@@ -1,7 +1,7 @@
-using System;
-using System.Collections.Generic;
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Epsitec.Common.Support.Platform.Win32
 {
@@ -9,74 +9,74 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 	internal static class ShellApi
 	{
-		public delegate Int32 BrowseCallbackProc(IntPtr hwnd, UInt32 uMsg, Int32 lParam, Int32 lpData);
+		public delegate int BrowseCallbackProc(System.IntPtr hwnd, uint uMsg, int lParam, int lpData);
 
 		// Contains parameters for the SHBrowseForFolder function and receives information about the folder selected 
 		// by the user.
 		[StructLayout (LayoutKind.Sequential)]
 		public struct BROWSEINFO
 		{
-			public IntPtr hwndOwner;				// Handle to the owner window for the dialog box.
+			public System.IntPtr hwndOwner;				// Handle to the owner window for the dialog box.
 
-			public IntPtr pidlRoot;					// Pointer to an item identifier list (PIDL) specifying the 
+			public System.IntPtr pidlRoot;					// Pointer to an item identifier list (PIDL) specifying the 
 			// location of the root folder from which to start browsing.
 
 			[MarshalAs (UnmanagedType.LPStr)]		// Address of a buffer to receive the display name of the 
-			public String pszDisplayName;			// folder selected by the user.
+			public string pszDisplayName;			// folder selected by the user.
 
 			[MarshalAs (UnmanagedType.LPStr)]		// Address of a null-terminated string that is displayed 
-			public String lpszTitle;				// above the tree view control in the dialog box.
+			public string lpszTitle;				// above the tree view control in the dialog box.
 
-			public UInt32 ulFlags;					// Flags specifying the options for the dialog box. 
+			public uint ulFlags;					// Flags specifying the options for the dialog box. 
 
 			[MarshalAs (UnmanagedType.FunctionPtr)]	// Address of an application-defined function that the 
 			public BrowseCallbackProc lpfn;			// dialog box calls when an event occurs.
 
-			public Int32 lParam;					// Application-defined value that the dialog box passes to 
+			public int lParam;					// Application-defined value that the dialog box passes to 
 			// the callback function
 
-			public Int32 iImage;					// Variable to receive the image associated with the selected folder.
+			public int iImage;					// Variable to receive the image associated with the selected folder.
 		}
 
 		[StructLayout (LayoutKind.Explicit)]
 		public struct STRRETinternal
 		{
 			[FieldOffset (0)]
-			public IntPtr pOleStr;						// must be freed by caller of GetDisplayNameOf
+			public System.IntPtr pOleStr;						// must be freed by caller of GetDisplayNameOf
 
 			[FieldOffset (0)]
-			public IntPtr pStr;							// NOT USED
+			public System.IntPtr pStr;							// NOT USED
 
 			[FieldOffset (0)]
-			public UInt32 uOffset;						// Offset into SHITEMID
+			public uint uOffset;						// Offset into SHITEMID
 
 			[FieldOffset (0)]
-			public IntPtr cStr;							// Buffer to fill in (ANSI)
+			public System.IntPtr cStr;							// Buffer to fill in (ANSI)
 		}
 
 		//		[StructLayout(LayoutKind.Explicit)]
 		//		public struct STRRET
 		//		{
 		//			[FieldOffset(0)]
-		//			public UInt32 uType;						// One of the STRRET_* values
+		//			public uint uType;						// One of the STRRET_* values
 		//
 		//			[FieldOffset(4)]
-		//			public IntPtr pOleStr;						// must be freed by caller of GetDisplayNameOf
+		//			public System.IntPtr pOleStr;						// must be freed by caller of GetDisplayNameOf
 		//
 		//			[FieldOffset(4)]
-		//			public IntPtr pStr;							// NOT USED
+		//			public System.IntPtr pStr;							// NOT USED
 		//
 		//			[FieldOffset(4)]
-		//			public UInt32 uOffset;						// Offset into SHITEMID
+		//			public uint uOffset;						// Offset into SHITEMID
 		//
 		//			[FieldOffset(4)]
-		//			public IntPtr cStr;							// Buffer to fill in (ANSI)
+		//			public System.IntPtr cStr;							// Buffer to fill in (ANSI)
 		//		}
 
 		[StructLayout (LayoutKind.Sequential)]
 		public struct STRRET
 		{
-			public UInt32 uType;						// One of the STRRET_* values
+			public uint uType;						// One of the STRRET_* values
 
 			public STRRETinternal data;
 		}
@@ -86,44 +86,44 @@ namespace Epsitec.Common.Support.Platform.Win32
 		[StructLayout (LayoutKind.Sequential)]
 		public struct SHELLEXECUTEINFO
 		{
-			public UInt32 cbSize;					// Size of the structure, in bytes. 
-			public UInt32 fMask;					// Array of flags that indicate the content and validity of the 
+			public uint cbSize;					// Size of the structure, in bytes. 
+			public uint fMask;					// Array of flags that indicate the content and validity of the 
 			// other structure members.
-			public IntPtr hwnd;						// Window handle to any message boxes that the system might produce
+			public System.IntPtr hwnd;						// Window handle to any message boxes that the system might produce
 			// while executing this function. 
 			[MarshalAs (UnmanagedType.LPWStr)]
-			public String lpVerb;					// String, referred to as a verb, that specifies the action to 
+			public string lpVerb;					// string, referred to as a verb, that specifies the action to 
 			// be performed. 
 			[MarshalAs (UnmanagedType.LPWStr)]
-			public String lpFile;					// Address of a null-terminated string that specifies the name of 
+			public string lpFile;					// Address of a null-terminated string that specifies the name of 
 			// the file or object on which ShellExecuteEx will perform the 
 			// action specified by the lpVerb parameter.
 			[MarshalAs (UnmanagedType.LPWStr)]
-			public String lpParameters;				// Address of a null-terminated string that contains the 
+			public string lpParameters;				// Address of a null-terminated string that contains the 
 			// application parameters.
 			[MarshalAs (UnmanagedType.LPWStr)]
-			public String lpDirectory;				// Address of a null-terminated string that specifies the name of 
+			public string lpDirectory;				// Address of a null-terminated string that specifies the name of 
 			// the working directory. 
-			public Int32 nShow;						// Flags that specify how an application is to be shown when it 
+			public int nShow;						// Flags that specify how an application is to be shown when it 
 			// is opened.
-			public IntPtr hInstApp;					// If the function succeeds, it sets this member to a value 
+			public System.IntPtr hInstApp;					// If the function succeeds, it sets this member to a value 
 			// greater than 32.
-			public IntPtr lpIDList;					// Address of an ITEMIDLIST structure to contain an item identifier
+			public System.IntPtr lpIDList;					// Address of an ITEMIDLIST structure to contain an item identifier
 			// list uniquely identifying the file to execute.
 			[MarshalAs (UnmanagedType.LPWStr)]
-			public String lpClass;					// Address of a null-terminated string that specifies the name of 
+			public string lpClass;					// Address of a null-terminated string that specifies the name of 
 			// a file class or a globally unique identifier (GUID). 
-			public IntPtr hkeyClass;				// Handle to the registry key for the file class.
-			public UInt32 dwHotKey;					// Hot key to associate with the application.
-			public IntPtr hIconMonitor;				// Handle to the icon for the file class. OR Handle to the monitor 
+			public System.IntPtr hkeyClass;				// Handle to the registry key for the file class.
+			public uint dwHotKey;					// Hot key to associate with the application.
+			public System.IntPtr hIconMonitor;				// Handle to the icon for the file class. OR Handle to the monitor 
 			// upon which the document is to be displayed. 
-			public IntPtr hProcess;					// Handle to the newly started application.
+			public System.IntPtr hProcess;					// Handle to the newly started application.
 		}
 
 		[StructLayout (LayoutKind.Sequential, CharSet=CharSet.Auto)]
 		public struct SHFILEINFO
 		{
-			public IntPtr hIcon;
+			public System.IntPtr hIcon;
 			public int iIcon;
 			public uint dwAttributes;
 			[MarshalAs (UnmanagedType.ByValTStr, SizeConst=Win32Const.MAX_PATH)]
@@ -136,10 +136,10 @@ namespace Epsitec.Common.Support.Platform.Win32
 		[StructLayout (LayoutKind.Sequential, CharSet=CharSet.Unicode)]
 		public struct SHFILEOPSTRUCT
 		{
-			public IntPtr hwnd;						// Window handle to the dialog box to display information about the 
+			public System.IntPtr hwnd;						// Window handle to the dialog box to display information about the 
 			// status of the file operation. 
-			public UInt32 wFunc;					// Value that indicates which operation to perform.
-			public IntPtr pFrom;					// Address of a buffer to specify one or more source file names. 
+			public uint wFunc;					// Value that indicates which operation to perform.
+			public System.IntPtr pFrom;					// Address of a buffer to specify one or more source file names. 
 			// These names must be fully qualified paths. Standard Microsoft® 
 			// MS-DOS® wild cards, such as "*", are permitted in the file-name 
 			// position. Although this member is declared as a null-terminated 
@@ -147,18 +147,18 @@ namespace Epsitec.Common.Support.Platform.Win32
 			// file name must be terminated by a single NULL character. An	
 			// additional NULL character must be appended to the end of the 
 			// final name to indicate the end of pFrom. 
-			public IntPtr pTo;						// Address of a buffer to contain the name of the destination file or 
+			public System.IntPtr pTo;						// Address of a buffer to contain the name of the destination file or 
 			// directory. This parameter must be set to NULL if it is not used.
 			// Like pFrom, the pTo member is also a double-null terminated 
 			// string and is handled in much the same way. 
-			public UInt16 fFlags;					// Flags that control the file operation. 
-			public Int32 fAnyOperationsAborted;		// Value that receives TRUE if the user aborted any file operations
+			public ushort fFlags;					// Flags that control the file operation. 
+			public int fAnyOperationsAborted;		// Value that receives TRUE if the user aborted any file operations
 			// before they were completed, or FALSE otherwise. 
-			public IntPtr hNameMappings;			// A handle to a name mapping object containing the old and new 
+			public System.IntPtr hNameMappings;			// A handle to a name mapping object containing the old and new 
 			// names of the renamed files. This member is used only if the 
 			// fFlags member includes the FOF_WANTMAPPINGHANDLE flag.
 			[MarshalAs (UnmanagedType.LPWStr)]
-			public String lpszProgressTitle;		// Address of a string to use as the title of a progress dialog box.
+			public string lpszProgressTitle;		// Address of a string to use as the title of a progress dialog box.
 			// This member is used only if fFlags includes the 
 			// FOF_SIMPLEPROGRESS flag.
 		}
@@ -167,33 +167,33 @@ namespace Epsitec.Common.Support.Platform.Win32
 		[StructLayout (LayoutKind.Sequential)]
 		public struct RECT
 		{
-			public Int32 left;
-			public Int32 top;
-			public Int32 right;
-			public Int32 bottom;
+			public int left;
+			public int top;
+			public int right;
+			public int bottom;
 		}
 
 		[StructLayout (LayoutKind.Sequential)]
 		public struct APPBARDATA
 		{
-			public UInt32 cbSize;
-			public IntPtr hWnd;
-			public UInt32 uCallbackMessage;
-			public UInt32 uEdge;
+			public uint cbSize;
+			public System.IntPtr hWnd;
+			public uint uCallbackMessage;
+			public uint uEdge;
 			public RECT rc;
-			public Int32 lParam;
+			public int lParam;
 		}
 
 		[StructLayout (LayoutKind.Sequential)]
 		public struct ComboBoxInfo
 		{
-			public Int32 cbSize;
+			public int cbSize;
 			public RECT rcItem;
 			public RECT rcButton;
-			public IntPtr stateButton;
-			public IntPtr hwndCombo;
-			public IntPtr hwndEdit;
-			public IntPtr hwndList;
+			public System.IntPtr stateButton;
+			public System.IntPtr hwndCombo;
+			public System.IntPtr hwndEdit;
+			public System.IntPtr hwndList;
 		}
 
 		// IShellLink.Resolve fFlags
@@ -256,8 +256,8 @@ namespace Epsitec.Common.Support.Platform.Win32
 		
 		// Retrieves a pointer to the Shell's IMalloc interface.
 		[DllImport ("shell32.dll")]
-		public static extern Int32 SHGetMalloc(
-			out IntPtr hObject);	// Address of a pointer that receives the Shell's IMalloc interface pointer. 
+		public static extern int SHGetMalloc(
+			out System.IntPtr hObject);	// Address of a pointer that receives the Shell's IMalloc interface pointer. 
 
 		[System.Flags]
 		public enum SHGFI
@@ -284,149 +284,149 @@ namespace Epsitec.Common.Support.Platform.Win32
 		public static extern System.IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, out SHFILEINFO psfi, int cbFileInfo, SHGFI uFlags);
 		
 		[DllImport ("shell32.dll", CharSet=CharSet.Unicode)]
-		public static extern System.IntPtr SHGetFileInfo(IntPtr pidl, uint dwFileAttributes, out SHFILEINFO psfi, int cbFileInfo, SHGFI uFlags);
+		public static extern System.IntPtr SHGetFileInfo(System.IntPtr pidl, uint dwFileAttributes, out SHFILEINFO psfi, int cbFileInfo, SHGFI uFlags);
 
 		// Retrieves the path of a folder as an PIDL.
 		[DllImport ("shell32.dll")]
 		public static extern uint SHGetFolderLocation(
-			IntPtr hwndOwner,		// Handle to the owner window.
-			Int32 nFolder,			// A CSIDL value that identifies the folder to be located.
-			IntPtr hToken,			// Token that can be used to represent a particular user.
-			UInt32 dwReserved,		// Reserved.
-			out IntPtr ppidl);		// Address of a pointer to an item identifier list structure 
+			System.IntPtr hwndOwner,		// Handle to the owner window.
+			int nFolder,			// A CSIDL value that identifies the folder to be located.
+			System.IntPtr hToken,			// Token that can be used to represent a particular user.
+			uint dwReserved,		// Reserved.
+			out System.IntPtr ppidl);		// Address of a pointer to an item identifier list structure 
 		// Retrieves the path of a folder as an PIDL.
 		[DllImport ("shell32.dll")]
 		public static extern uint SHGetSpecialFolderLocation(
-			IntPtr hwndOwner,		// Handle to the owner window.
-			Int32 nFolder,			// A CSIDL value that identifies the folder to be located.
-			out IntPtr ppidl);		// Address of a pointer to an item identifier list structure 
+			System.IntPtr hwndOwner,		// Handle to the owner window.
+			int nFolder,			// A CSIDL value that identifies the folder to be located.
+			out System.IntPtr ppidl);		// Address of a pointer to an item identifier list structure 
 		// specifying the folder's location relative to the root of the namespace 
 		// (the desktop). 
 
 		// Converts an item identifier list to a file system path. 
 		[DllImport ("shell32.dll")]
-		public static extern Int32 SHGetPathFromIDList(
-			IntPtr pidl,			// Address of an item identifier list that specifies a file or directory location 
+		public static extern int SHGetPathFromIDList(
+			System.IntPtr pidl,			// Address of an item identifier list that specifies a file or directory location 
 			// relative to the root of the namespace (the desktop). 
-			StringBuilder pszPath);	// Address of a buffer to receive the file system path.
+			System.Text.StringBuilder pszPath);	// Address of a buffer to receive the file system path.
 
 		[DllImport ("shell32.dll")]
-		public static extern IntPtr ILCombine(
-			IntPtr pidlAbsolute,
-			IntPtr pidlRelative);
+		public static extern System.IntPtr ILCombine(
+			System.IntPtr pidlAbsolute,
+			System.IntPtr pidlRelative);
 
 		[DllImport ("shell32.dll")]
 		public static extern bool ILIsEqual(
-			IntPtr pidlA,
-			IntPtr pidlB);
+			System.IntPtr pidlA,
+			System.IntPtr pidlB);
 
 		[DllImport ("shell32.dll")]
 		public static extern bool ILRemoveLastID(
-			IntPtr pidl);
+			System.IntPtr pidl);
 
 		// Takes the CSIDL of a folder and returns the pathname.
 		[DllImport ("shell32.dll")]
-		public static extern Int32 SHGetFolderPath(
-			IntPtr hwndOwner,			// Handle to an owner window.
-			Int32 nFolder,				// A CSIDL value that identifies the folder whose path is to be retrieved.
-			IntPtr hToken,				// An access token that can be used to represent a particular user.
-			UInt32 dwFlags,				// Flags to specify which path is to be returned. It is used for cases where 
+		public static extern int SHGetFolderPath(
+			System.IntPtr hwndOwner,			// Handle to an owner window.
+			int nFolder,				// A CSIDL value that identifies the folder whose path is to be retrieved.
+			System.IntPtr hToken,				// An access token that can be used to represent a particular user.
+			uint dwFlags,				// Flags to specify which path is to be returned. It is used for cases where 
 			// the folder associated with a CSIDL may be moved or renamed by the user. 
-			StringBuilder pszPath);		// Pointer to a null-terminated string which will receive the path.
+			System.Text.StringBuilder pszPath);		// Pointer to a null-terminated string which will receive the path.
 
 		// Translates a Shell namespace object's display name into an item identifier list and returns the attributes 
 		// of the object. This function is the preferred method to convert a string to a pointer to an item 
 		// identifier list (PIDL). 
 		[DllImport ("shell32.dll")]
-		public static extern Int32 SHParseDisplayName(
+		public static extern int SHParseDisplayName(
 			[MarshalAs (UnmanagedType.LPWStr)]
-		String pszName,				// Pointer to a zero-terminated wide string that contains the display name 
+		string pszName,				// Pointer to a zero-terminated wide string that contains the display name 
 			// to parse. 
-			IntPtr pbc,					// Optional bind context that controls the parsing operation. This parameter 
+			System.IntPtr pbc,					// Optional bind context that controls the parsing operation. This parameter 
 			// is normally set to NULL.
-			out IntPtr ppidl,			// Address of a pointer to a variable of type ITEMIDLIST that receives the item
+			out System.IntPtr ppidl,			// Address of a pointer to a variable of type ITEMIDLIST that receives the item
 			// identifier list for the object.
-			UInt32 sfgaoIn,				// ULONG value that specifies the attributes to query.
-			out UInt32 psfgaoOut);		// Pointer to a ULONG. On return, those attributes that are true for the 
+			uint sfgaoIn,				// ULONG value that specifies the attributes to query.
+			out uint psfgaoOut);		// Pointer to a ULONG. On return, those attributes that are true for the 
 		// object and were requested in sfgaoIn will be set. 
 
 
 		// Retrieves the IShellFolder interface for the desktop folder, which is the root of the Shell's namespace. 
 		[DllImport ("shell32.dll")]
-		public static extern Int32 SHGetDesktopFolder(
-			out IntPtr ppshf);			// Address that receives an IShellFolder interface pointer for the 
+		public static extern int SHGetDesktopFolder(
+			out System.IntPtr ppshf);			// Address that receives an IShellFolder interface pointer for the 
 		// desktop folder.
 
 		// This function takes the fully-qualified pointer to an item identifier list (PIDL) of a namespace object, 
 		// and returns a specified interface pointer on the parent object.
 		[DllImport ("shell32.dll")]
-		public static extern Int32 SHBindToParent(
-			IntPtr pidl,			// The item's PIDL. 
+		public static extern int SHBindToParent(
+			System.IntPtr pidl,			// The item's PIDL. 
 			[In]
-			ref Guid riid,				// The REFIID of one of the interfaces exposed by the item's parent object. 
-			out IntPtr ppv,			// A pointer to the interface specified by riid. You must release the object when 
+			ref System.Guid riid,				// The REFIID of one of the interfaces exposed by the item's parent object. 
+			out System.IntPtr ppv,			// A pointer to the interface specified by riid. You must release the object when 
 			// you are finished. 
-			ref IntPtr ppidlLast);	// The item's PIDL relative to the parent folder. This PIDL can be used with many
+			ref System.IntPtr ppidlLast);	// The item's PIDL relative to the parent folder. This PIDL can be used with many
 		// of the methods supported by the parent folder's interfaces. If you set ppidlLast 
 		// to NULL, the PIDL will not be returned. 
 
 		// Accepts a STRRET structure returned by IShellFolder::GetDisplayNameOf that contains or points to a 
 		// string, and then returns that string as a BSTR.
 		[DllImport ("shlwapi.dll")]
-		public static extern Int32 StrRetToBSTR(
+		public static extern int StrRetToBSTR(
 			ref STRRET pstr,		// Pointer to a STRRET structure.
-			IntPtr pidl,			// Pointer to an ITEMIDLIST uniquely identifying a file object or subfolder relative
+			System.IntPtr pidl,			// Pointer to an ITEMIDLIST uniquely identifying a file object or subfolder relative
 			// to the parent folder.
 			[MarshalAs (UnmanagedType.BStr)]
-		out String pbstr);		// Pointer to a variable of type BSTR that contains the converted string.
+		out string pbstr);		// Pointer to a variable of type BSTR that contains the converted string.
 
 		// Takes a STRRET structure returned by IShellFolder::GetDisplayNameOf, converts it to a string, and 
 		// places the result in a buffer. 
 		[DllImport ("shlwapi.dll")]
-		public static extern Int32 StrRetToBuf(
+		public static extern int StrRetToBuf(
 			ref STRRET pstr,		// Pointer to the STRRET structure. When the function returns, this pointer will no
 			// longer be valid.
-			IntPtr pidl,			// Pointer to the item's ITEMIDLIST structure.
-			StringBuilder pszBuf,	// Buffer to hold the display name. It will be returned as a null-terminated
+			System.IntPtr pidl,			// Pointer to the item's ITEMIDLIST structure.
+			System.Text.StringBuilder pszBuf,	// Buffer to hold the display name. It will be returned as a null-terminated
 			// string. If cchBuf is too small, the name will be truncated to fit. 
-			UInt32 cchBuf);			// Size of pszBuf, in characters. If cchBuf is too small, the string will be 
+			uint cchBuf);			// Size of pszBuf, in characters. If cchBuf is too small, the string will be 
 		// truncated to fit. 
 
 
 
 		// Displays a dialog box that enables the user to select a Shell folder. 
 		[DllImport ("shell32.dll")]
-		public static extern IntPtr SHBrowseForFolder(
+		public static extern System.IntPtr SHBrowseForFolder(
 			ref BROWSEINFO lbpi);	// Pointer to a BROWSEINFO structure that contains information used to display 
 		// the dialog box. 
 
 		// Performs an operation on a specified file.
 		[DllImport ("shell32.dll")]
-		public static extern IntPtr ShellExecute(
-			IntPtr hwnd,			// Handle to a parent window.
+		public static extern System.IntPtr ShellExecute(
+			System.IntPtr hwnd,			// Handle to a parent window.
 			[MarshalAs (UnmanagedType.LPStr)]
-		String lpOperation,		// Pointer to a null-terminated string, referred to in this case as a verb, 
+		string lpOperation,		// Pointer to a null-terminated string, referred to in this case as a verb, 
 			// that specifies the action to be performed.
 			[MarshalAs (UnmanagedType.LPStr)]
-		String lpFile,			// Pointer to a null-terminated string that specifies the file or object on which 
+		string lpFile,			// Pointer to a null-terminated string that specifies the file or object on which 
 			// to execute the specified verb.
 			[MarshalAs (UnmanagedType.LPStr)]
-		String lpParameters,	// If the lpFile parameter specifies an executable file, lpParameters is a pointer 
+		string lpParameters,	// If the lpFile parameter specifies an executable file, lpParameters is a pointer 
 			// to a null-terminated string that specifies the parameters to be passed 
 			// to the application.
 			[MarshalAs (UnmanagedType.LPStr)]
-		String lpDirectory,		// Pointer to a null-terminated string that specifies the default directory. 
-			Int32 nShowCmd);		// Flags that specify how an application is to be displayed when it is opened.
+		string lpDirectory,		// Pointer to a null-terminated string that specifies the default directory. 
+			int nShowCmd);		// Flags that specify how an application is to be displayed when it is opened.
 
 		// Performs an action on a file. 
 		[DllImport ("shell32.dll")]
-		public static extern Int32 ShellExecuteEx(
+		public static extern int ShellExecuteEx(
 			ref SHELLEXECUTEINFO lpExecInfo);	// Address of a SHELLEXECUTEINFO structure that contains and receives 
 		// information about the application being executed. 
 
 		// Copies, moves, renames, or deletes a file system object. 
 		[DllImport ("shell32.dll", CharSet=CharSet.Unicode)]
-		public static extern Int32 SHFileOperation(
+		public static extern int SHFileOperation(
 			ref SHFILEOPSTRUCT lpFileOp);		// Address of an SHFILEOPSTRUCT structure that contains information 
 		// this function needs to carry out the specified operation. This 
 		// parameter must contain a valid value that is not NULL. You are 
@@ -437,11 +437,11 @@ namespace Epsitec.Common.Support.Platform.Win32
 		// if it performs an action that may affect the Shell. 
 		[DllImport ("shell32.dll")]
 		public static extern void SHChangeNotify(
-			UInt32 wEventId,				// Describes the event that has occurred. the 
+			uint wEventId,				// Describes the event that has occurred. the 
 			// ShellChangeNotificationEvents enum contains a list of options.
-			UInt32 uFlags,					// Flags that indicate the meaning of the dwItem1 and dwItem2 parameters.
-			IntPtr dwItem1,					// First event-dependent value. 
-			IntPtr dwItem2);				// Second event-dependent value. 
+			uint uFlags,					// Flags that indicate the meaning of the dwItem1 and dwItem2 parameters.
+			System.IntPtr dwItem1,					// First event-dependent value. 
+			System.IntPtr dwItem2);				// Second event-dependent value. 
 
 		
 		public const uint SHARD_PIDL	= 0x0001;
@@ -451,7 +451,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 		[DllImport ("shell32.dll")]
 		public static extern void SHAddToRecentDocs(
 			uint uFlags,					// Flag that indicates the meaning of the pv parameter.
-			IntPtr pv);						// A pointer to either a null-terminated string with the path and file name 
+			System.IntPtr pv);						// A pointer to either a null-terminated string with the path and file name 
 		// of the document, or a PIDL that identifies the document's file object. 
 		// Set this parameter to NULL to clear all documents from the list. 
 		[DllImport ("shell32.dll")]
@@ -462,25 +462,25 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 		// Executes a command on a printer object. 
 		[DllImport ("shell32.dll")]
-		public static extern Int32 SHInvokePrinterCommand(
-			IntPtr hwnd,						// Handle of the window that will be used as the parent of any windows 
+		public static extern int SHInvokePrinterCommand(
+			System.IntPtr hwnd,						// Handle of the window that will be used as the parent of any windows 
 			// or dialog boxes that are created during the operation.
-			UInt32 uAction,						// A value that determines the type of printer operation that will be 
+			uint uAction,						// A value that determines the type of printer operation that will be 
 			// performed.
 			[MarshalAs (UnmanagedType.LPWStr)]
-		String lpBuf1,						// Address of a null_terminated string that contains additional 
+		string lpBuf1,						// Address of a null_terminated string that contains additional 
 			// information for the printer command. 
 			[MarshalAs (UnmanagedType.LPWStr)]	
-		String lpBuf2,						// Address of a null-terminated string that contains additional
+		string lpBuf2,						// Address of a null-terminated string that contains additional
 			// information for the printer command. 
-			Int32 fModal);						//  value that determines whether SHInvokePrinterCommand should return
+			int fModal);						//  value that determines whether SHInvokePrinterCommand should return
 		// after initializing the command or wait until the command is completed.
 
 
 		// Sends an appbar message to the system. 
 		[DllImport ("shell32.dll")]
-		public static extern UInt32 SHAppBarMessage(
-			UInt32 dwMessage,					// Appbar message value to send.
+		public static extern uint SHAppBarMessage(
+			uint dwMessage,					// Appbar message value to send.
 			ref APPBARDATA pData);				// Address of an APPBARDATA structure. The content of the structure 
 		// depends on the value set in the dwMessage parameter. 
 
@@ -488,28 +488,28 @@ namespace Epsitec.Common.Support.Platform.Win32
 		// The RegisterWindowMessage function defines a new window message that is guaranteed to be unique throughout 
 		// the system. The message value can be used when sending or posting messages. 
 		[DllImport ("user32.dll")]
-		public static extern UInt32 RegisterWindowMessage(
+		public static extern uint RegisterWindowMessage(
 			[MarshalAs (UnmanagedType.LPTStr)]
-		String lpString);		// Pointer to a null-terminated string that specifies the message to be registered. 
+		string lpstring);		// Pointer to a null-terminated string that specifies the message to be registered. 
 
 		// Instructs system edit controls to use AutoComplete to help complete URLs or 
 		// file system paths. 
 		[DllImport ("shlwapi.dll")]
-		public static extern Int32 SHAutoComplete(
-			IntPtr hwndEdit,
-			UInt32 dwFlags);
+		public static extern int SHAutoComplete(
+			System.IntPtr hwndEdit,
+			uint dwFlags);
 
 
 		[DllImport ("User32.dll")]
-		public static extern Boolean GetComboBoxInfo(
-			IntPtr hwndCombo,
+		public static extern bool GetComboBoxInfo(
+			System.IntPtr hwndCombo,
 			ref ComboBoxInfo info);
 
 
-		public static Int16 GetHResultCode(Int32 hr)
+		public static short GetHResultCode(int hr)
 		{
 			hr = hr & 0x0000ffff;
-			return (Int16) hr;
+			return (short) hr;
 		}
 
 

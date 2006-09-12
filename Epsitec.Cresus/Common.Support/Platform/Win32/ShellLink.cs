@@ -1,5 +1,6 @@
-using System;
-using System.Text;
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Support.Platform.Win32
