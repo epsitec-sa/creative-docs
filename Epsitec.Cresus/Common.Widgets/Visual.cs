@@ -357,6 +357,7 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.Rectangle				ActualBounds
 		{
+			//	Coordonnées du widget par rapport à son parent.
 			get
 			{
 				if (!this.IsActualGeometryValid)
@@ -369,6 +370,7 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.Point					ActualLocation
 		{
+			//	Origine du widget par rapport à son parent.
 			get
 			{
 				if (!this.IsActualGeometryValid)

@@ -1445,6 +1445,9 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Point MapClientToRoot(Drawing.Point point)
 		{
+			//	Transforme des coordonnées client d'un widget en coordonnées relatives à la
+			//	racine de la fenêtre. Le point inférieur gauche d'un widget, en coordonnées
+			//	client, est en principe [0;0].
 			if (this.IsDisposing)
 			{
 				return point;
@@ -1521,6 +1524,12 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Rectangle MapClientToRoot(Drawing.Rectangle rect)
 		{
+			//	Transforme des coordonnées client d'un widget en coordonnées relatives à la
+			//	racine de la fenêtre. Le point inférieur gauche d'un widget, en coordonnées
+			//	client, est en principe [0;0].
+			//	Pour obtenir les "bounds" d'un widget, il faut donc convertir [0;0;width;height]
+			//	comme ceci:
+			//		widget.MapClientToRoot(widget.Client.Bounds);
 			bool flip_x = rect.Width < 0;
 			bool flip_y = rect.Height < 0;
 			
