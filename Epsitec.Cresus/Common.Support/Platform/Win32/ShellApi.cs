@@ -252,6 +252,12 @@ namespace Epsitec.Common.Support.Platform.Win32
 		public static extern bool EnableWindow(System.IntPtr hWnd, bool enable);
 
 		[DllImport ("user32.dll")]
+		public static extern System.IntPtr GetFocus();
+
+		[DllImport ("user32.dll")]
+		public static extern System.IntPtr SetFocus(System.IntPtr hWnd);
+
+		[DllImport ("user32.dll")]
 		public static extern System.IntPtr GetDesktopWindow();
 		
 		// Retrieves a pointer to the Shell's IMalloc interface.

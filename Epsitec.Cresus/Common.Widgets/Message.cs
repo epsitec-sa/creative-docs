@@ -525,6 +525,8 @@ namespace Epsitec.Common.Widgets
 			switch (msg.Msg)
 			{
 				case Win32Const.WM_KEYDOWN:
+				case Win32Const.WM_SYSKEYDOWN:
+				case Win32Const.WM_SYSKEYUP:
 				case Win32Const.WM_KEYUP:
 				case Win32Const.WM_CHAR:
 					message = Message.FromKeyEvent (msg.Msg, msg.WParam, msg.LParam);
@@ -719,6 +721,8 @@ namespace Epsitec.Common.Widgets
 			
 			switch (msg)
 			{
+				case Win32Const.WM_SYSKEYDOWN:	message.type = MessageType.KeyDown;		break;
+				case Win32Const.WM_SYSKEYUP:	message.type = MessageType.KeyUp;		break;
 				case Win32Const.WM_KEYDOWN:		message.type = MessageType.KeyDown;		break;
 				case Win32Const.WM_KEYUP:		message.type = MessageType.KeyUp;		break;
 				case Win32Const.WM_CHAR:		message.type = MessageType.KeyPress;	break;
