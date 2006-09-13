@@ -1041,13 +1041,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			StaticText st = this.table[1, sel].Children[0] as StaticText;
-			Rectangle rect = st.MapClientToRoot(st.ActualBounds);
-			rect.Deflate(0, System.Math.Floor((rect.Height-20)/2));  // force une hauteur de 20
-			rect.Offset(-13, 0);  // TODO: mystère...
-			rect.Width += 38;  // place pour les boutons "v" et "x"
+			Rectangle rect = st.MapClientToRoot(st.Client.Bounds);
+			rect.Deflate(0, System.Math.Floor((rect.Height-20)/2));		// force une hauteur de 20
+			rect.Inflate(st.Margins);									// tient compte de la marge
+			rect.Left -= 1;												// déborde d'un pixel hors du tableau
+			rect.Width += 32;											// place pour les boutons "v" et "x"
 
-			//Rectangle box = this.table.MapClientToRoot(this.table.ActualBounds);  // TODO: pourquoi ça ne marche pas ???
-			Rectangle box = this.table.ActualBounds;
+			Rectangle box = this.table.MapClientToRoot(this.table.Client.Bounds);
 			box.Deflate(2);
 			box.Top -= this.table.HeaderHeight;
 			if (!box.Contains(rect))
