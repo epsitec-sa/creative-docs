@@ -865,7 +865,7 @@ namespace Epsitec.App.DocumentEditor
 			{
 				Command c = Widgets.Command.Get(command);
 
-				MenuItem item = new MenuItem(c.CommandId, Misc.Icon(c.Icon), c.Description, Misc.GetShortcut(c), c.CommandId);
+				MenuItem item = new MenuItem(c.CommandId, c.Icon, c.Description, Misc.GetShortcut(c), c.CommandId);
 				vmenu.Items.Add(item);
 			}
 		}

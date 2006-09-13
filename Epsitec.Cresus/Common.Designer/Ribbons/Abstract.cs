@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.Ribbons
 		{
 			//	Cherche le bouton utilisé pour une commande, dans le ruban.
 			Command c = Common.Widgets.Command.Get(command);
-			string icon = Misc.Icon(c.Icon);
+			string icon = c.Icon;
 
 			foreach (Widget widget in this.Children)
 			{
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			}
 #else
 			button.CommandObject = c;
-			button.IconName = Misc.Icon (c.Icon);
+//-			button.IconName = Misc.Icon(c.Icon);
 			button.PreferredIconSize = Misc.IconPreferredSize (iconSize);
 			button.AutoFocus = false;
 #endif

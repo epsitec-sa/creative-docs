@@ -726,6 +726,9 @@ namespace Epsitec.Common.Document
 			{
 				return null;
 			}
+			
+			System.Diagnostics.Debug.Assert(icon.StartsWith("manifest:") == false);
+			System.Diagnostics.Debug.Assert(icon.EndsWith(".icon") == false);
 
 			return string.Format("manifest:Epsitec.App.DocumentEditor.Images.{0}.icon", icon);
 		}
