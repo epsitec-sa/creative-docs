@@ -2075,7 +2075,8 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			if (consumer != null)
+			if ((consumer != null) &&
+				(consumer.IsVisible))
 			{
 				switch (message.Type)
 				{

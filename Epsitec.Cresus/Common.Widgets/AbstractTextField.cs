@@ -930,6 +930,14 @@ namespace Epsitec.Common.Widgets
 				
 				this.Focus();
 			}
+
+			if (this.IsModal)
+			{
+				if (this.Client.Bounds.Contains (pos) == false)
+				{
+					this.DefocusAndAcceptOrReject ();
+				}
+			}
 			
 			return true;
 		}
@@ -1141,37 +1149,42 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.KeyboardFocus == false)
 			{
-				switch (this.DefocusAction)
-				{
-					case DefocusAction.AcceptEdition:
-						this.AcceptEdition ();
-						break;
-					
-					case DefocusAction.RejectEdition:
-						this.RejectEdition ();
-						break;
-					
-					case DefocusAction.Modal:
-					case DefocusAction.AutoAcceptOrRejectEdition:
-						if (this.IsValid)
-						{
-							this.AcceptEdition ();
-						}
-						else
-						{
-							this.RejectEdition ();
-						}
-						break;
-					
-					case DefocusAction.None:
-						break;
-					
-					default:
-						throw new System.NotImplementedException (string.Format ("DefocusAction.{0} not implemented.", this.DefocusAction));
-				}
+				this.DefocusAndAcceptOrReject ();
 			}
 			
 			this.Invalidate ();
+		}
+
+		private void DefocusAndAcceptOrReject()
+		{
+			switch (this.DefocusAction)
+			{
+				case DefocusAction.AcceptEdition:
+					this.AcceptEdition ();
+					break;
+
+				case DefocusAction.RejectEdition:
+					this.RejectEdition ();
+					break;
+
+				case DefocusAction.Modal:
+				case DefocusAction.AutoAcceptOrRejectEdition:
+					if (this.IsValid)
+					{
+						this.AcceptEdition ();
+					}
+					else
+					{
+						this.RejectEdition ();
+					}
+					break;
+
+				case DefocusAction.None:
+					break;
+
+				default:
+					throw new System.NotImplementedException (string.Format ("DefocusAction.{0} not implemented.", this.DefocusAction));
+			}
 		}
 
 		
