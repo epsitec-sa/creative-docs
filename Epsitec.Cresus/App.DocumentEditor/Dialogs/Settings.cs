@@ -604,7 +604,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				//	Icône.
 				ib = this.quickList[1, row].Children[0] as IconButton;
-				ib.IconName = Misc.Icon(c.Icon);
+				ib.IconName = c.Icon;
 
 				//	Bouton pour le séparateur.
 				ib = this.quickList[2, row].Children[0] as IconButton;
