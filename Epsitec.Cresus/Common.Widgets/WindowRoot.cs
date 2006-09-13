@@ -226,11 +226,16 @@ namespace Epsitec.Common.Widgets
 					Widget widget = focused == null ? this : focused;
 					Window window = this.window;
 
-					Command command = Widgets.Command.Find (shortcut);
+					List<Command> commands = Types.Collection.ToList (Widgets.Command.Find (shortcut));
 					
-					if (command != null)
+					if (commands.Count > 0)
 					{
-						window.QueueCommand (widget, command);
+						CommandDispatcherChain dispatcherChain = CommandDispatcherChain.BuildChain (this);
+						CommandContextChain    contextChain    = CommandContextChain.BuildChain (this);
+
+						//	TODO: find best command
+						
+						window.QueueCommand (widget, commands[0]);
 						return true;
 					}
 					
