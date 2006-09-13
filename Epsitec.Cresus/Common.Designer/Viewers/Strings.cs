@@ -46,6 +46,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.labelEdit = new TextFieldEx(this);
 			this.labelEdit.ButtonShowCondition = ShowCondition.WhenModified;
+			this.labelEdit.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
 			this.labelEdit.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);

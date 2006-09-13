@@ -49,6 +49,7 @@
   <data name="Dialog.Warning.Text1" id="0C1">Les problèmes suivants ont été rencontrés:</data>
   <data name="Dialog.Warning.Text2" id="0D1">Malgré ces problèmes, le fichier a été ouvert le mieux possible.</data>
   <data name="Dialog.Warning.Text3" id="0E1">Son aspect est toutefois différent de ce qu'il devrait être.</data>
+  <data name="Dialog.Warning.Redirection" id="0H7" mod="1">Le dossier &lt;b&gt;{0}&lt;/b&gt; ne peut pas être modifié.&lt;br/&gt;L&amp;apos;enregistrement est donc dévié dans &lt;b&gt;{1}&lt;/b&gt;.</data>
   <data name="Dialog.New.Title" id="0L6" mod="1">Nouveau document</data>
   <data name="Dialog.New.EmptyDocument" id="0T6" mod="1">Document vide</data>
   <data name="Dialog.File.Header.Preview" id="0N6" mod="1">Aperçu</data>
