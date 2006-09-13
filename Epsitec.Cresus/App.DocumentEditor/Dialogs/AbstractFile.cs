@@ -313,9 +313,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.favorites.IsForegroundFrame = true;
 			this.favorites.Dock = DockStyle.Fill;
 
+#if false
 			Widget band = new Widget(this.favorites);
 			band.PreferredHeight = 12;
 			band.Dock = DockStyle.Top;
+#endif
 		}
 
 		protected void CreateTable(double cellHeight)
