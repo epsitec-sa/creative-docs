@@ -796,8 +796,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 					else
 					{
-						string ext = System.IO.Path.GetExtension(target.FullPath);
-						if (!string.Equals (ext, this.fileExtension, System.StringComparison.OrdinalIgnoreCase))  // autre extension ?
+						if (!Misc.IsExtension(target.FullPath, this.fileExtension))  // autre extension ?
 						{
 							continue;  // oui -> ignore ce fichier
 						}
@@ -805,8 +804,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 				else if (!item.IsFolder)  // fichier ?
 				{
-					string ext = System.IO.Path.GetExtension(item.FullPath);
-					if (!string.Equals (ext, this.fileExtension, System.StringComparison.OrdinalIgnoreCase))  // autre extension ?
+					if (!Misc.IsExtension(item.FullPath, this.fileExtension))  // autre extension ?
 					{
 						continue;  // oui -> ignore ce fichier
 					}

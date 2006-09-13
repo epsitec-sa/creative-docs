@@ -815,7 +815,8 @@ namespace Epsitec.Common.Document
 		static public bool IsExtension(string filename, string ext)
 		{
 			//	Indique si un fichier utilise une extension donnée.
-			return filename.ToLower().EndsWith(ext);
+			string fileExt = System.IO.Path.GetExtension(filename);
+			return string.Equals(fileExt, ext, System.StringComparison.OrdinalIgnoreCase);
 		}
 
 		static public bool IsTextStyleName(string name)
