@@ -91,24 +91,46 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.navigator.IsReadOnly;
 			}
-
 			set
 			{
-				if ( this.navigator.IsReadOnly != value )
+				if (this.navigator.IsReadOnly != value)
 				{
 					this.navigator.IsReadOnly = value;
-					
-					
-					if ( Message.CurrentState.LastWindow == this.Window &&
-					     this.IsEntered )
+
+
+					if ((Message.CurrentState.LastWindow == this.Window) &&
+					    (this.IsEntered))
 					{
 						//	Ne changeons l'aspect de la souris que si actuellement le curseur se trouve
 						//	dans la zone éditable; si la souris se trouve sur un bouton, on ne fait rien.
-						
-						this.UpdateMouseCursor(this.MapRootToClient(Message.CurrentState.LastPosition));
+
+						this.UpdateMouseCursor (this.MapRootToClient (Message.CurrentState.LastPosition));
 					}
-					
-					this.OnReadOnlyChanged();
+
+					this.OnReadOnlyChanged ();
+				}
+			}
+		}
+
+		public bool								IsModal
+		{
+			get
+			{
+				return this.is_modal;
+			}
+			set
+			{
+				if (this.is_modal != value)
+				{
+					this.is_modal = value;
+
+					Window window = this.Window;
+
+					if ((window != null) &&
+						(window.ModalWidget == this))
+					{
+						window.ModalWidget = null;
+					}
 				}
 			}
 		}
@@ -162,6 +184,40 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.swallow_escape = value;
+			}
+		}
+
+		protected bool							IsEditing
+		{
+			get
+			{
+				return this.is_editing;
+			}
+			set
+			{
+				if (this.is_editing != value)
+				{
+					this.is_editing = value;
+
+					if (this.is_modal)
+					{
+						Window window = this.Window;
+
+						if (window != null)
+						{
+							if ((this.is_editing) &&
+								(window.ModalWidget == null))
+							{
+								window.ModalWidget = this;
+							}
+							else if ((this.is_editing == false) &&
+								/**/ (window.ModalWidget == this))
+							{
+								window.ModalWidget = null;
+							}
+						}
+					}
+				}
 			}
 		}
 		
@@ -569,13 +625,13 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual bool StartEdition()
 		{
-			if ((this.is_editing == false) &&
+			if ((this.IsEditing == false) &&
 				((this.defocus_action != DefocusAction.None) || (this.IsCombo)))
 			{
 				this.initial_text              = this.Text;
 				this.initial_text_display_mode = this.TextDisplayMode;
 				
-				this.is_editing = true;
+				this.IsEditing = true;
 				
 				if (this.textDisplayMode == TextDisplayMode.Proposal)
 				{
@@ -592,11 +648,12 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual bool AcceptEdition()
 		{
-			if (this.is_editing)
+			if (this.IsEditing)
 			{
+				this.IsEditing = false;
+				
 				this.OnEditionAccepted ();
 				
-				this.is_editing = false;
 				this.SelectAll ();
 				
 				return true;
@@ -607,14 +664,15 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual bool RejectEdition()
 		{
-			if (this.is_editing)
+			if (this.IsEditing)
 			{
+				this.IsEditing = false;
+				
 				this.OnEditionRejected ();
 				
 				this.Text            = this.InitialText;
 				this.TextDisplayMode = this.InitialTextDisplayMode;
 				
-				this.is_editing = false;
 				this.SelectAll ();
 				
 				return true;
@@ -1894,7 +1952,8 @@ namespace Epsitec.Common.Widgets
 		protected DefocusAction					defocus_action;
 		protected string						initial_text;
 		protected TextDisplayMode				initial_text_display_mode;
-		protected bool							is_editing;
+		private bool							is_editing;
+		private bool							is_modal;
 		protected bool							has_edited_text;
 		protected bool							swallow_return;
 		protected bool							swallow_escape;
