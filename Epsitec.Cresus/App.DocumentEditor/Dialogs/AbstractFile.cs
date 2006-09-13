@@ -835,6 +835,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			sel = this.table.SelectedRow;
 			bool enable = (sel != -1 && this.files[sel].Filename != Common.Document.Settings.GlobalSettings.NewEmptyDocument && !this.files[sel].IsShortcut);
+
+			if (string.Equals(this.initialFolder.FullPath, Document.DirectoryOriginalSamples, System.StringComparison.OrdinalIgnoreCase))
+			{
+				enable = false;
+			}
 			
 			this.renameState.Enable = enable;
 			this.deleteState.Enable = enable;
