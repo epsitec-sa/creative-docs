@@ -1057,6 +1057,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return;
 			}
 
+			this.focusedWidgetBeforeRename = this.window.FocusedWidget;
+
 			this.fieldRename.SetManualBounds(rect);
 			this.fieldRename.Text = this.files[sel].ShortFilename;
 			this.fieldRename.SelectAll();
@@ -1075,6 +1077,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return;
 			}
 
+			this.focusedWidgetBeforeRename.Focus();
+			this.focusedWidgetBeforeRename = null;
 			this.fieldRename.Visibility = false;
 
 			if (accepted && this.renameSelected != -1)
@@ -2078,6 +2082,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected int						tabIndex;
 		protected int						renameSelected = -1;
 		protected Widget					focusedWidget;
+		protected Widget					focusedWidgetBeforeRename;
 		protected bool						ignoreChanged = false;
 		protected List<FolderItem>			favoritesList;
 		protected int						favoritesFixes;
