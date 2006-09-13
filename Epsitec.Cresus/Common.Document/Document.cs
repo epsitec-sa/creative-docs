@@ -1378,7 +1378,7 @@ namespace Epsitec.Common.Document
 			}
 
 			string dir = System.IO.Path.GetDirectoryName(filename);
-			if (dir.ToLower() == Document.DirectoryOriginalSamples.ToLower())
+			if (string.Equals(dir, Document.DirectoryOriginalSamples, System.StringComparison.OrdinalIgnoreCase))
 			{
 				string file = System.IO.Path.GetFileName(filename);
 				filename = string.Concat(Document.DirectoryMySamples, "\\", file);
@@ -1395,7 +1395,7 @@ namespace Epsitec.Common.Document
 				return directory;
 			}
 
-			if (directory.ToLower() == Document.DirectoryOriginalSamples.ToLower())
+			if (string.Equals(directory, Document.DirectoryOriginalSamples, System.StringComparison.OrdinalIgnoreCase))
 			{
 				directory = Document.DirectoryMySamples;
 			}

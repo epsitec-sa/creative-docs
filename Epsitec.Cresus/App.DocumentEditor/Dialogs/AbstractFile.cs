@@ -769,9 +769,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						//	Filtre tout de suite les fichiers que l'on ne sait pas nous intéresser.
 						//	En effet, le nom du raccourci se termine par .crdoc.lnk s'il s'agit d'un
 						//	document .crdoc.
-						string name = item.FullPath.Substring(0, item.FullPath.Length-4);
+						string name = item.FullPath.Substring(0, item.FullPath.Length-4);  // nom sans .lnk
 
-						if (!string.Equals(name, this.fileExtension, System.StringComparison.OrdinalIgnoreCase))  // autre extension ?
+						if (!name.EndsWith(this.fileExtension))  // autre extension ?
 						{
 							continue;
 						}
