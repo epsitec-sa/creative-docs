@@ -42,7 +42,6 @@ namespace Epsitec.Common.Document.Settings
 			this.fineCursor = false;
 			this.splashScreen = true;
 			this.firstAction = FirstAction.OpenNewDocument;
-			this.newDocument = "";
 			this.lastModel = new System.Collections.ArrayList();
 			this.lastModelMax = 10;
 			this.lastFilename = new System.Collections.ArrayList();
@@ -57,6 +56,7 @@ namespace Epsitec.Common.Document.Settings
 			//	Suppose que le dossier des exemples est dans le même dossier
 			//	que l'application.
 			this.initialDirectory = Document.DirectoryOriginalSamples;
+			this.newDocument      = Document.DirectoryOriginalSamples;
 
 			this.colorCollection = new ColorCollection();
 			this.colorCollectionDirectory = "";
@@ -71,6 +71,7 @@ namespace Epsitec.Common.Document.Settings
 		{
 			//	Met tous les fichiers d'exemples dans la liste des 10 premiers
 			//	fichiers récents.
+#if false
 			string ext = "";
 			if ( type == DocumentType.Pictogram )
 			{
@@ -114,6 +115,7 @@ namespace Epsitec.Common.Document.Settings
 			{
 				this.newDocument = this.initialDirectory;
 			}
+#endif
 		}
 
 
@@ -276,6 +278,7 @@ namespace Epsitec.Common.Document.Settings
 
 		public string NewDocument
 		{
+			//	Dossier à utiliser pour les fichiers modèles (*.crmod).
 			get
 			{
 				return this.newDocument;
@@ -421,6 +424,7 @@ namespace Epsitec.Common.Document.Settings
 
 		public string InitialDirectory
 		{
+			//	Dossier à utiliser pour les fichiers documents (*.crdoc).
 			get
 			{
 				return this.initialDirectory;
