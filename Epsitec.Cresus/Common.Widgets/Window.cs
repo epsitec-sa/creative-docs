@@ -352,6 +352,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.window.ShowDialogWindow ();
+			this.DispatchQueuedCommands ();
 		}
 		
 		public virtual void Hide()

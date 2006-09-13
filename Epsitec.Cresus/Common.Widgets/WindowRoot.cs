@@ -230,7 +230,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (command != null)
 					{
-						window.QueueCommand (widget, command.CommandId);
+						window.QueueCommand (widget, command);
 						return true;
 					}
 					
@@ -239,7 +239,10 @@ namespace Epsitec.Common.Widgets
 						(shortcut.IsControlDefined == false) &&
 						(shortcut.IsShiftDefined == false))
 					{
-						window.QueueCommand (this, "Quit" + this.Window.Name);
+						if (string.IsNullOrEmpty (this.Window.Name) == false)
+						{
+							window.QueueCommand (this, "Quit" + this.Window.Name);
+						}
 						return true;
 					}
 				}
