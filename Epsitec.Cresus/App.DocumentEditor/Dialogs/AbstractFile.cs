@@ -836,7 +836,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.favoritesDownState.Enable = (sel >= 0 && sel < list.Count-1);
 
 			sel = this.table.SelectedRow;
-			bool enable = (sel != -1 && this.files[sel].Filename != Common.Document.Settings.GlobalSettings.NewEmptyDocument);
+			bool enable = (sel != -1 && this.files[sel].Filename != Common.Document.Settings.GlobalSettings.NewEmptyDocument && !this.files[sel].IsShortcut);
 			
 			this.renameState.Enable = enable;
 			this.deleteState.Enable = enable;
@@ -1078,7 +1078,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				string srcFilename, dstFilename;
 				string newText = TextLayout.ConvertToSimpleText(this.fieldRename.Text);
 
-				if (this.files[sel].IsDirectory && !this.files[sel].FolderItem.IsShortcut)
+				if (this.files[sel].IsDirectory)
 				{
 					srcFilename = this.files[sel].Filename;
 					dstFilename = string.Concat(System.IO.Path.GetDirectoryName(srcFilename), "\\", newText);
@@ -1674,7 +1674,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 					else
 					{
-						return this.folderItem.FullPath;
+						if (this.IsShortcut)
+						{
+							FolderItem item = FileManager.ResolveShortcut(this.folderItem, FolderQueryMode.NoIcons);
+							return item.FullPath;
+						}
+						else
+						{
+							return this.folderItem.FullPath;
+						}
 					}
 				}
 			}
@@ -1690,9 +1698,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 					else
 					{
-						if (this.folderItem.IsFolder || this.folderItem.IsShortcut)
+						if (this.IsDirectory)
 						{
 							return TextLayout.ConvertToTaggedText(this.folderItem.DisplayName);
+						}
+						else if (this.IsShortcut)
+						{
+							FolderItem item = FileManager.ResolveShortcut(this.folderItem, FolderQueryMode.NoIcons);
+							return TextLayout.ConvertToTaggedText(System.IO.Path.GetFileNameWithoutExtension(item.FullPath));
 						}
 						else
 						{
@@ -1711,7 +1724,33 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						return false;
 					}
 
+					return this.folderItem.IsFolder;
+				}
+			}
+
+			public bool IsDirectoryOrShortcut
+			{
+				get
+				{
+					if (this.isNewEmptyDocument)
+					{
+						return false;
+					}
+
 					return this.folderItem.IsFolder || this.folderItem.IsShortcut;
+				}
+			}
+
+			public bool IsShortcut
+			{
+				get
+				{
+					if (this.isNewEmptyDocument)
+					{
+						return false;
+					}
+
+					return this.folderItem.IsShortcut;
 				}
 			}
 
@@ -1733,7 +1772,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Taille du fichier en kilo-bytes.
 				get
 				{
-					if (this.isNewEmptyDocument || this.IsDirectory)
+					if (this.isNewEmptyDocument || this.IsDirectoryOrShortcut)
 					{
 						return "";
 					}
@@ -1760,9 +1799,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 					else
 					{
-						if (this.IsDirectory)
+						if (this.IsDirectoryOrShortcut)
 						{
-							//?return Res.Strings.Dialog.File.Directory;
 							return this.folderItem.TypeName;
 						}
 						else
@@ -1807,7 +1845,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 				else
 				{
-					if (this.IsDirectory)
+					if (this.IsDirectoryOrShortcut)
 					{
 						image = this.folderItem.Icon.Image;
 						icon = true;
@@ -1840,7 +1878,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 					else
 					{
-						if (this.IsDirectory)
+						if (this.IsDirectoryOrShortcut)
 						{
 							return null;
 						}
