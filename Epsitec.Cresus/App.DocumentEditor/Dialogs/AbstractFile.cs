@@ -275,11 +275,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			container.PreferredWidth = 111;
 			container.Dock = DockStyle.Left;
 			container.Margins = new Margins(0, 10, 0, 0);
+			container.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			Widget header = new Widget(container);
 			header.PreferredHeight = 20;
 			header.Dock = DockStyle.Top;
 			header.Margins = new Margins(0, 0, 0, 8);
+			header.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			this.favoritesExtend = new GlyphButton(header);
 			this.favoritesExtend.Dock = DockStyle.Left;
@@ -296,6 +298,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.favoritesToolbar.PreferredHeight = 22;
 			this.favoritesToolbar.Dock = DockStyle.Top;
 			this.favoritesToolbar.Margins = new Margins(0, 0, 0, 1);
+			this.favoritesToolbar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			IconButton buttonAdd = new IconButton(this.favoritesToolbar);
 			buttonAdd.CommandObject = this.favoritesAddState.Command;
@@ -372,6 +375,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			group.PreferredHeight = 20;
 			group.Margins = new Margins(0, 0, 0, 8);
 			group.Dock = DockStyle.Top;
+			group.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			this.fieldPath = new TextFieldCombo(group);
 			this.fieldPath.IsReadOnly = true;
@@ -380,6 +384,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fieldPath.ComboOpening += new EventHandler<CancelEventArgs>(this.HandleFieldPathComboOpening);
 			this.fieldPath.ComboClosed += new EventHandler(this.HandleFieldPathComboClosed);
 			this.fieldPath.TextChanged += new EventHandler(this.HandleFieldPathTextChanged);
+			this.fieldPath.TabIndex = this.tabIndex++;
+			this.fieldPath.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Il faut créer ces boutons dans l'ordre 'de droite à gauche' !
 			IconButton buttonDelete = new IconButton(group);
@@ -414,6 +420,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			group.PreferredHeight = 20;
 			group.Margins = new Margins(0, 0, 8, 0);
 			group.Dock = DockStyle.Bottom;
+			group.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			StaticText label = new StaticText(group);
 			label.Text = this.isModel ? Res.Strings.Dialog.Open.LabelMod : Res.Strings.Dialog.Open.LabelDoc;
@@ -423,6 +430,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fieldFilename = new TextField(group);
 			this.fieldFilename.Dock = DockStyle.Fill;
 			this.fieldFilename.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
+			this.fieldFilename.TabIndex = this.tabIndex++;
+			this.fieldFilename.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			TextField ext = new TextField(group);
 			ext.IsReadOnly = true;
@@ -439,6 +448,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			footer.PreferredHeight = 22;
 			footer.Margins = new Margins(0, 0, 8, 0);
 			footer.Dock = DockStyle.Bottom;
+			footer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			string ok;
 			if (this.isNewEmtpyDocument)
