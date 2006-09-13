@@ -1918,33 +1918,6 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual (w3, find[1]);
 		}
 		
-		[Test] public void CheckCommandName()
-		{
-			Widget w1 = new Widget (); w1.Name = "A"; w1.CommandLine = "a";
-			Widget w2 = new Widget (); w2.Name = "B"; w2.CommandLine = "b ()";  w2.SetParent (w1);
-			Widget w3 = new Widget (); w3.Name = "C"; w3.CommandLine = "c (1)"; w3.SetParent (w2);
-			
-			Assert.AreEqual ("a",     w1.CommandLine);
-			Assert.AreEqual ("b ()",  w2.CommandLine);
-			Assert.AreEqual ("c (1)", w3.CommandLine);
-			
-			Assert.AreEqual ("a", w1.CommandName);
-			Assert.AreEqual ("b", w2.CommandName);
-			Assert.AreEqual ("c", w3.CommandName);
-			
-			Assert.IsTrue (w1.HasCommand);
-			Assert.IsTrue (w2.HasCommand);
-			Assert.IsTrue (w3.HasCommand);
-			
-			Assert.AreEqual (w2, w1.FindChildByPath ("A.B"));
-			Assert.AreEqual (w3, w1.FindChildByPath ("A.B.C"));
-			
-			Widget[] find = w1.FindCommandWidgets ("b");
-			
-			Assert.AreEqual (1, find.Length);
-			Assert.AreEqual (w2, find[0]);
-		}
-		
 		[Test] public void CheckCommandState()
 		{
 			WidgetTest.open_state.Enable = ! WidgetTest.open_state.Enable;
@@ -1962,28 +1935,6 @@ namespace Epsitec.Common.Widgets
 			
 			Assert.AreEqual (w1, root.FindChild ("a"));
 			Assert.AreEqual (w3, root.FindChild ("b"));
-		}
-		
-		[Test] public void CheckFindChildBasedOnCommandName()
-		{
-			Widget root = new Widget ();
-			Widget w1 = new Widget ();	w1.CommandLine = "a";	w1.SetParent (root);
-			Widget w2 = new Widget ();						w2.SetParent (root);
-			Widget w3 = new Widget ();	w3.CommandLine = "b";	w3.SetParent (w2);
-			Widget w4 = new Widget ();	w4.CommandLine = "c";	w4.SetParent (w2);
-			Widget w5 = new Widget ();	w5.CommandLine = "d";	w5.SetParent (w4);
-			Widget w6 = new Widget ();	w6.Name = "e";		w6.SetParent (w1);
-			
-			Assert.AreEqual (w1, root.FindCommandWidgets ("a") [0]);
-			Assert.AreEqual (w3, root.FindCommandWidgets ("b") [0]);
-			Assert.AreEqual (w4, root.FindCommandWidgets ("c") [0]);
-			Assert.AreEqual (w5, root.FindCommandWidgets ("d") [0]);
-			
-			Assert.IsTrue (root.FindCommandWidgets ("e").Length == 0);
-			
-			Widget[] command_widgets = root.FindCommandWidgets ();
-			
-			Assert.AreEqual (4, command_widgets.Length);
 		}
 		
 		[Test] public void CheckColorSelector()

@@ -100,7 +100,10 @@ namespace Epsitec.Common.Document.Menus
 					name = Misc.Bold(name);
 				}
 
-				MenuItem item = new MenuItem("ZoomChange(this.Name)", icon, name, "", zm.zoom.ToString());
+				string cmd = "ZoomChange";
+				Misc.CreateStructuredCommandWithName (cmd);
+
+				MenuItem item = new MenuItem(cmd, icon, name, "", zm.zoom.ToString());
 
 				if ( message != null )
 				{

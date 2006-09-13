@@ -124,10 +124,11 @@ namespace Epsitec.Common.Document.Ribbons
 
 			for ( int i=0 ; i<total ; i++ )
 			{
-				string cmd = "LastModel(this.Name)";
+				string cmd = "LastModel";
 				string filename = string.Format("{0} {1}", (i+1)%10, this.globalSettings.LastModelGetShort(i));
 				string name = this.globalSettings.LastModelGet(i);
-				MenuItem item = new MenuItem(cmd, "", filename, "", name);
+				Misc.CreateStructuredCommandWithName (cmd);
+				MenuItem item = new MenuItem (cmd, "", filename, "", name);
 				menu.Items.Add(item);
 			}
 
@@ -145,10 +146,11 @@ namespace Epsitec.Common.Document.Ribbons
 
 			for ( int i=0 ; i<total ; i++ )
 			{
-				string cmd = "LastFile(this.Name)";
+				string cmd = "LastFile";
 				string filename = string.Format("{0} {1}", (i+1)%10, this.globalSettings.LastFilenameGetShort(i));
 				string name = this.globalSettings.LastFilenameGet(i);
-				MenuItem item = new MenuItem(cmd, "", filename, "", name);
+				Misc.CreateStructuredCommandWithName (cmd);
+				MenuItem item = new MenuItem (cmd, "", filename, "", name);
 				menu.Items.Add(item);
 			}
 

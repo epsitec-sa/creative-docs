@@ -513,7 +513,7 @@ namespace Epsitec.App.DocumentEditor
 			this.bookDocuments.Margins = new Margins(1, 0, 3, 1);
 			this.bookDocuments.Arrows = TabBookArrows.Right;
 			this.bookDocuments.HasCloseButton = true;
-			this.bookDocuments.CloseButton.CommandLine = "Close";
+			this.bookDocuments.CloseButton.CommandObject = Command.Get("Close");
 			this.bookDocuments.ActivePageChanged += new EventHandler(this.HandleBookDocumentsActivePageChanged);
 			ToolTip.Default.SetToolTip(this.bookDocuments.CloseButton, Res.Strings.Tooltip.TabBook.Close);
 
@@ -673,7 +673,7 @@ namespace Epsitec.App.DocumentEditor
 			ToolTip.Default.SetToolTip(quickPagePrev, DocumentEditor.GetRes("Action.PagePrev"));
 
 			di.quickPageMenu = new Button(hBand);
-			di.quickPageMenu.CommandLine = "PageMenu";
+			di.quickPageMenu.CommandObject = Command.Get("PageMenu");
 			di.quickPageMenu.Clicked += new MessageEventHandler(this.HandleQuickPageMenu);
 			di.quickPageMenu.PreferredWidth = System.Math.Floor(sw*2.0);
 			di.quickPageMenu.PreferredHeight = sw;
@@ -689,7 +689,7 @@ namespace Epsitec.App.DocumentEditor
 			ToolTip.Default.SetToolTip(quickPageNext, DocumentEditor.GetRes("Action.PageNext"));
 
 			Button quickPageNew = new Button(hBand);
-			quickPageNew.CommandLine = "PageNew";
+			quickPageNew.CommandObject = Command.Get("PageNew");
 			quickPageNew.Text = "<b>+</b>";
 			quickPageNew.PreferredWidth = sw;
 			quickPageNew.PreferredHeight = sw;
@@ -709,7 +709,7 @@ namespace Epsitec.App.DocumentEditor
 			vBand.Margins = new Margins(0, wm, 6+wm+tm, wm+sw+1);
 
 			Button quickLayerNew = new Button(vBand);
-			quickLayerNew.CommandLine = "LayerNew";
+			quickLayerNew.CommandObject = Command.Get("LayerNew");
 			quickLayerNew.Text = "<b>+</b>";
 			quickLayerNew.PreferredWidth = sw;
 			quickLayerNew.PreferredHeight = sw;
@@ -726,7 +726,7 @@ namespace Epsitec.App.DocumentEditor
 			ToolTip.Default.SetToolTip(quickLayerNext, DocumentEditor.GetRes("Action.LayerNext"));
 
 			di.quickLayerMenu = new Button(vBand);
-			di.quickLayerMenu.CommandLine = "LayerMenu";
+			di.quickLayerMenu.CommandObject = Command.Get("LayerMenu");
 			di.quickLayerMenu.Clicked += new MessageEventHandler(this.HandleQuickLayerMenu);
 			di.quickLayerMenu.PreferredWidth = sw;
 			di.quickLayerMenu.PreferredHeight = sw;
@@ -844,10 +844,10 @@ namespace Epsitec.App.DocumentEditor
 			for ( int i=0 ; i<menu.Items.Count ; i++ )
 			{
 				MenuItem item = menu.Items[i] as MenuItem;
-				if ( item.CommandLine == cmd )
+				if (item.CommandObject.CommandId == cmd)
 				{
 					item.Submenu = sub;
-					item.CommandLine = cmd;
+//?					item.CommandObject = Command.Get(cmd);
 					return;
 				}
 			}
@@ -1187,7 +1187,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ObjectDimension")]
 		void CommandTool(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.Tool = e.CommandName;
+			this.CurrentDocument.Modifier.Tool = e.Command.CommandId;
 			this.DispatchDummyMouseMoveEvent();
 		}
 
@@ -1783,14 +1783,14 @@ namespace Epsitec.App.DocumentEditor
 		[Command("LastFile")]
 		void CommandLastFile(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			string filename = e.CommandArgs[0];
+			string filename = StructuredCommand.GetFieldValue(e.CommandState, "Name") as string;
 			this.Open(filename);
 		}
 
 		[Command("LastModel")]
 		void CommandLastModel(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			string filename = e.CommandArgs[0];
+			string filename = StructuredCommand.GetFieldValue (e.CommandState, "Name") as string;
 			if (filename == GlobalSettings.NewEmptyDocument)  // nouveau document vide ?
 			{
 				this.CreateDocument();
@@ -1919,9 +1919,11 @@ namespace Epsitec.App.DocumentEditor
 		void CommandFind(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if ( !this.IsCurrentDocument )  return;
+			
+			string commandName = e.Command.CommandId;
 
-			bool isPrev = (e.CommandName == "FindPrev" || e.CommandName == "FindDefPrev");
-			bool isDef = (e.CommandName == "FindDefNext" || e.CommandName == "FindDefPrev");
+			bool isPrev = (commandName == "FindPrev" || commandName == "FindDefPrev");
+			bool isDef = (commandName == "FindDefNext" || commandName == "FindDefPrev");
 
 			if ( isDef )  // Ctrl-F3 ?
 			{
@@ -2113,7 +2115,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ParagraphClear")]
 		void CommandFont(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Wrappers.ExecuteCommand(e.CommandName, null);
+			this.CurrentDocument.Wrappers.ExecuteCommand(e.Command.CommandId, null);
 		}
 
 		[Command ("ParagraphLeading")]
@@ -2121,15 +2123,15 @@ namespace Epsitec.App.DocumentEditor
 		void CommandCombo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			IconButtonCombo combo = e.Source as IconButtonCombo;
-			CommandState cs = this.commandContext.GetCommandState(e.CommandName);
+			CommandState cs = this.commandContext.GetCommandState (e.Command.CommandId);
 			if ( combo != null && cs != null )
 			{
 				cs.AdvancedState = combo.SelectedName;
-				this.CurrentDocument.Wrappers.ExecuteCommand(e.CommandName, cs.AdvancedState);
+				this.CurrentDocument.Wrappers.ExecuteCommand (e.Command.CommandId, cs.AdvancedState);
 			}
 			else
 			{
-				this.CurrentDocument.Wrappers.ExecuteCommand(e.CommandName, null);
+				this.CurrentDocument.Wrappers.ExecuteCommand (e.Command.CommandId, null);
 			}
 		}
 
@@ -2193,7 +2195,9 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("UndoRedoListDo")]
 		void CommandUndoRedoListDo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			int nb = System.Convert.ToInt32(e.CommandArgs[0]);
+			string value = StructuredCommand.GetFieldValue (e.CommandState, "Name") as string;
+
+			int nb = System.Convert.ToInt32(value);
 			if ( nb > 0 )
 			{
 				this.CurrentDocument.Modifier.Undo(nb);
@@ -2539,7 +2543,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ShaperHandleContinue")]
 		void CommandShaperHandle(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.ShaperHandleCommand(e.CommandName);
+			this.CurrentDocument.Modifier.ShaperHandleCommand (e.Command.CommandId);
 		}
 
 		[Command ("BooleanOr")]
@@ -2784,7 +2788,8 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("SelectorStretchTypeDo")]
 		void CommandSelectorStretchTypeDo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			int nb = System.Convert.ToInt32(e.CommandArgs[0]);
+			string value = StructuredCommand.GetFieldValue (e.CommandState, "Name") as string;
+			int nb = System.Convert.ToInt32(value);
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 			viewer.SelectorTypeStretch = (SelectorTypeStretch) nb;
 		}
@@ -2893,7 +2898,8 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ZoomChange")]
 		void CommandZoomChange(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			double zoom = System.Convert.ToDouble(e.CommandArgs[0]);
+			string value = StructuredCommand.GetFieldValue (e.CommandState, "Name") as string;
+			double zoom = System.Convert.ToDouble(value);
 			this.CurrentDocument.Modifier.ZoomValue(zoom);
 		}
 
@@ -3134,7 +3140,8 @@ namespace Epsitec.App.DocumentEditor
 		void CommandPageSelect(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-			int sel = System.Convert.ToInt32(e.CommandArgs[0]);
+			string value = StructuredCommand.GetFieldValue (e.CommandState, "Name") as string;
+			int sel = System.Convert.ToInt32(value);
 			context.CurrentPage = sel;
 		}
 
@@ -3217,7 +3224,8 @@ namespace Epsitec.App.DocumentEditor
 		void CommandLayerSelect(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-			int sel = System.Convert.ToInt32(e.CommandArgs[0]);
+			string value = StructuredCommand.GetFieldValue (e.CommandState, "Name") as string;
+			int sel = System.Convert.ToInt32 (value);
 			context.CurrentLayer = sel;
 		}
 

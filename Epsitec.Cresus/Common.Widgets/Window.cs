@@ -1878,9 +1878,14 @@ namespace Epsitec.Common.Widgets
 				string    commandLine   = item.CommandLine;
 				Command   commandObject = item.CommandObject;
 
+				if (commandObject == null)
+				{
+					commandObject = Command.Get (commandLine);
+				}
+
 				System.Diagnostics.Debug.Assert (item.DispatcherChain.IsEmpty == false);
 				
-				CommandDispatcher.Dispatch (item.DispatcherChain, item.ContextChain, commandObject, commandLine, source);
+				CommandDispatcher.Dispatch (item.DispatcherChain, item.ContextChain, commandObject, source);
 			}
 			
 			if (this.is_dispose_queued)

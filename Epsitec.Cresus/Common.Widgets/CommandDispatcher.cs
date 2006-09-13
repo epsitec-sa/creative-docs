@@ -108,24 +108,6 @@ namespace Epsitec.Common.Widgets
 				return this.level;
 			}
 		}
-
-#if false //#fix
-		public bool								HasPendingMultipleCommands
-		{
-			get
-			{
-				return this.pending_commands.Peek () != null;
-			}
-		}
-		
-		public string							TopPendingMulitpleCommands
-		{
-			get
-			{
-				return this.pending_commands.Peek () as string;
-			}
-		}
-#endif
 		
 		public Support.OpletQueue				OpletQueue
 		{
@@ -143,101 +125,26 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public static void Dispatch(CommandDispatcherChain dispatcherChain, CommandContextChain contextChain, string commandLine, object source)
-		{
-			CommandDispatcher.Dispatch (dispatcherChain, contextChain, null, commandLine, source);
-		}
-
-		public static void Dispatch(CommandDispatcherChain dispatcherChain, CommandContextChain contextChain, Command commandObject, string commandLine, object source)
+		/// <summary>
+		/// Dispatches a command using the specified dispatcher and context chains.
+		/// </summary>
+		/// <param name="dispatcherChain">The dispatcher chain.</param>
+		/// <param name="contextChain">The context chain.</param>
+		/// <param name="commandObject">The command object.</param>
+		/// <param name="source">The source of the command.</param>
+		public static void Dispatch(CommandDispatcherChain dispatcherChain, CommandContextChain contextChain, Command commandObject, object source)
 		{
 			if (dispatcherChain != null)
 			{
 				foreach (CommandDispatcher dispatcher in dispatcherChain.Dispatchers)
 				{
-					if (dispatcher.InternalDispatch (contextChain, commandObject, commandLine, source))
+					if (dispatcher.InternalDispatchSingleCommand (contextChain, commandObject, source))
 					{
 						break;
 					}
 				}
 			}
 		}
-
-		public bool InternalDispatch(CommandContextChain contextChain, string commandLine, object source)
-		{
-			return this.InternalDispatch (contextChain, null, commandLine, source);
-		}
-
-		public bool InternalDispatch(CommandContextChain contextChain, Command commandObject, string commandLine, object source)
-		{
-			
-#if false //#fix
-			//	L'appelant peut spécifier une ou plusieurs commandes. Dans ce dernier cas, les
-			//	commandes sont chaînées au moyen du symbole "->" et elles sont exécutées dans
-			//	l'ordre. Une commande peut prendre connaissance des commandes encore en attente
-			//	d'exécution au moyen de XxxPendingMultipleCommands.
-			//
-			//	De cette façon, une commande interactive peut annuler les commandes en attente
-			//	et les exécuter soi-même lorsque l'utilisateur valide le dialogue, par exemple.
-			
-			if (command.IndexOf ("->") >= 0)
-			{
-				string[] commands = System.Utilities.Split (command, "->");
-				
-				System.Diagnostics.Debug.Assert (commands.Length > 0);
-				
-				while (commands.Length > 1)
-				{
-					command = string.Join ("->", commands, 1, commands.Length-1);
-					
-					try
-					{
-						this.pending_commands.Push (command);
-						this.DispatchSingleCommand (commands[0], source);
-					}
-					finally
-					{
-						command = this.pending_commands.Pop () as string;
-					}
-					
-					//	Si la commande a été annulée, on s'arrête immédiatement.
-					
-					if (command == null)
-					{
-						return;
-					}
-					
-					//	Il reste des commandes inexploitées. On va donc passer à la suite.
-					
-					commands = System.Utilities.Split (command, "->");
-				}
-			}
-#endif
-			bool handled = false;
-			
-#if true //#fix
-			handled = this.InternalDispatchSingleCommand (contextChain, commandObject, commandLine, source);
-#else
-			try
-			{
-				this.pending_commands.Push (null);
-				handled = this.InternalDispatchSingleCommand (command, source);
-			}
-			finally
-			{
-				this.pending_commands.Pop ();
-			}
-#endif
-
-			return handled;
-		}
-		
-#if false //#fix
-		public void InternalCancelTopPendingMultipleCommands()
-		{
-			this.pending_commands.Pop ();
-			this.pending_commands.Push (null);
-		}
-#endif
 		
 		
 		public void RegisterController(object controller)
@@ -245,217 +152,51 @@ namespace Epsitec.Common.Widgets
 			if (controller != null)
 			{
 				System.Type type = controller.GetType ();
-				System.Reflection.MemberInfo[] members = type.GetMembers (System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
 				
-				for (int i = 0; i < members.Length; i++)
+				foreach (System.Reflection.MemberInfo member in type.GetMembers (System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic))
 				{
-					if ((members[i].IsDefined (CommandDispatcher.commandAttributeType, true)) &&
-						(members[i].MemberType == System.Reflection.MemberTypes.Method))
+					if ((member.IsDefined (CommandDispatcher.commandAttributeType, true)) &&
+						(member.MemberType == System.Reflection.MemberTypes.Method))
 					{
-						System.Reflection.MethodInfo info = members[i] as System.Reflection.MethodInfo;
+						System.Reflection.MethodInfo info = member as System.Reflection.MethodInfo;
 						this.RegisterMethod (controller, info);
 					}
 				}
 			}
 		}
 
-		public void Register(Command command, CommandEventHandler handler)
-		{
-			this.Register (command.CommandId, handler);
-		}
-
 		public void Register(Command command, Support.SimpleCallback handler)
 		{
-			this.Register (command.CommandId, delegate (CommandDispatcher d, CommandEventArgs e) { handler (); });
+			this.Register (command, delegate (CommandDispatcher d, CommandEventArgs e) { handler (); });
 		}
 
-		public void Register(string commandName, CommandEventHandler handler)
+		public void Register(Command command, CommandEventHandler handler)
 		{
-			System.Diagnostics.Debug.Assert (commandName.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + commandName + "' may not contain a '*' in its name.\nPlease fix the registration source code.");
-			System.Diagnostics.Debug.Assert (commandName.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + commandName + "' may not contain a '.' in its name.\nPlease fix the registration source code.");
-			
 			EventSlot slot;
 			
-			if (this.eventHandlers.TryGetValue (commandName, out slot) == false)
+			if (this.eventHandlers.TryGetValue (command, out slot) == false)
 			{
-				slot = new EventSlot (commandName);
-				this.eventHandlers[commandName] = slot;
+				slot = new EventSlot (command);
+				this.eventHandlers[command] = slot;
 			}
 			
 			slot.Register (handler);
 		}
 		
-		public void Unregister(string commandName, CommandEventHandler handler)
+		public void Unregister(Command command, CommandEventHandler handler)
 		{
 			EventSlot slot;
 			
-			if (this.eventHandlers.TryGetValue (commandName, out slot))
+			if (this.eventHandlers.TryGetValue (command, out slot))
 			{
 				slot.Unregister (handler);
 				
-				if (slot.Count == 0)
+				if (slot.IsEmpty)
 				{
-					this.eventHandlers.Remove (commandName);
+					this.eventHandlers.Remove (command);
 				}
 			}
 		}
-		
-		public void Register(ICommandDispatcher extra)
-		{
-			if (this.extraDispatchers == null)
-			{
-				this.extraDispatchers = new List<ICommandDispatcher> ();
-			}
-			
-			this.extraDispatchers.Add (extra);
-		}
-		
-		public void Unregister(ICommandDispatcher extra)
-		{
-			if (this.extraDispatchers != null)
-			{
-				this.extraDispatchers.Remove (extra);
-				
-				if (this.extraDispatchers.Count == 0)
-				{
-					this.extraDispatchers = null;
-				}
-			}
-		}
-		
-		public static bool IsSimpleCommand(string commandName)
-		{
-			if (string.IsNullOrEmpty (commandName))
-			{
-				return true;
-			}
-			
-			int pos = commandName.IndexOf ('(');
-			return (pos < 0) ? true : false;
-		}
-		
-		
-		public static string   ExtractCommandName(string commandName)
-		{
-			if (string.IsNullOrEmpty (commandName))
-			{
-				return null;
-			}
-			
-			int pos = commandName.IndexOf ('(');
-			
-			if (pos >= 0)
-			{
-				commandName = commandName.Substring (0, pos);
-			}
-			
-			commandName = commandName.Trim ();
-			
-			if (commandName.Length == 0)
-			{
-				return null;
-			}
-			else
-			{
-				return commandName;
-			}
-		}
-		
-		public static string[] ExtractCommandArgs(string commandName)
-		{
-			if (string.IsNullOrEmpty (commandName))
-			{
-				return new string[0];
-			}
-			
-			int pos = commandName.IndexOf ('(');
-			
-			if (pos < 0)
-			{
-				return new string[0];
-			}
-			
-			Match match = CommandDispatcher.commandArgRegex.Match (commandName);
-			
-			if ((match.Success) &&
-				(match.Groups.Count == 3))
-			{
-				int      n    = match.Groups[2].Captures.Count;
-				string[] args = new string[n];
-				
-				for (int i = 0; i < n; i++)
-				{
-					args[i] = match.Groups[2].Captures[i].Value;
-				}
-				
-				return args;
-			}
-			
-			throw new System.FormatException (string.Format ("Command '{0}' is not well formed.", commandName));
-		}
-		
-		public static string[] ExtractAndParseCommandArgs(string commandLine, object source)
-		{
-			string[] args = CommandDispatcher.ExtractCommandArgs (commandLine);
-			
-			for (int i = 0; i < args.Length; i++)
-			{
-				string arg   = args[i];
-				Match  match = Support.RegexFactory.InvariantDecimalNum.Match (arg);
-				
-				if (match.Success)
-				{
-					//	C'est une valeur numérique proprement formatée. On la garde telle
-					//	quelle.
-				}
-				else if ((arg[0] == '\'') || (arg[0] == '\"'))
-				{
-					//	C'est un texte entre guillemets. On supprime le premier et le dernier
-					//	caractère.
-					
-					System.Diagnostics.Debug.Assert (arg.Length > 1);
-					System.Diagnostics.Debug.Assert (arg[arg.Length-1] == arg[0]);
-					
-					arg = arg.Substring (1, arg.Length - 2);
-				}
-				else
-				{
-					//	Ce n'est ni une valeur numérique, ni un texte; c'est probablement un
-					//	symbole que l'on va passer tel quel plus loin, sauf si c'est une
-					//	expression commençant par 'this.'.
-					
-					if (arg.StartsWith ("this."))
-					{
-						//	L'argument décrit une propriété de la source. On va tenter d'aller
-						//	lire la source.
-						
-						System.Reflection.PropertyInfo info;
-						System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.GetProperty
-							/**/							 | System.Reflection.BindingFlags.Instance
-							/**/							 | System.Reflection.BindingFlags.Public;
-						
-						string prop_name = arg.Substring (5);
-						System.Type type = source.GetType ();
-						
-						info = type.GetProperty (prop_name, flags);
-						
-						if (info == null)
-						{
-							throw new System.FieldAccessException (string.Format ("Command {0} tries to access property {1} which cannot be found in class {2}.", commandLine, prop_name, type.Name));
-						}
-						
-						object data = info.GetValue (source, null);
-						
-						arg = data.ToString ();
-					}
-				}
-				
-				args[i] = arg;
-			}
-			
-			return args;
-		}
-		
 		
 		
 		protected override void Dispose(bool disposing)
@@ -515,32 +256,30 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region EventSlot class
-		protected class EventSlot : ICommandDispatcher
+		private sealed class EventSlot : ICommandDispatcher
 		{
-			public EventSlot(string name)
+			public EventSlot(Command command)
 			{
-				this.name = name;
+				this.command = command;
 			}
 			
 			
 			public void Register(CommandEventHandler handler)
 			{
-				this.command += handler;
-				this.count++;
+				this.handler += handler;
 			}
 			
 			public void Unregister(CommandEventHandler handler)
 			{
-				this.command -= handler;
-				this.count--;
+				this.handler -= handler;
 			}
 			
 			
 			public bool DispatchCommand(CommandDispatcher sender, CommandEventArgs e)
 			{
-				if (this.command != null)
+				if (this.handler != null)
 				{
-					this.command (sender, e);
+					this.handler (sender, e);
 					return true;
 				}
 				
@@ -548,20 +287,17 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			public int							Count
+			public bool							IsEmpty
 			{
-				get { return this.count; }
+				get
+				{
+					return this.handler == null;
+				}
 			}
 			
-			public string						Name
-			{
-				get { return this.name; }
-			}
 			
-			
-			protected string					name;
-			protected event CommandEventHandler	command;
-			protected int						count;
+			private Command						command;
+			private event CommandEventHandler	handler;
 		}
 		#endregion
 		
@@ -629,31 +365,18 @@ namespace Epsitec.Common.Widgets
 				throw new System.FormatException (string.Format ("{0}.{1} uses invalid signature: {2}.", controller.GetType ().Name, method_info.Name, method_info.ToString ()));
 			}
 			
-			this.Register (attribute.CommandName, handler);
+			this.Register (Command.Get (attribute.CommandName), handler);
 			
 		}
 
 
-		protected bool InternalDispatchSingleCommand(CommandContextChain contextChain, Command commandObject, string commandLine, object source)
+		protected bool InternalDispatchSingleCommand(CommandContextChain contextChain, Command commandObject, object source)
 		{
 			//	Transmet la commande à ceux qui sont intéressés
 
-			if ((commandLine == null) &&
-				(commandObject != null))
-			{
-				commandLine = commandObject.CommandId;
-			}
-			
-			string commandName = CommandDispatcher.ExtractCommandName (commandLine);
-			
-			if (string.IsNullOrEmpty (commandName))
-			{
-				return false;
-			}
-
 			if (commandObject == null)
 			{
-				commandObject = Command.Find (commandName);
+				return false;
 			}
 			
 			CommandContext commandContext;
@@ -663,8 +386,7 @@ namespace Epsitec.Common.Widgets
 
 		again:
 			
-			if ((commandObject == null) ||
-				(commandObject.IsReadWrite))
+			if (commandObject.IsReadWrite)
 			{
 				//	The command will always be considered to be "enabled" if it
 				//	has never been defined as such or if no command state has ever
@@ -695,23 +417,14 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			string[] commandElements = commandName.Split ('/');
-			int      commandLength   = commandElements.Length;
-			string[] commandArgs     = CommandDispatcher.ExtractAndParseCommandArgs (commandLine, source);
-			
-			System.Diagnostics.Debug.Assert (commandLength == 1);
-			System.Diagnostics.Debug.Assert (commandName.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + commandLine + "' may not contain a '*' in its name.\nPlease fix the command name definition source code.");
-			System.Diagnostics.Debug.Assert (commandName.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + commandLine + "' may not contain a '.' in its name.\nPlease fix the command name definition source code.");
-
-			CommandEventArgs e = new CommandEventArgs (source, commandObject, commandArgs, commandContext, commandState);
+			CommandEventArgs e = new CommandEventArgs (source, commandObject, commandContext, commandState);
 
 			EventSlot slot;
 			int handled = 0;
 			
-			
-			if (this.eventHandlers.TryGetValue (commandName, out slot))
+			if (this.eventHandlers.TryGetValue (commandObject, out slot))
 			{
-				System.Diagnostics.Debug.WriteLine ("Command '" + commandName + "' fired.");
+				System.Diagnostics.Debug.WriteLine ("Command '" + commandObject.CommandId + "' (" + commandObject.Name + ") fired.");
 				
 				if (slot.DispatchCommand (this, e))
 				{
@@ -719,20 +432,6 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			if ((this.extraDispatchers != null) &&
-				(this.extraDispatchers.Count > 0))
-			{
-				ICommandDispatcher[] extra = this.extraDispatchers.ToArray ();
-				
-				for (int i = 0; i < extra.Length; i++)
-				{
-					if (extra[i].DispatchCommand (this, e))
-					{
-						handled++;
-					}
-				}
-			}
-			
 			if (handled == 0)
 			{
 				if (loopCounter++ > 10)
@@ -747,14 +446,11 @@ namespace Epsitec.Common.Widgets
 
 					if (commandObject != null)
 					{
-						commandName = commandObject.CommandId;
-						commandLine = commandName;
-
 						goto again;
 					}
 				}
-				
-				System.Diagnostics.Debug.WriteLine ("Command '" + commandName + "' not handled.");
+
+				System.Diagnostics.Debug.WriteLine ("Command '" + commandObject.CommandId + "' (" + commandObject.Name + ") not handled.");
 				return false;
 			}
 			else
@@ -766,7 +462,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					System.Diagnostics.Debug.WriteLine ("Command '" + commandName + "' handled but not marked as executed.");
+					System.Diagnostics.Debug.WriteLine ("Command '" + commandObject.CommandId + "' (" + commandObject.Name + ") handled; not marked as executed.");
 					return false;
 				}
 			}
@@ -816,9 +512,7 @@ namespace Epsitec.Common.Widgets
 		private CommandDispatcherLevel			level;
 		private long							id;
 
-		protected Dictionary<string, EventSlot> eventHandlers    = new Dictionary<string, EventSlot> ();
-//#		protected System.Collections.Stack		pending_commands  = new System.Collections.Stack ();
-		protected List<ICommandDispatcher>		extraDispatchers;
+		private Dictionary<Command, EventSlot>	eventHandlers = new Dictionary<Command, EventSlot> ();
 		
 		protected Support.OpletQueue			opletQueue;
 		

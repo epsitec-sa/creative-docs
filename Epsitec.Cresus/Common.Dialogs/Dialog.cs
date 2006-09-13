@@ -107,8 +107,39 @@ namespace Epsitec.Common.Dialogs
 				return Dialog.factory;
 			}
 		}
-		
-		
+
+		public static Command					ValidateDialogCommand
+		{
+			get
+			{
+				return Command.Get ("ValidateDialog");
+			}
+		}
+
+		public static Command					ValidateDialogYesCommand
+		{
+			get
+			{
+				return Command.Get ("ValidateNoDialog");
+			}
+		}
+
+		public static Command					ValidateDialogNoCommand
+		{
+			get
+			{
+				return Command.Get ("ValidateYesDialog");
+			}
+		}
+
+		public static Command					QuitDialogCommand
+		{
+			get
+			{
+				return Command.Get ("QuitDialog");
+			}
+		}
+
 		public void Load()
 		{
 			this.Load (this.name);

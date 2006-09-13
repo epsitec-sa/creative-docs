@@ -762,7 +762,24 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		static public Command CreateStructuredCommandWithName(string commandName)
+		{
+			Command command = Command.Find (commandName);
 
+			if ((command == null) ||
+				(command.CommandType == CommandType.Standard))
+			{
+				command = Command.Get (commandName);
+				Command.SetCommandType (command.Caption, CommandType.Structured);
+				
+				Types.StructuredType type = command.StructuredType;
+				
+				type.AddField ("Name", new Types.StringType ());
+			}
+
+			return command;
+		}
+		
 		static public string FullName(string filename, bool dirtySerialize)
 		{
 			//	Donne le nom complet du fichier.

@@ -78,19 +78,19 @@ namespace Epsitec.Common.Script.Developer
 			
 			this.compile_button = new Button ();
 			this.compile_button.Text = "Compile";
-			this.compile_button.CommandLine = "CompileSourceCode";
+			this.compile_button.CommandObject = Command.Get ("CompileSourceCode");
 			this.compile_button.Shortcuts.Add (new Shortcut (KeyCode.FuncF7));
 			
 			this.find_prev_error_button = new Button ();
 			this.find_prev_error_button.PreferredWidth = 20;
 			this.find_prev_error_button.Text = "&lt;";
-			this.find_prev_error_button.CommandLine = "FindNextError(-1)";
+			this.find_prev_error_button.CommandObject = Command.Get ("FindPrevError");
 			this.find_prev_error_button.Shortcuts.Add (new Shortcut (KeyCode.FuncF8 | KeyCode.ModifierShift));
 			
 			this.find_next_error_button = new Button ();
 			this.find_next_error_button.PreferredWidth = 20;
 			this.find_next_error_button.Text = "&gt;";
-			this.find_next_error_button.CommandLine = "FindNextError(1)";
+			this.find_next_error_button.CommandObject = Command.Get ("FindNextError");
 			this.find_next_error_button.Shortcuts.Add (new Shortcut (KeyCode.FuncF8));
 			
 			this.panel.Widget.SetParent (page);
@@ -485,19 +485,20 @@ namespace Epsitec.Common.Script.Developer
 			this.FindNextError (1);
 		}
 		
+		[Command ("FindPrevError")]		void CommandFindPrevError(CommandDispatcher d, CommandEventArgs e)
+		{
+			this.FocusSource ();
+			this.SyncFromUI ();
+			
+			this.FindNextError (-1);
+		}
+
 		[Command ("FindNextError")]		void CommandFindNextError(CommandDispatcher d, CommandEventArgs e)
 		{
 			this.FocusSource ();
 			this.SyncFromUI ();
 			
-			int dir = 1;
-			
-			if (e.CommandArgs.Length >= 1)
-			{
-				Types.InvariantConverter.Convert (e.CommandArgs[0], out dir);
-			}
-			
-			this.FindNextError (dir);
+			this.FindNextError (1);
 		}
 
 		

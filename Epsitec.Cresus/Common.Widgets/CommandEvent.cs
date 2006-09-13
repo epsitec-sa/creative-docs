@@ -9,11 +9,10 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class CommandEventArgs : System.EventArgs
 	{
-		public CommandEventArgs(object source, Command command, string[] args, CommandContext context, CommandState state)
+		public CommandEventArgs(object source, Command command, CommandContext context, CommandState state)
 		{
 			this.source  = source;
 			this.command = command;
-			this.args    = args;
 			this.context = context;
 			this.state   = state;
 		}
@@ -32,22 +31,6 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.command;
-			}
-		}
-		
-		public string							CommandName
-		{
-			get
-			{
-				return this.command.CommandId;
-			}
-		}
-		
-		public string[]							CommandArgs
-		{
-			get
-			{
-				return this.args;
 			}
 		}
 		
@@ -82,7 +65,6 @@ namespace Epsitec.Common.Widgets
 		
 		private object							source;
 		private Command							command;
-		private string[]						args;
 		private CommandContext					context;
 		private CommandState					state;
 		private bool							executed;

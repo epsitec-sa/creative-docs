@@ -97,25 +97,25 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorAuto = new IconButton(Misc.Icon("SelectorAuto"));
 			this.selectorAuto.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorAuto);
-			this.selectorAuto.CommandLine = "SelectorAuto";
+			this.selectorAuto.CommandObject = Command.Get("SelectorAuto");
 			ToolTip.Default.SetToolTip(this.selectorAuto, Res.Strings.Container.Principal.Button.Auto);
 			
 			this.selectorIndividual = new IconButton(Misc.Icon("SelectorIndividual"));
 			this.selectorIndividual.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorIndividual);
-			this.selectorIndividual.CommandLine = "SelectorIndividual";
+			this.selectorIndividual.CommandObject = Command.Get("SelectorIndividual");
 			ToolTip.Default.SetToolTip(this.selectorIndividual, Res.Strings.Container.Principal.Button.Individual);
 			
 			this.selectorScaler = new IconButton(Misc.Icon("SelectorScaler"));
 			this.selectorScaler.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorScaler);
-			this.selectorScaler.CommandLine = "SelectorScaler";
+			this.selectorScaler.CommandObject = Command.Get("SelectorScaler");
 			ToolTip.Default.SetToolTip(this.selectorScaler, Res.Strings.Container.Principal.Button.Scaler);
 			
 			this.selectorStretch = new IconButton(Misc.Icon("SelectorStretch"));
 			this.selectorStretch.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorStretch);
-			this.selectorStretch.CommandLine = "SelectorStretch";
+			this.selectorStretch.CommandObject = Command.Get("SelectorStretch");
 			this.selectorStretch.Name = "SelectorStretch";
 			ToolTip.Default.SetToolTip(this.selectorStretch, Res.Strings.Container.Principal.Button.Stretch);
 
@@ -135,13 +135,13 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorTotal = new IconButton(Misc.Icon("SelectTotal"));
 			this.selectorTotal.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorTotal);
-			this.selectorTotal.CommandLine = "SelectTotal";
+			this.selectorTotal.CommandObject = Command.Get("SelectTotal");
 			ToolTip.Default.SetToolTip(this.selectorTotal, Res.Strings.Container.Principal.Button.Total);
 			
 			this.selectorPartial = new IconButton(Misc.Icon("SelectPartial"));
 			this.selectorPartial.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorPartial);
-			this.selectorPartial.CommandLine = "SelectPartial";
+			this.selectorPartial.CommandObject = Command.Get("SelectPartial");
 			ToolTip.Default.SetToolTip(this.selectorPartial, Res.Strings.Container.Principal.Button.Partial);
 
 			this.selectorToolBar.Items.Add(new IconSeparator());
@@ -149,13 +149,13 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorAdaptLine = new IconButton(Misc.Icon("SelectorAdaptLine"));
 			this.selectorAdaptLine.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorAdaptLine);
-			this.selectorAdaptLine.CommandLine = "SelectorAdaptLine";
+			this.selectorAdaptLine.CommandObject = Command.Get("SelectorAdaptLine");
 			ToolTip.Default.SetToolTip(this.selectorAdaptLine, Res.Strings.Container.Principal.Button.AdaptLine);
 			
 			this.selectorAdaptText = new IconButton(Misc.Icon("SelectorAdaptText"));
 			this.selectorAdaptText.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorAdaptText);
-			this.selectorAdaptText.CommandLine = "SelectorAdaptText";
+			this.selectorAdaptText.CommandObject = Command.Get("SelectorAdaptText");
 			ToolTip.Default.SetToolTip(this.selectorAdaptText, Res.Strings.Container.Principal.Button.AdaptText);
 		}
 
@@ -437,7 +437,7 @@ namespace Epsitec.Common.Document.Containers
 					{
 						Button button = new Button();
 						button.PreferredHeight = 40;
-						button.CommandLine = cmd;
+						button.CommandObject = Command.Get(cmd);
 						button.Name = name;
 						button.Text = text;
 						button.ContentAlignment = ContentAlignment.MiddleLeft;
@@ -860,7 +860,11 @@ namespace Epsitec.Common.Document.Containers
 			//	Crée une case du menu des actions à refaire/annuler.
 			string icon = Principal.GetSelectorTypeStretchIcon(type);
 			string name = ((int)type).ToString();
-			MenuItem item = new MenuItem("SelectorStretchTypeDo(this.Name)", icon, text, "", name);
+			string cmd  = "SelectorStretchTypeDo";
+			
+			Misc.CreateStructuredCommandWithName (cmd);
+
+			MenuItem item = new MenuItem(cmd, icon, text, "", name);
 
 			if ( message != null )
 			{

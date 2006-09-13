@@ -141,7 +141,7 @@ namespace Epsitec.Common.Script
 		#region ICommandDispatcher Members
 		bool ICommandDispatcher.DispatchCommand(CommandDispatcher sender, CommandEventArgs e)
 		{
-			return this.Execute (e.CommandName, e.CommandArgs);
+			return this.Execute (e.Command.Name, new string[0]);
 		}
 		#endregion
 		

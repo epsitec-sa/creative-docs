@@ -2030,44 +2030,6 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 		
-		public Widget[]	        FindCommandWidgets()
-		{
-			//	Passe en revue tous les widgets de la descendance et accumule
-			//	ceux qui sont des widgets de commande.
-			
-			CommandWidgetFinder finder = new CommandWidgetFinder ();
-			
-			this.WalkChildren (new WidgetWalkChildrenCallback (finder.Analyse));
-			
-			return finder.Widgets;
-		}
-		
-		public Widget[]	        FindCommandWidgets(string command)
-		{
-			//	Passe en revue tous les widgets de la descendance et accumule
-			//	ceux qui sont des widgets de commande qui correspondent au critère
-			//	de recherche.
-			
-			CommandWidgetFinder finder = new CommandWidgetFinder (command);
-			
-			this.WalkChildren (new WidgetWalkChildrenCallback (finder.Analyse));
-			
-			return finder.Widgets;
-		}
-		
-		public Widget[]	        FindCommandWidgets(System.Text.RegularExpressions.Regex regex)
-		{
-			//	Passe en revue tous les widgets de la descendance et accumule
-			//	ceux qui sont des widgets de commande qui correspondent au critère
-			//	de recherche.
-			
-			CommandWidgetFinder finder = new CommandWidgetFinder (regex);
-			
-			this.WalkChildren (new WidgetWalkChildrenCallback (finder.Analyse));
-			
-			return finder.Widgets;
-		}
-		
 		public Widget	        FindCommandWidget(string command)
 		{
 			//	Passe en revue tous les widgets de la descendance et retourne le
@@ -2910,25 +2872,23 @@ namespace Epsitec.Common.Widgets
 				if (window != null)
 				{
 					Command commandObject = this.CommandObject;
-					string  commandLine   = this.CommandLine;
-
+					
 					if (commandObject == null)
 					{
-						if (string.IsNullOrEmpty (commandLine))
-						{
-							//	Command cannot be queued !
-						}
-						else
-						{
-							window.QueueCommand (this, commandLine);
-						}
+						//	Command cannot be queued !
 					}
 					else
 					{
-						window.QueueCommand (this, commandObject);
+						CommandState state = Helpers.VisualTree.GetCommandContext (this).GetCommandState (commandObject);
+						this.QueueCommandForExecution (window, commandObject, state);
 					}
 				}
 			}
+		}
+
+		protected virtual void QueueCommandForExecution(Window window, Command command, CommandState state)
+		{
+			window.QueueCommand (this, command);
 		}
 		
 		internal void ExecuteCommand(string command)

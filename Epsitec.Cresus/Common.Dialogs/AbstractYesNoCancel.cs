@@ -69,7 +69,7 @@ namespace Epsitec.Common.Dialogs
 			button1               = new Button (this.window.Root);
 			button1.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 3*75 - 3*8, 16, 75, button1.PreferredHeight));
 			button1.Text          = Widgets.Res.Strings.Dialog.Button.Yes;
-			button1.CommandLine       = "ValidateDialogYes";
+			button1.CommandObject = Dialog.ValidateDialogYesCommand;
 			button1.TabIndex      = 2;
 			button1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			button1.ButtonStyle   = ButtonStyle.DefaultAccept;
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Dialogs
 			button2               = new Button (this.window.Root);
 			button2.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 2*75 - 2*8, 16, 75, button2.PreferredHeight));
 			button2.Text          = Widgets.Res.Strings.Dialog.Button.No;
-			button2.CommandLine       = "ValidateDialogNo";
+			button2.CommandObject = Dialog.ValidateDialogNoCommand;
 			button2.TabIndex      = 3;
 			button2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Dialogs
 				button3.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 1*75 - 1*8, 16, 75, button3.PreferredHeight));
 				button3.Text          = Widgets.Res.Strings.Dialog.Button.Cancel;
 				button3.Name          = "Cancel";
-				button3.CommandLine       = "QuitDialog";
+				button3.CommandObject = Dialog.QuitDialogCommand;
 				button3.TabIndex      = 4;
 				button3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				button3.ButtonStyle   = ButtonStyle.DefaultCancel;

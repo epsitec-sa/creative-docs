@@ -2171,8 +2171,10 @@ namespace Epsitec.Common.Document
 			if ( active == 2 )  icon = Misc.Icon("ActiveCurrent");
 
 			string name = string.Format("{0}: {1}", rank.ToString(), action);
+			string cmd = "UndoRedoListDo";
+			Misc.CreateStructuredCommandWithName (cmd);
 
-			MenuItem item = new MenuItem("UndoRedoListDo(this.Name)", icon, name, "", todo.ToString());
+			MenuItem item = new MenuItem(cmd, icon, name, "", todo.ToString());
 
 			if ( message != null )
 			{
