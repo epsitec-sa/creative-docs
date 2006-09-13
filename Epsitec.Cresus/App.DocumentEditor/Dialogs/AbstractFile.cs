@@ -343,7 +343,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.TabIndex = this.tabIndex++;
 			this.table.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.table.DoubleClicked += new MessageEventHandler(this.HandleTableDoubleClicked);
-			this.table.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleKeyboardFocusChanged);
+			this.table.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
 		}
 
 		protected void CreateRename()
@@ -355,7 +355,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fieldRename.ButtonShowCondition = ShowCondition.Always;
 			this.fieldRename.EditionAccepted += new EventHandler(this.HandleRenameAccepted);
 			this.fieldRename.EditionRejected += new EventHandler(this.HandleRenameRejected);
-			this.fieldRename.IsFocusedChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleRenameFocusChanged);
+			this.fieldRename.IsFocusedChanged += this.HandleRenameFocusChanged;
+			this.fieldRename.SwallowEscape = true;
+			this.fieldRename.SwallowReturn = true;
 		}
 
 		protected void CreateAccess()
@@ -415,7 +417,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.fieldFilename = new TextField(group);
 			this.fieldFilename.Dock = DockStyle.Fill;
-			this.fieldFilename.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleKeyboardFocusChanged);
+			this.fieldFilename.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
 
 			TextField ext = new TextField(group);
 			ext.IsReadOnly = true;
@@ -1055,9 +1057,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return;
 			}
 
-			this.buttonOK.ButtonStyle = ButtonStyle.Normal;
-			this.buttonCancel.ButtonStyle = ButtonStyle.Normal;  // TODO: ne fonctionne pas !
-
 			this.fieldRename.SetManualBounds(rect);
 			this.fieldRename.Text = this.files[sel].ShortFilename;
 			this.fieldRename.SelectAll();
@@ -1077,9 +1076,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			this.fieldRename.Visibility = false;
-
-			this.buttonOK.ButtonStyle = ButtonStyle.DefaultAccept;
-			this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 
 			if (accepted && this.renameSelected != -1)
 			{
