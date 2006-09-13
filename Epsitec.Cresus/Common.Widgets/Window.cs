@@ -1448,6 +1448,7 @@ namespace Epsitec.Common.Widgets
 				
 		internal void NotifyWindowFocused()
 		{
+			System.Diagnostics.Debug.WriteLine ("Window focused");
 			if (this.window_is_focused == false)
 			{
 				if (this.focused_widget != null)
@@ -1466,6 +1467,7 @@ namespace Epsitec.Common.Widgets
 		
 		internal void NotifyWindowDefocused()
 		{
+			System.Diagnostics.Debug.WriteLine ("Window de-focused");
 			if ((this.window_is_focused == true) &&
 				(this.IsSubmenuOpen == false))
 			{

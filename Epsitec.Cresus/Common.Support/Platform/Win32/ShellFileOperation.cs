@@ -228,6 +228,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			fileOpStruct.hNameMappings = System.IntPtr.Zero;
 
 			bool enable = false;
+			bool focus  = false;
 			
 			if ((fileOpStruct.hwnd != System.IntPtr.Zero) &&
 				(fileOpStruct.hwnd != ShellApi.GetDesktopWindow ()) &&
@@ -236,8 +237,9 @@ namespace Epsitec.Common.Support.Platform.Win32
 				//	Disable the owner window before we start working, as SHFileOperation
 				//	won't really block the UI while working.
 				
-				ShellApi.EnableWindow (fileOpStruct.hwnd, false);
 				enable = true;
+				focus  = ShellApi.GetFocus () == fileOpStruct.hwnd;
+				ShellApi.EnableWindow (fileOpStruct.hwnd, false);
 			}
 
 			int retVal;
@@ -253,6 +255,10 @@ namespace Epsitec.Common.Support.Platform.Win32
 					//	Restore the window enable, if required.
 					
 					ShellApi.EnableWindow (fileOpStruct.hwnd, true);
+				}
+				if (focus)
+				{
+					ShellApi.SetFocus (fileOpStruct.hwnd);
 				}
 			}
 
