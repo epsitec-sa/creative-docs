@@ -398,21 +398,19 @@ namespace Epsitec.Common.Widgets
 		}
 
 		/// <summary>
-		/// Finds the command matching the specified shortcut.
+		/// Finds and enumerates the commands matching the specified shortcut.
 		/// </summary>
 		/// <param name="shortcut">The command shortcut.</param>
-		/// <returns>The command, or <c>null</c> if none could be found.</returns>
-		public static Command Find(Shortcut shortcut)
+		/// <returns>The command enumeration.</returns>
+		public static IEnumerable<Command> Find(Shortcut shortcut)
 		{
 			foreach (Command command in Command.commands.Values)
 			{
 				if (command.Shortcuts.Contains (shortcut))
 				{
-					return command;
+					yield return command;
 				}
 			}
-			
-			return null;
 		}
 
 
