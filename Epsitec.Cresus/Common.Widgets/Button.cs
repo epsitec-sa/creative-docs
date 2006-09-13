@@ -119,7 +119,8 @@ namespace Epsitec.Common.Widgets
 		{
 			IFeel feel = Feel.Factory.Active;
 
-			if (this.buttonStyle == ButtonStyle.DefaultAccept || this.buttonStyle == ButtonStyle.DefaultAcceptAndCancel)
+			if ((this.buttonStyle == ButtonStyle.DefaultAccept) || 
+				(this.buttonStyle == ButtonStyle.DefaultAcceptAndCancel))
 			{
 				if (feel.AcceptShortcut == shortcut)
 				{
@@ -128,7 +129,8 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			if (this.buttonStyle == ButtonStyle.DefaultCancel || this.buttonStyle == ButtonStyle.DefaultAcceptAndCancel)
+			if ((this.buttonStyle == ButtonStyle.DefaultCancel) ||
+				(this.buttonStyle == ButtonStyle.DefaultAcceptAndCancel))
 			{
 				if (feel.CancelShortcut == shortcut)
 				{
