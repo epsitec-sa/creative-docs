@@ -1543,7 +1543,7 @@ namespace Epsitec.App.DocumentEditor
 
 			string newDocument = this.globalSettings.NewDocument;
 
-			if (newDocument.EndsWith(".crmod"))  // ancienne définition ?
+			if (Misc.IsExtension(newDocument, ".crmod"))  // ancienne définition ?
 			{
 				newDocument = System.IO.Path.GetDirectoryName(newDocument);
 			}
@@ -1637,7 +1637,7 @@ namespace Epsitec.App.DocumentEditor
 			{
 				string newDocument = this.globalSettings.NewDocument;
 
-				if (newDocument.EndsWith(".crmod"))  // ancienne définition ?
+				if (Misc.IsExtension(newDocument, ".crmod"))  // ancienne définition ?
 				{
 					newDocument = System.IO.Path.GetDirectoryName(newDocument);
 				}

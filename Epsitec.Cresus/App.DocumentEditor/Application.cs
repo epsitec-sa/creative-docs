@@ -157,9 +157,9 @@ namespace Epsitec.App.DocumentEditor
 			{
 				foreach ( string file in files )
 				{
-					if ( !file.ToLower().EndsWith(this.DefaultExtension) &&
-						 !file.ToLower().EndsWith(this.ModelExtension)   &&
-						 !file.ToLower().EndsWith(this.ColorsExtension)  )
+					if ( !Misc.IsExtension(file, this.DefaultExtension) &&
+						 !Misc.IsExtension(file, this.ModelExtension)   &&
+						 !Misc.IsExtension(file, this.ColorsExtension)  )
 					{
 						return;
 					}
@@ -179,9 +179,9 @@ namespace Epsitec.App.DocumentEditor
 			{
 				foreach ( string file in files )
 				{
-					if ( !file.ToLower().EndsWith(this.DefaultExtension) &&
-						 !file.ToLower().EndsWith(this.ModelExtension)   &&
-						 !file.ToLower().EndsWith(this.ColorsExtension)  )
+					if ( !Misc.IsExtension(file, this.DefaultExtension) &&
+						 !Misc.IsExtension(file, this.ModelExtension)   &&
+						 !Misc.IsExtension(file, this.ColorsExtension)  )
 					{
 						return;
 					}

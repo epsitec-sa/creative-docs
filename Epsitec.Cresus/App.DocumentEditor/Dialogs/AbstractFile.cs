@@ -772,7 +772,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						//	document .crdoc.
 						string name = item.FullPath.Substring(0, item.FullPath.Length-4);  // nom sans .lnk
 
-						if (!name.EndsWith(this.fileExtension))  // autre extension ?
+						if (!Misc.IsExtension(name, this.fileExtension))  // autre extension ?
 						{
 							continue;
 						}
