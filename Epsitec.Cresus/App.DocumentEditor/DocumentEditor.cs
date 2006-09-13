@@ -1254,6 +1254,13 @@ namespace Epsitec.App.DocumentEditor
 			return dialog.Result;
 		}
 
+		protected void DialogWarningRedirection()
+		{
+			//	Affiche l'avertissement de changement 'Exemples originaux' vers 'Mes exemples'.
+			string message = string.Format("Le dossier '{0}' ne peut pas être modifié.<br/>L'enregistrement est donc dévié dans '{1}'.", Document.DisplayOriginalSamples, Document.DisplayMySamples);  // TODO: mettre dans les ressources !
+			this.DialogError(this.commandDispatcher, message);
+		}
+
 		public Common.Dialogs.DialogResult DialogError(CommandDispatcher dispatcher, string error)
 		{
 			//	Affiche le dialogue pour signaler une erreur.
@@ -1506,6 +1513,11 @@ namespace Epsitec.App.DocumentEditor
 						this.dlgFileSave.InitialFilename = this.CurrentDocument.Filename;
 					}
 
+					if (this.dlgFileSave.IsRedirection)
+					{
+						this.DialogWarningRedirection();
+					}
+
 					this.dlgFileSave.Show();  // choix d'un fichier...
 					if (this.dlgFileSave.Result != Common.Dialogs.DialogResult.Accept)
 					{
@@ -1519,6 +1531,11 @@ namespace Epsitec.App.DocumentEditor
 			else
 			{
 				filename = this.CurrentDocument.Filename;
+			}
+
+			if (Document.RedirectionFilename(ref filename))
+			{
+				this.DialogWarningRedirection();
 			}
 
 			this.MouseShowWait();
@@ -1551,6 +1568,11 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgFileSaveModel.InitialDirectory = newDocument;
 			this.dlgFileSaveModel.InitialFilename = "";
 
+			if (this.dlgFileSave.IsRedirection)
+			{
+				this.DialogWarningRedirection();
+			}
+
 			this.dlgFileSaveModel.Show();  // choix d'un fichier...
 			if (this.dlgFileSaveModel.Result != Common.Dialogs.DialogResult.Accept)
 			{
@@ -1559,6 +1581,11 @@ namespace Epsitec.App.DocumentEditor
 
 			filename = this.dlgFileSaveModel.Filename;
 			filename = DocumentEditor.AdjustFilename(filename);
+
+			if (Document.RedirectionFilename(ref filename))
+			{
+				this.DialogWarningRedirection();
+			}
 
 			this.MouseShowWait();
 			string err = this.CurrentDocument.Write(filename);
