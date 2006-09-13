@@ -128,7 +128,14 @@ namespace Epsitec.Common.Support
 		/// <returns>Returns <c>true</c> on success.</returns>
 		public static bool RenameFile(FileOperationMode mode, string source, string destination)
 		{
-			return Platform.FileOperation.RenameFiles (mode, new string[] { source }, new string[] { destination });
+			if (string.Equals (source, destination, System.StringComparison.CurrentCultureIgnoreCase))
+			{
+				return false;
+			}
+			else
+			{
+				return Platform.FileOperation.RenameFiles (mode, new string[] { source }, new string[] { destination });
+			}
 		}
 
 		/// <summary>
