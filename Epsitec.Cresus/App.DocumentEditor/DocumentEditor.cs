@@ -1257,7 +1257,7 @@ namespace Epsitec.App.DocumentEditor
 		protected void DialogWarningRedirection()
 		{
 			//	Affiche l'avertissement de changement 'Exemples originaux' vers 'Mes exemples'.
-			string message = string.Format("Le dossier '{0}' ne peut pas être modifié.<br/>L'enregistrement est donc dévié dans '{1}'.", Document.DisplayOriginalSamples, Document.DisplayMySamples);  // TODO: mettre dans les ressources !
+			string message = string.Format(Res.Strings.Dialog.Warning.Redirection, Document.DisplayOriginalSamples, Document.DisplayMySamples);  // TODO: mettre dans les ressources !
 			this.DialogError(this.commandDispatcher, message);
 		}
 
