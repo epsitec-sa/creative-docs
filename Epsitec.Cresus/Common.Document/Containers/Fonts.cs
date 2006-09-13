@@ -50,7 +50,7 @@ namespace Epsitec.Common.Document.Containers
 			ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Double.TextFontSampleHeight);
 
 			this.buttonAbc = new IconButton(Misc.Icon("TextFontSampleAbc"));
-			this.buttonAbc.CommandLine = "TextFontSampleAbc";
+			this.buttonAbc.CommandObject = Command.Get("TextFontSampleAbc");
 			this.buttonAbc.Margins = new Margins(10, 0, 0, 0);
 			this.buttonAbc.TabIndex = tabIndex++;
 			this.buttonAbc.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

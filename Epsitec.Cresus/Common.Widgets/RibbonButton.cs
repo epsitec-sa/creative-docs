@@ -28,7 +28,7 @@ namespace Epsitec.Common.Widgets
 		
 		public RibbonButton(string command, string text) : this()
 		{
-			this.CommandLine  = command;
+			this.CommandObject = Command.Get (command);
 			this.Text     = text;
 		}
 		

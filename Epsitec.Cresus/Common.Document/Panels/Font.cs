@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.fontFace, Res.Strings.TextPanel.Font.Tooltip.Face);
 
 			this.buttonFilter = new IconButton(this);
-			this.buttonFilter.CommandLine = "TextFontFilter";
+			this.buttonFilter.CommandObject = Command.Get("TextFontFilter");
 			this.buttonFilter.IconName = Misc.Icon("TextFontFilter");
 			this.buttonFilter.PreferredIconSize = Misc.IconPreferredSize("Normal");
 			this.buttonFilter.AutoFocus = false;

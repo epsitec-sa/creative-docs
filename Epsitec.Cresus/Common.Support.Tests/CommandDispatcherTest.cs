@@ -3,6 +3,7 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Support
 {
+#if false
 	[TestFixture]
 	public class CommandDispatcherTest
 	{
@@ -766,4 +767,5 @@ namespace Epsitec.Common.Support
 
 		static System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 	}
+#endif
 }

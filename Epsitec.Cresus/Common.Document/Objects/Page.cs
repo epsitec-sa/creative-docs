@@ -503,7 +503,10 @@ namespace Epsitec.Common.Document.Objects
 					name = Misc.Bold(name);
 				}
 
-				MenuItem item = new MenuItem("PageSelect(this.Name)", icon, name, "", i.ToString());
+				string cmd = "PageSelect";
+				Misc.CreateStructuredCommandWithName (cmd);
+
+				MenuItem item = new MenuItem(cmd, icon, name, "", i.ToString());
 
 				if ( message != null )
 				{

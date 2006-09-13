@@ -77,7 +77,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			Command c = Widgets.Command.Get (command);
 			IconButtonCombo button = new IconButtonCombo(this);
 
-			button.CommandLine = command;
+			button.CommandObject = c;
 			button.AutoFocus = false;
 			button.IsLiveUpdateEnabled = false;
 
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			Command c = Widgets.Command.Get (command);
 			IconButtonsCombo button = new IconButtonsCombo(this);
 
-			button.CommandLine = command;
+			button.CommandObject = c;
 			button.AutoFocus = false;
 			button.IsLiveUpdateEnabled = false;
 
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Designer.Ribbons
 		{
 			//	Crée un bouton "v" pour un menu.
 			GlyphButton button = new GlyphButton(this);
-			button.CommandLine = command;
+			button.CommandObject = Command.Get(command);
 			button.ButtonStyle = ButtonStyle.ToolItem;
 			button.GlyphShape = GlyphShape.Menu;
 			button.AutoFocus = false;

@@ -276,7 +276,7 @@ namespace Epsitec.Common.Designer
 			this.bookModules.Margins = new Margins(0, 0, 3, 0);
 			this.bookModules.Arrows = TabBookArrows.Right;
 			this.bookModules.HasCloseButton = true;
-			this.bookModules.CloseButton.CommandLine = "Close";
+			this.bookModules.CloseButton.CommandObject = Command.Get("Close");
 			this.bookModules.ActivePageChanged += new EventHandler(this.HandleBookModulesActivePageChanged);
 			ToolTip.Default.SetToolTip(this.bookModules.CloseButton, Res.Strings.Action.Close);
 
@@ -534,7 +534,7 @@ namespace Epsitec.Common.Designer
 			Searcher.SearchingMode mode = this.dlgSearch.Mode;
 			List<int> filter = this.dlgSearch.FilterList;
 
-			if (e.CommandName == "SearchPrev")
+			if (e.Command.CommandId == "SearchPrev")
 			{
 				mode |= Searcher.SearchingMode.Reverse;
 			}
@@ -549,7 +549,7 @@ namespace Epsitec.Common.Designer
 		void CommandAccess(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if ( !this.IsCurrentModule )  return;
-			this.CurrentModule.Modifier.ActiveViewer.DoAccess(e.CommandName);
+			this.CurrentModule.Modifier.ActiveViewer.DoAccess(e.Command.CommandId);
 		}
 
 		[Command("ModificationAll")]
@@ -559,7 +559,7 @@ namespace Epsitec.Common.Designer
 		void CommandModification(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if ( !this.IsCurrentModule )  return;
-			this.CurrentModule.Modifier.ActiveViewer.DoModification(e.CommandName);
+			this.CurrentModule.Modifier.ActiveViewer.DoModification(e.Command.CommandId);
 		}
 
 		[Command("NewCulture")]
@@ -617,7 +617,7 @@ namespace Epsitec.Common.Designer
 		void CommandClipboard(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if ( !this.IsCurrentModule )  return;
-			this.CurrentModule.Modifier.ActiveViewer.DoClipboard(e.CommandName);
+			this.CurrentModule.Modifier.ActiveViewer.DoClipboard(e.Command.CommandId);
 		}
 
 		[Command("FontBold")]
@@ -626,7 +626,7 @@ namespace Epsitec.Common.Designer
 		void CommandFont(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if ( !this.IsCurrentModule )  return;
-			this.CurrentModule.Modifier.ActiveViewer.DoFont(e.CommandName);
+			this.CurrentModule.Modifier.ActiveViewer.DoFont(e.Command.CommandId);
 		}
 
 		[Command("ToolSelect")]
@@ -645,7 +645,7 @@ namespace Epsitec.Common.Designer
 		void CommandTool(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if ( !this.IsCurrentModule )  return;
-			this.CurrentModule.Modifier.ActiveViewer.DoTool(e.CommandName);
+			this.CurrentModule.Modifier.ActiveViewer.DoTool(e.Command.CommandId);
 		}
 
 		[Command("PanelDelete")]
@@ -687,7 +687,7 @@ namespace Epsitec.Common.Designer
 		void CommandCommand(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if ( !this.IsCurrentModule )  return;
-			this.CurrentModule.Modifier.ActiveViewer.DoCommand(e.CommandName);
+			this.CurrentModule.Modifier.ActiveViewer.DoCommand(e.Command.CommandId);
 		}
 
 		protected void InitCommands()

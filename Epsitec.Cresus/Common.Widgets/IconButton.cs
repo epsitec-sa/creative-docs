@@ -35,7 +35,7 @@ namespace Epsitec.Common.Widgets
 		public IconButton(string command, string icon)
 			: this (icon)
 		{
-			this.CommandLine = command;
+			this.CommandObject = Command.Get (command);
 		}
 
 		public IconButton(string command, string icon, string name)
@@ -201,7 +201,7 @@ namespace Epsitec.Common.Widgets
 		{
 			IconButton button = new IconButton (command, icon);
 
-			button.Name = CommandDispatcher.ExtractCommandName (command);
+			button.Name = command;
 
 			return button;
 		}
@@ -211,7 +211,7 @@ namespace Epsitec.Common.Widgets
 			IconButton button = new IconButton (command, icon);
 
 			button.Visibility = false;
-			button.Name = CommandDispatcher.ExtractCommandName (command);
+			button.Name = command;
 
 			return button;
 		}
@@ -221,7 +221,7 @@ namespace Epsitec.Common.Widgets
 			IconButton button = new IconButton (command, icon);
 
 			button.AutoToggle = true;
-			button.Name = CommandDispatcher.ExtractCommandName (command);
+			button.Name = command;
 
 			return button;
 		}

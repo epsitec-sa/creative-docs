@@ -67,7 +67,6 @@ namespace Epsitec.Common.Widgets
 			
 			visual.CommandObject = ApplicationCommands.Cut;
 
-			Assert.IsNull (visual.CommandLine);
 			Assert.AreEqual ("Cut", visual.CommandName);
 			Assert.AreEqual ("Couper", ApplicationCommands.Cut.Caption.Description);
 			Assert.AreEqual ("Couper", visual.GetDisplayCaption ().Description);

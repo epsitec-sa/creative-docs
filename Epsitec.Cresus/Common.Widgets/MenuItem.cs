@@ -61,14 +61,14 @@ namespace Epsitec.Common.Widgets
 		
 		public MenuItem(string command, string text) : this ()
 		{
-			this.CommandLine  = command;
+			this.CommandObject = Command.Get (command);
 			this.Text     = text;
 			this.text_only = true;
 		}
 		
 		public MenuItem(string command, string icon, string text, string shortcut) : this ()
 		{
-			this.CommandLine  = command;
+			this.CommandObject = Command.Get (command);
 			this.IconName = icon;
 			this.Text     = text;
 			this.ShortKey = shortcut;	//#fix
@@ -338,6 +338,21 @@ namespace Epsitec.Common.Widgets
 			return new Drawing.Size (dx, dy);
 		}
 
+
+		protected override void QueueCommandForExecution(Window window, Command command, CommandState state)
+		{
+			if (command.CommandType == CommandType.Structured)
+			{
+				object typeObject = command.StructuredType.GetFieldTypeObject ("Name");
+
+				if (typeObject is Types.StringType)
+				{
+					StructuredCommand.SetFieldValue (state, "Name", this.Name);
+				}
+			}
+			
+			base.QueueCommandForExecution (window, command, state);
+		}
 		
 		protected override void OnTextChanged()
 		{
@@ -712,7 +727,7 @@ namespace Epsitec.Common.Widgets
 				//	Un MenuItem qui pointe sur un sous-menu ne peut pas avoir de
 				//	commande associée :
 				
-				that.CommandLine = null;
+				that.CommandObject = null;
 			}
 			
 			if (old_submenu != null)

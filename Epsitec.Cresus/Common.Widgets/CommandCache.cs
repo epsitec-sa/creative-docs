@@ -101,7 +101,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 
-			this.records[id].SetCommand (visual.GetCommand ());
+			this.records[id].SetCommand (visual.CommandObject);
 			
 			if (this.records[id].ClearCommandState ())
 			{
@@ -256,7 +256,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.visual  = new Types.Weak<Visual> (visual);
 				this.state   = null;
-				this.command = visual.GetCommand ();
+				this.command = visual.CommandObject;
 			}
 			
 			

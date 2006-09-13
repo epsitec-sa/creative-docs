@@ -176,7 +176,10 @@ namespace Epsitec.Common.Document.Objects
 					name = Misc.Bold(name);
 				}
 
-				MenuItem item = new MenuItem("LayerSelect(this.Name)", icon, name, "", ii.ToString());
+				string cmd = "LayerSelect";
+				Misc.CreateStructuredCommandWithName (cmd);
+
+				MenuItem item = new MenuItem(cmd, icon, name, "", ii.ToString());
 
 				if ( message != null )
 				{
