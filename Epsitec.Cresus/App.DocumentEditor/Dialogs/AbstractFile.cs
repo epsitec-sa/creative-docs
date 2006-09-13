@@ -349,9 +349,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fieldRename.ButtonShowCondition = ShowCondition.Always;
 			this.fieldRename.EditionAccepted += new EventHandler(this.HandleRenameAccepted);
 			this.fieldRename.EditionRejected += new EventHandler(this.HandleRenameRejected);
-			this.fieldRename.IsFocusedChanged += this.HandleRenameFocusChanged;
+//-			this.fieldRename.IsFocusedChanged += this.HandleRenameFocusChanged;
 			this.fieldRename.SwallowEscape = true;
 			this.fieldRename.SwallowReturn = true;
+			this.fieldRename.IsModal = true;
 		}
 
 		protected void CreateAccess()
@@ -1050,6 +1051,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fieldRename.Text = this.files[sel].ShortFilename;
 			this.fieldRename.SelectAll();
 			this.fieldRename.Visibility = true;
+			this.fieldRename.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
+			this.fieldRename.StartEdition();
 			this.fieldRename.Focus();
 
 			this.renameSelected = sel;
@@ -1353,6 +1356,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.RenameEnding(false);
 		}
 
+#if false
 		private void HandleRenameFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			//	Le TextFieldEx pour renommer a pris/perdu le focus.
@@ -1363,6 +1367,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 		}
+#endif
 
 		protected void HandleKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{

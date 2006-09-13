@@ -558,6 +558,18 @@ namespace Epsitec.Common.Widgets
 				return this.capturing_widget;
 			}
 		}
+
+		public Widget							ModalWidget
+		{
+			get
+			{
+				return this.modal_widget;
+			}
+			set
+			{
+				this.modal_widget = value;
+			}
+		}
 		
 		public IPaintFilter						PaintFilter
 		{
@@ -1905,7 +1917,7 @@ namespace Epsitec.Common.Widgets
 
 		internal void DispatchMessage(Message message)
 		{
-			this.DispatchMessage (message, null);
+			this.DispatchMessage (message, this.modal_widget);
 		}
 		
 		internal void DispatchMessage(Message message, Widget root)
@@ -2401,6 +2413,7 @@ namespace Epsitec.Common.Widgets
 		private Widget							focused_widget;
 		private Widget							engaged_widget;
 		private Widget							initially_engaged_widget;
+		private Widget							modal_widget;
 		private Timer							timer;
 		private MouseCursor						window_cursor;
 		private List<Widget>					logical_focus_stack = new List<Widget> ();
