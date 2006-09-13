@@ -15,6 +15,7 @@ namespace Epsitec.Common.Widgets
 		public TextFieldCombo()
 		{
 			this.textFieldStyle = TextFieldStyle.Combo;
+			this.ButtonShowCondition = ShowCondition.Always;
 			
 			this.select_item_behavior = new Behaviors.SelectItemBehavior (new Behaviors.SelectItemCallback (this.AutomaticItemSelection));
 
@@ -54,23 +55,6 @@ namespace Epsitec.Common.Widgets
 				return this.button;
 			}
 		}
-		
-		public ShowCondition					ButtonShowCondition
-		{
-			get
-			{
-				return this.button_show_condition;
-			}
-			set
-			{
-				if (this.button_show_condition != value)
-				{
-					this.button_show_condition = value;
-					this.UpdateButtonVisibility ();
-				}
-			}
-		}
-		
 		
 		public override bool					IsCombo
 		{
@@ -198,7 +182,7 @@ namespace Epsitec.Common.Widgets
 		{
 			bool show = false;
 			
-			switch (this.button_show_condition)
+			switch (this.ButtonShowCondition)
 			{
 				case ShowCondition.Always:				show = true;										break;
 				case ShowCondition.Never:				show = false;										break;
@@ -207,7 +191,7 @@ namespace Epsitec.Common.Widgets
 				case ShowCondition.WhenModified:		show = this.HasEditedText;							break;
 				
 				default:
-					throw new System.NotImplementedException (string.Format ("ButtonShowCondition.{0} not implemented.", this.button_show_condition));
+					throw new System.NotImplementedException (string.Format ("ButtonShowCondition.{0} not implemented.", this.ButtonShowCondition));
 			}
 			
 			return show;
@@ -898,7 +882,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected Button						button;
 		protected Collections.StringCollection	items;
-		protected ShowCondition					button_show_condition = ShowCondition.Always;
 		protected double						default_button_width;
 	}
 }

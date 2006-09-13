@@ -28,22 +28,6 @@ namespace Epsitec.Common.Widgets
 		
 		
 		
-		public ShowCondition					ButtonShowCondition
-		{
-			get
-			{
-				return this.button_show_condition;
-			}
-			set
-			{
-				if (this.button_show_condition != value)
-				{
-					this.button_show_condition = value;
-					this.UpdateButtonVisibility ();
-				}
-			}
-		}
-		
 		
 		public override bool AcceptEdition()
 		{
@@ -226,7 +210,6 @@ namespace Epsitec.Common.Widgets
 		}		
 		
 		
-		private ShowCondition					button_show_condition;
 		private Behaviors.AcceptRejectBehavior	accept_reject_behavior;
 	}
 }

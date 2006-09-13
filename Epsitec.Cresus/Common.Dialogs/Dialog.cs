@@ -120,7 +120,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			get
 			{
-				return Command.Get ("ValidateNoDialog");
+				return Command.Get ("ValidateDialogYes");
 			}
 		}
 
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			get
 			{
-				return Command.Get ("ValidateYesDialog");
+				return Command.Get ("ValidateDialogNo");
 			}
 		}
 

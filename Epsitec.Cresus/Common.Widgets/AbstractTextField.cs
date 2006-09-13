@@ -497,7 +497,24 @@ namespace Epsitec.Common.Widgets
 				this.defocus_action = value;
 			}
 		}
+
+		public ShowCondition					ButtonShowCondition
+		{
+			get
+			{
+				return this.button_show_condition;
+			}
+			set
+			{
+				if (this.button_show_condition != value)
+				{
+					this.button_show_condition = value;
+					this.UpdateButtonVisibility ();
+				}
+			}
+		}
 		
+
 		public TextDisplayMode					TextDisplayMode
 		{
 			get
@@ -626,7 +643,7 @@ namespace Epsitec.Common.Widgets
 		public virtual bool StartEdition()
 		{
 			if ((this.IsEditing == false) &&
-				((this.defocus_action != DefocusAction.None) || (this.IsCombo)))
+				((this.DefocusAction != DefocusAction.None) || (this.IsCombo) || (this.ButtonShowCondition != ShowCondition.Never)))
 			{
 				this.initial_text              = this.Text;
 				this.initial_text_display_mode = this.TextDisplayMode;
@@ -1962,8 +1979,9 @@ namespace Epsitec.Common.Widgets
 		protected TextFieldStyle				textFieldStyle = TextFieldStyle.Normal;
 		protected double						scrollZone = 0.5;
 		protected TextDisplayMode				textDisplayMode = TextDisplayMode.Default;
-		protected DefocusAction					defocus_action;
-		protected string						initial_text;
+		private DefocusAction					defocus_action;
+		private ShowCondition					button_show_condition;
+		protected string initial_text;
 		protected TextDisplayMode				initial_text_display_mode;
 		private bool							is_editing;
 		private bool							is_modal;
