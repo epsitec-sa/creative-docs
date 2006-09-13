@@ -45,6 +45,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			set
 			{
+				this.isRedirection = false;
 				FolderItem folder;
 
 				if (value == "")  // poste de travail ?
@@ -55,7 +56,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					if (this.isSave)
 					{
-						value = Document.RedirectionDirectory(value);
+						this.isRedirection = Document.RedirectionDirectory(ref value);
 					}
 
 					folder = FileManager.GetFolderItem(value, FolderQueryMode.NoIcons);
@@ -81,7 +82,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				if (this.isSave)
 				{
-					value = Document.RedirectionFilename(value);
+					Document.RedirectionFilename(ref value);
 				}
 
 				if (this.initialFilename != value)
@@ -89,6 +90,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					this.initialFilename = value;
 					this.UpdateInitialFilename();
 				}
+			}
+		}
+
+		public bool IsRedirection
+		{
+			//	Indique si le dossier passé avec InitialDirectory a dû être
+			//	redirigé de 'Exemples originaux' vers 'Mes exemples'.
+			get
+			{
+				return this.isRedirection;
 			}
 		}
 
@@ -2106,6 +2117,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected bool						isMultipleSelection = false;
 		protected bool						isNewEmtpyDocument = false;
 		protected bool						isSave = false;
+		protected bool						isRedirection = false;
 		protected FolderItem				initialFolder;
 		protected FolderItemIcon			initialSmallIcon;
 		protected string					initialFilename;
