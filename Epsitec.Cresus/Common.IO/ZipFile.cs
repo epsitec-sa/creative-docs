@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.IO
 {
+	public delegate bool LoadPredicate(string entryName);
+	
 	/// <summary>
 	/// The <c>ZipFile</c> class manages ZIP file loading and saving. The contents
 	/// of the ZIP file can be accessed as individual entries, each stored as a byte
@@ -109,6 +111,19 @@ namespace Epsitec.Common.IO
 		/// <returns><c>true</c> on success; otherwise, <c>false</c>.</returns>
 		public bool TryLoadFile(string name)
 		{
+			return this.TryLoadFile (name, delegate (string entryName) { return true; });
+		}
+
+		/// <summary>
+		/// Tries to load the specified ZIP file. Only the entries for which the predicate
+		/// returns true will be effectively loaded.
+		/// </summary>
+		/// <param name="name">The file name.</param>
+		/// <param name="loadPredicate">The load predicate which must return true if an
+		/// entry is to be loaded.</param>
+		/// <returns><c>true</c> on success; otherwise, <c>false</c>.</returns>
+		public bool TryLoadFile(string name, LoadPredicate loadPredicate)
+		{
 			try
 			{
 				using (System.IO.Stream stream = System.IO.File.OpenRead (name))
@@ -125,7 +140,7 @@ namespace Epsitec.Common.IO
 						(b3 == 3) &&
 						(b4 == 4))
 					{
-						this.LoadFile (stream);
+						this.LoadFile (stream, loadPredicate);
 
 						return true;
 					}
@@ -147,7 +162,7 @@ namespace Epsitec.Common.IO
 		{
 			using (System.IO.Stream stream = System.IO.File.OpenRead (name))
 			{
-				this.LoadFile (stream);
+				this.LoadFile (stream, delegate (string entryName) { return true; });
 			}
 		}
 
@@ -155,7 +170,7 @@ namespace Epsitec.Common.IO
 		/// Loads the specified ZIP stream.
 		/// </summary>
 		/// <param name="stream">The file stream.</param>
-		public void LoadFile(System.IO.Stream stream)
+		public void LoadFile(System.IO.Stream stream, LoadPredicate loadPredicate)
 		{
 			this.entries.Clear ();
 
@@ -166,26 +181,29 @@ namespace Epsitec.Common.IO
 			{
 				if (entry.IsDirectory == false)
 				{
-					byte[] data   = new byte[entry.Size];
-					int    size   = data.Length;
-					int    offset = 0;
-					
-					while (true)
+					if (loadPredicate (entry.Name))
 					{
-						int length = zip.Read (data, offset, size);
+						byte[] data   = new byte[entry.Size];
+						int size   = data.Length;
+						int offset = 0;
 
-						offset += length;
-						size   -= length;
-
-						if (length == 0)
+						while (true)
 						{
-							break;
-						}
-					}
+							int length = zip.Read (data, offset, size);
 
-					System.Diagnostics.Debug.Assert (size == 0);
-					
-					this.entries.Add (new Entry (entry.Name, data, entry.DateTime));
+							offset += length;
+							size   -= length;
+
+							if (length == 0)
+							{
+								break;
+							}
+						}
+
+						System.Diagnostics.Debug.Assert (size == 0);
+
+						this.entries.Add (new Entry (entry.Name, data, entry.DateTime));
+					}
 				}
 				else
 				{
