@@ -848,6 +848,10 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case MessageType.KeyDown:
+					if (message.ModifierKeys != ModifierKeys.None)
+					{
+						return;
+					}
 					if ( !this.ProcessKeyDown(message.KeyCode) )
 					{
 						return;
