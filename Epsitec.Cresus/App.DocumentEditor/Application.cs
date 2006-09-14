@@ -14,7 +14,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			Application.mode = mode.Substring (0, 1);
 			
-			Res.Initialize(typeof(Application), "App");
+			Res.Initialise(typeof(Application), "App");
 			
 			//	Il faut indiquer ci-après la date de diffusion du logiciel, qui doit
 			//	être mise à jour chaque fois que l'on génère un nouveau CD :

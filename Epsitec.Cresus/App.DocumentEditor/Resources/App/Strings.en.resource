@@ -241,4 +241,6 @@
   <data id="0G7" mod="1">Show or hide options for the favorites</data>
   <data id="0H7" mod="1">The contents of the &lt;b&gt;{0}&lt;/b&gt; folder cannot be modified.&lt;br/&gt;The file will be saved to &lt;b&gt;{1}&lt;/b&gt; instead.</data>
   <data id="091">Drag here to resize the window</data>
+  <data id="0I7" mod="1">{0} MB</data>
+  <data id="0J7" mod="1">{0} GB</data>
 </bundle>

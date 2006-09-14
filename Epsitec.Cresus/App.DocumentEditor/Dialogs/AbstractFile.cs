@@ -1812,11 +1812,38 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					else
 					{
 						System.IO.FileInfo info = new System.IO.FileInfo(this.folderItem.FullPath);
+						if (!info.Exists)
+						{
+							return "";
+						}
 
-						long size = info.Exists ? info.Length : 0;
-						
-						size = (size+500)/1024;
-						return string.Format(Res.Strings.Dialog.File.Size, size.ToString());
+						long size = info.Length;
+
+						size = (size+512)/1024;
+						if (size < 1024)
+						{
+							double s = (double) size;
+							s = System.Math.Floor(s*1000/1024);  // 0..999 KB
+							return string.Format(Res.Strings.Dialog.File.Size.Kilo, s.ToString());
+						}
+
+						size = (size+512)/1024;
+						if (size < 1024)
+						{
+							double s = (double) size;
+							s = System.Math.Floor(s*1000/1024);  // 0..999 MB
+							return string.Format(Res.Strings.Dialog.File.Size.Mega, s.ToString());
+						}
+
+						size = (size+512)/1024;
+						if (size < 1024)
+						{
+							double s = (double) size;
+							s = System.Math.Floor(s*1000/1024);  // 0..999 GB
+							return string.Format(Res.Strings.Dialog.File.Size.Giga, s.ToString());
+						}
+
+						return "?";
 					}
 				}
 			}
