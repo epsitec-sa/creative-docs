@@ -122,8 +122,10 @@ namespace Epsitec.Common.Tool.ResGenerator
 			
 			generator.BeginBlock ("namespace", defaultNamespace);
 			generator.BeginBlock ("public sealed class", "Res");
+
+			string[] bundleIds = manager.GetBundleIds ("*", "*", ResourceLevel.Default);
 			
-			foreach (string bundleId in manager.GetBundleIds ("*", "*", ResourceLevel.Default))
+			foreach (string bundleId in bundleIds)
 			{
 				ResourceBundle bundle = manager.GetBundle (bundleId, ResourceLevel.Default);
 
@@ -137,8 +139,11 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 				switch (bundleType)
 				{
-					case "Strings":
-						Application.GenerateStrings (buffer, generator, bundleId, bundle);
+					case "String":
+						Application.GenerateStrings (buffer, generator, defaultNamespace, bundleId, bundle);
+						break;
+					case "Caption":
+						Application.GenerateCaptions (buffer, generator, defaultNamespace, bundleId, bundle);
 						break;
 				}
 			}
@@ -175,7 +180,12 @@ namespace Epsitec.Common.Tool.ResGenerator
 			}
 		}
 
-		static void GenerateStrings(System.Text.StringBuilder buffer, Generator generator, string bundleId, ResourceBundle bundle)
+		static void GenerateCaptions(System.Text.StringBuilder buffer, Generator generator, string defaultNamespace, string bundleId, ResourceBundle bundle)
+		{
+			//	TODO: generate captions, commands and types...
+		}
+
+		static void GenerateStrings(System.Text.StringBuilder buffer, Generator generator, string defaultNamespace, string bundleId, ResourceBundle bundle)
 		{
 			string prefix   = "";
 			bool addNewline = false;
@@ -185,25 +195,25 @@ namespace Epsitec.Common.Tool.ResGenerator
 			string[] fields   = bundle.FieldNames;
 			string[] sortKeys = new string[fields.Length];
 
-			for (int j = 0; j < fields.Length; j++)
+			for (int i = 0; i < fields.Length; i++)
 			{
-				int pos = fields[j].LastIndexOf ('.');
+				int pos = fields[i].LastIndexOf ('.');
 
 				if (pos < 0)
 				{
-					sortKeys[j] = fields[j];
+					sortKeys[i] = fields[i];
 				}
 				else
 				{
-					sortKeys[j] = string.Concat (fields[j].Substring (0, pos), "!", fields[j].Substring (pos+1));
+					sortKeys[i] = string.Concat (fields[i].Substring (0, pos), "!", fields[i].Substring (pos+1));
 				}
 			}
 
 			System.Array.Sort (sortKeys, fields);
 
-			for (int j = 0; j < fields.Length; j++)
+			for (int i = 0; i < fields.Length; i++)
 			{
-				string field = fields[j];
+				string field = fields[i];
 
 				while ((prefix != "") && (field.StartsWith (prefix + ".") == false))
 				{
@@ -256,18 +266,24 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 				buffer.Append ("public static string ");
 				buffer.Append (delta);
-				buffer.Append (@" { get { return GetText (""");
+				buffer.Append (@" { get { return ");
+				buffer.Append (defaultNamespace);
+				buffer.Append (@".Res.");
 				buffer.Append (bundleId);
-				buffer.Append (@"""");
+				buffer.Append (@".GetText (");
 
 				if (druid.Type == Support.DruidType.ModuleRelative)
 				{
-					buffer.Append (@", """);
-					buffer.Append (druid.ToFieldName ());
-					buffer.Append (@"""");
+					buffer.Append (@"Epsitec.Common.Support.Druid.FromFieldId (");
+					buffer.Append (druid.ToFieldId ());
+					buffer.Append (@")");
 				}
 				else
 				{
+					buffer.Append (@"""");
+					buffer.Append (bundleId);
+					buffer.Append (@"""");
+					
 					string[] elems = field.Split ('.');
 
 					for (int k = 0; k < elems.Length; k++)
@@ -301,7 +317,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 			buffer.Append (@"string field = string.Join (""."", path);");
 			buffer.Append ("\n");
 			buffer.Append (generator.Tabs);
-			buffer.Append (@"return _bundle[field].AsString;");
+			buffer.Append (@"return _stringsBundle[field].AsString;");
 			buffer.Append ("\n");
 
 			generator.EndBlock ();
@@ -318,13 +334,21 @@ namespace Epsitec.Common.Tool.ResGenerator
 			buffer.Append (@"string field = string.Join (""."", path);");
 			buffer.Append ("\n");
 			buffer.Append (generator.Tabs);
-			buffer.Append (@"return _bundle[field].AsString;");
+			buffer.Append (@"return _stringsBundle[field].AsString;");
+			buffer.Append ("\n");
+
+			generator.EndBlock ();
+
+			generator.BeginBlock ("private static string", "GetText(Epsitec.Common.Support.Druid druid)");
+
+			buffer.Append (generator.Tabs);
+			buffer.Append (@"return _stringsBundle[druid].AsString;");
 			buffer.Append ("\n");
 
 			generator.EndBlock ();
 
 			buffer.Append (generator.Tabs);
-			buffer.Append (@"private static Epsitec.Common.Support.ResourceBundle _bundle = _manager.GetBundle (""");
+			buffer.Append (@"private static Epsitec.Common.Support.ResourceBundle _stringsBundle = _manager.GetBundle (""");
 			buffer.Append (bundleId);
 			buffer.Append (@""");");
 			buffer.Append ("\n");
