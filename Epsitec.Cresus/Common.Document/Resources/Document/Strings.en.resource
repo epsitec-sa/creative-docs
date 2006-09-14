@@ -796,7 +796,7 @@
   <data id="0OO">Close all</data>
   <data id="0PO">Save</data>
   <data id="0QO">Save as...</data>
-  <data id="0RO">Save as template...</data>
+  <data id="0RO" mod="1">Save as template...</data>
   <data id="0SO">Print...</data>
   <data id="0TO">Export...</data>
   <data id="0UO">Recent files</data>
@@ -1334,14 +1334,10 @@
   <data id="02901" mod="1">Embedded image</data>
   <data id="06901" mod="1">Export the image to a file</data>
   <data id="03901" mod="1">The file does not exist</data>
-  <data id="0T901">
-  </data>
-  <data id="0U901">
-  </data>
-  <data id="0V901">
-  </data>
-  <data id="00A01">
-  </data>
+  <data id="0T901" mod="1">Open last template</data>
+  <data id="0U901" mod="1">Open last templates</data>
+  <data id="0V901">Recent templates</data>
+  <data id="00A01">Empty document</data>
   <data id="01A01" mod="1" about="NE PAS MODIFIER (nom de dossier)">Original Samples</data>
   <data id="02A01" mod="1" about="NE PAS MODIFIER (nom de dossier)">My Samples</data>
 </bundle>
