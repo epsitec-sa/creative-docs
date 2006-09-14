@@ -52,6 +52,44 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool Knows(Command command, out int depth)
+		{
+			depth = 0;
+			
+			foreach (CommandDispatcher dispatcher in this.Dispatchers)
+			{
+				if (dispatcher.Knows (command))
+				{
+					return true;
+				}
+				
+				depth++;
+			}
+			
+			return false;
+		}
+
+		public Command SelectBestCommand(IEnumerable<Command> commands)
+		{
+			int     nearest  = int.MaxValue;
+			Command selected = null;
+
+			foreach (Command command in commands)
+			{
+				int depth;
+				
+				if ((this.Knows (command, out depth)) &&
+					(depth < nearest))
+				{
+					nearest  = depth;
+					selected = command;
+				}
+			}
+			
+			return selected;
+		}
+		
+
 		public static IEnumerable<CommandDispatcher> EmptyDispatcherEnumeration
 		{
 			get
