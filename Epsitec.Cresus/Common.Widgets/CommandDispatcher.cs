@@ -138,7 +138,7 @@ namespace Epsitec.Common.Widgets
 			{
 				foreach (CommandDispatcher dispatcher in dispatcherChain.Dispatchers)
 				{
-					if (dispatcher.InternalDispatchSingleCommand (contextChain, commandObject, source))
+					if (dispatcher.DispatchCommand (contextChain, commandObject, source))
 					{
 						break;
 					}
@@ -158,8 +158,7 @@ namespace Epsitec.Common.Widgets
 					if ((member.IsDefined (CommandDispatcher.commandAttributeType, true)) &&
 						(member.MemberType == System.Reflection.MemberTypes.Method))
 					{
-						System.Reflection.MethodInfo info = member as System.Reflection.MethodInfo;
-						this.RegisterMethod (controller, info);
+						this.RegisterMethod (controller, member as System.Reflection.MethodInfo);
 					}
 				}
 			}
@@ -197,63 +196,30 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+
+		public bool Knows(Command command)
+		{
+			if (this.eventHandlers.ContainsKey (command))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 		
 		
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
+				//	...
 			}
 			
 			base.Dispose (disposing);
 		}
 		
-		
-		#region EventRelay class
-		protected class EventRelay
-		{
-			public EventRelay(object controller, System.Reflection.MethodInfo method_info)
-			{
-				//	Cette classe réalise un relais entre le delegate CommandEventHandler et les
-				//	diverses implémentations possibles au niveau des gestionnaires de commandes.
-				//	Ainsi, les méthodes :
-				//
-				//		void Method()
-				//		void Method(CommandDispatcher)
-				//		void Method(CommandDispatcher, CommandEventArgs)
-				//
-				//	sont toutes appelables via CommandEventHandler.
-				
-				this.controller  = controller;
-				this.method_info = method_info;
-			}
-			
-			
-			public void InvokeWithoutArgument(CommandDispatcher sender, CommandEventArgs e)
-			{
-				this.method_info.Invoke (this.controller, null);
-			}
-			
-			public void InvokeWithCommandDispatcher(CommandDispatcher sender, CommandEventArgs e)
-			{
-				object[] p = new object[1];
-				p[0] = sender;
-				this.method_info.Invoke (this.controller, p);
-			}
-			
-			public void InvokeWithCommandDispatcherAndEventArgs(CommandDispatcher sender, CommandEventArgs e)
-			{
-				object[] p = new object[2];
-				p[0] = sender;
-				p[1] = e;
-				this.method_info.Invoke (this.controller, p);
-			}
-			
-			
-			protected object						controller;
-			protected System.Reflection.MethodInfo	method_info;
-		}
-		#endregion
 		
 		#region EventSlot class
 		private sealed class EventSlot : ICommandDispatcher
@@ -301,7 +267,7 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		protected void RegisterMethod(object controller, System.Reflection.MethodInfo info)
+		private void RegisterMethod(object controller, System.Reflection.MethodInfo info)
 		{
 			//	Ne parcourt que les attributs au niveau d'implémentation actuel (pas les classes dérivées,
 			//	ni les classes parent). Le parcours des parent est assuré par l'appelant.
@@ -313,49 +279,34 @@ namespace Epsitec.Common.Widgets
 				this.RegisterMethod (controller, info, attribute);
 			}
 		}
-		
-		protected void RegisterMethod(object controller, System.Reflection.MethodInfo method_info, Support.CommandAttribute attribute)
+
+		private void RegisterMethod(object controller, System.Reflection.MethodInfo method_info, Support.CommandAttribute attribute)
 		{
-//-			System.Diagnostics.Debug.WriteLine ("Command '" + attribute.CommandName + "' implemented by method " + method_info.Name + " in class " + method_info.DeclaringType.Name + ", prototype: " + method_info.ToString ());
-			
-			System.Diagnostics.Debug.Assert (attribute.CommandName.IndexOf ("*") < 0, "Found '*' in command name.", "The method handling command '" + attribute.CommandName + "' may not contain specify '*' in the command name.\nPlease fix the source code for " + method_info.Name + " in class " + method_info.DeclaringType.Name + ".");
-			System.Diagnostics.Debug.Assert (attribute.CommandName.IndexOf (".") < 0, "Found '.' in command name.", "The method handling command '" + attribute.CommandName + "' may not contain specify '.' in the command name.\nPlease fix the source code for " + method_info.Name + " in class " + method_info.DeclaringType.Name + ".");
-			
 			System.Reflection.ParameterInfo[] param_info = method_info.GetParameters ();
 			
 			CommandEventHandler handler = null;
-			EventRelay          relay   = new EventRelay (controller, method_info);
 			
 			switch (param_info.Length)
 			{
-				case 0:
-					//	La méthode n'a aucun argument :
+				case 0:		//	void Method()
 					
-					handler = new CommandEventHandler (relay.InvokeWithoutArgument);
+					handler = delegate (CommandDispatcher sender, CommandEventArgs e) { method_info.Invoke (controller, null); };
 					break;
 				
-				case 1:
-					//	La méthode a un unique argument. Ce n'est acceptable que si cet argument est
-					//	de type CommandDispatcher, soit :
-					//
-					//		void Method(CommandDispatcher)
+				case 1:		//	void Method(CommandDispatcher)
 					
 					if (param_info[0].ParameterType == typeof (CommandDispatcher))
 					{
-						handler = new CommandEventHandler (relay.InvokeWithCommandDispatcher);
+						handler = delegate (CommandDispatcher sender, CommandEventArgs e) { method_info.Invoke (controller, new object[] { sender }); };
 					}
 					break;
 				
-				case 2:
-					//	La méthode a deux arguments. Ce n'est acceptable que si le premier est de type
-					//	CommandDispatcher et le second de type CommandEventArgs, soit :
-					//
-					//		void Method(CommandDispatcher, CommandEventArgs)
+				case 2:		//	void Method(CommandDispatcher, CommandEventArgs)
 					
 					if ((param_info[0].ParameterType == typeof (CommandDispatcher)) &&
 						(param_info[1].ParameterType == typeof (CommandEventArgs)))
 					{
-						handler = new CommandEventHandler (relay.InvokeWithCommandDispatcherAndEventArgs);
+						handler = delegate (CommandDispatcher sender, CommandEventArgs e) { method_info.Invoke (controller, new object[] { sender, e }); };
 					}
 					break;
 			}
@@ -366,11 +317,10 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.Register (Command.Get (attribute.CommandName), handler);
-			
 		}
 
 
-		protected bool InternalDispatchSingleCommand(CommandContextChain contextChain, Command commandObject, object source)
+		private bool DispatchCommand(CommandContextChain contextChain, Command commandObject, object source)
 		{
 			//	Transmet la commande à ceux qui sont intéressés
 
@@ -380,7 +330,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			CommandContext commandContext;
-			CommandState commandState;
+			CommandState   commandState;
 
 			int loopCounter = 0;
 
@@ -393,7 +343,7 @@ namespace Epsitec.Common.Widgets
 				//	been created for it.
 
 				commandContext = null;
-				commandState = null;
+				commandState   = null;
 			}
 			else
 			{
@@ -514,7 +464,7 @@ namespace Epsitec.Common.Widgets
 
 		private Dictionary<Command, EventSlot>	eventHandlers = new Dictionary<Command, EventSlot> ();
 		
-		protected Support.OpletQueue			opletQueue;
+		private Support.OpletQueue				opletQueue;
 		
 		static object							exclusion = new object ();
 		
