@@ -13,10 +13,10 @@ namespace Epsitec.Common.Document.Settings
 	{
 		public Point(Document document, string name) : base(document, name)
 		{
-			this.Initialise();
+			this.Initialize();
 		}
 
-		protected void Initialise()
+		protected void Initialize()
 		{
 			this.conditionName = "";
 			this.conditionState = false;
@@ -288,7 +288,7 @@ namespace Epsitec.Common.Document.Settings
 			//	Constructeur qui désérialise le réglage.
 			this.link = false;
 			this.Value = (Drawing.Point) info.GetValue("Value", typeof(Drawing.Point));
-			this.Initialise();
+			this.Initialize();
 			this.link = info.GetBoolean("Link");
 		}
 		#endregion

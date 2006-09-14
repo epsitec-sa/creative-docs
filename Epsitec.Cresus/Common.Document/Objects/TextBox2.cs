@@ -32,20 +32,20 @@ namespace Epsitec.Common.Document.Objects
 			return new TextBox2(document, model);
 		}
 
-		protected override void Initialise()
+		protected override void Initialize()
 		{
 			this.textFrame = new Text.SimpleTextFrame();
-			base.Initialise();
+			base.Initialize();
 		}
 		
-		protected override void InitialiseInternals()
+		protected override void InitializeInternals()
 		{
 			if ( this.textFrame == null )
 			{
 				this.textFrame = new Text.SimpleTextFrame();
 			}
 
-			base.InitialiseInternals();
+			base.InitializeInternals();
 		}
 
 

@@ -10,9 +10,9 @@ namespace Epsitec.Common.Widgets
 	[TestFixture] public class CommandTest
 	{
 		[SetUp]
-		public void Initialise()
+		public void Initialize()
 		{
-			Epsitec.Common.Document.Engine.Initialise ();
+			Epsitec.Common.Document.Engine.Initialize ();
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 
 			Resources.DefaultManager.ActiveCulture = Resources.FindSpecificCultureInfo ("fr");

@@ -147,8 +147,8 @@ namespace Epsitec.Cresus.Database
 			
 			this.db_access = db_access;
 			this.db_access.Create = true;
-			
-			this.InitialiseDatabaseAbstraction ();
+
+			this.InitializeDatabaseAbstraction ();
 			
 			this.types.RegisterTypes ();
 			
@@ -229,8 +229,8 @@ namespace Epsitec.Cresus.Database
 			
 			this.db_access = db_access;
 			this.db_access.Create = false;
-			
-			this.InitialiseDatabaseAbstraction ();
+
+			this.InitializeDatabaseAbstraction ();
 			
 			System.Diagnostics.Debug.Assert (this.db_abstraction.UserTableNames.Length > 0);
 			
@@ -2054,7 +2054,7 @@ namespace Epsitec.Cresus.Database
 			fields.Add (type_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, type.Name));
 			fields.Add (type_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTypeFactory.SerializeToXml (type, false)));
 			
-			//	TODO: Initialiser les colonnes descriptives
+			//	TODO: Initializer les colonnes descriptives
 			
 			transaction.SqlBuilder.InsertData (type_def.CreateSqlName (), fields);
 			this.ExecuteSilent (transaction);
@@ -2168,7 +2168,7 @@ namespace Epsitec.Cresus.Database
 		
 		
 		#region Initialisation
-		protected void InitialiseDatabaseAbstraction()
+		protected void InitializeDatabaseAbstraction()
 		{
 			this.types = new TypeHelper (this);
 			
@@ -2368,9 +2368,9 @@ namespace Epsitec.Cresus.Database
 			
 			public void RegisterTypes()
 			{
-				this.InitialiseNumTypes ();
-				this.InitialiseStrTypes ();
-				this.InitialiseOtherTypes ();
+				this.InitializeNumTypes ();
+				this.InitializeStrTypes ();
+				this.InitializeOtherTypes ();
 				
 				this.AssertAllTypesReady ();
 			}
@@ -2407,9 +2407,9 @@ namespace Epsitec.Cresus.Database
 				
 				this.AssertAllTypesReady ();
 			}
-			
-			
-			void InitialiseNumTypes()
+
+
+			void InitializeNumTypes()
 			{
 				this.num_type_key_id       = new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId),     Tags.Name + "=" + Tags.TypeKeyId);
 				this.num_type_key_status   = new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForStatus), Tags.Name + "=" + Tags.TypeKeyStatus);
@@ -2419,8 +2419,8 @@ namespace Epsitec.Cresus.Database
 				this.infrastructure.internal_types.Add (this.num_type_key_status);
 				this.infrastructure.internal_types.Add (this.num_type_req_ex_state);
 			}
-			
-			void InitialiseOtherTypes()
+
+			void InitializeOtherTypes()
 			{
 				this.d_t_type_datetime   = new DbTypeDateTime (Tags.Name + "=" + Tags.TypeDateTime);
 				this.bin_type_raw_data   = new DbTypeByteArray (Tags.Name + "=" + Tags.TypeReqData);
@@ -2428,8 +2428,8 @@ namespace Epsitec.Cresus.Database
 				this.infrastructure.internal_types.Add (this.d_t_type_datetime);
 				this.infrastructure.internal_types.Add (this.bin_type_raw_data);
 			}
-			
-			void InitialiseStrTypes()
+
+			void InitializeStrTypes()
 			{
 				this.str_type_name        = new DbTypeString (DbColumn.MaxNameLength, false,		Tags.Name + "=" + Tags.TypeName);
 				this.str_type_caption     = new DbTypeString (DbColumn.MaxCaptionLength, false,		Tags.Name + "=" + Tags.TypeCaption);

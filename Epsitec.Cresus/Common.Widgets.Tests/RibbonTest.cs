@@ -7,9 +7,9 @@ namespace Epsitec.Common.Widgets
 	[TestFixture]
 	public class RibbonTest
 	{
-		[SetUp] public void Initialise()
+		[SetUp] public void Initialize()
 		{
-			Epsitec.Common.Document.Engine.Initialise();
+			Epsitec.Common.Document.Engine.Initialize();
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive("LookMetal");
 		}
 
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Widgets
 		
 		public static Window CreateAdornerWidgets()
 		{
-			Document.Engine.Initialise();
+			Document.Engine.Initialize();
 
 			Window window = new Window();
 			

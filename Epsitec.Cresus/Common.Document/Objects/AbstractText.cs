@@ -36,7 +36,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.document == null )  return;  // objet factice ?
 			this.CreateProperties(model, false);
-			this.Initialise();
+			this.Initialize();
 		}
 
 		protected override Objects.Abstract CreateNewObject(Document document, Objects.Abstract model)
@@ -44,13 +44,13 @@ namespace Epsitec.Common.Document.Objects
 			return null;
 		}
 
-		protected virtual void Initialise()
+		protected virtual void Initialize()
 		{
 			this.NewTextFlow();
-			this.InitialiseInternals();
+			this.InitializeInternals();
 		}
 		
-		protected virtual void InitialiseInternals()
+		protected virtual void InitializeInternals()
 		{
 			this.UpdateTextGrid(false);
 			
@@ -1430,7 +1430,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void ReadFinalize()
 		{
 			base.ReadFinalize();
-			this.InitialiseInternals();
+			this.InitializeInternals();
 		}
 		
 		public override void ReadFinalizeFlowReady(TextFlow flow)

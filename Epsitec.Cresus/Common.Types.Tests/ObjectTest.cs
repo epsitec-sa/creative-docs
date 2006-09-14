@@ -8,7 +8,7 @@ namespace Epsitec.Common.Types
 	[TestFixture] public class ObjectTest
 	{
 		[SetUp]
-		public void Initialise()
+		public void Initialize()
 		{
 		}
 

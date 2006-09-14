@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Properties
 		{
 		}
 
-		protected override void Initialise()
+		protected override void Initialize()
 		{
 			this.h = 0.0;
 			this.s = 0.0;

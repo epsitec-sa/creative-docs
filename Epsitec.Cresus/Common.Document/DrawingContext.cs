@@ -1563,7 +1563,7 @@ namespace Epsitec.Common.Document
 				Point proj = this.magnetLineMain.Projection(this.magnetStarting);
 				if ( Point.Distance(proj, pos) <= this.MagnetMargin )
 				{
-					this.magnetLineProj.Initialise(proj, this.magnetStarting, false);
+					this.magnetLineProj.Initialize(proj, this.magnetStarting, false);
 					pos = proj;
 					return true;
 				}
@@ -1673,20 +1673,20 @@ namespace Epsitec.Common.Document
 				Point p1, p2;
 				if ( this.document.Modifier.MagnetLayerDetect(pos, new Point(0,0), new Point(0,0), out p1, out p2) )
 				{
-					this.magnetLineMain.Initialise(p1, p2, true);
+					this.magnetLineMain.Initialize(p1, p2, true);
 					first = this.magnetLineMain;
 
 					//	Ajoute le segment au départ.
 					Point pp1 = Point.Move(p1, p2, this.MagnetMargin);
 					Point pb1 = Transform.RotatePointDeg(p1,  90, pp1);
 					Point pb2 = Transform.RotatePointDeg(p1, -90, pp1);
-					this.magnetLineBegin.Initialise(pb1, pb2, false);
+					this.magnetLineBegin.Initialize(pb1, pb2, false);
 
 					//	Ajoute le segment à l'arrivée.
 					Point pp2 = Point.Move(p2, p1, this.MagnetMargin);
 					Point pe1 = Transform.RotatePointDeg(p2,  90, pp2);
 					Point pe2 = Transform.RotatePointDeg(p2, -90, pp2);
-					this.magnetLineEnd.Initialise(pe1, pe2, false);
+					this.magnetLineEnd.Initialize(pe1, pe2, false);
 
 					if ( this.isMagnetStarting &&
 						 this.magnetLineMain.Detect(this.magnetStarting, 0.001) )
@@ -1694,7 +1694,7 @@ namespace Epsitec.Common.Document
 						Point delta = Point.Move(p1, p2, this.MagnetMargin*2.0)-p1;
 						Point pi1 = new Point(this.magnetStarting.X-delta.Y, this.magnetStarting.Y+delta.X);
 						Point pi2 = new Point(this.magnetStarting.X+delta.Y, this.magnetStarting.Y-delta.X);
-						this.magnetLinePerp.Initialise(pi1, pi2, false);
+						this.magnetLinePerp.Initialize(pi1, pi2, false);
 
 						this.magnetLineMiddle.Clear();
 					}
@@ -1705,7 +1705,7 @@ namespace Epsitec.Common.Document
 						Point n = Point.Move(m, p2, this.MagnetMargin);
 						Point pm1 = Transform.RotatePointDeg(m,  90, n);
 						Point pm2 = Transform.RotatePointDeg(m, -90, n);
-						this.magnetLineMiddle.Initialise(pm1, pm2, false);
+						this.magnetLineMiddle.Initialize(pm1, pm2, false);
 
 						this.magnetLinePerp.Clear();
 					}
@@ -1721,7 +1721,7 @@ namespace Epsitec.Common.Document
 						Point[] inter = Geometry.Intersect(first.P1, first.P2, p1, p2);
 						if ( inter != null && Geometry.IsInside(p1, p2, inter[0]) )
 						{
-							this.magnetLineInter.Initialise(p1, p2, false);
+							this.magnetLineInter.Initialize(p1, p2, false);
 							second = this.magnetLineInter;
 						}
 					}
@@ -1856,7 +1856,7 @@ namespace Epsitec.Common.Document
 			if ( p1 == p2 )  return;
 
 			MagnetLine line = new MagnetLine(this.document, this, MagnetLine.Type.Constrain);
-			line.Initialise(p1, p2, true, false);
+			line.Initialize(p1, p2, true, false);
 
 			foreach ( MagnetLine exist in this.constrainList )
 			{
@@ -1873,7 +1873,7 @@ namespace Epsitec.Common.Document
 			if ( center == ext )  return;
 
 			MagnetLine line = new MagnetLine(this.document, this, MagnetLine.Type.Circle);
-			line.Initialise(center, ext, true, false);
+			line.Initialize(center, ext, true, false);
 
 			line.IsVisible = this.isCtrl;
 			this.constrainList.Add(line);

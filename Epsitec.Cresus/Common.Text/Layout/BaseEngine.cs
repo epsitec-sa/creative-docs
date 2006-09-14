@@ -31,7 +31,7 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		public virtual void Initialise(Text.TextContext context, string name)
+		public virtual void Initialize(Text.TextContext context, string name)
 		{
 			this.context = context;
 			this.name    = name;

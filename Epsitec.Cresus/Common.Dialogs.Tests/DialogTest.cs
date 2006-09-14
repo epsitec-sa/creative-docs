@@ -9,7 +9,7 @@ namespace Epsitec.Common.Dialogs
 	{
 		[SetUp] public void SetUp()
 		{
-			Epsitec.Common.Document.Engine.Initialise ();
+			Epsitec.Common.Document.Engine.Initialize ();
 			
 			Support.Resources.DefaultManager.DefineDefaultModuleName ("DialogTest");
 		}

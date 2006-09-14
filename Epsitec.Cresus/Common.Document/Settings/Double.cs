@@ -13,10 +13,10 @@ namespace Epsitec.Common.Document.Settings
 	{
 		public Double(Document document, string name) : base(document, name)
 		{
-			this.Initialise();
+			this.Initialize();
 		}
 
-		protected void Initialise()
+		protected void Initialize()
 		{
 			this.conditionName = "";
 			this.conditionState = false;
@@ -534,7 +534,7 @@ namespace Epsitec.Common.Document.Settings
 		{
 			//	Constructeur qui désérialise le réglage.
 			this.Value = info.GetDouble("Value");
-			this.Initialise();
+			this.Initialize();
 		}
 		#endregion
 

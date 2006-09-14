@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.ServerManager
 		#region Application Startup
 		[System.STAThread] static void Main() 
 		{
-			Epsitec.Common.Document.Engine.Initialise ();
+			Epsitec.Common.Document.Engine.Initialize ();
 			Epsitec.Common.Support.Resources.DefaultManager.DefineDefaultModuleName ("ServerManager");
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
 			

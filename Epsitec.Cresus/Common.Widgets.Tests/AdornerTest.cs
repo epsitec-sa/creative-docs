@@ -7,9 +7,9 @@ namespace Epsitec.Common.Widgets
 	[TestFixture]
 	public class AdornerTest
 	{
-		[SetUp] public void Initialise()
+		[SetUp] public void Initialize()
 		{
-			Epsitec.Common.Document.Engine.Initialise ();
+			Epsitec.Common.Document.Engine.Initialize ();
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 			
 			Drawing.DynamicImage image = new Drawing.DynamicImage (new Drawing.Size (30, 18), new Drawing.DynamicImagePaintCallback (this.DynamicImageXyz));
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Widgets
 		
 		public static Window CreateAdornerWidgets()
 		{
-			Document.Engine.Initialise ();
+			Document.Engine.Initialize ();
 
 			Window window = new Window();
 			

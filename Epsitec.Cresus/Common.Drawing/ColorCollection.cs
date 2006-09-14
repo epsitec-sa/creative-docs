@@ -28,16 +28,16 @@ namespace Epsitec.Common.Drawing
 				this.colors[i] = RichColor.Empty;
 			}
 			
-			this.Initialise(ColorCollectionType.Default);
+			this.Initialize(ColorCollectionType.Default);
 		}
 
 		public ColorCollection(ColorCollectionType type) : this ()
 		{
-			this.Initialise (type);
+			this.Initialize (type);
 		}
 
 		
-		public void Initialise(ColorCollectionType type)
+		public void Initialize(ColorCollectionType type)
 		{
 			switch (type)
 			{

@@ -13,10 +13,10 @@ namespace Epsitec.Common.Document.Settings
 	{
 		public Bool(Document document, string name) : base(document, name)
 		{
-			this.Initialise();
+			this.Initialize();
 		}
 
-		protected void Initialise()
+		protected void Initialize()
 		{
 			this.conditionName = "";
 			this.conditionState = false;
@@ -347,7 +347,7 @@ namespace Epsitec.Common.Document.Settings
 		{
 			//	Constructeur qui désérialise le réglage.
 			this.Value = info.GetBoolean("Value");
-			this.Initialise();
+			this.Initialize();
 		}
 		#endregion
 	}

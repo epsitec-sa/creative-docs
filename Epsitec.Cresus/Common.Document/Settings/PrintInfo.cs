@@ -46,10 +46,10 @@ namespace Epsitec.Common.Document.Settings
 		public PrintInfo(Document document)
 		{
 			this.document = document;
-			this.Initialise();
+			this.Initialize();
 		}
 
-		protected void Initialise()
+		protected void Initialize()
 		{
 			this.printName = "";
 			this.printRange = PrintRange.All;
@@ -291,7 +291,7 @@ namespace Epsitec.Common.Document.Settings
 		{
 			//	Constructeur qui désérialise les réglages.
 			this.document = Document.ReadDocument;
-			this.Initialise();
+			this.Initialize();
 
 			int rev = 0;
 			if ( Support.Serialization.Helper.FindElement(info, "Rev") )

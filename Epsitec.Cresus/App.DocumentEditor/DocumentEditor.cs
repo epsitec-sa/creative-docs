@@ -78,7 +78,7 @@ namespace Epsitec.App.DocumentEditor
 			if ( !this.ReadGlobalSettings() )
 			{
 				this.globalSettings = new GlobalSettings();
-				this.globalSettings.Initialise(this.documentType);
+				this.globalSettings.Initialize(this.documentType);
 			}
 
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive(this.globalSettings.Adorner);
@@ -1946,31 +1946,31 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("NewPaletteDefault")]
 		void CommandNewPaletteDefault()
 		{
-			this.CurrentDocument.GlobalSettings.ColorCollection.Initialise(ColorCollectionType.Default);
+			this.CurrentDocument.GlobalSettings.ColorCollection.Initialize(ColorCollectionType.Default);
 		}
 
 		[Command ("NewPaletteRainbow")]
 		void NewPaletteRainbow()
 		{
-			this.CurrentDocument.GlobalSettings.ColorCollection.Initialise(ColorCollectionType.Rainbow);
+			this.CurrentDocument.GlobalSettings.ColorCollection.Initialize(ColorCollectionType.Rainbow);
 		}
 
 		[Command ("NewPaletteLight")]
 		void NewPaletteLight()
 		{
-			this.CurrentDocument.GlobalSettings.ColorCollection.Initialise(ColorCollectionType.Light);
+			this.CurrentDocument.GlobalSettings.ColorCollection.Initialize(ColorCollectionType.Light);
 		}
 
 		[Command ("NewPaletteDark")]
 		void NewPaletteDark()
 		{
-			this.CurrentDocument.GlobalSettings.ColorCollection.Initialise(ColorCollectionType.Dark);
+			this.CurrentDocument.GlobalSettings.ColorCollection.Initialize(ColorCollectionType.Dark);
 		}
 
 		[Command ("NewPaletteGray")]
 		void CommandNewPaletteGray()
 		{
-			this.CurrentDocument.GlobalSettings.ColorCollection.Initialise(ColorCollectionType.Gray);
+			this.CurrentDocument.GlobalSettings.ColorCollection.Initialize(ColorCollectionType.Gray);
 		}
 
 		[Command ("OpenPalette")]

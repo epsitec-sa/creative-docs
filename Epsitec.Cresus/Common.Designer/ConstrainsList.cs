@@ -200,13 +200,13 @@ namespace Epsitec.Common.Designer
 						distance = System.Math.Abs(bounds.Center.X-center.X);
 						if (distance <= distanceX)
 						{
-							this.Initialise(obj);
+							this.Initialize(obj);
 						}
 
 						distance = System.Math.Abs(bounds.Center.Y-center.Y);
 						if (distance <= distanceY)
 						{
-							this.Initialise(obj);
+							this.Initialize(obj);
 						}
 					}
 
@@ -233,7 +233,7 @@ namespace Epsitec.Common.Designer
 			return false;
 		}
 
-		protected void Initialise(Widget obj)
+		protected void Initialize(Widget obj)
 		{
 			//	Initialise les contraintes pour un objet.
 			Rectangle bounds = this.editor.GetObjectPreferredBounds(obj);

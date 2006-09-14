@@ -25,7 +25,7 @@ namespace Epsitec.Common.Document.Properties
 		{
 		}
 
-		protected override void Initialise()
+		protected override void Initialize()
 		{
 			this.volumeType = VolumeType.BoxClose;
 			this.rapport = 0.40;

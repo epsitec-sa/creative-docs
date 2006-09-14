@@ -30,7 +30,7 @@ namespace Epsitec.Common.Text
 			
 			Layout.BaseEngine engine = System.Activator.CreateInstance (type) as Layout.BaseEngine;
 			
-			engine.Initialise (this.context, name);
+			engine.Initialize (this.context, name);
 			
 			this.layouts[name] = engine;
 			

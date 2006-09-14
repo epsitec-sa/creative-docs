@@ -31,20 +31,20 @@ namespace Epsitec.Common.Document.Objects
 			return new TextLine2(document, model);
 		}
 
-		protected override void Initialise()
+		protected override void Initialize()
 		{
 			this.textFrame = new Text.SingleLineTextFrame();
-			base.Initialise();
+			base.Initialize();
 		}
 		
-		protected override void InitialiseInternals()
+		protected override void InitializeInternals()
 		{
 			if ( this.textFrame == null )
 			{
 				this.textFrame = new Text.SingleLineTextFrame();
 			}
 
-			base.InitialiseInternals();
+			base.InitializeInternals();
 		}
 
 

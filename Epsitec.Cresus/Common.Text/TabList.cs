@@ -158,7 +158,7 @@ namespace Epsitec.Common.Text
 				int count = record.UserCount;
 				
 				this.Detach (record.Tag);
-				record.Initialise (tab.TabTag, position, units, disposition, docking_mark, position_mode, attribute);
+				record.Initialize (tab.TabTag, position, units, disposition, docking_mark, position_mode, attribute);
 				this.Attach (record);
 				
 				System.Diagnostics.Debug.Assert (record.UserCount == count);
@@ -742,7 +742,7 @@ namespace Epsitec.Common.Text
 			
 			public TabRecord(string tag, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
 			{
-				this.Initialise (tag, position, units, disposition, docking_mark, position_mode, attribute);
+				this.Initialize (tag, position, units, disposition, docking_mark, position_mode, attribute);
 			}
 			
 			
@@ -856,7 +856,7 @@ namespace Epsitec.Common.Text
 			}
 		
 			
-			public void Initialise(string tag, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
+			public void Initialize(string tag, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
 			{
 				this.tag           = tag;
 				this.position      = position;

@@ -15,7 +15,7 @@ namespace Epsitec.Common.Dialogs
 		[Test]
 		public void CheckApplication()
 		{
-			Epsitec.Common.Document.Engine.Initialise();
+			Epsitec.Common.Document.Engine.Initialize();
 
 			Window window = new Window();
 			
