@@ -9,7 +9,7 @@ namespace Epsitec.Common.Document
 	{
 		private Engine()
 		{
-			Res.Initialize(typeof(Engine), "Document");
+			Res.Initialise(typeof(Engine), "Document");
 			Drawing.Canvas.RegisterEngine(this);
 		}
 		
