@@ -1,13 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Captions" type="Caption" culture="en">
-  <data id="03">&lt;s:data id="_0" /&gt;</data>
-  <data id="04">&lt;objects xmlns:s="http://www.epsitec.ch/XNS/storage-structure-1" xmlns:f="http://www.epsitec.ch/XNS/storage-fields-1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="2" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="Epsitec.Common.Types.Caption" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_2" /&gt;&lt;s:data id="_1" f:_2.Shortcuts="{Collection {ObjRef _2}}" /&gt;&lt;s:data id="_2" f:KeyCode="FuncF2" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
-  <data id="05">&lt;s:data id="_0" /&gt;</data>
-  <data id="06">&lt;s:data id="_0" /&gt;</data>
-  <data id="07">&lt;s:data id="_0" /&gt;</data>
-  <data id="08">&lt;s:data id="_0" /&gt;</data>
-  <data id="09">&lt;s:data id="_0" /&gt;</data>
-  <data id="0A">&lt;s:data id="_0" /&gt;</data>
-  <data id="0B">&lt;s:data id="_0" /&gt;</data>
-  <data id="0C">&lt;s:data id="_0" /&gt;</data>
+  <data id="03">&lt;s:data id="_0" f:Description="New folder" f:Labels="{Collection {Text 'New folder'}}" /&gt;</data>
+  <data id="04">&lt;s:data id="_0" f:Description="Rename a file or folder" f:Labels="{Collection {Text 'Rename'}}" /&gt;</data>
+  <data id="05">&lt;s:data id="_0" f:Description="Delete a file or folder" f:Labels="{Collection {Text 'Delete'}}" /&gt;</data>
+  <data id="06">&lt;s:data id="_0" f:Description="Back" f:Labels="{Collection {Text 'Back'}}" /&gt;</data>
+  <data id="07">&lt;s:data id="_0" f:Description="Forward" f:Labels="{Collection {Text 'Forward'}}" /&gt;</data>
+  <data id="08">&lt;s:data id="_0" f:Description="Add a favorite" f:Labels="{Collection {Text 'Add a favorite'}}" /&gt;</data>
+  <data id="09">&lt;s:data id="_0" f:Description="Remove a favorite" f:Labels="{Collection {Text 'Remove a favorite'}}" /&gt;</data>
+  <data id="0A">&lt;s:data id="_0" f:Description="Move favorite up" f:Labels="{Collection {Text 'Move favorite up'}}" /&gt;</data>
+  <data id="0B">&lt;s:data id="_0" f:Description="Move favorite down" f:Labels="{Collection {Text 'Move favorite down'}}" /&gt;</data>
+  <data id="0C">&lt;s:data id="_0" f:Description="Large icons" f:Labels="{Collection {Text 'Large icons'}}" /&gt;</data>
+  <data id="01">&lt;s:data id="_0" f:Description="Up" f:Labels="{Collection {Text 'Up'}}" /&gt;</data>
 </bundle>
