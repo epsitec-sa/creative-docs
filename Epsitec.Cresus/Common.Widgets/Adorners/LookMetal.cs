@@ -1261,6 +1261,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				this.PaintImageButton(graphics, rect, 19);
 			}
+
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			if ( (state&WidgetPaintState.Enabled) != 0 )
@@ -1270,6 +1271,13 @@ namespace Epsitec.Common.Widgets.Adorners
 			else
 			{
 				graphics.RenderSolid(this.colorDisabled);
+			}
+
+			if ((state&WidgetPaintState.Focused) != 0)
+			{
+				rect.Deflate(1.0);
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(this.colorCaption);
 			}
 		}
 

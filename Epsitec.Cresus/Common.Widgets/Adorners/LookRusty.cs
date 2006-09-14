@@ -1187,7 +1187,14 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine le fond d'un tableau.
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.ColorBorder);
+			if ((state&WidgetPaintState.Focused) != 0)
+			{
+				graphics.RenderSolid(this.colorCaption);
+			}
+			else
+			{
+				graphics.RenderSolid(this.ColorBorder);
+			}
 		}
 
 		public override void PaintArrayForeground(Drawing.Graphics graphics,

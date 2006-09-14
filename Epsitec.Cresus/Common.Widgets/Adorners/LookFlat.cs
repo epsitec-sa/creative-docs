@@ -981,6 +981,12 @@ namespace Epsitec.Common.Widgets.Adorners
 										 Drawing.Rectangle rect,
 										 WidgetPaintState state)
 		{
+			if ((state&WidgetPaintState.Focused) != 0)
+			{
+				rect.Deflate(0.5);
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(this.colorCaption);
+			}
 		}
 
 		public override void PaintCellBackground(Drawing.Graphics graphics,

@@ -1158,6 +1158,13 @@ namespace Epsitec.Common.Widgets.Adorners
 			Drawing.Path path = this.PathRoundRectangle(rect, radius);
 			graphics.Rasterizer.AddOutline(path, 1);
 			graphics.RenderSolid(this.colorBorder);
+
+			if ((state&WidgetPaintState.Focused) != 0)
+			{
+				rect.Deflate(1.5);
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(this.colorCaption);
+			}
 		}
 
 		public override void PaintArrayForeground(Drawing.Graphics graphics,

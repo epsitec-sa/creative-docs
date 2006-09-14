@@ -1233,6 +1233,13 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				graphics.RenderSolid(this.colorControlDarkDark);
 			}
+
+			if ((state&WidgetPaintState.Focused) != 0)
+			{
+				rect.Deflate(1.5);
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(this.colorCaption);
+			}
 		}
 
 		public override void PaintArrayForeground(Drawing.Graphics graphics,
