@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Strings" type="String" culture="en">
-  <data id="0">CreativeDocs</data>
-  <data id="01">Creative Docs .NET</data>
-  <data id="02">Creative Pict .NET</data>
-  <data id="03">Creative Text .NET</data>
-  <data id="04">CreativeDocs</data>
-  <data id="05">F</data>
+  <data id="0" mod="1">CreativeDocs</data>
+  <data id="01" mod="1">Creative Docs .NET</data>
+  <data id="02" mod="1">Creative Pict .NET</data>
+  <data id="03" mod="1">Creative Text .NET</data>
+  <data id="04" mod="1">CreativeDocs</data>
+  <data id="05" mod="1">F</data>
   <data id="06">Documents</data>
   <data id="07">Operations</data>
   <data id="08">Geometry</data>
@@ -213,58 +213,32 @@
   <data id="0I6">+41 84 827 37 87</data>
   <data id="0J6">Fax:</data>
   <data id="0K6">+41 21 728 44 83</data>
-  <data id="0L6">
-  </data>
-  <data id="0M6">
-  </data>
-  <data id="0N6">
-  </data>
-  <data id="0O6">
-  </data>
-  <data id="0P6">
-  </data>
-  <data id="0Q6">
-  </data>
-  <data id="0R6">
-  </data>
-  <data id="0S6">
-  </data>
-  <data id="0T6">
-  </data>
-  <data id="0U6">
-  </data>
-  <data id="0V6">
-  </data>
-  <data id="007">
-  </data>
-  <data id="017">
-  </data>
-  <data id="027">
-  </data>
-  <data id="037">
-  </data>
-  <data id="047">
-  </data>
-  <data id="057">
-  </data>
-  <data id="067">
-  </data>
-  <data id="077">
-  </data>
-  <data id="0A7">
-  </data>
-  <data id="0B7">
-  </data>
-  <data id="0C7">
-  </data>
-  <data id="0D7">
-  </data>
-  <data id="0E7">
-  </data>
-  <data id="0F7">
-  </data>
-  <data id="0G7">
-  </data>
-  <data id="0H7">
-  </data>
+  <data id="0L6" mod="1">New document</data>
+  <data id="0M6" mod="1">Open</data>
+  <data id="0N6" mod="1">Preview</data>
+  <data id="0O6" mod="1">Type</data>
+  <data id="0P6" mod="1">Name</data>
+  <data id="0Q6" mod="1">Size</data>
+  <data id="0R6" mod="1">Preview size</data>
+  <data id="0S6" mod="1">{0} KB</data>
+  <data id="0T6" mod="1">Empty document</data>
+  <data id="0U6" mod="1">Folder</data>
+  <data id="0V6" mod="1">Document</data>
+  <data id="007" mod="1">Document</data>
+  <data id="017" mod="1">Browse</data>
+  <data id="027" mod="1">Parent folder</data>
+  <data id="037" mod="1">Create a New folder</data>
+  <data id="047" mod="1">Format: {0}&lt;br/&gt;Pages/layers: {1}/{2}&lt;br/&gt;Fonts/images: {5}/{6}&lt;br/&gt;Objects: {3}/{4}</data>
+  <data id="057" mod="1">New folder</data>
+  <data id="067" mod="1">Rename a file or folder</data>
+  <data id="077" mod="1">Delete a file or folder</data>
+  <data id="0A7" mod="1">Save</data>
+  <data id="0B7" mod="1">The document &lt;b&gt;{0}&lt;/b&gt; already exists.&lt;br/&gt;&lt;br/&gt;{1}&lt;br/&gt;&lt;br/&gt;Do you want to replace it?</data>
+  <data id="0C7" mod="1">Template</data>
+  <data id="0D7" mod="1">Template</data>
+  <data id="0E7" mod="1">The document &lt;b&gt;{0}&lt;/b&gt; does not exist.&lt;br/&gt;&lt;br/&gt;{1}</data>
+  <data id="0F7" mod="1">New</data>
+  <data id="0G7" mod="1">Show or hide options for the favorites</data>
+  <data id="0H7" mod="1">The contents of the &lt;b&gt;{0}&lt;/b&gt; folder cannot be modified.&lt;br/&gt;The file will be saved to &lt;b&gt;{1}&lt;/b&gt; instead.</data>
+  <data id="091">Drag here to resize the window</data>
 </bundle>
