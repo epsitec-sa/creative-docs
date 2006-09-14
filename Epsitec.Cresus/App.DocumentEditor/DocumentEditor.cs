@@ -147,9 +147,9 @@ namespace Epsitec.App.DocumentEditor
 				this.UpdateRulers();
 				if ( err == "" )
 				{
-					this.DialogWarnings(this.commandDispatcher, this.CurrentDocument.ReadWarnings);
+					this.DialogWarnings(this.CurrentDocument.ReadWarnings);
 				}
-				this.DialogError(this.commandDispatcher, err);
+				this.DialogError(err);
 			}
 			else
 			{
@@ -168,7 +168,7 @@ namespace Epsitec.App.DocumentEditor
 					this.UpdateRulers();
 					if ( err == "" )
 					{
-						this.DialogWarnings(this.commandDispatcher, this.CurrentDocument.ReadWarnings);
+						this.DialogWarnings(this.CurrentDocument.ReadWarnings);
 					}
 				}
 
@@ -182,7 +182,7 @@ namespace Epsitec.App.DocumentEditor
 					this.UpdateRulers();
 					if ( err == "" )
 					{
-						this.DialogWarnings(this.commandDispatcher, this.CurrentDocument.ReadWarnings);
+						this.DialogWarnings(this.CurrentDocument.ReadWarnings);
 					}
 				}
 			}
@@ -1194,7 +1194,7 @@ namespace Epsitec.App.DocumentEditor
 
 		
 		#region IO
-		protected Common.Dialogs.DialogResult DialogSave(CommandDispatcher dispatcher)
+		protected Common.Dialogs.DialogResult DialogSave()
 		{
 			//	Affiche le dialogue pour demander s'il faut enregistrer le
 			//	document modifié, avant de passer à un autre document.
@@ -1213,13 +1213,13 @@ namespace Epsitec.App.DocumentEditor
 			string question1 = string.Format(Res.Strings.Dialog.Question.Save.Part1, shortFilename);
 			string question2 = Res.Strings.Dialog.Question.Save.Part2;
 			string message = string.Format("<font size=\"100%\">{0}</font><br/><br/>{1}{2}", question1, statistic, question2);
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel(title, icon, message, null, null, dispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel(title, icon, message, null, null, this.commandDispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
 		}
 
-		protected Common.Dialogs.DialogResult DialogWarnings(CommandDispatcher dispatcher, System.Collections.ArrayList warnings)
+		protected Common.Dialogs.DialogResult DialogWarnings(System.Collections.ArrayList warnings)
 		{
 			//	Affiche le dialogue pour signaler la liste de tous les problèmes.
 			if ( warnings == null || warnings.Count == 0 )  return Common.Dialogs.DialogResult.None;
@@ -1248,7 +1248,7 @@ namespace Epsitec.App.DocumentEditor
 			builder.Append("<br/>");
 			string message = builder.ToString();
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateOk(title, icon, message, "", dispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateOk(title, icon, message, "", this.commandDispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -1258,10 +1258,10 @@ namespace Epsitec.App.DocumentEditor
 		{
 			//	Affiche l'avertissement de changement 'Exemples originaux' vers 'Mes exemples'.
 			string message = string.Format(Res.Strings.Dialog.Warning.Redirection, Document.DisplayOriginalSamples, Document.DisplayMySamples);  // TODO: mettre dans les ressources !
-			this.DialogError(this.commandDispatcher, message);
+			this.DialogError(message);
 		}
 
-		public Common.Dialogs.DialogResult DialogError(CommandDispatcher dispatcher, string error)
+		public Common.Dialogs.DialogResult DialogError(string error)
 		{
 			//	Affiche le dialogue pour signaler une erreur.
 			if ( this.Window == null )  return Common.Dialogs.DialogResult.None;
@@ -1273,13 +1273,13 @@ namespace Epsitec.App.DocumentEditor
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
 			string message = error;
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateOk(title, icon, message, "", dispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateOk(title, icon, message, "", this.commandDispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
 		}
 
-		public Common.Dialogs.DialogResult DialogQuestion(CommandDispatcher dispatcher, string message)
+		public Common.Dialogs.DialogResult DialogQuestion(string message)
 		{
 			//	Affiche le dialogue pour poser une question oui/non.
 			if ( this.Window == null )  return Common.Dialogs.DialogResult.None;
@@ -1289,7 +1289,7 @@ namespace Epsitec.App.DocumentEditor
 			string title = Res.Strings.Application.TitleShort;
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNo(title, icon, message, "", "", dispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNo(title, icon, message, "", "", this.commandDispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -1317,7 +1317,7 @@ namespace Epsitec.App.DocumentEditor
 			return filename;
 		}
 
-		protected bool Open(CommandDispatcher dispatcher)
+		protected bool Open()
 		{
 			//	Demande un nom de fichier puis ouvre le fichier.
 			//	Affiche l'erreur éventuelle.
@@ -1381,7 +1381,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		protected bool OpenModel(CommandDispatcher dispatcher)
+		protected bool OpenModel()
 		{
 			//	Demande un nom de fichier modèle puis ouvre le fichier.
 			//	Affiche l'erreur éventuelle.
@@ -1460,15 +1460,15 @@ namespace Epsitec.App.DocumentEditor
 				if ( err == "" )
 				{
 					this.UpdateBookDocuments();
-					this.DialogWarnings(this.commandDispatcher, this.CurrentDocument.ReadWarnings);
+					this.DialogWarnings(this.CurrentDocument.ReadWarnings);
 				}
 			}
 			//?this.MouseHideWait();
-			this.DialogError(this.commandDispatcher, err);
+			this.DialogError(err);
 			return (err == "");
 		}
 
-		protected bool Save(CommandDispatcher dispatcher, bool ask)
+		protected bool Save(bool ask)
 		{
 			//	Demande un nom de fichier puis enregistre le fichier.
 			//	Si le document a déjà un nom de fichier et que ask=false,
@@ -1546,11 +1546,11 @@ namespace Epsitec.App.DocumentEditor
 				this.globalSettings.LastFilenameAdd(filename);
 			}
 			this.MouseHideWait();
-			this.DialogError(dispatcher, err);
+			this.DialogError(err);
 			return (err == "");
 		}
 
-		protected bool SaveModel(CommandDispatcher dispatcher)
+		protected bool SaveModel()
 		{
 			//	Demande un nom de fichier modèle puis enregistre le fichier.
 			//	Retourne false si le fichier n'a pas été enregistré.
@@ -1595,19 +1595,19 @@ namespace Epsitec.App.DocumentEditor
 				this.globalSettings.LastModelAdd(filename);
 			}
 			this.MouseHideWait();
-			this.DialogError(dispatcher, err);
+			this.DialogError(err);
 			return (err == "");
 		}
 
-		protected bool AutoSave(CommandDispatcher dispatcher)
+		protected bool AutoSave()
 		{
 			//	Fait tout ce qu'il faut pour éventuellement sauvegarder le document
 			//	avant de passer à autre chose.
 			//	Retourne false si on ne peut pas continuer.
-			Common.Dialogs.DialogResult result = this.DialogSave(dispatcher);
+			Common.Dialogs.DialogResult result = this.DialogSave();
 			if ( result == Common.Dialogs.DialogResult.Yes )
 			{
-				return this.Save(dispatcher, false);
+				return this.Save(false);
 			}
 			if ( result == Common.Dialogs.DialogResult.Cancel )
 			{
@@ -1616,7 +1616,7 @@ namespace Epsitec.App.DocumentEditor
 			return true;
 		}
 
-		protected bool AutoSaveAll(CommandDispatcher dispatcher)
+		protected bool AutoSaveAll()
 		{
 			//	Fait tout ce qu'il faut pour éventuellement sauvegarder tous les
 			//	documents avant de passer à autre chose.
@@ -1627,7 +1627,7 @@ namespace Epsitec.App.DocumentEditor
 			for ( int i=0 ; i<total ; i++ )
 			{
 				this.currentDocument = i;
-				if ( !this.AutoSave(dispatcher) )
+				if ( !this.AutoSave() )
 				{
 					this.currentDocument = cd;
 					return false;
@@ -1638,7 +1638,7 @@ namespace Epsitec.App.DocumentEditor
 			return true;
 		}
 
-		protected bool ForceSaveAll(CommandDispatcher dispatcher)
+		protected bool ForceSaveAll()
 		{
 			//	Sauvegarde tous les documents, même ceux qui sont à jour.
 			int cd = this.currentDocument;
@@ -1647,7 +1647,7 @@ namespace Epsitec.App.DocumentEditor
 			for ( int i=0 ; i<total ; i++ )
 			{
 				this.currentDocument = i;
-				this.Save(dispatcher, false);
+				this.Save(false);
 			}
 
 			this.currentDocument = cd;
@@ -1706,7 +1706,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("Open")]
 		void CommandOpen(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.Open(dispatcher);
+			this.Open();
 			if ( this.IsCurrentDocument )
 			{
 				this.CurrentDocument.Modifier.ActiveViewer.Focus();
@@ -1716,7 +1716,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("OpenModel")]
 		void CommandOpenModel(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.OpenModel(dispatcher);
+			this.OpenModel();
 			if ( this.IsCurrentDocument )
 			{
 				this.CurrentDocument.Modifier.ActiveViewer.Focus();
@@ -1726,32 +1726,32 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("Save")]
 		void CommandSave(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.Save(dispatcher, false);
+			this.Save(false);
 		}
 		
 		[Command ("SaveAs")]
 		void CommandSaveAs(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.Save(dispatcher, true);
+			this.Save(true);
 		}
 		
 		[Command ("SaveModel")]
 		void CommandSaveModel(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.SaveModel(dispatcher);
+			this.SaveModel();
 		}
 		
 		[Command ("Close")]
 		void CommandClose(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( !this.AutoSave(dispatcher) )  return;
+			if ( !this.AutoSave() )  return;
 			this.CloseDocument();
 		}
 
 		[Command ("CloseAll")]
 		void CommandCloseAll(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( !this.AutoSaveAll(dispatcher) )  return;
+			if ( !this.AutoSaveAll() )  return;
 			while ( this.IsCurrentDocument )
 			{
 				this.CloseDocument();
@@ -1761,7 +1761,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ForceSaveAll")]
 		void CommandForceSaveAll(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.ForceSaveAll(dispatcher);
+			this.ForceSaveAll();
 		}
 
 		[Command ("NextDocument")]
@@ -1808,7 +1808,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command("QuitApplication")]
 		void CommandQuitApplication(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( !this.AutoSaveAll(dispatcher) )  return;
+			if ( !this.AutoSaveAll() )  return;
 			this.QuitApplication();
 		}
 
@@ -1993,7 +1993,7 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.GlobalSettings.ColorCollectionFilename = System.IO.Path.GetFileName(dialog.FileName);
 
 			string err = this.PaletteRead(dialog.FileName);
-			this.DialogError(this.commandDispatcher, err);
+			this.DialogError(err);
 		}
 
 		[Command ("SavePalette")]
@@ -2017,7 +2017,7 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.GlobalSettings.ColorCollectionFilename = System.IO.Path.GetFileName(dialog.FileName);
 
 			string err = this.PaletteWrite(dialog.FileName);
-			this.DialogError(this.commandDispatcher, err);
+			this.DialogError(err);
 		}
 
 		public string PaletteRead(string filename)

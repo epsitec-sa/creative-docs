@@ -301,22 +301,27 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.favoritesToolbar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			IconButton buttonAdd = new IconButton(this.favoritesToolbar);
+			buttonAdd.AutoFocus = false;
 			buttonAdd.CommandObject = this.favoritesAddState.Command;
 			buttonAdd.Dock = DockStyle.Left;
 
 			IconButton buttonRemove = new IconButton(this.favoritesToolbar);
+			buttonRemove.AutoFocus = false;
 			buttonRemove.CommandObject = this.favoritesRemoveState.Command;
 			buttonRemove.Dock = DockStyle.Left;
 
 			IconButton buttonUp = new IconButton(this.favoritesToolbar);
+			buttonUp.AutoFocus = false;
 			buttonUp.CommandObject = this.favoritesUpState.Command;
 			buttonUp.Dock = DockStyle.Left;
 
 			IconButton buttonDown = new IconButton(this.favoritesToolbar);
+			buttonDown.AutoFocus = false;
 			buttonDown.CommandObject = this.favoritesDownState.Command;
 			buttonDown.Dock = DockStyle.Left;
 
 			IconButton buttonBig = new IconButton(this.favoritesToolbar);
+			buttonBig.AutoFocus = false;
 			buttonBig.CommandObject = this.favoritesBigState.Command;
 			buttonBig.Dock = DockStyle.Left;
 
@@ -389,26 +394,27 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			//	Il faut créer ces boutons dans l'ordre 'de droite à gauche' !
 			IconButton buttonDelete = new IconButton(group);
+			buttonDelete.AutoFocus = false;
 			buttonDelete.CommandObject = this.deleteState.Command;
 			buttonDelete.Dock = DockStyle.Right;
 
 			IconButton buttonRename = new IconButton(group);
+			buttonRename.AutoFocus = false;
 			buttonRename.CommandObject = this.renameState.Command;
 			buttonRename.Dock = DockStyle.Right;
 
 			IconButton buttonNew = new IconButton(group);
+			buttonNew.AutoFocus = false;
 			buttonNew.CommandObject = this.newState.Command;
 			buttonNew.Dock = DockStyle.Right;
 
 			IconButton buttonParent = new IconButton(group);
+			buttonParent.AutoFocus = false;
 			buttonParent.CommandObject = this.parentState.Command;
 			buttonParent.Dock = DockStyle.Right;
 
-			//IconButton buttonNext = new IconButton(group);
-			//buttonNext.CommandObject = this.nextState.Command;
-			//buttonNext.Dock = DockStyle.Right;
-
 			IconButton buttonPrev = new IconButton(group);
+			buttonPrev.AutoFocus = false;
 			buttonPrev.CommandObject = this.prevState.Command;
 			buttonPrev.Dock = DockStyle.Right;
 		}
@@ -485,12 +491,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.slider = new HSlider(footer);
+			this.slider.AutoFocus = false;
 			this.slider.PreferredWidth = 110;
 			this.slider.IsMinMaxButtons = true;
 			this.slider.Dock = DockStyle.Right;
 			this.slider.Margins = new Margins(0, 0, 4, 4);
-			this.slider.TabIndex = this.tabIndex++;
-			this.slider.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.slider.MinValue = 20.0M;
 			this.slider.MaxValue = 100.0M;
 			this.slider.SmallChange = 1.0M;
@@ -1307,7 +1312,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if (!this.isSave && this.selectedFilename != Common.Document.Settings.GlobalSettings.NewEmptyDocument && !System.IO.File.Exists(this.selectedFilename))  // fichier n'existe pas ?
 			{
 				string message = string.Format(Res.Strings.Dialog.Question.Open.File, Misc.ExtractName(this.selectedFilename), this.selectedFilename);
-				Common.Dialogs.DialogResult result = this.editor.DialogError(this.editor.CommandDispatcher, message);
+				Common.Dialogs.DialogResult result = this.editor.DialogError(message);
 				this.selectedFilename = null;
 				this.selectedFilenames = null;
 				return false;  // ne pas fermer le dialogue
@@ -1316,7 +1321,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if (this.isSave && System.IO.File.Exists(this.selectedFilename))  // fichier existe déjà ?
 			{
 				string message = string.Format(Res.Strings.Dialog.Question.Save.File, Misc.ExtractName(this.selectedFilename), this.selectedFilename);
-				Common.Dialogs.DialogResult result = this.editor.DialogQuestion(this.editor.CommandDispatcher, message);
+				Common.Dialogs.DialogResult result = this.editor.DialogQuestion(message);
 				if (result != Common.Dialogs.DialogResult.Yes)
 				{
 					this.selectedFilename = null;

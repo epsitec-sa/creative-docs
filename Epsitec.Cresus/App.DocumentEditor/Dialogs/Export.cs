@@ -98,7 +98,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			string filename = string.Format("{0}\\{1}", this.editor.CurrentDocument.ExportDirectory, this.editor.CurrentDocument.ExportFilename);
 			string err = this.editor.CurrentDocument.Export(filename);
-			this.editor.DialogError(this.editor.CommandDispatcher, err);
+			this.editor.DialogError(err);
 		}
 
 	}
