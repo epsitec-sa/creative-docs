@@ -871,6 +871,7 @@ namespace Epsitec.Common.Document
 			this.uniqueParagraphStyleId = doc.uniqueParagraphStyleId;
 			this.uniqueCharacterStyleId = doc.uniqueCharacterStyleId;
 			this.imageCache = doc.imageCache;
+			this.fontIncludeMode = doc.fontIncludeMode;
 			
 			if ( this.textContext != null )
 			{
