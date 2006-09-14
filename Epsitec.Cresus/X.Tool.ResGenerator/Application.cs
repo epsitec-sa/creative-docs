@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Tool.ResGenerator
 {
@@ -110,6 +111,8 @@ namespace Epsitec.Common.Tool.ResGenerator
 			ResourceManager manager = new ResourceManager (moduleDirectory);
 			
 			manager.DefineDefaultModuleName (moduleName);
+
+			System.Diagnostics.Debug.Assert (manager.DefaultModuleId >= 0);
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
@@ -121,7 +124,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 			buffer.Append ("//\tDo not edit manually.\n\n");
 			
 			generator.BeginBlock ("namespace", defaultNamespace);
-			generator.BeginBlock ("public sealed class", "Res");
+			generator.BeginBlock ("public static class", "Res");
 
 			string[] bundleIds = manager.GetBundleIds ("*", "*", ResourceLevel.Default);
 			
@@ -140,10 +143,10 @@ namespace Epsitec.Common.Tool.ResGenerator
 				switch (bundleType)
 				{
 					case "String":
-						Application.GenerateStrings (buffer, generator, defaultNamespace, bundleId, bundle);
+						Application.GenerateStrings (manager, buffer, generator, defaultNamespace, bundleId, bundle);
 						break;
 					case "Caption":
-						Application.GenerateCaptions (buffer, generator, defaultNamespace, bundleId, bundle);
+						Application.GenerateCommandsCaptionsAndTypes (manager, buffer, generator, defaultNamespace, bundleId, bundle);
 						break;
 				}
 			}
@@ -167,8 +170,19 @@ namespace Epsitec.Common.Tool.ResGenerator
 			generator.EndBlock ();
 			buffer.Append (generator.Tabs);
 			buffer.Append ("\n");
+			generator.BeginBlock ("public static int", "ModuleId");
+			buffer.Append (generator.Tabs);
+			buffer.Append (@"get { return _moduleId; }");
+			buffer.Append ("\n");
+			generator.EndBlock ();
+			buffer.Append (generator.Tabs);
+			buffer.Append ("\n");
 			buffer.Append (generator.Tabs);
 			buffer.Append ("private static Epsitec.Common.Support.ResourceManager _manager = Epsitec.Common.Support.Resources.DefaultManager;");
+			buffer.Append ("\n");
+			buffer.Append (generator.Tabs);
+			buffer.Append ("private static int _moduleId = ");
+			buffer.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "{0};", manager.DefaultModuleId);
 			buffer.Append ("\n");
 			
 			generator.EndBlock ();
@@ -180,17 +194,58 @@ namespace Epsitec.Common.Tool.ResGenerator
 			}
 		}
 
-		static void GenerateCaptions(System.Text.StringBuilder buffer, Generator generator, string defaultNamespace, string bundleId, ResourceBundle bundle)
+		static void GenerateCommandsCaptionsAndTypes(ResourceManager manager, System.Text.StringBuilder buffer, Generator generator, string defaultNamespace, string bundleId, ResourceBundle bundle)
 		{
-			//	TODO: generate captions, commands and types...
+			List<string> cmdFields = new List<string> ();
+			List<string> capFields = new List<string> ();
+			List<string> typFields = new List<string> ();
+
+			foreach (string field in bundle.FieldNames)
+			{
+				if (field.StartsWith ("Cmd."))
+				{
+					cmdFields.Add (field);
+				}
+				else if (field.StartsWith ("Cap."))
+				{
+					capFields.Add (field);
+				}
+				else if (field.StartsWith ("Typ."))
+				{
+					typFields.Add (field);
+				}
+				else
+				{
+					System.Console.Error.WriteLine ("Field {0} not supported in {1}.", field, bundleId); 
+				}
+			}
+
+			Application.GenerateCommands (manager, buffer, generator, defaultNamespace, bundleId, bundle, cmdFields);
+			Application.GenerateCaptions (manager, buffer, generator, defaultNamespace, bundleId, bundle, capFields);
+			Application.GenerateTypes (manager, buffer, generator, defaultNamespace, bundleId, bundle, typFields);
 		}
 
-		static void GenerateStrings(System.Text.StringBuilder buffer, Generator generator, string defaultNamespace, string bundleId, ResourceBundle bundle)
+		static void GenerateCommands(ResourceManager manager, System.Text.StringBuilder buffer, Generator generator, string defaultNamespace, string bundleId, ResourceBundle bundle, List<string> cmdFields)
+		{
+			//	TODO: ...
+		}
+
+		static void GenerateCaptions(ResourceManager manager, System.Text.StringBuilder buffer, Generator generator, string defaultNamespace, string bundleId, ResourceBundle bundle, List<string> capFields)
+		{
+			//	TODO: ...
+		}
+
+		static void GenerateTypes(ResourceManager manager, System.Text.StringBuilder buffer, Generator generator, string defaultNamespace, string bundleId, ResourceBundle bundle, List<string> typFields)
+		{
+			//	TODO: ...
+		}
+		
+		static void GenerateStrings(ResourceManager manager, System.Text.StringBuilder buffer, Generator generator, string defaultNamespace, string bundleId, ResourceBundle bundle)
 		{
 			string prefix   = "";
 			bool addNewline = false;
 
-			generator.BeginBlock ("public sealed class", bundleId);
+			generator.BeginBlock ("public static class", bundleId);
 
 			string[] fields   = bundle.FieldNames;
 			string[] sortKeys = new string[fields.Length];
@@ -244,7 +299,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 					string[] args = delta.Split ('.');
 					string elem = args[0];
 
-					generator.BeginBlock ("public sealed class", elem);
+					generator.BeginBlock ("public static class", elem);
 
 					if (prefix.Length == 0)
 					{
