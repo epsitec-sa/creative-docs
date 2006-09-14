@@ -7,47 +7,17 @@ namespace Epsitec.Common.Tool.ResGenerator
 {
 	class Application
 	{
-		[System.STAThread] static void Main(string[] args)
+		[System.STAThread]
+		static void Main(string[] args)
 		{
 			if (args.Length == 2)
 			{
-				Application.Process (args);
+				Application.Process (args[0], args[1]);
 				System.Console.Out.WriteLine ("Done.");
 			}
 			else if (System.IO.File.Exists ("build.ini"))
 			{
-				using (System.IO.StreamReader reader = new System.IO.StreamReader ("build.ini", System.Text.Encoding.UTF8))
-				{
-					for (int count = 0; ; count++)
-					{
-						string line = reader.ReadLine ();
-						
-						if (line == null)
-						{
-							break;
-						}
-						
-						line = line.Trim ();
-						
-						if ((line.Length == 0) ||
-							(line.StartsWith ("#")) ||
-							(line.StartsWith ("//")))
-						{
-							continue;
-						}
-						
-						args = line.Split ('=');
-						
-						if (args.Length == 2)
-						{
-							Application.Process (args);
-						}
-						else
-						{
-							System.Console.Error.WriteLine ("Error: build.ini:{0}: syntax error.", count);
-						}
-					}
-				}
+				Application.ProcessBuildFile ("build.ini");
 				
 				System.Console.Out.WriteLine ("Done.");
 			}
@@ -56,33 +26,90 @@ namespace Epsitec.Common.Tool.ResGenerator
 				System.Console.Out.WriteLine ("Invalid command line and no 'build.ini' script found.");
 			}
 		}
-		
-		public static void Process(string[] args)
+
+		/// <summary>
+		/// Processes the build file. Skips comments and empty lines and executes
+		/// individual generation directives.
+		/// </summary>
+		/// <param name="buildFileName">Name of the build file.</param>
+		static void ProcessBuildFile(string buildFileName)
 		{
-			string default_namespace = args[0].Trim ();
-			string app_directory     = args[1].Trim ();
-			string app_name          = "x";
+			string[] args;
 			
-			if (app_directory.IndexOf ("|") > 0)
+			using (System.IO.StreamReader reader = new System.IO.StreamReader (buildFileName, System.Text.Encoding.UTF8))
 			{
-				string[] split = app_directory.Split ('|');
+				for (int count = 0; ; count++)
+				{
+					string line = reader.ReadLine ();
+
+					if (line == null)
+					{
+						break;
+					}
+
+					line = line.Trim ();
+
+					if ((line.Length == 0) ||
+						(line.StartsWith ("#")) ||
+						(line.StartsWith ("//")))
+					{
+						continue;
+					}
+
+					args = line.Split ('=');
+
+					if (args.Length == 2)
+					{
+						Application.Process (args[0], args[1]);
+					}
+					else
+					{
+						System.Console.Error.WriteLine ("Error: {0}:{1}: syntax error.", buildFileName, count);
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Processes the specified command line. There are two arguments: the default
+		/// namespace and the application directory.
+		/// </summary>
+		/// <param name="defaultNamespace">The default namespace.</param>
+		/// <param name="moduleDirectory">The module directory.</param>
+		static void Process(string defaultNamespace, string moduleDirectory)
+		{
+			string moduleName = "x";
+
+			defaultNamespace = defaultNamespace.Trim ();
+			moduleDirectory  = moduleDirectory.Trim ();
+			
+			//	The directory name may contain the short application module name;
+			//	this is encoded as "directory|module".
+			
+			if (moduleDirectory.IndexOf ("|") > 0)
+			{
+				string[] split = moduleDirectory.Split ('|');
 				
-				app_directory = split[0];
-				app_name      = split[1];
+				moduleDirectory = split[0];
+				moduleName      = split[1];
 			}
 			
-			Application.GenerateResFile (app_directory, default_namespace, app_name);
+			Application.GenerateResFile (moduleDirectory, defaultNamespace, moduleName);
 			
-			System.Console.Out.WriteLine ("Generated 'Res.cs' for {0}, application '{1}'", app_directory, app_name);
+			System.Console.Out.WriteLine ("Generated 'Res.cs' for {0}, application '{1}'", moduleDirectory, moduleName);
 		}
-		
-		public static void GenerateResFile(string app_directory, string default_namespace, string app_name)
+
+		/// <summary>
+		/// Generates the <c>"Res.cs"</c> file for a given module.
+		/// </summary>
+		/// <param name="moduleDirectory">The module directory.</param>
+		/// <param name="defaultNamespace">The default namespace.</param>
+		/// <param name="moduleName">Name of the module.</param>
+		static void GenerateResFile(string moduleDirectory, string defaultNamespace, string moduleName)
 		{
-			ResourceManager manager = new ResourceManager (app_directory);
+			ResourceManager manager = new ResourceManager (moduleDirectory);
 			
-			manager.DefineDefaultModuleName (app_name);
-			
-			string[] names = manager.GetBundleIds ("*", "String", ResourceLevel.Default);
+			manager.DefineDefaultModuleName (moduleName);
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
@@ -93,171 +120,27 @@ namespace Epsitec.Common.Tool.ResGenerator
 			buffer.Append ("\n");
 			buffer.Append ("//\tDo not edit manually.\n\n");
 			
-			generator.BeginBlock ("namespace", default_namespace);
+			generator.BeginBlock ("namespace", defaultNamespace);
 			generator.BeginBlock ("public sealed class", "Res");
 			
-			for (int i = 0; i < names.Length; i++)
+			foreach (string bundleId in manager.GetBundleIds ("*", "*", ResourceLevel.Default))
 			{
-				string file_name = names[i];
-				string prefix    = "";
-				bool add_newline = false;
-				
-				generator.BeginBlock ("public sealed class", file_name);
-				
-				ResourceBundle bundle = manager.GetBundle (file_name, ResourceLevel.Default);
-				
-				string[] fields    = bundle.FieldNames;
-				string[] sort_keys = new string[fields.Length];
-				
-				for (int j = 0; j < fields.Length; j++)
+				ResourceBundle bundle = manager.GetBundle (bundleId, ResourceLevel.Default);
+
+				if (bundle == null)
 				{
-					int pos = fields[j].LastIndexOf ('.');
-					
-					if (pos < 0)
-					{
-						sort_keys[j] = fields[j];
-					}
-					else
-					{
-						sort_keys[j] = string.Concat (fields[j].Substring (0, pos), "!", fields[j].Substring (pos+1));
-					}
+					System.Console.Error.WriteLine ("Bundle {0} could not be loaded.", bundleId);
+					continue;
 				}
-				
-				System.Array.Sort (sort_keys, fields);
-				
-				for (int j = 0; j < fields.Length; j++)
+
+				string bundleType = bundle.Type;
+
+				switch (bundleType)
 				{
-					string field = fields[j];
-					
-					while ((prefix != "") && (field.StartsWith (prefix + ".") == false))
-					{
-						//	Remonte d'un niveau dans la hiérarchie des classes.
-						
-						string[] args = prefix.Split ('.');
-						string   last = args[args.Length-1];
-						
-						generator.EndBlock ();
-						
-						prefix = prefix.Substring (0, System.Math.Max (0, prefix.Length - last.Length - 1));
-						add_newline = true;
-					}
-					
-					string delta = prefix.Length == 0 ? field : field.Substring (prefix.Length + 1);
-					
-					if (add_newline)
-					{
-						buffer.Append (generator.Tabs);
-						buffer.Append ("\n");
-						add_newline = false;
-					}
-					
-					//	Crée les classes manquantes, si besoin :
-					
-					while (delta.IndexOf ('.') > -1)
-					{
-						string[] args = delta.Split ('.');
-						string   elem = args[0];
-						
-						generator.BeginBlock ("public sealed class", elem);
-						
-						if (prefix.Length == 0)
-						{
-							prefix = elem;
-						}
-						else
-						{
-							prefix = string.Concat (prefix, ".", elem);
-						}
-						
-						delta = field.Substring (prefix.Length + 1);
-					}
-					
-					//	Crée l'accesseur pour le champ actuel :
-					
-					buffer.Append (generator.Tabs);
-
-					Support.Druid druid = bundle[field].Druid;
-
-					buffer.Append ("public static string ");
-					buffer.Append (delta);
-					buffer.Append (@" { get { return GetText (""");
-					buffer.Append (file_name);
-					buffer.Append (@"""");
-
-					if (druid.Type == Support.DruidType.ModuleRelative)
-					{
-						buffer.Append (@", """);
-						buffer.Append (druid.ToFieldName ());
-						buffer.Append (@"""");
-					}
-					else
-					{
-						string[] elems = field.Split ('.');
-
-						for (int k = 0; k < elems.Length; k++)
-						{
-							buffer.Append (@", """);
-							buffer.Append (elems[k]);
-							buffer.Append (@"""");
-						}
-					}
-					
-					buffer.Append ("); } }\n");
+					case "Strings":
+						Application.GenerateStrings (buffer, generator, bundleId, bundle);
+						break;
 				}
-				
-				//	Referme les classes ouvertes :
-				
-				if (prefix.Length > 0)
-				{
-					string[] args = prefix.Split ('.');
-					
-					for (int j = 0; j < args.Length; j++)
-					{
-						generator.EndBlock ();
-					}
-				}
-				
-				buffer.Append (generator.Tabs);
-				buffer.Append ("\n");
-				
-				generator.BeginBlock ("public static string", "GetString(params string[] path)");
-				
-				buffer.Append (generator.Tabs);
-				buffer.Append (@"string field = string.Join (""."", path);");
-				buffer.Append ("\n");
-				buffer.Append (generator.Tabs);
-				buffer.Append (@"return _bundle[field].AsString;");
-				buffer.Append ("\n");
-				
-				generator.EndBlock ();
-				
-				buffer.Append (generator.Tabs);
-				buffer.Append ("\n");
-				
-				buffer.Append (generator.Tabs);
-				buffer.Append ("#region Internal Support Code\n");
-				
-				generator.BeginBlock ("private static string", "GetText(string bundle, params string[] path)");
-				
-				buffer.Append (generator.Tabs);
-				buffer.Append (@"string field = string.Join (""."", path);");
-				buffer.Append ("\n");
-				buffer.Append (generator.Tabs);
-				buffer.Append (@"return _bundle[field].AsString;");
-				buffer.Append ("\n");
-				
-				generator.EndBlock ();
-				
-				buffer.Append (generator.Tabs);
-				buffer.Append (@"private static Epsitec.Common.Support.ResourceBundle _bundle = _manager.GetBundle (""");
-				buffer.Append (file_name);
-				buffer.Append (@""");");
-				buffer.Append ("\n");
-				
-				buffer.Append (generator.Tabs);
-				buffer.Append ("#endregion\n");
-				
-				generator.EndBlock ();
 			}
 			
 			buffer.Append (generator.Tabs);
@@ -286,62 +169,170 @@ namespace Epsitec.Common.Tool.ResGenerator
 			generator.EndBlock ();
 			generator.EndBlock ();
 			
-			using (System.IO.StreamWriter file = new System.IO.StreamWriter (System.IO.Path.Combine (app_directory, "Res.cs"), false, System.Text.Encoding.UTF8))
+			using (System.IO.StreamWriter file = new System.IO.StreamWriter (System.IO.Path.Combine (moduleDirectory, "Res.cs"), false, System.Text.Encoding.UTF8))
 			{
 				file.Write (buffer.ToString ());
 			}
 		}
-		
-		
-		public class Generator
+
+		static void GenerateStrings(System.Text.StringBuilder buffer, Generator generator, string bundleId, ResourceBundle bundle)
 		{
-			public Generator(System.Text.StringBuilder buffer)
+			string prefix   = "";
+			bool addNewline = false;
+
+			generator.BeginBlock ("public sealed class", bundleId);
+
+			string[] fields   = bundle.FieldNames;
+			string[] sortKeys = new string[fields.Length];
+
+			for (int j = 0; j < fields.Length; j++)
 			{
-				this.buffer    = buffer;
-				this.tab_count = 0;
-			}
-			
-			
-			
-			public void BeginBlock(string prefix, string name)
-			{
-				if (char.IsLower (name[0]))
+				int pos = fields[j].LastIndexOf ('.');
+
+				if (pos < 0)
 				{
-					name = char.ToUpper (name[0]) + name.Substring (1);
+					sortKeys[j] = fields[j];
 				}
-				
-				this.buffer.Append (this.Tabs);
-				this.buffer.Append (prefix);
-				this.buffer.Append (" ");
-				this.buffer.Append (name);
-				this.buffer.Append ("\n");
-				
-				this.buffer.Append (this.Tabs);
-				this.buffer.Append ("{\n");
-				
-				this.tab_count++;
-			}
-			
-			public void EndBlock()
-			{
-				this.tab_count--;
-				
-				this.buffer.Append (this.Tabs);
-				this.buffer.Append ("}\n");
-			}
-			
-			
-			public string						Tabs
-			{
-				get
+				else
 				{
-					return new string ('\t', this.tab_count);
+					sortKeys[j] = string.Concat (fields[j].Substring (0, pos), "!", fields[j].Substring (pos+1));
 				}
 			}
-			
-			
-			private System.Text.StringBuilder	buffer;
-			private int							tab_count;
+
+			System.Array.Sort (sortKeys, fields);
+
+			for (int j = 0; j < fields.Length; j++)
+			{
+				string field = fields[j];
+
+				while ((prefix != "") && (field.StartsWith (prefix + ".") == false))
+				{
+					//	Remonte d'un niveau dans la hiérarchie des classes.
+
+					string[] args = prefix.Split ('.');
+					string last = args[args.Length-1];
+
+					generator.EndBlock ();
+
+					prefix = prefix.Substring (0, System.Math.Max (0, prefix.Length - last.Length - 1));
+					addNewline = true;
+				}
+
+				string delta = prefix.Length == 0 ? field : field.Substring (prefix.Length + 1);
+
+				if (addNewline)
+				{
+					buffer.Append (generator.Tabs);
+					buffer.Append ("\n");
+					addNewline = false;
+				}
+
+				//	Crée les classes manquantes, si besoin :
+
+				while (delta.IndexOf ('.') > -1)
+				{
+					string[] args = delta.Split ('.');
+					string elem = args[0];
+
+					generator.BeginBlock ("public sealed class", elem);
+
+					if (prefix.Length == 0)
+					{
+						prefix = elem;
+					}
+					else
+					{
+						prefix = string.Concat (prefix, ".", elem);
+					}
+
+					delta = field.Substring (prefix.Length + 1);
+				}
+
+				//	Crée l'accesseur pour le champ actuel :
+
+				buffer.Append (generator.Tabs);
+
+				Support.Druid druid = bundle[field].Druid;
+
+				buffer.Append ("public static string ");
+				buffer.Append (delta);
+				buffer.Append (@" { get { return GetText (""");
+				buffer.Append (bundleId);
+				buffer.Append (@"""");
+
+				if (druid.Type == Support.DruidType.ModuleRelative)
+				{
+					buffer.Append (@", """);
+					buffer.Append (druid.ToFieldName ());
+					buffer.Append (@"""");
+				}
+				else
+				{
+					string[] elems = field.Split ('.');
+
+					for (int k = 0; k < elems.Length; k++)
+					{
+						buffer.Append (@", """);
+						buffer.Append (elems[k]);
+						buffer.Append (@"""");
+					}
+				}
+
+				buffer.Append ("); } }\n");
+			}
+
+			//	Referme les classes ouvertes :
+
+			if (prefix.Length > 0)
+			{
+				string[] args = prefix.Split ('.');
+
+				for (int j = 0; j < args.Length; j++)
+				{
+					generator.EndBlock ();
+				}
+			}
+			buffer.Append (generator.Tabs);
+			buffer.Append ("\n");
+
+			generator.BeginBlock ("public static string", "GetString(params string[] path)");
+
+			buffer.Append (generator.Tabs);
+			buffer.Append (@"string field = string.Join (""."", path);");
+			buffer.Append ("\n");
+			buffer.Append (generator.Tabs);
+			buffer.Append (@"return _bundle[field].AsString;");
+			buffer.Append ("\n");
+
+			generator.EndBlock ();
+
+			buffer.Append (generator.Tabs);
+			buffer.Append ("\n");
+
+			buffer.Append (generator.Tabs);
+			buffer.Append ("#region Internal Support Code\n");
+
+			generator.BeginBlock ("private static string", "GetText(string bundle, params string[] path)");
+
+			buffer.Append (generator.Tabs);
+			buffer.Append (@"string field = string.Join (""."", path);");
+			buffer.Append ("\n");
+			buffer.Append (generator.Tabs);
+			buffer.Append (@"return _bundle[field].AsString;");
+			buffer.Append ("\n");
+
+			generator.EndBlock ();
+
+			buffer.Append (generator.Tabs);
+			buffer.Append (@"private static Epsitec.Common.Support.ResourceBundle _bundle = _manager.GetBundle (""");
+			buffer.Append (bundleId);
+			buffer.Append (@""");");
+			buffer.Append ("\n");
+
+			buffer.Append (generator.Tabs);
+			buffer.Append ("#endregion\n");
+
+			generator.EndBlock ();
 		}
 	}
 }
