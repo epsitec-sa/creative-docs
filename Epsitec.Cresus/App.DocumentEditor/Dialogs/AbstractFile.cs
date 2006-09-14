@@ -93,6 +93,23 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		public Document.FontIncludeMode FontIncludeMode
+		{
+			//	Mode d'inclusion des polices.
+			get
+			{
+				return this.fontIncludeMode;
+			}
+			set
+			{
+				if (this.fontIncludeMode != value)
+				{
+					this.fontIncludeMode = value;
+					this.UpdateFontIncludeMode();
+				}
+			}
+		}
+
 		public bool IsRedirection
 		{
 			//	Indique si le dossier passé avec InitialDirectory a dû être
@@ -215,6 +232,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.UpdateInitialDirectory();
 			this.UpdateInitialFilename();
 			this.UpdateButtons();
+			this.UpdateFontIncludeMode();
 
 			if (focusInFilename)
 			{
@@ -466,6 +484,32 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			ext.Dock = DockStyle.Right;
 		}
 
+		protected void CreateOptions()
+		{
+			//	Crée le panneau facultatif pour les options d'enregistrement.
+			this.optionsToolbar = new Widget(this.window.Root);
+			this.optionsToolbar.Margins = new Margins(0, 0, 8, 0);
+			this.optionsToolbar.Dock = DockStyle.Bottom;
+			this.optionsToolbar.TabIndex = 4;
+			this.optionsToolbar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.optionsToolbar.Visibility = false;
+
+			this.optionsFontNone = new RadioButton(this.optionsToolbar);
+			this.optionsFontNone.Text = "N'inclut aucune police";
+			this.optionsFontNone.Dock = DockStyle.Top;
+			this.optionsFontNone.Clicked += new MessageEventHandler(this.HandleOptionsFontClicked);
+
+			this.optionsFontUsed = new RadioButton(this.optionsToolbar);
+			this.optionsFontUsed.Text = "Inclut les polices utilisées";
+			this.optionsFontUsed.Dock = DockStyle.Top;
+			this.optionsFontUsed.Clicked += new MessageEventHandler(this.HandleOptionsFontClicked);
+
+			this.optionsFontAll = new RadioButton(this.optionsToolbar);
+			this.optionsFontAll.Text = "Inclut toutes les polices définies";
+			this.optionsFontAll.Dock = DockStyle.Top;
+			this.optionsFontAll.Clicked += new MessageEventHandler(this.HandleOptionsFontClicked);
+		}
+
 		protected void CreateFooter()
 		{
 			//	Crée le pied du dialogue, avec les boutons 'ouvrir/enregistrer' et 'annuler'.
@@ -473,7 +517,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			footer.PreferredHeight = 22;
 			footer.Margins = new Margins(0, 0, 8, 0);
 			footer.Dock = DockStyle.Bottom;
-			footer.TabIndex = 4;
+			footer.TabIndex = 5;
 			footer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			string ok;
@@ -535,30 +579,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.slider.Value = (decimal) this.table.DefHeight;
 			this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
 			ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.File.Tooltip.PreviewSize);
-		}
-
-		protected void CreateOptions()
-		{
-			//	Crée le panneau inférieur pour les options.
-			this.optionsToolbar = new Widget(this.window.Root);
-			this.optionsToolbar.Margins = new Margins(0, 0, 8, 0);
-			this.optionsToolbar.Dock = DockStyle.Bottom;
-			this.optionsToolbar.TabIndex = 5;
-			this.optionsToolbar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-			this.optionsToolbar.Visibility = false;
-
-			RadioButton radio1 = new RadioButton(this.optionsToolbar);
-			radio1.Text = "N'inclut aucune police";
-			radio1.Dock = DockStyle.Top;
-
-			RadioButton radio2 = new RadioButton(this.optionsToolbar);
-			radio2.Text = "Inclut les polices utilisées";
-			radio2.ActiveState = ActiveState.Yes;
-			radio2.Dock = DockStyle.Top;
-
-			RadioButton radio3 = new RadioButton(this.optionsToolbar);
-			radio3.Text = "Inclut toutes les polices définies";
-			radio3.Dock = DockStyle.Top;
 		}
 
 
@@ -972,6 +992,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 
 				this.ignoreChanged = false;
+			}
+		}
+
+		protected void UpdateFontIncludeMode()
+		{
+			//	Met à jour le mode d'inclusion des polices.
+			if (this.optionsFontNone != null)
+			{
+				this.optionsFontNone.ActiveState = (this.fontIncludeMode == Document.FontIncludeMode.None) ? ActiveState.Yes : ActiveState.No;
+				this.optionsFontUsed.ActiveState = (this.fontIncludeMode == Document.FontIncludeMode.Used) ? ActiveState.Yes : ActiveState.No;
+				this.optionsFontAll .ActiveState = (this.fontIncludeMode == Document.FontIncludeMode.All ) ? ActiveState.Yes : ActiveState.No;
 			}
 		}
 
@@ -1610,7 +1641,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		void HandleFieldPathTextChanged(object sender)
+		private void HandleFieldPathTextChanged(object sender)
 		{
 			//	Le texte pour le chemin d'accès a changé.
 			if (this.ignoreChanged)
@@ -1622,6 +1653,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.comboSelected = this.comboTexts.IndexOf(this.fieldPath.Text);
 			this.fieldPath.Text = AbstractFile.RemoveStartingIndent(this.fieldPath.Text);
 			this.ignoreChanged = false;
+		}
+
+		private void HandleOptionsFontClicked(object sender, MessageEventArgs e)
+		{
+			//	Un bouton radio pour le mode d'inclusion des polices a été cliqué.
+			if (sender == this.optionsFontNone)
+			{
+				this.FontIncludeMode = Document.FontIncludeMode.None;
+			}
+			
+			if (sender == this.optionsFontUsed)
+			{
+				this.FontIncludeMode = Document.FontIncludeMode.Used;
+			}
+			
+			if (sender == this.optionsFontAll)
+			{
+				this.FontIncludeMode = Document.FontIncludeMode.All;
+			}
 		}
 
 		private void HandleSliderChanged(object sender)
@@ -2179,6 +2229,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected Button					buttonCancel;
 		protected GlyphButton				optionsExtend;
 		protected Widget					optionsToolbar;
+		protected RadioButton				optionsFontNone;
+		protected RadioButton				optionsFontUsed;
+		protected RadioButton				optionsFontAll;
 
 		protected string					fileExtension;
 		protected bool						isModel = false;
@@ -2190,6 +2243,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected FolderItem				initialFolder;
 		protected FolderItemIcon			initialSmallIcon;
 		protected string					initialFilename;
+		protected Document.FontIncludeMode	fontIncludeMode;
 		protected List<Item>				files;
 		protected string					selectedFilename;
 		protected string[]					selectedFilenames;

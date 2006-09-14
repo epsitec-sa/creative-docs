@@ -69,6 +69,17 @@ namespace Epsitec.Common.Document
 			SoapUncompress,		// format de debug
 		}
 
+		public enum FontIncludeMode
+		{
+			//	Mode d'inclusion des polices dans le document crdoc/zip.
+			//	Ne pas changer les valeurs à cause des sérialisations existantes !
+
+			None	= 0,	// n'inclut aucune police
+			Used	= 1,	// inclut les polices utilisées
+			All		= 2,	// inclut toutes les polices définies
+		}
+
+
 		public Document(DocumentType type, DocumentMode mode, InstallType installType, DebugMode debugMode, Settings.GlobalSettings globalSettings, CommandDispatcher commandDispatcher, CommandContext commandContext)
 		{
 			//	Crée un nouveau document vide.
@@ -77,6 +88,7 @@ namespace Epsitec.Common.Document
 			this.mode = mode;
 			this.installType = installType;
 			this.debugMode = debugMode;
+			this.fontIncludeMode = FontIncludeMode.Used;
 			this.globalSettings = globalSettings;
 			this.commandDispatcher = commandDispatcher;
 			this.commandContext = commandContext;
@@ -230,6 +242,13 @@ namespace Epsitec.Common.Document
 			//	Type de mise au point du logiciel.
 			get { return this.debugMode; }
 			set { this.debugMode = value; }
+		}
+
+		public FontIncludeMode FontIncludeModeValue
+		{
+			//	Mode d'inclusion des polices.
+			get { return this.fontIncludeMode; }
+			set { this.fontIncludeMode = value; }
 		}
 
 		public Settings.GlobalSettings GlobalSettings
@@ -1436,6 +1455,7 @@ namespace Epsitec.Common.Document
 
 				info.AddValue("TextFlows", this.textFlows);
 				info.AddValue("FontList", this.fontList);
+				info.AddValue("FontIncludeMode", this.fontIncludeMode);
 			}
 
 			info.AddValue("UniqueObjectId", this.uniqueObjectId);
@@ -1522,6 +1542,15 @@ namespace Epsitec.Common.Document
 				else
 				{
 					this.fontList = null;
+				}
+
+				if (this.IsRevisionGreaterOrEqual(2, 0, 2))
+				{
+					this.fontIncludeMode = (FontIncludeMode) info.GetValue("FontIncludeMode", typeof(FontIncludeMode));
+				}
+				else
+				{
+					this.fontIncludeMode = FontIncludeMode.Used;
 				}
 			}
 
@@ -1788,7 +1817,7 @@ namespace Epsitec.Common.Document
 		protected void FontWriteAll(ZipFile zip)
 		{
 			//	Ecrit sur disque tous les fichiers des polices utilisées dans le document.
-			if (this.fontList == null)
+			if (this.fontList == null || this.fontIncludeMode == FontIncludeMode.None)
 			{
 				return;
 			}
@@ -1809,7 +1838,7 @@ namespace Epsitec.Common.Document
 		protected void FontReadAll(ZipFile zip)
 		{
 			//	Lit sur disque tous les fichiers des polices utilisées dans le document.
-			if (this.fontList == null)
+			if (this.fontList == null || this.fontIncludeMode == FontIncludeMode.None)
 			{
 				return;
 			}
@@ -2852,6 +2881,7 @@ namespace Epsitec.Common.Document
 		protected DocumentMode					mode;
 		protected InstallType					installType;
 		protected DebugMode						debugMode;
+		protected FontIncludeMode				fontIncludeMode;
 		protected bool							initializationInProgress;
 		protected Settings.GlobalSettings		globalSettings;
 		protected CommandDispatcher				commandDispatcher;
