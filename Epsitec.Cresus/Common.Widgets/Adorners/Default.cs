@@ -1075,6 +1075,13 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Ombre claire en bas à droite.
 			this.PaintL(graphics, rect, this.colorControlLightLight, shadow);
 			this.PaintL(graphics, rInside, this.colorControlLight, shadow);
+
+			if ((state&WidgetPaintState.Focused) != 0)
+			{
+				rect.Deflate(1.5);
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(this.colorCaption);
+			}
 		}
 
 		public override void PaintArrayForeground(Drawing.Graphics graphics,

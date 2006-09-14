@@ -1198,13 +1198,25 @@ namespace Epsitec.Common.Widgets.Adorners
 										 WidgetPaintState state)
 		{
 			rect.Deflate(0.5);
-			graphics.AddRectangle(rect);
+
 			if ( (state&WidgetPaintState.Enabled) != 0 )
 			{
-				graphics.RenderSolid(this.colorControlDarkDark);
+				if ((state&WidgetPaintState.Focused) != 0)
+				{
+					graphics.AddRectangle(rect);
+					rect.Deflate(1.0);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.colorCaption);
+				}
+				else
+				{
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.colorControlDarkDark);
+				}
 			}
 			else
 			{
+				graphics.AddRectangle(rect);
 				graphics.RenderSolid(this.colorControlDark);
 			}
 		}

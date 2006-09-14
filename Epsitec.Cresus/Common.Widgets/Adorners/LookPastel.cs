@@ -1128,9 +1128,17 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				this.PaintImageButton(graphics, rect, 18);
 			}
+
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(this.ColorOutline(state));
+
+			if ((state&WidgetPaintState.Focused) != 0)
+			{
+				rect.Deflate(1.0);
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(this.colorCaption);
+			}
 		}
 
 		public override void PaintArrayForeground(Drawing.Graphics graphics,

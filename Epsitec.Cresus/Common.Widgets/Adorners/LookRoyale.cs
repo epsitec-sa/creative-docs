@@ -1262,6 +1262,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.colorWhite);
 			}
+
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			if ( (state&WidgetPaintState.Enabled) != 0 )
@@ -1278,6 +1279,14 @@ namespace Epsitec.Common.Widgets.Adorners
 										 Drawing.Rectangle rect,
 										 WidgetPaintState state)
 		{
+			if ((state&WidgetPaintState.Focused) != 0)
+			{
+				rect.Deflate(0.5);
+				graphics.AddRectangle(rect);
+				rect.Deflate(1.0);
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(this.colorCaption);
+			}
 		}
 
 		public override void PaintCellBackground(Drawing.Graphics graphics,
