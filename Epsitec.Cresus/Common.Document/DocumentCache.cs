@@ -92,10 +92,7 @@ namespace Epsitec.Common.Document
 				{
 					dataImage = null;
 				}
-			}
 
-			if (zip.TryLoadFile(filename))
-			{
 				try
 				{
 					dataStatistics = zip["statistics.data"].Data;  // lit les données dans le fichier zip
