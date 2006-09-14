@@ -380,7 +380,7 @@ namespace Epsitec.Common.Widgets
 		public void CheckRealExample()
 		{
 			AdornerTest test = new AdornerTest ();
-			test.Initialise ();
+			test.Initialize ();
 			Window window = AdornerTest.CreateAdornerWidgets ();
 			
 			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (window.Root);

@@ -13,7 +13,7 @@ namespace Epsitec.Common.Types
 	[TestFixture] public class SerializationTest
 	{
 		[SetUp]
-		public void Initialise()
+		public void Initialize()
 		{
 			Serialization.DependencyClassManager.Setup ();
 		}

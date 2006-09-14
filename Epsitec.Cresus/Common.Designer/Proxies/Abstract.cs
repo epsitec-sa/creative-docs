@@ -123,7 +123,7 @@ namespace Epsitec.Common.Designer.Proxies
 				
 				try
 				{
-					this.InitialisePropertyValues();
+					this.InitializePropertyValues ();
 				}
 				finally
 				{
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		protected abstract void InitialisePropertyValues();
+		protected abstract void InitializePropertyValues();
 
 		protected void SuspendChanges()
 		{

@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document
 			//	Imprime le document selon les choix faits dans le dialogue Window (dp)
 			//	ainsi que dans le dialogue des réglages (PrintInfo).
 			PrintEngine printEngine = new PrintEngine();
-			printEngine.Initialise(this, dp);
+			printEngine.Initialize(this, dp);
 			dp.Document.Print(printEngine);
 		}
 
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Document
 
 		protected class PrintEngine : Printing.IPrintEngine
 		{
-			public void Initialise(Printer printer, Epsitec.Common.Dialogs.Print dp)
+			public void Initialize(Printer printer, Epsitec.Common.Dialogs.Print dp)
 			{
 				this.printer = printer;
 				this.document = printer.document;

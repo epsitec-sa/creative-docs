@@ -54,7 +54,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		public void Initialise(Module module, PanelsContext context, UI.Panel panel)
+		public void Initialize(Module module, PanelsContext context, UI.Panel panel)
 		{
 			this.module = module;
 			this.context = context;

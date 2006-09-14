@@ -14,15 +14,15 @@ namespace Epsitec.App.DocumentEditor
 		{
 			Application.mode = mode.Substring (0, 1);
 			
-			Res.Initialise(typeof(Application), "App");
+			Res.Initialize(typeof(Application), "App");
 			
 			//	Il faut indiquer ci-après la date de diffusion du logiciel, qui doit
 			//	être mise à jour chaque fois que l'on génère un nouveau CD :
 			Common.Support.SerialAlgorithm.SetProductBuildDate(new System.DateTime(2005, 12, 31));
 			Common.Support.SerialAlgorithm.SetProductGenerationNumber(1, 6);
 			
-			Widget.Initialise();
-			Epsitec.Common.Document.Engine.Initialise();
+			Widget.Initialize();
+			Epsitec.Common.Document.Engine.Initialize();
 			
 			Common.Support.ImageProvider.Default.EnableLongLifeCache = true;
 			Common.Support.ImageProvider.Default.PrefillManifestIconCache();

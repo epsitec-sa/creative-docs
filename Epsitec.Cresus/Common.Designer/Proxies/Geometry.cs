@@ -176,7 +176,7 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
-		protected override void InitialisePropertyValues()
+		protected override void InitializePropertyValues()
 		{
 			//	Cette méthode est appelée par Proxies.Abstract quand on connecte
 			//	le premier widget avec le proxy.

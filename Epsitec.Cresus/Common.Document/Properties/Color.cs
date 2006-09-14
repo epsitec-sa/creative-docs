@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Properties
 		{
 		}
 
-		protected override void Initialise()
+		protected override void Initialize()
 		{
 			this.color = Drawing.RichColor.FromBrightness(0.0);
 		}

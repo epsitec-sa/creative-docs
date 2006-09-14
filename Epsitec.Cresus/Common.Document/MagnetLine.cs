@@ -129,13 +129,13 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void Initialise(Point p1, Point p2, bool infinite)
+		public void Initialize(Point p1, Point p2, bool infinite)
 		{
 			//	Initialise la ligne et rend-la visible.
-			this.Initialise(p1, p2, infinite, true);
+			this.Initialize(p1, p2, infinite, true);
 		}
 
-		public void Initialise(Point p1, Point p2, bool infinite, bool isVisible)
+		public void Initialize(Point p1, Point p2, bool infinite, bool isVisible)
 		{
 			//	Initialise la ligne visible ou invisible.
 			if ( this.p1 != p1 ||

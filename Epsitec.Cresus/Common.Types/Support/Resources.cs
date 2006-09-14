@@ -18,7 +18,7 @@ namespace Epsitec.Common.Support
 
 			Resources.factory = new ResourceProviderFactory ();
 			
-			Resources.InternalInitialise ();
+			Resources.InternalInitialize ();
 			Resources.InternalDefineCultures (names);
 			
 			Types.ResourceBinding.RebindCallback = Resources.Rebinder;
@@ -449,7 +449,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		private static void InternalInitialise()
+		private static void InternalInitialize()
 		{
 			Resources.manager = new ResourceManager (typeof (ResourceManager));
 		}

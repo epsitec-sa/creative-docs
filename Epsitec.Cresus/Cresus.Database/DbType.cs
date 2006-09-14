@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Database
 		
 		public DbType(DbSimpleType type, params string[] attributes) : this (attributes)
 		{
-			this.Initialise (type);
+			this.Initialize (type);
 		}
 		
 		
@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		internal void Initialise(DbSimpleType type)
+		internal void Initialize(DbSimpleType type)
 		{
 			this.EnsureTypeIsNotInitialised();
 			

@@ -47,10 +47,10 @@ namespace Epsitec.Common.Document.Properties
 			this.document = document;
 			this.type = type;
 			this.owners = new UndoableList(this.document, UndoableListType.ObjectsInsideProperty);
-			this.Initialise();
+			this.Initialize();
 		}
 
-		protected virtual void Initialise()
+		protected virtual void Initialize()
 		{
 		}
 
@@ -806,7 +806,7 @@ namespace Epsitec.Common.Document.Properties
 		{
 			//	Constructeur qui désérialise la propriété.
 			this.document = Document.ReadDocument;
-			this.Initialise();
+			this.Initialize();
 			this.type = (Type) info.GetValue("Type", typeof(Type));
 			this.isStyle = info.GetBoolean("IsStyle");
 			if ( this.isStyle && !this.document.IsRevisionGreaterOrEqual(1,0,24) )

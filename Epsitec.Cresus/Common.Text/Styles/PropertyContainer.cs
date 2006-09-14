@@ -15,7 +15,7 @@ namespace Epsitec.Common.Text.Styles
 		
 		public PropertyContainer(System.Collections.ICollection properties)
 		{
-			this.Initialise (properties);
+			this.Initialize (properties);
 		}
 		
 		
@@ -134,7 +134,7 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
-		internal void Initialise(System.Collections.ICollection properties)
+		internal void Initialize(System.Collections.ICollection properties)
 		{
 			//	Insère les propriétés dans notre table interne. Les propriétés
 			//	sont toujours triées en s'appuyant sur leur WellKnownType, ce
@@ -546,11 +546,11 @@ namespace Epsitec.Common.Text.Styles
 					if (this.list != null)
 					{
 						this.list.AddRange (this.hash.Values);
-						this.host.Initialise (this.list);
+						this.host.Initialize (this.list);
 					}
 					else
 					{
-						this.host.Initialise (this.hash.Values);
+						this.host.Initialize (this.hash.Values);
 					}
 				}
 				

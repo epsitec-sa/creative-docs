@@ -42,7 +42,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public static void Initialise()
+		public static void Initialize()
 		{
 			//	En appelant cette méthode statique, on peut garantir que le constructeur
 			//	statique de ImageProvider a bien été exécuté.

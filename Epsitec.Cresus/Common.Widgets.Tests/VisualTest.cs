@@ -8,9 +8,9 @@ namespace Epsitec.Common.Widgets
 	
 	[TestFixture] public class VisualTest
 	{
-		[SetUp] public void Initialise()
+		[SetUp] public void Initialize()
 		{
-			Epsitec.Common.Document.Engine.Initialise ();
+			Epsitec.Common.Document.Engine.Initialize ();
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 		}
 

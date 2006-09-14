@@ -67,7 +67,7 @@ namespace Epsitec.Common.Document.Settings
 			this.dateChecker = this.dateChecker.AddDays(-1);
 		}
 
-		public void Initialise(DocumentType type)
+		public void Initialize(DocumentType type)
 		{
 			//	Met tous les fichiers d'exemples dans la liste des 10 premiers
 			//	fichiers récents.

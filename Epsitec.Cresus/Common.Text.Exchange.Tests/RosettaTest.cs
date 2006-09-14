@@ -10,7 +10,7 @@ namespace Epsitec.Common.Text.Exchange
 	{
 		[SetUp] public void Intialize()
 		{
-			Widgets.Widget.Initialise ();
+			Widgets.Widget.Initialize ();
 		}
 			
 		

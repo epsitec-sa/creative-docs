@@ -25,14 +25,14 @@ namespace Epsitec.Common.Document
 			//	Crée un nouveau flux pour un seul pavé.
 			this.document = document;
 
-			this.InitialiseNavigator();
-			this.InitialiseEmptyTextStory();
+			this.InitializeNavigator ();
+			this.InitializeEmptyTextStory ();
 			
 			this.objectsChain = new UndoableList(this.document, UndoableListType.ObjectsChain);
 		}
 
-		
-		protected void InitialiseNavigator()
+
+		protected void InitializeNavigator()
 		{
 			Text.TextContext context = this.document.TextContext;
 			
@@ -65,8 +65,8 @@ namespace Epsitec.Common.Document
 			
 			this.textStory.EnableOpletQueue();
 		}
-		
-		protected void InitialiseEmptyTextStory()
+
+		protected void InitializeEmptyTextStory()
 		{
 			System.Diagnostics.Debug.Assert(this.textStory.TextLength == 0);
 			
@@ -614,7 +614,7 @@ namespace Epsitec.Common.Document
 		public void ReadFinalizeTextStory()
 		{
 			//	Adapte l'objet après une désérialisation.
-			this.InitialiseNavigator();
+			this.InitializeNavigator ();
 			
 			System.Diagnostics.Debug.Assert(this.textStory != null);
 			System.Diagnostics.Debug.Assert(this.textStory.OpletQueue != null);

@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Properties
 		{
 		}
 
-		protected override void Initialise()
+		protected override void Initialize()
 		{
 			this.arrowType = new ArrowType[2];
 			this.length    = new double[2];

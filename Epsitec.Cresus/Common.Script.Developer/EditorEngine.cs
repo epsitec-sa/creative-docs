@@ -13,8 +13,8 @@ namespace Epsitec.Common.Script.Developer
 	{
 		public EditorEngine()
 		{
-			Common.Widgets.Widget.Initialise ();
-			Common.Document.Engine.Initialise ();
+			Common.Widgets.Widget.Initialize ();
+			Common.Document.Engine.Initialize ();
 		}
 		
 		

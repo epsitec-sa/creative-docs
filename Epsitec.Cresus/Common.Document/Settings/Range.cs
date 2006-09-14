@@ -13,10 +13,10 @@ namespace Epsitec.Common.Document.Settings
 	{
 		public Range(Document document, string name) : base(document, name)
 		{
-			this.Initialise();
+			this.Initialize();
 		}
 
-		protected void Initialise()
+		protected void Initialize()
 		{
 			this.conditionName = "";
 			this.conditionState = false;
@@ -174,7 +174,7 @@ namespace Epsitec.Common.Document.Settings
 			this.PrintRange = (PrintRange) info.GetValue("PrintRange", typeof(PrintRange));
 			this.From = info.GetInt32("PrintFrom");
 			this.To = info.GetInt32("PrintTo");
-			this.Initialise();
+			this.Initialize();
 		}
 		#endregion
 	}

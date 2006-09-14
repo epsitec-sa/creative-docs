@@ -26,7 +26,7 @@ namespace Epsitec.Common.Document.Properties
 		{
 		}
 
-		protected override void Initialise()
+		protected override void Initialize()
 		{
 			if ( this.document.Type == DocumentType.Pictogram )
 			{

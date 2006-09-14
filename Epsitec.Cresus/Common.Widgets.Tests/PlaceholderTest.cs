@@ -12,9 +12,9 @@ namespace Epsitec.Common.Widgets
 	[TestFixture] public class PlaceholderTest
 	{
 		[SetUp]
-		public void Initialise()
+		public void Initialize()
 		{
-			Epsitec.Common.Widgets.Widget.Initialise ();
+			Epsitec.Common.Widgets.Widget.Initialize ();
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 		}
 		

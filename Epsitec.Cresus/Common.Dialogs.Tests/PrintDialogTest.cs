@@ -9,7 +9,7 @@ namespace Epsitec.Common.Dialogs
 	{
 		public PrintDialogTest()
 		{
-			Widgets.Widget.Initialise ();
+			Widgets.Widget.Initialize ();
 		}
 		
 		

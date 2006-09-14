@@ -7,10 +7,10 @@ namespace Epsitec.Common.Dialogs
 	
 	[TestFixture] public class MessageTest
 	{
-		[SetUp] public void Initialise()
+		[SetUp] public void Initialize()
 		{
-			Common.Widgets.Widget.Initialise ();
-			Common.Document.Engine.Initialise ();
+			Common.Widgets.Widget.Initialize ();
+			Common.Document.Engine.Initialize ();
 			Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 		}
 		

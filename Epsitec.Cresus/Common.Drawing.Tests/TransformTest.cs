@@ -9,7 +9,7 @@ namespace Epsitec.Common.Drawing
 		{
 		}
 		
-		[SetUp] public void Initialise()
+		[SetUp] public void Initialize()
 		{
 		}
 		

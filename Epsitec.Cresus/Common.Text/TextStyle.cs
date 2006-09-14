@@ -35,12 +35,12 @@ namespace Epsitec.Common.Text
 			if ((parent_styles == null) ||
 				(parent_styles.Count == 0))
 			{
-				this.Initialise (properties);
+				this.Initialize (properties);
 				this.SaveStyleProperties (properties);
 			}
 			else
 			{
-				this.Initialise (properties, parent_styles);
+				this.Initialize (properties, parent_styles);
 			}
 		}
 		
@@ -248,12 +248,12 @@ namespace Epsitec.Common.Text
 			this.Invalidate ();
 		}
 		
-		internal void Initialise(System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
+		internal void Initialize(System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
 		{
 			if ((parent_styles == null) ||
 				(parent_styles.Count == 0))
 			{
-				this.Initialise (properties);
+				this.Initialize (properties);
 				this.SaveStyleProperties (properties);
 			}
 			else
@@ -514,7 +514,7 @@ namespace Epsitec.Common.Text
 					System.Diagnostics.Debug.Assert (style_properties != null);
 					System.Diagnostics.Debug.Assert (parent_styles != null);
 					
-					this.Initialise (style_properties, parent_styles);
+					this.Initialize (style_properties, parent_styles);
 				}
 				else
 				{
@@ -529,7 +529,7 @@ namespace Epsitec.Common.Text
 					
 					System.Diagnostics.Debug.Assert (style_properties != null);
 					
-					this.Initialise (style_properties);
+					this.Initialize (style_properties);
 					this.SaveStyleProperties (style_properties);
 				}
 			}
@@ -719,7 +719,7 @@ namespace Epsitec.Common.Text
 			
 			accumulator.Accumulate (this.style_properties);
 			
-			this.Initialise (accumulator.AccumulatedProperties);
+			this.Initialize (accumulator.AccumulatedProperties);
 			
 			this.ClearContentsSignature ();
 		}

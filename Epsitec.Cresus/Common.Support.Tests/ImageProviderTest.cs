@@ -6,10 +6,10 @@ namespace Epsitec.Common.Support
 	[TestFixture] public class ImageProviderTest
 	{
 		[SetUp]
-		public void Initialise()
+		public void Initialize()
 		{
-			Epsitec.Common.Document.Engine.Initialise ();
-			Epsitec.Common.Widgets.Widget.Initialise ();
+			Epsitec.Common.Document.Engine.Initialize ();
+			Epsitec.Common.Widgets.Widget.Initialize ();
 		}
 
 		[Test]

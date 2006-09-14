@@ -153,7 +153,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 			
 			buffer.Append (generator.Tabs);
 			buffer.Append ("\n");
-			generator.BeginBlock ("public static void", "Initialise(System.Type type, string name)");
+			generator.BeginBlock ("public static void", "Initialize(System.Type type, string name)");
 			buffer.Append (generator.Tabs);
 			buffer.Append (@"_manager = new Epsitec.Common.Support.ResourceManager (type);");
 			buffer.Append ("\n");

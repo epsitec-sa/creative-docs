@@ -21,16 +21,16 @@ namespace Epsitec.Common.Widgets
 	{
 		public Window()
 		{
-			this.Initialise (new WindowRoot (this));
+			this.Initialize (new WindowRoot (this));
 		}
 		
 		internal Window(WindowRoot root)
 		{
-			this.Initialise (root);
+			this.Initialize (root);
 		}
 		
 		
-		private void Initialise(WindowRoot root)
+		private void Initialize(WindowRoot root)
 		{
 			this.components = new Support.Data.ComponentCollection (this);
 			

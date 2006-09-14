@@ -29,7 +29,7 @@ namespace Epsitec.Common.Document.Properties
 		{
 		}
 
-		protected override void Initialise()
+		protected override void Initialize()
 		{
 			this.dimensionJustif = DimensionJustif.CenterOrRight;
 			this.dimensionForm = DimensionForm.Auto;

@@ -16,10 +16,10 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.document == null )  return;  // objet factice ?
 			this.CreateProperties(model, false);
-			this.Initialise();
+			this.Initialize();
 		}
 
-		protected void Initialise()
+		protected void Initialize()
 		{
 			this.textLayout = new TextLayout();
 			this.textNavigator = new TextNavigator(this.textLayout);
@@ -1770,7 +1770,7 @@ namespace Epsitec.Common.Document.Objects
 		protected TextLine(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
 			//	Constructeur qui désérialise l'objet.
-			this.Initialise();
+			this.Initialize();
 			this.textLayout.Text = info.GetString("Text");
 		}
 

@@ -223,7 +223,7 @@ namespace Epsitec.Common.Text
 			}
 			
 			this.PreRedefine (style);
-			style.Initialise (properties, parent_styles);
+			style.Initialize (properties, parent_styles);
 			this.PostRedefine (style);
 		}
 		

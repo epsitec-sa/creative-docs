@@ -41,7 +41,7 @@ namespace Epsitec.Common.Support
 			#endregion
 		}
 		
-		public static void Initialise(System.Type type, string name)
+		public static void Initialize(System.Type type, string name)
 		{
 			_manager = new Epsitec.Common.Support.ResourceManager (type);
 			_manager.DefineDefaultModuleName (name);

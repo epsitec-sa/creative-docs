@@ -77,9 +77,9 @@ namespace Epsitec.Common.Widgets
 			
 			Helpers.FontPreviewer.Initialize ();
 			
-			Res.Initialise (typeof (Widget), "Common.Widgets");
+			Res.Initialize (typeof (Widget), "Common.Widgets");
 			
-			Support.ImageProvider.Initialise ();
+			Support.ImageProvider.Initialize ();
 			
 			System.Threading.Thread          thread  = System.Threading.Thread.CurrentThread;
 			System.Globalization.CultureInfo culture = thread.CurrentCulture;
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static void Initialise()
+		public static void Initialize()
 		{
 			//	En appelant cette méthode statique, on peut garantir que le constructeur
 			//	statique de Widget a bien été exécuté.

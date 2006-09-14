@@ -8,7 +8,7 @@ namespace Epsitec.Common.DynamicData
 	[TestFixture]
 	public class PictogramTest
 	{
-		[SetUp] public void Initialise()
+		[SetUp] public void Initialize()
 		{
 		}
 		

@@ -13,10 +13,10 @@ namespace Epsitec.Common.Document.Settings
 	{
 		public Integer(Document document, string name) : base(document, name)
 		{
-			this.Initialise();
+			this.Initialize();
 		}
 
-		protected void Initialise()
+		protected void Initialize()
 		{
 			this.conditionName = "";
 			this.conditionState = false;
@@ -384,7 +384,7 @@ namespace Epsitec.Common.Document.Settings
 				this.Value = info.GetInt32("Value");
 			}
 
-			this.Initialise();
+			this.Initialize();
 		}
 		#endregion
 

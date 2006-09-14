@@ -4,9 +4,9 @@ namespace Epsitec.Common.Support
 {
 	[TestFixture] public class ClipboardTest
 	{
-		[SetUp] public void Initialise()
+		[SetUp] public void Initialize()
 		{
-			Widgets.Widget.Initialise ();
+			Widgets.Widget.Initialize ();
 		}
 		
 		[Test]

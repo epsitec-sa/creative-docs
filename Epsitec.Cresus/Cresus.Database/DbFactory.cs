@@ -16,11 +16,11 @@ namespace Epsitec.Cresus.Database
 		
 		static DbFactory()
 		{
-			DbFactory.Initialise ();
+			DbFactory.Initialize ();
 		}
 		
 		
-		protected static void Initialise()
+		protected static void Initialize()
 		{
 			System.Reflection.Assembly assembly = Common.Support.AssemblyLoader.Load ("Cresus.Database.Implementation");
 			System.Type[] types_in_assembly = assembly.GetTypes ();
