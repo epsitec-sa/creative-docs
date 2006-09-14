@@ -275,15 +275,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			container.PreferredWidth = 111;
 			container.Dock = DockStyle.Left;
 			container.Margins = new Margins(0, 10, 0, 0);
-			container.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			container.TabNavigation = Widget.TabNavigationMode.Passive;
 
 			Widget header = new Widget(container);
 			header.PreferredHeight = 20;
 			header.Dock = DockStyle.Top;
 			header.Margins = new Margins(0, 0, 0, 8);
-			header.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			header.TabNavigation = Widget.TabNavigationMode.Passive;
 
 			this.favoritesExtend = new GlyphButton(header);
+			this.favoritesExtend.AutoFocus = false;
+			this.favoritesExtend.TabNavigation = Widget.TabNavigationMode.Passive;
 			this.favoritesExtend.Dock = DockStyle.Left;
 			this.favoritesExtend.Clicked += new MessageEventHandler(this.HandleFavoritesExtendClicked);
 			ToolTip.Default.SetToolTip(this.favoritesExtend, Res.Strings.Dialog.File.Tooltip.Extend);
@@ -298,30 +300,35 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.favoritesToolbar.PreferredHeight = 22;
 			this.favoritesToolbar.Dock = DockStyle.Top;
 			this.favoritesToolbar.Margins = new Margins(0, 0, 0, 1);
-			this.favoritesToolbar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.favoritesToolbar.TabNavigation = Widget.TabNavigationMode.Passive;
 
 			IconButton buttonAdd = new IconButton(this.favoritesToolbar);
 			buttonAdd.AutoFocus = false;
+			buttonAdd.TabNavigation = Widget.TabNavigationMode.Passive;
 			buttonAdd.CommandObject = this.favoritesAddState.Command;
 			buttonAdd.Dock = DockStyle.Left;
 
 			IconButton buttonRemove = new IconButton(this.favoritesToolbar);
 			buttonRemove.AutoFocus = false;
+			buttonRemove.TabNavigation = Widget.TabNavigationMode.Passive;
 			buttonRemove.CommandObject = this.favoritesRemoveState.Command;
 			buttonRemove.Dock = DockStyle.Left;
 
 			IconButton buttonUp = new IconButton(this.favoritesToolbar);
 			buttonUp.AutoFocus = false;
+			buttonUp.TabNavigation = Widget.TabNavigationMode.Passive;
 			buttonUp.CommandObject = this.favoritesUpState.Command;
 			buttonUp.Dock = DockStyle.Left;
 
 			IconButton buttonDown = new IconButton(this.favoritesToolbar);
 			buttonDown.AutoFocus = false;
+			buttonDown.TabNavigation = Widget.TabNavigationMode.Passive;
 			buttonDown.CommandObject = this.favoritesDownState.Command;
 			buttonDown.Dock = DockStyle.Left;
 
 			IconButton buttonBig = new IconButton(this.favoritesToolbar);
 			buttonBig.AutoFocus = false;
+			buttonBig.TabNavigation = Widget.TabNavigationMode.Passive;
 			buttonBig.CommandObject = this.favoritesBigState.Command;
 			buttonBig.Dock = DockStyle.Left;
 
@@ -353,7 +360,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.Margins = new Margins(0, 0, 0, 0);
 			this.table.Dock = DockStyle.Fill;
 			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableFinalSelectionChanged);
-			this.table.TabIndex = this.tabIndex++;
+			this.table.TabIndex = 2;
 			this.table.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.table.DoubleClicked += new MessageEventHandler(this.HandleTableDoubleClicked);
 			this.table.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
@@ -380,6 +387,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			group.PreferredHeight = 20;
 			group.Margins = new Margins(0, 0, 0, 8);
 			group.Dock = DockStyle.Top;
+			group.TabIndex = 1;
 			group.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			this.fieldPath = new TextFieldCombo(group);
@@ -389,32 +397,37 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fieldPath.ComboOpening += new EventHandler<CancelEventArgs>(this.HandleFieldPathComboOpening);
 			this.fieldPath.ComboClosed += new EventHandler(this.HandleFieldPathComboClosed);
 			this.fieldPath.TextChanged += new EventHandler(this.HandleFieldPathTextChanged);
-			this.fieldPath.TabIndex = this.tabIndex++;
+			this.fieldPath.TabIndex = 1;
 			this.fieldPath.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Il faut créer ces boutons dans l'ordre 'de droite à gauche' !
 			IconButton buttonDelete = new IconButton(group);
 			buttonDelete.AutoFocus = false;
+			buttonDelete.TabNavigation = Widget.TabNavigationMode.Passive;
 			buttonDelete.CommandObject = this.deleteState.Command;
 			buttonDelete.Dock = DockStyle.Right;
 
 			IconButton buttonRename = new IconButton(group);
 			buttonRename.AutoFocus = false;
+			buttonRename.TabNavigation = Widget.TabNavigationMode.Passive;
 			buttonRename.CommandObject = this.renameState.Command;
 			buttonRename.Dock = DockStyle.Right;
 
 			IconButton buttonNew = new IconButton(group);
 			buttonNew.AutoFocus = false;
+			buttonNew.TabNavigation = Widget.TabNavigationMode.Passive;
 			buttonNew.CommandObject = this.newState.Command;
 			buttonNew.Dock = DockStyle.Right;
 
 			IconButton buttonParent = new IconButton(group);
 			buttonParent.AutoFocus = false;
+			buttonParent.TabNavigation = Widget.TabNavigationMode.Passive;
 			buttonParent.CommandObject = this.parentState.Command;
 			buttonParent.Dock = DockStyle.Right;
 
 			IconButton buttonPrev = new IconButton(group);
 			buttonPrev.AutoFocus = false;
+			buttonPrev.TabNavigation = Widget.TabNavigationMode.Passive;
 			buttonPrev.CommandObject = this.prevState.Command;
 			buttonPrev.Dock = DockStyle.Right;
 		}
@@ -426,6 +439,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			group.PreferredHeight = 20;
 			group.Margins = new Margins(0, 0, 8, 0);
 			group.Dock = DockStyle.Bottom;
+			group.TabIndex = 3;
 			group.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			StaticText label = new StaticText(group);
@@ -436,10 +450,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fieldFilename = new TextField(group);
 			this.fieldFilename.Dock = DockStyle.Fill;
 			this.fieldFilename.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
-			this.fieldFilename.TabIndex = this.tabIndex++;
+			this.fieldFilename.TabIndex = 1;
 			this.fieldFilename.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			TextField ext = new TextField(group);
+			ext.AutoFocus = false;
+			ext.TabNavigation = Widget.TabNavigationMode.Passive;
 			ext.IsReadOnly = true;
 			ext.Text = this.fileExtension;
 			ext.PreferredWidth = 50;
@@ -454,6 +470,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			footer.PreferredHeight = 22;
 			footer.Margins = new Margins(0, 0, 8, 0);
 			footer.Dock = DockStyle.Bottom;
+			footer.TabIndex = 4;
 			footer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			string ok;
@@ -477,7 +494,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.buttonOK.Dock = DockStyle.Left;
 			this.buttonOK.Margins = new Margins(0, 6, 0, 0);
 			this.buttonOK.Clicked += new MessageEventHandler(this.HandleButtonOKClicked);
-			this.buttonOK.TabIndex = this.tabIndex++;
+			this.buttonOK.TabIndex = 1;
 			this.buttonOK.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.buttonCancel = new Button(footer);
@@ -487,11 +504,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.buttonCancel.Dock = DockStyle.Left;
 			this.buttonCancel.Margins = new Margins(0, 6, 0, 0);
 			this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCancelClicked);
-			this.buttonCancel.TabIndex = this.tabIndex++;
+			this.buttonCancel.TabIndex = 2;
 			this.buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.slider = new HSlider(footer);
 			this.slider.AutoFocus = false;
+			this.slider.TabNavigation = Widget.TabNavigationMode.Passive;
 			this.slider.PreferredWidth = 110;
 			this.slider.IsMinMaxButtons = true;
 			this.slider.Dock = DockStyle.Right;
@@ -2125,7 +2143,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected List<Item>				files;
 		protected string					selectedFilename;
 		protected string[]					selectedFilenames;
-		protected int						tabIndex;
 		protected int						renameSelected = -1;
 		protected Widget					focusedWidget;
 		protected Widget					focusedWidgetBeforeRename;
