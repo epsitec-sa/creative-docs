@@ -198,7 +198,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.CreateAccess();
 			this.CreateTable(cellHeight);
 			this.CreateRename();
+
+			//	Danss l'ordre de bas en haut:
 			this.CreateFooter();
+			this.CreateOptions();
 			this.CreateFilename();
 		}
 
@@ -502,10 +505,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 			this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 			this.buttonCancel.Dock = DockStyle.Left;
-			this.buttonCancel.Margins = new Margins(0, 6, 0, 0);
+			this.buttonCancel.Margins = new Margins(0, 12, 0, 0);
 			this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCancelClicked);
 			this.buttonCancel.TabIndex = 2;
 			this.buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			if (this.isSave)
+			{
+				this.optionsExtend = new GlyphButton(footer);
+				this.optionsExtend.AutoFocus = false;
+				this.optionsExtend.TabNavigation = Widget.TabNavigationMode.Passive;
+				this.optionsExtend.Dock = DockStyle.Left;
+				this.optionsExtend.Clicked += new MessageEventHandler(this.HandleOptionsExtendClicked);
+				ToolTip.Default.SetToolTip(this.optionsExtend, "Montre ou cache les options d'enregistrement");
+			}
 
 			this.slider = new HSlider(footer);
 			this.slider.AutoFocus = false;
@@ -522,6 +535,30 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.slider.Value = (decimal) this.table.DefHeight;
 			this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
 			ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.File.Tooltip.PreviewSize);
+		}
+
+		protected void CreateOptions()
+		{
+			//	Crée le panneau inférieur pour les options.
+			this.optionsToolbar = new Widget(this.window.Root);
+			this.optionsToolbar.Margins = new Margins(0, 0, 8, 0);
+			this.optionsToolbar.Dock = DockStyle.Bottom;
+			this.optionsToolbar.TabIndex = 5;
+			this.optionsToolbar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.optionsToolbar.Visibility = false;
+
+			RadioButton radio1 = new RadioButton(this.optionsToolbar);
+			radio1.Text = "N'inclut aucune police";
+			radio1.Dock = DockStyle.Top;
+
+			RadioButton radio2 = new RadioButton(this.optionsToolbar);
+			radio2.Text = "Inclut les polices utilisées";
+			radio2.ActiveState = ActiveState.Yes;
+			radio2.Dock = DockStyle.Top;
+
+			RadioButton radio3 = new RadioButton(this.optionsToolbar);
+			radio3.Text = "Inclut toutes les polices définies";
+			radio3.Dock = DockStyle.Top;
 		}
 
 
@@ -868,6 +905,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			this.favoritesExtend.GlyphShape = this.favoritesToolbar.Visibility ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
+
+			if (this.optionsExtend != null)
+			{
+				this.optionsExtend.GlyphShape = this.optionsToolbar.Visibility ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
+			}
 
 			System.Collections.ArrayList list = this.globalSettings.FavoritesList;
 			int sel = this.favoritesSelected-this.favoritesFixes;
@@ -1379,6 +1421,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleFavoritesExtendClicked(object sender, MessageEventArgs e)
 		{
 			this.favoritesToolbar.Visibility = !this.favoritesToolbar.Visibility;
+			this.UpdateButtons();
+		}
+
+		private void HandleOptionsExtendClicked(object sender, MessageEventArgs e)
+		{
+			this.optionsToolbar.Visibility = !this.optionsToolbar.Visibility;
 			this.UpdateButtons();
 		}
 
@@ -2129,6 +2177,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected TextFieldEx				fieldRename;
 		protected Button					buttonOK;
 		protected Button					buttonCancel;
+		protected GlyphButton				optionsExtend;
+		protected Widget					optionsToolbar;
 
 		protected string					fileExtension;
 		protected bool						isModel = false;
