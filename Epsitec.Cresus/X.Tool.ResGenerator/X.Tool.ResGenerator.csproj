@@ -74,6 +74,8 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
     <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
       <Name>Common.Support.Implementation</Name>
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
@@ -98,6 +100,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Generator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
