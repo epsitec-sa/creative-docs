@@ -1912,8 +1912,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 					else
 					{
-						MiniatureCache.Add(this.folderItem.FullPath);
-						image = MiniatureCache.Image(this.folderItem.FullPath);
+						DocumentCache.Add(this.folderItem.FullPath);
+						image = DocumentCache.Image(this.folderItem.FullPath);
 						if (image == null)
 						{
 							image = this.folderItem.Icon.Image;
@@ -1944,38 +1944,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						}
 						else
 						{
-							byte[] data = this.ReadStatistics();
-							if (data != null)
-							{
-								Document.Statistics stat = new Document.Statistics();
-								stat = Serialization.DeserializeFromMemory(data) as Document.Statistics;
-								return stat;
-							}
-
-							return null;
+							DocumentCache.Add(this.folderItem.FullPath);
+							return DocumentCache.Statistics(this.folderItem.FullPath);
 						}
 					}
 				}
-			}
-
-			protected byte[] ReadStatistics()
-			{
-				//	Lit les données des statistiques associée au fichier.
-				ZipFile zip = new ZipFile();
-
-				if (zip.TryLoadFile(this.folderItem.FullPath))
-				{
-					try
-					{
-						return zip["statistics.data"].Data;  // lit les données dans le fichier zip
-					}
-					catch
-					{
-						return null;
-					}
-				}
-
-				return null;
 			}
 
 
