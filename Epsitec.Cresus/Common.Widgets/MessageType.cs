@@ -22,5 +22,7 @@ namespace Epsitec.Common.Widgets
 		KeyDown,
 		KeyUp,
 		KeyPress,
+
+		ApplicationCommand
 	}
 }

@@ -45,8 +45,12 @@ namespace Epsitec.Common.Widgets.Platform
 		public const int WM_ENTERSIZEMOVE	= 0x0231;
 		public const int WM_EXITSIZEMOVE	= 0x0232;
 		public const int WM_MOUSELEAVE		= 0x02A3;
+		public const int WM_APPCOMMAND		= 0x0319;
 		public const int WM_NCCALCSIZE		= 0x0083;
 		public const int WM_CHANGEUISTATE	= 0x0127;
+
+		public const int APPCOMMAND_BROWSER_BACKWARD = 1;
+		public const int APPCOMMAND_BROWSER_FORWARD = 2;
 		
 		public const int WM_APP				= 0x8000;
 		public const int WM_APP_DISPOSE		= WM_APP + 1;

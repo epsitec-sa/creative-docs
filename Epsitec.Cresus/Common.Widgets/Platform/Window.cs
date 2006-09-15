@@ -1408,7 +1408,7 @@ namespace Epsitec.Common.Widgets.Platform
 				base.WndProc (ref msg);
 				return;
 			}
-			
+
 			if (msg.Msg == Win32Const.WM_GETMINMAXINFO)
 			{
 				//	Pour des raisons mystérieuses, WinForms (?) se croit obligé de touiller les positions
