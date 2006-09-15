@@ -77,7 +77,7 @@ namespace Epsitec.Common.Widgets
 			
 			Helpers.FontPreviewer.Initialize ();
 			
-			Res.Initialise (typeof (Widget), "Common.Widgets");
+			Res.Initialize (typeof (Widget), "Common.Widgets");
 			
 			Support.ImageProvider.Initialize ();
 			
