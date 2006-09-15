@@ -465,6 +465,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			buttonNew.CommandObject = this.newState.Command;
 			buttonNew.Dock = DockStyle.Right;
 
+			IconSeparator sep = new IconSeparator(group);
+			sep.Dock = DockStyle.Right;
+
 			IconButton buttonParent = new IconButton(group);
 			buttonParent.AutoFocus = false;
 			buttonParent.TabNavigation = Widget.TabNavigationMode.Passive;
@@ -523,8 +526,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.optionsToolbar = new Widget(this.window.Root);
 			this.optionsToolbar.Margins = new Margins(0, 0, 8, 0);
 			this.optionsToolbar.Dock = DockStyle.Bottom;
-			this.optionsToolbar.TabIndex = 4;
-			this.optionsToolbar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.optionsToolbar.TabNavigation = Widget.TabNavigationMode.Passive;
 			this.optionsToolbar.Visibility = false;
 
 
