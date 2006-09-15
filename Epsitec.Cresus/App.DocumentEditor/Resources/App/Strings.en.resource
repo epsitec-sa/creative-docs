@@ -243,4 +243,22 @@
   <data id="091">Drag here to resize the window</data>
   <data id="0I7" mod="1">{0} MB</data>
   <data id="0J7" mod="1">{0} GB</data>
+  <data id="0K7">
+  </data>
+  <data id="0L7">
+  </data>
+  <data id="0M7">
+  </data>
+  <data id="0N7">
+  </data>
+  <data id="0O7">
+  </data>
+  <data id="0P7">
+  </data>
+  <data id="0Q7">
+  </data>
+  <data id="0R7">
+  </data>
+  <data id="0S7">
+  </data>
 </bundle>

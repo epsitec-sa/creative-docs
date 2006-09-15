@@ -150,12 +150,17 @@ namespace Epsitec.Common.Document
 		}
 
 
-		public void WriteData(ZipFile zip)
+		public void WriteData(ZipFile zip, Document.ImageIncludeMode imageIncludeMode)
 		{
 			//	Ecrit toutes les données des images.
+			if (imageIncludeMode == Document.ImageIncludeMode.None)
+			{
+				return;
+			}
+
 			foreach (Item item in this.dico.Values)
 			{
-				if (item.InsideDoc)
+				if (item.InsideDoc || imageIncludeMode == Document.ImageIncludeMode.All)
 				{
 					string name = string.Format("images/{0}", item.ShortName);
 					zip.AddEntry(name, item.Data);
@@ -163,12 +168,12 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void ReadData(ZipFile zip, Properties.Image propImage)
+		public void ReadData(ZipFile zip, Document.ImageIncludeMode imageIncludeMode, Properties.Image propImage)
 		{
 			//	Lit les données d'une image.
 			if (!this.Contains(propImage.Filename))  // pas encore dans le cache ?
 			{
-				if (propImage.InsideDoc)
+				if (propImage.InsideDoc || imageIncludeMode == Document.ImageIncludeMode.All)
 				{
 					string name = string.Format("images/{0}", propImage.ShortName);
 					byte[] data = zip[name].Data;  // lit les données dans le fichier zip

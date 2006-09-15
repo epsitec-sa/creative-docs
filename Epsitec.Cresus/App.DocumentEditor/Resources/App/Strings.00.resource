@@ -65,7 +65,8 @@
   <data name="Dialog.File.Button.Open" id="0M6" mod="1">Ouvrir</data>
   <data name="Dialog.File.Button.Save" id="0A7" mod="1">Enregistrer</data>
   <data name="Dialog.File.Button.New" id="0F7" mod="1">Nouveau</data>
-  <data name="Dialog.File.Tooltip.Extend" id="0G7" mod="1">Montre ou cache les options pour les favoris</data>
+  <data name="Dialog.File.Tooltip.Extend.Favorites" id="0G7" mod="1">Montre ou cache les options pour les favoris</data>
+  <data name="Dialog.File.Tooltip.Extend.Include" id="0L7" mod="1">Montre ou cache les options d&amp;apos;enregistrement</data>
   <data name="Dialog.File.Tooltip.PreviewSize" id="0R6" mod="1">Taille des échantillons</data>
   <data name="Dialog.File.NewDirectoryName" id="037" mod="1">Nouveau dossier</data>
   <data name="Dialog.File.Statistics" id="047" mod="1">Format: {0}&lt;br/&gt;Pages/calques: {1}/{2}&lt;br/&gt;Polices/images: {5}/{6}&lt;br/&gt;Objets: {3}/{4}</data>
@@ -84,6 +85,14 @@
   <data name="Dialog.Save.TitleMod" id="0K1">Enregistrer un document modèle</data>
   <data name="Dialog.Save.TitlePic" id="0L1">Enregistrer une icône</data>
   <data name="Dialog.Save.TitleCol" id="0M1">Enregistrer une palette de couleurs</data>
+  <data name="Dialog.Save.Include.Font.Title" id="0K7" mod="1">Inclusion des polices</data>
+  <data name="Dialog.Save.Include.Font.None" id="0M7" mod="1">Aucune police</data>
+  <data name="Dialog.Save.Include.Font.Used" id="0N7" mod="1">Polices utilisées</data>
+  <data name="Dialog.Save.Include.Font.All" id="0O7" mod="1">Polices définies en plus</data>
+  <data name="Dialog.Save.Include.Image.Title" id="0P7" mod="1">Inclusion des images bitmap</data>
+  <data name="Dialog.Save.Include.Image.None" id="0Q7" mod="1">Aucune image</data>
+  <data name="Dialog.Save.Include.Image.Defined" id="0R7" mod="1">Selon les attributs</data>
+  <data name="Dialog.Save.Include.Image.All" id="0S7" mod="1">Toutes les images</data>
   <data name="Dialog.FileDoc" id="0N1">Documents</data>
   <data name="Dialog.FileMod" id="0O1">Documents modèles</data>
   <data name="Dialog.FilePic" id="0P1">Icônes</data>
