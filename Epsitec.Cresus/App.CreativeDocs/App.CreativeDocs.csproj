@@ -88,15 +88,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
-    <None Include="Resources\App\Captions.00.resource" />
-    <None Include="Resources\App\Captions.en.resource" />
-    <None Include="Resources\App\module.info" />
-    <None Include="Resources\Common.Widgets\Captions.00.resource" />
-    <None Include="Resources\Common.Widgets\Captions.en.resource" />
-    <None Include="Resources\Common.Widgets\module.info" />
-    <None Include="Resources\Designer\module.info" />
-    <None Include="Resources\Designer\Strings.00.resource" />
-    <None Include="Resources\Document\module.info" />
+    <Content Include="Resources\App\Captions.00.resource" />
+    <Content Include="Resources\App\Captions.en.resource" />
+    <Content Include="Resources\App\module.info" />
+    <Content Include="Resources\App\Strings.en.resource" />
+    <Content Include="Resources\Common.Widgets\Captions.00.resource" />
+    <Content Include="Resources\Common.Widgets\Captions.en.resource" />
+    <Content Include="Resources\Common.Widgets\module.info" />
+    <Content Include="Resources\Common.Widgets\Strings.en.resource" />
+    <Content Include="Resources\Designer\Captions.00.resource" />
+    <Content Include="Resources\Designer\module.info" />
+    <Content Include="Resources\Designer\Strings.00.resource" />
+    <Content Include="Resources\Designer\Strings.en.resource" />
+    <Content Include="Resources\Document\module.info" />
+    <Content Include="Resources\Document\Strings.en.resource" />
     <Content Include="Original Samples\normal.crmod" />
     <Compile Include="Application.cs">
       <SubType>Code</SubType>
@@ -131,20 +136,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>copy "$(SolutionDir)Common.Document\Resources\Document\Strings.en.resource" "$(ProjectDir)Resources\Document\Strings.00.resource"
-copy "$(SolutionDir)Common.Widgets\Resources\Common.Widgets\Strings.en.resource" "$(ProjectDir)Resources\Common.Widgets\Strings.00.resource"
-copy "$(SolutionDir)App.DocumentEditor\Resources\App\Strings.en.resource" "$(ProjectDir)Resources\App\Strings.00.resource"
-copy "$(SolutionDir)Common.Designer\Resources\Designer\Strings.en.resource" "$(ProjectDir)Resources\Designer\Strings.00.resource"
-
-copy "$(SolutionDir)Common.Document\Resources\Document\Captions.00.resource" "$(ProjectDir)Resources\Document\Captions.00.resource"
-copy "$(SolutionDir)Common.Widgets\Resources\Common.Widgets\Captions.00.resource" "$(ProjectDir)Resources\Common.Widgets\Captions.00.resource"
-copy "$(SolutionDir)App.DocumentEditor\Resources\App\Captions.00.resource" "$(ProjectDir)Resources\App\Captions.00.resource"
-copy "$(SolutionDir)Common.Designer\Resources\Designer\Captions.00.resource" "$(ProjectDir)Resources\Designer\Captions.00.resource"
-
-copy "$(SolutionDir)Common.Document\Resources\Document\Captions.en.resource" "$(ProjectDir)Resources\Document\Captions.en.resource"
-copy "$(SolutionDir)Common.Widgets\Resources\Common.Widgets\Captions.en.resource" "$(ProjectDir)Resources\Common.Widgets\Captions.en.resource"
-copy "$(SolutionDir)App.DocumentEditor\Resources\App\Captions.en.resource" "$(ProjectDir)Resources\App\Captions.en.resource"
-copy "$(SolutionDir)Common.Designer\Resources\Designer\Captions.en.resource" "$(ProjectDir)Resources\Designer\Captions.en.resource"
+    <PreBuildEvent>copy "$(SolutionDir)Common.Document\Resources\Document\*.resource" "$(ProjectDir)Resources\Document\"
+copy "$(SolutionDir)Common.Widgets\Resources\Common.Widgets\*.resource" "$(ProjectDir)Resources\Common.Widgets\"
+copy "$(SolutionDir)App.DocumentEditor\Resources\App\*.resource" "$(ProjectDir)Resources\App\"
+copy "$(SolutionDir)Common.Designer\Resources\Designer\*.resource" "$(ProjectDir)Resources\Designer\"
 
 copy "$(SolutionDir)Common.Document\Resources\Document\*.info" "$(ProjectDir)Resources\Document\"
 copy "$(SolutionDir)Common.Widgets\Resources\Common.Widgets\*.info" "$(ProjectDir)Resources\Common.Widgets\"
