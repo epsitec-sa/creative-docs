@@ -327,7 +327,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.favoritesExtend.TabNavigation = Widget.TabNavigationMode.Passive;
 			this.favoritesExtend.Dock = DockStyle.Left;
 			this.favoritesExtend.Clicked += new MessageEventHandler(this.HandleFavoritesExtendClicked);
-			ToolTip.Default.SetToolTip(this.favoritesExtend, Res.Strings.Dialog.File.Tooltip.Extend);
+			ToolTip.Default.SetToolTip(this.favoritesExtend, Res.Strings.Dialog.File.Tooltip.Extend.Favorites);
 
 			StaticText label = new StaticText(header);
 			label.Text = Res.Strings.Dialog.Open.LabelPath;
@@ -514,47 +514,47 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 
 			GroupBox groupFont = new GroupBox(this.optionsToolbar);
-			groupFont.Text = "Inclusion des polices";
+			groupFont.Text = Res.Strings.Dialog.Save.Include.Font.Title;
 			groupFont.PreferredWidth = 180;
 			groupFont.Padding = new Margins(4, 0, 0, 3);
 			groupFont.Dock = DockStyle.Left;
 			groupFont.Margins = new Margins(0, 8, 0, 0);
 
 			this.optionsFontNone = new RadioButton(groupFont);
-			this.optionsFontNone.Text = "Aucune police";
+			this.optionsFontNone.Text = Res.Strings.Dialog.Save.Include.Font.None;
 			this.optionsFontNone.Dock = DockStyle.Top;
 			this.optionsFontNone.Clicked += new MessageEventHandler(this.HandleOptionsFontClicked);
 
 			this.optionsFontUsed = new RadioButton(groupFont);
-			this.optionsFontUsed.Text = "Polices utilisées";
+			this.optionsFontUsed.Text = Res.Strings.Dialog.Save.Include.Font.Used;
 			this.optionsFontUsed.Dock = DockStyle.Top;
 			this.optionsFontUsed.Clicked += new MessageEventHandler(this.HandleOptionsFontClicked);
 
 			this.optionsFontAll = new RadioButton(groupFont);
-			this.optionsFontAll.Text = "Polices utilisées et définies";
+			this.optionsFontAll.Text = Res.Strings.Dialog.Save.Include.Font.All;
 			this.optionsFontAll.Dock = DockStyle.Top;
 			this.optionsFontAll.Clicked += new MessageEventHandler(this.HandleOptionsFontClicked);
 
 
 			GroupBox groupImage = new GroupBox(this.optionsToolbar);
-			groupImage.Text = "Inclusion des images bitmap";
+			groupImage.Text = Res.Strings.Dialog.Save.Include.Image.Title;
 			groupImage.PreferredWidth = 180;
 			groupImage.Padding = new Margins(4, 0, 0, 3);
 			groupImage.Dock = DockStyle.Left;
 			groupImage.Margins = new Margins(0, 8, 0, 0);
 
 			this.optionsImageNone = new RadioButton(groupImage);
-			this.optionsImageNone.Text = "Aucune image";
+			this.optionsImageNone.Text = Res.Strings.Dialog.Save.Include.Image.None;
 			this.optionsImageNone.Dock = DockStyle.Top;
 			this.optionsImageNone.Clicked += new MessageEventHandler(this.HandleOptionsImageClicked);
 
 			this.optionsImageDefined = new RadioButton(groupImage);
-			this.optionsImageDefined.Text = "Selon les attributs";
+			this.optionsImageDefined.Text = Res.Strings.Dialog.Save.Include.Image.Defined;
 			this.optionsImageDefined.Dock = DockStyle.Top;
 			this.optionsImageDefined.Clicked += new MessageEventHandler(this.HandleOptionsImageClicked);
 
 			this.optionsImageAll = new RadioButton(groupImage);
-			this.optionsImageAll.Text = "Toutes les images";
+			this.optionsImageAll.Text = Res.Strings.Dialog.Save.Include.Image.All;
 			this.optionsImageAll.Dock = DockStyle.Top;
 			this.optionsImageAll.Clicked += new MessageEventHandler(this.HandleOptionsImageClicked);
 		}
@@ -610,7 +610,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.optionsExtend.TabNavigation = Widget.TabNavigationMode.Passive;
 				this.optionsExtend.Dock = DockStyle.Left;
 				this.optionsExtend.Clicked += new MessageEventHandler(this.HandleOptionsExtendClicked);
-				ToolTip.Default.SetToolTip(this.optionsExtend, "Montre ou cache les options d'enregistrement");
+				ToolTip.Default.SetToolTip(this.optionsExtend, Res.Strings.Dialog.File.Tooltip.Extend.Include);
 			}
 
 			this.slider = new HSlider(footer);

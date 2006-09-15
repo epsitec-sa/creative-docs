@@ -833,7 +833,7 @@ namespace Epsitec.Common.Document
 					{
 						doc = (Document) formatter.Deserialize(stream);
 						doc.FontReadAll(zip);
-						doc.ImageCacheAll(zip);
+						doc.ImageCacheAll(zip, doc.imageIncludeMode);
 					}
 				}
 				catch ( System.Exception e )
@@ -1298,7 +1298,7 @@ namespace Epsitec.Common.Document
 					zip.AddEntry("document.data", data);
 					this.WriteMiniature(zip);
 					this.WriteStatistics(zip);
-					this.imageCache.WriteData(zip);
+					this.imageCache.WriteData(zip, this.imageIncludeMode);
 					this.FontWriteAll(zip);
 					zip.CompressionLevel = 6;
 					zip.SaveFile(filename);
@@ -1931,7 +1931,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected void ImageCacheAll(ZipFile zip)
+		protected void ImageCacheAll(ZipFile zip, ImageIncludeMode imageIncludeMode)
 		{
 			//	Cache toutes les données pour les objets Images du document.
 			this.imageCache = new ImageCache();
@@ -1941,7 +1941,7 @@ namespace Epsitec.Common.Document
 				Properties.Image propImage = obj.PropertyImage;
 				if (propImage != null)
 				{
-					this.imageCache.ReadData(zip, propImage);
+					this.imageCache.ReadData(zip, imageIncludeMode, propImage);
 				}
 			}
 		}
