@@ -1849,6 +1849,13 @@ namespace Epsitec.Common.Document
 			{
 				OpenType.FontName fontName = this.fontList[i];
 
+				if (fontName.FaceName == "Arial"           ||
+					fontName.FaceName == "Times New Roman" ||
+					fontName.FaceName == "Courier New"     )
+				{
+					continue;
+				}
+
 				OpenType.Font font = TextContext.GetFont(fontName.FaceName, fontName.StyleName);
 				System.Diagnostics.Debug.Assert(font != null);
 
