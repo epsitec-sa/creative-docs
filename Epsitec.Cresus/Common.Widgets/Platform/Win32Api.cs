@@ -27,6 +27,7 @@ namespace Epsitec.Common.Widgets.Platform
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr GetDesktopWindow();
 		[DllImport ("User32.dll")]	internal extern static bool GetGUIThreadInfo(int thread_id, out GUIThreadInfo info);
 		[DllImport ("User32.dll")]	internal extern static bool IsWindowVisible(System.IntPtr handle);
+		[DllImport ("user32.dll")]  internal extern static bool IsWindowEnabled(System.IntPtr handle);
 		[DllImport ("User32.dll")]	internal extern static bool BringWindowToTop(System.IntPtr handle);
 		[DllImport ("User32.dll")]	internal extern static bool GetIconInfo(System.IntPtr handle, out IconInfo info);
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr CreateIconIndirect(ref IconInfo info);

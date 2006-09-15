@@ -1282,7 +1282,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					FileOperationMode mode = new FileOperationMode(this.window);
 					FileManager.RenameFile(mode, srcFilename, dstFilename);
 
-					if (!System.IO.Directory.Exists(dstFilename))
+					if (System.IO.Directory.Exists(srcFilename) && !string.Equals(srcFilename, dstFilename, System.StringComparison.CurrentCultureIgnoreCase))
 					{
 						return;
 					}
@@ -1295,7 +1295,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					FileOperationMode mode = new FileOperationMode(this.window);
 					FileManager.RenameFile(mode, srcFilename, dstFilename);
 
-					if (!System.IO.File.Exists(dstFilename))
+					if (System.IO.File.Exists(srcFilename) && !string.Equals(srcFilename, dstFilename, System.StringComparison.CurrentCultureIgnoreCase))
 					{
 						return;
 					}
