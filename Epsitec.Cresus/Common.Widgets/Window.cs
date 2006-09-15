@@ -2083,7 +2083,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			if ((consumer != null) &&
-				(consumer.IsVisible))
+				(consumer.Visibility))
 			{
 				switch (message.Type)
 				{
