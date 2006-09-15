@@ -1834,6 +1834,26 @@ namespace Epsitec.Common.Document
 			TextFlow.StatisticFonts(this.fontList, this.textFlows);
 			this.modifier.StatisticFonts(this.fontList);
 
+			if (this.fontIncludeMode == FontIncludeMode.All)
+			{
+				//	Fouille tous les styles à la recherche des polices définies.
+				Text.TextStyle[] list = this.TextContext.StyleList.StyleMap.GetSortedStyles();
+				foreach (Text.TextStyle style in list)
+				{
+					Text.Property[] properties = style.FindProperties(Text.Properties.WellKnownType.Font);
+					foreach (Text.Property property in properties)
+					{
+						Text.Properties.FontProperty font = property as Text.Properties.FontProperty;
+						OpenType.FontName f = new Epsitec.Common.OpenType.FontName(font.FaceName, font.StyleName);
+						if (!this.fontList.Contains(f))
+						{
+							this.fontList.Add(f);
+						}
+					}
+				
+				}
+			}
+
 			this.fontList.Sort();
 		}
 
