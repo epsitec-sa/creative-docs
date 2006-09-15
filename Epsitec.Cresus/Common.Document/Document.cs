@@ -1849,9 +1849,7 @@ namespace Epsitec.Common.Document
 			{
 				OpenType.FontName fontName = this.fontList[i];
 
-				if (fontName.FaceName == "Arial"           ||
-					fontName.FaceName == "Times New Roman" ||
-					fontName.FaceName == "Courier New"     )
+				if (Document.IsStandardFont(fontName.FaceName))
 				{
 					continue;
 				}
@@ -1877,10 +1875,27 @@ namespace Epsitec.Common.Document
 			{
 				OpenType.FontName fontName = this.fontList[i];
 
+				if (Document.IsStandardFont(fontName.FaceName))
+				{
+					continue;
+				}
+
 				string name = Document.GetFontFilename(fontName, i);
 				byte[] data = zip[name].Data;  // lit les données dans le fichier zip
-				Drawing.Font.RegisterDynamicFont(data);
+				if (data != null)
+				{
+					Drawing.Font.RegisterDynamicFont(data);
+				}
 			}
+		}
+
+		protected static bool IsStandardFont(string faceName)
+		{
+			//	Indique s'il s'agit d'une police courante dont il est certain qu'elle
+			//	existe sur tous les ordinateurs.
+			return (faceName == "Arial"           ||
+					faceName == "Times New Roman" ||
+					faceName == "Courier New"     );
 		}
 
 		protected static string GetFontFilename(OpenType.FontName fontName, int rank)
