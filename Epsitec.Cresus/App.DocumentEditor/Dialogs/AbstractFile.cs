@@ -718,20 +718,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			Filename f = new Filename();
-			f.PreferredHeight = (this.favoritesBigState.ActiveState == ActiveState.Yes) ? Common.Widgets.Filename.ExtendedHeight : Common.Widgets.Filename.CompactedHeight;
-			f.Name = this.favoritesList.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
 			f.FilenameValue = text;
 			f.IconValue = Misc.Icon(icon);
-			f.Dock = DockStyle.Top;
-			f.Clicked += new MessageEventHandler(this.HandleFavoriteClicked);
 
-			if (!string.IsNullOrEmpty(item.FullPath))
-			{
-				ToolTip.Default.SetToolTip(f, TextLayout.ConvertToTaggedText(item.FullPath));
-			}
-
-			this.favorites.Panel.Children.Add(f);
-			this.favoritesList.Add(item);
+			this.FavoritesAdd(item, f);
 		}
 
 		protected void FavoritesAdd(FolderId id)
@@ -740,16 +730,28 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			FolderItem item = FileManager.GetFolderItem(id, FolderQueryMode.LargeIcons);
 
 			Filename f = new Filename();
-			f.PreferredHeight = (this.favoritesBigState.ActiveState == ActiveState.Yes) ? Common.Widgets.Filename.ExtendedHeight : Common.Widgets.Filename.CompactedHeight;
-			f.Name = this.favoritesList.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
 			f.FilenameValue = item.DisplayName;
 			f.ImageValue = item.Icon.Image;
+
+			this.FavoritesAdd(item, f);
+		}
+
+		protected void FavoritesAdd(FolderItem item, Filename f)
+		{
+			//	Ajoute un favoris dans le panneau de gauche.
+			f.PreferredHeight = (this.favoritesBigState.ActiveState == ActiveState.Yes) ? Common.Widgets.Filename.ExtendedHeight : Common.Widgets.Filename.CompactedHeight;
+			f.Name = this.favoritesList.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
 			f.Dock = DockStyle.Top;
 			f.Clicked += new MessageEventHandler(this.HandleFavoriteClicked);
 
-			if (!string.IsNullOrEmpty(item.FullPath))
+			if (string.IsNullOrEmpty(item.FullPath))
 			{
-				ToolTip.Default.SetToolTip(f, TextLayout.ConvertToTaggedText(item.FullPath));
+				ToolTip.Default.SetToolTip(f, TextLayout.ConvertToTaggedText(f.FilenameValue));
+			}
+			else
+			{
+				string tooltip = string.Concat(TextLayout.ConvertToTaggedText(f.FilenameValue), "<br/><i>", TextLayout.ConvertToTaggedText(item.FullPath), "</i>");
+				ToolTip.Default.SetToolTip(f, tooltip);
 			}
 
 			this.favorites.Panel.Children.Add(f);
