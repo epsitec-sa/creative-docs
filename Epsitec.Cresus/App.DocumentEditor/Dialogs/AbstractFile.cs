@@ -1218,7 +1218,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					FileOperationMode mode = new FileOperationMode(this.window);
 					FileManager.RenameFile(mode, srcFilename, dstFilename);
 
-					if (System.IO.File.Exists(srcFilename))
+					if (!System.IO.File.Exists(dstFilename))
 					{
 						return;
 					}
