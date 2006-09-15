@@ -887,11 +887,14 @@ namespace Epsitec.Common.Widgets
 							case KeyCode.End:
 							case KeyCode.ArrowLeft:
 							case KeyCode.ArrowRight:
-								message.Consumer = this;
+								if (message.IsAltPressed == false)
+								{
+									message.Consumer = this;
+								}
 								break;
 							
 							case KeyCode.Escape:
-								if (this.RejectEdition () && this.SwallowEscape)
+								if (this.RejectEdition () && this.SwallowEscape && !message.IsAltPressed && !message.IsControlPressed && !message.IsShiftPressed)
 								{
 									message.Consumer = this;
 									message.Swallowed = true;
@@ -899,7 +902,7 @@ namespace Epsitec.Common.Widgets
 								break;
 							
 							case KeyCode.Return:
-								if (this.AcceptEdition () && this.SwallowReturn)
+								if (this.AcceptEdition () && this.SwallowReturn && !message.IsAltPressed && !message.IsControlPressed && !message.IsShiftPressed)
 								{
 									message.Consumer = this;
 									message.Swallowed = true;

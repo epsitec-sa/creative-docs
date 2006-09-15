@@ -437,18 +437,22 @@ namespace Epsitec.Common.Widgets
 				switch (message.Type)
 				{
 					case MessageType.KeyDown:
-						if (this.ProcessKeyDown (message.KeyCode, message.IsShiftPressed, message.IsControlPressed))
+						if (message.IsAltPressed)
 						{
-							//?System.Diagnostics.Debug.WriteLine(this.textLayout.Text);
+						}
+						else if (this.ProcessKeyDown (message.KeyCode, message.IsShiftPressed, message.IsControlPressed))
+						{
 							message.Swallowed = true;
 							return true;
 						}
 						break;
 
 					case MessageType.KeyPress:
-						if (this.ProcessKeyPress (message.KeyChar))
+						if (message.IsAltPressed)
 						{
-							//?System.Diagnostics.Debug.WriteLine(this.textLayout.Text);
+						}
+						else if (this.ProcessKeyPress (message.KeyChar))
+						{
 							return true;
 						}
 						break;
