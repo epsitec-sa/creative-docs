@@ -898,7 +898,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 
-			if (((style & CellArrayStyles.SelectMulti) == 0 || !isControlPressed) && !isShiftPressed)
+			if ((style & CellArrayStyles.SelectMulti) == 0 || (!isControlPressed && !isShiftPressed))
 			{
 				this.DeselectAll();
 				this.selectedRow = -1;

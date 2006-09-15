@@ -2277,9 +2277,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					return this.IsDrive ? -1 : 1;  // unités avant les fichiers
 				}
 
-				if (this.IsDirectory != that.IsDirectory)
+				if (this.IsDirectoryOrShortcut != that.IsDirectoryOrShortcut)
 				{
-					return this.IsDirectory ? -1 : 1;  // dossiers avant les fichiers
+					return this.IsDirectoryOrShortcut ? -1 : 1;  // dossiers avant les fichiers
 				}
 
 				if (this.IsDrive)
