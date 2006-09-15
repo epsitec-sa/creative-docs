@@ -82,7 +82,7 @@ namespace Epsitec.Common.Document
 			dataImage = null;
 			dataStatistics = null;
 
-			if (zip.TryLoadFile(filename))
+			if (zip.TryLoadFile(filename, DocumentCache.IsLoading))
 			{
 				try
 				{
@@ -102,6 +102,11 @@ namespace Epsitec.Common.Document
 					dataStatistics = null;
 				}
 			}
+		}
+
+		protected static bool IsLoading(string entryName)
+		{
+			return (entryName == "preview.png" || entryName == "statistics.data");
 		}
 
 
