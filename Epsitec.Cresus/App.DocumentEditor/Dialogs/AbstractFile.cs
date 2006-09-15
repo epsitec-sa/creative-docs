@@ -16,6 +16,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		public AbstractFile(DocumentEditor editor) : base(editor)
 		{
 			this.directoriesVisited = new List<FolderItem>();
+			this.directoriesVisitedIndex = -1;
+
 			this.focusedWidget = null;
 		}
 
@@ -67,7 +69,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 				}
 
-				this.SetInitialFolder(folder);
+				this.SetInitialFolder(folder, true);
 			}
 		}
 
@@ -169,14 +171,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-		protected void SetInitialFolder(FolderItem folder)
+		protected void SetInitialFolder(FolderItem folder, bool updateVisited)
 		{
 			//	Change le dossier courant.
-			if (!this.IsDirectoriesEndWith(this.initialFolder))
-			{
-				this.directoriesVisited.Add(this.initialFolder);
-			}
-
 			if (folder.IsEmpty)
 			{
 				this.initialFolder = FileManager.GetFolderItem(FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
@@ -188,27 +185,37 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.initialSmallIcon = FileManager.GetFolderItemIcon(this.initialFolder, FolderQueryMode.SmallIcons);
 
+			if (updateVisited)
+			{
+				this.AddToVisitedDirectories(this.initialFolder);
+			}
+
 			this.UpdateInitialDirectory();
 			this.UpdateTable(-1);
 			this.UpdateButtons();
 		}
 
-		protected bool IsDirectoriesEndWith(FolderItem folder)
+		protected void AddToVisitedDirectories(FolderItem folder)
 		{
 			if (folder.IsEmpty)
 			{
-				return true;  // on n'insère jamais un folder vide
+				return;  // on n'insère jamais un folder vide
 			}
 
-			if (this.directoriesVisited.Count == 0)
+			if (this.directoriesVisited.Count != 0)
 			{
-				return false;
+				FolderItem current = this.directoriesVisited[this.directoriesVisitedIndex];
+				if (current != folder)
+				{
+					while (this.directoriesVisitedIndex < this.directoriesVisited.Count-1)
+					{
+						this.directoriesVisited.RemoveAt(this.directoriesVisited.Count-1);
+					}
+				}
 			}
-			else
-			{
-				FolderItem last = this.directoriesVisited[this.directoriesVisited.Count-1];
-				return (last == folder);
-			}
+
+			this.directoriesVisited.Add(folder);
+			this.directoriesVisitedIndex = this.directoriesVisited.Count-1;
 		}
 
 
@@ -463,6 +470,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			buttonParent.TabNavigation = Widget.TabNavigationMode.Passive;
 			buttonParent.CommandObject = this.parentState.Command;
 			buttonParent.Dock = DockStyle.Right;
+
+#if false
+			IconButton buttonNext = new IconButton(group);
+			buttonNext.AutoFocus = false;
+			buttonNext.TabNavigation = Widget.TabNavigationMode.Passive;
+			buttonNext.CommandObject = this.nextState.Command;
+			buttonNext.Dock = DockStyle.Right;
+#endif
 
 			IconButton buttonPrev = new IconButton(group);
 			buttonPrev.AutoFocus = false;
@@ -1001,7 +1016,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			FolderItem parent = FileManager.GetParentFolderItem(this.initialFolder, FolderQueryMode.NoIcons);
 			this.parentState.Enable = !parent.IsEmpty;
 
-			this.prevState.Enable = (this.directoriesVisited.Count > 0);
+			this.prevState.Enable = (this.directoriesVisitedIndex > 0);
+			this.nextState.Enable = (this.directoriesVisitedIndex < this.directoriesVisited.Count-1);
 		}
 
 		protected void UpdateInitialDirectory()
@@ -1069,19 +1085,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void NavigatePrev()
 		{
-			if (this.directoriesVisited.Count == 0)
+			if (this.directoriesVisitedIndex > 0)
 			{
-				return;
+				this.SetInitialFolder(this.directoriesVisited[--this.directoriesVisitedIndex], false);
+				this.UpdateButtons();
 			}
-
-			this.SetInitialFolder(this.directoriesVisited[this.directoriesVisited.Count-1]);
-			this.directoriesVisited.RemoveAt(this.directoriesVisited.Count-1);
-			this.directoriesVisited.RemoveAt(this.directoriesVisited.Count-1);
-			this.UpdateButtons();
 		}
 
 		protected void NavigateNext()
 		{
+			if (this.directoriesVisitedIndex < this.directoriesVisited.Count-1)
+			{
+				this.SetInitialFolder(this.directoriesVisited[++this.directoriesVisitedIndex], false);
+				this.UpdateButtons();
+			}
 		}
 
 		protected void ParentDirectory()
@@ -1093,7 +1110,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return;
 			}
 
-			this.SetInitialFolder(parent);
+			this.SetInitialFolder(parent, true);
 		}
 
 		protected void NewDirectory()
@@ -1410,11 +1427,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					if (this.files[sel].FolderItem.IsShortcut)
 					{
-						this.SetInitialFolder(FileManager.ResolveShortcut(this.files[sel].FolderItem, FolderQueryMode.NoIcons));
+						this.SetInitialFolder(FileManager.ResolveShortcut(this.files[sel].FolderItem, FolderQueryMode.NoIcons), true);
 					}
 					else
 					{
-						this.SetInitialFolder(this.files[sel].FolderItem);
+						this.SetInitialFolder(this.files[sel].FolderItem, true);
 					}
 
 					return false;  // ne pas fermer le dialogue
@@ -1526,7 +1543,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Favoris cliqué dans le panneau de gauche.
 			Filename f = sender as Filename;
 			int i = System.Int32.Parse(f.Name, System.Globalization.CultureInfo.InvariantCulture);
-			this.SetInitialFolder(this.favoritesList[i]);
+			this.SetInitialFolder(this.favoritesList[i], true);
 		}
 
 		private void HandleRenameAccepted(object sender)
@@ -1696,7 +1713,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Le menu pour le chemin d'accès a été fermé.
 			if (this.comboSelected != -1)
 			{
-				this.SetInitialFolder(this.comboFolders[this.comboSelected].FolderItem);
+				this.SetInitialFolder(this.comboFolders[this.comboSelected].FolderItem, true);
 				this.UpdateTable(-1);
 			}
 		}
@@ -2338,6 +2355,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected int						favoritesFixes;
 		protected int						favoritesSelected;
 		protected List<FolderItem>			directoriesVisited;
+		protected int						directoriesVisitedIndex;
 		protected List<Item>				comboFolders;
 		protected List<string>				comboTexts;
 		protected int						comboSelected;
