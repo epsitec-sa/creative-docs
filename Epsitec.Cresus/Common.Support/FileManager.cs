@@ -128,7 +128,7 @@ namespace Epsitec.Common.Support
 		/// <returns>Returns <c>true</c> on success.</returns>
 		public static bool RenameFile(FileOperationMode mode, string source, string destination)
 		{
-			if (string.Equals (source, destination, System.StringComparison.CurrentCultureIgnoreCase))
+			if (string.Equals (source, destination, System.StringComparison.CurrentCulture))
 			{
 				return false;
 			}
