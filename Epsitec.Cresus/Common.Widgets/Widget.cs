@@ -2608,12 +2608,12 @@ namespace Epsitec.Common.Widgets
 					{
 						if (dir == TabNavigationDir.Forwards)
 						{
-							find = candidates[0].FindTabWidget (dir, mode, true, true);
+							find = candidates[0].FindTabWidget (dir, mode, false, true);
 						}
 						else if (accept_focus)
 						{
 							int count = candidates.Length;
-							find = candidates[count-1].FindTabWidget (dir, mode, true, true);
+							find = candidates[count-1].FindTabWidget (dir, mode, false, true);
 						}
 						
 						if (find != null)
