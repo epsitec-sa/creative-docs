@@ -292,6 +292,16 @@ namespace Epsitec.Common.Widgets
 
 				return new Shortcut (keyCode);
 			}
+			else if (message.Type == MessageType.ApplicationCommand)
+			{
+				switch (message.Command)
+				{
+					case "BrowserBackward":
+						return new Shortcut (KeyCode.ModifierAlt | KeyCode.ArrowLeft);
+					case "BrowserForward":
+						return new Shortcut (KeyCode.ModifierAlt | KeyCode.ArrowRight);
+				}
+			}
 
 			return null;
 		}

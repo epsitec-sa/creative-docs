@@ -130,6 +130,13 @@ namespace Epsitec.Common.Widgets
 			get { return this.tick_count; }
 		}
 		
+		public string						Command
+		{
+			get
+			{
+				return this.command;
+			}
+		}
 		
 		public static Message.State			CurrentState
 		{
@@ -524,6 +531,10 @@ namespace Epsitec.Common.Widgets
 			
 			switch (msg.Msg)
 			{
+				case Win32Const.WM_APPCOMMAND:
+					message = Message.FromApplicationCommand ((msg.LParam.ToInt32 () >> 16) & 0x0fff);
+					break;
+			
 				case Win32Const.WM_KEYDOWN:
 				case Win32Const.WM_SYSKEYDOWN:
 				case Win32Const.WM_SYSKEYUP:
@@ -814,6 +825,25 @@ namespace Epsitec.Common.Widgets
 			
 			return message;
 		}
+
+		internal static Message FromApplicationCommand(int cmd)
+		{
+			Message message = new Message ();
+
+			message.type = MessageType.ApplicationCommand;
+			
+			switch (cmd)
+			{
+				case Win32Const.APPCOMMAND_BROWSER_BACKWARD:
+					message.command = "BrowserBackward";
+					break;
+				case Win32Const.APPCOMMAND_BROWSER_FORWARD:
+					message.command = "BrowserForward";
+					break;
+			}
+			
+			return message;
+		}
 		
 		
 		internal static void DefineLastWindow(Window window)
@@ -980,6 +1010,7 @@ namespace Epsitec.Common.Widgets
 		private WindowRoot					window_root;
 		private Widget						in_widget;
 		private Widget						consumer;
+		private string						command;
 		
 		private MessageType					type;
 		private int							tick_count;
