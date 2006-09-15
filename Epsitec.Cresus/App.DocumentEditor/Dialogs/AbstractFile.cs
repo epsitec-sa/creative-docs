@@ -110,6 +110,23 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		public Document.ImageIncludeMode ImageIncludeMode
+		{
+			//	Mode d'inclusion des images.
+			get
+			{
+				return this.imageIncludeMode;
+			}
+			set
+			{
+				if (this.imageIncludeMode != value)
+				{
+					this.imageIncludeMode = value;
+					this.UpdateImageIncludeMode();
+				}
+			}
+		}
+
 		public bool IsRedirection
 		{
 			//	Indique si le dossier passé avec InitialDirectory a dû être
@@ -233,6 +250,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.UpdateInitialFilename();
 			this.UpdateButtons();
 			this.UpdateFontIncludeMode();
+			this.UpdateImageIncludeMode();
 
 			if (focusInFilename)
 			{
@@ -494,20 +512,51 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.optionsToolbar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			this.optionsToolbar.Visibility = false;
 
-			this.optionsFontNone = new RadioButton(this.optionsToolbar);
-			this.optionsFontNone.Text = "N'inclut aucune police";
+
+			GroupBox groupFont = new GroupBox(this.optionsToolbar);
+			groupFont.Text = "Inclusion des polices";
+			groupFont.PreferredWidth = 180;
+			groupFont.Padding = new Margins(4, 0, 0, 3);
+			groupFont.Dock = DockStyle.Left;
+			groupFont.Margins = new Margins(0, 8, 0, 0);
+
+			this.optionsFontNone = new RadioButton(groupFont);
+			this.optionsFontNone.Text = "Aucune police";
 			this.optionsFontNone.Dock = DockStyle.Top;
 			this.optionsFontNone.Clicked += new MessageEventHandler(this.HandleOptionsFontClicked);
 
-			this.optionsFontUsed = new RadioButton(this.optionsToolbar);
-			this.optionsFontUsed.Text = "Inclut les polices utilisées";
+			this.optionsFontUsed = new RadioButton(groupFont);
+			this.optionsFontUsed.Text = "Polices utilisées";
 			this.optionsFontUsed.Dock = DockStyle.Top;
 			this.optionsFontUsed.Clicked += new MessageEventHandler(this.HandleOptionsFontClicked);
 
-			this.optionsFontAll = new RadioButton(this.optionsToolbar);
-			this.optionsFontAll.Text = "Inclut toutes les polices définies";
+			this.optionsFontAll = new RadioButton(groupFont);
+			this.optionsFontAll.Text = "Polices utilisées et définies";
 			this.optionsFontAll.Dock = DockStyle.Top;
 			this.optionsFontAll.Clicked += new MessageEventHandler(this.HandleOptionsFontClicked);
+
+
+			GroupBox groupImage = new GroupBox(this.optionsToolbar);
+			groupImage.Text = "Inclusion des images bitmap";
+			groupImage.PreferredWidth = 180;
+			groupImage.Padding = new Margins(4, 0, 0, 3);
+			groupImage.Dock = DockStyle.Left;
+			groupImage.Margins = new Margins(0, 8, 0, 0);
+
+			this.optionsImageNone = new RadioButton(groupImage);
+			this.optionsImageNone.Text = "Aucune image";
+			this.optionsImageNone.Dock = DockStyle.Top;
+			this.optionsImageNone.Clicked += new MessageEventHandler(this.HandleOptionsImageClicked);
+
+			this.optionsImageDefined = new RadioButton(groupImage);
+			this.optionsImageDefined.Text = "Selon les attributs";
+			this.optionsImageDefined.Dock = DockStyle.Top;
+			this.optionsImageDefined.Clicked += new MessageEventHandler(this.HandleOptionsImageClicked);
+
+			this.optionsImageAll = new RadioButton(groupImage);
+			this.optionsImageAll.Text = "Toutes les images";
+			this.optionsImageAll.Dock = DockStyle.Top;
+			this.optionsImageAll.Clicked += new MessageEventHandler(this.HandleOptionsImageClicked);
 		}
 
 		protected void CreateFooter()
@@ -1003,6 +1052,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.optionsFontNone.ActiveState = (this.fontIncludeMode == Document.FontIncludeMode.None) ? ActiveState.Yes : ActiveState.No;
 				this.optionsFontUsed.ActiveState = (this.fontIncludeMode == Document.FontIncludeMode.Used) ? ActiveState.Yes : ActiveState.No;
 				this.optionsFontAll .ActiveState = (this.fontIncludeMode == Document.FontIncludeMode.All ) ? ActiveState.Yes : ActiveState.No;
+			}
+		}
+
+		protected void UpdateImageIncludeMode()
+		{
+			//	Met à jour le mode d'inclusion des images.
+			if (this.optionsFontNone != null)
+			{
+				this.optionsImageNone   .ActiveState = (this.imageIncludeMode == Document.ImageIncludeMode.None   ) ? ActiveState.Yes : ActiveState.No;
+				this.optionsImageDefined.ActiveState = (this.imageIncludeMode == Document.ImageIncludeMode.Defined) ? ActiveState.Yes : ActiveState.No;
+				this.optionsImageAll    .ActiveState = (this.imageIncludeMode == Document.ImageIncludeMode.All    ) ? ActiveState.Yes : ActiveState.No;
 			}
 		}
 
@@ -1674,6 +1734,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		private void HandleOptionsImageClicked(object sender, MessageEventArgs e)
+		{
+			//	Un bouton radio pour le mode d'inclusion des images a été cliqué.
+			if (sender == this.optionsImageNone)
+			{
+				this.ImageIncludeMode = Document.ImageIncludeMode.None;
+			}
+
+			if (sender == this.optionsImageDefined)
+			{
+				this.ImageIncludeMode = Document.ImageIncludeMode.Defined;
+			}
+
+			if (sender == this.optionsImageAll)
+			{
+				this.ImageIncludeMode = Document.ImageIncludeMode.All;
+			}
+		}
+
 		private void HandleSliderChanged(object sender)
 		{
 			//	Slider pour la taille des miniatures changé.
@@ -2232,6 +2311,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected RadioButton				optionsFontNone;
 		protected RadioButton				optionsFontUsed;
 		protected RadioButton				optionsFontAll;
+		protected RadioButton				optionsImageNone;
+		protected RadioButton				optionsImageDefined;
+		protected RadioButton				optionsImageAll;
 
 		protected string					fileExtension;
 		protected bool						isModel = false;
@@ -2244,6 +2326,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected FolderItemIcon			initialSmallIcon;
 		protected string					initialFilename;
 		protected Document.FontIncludeMode	fontIncludeMode;
+		protected Document.ImageIncludeMode	imageIncludeMode;
 		protected List<Item>				files;
 		protected string					selectedFilename;
 		protected string[]					selectedFilenames;

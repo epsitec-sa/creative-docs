@@ -79,6 +79,16 @@ namespace Epsitec.Common.Document
 			All		= 2,	// inclut toutes les polices définies
 		}
 
+		public enum ImageIncludeMode
+		{
+			//	Mode d'inclusion des images dans le document crdoc/zip.
+			//	Ne pas changer les valeurs à cause des sérialisations existantes !
+
+			None	= 0,	// n'inclut aucune image
+			Defined	= 1,	// inclut les images selons leurs définitions
+			All		= 2,	// inclut toutes les images définies
+		}
+
 
 		public Document(DocumentType type, DocumentMode mode, InstallType installType, DebugMode debugMode, Settings.GlobalSettings globalSettings, CommandDispatcher commandDispatcher, CommandContext commandContext)
 		{
@@ -89,6 +99,7 @@ namespace Epsitec.Common.Document
 			this.installType = installType;
 			this.debugMode = debugMode;
 			this.fontIncludeMode = FontIncludeMode.Used;
+			this.imageIncludeMode = ImageIncludeMode.Defined;
 			this.globalSettings = globalSettings;
 			this.commandDispatcher = commandDispatcher;
 			this.commandContext = commandContext;
@@ -249,6 +260,13 @@ namespace Epsitec.Common.Document
 			//	Mode d'inclusion des polices.
 			get { return this.fontIncludeMode; }
 			set { this.fontIncludeMode = value; }
+		}
+
+		public ImageIncludeMode ImageIncludeModeValue
+		{
+			//	Mode d'inclusion des polices.
+			get { return this.imageIncludeMode; }
+			set { this.imageIncludeMode = value; }
 		}
 
 		public Settings.GlobalSettings GlobalSettings
@@ -872,6 +890,7 @@ namespace Epsitec.Common.Document
 			this.uniqueCharacterStyleId = doc.uniqueCharacterStyleId;
 			this.imageCache = doc.imageCache;
 			this.fontIncludeMode = doc.fontIncludeMode;
+			this.imageIncludeMode = doc.imageIncludeMode;
 			
 			if ( this.textContext != null )
 			{
@@ -1457,6 +1476,7 @@ namespace Epsitec.Common.Document
 				info.AddValue("TextFlows", this.textFlows);
 				info.AddValue("FontList", this.fontList);
 				info.AddValue("FontIncludeMode", this.fontIncludeMode);
+				info.AddValue("ImageIncludeMode", this.imageIncludeMode);
 			}
 
 			info.AddValue("UniqueObjectId", this.uniqueObjectId);
@@ -1548,10 +1568,12 @@ namespace Epsitec.Common.Document
 				if (this.IsRevisionGreaterOrEqual(2, 0, 2))
 				{
 					this.fontIncludeMode = (FontIncludeMode) info.GetValue("FontIncludeMode", typeof(FontIncludeMode));
+					this.imageIncludeMode = (ImageIncludeMode) info.GetValue("ImageIncludeMode", typeof(ImageIncludeMode));
 				}
 				else
 				{
 					this.fontIncludeMode = FontIncludeMode.Used;
+					this.imageIncludeMode = ImageIncludeMode.Defined;
 				}
 			}
 
@@ -2883,6 +2905,7 @@ namespace Epsitec.Common.Document
 		protected InstallType					installType;
 		protected DebugMode						debugMode;
 		protected FontIncludeMode				fontIncludeMode;
+		protected ImageIncludeMode				imageIncludeMode;
 		protected bool							initializationInProgress;
 		protected Settings.GlobalSettings		globalSettings;
 		protected CommandDispatcher				commandDispatcher;

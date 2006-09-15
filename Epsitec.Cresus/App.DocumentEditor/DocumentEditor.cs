@@ -1514,6 +1514,7 @@ namespace Epsitec.App.DocumentEditor
 					}
 
 					this.dlgFileSave.FontIncludeMode = this.CurrentDocument.FontIncludeModeValue;
+					this.dlgFileSave.ImageIncludeMode = this.CurrentDocument.ImageIncludeModeValue;
 
 					if (this.dlgFileSave.IsRedirection)
 					{
@@ -1541,6 +1542,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 
 			this.CurrentDocument.FontIncludeModeValue = this.dlgFileSave.FontIncludeMode;
+			this.CurrentDocument.ImageIncludeModeValue = this.dlgFileSave.ImageIncludeMode;
 
 			this.MouseShowWait();
 			string err = this.CurrentDocument.Write(filename);
@@ -1572,6 +1574,7 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgFileSaveModel.InitialDirectory = newDocument;
 			this.dlgFileSaveModel.InitialFilename = "";
 			this.dlgFileSaveModel.FontIncludeMode = this.CurrentDocument.FontIncludeModeValue;
+			this.dlgFileSaveModel.ImageIncludeMode = this.CurrentDocument.ImageIncludeModeValue;
 
 			if (this.dlgFileSave.IsRedirection)
 			{
@@ -1593,6 +1596,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 
 			this.CurrentDocument.FontIncludeModeValue = this.dlgFileSaveModel.FontIncludeMode;
+			this.CurrentDocument.ImageIncludeModeValue = this.dlgFileSaveModel.ImageIncludeMode;
 
 			this.MouseShowWait();
 			string err = this.CurrentDocument.Write(filename);
