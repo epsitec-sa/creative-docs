@@ -226,12 +226,8 @@
   <data id="0V6" mod="1">Document</data>
   <data id="007" mod="1">Document</data>
   <data id="017" mod="1">Browse</data>
-  <data id="027" mod="1">Parent folder</data>
   <data id="037" mod="1">Create a New folder</data>
   <data id="047" mod="1">Format: {0}&lt;br/&gt;Pages/layers: {1}/{2}&lt;br/&gt;Fonts/images: {5}/{6}&lt;br/&gt;Objects: {3}/{4}</data>
-  <data id="057" mod="1">New folder</data>
-  <data id="067" mod="1">Rename a file or folder</data>
-  <data id="077" mod="1">Delete a file or folder</data>
   <data id="0A7" mod="1">Save</data>
   <data id="0B7" mod="1">The document &lt;b&gt;{0}&lt;/b&gt; already exists.&lt;br/&gt;&lt;br/&gt;{1}&lt;br/&gt;&lt;br/&gt;Do you want to replace it?</data>
   <data id="0C7" mod="1">Template</data>
@@ -260,5 +256,7 @@
   <data id="0R7">
   </data>
   <data id="0S7">
+  </data>
+  <data id="0T7">
   </data>
 </bundle>

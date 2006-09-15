@@ -70,17 +70,14 @@
   <data name="Dialog.File.Tooltip.PreviewSize" id="0R6" mod="1">Taille des échantillons</data>
   <data name="Dialog.File.NewDirectoryName" id="037" mod="1">Nouveau dossier</data>
   <data name="Dialog.File.Statistics" id="047" mod="1">Format: {0}&lt;br/&gt;Pages/calques: {1}/{2}&lt;br/&gt;Polices/images: {5}/{6}&lt;br/&gt;Objets: {3}/{4}</data>
+  <data name="Dialog.File.LabelPath.Open" id="017" mod="1">Regarder dans</data>
+  <data name="Dialog.File.LabelPath.Save" id="0T7" mod="1">Enregistrer dans</data>
+  <data name="Dialog.File.LabelDoc" id="0V6" mod="1">Document</data>
+  <data name="Dialog.File.LabelMod" id="0C7" mod="1">Modèle</data>
   <data name="Dialog.Open.TitleDoc" id="0F1">Ouvrir un document</data>
   <data name="Dialog.Open.TitleMod" id="0G1">Ouvrir un document modèle</data>
   <data name="Dialog.Open.TitlePic" id="0H1">Ouvrir une icône</data>
   <data name="Dialog.Open.TitleCol" id="0I1">Ouvrir une palette de couleurs</data>
-  <data name="Dialog.Open.LabelPath" id="017" mod="1">Regarder dans</data>
-  <data name="Dialog.Open.LabelDoc" id="0V6" mod="1">Document</data>
-  <data name="Dialog.Open.LabelMod" id="0C7" mod="1">Modèle</data>
-  <data name="Dialog.Open.ParentDirectory" id="027" mod="1">Dossier parent</data>
-  <data name="Dialog.Open.NewDirectory" id="057" mod="1">Nouveau dossier</data>
-  <data name="Dialog.Open.Rename" id="067" mod="1">Renommer un fichier</data>
-  <data name="Dialog.Open.Delete" id="077" mod="1">Supprimer un fichier</data>
   <data name="Dialog.Save.TitleDoc" id="0J1">Enregistrer un document</data>
   <data name="Dialog.Save.TitleMod" id="0K1">Enregistrer un document modèle</data>
   <data name="Dialog.Save.TitlePic" id="0L1">Enregistrer une icône</data>

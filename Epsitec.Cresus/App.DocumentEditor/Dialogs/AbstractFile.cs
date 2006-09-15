@@ -337,7 +337,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			ToolTip.Default.SetToolTip(this.favoritesExtend, Res.Strings.Dialog.File.Tooltip.Extend.Favorites);
 
 			StaticText label = new StaticText(header);
-			label.Text = Res.Strings.Dialog.Open.LabelPath;
+			label.Text = this.isSave ? Res.Strings.Dialog.File.LabelPath.Save : Res.Strings.Dialog.File.LabelPath.Open;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Dock = DockStyle.Fill;
 
@@ -497,7 +497,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			group.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			StaticText label = new StaticText(group);
-			label.Text = this.isModel ? Res.Strings.Dialog.Open.LabelMod : Res.Strings.Dialog.Open.LabelDoc;
+			label.Text = this.isModel ? Res.Strings.Dialog.File.LabelMod : Res.Strings.Dialog.File.LabelDoc;
 			label.PreferredWidth = 80;
 			label.Dock = DockStyle.Left;
 
