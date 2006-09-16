@@ -614,6 +614,17 @@ namespace Epsitec.Common.Support
 				{
 					//	Le champ est déjà connu: on remplace simplement l'ancienne occurrence
 					//	dans la liste.
+					
+					Field original = list[index];
+
+					if (string.IsNullOrEmpty (field.Name))
+					{
+						field.SetName (original.Name);
+					}
+					if (string.IsNullOrEmpty (field.About))
+					{
+						field.SetAbout (original.About);
+					}
 
 					list[index] = field;
 				}
