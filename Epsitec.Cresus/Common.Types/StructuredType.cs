@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.StructuredType))]
+
 namespace Epsitec.Common.Types
 {
 	/// <summary>
@@ -107,5 +109,13 @@ namespace Epsitec.Common.Types
 		}
 
 		private Collections.HostedDictionary<string, INamedType> fields;
+
+		private static object GetFieldsValue(DependencyObject obj)
+		{
+			StructuredType that = obj as StructuredType;
+			return that.Fields;
+		}
+
+		public static DependencyProperty FieldsProperty = DependencyProperty.RegisterReadOnly ("Fields", typeof (Collections.HostedDictionary<string, INamedType>), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetFieldsValue).MakeReadOnlySerializable ());
 	}
 }

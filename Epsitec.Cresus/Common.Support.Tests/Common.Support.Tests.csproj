@@ -162,6 +162,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CaptionCacheTest.cs" />
+    <Compile Include="CommandTest.cs" />
     <Compile Include="FileManagerTest.cs" />
     <Compile Include="FileInfoTest.cs" />
     <Compile Include="ResourceManagerTest.cs" />
