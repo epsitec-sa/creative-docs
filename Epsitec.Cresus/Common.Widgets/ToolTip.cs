@@ -351,9 +351,11 @@ namespace Epsitec.Common.Widgets
 			
 			System.Diagnostics.Debug.Assert(this.widget != widget);
 //-			System.Diagnostics.Debug.Assert(this.hash.Contains(widget));
-			System.Diagnostics.Debug.Assert(ToolTip.HasToolTip (widget));
 
-			ToolTip.SetToolTipText (widget, null);
+			if (ToolTip.HasToolTip (widget))
+			{
+				ToolTip.SetToolTipText (widget, null);
+			}
 			this.DefineToolTip (widget, null);
 		}
 		
