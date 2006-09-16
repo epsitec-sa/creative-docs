@@ -828,14 +828,16 @@ namespace Epsitec.Common.Drawing
 		
 		public static FontFaceInfo GetFaceInfo(string face)
 		{
-			return Font.face_hash[face];
+			FontFaceInfo info;
+			Font.face_hash.TryGetValue (face, out info);
+			return info;
 		}
 		
 		public static Font GetFontFallback(string face)
 		{
-			FontFaceInfo info = Font.face_hash[face];
+			FontFaceInfo info;
 			
-			if (info != null)
+			if (Font.face_hash.TryGetValue (face, out info))
 			{
 				Font[] fonts = info.GetFonts ();
 				
