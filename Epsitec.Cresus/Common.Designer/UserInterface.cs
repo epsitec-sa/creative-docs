@@ -36,21 +36,22 @@ namespace Epsitec.Common.Designer
 			System.IO.StringWriter stringWriter = new System.IO.StringWriter(buffer);
 			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter(stringWriter);
 
-			Types.Serialization.Context context = new Types.Serialization.SerializerContext(new Types.Serialization.IO.XmlWriter(xmlWriter));
-			
-			xmlWriter.Formatting = System.Xml.Formatting.None;
-			xmlWriter.WriteStartElement("panel");
+			using (Types.Serialization.Context context = new Types.Serialization.SerializerContext (new Types.Serialization.IO.XmlWriter (xmlWriter)))
+			{
+				xmlWriter.Formatting = System.Xml.Formatting.None;
+				xmlWriter.WriteStartElement ("panel");
 
-			context.ActiveWriter.WriteAttributeStrings();
-			// TODO: utiliser Panel.FillSerializationContext
-			
-			Types.Storage.Serialize(panel, context);
+				context.ActiveWriter.WriteAttributeStrings ();
+				// TODO: utiliser Panel.FillSerializationContext
 
-			xmlWriter.WriteEndElement();
-			xmlWriter.Flush();
-			xmlWriter.Close();
+				Types.Storage.Serialize (panel, context);
 
-			return buffer.ToString();
+				xmlWriter.WriteEndElement ();
+				xmlWriter.Flush ();
+				xmlWriter.Close ();
+
+				return buffer.ToString ();
+			}
 		}
 
 		public static UI.Panel DeserializePanel(string xml, ResourceManager manager)

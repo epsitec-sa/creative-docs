@@ -164,48 +164,49 @@ namespace Epsitec.Common.Types
 
 			writer.WriteAttributeStrings ();
 
-			Serialization.Context context = new Serialization.SerializerContext (writer);
-
-			Visitor visitor = new Visitor (this);
-			Serialization.GraphVisitor.VisitSerializableNodes (this, context, visitor);
-
-			if (visitor.RequiresRichSerialization)
+			using (Serialization.Context context = new Serialization.SerializerContext (writer))
 			{
-				//	We cannot use the compact serialization since the object graph
-				//	contains references to other full-fledged dependency objects;
-				//	just use the plain XML serialization instead:
-				
-				xmlWriter.Close ();
-				stringWriter.Close ();
-				
-				return Serialization.SimpleSerialization.SerializeToString (this);
-			}
-			else
-			{
-				//	Simply store the object data (after the optional type definitions
-				//	which get generated in case there are some attached properties).
-				
-				context.StoreObjectData (0, this);
+				Visitor visitor = new Visitor (this);
+				Serialization.GraphVisitor.VisitSerializableNodes (this, context, visitor);
 
-				xmlWriter.WriteEndElement ();
-				xmlWriter.Flush ();
-				xmlWriter.Close ();
+				if (visitor.RequiresRichSerialization)
+				{
+					//	We cannot use the compact serialization since the object graph
+					//	contains references to other full-fledged dependency objects;
+					//	just use the plain XML serialization instead:
 
-				string xml = buffer.ToString ();
+					xmlWriter.Close ();
+					stringWriter.Close ();
 
-				string typeElementPrefix = string.Concat (@"<", Serialization.IO.Xml.StructurePrefix, @":type ");
-				string dataElementPrefix = string.Concat (@"<", Serialization.IO.Xml.StructurePrefix, @":data ");
-				string endElement = @"</xml>";
+					return Serialization.SimpleSerialization.SerializeToString (this);
+				}
+				else
+				{
+					//	Simply store the object data (after the optional type definitions
+					//	which get generated in case there are some attached properties).
 
-				int typeElementPos = xml.IndexOf (typeElementPrefix);
-				int dataElementPos = xml.IndexOf (dataElementPrefix);
-				int endElementPos   = xml.IndexOf (endElement);
-				int startElementPos = typeElementPos > 0 ? typeElementPos : dataElementPos;
+					context.StoreObjectData (0, this);
 
-				System.Diagnostics.Debug.Assert (startElementPos > 0);
-				System.Diagnostics.Debug.Assert (endElementPos > 0);
+					xmlWriter.WriteEndElement ();
+					xmlWriter.Flush ();
+					xmlWriter.Close ();
 
-				return xml.Substring (startElementPos, endElementPos - startElementPos);
+					string xml = buffer.ToString ();
+
+					string typeElementPrefix = string.Concat (@"<", Serialization.IO.Xml.StructurePrefix, @":type ");
+					string dataElementPrefix = string.Concat (@"<", Serialization.IO.Xml.StructurePrefix, @":data ");
+					string endElement = @"</xml>";
+
+					int typeElementPos = xml.IndexOf (typeElementPrefix);
+					int dataElementPos = xml.IndexOf (dataElementPrefix);
+					int endElementPos   = xml.IndexOf (endElement);
+					int startElementPos = typeElementPos > 0 ? typeElementPos : dataElementPos;
+
+					System.Diagnostics.Debug.Assert (startElementPos > 0);
+					System.Diagnostics.Debug.Assert (endElementPos > 0);
+
+					return xml.Substring (startElementPos, endElementPos - startElementPos);
+				}
 			}
 		}
 

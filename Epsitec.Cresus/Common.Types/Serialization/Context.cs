@@ -11,7 +11,7 @@ namespace Epsitec.Common.Types.Serialization
 	/// graph, or as a base class to SerializerContext and DeserializerContext;
 	/// see also the Epsitec.Common.Types.Storage class.
 	/// </summary>
-	public class Context : IContextResolver
+	public class Context : IContextResolver, System.IDisposable
 	{
 		public Context()
 		{
@@ -19,8 +19,10 @@ namespace Epsitec.Common.Types.Serialization
 			this.externalMap = new MapTag<object> ();
 			this.typeIds = new Dictionary<System.Type, int> ();
 			this.unknownMap = new MapId<object> ();
+
+			Context.Link (this);
 		}
-		
+
 		public MapId<DependencyObject>			ObjectMap
 		{
 			get
@@ -245,6 +247,17 @@ namespace Epsitec.Common.Types.Serialization
 
 		#endregion
 
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+
+		#endregion
+		
 		public static string IdToString(int id)
 		{
 			//	Convert an id to a string representation, which is compatible
@@ -287,9 +300,51 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				Context.Unlink (this);
+			}
+		}
+
+		private static void Link(Context context)
+		{
+			if (Context.links == null)
+			{
+				Context.links = new List<Weak<Context>> ();
+			}
+
+			Context.links.Add (new Weak<Context> (context));
+		}
+
+		private static void Unlink(Context context)
+		{
+			List<Weak<Context>> list = new List<Weak<Context>> ();
+			
+			foreach (Weak<Context> item in Context.links)
+			{
+				if (item.IsAlive)
+				{
+					if (item.Target == context)
+					{
+						//	Remove item from links.
+					}
+					else
+					{
+						list.Add (item);
+					}
+				}
+			}
+
+			Context.links = list;
+		}
 
 		public static readonly string			WellKnownTagResourceManager = "_ResourceManager";
 		public static readonly string			WellKnownTagDataSource = "_DataSource";
+
+		[System.ThreadStatic]
+		private static List<Weak<Context>>		links;
 		
 		private MapId<DependencyObject>			objMap;
 		private MapTag<object>					externalMap;
