@@ -11,6 +11,7 @@ namespace Epsitec.Common.Types
 	{
 		public StructuredTypeFieldCollection()
 		{
+			this.pendingFields = new List<StructuredTypeField> ();
 		}
 
 		public StructuredTypeFieldCollection(StructuredType owner)
@@ -24,12 +25,22 @@ namespace Epsitec.Common.Types
 		{
 			StructuredTypeField field = item as StructuredTypeField;
 
-			this.Owner.AddField (field.Name, field.Type);
+			if (this.Owner == null)
+			{
+				this.pendingFields.Add (field);
+			}
+			else
+			{
+				this.Owner.AddField (field.Name, field.Type);
+			}
 		}
 
 		void ICollection<DependencyObject>.Clear()
 		{
-			this.Owner.Fields.Clear ();
+			if (this.Owner != null)
+			{
+				this.Owner.Fields.Clear ();
+			}
 		}
 
 		bool ICollection<DependencyObject>.Contains(DependencyObject item)
@@ -46,7 +57,14 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.Owner.Fields.Count;
+				if (this.Owner == null)
+				{
+					return 0;
+				}
+				else
+				{
+					return this.Owner.Fields.Count;
+				}
 			}
 		}
 
@@ -69,9 +87,12 @@ namespace Epsitec.Common.Types
 
 		IEnumerator<DependencyObject> IEnumerable<DependencyObject>.GetEnumerator()
 		{
-			foreach (KeyValuePair<string, INamedType> item in this.Owner.Fields)
+			if (this.Owner != null)
 			{
-				yield return new StructuredTypeField (item.Key, item.Value);
+				foreach (KeyValuePair<string, INamedType> item in this.Owner.Fields)
+				{
+					yield return new StructuredTypeField (item.Key, item.Value);
+				}
 			}
 		}
 
@@ -98,6 +119,30 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public static DependencyProperty OwnerProperty = DependencyProperty.Register ("Owner", typeof (StructuredType), typeof (StructuredTypeFieldCollection));
+		private List<StructuredTypeField> pendingFields;
+
+		public static void HandleOwnerChanged(DependencyObject obj, object oldValue, object newValue)
+		{
+			StructuredTypeFieldCollection that = obj as StructuredTypeFieldCollection;
+
+			if (that.Owner == null)
+			{
+				that.pendingFields = new List<StructuredTypeField> ();
+			}
+			else
+			{
+				if (that.pendingFields != null)
+				{
+					foreach (StructuredTypeField field in that.pendingFields)
+					{
+						that.Owner.AddField (field.Name, field.Type);
+					}
+
+					that.pendingFields = null;
+				}
+			}
+		}
+
+		public static DependencyProperty OwnerProperty = DependencyProperty.Register ("Owner", typeof (StructuredType), typeof (StructuredTypeFieldCollection), new DependencyPropertyMetadata (StructuredTypeFieldCollection.HandleOwnerChanged));
 	}
 }
