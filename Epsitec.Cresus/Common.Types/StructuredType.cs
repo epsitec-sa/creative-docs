@@ -113,9 +113,9 @@ namespace Epsitec.Common.Types
 		private static object GetFieldsValue(DependencyObject obj)
 		{
 			StructuredType that = obj as StructuredType;
-			return that.Fields;
+			return new StructuredTypeFieldCollection (that);
 		}
 
-		public static DependencyProperty FieldsProperty = DependencyProperty.RegisterReadOnly ("Fields", typeof (Collections.HostedDictionary<string, INamedType>), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetFieldsValue).MakeReadOnlySerializable ());
+		public static DependencyProperty FieldsProperty = DependencyProperty.RegisterReadOnly ("Fields", typeof (StructuredTypeFieldCollection), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetFieldsValue).MakeReadOnlySerializable ());
 	}
 }

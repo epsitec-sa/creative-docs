@@ -607,7 +607,53 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("m", readM.Name);
 			Assert.AreEqual (ext, root.Friend.Friend);
 		}
-		
+
+		[Test]
+		public void CheckStructuredTypeSerialization()
+		{
+			StructuredType st = new StructuredType ();
+
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			System.IO.StringWriter stringWriter = new System.IO.StringWriter (buffer);
+			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (stringWriter);
+
+			xmlWriter.Indentation = 2;
+			xmlWriter.IndentChar = ' ';
+			xmlWriter.Formatting = System.Xml.Formatting.Indented;
+			xmlWriter.WriteStartDocument (true);
+			xmlWriter.WriteStartElement ("root");
+
+			Serialization.Context context = new Serialization.SerializerContext (new Serialization.IO.XmlWriter (xmlWriter));
+
+			Storage.Serialize (st, context);
+
+			xmlWriter.WriteEndElement ();
+			xmlWriter.WriteEndDocument ();
+			xmlWriter.Flush ();
+			xmlWriter.Close ();
+
+			System.Console.Out.WriteLine ("{0}", buffer.ToString ());
+
+			System.IO.StringReader stringReader = new System.IO.StringReader (buffer.ToString ());
+			System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (stringReader);
+
+			while (xmlReader.Read ())
+			{
+				if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
+					(xmlReader.LocalName == "root"))
+				{
+					break;
+				}
+			}
+
+			context = new Serialization.DeserializerContext (new Serialization.IO.XmlReader (xmlReader));
+
+			StructuredType readSt = Storage.Deserialize (context) as StructuredType;
+
+			Assert.IsNotNull (readSt);
+			Assert.AreEqual (st.Fields.Count, readSt.Fields.Count);
+		}
+
 		private MyItem CreateSampleTree(out MyItem ext)
 		{
 			ext = new MyItem ();

@@ -104,6 +104,8 @@
     <Compile Include="Converters\AutomaticValueConverter.cs" />
     <Compile Include="AbstractNumericType.cs" />
     <Compile Include="AbstractType.cs" />
+    <Compile Include="StructuredTypeFieldCollection.cs" />
+    <Compile Include="StructuredTypeField.cs" />
     <Compile Include="DoubleType.cs" />
     <Compile Include="ISytemType.cs" />
     <Compile Include="RankAttribute.cs" />
