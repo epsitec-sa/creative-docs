@@ -113,7 +113,17 @@ namespace Epsitec.Common.Types
 		private static object GetFieldsValue(DependencyObject obj)
 		{
 			StructuredType that = obj as StructuredType;
-			return new StructuredTypeFieldCollection (that);
+			Serialization.Context context = Serialization.Context.GetActiveContext ();
+
+			object data = context.GetEntry (that);
+			
+			if (data == null)
+			{
+				data = new StructuredTypeFieldCollection (that);
+				context.SetEntry (that, data);
+			}
+			
+			return data as StructuredTypeFieldCollection;
 		}
 
 		public static DependencyProperty FieldsProperty = DependencyProperty.RegisterReadOnly ("Fields", typeof (StructuredTypeFieldCollection), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetFieldsValue).MakeReadOnlySerializable ());

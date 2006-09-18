@@ -247,7 +247,6 @@ namespace Epsitec.Common.Types.Serialization
 
 		#endregion
 
-
 		#region IDisposable Members
 
 		public void Dispose()
@@ -257,6 +256,25 @@ namespace Epsitec.Common.Types.Serialization
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Gets the active context.
+		/// </summary>
+		/// <returns>Active context or <c>null</c>.</returns>
+		public static Context GetActiveContext()
+		{
+			foreach (Weak<Context> item in Context.links)
+			{
+				Context context = item.Target;
+
+				if (context != null)
+				{
+					return context;
+				}
+			}
+			
+			return null;
+		}
 		
 		public static string IdToString(int id)
 		{
@@ -353,5 +371,31 @@ namespace Epsitec.Common.Types.Serialization
 		
 		protected IO.AbstractWriter				writer;
 		protected IO.AbstractReader				reader;
+
+		public object GetEntry(object key)
+		{
+			if (this.entries == null)
+			{
+				return null;
+			}
+
+			object value;
+
+			this.entries.TryGetValue (key, out value);
+			
+			return value;
+		}
+
+		public void SetEntry(object key, object data)
+		{
+			if (this.entries == null)
+			{
+				this.entries = new Dictionary<object, object> ();
+			}
+
+			this.entries[key] = data;
+		}
+
+		private Dictionary<object, object>		entries;
 	}
 }
