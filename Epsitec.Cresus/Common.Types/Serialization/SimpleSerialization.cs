@@ -15,16 +15,18 @@ namespace Epsitec.Common.Types.Serialization
 			xmlWriter.Formatting = System.Xml.Formatting.None;
 			xmlWriter.WriteStartElement (SimpleSerialization.RootElementName);
 
-			Serialization.Context context = new Serialization.SerializerContext (new Serialization.IO.XmlWriter (xmlWriter));
-			context.ActiveWriter.WriteAttributeStrings ();
+			using (Serialization.Context context = new Serialization.SerializerContext (new Serialization.IO.XmlWriter (xmlWriter)))
+			{
+				context.ActiveWriter.WriteAttributeStrings ();
 
-			Storage.Serialize (root, context);
-			
-			xmlWriter.WriteEndElement ();
-			xmlWriter.Flush ();
-			xmlWriter.Close ();
+				Storage.Serialize (root, context);
 
-			return buffer.ToString ();
+				xmlWriter.WriteEndElement ();
+				xmlWriter.Flush ();
+				xmlWriter.Close ();
+
+				return buffer.ToString ();
+			}
 		}
 
 		public static DependencyObject DeserializeFromString(string xml)
@@ -32,23 +34,24 @@ namespace Epsitec.Common.Types.Serialization
 			System.IO.StringReader stringReader = new System.IO.StringReader (xml);
 			System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (stringReader);
 
-			Serialization.Context context = new Serialization.DeserializerContext (new Serialization.IO.XmlReader (xmlReader));
-
-			while (xmlReader.Read ())
+			using (Serialization.Context context = new Serialization.DeserializerContext (new Serialization.IO.XmlReader (xmlReader)))
 			{
-				if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
-					(xmlReader.LocalName == SimpleSerialization.RootElementName))
+				while (xmlReader.Read ())
 				{
-					break;
+					if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
+					(xmlReader.LocalName == SimpleSerialization.RootElementName))
+					{
+						break;
+					}
 				}
+
+				DependencyObject root = Storage.Deserialize (context);
+
+				xmlReader.Close ();
+				stringReader.Close ();
+
+				return root;
 			}
-
-			DependencyObject root = Storage.Deserialize (context);
-
-			xmlReader.Close ();
-			stringReader.Close ();
-			
-			return root;
 		}
 
 		public const string RootElementName = "objects";
