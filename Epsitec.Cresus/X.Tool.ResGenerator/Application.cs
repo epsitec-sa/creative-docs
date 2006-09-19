@@ -127,7 +127,9 @@ namespace Epsitec.Common.Tool.ResGenerator
 			generator.BeginBlock ("public static class", "Res");
 
 			string[] bundleIds = manager.GetBundleIds ("*", "*", ResourceLevel.Default);
-			
+
+			Application.comandsGenerated = false;
+
 			foreach (string bundleId in bundleIds)
 			{
 				ResourceBundle bundle = manager.GetBundle (bundleId, ResourceLevel.Default);
@@ -153,6 +155,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 			
 			buffer.Append (generator.Tabs);
 			buffer.Append ("\n");
+
 			generator.BeginBlock ("public static void", "Initialize(System.Type type, string name)");
 			buffer.Append (generator.Tabs);
 			buffer.Append (@"_manager = new Epsitec.Common.Support.ResourceManager (type);");
@@ -160,23 +163,35 @@ namespace Epsitec.Common.Tool.ResGenerator
 			buffer.Append (generator.Tabs);
 			buffer.Append (@"_manager.DefineDefaultModuleName (name);");
 			buffer.Append ("\n");
+			if (Application.comandsGenerated)
+			{
+				buffer.Append(generator.Tabs);
+				buffer.Append(@"Commands._Initialize();");
+				buffer.Append("\n");
+			}
 			generator.EndBlock ();
+			
 			buffer.Append (generator.Tabs);
 			buffer.Append ("\n");
+			
 			generator.BeginBlock ("public static Epsitec.Common.Support.ResourceManager", "Manager");
 			buffer.Append (generator.Tabs);
 			buffer.Append (@"get { return _manager; }");
 			buffer.Append ("\n");
 			generator.EndBlock ();
+			
 			buffer.Append (generator.Tabs);
 			buffer.Append ("\n");
+			
 			generator.BeginBlock ("public static int", "ModuleId");
 			buffer.Append (generator.Tabs);
 			buffer.Append (@"get { return _moduleId; }");
 			buffer.Append ("\n");
 			generator.EndBlock ();
+			
 			buffer.Append (generator.Tabs);
 			buffer.Append ("\n");
+			
 			buffer.Append (generator.Tabs);
 			buffer.Append ("private static Epsitec.Common.Support.ResourceManager _manager = Epsitec.Common.Support.Resources.DefaultManager;");
 			buffer.Append ("\n");
@@ -227,12 +242,230 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 		static void GenerateCommands(ResourceManager manager, System.Text.StringBuilder buffer, Generator generator, string defaultNamespace, string bundleId, ResourceBundle bundle, List<string> cmdFields)
 		{
-			//	TODO: ...
+			Application.comandsGenerated = true;
+			string prefix   = "";
+			bool addNewline = false;
+
+			generator.BeginBlock("public static class", "Commands");
+
+			string[] fields   = new string[cmdFields.Count];
+			string[] sortKeys = new string[cmdFields.Count];
+
+			for (int i=0; i<fields.Length; i++)
+			{
+				fields[i] = cmdFields[i];
+
+				int pos = fields[i].LastIndexOf('.');
+				if (pos < 0)
+				{
+					sortKeys[i] = fields[i];
+				}
+				else
+				{
+					sortKeys[i] = string.Concat(fields[i].Substring(0, pos), "!", fields[i].Substring(pos+1));
+				}
+			}
+
+			System.Array.Sort(sortKeys, fields);
+
+			List<string> classes = new List<string>();
+
+			for (int i=0; i<fields.Length; i++)
+			{
+				string field = fields[i];
+
+				while (prefix != "" && !field.StartsWith(prefix + "."))
+				{
+					//	Remonte d'un niveau dans la hiérarchie des classes.
+					string[] args = prefix.Split('.');
+					string last = args[args.Length-1];
+
+					generator.EndBlock();
+
+					prefix = prefix.Substring(0, System.Math.Max(0, prefix.Length-last.Length-1));
+					addNewline = true;
+				}
+
+				string delta = prefix.Length == 0 ? field : field.Substring(prefix.Length+1);
+
+				if (addNewline)
+				{
+					buffer.Append(generator.Tabs);
+					buffer.Append("\n");
+					addNewline = false;
+				}
+
+				//	Crée les classes manquantes, si besoin :
+				while (delta.IndexOf('.') > -1)
+				{
+					string[] args = delta.Split('.');
+					string elem = args[0];
+
+					generator.BeginBlock("public static class", elem);
+					classes.Add(elem);
+
+					buffer.Append(generator.Tabs);
+					buffer.Append("internal static void _Initialize() { }\n");
+					buffer.Append(generator.Tabs);
+					buffer.Append("\n");
+
+					if (prefix.Length == 0)
+					{
+						prefix = elem;
+					}
+					else
+					{
+						prefix = string.Concat(prefix, ".", elem);
+					}
+
+					delta = field.Substring(prefix.Length + 1);
+				}
+
+				//	Crée l'accesseur pour le champ actuel :
+				buffer.Append(generator.Tabs);
+
+				Support.Druid druid = bundle[field].Druid;
+
+				buffer.Append("public static readonly Epsitec.Common.Widgets.Command ");
+				buffer.Append(delta);
+				buffer.Append(@" = Epsitec.Common.Widgets.Command.Get(Epsitec.Common.Support.Druid.FromLong(Epsitec.Common.Support.Druid.FromModuleDruid(_moduleId, ");
+				buffer.Append(druid.ToFieldId());
+				buffer.Append(")));\n");
+			}
+
+			//	Referme les classes ouvertes :
+			if (prefix.Length > 0)
+			{
+				string[] args = prefix.Split('.');
+
+				for (int j=0; j<args.Length; j++)
+				{
+					generator.EndBlock();
+				}
+			}
+			buffer.Append(generator.Tabs);
+			buffer.Append("\n");
+
+			generator.BeginBlock("internal static void", "_Initialize()");
+			for (int i=0; i<classes.Count; i++)
+			{
+				buffer.Append(generator.Tabs);
+
+#if true
+				buffer.Append("// plantée à l'initialisation, sans ce commentaire !  ");
+#endif
+
+				for (int j=0; j<=i; j++)
+				{
+					buffer.Append(classes[j]);
+					buffer.Append(".");
+				}
+
+				buffer.Append("_Initialize();\n");
+			}
+			generator.EndBlock();
+
+			generator.EndBlock();
 		}
 
 		static void GenerateCaptions(ResourceManager manager, System.Text.StringBuilder buffer, Generator generator, string defaultNamespace, string bundleId, ResourceBundle bundle, List<string> capFields)
 		{
-			//	TODO: ...
+			string prefix   = "";
+			bool addNewline = false;
+
+			generator.BeginBlock("public static class", "Captions");
+
+			string[] fields   = new string[capFields.Count];
+			string[] sortKeys = new string[capFields.Count];
+
+			for (int i=0; i<fields.Length; i++)
+			{
+				fields[i] = capFields[i];
+
+				int pos = fields[i].LastIndexOf('.');
+				if (pos < 0)
+				{
+					sortKeys[i] = fields[i];
+				}
+				else
+				{
+					sortKeys[i] = string.Concat(fields[i].Substring(0, pos), "!", fields[i].Substring(pos+1));
+				}
+			}
+
+			System.Array.Sort(sortKeys, fields);
+
+			for (int i=0; i<fields.Length; i++)
+			{
+				string field = fields[i];
+
+				while (prefix != "" && !field.StartsWith(prefix + "."))
+				{
+					//	Remonte d'un niveau dans la hiérarchie des classes.
+					string[] args = prefix.Split('.');
+					string last = args[args.Length-1];
+
+					generator.EndBlock();
+
+					prefix = prefix.Substring(0, System.Math.Max(0, prefix.Length-last.Length-1));
+					addNewline = true;
+				}
+
+				string delta = prefix.Length == 0 ? field : field.Substring(prefix.Length+1);
+
+				if (addNewline)
+				{
+					buffer.Append(generator.Tabs);
+					buffer.Append("\n");
+					addNewline = false;
+				}
+
+				//	Crée les classes manquantes, si besoin :
+				while (delta.IndexOf('.') > -1)
+				{
+					string[] args = delta.Split('.');
+					string elem = args[0];
+
+					generator.BeginBlock("public static class", elem);
+
+					if (prefix.Length == 0)
+					{
+						prefix = elem;
+					}
+					else
+					{
+						prefix = string.Concat(prefix, ".", elem);
+					}
+
+					delta = field.Substring(prefix.Length + 1);
+				}
+
+				//	Crée l'accesseur pour le champ actuel :
+				buffer.Append(generator.Tabs);
+
+				Support.Druid druid = bundle[field].Druid;
+
+				buffer.Append("public static Epsitec.Common.Types.Caption ");
+				buffer.Append(delta);
+				buffer.Append(@" { get { return _manager.GetCaption(Epsitec.Common.Support.Druid.FromLong(Epsitec.Common.Support.Druid.FromModuleDruid(_moduleId, ");
+				buffer.Append(druid.ToFieldId());
+				buffer.Append("))); } }\n");
+			}
+
+			//	Referme les classes ouvertes :
+			if (prefix.Length > 0)
+			{
+				string[] args = prefix.Split('.');
+
+				for (int j=0; j<args.Length; j++)
+				{
+					generator.EndBlock();
+				}
+			}
+			buffer.Append(generator.Tabs);
+			buffer.Append("\n");
+
+			generator.EndBlock();
 		}
 
 		static void GenerateTypes(ResourceManager manager, System.Text.StringBuilder buffer, Generator generator, string defaultNamespace, string bundleId, ResourceBundle bundle, List<string> typFields)
@@ -413,5 +646,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 			generator.EndBlock ();
 		}
+
+		static bool comandsGenerated;
 	}
 }
