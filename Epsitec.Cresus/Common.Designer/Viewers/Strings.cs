@@ -13,15 +13,13 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Strings(Module module, PanelsContext context, ResourceAccess access) : base(module, context, access)
 		{
-			int tabIndex = 0;
-
 			this.primaryCulture = new IconButtonMark(this);
 			this.primaryCulture.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.primaryCulture.SiteMark = SiteMark.OnBottom;
 			this.primaryCulture.MarkDimension = 5;
 			this.primaryCulture.ActiveState = ActiveState.Yes;
 			this.primaryCulture.AutoFocus = false;
-			this.primaryCulture.TabIndex = tabIndex++;
+			this.primaryCulture.TabIndex = this.tabIndex++;
 			this.primaryCulture.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.array = new MyWidgets.StringArray(this);
@@ -36,7 +34,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.CellCountChanged += new EventHandler (this.HandleArrayCellCountChanged);
 			this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
-			this.array.TabIndex = tabIndex++;
+			this.array.TabIndex = this.tabIndex++;
 			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.labelStatic = new StaticText(this);
@@ -50,7 +48,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
 			this.labelEdit.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
-			this.labelEdit.TabIndex = tabIndex++;
+			this.labelEdit.TabIndex = this.tabIndex++;
 			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
 			this.currentTextField = this.labelEdit;
@@ -59,14 +57,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryEdit.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryEdit.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.primaryEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
-			this.primaryEdit.TabIndex = tabIndex++;
+			this.primaryEdit.TabIndex = this.tabIndex++;
 			this.primaryEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryEdit = new TextFieldMulti(this);
 			this.secondaryEdit.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryEdit.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.secondaryEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
-			this.secondaryEdit.TabIndex = tabIndex++;
+			this.secondaryEdit.TabIndex = this.tabIndex++;
 			this.secondaryEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.labelAbout = new StaticText(this);
@@ -77,14 +75,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.primaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
-			this.primaryAbout.TabIndex = tabIndex++;
+			this.primaryAbout.TabIndex = this.tabIndex++;
 			this.primaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryAbout = new TextFieldMulti(this);
 			this.secondaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.secondaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
-			this.secondaryAbout.TabIndex = tabIndex++;
+			this.secondaryAbout.TabIndex = this.tabIndex++;
 			this.secondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.UpdateCultures();
