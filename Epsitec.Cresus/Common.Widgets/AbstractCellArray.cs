@@ -848,11 +848,7 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case MessageType.KeyDown:
-					if (message.ModifierKeys != ModifierKeys.None)
-					{
-						return;
-					}
-					if ( !this.ProcessKeyDown(message.KeyCode) )
+					if (!this.ProcessKeyDown(message.ModifierKeys, message.KeyCode))
 					{
 						return;
 					}
@@ -865,27 +861,69 @@ namespace Epsitec.Common.Widgets
 			message.Consumer = this;
 		}
 
-		protected bool ProcessKeyDown(KeyCode key)
+		protected bool ProcessKeyDown(ModifierKeys modifier, KeyCode key)
 		{
 			//	Gestion d'une touche pressée avec KeyDown.
-			switch ( key )
+			CellArrayStyles style = this.styleV | this.styleH;
+
+			if (modifier == ModifierKeys.None || (modifier == ModifierKeys.Shift && (style & CellArrayStyles.SelectMulti) != 0))
 			{
-				case KeyCode.ArrowLeft:
-					this.SelectCellDir(-1, 0);
-					return true;
+				switch (key)
+				{
+					case KeyCode.ArrowLeft:
+						this.SelectCellDir(-1, 0, modifier == ModifierKeys.Shift);
+						this.OnSelectionChanged();
+						this.OnFinalSelectionChanged();
+						this.ShowSelect();
+						return true;
 
-				case KeyCode.ArrowRight:
-					this.SelectCellDir(1, 0);
-					return true;
+					case KeyCode.ArrowRight:
+						this.SelectCellDir(1, 0, modifier == ModifierKeys.Shift);
+						this.OnSelectionChanged();
+						this.OnFinalSelectionChanged();
+						this.ShowSelect();
+						return true;
 
-				case KeyCode.ArrowUp:
-					this.SelectCellDir(0, -1);
-					return true;
+					case KeyCode.ArrowUp:
+						this.SelectCellDir(0, -1, modifier == ModifierKeys.Shift);
+						this.OnSelectionChanged();
+						this.OnFinalSelectionChanged();
+						this.ShowSelect();
+						return true;
 
-				case KeyCode.ArrowDown:
-					this.SelectCellDir(0, 1);
-					return true;
+					case KeyCode.ArrowDown:
+						this.SelectCellDir(0, 1, modifier == ModifierKeys.Shift);
+						this.OnSelectionChanged();
+						this.OnFinalSelectionChanged();
+						this.ShowSelect();
+						return true;
+
+					case KeyCode.Home:
+						while (this.SelectCellDir(0, -1, modifier == ModifierKeys.Shift));
+						this.OnSelectionChanged();
+						this.OnFinalSelectionChanged();
+						this.ShowSelect();
+						return true;
+
+					case KeyCode.End:
+						while (this.SelectCellDir(0, 1, modifier == ModifierKeys.Shift));
+						this.OnSelectionChanged();
+						this.OnFinalSelectionChanged();
+						this.ShowSelect();
+						return true;
+				}
 			}
+
+			if (modifier == ModifierKeys.Control && (style & CellArrayStyles.SelectMulti) != 0)
+			{
+				if (key == KeyCode.AlphaA)
+				{
+					this.SelectAll();
+					this.OnSelectionChanged();
+					this.OnFinalSelectionChanged();
+				}
+			}
+
 			return false;
 		}
 
@@ -1025,20 +1063,30 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		protected void SelectCellDir(int dirColumn, int dirRow)
+		protected bool SelectCellDir(int dirColumn, int dirRow, bool add)
 		{
 			//	Sélectionne une cellule proche.
 			int column = this.selectedColumn+dirColumn;
-			column = System.Math.Max(column, 0);
-			column = System.Math.Min(column, this.maxColumns-1);
+			if (column < 0 || column >= this.maxColumns)
+			{
+				return false;
+			}
 
 			int row = this.selectedRow+dirRow;
-			row = System.Math.Max(row, 0);
-			row = System.Math.Min(row, this.maxRows-1);
+			if (row < 0 || row >= this.maxRows)
+			{
+				return false;
+			}
 
-			if ( column == this.selectedColumn && row == this.selectedRow )  return;
+			if (column == this.selectedColumn && row == this.selectedRow)
+			{
+				return false;
+			}
 
-			this.DeselectAll();
+			if (!add)
+			{
+				this.DeselectAll();
+			}
 
 			this.SelectCell(column, row, true);
 			this.selectedColumn = column;
@@ -1054,19 +1102,29 @@ namespace Epsitec.Common.Widgets
 				this.SelectColumn(column, true);
 			}
 
-			this.OnSelectionChanged();
-			this.OnFinalSelectionChanged();
-			this.ShowSelect();
+			return true;
 		}
 
 		public void DeselectAll()
 		{
 			//	Desélectionne toutes les cellules.
-			for ( int row=0 ; row<this.maxRows ; row++ )
+			for (int row=0; row<this.maxRows; row++)
 			{
-				for ( int column=0 ; column<this.maxColumns ; column++ )
+				for (int column=0; column<this.maxColumns; column++)
 				{
 					this.SelectCell(column, row, false);
+				}
+			}
+		}
+
+		public void SelectAll()
+		{
+			//	Sélectionne toutes les cellules.
+			for (int row=0; row<this.maxRows; row++)
+			{
+				for (int column=0; column<this.maxColumns; column++)
+				{
+					this.SelectCell(column, row, true);
 				}
 			}
 		}
