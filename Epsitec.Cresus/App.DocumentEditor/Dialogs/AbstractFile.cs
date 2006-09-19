@@ -276,6 +276,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.dispatcher = new CommandDispatcher();
 			this.context = new CommandContext();
 
+#if false
 			//	Les Druids utilisés ici sont de la forme [MMDL].
 			//	MM: numéro de module, voir dans App.DocumentEditor/Resources/App/module.info
 			//	D: numéro du développeur (pour le moment, le numéro du développeur est toujours "0")
@@ -291,9 +292,29 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.favoritesUpState     = this.CreateCommandState("[300A]", this.FavoriteUp);
 			this.favoritesDownState   = this.CreateCommandState("[300B]", this.FavoriteDown);
 			this.favoritesBigState    = this.CreateCommandState("[300C]", this.FavoriteBig);
+#else
+			this.prevState            = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.NavigatePrev, this.NavigatePrev);
+			this.nextState            = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.NavigateNext, this.NavigateNext);
+			this.parentState          = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.ParentDirectory, this.ParentDirectory);
+			this.newState             = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.NewDirectory, this.NewDirectory);
+			this.renameState          = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.Rename, this.RenameStarting);
+			this.deleteState          = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.Delete, this.FileDelete);
+			this.favoritesAddState    = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.Favorites.Add, this.FavoriteAdd);
+			this.favoritesRemoveState = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.Favorites.Remove, this.FavoriteRemove);
+			this.favoritesUpState     = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.Favorites.Up, this.FavoriteUp);
+			this.favoritesDownState   = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.Favorites.Down, this.FavoriteDown);
+			this.favoritesBigState    = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.Favorites.Big, this.FavoriteBig);
+#endif
 
 			CommandDispatcher.SetDispatcher(this.window, this.dispatcher);
 			CommandContext.SetContext(this.window, this.context);
+		}
+
+		protected CommandState CreateCommandState(Command command, SimpleCallback handler)
+		{
+			this.dispatcher.Register(command, handler);
+
+			return this.context.GetCommandState(command);
 		}
 
 		protected CommandState CreateCommandState(string commandDruid, SimpleCallback handler)
