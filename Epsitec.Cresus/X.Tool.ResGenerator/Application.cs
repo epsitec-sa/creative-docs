@@ -351,7 +351,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 			{
 				buffer.Append(generator.Tabs);
 
-#if true
+#if false
 				buffer.Append("// plantée à l'initialisation, sans ce commentaire !  ");
 #endif
 
