@@ -613,6 +613,9 @@ namespace Epsitec.Common.Types
 		{
 			StructuredType st = new StructuredType ();
 
+			st.AddField ("Name", new StringType ());
+			st.AddField ("Age", new IntegerType (0, 199));
+
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			System.IO.StringWriter stringWriter = new System.IO.StringWriter (buffer);
 			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (stringWriter);

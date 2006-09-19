@@ -43,7 +43,46 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public static DependencyProperty NameProperty = DependencyProperty.Register ("Name", typeof (string), typeof (StructuredTypeField), new DependencyPropertyMetadata ());
-		public static DependencyProperty TypeProperty = DependencyProperty.Register ("Type", typeof (INamedType), typeof (StructuredTypeField), new DependencyPropertyMetadata ());
+		internal bool IsFullyDefined
+		{
+			get
+			{
+				return this.ContainsLocalValue (StructuredTypeField.NameProperty)
+					&& this.ContainsLocalValue (StructuredTypeField.TypeProperty);
+			}
+		}
+
+		internal void DefineContainer(StructuredTypeFieldCollection container)
+		{
+			this.container = container;
+		}
+
+		private static void HandleNameChanged(DependencyObject obj, object oldValue, object newValue)
+		{
+			StructuredTypeField that = obj as StructuredTypeField;
+
+			if ((that.container != null) &&
+				(that.IsFullyDefined))
+			{
+				that.container.NotifyFieldFullyDefined (that);
+			}
+		}
+
+		private static void HandleTypeChanged(DependencyObject obj, object oldValue, object newValue)
+		{
+			StructuredTypeField that = obj as StructuredTypeField;
+
+			if ((that.container != null) &&
+				(that.IsFullyDefined))
+			{
+				that.container.NotifyFieldFullyDefined (that);
+			}
+		}
+
+
+		public static DependencyProperty NameProperty = DependencyProperty.Register ("Name", typeof (string), typeof (StructuredTypeField), new DependencyPropertyMetadata (StructuredTypeField.HandleNameChanged));
+		public static DependencyProperty TypeProperty = DependencyProperty.Register ("Type", typeof (INamedType), typeof (StructuredTypeField), new DependencyPropertyMetadata (StructuredTypeField.HandleTypeChanged));
+
+		private StructuredTypeFieldCollection container;
 	}
 }
