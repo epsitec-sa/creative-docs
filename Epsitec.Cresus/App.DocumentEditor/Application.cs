@@ -12,6 +12,7 @@ namespace Epsitec.App.DocumentEditor
 	{
 		public static void Start(string mode)
 		{
+			Widget.Initialize ();
 			Application.mode = mode.Substring (0, 1);
 			
 			Res.Initialize(typeof(Application), "App");
@@ -21,7 +22,6 @@ namespace Epsitec.App.DocumentEditor
 			Common.Support.SerialAlgorithm.SetProductBuildDate(new System.DateTime(2005, 12, 31));
 			Common.Support.SerialAlgorithm.SetProductGenerationNumber(1, 6);
 			
-			Widget.Initialize();
 			Epsitec.Common.Document.Engine.Initialize();
 			
 			Common.Support.ImageProvider.Default.EnableLongLifeCache = true;
