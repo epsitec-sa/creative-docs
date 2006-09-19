@@ -3,20 +3,13 @@
 
 using System.Collections.Generic;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.StructuredTypeFieldCollection))]
-
 namespace Epsitec.Common.Types
 {
-	public class StructuredTypeFieldCollection : DependencyObject, ICollection<DependencyObject>
+	public class StructuredTypeFieldCollection : ICollection<DependencyObject>
 	{
-		public StructuredTypeFieldCollection()
-		{
-			this.pendingFields = new List<StructuredTypeField> ();
-		}
-
 		public StructuredTypeFieldCollection(StructuredType owner)
 		{
-			this.Owner = owner;
+			this.owner = owner;
 		}
 
 		#region ICollection<DependencyObject> Members
@@ -25,21 +18,28 @@ namespace Epsitec.Common.Types
 		{
 			StructuredTypeField field = item as StructuredTypeField;
 
-			if (this.Owner == null)
+			if ((this.owner == null) ||
+				(!field.IsFullyDefined))
 			{
+				if (this.pendingFields == null)
+				{
+					this.pendingFields = new List<StructuredTypeField> ();
+				}
+
 				this.pendingFields.Add (field);
+				field.DefineContainer (this);
 			}
 			else
 			{
-				this.Owner.AddField (field.Name, field.Type);
+				this.owner.AddField (field.Name, field.Type);
 			}
 		}
 
 		void ICollection<DependencyObject>.Clear()
 		{
-			if (this.Owner != null)
+			if (this.owner != null)
 			{
-				this.Owner.Fields.Clear ();
+				this.owner.Fields.Clear ();
 			}
 		}
 
@@ -57,13 +57,13 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				if (this.Owner == null)
+				if (this.owner == null)
 				{
 					return 0;
 				}
 				else
 				{
-					return this.Owner.Fields.Count;
+					return this.owner.Fields.Count;
 				}
 			}
 		}
@@ -87,11 +87,20 @@ namespace Epsitec.Common.Types
 
 		IEnumerator<DependencyObject> IEnumerable<DependencyObject>.GetEnumerator()
 		{
-			if (this.Owner != null)
+			if (this.owner != null)
 			{
-				foreach (KeyValuePair<string, INamedType> item in this.Owner.Fields)
+				if (this.cachedFields == null)
 				{
-					yield return new StructuredTypeField (item.Key, item.Value);
+					this.cachedFields = new List<StructuredTypeField> ();
+					
+					foreach (KeyValuePair<string, INamedType> item in this.owner.Fields)
+					{
+						this.cachedFields.Add (new StructuredTypeField (item.Key, item.Value));
+					}
+				}
+				foreach (StructuredTypeField field in this.cachedFields)
+				{
+					yield return field;
 				}
 			}
 		}
@@ -107,42 +116,19 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
-		private StructuredType Owner
-		{
-			get
-			{
-				return (StructuredType) this.GetValue (StructuredTypeFieldCollection.OwnerProperty);
-			}
-			set
-			{
-				this.SetValue (StructuredTypeFieldCollection.OwnerProperty, value);
-			}
-		}
-
+		private StructuredType owner;
 		private List<StructuredTypeField> pendingFields;
+		private List<StructuredTypeField> cachedFields;
 
-		public static void HandleOwnerChanged(DependencyObject obj, object oldValue, object newValue)
+		internal void NotifyFieldFullyDefined(StructuredTypeField field)
 		{
-			StructuredTypeFieldCollection that = obj as StructuredTypeFieldCollection;
+			System.Diagnostics.Debug.Assert (this.pendingFields != null);
+			System.Diagnostics.Debug.Assert (this.pendingFields.Contains (field));
 
-			if (that.Owner == null)
-			{
-				that.pendingFields = new List<StructuredTypeField> ();
-			}
-			else
-			{
-				if (that.pendingFields != null)
-				{
-					foreach (StructuredTypeField field in that.pendingFields)
-					{
-						that.Owner.AddField (field.Name, field.Type);
-					}
+			this.pendingFields.Remove (field);
+			this.owner.AddField (field.Name, field.Type);
 
-					that.pendingFields = null;
-				}
-			}
+			field.DefineContainer (null);
 		}
-
-		public static DependencyProperty OwnerProperty = DependencyProperty.Register ("Owner", typeof (StructuredType), typeof (StructuredTypeFieldCollection), new DependencyPropertyMetadata (StructuredTypeFieldCollection.HandleOwnerChanged));
 	}
 }
