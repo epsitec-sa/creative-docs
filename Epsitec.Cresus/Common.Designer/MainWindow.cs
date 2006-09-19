@@ -234,6 +234,7 @@ namespace Epsitec.Common.Designer
 				this.ribbonMain.Items.Add(new Ribbons.Select(this));
 			}
 			this.ribbonMain.Items.Add(new Ribbons.Access(this));
+			this.ribbonMain.Items.Add(new Ribbons.Character(this));
 
 			//	Crée le ruban des opérations.
 			this.ribbonOper = new RibbonPage();
@@ -246,14 +247,6 @@ namespace Epsitec.Common.Designer
 			this.ribbonOper.Items.Add(new Ribbons.Align(this));
 			this.ribbonOper.Items.Add(new Ribbons.Order(this));
 			this.ribbonOper.Items.Add(new Ribbons.TabIndex(this));
-
-			//	Crée le ruban du texte.
-			this.ribbonText = new RibbonPage();
-			this.ribbonText.RibbonTitle = Res.Strings.Ribbon.Text;
-			this.ribbonBook.Items.Add(this.ribbonText);
-
-			this.ribbonText.Items.Add(new Ribbons.Character(this));
-			this.ribbonText.Items.Add(new Ribbons.Clipboard(this));
 
 			//	Crée la barre de statuts.
 			this.info = new StatusBar(this.window.Root);
@@ -308,12 +301,6 @@ namespace Epsitec.Common.Designer
 			}
 
 			button = this.SearchIconButton(this.ribbonOper, command);
-			if (button != null)
-			{
-				return button;
-			}
-
-			button = this.SearchIconButton(this.ribbonText, command);
 			if (button != null)
 			{
 				return button;
@@ -1232,7 +1219,6 @@ namespace Epsitec.Common.Designer
 		protected RibbonBook					ribbonBook;
 		protected RibbonPage					ribbonMain;
 		protected RibbonPage					ribbonOper;
-		protected RibbonPage					ribbonText;
 		protected RibbonPage					ribbonActive;
 		protected TabBook						bookModules;
 		protected StatusBar						info;
