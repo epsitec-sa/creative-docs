@@ -42,6 +42,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.TabIndex = this.tabIndex++;
 			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
+			this.currentTextField = this.labelEdit;
 
 			this.array = new MyWidgets.StringArray(left);
 			this.array.Columns = 1;
