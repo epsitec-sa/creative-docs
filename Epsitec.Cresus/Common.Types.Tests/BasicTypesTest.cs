@@ -422,12 +422,16 @@ namespace Epsitec.Common.Types
 			caption = TypeRosetta.GetTypeObject ("Integer").Caption;
 			intSerial = caption.SerializeToString ();
 
+			System.Console.WriteLine ("Integer caption ID: {0}", caption.Druid.ToString ());
+
 			Assert.AreEqual ("Integer", TypeRosetta.GetTypeObject ("Integer").Name);
 			Assert.AreEqual ("Integer", caption.Name);
 			Assert.AreEqual (typeof (int).FullName, caption.GetValue (AbstractType.SytemTypeProperty));
 
 			caption = TypeRosetta.GetTypeObject ("String").Caption;
 			strSerial = caption.SerializeToString ();
+
+			System.Console.WriteLine ("String caption ID: {0}", caption.Druid.ToString ());
 
 			System.Console.WriteLine ("Integer: {0}", intSerial);
 			System.Console.WriteLine ("String: {0}", strSerial);

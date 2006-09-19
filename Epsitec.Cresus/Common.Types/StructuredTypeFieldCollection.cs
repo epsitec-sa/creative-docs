@@ -18,8 +18,7 @@ namespace Epsitec.Common.Types
 		{
 			StructuredTypeField field = item as StructuredTypeField;
 
-			if ((this.owner == null) ||
-				(!field.IsFullyDefined))
+			if (!field.IsFullyDefined)
 			{
 				if (this.pendingFields == null)
 				{
@@ -37,10 +36,7 @@ namespace Epsitec.Common.Types
 
 		void ICollection<DependencyObject>.Clear()
 		{
-			if (this.owner != null)
-			{
-				this.owner.Fields.Clear ();
-			}
+			this.owner.Fields.Clear ();
 		}
 
 		bool ICollection<DependencyObject>.Contains(DependencyObject item)
@@ -57,14 +53,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				if (this.owner == null)
-				{
-					return 0;
-				}
-				else
-				{
-					return this.owner.Fields.Count;
-				}
+				return this.owner.Fields.Count;
 			}
 		}
 
@@ -87,21 +76,19 @@ namespace Epsitec.Common.Types
 
 		IEnumerator<DependencyObject> IEnumerable<DependencyObject>.GetEnumerator()
 		{
-			if (this.owner != null)
+			if (this.cachedFields == null)
 			{
-				if (this.cachedFields == null)
+				this.cachedFields = new List<StructuredTypeField> ();
+				
+				foreach (KeyValuePair<string, INamedType> item in this.owner.Fields)
 				{
-					this.cachedFields = new List<StructuredTypeField> ();
-					
-					foreach (KeyValuePair<string, INamedType> item in this.owner.Fields)
-					{
-						this.cachedFields.Add (new StructuredTypeField (item.Key, item.Value));
-					}
+					this.cachedFields.Add (new StructuredTypeField (item.Key, item.Value));
 				}
-				foreach (StructuredTypeField field in this.cachedFields)
-				{
-					yield return field;
-				}
+			}
+			
+			foreach (StructuredTypeField field in this.cachedFields)
+			{
+				yield return field;
 			}
 		}
 
@@ -116,10 +103,6 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
-		private StructuredType owner;
-		private List<StructuredTypeField> pendingFields;
-		private List<StructuredTypeField> cachedFields;
-
 		internal void NotifyFieldFullyDefined(StructuredTypeField field)
 		{
 			System.Diagnostics.Debug.Assert (this.pendingFields != null);
@@ -130,5 +113,9 @@ namespace Epsitec.Common.Types
 
 			field.DefineContainer (null);
 		}
+
+		private StructuredType owner;
+		private List<StructuredTypeField> pendingFields;
+		private List<StructuredTypeField> cachedFields;
 	}
 }
