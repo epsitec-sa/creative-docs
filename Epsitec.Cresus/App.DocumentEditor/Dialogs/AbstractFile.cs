@@ -351,6 +351,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			header.TabNavigation = Widget.TabNavigationMode.Passive;
 
 			this.favoritesExtend = new GlyphButton(header);
+			this.favoritesExtend.GlyphShape = GlyphShape.ArrowDown;
 			this.favoritesExtend.AutoFocus = false;
 			this.favoritesExtend.TabNavigation = Widget.TabNavigationMode.Passive;
 			this.favoritesExtend.Dock = DockStyle.Left;
@@ -361,43 +362,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			label.Text = this.isSave ? Res.Strings.Dialog.File.LabelPath.Save : Res.Strings.Dialog.File.LabelPath.Open;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Dock = DockStyle.Fill;
-
-			this.favoritesToolbar = new Widget(container);
-			this.favoritesToolbar.Visibility = false;
-			this.favoritesToolbar.PreferredHeight = 22;
-			this.favoritesToolbar.Dock = DockStyle.Top;
-			this.favoritesToolbar.Margins = new Margins(0, 0, 0, 1);
-			this.favoritesToolbar.TabNavigation = Widget.TabNavigationMode.Passive;
-
-			IconButton buttonAdd = new IconButton(this.favoritesToolbar);
-			buttonAdd.AutoFocus = false;
-			buttonAdd.TabNavigation = Widget.TabNavigationMode.Passive;
-			buttonAdd.CommandObject = this.favoritesAddState.Command;
-			buttonAdd.Dock = DockStyle.Left;
-
-			IconButton buttonRemove = new IconButton(this.favoritesToolbar);
-			buttonRemove.AutoFocus = false;
-			buttonRemove.TabNavigation = Widget.TabNavigationMode.Passive;
-			buttonRemove.CommandObject = this.favoritesRemoveState.Command;
-			buttonRemove.Dock = DockStyle.Left;
-
-			IconButton buttonUp = new IconButton(this.favoritesToolbar);
-			buttonUp.AutoFocus = false;
-			buttonUp.TabNavigation = Widget.TabNavigationMode.Passive;
-			buttonUp.CommandObject = this.favoritesUpState.Command;
-			buttonUp.Dock = DockStyle.Left;
-
-			IconButton buttonDown = new IconButton(this.favoritesToolbar);
-			buttonDown.AutoFocus = false;
-			buttonDown.TabNavigation = Widget.TabNavigationMode.Passive;
-			buttonDown.CommandObject = this.favoritesDownState.Command;
-			buttonDown.Dock = DockStyle.Left;
-
-			IconButton buttonBig = new IconButton(this.favoritesToolbar);
-			buttonBig.AutoFocus = false;
-			buttonBig.TabNavigation = Widget.TabNavigationMode.Passive;
-			buttonBig.CommandObject = this.favoritesBigState.Command;
-			buttonBig.Dock = DockStyle.Left;
 
 			this.favorites = new Scrollable(container);
 			this.favorites.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
@@ -779,6 +743,29 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.favoritesList.Add(item);
 		}
 
+		protected static VMenu CreateFavoritesMenu()
+		{
+			VMenu menu = new VMenu();
+
+			menu.Items.Add(AbstractFile.CreateMenuItem(Res.Commands.Cmd.Dialog.File.Favorites.Add));
+			menu.Items.Add(AbstractFile.CreateMenuItem(Res.Commands.Cmd.Dialog.File.Favorites.Remove));
+			menu.Items.Add(new MenuSeparator());
+			menu.Items.Add(AbstractFile.CreateMenuItem(Res.Commands.Cmd.Dialog.File.Favorites.Up));
+			menu.Items.Add(AbstractFile.CreateMenuItem(Res.Commands.Cmd.Dialog.File.Favorites.Down));
+			menu.Items.Add(new MenuSeparator());
+			menu.Items.Add(AbstractFile.CreateMenuItem(Res.Commands.Cmd.Dialog.File.Favorites.Big));
+
+			menu.AdjustSize();
+			return menu;
+		}
+
+		protected static MenuItem CreateMenuItem(Command command)
+		{
+			MenuItem item = new MenuItem();
+			item.CommandObject = command;
+			return item;
+		}
+
 		protected void UpdateSelectedFavorites()
 		{
 			//	Met à jour le favoris sélectionné selon le chemin d'accès en cours.
@@ -1012,8 +999,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				return;
 			}
-
-			this.favoritesExtend.GlyphShape = this.favoritesToolbar.Visibility ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 
 			if (this.optionsExtend != null)
 			{
@@ -1553,8 +1538,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private void HandleFavoritesExtendClicked(object sender, MessageEventArgs e)
 		{
-			this.favoritesToolbar.Visibility = !this.favoritesToolbar.Visibility;
-			this.UpdateButtons();
+			//	Clic sur le bouton pour le menu des favoris.
+			GlyphButton button = sender as GlyphButton;
+			if (button == null)  return;
+			Point pos = button.MapClientToScreen(new Point(0, 1));
+			VMenu menu = AbstractFile.CreateFavoritesMenu();
+			menu.Host = this.window;
+			menu.ShowAsContextMenu(this.window, pos);
 		}
 
 		private void HandleOptionsExtendClicked(object sender, MessageEventArgs e)
@@ -2340,7 +2330,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected Scrollable				favorites;
 		protected GlyphButton				favoritesExtend;
-		protected Widget					favoritesToolbar;
 		protected CellTable					table;
 		protected HSlider					slider;
 		protected TextFieldCombo			fieldPath;
