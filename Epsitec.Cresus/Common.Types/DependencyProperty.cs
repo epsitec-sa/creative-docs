@@ -31,6 +31,7 @@ namespace Epsitec.Common.Types
 
 			this.isPropertyAnICollectionOfDependencyObject = TypeRosetta.DoesTypeImplementInterface (this.propertyType, typeof (ICollection<DependencyObject>));
 			this.isPropertyAnICollectionOfString = TypeRosetta.DoesTypeImplementInterface (this.propertyType, typeof (ICollection<string>));
+			this.isPropertyAnICollectionOfAny = TypeRosetta.DoesTypeImplementGenericInterface (this.propertyType, "ICollection");
 
 			if ((this.isPropertyAnICollectionOfDependencyObject == false) &&
 				(this.isPropertyAnICollectionOfString == false))
@@ -117,6 +118,14 @@ namespace Epsitec.Common.Types
 			get
 			{
 				return this.isPropertyAnICollectionOfString;
+			}
+		}
+
+		public bool								IsPropertyTypeAnICollectionOfAny
+		{
+			get
+			{
+				return this.isPropertyAnICollectionOfAny;
 			}
 		}
 
@@ -583,6 +592,7 @@ namespace Epsitec.Common.Types
 		private bool							isPropertyDerivedFromDependencyObject;
 		private bool							isPropertyAnICollectionOfDependencyObject;
 		private bool							isPropertyAnICollectionOfString;
+		private bool							isPropertyAnICollectionOfAny;
 		private bool							isReadOnly;
 		private int								globalIndex;
 		private int								inheritedPropertyCacheMask;

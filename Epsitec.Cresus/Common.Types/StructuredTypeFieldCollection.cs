@@ -5,19 +5,17 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	public class StructuredTypeFieldCollection : ICollection<DependencyObject>
+	internal class StructuredTypeFieldCollection : ICollection<StructuredTypeField>
 	{
 		public StructuredTypeFieldCollection(StructuredType owner)
 		{
 			this.owner = owner;
 		}
 
-		#region ICollection<DependencyObject> Members
+		#region ICollection<StructuredTypeField> Members
 
-		void ICollection<DependencyObject>.Add(DependencyObject item)
+		void ICollection<StructuredTypeField>.Add(StructuredTypeField field)
 		{
-			StructuredTypeField field = item as StructuredTypeField;
-
 			if (!field.IsFullyDefined)
 			{
 				if (this.pendingFields == null)
@@ -34,22 +32,22 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		void ICollection<DependencyObject>.Clear()
+		void ICollection<StructuredTypeField>.Clear()
 		{
 			this.owner.Fields.Clear ();
 		}
 
-		bool ICollection<DependencyObject>.Contains(DependencyObject item)
+		bool ICollection<StructuredTypeField>.Contains(StructuredTypeField item)
 		{
 			throw new System.Exception ("The method or operation is not implemented.");
 		}
 
-		void ICollection<DependencyObject>.CopyTo(DependencyObject[] array, int arrayIndex)
+		void ICollection<StructuredTypeField>.CopyTo(StructuredTypeField[] array, int arrayIndex)
 		{
 			throw new System.Exception ("The method or operation is not implemented.");
 		}
 
-		int ICollection<DependencyObject>.Count
+		int ICollection<StructuredTypeField>.Count
 		{
 			get
 			{
@@ -57,7 +55,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		bool ICollection<DependencyObject>.IsReadOnly
+		bool ICollection<StructuredTypeField>.IsReadOnly
 		{
 			get
 			{
@@ -65,16 +63,16 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		bool ICollection<DependencyObject>.Remove(DependencyObject item)
+		bool ICollection<StructuredTypeField>.Remove(StructuredTypeField item)
 		{
 			throw new System.Exception ("The method or operation is not implemented.");
 		}
 
 		#endregion
 
-		#region IEnumerable<DependencyObject> Members
+		#region IEnumerable<StructuredTypeField> Members
 
-		IEnumerator<DependencyObject> IEnumerable<DependencyObject>.GetEnumerator()
+		IEnumerator<StructuredTypeField> IEnumerable<StructuredTypeField>.GetEnumerator()
 		{
 			if (this.cachedFields == null)
 			{
@@ -98,7 +96,20 @@ namespace Epsitec.Common.Types
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			if (this.cachedFields == null)
+			{
+				this.cachedFields = new List<StructuredTypeField> ();
+
+				foreach (KeyValuePair<string, INamedType> item in this.owner.Fields)
+				{
+					this.cachedFields.Add (new StructuredTypeField (item.Key, item.Value));
+				}
+			}
+
+			foreach (StructuredTypeField field in this.cachedFields)
+			{
+				yield return field;
+			}
 		}
 
 		#endregion
@@ -114,8 +125,8 @@ namespace Epsitec.Common.Types
 			field.DefineContainer (null);
 		}
 
-		private StructuredType owner;
-		private List<StructuredTypeField> pendingFields;
-		private List<StructuredTypeField> cachedFields;
+		private StructuredType					owner;
+		private List<StructuredTypeField>		pendingFields;
+		private List<StructuredTypeField>		cachedFields;
 	}
 }

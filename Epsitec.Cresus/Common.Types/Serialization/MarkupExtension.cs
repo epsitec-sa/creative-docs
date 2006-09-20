@@ -312,6 +312,31 @@ namespace Epsitec.Common.Types.Serialization
 			return (i < 0) ? null : buffer.ToString ();
 		}
 
+		public static string EnumerableToString(System.Collections.IEnumerable enumerable, Context context, ISerializationConverter converter)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			buffer.Append ("{Collection");
+
+			int i = -1;
+
+			foreach (object node in enumerable)
+			{
+				if (++i == 0)
+				{
+					buffer.Append (" ");
+				}
+				else
+				{
+					buffer.Append (", ");
+				}
+
+				buffer.Append (MarkupExtension.TextToString (converter.ConvertToString (node, context)));
+			}
+
+			buffer.Append ("}");
+			return (i < 0) ? null : buffer.ToString ();
+		}
 		
 		public static object Resolve(Context context, string markup, System.Type type)
 		{
@@ -710,6 +735,15 @@ namespace Epsitec.Common.Types.Serialization
 			{
 				return MarkupExtension.CollectionFromString<string> (context, args);
 			}
+			if (TypeRosetta.DoesTypeImplementInterface (type, typeof (System.Collections.IEnumerable)))
+			{
+				ISerializationConverter converter = context.FindConverterForCollection (type);
+				
+				if (context != null)
+				{
+					return MarkupExtension.EnumerableFromString (context, args, converter);
+				}
+			}
 			
 			return null;
 		}
@@ -721,6 +755,18 @@ namespace Epsitec.Common.Types.Serialization
 			for (int i = 1; i < args.Length; i++)
 			{
 				items[i-1] = (T) context.ResolveFromMarkup (args[i], typeof (T));
+			}
+
+			return items;
+		}
+		
+		public static System.Collections.IEnumerable EnumerableFromString(Context context, string[] args, ISerializationConverter converter)
+		{
+			object[] items = new object[args.Length-1];
+
+			for (int i = 1; i < args.Length; i++)
+			{
+				items[i-1] = converter.ConvertFromString (args[i], context);
 			}
 
 			return items;

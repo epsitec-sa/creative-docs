@@ -3,11 +3,10 @@
 
 using System.Collections.Generic;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.StructuredTypeField))]
-
 namespace Epsitec.Common.Types
 {
-	public class StructuredTypeField : DependencyObject
+	[SerializationConverter (typeof (StructuredTypeField.SerializationConverter))]
+	public class StructuredTypeField
 	{
 		public StructuredTypeField()
 		{
@@ -23,11 +22,12 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (string) this.GetValue (StructuredTypeField.NameProperty);
+				return this.name;
 			}
 			set
 			{
-				this.SetValue (StructuredTypeField.NameProperty, value);
+				this.name = value;
+				this.HandleNameOrTypeChanged ();
 			}
 		}
 
@@ -35,11 +35,12 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (INamedType) this.GetValue (StructuredTypeField.TypeProperty);
+				return this.type;
 			}
 			set
 			{
-				this.SetValue (StructuredTypeField.TypeProperty, value);
+				this.type = value;
+				this.HandleNameOrTypeChanged ();
 			}
 		}
 
@@ -47,8 +48,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.ContainsLocalValue (StructuredTypeField.NameProperty)
-					&& this.ContainsLocalValue (StructuredTypeField.TypeProperty);
+				return (this.name != null) && (this.type != null);
 			}
 		}
 
@@ -57,32 +57,45 @@ namespace Epsitec.Common.Types
 			this.container = container;
 		}
 
-		private static void HandleNameChanged(DependencyObject obj, object oldValue, object newValue)
+		private void HandleNameOrTypeChanged()
 		{
-			StructuredTypeField that = obj as StructuredTypeField;
-
-			if ((that.container != null) &&
-				(that.IsFullyDefined))
+			if ((this.container != null) &&
+				(this.IsFullyDefined))
 			{
-				that.container.NotifyFieldFullyDefined (that);
+				this.container.NotifyFieldFullyDefined (this);
 			}
 		}
 
-		private static void HandleTypeChanged(DependencyObject obj, object oldValue, object newValue)
-		{
-			StructuredTypeField that = obj as StructuredTypeField;
+		#region SerializationConverter Class
 
-			if ((that.container != null) &&
-				(that.IsFullyDefined))
+		public class SerializationConverter : ISerializationConverter
+		{
+			#region ISerializationConverter Members
+
+			public string ConvertToString(object value, IContextResolver context)
 			{
-				that.container.NotifyFieldFullyDefined (that);
+				StructuredTypeField field = (StructuredTypeField) value;
+				return string.Format ("{0};{1}", field.Name, field.Type.CaptionId);
 			}
+
+			public object ConvertFromString(string value, IContextResolver context)
+			{
+				string[] args = value.Split (';');
+				StructuredTypeField field = new StructuredTypeField ();
+
+				field.Name = args[0];
+				//	TODO: ...
+
+				return field;
+			}
+
+			#endregion
 		}
 
-
-		public static DependencyProperty NameProperty = DependencyProperty.Register ("Name", typeof (string), typeof (StructuredTypeField), new DependencyPropertyMetadata (StructuredTypeField.HandleNameChanged));
-		public static DependencyProperty TypeProperty = DependencyProperty.Register ("Type", typeof (INamedType), typeof (StructuredTypeField), new DependencyPropertyMetadata (StructuredTypeField.HandleTypeChanged));
-
+		#endregion
+		
 		private StructuredTypeFieldCollection container;
+		private string name;
+		private INamedType type;
 	}
 }
