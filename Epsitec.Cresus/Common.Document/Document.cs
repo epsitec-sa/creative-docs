@@ -76,7 +76,7 @@ namespace Epsitec.Common.Document
 
 			None	= 0,	// n'inclut aucune police
 			Used	= 1,	// inclut les polices utilisées
-			All		= 2,	// inclut toutes les polices définies
+			All		= 2,	// inclut les polices utilisées plus toutes les polices définies
 		}
 
 		public enum ImageIncludeMode
