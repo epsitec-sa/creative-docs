@@ -766,7 +766,8 @@ namespace Epsitec.Common.Types.Serialization
 
 			for (int i = 1; i < args.Length; i++)
 			{
-				items[i-1] = converter.ConvertFromString (args[i], context);
+				string text = (string) context.ResolveFromMarkup (args[i], typeof (string));
+				items[i-1] = converter.ConvertFromString (text, context);
 			}
 
 			return items;
