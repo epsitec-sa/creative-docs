@@ -126,6 +126,23 @@ namespace Epsitec.Common.Widgets
 		}
 
 		/// <summary>
+		/// Gets or sets a value indicating whether this dispatcher auto forwards commands
+		/// to its predecessor when linked in a dispatcher chain.
+		/// </summary>
+		/// <value><c>true</c> to auto forward commands; otherwise, <c>false</c>.</value>
+		public bool								AutoForwardCommands
+		{
+			get
+			{
+				return this.autoForwardCommands;
+			}
+			set
+			{
+				this.autoForwardCommands = value;
+			}
+		}
+
+		/// <summary>
 		/// Dispatches a command using the specified dispatcher and context chains.
 		/// </summary>
 		/// <param name="dispatcherChain">The dispatcher chain.</param>
@@ -461,6 +478,7 @@ namespace Epsitec.Common.Widgets
 		private string							name;
 		private CommandDispatcherLevel			level;
 		private long							id;
+		private bool							autoForwardCommands;
 
 		private Dictionary<Command, EventSlot>	eventHandlers = new Dictionary<Command, EventSlot> ();
 		

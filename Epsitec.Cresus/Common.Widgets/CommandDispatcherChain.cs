@@ -14,7 +14,11 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
-		public bool IsEmpty
+		/// <summary>
+		/// Gets a value indicating whether this chain is empty.
+		/// </summary>
+		/// <value><c>true</c> if this chain is empty; otherwise, <c>false</c>.</value>
+		public bool								IsEmpty
 		{
 			get
 			{
@@ -30,11 +34,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public IEnumerable<CommandDispatcher> Dispatchers
+		/// <summary>
+		/// Enumerates the dispatchers found in the chain.
+		/// </summary>
+		/// <value>The dispatchers.</value>
+		public IEnumerable<CommandDispatcher>	Dispatchers
 		{
 			get
 			{
 				System.WeakReference[] chain = this.chain.ToArray ();
+				bool enableForwarding = true;
 
 				for (int i = 0; i < chain.Length; i++)
 				{
@@ -44,14 +53,22 @@ namespace Epsitec.Common.Widgets
 					{
 						this.chain.Remove (chain[i]);
 					}
-					else
+					else if (enableForwarding)
 					{
 						yield return dispatcher;
+
+						enableForwarding = dispatcher.AutoForwardCommands;
 					}
 				}
 			}
 		}
 
+		/// <summary>
+		/// Checks if a command is known by some dispatcher in the command chain.
+		/// </summary>
+		/// <param name="command">The command.</param>
+		/// <param name="depth">The depth at which the dispatcher was found.</param>
+		/// <returns><c>true</c> if the command is known; <c>false</c> otherwise.</returns>
 		public bool Knows(Command command, out int depth)
 		{
 			depth = 0;
@@ -69,6 +86,12 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
+		/// <summary>
+		/// Selects the best command in an enumeration. In this case, best means
+		/// the command which is topmost in the chain.
+		/// </summary>
+		/// <param name="commands">The commands.</param>
+		/// <returns>The best command found or <c>null</c>.</returns>
 		public Command SelectBestCommand(IEnumerable<Command> commands)
 		{
 			int     nearest  = int.MaxValue;
