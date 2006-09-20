@@ -669,7 +669,6 @@ namespace Epsitec.Common.Document.Properties
 			//	Engraisse la bbox en fonction de la propriété.
 			if ( this.fillType == GradientFillType.None )  return;
 
-			Point center = sa.ToAbs(new Point(this.cx, this.cy));
 			Point p1 = sa.ToAbs(new Point(this.cx+this.sx, this.cy+this.sy));
 			Point p2 = sa.ToAbs(new Point(this.cx-this.sx, this.cy+this.sy));
 			Point p3 = sa.ToAbs(new Point(this.cx-this.sx, this.cy-this.sy));

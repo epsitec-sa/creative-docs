@@ -1207,7 +1207,7 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgSplash.Hide();
 
 			string title = Res.Strings.Application.TitleShort;
-			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
+			string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
 			string shortFilename = Misc.ExtractName(this.CurrentDocument.Filename, this.CurrentDocument.IsDirtySerialize);
 			string statistic = string.Format("<font size=\"80%\">{0}</font><br/>", this.CurrentDocument.Modifier.Statistic(false, false));
 			string question1 = string.Format(Res.Strings.Dialog.Question.Save.Part1, shortFilename);

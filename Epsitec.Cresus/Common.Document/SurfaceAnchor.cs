@@ -220,7 +220,11 @@ namespace Epsitec.Common.Document
 			if ( !this.dirty || this.obj == null )  return;
 
 			this.obj.UpdateSurfaceBox(out this.surfaceThin, out this.surfaceGeom);
-			this.dirty = false;
+
+			if (!this.surfaceThin.IsEmpty)
+			{
+				this.dirty = false;
+			}
 		}
 
 
