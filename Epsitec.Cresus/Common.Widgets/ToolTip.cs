@@ -393,8 +393,15 @@ namespace Epsitec.Common.Widgets
 			if (caption is string)
 			{
 				tip = new Contents ();
+
+				string text = caption as string;
+
+				if (string.IsNullOrEmpty (text))
+				{
+					text = " ";
+				}
 				
-				tip.Text                 = caption as string;
+				tip.Text                 = text;
 				tip.TextLayout.Alignment = Drawing.ContentAlignment.MiddleLeft;
 				
 				Drawing.Size size = tip.TextLayout.SingleLineSize;
