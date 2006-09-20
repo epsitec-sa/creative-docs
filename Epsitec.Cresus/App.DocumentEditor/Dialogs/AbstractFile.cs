@@ -745,6 +745,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected static VMenu CreateFavoritesMenu()
 		{
+			//	Crée le menu des commandes pour manipuler les favoris.
 			VMenu menu = new VMenu();
 
 			menu.Items.Add(AbstractFile.CreateMenuItem(Res.Commands.Cmd.Dialog.File.Favorites.Add));
@@ -761,6 +762,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected static MenuItem CreateMenuItem(Command command)
 		{
+			//	Crée une case d'un menu contenant une commande.
 			MenuItem item = new MenuItem();
 			item.CommandObject = command;
 			return item;

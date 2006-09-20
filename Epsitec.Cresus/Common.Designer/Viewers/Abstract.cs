@@ -725,7 +725,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommandTool("ObjectGroup");
 			this.UpdateCommandTool("ObjectGroupBox");
 
-			this.GetCommandState("Save").Enable = this.access.IsDirty;
+			this.GetCommandState("Save").Enable = this.module.IsDirty;
 			this.GetCommandState("SaveAs").Enable = true;
 
 			if (this is Panels)
