@@ -1038,6 +1038,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Indique qu'il faudra refaire les bbox.
 			this.dirtyBbox = true;
+			this.dirtyBboxBase = true;
 			this.surfaceAnchor.SetDirty();
 		}
 
@@ -1167,8 +1168,14 @@ namespace Epsitec.Common.Document.Objects
 		public void UpdateSurfaceBox(out Drawing.Rectangle surfThin, out Drawing.Rectangle surfGeom)
 		{
 			//	Calcule les 2 rectangles pour SurfaceAnchor, qui sont les bbox
-			//	(thin et geom) de l'objet lorsqu'il n'est pas tourné.
-			if ( this.direction == 0.0 )
+			//	(Thin et Geom) de l'objet lorsqu'il n'est pas tourné.
+			if (this.dirtyBboxBase)  // est-ce que les bbox Thin et Geom ne sont pas à jour ?
+			{
+				this.UpdateBoundingBox();  // on les recalcule (toutes, même Full)
+				this.dirtyBbox = false;  // elles sont de nouveau à jour
+			}
+
+			if (this.direction == 0.0)
 			{
 				surfThin = this.bboxThin;
 				surfGeom = this.bboxGeom;
@@ -1252,6 +1259,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.bboxFull = this.bboxGeom;
+			this.dirtyBboxBase = false;  // les bbox Thin et Geom sont déjà à jour (Full pas encore)
 
 			if ( !this.document.IsSurfaceRotation )
 			{
@@ -2467,6 +2475,7 @@ namespace Epsitec.Common.Document.Objects
 			this.allSelected         = src.allSelected;
 			this.edited              = src.edited;
 			this.dirtyBbox           = src.dirtyBbox;
+			this.dirtyBboxBase       = src.dirtyBboxBase;
 			this.bboxThin            = src.bboxThin;
 			this.bboxGeom            = src.bboxGeom;
 			this.bboxFull            = src.bboxFull;
@@ -3564,6 +3573,7 @@ namespace Epsitec.Common.Document.Objects
 		protected bool							allSelected;
 		protected bool							isCreating;
 		protected bool							dirtyBbox = true;
+		protected bool							dirtyBboxBase = true;
 		protected bool							autoScrollOneShot;
 		protected Drawing.Rectangle				bboxThin = Drawing.Rectangle.Empty;
 		protected Drawing.Rectangle				bboxGeom = Drawing.Rectangle.Empty;
