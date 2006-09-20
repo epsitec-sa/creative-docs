@@ -1529,6 +1529,9 @@ namespace Epsitec.App.DocumentEditor
 
 					filename = this.dlgFileSave.Filename;
 					filename = DocumentEditor.AdjustFilename(filename);
+
+					this.CurrentDocument.FontIncludeModeValue = this.dlgFileSave.FontIncludeMode;
+					this.CurrentDocument.ImageIncludeModeValue = this.dlgFileSave.ImageIncludeMode;
 				}
 			}
 			else
@@ -1540,9 +1543,6 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.DialogWarningRedirection();
 			}
-
-			this.CurrentDocument.FontIncludeModeValue = this.dlgFileSave.FontIncludeMode;
-			this.CurrentDocument.ImageIncludeModeValue = this.dlgFileSave.ImageIncludeMode;
 
 			this.MouseShowWait();
 			string err = this.CurrentDocument.Write(filename);
@@ -1590,13 +1590,13 @@ namespace Epsitec.App.DocumentEditor
 			filename = this.dlgFileSaveModel.Filename;
 			filename = DocumentEditor.AdjustFilename(filename);
 
+			this.CurrentDocument.FontIncludeModeValue = this.dlgFileSaveModel.FontIncludeMode;
+			this.CurrentDocument.ImageIncludeModeValue = this.dlgFileSaveModel.ImageIncludeMode;
+
 			if (Document.RedirectionFilename(ref filename))
 			{
 				this.DialogWarningRedirection();
 			}
-
-			this.CurrentDocument.FontIncludeModeValue = this.dlgFileSaveModel.FontIncludeMode;
-			this.CurrentDocument.ImageIncludeModeValue = this.dlgFileSaveModel.ImageIncludeMode;
 
 			this.MouseShowWait();
 			string err = this.CurrentDocument.Write(filename);
