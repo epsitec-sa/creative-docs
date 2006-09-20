@@ -1543,10 +1543,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Clic sur le bouton pour le menu des favoris.
 			GlyphButton button = sender as GlyphButton;
 			if (button == null)  return;
-			Point pos = button.MapClientToScreen(new Point(0, 1));
 			VMenu menu = AbstractFile.CreateFavoritesMenu();
 			menu.Host = this.window;
-			menu.ShowAsContextMenu(this.window, pos);
+			TextFieldCombo.AdjustComboSize(button, menu);
+			menu.ShowAsComboList(button, Point.Zero, button);
 		}
 
 		private void HandleOptionsExtendClicked(object sender, MessageEventArgs e)
