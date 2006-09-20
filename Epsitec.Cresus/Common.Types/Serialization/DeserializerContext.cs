@@ -77,6 +77,11 @@ namespace Epsitec.Common.Types.Serialization
 				{
 					DeserializerContext.RestoreCollection<string> (obj, field, property, data);
 				}
+				else if ((TypeRosetta.DoesTypeImplementInterface (dataType, typeof (System.Collections.IEnumerable))) &&
+					/**/ (property.IsPropertyTypeAnICollectionOfAny))
+				{
+					DeserializerContext.RestoreEnumerable (obj, field, property, data);
+				}
 				else if (data is Binding)
 				{
 					//	Rebind property if it was a binding...
@@ -114,6 +119,30 @@ namespace Epsitec.Common.Types.Serialization
 			foreach (T item in dataSource)
 			{
 				collection.Add (item);
+			}
+		}
+
+		private static void RestoreEnumerable(DependencyObject obj, string field, DependencyProperty property, object data)
+		{
+			System.Type                    collectionType;
+			object                         collection = obj.GetValue (property);
+			ISerializationConverter        converter  = Context.GetActiveContext ().FindConverterForCollection (property.PropertyType, out collectionType);
+			System.Collections.IEnumerable dataSource = data as System.Collections.IEnumerable;
+
+			if (collectionType == null)
+			{
+				throw new System.ArgumentException (string.Format ("Property {0} does not follow Collection semantics", field));
+			}
+			if (dataSource == null)
+			{
+				throw new System.ArgumentException (string.Format ("Property {0} cannot be restored", field));
+			}
+
+			collectionType.InvokeMember ("Clear", System.Reflection.BindingFlags.InvokeMethod, null, collection, new object[0]);
+
+			foreach (object item in dataSource)
+			{
+				collectionType.InvokeMember ("Add", System.Reflection.BindingFlags.InvokeMethod, null, collection, new object[] { item });
 			}
 		}
 	}

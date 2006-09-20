@@ -93,6 +93,10 @@ namespace Epsitec.Common.Types.Serialization
 					{
 						continue;
 					}
+					if (this.StoreFieldAsStringifyableCollection (obj, entry, metadata))
+					{
+						continue;
+					}
 				
 				stringify:
 					
@@ -157,6 +161,39 @@ namespace Epsitec.Common.Types.Serialization
 			{
 				return false;
 			}
+		}
+
+		private bool StoreFieldAsStringifyableCollection(DependencyObject obj, PropertyValuePair entry, DependencyPropertyMetadata metadata)
+		{
+			System.Collections.IEnumerable enumerable = entry.Value as System.Collections.IEnumerable;
+
+			if (enumerable == null)
+			{
+				return false;
+			}
+
+			System.Type type;
+			ISerializationConverter converter = this.FindConverterForCollection (entry.Value.GetType (), out type);
+
+			if (converter != null)
+			{
+				int count = (int) type.InvokeMember ("Count", System.Reflection.BindingFlags.GetProperty, null, entry.Value, new object[0]);
+
+				if (count > 0)
+				{
+					string markup = MarkupExtension.EnumerableToString (enumerable, this, converter);
+
+					if (!string.IsNullOrEmpty (markup))
+					{
+						this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
+					}
+					
+				}
+
+				return true;
+			}
+			
+			return false;
 		}
 
 		private void StoreObjectChildren(DependencyObject obj)

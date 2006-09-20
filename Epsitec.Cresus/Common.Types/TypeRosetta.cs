@@ -514,7 +514,31 @@ namespace Epsitec.Common.Types
 
 			return false;
 		}
-		
+
+
+		/// <summary>
+		/// Verifies if the type implements the specified generic interface.
+		/// </summary>
+		/// <param name="type">Type to check.</param>
+		/// <param name="name">The name of the interface to find.</param>
+		/// <returns><c>true</c> if the interface is found; otherwise, <c>false</c>.</returns>
+		public static bool DoesTypeImplementGenericInterface(System.Type type, string name)
+		{
+			System.Type[] types = type.GetInterfaces ();
+
+			name = string.Concat (name, "`");
+
+			foreach (System.Type item in types)
+			{
+				if ((item.Name.StartsWith (name)) &&
+					(item.IsGenericType))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
 		
 		public static readonly DependencyProperty TypeObjectProperty = DependencyProperty.RegisterAttached ("TypeObject", typeof (object), typeof (TypeRosetta.Properties));
 

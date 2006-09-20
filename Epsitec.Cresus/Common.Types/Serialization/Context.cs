@@ -19,6 +19,7 @@ namespace Epsitec.Common.Types.Serialization
 			this.externalMap = new MapTag<object> ();
 			this.typeIds = new Dictionary<System.Type, int> ();
 			this.unknownMap = new MapId<object> ();
+			this.converters = new Dictionary<System.Type, ISerializationConverter> ();
 
 			Context.Link (this);
 		}
@@ -198,6 +199,57 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 
+		public ISerializationConverter FindConverter(System.Type type)
+		{
+			ISerializationConverter converter;
+			
+			if (this.converters.TryGetValue (type, out converter))
+			{
+				return converter;
+			}
+			
+			converter = Serialization.DependencyClassManager.Current.FindSerializationConverter (type);
+			converter = converter ?? InvariantConverter.GetSerializationConverter (type);
+
+			this.converters[type] = converter;
+
+			return converter;
+		}
+
+		public ISerializationConverter FindConverterForCollection(System.Type collectionType)
+		{
+			System.Type countaleType;
+			return this.FindConverterForCollection (collectionType, out countaleType);
+		}
+
+		public ISerializationConverter FindConverterForCollection(System.Type collectionType, out System.Type countableType)
+		{
+			System.Type[] types = collectionType.GetInterfaces ();
+
+			foreach (System.Type type in types)
+			{
+				if ((type.Name == "ICollection`1") &&
+					(type.IsGenericType))
+				{
+					System.Type[] genericArgs = type.GetGenericArguments ();
+
+					if (genericArgs.Length == 1)
+					{
+						ISerializationConverter converter = this.FindConverter (genericArgs[0]);
+
+						if (converter != null)
+						{
+							countableType = type;
+							return converter;
+						}
+					}
+				}
+			}
+
+			countableType = null;
+			return null;
+		}
+
 		#region IContextResolver Members
 
 		public string ResolveToMarkup(object value)
@@ -368,6 +420,7 @@ namespace Epsitec.Common.Types.Serialization
 		private MapTag<object>					externalMap;
 		private Dictionary<System.Type, int>	typeIds;
 		private MapId<object>					unknownMap;
+		private Dictionary<System.Type, ISerializationConverter> converters;
 		
 		protected IO.AbstractWriter				writer;
 		protected IO.AbstractReader				reader;
