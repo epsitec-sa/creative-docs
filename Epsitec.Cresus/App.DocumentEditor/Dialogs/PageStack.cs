@@ -297,8 +297,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			Point pos = button.MapClientToScreen(new Point(0, button.ActualHeight));
 			VMenu menu = this.CreatePagesMenu();
 			menu.Host = button.Window;
-			pos.Y += menu.ActualHeight;
-			menu.ShowAsComboList (button, pos, button);
+			pos.Y += menu.PreferredHeight;
+			menu.ShowAsComboList(button, pos, button);
 		}
 
 		public VMenu CreatePagesMenu()

@@ -1139,12 +1139,12 @@ namespace Epsitec.App.DocumentEditor
 			if ( !this.IsCurrentDocument )  return;
 			StatusField sf = sender as StatusField;
 			if ( sf == null )  return;
-			Point pos = sf.MapClientToScreen(new Point(0, sf.ActualHeight));
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			VMenu menu = Menus.ZoomMenu.CreateZoomMenu(context.Zoom, context.ZoomPage, null);
-			menu.Host = this;
-			pos.Y += menu.ActualHeight;
-			menu.ShowAsContextMenu(this.Window, pos);  // -> commandes "ZoomChange"
+			menu.Host = sf.Window;
+			Point pos = sf.MapClientToScreen(new Point(0, sf.ActualHeight));
+			pos.Y += menu.PreferredHeight;
+			menu.ShowAsComboList(sf, pos, sf);
 		}
 
 		private void HandleSliderZoomChanged(object sender)
@@ -3140,11 +3140,11 @@ namespace Epsitec.App.DocumentEditor
 			//	Bouton "menu des pages" cliqué.
 			Button button = sender as Button;
 			if ( button == null )  return;
-			Point pos = button.MapClientToScreen(new Point(0, button.ActualHeight));
 			VMenu menu = this.CreatePagesMenu();
-			menu.Host = this;
-			pos.Y += menu.ActualHeight;
-			menu.ShowAsComboList(this, pos, button);
+			menu.Host = button.Window;
+			Point pos = button.MapClientToScreen(new Point(0, button.ActualHeight));
+			pos.Y += menu.PreferredHeight;
+			menu.ShowAsComboList(button, pos, button);
 		}
 
 		[Command ("PageSelect")]
@@ -3224,11 +3224,11 @@ namespace Epsitec.App.DocumentEditor
 			//	Bouton "menu des calques" cliqué.
 			Button button = sender as Button;
 			if ( button == null )  return;
-			Point pos = button.MapClientToScreen(new Point(0, button.ActualHeight));
 			VMenu menu = this.CreateLayersMenu();
-			menu.Host = this;
-			pos.X -= menu.ActualWidth;
-			menu.ShowAsComboList(this, pos, button);
+			menu.Host = button.Window;
+			Point pos = button.MapClientToScreen(new Point(0, button.ActualHeight));
+			pos.X -= menu.PreferredWidth;
+			menu.ShowAsComboList(button, pos, button);
 		}
 
 		[Command ("LayerSelect")]
