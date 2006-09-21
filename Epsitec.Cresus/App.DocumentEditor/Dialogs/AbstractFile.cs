@@ -1550,14 +1550,38 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Crée le menu pour choisir un dossier visité.
 			VMenu menu = new VMenu();
 
-			for (int i=0; i<this.directoriesVisited.Count; i++)
+			int max = 10;  // +/-, donc 20 lignes au maximum
+			int end   = System.Math.Min(this.directoriesVisitedIndex+max, this.directoriesVisited.Count-1);
+			int start = System.Math.Max(end-max*2, 0);
+
+			if (start > 0)  // commence après le début ?
+			{
+				menu.Items.Add(this.CreateVisitedMenuItem(0));  // met "1: dossier"
+
+				if (start > 1)
+				{
+					menu.Items.Add(new MenuSeparator());  // met séparateur "------"
+				}
+			}
+
+			for (int i=start; i<=end; i++)
 			{
 				if (i-1 == this.directoriesVisitedIndex)
 				{
-					menu.Items.Add(new MenuSeparator());
+					menu.Items.Add(new MenuSeparator());  // met séparateur "------"
 				}
 
-				menu.Items.Add(this.CreateVisitedMenuItem(i));
+				menu.Items.Add(this.CreateVisitedMenuItem(i));  // met "n: dossier"
+			}
+
+			if (end < this.directoriesVisited.Count-1)  // fini avant la fin ?
+			{
+				if (end < this.directoriesVisited.Count-2)
+				{
+					menu.Items.Add(new MenuSeparator());  // met séparateur "------"
+				}
+				
+				menu.Items.Add(this.CreateVisitedMenuItem(this.directoriesVisited.Count-1));  // met "n: dossier"
 			}
 
 			menu.AdjustSize();
@@ -1567,33 +1591,40 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected  MenuItem CreateVisitedMenuItem(int index)
 		{
 			//	Crée une case du menu pour choisir un dossier visité.
-			FolderItem folder = this.directoriesVisited[index];
-
-			bool isCurrent = (index == this.directoriesVisitedIndex);
-			bool isNext    = (index >  this.directoriesVisitedIndex);
-
-			string icon = "";
-			if (!isNext)
+			if (index == -1)
 			{
-				icon = isCurrent ? Misc.Icon("ActiveCurrent") : Misc.Icon("ActiveNo");
+				return new MenuItem("ChangeVisitedDirectory", "", "...", null);
 			}
-
-			string text = TextLayout.ConvertToTaggedText(folder.DisplayName);
-			if (isNext)
+			else
 			{
-				text = Misc.Italic(text);
+				FolderItem folder = this.directoriesVisited[index];
+
+				bool isCurrent = (index == this.directoriesVisitedIndex);
+				bool isNext    = (index >  this.directoriesVisitedIndex);
+
+				string icon = "";
+				if (!isNext)
+				{
+					icon = isCurrent ? Misc.Icon("ActiveCurrent") : Misc.Icon("ActiveNo");
+				}
+
+				string text = TextLayout.ConvertToTaggedText(folder.DisplayName);
+				if (isNext)
+				{
+					text = Misc.Italic(text);
+				}
+				text = string.Format("{0}: {1}", (index+1).ToString(), text);
+
+				string tooltip = TextLayout.ConvertToTaggedText(folder.FullPath);
+
+				string name = index.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+				MenuItem item = new MenuItem("ChangeVisitedDirectory", icon, text, null, name);
+				item.Pressed += new MessageEventHandler(this.HandleVisitedMenuPressed);
+				ToolTip.Default.SetToolTip(item, tooltip);
+
+				return item;
 			}
-			text = string.Format("{0}: {1}", (index+1).ToString(), text);
-
-			string tooltip = TextLayout.ConvertToTaggedText(folder.FullPath);
-
-			string name = index.ToString(System.Globalization.CultureInfo.InvariantCulture);
-
-			MenuItem item = new MenuItem("ChangeVisitedDirectory", icon, text, null, name);
-			item.Pressed += new MessageEventHandler(this.HandleVisitedMenuPressed);
-			ToolTip.Default.SetToolTip(item, tooltip);
-
-			return item;
 		}
 
 		void HandleVisitedMenuPressed(object sender, MessageEventArgs e)
