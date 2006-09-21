@@ -106,6 +106,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public override bool HasTextLabel
+		{
+			get
+			{
+				return false;
+			}
+		}
+
 		protected void UpdateText(string iconName)
 		{
 			//	Met à jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
