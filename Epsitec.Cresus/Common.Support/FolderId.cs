@@ -25,7 +25,7 @@ namespace Epsitec.Common.Support
 
 		AdminTools,
 		AltStartup,
-		ApplicatioData,
+		ApplicationData,
 		CdBurnArea,
 		Cookies,
 		DesktopDirectory,
