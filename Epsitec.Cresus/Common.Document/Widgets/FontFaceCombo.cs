@@ -103,7 +103,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.fontSelector.SelectedFontFace = this.Text;
 			this.fontSelector.SelectionChanged += new Support.EventHandler(this.HandleSelectorSelectionChanged);
 			
-			MenuItem.SetMenuHost(this, new MenuHost(menu));
+			MenuItem.SetMenuHost(this, new ScrollableMenuHost(menu));
 			
 			return menu;
 		}

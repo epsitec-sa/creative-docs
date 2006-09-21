@@ -1142,9 +1142,8 @@ namespace Epsitec.App.DocumentEditor
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			VMenu menu = Menus.ZoomMenu.CreateZoomMenu(context.Zoom, context.ZoomPage, null);
 			menu.Host = sf.Window;
-			Point pos = sf.MapClientToScreen(new Point(0, sf.ActualHeight));
-			pos.Y += menu.PreferredHeight;
-			menu.ShowAsComboList(sf, pos, sf);
+			TextFieldCombo.AdjustComboSize(sf, menu, false);
+			menu.ShowAsComboList(sf, Point.Zero, sf);
 		}
 
 		private void HandleSliderZoomChanged(object sender)
@@ -2767,7 +2766,7 @@ namespace Epsitec.App.DocumentEditor
 			menu.Behavior.Accepted += new EventHandler(this.HandleStretchTypeMenuAccepted);
 			menu.Behavior.Rejected += new EventHandler(this.HandleStretchTypeMenuRejected);
 			menu.MinWidth = button.ActualWidth+type.ActualWidth;
-			TextFieldCombo.AdjustComboSize(button, menu);
+			TextFieldCombo.AdjustComboSize(button, menu, false);
 			menu.ShowAsComboList(button, Point.Zero, type);
 			this.WidgetStretchTypeMenuEngaged(true);
 		}
@@ -3142,9 +3141,8 @@ namespace Epsitec.App.DocumentEditor
 			if ( button == null )  return;
 			VMenu menu = this.CreatePagesMenu();
 			menu.Host = button.Window;
-			Point pos = button.MapClientToScreen(new Point(0, button.ActualHeight));
-			pos.Y += menu.PreferredHeight;
-			menu.ShowAsComboList(button, pos, button);
+			TextFieldCombo.AdjustComboSize(button, menu, false);
+			menu.ShowAsComboList(button, Point.Zero, button);
 		}
 
 		[Command ("PageSelect")]
@@ -3226,9 +3224,8 @@ namespace Epsitec.App.DocumentEditor
 			if ( button == null )  return;
 			VMenu menu = this.CreateLayersMenu();
 			menu.Host = button.Window;
-			Point pos = button.MapClientToScreen(new Point(0, button.ActualHeight));
-			pos.X -= menu.PreferredWidth;
-			menu.ShowAsComboList(button, pos, button);
+			TextFieldCombo.AdjustComboSize(button, menu, false);
+			menu.ShowAsComboList(button, Point.Zero, button);
 		}
 
 		[Command ("LayerSelect")]

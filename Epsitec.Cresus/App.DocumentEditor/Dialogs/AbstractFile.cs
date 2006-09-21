@@ -1644,7 +1644,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if (button == null)  return;
 			VMenu menu = this.CreateVisitedMenu();
 			menu.Host = this.window;
-			TextFieldCombo.AdjustComboSize(button, menu);
+			TextFieldCombo.AdjustComboSize(button, menu, false);
 			menu.ShowAsComboList(button, Point.Zero, button);
 		}
 
