@@ -384,7 +384,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.toolbarExtend.Dock = DockStyle.Left;
 			this.toolbarExtend.Margins = new Margins(0, 0, 2, 2);
 			this.toolbarExtend.Clicked += new MessageEventHandler(this.HandleToolbarExtendClicked);
-			//?ToolTip.Default.SetToolTip(this.toolbarExtend, Res.Strings.Dialog.File.Tooltip.Extend.Include);
+			ToolTip.Default.SetToolTip(this.toolbarExtend, Res.Strings.Dialog.File.Tooltip.ExtendToolbar);
 
 			StaticText label = new StaticText(group);
 			label.Text = this.isSave ? Res.Strings.Dialog.File.LabelPath.Save : Res.Strings.Dialog.File.LabelPath.Open;
@@ -419,7 +419,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.navigateCombo.Dock = DockStyle.Right;
 			this.navigateCombo.Margins = new Margins(0, 10, 0, 0);
 			this.navigateCombo.Clicked += new MessageEventHandler(this.HandleNavigateComboClicked);
-			//?ToolTip.Default.SetToolTip(this.navigateCombo, Res.Strings.Dialog.File.Tooltip.Extend.Favorites);
+			ToolTip.Default.SetToolTip(this.navigateCombo, Res.Strings.Dialog.File.Tooltip.VisitedMenu);
 
 			IconButton buttonNext = new IconButton(group);
 			buttonNext.AutoFocus = false;
@@ -624,7 +624,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.optionsExtend.Dock = DockStyle.Left;
 				this.optionsExtend.Margins = new Margins(0, 0, 3, 3);
 				this.optionsExtend.Clicked += new MessageEventHandler(this.HandleOptionsExtendClicked);
-				ToolTip.Default.SetToolTip(this.optionsExtend, Res.Strings.Dialog.File.Tooltip.Extend.Include);
+				ToolTip.Default.SetToolTip(this.optionsExtend, Res.Strings.Dialog.File.Tooltip.ExtendInclude);
 			}
 
 			//	Dans l'ordre de droite à gauche:
@@ -772,31 +772,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.favorites.Panel.Children.Add(f);
 			this.favoritesList.Add(item);
-		}
-
-		protected static VMenu CreateFavoritesMenu()
-		{
-			//	Crée le menu des commandes pour manipuler les favoris.
-			VMenu menu = new VMenu();
-
-			menu.Items.Add(AbstractFile.CreateMenuItem(Res.Commands.Cmd.Dialog.File.Favorites.Add));
-			menu.Items.Add(AbstractFile.CreateMenuItem(Res.Commands.Cmd.Dialog.File.Favorites.Remove));
-			menu.Items.Add(new MenuSeparator());
-			menu.Items.Add(AbstractFile.CreateMenuItem(Res.Commands.Cmd.Dialog.File.Favorites.Up));
-			menu.Items.Add(AbstractFile.CreateMenuItem(Res.Commands.Cmd.Dialog.File.Favorites.Down));
-			menu.Items.Add(new MenuSeparator());
-			menu.Items.Add(AbstractFile.CreateMenuItem(Res.Commands.Cmd.Dialog.File.Favorites.Big));
-
-			menu.AdjustSize();
-			return menu;
-		}
-
-		protected static MenuItem CreateMenuItem(Command command)
-		{
-			//	Crée une case d'un menu contenant une commande.
-			MenuItem item = new MenuItem();
-			item.CommandObject = command;
-			return item;
 		}
 
 		protected void UpdateSelectedFavorites()

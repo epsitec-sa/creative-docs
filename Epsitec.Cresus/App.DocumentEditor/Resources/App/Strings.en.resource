@@ -234,7 +234,8 @@
   <data id="0D7" mod="1">Template</data>
   <data id="0E7" mod="1">The document &lt;b&gt;{0}&lt;/b&gt; does not exist.&lt;br/&gt;&lt;br/&gt;{1}</data>
   <data id="0F7" mod="1">New</data>
-  <data id="0G7" mod="1">Options for the favorites</data>
+  <data id="0G7" mod="1">
+  </data>
   <data id="0H7" mod="1">The contents of the &lt;b&gt;{0}&lt;/b&gt; folder cannot be modified.&lt;br/&gt;The file will be saved to &lt;b&gt;{1}&lt;/b&gt; instead.</data>
   <data id="091">Drag here to resize the window</data>
   <data id="0I7" mod="1">{0} MB</data>
@@ -258,5 +259,7 @@
   <data id="0S7">
   </data>
   <data id="0T7">
+  </data>
+  <data id="0U7">
   </data>
 </bundle>
