@@ -28,7 +28,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Crée et montre la fenêtre du dialogue.
 			if ( this.window == null )
 			{
-				this.CreateAll("FileNew", new Size(520, 379), Res.Strings.Dialog.New.Title, 50);
+				this.CreateAll("FileNew", new Size(600, 480), Res.Strings.Dialog.New.Title, 50);
 			}
 
 			this.UpdateAll(0, false);  // sélectionne 'Document vide'

@@ -529,8 +529,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			StaticText label = new StaticText(group);
 			label.Text = this.isModel ? Res.Strings.Dialog.File.LabelMod : Res.Strings.Dialog.File.LabelDoc;
-			label.PreferredWidth = 80;
+			label.PreferredWidth = 140-10-1;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Dock = DockStyle.Left;
+			label.Margins = new Margins(0, 10, 0, 0);
 
 			this.fieldFilename = new TextField(group);
 			this.fieldFilename.Dock = DockStyle.Fill;

@@ -294,11 +294,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			Button button = sender as Button;
 			if ( button == null )  return;
-			Point pos = button.MapClientToScreen(new Point(0, button.ActualHeight));
 			VMenu menu = this.CreatePagesMenu();
 			menu.Host = button.Window;
-			pos.Y += menu.PreferredHeight;
-			menu.ShowAsComboList(button, pos, button);
+			TextFieldCombo.AdjustComboSize(button, menu, false);
+			menu.ShowAsComboList(button, Point.Zero, button);
 		}
 
 		public VMenu CreatePagesMenu()
