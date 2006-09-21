@@ -26,12 +26,26 @@ namespace Epsitec.Common.Support
 		public long Add(Drawing.Image image)
 		{
 			long id = -1;
+
+			//	Beware: the GC can release any Item at any time asynchronously by
+			//	calling Release, so be very cautious in this method !
 			
 			byte[] sourceData = image.BitmapImage.GetRawBitmapBytes ();
 			long   sourceCrc  = IO.Checksum.ComputeCrc32 (delegate (IO.IChecksum checksum) { checksum.Update (sourceData); });
+
+			Item[] items;
+			Item matchingItem = new Item ();
 			
-			foreach (Item item in this.images.Values)
+			lock (this.images)
 			{
+				items = new Item[this.images.Count];
+				this.images.Values.CopyTo (items, 0);
+			}
+			
+			for (int j = 0; j < items.Length; j++)
+			{
+				Item item = items[j];
+				
 				if (item.crc == sourceCrc)
 				{
 					byte[] cacheData = item.image.BitmapImage.GetRawBitmapBytes ();
@@ -51,7 +65,8 @@ namespace Epsitec.Common.Support
 
 						if (ok)
 						{
-							id = item.id;
+							id           = item.id;
+							matchingItem = item;
 							break;
 						}
 					}
@@ -65,7 +80,7 @@ namespace Epsitec.Common.Support
 					Item item = new Item ();
 
 					item.image = image;
-					item.id = this.nextIndex++;
+					item.id    = this.nextIndex++;
 					item.crc   = sourceCrc;
 					item.count = 1;
 
@@ -75,9 +90,17 @@ namespace Epsitec.Common.Support
 				}
 				else
 				{
-					Item item = this.images[id];
+					Item item;
 
-					item.count++;
+					if (this.images.TryGetValue (id, out item))
+					{
+						item.count++;
+					}
+					else
+					{
+						item       = matchingItem;
+						item.count = 1;
+					}
 
 					this.images[item.id] = item;
 
