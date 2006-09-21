@@ -673,6 +673,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public virtual bool							HasTextLabel
+		{
+			get
+			{
+				return true;
+			}
+		}
 
 		public string								FullPathName
 		{
@@ -2967,9 +2974,12 @@ namespace Epsitec.Common.Widgets
 
 				if (caption != null)
 				{
+					string textLabel = null;
+
 					if (caption.HasLabels)
 					{
-						this.DefineTextFromCaption (TextLayout.SelectBestText (this.TextLayout, caption.SortedLabels, this.GetTextLayoutSize ()));
+						textLabel = TextLayout.SelectBestText (this.TextLayout, caption.SortedLabels, this.GetTextLayoutSize ());
+						this.DefineTextFromCaption (textLabel);
 					}
 
 					if (caption.HasDescription)
@@ -2977,7 +2987,18 @@ namespace Epsitec.Common.Widgets
 						Collections.ShortcutCollection shortcuts = Shortcut.GetShortcuts (caption);
 						string tip = Shortcut.AppendShortcutText (caption.Description, shortcuts);
 
-						this.DefineToolTipFromCaption (tip);
+						//	If the widget does not display a text label or if the tool tip
+						//	is different from the label, define which tool tip to use.
+
+						if ((this.HasTextLabel == false) ||
+							(textLabel != tip))
+						{
+							this.DefineToolTipFromCaption (tip);
+						}
+						else
+						{
+							this.DefineToolTipFromCaption (null);
+						}
 					}
 
 					if (caption.HasIcon)

@@ -57,7 +57,11 @@ namespace Epsitec.Common.Widgets
 					{
 						yield return dispatcher;
 
-						enableForwarding = dispatcher.AutoForwardCommands;
+						//	Stop forwarding as soon as the command dispatcher says so or we
+						//	have reached an application level dispatcher; we don't bubble
+						//	the commands from one application to another.
+						
+						enableForwarding = dispatcher.AutoForwardCommands && (dispatcher.Level != CommandDispatcherLevel.Root);
 					}
 				}
 			}

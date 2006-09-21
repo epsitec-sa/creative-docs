@@ -14,52 +14,18 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class CommandDispatcher : DependencyObject
 	{
-		static CommandDispatcher()
-		{
-			//	Capture le nom et les arguments d'une commande complexe, en filtrant les
-			//	caractères et vérifiant ainsi la validité de la syntaxe. Voici l'inter-
-			//	prétation de la regex :
-			//
-			//	- un <name> est constitué de caractères alphanumériques;
-			//	- suit une parenthèse ouvrante, avec évtl. des espaces;
-			//	- suit zéro à n arguments <arg> séparés par une virgule;
-			//	- chaque <arg> est soit une chaîne "", soit une chaîne '',
-			//	  soit une valeur numérique, soit un nom (avec des '.' pour
-			//	  séparer les divers termes).
-			//
-			//	La capture retourne dans l'ordre <name>, puis la liste des <arg> trouvés.
-			//	Il peut y avoir zéro à n arguments séparés par des virgules, le tout entre
-			//	parenthèses.
-			
-			string regex_1 = @"\A(?<name>([a-zA-Z](\w|(\.\w))*))" +
-				//	                      <---- nom valide --->
-				/**/       @"\s*\(\s*((((?<arg>(" +
-				/**/                          @"(\""[^\""]{0,}\"")|" +
-				//	                            <-- guillemets -->
-				/**/                          @"(\'[^\']{0,}\')|" +
-				//	                            <-- apostr. -->
-				/**/                          @"((\-|\+)?((\d{1,12}(\.\d{0,12})?0*)|(\d{0,12}\.(\d{0,12})?0*)))|" +
-				//	                            <----------- valeur décimale avec signe en option ------------>
-				/**/                          @"([a-zA-Z](\w|(\.\w))*)))" +
-				//	                            <---- nom valide ---->
-				/**/                         @"((\s*\,\s*)|(\s*\)\s*\z)))*)|(\)\s*))\z";
-			
-			RegexOptions options = RegexOptions.Compiled | RegexOptions.ExplicitCapture;
-			
-			CommandDispatcher.commandArgRegex = new Regex (regex_1, options);
-			CommandDispatcher.commandAttributeType = typeof (Support.CommandAttribute);
-			
-			CommandDispatcher defaultDispatcher = new CommandDispatcher ("default", CommandDispatcherLevel.Root);
-			
-			System.Diagnostics.Debug.Assert (defaultDispatcher == CommandDispatcher.defaultDispatcher);
-			System.Diagnostics.Debug.Assert (defaultDispatcher.id == 1);
-		}
-		
-		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CommandDispatcher"/> class.
+		/// </summary>
 		public CommandDispatcher() : this ("anonymous", CommandDispatcherLevel.Secondary)
 		{
 		}
-		
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CommandDispatcher"/> class.
+		/// </summary>
+		/// <param name="name">The dispatcher name.</param>
+		/// <param name="level">The dispatcher level.</param>
 		public CommandDispatcher(string name, CommandDispatcherLevel level)
 		{
 			lock (CommandDispatcher.exclusion)
@@ -90,9 +56,13 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		
-		
+
+
+
+		/// <summary>
+		/// Gets the name of the dispatcher.
+		/// </summary>
+		/// <value>The name.</value>
 		public string							Name
 		{
 			get
@@ -100,7 +70,11 @@ namespace Epsitec.Common.Widgets
 				return this.name;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the level of the dispatcher.
+		/// </summary>
+		/// <value>The level.</value>
 		public CommandDispatcherLevel			Level
 		{
 			get
@@ -108,7 +82,11 @@ namespace Epsitec.Common.Widgets
 				return this.level;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets or sets the oplet queue associated with the dispatcher.
+		/// </summary>
+		/// <value>The oplet queue.</value>
 		public Support.OpletQueue				OpletQueue
 		{
 			get
@@ -162,8 +140,13 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Registers a command controller. The object must implement methods marked
+		/// with the <see cref="Epsitec.Common.Support.CommandAttribute"/> attribute.
+		/// </summary>
+		/// <param name="controller">The controller.</param>
 		public void RegisterController(object controller)
 		{
 			if (controller != null)
@@ -181,11 +164,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		/// <summary>
+		/// Registers the specified command handler.
+		/// </summary>
+		/// <param name="command">The command.</param>
+		/// <param name="handler">The command handler.</param>
 		public void Register(Command command, Support.SimpleCallback handler)
 		{
 			this.Register (command, delegate (CommandDispatcher d, CommandEventArgs e) { handler (); });
 		}
 
+		/// <summary>
+		/// Registers the specified command handler.
+		/// </summary>
+		/// <param name="command">The command.</param>
+		/// <param name="handler">The command handler.</param>
 		public void Register(Command command, CommandEventHandler handler)
 		{
 			EventSlot slot;
@@ -198,7 +191,12 @@ namespace Epsitec.Common.Widgets
 			
 			slot.Register (handler);
 		}
-		
+
+		/// <summary>
+		/// Unregisters the specified command handler.
+		/// </summary>
+		/// <param name="command">The command.</param>
+		/// <param name="handler">The command handler.</param>
 		public void Unregister(Command command, CommandEventHandler handler)
 		{
 			EventSlot slot;
@@ -214,6 +212,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		/// <summary>
+		/// Checks if the dispatcher knows how to execute the specified command.
+		/// </summary>
+		/// <param name="command">The command.</param>
+		/// <returns><c>true</c> if the dispatcher knows how to execute the command;
+		/// otherwise, <c>false</c>.</returns>
 		public bool Knows(Command command)
 		{
 			if (this.eventHandlers.ContainsKey (command))
@@ -226,7 +230,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -237,8 +240,13 @@ namespace Epsitec.Common.Widgets
 			base.Dispose (disposing);
 		}
 		
-		
 		#region EventSlot class
+		
+		/// <summary>
+		/// The <c>EventSlot</c> class is used to map a command to one or more
+		/// command handlers. It is a wrapper for the <c>CommandEventHandler</c>
+		/// event.
+		/// </summary>
 		private sealed class EventSlot : ICommandDispatcher
 		{
 			public EventSlot(Command command)
@@ -246,6 +254,21 @@ namespace Epsitec.Common.Widgets
 				this.command = command;
 			}
 			
+			public bool							IsEmpty
+			{
+				get
+				{
+					return this.handler == null;
+				}
+			}
+
+			public Command						Command
+			{
+				get
+				{
+					return this.command;
+				}
+			}
 			
 			public void Register(CommandEventHandler handler)
 			{
@@ -256,9 +279,10 @@ namespace Epsitec.Common.Widgets
 			{
 				this.handler -= handler;
 			}
-			
-			
-			public bool DispatchCommand(CommandDispatcher sender, CommandEventArgs e)
+
+			#region ICommandDispatcher Members
+
+			public bool ExecuteCommand(CommandDispatcher sender, CommandEventArgs e)
 			{
 				if (this.handler != null)
 				{
@@ -268,22 +292,58 @@ namespace Epsitec.Common.Widgets
 				
 				return false;
 			}
-			
-			
-			public bool							IsEmpty
-			{
-				get
-				{
-					return this.handler == null;
-				}
-			}
-			
-			
+
+			#endregion
+
 			private Command						command;
 			private event CommandEventHandler	handler;
 		}
 		#endregion
-		
+
+		static CommandDispatcher()
+		{
+#if false
+			//	Capture le nom et les arguments d'une commande complexe, en filtrant les
+			//	caractères et vérifiant ainsi la validité de la syntaxe. Voici l'inter-
+			//	prétation de la regex :
+			//
+			//	- un <name> est constitué de caractères alphanumériques;
+			//	- suit une parenthèse ouvrante, avec évtl. des espaces;
+			//	- suit zéro à n arguments <arg> séparés par une virgule;
+			//	- chaque <arg> est soit une chaîne "", soit une chaîne '',
+			//	  soit une valeur numérique, soit un nom (avec des '.' pour
+			//	  séparer les divers termes).
+			//
+			//	La capture retourne dans l'ordre <name>, puis la liste des <arg> trouvés.
+			//	Il peut y avoir zéro à n arguments séparés par des virgules, le tout entre
+			//	parenthèses.
+			
+			string regex_1 = @"\A(?<name>([a-zA-Z](\w|(\.\w))*))" +
+				//	                      <---- nom valide --->
+				/**/       @"\s*\(\s*((((?<arg>(" +
+				/**/                          @"(\""[^\""]{0,}\"")|" +
+				//	                            <-- guillemets -->
+				/**/                          @"(\'[^\']{0,}\')|" +
+				//	                            <-- apostr. -->
+				/**/                          @"((\-|\+)?((\d{1,12}(\.\d{0,12})?0*)|(\d{0,12}\.(\d{0,12})?0*)))|" +
+				//	                            <----------- valeur décimale avec signe en option ------------>
+				/**/                          @"([a-zA-Z](\w|(\.\w))*)))" +
+				//	                            <---- nom valide ---->
+				/**/                         @"((\s*\,\s*)|(\s*\)\s*\z)))*)|(\)\s*))\z";
+			
+			RegexOptions options = RegexOptions.Compiled | RegexOptions.ExplicitCapture;
+			
+			CommandDispatcher.commandArgRegex = new Regex (regex_1, options);
+#endif
+
+			CommandDispatcher.commandAttributeType = typeof (Support.CommandAttribute);
+
+			CommandDispatcher defaultDispatcher = new CommandDispatcher ("default", CommandDispatcherLevel.Root);
+
+			System.Diagnostics.Debug.Assert (defaultDispatcher == CommandDispatcher.defaultDispatcher);
+			System.Diagnostics.Debug.Assert (defaultDispatcher.id == 1);
+		}
+
 		private void RegisterMethod(object controller, System.Reflection.MethodInfo info)
 		{
 			//	Ne parcourt que les attributs au niveau d'implémentation actuel (pas les classes dérivées,
@@ -335,7 +395,6 @@ namespace Epsitec.Common.Widgets
 			
 			this.Register (Command.Get (attribute.CommandName), handler);
 		}
-
 
 		private bool DispatchCommand(CommandContextChain contextChain, Command commandObject, object source)
 		{
@@ -393,7 +452,7 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Diagnostics.Debug.WriteLine ("Command '" + commandObject.CommandId + "' (" + commandObject.Name + ") fired.");
 				
-				if (slot.DispatchCommand (this, e))
+				if (slot.ExecuteCommand (this, e))
 				{
 					handled++;
 				}
@@ -453,18 +512,32 @@ namespace Epsitec.Common.Widgets
 				this.CommandDispatched (this);
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Gets the dispatcher associated with a given object.
+		/// </summary>
+		/// <param name="obj">The object.</param>
+		/// <returns>The dispatcher associated with the object, or <c>null</c>.</returns>
 		public static CommandDispatcher GetDispatcher(DependencyObject obj)
 		{
 			return (CommandDispatcher) obj.GetValue (CommandDispatcher.DispatcherProperty);
 		}
 
+		/// <summary>
+		/// Sets the dispatcher associated with a given object.
+		/// </summary>
+		/// <param name="obj">The object.</param>
+		/// <param name="value">The dispatcher.</param>
 		public static void SetDispatcher(DependencyObject obj, CommandDispatcher value)
 		{
 			obj.SetValue (CommandDispatcher.DispatcherProperty, value);
 		}
 
+		/// <summary>
+		/// Clears the dispatcher associated with a given object.
+		/// </summary>
+		/// <param name="obj">The object.</param>
 		public static void ClearDispatcher(DependencyObject obj)
 		{
 			obj.ClearValue (CommandDispatcher.DispatcherProperty);
@@ -486,7 +559,7 @@ namespace Epsitec.Common.Widgets
 		
 		static object							exclusion = new object ();
 		
-		static Regex							commandArgRegex;
+//-		static Regex							commandArgRegex;
 		static System.Type						commandAttributeType;
 		
 		static CommandDispatcher				defaultDispatcher;
