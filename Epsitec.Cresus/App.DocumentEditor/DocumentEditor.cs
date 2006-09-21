@@ -1515,7 +1515,7 @@ namespace Epsitec.App.DocumentEditor
 					this.dlgFileSave.FontIncludeMode = this.CurrentDocument.FontIncludeModeValue;
 					this.dlgFileSave.ImageIncludeMode = this.CurrentDocument.ImageIncludeModeValue;
 
-					if (this.dlgFileSave.IsRedirection)
+					if (this.dlgFileSave.IsRedirection && this.dlgFileSave.InitialFilename != "")
 					{
 						this.DialogWarningRedirection();
 					}
@@ -1574,11 +1574,6 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgFileSaveModel.InitialFilename = "";
 			this.dlgFileSaveModel.FontIncludeMode = this.CurrentDocument.FontIncludeModeValue;
 			this.dlgFileSaveModel.ImageIncludeMode = this.CurrentDocument.ImageIncludeModeValue;
-
-			if (this.dlgFileSave.IsRedirection)
-			{
-				this.DialogWarningRedirection();
-			}
 
 			this.dlgFileSaveModel.Show();  // choix d'un fichier...
 			if (this.dlgFileSaveModel.Result != Common.Dialogs.DialogResult.Accept)

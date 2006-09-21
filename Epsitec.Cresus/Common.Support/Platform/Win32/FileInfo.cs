@@ -417,7 +417,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 					return ShellApi.CSIDL.CSIDL_ADMINTOOLS;
 				case FolderId.AltStartup:
 					return ShellApi.CSIDL.CSIDL_ALTSTARTUP;
-				case FolderId.ApplicatioData:
+				case FolderId.ApplicationData:
 					return ShellApi.CSIDL.CSIDL_APPDATA;
 				case FolderId.CdBurnArea:
 					return ShellApi.CSIDL.CSIDL_CDBURN_AREA;
