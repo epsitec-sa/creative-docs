@@ -441,16 +441,8 @@ namespace Epsitec.Common.Widgets
 				rank ++;
 			}
 
-#if false
-			Drawing.Size size = this.scrollList.GetBestLineSize();
-			this.scrollList.LineHeight = size.Height;
-			menu.SetManualBounds(new Drawing.Rectangle(0, 0, size.Width, 200));
-			menu.AdjustSize();
-			MenuItem.SetMenuHost(this, new MenuHost(menu));
-#else
 			TextFieldCombo.AdjustScrollListWidth (this.scrollList);
 			TextFieldCombo.AdjustComboSize (this, menu);
-#endif
 			
 			return menu;
 		}
@@ -567,85 +559,6 @@ namespace Epsitec.Common.Widgets
 		{
 			Accept,
 			Reject
-		}
-		#endregion
-		
-		#region MenuHost Class
-		public class MenuHost : IMenuHost
-		{
-			public MenuHost(AbstractMenu menu)
-			{
-				this.menu = menu;
-			}
-			
-			#region IMenuHost Members
-			public void GetMenuDisposition(Widget item, ref Drawing.Size size, out Drawing.Point location, out Animation animation)
-			{
-				//	Détermine la hauteur maximale disponible par rapport à la position
-				//	actuelle :
-				
-				Drawing.Point     pos = Helpers.VisualTree.MapVisualToScreen(item, new Drawing.Point(0, 1));
-				Drawing.Point     hot = Helpers.VisualTree.MapVisualToScreen(item, new Drawing.Point(0, 1));
-				ScreenInfo        screenInfo = ScreenInfo.Find(hot);
-				Drawing.Rectangle workingArea = screenInfo.WorkingArea;
-				
-				double maxHeight = pos.Y - workingArea.Bottom;
-				double scrollWidth = 0;
-				
-				if ( maxHeight > size.Height ||
-					 maxHeight > 100         )
-				{
-					//	Il y a assez de place pour dérouler le menu vers le bas,
-					//	mais il faudra peut-être le raccourcir un bout :
-					
-					if ( this.menu.ActualHeight > maxHeight )  // pas assez de place en hauteur ?
-					{
-						scrollWidth = 17;  // place pour l'ascenseur à droite
-					}
-
-					this.menu.MaxSize = new Drawing.Size(this.menu.MaxSize.Width, maxHeight);
-					this.menu.AdjustSize();
-					
-					size      = this.menu.ActualSize;
-					location  = pos;
-					animation = Animation.RollDown;
-				}
-				else
-				{
-					//	Il faut dérouler le menu vers le haut.
-					
-					pos.Y += item.ActualHeight-2;
-					
-					maxHeight = workingArea.Top - pos.Y;
-				
-					if ( this.menu.ActualHeight > maxHeight )  // pas assez de place en hauteur ?
-					{
-						scrollWidth = 17;  // place pour l'ascenseur à droite
-					}
-
-					this.menu.MaxSize = new Drawing.Size(this.menu.MaxSize.Width, maxHeight);
-					this.menu.AdjustSize();
-					
-					pos.Y += this.menu.ActualHeight;
-					
-					size      = this.menu.ActualSize;
-					location  = pos;
-					animation = Animation.RollUp;
-				}
-				
-				size.Width += scrollWidth;
-
-				location.X -= this.menu.MenuShadow.Left;
-				location.Y -= size.Height;
-				
-				if ( location.X + size.Width > workingArea.Right )
-				{
-					location.X = workingArea.Right - size.Width;
-				}
-			}
-			#endregion
-			
-			private AbstractMenu				menu;
 		}
 		#endregion
 		
