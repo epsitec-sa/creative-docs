@@ -127,8 +127,15 @@ namespace Epsitec.Common.Document.Ribbons
 				string cmd = "LastModel";
 				string filename = string.Format("{0} {1}", (i+1)%10, this.globalSettings.LastModelGetShort(i));
 				string name = this.globalSettings.LastModelGet(i);
-				Misc.CreateStructuredCommandWithName (cmd);
-				MenuItem item = new MenuItem (cmd, "", filename, "", name);
+				Misc.CreateStructuredCommandWithName(cmd);
+				MenuItem item = new MenuItem(cmd, "", filename, "", name);
+
+				string tooltip = this.globalSettings.LastModelGet(i);
+				if (tooltip != Settings.GlobalSettings.NewEmptyDocument)
+				{
+					ToolTip.Default.SetToolTip(item, tooltip);
+				}
+
 				menu.Items.Add(item);
 			}
 
@@ -149,8 +156,9 @@ namespace Epsitec.Common.Document.Ribbons
 				string cmd = "LastFile";
 				string filename = string.Format("{0} {1}", (i+1)%10, this.globalSettings.LastFilenameGetShort(i));
 				string name = this.globalSettings.LastFilenameGet(i);
-				Misc.CreateStructuredCommandWithName (cmd);
-				MenuItem item = new MenuItem (cmd, "", filename, "", name);
+				Misc.CreateStructuredCommandWithName(cmd);
+				MenuItem item = new MenuItem(cmd, "", filename, "", name);
+				ToolTip.Default.SetToolTip(item, this.globalSettings.LastFilenameGet(i));
 				menu.Items.Add(item);
 			}
 
