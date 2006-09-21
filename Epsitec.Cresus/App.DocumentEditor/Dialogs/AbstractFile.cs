@@ -352,6 +352,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.favoritesExtend = new GlyphButton(header);
 			this.favoritesExtend.GlyphShape = GlyphShape.ArrowDown;
+			this.favoritesExtend.ButtonStyle = ButtonStyle.ToolItem;
 			this.favoritesExtend.AutoFocus = false;
 			this.favoritesExtend.TabNavigation = Widget.TabNavigationMode.Passive;
 			this.favoritesExtend.Dock = DockStyle.Left;
@@ -608,9 +609,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if (this.isSave)
 			{
 				this.optionsExtend = new GlyphButton(footer);
+				this.optionsExtend.PreferredWidth = 16;
+				this.optionsExtend.ButtonStyle = ButtonStyle.Slider;
 				this.optionsExtend.AutoFocus = false;
 				this.optionsExtend.TabNavigation = Widget.TabNavigationMode.Passive;
 				this.optionsExtend.Dock = DockStyle.Left;
+				this.optionsExtend.Margins = new Margins(0, 0, 3, 3);
 				this.optionsExtend.Clicked += new MessageEventHandler(this.HandleOptionsExtendClicked);
 				ToolTip.Default.SetToolTip(this.optionsExtend, Res.Strings.Dialog.File.Tooltip.Extend.Include);
 			}
