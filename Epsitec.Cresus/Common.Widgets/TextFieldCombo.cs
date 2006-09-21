@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Widgets
 {
@@ -246,7 +247,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected override void ProcessMessage(Message message, Drawing.Point pos)
+		protected override void ProcessMessage(Message message, Point pos)
 		{
 			switch (message.Type)
 			{
@@ -276,7 +277,7 @@ namespace Epsitec.Common.Widgets
 			base.ProcessMessage(message, pos);
 		}
 		
-		protected override bool ProcessKeyDown(Message message, Drawing.Point pos)
+		protected override bool ProcessKeyDown(Message message, Point pos)
 		{
 			//	Gère les pressions de touches (en particulier les flèches haut
 			//	et bas qui permettent soit d'ouvrir un combo, soit de cycler le
@@ -314,7 +315,7 @@ namespace Epsitec.Common.Widgets
 			return base.ProcessKeyDown(message, pos);
 		}
 		
-		protected override bool ProcessKeyPress(Message message, Epsitec.Common.Drawing.Point pos)
+		protected override bool ProcessKeyPress(Message message, Point pos)
 		{
 			if ((this.IsReadOnly) &&
 				(this.ProcessKeyPressInSelectItemBehavior (message)))
@@ -436,7 +437,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			this.menu.ShowAsComboList (this, this.MapClientToScreen (new Drawing.Point (0, 0)), this.Button);
+			this.menu.ShowAsComboList (this, this.MapClientToScreen (new Point(0, 0)), this.Button);
 			
 			if (this.scroll_list != null)
 			{
@@ -513,14 +514,26 @@ namespace Epsitec.Common.Widgets
 
 		public static void AdjustComboSize(Widget parent, AbstractMenu menu)
 		{
-			menu.AdjustSize ();
-			
-			MenuItem.SetMenuHost (parent, new MenuHost (menu));
+			TextFieldCombo.AdjustComboSize(parent, menu, true);
+		}
+
+		public static void AdjustComboSize(Widget parent, AbstractMenu menu, bool isScrollable)
+		{
+			menu.AdjustSize();
+
+			if (isScrollable)
+			{
+				MenuItem.SetMenuHost(parent, new ScrollableMenuHost(menu));
+			}
+			else
+			{
+				MenuItem.SetMenuHost(parent, new FixMenuHost(menu));
+			}
 		}
 
 		public static void AdjustScrollListWidth(ScrollList scrollList)
 		{
-			Drawing.Size size = scrollList.GetBestLineSize ();
+			Size size = scrollList.GetBestLineSize ();
 			
 			scrollList.LineHeight     = size.Height;
 			scrollList.PreferredWidth = size.Width;
@@ -768,37 +781,34 @@ namespace Epsitec.Common.Widgets
 			Reject
 		}
 		#endregion
-		
-		#region MenuHost Class
-		public class MenuHost : IMenuHost
+
+		#region ScrollableMenuHost Class
+		protected class ScrollableMenuHost : IMenuHost
 		{
-			public MenuHost(AbstractMenu menu)
+			public ScrollableMenuHost(AbstractMenu menu)
 			{
 				this.menu = menu;
 			}
 			
 			
 			#region IMenuHost Members
-			public void GetMenuDisposition(Widget item, ref Drawing.Size size, out Drawing.Point location, out Animation animation)
+			public void GetMenuDisposition(Widget item, ref Size size, out Point location, out Animation animation)
 			{
 				//	Détermine la hauteur maximale disponible par rapport à la position
 				//	actuelle :
-				
-				Drawing.Point     pos = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (0, 0));
-				Drawing.Point     hot = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (0, 0));
-				ScreenInfo        screen_info  = ScreenInfo.Find (hot);
-				Drawing.Rectangle working_area = screen_info.WorkingArea;
-				
-				double max_height = pos.Y - working_area.Bottom;
-				
-				if ((max_height > size.Height) ||
-					(max_height > 100))
+				Point pos = Helpers.VisualTree.MapVisualToScreen(item, new Point(0, 0));
+				Point hot = Helpers.VisualTree.MapVisualToScreen(item, new Point(0, 0));
+				ScreenInfo screenInfo  = ScreenInfo.Find(hot);
+				Rectangle workingArea = screenInfo.WorkingArea;
+
+				double maxHeight = pos.Y - workingArea.Bottom;
+
+				if (maxHeight > size.Height || maxHeight > 100)
 				{
 					//	Il y a assez de place pour dérouler le menu vers le bas,
 					//	mais il faudra peut-être le raccourcir un bout :
-					
-					this.menu.MaxSize = new Drawing.Size (this.menu.MaxWidth, max_height);
-					this.menu.AdjustSize ();
+					this.menu.MaxSize = new Size(this.menu.MaxWidth, maxHeight);
+					this.menu.AdjustSize();
 					
 					size      = this.menu.ActualSize;
 					location  = pos;
@@ -807,13 +817,12 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					//	Il faut dérouler le menu vers le haut.
-					
 					pos.Y += item.ActualHeight-2;
-					
-					max_height = working_area.Top - pos.Y;
 
-					this.menu.MaxSize = new Drawing.Size (this.menu.MaxWidth, max_height);
-					this.menu.AdjustSize ();
+					maxHeight = workingArea.Top - pos.Y;
+
+					this.menu.MaxSize = new Size(this.menu.MaxWidth, maxHeight);
+					this.menu.AdjustSize();
 					
 					pos.Y += this.menu.ActualHeight;
 					
@@ -824,10 +833,10 @@ namespace Epsitec.Common.Widgets
 				
 				location.X -= this.menu.MenuShadow.Left;
 				location.Y -= size.Height;
-				
-				if (location.X + size.Width > working_area.Right)
+
+				if (location.X + size.Width > workingArea.Right)
 				{
-					location.X = working_area.Right - size.Width;
+					location.X = workingArea.Right - size.Width;
 				}
 			}
 			#endregion
@@ -835,6 +844,70 @@ namespace Epsitec.Common.Widgets
 			private AbstractMenu				menu;
 		}
 		#endregion
+		
+		#region FixMenuHost Class
+		protected class FixMenuHost : IMenuHost
+		{
+			public FixMenuHost(AbstractMenu menu)
+			{
+				this.menu = menu;
+			}
+			
+			
+			#region IMenuHost Members
+			public void GetMenuDisposition(Widget item, ref Size size, out Point location, out Animation animation)
+			{
+				//	Détermine la hauteur maximale disponible par rapport à la position
+				//	actuelle :
+				Point pos = Helpers.VisualTree.MapVisualToScreen(item, new Point(0, 0));
+				Point hot = Helpers.VisualTree.MapVisualToScreen(item, new Point(0, 0));
+				ScreenInfo screenInfo  = ScreenInfo.Find(hot);
+				Rectangle workingArea = screenInfo.WorkingArea;
+
+				this.menu.MaxSize = new Size(this.menu.MaxWidth, workingArea.Height);
+				this.menu.AdjustSize();
+
+				if (this.menu.PreferredHeight < pos.Y-workingArea.Bottom)
+				{
+					//	Il y a assez de place pour dérouler le menu vers le bas.
+					size      = this.menu.PreferredSize;
+					location  = pos;
+					animation = Animation.RollDown;
+				}
+				else if (this.menu.PreferredHeight < workingArea.Top-(pos.Y+item.ActualHeight))
+				{
+					//	Il y a assez de place pour dérouler le menu vers le haut.
+					pos.Y += item.ActualHeight;
+					pos.Y += this.menu.PreferredHeight;
+
+					size      = this.menu.PreferredSize;
+					location  = pos;
+					animation = Animation.RollUp;
+				}
+				else
+				{
+					//	Il faut dérouler le menu vers le bas, mais depuis en dessus du bouton.
+					pos.Y = workingArea.Bottom+this.menu.PreferredHeight;
+
+					size      = this.menu.PreferredSize;
+					location  = pos;
+					animation = Animation.RollDown;
+				}
+				
+				location.X -= this.menu.MenuShadow.Left;
+				location.Y -= size.Height;
+
+				if (location.X + size.Width > workingArea.Right)
+				{
+					location.X = workingArea.Right - size.Width;
+				}
+			}
+			#endregion
+			
+			private AbstractMenu				menu;
+		}
+		#endregion
+
 		
 		public event EventHandler<CancelEventArgs>	ComboOpening
 		{

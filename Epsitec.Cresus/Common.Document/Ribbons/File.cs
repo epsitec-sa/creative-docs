@@ -97,7 +97,7 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( menu == null )  return;
 			menu.Host = this;
 			menu.MinWidth = button.ActualWidth;
-			TextFieldCombo.AdjustComboSize(button, menu);
+			TextFieldCombo.AdjustComboSize(button, menu, false);
 			menu.ShowAsComboList(button, Point.Zero, button);
 		}
 
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( menu == null )  return;
 			menu.Host = this;
 			menu.MinWidth = button.ActualWidth;
-			TextFieldCombo.AdjustComboSize(button, menu);
+			TextFieldCombo.AdjustComboSize(button, menu, false);
 			menu.ShowAsComboList(button, Point.Zero, button);
 		}
 
