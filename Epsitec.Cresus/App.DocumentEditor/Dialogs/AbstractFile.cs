@@ -515,7 +515,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.optionsToolbar.TabNavigation = Widget.TabNavigationMode.Passive;
 			this.optionsToolbar.Visibility = false;
 
-
+			//	Options pour les polices.
 			GroupBox groupFont = new GroupBox(this.optionsToolbar);
 			groupFont.Text = Res.Strings.Dialog.Save.Include.Font.Title;
 			groupFont.PreferredWidth = 180;
@@ -538,7 +538,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.optionsFontAll.Dock = DockStyle.Top;
 			this.optionsFontAll.Clicked += new MessageEventHandler(this.HandleOptionsFontClicked);
 
-
+			//	Options pour les images.
 			GroupBox groupImage = new GroupBox(this.optionsToolbar);
 			groupImage.Text = Res.Strings.Dialog.Save.Include.Image.Title;
 			groupImage.PreferredWidth = 180;
@@ -586,45 +586,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				ok = Res.Strings.Dialog.File.Button.Open;
 			}
 
-			this.buttonOK = new Button(footer);
-			this.buttonOK.PreferredWidth = 75;
-			this.buttonOK.Text = ok;
-			this.buttonOK.ButtonStyle = ButtonStyle.DefaultAccept;
-			this.buttonOK.Dock = DockStyle.Left;
-			this.buttonOK.Margins = new Margins(0, 6, 0, 0);
-			this.buttonOK.Clicked += new MessageEventHandler(this.HandleButtonOKClicked);
-			this.buttonOK.TabIndex = 1;
-			this.buttonOK.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			this.buttonCancel = new Button(footer);
-			this.buttonCancel.PreferredWidth = 75;
-			this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
-			this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
-			this.buttonCancel.Dock = DockStyle.Left;
-			this.buttonCancel.Margins = new Margins(0, 12, 0, 0);
-			this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCancelClicked);
-			this.buttonCancel.TabIndex = 2;
-			this.buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			if (this.isSave)
-			{
-				this.optionsExtend = new GlyphButton(footer);
-				this.optionsExtend.PreferredWidth = 16;
-				this.optionsExtend.ButtonStyle = ButtonStyle.Slider;
-				this.optionsExtend.AutoFocus = false;
-				this.optionsExtend.TabNavigation = Widget.TabNavigationMode.Passive;
-				this.optionsExtend.Dock = DockStyle.Left;
-				this.optionsExtend.Margins = new Margins(0, 0, 3, 3);
-				this.optionsExtend.Clicked += new MessageEventHandler(this.HandleOptionsExtendClicked);
-				ToolTip.Default.SetToolTip(this.optionsExtend, Res.Strings.Dialog.File.Tooltip.Extend.Include);
-			}
-
 			this.slider = new HSlider(footer);
 			this.slider.AutoFocus = false;
 			this.slider.TabNavigation = Widget.TabNavigationMode.Passive;
 			this.slider.PreferredWidth = 110;
 			this.slider.IsMinMaxButtons = true;
-			this.slider.Dock = DockStyle.Right;
+			this.slider.Dock = DockStyle.Left;
 			this.slider.Margins = new Margins(0, 0, 4, 4);
 			this.slider.MinValue = 20.0M;
 			this.slider.MaxValue = 100.0M;
@@ -634,6 +601,40 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.slider.Value = (decimal) this.table.DefHeight;
 			this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
 			ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.File.Tooltip.PreviewSize);
+
+			//	Dans l'ordre de droite à gauche:
+			this.buttonCancel = new Button(footer);
+			this.buttonCancel.PreferredWidth = 75;
+			this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
+			this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
+			this.buttonCancel.Dock = DockStyle.Right;
+			this.buttonCancel.Margins = new Margins(6, 0, 0, 0);
+			this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCancelClicked);
+			this.buttonCancel.TabIndex = 2;
+			this.buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.buttonOK = new Button(footer);
+			this.buttonOK.PreferredWidth = 85;
+			this.buttonOK.Text = ok;
+			this.buttonOK.ButtonStyle = ButtonStyle.DefaultAccept;
+			this.buttonOK.Dock = DockStyle.Right;
+			this.buttonOK.Margins = new Margins(12, 0, 0, 0);
+			this.buttonOK.Clicked += new MessageEventHandler(this.HandleButtonOKClicked);
+			this.buttonOK.TabIndex = 1;
+			this.buttonOK.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			if (this.isSave)
+			{
+				this.optionsExtend = new GlyphButton(footer);
+				this.optionsExtend.PreferredWidth = 16;
+				this.optionsExtend.ButtonStyle = ButtonStyle.Slider;
+				this.optionsExtend.AutoFocus = false;
+				this.optionsExtend.TabNavigation = Widget.TabNavigationMode.Passive;
+				this.optionsExtend.Dock = DockStyle.Right;
+				this.optionsExtend.Margins = new Margins(0, 0, 3, 3);
+				this.optionsExtend.Clicked += new MessageEventHandler(this.HandleOptionsExtendClicked);
+				ToolTip.Default.SetToolTip(this.optionsExtend, Res.Strings.Dialog.File.Tooltip.Extend.Include);
+			}
 		}
 
 
