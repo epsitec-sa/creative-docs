@@ -205,12 +205,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if (this.directoriesVisited.Count != 0)
 			{
 				FolderItem current = this.directoriesVisited[this.directoriesVisitedIndex];
-				if (current != folder)
+				if (current == folder)
 				{
-					while (this.directoriesVisitedIndex < this.directoriesVisited.Count-1)
-					{
-						this.directoriesVisited.RemoveAt(this.directoriesVisited.Count-1);
-					}
+					return;
+				}
+
+				while (this.directoriesVisitedIndex < this.directoriesVisited.Count-1)
+				{
+					this.directoriesVisited.RemoveAt(this.directoriesVisited.Count-1);
 				}
 			}
 
@@ -408,6 +410,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			buttonParent.CommandObject = this.parentState.Command;
 			buttonParent.Dock = DockStyle.Right;
 
+			this.navigateCombo = new GlyphButton(group);
+			this.navigateCombo.PreferredWidth = 12;
+			this.navigateCombo.GlyphShape = GlyphShape.ArrowDown;
+			this.navigateCombo.ButtonStyle = ButtonStyle.ToolItem;
+			this.navigateCombo.AutoFocus = false;
+			this.navigateCombo.TabNavigation = Widget.TabNavigationMode.Passive;
+			this.navigateCombo.Dock = DockStyle.Right;
+			this.navigateCombo.Margins = new Margins(0, 10, 0, 0);
+			this.navigateCombo.Clicked += new MessageEventHandler(this.HandleNavigateComboClicked);
+			//?ToolTip.Default.SetToolTip(this.navigateCombo, Res.Strings.Dialog.File.Tooltip.Extend.Favorites);
+
 			IconButton buttonNext = new IconButton(group);
 			buttonNext.AutoFocus = false;
 			buttonNext.TabNavigation = Widget.TabNavigationMode.Passive;
@@ -425,22 +438,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Crée la grande toolbar.
 			this.toolbar = new HToolBar(this.window.Root);
-			this.toolbar.Margins = new Margins(0, 0, 0, 0);
+			this.toolbar.Margins = new Margins(0, 0, 0, -1);
 			this.toolbar.Dock = DockStyle.Top;
 			this.toolbar.TabNavigation = Widget.TabNavigationMode.Passive;
 			this.toolbar.Visibility = false;
-
-#if false
-			this.favoritesExtend = new GlyphButton();
-			this.favoritesExtend.GlyphShape = GlyphShape.ArrowDown;
-			this.favoritesExtend.ButtonStyle = ButtonStyle.ToolItem;
-			this.favoritesExtend.AutoFocus = false;
-			this.favoritesExtend.TabNavigation = Widget.TabNavigationMode.Passive;
-			this.favoritesExtend.Dock = DockStyle.Left;
-			this.favoritesExtend.Clicked += new MessageEventHandler(this.HandleFavoritesExtendClicked);
-			ToolTip.Default.SetToolTip(this.favoritesExtend, Res.Strings.Dialog.File.Tooltip.Extend.Favorites);
-			this.toolbar.Items.Add(this.favoritesExtend);
-#endif
 
 			IconButton buttonFavoritesAdd = new IconButton();
 			buttonFavoritesAdd.AutoFocus = false;
@@ -1569,13 +1570,73 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-
-		private void HandleFavoritesExtendClicked(object sender, MessageEventArgs e)
+		protected VMenu CreateVisitedMenu()
 		{
-			//	Clic sur le bouton pour le menu des favoris.
+			//	Crée le menu pour choisir un dossier visité.
+			VMenu menu = new VMenu();
+
+			for (int i=0; i<this.directoriesVisited.Count; i++)
+			{
+				if (i-1 == this.directoriesVisitedIndex)
+				{
+					menu.Items.Add(new MenuSeparator());
+				}
+
+				menu.Items.Add(this.CreateVisitedMenuItem(i));
+			}
+
+			menu.AdjustSize();
+			return menu;
+		}
+
+		protected  MenuItem CreateVisitedMenuItem(int index)
+		{
+			//	Crée une case du menu pour choisir un dossier visité.
+			FolderItem folder = this.directoriesVisited[index];
+
+			bool isCurrent = (index == this.directoriesVisitedIndex);
+			bool isNext    = (index >  this.directoriesVisitedIndex);
+
+			string icon = "";
+			if (!isNext)
+			{
+				icon = isCurrent ? Misc.Icon("ActiveCurrent") : Misc.Icon("ActiveNo");
+			}
+
+			string text = TextLayout.ConvertToTaggedText(folder.DisplayName);
+			if (isNext)
+			{
+				text = Misc.Italic(text);
+			}
+			text = string.Format("{0}: {1}", (index+1).ToString(), text);
+
+			string tooltip = TextLayout.ConvertToTaggedText(folder.FullPath);
+
+			string name = index.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+			MenuItem item = new MenuItem("ChangeVisitedDirectory", icon, text, null, name);
+			item.Pressed += new MessageEventHandler(this.HandleVisitedMenuPressed);
+			ToolTip.Default.SetToolTip(item, tooltip);
+
+			return item;
+		}
+
+		void HandleVisitedMenuPressed(object sender, MessageEventArgs e)
+		{
+			//	Une case du menu pour choisir un dossier visité a été actionnée.
+			MenuItem item = sender as MenuItem;
+			this.directoriesVisitedIndex = System.Int32.Parse(item.Name, System.Globalization.CultureInfo.InvariantCulture);
+			this.SetInitialFolder(this.directoriesVisited[this.directoriesVisitedIndex], false);
+			this.UpdateButtons();
+		}
+
+
+		private void HandleNavigateComboClicked(object sender, MessageEventArgs e)
+		{
+			//	Clic sur le bouton pour le menu de navigation.
 			GlyphButton button = sender as GlyphButton;
 			if (button == null)  return;
-			VMenu menu = AbstractFile.CreateFavoritesMenu();
+			VMenu menu = this.CreateVisitedMenu();
 			menu.Host = this.window;
 			TextFieldCombo.AdjustComboSize(button, menu);
 			menu.ShowAsComboList(button, Point.Zero, button);
@@ -2370,8 +2431,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected GlyphButton				toolbarExtend;
 		protected HToolBar					toolbar;
+		protected GlyphButton				navigateCombo;
 		protected Scrollable				favorites;
-		protected GlyphButton				favoritesExtend;
 		protected CellTable					table;
 		protected HSlider					slider;
 		protected TextFieldCombo			fieldPath;

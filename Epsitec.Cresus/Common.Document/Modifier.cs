@@ -2172,7 +2172,7 @@ namespace Epsitec.Common.Document
 
 			string name = string.Format("{0}: {1}", rank.ToString(), action);
 			string cmd = "UndoRedoListDo";
-			Misc.CreateStructuredCommandWithName (cmd);
+			Misc.CreateStructuredCommandWithName(cmd);
 
 			MenuItem item = new MenuItem(cmd, icon, name, "", todo.ToString());
 
