@@ -366,7 +366,7 @@ namespace Epsitec.Common.Script
 		
 		
 		#region ICommandDispatcher Members
-		public bool DispatchCommand(CommandDispatcher sender, CommandEventArgs e)
+		public bool ExecuteCommand(CommandDispatcher sender, CommandEventArgs e)
 		{
 			Script script = this.Script;
 			
@@ -376,7 +376,7 @@ namespace Epsitec.Common.Script
 				
 				if (dispatcher != null)
 				{
-					dispatcher.DispatchCommand (sender, e);
+					dispatcher.ExecuteCommand (sender, e);
 				}
 			}
 			

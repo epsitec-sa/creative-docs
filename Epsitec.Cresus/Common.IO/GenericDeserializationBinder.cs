@@ -1,5 +1,7 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.IO
 {
@@ -14,24 +16,24 @@ namespace Epsitec.Common.IO
 		}
 		
 		
-		public override System.Type BindToType(string assembly_name, string type_name) 
+		public override System.Type BindToType(string assemblyName, string typeName) 
 		{
-			string full_name = string.Concat (type_name, ", ", assembly_name);
-			System.Type type = GenericDeserializationBinder.type_cache[full_name] as System.Type;
+			string fullName = string.Concat (typeName, ", ", assemblyName);
+			System.Type type;
 			
-			if (type == null)
+			if (GenericDeserializationBinder.typeCache.TryGetValue (fullName, out type) == false)
 			{
 				//	Premier essai: trouve le type exact correspondant à ce qui est
 				//	demandé par la désérialisation.
 
-				type = GenericDeserializationBinder.SafeGetType (full_name);
+				type = GenericDeserializationBinder.SafeGetType (fullName);
 				
 				if (type == null)
 				{
 					//	Second essai: trouve le type équivalent dans l'assembly avec la
 					//	version courante, plutôt que celle avec la version spécifiée.
 					
-					type = this.FindReplacementType (assembly_name, type_name);
+					type = this.FindReplacementType (assemblyName, typeName);
 				}
 				
 				if (type == null)
@@ -39,42 +41,44 @@ namespace Epsitec.Common.IO
 					//	Troisième essai: trouve le type équivalent dans une autre
 					//	assembly, avec une heuristique maison.
 					
-					if (assembly_name.IndexOf ("Common.Drawing") >= 0)
+					if (assemblyName.StartsWith ("Common.Drawing,"))
 					{
-						type = this.FindReplacementType (assembly_name.Replace ("Common.Drawing", "Common.Drawing.Agg"), type_name);
+						assemblyName = assemblyName.Replace ("Common.Drawing,", "Common.Drawing.Agg,");
+						type = this.FindReplacementType (assemblyName, typeName);
 					}
 				}
 				
 				System.Diagnostics.Debug.Assert (type != null);
-				GenericDeserializationBinder.type_cache[full_name] = type;
+				GenericDeserializationBinder.typeCache[fullName] = type;
 			}
 			
 			return type;
 		}
 
-		private static System.Type SafeGetType(string name)
+		[System.Diagnostics.DebuggerHidden]
+		public static System.Type SafeGetType(string name)
 		{
 			try
 			{
-				return System.Type.GetType(name);
+				return System.Type.GetType (name, false, false);
 			}
 			catch (System.IO.FileLoadException)
 			{
 			}
-			
+
 			return null;
 		}
 		
-		protected virtual System.Type FindReplacementType(string assembly_name, string type_name)
+		protected virtual System.Type FindReplacementType(string assemblyName, string typeName)
 		{
-			string prefix = assembly_name.Substring (0, assembly_name.IndexOf (' '));
+			string prefix = assemblyName.Substring (0, assemblyName.IndexOf (' '));
 					
 			foreach (System.Reflection.Assembly assembly in GenericDeserializationBinder.assemblies)
 			{
 				if (assembly.FullName.StartsWith (prefix))
 				{
-					string full_name = string.Concat (type_name, ", ", assembly.FullName);
-					return GenericDeserializationBinder.SafeGetType (full_name);
+					string fullName = string.Concat (typeName, ", ", assembly.FullName);
+					return GenericDeserializationBinder.SafeGetType (fullName);
 				}
 			}
 			
@@ -84,12 +88,21 @@ namespace Epsitec.Common.IO
 		
 		static GenericDeserializationBinder()
 		{
-			GenericDeserializationBinder.assemblies = System.AppDomain.CurrentDomain.GetAssemblies ();
-			GenericDeserializationBinder.type_cache = new System.Collections.Hashtable ();
+			GenericDeserializationBinder.assemblies = new List<System.Reflection.Assembly> ();
+			GenericDeserializationBinder.typeCache = new Dictionary<string, System.Type> ();
+
+			GenericDeserializationBinder.assemblies.AddRange (System.AppDomain.CurrentDomain.GetAssemblies ());
+
+			System.AppDomain.CurrentDomain.AssemblyLoad += GenericDeserializationBinder.HandleAssemblyLoad;
+		}
+
+		private static void HandleAssemblyLoad(object sender, System.AssemblyLoadEventArgs e)
+		{
+			GenericDeserializationBinder.assemblies.Add (e.LoadedAssembly);
 		}
 		
 		
-		static System.Reflection.Assembly[]		assemblies;
-		static System.Collections.Hashtable		type_cache;
+		static List<System.Reflection.Assembly>	assemblies;
+		static Dictionary<string, System.Type>	typeCache;
 	}
 }

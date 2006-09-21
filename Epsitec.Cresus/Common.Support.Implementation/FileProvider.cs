@@ -210,7 +210,8 @@ namespace Epsitec.Common.Support.Implementation
 			
 			string path = this.GetPathFromId (id, level);
 			
-			if (path != null)
+			if ((string.IsNullOrEmpty (path) == false) &&
+				(System.IO.File.Exists (path)))
 			{
 				try
 				{

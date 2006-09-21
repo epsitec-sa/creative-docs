@@ -1,20 +1,32 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
-
-using System.Text.RegularExpressions;
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// L'énumération CommandDispatcherLevel détermine à quel niveau se trouve
-	/// un CommandDispatcher.
+	/// The <c>CommandDispatcherLevel</c> enumeration specifies at which level in
+	/// a dispatch chain the command dispatcher works.
 	/// </summary>
 	public enum CommandDispatcherLevel
 	{
+		/// <summary>
+		/// No or unknown dispatcher level.
+		/// </summary>
 		Unknown			= 0,
 		
-		Root			= 1,					//	au niveau application
-		Primary			= 2,					//	au niveau document
-		Secondary		= 3,					//	au niveau dialogue
+		/// <summary>
+		/// Root dispatcher; this is an application level dispatcher.
+		/// </summary>
+		Root			= 1,
+
+		/// <summary>
+		/// Primary dispatcher; this is a document view level dispatcher.
+		/// </summary>
+		Primary			= 2,
+		
+		/// <summary>
+		/// Secondary dispatcher; this is a dialog level dispatcher.
+		/// </summary>
+		Secondary		= 3,
 	}
 }
