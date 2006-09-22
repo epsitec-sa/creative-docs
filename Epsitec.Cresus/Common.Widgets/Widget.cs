@@ -2470,7 +2470,17 @@ namespace Epsitec.Common.Widgets
 			{
 				if ((this.tab_navigation_mode & mode) != 0)
 				{
-					return this;
+					if ((this.tab_navigation_mode & TabNavigationMode.ForwardOnly) != 0)
+					{
+						if (dir != TabNavigationDir.Backwards)
+						{
+							return null;
+						}
+					}
+					else
+					{
+						return this;
+					}
 				}
 			}
 			
@@ -2505,13 +2515,8 @@ namespace Epsitec.Common.Widgets
 									
 									if (candidates.Length > 0)
 									{
-										int    count = candidates.Length;
-										Widget enter = candidates[count-1].FindTabWidget (dir, mode, false, true);
-										
-										if (enter != null)
-										{
-											find = enter;
-										}
+										int count = candidates.Length;
+										find = candidates[count-1].FindTabWidget (dir, mode, false, true);
 									}
 								}
 							}
@@ -2530,16 +2535,7 @@ namespace Epsitec.Common.Widgets
 									//	Entre en marche avant dans le widget...
 									
 									Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (mode);
-									
-									if (candidates.Length > 0)
-									{
-										Widget enter = candidates[0].FindTabWidget (dir, mode, false, true);
-										
-										if (enter != null)
-										{
-											find = enter;
-										}
-									}
+									find = (candidates.Length > 0) ? candidates[0].FindTabWidget (dir, mode, false, true) : null;
 								}
 							}
 							break;
@@ -2648,6 +2644,11 @@ namespace Epsitec.Common.Widgets
 							break;
 					}
 				}
+			}
+
+			if (find != null)
+			{
+				System.Diagnostics.Debug.Assert ((find.TabNavigation & TabNavigationMode.ForwardOnly) == 0);
 			}
 			
 			return find;

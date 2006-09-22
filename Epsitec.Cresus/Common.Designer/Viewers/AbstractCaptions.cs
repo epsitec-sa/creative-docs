@@ -121,14 +121,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryLabels.StringTextChanged += new EventHandler(this.HandleStringTextCollectionChanged);
 			this.primaryLabels.StringFocusChanged += new EventHandler(this.HandleStringFocusCollectionChanged);
 			this.primaryLabels.TabIndex = this.tabIndex++;
-			this.primaryLabels.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.primaryLabels.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			this.secondaryLabels = new MyWidgets.StringCollection(rightContainer.Container);
 			this.secondaryLabels.Dock = DockStyle.StackBegin;
 			this.secondaryLabels.StringTextChanged += new EventHandler(this.HandleStringTextCollectionChanged);
 			this.secondaryLabels.StringFocusChanged += new EventHandler(this.HandleStringFocusCollectionChanged);
 			this.secondaryLabels.TabIndex = this.tabIndex++;
-			this.secondaryLabels.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.secondaryLabels.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			//	Description.
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Description.Title, 0.3);
