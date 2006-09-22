@@ -1652,6 +1652,15 @@ namespace Epsitec.Common.Designer
 						//	Supprime le 'name="Truc.Chose' dans tous les bundles,
 						//	sauf dans le bundle par défaut.
 						field.SetName(null);
+
+						//	Si une ressource est vide dans un bundle autre que le bundle
+						//	par défaut, il faut la supprimer.
+						string s = field.AsString;
+						if (string.IsNullOrEmpty(s))
+						{
+							bundle.Remove(i);
+							i--;
+						}
 					}
 				}
 			}
