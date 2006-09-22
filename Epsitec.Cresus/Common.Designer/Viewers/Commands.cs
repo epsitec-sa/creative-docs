@@ -34,14 +34,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryShortcut1.Dock = DockStyle.StackBegin;
 			this.primaryShortcut1.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
 			this.primaryShortcut1.TabIndex = this.tabIndex++;
-			this.primaryShortcut1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.primaryShortcut1.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			this.primaryShortcut2 = new ShortcutEditor(leftContainer.Container);
 			this.primaryShortcut2.Title = Res.Strings.Viewers.Commands.Shortcut.Suppl;
 			this.primaryShortcut2.Dock = DockStyle.StackBegin;
 			this.primaryShortcut2.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
 			this.primaryShortcut2.TabIndex = this.tabIndex++;
-			this.primaryShortcut2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.primaryShortcut2.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			this.secondaryShortcut1 = new ShortcutEditor(rightContainer.Container);
 			this.secondaryShortcut1.Title = Res.Strings.Viewers.Commands.Shortcut.Main;
@@ -49,14 +49,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryShortcut1.Dock = DockStyle.StackBegin;
 			this.secondaryShortcut1.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
 			this.secondaryShortcut1.TabIndex = this.tabIndex++;
-			this.secondaryShortcut1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.secondaryShortcut1.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			this.secondaryShortcut2 = new ShortcutEditor(rightContainer.Container);
 			this.secondaryShortcut2.Title = Res.Strings.Viewers.Commands.Shortcut.Suppl;
 			this.secondaryShortcut2.Dock = DockStyle.StackBegin;
 			this.secondaryShortcut2.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
 			this.secondaryShortcut2.TabIndex = this.tabIndex++;
-			this.secondaryShortcut2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.secondaryShortcut2.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			//	Group.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Group.Title, 0.5);

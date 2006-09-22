@@ -20,6 +20,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.container = new Widget(this);
 			this.container.Dock = DockStyle.Fill;
+			this.container.TabIndex = 0;
+			this.container.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			this.Entered += new MessageEventHandler(this.HandleMouseEntered);
 			this.Exited += new MessageEventHandler(this.HandleMouseExited);

@@ -28,6 +28,8 @@ namespace Epsitec.Common.Widgets
 			this.fieldModifier.IsLiveUpdateEnabled = false;
 			this.fieldModifier.PreferredWidth = 100;
 			this.fieldModifier.Dock = DockStyle.Left;
+			this.fieldModifier.TabIndex = 0;
+			this.fieldModifier.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldModifier, Res.Strings.ShortcutEditor.Modifier.Tooltip);
 			this.UpdateFieldModifier();
 
@@ -43,7 +45,9 @@ namespace Epsitec.Common.Widgets
 			this.fieldCode.IsLiveUpdateEnabled = false;
 			this.fieldCode.PreferredWidth = 100;
 			this.fieldCode.Dock = DockStyle.Left;
-			ToolTip.Default.SetToolTip(this.fieldCode, Res.Strings.ShortcutEditor.Code.Tooltip);
+			this.fieldCode.TabIndex = 1;
+			this.fieldCode.TabNavigation = TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip (this.fieldCode, Res.Strings.ShortcutEditor.Code.Tooltip);
 			this.UpdateFieldCode();
 		}
 
