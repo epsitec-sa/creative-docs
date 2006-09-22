@@ -2118,6 +2118,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 			}
 
+			public bool IsVirtual
+			{
+				get
+				{
+					if (this.isNewEmptyDocument)
+					{
+						return false;
+					}
+
+					return this.folderItem.IsVirtual;
+				}
+			}
+
 			public string FileSize
 			{
 				//	Taille du fichier en kilo-bytes.
@@ -2397,6 +2410,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				if (this.IsDrive != that.IsDrive)
 				{
 					return this.IsDrive ? -1 : 1;  // unités avant les fichiers
+				}
+
+				if (this.IsVirtual != that.IsVirtual)
+				{
+					return this.IsVirtual ? -1 : 1;  // unités virtuelles avant les dossiers
 				}
 
 				if (this.IsDirectoryOrShortcut != that.IsDirectoryOrShortcut)
