@@ -257,6 +257,8 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			ShortcutEditor editor = sender as ShortcutEditor;
+			ShortcutEditor editor1 = null;
+			ShortcutEditor editor2 = null;
 			int sel = this.access.AccessIndex;
 			string cultureName = null;
 			int rank = -1;
@@ -265,24 +267,32 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				cultureName = null;  // culture principale
 				rank = 0;  // raccourci principal
+				editor1 = this.primaryShortcut1;
+				editor2 = this.primaryShortcut2;
 			}
 
 			if (editor == this.primaryShortcut2)
 			{
 				cultureName = null;  // culture principale
 				rank = 1;  // raccourci supplémentaire
+				editor1 = this.primaryShortcut1;
+				editor2 = this.primaryShortcut2;
 			}
 
 			if (editor == this.secondaryShortcut1)
 			{
 				cultureName = this.secondaryCulture;  // culture secondaire
 				rank = 0;  // raccourci principal
+				editor1 = this.secondaryShortcut1;
+				editor2 = this.secondaryShortcut2;
 			}
 
 			if (editor == this.secondaryShortcut2)
 			{
 				cultureName = this.secondaryCulture;  // culture secondaire
 				rank = 1;  // raccourci supplémentaire
+				editor1 = this.secondaryShortcut1;
+				editor2 = this.secondaryShortcut2;
 			}
 
 			System.Diagnostics.Debug.Assert(rank != -1);
@@ -319,16 +329,47 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			while (collection.Count > 0)
+			//	Supprime tous les raccourcis inexistant KeyCode.None de la collection.
+			int i = 0;
+			bool removed = false;
+			while (i < collection.Count)
 			{
-				if (collection[collection.Count-1] == KeyCode.None)
+				if (collection[i] == KeyCode.None)
 				{
-					collection.RemoveAt(collection.Count-1);
+					collection.RemoveAt(i);
+					removed = true;
 				}
 				else
 				{
-					break;
+					i++;
 				}
+			}
+
+			//	Si des raccourcis inexistants ont été supprimés, il faut réinitialiser les
+			//	widgets, pour éviter d'avoir un trou (KeyCode.None puis KeyCode.AlphaA).
+			if (removed)
+			{
+				this.ignoreChange = true;
+				
+				if (collection.Count < 1)
+				{
+					editor1.Shortcut = new Shortcut(KeyCode.None);
+				}
+				else
+				{
+					editor1.Shortcut = collection[0];
+				}
+
+				if (collection.Count < 2)
+				{
+					editor2.Shortcut = new Shortcut(KeyCode.None);
+				}
+				else
+				{
+					editor2.Shortcut = collection[1];
+				}
+
+				this.ignoreChange = false;
 			}
 
 			this.access.SetField(sel, cultureName, "Shortcuts", new ResourceAccess.Field(collection));
