@@ -1474,9 +1474,14 @@ namespace Epsitec.App.DocumentEditor
 			//	l'enregistrement est fait directement avec le nom connu.
 			//	Affiche l'erreur éventuelle.
 			//	Retourne false si le fichier n'a pas été enregistré.
-			string filename;
+			string filename = this.CurrentDocument.Filename;
+			if (Document.RedirectionFilename(ref filename))
+			{
+				this.DialogWarningRedirection();
+				ask = true;
+			}
 
-			if ( this.CurrentDocument.Filename == "" || ask )
+			if (filename == "" || ask)
 			{
 				this.dlgSplash.Hide();
 
@@ -1485,7 +1490,7 @@ namespace Epsitec.App.DocumentEditor
 					Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
 
 					dialog.InitialDirectory = this.globalSettings.InitialDirectory;
-					dialog.FileName = this.CurrentDocument.Filename;
+					dialog.FileName = filename;
 					dialog.Title = Res.Strings.Dialog.Save.TitlePic;
 					dialog.Filters.Add("icon", Res.Strings.Dialog.FilePic, "*.icon");
 					dialog.PromptForOverwriting = true;
@@ -1501,15 +1506,15 @@ namespace Epsitec.App.DocumentEditor
 				}
 				else
 				{
-					if (this.CurrentDocument.Filename == "")
+					if (filename == "")
 					{
 						this.dlgFileSave.InitialDirectory = this.globalSettings.InitialDirectory;
 						this.dlgFileSave.InitialFilename = "";
 					}
 					else
 					{
-						this.dlgFileSave.InitialDirectory = System.IO.Path.GetDirectoryName(this.CurrentDocument.Filename);
-						this.dlgFileSave.InitialFilename = this.CurrentDocument.Filename;
+						this.dlgFileSave.InitialDirectory = System.IO.Path.GetDirectoryName(filename);
+						this.dlgFileSave.InitialFilename = filename;
 					}
 
 					this.dlgFileSave.FontIncludeMode = this.CurrentDocument.FontIncludeModeValue;
@@ -1532,10 +1537,6 @@ namespace Epsitec.App.DocumentEditor
 					this.CurrentDocument.FontIncludeModeValue = this.dlgFileSave.FontIncludeMode;
 					this.CurrentDocument.ImageIncludeModeValue = this.dlgFileSave.ImageIncludeMode;
 				}
-			}
-			else
-			{
-				filename = this.CurrentDocument.Filename;
 			}
 
 			if (Document.RedirectionFilename(ref filename))
