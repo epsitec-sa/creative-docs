@@ -13,7 +13,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Ajoute une miniature et une statistique dans le cache, si elles n'y sont pas déjà.
 			//	Si la miniature ou la statistique ont changé, il faut au préalable exécuter Remove.
-			filename = filename.ToLower();
+			filename = filename.ToLower();  // voir (*)
 
 			if (!DocumentCache.cache.ContainsKey(filename))
 			{
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Document
 		public static void Remove(string filename)
 		{
 			//	Supprime une miniature et une statistique du cache.
-			filename = filename.ToLower();
+			filename = filename.ToLower();  // voir (*)
 
 			DocumentCache.cache.Remove(filename);
 		}
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Retourne une miniature contenue dans le cache.
 			//	Retourne null si la miniature n'est pas dans le cache.
-			filename = filename.ToLower();
+			filename = filename.ToLower();  // voir (*)
 
 			if (DocumentCache.cache.ContainsKey(filename))
 			{
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Retourne une statistique contenue dans le cache.
 			//	Retourne null si la statistique n'est pas dans le cache.
-			filename = filename.ToLower();
+			filename = filename.ToLower();  // voir (*)
 
 			if (DocumentCache.cache.ContainsKey(filename))
 			{
@@ -80,6 +80,11 @@ namespace Epsitec.Common.Document
 				return null;
 			}
 		}
+
+		// (*)	Il faut considérer 'Abc' = 'abc' à cause de certaines anomalies.
+		//		Par exemple, Document.DirectoryMySamples retourne :
+		//		C:\Documents and Settings\Daniel Roux\Application Data\Epsitec\Crésus Documents\Mes exemples
+		//		'Crésus Documents' au lieu de 'Crésus documents' qui est le vrai nom !
 
 
 		protected static void ReadData(string filename, out byte[] dataImage, out byte[] dataStatistics)

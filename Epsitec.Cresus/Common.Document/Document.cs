@@ -1396,6 +1396,9 @@ namespace Epsitec.Common.Document
 			//	Retourne le nom du dossier contenant les exemples personnels.
 			get
 			{
+				//	Attention, on reçoit:
+				//	C:\Documents and Settings\Daniel Roux\Application Data\Epsitec\Crésus Documents\2.0.2.0
+				//	'Crésus Documents' au lieu de 'Crésus documents' qui est le vrai nom !
 				string path = Common.Support.Globals.Directories.UserAppData;
 				int i = path.LastIndexOf("\\");
 				if (i > 0)
