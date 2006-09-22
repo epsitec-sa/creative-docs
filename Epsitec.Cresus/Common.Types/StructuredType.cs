@@ -108,14 +108,18 @@ namespace Epsitec.Common.Types
 		{
 		}
 
-		private Collections.HostedDictionary<string, INamedType> fields;
-
 		private static object GetFieldsValue(DependencyObject obj)
 		{
+			//	The fields value is not serializable in its native HostedDictionary
+			//	form, so we wrap it into a synthetic (and temporary) collection which
+			//	is only used when serializing and deserializing.
+			
 			StructuredType that = obj as StructuredType;
 			Serialization.Context context = Serialization.Context.GetActiveContext ();
 
-			object data = context.GetEntry (that);
+			System.Diagnostics.Debug.Assert (context != null);
+
+			StructuredTypeFieldCollection data = context.GetEntry (that) as StructuredTypeFieldCollection;
 			
 			if (data == null)
 			{
@@ -123,9 +127,11 @@ namespace Epsitec.Common.Types
 				context.SetEntry (that, data);
 			}
 			
-			return data as StructuredTypeFieldCollection;
+			return data;
 		}
 
 		public static DependencyProperty FieldsProperty = DependencyProperty.RegisterReadOnly ("Fields", typeof (StructuredTypeFieldCollection), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetFieldsValue).MakeReadOnlySerializable ());
+
+		private Collections.HostedDictionary<string, INamedType> fields;
 	}
 }
