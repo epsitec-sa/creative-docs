@@ -13,6 +13,8 @@ namespace Epsitec.Common.Document
 		{
 			//	Ajoute une miniature et une statistique dans le cache, si elles n'y sont pas déjà.
 			//	Si la miniature ou la statistique ont changé, il faut au préalable exécuter Remove.
+			filename = filename.ToLower();
+
 			if (!DocumentCache.cache.ContainsKey(filename))
 			{
 				byte[] dataImage;
@@ -42,6 +44,8 @@ namespace Epsitec.Common.Document
 		public static void Remove(string filename)
 		{
 			//	Supprime une miniature et une statistique du cache.
+			filename = filename.ToLower();
+
 			DocumentCache.cache.Remove(filename);
 		}
 
@@ -49,6 +53,8 @@ namespace Epsitec.Common.Document
 		{
 			//	Retourne une miniature contenue dans le cache.
 			//	Retourne null si la miniature n'est pas dans le cache.
+			filename = filename.ToLower();
+
 			if (DocumentCache.cache.ContainsKey(filename))
 			{
 				return DocumentCache.cache[filename].Image;
@@ -63,6 +69,8 @@ namespace Epsitec.Common.Document
 		{
 			//	Retourne une statistique contenue dans le cache.
 			//	Retourne null si la statistique n'est pas dans le cache.
+			filename = filename.ToLower();
+
 			if (DocumentCache.cache.ContainsKey(filename))
 			{
 				return DocumentCache.cache[filename].Statistics;
