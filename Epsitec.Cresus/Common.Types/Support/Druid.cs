@@ -329,7 +329,8 @@ namespace Epsitec.Common.Support
 		/// <returns>The DRUID.</returns>
 		public static Druid Parse(string value)
 		{
-			if (string.IsNullOrEmpty (value))
+			if ((string.IsNullOrEmpty (value)) ||
+				(value == "<invalid>"))
 			{
 				return new Druid ();
 			}

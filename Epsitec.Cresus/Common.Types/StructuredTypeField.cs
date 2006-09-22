@@ -5,64 +5,36 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
+	/// <summary>
+	/// The <c>StructuredTypeField</c> class is used to represent a name/type
+	/// pair, when serializing a <see cref="StructuredType"/>.
+	/// </summary>
 	[SerializationConverter (typeof (StructuredTypeField.SerializationConverter))]
 	public class StructuredTypeField
 	{
-		public StructuredTypeField()
+		private StructuredTypeField()
 		{
 		}
 
-		public StructuredTypeField(string name, INamedType type)
+		public StructuredTypeField(KeyValuePair<string, INamedType> field)
 		{
-			this.Name = name;
-			this.Type = type;
+			this.name = field.Key;
+			this.type = field.Value;
 		}
 
-		public string Name
+		public string							Name
 		{
 			get
 			{
 				return this.name;
 			}
-			set
-			{
-				this.name = value;
-				this.HandleNameOrTypeChanged ();
-			}
 		}
 
-		public INamedType Type
+		public INamedType						Type
 		{
 			get
 			{
 				return this.type;
-			}
-			set
-			{
-				this.type = value;
-				this.HandleNameOrTypeChanged ();
-			}
-		}
-
-		internal bool IsFullyDefined
-		{
-			get
-			{
-				return (this.name != null) && (this.type != null);
-			}
-		}
-
-		internal void DefineContainer(StructuredTypeFieldCollection container)
-		{
-			this.container = container;
-		}
-
-		private void HandleNameOrTypeChanged()
-		{
-			if ((this.container != null) &&
-				(this.IsFullyDefined))
-			{
-				this.container.NotifyFieldFullyDefined (this);
 			}
 		}
 
@@ -75,18 +47,22 @@ namespace Epsitec.Common.Types
 			public string ConvertToString(object value, IContextResolver context)
 			{
 				StructuredTypeField field = (StructuredTypeField) value;
-				return string.Format ("{0};{1}", field.Name, field.Type.CaptionId);
+				return string.Format ("{0};{1}", field.name, field.type.CaptionId);
 			}
 
 			public object ConvertFromString(string value, IContextResolver context)
 			{
 				string[] args = value.Split (';');
-				StructuredTypeField field = new StructuredTypeField ();
+				
+				string        name  = args[0];
+				Support.Druid druid = Support.Druid.Parse (args[1]);
+				INamedType    type  = null;
 
-				field.Name = args[0];
-				//	TODO: ...
-
-				return field;
+				//	TODO: re-create type from DRUID
+				
+				KeyValuePair<string, INamedType> keyValuePair = new KeyValuePair<string, INamedType> (name, type);
+				
+				return new StructuredTypeField (keyValuePair);
 			}
 
 			#endregion
@@ -94,8 +70,7 @@ namespace Epsitec.Common.Types
 
 		#endregion
 		
-		private StructuredTypeFieldCollection container;
-		private string name;
-		private INamedType type;
+		private string							name;
+		private INamedType						type;
 	}
 }
