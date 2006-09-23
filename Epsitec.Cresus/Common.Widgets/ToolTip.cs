@@ -4,6 +4,8 @@
 using System.Collections.Generic;
 using Epsitec.Common.Types;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.ToolTip))]
+
 namespace Epsitec.Common.Widgets
 {
 	public enum ToolTipBehaviour
