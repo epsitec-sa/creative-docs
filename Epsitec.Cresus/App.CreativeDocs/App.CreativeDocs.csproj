@@ -91,17 +91,20 @@
     <Content Include="Resources\App.DocumentEditor\Captions.00.resource" />
     <Content Include="Resources\App.DocumentEditor\Captions.en.resource" />
     <Content Include="Resources\App.DocumentEditor\module.info" />
+    <Content Include="Resources\App.DocumentEditor\Strings.00.resource" />
     <Content Include="Resources\App.DocumentEditor\Strings.en.resource" />
+    <Content Include="Resources\Common.Widgets\module.info" />
     <Content Include="Resources\Common.Widgets\Captions.00.resource" />
     <Content Include="Resources\Common.Widgets\Captions.en.resource" />
-    <Content Include="Resources\Common.Widgets\module.info" />
+    <Content Include="Resources\Common.Widgets\Strings.00.resource" />
     <Content Include="Resources\Common.Widgets\Strings.en.resource" />
-    <Content Include="Resources\Designer\Captions.00.resource" />
-    <Content Include="Resources\Designer\module.info" />
-    <Content Include="Resources\Designer\Strings.00.resource" />
-    <Content Include="Resources\Designer\Strings.en.resource" />
-    <Content Include="Resources\Document\module.info" />
-    <Content Include="Resources\Document\Strings.en.resource" />
+    <Content Include="Resources\Common.Designer\module.info" />
+    <Content Include="Resources\Common.Designer\Captions.00.resource" />
+    <Content Include="Resources\Common.Designer\Strings.00.resource" />
+    <Content Include="Resources\Common.Designer\Strings.en.resource" />
+    <Content Include="Resources\Common.Document\module.info" />
+    <Content Include="Resources\Common.Document\Strings.00.resource" />
+    <Content Include="Resources\Common.Document\Strings.en.resource" />
     <Content Include="Original Samples\normal.crmod" />
     <Compile Include="Application.cs">
       <SubType>Code</SubType>
@@ -110,9 +113,6 @@
       <SubType>Code</SubType>
     </Compile>
     <EmbeddedResource Include="SplashScreen.png" />
-    <Content Include="Resources\App.DocumentEditor\Strings.00.resource" />
-    <Content Include="Resources\Common.Widgets\Strings.00.resource" />
-    <Content Include="Resources\Document\Strings.00.resource" />
     <Content Include="Original Samples\2005-curve.crdoc" />
     <Content Include="Original Samples\2005-font.crdoc" />
     <Content Include="Original Samples\a4-1col.crmod" />
@@ -136,16 +136,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>copy "$(SolutionDir)Common.Document\Resources\Document\*.resource" "$(ProjectDir)Resources\Document\"
-copy "$(SolutionDir)Common.Widgets\Resources\Common.Widgets\*.resource" "$(ProjectDir)Resources\Common.Widgets\"
-copy "$(SolutionDir)App.DocumentEditor\Resources\App.DocumentEditor\*.resource" "$(ProjectDir)Resources\App.DocumentEditor\"
-copy "$(SolutionDir)Common.Designer\Resources\Designer\*.resource" "$(ProjectDir)Resources\Designer\"
-
-copy "$(SolutionDir)Common.Document\Resources\Document\*.info" "$(ProjectDir)Resources\Document\"
-copy "$(SolutionDir)Common.Widgets\Resources\Common.Widgets\*.info" "$(ProjectDir)Resources\Common.Widgets\"
-copy "$(SolutionDir)App.DocumentEditor\Resources\App.DocumentEditor\*.info" "$(ProjectDir)Resources\App.DocumentEditor\"
-copy "$(SolutionDir)Common.Designer\Resources\Designer\*.info" "$(ProjectDir)Resources\Designer\"
-</PreBuildEvent>
+    <PreBuildEvent>
+      xcopy "$(SolutionDir)Common.Designer\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+      xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+      xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+      xcopy "$(SolutionDir)App.DocumentEditor\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+    </PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
