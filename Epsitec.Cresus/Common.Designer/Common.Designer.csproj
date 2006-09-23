@@ -233,9 +233,10 @@
     <EmbeddedResource Include="Images\AlignBaseLine.icon" />
     <EmbeddedResource Include="Images\CursorFinger.icon" />
     <EmbeddedResource Include="Images\ObjectVLine.icon" />
-    <Content Include="Resources\Designer\module.info" />
-    <Content Include="Resources\Designer\Strings.00.resource" />
-    <Content Include="Resources\Designer\Strings.en.resource" />
+    <Content Include="Resources\Common.Designer\module.info" />
+    <Content Include="Resources\Common.Designer\Captions.00.resource" />
+    <Content Include="Resources\Common.Designer\Strings.00.resource" />
+    <Content Include="Resources\Common.Designer\Strings.en.resource" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\MoveRight.icon" />
@@ -257,9 +258,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\PropertyPadding.icon" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\Designer\Captions.00.resource" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\PropertyCPAnchored.icon" />
