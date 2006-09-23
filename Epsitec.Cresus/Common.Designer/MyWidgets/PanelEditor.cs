@@ -1497,24 +1497,35 @@ namespace Epsitec.Common.Designer.MyWidgets
 					druid = Druid.Parse(binding.ResourceId);
 				}
 
-#if true
+#if false
 				druid = this.module.MainWindow.DlgResourceSelector(this.module.PrepareAccess(ResourceAccess.Type.Strings), druid);
-#else
-				//	TODO: provisoire
-				if (obj is Button)
-				{
-					druid = this.module.MainWindow.DlgResourceSelector(this.module.PrepareAccess(ResourceAccess.Type.Commands), druid);
-				}
-				else
-				{
-					druid = this.module.MainWindow.DlgResourceSelector(this.module.PrepareAccess(ResourceAccess.Type.Strings), druid);
-				}
-#endif
 				
 				if (druid.IsValid)
 				{
 					this.module.ResourceManager.Bind(obj, Widget.TextProperty, druid);
 				}
+#else
+				if (obj is Button)
+				{
+					druid = this.module.MainWindow.DlgResourceSelector(this.module.PrepareAccess(ResourceAccess.Type.Commands), druid);
+
+					if (druid.IsValid)
+					{
+						Command command = Command.Get(druid);
+						//this.module.MainWindow.CommandDispatcher.Register(command, null);
+						obj.CommandObject = command;
+					}
+				}
+				else
+				{
+					druid = this.module.MainWindow.DlgResourceSelector(this.module.PrepareAccess(ResourceAccess.Type.Strings), druid);
+
+					if (druid.IsValid)
+					{
+						this.module.ResourceManager.Bind(obj, Widget.TextProperty, druid);
+					}
+				}
+#endif
 			}
 		}
 
