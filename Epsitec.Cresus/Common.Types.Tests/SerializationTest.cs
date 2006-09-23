@@ -663,6 +663,33 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Integer", st.Fields["Age"].Name);
 		}
 
+		[Test]
+		public void CheckStructuredTypeSerializationUsingCaption()
+		{
+			StructuredType st = new StructuredType ();
+
+			st.AddField ("Name", StringType.Default);
+			st.AddField ("Age", IntegerType.Default);
+
+			string serial = st.Caption.SerializeToString ();
+			
+			System.Console.Out.WriteLine ("{0}", serial);
+
+			Caption caption = new Caption ();
+			caption.DeserializeFromString (serial);
+
+			StructuredType readSt = AbstractType.GetComplexType (caption) as StructuredType;
+
+			Assert.IsNotNull (readSt);
+			Assert.AreEqual (st.Fields.Count, readSt.Fields.Count);
+
+			Assert.IsTrue (st.Fields.ContainsKey ("Name"));
+			Assert.IsTrue (st.Fields.ContainsKey ("Age"));
+
+			Assert.AreEqual ("String", st.Fields["Name"].Name);
+			Assert.AreEqual ("Integer", st.Fields["Age"].Name);
+		}
+
 		private MyItem CreateSampleTree(out MyItem ext)
 		{
 			ext = new MyItem ();
