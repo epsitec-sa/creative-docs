@@ -55,6 +55,19 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 
-		public static readonly DecimalType Default = new DecimalType ();
+		public static DecimalType Default
+		{
+			get
+			{
+				if (DecimalType.defaultValue == null)
+				{
+					DecimalType.defaultValue = (DecimalType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1004]"));
+				}
+
+				return DecimalType.defaultValue;
+			}
+		}
+
+		private static DecimalType defaultValue;
 	}
 }

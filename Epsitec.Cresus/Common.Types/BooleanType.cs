@@ -45,6 +45,19 @@ namespace Epsitec.Common.Types
 			BooleanType.DefaultControllerProperty.OverrideMetadata (typeof (BooleanType), metadata);
 		}
 
-		public static readonly BooleanType Default = (BooleanType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1003]"));
+		public static BooleanType Default
+		{
+			get
+			{
+				if (BooleanType.defaultValue == null)
+				{
+					BooleanType.defaultValue = (BooleanType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1003]"));
+				}
+
+				return BooleanType.defaultValue;
+			}
+		}
+
+		private static BooleanType defaultValue;
 	}
 }

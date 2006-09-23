@@ -53,6 +53,19 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 
-		public static readonly IntegerType Default = new IntegerType ();
+		public static IntegerType Default
+		{
+			get
+			{
+				if (IntegerType.defaultValue == null)
+				{
+					IntegerType.defaultValue = (IntegerType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1006]"));
+				}
+
+				return IntegerType.defaultValue;
+			}
+		}
+
+		private static IntegerType defaultValue;
 	}
 }

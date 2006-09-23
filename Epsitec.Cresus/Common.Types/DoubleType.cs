@@ -55,9 +55,22 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 
-		public static readonly DoubleType Default = new DoubleType ();
-
 		public const decimal TenTo24 = 1000000M*1000000M * 1000000M*1000000M;
 		public const decimal TenTo28 = 1000000M*1000000M * 1000000M*1000000M * 10000M;
+
+		public static DoubleType Default
+		{
+			get
+			{
+				if (DoubleType.defaultValue == null)
+				{
+					DoubleType.defaultValue = (DoubleType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1005]"));
+				}
+
+				return DoubleType.defaultValue;
+			}
+		}
+
+		private static DoubleType defaultValue;
 	}
 }
