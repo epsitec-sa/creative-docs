@@ -613,8 +613,8 @@ namespace Epsitec.Common.Types
 		{
 			StructuredType st = new StructuredType ();
 
-			st.AddField ("Name", new StringType ());
-			st.AddField ("Age", new IntegerType (0, 199));
+			st.AddField ("Name", StringType.Default);
+			st.AddField ("Age", IntegerType.Default);
 
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			System.IO.StringWriter stringWriter = new System.IO.StringWriter (buffer);
@@ -655,6 +655,12 @@ namespace Epsitec.Common.Types
 
 			Assert.IsNotNull (readSt);
 			Assert.AreEqual (st.Fields.Count, readSt.Fields.Count);
+
+			Assert.IsTrue (st.Fields.ContainsKey ("Name"));
+			Assert.IsTrue (st.Fields.ContainsKey ("Age"));
+
+			Assert.AreEqual ("String", st.Fields["Name"].Name);
+			Assert.AreEqual ("Integer", st.Fields["Age"].Name);
 		}
 
 		private MyItem CreateSampleTree(out MyItem ext)
