@@ -45,14 +45,40 @@ namespace Epsitec.Common.Types
 			Assert.IsNotNull (TypeRosetta.GetTypeObject ("LongInteger"), "LongInteger type not found");
 			Assert.IsNotNull (TypeRosetta.GetTypeObject ("String"), "String type not found");
 			Assert.IsNotNull (TypeRosetta.GetTypeObject ("Void"), "Void type not found");
-			
-			Assert.AreEqual (typeof (bool), TypeRosetta.GetTypeObject ("Boolean").SystemType);
-			Assert.AreEqual (typeof (decimal), TypeRosetta.GetTypeObject ("Decimal").SystemType);
-			Assert.AreEqual (typeof (double), TypeRosetta.GetTypeObject ("Double").SystemType);
-			Assert.AreEqual (typeof (int), TypeRosetta.GetTypeObject ("Integer").SystemType);
-			Assert.AreEqual (typeof (long), TypeRosetta.GetTypeObject ("LongInteger").SystemType);
-			Assert.AreEqual (typeof (string), TypeRosetta.GetTypeObject ("String").SystemType);
-			Assert.AreEqual (typeof (void), TypeRosetta.GetTypeObject ("Void").SystemType);
+
+			Assert.AreEqual (typeof (bool),		TypeRosetta.GetTypeObject ("Boolean").SystemType);
+			Assert.AreEqual (typeof (decimal),	TypeRosetta.GetTypeObject ("Decimal").SystemType);
+			Assert.AreEqual (typeof (double),	TypeRosetta.GetTypeObject ("Double").SystemType);
+			Assert.AreEqual (typeof (int),		TypeRosetta.GetTypeObject ("Integer").SystemType);
+			Assert.AreEqual (typeof (long),		TypeRosetta.GetTypeObject ("LongInteger").SystemType);
+			Assert.AreEqual (typeof (string),	TypeRosetta.GetTypeObject ("String").SystemType);
+			Assert.AreEqual (typeof (void),		TypeRosetta.GetTypeObject ("Void").SystemType);
+
+			Assert.AreEqual (typeof (bool),		TypeRosetta.GetTypeObject (Druid.Parse ("[1003]")).SystemType);
+			Assert.AreEqual (typeof (decimal),	TypeRosetta.GetTypeObject (Druid.Parse ("[1004]")).SystemType);
+			Assert.AreEqual (typeof (double),	TypeRosetta.GetTypeObject (Druid.Parse ("[1005]")).SystemType);
+			Assert.AreEqual (typeof (int),		TypeRosetta.GetTypeObject (Druid.Parse ("[1006]")).SystemType);
+			Assert.AreEqual (typeof (long),		TypeRosetta.GetTypeObject (Druid.Parse ("[1007]")).SystemType);
+			Assert.AreEqual (typeof (string),	TypeRosetta.GetTypeObject (Druid.Parse ("[1008]")).SystemType);
+			Assert.AreEqual (typeof (void),		TypeRosetta.GetTypeObject (Druid.Parse ("[1009]")).SystemType);
+
+			AbstractType t1 = TypeRosetta.GetTypeObject ("Boolean");
+			AbstractType t2 = TypeRosetta.GetTypeObject (Druid.Parse ("[1003]"));
+			AbstractType t3 = TypeRosetta.CreateTypeObject (Druid.Parse ("[1003]"));
+			AbstractType t4 = TypeRosetta.CreateTypeObject (Druid.Parse ("[1003]"));
+
+			Assert.AreEqual (t1, t2);
+			Assert.AreNotEqual (t3, t4);
+
+			Caption caption = Resources.DefaultManager.GetCaption (Druid.Parse ("[1003]"));
+
+			AbstractType t5 = TypeRosetta.GetTypeObject (caption);
+			AbstractType t6 = TypeRosetta.GetTypeObject (caption);
+			AbstractType t7 = TypeRosetta.CreateTypeObject (caption);
+			AbstractType t8 = TypeRosetta.CreateTypeObject (caption);
+
+			Assert.AreEqual (t5, t6);
+			Assert.AreNotEqual (t7, t8);
 		}
 		
 		[Test]

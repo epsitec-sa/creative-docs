@@ -304,6 +304,11 @@ namespace Epsitec.Common.Types
 			return null;
 		}
 
+		/// <summary>
+		/// Gets the type object with the specified type id.
+		/// </summary>
+		/// <param name="typeId">The type object DRUID.</param>
+		/// <returns>The type object or <c>null</c> if no matching type object can be found.</returns>
 		public static AbstractType GetTypeObject(Support.Druid typeId)
 		{
 			TypeRosetta.InitializeKnownTypes ();
@@ -323,13 +328,62 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the type object described by the specified caption. This
+		/// relies on an internal cache to speed up accesses.
+		/// </summary>
+		/// <param name="typeId">The caption defining a type object.</param>
+		/// <returns>The type object or <c>null</c> if no matching type object can be found.</returns>
+		public static AbstractType GetTypeObject(Caption caption)
+		{
+			if (caption == null)
+			{
+				throw new System.ArgumentNullException ("caption");
+			}
+
+			AbstractType type = AbstractType.GetCachedType (caption);
+
+			if (type != null)
+			{
+				return type;
+			}
+
+			type = TypeRosetta.GetTypeObject (caption.Druid);
+
+			if (type == null)
+			{
+				type = TypeRosetta.CreateTypeObject (caption);
+
+				System.Diagnostics.Debug.Assert ((type == null) || (TypeRosetta.knownTypes.ContainsKey (caption.Druid)));
+			}
+
+			if (type != null)
+			{
+				AbstractType.SetCachedType (caption, type);
+			}
+			
+			return type;
+		}
+
+		/// <summary>
+		/// Creates the type object for the specified type id.
+		/// </summary>
+		/// <param name="druid">The type object DRUID.</param>
+		/// <returns>The type object or <c>null</c> if the type object cannot be created.</returns>
 		public static AbstractType CreateTypeObject(Support.Druid druid)
 		{
 			Caption caption = Support.Resources.DefaultManager.GetCaption (druid);
 			
 			return TypeRosetta.CreateTypeObject (caption);
 		}
-		
+
+		/// <summary>
+		/// Creates the type object for the specified caption.
+		/// </summary>
+		/// <param name="caption">The caption used to store the type object definition.</param>
+		/// <returns>
+		/// The type object or <c>null</c> if the type object cannot be created.
+		/// </returns>
 		public static AbstractType CreateTypeObject(Caption caption)
 		{
 			TypeRosetta.InitializeKnownTypes ();
@@ -340,40 +394,37 @@ namespace Epsitec.Common.Types
 			}
 
 			Support.Druid typeId = caption.Druid;
-			AbstractType  type   = AbstractType.GetCachedType (caption);
+			AbstractType  type   = null;
 
-			if (type == null)
+			switch (AbstractType.GetSystemType (caption))
 			{
-				switch (AbstractType.GetSystemType (caption))
-				{
-					case "System.Boolean":
-						type = new BooleanType (caption);
-						break;
+				case "System.Boolean":
+					type = new BooleanType (caption);
+					break;
 
-					case "System.Decimal":
-						type = new DecimalType (caption);
-						break;
+				case "System.Decimal":
+					type = new DecimalType (caption);
+					break;
 
-					case "System.Double":
-						type = new DoubleType (caption);
-						break;
+				case "System.Double":
+					type = new DoubleType (caption);
+					break;
 
-					case "System.Int32":
-						type = new IntegerType (caption);
-						break;
+				case "System.Int32":
+					type = new IntegerType (caption);
+					break;
 
-					case "System.Int64":
-						type = new LongIntegerType (caption);
-						break;
+				case "System.Int64":
+					type = new LongIntegerType (caption);
+					break;
 
-					case "System.String":
-						type = new StringType (caption);
-						break;
+				case "System.String":
+					type = new StringType (caption);
+					break;
 
-					case "System.Void":
-						type = new VoidType (caption);
-						break;
-				}
+				case "System.Void":
+					type = new VoidType (caption);
+					break;
 			}
 
 			if ((type != null) &&
