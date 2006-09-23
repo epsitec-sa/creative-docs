@@ -13,7 +13,7 @@ namespace Epsitec.Common.Types
 	public struct DecimalRange : System.IEquatable<DecimalRange>
 	{
 		public DecimalRange(decimal min, decimal max)
-			: this (min, max, 1.0M)
+			: this (min, max, 1M)
 		{
 		}
 
@@ -22,9 +22,9 @@ namespace Epsitec.Common.Types
 			this.minimum     = min;
 			this.maximum     = max;
 			this.resolution  = 0;
-			this.digitsDiv  = 0;
-			this.digitsMul  = 0;
-			this.fracDigits = 0;
+			this.digitsDiv   = 0;
+			this.digitsMul   = 0;
+			this.fracDigits  = 0;
 
 			this.DefineResolution (resolution);
 		}
