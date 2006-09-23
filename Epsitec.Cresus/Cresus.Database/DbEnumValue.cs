@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
@@ -50,17 +50,26 @@ namespace Epsitec.Cresus.Database
 		
 		public string							Name
 		{
-			get { return this.Attributes[Tags.Name, ResourceLevel.Default]; }
+			get
+			{
+				return this.Attributes[Tags.Name, ResourceLevel.Default];
+			}
 		}
 		
 		public string							Caption
 		{
-			get { return this.Attributes[Tags.Caption]; }
+			get
+			{
+				return this.Attributes[Tags.Caption];
+			}
 		}
 		
 		public string							Description
 		{
-			get { return this.Attributes[Tags.Description]; }
+			get
+			{
+				return this.Attributes[Tags.Description];
+			}
 		}
 
 		public Common.Support.Druid				CaptionId
@@ -71,7 +80,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public System.Enum Value
+		public System.Enum						Value
 		{
 			get
 			{
@@ -79,9 +88,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public int Rank
+		public int								Rank
 		{
-			get { return this.rank; }
+			get
+			{
+				return this.rank;
+			}
 		}
 		
 		public bool								IsHidden
@@ -94,7 +106,10 @@ namespace Epsitec.Cresus.Database
 		
 		public DbKey							InternalKey
 		{
-			get { return this.internal_key; }
+			get
+			{
+				return this.internal_key;
+			}
 		}
 		
 		

@@ -147,6 +147,28 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("[res:Enums#MyEnum.Third.capt]",  et["Third"].CaptionId);
 			Assert.AreEqual ("[res:Enums#MyEnum.Extra.capt]",  et["Extra"].CaptionId);
 		}
+
+		[Test]
+		public void CheckEnumType5()
+		{
+			System.ComponentModel.EnumConverter converter = new System.ComponentModel.EnumConverter (typeof (MyEnum));
+
+			//	The converter cannot be used to convert a MyEnum object to an int.
+
+			System.Enum value1 = MyEnum.First;
+			MyEnum      value2 = MyEnum.First;
+			object      value3 = System.Enum.ToObject (typeof (MyEnum), 1);
+
+			//	Casting to int only works with the real MyEnum typed object. The others,
+			//	even if they are equal, won't accept the cast at compile time :
+			
+			System.Console.Out.WriteLine ("System.Enum --> {0} ---", value1.GetType ().FullName/*, (int) value1*/);
+			System.Console.Out.WriteLine ("MyEnum -------> {0} {1}", value2.GetType ().FullName, (int) value2);
+			System.Console.Out.WriteLine ("object -------> {0} ---", value3.GetType ().FullName/*, (int) value3*/);
+
+			Assert.AreEqual (value1, value2);
+			Assert.AreEqual (value1, value3);
+		}
 		
 		[Test] public void CheckOpenEnumType()
 		{
