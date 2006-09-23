@@ -178,8 +178,8 @@
     <EmbeddedResource Include="Images\NavigatePrev.icon" />
     <EmbeddedResource Include="Images\FileTypeEpsitecSamples.icon" />
     <EmbeddedResource Include="Images\FileTypeMySamples.icon" />
-    <Content Include="Resources\App\Captions.00.resource" />
-    <Content Include="Resources\App\Captions.en.resource" />
+    <Content Include="Resources\App.DocumentEditor\Captions.00.resource" />
+    <Content Include="Resources\App.DocumentEditor\Captions.en.resource" />
     <EmbeddedResource Include="Images\FileRename.icon" />
     <EmbeddedResource Include="Images\FileDelete.icon" />
     <EmbeddedResource Include="Images\NewDirectory.icon" />
@@ -194,7 +194,7 @@
     <EmbeddedResource Include="Images\Picker.icon" />
     <EmbeddedResource Include="Images\Zoom.icon" />
     <EmbeddedResource Include="Images\Hand.icon" />
-    <Content Include="Resources\App\module.info" />
+    <Content Include="Resources\App.DocumentEditor\module.info" />
     <EmbeddedResource Include="Images\ToolSelect.icon" />
     <EmbeddedResource Include="Images\ToolEdit.icon" />
     <EmbeddedResource Include="Images\ToolGlobal.icon" />
@@ -684,8 +684,8 @@
     <EmbeddedResource Include="Images\ZoomShift.icon" />
     <EmbeddedResource Include="Images\ZoomShiftCtrl.icon" />
     <EmbeddedResource Include="Images\ZoomSub.icon" />
-    <Content Include="Resources\App\Strings.00.resource" />
-    <Content Include="Resources\App\Strings.en.resource" />
+    <Content Include="Resources\App.DocumentEditor\Strings.00.resource" />
+    <Content Include="Resources\App.DocumentEditor\Strings.en.resource" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
