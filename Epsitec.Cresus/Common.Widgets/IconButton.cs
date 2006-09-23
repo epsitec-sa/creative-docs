@@ -139,14 +139,14 @@ namespace Epsitec.Common.Widgets
 					builder.Append (@"""");
 				}
 
-				if (this.preferredIconLanguage != null && this.preferredIconLanguage != "")
+				if (string.IsNullOrEmpty (this.preferredIconLanguage) == false)
 				{
 					builder.Append (@" lang=""");
 					builder.Append (this.preferredIconLanguage);
 					builder.Append (@"""");
 				}
 
-				if (this.preferredIconStyle != null && this.preferredIconStyle != "")
+				if (string.IsNullOrEmpty (this.preferredIconStyle) == false)
 				{
 					builder.Append (@" style=""");
 					builder.Append (this.preferredIconStyle);
