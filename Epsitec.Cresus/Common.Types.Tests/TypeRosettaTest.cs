@@ -3,11 +3,38 @@
 
 using NUnit.Framework;
 using System.Collections.Generic;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Types
 {
 	[TestFixture] public class TypeRosettaTest
 	{
+		[Test]
+		public void CheckCreateTypeObjects()
+		{
+			TypeRosettaTest.CreateTypeObject (BooleanType.Default);
+			TypeRosettaTest.CreateTypeObject (DecimalType.Default);
+			TypeRosettaTest.CreateTypeObject (DoubleType.Default);
+			TypeRosettaTest.CreateTypeObject (IntegerType.Default);
+			TypeRosettaTest.CreateTypeObject (LongIntegerType.Default);
+			TypeRosettaTest.CreateTypeObject (StringType.Default);
+			TypeRosettaTest.CreateTypeObject (VoidType.Default);
+		}
+
+		private static void CreateTypeObject(AbstractType type)
+		{
+			System.Console.Out.WriteLine ("Type '{0}':", type.Name);
+
+			Caption caption = type.Caption;
+			string text = caption.SerializeToString ();
+
+			text = text.Replace ("&", "&amp;");
+			text = text.Replace ("<", "&lt;");
+			text = text.Replace (">", "&gt;");
+			
+			System.Console.Out.WriteLine ("  {0}", text);
+		}
+		
 		[Test]
 		public void CheckGetTypeObject()
 		{
@@ -167,7 +194,7 @@ namespace Epsitec.Common.Types
 		
 		#endregion
 
-		#region class B
+		#region B Class
 
 		private class B : A
 		{

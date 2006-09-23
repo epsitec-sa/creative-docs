@@ -325,6 +325,9 @@
     </Compile>
     <Compile Include="Weak.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\Common.Types\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

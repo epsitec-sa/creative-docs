@@ -288,76 +288,122 @@ namespace Epsitec.Common.Types
 		/// <returns>The type object or <c>null</c> if no matching type object can be found.</returns>
 		public static AbstractType GetTypeObject(string name)
 		{
-			TypeRosetta.InitializeNamedTypes ();
+			TypeRosetta.InitializeKnownTypes ();
 
-			AbstractType type;
-
-			if (TypeRosetta.namedTypes.TryGetValue (name, out type))
+			lock (TypeRosetta.knownTypes)
 			{
-				return type;
+				foreach (AbstractType type in TypeRosetta.knownTypes.Values)
+				{
+					if (type.Name == name)
+					{
+						return type;
+					}
+				}
 			}
-			
+
 			return null;
+		}
+
+		public static AbstractType GetTypeObject(Support.Druid typeId)
+		{
+			TypeRosetta.InitializeKnownTypes ();
+
+			lock (TypeRosetta.knownTypes)
+			{
+				AbstractType type;
+
+				if (TypeRosetta.knownTypes.TryGetValue (typeId, out type))
+				{
+					return type;
+				}
+				else
+				{
+					return null;
+				}
+			}
 		}
 
 		public static AbstractType CreateTypeObject(Caption caption)
 		{
-			AbstractType type = null;
-			
-			switch (AbstractType.GetSystemType (caption))
+			if (caption == null)
 			{
-				case "System.Boolean":
-					type = new BooleanType (caption);
-					break;
-				
-				case "System.Decimal":
-					type = new DecimalType (caption);
-					break;
-				
-				case "System.Double":
-					type = new DoubleType (caption);
-					break;
+				throw new System.ArgumentNullException ("caption");
+			}
 
-				case "System.Int32":
-					type = new IntegerType (caption);
-					break;
+			Support.Druid typeId = caption.Druid;
+			AbstractType  type   = AbstractType.GetCachedType (caption);
 
-				case "System.Int64":
-					type = new LongIntegerType (caption);
-					break;
+			if (type == null)
+			{
+				switch (AbstractType.GetSystemType (caption))
+				{
+					case "System.Boolean":
+						type = new BooleanType (caption);
+						break;
 
-				case "System.String":
-					type = new StringType (caption);
-					break;
+					case "System.Decimal":
+						type = new DecimalType (caption);
+						break;
 
-				case "System.Void":
-					type = new VoidType (caption);
-					break;
+					case "System.Double":
+						type = new DoubleType (caption);
+						break;
 
+					case "System.Int32":
+						type = new IntegerType (caption);
+						break;
+
+					case "System.Int64":
+						type = new LongIntegerType (caption);
+						break;
+
+					case "System.String":
+						type = new StringType (caption);
+						break;
+
+					case "System.Void":
+						type = new VoidType (caption);
+						break;
+				}
+			}
+
+			if ((type != null) &&
+				(typeId.IsValid))
+			{
+				lock (TypeRosetta.knownTypes)
+				{
+					//	Check if the type is already known. If not, record a reference to
+					//	it so that we can then access it by its DRUID or by its name :
+
+					if (TypeRosetta.knownTypes.ContainsKey (typeId) == false)
+					{
+						TypeRosetta.knownTypes[typeId] = type;
+					}
+				}
 			}
 			
 			return type;
 		}
 
-		private static void InitializeNamedTypes()
+		private static void InitializeKnownTypes()
 		{
-			if (TypeRosetta.namedTypes == null)
+			if (TypeRosetta.knownTypes == null)
 			{
 				lock (TypeRosetta.globalExclusion)
 				{
-					if (TypeRosetta.namedTypes == null)
+					if (TypeRosetta.knownTypes == null)
 					{
-						Dictionary<string, AbstractType> dict = new Dictionary<string, AbstractType> ();
+						Dictionary<Support.Druid, AbstractType> dict = new Dictionary<Support.Druid, AbstractType> ();
 
 						TypeRosetta.InitializeDictionaryWithDefaultTypes (dict);
-						
-						TypeRosetta.namedTypes = dict;
+
+						TypeRosetta.knownTypes = dict;
 					}
 				}
 			}
 		}
 
-		private static void InitializeDictionaryWithDefaultTypes(Dictionary<string, AbstractType> dict)
+		private static void InitializeDictionaryWithDefaultTypes(Dictionary<Support.Druid, AbstractType> dict)
 		{
 			//	Fill the dictionary with the known default types. This defines the
 			//	following basic .NET types :
@@ -376,10 +422,16 @@ namespace Epsitec.Common.Types
 			TypeRosetta.AddType (dict, VoidType.Default);
 		}
 
-		private static void AddType(Dictionary<string, AbstractType> dict, AbstractType type)
+		private static void AddType(Dictionary<Support.Druid, AbstractType> dict, AbstractType type)
 		{
 			type.LockName ();
-			dict.Add (type.Name, type);
+
+			Support.Druid typeId = type.CaptionId;
+
+			if (typeId.IsValid)
+			{
+				dict.Add (type.CaptionId, type);
+			}
 		}
 
 		#region AutomaticNamedType Class
@@ -544,6 +596,6 @@ namespace Epsitec.Common.Types
 
 		private static object globalExclusion = new object ();
 
-		private static Dictionary<string, AbstractType> namedTypes;
+		private static Dictionary<Support.Druid, AbstractType> knownTypes;
 	}
 }
