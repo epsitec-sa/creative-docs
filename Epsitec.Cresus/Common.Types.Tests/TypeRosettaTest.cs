@@ -38,6 +38,14 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckGetTypeObject()
 		{
+			Assert.IsNotNull (TypeRosetta.GetTypeObject ("Boolean"), "Boolean type not found");
+			Assert.IsNotNull (TypeRosetta.GetTypeObject ("Decimal"), "Decimal type not found");
+			Assert.IsNotNull (TypeRosetta.GetTypeObject ("Double"), "Double type not found");
+			Assert.IsNotNull (TypeRosetta.GetTypeObject ("Integer"), "Integer type not found");
+			Assert.IsNotNull (TypeRosetta.GetTypeObject ("LongInteger"), "LongInteger type not found");
+			Assert.IsNotNull (TypeRosetta.GetTypeObject ("String"), "String type not found");
+			Assert.IsNotNull (TypeRosetta.GetTypeObject ("Void"), "Void type not found");
+			
 			Assert.AreEqual (typeof (bool), TypeRosetta.GetTypeObject ("Boolean").SystemType);
 			Assert.AreEqual (typeof (decimal), TypeRosetta.GetTypeObject ("Decimal").SystemType);
 			Assert.AreEqual (typeof (double), TypeRosetta.GetTypeObject ("Double").SystemType);
