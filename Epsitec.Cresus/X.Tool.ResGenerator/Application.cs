@@ -124,7 +124,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 			buffer.Append ("//\tDo not edit manually.\n\n");
 
 			generator.BeginBlock ("namespace", defaultNamespace);
-			generator.BeginBlock ("internal static class", "Res");
+			generator.BeginBlock ("public static class", "Res");
 
 			string[] bundleIds = manager.GetBundleIds ("*", "*", ResourceLevel.Default);
 
