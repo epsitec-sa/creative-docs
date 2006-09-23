@@ -1,6 +1,8 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.AbstractNumericType))]
+
 namespace Epsitec.Common.Types
 {
 	public abstract class AbstractNumericType : AbstractType, INumericType

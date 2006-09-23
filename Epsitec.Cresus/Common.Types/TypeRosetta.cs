@@ -323,8 +323,17 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public static AbstractType CreateTypeObject(Support.Druid druid)
+		{
+			Caption caption = Support.Resources.DefaultManager.GetCaption (druid);
+			
+			return TypeRosetta.CreateTypeObject (caption);
+		}
+		
 		public static AbstractType CreateTypeObject(Caption caption)
 		{
+			TypeRosetta.InitializeKnownTypes ();
+			
 			if (caption == null)
 			{
 				throw new System.ArgumentNullException ("caption");
@@ -395,9 +404,9 @@ namespace Epsitec.Common.Types
 					{
 						Dictionary<Support.Druid, AbstractType> dict = new Dictionary<Support.Druid, AbstractType> ();
 
-						TypeRosetta.InitializeDictionaryWithDefaultTypes (dict);
-
 						TypeRosetta.knownTypes = dict;
+						
+						TypeRosetta.InitializeDictionaryWithDefaultTypes (dict);
 					}
 				}
 			}
@@ -413,25 +422,18 @@ namespace Epsitec.Common.Types
 			//	- string
 			//	- void
 			
-			TypeRosetta.AddType (dict, BooleanType.Default);
-			TypeRosetta.AddType (dict, DecimalType.Default);
-			TypeRosetta.AddType (dict, DoubleType.Default);
-			TypeRosetta.AddType (dict, IntegerType.Default);
-			TypeRosetta.AddType (dict, LongIntegerType.Default);
-			TypeRosetta.AddType (dict, StringType.Default);
-			TypeRosetta.AddType (dict, VoidType.Default);
+			TypeRosetta.AddType (BooleanType.Default);
+			TypeRosetta.AddType (DecimalType.Default);
+			TypeRosetta.AddType (DoubleType.Default);
+			TypeRosetta.AddType (IntegerType.Default);
+			TypeRosetta.AddType (LongIntegerType.Default);
+			TypeRosetta.AddType (StringType.Default);
+			TypeRosetta.AddType (VoidType.Default);
 		}
 
-		private static void AddType(Dictionary<Support.Druid, AbstractType> dict, AbstractType type)
+		private static void AddType(AbstractType type)
 		{
 			type.LockName ();
-
-			Support.Druid typeId = type.CaptionId;
-
-			if (typeId.IsValid)
-			{
-				dict.Add (type.CaptionId, type);
-			}
 		}
 
 		#region AutomaticNamedType Class
