@@ -5,6 +5,10 @@
 
 namespace Epsitec.Common.Types
 {
+	/// <summary>
+	/// The <c>AbstractType</c> class implements the basic type properties by
+	/// storing them as attached properties in a <see cref="Caption"/>.
+	/// </summary>
 	public abstract class AbstractType : NamedDependencyObject, INamedType, IDataConstraint
 	{
 		protected AbstractType(string name)
@@ -58,6 +62,11 @@ namespace Epsitec.Common.Types
 		
 		#endregion
 
+		/// <summary>
+		/// Defines the default controller used to represent data of this type.
+		/// </summary>
+		/// <param name="controller">The controller.</param>
+		/// <param name="controllerParameter">The controller parameter.</param>
 		public void DefineDefaultController(string controller, string controllerParameter)
 		{
 			if (this.DefaultController != controller)
@@ -83,21 +92,41 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the value of the <c>SystemTypeProperty</c> dependency property.
+		/// </summary>
+		/// <param name="caption">The caption to query.</param>
+		/// <returns>The value or <c>null</c> if none is defined.</returns>
 		public static string GetSystemType(Caption caption)
 		{
 			return (string) caption.GetValue (AbstractType.SytemTypeProperty);
 		}
-		
+
+		/// <summary>
+		/// Gets the value of the <c>CachedTypeProperty</c> dependency property.
+		/// </summary>
+		/// <param name="caption">The caption to query.</param>
+		/// <returns>The value or <c>null</c> if none is defined.</returns>
 		public static AbstractType GetCachedType(Caption caption)
 		{
 			return (AbstractType) caption.GetValue (AbstractType.CachedTypeProperty);
 		}
 
+		/// <summary>
+		/// Gets the value of the <c>ComplexTypeProperty</c> dependency property.
+		/// </summary>
+		/// <param name="caption">The caption to query.</param>
+		/// <returns>The value or <c>null</c> if none is defined.</returns>
 		public static AbstractType GetComplexType(Caption caption)
 		{
 			return (AbstractType) caption.GetValue (AbstractType.ComplexTypeProperty);
 		}
 
+		/// <summary>
+		/// Sets the value of the <c>SystemTypeProperty</c> dependency property.
+		/// </summary>
+		/// <param name="caption">The caption to modify.</param>
+		/// <param name="value">The value.</param>
 		public static void SetSystemType(Caption caption, string value)
 		{
 			if (string.IsNullOrEmpty (value))
@@ -110,6 +139,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Sets the value of the <c>CachedTypeProperty</c> dependency property.
+		/// </summary>
+		/// <param name="caption">The caption to modify.</param>
+		/// <param name="value">The value.</param>
 		public static void SetCachedType(Caption caption, AbstractType value)
 		{
 			if (value == null)
@@ -122,6 +156,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Sets the value of the <c>ComplexTypeProperty</c> dependency property.
+		/// </summary>
+		/// <param name="caption">The caption to modify.</param>
+		/// <param name="value">The value.</param>
 		public static void SetComplexType(Caption caption, AbstractType value)
 		{
 			if (value == null)

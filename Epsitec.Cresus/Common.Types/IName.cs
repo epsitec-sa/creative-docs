@@ -4,10 +4,17 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// L'interface IName permet de connaître le nom d'un objet.
+	/// The <c>IName</c> interface returns the name of an object.
 	/// </summary>
 	public interface IName
 	{
-		string	Name		{ get; }
+		/// <summary>
+		/// Gets the name of the object.
+		/// </summary>
+		/// <value>The name of the object.</value>
+		string Name
+		{
+			get;
+		}
 	}
 }

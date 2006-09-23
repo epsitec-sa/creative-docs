@@ -10,9 +10,9 @@ namespace Epsitec.Common.Types
 	public interface ISystemType
 	{
 		/// <summary>
-		/// Gets the type described by this object.
+		/// Gets the system type described by this object.
 		/// </summary>
-		/// <value>The type described by this object.</value>
+		/// <value>The system type described by this object.</value>
 		System.Type SystemType
 		{
 			get;

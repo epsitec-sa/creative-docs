@@ -10,11 +10,19 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public interface INamedType : ICaption, IName, ISystemType
 	{
+		/// <summary>
+		/// Gets the default controller used to represent data of this type.
+		/// </summary>
+		/// <value>The default controller.</value>
 		string DefaultController
 		{
 			get;
 		}
 
+		/// <summary>
+		/// Gets the parameter used with the default controller.
+		/// </summary>
+		/// <value>The default controller parameter.</value>
 		string DefaultControllerParameter
 		{
 			get;
