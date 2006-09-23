@@ -56,9 +56,7 @@ namespace Epsitec.Common.Types
 				
 				string        name  = args[0];
 				Support.Druid druid = Support.Druid.Parse (args[1]);
-				INamedType    type  = null;
-
-				//	TODO: re-create type from DRUID
+				INamedType    type  = TypeRosetta.GetTypeObject (druid);
 				
 				KeyValuePair<string, INamedType> keyValuePair = new KeyValuePair<string, INamedType> (name, type);
 				

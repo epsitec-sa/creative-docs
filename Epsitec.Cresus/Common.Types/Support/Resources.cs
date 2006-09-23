@@ -8,7 +8,8 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// La classe Resources permet de gérer les ressources de l'application.
+	/// The <c>Resources</c> class provides access to the resources through the
+	/// <see cref="ResourceManager"/>.
 	/// </summary>
 	public static class Resources
 	{

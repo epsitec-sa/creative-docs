@@ -23,8 +23,12 @@ namespace Epsitec.Common.Types
 		{
 			this.DefineCaption (caption);
 		}
-		
-		public string Name
+
+		/// <summary>
+		/// Gets the name of the object.
+		/// </summary>
+		/// <value>The name.</value>
+		public string							Name
 		{
 			get
 			{
@@ -43,7 +47,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public Caption Caption
+		/// <summary>
+		/// Gets the caption of the object.
+		/// </summary>
+		/// <value>The caption.</value>
+		public Caption							Caption
 		{
 			get
 			{
