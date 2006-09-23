@@ -84,14 +84,39 @@ namespace Epsitec.Common.Types
 		{
 			return (string) caption.GetValue (AbstractType.SytemTypeProperty);
 		}
+		
+		public static AbstractType GetCachedType(Caption caption)
+		{
+			return (AbstractType) caption.GetValue (AbstractType.CachedTypeProperty);
+		}
 
 		public static void SetSystemType(Caption caption, string value)
 		{
-			caption.SetValue (AbstractType.SytemTypeProperty, value);
+			if (string.IsNullOrEmpty (value))
+			{
+				caption.ClearValue (AbstractType.SytemTypeProperty);
+			}
+			else
+			{
+				caption.SetValue (AbstractType.SytemTypeProperty, value);
+			}
+		}
+
+		public static void SetCachedType(Caption caption, AbstractType value)
+		{
+			if (value == null)
+			{
+				caption.ClearValue (AbstractType.CachedTypeProperty);
+			}
+			else
+			{
+				caption.SetValue (AbstractType.CachedTypeProperty, value);
+			}
 		}
 
 		public static readonly DependencyProperty DefaultControllerProperty = DependencyProperty.RegisterAttached ("DefaultController", typeof (string), typeof (AbstractType), new DependencyPropertyMetadata ("Numeric"));
 		public static readonly DependencyProperty DefaultControllerParameterProperty = DependencyProperty.RegisterAttached ("DefaultControllerParameter", typeof (string), typeof (AbstractType), new DependencyPropertyMetadata ());
 		public static readonly DependencyProperty SytemTypeProperty = DependencyProperty.RegisterAttached ("SystemType", typeof (string), typeof (AbstractType));
+		public static readonly DependencyProperty CachedTypeProperty = DependencyProperty.RegisterAttached ("CachedType", typeof (AbstractType), typeof (AbstractType), new DependencyPropertyMetadata ().MakeNotSerializable ());
 	}
 }
