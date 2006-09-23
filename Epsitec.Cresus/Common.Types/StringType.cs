@@ -95,10 +95,23 @@ namespace Epsitec.Common.Types
 		{
 			this.Caption.SetValue (StringType.MaximumLengthProperty, value);
 		}
-		
-		public static readonly StringType		Default = new StringType ();
+
+		public static StringType Default
+		{
+			get
+			{
+				if (StringType.defaultValue == null)
+				{
+					StringType.defaultValue = (StringType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1008]"));
+				}
+				
+				return StringType.defaultValue;
+			}
+		}
 
 		public static readonly DependencyProperty MinimumLengthProperty = DependencyProperty.RegisterAttached ("MinimumLength", typeof (int), typeof (StringType), new DependencyPropertyMetadata (0));
 		public static readonly DependencyProperty MaximumLengthProperty = DependencyProperty.RegisterAttached ("MaximumLength", typeof (int), typeof (StringType), new DependencyPropertyMetadata (100*1000));
+
+		private static StringType defaultValue;
 	}
 }

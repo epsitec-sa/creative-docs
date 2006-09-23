@@ -34,7 +34,20 @@ namespace Epsitec.Common.Types
 		{
 			return false;
 		}
-		
-		public static readonly VoidType Default = new VoidType ();
+
+		public static VoidType Default
+		{
+			get
+			{
+				if (VoidType.defaultValue == null)
+				{
+					VoidType.defaultValue = (VoidType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1009]"));
+				}
+
+				return VoidType.defaultValue;
+			}
+		}
+
+		private static VoidType defaultValue;
 	}
 }

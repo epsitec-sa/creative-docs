@@ -50,6 +50,19 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 
-		public static readonly LongIntegerType Default = new LongIntegerType ();
+		public static LongIntegerType Default
+		{
+			get
+			{
+				if (LongIntegerType.defaultValue == null)
+				{
+					LongIntegerType.defaultValue = (LongIntegerType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1007]"));
+				}
+
+				return LongIntegerType.defaultValue;
+			}
+		}
+
+		private static LongIntegerType defaultValue;
 	}
 }
