@@ -104,6 +104,7 @@
     <Compile Include="Converters\AutomaticValueConverter.cs" />
     <Compile Include="AbstractNumericType.cs" />
     <Compile Include="AbstractType.cs" />
+    <Compile Include="Res.cs" />
     <Compile Include="StructuredTypeFieldCollection.cs" />
     <Compile Include="StructuredTypeField.cs" />
     <Compile Include="DoubleType.cs" />
@@ -326,7 +327,9 @@
     <Compile Include="Weak.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\Common.Types\" />
+    <Content Include="Resources\Common.Types\Captions.00.resource" />
+    <Content Include="Resources\Common.Types\module.info" />
+    <Content Include="Resources\Common.Types\Strings.00.resource" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
