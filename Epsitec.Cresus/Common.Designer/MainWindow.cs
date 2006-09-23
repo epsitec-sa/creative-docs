@@ -184,6 +184,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public CommandDispatcher CommandDispatcher
+		{
+			get
+			{
+				return this.commandDispatcher;
+			}
+		}
+
 		public CommandState GetCommandState(string command)
 		{
 			CommandContext context = this.CommandContext;
