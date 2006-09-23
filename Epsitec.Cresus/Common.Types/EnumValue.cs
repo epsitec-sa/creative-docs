@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.EnumValue))]
+
 namespace Epsitec.Common.Types
 {
 	/// <summary>
@@ -20,6 +22,7 @@ namespace Epsitec.Common.Types
 		}
 		
 		public EnumValue(System.Enum value, int rank, bool hidden, Support.Druid captionId)
+			: base (captionId)
 		{
 			// TODO: use captionId instead of name
 			this.DefineValue (value);
@@ -30,17 +33,26 @@ namespace Epsitec.Common.Types
 		
 		public void DefineValue(System.Enum value)
 		{
-			this.value = value;
+			if (this.Value != value)
+			{
+				this.value = value;
+			}
 		}
 
 		public void DefineRank(int rank)
 		{
-			this.rank = rank;
+			if (this.Rank != rank)
+			{
+				this.rank = rank;
+			}
 		}
 
 		public void DefineHidden(bool hide)
 		{
-			this.hidden = hide;
+			if (this.IsHidden != hide)
+			{
+				this.hidden = hide;
+			}
 		}
 
 
@@ -72,6 +84,7 @@ namespace Epsitec.Common.Types
 		
 		#endregion
 
+		public static DependencyProperty ValueProperty = DependencyProperty.RegisterAttached ("Value", typeof (System.Enum), typeof (EnumValue));
 
 		private System.Enum value;
 		private int rank;

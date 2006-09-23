@@ -17,42 +17,9 @@ namespace Epsitec.Common.Types
 		public EnumType(System.Type enum_type)
 			: base (string.Concat ("Enumeration", " ", enum_type.Name))
 		{
-			FieldInfo[] fields = enum_type.GetFields (BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
-
-			this.enumType   = enum_type;
-			this.enumValues = new Collections.EnumValueCollection ();
-
-			for (int i = 0; i < fields.Length; i++)
-			{
-				object[] hiddenAttributes;
-				object[] rankAttributes;
-
-				hiddenAttributes = fields[i].GetCustomAttributes (typeof (HiddenAttribute), false);
-				rankAttributes   = fields[i].GetCustomAttributes (typeof (RankAttribute), false);
-
-				string name = fields[i].Name;
-				bool hide = hiddenAttributes.Length == 1;
-				int rank;
-
-				System.Enum value = (System.Enum) System.Enum.Parse (this.enumType, name);
-
-				if (rankAttributes.Length == 1)
-				{
-					RankAttribute rankAttribute = rankAttributes[0] as RankAttribute;
-					rank = rankAttribute.Rank;
-				}
-				else
-				{
-					rank = EnumType.ConvertToInt (value);
-				}
-
-				this.enumValues.Add (new EnumValue (value, rank, hide, name));
-			}
-
-			this.enumValues.Sort (EnumType.RankComparer);
+			this.CreateEnumValues (enum_type);
 		}
-		
-		
+
 		public IEnumerable<EnumValue>			Values
 		{
 			get
@@ -81,7 +48,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.FindValueFromValue (value);
+				return this.FindValueFromEnumValue (value);
 			}
 		}
 		
@@ -108,7 +75,7 @@ namespace Epsitec.Common.Types
 			return null;
 		}
 
-		public EnumValue FindValueFromValue(System.Enum value)
+		public EnumValue FindValueFromEnumValue(System.Enum value)
 		{
 			for (int i = 0; i < this.enumValues.Count; i++)
 			{
@@ -328,6 +295,44 @@ namespace Epsitec.Common.Types
 				return enumType;
 			}
 		}
+
+		private void CreateEnumValues(System.Type enum_type)
+		{
+			FieldInfo[] fields = enum_type.GetFields (BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
+
+			this.enumType   = enum_type;
+			this.enumValues = new Collections.EnumValueCollection ();
+
+			for (int i = 0; i < fields.Length; i++)
+			{
+				object[] hiddenAttributes;
+				object[] rankAttributes;
+
+				hiddenAttributes = fields[i].GetCustomAttributes (typeof (HiddenAttribute), false);
+				rankAttributes   = fields[i].GetCustomAttributes (typeof (RankAttribute), false);
+
+				string name = fields[i].Name;
+				bool hide = hiddenAttributes.Length == 1;
+				int rank;
+
+				System.Enum value = (System.Enum) System.Enum.Parse (this.enumType, name);
+
+				if (rankAttributes.Length == 1)
+				{
+					RankAttribute rankAttribute = rankAttributes[0] as RankAttribute;
+					rank = rankAttribute.Rank;
+				}
+				else
+				{
+					rank = EnumType.ConvertToInt (value);
+				}
+
+				this.enumValues.Add (new EnumValue (value, rank, hide, name));
+			}
+
+			this.enumValues.Sort (EnumType.RankComparer);
+		}
+
 
 		private static object exclusion = new object ();
 		private static Dictionary<System.Type, EnumType> cache = new Dictionary<System.Type, EnumType> ();
