@@ -260,6 +260,17 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (StructuredTree.IsPathValid (type, "Client.Adresse.Pays"));
 		}
 
+		[Test]
+		public void CheckStructuredType()
+		{
+			StructuredType type = new StructuredType ();
+
+			type.AddField ("Name", StringType.Default);
+			type.AddField ("Age", IntegerType.Default);
+
+			Assert.IsNull (type.SystemType);
+		}
+
 		private static void Fill(StructuredType record)
 		{
 			StructuredType subRec1 = new StructuredType ();

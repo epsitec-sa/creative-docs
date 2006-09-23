@@ -395,36 +395,48 @@ namespace Epsitec.Common.Types
 
 			Support.Druid typeId = caption.Druid;
 			AbstractType  type   = null;
+			
+			string systemTypeName = AbstractType.GetSystemType (caption);
 
-			switch (AbstractType.GetSystemType (caption))
+			if (string.IsNullOrEmpty (systemTypeName))
 			{
-				case "System.Boolean":
-					type = new BooleanType (caption);
-					break;
+				//	This is not a simple type, based on one of the well known .NET
+				//	types :
 
-				case "System.Decimal":
-					type = new DecimalType (caption);
-					break;
+				type = AbstractType.GetComplexType (caption);
+			}
+			else
+			{
+				switch (systemTypeName)
+				{
+					case "System.Boolean":
+						type = new BooleanType (caption);
+						break;
 
-				case "System.Double":
-					type = new DoubleType (caption);
-					break;
+					case "System.Decimal":
+						type = new DecimalType (caption);
+						break;
 
-				case "System.Int32":
-					type = new IntegerType (caption);
-					break;
+					case "System.Double":
+						type = new DoubleType (caption);
+						break;
 
-				case "System.Int64":
-					type = new LongIntegerType (caption);
-					break;
+					case "System.Int32":
+						type = new IntegerType (caption);
+						break;
 
-				case "System.String":
-					type = new StringType (caption);
-					break;
+					case "System.Int64":
+						type = new LongIntegerType (caption);
+						break;
 
-				case "System.Void":
-					type = new VoidType (caption);
-					break;
+					case "System.String":
+						type = new StringType (caption);
+						break;
+
+					case "System.Void":
+						type = new VoidType (caption);
+						break;
+				}
 			}
 
 			if ((type != null) &&

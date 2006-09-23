@@ -99,6 +99,19 @@ namespace Epsitec.Common.Types
 
 			return (data != null) && (data.StructuredType == this);
 		}
+
+		protected override void OnCaptionDefined()
+		{
+			base.OnCaptionDefined ();
+
+
+			Caption caption = this.Caption;
+
+			if (caption != null)
+			{
+				AbstractType.SetComplexType (caption, this);
+			}
+		}
 		
 		private void NotifyFieldInserted(string name, INamedType type)
 		{

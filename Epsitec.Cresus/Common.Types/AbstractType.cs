@@ -76,7 +76,8 @@ namespace Epsitec.Common.Types
 
 			Caption caption = this.Caption;
 
-			if (caption != null)
+			if ((caption != null) &&
+				(this.SystemType != null))
 			{
 				AbstractType.SetSystemType (caption, this.SystemType.FullName);
 			}
@@ -90,6 +91,11 @@ namespace Epsitec.Common.Types
 		public static AbstractType GetCachedType(Caption caption)
 		{
 			return (AbstractType) caption.GetValue (AbstractType.CachedTypeProperty);
+		}
+
+		public static AbstractType GetComplexType(Caption caption)
+		{
+			return (AbstractType) caption.GetValue (AbstractType.ComplexTypeProperty);
 		}
 
 		public static void SetSystemType(Caption caption, string value)
@@ -116,9 +122,22 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public static void SetComplexType(Caption caption, AbstractType value)
+		{
+			if (value == null)
+			{
+				caption.ClearValue (AbstractType.ComplexTypeProperty);
+			}
+			else
+			{
+				caption.SetValue (AbstractType.ComplexTypeProperty, value);
+			}
+		}
+
 		public static readonly DependencyProperty DefaultControllerProperty = DependencyProperty.RegisterAttached ("DefaultController", typeof (string), typeof (AbstractType), new DependencyPropertyMetadata ("Numeric"));
 		public static readonly DependencyProperty DefaultControllerParameterProperty = DependencyProperty.RegisterAttached ("DefaultControllerParameter", typeof (string), typeof (AbstractType), new DependencyPropertyMetadata ());
 		public static readonly DependencyProperty SytemTypeProperty = DependencyProperty.RegisterAttached ("SystemType", typeof (string), typeof (AbstractType));
 		public static readonly DependencyProperty CachedTypeProperty = DependencyProperty.RegisterAttached ("CachedType", typeof (AbstractType), typeof (AbstractType), new DependencyPropertyMetadata ().MakeNotSerializable ());
+		public static readonly DependencyProperty ComplexTypeProperty = DependencyProperty.RegisterAttached ("ComplexType", typeof (AbstractType), typeof (AbstractType));
 	}
 }
