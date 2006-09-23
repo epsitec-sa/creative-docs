@@ -95,9 +95,9 @@ namespace Epsitec.Common.Tool.ResGenerator
 				moduleName      = split[1];
 			}
 
-			Application.GenerateResFile (moduleDirectory, defaultNamespace, moduleName);
+			int moduleId = Application.GenerateResFile (moduleDirectory, defaultNamespace, moduleName);
 
-			System.Console.Out.WriteLine ("Generated 'Res.cs' for {0}\n  module '{1}' OK.", moduleDirectory, moduleName);
+			System.Console.Out.WriteLine ("Generated 'Res.cs' for {0}\n  module '{1}' with id={2}.", moduleDirectory, moduleName, moduleId);
 		}
 
 		/// <summary>
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 		/// <param name="moduleDirectory">The module directory.</param>
 		/// <param name="defaultNamespace">The default namespace.</param>
 		/// <param name="moduleName">Name of the module.</param>
-		static void GenerateResFile(string moduleDirectory, string defaultNamespace, string moduleName)
+		static int GenerateResFile(string moduleDirectory, string defaultNamespace, string moduleName)
 		{
 			ResourceManager manager = new ResourceManager (moduleDirectory);
 
@@ -207,6 +207,8 @@ namespace Epsitec.Common.Tool.ResGenerator
 			{
 				file.Write (buffer.ToString ());
 			}
+
+			return manager.DefaultModuleId;
 		}
 
 		static void GenerateCommandsCaptionsAndTypes(ResourceManager manager, System.Text.StringBuilder buffer, Generator generator, string defaultNamespace, string bundleId, ResourceBundle bundle)
