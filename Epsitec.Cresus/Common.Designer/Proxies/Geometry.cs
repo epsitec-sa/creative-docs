@@ -320,20 +320,20 @@ namespace Epsitec.Common.Designer.Proxies
 			Geometry.MinHeightProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 			Geometry.MaxHeightProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 
-			Geometry.LeftMarginProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1000]"));
-			Geometry.RightMarginProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1001]"));
-			Geometry.TopMarginProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1002]"));
-			Geometry.BottomMarginProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1003]"));
+			Geometry.LeftMarginProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[3000]"));
+			Geometry.RightMarginProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[3001]"));
+			Geometry.TopMarginProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[3002]"));
+			Geometry.BottomMarginProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[3003]"));
 
-			Geometry.OriginXProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1004]"));
-			Geometry.OriginYProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1005]"));
-			Geometry.WidthProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1006]"));
-			Geometry.HeightProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1007]"));
+			Geometry.OriginXProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[3004]"));
+			Geometry.OriginYProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[3005]"));
+			Geometry.WidthProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[3006]"));
+			Geometry.HeightProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[3007]"));
 
-			Geometry.MinWidthProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100R]"));
-			Geometry.MaxWidthProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100S]"));
-			Geometry.MinHeightProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100T]"));
-			Geometry.MaxHeightProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100U]"));
+			Geometry.MinWidthProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300R]"));
+			Geometry.MaxWidthProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300S]"));
+			Geometry.MinHeightProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300T]"));
+			Geometry.MaxHeightProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300U]"));
 		}
 
 
