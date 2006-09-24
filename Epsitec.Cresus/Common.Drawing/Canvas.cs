@@ -119,6 +119,11 @@ namespace Epsitec.Common.Drawing
 				double last = 0;
 				foreach ( System.Collections.DictionaryEntry dict in this.keys )
 				{
+					// ATTENTION:
+					// L'ordre dans lequel ces clés est retourné par le dictionnaire est non défini
+					// et il se trouve qu'en exécutant avec le debugger attaché, il est différent de
+					// quand on lance l'application avec F5.
+
 					IconKey candidate = dict.Key as IconKey;
 					double delta = Canvas.Delta(key, candidate);
 
