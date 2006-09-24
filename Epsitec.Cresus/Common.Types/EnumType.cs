@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.EnumType))]
+
 namespace Epsitec.Common.Types
 {
 	using IComparer    = System.Collections.IComparer;
