@@ -1511,18 +1511,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					if (druid.IsValid)
 					{
-						Command command = Command.Get(druid);
-						//this.module.MainWindow.CommandDispatcher.Register(command, null);
-						obj.CommandObject = command;
+						obj.CommandObject = Command.Get(druid);
 					}
 				}
 				else
 				{
-					druid = this.module.MainWindow.DlgResourceSelector(this.module.PrepareAccess(ResourceAccess.Type.Strings), druid);
+					druid = this.module.MainWindow.DlgResourceSelector(this.module.PrepareAccess(ResourceAccess.Type.Captions), druid);
 
 					if (druid.IsValid)
 					{
-						this.module.ResourceManager.Bind(obj, Widget.TextProperty, druid);
+						obj.CommandObject = Command.Get(druid);
 					}
 				}
 #endif
