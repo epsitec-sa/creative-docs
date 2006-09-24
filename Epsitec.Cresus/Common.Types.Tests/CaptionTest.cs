@@ -68,6 +68,17 @@ namespace Epsitec.Common.Types
 			
 			Assert.AreEqual (4, count);
 		}
+
+		[Test]
+		public void CheckEnumWithCaptions()
+		{
+			EnumType enumType = CaptionTest.GetMyEnumEnumType ();
+
+			Assert.AreEqual ("[4005]", enumType.CaptionId.ToString ());
+
+			System.Console.Out.WriteLine ("Type name: {0}", enumType.Name);
+			System.Console.Out.WriteLine ("Type description: {0}", enumType.Caption.Description);
+		}
 		
 		[Test]
 		public void CheckLabels()
@@ -199,22 +210,31 @@ namespace Epsitec.Common.Types
 				DependencyPropertyMetadata metadataText = Stuff.TextProperty.GetMetadata (typeof (Stuff));
 				DependencyPropertyMetadata metadataEnum = Stuff.EnumProperty.GetMetadata (typeof (Stuff));
 
-				EnumType enumType = new EnumType (typeof (MyEnum));
-
-				enumType.DefineCaptionId (Support.Druid.FromLong (0x0000400000000005L));
-				enumType[MyEnum.None].DefineCaptionId (Support.Druid.FromLong (0x0000400000000006L));
-				enumType[MyEnum.First].DefineCaptionId (Support.Druid.FromLong (0x0000400000000007L));
-				enumType[MyEnum.Second].DefineCaptionId (Support.Druid.FromLong (0x0000400000000008L));
-				enumType[MyEnum.Third].DefineCaptionId (Support.Druid.FromLong (0x0000400000000009L));
-
 				metadataText.DefineCaptionId (Support.Druid.FromLong (0x0000400000000004L));
-				metadataEnum.DefineNamedType (enumType);
+				metadataEnum.DefineNamedType (CaptionTest.GetMyEnumEnumType ());
 			}
 
 			public static readonly DependencyProperty NameProperty = DependencyProperty.RegisterAttached ("Name", typeof (string), typeof (Stuff));
 
 			public static readonly DependencyProperty TextProperty = DependencyProperty.RegisterAttached ("Text", typeof (string), typeof (Stuff), new DependencyPropertyMetadata ());
 			public static readonly DependencyProperty EnumProperty = DependencyProperty.RegisterAttached ("Enum", typeof (MyEnum), typeof (Stuff), new DependencyPropertyMetadata (MyEnum.None));
+		}
+
+		private static EnumType GetMyEnumEnumType()
+		{
+			Support.Druid enumTypeDruid = Support.Druid.FromLong (0x0000400000000005L);
+
+			EnumType enumType = new EnumType (typeof (MyEnum), enumTypeDruid);
+
+#if false //#fix
+				enumType.DefineCaptionId (Support.Druid.FromLong (0x0000400000000005L));
+				enumType[MyEnum.None].DefineCaptionId (Support.Druid.FromLong (0x0000400000000006L));
+				enumType[MyEnum.First].DefineCaptionId (Support.Druid.FromLong (0x0000400000000007L));
+				enumType[MyEnum.Second].DefineCaptionId (Support.Druid.FromLong (0x0000400000000008L));
+				enumType[MyEnum.Third].DefineCaptionId (Support.Druid.FromLong (0x0000400000000009L));
+#endif
+
+			return enumType;
 		}
 		
 		private enum MyEnum
