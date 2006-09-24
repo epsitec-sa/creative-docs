@@ -80,11 +80,15 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public System.Enum						Value
+		public int								Value
 		{
 			get
 			{
-				return Common.Types.NotAnEnum.Instance;
+				//	Pour l'instant, la valeur et le rang sont considérés comme étant
+				//	exactement la même chose. En fait, DbEnumValue n'a pas besoin de
+				//	la notion de valeur.
+				
+				return this.rank;
 			}
 		}
 		
