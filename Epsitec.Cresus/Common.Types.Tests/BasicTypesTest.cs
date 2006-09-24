@@ -6,7 +6,8 @@ namespace Epsitec.Common.Types
 {
 	[TestFixture] public class BasicTypesTest
 	{
-		[Test] public void CheckEnumType1()
+		[Test]
+		public void CheckEnumType1()
 		{
 			System.Type type = typeof (MyEnum);
 			
@@ -35,11 +36,11 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ( 3, et["Third"] .Rank);
 			Assert.AreEqual (99, et["Extra"] .Rank);
 
-			Assert.AreEqual (MyEnum.None, et["None"].Value);
-			Assert.AreEqual (MyEnum.First, et["First"].Value);
-			Assert.AreEqual (MyEnum.Second, et["Second"].Value);
-			Assert.AreEqual (MyEnum.Third, et["Third"].Value);
-			Assert.AreEqual (MyEnum.Extra, et["Extra"].Value);
+			Assert.AreEqual (MyEnum.None, et.ConvertToEnum (et["None"].Value));
+			Assert.AreEqual (MyEnum.First, et.ConvertToEnum (et["First"].Value));
+			Assert.AreEqual (MyEnum.Second, et.ConvertToEnum (et["Second"].Value));
+			Assert.AreEqual (MyEnum.Third, et.ConvertToEnum (et["Third"].Value));
+			Assert.AreEqual (MyEnum.Extra, et.ConvertToEnum (et["Extra"].Value));
 
 			Assert.AreEqual (-1, et[MyEnum.None].Rank);
 			Assert.AreEqual (1, et[MyEnum.First].Rank);
@@ -84,11 +85,11 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (4, et["Flag3"].Rank);
 			Assert.AreEqual (8, et["Flag4"].Rank);
 
-			Assert.AreEqual (MyFlags.None, et["None"].Value);
-			Assert.AreEqual (MyFlags.Flag1, et["Flag1"].Value);
-			Assert.AreEqual (MyFlags.Flag2, et["Flag2"].Value);
-			Assert.AreEqual (MyFlags.Flag3, et["Flag3"].Value);
-			Assert.AreEqual (MyFlags.Flag4, et["Flag4"].Value);
+			Assert.AreEqual (MyFlags.None, et.ConvertToEnum (et["None"].Value));
+			Assert.AreEqual (MyFlags.Flag1, et.ConvertToEnum (et["Flag1"].Value));
+			Assert.AreEqual (MyFlags.Flag2, et.ConvertToEnum (et["Flag2"].Value));
+			Assert.AreEqual (MyFlags.Flag3, et.ConvertToEnum (et["Flag3"].Value));
+			Assert.AreEqual (MyFlags.Flag4, et.ConvertToEnum (et["Flag4"].Value));
 			
 			Assert.AreEqual ("None",  et[0].Name);
 			Assert.AreEqual ("Flag1", et[1].Name);
@@ -125,10 +126,10 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (1, et["ValueB"].Rank);
 			Assert.AreEqual (2, et["ValueC"].Rank);
 
-			Assert.AreEqual (MyEnum2.None, et["None"].Value);
-			Assert.AreEqual (MyEnum2.ValueA, et["ValueA"].Value);
-			Assert.AreEqual (MyEnum2.ValueB, et["ValueB"].Value);
-			Assert.AreEqual (MyEnum2.ValueC, et["ValueC"].Value);
+			Assert.AreEqual (MyEnum2.None, et.ConvertToEnum (et["None"].Value));
+			Assert.AreEqual (MyEnum2.ValueA, et.ConvertToEnum (et["ValueA"].Value));
+			Assert.AreEqual (MyEnum2.ValueB, et.ConvertToEnum (et["ValueB"].Value));
+			Assert.AreEqual (MyEnum2.ValueC, et.ConvertToEnum (et["ValueC"].Value));
 		}
 
 		[Test]
