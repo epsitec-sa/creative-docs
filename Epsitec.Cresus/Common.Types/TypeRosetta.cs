@@ -463,7 +463,7 @@ namespace Epsitec.Common.Types
 
 		private static AbstractType CreateSystemTypeBasedTypeObject(string systemTypeName, Caption caption)
 		{
-			System.Type systemType = System.Type.GetType (systemTypeName, false);
+			System.Type systemType = AbstractType.GetSystemTypeFromSystemTypeName (systemTypeName);
 
 			if (systemType == null)
 			{

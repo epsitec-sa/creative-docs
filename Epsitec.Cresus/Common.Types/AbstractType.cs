@@ -89,23 +89,61 @@ namespace Epsitec.Common.Types
 				(this.SystemType != null))
 			{
 				System.Type type = this.SystemType;
-				
-				string typeName     = type.FullName;
-				string typeAssembly = type.Assembly.GetName ().Name;
-
-				string name;
-
-				if (typeAssembly == "mscorlib")
-				{
-					name = typeName;
-				}
-				else
-				{
-					name = string.Concat (typeName, ", ", typeAssembly);
-				}
+				string      name = AbstractType.GetSystemTypeNameFromSystemType (type);
 				
 				AbstractType.SetSystemType (caption, name);
 			}
+		}
+
+		/// <summary>
+		/// Gets a partially qualified <see cref="System.Type"/> name.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns>The name.</returns>
+		public static string GetSystemTypeNameFromSystemType(System.Type type)
+		{
+			//	We don't use the fully qualified type name here, since this would be
+			//	to verbose when serializing, and we hopefully don't need the versioning
+			//	information either.
+
+			string typeName     = type.FullName;
+			string typeAssembly = type.Assembly.GetName ().Name;
+
+			string name;
+
+			if (typeAssembly == "mscorlib")
+			{
+				//	Types from the core .NET library won't be suffixed by an assembly
+				//	name; thus, "int" will simply be represented as "System.Int32" :
+
+				name = typeName;
+			}
+			else
+			{
+				//	Other types need the assembly reference :
+
+				name = string.Concat (typeName, ", ", typeAssembly);
+			}
+			
+			return name;
+		}
+
+		/// <summary>
+		/// Gets the <see cref="System.Type"/> from a partially qualified name.
+		/// </summary>
+		/// <param name="name">The partially qualified name.</param>
+		/// <returns>The type.</returns>
+		public static System.Type GetSystemTypeFromSystemTypeName(string name)
+		{
+			if (!name.Contains (", "))
+			{
+				//	A name which has no assembly specification refers to a type from
+				//	the core .NET library :
+				
+				name = string.Concat (name, ", mscorlib");
+			}
+			
+			return System.Type.GetType (name, false);
 		}
 
 		/// <summary>
