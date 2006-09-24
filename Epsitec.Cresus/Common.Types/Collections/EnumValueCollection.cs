@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types.Collections
 	/// <summary>
 	/// The <c>EnumValueCollection</c> represents a collection of <see cref="EnumValue"/> items.
 	/// </summary>
-	public class EnumValueCollection : HostedDependencyObjectList<EnumValue>
+	public class EnumValueCollection : HostedList<EnumValue>
 	{
 		public EnumValueCollection()
 			: base (null)

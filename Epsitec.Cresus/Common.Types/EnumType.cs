@@ -43,7 +43,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.enumValues;
+				return this.EnumValues;
 			}
 		}
 		
@@ -79,15 +79,45 @@ namespace Epsitec.Common.Types
 				return new RankComparerImplementation ();
 			}
 		}
+
+
+		private Collections.EnumValueCollection EnumValues
+		{
+			get
+			{
+				return EnumType.GetEnumValues (this.Caption);
+			}
+			set
+			{
+				EnumType.SetEnumValues (this.Caption, value);
+			}
+		}
+
+		private static Collections.EnumValueCollection GetEnumValues(Caption caption)
+		{
+			return (Collections.EnumValueCollection) caption.GetValue (EnumType.EnumValuesProperty);
+		}
+
+		private static void SetEnumValues(Caption caption, Collections.EnumValueCollection value)
+		{
+			if (value == null)
+			{
+				caption.ClearValue (EnumType.EnumValuesProperty);
+			}
+			else
+			{
+				caption.SetValue (EnumType.EnumValuesProperty, value);
+			}
+		}
 		
 		
 		public EnumValue FindValueFromRank(int rank)
 		{
-			for (int i = 0; i < this.enumValues.Count; i++)
+			for (int i = 0; i < this.EnumValues.Count; i++)
 			{
-				if (this.enumValues[i].Rank == rank)
+				if (this.EnumValues[i].Rank == rank)
 				{
-					return this.enumValues[i];
+					return this.EnumValues[i];
 				}
 			}
 
@@ -96,11 +126,11 @@ namespace Epsitec.Common.Types
 
 		public EnumValue FindValueFromEnumValue(System.Enum value)
 		{
-			for (int i = 0; i < this.enumValues.Count; i++)
+			for (int i = 0; i < this.EnumValues.Count; i++)
 			{
-				if (System.Enum.Equals (this.enumValues[i].Value, value))
+				if (System.Enum.Equals (this.EnumValues[i].Value, value))
 				{
-					return this.enumValues[i];
+					return this.EnumValues[i];
 				}
 			}
 
@@ -109,11 +139,11 @@ namespace Epsitec.Common.Types
 
 		public EnumValue FindValueFromName(string name)
 		{
-			for (int i = 0; i < this.enumValues.Count; i++)
+			for (int i = 0; i < this.EnumValues.Count; i++)
 			{
-				if (this.enumValues[i].Name == name)
+				if (this.EnumValues[i].Name == name)
 				{
-					return this.enumValues[i];
+					return this.EnumValues[i];
 				}
 			}
 			
@@ -122,11 +152,11 @@ namespace Epsitec.Common.Types
 
 		public EnumValue FindValueFromCaptionId(Support.Druid captionId)
 		{
-			for (int i = 0; i < this.enumValues.Count; i++)
+			for (int i = 0; i < this.EnumValues.Count; i++)
 			{
-				if (this.enumValues[i].CaptionId == captionId)
+				if (this.EnumValues[i].CaptionId == captionId)
 				{
-					return this.enumValues[i];
+					return this.EnumValues[i];
 				}
 			}
 			
@@ -323,7 +353,7 @@ namespace Epsitec.Common.Types
 			FieldInfo[] fields = enumType.GetFields (BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
 
 			this.enumType   = enumType;
-			this.enumValues = new Collections.EnumValueCollection ();
+			this.EnumValues = new Collections.EnumValueCollection ();
 
 			for (int i = 0; i < fields.Length; i++)
 			{
@@ -349,29 +379,30 @@ namespace Epsitec.Common.Types
 					rank = EnumType.ConvertToInt (value);
 				}
 
-				this.enumValues.Add (new EnumValue (value, rank, hide, name));
+				this.EnumValues.Add (new EnumValue (value, rank, hide, name));
 			}
 
-			this.enumValues.Sort (EnumType.RankComparer);
-			this.enumValues.Lock ();
+			this.EnumValues.Sort (EnumType.RankComparer);
+			this.EnumValues.Lock ();
 		}
 
 		private void CreateEnumValues(Caption caption)
 		{
 			this.enumType   = typeof (NotAnEnum);
-			this.enumValues = new Collections.EnumValueCollection ();
+			this.EnumValues = new Collections.EnumValueCollection ();
 
 			//	TODO: fill enum values from caption definition
 			
-			this.enumValues.Lock ();
+			this.EnumValues.Lock ();
 
 			AbstractType.SetSystemType (caption, this.enumType);
 		}
 
+		public static DependencyProperty EnumValuesProperty = DependencyProperty.RegisterAttached ("EnumValues", typeof (Collections.EnumValueCollection), typeof (Caption));
+		
 		private static object exclusion = new object ();
 		private static Dictionary<System.Type, EnumType> cache = new Dictionary<System.Type, EnumType> ();
 		
 		private System.Type						enumType;
-		private Collections.EnumValueCollection	enumValues;
 	}
 }

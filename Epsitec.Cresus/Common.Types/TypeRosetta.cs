@@ -517,7 +517,7 @@ namespace Epsitec.Common.Types
 
 		private static void AddType(AbstractType type)
 		{
-			type.LockName ();
+			type.Lock ();
 		}
 
 		#region AutomaticNamedType Class
