@@ -743,7 +743,10 @@ namespace Epsitec.Common.Support
 							this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Localized, culture), druid, ref caption);
 							this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Customized, culture), druid, ref caption);
 
-							this.ResolveDruidReferencesInCaption (caption, ResourceLevel.Merged, culture);
+							if (caption != null)
+							{
+								this.ResolveDruidReferencesInCaption (caption, ResourceLevel.Merged, culture);
+							}
 							break;
 
 						case ResourceLevel.Default:

@@ -398,7 +398,7 @@ namespace Epsitec.Common.Types
 			AbstractType.SetSystemType (caption, this.enumType);
 		}
 
-		public static DependencyProperty EnumValuesProperty = DependencyProperty.RegisterAttached ("EnumValues", typeof (Collections.EnumValueCollection), typeof (Caption));
+		public static DependencyProperty EnumValuesProperty = DependencyProperty.RegisterAttached ("EnumValues", typeof (Collections.EnumValueCollection), typeof (EnumType));
 		
 		private static object exclusion = new object ();
 		private static Dictionary<System.Type, EnumType> cache = new Dictionary<System.Type, EnumType> ();

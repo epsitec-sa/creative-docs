@@ -19,6 +19,8 @@ namespace Epsitec.Common.Support
 	/// A compact, module relative DRUID exists; it uses only 44-bit for
 	/// the encoding of the data.
 	/// </summary>
+
+	[Types.SerializationConverter (typeof (Druid.SerializationConverter))]
 	public struct Druid : System.IEquatable<Druid>
 	{
 		/// <summary>
@@ -876,7 +878,29 @@ namespace Epsitec.Common.Support
 		}
 
 		#endregion
-		
+
+		#region SerializationConverter Class
+
+		public class SerializationConverter : Types.ISerializationConverter
+		{
+			#region ISerializationConverter Members
+
+			public string ConvertToString(object value, Types.IContextResolver context)
+			{
+				Druid druid = (Druid) value;
+				return druid.ToString ();
+			}
+
+			public object ConvertFromString(string value, Types.IContextResolver context)
+			{
+				return Druid.Parse (value);
+			}
+
+			#endregion
+		}
+
+		#endregion
+
 		#region Private Methods
 		
 		private static bool IsValidBase32Number(string value)
