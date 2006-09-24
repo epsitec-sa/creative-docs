@@ -27,6 +27,11 @@ namespace Epsitec.Common.Types
 		{
 		}
 
+		protected AbstractType(Support.Druid druid)
+			: base (druid)
+		{
+		}
+
 		#region INamedType Members
 
 		public string DefaultController

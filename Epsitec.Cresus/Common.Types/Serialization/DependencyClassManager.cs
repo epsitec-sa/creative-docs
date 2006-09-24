@@ -30,7 +30,24 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			get
 			{
+				if (DependencyClassManager.current == null)
+				{
+					System.Diagnostics.Debug.Assert (DependencyClassManager.isBooting == false);
+					
+					DependencyClassManager.isBooting = true;
+					DependencyClassManager.current   = new DependencyClassManager ();
+					DependencyClassManager.isBooting = false;
+				}
+				
 				return DependencyClassManager.current;
+			}
+		}
+
+		public static bool						IsReady
+		{
+			get
+			{
+				return DependencyClassManager.current != null;
 			}
 		}
 
@@ -99,7 +116,8 @@ namespace Epsitec.Common.Types.Serialization
 			this.Analyse (args.LoadedAssembly);
 		}
 		
-		private static DependencyClassManager	current = new DependencyClassManager ();
+		private static DependencyClassManager	current;
+		private static bool						isBooting;
 		
 		private System.AppDomain				domain;
 		private List<Assembly>					assemblies;

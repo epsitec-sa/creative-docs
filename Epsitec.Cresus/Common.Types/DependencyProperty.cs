@@ -512,19 +512,25 @@ namespace Epsitec.Common.Types
 				{
 					if (this.typeConverterOk == false)
 					{
-						ISerializationConverter converter = Serialization.DependencyClassManager.Current.FindSerializationConverter (this.propertyType);
-
-						if (this.typeConverter == null)
+						ISerializationConverter converter = null;
+						
+						if (Serialization.DependencyClassManager.IsReady)
 						{
-							this.typeConverter = converter;
+							converter = Serialization.DependencyClassManager.Current.FindSerializationConverter (this.propertyType);
+
+							if (this.typeConverter == null)
+							{
+								this.typeConverter = converter;
+							}
 						}
+						
 						if (this.typeConverter == null)
 						{
 							this.typeConverter = InvariantConverter.GetSerializationConverter (this.propertyType);
 						}
 
-						this.hasTypeConverter   = (converter != null);
-						this.typeConverterOk = true;
+						this.hasTypeConverter = (converter != null);
+						this.typeConverterOk  = true;
 					}
 				}
 			}

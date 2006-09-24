@@ -149,7 +149,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\" />
+    <None Include="Resources\Test\captions.00.resource" />
+    <None Include="Resources\Test\captions.fr.resource" />
+    <None Include="Resources\Test\module.info" />
+    <None Include="Resources\Test\strings.00.resource" />
+    <None Include="Resources\Test\strings.fr.resource" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

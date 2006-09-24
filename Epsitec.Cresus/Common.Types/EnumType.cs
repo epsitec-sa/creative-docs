@@ -33,7 +33,7 @@ namespace Epsitec.Common.Types
 			if ((enumType == null) ||
 				(enumType == typeof (NotAnEnum)))
 			{
-				this.CreateEnumValues (caption);
+				this.CreateEnumValues ();
 			}
 			else
 			{
@@ -41,6 +41,25 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public EnumType(Support.Druid druid)
+			: this (null, druid)
+		{
+		}
+
+		public EnumType(System.Type enumType, Support.Druid druid)
+			: base (druid)
+		{
+			if ((enumType == null) ||
+				(enumType == typeof (NotAnEnum)))
+			{
+				this.CreateEnumValues ();
+			}
+			else
+			{
+				this.CreateEnumValues (enumType);
+			}
+		}
+		
 		public IEnumerable<EnumValue>			Values
 		{
 			get
@@ -399,8 +418,10 @@ namespace Epsitec.Common.Types
 			this.EnumValues.Lock ();
 		}
 
-		private void CreateEnumValues(Caption caption)
+		private void CreateEnumValues()
 		{
+			Caption caption = this.Caption;
+			
 			this.enumType = typeof (NotAnEnum);
 
 			//	TODO: fill enum values from caption definition
