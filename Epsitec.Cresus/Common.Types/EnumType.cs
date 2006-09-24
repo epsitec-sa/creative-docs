@@ -14,16 +14,16 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class EnumType : AbstractType, IEnumType
 	{
-		public EnumType(System.Type enum_type)
-			: base (string.Concat ("Enumeration", " ", enum_type.Name))
+		public EnumType(System.Type enumType)
+			: base (string.Concat ("Enumeration", " ", enumType.Name))
 		{
-			this.CreateEnumValues (enum_type);
+			this.CreateEnumValues (enumType);
 		}
 
-		public EnumType(System.Type enum_type, Caption caption)
+		public EnumType(System.Type enumType, Caption caption)
 			: base (caption)
 		{
-			this.CreateEnumValues (enum_type);
+			this.CreateEnumValues (enumType);
 		}
 
 		public IEnumerable<EnumValue>			Values
@@ -126,9 +126,9 @@ namespace Epsitec.Common.Types
 		{
 			try
 			{
-				System.Enum enum_value = (System.Enum) System.Enum.Parse (this.enumType, value.ToString ());
+				System.Enum enumValue = (System.Enum) System.Enum.Parse (this.enumType, value.ToString ());
 				
-				return InvariantConverter.CheckEnumValue (this.enumType, enum_value);
+				return InvariantConverter.CheckEnumValue (this.enumType, enumValue);
 			}
 			catch (System.ArgumentException)
 			{
@@ -205,24 +205,24 @@ namespace Epsitec.Common.Types
 		private class RankComparerImplementation : IComparer<EnumValue>
 		{
 			#region IComparer Members
-			public int Compare(EnumValue val_x, EnumValue val_y)
+			public int Compare(EnumValue valX, EnumValue valY)
 			{
-				if (val_x == val_y)
+				if (valX == valY)
 				{
 					return 0;
 				}
 				
-				if (val_x == null)
+				if (valX == null)
 				{
 					return -1;
 				}
-				if (val_y == null)
+				if (valY == null)
 				{
 					return 1;
 				}
 				
-				int rx = val_x.Rank;
-				int ry = val_y.Rank;
+				int rx = valX.Rank;
+				int ry = valY.Rank;
 
 				if (rx < ry)
 				{
@@ -233,7 +233,7 @@ namespace Epsitec.Common.Types
 					return 1;
 				}
 
-				return string.CompareOrdinal (val_x.Name, val_y.Name);
+				return string.CompareOrdinal (valX.Name, valY.Name);
 			}
 			#endregion
 		}
@@ -302,11 +302,14 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private void CreateEnumValues(System.Type enum_type)
+		private void CreateEnumValues(System.Type enumType)
 		{
-			FieldInfo[] fields = enum_type.GetFields (BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
+			System.Diagnostics.Debug.Assert (enumType != null);
+			System.Diagnostics.Debug.Assert (enumType != typeof (NotAnEnum));
+			
+			FieldInfo[] fields = enumType.GetFields (BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
 
-			this.enumType   = enum_type;
+			this.enumType   = enumType;
 			this.enumValues = new Collections.EnumValueCollection ();
 
 			for (int i = 0; i < fields.Length; i++)
@@ -337,6 +340,7 @@ namespace Epsitec.Common.Types
 			}
 
 			this.enumValues.Sort (EnumType.RankComparer);
+			this.enumValues.Lock ();
 		}
 
 
