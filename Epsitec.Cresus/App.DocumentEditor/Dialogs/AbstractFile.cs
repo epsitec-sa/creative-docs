@@ -278,17 +278,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.dispatcher = new CommandDispatcher();
 			this.context = new CommandContext();
 
-			this.prevState            = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.NavigatePrev, this.NavigatePrev);
-			this.nextState            = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.NavigateNext, this.NavigateNext);
-			this.parentState          = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.ParentDirectory, this.ParentDirectory);
-			this.newState             = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.NewDirectory, this.NewDirectory);
-			this.renameState          = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.Rename, this.RenameStarting);
-			this.deleteState          = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.Delete, this.FileDelete);
-			this.favoritesAddState    = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.Favorites.Add, this.FavoriteAdd);
-			this.favoritesRemoveState = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.Favorites.Remove, this.FavoriteRemove);
-			this.favoritesUpState     = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.Favorites.Up, this.FavoriteUp);
-			this.favoritesDownState   = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.Favorites.Down, this.FavoriteDown);
-			this.favoritesBigState    = this.CreateCommandState(Res.Commands.Cmd.Dialog.File.Favorites.Big, this.FavoriteBig);
+			this.prevState            = this.CreateCommandState(Res.Commands.Dialog.File.NavigatePrev, this.NavigatePrev);
+			this.nextState            = this.CreateCommandState(Res.Commands.Dialog.File.NavigateNext, this.NavigateNext);
+			this.parentState          = this.CreateCommandState(Res.Commands.Dialog.File.ParentDirectory, this.ParentDirectory);
+			this.newState             = this.CreateCommandState(Res.Commands.Dialog.File.NewDirectory, this.NewDirectory);
+			this.renameState          = this.CreateCommandState(Res.Commands.Dialog.File.Rename, this.RenameStarting);
+			this.deleteState          = this.CreateCommandState(Res.Commands.Dialog.File.Delete, this.FileDelete);
+			this.favoritesAddState    = this.CreateCommandState(Res.Commands.Dialog.File.Favorites.Add, this.FavoriteAdd);
+			this.favoritesRemoveState = this.CreateCommandState(Res.Commands.Dialog.File.Favorites.Remove, this.FavoriteRemove);
+			this.favoritesUpState     = this.CreateCommandState(Res.Commands.Dialog.File.Favorites.Up, this.FavoriteUp);
+			this.favoritesDownState   = this.CreateCommandState(Res.Commands.Dialog.File.Favorites.Down, this.FavoriteDown);
+			this.favoritesBigState    = this.CreateCommandState(Res.Commands.Dialog.File.Favorites.Big, this.FavoriteBig);
 
 			CommandDispatcher.SetDispatcher(this.window, this.dispatcher);
 			CommandContext.SetContext(this.window, this.context);

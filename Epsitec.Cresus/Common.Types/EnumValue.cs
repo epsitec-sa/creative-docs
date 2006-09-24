@@ -103,7 +103,7 @@ namespace Epsitec.Common.Types
 		{
 			if (this.IsHidden != hide)
 			{
-				this.hidden = hide;
+				this.isHidden = hide;
 			}
 		}
 
@@ -154,7 +154,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.hidden;
+				return this.isHidden;
 			}
 		}
 		
@@ -218,10 +218,10 @@ namespace Epsitec.Common.Types
 
 		private string name;
 		private bool isReadOnly;
+		private bool isHidden;
 		private Support.Druid captionId;
 		private Caption caption;
 		private System.Enum value;
 		private int rank;
-		private bool hidden;
 	}
 }

@@ -283,7 +283,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 			for (int i=0; i<fields.Length; i++)
 			{
-				string field = fields[i];
+				string field = fields[i].Substring (4);
 
 				while (prefix != "" && !field.StartsWith (prefix + "."))
 				{
@@ -335,7 +335,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 				//	Crée l'accesseur pour le champ actuel :
 				buffer.Append (generator.Tabs);
 
-				Support.Druid druid = bundle[field].Druid;
+				Support.Druid druid = bundle[fields[i]].Druid;
 
 				buffer.Append ("public static readonly Epsitec.Common.Widgets.Command ");
 				buffer.Append (delta);
@@ -404,7 +404,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 			for (int i=0; i<fields.Length; i++)
 			{
-				string field = fields[i];
+				string field = fields[i].Substring (4);
 
 				while (prefix != "" && !field.StartsWith (prefix + "."))
 				{
@@ -450,7 +450,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 				//	Crée l'accesseur pour le champ actuel :
 				buffer.Append (generator.Tabs);
 
-				Support.Druid druid = bundle[field].Druid;
+				Support.Druid druid = bundle[fields[i]].Druid;
 
 				buffer.Append ("public static Epsitec.Common.Types.Caption ");
 				buffer.Append (delta);
