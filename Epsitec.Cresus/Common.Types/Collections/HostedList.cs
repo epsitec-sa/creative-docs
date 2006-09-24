@@ -70,6 +70,7 @@ namespace Epsitec.Common.Types.Collections
 
 		public void Insert(int index, T item)
 		{
+			this.NotifyBeforeChange ();
 			this.NotifyBeforeInsertion (item);
 			this.list.Insert (index, item);
 			this.NotifyInsertion (item);
@@ -78,6 +79,7 @@ namespace Epsitec.Common.Types.Collections
 
 		public void RemoveAt(int index)
 		{
+			this.NotifyBeforeChange ();
 			T item = this.list[index];
 			this.list.RemoveAt (index);
 			this.NotifyRemoval (item);
@@ -91,6 +93,7 @@ namespace Epsitec.Common.Types.Collections
 			}
 			set
 			{
+				this.NotifyBeforeChange ();
 				if (EqualityComparer<T>.Default.Equals (this.list[index], value) == false)
 				{
 					this.NotifyBeforeInsertion (value);
@@ -107,6 +110,7 @@ namespace Epsitec.Common.Types.Collections
 
 		public virtual void Add(T item)
 		{
+			this.NotifyBeforeChange ();
 			this.NotifyBeforeInsertion (item);
 			this.list.Add (item);
 			this.NotifyInsertion (item);
@@ -114,6 +118,8 @@ namespace Epsitec.Common.Types.Collections
 
 		public void Clear()
 		{
+			this.NotifyBeforeChange ();
+
 			T[] array = this.list.ToArray ();
 
 			this.list.Clear ();
@@ -152,6 +158,8 @@ namespace Epsitec.Common.Types.Collections
 
 		public bool Remove(T item)
 		{
+			this.NotifyBeforeChange ();
+
 			if (this.list.Contains (item))
 			{
 				this.list.Remove (item);
@@ -257,6 +265,10 @@ namespace Epsitec.Common.Types.Collections
 		}
 
 		#endregion
+
+		protected virtual void NotifyBeforeChange()
+		{
+		}
 
 		protected virtual void NotifyBeforeInsertion(T item)
 		{
