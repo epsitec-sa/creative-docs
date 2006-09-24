@@ -690,6 +690,24 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Integer", st.Fields["Age"].Name);
 		}
 
+		[Test]
+		public void CheckEnumSerialization()
+		{
+			EnumType et = new EnumType (typeof (Common.Drawing.ColorCollectionType));
+
+			string serial = et.Caption.SerializeToString ();
+
+			System.Console.Out.WriteLine ("{0}", serial);
+
+			Caption caption = new Caption ();
+			caption.DeserializeFromString (serial);
+
+			EnumType et1 = TypeRosetta.CreateTypeObject (caption) as EnumType;
+
+			Assert.IsNotNull (et1);
+			Assert.AreEqual (et.SystemType, et1.SystemType);
+		}
+
 		private MyItem CreateSampleTree(out MyItem ext)
 		{
 			ext = new MyItem ();

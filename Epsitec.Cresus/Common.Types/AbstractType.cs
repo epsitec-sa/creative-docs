@@ -88,7 +88,23 @@ namespace Epsitec.Common.Types
 			if ((caption != null) &&
 				(this.SystemType != null))
 			{
-				AbstractType.SetSystemType (caption, this.SystemType.FullName);
+				System.Type type = this.SystemType;
+				
+				string typeName     = type.FullName;
+				string typeAssembly = type.Assembly.GetName ().Name;
+
+				string name;
+
+				if (typeAssembly == "mscorlib")
+				{
+					name = typeName;
+				}
+				else
+				{
+					name = string.Concat (typeName, ", ", typeAssembly);
+				}
+				
+				AbstractType.SetSystemType (caption, name);
 			}
 		}
 

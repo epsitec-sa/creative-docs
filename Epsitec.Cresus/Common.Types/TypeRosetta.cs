@@ -436,6 +436,10 @@ namespace Epsitec.Common.Types
 					case "System.Void":
 						type = new VoidType (caption);
 						break;
+					
+					default:
+						type = TypeRosetta.CreateSystemTypeBasedTypeObject (systemTypeName, caption);
+						break;
 				}
 			}
 
@@ -455,6 +459,23 @@ namespace Epsitec.Common.Types
 			}
 			
 			return type;
+		}
+
+		private static AbstractType CreateSystemTypeBasedTypeObject(string systemTypeName, Caption caption)
+		{
+			System.Type systemType = System.Type.GetType (systemTypeName, false);
+
+			if (systemType == null)
+			{
+				return null;
+			}
+
+			if (systemType.IsEnum)
+			{
+				return new EnumType (systemType, caption);
+			}
+			
+			return null;
 		}
 
 		private static void InitializeKnownTypes()

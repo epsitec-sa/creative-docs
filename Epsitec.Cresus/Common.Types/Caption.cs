@@ -178,7 +178,7 @@ namespace Epsitec.Common.Types
 					xmlWriter.Close ();
 					stringWriter.Close ();
 
-					return Serialization.SimpleSerialization.SerializeToString (this);
+					return Caption.CompressXml (Serialization.SimpleSerialization.SerializeToString (this));
 				}
 				else
 				{
@@ -205,9 +205,33 @@ namespace Epsitec.Common.Types
 					System.Diagnostics.Debug.Assert (startElementPos > 0);
 					System.Diagnostics.Debug.Assert (endElementPos > 0);
 
-					return xml.Substring (startElementPos, endElementPos - startElementPos);
+					return Caption.CompressXml (xml.Substring (startElementPos, endElementPos - startElementPos));
 				}
 			}
+		}
+
+		private static string CompressXml(string xml)
+		{
+			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.AbstractType""", @"s:name=""*aT""");
+			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.AbstractNumericType""", @"s:name=""*aNT""");
+			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.Caption""", @"s:name=""*C""");
+			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.StructuredType""", @"s:name=""*S""");
+			xml = xml.Replace (@"xmlns:s=""http://www.epsitec.ch/XNS/storage-structure-1""", @"xmlns:s=""*1""");
+			xml = xml.Replace (@"xmlns:f=""http://www.epsitec.ch/XNS/storage-fields-1""", @"xmlns:f=""*1""");
+			
+			return xml;
+		}
+
+		private static string DecompressXml(string xml)
+		{
+			xml = xml.Replace (@"s:name=""*aT""", @"s:name=""Epsitec.Common.Types.AbstractType""");
+			xml = xml.Replace (@"s:name=""*aNT""", @"s:name=""Epsitec.Common.Types.AbstractNumericType""");
+			xml = xml.Replace (@"s:name=""*C""", @"s:name=""Epsitec.Common.Types.Caption""");
+			xml = xml.Replace (@"s:name=""*S""", @"s:name=""Epsitec.Common.Types.StructuredType""");
+			xml = xml.Replace (@"xmlns:s=""*1""", @"xmlns:s=""http://www.epsitec.ch/XNS/storage-structure-1""");
+			xml = xml.Replace (@"xmlns:f=""*1""", @"xmlns:f=""http://www.epsitec.ch/XNS/storage-fields-1""");
+
+			return xml;
 		}
 
 		/// <summary>
@@ -216,6 +240,8 @@ namespace Epsitec.Common.Types
 		/// <param name="value">The serialized caption.</param>
 		public void DeserializeFromString(string value)
 		{
+			value = Caption.DecompressXml (value);
+			
 			if (value.StartsWith ("<" + Serialization.SimpleSerialization.RootElementName))
 			{
 				//	The caller has provided us with a fullly serialized XML stream.

@@ -20,6 +20,12 @@ namespace Epsitec.Common.Types
 			this.CreateEnumValues (enum_type);
 		}
 
+		public EnumType(System.Type enum_type, Caption caption)
+			: base (caption)
+		{
+			this.CreateEnumValues (enum_type);
+		}
+
 		public IEnumerable<EnumValue>			Values
 		{
 			get
