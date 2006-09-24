@@ -89,10 +89,6 @@ namespace Epsitec.Common.Types
 			{
 				return EnumType.GetEnumValues (this.Caption);
 			}
-			set
-			{
-				EnumType.SetEnumValues (this.Caption, value);
-			}
 		}
 
 		private static Collections.EnumValueCollection GetEnumValues(Caption caption)
@@ -128,11 +124,16 @@ namespace Epsitec.Common.Types
 
 		public EnumValue FindValueFromEnumValue(System.Enum value)
 		{
-			for (int i = 0; i < this.EnumValues.Count; i++)
+			if (this.enumType == value.GetType ())
 			{
-				if (System.Enum.Equals (this.EnumValues[i].Value, value))
+				int intValue = EnumType.ConvertToInt (value);
+
+				for (int i = 0; i < this.EnumValues.Count; i++)
 				{
-					return this.EnumValues[i];
+					if (this.EnumValues[i].Value == intValue)
+					{
+						return this.EnumValues[i];
+					}
 				}
 			}
 
@@ -165,6 +166,17 @@ namespace Epsitec.Common.Types
 			return null;
 		}
 
+		public System.Enum ConvertToEnum(int value)
+		{
+			if (this.enumType == typeof (NotAnEnum))
+			{
+				return NotAnEnum.Instance;
+			}
+			else
+			{
+				return (System.Enum) System.Enum.ToObject (this.enumType, value);
+			}
+		}
 
 		#region IDataConstraint Members
 		public override bool IsValidValue(object value)
@@ -354,9 +366,8 @@ namespace Epsitec.Common.Types
 			
 			FieldInfo[] fields = enumType.GetFields (BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
 
-			this.enumType   = enumType;
-			this.EnumValues = new Collections.EnumValueCollection ();
-
+			this.enumType = enumType;
+			
 			for (int i = 0; i < fields.Length; i++)
 			{
 				object[] hiddenAttributes;
@@ -369,7 +380,7 @@ namespace Epsitec.Common.Types
 				bool hide = hiddenAttributes.Length == 1;
 				int rank;
 
-				System.Enum value = (System.Enum) System.Enum.Parse (this.enumType, name);
+				int value = EnumType.ConvertToInt ((System.Enum) System.Enum.Parse (this.enumType, name));
 
 				if (rankAttributes.Length == 1)
 				{
@@ -378,7 +389,7 @@ namespace Epsitec.Common.Types
 				}
 				else
 				{
-					rank = EnumType.ConvertToInt (value);
+					rank = value;
 				}
 
 				this.EnumValues.Add (new EnumValue (value, rank, hide, name));
@@ -390,8 +401,7 @@ namespace Epsitec.Common.Types
 
 		private void CreateEnumValues(Caption caption)
 		{
-			this.enumType   = typeof (NotAnEnum);
-			this.EnumValues = new Collections.EnumValueCollection ();
+			this.enumType = typeof (NotAnEnum);
 
 			//	TODO: fill enum values from caption definition
 			
@@ -400,7 +410,23 @@ namespace Epsitec.Common.Types
 			AbstractType.SetSystemType (caption, this.enumType);
 		}
 
-		public static DependencyProperty EnumValuesProperty = DependencyProperty.RegisterAttached ("EnumValues", typeof (Collections.EnumValueCollection), typeof (EnumType));
+		private static object GetEnumValuesValue(DependencyObject obj)
+		{
+			if (obj.ContainsLocalValue (EnumType.EnumValuesProperty))
+			{
+				return obj.GetLocalValue (EnumType.EnumValuesProperty);
+			}
+			else
+			{
+				Collections.EnumValueCollection collection = new Collections.EnumValueCollection ();
+
+				obj.SetLocalValue (EnumType.EnumValuesProperty, collection);
+				
+				return collection;
+			}
+		}
+
+		public static DependencyProperty EnumValuesProperty = DependencyProperty.RegisterAttached ("EnumValues", typeof (Collections.EnumValueCollection), typeof (EnumType), new DependencyPropertyMetadata (EnumType.GetEnumValuesValue));
 		
 		private static object exclusion = new object ();
 		private static Dictionary<System.Type, EnumType> cache = new Dictionary<System.Type, EnumType> ();

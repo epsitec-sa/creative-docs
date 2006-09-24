@@ -9,13 +9,14 @@ namespace Epsitec.Common.Types
 	/// The <c>EnumValue</c> class describes a single value in an enumeration.
 	/// See also <see cref="T:EnumType"/>.
 	/// </summary>
+	[Types.SerializationConverter (typeof (EnumValue.SerializationConverter))]
 	public class EnumValue : IEnumValue
 	{
 		public EnumValue()
 		{
 		}
 		
-		public EnumValue(System.Enum value, int rank, bool hidden, string name)
+		public EnumValue(int value, int rank, bool hidden, string name)
 		{
 			this.DefineName (name);
 			this.DefineValue (value);
@@ -23,7 +24,7 @@ namespace Epsitec.Common.Types
 			this.DefineHidden (hidden);
 		}
 		
-		public EnumValue(System.Enum value, int rank, bool hidden, Support.Druid captionId)
+		public EnumValue(int value, int rank, bool hidden, Support.Druid captionId)
 		{
 			this.DefineCaptionId (captionId);
 			this.DefineValue (value);
@@ -31,6 +32,10 @@ namespace Epsitec.Common.Types
 			this.DefineHidden (hidden);
 		}
 
+		private EnumValue(Support.Druid captionId)
+		{
+			this.DefineCaptionId (captionId);
+		}
 
 		/// <summary>
 		/// Gets the name of the object.
@@ -83,7 +88,7 @@ namespace Epsitec.Common.Types
 		}
 
 		
-		public void DefineValue(System.Enum value)
+		public void DefineValue(int value)
 		{
 			if (this.Value != value)
 			{
@@ -134,7 +139,7 @@ namespace Epsitec.Common.Types
 
 		#region IEnumValue Members
 
-		public System.Enum Value
+		public int Value
 		{
 			get
 			{
@@ -160,6 +165,30 @@ namespace Epsitec.Common.Types
 		
 		#endregion
 
+		#region SerializationConverter Class
+
+		public class SerializationConverter : Types.ISerializationConverter
+		{
+			#region ISerializationConverter Members
+
+			public string ConvertToString(object value, Types.IContextResolver context)
+			{
+				EnumValue enumValue = (EnumValue) value;
+				return enumValue.CaptionId.ToString ();
+			}
+
+			public object ConvertFromString(string value, Types.IContextResolver context)
+			{
+				Support.Druid druid = Support.Druid.Parse (value);
+				EnumValue enumValue = new EnumValue (druid);
+				return enumValue;
+			}
+
+			#endregion
+		}
+
+		#endregion
+		
 		internal void Lock()
 		{
 			this.isReadOnly = true;
@@ -221,7 +250,7 @@ namespace Epsitec.Common.Types
 		private bool isHidden;
 		private Support.Druid captionId;
 		private Caption caption;
-		private System.Enum value;
+		private int value;
 		private int rank;
 	}
 }
