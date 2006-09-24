@@ -88,10 +88,7 @@ namespace Epsitec.Common.Types
 			if ((caption != null) &&
 				(this.SystemType != null))
 			{
-				System.Type type = this.SystemType;
-				string      name = AbstractType.GetSystemTypeNameFromSystemType (type);
-				
-				AbstractType.SetSystemType (caption, name);
+				AbstractType.SetSystemType (caption, this.SystemType);
 			}
 		}
 
@@ -190,6 +187,18 @@ namespace Epsitec.Common.Types
 			else
 			{
 				caption.SetValue (AbstractType.SytemTypeProperty, value);
+			}
+		}
+
+		public static void SetSystemType(Caption caption, System.Type type)
+		{
+			if (type == null)
+			{
+				AbstractType.SetSystemType (caption, "");
+			}
+			else
+			{
+				AbstractType.SetSystemType (caption, AbstractType.GetSystemTypeNameFromSystemType (type));
 			}
 		}
 

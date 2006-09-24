@@ -20,10 +20,23 @@ namespace Epsitec.Common.Types
 			this.CreateEnumValues (enumType);
 		}
 
+		public EnumType(Caption caption)
+			: this (null, caption)
+		{
+		}
+
 		public EnumType(System.Type enumType, Caption caption)
 			: base (caption)
 		{
-			this.CreateEnumValues (enumType);
+			if ((enumType == null) ||
+				(enumType == typeof (NotAnEnum)))
+			{
+				this.CreateEnumValues (caption);
+			}
+			else
+			{
+				this.CreateEnumValues (enumType);
+			}
 		}
 
 		public IEnumerable<EnumValue>			Values
@@ -343,6 +356,17 @@ namespace Epsitec.Common.Types
 			this.enumValues.Lock ();
 		}
 
+		private void CreateEnumValues(Caption caption)
+		{
+			this.enumType   = typeof (NotAnEnum);
+			this.enumValues = new Collections.EnumValueCollection ();
+
+			//	TODO: fill enum values from caption definition
+			
+			this.enumValues.Lock ();
+
+			AbstractType.SetSystemType (caption, this.enumType);
+		}
 
 		private static object exclusion = new object ();
 		private static Dictionary<System.Type, EnumType> cache = new Dictionary<System.Type, EnumType> ();
