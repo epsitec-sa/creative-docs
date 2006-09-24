@@ -691,7 +691,7 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		public void CheckEnumSerialization()
+		public void CheckEnumSerialization1()
 		{
 			EnumType et = new EnumType (typeof (Common.Drawing.ColorCollectionType));
 
@@ -700,6 +700,25 @@ namespace Epsitec.Common.Types
 			System.Console.Out.WriteLine ("{0}", serial);
 
 			Caption caption = new Caption ();
+			caption.DeserializeFromString (serial);
+
+			EnumType et1 = TypeRosetta.CreateTypeObject (caption) as EnumType;
+
+			Assert.IsNotNull (et1);
+			Assert.AreEqual (et.SystemType, et1.SystemType);
+		}
+
+		[Test]
+		public void CheckEnumSerialization2()
+		{
+			Caption caption = new Caption ();
+			EnumType et = new EnumType (caption);
+
+			string serial = et.Caption.SerializeToString ();
+
+			System.Console.Out.WriteLine ("{0}", serial);
+
+			caption = new Caption ();
 			caption.DeserializeFromString (serial);
 
 			EnumType et1 = TypeRosetta.CreateTypeObject (caption) as EnumType;
