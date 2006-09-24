@@ -163,11 +163,18 @@ namespace Epsitec.Common.Drawing
 			//	est grande si le candidat est mauvais.
 			double delta = 0;
 
-			if ( search.Style != null && search.Style != "" )  // cherche un style précis ?
+			if ( string.IsNullOrEmpty(search.Style) )
 			{
-				if ( candidate.Style == null || candidate.Style == "" )
+				if ( !string.IsNullOrEmpty(candidate.Style) )
 				{
-					delta += 50000;
+					delta += 100000;
+				}
+			}
+			else
+			{
+				if ( string.IsNullOrEmpty(candidate.Style) )
+				{
+					delta += 100000;
 				}
 				else
 				{
@@ -178,9 +185,9 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 
-			if ( search.Language != null && search.Language != "" )  // cherche une langue précise ?
+			if ( !string.IsNullOrEmpty(search.Language) )  // cherche une langue précise ?
 			{
-				if ( candidate.Language == null || candidate.Language == "" )
+				if ( string.IsNullOrEmpty(candidate.Language) )
 				{
 					delta += 5000;
 				}
