@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.DynamicStructuredType))]
+
 namespace Epsitec.Common.Types
 {
 	/// <summary>
