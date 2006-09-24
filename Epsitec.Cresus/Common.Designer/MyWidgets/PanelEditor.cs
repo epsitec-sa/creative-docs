@@ -1520,7 +1520,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					if (druid.IsValid)
 					{
-						obj.CommandObject = Command.Get(druid);
+						obj.CaptionDruid = druid;
 					}
 				}
 #endif
