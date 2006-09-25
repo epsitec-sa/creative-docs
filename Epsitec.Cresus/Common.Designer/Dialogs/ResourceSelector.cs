@@ -242,12 +242,12 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.fieldModule.Items.Clear();
 
-			List<MainWindow.ModuleInfo> list = this.mainWindow.OpeningListModule;
-			foreach (MainWindow.ModuleInfo info in list)
+			List<Module> list = this.mainWindow.OpeningListModule;
+			foreach (Module module in list)
 			{
-				text = info.Module.ModuleInfo.Name;
+				text = module.ModuleInfo.Name;
 
-				if (info.Module == this.baseModule)
+				if (module == this.baseModule)
 				{
 					text = Misc.Bold(text);
 				}
@@ -538,12 +538,12 @@ namespace Epsitec.Common.Designer.Dialogs
 				return null;
 			}
 
-			List<MainWindow.ModuleInfo> list = this.mainWindow.OpeningListModule;
-			foreach (MainWindow.ModuleInfo info in list)
+			List<Module> list = this.mainWindow.OpeningListModule;
+			foreach (Module module in list)
 			{
-				if (info.Module.ModuleInfo.Id == druid.Module)
+				if (module.ModuleInfo.Id == druid.Module)
 				{
-					return info.Module;
+					return module;
 				}
 			}
 
@@ -556,12 +556,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Choix d'un module dans le menu-combo.
 			string text = Misc.RemoveTags(this.fieldModule.Text);  // nom sans les tags <b> ou <i>
 
-			List<MainWindow.ModuleInfo> list = this.mainWindow.OpeningListModule;
-			foreach (MainWindow.ModuleInfo info in list)
+			List<Module> list = this.mainWindow.OpeningListModule;
+			foreach (Module module in list)
 			{
-				if (text == info.Module.ModuleInfo.Name)
+				if (text == module.ModuleInfo.Name)
 				{
-					this.module = info.Module;
+					this.module = module;
 					this.access = this.module.PrepareAccess(this.resourceType);
 
 					this.ignoreChanged = true;
