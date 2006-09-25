@@ -1489,6 +1489,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Choix de la ressource de type texte pour l'objet.
 			if (obj is Button || obj is StaticText || obj is GroupBox)
 			{
+#if false
 				Types.ResourceBinding binding = obj.GetBinding(Widget.TextProperty) as Types.ResourceBinding;
 
 				Druid druid = Druid.Empty;
@@ -1497,7 +1498,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 					druid = Druid.Parse(binding.ResourceId);
 				}
 
-#if false
 				druid = this.module.MainWindow.DlgResourceSelector(this.module.PrepareAccess(ResourceAccess.Type.Strings), druid);
 				
 				if (druid.IsValid)
@@ -1507,6 +1507,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 #else
 				if (obj is Button)
 				{
+					Command command = obj.CommandObject;
+					Druid druid = command.Caption.Druid;
+
 					druid = this.module.MainWindow.DlgResourceSelector(this.module.PrepareAccess(ResourceAccess.Type.Commands), druid);
 
 					if (druid.IsValid)
@@ -1516,6 +1519,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 				else
 				{
+					Druid druid = obj.CaptionDruid;
+
 					druid = this.module.MainWindow.DlgResourceSelector(this.module.PrepareAccess(ResourceAccess.Type.Captions), druid);
 
 					if (druid.IsValid)
