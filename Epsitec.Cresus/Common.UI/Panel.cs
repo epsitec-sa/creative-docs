@@ -49,6 +49,22 @@ namespace Epsitec.Common.UI
 				}
 			}
 		}
+
+		/// <summary>
+		/// Gets or sets the associated resource manager.
+		/// </summary>
+		/// <value>The resource manager.</value>
+		public Support.ResourceManager XResourceManager
+		{
+			get
+			{
+				return Support.ResourceManager.GetResourceManager (this);
+			}
+			set
+			{
+				Support.ResourceManager.SetResourceManager (this, value);
+			}
+		}
 		
 		/// <summary>
 		/// Fills the serialization context <c>ExternalMap</c> property.

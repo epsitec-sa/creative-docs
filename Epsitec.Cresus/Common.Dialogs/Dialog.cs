@@ -164,7 +164,7 @@ namespace Epsitec.Common.Dialogs
 				this.mode     = InternalMode.Design;
 				
 				this.window.Root.Text = "&lt; à créer ... &gt;";
-				this.window.Root.ResourceManager = this.resource_manager;
+//#				this.window.Root.ResourceManager = this.resource_manager;
 				
 				this.AttachDesigner ();
 				

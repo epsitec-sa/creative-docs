@@ -585,7 +585,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual Support.ResourceManager		ResourceManager
+		public Support.ResourceManager				ResourceManager
 		{
 			get
 			{
@@ -601,20 +601,6 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				return this.resource_manager;
-			}
-			set
-			{
-				if (this.resource_manager != value)
-				{
-					this.resource_manager = value;
-					
-					if (this.text_layout != null)
-					{
-						this.text_layout.ResourceManager = value;
-					}
-					
-					this.OnResourceManagerChanged ();
-				}
 			}
 		}
 		
