@@ -314,7 +314,8 @@ namespace Epsitec.Common.Types.Serialization
 
 		public static string EnumerableToString(System.Collections.IEnumerable enumerable, Context context, ISerializationConverter converter)
 		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			System.Text.StringBuilder     buffer = new System.Text.StringBuilder ();
+			ISerializationConverterFilter filter = converter as ISerializationConverterFilter;
 
 			buffer.Append ("{Collection");
 
@@ -322,6 +323,15 @@ namespace Epsitec.Common.Types.Serialization
 
 			foreach (object node in enumerable)
 			{
+				//	If a filter is provided, we don't serialize nodes which the
+				//	filter discards :
+				
+				if ((filter != null) &&
+					(filter.IsSerializable (node, context) == false))
+				{
+					continue;
+				}
+				
 				if (++i == 0)
 				{
 					buffer.Append (" ");
