@@ -2023,7 +2023,7 @@ namespace Epsitec.Common.Designer
 						bundle.Add(field);
 					}
 
-					bundle[this.BundleName(false)].SetXmlValue(UserInterface.SerializePanel(panel));
+					bundle[this.BundleName(false)].SetXmlValue(UserInterface.SerializePanel(panel, this.resourceManager));
 				}
 
 				if (this.panelsToCreate.Contains(bundle))

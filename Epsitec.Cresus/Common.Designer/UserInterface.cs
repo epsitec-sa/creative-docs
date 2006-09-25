@@ -30,7 +30,7 @@ namespace Epsitec.Common.Designer
 			return panel;
 		}
 
-		public static string SerializePanel(UI.Panel panel)
+		public static string SerializePanel(UI.Panel panel, ResourceManager manager)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 			System.IO.StringWriter stringWriter = new System.IO.StringWriter(buffer);
@@ -38,6 +38,8 @@ namespace Epsitec.Common.Designer
 
 			using (Types.Serialization.Context context = new Types.Serialization.SerializerContext (new Types.Serialization.IO.XmlWriter (xmlWriter)))
 			{
+				context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagResourceManager, manager);
+				
 				xmlWriter.Formatting = System.Xml.Formatting.None;
 				xmlWriter.WriteStartElement ("panel");
 
@@ -71,12 +73,14 @@ namespace Epsitec.Common.Designer
 
 			UI.Panel panel = Types.Storage.Deserialize(context) as UI.Panel;
 			
+			System.Diagnostics.Debug.Assert(panel.ResourceManager == manager);
+			
 			return panel;
 		}
 
 		public static void RunPanel(UI.Panel panel, ResourceManager manager, string name)
 		{
-			string xml = UserInterface.SerializePanel (panel);
+			string xml = UserInterface.SerializePanel (panel, manager);
 			UI.Panel clone = UserInterface.DeserializePanel (xml, manager);
 			Widgets.Window window = new Epsitec.Common.Widgets.Window ();
 
