@@ -904,6 +904,15 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public List<ModuleInfo> OpeningListModule
+		{
+			//	Retourne la liste des modules ouverts.
+			get
+			{
+				return this.moduleInfoList;
+			}
+		}
+
 		public Module CurrentModule
 		{
 			//	Retourne le Module courant.
@@ -1062,13 +1071,17 @@ namespace Epsitec.Common.Designer
 
 
 		#region Dialogs
-		public Druid DlgResourceSelector(ResourceAccess access, Druid ressource)
+		//?public Druid DlgResourceSelector(ResourceAccess access, Druid ressource)
+		public void DlgResourceSelector(ref Module module, ResourceAccess.Type type, ref Druid ressource)
 		{
 			//	Ouvre le dialogue pour choisir un ressource de type texte.
-			this.dlgResourceSelector.SetAccess(access);
+			this.dlgResourceSelector.SetAccess(module, type);
 			this.dlgResourceSelector.Resource = ressource;
-			this.dlgResourceSelector.Show();
-			return this.dlgResourceSelector.Resource;
+
+			this.dlgResourceSelector.Show();  // choix dans le dialogue...
+
+			module = this.dlgResourceSelector.Module;
+			ressource = this.dlgResourceSelector.Resource;
 		}
 
 		public string DlgIcon(ResourceManager manager, string icon)
@@ -1213,7 +1226,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region ModuleInfo class
-		protected class ModuleInfo : System.IDisposable
+		public class ModuleInfo : System.IDisposable
 		{
 			public Module						Module;
 			public TabPage						TabPage;
