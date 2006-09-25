@@ -904,12 +904,19 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public List<ModuleInfo> OpeningListModule
+		public List<Module> OpeningListModule
 		{
 			//	Retourne la liste des modules ouverts.
 			get
 			{
-				return this.moduleInfoList;
+				List<Module> list = new List<Module>();
+
+				foreach (ModuleInfo info in this.moduleInfoList)
+				{
+					list.Add(info.Module);
+				}
+
+				return list;
 			}
 		}
 
@@ -1228,7 +1235,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region ModuleInfo class
-		public class ModuleInfo : System.IDisposable
+		protected class ModuleInfo : System.IDisposable
 		{
 			public Module						Module;
 			public TabPage						TabPage;
