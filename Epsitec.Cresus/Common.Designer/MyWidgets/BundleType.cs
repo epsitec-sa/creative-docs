@@ -69,6 +69,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonTypes.Dock = DockStyle.Left;
 			this.buttonTypes.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
+			this.buttonValues = new IconButtonMark(this);
+			this.buttonValues.Text = "Valeurs";  // TODO: Res.Strings.BundleType.Values;
+			this.buttonValues.Name = BundleType.Convert(ResourceAccess.Type.Values);
+			this.buttonValues.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonValues.SiteMark = SiteMark.OnBottom;
+			this.buttonValues.MarkDimension = 5;
+			this.buttonValues.PreferredWidth = 100;
+			this.buttonValues.MinHeight = 20+5;
+			this.buttonValues.AutoFocus = false;
+			this.buttonValues.Margins = new Margins(2, 0, 10, 0);
+			this.buttonValues.Dock = DockStyle.Left;
+			this.buttonValues.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
 			this.buttonPanels = new IconButtonMark(this);
 			this.buttonPanels.Text = Res.Strings.BundleType.Panels;
 			this.buttonPanels.Name = BundleType.Convert(ResourceAccess.Type.Panels);
@@ -130,6 +143,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCaptions.ActiveState = (this.currentType == ResourceAccess.Type.Captions) ? ActiveState.Yes : ActiveState.No;
 			this.buttonCommands.ActiveState = (this.currentType == ResourceAccess.Type.Commands) ? ActiveState.Yes : ActiveState.No;
 			this.buttonTypes.ActiveState    = (this.currentType == ResourceAccess.Type.Types   ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonValues.ActiveState   = (this.currentType == ResourceAccess.Type.Values  ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonPanels.ActiveState   = (this.currentType == ResourceAccess.Type.Panels  ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonScripts.ActiveState  = (this.currentType == ResourceAccess.Type.Scripts ) ? ActiveState.Yes : ActiveState.No;
 		}
@@ -185,5 +199,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButtonMark			buttonCommands;
 		protected IconButtonMark			buttonPanels;
 		protected IconButtonMark			buttonTypes;
+		protected IconButtonMark			buttonValues;
 	}
 }

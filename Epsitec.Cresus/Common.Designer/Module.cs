@@ -133,6 +133,7 @@ namespace Epsitec.Common.Designer
 				case ResourceAccess.Type.Captions:
 				case ResourceAccess.Type.Commands:
 				case ResourceAccess.Type.Types:
+				case ResourceAccess.Type.Values:
 					return this.accessCaptions;
 
 				case ResourceAccess.Type.Panels:

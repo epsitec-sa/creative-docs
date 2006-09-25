@@ -41,6 +41,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (type == ResourceAccess.Type.Captions)  return new Captions(module, context, access);
 			if (type == ResourceAccess.Type.Commands)  return new Commands(module, context, access);
 			if (type == ResourceAccess.Type.Types)  return new Types(module, context, access);
+			if (type == ResourceAccess.Type.Values)  return new Values(module, context, access);
 			if (type == ResourceAccess.Type.Panels)  return new Panels(module, context, access);
 			if (type == ResourceAccess.Type.Scripts)  return new Scripts(module, context, access);
 			return null;
