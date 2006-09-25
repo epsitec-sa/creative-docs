@@ -1400,7 +1400,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if (caption.IsValid)
 			{
-				return this.AttachCaption (Support.Resources.DefaultManager.GetCaption (caption));
+				Support.ResourceManager manager = Helpers.VisualTree.GetResourceManager (this);
+				return this.AttachCaption (manager.GetCaption (caption));
 			}
 			else
 			{
