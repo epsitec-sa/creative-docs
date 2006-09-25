@@ -96,6 +96,36 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public static string TypeDisplayName(Type type)
+		{
+			//	Retourne le nom correspondant à un type.
+			switch (type)
+			{
+				case Type.Strings:
+					return Res.Strings.BundleType.Strings;
+
+				case Type.Captions:
+					return Res.Strings.BundleType.Captions;
+
+				case Type.Commands:
+					return Res.Strings.BundleType.Commands;
+
+				case Type.Types:
+					return Res.Strings.BundleType.Types;
+
+				case Type.Values:
+					return "Valeurs";  // TODO: Res.Strings.BundleType.Values;
+
+				case Type.Panels:
+					return Res.Strings.BundleType.Panels;
+
+				case Type.Scripts:
+					return Res.Strings.BundleType.Scripts;
+			}
+
+			return "?";
+		}
+
 		public void Load()
 		{
 			//	Charge les ressources.
