@@ -530,53 +530,31 @@ namespace Epsitec.Common.Designer
 		}
 
 		
-		static public string FullName(string filename, bool dirtySerialize)
+		static public string ExtractName(string moduleName, bool dirtySerialize)
 		{
-			//	Donne le nom complet du fichier.
+			//	Extrait le nom de module.
 			//	Si le nom n'existe pas, donne "sans titre".
 			//	Si le fichier doit être sérialisé, donne le nom en gras.
 			string name = "";
 			if ( dirtySerialize )  name += "<b>";
 
-			if ( filename == "" )
+			if ( moduleName == "" )
 			{
 				name += Res.Strings.Misc.NoTitle;
 			}
 			else
 			{
-				name += TextLayout.ConvertToTaggedText(filename);
+				name += ExtractName(moduleName);
 			}
 
 			if ( dirtySerialize )  name += "</b>";
 			return name;
 		}
 
-		static public string ExtractName(string filename, bool dirtySerialize)
+		static public string ExtractName(string moduleName)
 		{
-			//	Extrait le nom de fichier, en ignorant les noms de dossiers et l'extension.
-			//	Si le nom n'existe pas, donne "sans titre".
-			//	Si le fichier doit être sérialisé, donne le nom en gras.
-			string name = "";
-			if ( dirtySerialize )  name += "<b>";
-
-			if ( filename == "" )
-			{
-				name += Res.Strings.Misc.NoTitle;
-			}
-			else
-			{
-				name += ExtractName(filename);
-			}
-
-			if ( dirtySerialize )  name += "</b>";
-			return name;
-		}
-
-		static public string ExtractName(string filename)
-		{
-			//	Extrait le nom de fichier, en ignorant les noms de dossiers et l'extension.
-			//	"c:\rep\abc.txt" devient "abc".
-			return TextLayout.ConvertToTaggedText(System.IO.Path.GetFileNameWithoutExtension(filename));
+			//	Extrait le nom de module.
+			return TextLayout.ConvertToTaggedText(moduleName);
 		}
 
 		static public bool IsExtension(string filename, string ext)
