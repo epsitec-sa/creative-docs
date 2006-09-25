@@ -7,9 +7,9 @@
   <data id="03">&lt;s:data id="_0" f:Description="Quality coefficient." f:Labels="{Collection {Text 'Q'}}" /&gt;</data>
   <data id="04">&lt;s:data id="_0" f:Description="[4005]" f:Labels="{Collection {Text 'Text'}}" /&gt;</data>
   <data id="05">&lt;s:data id="_0" f:Name="OneOfThree" f:Description="One of Three" /&gt;</data>
-  <data id="06">&lt;s:data id="_0" f:Description="None" /&gt;</data>
-  <data id="07">&lt;s:data id="_0" f:Description="1st choice" /&gt;</data>
-  <data id="08">&lt;s:data id="_0" f:Description="2nd choice" /&gt;</data>
-  <data id="09">&lt;s:data id="_0" f:Description="3rd choice" /&gt;</data>
+  <data id="06">&lt;s:data id="_0" f:Name="None" f:Description="None" /&gt;</data>
+  <data id="07">&lt;s:data id="_0" f:Name="First" f:Description="1st choice" /&gt;</data>
+  <data id="08">&lt;s:data id="_0" f:Name="Second" f:Description="2nd choice" /&gt;</data>
+  <data id="09">&lt;s:data id="_0" f:Name="Third" f:Description="3rd choice" /&gt;</data>
   <data id="0A">&lt;s:data id="_0" f:Description="Borrowed Text" /&gt;</data>
 </bundle>

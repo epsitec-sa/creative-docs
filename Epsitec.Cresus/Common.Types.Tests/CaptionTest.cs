@@ -78,6 +78,28 @@ namespace Epsitec.Common.Types
 
 			System.Console.Out.WriteLine ("Type name: {0}", enumType.Name);
 			System.Console.Out.WriteLine ("Type description: {0}", enumType.Caption.Description);
+
+			foreach (EnumValue value in enumType.Values)
+			{
+				System.Console.Out.WriteLine ("- {0}, rank={1}, {2}", value.Name, value.Rank, value.Caption.Description);
+			}
+
+			string serial = enumType.Caption.SerializeToString ();
+
+			System.Console.Out.WriteLine ("XML: {0}", serial);
+
+			Caption caption = new Caption ();
+			caption.DeserializeFromString (serial);
+
+			EnumType eT = TypeRosetta.CreateTypeObject (caption) as EnumType;
+
+			System.Console.Out.WriteLine ("Type name: {0}", eT.Name);
+			System.Console.Out.WriteLine ("Type description: {0}", eT.Caption.Description);
+
+			foreach (EnumValue value in eT.Values)
+			{
+				System.Console.Out.WriteLine ("- {0}, rank={1}, {2}", value.Name, value.Rank, value.Caption.Description);
+			}
 		}
 		
 		[Test]
@@ -226,13 +248,10 @@ namespace Epsitec.Common.Types
 
 			EnumType enumType = new EnumType (typeof (MyEnum), enumTypeDruid);
 
-#if false //#fix
-				enumType.DefineCaptionId (Support.Druid.FromLong (0x0000400000000005L));
-				enumType[MyEnum.None].DefineCaptionId (Support.Druid.FromLong (0x0000400000000006L));
-				enumType[MyEnum.First].DefineCaptionId (Support.Druid.FromLong (0x0000400000000007L));
-				enumType[MyEnum.Second].DefineCaptionId (Support.Druid.FromLong (0x0000400000000008L));
-				enumType[MyEnum.Third].DefineCaptionId (Support.Druid.FromLong (0x0000400000000009L));
-#endif
+			enumType[MyEnum.None].DefineCaptionId (Support.Druid.FromLong (0x0000400000000006L));
+			enumType[MyEnum.First].DefineCaptionId (Support.Druid.FromLong (0x0000400000000007L));
+			enumType[MyEnum.Second].DefineCaptionId (Support.Druid.FromLong (0x0000400000000008L));
+			enumType[MyEnum.Third].DefineCaptionId (Support.Druid.FromLong (0x0000400000000009L));
 
 			return enumType;
 		}
