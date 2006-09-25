@@ -261,14 +261,29 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		public void CheckStructuredType()
+		public void CheckStructuredTypeSerialization()
 		{
 			StructuredType type = new StructuredType ();
+
+			type.Caption.Name = "TestStruct";
 
 			type.AddField ("Name", StringType.Default);
 			type.AddField ("Age", IntegerType.Default);
 
 			Assert.IsNull (type.SystemType);
+
+			string xml = type.Caption.SerializeToString ();
+
+			System.Console.Out.WriteLine ("StructuredType: {0}", xml);
+
+			Caption caption = new Caption ();
+			caption.DeserializeFromString (xml);
+
+			StructuredType restoredType = TypeRosetta.CreateTypeObject (caption) as StructuredType;
+
+			Assert.AreEqual (type.Fields.Count, restoredType.Fields.Count);
+			Assert.AreEqual (type.GetFieldTypeObject ("Name").GetType ().Name, restoredType.GetFieldTypeObject ("Name").GetType ().Name);
+			Assert.AreEqual (type.GetFieldTypeObject ("Age").GetType ().Name, restoredType.GetFieldTypeObject ("Age").GetType ().Name);
 		}
 
 		private static void Fill(StructuredType record)

@@ -11,7 +11,7 @@ namespace Epsitec.Common.Support
 	/// La classe ResourceBundleCollection permet de stocker ensemble toutes les variantes
 	/// d'un bundle (Default, Localized, Customized).
 	/// </summary>
-	public class ResourceBundleCollection : System.Collections.Generic.ICollection<ResourceBundle>, System.Collections.Generic.IList<ResourceBundle>
+	public class ResourceBundleCollection : ICollection<ResourceBundle>, IList<ResourceBundle>
 	{
 		public ResourceBundleCollection(ResourceManager resource_manager)
 		{
