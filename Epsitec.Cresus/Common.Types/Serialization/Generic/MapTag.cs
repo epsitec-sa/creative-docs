@@ -62,6 +62,11 @@ namespace Epsitec.Common.Types.Serialization.Generic
 
 		public void Record(string tag, T value)
 		{
+			if (value == null)
+			{
+				return;
+			}
+			
 			if (this.tagToValueLookup.ContainsKey (tag))
 			{
 				throw new System.ArgumentException (string.Format ("Duplicate tag '{0}' in MapTag", tag));

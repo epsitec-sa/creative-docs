@@ -38,14 +38,13 @@ namespace Epsitec.Common.Designer
 
 			using (Types.Serialization.Context context = new Types.Serialization.SerializerContext (new Types.Serialization.IO.XmlWriter (xmlWriter)))
 			{
-				context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagResourceManager, manager);
+				UI.Panel.FillSerializationContext (context, null, manager);
 				
 				xmlWriter.Formatting = System.Xml.Formatting.None;
 				xmlWriter.WriteStartElement ("panel");
 
 				context.ActiveWriter.WriteAttributeStrings ();
-				// TODO: utiliser Panel.FillSerializationContext
-
+				
 				Types.Storage.Serialize (panel, context);
 
 				xmlWriter.WriteEndElement ();
@@ -68,9 +67,8 @@ namespace Epsitec.Common.Designer
 
 			Types.Serialization.Context context = new Types.Serialization.DeserializerContext(new Types.Serialization.IO.XmlReader(xmlReader));
 
-			context.ExternalMap.Record(Types.Serialization.Context.WellKnownTagResourceManager, manager);
-			// TODO: utiliser Panel.FillSerializationContext
-
+			UI.Panel.FillSerializationContext (context, null, manager);
+			
 			UI.Panel panel = Types.Storage.Deserialize(context) as UI.Panel;
 			
 			System.Diagnostics.Debug.Assert(panel.ResourceManager == manager);
