@@ -816,34 +816,34 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			Grid.GridColumnsCountProperty.DefaultMetadata.DefineNamedType(ProxyManager.GridNumericType);
 			Grid.GridRowsCountProperty.DefaultMetadata.DefineNamedType(ProxyManager.GridNumericType);
-			Grid.GridColumnsCountProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300J]"));
-			Grid.GridRowsCountProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300K]"));
+			Grid.GridColumnsCountProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnsCount.Druid);
+			Grid.GridRowsCountProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowsCount.Druid);
 
 			Grid.GridColumnSpanProperty.DefaultMetadata.DefineNamedType(ProxyManager.GridNumericType);
 			Grid.GridRowSpanProperty.DefaultMetadata.DefineNamedType(ProxyManager.GridNumericType);
-			Grid.GridColumnSpanProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300L]"));
-			Grid.GridRowSpanProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300M]"));
+			Grid.GridColumnSpanProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnSpan.Druid);
+			Grid.GridRowSpanProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowSpan.Druid);
 
 			EnumType gridColumnModeEnumType = new EnumType(typeof(ObjectModifier.GridMode));
 			gridColumnModeEnumType.DefineDefaultController("Enum", "Icons");
-			gridColumnModeEnumType[ObjectModifier.GridMode.Proportional].DefineCaptionId (new Support.Druid ("[30051]"));
-			gridColumnModeEnumType[ObjectModifier.GridMode.Absolute].DefineCaptionId (new Support.Druid ("[30052]"));
-			gridColumnModeEnumType[ObjectModifier.GridMode.Auto].DefineCaptionId (new Support.Druid ("[30053]"));
+			gridColumnModeEnumType[ObjectModifier.GridMode.Proportional].DefineCaptionId(Res.Captions.Grid.Mode.Proportional.Druid);
+			gridColumnModeEnumType[ObjectModifier.GridMode.Absolute].DefineCaptionId(Res.Captions.Grid.Mode.Absolute.Druid);
+			gridColumnModeEnumType[ObjectModifier.GridMode.Auto].DefineCaptionId(Res.Captions.Grid.Mode.Auto.Druid);
 			Grid.GridColumnModeProperty.DefaultMetadata.DefineNamedType(gridColumnModeEnumType);
-			Grid.GridColumnModeProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300N]"));
+			Grid.GridColumnModeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnMode.Druid);
 
 			EnumType gridRowModeEnumType = new EnumType(typeof(ObjectModifier.GridMode));
 			gridRowModeEnumType.DefineDefaultController("Enum", "Icons");
-			gridRowModeEnumType[ObjectModifier.GridMode.Proportional].DefineCaptionId (new Support.Druid ("[30051]"));
-			gridRowModeEnumType[ObjectModifier.GridMode.Absolute].DefineCaptionId (new Support.Druid ("[30052]"));
-			gridRowModeEnumType[ObjectModifier.GridMode.Auto].DefineCaptionId (new Support.Druid ("[30053]"));
+			gridRowModeEnumType[ObjectModifier.GridMode.Proportional].DefineCaptionId(Res.Captions.Grid.Mode.Proportional.Druid);
+			gridRowModeEnumType[ObjectModifier.GridMode.Absolute].DefineCaptionId(Res.Captions.Grid.Mode.Absolute.Druid);
+			gridRowModeEnumType[ObjectModifier.GridMode.Auto].DefineCaptionId(Res.Captions.Grid.Mode.Auto.Druid);
 			Grid.GridRowModeProperty.DefaultMetadata.DefineNamedType(gridRowModeEnumType);
-			Grid.GridRowModeProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300O]"));
+			Grid.GridRowModeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowMode.Druid);
 
 			Grid.GridColumnValueProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 			Grid.GridRowValueProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
-			Grid.GridColumnValueProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300P]"));
-			Grid.GridRowValueProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300Q]"));
+			Grid.GridColumnValueProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnWidth.Druid);
+			Grid.GridRowValueProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowHeight.Druid);
 
 			Grid.GridMinWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 			Grid.GridMaxWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
@@ -853,14 +853,14 @@ namespace Epsitec.Common.Designer.Proxies
 			Grid.GridRightBorderProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 			Grid.GridTopBorderProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 			Grid.GridBottomBorderProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
-			Grid.GridMinWidthProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[30041]"));
-			Grid.GridMaxWidthProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[30042]"));
-			Grid.GridMinHeightProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[30043]"));
-			Grid.GridMaxHeightProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[30044]"));
-			Grid.GridLeftBorderProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[30045]"));
-			Grid.GridRightBorderProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[30046]"));
-			Grid.GridTopBorderProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[30047]"));
-			Grid.GridBottomBorderProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[30048]"));
+			Grid.GridMinWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.MinWidth.Druid);
+			Grid.GridMaxWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.MaxWidth.Druid);
+			Grid.GridMinHeightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.MinHeight.Druid);
+			Grid.GridMaxHeightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.MaxHeight.Druid);
+			Grid.GridLeftBorderProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.LeftBorder.Druid);
+			Grid.GridRightBorderProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RightBorder.Druid);
+			Grid.GridTopBorderProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.TopBorder.Druid);
+			Grid.GridBottomBorderProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.BottomBorder.Druid);
 		}
 
 
