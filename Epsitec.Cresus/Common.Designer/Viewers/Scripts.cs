@@ -35,7 +35,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array = new MyWidgets.StringArray(left);
 			this.array.Columns = 1;
 			this.array.SetColumnsRelativeWidth(0, 1.00);
-			this.array.SetDynamicsToolTips(0, true);
+			this.array.SetDynamicToolTips(0, true);
 			this.array.Margins = new Margins(0, 0, 0, 0);
 			this.array.Dock = DockStyle.Fill;
 			this.array.CellCountChanged += new EventHandler (this.HandleArrayCellCountChanged);

@@ -219,16 +219,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return this.columns[column].GetLineState(row-this.firstVisibleRow);
 		}
 
-		public void SetDynamicsToolTips(int column, bool state)
+		public void SetDynamicToolTips(int column, bool state)
 		{
 			//	Spécifie si une colonne génère des tooltips dynamiques.
-			this.columns[column].IsDynamicsToolTips = state;
+			this.columns[column].IsDynamicToolTips = state;
 		}
 
-		public bool GetDynamicsToolTips(int column)
+		public bool GetDynamicToolTips(int column)
 		{
 			//	Retourne si une colonne génère des tooltips dynamiques.
-			return this.columns[column].IsDynamicsToolTips;
+			return this.columns[column].IsDynamicToolTips;
 		}
 
 		public int TotalRows
