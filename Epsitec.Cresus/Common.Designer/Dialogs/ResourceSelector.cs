@@ -541,14 +541,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			List<MainWindow.ModuleInfo> list = this.mainWindow.OpeningListModule;
 			foreach (MainWindow.ModuleInfo info in list)
 			{
-				ResourceAccess access = info.Module.PrepareAccess(this.resourceType);
-
-				for (int i=0; i<access.TotalCount; i++)
+				if (info.Module.ModuleInfo.Id == druid.Module)
 				{
-					if (druid == access.GetBypassFilterDruid(i))
-					{
-						return info.Module;
-					}
+					return info.Module;
 				}
 			}
 
@@ -559,7 +554,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void HandleFieldModuleComboClosed(object sender)
 		{
 			//	Choix d'un module dans le menu-combo.
-			string text = Misc.RemoveTags(this.fieldModule.Text);
+			string text = Misc.RemoveTags(this.fieldModule.Text);  // nom sans les tags <b> ou <i>
 
 			List<MainWindow.ModuleInfo> list = this.mainWindow.OpeningListModule;
 			foreach (MainWindow.ModuleInfo info in list)
