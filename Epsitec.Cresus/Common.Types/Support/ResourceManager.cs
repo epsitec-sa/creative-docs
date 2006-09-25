@@ -48,7 +48,9 @@ namespace Epsitec.Common.Support
 		public ResourceManager(string path, ResourceManagerPool pool)
 		{
 			this.pool = pool ?? new ResourceManagerPool ();
-			this.pool.Register (this);
+			this.bundleRelatedCache = new Dictionary<string, BundleRelatedCache> ();
+			this.captionCache = new Dictionary<string, Weak<Caption>> ();
+
 			this.serialId = System.Threading.Interlocked.Increment (ref ResourceManager.nextSerialId);
 			this.providers = new Dictionary<string, ProviderRecord> ();
 			this.culture = CultureInfo.CurrentCulture;
@@ -59,10 +61,12 @@ namespace Epsitec.Common.Support
 				ProviderRecord record = new ProviderRecord (this, allocator);
 				this.providers.Add (record.Prefix, record);
 			}
+			
+			this.pool.Register (this);
 		}
 		
 
-		internal long							ManagerSerialId
+		internal long							SerialId
 		{
 			get
 			{
@@ -276,6 +280,7 @@ namespace Epsitec.Common.Support
 
 			return this.NormalizeFullId (prefix, localId);
 		}
+		
 		public string NormalizeFullId(string prefix, string localId)
 		{
 			if (string.IsNullOrEmpty (localId))
@@ -1602,6 +1607,8 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
+		#region DependencyProperty Accessors
+
 		public static void SetResourceManager(DependencyObject obj, ResourceManager value)
 		{
 			if (value == null)
@@ -1619,30 +1626,23 @@ namespace Epsitec.Common.Support
 			return (ResourceManager) obj.GetValue (ResourceManager.ResourceManagerProperty);
 		}
 
-		public static readonly string StringsBundleName = "Strings";
-		public static readonly string CaptionsBundleName = "Captions";
-
-		public static readonly char PrefixSeparator = ':';
-		public static readonly char ModuleSeparator = '/';
-
-		public static readonly char FieldIdPrefix = '$';
-		public static readonly char FieldSeparator = '#';
-		public static readonly int MaxRecursion = 50;
+		#endregion
 
 		public static DependencyProperty ResourceManagerProperty = DependencyProperty.RegisterAttached ("ResourceManager", typeof (ResourceManager), typeof (ResourceManager));
 		
-		private static long nextSerialId = 1;
+		private static long						nextSerialId = 1;
 		
 		private long							serialId;
-		private Dictionary<string, ProviderRecord> providers;
 		private CultureInfo						culture;
 		private string							defaultModuleName;
 		private int								defaultModuleId = -1;
 		private string							defaultPrefix = "file";
 		private string							defaultPath;
 		
-		ResourceManagerPool						pool;
-		Dictionary<string, BundleRelatedCache>	bundleRelatedCache = new Dictionary<string, BundleRelatedCache> ();
-		Dictionary<string, Weak<Caption>>		captionCache = new Dictionary<string, Weak<Caption>> ();
+		private ResourceManagerPool				pool;
+		
+		Dictionary<string, ProviderRecord>		providers;
+		Dictionary<string, BundleRelatedCache>	bundleRelatedCache;
+		Dictionary<string, Weak<Caption>>		captionCache;
 	}
 }

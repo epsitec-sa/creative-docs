@@ -694,7 +694,7 @@ namespace Epsitec.Common.Support
 		
 		public void Compile(System.Xml.XmlNode xmlroot, ResourceLevel dataLevel)
 		{
-			if (this.depth > Resources.MaxRecursion)
+			if (this.depth > Resources.MaxRecursionCount)
 			{
 				throw new ResourceException (string.Format ("Bundle is too complex, giving up."));
 			}
@@ -1048,7 +1048,7 @@ namespace Epsitec.Common.Support
 			{
 				throw new ResourceException (string.Format ("<ref target='{0}'/> could not be resolved. Missing bundle. XML: {1}.", ref_target, node.OuterXml));
 			}
-			if (bundle.depth > Resources.MaxRecursion)
+			if (bundle.depth > Resources.MaxRecursionCount)
 			{
 				throw new ResourceException (string.Format ("Bundle is too complex, giving up."));
 			}
