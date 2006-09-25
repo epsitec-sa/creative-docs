@@ -22,6 +22,11 @@ namespace Epsitec.Common.Types.Collections
 			this.isReadOnly = true;
 		}
 
+		internal void Unlock()
+		{
+			this.isReadOnly = false;
+		}
+		
 		protected override void NotifyBeforeChange()
 		{
 			if (this.isReadOnly)

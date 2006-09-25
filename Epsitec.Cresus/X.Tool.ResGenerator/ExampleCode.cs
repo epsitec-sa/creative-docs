@@ -72,6 +72,19 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
+		
+		//	Voici à quoi ressemble le code qui doit être généré pour les définitions
+		//	de types :
+
+		public static class Types
+		{
+			public static class Foo
+			{
+				public static readonly Epsitec.Common.Types.StringType Abc = (Epsitec.Common.Types.StringType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (Epsitec.Common.Support.Druid.FromModuleDruid (_moduleId, 5)));
+				public static readonly Epsitec.Common.Types.IntegerType Xyz = (Epsitec.Common.Types.IntegerType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (Epsitec.Common.Support.Druid.FromModuleDruid (_moduleId, 6)));
+			}
+		}
+
 		// ...
 
 		public static void Initialize(System.Type type, string name)

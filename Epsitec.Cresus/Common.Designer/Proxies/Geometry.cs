@@ -320,10 +320,10 @@ namespace Epsitec.Common.Designer.Proxies
 			Geometry.MinHeightProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 			Geometry.MaxHeightProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 
-			Geometry.LeftMarginProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[3000]"));
-			Geometry.RightMarginProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[3001]"));
-			Geometry.TopMarginProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[3002]"));
-			Geometry.BottomMarginProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[3003]"));
+			Geometry.LeftMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.LeftMargin.Druid);
+			Geometry.RightMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.RightMargin.Druid);
+			Geometry.TopMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.TopMargin.Druid);
+			Geometry.BottomMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.BottomMargin.Druid);
 
 			Geometry.OriginXProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[3004]"));
 			Geometry.OriginYProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[3005]"));

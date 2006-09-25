@@ -15,7 +15,17 @@ namespace Epsitec.Common.Types
 		public EnumValue()
 		{
 		}
-		
+
+		public EnumValue(int rank, Support.Druid captionId)
+			: this (NotAnEnum.Instance, rank, false, captionId)
+		{
+		}
+
+		public EnumValue(int rank, Caption caption)
+			: this (NotAnEnum.Instance, rank, false, caption)
+		{
+		}
+
 		public EnumValue(System.Enum value, int rank, bool hidden, string name)
 		{
 			this.DefineName (name);
@@ -27,6 +37,14 @@ namespace Epsitec.Common.Types
 		public EnumValue(System.Enum value, int rank, bool hidden, Support.Druid captionId)
 		{
 			this.DefineCaptionId (captionId);
+			this.DefineValue (value);
+			this.DefineRank (rank);
+			this.DefineHidden (hidden);
+		}
+
+		public EnumValue(System.Enum value, int rank, bool hidden, Caption caption)
+		{
+			this.DefineCaption (caption);
 			this.DefineValue (value);
 			this.DefineRank (rank);
 			this.DefineHidden (hidden);

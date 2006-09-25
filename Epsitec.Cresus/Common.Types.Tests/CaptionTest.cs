@@ -36,7 +36,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (Support.Druid.Empty, target.GetBindingExpression (Stuff.EnumProperty).GetSourceCaptionId ());
 			Assert.IsNotNull (target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ());
 			Assert.AreEqual ("EnumType", target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ().GetType ().Name);
-			Assert.AreEqual ("Enumeration MyEnum", target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ().Name);
+			Assert.AreEqual ("OneOfThree", target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ().Name);
 			Assert.AreEqual (Support.Druid.FromLong (0x0000400000000005L), target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ().CaptionId);
 		}
 
@@ -67,6 +67,42 @@ namespace Epsitec.Common.Types
 			Caption.CopyDefinedProperties (caption1, caption2);
 			
 			Assert.AreEqual (4, count);
+		}
+
+		[Test]
+		public void CheckEnumCreation()
+		{
+			Caption caption = new Caption ();
+
+			caption.DefineDruid (Support.Druid.Parse ("[4005]"));
+			caption.Name = "TestEnum";
+			caption.Description = "Enumeration used for tests only";
+
+			EnumType type = new EnumType (caption);
+			
+			type.MakeEditable ();
+
+			Caption captionV1 = new Caption ();
+			Caption captionV2 = new Caption ();
+			Caption captionV3 = new Caption ();
+
+			captionV1.DefineDruid (Support.Druid.Parse ("[4007]"));
+			captionV1.Name = "Value1";
+			captionV1.Description = "First value";
+
+			captionV2.DefineDruid (Support.Druid.Parse ("[4008]"));
+			captionV2.Name = "Value2";
+			captionV2.Description = "Middle value";
+
+			captionV3.DefineDruid (Support.Druid.Parse ("[4009]"));
+			captionV3.Name = "Value3";
+			captionV3.Description = "Last value";
+
+			type.EnumValues.Add (new EnumValue (1, captionV1));
+			type.EnumValues.Add (new EnumValue (2, captionV2));
+			type.EnumValues.Add (new EnumValue (3, captionV3));
+
+			System.Console.Out.WriteLine ("XML: {0}", caption.SerializeToString ());
 		}
 
 		[Test]
