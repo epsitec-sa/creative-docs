@@ -1802,6 +1802,8 @@ namespace Epsitec.Common.Widgets
 			this.cache_visible_rows      = max;
 			this.cache_first_virtvis_row = this.first_virtvis_row;
 
+			Support.ResourceManager manager = Helpers.VisualTree.GetResourceManager (this);
+
 			for (int row = 0; row < max; row++)
 			{
 				for (int column = 0; column < this.max_columns; column++)
@@ -1810,12 +1812,12 @@ namespace Epsitec.Common.Widgets
 					{
 						if (this.layouts[row, column] == null)
 						{
-							this.layouts[row, column] = new TextLayout (this.ResourceManager);
+							this.layouts[row, column] = new TextLayout (manager);
 						}
 
 						string text = this[row + top, column];
 
-						this.layouts[row, column].Text            = text;	//@	this.AutoResolveResRef ? this.ResourceManager.ResolveTextRef (text) : text;
+						this.layouts[row, column].Text            = text;
 						this.layouts[row, column].DefaultFont     = this.DefaultFont;
 						this.layouts[row, column].DefaultFontSize = this.DefaultFontSize;
 					}
@@ -1948,28 +1950,6 @@ namespace Epsitec.Common.Widgets
 		{
 			this.UpdateGeometry ();
 			base.OnAdornerChanged ();
-		}
-
-		protected override void OnResourceManagerChanged()
-		{
-			base.OnResourceManagerChanged ();
-
-			ResourceManager resource_manager = this.ResourceManager;
-
-			for (int i = 0; i < this.layouts.GetLength (0); i++)
-			{
-				for (int j = 0; j < this.layouts.GetLength (1); j++)
-				{
-					TextLayout layout = this.layouts[i, j];
-
-					if (layout != null)
-					{
-						layout.ResourceManager = resource_manager;
-					}
-				}
-			}
-
-			this.Invalidate ();
 		}
 
 		protected virtual void OnSelectedIndexChanging()

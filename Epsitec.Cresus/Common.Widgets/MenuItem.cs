@@ -361,19 +361,6 @@ namespace Epsitec.Common.Widgets
 			this.mainTextSize = this.AdjustSize (this.TextLayout.SingleLineSize);
 		}
 
-		protected override void OnResourceManagerChanged()
-		{
-			base.OnResourceManagerChanged ();
-			
-			Support.ResourceManager resource_manager = this.ResourceManager;
-			
-			this.icon.ResourceManager          = resource_manager;
-			this.shortcut.ResourceManager      = resource_manager;
-
-			this.Invalidate ();
-		}
-		
-		
 		protected override void OnPressed(MessageEventArgs e)
 		{
 			this.OnUserAction (e);

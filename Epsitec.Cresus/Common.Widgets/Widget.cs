@@ -585,15 +585,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Support.ResourceManager				ResourceManager
-		{
-			get
-			{
-				return Helpers.VisualTree.GetResourceManager (this);
-			}
-		}
-		
-		
 		public Widget								RootParent
 		{
 			get
@@ -3431,7 +3422,7 @@ namespace Epsitec.Common.Widgets
 				this.text_layout.DefaultFont     = this.DefaultFont;
 				this.text_layout.DefaultFontSize = this.DefaultFontSize;
 				this.text_layout.Anchor         += new AnchorEventHandler (this.HandleTextLayoutAnchor);
-				this.text_layout.ResourceManager = this.ResourceManager;
+				this.text_layout.ResourceManager = Helpers.VisualTree.GetResourceManager (this);
 				
 				this.UpdateTextLayout ();
 			}
@@ -3896,14 +3887,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnResourceManagerChanged()
-		{
-			if (this.ResourceManagerChanged != null)
-			{
-				this.ResourceManagerChanged (this);
-			}
-		}
-		
 		public event PaintEventHandler				PaintBackground
 		{
 			add
@@ -3945,7 +3928,6 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			HypertextHot;
 		public event MessageEventHandler			HypertextClicked;
 		public event Support.EventHandler			ValidatorChanged;
-		public event Support.EventHandler			ResourceManagerChanged;
 		
 		public event MessageEventHandler			PreProcessing;
 		public event MessageEventHandler			PostProcessing;

@@ -2070,6 +2070,7 @@ namespace Epsitec.Common.Designer
 			panel.Anchor = AnchorStyles.BottomLeft;
 			panel.Padding = new Margins(20, 20, 20, 20);
 			panel.DrawDesignerFrame = true;
+			panel.ResourceManager = this.resourceManager;
 
 			return panel;
 		}
