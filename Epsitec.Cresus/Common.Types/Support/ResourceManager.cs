@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 using Epsitec.Common.Types;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Support.ResourceManager))]
+
 namespace Epsitec.Common.Support
 {
 	/// <summary>
@@ -1595,6 +1597,23 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
+		public static void SetResourceManager(DependencyObject obj, ResourceManager value)
+		{
+			if (value == null)
+			{
+				obj.ClearValue (ResourceManager.ResourceManagerProperty);
+			}
+			else
+			{
+				obj.SetValue (ResourceManager.ResourceManagerProperty, value);
+			}
+		}
+
+		public static ResourceManager GetResourceManager(DependencyObject obj)
+		{
+			return (ResourceManager) obj.GetValue (ResourceManager.ResourceManagerProperty);
+		}
+
 		public static readonly string StringsBundleName = "Strings";
 		public static readonly string CaptionsBundleName = "Captions";
 
@@ -1604,6 +1623,8 @@ namespace Epsitec.Common.Support
 		public static readonly char FieldIdPrefix = '$';
 		public static readonly char FieldSeparator = '#';
 		public static readonly int MaxRecursion = 50;
+
+		public static DependencyProperty ResourceManagerProperty = DependencyProperty.RegisterAttached ("ResourceManager", typeof (ResourceManager), typeof (ResourceManager));
 		
 		private static long nextSerialId = 1;
 		
