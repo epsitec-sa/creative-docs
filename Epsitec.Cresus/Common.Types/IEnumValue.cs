@@ -9,10 +9,10 @@ namespace Epsitec.Common.Types
 	public interface IEnumValue : ICaption, IName
 	{
 		/// <summary>
-		/// Gets the numeric value of the enumeration value.
+		/// Gets the <see cref="System.Enum"/> value of the enumeration value.
 		/// </summary>
-		/// <value>The numeric value.</value>
-		int Value
+		/// <value>The enumeration value.</value>
+		System.Enum Value
 		{
 			get;
 		}
