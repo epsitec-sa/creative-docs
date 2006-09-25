@@ -477,7 +477,7 @@ namespace Epsitec.Common.Support
 
 		public static readonly char				FieldIdPrefix = '$';
 		public static readonly char				FieldSeparator = '#';
-		public static readonly int				MaxRecursion = 50;
+		public static readonly int				MaxRecursionCount = 50;
 		
 		private static ResourceProviderFactory	factory;
 

@@ -223,7 +223,7 @@ namespace Epsitec.Common.Support
 		{
 			public BigKey(ResourceManager manager, long id)
 			{
-				this.serial = manager.ManagerSerialId;
+				this.serial = manager.SerialId;
 				this.id     = id;
 			}
 			
