@@ -949,6 +949,11 @@ namespace Epsitec.Common.Designer
 				this.bookModules.ActivePage = this.CurrentModuleInfo.TabPage;
 				this.ignoreChange = false;
 
+				//	Il faut re-préparer l'accès, car l'utilisation du dialogue ResourceSelector
+				//	dans un autre module a pu modifier l'accès de ce module !
+				ResourceAccess.Type type = this.CurrentModuleInfo.BundleType.CurrentType;
+				this.CurrentModule.PrepareAccess(type);
+
 				this.DialogSearchAdapt();
 				this.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
 			}
@@ -1071,13 +1076,10 @@ namespace Epsitec.Common.Designer
 
 
 		#region Dialogs
-		//?public Druid DlgResourceSelector(ResourceAccess access, Druid ressource)
 		public void DlgResourceSelector(ref Module module, ResourceAccess.Type type, ref Druid ressource)
 		{
-			//	Ouvre le dialogue pour choisir un ressource de type texte.
-			this.dlgResourceSelector.SetAccess(module, type);
-			this.dlgResourceSelector.Resource = ressource;
-
+			//	Ouvre le dialogue pour choisir un ressource d'un type à choix.
+			this.dlgResourceSelector.SetAccess(module, type, ressource);
 			this.dlgResourceSelector.Show();  // choix dans le dialogue...
 
 			module = this.dlgResourceSelector.Module;

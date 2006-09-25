@@ -195,11 +195,20 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void SetAccess(Module module, ResourceAccess.Type type)
+		public void SetAccess(Module module, ResourceAccess.Type type, Druid ressource)
 		{
 			//	Détermine les ressources à afficher.
+			Module m = this.ModuleSearch(ressource);
+			if (m != null)
+			{
+				module = m;
+			}
+
 			this.module = module;
 			this.resourceType = type;
+
+			System.Diagnostics.Debug.Assert(ressource.Type != DruidType.ModuleRelative);
+			this.resource = ressource;
 
 			this.access = this.module.PrepareAccess(this.resourceType);
 		}
@@ -215,15 +224,10 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public Druid Resource
 		{
-			//	Druid de la ressource choisie.
+			//	Retourne le Druid de la ressource choisie.
 			get
 			{
 				return this.resource;
-			}
-			set
-			{
-				System.Diagnostics.Debug.Assert(value.Type != DruidType.ModuleRelative);
-				this.resource = value;
 			}
 		}
 
@@ -501,6 +505,32 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		protected Module ModuleSearch(Druid druid)
+		{
+			//	Cherche à quel module appartient un druid.
+			if (druid.IsEmpty)
+			{
+				return null;
+			}
+
+			List<MainWindow.ModuleInfo> list = this.mainWindow.OpeningListModule;
+			foreach (MainWindow.ModuleInfo info in list)
+			{
+				ResourceAccess access = info.Module.PrepareAccess(this.resourceType);
+
+				for (int i=0; i<access.TotalCount; i++)
+				{
+					if (druid == access.GetBypassFilterDruid(i))
+					{
+						return info.Module;
+					}
+				}
+			}
+
+			return null;
+		}
+
+
 		protected void HandleFieldModuleComboClosed(object sender)
 		{
 			//	Choix d'un module dans le menu-combo.
@@ -511,7 +541,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				if (text == info.Module.ModuleInfo.Name)
 				{
-					this.SetAccess(info.Module, this.resourceType);
+					this.module = info.Module;
+					this.access = this.module.PrepareAccess(this.resourceType);
+
+					this.ignoreChanged = true;
+					this.filterLabel.Text = "";
+					this.filterText.Text = "";
+					this.ignoreChanged = false;
+
 					this.UpdateDruidsIndex();
 					this.UpdateArray();
 					this.SelectArray();
