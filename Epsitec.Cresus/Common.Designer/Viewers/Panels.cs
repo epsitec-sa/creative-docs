@@ -288,7 +288,7 @@ namespace Epsitec.Common.Designer.Viewers
 				button.Margins = new Margins(0, 0, 0, 2);
 				button.TabIndex = tabIndex++;
 				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				button.Pressed += new MessageEventHandler(this.HandleCultureButtonPressed);
+				button.Clicked += new MessageEventHandler(this.HandleCultureButtonClicked);
 				ToolTip.Default.SetToolTip(button, Misc.CultureLongName(culture));
 
 				this.cultureButtonList.Add(button);
@@ -297,11 +297,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCultureButtons();
 		}
 
-		void HandleCultureButtonPressed(object sender, MessageEventArgs e)
+		void HandleCultureButtonClicked(object sender, MessageEventArgs e)
 		{
 			//	Un bouton pour changer de culture a été cliqué.
 			IconButton button = sender as IconButton;
 			this.module.ResourceManager.ActiveCulture = Resources.FindSpecificCultureInfo(button.Name);
+			this.panelContainer.UpdateDisplayCaptions ();
 			this.UpdateCultureButtons();
 		}
 

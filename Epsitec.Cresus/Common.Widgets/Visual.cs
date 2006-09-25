@@ -1261,8 +1261,46 @@ namespace Epsitec.Common.Widgets
 			Command commandObject  = this.CommandObject;
 			Caption commandCaption = commandObject == null ? null : commandObject.Caption;
 
+			if (commandCaption != null)
+			{
+				Support.ResourceManager manager = Visual.cachedResourceManager ?? Helpers.VisualTree.FindResourceManager (this);
+
+				if (manager != null)
+				{
+					commandCaption = manager.GetCaption (commandCaption.Druid);
+				}
+			}
+
 			return Caption.Merge (commandCaption, this.Caption);
 		}
+
+		public void UpdateDisplayCaptions()
+		{
+			Support.ResourceManager oldManager = Visual.cachedResourceManager;
+			Support.ResourceManager newManager = Helpers.VisualTree.GetResourceManager (this);
+
+			Visual.cachedResourceManager = newManager;
+
+			this.RecursiveUpdateDisplayCaptions ();
+			
+			Visual.cachedResourceManager = oldManager;
+		}
+
+		private void RecursiveUpdateDisplayCaptions()
+		{
+			this.OnDisplayCaptionChanged ();
+
+			if (this.HasChildren)
+			{
+				foreach (Visual child in this.Children)
+				{
+					child.RecursiveUpdateDisplayCaptions ();
+				}
+			}
+		}
+
+		[System.ThreadStatic]
+		private static Support.ResourceManager cachedResourceManager;
 		
 		internal virtual void InvalidateTextLayout()
 		{

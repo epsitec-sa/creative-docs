@@ -233,7 +233,7 @@ namespace Epsitec.Common.Widgets
 			double dy = 0;
 
 			TextLayout layout = new TextLayout();
-			layout.ResourceManager = this.ResourceManager;
+			layout.ResourceManager = Helpers.VisualTree.GetResourceManager (this);
 			layout.DefaultFont     = this.DefaultFont;
 			layout.DefaultFontSize = this.DefaultFontSize;
 
@@ -542,9 +542,9 @@ namespace Epsitec.Common.Widgets
 					}
 					
 					string text = (i+this.firstLine < this.items.Count) ? this.items[i+this.firstLine] : "";
-					
-					this.textLayouts[i].ResourceManager = this.ResourceManager;
-					this.textLayouts[i].Text            = text;	//@	this.AutoResolveResRef ? this.ResourceManager.ResolveTextRef(text) : text;
+
+					this.textLayouts[i].ResourceManager = Helpers.VisualTree.GetResourceManager (this);
+					this.textLayouts[i].Text            = text;
 					this.textLayouts[i].DefaultFont     = this.DefaultFont;
 					this.textLayouts[i].DefaultFontSize = this.DefaultFontSize;
 					this.textLayouts[i].LayoutSize      = new Drawing.Size(this.GetTextWidth(), this.lineHeight);
@@ -592,25 +592,6 @@ namespace Epsitec.Common.Widgets
 			base.OnAdornerChanged();
 		}
 		
-		protected override void OnResourceManagerChanged()
-		{
-			base.OnResourceManagerChanged();
-			
-			ResourceManager resourceManager = this.ResourceManager;
-			
-			for ( int i=0 ; i<this.textLayouts.GetLength(0) ; i++ )
-			{
-				TextLayout layout = this.textLayouts[i];
-				
-				if ( layout != null )
-				{
-					layout.ResourceManager = resourceManager;
-				}
-			}
-			
-			this.Invalidate();
-		}
-
 		protected void UpdateMargins()
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;

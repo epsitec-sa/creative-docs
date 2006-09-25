@@ -54,7 +54,7 @@ namespace Epsitec.Common.UI
 		/// Gets or sets the associated resource manager.
 		/// </summary>
 		/// <value>The resource manager.</value>
-		public Support.ResourceManager XResourceManager
+		public Support.ResourceManager ResourceManager
 		{
 			get
 			{

@@ -309,12 +309,28 @@ namespace Epsitec.Common.Widgets.Helpers
 			return VisualTree.GetRoot (visual) as WindowRoot;
 		}
 
+		/// <summary>
+		/// Gets the resource manager for a specified <see cref="Visual"/> instance.
+		/// </summary>
+		/// <param name="visual">The visual.</param>
+		/// <returns>The specific resource manager if one is defined; otherwise,
+		/// <c>Epsitec.Common.Support.Resources.DefaultManager</c>.</returns>
 		public static Support.ResourceManager GetResourceManager(Visual visual)
+		{
+			return VisualTree.FindResourceManager (visual) ?? Support.Resources.DefaultManager;
+		}
+
+		/// <summary>
+		/// Finds the resource manager for a specified <see cref="Visual"/> instance.
+		/// </summary>
+		/// <param name="visual">The visual.</param>
+		/// <returns>The specific resource manager if one is defined; otherwise, <c>null</c>.</returns>
+		public static Support.ResourceManager FindResourceManager(Visual visual)
 		{
 			while (visual != null)
 			{
 				Support.ResourceManager manager = Support.ResourceManager.GetResourceManager (visual);
-				
+
 				if (manager != null)
 				{
 					return manager;
@@ -330,16 +346,14 @@ namespace Epsitec.Common.Widgets.Helpers
 					{
 						return manager;
 					}
-					
+
 					break;
 				}
 
 				visual = visual.Parent;
 			}
 			
-			System.Diagnostics.Debug.WriteLine ("Falling back to default resource manager");
-			
-			return Support.Resources.DefaultManager;
+			return null;
 		}
 
 		public static CommandContext GetCommandContext(Visual visual)

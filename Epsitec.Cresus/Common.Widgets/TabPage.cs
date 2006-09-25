@@ -58,7 +58,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				TextLayout tl = new TextLayout(this.ResourceManager);
+				TextLayout tl = new TextLayout (Helpers.VisualTree.GetResourceManager (this));
 				
 				tl.Text = this.tabButton.Text;
 				
