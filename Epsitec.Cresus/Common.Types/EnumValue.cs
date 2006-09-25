@@ -167,7 +167,7 @@ namespace Epsitec.Common.Types
 
 		#region SerializationConverter Class
 
-		public class SerializationConverter : Types.ISerializationConverter
+		public class SerializationConverter : Types.ISerializationConverter, Types.ISerializationConverterFilter
 		{
 			#region ISerializationConverter Members
 
@@ -175,26 +175,45 @@ namespace Epsitec.Common.Types
 			{
 				EnumValue enumValue = (EnumValue) value;
 
-				string rank      = enumValue.Rank.ToString (System.Globalization.CultureInfo.InvariantCulture);
-				string captionId = enumValue.CaptionId.ToString ();
-
-				return string.Concat (rank, " ", captionId);
+				string        rank  = enumValue.Rank.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				Support.Druid druid = enumValue.CaptionId;
+				
+				return string.Concat (rank, " ", druid.ToString ());
 			}
 
 			public object ConvertFromString(string value, Types.IContextResolver context)
 			{
-				string[]      args  = value.Split (' ');
+				string[] args = value.Split (' ');
 
-				System.Diagnostics.Debug.Assert (args.Length == 2);
-				
-				int           rank  = System.Int32.Parse (args[0], System.Globalization.CultureInfo.InvariantCulture);
-				Support.Druid druid = Support.Druid.Parse (args[1]);
+				int rank;
+				Support.Druid druid;
+
+				if (args.Length == 2)
+				{
+					rank  = System.Int32.Parse (args[0], System.Globalization.CultureInfo.InvariantCulture);
+					druid = Support.Druid.Parse (args[1]);
+				}
+				else
+				{
+					throw new System.FormatException ();
+				}
 				
 				EnumValue enumValue = new EnumValue (druid);
 
 				enumValue.rank = rank;
 				
 				return enumValue;
+			}
+
+			#endregion
+
+			#region ISerializationConverterFilter Members
+
+			public bool IsSerializable(object value, IContextResolver context)
+			{
+				EnumValue enumValue = (EnumValue) value;
+
+				return enumValue.CaptionId.IsValid;
 			}
 
 			#endregion
