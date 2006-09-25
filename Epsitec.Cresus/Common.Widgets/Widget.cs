@@ -848,7 +848,12 @@ namespace Epsitec.Common.Widgets
 				return this.hypertext.Anchor;
 			}
 		}
-		
+
+
+		public static readonly IComparer<Widget>	TabIndexComparer = new TabIndexComparerImplementation ();
+
+
+
 		
 		public virtual Drawing.Size GetBestFitSize()
 		{
@@ -2109,7 +2114,7 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 		
-		protected virtual void FindAllChildren(System.Collections.ArrayList list)
+		private void FindAllChildren(System.Collections.ArrayList list)
 		{
 			foreach (Widget child in this.Children)
 			{
@@ -2118,127 +2123,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-#if false //#fix
-		public static Widget[]	FindAllCommandWidgets(string command)
-		{
-			return Widget.FindAllCommandWidgets (command, null);
-		}
-		
-		public static Widget[]	FindAllCommandWidgets(System.Text.RegularExpressions.Regex regex)
-		{
-			return Widget.FindAllCommandWidgets (regex, null);
-		}
-		
-		public static Widget[]	FindAllCommandWidgets(string command, CommandDispatcher dispatcher)
-		{
-			//	Passe en revue absolument tous les widgets qui existent et cherche ceux qui ont
-			//	une commande qui correspond au critère spécifié.
-			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			System.Collections.ArrayList dead = new System.Collections.ArrayList ();
-			
-			lock (Widget.alive_widgets)
-			{
-				foreach (System.WeakReference weak_ref in Widget.alive_widgets)
-				{
-					//	On utilise la liste des widgets connus qui permet d'avoir accès immédiatement
-					//	à tous les widgets sans nécessiter de descente récursive :
-					
-					if (weak_ref.IsAlive)
-					{
-						//	Le widget trouvé existe (encore) :
-						
-						Widget widget = weak_ref.Target as Widget;
-						
-						if ((widget != null) &&
-							(widget.IsCommand))
-						{
-							if ((dispatcher == null) ||
-								(widget.CommandDispatcher == dispatcher))
-							{
-								if (widget.CommandName == command)
-								{
-									list.Add (widget);
-								}
-							}
-						}
-					}
-					else
-					{
-						dead.Add (weak_ref);
-					}
-				}
-				
-				//	Profite de l'occasion, puisqu'on vient de passer en revue tous les widgets,
-				//	de supprimer ceux qui sont morts entre temps :
-				
-				foreach (System.WeakReference weak_ref in dead)
-				{
-					Widget.alive_widgets.Remove (weak_ref);
-				}
-			}
-			
-			Widget[] widgets = new Widget[list.Count];
-			list.CopyTo (widgets);
-			
-			return widgets;
-		}
-		
-		public static Widget[]	FindAllCommandWidgets(System.Text.RegularExpressions.Regex regex, CommandDispatcher dispatcher)
-		{
-			//	Passe en revue absolument tous les widgets qui existent et cherche ceux qui ont
-			//	une commande qui correspond au critère spécifié.
-			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			System.Collections.ArrayList dead = new System.Collections.ArrayList ();
-			
-			lock (Widget.alive_widgets)
-			{
-				foreach (System.WeakReference weak_ref in Widget.alive_widgets)
-				{
-					//	On utilise la liste des widgets connus qui permet d'avoir accès immédiatement
-					//	à tous les widgets sans nécessiter de descente récursive :
-					
-					if (weak_ref.IsAlive)
-					{
-						//	Le widget trouvé existe (encore) :
-						
-						Widget widget = weak_ref.Target as Widget;
-						
-						if ((widget != null) &&
-							(widget.IsCommand))
-						{
-							if ((dispatcher == null) ||
-								(widget.CommandDispatcher == dispatcher))
-							{
-								if (regex.IsMatch (widget.CommandName))
-								{
-									list.Add (widget);
-								}
-							}
-						}
-					}
-					else
-					{
-						dead.Add (weak_ref);
-					}
-				}
-				
-				//	Profite de l'occasion, puisqu'on vient de passer en revue tous les widgets,
-				//	de supprimer ceux qui sont morts entre temps :
-				
-				foreach (System.WeakReference weak_ref in dead)
-				{
-					Widget.alive_widgets.Remove (weak_ref);
-				}
-			}
-			
-			Widget[] widgets = new Widget[list.Count];
-			list.CopyTo (widgets);
-			
-			return widgets;
-		}
-#endif
 		
 		public static Widget[]	FindAllFullPathWidgets(System.Text.RegularExpressions.Regex regex)
 		{
@@ -2566,35 +2450,37 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 			}
+
+			Widget parent = this.Parent;
 			
 			if (find == null)
 			{
 				//	Toujours rien trouvé. On a demandé aux enfants et aux frères. Il ne nous
 				//	reste plus qu'à transmettre au père.
 				
-				if (this.Parent != null)
+				if (parent != null)
 				{
-					if (this.Parent.ProcessTabChildrenExit (dir, mode, out find))
+					if (parent.ProcessTabChildrenExit (dir, mode, out find))
 					{
 						return find;
 					}
 					
 					find = null;
-					
-					if ((this.Parent.tab_navigation_mode & TabNavigationMode.ForwardToChildren) != 0)
+
+					if ((parent.tab_navigation_mode & TabNavigationMode.ForwardToChildren) != 0)
 					{
 						bool accept;
 						
 						switch (dir)
 						{
 							case TabNavigationDir.Backwards:
-								accept = (this.Parent.tab_navigation_mode & TabNavigationMode.ForwardOnly) == 0;
-								find   = this.Parent.FindTabWidget (dir, mode, true, accept);
+								accept = (parent.tab_navigation_mode & TabNavigationMode.ForwardOnly) == 0;
+								find   = parent.FindTabWidget (dir, mode, true, accept);
 								break;
 							
 							case TabNavigationDir.Forwards:
 								accept = false;
-								find = this.Parent.FindTabWidget (dir, mode, true, accept);
+								find   = parent.FindTabWidget (dir, mode, true, accept);
 								break;
 						}
 					}
@@ -2654,19 +2540,14 @@ namespace Epsitec.Common.Widgets
 			return find;
 		}
 		
-		protected Widget[] FindTabWidgets(TabNavigationMode mode)
+		private Widget[] FindTabWidgets(TabNavigationMode mode)
 		{
-			System.Collections.ArrayList list = this.FindTabWidgetList (mode);
-			
-			Widget[] widgets = new Widget[list.Count];
-			list.CopyTo (widgets);
-			
-			return widgets;
+			return this.FindTabWidgetList (mode).ToArray ();
 		}
 		
-		protected virtual System.Collections.ArrayList FindTabWidgetList(TabNavigationMode mode)
+		protected virtual List<Widget> FindTabWidgetList(TabNavigationMode mode)
 		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			List<Widget> list = new List<Widget> ();
 			
 			Widget parent = this.Parent;
 			
@@ -2701,7 +2582,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			list.Sort (new TabIndexComparer ());
+			list.Sort (Widget.TabIndexComparer);
 			
 			if ((mode == TabNavigationMode.ActivateOnTab) &&
 				(this.AutoRadio))
@@ -2709,8 +2590,8 @@ namespace Epsitec.Common.Widgets
 				//	On recherche les frères de ce widget, pour déterminer lequel devra être activé par la
 				//	pression de la touche TAB. Pour bien faire, il faut supprimer les autres boutons radio
 				//	qui appartiennent à notre groupe :
-			
-				System.Collections.ArrayList copy = new System.Collections.ArrayList ();
+
+				List<Widget> copy = new List<Widget> ();
 				
 				string group = this.Group;
 				
@@ -2757,21 +2638,21 @@ namespace Epsitec.Common.Widgets
 			
 			return null;
 		}
+
+
+		#region TabIndexComparerImplementation class
 		
-		
-		#region TabIndexComparer class
-		protected class TabIndexComparer : System.Collections.IComparer
+		private class TabIndexComparerImplementation : IComparer<Widget>
 		{
-			public int Compare(object x, object y)
+			public int Compare(Widget x, Widget y)
 			{
-				Widget wx = x as Widget;
-				Widget wy = y as Widget;
-				if (wx == wy) return 0;
-				if (wx == null) return -1;
-				if (wy == null) return 1;
-				return (wx.TabIndex == wy.TabIndex) ? wx.Index - wy.Index : wx.TabIndex - wy.TabIndex;
+				if (x == y) return 0;
+				if (x == null) return -1;
+				if (y == null) return 1;
+				return (x.TabIndex == y.TabIndex) ? x.Index - y.Index : x.TabIndex - y.TabIndex;
 			}
 		}
+		
 		#endregion
 		
 		protected virtual bool ProcessTab(TabNavigationDir dir, TabNavigationMode mode)
@@ -3538,9 +3419,11 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void BuildFullPathName(System.Text.StringBuilder buffer)
 		{
-			if (this.Parent != null)
+			Widget parent = this.Parent;
+			
+			if (parent != null)
 			{
-				this.Parent.BuildFullPathName (buffer);
+				parent.BuildFullPathName (buffer);
 			}
 			
 			string name = this.Name;

@@ -5,6 +5,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
+	/// <summary>
+	/// The <c>StructuredTypeFieldCollection</c> is used only when serializing the
+	/// <c>StructuredType</c> contents.
+	/// </summary>
 	internal class StructuredTypeFieldCollection : ICollection<StructuredTypeField>
 	{
 		public StructuredTypeFieldCollection(StructuredType owner)

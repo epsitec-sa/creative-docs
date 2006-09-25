@@ -16,15 +16,15 @@ namespace Epsitec.Common.Types
 		{
 		}
 		
-		public EnumValue(int value, int rank, bool hidden, string name)
+		public EnumValue(System.Enum value, int rank, bool hidden, string name)
 		{
 			this.DefineName (name);
 			this.DefineValue (value);
 			this.DefineRank (rank);
 			this.DefineHidden (hidden);
 		}
-		
-		public EnumValue(int value, int rank, bool hidden, Support.Druid captionId)
+
+		public EnumValue(System.Enum value, int rank, bool hidden, Support.Druid captionId)
 		{
 			this.DefineCaptionId (captionId);
 			this.DefineValue (value);
@@ -87,8 +87,8 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		
-		public void DefineValue(int value)
+
+		public void DefineValue(System.Enum value)
 		{
 			if (this.Value != value)
 			{
@@ -139,7 +139,7 @@ namespace Epsitec.Common.Types
 
 		#region IEnumValue Members
 
-		public int Value
+		public System.Enum Value
 		{
 			get
 			{
@@ -250,7 +250,21 @@ namespace Epsitec.Common.Types
 		private bool isHidden;
 		private Support.Druid captionId;
 		private Caption caption;
-		private int value;
+		private System.Enum value;
 		private int rank;
+
+		internal static void CopyProperties(EnumValue srcValue, EnumValue dstValue)
+		{
+			System.Diagnostics.Debug.Assert (srcValue != null);
+			System.Diagnostics.Debug.Assert (dstValue != null);
+
+			if ((dstValue != null) &&
+				(srcValue != null))
+			{
+				dstValue.captionId = srcValue.captionId;
+				dstValue.caption   = srcValue.caption;
+				dstValue.rank      = srcValue.rank;
+			}
+		}
 	}
 }

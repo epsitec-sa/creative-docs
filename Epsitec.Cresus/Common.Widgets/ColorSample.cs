@@ -4,6 +4,8 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -188,7 +190,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected override System.Collections.ArrayList FindTabWidgetList(TabNavigationMode mode)
+		protected override List<Widget> FindTabWidgetList(TabNavigationMode mode)
 		{
 			if ( mode != TabNavigationMode.ActivateOnTab )
 			{
@@ -199,8 +201,8 @@ namespace Epsitec.Common.Widgets
 			//	pression de la touche TAB. Pour bien faire, il faut supprimer les autres boutons radio
 			//	qui appartiennent à notre groupe :
 			
-			System.Collections.ArrayList list = base.FindTabWidgetList(mode);
-			System.Collections.ArrayList copy = new System.Collections.ArrayList();
+			List<Widget> list = base.FindTabWidgetList(mode);
+			List<Widget> copy = new List<Widget> ();
 			
 			foreach ( Widget widget in list )
 			{
