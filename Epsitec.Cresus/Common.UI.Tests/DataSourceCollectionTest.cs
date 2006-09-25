@@ -137,7 +137,7 @@ namespace Epsitec.Common.UI
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
 
-			type.AddField ("Label", new StringType ());
+			type.AddField ("Label", StringType.Default);
 			data.SetValue ("Label", "Hello");
 
 			panel.DataSource = collection;
