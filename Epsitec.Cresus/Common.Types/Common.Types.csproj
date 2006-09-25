@@ -306,6 +306,7 @@
     <Compile Include="Support\ResourceFieldType.cs" />
     <Compile Include="Support\ResourceLevel.cs" />
     <Compile Include="Support\ResourceManager.cs" />
+    <Compile Include="Support\ResourceManagerPool.cs" />
     <Compile Include="Support\ResourceModuleInfo.cs" />
     <Compile Include="Support\ResourceProviderFactory.cs" />
     <Compile Include="Support\Resources.cs" />
