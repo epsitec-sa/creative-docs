@@ -1503,7 +1503,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					druid = Druid.Parse(binding.ResourceId);
 				}
 
-				this.module.MainWindow.DlgResourceSelector(ref this.moduleForResourceSelector, ResourceAccess.Type.Strings, ref druid);
+				this.module.MainWindow.DlgResourceSelector(this.module, ref this.moduleForResourceSelector, ResourceAccess.Type.Strings, ref druid);
 				
 				if (druid.IsValid)
 				{
@@ -1519,7 +1519,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						druid = command.Caption.Druid;
 					}
 
-					this.module.MainWindow.DlgResourceSelector(ref this.moduleForResourceSelector, ResourceAccess.Type.Commands, ref druid);
+					this.module.MainWindow.DlgResourceSelector(this.module, ref this.moduleForResourceSelector, ResourceAccess.Type.Commands, ref druid);
 
 					if (druid.IsValid)
 					{
@@ -1530,7 +1530,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					Druid druid = obj.CaptionDruid;
 
-					this.module.MainWindow.DlgResourceSelector(ref this.moduleForResourceSelector, ResourceAccess.Type.Captions, ref druid);
+					this.module.MainWindow.DlgResourceSelector(this.module, ref this.moduleForResourceSelector, ResourceAccess.Type.Captions, ref druid);
 
 					if (druid.IsValid)
 					{

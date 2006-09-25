@@ -397,7 +397,30 @@ namespace Epsitec.Common.Designer
 			return text;
 		}
 
-		
+
+		static public string RemoveTags(string text)
+		{
+			//	Supprime tous les tags xml <...> dans un texte.
+			while (true)
+			{
+				int start = text.IndexOf("<");
+				if (start == -1)
+				{
+					break;
+				}
+
+				int end = text.IndexOf(">", start);
+				if (end == -1)
+				{
+					break;
+				}
+
+				text = text.Remove(start, end-start+1);
+			}
+
+			return text;
+		}
+
 		static public string Bold(string text)
 		{
 			//	Retourne le texte en gras.
