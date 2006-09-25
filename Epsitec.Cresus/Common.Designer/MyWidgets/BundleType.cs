@@ -18,7 +18,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			sep.Dock = DockStyle.Bottom;
 
 			this.buttonStrings = new IconButtonMark(this);
-			this.buttonStrings.Text = Res.Strings.BundleType.Strings;
+			this.buttonStrings.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Strings);
 			this.buttonStrings.Name = BundleType.Convert(ResourceAccess.Type.Strings);
 			this.buttonStrings.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonStrings.SiteMark = SiteMark.OnBottom;
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonStrings.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonCaptions = new IconButtonMark(this);
-			this.buttonCaptions.Text = Res.Strings.BundleType.Captions;
+			this.buttonCaptions.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Captions);
 			this.buttonCaptions.Name = BundleType.Convert(ResourceAccess.Type.Captions);
 			this.buttonCaptions.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonCaptions.SiteMark = SiteMark.OnBottom;
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCaptions.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonCommands = new IconButtonMark(this);
-			this.buttonCommands.Text = Res.Strings.BundleType.Commands;
+			this.buttonCommands.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Commands);
 			this.buttonCommands.Name = BundleType.Convert(ResourceAccess.Type.Commands);
 			this.buttonCommands.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonCommands.SiteMark = SiteMark.OnBottom;
@@ -57,7 +57,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCommands.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonTypes = new IconButtonMark(this);
-			this.buttonTypes.Text = Res.Strings.BundleType.Types;
+			this.buttonTypes.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Types);
 			this.buttonTypes.Name = BundleType.Convert(ResourceAccess.Type.Types);
 			this.buttonTypes.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonTypes.SiteMark = SiteMark.OnBottom;
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonTypes.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonValues = new IconButtonMark(this);
-			this.buttonValues.Text = "Valeurs";  // TODO: Res.Strings.BundleType.Values;
+			this.buttonValues.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Values);
 			this.buttonValues.Name = BundleType.Convert(ResourceAccess.Type.Values);
 			this.buttonValues.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonValues.SiteMark = SiteMark.OnBottom;
@@ -83,7 +83,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonValues.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonPanels = new IconButtonMark(this);
-			this.buttonPanels.Text = Res.Strings.BundleType.Panels;
+			this.buttonPanels.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Panels);
 			this.buttonPanels.Name = BundleType.Convert(ResourceAccess.Type.Panels);
 			this.buttonPanels.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonPanels.SiteMark = SiteMark.OnBottom;
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonPanels.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonScripts = new IconButtonMark(this);
-			this.buttonScripts.Text = Res.Strings.BundleType.Scripts;
+			this.buttonScripts.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Scripts);
 			this.buttonScripts.Name = BundleType.Convert(ResourceAccess.Type.Scripts);
 			this.buttonScripts.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonScripts.SiteMark = SiteMark.OnBottom;

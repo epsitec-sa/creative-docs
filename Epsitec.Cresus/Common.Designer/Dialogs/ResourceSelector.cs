@@ -37,6 +37,14 @@ namespace Epsitec.Common.Designer.Dialogs
 				int tabIndex = 0;
 
 				Widget header = new Widget(this.window.Root);
+				header.Margins = new Margins(0, 0, 0, 8);
+				header.PreferredHeight = 26;
+				header.Dock = DockStyle.Top;
+
+				this.title = new StaticText(header);
+				this.title.Dock = DockStyle.Fill;
+
+				header = new Widget(this.window.Root);
 				header.Margins = new Margins(0, 0, 0, 2);
 				header.Dock = DockStyle.Top;
 
@@ -132,6 +140,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.ignoreChanged = false;
 
 			this.UpdateResourceType();
+			this.UpdateTitle();
 			this.UpdateHeader();
 			this.UpdateDruidsIndex();
 			this.UpdateArray();
@@ -190,6 +199,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+
+		protected void UpdateTitle()
+		{
+			//	Met à jour le titre qui dépend du type des ressources éditées.
+			this.title.Text = string.Concat("<font size=\"200%\"><b>", ResourceAccess.TypeDisplayName(this.access.ResourceType), "</b></font>");
+		}
 
 		protected void UpdateHeader()
 		{
@@ -577,6 +592,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 
 		protected ResourceAccess				access;
+		protected StaticText					title;
 		protected StaticText					header1;
 		protected StaticText					header2;
 		protected TextField						filterLabel;
