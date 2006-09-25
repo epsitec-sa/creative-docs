@@ -4,11 +4,26 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// L'interface IStringType décrit un type texte.
+	/// The <c>IStringType</c> interface describes a text type.
 	/// </summary>
 	public interface IStringType : INamedType
 	{
-		int		MinimumLength	{ get; }
-		int		MaximumLength	{ get; }
+		/// <summary>
+		/// Gets the minimum length for the text.
+		/// </summary>
+		/// <value>The minimum length.</value>
+		int MinimumLength
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets the maximum length for the text.
+		/// </summary>
+		/// <value>The maximum length.</value>
+		int MaximumLength
+		{
+			get;
+		}
 	}
 }

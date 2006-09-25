@@ -92,17 +92,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		
-		public static IComparer<EnumValue>		RankComparer
-		{
-			get
-			{
-				return new RankComparerImplementation ();
-			}
-		}
-
-
-		private Collections.EnumValueCollection EnumValues
+		public Collections.EnumValueCollection	EnumValues
 		{
 			get
 			{
@@ -115,6 +105,18 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public static IComparer<EnumValue>		RankComparer
+		{
+			get
+			{
+				return new RankComparerImplementation ();
+			}
+		}
+
+		public void MakeEditable()
+		{
+			this.EnumValues.Unlock ();
+		}
 		
 		public EnumValue FindValueFromRank(int rank)
 		{

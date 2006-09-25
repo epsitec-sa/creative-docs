@@ -18,7 +18,7 @@ namespace Epsitec.Common.Types
 		{
 		}
 
-		#region INumType Members
+		#region INumericType Members
 		
 		public DecimalRange						Range
 		{
