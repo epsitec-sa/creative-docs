@@ -741,7 +741,9 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
-			name = this.SubFilter(field.Name);
+			ResourceBundle.Field primaryField = this.primaryBundle[druid];
+			System.Diagnostics.Debug.Assert(!primaryField.IsEmpty && !string.IsNullOrEmpty(primaryField.Name));
+			name = this.SubFilter(primaryField.Name);
 
 			if (this.type == Type.Strings)
 			{
