@@ -172,17 +172,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		public bool IsDynamicsToolTips
+		public bool IsDynamicToolTips
 		{
 			//	Faut-il générer les tooltips dynamiques ?
 			get
 			{
-				return this.isDynamicsToolTips;
+				return this.isDynamicToolTips;
 			}
 
 			set
 			{
-				this.isDynamicsToolTips = value;
+				this.isDynamicToolTips = value;
 			}
 		}
 
@@ -400,7 +400,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public object GetToolTipCaption(Point pos)
 		{
 			//	Donne l'objet (string ou widget) pour le tooltip en fonction de la position.
-			if ( !this.isDynamicsToolTips )  return null;
+			if ( !this.isDynamicToolTips )  return null;
 			return this.GetTooltipEditedText(pos);
 		}
 
@@ -509,7 +509,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected double					relativeWidth = 0;
 		protected ContentAlignment			alignment = ContentAlignment.MiddleLeft;
 		protected Cell[]					cells;
-		protected bool						isDynamicsToolTips = false;
+		protected bool						isDynamicToolTips = false;
 		protected bool						isDragging = false;
 		protected int						selectedCell = -1;
 	}

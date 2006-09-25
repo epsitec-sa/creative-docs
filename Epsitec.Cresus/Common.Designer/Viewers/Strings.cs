@@ -27,9 +27,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.SetColumnsRelativeWidth(0, 0.30);
 			this.array.SetColumnsRelativeWidth(1, 0.35);
 			this.array.SetColumnsRelativeWidth(2, 0.35);
-			this.array.SetDynamicsToolTips(0, true);
-			this.array.SetDynamicsToolTips(1, false);
-			this.array.SetDynamicsToolTips(2, false);
+			this.array.SetDynamicToolTips(0, true);
+			this.array.SetDynamicToolTips(1, false);
+			this.array.SetDynamicToolTips(2, false);
 			this.array.ColumnsWidthChanged += new EventHandler(this.HandleArrayColumnsWidthChanged);
 			this.array.CellCountChanged += new EventHandler (this.HandleArrayCellCountChanged);
 			this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);

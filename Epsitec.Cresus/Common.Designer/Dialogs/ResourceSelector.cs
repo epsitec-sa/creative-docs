@@ -315,8 +315,8 @@ namespace Epsitec.Common.Designer.Dialogs
 					this.array.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
 					this.array.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
 
-					this.array.SetDynamicsToolTips(0, true);
-					this.array.SetDynamicsToolTips(1, false);
+					this.array.SetDynamicToolTips(0, true);
+					this.array.SetDynamicToolTips(1, false);
 
 					this.array.LineHeight = 20;  // hauteur standard
 				}
@@ -330,9 +330,9 @@ namespace Epsitec.Common.Designer.Dialogs
 					this.array.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
 					this.array.SetColumnAlignment(2, ContentAlignment.MiddleCenter);
 
-					this.array.SetDynamicsToolTips(0, true);
-					this.array.SetDynamicsToolTips(1, false);
-					this.array.SetDynamicsToolTips(2, false);
+					this.array.SetDynamicToolTips(0, true);
+					this.array.SetDynamicToolTips(1, false);
+					this.array.SetDynamicToolTips(2, false);
 
 					this.array.LineHeight = 30;  // plus haut, à cause des descriptions et des icônes
 				}
