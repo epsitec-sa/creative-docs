@@ -9,6 +9,12 @@ namespace Epsitec.Common.UI
 {
 	[TestFixture] public class DataSourceCollectionTest
 	{
+		[SetUp]
+		public void Initialize()
+		{
+			Epsitec.Common.Widgets.Widget.Initialize ();
+		}
+		
 		[Test]
 		public void CheckCreation()
 		{
@@ -75,7 +81,6 @@ namespace Epsitec.Common.UI
 			Panel panel = new UI.Panel ();
 			DataSourceCollection collection = new DataSourceCollection ();
 
-			collection.ResourceManager = manager;
 			panel.DataSource = collection;
 
 			Widgets.Visual source1 = new Widgets.Visual ();

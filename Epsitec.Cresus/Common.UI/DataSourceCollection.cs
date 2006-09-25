@@ -21,22 +21,6 @@ namespace Epsitec.Common.UI
 		}
 
 		/// <summary>
-		/// Gets or sets the associated resource manager.
-		/// </summary>
-		/// <value>The resource manager.</value>
-		public ResourceManager ResourceManager
-		{
-			get
-			{
-				return this.resourceManager;
-			}
-			set
-			{
-				this.resourceManager = value;
-			}
-		}
-
-		/// <summary>
 		/// Adds a named data source.
 		/// </summary>
 		/// <param name="name">The name of the datasource.</param>
@@ -279,6 +263,5 @@ namespace Epsitec.Common.UI
 		#endregion
 
 		List<ItemRecord> items = new List<ItemRecord> ();
-		ResourceManager resourceManager;
 	}
 }
