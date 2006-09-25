@@ -18,6 +18,7 @@ namespace Epsitec.Common.Designer
 			Captions,
 			Commands,
 			Types,
+			Values,
 			Panels,
 			Scripts,
 		}
@@ -34,7 +35,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Constructeur unique pour accéder aux ressources d'un type donné.
 			//	Par la suite, l'instance créée accédera toujours aux ressources de ce type,
-			//	sauf pour les ressources Captions, Commands et Types.
+			//	sauf pour les ressources Captions, Commands, Types et Values.
 			this.type = type;
 			this.resourceManager = resourceManager;
 			this.moduleInfo = moduleInfo;
@@ -45,6 +46,7 @@ namespace Epsitec.Common.Designer
 			this.captionCounters[Type.Captions] = 0;
 			this.captionCounters[Type.Commands] = 0;
 			this.captionCounters[Type.Types] = 0;
+			this.captionCounters[Type.Values] = 0;
 
 			this.filterIndexes = new Dictionary<Type, int>();
 			this.filterStrings = new Dictionary<Type, string>();
@@ -510,6 +512,9 @@ namespace Epsitec.Common.Designer
 
 					case Type.Types:
 						return ResourceAccess.NameTypes;
+
+					case Type.Values:
+						return ResourceAccess.NameValues;
 				}
 
 				return null;
@@ -534,6 +539,9 @@ namespace Epsitec.Common.Designer
 
 					case Type.Types:
 						return ResourceAccess.TypeTypes;
+
+					case Type.Values:
+						return ResourceAccess.TypeValues;
 				}
 
 				return null;
@@ -675,7 +683,7 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				//	Comme les ressources Captions, Commands et Types sont dans le même "sac",
+				//	Comme les ressources Captions, Commands, Types et Values sont dans le même "sac",
 				//	il faut les distinguer d'après leurs préfixes.
 				//	TODO: à optimiser !
 				for (int i=0; i<this.primaryBundle.FieldCount; i++)
@@ -1428,12 +1436,14 @@ namespace Epsitec.Common.Designer
 		protected static string[] NameCaptions = { "Name", "Labels", "Description", "Icon", "About" };
 		protected static string[] NameCommands = { "Name", "Labels", "Description", "Icon", "About", "Statefull", "Shortcuts", "Group" };
 		protected static string[] NameTypes    = { "Name", "Labels", "Description", "Icon", "About" };
+		protected static string[] NameValues   = { "Name", "Labels", "Description", "Icon", "About" };
 		protected static string[] NamePanels   = { "Name", "Panel" };
 
 		protected static Field.Type[] TypeStrings  = { Field.Type.String, Field.Type.String, Field.Type.String };
 		protected static Field.Type[] TypeCaptions = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
 		protected static Field.Type[] TypeCommands = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String, Field.Type.Bool, Field.Type.Shortcuts, Field.Type.String };
 		protected static Field.Type[] TypeTypes    = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
+		protected static Field.Type[] TypeValues   = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
 		protected static Field.Type[] TypePanels   = { Field.Type.String, Field.Type.Bundle };
 
 
@@ -1574,6 +1584,7 @@ namespace Epsitec.Common.Designer
 					this.CreateFirstField(bundle, 0, ResourceAccess.GetFixFilter(Type.Captions)+Res.Strings.Viewers.Panels.New);
 					this.CreateFirstField(bundle, 1, ResourceAccess.GetFixFilter(Type.Commands)+Res.Strings.Viewers.Panels.New);
 					this.CreateFirstField(bundle, 2, ResourceAccess.GetFixFilter(Type.Types)+Res.Strings.Viewers.Panels.New);
+					this.CreateFirstField(bundle, 3, ResourceAccess.GetFixFilter(Type.Values)+Res.Strings.Viewers.Panels.New);
 				}
 				else
 				{
@@ -1597,6 +1608,12 @@ namespace Epsitec.Common.Designer
 			if (this.IsCaptionsType)
 			{
 				this.CaptionsCountersUpdate();
+
+				if (this.captionCounters[Type.Values] == 0)
+				{
+					Druid newDruid = this.CreateUniqueDruid();
+					this.CreateFirstField(this.primaryBundle, newDruid.Local, ResourceAccess.GetFixFilter(Type.Values)+Res.Strings.Viewers.Panels.New);
+				}
 			}
 		}
 
@@ -1849,10 +1866,12 @@ namespace Epsitec.Common.Designer
 			int countCap = 0;
 			int countCmd = 0;
 			int countTyp = 0;
+			int countVal = 0;
 
 			string filterCap = ResourceAccess.GetFixFilter(Type.Captions);
 			string filterCmd = ResourceAccess.GetFixFilter(Type.Commands);
 			string filterTyp = ResourceAccess.GetFixFilter(Type.Types);
+			string filterVal = ResourceAccess.GetFixFilter(Type.Values);
 
 			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
 			{
@@ -1872,11 +1891,17 @@ namespace Epsitec.Common.Designer
 				{
 					countTyp++;
 				}
+
+				if (name.StartsWith(filterVal))
+				{
+					countVal++;
+				}
 			}
 
 			this.captionCounters[Type.Captions] = countCap;
 			this.captionCounters[Type.Commands] = countCmd;
 			this.captionCounters[Type.Types] = countTyp;
+			this.captionCounters[Type.Values] = countVal;
 		}
 
 		protected Druid CreateUniqueDruid()
@@ -2097,10 +2122,10 @@ namespace Epsitec.Common.Designer
 
 		protected bool IsCaptionsType
 		{
-			//	Retourne true si on accède à des ressources de type Captions/Commands/Types.
+			//	Retourne true si on accède à des ressources de type Captions/Commands/Types/Values.
 			get
 			{
-				return (this.type == Type.Captions || this.type == Type.Commands || this.type == Type.Types);
+				return (this.type == Type.Captions || this.type == Type.Commands || this.type == Type.Types || this.type == Type.Values);
 			}
 		}
 
@@ -2115,6 +2140,7 @@ namespace Epsitec.Common.Designer
 				case Type.Captions:
 				case Type.Commands:
 				case Type.Types:
+				case Type.Values:
 					return many ? "Captions" : "Caption";
 
 				case Type.Panels:
@@ -2187,6 +2213,12 @@ namespace Epsitec.Common.Designer
 				return name.Substring(filter.Length);
 			}
 
+			filter = ResourceAccess.GetFixFilter(Type.Values);
+			if (name.StartsWith(filter))
+			{
+				return name.Substring(filter.Length);
+			}
+
 			return name;
 		}
 
@@ -2227,6 +2259,9 @@ namespace Epsitec.Common.Designer
 
 				case Type.Types:
 					return "Typ.";
+
+				case Type.Values:
+					return "Val.";
 			}
 
 			return null;
