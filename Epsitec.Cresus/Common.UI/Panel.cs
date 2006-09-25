@@ -65,15 +65,17 @@ namespace Epsitec.Common.UI
 				Support.ResourceManager.SetResourceManager (this, value);
 			}
 		}
-		
+
 		/// <summary>
 		/// Fills the serialization context <c>ExternalMap</c> property.
 		/// </summary>
 		/// <param name="context">The serialization context.</param>
-		public void FillSerializationContext(Types.Serialization.Context context)
+		/// <param name="dataSource">The data source.</param>
+		/// <param name="resourceManager">The resource manager.</param>
+		public static void FillSerializationContext(Types.Serialization.Context context, DataSourceCollection dataSource, Support.ResourceManager resourceManager)
 		{
-			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagDataSource, this.dataSource);
-			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagResourceManager, this.dataSource.ResourceManager);
+			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagDataSource, dataSource);
+			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagResourceManager, resourceManager);
 		}
 
 		

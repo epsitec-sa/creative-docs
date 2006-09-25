@@ -92,7 +92,7 @@ namespace Epsitec.Common.UI
 
 			Types.Serialization.Context context = new Types.Serialization.Context ();
 
-			panel.FillSerializationContext (context);
+			UI.Panel.FillSerializationContext (context, collection, manager);
 
 			Assert.AreEqual (2, context.ExternalMap.TagCount);
 			Assert.AreEqual ("_DataSource", Collection.ToArray<string> (context.ExternalMap.RecordedTags)[0]);
