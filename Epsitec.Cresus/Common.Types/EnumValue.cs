@@ -174,13 +174,26 @@ namespace Epsitec.Common.Types
 			public string ConvertToString(object value, Types.IContextResolver context)
 			{
 				EnumValue enumValue = (EnumValue) value;
-				return enumValue.CaptionId.ToString ();
+
+				string rank      = enumValue.Rank.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				string captionId = enumValue.CaptionId.ToString ();
+
+				return string.Concat (rank, " ", captionId);
 			}
 
 			public object ConvertFromString(string value, Types.IContextResolver context)
 			{
-				Support.Druid druid = Support.Druid.Parse (value);
+				string[]      args  = value.Split (' ');
+
+				System.Diagnostics.Debug.Assert (args.Length == 2);
+				
+				int           rank  = System.Int32.Parse (args[0], System.Globalization.CultureInfo.InvariantCulture);
+				Support.Druid druid = Support.Druid.Parse (args[1]);
+				
 				EnumValue enumValue = new EnumValue (druid);
+
+				enumValue.rank = rank;
+				
 				return enumValue;
 			}
 
@@ -255,9 +268,6 @@ namespace Epsitec.Common.Types
 
 		internal static void CopyProperties(EnumValue srcValue, EnumValue dstValue)
 		{
-			System.Diagnostics.Debug.Assert (srcValue != null);
-			System.Diagnostics.Debug.Assert (dstValue != null);
-
 			if ((dstValue != null) &&
 				(srcValue != null))
 			{

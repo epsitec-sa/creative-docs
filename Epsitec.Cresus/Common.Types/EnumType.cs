@@ -313,11 +313,27 @@ namespace Epsitec.Common.Types
 			System.Diagnostics.Debug.Assert (internalValues != null);
 			System.Diagnostics.Debug.Assert (externalValues != null);
 			
-			foreach (EnumValue value in externalValues)
+			foreach (EnumValue externalValue in externalValues)
 			{
-				string name = value.Name;
+				string name = externalValue.Name;
 
-				EnumValue.CopyProperties (value, this[name]);
+				System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (name) == false);
+
+				EnumValue internalValue = this[name];
+
+				if (internalValue == null)
+				{
+					if (this.pendingEnumValues == null)
+					{
+						this.pendingEnumValues = new Collections.EnumValueCollection ();
+					}
+					
+					this.pendingEnumValues.Add (externalValue);
+				}
+				else
+				{
+					EnumValue.CopyProperties (externalValue, internalValue);
+				}
 			}
 
 			EnumType.SetEnumValues (caption, internalValues);
@@ -424,8 +440,7 @@ namespace Epsitec.Common.Types
 				this.EnumValues.Add (new EnumValue (value, rank, hide, name));
 			}
 
-			this.EnumValues.Sort (EnumType.RankComparer);
-			this.EnumValues.Lock ();
+			this.FinishCreation ();
 		}
 
 		private void CreateEnumValues()
@@ -435,10 +450,37 @@ namespace Epsitec.Common.Types
 			this.enumType = typeof (NotAnEnum);
 
 			//	TODO: fill enum values from caption definition
-			
-			this.EnumValues.Lock ();
+
+			this.FinishCreation ();
 
 			AbstractType.SetSystemType (caption, this.enumType);
+		}
+
+		private void FinishCreation()
+		{
+			if (this.pendingEnumValues != null)
+			{
+				foreach (EnumValue pendingValue in this.pendingEnumValues)
+				{
+					string name = pendingValue.Name;
+
+					EnumValue internalValue = this[name];
+
+					if (internalValue == null)
+					{
+						this.EnumValues.Add (pendingValue);
+					}
+					else
+					{
+						EnumValue.CopyProperties (pendingValue, internalValue);
+					}
+				}
+
+				this.pendingEnumValues = null;
+			}
+
+			this.EnumValues.Sort (EnumType.RankComparer);
+			this.EnumValues.Lock ();
 		}
 
 		private static Collections.EnumValueCollection GetEnumValues(Caption caption)
@@ -481,5 +523,6 @@ namespace Epsitec.Common.Types
 		
 		private System.Type						enumType;
 		private Collections.EnumValueCollection enumValues;
+		private Collections.EnumValueCollection pendingEnumValues;
 	}
 }
