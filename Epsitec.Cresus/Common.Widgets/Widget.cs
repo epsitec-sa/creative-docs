@@ -589,18 +589,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.resource_manager == null)
-				{
-					if (this.Parent != null)
-					{
-						return this.Parent.ResourceManager;
-					}
-					
-//-					System.Diagnostics.Debug.WriteLine ("Falling back to default resource manager: " + this.ToString ());
-					return Support.Resources.DefaultManager;
-				}
-				
-				return this.resource_manager;
+				return Helpers.VisualTree.GetResourceManager (this);
 			}
 		}
 		
@@ -4142,7 +4131,6 @@ namespace Epsitec.Common.Widgets
 		private Collections.ShortcutCollection	shortcuts;
 		private double							default_font_height;
 		private MouseCursor						mouse_cursor;
-		private Support.ResourceManager			resource_manager;
 		
 		static List<Widget>						enteredWidgets = new List<Widget> ();
 		static List<System.WeakReference>		aliveWidgets = new List<System.WeakReference> ();

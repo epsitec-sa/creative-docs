@@ -311,7 +311,33 @@ namespace Epsitec.Common.Widgets.Helpers
 
 		public static Support.ResourceManager GetResourceManager(Visual visual)
 		{
-			//	TODO: trouve le bon resource manager
+			while (visual != null)
+			{
+				Support.ResourceManager manager = Support.ResourceManager.GetResourceManager (visual);
+				
+				if (manager != null)
+				{
+					return manager;
+				}
+
+				WindowRoot root = visual as WindowRoot;
+
+				if (root != null)
+				{
+					manager = Support.ResourceManager.GetResourceManager (root.Window);
+
+					if (manager != null)
+					{
+						return manager;
+					}
+					
+					break;
+				}
+
+				visual = visual.Parent;
+			}
+			
+			System.Diagnostics.Debug.WriteLine ("Falling back to default resource manager");
 			
 			return Support.Resources.DefaultManager;
 		}
