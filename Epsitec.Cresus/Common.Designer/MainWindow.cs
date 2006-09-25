@@ -1076,10 +1076,10 @@ namespace Epsitec.Common.Designer
 
 
 		#region Dialogs
-		public void DlgResourceSelector(ref Module module, ResourceAccess.Type type, ref Druid ressource)
+		public void DlgResourceSelector(Module baseModule, ref Module module, ResourceAccess.Type type, ref Druid ressource)
 		{
 			//	Ouvre le dialogue pour choisir un ressource d'un type à choix.
-			this.dlgResourceSelector.SetAccess(module, type, ressource);
+			this.dlgResourceSelector.SetAccess(baseModule, module, type, ressource);
 			this.dlgResourceSelector.Show();  // choix dans le dialogue...
 
 			module = this.dlgResourceSelector.Module;

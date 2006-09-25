@@ -195,9 +195,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void SetAccess(Module module, ResourceAccess.Type type, Druid ressource)
+		public void SetAccess(Module baseModule, Module module, ResourceAccess.Type type, Druid ressource)
 		{
 			//	Détermine les ressources à afficher.
+			this.baseModule = baseModule;
+
 			Module m = this.ModuleSearch(ressource);
 			if (m != null)
 			{
@@ -235,17 +237,40 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateTitle()
 		{
 			//	Met à jour le titre qui dépend du type des ressources éditées.
-			this.title.Text = string.Concat("<font size=\"200%\"><b>", ResourceAccess.TypeDisplayName(this.access.ResourceType), "</b></font>");
+			string text = string.Concat("<font size=\"200%\"><b>", ResourceAccess.TypeDisplayName(this.access.ResourceType), "</b></font>");
+			this.title.Text = text;
 
 			this.fieldModule.Items.Clear();
 
 			List<MainWindow.ModuleInfo> list = this.mainWindow.OpeningListModule;
 			foreach (MainWindow.ModuleInfo info in list)
 			{
-				this.fieldModule.Items.Add(info.Module.ModuleInfo.Name);
+				text = info.Module.ModuleInfo.Name;
+
+				if (info.Module == this.baseModule)
+				{
+					text = Misc.Bold(text);
+				}
+				else
+				{
+					text = Misc.Italic(text);
+				}
+
+				this.fieldModule.Items.Add(text);
 			}
 
-			this.fieldModule.Text = this.module.ModuleInfo.Name;
+			text = this.module.ModuleInfo.Name;
+
+			if (this.module == this.baseModule)
+			{
+				text = Misc.Bold(text);
+			}
+			else
+			{
+				text = Misc.Italic(text);
+			}
+
+			this.fieldModule.Text = text;
 		}
 
 		protected void UpdateHeader()
@@ -534,7 +559,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void HandleFieldModuleComboClosed(object sender)
 		{
 			//	Choix d'un module dans le menu-combo.
-			string text = this.fieldModule.Text;
+			string text = Misc.RemoveTags(this.fieldModule.Text);
 
 			List<MainWindow.ModuleInfo> list = this.mainWindow.OpeningListModule;
 			foreach (MainWindow.ModuleInfo info in list)
@@ -685,6 +710,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		protected Module						baseModule;
 		protected Module						module;
 		protected ResourceAccess.Type			resourceType;
 		protected ResourceAccess				access;
