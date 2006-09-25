@@ -27,6 +27,7 @@ namespace Epsitec.Common.Designer
 		public MainWindow()
 		{
 			this.resourcePrefix = "file";
+			this.resourceManagerPool = new ResourceManagerPool("Common.Designer");
 			this.moduleInfoList = new List<ModuleInfo>();
 			this.context = new PanelsContext();
 		}
@@ -173,6 +174,14 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				return this.mode;
+			}
+		}
+
+		public ResourceManagerPool ResourceManagerPool
+		{
+			get
+			{
+				return this.resourceManagerPool;
 			}
 		}
 
@@ -1241,6 +1250,7 @@ namespace Epsitec.Common.Designer
 		protected PanelsContext					context;
 
 		protected string						resourcePrefix;
+		protected Support.ResourceManagerPool	resourceManagerPool;
 		protected List<ModuleInfo>				moduleInfoList;
 		protected int							currentModule = -1;
 		protected double						ribbonHeight = 71;

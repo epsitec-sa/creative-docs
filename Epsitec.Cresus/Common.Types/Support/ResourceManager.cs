@@ -20,17 +20,34 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public sealed class ResourceManager : DependencyObject, System.IComparable<ResourceManager>, System.IEquatable<ResourceManager>
 	{
-		public ResourceManager() : this (Support.Globals.Directories.Executable)
+		public ResourceManager()
+			: this (Support.Globals.Directories.Executable, null)
 		{
 		}
-		
-		public ResourceManager(System.Type type) : this (System.IO.Path.GetDirectoryName (type.Assembly.Location))
+
+		public ResourceManager(System.Type type)
+			: this (System.IO.Path.GetDirectoryName (type.Assembly.Location), null)
 		{
 		}
-		
+
 		public ResourceManager(string path)
+			: this (path, null)
 		{
-			this.pool = new ResourceManagerPool ();
+		}
+
+		public ResourceManager(ResourceManagerPool pool)
+			: this (Support.Globals.Directories.Executable, pool)
+		{
+		}
+
+		public ResourceManager(System.Type type, ResourceManagerPool pool)
+			: this (System.IO.Path.GetDirectoryName (type.Assembly.Location), pool)
+		{
+		}
+
+		public ResourceManager(string path, ResourceManagerPool pool)
+		{
+			this.pool = pool ?? new ResourceManagerPool ();
 			this.pool.Register (this);
 			this.serialId = System.Threading.Interlocked.Increment (ref ResourceManager.nextSerialId);
 			this.providers = new Dictionary<string, ProviderRecord> ();

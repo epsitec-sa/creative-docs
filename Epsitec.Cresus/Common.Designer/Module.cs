@@ -18,7 +18,7 @@ namespace Epsitec.Common.Designer
 			this.mode = mode;
 			this.moduleInfo = moduleInfo;
 
-			this.resourceManager = new ResourceManager();
+			this.resourceManager = new ResourceManager(this.mainWindow.ResourceManagerPool);
 			this.resourceManager.DefineDefaultModuleName(this.moduleInfo.Name);
 			this.resourceManager.ActivePrefix = resourcePrefix;
 
