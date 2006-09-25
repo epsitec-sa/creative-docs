@@ -1507,8 +1507,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 #else
 				if (obj is Button)
 				{
+					Druid druid = Druid.Empty;
 					Command command = obj.CommandObject;
-					Druid druid = command.Caption.Druid;
+					if (command != null)
+					{
+						druid = command.Caption.Druid;
+					}
 
 					druid = this.module.MainWindow.DlgResourceSelector(this.module.PrepareAccess(ResourceAccess.Type.Commands), druid);
 
