@@ -70,7 +70,7 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		public void CheckEnumCreation()
+		public void CheckEnumCreation1()
 		{
 			Caption caption = new Caption ();
 
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Types
 			caption.Description = "Enumeration used for tests only";
 
 			EnumType type = new EnumType (caption);
-			
+
 			type.MakeEditable ();
 
 			Caption captionV1 = new Caption ();
@@ -103,6 +103,60 @@ namespace Epsitec.Common.Types
 			type.EnumValues.Add (new EnumValue (3, captionV3));
 
 			System.Console.Out.WriteLine ("XML: {0}", caption.SerializeToString ());
+		}
+
+		[Test]
+		public void CheckEnumCreation2()
+		{
+			Caption caption = new Caption ();
+
+			caption.DefineDruid (Support.Druid.Parse ("[4005]"));
+			caption.Name = "TestEnum";
+			caption.Description = "Enumeration used for tests only";
+
+			EnumType type = new EnumType (caption);
+
+			string xml = type.Caption.SerializeToString ();
+
+			System.Console.Out.WriteLine ("XML empty: {0}", xml);
+			
+			caption = new Caption ();
+			caption.DeserializeFromString (xml);
+
+			type = TypeRosetta.CreateTypeObject (caption) as EnumType;
+
+			type.MakeEditable ();
+
+			Caption captionV1 = new Caption ();
+			Caption captionV2 = new Caption ();
+			Caption captionV3 = new Caption ();
+
+			captionV1.DefineDruid (Support.Druid.Parse ("[4007]"));
+			captionV1.Name = "Value1";
+			captionV1.Description = "First value";
+
+			captionV2.DefineDruid (Support.Druid.Parse ("[4008]"));
+			captionV2.Name = "Value2";
+			captionV2.Description = "Middle value";
+
+			captionV3.DefineDruid (Support.Druid.Parse ("[4009]"));
+			captionV3.Name = "Value3";
+			captionV3.Description = "Last value";
+
+			type.EnumValues.Add (new EnumValue (1, captionV1));
+			type.EnumValues.Add (new EnumValue (2, captionV2));
+			type.EnumValues.Add (new EnumValue (3, captionV3));
+
+			xml = type.Caption.SerializeToString ();
+
+			System.Console.Out.WriteLine ("XML filled: {0}", xml);
+
+			caption = new Caption ();
+			caption.DeserializeFromString (xml);
+
+			type = TypeRosetta.CreateTypeObject (caption) as EnumType;
+
+			Assert.AreEqual (3, Collection.Count (type.Values));
 		}
 
 		[Test]
