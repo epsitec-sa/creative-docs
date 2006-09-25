@@ -216,6 +216,7 @@ namespace Epsitec.Common.Types
 			//	unambiguous shorter representations :
 
 			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.AbstractType""", @"s:name=""*aT""");
+			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.EnumType""", @"s:name=""*eT""");
 			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.AbstractNumericType""", @"s:name=""*aNT""");
 			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.Caption""", @"s:name=""*C""");
 			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.StructuredType""", @"s:name=""*S""");
@@ -229,8 +230,9 @@ namespace Epsitec.Common.Types
 		private static string DecompressXml(string xml)
 		{
 			//	Restores the XML to what it was before the call to CompressXml.
-			
+
 			xml = xml.Replace (@"s:name=""*aT""", @"s:name=""Epsitec.Common.Types.AbstractType""");
+			xml = xml.Replace (@"s:name=""*eT""", @"s:name=""Epsitec.Common.Types.EnumType""");
 			xml = xml.Replace (@"s:name=""*aNT""", @"s:name=""Epsitec.Common.Types.AbstractNumericType""");
 			xml = xml.Replace (@"s:name=""*C""", @"s:name=""Epsitec.Common.Types.Caption""");
 			xml = xml.Replace (@"s:name=""*S""", @"s:name=""Epsitec.Common.Types.StructuredType""");
