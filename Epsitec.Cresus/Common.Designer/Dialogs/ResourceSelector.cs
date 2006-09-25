@@ -35,15 +35,30 @@ namespace Epsitec.Common.Designer.Dialogs
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
 				int tabIndex = 0;
+				Widget header;
 
-				Widget header = new Widget(this.window.Root);
+				//	Titre supérieur.
+				header = new Widget(this.window.Root);
 				header.Margins = new Margins(0, 0, 0, 8);
 				header.PreferredHeight = 26;
 				header.Dock = DockStyle.Top;
 
 				this.title = new StaticText(header);
-				this.title.Dock = DockStyle.Fill;
+				this.title.PreferredWidth = 180;
+				this.title.Dock = DockStyle.Left;
 
+				this.fieldModule = new TextFieldCombo(header);
+				this.fieldModule.IsReadOnly = true;
+				this.fieldModule.Dock = DockStyle.Fill;
+				this.fieldModule.Margins = new Margins(0, 0, 5, 1);
+				this.fieldModule.ComboClosed += new EventHandler(this.HandleFieldModuleComboClosed);
+
+				//	Trait horizontal de séparation.
+				Separator sep = new Separator(this.window.Root);
+				sep.PreferredHeight = 1;
+				sep.Dock = DockStyle.Top;
+
+				//	En-tête avec les textes fixes.
 				header = new Widget(this.window.Root);
 				header.Margins = new Margins(0, 0, 0, 2);
 				header.Dock = DockStyle.Top;
@@ -56,6 +71,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.header2.MinWidth = 100;
 				this.header2.Dock = DockStyle.Left;
 
+				//	En-tête avec les lignes éditables.
 				header = new Widget(this.window.Root);
 				header.Margins = new Margins(0, 0, 0, 4);
 				header.Dock = DockStyle.Top;
@@ -179,10 +195,22 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void SetAccess(ResourceAccess access)
+		public void SetAccess(Module module, ResourceAccess.Type type)
 		{
 			//	Détermine les ressources à afficher.
-			this.access = access;
+			this.module = module;
+			this.resourceType = type;
+
+			this.access = this.module.PrepareAccess(this.resourceType);
+		}
+
+		public Module Module
+		{
+			//	Retourne le module utilisé.
+			get
+			{
+				return this.module;
+			}
 		}
 
 		public Druid Resource
@@ -204,6 +232,16 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Met à jour le titre qui dépend du type des ressources éditées.
 			this.title.Text = string.Concat("<font size=\"200%\"><b>", ResourceAccess.TypeDisplayName(this.access.ResourceType), "</b></font>");
+
+			this.fieldModule.Items.Clear();
+
+			List<MainWindow.ModuleInfo> list = this.mainWindow.OpeningListModule;
+			foreach (MainWindow.ModuleInfo info in list)
+			{
+				this.fieldModule.Items.Add(info.Module.ModuleInfo.Name);
+			}
+
+			this.fieldModule.Text = this.module.ModuleInfo.Name;
 		}
 
 		protected void UpdateHeader()
@@ -463,6 +501,25 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		protected void HandleFieldModuleComboClosed(object sender)
+		{
+			//	Choix d'un module dans le menu-combo.
+			string text = this.fieldModule.Text;
+
+			List<MainWindow.ModuleInfo> list = this.mainWindow.OpeningListModule;
+			foreach (MainWindow.ModuleInfo info in list)
+			{
+				if (text == info.Module.ModuleInfo.Name)
+				{
+					this.SetAccess(info.Module, this.resourceType);
+					this.UpdateDruidsIndex();
+					this.UpdateArray();
+					this.SelectArray();
+					return;
+				}
+			}
+		}
+
 		protected void HandleWindowCloseClicked(object sender)
 		{
 			this.parentWindow.MakeActive();
@@ -591,8 +648,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		protected Module						module;
+		protected ResourceAccess.Type			resourceType;
 		protected ResourceAccess				access;
 		protected StaticText					title;
+		protected TextFieldCombo				fieldModule;
 		protected StaticText					header1;
 		protected StaticText					header2;
 		protected TextField						filterLabel;
