@@ -406,73 +406,73 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			EnumType childrenPlacementEnumType = new EnumType(typeof(ObjectModifier.ChildrenPlacement));
 			childrenPlacementEnumType.DefineDefaultController("Enum", "Icons");
-			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.Anchored].DefineCaptionId (new Support.Druid ("[30011]"));
-			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.VerticalStacked].DefineCaptionId (new Support.Druid ("[30012]"));
-			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.HorizontalStacked].DefineCaptionId (new Support.Druid ("[30013]"));
-			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.Grid].DefineCaptionId (new Support.Druid ("[30014]"));
+			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.Anchored].DefineCaptionId(Res.Captions.Layout.Anchored.Druid);
+			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.VerticalStacked].DefineCaptionId(Res.Captions.Layout.VerticalStacked.Druid);
+			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.HorizontalStacked].DefineCaptionId(Res.Captions.Layout.HorizontalStacked.Druid);
+			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.Grid].DefineCaptionId(Res.Captions.Layout.Grid.Druid);
 			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineNamedType(childrenPlacementEnumType);
-			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300C]"));
+			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.ChildrenPlacement.Druid);
 
 			EnumType anchoredHorizontalAttachmentEnumType = new EnumType(typeof(ObjectModifier.AnchoredHorizontalAttachment));
 			anchoredHorizontalAttachmentEnumType.DefineDefaultController("Enum", "Icons");
-			anchoredHorizontalAttachmentEnumType[ObjectModifier.AnchoredHorizontalAttachment.Left].DefineCaptionId (new Support.Druid ("[30021]"));
-			anchoredHorizontalAttachmentEnumType[ObjectModifier.AnchoredHorizontalAttachment.Right].DefineCaptionId (new Support.Druid ("[30022]"));
-			anchoredHorizontalAttachmentEnumType[ObjectModifier.AnchoredHorizontalAttachment.Fill].DefineCaptionId (new Support.Druid ("[30025]"));
+			anchoredHorizontalAttachmentEnumType[ObjectModifier.AnchoredHorizontalAttachment.Left].DefineCaptionId(Res.Captions.Layout.Attachment.Left.Druid);
+			anchoredHorizontalAttachmentEnumType[ObjectModifier.AnchoredHorizontalAttachment.Right].DefineCaptionId(Res.Captions.Layout.Attachment.Right.Druid);
+			anchoredHorizontalAttachmentEnumType[ObjectModifier.AnchoredHorizontalAttachment.Fill].DefineCaptionId(Res.Captions.Layout.Attachment.HFill.Druid);
 			Layout.AnchoredHorizontalAttachmentProperty.DefaultMetadata.DefineNamedType(anchoredHorizontalAttachmentEnumType);
-			Layout.AnchoredHorizontalAttachmentProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300D]"));
+			Layout.AnchoredHorizontalAttachmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.AnchoredHorizontalAttachment.Druid);
 
 			EnumType anchoredVerticalAttachmentEnumType = new EnumType(typeof(ObjectModifier.AnchoredVerticalAttachment));
 			anchoredVerticalAttachmentEnumType.DefineDefaultController("Enum", "Icons");
-			anchoredVerticalAttachmentEnumType[ObjectModifier.AnchoredVerticalAttachment.Bottom].DefineCaptionId (new Support.Druid ("[30023]"));
-			anchoredVerticalAttachmentEnumType[ObjectModifier.AnchoredVerticalAttachment.Top].DefineCaptionId (new Support.Druid ("[30024]"));
-			anchoredVerticalAttachmentEnumType[ObjectModifier.AnchoredVerticalAttachment.Fill].DefineCaptionId (new Support.Druid ("[30026]"));
+			anchoredVerticalAttachmentEnumType[ObjectModifier.AnchoredVerticalAttachment.Bottom].DefineCaptionId(Res.Captions.Layout.Attachment.Botton.Druid);
+			anchoredVerticalAttachmentEnumType[ObjectModifier.AnchoredVerticalAttachment.Top].DefineCaptionId(Res.Captions.Layout.Attachment.Top.Druid);
+			anchoredVerticalAttachmentEnumType[ObjectModifier.AnchoredVerticalAttachment.Fill].DefineCaptionId(Res.Captions.Layout.Attachment.VFill.Druid);
 			Layout.AnchoredVerticalAttachmentProperty.DefaultMetadata.DefineNamedType(anchoredVerticalAttachmentEnumType);
-			Layout.AnchoredVerticalAttachmentProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300E]"));
+			Layout.AnchoredVerticalAttachmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.AnchoredVerticalAttachment.Druid);
 
 			EnumType stackedHorizontalAttachmentEnumType = new EnumType(typeof(ObjectModifier.StackedHorizontalAttachment));
 			stackedHorizontalAttachmentEnumType.DefineDefaultController("Enum", "Icons");
-			stackedHorizontalAttachmentEnumType[ObjectModifier.StackedHorizontalAttachment.Left].DefineCaptionId (new Support.Druid ("[30021]"));
-			stackedHorizontalAttachmentEnumType[ObjectModifier.StackedHorizontalAttachment.Right].DefineCaptionId (new Support.Druid ("[30022]"));
-			stackedHorizontalAttachmentEnumType[ObjectModifier.StackedHorizontalAttachment.Fill].DefineCaptionId (new Support.Druid ("[30025]"));
+			stackedHorizontalAttachmentEnumType[ObjectModifier.StackedHorizontalAttachment.Left].DefineCaptionId(Res.Captions.Layout.Attachment.Left.Druid);
+			stackedHorizontalAttachmentEnumType[ObjectModifier.StackedHorizontalAttachment.Right].DefineCaptionId(Res.Captions.Layout.Attachment.Right.Druid);
+			stackedHorizontalAttachmentEnumType[ObjectModifier.StackedHorizontalAttachment.Fill].DefineCaptionId(Res.Captions.Layout.Attachment.HFill.Druid);
 			Layout.StackedHorizontalAttachmentProperty.DefaultMetadata.DefineNamedType(stackedHorizontalAttachmentEnumType);
-			Layout.StackedHorizontalAttachmentProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300F]"));
+			Layout.StackedHorizontalAttachmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.StackedHorizontalAttachment.Druid);
 
 			EnumType stackedVerticalAttachmentEnumType = new EnumType(typeof(ObjectModifier.StackedVerticalAttachment));
 			stackedVerticalAttachmentEnumType.DefineDefaultController("Enum", "Icons");
-			stackedVerticalAttachmentEnumType[ObjectModifier.StackedVerticalAttachment.Bottom].DefineCaptionId (new Support.Druid ("[30023]"));
-			stackedVerticalAttachmentEnumType[ObjectModifier.StackedVerticalAttachment.Top].DefineCaptionId (new Support.Druid ("[30024]"));
-			stackedVerticalAttachmentEnumType[ObjectModifier.StackedVerticalAttachment.Fill].DefineCaptionId (new Support.Druid ("[30026]"));
+			stackedVerticalAttachmentEnumType[ObjectModifier.StackedVerticalAttachment.Bottom].DefineCaptionId(Res.Captions.Layout.Attachment.Botton.Druid);
+			stackedVerticalAttachmentEnumType[ObjectModifier.StackedVerticalAttachment.Top].DefineCaptionId(Res.Captions.Layout.Attachment.Top.Druid);
+			stackedVerticalAttachmentEnumType[ObjectModifier.StackedVerticalAttachment.Fill].DefineCaptionId(Res.Captions.Layout.Attachment.VFill.Druid);
 			Layout.StackedVerticalAttachmentProperty.DefaultMetadata.DefineNamedType(stackedVerticalAttachmentEnumType);
-			Layout.StackedVerticalAttachmentProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300G]"));
+			Layout.StackedVerticalAttachmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.StackedVerticalAttachment.Druid);
 
 			EnumType stackedHorizontalAlignmentEnumType = new EnumType(typeof(ObjectModifier.StackedHorizontalAlignment));
 			stackedHorizontalAlignmentEnumType.DefineDefaultController("Enum", "Icons");
-			stackedHorizontalAlignmentEnumType[ObjectModifier.StackedHorizontalAlignment.Stretch].DefineCaptionId (new Support.Druid ("[30037]"));
-			stackedHorizontalAlignmentEnumType[ObjectModifier.StackedHorizontalAlignment.Center].DefineCaptionId (new Support.Druid ("[30035]"));
-			stackedHorizontalAlignmentEnumType[ObjectModifier.StackedHorizontalAlignment.Left].DefineCaptionId (new Support.Druid ("[30031]"));
-			stackedHorizontalAlignmentEnumType[ObjectModifier.StackedHorizontalAlignment.Right].DefineCaptionId (new Support.Druid ("[30032]"));
+			stackedHorizontalAlignmentEnumType[ObjectModifier.StackedHorizontalAlignment.Stretch].DefineCaptionId(Res.Captions.Layout.Alignment.HStretch.Druid);
+			stackedHorizontalAlignmentEnumType[ObjectModifier.StackedHorizontalAlignment.Center].DefineCaptionId(Res.Captions.Layout.Alignment.HCenter.Druid);
+			stackedHorizontalAlignmentEnumType[ObjectModifier.StackedHorizontalAlignment.Left].DefineCaptionId(Res.Captions.Layout.Alignment.Left.Druid);
+			stackedHorizontalAlignmentEnumType[ObjectModifier.StackedHorizontalAlignment.Right].DefineCaptionId(Res.Captions.Layout.Alignment.Right.Druid);
 			Layout.StackedHorizontalAlignmentProperty.DefaultMetadata.DefineNamedType(stackedHorizontalAlignmentEnumType);
-			Layout.StackedHorizontalAlignmentProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300H]"));
+			Layout.StackedHorizontalAlignmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.StackedHorizontalAlignment.Druid);
 
 			EnumType stackedVerticalAlignmentEnumType = new EnumType(typeof(ObjectModifier.StackedVerticalAlignment));
 			stackedVerticalAlignmentEnumType.DefineDefaultController("Enum", "Icons");
-			stackedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Stretch].DefineCaptionId (new Support.Druid ("[30038]"));
-			stackedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Center].DefineCaptionId (new Support.Druid ("[30036]"));
-			stackedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Bottom].DefineCaptionId (new Support.Druid ("[30033]"));
-			stackedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Top].DefineCaptionId (new Support.Druid ("[30034]"));
+			stackedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Stretch].DefineCaptionId(Res.Captions.Layout.Alignment.VStretch.Druid);
+			stackedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Center].DefineCaptionId(Res.Captions.Layout.Alignment.VCenter.Druid);
+			stackedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Bottom].DefineCaptionId(Res.Captions.Layout.Alignment.Bottom.Druid);
+			stackedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Top].DefineCaptionId(Res.Captions.Layout.Alignment.Top.Druid);
 			stackedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.BaseLine].DefineHidden(true);
 			Layout.StackedVerticalAlignmentProperty.DefaultMetadata.DefineNamedType(stackedVerticalAlignmentEnumType);
-			Layout.StackedVerticalAlignmentProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300I]"));
+			Layout.StackedVerticalAlignmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.StackedVerticalAlignment.Druid);
 
 			EnumType stackedVerticalBaseLineAlignmentEnumType = new EnumType(typeof(ObjectModifier.StackedVerticalAlignment));
 			stackedVerticalBaseLineAlignmentEnumType.DefineDefaultController("Enum", "Icons");
-			stackedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Stretch].DefineCaptionId (new Support.Druid ("[30038]"));
-			stackedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Center].DefineCaptionId (new Support.Druid ("[30036]"));
-			stackedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Bottom].DefineCaptionId (new Support.Druid ("[30033]"));
-			stackedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Top].DefineCaptionId (new Support.Druid ("[30034]"));
-			stackedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.BaseLine].DefineCaptionId (new Support.Druid ("[30039]"));
+			stackedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Stretch].DefineCaptionId(Res.Captions.Layout.Alignment.VStretch.Druid);
+			stackedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Center].DefineCaptionId(Res.Captions.Layout.Alignment.VCenter.Druid);
+			stackedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Bottom].DefineCaptionId(Res.Captions.Layout.Alignment.Bottom.Druid);
+			stackedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Top].DefineCaptionId(Res.Captions.Layout.Alignment.Top.Druid);
+			stackedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.BaseLine].DefineCaptionId(Res.Captions.Layout.Alignment.BaseLine.Druid);
 			Layout.StackedVerticalBaseLineAlignmentProperty.DefaultMetadata.DefineNamedType(stackedVerticalBaseLineAlignmentEnumType);
-			Layout.StackedVerticalBaseLineAlignmentProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300I]"));
+			Layout.StackedVerticalBaseLineAlignmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.StackedVerticalAlignment.Druid);
 		}
 
 		

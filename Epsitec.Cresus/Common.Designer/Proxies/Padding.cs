@@ -162,10 +162,10 @@ namespace Epsitec.Common.Designer.Proxies
 			Padding.TopPaddingProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
 			Padding.BottomPaddingProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
 
-			Padding.LeftPaddingProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[3008]"));
-			Padding.RightPaddingProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[3009]"));
-			Padding.TopPaddingProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300A]"));
-			Padding.BottomPaddingProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[300B]"));
+			Padding.LeftPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Padding.Left.Druid);
+			Padding.RightPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Padding.Right.Druid);
+			Padding.TopPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Padding.Top.Druid);
+			Padding.BottomPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Padding.Bottom.Druid);
 		}
 
 
