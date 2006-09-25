@@ -10,7 +10,21 @@ namespace Epsitec.Common.Support
 	public class ResourceManagerPool
 	{
 		public ResourceManagerPool()
+			: this (null)
 		{
+		}
+
+		public ResourceManagerPool(string name)
+		{
+			this.name = name;
+		}
+
+		public string Name
+		{
+			get
+			{
+				return this.name;
+			}
 		}
 
 		public void Register(ResourceManager manager)
@@ -99,6 +113,11 @@ namespace Epsitec.Common.Support
 			this.SyncBundleRelatedCaches ();
 		}
 
+		public override string ToString()
+		{
+			return string.Format ("{0}:{1}:{2}", this.name ?? "<auto>", this.bundles.Count, this.managers.Count);
+		}
+
 		private void SyncBundleRelatedCaches()
 		{
 			List<ResourceManager> managers = new List<ResourceManager> ();
@@ -131,9 +150,10 @@ namespace Epsitec.Common.Support
 				manager.SyncBundleRelatedCache ();
 			}
 		}
-		
-		Dictionary<string, ResourceBundle>	bundles = new Dictionary<string, ResourceBundle> ();
-		List<Weak<ResourceManager>>			managers = new List<Weak<ResourceManager>> ();
-		int mergedBundlesCount;
+
+		private string								name;
+		private Dictionary<string, ResourceBundle>	bundles = new Dictionary<string, ResourceBundle> ();
+		private List<Weak<ResourceManager>>			managers = new List<Weak<ResourceManager>> ();
+		private int									mergedBundlesCount;
 	}
 }
