@@ -35,7 +35,6 @@ namespace Epsitec.Common.Designer.Controllers
 			this.button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.button.TabIndex = 1;
 			this.button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.button.PreferredHeight = 36;  // place pour 2 lignes
 			this.button.Dock = DockStyle.Stacked;
 
 			this.AddWidget(this.button);
@@ -69,12 +68,14 @@ namespace Epsitec.Common.Designer.Controllers
 					{
 						string part2 = module.AccessCaptions.DirectGetDisplayName(d);
 						this.button.Text = part2;
+						this.button.PreferredHeight = 8+14*1;  // place pour une seule ligne
 					}
 					else
 					{
 						string part1 = Misc.Italic(module.ModuleInfo.Name);
 						string part2 = module.AccessCaptions.DirectGetDisplayName(d);
 						this.button.Text = string.Format("{0}<br/>{1}", part1, part2);
+						this.button.PreferredHeight = 8+14*2;  // place pour deux lignes
 					}
 				}
 			}
