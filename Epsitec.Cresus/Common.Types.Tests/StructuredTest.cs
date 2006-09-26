@@ -25,7 +25,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("A", data.StructuredType.GetFieldNames ()[0]);
 			Assert.AreEqual ("B", data.StructuredType.GetFieldNames ()[1]);
 
-			Assert.AreEqual (typeof (int), data.StructuredType.GetFieldType ("A"));
+			Assert.AreEqual (typeof (int), data.StructuredType.GetFieldType ("A").SystemType);
 			Assert.AreEqual (10, data.GetValue ("A"));
 			Assert.AreEqual (20, data.GetValue ("B"));
 			Assert.AreEqual (UndefinedValue.Instance, data.GetValue ("X"));
