@@ -145,9 +145,9 @@ namespace Epsitec.Common.Types
 
 			MyData data = new MyData ();
 
-			objType1.Fields["X"] = new IntegerType ();
-			objType1.Fields["Y"] = new IntegerType ();
-
+			objType1.Fields.Add ("X", IntegerType.Default);
+			objType1.Fields.Add ("Y", IntegerType.Default);
+			
 			TypeRosetta.SetTypeObject (obj1, objType1);
 
 			Assert.AreEqual (objType1, TypeRosetta.GetTypeObjectFromValue (obj1));
@@ -167,8 +167,8 @@ namespace Epsitec.Common.Types
 
 			MyData data = new MyData ();
 
-			objType1.Fields["X"] = new IntegerType ();
-			objType1.Fields["Y"] = new IntegerType ();
+			objType1.Fields.Add ("X", IntegerType.Default);
+			objType1.Fields.Add ("Y", IntegerType.Default);
 
 			TypeRosetta.SetTypeObject (obj1, objType1);
 

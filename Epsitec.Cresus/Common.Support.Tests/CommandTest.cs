@@ -113,8 +113,8 @@ namespace Epsitec.Common.Support
 			
 			Types.StructuredType type = command.StructuredType;
 			
-			type.AddField ("Size", new Types.DecimalType (0.1M, 999.9M, 0.1M));
-			type.AddField ("Units", new Types.EnumType (typeof (Text.Properties.SizeUnits)));
+			type.Fields.Add ("Size", new Types.DecimalType (0.1M, 999.9M, 0.1M));
+			type.Fields.Add ("Units", new Types.EnumType (typeof (Text.Properties.SizeUnits)));
 
 			CommandState state = context.GetCommandState (command);
 
@@ -148,8 +148,8 @@ namespace Epsitec.Common.Support
 
 			StructuredType type = command.StructuredType;
 
-			type.AddField ("Name", new StringType ());
-			type.AddField ("Count", new IntegerType (0, 99));
+			type.Fields.Add ("Name", StringType.Default);
+			type.Fields.Add ("Count", new IntegerType (0, 99));
 
 			caption.Labels.Add ("M");
 			caption.Labels.Add ("Mystery");

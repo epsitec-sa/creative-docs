@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Epsitec.Common.Types
+namespace Epsitec.Common.Types.Collections
 {
 	/// <summary>
 	/// The <c>StructuredTypeFieldCollection</c> is used only when serializing the
@@ -20,7 +20,7 @@ namespace Epsitec.Common.Types
 
 		void ICollection<StructuredTypeField>.Add(StructuredTypeField field)
 		{
-			this.owner.AddField (field.Id, field.Type);
+			this.owner.Fields.Add (field.Id, field);
 		}
 
 		void ICollection<StructuredTypeField>.Clear()

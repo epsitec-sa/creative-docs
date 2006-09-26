@@ -777,7 +777,7 @@ namespace Epsitec.Common.Document
 				Command.SetCommandType(command.Caption, CommandType.Structured);
 				
 				Types.StructuredType type = command.StructuredType;
-				type.AddField("Name", new Types.StringType());
+				type.Fields.Add("Name", Types.StringType.Default);
 			}
 
 			return command;
