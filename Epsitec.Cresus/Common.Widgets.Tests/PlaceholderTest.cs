@@ -77,10 +77,10 @@ namespace Epsitec.Common.Widgets
 			IntegerType ageType = new IntegerType (16, 80);
 			ageType.DefinePreferredRange (new DecimalRange (20, 65, 10));
 			
-			type.AddField ("Name", new StringType (1));
-			type.AddField ("Forename", new StringType (1));
-			type.AddField ("Age", ageType);
-			type.AddField ("Sex", new EnumType (typeof (Sex)));
+			type.Fields.Add ("Name", new StringType (1));
+			type.Fields.Add ("Forename", new StringType (1));
+			type.Fields.Add ("Age", ageType);
+			type.Fields.Add ("Sex", new EnumType (typeof (Sex)));
 
 			data.SetValue ("Name", "Arnaud");
 			data.SetValue ("Forename", "Pierre");
@@ -233,9 +233,9 @@ namespace Epsitec.Common.Widgets
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
 
-			type.AddField ("Name", new StringType ());
-			type.AddField ("Forename", new StringType ());
-			type.AddField ("Age", new IntegerType (1, 150));
+			type.Fields.Add ("Name", new StringType ());
+			type.Fields.Add ("Forename", new StringType ());
+			type.Fields.Add ("Age", new IntegerType (1, 150));
 
 			data.SetValue ("Name", "Arnaud");
 			data.SetValue ("Forename", "Pierre");

@@ -613,8 +613,8 @@ namespace Epsitec.Common.Types
 		{
 			StructuredType st = new StructuredType ();
 
-			st.AddField ("Name", StringType.Default);
-			st.AddField ("Age", IntegerType.Default);
+			st.Fields.Add ("Name", StringType.Default);
+			st.Fields.Add ("Age", IntegerType.Default);
 
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			System.IO.StringWriter stringWriter = new System.IO.StringWriter (buffer);
@@ -659,8 +659,8 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (st.Fields.ContainsKey ("Name"));
 			Assert.IsTrue (st.Fields.ContainsKey ("Age"));
 
-			Assert.AreEqual ("String", st.Fields["Name"].Name);
-			Assert.AreEqual ("Integer", st.Fields["Age"].Name);
+			Assert.AreEqual ("String", st.Fields["Name"].Type.Name);
+			Assert.AreEqual ("Integer", st.Fields["Age"].Type.Name);
 		}
 
 		[Test]
@@ -668,8 +668,8 @@ namespace Epsitec.Common.Types
 		{
 			StructuredType st = new StructuredType ();
 
-			st.AddField ("Name", StringType.Default);
-			st.AddField ("Age", IntegerType.Default);
+			st.Fields.Add ("Name", StringType.Default);
+			st.Fields.Add ("Angle", IntegerType.Default, Support.Druid.Parse ("[4002]"));
 
 			string serial = st.Caption.SerializeToString ();
 			
@@ -684,10 +684,10 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (st.Fields.Count, readSt.Fields.Count);
 
 			Assert.IsTrue (st.Fields.ContainsKey ("Name"));
-			Assert.IsTrue (st.Fields.ContainsKey ("Age"));
+			Assert.IsTrue (st.Fields.ContainsKey ("Angle"));
 
-			Assert.AreEqual ("String", st.Fields["Name"].Name);
-			Assert.AreEqual ("Integer", st.Fields["Age"].Name);
+			Assert.AreEqual ("String", st.Fields["Name"].Type.Name);
+			Assert.AreEqual ("Integer", st.Fields["Angle"].Type.Name);
 		}
 
 		[Test]

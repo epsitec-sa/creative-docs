@@ -97,6 +97,7 @@
     <Compile Include="BindingChangedEventArgs.cs" />
     <Compile Include="BindingBreadcrumbs.cs" />
     <Compile Include="Caption.cs" />
+    <Compile Include="Collections\HostedStructuredTypeFieldDictionary.cs" />
     <Compile Include="Collections\EnumValueCollection.cs" />
     <Compile Include="Collections\HostedDepdendencyObjectList.cs" />
     <Compile Include="Collections\GenericList.cs" />
@@ -106,7 +107,7 @@
     <Compile Include="AbstractType.cs" />
     <Compile Include="ISerializationConverterFilter.cs" />
     <Compile Include="Res.cs" />
-    <Compile Include="StructuredTypeFieldCollection.cs" />
+    <Compile Include="Collections\StructuredTypeFieldCollection.cs" />
     <Compile Include="StructuredTypeField.cs" />
     <Compile Include="DoubleType.cs" />
     <Compile Include="ISytemType.cs" />

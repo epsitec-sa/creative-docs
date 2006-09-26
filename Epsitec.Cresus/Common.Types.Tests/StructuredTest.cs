@@ -45,8 +45,8 @@ namespace Epsitec.Common.Types
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
 
-			type.Fields["A"] = new IntegerType (0, 100);
-			type.Fields["B"] = new IntegerType (0, 100);
+			type.Fields.Add ("A", new IntegerType (0, 100));
+			type.Fields.Add ("B", new IntegerType (0, 100));
 
 			Assert.AreEqual (2, Collection.Count (data.GetValueNames ()));
 			Assert.AreEqual (2, Collection.Count (data.StructuredType.GetFieldIds ()));
@@ -105,8 +105,8 @@ namespace Epsitec.Common.Types
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
 
-			type.Fields["A"] = new IntegerType ();
-			type.Fields["B"] = new IntegerType ();
+			type.Fields.Add ("A", IntegerType.Default);
+			type.Fields.Add ("B", IntegerType.Default);
 
 			data.SetValue ("X", 100);
 		}
@@ -118,8 +118,8 @@ namespace Epsitec.Common.Types
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
 
-			type.Fields["A"] = new IntegerType ();
-			type.Fields["B"] = new IntegerType ();
+			type.Fields.Add ("A", IntegerType.Default);
+			type.Fields.Add ("B", IntegerType.Default);
 
 			data.GetValue ("X");
 		}
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Types
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
 
-			type.Fields["A"] = new IntegerType (0, 100);
+			type.Fields.Add ("A", new IntegerType (0, 100));
 
 			data.SetValue ("A", 200);
 		}
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Types
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
 
-			type.Fields["A"] = new IntegerType (0, 100);
+			type.Fields.Add ("A", new IntegerType (0, 100));
 
 			data.SetValue ("A", "-");
 		}
@@ -267,8 +267,8 @@ namespace Epsitec.Common.Types
 
 			type.Caption.Name = "TestStruct";
 
-			type.AddField ("Name", StringType.Default);
-			type.AddField ("Age", IntegerType.Default);
+			type.Fields.Add ("Name", StringType.Default);
+			type.Fields.Add ("Age", IntegerType.Default);
 
 			Assert.IsNull (type.SystemType);
 
