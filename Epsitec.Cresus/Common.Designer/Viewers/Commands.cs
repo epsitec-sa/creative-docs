@@ -203,7 +203,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			for (int i=0; i<this.access.TotalCount; i++)
 			{
-				string group = this.access.GetBypassFilterGroup(i);
+				string group = this.access.DirectGetGroup(i);
 				if (group != null && !list.Contains(group))
 				{
 					list.Add(group);

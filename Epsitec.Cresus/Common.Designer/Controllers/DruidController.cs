@@ -35,7 +35,7 @@ namespace Epsitec.Common.Designer.Controllers
 			this.button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.button.TabIndex = 1;
 			this.button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.button.PreferredHeight = 36;
+			this.button.PreferredHeight = 36;  // place pour 2 lignes
 			this.button.Dock = DockStyle.Stacked;
 
 			this.AddWidget(this.button);
@@ -43,16 +43,16 @@ namespace Epsitec.Common.Designer.Controllers
 
 		protected override void PrepareUserInterfaceDisposal()
 		{
-			base.PrepareUserInterfaceDisposal ();
+			base.PrepareUserInterfaceDisposal();
 
 			this.button.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 		}
 
 		protected override void RefreshUserInterface(object oldValue, object newValue)
 		{
-			if ((newValue != UndefinedValue.Instance) &&
-				(newValue != InvalidValue.Instance) &&
-				(newValue != null))
+			if (newValue != UndefinedValue.Instance &&
+				newValue != InvalidValue.Instance &&
+				newValue != null)
 			{
 				this.druid = this.ConvertFromValue(newValue);
 
@@ -65,31 +65,38 @@ namespace Epsitec.Common.Designer.Controllers
 				}
 				else
 				{
-					this.button.Text = string.Format(@"<font size=""100%"">{0}<br/>{1}</font>", module.ModuleInfo.Name, this.druid);
+					if (module == mainWindow.CurrentModule)
+					{
+						string part2 = module.AccessCaptions.DirectGetDisplayName(d);
+						this.button.Text = part2;
+					}
+					else
+					{
+						string part1 = Misc.Italic(module.ModuleInfo.Name);
+						string part2 = module.AccessCaptions.DirectGetDisplayName(d);
+						this.button.Text = string.Format("{0}<br/>{1}", part1, part2);
+					}
 				}
 			}
 		}
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
-#if flase
+#if true
 			MainWindow mainWindow = this.MainWindow;
 
 			Druid d = Druid.Parse(this.druid);
-			mainWindow.DlgResourceSelector(this.module, ref this.moduleForResourceSelector, ResourceAccess.Type.Commands, ref d);
+			d = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Unknow, d);
 
 			this.druid = d.ToString();
 			this.OnActualValueChanged();
-#endif
-
-
-
-			//	TODO:
+#else
 			Druid d = Druid.Parse(this.druid);
 			Druid dd = new Druid(d.Module, d.Developer, d.Local+1);
 			this.druid = dd.ToString();
 
 			this.OnActualValueChanged();
+#endif
 		}
 
 		private string ConvertFromValue(object newValue)
