@@ -27,6 +27,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.SetColumnsRelativeWidth(0, 0.30);
 			this.array.SetColumnsRelativeWidth(1, 0.35);
 			this.array.SetColumnsRelativeWidth(2, 0.35);
+			this.array.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 			this.array.SetDynamicToolTips(0, true);
 			this.array.SetDynamicToolTips(1, false);
 			this.array.SetDynamicToolTips(2, false);

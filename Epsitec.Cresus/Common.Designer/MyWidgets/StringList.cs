@@ -84,6 +84,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public TextBreakMode BreakMode
+		{
+			//	Césure des textes pour la colonne.
+			get
+			{
+				return this.breakMode;
+			}
+
+			set
+			{
+				this.breakMode = value;
+			}
+		}
+
 		public int LineCount
 		{
 			//	Nombre total de ligne en fonction de la hauteur du widget et de la hauteur d'une ligne.
@@ -303,6 +317,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.cells[i] = new Cell ();
 				this.cells[i].TextLayout = new TextLayout ();
 				this.cells[i].TextLayout.Alignment = this.alignment;
+				this.cells[i].TextLayout.BreakMode = this.breakMode;
 				this.cells[i].State = CellState.Normal;
 				this.cells[i].Selected = (i == this.selectedCell);
 			}
@@ -508,6 +523,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected double					lineHeight = 20;
 		protected double					relativeWidth = 0;
 		protected ContentAlignment			alignment = ContentAlignment.MiddleLeft;
+		protected TextBreakMode				breakMode = TextBreakMode.None;
 		protected Cell[]					cells;
 		protected bool						isDynamicToolTips = false;
 		protected bool						isDragging = false;
