@@ -10,12 +10,8 @@ namespace Epsitec.Common.Types
 	/// pair, when serializing a <see cref="StructuredType"/>.
 	/// </summary>
 	[SerializationConverter (typeof (StructuredTypeField.SerializationConverter))]
-	public class StructuredTypeField
+	public struct StructuredTypeField
 	{
-		private StructuredTypeField()
-		{
-		}
-
 		public StructuredTypeField(KeyValuePair<string, INamedType> field)
 		{
 			this.name = field.Key;
