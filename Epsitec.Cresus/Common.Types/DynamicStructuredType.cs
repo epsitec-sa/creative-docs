@@ -23,7 +23,8 @@ namespace Epsitec.Common.Types
 		public object GetFieldTypeObject(string name)
 		{
 			object value = this.data.GetValue (name);
-			return TypeRosetta.GetTypeObjectFromValue (value);
+			object typeObject = TypeRosetta.GetTypeObjectFromValue (value);
+			return TypeRosetta.GetNamedTypeFromTypeObject (typeObject);
 		}
 
 		public string[] GetFieldNames()
