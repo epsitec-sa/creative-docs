@@ -131,6 +131,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return this.columns[column].Alignment;
 		}
 
+		public void SetColumnBreakMode(int column, TextBreakMode breakMode)
+		{
+			//	Modifie la césure d'une colonne.
+			this.columns[column].BreakMode = breakMode;
+		}
+
+		public TextBreakMode GetColumnBreakMode(int column)
+		{
+			//	Retourne la césure d'une colonne.
+			return this.columns[column].BreakMode;
+		}
+
 		public double LineHeight
 		{
 			//	Hauteur d'une ligne.
