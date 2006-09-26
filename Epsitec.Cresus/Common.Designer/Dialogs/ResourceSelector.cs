@@ -247,7 +247,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateTitle()
 		{
 			//	Met à jour le titre qui dépend du type des ressources éditées.
-			string text = string.Concat("<font size=\"200%\"><b>", ResourceAccess.TypeDisplayName(this.access.ResourceType), "</b></font>");
+			string text = string.Concat("<font size=\"200%\"><b>", ResourceAccess.TypeDisplayName(this.resourceType), "</b></font>");
 			this.title.Text = text;
 
 			this.fieldModule.Items.Clear();

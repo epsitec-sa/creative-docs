@@ -83,21 +83,13 @@ namespace Epsitec.Common.Designer.Controllers
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
-#if true
 			MainWindow mainWindow = this.MainWindow;
 
 			Druid d = Druid.Parse(this.druid);
 			d = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Unknow, d);
-
 			this.druid = d.ToString();
-			this.OnActualValueChanged();
-#else
-			Druid d = Druid.Parse(this.druid);
-			Druid dd = new Druid(d.Module, d.Developer, d.Local+1);
-			this.druid = dd.ToString();
 
 			this.OnActualValueChanged();
-#endif
 		}
 
 		private string ConvertFromValue(object newValue)
