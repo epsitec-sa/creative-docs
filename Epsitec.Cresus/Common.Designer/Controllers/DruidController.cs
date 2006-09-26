@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Controllers;
 using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 
 [assembly: Controller(typeof(Epsitec.Common.Designer.Controllers.DruidController))]
 
@@ -18,7 +19,7 @@ namespace Epsitec.Common.Designer.Controllers
 
 		public override object GetActualValue()
 		{
-			return this.button.Text;
+			return this.druid;
 		}
 
 		protected override Widgets.Layouts.IGridPermeable GetGridPermeableLayoutHelper()
@@ -52,13 +53,19 @@ namespace Epsitec.Common.Designer.Controllers
 				(newValue != InvalidValue.Instance) &&
 				(newValue != null))
 			{
-				this.button.Text = this.ConvertFromValue(newValue);
+				this.druid = this.ConvertFromValue(newValue);
+				this.button.Text = string.Format("Druid = {0}", this.druid);
 			}
 		}
 
 		private void HandleButtonPressed(object sender, MessageEventArgs e)
 		{
 			//	TODO:
+			Druid d = Druid.Parse(this.druid);
+			Druid dd = new Druid(d.Module, d.Developer, d.Local+1);
+			this.druid = dd.ToString();
+
+			this.OnActualValueChanged();
 		}
 
 		private string ConvertFromValue(object newValue)
@@ -81,8 +88,9 @@ namespace Epsitec.Common.Designer.Controllers
 			return true;
 		}
 		#endregion
-		
 
+
+		private string druid;
 		private Button button;
 	}
 }
