@@ -157,7 +157,7 @@ namespace Epsitec.Common.Types
 
 
 
-		public static object GetFieldType(IStructuredType root, string path)
+		public static INamedType GetFieldType(IStructuredType root, string path)
 		{
 			string leafName;
 			string leafPath = StructuredTree.GetLeafPath (path, out leafName);
@@ -201,23 +201,19 @@ namespace Epsitec.Common.Types
 			return item;
 		}
 
-		public static string[] GetFieldPaths(IStructuredType root, string path)
+		public static IEnumerable<string> GetFieldPaths(IStructuredType root, string path)
 		{
 			root = StructuredTree.GetSubTreeType (root, path);
 			
 			if (root == null)
 			{
-				return null;
+				yield break;
 			}
 
-			string[] names = root.GetFieldNames ();
-
-			for (int i = 0; i < names.Length; i++)
+			foreach (string id in root.GetFieldIds ())
 			{
-				names[i] = StructuredTree.CreatePath (path, names[i]);
+				yield return StructuredTree.CreatePath (path, id);
 			}
-
-			return names;
 		}
 		
 		public static readonly string[] EmptyPath = new string[0];

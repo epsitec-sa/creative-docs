@@ -69,7 +69,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public string[] GetFieldNames()
+		public string[] GetFieldIds()
 		{
 			string[] names = new string[this.fields.Count];
 			this.fields.Keys.CopyTo (names, 0);

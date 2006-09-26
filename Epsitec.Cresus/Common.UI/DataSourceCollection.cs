@@ -82,7 +82,7 @@ namespace Epsitec.Common.UI
 		/// Gets the field names.
 		/// </summary>
 		/// <returns>Array of field names.</returns>
-		public string[] GetFieldNames()
+		public string[] GetFieldIds()
 		{
 			string[] names = new string[this.items.Count];
 

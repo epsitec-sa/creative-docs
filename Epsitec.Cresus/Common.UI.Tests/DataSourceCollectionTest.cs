@@ -40,7 +40,7 @@ namespace Epsitec.Common.UI
 			Assert.IsNotNull (structuredType);
 			Assert.AreEqual (source1.ObjectType, structuredType.GetFieldType ("A"));
 
-			foreach (string name in collection.GetFieldNames ())
+			foreach (string name in collection.GetFieldIds ())
 			{
 				System.Console.Out.WriteLine ("Name: {0}", name);
 
@@ -62,7 +62,7 @@ namespace Epsitec.Common.UI
 					System.Console.Out.WriteLine ("  {0}", subPath);
 				}
 
-				foreach (string subPath in tree.GetFieldNames ())
+				foreach (string subPath in tree.GetFieldIds ())
 				{
 					buffer2.Append (name);
 					buffer2.Append (".");

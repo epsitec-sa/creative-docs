@@ -211,7 +211,7 @@ namespace Epsitec.Common.Types
 			return TypeRosetta.GetNamedTypeFromTypeObject (this.GetProperty (name));
 		}
 
-		string[] IStructuredType.GetFieldNames()
+		string[] IStructuredType.GetFieldIds()
 		{
 			ReadOnlyArray<DependencyProperty> properties = this.GetProperties ();
 			string[] names = new string[properties.Count];
