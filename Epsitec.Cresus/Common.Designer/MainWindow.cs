@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Designer
@@ -14,7 +15,7 @@ namespace Epsitec.Common.Designer
 	/// <summary>
 	/// Fenêtre principale de l'éditeur de ressources.
 	/// </summary>
-	public class MainWindow
+	public class MainWindow : DependencyObject
 	{
 		static MainWindow()
 		{
@@ -52,6 +53,8 @@ namespace Epsitec.Common.Designer
 				this.window.Text = Res.Strings.Application.Title;
 				this.window.Name = "Application";  // utilisé pour générer "QuitApplication" !
 				this.window.PreventAutoClose = true;
+				
+				MainWindow.SetInstance(this.window, this);  // attache l'instance de MainWindow à la fenêtre
 
 				this.commandDispatcher = new CommandDispatcher("Common.Designer", CommandDispatcherLevel.Primary);
 				this.commandContext = new CommandContext();
@@ -1250,6 +1253,15 @@ namespace Epsitec.Common.Designer
 		}
 		#endregion
 
+		public static MainWindow GetInstance(DependencyObject obj)
+		{
+			return (MainWindow) obj.GetValue(MainWindow.InstanceProperty);
+		}
+
+		public static void SetInstance(DependencyObject obj, MainWindow value)
+		{
+			obj.SetValue(MainWindow.InstanceProperty, value);
+		}
 
 		protected DesignerMode					mode;
 		protected Window						window;
@@ -1361,5 +1373,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					tabIndexNextState;
 		protected CommandState					tabIndexLastState;
 		protected CommandState					tabIndexRenumState;
+
+		public static readonly DependencyProperty InstanceProperty = DependencyProperty.RegisterAttached("Instance", typeof(MainWindow), typeof(MainWindow));
 	}
 }
