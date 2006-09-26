@@ -115,7 +115,8 @@ namespace Epsitec.Common.Widgets
 			Layouts.GridLayoutEngine.SetColumn (placeholder3, 0);
 			Layouts.GridLayoutEngine.SetRow (placeholder3, 3);
 
-			placeholder4.Controller = "*";
+			placeholder4.Controller = "Enum";
+			placeholder4.ControllerParameter = "Combo";
 			placeholder4.PreferredHeight = 20;
 			placeholder4.TabIndex = 4;
 			Layouts.GridLayoutEngine.SetColumn (placeholder4, 2);
