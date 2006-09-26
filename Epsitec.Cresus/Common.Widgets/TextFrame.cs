@@ -69,7 +69,8 @@ namespace Epsitec.Common.Widgets
 			this.navigator.CursorMoved += new Support.EventHandler (this.HandleCursorMoved);
 
 			CommandDispatcher dispatcher = new CommandDispatcher ("TextFrame", CommandDispatcherLevel.Secondary);
-
+			
+			dispatcher.AutoForwardCommands = true;
 			dispatcher.OpletQueue = this.oplet_queue;
 
 			CommandDispatcher.SetDispatcher (this, dispatcher);
