@@ -29,14 +29,24 @@ namespace Epsitec.Common.Designer.Controllers
 
 		protected override void CreateUserInterface(INamedType namedType, string valueName, Caption caption)
 		{
-			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
+
+			this.title = new StaticText();
+			this.title.HorizontalAlignment = HorizontalAlignment.Stretch;
+			this.title.VerticalAlignment = VerticalAlignment.Top;
+			this.title.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
+			this.title.Dock = DockStyle.Stacked;
+			this.title.PreferredHeight = 26;
 
 			this.button = new Button();
 			this.button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.button.TabIndex = 1;
 			this.button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.button.HorizontalAlignment = HorizontalAlignment.Stretch;
+			this.button.VerticalAlignment = VerticalAlignment.Stretch;
 			this.button.Dock = DockStyle.Stacked;
 
+			this.AddWidget(this.title);
 			this.AddWidget(this.button);
 		}
 
@@ -58,12 +68,17 @@ namespace Epsitec.Common.Designer.Controllers
 				Druid d = Druid.Parse(this.druid);
 				MainWindow mainWindow = this.MainWindow;
 				Module module = mainWindow.SearchModule(d);
+
 				if (module == null)
 				{
+					this.title.Text = "";
 					this.button.Text = this.druid;
 				}
 				else
 				{
+					string text = ResourceAccess.TypeDisplayName(module.AccessCaptions.DirectGetType(d));
+					this.title.Text = string.Concat("<font size=\"150%\"><b>", text, "</b></font>");
+
 					if (module == mainWindow.CurrentModule)
 					{
 						string part2 = module.AccessCaptions.DirectGetDisplayName(d);
@@ -74,7 +89,7 @@ namespace Epsitec.Common.Designer.Controllers
 					{
 						string part1 = Misc.Italic(module.ModuleInfo.Name);
 						string part2 = module.AccessCaptions.DirectGetDisplayName(d);
-						this.button.Text = string.Format("{0}<br/>{1}", part1, part2);
+						this.button.Text = string.Concat(part1, "<br/>", part2);
 						this.button.PreferredHeight = 8+14*2;  // place pour deux lignes
 					}
 				}
@@ -111,20 +126,22 @@ namespace Epsitec.Common.Designer.Controllers
 		#region IGridPermeable Members
 		IEnumerable<Widgets.Layouts.PermeableCell> Widgets.Layouts.IGridPermeable.GetChildren(int column, int row, int columnSpan, int rowSpan)
 		{
-			yield return new Widgets.Layouts.PermeableCell(this.button, column, row, columnSpan, 1);
+			yield return new Widgets.Layouts.PermeableCell(this.title, column+0, row+0, columnSpan, 1);
+			yield return new Widgets.Layouts.PermeableCell(this.button, column+0, row+1, columnSpan, rowSpan-1);
 		}
 
 		bool Widgets.Layouts.IGridPermeable.UpdateGridSpan(ref int columnSpan, ref int rowSpan)
 		{
 			columnSpan = System.Math.Max(columnSpan, 2);
-			rowSpan    = System.Math.Max(rowSpan, 1);
+			rowSpan    = System.Math.Max(rowSpan, 2);
 			
 			return true;
 		}
 		#endregion
 
 
-		private string druid;
-		private Button button;
+		private string					druid;
+		private StaticText				title;
+		private Button					button;
 	}
 }
