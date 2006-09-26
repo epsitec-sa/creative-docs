@@ -1,6 +1,8 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Types
 {
 	/// <summary>
@@ -20,6 +22,6 @@ namespace Epsitec.Common.Types
 		/// Gets the field identifiers.
 		/// </summary>
 		/// <returns>An array of field identifiers.</returns>
-		string[] GetFieldIds();
+		IEnumerable<string> GetFieldIds();
 	}
 }

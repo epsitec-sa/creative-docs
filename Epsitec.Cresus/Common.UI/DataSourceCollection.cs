@@ -81,8 +81,8 @@ namespace Epsitec.Common.UI
 		/// <summary>
 		/// Gets the field names.
 		/// </summary>
-		/// <returns>Array of field names.</returns>
-		public string[] GetFieldIds()
+		/// <returns>Enumeration of field names.</returns>
+		public IEnumerable<string> GetFieldIds()
 		{
 			string[] names = new string[this.items.Count];
 

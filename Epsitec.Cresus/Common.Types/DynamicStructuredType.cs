@@ -27,7 +27,7 @@ namespace Epsitec.Common.Types
 			return TypeRosetta.GetNamedTypeFromTypeObject (typeObject);
 		}
 
-		public string[] GetFieldIds()
+		public IEnumerable<string> GetFieldIds()
 		{
 			return this.data.GetValueNames ();
 		}
