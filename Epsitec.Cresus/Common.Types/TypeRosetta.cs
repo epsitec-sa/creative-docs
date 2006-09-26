@@ -60,6 +60,11 @@ namespace Epsitec.Common.Types
 		/// <returns>The named type.</returns>
 		public static INamedType GetNamedTypeFromTypeObject(object typeObject)
 		{
+			if (typeObject == null)
+			{
+				return null;
+			}
+			
 			INamedType namedType = typeObject as INamedType;
 
 			if (namedType == null)
@@ -90,7 +95,11 @@ namespace Epsitec.Common.Types
 						}
 						else
 						{
-							if (systemType == typeof (int))
+							if (systemType == typeof (bool))
+							{
+								namedType = BooleanType.Default;
+							}
+							else if (systemType == typeof (int))
 							{
 								namedType = IntegerType.Default;
 							}
@@ -101,6 +110,10 @@ namespace Epsitec.Common.Types
 							else if (systemType == typeof (double))
 							{
 								namedType = DoubleType.Default;
+							}
+							else if (systemType == typeof (decimal))
+							{
+								namedType = DecimalType.Default;
 							}
 							else if (systemType == typeof (void))
 							{
