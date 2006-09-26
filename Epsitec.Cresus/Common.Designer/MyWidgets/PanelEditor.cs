@@ -1489,27 +1489,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Choix de la ressource de type texte pour l'objet.
 			if (obj is Button || obj is StaticText || obj is GroupBox)
 			{
-				if (this.moduleForResourceSelector == null)
-				{
-					this.moduleForResourceSelector = this.module;
-				}
-
-#if false
-				Types.ResourceBinding binding = obj.GetBinding(Widget.TextProperty) as Types.ResourceBinding;
-
-				Druid druid = Druid.Empty;
-				if (binding != null)
-				{
-					druid = Druid.Parse(binding.ResourceId);
-				}
-
-				this.module.MainWindow.DlgResourceSelector(this.module, ref this.moduleForResourceSelector, ResourceAccess.Type.Strings, ref druid);
-				
-				if (druid.IsValid)
-				{
-					this.module.ResourceManager.Bind(obj, Widget.TextProperty, druid);
-				}
-#else
 				if (obj is Button)
 				{
 					Druid druid = Druid.Empty;
@@ -1519,7 +1498,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						druid = command.Caption.Druid;
 					}
 
-					this.module.MainWindow.DlgResourceSelector(this.module, ref this.moduleForResourceSelector, ResourceAccess.Type.Commands, ref druid);
+					druid = this.module.MainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Commands, druid);
 
 					if (druid.IsValid)
 					{
@@ -1530,14 +1509,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					Druid druid = obj.CaptionDruid;
 
-					this.module.MainWindow.DlgResourceSelector(this.module, ref this.moduleForResourceSelector, ResourceAccess.Type.Captions, ref druid);
+					druid = this.module.MainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Captions, druid);
 
 					if (druid.IsValid)
 					{
 						obj.CaptionDruid = druid;
 					}
 				}
-#endif
 			}
 		}
 
@@ -4561,7 +4539,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected static readonly double	attachmentScale = 0.4;
 
 		protected Module					module;
-		protected Module					moduleForResourceSelector = null;
 		protected UI.Panel					panel;
 		protected PanelsContext				context;
 		protected ObjectModifier			objectModifier;

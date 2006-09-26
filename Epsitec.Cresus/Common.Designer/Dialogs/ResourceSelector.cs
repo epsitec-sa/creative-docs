@@ -167,7 +167,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				string text;
 				bool isDefined;
-				this.access.GetBypassFilterStrings(this.resource, this.CurrentBundle, out label, out text, out isDefined);
+				this.access.BypassFilterGetStrings(this.resource, this.CurrentBundle, out label, out text, out isDefined);
 			}
 
 			this.ignoreChanged = true;
@@ -195,42 +195,52 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void SetAccess(Module baseModule, Module module, ResourceAccess.Type type, Druid ressource)
+		public void AccessOpen(Module baseModule, ResourceAccess.Type type, Druid resource)
 		{
-			//	Détermine les ressources à afficher.
-			this.baseModule = baseModule;
+			//	Début de l'accès 'bypass' aux ressources pour le dialogue.
+			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Unknow || type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Commands);
+			System.Diagnostics.Debug.Assert(resource.Type != DruidType.ModuleRelative);
 
-			Module m = this.mainWindow.SearchModule(ressource);
-			if (m != null)
+			this.resource = resource;
+
+			//	Cherche le module contenant le Druid de la ressource.
+			this.baseModule = baseModule;
+			this.module = this.mainWindow.SearchModule(this.resource);
+
+			if (this.module == null)  // module inconnu ?
 			{
-				module = m;
+				this.module = this.baseModule;  // utilise le module de base
 			}
+
+			this.access = this.module.AccessCaptions;
+
+			if (type == ResourceAccess.Type.Unknow)
+			{
+				this.resourceType = this.module.AccessCaptions.DirectGetType(this.resource);
+			}
+			else
+			{
+				this.resourceType = type;
+			}
+
+			this.module.AccessCaptions.BypassFilterOpenAccess(this.resourceType);
+		}
+
+		protected void AccessChange(Module module)
+		{
+			//	Change l'accès 'bypass' aux ressources dans un autre module.
+			this.AccessClose();
 
 			this.module = module;
-			this.resourceType = type;
-
-			System.Diagnostics.Debug.Assert(ressource.Type != DruidType.ModuleRelative);
-			this.resource = ressource;
-
-			this.access = this.module.PrepareAccess(this.resourceType);
+			this.access = this.module.AccessCaptions;
+			this.module.AccessCaptions.BypassFilterOpenAccess(this.resourceType);
 		}
 
-		public Module Module
+		public Druid AccessClose()
 		{
-			//	Retourne le module utilisé.
-			get
-			{
-				return this.module;
-			}
-		}
-
-		public Druid Resource
-		{
-			//	Retourne le Druid de la ressource choisie.
-			get
-			{
-				return this.resource;
-			}
+			//	Fin de l'accès 'bypass' aux ressources pour le dialogue.
+			this.module.AccessCaptions.BypassFilterCloseAccess();
+			return this.resource;
 		}
 
 
@@ -317,12 +327,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			int min = 100000;
 			int best = 0;
 
-			for (int i=0; i<this.access.TotalCount; i++)
+			for (int i=0; i<this.access.BypassFilterCount; i++)
 			{
-				Druid druid = this.access.GetBypassFilterDruid(i);
+				Druid druid = this.access.BypassFilterGetDruid(i);
+
 				string label, text;
 				bool isDefined;
-				this.access.GetBypassFilterStrings(druid, bundle, out label, out text, out isDefined);
+				this.access.BypassFilterGetStrings(druid, bundle, out label, out text, out isDefined);
 
 				bool add1 = false;
 				bool add2 = false;
@@ -435,7 +446,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					string label, text;
 					bool isDefined;
-					this.access.GetBypassFilterStrings(this.druidsIndex[first+i], bundle, out label, out text, out isDefined);
+					this.access.BypassFilterGetStrings(this.druidsIndex[first+i], bundle, out label, out text, out isDefined);
 
 					this.array.SetLineString(0, first+i, label);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
@@ -445,7 +456,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 					if (this.access.ResourceType != ResourceAccess.Type.Strings)
 					{
-						string icon = this.access.GetBypassFilterIcon(this.druidsIndex[first+i]);
+						string icon = this.access.DirectGetIcon(this.druidsIndex[first+i]);
 
 						if (string.IsNullOrEmpty(icon))
 						{
@@ -540,8 +551,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				if (text == module.ModuleInfo.Name)
 				{
-					this.module = module;
-					this.access = this.module.PrepareAccess(this.resourceType);
+					this.AccessChange(module);
 
 					this.ignoreChanged = true;
 					this.filterLabel.Text = "";
@@ -607,7 +617,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					if (!this.access.IsExistingName(label))
 					{
-						this.resource = this.access.CreateBypassFilter(this.CurrentBundle, label, text);
+						this.resource = this.access.BypassFilterCreate(this.CurrentBundle, label, text);
 					}
 				}
 			}

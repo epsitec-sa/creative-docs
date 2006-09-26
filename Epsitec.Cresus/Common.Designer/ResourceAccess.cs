@@ -252,7 +252,7 @@ namespace Epsitec.Common.Designer
 
 			if (this.IsBundlesType)
 			{
-				newName = this.AddFilter(newName);
+				newName = this.AddFilter(newName, false);
 
 				Druid actualDruid = this.druidsIndex[this.accessIndex];
 				int aIndex = this.GetAbsoluteIndex(actualDruid);
@@ -644,7 +644,7 @@ namespace Epsitec.Common.Designer
 			//	Vérifie si un futur "Name" existe déjà.
 			if (this.IsBundlesType)
 			{
-				name = this.AddFilter(name);
+				name = this.AddFilter(name, false);
 				ResourceBundle.Field field = this.primaryBundle[name];
 				return (field != null && field.Name != null);
 			}
@@ -701,54 +701,69 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public Druid GetBypassFilterDruid(int index)
+		#region ByPassFilter
+		public void BypassFilterOpenAccess(Type type)
 		{
-			//	Donne un druid, sans tenir compte du filtre.
-			System.Diagnostics.Debug.Assert(this.IsBundlesType);
+			//	Ouvre l'accès 'bypass'.
+			//	Ce type d'accès n'est possible que sur une ressource 'Caption' (Captions,
+			//	Commands, Types et Values).
+			System.Diagnostics.Debug.Assert(this.IsCaptionsType);
+			System.Diagnostics.Debug.Assert(this.bypassType == Type.Unknow);
+			this.bypassType = type;
+			System.Diagnostics.Debug.Assert(this.bypassType != Type.Unknow);
 
-			if (this.type == Type.Strings)
+			this.bypassDruids = new List<Druid>();
+			for (int i=0; i<this.primaryBundle.FieldCount; i++)
 			{
-				ResourceBundle.Field field = this.primaryBundle[index];
-				return new Druid(field.Druid, this.primaryBundle.Module.Id);
-			}
-			else
-			{
-				//	Comme les ressources Captions, Commands, Types et Values sont dans le même "sac",
-				//	il faut les distinguer d'après leurs préfixes.
-				//	TODO: à optimiser !
-				for (int i=0; i<this.primaryBundle.FieldCount; i++)
+				ResourceBundle.Field field = this.primaryBundle[i];
+				if (this.HasFixFilter(field.Name, true))
 				{
-					ResourceBundle.Field field = this.primaryBundle[i];
-					if (this.HasFixFilter(field.Name))
-					{
-						if (index == 0)
-						{
-							return new Druid(field.Druid, this.primaryBundle.Module.Id);
-						}
-
-						index--;
-					}
+					Druid fullDruid = new Druid(field.Druid, this.primaryBundle.Module.Id);
+					this.bypassDruids.Add(fullDruid);
 				}
-				return Druid.Empty;
 			}
 		}
 
-		public void GetBypassFilterStrings(Druid druid, ResourceBundle bundle, out string name, out string text, out bool isDefined)
+		public int BypassFilterCount
 		{
-			//	Donne les chaînes 'Name' et 'String' d'une ressource, sans tenir compte du filtre.
-			//	Si le texte n'existe pas, cherche dans la culture de base (isDefined est alors false).
+			//	Retourne le nombre de ressources disponibles à travers l'accès 'bypass'.
+			get
+			{
+				System.Diagnostics.Debug.Assert(this.bypassType != Type.Unknow);
+				return this.bypassDruids.Count;
+			}
+		}
+
+		public Druid BypassFilterGetDruid(int index)
+		{
+			//	Retourne le Druid à un index donné.
+			System.Diagnostics.Debug.Assert(this.bypassType != Type.Unknow);
+			return this.bypassDruids[index];
+		}
+
+		public int BypassFilterGetIndex(Druid druid)
+		{
+			//	Cherche l'index d'un Druid donné.
+			System.Diagnostics.Debug.Assert(this.bypassType != Type.Unknow);
+			return this.bypassDruids.IndexOf(druid);
+		}
+
+		public void BypassFilterGetStrings(Druid druid, ResourceBundle bundle, out string name, out string text, out bool isDefined)
+		{
+			//	Retourne une ressource de l'accès 'bypass'.
+			System.Diagnostics.Debug.Assert(this.bypassType != Type.Unknow);
 			if (bundle == null)
 			{
-				this.GetBypassFilterStrings(druid, this.primaryBundle, out name, out text);
+				this.BypassFilterGetStrings(druid, this.primaryBundle, out name, out text);
 				isDefined = false;
 			}
 			else
 			{
-				this.GetBypassFilterStrings(druid, bundle, out name, out text);
+				this.BypassFilterGetStrings(druid, bundle, out name, out text);
 
 				if (string.IsNullOrEmpty(text) && bundle != this.primaryBundle)
 				{
-					this.GetBypassFilterStrings(druid, this.primaryBundle, out name, out text);
+					this.BypassFilterGetStrings(druid, this.primaryBundle, out name, out text);
 					isDefined = false;
 				}
 				else
@@ -758,10 +773,9 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void GetBypassFilterStrings(Druid druid, ResourceBundle bundle, out string name, out string text)
+		protected void BypassFilterGetStrings(Druid druid, ResourceBundle bundle, out string name, out string text)
 		{
-			//	Donne les chaînes 'Name' et 'String' d'une ressource, sans tenir compte du filtre.
-			System.Diagnostics.Debug.Assert(this.IsBundlesType);
+			//	Retourne une ressource de l'accès 'bypass'.
 			ResourceBundle.Field field = bundle[druid];
 
 			if (field.IsEmpty)
@@ -773,7 +787,7 @@ namespace Epsitec.Common.Designer
 
 			ResourceBundle.Field primaryField = this.primaryBundle[druid];
 			System.Diagnostics.Debug.Assert(!primaryField.IsEmpty && !string.IsNullOrEmpty(primaryField.Name));
-			name = this.SubFilter(primaryField.Name);
+			name = this.SubFilter(primaryField.Name, true);
 
 			if (this.type == Type.Strings)
 			{
@@ -827,53 +841,11 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public string GetBypassFilterIcon(Druid druid)
-		{
-			//	Retourne l'icône d'une ressource, sans tenir compte du filtre.
-			//	La recherche s'effectue toujours dans la culture de base.
-			System.Diagnostics.Debug.Assert(this.IsBundlesType);
-			ResourceBundle.Field field = this.primaryBundle[druid];
-
-			if (this.type == Type.Strings)
-			{
-				return null;
-			}
-			else
-			{
-				Common.Types.Caption caption = new Common.Types.Caption();
-
-				string s = field.AsString;
-				if (!string.IsNullOrEmpty(s))
-				{
-					caption.DeserializeFromString(s);
-				}
-
-				return caption.Icon;
-			}
-		}
-
-		public string GetBypassFilterGroup(int index)
-		{
-			//	Retourne le groupe d'une commande.
-			System.Diagnostics.Debug.Assert(this.type == Type.Commands);
-			ResourceBundle.Field field = this.primaryBundle[index];
-
-			Common.Types.Caption caption = new Common.Types.Caption();
-
-			string s = field.AsString;
-			if (!string.IsNullOrEmpty(s))
-			{
-				caption.DeserializeFromString(s);
-			}
-
-			return Command.GetGroup(caption);
-		}
-
-		public Druid CreateBypassFilter(ResourceBundle bundle, string name, string text)
+		public Druid BypassFilterCreate(ResourceBundle bundle, string name, string text)
 		{
 			//	Crée une nouvelle ressource 'Strings' à la fin.
-			System.Diagnostics.Debug.Assert(this.IsBundlesType);
-			name = this.AddFilter(name);
+			System.Diagnostics.Debug.Assert(this.bypassType != Type.Unknow);
+			name = this.AddFilter(name, true);
 
 			Druid newDruid = this.CreateUniqueDruid();
 
@@ -929,6 +901,84 @@ namespace Epsitec.Common.Designer
 			return newDruid;
 		}
 
+		public void BypassFilterCloseAccess()
+		{
+			//	Ferme l'accès 'bypass'.
+			System.Diagnostics.Debug.Assert(this.bypassType != Type.Unknow);
+			this.bypassType = Type.Unknow;
+			this.bypassDruids = null;
+		}
+		#endregion
+
+
+		#region Direct
+		public Type DirectGetType(Druid druid)
+		{
+			//	Retourne le type d'une ressource 'Caption'.
+			System.Diagnostics.Debug.Assert(this.IsCaptionsType);
+			string name = this.DirectGetName(druid);
+			if (string.IsNullOrEmpty(name))
+			{
+				return Type.Unknow;
+			}
+			else
+			{
+				return ResourceAccess.GetFilterType(name);
+			}
+		}
+
+		public string DirectGetDisplayName(Druid druid)
+		{
+			//	Retourne le nom d'une ressource à afficher, sans tenir compte du filtre.
+			string name = this.DirectGetName(druid);
+			return ResourceAccess.SubAllFilter(name);
+		}
+
+		public string DirectGetName(Druid druid)
+		{
+			//	Retourne le nom d'une ressource, sans tenir compte du filtre.
+			//	La recherche s'effectue toujours dans la culture de base.
+			System.Diagnostics.Debug.Assert(this.IsBundlesType);
+			ResourceBundle.Field field = this.primaryBundle[druid];
+			return field.Name;
+		}
+
+		public string DirectGetIcon(Druid druid)
+		{
+			//	Retourne l'icône d'une ressource, sans tenir compte du filtre.
+			//	La recherche s'effectue toujours dans la culture de base.
+			System.Diagnostics.Debug.Assert(this.IsCaptionsType);
+			ResourceBundle.Field field = this.primaryBundle[druid];
+
+			Common.Types.Caption caption = new Common.Types.Caption();
+
+			string s = field.AsString;
+			if (!string.IsNullOrEmpty(s))
+			{
+				caption.DeserializeFromString(s);
+			}
+
+			return caption.Icon;
+		}
+
+		public string DirectGetGroup(int index)
+		{
+			//	Retourne le groupe d'une commande.
+			System.Diagnostics.Debug.Assert(this.type == Type.Commands);
+			ResourceBundle.Field field = this.primaryBundle[index];
+
+			Common.Types.Caption caption = new Common.Types.Caption();
+
+			string s = field.AsString;
+			if (!string.IsNullOrEmpty(s))
+			{
+				caption.DeserializeFromString(s);
+			}
+
+			return Command.GetGroup(caption);
+		}
+		#endregion
+
 
 		public Field GetField(int index, string cultureName, string fieldName)
 		{
@@ -945,7 +995,7 @@ namespace Epsitec.Common.Designer
 
 				if (fieldName == ResourceAccess.NameStrings[0])
 				{
-					return new Field(this.SubFilter(this.accessField.Name));
+					return new Field(this.SubFilter(this.accessField.Name, false));
 				}
 			}
 
@@ -1050,7 +1100,7 @@ namespace Epsitec.Common.Designer
 
 				if (fieldName == ResourceAccess.NameStrings[0])
 				{
-					string name = this.AddFilter(field.String);
+					string name = this.AddFilter(field.String, false);
 					this.accessField.SetName(name);
 
 					Druid druid = this.druidsIndex[index];
@@ -1686,7 +1736,7 @@ namespace Epsitec.Common.Designer
 						//	bundles, il ne faut rien.
 						if (bundle == this.primaryBundle)
 						{
-							caption.Name = this.SubAllFilter(field.Name);
+							caption.Name = ResourceAccess.SubAllFilter(field.Name);
 						}
 						else
 						{
@@ -1769,12 +1819,12 @@ namespace Epsitec.Common.Designer
 
 			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
 			{
-				if (!this.HasFixFilter(field.Name))
+				if (!this.HasFixFilter(field.Name, false))
 				{
 					continue;
 				}
 
-				string name = this.SubFilter(field.Name);
+				string name = this.SubFilter(field.Name, false);
 
 				if (filter != "")
 				{
@@ -1826,7 +1876,7 @@ namespace Epsitec.Common.Designer
 
 			foreach (ResourceBundle bundle in this.panelsList)
 			{
-				string name = this.SubFilter(bundle.Caption);
+				string name = this.SubFilter(bundle.Caption, false);
 
 				if (filter != "")
 				{
@@ -2185,12 +2235,12 @@ namespace Epsitec.Common.Designer
 
 
 		#region FixFilter
-		protected string AddFilter(string name)
+		protected string AddFilter(string name, bool bypass)
 		{
 			//	Ajoute le filtre fixe si nécessaire.
-			if (!this.HasFixFilter(name))
+			if (!this.HasFixFilter(name, bypass))
 			{
-				string fix = this.FixFilter;
+				string fix = this.FixFilter(bypass);
 				if (fix == null)
 				{
 					return name;
@@ -2204,12 +2254,12 @@ namespace Epsitec.Common.Designer
 			return name;
 		}
 
-		protected string SubFilter(string name)
+		protected string SubFilter(string name, bool bypass)
 		{
 			//	Supprime le filtre fixe si nécessaire.
-			if (this.HasFixFilter(name))
+			if (this.HasFixFilter(name, bypass))
 			{
-				string fix = this.FixFilter;
+				string fix = this.FixFilter(bypass);
 				if (fix == null)
 				{
 					return name;
@@ -2223,42 +2273,56 @@ namespace Epsitec.Common.Designer
 			return name;
 		}
 
-		protected string SubAllFilter(string name)
+		protected static string SubAllFilter(string name)
 		{
 			//	Supprime tous les filtres fixes connus si nécessaire.
-			string filter;
+			Type type = ResourceAccess.GetFilterType(name);
 
-			filter = ResourceAccess.GetFixFilter(Type.Captions);
-			if (name.StartsWith(filter))
+			if (type != Type.Unknow)
 			{
-				return name.Substring(filter.Length);
-			}
-
-			filter = ResourceAccess.GetFixFilter(Type.Commands);
-			if (name.StartsWith(filter))
-			{
-				return name.Substring(filter.Length);
-			}
-
-			filter = ResourceAccess.GetFixFilter(Type.Types);
-			if (name.StartsWith(filter))
-			{
-				return name.Substring(filter.Length);
-			}
-
-			filter = ResourceAccess.GetFixFilter(Type.Values);
-			if (name.StartsWith(filter))
-			{
-				return name.Substring(filter.Length);
+				string filter = ResourceAccess.GetFixFilter(type);
+				name = name.Substring(filter.Length);
 			}
 
 			return name;
 		}
 
-		protected bool HasFixFilter(string name)
+		protected static Type GetFilterType(string name)
+		{
+			//	Retourne le type en fonction du préfixe du nom.
+			string filter;
+
+			filter = ResourceAccess.GetFixFilter(Type.Captions);
+			if (name.StartsWith(filter))
+			{
+				return Type.Captions;
+			}
+
+			filter = ResourceAccess.GetFixFilter(Type.Commands);
+			if (name.StartsWith(filter))
+			{
+				return Type.Commands;
+			}
+
+			filter = ResourceAccess.GetFixFilter(Type.Types);
+			if (name.StartsWith(filter))
+			{
+				return Type.Types;
+			}
+
+			filter = ResourceAccess.GetFixFilter(Type.Values);
+			if (name.StartsWith(filter))
+			{
+				return Type.Values;
+			}
+
+			return Type.Unknow;
+		}
+
+		protected bool HasFixFilter(string name, bool bypass)
 		{
 			//	Indique si un nom commence par le filtre fixe.
-			string fix = this.FixFilter;
+			string fix = this.FixFilter(bypass);
 			
 			if (fix == null)
 			{
@@ -2270,13 +2334,10 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected string FixFilter
+		protected string FixFilter(bool bypass)
 		{
 			//	Retourne la chaîne fixe du filtre.
-			get
-			{
-				return ResourceAccess.GetFixFilter(this.type);
-			}
+			return ResourceAccess.GetFixFilter(bypass ? this.bypassType : this.type);
 		}
 
 		protected static string GetFixFilter(Type type)
@@ -2542,5 +2603,7 @@ namespace Epsitec.Common.Designer
 		protected Dictionary<Type, int>						filterIndexes;
 		protected Dictionary<Type, string>					filterStrings;
 		protected Dictionary<Type, Searcher.SearchingMode>	filterModes;
+		protected Type										bypassType = Type.Unknow;
+		protected List<Druid>								bypassDruids;
 	}
 }
