@@ -200,7 +200,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Détermine les ressources à afficher.
 			this.baseModule = baseModule;
 
-			Module m = this.ModuleSearch(ressource);
+			Module m = this.mainWindow.SearchModule(ressource);
 			if (m != null)
 			{
 				module = m;
@@ -527,27 +527,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				string culture = Misc.CultureBaseName(this.mainWindow.CurrentModule.ResourceManager.ActiveCulture);
 				return this.access.GetCultureBundle(culture);
 			}
-		}
-
-
-		protected Module ModuleSearch(Druid druid)
-		{
-			//	Cherche à quel module appartient un druid.
-			if (druid.IsEmpty)
-			{
-				return null;
-			}
-
-			List<Module> list = this.mainWindow.OpeningListModule;
-			foreach (Module module in list)
-			{
-				if (module.ModuleInfo.Id == druid.Module)
-				{
-					return module;
-				}
-			}
-
-			return null;
 		}
 
 

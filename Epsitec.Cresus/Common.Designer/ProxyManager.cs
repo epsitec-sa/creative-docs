@@ -278,30 +278,32 @@ namespace Epsitec.Common.Designer
 
 		static ProxyManager()
 		{
-			Types.StringType druidStringType     = new Types.StringType();
-			Types.DoubleType locationNumericType = new Types.DoubleType(-9999, 9999, 1.0M);
-			Types.DoubleType sizeNumericType     = new Types.DoubleType(0, 9999, 1.0M);
-			Types.DoubleType marginNumericType   = new Types.DoubleType(-1, 9999, 1.0M);
-			Types.IntegerType gridNumericType    = new Types.IntegerType(1, 100);
-
+			StringType druidStringType = new StringType();
 			druidStringType.DefineDefaultController("Druid", "");  // utilise DruidController
-			locationNumericType.DefinePreferredRange(new Types.DecimalRange(0, 1000, 2));
-			sizeNumericType.DefinePreferredRange(new Types.DecimalRange(0, 1000, 1));
-			marginNumericType.DefinePreferredRange(new Types.DecimalRange(0, 200, 1));
-			gridNumericType.DefinePreferredRange(new Types.DecimalRange(1, 10, 1));
+			ProxyManager.DruidStringType = druidStringType;
 
-			ProxyManager.DruidStringType     = druidStringType;
+			DoubleType locationNumericType = new DoubleType(-9999, 9999, 1.0M);
+			locationNumericType.DefinePreferredRange(new DecimalRange(0, 1000, 2));
 			ProxyManager.LocationNumericType = locationNumericType;
-			ProxyManager.SizeNumericType     = sizeNumericType;
-			ProxyManager.MarginNumericType   = marginNumericType;
-			ProxyManager.GridNumericType     = gridNumericType;
+			
+			DoubleType sizeNumericType = new DoubleType(0, 9999, 1.0M);
+			sizeNumericType.DefinePreferredRange(new DecimalRange(0, 1000, 1));
+			ProxyManager.SizeNumericType = sizeNumericType;
+			
+			DoubleType marginNumericType = new DoubleType(-1, 9999, 1.0M);
+			marginNumericType.DefinePreferredRange(new DecimalRange(0, 200, 1));
+			ProxyManager.MarginNumericType = marginNumericType;
+			
+			IntegerType gridNumericType = new IntegerType(1, 100);
+			gridNumericType.DefinePreferredRange(new DecimalRange(1, 10, 1));
+			ProxyManager.GridNumericType = gridNumericType;
 		}
 
-		public static readonly Types.IStringType DruidStringType;
-		public static readonly Types.INumericType LocationNumericType;
-		public static readonly Types.INumericType SizeNumericType;
-		public static readonly Types.INumericType MarginNumericType;
-		public static readonly Types.INumericType GridNumericType;
+		public static readonly IStringType  DruidStringType;
+		public static readonly INumericType LocationNumericType;
+		public static readonly INumericType SizeNumericType;
+		public static readonly INumericType MarginNumericType;
+		public static readonly INumericType GridNumericType;
 
 		private Viewers.Panels				panel;
 		private ObjectModifier				objectModifier;
