@@ -193,6 +193,7 @@ namespace Epsitec.Common.Designer
 
 		private IEnumerable<IProxy> GenerateWidgetProxies(Widget widget)
 		{
+			yield return new Proxies.Content(this);
 			yield return new Proxies.Geometry(this);
 			yield return new Proxies.Layout(this);
 			yield return new Proxies.Padding(this);
@@ -277,6 +278,7 @@ namespace Epsitec.Common.Designer
 
 		static ProxyManager()
 		{
+			Types.StringType druidStringType     = new StringType();
 			Types.DoubleType locationNumericType = new Types.DoubleType(-9999, 9999, 1.0M);
 			Types.DoubleType sizeNumericType     = new Types.DoubleType(0, 9999, 1.0M);
 			Types.DoubleType marginNumericType   = new Types.DoubleType(-1, 9999, 1.0M);
@@ -287,12 +289,14 @@ namespace Epsitec.Common.Designer
 			marginNumericType.DefinePreferredRange(new Types.DecimalRange(0, 200, 1));
 			gridNumericType.DefinePreferredRange(new Types.DecimalRange(1, 10, 1));
 
+			ProxyManager.DruidStringType     = druidStringType;
 			ProxyManager.LocationNumericType = locationNumericType;
 			ProxyManager.SizeNumericType     = sizeNumericType;
 			ProxyManager.MarginNumericType   = marginNumericType;
 			ProxyManager.GridNumericType     = gridNumericType;
 		}
-		
+
+		public static readonly Types.IStringType DruidStringType;
 		public static readonly Types.INumericType LocationNumericType;
 		public static readonly Types.INumericType SizeNumericType;
 		public static readonly Types.INumericType MarginNumericType;

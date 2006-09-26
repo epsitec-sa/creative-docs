@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Layouts;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Designer
 {
@@ -100,6 +101,58 @@ namespace Epsitec.Common.Designer
 				return this.panelEditor.Panel;
 			}
 		}
+
+
+		#region Druid
+		public bool HasDruid(Widget obj)
+		{
+			//	Indique si l'objet a un druid.
+			return (obj is Button || obj is StaticText || obj is GroupBox);
+		}
+
+		public void SetDruid(Widget obj, string druid)
+		{
+			//	Modifie le druid de l'objet.
+			Druid d = Druid.Parse(druid);
+			if (!d.IsValid)
+			{
+				return;
+			}
+
+			if (obj is Button)
+			{
+				obj.CommandObject = Command.Get(d);
+			}
+
+			if (obj is StaticText || obj is GroupBox)
+			{
+				obj.CaptionDruid = d;
+			}
+		}
+
+		public string GetDruid(Widget obj)
+		{
+			//	Retourne le druid de l'objet.
+			Druid druid = Druid.Empty;
+
+			if (obj is Button)
+			{
+				Command command = obj.CommandObject;
+				if (command != null)
+				{
+					druid = command.Caption.Druid;
+				}
+			}
+
+			if (obj is StaticText || obj is GroupBox)
+			{
+				druid = obj.CaptionDruid;
+			}
+
+			return druid.ToString();
+		}
+		#endregion
+
 
 		#region ChildrenPlacement
 		public bool AreChildrenAnchored(Widget obj)
