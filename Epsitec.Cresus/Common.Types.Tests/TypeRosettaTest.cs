@@ -187,12 +187,12 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Foo", t2.GetFieldNames ()[0]);
 			Assert.AreEqual ("Self", t4.GetFieldNames ()[0]);
 
-			object t1x = t1.GetFieldType ("X");
-			object t2foo = t2.GetFieldType ("Foo");
-			object t4self = t4.GetFieldType ("Self");
+			INamedType t1x = t1.GetFieldType ("X");
+			INamedType t2foo = t2.GetFieldType ("Foo");
+			INamedType t4self = t4.GetFieldType ("Self");
 
 			Assert.AreEqual (typeof (IntegerType), t1x.GetType ());
-			Assert.AreEqual (MyObject.FooProperty, t2foo);
+			Assert.AreEqual (MyObject.FooProperty.PropertyType, t2foo.SystemType);
 			Assert.AreEqual (typeof (DynamicStructuredType), t4self.GetType ());
 			
 			Assert.AreEqual ("Integer", TypeRosetta.GetNamedTypeFromTypeObject (t1x).Name);
