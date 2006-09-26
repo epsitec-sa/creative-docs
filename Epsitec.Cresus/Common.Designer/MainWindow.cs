@@ -933,6 +933,17 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public Module SearchModule(Druid druid)
+		{
+			//	Cherche à quel module appartient un druid.
+			if (druid.IsEmpty)
+			{
+				return null;
+			}
+
+			return this.SearchModuleId(druid.Module);
+		}
+
 		public Module SearchModuleId(int id)
 		{
 			//	Cherche un module d'après son identificateur.
@@ -1253,6 +1264,8 @@ namespace Epsitec.Common.Designer
 		}
 		#endregion
 
+
+		#region Instance
 		public static MainWindow GetInstance(DependencyObject obj)
 		{
 			return (MainWindow) obj.GetValue(MainWindow.InstanceProperty);
@@ -1262,6 +1275,8 @@ namespace Epsitec.Common.Designer
 		{
 			obj.SetValue(MainWindow.InstanceProperty, value);
 		}
+		#endregion
+
 
 		protected DesignerMode					mode;
 		protected Window						window;

@@ -32,7 +32,7 @@ namespace Epsitec.Common.Designer.Controllers
 			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
 			this.button = new Button();
-			this.button.Pressed += new MessageEventHandler(this.HandleButtonPressed);
+			this.button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.button.TabIndex = 1;
 			this.button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.button.Dock = DockStyle.Stacked;
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Designer.Controllers
 		{
 			base.PrepareUserInterfaceDisposal ();
 
-			this.button.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
+			this.button.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 		}
 
 		protected override void RefreshUserInterface(object oldValue, object newValue)
@@ -54,12 +54,35 @@ namespace Epsitec.Common.Designer.Controllers
 				(newValue != null))
 			{
 				this.druid = this.ConvertFromValue(newValue);
-				this.button.Text = string.Format("Druid = {0}", this.druid);
+
+				Druid d = Druid.Parse(this.druid);
+				MainWindow mainWindow = this.MainWindow;
+				Module module = mainWindow.SearchModule(d);
+				if (module == null)
+				{
+					this.button.Text = this.druid;
+				}
+				else
+				{
+					this.button.Text = string.Format(@"<font size=""50%"">{0}<br/>{1}</font>", module.ModuleInfo.Name, this.druid);
+				}
 			}
 		}
 
-		private void HandleButtonPressed(object sender, MessageEventArgs e)
+		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
+#if flase
+			MainWindow mainWindow = this.MainWindow;
+
+			Druid d = Druid.Parse(this.druid);
+			mainWindow.DlgResourceSelector(this.module, ref this.moduleForResourceSelector, ResourceAccess.Type.Commands, ref d);
+
+			this.druid = d.ToString();
+			this.OnActualValueChanged();
+#endif
+
+
+
 			//	TODO:
 			Druid d = Druid.Parse(this.druid);
 			Druid dd = new Druid(d.Module, d.Developer, d.Local+1);
@@ -72,18 +95,28 @@ namespace Epsitec.Common.Designer.Controllers
 		{
 			return newValue.ToString();
 		}
+
+		private MainWindow MainWindow
+		{
+			get
+			{
+				MainWindow mainWindow = MainWindow.GetInstance(this.Placeholder.Window);
+				System.Diagnostics.Debug.Assert(mainWindow != null);
+				return mainWindow;
+			}
+		}
 		
 
 		#region IGridPermeable Members
 		IEnumerable<Widgets.Layouts.PermeableCell> Widgets.Layouts.IGridPermeable.GetChildren(int column, int row, int columnSpan, int rowSpan)
 		{
-			yield return new Widgets.Layouts.PermeableCell(this.button, column, row, columnSpan, 1);
+			yield return new Widgets.Layouts.PermeableCell(this.button, column, row, columnSpan, rowSpan);
 		}
 
 		bool Widgets.Layouts.IGridPermeable.UpdateGridSpan(ref int columnSpan, ref int rowSpan)
 		{
 			columnSpan = System.Math.Max(columnSpan, 2);
-			rowSpan    = System.Math.Max(rowSpan, 1);
+			rowSpan    = System.Math.Max(rowSpan, 2);
 			
 			return true;
 		}

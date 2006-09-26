@@ -90,6 +90,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+
 		public ResourceAccess AccessStrings
 		{
 			get
@@ -145,6 +146,7 @@ namespace Epsitec.Common.Designer
 
 			return null;
 		}
+
 
 		public void Load()
 		{
