@@ -284,7 +284,7 @@ namespace Epsitec.Common.Designer
 			Types.DoubleType marginNumericType   = new Types.DoubleType(-1, 9999, 1.0M);
 			Types.IntegerType gridNumericType    = new Types.IntegerType(1, 100);
 
-			druidStringType.DefineDefaultController("Druid", "");
+			druidStringType.DefineDefaultController("Druid", "");  // utilise DruidController
 			locationNumericType.DefinePreferredRange(new Types.DecimalRange(0, 1000, 2));
 			sizeNumericType.DefinePreferredRange(new Types.DecimalRange(0, 1000, 1));
 			marginNumericType.DefinePreferredRange(new Types.DecimalRange(0, 200, 1));
