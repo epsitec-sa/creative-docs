@@ -25,7 +25,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("A", data.StructuredType.GetFieldNames ()[0]);
 			Assert.AreEqual ("B", data.StructuredType.GetFieldNames ()[1]);
 
-			Assert.AreEqual (typeof (int), data.StructuredType.GetFieldTypeObject ("A"));
+			Assert.AreEqual (typeof (int), data.StructuredType.GetFieldType ("A"));
 			Assert.AreEqual (10, data.GetValue ("A"));
 			Assert.AreEqual (20, data.GetValue ("B"));
 			Assert.AreEqual (UndefinedValue.Instance, data.GetValue ("X"));
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Types
 			data.SetValue ("B", 20);
 
 			Assert.AreEqual (2, data.InternalGetValueCount ());
-			Assert.AreEqual (typeof (IntegerType), data.StructuredType.GetFieldTypeObject ("A").GetType ());
+			Assert.AreEqual (typeof (IntegerType), data.StructuredType.GetFieldType ("A").GetType ());
 			Assert.AreEqual (10, data.GetValue ("A"));
 			Assert.AreEqual (20, data.GetValue ("B"));
 			
@@ -249,9 +249,9 @@ namespace Epsitec.Common.Types
 			Assert.IsNull (StructuredTree.GetFieldPaths (record.StructuredType, "Personne.Adresse.Ville"));
 			Assert.IsNull (StructuredTree.GetFieldPaths (record.StructuredType, "X"));
 
-			Assert.AreEqual (typeof (DecimalType), record.StructuredType.GetFieldTypeObject ("Number1").GetType ());
-			Assert.AreEqual (typeof (StringType), record.StructuredType.GetFieldTypeObject ("Text1").GetType ());
-			Assert.AreEqual (typeof (StructuredType), record.StructuredType.GetFieldTypeObject ("Personne").GetType ());
+			Assert.AreEqual (typeof (DecimalType), record.StructuredType.GetFieldType ("Number1").GetType ());
+			Assert.AreEqual (typeof (StringType), record.StructuredType.GetFieldType ("Text1").GetType ());
+			Assert.AreEqual (typeof (StructuredType), record.StructuredType.GetFieldType ("Personne").GetType ());
 
 			Assert.IsTrue (StructuredTree.IsPathValid (type, "Number1"));
 			Assert.IsTrue (StructuredTree.IsPathValid (type, "Personne.Nom"));
@@ -282,8 +282,8 @@ namespace Epsitec.Common.Types
 			StructuredType restoredType = TypeRosetta.CreateTypeObject (caption) as StructuredType;
 
 			Assert.AreEqual (type.Fields.Count, restoredType.Fields.Count);
-			Assert.AreEqual (type.GetFieldTypeObject ("Name").GetType ().Name, restoredType.GetFieldTypeObject ("Name").GetType ().Name);
-			Assert.AreEqual (type.GetFieldTypeObject ("Age").GetType ().Name, restoredType.GetFieldTypeObject ("Age").GetType ().Name);
+			Assert.AreEqual (type.GetFieldType ("Name").GetType ().Name, restoredType.GetFieldType ("Name").GetType ().Name);
+			Assert.AreEqual (type.GetFieldType ("Age").GetType ().Name, restoredType.GetFieldType ("Age").GetType ().Name);
 		}
 
 		private static void Fill(StructuredType record)

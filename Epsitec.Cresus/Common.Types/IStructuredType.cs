@@ -10,11 +10,11 @@ namespace Epsitec.Common.Types
 	public interface IStructuredType
 	{
 		/// <summary>
-		/// Gets the type object for the named field.
+		/// Gets the type for the named field.
 		/// </summary>
 		/// <param name="name">The field name.</param>
-		/// <returns>The type object (see <c>TypeRosetta</c>).</returns>
-		object GetFieldTypeObject(string name);
+		/// <returns>The <see cref="INamedType"/> type.</returns>
+		INamedType GetFieldType(string name);
 
 		/// <summary>
 		/// Gets the field names.

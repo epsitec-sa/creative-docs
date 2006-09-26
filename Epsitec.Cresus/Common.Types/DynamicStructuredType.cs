@@ -20,7 +20,7 @@ namespace Epsitec.Common.Types
 
 		#region IStructuredType Members
 
-		public object GetFieldTypeObject(string name)
+		public INamedType GetFieldType(string name)
 		{
 			object value = this.data.GetValue (name);
 			object typeObject = TypeRosetta.GetTypeObjectFromValue (value);

@@ -55,7 +55,7 @@ namespace Epsitec.Common.Types
 
 		#region IStructuredType Members
 
-		public object GetFieldTypeObject(string name)
+		public INamedType GetFieldType(string name)
 		{
 			INamedType type;
 
