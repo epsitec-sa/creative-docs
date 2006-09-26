@@ -47,22 +47,6 @@ namespace Epsitec.Common.Widgets
 			return data.GetValue (name);
 		}
 	
-#if false
-		#region IStructuredType Members
-
-		string[] IStructuredType.GetFieldNames()
-		{
-			return this.type.GetFieldNames ();
-		}
-
-		object IStructuredType.GetFieldTypeObject(string name)
-		{
-			return this.type.GetFieldTypeObject (name);
-		}
-		
-		#endregion
-#endif
-
 		internal class StructuredState : CommandState, IStructuredData
 		{
 			public StructuredState()

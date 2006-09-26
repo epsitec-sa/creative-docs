@@ -174,7 +174,7 @@ namespace Epsitec.Common.Types
 				return null;
 			}
 			
-			return root.GetFieldTypeObject (leafName);
+			return root.GetFieldType (leafName);
 		}
 
 		public static IStructuredType GetSubTreeType(IStructuredType root, string path)
@@ -195,7 +195,7 @@ namespace Epsitec.Common.Types
 					return null;
 				}
 
-				item = item.GetFieldTypeObject (names[i]) as IStructuredType;
+				item = item.GetFieldType (names[i]) as IStructuredType;
 			}
 
 			return item;

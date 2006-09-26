@@ -588,7 +588,7 @@ namespace Epsitec.Common.Types
 			if (typeProvider != null)
 			{
 				IStructuredType structuredType = typeProvider.GetStructuredType ();
-				object typeObject = structuredType.GetFieldTypeObject (name);
+				object typeObject = structuredType.GetFieldType (name);
 				return TypeRosetta.GetSystemTypeFromTypeObject (typeObject);
 			}
 
@@ -602,7 +602,7 @@ namespace Epsitec.Common.Types
 			if (typeProvider != null)
 			{
 				IStructuredType structuredType = typeProvider.GetStructuredType ();
-				return structuredType.GetFieldTypeObject (name);
+				return structuredType.GetFieldType (name);
 			}
 
 			return null;

@@ -38,7 +38,7 @@ namespace Epsitec.Common.UI
 			IStructuredType structuredType = collection as IStructuredType;
 
 			Assert.IsNotNull (structuredType);
-			Assert.AreEqual (source1.ObjectType, structuredType.GetFieldTypeObject ("A"));
+			Assert.AreEqual (source1.ObjectType, structuredType.GetFieldType ("A"));
 
 			foreach (string name in collection.GetFieldNames ())
 			{
