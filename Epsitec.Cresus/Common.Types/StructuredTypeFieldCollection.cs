@@ -20,7 +20,7 @@ namespace Epsitec.Common.Types
 
 		void ICollection<StructuredTypeField>.Add(StructuredTypeField field)
 		{
-			this.owner.AddField (field.Name, field.Type);
+			this.owner.AddField (field.Id, field.Type);
 		}
 
 		void ICollection<StructuredTypeField>.Clear()
@@ -69,9 +69,9 @@ namespace Epsitec.Common.Types
 			{
 				this.cachedFields = new List<StructuredTypeField> ();
 				
-				foreach (KeyValuePair<string, INamedType> item in this.owner.Fields)
+				foreach (StructuredTypeField field in this.owner.Fields.Values)
 				{
-					this.cachedFields.Add (new StructuredTypeField (item));
+					this.cachedFields.Add (field);
 				}
 			}
 			
@@ -91,9 +91,9 @@ namespace Epsitec.Common.Types
 			{
 				this.cachedFields = new List<StructuredTypeField> ();
 
-				foreach (KeyValuePair<string, INamedType> item in this.owner.Fields)
+				foreach (StructuredTypeField field in this.owner.Fields.Values)
 				{
-					this.cachedFields.Add (new StructuredTypeField (item));
+					this.cachedFields.Add (field);
 				}
 			}
 
