@@ -35,6 +35,7 @@ namespace Epsitec.Common.Designer.Controllers
 			this.button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.button.TabIndex = 1;
 			this.button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.button.PreferredHeight = 36;
 			this.button.Dock = DockStyle.Stacked;
 
 			this.AddWidget(this.button);
@@ -64,7 +65,7 @@ namespace Epsitec.Common.Designer.Controllers
 				}
 				else
 				{
-					this.button.Text = string.Format(@"<font size=""50%"">{0}<br/>{1}</font>", module.ModuleInfo.Name, this.druid);
+					this.button.Text = string.Format(@"<font size=""100%"">{0}<br/>{1}</font>", module.ModuleInfo.Name, this.druid);
 				}
 			}
 		}
@@ -110,13 +111,13 @@ namespace Epsitec.Common.Designer.Controllers
 		#region IGridPermeable Members
 		IEnumerable<Widgets.Layouts.PermeableCell> Widgets.Layouts.IGridPermeable.GetChildren(int column, int row, int columnSpan, int rowSpan)
 		{
-			yield return new Widgets.Layouts.PermeableCell(this.button, column, row, columnSpan, rowSpan);
+			yield return new Widgets.Layouts.PermeableCell(this.button, column, row, columnSpan, 1);
 		}
 
 		bool Widgets.Layouts.IGridPermeable.UpdateGridSpan(ref int columnSpan, ref int rowSpan)
 		{
 			columnSpan = System.Math.Max(columnSpan, 2);
-			rowSpan    = System.Math.Max(rowSpan, 2);
+			rowSpan    = System.Math.Max(rowSpan, 1);
 			
 			return true;
 		}
