@@ -17,9 +17,9 @@ namespace Epsitec.Common.Types
 		INamedType GetFieldType(string name);
 
 		/// <summary>
-		/// Gets the field names.
+		/// Gets the field identifiers.
 		/// </summary>
-		/// <returns>An array of sorted field names.</returns>
-		string[] GetFieldNames();
+		/// <returns>An array of field identifiers.</returns>
+		string[] GetFieldIds();
 	}
 }

@@ -8,8 +8,8 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe ReadOnlyArray se comporte exactement comme un Array,
 	/// si ce n'est que l'on ne peut pas en modifier le contenu. C'est
-	/// utile lorsqu'une méthode désire retourner un array pour consul-
-	/// tation uniquement.
+	/// utile lorsqu'une méthode désire retourner un array pour consultation
+	/// uniquement.
 	/// </summary>
 	/// <typeparam name="T">Le type d'un élément</typeparam>
 	public struct ReadOnlyArray<T> : ICollection<T>, IList<T>

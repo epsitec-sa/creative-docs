@@ -13,17 +13,17 @@ namespace Epsitec.Common.Types
 		{
 			StructuredData data = new StructuredData ();
 
-			Assert.AreEqual (0, data.GetValueNames ().Length);
-			Assert.AreEqual (0, data.StructuredType.GetFieldNames ().Length);
+			Assert.AreEqual (0, Collection.Count (data.GetValueNames ()));
+			Assert.AreEqual (0, Collection.Count (data.StructuredType.GetFieldIds ()));
 
 			data.SetValue ("A", 10);
 			data.SetValue ("B", 20);
 
-			Assert.AreEqual (2, data.GetValueNames ().Length);
-			Assert.AreEqual (2, data.StructuredType.GetFieldNames ().Length);
+			Assert.AreEqual (2, Collection.Count (data.GetValueNames ()));
+			Assert.AreEqual (2, Collection.Count (data.StructuredType.GetFieldIds ()));
 
-			Assert.AreEqual ("A", data.StructuredType.GetFieldNames ()[0]);
-			Assert.AreEqual ("B", data.StructuredType.GetFieldNames ()[1]);
+			Assert.AreEqual ("A", Collection.Extract (data.StructuredType.GetFieldIds (), 0));
+			Assert.AreEqual ("B", Collection.Extract (data.StructuredType.GetFieldIds (), 1));
 
 			Assert.AreEqual (typeof (int), data.StructuredType.GetFieldType ("A").SystemType);
 			Assert.AreEqual (10, data.GetValue ("A"));
@@ -32,10 +32,10 @@ namespace Epsitec.Common.Types
 			
 			data.SetValue ("A", UndefinedValue.Instance);
 
-			Assert.AreEqual (1, data.GetValueNames ().Length);
-			Assert.AreEqual (1, data.StructuredType.GetFieldNames ().Length);
+			Assert.AreEqual (1, Collection.Count (data.GetValueNames ()));
+			Assert.AreEqual (1, Collection.Count (data.StructuredType.GetFieldIds ()));
 
-			Assert.AreEqual ("B", data.StructuredType.GetFieldNames ()[0]);
+			Assert.AreEqual ("B", Collection.Extract (data.StructuredType.GetFieldIds (), 0));
 
 		}
 
@@ -48,11 +48,11 @@ namespace Epsitec.Common.Types
 			type.Fields["A"] = new IntegerType (0, 100);
 			type.Fields["B"] = new IntegerType (0, 100);
 
-			Assert.AreEqual (2, data.GetValueNames ().Length);
-			Assert.AreEqual (2, data.StructuredType.GetFieldNames ().Length);
+			Assert.AreEqual (2, Collection.Count (data.GetValueNames ()));
+			Assert.AreEqual (2, Collection.Count (data.StructuredType.GetFieldIds ()));
 
-			Assert.AreEqual ("A", data.StructuredType.GetFieldNames ()[0]);
-			Assert.AreEqual ("B", data.StructuredType.GetFieldNames ()[1]);
+			Assert.AreEqual ("A", Collection.Extract (data.StructuredType.GetFieldIds (), 0));
+			Assert.AreEqual ("B", Collection.Extract (data.StructuredType.GetFieldIds (), 1));
 
 			Assert.AreEqual (UndefinedValue.Instance, data.GetValue ("A"));
 			Assert.AreEqual (UndefinedValue.Instance, data.GetValue ("B"));
@@ -227,27 +227,27 @@ namespace Epsitec.Common.Types
 			StructuredType type = new StructuredType ();
 			StructuredData record = new StructuredData (null);
 
-			Assert.AreEqual (0, type.GetFieldNames ().Length);
+			Assert.AreEqual (0, Collection.Count (type.GetFieldIds ()));
 			
 			StructuredTest.Fill (type);
 
 			record = new StructuredData (type);
 
-			Assert.AreEqual ("Number1/Number2/Personne/Text1", string.Join ("/", type.GetFieldNames ()));
-			Assert.AreEqual ("Personne.Adresse/Personne.Nom/Personne.Prénom", string.Join ("/", StructuredTree.GetFieldPaths (type, "Personne")));
-			Assert.AreEqual ("Personne.Adresse.NPA/Personne.Adresse.Ville", string.Join ("/", StructuredTree.GetFieldPaths (type, "Personne.Adresse")));
+			Assert.AreEqual ("Number1/Number2/Personne/Text1", string.Join ("/", Collection.ToArray (type.GetFieldIds ())));
+			Assert.AreEqual ("Personne.Adresse/Personne.Nom/Personne.Prénom", string.Join ("/", Collection.ToArray (StructuredTree.GetFieldPaths (type, "Personne"))));
+			Assert.AreEqual ("Personne.Adresse.NPA/Personne.Adresse.Ville", string.Join ("/", Collection.ToArray (StructuredTree.GetFieldPaths (type, "Personne.Adresse"))));
 
-			Assert.IsNull (StructuredTree.GetFieldPaths (type, "Number1"));
-			Assert.IsNull (StructuredTree.GetFieldPaths (type, "Personne.Adresse.Ville"));
-			Assert.IsNull (StructuredTree.GetFieldPaths (type, "X"));
+			Assert.AreEqual (0, Collection.Count (StructuredTree.GetFieldPaths (type, "Number1")));
+			Assert.AreEqual (0, Collection.Count (StructuredTree.GetFieldPaths (type, "Personne.Adresse.Ville")));
+			Assert.AreEqual (0, Collection.Count (StructuredTree.GetFieldPaths (type, "X")));
 
-			Assert.AreEqual ("Number1/Number2/Personne/Text1", string.Join ("/", record.StructuredType.GetFieldNames ()));
-			Assert.AreEqual ("Personne.Adresse/Personne.Nom/Personne.Prénom", string.Join ("/", StructuredTree.GetFieldPaths (record.StructuredType, "Personne")));
-			Assert.AreEqual ("Personne.Adresse.NPA/Personne.Adresse.Ville", string.Join ("/", StructuredTree.GetFieldPaths (record.StructuredType, "Personne.Adresse")));
+			Assert.AreEqual ("Number1/Number2/Personne/Text1", string.Join ("/", Collection.ToArray (record.StructuredType.GetFieldIds ())));
+			Assert.AreEqual ("Personne.Adresse/Personne.Nom/Personne.Prénom", string.Join ("/", Collection.ToArray (StructuredTree.GetFieldPaths (record.StructuredType, "Personne"))));
+			Assert.AreEqual ("Personne.Adresse.NPA/Personne.Adresse.Ville", string.Join ("/", Collection.ToArray (StructuredTree.GetFieldPaths (record.StructuredType, "Personne.Adresse"))));
 
-			Assert.IsNull (StructuredTree.GetFieldPaths (record.StructuredType, "Number1"));
-			Assert.IsNull (StructuredTree.GetFieldPaths (record.StructuredType, "Personne.Adresse.Ville"));
-			Assert.IsNull (StructuredTree.GetFieldPaths (record.StructuredType, "X"));
+			Assert.AreEqual (0, Collection.Count (StructuredTree.GetFieldPaths (record.StructuredType, "Number1")));
+			Assert.AreEqual (0, Collection.Count (StructuredTree.GetFieldPaths (record.StructuredType, "Personne.Adresse.Ville")));
+			Assert.AreEqual (0, Collection.Count (StructuredTree.GetFieldPaths (record.StructuredType, "X")));
 
 			Assert.AreEqual (typeof (DecimalType), record.StructuredType.GetFieldType ("Number1").GetType ());
 			Assert.AreEqual (typeof (StringType), record.StructuredType.GetFieldType ("Text1").GetType ());

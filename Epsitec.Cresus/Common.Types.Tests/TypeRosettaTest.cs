@@ -177,15 +177,15 @@ namespace Epsitec.Common.Types
 			IStructuredType t3 = TypeRosetta.GetStructuredTypeFromTypeObject (TypeRosetta.GetTypeObjectFromValue (record));
 			IStructuredType t4 = TypeRosetta.GetStructuredTypeFromTypeObject (TypeRosetta.GetTypeObjectFromValue (data));
 
-			Assert.AreEqual (2, t1.GetFieldNames ().Length);
-			Assert.AreEqual (1, t2.GetFieldNames ().Length);
-			Assert.AreEqual (2, t3.GetFieldNames ().Length);
-			Assert.AreEqual (1, t4.GetFieldNames ().Length);
+			Assert.AreEqual (2, Collection.Count (t1.GetFieldIds ()));
+			Assert.AreEqual (1, Collection.Count (t2.GetFieldIds ()));
+			Assert.AreEqual (2, Collection.Count (t3.GetFieldIds ()));
+			Assert.AreEqual (1, Collection.Count (t4.GetFieldIds ()));
 
-			Assert.AreEqual ("X", t1.GetFieldNames ()[0]);
-			Assert.AreEqual ("Y", t1.GetFieldNames ()[1]);
-			Assert.AreEqual ("Foo", t2.GetFieldNames ()[0]);
-			Assert.AreEqual ("Self", t4.GetFieldNames ()[0]);
+			Assert.AreEqual ("X", Collection.Extract (t1.GetFieldIds (), 0));
+			Assert.AreEqual ("Y", Collection.Extract (t1.GetFieldIds (), 1));
+			Assert.AreEqual ("Foo", Collection.Extract (t2.GetFieldIds (), 0));
+			Assert.AreEqual ("Self", Collection.Extract (t4.GetFieldIds (), 0));
 
 			INamedType t1x = t1.GetFieldType ("X");
 			INamedType t2foo = t2.GetFieldType ("Foo");
