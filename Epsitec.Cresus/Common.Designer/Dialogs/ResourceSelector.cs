@@ -214,6 +214,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.access = this.module.AccessCaptions;
 
+			//	Utilise le type spécifié s'il est défini, ou le type de la ressource dans le cas contraire.
 			if (type == ResourceAccess.Type.Unknow)
 			{
 				this.resourceType = this.module.AccessCaptions.DirectGetType(this.resource);
@@ -222,6 +223,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				this.resourceType = type;
 			}
+			System.Diagnostics.Debug.Assert(this.resourceType != ResourceAccess.Type.Unknow);
 
 			this.module.AccessCaptions.BypassFilterOpenAccess(this.resourceType);
 		}

@@ -72,7 +72,8 @@ namespace Epsitec.Common.Designer.Controllers
 				if (module == null)
 				{
 					this.title.Text = "";
-					this.button.Text = this.druid;
+					this.button.Text = "";
+					this.button.PreferredHeight = 8+14*1;  // place pour une seule ligne
 				}
 				else
 				{

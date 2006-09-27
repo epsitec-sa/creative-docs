@@ -1376,10 +1376,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.lastCreatedObject = this.creatingObject;
 				this.creatingObject = null;
+
+				if (!this.ChangeTextResource(this.lastCreatedObject))  // choix d'un Druid...
+				{
+					this.lastCreatedObject.Parent.Children.Remove(this.lastCreatedObject);
+					this.lastCreatedObject.Dispose();
+					this.lastCreatedObject = null;
+
+					this.Invalidate();
+				}
+
 				this.module.MainWindow.UpdateInfoViewer();
 				this.OnUpdateCommands();
-
-				this.ChangeTextResource(this.lastCreatedObject);
 			}
 		}
 
@@ -1484,9 +1492,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
-		protected void ChangeTextResource(Widget obj)
+		protected bool ChangeTextResource(Widget obj)
 		{
-			//	Choix de la ressource de type texte pour l'objet.
+			//	Choix de la ressource (un Druid) pour l'objet.
+			//	Retourne false s'il fallait choisir un Druid et que l'utilisateur ne l'a pas fait.
 			if (obj is Button || obj is StaticText || obj is GroupBox)
 			{
 				ResourceAccess.Type type;
@@ -1503,7 +1512,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Druid druid = Druid.Parse(this.objectModifier.GetDruid(obj));
 				druid = this.module.MainWindow.DlgResourceSelector(this.module, type, druid);
 				this.objectModifier.SetDruid(obj, druid.ToString());
+
+				return !druid.IsEmpty;
 			}
+
+			return true;
 		}
 
 
