@@ -125,7 +125,16 @@ namespace Epsitec.Common.Types
 							}
 							else
 							{
-								namedType = new AutomaticNamedType (systemType);
+								IStructuredType structuredType = typeObject as IStructuredType;
+
+								if (structuredType ==  null)
+								{
+									namedType = new AutomaticNamedType (systemType);
+								}
+								else
+								{
+									namedType = new AutomaticStructuredNamedType (systemType, structuredType);
+								}
 							}
 						}
 					}
@@ -561,7 +570,7 @@ namespace Epsitec.Common.Types
 			}
 
 			#endregion
-			
+
 			#region ISystemType Members
 
 			public System.Type SystemType
@@ -574,7 +583,7 @@ namespace Epsitec.Common.Types
 
 			#endregion
 
-			#region INameCaption Members
+			#region ICaption Members
 
 			public Support.Druid CaptionId
 			{
@@ -600,7 +609,36 @@ namespace Epsitec.Common.Types
 
 			private System.Type type;
 		}
-		
+
+		#endregion
+
+		#region AutomaticNamedType Class
+
+		private class AutomaticStructuredNamedType : AutomaticNamedType, IStructuredType
+		{
+			public AutomaticStructuredNamedType(System.Type type, IStructuredType structuredType)
+				: base (type)
+			{
+				this.structuredType = structuredType;
+			}
+
+			#region IStructuredType Members
+
+			public IEnumerable<string> GetFieldIds()
+			{
+				return this.structuredType.GetFieldIds ();
+			}
+
+			public StructuredTypeField GetField(string fieldId)
+			{
+				return this.structuredType.GetField (fieldId);
+			}
+
+			#endregion
+
+			private IStructuredType structuredType;
+		}
+
 		#endregion
 
 		#region Tools Class
