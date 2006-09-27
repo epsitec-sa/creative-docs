@@ -121,10 +121,9 @@ namespace Epsitec.Common.Designer
 
 			if (obj is Button)
 			{
-				obj.CommandObject = Command.Get(d);
+				obj.CommandDruid = d;
 			}
-
-			if (obj is StaticText || obj is GroupBox)
+			else if (obj is StaticText || obj is GroupBox)
 			{
 				obj.CaptionDruid = d;
 			}
@@ -137,14 +136,9 @@ namespace Epsitec.Common.Designer
 
 			if (obj is Button)
 			{
-				Command command = obj.CommandObject;
-				if (command != null)
-				{
-					druid = command.Caption.Druid;
-				}
+				druid = obj.CommandDruid;
 			}
-
-			if (obj is StaticText || obj is GroupBox)
+			else if (obj is StaticText || obj is GroupBox)
 			{
 				druid = obj.CaptionDruid;
 			}

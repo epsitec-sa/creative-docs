@@ -30,6 +30,11 @@ namespace Epsitec.Common.Types.Collections
 		{
 		}
 
+		public void Add(StructuredTypeField field)
+		{
+			this.Add (field.Id, field);
+		}
+
 		public void Add(string id, INamedType type)
 		{
 			if (string.IsNullOrEmpty (id))
