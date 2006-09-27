@@ -38,7 +38,7 @@ namespace Epsitec.Common.UI
 			IStructuredType structuredType = collection as IStructuredType;
 
 			Assert.IsNotNull (structuredType);
-			Assert.AreEqual (source1.ObjectType, structuredType.GetField ("A").Type);
+			Assert.AreEqual (source1.ObjectType.SystemType, structuredType.GetField ("A").Type.SystemType);
 
 			foreach (string name in collection.GetFieldIds ())
 			{
@@ -177,11 +177,11 @@ namespace Epsitec.Common.UI
 
 			Assert.IsNotNull (type);
 			
-			Assert.AreEqual (DependencyObjectType.FromSystemType (typeof (Widgets.Visual)), StructuredTree.GetField (type, "A").Type);
+			Assert.AreEqual (typeof (Widgets.Visual), StructuredTree.GetField (type, "A").Type.SystemType);
 			Assert.AreEqual (typeof (DynamicStructuredType), StructuredTree.GetField (type, "B").Type.GetType ());
-			Assert.AreEqual (Widgets.Visual.NameProperty, StructuredTree.GetField (type, "A.Name").Type);
-			Assert.AreEqual (typeof (string), StructuredTree.GetField (type, "B.Name").Type);
-			Assert.AreEqual (typeof (int), StructuredTree.GetField (type, "B.BirthDateYear").Type);
+			Assert.AreEqual (typeof (StringType), StructuredTree.GetField (type, "A.Name").Type.GetType ());
+			Assert.AreEqual (typeof (StringType), StructuredTree.GetField (type, "B.Name").Type.GetType ());
+			Assert.AreEqual (typeof (IntegerType), StructuredTree.GetField (type, "B.BirthDateYear").Type.GetType ());
 
 			Assert.AreEqual (typeof (Widgets.Visual), Types.TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "A").Type));
 			Assert.AreEqual (null, Types.TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetField (type, "B").Type));
