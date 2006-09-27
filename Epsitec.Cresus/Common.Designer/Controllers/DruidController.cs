@@ -29,25 +29,25 @@ namespace Epsitec.Common.Designer.Controllers
 
 		protected override void CreateUserInterface(INamedType namedType, string valueName, Caption caption)
 		{
-			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
+			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
-			this.title = new StaticText();
-			this.title.HorizontalAlignment = HorizontalAlignment.Stretch;
-			this.title.VerticalAlignment = VerticalAlignment.Top;
+			this.group = new Widget();
+			this.group.HorizontalAlignment = HorizontalAlignment.Stretch;
+			this.group.VerticalAlignment = VerticalAlignment.Stretch;
+			this.group.Dock = DockStyle.Stacked;
+
+			this.title = new StaticText(this.group);
+			this.title.PreferredHeight = 22;
 			this.title.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
-			this.title.Dock = DockStyle.Stacked;
-			this.title.PreferredHeight = 26;
+			this.title.Dock = DockStyle.Top;
 
-			this.button = new Button();
+			this.button = new Button(this.group);
 			this.button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.button.TabIndex = 1;
 			this.button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.button.HorizontalAlignment = HorizontalAlignment.Stretch;
-			this.button.VerticalAlignment = VerticalAlignment.Stretch;
-			this.button.Dock = DockStyle.Stacked;
+			this.button.Dock = DockStyle.Fill;
 
-			this.AddWidget(this.title);
-			this.AddWidget(this.button);
+			this.AddWidget(this.group);
 		}
 
 		protected override void PrepareUserInterfaceDisposal()
@@ -73,6 +73,7 @@ namespace Epsitec.Common.Designer.Controllers
 				{
 					this.title.Text = "";
 					this.button.Text = this.druid;
+					this.button.PreferredHeight = 8+14*1;  // place pour une seule ligne
 				}
 				else
 				{
@@ -93,6 +94,8 @@ namespace Epsitec.Common.Designer.Controllers
 						this.button.PreferredHeight = 8+14*2;  // place pour deux lignes
 					}
 				}
+
+				this.group.PreferredHeight = this.title.PreferredHeight + this.button.PreferredHeight;
 			}
 		}
 
@@ -126,14 +129,13 @@ namespace Epsitec.Common.Designer.Controllers
 		#region IGridPermeable Members
 		IEnumerable<Widgets.Layouts.PermeableCell> Widgets.Layouts.IGridPermeable.GetChildren(int column, int row, int columnSpan, int rowSpan)
 		{
-			yield return new Widgets.Layouts.PermeableCell(this.title, column+0, row+0, columnSpan, 1);
-			yield return new Widgets.Layouts.PermeableCell(this.button, column+0, row+1, columnSpan, rowSpan-1);
+			yield return new Widgets.Layouts.PermeableCell(this.group, column, row, columnSpan, rowSpan);
 		}
 
 		bool Widgets.Layouts.IGridPermeable.UpdateGridSpan(ref int columnSpan, ref int rowSpan)
 		{
 			columnSpan = System.Math.Max(columnSpan, 2);
-			rowSpan    = System.Math.Max(rowSpan, 2);
+			rowSpan    = System.Math.Max(rowSpan, 1);
 			
 			return true;
 		}
@@ -141,6 +143,7 @@ namespace Epsitec.Common.Designer.Controllers
 
 
 		private string					druid;
+		private Widget					group;
 		private StaticText				title;
 		private Button					button;
 	}
