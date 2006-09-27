@@ -859,7 +859,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			//	Crée une case du menu des actions à refaire/annuler.
 			string icon = Principal.GetSelectorTypeStretchIcon(type);
-			string name = ((int)type).ToString();
+			string name = ((int)type).ToString(System.Globalization.CultureInfo.InvariantCulture);
 			string cmd  = "SelectorStretchTypeDo";
 			
 			Misc.CreateStructuredCommandWithName (cmd);

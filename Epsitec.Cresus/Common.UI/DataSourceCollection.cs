@@ -23,16 +23,27 @@ namespace Epsitec.Common.UI
 		/// <summary>
 		/// Adds a named data source.
 		/// </summary>
-		/// <param name="name">The name of the datasource.</param>
-		/// <param name="source">The datasource.</param>
+		/// <param name="name">The name of the data source.</param>
+		/// <param name="source">The data source.</param>
 		public void AddDataSource(string name, IStructuredData source)
+		{
+			this.AddDataSource (name, source, Support.Druid.Empty);
+		}
+
+		/// <summary>
+		/// Adds a named data source.
+		/// </summary>
+		/// <param name="name">The name of the data source.</param>
+		/// <param name="source">The data source.</param>
+		/// <param name="captionId">The caption DRUID for the data source.</param>
+		public void AddDataSource(string name, IStructuredData source, Support.Druid captionId)
 		{
 			if (this.Contains (name))
 			{
 				throw new System.InvalidOperationException (string.Format ("Cannot insert duplicate data source with name '{0}'", name));
 			}
 			
-			this.items.Add (new ItemRecord (name, source));
+			this.items.Add (new ItemRecord (name, source, captionId));
 		}
 
 		/// <summary>
@@ -77,9 +88,7 @@ namespace Epsitec.Common.UI
 			object typeObject = TypeRosetta.GetTypeObjectFromValue (data);
 			INamedType namedType = TypeRosetta.GetNamedTypeFromTypeObject (typeObject);
 
-			//	TODO: add record.CaptionId
-
-			return new StructuredTypeField (fieldId, namedType);
+			return new StructuredTypeField (fieldId, namedType, record.CaptionId);
 		}
 
 		/// <summary>
@@ -195,18 +204,18 @@ namespace Epsitec.Common.UI
 			/// </summary>
 			/// <param name="name">The name of the item.</param>
 			/// <param name="data">The data of the item.</param>
-			public ItemRecord(string name, IStructuredData data)
+			public ItemRecord(string name, IStructuredData data, Support.Druid captionId)
 			{
 				this.data = data;
 				this.name = name;
-				this.caption = name;
+				this.captionId = captionId;
 			}
 
 			/// <summary>
 			/// Gets the datasource.
 			/// </summary>
 			/// <value>The datasource.</value>
-			public IStructuredData Data
+			public IStructuredData				Data
 			{
 				get
 				{
@@ -218,7 +227,7 @@ namespace Epsitec.Common.UI
 			/// Gets the name of the datasource.
 			/// </summary>
 			/// <value>The name of the datasource.</value>
-			public string Name
+			public string						Name
 			{
 				get
 				{
@@ -227,18 +236,14 @@ namespace Epsitec.Common.UI
 			}
 
 			/// <summary>
-			/// Gets or sets the caption of the datasource.
+			/// Gets or sets the caption DRUID of the datasource.
 			/// </summary>
-			/// <value>The caption of the datasource.</value>
-			public string Caption
+			/// <value>The caption DRUID of the datasource.</value>
+			public Support.Druid				CaptionId
 			{
 				get
 				{
-					return this.caption;
-				}
-				set
-				{
-					this.caption = value;
+					return this.captionId;
 				}
 			}
 
@@ -246,7 +251,7 @@ namespace Epsitec.Common.UI
 			/// Gets a value indicating whether this record is empty.
 			/// </summary>
 			/// <value><c>true</c> if this record is empty; otherwise, <c>false</c>.</value>
-			public bool IsEmpty
+			public bool							IsEmpty
 			{
 				get
 				{
@@ -259,9 +264,9 @@ namespace Epsitec.Common.UI
 			/// </summary>
 			public static readonly ItemRecord Empty = new ItemRecord ();
 
-			private IStructuredData data;
-			private string name;
-			private string caption;
+			private IStructuredData				data;
+			private string						name;
+			private Support.Druid				captionId;
 		}
 		
 		#endregion

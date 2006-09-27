@@ -233,17 +233,17 @@ namespace Epsitec.Common.Types
 
 			record = new StructuredData (type);
 
-			Assert.AreEqual ("Number1/Number2/Personne/Text1", string.Join ("/", Collection.ToArray (type.GetFieldIds ())));
-			Assert.AreEqual ("Personne.Adresse/Personne.Nom/Personne.Prénom", string.Join ("/", Collection.ToArray (StructuredTree.GetFieldPaths (type, "Personne"))));
-			Assert.AreEqual ("Personne.Adresse.NPA/Personne.Adresse.Ville", string.Join ("/", Collection.ToArray (StructuredTree.GetFieldPaths (type, "Personne.Adresse"))));
+			Assert.AreEqual ("Number1/Number2/Personne/Text1", string.Join ("/", Collection.ToSortedArray (type.GetFieldIds ())));
+			Assert.AreEqual ("Personne.Adresse/Personne.Nom/Personne.Prénom", string.Join ("/", Collection.ToSortedArray (StructuredTree.GetFieldPaths (type, "Personne"))));
+			Assert.AreEqual ("Personne.Adresse.NPA/Personne.Adresse.Ville", string.Join ("/", Collection.ToSortedArray (StructuredTree.GetFieldPaths (type, "Personne.Adresse"))));
 
 			Assert.AreEqual (0, Collection.Count (StructuredTree.GetFieldPaths (type, "Number1")));
 			Assert.AreEqual (0, Collection.Count (StructuredTree.GetFieldPaths (type, "Personne.Adresse.Ville")));
 			Assert.AreEqual (0, Collection.Count (StructuredTree.GetFieldPaths (type, "X")));
 
-			Assert.AreEqual ("Number1/Number2/Personne/Text1", string.Join ("/", Collection.ToArray (record.StructuredType.GetFieldIds ())));
-			Assert.AreEqual ("Personne.Adresse/Personne.Nom/Personne.Prénom", string.Join ("/", Collection.ToArray (StructuredTree.GetFieldPaths (record.StructuredType, "Personne"))));
-			Assert.AreEqual ("Personne.Adresse.NPA/Personne.Adresse.Ville", string.Join ("/", Collection.ToArray (StructuredTree.GetFieldPaths (record.StructuredType, "Personne.Adresse"))));
+			Assert.AreEqual ("Number1/Number2/Personne/Text1", string.Join ("/", Collection.ToSortedArray (record.StructuredType.GetFieldIds ())));
+			Assert.AreEqual ("Personne.Adresse/Personne.Nom/Personne.Prénom", string.Join ("/", Collection.ToSortedArray (StructuredTree.GetFieldPaths (record.StructuredType, "Personne"))));
+			Assert.AreEqual ("Personne.Adresse.NPA/Personne.Adresse.Ville", string.Join ("/", Collection.ToSortedArray (StructuredTree.GetFieldPaths (record.StructuredType, "Personne.Adresse"))));
 
 			Assert.AreEqual (0, Collection.Count (StructuredTree.GetFieldPaths (record.StructuredType, "Number1")));
 			Assert.AreEqual (0, Collection.Count (StructuredTree.GetFieldPaths (record.StructuredType, "Personne.Adresse.Ville")));

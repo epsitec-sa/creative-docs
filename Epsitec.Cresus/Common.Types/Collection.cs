@@ -46,6 +46,7 @@ namespace Epsitec.Common.Types
 			list.AddRange (collection);
 			return list;
 		}
+		
 		public static T[] ToArray<T>(IEnumerable<T> collection)
 		{
 			List<T> list = new List<T> ();
@@ -53,6 +54,15 @@ namespace Epsitec.Common.Types
 			return list.ToArray ();
 		}
 
+		public static T[] ToSortedArray<T>(IEnumerable<T> collection)
+		{
+			List<T> list = new List<T> ();
+			list.AddRange (collection);
+			T[] array = list.ToArray ();
+			System.Array.Sort (array);
+			return array;
+		}
+		
 		public static bool ContainsAll<T>(IEnumerable<T> collection, ICollection<T> values)
 		{
 			List<T> ignore = new List<T> ();
