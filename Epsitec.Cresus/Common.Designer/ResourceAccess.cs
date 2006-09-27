@@ -98,29 +98,35 @@ namespace Epsitec.Common.Designer
 
 		public static string TypeDisplayName(Type type)
 		{
-			//	Retourne le nom correspondant à un type.
+			//	Retourne le nom au pluriel correspondant à un type.
+			return ResourceAccess.TypeDisplayName(type, true);
+		}
+
+		public static string TypeDisplayName(Type type, bool many)
+		{
+			//	Retourne le nom au singulier ou au pluriel correspondant à un type.
 			switch (type)
 			{
 				case Type.Strings:
-					return Res.Strings.BundleType.Strings;
+					return many ? Res.Strings.BundleType.Strings : Res.Strings.BundleType.String;
 
 				case Type.Captions:
-					return Res.Strings.BundleType.Captions;
+					return many ? Res.Strings.BundleType.Captions : Res.Strings.BundleType.Caption;
 
 				case Type.Commands:
-					return Res.Strings.BundleType.Commands;
+					return many ? Res.Strings.BundleType.Commands : Res.Strings.BundleType.Command;
 
 				case Type.Types:
-					return Res.Strings.BundleType.Types;
+					return many ? Res.Strings.BundleType.Types : Res.Strings.BundleType.Type;
 
 				case Type.Values:
-					return "Valeurs";  // TODO: Res.Strings.BundleType.Values;
+					return many ? Res.Strings.BundleType.Values : Res.Strings.BundleType.Value;
 
 				case Type.Panels:
-					return Res.Strings.BundleType.Panels;
+					return many ? Res.Strings.BundleType.Panels : Res.Strings.BundleType.Panel;
 
 				case Type.Scripts:
-					return Res.Strings.BundleType.Scripts;
+					return many ? Res.Strings.BundleType.Scripts : Res.Strings.BundleType.Script;
 			}
 
 			return "?";

@@ -18,12 +18,20 @@
   <data name="Ribbon.Section.Move" id="0F">Déplacement</data>
   <data name="Ribbon.Section.MoveHorizontal" id="0G">Déplacement horizontal</data>
   <data name="Ribbon.Section.MoveVertical" id="0H">Déplacement vertical</data>
+  <data name="BundleType.String" id="0J6" mod="1">Texte</data>
+  <data name="BundleType.Panel" id="0K6" mod="1">Interface</data>
+  <data name="BundleType.Script" id="0L6" mod="1">Script</data>
+  <data name="BundleType.Caption" id="0M6" mod="1">Légende</data>
+  <data name="BundleType.Command" id="0N6" mod="1">Commande</data>
+  <data name="BundleType.Type" id="0O6" mod="1">Type</data>
+  <data name="BundleType.Value" id="0P6" mod="1">Valeur</data>
   <data name="BundleType.Strings" id="0I">Textes</data>
   <data name="BundleType.Panels" id="0J">Interfaces</data>
   <data name="BundleType.Scripts" id="0K">Scripts</data>
   <data name="BundleType.Captions" id="075" mod="1">Légendes</data>
   <data name="BundleType.Commands" id="085" mod="1">Commandes</data>
   <data name="BundleType.Types" id="095" mod="1">Types</data>
+  <data name="BundleType.Values" id="0I6" mod="1">Valeurs</data>
   <data name="Viewers.Strings.Reference" id="0L">&lt;b&gt;{0}&lt;/b&gt; (référence)</data>
   <data name="Viewers.Strings.Edit" id="0M">Textes</data>
   <data name="Viewers.Strings.About" id="0N">Commentaires</data>
