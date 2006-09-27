@@ -448,7 +448,10 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				foreach (PermeableCell cell in permeable.GetChildren (column, row, columnSpan, rowSpan))
 				{
-					this.LayoutChild (rect, x, y, b, cell.Visual, cell.Column, cell.Row, cell.ColumnSpan, cell.RowSpan);
+					if (cell.Visual != null)
+					{
+						this.LayoutChild (rect, x, y, b, cell.Visual, cell.Column, cell.Row, cell.ColumnSpan, cell.RowSpan);
+					}
 				}
 			}
 		}
@@ -616,7 +619,10 @@ namespace Epsitec.Common.Widgets.Layouts
 					{
 						foreach (PermeableCell cell in permeable.GetChildren (column, row, columnSpan, rowSpan))
 						{
-							this.ProcessChild (cell.Visual, cell.Column, cell.Row);
+							if (cell.Visual != null)
+							{
+								this.ProcessChild (cell.Visual, cell.Column, cell.Row);
+							}
 						}
 					}
 				}
