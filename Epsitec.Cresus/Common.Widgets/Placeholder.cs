@@ -123,7 +123,17 @@ namespace Epsitec.Common.Widgets
 			{
 				Layouts.IGridPermeable helper = null;
 
-				if (this.controller != null)
+				if ((this.controller == null) &&
+					(this.controllerName != null))
+				{
+					IController temp = Controllers.Factory.CreateController (this.controllerName, this.controllerParameter);
+
+					if (temp != null)
+					{
+						helper = temp.GetGridPermeableLayoutHelper ();
+					}
+				}
+				else if (this.controller != null)
 				{
 					helper = this.controller.GetGridPermeableLayoutHelper ();
 				}

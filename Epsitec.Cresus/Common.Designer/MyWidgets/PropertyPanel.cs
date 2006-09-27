@@ -150,8 +150,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void AddPlaceHolder(Placeholder placeholder)
 		{
-			this.grid.RowDefinitions.Add(new RowDefinition());
-			int row = this.grid.RowDefinitions.Count-1;
+			int columnSpan = 2;
+			int rowSpan = 1;
+
+			IGridPermeable permeable = placeholder as IGridPermeable;
+
+			if (permeable != null)
+			{
+				permeable.UpdateGridSpan (ref columnSpan, ref rowSpan);
+			}
+
+			int row = this.grid.RowDefinitions.Count;
+
+			for (int i = 0; i < rowSpan; i++)
+			{
+				this.grid.RowDefinitions.Add (new RowDefinition ());
+			}
 			
 			if (row > 0)
 			{
@@ -160,7 +174,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			GridLayoutEngine.SetColumn(placeholder, 0);
 			GridLayoutEngine.SetRow(placeholder, row);
-			GridLayoutEngine.SetColumnSpan(placeholder, 2);
+			GridLayoutEngine.SetColumnSpan(placeholder, columnSpan);
+			GridLayoutEngine.SetRowSpan (placeholder, rowSpan);
 			this.container.Children.Add(placeholder);
 		}
 
