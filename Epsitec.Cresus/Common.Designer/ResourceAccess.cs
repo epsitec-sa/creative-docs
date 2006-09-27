@@ -2292,6 +2292,11 @@ namespace Epsitec.Common.Designer
 			//	Retourne le type en fonction du préfixe du nom.
 			string filter;
 
+			if (string.IsNullOrEmpty(name))
+			{
+				return Type.Unknow;
+			}
+
 			filter = ResourceAccess.GetFixFilter(Type.Captions);
 			if (name.StartsWith(filter))
 			{
