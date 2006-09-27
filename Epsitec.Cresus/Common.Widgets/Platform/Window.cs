@@ -2200,6 +2200,8 @@ namespace Epsitec.Common.Widgets.Platform
 			this.UpdateLayeredWindow ();
 			
 			System.Windows.Forms.Application.DoEvents ();
+
+			ToolTip.HideAllToolTips ();
 			
 			this.ShowDialog (this.Owner);
 		}

@@ -1070,6 +1070,12 @@ namespace Epsitec.Common.Widgets
 
 		System.IntPtr Support.Platform.IFileOperationWindow.GetPlatformHandle()
 		{
+			//	Cheat: we know that if somebody asks us for the platform handle, then
+			//	this means that a modal dialog window will soon be opened; so, hide the
+			//	tool tips :
+			
+			ToolTip.HideAllToolTips ();
+			
 			return this.window.Handle;
 		}
 
