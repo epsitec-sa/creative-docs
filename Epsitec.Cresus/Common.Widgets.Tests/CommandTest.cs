@@ -27,8 +27,8 @@ namespace Epsitec.Common.Widgets
 
 			Command command = Command.Get (Druid.Parse ("[0005]"));
 
-			Command tempCmd1 = Command.CreateTemporary (caption1);
-			Command tempCmd2 = Command.CreateTemporary (caption2);
+			Command tempCmd1 = Command.CreateTemporary (caption1, Support.Resources.DefaultManager);
+			Command tempCmd2 = Command.CreateTemporary (caption2, Support.Resources.DefaultManager);
 
 			Assert.AreEqual (caption1, command.Caption);
 			Assert.AreEqual (caption2, caption3);

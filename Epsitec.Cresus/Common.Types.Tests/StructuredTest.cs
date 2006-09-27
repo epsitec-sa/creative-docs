@@ -25,7 +25,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("A", Collection.Extract (data.StructuredType.GetFieldIds (), 0));
 			Assert.AreEqual ("B", Collection.Extract (data.StructuredType.GetFieldIds (), 1));
 
-			Assert.AreEqual (typeof (int), data.StructuredType.GetFieldType ("A").SystemType);
+			Assert.AreEqual (typeof (int), data.StructuredType.GetField ("A").Type.SystemType);
 			Assert.AreEqual (10, data.GetValue ("A"));
 			Assert.AreEqual (20, data.GetValue ("B"));
 			Assert.AreEqual (UndefinedValue.Instance, data.GetValue ("X"));
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Types
 			data.SetValue ("B", 20);
 
 			Assert.AreEqual (2, data.InternalGetValueCount ());
-			Assert.AreEqual (typeof (IntegerType), data.StructuredType.GetFieldType ("A").GetType ());
+			Assert.AreEqual (typeof (IntegerType), data.StructuredType.GetField ("A").Type.GetType ());
 			Assert.AreEqual (10, data.GetValue ("A"));
 			Assert.AreEqual (20, data.GetValue ("B"));
 			
@@ -170,18 +170,18 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		public void CheckStructuredTreeGetFieldType()
+		public void CheckStructuredTreeGetField()
 		{
 			StructuredType record = new StructuredType ();
 
 			StructuredTest.Fill (record);
 
-			Assert.IsTrue (StructuredTree.GetFieldType (record, "Number1") is DecimalType);
-			Assert.IsTrue (StructuredTree.GetFieldType (record, "Text1") is StringType);
+			Assert.IsTrue (StructuredTree.GetField (record, "Number1").Type is DecimalType);
+			Assert.IsTrue (StructuredTree.GetField (record, "Text1").Type is StringType);
 
-			Assert.IsTrue (StructuredTree.GetFieldType (record, "Personne") is StructuredType);
-			Assert.IsTrue (StructuredTree.GetFieldType (record, "Personne.Adresse") is StructuredType);
-			Assert.IsTrue (StructuredTree.GetFieldType (record, "Personne.Adresse.NPA") is IntegerType);
+			Assert.IsTrue (StructuredTree.GetField (record, "Personne").Type is StructuredType);
+			Assert.IsTrue (StructuredTree.GetField (record, "Personne.Adresse").Type is StructuredType);
+			Assert.IsTrue (StructuredTree.GetField (record, "Personne.Adresse.NPA").Type is IntegerType);
 		}
 
 		[Test]
@@ -249,9 +249,9 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (0, Collection.Count (StructuredTree.GetFieldPaths (record.StructuredType, "Personne.Adresse.Ville")));
 			Assert.AreEqual (0, Collection.Count (StructuredTree.GetFieldPaths (record.StructuredType, "X")));
 
-			Assert.AreEqual (typeof (DecimalType), record.StructuredType.GetFieldType ("Number1").GetType ());
-			Assert.AreEqual (typeof (StringType), record.StructuredType.GetFieldType ("Text1").GetType ());
-			Assert.AreEqual (typeof (StructuredType), record.StructuredType.GetFieldType ("Personne").GetType ());
+			Assert.AreEqual (typeof (DecimalType), record.StructuredType.GetField ("Number1").Type.GetType ());
+			Assert.AreEqual (typeof (StringType), record.StructuredType.GetField ("Text1").Type.GetType ());
+			Assert.AreEqual (typeof (StructuredType), record.StructuredType.GetField ("Personne").Type.GetType ());
 
 			Assert.IsTrue (StructuredTree.IsPathValid (type, "Number1"));
 			Assert.IsTrue (StructuredTree.IsPathValid (type, "Personne.Nom"));
@@ -282,8 +282,8 @@ namespace Epsitec.Common.Types
 			StructuredType restoredType = TypeRosetta.CreateTypeObject (caption) as StructuredType;
 
 			Assert.AreEqual (type.Fields.Count, restoredType.Fields.Count);
-			Assert.AreEqual (type.GetFieldType ("Name").GetType ().Name, restoredType.GetFieldType ("Name").GetType ().Name);
-			Assert.AreEqual (type.GetFieldType ("Age").GetType ().Name, restoredType.GetFieldType ("Age").GetType ().Name);
+			Assert.AreEqual (type.GetField ("Name").Type.GetType ().Name, restoredType.GetField ("Name").Type.GetType ().Name);
+			Assert.AreEqual (type.GetField ("Age").Type.GetType ().Name, restoredType.GetField ("Age").Type.GetType ().Name);
 		}
 
 		private static void Fill(StructuredType record)

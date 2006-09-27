@@ -142,7 +142,7 @@ namespace Epsitec.Common.Support
 		{
 			Caption caption = new Caption ();
 			caption.DefineDruid (Druid.Parse ("[4001]"));
-			Command command = Command.CreateTemporary (caption);
+			Command command = Command.CreateTemporary (caption, Support.Resources.DefaultManager);
 
 			command.DefineCommandType (CommandType.Structured);
 

@@ -343,7 +343,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (command.CommandType == CommandType.Structured)
 			{
-				object typeObject = command.StructuredType.GetFieldType ("Name");
+				object typeObject = command.StructuredType.GetField ("Name").Type;
 
 				if (typeObject is Types.StringType)
 				{

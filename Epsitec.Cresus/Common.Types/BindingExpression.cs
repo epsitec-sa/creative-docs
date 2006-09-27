@@ -136,6 +136,8 @@ namespace Epsitec.Common.Types
 					break;
 
 				case DataSourceType.StructuredData:
+					captionId = BindingExpression.GetSourceCaptionId ((IStructuredData) this.sourceObject, (string) this.sourceProperty);
+					break;
 				case DataSourceType.SourceItself:
 				case DataSourceType.Resource:
 					captionId = Support.Druid.Empty;
@@ -156,7 +158,7 @@ namespace Epsitec.Common.Types
 					break;
 				
 				case DataSourceType.StructuredData:
-					typeObject = this.GetTypeObjectFromStructuredData ((IStructuredData) this.sourceObject, (string) this.sourceProperty);
+					typeObject = BindingExpression.GetTypeObjectFromStructuredData ((IStructuredData) this.sourceObject, (string) this.sourceProperty);
 					break;
 					
 				case DataSourceType.SourceItself:
@@ -212,7 +214,7 @@ namespace Epsitec.Common.Types
 					break;
 
 				case DataSourceType.StructuredData:
-					type = this.GetSystemTypeFromStructuredData (this.sourceObject as IStructuredData, (string) this.sourceProperty);
+					type = BindingExpression.GetSystemTypeFromStructuredData (this.sourceObject as IStructuredData, (string) this.sourceProperty);
 					break;
 
 				default:
@@ -581,28 +583,27 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private System.Type GetSystemTypeFromStructuredData(IStructuredData source, string name)
+		private static System.Type GetSystemTypeFromStructuredData(IStructuredData source, string fieldId)
 		{
 			IStructuredTypeProvider typeProvider = source as IStructuredTypeProvider;
 
 			if (typeProvider != null)
 			{
 				IStructuredType structuredType = typeProvider.GetStructuredType ();
-				object typeObject = structuredType.GetFieldType (name);
-				return TypeRosetta.GetSystemTypeFromTypeObject (typeObject);
+				return structuredType.GetField (fieldId).Type.SystemType;
 			}
 
 			return null;
 		}
 
-		private object GetTypeObjectFromStructuredData(IStructuredData source, string name)
+		private static object GetTypeObjectFromStructuredData(IStructuredData source, string fieldId)
 		{
 			IStructuredTypeProvider typeProvider = source as IStructuredTypeProvider;
 
 			if (typeProvider != null)
 			{
 				IStructuredType structuredType = typeProvider.GetStructuredType ();
-				return structuredType.GetFieldType (name);
+				return structuredType.GetField (fieldId).Type;
 			}
 
 			return null;
@@ -809,20 +810,40 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private static Support.Druid GetSourceCaptionId(DependencyObject dependencyObject, DependencyProperty dependencyProperty)
+		private static Support.Druid GetSourceCaptionId(DependencyObject source, DependencyProperty property)
 		{
-			if ((dependencyObject == null) ||
-				(dependencyProperty == null))
+			if ((source == null) ||
+				(property == null))
 			{
 				return Support.Druid.Empty;
 			}
 			else
 			{
-				return dependencyProperty.GetMetadata (dependencyObject).CaptionId;
+				return property.GetMetadata (source).CaptionId;
 			}
 		}
 
-		
+		private static Support.Druid GetSourceCaptionId(IStructuredData source, string fieldId)
+		{
+			IStructuredTypeProvider typeProvider = source as IStructuredTypeProvider;
+
+			if ((typeProvider == null) ||
+				(fieldId == null))
+			{
+				return Support.Druid.Empty;
+			}
+			
+			IStructuredType structuredType = typeProvider.GetStructuredType ();
+
+			if (structuredType == null)
+			{
+				return Support.Druid.Empty;
+			}
+
+			StructuredTypeField field = structuredType.GetField (fieldId);
+
+			return field.CaptionId;
+		}
 		private Binding							binding;
 		private DependencyObject				targetObject;			//	immutable
 		private DependencyProperty				targetPropery;			//	immutable
