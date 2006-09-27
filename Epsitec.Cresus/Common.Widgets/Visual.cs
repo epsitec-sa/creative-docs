@@ -119,6 +119,28 @@ namespace Epsitec.Common.Widgets
 				this.SetValue (Visual.CommandObjectProperty, value);
 			}
 		}
+
+		public Support.Druid					CommandDruid
+		{
+			get
+			{
+				Command command = this.CommandObject;
+				return command == null ? Support.Druid.Empty : command.Caption.Druid;
+			}
+			set
+			{
+				if (value.IsEmpty)
+				{
+					this.CommandObject = null;
+				}
+				else
+				{
+					Support.ResourceManager manager = Visual.cachedResourceManager ?? Helpers.VisualTree.FindResourceManager (this);
+
+					this.CommandObject = Command.Get (value, manager);
+				}
+			}
+		}
 		
 		public string							CommandName
 		{

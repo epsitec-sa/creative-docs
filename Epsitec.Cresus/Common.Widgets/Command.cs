@@ -22,14 +22,19 @@ namespace Epsitec.Common.Widgets
 		}
 
 		protected Command(string id)
+			: this (id, Support.Resources.DefaultManager)
+		{
+		}
+		
+		protected Command(string id, Support.ResourceManager manager)
 			: this ()
 		{
 			if (string.IsNullOrEmpty (id))
 			{
 				throw new System.ArgumentNullException ("id");
 			}
-			
-			this.InitializeCommandId (id);
+
+			this.InitializeCommandId (id, manager);
 		}
 
 		protected Command(string id, params Shortcut[] shortcuts)
@@ -39,25 +44,30 @@ namespace Epsitec.Common.Widgets
 		}
 
 		protected Command(Support.Druid druid)
+			: this (druid, Support.Resources.DefaultManager)
+		{
+		}
+		
+		protected Command(Support.Druid druid, Support.ResourceManager manager)
 			: this ()
 		{
 			string id = druid.ToResourceId ();
 			
-			this.InitializeCommandId (id);
+			this.InitializeCommandId (id, manager);
 		}
 
-		protected Command(Types.Caption caption)
+		protected Command(Types.Caption caption, Support.ResourceManager manager)
 			: this ()
 		{
 			this.uniqueId = -1;
 			this.caption  = caption;
 			
-			this.InitializeCommandId (caption.Druid.ToResourceId ());
+			this.InitializeCommandId (caption.Druid.ToResourceId (), manager);
 		}
 
-		public static Command CreateTemporary(Types.Caption caption)
+		public static Command CreateTemporary(Types.Caption caption, Support.ResourceManager manager)
 		{
-			Command command = new Command (caption);
+			Command command = new Command (caption, manager);
 			command.temporary = true;
 			return command;
 		}
@@ -326,12 +336,17 @@ namespace Epsitec.Common.Widgets
 		/// <returns>The command.</returns>
 		public static Command Get(Support.Druid druid)
 		{
+			return Command.Get (druid, null);
+		}
+
+		public static Command Get(Support.Druid druid, Support.ResourceManager manager)
+		{
 			if (druid.IsEmpty)
 			{
 				return null;
 			}
 			
-			return Command.Get (druid.ToResourceId ());
+			return Command.Get (druid.ToResourceId (), manager);
 		}
 
 		/// <summary>
@@ -341,6 +356,11 @@ namespace Epsitec.Common.Widgets
 		/// <param name="id">The command id.</param>
 		/// <returns>The command.</returns>
 		public static Command Get(string id)
+		{
+			return Command.Get (id, null);
+		}
+
+		public static Command Get(string id, Support.ResourceManager manager)
 		{
 			if (string.IsNullOrEmpty (id))
 			{
@@ -353,7 +373,7 @@ namespace Epsitec.Common.Widgets
 
 				if (command == null)
 				{
-					command = new Command (id);
+					command = new Command (id, manager);
 				}
 				
 				return command;
@@ -551,10 +571,15 @@ namespace Epsitec.Common.Widgets
 		
 		#region Internal Methods
 
-		private void InitializeCommandId(string commandId)
+		private void InitializeCommandId(string commandId, Support.ResourceManager manager)
 		{
 			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (commandId) == false);
 			System.Diagnostics.Debug.Assert (this.commandId == null);
+
+			if (manager == null)
+			{
+				manager = Support.Resources.DefaultManager;
+			}
 
 			if (this.uniqueId == 0)
 			{
@@ -576,7 +601,7 @@ namespace Epsitec.Common.Widgets
 
 			if (Support.Druid.TryParse (commandId, out druid))
 			{
-				this.InitializeDruid (druid);
+				this.InitializeDruid (druid, manager);
 			}
 			else
 			{
@@ -612,8 +637,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void InitializeDruid(Support.Druid druid)
+		private void InitializeDruid(Support.Druid druid, Support.ResourceManager manager)
 		{
+			System.Diagnostics.Debug.Assert (manager != null);
 			System.Diagnostics.Debug.Assert (druid.IsValid);
 			System.Diagnostics.Debug.Assert (this.captionId == Support.Druid.Empty);
 
@@ -623,7 +649,7 @@ namespace Epsitec.Common.Widgets
 
 			if (this.caption == null)
 			{
-				Types.Caption caption = Support.Resources.DefaultManager.GetCaption (druid);
+				Types.Caption caption = manager.GetCaption (druid);
 
 				System.Diagnostics.Debug.Assert (caption != null);
 				System.Diagnostics.Debug.Assert (caption.Druid.ToResourceId () == this.commandId);

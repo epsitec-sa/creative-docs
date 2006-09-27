@@ -20,7 +20,7 @@ namespace Epsitec.Common.Types.Collections
 
 		void ICollection<StructuredTypeField>.Add(StructuredTypeField field)
 		{
-			this.owner.Fields.Add (field.Id, field);
+			this.owner.Fields.Add (field);
 		}
 
 		void ICollection<StructuredTypeField>.Clear()
@@ -65,20 +65,7 @@ namespace Epsitec.Common.Types.Collections
 
 		IEnumerator<StructuredTypeField> IEnumerable<StructuredTypeField>.GetEnumerator()
 		{
-			if (this.cachedFields == null)
-			{
-				this.cachedFields = new List<StructuredTypeField> ();
-				
-				foreach (StructuredTypeField field in this.owner.Fields.Values)
-				{
-					this.cachedFields.Add (field);
-				}
-			}
-			
-			foreach (StructuredTypeField field in this.cachedFields)
-			{
-				yield return field;
-			}
+			return this.owner.Fields.Values.GetEnumerator ();
 		}
 
 		#endregion
@@ -87,25 +74,11 @@ namespace Epsitec.Common.Types.Collections
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			if (this.cachedFields == null)
-			{
-				this.cachedFields = new List<StructuredTypeField> ();
-
-				foreach (StructuredTypeField field in this.owner.Fields.Values)
-				{
-					this.cachedFields.Add (field);
-				}
-			}
-
-			foreach (StructuredTypeField field in this.cachedFields)
-			{
-				yield return field;
-			}
+			return this.owner.Fields.Values.GetEnumerator ();
 		}
 
 		#endregion
 
 		private StructuredType					owner;
-		private List<StructuredTypeField>		cachedFields;
 	}
 }
