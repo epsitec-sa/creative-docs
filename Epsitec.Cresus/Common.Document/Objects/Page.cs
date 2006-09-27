@@ -506,7 +506,7 @@ namespace Epsitec.Common.Document.Objects
 				string cmd = "PageSelect";
 				Misc.CreateStructuredCommandWithName (cmd);
 
-				MenuItem item = new MenuItem(cmd, icon, name, "", i.ToString());
+				MenuItem item = new MenuItem(cmd, icon, name, "", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
 				if ( message != null )
 				{

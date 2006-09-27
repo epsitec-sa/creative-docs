@@ -51,12 +51,10 @@ namespace Epsitec.Common.Types
 		
 		public IEnumerable<string> GetFieldIds()
 		{
-			string[] names = new string[this.fields.Count];
-			this.fields.Keys.CopyTo (names, 0);
-
-			System.Array.Sort (names);
-			
-			return names;
+			foreach (StructuredTypeField field in this.fields.Values)
+			{
+				yield return field.Id;
+			}
 		}
 
 		#endregion
