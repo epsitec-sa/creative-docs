@@ -970,11 +970,6 @@ namespace Epsitec.Common.Designer
 				this.bookModules.ActivePage = this.CurrentModuleInfo.TabPage;
 				this.ignoreChange = false;
 
-				//	Il faut re-préparer l'accès, car l'utilisation du dialogue ResourceSelector
-				//	dans un autre module a pu modifier l'accès de ce module !
-				ResourceAccess.Type type = this.CurrentModuleInfo.BundleType.CurrentType;
-				this.CurrentModule.PrepareAccess(type);
-
 				this.DialogSearchAdapt();
 				this.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
 			}

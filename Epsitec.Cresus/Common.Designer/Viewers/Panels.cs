@@ -55,7 +55,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ToolBarAdd(Widgets.Command.Get("ToolSelect"));
 			this.ToolBarAdd(Widgets.Command.Get("ToolGlobal"));
 			this.ToolBarAdd(Widgets.Command.Get("ToolGrid"));
-			this.ToolBarAdd(Widgets.Command.Get("ToolEdit"));
+			//?this.ToolBarAdd(Widgets.Command.Get("ToolEdit"));
 			//?this.ToolBarAdd(Widgets.Command.Get("ToolZoom"));
 			//?this.ToolBarAdd(Widgets.Command.Get("ToolHand"));
 			this.ToolBarAdd(null);
