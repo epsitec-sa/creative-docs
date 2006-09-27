@@ -444,7 +444,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				rect = bounds;
 
 				rect.X = -x[column];
-				rect.Y =  y[row] - rect.Height;
+				rect.Y =  y[row+rowSpan-1] - rect.Height;
 
 				foreach (PermeableCell cell in permeable.GetChildren (column, row, columnSpan, rowSpan))
 				{
