@@ -107,7 +107,7 @@ namespace Epsitec.Common.Designer
 		public bool HasDruid(Widget obj)
 		{
 			//	Indique si l'objet a un druid.
-			return (obj is Button || obj is StaticText || obj is GroupBox);
+			return (obj is MetaButton || obj is StaticText || obj is GroupBox);
 		}
 
 		public void SetDruid(Widget obj, string druid)
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
-			if (obj is Button)
+			if (obj is MetaButton)
 			{
 				obj.CommandDruid = d;
 			}
@@ -134,7 +134,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne le druid de l'objet.
 			Druid druid = Druid.Empty;
 
-			if (obj is Button)
+			if (obj is MetaButton)
 			{
 				druid = obj.CommandDruid;
 			}
@@ -1237,7 +1237,7 @@ namespace Epsitec.Common.Designer
 				obj.PreferredHeight = obj.MinHeight;
 			}
 
-			if (obj is Button)
+			if (obj is MetaButton)
 			{
 				obj.PreferredHeight = obj.MinHeight;
 			}

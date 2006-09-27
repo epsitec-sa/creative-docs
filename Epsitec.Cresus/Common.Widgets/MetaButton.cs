@@ -1,0 +1,467 @@
+using Epsitec.Common.Drawing;
+
+namespace Epsitec.Common.Widgets
+{
+	public enum DisplayMode
+	{
+		Automatic,		// icône et/ou texte selon la taille disponible
+		Icon,			// icône seule
+		Text,			// texte seul
+		IconAndText,	// icône à gauche et texte à droite
+	}
+
+	public enum SiteMark
+	{
+		None,			// pas de marque
+		OnBottom,		// marque en bas
+		OnTop,			// marque en haut
+		OnLeft,			// marque à gauche
+		OnRight,		// marque à droite
+	}
+
+
+	/// <summary>
+	/// La classe MetaButton est un IconButton avec une marque triangulaire sur un côté.
+	/// </summary>
+	public class MetaButton : Button
+	{
+		public MetaButton()
+		{
+			//?this.ButtonStyle = ButtonStyle.ToolItem;
+		}
+
+		public MetaButton(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
+
+
+		static MetaButton()
+		{
+			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata(22.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata(22.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+
+			Visual.PreferredWidthProperty.OverrideMetadata(typeof(IconButton), metadataDx);
+			Visual.PreferredHeightProperty.OverrideMetadata(typeof(IconButton), metadataDy);
+		}
+
+		
+		public DisplayMode DisplayMode
+		{
+			//	Mode d'affichage du contenu du bouton.
+			get
+			{
+				return this.displayMode;
+			}
+
+			set
+			{
+				if (this.displayMode != value)
+				{
+					this.displayMode = value;
+					this.Invalidate();
+				}
+			}
+		}
+
+		public SiteMark SiteMark
+		{
+			//	Emplacement de la marque.
+			get
+			{
+				return this.siteMark;
+			}
+
+			set
+			{
+				if (this.siteMark != value)
+				{
+					this.siteMark = value;
+					this.Invalidate();
+				}
+			}
+		}
+
+		public double MarkDimension
+		{
+			//	Dimension de la marque.
+			get
+			{
+				return this.markDimension;
+			}
+
+			set
+			{
+				if ( this.markDimension != value )
+				{
+					this.markDimension = value;
+					this.Invalidate();
+				}
+			}
+		}
+
+		public Color BulletColor
+		{
+			//	Couleur de la puce éventuelle (si différent de Color.Empty).
+			get
+			{
+				return this.bulletColor;
+			}
+
+			set
+			{
+				if ( this.bulletColor != value )
+				{
+					this.bulletColor = value;
+					this.Invalidate();
+				}
+			}
+		}
+
+		public Size PreferredIconSize
+		{
+			get
+			{
+				return this.preferredIconSize;
+			}
+
+			set
+			{
+				if (this.preferredIconSize != value)
+				{
+					this.preferredIconSize = value;
+					this.UpdateIcon(this.IconName);
+				}
+			}
+		}
+
+		public string PreferredIconLanguage
+		{
+			get
+			{
+				return this.preferredIconLanguage;
+			}
+
+			set
+			{
+				if (this.preferredIconLanguage != value)
+				{
+					this.preferredIconLanguage = value;
+					this.UpdateIcon(this.IconName);
+				}
+			}
+		}
+
+		public string PreferredIconStyle
+		{
+			get
+			{
+				return this.preferredIconStyle;
+			}
+
+			set
+			{
+				if (this.preferredIconStyle != value)
+				{
+					this.preferredIconStyle = value;
+					this.UpdateIcon(this.IconName);
+				}
+			}
+		}
+
+		public override bool HasTextLabel
+		{
+			get
+			{
+				return (this.displayMode == DisplayMode.Text || this.displayMode == DisplayMode.IconAndText);
+			}
+		}
+
+
+		public Rectangle InnerTextBounds
+		{
+			get
+			{
+				return this.TextBounds;
+			}
+		}
+
+		protected override void UpdateTextLayout()
+		{
+			if (this.TextLayout != null)
+			{
+				this.TextLayout.Alignment  = this.ContentAlignment;
+				this.TextLayout.LayoutSize = this.GetTextLayoutSize();
+			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine(string.Format("UpdateTextLayout Failed."));
+			}
+		}
+
+		protected override Size GetTextLayoutSize()
+		{
+			return this.TextBounds.Size;
+		}
+
+		protected override void OnIconNameChanged(string oldIconName, string newIconName)
+		{
+			base.OnIconNameChanged(oldIconName, newIconName);
+
+			if (string.IsNullOrEmpty(oldIconName) &&
+				string.IsNullOrEmpty(newIconName))
+			{
+				//	Nothing to do. Change is not significant : the text remains
+				//	empty if we swap "" for null.
+			}
+			else
+			{
+				this.UpdateIcon(newIconName);
+			}
+		}
+
+
+		protected void UpdateIcon(string iconName)
+		{
+			//	Met à jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
+			//	suivi des différentes préférences (taille, langue et style).
+			if (string.IsNullOrEmpty(iconName))
+			{
+				this.iconLayout = null;
+			}
+			else
+			{
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+				builder.Append(@"<img src=""");
+				builder.Append(iconName);
+				builder.Append(@"""");
+
+				if (this.preferredIconSize.Width != 0 && this.preferredIconSize.Height != 0)
+				{
+					builder.Append(@" dx=""");
+					builder.Append(this.preferredIconSize.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					builder.Append(@""" dy=""");
+					builder.Append(this.preferredIconSize.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					builder.Append(@"""");
+				}
+
+				if (string.IsNullOrEmpty(this.preferredIconLanguage) == false)
+				{
+					builder.Append(@" lang=""");
+					builder.Append(this.preferredIconLanguage);
+					builder.Append(@"""");
+				}
+
+				if (string.IsNullOrEmpty(this.preferredIconStyle) == false)
+				{
+					builder.Append(@" style=""");
+					builder.Append(this.preferredIconStyle);
+					builder.Append(@"""");
+				}
+
+				builder.Append(@"/>");
+
+				if (this.iconLayout == null)
+				{
+					this.iconLayout = new TextLayout();
+				}
+
+				this.iconLayout.Text = builder.ToString();
+				this.iconLayout.Alignment = ContentAlignment.MiddleCenter;
+			}
+		}
+
+		protected Rectangle IconBounds
+		{
+			//	Donne le rectangle carré à utiliser pour l'icône du bouton.
+			get
+			{
+				if (this.iconLayout == null)
+				{
+					return Rectangle.Empty;
+				}
+				else
+				{
+					Rectangle rect = this.ButtonBounds;
+					rect.Width = rect.Height;  // forcément un carré
+					return rect;
+				}
+			}
+		}
+
+		protected Rectangle TextBounds
+		{
+			//	Donne le rectangle à utiliser pour le texte du bouton.
+			get
+			{
+				Rectangle rect = this.ButtonBounds;
+
+				if (this.iconLayout != null)
+				{
+					rect.Left += rect.Height;
+				}
+
+				return rect;
+			}
+		}
+
+		protected Rectangle ButtonBounds
+		{
+			//	Donne le rectangle à utiliser pour le cadre du bouton.
+			get
+			{
+				Rectangle rect = this.Client.Bounds;
+
+				switch (this.siteMark)
+				{
+					case SiteMark.OnBottom:
+						rect.Bottom += this.markDimension;
+						break;
+
+					case SiteMark.OnTop:
+						rect.Top -= this.markDimension;
+						break;
+
+					case SiteMark.OnLeft:
+						rect.Left += this.markDimension;
+						break;
+
+					case SiteMark.OnRight:
+						rect.Right -= this.markDimension;
+						break;
+				}
+
+				return rect;
+			}
+		}
+
+		
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		{
+			//	Dessine le bouton.
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+
+			Rectangle rect = this.Client.Bounds;
+			WidgetPaintState state = this.PaintState;
+
+			bool enable = ((state & WidgetPaintState.Enabled) != 0);
+			if (!enable)
+			{
+				state &= ~WidgetPaintState.Focused;
+				state &= ~WidgetPaintState.Entered;
+				state &= ~WidgetPaintState.Engaged;
+			}
+
+			if (this.ActiveState == ActiveState.Yes && this.siteMark != SiteMark.None)  // dessine la marque triangulaire ?
+			{
+				Path path = new Path();
+				double middle;
+				double factor = 1.0;
+
+				switch ( this.siteMark )
+				{
+					case SiteMark.OnBottom:
+						middle = (rect.Left+rect.Right)/2;
+						path.MoveTo(middle, rect.Bottom);
+						path.LineTo(middle-this.markDimension*factor, rect.Bottom+this.markDimension);
+						path.LineTo(middle+this.markDimension*factor, rect.Bottom+this.markDimension);
+						break;
+
+					case SiteMark.OnTop:
+						middle = (rect.Left+rect.Right)/2;
+						path.MoveTo(middle, rect.Top);
+						path.LineTo(middle-this.markDimension*factor, rect.Top-this.markDimension);
+						path.LineTo(middle+this.markDimension*factor, rect.Top-this.markDimension);
+						break;
+
+					case SiteMark.OnLeft:
+						middle = (rect.Bottom+rect.Top)/2;
+						path.MoveTo(rect.Left, middle);
+						path.LineTo(rect.Left+this.markDimension, middle-this.markDimension*factor);
+						path.LineTo(rect.Left+this.markDimension, middle+this.markDimension*factor);
+						break;
+
+					case SiteMark.OnRight:
+						middle = (rect.Bottom+rect.Top)/2;
+						path.MoveTo(rect.Right, middle);
+						path.LineTo(rect.Right-this.markDimension, middle-this.markDimension*factor);
+						path.LineTo(rect.Right-this.markDimension, middle+this.markDimension*factor);
+						break;
+				}
+				path.Close();
+
+				graphics.Color = adorner.ColorTextFieldBorder(enable);
+				graphics.PaintSurface(path);
+			}
+			
+			rect = this.ButtonBounds;
+			state &= ~WidgetPaintState.Selected;
+			adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.buttonStyle);
+
+			//	Dessine la puce carrée à gauche.
+			if (!this.bulletColor.IsEmpty)
+			{
+				Rectangle r = rect;
+				r.Deflate(3.5);
+				r.Width = r.Height;
+
+				graphics.AddFilledRectangle(r);
+				graphics.RenderSolid(this.bulletColor);
+
+				graphics.AddRectangle(r);
+				graphics.RenderSolid(adorner.ColorTextFieldBorder(enable));
+
+				rect.Left += rect.Height;
+			}
+
+			//	Dessine l'icône.
+			if (this.iconLayout != null)
+			{
+				Rectangle ricon = this.IconBounds;
+
+				if (this.innerZoom != 1.0)
+				{
+					double zoom = (this.innerZoom-1)/2+1;
+					this.iconLayout.LayoutSize = ricon.Size/this.innerZoom;
+					Transform transform = graphics.Transform;
+					graphics.ScaleTransform(zoom, zoom, 0, -this.Client.Size.Height*zoom);
+					adorner.PaintButtonTextLayout(graphics, ricon.BottomLeft, this.iconLayout, state, this.buttonStyle);
+					graphics.Transform = transform;
+				}
+				else
+				{
+					this.iconLayout.LayoutSize = ricon.Size;
+					adorner.PaintButtonTextLayout(graphics, ricon.BottomLeft, this.iconLayout, state, this.buttonStyle);
+				}
+			}
+
+			//	Dessine le texte.
+			rect = this.TextBounds;
+
+			if (this.innerZoom != 1.0)
+			{
+				this.TextLayout.LayoutSize = rect.Size/this.innerZoom;
+				Transform transform = graphics.Transform;
+				graphics.ScaleTransform(this.innerZoom, this.innerZoom, this.Client.Size.Width / 2, this.Client.Size.Height / 2);
+				adorner.PaintButtonTextLayout(graphics, rect.BottomLeft, this.TextLayout, state, this.buttonStyle);
+				graphics.Transform = transform;
+			}
+			else
+			{
+				this.TextLayout.LayoutSize = rect.Size;
+				adorner.PaintButtonTextLayout(graphics, rect.BottomLeft, this.TextLayout, state, this.buttonStyle);
+			}
+		}
+
+
+		protected DisplayMode			displayMode = DisplayMode.Automatic;
+		protected SiteMark				siteMark = SiteMark.None;
+		protected double				markDimension = 8;
+		protected Color					bulletColor = Color.Empty;
+		protected Size					preferredIconSize = Size.Zero;
+		protected string				preferredIconLanguage = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+		protected string				preferredIconStyle;
+		protected TextLayout			iconLayout;
+	}
+}
