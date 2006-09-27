@@ -115,14 +115,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public ResourceAccess PrepareAccess(ResourceAccess.Type type)
-		{
-			//	Prépare un accès pour un type donné.
-			ResourceAccess access = this.GetAccess(type);
-			access.ResourceType = type;
-			return access;
-		}
-
 		public ResourceAccess GetAccess(ResourceAccess.Type type)
 		{
 			//	Cherche un accès d'après son type.

@@ -36,7 +36,7 @@ namespace Epsitec.Common.Designer.Controllers
 			this.title.VerticalAlignment = VerticalAlignment.Top;
 			this.title.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
 			this.title.Dock = DockStyle.Stacked;
-			this.title.PreferredHeight = 26;
+			this.title.PreferredHeight = 22;
 
 			this.button = new Button();
 			this.button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Designer.Controllers
 				}
 				else
 				{
-					string text = ResourceAccess.TypeDisplayName(module.AccessCaptions.DirectGetType(d));
+					string text = ResourceAccess.TypeDisplayName(module.AccessCaptions.DirectGetType(d), false);
 					this.title.Text = string.Concat("<font size=\"150%\"><b>", text, "</b></font>");
 
 					if (module == mainWindow.CurrentModule)
