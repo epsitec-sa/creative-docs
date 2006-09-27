@@ -2,15 +2,6 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Widgets
 {
-	public enum SiteMark
-	{
-		OnBottom,		// marque en bas
-		OnTop,			// marque en haut
-		OnLeft,			// marque à gauche
-		OnRight,		// marque à droite
-	}
-
-
 	/// <summary>
 	/// La classe IconButtonMark est un IconButton avec une marque triangulaire sur un côté.
 	/// </summary>

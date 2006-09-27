@@ -1424,7 +1424,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.context.Tool == "ObjectButton")
 			{
-				item = new Button();
+				item = new MetaButton();
 				item.Text = Misc.Italic("Button");
 				item.MinWidth = 20;
 				item.MinHeight = item.PreferredHeight;
@@ -1496,11 +1496,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Choix de la ressource (un Druid) pour l'objet.
 			//	Retourne false s'il fallait choisir un Druid et que l'utilisateur ne l'a pas fait.
-			if (obj is Button || obj is StaticText || obj is GroupBox)
+			if (obj is MetaButton || obj is StaticText || obj is GroupBox)
 			{
 				ResourceAccess.Type type;
 
-				if (obj is Button)
+				if (obj is MetaButton)
 				{
 					type = ResourceAccess.Type.Commands;
 				}
