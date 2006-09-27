@@ -48,6 +48,15 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		public PanelsContext PanelsContext
+		{
+			get
+			{
+				return this.context;
+			}
+		}
+
+
 		public virtual AbstractTextField CurrentTextField
 		{
 			//	Retourne le texte éditable en cours d'édition.
@@ -566,6 +575,16 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+
+		public void UpdateExternalDirtyList()
+		{
+			//	Met à jour la liste des ressources si elle a été modifiée depuis l'extérieur.
+			if (this.access.IsExternalDirtyList)
+			{
+				this.UpdateArray();
+				this.access.IsExternalDirtyList = false;
+			}
+		}
 
 		protected virtual void UpdateArray()
 		{

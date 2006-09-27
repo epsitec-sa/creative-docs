@@ -250,6 +250,19 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public bool IsExternalDirtyList
+		{
+			//	Est-ce que la liste des ressources a été modifiée depuis l'extérieur.
+			get
+			{
+				return this.isExternalDirtyList;
+			}
+			set
+			{
+				this.isExternalDirtyList = value;
+			}
+		}
+
 
 		public void Duplicate(string newName, bool duplicateContent)
 		{
@@ -903,6 +916,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			this.druidsIndex.Add(newDruid);
+			this.isExternalDirtyList = true;
 
 			return newDruid;
 		}
@@ -1863,6 +1877,8 @@ namespace Epsitec.Common.Designer
 				Druid fullDruid = new Druid(field.Druid, this.primaryBundle.Module.Id);
 				this.druidsIndex.Add(fullDruid);
 			}
+
+			this.isExternalDirtyList = false;
 		}
 
 		protected void SetFilterPanels(string filter, Searcher.SearchingMode mode)
@@ -1914,6 +1930,8 @@ namespace Epsitec.Common.Designer
 
 				this.druidsIndex.Add(bundle.Druid);
 			}
+
+			this.isExternalDirtyList = false;
 		}
 
 		protected int GetAbsoluteIndex(Druid druid)
@@ -2597,6 +2615,7 @@ namespace Epsitec.Common.Designer
 		protected ResourceManager							resourceManager;
 		protected ResourceModuleInfo						moduleInfo;
 		protected bool										isDirty = false;
+		protected bool										isExternalDirtyList = false;
 
 		protected ResourceBundleCollection					bundles;
 		protected ResourceBundle							primaryBundle;

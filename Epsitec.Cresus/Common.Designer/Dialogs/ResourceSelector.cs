@@ -198,6 +198,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		public void AccessOpen(Module baseModule, ResourceAccess.Type type, Druid resource)
 		{
 			//	Début de l'accès 'bypass' aux ressources pour le dialogue.
+			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
 			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Unknow || type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Commands);
 			System.Diagnostics.Debug.Assert(resource.Type != DruidType.ModuleRelative);
 
@@ -218,12 +219,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (type == ResourceAccess.Type.Unknow)
 			{
 				this.resourceType = this.module.AccessCaptions.DirectGetType(this.resource);
+				System.Diagnostics.Debug.Assert(this.resourceType != ResourceAccess.Type.Unknow);
 			}
 			else
 			{
 				this.resourceType = type;
 			}
-			System.Diagnostics.Debug.Assert(this.resourceType != ResourceAccess.Type.Unknow);
 
 			this.module.AccessCaptions.BypassFilterOpenAccess(this.resourceType);
 		}
@@ -518,15 +519,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.buttonUse.Enable = (this.array.SelectedRow != -1);
 
 			bool createEnable = false;
-			if (label != "" && text != "")
+			if (label != "" && text != "" && Misc.IsValidLabel(ref label) && !this.access.IsExistingName(label))
 			{
-				if (Misc.IsValidLabel(ref label))
-				{
-					if (!this.access.IsExistingName(label))
-					{
-						createEnable = true;
-					}
-				}
+				createEnable = true;
 			}
 			this.buttonCreate.Enable = createEnable;
 		}
@@ -613,15 +608,9 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			string label = TextLayout.ConvertToSimpleText(this.filterLabel.Text);
 			string text  = TextLayout.ConvertToSimpleText(this.filterText.Text);
-			if (label != "" && text != "")
+			if (label != "" && text != "" && Misc.IsValidLabel(ref label) && !this.access.IsExistingName(label))
 			{
-				if (Misc.IsValidLabel(ref label))
-				{
-					if (!this.access.IsExistingName(label))
-					{
-						this.resource = this.access.BypassFilterCreate(this.CurrentBundle, label, text);
-					}
-				}
+				this.resource = this.access.BypassFilterCreate(this.CurrentBundle, label, text);
 			}
 		}
 

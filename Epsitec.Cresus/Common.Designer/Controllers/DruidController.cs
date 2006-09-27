@@ -34,9 +34,9 @@ namespace Epsitec.Common.Designer.Controllers
 			this.title = new StaticText();
 			this.title.HorizontalAlignment = HorizontalAlignment.Stretch;
 			this.title.VerticalAlignment = VerticalAlignment.Top;
-			this.title.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
+			this.title.ContentAlignment = Drawing.ContentAlignment.TopCenter;
 			this.title.Dock = DockStyle.Stacked;
-			this.title.PreferredHeight = 22;
+			this.title.PreferredHeight = 24;
 
 			this.button = new Button();
 			this.button.Clicked += new MessageEventHandler(this.HandleButtonClicked);

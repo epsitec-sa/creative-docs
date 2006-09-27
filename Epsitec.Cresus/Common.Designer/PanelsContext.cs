@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
@@ -11,6 +12,7 @@ namespace Epsitec.Common.Designer
 	{
 		public PanelsContext()
 		{
+			this.extendedProxies = new Dictionary<int, bool>();
 		}
 
 
@@ -241,6 +243,31 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		#region ExtendedProxies
+		public bool IsExtendedProxies(int rank)
+		{
+			//	Indique si un panneau pour un proxy est étendu ou non.
+			if (!this.extendedProxies.ContainsKey(rank))
+			{
+				this.extendedProxies.Add(rank, false);
+			}
+
+			return this.extendedProxies[rank];
+		}
+
+		public void SetExtendedProxies(int rank, bool extended)
+		{
+			//	Modifie l'état étendu ou non d'un panneau pour un proxy.
+			if (!this.extendedProxies.ContainsKey(rank))
+			{
+				this.extendedProxies.Add(rank, false);
+			}
+
+			this.extendedProxies[rank] = extended;
+		}
+		#endregion
+
+
 		#region Static colors
 		static public Color ColorHiliteOutline
 		{
@@ -395,23 +422,24 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		protected string				tool = "ToolSelect";
-		protected bool					showGrid = false;
-		protected bool					showConstrain = true;
-		protected bool					showAttachment = true;
-		protected bool					showExpand = false;
-		protected bool					showZOrder = false;
-		protected bool					showTabIndex = false;
-		protected double				gridStep = 10;
-		protected double				constrainMargin = 5;
-		protected Size					constrainSpacing = new Size(10, 5);
-		protected Margins				constrainGroupMargins = new Margins(12, 12, 12+7, 12);
-		protected double				leading = 30;
-		protected double				minimalSize = 3;
-		protected double				groupOutline = 5;
-		protected double				zOrderThickness = 2;
-		protected double				sizeMarkThickness = 8;
-		protected double				dockedTriangleThickness = 10;
-		protected double				dockedTriangleLength = 10;
+		protected string					tool = "ToolSelect";
+		protected bool						showGrid = false;
+		protected bool						showConstrain = true;
+		protected bool						showAttachment = true;
+		protected bool						showExpand = false;
+		protected bool						showZOrder = false;
+		protected bool						showTabIndex = false;
+		protected double					gridStep = 10;
+		protected double					constrainMargin = 5;
+		protected Size						constrainSpacing = new Size(10, 5);
+		protected Margins					constrainGroupMargins = new Margins(12, 12, 12+7, 12);
+		protected double					leading = 30;
+		protected double					minimalSize = 3;
+		protected double					groupOutline = 5;
+		protected double					zOrderThickness = 2;
+		protected double					sizeMarkThickness = 8;
+		protected double					dockedTriangleThickness = 10;
+		protected double					dockedTriangleLength = 10;
+		protected Dictionary<int, bool>		extendedProxies;	
 	}
 }

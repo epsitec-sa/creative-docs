@@ -826,8 +826,6 @@ namespace Epsitec.Common.Designer
 		{
 			ModuleInfo mi = this.CurrentModuleInfo;
 
-			//?mi.Module.CreateIds();
-
 			mi.TabPage = new TabPage();
 			mi.TabPage.TabTitle = mi.Module.ModuleInfo.Name;
 			this.bookModules.Items.Insert(this.currentModule, mi.TabPage);
@@ -971,6 +969,7 @@ namespace Epsitec.Common.Designer
 				this.ignoreChange = false;
 
 				this.DialogSearchAdapt();
+				this.CurrentModule.Modifier.ActiveViewer.UpdateExternalDirtyList();
 				this.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
 			}
 			else
@@ -1094,7 +1093,9 @@ namespace Epsitec.Common.Designer
 		#region Dialogs
 		public Druid DlgResourceSelector(Module baseModule, ResourceAccess.Type type, Druid ressource)
 		{
-			//	Ouvre le dialogue pour choisir un ressource d'un type à choix.
+			//	Ouvre le dialogue pour choisir une ressource (sous forme d'un Druid)
+			//	d'un type à choix.
+			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
 			this.dlgResourceSelector.AccessOpen(baseModule, type, ressource);
 			this.dlgResourceSelector.Show();  // choix dans le dialogue...
 			return this.dlgResourceSelector.AccessClose();
