@@ -52,6 +52,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.strings = new List<string>();
 				}
 
+				if (this.selectedRow == -1)
+				{
+					this.SelectedRow = 0;
+				}
+
+				if (this.selectedRow > this.strings.Count-1)
+				{
+					this.SelectedRow = System.Math.Max(this.strings.Count-1, 0);
+				}
+
 				this.AdaptGrid();
 				this.UpdateGrid();
 				this.UpdateArrows();
@@ -181,11 +191,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void AdaptGrid()
 		{
 			//	Adapte le nombre de lignes du tableau en fonction de la collection.
-			while (this.grid.RowDefinitions.Count != this.strings.Count+1)
+			int sc = System.Math.Max(this.strings.Count, 1);
+
+			while (this.grid.RowDefinitions.Count != sc+1)
 			{
 				int count = this.grid.RowDefinitions.Count;
 
-				if (count < this.strings.Count+1)  // ajoute une ligne ?
+				if (count < sc+1)  // ajoute une ligne ?
 				{
 					this.grid.RowDefinitions.Add(new RowDefinition());
 					this.grid.RowDefinitions[count].TopBorder = -1;
@@ -240,10 +252,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.textFields.RemoveAt(count-2);
 				}
 			}
-
-			System.Diagnostics.Debug.Assert(this.strings.Count == this.staticTexts.Count);
-			System.Diagnostics.Debug.Assert(this.strings.Count == this.glyphButtons.Count);
-			System.Diagnostics.Debug.Assert(this.strings.Count == this.textFields.Count);
 		}
 
 		protected void AdaptTextFieldLines()
@@ -270,9 +278,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void UpdateGrid()
 		{
 			//	Adapte les textes des lignes éditables en fonction de la collection.
-			for (int i=0; i<this.strings.Count; i++)
+			for (int i=0; i<this.textFields.Count; i++)
 			{
-				this.textFields[i].Text = this.strings[i];
+				string text = "";
+
+				if (i < this.strings.Count)
+				{
+					text = this.strings[i];
+				}
+
+				this.textFields[i].Text = text;
 			}
 		}
 
@@ -285,7 +300,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.buttonAdd.Enable = enable;
 			this.buttonDuplicate.Enable = (enable && sel != -1);
-			this.buttonRemove.Enable = (enable && sel != -1);
+			this.buttonRemove.Enable = (enable && sel != -1 && count > 1);
 			this.buttonPrev.Enable = (enable && sel != -1 && sel > 0);
 			this.buttonNext.Enable = (enable && sel != -1 && sel < count-1);
 		}
@@ -352,6 +367,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.UpdateGrid();
 			this.SelectedRow = sel+1;
 			this.SetFocusInSelection();
+			this.OnStringTextChanged();
 		}
 
 		protected void HandleButtonDuplicatePressed(object sender, MessageEventArgs e)
@@ -365,6 +381,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.UpdateGrid();
 			this.SelectedRow = sel+1;
 			this.SetFocusInSelection();
+			this.OnStringTextChanged();
 		}
 
 		protected void HandleButtonRemovePressed(object sender, MessageEventArgs e)
@@ -384,6 +401,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.selectedRow = -1;  // pour forcer SelectedRow à refaire son travail
 			this.SelectedRow = sel;
 			this.SetFocusInSelection();
+			this.OnStringTextChanged();
 		}
 
 		protected void HandleButtonPrevPressed(object sender, MessageEventArgs e)
@@ -437,6 +455,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Appelé lorsqu'une ligne éditable a changé.
 			TextFieldMulti field = sender as TextFieldMulti;
 			int i = textFields.IndexOf(field);
+			if (this.strings.Count == 0)
+			{
+				this.strings.Add("");
+			}
 			this.strings[i] = field.Text;
 			this.OnStringTextChanged();
 		}
