@@ -206,11 +206,13 @@ namespace Epsitec.Common.Types
 
 		#region IStructuredType Members
 
-		INamedType IStructuredType.GetFieldType(string name)
+		StructuredTypeField IStructuredType.GetField(string fieldId)
 		{
-			return TypeRosetta.GetNamedTypeFromTypeObject (this.GetProperty (name));
-		}
+			INamedType namedType = TypeRosetta.GetNamedTypeFromTypeObject (this.GetProperty (fieldId));
 
+			return new StructuredTypeField (fieldId, namedType);
+		}
+		
 		IEnumerable<string> IStructuredType.GetFieldIds()
 		{
 			ReadOnlyArray<DependencyProperty> properties = this.GetProperties ();

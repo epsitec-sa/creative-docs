@@ -20,11 +20,13 @@ namespace Epsitec.Common.Types
 
 		#region IStructuredType Members
 
-		public INamedType GetFieldType(string name)
+		public StructuredTypeField GetField(string fieldId)
 		{
-			object value = this.data.GetValue (name);
+			object value = this.data.GetValue (fieldId);
 			object typeObject = TypeRosetta.GetTypeObjectFromValue (value);
-			return TypeRosetta.GetNamedTypeFromTypeObject (typeObject);
+			INamedType namedType = TypeRosetta.GetNamedTypeFromTypeObject (typeObject);
+
+			return new StructuredTypeField (fieldId, namedType);
 		}
 
 		public IEnumerable<string> GetFieldIds()

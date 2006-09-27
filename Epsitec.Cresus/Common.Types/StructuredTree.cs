@@ -100,7 +100,7 @@ namespace Epsitec.Common.Types
 
 		public static bool IsPathValid(IStructuredType root, string path)
 		{
-			return StructuredTree.GetFieldType (root, path) != null;
+			return StructuredTree.GetField (root, path).Type != null;
 		}
 
 		public static object GetValue(IStructuredData root, string path)
@@ -157,24 +157,24 @@ namespace Epsitec.Common.Types
 
 
 
-		public static INamedType GetFieldType(IStructuredType root, string path)
+		public static StructuredTypeField GetField(IStructuredType root, string path)
 		{
 			string leafName;
 			string leafPath = StructuredTree.GetLeafPath (path, out leafName);
 
 			if (string.IsNullOrEmpty (leafName))
 			{
-				return null;
+				return StructuredTypeField.Empty;
 			}
 			
 			root = StructuredTree.GetSubTreeType (root, leafPath);
 			
 			if (root == null)
 			{
-				return null;
+				return StructuredTypeField.Empty;
 			}
 			
-			return root.GetFieldType (leafName);
+			return root.GetField (leafName);
 		}
 
 		public static IStructuredType GetSubTreeType(IStructuredType root, string path)
@@ -195,7 +195,7 @@ namespace Epsitec.Common.Types
 					return null;
 				}
 
-				item = item.GetFieldType (names[i]) as IStructuredType;
+				item = item.GetField (names[i]).Type as IStructuredType;
 			}
 
 			return item;

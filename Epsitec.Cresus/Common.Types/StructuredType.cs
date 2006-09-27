@@ -35,20 +35,20 @@ namespace Epsitec.Common.Types
 
 		#region IStructuredType Members
 
-		public INamedType GetFieldType(string name)
+		public StructuredTypeField GetField(string fieldId)
 		{
 			StructuredTypeField field;
 
-			if (this.fields.TryGetValue (name, out field))
+			if (this.fields.TryGetValue (fieldId, out field))
 			{
-				return field.Type;
+				return field;
 			}
 			else
 			{
-				return null;
+				return StructuredTypeField.Empty;
 			}
 		}
-
+		
 		public IEnumerable<string> GetFieldIds()
 		{
 			string[] names = new string[this.fields.Count];

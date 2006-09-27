@@ -246,7 +246,7 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				type = this.type.GetFieldType (name);
+				type = this.type.GetField (name).Type;
 
 				if (type == null)
 				{

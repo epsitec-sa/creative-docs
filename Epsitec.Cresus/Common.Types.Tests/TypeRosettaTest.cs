@@ -187,9 +187,9 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Foo", Collection.Extract (t2.GetFieldIds (), 0));
 			Assert.AreEqual ("Self", Collection.Extract (t4.GetFieldIds (), 0));
 
-			INamedType t1x = t1.GetFieldType ("X");
-			INamedType t2foo = t2.GetFieldType ("Foo");
-			INamedType t4self = t4.GetFieldType ("Self");
+			INamedType t1x = t1.GetField ("X").Type;
+			INamedType t2foo = t2.GetField ("Foo").Type;
+			INamedType t4self = t4.GetField ("Self").Type;
 
 			Assert.AreEqual (typeof (IntegerType), t1x.GetType ());
 			Assert.AreEqual (MyObject.FooProperty.PropertyType, t2foo.SystemType);

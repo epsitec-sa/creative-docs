@@ -70,12 +70,16 @@ namespace Epsitec.Common.UI
 
 		#region IStructuredType Members
 
-		INamedType IStructuredType.GetFieldType(string name)
+		StructuredTypeField IStructuredType.GetField(string fieldId)
 		{
-			ItemRecord record = this.GetItemRecord (name);
+			ItemRecord record = this.GetItemRecord (fieldId);
 			IStructuredData data = record.Data;
 			object typeObject = TypeRosetta.GetTypeObjectFromValue (data);
-			return TypeRosetta.GetNamedTypeFromTypeObject (typeObject);
+			INamedType namedType = TypeRosetta.GetNamedTypeFromTypeObject (typeObject);
+
+			//	TODO: add record.CaptionId
+
+			return new StructuredTypeField (fieldId, namedType);
 		}
 
 		/// <summary>
