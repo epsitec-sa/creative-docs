@@ -21,13 +21,13 @@ namespace Epsitec.Common.Widgets
 
 
 	/// <summary>
-	/// La classe MetaButton est un IconButton avec une marque triangulaire sur un côté.
+	/// La classe MetaButton est un Button pouvant contenir une icône et/ou un texte.
 	/// </summary>
 	public class MetaButton : Button
 	{
 		public MetaButton()
 		{
-			//?this.ButtonStyle = ButtonStyle.ToolItem;
+			this.ButtonStyle = ButtonStyle.ToolItem;
 		}
 
 		public MetaButton(Widget embedder) : this()
@@ -38,11 +38,13 @@ namespace Epsitec.Common.Widgets
 
 		static MetaButton()
 		{
-			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata(22.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata(22.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata(ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata(Widget.DefaultFontHeight, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata(Widget.DefaultFontHeight+10, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
 
-			Visual.PreferredWidthProperty.OverrideMetadata(typeof(IconButton), metadataDx);
-			Visual.PreferredHeightProperty.OverrideMetadata(typeof(IconButton), metadataDy);
+			Visual.ContentAlignmentProperty.OverrideMetadata(typeof(MetaButton), metadataAlign);
+			Visual.PreferredHeightProperty.OverrideMetadata(typeof(MetaButton), metadataHeight);
+			Visual.PreferredHeightProperty.OverrideMetadata(typeof(MetaButton), metadataDy);
 		}
 
 		
@@ -299,7 +301,7 @@ namespace Epsitec.Common.Widgets
 
 				if (this.iconLayout != null)
 				{
-					rect.Left += rect.Height;
+					rect.Left += rect.Height+5;
 				}
 
 				return rect;
