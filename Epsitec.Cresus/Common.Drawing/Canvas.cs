@@ -220,9 +220,20 @@ namespace Epsitec.Common.Drawing
 			return delta;
 		}
 		
-		protected static double Delta(Size s1, Size s2)
+		protected static double Delta(Size search, Size candidate)
 		{
-			return System.Math.Abs(s1.Width-s2.Width) + System.Math.Abs(s1.Height-s2.Height);
+			//	Calcule la valeur 'delta' entre une taille cherchée et une tailla candidate.
+			//	Si la taille candidate est plus grande que la taille cherchée, on retourne le
+			//	plus grand delta (donc la valeur la plus défavorable), car on ne doit jamais
+			//	essayer de caser une icône dans une surface trop petite (même d'un seul pixel).
+			if (candidate.Width > search.Width || candidate.Height > search.Height)
+			{
+				return 100;
+			}
+			else
+			{
+				return (search.Width-candidate.Width) + (search.Height-candidate.Height);
+			}
 		}
 		
 
