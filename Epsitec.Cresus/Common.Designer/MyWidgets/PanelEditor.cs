@@ -1424,10 +1424,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.context.Tool == "ObjectButton")
 			{
+#if false
 				item = new Button();
 				item.Text = Misc.Italic("Button");
 				item.MinWidth = 20;
 				item.MinHeight = item.PreferredHeight;
+#else
+				MetaButton button = new MetaButton();
+				button.Text = Misc.Italic("Button");
+				button.ButtonStyle = ButtonStyle.Normal;
+				button.DisplayMode = DisplayMode.Text;
+				button.ContentAlignment = ContentAlignment.MiddleCenter;
+				button.MinWidth = 20;
+				button.MinHeight = button.PreferredHeight;
+
+				item = button;
+#endif
 			}
 
 			if (this.context.Tool == "ObjectMetaButton")
