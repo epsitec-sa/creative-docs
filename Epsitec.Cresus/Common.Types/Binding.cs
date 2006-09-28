@@ -7,7 +7,7 @@ using System.Globalization;
 namespace Epsitec.Common.Types
 {
 	[SerializationConverter (typeof (Binding.SerializationConverter))]
-	public class Binding
+	public class Binding : AbstractBinding
 	{
 		public Binding()
 		{
@@ -96,6 +96,24 @@ namespace Epsitec.Common.Types
 					this.path = value;
 					this.NotifyAfterChange ();
 				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the binding should get and
+		/// set values asynchronously.
+		/// </summary>
+		/// <value><c>true</c> if the binding should get and set values
+		/// asynchronously; otherwise, <c>false</c>.</value>
+		public bool								IsAsync
+		{
+			get
+			{
+				return this.isAsync;
+			}
+			set
+			{
+				this.isAsync = value;
 			}
 		}
 		
@@ -597,6 +615,7 @@ namespace Epsitec.Common.Types
 
 		private BindingMode						bindingMode;
 		private SourceState						sourceState = SourceState.Detached;
+		private bool							isAsync;
 		
 		private object							source;
 		private string							path;
