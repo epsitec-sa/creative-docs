@@ -61,6 +61,7 @@ namespace Epsitec.Common.Widgets
 				if (this.displayMode != value)
 				{
 					this.displayMode = value;
+					this.UpdateIcon(this.IconName);
 					this.Invalidate();
 				}
 			}
@@ -203,7 +204,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Met à jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
 			//	suivi des différentes préférences (taille, langue et style).
-			if (string.IsNullOrEmpty(iconName))
+			if (string.IsNullOrEmpty(iconName) || this.displayMode == DisplayMode.Text)
 			{
 				this.iconLayout = null;
 			}
@@ -278,7 +279,10 @@ namespace Epsitec.Common.Widgets
 					rect.Left += rect.Height;
 				}
 
-				rect.Left += 5;  // espace entre le bord gauche ou l'icône et le texte
+				if (this.ContentAlignment == ContentAlignment.MiddleLeft)
+				{
+					rect.Left += 5;  // espace entre le bord gauche ou l'icône et le texte
+				}
 
 				return rect;
 			}
