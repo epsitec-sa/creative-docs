@@ -106,6 +106,7 @@
     <Compile Include="AbstractNumericType.cs" />
     <Compile Include="AbstractType.cs" />
     <Compile Include="AbstractBinding.cs" />
+    <Compile Include="PriorityBinding.cs" />
     <Compile Include="ISerializationConverterFilter.cs" />
     <Compile Include="Res.cs" />
     <Compile Include="Collections\StructuredTypeFieldCollection.cs" />

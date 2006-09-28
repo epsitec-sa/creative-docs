@@ -201,26 +201,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		internal bool							Deferred
-		{
-			get
-			{
-				return this.deferCounter > 0;
-			}
-		}
-
-		/// <summary>
-		/// Defers the changes; this method should be used in a <c>using</c>
-		/// clause when changing several properties of the binding, to
-		/// avoid immediate changes.
-		/// </summary>
-		/// <returns>An <see cref="T:System.IDisposable"/> object which should
-		/// be disposed to reactivate the normal change propagation.</returns>
-		public System.IDisposable DeferChanges()
-		{
-			return new DeferManager (this);
-		}
-
 		/// <summary>
 		/// Determines whether the binding mode affects the target of a binding.
 		/// </summary>
@@ -275,47 +255,12 @@ namespace Epsitec.Common.Types
 		/// <param name="mode">The binding update mode.</param>
 		public void UpdateTargets(BindingUpdateMode mode)
 		{
-			WeakBindingExpression[] expressions = this.GetExpressions ();
-
-			for (int i = 0; i < expressions.Length; i++)
+			foreach (BindingExpression item in this.GetExpressions ())
 			{
-				BindingExpression item = expressions[i].Expression;
-
-				if (item == null)
-				{
-					this.RemoveExpression (expressions[i]);
-				}
-				else
-				{
-					item.UpdateTarget (mode);
-				}
+				item.UpdateTarget (mode);
 			}
 		}
 		
-		internal void Add(BindingExpression expression)
-		{
-			//	The binding expression is referenced through a weak binding
-			//	by the binding itself, which allows for the expression to be
-			//	garbage collected when its property dies.
-			
-			this.AddExpression (new WeakBindingExpression (expression));
-		}
-		internal void Remove(BindingExpression expression)
-		{
-			WeakBindingExpression[] expressions = this.GetExpressions ();
-			
-			for (int i = 0; i < expressions.Length; i++)
-			{
-				BindingExpression item = expressions[i].Expression;
-
-				if ((item == null) ||
-					(item == expression))
-				{
-					this.RemoveExpression (expressions[i]);
-				}
-			}
-		}
-
 		internal object ConvertValue(object value, System.Type type)
 		{
 			if (type != null)
@@ -352,37 +297,116 @@ namespace Epsitec.Common.Types
 			return value;
 		}
 
-		private WeakBindingExpression[] GetExpressions()
+		protected override IEnumerable<BindingExpression> GetExpressions()
 		{
 			//	See RemoveExpression and AddExpression.
-			
-			WeakBindingExpression[] expressions;
-			WeakBindingExpression[] copy;
 
+			Weak<BindingExpression> item;
+			BindingExpression expression;
+			Weak<BindingExpression>[] items;
+			List<BindingExpression> expressions;
+			bool cleanUp = false;
+			
 			lock (this)
 			{
 				switch (this.boundExpressionsType)
 				{
 					case BoundExpressions.None:
-						return new WeakBindingExpression[0];
+						expression  = null;
+						expressions = null;
+						break;
 
 					case BoundExpressions.Single:
-						return new WeakBindingExpression[1] { (WeakBindingExpression) this.boundExpressions };
+						item = (Weak<BindingExpression>) this.boundExpressions;
+						
+						expression  = item.Target;
+						expressions = null;
+						
+						if (expression == null)
+						{
+							this.boundExpressionsType = BoundExpressions.None;
+							this.boundExpressions = null;
+							break;
+						}
+
+						break;
 
 					case BoundExpressions.Several:
-						expressions = (WeakBindingExpression []) this.boundExpressions;
-						copy = new WeakBindingExpression[expressions.Length];
-						expressions.CopyTo (copy, 0);
-						return copy;
+						items = (Weak<BindingExpression> []) this.boundExpressions;
+						expressions = new List<BindingExpression> ();
+						expression = null;
+
+						for (int i = 0; i < items.Length; i++)
+						{
+							expression = items[i].Target;
+
+							if (expression == null)
+							{
+								cleanUp = true;
+							}
+							else
+							{
+								expressions.Add (expression);
+							}
+						}
+
+						if (expressions.Count == 0)
+						{
+							this.boundExpressionsType = BoundExpressions.None;
+							this.boundExpressions = null;
+
+							expression  = null;
+							expressions = null;
+							
+							break;
+						}
+						else if (expressions.Count == 1)
+						{
+							expression  = expressions[0];
+							expressions = null;
+							
+							this.boundExpressionsType = BoundExpressions.Single;
+							this.boundExpressions = new Weak<BindingExpression> (expression);
+						}
+						else if (cleanUp)
+						{
+							items = new Weak<BindingExpression>[expressions.Count];
+
+							for (int i = 0; i < expressions.Count; i++)
+							{
+								items[i] = new Weak<BindingExpression> (expressions[i]);
+							}
+							
+							this.boundExpressionsType = BoundExpressions.Several;
+							this.boundExpressions = items;
+						}
+						break;
+					
+					default:
+						throw new System.InvalidOperationException ();
 				}
 			}
-			
-			throw new System.InvalidOperationException ();
+
+			if (expressions == null)
+			{
+				if (expression == null)
+				{
+					return new BindingExpression[0];
+				}
+				else
+				{
+					return new BindingExpression[1] { expression };
+				}
+			}
+			else
+			{
+				return expressions;
+			}
 		}
 
-		private void RemoveExpression(WeakBindingExpression expression)
+		protected override void RemoveExpression(BindingExpression expression)
 		{
-			WeakBindingExpression[] expressions;
+			Weak<BindingExpression>[] expressions;
 
 			lock (this)
 			{
@@ -397,15 +421,15 @@ namespace Epsitec.Common.Types
 						break;
 
 					case BoundExpressions.Several:
-						expressions = (WeakBindingExpression[]) this.boundExpressions;
+						expressions = (Weak<BindingExpression>[]) this.boundExpressions;
 
 						if (expressions.Length > 2)
 						{
-							WeakBindingExpression[] copy = new WeakBindingExpression[expressions.Length-1];
+							Weak<BindingExpression>[] copy = new Weak<BindingExpression>[expressions.Length-1];
 
 							for (int i = 0, j = 0; i < expressions.Length; i++)
 							{
-								if (expressions[i] != expression)
+								if (expressions[i].Target != expression)
 								{
 									copy[j++] = expressions[i];
 								}
@@ -415,12 +439,12 @@ namespace Epsitec.Common.Types
 						}
 						else if (expressions.Length == 2)
 						{
-							if (expressions[0] == expression)
+							if (expressions[0].Target == expression)
 							{
 								this.boundExpressions = expressions[1];
 								this.boundExpressionsType = BoundExpressions.Single;
 							}
-							else if (expressions[1] == expression)
+							else if (expressions[1].Target == expression)
 							{
 								this.boundExpressions = expressions[0];
 								this.boundExpressionsType = BoundExpressions.Single;
@@ -442,31 +466,31 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		
-		private void AddExpression(WeakBindingExpression expression)
+
+		protected override void AddExpression(BindingExpression expression)
 		{
-			WeakBindingExpression[] expressions;
-			WeakBindingExpression[] copy;
+			Weak<BindingExpression>[] expressions;
+			Weak<BindingExpression>[] copy;
 
 			lock (this)
 			{
 				switch (this.boundExpressionsType)
 				{
 					case BoundExpressions.None:
-						this.boundExpressions = expression;
+						this.boundExpressions = new Weak<BindingExpression> (expression);
 						this.boundExpressionsType = BoundExpressions.Single;
 						break;
 
 					case BoundExpressions.Single:
-						this.boundExpressions = new WeakBindingExpression[2] { (WeakBindingExpression) this.boundExpressions, expression };
+						this.boundExpressions = new Weak<BindingExpression>[2] { (Weak<BindingExpression>) this.boundExpressions, new Weak<BindingExpression> (expression) };
 						this.boundExpressionsType = BoundExpressions.Several;
 						break;
 
 					case BoundExpressions.Several:
-						expressions = (WeakBindingExpression[]) this.boundExpressions;
-						copy = new WeakBindingExpression[expressions.Length+1];
+						expressions = (Weak<BindingExpression>[]) this.boundExpressions;
+						copy = new Weak<BindingExpression>[expressions.Length+1];
 						expressions.CopyTo (copy, 0);
-						copy[expressions.Length] = expression;
+						copy[expressions.Length] = new Weak<BindingExpression> (expression);
 						this.boundExpressions = copy;
 						break;
 
@@ -476,50 +500,29 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private void NotifyBeforeChange()
-		{
-			this.DetachBeforeChanges ();
-		}
-		private void NotifyAfterChange()
-		{
-			if (this.deferCounter == 0)
-			{
-				this.AttachAfterChanges ();
-			}
-		}
-
-		private void DetachBeforeChanges()
+		protected override void DetachBeforeChanges()
 		{
 			if (this.sourceState == SourceState.Attached)
 			{
 				this.sourceState = SourceState.Detached;
-				
-				foreach (WeakBindingExpression item in this.GetExpressions ())
-				{
-					BindingExpression expression = item.Expression;
 
-					if (expression != null)
-					{
-						expression.DetachFromSource ();
-					}
+				foreach (BindingExpression expression in this.GetExpressions ())
+				{
+					expression.DetachFromSource ();
 				}
 			}
 		}
-		private void AttachAfterChanges()
+		
+		protected override void AttachAfterChanges()
 		{
 			if (this.sourceState == SourceState.Detached)
 			{
 				this.sourceState = SourceState.Attached;
 
-				foreach (WeakBindingExpression item in this.GetExpressions ())
+				foreach (BindingExpression expression in this.GetExpressions ())
 				{
-					BindingExpression expression = item.Expression;
-
-					if (expression != null)
-					{
-						expression.AttachToSource ();
-						expression.UpdateTarget (BindingUpdateMode.Reset);
-					}
+					expression.AttachToSource ();
+					expression.UpdateTarget (BindingUpdateMode.Reset);
 				}
 			}
 		}
@@ -546,29 +549,6 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
-		#region Private DeferManager Class
-		private struct DeferManager : System.IDisposable
-		{
-			public DeferManager(Binding binding)
-			{
-				this.binding = binding;
-				System.Threading.Interlocked.Increment (ref this.binding.deferCounter);
-			}
-
-			#region IDisposable Members
-			public void Dispose()
-			{
-				if (System.Threading.Interlocked.Decrement (ref this.binding.deferCounter) == 0)
-				{
-					this.binding.AttachAfterChanges ();
-				}
-			}
-			#endregion
-			
-			private Binding						binding;
-		}
-		#endregion
-
 		#region Private SourceState Enumeration
 
 		private enum SourceState : byte
@@ -592,25 +572,6 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
-		#region Private WeakBindingExpression Class
-
-		private class WeakBindingExpression : System.WeakReference
-		{
-			public WeakBindingExpression(BindingExpression expression) : base (expression)
-			{
-			}
-
-			public BindingExpression Expression
-			{
-				get
-				{
-					return base.Target as BindingExpression;
-				}
-			}
-		}
-
-		#endregion
-
 		public static readonly object			DoNothing = new object ();	//	setting a value of DoNothing in BindingExpression does nothing
 
 		private BindingMode						bindingMode;
@@ -622,7 +583,6 @@ namespace Epsitec.Common.Types
 #if false
 		private string							elementName;
 #endif
-		private int								deferCounter;
 		
 		private BoundExpressions				boundExpressionsType;
 		private object							boundExpressions;

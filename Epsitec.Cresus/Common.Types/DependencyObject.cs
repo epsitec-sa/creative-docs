@@ -641,7 +641,7 @@ namespace Epsitec.Common.Types
 				this.ClearBinding (property);
 			}
 			
-			this.bindings[property] = BindingExpression.BindToTarget (this, property, binding as Binding);
+			this.bindings[property] = BindingExpression.BindToTarget (this, property, binding);
 
 			this.OnBindingChanged (property);
 		}
