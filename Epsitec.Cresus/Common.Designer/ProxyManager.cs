@@ -193,6 +193,7 @@ namespace Epsitec.Common.Designer
 		private IEnumerable<IProxy> GenerateWidgetProxies(Widget widget)
 		{
 			yield return new Proxies.Content(this);
+			yield return new Proxies.Aspect(this);
 			yield return new Proxies.Geometry(this);
 			yield return new Proxies.Layout(this);
 			yield return new Proxies.Padding(this);

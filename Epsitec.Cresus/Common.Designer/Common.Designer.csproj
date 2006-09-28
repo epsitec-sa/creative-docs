@@ -46,6 +46,7 @@
     <Compile Include="MyWidgets\IconArray.cs" />
     <Compile Include="MyWidgets\GlyphArray.cs" />
     <Compile Include="Proxies\Content.cs" />
+    <Compile Include="Proxies\Aspect.cs" />
     <Compile Include="ResourceAccess.cs" />
     <Compile Include="GridSelection.cs" />
     <Compile Include="GeometryCache.cs" />
@@ -372,6 +373,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\ObjectMetaButton.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\PropertyAspect.icon" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

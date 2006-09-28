@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.Proxies
 			//	liste.
 			get
 			{
-				return 2;
+				return 4;
 			}
 		}
 
