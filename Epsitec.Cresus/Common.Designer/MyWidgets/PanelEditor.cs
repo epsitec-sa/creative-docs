@@ -1433,7 +1433,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				MetaButton button = new MetaButton();
 				button.Text = Misc.Italic("Button");
 				button.ButtonStyle = ButtonStyle.Normal;
-				button.DisplayMode = DisplayMode.Text;
+				button.DisplayMode = ButtonDisplayMode.Text;
 				button.ContentAlignment = ContentAlignment.MiddleCenter;
 				button.MinWidth = 20;
 				button.MinHeight = button.PreferredHeight;

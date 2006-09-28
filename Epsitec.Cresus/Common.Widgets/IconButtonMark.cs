@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public SiteMark							SiteMark
+		public ButtonSiteMark							SiteMark
 		{
 			//	Emplacement de la marque.
 			get
@@ -80,19 +80,19 @@ namespace Epsitec.Common.Widgets
 
 				switch ( this.siteMark )
 				{
-					case SiteMark.OnBottom:
+					case ButtonSiteMark.OnBottom:
 						rect.Bottom += this.markDimension;
 						break;
 
-					case SiteMark.OnTop:
+					case ButtonSiteMark.OnTop:
 						rect.Top -= this.markDimension;
 						break;
 
-					case SiteMark.OnLeft:
+					case ButtonSiteMark.OnLeft:
 						rect.Left += this.markDimension;
 						break;
 
-					case SiteMark.OnRight:
+					case ButtonSiteMark.OnRight:
 						rect.Right -= this.markDimension;
 						break;
 				}
@@ -126,28 +126,28 @@ namespace Epsitec.Common.Widgets
 
 				switch ( this.siteMark )
 				{
-					case SiteMark.OnBottom:
+					case ButtonSiteMark.OnBottom:
 						middle = (rect.Left+rect.Right)/2;
 						path.MoveTo(middle, rect.Bottom);
 						path.LineTo(middle-this.markDimension*factor, rect.Bottom+this.markDimension);
 						path.LineTo(middle+this.markDimension*factor, rect.Bottom+this.markDimension);
 						break;
 
-					case SiteMark.OnTop:
+					case ButtonSiteMark.OnTop:
 						middle = (rect.Left+rect.Right)/2;
 						path.MoveTo(middle, rect.Top);
 						path.LineTo(middle-this.markDimension*factor, rect.Top-this.markDimension);
 						path.LineTo(middle+this.markDimension*factor, rect.Top-this.markDimension);
 						break;
 
-					case SiteMark.OnLeft:
+					case ButtonSiteMark.OnLeft:
 						middle = (rect.Bottom+rect.Top)/2;
 						path.MoveTo(rect.Left, middle);
 						path.LineTo(rect.Left+this.markDimension, middle-this.markDimension*factor);
 						path.LineTo(rect.Left+this.markDimension, middle+this.markDimension*factor);
 						break;
 
-					case SiteMark.OnRight:
+					case ButtonSiteMark.OnRight:
 						middle = (rect.Bottom+rect.Top)/2;
 						path.MoveTo(rect.Right, middle);
 						path.LineTo(rect.Right-this.markDimension, middle-this.markDimension*factor);
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected SiteMark				siteMark = SiteMark.OnBottom;
+		protected ButtonSiteMark				siteMark = ButtonSiteMark.OnBottom;
 		protected double				markDimension = 8;
 		protected Color					bulletColor = Color.Empty;
 	}

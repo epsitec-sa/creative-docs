@@ -5,7 +5,7 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
-	public enum DisplayMode
+	public enum ButtonDisplayMode
 	{
 		Automatic,		// icône et/ou texte selon la taille disponible
 		Icon,			// icône seule
@@ -13,7 +13,7 @@ namespace Epsitec.Common.Widgets
 		IconAndText,	// icône à gauche et texte à droite
 	}
 
-	public enum SiteMark
+	public enum ButtonSiteMark
 	{
 		None,			// pas de marque
 		OnBottom,		// marque en bas
@@ -49,12 +49,12 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public DisplayMode DisplayMode
+		public ButtonDisplayMode DisplayMode
 		{
 			//	Mode d'affichage du contenu du bouton.
 			get
 			{
-				return (DisplayMode) this.GetValue (MetaButton.DisplayModeProperty);
+				return (ButtonDisplayMode) this.GetValue (MetaButton.DisplayModeProperty);
 			}
 
 			set
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public SiteMark SiteMark
+		public ButtonSiteMark SiteMark
 		{
 			//	Emplacement de la marque.
 			get
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (this.DisplayMode == DisplayMode.Text || this.DisplayMode == DisplayMode.IconAndText);
+				return (this.DisplayMode == ButtonDisplayMode.Text || this.DisplayMode == ButtonDisplayMode.IconAndText);
 			}
 		}
 
@@ -200,7 +200,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Met à jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
 			//	suivi des différentes préférences (taille, langue et style).
-			if (string.IsNullOrEmpty(iconName) || this.DisplayMode == DisplayMode.Text)
+			if (string.IsNullOrEmpty(iconName) || this.DisplayMode == ButtonDisplayMode.Text)
 			{
 				this.iconLayout = null;
 			}
@@ -293,19 +293,19 @@ namespace Epsitec.Common.Widgets
 
 				switch (this.siteMark)
 				{
-					case SiteMark.OnBottom:
+					case ButtonSiteMark.OnBottom:
 						rect.Bottom += this.markDimension;
 						break;
 
-					case SiteMark.OnTop:
+					case ButtonSiteMark.OnTop:
 						rect.Top -= this.markDimension;
 						break;
 
-					case SiteMark.OnLeft:
+					case ButtonSiteMark.OnLeft:
 						rect.Left += this.markDimension;
 						break;
 
-					case SiteMark.OnRight:
+					case ButtonSiteMark.OnRight:
 						rect.Right -= this.markDimension;
 						break;
 				}
@@ -331,7 +331,7 @@ namespace Epsitec.Common.Widgets
 				state &= ~WidgetPaintState.Engaged;
 			}
 
-			if (this.ActiveState == ActiveState.Yes && this.siteMark != SiteMark.None)  // dessine la marque triangulaire ?
+			if (this.ActiveState == ActiveState.Yes && this.siteMark != ButtonSiteMark.None)  // dessine la marque triangulaire ?
 			{
 				Path path = new Path();
 				double middle;
@@ -339,28 +339,28 @@ namespace Epsitec.Common.Widgets
 
 				switch ( this.siteMark )
 				{
-					case SiteMark.OnBottom:
+					case ButtonSiteMark.OnBottom:
 						middle = (rect.Left+rect.Right)/2;
 						path.MoveTo(middle, rect.Bottom);
 						path.LineTo(middle-this.markDimension*factor, rect.Bottom+this.markDimension);
 						path.LineTo(middle+this.markDimension*factor, rect.Bottom+this.markDimension);
 						break;
 
-					case SiteMark.OnTop:
+					case ButtonSiteMark.OnTop:
 						middle = (rect.Left+rect.Right)/2;
 						path.MoveTo(middle, rect.Top);
 						path.LineTo(middle-this.markDimension*factor, rect.Top-this.markDimension);
 						path.LineTo(middle+this.markDimension*factor, rect.Top-this.markDimension);
 						break;
 
-					case SiteMark.OnLeft:
+					case ButtonSiteMark.OnLeft:
 						middle = (rect.Bottom+rect.Top)/2;
 						path.MoveTo(rect.Left, middle);
 						path.LineTo(rect.Left+this.markDimension, middle-this.markDimension*factor);
 						path.LineTo(rect.Left+this.markDimension, middle+this.markDimension*factor);
 						break;
 
-					case SiteMark.OnRight:
+					case ButtonSiteMark.OnRight:
 						middle = (rect.Bottom+rect.Top)/2;
 						path.MoveTo(rect.Right, middle);
 						path.LineTo(rect.Right-this.markDimension, middle-this.markDimension*factor);
@@ -440,9 +440,9 @@ namespace Epsitec.Common.Widgets
 			that.Invalidate ();
 		}
 
-		public static readonly DependencyProperty DisplayModeProperty = DependencyProperty.Register ("DisplayMode", typeof (DisplayMode), typeof (MetaButton), new DependencyPropertyMetadata (DisplayMode.Automatic, MetaButton.HandleDisplayModeChanged));
+		public static readonly DependencyProperty DisplayModeProperty = DependencyProperty.Register ("DisplayMode", typeof (ButtonDisplayMode), typeof (MetaButton), new DependencyPropertyMetadata (ButtonDisplayMode.Automatic, MetaButton.HandleDisplayModeChanged));
 
-		protected SiteMark				siteMark = SiteMark.None;
+		protected ButtonSiteMark				siteMark = ButtonSiteMark.None;
 		protected double				markDimension = 8;
 		protected Color					bulletColor = Color.Empty;
 		protected string				preferredIconLanguage = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
