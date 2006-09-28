@@ -42,7 +42,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		public DataSourceType DataSourceType
+		public DataSourceType					DataSourceType
 		{
 			get
 			{
@@ -265,13 +265,13 @@ namespace Epsitec.Common.Types
 			this.InternalDetachFromSource ();
 		}
 		
-		internal static BindingExpression BindToTarget(DependencyObject target, DependencyProperty property, Binding binding)
+		internal static BindingExpression BindToTarget(DependencyObject target, DependencyProperty property, AbstractBinding binding)
 		{
 			BindingExpression expression = new BindingExpression ();
 
 			binding.Add (expression);
 			
-			expression.binding = binding;
+			expression.binding = binding as Binding;
 			expression.targetObject = target;
 			expression.targetPropery = property;
 

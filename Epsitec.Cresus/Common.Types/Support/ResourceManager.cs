@@ -1360,21 +1360,23 @@ namespace Epsitec.Common.Support
 
 			private void SyncBindings(ResourceManager manager)
 			{
-				Weak<Types.Binding>[] bindings = this.bindings.ToArray ();
-
-				for (int i = 0; i < bindings.Length; i++)
-				{
-					Types.Binding binding = bindings[i].Target;
-
-					if (binding == null)
+				this.bindings.RemoveAll
+				(
+					delegate (Weak<Types.Binding> item)
 					{
-						this.bindings.Remove (bindings[i]);
+						Types.Binding binding = item.Target;
+
+						if (binding == null)
+						{
+							return true;
+						}
+						else
+						{
+							binding.UpdateTargets (Types.BindingUpdateMode.Reset);
+							return false;
+						}
 					}
-					else
-					{
-						binding.UpdateTargets (Types.BindingUpdateMode.Reset);
-					}
-				}
+				);
 			}
 
 			private void SyncCaptions(ResourceManager manager)
