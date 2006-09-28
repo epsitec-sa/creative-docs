@@ -621,7 +621,7 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		/// <param name="property">The property.</param>
 		/// <param name="binding">The binding.</param>
-		public void SetBinding(DependencyProperty property, Binding binding)
+		public void SetBinding(DependencyProperty property, AbstractBinding binding)
 		{
 			if (property == null)
 			{
@@ -641,7 +641,7 @@ namespace Epsitec.Common.Types
 				this.ClearBinding (property);
 			}
 			
-			this.bindings[property] = BindingExpression.BindToTarget (this, property, binding);
+			this.bindings[property] = BindingExpression.BindToTarget (this, property, binding as Binding);
 
 			this.OnBindingChanged (property);
 		}

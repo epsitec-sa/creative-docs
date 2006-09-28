@@ -844,6 +844,7 @@ namespace Epsitec.Common.Types
 
 			return field.CaptionId;
 		}
+		
 		private Binding							binding;
 		private DependencyObject				targetObject;			//	immutable
 		private DependencyProperty				targetPropery;			//	immutable
