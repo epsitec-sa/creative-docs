@@ -742,6 +742,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommandTool("ObjectVLine");
 			this.UpdateCommandTool("ObjectHLine");
 			this.UpdateCommandTool("ObjectButton");
+			this.UpdateCommandTool("ObjectMetaButton");
 			this.UpdateCommandTool("ObjectText");
 			this.UpdateCommandTool("ObjectStatic");
 			this.UpdateCommandTool("ObjectGroup");
