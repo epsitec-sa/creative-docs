@@ -1,4 +1,5 @@
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 
 [assembly: Epsitec.Common.Types.DependencyClass(typeof(Epsitec.Common.Widgets.MetaButton))]
 
@@ -53,17 +54,12 @@ namespace Epsitec.Common.Widgets
 			//	Mode d'affichage du contenu du bouton.
 			get
 			{
-				return this.displayMode;
+				return (DisplayMode) this.GetValue (MetaButton.DisplayModeProperty);
 			}
 
 			set
 			{
-				if (this.displayMode != value)
-				{
-					this.displayMode = value;
-					this.UpdateIcon(this.IconName);
-					this.Invalidate();
-				}
+				this.SetValue (MetaButton.DisplayModeProperty, value);
 			}
 		}
 
@@ -159,7 +155,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (this.displayMode == DisplayMode.Text || this.displayMode == DisplayMode.IconAndText);
+				return (this.DisplayMode == DisplayMode.Text || this.DisplayMode == DisplayMode.IconAndText);
 			}
 		}
 
@@ -204,7 +200,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Met à jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
 			//	suivi des différentes préférences (taille, langue et style).
-			if (string.IsNullOrEmpty(iconName) || this.displayMode == DisplayMode.Text)
+			if (string.IsNullOrEmpty(iconName) || this.DisplayMode == DisplayMode.Text)
 			{
 				this.iconLayout = null;
 			}
@@ -379,7 +375,7 @@ namespace Epsitec.Common.Widgets
 			
 			rect = this.ButtonBounds;
 			state &= ~WidgetPaintState.Selected;
-			adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.buttonStyle);
+			adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.ButtonStyle);
 
 			//	Dessine la puce carrée à gauche.
 			if (!this.bulletColor.IsEmpty)
@@ -408,13 +404,13 @@ namespace Epsitec.Common.Widgets
 					this.iconLayout.LayoutSize = ricon.Size/this.innerZoom;
 					Transform transform = graphics.Transform;
 					graphics.ScaleTransform(zoom, zoom, 0, -this.Client.Size.Height*zoom);
-					adorner.PaintButtonTextLayout(graphics, ricon.BottomLeft, this.iconLayout, state, this.buttonStyle);
+					adorner.PaintButtonTextLayout(graphics, ricon.BottomLeft, this.iconLayout, state, this.ButtonStyle);
 					graphics.Transform = transform;
 				}
 				else
 				{
 					this.iconLayout.LayoutSize = ricon.Size;
-					adorner.PaintButtonTextLayout(graphics, ricon.BottomLeft, this.iconLayout, state, this.buttonStyle);
+					adorner.PaintButtonTextLayout(graphics, ricon.BottomLeft, this.iconLayout, state, this.ButtonStyle);
 				}
 			}
 
@@ -426,18 +422,26 @@ namespace Epsitec.Common.Widgets
 				this.TextLayout.LayoutSize = rect.Size/this.innerZoom;
 				Transform transform = graphics.Transform;
 				graphics.ScaleTransform(this.innerZoom, this.innerZoom, this.Client.Size.Width / 2, this.Client.Size.Height / 2);
-				adorner.PaintButtonTextLayout(graphics, rect.BottomLeft, this.TextLayout, state, this.buttonStyle);
+				adorner.PaintButtonTextLayout(graphics, rect.BottomLeft, this.TextLayout, state, this.ButtonStyle);
 				graphics.Transform = transform;
 			}
 			else
 			{
 				this.TextLayout.LayoutSize = rect.Size;
-				adorner.PaintButtonTextLayout(graphics, rect.BottomLeft, this.TextLayout, state, this.buttonStyle);
+				adorner.PaintButtonTextLayout(graphics, rect.BottomLeft, this.TextLayout, state, this.ButtonStyle);
 			}
 		}
 
+		private static void HandleDisplayModeChanged(DependencyObject obj, object oldValue, object newObject)
+		{
+			MetaButton that = obj as MetaButton;
+			
+			that.UpdateIcon (that.IconName);
+			that.Invalidate ();
+		}
 
-		protected DisplayMode			displayMode = DisplayMode.Automatic;
+		public static readonly DependencyProperty DisplayModeProperty = DependencyProperty.Register ("DisplayMode", typeof (DisplayMode), typeof (MetaButton), new DependencyPropertyMetadata (DisplayMode.Automatic, MetaButton.HandleDisplayModeChanged));
+
 		protected SiteMark				siteMark = SiteMark.None;
 		protected double				markDimension = 8;
 		protected Color					bulletColor = Color.Empty;

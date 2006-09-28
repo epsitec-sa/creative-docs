@@ -1,3 +1,4 @@
+using Epsitec.Common.Types;
 
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Button))]
 
@@ -34,12 +35,10 @@ namespace Epsitec.Common.Widgets
 	{
 		public Button()
 		{
-			this.buttonStyle = ButtonStyle.Normal;
 		}
 		
 		public Button(string text)
 		{
-			this.buttonStyle = ButtonStyle.Normal;
 			this.Text = text;
 		}
 		
@@ -60,16 +59,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.buttonStyle;
+				return (ButtonStyle) this.GetValue (MetaButton.ButtonStyleProperty);
 			}
 
 			set
 			{
-				if ( this.buttonStyle != value )
-				{
-					this.buttonStyle = value;
-					this.Invalidate();
-				}
+				this.SetValue (MetaButton.ButtonStyleProperty, value);
 			}
 		}
 
@@ -97,7 +92,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Margins GetShapeMargins()
 		{
-			if (this.buttonStyle == ButtonStyle.ActivableIcon)
+			if (this.ButtonStyle == ButtonStyle.ActivableIcon)
 			{
 				if ((this.PaintState&WidgetPaintState.ThreeState) == 0)
 				{
@@ -119,8 +114,8 @@ namespace Epsitec.Common.Widgets
 		{
 			IFeel feel = Feel.Factory.Active;
 
-			if ((this.buttonStyle == ButtonStyle.DefaultAccept) || 
-				(this.buttonStyle == ButtonStyle.DefaultAcceptAndCancel))
+			if ((this.ButtonStyle == ButtonStyle.DefaultAccept) || 
+				(this.ButtonStyle == ButtonStyle.DefaultAcceptAndCancel))
 			{
 				if (feel.AcceptShortcut == shortcut)
 				{
@@ -129,8 +124,8 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			if ((this.buttonStyle == ButtonStyle.DefaultCancel) ||
-				(this.buttonStyle == ButtonStyle.DefaultAcceptAndCancel))
+			if ((this.ButtonStyle == ButtonStyle.DefaultCancel) ||
+				(this.ButtonStyle == ButtonStyle.DefaultAcceptAndCancel))
 			{
 				if (feel.CancelShortcut == shortcut)
 				{
@@ -147,7 +142,7 @@ namespace Epsitec.Common.Widgets
 			//	Le texte dans les boutons standards doit être remonté d'un pixel
 			//	pour paraître centré, mais surtout pas dans les IconButtons !
 			
-			switch (this.buttonStyle)
+			switch (this.ButtonStyle)
 			{
 				case ButtonStyle.Normal:
 				case ButtonStyle.DefaultAccept:
@@ -222,7 +217,7 @@ namespace Epsitec.Common.Widgets
 				//	Ne reproduit pas l'état sélectionné si on peint nous-même le fond du bouton.
 				
 				state &= ~WidgetPaintState.Selected;
-				adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.buttonStyle);
+				adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.ButtonStyle);
 			}
 
 			pos.Y += this.GetBaseLineVerticalOffset ();
@@ -231,17 +226,17 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Transform transform = graphics.Transform;
 				graphics.ScaleTransform (this.innerZoom, this.innerZoom, this.Client.Size.Width / 2, this.Client.Size.Height / 2);
-				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
+				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.ButtonStyle);
 				graphics.Transform = transform;
 			}
 			else
 			{
-				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
+				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.ButtonStyle);
 			}
 		}
+
+		public static readonly DependencyProperty ButtonStyleProperty = DependencyProperty.Register ("ButtonStyle", typeof (ButtonStyle), typeof (MetaButton), new Helpers.VisualPropertyMetadata (ButtonStyle.Normal, Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
 		
-		
-		protected ButtonStyle			buttonStyle;
 		protected double				innerZoom = 1.0;
 	}
 }

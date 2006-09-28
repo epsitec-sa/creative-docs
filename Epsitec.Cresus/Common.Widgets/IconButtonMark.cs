@@ -162,7 +162,7 @@ namespace Epsitec.Common.Widgets
 			
 			rect = this.IconButtonBounds;
 			state &= ~WidgetPaintState.Selected;
-			adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.buttonStyle);
+			adorner.PaintButtonBackground (graphics, rect, state, Direction.Down, this.ButtonStyle);
 
 			if (!this.bulletColor.IsEmpty)
 			{
@@ -185,13 +185,13 @@ namespace Epsitec.Common.Widgets
 				this.TextLayout.LayoutSize = rect.Size/this.innerZoom;
 				Drawing.Transform transform = graphics.Transform;
 				graphics.ScaleTransform(zoom, zoom, 0, -this.Client.Size.Height*zoom);
-				adorner.PaintButtonTextLayout(graphics, rect.BottomLeft, this.TextLayout, state, this.buttonStyle);
+				adorner.PaintButtonTextLayout (graphics, rect.BottomLeft, this.TextLayout, state, this.ButtonStyle);
 				graphics.Transform = transform;
 			}
 			else
 			{
 				this.TextLayout.LayoutSize = rect.Size;
-				adorner.PaintButtonTextLayout(graphics, rect.BottomLeft, this.TextLayout, state, this.buttonStyle);
+				adorner.PaintButtonTextLayout (graphics, rect.BottomLeft, this.TextLayout, state, this.ButtonStyle);
 			}
 		}
 
