@@ -1,5 +1,7 @@
 using Epsitec.Common.Drawing;
 
+[assembly: Epsitec.Common.Types.DependencyClass(typeof(Epsitec.Common.Widgets.MetaButton))]
+
 namespace Epsitec.Common.Widgets
 {
 	public enum DisplayMode
@@ -183,19 +185,6 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.TextBounds;
-			}
-		}
-
-		protected override void UpdateTextLayout()
-		{
-			if (this.TextLayout != null)
-			{
-				this.TextLayout.Alignment  = this.ContentAlignment;
-				this.TextLayout.LayoutSize = this.GetTextLayoutSize();
-			}
-			else
-			{
-				System.Diagnostics.Debug.WriteLine(string.Format("UpdateTextLayout Failed."));
 			}
 		}
 
