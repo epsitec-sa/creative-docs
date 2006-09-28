@@ -120,23 +120,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public Size PreferredIconSize
-		{
-			get
-			{
-				return this.preferredIconSize;
-			}
-
-			set
-			{
-				if (this.preferredIconSize != value)
-				{
-					this.preferredIconSize = value;
-					this.UpdateIcon(this.IconName);
-				}
-			}
-		}
-
 		public string PreferredIconLanguage
 		{
 			get
@@ -193,6 +176,12 @@ namespace Epsitec.Common.Widgets
 			return this.TextBounds.Size;
 		}
 
+		protected override void UpdateClientGeometry()
+		{
+			base.UpdateClientGeometry();
+			this.UpdateIcon(this.IconName);
+		}
+
 		protected override void OnIconNameChanged(string oldIconName, string newIconName)
 		{
 			base.OnIconNameChanged(oldIconName, newIconName);
@@ -226,14 +215,12 @@ namespace Epsitec.Common.Widgets
 				builder.Append(iconName);
 				builder.Append(@"""");
 
-				if (this.preferredIconSize.Width != 0 && this.preferredIconSize.Height != 0)
-				{
-					builder.Append(@" dx=""");
-					builder.Append(this.preferredIconSize.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
-					builder.Append(@""" dy=""");
-					builder.Append(this.preferredIconSize.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
-					builder.Append(@"""");
-				}
+				Rectangle rect = this.IconBounds;
+				builder.Append(@" dx=""");
+				builder.Append(rect.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				builder.Append(@""" dy=""");
+				builder.Append(rect.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				builder.Append(@"""");
 
 				if (string.IsNullOrEmpty(this.preferredIconLanguage) == false)
 				{
@@ -288,8 +275,10 @@ namespace Epsitec.Common.Widgets
 
 				if (this.iconLayout != null)
 				{
-					rect.Left += rect.Height+5;
+					rect.Left += rect.Height;
 				}
+
+				rect.Left += 5;  // espace entre le bord gauche ou l'icône et le texte
 
 				return rect;
 			}
@@ -448,7 +437,6 @@ namespace Epsitec.Common.Widgets
 		protected SiteMark				siteMark = SiteMark.None;
 		protected double				markDimension = 8;
 		protected Color					bulletColor = Color.Empty;
-		protected Size					preferredIconSize = Size.Zero;
 		protected string				preferredIconLanguage = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 		protected string				preferredIconStyle;
 		protected TextLayout			iconLayout;
