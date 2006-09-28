@@ -43,21 +43,36 @@ namespace Epsitec.Common.Types
 		public static List<T> ToList<T>(IEnumerable<T> collection)
 		{
 			List<T> list = new List<T> ();
-			list.AddRange (collection);
+			
+			if (collection != null)
+			{
+				list.AddRange (collection);
+			}
+			
 			return list;
 		}
 		
 		public static T[] ToArray<T>(IEnumerable<T> collection)
 		{
 			List<T> list = new List<T> ();
-			list.AddRange (collection);
+
+			if (collection != null)
+			{
+				list.AddRange (collection);
+			}
+
 			return list.ToArray ();
 		}
 
 		public static T[] ToSortedArray<T>(IEnumerable<T> collection)
 		{
 			List<T> list = new List<T> ();
-			list.AddRange (collection);
+
+			if (collection != null)
+			{
+				list.AddRange (collection);
+			}
+
 			T[] array = list.ToArray ();
 			System.Array.Sort (array);
 			return array;

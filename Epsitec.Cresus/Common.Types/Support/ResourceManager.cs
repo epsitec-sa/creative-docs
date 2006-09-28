@@ -1157,8 +1157,11 @@ namespace Epsitec.Common.Support
 			//	active.
 
 			Dictionary<string, BundleRelatedCache> update = new Dictionary<string, BundleRelatedCache> ();
+			BundleRelatedCache[] cacheArray = new BundleRelatedCache[this.bundleRelatedCache.Count];
 
-			foreach (BundleRelatedCache cache in this.bundleRelatedCache.Values)
+			this.bundleRelatedCache.Values.CopyTo (cacheArray, 0);
+
+			foreach (BundleRelatedCache cache in cacheArray)
 			{
 				string name = cache.Bundle.PrefixedName;
 
