@@ -361,12 +361,22 @@ namespace Epsitec.Common.Widgets
 			this.mainTextSize = this.AdjustSize (this.TextLayout.SingleLineSize);
 		}
 
-		protected override void OnPressed(MessageEventArgs e)
+		protected override void OnClicked(MessageEventArgs e)
 		{
 			this.OnUserAction (e);
+			base.OnClicked (e);
+		}
+
+		protected override void OnPressed(MessageEventArgs e)
+		{
 			base.OnPressed (e);
 		}
-		
+
+		protected override void OnReleased(MessageEventArgs e)
+		{
+			base.OnReleased (e);
+		}
+
 		protected override void OnEntered(MessageEventArgs e)
 		{
 			base.OnEntered (e);
@@ -393,7 +403,7 @@ namespace Epsitec.Common.Widgets
 			{
 				Behaviors.MenuBehavior behavior = Behaviors.MenuBehavior.CloseItemMenu (this);
 				
-				this.ExecuteCommand ();
+//				this.ExecuteCommand ();
 				
 				if (behavior != null)
 				{
