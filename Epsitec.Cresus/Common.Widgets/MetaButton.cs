@@ -39,11 +39,9 @@ namespace Epsitec.Common.Widgets
 		static MetaButton()
 		{
 			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata(ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
-			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata(Widget.DefaultFontHeight, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
 			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata(Widget.DefaultFontHeight+10, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
 
 			Visual.ContentAlignmentProperty.OverrideMetadata(typeof(MetaButton), metadataAlign);
-			Visual.PreferredHeightProperty.OverrideMetadata(typeof(MetaButton), metadataHeight);
 			Visual.PreferredHeightProperty.OverrideMetadata(typeof(MetaButton), metadataDy);
 		}
 

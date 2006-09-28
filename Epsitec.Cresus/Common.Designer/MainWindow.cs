@@ -645,6 +645,7 @@ namespace Epsitec.Common.Designer
 		[Command("ObjectHLine")]
 		[Command("ObjectVLine")]
 		[Command("ObjectButton")]
+		[Command("ObjectMetaButton")]
 		[Command("ObjectText")]
 		[Command("ObjectStatic")]
 		[Command("ObjectGroup")]
@@ -748,6 +749,7 @@ namespace Epsitec.Common.Designer
 			this.objectHLineState = this.CreateCommandState("ObjectHLine", KeyCode.AlphaL);
 			this.objectVLineState = this.CreateCommandState("ObjectVLine");
 			this.objectButtonState = this.CreateCommandState("ObjectButton", KeyCode.AlphaB);
+			this.objectMetaButtonState = this.CreateCommandState("ObjectMetaButton");
 			this.objectTextState = this.CreateCommandState("ObjectText", KeyCode.AlphaT);
 			this.objectStaticState = this.CreateCommandState("ObjectStatic");
 			this.objectGroupState = this.CreateCommandState("ObjectGroup");
@@ -1342,6 +1344,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					objectHLineState;
 		protected CommandState					objectVLineState;
 		protected CommandState					objectButtonState;
+		protected CommandState					objectMetaButtonState;
 		protected CommandState					objectTextState;
 		protected CommandState					objectStaticState;
 		protected CommandState					objectGroupState;

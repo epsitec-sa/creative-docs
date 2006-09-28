@@ -63,6 +63,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ToolBarAdd(Widgets.Command.Get("ObjectHLine"));
 			this.ToolBarAdd(Widgets.Command.Get("ObjectStatic"));
 			this.ToolBarAdd(Widgets.Command.Get("ObjectButton"));
+			this.ToolBarAdd(Widgets.Command.Get("ObjectMetaButton"));
 			this.ToolBarAdd(Widgets.Command.Get("ObjectText"));
 			this.ToolBarAdd(Widgets.Command.Get("ObjectGroup"));
 			this.ToolBarAdd(Widgets.Command.Get("ObjectGroupBox"));
