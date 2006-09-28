@@ -1555,7 +1555,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 							//	Sinon, simule une pression du MenuItem et consomme
 							//	l'événement.
 							
-							item.SimulatePressed ();
+							item.SimulateClicked ();
 							
 							swallow_message = true;
 						}
