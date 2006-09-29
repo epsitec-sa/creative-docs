@@ -54,12 +54,12 @@ namespace Epsitec.Common.Widgets
 			//	Mode d'affichage du contenu du bouton.
 			get
 			{
-				return (ButtonDisplayMode) this.GetValue (MetaButton.DisplayModeProperty);
+				return (ButtonDisplayMode) this.GetValue(MetaButton.DisplayModeProperty);
 			}
 
 			set
 			{
-				this.SetValue (MetaButton.DisplayModeProperty, value);
+				this.SetValue(MetaButton.DisplayModeProperty, value);
 			}
 		}
 
@@ -68,16 +68,12 @@ namespace Epsitec.Common.Widgets
 			//	Emplacement de la marque.
 			get
 			{
-				return this.siteMark;
+				return (ButtonSiteMark) this.GetValue(MetaButton.SiteMarkProperty);
 			}
 
 			set
 			{
-				if (this.siteMark != value)
-				{
-					this.siteMark = value;
-					this.Invalidate();
-				}
+				this.SetValue(MetaButton.SiteMarkProperty, value);
 			}
 		}
 
@@ -86,16 +82,12 @@ namespace Epsitec.Common.Widgets
 			//	Dimension de la marque.
 			get
 			{
-				return this.markDimension;
+				return (double) this.GetValue(MetaButton.MarkDimensionProperty);
 			}
 
 			set
 			{
-				if ( this.markDimension != value )
-				{
-					this.markDimension = value;
-					this.Invalidate();
-				}
+				this.SetValue(MetaButton.MarkDimensionProperty, value);
 			}
 		}
 
@@ -104,16 +96,12 @@ namespace Epsitec.Common.Widgets
 			//	Couleur de la puce éventuelle (si différent de Color.Empty).
 			get
 			{
-				return this.bulletColor;
+				return (Color) this.GetValue(MetaButton.BulletColorProperty);
 			}
 
 			set
 			{
-				if ( this.bulletColor != value )
-				{
-					this.bulletColor = value;
-					this.Invalidate();
-				}
+				this.SetValue(MetaButton.BulletColorProperty, value);
 			}
 		}
 
@@ -121,16 +109,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.preferredIconLanguage;
+				return (string) this.GetValue(MetaButton.PreferredIconLanguageProperty);
 			}
 
 			set
 			{
-				if (this.preferredIconLanguage != value)
-				{
-					this.preferredIconLanguage = value;
-					this.UpdateIcon(this.IconName);
-				}
+				this.SetValue(MetaButton.PreferredIconLanguageProperty, value);
 			}
 		}
 
@@ -138,16 +122,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.preferredIconStyle;
+				return (string) this.GetValue(MetaButton.PreferredIconStyleProperty);
 			}
 
 			set
 			{
-				if (this.preferredIconStyle != value)
-				{
-					this.preferredIconStyle = value;
-					this.UpdateIcon(this.IconName);
-				}
+				this.SetValue(MetaButton.PreferredIconStyleProperty, value);
 			}
 		}
 
@@ -219,17 +199,17 @@ namespace Epsitec.Common.Widgets
 				builder.Append(rect.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				builder.Append(@"""");
 
-				if (string.IsNullOrEmpty(this.preferredIconLanguage) == false)
+				if (string.IsNullOrEmpty(this.PreferredIconLanguage) == false)
 				{
 					builder.Append(@" lang=""");
-					builder.Append(this.preferredIconLanguage);
+					builder.Append(this.PreferredIconLanguage);
 					builder.Append(@"""");
 				}
 
-				if (string.IsNullOrEmpty(this.preferredIconStyle) == false)
+				if (string.IsNullOrEmpty(this.PreferredIconStyle) == false)
 				{
 					builder.Append(@" style=""");
-					builder.Append(this.preferredIconStyle);
+					builder.Append(this.PreferredIconStyle);
 					builder.Append(@"""");
 				}
 
@@ -291,22 +271,22 @@ namespace Epsitec.Common.Widgets
 			{
 				Rectangle rect = this.Client.Bounds;
 
-				switch (this.siteMark)
+				switch (this.SiteMark)
 				{
 					case ButtonSiteMark.OnBottom:
-						rect.Bottom += this.markDimension;
+						rect.Bottom += this.MarkDimension;
 						break;
 
 					case ButtonSiteMark.OnTop:
-						rect.Top -= this.markDimension;
+						rect.Top -= this.MarkDimension;
 						break;
 
 					case ButtonSiteMark.OnLeft:
-						rect.Left += this.markDimension;
+						rect.Left += this.MarkDimension;
 						break;
 
 					case ButtonSiteMark.OnRight:
-						rect.Right -= this.markDimension;
+						rect.Right -= this.MarkDimension;
 						break;
 				}
 
@@ -331,40 +311,41 @@ namespace Epsitec.Common.Widgets
 				state &= ~WidgetPaintState.Engaged;
 			}
 
-			if (this.ActiveState == ActiveState.Yes && this.siteMark != ButtonSiteMark.None)  // dessine la marque triangulaire ?
+			if (this.ActiveState == ActiveState.Yes && this.SiteMark != ButtonSiteMark.None)  // dessine la marque triangulaire ?
 			{
 				Path path = new Path();
 				double middle;
 				double factor = 1.0;
+				double m = this.MarkDimension;
 
-				switch ( this.siteMark )
+				switch ( this.SiteMark )
 				{
 					case ButtonSiteMark.OnBottom:
 						middle = (rect.Left+rect.Right)/2;
 						path.MoveTo(middle, rect.Bottom);
-						path.LineTo(middle-this.markDimension*factor, rect.Bottom+this.markDimension);
-						path.LineTo(middle+this.markDimension*factor, rect.Bottom+this.markDimension);
+						path.LineTo(middle-m*factor, rect.Bottom+m);
+						path.LineTo(middle+m*factor, rect.Bottom+m);
 						break;
 
 					case ButtonSiteMark.OnTop:
 						middle = (rect.Left+rect.Right)/2;
 						path.MoveTo(middle, rect.Top);
-						path.LineTo(middle-this.markDimension*factor, rect.Top-this.markDimension);
-						path.LineTo(middle+this.markDimension*factor, rect.Top-this.markDimension);
+						path.LineTo(middle-m*factor, rect.Top-m);
+						path.LineTo(middle+m*factor, rect.Top-m);
 						break;
 
 					case ButtonSiteMark.OnLeft:
 						middle = (rect.Bottom+rect.Top)/2;
 						path.MoveTo(rect.Left, middle);
-						path.LineTo(rect.Left+this.markDimension, middle-this.markDimension*factor);
-						path.LineTo(rect.Left+this.markDimension, middle+this.markDimension*factor);
+						path.LineTo(rect.Left+m, middle-m*factor);
+						path.LineTo(rect.Left+m, middle+m*factor);
 						break;
 
 					case ButtonSiteMark.OnRight:
 						middle = (rect.Bottom+rect.Top)/2;
 						path.MoveTo(rect.Right, middle);
-						path.LineTo(rect.Right-this.markDimension, middle-this.markDimension*factor);
-						path.LineTo(rect.Right-this.markDimension, middle+this.markDimension*factor);
+						path.LineTo(rect.Right-m, middle-m*factor);
+						path.LineTo(rect.Right-m, middle+m*factor);
 						break;
 				}
 				path.Close();
@@ -378,14 +359,14 @@ namespace Epsitec.Common.Widgets
 			adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.ButtonStyle);
 
 			//	Dessine la puce carrée à gauche.
-			if (!this.bulletColor.IsEmpty)
+			if (!this.BulletColor.IsEmpty)
 			{
 				Rectangle r = rect;
 				r.Deflate(3.5);
 				r.Width = r.Height;
 
 				graphics.AddFilledRectangle(r);
-				graphics.RenderSolid(this.bulletColor);
+				graphics.RenderSolid(this.BulletColor);
 
 				graphics.AddRectangle(r);
 				graphics.RenderSolid(adorner.ColorTextFieldBorder(enable));
@@ -432,21 +413,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private static void HandleDisplayModeChanged(DependencyObject obj, object oldValue, object newObject)
+
+		private static void HandleGeometryChanged(DependencyObject obj, object oldValue, object newObject)
 		{
 			MetaButton that = obj as MetaButton;
-			
-			that.UpdateIcon (that.IconName);
-			that.Invalidate ();
+
+			that.UpdateIcon(that.IconName);
+			that.Invalidate();
 		}
 
-		public static readonly DependencyProperty DisplayModeProperty = DependencyProperty.Register ("DisplayMode", typeof (ButtonDisplayMode), typeof (MetaButton), new DependencyPropertyMetadata (ButtonDisplayMode.Automatic, MetaButton.HandleDisplayModeChanged));
+		public static readonly DependencyProperty DisplayModeProperty           = DependencyProperty.Register("DisplayMode", typeof(ButtonDisplayMode), typeof(MetaButton), new DependencyPropertyMetadata(ButtonDisplayMode.Automatic, MetaButton.HandleGeometryChanged));
+		public static readonly DependencyProperty SiteMarkProperty              = DependencyProperty.Register("SiteMark", typeof(ButtonSiteMark), typeof(MetaButton), new DependencyPropertyMetadata(ButtonSiteMark.None, MetaButton.HandleGeometryChanged));
+		public static readonly DependencyProperty MarkDimensionProperty         = DependencyProperty.Register("MarkDimension", typeof(double), typeof(MetaButton), new DependencyPropertyMetadata(8.0, MetaButton.HandleGeometryChanged));
+		public static readonly DependencyProperty BulletColorProperty           = DependencyProperty.Register("BulletColor", typeof(Color), typeof(MetaButton), new DependencyPropertyMetadata(Color.Empty, MetaButton.HandleGeometryChanged));
+		public static readonly DependencyProperty PreferredIconLanguageProperty = DependencyProperty.Register("PreferredIconLanguage", typeof(string), typeof(MetaButton), new DependencyPropertyMetadata(System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName, MetaButton.HandleGeometryChanged));
+		public static readonly DependencyProperty PreferredIconStyleProperty    = DependencyProperty.Register("PreferredIconStyle", typeof(string), typeof(MetaButton), new DependencyPropertyMetadata(null, MetaButton.HandleGeometryChanged));
 
-		protected ButtonSiteMark				siteMark = ButtonSiteMark.None;
-		protected double				markDimension = 8;
-		protected Color					bulletColor = Color.Empty;
-		protected string				preferredIconLanguage = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-		protected string				preferredIconStyle;
 		protected TextLayout			iconLayout;
 	}
 }
