@@ -21,7 +21,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonStrings.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Strings);
 			this.buttonStrings.Name = BundleType.Convert(ResourceAccess.Type.Strings);
 			this.buttonStrings.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonStrings.SiteMark = ButtonSiteMark.OnBottom;
+			this.buttonStrings.SiteMark = ButtonMarkDisposition.Below;
 			this.buttonStrings.MarkDimension = 5;
 			this.buttonStrings.PreferredWidth = 100;
 			this.buttonStrings.MinHeight = 20+5;
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCaptions.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Captions);
 			this.buttonCaptions.Name = BundleType.Convert(ResourceAccess.Type.Captions);
 			this.buttonCaptions.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonCaptions.SiteMark = ButtonSiteMark.OnBottom;
+			this.buttonCaptions.SiteMark = ButtonMarkDisposition.Below;
 			this.buttonCaptions.MarkDimension = 5;
 			this.buttonCaptions.PreferredWidth = 100;
 			this.buttonCaptions.MinHeight = 20+5;
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCommands.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Commands);
 			this.buttonCommands.Name = BundleType.Convert(ResourceAccess.Type.Commands);
 			this.buttonCommands.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonCommands.SiteMark = ButtonSiteMark.OnBottom;
+			this.buttonCommands.SiteMark = ButtonMarkDisposition.Below;
 			this.buttonCommands.MarkDimension = 5;
 			this.buttonCommands.PreferredWidth = 100;
 			this.buttonCommands.MinHeight = 20+5;
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonTypes.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Types);
 			this.buttonTypes.Name = BundleType.Convert(ResourceAccess.Type.Types);
 			this.buttonTypes.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonTypes.SiteMark = ButtonSiteMark.OnBottom;
+			this.buttonTypes.SiteMark = ButtonMarkDisposition.Below;
 			this.buttonTypes.MarkDimension = 5;
 			this.buttonTypes.PreferredWidth = 100;
 			this.buttonTypes.MinHeight = 20+5;
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonValues.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Values);
 			this.buttonValues.Name = BundleType.Convert(ResourceAccess.Type.Values);
 			this.buttonValues.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonValues.SiteMark = ButtonSiteMark.OnBottom;
+			this.buttonValues.SiteMark = ButtonMarkDisposition.Below;
 			this.buttonValues.MarkDimension = 5;
 			this.buttonValues.PreferredWidth = 100;
 			this.buttonValues.MinHeight = 20+5;
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonPanels.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Panels);
 			this.buttonPanels.Name = BundleType.Convert(ResourceAccess.Type.Panels);
 			this.buttonPanels.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonPanels.SiteMark = ButtonSiteMark.OnBottom;
+			this.buttonPanels.SiteMark = ButtonMarkDisposition.Below;
 			this.buttonPanels.MarkDimension = 5;
 			this.buttonPanels.PreferredWidth = 100;
 			this.buttonPanels.MinHeight = 20+5;
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonScripts.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Scripts);
 			this.buttonScripts.Name = BundleType.Convert(ResourceAccess.Type.Scripts);
 			this.buttonScripts.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonScripts.SiteMark = ButtonSiteMark.OnBottom;
+			this.buttonScripts.SiteMark = ButtonMarkDisposition.Below;
 			this.buttonScripts.MarkDimension = 5;
 			this.buttonScripts.PreferredWidth = 100;
 			this.buttonScripts.MinHeight = 20+5;

@@ -75,7 +75,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.primaryCulture = new IconButtonMark(sup);
 			this.primaryCulture.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.primaryCulture.SiteMark = ButtonSiteMark.OnBottom;
+			this.primaryCulture.SiteMark = ButtonMarkDisposition.Below;
 			this.primaryCulture.MarkDimension = 10;
 			this.primaryCulture.PreferredHeight = 35;
 			this.primaryCulture.ActiveState = ActiveState.Yes;
