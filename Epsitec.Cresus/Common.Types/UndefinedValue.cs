@@ -5,7 +5,7 @@ namespace Epsitec.Common.Types
 {
 	/// <summary>
 	/// The <c>UndefinedValue</c> represents the value for a property which has
-	/// not been set. Compare with <see cref="T:InvalidValue"/>.
+	/// not been set. Compare with <see cref="InvalidValue"/>.
 	/// </summary>
 	public sealed class UndefinedValue
 	{
@@ -26,9 +26,9 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Returns a <see cref="T:string"/> that represents the undefined value.
+		/// Returns a <see cref="string"/> that represents the undefined value.
 		/// </summary>
-		/// <returns>A <see cref="T:string"/> that represents the undefined value.</returns>
+		/// <returns>A <see cref="string"/> that represents the undefined value.</returns>
 		public override string ToString()
 		{
 			return "<UndefinedValue>";

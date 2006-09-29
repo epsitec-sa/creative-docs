@@ -61,7 +61,27 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				return null; //	this.expressions.ToArray ();
+				List<BindingExpression> list =  new List<BindingExpression> ();
+
+				this.expressions.RemoveAll
+				(
+					delegate (Weak<BindingExpression> item)
+					{
+						BindingExpression expression = item.Target;
+						
+						if (expression == null)
+						{
+							return true;
+						}
+						else
+						{
+							list.Add (expression);
+							return false;
+						}
+					}
+				);
+
+				return list;
 			}
 		}
 

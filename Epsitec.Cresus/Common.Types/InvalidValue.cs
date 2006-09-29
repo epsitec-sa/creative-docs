@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// The <c>InvalidValue</c> class represents an invalid value. Do not confuse
 	/// this with an undefined value which is represented by an instance of
-	/// class <see cref="T:UndefinedValue"/>.
+	/// class <see cref="UndefinedValue"/>.
 	/// </summary>
 	public sealed class InvalidValue
 	{
@@ -26,9 +26,9 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Returns a <see cref="T:string"/> that represents the invalid value.
+		/// Returns a <see cref="string"/> that represents the invalid value.
 		/// </summary>
-		/// <returns>A <see cref="T:string"/> that represents the invalid value.</returns>
+		/// <returns>A <see cref="string"/> that represents the invalid value.</returns>
 		public override string ToString()
 		{
 			return "<InvalidValue>";

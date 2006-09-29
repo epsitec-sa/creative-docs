@@ -24,7 +24,7 @@ namespace Epsitec.Common.Types.Converters
 		/// <param name="expectedType">The expected type.</param>
 		/// <param name="parameter">The optional parameter (not used).</param>
 		/// <param name="culture">The culture used for the conversion.</param>
-		/// <returns>The converted value or <see cref="T:InvalidValue.Instance"/>
+		/// <returns>The converted value or <see cref="InvalidValue.Instance"/>
 		/// if the conversion was not possible.</returns>
 		public object Convert(object value, System.Type expectedType, object parameter, System.Globalization.CultureInfo culture)
 		{
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Types.Converters
 		/// <param name="expectedType">The expected type.</param>
 		/// <param name="parameter">The optional parameter (not used).</param>
 		/// <param name="culture">The culture used for the conversion.</param>
-		/// <returns>The converted value or <see cref="T:InvalidValue.Instance"/>
+		/// <returns>The converted value or <see cref="InvalidValue.Instance"/>
 		/// if the conversion was not possible.</returns>
 		public object ConvertBack(object value, System.Type expectedType, object parameter, System.Globalization.CultureInfo culture)
 		{
