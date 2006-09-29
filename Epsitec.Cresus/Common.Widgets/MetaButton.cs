@@ -13,13 +13,13 @@ namespace Epsitec.Common.Widgets
 		IconAndText,	// icône à gauche et texte à droite
 	}
 
-	public enum ButtonSiteMark
+	public enum ButtonMarkDisposition
 	{
 		None,			// pas de marque
-		OnBottom,		// marque en bas
-		OnTop,			// marque en haut
-		OnLeft,			// marque à gauche
-		OnRight,		// marque à droite
+		Below,			// marque au dessous
+		Above,			// marque au dessus
+		Left,			// marque à gauche
+		Right,			// marque à droite
 	}
 
 
@@ -63,17 +63,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public ButtonSiteMark SiteMark
+		public ButtonMarkDisposition MarkDisposition
 		{
 			//	Emplacement de la marque.
 			get
 			{
-				return (ButtonSiteMark) this.GetValue(MetaButton.SiteMarkProperty);
+				return (ButtonMarkDisposition) this.GetValue(MetaButton.MarkDispositionProperty);
 			}
 
 			set
 			{
-				this.SetValue(MetaButton.SiteMarkProperty, value);
+				this.SetValue(MetaButton.MarkDispositionProperty, value);
 			}
 		}
 
@@ -236,7 +236,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					Rectangle rect = this.ButtonBounds;
+					Rectangle rect = this.InsideButtonBounds;
 					rect.Width = rect.Height;  // forcément un carré
 					return rect;
 				}
@@ -248,19 +248,44 @@ namespace Epsitec.Common.Widgets
 			//	Donne le rectangle à utiliser pour le texte du bouton.
 			get
 			{
-				Rectangle rect = this.ButtonBounds;
+				Rectangle rect = this.InsideButtonBounds;
 
 				if (this.iconLayout != null)
 				{
 					rect.Left += rect.Height;
 				}
 
-				if (this.ContentAlignment == ContentAlignment.MiddleLeft)
+				switch (this.ContentAlignment)
 				{
-					rect.Left += 5;  // espace entre le bord gauche ou l'icône et le texte
+					case ContentAlignment.BottomLeft:
+					case ContentAlignment.MiddleLeft:
+					case ContentAlignment.TopLeft:
+						rect.Left += 5;  // espace entre le bord gauche ou l'icône et le texte
+						break;
 				}
 
 				return rect;
+			}
+		}
+
+		protected Rectangle InsideButtonBounds
+		{
+			//  Donne le rectangle utilisable à l'intérieur du cadre du bouton.
+			get
+			{
+				Rectangle bounds = this.ButtonBounds;
+				
+				switch (this.ButtonStyle)
+				{
+					case ButtonStyle.Normal:
+					case ButtonStyle.DefaultAccept:
+					case ButtonStyle.DefaultAcceptAndCancel:
+					case ButtonStyle.DefaultCancel:
+						bounds.Deflate (4);
+						break;
+				}
+
+				return bounds;
 			}
 		}
 
@@ -271,21 +296,21 @@ namespace Epsitec.Common.Widgets
 			{
 				Rectangle rect = this.Client.Bounds;
 
-				switch (this.SiteMark)
+				switch (this.MarkDisposition)
 				{
-					case ButtonSiteMark.OnBottom:
+					case ButtonMarkDisposition.Below:
 						rect.Bottom += this.MarkDimension;
 						break;
 
-					case ButtonSiteMark.OnTop:
+					case ButtonMarkDisposition.Above:
 						rect.Top -= this.MarkDimension;
 						break;
 
-					case ButtonSiteMark.OnLeft:
+					case ButtonMarkDisposition.Left:
 						rect.Left += this.MarkDimension;
 						break;
 
-					case ButtonSiteMark.OnRight:
+					case ButtonMarkDisposition.Right:
 						rect.Right -= this.MarkDimension;
 						break;
 				}
@@ -311,37 +336,37 @@ namespace Epsitec.Common.Widgets
 				state &= ~WidgetPaintState.Engaged;
 			}
 
-			if (this.ActiveState == ActiveState.Yes && this.SiteMark != ButtonSiteMark.None)  // dessine la marque triangulaire ?
+			if (this.ActiveState == ActiveState.Yes && this.MarkDisposition != ButtonMarkDisposition.None)  // dessine la marque triangulaire ?
 			{
 				Path path = new Path();
 				double middle;
 				double factor = 1.0;
 				double m = this.MarkDimension;
 
-				switch ( this.SiteMark )
+				switch ( this.MarkDisposition )
 				{
-					case ButtonSiteMark.OnBottom:
+					case ButtonMarkDisposition.Below:
 						middle = (rect.Left+rect.Right)/2;
 						path.MoveTo(middle, rect.Bottom);
 						path.LineTo(middle-m*factor, rect.Bottom+m);
 						path.LineTo(middle+m*factor, rect.Bottom+m);
 						break;
 
-					case ButtonSiteMark.OnTop:
+					case ButtonMarkDisposition.Above:
 						middle = (rect.Left+rect.Right)/2;
 						path.MoveTo(middle, rect.Top);
 						path.LineTo(middle-m*factor, rect.Top-m);
 						path.LineTo(middle+m*factor, rect.Top-m);
 						break;
 
-					case ButtonSiteMark.OnLeft:
+					case ButtonMarkDisposition.Left:
 						middle = (rect.Bottom+rect.Top)/2;
 						path.MoveTo(rect.Left, middle);
 						path.LineTo(rect.Left+m, middle-m*factor);
 						path.LineTo(rect.Left+m, middle+m*factor);
 						break;
 
-					case ButtonSiteMark.OnRight:
+					case ButtonMarkDisposition.Right:
 						middle = (rect.Bottom+rect.Top)/2;
 						path.MoveTo(rect.Right, middle);
 						path.LineTo(rect.Right-m, middle-m*factor);
@@ -423,7 +448,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		public static readonly DependencyProperty DisplayModeProperty           = DependencyProperty.Register("DisplayMode", typeof(ButtonDisplayMode), typeof(MetaButton), new DependencyPropertyMetadata(ButtonDisplayMode.Automatic, MetaButton.HandleGeometryChanged));
-		public static readonly DependencyProperty SiteMarkProperty              = DependencyProperty.Register("SiteMark", typeof(ButtonSiteMark), typeof(MetaButton), new DependencyPropertyMetadata(ButtonSiteMark.None, MetaButton.HandleGeometryChanged));
+		public static readonly DependencyProperty MarkDispositionProperty       = DependencyProperty.Register("MarkDisposition", typeof(ButtonMarkDisposition), typeof(MetaButton), new DependencyPropertyMetadata(ButtonMarkDisposition.None, MetaButton.HandleGeometryChanged));
 		public static readonly DependencyProperty MarkDimensionProperty         = DependencyProperty.Register("MarkDimension", typeof(double), typeof(MetaButton), new DependencyPropertyMetadata(8.0, MetaButton.HandleGeometryChanged));
 		public static readonly DependencyProperty BulletColorProperty           = DependencyProperty.Register("BulletColor", typeof(Color), typeof(MetaButton), new DependencyPropertyMetadata(Color.Empty, MetaButton.HandleGeometryChanged));
 		public static readonly DependencyProperty PreferredIconLanguageProperty = DependencyProperty.Register("PreferredIconLanguage", typeof(string), typeof(MetaButton), new DependencyPropertyMetadata(System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName, MetaButton.HandleGeometryChanged));

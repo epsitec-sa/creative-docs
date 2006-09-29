@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public ButtonSiteMark							SiteMark
+		public ButtonMarkDisposition							SiteMark
 		{
 			//	Emplacement de la marque.
 			get
@@ -80,19 +80,19 @@ namespace Epsitec.Common.Widgets
 
 				switch ( this.siteMark )
 				{
-					case ButtonSiteMark.OnBottom:
+					case ButtonMarkDisposition.Below:
 						rect.Bottom += this.markDimension;
 						break;
 
-					case ButtonSiteMark.OnTop:
+					case ButtonMarkDisposition.Above:
 						rect.Top -= this.markDimension;
 						break;
 
-					case ButtonSiteMark.OnLeft:
+					case ButtonMarkDisposition.Left:
 						rect.Left += this.markDimension;
 						break;
 
-					case ButtonSiteMark.OnRight:
+					case ButtonMarkDisposition.Right:
 						rect.Right -= this.markDimension;
 						break;
 				}
@@ -126,28 +126,28 @@ namespace Epsitec.Common.Widgets
 
 				switch ( this.siteMark )
 				{
-					case ButtonSiteMark.OnBottom:
+					case ButtonMarkDisposition.Below:
 						middle = (rect.Left+rect.Right)/2;
 						path.MoveTo(middle, rect.Bottom);
 						path.LineTo(middle-this.markDimension*factor, rect.Bottom+this.markDimension);
 						path.LineTo(middle+this.markDimension*factor, rect.Bottom+this.markDimension);
 						break;
 
-					case ButtonSiteMark.OnTop:
+					case ButtonMarkDisposition.Above:
 						middle = (rect.Left+rect.Right)/2;
 						path.MoveTo(middle, rect.Top);
 						path.LineTo(middle-this.markDimension*factor, rect.Top-this.markDimension);
 						path.LineTo(middle+this.markDimension*factor, rect.Top-this.markDimension);
 						break;
 
-					case ButtonSiteMark.OnLeft:
+					case ButtonMarkDisposition.Left:
 						middle = (rect.Bottom+rect.Top)/2;
 						path.MoveTo(rect.Left, middle);
 						path.LineTo(rect.Left+this.markDimension, middle-this.markDimension*factor);
 						path.LineTo(rect.Left+this.markDimension, middle+this.markDimension*factor);
 						break;
 
-					case ButtonSiteMark.OnRight:
+					case ButtonMarkDisposition.Right:
 						middle = (rect.Bottom+rect.Top)/2;
 						path.MoveTo(rect.Right, middle);
 						path.LineTo(rect.Right-this.markDimension, middle-this.markDimension*factor);
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected ButtonSiteMark				siteMark = ButtonSiteMark.OnBottom;
+		protected ButtonMarkDisposition				siteMark = ButtonMarkDisposition.Below;
 		protected double				markDimension = 8;
 		protected Color					bulletColor = Color.Empty;
 	}

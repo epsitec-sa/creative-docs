@@ -3101,7 +3101,7 @@ namespace Epsitec.Common.Widgets
 					bestDelta = delta;
 					bestText  = text;
 				}
-				else if (delta > 0)
+				else if (delta >= 1)
 				{
 					//	If this text fits into the given width, use it as it provides more
 					//	contents than the previous, shorter, text.
