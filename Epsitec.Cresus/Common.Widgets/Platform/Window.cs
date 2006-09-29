@@ -17,6 +17,10 @@ namespace Epsitec.Common.Widgets.Platform
 			Window.dispatch_window = new Window ();
 			Window.DummyHandleEater (Window.dispatch_window.Handle);
 			
+			//	The asynchronous binding mechanisms need to be able to execute
+			//	code on the main application thread. Thus, we have to register
+			//	the special thread invoker interface :
+			
 			Types.BindingAsyncOperation.DefineApplicationThreadInvoker (Window.dispatch_window);
 		}
 		
@@ -2213,6 +2217,10 @@ namespace Epsitec.Common.Widgets.Platform
 
 		void Epsitec.Common.Types.BindingAsyncOperation.IApplicationThreadInvoker.Invoke(SimpleCallback method)
 		{
+			//	Execute the method in the main UI thread. If the caller is
+			//	on another thread, we have to go through the not specially
+			//	pleasant WndProc-based "Invoke" mechanism :
+			
 			if (this.InvokeRequired)
 			{
 				this.Invoke (method);

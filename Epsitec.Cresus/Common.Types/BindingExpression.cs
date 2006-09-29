@@ -615,12 +615,23 @@ namespace Epsitec.Common.Types
 			{
 				if (this.binding.IsAsync)
 				{
+					//	If the binding requires an asynchronous access to the source
+					//	value, we delegate the work to the BindingAsyncOperation class.
+					
 					if (this.asyncOperation == null)
 					{
 						this.asyncOperation = new BindingAsyncOperation (this);
 					}
 
+					//	First, tell the target that the data is still pending. This is
+					//	immediate :
+					
 					this.InternalUpdateTarget (PendingValue.Instance);
+					
+					//	Now, queue up an asynchronous call to GetSourceValue followed
+					//	by a call to InternalUpdateTarget, but don't wait for the value
+					//	to be successfully set and return immediately.
+					
 					this.asyncOperation.QuerySourceValueAndUpdateTarget ();
 				}
 				else
