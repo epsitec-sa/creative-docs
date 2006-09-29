@@ -620,8 +620,9 @@ namespace Epsitec.Common.Types
 		{
 			if ((this.sourceUpdateCounter == 0) &&
 				(value != Binding.DoNothing) &&
-				(value != InvalidValue.Instance) &&
-				(value != UndefinedValue.Instance))
+				(!InvalidValue.IsInvalidValue (value)) &&
+				(!UndefinedValue.IsUndefinedValue (value)) &&
+				(!PendingValue.IsPendingValue (value)))
 			{
 				System.Threading.Interlocked.Increment (ref this.targetUpdateCounter);
 				
@@ -758,8 +759,9 @@ namespace Epsitec.Common.Types
 			if (target != null)
 			{
 				if ((value != Binding.DoNothing) &&
-					(value != InvalidValue.Instance) &&
-					(value != UndefinedValue.Instance))
+					(!InvalidValue.IsInvalidValue (value)) &&
+					(!UndefinedValue.IsUndefinedValue (value)) &&
+					(!PendingValue.IsPendingValue (value)))
 				{
 					target.SetValue (property, value);
 				}
@@ -771,8 +773,9 @@ namespace Epsitec.Common.Types
 			if (target != null)
 			{
 				if ((value != Binding.DoNothing) &&
-					(value != InvalidValue.Instance) &&
-					(value != UndefinedValue.Instance))
+					(!InvalidValue.IsInvalidValue (value)) &&
+					(!UndefinedValue.IsUndefinedValue (value)) &&
+					(!PendingValue.IsPendingValue (value)))
 				{
 					target.SetValue (name, value);
 				}

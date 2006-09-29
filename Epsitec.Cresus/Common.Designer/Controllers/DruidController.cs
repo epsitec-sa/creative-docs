@@ -59,8 +59,9 @@ namespace Epsitec.Common.Designer.Controllers
 
 		protected override void RefreshUserInterface(object oldValue, object newValue)
 		{
-			if (newValue != UndefinedValue.Instance &&
-				newValue != InvalidValue.Instance &&
+			if (!UndefinedValue.IsUndefinedValue (newValue) &&
+				!InvalidValue.IsInvalidValue (newValue) &&
+				!PendingValue.IsPendingValue (newValue) &&
 				newValue != null)
 			{
 				this.druid = this.ConvertFromValue(newValue);
