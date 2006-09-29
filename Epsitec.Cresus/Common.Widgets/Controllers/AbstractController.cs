@@ -57,24 +57,38 @@ namespace Epsitec.Common.Widgets.Controllers
 		{
 			if (this.placeholder != null)
 			{
-				string name = this.placeholder.ValueName;
 				Caption caption = this.placeholder.ValueCaption;
 				INamedType type = this.placeholder.ValueType;
 
+				if (type == null)
+				{
+					type = this.placeholder.UpdateValueType ();
+				}
+				
 				if (type != null)
 				{
+					string name;
+
 					if ((caption != null) &&
 						(caption.Labels.Count > 0))
 					{
 						//	TODO: ne plus transformer le nom ici, mais attacher le caption au
 						//	widget qui représente le label!
-						
+
 						name = Collection.Extract (caption.Labels, 0);
-						
+
 						ToolTip.Default.SetToolTip (this.placeholder, caption.Description);
 					}
-					
+					else
+					{
+						name = this.placeholder.ValueName;
+					}
+
 					this.CreateUserInterface (type, name, caption);
+				}
+				else
+				{
+					System.Diagnostics.Debug.WriteLine ("No type object found");
 				}
 			}
 		}

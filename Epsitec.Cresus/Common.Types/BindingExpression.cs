@@ -613,10 +613,24 @@ namespace Epsitec.Common.Types
 		{
 			if (this.sourceType != DataSourceType.None)
 			{
-				this.InternalUpdateTarget (this.GetSourceValue ());
+				if (this.binding.IsAsync)
+				{
+					if (this.asyncOperation == null)
+					{
+						this.asyncOperation = new BindingAsyncOperation (this);
+					}
+
+					this.InternalUpdateTarget (PendingValue.Instance);
+					this.asyncOperation.QuerySourceValueAndUpdateTarget ();
+				}
+				else
+				{
+					this.InternalUpdateTarget (this.GetSourceValue ());
+				}
 			}
 		}
-		private void InternalUpdateTarget(object value)
+		
+		internal void InternalUpdateTarget(object value)
 		{
 			if ((this.sourceUpdateCounter == 0) &&
 				(value != Binding.DoNothing) &&
@@ -719,7 +733,7 @@ namespace Epsitec.Common.Types
 			this.InternalUpdateSource (e.NewValue);
 		}
 
-		private object GetSourceValue()
+		internal object GetSourceValue()
 		{
 			DependencyObject doSource;
 			IStructuredData sdSource;
@@ -859,5 +873,6 @@ namespace Epsitec.Common.Types
 		private bool							isDataContextBound;
 		private int								sourceUpdateCounter;
 		private int								targetUpdateCounter;
+		private BindingAsyncOperation			asyncOperation;
 	}
 }

@@ -94,6 +94,7 @@
     <Compile Include="AbstractStringConverter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BindingAsyncOperation.cs" />
     <Compile Include="BindingChangedEventArgs.cs" />
     <Compile Include="BindingBreadcrumbs.cs" />
     <Compile Include="Caption.cs" />

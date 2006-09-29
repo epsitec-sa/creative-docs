@@ -55,6 +55,37 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckAsyncBinding()
+		{
+			Binding    binding = new Binding ();
+			SlowObject source  = new SlowObject ();
+			MyObject   target  = new MyObject ();
+
+			binding.Mode = BindingMode.OneWay;
+			binding.Source = source;
+			binding.Path = "A";
+			binding.IsAsync = true;
+
+			target.Name = "-";
+			target.SetBinding (MyObject.NameProperty, binding);
+
+			for (int i = 0; i < 20; i++)
+			{
+				string value = target.Name;
+				System.Threading.Thread.Sleep (10);
+
+				if (value != "-")
+				{
+					System.Console.Out.WriteLine ("Value {1} after approximatively {0} ms", i*10, value);
+					System.Console.Out.Flush ();
+					break;
+				}
+			}
+
+			Assert.AreNotEqual ("-", target.Name);
+		}
+
+		[Test]
 		public void CheckBinding1()
 		{
 			Binding bindingName = new Binding ();
@@ -1597,6 +1628,64 @@ namespace Epsitec.Common.Types
 			
 			private MyObjectChildren	children;
 			private int					nativeXyz;
+		}
+		#endregion
+
+		#region SlowObject Class
+		private class SlowObject : Types.DependencyObject
+		{
+			public SlowObject()
+			{
+			}
+
+			public string A
+			{
+				get
+				{
+					return (string) this.GetValue (SlowObject.AProperty);
+				}
+			}
+
+			public string B
+			{
+				get
+				{
+					return (string) this.GetValue (SlowObject.BProperty);
+				}
+			}
+
+			public string C
+			{
+				get
+				{
+					return (string) this.GetValue (SlowObject.CProperty);
+				}
+			}
+
+			private static object GetAValue(DependencyObject o)
+			{
+				SlowObject that = (SlowObject) o;
+				System.Threading.Thread.Sleep (100);
+				return "A (100 ms)";
+			}
+
+			private static object GetBValue(DependencyObject o)
+			{
+				SlowObject that = (SlowObject) o;
+				System.Threading.Thread.Sleep (1000);
+				return "B (1000 ms)";
+			}
+
+			private static object GetCValue(DependencyObject o)
+			{
+				SlowObject that = (SlowObject) o;
+				System.Threading.Thread.Sleep (5000);
+				return "C (5000 ms)";
+			}
+
+			public static DependencyProperty AProperty	= DependencyProperty.RegisterReadOnly ("A", typeof (string), typeof (SlowObject), new DependencyPropertyMetadata (SlowObject.GetAValue));
+			public static DependencyProperty BProperty	= DependencyProperty.RegisterReadOnly ("B", typeof (string), typeof (SlowObject), new DependencyPropertyMetadata (SlowObject.GetBValue));
+			public static DependencyProperty CProperty	= DependencyProperty.RegisterReadOnly ("C", typeof (string), typeof (SlowObject), new DependencyPropertyMetadata (SlowObject.GetCValue));
 		}
 		#endregion
 

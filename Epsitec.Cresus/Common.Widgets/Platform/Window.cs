@@ -8,13 +8,16 @@ namespace Epsitec.Common.Widgets.Platform
 	/// <summary>
 	/// La classe Platform.Window fait le lien avec les WinForms.
 	/// </summary>
-	internal class Window : System.Windows.Forms.Form
+	internal class Window : System.Windows.Forms.Form, Types.BindingAsyncOperation.IApplicationThreadInvoker
 	{
 		static Window()
 		{
 			Microsoft.Win32.SystemEvents.UserPreferenceChanged += new Microsoft.Win32.UserPreferenceChangedEventHandler (Window.HandleSystemEventsUserPreferenceChanged);
 			
 			Window.dispatch_window = new Window ();
+			Window.DummyHandleEater (Window.dispatch_window.Handle);
+			
+			Types.BindingAsyncOperation.DefineApplicationThreadInvoker (Window.dispatch_window);
 		}
 		
 		
@@ -2205,7 +2208,22 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			this.ShowDialog (this.Owner);
 		}
-		
+
+		#region IApplicationThreadInvoker Members
+
+		void Epsitec.Common.Types.BindingAsyncOperation.IApplicationThreadInvoker.Invoke(SimpleCallback method)
+		{
+			if (this.InvokeRequired)
+			{
+				this.Invoke (method);
+			}
+			else
+			{
+				method ();
+			}
+		}
+
+		#endregion
 		
 		private bool							widget_window_disposed;
 		private Epsitec.Common.Widgets.Window	widget_window;
