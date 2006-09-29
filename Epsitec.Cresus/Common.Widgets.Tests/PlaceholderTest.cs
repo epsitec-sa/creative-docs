@@ -204,6 +204,7 @@ namespace Epsitec.Common.Widgets
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
+			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
 			grid.RowDefinitions.Add (new Layouts.RowDefinition (new Layouts.GridLength (1, Layouts.GridUnitType.Proportional)));
 //			grid.RowDefinitions.Add (new Layouts.RowDefinition ()); // en pas assez
 
@@ -238,6 +239,8 @@ namespace Epsitec.Common.Widgets
 			Placeholder placeholder2 = new Placeholder ();
 			Placeholder placeholder3 = new Placeholder ();
 			Placeholder placeholder4 = new Placeholder ();
+			Placeholder placeholder5 = new Placeholder ();
+			Placeholder placeholder6 = new Placeholder ();
 
 			placeholder1.Controller = "*";
 			placeholder1.PreferredHeight = 20;
@@ -253,7 +256,7 @@ namespace Epsitec.Common.Widgets
 			Layouts.GridLayoutEngine.SetRow (placeholder2, 2);
 			Layouts.GridLayoutEngine.SetColumnSpan (placeholder2, 4);
 
-			placeholder3.Controller = "*";
+			placeholder3.Controller = "Numeric";
 			placeholder3.PreferredHeight = 20;
 			placeholder3.TabIndex = 3;
 			Layouts.GridLayoutEngine.SetColumn (placeholder3, 0);
@@ -267,20 +270,36 @@ namespace Epsitec.Common.Widgets
 			Layouts.GridLayoutEngine.SetRow (placeholder4, 3);
 			Layouts.GridLayoutEngine.SetColumnSpan (placeholder4, 2);
 
+			placeholder5.Controller = "Numeric";
+			placeholder5.PreferredHeight = 20;
+			placeholder5.TabIndex = 5;
+			Layouts.GridLayoutEngine.SetColumn (placeholder5, 0);
+			Layouts.GridLayoutEngine.SetRow (placeholder5, 4);
+
+			placeholder6.Controller = "Numeric";
+			placeholder6.PreferredHeight = 20;
+			placeholder6.TabIndex = 6;
+			Layouts.GridLayoutEngine.SetColumn (placeholder6, 2);
+			Layouts.GridLayoutEngine.SetRow (placeholder6, 4);
+
+
 			Binding binding1 = new Binding (BindingMode.TwoWay, "Person.Name");
 			Binding binding2 = new Binding (BindingMode.TwoWay, "Person.Forename");
 			Binding binding3 = new Binding (BindingMode.OneWay, "Person.Slow.A");
 			Binding binding4 = new Binding (BindingMode.TwoWay, "Person.Sex");
+			Binding binding5 = new Binding (BindingMode.OneWay, "Person.Slow.B");
+			Binding binding6 = new Binding (BindingMode.OneWay, "Person.Slow.C");
 
 			binding3.IsAsync = true;
+			binding5.IsAsync = true;
+			binding6.IsAsync = true;
 
 			placeholder1.SetBinding (Placeholder.ValueProperty, binding1);
 			placeholder2.SetBinding (Placeholder.ValueProperty, binding2);
 			placeholder3.SetBinding (Placeholder.ValueProperty, binding3);
 			placeholder4.SetBinding (Placeholder.ValueProperty, binding4);
-
-			placeholder3.Name = "Slow_A";
-			placeholder3.Controller = "Numeric";
+			placeholder5.SetBinding (Placeholder.ValueProperty, binding5);
+			placeholder6.SetBinding (Placeholder.ValueProperty, binding6);
 
 			Layouts.LayoutEngine.SetLayoutEngine (panel, grid);
 
@@ -291,6 +310,8 @@ namespace Epsitec.Common.Widgets
 			panel.Children.Add (placeholder2);
 			panel.Children.Add (placeholder3);
 			panel.Children.Add (placeholder4);
+			panel.Children.Add (placeholder5);
+			panel.Children.Add (placeholder6);
 
 			StaticText text;
 
