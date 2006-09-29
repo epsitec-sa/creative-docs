@@ -7,11 +7,19 @@ namespace Epsitec.Common.Widgets
 {
 	public static class Application
 	{
+		static Application()
+		{
+			Application.thread = System.Threading.Thread.CurrentThread;
+		}
+		
+		private static System.Threading.Thread thread;
 
 		public static void QueueAsyncCallback(Support.SimpleCallback callback)
 		{
 			lock (Application.queueExclusion)
 			{
+				System.Diagnostics.Debug.Assert (Application.thread == System.Threading.Thread.CurrentThread);
+				
 				if ((Application.pendingCallbacks.Contains (callback)) ||
 					(Application.runningCallbacks.Contains (callback)))
 				{
@@ -26,6 +34,7 @@ namespace Epsitec.Common.Widgets
 
 		public static void ExecuteAsyncCallbacks()
 		{
+			System.Diagnostics.Debug.Assert (Application.thread == System.Threading.Thread.CurrentThread);
 			System.Diagnostics.Debug.Assert (Application.runningCallbacks.Count == 0);
 
 			if (Application.pendingCallbacks.Count > 0)

@@ -261,7 +261,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void UpdateValueType()
+		internal INamedType UpdateValueType()
 		{
 			INamedType oldValueType = this.valueType;
 			INamedType newValueType = null;
@@ -293,6 +293,8 @@ namespace Epsitec.Common.Widgets
 			{
 				this.UpdateValueName (oldValueName, newValueName);
 			}
+			
+			return this.valueType;
 		}
 
 		private void UpdateValueType(object oldValueType, object newValueType)
