@@ -1296,7 +1296,7 @@ namespace Epsitec.Common.Document
 
 					ZipFile zip = new ZipFile();
 					zip.AddEntry("document.data", data);
-					this.WriteMiniature(zip);
+					this.WriteMiniature(zip, Misc.IsExtension(filename, ".crmod"));
 					this.WriteStatistics(zip);
 					this.imageCache.WriteData(zip, this.imageIncludeMode);
 					this.FontWriteAll(zip);
@@ -1623,12 +1623,12 @@ namespace Epsitec.Common.Document
 
 
 		#region Miniature
-		protected void WriteMiniature(ZipFile zip)
+		protected void WriteMiniature(ZipFile zip, bool isModel)
 		{
 			//	Ecrit la miniature de la première page dans le fichier zip.
 			string filename;
 			byte[] data;
-			if (this.printer.Miniature(new Size(100, 100), out filename, out data))
+			if (this.printer.Miniature(new Size(100, 100), isModel, out filename, out data))
 			{
 				zip.AddEntry(filename, data);
 			}
