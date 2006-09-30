@@ -43,17 +43,19 @@ namespace Epsitec.Common.Document
 			drawingContext.ContainerSize = this.document.PageSize;
 			drawingContext.PreviewActive = true;
 			drawingContext.IsBitmap = true;
+			drawingContext.GridShow = false;
 
 			return this.ExportGeometry(drawingContext, filename, this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage);
 		}
 
-		public bool Miniature(Size sizeHope, out string filename, out byte[] data)
+		public bool Miniature(Size sizeHope, bool isModel, out string filename, out byte[] data)
 		{
 			//	Retourne les données pour l'image miniature de la première page.
 			DrawingContext drawingContext = new DrawingContext(this.document, null);
 			drawingContext.ContainerSize = this.document.PageSize;
 			drawingContext.PreviewActive = false;
 			drawingContext.IsBitmap = true;
+			drawingContext.GridShow = isModel;
 
 			Size pageSize = this.document.GetPageSize(0);
 			double dpix = sizeHope.Width*254/pageSize.Width;
@@ -145,6 +147,7 @@ namespace Epsitec.Common.Document
 				this.drawingContext = new DrawingContext(this.document, null);
 				this.drawingContext.ContainerSize = this.document.DocumentSize;
 				this.drawingContext.PreviewActive = true;
+				this.drawingContext.GridShow = false;
 
 				Settings.PrintInfo pi = this.document.Settings.PrintInfo;
 
@@ -1153,9 +1156,12 @@ namespace Epsitec.Common.Document
 				gfx.PopColorModifier();
 			}
 
-			gfx.LineWidth = 1/zoom;
-			this.document.Modifier.ActiveViewer.DrawGuides(gfx);
-			gfx.LineWidth = 1;
+			if (drawingContext.GridShow)
+			{
+				gfx.LineWidth = 1/zoom;
+				this.document.Modifier.ActiveViewer.DrawGuides(gfx);
+				gfx.LineWidth = 1;
+			}
 
 			if (paintMark)
 			{
