@@ -810,17 +810,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.ListFilenames();
 			int rows = this.files.Count;
 
-			this.table.SetArraySize(4, rows);
+			this.table.SetArraySize(5, rows);
 
 			this.table.SetWidthColumn(0, 50);
 			this.table.SetWidthColumn(1, 90);
 			this.table.SetWidthColumn(2, 90);
-			this.table.SetWidthColumn(3, 40);
+			this.table.SetWidthColumn(3, 80);
+			this.table.SetWidthColumn(4, 40);
 
 			this.table.SetHeaderTextH(0, Res.Strings.Dialog.File.Header.Preview);
 			this.table.SetHeaderTextH(1, Res.Strings.Dialog.File.Header.Filename);
 			this.table.SetHeaderTextH(2, Res.Strings.Dialog.File.Header.Description);
-			this.table.SetHeaderTextH(3, Res.Strings.Dialog.File.Header.Size);
+			this.table.SetHeaderTextH(3, "Date");  // TODO: Res.Strings.Dialog.File.Header.Date);
+			this.table.SetHeaderTextH(4, Res.Strings.Dialog.File.Header.Size);
 
 			this.table.SelectRow(-1, true);
 
@@ -857,7 +859,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							st.Margins = new Margins(6, 6, 0, 0);
 							this.table[column, row].Insert(st);
 						}
-						else if (column == 3)  // taille ?
+						else if (column == 3)  // date ?
+						{
+							st = new StaticText();
+							st.ContentAlignment = ContentAlignment.MiddleLeft;
+							st.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+							st.Dock = DockStyle.Fill;
+							st.Margins = new Margins(6, 0, 0, 0);
+							this.table[column, row].Insert(st);
+						}
+						else if (column == 4)  // taille ?
 						{
 							st = new StaticText();
 							st.ContentAlignment = ContentAlignment.MiddleRight;
@@ -895,6 +906,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				st.Text = this.files[row].Description;
 
 				st = this.table[3, row].Children[0] as StaticText;
+				st.Text = this.files[row].FileDate;
+
+				st = this.table[4, row].Children[0] as StaticText;
 				st.Text = this.files[row].FileSize;
 
 				this.table.SelectRow(row, row==sel);
@@ -2128,6 +2142,46 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 
 					return this.folderItem.IsVirtual;
+				}
+			}
+
+			public string FileDate
+			{
+				//	Date de modification du fichier.
+				get
+				{
+					if (this.isNewEmptyDocument)
+					{
+						return "";
+					}
+					else
+					{
+						if (this.IsDirectoryOrShortcut)
+						{
+							if (string.IsNullOrEmpty(this.folderItem.FullPath))
+							{
+								return "";
+							}
+
+							System.IO.DirectoryInfo info = new System.IO.DirectoryInfo(this.folderItem.FullPath);
+							if (!info.Exists)
+							{
+								return "";
+							}
+
+							return string.Concat(info.LastWriteTime.ToShortDateString(), " ", info.LastWriteTime.ToShortTimeString());
+						}
+						else
+						{
+							System.IO.FileInfo info = new System.IO.FileInfo(this.folderItem.FullPath);
+							if (!info.Exists)
+							{
+								return "";
+							}
+
+							return string.Concat(info.LastWriteTime.ToShortDateString(), " ", info.LastWriteTime.ToShortTimeString());
+						}
+					}
 				}
 			}
 
