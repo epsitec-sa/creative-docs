@@ -821,7 +821,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.SetHeaderTextH(0, Res.Strings.Dialog.File.Header.Preview);
 			this.table.SetHeaderTextH(1, Res.Strings.Dialog.File.Header.Filename);
 			this.table.SetHeaderTextH(2, Res.Strings.Dialog.File.Header.Description);
-			this.table.SetHeaderTextH(3, "Date");  // TODO: Res.Strings.Dialog.File.Header.Date);
+			this.table.SetHeaderTextH(3, Res.Strings.Dialog.File.Header.Date);
 			this.table.SetHeaderTextH(4, Res.Strings.Dialog.File.Header.Size);
 
 			this.table.SelectRow(-1, true);

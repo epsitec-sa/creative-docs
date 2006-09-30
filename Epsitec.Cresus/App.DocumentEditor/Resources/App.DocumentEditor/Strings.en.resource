@@ -238,4 +238,5 @@
   <data id="091">Drag here to resize the window</data>
   <data id="0I7" mod="1">{0} MB</data>
   <data id="0J7" mod="1">{0} GB</data>
+  <data id="0V7" mod="1">Date</data>
 </bundle>

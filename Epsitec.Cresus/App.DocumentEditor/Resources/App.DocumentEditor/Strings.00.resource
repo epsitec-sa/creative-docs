@@ -55,6 +55,7 @@
   <data name="Dialog.File.Header.Preview" id="0N6" mod="1">Aperçu</data>
   <data name="Dialog.File.Header.Filename" id="0P6" mod="1">Nom</data>
   <data name="Dialog.File.Header.Description" id="0O6" mod="1">Type</data>
+  <data name="Dialog.File.Header.Date" id="0V7" mod="1">Date</data>
   <data name="Dialog.File.Header.Size" id="0Q6" mod="1">Taille</data>
   <data name="Dialog.File.Size.Kilo" id="0S6" mod="1">{0} Ko</data>
   <data name="Dialog.File.Size.Mega" id="0I7" mod="1">{0} Mo</data>
