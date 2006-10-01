@@ -181,48 +181,54 @@ namespace Epsitec.Common.Document
 
 		public void Dispose()
 		{
-			if ( this.modifier != null )
+			if (this.imageCache != null)
+			{
+				this.imageCache.Clear();
+				this.imageCache = null;
+			}
+
+			if (this.modifier != null)
 			{
 				this.modifier.Dispose();
 				this.modifier = null;
 			}
 
-			if ( this.wrappers != null )
+			if (this.wrappers != null)
 			{
 				this.wrappers.Dispose();
 				this.wrappers = null;
 			}
 
-			if ( this.notifier != null )
+			if (this.notifier != null)
 			{
 				this.notifier.Dispose();
 				this.notifier = null;
 			}
 
-			if ( this.imageCache != null )
+			if (this.imageCache != null)
 			{
 				this.imageCache = null;
 			}
 
-			if ( this.dialogs != null )
+			if (this.dialogs != null)
 			{
 				this.dialogs.Dispose();
 				this.dialogs = null;
 			}
 
-			if ( this.settings != null )
+			if (this.settings != null)
 			{
 				this.settings.Dispose();
 				this.settings = null;
 			}
 
-			if ( this.printer != null )
+			if (this.printer != null)
 			{
 				this.printer.Dispose();
 				this.printer = null;
 			}
 
-			if ( this.exportPDF != null )
+			if (this.exportPDF != null)
 			{
 				this.exportPDF.Dispose();
 				this.exportPDF = null;
