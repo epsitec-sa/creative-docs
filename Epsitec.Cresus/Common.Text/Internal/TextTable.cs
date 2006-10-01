@@ -651,10 +651,10 @@ namespace Epsitec.Common.Text.Internal
 		{
 			Internal.Cursor record = this.cursors.ReadCursor (cursor_id);
 			
-			Debug.Assert.IsTrue (record.TextChunkId.IsValid);
+			Debug.Assert.IsTrue (record.TextChunkId > 0);
 			
-			Internal.TextChunkId chunk_id = record.TextChunkId;
-			Internal.TextChunk   chunk    = this.text_chunks[chunk_id-1];
+			int chunk_id = record.TextChunkId;
+			Internal.TextChunk chunk = this.text_chunks[chunk_id-1];
 			
 			int cursor_position = chunk.GetCursorPosition (cursor_id);
 			
@@ -679,7 +679,7 @@ namespace Epsitec.Common.Text.Internal
 		{
 			Internal.Cursor record = this.cursors.ReadCursor (cursor_id);
 			
-			Debug.Assert.IsTrue (record.TextChunkId.IsValid);
+			Debug.Assert.IsTrue (record.TextChunkId > 0);
 			Debug.Assert.IsTrue (this.GetCursorPosition (cursor_id) + length <= this.text_length);
 			
 			System.Collections.ArrayList list = null;
@@ -787,7 +787,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		public int ReadText(Internal.CursorId cursor_id, int offset, int length, ulong[] buffer)
 		{
-			Internal.TextChunkId chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
+			int chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
 			
 			int index = chunk_id - 1;
 			int read  = 0;
@@ -841,7 +841,7 @@ namespace Epsitec.Common.Text.Internal
 			//
 			//	Retourne -1 si le callback n'a jamais retourné 'true'.
 			
-			Internal.TextChunkId chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
+			int chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
 			
 			int index = chunk_id - 1;
 			int count = 0;
@@ -937,7 +937,7 @@ namespace Epsitec.Common.Text.Internal
 			//
 			//	Si on atteint la fin du texte, on aura 'next' = 'code'.
 			
-			Internal.TextChunkId chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
+			int chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
 			
 			code = 0;
 			next = 0;
@@ -992,7 +992,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		public int ChangeMarkers(Internal.CursorId cursor_id, int length, ulong marker, bool set)
 		{
-			Internal.TextChunkId chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
+			int chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
 			
 			int  index    = chunk_id - 1;
 			int  changed  = 0;
@@ -1039,7 +1039,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		public int WriteText(Internal.CursorId cursor_id, int offset, int length, ulong[] buffer)
 		{
-			Internal.TextChunkId chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
+			int chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
 			
 			int  index    = chunk_id - 1;
 			int  wrote    = 0;
@@ -1262,7 +1262,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		private Internal.TextChunkId FindTextChunkId(int position)
+		private int FindTextChunkId(int position)
 		{
 			//	Détermine dans quel morceau de texte se trouve la position
 			//	indiquée. Si la position est à la frontière de deux morceaux,
@@ -1276,7 +1276,7 @@ namespace Epsitec.Common.Text.Internal
 				
 				if (position <= 0)
 				{
-					return new Internal.TextChunkId (i+1);
+					return i+1;
 				}
 			}
 			
@@ -1286,11 +1286,11 @@ namespace Epsitec.Common.Text.Internal
 			throw new Debug.FailureException ();
 		}
 		
-		private int                  FindTextChunkPosition(Internal.TextChunkId id)
+		private int                  FindTextChunkPosition(int id)
 		{
 			//	Détermine la position du début du morceau spécifié.
 			
-			Debug.Assert.IsTrue (id.IsValid);
+			Debug.Assert.IsTrue (id > 0);
 			Debug.Assert.IsInBounds (id-1, 0, this.text_chunks.Length-1);
 			
 			int position = 0;
@@ -1305,23 +1305,23 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		private void OptimizeTextChunk(Internal.TextChunkId id)
+		private void OptimizeTextChunk(int id)
 		{
 			//	Optimise l'utilisation de la mémoire du morceau de texte.
 			
-			Debug.Assert.IsTrue (id.IsValid);
+			Debug.Assert.IsTrue (id > 0);
 			Debug.Assert.IsInBounds (id, 0, this.text_chunks.Length-1);
 			
 			this.text_chunks[id-1].OptimizeTextBuffer ();
 		}
 		
-		private void SplitTextChunk(Internal.TextChunkId id, int offset)
+		private void SplitTextChunk(int id, int offset)
 		{
 			//	Partage un morceau de texte devenu trop grand en deux morceaux
 			//	distincts. Les curseurs dans la table globale doivent tous être
 			//	vérifiés et éventuellement ajustés.
 			
-			Debug.Assert.IsTrue (id.IsValid);
+			Debug.Assert.IsTrue (id > 0);
 			Debug.Assert.IsInBounds (id-1, 0, this.text_chunks.Length-1);
 			Debug.Assert.IsInBounds (offset, 0, this.text_chunks[id-1].TextLength);
 			

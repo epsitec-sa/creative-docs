@@ -109,7 +109,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public Internal.TextChunkId GetCursorTextChunkId(Internal.CursorId id)
+		public int GetCursorTextChunkId(Internal.CursorId id)
 		{
 			Debug.Assert.IsTrue (id.IsValid);
 			Debug.Assert.IsInBounds (id, 0, this.cursors.Length-1);
@@ -118,7 +118,7 @@ namespace Epsitec.Common.Text.Internal
 			return this.cursors[id].TextChunkId;
 		}
 		
-		public void SetCursorTextChunkId(Internal.CursorId id, Internal.TextChunkId text_chunk_id)
+		public void SetCursorTextChunkId(Internal.CursorId id, int text_chunk_id)
 		{
 			Debug.Assert.IsTrue (id.IsValid);
 			Debug.Assert.IsInBounds (id, 0, this.cursors.Length-1);
