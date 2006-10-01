@@ -26,7 +26,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static Internal.Cursor		Empty = new Internal.Cursor ();
 		
-		public Internal.TextChunkId			TextChunkId
+		public int							TextChunkId
 		{
 			get
 			{
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Text.Internal
 		//	- CursorTable.RecycleCursor
 		//
 		
-		private Internal.TextChunkId		chunk_id;
+		private int							chunk_id;
 		private ICursor						instance;
 		private int							cached_pos;
 		

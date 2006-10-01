@@ -228,9 +228,6 @@
     <Compile Include="Internal\TextChunk.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Internal\TextChunkId.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Internal\TextTable.cs">
       <SubType>Code</SubType>
     </Compile>
