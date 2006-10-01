@@ -188,7 +188,7 @@ namespace Epsitec.Common.Document
 
 
 		#region Class Item
-		public class Item
+		public class Item : System.IDisposable
 		{
 			public Item(string filename, byte[] data)
 			{
@@ -209,7 +209,7 @@ namespace Epsitec.Common.Document
 						this.data = data;
 					}
 
-					this.image = Drawing.Bitmap.FromData(this.data);
+					this.image = Bitmap.FromData(this.data);
 				}
 				catch
 				{
@@ -240,7 +240,7 @@ namespace Epsitec.Common.Document
 
 				try
 				{
-					this.image = Drawing.Bitmap.FromData(this.data);
+					this.image = Bitmap.FromData(this.data);
 				}
 				catch
 				{
@@ -358,6 +358,25 @@ namespace Epsitec.Common.Document
 				}
 			}
 
+			#region IDisposable Members
+			public void Dispose()
+			{
+				this.data = null;
+
+				if (this.image != null)
+				{
+					this.image.Dispose();
+					this.image = null;
+				}
+
+				if (this.imageDimmed != null)
+				{
+					this.imageDimmed.Dispose();
+					this.imageDimmed = null;
+				}
+			}
+			#endregion
+						
 			protected string				filename;
 			protected string				shortName;
 			protected bool					insideDoc;
