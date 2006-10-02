@@ -7,7 +7,7 @@ namespace Epsitec.Common.Script
 	/// La classe Source représente le source complet d'un script, lequel est
 	/// constitué d'une série de méthodes et d'une source de données.
 	/// </summary>
-	public class Source : Types.IChange
+	public class Source : Types.INotifyChanged
 	{
 		public Source()
 		{
@@ -472,7 +472,7 @@ namespace Epsitec.Common.Script
 		}
 		
 		
-		#region IChange Members
+		#region INotifyChanged Members
 		public event Support.EventHandler		Changed;
 		#endregion
 		

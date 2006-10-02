@@ -4,9 +4,9 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// L'interface IChange définit un événement Changed.
+	/// The <c>INotifyChanged</c> interface defines a <c>Changed</c> event.
 	/// </summary>
-	public interface IChange
+	public interface INotifyChanged
 	{
 		event Support.EventHandler	Changed;
 	}

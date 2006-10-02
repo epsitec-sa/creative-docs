@@ -7,7 +7,7 @@ namespace Epsitec.Common.DynamicData
 	/// La classe DynamicFieldCollection définit quels champs d'une table
 	/// sont calculés de manière dynamique.
 	/// </summary>
-	public class DynamicFieldCollection : System.Collections.ICollection, Types.IChange
+	public class DynamicFieldCollection : System.Collections.ICollection, Types.INotifyChanged
 	{
 		public DynamicFieldCollection()
 		{
@@ -375,7 +375,7 @@ namespace Epsitec.Common.DynamicData
 		}
 		
 		
-		#region IChange Members
+		#region INotifyChanged Members
 		public event Support.EventHandler		Changed;
 		#endregion
 		
