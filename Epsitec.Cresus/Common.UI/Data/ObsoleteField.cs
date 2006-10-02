@@ -7,7 +7,7 @@ namespace Epsitec.Common.UI.Data
 	/// La classe Field décrit un champ d'un Record, utilisé pour échanger des
 	/// données entre une application et son interface via mapper/binder/...
 	/// </summary>
-	public class ObsoleteField : Types.IDataValue, Types.IChange
+	public class ObsoleteField : Types.IDataValue, Types.INotifyChanged
 	{
 		public ObsoleteField()
 		{
@@ -248,7 +248,7 @@ namespace Epsitec.Common.UI.Data
 		}
 		#endregion
 		
-		#region IChange Members
+		#region INotifyChanged Members
 		public event Support.EventHandler		Changed;
 		#endregion
 		

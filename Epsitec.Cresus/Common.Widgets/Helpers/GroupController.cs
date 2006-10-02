@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets.Helpers
 	/// <summary>
 	/// La classe GroupController permet de gérer des groupes de widgets.
 	/// </summary>
-	public class GroupController : DependencyObject, Types.IChange
+	public class GroupController : DependencyObject, Types.INotifyChanged
 	{
 		public GroupController(Widget parent, string group)
 		{
@@ -232,7 +232,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		}
 		
 		
-		#region IChange Members
+		#region INotifyChanged Members
 		public event Support.EventHandler	Changed;
 		#endregion
 

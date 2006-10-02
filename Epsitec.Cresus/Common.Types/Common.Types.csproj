@@ -188,7 +188,7 @@
     <Compile Include="HiddenAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IChange.cs">
+    <Compile Include="INotifyChanged.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IDataCollection.cs">

@@ -10,7 +10,7 @@ namespace Epsitec.Common.UI.Data
 	/// La classe Record décrit un ensemble de champs utilisés pour échanger des
 	/// données entre une application et son interface via mapper/binder/...
 	/// </summary>
-	public class ObsoleteRecord : Types.AbstractDataCollection, Types.IDataFolder, Types.IDataGraph, Types.IChange
+	public class ObsoleteRecord : Types.AbstractDataCollection, Types.IDataFolder, Types.IDataGraph, Types.INotifyChanged
 	{
 		public ObsoleteRecord()
 		{
