@@ -210,7 +210,7 @@ namespace Epsitec.Common.Document.Panels
 					return new ImageFilter(ImageFilteringMode.Bilinear);
 
 				case "Bicubic":
-					return new ImageFilter(ImageFilteringMode.Bicubic);
+					return new ImageFilter(ImageFilteringMode.ResamplingBicubic);
 
 				case "Spline16":
 					return new ImageFilter(ImageFilteringMode.Spline16);
@@ -288,7 +288,7 @@ namespace Epsitec.Common.Document.Panels
 				return "Bilinear";
 			}
 
-			if (filter.Mode == ImageFilteringMode.Bicubic)
+			if (filter.Mode == ImageFilteringMode.ResamplingBicubic)
 			{
 				return "Bicubic";
 			}

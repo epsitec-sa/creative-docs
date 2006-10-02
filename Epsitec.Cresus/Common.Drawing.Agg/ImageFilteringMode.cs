@@ -22,6 +22,19 @@ namespace Epsitec.Common.Drawing
 		Mitchell = 10,
 		Sinc = 11,
 		Lanczos = 12,
-		Blackman = 13
+		Blackman = 13,
+		
+		ResamplingBicubic = -2,
+		ResamplingSpline16 = -3,
+		ResamplingSpline36 = -4,
+		ResamplingKaiser = -5,
+		ResamplingQuadric = -6,
+		ResamplingCatrom = -7,
+		ResamplingGaussian = -8,
+		ResamplingBessel = -9,
+		ResamplingMitchell = -10,
+		ResamplingSinc = -11,
+		ResamplingLanczos = -12,
+		ResamplingBlackman = -13
 	}
 }
