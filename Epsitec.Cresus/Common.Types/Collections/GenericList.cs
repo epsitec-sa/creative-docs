@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types.Collections
 {
-	public abstract class GenericList<T> : IList<T>
+	public abstract class GenericList<T> : IList<T>, INotifyCollectionChanged
 	{
 		protected GenericList()
 		{
@@ -23,11 +23,14 @@ namespace Epsitec.Common.Types.Collections
 		public void Insert(int index, T item)
 		{
 			this.list.Insert (index, item);
+			this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index, item));
 		}
 
 		public void RemoveAt(int index)
 		{
+			T value = this.list[index];
 			this.list.RemoveAt (index);
+			this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Remove, -1, null, index, value));
 		}
 
 		public T this[int index]
@@ -38,7 +41,10 @@ namespace Epsitec.Common.Types.Collections
 			}
 			set
 			{
+				T oldValue = this.list[index];
+				
 				this.list[index] = value;
+				this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Replace, index, value, index, oldValue));
 			}
 		}
 
@@ -48,12 +54,15 @@ namespace Epsitec.Common.Types.Collections
 
 		public void Add(T item)
 		{
+			int index = this.list.Count;
 			this.list.Add (item);
+			this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index, item));
 		}
 
 		public void Clear()
 		{
 			this.list.Clear ();
+			this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Reset));
 		}
 
 		public bool Contains(T item)
@@ -84,7 +93,17 @@ namespace Epsitec.Common.Types.Collections
 
 		public bool Remove(T item)
 		{
-			return this.list.Remove (item);
+			int index = this.list.IndexOf (item);
+			if (index >= 0)
+			{
+				this.list.RemoveAt (index);
+				this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Remove, -1, null, index, item));
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		#endregion
@@ -104,6 +123,20 @@ namespace Epsitec.Common.Types.Collections
 		{
 			return this.list.GetEnumerator ();
 		}
+
+		#endregion
+
+		protected virtual void OnCollectionChanged(CollectionChangedEventArgs e)
+		{
+			if (this.CollectionChanged != null)
+			{
+				this.CollectionChanged (this, e);
+			}
+		}
+
+		#region INotifyCollectionChanged Members
+
+		public event Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> CollectionChanged;
 
 		#endregion
 
