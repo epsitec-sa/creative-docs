@@ -20,7 +20,7 @@ namespace Epsitec.Common.Drawing
 		Gaussian = 8,
 		Bessel = 9,
 		Mitchell = 10,
-		Sync = 11,
+		Sinc = 11,
 		Lanczos = 12,
 		Blackman = 13
 	}

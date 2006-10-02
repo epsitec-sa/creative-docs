@@ -100,8 +100,8 @@ namespace Epsitec.Common.Document.Panels
 			this.AddFilterCombo("Gaussian");
 			this.AddFilterCombo("Bessel");
 			this.AddFilterCombo("Mitchell");
-			this.AddFilterCombo("Sync1");
-			this.AddFilterCombo("Sync2");
+			this.AddFilterCombo("Sinc1");
+			this.AddFilterCombo("Sinc2");
 			this.AddFilterCombo("Lanczos1");
 			this.AddFilterCombo("Lanczos2");
 			this.AddFilterCombo("Blackman1");
@@ -236,11 +236,11 @@ namespace Epsitec.Common.Document.Panels
 				case "Mitchell":
 					return new ImageFilter(ImageFilteringMode.Mitchell);
 
-				case "Sync1":
-					return new ImageFilter(ImageFilteringMode.Sync, Image.normRadius);
+				case "Sinc1":
+					return new ImageFilter(ImageFilteringMode.Sinc, Image.normRadius);
 
-				case "Sync2":
-					return new ImageFilter(ImageFilteringMode.Sync, Image.softRadius);
+				case "Sinc2":
+					return new ImageFilter(ImageFilteringMode.Sinc, Image.softRadius);
 
 				case "Lanczos1":
 					return new ImageFilter(ImageFilteringMode.Lanczos, Image.normRadius);
@@ -333,15 +333,15 @@ namespace Epsitec.Common.Document.Panels
 				return "Mitchell";
 			}
 
-			if (filter.Mode == ImageFilteringMode.Sync)
+			if (filter.Mode == ImageFilteringMode.Sinc)
 			{
 				if (filter.Radius == Image.normRadius)
 				{
-					return "Sync1";
+					return "Sinc1";
 				}
 				else
 				{
-					return "Sync2";
+					return "Sinc2";
 				}
 			}
 
