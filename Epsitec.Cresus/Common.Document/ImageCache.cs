@@ -14,8 +14,27 @@ namespace Epsitec.Common.Document
 		public ImageCache()
 		{
 			this.dico = new Dictionary<string, Item>();
+			this.isDisplay = true;
 		}
 
+
+		public bool IsDisplay
+		{
+			get
+			{
+				return this.isDisplay;
+			}
+
+			set
+			{
+				this.isDisplay = value;
+
+				foreach (Item item in this.dico.Values)
+				{
+					item.IsDisplay = this.isDisplay;
+				}
+			}
+		}
 
 		public Item Get(string filename)
 		{
@@ -27,14 +46,7 @@ namespace Epsitec.Common.Document
 
 			if (this.dico.ContainsKey(filename))
 			{
-				Item item = this.dico[filename];
-
-				if (item.Image == null)
-				{
-					item.Reload();
-				}
-
-				return item;
+				return this.dico[filename];
 			}
 			else
 			{
@@ -59,7 +71,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				Item item = new Item(filename, data);
+				Item item = new Item(filename, data, this.isDisplay);
 				this.dico.Add(filename, item);
 				return item;
 			}
@@ -101,10 +113,7 @@ namespace Epsitec.Common.Document
 			{
 				foreach (KeyValuePair<string, Item> pair in this.dico)
 				{
-					if (pair.Value.KBWeight > 200)  // image de plus de 200 KB ?
-					{
-						pair.Value.Free();
-					}
+					pair.Value.FreeOriginal();
 				}
 			}
 		}
@@ -226,14 +235,14 @@ namespace Epsitec.Common.Document
 		#region Class Item
 		public class Item : System.IDisposable
 		{
-			public Item(string filename, byte[] data)
+			public Item(string filename, byte[] data, bool isDisplay)
 			{
 				//	Constructeur qui met en cache les données de l'image.
 				//	Si les données 'data' n'existent pas, l'image est lue sur disque.
 				//	Si les données existent, l'image est lue à partir des données en mémoire.
 				this.filename = filename;
 				this.shortName = null;
-				System.Diagnostics.Debug.WriteLine(string.Format("Cache {0}", this.filename));
+				this.isDisplay = isDisplay;
 
 				try
 				{
@@ -246,24 +255,24 @@ namespace Epsitec.Common.Document
 						this.data = data;
 					}
 
-					this.image = Bitmap.FromData(this.data);
-					this.size = this.image.Size;
+					this.originalImage = Bitmap.FromData(this.data);
+					this.originalSize = this.originalImage.Size;
+					this.CreateDisplayImage();
 				}
 				catch
 				{
 					this.data = null;
-					this.image = null;
-					this.size = Size.Empty;
+					this.originalImage = null;
+					this.originalSize = Size.Empty;
 				}
 
-				this.imageDimmed = null;
+				this.dimmedImage = null;
 			}
 
 			public bool Reload()
 			{
 				//	Relit l'image sur disque.
 				//	Retourne false en cas d'erreur.
-				System.Diagnostics.Debug.WriteLine(string.Format("Reload {0}", this.filename));
 				byte[] initialData = this.data;
 
 				try
@@ -276,44 +285,102 @@ namespace Epsitec.Common.Document
 					return false;
 				}
 
-				Drawing.Image initialImage = this.image;
+				Drawing.Image initialImage = this.originalImage;
 
 				try
 				{
-					this.image = Bitmap.FromData(this.data);
+					this.originalImage = Bitmap.FromData(this.data);
+					this.CreateDisplayImage();
 				}
 				catch
 				{
 					this.data = initialData;
-					this.image = initialImage;
+					this.originalImage = initialImage;
 					return false;
 				}
 
-				this.imageDimmed = null;
+				this.dimmedImage = null;
 				return true;
 			}
 
-			public void Free()
+			protected void CreateDisplayImage()
 			{
-				//	Libère l'image.
-				System.Diagnostics.Debug.WriteLine(string.Format("Free {0}", this.filename));
-				if (this.image != null)
-				{
-					this.image.Dispose();
-					this.image = null;
-				}
+				//	Crée l'image pour l'affichage.
+				//	Libère l'image originale si elle est trop grosse.
+				System.Diagnostics.Debug.Assert(this.originalImage != null);
 
-				if (this.imageDimmed != null)
+				if (this.IsBigOriginal)  // image dépasse 200 KB ?
 				{
-					this.imageDimmed.Dispose();
-					this.imageDimmed = null;
+					//	Génère une image pour l'affichage (this.displayImage) qui pèse
+					//	environ 200 KB.
+					this.displayScale = System.Math.Sqrt(this.KBWeight/200);
+					int dx = (int) (this.originalSize.Width/this.displayScale);
+					int dy = (int) (this.originalSize.Height/this.displayScale);
+					this.displayImage = ImageCache.ResizeImage(this.originalImage, dx, dy);
+
+					this.originalImage.Dispose();  // oublie tout de suite l'image originale
+					this.originalImage = null;
+				}
+				else
+				{
+					this.displayImage = this.originalImage;
+					this.displayScale = 1.0;
+				}
+			}
+
+			public void FreeOriginal()
+			{
+				//	Libère l'image originale, si elle est grosse.
+				if (this.originalImage != null && this.IsBigOriginal)
+				{
+					this.originalImage.Dispose();
+					this.originalImage = null;
 				}
 			}
 
 			public void Write(string otherFilename)
 			{
-				//	Exporte l'image dans un fichier quelconque.
+				//	Exporte l'image originale dans un fichier quelconque.
 				System.IO.File.WriteAllBytes(otherFilename, this.data);
+			}
+
+			public bool IsDisplay
+			{
+				get
+				{
+					return this.isDisplay;
+				}
+				set
+				{
+					this.isDisplay = value;
+				}
+			}
+
+			public Size Size
+			{
+				//	Retourne la taille de l'image originale.
+				get
+				{
+					return this.originalSize;
+				}
+			}
+
+			public double Scale
+			{
+				//	Retourne l'échelle de l'image pour l'affichage (>= 1).
+				get
+				{
+					return this.isDisplay ? this.displayScale : 1.0;
+				}
+			}
+
+			public bool IsBigOriginal
+			{
+				//	Retourne 'true' si l'image originale dépasse 200 KB.
+				get
+				{
+					return (this.KBWeight > 200);
+				}
 			}
 
 			public long KBWeight
@@ -321,7 +388,7 @@ namespace Epsitec.Common.Document
 				//	Retourne la taille de l'image en KB.
 				get
 				{
-					return ((long) this.size.Width * (long) this.size.Height) / (1024/4);
+					return ((long) this.originalSize.Width * (long) this.originalSize.Height) / (1024/4);
 				}
 			}
 
@@ -375,31 +442,43 @@ namespace Epsitec.Common.Document
 
 			public Drawing.Image Image
 			{
-				//	Retourne l'objet Drawing.Image normal.
+				//	Retourne l'objet Drawing.Image.
 				get
 				{
-					return this.image;
+					if (this.isDisplay)
+					{
+						return this.displayImage;
+					}
+					else
+					{
+						if (this.originalImage == null)
+						{
+							this.originalImage = Bitmap.FromData(this.data);
+						}
+
+						return this.originalImage;
+					}
 				}
 			}
 
-			public Drawing.Image ImageDimmed
+			public Drawing.Image DimmedImage
 			{
 				//	Retourne l'objet Drawing.Image estompé.
 				get
 				{
 					//?this.OpenBitmapDimmed();  // trop couteux en temps calcul et en mémoire !
-					return this.imageDimmed;
+					return this.dimmedImage;
 				}
 			}
 
 			protected void OpenBitmapDimmed()
 			{
 				//	Ouvre le bitmap de la variante estompée de l'image si nécessaire.
-				if ( this.image == null )  return;
-				if ( this.imageDimmed != null )  return;
+				if ( this.originalImage == null )  return;
+				if ( this.dimmedImage != null )  return;
 
-				this.imageDimmed = Bitmap.CopyImage(this.image);
-				Pixmap.RawData data = new Pixmap.RawData(this.imageDimmed);
+				this.dimmedImage = Bitmap.CopyImage(this.originalImage);
+				Pixmap.RawData data = new Pixmap.RawData(this.dimmedImage);
 				using ( data )
 				{
 					Color pixel;
@@ -429,16 +508,22 @@ namespace Epsitec.Common.Document
 			{
 				this.data = null;
 
-				if (this.image != null)
+				if (this.originalImage != null)
 				{
-					this.image.Dispose();
-					this.image = null;
+					this.originalImage.Dispose();
+					this.originalImage = null;
 				}
 
-				if (this.imageDimmed != null)
+				if (this.displayImage != null)
 				{
-					this.imageDimmed.Dispose();
-					this.imageDimmed = null;
+					this.displayImage.Dispose();
+					this.displayImage = null;
+				}
+
+				if (this.dimmedImage != null)
+				{
+					this.dimmedImage.Dispose();
+					this.dimmedImage = null;
 				}
 			}
 			#endregion
@@ -447,13 +532,32 @@ namespace Epsitec.Common.Document
 			protected string				shortName;
 			protected bool					insideDoc;
 			protected byte[]				data;
-			protected Drawing.Image			image;
-			protected Drawing.Image			imageDimmed;
-			protected Size					size;
+			protected Drawing.Image			originalImage;
+			protected Drawing.Image			displayImage;
+			protected Drawing.Image			dimmedImage;
+			protected Size					originalSize;
+			protected double				displayScale;
+			protected bool					isDisplay;
 		}
 		#endregion
 
 
+		protected static Drawing.Image ResizeImage(Drawing.Image image, int dx, int dy)
+		{
+			//	Retourne une image redimensionnée.
+			Graphics gfx = new Graphics();
+			gfx.SetPixmapSize(dx, dy);
+			gfx.TranslateTransform(0, dy);
+			gfx.ScaleTransform(1, -1, 0, 0);
+
+			gfx.ImageFilter = new ImageFilter(ImageFilteringMode.Bilinear);
+			gfx.PaintImage(image, new Rectangle(0, 0, dx, dy));
+
+			return Bitmap.FromPixmap(gfx.Pixmap) as Bitmap;
+		}
+
+
 		protected Dictionary<string, Item>	dico;
+		protected bool						isDisplay;
 	}
 }

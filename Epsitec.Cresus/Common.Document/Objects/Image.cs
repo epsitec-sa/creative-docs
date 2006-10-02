@@ -312,10 +312,10 @@ namespace Epsitec.Common.Document.Objects
 
 					if ( property.Homo )  // conserve les proportions ?
 					{
-						Drawing.Rectangle crop = new Drawing.Rectangle(0, 0, item.Image.Height, item.Image.Width);
+						Drawing.Rectangle crop = new Drawing.Rectangle(0, 0, item.Size.Height, item.Size.Width);
 						crop.Deflate(property.CropMargins);
 
-						double rapport = item.Image.Height/item.Image.Width;
+						double rapport = item.Size.Height/item.Size.Width;
 						if ( rapport < height/width )  height = width*rapport;
 						else                           width  = height/rapport;
 					}
@@ -383,21 +383,29 @@ namespace Epsitec.Common.Document.Objects
 			Properties.Image pi = this.PropertyImage;
 			ImageFilter filter = pi.ImageFilter;
 			Margins crop = pi.CropMargins;
-			port.ImageCrop = crop;
 			port.ImageFinalSize = size;
 
 			if (item != null)
 			{
+				double scale = item.Scale;
+				crop.Left   /= scale;
+				crop.Right  /= scale;
+				crop.Bottom /= scale;
+				crop.Top    /= scale;
+				port.ImageCrop = crop;
+
 				if (port is PDF.Port)  // exportation PDF ?
 				{
 					PDF.Port pdfPort = port as PDF.Port;
 					PDF.ImageSurface surface = pdfPort.SearchImageSurface(pi.Filename, size, crop, filter);
 					System.Diagnostics.Debug.Assert(surface != null);
 					image = surface.DrawingImage;
+
+					port.ImageCrop = crop;
 				}
 				else
 				{
-					image = drawingContext.IsDimmed ? item.ImageDimmed : item.Image;
+					image = drawingContext.IsDimmed ? item.DimmedImage : item.Image;
 				}
 			}
 

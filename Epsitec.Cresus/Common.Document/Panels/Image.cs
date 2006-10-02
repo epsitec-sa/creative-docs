@@ -517,7 +517,7 @@ namespace Epsitec.Common.Document.Panels
 				{
 					item = this.document.ImageCache.Add(filename, null);
 
-					if (item.Image == null)
+					if (item.Data == null)  // image n'existe pas ?
 					{
 						this.document.ImageCache.Remove(filename);
 					}
