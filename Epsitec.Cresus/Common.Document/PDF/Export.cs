@@ -545,7 +545,7 @@ namespace Epsitec.Common.Document.PDF
 							Properties.Image propImage = obj.PropertyImage;
 							System.Diagnostics.Debug.Assert(propImage != null);
 							string filename = propImage.Filename;
-							ImageFilter filter = propImage.Filter ? new Drawing.ImageFilter (Drawing.ImageFilteringMode.Bilinear) : new Drawing.ImageFilter (Drawing.ImageFilteringMode.None);
+							ImageFilter filter = propImage.ImageFilter;
 							Margins crop = propImage.CropMargins;
 							Size size = objImage.ImageBitmapSize;
 

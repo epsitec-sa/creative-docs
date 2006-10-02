@@ -81,12 +81,36 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonMirrorV.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonMirrorV, Res.Strings.Panel.Image.Button.MirrorY);
 
-			this.buttonFilter = new IconButton(this);
+			this.buttonFilter = new IconButtonCombo(this);
+			this.buttonFilter.AutoFocus = false;
+			this.buttonFilter.IsLiveUpdateEnabled = false;
 			this.buttonFilter.IconName = Misc.Icon("ImageFilter");
-			this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonFilter.Pressed += new MessageEventHandler(this.HandleButtonPressed);
+			this.buttonFilter.ComboClosed += new EventHandler(this.HandleFilterComboClosed);
 			this.buttonFilter.TabIndex = tabIndex++;
 			this.buttonFilter.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+#if false
+			this.AddFilterCombo("None");
+			this.AddFilterCombo("Bilinear");
+			this.AddFilterCombo("Bicubic");
+			this.AddFilterCombo("Spline16");
+			this.AddFilterCombo("Spline36");
+			this.AddFilterCombo("Kaiser");
+			this.AddFilterCombo("Quadric");
+			this.AddFilterCombo("Catrom");
+			this.AddFilterCombo("Gaussian");
+			this.AddFilterCombo("Bessel");
+			this.AddFilterCombo("Mitchell");
+			this.AddFilterCombo("Sync1");
+			this.AddFilterCombo("Sync2");
+			this.AddFilterCombo("Lanczos1");
+			this.AddFilterCombo("Lanczos2");
+			this.AddFilterCombo("Blackman1");
+			this.AddFilterCombo("Blackman2");
+#else
+			this.AddFilterCombo("None");
+			this.AddFilterCombo("Bilinear");
+			this.AddFilterCombo("Bicubic");
+#endif
 			ToolTip.Default.SetToolTip(this.buttonFilter, Res.Strings.Panel.Image.Button.Filter);
 
 			this.buttonHomo = new IconButton(this);
@@ -125,7 +149,7 @@ namespace Epsitec.Common.Document.Panels
 				this.buttonMirrorH.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
 				this.buttonMirrorV.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
 				this.buttonHomo.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
-				this.buttonFilter.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
+				this.buttonFilter.ComboClosed -= new EventHandler(this.HandleFilterComboClosed);
 				this.buttonInside.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 
 				this.fieldFilename = null;
@@ -162,6 +186,193 @@ namespace Epsitec.Common.Document.Panels
 			this.cropper.UpdateField();
 		}
 
+
+		protected void AddFilterCombo(string name)
+		{
+			//	Ajoute une ligne au menu du filtre.
+			string text = Image.NameToText(name);
+			string icon = name == "None" ? "DeleteItem" : "ImageFilter";
+			string regularText  = text;
+			string selectedText = Misc.Bold(text);
+			string briefIcon    = Misc.Icon(icon);
+			IconButtonCombo.Item item = new IconButtonCombo.Item(name, briefIcon, regularText, selectedText);
+			this.buttonFilter.Items.Add(item);
+		}
+
+		protected static ImageFilter NameToFilter(string name)
+		{
+			switch (name)
+			{
+				case "None":
+					return new ImageFilter(ImageFilteringMode.None);
+
+				case "Bilinear":
+					return new ImageFilter(ImageFilteringMode.Bilinear);
+
+				case "Bicubic":
+					return new ImageFilter(ImageFilteringMode.Bicubic);
+
+				case "Spline16":
+					return new ImageFilter(ImageFilteringMode.Spline16);
+
+				case "Spline36":
+					return new ImageFilter(ImageFilteringMode.Spline36);
+
+				case "Kaiser":
+					return new ImageFilter(ImageFilteringMode.Kaiser);
+
+				case "Quadric":
+					return new ImageFilter(ImageFilteringMode.Quadric);
+
+				case "Catrom":
+					return new ImageFilter(ImageFilteringMode.Catrom);
+
+				case "Gaussian":
+					return new ImageFilter(ImageFilteringMode.Gaussian);
+
+				case "Bessel":
+					return new ImageFilter(ImageFilteringMode.Bessel);
+
+				case "Mitchell":
+					return new ImageFilter(ImageFilteringMode.Mitchell);
+
+				case "Sync1":
+					return new ImageFilter(ImageFilteringMode.Sync, Image.normRadius);
+
+				case "Sync2":
+					return new ImageFilter(ImageFilteringMode.Sync, Image.softRadius);
+
+				case "Lanczos1":
+					return new ImageFilter(ImageFilteringMode.Lanczos, Image.normRadius);
+
+				case "Lanczos2":
+					return new ImageFilter(ImageFilteringMode.Lanczos, Image.softRadius);
+
+				case "Blackman1":
+					return new ImageFilter(ImageFilteringMode.Blackman, Image.normRadius);
+
+				case "Blackman2":
+					return new ImageFilter(ImageFilteringMode.Blackman, Image.softRadius);
+			}
+
+			return new ImageFilter(ImageFilteringMode.None);
+		}
+
+		protected static string NameToText(string name)
+		{
+			switch (name)
+			{
+				case "None":
+					return Res.Strings.Panel.Image.Filter.None;
+
+				case "Bilinear":
+					return Res.Strings.Panel.Image.Filter.Bilinear;
+
+				case "Bicubic":
+					return Res.Strings.Panel.Image.Filter.Bicubic;
+
+				default:
+					return string.Format(Res.Strings.Panel.Image.Filter.Other, name);
+			}
+		}
+
+		protected static string FilterToName(ImageFilter filter)
+		{
+			if (filter.Mode == ImageFilteringMode.None)
+			{
+				return "None";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Bilinear)
+			{
+				return "Bilinear";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Bicubic)
+			{
+				return "Bicubic";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Spline16)
+			{
+				return "Spline16";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Spline36)
+			{
+				return "Spline36";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Kaiser)
+			{
+				return "Kaiser";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Quadric)
+			{
+				return "Quadric";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Catrom)
+			{
+				return "Catrom";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Gaussian)
+			{
+				return "Gaussian";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Bessel)
+			{
+				return "Bessel";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Mitchell)
+			{
+				return "Mitchell";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Sync)
+			{
+				if (filter.Radius == Image.normRadius)
+				{
+					return "Sync1";
+				}
+				else
+				{
+					return "Sync2";
+				}
+			}
+
+			if (filter.Mode == ImageFilteringMode.Lanczos)
+			{
+				if (filter.Radius == Image.normRadius)
+				{
+					return "Lanczos1";
+				}
+				else
+				{
+					return "Lanczos2";
+				}
+			}
+
+			if (filter.Mode == ImageFilteringMode.Blackman)
+			{
+				if (filter.Radius == Image.normRadius)
+				{
+					return "Blackman1";
+				}
+				else
+				{
+					return "Blackman2";
+				}
+			}
+
+			return null;
+		}
+
+
 		protected override void PropertyToWidgets()
 		{
 			//	Propriété -> widgets.
@@ -182,8 +393,9 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonMirrorH.ActiveState = p.MirrorH   ? ActiveState.Yes : ActiveState.No;
 			this.buttonMirrorV.ActiveState = p.MirrorV   ? ActiveState.Yes : ActiveState.No;
 			this.buttonHomo   .ActiveState = p.Homo      ? ActiveState.Yes : ActiveState.No;
-			this.buttonFilter .ActiveState = p.Filter    ? ActiveState.Yes : ActiveState.No;
 			this.buttonInside .ActiveState = p.InsideDoc ? ActiveState.Yes : ActiveState.No;
+
+			this.buttonFilter.SelectedName = Image.FilterToName(p.ImageFilter);
 
 			this.cropper.Crop = p.CropMargins;
 
@@ -206,8 +418,9 @@ namespace Epsitec.Common.Document.Panels
 			p.MirrorH   = ( this.buttonMirrorH.ActiveState == ActiveState.Yes );
 			p.MirrorV   = ( this.buttonMirrorV.ActiveState == ActiveState.Yes );
 			p.Homo      = ( this.buttonHomo   .ActiveState == ActiveState.Yes );
-			p.Filter    = ( this.buttonFilter .ActiveState == ActiveState.Yes );
 			p.InsideDoc = ( this.buttonInside .ActiveState == ActiveState.Yes );
+
+			p.ImageFilter = Image.NameToFilter(this.buttonFilter.SelectedName);
 
 			p.CropMargins = this.cropper.Crop;
 		}
@@ -248,13 +461,15 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonRotation180.SetManualBounds(rr);
 			rr.Offset(22, 0);
 			this.buttonRotation270.SetManualBounds(rr);
-			rr.Offset(22+8, 0);
+			rr.Offset(22+4, 0);
 			this.buttonMirrorH.SetManualBounds(rr);
 			rr.Offset(22, 0);
 			this.buttonMirrorV.SetManualBounds(rr);
-			rr.Offset(22+8, 0);
+			rr.Offset(22+4, 0);
+			rr.Width += 12;
 			this.buttonFilter.SetManualBounds(rr);
-			rr.Offset(22+8, 0);
+			rr.Offset(22+12+4, 0);
+			rr.Width -= 12;
 			this.buttonHomo.SetManualBounds(rr);
 
 			r.Offset(0, -110);
@@ -339,6 +554,12 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Notifier.NotifyGeometryChanged();
 		}
 
+		private void HandleFilterComboClosed(object sender)
+		{
+			//	Le filtre a été changé.
+			this.OnChanged();
+		}
+
 		private void HandleButtonActiveStateChanged(object sender)
 		{
 			//	Une valeur a été changée.
@@ -418,6 +639,8 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
+		protected static readonly double normRadius = 1.0;
+		protected static readonly double softRadius = 2.0;
 
 		protected TextField					fieldFilename;
 		protected Button					buttonOpen;
@@ -428,7 +651,7 @@ namespace Epsitec.Common.Document.Panels
 		protected IconButton				buttonRotation270;
 		protected IconButton				buttonMirrorH;
 		protected IconButton				buttonMirrorV;
-		protected IconButton				buttonFilter;
+		protected IconButtonCombo			buttonFilter;
 		protected IconButton				buttonHomo;
 		protected Widgets.Cropper			cropper;
 		protected CheckButton				buttonInside;

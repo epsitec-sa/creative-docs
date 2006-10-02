@@ -376,6 +376,10 @@
   <data name="Panel.Image.Crop.Tooltip.Reset" id="0K901" mod="1">Montre toute l&amp;apos;image</data>
   <data name="Panel.Image.Crop.Button.Fill" id="0L901" mod="1">Remplir</data>
   <data name="Panel.Image.Crop.Button.Reset" id="0N901" mod="1">Tout</data>
+  <data name="Panel.Image.Filter.None" id="03A01" mod="1">Pas de filtrage</data>
+  <data name="Panel.Image.Filter.Bilinear" id="04A01" mod="1">Filtrage bilinéaire</data>
+  <data name="Panel.Image.Filter.Bicubic" id="05A01" mod="1">Filtrage bi-cubique</data>
+  <data name="Panel.Image.Filter.Other" id="06A01" mod="1">Filtrage {0}</data>
   <data name="File.Bitmap.All" id="02B">Toutes les images</data>
   <data name="File.Bitmap.BMP" id="03B">Bitmap Windows BMP</data>
   <data name="File.Bitmap.TIF" id="04B">Tagged Image TIFF</data>

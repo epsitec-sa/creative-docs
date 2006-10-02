@@ -508,8 +508,6 @@
   <data id="0PF">A, B...</data>
   <data id="0QF">i, ii...</data>
   <data id="0RF">I, II...</data>
-  <data id="0SF">
-  </data>
   <data id="0TF">.</data>
   <data id="0UF">,</data>
   <data id="0VF">:</data>

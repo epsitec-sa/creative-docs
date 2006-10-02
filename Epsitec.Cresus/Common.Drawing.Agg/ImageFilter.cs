@@ -3,6 +3,8 @@
 
 namespace Epsitec.Common.Drawing
 {
+	[System.Serializable]
+
 	/// <summary>
 	/// The <c>ImageFilter</c> structure defines the image filtering setting.
 	/// </summary>
@@ -30,6 +32,7 @@ namespace Epsitec.Common.Drawing
 
 		public double Radius
 		{
+			//	Le rayon est effectif pour les modes Sync, Lanczos et Blackman.
 			get
 			{
 				return this.radius;
