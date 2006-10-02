@@ -51,7 +51,7 @@ namespace Epsitec.Common.Types
 			
 			return list;
 		}
-		
+
 		public static T[] ToArray<T>(IEnumerable<T> collection)
 		{
 			List<T> list = new List<T> ();
@@ -62,6 +62,25 @@ namespace Epsitec.Common.Types
 			}
 
 			return list.ToArray ();
+		}
+
+		public static object[] ToObjectArray<T>(IEnumerable<T> collection)
+		{
+			List<T> list = new List<T> ();
+
+			if (collection != null)
+			{
+				list.AddRange (collection);
+			}
+
+			object[] items = new object[list.Count];
+
+			for (int i = 0; i < list.Count; i++)
+			{
+				items[i] = list[i];
+			}
+
+			return items;
 		}
 
 		public static T[] ToSortedArray<T>(IEnumerable<T> collection)

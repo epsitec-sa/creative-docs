@@ -55,39 +55,6 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="T:CollectionChangedEventArgs"/> class.
-		/// </summary>
-		/// <param name="action">The action.</param>
-		/// <param name="newIndex">The index of the new item.</param>
-		/// <param name="newItem">The new item.</param>
-		public CollectionChangedEventArgs(CollectionChangedAction action, int newIndex, object newItem)
-		{
-			this.action = action;
-			this.newItems = new object[] { newItem };
-			this.oldItems = null;
-			this.newStartingIndex = newIndex+1;
-			this.oldStartingIndex = 0;
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:CollectionChangedEventArgs"/> class.
-		/// </summary>
-		/// <param name="action">The action.</param>
-		/// <param name="newIndex">The index of the new item.</param>
-		/// <param name="newItem">The new item.</param>
-		/// <param name="oldIndex">The old index.</param>
-		/// <param name="oldItem">The index of the old item.</param>
-		public CollectionChangedEventArgs(CollectionChangedAction action, int newIndex, object newItem, int oldIndex, object oldItem)
-		{
-			this.action = action;
-			this.newItems = new object[] { newItem };
-			this.oldItems = new object[] { oldItem };
-			this.newStartingIndex = newIndex+1;
-			this.oldStartingIndex = oldIndex+1;
-		}
-
-
-		/// <summary>
 		/// Gets the action that caused the event.
 		/// </summary>
 		/// <value>The action.</value>
