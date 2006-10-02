@@ -21,9 +21,10 @@ namespace Epsitec.Common.Types
 			this.binding = this.bindingExpression.ParentBinding;
 		}
 
-		public BindingAsyncOperation(Binding binding)
+		public BindingAsyncOperation(Binding binding, BindingExpression[] expressions)
 		{
 			this.binding = binding;
+			this.expressions = expressions;
 		}
 
 		/// <summary>
@@ -76,7 +77,6 @@ namespace Epsitec.Common.Types
 
 			lock (this.exclusion)
 			{
-				this.expressions = Collection.ToArray (this.binding.GetExpressions ());
 				this.asyncWork   = this.AsyncAttach;
 				this.asyncResult = this.asyncWork.BeginInvoke (this.NotifyAsyncAttachDone, null);
 			}

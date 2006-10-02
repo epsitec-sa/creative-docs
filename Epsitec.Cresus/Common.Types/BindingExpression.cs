@@ -279,8 +279,7 @@ namespace Epsitec.Common.Types
 
 			if (!binding.Deferred)
 			{
-				expression.AttachToSource ();
-				expression.UpdateTarget (BindingUpdateMode.Reset);
+				expression.binding.AttachExpressionsToSource (expression);
 			}
 			
 			return expression;

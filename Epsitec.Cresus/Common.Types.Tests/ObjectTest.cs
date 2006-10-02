@@ -82,6 +82,43 @@ namespace Epsitec.Common.Types
 				}
 			}
 
+			Assert.AreEqual ("A (100 ms)", target.Name);
+
+			//	Modification with immediate effect, since we will generate internally a
+			//	property changed event :
+			
+			source.ModifyA ();
+			Assert.AreEqual ("A+", target.Name);
+		}
+
+		[Test]
+		public void CheckAsyncBindingAndAttach()
+		{
+			Binding binding = new Binding ();
+			SlowObject source  = new SlowObject ();
+			MyObject target  = new MyObject ();
+
+			binding.Mode = BindingMode.OneWay;
+			binding.Source = source;
+			binding.Path = "SlowFriend.SlowFriend.A";
+			binding.IsAsync = true;
+
+			target.Name = "-";
+			target.SetBinding (MyObject.NameProperty, binding);
+
+			for (int i = 0; i < 200; i++)
+			{
+				string value = target.Name;
+				System.Threading.Thread.Sleep (10);
+
+				if (value != "-")
+				{
+					System.Console.Out.WriteLine ("Value {1} after approximatively {0} ms", i*10, value);
+					System.Console.Out.Flush ();
+					break;
+				}
+			}
+
 			Assert.AreNotEqual ("-", target.Name);
 		}
 
@@ -1662,11 +1699,27 @@ namespace Epsitec.Common.Types
 				}
 			}
 
+			public SlowObject SlowFriend
+			{
+				get
+				{
+					return (SlowObject) this.GetValue (SlowObject.SlowFriendProperty);
+				}
+			}
+
+			internal void ModifyA()
+			{
+				string oldA = this.a;
+				string newA = this.a + "+";
+				this.a = newA;
+				this.InvalidateProperty (SlowObject.AProperty, oldA, newA);
+			}
+
 			private static object GetAValue(DependencyObject o)
 			{
 				SlowObject that = (SlowObject) o;
 				System.Threading.Thread.Sleep (100);
-				return "A (100 ms)";
+				return that.a + " (100 ms)";
 			}
 
 			private static object GetBValue(DependencyObject o)
@@ -1683,9 +1736,26 @@ namespace Epsitec.Common.Types
 				return "C (5000 ms)";
 			}
 
+			private static object GetSlowFriendValue(DependencyObject o)
+			{
+				SlowObject that = (SlowObject) o;
+				
+				if (that.friend == null)
+				{
+					that.friend = new SlowObject ();
+				}
+
+				System.Threading.Thread.Sleep (500);
+				return that.friend;
+			}
+
 			public static DependencyProperty AProperty	= DependencyProperty.RegisterReadOnly ("A", typeof (string), typeof (SlowObject), new DependencyPropertyMetadata (SlowObject.GetAValue));
 			public static DependencyProperty BProperty	= DependencyProperty.RegisterReadOnly ("B", typeof (string), typeof (SlowObject), new DependencyPropertyMetadata (SlowObject.GetBValue));
 			public static DependencyProperty CProperty	= DependencyProperty.RegisterReadOnly ("C", typeof (string), typeof (SlowObject), new DependencyPropertyMetadata (SlowObject.GetCValue));
+			public static DependencyProperty SlowFriendProperty	= DependencyProperty.RegisterReadOnly ("SlowFriend", typeof (SlowObject), typeof (SlowObject), new DependencyPropertyMetadata (SlowObject.GetSlowFriendValue));
+
+			private SlowObject friend;
+			private string a = "A";
 		}
 		#endregion
 

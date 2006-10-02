@@ -304,7 +304,7 @@ namespace Epsitec.Common.Types
 			return value;
 		}
 
-		public override IEnumerable<BindingExpression> GetExpressions()
+		protected override IEnumerable<BindingExpression> GetExpressions()
 		{
 			//	See RemoveExpression and AddExpression.
 
@@ -524,32 +524,37 @@ namespace Epsitec.Common.Types
 		{
 			if (this.sourceState == SourceState.Detached)
 			{
-				if (this.IsAsync)
-				{
-					//	The binding is defined to be asynchronous : start a separate
-					//	operation, running concurrently, which will walk the source
-					//	tree and update the targets :
-					
-					this.sourceState = SourceState.AsyncAttaching;
-
-					BindingAsyncOperation asyncOperation = new BindingAsyncOperation (this);
-
-					asyncOperation.AttachToSourceAndUpdateTargets ();
-				}
-				else
-				{
-					this.sourceState = SourceState.Attached;
-
-					foreach (BindingExpression expression in this.GetExpressions ())
-					{
-						expression.AttachToSource ();
-						expression.UpdateTarget (BindingUpdateMode.Reset);
-					}
-				}
+				this.AttachExpressionsToSource (Collection.ToArray (this.GetExpressions ()));
 			}
 			else if (this.sourceState == SourceState.AsyncAttaching)
 			{
 				System.Diagnostics.Debug.Fail ("Attaching while previous asynchronous attach is still running");
+			}
+		}
+
+		internal void AttachExpressionsToSource(params BindingExpression[] expressions)
+		{
+			if (this.IsAsync)
+			{
+				//	The binding is defined to be asynchronous : start a separate
+				//	operation, running concurrently, which will walk the source
+				//	tree and update the targets :
+
+				this.sourceState = SourceState.AsyncAttaching;
+
+				BindingAsyncOperation asyncOperation = new BindingAsyncOperation (this, expressions);
+
+				asyncOperation.AttachToSourceAndUpdateTargets ();
+			}
+			else
+			{
+				this.sourceState = SourceState.Attached;
+
+				foreach (BindingExpression expression in expressions)
+				{
+					expression.AttachToSource ();
+					expression.UpdateTarget (BindingUpdateMode.Reset);
+				}
 			}
 		}
 
