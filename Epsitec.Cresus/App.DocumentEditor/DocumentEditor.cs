@@ -4300,6 +4300,8 @@ namespace Epsitec.App.DocumentEditor
 				Objects.Page page = this.CurrentDocument.GetObjects[cp] as Objects.Page;
 				this.CurrentDocumentInfo.quickPageMenu.Text = page.ShortName;
 
+				di.document.ImageCache.Free();  // libère toutes les images
+
 				this.dlgPageStack.Update();
 				this.dlgPrint.UpdatePages();
 				this.dlgExportPDF.UpdatePages();
@@ -5084,6 +5086,7 @@ namespace Epsitec.App.DocumentEditor
 				{
 					di = this.documents[i] as DocumentInfo;
 					di.bookPanels.Visibility = (i == this.currentDocument);
+					di.document.ImageCache.Free();  // libère toutes les images
 				}
 
 				di = this.CurrentDocumentInfo;

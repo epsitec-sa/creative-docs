@@ -27,7 +27,14 @@ namespace Epsitec.Common.Document
 
 			if (this.dico.ContainsKey(filename))
 			{
-				return this.dico[filename];
+				Item item = this.dico[filename];
+
+				if (item.Image == null)
+				{
+					item.Reload();
+				}
+
+				return item;
 			}
 			else
 			{
@@ -80,6 +87,27 @@ namespace Epsitec.Common.Document
 			this.dico.Clear();
 		}
 
+
+		public void Free()
+		{
+			//	Libère toutes les images.
+			long total = 0;
+			foreach (Item item in this.dico.Values)
+			{
+				total += item.KBWeight;
+			}
+
+			if (total > 100000)  // occupe plus de 100 MB ?
+			{
+				foreach (KeyValuePair<string, Item> pair in this.dico)
+				{
+					if (pair.Value.KBWeight > 200)  // image de plus de 200 KB ?
+					{
+						pair.Value.Free();
+					}
+				}
+			}
+		}
 
 		public void FlushUnused(List<string> filenames)
 		{
@@ -205,6 +233,7 @@ namespace Epsitec.Common.Document
 				//	Si les données existent, l'image est lue à partir des données en mémoire.
 				this.filename = filename;
 				this.shortName = null;
+				System.Diagnostics.Debug.WriteLine(string.Format("Cache {0}", this.filename));
 
 				try
 				{
@@ -218,11 +247,13 @@ namespace Epsitec.Common.Document
 					}
 
 					this.image = Bitmap.FromData(this.data);
+					this.size = this.image.Size;
 				}
 				catch
 				{
 					this.data = null;
 					this.image = null;
+					this.size = Size.Empty;
 				}
 
 				this.imageDimmed = null;
@@ -232,6 +263,7 @@ namespace Epsitec.Common.Document
 			{
 				//	Relit l'image sur disque.
 				//	Retourne false en cas d'erreur.
+				System.Diagnostics.Debug.WriteLine(string.Format("Reload {0}", this.filename));
 				byte[] initialData = this.data;
 
 				try
@@ -261,10 +293,36 @@ namespace Epsitec.Common.Document
 				return true;
 			}
 
+			public void Free()
+			{
+				//	Libère l'image.
+				System.Diagnostics.Debug.WriteLine(string.Format("Free {0}", this.filename));
+				if (this.image != null)
+				{
+					this.image.Dispose();
+					this.image = null;
+				}
+
+				if (this.imageDimmed != null)
+				{
+					this.imageDimmed.Dispose();
+					this.imageDimmed = null;
+				}
+			}
+
 			public void Write(string otherFilename)
 			{
 				//	Exporte l'image dans un fichier quelconque.
 				System.IO.File.WriteAllBytes(otherFilename, this.data);
+			}
+
+			public long KBWeight
+			{
+				//	Retourne la taille de l'image en KB.
+				get
+				{
+					return ((long) this.size.Width * (long) this.size.Height) / (1024/4);
+				}
 			}
 
 			public string Filename
@@ -391,6 +449,7 @@ namespace Epsitec.Common.Document
 			protected byte[]				data;
 			protected Drawing.Image			image;
 			protected Drawing.Image			imageDimmed;
+			protected Size					size;
 		}
 		#endregion
 
