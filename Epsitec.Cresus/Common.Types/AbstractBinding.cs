@@ -32,6 +32,8 @@ namespace Epsitec.Common.Types
 			return new DeferManager (this);
 		}
 
+		public abstract IEnumerable<BindingExpression> GetExpressions();
+
 		internal void Add(BindingExpression expression)
 		{
 			//	The binding expression is referenced through a weak binding
@@ -66,8 +68,6 @@ namespace Epsitec.Common.Types
 		protected abstract void AddExpression(BindingExpression expression);
 
 		protected abstract void RemoveExpression(BindingExpression expression);
-
-		protected abstract IEnumerable<BindingExpression> GetExpressions();
 		
 		#region Private DeferManager Class
 		

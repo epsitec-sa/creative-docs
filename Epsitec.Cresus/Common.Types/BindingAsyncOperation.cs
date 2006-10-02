@@ -15,14 +15,20 @@ namespace Epsitec.Common.Types
 		/// Initializes a new instance of the <see cref="BindingAsyncOperation"/> class.
 		/// </summary>
 		/// <param name="binding">The binding that is using this instance.</param>
-		public BindingAsyncOperation(BindingExpression binding)
+		public BindingAsyncOperation(BindingExpression bindingExpression)
+		{
+			this.bindingExpression = bindingExpression;
+			this.binding = this.bindingExpression.ParentBinding;
+		}
+
+		public BindingAsyncOperation(Binding binding)
 		{
 			this.binding = binding;
 		}
 
 		/// <summary>
 		/// Asynchronously queries the source value and then updates the target.
-		/// This method call return immediately.
+		/// This method call returns immediately.
 		/// </summary>
 		public void QuerySourceValueAndUpdateTarget()
 		{
@@ -30,7 +36,7 @@ namespace Epsitec.Common.Types
 			{
 				if (this.asyncWork == null)
 				{
-					this.asyncWork = this.AsyncWork;
+					this.asyncWork = this.AsyncUpdate;
 				}
 				
 				if (this.asyncResult == null)
@@ -59,6 +65,24 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Asynchronously attaches to the source and updates all targets. This
+		/// method call returns immediately.
+		/// </summary>
+		public void AttachToSourceAndUpdateTargets()
+		{
+			System.Diagnostics.Debug.Assert (this.bindingExpression == null);
+			System.Diagnostics.Debug.Assert (this.asyncWork == null);
+			System.Diagnostics.Debug.Assert (this.asyncResult == null);
+
+			lock (this.exclusion)
+			{
+				this.expressions = Collection.ToArray (this.binding.GetExpressions ());
+				this.asyncWork   = this.AsyncAttach;
+				this.asyncResult = this.asyncWork.BeginInvoke (this.NotifyAsyncAttachDone, null);
+			}
+		}
+
+		/// <summary>
 		/// Defines the application thread invoker required to excute methods
 		/// on the UI main thread.
 		/// </summary>
@@ -77,7 +101,7 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
-		private void AsyncWork()
+		private void AsyncUpdate()
 		{
 			bool work = true;
 
@@ -88,29 +112,7 @@ namespace Epsitec.Common.Types
 					this.restartRequested = false;
 				}
 
-				//	The slow operation is here: query the binding expression
-				//	to get the source value.
-
-				object value = this.binding.GetSourceValue ();
-
-				//	Update the target value; this must be done on the same thread
-				//	than that of the UI of the application, or else WinForms won't
-				//	be happy.
-
-				if (BindingAsyncOperation.applicationThreadInvoker == null)
-				{
-					this.binding.InternalUpdateTarget (value);
-				}
-				else
-				{
-					BindingAsyncOperation.applicationThreadInvoker.Invoke
-					(
-						delegate ()
-						{
-							this.binding.InternalUpdateTarget (value);
-						}
-					);
-				}
+				BindingAsyncOperation.GetSourceAndUpdateTarget (this.bindingExpression);
 
 				//	We are done, but maybe someone already asked us for a new
 				//	update of the value in the meantime. Just restart the loop
@@ -127,9 +129,65 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		private void AsyncAttach()
+		{
+			foreach (BindingExpression expression in this.expressions)
+			{
+				BindingAsyncOperation.AttachToSource (expression);
+				BindingAsyncOperation.GetSourceAndUpdateTarget (expression);
+			}
+
+			this.binding.NotifyAttachCompleted ();
+		}
+
+		private void NotifyAsyncAttachDone(System.IAsyncResult result)
+		{
+			lock (this.exclusion)
+			{
+				this.asyncWork.EndInvoke (result);
+
+				this.asyncWork   = null;
+				this.asyncResult = null;
+			}
+		}
+
+		private static void AttachToSource(BindingExpression expression)
+		{
+			expression.AttachToSource ();
+		}
+
+		private static void GetSourceAndUpdateTarget(BindingExpression expression)
+		{
+			//	The slow operation is here: query the binding expression
+			//	to get the source value.
+
+			object value = expression.GetSourceValue ();
+
+			//	Update the target value; this must be done on the same thread
+			//	than that of the UI of the application, or else WinForms won't
+			//	be happy.
+
+			if (BindingAsyncOperation.applicationThreadInvoker == null)
+			{
+				expression.InternalUpdateTarget (value);
+			}
+			else
+			{
+				BindingAsyncOperation.applicationThreadInvoker.Invoke
+				(
+					delegate ()
+					{
+						expression.InternalUpdateTarget (value);
+					}
+				);
+			}
+		}
+
 		static IApplicationThreadInvoker		applicationThreadInvoker;
 		
-		private BindingExpression				binding;
+		private BindingExpression				bindingExpression;
+		private Binding							binding;
+		private BindingExpression[]				expressions;
 		
 		private Support.SimpleCallback			asyncWork;
 		private System.IAsyncResult				asyncResult;
