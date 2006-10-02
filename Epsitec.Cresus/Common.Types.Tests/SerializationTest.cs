@@ -600,6 +600,8 @@ namespace Epsitec.Common.Types
 				System.Threading.Thread.Sleep (1);
 			}
 			System.Console.Out.WriteLine ();
+
+			Assert.AreEqual (root.Children[0].Children[0], root.Children[2].Friend);
 			
 			Assert.AreEqual (4, root.Children[2].Labels.Count);
 			Assert.AreEqual ("First", root.Children[2].Labels[0]);
