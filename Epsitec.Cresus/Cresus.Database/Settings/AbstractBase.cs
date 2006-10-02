@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Database.Settings
 	/// La classe AbstractBase sert de base pour les diverses variables
 	/// globales (réglages) qui utilisent DbDict.
 	/// </summary>
-	public abstract class AbstractBase : IPropertyChange
+	public abstract class AbstractBase : INotifyPropertyChanged
 	{
 		protected AbstractBase()
 		{
@@ -79,10 +79,12 @@ namespace Epsitec.Cresus.Database.Settings
 				this.PropertyChanged (this, new Epsitec.Common.Types.DependencyPropertyChangedEventArgs (name, old_value, new_value));
 			}
 		}
+
+
+		#region INotifyPropertyChanged Members
 		
-		
-		#region IPropertyChange Members
 		public event PropertyChangedEventHandler PropertyChanged;
+		
 		#endregion
 		
 		private DbDict							dict;
