@@ -8,10 +8,10 @@ namespace Epsitec.Common.Types
 	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
 	
 	/// <summary>
-	/// L'interface IPropertyChange définit un événement PropertyChanged.
+	/// The <c>INotifyPropertyChanged</c> interface defines a <c>PropertyChanged</c> event.
 	/// </summary>
-	public interface IPropertyChange
+	public interface INotifyPropertyChanged
 	{
-		event PropertyChangedEventHandler		PropertyChanged;
+		event PropertyChangedEventHandler PropertyChanged;
 	}
 }

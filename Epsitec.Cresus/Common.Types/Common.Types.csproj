@@ -107,6 +107,9 @@
     <Compile Include="AbstractNumericType.cs" />
     <Compile Include="AbstractType.cs" />
     <Compile Include="AbstractBinding.cs" />
+    <Compile Include="CollectionChangedEventArgs.cs" />
+    <Compile Include="CollectionChangedAction.cs" />
+    <Compile Include="INotifyCollectionChanged.cs" />
     <Compile Include="PendingValue.cs" />
     <Compile Include="PriorityBinding.cs" />
     <Compile Include="ISerializationConverterFilter.cs" />
@@ -236,7 +239,7 @@
     <Compile Include="InvalidValue.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IPropertyChange.cs">
+    <Compile Include="INotifyPropertyChanged.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IReadOnly.cs">
