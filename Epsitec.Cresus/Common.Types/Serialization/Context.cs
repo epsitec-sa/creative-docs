@@ -412,6 +412,8 @@ namespace Epsitec.Common.Types.Serialization
 
 		public static readonly string			WellKnownTagResourceManager = "_ResourceManager";
 		public static readonly string			WellKnownTagDataSource = "_DataSource";
+		public static readonly string			WellKnownTagApplication = "_Application";
+		public static readonly string			WellKnownTagDocument = "_Document";
 
 		[System.ThreadStatic]
 		private static List<Weak<Context>>		links;

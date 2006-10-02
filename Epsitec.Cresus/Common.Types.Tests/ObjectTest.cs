@@ -1487,7 +1487,7 @@ namespace Epsitec.Common.Types
 		}
 
 		#region MyObject Class
-		private class MyObject : Types.DependencyObject
+		private class MyObject : Types.DependencyObject, Types.IListHost<MyObject>
 		{
 			public MyObject()
 			{
@@ -1602,7 +1602,7 @@ namespace Epsitec.Common.Types
 				{
 					if (this.children == null)
 					{
-						this.children = new MyObjectChildren ();
+						this.children = new MyObjectChildren (this);
 					}
 
 					return this.children;
@@ -1665,6 +1665,26 @@ namespace Epsitec.Common.Types
 			
 			private MyObjectChildren	children;
 			private int					nativeXyz;
+
+			#region IListHost<MyObject> Members
+
+			Epsitec.Common.Types.Collections.HostedList<MyObject> IListHost<MyObject>.Items
+			{
+				get
+				{
+					return this.children;
+				}
+			}
+
+			void IListHost<MyObject>.NotifyListInsertion(MyObject item)
+			{
+			}
+
+			void IListHost<MyObject>.NotifyListRemoval(MyObject item)
+			{
+			}
+
+			#endregion
 		}
 		#endregion
 
@@ -1927,8 +1947,19 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		#region MyObjectChildren Class
-		class MyObjectChildren : DependencyObjectList<MyObject>
+		class MyObjectChildren : Collections.HostedDependencyObjectList<MyObject>
 		{
+			public MyObjectChildren(MyObject host)
+				: base (host)
+			{
+			}
+
+			protected override void OnCollectionChanged(CollectionChangedEventArgs e)
+			{
+				base.OnCollectionChanged (e);
+				MyObject host = this.Host as MyObject;
+				host.InheritedPropertyCache.NotifyChanges (host);
+			}
 		}
 		#endregion
 

@@ -582,7 +582,25 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("b", root.Children[0].Name);
 			Assert.AreEqual ("q", root.Children[1].Name);
 			Assert.AreEqual ("r", root.Children[2].Name);
+			
+			Assert.AreEqual (root.Children[0].Friend.Price, root.Children[1].Price);
 
+			Assert.IsTrue (root.Children[2].GetBinding (MyItem.FriendProperty).IsAsync);
+
+			//	Wait for the asynchronous binding to execute:
+
+			for (int i = 0; i < 50; i++)
+			{
+				if (root.Children[2].Friend != null)
+				{
+					break;
+				}
+				
+				System.Console.Out.Write (".");
+				System.Threading.Thread.Sleep (1);
+			}
+			System.Console.Out.WriteLine ();
+			
 			Assert.AreEqual (4, root.Children[2].Labels.Count);
 			Assert.AreEqual ("First", root.Children[2].Labels[0]);
 			Assert.AreEqual ("Second", root.Children[2].Labels[1]);
@@ -770,6 +788,11 @@ namespace Epsitec.Common.Types
 			//	    |        +--> c2 ...friend... ext
 			//	    +--> q ...friend... b
 			//		+--> r
+			//
+			//	Bindings:
+			//
+			//  q.Price <= a.friend.price (c2.price)
+			//	r.Friend <= * (inferred from DataContext, this maps to c1)
 
 			a.Friend = c2;
 			q.Friend = b;
@@ -794,6 +817,7 @@ namespace Epsitec.Common.Types
 			bindingQ.Mode = BindingMode.OneWay;
 
 			bindingR.Mode = BindingMode.OneWay;
+			bindingR.IsAsync = true;
 
 			dataContext.Source = c1;
 			
@@ -805,6 +829,20 @@ namespace Epsitec.Common.Types
 
 			q.SetBinding (MyItem.PriceProperty, bindingQ);
 			r.SetBinding (MyItem.FriendProperty, bindingR);
+
+			//	Wait for the asynchronous binding to execute:
+
+			for (int i = 0; i < 50; i++)
+			{
+				if (r.Friend != null)
+				{
+					break;
+				}
+				
+				System.Console.Out.Write (".");
+				System.Threading.Thread.Sleep (1);
+			}
+			System.Console.Out.WriteLine ();
 
 			Assert.AreEqual (c2.Price, q.Price);
 			Assert.AreEqual (c1, r.Friend);
@@ -854,7 +892,7 @@ namespace Epsitec.Common.Types
 
 		#region MyItem Class
 
-		public class MyItem : DependencyObject
+		public class MyItem : DependencyObject, Types.IListHost<MyItem>
 		{
 			public MyItem()
 			{
@@ -965,7 +1003,7 @@ namespace Epsitec.Common.Types
 				
 				if (this.children == null)
 				{
-					this.children = new ChildrenCollection ();
+					this.children = new ChildrenCollection (this);
 				}
 				if (item.parent != null)
 				{
@@ -989,7 +1027,7 @@ namespace Epsitec.Common.Types
 				MyItem tt = o as MyItem;
 				if (tt.children == null)
 				{
-					tt.children = new ChildrenCollection ();
+					tt.children = new ChildrenCollection (tt);
 				}
 				return tt.children;
 			}
@@ -1018,6 +1056,30 @@ namespace Epsitec.Common.Types
 			MyItem parent;
 			ChildrenCollection children;
 			List<string> labels;
+
+			#region IListHost<MyItem> Members
+
+			Epsitec.Common.Types.Collections.HostedList<MyItem> IListHost<MyItem>.Items
+			{
+				get
+				{
+					return this.children;
+				}
+			}
+
+			void IListHost<MyItem>.NotifyListInsertion(MyItem item)
+			{
+				item.parent = this;
+				item.InheritedPropertyCache.InheritValuesFromParent (item, this);
+			}
+
+			void IListHost<MyItem>.NotifyListRemoval(MyItem item)
+			{
+				item.parent = null;
+				item.InheritedPropertyCache.ClearAllValues (item);
+			}
+
+			#endregion
 		}
 		
 		#endregion
@@ -1076,8 +1138,19 @@ namespace Epsitec.Common.Types
 		}
 
 		#region ChildrenCollection Class
-		public class ChildrenCollection : DependencyObjectList<MyItem>
+		public class ChildrenCollection : Collections.HostedDependencyObjectList<MyItem>
 		{
+			public ChildrenCollection(MyItem host)
+				: base (host)
+			{
+			}
+
+			protected override void OnCollectionChanged(CollectionChangedEventArgs e)
+			{
+				base.OnCollectionChanged (e);
+				MyItem host = this.Host as MyItem;
+				host.InheritedPropertyCache.NotifyChanges (host);
+			}
 		}
 		#endregion
 

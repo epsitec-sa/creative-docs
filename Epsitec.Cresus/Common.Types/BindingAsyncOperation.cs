@@ -160,26 +160,28 @@ namespace Epsitec.Common.Types
 		{
 			//	The slow operation is here: query the binding expression
 			//	to get the source value.
-
-			object value = expression.GetSourceValue ();
-
-			//	Update the target value; this must be done on the same thread
-			//	than that of the UI of the application, or else WinForms won't
-			//	be happy.
-
-			if (BindingAsyncOperation.applicationThreadInvoker == null)
+			if (expression.DataSourceType != DataSourceType.None)
 			{
-				expression.InternalUpdateTarget (value);
-			}
-			else
-			{
-				BindingAsyncOperation.applicationThreadInvoker.Invoke
-				(
-					delegate ()
-					{
-						expression.InternalUpdateTarget (value);
-					}
-				);
+				object value = expression.GetSourceValue ();
+
+				//	Update the target value; this must be done on the same thread
+				//	than that of the UI of the application, or else WinForms won't
+				//	be happy.
+
+				if (BindingAsyncOperation.applicationThreadInvoker == null)
+				{
+					expression.InternalUpdateTarget (value);
+				}
+				else
+				{
+					BindingAsyncOperation.applicationThreadInvoker.Invoke
+					(
+						delegate ()
+						{
+							expression.InternalUpdateTarget (value);
+						}
+					);
+				}
 			}
 		}
 

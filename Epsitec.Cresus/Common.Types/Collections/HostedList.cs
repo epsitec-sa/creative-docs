@@ -31,6 +31,14 @@ namespace Epsitec.Common.Types.Collections
 			this.host = new CallbackRelay (insertionCallback, removalCallback);
 		}
 
+		public IListHost<T> Host
+		{
+			get
+			{
+				return this.host;
+			}
+		}
+		
 		public delegate void Callback(T item);
 
 		#region CallbackRelay Class

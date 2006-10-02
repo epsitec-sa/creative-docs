@@ -156,6 +156,7 @@ namespace Epsitec.Common.Types.Serialization
 			DependencyObject source = binding.Source as DependencyObject;
 			BindingMode mode = binding.Mode;
 			string path = binding.Path;
+			bool async = binding.IsAsync;
 
 			if (source != null)
 			{
@@ -194,6 +195,14 @@ namespace Epsitec.Common.Types.Serialization
 
 				buffer.Append ("Mode=");
 				buffer.Append (value);
+			}
+
+			if (async)
+			{
+				buffer.Append (space);
+				space = ", ";
+				
+				buffer.Append ("Async");
 			}
 
 			buffer.Append ("}");
@@ -626,30 +635,37 @@ namespace Epsitec.Common.Types.Serialization
 
 				if (element.Length > 0)
 				{
-					string[] elems = element.Split ('=');
-
-					if (elems.Length != 2)
+					if (element == "Async")
 					{
-						throw new System.FormatException (string.Format ("Element '{0}' not valid in Binding expression", element));
+						binding.IsAsync = true;
 					}
-
-					System.Enum mode;
-
-					switch (elems[0])
+					else
 					{
-						case "Path":
-							binding.Path = elems[1];
-							break;
-						case "Source":
-							binding.Source = context.ResolveFromMarkup (elems[1], typeof (object));
-							break;
-						case "Mode":
-							InvariantConverter.Convert (elems[1], typeof (BindingMode), out mode);
-							binding.Mode = (BindingMode) mode;
-							break;
+						string[] elems = element.Split ('=');
 
-						default:
+						if (elems.Length != 2)
+						{
 							throw new System.FormatException (string.Format ("Element '{0}' not valid in Binding expression", element));
+						}
+
+						System.Enum mode;
+
+						switch (elems[0])
+						{
+							case "Path":
+								binding.Path = elems[1];
+								break;
+							case "Source":
+								binding.Source = context.ResolveFromMarkup (elems[1], typeof (object));
+								break;
+							case "Mode":
+								InvariantConverter.Convert (elems[1], typeof (BindingMode), out mode);
+								binding.Mode = (BindingMode) mode;
+								break;
+
+							default:
+								throw new System.FormatException (string.Format ("Element '{0}' not valid in Binding expression", element));
+						}
 					}
 				}
 			}
