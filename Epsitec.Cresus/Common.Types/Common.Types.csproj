@@ -101,7 +101,7 @@
     <Compile Include="Collections\HostedStructuredTypeFieldDictionary.cs" />
     <Compile Include="Collections\EnumValueCollection.cs" />
     <Compile Include="Collections\HostedDepdendencyObjectList.cs" />
-    <Compile Include="Collections\GenericList.cs" />
+    <Compile Include="Collections\ObservableList.cs" />
     <Compile Include="Converters\AutomaticValueConverter.cs" />
     <Compile Include="AbstractNumericType.cs" />
     <Compile Include="AbstractType.cs" />
