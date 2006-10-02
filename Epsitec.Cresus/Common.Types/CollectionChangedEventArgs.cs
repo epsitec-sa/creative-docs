@@ -9,6 +9,10 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class CollectionChangedEventArgs : System.EventArgs
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:CollectionChangedEventArgs"/> class.
+		/// </summary>
+		/// <param name="action">The action.</param>
 		public CollectionChangedEventArgs(CollectionChangedAction action)
 		{
 			this.action = action;
@@ -18,6 +22,12 @@ namespace Epsitec.Common.Types
 			this.oldStartingIndex = 0;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:CollectionChangedEventArgs"/> class.
+		/// </summary>
+		/// <param name="action">The action.</param>
+		/// <param name="newIndex">The index of the new items.</param>
+		/// <param name="newItems">The new items.</param>
 		public CollectionChangedEventArgs(CollectionChangedAction action, int newIndex, object[] newItems)
 		{
 			this.action = action;
@@ -27,7 +37,15 @@ namespace Epsitec.Common.Types
 			this.oldStartingIndex = 0;
 		}
 
-		public CollectionChangedEventArgs(CollectionChangedAction action, int oldIndex, object[] oldItems, int newIndex, object[] newItems)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:CollectionChangedEventArgs"/> class.
+		/// </summary>
+		/// <param name="action">The action.</param>
+		/// <param name="newIndex">The index of the new items.</param>
+		/// <param name="newItems">The new items.</param>
+		/// <param name="oldIndex">The index of the old items.</param>
+		/// <param name="oldItems">The old items.</param>
+		public CollectionChangedEventArgs(CollectionChangedAction action, int newIndex, object[] newItems, int oldIndex, object[] oldItems)
 		{
 			this.action = action;
 			this.newItems = newItems;
@@ -36,7 +54,43 @@ namespace Epsitec.Common.Types
 			this.oldStartingIndex = oldIndex+1;
 		}
 
-		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:CollectionChangedEventArgs"/> class.
+		/// </summary>
+		/// <param name="action">The action.</param>
+		/// <param name="newIndex">The index of the new item.</param>
+		/// <param name="newItem">The new item.</param>
+		public CollectionChangedEventArgs(CollectionChangedAction action, int newIndex, object newItem)
+		{
+			this.action = action;
+			this.newItems = new object[] { newItem };
+			this.oldItems = null;
+			this.newStartingIndex = newIndex+1;
+			this.oldStartingIndex = 0;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:CollectionChangedEventArgs"/> class.
+		/// </summary>
+		/// <param name="action">The action.</param>
+		/// <param name="newIndex">The index of the new item.</param>
+		/// <param name="newItem">The new item.</param>
+		/// <param name="oldIndex">The old index.</param>
+		/// <param name="oldItem">The index of the old item.</param>
+		public CollectionChangedEventArgs(CollectionChangedAction action, int newIndex, object newItem, int oldIndex, object oldItem)
+		{
+			this.action = action;
+			this.newItems = new object[] { newItem };
+			this.oldItems = new object[] { oldItem };
+			this.newStartingIndex = newIndex+1;
+			this.oldStartingIndex = oldIndex+1;
+		}
+
+
+		/// <summary>
+		/// Gets the action that caused the event.
+		/// </summary>
+		/// <value>The action.</value>
 		public CollectionChangedAction			Action
 		{
 			get
@@ -45,6 +99,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the list of new items involved in the change (<see cref="CollectionChangedAction.Add"/> and
+		/// <see cref="CollectionChangedAction.Replace"/> actions).
+		/// </summary>
+		/// <value>The list of new items or <c>null</c>.</value>
 		public System.Collections.IList			NewItems
 		{
 			get
@@ -53,7 +112,12 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public System.Collections.IList			OldItems
+		/// <summary>
+		/// Gets the list of old items involved in the change (<see cref="CollectionChangedAction.Remove"/> and
+		/// <see cref="CollectionChangedAction.Replace"/> actions).
+		/// </summary>
+		/// <value>The list of old items or <c>null</c>.</value>
+		public System.Collections.IList OldItems
 		{
 			get
 			{
@@ -61,6 +125,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the index at which the changed occurred (destination index in the case of <see cref="CollectionChangedAction.Add"/>
+		/// and <see cref="CollectionChangedAction.Replace"/> actions).
+		/// </summary>
+		/// <value>The index at which the changed occurred.</value>
 		public int								NewStartingIndex
 		{
 			get
@@ -69,6 +138,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the index at which the changed occurred (source index in the case of <see cref="CollectionChangedAction.Move"/>,
+		/// <see cref="CollectionChangedAction.Remove"/> and <see cref="CollectionChangedAction.Replace"/> actions).
+		/// </summary>
+		/// <value>The index at which the changed occurred.</value>
 		public int								OldStartingIndex
 		{
 			get
