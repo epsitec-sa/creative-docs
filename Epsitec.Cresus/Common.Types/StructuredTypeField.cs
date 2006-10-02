@@ -12,13 +12,24 @@ namespace Epsitec.Common.Types
 	[SerializationConverter (typeof (StructuredTypeField.SerializationConverter))]
 	public struct StructuredTypeField
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StructuredTypeField"/> class.
+		/// </summary>
+		/// <param name="id">The field id.</param>
+		/// <param name="type">The field type.</param>
 		public StructuredTypeField(string id, INamedType type)
 		{
 			this.id = id;
 			this.type = type;
 			this.captionId = Support.Druid.Empty;
 		}
-		
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StructuredTypeField"/> class.
+		/// </summary>
+		/// <param name="id">The field id.</param>
+		/// <param name="type">The field type.</param>
+		/// <param name="captionId">The field caption DRUID.</param>
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId)
 		{
 			this.id = id;
@@ -26,6 +37,10 @@ namespace Epsitec.Common.Types
 			this.captionId = captionId;
 		}
 
+		/// <summary>
+		/// Gets the field id.
+		/// </summary>
+		/// <value>The field id.</value>
 		public string							Id
 		{
 			get
@@ -34,6 +49,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the field type.
+		/// </summary>
+		/// <value>The field type.</value>
 		public INamedType						Type
 		{
 			get
@@ -42,6 +61,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the field caption DRUID.
+		/// </summary>
+		/// <value>The field caption DRUID.</value>
 		public Support.Druid					CaptionId
 		{
 			get
