@@ -130,7 +130,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public bool								ImageFilter
+		public ImageFilter						ImageFilter
 		{
 			get
 			{
@@ -542,15 +542,7 @@ namespace Epsitec.Common.Drawing
 			this.ImageRenderer.BitmapImage = bitmap;
 			this.ImageRenderer.Transform = transform;
 
-			if (this.image_filter)
-			{
-				this.ImageRenderer.SelectBilinearFilter ();
-			}
-			else
-			{
-				this.ImageRenderer.SelectNoFilter ();
-			}
-			
+			this.ImageRenderer.SelectAdvancedFilter (this.image_filter.Mode, this.image_filter.Radius);
 			this.RenderImage ();
 			this.ImageRenderer.BitmapImage = null;
 		}
@@ -1054,7 +1046,7 @@ namespace Epsitec.Common.Drawing
 
 		
 		private const double				AlmostInfinite = 1000000000.0;
-		private bool						image_filter = true;
+		private ImageFilter					image_filter;
 		private Margins						image_crop;
 		private Size						image_final_size;
 		

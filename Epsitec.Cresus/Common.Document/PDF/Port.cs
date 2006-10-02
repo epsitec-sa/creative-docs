@@ -205,7 +205,7 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 		
-		public bool ImageFilter
+		public ImageFilter ImageFilter
 		{
 			get
 			{
@@ -1361,7 +1361,7 @@ namespace Epsitec.Common.Document.PDF
 			return -1;
 		}
 
-		public ImageSurface SearchImageSurface(string filename, Size size, Margins crop, bool filter)
+		public ImageSurface SearchImageSurface(string filename, Size size, Margins crop, ImageFilter filter)
 		{
 			//	Cherche l'image à utiliser.
 			if ( this.imageSurfaceList == null )  return null;
@@ -1393,7 +1393,7 @@ namespace Epsitec.Common.Document.PDF
 		protected TypeComplexSurface			complexType;
 		protected Transform						transform;
 		protected FillMode						fillMode;
-		protected bool							imageFilter;
+		protected ImageFilter					imageFilter;
 		protected Margins						imageCrop;
 		protected Size							imageFinalSize;
 
