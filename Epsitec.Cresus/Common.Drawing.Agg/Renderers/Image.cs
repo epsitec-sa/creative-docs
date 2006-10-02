@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing.Renderers
@@ -144,16 +144,10 @@ namespace Epsitec.Common.Drawing.Renderers
 			AntiGrain.Renderer.Image.SetAlphaMask (this.agg_ren, (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle, (AntiGrain.Renderer.MaskComponent) component);
 		}
 		
-		public void SelectBilinearFilter()
+		public void SelectAdvancedFilter(ImageFilteringMode mode, double radius)
 		{
 			this.AssertAttached ();
-			AntiGrain.Renderer.Image.SetStretchMode (this.agg_ren, 1);
-		}
-		
-		public void SelectNoFilter()
-		{
-			this.AssertAttached ();
-			AntiGrain.Renderer.Image.SetStretchMode (this.agg_ren, 0);
+			AntiGrain.Renderer.Image.SetStretchMode (this.agg_ren, (int) mode, radius);
 		}
 		
 		

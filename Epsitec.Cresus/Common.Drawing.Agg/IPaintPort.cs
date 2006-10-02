@@ -21,7 +21,7 @@ namespace Epsitec.Common.Drawing
 		Color		FinalColor			{ get; set; }
 		Transform	Transform			{ get; set; }
 		FillMode	FillMode			{ get; set; }
-		bool		ImageFilter			{ get; set; }
+		ImageFilter	ImageFilter			{ get; set; }
 		Margins		ImageCrop			{ get; set; }
 		Size		ImageFinalSize		{ get; set; }
 		

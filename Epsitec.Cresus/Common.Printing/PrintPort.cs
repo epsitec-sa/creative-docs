@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Printing
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Printing
 			}
 		}
 		
-		public bool								ImageFilter
+		public Drawing.ImageFilter				ImageFilter
 		{
 			get
 			{
@@ -840,7 +840,7 @@ namespace Epsitec.Common.Printing
 		protected Drawing.JoinStyle				line_join        = Drawing.JoinStyle.Miter;
 		protected Drawing.CapStyle				line_cap         = Drawing.CapStyle.Square;
 		protected double						line_miter_limit = 4.0;
-		protected bool							image_filter;
+		protected Drawing.ImageFilter			image_filter;
 		protected Drawing.Margins				image_crop;
 		protected Drawing.Size					image_final_size;
 		

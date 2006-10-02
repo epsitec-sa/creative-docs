@@ -383,7 +383,6 @@ namespace Epsitec.Common.Document.Objects
 			Properties.Image pi = this.PropertyImage;
 			bool filter = pi.Filter;
 			Margins crop = pi.CropMargins;
-			port.ImageFilter = filter;
 			port.ImageCrop = crop;
 			port.ImageFinalSize = size;
 
@@ -392,7 +391,7 @@ namespace Epsitec.Common.Document.Objects
 				if (port is PDF.Port)  // exportation PDF ?
 				{
 					PDF.Port pdfPort = port as PDF.Port;
-					PDF.ImageSurface surface = pdfPort.SearchImageSurface(pi.Filename, size, crop, filter);
+					PDF.ImageSurface surface = pdfPort.SearchImageSurface (pi.Filename, size, crop, filter ? new Drawing.ImageFilter (Drawing.ImageFilteringMode.Bilinear) : new Drawing.ImageFilter (Drawing.ImageFilteringMode.None));
 					System.Diagnostics.Debug.Assert(surface != null);
 					image = surface.DrawingImage;
 				}
@@ -452,7 +451,10 @@ namespace Epsitec.Common.Document.Objects
 						port.TranslateTransform(-0.5, -0.5);
 
 						Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, 1.0, 1.0);
-						port.PaintImage(image, rect, cropRect);
+						Drawing.ImageFilter oldFilter = port.ImageFilter;
+						port.ImageFilter = filter ? new Drawing.ImageFilter (Drawing.ImageFilteringMode.Bilinear) : new Drawing.ImageFilter (Drawing.ImageFilteringMode.None);
+						port.PaintImage (image, rect, cropRect);
+						port.ImageFilter = oldFilter;
 #endif
 					}
 				}

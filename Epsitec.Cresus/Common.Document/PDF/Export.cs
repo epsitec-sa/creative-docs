@@ -545,7 +545,7 @@ namespace Epsitec.Common.Document.PDF
 							Properties.Image propImage = obj.PropertyImage;
 							System.Diagnostics.Debug.Assert(propImage != null);
 							string filename = propImage.Filename;
-							bool filter = propImage.Filter;
+							ImageFilter filter = propImage.Filter ? new Drawing.ImageFilter (Drawing.ImageFilteringMode.Bilinear) : new Drawing.ImageFilter (Drawing.ImageFilteringMode.None);
 							Margins crop = propImage.CropMargins;
 							Size size = objImage.ImageBitmapSize;
 
@@ -1552,13 +1552,13 @@ namespace Epsitec.Common.Document.PDF
 			double finalDpiX = currentDpiX;
 			double finalDpiY = currentDpiY;
 
-			if ( this.imageMinDpi != 0.0 && image.Filter )
+			if ( this.imageMinDpi != 0.0 && image.Filter.Active )
 			{
 				finalDpiX = System.Math.Max(finalDpiX, this.imageMinDpi);
 				finalDpiY = System.Math.Max(finalDpiY, this.imageMinDpi);
 			}
 
-			if ( this.imageMaxDpi != 0.0 && image.Filter )
+			if ( this.imageMaxDpi != 0.0 && image.Filter.Active )
 			{
 				finalDpiX = System.Math.Min(finalDpiX, this.imageMaxDpi);
 				finalDpiY = System.Math.Min(finalDpiY, this.imageMaxDpi);
@@ -1638,7 +1638,7 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteString(Port.StringValue(dy, 0));
 			writer.WriteString(" ");
 
-			if ( image.Filter )
+			if ( image.Filter.Active )
 			{
 				writer.WriteString("/Interpolate true ");
 			}

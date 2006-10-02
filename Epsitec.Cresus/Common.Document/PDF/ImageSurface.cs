@@ -9,7 +9,7 @@ namespace Epsitec.Common.Document.PDF
 	/// </summary>
 	public class ImageSurface
 	{
-		public ImageSurface(ImageCache.Item cache, Size size, Margins crop, bool filter, int id)
+		public ImageSurface(ImageCache.Item cache, Size size, Margins crop, ImageFilter filter, int id)
 		{
 			this.cache = cache;
 			this.size = size;
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Document.PDF
 			get { return this.crop; }
 		}
 
-		public bool Filter
+		public ImageFilter Filter
 		{
 			//	Filtre de l'image.
 			get { return this.filter; }
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Document.PDF
 		}
 
 
-		public static ImageSurface Search(System.Collections.ArrayList list, string filename, Size size, Margins crop, bool filter)
+		public static ImageSurface Search(System.Collections.ArrayList list, string filename, Size size, Margins crop, ImageFilter filter)
 		{
 			//	Cherche une image d'après son nom dans une liste.
 			foreach ( ImageSurface image in list )
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Document.PDF
 			return null;
 		}
 
-		public static ImageSurface Search(System.Collections.ArrayList list, Drawing.Image drim, Size size, Margins crop, bool filter)
+		public static ImageSurface Search(System.Collections.ArrayList list, Drawing.Image drim, Size size, Margins crop, ImageFilter filter)
 		{
 			//	Cherche une image d'après son Drawing.Image.
 			foreach ( ImageSurface image in list )
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Document.PDF
 		protected ImageCache.Item			cache;
 		protected Size						size;
 		protected Margins					crop;
-		protected bool						filter;
+		protected ImageFilter				filter;
 		protected int						id;
 	}
 }
