@@ -26,14 +26,14 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialize()
 		{
-			this.filename  = "";
-			this.shortName = "";
-			this.insideDoc = true;
-			this.rotation  = Rotation.Angle0;
-			this.mirrorH   = false;
-			this.mirrorV   = false;
-			this.homo      = true;
-			this.filter    = true;
+			this.filename    = "";
+			this.shortName   = "";
+			this.insideDoc   = true;
+			this.rotation    = Rotation.Angle0;
+			this.mirrorH     = false;
+			this.mirrorV     = false;
+			this.homo        = true;
+			this.imageFilter = new ImageFilter(ImageFilteringMode.Bilinear);
 			this.cropMargins = Margins.Zero;
 		}
 
@@ -156,19 +156,19 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		public bool Filter
+		public ImageFilter ImageFilter
 		{
 			get
 			{
-				return this.filter;
+				return this.imageFilter;
 			}
-			
+
 			set
 			{
-				if ( this.filter != value )
+				if (this.imageFilter != value)
 				{
 					this.NotifyBefore();
-					this.filter = value;
+					this.imageFilter = value;
 					this.NotifyAfter();
 				}
 			}
@@ -231,7 +231,7 @@ namespace Epsitec.Common.Document.Properties
 			p.mirrorH     = this.mirrorH;
 			p.mirrorV     = this.mirrorV;
 			p.homo        = this.homo;
-			p.filter      = this.filter;
+			p.imageFilter = this.imageFilter;
 			p.cropMargins = this.cropMargins;
 		}
 
@@ -248,7 +248,7 @@ namespace Epsitec.Common.Document.Properties
 			if ( p.mirrorH     != this.mirrorH     )  return false;
 			if ( p.mirrorV     != this.mirrorV     )  return false;
 			if ( p.homo        != this.homo        )  return false;
-			if ( p.filter      != this.filter      )  return false;
+			if ( p.imageFilter != this.imageFilter )  return false;
 			if ( p.cropMargins != this.cropMargins )  return false;
 
 			return true;
@@ -284,7 +284,7 @@ namespace Epsitec.Common.Document.Properties
 			info.AddValue("MirrorH", this.mirrorH);
 			info.AddValue("MirrorV", this.mirrorV);
 			info.AddValue("Homo", this.homo);
-			info.AddValue("Filter", this.filter);
+			info.AddValue("ImageFilter", this.imageFilter);
 
 			info.AddValue("CropLeft", this.cropMargins.Left);
 			info.AddValue("CropRight", this.cropMargins.Right);
@@ -302,11 +302,20 @@ namespace Epsitec.Common.Document.Properties
 
 			if ( this.document.IsRevisionGreaterOrEqual(1,2,4) )
 			{
-				this.filter = info.GetBoolean("Filter");
+				if (this.document.IsRevisionGreaterOrEqual(2, 0, 3))
+				{
+					this.imageFilter = (ImageFilter) info.GetValue("ImageFilter", typeof(ImageFilter));
+				}
+				else
+				{
+					bool filter = info.GetBoolean("Filter");
+					this.imageFilter = filter ? new ImageFilter(ImageFilteringMode.Bilinear) : new ImageFilter(ImageFilteringMode.None);
+				}
+
 			}
 			else
 			{
-				this.filter = true;
+				this.imageFilter = new ImageFilter(ImageFilteringMode.Bilinear);
 			}
 
 			//	Si le nom de l'image ne contient pas de nom de dossier (nom relatif),
@@ -349,7 +358,7 @@ namespace Epsitec.Common.Document.Properties
 		protected bool				mirrorH;
 		protected bool				mirrorV;
 		protected bool				homo;
-		protected bool				filter;
+		protected ImageFilter		imageFilter;
 		protected Margins			cropMargins;
 	}
 }
