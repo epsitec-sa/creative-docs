@@ -206,7 +206,7 @@ namespace Epsitec.Common.Document.Widgets
 					ImageCache.Item item = this.document.ImageCache.Get(pi.Filename);
 					if (item != null)
 					{
-						return item.Image.Size;
+						return item.Size;
 					}
 				}
 
