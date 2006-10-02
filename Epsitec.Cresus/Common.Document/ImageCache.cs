@@ -14,28 +14,28 @@ namespace Epsitec.Common.Document
 		public ImageCache()
 		{
 			this.dico = new Dictionary<string, Item>();
-			this.isDisplay = true;
+			this.isLowres = true;
 		}
 
 
-		public bool IsDisplay
+		public bool IsLowres
 		{
 			//	Indique le type des images auxquelles on s'intéresse.
 			get
 			{
-				return this.isDisplay;
+				return this.isLowres;
 			}
 
 			set
 			{
-				if (this.isDisplay != value)
+				if (this.isLowres != value)
 				{
-					this.isDisplay = value;
+					this.isLowres = value;
 
 					//	Informe tout le cache.
 					foreach (Item item in this.dico.Values)
 					{
-						item.IsDisplay = this.isDisplay;
+						item.IsLowres = this.isLowres;
 					}
 				}
 			}
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				Item item = new Item(filename, data, this.isDisplay);
+				Item item = new Item(filename, data, this.isLowres);
 				this.dico.Add(filename, item);
 				return item;
 			}
@@ -240,14 +240,14 @@ namespace Epsitec.Common.Document
 		#region Class Item
 		public class Item : System.IDisposable
 		{
-			public Item(string filename, byte[] data, bool isDisplay)
+			public Item(string filename, byte[] data, bool isLowres)
 			{
 				//	Constructeur qui met en cache les données de l'image.
 				//	Si les données 'data' n'existent pas, l'image est lue sur disque.
 				//	Si les données existent, l'image est lue à partir des données en mémoire.
 				this.filename = filename;
 				this.shortName = null;
-				this.isDisplay = isDisplay;
+				this.isLowres = isLowres;
 
 				try
 				{
@@ -262,7 +262,7 @@ namespace Epsitec.Common.Document
 
 					this.originalImage = Bitmap.FromData(this.data);
 					this.originalSize = this.originalImage.Size;
-					this.CreateDisplayImage();
+					this.CreateLowresImage();
 				}
 				catch
 				{
@@ -295,7 +295,7 @@ namespace Epsitec.Common.Document
 				try
 				{
 					this.originalImage = Bitmap.FromData(this.data);
-					this.CreateDisplayImage();
+					this.CreateLowresImage();
 				}
 				catch
 				{
@@ -308,7 +308,7 @@ namespace Epsitec.Common.Document
 				return true;
 			}
 
-			protected void CreateDisplayImage()
+			protected void CreateLowresImage()
 			{
 				//	Crée l'image pour l'affichage.
 				//	Libère l'image originale si elle est trop grosse.
@@ -316,20 +316,20 @@ namespace Epsitec.Common.Document
 
 				if (this.IsBigOriginal)  // image dépasse 200 KB ?
 				{
-					//	Génère une image pour l'affichage (this.displayImage) qui pèse
+					//	Génère une image pour l'affichage (this.lowresImage) qui pèse
 					//	environ 200 KB.
-					this.displayScale = System.Math.Sqrt(this.KBWeight/200);
-					int dx = (int) (this.originalSize.Width/this.displayScale);
-					int dy = (int) (this.originalSize.Height/this.displayScale);
-					this.displayImage = ImageCache.ResizeImage(this.originalImage, dx, dy);
+					this.lowresScale = System.Math.Sqrt(this.KBWeight/200);
+					int dx = (int) (this.originalSize.Width/this.lowresScale);
+					int dy = (int) (this.originalSize.Height/this.lowresScale);
+					this.lowresImage = ImageCache.ResizeImage(this.originalImage, dx, dy);
 
 					this.originalImage.Dispose();  // oublie tout de suite l'image originale
 					this.originalImage = null;
 				}
 				else
 				{
-					this.displayImage = this.originalImage;
-					this.displayScale = 1.0;
+					this.lowresImage = this.originalImage;
+					this.lowresScale = 1.0;
 				}
 			}
 
@@ -349,16 +349,16 @@ namespace Epsitec.Common.Document
 				System.IO.File.WriteAllBytes(otherFilename, this.data);
 			}
 
-			public bool IsDisplay
+			public bool IsLowres
 			{
 				//	Indique le type de l'image a laquelle on s'intéresse.
 				get
 				{
-					return this.isDisplay;
+					return this.isLowres;
 				}
 				set
 				{
-					this.isDisplay = value;
+					this.isLowres = value;
 				}
 			}
 
@@ -376,7 +376,7 @@ namespace Epsitec.Common.Document
 				//	Retourne l'échelle de l'image pour l'affichage (>= 1).
 				get
 				{
-					return this.isDisplay ? this.displayScale : 1.0;
+					return this.isLowres ? this.lowresScale : 1.0;
 				}
 			}
 
@@ -451,9 +451,9 @@ namespace Epsitec.Common.Document
 				//	Retourne l'objet Drawing.Image.
 				get
 				{
-					if (this.isDisplay)
+					if (this.isLowres)
 					{
-						return this.displayImage;
+						return this.lowresImage;
 					}
 					else
 					{
@@ -520,10 +520,10 @@ namespace Epsitec.Common.Document
 					this.originalImage = null;
 				}
 
-				if (this.displayImage != null)
+				if (this.lowresImage != null)
 				{
-					this.displayImage.Dispose();
-					this.displayImage = null;
+					this.lowresImage.Dispose();
+					this.lowresImage = null;
 				}
 
 				if (this.dimmedImage != null)
@@ -539,11 +539,11 @@ namespace Epsitec.Common.Document
 			protected bool					insideDoc;
 			protected byte[]				data;
 			protected Drawing.Image			originalImage;
-			protected Drawing.Image			displayImage;
+			protected Drawing.Image			lowresImage;
 			protected Drawing.Image			dimmedImage;
 			protected Size					originalSize;
-			protected double				displayScale;
-			protected bool					isDisplay;
+			protected double				lowresScale;
+			protected bool					isLowres;
 		}
 		#endregion
 
@@ -564,6 +564,6 @@ namespace Epsitec.Common.Document
 
 
 		protected Dictionary<string, Item>	dico;
-		protected bool						isDisplay;
+		protected bool						isLowres;
 	}
 }
