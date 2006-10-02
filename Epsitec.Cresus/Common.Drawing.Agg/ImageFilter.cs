@@ -30,9 +30,14 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+		/// <summary>
+		/// Gets the radius for the <c>Sinc</c>, <c>Lanczos</c> and <c>Blackman</c> filtering
+		/// modes.
+		/// </summary>
+		/// <value>The radius.</value>
 		public double Radius
 		{
-			//	Le rayon est effectif pour les modes Sync, Lanczos et Blackman.
+			//	Le rayon est effectif pour les modes Sinc (c'est la fonction "sin(x)/x"), Lanczos et Blackman.
 			get
 			{
 				return this.radius;
