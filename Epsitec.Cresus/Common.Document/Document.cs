@@ -2004,6 +2004,8 @@ namespace Epsitec.Common.Document
 			//	Dessine le document.
 			if ( drawingContext.RootStackIsEmpty )  return;
 
+			this.imageCache.IsDisplay = !drawingContext.PreviewActive;
+
 			if ( !clipRect.IsInfinite )
 			{
 				clipRect = drawingContext.Viewer.ScreenToInternal(clipRect);
@@ -2142,6 +2144,7 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
+			this.imageCache.IsDisplay = false;
 			this.printer.Print(dp);
 		}
 
@@ -2151,6 +2154,7 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
+			this.imageCache.IsDisplay = false;
 			return this.printer.Export(filename);
 		}
 
@@ -2160,6 +2164,7 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
+			this.imageCache.IsDisplay = false;
 			return this.exportPDF.FileExport(filename);
 		}
 
