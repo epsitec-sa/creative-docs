@@ -65,12 +65,18 @@ namespace Epsitec.Common.Document
 			if (item != null)
 			{
 				this.dico.Remove(filename);
+				item.Dispose();
 			}
 		}
 
 		public void Clear()
 		{
 			//	Supprime toutes les images du cache.
+			foreach (KeyValuePair<string, Item> pair in this.dico)
+			{
+				pair.Value.Dispose();
+			}
+
 			this.dico.Clear();
 		}
 
@@ -90,7 +96,9 @@ namespace Epsitec.Common.Document
 
 			foreach (string key in keysToDelete)
 			{
+				Item item = this.dico[key];
 				this.dico.Remove(key);
+				item.Dispose();
 			}
 		}
 
