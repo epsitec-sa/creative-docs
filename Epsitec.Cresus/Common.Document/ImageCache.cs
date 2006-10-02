@@ -20,6 +20,7 @@ namespace Epsitec.Common.Document
 
 		public bool IsDisplay
 		{
+			//	Indique le type des images auxquelles on s'intéresse.
 			get
 			{
 				return this.isDisplay;
@@ -27,11 +28,15 @@ namespace Epsitec.Common.Document
 
 			set
 			{
-				this.isDisplay = value;
-
-				foreach (Item item in this.dico.Values)
+				if (this.isDisplay != value)
 				{
-					item.IsDisplay = this.isDisplay;
+					this.isDisplay = value;
+
+					//	Informe tout le cache.
+					foreach (Item item in this.dico.Values)
+					{
+						item.IsDisplay = this.isDisplay;
+					}
 				}
 			}
 		}
@@ -346,6 +351,7 @@ namespace Epsitec.Common.Document
 
 			public bool IsDisplay
 			{
+				//	Indique le type de l'image a laquelle on s'intéresse.
 				get
 				{
 					return this.isDisplay;
