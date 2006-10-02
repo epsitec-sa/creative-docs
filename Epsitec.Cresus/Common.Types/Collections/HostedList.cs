@@ -10,7 +10,7 @@ namespace Epsitec.Common.Types.Collections
 	/// host when the contents changes (insertion and removal of items).
 	/// </summary>
 	/// <typeparam name="T">Type of items stored in list</typeparam>
-	public class HostedList<T> : GenericList<T>
+	public class HostedList<T> : ObservableList<T>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="HostedList&lt;T&gt;"/> class.

@@ -5,9 +5,15 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types.Collections
 {
-	public class GenericList<T> : IList<T>, INotifyCollectionChanged, System.Collections.ICollection
+	/// <summary>
+	/// The <c>ObservableList</c> represents a list which provides notifications
+	/// when items get added, removed and modified, or when the whole list is
+	/// refreshed.
+	/// </summary>
+	/// <typeparam name="T">The manipulated data type.</typeparam>
+	public class ObservableList<T> : IList<T>, INotifyCollectionChanged, System.Collections.ICollection
 	{
-		public GenericList()
+		public ObservableList()
 		{
 		}
 
