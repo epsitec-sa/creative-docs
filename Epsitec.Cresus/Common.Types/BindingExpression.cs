@@ -336,7 +336,8 @@ namespace Epsitec.Common.Types
 
 			if (string.IsNullOrEmpty (path))
 			{
-				//	There is no path, so we will simply consider the source as the data.
+				//	There is no path, so we will simply consider the source itself
+				//	as the data.
 				
 				type = DataSourceType.SourceItself;
 
@@ -462,12 +463,20 @@ namespace Epsitec.Common.Types
 			
 			return false;
 		}
-		private void FindDataSourceRoot(out object source, out string path)
-		{
-			source = this.binding.Source;
-			path   = this.binding.Path;
 
-			if (source == null)
+		/// <summary>
+		/// Finds the data source root based on the binding definition. This will either
+		/// use the binding source directly (if available) or derive the source from the
+		/// locally visible <c>DataContext</c>.
+		/// </summary>
+		/// <param name="sourceRoot">The source root.</param>
+		/// <param name="sourcePath">The path from the root to the source.</param>
+		private void FindDataSourceRoot(out object sourceRoot, out string sourcePath)
+		{
+			sourceRoot = this.binding.Source;
+			sourcePath   = this.binding.Path;
+
+			if (sourceRoot == null)
 			{
 				//	Our binding is not explicitely attached to a source; we will
 				//	have to use the target's DataContext instead.
@@ -476,8 +485,8 @@ namespace Epsitec.Common.Types
 
 				if (this.dataContext != null)
 				{
-					source = this.dataContext.Source;
-					path   = DependencyPropertyPath.Combine (this.dataContext.Path, path);
+					sourceRoot = this.dataContext.Source;
+					sourcePath   = DependencyPropertyPath.Combine (this.dataContext.Path, sourcePath);
 				}
 			}
 			else
@@ -613,30 +622,33 @@ namespace Epsitec.Common.Types
 		{
 			if (this.sourceType != DataSourceType.None)
 			{
-				if (this.binding.IsAsync)
+				if (this.binding.IsAttached)
 				{
-					//	If the binding requires an asynchronous access to the source
-					//	value, we delegate the work to the BindingAsyncOperation class.
-					
-					if (this.asyncOperation == null)
+					if (this.binding.IsAsync)
 					{
-						this.asyncOperation = new BindingAsyncOperation (this);
-					}
+						//	If the binding requires an asynchronous access to the source
+						//	value, we delegate the work to the BindingAsyncOperation class.
 
-					//	First, tell the target that the data is still pending. This is
-					//	immediate :
-					
-					this.InternalUpdateTarget (PendingValue.Instance);
-					
-					//	Now, queue up an asynchronous call to GetSourceValue followed
-					//	by a call to InternalUpdateTarget, but don't wait for the value
-					//	to be successfully set and return immediately.
-					
-					this.asyncOperation.QuerySourceValueAndUpdateTarget ();
-				}
-				else
-				{
-					this.InternalUpdateTarget (this.GetSourceValue ());
+						if (this.asyncOperation == null)
+						{
+							this.asyncOperation = new BindingAsyncOperation (this);
+						}
+
+						//	First, tell the target that the data is still pending. This is
+						//	immediate :
+
+						this.InternalUpdateTarget (PendingValue.Instance);
+
+						//	Now, queue up an asynchronous call to GetSourceValue followed
+						//	by a call to InternalUpdateTarget, but don't wait for the value
+						//	to be successfully set and return immediately.
+
+						this.asyncOperation.QuerySourceValueAndUpdateTarget ();
+					}
+					else
+					{
+						this.InternalUpdateTarget (this.GetSourceValue ());
+					}
 				}
 			}
 		}

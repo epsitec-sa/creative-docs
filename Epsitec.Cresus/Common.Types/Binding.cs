@@ -116,7 +116,14 @@ namespace Epsitec.Common.Types
 				this.isAsync = value;
 			}
 		}
-		
+
+		internal bool							IsAttached
+		{
+			get
+			{
+				return this.sourceState == SourceState.Attached;
+			}
+		}
 #if false
 		/// <summary>
 		/// Gets or sets the name of the data source element.
@@ -297,7 +304,7 @@ namespace Epsitec.Common.Types
 			return value;
 		}
 
-		protected override IEnumerable<BindingExpression> GetExpressions()
+		public override IEnumerable<BindingExpression> GetExpressions()
 		{
 			//	See RemoveExpression and AddExpression.
 
@@ -517,13 +524,40 @@ namespace Epsitec.Common.Types
 		{
 			if (this.sourceState == SourceState.Detached)
 			{
-				this.sourceState = SourceState.Attached;
-
-				foreach (BindingExpression expression in this.GetExpressions ())
+				if (this.IsAsync)
 				{
-					expression.AttachToSource ();
-					expression.UpdateTarget (BindingUpdateMode.Reset);
+					//	The binding is defined to be asynchronous : start a separate
+					//	operation, running concurrently, which will walk the source
+					//	tree and update the targets :
+					
+					this.sourceState = SourceState.AsyncAttaching;
+
+					BindingAsyncOperation asyncOperation = new BindingAsyncOperation (this);
+
+					asyncOperation.AttachToSourceAndUpdateTargets ();
 				}
+				else
+				{
+					this.sourceState = SourceState.Attached;
+
+					foreach (BindingExpression expression in this.GetExpressions ())
+					{
+						expression.AttachToSource ();
+						expression.UpdateTarget (BindingUpdateMode.Reset);
+					}
+				}
+			}
+			else if (this.sourceState == SourceState.AsyncAttaching)
+			{
+				System.Diagnostics.Debug.Fail ("Attaching while previous asynchronous attach is still running");
+			}
+		}
+
+		internal void NotifyAttachCompleted()
+		{
+			if (this.sourceState == SourceState.AsyncAttaching)
+			{
+				this.sourceState = SourceState.Attached;
 			}
 		}
 
@@ -556,7 +590,9 @@ namespace Epsitec.Common.Types
 			Invalid,
 			
 			Attached,
-			Detached
+			Detached,
+			
+			AsyncAttaching
 		}
 
 		#endregion

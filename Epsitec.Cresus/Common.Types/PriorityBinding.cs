@@ -53,7 +53,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		protected override IEnumerable<BindingExpression> GetExpressions()
+		public override IEnumerable<BindingExpression> GetExpressions()
 		{
 			if (this.expressions == null)
 			{
