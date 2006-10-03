@@ -70,7 +70,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (sel != -1)
 			{
-#if false
+#if true
 				ResourceAccess.Field field = this.access.GetField(sel, null, "AbstractType");
 				AbstractType type = field.AbstractType;
 

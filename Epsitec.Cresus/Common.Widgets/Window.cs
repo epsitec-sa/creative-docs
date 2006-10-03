@@ -1830,8 +1830,12 @@ namespace Epsitec.Common.Widgets
 
 				if (context != null)
 				{
-					total = context.TotalArrangeCount;
-					counter = context.SyncArrange ();
+					if ((context.ArrangeQueueLength > 0) ||
+						(context.MeasureQueueLength > 0))
+					{
+						total = context.TotalArrangeCount;
+						counter = context.SyncArrange ();
+					}
 				}
 
 				if (counter > 0)
