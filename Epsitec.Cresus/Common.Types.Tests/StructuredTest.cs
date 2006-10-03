@@ -112,7 +112,6 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.Collections.Generic.KeyNotFoundException))]
 		public void CheckStructuredDataWithTypeEx2()
 		{
 			StructuredType type = new StructuredType ();
@@ -121,7 +120,7 @@ namespace Epsitec.Common.Types
 			type.Fields.Add ("A", IntegerType.Default);
 			type.Fields.Add ("B", IntegerType.Default);
 
-			data.GetValue ("X");
+			Assert.IsTrue (UnknownValue.IsUnknownValue (data.GetValue ("X")));
 		}
 
 		[Test]

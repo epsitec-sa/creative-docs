@@ -33,10 +33,12 @@ namespace Epsitec.Common.Types
 			group.PropertyName = null;
 			group.Converter = Converters.AutomaticValueConverter.Instance;
 
-			MyItem item = new MyItem ("X");
-
+			//	Convert simple types to string :
+			
 			Assert.AreEqual ("1.1", string.Join (":", group.GetGroupNamesForItem (1.1, System.Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag ("en-US"))));
 			Assert.AreEqual ("1,1", string.Join (":", group.GetGroupNamesForItem (1.1, System.Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag ("fr-FR"))));
+
+			MyItem item = new MyItem ("X");
 
 			Assert.AreEqual (0, group.GetGroupNamesForItem (null, System.Globalization.CultureInfo.InvariantCulture).Length);
 			Assert.AreEqual (1, group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture).Length);
