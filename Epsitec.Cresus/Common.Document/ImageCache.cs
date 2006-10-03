@@ -270,7 +270,7 @@ namespace Epsitec.Common.Document
 			{
 				get
 				{
-					return this.gItem.Image(this.isLowres);
+					return this.gItem.Image(this.IsLowresEffective);
 				}
 			}
 
@@ -278,7 +278,7 @@ namespace Epsitec.Common.Document
 			{
 				get
 				{
-					return this.isLowres ? this.gItem.LowresScale : 1.0;
+					return this.IsLowresEffective ? this.gItem.LowresScale : 1.0;
 				}
 			}
 
@@ -293,7 +293,7 @@ namespace Epsitec.Common.Document
 
 			public bool IsLowres
 			{
-				//	Indique le type de l'image a laquelle on s'intéresse.
+				//	Indique le type de l'image à laquelle on s'intéresse.
 				get
 				{
 					return this.isLowres;
@@ -330,21 +330,28 @@ namespace Epsitec.Common.Document
 				}
 			}
 
+			protected bool IsLowresEffective
+			{
+				get
+				{
+					return this.isLowres && GlobalImageCache.IsBigSize;
+				}
+			}
+
 			#region IDisposable Members
 			public void Dispose()
 			{
 				if (this.gItem != null)
 				{
-					this.gItem.Dispose();
 					this.gItem = null;
 				}
 			}
 			#endregion
 
-			protected GlobalImageCache.Item	gItem;			
-			protected string				shortName;
-			protected bool					insideDoc;
-			protected bool					isLowres;
+			protected GlobalImageCache.Item		gItem;			
+			protected string					shortName;
+			protected bool						insideDoc;
+			protected bool						isLowres;
 		}
 		#endregion
 
@@ -357,14 +364,14 @@ namespace Epsitec.Common.Document
 			gfx.TranslateTransform(0, dy);
 			gfx.ScaleTransform(1, -1, 0, 0);
 
-			gfx.ImageFilter = new ImageFilter(ImageFilteringMode.Bilinear);
+			gfx.ImageFilter = new ImageFilter(ImageFilteringMode.Bilinear);  // le plus rapide
 			gfx.PaintImage(image, new Rectangle(0, 0, dx, dy));
 
 			return Bitmap.FromPixmap(gfx.Pixmap) as Bitmap;
 		}
 
 
-		protected Dictionary<string, Item>	dico;
-		protected bool						isLowres;
+		protected Dictionary<string, Item>		dico;
+		protected bool							isLowres;
 	}
 }
