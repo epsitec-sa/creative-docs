@@ -31,6 +31,11 @@ namespace Epsitec.Common.Types.Collections
 			this.host = new CallbackRelay (insertionCallback, removalCallback);
 		}
 
+		/// <summary>
+		/// Gets the host for this list; this is the object which is notified
+		/// when insertions and removals happen.
+		/// </summary>
+		/// <value>The host.</value>
 		public IListHost<T> Host
 		{
 			get
