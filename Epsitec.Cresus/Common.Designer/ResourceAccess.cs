@@ -1099,7 +1099,7 @@ namespace Epsitec.Common.Designer
 
 					if (type == null)
 					{
-						type = TypeRosetta.CreateTypeObject (this.accessCaption);
+						type = TypeRosetta.CreateTypeObject(this.accessCaption);
 						if (type == null)
 						{
 							return null;

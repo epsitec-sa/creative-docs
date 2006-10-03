@@ -314,14 +314,12 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				int index = this.access.AccessIndex;
-
-				this.SetTextField(this.labelEdit, index, null, "Name");
-				this.SetTextField(this.primaryLabels, index, null, "Labels");
-				this.SetTextField(this.primaryDescription, index, null, "Description");
-				this.SetTextField(this.primaryIcon, index, null, "Icon");
+				this.SetTextField(this.labelEdit, sel, null, "Name");
+				this.SetTextField(this.primaryLabels, sel, null, "Labels");
+				this.SetTextField(this.primaryDescription, sel, null, "Description");
+				this.SetTextField(this.primaryIcon, sel, null, "Icon");
 				this.UpdateIconInfo();
-				this.SetTextField(this.primaryAbout, index, null, "About");
+				this.SetTextField(this.primaryAbout, sel, null, "About");
 
 				if (this.secondaryCulture == null)
 				{
@@ -331,9 +329,9 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 				else
 				{
-					this.SetTextField(this.secondaryLabels, index, this.secondaryCulture, "Labels");
-					this.SetTextField(this.secondaryDescription, index, this.secondaryCulture, "Description");
-					this.SetTextField(this.secondaryAbout, index, this.secondaryCulture, "About");
+					this.SetTextField(this.secondaryLabels, sel, this.secondaryCulture, "Labels");
+					this.SetTextField(this.secondaryDescription, sel, this.secondaryCulture, "Description");
+					this.SetTextField(this.secondaryAbout, sel, this.secondaryCulture, "About");
 				}
 
 				this.labelEdit.Focus();

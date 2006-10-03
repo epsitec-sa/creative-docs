@@ -139,18 +139,16 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				int index = this.access.AccessIndex;
-
-				ResourceAccess.Field field = this.access.GetField(index, null, "Statefull");
+				ResourceAccess.Field field = this.access.GetField(sel, null, "Statefull");
 				bool statefull = field.Bool;
 
 				this.primaryStatefull.Enable = true;
 				this.primaryStatefull.ActiveState = statefull ? ActiveState.Yes : ActiveState.No;
 
-				this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, index, null, "Shortcuts");
-				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, index, this.secondaryCulture, "Shortcuts");
+				this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, sel, null, "Shortcuts");
+				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, sel, this.secondaryCulture, "Shortcuts");
 
-				this.SetTextField(this.primaryGroup, index, null, "Group");
+				this.SetTextField(this.primaryGroup, sel, null, "Group");
 			}
 
 			this.ignoreChange = iic;
