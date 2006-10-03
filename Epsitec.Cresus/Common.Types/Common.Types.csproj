@@ -109,6 +109,7 @@
     <Compile Include="CollectionChangedEventArgs.cs" />
     <Compile Include="CollectionChangedAction.cs" />
     <Compile Include="AbstractGroupDescription.cs" />
+    <Compile Include="CollectionViewSource.cs" />
     <Compile Include="UnknownValue.cs" />
     <Compile Include="PropertyGroupDescription.cs" />
     <Compile Include="ListSortDirection.cs" />
