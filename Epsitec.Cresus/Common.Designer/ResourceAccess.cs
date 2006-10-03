@@ -1099,11 +1099,12 @@ namespace Epsitec.Common.Designer
 
 					if (type == null)
 					{
-						type = TypeRosetta.CreateTypeObject(this.accessCaption);
-					}
-					if (type == null)
-					{
-						return null;
+						type = TypeRosetta.CreateTypeObject (this.accessCaption);
+						if (type == null)
+						{
+							return null;
+						}
+						AbstractType.SetCachedType(this.accessCaption, type);
 					}
 
 					return new Field(type);
