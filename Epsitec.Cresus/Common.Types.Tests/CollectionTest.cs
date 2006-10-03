@@ -62,6 +62,15 @@ namespace Epsitec.Common.Types
 			
 			Assert.AreEqual (1, group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture).Length);
 			Assert.AreEqual ("X", string.Join (":", group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture)));
+
+			Assert.AreEqual (System.StringComparison.Ordinal, group.StringComparison);
+
+			Assert.IsTrue (group.NamesMatch ("A", "A"));
+			Assert.IsFalse (group.NamesMatch ("A", "a"));
+
+			group.StringComparison = System.StringComparison.InvariantCultureIgnoreCase;
+			
+			Assert.IsTrue (group.NamesMatch ("A", "a"));
 		}
 
 		#region MyItem Class
