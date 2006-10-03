@@ -33,27 +33,38 @@ namespace Epsitec.Common.Types
 			group.PropertyName = null;
 			group.Converter = Converters.AutomaticValueConverter.Instance;
 
-			//	Convert simple types to string :
+			//	Convert simple types to string
 			
 			Assert.AreEqual ("1.1", string.Join (":", group.GetGroupNamesForItem (1.1, System.Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag ("en-US"))));
 			Assert.AreEqual ("1,1", string.Join (":", group.GetGroupNamesForItem (1.1, System.Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag ("fr-FR"))));
 
+			Assert.AreEqual (0, group.GetGroupNamesForItem (null, System.Globalization.CultureInfo.InvariantCulture).Length);
+			
+			//	Convert DependencyObject to string
+			
 			MyItem item = new MyItem ("X");
 
-			Assert.AreEqual (0, group.GetGroupNamesForItem (null, System.Globalization.CultureInfo.InvariantCulture).Length);
+			//	Automatic converter, no property :
+
 			Assert.AreEqual (1, group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture).Length);
 			Assert.AreEqual ("MyItem:X", string.Join (":", group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture)));
 
+			//	No converter, no property :
+			
 			group.Converter = null;
 
 			Assert.AreEqual (1, group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture).Length);
 			Assert.AreEqual ("Epsitec.Common.Types.CollectionTest+MyItem", string.Join (":", group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture)));
 
+			//	Property, no converter :
+			
 			group.PropertyName = "Name";
 			
 			Assert.AreEqual (1, group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture).Length);
 			Assert.AreEqual ("X", string.Join (":", group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture)));
 		}
+
+		#region MyItem Class
 
 		[System.ComponentModel.TypeConverter (typeof (MyItem.Converter))]
 		private class MyItem : DependencyObject
@@ -75,6 +86,8 @@ namespace Epsitec.Common.Types
 				}
 			}
 
+			#region Converter Class
+
 			public class Converter : Epsitec.Common.Types.AbstractStringConverter
 			{
 				public override object ParseString(string value, System.Globalization.CultureInfo culture)
@@ -89,7 +102,11 @@ namespace Epsitec.Common.Types
 				}
 			}
 
+			#endregion
+
 			public static readonly DependencyProperty NameProperty = DependencyProperty.Register ("Name", typeof (string), typeof (MyItem));
 		}
+
+		#endregion
 	}
 }
