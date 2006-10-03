@@ -54,6 +54,7 @@ namespace Epsitec.Common.Document
 				else
 				{
 					GlobalImageCache.dico.Add(filename, item);
+					GlobalImageCache.UpdateBigSize();
 					return item;
 				}
 			}
@@ -66,17 +67,41 @@ namespace Epsitec.Common.Document
 			if (item != null)
 			{
 				GlobalImageCache.dico.Remove(filename);
+				GlobalImageCache.UpdateBigSize();
 				item.Dispose();
 			}
 		}
 
 		public static void Free()
 		{
-			//	Libère toutes les images.
+			//	Libère toutes les images, si nécessaire.
+			if (GlobalImageCache.isBigSize)
+			{
+				foreach (Item item in GlobalImageCache.dico.Values)
+				{
+					item.FreeOriginal();
+				}
+			}
+		}
+
+		public static bool IsBigSize
+		{
+			get
+			{
+				return GlobalImageCache.isBigSize;
+			}
+		}
+
+		protected static void UpdateBigSize()
+		{
+			//	Indique si le total des images originales en cache dépasse 0.5 GB.
+			long total = 0;
 			foreach (Item item in GlobalImageCache.dico.Values)
 			{
-				item.FreeOriginal();
+				total += item.KBWeight;
 			}
+
+			GlobalImageCache.isBigSize = (total > 500000);  // dépasse 0.5 GB ?
 		}
 
 
@@ -214,21 +239,21 @@ namespace Epsitec.Common.Document
 				}
 			}
 
+			public long KBWeight
+			{
+				//	Retourne la taille de l'image en KB.
+				get
+				{
+					return ((long) this.originalSize.Width * (long) this.originalSize.Height) / (1024/4);
+				}
+			}
+
 			protected bool IsBigOriginal
 			{
 				//	Retourne 'true' si l'image originale dépasse 200 KB.
 				get
 				{
 					return (this.KBWeight > 200);
-				}
-			}
-
-			protected long KBWeight
-			{
-				//	Retourne la taille de l'image en KB.
-				get
-				{
-					return ((long) this.originalSize.Width * (long) this.originalSize.Height) / (1024/4);
 				}
 			}
 
@@ -320,5 +345,6 @@ namespace Epsitec.Common.Document
 
 
 		protected static Dictionary<string, Item>	dico = new Dictionary<string, Item>();
+		protected static bool						isBigSize = false;
 	}
 }
