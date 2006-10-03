@@ -117,6 +117,11 @@ namespace Epsitec.Common.Types
 				string name  = StructuredTree.GetRootName (path);
 				object value = root.GetValue (name);
 
+				if (UnknownValue.IsUnknownValue (value))
+				{
+					return value;
+				}
+
 				if (name == path)
 				{
 					return value;
@@ -126,14 +131,18 @@ namespace Epsitec.Common.Types
 				path = StructuredTree.GetSubPath (path, 1);
 			}
 
-			throw new System.ArgumentException (string.Format ("Path {0} cannot be resolved", originalPath));
+			return UnknownValue.Instance;
 		}
 
 		public static void SetValue(IStructuredData root, string path, object value)
 		{
 			if (string.IsNullOrEmpty (path))
 			{
-				throw new System.ArgumentException ();
+				throw new System.ArgumentException ("Empty path");
+			}
+			if (UnknownValue.IsUnknownValue (value))
+			{
+				throw new System.ArgumentException ("UnknownValue specified");
 			}
 
 			string originalPath = path;
@@ -147,8 +156,15 @@ namespace Epsitec.Common.Types
 					root.SetValue (name, value);
 					return;
 				}
+
+				object item = root.GetValue (name);
+
+				if (UnknownValue.IsUnknownValue (item))
+				{
+					break;
+				}
 				
-				root = root.GetValue (name) as IStructuredData;
+				root = item as IStructuredData;
 				path = StructuredTree.GetSubPath (path, 1);
 			}
 

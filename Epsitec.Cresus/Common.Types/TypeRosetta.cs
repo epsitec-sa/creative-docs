@@ -229,6 +229,10 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public static bool IsValidValue(object value, object typeObject)
 		{
+			if (UnknownValue.IsUnknownValue (value))
+			{
+				return false;
+			}
 			if (typeObject == null)
 			{
 				throw new System.ArgumentNullException ("Null type specified");
@@ -273,6 +277,10 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public static bool IsValidValue(object value, INamedType targetType)
 		{
+			if (UnknownValue.IsUnknownValue (value))
+			{
+				return false;
+			}
 			if (targetType == null)
 			{
 				throw new System.ArgumentNullException ("Null type specified");

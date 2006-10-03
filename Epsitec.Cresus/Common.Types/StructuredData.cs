@@ -138,7 +138,7 @@ namespace Epsitec.Common.Types
 			
 			if (! this.CheckNameValidity (name, out type))
 			{
-				throw new System.Collections.Generic.KeyNotFoundException (string.Format ("The value '{0}' cannot be get; it is not defined by the structure", name));
+				return UnknownValue.Instance;
 			}
 			
 			Record value;
@@ -165,11 +165,16 @@ namespace Epsitec.Common.Types
 			{
 				throw new System.Collections.Generic.KeyNotFoundException (string.Format ("The value '{0}' cannot be set; it is not defined by the structure", name));
 			}
+			
+			if (UnknownValue.IsUnknownValue (value))
+			{
+				throw new System.ArgumentException ("UnknownValue specified");
+			}
 
 			object oldValue = this.GetValue (name);
 			PropertyChangedEventHandler handler = null;
 
-			if (value == UndefinedValue.Instance)
+			if (UndefinedValue.IsUndefinedValue (value))
 			{
 				if (this.values != null)
 				{

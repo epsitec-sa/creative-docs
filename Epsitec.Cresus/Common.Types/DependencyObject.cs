@@ -1176,10 +1176,12 @@ namespace Epsitec.Common.Types
 
 			if (property == null)
 			{
-				throw new System.ArgumentException (string.Format ("Name '{0}' cannot be mapped to a DependencyProperty", name));
+				return UnknownValue.Instance;
 			}
-
-			return this.GetValue (property);
+			else
+			{
+				return this.GetValue (property);
+			}
 		}
 
 		void IStructuredData.SetValue(string name, object value)
