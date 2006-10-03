@@ -1503,7 +1503,7 @@ namespace Epsitec.Common.Document.PDF
 		{
 			//	Crée une image.
 			//	Création d'une instance de Magick.Image à partir du nom de fichier.
-			byte[] imageData = image.Cache.Data;
+			byte[] imageData = image.Cache.GlobalItem.Data;
 			
 			Magick.Blob blob = new Magick.Blob();
 			blob.Update(imageData);

@@ -41,6 +41,20 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public void Load(string filename)
+		{
+			//	Essaie de charger une image dans le cache.
+			if (!string.IsNullOrEmpty(filename))
+			{
+				Item item = this.Get(filename);
+
+				if (item == null)
+				{
+					this.Add(filename, null);
+				}
+			}
+		}
+
 		public Item Get(string filename)
 		{
 			//	Retourne les données d'une image.
@@ -76,20 +90,17 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				Item item = new Item(filename, data, this.isLowres);
-				this.dico.Add(filename, item);
-				return item;
-			}
-		}
-
-		public void Remove(string filename)
-		{
-			//	Supprime une image dans le cache.
-			Item item = this.dico[filename];
-			if (item != null)
-			{
-				this.dico.Remove(filename);
-				item.Dispose();
+				GlobalImageCache.Item gItem = GlobalImageCache.Add(filename, data);
+				if (gItem.Data == null)
+				{
+					return null;
+				}
+				else
+				{
+					Item item = new Item(gItem, this.isLowres);
+					this.dico.Add(filename, item);
+					return item;
+				}
 			}
 		}
 
@@ -104,24 +115,6 @@ namespace Epsitec.Common.Document
 			this.dico.Clear();
 		}
 
-
-		public void Free()
-		{
-			//	Libère toutes les images.
-			long total = 0;
-			foreach (Item item in this.dico.Values)
-			{
-				total += item.KBWeight;
-			}
-
-			if (total > 100000)  // occupe plus de 100 MB ?
-			{
-				foreach (KeyValuePair<string, Item> pair in this.dico)
-				{
-					pair.Value.FreeOriginal();
-				}
-			}
-		}
 
 		public void FlushUnused(List<string> filenames)
 		{
@@ -213,7 +206,7 @@ namespace Epsitec.Common.Document
 				if (item.InsideDoc || imageIncludeMode == Document.ImageIncludeMode.All)
 				{
 					string name = string.Format("images/{0}", item.ShortName);
-					zip.AddEntry(name, item.Data);
+					zip.AddEntry(name, item.GlobalItem.Data);
 				}
 			}
 		}
@@ -240,113 +233,51 @@ namespace Epsitec.Common.Document
 		#region Class Item
 		public class Item : System.IDisposable
 		{
-			public Item(string filename, byte[] data, bool isLowres)
+			public Item(GlobalImageCache.Item gItem, bool isLowres)
 			{
-				//	Constructeur qui met en cache les données de l'image.
-				//	Si les données 'data' n'existent pas, l'image est lue sur disque.
-				//	Si les données existent, l'image est lue à partir des données en mémoire.
-				this.filename = filename;
-				this.shortName = null;
+				this.gItem = gItem;
 				this.isLowres = isLowres;
-
-				try
-				{
-					if (data == null)  // lecture sur disque ?
-					{
-						this.data = System.IO.File.ReadAllBytes(this.filename);
-					}
-					else  // image en mémoire ?
-					{
-						this.data = data;
-					}
-
-					this.originalImage = Bitmap.FromData(this.data);
-					this.originalSize = this.originalImage.Size;
-					this.CreateLowresImage();
-				}
-				catch
-				{
-					this.data = null;
-					this.originalImage = null;
-					this.originalSize = Size.Empty;
-				}
-
-				this.dimmedImage = null;
 			}
 
-			public bool Reload()
+			public string Filename
 			{
-				//	Relit l'image sur disque.
-				//	Retourne false en cas d'erreur.
-				byte[] initialData = this.data;
-
-				try
+				get
 				{
-					this.data = System.IO.File.ReadAllBytes(this.filename);
-				}
-				catch
-				{
-					this.data = initialData;
-					return false;
-				}
-
-				Drawing.Image initialImage = this.originalImage;
-
-				try
-				{
-					this.originalImage = Bitmap.FromData(this.data);
-					this.CreateLowresImage();
-				}
-				catch
-				{
-					this.data = initialData;
-					this.originalImage = initialImage;
-					return false;
-				}
-
-				this.dimmedImage = null;
-				return true;
-			}
-
-			protected void CreateLowresImage()
-			{
-				//	Crée l'image pour l'affichage.
-				//	Libère l'image originale si elle est trop grosse.
-				System.Diagnostics.Debug.Assert(this.originalImage != null);
-
-				if (this.IsBigOriginal)  // image dépasse 200 KB ?
-				{
-					//	Génère une image pour l'affichage (this.lowresImage) qui pèse
-					//	environ 200 KB.
-					this.lowresScale = System.Math.Sqrt(this.KBWeight/200);
-					int dx = (int) (this.originalSize.Width/this.lowresScale);
-					int dy = (int) (this.originalSize.Height/this.lowresScale);
-					this.lowresImage = ImageCache.ResizeImage(this.originalImage, dx, dy);
-
-					this.originalImage.Dispose();  // oublie tout de suite l'image originale
-					this.originalImage = null;
-				}
-				else
-				{
-					this.lowresImage = this.originalImage;
-					this.lowresScale = 1.0;
+					return this.gItem.Filename;
 				}
 			}
 
-			public void FreeOriginal()
+			public Size Size
 			{
-				//	Libère l'image originale, si elle est grosse.
-				if (this.originalImage != null && this.IsBigOriginal)
+				get
 				{
-					this.originalImage.Dispose();
-					this.originalImage = null;
+					return this.gItem.Size;
 				}
 			}
 
-			public void Write(string otherFilename)
+			public Drawing.Image Image
 			{
-				//	Exporte l'image originale dans un fichier quelconque.
-				System.IO.File.WriteAllBytes(otherFilename, this.data);
+				get
+				{
+					return this.gItem.Image(this.isLowres);
+				}
+			}
+
+			public double Scale
+			{
+				get
+				{
+					return this.isLowres ? this.gItem.LowresScale : 1.0;
+				}
+			}
+
+			public GlobalImageCache.Item GlobalItem
+			{
+				//	Item du cache statique global.
+				get
+				{
+					return this.gItem;
+				}
 			}
 
 			public bool IsLowres
@@ -359,51 +290,6 @@ namespace Epsitec.Common.Document
 				set
 				{
 					this.isLowres = value;
-				}
-			}
-
-			public Size Size
-			{
-				//	Retourne la taille de l'image originale.
-				get
-				{
-					return this.originalSize;
-				}
-			}
-
-			public double Scale
-			{
-				//	Retourne l'échelle de l'image pour l'affichage (>= 1).
-				get
-				{
-					return this.isLowres ? this.lowresScale : 1.0;
-				}
-			}
-
-			public bool IsBigOriginal
-			{
-				//	Retourne 'true' si l'image originale dépasse 200 KB.
-				get
-				{
-					return (this.KBWeight > 200);
-				}
-			}
-
-			public long KBWeight
-			{
-				//	Retourne la taille de l'image en KB.
-				get
-				{
-					return ((long) this.originalSize.Width * (long) this.originalSize.Height) / (1024/4);
-				}
-			}
-
-			public string Filename
-			{
-				//	Retourne le nom de fichier avec le chemin complet.
-				get
-				{
-					return this.filename;
 				}
 			}
 
@@ -433,116 +319,20 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			public byte[] Data
-			{
-				//	Données brutes de l'image.
-				get
-				{
-					return this.data;
-				}
-				set
-				{
-					this.data = value;
-				}
-			}
-
-			public Drawing.Image Image
-			{
-				//	Retourne l'objet Drawing.Image.
-				get
-				{
-					if (this.isLowres)
-					{
-						return this.lowresImage;
-					}
-					else
-					{
-						if (this.originalImage == null)
-						{
-							this.originalImage = Bitmap.FromData(this.data);
-						}
-
-						return this.originalImage;
-					}
-				}
-			}
-
-			public Drawing.Image DimmedImage
-			{
-				//	Retourne l'objet Drawing.Image estompé.
-				get
-				{
-					//?this.OpenBitmapDimmed();  // trop couteux en temps calcul et en mémoire !
-					return this.dimmedImage;
-				}
-			}
-
-			protected void OpenBitmapDimmed()
-			{
-				//	Ouvre le bitmap de la variante estompée de l'image si nécessaire.
-				if ( this.originalImage == null )  return;
-				if ( this.dimmedImage != null )  return;
-
-				this.dimmedImage = Bitmap.CopyImage(this.originalImage);
-				Pixmap.RawData data = new Pixmap.RawData(this.dimmedImage);
-				using ( data )
-				{
-					Color pixel;
-					double intensity;
-
-					for ( int y=0 ; y<data.Height ; y++ )
-					{
-						for ( int x=0 ; x<data.Width ; x++ )
-						{
-							pixel = data[x,y];
-
-							intensity = pixel.GetBrightness();
-							intensity = System.Math.Max(intensity*2.0-1.0, 0.0);
-							pixel.R = intensity;
-							pixel.G = intensity;
-							pixel.B = intensity;
-							pixel.A *= 0.2;  // très transparent
-
-							data[x,y] = pixel;
-						}
-					}
-				}
-			}
-
 			#region IDisposable Members
 			public void Dispose()
 			{
-				this.data = null;
-
-				if (this.originalImage != null)
+				if (this.gItem != null)
 				{
-					this.originalImage.Dispose();
-					this.originalImage = null;
-				}
-
-				if (this.lowresImage != null)
-				{
-					this.lowresImage.Dispose();
-					this.lowresImage = null;
-				}
-
-				if (this.dimmedImage != null)
-				{
-					this.dimmedImage.Dispose();
-					this.dimmedImage = null;
+					this.gItem.Dispose();
+					this.gItem = null;
 				}
 			}
 			#endregion
-						
-			protected string				filename;
+
+			protected GlobalImageCache.Item	gItem;			
 			protected string				shortName;
 			protected bool					insideDoc;
-			protected byte[]				data;
-			protected Drawing.Image			originalImage;
-			protected Drawing.Image			lowresImage;
-			protected Drawing.Image			dimmedImage;
-			protected Size					originalSize;
-			protected double				lowresScale;
 			protected bool					isLowres;
 		}
 		#endregion
