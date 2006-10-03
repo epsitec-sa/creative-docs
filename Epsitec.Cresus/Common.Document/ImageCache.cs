@@ -64,24 +64,29 @@ namespace Epsitec.Common.Document
 				return null;
 			}
 
-			if (this.dico.ContainsKey(filename))
+			Item item = null;
+
+			if (this.dico.ContainsKey(filename))  // image déjà dans le cache ?
 			{
-				return this.dico[filename];
+				item = this.dico[filename];
 			}
 			else
 			{
 				GlobalImageCache.Item gItem = GlobalImageCache.Get(filename);
-				if (gItem == null)
+				if (gItem != null)  // image dans le cache global ?
 				{
-					return null;
-				}
-				else
-				{
-					Item item = new Item(gItem, this.isLowres);
-					this.dico.Add(filename, item);
-					return item;
+					item = new Item(gItem, this.isLowres);
+					this.dico.Add(filename, item);  // ajoute l'image dans le cache local
 				}
 			}
+
+			if (item != null)  // image trouvé ?
+			{
+				item.GlobalItem.SetRecentTimeStamp();  // le plus récent
+				GlobalImageCache.FreeOldest();  // libère éventuellement des antiquités
+			}
+
+			return item;
 		}
 
 		public bool Contains(string filename)
@@ -270,7 +275,7 @@ namespace Epsitec.Common.Document
 			{
 				get
 				{
-					return this.gItem.Image(this.IsLowresEffective);
+					return this.gItem.Image(this.isLowres);
 				}
 			}
 
@@ -278,7 +283,7 @@ namespace Epsitec.Common.Document
 			{
 				get
 				{
-					return this.IsLowresEffective ? this.gItem.LowresScale : 1.0;
+					return this.isLowres ? this.gItem.LowresScale : 1.0;
 				}
 			}
 
@@ -327,14 +332,6 @@ namespace Epsitec.Common.Document
 				set
 				{
 					this.insideDoc = value;
-				}
-			}
-
-			protected bool IsLowresEffective
-			{
-				get
-				{
-					return this.isLowres && GlobalImageCache.IsBigSize;
 				}
 			}
 
