@@ -108,12 +108,14 @@
     <Compile Include="AbstractBinding.cs" />
     <Compile Include="CollectionChangedEventArgs.cs" />
     <Compile Include="CollectionChangedAction.cs" />
+    <Compile Include="ListSortDirection.cs" />
     <Compile Include="INotifyCollectionChanged.cs" />
     <Compile Include="PendingValue.cs" />
     <Compile Include="PriorityBinding.cs" />
     <Compile Include="ISerializationConverterFilter.cs" />
     <Compile Include="Res.cs" />
     <Compile Include="Collections\StructuredTypeFieldCollection.cs" />
+    <Compile Include="SortDescription.cs" />
     <Compile Include="StructuredTypeField.cs" />
     <Compile Include="DoubleType.cs" />
     <Compile Include="ISytemType.cs" />

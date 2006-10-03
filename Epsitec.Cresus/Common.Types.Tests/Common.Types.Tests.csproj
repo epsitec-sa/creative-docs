@@ -127,6 +127,7 @@
     <Compile Include="BasicTypesTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CollectionTest.cs" />
     <Compile Include="ComparerTest.cs">
       <SubType>Code</SubType>
     </Compile>
