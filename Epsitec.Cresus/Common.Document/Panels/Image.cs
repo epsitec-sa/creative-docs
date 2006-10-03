@@ -507,22 +507,7 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 
 			Properties.Image p = this.property as Properties.Image;
-			string filename = p.Filename;
-
-			if (!string.IsNullOrEmpty(filename))
-			{
-				ImageCache.Item item = this.document.ImageCache.Get(filename);
-
-				if (item == null)
-				{
-					item = this.document.ImageCache.Add(filename, null);
-
-					if (item.Data == null)  // image n'existe pas ?
-					{
-						this.document.ImageCache.Remove(filename);
-					}
-				}
-			}
+			this.document.ImageCache.Load(p.Filename);
 		}
 
 		private void HandleButtonPressed(object sender, MessageEventArgs e)
@@ -593,7 +578,7 @@ namespace Epsitec.Common.Document.Panels
 
 			if (item != null)
 			{
-				if (item.Reload())  // relit l'image sur disque
+				if (item.GlobalItem.Reload())  // relit l'image sur disque
 				{
 					return;  // tout c'est bien passé
 				}
@@ -630,7 +615,7 @@ namespace Epsitec.Common.Document.Panels
 				return;
 			}
 
-			item.Write(dialog.FileName);  // écrit le fichier sur disque
+			item.GlobalItem.Write(dialog.FileName);  // écrit le fichier sur disque
 		}
 
 		void HandleCropChanged(object sender)

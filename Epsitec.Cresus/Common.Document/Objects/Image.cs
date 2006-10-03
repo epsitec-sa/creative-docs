@@ -405,7 +405,8 @@ namespace Epsitec.Common.Document.Objects
 				}
 				else
 				{
-					image = drawingContext.IsDimmed ? item.DimmedImage : item.Image;
+					//?image = drawingContext.IsDimmed ? item.DimmedImage : item.Image;
+					image = item.Image;
 				}
 			}
 
