@@ -286,33 +286,28 @@ namespace Epsitec.Common.Designer
 
 					if (duplicateContent)
 					{
-						if (this.type == Type.Types)
+						ResourceBundle.Field field = bundle[actualDruid];
+						if (field.IsEmpty)
 						{
-							//	PA: comment copier un Type ?
+							newField.SetStringValue("");
 						}
 						else
 						{
-							ResourceBundle.Field field = bundle[actualDruid];
-							if (field.IsEmpty)
-							{
-								newField.SetStringValue("");
-							}
-							else
-							{
-								newField.SetStringValue(field.AsString);
-								newField.SetAbout(field.About);
-							}
+							newField.SetStringValue(field.AsString);
+							newField.SetAbout(field.About);
 						}
 					}
 					else
 					{
-						if (this.type == Type.Types)
+						newField.SetStringValue("");
+					}
+					
+					if (this.type == Type.Types)
+					{
+						if (string.IsNullOrEmpty(newField.AsString))
 						{
-							//	PA: commet créer un nouveau Type ?
-						}
-						else
-						{
-							newField.SetStringValue("");
+							AbstractType type = new DecimalType();
+							newField.SetStringValue(type.Caption.SerializeToString());
 						}
 					}
 
@@ -1098,9 +1093,14 @@ namespace Epsitec.Common.Designer
 
 			if (this.type == Type.Types)
 			{
-				if (fieldName == ResourceAccess.NameCommands[5])
+				if (fieldName == ResourceAccess.NameTypes[5])
 				{
-					AbstractType type = TypeRosetta.GetTypeObject(this.accessCaption);
+					AbstractType type = AbstractType.GetCachedType(this.accessCaption);
+
+					if (type == null)
+					{
+						type = TypeRosetta.CreateTypeObject(this.accessCaption);
+					}
 					if (type == null)
 					{
 						return null;
@@ -1250,9 +1250,9 @@ namespace Epsitec.Common.Designer
 
 			if (this.type == Type.Types)
 			{
-				if (fieldName == ResourceAccess.NameCommands[5])
+				if (fieldName == ResourceAccess.NameTypes[5])
 				{
-					//	PA: rien ?
+					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
 			}
 
