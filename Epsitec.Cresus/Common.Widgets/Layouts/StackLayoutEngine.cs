@@ -43,6 +43,11 @@ namespace Epsitec.Common.Widgets.Layouts
 				Drawing.Margins   margins = child.Margins;
 				Drawing.Size      size    = LayoutContext.GetResultingMeasuredSize (child);
 
+				if (size == Drawing.Size.NegativeInfinity)
+				{
+					return;
+				}
+				
 				double dx = size.Width;
 				double dy = size.Height;
 
