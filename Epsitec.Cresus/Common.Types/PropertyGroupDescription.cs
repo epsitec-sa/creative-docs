@@ -51,16 +51,27 @@ namespace Epsitec.Common.Types
 		
 		public override string[] GetGroupNamesForItem(object item, System.Globalization.CultureInfo culture)
 		{
-			if (item == null)
+			object value = this.GetGroupValue (item);
+
+			if ((value == null) ||
+				(UnknownValue.IsUnknownValue (value)) ||
+				(UndefinedValue.IsUndefinedValue (value)))
 			{
 				return new string[0];
 			}
 
-			object value = this.GetGroupValue (item);
+			string group;
 
-			//	TODO: implement
+			if (this.converter != null)
+			{
+				group = this.converter.Convert (value, typeof (string), null, culture) as string;
+			}
+			else
+			{
+				group = value.ToString ();
+			}
 
-			throw new System.NotImplementedException ();
+			return string.IsNullOrEmpty (group) ? new string[0] : new string[] { group };
 		}
 		
 		public override bool NamesMatch(string groupName, string itemName)
@@ -70,7 +81,8 @@ namespace Epsitec.Common.Types
 
 		private object GetGroupValue(object item)
 		{
-			if (string.IsNullOrEmpty (this.propertyName))
+			if ((item == null) ||
+				(string.IsNullOrEmpty (this.propertyName)))
 			{
 				return item;
 			}

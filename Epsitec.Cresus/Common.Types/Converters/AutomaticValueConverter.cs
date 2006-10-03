@@ -28,6 +28,8 @@ namespace Epsitec.Common.Types.Converters
 		/// if the conversion was not possible.</returns>
 		public object Convert(object value, System.Type expectedType, object parameter, System.Globalization.CultureInfo culture)
 		{
+			System.Type sourceType = value == null ? null : value.GetType ();
+			
 			try
 			{
 				if (expectedType == null)
@@ -35,18 +37,26 @@ namespace Epsitec.Common.Types.Converters
 					throw new System.ArgumentNullException ("expectedType", "Expected type is null");
 				}
 
-				System.Type sourceType = value == null ? null : value.GetType ();
-
 				if ((sourceType != null) &&
 					(sourceType.IsEnum))
 				{
 					System.Diagnostics.Debug.WriteLine ("Convert enum value " + value.ToString () + " to type " + expectedType.Name);
 				}
-				
+
 				return System.Convert.ChangeType (value, expectedType, culture);
 			}
 			catch (System.InvalidCastException)
 			{
+				System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (sourceType);
+				
+				if (converter != null)
+				{
+					if (converter.CanConvertTo (expectedType))
+					{
+						return converter.ConvertTo (null, culture, value, expectedType);
+					}
+				}
+
 				return InvalidValue.Instance;
 			}
 			catch (System.FormatException)
