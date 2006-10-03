@@ -54,7 +54,6 @@ namespace Epsitec.Common.Document
 				else
 				{
 					GlobalImageCache.dico.Add(filename, item);
-					GlobalImageCache.UpdateBigSize();
 					return item;
 				}
 			}
@@ -67,7 +66,6 @@ namespace Epsitec.Common.Document
 			if (item != null)
 			{
 				GlobalImageCache.dico.Remove(filename);
-				GlobalImageCache.UpdateBigSize();
 				item.Dispose();
 			}
 		}
@@ -75,33 +73,54 @@ namespace Epsitec.Common.Document
 		public static void Free()
 		{
 			//	Libère toutes les images, si nécessaire.
-			if (GlobalImageCache.isBigSize)
+#if false
+			foreach (Item item in GlobalImageCache.dico.Values)
 			{
-				foreach (Item item in GlobalImageCache.dico.Values)
-				{
-					item.FreeOriginal();
-				}
+				item.FreeOriginal();
 			}
+#endif
 		}
 
-		public static bool IsBigSize
-		{
-			get
-			{
-				return GlobalImageCache.isBigSize;
-			}
-		}
 
-		protected static void UpdateBigSize()
+		public static void FreeOldest()
 		{
-			//	Indique si le total des images originales en cache dépasse 0.5 GB.
+			//	Libère les images les plus vieilles, pour que le total du cache
+			//	ne dépasse pas 0.5 GB.
 			long total = 0;
 			foreach (Item item in GlobalImageCache.dico.Values)
 			{
-				total += item.KBWeight;
+				total += item.KBUsed;
 			}
 
-			GlobalImageCache.isBigSize = (total > 500000);  // dépasse 0.5 GB ?
+			while (total > 500000)  // dépasse 0.5 GB ?
+			{
+				Item older = GlobalImageCache.SearchOlder();
+				if (older == null)
+				{
+					break;
+				}
+
+				total -= older.KBWeight;
+				older.FreeOriginal();
+			}
+		}
+
+		protected static Item SearchOlder()
+		{
+			//	Cherche l'image libèrable la plus vieille du cache.
+			long max = long.MaxValue;
+			Item older = null;
+
+			foreach (Item item in GlobalImageCache.dico.Values)
+			{
+				if (item.IsFreeable && max > item.TimeStamp)
+				{
+					max = item.TimeStamp;
+					older = item;
+				}
+			}
+
+			return older;
 		}
 
 
@@ -153,14 +172,18 @@ namespace Epsitec.Common.Document
 				return true;
 			}
 
+			public bool IsFreeable
+			{
+				//	Indique s'il est possible de libèrer quelque chose dans cette image.
+				get
+				{
+					return (this.originalImage != null && this.IsBigOriginal);
+				}
+			}
+
 			public void FreeOriginal()
 			{
 				//	Libère l'image originale, si elle est grosse.
-				if (this.data == null)
-				{
-					return;
-				}
-
 				if (this.originalImage != null && this.IsBigOriginal)
 				{
 					this.originalImage.Dispose();
@@ -168,14 +191,24 @@ namespace Epsitec.Common.Document
 				}
 			}
 
+			public long TimeStamp
+			{
+				//	Retourne la marque de vieillesse.
+				get
+				{
+					return this.timeStamp;
+				}
+			}
+
+			public void SetRecentTimeStamp()
+			{
+				//	Met la marque de vieillesse la plus récente.
+				this.timeStamp = GlobalImageCache.timeStamp++;
+			}
+
 			public void Write(string otherFilename)
 			{
 				//	Exporte l'image originale dans un fichier quelconque.
-				if (this.data == null)
-				{
-					return;
-				}
-
 				System.IO.File.WriteAllBytes(otherFilename, this.data);
 			}
 
@@ -213,10 +246,6 @@ namespace Epsitec.Common.Document
 				{
 					return this.data;
 				}
-				set
-				{
-					this.data = value;
-				}
 			}
 
 			public Drawing.Image Image(bool isLowres)
@@ -236,6 +265,22 @@ namespace Epsitec.Common.Document
 				{
 					this.ReadOriginalImage();
 					return this.originalImage;
+				}
+			}
+
+			public long KBUsed
+			{
+				//	Retourne la taille effectivement utilisée en KB.
+				get
+				{
+					if (this.originalImage == null)
+					{
+						return 0;
+					}
+					else
+					{
+						return this.KBWeight;
+					}
 				}
 			}
 
@@ -325,6 +370,7 @@ namespace Epsitec.Common.Document
 			protected Drawing.Image			lowresImage;
 			protected Size					originalSize;
 			protected double				lowresScale;
+			protected long					timeStamp;
 		}
 		#endregion
 
@@ -345,6 +391,6 @@ namespace Epsitec.Common.Document
 
 
 		protected static Dictionary<string, Item>	dico = new Dictionary<string, Item>();
-		protected static bool						isBigSize = false;
+		protected static long						timeStamp = 0;
 	}
 }
