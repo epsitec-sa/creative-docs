@@ -44,6 +44,7 @@ namespace Epsitec.Common.Document
 		public void Load(string filename)
 		{
 			//	Essaie de charger une image dans le cache.
+			//	Celle méthode est appelée chaque fois que le nom édité de l'image est changé.
 			if (!string.IsNullOrEmpty(filename))
 			{
 				Item item = this.Get(filename);
@@ -69,7 +70,17 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				return null;
+				GlobalImageCache.Item gItem = GlobalImageCache.Get(filename);
+				if (gItem == null)
+				{
+					return null;
+				}
+				else
+				{
+					Item item = new Item(gItem, this.isLowres);
+					this.dico.Add(filename, item);
+					return item;
+				}
 			}
 		}
 
@@ -79,7 +90,7 @@ namespace Epsitec.Common.Document
 			return this.dico.ContainsKey(filename);
 		}
 
-		public Item Add(string filename, byte[] data)
+		protected Item Add(string filename, byte[] data)
 		{
 			//	Ajoute une nouvelle image dans le cache.
 			//	Si les données 'data' n'existent pas, l'image est lue sur disque.
