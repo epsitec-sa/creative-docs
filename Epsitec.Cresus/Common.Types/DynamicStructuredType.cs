@@ -23,6 +23,12 @@ namespace Epsitec.Common.Types
 		public StructuredTypeField GetField(string fieldId)
 		{
 			object value = this.data.GetValue (fieldId);
+
+			if (UnknownValue.IsUnknownValue (value))
+			{
+				return StructuredTypeField.Empty;
+			}
+			
 			object typeObject = TypeRosetta.GetTypeObjectFromValue (value);
 			INamedType namedType = TypeRosetta.GetNamedTypeFromTypeObject (typeObject);
 
