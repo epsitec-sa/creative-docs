@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Designer
 {
@@ -285,20 +286,34 @@ namespace Epsitec.Common.Designer
 
 					if (duplicateContent)
 					{
-						ResourceBundle.Field field = bundle[actualDruid];
-						if (field.IsEmpty)
+						if (this.type == Type.Types)
 						{
-							newField.SetStringValue("");
+							//	PA: comment copier un Type ?
 						}
 						else
 						{
-							newField.SetStringValue(field.AsString);
-							newField.SetAbout(field.About);
+							ResourceBundle.Field field = bundle[actualDruid];
+							if (field.IsEmpty)
+							{
+								newField.SetStringValue("");
+							}
+							else
+							{
+								newField.SetStringValue(field.AsString);
+								newField.SetAbout(field.About);
+							}
 						}
 					}
 					else
 					{
-						newField.SetStringValue("");
+						if (this.type == Type.Types)
+						{
+							//	PA: commet créer un nouveau Type ?
+						}
+						else
+						{
+							newField.SetStringValue("");
+						}
 					}
 
 					if (bundle == this.primaryBundle)
@@ -814,7 +829,7 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				Common.Types.Caption caption = new Common.Types.Caption();
+				Caption caption = new Caption();
 
 				string s = field.AsString;
 				if (!string.IsNullOrEmpty(s))
@@ -889,7 +904,7 @@ namespace Epsitec.Common.Designer
 				{
 					if (b == bundle)
 					{
-						Common.Types.Caption caption = new Common.Types.Caption();
+						Caption caption = new Caption();
 
 						ICollection<string> dst = caption.Labels;
 						dst.Add(text);
@@ -970,7 +985,7 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert(this.IsCaptionsType);
 			ResourceBundle.Field field = this.primaryBundle[druid];
 
-			Common.Types.Caption caption = new Common.Types.Caption();
+			Caption caption = new Caption();
 
 			string s = field.AsString;
 			if (!string.IsNullOrEmpty(s))
@@ -987,7 +1002,7 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert(this.type == Type.Commands);
 			ResourceBundle.Field field = this.primaryBundle[index];
 
-			Common.Types.Caption caption = new Common.Types.Caption();
+			Caption caption = new Caption();
 
 			string s = field.AsString;
 			if (!string.IsNullOrEmpty(s))
@@ -1078,6 +1093,20 @@ namespace Epsitec.Common.Designer
 				{
 					string group = Command.GetGroup(this.accessCaption);
 					return new Field(group);
+				}
+			}
+
+			if (this.type == Type.Types)
+			{
+				if (fieldName == ResourceAccess.NameCommands[5])
+				{
+					AbstractType type = TypeRosetta.GetTypeObject(this.accessCaption);
+					if (type == null)
+					{
+						return null;
+					}
+
+					return new Field(type);
 				}
 			}
 
@@ -1216,6 +1245,14 @@ namespace Epsitec.Common.Designer
 					string group = field.String;
 					Command.SetGroup(this.accessCaption, group);
 					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
+				}
+			}
+
+			if (this.type == Type.Types)
+			{
+				if (fieldName == ResourceAccess.NameCommands[5])
+				{
+					//	PA: rien ?
 				}
 			}
 
@@ -1489,7 +1526,7 @@ namespace Epsitec.Common.Designer
 				{
 					if (this.accessCached != index || this.accessCaption == null)
 					{
-						this.accessCaption = new Common.Types.Caption();
+						this.accessCaption = new Caption();
 
 						if (this.accessField != null)
 						{
@@ -1537,14 +1574,14 @@ namespace Epsitec.Common.Designer
 		protected static string[] NameStrings  = { "Name", "String", "About" };
 		protected static string[] NameCaptions = { "Name", "Labels", "Description", "Icon", "About" };
 		protected static string[] NameCommands = { "Name", "Labels", "Description", "Icon", "About", "Statefull", "Shortcuts", "Group" };
-		protected static string[] NameTypes    = { "Name", "Labels", "Description", "Icon", "About" };
+		protected static string[] NameTypes    = { "Name", "Labels", "Description", "Icon", "About", "AbstractType" };
 		protected static string[] NameValues   = { "Name", "Labels", "Description", "Icon", "About" };
 		protected static string[] NamePanels   = { "Name", "Panel" };
 
 		protected static Field.Type[] TypeStrings  = { Field.Type.String, Field.Type.String, Field.Type.String };
 		protected static Field.Type[] TypeCaptions = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
 		protected static Field.Type[] TypeCommands = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String, Field.Type.Bool, Field.Type.Shortcuts, Field.Type.String };
-		protected static Field.Type[] TypeTypes    = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
+		protected static Field.Type[] TypeTypes    = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String, Field.Type.AbstractType };
 		protected static Field.Type[] TypeValues   = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
 		protected static Field.Type[] TypePanels   = { Field.Type.String, Field.Type.Bundle };
 
@@ -1743,7 +1780,7 @@ namespace Epsitec.Common.Designer
 
 					if (this.IsCaptionsType)
 					{
-						Common.Types.Caption caption = new Common.Types.Caption();
+						Caption caption = new Caption();
 
 						string s = field.AsString;
 						if (!string.IsNullOrEmpty(s))
@@ -1801,7 +1838,7 @@ namespace Epsitec.Common.Designer
 			{
 				ResourceBundle.Field field = bundle[i];
 
-				Common.Types.Caption caption = new Common.Types.Caption();
+				Caption caption = new Caption();
 
 				string s = field.AsString;
 				if (!string.IsNullOrEmpty(s))
@@ -2503,6 +2540,7 @@ namespace Epsitec.Common.Designer
 				Bundle,
 				Bool,
 				Shortcuts,
+				AbstractType,
 			}
 
 			public Field(string value)
@@ -2533,6 +2571,12 @@ namespace Epsitec.Common.Designer
 			{
 				this.type = Type.Shortcuts;
 				this.shortcutCollection = value;
+			}
+
+			public Field(AbstractType value)
+			{
+				this.type = Type.AbstractType;
+				this.abstractType = value;
 			}
 
 			public Type FieldType
@@ -2588,12 +2632,22 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			protected Type										type;
+			public AbstractType AbstractType
+			{
+				get
+				{
+					System.Diagnostics.Debug.Assert(this.type == Type.AbstractType);
+					return this.abstractType;
+				}
+			}
+
+			protected Type type;
 			protected string									stringValue;
 			protected ICollection<string>						stringCollection;
 			protected ResourceBundle							bundle;
 			protected bool										boolValue;
 			protected Widgets.Collections.ShortcutCollection	shortcutCollection;
+			protected AbstractType								abstractType;
 		}
 		#endregion
 
@@ -2625,7 +2679,7 @@ namespace Epsitec.Common.Designer
 		protected int										accessIndex;
 		protected int										accessCached;
 		protected ResourceBundle.Field						accessField;
-		protected Common.Types.Caption						accessCaption;
+		protected Caption									accessCaption;
 		protected List<ResourceBundle>						panelsList;
 		protected List<ResourceBundle>						panelsToCreate;
 		protected List<ResourceBundle>						panelsToDelete;
