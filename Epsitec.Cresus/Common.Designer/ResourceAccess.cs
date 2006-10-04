@@ -336,7 +336,9 @@ namespace Epsitec.Common.Designer
 					{
 						if (string.IsNullOrEmpty(newField.AsString))
 						{
+							//	TODO: afficher un dialogue permettant de choisir le type...
 							AbstractType type = new DecimalType();
+							//?AbstractType type = new EnumType();
 							newField.SetStringValue(type.Caption.SerializeToString());
 						}
 					}
