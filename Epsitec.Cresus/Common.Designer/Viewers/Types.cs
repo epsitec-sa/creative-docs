@@ -106,7 +106,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.ignoreChange = iic;
 
-			base.UpdateEdit();
+			base.UpdateEdit();  // met à jour le reste
 		}
 
 
