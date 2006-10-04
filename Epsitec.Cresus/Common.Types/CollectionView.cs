@@ -33,7 +33,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public Collections.ReadOnlyObservableList<string> Groups
+		public Collections.ReadOnlyObservableList<CollectionViewGroup> Groups
 		{
 			get
 			{
@@ -41,6 +41,30 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public Collections.ObservableList<AbstractGroupDescription> GroupDescriptions
+		{
+			get
+			{
+				throw new System.Exception ("The method or operation is not implemented.");
+			}
+		}
+
+		public Collections.ObservableList<SortDescription> SortDescriptions
+		{
+			get
+			{
+				throw new System.Exception ("The method or operation is not implemented.");
+			}
+		}
+
+		public System.Collections.IEnumerable SourceCollection
+		{
+			get
+			{
+				throw new System.Exception ("The method or operation is not implemented.");
+			}
+		}
+		
 		public void Refresh()
 		{
 			throw new System.Exception ("The method or operation is not implemented.");
