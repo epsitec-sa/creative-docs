@@ -14,15 +14,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			Widget group;
 
-			this.CreateDoubleLabeled("Longueur minimale", 0, 1000, 0, 1, 1, this, out group, out this.fieldMin);
-			group.PreferredWidth = 200;
+			this.CreateDoubleLabeled("Longueur minimale", 0, 1000, 1, 1, this, out group, out this.fieldMin);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 5);
 			this.fieldMin.TextChanged += new EventHandler(this.HandleTextFieldRealChanged);
 
-			this.CreateDoubleLabeled("Longueur maximale", 0, 1000, 100, 1, 1, this, out group, out this.fieldMax);
-			group.PreferredWidth = 200;
+			this.CreateDoubleLabeled("Longueur maximale", 0, 1000, 1, 1, this, out group, out this.fieldMax);
 			group.Dock = DockStyle.StackBegin;
+			group.Margins = new Margins(0, 0, 0, 0);
 			this.fieldMax.TextChanged += new EventHandler(this.HandleTextFieldRealChanged);
 		}
 
