@@ -91,13 +91,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.ignoreChange = true;
 
-			this.SetDecimal(this.fieldMin, type.Range.Minimum);
-			this.SetDecimal(this.fieldMax, type.Range.Maximum);
-			this.SetDecimal(this.fieldRes, type.Range.Resolution);
+			if (type.Range.IsEmpty)
+			{
+				this.fieldMin.Text = "";
+				this.fieldMax.Text = "";
+				this.fieldRes.Text = "";
+			}
+			else
+			{
+				this.SetDecimal(this.fieldMin, type.Range.Minimum);
+				this.SetDecimal(this.fieldMax, type.Range.Maximum);
+				this.SetDecimal(this.fieldRes, type.Range.Resolution);
+			}
 
-			this.SetDecimal(this.fieldPreferredMin, type.PreferredRange.Minimum);
-			this.SetDecimal(this.fieldPreferredMax, type.PreferredRange.Maximum);
-			this.SetDecimal(this.fieldPreferredRes, type.PreferredRange.Resolution);
+			if (type.PreferredRange.IsEmpty)
+			{
+				this.fieldPreferredMin.Text = "";
+				this.fieldPreferredMax.Text = "";
+				this.fieldPreferredRes.Text = "";
+			}
+			else
+			{
+				this.SetDecimal(this.fieldPreferredMin, type.PreferredRange.Minimum);
+				this.SetDecimal(this.fieldPreferredMax, type.PreferredRange.Maximum);
+				this.SetDecimal(this.fieldPreferredRes, type.PreferredRange.Resolution);
+			}
 
 			this.SetDecimal(this.fieldSmallStep, type.SmallStep);
 			this.SetDecimal(this.fieldLargeStep, type.LargeStep);
@@ -166,8 +184,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 				type.DefineLargeStep(this.GetDecimal(this.fieldLargeStep));
 			}
 
-			type.DefineRange(new DecimalRange(min, max, res));
-			type.DefinePreferredRange(new DecimalRange(pmin, pmax, pres));
+			if (min == 0 && max == 0 && res == 0)
+			{
+				type.DefineRange(new DecimalRange());
+			}
+			else
+			{
+				type.DefineRange(new DecimalRange(min, max, res));
+			}
+
+			if (pmin == 0 && pmax == 0 && pres == 0)
+			{
+				type.DefinePreferredRange(new DecimalRange());
+			}
+			else
+			{
+				type.DefinePreferredRange(new DecimalRange(pmin, pmax, pres));
+			}
 
 			this.OnContentChanged();
 		}
