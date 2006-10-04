@@ -15,7 +15,8 @@ namespace Epsitec.Common.Types.Collections
 		public ReadOnlyObservableList(ObservableList<T> list)
 		{
 			this.list = list;
-			this.list.CollectionChanged += new Support.EventHandler<CollectionChangedEventArgs> (this.HandleCollectionChanged);
+
+			EventRelay.CreateEventRelay (this);
 		}
 
 		/// <summary>
@@ -166,6 +167,33 @@ namespace Epsitec.Common.Types.Collections
 			{
 				this.CollectionChanged (this, e);
 			}
+		}
+
+		private class EventRelay
+		{
+			public static void CreateEventRelay(ReadOnlyObservableList<T> host)
+			{
+				EventRelay relay = new EventRelay ();
+				relay.host = new Weak<ReadOnlyObservableList<T>> (host);
+				host.list.CollectionChanged += relay.HandleCollectionChanged;
+			}
+
+			private void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
+			{
+				ReadOnlyObservableList<T> host = this.host.Target;
+
+				if (host == null)
+				{
+					ObservableList<T> list = sender as ObservableList<T>;
+					list.CollectionChanged -= this.HandleCollectionChanged;
+				}
+				else
+				{
+					host.HandleCollectionChanged (sender, e);
+				}
+			}
+
+			Weak<ReadOnlyObservableList<T>> host;
 		}
 
 		#region INotifyCollectionChanged Members

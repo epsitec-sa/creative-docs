@@ -111,6 +111,8 @@
     <Compile Include="CollectionChangedAction.cs" />
     <Compile Include="AbstractGroupDescription.cs" />
     <Compile Include="CollectionViewSource.cs" />
+    <Compile Include="CollectionView.cs" />
+    <Compile Include="CollectionViewGroup.cs" />
     <Compile Include="CurrentChangingEventArgs.cs" />
     <Compile Include="ICollectionView.cs" />
     <Compile Include="UnknownValue.cs" />
