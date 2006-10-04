@@ -12,11 +12,19 @@ namespace Epsitec.Common.Types
 			this.oldValue = oldValue;
 			this.newValue = newValue;
 		}
+
 		public DependencyPropertyChangedEventArgs(string propertyName, object oldValue, object newValue)
 		{
 			this.propertyName = propertyName;
 			this.oldValue = oldValue;
 			this.newValue = newValue;
+		}
+		
+		public DependencyPropertyChangedEventArgs(string propertyName)
+		{
+			this.propertyName = propertyName;
+			this.oldValue = null;
+			this.newValue = null;
 		}
 		
 		public DependencyProperty				Property
