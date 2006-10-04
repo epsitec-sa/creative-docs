@@ -1143,6 +1143,16 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
+			if (this.type == Type.Values)
+			{
+				if (fieldName == ResourceAccess.NameValues[5])
+				{
+					//	TODO:
+					int i = 123;
+					return new Field(i);
+				}
+			}
+
 			if (this.type == Type.Panels)
 			{
 				ResourceBundle bundle = this.PanelBundle(index);
@@ -1261,7 +1271,7 @@ namespace Epsitec.Common.Designer
 			{
 				if (fieldName == ResourceAccess.NameCommands[5])
 				{
-					bool statefull = field.Bool;
+					bool statefull = field.Boolean;
 					Command.SetStatefull(this.accessCaption, statefull);
 					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
@@ -1286,6 +1296,15 @@ namespace Epsitec.Common.Designer
 				if (fieldName == ResourceAccess.NameTypes[5])
 				{
 					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
+				}
+			}
+
+			if (this.type == Type.Values)
+			{
+				if (fieldName == ResourceAccess.NameValues[5])
+				{
+					//	TODO:
+					int i = field.Integer;
 				}
 			}
 
@@ -1608,14 +1627,14 @@ namespace Epsitec.Common.Designer
 		protected static string[] NameCaptions = { "Name", "Labels", "Description", "Icon", "About" };
 		protected static string[] NameCommands = { "Name", "Labels", "Description", "Icon", "About", "Statefull", "Shortcuts", "Group" };
 		protected static string[] NameTypes    = { "Name", "Labels", "Description", "Icon", "About", "AbstractType" };
-		protected static string[] NameValues   = { "Name", "Labels", "Description", "Icon", "About" };
+		protected static string[] NameValues   = { "Name", "Labels", "Description", "Icon", "About", "Rank" };
 		protected static string[] NamePanels   = { "Name", "Panel" };
 
 		protected static Field.Type[] TypeStrings  = { Field.Type.String, Field.Type.String, Field.Type.String };
 		protected static Field.Type[] TypeCaptions = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
-		protected static Field.Type[] TypeCommands = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String, Field.Type.Bool, Field.Type.Shortcuts, Field.Type.String };
+		protected static Field.Type[] TypeCommands = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String, Field.Type.Boolean, Field.Type.Shortcuts, Field.Type.String };
 		protected static Field.Type[] TypeTypes    = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String, Field.Type.AbstractType };
-		protected static Field.Type[] TypeValues   = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
+		protected static Field.Type[] TypeValues   = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String, Field.Type.Integer };
 		protected static Field.Type[] TypePanels   = { Field.Type.String, Field.Type.Bundle };
 
 
@@ -2571,7 +2590,8 @@ namespace Epsitec.Common.Designer
 				String,
 				StringCollection,
 				Bundle,
-				Bool,
+				Boolean,
+				Integer,
 				Shortcuts,
 				AbstractType,
 			}
@@ -2596,8 +2616,14 @@ namespace Epsitec.Common.Designer
 
 			public Field(bool value)
 			{
-				this.type = Type.Bool;
-				this.boolValue = value;
+				this.type = Type.Boolean;
+				this.booleanValue = value;
+			}
+
+			public Field(int value)
+			{
+				this.type = Type.Integer;
+				this.integerValue = value;
 			}
 
 			public Field(Widgets.Collections.ShortcutCollection value)
@@ -2647,12 +2673,21 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			public bool Bool
+			public bool Boolean
 			{
 				get
 				{
-					System.Diagnostics.Debug.Assert(this.type == Type.Bool);
-					return this.boolValue;
+					System.Diagnostics.Debug.Assert(this.type == Type.Boolean);
+					return this.booleanValue;
+				}
+			}
+
+			public int Integer
+			{
+				get
+				{
+					System.Diagnostics.Debug.Assert(this.type == Type.Integer);
+					return this.integerValue;
 				}
 			}
 
@@ -2678,7 +2713,8 @@ namespace Epsitec.Common.Designer
 			protected string									stringValue;
 			protected ICollection<string>						stringCollection;
 			protected ResourceBundle							bundle;
-			protected bool										boolValue;
+			protected bool										booleanValue;
+			protected int										integerValue;
 			protected Widgets.Collections.ShortcutCollection	shortcutCollection;
 			protected AbstractType								abstractType;
 		}

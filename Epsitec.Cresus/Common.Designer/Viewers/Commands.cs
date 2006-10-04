@@ -140,7 +140,7 @@ namespace Epsitec.Common.Designer.Viewers
 			else
 			{
 				ResourceAccess.Field field = this.access.GetField(sel, null, "Statefull");
-				bool statefull = field.Bool;
+				bool statefull = field.Boolean;
 
 				this.primaryStatefull.Enable = true;
 				this.primaryStatefull.ActiveState = statefull ? ActiveState.Yes : ActiveState.No;
