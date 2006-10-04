@@ -24,10 +24,10 @@ namespace Epsitec.Common.Designer
 
 			this.modifier = new Modifier(this);
 
-			this.accessStrings = new ResourceAccess(ResourceAccess.Type.Strings, this.resourceManager, this.moduleInfo);
-			this.accessCaptions = new ResourceAccess(ResourceAccess.Type.Captions, this.resourceManager, this.moduleInfo);
-			this.accessPanels = new ResourceAccess(ResourceAccess.Type.Panels, this.resourceManager, this.moduleInfo);
-			this.accessScripts = new ResourceAccess(ResourceAccess.Type.Scripts, this.resourceManager, this.moduleInfo);
+			this.accessStrings = new ResourceAccess(ResourceAccess.Type.Strings, this.resourceManager, this.moduleInfo, this.mainWindow);
+			this.accessCaptions = new ResourceAccess(ResourceAccess.Type.Captions, this.resourceManager, this.moduleInfo, this.mainWindow);
+			this.accessPanels = new ResourceAccess(ResourceAccess.Type.Panels, this.resourceManager, this.moduleInfo, this.mainWindow);
+			this.accessScripts = new ResourceAccess(ResourceAccess.Type.Scripts, this.resourceManager, this.moduleInfo, this.mainWindow);
 
 			foreach (ResourceAccess access in Access)
 			{
