@@ -2830,6 +2830,11 @@ namespace Epsitec.Common.Widgets
 				{
 					string textLabel = null;
 
+					if (string.IsNullOrEmpty (caption.Name) == false)
+					{
+						this.Name = caption.Name;
+					}
+
 					if (caption.HasLabels)
 					{
 						textLabel = TextLayout.SelectBestText (this.TextLayout, caption.SortedLabels, this.GetTextLayoutSize ());
