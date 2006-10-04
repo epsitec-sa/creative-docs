@@ -98,6 +98,7 @@
     <Compile Include="BindingChangedEventArgs.cs" />
     <Compile Include="BindingBreadcrumbs.cs" />
     <Compile Include="Caption.cs" />
+    <Compile Include="Collections\ReadOnlyObservableList.cs" />
     <Compile Include="Collections\HostedStructuredTypeFieldDictionary.cs" />
     <Compile Include="Collections\EnumValueCollection.cs" />
     <Compile Include="Collections\HostedDepdendencyObjectList.cs" />
@@ -110,6 +111,8 @@
     <Compile Include="CollectionChangedAction.cs" />
     <Compile Include="AbstractGroupDescription.cs" />
     <Compile Include="CollectionViewSource.cs" />
+    <Compile Include="CurrentChangingEventArgs.cs" />
+    <Compile Include="ICollectionView.cs" />
     <Compile Include="UnknownValue.cs" />
     <Compile Include="PropertyGroupDescription.cs" />
     <Compile Include="ListSortDirection.cs" />
@@ -278,7 +281,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DependencyPropertyPath.cs" />
-    <Compile Include="ReadOnlyArray.cs" />
+    <Compile Include="Collections\ReadOnlyArray.cs" />
     <Compile Include="Resources.cs">
       <SubType>Code</SubType>
     </Compile>

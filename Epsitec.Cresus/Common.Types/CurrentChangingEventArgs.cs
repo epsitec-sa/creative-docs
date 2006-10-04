@@ -1,0 +1,38 @@
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
+namespace Epsitec.Common.Types
+{
+	/// <summary>
+	/// The <c>CurrentChangingEventArgs</c> class provides information for the
+	/// <c>CurrentChanging</c> event.
+	/// </summary>
+	public class CurrentChangingEventArgs : Support.CancelEventArgs
+	{
+		public CurrentChangingEventArgs()
+			: this (true)
+		{
+		}
+
+		public CurrentChangingEventArgs(bool isCancelable)
+		{
+			this.isCancelable = isCancelable;
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether the event is cancelable.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the event is cancelable; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsCancelable
+		{
+			get
+			{
+				return this.isCancelable;
+			}
+		}
+
+		private bool isCancelable;
+	}
+}

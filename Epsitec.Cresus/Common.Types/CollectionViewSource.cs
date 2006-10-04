@@ -35,6 +35,31 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public System.Type CollectionViewType
+		{
+			get
+			{
+				return this.collectionViewType;
+			}
+			set
+			{
+				this.collectionViewType = value;
+			}
+		}
+
+		public ICollectionView View
+		{
+			get
+			{
+				if (this.view == null)
+				{
+					//	TODO: create view instance
+				}
+				
+				return this.view;
+			}
+		}
+
 		public Collections.ObservableList<SortDescription> SortDescriptions
 		{
 			get
@@ -84,5 +109,7 @@ namespace Epsitec.Common.Types
 		private Collections.HostedList<SortDescription> sortDescriptions;
 		private Collections.HostedList<AbstractGroupDescription> groupDescriptions;
 		private object source;
+		private System.Type collectionViewType;
+		private ICollectionView view;
 	}
 }

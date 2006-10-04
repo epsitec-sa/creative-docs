@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Epsitec.Common.Types
+namespace Epsitec.Common.Types.Collections
 {
 	/// <summary>
 	/// La classe ReadOnlyArray se comporte exactement comme un Array,
