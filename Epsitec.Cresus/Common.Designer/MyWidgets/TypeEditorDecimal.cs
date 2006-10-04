@@ -17,12 +17,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Range.
 			this.CreateDecimalLabeled("Valeur minimale", this, out group, out this.fieldMin);
 			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 5);
+			group.Margins = new Margins(0, 0, 0, 2);
 			this.fieldMin.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			this.CreateDecimalLabeled("Valeur maximale", this, out group, out this.fieldMax);
 			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 5);
+			group.Margins = new Margins(0, 0, 0, 2);
 			this.fieldMax.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			this.CreateDecimalLabeled("Résolution", this, out group, out this.fieldRes);
@@ -33,18 +33,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	PreferredRange.
 			this.CreateDecimalLabeled("Valeur minimale préférentielle", this, out group, out this.fieldPreferredMin);
 			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 5);
+			group.Margins = new Margins(0, 0, 0, 2);
 			this.fieldPreferredMin.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			this.CreateDecimalLabeled("Valeur maximale préférentielle", this, out group, out this.fieldPreferredMax);
 			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 5);
+			group.Margins = new Margins(0, 0, 0, 2);
 			this.fieldPreferredMax.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			this.CreateDecimalLabeled("Résolution préférentielle", this, out group, out this.fieldPreferredRes);
 			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 0);
+			group.Margins = new Margins(0, 0, 0, 15);
 			this.fieldPreferredRes.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+
+			//	Steps.
+			this.CreateDecimalLabeled("Petit pas", this, out group, out this.fieldSmallStep);
+			group.Dock = DockStyle.StackBegin;
+			group.Margins = new Margins(0, 0, 0, 2);
+			this.fieldSmallStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+
+			this.CreateDecimalLabeled("Grand pas", this, out group, out this.fieldLargeStep);
+			group.Dock = DockStyle.StackBegin;
+			group.Margins = new Margins(0, 0, 0, 0);
+			this.fieldLargeStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 		}
 		
 		public TypeEditorDecimal(Widget embedder) : this()
@@ -64,6 +75,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.fieldPreferredMin.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldPreferredMax.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldPreferredRes.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+
+				this.fieldSmallStep.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldLargeStep.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -84,6 +98,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.SetDecimal(this.fieldPreferredMin, type.PreferredRange.Minimum);
 			this.SetDecimal(this.fieldPreferredMax, type.PreferredRange.Maximum);
 			this.SetDecimal(this.fieldPreferredRes, type.PreferredRange.Resolution);
+
+			this.SetDecimal(this.fieldSmallStep, type.SmallStep);
+			this.SetDecimal(this.fieldLargeStep, type.LargeStep);
 
 			this.ignoreChange = false;
 		}
@@ -138,6 +155,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				pres = this.GetDecimal(this.fieldPreferredRes);
 			}
 
+			//	Steps.
+			if (sender == this.fieldSmallStep)
+			{
+				type.DefineSmallStep(this.GetDecimal(this.fieldSmallStep));
+			}
+
+			if (sender == this.fieldLargeStep)
+			{
+				type.DefineLargeStep(this.GetDecimal(this.fieldLargeStep));
+			}
+
 			type.DefineRange(new DecimalRange(min, max, res));
 			type.DefinePreferredRange(new DecimalRange(pmin, pmax, pres));
 
@@ -151,5 +179,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected TextField						fieldPreferredMin;
 		protected TextField						fieldPreferredMax;
 		protected TextField						fieldPreferredRes;
+		protected TextField						fieldSmallStep;
+		protected TextField						fieldLargeStep;
 	}
 }

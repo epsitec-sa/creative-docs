@@ -16,7 +16,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.CreateDecimalLabeled("Longueur minimale", this, out group, out this.fieldMin);
 			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 5);
+			group.Margins = new Margins(0, 0, 0, 2);
 			this.fieldMin.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			this.CreateDecimalLabeled("Longueur maximale", this, out group, out this.fieldMax);
