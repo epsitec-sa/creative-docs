@@ -9,19 +9,26 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class CollectionView : ICollectionView, System.Collections.IEnumerable, INotifyCollectionChanged
 	{
-		public CollectionView()
+		public CollectionView(System.Collections.IEnumerable sourceCollection)
 		{
+			this.sourceCollection = sourceCollection;
 		}
 
-
-
 		#region ICollectionView Members
+
+		public System.Collections.IEnumerable SourceCollection
+		{
+			get
+			{
+				return this.sourceCollection;
+			}
+		}
 
 		public object CurrentItem
 		{
 			get
 			{
-				throw new System.Exception ("The method or operation is not implemented.");
+				return this.currentItem;
 			}
 		}
 
@@ -29,15 +36,20 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				throw new System.Exception ("The method or operation is not implemented.");
+				return this.currentPosition;
 			}
 		}
 
-		public Collections.ReadOnlyObservableList<CollectionViewGroup> Groups
+		public Collections.ReadOnlyObservableList<object> Groups
 		{
 			get
 			{
-				throw new System.Exception ("The method or operation is not implemented.");
+				if (this.readOnlyGroups == null)
+				{
+					this.Refresh ();
+				}
+
+				return this.readOnlyGroups;
 			}
 		}
 
@@ -45,7 +57,12 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				throw new System.Exception ("The method or operation is not implemented.");
+				if (this.groupDescriptions == null)
+				{
+					this.groupDescriptions = new Collections.ObservableList<AbstractGroupDescription> ();
+				}
+				
+				return this.groupDescriptions;
 			}
 		}
 
@@ -53,21 +70,24 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				throw new System.Exception ("The method or operation is not implemented.");
+				if (this.sortDescriptions == null)
+				{
+					this.sortDescriptions = new Collections.ObservableList<SortDescription> ();
+				}
+
+				return this.sortDescriptions;
 			}
 		}
 
-		public System.Collections.IEnumerable SourceCollection
-		{
-			get
-			{
-				throw new System.Exception ("The method or operation is not implemented.");
-			}
-		}
-		
 		public void Refresh()
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			if (this.groups == null)
+			{
+				this.groups = new Collections.ObservableList<object> ();
+				this.readOnlyGroups = new Collections.ReadOnlyObservableList<object> (this.groups);
+			}
+
+			//	TODO: refresh the contents of the groups
 		}
 
 		public event Support.EventHandler CurrentChanged;
@@ -86,9 +106,37 @@ namespace Epsitec.Common.Types
 
 		public System.Collections.IEnumerator GetEnumerator()
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			foreach (object group in this.Groups)
+			{
+				yield return group;
+			}
 		}
 
 		#endregion
+
+		protected virtual void OnCurrentChanged()
+		{
+			if (this.CurrentChanged != null)
+			{
+				this.CurrentChanged (this);
+			}
+		}
+
+		protected virtual void OnCurrentChanging(CurrentChangingEventArgs e)
+		{
+			if (this.CurrentChanging != null)
+			{
+				this.CurrentChanging (this, e);
+			}
+		}
+		
+		
+		private System.Collections.IEnumerable sourceCollection;
+		private int currentPosition;
+		private object currentItem;
+		private Collections.ObservableList<object> groups;
+		private Collections.ReadOnlyObservableList<object> readOnlyGroups;
+		private Collections.ObservableList<AbstractGroupDescription> groupDescriptions;
+		private Collections.ObservableList<SortDescription> sortDescriptions;
 	}
 }
