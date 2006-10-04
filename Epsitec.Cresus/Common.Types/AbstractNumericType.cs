@@ -36,20 +36,75 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public decimal							SmallStep
+		{
+			get
+			{
+				return (decimal) this.Caption.GetValue (AbstractNumericType.SmallStepProperty);
+			}
+		}
+
+		public decimal							LargeStep
+		{
+			get
+			{
+				return (decimal) this.Caption.GetValue (AbstractNumericType.LargeStepProperty);
+			}
+		}
+
 		#endregion
 		
 		public void DefineRange(DecimalRange range)
 		{
-			this.Caption.SetValue (AbstractNumericType.RangeProperty, range);
+			if (range.IsEmpty)
+			{
+				this.Caption.ClearValue (AbstractNumericType.RangeProperty);
+			}
+			else
+			{
+				this.Caption.SetValue (AbstractNumericType.RangeProperty, range);
+			}
 		}
 
 		public void DefinePreferredRange(DecimalRange range)
 		{
-			this.Caption.SetValue (AbstractNumericType.PreferredRangeProperty, range);
+			if (range.IsEmpty)
+			{
+				this.Caption.ClearValue (AbstractNumericType.PreferredRangeProperty);
+			}
+			else
+			{
+				this.Caption.SetValue (AbstractNumericType.PreferredRangeProperty, range);
+			}
 		}
 
+		public void DefineSmallStep(decimal value)
+		{
+			if (value == 0)
+			{
+				this.Caption.ClearValue (AbstractNumericType.SmallStepProperty);
+			}
+			else
+			{
+				this.Caption.SetValue (AbstractNumericType.SmallStepProperty, value);
+			}
+		}
+
+		public void DefineLargeStep(decimal value)
+		{
+			if (value == 0)
+			{
+				this.Caption.ClearValue (AbstractNumericType.LargeStepProperty);
+			}
+			else
+			{
+				this.Caption.SetValue (AbstractNumericType.LargeStepProperty, value);
+			}
+		}
 
 		public static readonly DependencyProperty RangeProperty = DependencyProperty.RegisterAttached ("Range", typeof (DecimalRange), typeof (AbstractNumericType), new DependencyPropertyMetadata (DecimalRange.Empty));
 		public static readonly DependencyProperty PreferredRangeProperty = DependencyProperty.RegisterAttached ("PreferredRange", typeof (DecimalRange), typeof (AbstractNumericType), new DependencyPropertyMetadata (DecimalRange.Empty));
+		public static readonly DependencyProperty SmallStepProperty = DependencyProperty.RegisterAttached ("SmallStep", typeof (decimal), typeof (AbstractNumericType), new DependencyPropertyMetadata (0M));
+		public static readonly DependencyProperty LargeStepProperty = DependencyProperty.RegisterAttached ("LargeStep", typeof (decimal), typeof (AbstractNumericType), new DependencyPropertyMetadata (0M));
 	}
 }

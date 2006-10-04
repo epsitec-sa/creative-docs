@@ -27,5 +27,25 @@ namespace Epsitec.Common.Types
 		{
 			get;
 		}
+
+		/// <summary>
+		/// Gets the value which should be used by the user interface to increment
+		/// or decrement a number by a small amount.
+		/// </summary>
+		/// <value>The small step value.</value>
+		decimal SmallStep
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets the value which should be used by the user interface to increment
+		/// or decrement a number by a large amount.
+		/// </summary>
+		/// <value>The large step value.</value>
+		decimal LargeStep
+		{
+			get;
+		}
 	}
 }
