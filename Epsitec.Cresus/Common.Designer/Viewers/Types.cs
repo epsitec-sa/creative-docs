@@ -70,7 +70,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				ResourceAccess.Field field = this.access.GetField(sel, null, "AbstractType");
 				type = field.AbstractType;
-				typeType = ResourceAccess.CaptionType(type);
+				typeType = ResourceAccess.CaptionTypeType(type);
 			}
 
 			this.container.Title = string.Format("Définitions du type <b>{0}</b>", typeType.ToString());
