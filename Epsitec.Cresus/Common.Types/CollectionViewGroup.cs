@@ -14,10 +14,8 @@ namespace Epsitec.Common.Types
 		{
 			this.name = name;
 			this.items = new Collections.ObservableList<object> ();
-			this.subgroups = new Collections.ObservableList<CollectionViewGroup> ();
-
+			
 			this.items.CollectionChanged += this.HandleItemsCollectionChanged;
-			this.subgroups.CollectionChanged += this.HandleSubgroupsCollectionChanged;
 		}
 
 		/// <summary>
@@ -30,24 +28,20 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.subgroups.Count > 0;
+				foreach (object item in this.items)
+				{
+					if (item is CollectionViewGroup)
+					{
+						return true;
+					}
+				}
+				
+				return false;
 			}
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether this group has leaf items.
-		/// </summary>
-		/// <value><c>true</c> if this group has leaf items; otherwise, <c>false</c>.</value>
-		public bool								HasItems
-		{
-			get
-			{
-				return this.items.Count > 0;
-			}
-		}
-
-		/// <summary>
-		/// Gets the number of leaf items in this group.
+		/// Gets the number of items in this group.
 		/// </summary>
 		/// <value>The number of items in this group.</value>
 		public int								ItemCount
@@ -55,18 +49,6 @@ namespace Epsitec.Common.Types
 			get
 			{
 				return this.items.Count;
-			}
-		}
-
-		/// <summary>
-		/// Gets the number of subgroups in this group.
-		/// </summary>
-		/// <value>The number of subgroups in this group.</value>
-		public int								SubgroupCount
-		{
-			get
-			{
-				return this.subgroups.Count;
 			}
 		}
 
@@ -83,9 +65,10 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Gets the leaf items contained in this group.
+		/// Gets the items contained in this group. An item will be an instance
+		/// of <see cref="CollectionViewGroup"/> if it describes a subgroup.
 		/// </summary>
-		/// <value>A read-only collection of the leaf items contained in this group.</value>
+		/// <value>A read-only collection of the items contained in this group.</value>
 		public Collections.ReadOnlyObservableList<object> Items
 		{
 			get
@@ -99,42 +82,14 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		/// <summary>
-		/// Gets the subgroups contained in this group.
-		/// </summary>
-		/// <value>A read-only collection of the subgroups contained in this group.</value>
-		public Collections.ReadOnlyObservableList<CollectionViewGroup> Subgroups
-		{
-			get
-			{
-				if (this.readOnlySubgroups == null)
-				{
-					this.readOnlySubgroups = new Collections.ReadOnlyObservableList<CollectionViewGroup> (this.subgroups);
-				}
-				
-				return this.readOnlySubgroups;
-			}
-		}
-
-
 		private void HandleItemsCollectionChanged(object sender, CollectionChangedEventArgs e)
 		{
 			this.OnPropertyChanged (new DependencyPropertyChangedEventArgs ("Items"));
 		}
 		
-		private void HandleSubgroupsCollectionChanged(object sender, CollectionChangedEventArgs e)
-		{
-			this.OnPropertyChanged (new DependencyPropertyChangedEventArgs ("Subgroups"));
-		}
-
 		internal Collections.ObservableList<object> GetItems()
 		{
 			return this.items;
-		}
-
-		internal Collections.ObservableList<CollectionViewGroup> GetSubgroups()
-		{
-			return this.subgroups;
 		}
 
 		
@@ -156,7 +111,5 @@ namespace Epsitec.Common.Types
 		private string							name;
 		private Collections.ObservableList<object> items;
 		private Collections.ReadOnlyObservableList<object> readOnlyItems;
-		private Collections.ObservableList<CollectionViewGroup> subgroups;
-		private Collections.ReadOnlyObservableList<CollectionViewGroup> readOnlySubgroups;
 	}
 }

@@ -24,7 +24,7 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		/// <value>A read-only collection of the top-level groups, which has always
 		/// at least one element.</value>
-		Collections.ReadOnlyObservableList<CollectionViewGroup> Groups
+		Collections.ReadOnlyObservableList<object> Groups
 		{
 			get;
 		}
