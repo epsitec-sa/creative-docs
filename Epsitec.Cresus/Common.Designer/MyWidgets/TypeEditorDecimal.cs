@@ -14,33 +14,34 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			Widget group;
 
-			this.CreateDoubleLabeled("Valeur minimale", -1000000, 1000000, 0.0001M, 1, this, out group, out this.fieldMin);
+			//	Range.
+			this.CreateDecimalLabeled("Valeur minimale", -1000000, 1000000, 0.0001M, 1, this, out group, out this.fieldMin);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 5);
 			this.fieldMin.TextChanged += new EventHandler(this.HandleTextFieldRealChanged);
 
-			this.CreateDoubleLabeled("Valeur maximale", -1000000, 1000000, 0.0001M, 1, this, out group, out this.fieldMax);
+			this.CreateDecimalLabeled("Valeur maximale", -1000000, 1000000, 0.0001M, 1, this, out group, out this.fieldMax);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 5);
 			this.fieldMax.TextChanged += new EventHandler(this.HandleTextFieldRealChanged);
 
-			this.CreateDoubleLabeled("Résolution", 0, 1000, 0.0001M, 0.0001M, this, out group, out this.fieldRes);
+			this.CreateDecimalLabeled("Résolution", 0, 1000, 0.0001M, 0.0001M, this, out group, out this.fieldRes);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 15);
 			this.fieldRes.TextChanged += new EventHandler(this.HandleTextFieldRealChanged);
 
-
-			this.CreateDoubleLabeled("Valeur minimale préférentielle", -1000000, 1000000, 0.0001M, 1, this, out group, out this.fieldPreferredMin);
+			//	PreferredRange.
+			this.CreateDecimalLabeled("Valeur minimale préférentielle", -1000000, 1000000, 0.0001M, 1, this, out group, out this.fieldPreferredMin);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 5);
 			this.fieldPreferredMin.TextChanged += new EventHandler(this.HandleTextFieldRealChanged);
 
-			this.CreateDoubleLabeled("Valeur maximale préférentielle", -1000000, 1000000, 0.0001M, 1, this, out group, out this.fieldPreferredMax);
+			this.CreateDecimalLabeled("Valeur maximale préférentielle", -1000000, 1000000, 0.0001M, 1, this, out group, out this.fieldPreferredMax);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 5);
 			this.fieldPreferredMax.TextChanged += new EventHandler(this.HandleTextFieldRealChanged);
 
-			this.CreateDoubleLabeled("Résolution préférentielle", 0, 1000, 0.0001M, 0.0001M, this, out group, out this.fieldPreferredRes);
+			this.CreateDecimalLabeled("Résolution préférentielle", 0, 1000, 0.0001M, 0.0001M, this, out group, out this.fieldPreferredRes);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 0);
 			this.fieldPreferredRes.TextChanged += new EventHandler(this.HandleTextFieldRealChanged);
@@ -71,6 +72,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected override void UpdateContent()
 		{
+			//	Met à jour le contenu de l'éditeur.
 			DecimalType type = this.type as DecimalType;
 
 			this.ignoreChange = true;
@@ -104,6 +106,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			decimal pmax = type.PreferredRange.Maximum;
 			decimal pres = type.PreferredRange.Resolution;
 
+			//	Range.
 			if (sender == this.fieldMin)
 			{
 				min = this.fieldMin.InternalValue;
@@ -119,6 +122,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				res = this.fieldRes.InternalValue;
 			}
 
+			//	PreferredRange.
 			if (sender == this.fieldPreferredMin)
 			{
 				pmin = this.fieldPreferredMin.InternalValue;

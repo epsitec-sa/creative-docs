@@ -76,12 +76,13 @@ namespace Epsitec.Common.Designer.Viewers
 				typeType = ResourceAccess.CaptionType(type);
 			}
 
-			if (this.typeType != typeType)
+			if (this.typeType != typeType)  // autre type ?
 			{
 				this.typeType = typeType;
 
 				if (this.editor != null)
 				{
+					//	Supprime l'éditeur actuel.
 					this.container.Children.Clear();
 
 					this.editor.ContentChanged -= new EventHandler(this.HandleEditorContentChanged);
@@ -92,6 +93,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				if (this.editor != null)
 				{
+					//	Crée le nouvel éditeur.
 					this.editor.SetParent(this.container);
 					this.editor.Dock = DockStyle.StackBegin;
 					this.editor.ContentChanged += new EventHandler(this.HandleEditorContentChanged);
@@ -100,7 +102,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (this.editor != null && type != null)
 			{
-				this.editor.Type = type;
+				this.editor.Type = type;  // donne le type et met à jour l'éditeur
 			}
 
 			this.ignoreChange = iic;
