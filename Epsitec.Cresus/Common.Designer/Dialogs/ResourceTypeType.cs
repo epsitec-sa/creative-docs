@@ -32,14 +32,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.tabIndex = 0;
 				this.radioButtons = new List<RadioButton>();
-				this.CreateRadio(Res.Commands.Types.Type.Void);
-				this.CreateRadio(Res.Commands.Types.Type.Boolean);
-				this.CreateRadio(Res.Commands.Types.Type.Integer);
-				this.CreateRadio(Res.Commands.Types.Type.LongInteger);
-				this.CreateRadio(Res.Commands.Types.Type.Decimal);
-				this.CreateRadio(Res.Commands.Types.Type.String);
-				this.CreateRadio(Res.Commands.Types.Type.Enum);
-				this.CreateRadio(Res.Commands.Types.Type.Structured);
+				this.CreateRadio(Res.Captions.Types.Type.Void);
+				this.CreateRadio(Res.Captions.Types.Type.Boolean);
+				this.CreateRadio(Res.Captions.Types.Type.Integer);
+				this.CreateRadio(Res.Captions.Types.Type.LongInteger);
+				this.CreateRadio(Res.Captions.Types.Type.Decimal);
+				this.CreateRadio(Res.Captions.Types.Type.String);
+				this.CreateRadio(Res.Captions.Types.Type.Enum);
+				this.CreateRadio(Res.Captions.Types.Type.Structured);
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -85,11 +85,12 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected void CreateRadio(Command command)
+		protected void CreateRadio(Caption caption)
 		{
 			//	Crée un bouton radio.
 			RadioButton button = new RadioButton(this.window.Root);
-			button.CommandDruid = command.Caption.Druid;
+			button.CaptionDruid = caption.Druid;
+			System.Diagnostics.Debug.Assert(button.Name.StartsWith("Res.Captions.Types.Type."));
 			button.Dock = DockStyle.Top;
 			button.Margins = new Margins(0, 0, 2, 2);
 			button.TabIndex = tabIndex++;
@@ -114,7 +115,9 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void HandleRadioButtonClicked(object sender, MessageEventArgs e)
 		{
 			RadioButton button = sender as RadioButton;
-			this.type = ResourceAccess.ConvTypeType(button.Name);
+			string name = button.Name;
+			name = name.Substring(name.LastIndexOf('.')+1);  // enlève "Res.Captions.Types.Type."
+			this.type = ResourceAccess.ConvTypeType(name);
 			this.UpdateRadios();
 		}
 
