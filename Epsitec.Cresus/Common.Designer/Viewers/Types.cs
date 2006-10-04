@@ -14,11 +14,8 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Types(Module module, PanelsContext context, ResourceAccess access) : base(module, context, access)
 		{
-			MyWidgets.StackedPanel leftContainer;
-
 			//	Editeur contenant toutes les définitions.
-			this.CreateBand(out leftContainer, "Définitions", 0.3);
-			this.container = leftContainer.Container;
+			this.CreateBand(out this.container, "", 0.3);
 
 			this.UpdateEdit();
 		}
@@ -76,6 +73,8 @@ namespace Epsitec.Common.Designer.Viewers
 				typeType = ResourceAccess.CaptionType(type);
 			}
 
+			this.container.Title = string.Format("Définitions du type <b>{0}</b>", typeType.ToString());
+
 			if (this.typeType != typeType)  // autre type ?
 			{
 				this.typeType = typeType;
@@ -83,7 +82,7 @@ namespace Epsitec.Common.Designer.Viewers
 				if (this.editor != null)
 				{
 					//	Supprime l'éditeur actuel.
-					this.container.Children.Clear();
+					this.container.Container.Children.Clear();
 
 					this.editor.ContentChanged -= new EventHandler(this.HandleEditorContentChanged);
 					this.editor = null;
@@ -94,7 +93,7 @@ namespace Epsitec.Common.Designer.Viewers
 				if (this.editor != null)
 				{
 					//	Crée le nouvel éditeur.
-					this.editor.SetParent(this.container);
+					this.editor.SetParent(this.container.Container);
 					this.editor.Dock = DockStyle.StackBegin;
 					this.editor.ContentChanged += new EventHandler(this.HandleEditorContentChanged);
 				}
@@ -133,7 +132,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected Widget container;
+		protected MyWidgets.StackedPanel		container;
 		protected ResourceAccess.TypeType		typeType = ResourceAccess.TypeType.None;
 		protected MyWidgets.AbstractTypeEditor	editor;
 	}

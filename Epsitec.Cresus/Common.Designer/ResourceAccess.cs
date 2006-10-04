@@ -30,6 +30,8 @@ namespace Epsitec.Common.Designer
 			Void,
 			Boolean,
 			Integer,
+			LongInteger,
+			Double,
 			Decimal,
 			String,
 			Enum,
@@ -147,13 +149,15 @@ namespace Epsitec.Common.Designer
 
 		public static TypeType CaptionType(AbstractType type)
 		{
-			if (type is VoidType      )  return TypeType.Void;
-			if (type is BooleanType   )  return TypeType.Boolean;
-			if (type is IntegerType   )  return TypeType.Integer;
-			if (type is DecimalType   )  return TypeType.Decimal;
-			if (type is StringType    )  return TypeType.String;
-			if (type is EnumType      )  return TypeType.Enum;
-			if (type is StructuredType)  return TypeType.Structured;
+			if (type is VoidType       )  return TypeType.Void;
+			if (type is BooleanType    )  return TypeType.Boolean;
+			if (type is IntegerType    )  return TypeType.Integer;
+			if (type is LongIntegerType)  return TypeType.LongInteger;
+			if (type is DoubleType     )  return TypeType.Double;
+			if (type is DecimalType    )  return TypeType.Decimal;
+			if (type is StringType     )  return TypeType.String;
+			if (type is EnumType       )  return TypeType.Enum;
+			if (type is StructuredType )  return TypeType.Structured;
 
 			return TypeType.None;
 		}

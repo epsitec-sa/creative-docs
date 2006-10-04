@@ -35,10 +35,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Crée le bon widget AbstractTypeEditor pour éditer un type.
 			switch (typeType)
 			{
-				case ResourceAccess.TypeType.Decimal:
-					return new TypeEditorDecimal();
-				case ResourceAccess.TypeType.String:
-					return new TypeEditorString();
+				case ResourceAccess.TypeType.Decimal:  return new TypeEditorDecimal();
+				case ResourceAccess.TypeType.String:   return new TypeEditorString();
 			}
 
 			return null;
