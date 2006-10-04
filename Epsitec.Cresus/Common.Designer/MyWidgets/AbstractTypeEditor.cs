@@ -70,6 +70,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void CreateDoubleLabeled(string label, decimal min, decimal max, decimal resol, decimal step, Widget parent, out Widget group, out TextFieldReal field)
 		{
 			group = new Widget(parent);
+			group.TabIndex = this.tabIndex++;
+			group.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			StaticText text = new StaticText(group);
 			text.Text = label;
@@ -85,6 +87,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			field.Step             = step;
 			field.PreferredWidth = 100;
 			field.Dock = DockStyle.Left;
+			field.TabIndex = 0;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 		}
 		#endregion
 
@@ -114,6 +118,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		protected AbstractType					type;
+		protected int							tabIndex = 0;
 		protected bool							ignoreChange = false;
 	}
 }
