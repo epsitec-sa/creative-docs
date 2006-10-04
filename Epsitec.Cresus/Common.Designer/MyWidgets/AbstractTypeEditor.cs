@@ -67,22 +67,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Super widgets
-		protected void CreateDoubleLabeled(string label, double min, double max, double def, double step, double resol, Widget parent, out Widget group, out TextFieldReal field)
+		protected void CreateDoubleLabeled(string label, decimal min, decimal max, decimal resol, decimal step, Widget parent, out Widget group, out TextFieldReal field)
 		{
 			group = new Widget(parent);
 
 			StaticText text = new StaticText(group);
 			text.Text = label;
-			text.PreferredWidth = 120;
+			text.ContentAlignment = ContentAlignment.MiddleRight;
+			text.PreferredWidth = 200;
 			text.Dock = DockStyle.Left;
+			text.Margins = new Margins(0, 8, 0, 0);
 
 			field = new TextFieldReal(group);
-			field.InternalMinValue     = (decimal) min;
-			field.InternalMaxValue     = (decimal) max;
-			field.InternalDefaultValue = (decimal) def;
-			field.Step                 = (decimal) step;
-			field.Resolution           = (decimal) resol;
-			field.PreferredWidth = 60;
+			field.InternalMinValue = min;
+			field.InternalMaxValue = max;
+			field.Resolution       = resol;
+			field.Step             = step;
+			field.PreferredWidth = 100;
 			field.Dock = DockStyle.Left;
 		}
 		#endregion
