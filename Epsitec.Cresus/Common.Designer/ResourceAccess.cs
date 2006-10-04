@@ -46,7 +46,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public ResourceAccess(Type type, ResourceManager resourceManager, ResourceModuleInfo moduleInfo)
+		public ResourceAccess(Type type, ResourceManager resourceManager, ResourceModuleInfo moduleInfo, MainWindow mainWindow)
 		{
 			//	Constructeur unique pour accéder aux ressources d'un type donné.
 			//	Par la suite, l'instance créée accédera toujours aux ressources de ce type,
@@ -54,6 +54,7 @@ namespace Epsitec.Common.Designer
 			this.type = type;
 			this.resourceManager = resourceManager;
 			this.moduleInfo = moduleInfo;
+			this.mainWindow = mainWindow;
 
 			this.druidsIndex = new List<Druid>();
 
@@ -160,6 +161,24 @@ namespace Epsitec.Common.Designer
 			if (type is StructuredType )  return TypeType.Structured;
 
 			return TypeType.None;
+		}
+
+		public static AbstractType CreateType(TypeType type)
+		{
+			switch (type)
+			{
+				case TypeType.Void:         return new VoidType();
+				case TypeType.Boolean:      return new BooleanType();
+				case TypeType.Integer:      return new IntegerType();
+				case TypeType.LongInteger:  return new LongIntegerType();
+				case TypeType.Double:       return new DoubleType();
+				case TypeType.Decimal:      return new DecimalType();
+				case TypeType.String:       return new StringType();
+				case TypeType.Enum:         return new EnumType();
+				case TypeType.Structured:   return new StructuredType();
+			}
+
+			return null;
 		}
 
 
@@ -336,9 +355,14 @@ namespace Epsitec.Common.Designer
 					{
 						if (string.IsNullOrEmpty(newField.AsString))
 						{
-							//	TODO: afficher un dialogue permettant de choisir le type...
-							AbstractType type = new DecimalType();
-							//?AbstractType type = new EnumType();
+							TypeType tt = this.mainWindow.DlgResourceTypeType(this.lastTypeTypeCreatated);
+							if (tt == TypeType.None)
+							{
+								return;
+							}
+
+							this.lastTypeTypeCreatated = tt;
+							AbstractType type = ResourceAccess.CreateType(this.lastTypeTypeCreatated);
 							newField.SetStringValue(type.Caption.SerializeToString());
 						}
 					}
@@ -1143,16 +1167,6 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (this.type == Type.Values)
-			{
-				if (fieldName == ResourceAccess.NameValues[5])
-				{
-					//	TODO:
-					int i = 123;
-					return new Field(i);
-				}
-			}
-
 			if (this.type == Type.Panels)
 			{
 				ResourceBundle bundle = this.PanelBundle(index);
@@ -1296,15 +1310,6 @@ namespace Epsitec.Common.Designer
 				if (fieldName == ResourceAccess.NameTypes[5])
 				{
 					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
-				}
-			}
-
-			if (this.type == Type.Values)
-			{
-				if (fieldName == ResourceAccess.NameValues[5])
-				{
-					//	TODO:
-					int i = field.Integer;
 				}
 			}
 
@@ -1627,14 +1632,14 @@ namespace Epsitec.Common.Designer
 		protected static string[] NameCaptions = { "Name", "Labels", "Description", "Icon", "About" };
 		protected static string[] NameCommands = { "Name", "Labels", "Description", "Icon", "About", "Statefull", "Shortcuts", "Group" };
 		protected static string[] NameTypes    = { "Name", "Labels", "Description", "Icon", "About", "AbstractType" };
-		protected static string[] NameValues   = { "Name", "Labels", "Description", "Icon", "About", "Rank" };
+		protected static string[] NameValues   = { "Name", "Labels", "Description", "Icon", "About" };
 		protected static string[] NamePanels   = { "Name", "Panel" };
 
 		protected static Field.Type[] TypeStrings  = { Field.Type.String, Field.Type.String, Field.Type.String };
 		protected static Field.Type[] TypeCaptions = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
 		protected static Field.Type[] TypeCommands = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String, Field.Type.Boolean, Field.Type.Shortcuts, Field.Type.String };
 		protected static Field.Type[] TypeTypes    = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String, Field.Type.AbstractType };
-		protected static Field.Type[] TypeValues   = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String, Field.Type.Integer };
+		protected static Field.Type[] TypeValues   = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
 		protected static Field.Type[] TypePanels   = { Field.Type.String, Field.Type.Bundle };
 
 
@@ -2737,6 +2742,7 @@ namespace Epsitec.Common.Designer
 		protected Type										type;
 		protected ResourceManager							resourceManager;
 		protected ResourceModuleInfo						moduleInfo;
+		protected MainWindow								mainWindow;
 		protected bool										isDirty = false;
 		protected bool										isExternalDirtyList = false;
 
@@ -2758,5 +2764,6 @@ namespace Epsitec.Common.Designer
 		protected Dictionary<Type, Searcher.SearchingMode>	filterModes;
 		protected Type										bypassType = Type.Unknow;
 		protected List<Druid>								bypassDruids;
+		protected ResourceAccess.TypeType					lastTypeTypeCreatated = TypeType.String;
 	}
 }

@@ -69,6 +69,7 @@ namespace Epsitec.Common.Designer
 				this.dlgFilter           = new Dialogs.Filter(this);
 				this.dlgSearch           = new Dialogs.Search(this);
 				this.dlgNewCulture       = new Dialogs.NewCulture(this);
+				this.dlgResourceTypeType = new Dialogs.ResourceTypeType(this);
 				this.dlgResourceSelector = new Dialogs.ResourceSelector(this);
 
 				this.dlgGlyphs.Closed += new EventHandler(this.HandleDlgClosed);
@@ -1121,6 +1122,14 @@ namespace Epsitec.Common.Designer
 			return this.dlgNewCulture.Culture;
 		}
 
+		public ResourceAccess.TypeType DlgResourceTypeType(ResourceAccess.TypeType type)
+		{
+			//	Ouvre le dialogue pour choisir le type d'un Caption.Type.
+			this.dlgResourceTypeType.ContentType = type;
+			this.dlgResourceTypeType.Show();
+			return this.dlgResourceTypeType.ContentType;
+		}
+
 		public Dialogs.Search DialogSearch
 		{
 			get
@@ -1291,6 +1300,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.Filter				dlgFilter;
 		protected Dialogs.Search				dlgSearch;
 		protected Dialogs.NewCulture			dlgNewCulture;
+		protected Dialogs.ResourceTypeType		dlgResourceTypeType;
 		protected Dialogs.ResourceSelector		dlgResourceSelector;
 		protected PanelsContext					context;
 

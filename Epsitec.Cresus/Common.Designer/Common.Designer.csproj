@@ -41,6 +41,7 @@
     <Compile Include="Constrain.cs" />
     <Compile Include="ConstrainsList.cs" />
     <Compile Include="Controllers\DruidController.cs" />
+    <Compile Include="Dialogs\ResourceTypeType.cs" />
     <Compile Include="Dialogs\Open.cs" />
     <Compile Include="Dialogs\Icon.cs" />
     <Compile Include="MyWidgets\AbstractTypeEditor.cs" />
