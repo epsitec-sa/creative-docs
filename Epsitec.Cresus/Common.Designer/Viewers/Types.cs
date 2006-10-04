@@ -18,7 +18,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			//	Editeur contenant toutes les définitions.
 			this.CreateBand(out leftContainer, "Définitions", 0.3);
-			this.editor = leftContainer.Container;
+			this.container = leftContainer.Container;
 
 			this.UpdateEdit();
 		}
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override void UpdateEdit()
 		{
 			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
-			if (this.editor == null)
+			if (this.container == null)
 			{
 				return;
 			}
@@ -66,19 +66,16 @@ namespace Epsitec.Common.Designer.Viewers
 				sel = -1;
 			}
 
-			this.editor.Children.Clear();
+			this.container.Children.Clear();
 
 			if (sel != -1)
 			{
-#if true
 				ResourceAccess.Field field = this.access.GetField(sel, null, "AbstractType");
 				AbstractType type = field.AbstractType;
 
-				StaticText s = new StaticText(this.editor);
-				s.PreferredHeight = 100;
-				s.Text = string.Concat(@"<font size=""200%"">", type.ToString(), "</font>");
-				s.Dock = DockStyle.StackBegin;
-#endif
+				this.editor = new MyWidgets.TypeEditorDecimal(this.container);
+				this.editor.Type = type;
+				this.editor.Dock = DockStyle.StackBegin;
 			}
 
 			this.ignoreChange = iic;
@@ -100,6 +97,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected Widget					editor;
+		protected Widget						container;
+		protected MyWidgets.AbstractTypeEditor	editor;
 	}
 }
