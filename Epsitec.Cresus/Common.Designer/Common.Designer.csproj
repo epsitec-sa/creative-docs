@@ -44,6 +44,7 @@
     <Compile Include="Dialogs\Open.cs" />
     <Compile Include="Dialogs\Icon.cs" />
     <Compile Include="MyWidgets\AbstractTypeEditor.cs" />
+    <Compile Include="MyWidgets\TypeEditorString.cs" />
     <Compile Include="MyWidgets\TypeEditorDecimal.cs" />
     <Compile Include="MyWidgets\IconArray.cs" />
     <Compile Include="MyWidgets\GlyphArray.cs" />

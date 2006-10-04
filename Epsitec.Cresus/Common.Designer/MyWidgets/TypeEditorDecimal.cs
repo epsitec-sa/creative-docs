@@ -14,7 +14,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			StaticText s = new StaticText(this);
 			s.PreferredHeight = 100;
-			s.Text = string.Concat(@"<font size=""200%"">", "Tralala", "</font>");
+			s.Text = @"<font size=""200%""><b>Decimal</b> (à faire)</font>";
 			s.Dock = DockStyle.Fill;
 		}
 		
