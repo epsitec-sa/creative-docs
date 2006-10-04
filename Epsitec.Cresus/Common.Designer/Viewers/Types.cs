@@ -67,15 +67,26 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.container.Children.Clear();
+			this.editor = null;
 
 			if (sel != -1)
 			{
 				ResourceAccess.Field field = this.access.GetField(sel, null, "AbstractType");
 				AbstractType type = field.AbstractType;
+				ResourceAccess.TypeType typeType = ResourceAccess.CaptionType(type);
 
-				this.editor = new MyWidgets.TypeEditorDecimal(this.container);
-				this.editor.Type = type;
-				this.editor.Dock = DockStyle.StackBegin;
+				if (this.typeType != typeType)
+				{
+					this.typeType = typeType;
+
+					this.editor = MyWidgets.AbstractTypeEditor.Create(this.typeType);
+					if (this.editor != null)
+					{
+						this.editor.SetParent(this.container);
+						this.editor.Type = type;
+						this.editor.Dock = DockStyle.StackBegin;
+					}
+				}
 			}
 
 			this.ignoreChange = iic;
@@ -98,6 +109,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		protected Widget						container;
+		protected ResourceAccess.TypeType		typeType = ResourceAccess.TypeType.None;
 		protected MyWidgets.AbstractTypeEditor	editor;
 	}
 }

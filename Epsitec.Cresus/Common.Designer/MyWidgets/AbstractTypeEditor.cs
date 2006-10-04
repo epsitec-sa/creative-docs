@@ -42,7 +42,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public static AbstractTypeEditor Create(ResourceAccess.TypeType typeType)
+		{
+			switch (typeType)
+			{
+				case ResourceAccess.TypeType.Decimal:
+					return new TypeEditorDecimal();
+			}
 
+			return null;
+		}
+		
 
 		protected AbstractType					type;
 	}

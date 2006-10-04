@@ -24,6 +24,18 @@ namespace Epsitec.Common.Designer
 			Scripts,
 		}
 
+		public enum TypeType
+		{
+			None,
+			Void,
+			Boolean,
+			Integer,
+			Decimal,
+			String,
+			Enum,
+			Structured,
+		}
+
 		public enum ModificationState
 		{
 			Normal,			//	défini normalement
@@ -132,6 +144,20 @@ namespace Epsitec.Common.Designer
 
 			return "?";
 		}
+
+		public static TypeType CaptionType(AbstractType type)
+		{
+			if (type is VoidType      )  return TypeType.Void;
+			if (type is BooleanType   )  return TypeType.Boolean;
+			if (type is IntegerType   )  return TypeType.Integer;
+			if (type is DecimalType   )  return TypeType.Decimal;
+			if (type is StringType    )  return TypeType.String;
+			if (type is EnumType      )  return TypeType.Enum;
+			if (type is StructuredType)  return TypeType.Structured;
+
+			return TypeType.None;
+		}
+
 
 		public void Load()
 		{
