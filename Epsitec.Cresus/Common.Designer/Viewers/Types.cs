@@ -66,27 +66,41 @@ namespace Epsitec.Common.Designer.Viewers
 				sel = -1;
 			}
 
-			this.container.Children.Clear();
-			this.editor = null;
+			AbstractType type = null;
+			ResourceAccess.TypeType typeType = ResourceAccess.TypeType.None;
 
 			if (sel != -1)
 			{
 				ResourceAccess.Field field = this.access.GetField(sel, null, "AbstractType");
-				AbstractType type = field.AbstractType;
-				ResourceAccess.TypeType typeType = ResourceAccess.CaptionType(type);
+				type = field.AbstractType;
+				typeType = ResourceAccess.CaptionType(type);
+			}
 
-				if (this.typeType != typeType)
+			if (this.typeType != typeType)
+			{
+				this.typeType = typeType;
+
+				if (this.editor != null)
 				{
-					this.typeType = typeType;
+					this.container.Children.Clear();
 
-					this.editor = MyWidgets.AbstractTypeEditor.Create(this.typeType);
-					if (this.editor != null)
-					{
-						this.editor.SetParent(this.container);
-						this.editor.Type = type;
-						this.editor.Dock = DockStyle.StackBegin;
-					}
+					this.editor.ContentChanged -= new EventHandler(this.HandleEditorContentChanged);
+					this.editor = null;
 				}
+
+				this.editor = MyWidgets.AbstractTypeEditor.Create(this.typeType);
+
+				if (this.editor != null)
+				{
+					this.editor.SetParent(this.container);
+					this.editor.Dock = DockStyle.StackBegin;
+					this.editor.ContentChanged += new EventHandler(this.HandleEditorContentChanged);
+				}
+			}
+
+			if (this.editor != null && type != null)
+			{
+				this.editor.Type = type;
 			}
 
 			this.ignoreChange = iic;
@@ -108,7 +122,16 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected Widget						container;
+		private void HandleEditorContentChanged(object sender)
+		{
+			//	Le contenu de l'éditeur de type a changé.
+			int sel = this.access.AccessIndex;
+			ResourceAccess.Field field = new ResourceAccess.Field(this.editor.Type);
+			this.access.SetField(sel, null, "AbstractType", field);
+		}
+
+
+		protected Widget container;
 		protected ResourceAccess.TypeType		typeType = ResourceAccess.TypeType.None;
 		protected MyWidgets.AbstractTypeEditor	editor;
 	}
