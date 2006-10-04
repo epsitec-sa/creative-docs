@@ -16,6 +16,11 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class EnumType : AbstractType, IEnumType
 	{
+		public EnumType()
+			: this (null, new Caption ())
+		{
+		}
+		
 		public EnumType(System.Type enumType)
 			: base (string.Concat ("Enumeration", " ", enumType.Name))
 		{
