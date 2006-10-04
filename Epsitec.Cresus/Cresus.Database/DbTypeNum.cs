@@ -68,6 +68,22 @@ namespace Epsitec.Cresus.Database
 				return Common.Types.DecimalRange.Empty;
 			}
 		}
+
+		public decimal							SmallStep
+		{
+			get
+			{
+				return 0;
+			}
+		}
+
+		public decimal							LargeStep
+		{
+			get
+			{
+				return 0;
+			}
+		}
 		
 		
 		internal override void SerializeXmlAttributes(System.Text.StringBuilder buffer, bool full)

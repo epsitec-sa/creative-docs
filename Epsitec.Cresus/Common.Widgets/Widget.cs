@@ -2379,13 +2379,19 @@ namespace Epsitec.Common.Widgets
 							if (find != null)
 							{
 								if (((find.tab_navigation_mode & TabNavigationMode.ForwardToChildren) != 0) &&
-									((find.tab_navigation_mode & TabNavigationMode.ForwardOnly) != 0) &&
-									(find.HasChildren))
+									((find.tab_navigation_mode & TabNavigationMode.ForwardOnly) != 0))
 								{
-									//	Entre en marche avant dans le widget...
-									
-									Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (mode);
-									find = (candidates.Length > 0) ? candidates[0].FindTabWidget (dir, mode, false, true) : null;
+									if (find.HasChildren)
+									{
+										//	Entre en marche avant dans le widget...
+
+										Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (mode);
+										find = (candidates.Length > 0) ? candidates[0].FindTabWidget (dir, mode, false, true) : null;
+									}
+									else
+									{
+										find = null;
+									}
 								}
 							}
 							break;
