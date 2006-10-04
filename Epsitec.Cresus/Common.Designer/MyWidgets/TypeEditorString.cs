@@ -14,12 +14,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			Widget group;
 
-			this.CreateDoubleLabeled("Longueur minimale", 0, 1000, 1, 1, this, out group, out this.fieldMin);
+			this.CreateDecimalLabeled("Longueur minimale", 0, 100000, 1, 10, this, out group, out this.fieldMin);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 5);
 			this.fieldMin.TextChanged += new EventHandler(this.HandleTextFieldRealChanged);
 
-			this.CreateDoubleLabeled("Longueur maximale", 0, 1000, 1, 1, this, out group, out this.fieldMax);
+			this.CreateDecimalLabeled("Longueur maximale", 0, 100000, 1, 10, this, out group, out this.fieldMax);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 0);
 			this.fieldMax.TextChanged += new EventHandler(this.HandleTextFieldRealChanged);
@@ -45,6 +45,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected override void UpdateContent()
 		{
+			//	Met à jour le contenu de l'éditeur.
 			StringType type = this.type as StringType;
 
 			this.ignoreChange = true;

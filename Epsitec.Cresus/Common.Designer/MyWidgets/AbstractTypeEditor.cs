@@ -63,12 +63,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected virtual void UpdateContent()
 		{
+			//	Met à jour le contenu de l'éditeur.
 		}
 
 
 		#region Super widgets
-		protected void CreateDoubleLabeled(string label, decimal min, decimal max, decimal resol, decimal step, Widget parent, out Widget group, out TextFieldReal field)
+		protected void CreateDecimalLabeled(string label, decimal min, decimal max, decimal resol, decimal step, Widget parent, out Widget group, out TextFieldReal field)
 		{
+			//	Crée un super-widget permettant d'éditer une valeur décimale, avec une étiquette à gauche.
 			group = new Widget(parent);
 			group.TabIndex = this.tabIndex++;
 			group.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
