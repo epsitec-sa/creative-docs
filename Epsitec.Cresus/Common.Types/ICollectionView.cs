@@ -22,9 +22,37 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Gets the top-level groups.
 		/// </summary>
-		/// <value>A read-only collection of the top-level groups or <c>null</c> if
-		/// there are no groups.</value>
-		Collections.ReadOnlyObservableList<string> Groups
+		/// <value>A read-only collection of the top-level groups, which has always
+		/// at least one element.</value>
+		Collections.ReadOnlyObservableList<CollectionViewGroup> Groups
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets a collection of group description objects that describe how the items
+		/// in the collection are grouped in a view.
+		/// </summary>
+		/// <value>The collection of group descriptions.</value>
+		Collections.ObservableList<AbstractGroupDescription> GroupDescriptions
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets a collection of <see cref="SortDescription"/> objects that describe how
+		/// the items in a collection are sorted within the groups.
+		/// </summary>
+		Collections.ObservableList<SortDescription> SortDescriptions
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets the underlying unfiltered source collection.
+		/// </summary>
+		/// <value>The source collection.</value>
+		System.Collections.IEnumerable SourceCollection
 		{
 			get;
 		}

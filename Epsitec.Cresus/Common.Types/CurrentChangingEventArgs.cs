@@ -9,11 +9,19 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class CurrentChangingEventArgs : Support.CancelEventArgs
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CurrentChangingEventArgs"/> class,
+		/// defaulting to a cancelable event.
+		/// </summary>
 		public CurrentChangingEventArgs()
 			: this (true)
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CurrentChangingEventArgs"/> class.
+		/// </summary>
+		/// <param name="isCancelable">if set to <c>true</c>, the event is cancelable.</param>
 		public CurrentChangingEventArgs(bool isCancelable)
 		{
 			this.isCancelable = isCancelable;
