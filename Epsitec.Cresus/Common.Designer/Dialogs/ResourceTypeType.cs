@@ -24,13 +24,21 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeFixedSizeWindow();
 				this.window.Root.WindowStyles = WindowStyles.None;
 				this.window.PreventAutoClose = true;
-				this.WindowInit("TypeType", 250, 250, true);
+				this.WindowInit("TypeType", 250, 200, true);
 				this.window.Text = "Choix du type à créer";  // Res.Strings.Dialog.TypeType.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
-				int tabIndex = 0;
-
+				this.tabIndex = 0;
+				this.radioButtons = new List<RadioButton>();
+				this.CreateRadio(ResourceAccess.TypeType.Void,        "Vide");
+				this.CreateRadio(ResourceAccess.TypeType.Boolean,     "Booléen");
+				this.CreateRadio(ResourceAccess.TypeType.Integer,     "Entier");
+				this.CreateRadio(ResourceAccess.TypeType.LongInteger, "Entier long");
+				this.CreateRadio(ResourceAccess.TypeType.Decimal,     "Décimal");
+				this.CreateRadio(ResourceAccess.TypeType.String,      "Chaîne de caractères");
+				this.CreateRadio(ResourceAccess.TypeType.Enum,        "Enumération");
+				this.CreateRadio(ResourceAccess.TypeType.Structured,  "Structure");
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -44,8 +52,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Dock = DockStyle.Left;
 				buttonOk.Margins = new Margins(0, 6, 0, 0);
-				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonFilterClicked);
-				buttonOk.TabIndex = tabIndex++;
+				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonOKClicked);
+				buttonOk.TabIndex = this.tabIndex++;
 				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				Button buttonClose = new Button(footer);
@@ -57,6 +65,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.TabIndex = tabIndex++;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
+
+			this.UpdateRadios();
 
 			this.window.ShowDialog();
 		}
@@ -74,14 +84,48 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		protected void CreateRadio(ResourceAccess.TypeType type, string text)
+		{
+			RadioButton button = new RadioButton(this.window.Root);
+			button.Name = ResourceAccess.ConvTypeType(type);
+			button.Text = string.Format("{0} ({1})", text, type.ToString());
+			button.Dock = DockStyle.Top;
+			button.Margins = new Margins(0, 0, 2, 2);
+			button.TabIndex = tabIndex++;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			button.Clicked += new MessageEventHandler(this.HandleRadioButtonClicked);
+
+			this.radioButtons.Add(button);
+		}
+
+		protected void UpdateRadios()
+		{
+			string actual = ResourceAccess.ConvTypeType(this.type);
+
+			foreach (RadioButton button in this.radioButtons)
+			{
+				button.ActiveState = (button.Name == actual) ? ActiveState.Yes : ActiveState.No;
+			}
+		}
+
+
+		private void HandleRadioButtonClicked(object sender, MessageEventArgs e)
+		{
+			RadioButton button = sender as RadioButton;
+			this.type = ResourceAccess.ConvTypeType(button.Name);
+			this.UpdateRadios();
+		}
+
 		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
 		{
+			this.type = ResourceAccess.TypeType.None;
+
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
 		}
 
-		private void HandleButtonFilterClicked(object sender, MessageEventArgs e)
+		private void HandleButtonOKClicked(object sender, MessageEventArgs e)
 		{
 			this.parentWindow.MakeActive();
 			this.window.Hide();
@@ -90,5 +134,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 
 		protected ResourceAccess.TypeType		type;
+		protected List<RadioButton>				radioButtons;
+		protected int							tabIndex;
 	}
 }

@@ -148,7 +148,8 @@ namespace Epsitec.Common.Designer
 			return "?";
 		}
 
-		public static TypeType CaptionType(AbstractType type)
+
+		public static TypeType CaptionTypeType(AbstractType type)
 		{
 			if (type is VoidType       )  return TypeType.Void;
 			if (type is BooleanType    )  return TypeType.Boolean;
@@ -163,7 +164,7 @@ namespace Epsitec.Common.Designer
 			return TypeType.None;
 		}
 
-		public static AbstractType CreateType(TypeType type)
+		public static AbstractType CreateTypeType(TypeType type)
 		{
 			switch (type)
 			{
@@ -179,6 +180,42 @@ namespace Epsitec.Common.Designer
 			}
 
 			return null;
+		}
+
+		public static string ConvTypeType(TypeType type)
+		{
+			switch (type)
+			{
+				case TypeType.Void:         return "Void";
+				case TypeType.Boolean:      return "Boolean";
+				case TypeType.Integer:      return "Integer";
+				case TypeType.LongInteger:  return "LongInteger";
+				case TypeType.Double:       return "Double";
+				case TypeType.Decimal:      return "Decimal";
+				case TypeType.String:       return "String";
+				case TypeType.Enum:         return "Enum";
+				case TypeType.Structured:   return "Structured";
+			}
+
+			return null;
+		}
+
+		public static TypeType ConvTypeType(string name)
+		{
+			switch (name)
+			{
+				case "Void":         return TypeType.Void;
+				case "Boolean":      return TypeType.Boolean;
+				case "Integer":      return TypeType.Integer;
+				case "LongInteger":  return TypeType.LongInteger;
+				case "Double":       return TypeType.Double;
+				case "Decimal":      return TypeType.Decimal;
+				case "String":       return TypeType.String;
+				case "Enum":         return TypeType.Enum;
+				case "Structured":   return TypeType.Structured;
+			}
+
+			return TypeType.None;
 		}
 
 
@@ -362,7 +399,7 @@ namespace Epsitec.Common.Designer
 							}
 
 							this.lastTypeTypeCreatated = tt;
-							AbstractType type = ResourceAccess.CreateType(this.lastTypeTypeCreatated);
+							AbstractType type = ResourceAccess.CreateTypeType(this.lastTypeTypeCreatated);
 							newField.SetStringValue(type.Caption.SerializeToString());
 						}
 					}
