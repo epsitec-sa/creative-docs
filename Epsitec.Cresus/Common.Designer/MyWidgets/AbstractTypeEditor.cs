@@ -67,7 +67,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Super widgets
-		protected void CreateDecimalLabeled(string label, decimal min, decimal max, decimal resol, decimal step, Widget parent, out Widget group, out TextFieldReal field)
+		protected void CreateDecimalLabeled(string label, Widget parent, out Widget group, out TextField field)
 		{
 			//	Crée un super-widget permettant d'éditer une valeur décimale, avec une étiquette à gauche.
 			group = new Widget(parent);
@@ -81,15 +81,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 8, 0, 0);
 
-			field = new TextFieldReal(group);
-			field.InternalMinValue = min;
-			field.InternalMaxValue = max;
-			field.Resolution       = resol;
-			field.Step             = step;
-			field.PreferredWidth = 100;
+			field = new TextField(group);
+			field.PreferredWidth = 80;
 			field.Dock = DockStyle.Left;
 			field.TabIndex = 0;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+		}
+
+		protected decimal GetDecimal(TextField field)
+		{
+			decimal value;
+			if (!decimal.TryParse(field.Text, out value))
+			{
+				return 0;
+			}
+			return value;
+		}
+
+		protected void SetDecimal(TextField field, decimal value)
+		{
+			field.Text = value.ToString();
 		}
 		#endregion
 

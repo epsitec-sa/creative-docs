@@ -14,15 +14,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			Widget group;
 
-			this.CreateDecimalLabeled("Longueur minimale", 0, 100000, 1, 10, this, out group, out this.fieldMin);
+			this.CreateDecimalLabeled("Longueur minimale", this, out group, out this.fieldMin);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 5);
-			this.fieldMin.TextChanged += new EventHandler(this.HandleTextFieldRealChanged);
+			this.fieldMin.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled("Longueur maximale", 0, 100000, 1, 10, this, out group, out this.fieldMax);
+			this.CreateDecimalLabeled("Longueur maximale", this, out group, out this.fieldMax);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 0);
-			this.fieldMax.TextChanged += new EventHandler(this.HandleTextFieldRealChanged);
+			this.fieldMax.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 		}
 
 		public TypeEditorString(Widget embedder) : this()
@@ -35,8 +35,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
-				this.fieldMin.TextChanged -= new EventHandler(this.HandleTextFieldRealChanged);
-				this.fieldMax.TextChanged -= new EventHandler(this.HandleTextFieldRealChanged);
+				this.fieldMin.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldMax.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -49,13 +49,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			StringType type = this.type as StringType;
 
 			this.ignoreChange = true;
-			this.fieldMin.InternalValue = (decimal) type.MinimumLength;
-			this.fieldMax.InternalValue = (decimal) type.MaximumLength;
+			this.SetDecimal(this.fieldMin, type.MinimumLength);
+			this.SetDecimal(this.fieldMax, type.MaximumLength);
 			this.ignoreChange = false;
 		}
 
 
-		void HandleTextFieldRealChanged(object sender)
+		void HandleTextFieldChanged(object sender)
 		{
 			if (this.ignoreChange)
 			{
@@ -66,19 +66,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (sender == this.fieldMin)
 			{
-				type.DefineMinimumLength((int) this.fieldMin.InternalValue);
+				type.DefineMinimumLength((int) this.GetDecimal(this.fieldMin));
 			}
 
 			if (sender == this.fieldMax)
 			{
-				type.DefineMaximumLength((int) this.fieldMax.InternalValue);
+				type.DefineMaximumLength((int) this.GetDecimal(this.fieldMax));
 			}
 
 			this.OnContentChanged();
 		}
 		
 
-		protected TextFieldReal					fieldMin;
-		protected TextFieldReal					fieldMax;
+		protected TextField						fieldMin;
+		protected TextField						fieldMax;
 	}
 }

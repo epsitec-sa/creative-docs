@@ -15,36 +15,36 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Widget group;
 
 			//	Range.
-			this.CreateDecimalLabeled("Valeur minimale", -1000000, 1000000, 0.0001M, 1, this, out group, out this.fieldMin);
+			this.CreateDecimalLabeled("Valeur minimale", this, out group, out this.fieldMin);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 5);
-			this.fieldMin.TextChanged += new EventHandler(this.HandleTextFieldRealChanged);
+			this.fieldMin.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled("Valeur maximale", -1000000, 1000000, 0.0001M, 1, this, out group, out this.fieldMax);
+			this.CreateDecimalLabeled("Valeur maximale", this, out group, out this.fieldMax);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 5);
-			this.fieldMax.TextChanged += new EventHandler(this.HandleTextFieldRealChanged);
+			this.fieldMax.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled("Résolution", 0, 1000, 0.0001M, 0.0001M, this, out group, out this.fieldRes);
+			this.CreateDecimalLabeled("Résolution", this, out group, out this.fieldRes);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 15);
-			this.fieldRes.TextChanged += new EventHandler(this.HandleTextFieldRealChanged);
+			this.fieldRes.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			//	PreferredRange.
-			this.CreateDecimalLabeled("Valeur minimale préférentielle", -1000000, 1000000, 0.0001M, 1, this, out group, out this.fieldPreferredMin);
+			this.CreateDecimalLabeled("Valeur minimale préférentielle", this, out group, out this.fieldPreferredMin);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 5);
-			this.fieldPreferredMin.TextChanged += new EventHandler(this.HandleTextFieldRealChanged);
+			this.fieldPreferredMin.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled("Valeur maximale préférentielle", -1000000, 1000000, 0.0001M, 1, this, out group, out this.fieldPreferredMax);
+			this.CreateDecimalLabeled("Valeur maximale préférentielle", this, out group, out this.fieldPreferredMax);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 5);
-			this.fieldPreferredMax.TextChanged += new EventHandler(this.HandleTextFieldRealChanged);
+			this.fieldPreferredMax.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled("Résolution préférentielle", 0, 1000, 0.0001M, 0.0001M, this, out group, out this.fieldPreferredRes);
+			this.CreateDecimalLabeled("Résolution préférentielle", this, out group, out this.fieldPreferredRes);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 0);
-			this.fieldPreferredRes.TextChanged += new EventHandler(this.HandleTextFieldRealChanged);
+			this.fieldPreferredRes.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 		}
 		
 		public TypeEditorDecimal(Widget embedder) : this()
@@ -57,13 +57,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
-				this.fieldMin.TextChanged -= new EventHandler(this.HandleTextFieldRealChanged);
-				this.fieldMax.TextChanged -= new EventHandler(this.HandleTextFieldRealChanged);
-				this.fieldRes.TextChanged -= new EventHandler(this.HandleTextFieldRealChanged);
+				this.fieldMin.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldMax.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldRes.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 
-				this.fieldPreferredMin.TextChanged -= new EventHandler(this.HandleTextFieldRealChanged);
-				this.fieldPreferredMax.TextChanged -= new EventHandler(this.HandleTextFieldRealChanged);
-				this.fieldPreferredRes.TextChanged -= new EventHandler(this.HandleTextFieldRealChanged);
+				this.fieldPreferredMin.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldPreferredMax.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldPreferredRes.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -77,19 +77,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.ignoreChange = true;
 
-			this.fieldMin.InternalValue = type.Range.Minimum;
-			this.fieldMax.InternalValue = type.Range.Maximum;
-			this.fieldRes.InternalValue = type.Range.Resolution;
+			this.SetDecimal(this.fieldMin, type.Range.Minimum);
+			this.SetDecimal(this.fieldMax, type.Range.Maximum);
+			this.SetDecimal(this.fieldRes, type.Range.Resolution);
 
-			this.fieldPreferredMin.InternalValue = type.PreferredRange.Minimum;
-			this.fieldPreferredMax.InternalValue = type.PreferredRange.Maximum;
-			this.fieldPreferredRes.InternalValue = type.PreferredRange.Resolution;
+			this.SetDecimal(this.fieldPreferredMin, type.PreferredRange.Minimum);
+			this.SetDecimal(this.fieldPreferredMax, type.PreferredRange.Maximum);
+			this.SetDecimal(this.fieldPreferredRes, type.PreferredRange.Resolution);
 
 			this.ignoreChange = false;
 		}
 
 
-		void HandleTextFieldRealChanged(object sender)
+		void HandleTextFieldChanged(object sender)
 		{
 			if (this.ignoreChange)
 			{
@@ -109,33 +109,33 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Range.
 			if (sender == this.fieldMin)
 			{
-				min = this.fieldMin.InternalValue;
+				min = this.GetDecimal(this.fieldMin);
 			}
 
 			if (sender == this.fieldMax)
 			{
-				max = this.fieldMax.InternalValue;
+				max = this.GetDecimal(this.fieldMax);
 			}
 
 			if (sender == this.fieldRes)
 			{
-				res = this.fieldRes.InternalValue;
+				res = this.GetDecimal(this.fieldRes);
 			}
 
 			//	PreferredRange.
 			if (sender == this.fieldPreferredMin)
 			{
-				pmin = this.fieldPreferredMin.InternalValue;
+				pmin = this.GetDecimal(this.fieldPreferredMin);
 			}
 
 			if (sender == this.fieldPreferredMax)
 			{
-				pmax = this.fieldPreferredMax.InternalValue;
+				pmax = this.GetDecimal(this.fieldPreferredMax);
 			}
 
 			if (sender == this.fieldPreferredRes)
 			{
-				pres = this.fieldPreferredRes.InternalValue;
+				pres = this.GetDecimal(this.fieldPreferredRes);
 			}
 
 			type.DefineRange(new DecimalRange(min, max, res));
@@ -145,11 +145,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 		
 
-		protected TextFieldReal					fieldMin;
-		protected TextFieldReal					fieldMax;
-		protected TextFieldReal					fieldRes;
-		protected TextFieldReal					fieldPreferredMin;
-		protected TextFieldReal					fieldPreferredMax;
-		protected TextFieldReal					fieldPreferredRes;
+		protected TextField						fieldMin;
+		protected TextField						fieldMax;
+		protected TextField						fieldRes;
+		protected TextField						fieldPreferredMin;
+		protected TextField						fieldPreferredMax;
+		protected TextField						fieldPreferredRes;
 	}
 }
