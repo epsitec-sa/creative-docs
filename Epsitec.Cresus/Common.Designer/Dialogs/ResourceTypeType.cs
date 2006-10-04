@@ -90,7 +90,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Crée un bouton radio.
 			RadioButton button = new RadioButton(this.window.Root);
 			button.CaptionDruid = caption.Druid;
-			System.Diagnostics.Debug.Assert(button.Name.StartsWith("Res.Captions.Types.Type."));
+			System.Diagnostics.Debug.Assert(button.Name.StartsWith("Types.Type."));
 			button.Dock = DockStyle.Top;
 			button.Margins = new Margins(0, 0, 2, 2);
 			button.TabIndex = tabIndex++;

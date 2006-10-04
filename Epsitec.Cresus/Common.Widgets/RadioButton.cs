@@ -88,20 +88,14 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		protected override void UpdateTextLayout()
+		protected override Drawing.Size GetTextLayoutSize()
 		{
-			System.Diagnostics.Debug.Assert (this.TextLayout != null);
+			Drawing.Point offset = this.LabelOffset;
 			
-			if (this.IsActualGeometryValid)
-			{
-				Drawing.Point offset = this.LabelOffset;
-				
-				double dx = this.Client.Size.Width - offset.X;
-				double dy = this.Client.Size.Height;
-				
-				this.TextLayout.Alignment  = this.ContentAlignment;
-				this.TextLayout.LayoutSize = new Drawing.Size (dx, dy);
-			}
+			double dx = this.Client.Size.Width - offset.X;
+			double dy = this.Client.Size.Height;
+
+			return new Drawing.Size (dx, dy);
 		}
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
