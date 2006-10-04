@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Designer.Dialogs
 {
@@ -31,14 +32,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.tabIndex = 0;
 				this.radioButtons = new List<RadioButton>();
-				this.CreateRadio(ResourceAccess.TypeType.Void,        "Vide");
-				this.CreateRadio(ResourceAccess.TypeType.Boolean,     "Booléen");
-				this.CreateRadio(ResourceAccess.TypeType.Integer,     "Entier");
-				this.CreateRadio(ResourceAccess.TypeType.LongInteger, "Entier long");
-				this.CreateRadio(ResourceAccess.TypeType.Decimal,     "Décimal");
-				this.CreateRadio(ResourceAccess.TypeType.String,      "Chaîne de caractères");
-				this.CreateRadio(ResourceAccess.TypeType.Enum,        "Enumération");
-				this.CreateRadio(ResourceAccess.TypeType.Structured,  "Structure");
+				this.CreateRadio(Res.Commands.Types.Type.Void);
+				this.CreateRadio(Res.Commands.Types.Type.Boolean);
+				this.CreateRadio(Res.Commands.Types.Type.Integer);
+				this.CreateRadio(Res.Commands.Types.Type.LongInteger);
+				this.CreateRadio(Res.Commands.Types.Type.Decimal);
+				this.CreateRadio(Res.Commands.Types.Type.String);
+				this.CreateRadio(Res.Commands.Types.Type.Enum);
+				this.CreateRadio(Res.Commands.Types.Type.Structured);
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -84,11 +85,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected void CreateRadio(ResourceAccess.TypeType type, string text)
+		protected void CreateRadio(Command command)
 		{
+			//	Crée un bouton radio.
 			RadioButton button = new RadioButton(this.window.Root);
-			button.Name = ResourceAccess.ConvTypeType(type);
-			button.Text = string.Format("{0} ({1})", text, type.ToString());
+			button.CommandDruid = command.Caption.Druid;
 			button.Dock = DockStyle.Top;
 			button.Margins = new Margins(0, 0, 2, 2);
 			button.TabIndex = tabIndex++;
@@ -100,6 +101,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateRadios()
 		{
+			//	Met à jour le bouton radio enfoncé en fonction du type.
 			string actual = ResourceAccess.ConvTypeType(this.type);
 
 			foreach (RadioButton button in this.radioButtons)

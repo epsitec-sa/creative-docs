@@ -61,6 +61,14 @@
   <data name="Cap.Grid.Mode.Proportional" id="051">&lt;s:data id="_0" f:Description="Proportionnel" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyGridProportional.icon" f:Name="Grid.Mode.Proportional" f:Labels="{Collection {Text 'Proportionnel'}}" /&gt;</data>
   <data name="Cap.Grid.Mode.Absolute" id="052">&lt;s:data id="_0" f:Description="Absolu" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyGridAbsolute.icon" f:Name="Grid.Mode.Absolute" f:Labels="{Collection {Text 'Absolu'}}" /&gt;</data>
   <data name="Cap.Grid.Mode.Auto" id="053">&lt;s:data id="_0" f:Description="Automatique" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyGridAuto.icon" f:Name="Grid.Mode.Auto" f:Labels="{Collection {Text 'Automatique'}}" /&gt;</data>
-  <data name="Cmd.New" id="061">&lt;s:data id="_0" f:Name="New" /&gt;</data>
+  <data name="Cmd.Types.Type.Void" id="061">&lt;s:data id="_0" f:Name="Type.Type.Void" f:Description="Valeur vide" f:Labels="{Collection {Text 'Vide'}}" /&gt;</data>
+  <data name="Cmd.Types.Type.Boolean" id="059" mod="1">&lt;s:data id="_0" f:Description="Valeur pouvant prendre deux états: vrai ou faux" f:Name="Type.Type.Boolean" f:Labels="{Collection {Text 'Booléen'}}" /&gt;</data>
+  <data name="Cmd.Types.Type.Integer" id="069" mod="1">&lt;s:data id="_0" f:Description="Valeur entière comprise entre ± 2∙10^9" f:Name="Type.Type.Integer" f:Labels="{Collection {Text 'Entier'}}" /&gt;</data>
+  <data name="Cmd.Types.Type.LongInteger" id="079" mod="1">&lt;s:data id="_0" f:Description="Valeur entière comprise entre ± 9∙10^18" f:Name="Type.Type.LongInteger" f:Labels="{Collection {Text 'Entier long'}}" /&gt;</data>
+  <data name="Cmd.Types.Type.Decimal" id="089" mod="1">&lt;s:data id="_0" f:Description="Valeur décimale" f:Name="Type.Type.Decimal" f:Labels="{Collection {Text 'Décimal'}}" /&gt;</data>
+  <data name="Cmd.Types.Type.String" id="099" mod="1">&lt;s:data id="_0" f:Description="Chaîne de caractères" f:Name="Type.Type.String" f:Labels="{Collection {Text 'Chaîne'}, {Text 'Chaîne de caractères'}}" /&gt;</data>
+  <data name="Cmd.Types.Type.Enum" id="0A9" mod="1">&lt;s:data id="_0" f:Description="Valeur choisie dans une énumération" f:Name="Type.Type.Enum" f:Labels="{Collection {Text 'Enumération'}}" /&gt;</data>
+  <data name="Cmd.Types.Type.Structured" id="0B9" mod="1">&lt;s:data id="_0" f:Description="Structure de données" f:Name="Type.Type.Structured" f:Labels="{Collection {Text 'Structure'}}" /&gt;</data>
   <data name="Typ.New" id="062">&lt;s:data id="_0" f:Name="New" /&gt;</data>
+  <data name="Val.New" id="049">&lt;s:data id="_0" f:Name="New" /&gt;</data>
 </bundle>
