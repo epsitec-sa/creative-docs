@@ -8,9 +8,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 	/// <summary>
 	/// Widget permettant d'éditer un Caption.Type.
 	/// </summary>
-	public class TypeEditorDecimal : AbstractTypeEditor
+	public class TypeEditorNumeric : AbstractTypeEditor
 	{
-		public TypeEditorDecimal()
+		public TypeEditorNumeric()
 		{
 			Widget group;
 
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldLargeStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 		}
 		
-		public TypeEditorDecimal(Widget embedder) : this()
+		public TypeEditorNumeric(Widget embedder) : this()
 		{
 			this.SetEmbedder(embedder);
 		}
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected override void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.
-			DecimalType type = this.type as DecimalType;
+			AbstractNumericType type = this.type as AbstractNumericType;
 
 			this.ignoreChange = true;
 
@@ -148,7 +148,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			DecimalType type = this.type as DecimalType;
+			AbstractNumericType type = this.type as AbstractNumericType;
 
 			decimal min = type.Range.Minimum;
 			decimal max = type.Range.Maximum;

@@ -47,7 +47,7 @@
     <Compile Include="MyWidgets\AbstractTypeEditor.cs" />
     <Compile Include="MyWidgets\TypeEditorEnum.cs" />
     <Compile Include="MyWidgets\TypeEditorString.cs" />
-    <Compile Include="MyWidgets\TypeEditorDecimal.cs" />
+    <Compile Include="MyWidgets\TypeEditorNumeric.cs" />
     <Compile Include="MyWidgets\IconArray.cs" />
     <Compile Include="MyWidgets\GlyphArray.cs" />
     <Compile Include="Proxies\Content.cs" />
