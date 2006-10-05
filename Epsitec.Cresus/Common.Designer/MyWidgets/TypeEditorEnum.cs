@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
@@ -40,14 +41,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.toolbar.Items.Add(this.buttonRemove);
 
 			this.array = new StringArray(this);
-			this.array.Columns = 2;
-			this.array.SetColumnsRelativeWidth(0, 0.5);
+			this.array.Columns = 3;
+			this.array.SetColumnsRelativeWidth(0, 0.4);
 			this.array.SetColumnsRelativeWidth(1, 0.5);
+			this.array.SetColumnsRelativeWidth(2, 0.1);
 			this.array.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
-			this.array.LineHeight = 20;  // hauteur standard
+			this.array.SetColumnAlignment(2, ContentAlignment.MiddleCenter);
+			this.array.LineHeight = 30;  // plus haut, à cause des descriptions et des icônes
 			this.array.Dock = DockStyle.StackBegin;
 			this.array.PreferredHeight = 200;
+			this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
+			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 		}
 
 		public TypeEditorEnum(Widget embedder) : this()
@@ -64,6 +69,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.buttonPrev.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonNext.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonRemove.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+
+				this.array.CellCountChanged -= new EventHandler(this.HandleArrayCellCountChanged);
+				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -73,19 +81,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected override void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.
-			EnumType type = this.type as EnumType;
-			type.MakeEditable();
-
 			this.ignoreChange = true;
+			this.UpdateArray();
 			this.ignoreChange = false;
 		}
 
 		protected void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			EnumType type = this.type as EnumType;
-			type.MakeEditable();
-			Types.Collections.EnumValueCollection collection = type.EnumValues;
+			Types.Collections.EnumValueCollection collection = this.Collection;
 
 			this.array.TotalRows = collection.Count;
 
@@ -104,6 +108,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					this.array.SetLineString(1, first+i, text);
 					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
+
+					string icon = caption.Icon;
+					if (string.IsNullOrEmpty(icon))
+					{
+						this.array.SetLineString(2, first+i, "");
+					}
+					else
+					{
+						this.array.SetLineString(2, first+i, Misc.ImageFull(icon));
+					}
+					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
 				}
 				else
 				{
@@ -112,15 +127,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					this.array.SetLineString(1, first+i, "");
 					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
+
+					this.array.SetLineString(2, first+i, "");
+					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Disabled);
 				}
 			}
 		}
 
 		protected void ArrayAdd()
 		{
-			EnumType type = this.type as EnumType;
-			type.MakeEditable();
-			Types.Collections.EnumValueCollection collection = type.EnumValues;
+			Types.Collections.EnumValueCollection collection = this.Collection;
 
 			int sel = this.array.SelectedRow;
 			if (sel == -1)
@@ -145,6 +161,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		protected Types.Collections.EnumValueCollection Collection
+		{
+			get
+			{
+				EnumType type = this.type as EnumType;
+				type.MakeEditable();
+				return type.EnumValues;
+			}
+		}
+
+
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
 			if (sender == this.buttonAdd)
@@ -166,6 +193,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.ArrayRemove();
 			}
+		}
+
+		private void HandleArrayCellCountChanged(object sender)
+		{
+			//	Le nombre de lignes a changé.
+			this.UpdateArray();
+		}
+
+		private void HandleArraySelectedRowChanged(object sender)
+		{
+			//	La ligne sélectionnée a changé.
+			//?this.UpdateButtons();
 		}
 
 
