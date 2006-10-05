@@ -14,36 +14,53 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			Widget group;
 
+			Widget band = new Widget(this);
+			band.TabIndex = this.tabIndex++;
+			band.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			band.Dock = DockStyle.StackBegin;
+			band.Margins = new Margins(0, 0, 0, 15);
+			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+
+			Widget left = new Widget(band);
+			left.TabIndex = this.tabIndex++;
+			left.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			left.Dock = DockStyle.Fill;
+
+			Widget right = new Widget(band);
+			right.TabIndex = this.tabIndex++;
+			right.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			right.Dock = DockStyle.Fill;
+
 			//	Range.
-			this.CreateDecimalLabeled("Valeur minimale", this, out group, out this.fieldMin);
+			this.CreateDecimalLabeled("Valeur minimale", left, out group, out this.fieldMin);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 2);
 			this.fieldMin.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled("Valeur maximale", this, out group, out this.fieldMax);
+			this.CreateDecimalLabeled("Valeur maximale", left, out group, out this.fieldMax);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 2);
 			this.fieldMax.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled("Résolution", this, out group, out this.fieldRes);
+			this.CreateDecimalLabeled("Résolution", left, out group, out this.fieldRes);
 			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 15);
+			group.Margins = new Margins(0, 0, 0, 0);
 			this.fieldRes.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			//	PreferredRange.
-			this.CreateDecimalLabeled("Valeur minimale préférentielle", this, out group, out this.fieldPreferredMin);
+			this.CreateDecimalLabeled("Valeur minimale préférentielle", right, out group, out this.fieldPreferredMin);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 2);
 			this.fieldPreferredMin.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled("Valeur maximale préférentielle", this, out group, out this.fieldPreferredMax);
+			this.CreateDecimalLabeled("Valeur maximale préférentielle", right, out group, out this.fieldPreferredMax);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 2);
 			this.fieldPreferredMax.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled("Résolution préférentielle", this, out group, out this.fieldPreferredRes);
+			this.CreateDecimalLabeled("Résolution préférentielle", right, out group, out this.fieldPreferredRes);
 			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 15);
+			group.Margins = new Margins(0, 0, 0, 0);
 			this.fieldPreferredRes.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			//	Steps.
