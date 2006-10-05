@@ -24,6 +24,22 @@ namespace Epsitec.Common.Designer
 			Scripts,
 		}
 
+		public enum FieldType
+		{
+			None,
+			Name,
+			String,
+			Labels,
+			Description,
+			Icon,
+			About,
+			Statefull,
+			Shortcuts,
+			Group,
+			AbstractType,
+			Panel,
+		}
+
 		public enum TypeType
 		{
 			None,
@@ -1000,7 +1016,7 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		public Field GetField(int index, string cultureName, string fieldName)
+		public Field GetField(int index, string cultureName, FieldType fieldType)
 		{
 			//	Retourne les données d'un champ.
 			//	Si cultureName est nul, on accède à la culture de base.
@@ -1013,7 +1029,7 @@ namespace Epsitec.Common.Designer
 					return null;
 				}
 
-				if (fieldName == ResourceAccess.NameStrings[0])
+				if (fieldType == FieldType.Name)
 				{
 					return new Field(this.SubFilter(this.accessField.Name, false));
 				}
@@ -1021,12 +1037,12 @@ namespace Epsitec.Common.Designer
 
 			if (this.type == Type.Strings)
 			{
-				if (fieldName == ResourceAccess.NameStrings[1])
+				if (fieldType == FieldType.String)
 				{
 					return new Field(this.accessField.AsString);
 				}
 
-				if (fieldName == ResourceAccess.NameStrings[2])
+				if (fieldType == FieldType.About)
 				{
 					return new Field(this.accessField.About);
 				}
@@ -1039,22 +1055,22 @@ namespace Epsitec.Common.Designer
 					return null;
 				}
 
-				if (fieldName == ResourceAccess.NameCaptions[1])
+				if (fieldType == FieldType.Labels)
 				{
 					return new Field(this.accessCaption.Labels);
 				}
 
-				if (fieldName == ResourceAccess.NameCaptions[2])
+				if (fieldType == FieldType.Description)
 				{
 					return new Field(this.accessCaption.Description);
 				}
 
-				if (fieldName == ResourceAccess.NameCaptions[3])
+				if (fieldType == FieldType.Icon)
 				{
 					return new Field(this.accessCaption.Icon);
 				}
 
-				if (fieldName == ResourceAccess.NameCaptions[4])
+				if (fieldType == FieldType.About)
 				{
 					return new Field(this.accessField.About);
 				}
@@ -1062,19 +1078,19 @@ namespace Epsitec.Common.Designer
 
 			if (this.type == Type.Commands)
 			{
-				if (fieldName == ResourceAccess.NameCommands[5])
+				if (fieldType == FieldType.Statefull)
 				{
 					bool statefull = Command.GetStatefull(this.accessCaption);
 					return new Field(statefull);
 				}
 
-				if (fieldName == ResourceAccess.NameCommands[6])
+				if (fieldType == FieldType.Shortcuts)
 				{
 					Widgets.Collections.ShortcutCollection collection = Shortcut.GetShortcuts(this.accessCaption);
 					return new Field(collection);
 				}
-				
-				if (fieldName == ResourceAccess.NameCommands[7])
+
+				if (fieldType == FieldType.Group)
 				{
 					string group = Command.GetGroup(this.accessCaption);
 					return new Field(group);
@@ -1083,7 +1099,7 @@ namespace Epsitec.Common.Designer
 
 			if (this.type == Type.Types)
 			{
-				if (fieldName == ResourceAccess.NameTypes[5])
+				if (fieldType == FieldType.AbstractType)
 				{
 					AbstractType type = AbstractType.GetCachedType(this.accessCaption);
 
@@ -1109,12 +1125,12 @@ namespace Epsitec.Common.Designer
 					return null;
 				}
 
-				if (fieldName == ResourceAccess.NamePanels[0])
+				if (fieldType == FieldType.Name)
 				{
 					return new Field(bundle.Caption);
 				}
 
-				if (fieldName == ResourceAccess.NamePanels[1])
+				if (fieldType == FieldType.Panel)
 				{
 					return new Field(bundle);
 				}
@@ -1123,7 +1139,7 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
-		public void SetField(int index, string cultureName, string fieldName, Field field)
+		public void SetField(int index, string cultureName, FieldType fieldType, Field field)
 		{
 			//	Modifie les données d'un champ.
 			//	Si cultureName est nul, on accède à la culture de base.
@@ -1138,7 +1154,7 @@ namespace Epsitec.Common.Designer
 
 				this.CreateIfNecessary();
 
-				if (fieldName == ResourceAccess.NameStrings[0])
+				if (fieldType == FieldType.Name)
 				{
 					string name = this.AddFilter(field.String, false);
 					this.accessField.SetName(name);
@@ -1157,12 +1173,12 @@ namespace Epsitec.Common.Designer
 
 			if (this.type == Type.Strings)
 			{
-				if (fieldName == ResourceAccess.NameStrings[1])
+				if (fieldType == FieldType.String)
 				{
 					this.accessField.SetStringValue(field.String);
 				}
 
-				if (fieldName == ResourceAccess.NameStrings[2])
+				if (fieldType == FieldType.About)
 				{
 					this.accessField.SetAbout(field.String);
 				}
@@ -1175,7 +1191,7 @@ namespace Epsitec.Common.Designer
 					return;
 				}
 
-				if (fieldName == ResourceAccess.NameCaptions[1])
+				if (fieldType == FieldType.Labels)
 				{
 					ICollection<string> src = field.StringCollection;
 					ICollection<string> dst = this.accessCaption.Labels;
@@ -1189,13 +1205,13 @@ namespace Epsitec.Common.Designer
 					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
 
-				if (fieldName == ResourceAccess.NameCaptions[2])
+				if (fieldType == FieldType.Description)
 				{
 					this.accessCaption.Description = field.String;
 					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
 
-				if (fieldName == ResourceAccess.NameCaptions[3])
+				if (fieldType == FieldType.Icon)
 				{
 					if (field.String == null)
 					{
@@ -1209,7 +1225,7 @@ namespace Epsitec.Common.Designer
 					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
 
-				if (fieldName == ResourceAccess.NameCaptions[4])
+				if (fieldType == FieldType.About)
 				{
 					this.accessField.SetAbout(field.String);
 				}
@@ -1217,21 +1233,21 @@ namespace Epsitec.Common.Designer
 
 			if (this.type == Type.Commands)
 			{
-				if (fieldName == ResourceAccess.NameCommands[5])
+				if (fieldType == FieldType.Statefull)
 				{
 					bool statefull = field.Boolean;
 					Command.SetStatefull(this.accessCaption, statefull);
 					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
-				
-				if (fieldName == ResourceAccess.NameCommands[6])
+
+				if (fieldType == FieldType.Shortcuts)
 				{
 					Widgets.Collections.ShortcutCollection collection = field.ShortcutCollection;
 					Shortcut.SetShortcuts(this.accessCaption, collection);
 					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
 
-				if (fieldName == ResourceAccess.NameCommands[7])
+				if (fieldType == FieldType.Group)
 				{
 					string group = field.String;
 					Command.SetGroup(this.accessCaption, group);
@@ -1241,7 +1257,7 @@ namespace Epsitec.Common.Designer
 
 			if (this.type == Type.Types)
 			{
-				if (fieldName == ResourceAccess.NameTypes[5])
+				if (fieldType == FieldType.AbstractType)
 				{
 					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
@@ -1255,12 +1271,12 @@ namespace Epsitec.Common.Designer
 					return;
 				}
 
-				if (fieldName == ResourceAccess.NamePanels[0])
+				if (fieldType == FieldType.Name)
 				{
 					bundle.DefineCaption(field.String);
 				}
 
-				if (fieldName == ResourceAccess.NamePanels[1])
+				if (fieldType == FieldType.Panel)
 				{
 				}
 			}
@@ -1375,7 +1391,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public void SearcherIndexToAccess(int field, string secondaryCulture, out string cultureName, out string fieldName)
+		public void SearcherIndexToAccess(int field, string secondaryCulture, out string cultureName, out FieldType fieldType)
 		{
 			//	Conversion d'un index de champ (0..n) en l'information nécessaire pour Get/SetField.
 			if (this.type == Type.Strings)
@@ -1384,17 +1400,17 @@ namespace Epsitec.Common.Designer
 				{
 					case 0:
 						cultureName = null;
-						fieldName = "Name";
+						fieldType = FieldType.Name;
 						return;
 
 					case 1:
 						cultureName = null;
-						fieldName = "String";
+						fieldType = FieldType.String;
 						return;
 
 					case 3:
 						cultureName = null;
-						fieldName = "About";
+						fieldType = FieldType.About;
 						return;
 				}
 
@@ -1404,12 +1420,12 @@ namespace Epsitec.Common.Designer
 					{
 						case 2:
 							cultureName = secondaryCulture;
-							fieldName = "String";
+							fieldType = FieldType.String;
 							return;
 
 						case 4:
 							cultureName = secondaryCulture;
-							fieldName = "About";
+							fieldType = FieldType.About;
 							return;
 					}
 				}
@@ -1421,22 +1437,22 @@ namespace Epsitec.Common.Designer
 				{
 					case 0:
 						cultureName = null;
-						fieldName = "Name";
+						fieldType = FieldType.Name;
 						return;
 
 					case 1:
 						cultureName = null;
-						fieldName = "Labels";
+						fieldType = FieldType.Labels;
 						return;
 
 					case 3:
 						cultureName = null;
-						fieldName = "Description";
+						fieldType = FieldType.Description;
 						return;
 
 					case 5:
 						cultureName = null;
-						fieldName = "About";
+						fieldType = FieldType.About;
 						return;
 				}
 
@@ -1446,17 +1462,17 @@ namespace Epsitec.Common.Designer
 					{
 						case 2:
 							cultureName = secondaryCulture;
-							fieldName = "Labels";
+							fieldType = FieldType.Labels;
 							return;
 
 						case 4:
 							cultureName = secondaryCulture;
-							fieldName = "Description";
+							fieldType = FieldType.Description;
 							return;
 
 						case 6:
 							cultureName = secondaryCulture;
-							fieldName = "About";
+							fieldType = FieldType.About;
 							return;
 					}
 				}
@@ -1468,13 +1484,13 @@ namespace Epsitec.Common.Designer
 
 				if (field == 0)
 				{
-					fieldName = "Name";
+					fieldType = FieldType.Name;
 					return;
 				}
 			}
 
 			cultureName = null;
-			fieldName = null;
+			fieldType = FieldType.None;
 		}
 
 
@@ -1561,13 +1577,6 @@ namespace Epsitec.Common.Designer
 				this.accessBundle.Add(this.accessField);
 			}
 		}
-
-		protected static string[] NameStrings  = { "Name", "String", "About" };
-		protected static string[] NameCaptions = { "Name", "Labels", "Description", "Icon", "About" };
-		protected static string[] NameCommands = { "Name", "Labels", "Description", "Icon", "About", "Statefull", "Shortcuts", "Group" };
-		protected static string[] NameTypes    = { "Name", "Labels", "Description", "Icon", "About", "AbstractType" };
-		protected static string[] NameValues   = { "Name", "Labels", "Description", "Icon", "About" };
-		protected static string[] NamePanels   = { "Name", "Panel" };
 
 
 		public int CultureCount

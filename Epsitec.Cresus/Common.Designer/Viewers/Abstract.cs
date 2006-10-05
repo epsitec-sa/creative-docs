@@ -249,9 +249,10 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Effectue le remplacement.
 			//	Retourne la chaîne complète contenant le remplacement.
-			string cultureName, fieldName;
-			this.access.SearcherIndexToAccess(searcher.Field, this.secondaryCulture, out cultureName, out fieldName);
-			ResourceAccess.Field field = this.access.GetField(searcher.Row, cultureName, fieldName);
+			string cultureName;
+			ResourceAccess.FieldType fieldType;
+			this.access.SearcherIndexToAccess(searcher.Field, this.secondaryCulture, out cultureName, out fieldType);
+			ResourceAccess.Field field = this.access.GetField(searcher.Row, cultureName, fieldType);
 			System.Diagnostics.Debug.Assert(field != null);
 
 			string text = "";
@@ -262,7 +263,7 @@ namespace Epsitec.Common.Designer.Viewers
 				text = text.Remove(searcher.Index, searcher.Length);
 				text = text.Insert(searcher.Index, replace);
 
-				if (fieldName == "Name")
+				if (fieldType == ResourceAccess.FieldType.Name)
 				{
 					if (!Misc.IsValidLabel(ref text))
 					{
@@ -277,7 +278,7 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 				}
 
-				this.access.SetField(searcher.Row, cultureName, fieldName, new ResourceAccess.Field(text));
+				this.access.SetField(searcher.Row, cultureName, fieldType, new ResourceAccess.Field(text));
 			}
 
 			if (field.FieldType == ResourceAccess.Field.Type.StringCollection)
@@ -290,7 +291,7 @@ namespace Epsitec.Common.Designer.Viewers
 				text = text.Insert(searcher.Index, replace);
 				array[searcher.Subfield] = text;
 
-				this.access.SetField(searcher.Row, cultureName, fieldName, new ResourceAccess.Field(array));
+				this.access.SetField(searcher.Row, cultureName, fieldType, new ResourceAccess.Field(array));
 			}
 
 			return text;
@@ -410,7 +411,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public void DoDuplicate(bool duplicate)
 		{
 			//	Duplique la ressource sélectionnée.
-			ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, "Name");
+			ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Name);
 			string newName = this.access.GetDuplicateName(field.String);
 			this.access.Duplicate(newName, duplicate);
 
@@ -553,7 +554,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 				else
 				{
-					ResourceAccess.Field field = this.access.GetField(sel, null, "Name");
+					ResourceAccess.Field field = this.access.GetField(sel, null, ResourceAccess.FieldType.Name);
 					if (field != null)
 					{
 						builder.Append(field.String);
@@ -599,11 +600,11 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				if (first+i < this.access.AccessCount)
 				{
-					this.UpdateArrayField(0, first+i, null, "Name");
+					this.UpdateArrayField(0, first+i, null, ResourceAccess.FieldType.Name);
 				}
 				else
 				{
-					this.UpdateArrayField(0, first+i, null, null);
+					this.UpdateArrayField(0, first+i, null, ResourceAccess.FieldType.None);
 				}
 			}
 
@@ -936,32 +937,32 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected void SetTextField(AbstractTextField textField, int index, string cultureName, string fieldName)
+		protected void SetTextField(AbstractTextField textField, int index, string cultureName, ResourceAccess.FieldType fieldType)
 		{
-			if (fieldName == null)
+			if (fieldType == ResourceAccess.FieldType.None)
 			{
 				textField.Enable = false;
 				textField.Text = "";
 			}
 			else
 			{
-				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldName);
+				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldType);
 
 				textField.Enable = true;
 				textField.Text = field.String;
 			}
 		}
 
-		protected void SetTextField(MyWidgets.StringCollection collection, int index, string cultureName, string fieldName)
+		protected void SetTextField(MyWidgets.StringCollection collection, int index, string cultureName, ResourceAccess.FieldType fieldType)
 		{
-			if (fieldName == null)
+			if (fieldType == ResourceAccess.FieldType.None)
 			{
 				collection.Enable = false;
 				collection.Collection = null;
 			}
 			else
 			{
-				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldName);
+				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldType);
 
 				List<string> list = new List<string>();
 				foreach (string text in field.StringCollection)
@@ -974,16 +975,16 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected void SetTextField(IconButton button, int index, string cultureName, string fieldName)
+		protected void SetTextField(IconButton button, int index, string cultureName, ResourceAccess.FieldType fieldType)
 		{
-			if (fieldName == null)
+			if (fieldType == ResourceAccess.FieldType.None)
 			{
 				button.Enable = false;
 				button.IconName = null;
 			}
 			else
 			{
-				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldName);
+				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldType);
 
 				button.Enable = true;
 				button.IconName = field.String;
@@ -994,7 +995,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Change le 'Name' d'une ressource, en gérant les diverses impossibilités.
 			string editedName = edit.Text;
-			string initialName = this.access.GetField(sel, null, "Name").String;
+			string initialName = this.access.GetField(sel, null, ResourceAccess.FieldType.Name).String;
 
 			if (!Misc.IsValidLabel(ref editedName))
 			{
@@ -1028,21 +1029,21 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			this.access.SetField(sel, null, "Name", new ResourceAccess.Field(editedName));
-			this.UpdateArrayField(0, sel, null, "Name");
+			this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field(editedName));
+			this.UpdateArrayField(0, sel, null, ResourceAccess.FieldType.Name);
 		}
 
-		protected void UpdateArrayField(int column, int row, string culture, string fieldName)
+		protected void UpdateArrayField(int column, int row, string culture, ResourceAccess.FieldType fieldType)
 		{
 			//	Met à jour une cellule dans le tableau.
-			if (fieldName == null)
+			if (fieldType == ResourceAccess.FieldType.None)
 			{
 				this.array.SetLineString(column, row, "");
 				this.array.SetLineState(column, row, MyWidgets.StringList.CellState.Disabled);
 			}
 			else
 			{
-				ResourceAccess.Field field = this.access.GetField(row, culture, fieldName);
+				ResourceAccess.Field field = this.access.GetField(row, culture, fieldType);
 				ResourceAccess.ModificationState state = this.access.GetModification(row, culture);
 
 				if (column == 0)

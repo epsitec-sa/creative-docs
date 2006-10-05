@@ -132,23 +132,23 @@ namespace Epsitec.Common.Designer.Viewers
 				this.primaryStatefull.Enable = false;
 				this.primaryStatefull.ActiveState = ActiveState.No;
 
-				this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, 0, null, null);
-				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, 0, null, null);
+				this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, 0, null, ResourceAccess.FieldType.None);
+				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, 0, null, ResourceAccess.FieldType.None);
 
-				this.SetTextField(this.primaryGroup, 0, null, null);
+				this.SetTextField(this.primaryGroup, 0, null, ResourceAccess.FieldType.None);
 			}
 			else
 			{
-				ResourceAccess.Field field = this.access.GetField(sel, null, "Statefull");
+				ResourceAccess.Field field = this.access.GetField(sel, null, ResourceAccess.FieldType.Statefull);
 				bool statefull = field.Boolean;
 
 				this.primaryStatefull.Enable = true;
 				this.primaryStatefull.ActiveState = statefull ? ActiveState.Yes : ActiveState.No;
 
-				this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, sel, null, "Shortcuts");
-				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, sel, this.secondaryCulture, "Shortcuts");
+				this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, sel, null, ResourceAccess.FieldType.Shortcuts);
+				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, sel, this.secondaryCulture, ResourceAccess.FieldType.Shortcuts);
 
-				this.SetTextField(this.primaryGroup, sel, null, "Group");
+				this.SetTextField(this.primaryGroup, sel, null, ResourceAccess.FieldType.Group);
 			}
 
 			this.ignoreChange = iic;
@@ -156,9 +156,9 @@ namespace Epsitec.Common.Designer.Viewers
 			base.UpdateEdit();
 		}
 
-		protected void SetShortcut(ShortcutEditor editor1, ShortcutEditor editor2, int index, string cultureName, string fieldName)
+		protected void SetShortcut(ShortcutEditor editor1, ShortcutEditor editor2, int index, string cultureName, ResourceAccess.FieldType fieldType)
 		{
-			if (fieldName == null)
+			if (fieldType == ResourceAccess.FieldType.None)
 			{
 				editor1.Enable = false;
 				editor2.Enable = false;
@@ -171,7 +171,7 @@ namespace Epsitec.Common.Designer.Viewers
 				editor1.Enable = true;
 				editor2.Enable = true;
 
-				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldName);
+				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldType);
 				Widgets.Collections.ShortcutCollection collection = field.ShortcutCollection;
 
 				if (collection.Count < 1)
@@ -241,7 +241,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			bool statefull = (this.primaryStatefull.ActiveState == ActiveState.No);
 			int sel = this.access.AccessIndex;
-			this.access.SetField(sel, null, "Statefull", new ResourceAccess.Field(statefull));
+			this.access.SetField(sel, null, ResourceAccess.FieldType.Statefull, new ResourceAccess.Field(statefull));
 
 			this.UpdateColor();
 		}
@@ -295,7 +295,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			System.Diagnostics.Debug.Assert(rank != -1);
 
-			ResourceAccess.Field field = this.access.GetField(sel, cultureName, "Shortcuts");
+			ResourceAccess.Field field = this.access.GetField(sel, cultureName, ResourceAccess.FieldType.Shortcuts);
 			Widgets.Collections.ShortcutCollection collection = field.ShortcutCollection;
 
 			if (rank == 0)  // raccourci principal ?
@@ -370,7 +370,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.ignoreChange = false;
 			}
 
-			this.access.SetField(sel, cultureName, "Shortcuts", new ResourceAccess.Field(collection));
+			this.access.SetField(sel, cultureName, ResourceAccess.FieldType.Shortcuts, new ResourceAccess.Field(collection));
 			this.UpdateColor();
 		}
 
@@ -394,7 +394,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (edit == this.primaryGroup)
 			{
-				this.access.SetField(sel, null, "Group", new ResourceAccess.Field(text));
+				this.access.SetField(sel, null, ResourceAccess.FieldType.Group, new ResourceAccess.Field(text));
 			}
 
 			this.UpdateColor();

@@ -146,15 +146,15 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				if (first+i < this.access.AccessCount)
 				{
-					this.UpdateArrayField(0, first+i, null, "Name");
-					this.UpdateArrayField(1, first+i, null, "String");
-					this.UpdateArrayField(2, first+i, this.secondaryCulture, (this.secondaryCulture == null) ? null : "String");
+					this.UpdateArrayField(0, first+i, null, ResourceAccess.FieldType.Name);
+					this.UpdateArrayField(1, first+i, null, ResourceAccess.FieldType.String);
+					this.UpdateArrayField(2, first+i, this.secondaryCulture, (this.secondaryCulture == null) ? ResourceAccess.FieldType.None : ResourceAccess.FieldType.String);
 				}
 				else
 				{
-					this.UpdateArrayField(0, first+i, null, null);
-					this.UpdateArrayField(1, first+i, null, null);
-					this.UpdateArrayField(2, first+i, null, null);
+					this.UpdateArrayField(0, first+i, null, ResourceAccess.FieldType.None);
+					this.UpdateArrayField(1, first+i, null, ResourceAccess.FieldType.None);
+					this.UpdateArrayField(2, first+i, null, ResourceAccess.FieldType.None);
 				}
 			}
 
@@ -187,29 +187,29 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (sel == -1)
 			{
-				this.SetTextField(this.labelEdit, 0, null, null);
-				this.SetTextField(this.primaryEdit, 0, null, null);
-				this.SetTextField(this.primaryAbout, 0, null, null);
-				this.SetTextField(this.secondaryEdit, 0, null, null);
-				this.SetTextField(this.secondaryAbout, 0, null, null);
+				this.SetTextField(this.labelEdit, 0, null, ResourceAccess.FieldType.None);
+				this.SetTextField(this.primaryEdit, 0, null, ResourceAccess.FieldType.None);
+				this.SetTextField(this.primaryAbout, 0, null, ResourceAccess.FieldType.None);
+				this.SetTextField(this.secondaryEdit, 0, null, ResourceAccess.FieldType.None);
+				this.SetTextField(this.secondaryAbout, 0, null, ResourceAccess.FieldType.None);
 			}
 			else
 			{
 				int index = this.access.AccessIndex;
 
-				this.SetTextField(this.labelEdit, index, null, "Name");
-				this.SetTextField(this.primaryEdit, index, null, "String");
-				this.SetTextField(this.primaryAbout, index, null, "About");
+				this.SetTextField(this.labelEdit, index, null, ResourceAccess.FieldType.Name);
+				this.SetTextField(this.primaryEdit, index, null, ResourceAccess.FieldType.String);
+				this.SetTextField(this.primaryAbout, index, null, ResourceAccess.FieldType.About);
 
 				if (this.secondaryCulture == null)
 				{
-					this.SetTextField(this.secondaryEdit, 0, null, null);
-					this.SetTextField(this.secondaryAbout, 0, null, null);
+					this.SetTextField(this.secondaryEdit, 0, null, ResourceAccess.FieldType.None);
+					this.SetTextField(this.secondaryAbout, 0, null, ResourceAccess.FieldType.None);
 				}
 				else
 				{
-					this.SetTextField(this.secondaryEdit, index, this.secondaryCulture, "String");
-					this.SetTextField(this.secondaryAbout, index, this.secondaryCulture, "About");
+					this.SetTextField(this.secondaryEdit, index, this.secondaryCulture, ResourceAccess.FieldType.String);
+					this.SetTextField(this.secondaryAbout, index, this.secondaryCulture, ResourceAccess.FieldType.About);
 				}
 
 				AbstractTextField edit = null;
@@ -507,24 +507,24 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (edit == this.primaryEdit)
 			{
-				this.access.SetField(sel, null, "String", new ResourceAccess.Field(text));
-				this.UpdateArrayField(1, sel, null, "String");
+				this.access.SetField(sel, null, ResourceAccess.FieldType.String, new ResourceAccess.Field(text));
+				this.UpdateArrayField(1, sel, null, ResourceAccess.FieldType.String);
 			}
 
 			if (edit == this.secondaryEdit)
 			{
-				this.access.SetField(sel, this.secondaryCulture, "String", new ResourceAccess.Field(text));
-				this.UpdateArrayField(2, sel, this.secondaryCulture, "String");
+				this.access.SetField(sel, this.secondaryCulture, ResourceAccess.FieldType.String, new ResourceAccess.Field(text));
+				this.UpdateArrayField(2, sel, this.secondaryCulture, ResourceAccess.FieldType.String);
 			}
 
 			if (edit == this.primaryAbout)
 			{
-				this.access.SetField(sel, null, "About", new ResourceAccess.Field(text));
+				this.access.SetField(sel, null, ResourceAccess.FieldType.About, new ResourceAccess.Field(text));
 			}
 
 			if (edit == this.secondaryAbout)
 			{
-				this.access.SetField(sel, this.secondaryCulture, "About", new ResourceAccess.Field(text));
+				this.access.SetField(sel, this.secondaryCulture, ResourceAccess.FieldType.About, new ResourceAccess.Field(text));
 			}
 
 			this.UpdateModificationsCulture();

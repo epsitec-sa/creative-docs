@@ -341,10 +341,11 @@ namespace Epsitec.Common.Designer
 					return null;
 				}
 
-				string cultureName, fieldName;
-				this.access.SearcherIndexToAccess(this.current.Field, this.secondaryCulture, out cultureName, out fieldName);
+				string cultureName;
+				ResourceAccess.FieldType fieldType;
+				this.access.SearcherIndexToAccess(this.current.Field, this.secondaryCulture, out cultureName, out fieldType);
 
-				ResourceAccess.Field field = this.access.GetField(this.current.Row, cultureName, fieldName);
+				ResourceAccess.Field field = this.access.GetField(this.current.Row, cultureName, fieldType);
 				if (field == null)
 				{
 					return null;

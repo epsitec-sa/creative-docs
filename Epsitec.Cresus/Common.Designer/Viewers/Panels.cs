@@ -242,7 +242,7 @@ namespace Epsitec.Common.Designer.Viewers
 			
 			if (sel == -1)
 			{
-				this.SetTextField(this.labelEdit, 0, null, null);
+				this.SetTextField(this.labelEdit, 0, null, ResourceAccess.FieldType.None);
 			}
 			else
 			{
@@ -252,7 +252,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.panelEditor.Panel = this.panelContainer;
 
 				int index = this.access.AccessIndex;
-				this.SetTextField(this.labelEdit, index, null, "Name");
+				this.SetTextField(this.labelEdit, index, null, ResourceAccess.FieldType.Name);
 				this.labelEdit.Focus();
 				this.labelEdit.SelectAll();
 			}
