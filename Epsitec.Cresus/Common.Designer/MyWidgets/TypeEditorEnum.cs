@@ -16,26 +16,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.toolbar.Dock = DockStyle.StackBegin;
 
 			this.buttonAdd = new IconButton();
-			this.buttonAdd.IconName = Misc.Icon("StringAdd");
+			this.buttonAdd.CaptionDruid = Res.Captions.Editor.Type.Add.Druid;
 			this.buttonAdd.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonAdd);
 
 			this.toolbar.Items.Add(new IconSeparator());
 
 			this.buttonPrev = new IconButton();
-			this.buttonPrev.IconName = Misc.Icon("StringPrev");
+			this.buttonPrev.CaptionDruid = Res.Captions.Editor.Type.Prev.Druid;
 			this.buttonPrev.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonPrev);
 
 			this.buttonNext = new IconButton();
-			this.buttonNext.IconName = Misc.Icon("StringNext");
+			this.buttonNext.CaptionDruid = Res.Captions.Editor.Type.Next.Druid;
 			this.buttonNext.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonNext);
 
 			this.toolbar.Items.Add(new IconSeparator());
 
 			this.buttonRemove = new IconButton();
-			this.buttonRemove.IconName = Misc.Icon("StringRemove");
+			this.buttonRemove.CaptionDruid = Res.Captions.Editor.Type.Remove.Druid;
 			this.buttonRemove.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonRemove);
 

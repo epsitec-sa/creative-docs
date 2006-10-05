@@ -69,6 +69,10 @@
   <data name="Cap.Types.Type.String" id="0H9" mod="1">&lt;s:data id="_0" f:Description="Chaîne de caractères" f:Name="Types.Type.String" f:Labels="{Collection {Text 'Chaîne'}, {Text 'Chaîne de caractères'}}" /&gt;</data>
   <data name="Cap.Types.Type.Enum" id="0I9" mod="1">&lt;s:data id="_0" f:Description="Valeur choisie dans une énumération" f:Name="Types.Type.Enum" f:Labels="{Collection {Text 'Enumération'}}" /&gt;</data>
   <data name="Cap.Types.Type.Structured" id="0J9" mod="1">&lt;s:data id="_0" f:Description="Structure de données" f:Name="Types.Type.Structured" f:Labels="{Collection {Text 'Structure'}}" /&gt;</data>
+  <data name="Cap.Editor.Type.Add" id="0K9" mod="1">&lt;s:data id="_0" f:Icon="manifest:Epsitec.Common.Designer.Images.StringAdd.icon" f:Description="Ajouter une nouvelle valeur dans l&amp;amp;apos;énumération" f:Name="Editor.Type.Add" f:Labels="{Collection {Text 'Ajouter'}}" /&gt;</data>
+  <data name="Cap.Editor.Type.Prev" id="0L9" mod="1">&lt;s:data id="_0" f:Icon="manifest:Epsitec.Common.Designer.Images.StringPrev.icon" f:Description="Monter la valeur dans l&amp;amp;apos;énumération" f:Name="Editor.Type.Prev" f:Labels="{Collection {Text 'Monter'}}" /&gt;</data>
+  <data name="Cap.Editor.Type.Next" id="0M9" mod="1">&lt;s:data id="_0" f:Icon="manifest:Epsitec.Common.Designer.Images.StringNext.icon" f:Description="Descendre la valeur dans l&amp;amp;apos;énumération" f:Name="Editor.Type.Next" f:Labels="{Collection {Text 'Descendre'}}" /&gt;</data>
+  <data name="Cap.Editor.Type.Remove" id="0N9" mod="1">&lt;s:data id="_0" f:Icon="manifest:Epsitec.Common.Designer.Images.StringRemove.icon" f:Description="Supprimer la valeur dans l&amp;amp;apos;énumération" f:Name="Editor.Type.Remove" f:Labels="{Collection {Text 'Supprimer'}}" /&gt;</data>
   <data name="Cmd.New" id="061">&lt;s:data id="_0" f:Name="New" f:Description="" f:Labels="{Collection {Text ''}}" /&gt;</data>
   <data name="Typ.New" id="062">&lt;s:data id="_0" f:Name="New" /&gt;</data>
   <data name="Val.New" id="049">&lt;s:data id="_0" f:Name="New" /&gt;</data>
