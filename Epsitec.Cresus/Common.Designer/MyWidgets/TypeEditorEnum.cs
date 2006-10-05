@@ -147,33 +147,74 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void ArrayAdd()
 		{
+			//	Ajoute une nouvelle valeur dans l'énumération.
 			Types.Collections.EnumValueCollection collection = this.Collection;
 
 			int sel = this.array.SelectedRow;
-			if (sel == -1)
-			{
-			}
 
 			Druid druid = Druid.Empty;
 			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Values, druid);
 
 			EnumValue item = new EnumValue(0, druid);
-			collection.Add(item);
+			collection.Insert(sel+1, item);
+
+			this.array.SelectedRow = sel+1;
+			this.array.ShowSelectedRow();
 
 			this.UpdateArray();
+			this.UpdateButtons();
 		}
 
 		protected void ArrayRemove()
 		{
+			//	Supprime une valeur de l'énumération.
+			Types.Collections.EnumValueCollection collection = this.Collection;
+
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			collection.RemoveAt(sel);
+
+			if (sel > collection.Count-1)
+			{
+				sel = collection.Count-1;
+			}
+			this.array.SelectedRow = sel;
+			this.array.ShowSelectedRow();
+
+			this.UpdateArray();
+			this.UpdateButtons();
 		}
 
 		protected void ArrayMove(int direction)
 		{
+			//	Déplace une valeur dans l'énumération.
+			Types.Collections.EnumValueCollection collection = this.Collection;
+
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			EnumValue value = collection[sel];
+			collection.RemoveAt(sel);
+			collection.Insert(sel+direction, value);
+
+			this.array.SelectedRow = sel+direction;
+			this.array.ShowSelectedRow();
+
+			this.UpdateArray();
+			this.UpdateButtons();
 		}
 
 
 		protected Types.Collections.EnumValueCollection Collection
 		{
+			//	Retourne la collection de l'énumération.
 			get
 			{
 				EnumType type = this.type as EnumType;
