@@ -300,38 +300,38 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if ( sel == -1 )
 			{
-				this.SetTextField(this.labelEdit, 0, null, null);
+				this.SetTextField(this.labelEdit, 0, null, ResourceAccess.FieldType.None);
 
-				this.SetTextField(this.primaryLabels, 0, null, null);
-				this.SetTextField(this.primaryDescription, 0, null, null);
-				this.SetTextField(this.primaryIcon, 0, null, null);
+				this.SetTextField(this.primaryLabels, 0, null, ResourceAccess.FieldType.None);
+				this.SetTextField(this.primaryDescription, 0, null, ResourceAccess.FieldType.None);
+				this.SetTextField(this.primaryIcon, 0, null, ResourceAccess.FieldType.None);
 				this.primaryIconInfo.Text = "";
-				this.SetTextField(this.primaryAbout, 0, null, null);
+				this.SetTextField(this.primaryAbout, 0, null, ResourceAccess.FieldType.None);
 
-				this.SetTextField(this.secondaryLabels, 0, null, null);
-				this.SetTextField(this.secondaryDescription, 0, null, null);
-				this.SetTextField(this.secondaryAbout, 0, null, null);
+				this.SetTextField(this.secondaryLabels, 0, null, ResourceAccess.FieldType.None);
+				this.SetTextField(this.secondaryDescription, 0, null, ResourceAccess.FieldType.None);
+				this.SetTextField(this.secondaryAbout, 0, null, ResourceAccess.FieldType.None);
 			}
 			else
 			{
-				this.SetTextField(this.labelEdit, sel, null, "Name");
-				this.SetTextField(this.primaryLabels, sel, null, "Labels");
-				this.SetTextField(this.primaryDescription, sel, null, "Description");
-				this.SetTextField(this.primaryIcon, sel, null, "Icon");
+				this.SetTextField(this.labelEdit, sel, null, ResourceAccess.FieldType.Name);
+				this.SetTextField(this.primaryLabels, sel, null, ResourceAccess.FieldType.Labels);
+				this.SetTextField(this.primaryDescription, sel, null, ResourceAccess.FieldType.Description);
+				this.SetTextField(this.primaryIcon, sel, null, ResourceAccess.FieldType.Icon);
 				this.UpdateIconInfo();
-				this.SetTextField(this.primaryAbout, sel, null, "About");
+				this.SetTextField(this.primaryAbout, sel, null, ResourceAccess.FieldType.About);
 
 				if (this.secondaryCulture == null)
 				{
-					this.SetTextField(this.secondaryLabels, 0, null, null);
-					this.SetTextField(this.secondaryDescription, 0, null, null);
-					this.SetTextField(this.secondaryAbout, 0, null, null);
+					this.SetTextField(this.secondaryLabels, 0, null, ResourceAccess.FieldType.None);
+					this.SetTextField(this.secondaryDescription, 0, null, ResourceAccess.FieldType.None);
+					this.SetTextField(this.secondaryAbout, 0, null, ResourceAccess.FieldType.None);
 				}
 				else
 				{
-					this.SetTextField(this.secondaryLabels, sel, this.secondaryCulture, "Labels");
-					this.SetTextField(this.secondaryDescription, sel, this.secondaryCulture, "Description");
-					this.SetTextField(this.secondaryAbout, sel, this.secondaryCulture, "About");
+					this.SetTextField(this.secondaryLabels, sel, this.secondaryCulture, ResourceAccess.FieldType.Labels);
+					this.SetTextField(this.secondaryDescription, sel, this.secondaryCulture, ResourceAccess.FieldType.Description);
+					this.SetTextField(this.secondaryAbout, sel, this.secondaryCulture, ResourceAccess.FieldType.About);
 				}
 
 				this.labelEdit.Focus();
@@ -345,7 +345,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateIconInfo()
 		{
-			ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, "Icon");
+			ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Icon);
 
 			string module, name;
 			Misc.GetIconNames(field.String, out module, out name);
@@ -682,22 +682,22 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (edit == this.primaryDescription)
 			{
-				this.access.SetField(sel, null, "Description", new ResourceAccess.Field(text));
+				this.access.SetField(sel, null, ResourceAccess.FieldType.Description, new ResourceAccess.Field(text));
 			}
 
 			if (edit == this.secondaryDescription)
 			{
-				this.access.SetField(sel, this.secondaryCulture, "Description", new ResourceAccess.Field(text));
+				this.access.SetField(sel, this.secondaryCulture, ResourceAccess.FieldType.Description, new ResourceAccess.Field(text));
 			}
 
 			if (edit == this.primaryAbout)
 			{
-				this.access.SetField(sel, null, "About", new ResourceAccess.Field(text));
+				this.access.SetField(sel, null, ResourceAccess.FieldType.About, new ResourceAccess.Field(text));
 			}
 
 			if (edit == this.secondaryAbout)
 			{
-				this.access.SetField(sel, this.secondaryCulture, "About", new ResourceAccess.Field(text));
+				this.access.SetField(sel, this.secondaryCulture, ResourceAccess.FieldType.About, new ResourceAccess.Field(text));
 			}
 
 			this.UpdateColor();
@@ -717,12 +717,12 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (sc == this.primaryLabels)
 			{
-				this.access.SetField(sel, null, "Labels", new ResourceAccess.Field(sc.Collection));
+				this.access.SetField(sel, null, ResourceAccess.FieldType.Labels, new ResourceAccess.Field(sc.Collection));
 			}
 
 			if (sc == this.secondaryLabels)
 			{
-				this.access.SetField(sel, this.secondaryCulture, "Labels", new ResourceAccess.Field(sc.Collection));
+				this.access.SetField(sel, this.secondaryCulture, ResourceAccess.FieldType.Labels, new ResourceAccess.Field(sc.Collection));
 			}
 
 			this.UpdateColor();
@@ -755,16 +755,16 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void HandlePrimaryIconClicked(object sender, MessageEventArgs e)
 		{
 			//	Le boutons pour choisir l'icône a été cliqué.
-			ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, "Icon");
+			ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Icon);
 			string initialIcon = field.String;
 
 			string icon = this.module.MainWindow.DlgIcon(this.module.ResourceManager, initialIcon);
 
 			if (icon != initialIcon)
 			{
-				this.access.SetField(this.access.AccessIndex, null, "Icon", new ResourceAccess.Field(icon));
+				this.access.SetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Icon, new ResourceAccess.Field(icon));
 
-				this.SetTextField(this.primaryIcon, this.access.AccessIndex, null, "Icon");
+				this.SetTextField(this.primaryIcon, this.access.AccessIndex, null, ResourceAccess.FieldType.Icon);
 				this.UpdateIconInfo();
 			}
 		}

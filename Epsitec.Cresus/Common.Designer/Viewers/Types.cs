@@ -68,7 +68,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (sel != -1)
 			{
-				ResourceAccess.Field field = this.access.GetField(sel, null, "AbstractType");
+				ResourceAccess.Field field = this.access.GetField(sel, null, ResourceAccess.FieldType.AbstractType);
 				if (field != null)
 				{
 					type = field.AbstractType;
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Le contenu de l'éditeur de type a changé.
 			int sel = this.access.AccessIndex;
 			ResourceAccess.Field field = new ResourceAccess.Field(this.editor.Type);
-			this.access.SetField(sel, null, "AbstractType", field);
+			this.access.SetField(sel, null, ResourceAccess.FieldType.AbstractType, field);
 		}
 
 
