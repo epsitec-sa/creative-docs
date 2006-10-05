@@ -74,6 +74,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Met à jour le contenu de l'éditeur.
 			EnumType type = this.type as EnumType;
+			type.MakeEditable();
 
 			this.ignoreChange = true;
 			this.ignoreChange = false;
@@ -83,6 +84,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Met à jour tout le contenu du tableau.
 			EnumType type = this.type as EnumType;
+			type.MakeEditable();
 			Types.Collections.EnumValueCollection collection = type.EnumValues;
 
 			this.array.TotalRows = collection.Count;
@@ -117,6 +119,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ArrayAdd()
 		{
 			EnumType type = this.type as EnumType;
+			type.MakeEditable();
 			Types.Collections.EnumValueCollection collection = type.EnumValues;
 
 			int sel = this.array.SelectedRow;
