@@ -651,120 +651,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public string[] GetAccessFieldNames
-		{
-			//	Donne les noms internes (fieldName) des champs accessibles.
-			get
-			{
-				switch (this.type)
-				{
-					case Type.Strings:
-						return ResourceAccess.NameStrings;
-
-					case Type.Captions:
-						return ResourceAccess.NameCaptions;
-
-					case Type.Commands:
-						return ResourceAccess.NameCommands;
-
-					case Type.Types:
-						return ResourceAccess.NameTypes;
-
-					case Type.Values:
-						return ResourceAccess.NameValues;
-				}
-
-				return null;
-			}
-		}
-
-		public Field.Type[] GetAccessFieldTypes
-		{
-			//	Donne les types des champs accessibles.
-			get
-			{
-				switch (this.type)
-				{
-					case Type.Strings:
-						return ResourceAccess.TypeStrings;
-
-					case Type.Captions:
-						return ResourceAccess.TypeCaptions;
-
-					case Type.Commands:
-						return ResourceAccess.TypeCommands;
-
-					case Type.Types:
-						return ResourceAccess.TypeTypes;
-
-					case Type.Values:
-						return ResourceAccess.TypeValues;
-				}
-
-				return null;
-			}
-		}
-
-		public string GetFieldDescription(string fieldName)
-		{
-			//	Donne le texte descriptif pour un champ.
-			if (this.type == Type.Strings)
-			{
-				if (fieldName == ResourceAccess.NameStrings[1])
-				{
-					return Res.Strings.Viewers.Strings.Edit;
-				}
-
-				if (fieldName == ResourceAccess.NameStrings[2])
-				{
-					return Res.Strings.Viewers.Strings.About;
-				}
-			}
-
-			if (this.IsCaptionsType)
-			{
-				if (fieldName == ResourceAccess.NameCaptions[1])
-				{
-					return Res.Strings.Viewers.Captions.Labels.Title;
-				}
-
-				if (fieldName == ResourceAccess.NameCaptions[2])
-				{
-					return Res.Strings.Viewers.Captions.Description.Title;
-				}
-
-				if (fieldName == ResourceAccess.NameCaptions[3])
-				{
-					return Res.Strings.Viewers.Captions.Icon.Title;
-				}
-
-				if (fieldName == ResourceAccess.NameCaptions[4])
-				{
-					return Res.Strings.Viewers.Captions.About.Title;
-				}
-			}
-
-			if (this.type == Type.Commands)
-			{
-				if (fieldName == ResourceAccess.NameCommands[5])
-				{
-					return "Type";
-				}
-
-				if (fieldName == ResourceAccess.NameCommands[6])
-				{
-					return "Raccourcis clavier";
-				}
-				
-				if (fieldName == ResourceAccess.NameCommands[7])
-				{
-					return "Groupe";
-				}
-			}
-
-			return null;
-		}
-
 
 		public bool IsExistingName(string name)
 		{
@@ -1682,13 +1568,6 @@ namespace Epsitec.Common.Designer
 		protected static string[] NameTypes    = { "Name", "Labels", "Description", "Icon", "About", "AbstractType" };
 		protected static string[] NameValues   = { "Name", "Labels", "Description", "Icon", "About" };
 		protected static string[] NamePanels   = { "Name", "Panel" };
-
-		protected static Field.Type[] TypeStrings  = { Field.Type.String, Field.Type.String, Field.Type.String };
-		protected static Field.Type[] TypeCaptions = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
-		protected static Field.Type[] TypeCommands = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String, Field.Type.Boolean, Field.Type.Shortcuts, Field.Type.String };
-		protected static Field.Type[] TypeTypes    = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String, Field.Type.AbstractType };
-		protected static Field.Type[] TypeValues   = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
-		protected static Field.Type[] TypePanels   = { Field.Type.String, Field.Type.Bundle };
 
 
 		public int CultureCount
