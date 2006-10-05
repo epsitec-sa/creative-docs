@@ -25,7 +25,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeFixedSizeWindow();
 				this.window.Root.WindowStyles = WindowStyles.None;
 				this.window.PreventAutoClose = true;
-				this.WindowInit("TypeType", 250, 200, true);
+				this.WindowInit("TypeType", 172, 190, true);
 				this.window.Text = "Choix du type à créer";  // Res.Strings.Dialog.TypeType.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
@@ -107,7 +107,10 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			foreach (RadioButton button in this.radioButtons)
 			{
-				button.ActiveState = (button.Name == actual) ? ActiveState.Yes : ActiveState.No;
+				string name = button.Name;
+				name = name.Substring(name.LastIndexOf('.')+1);  // enlève "Res.Captions.Types.Type."
+
+				button.ActiveState = (name == actual) ? ActiveState.Yes : ActiveState.No;
 			}
 		}
 
