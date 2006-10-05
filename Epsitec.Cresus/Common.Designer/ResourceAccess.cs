@@ -364,6 +364,7 @@ namespace Epsitec.Common.Designer
 				int aIndex = this.GetAbsoluteIndex(actualDruid);
 				newDruid = this.CreateUniqueDruid();
 
+				bool first = true;
 				foreach (ResourceBundle bundle in this.bundles)
 				{
 					ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
@@ -392,13 +393,17 @@ namespace Epsitec.Common.Designer
 					{
 						if (string.IsNullOrEmpty(newField.AsString))
 						{
-							TypeType tt = this.mainWindow.DlgResourceTypeType(this.lastTypeTypeCreatated);
-							if (tt == TypeType.None)
+							if (first)
 							{
-								return;
-							}
+								first = false;
+								TypeType tt = this.mainWindow.DlgResourceTypeType(this.lastTypeTypeCreatated);
+								if (tt == TypeType.None)
+								{
+									return;
+								}
 
-							this.lastTypeTypeCreatated = tt;
+								this.lastTypeTypeCreatated = tt;
+							}
 							AbstractType type = ResourceAccess.CreateTypeType(this.lastTypeTypeCreatated);
 							newField.SetStringValue(type.Caption.SerializeToString());
 						}
@@ -925,41 +930,7 @@ namespace Epsitec.Common.Designer
 					caption.DeserializeFromString(s);
 				}
 
-				//	Construit un texte d'après les labels et la description.
-				//	Les labels sont séparés par des virgules.
-				//	La description vient sur une deuxième ligne, seulement si elle est
-				//	différente de tous les labels.
-				System.Text.StringBuilder builder = new System.Text.StringBuilder();
-
-				string description = caption.Description;
-
-				foreach (string label in caption.Labels)
-				{
-					if (builder.Length > 0)
-					{
-						builder.Append(", ");
-					}
-					builder.Append(label);
-
-					if (description != null)
-					{
-						if (description == label)  // description identique à un label ?
-						{
-							description = null;  // pas nécessaire de montrer la description
-						}
-					}
-				}
-
-				if (description != null)  // faut-il montrer la description ?
-				{
-					if (builder.Length > 0)
-					{
-						builder.Append("<br/>");  // sur une deuxième ligne
-					}
-					builder.Append(description);
-				}
-
-				text = builder.ToString();
+				text = ResourceAccess.GetCaptionNiceDescription(caption);
 			}
 		}
 
@@ -1032,6 +1003,46 @@ namespace Epsitec.Common.Designer
 			this.bypassDruids = null;
 		}
 		#endregion
+
+
+		public static string GetCaptionNiceDescription(Caption caption)
+		{
+			//	Construit un texte d'après les labels et la description.
+			//	Les labels sont séparés par des virgules.
+			//	La description vient sur une deuxième ligne, seulement si elle est
+			//	différente de tous les labels.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			string description = caption.Description;
+
+			foreach (string label in caption.Labels)
+			{
+				if (builder.Length > 0)
+				{
+					builder.Append(", ");
+				}
+				builder.Append(label);
+
+				if (description != null)
+				{
+					if (description == label)  // description identique à un label ?
+					{
+						description = null;  // pas nécessaire de montrer la description
+					}
+				}
+			}
+
+			if (description != null)  // faut-il montrer la description ?
+			{
+				if (builder.Length > 0)
+				{
+					builder.Append("<br/>");  // sur une deuxième ligne
+				}
+				builder.Append(description);
+			}
+
+			return builder.ToString();
+		}
 
 
 		#region Direct

@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Scripts : Abstract
 	{
-		public Scripts(Module module, PanelsContext context, ResourceAccess access) : base(module, context, access)
+		public Scripts(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
 			int tabIndex = 0;
 

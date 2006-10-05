@@ -141,7 +141,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		void HandleTextFieldChanged(object sender)
+		private void HandleTextFieldChanged(object sender)
 		{
 			if (this.ignoreChange)
 			{

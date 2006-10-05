@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Strings : Abstract
 	{
-		public Strings(Module module, PanelsContext context, ResourceAccess access) : base(module, context, access)
+		public Strings(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
 			this.primaryCulture = new IconButtonMark(this);
 			this.primaryCulture.ButtonStyle = ButtonStyle.ActivableIcon;

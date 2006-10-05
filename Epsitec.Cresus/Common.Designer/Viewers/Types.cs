@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Types : AbstractCaptions
 	{
-		public Types(Module module, PanelsContext context, ResourceAccess access) : base(module, context, access)
+		public Types(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
 			//	Editeur contenant toutes les définitions.
 			this.CreateBand(out this.container, "", 0.3);
@@ -97,6 +97,8 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					//	Crée le nouvel éditeur.
 					this.editor.SetParent(this.container.Container);
+					this.editor.Module = this.module;
+					this.editor.MainWindow = this.mainWindow;
 					this.editor.Dock = DockStyle.StackBegin;
 					this.editor.ContentChanged += new EventHandler(this.HandleEditorContentChanged);
 				}
