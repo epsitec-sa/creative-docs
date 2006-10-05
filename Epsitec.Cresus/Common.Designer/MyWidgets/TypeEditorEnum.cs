@@ -83,7 +83,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Met à jour le contenu de l'éditeur.
 			this.ignoreChange = true;
 			this.UpdateArray();
+			this.UpdateButtons();
 			this.ignoreChange = false;
+		}
+
+		protected void UpdateButtons()
+		{
+			Types.Collections.EnumValueCollection collection = this.Collection;
+			int sel = this.array.SelectedRow;
+
+			this.buttonPrev.Enable = (sel != -1 && sel > 0);
+			this.buttonNext.Enable = (sel != -1 && sel < collection.Count-1);
+			this.buttonRemove.Enable = (sel != -1);
 		}
 
 		protected void UpdateArray()
@@ -204,7 +215,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		private void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
-			//?this.UpdateButtons();
+			this.UpdateButtons();
 		}
 
 
