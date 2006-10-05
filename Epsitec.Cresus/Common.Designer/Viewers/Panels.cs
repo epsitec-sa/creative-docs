@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Panels : Abstract
 	{
-		public Panels(Module module, PanelsContext context, ResourceAccess access) : base(module, context, access)
+		public Panels(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
 			int tabIndex = 0;
 

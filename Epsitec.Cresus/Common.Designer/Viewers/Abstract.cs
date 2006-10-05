@@ -11,11 +11,12 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public abstract class Abstract : Widget
 	{
-		public Abstract(Module module, PanelsContext context, ResourceAccess access)
+		public Abstract(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow)
 		{
 			this.module = module;
 			this.context = context;
 			this.access = access;
+			this.mainWindow = mainWindow;
 			this.access.ResourceType = this.ResourceType;
 		}
 
@@ -34,16 +35,16 @@ namespace Epsitec.Common.Designer.Viewers
 			get;
 		}
 
-		public static Abstract Create(ResourceAccess.Type type, Module module, PanelsContext context, ResourceAccess access)
+		public static Abstract Create(ResourceAccess.Type type, Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow)
 		{
 			//	Crée un Viewer d'un type donné.
-			if (type == ResourceAccess.Type.Strings)  return new Strings(module, context, access);
-			if (type == ResourceAccess.Type.Captions)  return new Captions(module, context, access);
-			if (type == ResourceAccess.Type.Commands)  return new Commands(module, context, access);
-			if (type == ResourceAccess.Type.Types)  return new Types(module, context, access);
-			if (type == ResourceAccess.Type.Values)  return new Values(module, context, access);
-			if (type == ResourceAccess.Type.Panels)  return new Panels(module, context, access);
-			if (type == ResourceAccess.Type.Scripts)  return new Scripts(module, context, access);
+			if (type == ResourceAccess.Type.Strings)  return new Strings(module, context, access, mainWindow);
+			if (type == ResourceAccess.Type.Captions)  return new Captions(module, context, access, mainWindow);
+			if (type == ResourceAccess.Type.Commands)  return new Commands(module, context, access, mainWindow);
+			if (type == ResourceAccess.Type.Types)  return new Types(module, context, access, mainWindow);
+			if (type == ResourceAccess.Type.Values)  return new Values(module, context, access, mainWindow);
+			if (type == ResourceAccess.Type.Panels)  return new Panels(module, context, access, mainWindow);
+			if (type == ResourceAccess.Type.Scripts)  return new Scripts(module, context, access, mainWindow);
 			return null;
 		}
 
@@ -1150,6 +1151,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Module					module;
 		protected PanelsContext				context;
 		protected ResourceAccess			access;
+		protected MainWindow				mainWindow;
 		protected string					secondaryCulture;
 		protected bool						ignoreChange = false;
 		protected bool						lastActionIsReplace = false;

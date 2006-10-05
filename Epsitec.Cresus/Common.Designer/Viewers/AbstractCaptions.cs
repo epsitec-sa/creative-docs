@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public abstract class AbstractCaptions : Abstract
 	{
-		public AbstractCaptions(Module module, PanelsContext context, ResourceAccess access) : base(module, context, access)
+		public AbstractCaptions(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
 			//	Crée les 2 parties gauche/droite séparées par un splitter.
 			Widget left = new Widget(this);

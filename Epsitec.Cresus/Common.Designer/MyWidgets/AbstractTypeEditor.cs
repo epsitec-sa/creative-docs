@@ -44,6 +44,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		public Module Module
+		{
+			get
+			{
+				return this.module;
+			}
+			set
+			{
+				this.module = value;
+			}
+		}
+
+		public MainWindow MainWindow
+		{
+			get
+			{
+				return this.mainWindow;
+			}
+			set
+			{
+				this.mainWindow = value;
+			}
+		}
+
 		public AbstractType Type
 		{
 			get
@@ -102,6 +126,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			field.Text = value.ToString();
 		}
+
+		protected IconButton CreateIconButton()
+		{
+			IconButton button = new IconButton();
+
+			return button;
+		}
 		#endregion
 
 
@@ -130,6 +161,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		protected AbstractType					type;
+		protected Module						module;
+		protected MainWindow					mainWindow;
 		protected int							tabIndex = 0;
 		protected bool							ignoreChange = false;
 	}

@@ -853,7 +853,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			ResourceAccess.Type type = mi.BundleType.CurrentType;
-			Viewers.Abstract viewer = Viewers.Abstract.Create(type, mi.Module, this.context, mi.Module.GetAccess(type));
+			Viewers.Abstract viewer = Viewers.Abstract.Create(type, mi.Module, this.context, mi.Module.GetAccess(type), this);
 
 			if (viewer != null)
 			{
