@@ -2940,7 +2940,31 @@ namespace Epsitec.Common.Widgets
 			
 			return '\0';  // rien trouvé
 		}
-		
+
+		public static string ConvertToXmlText(string text)
+		{
+			//	Convertit les caractères guillemet et apostrophe en tag XML &xxx;.
+			//	Ceci permet de formater un texte édité avec le bloc-notes, par exemple.
+			if (text == null)
+			{
+				return null;
+			}
+
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+			
+			for ( int pos=0 ; pos<text.Length ; pos++ )
+			{
+				switch ( text[pos] )
+				{
+					case '\"':  buffer.Append("&quot;");   break;
+					case '\'':  buffer.Append("&apos;");   break;
+					default:    buffer.Append(text[pos]);  break;
+				}
+			}
+			
+			return buffer.ToString();
+		}
+
 		public static string ConvertToTaggedText(string text)
 		{
 			return TextLayout.ConvertToTaggedText(text, false);

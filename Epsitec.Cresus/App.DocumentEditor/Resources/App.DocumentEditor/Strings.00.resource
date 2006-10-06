@@ -36,7 +36,7 @@
   <data name="Status.Zoom.Menu" id="011">Cliquez pour choisir le zoom dans un menu</data>
   <data name="Status.Zoom.Slider" id="021">Choix du zoom</data>
   <data name="Dialog.Button.Close" id="031">Fermer</data>
-  <data name="Dialog.Button.OK" id="041">D'accord</data>
+  <data name="Dialog.Button.OK" id="041">D&amp;apos;accord</data>
   <data name="Dialog.Button.Cancel" id="051">Annuler</data>
   <data name="Dialog.Button.Help" id="061">Aide</data>
   <data name="Dialog.Tooltip.Close" id="071">Fermer ce dialogue</data>
@@ -48,7 +48,7 @@
   <data name="Dialog.Question.Open.File" id="0E7" mod="1">Le document &lt;b&gt;{0}&lt;/b&gt; n&amp;apos;existe pas.&lt;br/&gt;&lt;br/&gt;{1}</data>
   <data name="Dialog.Warning.Text1" id="0C1">Les problèmes suivants ont été rencontrés:</data>
   <data name="Dialog.Warning.Text2" id="0D1">Malgré ces problèmes, le fichier a été ouvert le mieux possible.</data>
-  <data name="Dialog.Warning.Text3" id="0E1">Son aspect est toutefois différent de ce qu'il devrait être.</data>
+  <data name="Dialog.Warning.Text3" id="0E1">Son aspect est toutefois différent de ce qu&amp;apos;il devrait être.</data>
   <data name="Dialog.Warning.Redirection" id="0H7" mod="1">Le dossier &lt;b&gt;{0}&lt;/b&gt; ne peut pas être modifié.&lt;br/&gt;L&amp;apos;enregistrement est donc dévié dans &lt;b&gt;{1}&lt;/b&gt;.</data>
   <data name="Dialog.New.Title" id="0L6" mod="1">Nouveau document</data>
   <data name="Dialog.New.EmptyDocument" id="0T6" mod="1">Document vide</data>
@@ -112,19 +112,19 @@
   <data name="Dialog.Download.Available" id="082">Une mise à jour est disponible:</data>
   <data name="Dialog.Download.Actual" id="092">Version actuelle {0}</data>
   <data name="Dialog.Download.Link" id="0A2">Mise à jour {0}</data>
-  <data name="Dialog.Download.Nothing" id="0B2">Aucune mise à jour n'est disponible</data>
+  <data name="Dialog.Download.Nothing" id="0B2">Aucune mise à jour n&amp;apos;est disponible</data>
   <data name="Dialog.Export.Title1" id="0C2">Exporter un document</data>
   <data name="Dialog.Export.Title2" id="0D2">Exporter {0}</data>
   <data name="Dialog.Export.Button.OK" id="0E2">Exporter</data>
   <data name="Dialog.Export.Button.Cancel" id="0F2">Annuler</data>
-  <data name="Dialog.Export.Tooltip.OK" id="0G2">Exporter l'image</data>
-  <data name="Dialog.Export.Tooltip.Cancel" id="0H2">Annuler l'exportation</data>
+  <data name="Dialog.Export.Tooltip.OK" id="0G2">Exporter l&amp;apos;image</data>
+  <data name="Dialog.Export.Tooltip.Cancel" id="0H2">Annuler l&amp;apos;exportation</data>
   <data name="Dialog.ExportPDF.Title1" id="0I2">Exporter au format PDF</data>
   <data name="Dialog.ExportPDF.Title2" id="0J2">Exporter {0}</data>
   <data name="Dialog.ExportPDF.Button.OK" id="0K2">Exporter</data>
   <data name="Dialog.ExportPDF.Button.Cancel" id="0L2">Annuler</data>
   <data name="Dialog.ExportPDF.Tooltip.OK" id="0M2">Exporter au format PDF</data>
-  <data name="Dialog.ExportPDF.Tooltip.Cancel" id="0N2">Annuler l'exporation</data>
+  <data name="Dialog.ExportPDF.Tooltip.Cancel" id="0N2">Annuler l&amp;apos;exporation</data>
   <data name="Dialog.ExportPDF.TabPage.Generic" id="0O2">Général</data>
   <data name="Dialog.ExportPDF.TabPage.Color" id="0P2">Couleurs</data>
   <data name="Dialog.ExportPDF.TabPage.Image" id="0Q2">Images</data>
@@ -136,7 +136,7 @@
   <data name="Dialog.Glyphs.TabPage.Alternates" id="003">Alternatives</data>
   <data name="Dialog.Glyphs.Button.Insert" id="013">Insérer</data>
   <data name="Dialog.Glyphs.Tooltip.Insert" id="023">Insérer dans le texte</data>
-  <data name="Dialog.Glyphs.Tooltip.ArraySize" id="033">Taille de l'aperçu</data>
+  <data name="Dialog.Glyphs.Tooltip.ArraySize" id="033">Taille de l&amp;apos;aperçu</data>
   <data name="Dialog.Glyphs.Tooltip.CurrentFont" id="043">Récupérer la police en cours</data>
   <data name="Dialog.Glyphs.FontFace" id="053">Police</data>
   <data name="Dialog.Glyphs.FontStyle" id="063">Variante</data>
@@ -152,9 +152,9 @@
   <data name="Dialog.Glyphs.Substitute.Title.Latin" id="0G3">Texte de substitution en latin</data>
   <data name="Dialog.Glyphs.Substitute.Title.French" id="0H3">Texte de substitution en français</data>
   <data name="Dialog.Glyphs.Substitute.Title.English" id="0I3">Texte de substitution en anglais</data>
-  <data name="Dialog.Glyphs.Substitute.Text.Latin" id="0J3">Quae se laudari gaudent verbis subdolis, serae dant poenas turpi paenitentia. Cum de fenestra corvus raptum caseum comesse vellet, celsa residens arbore, vulpes invidit, deinde sic coepit loqui: 'O qui tuarum, corve, pinnarum est nitor! Quantum decoris corpore et vultu geris! Si vocem haberes, nulla prior ales foret'. At ille, dum etiam vocem vult ostendere, lato ore emisit caseum; quem celeriter dolosa vulpes avidis rapuit dentibus. Tum demum ingemuit corvi deceptus stupor.</data>
-  <data name="Dialog.Glyphs.Substitute.Text.French" id="0K3">Maître Corbeau, sur un arbre perché, tenait en son bec un fromage. Maître Renard, par l'odeur alléché, lui tint à peu près ce langage: "Hé ! bonjour, Monsieur du Corbeau. Que vous êtes joli ! Que vous me semblez beau ! Sans mentir, si votre ramage se rapporte à votre plumage, vous êtes le Phénix des hôtes de ces bois." A ces mots le Corbeau ne se sent pas de joie; Et pour montrer sa belle voix, il ouvre un large bec, laisse tomber sa proie. Le Renard s'en saisit, et dit: "Mon bon Monsieur, apprenez que tout flatteur vit aux dépens de celui qui l'écoute: Cette leçon vaut bien un fromage, sans doute." Le Corbeau, honteux et confus, jura, mais un peu tard, qu'on ne l'y prendrait plus.</data>
-  <data name="Dialog.Glyphs.Substitute.Text.English" id="0L3">Master Crow perched on a tree, was holding a cheese in his beak. Master Fox attracted by the smell said something like this: "Well, Hello Mister Crow! How beautiful you are! how nice you seem to me! Really, if your voice is like your plumage, you are the phoenix of all the inhabitants of these woods." At these words, the Crow is overjoyed. And in order to show off his beautiful voice, he opens his beak wide, lets his prey fall. The Fox grabs it, and says: "My good man, learn that every flatterer lives at the expense of the one who listens to him. This lesson, without doubt, is well worth a cheese." The Crow, ashamed and embarrassed, swore, but a little late, that he would not be taken again.</data>
+  <data name="Dialog.Glyphs.Substitute.Text.Latin" id="0J3">Quae se laudari gaudent verbis subdolis, serae dant poenas turpi paenitentia. Cum de fenestra corvus raptum caseum comesse vellet, celsa residens arbore, vulpes invidit, deinde sic coepit loqui: &amp;apos;O qui tuarum, corve, pinnarum est nitor! Quantum decoris corpore et vultu geris! Si vocem haberes, nulla prior ales foret&amp;apos;. At ille, dum etiam vocem vult ostendere, lato ore emisit caseum; quem celeriter dolosa vulpes avidis rapuit dentibus. Tum demum ingemuit corvi deceptus stupor.</data>
+  <data name="Dialog.Glyphs.Substitute.Text.French" id="0K3">Maître Corbeau, sur un arbre perché, tenait en son bec un fromage. Maître Renard, par l&amp;apos;odeur alléché, lui tint à peu près ce langage: &amp;quot;Hé ! bonjour, Monsieur du Corbeau. Que vous êtes joli ! Que vous me semblez beau ! Sans mentir, si votre ramage se rapporte à votre plumage, vous êtes le Phénix des hôtes de ces bois.&amp;quot; A ces mots le Corbeau ne se sent pas de joie; Et pour montrer sa belle voix, il ouvre un large bec, laisse tomber sa proie. Le Renard s&amp;apos;en saisit, et dit: &amp;quot;Mon bon Monsieur, apprenez que tout flatteur vit aux dépens de celui qui l&amp;apos;écoute: Cette leçon vaut bien un fromage, sans doute.&amp;quot; Le Corbeau, honteux et confus, jura, mais un peu tard, qu&amp;apos;on ne l&amp;apos;y prendrait plus.</data>
+  <data name="Dialog.Glyphs.Substitute.Text.English" id="0L3">Master Crow perched on a tree, was holding a cheese in his beak. Master Fox attracted by the smell said something like this: &amp;quot;Well, Hello Mister Crow! How beautiful you are! how nice you seem to me! Really, if your voice is like your plumage, you are the phoenix of all the inhabitants of these woods.&amp;quot; At these words, the Crow is overjoyed. And in order to show off his beautiful voice, he opens his beak wide, lets his prey fall. The Fox grabs it, and says: &amp;quot;My good man, learn that every flatterer lives at the expense of the one who listens to him. This lesson, without doubt, is well worth a cheese.&amp;quot; The Crow, ashamed and embarrassed, swore, but a little late, that he would not be taken again.</data>
   <data name="Dialog.Glyphs.Alternates.Help" id="0M3">Alternatives au caractère sélectionné dans le texte:</data>
   <data name="Dialog.Infos.Title" id="0N3">Informations</data>
   <data name="Dialog.Key.Title" id="0O3">Clé...</data>
@@ -166,9 +166,9 @@
   <data name="Dialog.PageStack.Title" id="0U3">Structure de la page imprimée...</data>
   <data name="Dialog.PageStack.Help1" id="0V3">La liste ci-dessous montre tous les calques qui seront imprimés pour la page sélectionnée.</data>
   <data name="Dialog.PageStack.Help2" id="004">Le calque qui se trouve au-dessus de tous les autres apparaît en premier dans la liste, puis vient le calque situé juste en dessous, etc. Le dernier calque est le premier imprimé.</data>
-  <data name="Dialog.PageStack.Help3" id="014">Si la page sélectionnée inclut des pages modèles contenant un calque unique, leur calque vient s'ajouter en fin de liste; ainsi, les calques des pages modèles apparaissent normalement derrière tous les autres calques de la page sélectionnée.</data>
-  <data name="Dialog.PageStack.Help4" id="024">Lorsqu'une page modèle contient plusieurs calques, une moitié de ceux-ci apparaîtra sous les calques de la page sélectionnée, l'autre dessus.</data>
-  <data name="Dialog.PageStack.Help5" id="034">Une page modèle peut inclure elle-même d'autres pages modèles, dont les calques viendront se placer dessous, respectivement dessus.</data>
+  <data name="Dialog.PageStack.Help3" id="014">Si la page sélectionnée inclut des pages modèles contenant un calque unique, leur calque vient s&amp;apos;ajouter en fin de liste; ainsi, les calques des pages modèles apparaissent normalement derrière tous les autres calques de la page sélectionnée.</data>
+  <data name="Dialog.PageStack.Help4" id="024">Lorsqu&amp;apos;une page modèle contient plusieurs calques, une moitié de ceux-ci apparaîtra sous les calques de la page sélectionnée, l&amp;apos;autre dessus.</data>
+  <data name="Dialog.PageStack.Help5" id="034">Une page modèle peut inclure elle-même d&amp;apos;autres pages modèles, dont les calques viendront se placer dessous, respectivement dessus.</data>
   <data name="Dialog.PageStack.Button.Current" id="044">Page courante</data>
   <data name="Dialog.PageStack.Tooltip.Current" id="054">Montre la page courante</data>
   <data name="Dialog.PageStack.Page" id="064">Page</data>
@@ -205,12 +205,12 @@
   <data name="Dialog.Settings.New" id="055">Modèle à ouvrir pour un nouveau document ?</data>
   <data name="Dialog.Settings.NewDocument" id="065">Document modèle</data>
   <data name="Dialog.Settings.Mouse" id="075">Réglages de la souris</data>
-  <data name="Dialog.Settings.Screen" id="085">Réglages de l'écran</data>
+  <data name="Dialog.Settings.Screen" id="085">Réglages de l&amp;apos;écran</data>
   <data name="Dialog.Settings.SplashScreen" id="095">Ecran initial</data>
   <data name="Dialog.Settings.MouseWheel" id="0A5">Molette</data>
   <data name="Dialog.Settings.MouseZoom" id="0B5">Grossissement</data>
   <data name="Dialog.Settings.FineCursor" id="0C5">Curseur précis</data>
-  <data name="Dialog.Settings.Adorner" id="0D5">Aspect de l'interface</data>
+  <data name="Dialog.Settings.Adorner" id="0D5">Aspect de l&amp;apos;interface</data>
   <data name="Dialog.Settings.ScreenDpi" id="0E5">Résolution (dpi)</data>
   <data name="Dialog.Settings.AutoUpdate" id="0F5">Mise à jour du logiciel</data>
   <data name="Dialog.Settings.AutoChecker" id="0G5">Recherche automatique</data>
@@ -232,7 +232,7 @@
   <data name="Dialog.Splash.WorkInProgress" id="006">Analyse {0}...</data>
   <data name="Dialog.Update.Title" id="016">Mise à jour...</data>
   <data name="Dialog.Update.Version" id="026">Version &lt;b&gt;{0}&lt;/b&gt;    Langue: français</data>
-  <data name="Dialog.Update.Limit" id="036">Mises à jour gratuites jusqu'au &lt;b&gt;{0}&lt;/b&gt;</data>
+  <data name="Dialog.Update.Limit" id="036">Mises à jour gratuites jusqu&amp;apos;au &lt;b&gt;{0}&lt;/b&gt;</data>
   <data name="Dialog.Update.Over" id="046">&lt;i&gt;Plus de mises à jour gratuites&lt;/i&gt;.</data>
   <data name="Dialog.Update.BuyDemo" id="056">Vous pouvez acheter ce logiciel auprès de Epsitec SA.</data>
   <data name="Dialog.Update.BuyFull" id="066">Vous pouvez obtenir une mise à jour auprès de Epsitec SA.</data>

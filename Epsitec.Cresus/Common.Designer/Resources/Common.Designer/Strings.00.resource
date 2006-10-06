@@ -104,12 +104,12 @@
   <data name="Action.PanelSelectAll" id="032">Sélectionner tous les objets</data>
   <data name="Action.PanelSelectInvert" id="042">Inverser les objets sélectionnés</data>
   <data name="Action.PanelShowGrid" id="052">Activer la grille magnétique</data>
-  <data name="Action.PanelShowZOrder" id="062">Afficher l'ordre des objets</data>
-  <data name="Action.PanelShowTabIndex" id="072">Afficher l'ordre pour la touche Tab</data>
+  <data name="Action.PanelShowZOrder" id="062">Afficher l&amp;apos;ordre des objets</data>
+  <data name="Action.PanelShowTabIndex" id="072">Afficher l&amp;apos;ordre pour la touche Tab</data>
   <data name="Action.PanelShowExpand" id="082">Espacer les groupes</data>
   <data name="Action.PanelShowConstrain" id="092">Activer les contraintes</data>
   <data name="Action.PanelShowAttachment" id="0A2">Afficher les ancrages</data>
-  <data name="Action.PanelRun" id="045" mod="1">Tester l&amp;apos;interface</data>
+  <data name="Action.PanelRun" id="045" mod="1">Tester l&amp;apos;apos;interface</data>
   <data name="Action.MoveLeft" id="0B2">Déplacement à gauche</data>
   <data name="Action.MoveRight" id="0C2">Déplacement à droite</data>
   <data name="Action.MoveDown" id="0D2">Déplacement en bas</data>
@@ -154,7 +154,7 @@
   <data name="StringCollection.Prev" id="0H5" mod="1">Monter le texte</data>
   <data name="StringCollection.Next" id="0I5" mod="1">Descendre le texte</data>
   <data name="Dialog.Button.Close" id="0E3">Fermer</data>
-  <data name="Dialog.Button.OK" id="0F3">D'accord</data>
+  <data name="Dialog.Button.OK" id="0F3">D&amp;apos;accord</data>
   <data name="Dialog.Button.Cancel" id="0G3">Annuler</data>
   <data name="Dialog.Button.Help" id="0H3">Aide</data>
   <data name="Dialog.Tooltip.Close" id="0I3">Fermer ce dialogue</data>
@@ -162,11 +162,11 @@
   <data name="Dialog.Tooltip.Resize" id="0K3">Redimensionner la fenêtre</data>
   <data name="Dialog.Glyphs.Title" id="0L3">Caractères spéciaux</data>
   <data name="Dialog.Glyphs.Button.Insert" id="0M3">Insérer</data>
-  <data name="Dialog.Glyphs.Tooltip.ArraySize" id="0N3">Taille de l'aperçu</data>
+  <data name="Dialog.Glyphs.Tooltip.ArraySize" id="0N3">Taille de l&amp;apos;aperçu</data>
   <data name="Dialog.Filter.Title" id="0O3">Filtre pour les noms des ressources</data>
   <data name="Dialog.Filter.Label" id="0P3">Critère</data>
   <data name="Dialog.Filter.Radio.Begin" id="0Q3">Au début</data>
-  <data name="Dialog.Filter.Radio.Any" id="0R3">N'importe où</data>
+  <data name="Dialog.Filter.Radio.Any" id="0R3">N&amp;apos;importe où</data>
   <data name="Dialog.Filter.Radio.Jocker" id="0S3">Avec des jockers</data>
   <data name="Dialog.Filter.Check.Case" id="0T3">Respecter la casse</data>
   <data name="Dialog.Filter.Check.Word" id="0U3">Mots entiers</data>
@@ -208,7 +208,7 @@
   <data name="Dialog.Icon.Filter.One" id="066" mod="1">Seulement {0}</data>
   <data name="Dialog.Icon.Tooltip.Mode" id="076" mod="1">Mode compact ou étendu</data>
   <data name="Dialog.Icon.Tooltip.Size" id="086" mod="1">Taille des icônes</data>
-  <data name="Dialog.ResourceSelector.Title" id="0N4">Choix d'une ressource</data>
+  <data name="Dialog.ResourceSelector.Title" id="0N4">Choix d&amp;apos;une ressource</data>
   <data name="Dialog.ResourceSelector.Label" id="0O4">Identificateur :</data>
   <data name="Dialog.ResourceSelector.Text" id="0P4">Texte {0} :</data>
   <data name="Dialog.ResourceSelector.Button.Clear" id="0Q4">R</data>
@@ -228,7 +228,7 @@
   <data name="Misc.Extract" id="005">Extrait</data>
   <data name="Misc.ExtractOf" id="015">de</data>
   <data name="Error.Name.Invalid" id="025">Le nom contient un ou plusieurs caractères invalides !</data>
-  <data name="Error.Name.AlreadyExist" id="035">Impossible d'utiliser ce nom, car il existe déjà !</data>
+  <data name="Error.Name.AlreadyExist" id="035">Impossible d&amp;apos;utiliser ce nom, car il existe déjà !</data>
   <data name="Error.Name.Twofold" id="077" mod="1">Deux parties successives séparées par des&lt;br/&gt;points ne peuvent pas être identiques !</data>
   <data name="Error.ShortcutMany" id="0V5" mod="1">Raccourcis clavier &lt;i&gt;{0}&lt;/i&gt; utilisés plusieurs fois:</data>
   <data name="Error.CheckOK" id="006" mod="1">Aucune anomalie détectée.</data>

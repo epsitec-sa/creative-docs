@@ -241,6 +241,7 @@ namespace Epsitec.Common.Designer
 			if (this.IsBundlesType)
 			{
 				this.LoadBundles();
+				this.AdjustBundlesAfterLoad();
 			}
 
 			if (this.type == Type.Panels)
@@ -258,7 +259,7 @@ namespace Epsitec.Common.Designer
 			//	Enregistre les modifications des ressources.
 			if (this.IsBundlesType)
 			{
-				this.AdjustBundles();
+				this.AdjustBundlesBeforeSave();
 				this.SaveBundles();
 			}
 
@@ -1804,7 +1805,30 @@ namespace Epsitec.Common.Designer
 			bundle.Add(newField);
 		}
 
-		protected void AdjustBundles()
+		protected void AdjustBundlesAfterLoad()
+		{
+			//	Ajuste les bundles après une désérialisation.
+			if (this.type == Type.Strings)
+			{
+				foreach (ResourceBundle bundle in this.bundles)
+				{
+					for (int i=0; i<bundle.FieldCount; i++)
+					{
+						ResourceBundle.Field field = bundle[i];
+
+						string s1 = field.AsString;
+						string s2 = TextLayout.ConvertToXmlText(s1);
+
+						if (s2 != s1)
+						{
+							field.SetStringValue(s2);
+						}
+					}
+				}
+			}
+		}
+
+		protected void AdjustBundlesBeforeSave()
 		{
 			//	Ajuste les bundles avant une sérialisation.
 			foreach (ResourceBundle bundle in this.bundles)
