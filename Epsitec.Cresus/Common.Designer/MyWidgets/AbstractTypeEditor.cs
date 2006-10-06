@@ -41,6 +41,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				case ResourceAccess.TypeType.Decimal:      return new TypeEditorNumeric();
 				case ResourceAccess.TypeType.String:       return new TypeEditorString();
 				case ResourceAccess.TypeType.Enum:         return new TypeEditorEnum();
+				case ResourceAccess.TypeType.Structured:   return new TypeEditorStructured();
 			}
 
 			return null;
