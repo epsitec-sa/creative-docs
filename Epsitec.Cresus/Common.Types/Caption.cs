@@ -249,6 +249,11 @@ namespace Epsitec.Common.Types
 		/// <param name="value">The serialized caption.</param>
 		public void DeserializeFromString(string value)
 		{
+			this.DeserializeFromString (value, Support.Resources.DefaultManager);
+		}
+
+		public void DeserializeFromString(string value, Support.ResourceManager manager)
+		{
 			value = Caption.DecompressXml (value);
 			
 			if (value.StartsWith ("<" + Serialization.SimpleSerialization.RootElementName))
@@ -256,7 +261,7 @@ namespace Epsitec.Common.Types
 				//	The caller has provided us with a fullly serialized XML stream.
 				//	Deserializing is easy: restore the object and copy its fields.
 
-				Caption caption = Serialization.SimpleSerialization.DeserializeFromString (value) as Caption;
+				Caption caption = Serialization.SimpleSerialization.DeserializeFromString (value, manager) as Caption;
 
 				DependencyObject.CopyDefinedProperties (caption, this);
 			}
@@ -291,6 +296,7 @@ namespace Epsitec.Common.Types
 				Serialization.Context context = new Serialization.DeserializerContext (new Serialization.IO.XmlReader (xmlReader));
 
 				context.ExternalMap.Record ("caption", this);
+				context.ExternalMap.Record (Serialization.Context.WellKnownTagResourceManager, manager);
 
 				while (xmlReader.Read ())
 				{

@@ -22,5 +22,14 @@ namespace Epsitec.Common.Types
 		/// <param name="id">The markup string to convert to an object.</param>
 		/// <returns>The object.</returns>
 		object ResolveFromMarkup(string markup, System.Type type);
+
+		/// <summary>
+		/// Gets the external map used to map referemces to external objects.
+		/// </summary>
+		/// <value>The external map.</value>
+		Serialization.Generic.MapTag<object> ExternalMap
+		{
+			get;
+		}
 	}
 }

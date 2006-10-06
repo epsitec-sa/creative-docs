@@ -155,7 +155,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Druid druid = Druid.Empty;
 			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Values, druid);
 
-			EnumValue item = new EnumValue(0, druid);
+			Caption caption = this.module.ResourceManager.GetCaption(druid);
+
+			EnumValue item = new EnumValue(0, caption);
 			collection.Insert(sel+1, item);
 
 			this.array.SelectedRow = sel+1;
@@ -163,6 +165,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.UpdateArray();
 			this.UpdateButtons();
+
+			this.OnContentChanged();
 		}
 
 		protected void ArrayRemove()
@@ -187,6 +191,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.UpdateArray();
 			this.UpdateButtons();
+
+			this.OnContentChanged();
 		}
 
 		protected void ArrayMove(int direction)
@@ -209,6 +215,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.UpdateArray();
 			this.UpdateButtons();
+
+			this.OnContentChanged();
 		}
 
 

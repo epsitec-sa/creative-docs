@@ -1540,7 +1540,7 @@ namespace Epsitec.Common.Designer
 							string s = this.accessField.AsString;
 							if (!string.IsNullOrEmpty(s))
 							{
-								this.accessCaption.DeserializeFromString(s);
+								this.accessCaption.DeserializeFromString(s, this.resourceManager);
 							}
 						}
 					}
