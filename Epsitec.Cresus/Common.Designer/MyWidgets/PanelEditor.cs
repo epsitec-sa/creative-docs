@@ -1530,7 +1530,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 
 				Druid druid = Druid.Parse(this.objectModifier.GetDruid(obj));
-				druid = this.module.MainWindow.DlgResourceSelector(this.module, type, druid);
+				druid = this.module.MainWindow.DlgResourceSelector(this.module, type, druid, null);
 				this.objectModifier.SetDruid(obj, druid.ToString());
 
 				return !druid.IsEmpty;

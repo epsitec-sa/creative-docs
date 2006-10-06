@@ -103,7 +103,7 @@ namespace Epsitec.Common.Designer.Controllers
 			MainWindow mainWindow = this.MainWindow;
 
 			Druid d = Druid.Parse(this.druid);
-			d = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Unknow, d);
+			d = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Unknow, d, null);
 			this.druid = d.ToString();
 
 			this.OnActualValueChanged();

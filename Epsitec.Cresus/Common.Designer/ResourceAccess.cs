@@ -759,7 +759,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region ByPassFilter
-		public void BypassFilterOpenAccess(Type type)
+		public void BypassFilterOpenAccess(Type type, List<Druid> exclude)
 		{
 			//	Ouvre l'accès 'bypass'.
 			//	Ce type d'accès n'est possible que sur une ressource 'Caption' (Captions,
@@ -776,7 +776,11 @@ namespace Epsitec.Common.Designer
 				if (this.HasFixFilter(field.Name, true))
 				{
 					Druid fullDruid = new Druid(field.Druid, this.primaryBundle.Module.Id);
-					this.bypassDruids.Add(fullDruid);
+
+					if (exclude == null || !exclude.Contains(fullDruid))
+					{
+						this.bypassDruids.Add(fullDruid);
+					}
 				}
 			}
 		}
