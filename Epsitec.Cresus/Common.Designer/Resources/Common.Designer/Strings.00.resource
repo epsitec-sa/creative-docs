@@ -227,9 +227,9 @@
   <data name="Misc.CopyOf" id="0V4">de</data>
   <data name="Misc.Extract" id="005">Extrait</data>
   <data name="Misc.ExtractOf" id="015">de</data>
-  <data name="Error.InvalidLabel" id="025">Le nom contient un ou plusieurs caractères invalides !</data>
-  <data name="Error.NameAlreadyExist" id="035">Impossible d'utiliser ce nom, car il existe déjà !</data>
-  <data name="Error.NameTwofold" id="077" mod="1">Deux parties successives séparées par des&lt;br/&gt;points ne peuvent pas être identiques !</data>
+  <data name="Error.Name.Invalid" id="025">Le nom contient un ou plusieurs caractères invalides !</data>
+  <data name="Error.Name.AlreadyExist" id="035">Impossible d'utiliser ce nom, car il existe déjà !</data>
+  <data name="Error.Name.Twofold" id="077" mod="1">Deux parties successives séparées par des&lt;br/&gt;points ne peuvent pas être identiques !</data>
   <data name="Error.ShortcutMany" id="0V5" mod="1">Raccourcis clavier &lt;i&gt;{0}&lt;/i&gt; utilisés plusieurs fois:</data>
   <data name="Error.CheckOK" id="006" mod="1">Aucune anomalie détectée.</data>
 </bundle>
