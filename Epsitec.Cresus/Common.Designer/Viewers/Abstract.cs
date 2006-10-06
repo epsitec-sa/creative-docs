@@ -265,13 +265,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				if (fieldType == ResourceAccess.FieldType.Name)
 				{
-					if (!Misc.IsValidLabel(ref text))
-					{
-						this.module.MainWindow.DialogError(Res.Strings.Error.InvalidLabel);
-						return null;
-					}
-
-					string err = this.access.CheckExistingName(text);
+					string err = this.access.CheckNewName(ref text);
 					if (err != null)
 					{
 						this.module.MainWindow.DialogError(err);
@@ -998,14 +992,15 @@ namespace Epsitec.Common.Designer.Viewers
 			string editedName = edit.Text;
 			string initialName = this.access.GetField(sel, null, ResourceAccess.FieldType.Name).String;
 
-			if (!Misc.IsValidLabel(ref editedName))
+			string err = this.access.CheckNewName(ref editedName);
+			if (err != null)
 			{
 				this.ignoreChange = true;
 				edit.Text = initialName;
 				edit.SelectAll();
 				this.ignoreChange = false;
 
-				this.module.MainWindow.DialogError(Res.Strings.Error.InvalidLabel);
+				this.module.MainWindow.DialogError(err);
 				return;
 			}
 
@@ -1016,18 +1011,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (editedName == initialName)  // label inchangé ?
 			{
-				return;
-			}
-
-			string err = this.access.CheckExistingName(editedName);
-			if (err != null)
-			{
-				this.ignoreChange = true;
-				edit.Text = initialName;
-				edit.SelectAll();
-				this.ignoreChange = false;
-
-				this.module.MainWindow.DialogError(err);
 				return;
 			}
 

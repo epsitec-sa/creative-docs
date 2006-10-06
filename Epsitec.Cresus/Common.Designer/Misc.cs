@@ -288,7 +288,10 @@ namespace Epsitec.Common.Designer
 			System.Text.StringBuilder builder = new System.Text.StringBuilder(label.Length);
 			for (int i=0; i<list.Length; i++)
 			{
-				if (!IsValidName(ref list[i]))  return false;
+				if (!IsValidName(ref list[i]))
+				{
+					return false;
+				}
 
 				if (i > 0)  builder.Append('.');
 				builder.Append(list[i]);
