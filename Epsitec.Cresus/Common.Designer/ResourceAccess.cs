@@ -698,8 +698,8 @@ namespace Epsitec.Common.Designer
 			//	Cherche si le nom existe déjà.
 			if (this.IsBundlesType)
 			{
-				name = this.AddFilter(name, false);
-				ResourceBundle.Field field = this.primaryBundle[name];
+				string n = this.AddFilter(name, false);
+				ResourceBundle.Field field = this.primaryBundle[n];
 				if (field != null && field.Name != null)
 				{
 					return Res.Strings.Error.Name.AlreadyExist;
