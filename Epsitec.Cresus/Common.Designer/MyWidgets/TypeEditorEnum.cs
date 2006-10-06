@@ -161,11 +161,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			EnumValue item = new EnumValue(0, caption);
 			collection.Insert(sel+1, item);
 
-			this.array.SelectedRow = sel+1;
-			this.array.ShowSelectedRow();
-
 			this.UpdateArray();
 			this.UpdateButtons();
+
+			this.array.SelectedRow = sel+1;
+			this.array.ShowSelectedRow();
 
 			this.OnContentChanged();
 		}
@@ -183,15 +183,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			collection.RemoveAt(sel);
 
+			this.UpdateArray();
+			this.UpdateButtons();
+
 			if (sel > collection.Count-1)
 			{
 				sel = collection.Count-1;
 			}
 			this.array.SelectedRow = sel;
 			this.array.ShowSelectedRow();
-
-			this.UpdateArray();
-			this.UpdateButtons();
 
 			this.OnContentChanged();
 		}
@@ -211,11 +211,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			collection.RemoveAt(sel);
 			collection.Insert(sel+direction, value);
 
-			this.array.SelectedRow = sel+direction;
-			this.array.ShowSelectedRow();
-
 			this.UpdateArray();
 			this.UpdateButtons();
+
+			this.array.SelectedRow = sel+direction;
+			this.array.ShowSelectedRow();
 
 			this.OnContentChanged();
 		}
