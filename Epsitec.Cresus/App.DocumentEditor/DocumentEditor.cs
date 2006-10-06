@@ -2904,7 +2904,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ZoomChange")]
 		void CommandZoomChange(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			string value = StructuredCommand.GetFieldValue (e.CommandState, "Name") as string;
+			string value = StructuredCommand.GetFieldValue(e.CommandState, "Name") as string;
 			double zoom = System.Convert.ToDouble(value);
 			this.CurrentDocument.Modifier.ZoomValue(zoom);
 		}
