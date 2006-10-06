@@ -670,12 +670,31 @@ namespace Epsitec.Common.Designer
 
 		public bool IsExistingName(string name)
 		{
-			//	Vérifie si un futur "Name" existe déjà.
+			//	Retourne true si un futur "Name" existe déjà.
+			return this.CheckExistingName(name) != null;
+		}
+
+		public string CheckExistingName(string name)
+		{
+			//	Retourne l'éventuelle erreur si on tente de créer cette ressource avec 'name'.
+			//	Retourne null si tout est correct.
+			string[] sub = name.Split('.');
+			for (int i=0; i<sub.Length-1; i++)
+			{
+				if (sub[i] == sub[i+1])
+				{
+					return "Deux parties successives séparées par des<br/>points ne peuvent pas être identiques !";
+				}
+			}
+
 			if (this.IsBundlesType)
 			{
 				name = this.AddFilter(name, false);
 				ResourceBundle.Field field = this.primaryBundle[name];
-				return (field != null && field.Name != null);
+				if (field != null && field.Name != null)
+				{
+					return Res.Strings.Error.NameAlreadyExist;
+				}
 			}
 
 			if (this.type == Type.Panels)
@@ -684,12 +703,12 @@ namespace Epsitec.Common.Designer
 				{
 					if (bundle.Caption == name)
 					{
-						return true;
+						return Res.Strings.Error.NameAlreadyExist;
 					}
 				}
 			}
 
-			return false;
+			return null;
 		}
 
 		public string GetDuplicateName(string baseName)
