@@ -31,11 +31,18 @@ namespace Epsitec.Common.Types.Serialization
 
 		public static DependencyObject DeserializeFromString(string xml)
 		{
+			return SimpleSerialization.DeserializeFromString (xml, Support.Resources.DefaultManager);
+		}
+
+		public static DependencyObject DeserializeFromString(string xml, Support.ResourceManager manager)
+		{
 			System.IO.StringReader stringReader = new System.IO.StringReader (xml);
 			System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (stringReader);
 
 			using (Serialization.Context context = new Serialization.DeserializerContext (new Serialization.IO.XmlReader (xmlReader)))
 			{
+				context.ExternalMap.Record (Serialization.Context.WellKnownTagResourceManager, manager);
+
 				while (xmlReader.Read ())
 				{
 					if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&

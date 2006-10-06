@@ -216,11 +216,26 @@ namespace Epsitec.Common.Types
 					throw new System.FormatException ();
 				}
 				
-				EnumValue enumValue = new EnumValue (druid);
-
-				enumValue.rank = rank;
+				//	We need to know the resource manager which is used for the
+				//	deserialization, so that we can properly map the DRUIDs to
+				//	their associated captions when working within the Designer :
 				
-				return enumValue;
+				Support.ResourceManager manager = context == null ? null : context.ExternalMap.GetValue (Serialization.Context.WellKnownTagResourceManager) as Support.ResourceManager;
+
+				if (manager == null)
+				{
+					EnumValue enumValue = new EnumValue (druid);
+					enumValue.rank = rank;
+					
+					return enumValue;
+				}
+				else
+				{
+					Caption caption = manager.GetCaption (druid);
+					EnumValue enumValue = new EnumValue (rank, caption);
+
+					return enumValue;
+				}
 			}
 
 			#endregion
