@@ -1758,7 +1758,22 @@ namespace Epsitec.Common.Designer
 			ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
 			newField.SetDruid(newDruid);
 			newField.SetName(name);
-			newField.SetStringValue("");
+
+			if (this.IsCaptionsType)
+			{
+				Caption caption = new Caption();
+
+				//	Le Caption.Name doit contenir le nom de la commande, sans
+				//	le préfixe, dans le bundle par défaut.
+				caption.Name = ResourceAccess.SubAllFilter(newField.Name);
+
+				newField.SetStringValue(caption.SerializeToString());
+			}
+			else
+			{
+				newField.SetStringValue("");
+			}
+
 			bundle.Add(newField);
 		}
 
