@@ -668,25 +668,33 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public bool IsExistingName(string name)
+		public bool IsCorrectNewName(ref string name)
 		{
-			//	Retourne true si un futur "Name" existe déjà.
-			return this.CheckExistingName(name) != null;
+			//	Retourne true s'il est possible de créer cette nouvelle ressource.
+			return (this.CheckNewName(ref name) == null);
 		}
 
-		public string CheckExistingName(string name)
+		public string CheckNewName(ref string name)
 		{
-			//	Retourne l'éventuelle erreur si on tente de créer cette ressource avec 'name'.
+			//	Retourne l'éventuelle erreur si on tente de créer cette nouvelle ressource.
 			//	Retourne null si tout est correct.
+			if (!Misc.IsValidLabel(ref name))
+			{
+				return Res.Strings.Error.InvalidLabel;
+			}
+
+			//	Refuse "Abc.Abc", "Toto.Abc.Abc", "Abc.Abc.Toto" ou "Toto.Abc.Abc.Titi"
+			//	Accepte "Abc.Toto.Abc"
 			string[] sub = name.Split('.');
 			for (int i=0; i<sub.Length-1; i++)
 			{
 				if (sub[i] == sub[i+1])
 				{
-					return "Deux parties successives séparées par des<br/>points ne peuvent pas être identiques !";
+					return Res.Strings.Error.NameTwofold;
 				}
 			}
 
+			//	Cherche si le nom existe déjà.
 			if (this.IsBundlesType)
 			{
 				name = this.AddFilter(name, false);
@@ -708,7 +716,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			return null;
+			return null;  // ok
 		}
 
 		public string GetDuplicateName(string baseName)
@@ -739,7 +747,7 @@ namespace Epsitec.Common.Designer
 			for (int i=nextNumber; i<nextNumber+100; i++)
 			{
 				newName = string.Concat(baseName, i.ToString(System.Globalization.CultureInfo.InvariantCulture));
-				if (!this.IsExistingName(newName))
+				if (this.IsCorrectNewName(ref newName))
 				{
 					break;
 				}
