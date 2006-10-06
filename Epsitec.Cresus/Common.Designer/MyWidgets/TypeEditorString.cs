@@ -14,12 +14,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			Widget group;
 
-			this.CreateDecimalLabeled("Longueur minimale", this, out group, out this.fieldMin);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Min, this, out group, out this.fieldMin);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 2);
 			this.fieldMin.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled("Longueur maximale", this, out group, out this.fieldMax);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Max, this, out group, out this.fieldMax);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 0);
 			this.fieldMax.TextChanged += new EventHandler(this.HandleTextFieldChanged);
