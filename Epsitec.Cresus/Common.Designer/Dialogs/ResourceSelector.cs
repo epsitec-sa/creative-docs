@@ -195,7 +195,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void AccessOpen(Module baseModule, ResourceAccess.Type type, Druid resource)
+		public void AccessOpen(Module baseModule, ResourceAccess.Type type, Druid resource, List<Druid> exclude)
 		{
 			//	Début de l'accès 'bypass' aux ressources pour le dialogue.
 			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
@@ -203,6 +203,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			System.Diagnostics.Debug.Assert(resource.Type != DruidType.ModuleRelative);
 
 			this.resource = resource;
+			this.exclude = exclude;
 
 			//	Cherche le module contenant le Druid de la ressource.
 			this.baseModule = baseModule;
@@ -226,7 +227,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.resourceType = type;
 			}
 
-			this.module.AccessCaptions.BypassFilterOpenAccess(this.resourceType);
+			this.module.AccessCaptions.BypassFilterOpenAccess(this.resourceType, this.exclude);
 		}
 
 		protected void AccessChange(Module module)
@@ -236,7 +237,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.module = module;
 			this.access = this.module.AccessCaptions;
-			this.module.AccessCaptions.BypassFilterOpenAccess(this.resourceType);
+			this.module.AccessCaptions.BypassFilterOpenAccess(this.resourceType, this.exclude);
 		}
 
 		public Druid AccessClose()
@@ -689,6 +690,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected Module						module;
 		protected ResourceAccess.Type			resourceType;
 		protected ResourceAccess				access;
+		protected List<Druid>					exclude;
 		protected StaticText					title;
 		protected TextFieldCombo				fieldModule;
 		protected StaticText					header1;

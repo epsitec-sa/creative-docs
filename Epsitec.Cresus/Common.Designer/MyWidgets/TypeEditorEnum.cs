@@ -152,8 +152,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			int sel = this.array.SelectedRow;
 
+			List<Druid> exclude = new List<Druid>();
+			foreach (EnumValue value in collection)
+			{
+				exclude.Add(value.Caption.Druid);
+			}
+
 			Druid druid = Druid.Empty;
-			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Values, druid);
+			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Values, druid, exclude);
 			if (druid.IsEmpty)
 			{
 				return;

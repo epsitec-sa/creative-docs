@@ -153,7 +153,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			int sel = this.array.SelectedRow;
 
 			Druid druid = Druid.Empty;
-			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Values, druid);
+			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Values, druid, null);
 
 			Caption caption = this.module.ResourceManager.GetCaption(druid);
 			System.Diagnostics.Debug.Assert(caption != null);
