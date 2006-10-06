@@ -2830,7 +2830,8 @@ namespace Epsitec.Common.Widgets
 				{
 					string textLabel = null;
 
-					if (string.IsNullOrEmpty (caption.Name) == false)
+					if ((string.IsNullOrEmpty (caption.Name) == false) &&
+						(UndefinedValue.IsUndefinedValue (this.GetLocalValue (Visual.NameProperty))))
 					{
 						this.Name = caption.Name;
 					}
