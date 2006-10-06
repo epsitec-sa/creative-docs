@@ -154,6 +154,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			Druid druid = Druid.Empty;
 			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Values, druid);
+			if (druid.IsEmpty)
+			{
+				return;
+			}
 
 			Caption caption = this.module.ResourceManager.GetCaption(druid);
 			System.Diagnostics.Debug.Assert(caption != null);
