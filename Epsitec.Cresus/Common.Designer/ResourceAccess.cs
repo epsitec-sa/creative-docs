@@ -680,7 +680,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne null si tout est correct.
 			if (!Misc.IsValidLabel(ref name))
 			{
-				return Res.Strings.Error.InvalidLabel;
+				return Res.Strings.Error.Name.Invalid;
 			}
 
 			//	Refuse "Abc.Abc", "Toto.Abc.Abc", "Abc.Abc.Toto" ou "Toto.Abc.Abc.Titi"
@@ -688,9 +688,9 @@ namespace Epsitec.Common.Designer
 			string[] sub = name.Split('.');
 			for (int i=0; i<sub.Length-1; i++)
 			{
-				if (sub[i] == sub[i+1])
+				if (sub[i] == sub[i+1])  // deux parties successives identiques ?
 				{
-					return Res.Strings.Error.NameTwofold;
+					return Res.Strings.Error.Name.Twofold;
 				}
 			}
 
@@ -701,7 +701,7 @@ namespace Epsitec.Common.Designer
 				ResourceBundle.Field field = this.primaryBundle[name];
 				if (field != null && field.Name != null)
 				{
-					return Res.Strings.Error.NameAlreadyExist;
+					return Res.Strings.Error.Name.AlreadyExist;
 				}
 			}
 
@@ -711,7 +711,7 @@ namespace Epsitec.Common.Designer
 				{
 					if (bundle.Caption == name)
 					{
-						return Res.Strings.Error.NameAlreadyExist;
+						return Res.Strings.Error.Name.AlreadyExist;
 					}
 				}
 			}
