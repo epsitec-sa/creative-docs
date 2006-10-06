@@ -26,7 +26,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Root.WindowStyles = WindowStyles.None;
 				this.window.PreventAutoClose = true;
 				this.WindowInit("TypeType", 172, 190, true);
-				this.window.Text = "Choix du type à créer";  // Res.Strings.Dialog.TypeType.Title;
+				this.window.Text = Res.Strings.Dialog.TypeType.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 

@@ -52,6 +52,17 @@
   <data name="Viewers.Commands.Shortcut.Main" id="0R5" mod="1">Principal</data>
   <data name="Viewers.Commands.Shortcut.Suppl" id="0S5" mod="1">Supplémentaire</data>
   <data name="Viewers.Commands.Group.Title" id="0T5" mod="1">Groupe</data>
+  <data name="Viewers.Types.Editor.Title" id="057" mod="1">Définition du type &lt;b&gt;{0}&lt;/b&gt;</data>
+  <data name="Viewers.Types.Numeric.Min" id="0R6" mod="1">Valeur minimale</data>
+  <data name="Viewers.Types.Numeric.Max" id="0S6" mod="1">Valeur maximale</data>
+  <data name="Viewers.Types.Numeric.Resol" id="0T6" mod="1">Résolution</data>
+  <data name="Viewers.Types.Numeric.PreferredMin" id="0U6" mod="1">Valeur minimale préférentielle</data>
+  <data name="Viewers.Types.Numeric.PreferredMax" id="0V6" mod="1">Valeur maximale préférentielle</data>
+  <data name="Viewers.Types.Numeric.PreferredResol" id="007" mod="1">Résolution préférentielle</data>
+  <data name="Viewers.Types.Numeric.SmallStep" id="017" mod="1">Petit pas</data>
+  <data name="Viewers.Types.Numeric.LargeStep" id="027" mod="1">Grand pas</data>
+  <data name="Viewers.Types.String.Min" id="037" mod="1">Longueur minimale</data>
+  <data name="Viewers.Types.String.Max" id="047" mod="1">Longueur maximale</data>
   <data name="Action.New" id="0U">Nouveau</data>
   <data name="Action.Open" id="0V">Ouvrir...</data>
   <data name="Action.Close" id="001">Fermer</data>
@@ -203,6 +214,7 @@
   <data name="Dialog.ResourceSelector.Button.Clear" id="0Q4">R</data>
   <data name="Dialog.ResourceSelector.Button.Use" id="0R4">Utiliser</data>
   <data name="Dialog.ResourceSelector.Button.Create" id="0S4">Créer</data>
+  <data name="Dialog.TypeType.Title" id="067" mod="1">Choix du type à créer</data>
   <data name="Dialog.Open.Title" id="0D6" mod="1">Ouvrir des ressources</data>
   <data name="Dialog.Open.Label" id="0E6" mod="1">Choix des ressources à ouvrir</data>
   <data name="Dialog.Open.Button.Open" id="0F6" mod="1">Ouvrir</data>

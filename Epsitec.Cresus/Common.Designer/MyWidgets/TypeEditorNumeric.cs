@@ -32,44 +32,44 @@ namespace Epsitec.Common.Designer.MyWidgets
 			right.Dock = DockStyle.Fill;
 
 			//	Range.
-			this.CreateDecimalLabeled("Valeur minimale", left, out group, out this.fieldMin);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Min, left, out group, out this.fieldMin);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 2);
 			this.fieldMin.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled("Valeur maximale", left, out group, out this.fieldMax);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Max, left, out group, out this.fieldMax);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 2);
 			this.fieldMax.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled("Résolution", left, out group, out this.fieldRes);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Resol, left, out group, out this.fieldRes);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 0);
 			this.fieldRes.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			//	PreferredRange.
-			this.CreateDecimalLabeled("Valeur minimale préférentielle", right, out group, out this.fieldPreferredMin);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.PreferredMin, right, out group, out this.fieldPreferredMin);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 2);
 			this.fieldPreferredMin.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled("Valeur maximale préférentielle", right, out group, out this.fieldPreferredMax);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.PreferredMax, right, out group, out this.fieldPreferredMax);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 2);
 			this.fieldPreferredMax.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled("Résolution préférentielle", right, out group, out this.fieldPreferredRes);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.PreferredResol, right, out group, out this.fieldPreferredRes);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 0);
 			this.fieldPreferredRes.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			//	Steps.
-			this.CreateDecimalLabeled("Petit pas", this, out group, out this.fieldSmallStep);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.SmallStep, this, out group, out this.fieldSmallStep);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 2);
 			this.fieldSmallStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled("Grand pas", this, out group, out this.fieldLargeStep);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.LargeStep, this, out group, out this.fieldLargeStep);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 0);
 			this.fieldLargeStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);

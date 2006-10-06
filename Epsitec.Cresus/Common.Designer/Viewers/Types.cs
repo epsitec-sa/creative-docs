@@ -76,7 +76,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			this.container.Title = string.Format("Définitions du type <b>{0}</b>", typeType.ToString());
+			this.container.Title = string.Format(Res.Strings.Viewers.Types.Editor.Title, typeType.ToString());
 
 			if (this.typeType != typeType)  // autre type ?
 			{
