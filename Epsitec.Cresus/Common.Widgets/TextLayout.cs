@@ -2944,6 +2944,10 @@ namespace Epsitec.Common.Widgets
 		public static string ConvertToXmlText(string text)
 		{
 			//	Convertit les caractères guillemet et apostrophe en tag XML &xxx;.
+			//	Il ne faut pas convertir les caractères '<', '>' et '&', car le texte
+			//	peut déjà contenir des tags XML. Par exemple, '<b>' ou '&quot;'.
+			//	Il serait évidemment catastrophique de convertir '<b>' en '&lt;b&gt;'
+			//	et '&quot;' en '&amp;quot;' !
 			//	Ceci permet de formater un texte édité avec le bloc-notes, par exemple.
 			if (text == null)
 			{
