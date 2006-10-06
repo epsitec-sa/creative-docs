@@ -161,6 +161,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			EnumValue item = new EnumValue(0, caption);
 			collection.Insert(sel+1, item);
+			this.RenumCollection();
 
 			this.UpdateArray();
 			this.UpdateButtons();
@@ -183,6 +184,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			collection.RemoveAt(sel);
+			this.RenumCollection();
 
 			this.UpdateArray();
 			this.UpdateButtons();
@@ -211,6 +213,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			EnumValue value = collection[sel];
 			collection.RemoveAt(sel);
 			collection.Insert(sel+direction, value);
+			this.RenumCollection();
 
 			this.UpdateArray();
 			this.UpdateButtons();
@@ -219,6 +222,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.ShowSelectedRow();
 
 			this.OnContentChanged();
+		}
+
+		protected void RenumCollection()
+		{
+			//	Renumérote toute la collection.
+			Types.Collections.EnumValueCollection collection = this.Collection;
+
+			for (int rank=0; rank<collection.Count; rank++)
+			{
+				EnumValue value = collection[rank];
+				value.DefineRank(rank);
+			}
 		}
 
 
