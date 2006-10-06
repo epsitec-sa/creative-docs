@@ -271,9 +271,10 @@ namespace Epsitec.Common.Designer.Viewers
 						return null;
 					}
 
-					if (this.access.IsExistingName(text))
+					string err = this.access.CheckExistingName(text);
+					if (err != null)
 					{
-						this.module.MainWindow.DialogError(Res.Strings.Error.NameAlreadyExist);
+						this.module.MainWindow.DialogError(err);
 						return null;
 					}
 				}
@@ -1018,14 +1019,15 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			if (this.access.IsExistingName(editedName))
+			string err = this.access.CheckExistingName(editedName);
+			if (err != null)
 			{
 				this.ignoreChange = true;
 				edit.Text = initialName;
 				edit.SelectAll();
 				this.ignoreChange = false;
 
-				this.module.MainWindow.DialogError(Res.Strings.Error.NameAlreadyExist);
+				this.module.MainWindow.DialogError(err);
 				return;
 			}
 
