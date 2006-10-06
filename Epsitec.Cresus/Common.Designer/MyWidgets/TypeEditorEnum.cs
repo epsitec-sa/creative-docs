@@ -156,6 +156,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Values, druid);
 
 			Caption caption = this.module.ResourceManager.GetCaption(druid);
+			System.Diagnostics.Debug.Assert(caption != null);
 			caption.Name = this.module.AccessCaptions.DirectGetDisplayName(druid);
 
 			EnumValue item = new EnumValue(0, caption);
