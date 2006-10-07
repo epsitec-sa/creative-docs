@@ -31,6 +31,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				this.tabIndex = 0;
+				this.index = 0;
 				this.radioButtons = new List<RadioButton>();
 				this.CreateRadio(Res.Captions.Types.Type.Void);
 				this.CreateRadio(Res.Captions.Types.Type.Boolean);
@@ -40,6 +41,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.CreateRadio(Res.Captions.Types.Type.String);
 				this.CreateRadio(Res.Captions.Types.Type.Enum);
 				this.CreateRadio(Res.Captions.Types.Type.Structured);
+				this.tabIndex++;
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -63,7 +65,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
 				buttonClose.Dock = DockStyle.Left;
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
-				buttonClose.TabIndex = tabIndex++;
+				buttonClose.TabIndex = this.tabIndex++;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
@@ -93,9 +95,10 @@ namespace Epsitec.Common.Designer.Dialogs
 			System.Diagnostics.Debug.Assert(button.Name.StartsWith("Types.Type."));
 			button.Dock = DockStyle.Top;
 			button.Margins = new Margins(0, 0, 2, 2);
-			button.TabIndex = tabIndex++;
+			button.Index = this.index++;
+			button.TabIndex = this.tabIndex;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			button.Clicked += new MessageEventHandler(this.HandleRadioButtonClicked);
+			button.ActiveStateChanged += new EventHandler(this.HandleRadioButtonActiveStateChanged);
 
 			this.radioButtons.Add(button);
 		}
@@ -105,18 +108,30 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour le bouton radio enfoncé en fonction du type.
 			string actual = ResourceAccess.ConvTypeType(this.type);
 
+			this.ignoreChanged = true;
 			foreach (RadioButton button in this.radioButtons)
 			{
 				string name = button.Name;
 				name = name.Substring(name.LastIndexOf('.')+1);  // enlève "Res.Captions.Types.Type."
 
 				button.ActiveState = (name == actual) ? ActiveState.Yes : ActiveState.No;
+
+				if (name == actual)
+				{
+					button.Focus();
+				}
 			}
+			this.ignoreChanged = false;
 		}
 
 
-		private void HandleRadioButtonClicked(object sender, MessageEventArgs e)
+		private void HandleRadioButtonActiveStateChanged(object sender)
 		{
+			if (this.ignoreChanged)
+			{
+				return;
+			}
+
 			RadioButton button = sender as RadioButton;
 			string name = button.Name;
 			name = name.Substring(name.LastIndexOf('.')+1);  // enlève "Res.Captions.Types.Type."
@@ -143,6 +158,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected ResourceAccess.TypeType		type;
 		protected List<RadioButton>				radioButtons;
+		protected int							index;
 		protected int							tabIndex;
 	}
 }

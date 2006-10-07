@@ -418,7 +418,6 @@ namespace Epsitec.Common.Designer
 								{
 									return;
 								}
-
 								this.lastTypeTypeCreatated = tt;
 							}
 							AbstractType type = ResourceAccess.CreateTypeType(this.lastTypeTypeCreatated);
