@@ -861,7 +861,7 @@ namespace Epsitec.Common.Designer
 				string s = field.AsString;
 				if (!string.IsNullOrEmpty(s))
 				{
-					caption.DeserializeFromString(s);
+					caption.DeserializeFromString(s, this.resourceManager);
 				}
 
 				text = ResourceAccess.GetCaptionNiceDescription(caption);
@@ -1023,7 +1023,7 @@ namespace Epsitec.Common.Designer
 			string s = field.AsString;
 			if (!string.IsNullOrEmpty(s))
 			{
-				caption.DeserializeFromString(s);
+				caption.DeserializeFromString(s, this.resourceManager);
 			}
 
 			return caption.Icon;
@@ -1040,7 +1040,7 @@ namespace Epsitec.Common.Designer
 			string s = field.AsString;
 			if (!string.IsNullOrEmpty(s))
 			{
-				caption.DeserializeFromString(s);
+				caption.DeserializeFromString(s, this.resourceManager);
 			}
 
 			return Command.GetGroup(caption);
@@ -1848,7 +1848,7 @@ namespace Epsitec.Common.Designer
 						string s = field.AsString;
 						if (!string.IsNullOrEmpty(s))
 						{
-							caption.DeserializeFromString(s);
+							caption.DeserializeFromString(s, this.resourceManager);
 						}
 
 						//	Le Caption.Name doit contenir le nom de la commande, sans
@@ -1906,7 +1906,7 @@ namespace Epsitec.Common.Designer
 				string s = field.AsString;
 				if (!string.IsNullOrEmpty(s))
 				{
-					caption.DeserializeFromString(s);
+					caption.DeserializeFromString(s, this.resourceManager);
 				}
 
 				Widgets.Collections.ShortcutCollection collection = Shortcut.GetShortcuts(caption);

@@ -437,7 +437,7 @@ namespace Epsitec.Common.Widgets
 				switch (message.Type)
 				{
 					case MessageType.KeyDown:
-						if (message.IsAltPressed)
+						if (message.IsAltPressed && !message.IsControlPressed)
 						{
 						}
 						else if (this.ProcessKeyDown (message.KeyCode, message.IsShiftPressed, message.IsControlPressed))
@@ -448,7 +448,7 @@ namespace Epsitec.Common.Widgets
 						break;
 
 					case MessageType.KeyPress:
-						if (message.IsAltPressed)
+						if (message.IsAltPressed && !message.IsControlPressed)
 						{
 						}
 						else if (this.ProcessKeyPress (message.KeyChar))

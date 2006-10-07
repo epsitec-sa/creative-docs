@@ -232,6 +232,12 @@ namespace Epsitec.Common.Types
 				else
 				{
 					Caption caption = manager.GetCaption (druid);
+
+					if (caption == null)
+					{
+						throw new System.InvalidOperationException ("DRUID cannot map to a Caption; probably incorrect ResourceManager specified");
+					}
+					
 					EnumValue enumValue = new EnumValue (rank, caption);
 
 					return enumValue;
