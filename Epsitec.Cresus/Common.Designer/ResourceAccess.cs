@@ -857,6 +857,8 @@ namespace Epsitec.Common.Designer
 			{
 				Caption caption = new Caption();
 
+				Epsitec.Common.Debug.Tracker.Register (string.Format ("GetStrings-{0}", druid), caption);
+
 				string s = field.AsString;
 				if (!string.IsNullOrEmpty(s))
 				{
@@ -897,6 +899,8 @@ namespace Epsitec.Common.Designer
 					if (b == bundle)
 					{
 						Caption caption = new Caption();
+
+						Epsitec.Common.Debug.Tracker.Register (string.Format ("Create-{0}", name), caption);
 
 						ICollection<string> dst = caption.Labels;
 						dst.Add(text);
@@ -1566,6 +1570,8 @@ namespace Epsitec.Common.Designer
 					{
 						this.accessCaption = new Caption();
 
+						Epsitec.Common.Debug.Tracker.Register (string.Format ("ResAccess-{0}-{1}", index, cultureName ?? "<null>"), this.accessCaption);
+
 						if (this.accessField != null)
 						{
 							string s = this.accessField.AsString;
@@ -1793,6 +1799,8 @@ namespace Epsitec.Common.Designer
 			if (this.IsCaptionsType)
 			{
 				Caption caption = new Caption();
+
+				Epsitec.Common.Debug.Tracker.Register (string.Format ("FirstField-{0}-{1}", localId, name), caption);
 
 				//	Le Caption.Name doit contenir le nom de la commande, sans
 				//	le préfixe, dans le bundle par défaut.
