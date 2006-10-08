@@ -113,6 +113,10 @@
     <Compile Include="Viewers\Strings.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
+      <Project>{AF58270B-4B5C-49F7-81D8-723CFF122F2C}</Project>
+      <Name>Common.Debug</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Dialogs\Common.Dialogs.csproj">
       <Project>{560DFD49-3052-4F41-A4C3-6216E6135DC9}</Project>
       <Name>Common.Dialogs</Name>
