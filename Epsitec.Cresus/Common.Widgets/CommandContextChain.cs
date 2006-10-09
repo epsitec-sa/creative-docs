@@ -54,6 +54,23 @@ namespace Epsitec.Common.Widgets
 		}
 
 		/// <summary>
+		/// Gets the first context in the context chain.
+		/// </summary>
+		/// <value>The first context or <c>null</c> if the chain is empty.</value>
+		public CommandContext FirstContext
+		{
+			get
+			{
+				foreach (CommandContext context in this.Contexts)
+				{
+					return context;
+				}
+
+				return null;
+			}
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether this chain is empty.
 		/// </summary>
 		/// <value><c>true</c> if this chain is empty; otherwise, <c>false</c>.</value>
@@ -130,16 +147,27 @@ namespace Epsitec.Common.Widgets
 		/// <returns>The command context chain.</returns>
 		public static CommandContextChain BuildChain(DependencyObject obj)
 		{
+			CommandContextChain that = null;
+
+			CommandContextChain.BuildChain (obj, ref that);
+
+			return that;
+		}
+
+		public static CommandContextChain BuildChain(DependencyObject obj, ref CommandContextChain chain)
+		{
 			Visual visual = obj as Visual;
 			Window window = obj as Window;
 
 			if (visual != null)
 			{
-				return CommandContextChain.BuildChain (visual);
+				CommandContextChain.BuildChain (visual, ref chain);
+				return chain;
 			}
 			if (window != null)
 			{
-				return CommandContextChain.BuildChain (window);
+				CommandContextChain.BuildChain (window, ref chain);
+				return chain;
 			}
 
 			CommandContextChain that = null;
@@ -175,6 +203,17 @@ namespace Epsitec.Common.Widgets
 			return this.GetCommandState (command, out context);
 		}
 
+		/// <summary>
+		/// Gets the state of the command.
+		/// </summary>
+		/// <param name="command">The command.</param>
+		/// <returns>The command state.</returns>
+		public CommandState GetCommandState(Command command)
+		{
+			CommandContext context;
+			return this.GetCommandState (command, out context);
+		}
+		
 		/// <summary>
 		/// Gets the state of the command.
 		/// </summary>
@@ -235,6 +274,13 @@ namespace Epsitec.Common.Widgets
 					}
 
 					that.chain.Add (new System.WeakReference (context));
+				}
+
+				AbstractMenu menu = visual as AbstractMenu;
+
+				if (menu != null)
+				{
+					CommandContextChain.BuildChain (menu.Host, ref that);
 				}
 
 				visual = visual.Parent;

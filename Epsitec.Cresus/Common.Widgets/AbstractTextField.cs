@@ -1007,6 +1007,9 @@ namespace Epsitec.Common.Widgets
 			this.contextMenu.AutoDispose = true;
 			this.contextMenu.Disposed += this.HandleContextMenuDisposed;
 
+			System.Diagnostics.Debug.Assert (context == Helpers.VisualTree.GetCommandContext (this.contextMenu));
+			System.Diagnostics.Debug.Assert (CommandDispatcherChain.BuildChain (this.contextMenu).IsEmpty == false);
+
 			bool sel = (this.TextNavigator.CursorFrom != this.TextNavigator.CursorTo);
 
 			context.SetLocalEnable (ApplicationCommands.Cut, sel);

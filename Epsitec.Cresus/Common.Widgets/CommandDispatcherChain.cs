@@ -178,6 +178,21 @@ namespace Epsitec.Common.Widgets
 			return that;
 		}
 
+		public static void BuildChain(DependencyObject obj, ref CommandDispatcherChain that)
+		{
+			Visual visual = obj as Visual;
+			Window window = obj as Window;
+
+			if (visual != null)
+			{
+				CommandDispatcherChain.BuildChain (visual, ref that);
+			}
+			if (window != null)
+			{
+				CommandDispatcherChain.BuildChain (window, ref that);
+			}
+		}
+
 		private static void BuildChain(Visual visual, ref CommandDispatcherChain that)
 		{
 			while (visual != null)
@@ -195,6 +210,13 @@ namespace Epsitec.Common.Widgets
 					{
 						that.chain.Add (new System.WeakReference (dispatcher));
 					}
+				}
+
+				AbstractMenu menu = visual as AbstractMenu;
+
+				if (menu != null)
+				{
+					CommandDispatcherChain.BuildChain (menu.Host, ref that);
 				}
 
 				visual = visual.Parent;

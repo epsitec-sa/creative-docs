@@ -2740,7 +2740,8 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						CommandState state = Helpers.VisualTree.GetCommandContext (this).GetCommandState (commandObject);
+						CommandContextChain chain = CommandContextChain.BuildChain (this);
+						CommandState state = chain.GetCommandState (commandObject);
 						this.QueueCommandForExecution (window, commandObject, state);
 					}
 				}
