@@ -93,6 +93,12 @@ namespace Epsitec.Common.Widgets
 		{
 			this.Name = name;
 		}
+
+		public MenuItem(Command commandObject)
+			: this ()
+		{
+			this.CommandObject = commandObject;
+		}
 		
 		
 		public virtual bool						IsSeparator

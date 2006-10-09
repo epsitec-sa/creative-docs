@@ -58,10 +58,13 @@ namespace Epsitec.Common.Widgets
 			this.OnCursorChanged(true);
 
 			CommandDispatcher dispatcher = new CommandDispatcher ("TextField", CommandDispatcherLevel.Secondary);
+			CommandContext    context    = new CommandContext ();
+			
 			dispatcher.AutoForwardCommands = true;
 			dispatcher.RegisterController (new Dispatcher (this));
 
 			CommandDispatcher.SetDispatcher (this, dispatcher);
+			CommandContext.SetContext (this, context);
 			
 			this.IsFocusedChanged += this.HandleIsFocusedChanged;
 		}
@@ -994,50 +997,28 @@ namespace Epsitec.Common.Widgets
 
 
 		#region ContextMenu
+		
 		protected void ShowContextMenu(bool mouseBased)
 		{
+			CommandContext context = CommandContext.GetContext (this);
+
 			this.contextMenu = new VMenu();
 			this.contextMenu.Host = this;
-			this.contextMenu.Accepted += new EventHandler(this.HandleContextMenuAccepted);
-			this.contextMenu.Rejected += new EventHandler(this.HandleContextMenuRejected);
+			this.contextMenu.AutoDispose = true;
+			this.contextMenu.Disposed += this.HandleContextMenuDisposed;
 
-			MenuItem mi;
 			bool sel = (this.TextNavigator.CursorFrom != this.TextNavigator.CursorTo);
 
-			mi = new MenuItem();
-			mi.CommandObject = ApplicationCommands.Cut;
-			mi.Name = "Cut";
-			mi.Text = Res.Strings.AbstractTextField.Menu.Cut;
-			mi.Enable = sel;
-			this.contextMenu.Items.Add(mi);
+			context.SetLocalEnable (ApplicationCommands.Cut, sel);
+			context.SetLocalEnable (ApplicationCommands.Copy, sel);
+			context.SetLocalEnable (ApplicationCommands.Delete, sel);
 
-			mi = new MenuItem();
-			mi.CommandObject = ApplicationCommands.Copy;
-			mi.Name = "Copy";
-			mi.Text = Res.Strings.AbstractTextField.Menu.Copy;
-			mi.Enable = sel;
-			this.contextMenu.Items.Add(mi);
-
-			mi = new MenuItem();
-			mi.CommandObject = ApplicationCommands.Paste;
-			mi.Name = "Paste";
-			mi.Text = Res.Strings.AbstractTextField.Menu.Paste;
-			this.contextMenu.Items.Add(mi);
-
-			mi = new MenuItem();
-			mi.CommandObject = ApplicationCommands.Delete;
-			mi.Name = "Delete";
-			mi.Text = Res.Strings.AbstractTextField.Menu.Delete;
-			mi.Enable = sel;
-			this.contextMenu.Items.Add(mi);
-
-			this.contextMenu.Items.Add(new MenuSeparator());
-
-			mi = new MenuItem();
-			mi.CommandObject = ApplicationCommands.SelectAll;
-			mi.Name = "SelectAll";
-			mi.Text = Res.Strings.AbstractTextField.Menu.SelectAll;
-			this.contextMenu.Items.Add(mi);
+			this.contextMenu.Items.AddItem (ApplicationCommands.Cut);
+			this.contextMenu.Items.AddItem (ApplicationCommands.Copy);
+			this.contextMenu.Items.AddItem (ApplicationCommands.Paste);
+			this.contextMenu.Items.AddItem (ApplicationCommands.Delete);
+			this.contextMenu.Items.AddSeparator();
+			this.contextMenu.Items.AddItem (ApplicationCommands.SelectAll);
 
 			this.contextMenu.AdjustSize();
 			
@@ -1072,29 +1053,13 @@ namespace Epsitec.Common.Widgets
 
 			this.contextMenu.ShowAsContextMenu(this, mouse);
 		}
-		
-		protected void DisposeContextMenu()
-		{
-			if (this.contextMenu != null)
-			{
-				this.contextMenu.Accepted -= new EventHandler(this.HandleContextMenuAccepted);
-				this.contextMenu.Rejected -= new EventHandler(this.HandleContextMenuRejected);
-				this.contextMenu.Dispose ();
-				this.contextMenu = null;
-			}
-		}
 
-		private void HandleContextMenuAccepted(object sender)
+		private void HandleContextMenuDisposed(object sender)
 		{
-			this.DisposeContextMenu ();
-			this.Invalidate ();
+			this.contextMenu.Disposed -= this.HandleContextMenuDisposed;
+			this.contextMenu = null;
 		}
 		
-		private void HandleContextMenuRejected(object sender)
-		{
-			this.DisposeContextMenu ();
-			this.Invalidate ();
-		}
 		#endregion
 
 		
