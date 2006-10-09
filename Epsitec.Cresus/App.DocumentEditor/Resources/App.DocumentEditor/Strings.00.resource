@@ -176,6 +176,7 @@
   <data name="Dialog.Print.Title" id="084">Imprimer...</data>
   <data name="Dialog.Print.TabPage.Printer" id="094">Imprimante</data>
   <data name="Dialog.Print.TabPage.Param" id="0A4">Paramètres</data>
+  <data name="Dialog.Print.TabPage.Image" id="008" mod="1">Images</data>
   <data name="Dialog.Print.TabPage.Publisher" id="0B4">Pré-presse</data>
   <data name="Dialog.Print.Button.OK" id="0C4">Imprimer</data>
   <data name="Dialog.Print.Tooltip.OK" id="0D4">Imprimer le document</data>

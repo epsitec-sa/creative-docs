@@ -33,6 +33,7 @@
   <data name="Dialog.Print.Copies" id="0Q">Tirage</data>
   <data name="Dialog.Print.Param" id="0R">Paramètres pour l&amp;apos;impression</data>
   <data name="Dialog.Print.File" id="0S">Fichier</data>
+  <data name="Dialog.Print.Image" id="0CA01" mod="1">Images bitmap</data>
   <data name="Dialog.Print.Publisher" id="0T">Réglages pré-presse</data>
   <data name="Dialog.Print.ToFile.Title" id="0U">Impression dans un fichier</data>
   <data name="Dialog.Print.ToFile.Type" id="0V">Fichier d&amp;apos;impression</data>
@@ -132,6 +133,8 @@
   <data name="Dialog.Integer.ImageCompression.Rle" id="0T3">RLE</data>
   <data name="Dialog.Integer.ImageCompression.FaxGroup3" id="0U3">Fax Group 3</data>
   <data name="Dialog.Integer.ImageCompression.FaxGroup4" id="0V3">Fax Group 4</data>
+  <data name="Dialog.Integer.ImageFilterA.Text" id="07A01" mod="1">Filtrage du groupe A</data>
+  <data name="Dialog.Integer.ImageFilterB.Text" id="08A01" mod="1">Filtrage du groupe B</data>
   <data name="Dialog.Integer.ExportPDFColorConversion.Text" id="004">Conversion</data>
   <data name="Dialog.Integer.ExportPDFColorConversion.None" id="014">Aucune</data>
   <data name="Dialog.Integer.ExportPDFColorConversion.ToRgb" id="024">Couleurs en RVB</data>
@@ -358,8 +361,11 @@
   <data name="Panel.Image.Button.MirrorX" id="0QA">Miroir horizontal</data>
   <data name="Panel.Image.Button.MirrorY" id="0RA">Miroir vertical</data>
   <data name="Panel.Image.Button.Homo" id="0SA">Conserver les proportions</data>
-  <data name="Panel.Image.Button.Filter" id="0TA">Filtre adoucissant</data>
   <data name="Panel.Image.Button.Inside" id="02901" mod="1">Image incluse au document</data>
+  <data name="Panel.Image.Button.Filter" id="0TA">Filtre adoucissant</data>
+  <data name="Panel.Image.Combo.Filter.None" id="09A01" mod="1">Pas de filtrage</data>
+  <data name="Panel.Image.Combo.Filter.FilterA" id="0AA01" mod="1">Filtrage A</data>
+  <data name="Panel.Image.Combo.Filter.FilterB" id="0BA01" mod="1">Filtrage B</data>
   <data name="Panel.Image.Tooltip.Filename" id="0UA">Nom du fichier de l&amp;apos;image</data>
   <data name="Panel.Image.Tooltip.Open" id="0VA">Choix du nom de fichier de l&amp;apos;image à importer</data>
   <data name="Panel.Image.Tooltip.Save" id="06901" mod="1">Exporte l&amp;apos;image dans un fichier sur disque</data>

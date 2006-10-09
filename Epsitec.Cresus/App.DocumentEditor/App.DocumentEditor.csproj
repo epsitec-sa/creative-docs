@@ -170,6 +170,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <EmbeddedResource Include="Images\ImageFilter1.icon" />
+    <EmbeddedResource Include="Images\ImageFilter2.icon" />
     <EmbeddedResource Include="Images\FavoriteRemove.icon" />
     <EmbeddedResource Include="Images\FavoriteAdd.icon" />
     <EmbeddedResource Include="Images\FavoriteBig.icon" />
@@ -185,7 +187,7 @@
     <EmbeddedResource Include="Images\NewDirectory.icon" />
     <EmbeddedResource Include="Images\ParentDirectory.icon" />
     <EmbeddedResource Include="Images\ImageHomo.icon" />
-    <EmbeddedResource Include="Images\ImageFilter.icon" />
+    <EmbeddedResource Include="Images\ImageFilter0.icon" />
     <EmbeddedResource Include="Images\ImageMirrorH.icon" />
     <EmbeddedResource Include="Images\ImageMirrorV.icon" />
     <EmbeddedResource Include="Images\ImageRotation180.icon" />

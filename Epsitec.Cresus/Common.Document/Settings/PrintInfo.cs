@@ -74,6 +74,10 @@ namespace Epsitec.Common.Document.Settings
 			this.debord = 50.0;
 			this.target = false;
 			this.debugArea = false;
+
+			this.imageNameFilters = new string[2];
+			this.imageNameFilters[0] = "Bicubic";
+			this.imageNameFilters[1] = "Bicubic";
 		}
 
 		public string PrintName
@@ -259,11 +263,28 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
+		#region ImageNameFilter
+		public string GetImageNameFilter(int rank)
+		{
+			//	Donne le nom d'un filtre pour l'image.
+			System.Diagnostics.Debug.Assert(rank >= 0 && rank < this.imageNameFilters.Length);
+			return this.imageNameFilters[rank];
+		}
+
+		public void SetImageNameFilter(int rank, string name)
+		{
+			//	Modifie le nom d'un filtre pour l'image.
+			System.Diagnostics.Debug.Assert(rank >= 0 && rank < this.imageNameFilters.Length);
+			this.imageNameFilters[rank] = name;
+		}
+		#endregion
+
+
 		#region Serialization
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			//	Sérialise les réglages.
-			info.AddValue("Rev", 3);
+			info.AddValue("Rev", 4);
 			info.AddValue("PrintName", this.printName);
 			info.AddValue("PrintRange", this.printRange);
 			info.AddValue("PrintArea", this.printArea);
@@ -285,6 +306,7 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("Margins", this.margins);
 			info.AddValue("Debord", this.debord);
 			info.AddValue("Target", this.target);
+			info.AddValue("ImageNameFilters", this.imageNameFilters);
 		}
 
 		protected PrintInfo(SerializationInfo info, StreamingContext context)
@@ -332,6 +354,11 @@ namespace Epsitec.Common.Document.Settings
 				this.debord = info.GetDouble("Debord");
 				this.target = info.GetBoolean("Target");
 			}
+
+			if ( rev >= 4 )
+			{
+				this.imageNameFilters = (string[]) info.GetValue("ImageNameFilters", typeof(string[]));
+			}
 		}
 		#endregion
 
@@ -360,5 +387,6 @@ namespace Epsitec.Common.Document.Settings
 		protected double				debord;
 		protected bool					target;
 		protected bool					debugArea;
+		protected string[]				imageNameFilters;
 	}
 }
