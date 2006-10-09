@@ -124,7 +124,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonUse = new Button(footer);
 				this.buttonUse.PreferredWidth = 75;
 				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
-				this.buttonUse.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonUse.Dock = DockStyle.Left;
 				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
 				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
@@ -525,6 +524,17 @@ namespace Epsitec.Common.Designer.Dialogs
 				createEnable = true;
 			}
 			this.buttonCreate.Enable = createEnable;
+
+			if (createEnable)
+			{
+				this.buttonUse.ButtonStyle = ButtonStyle.Normal;
+				this.buttonCreate.ButtonStyle = ButtonStyle.DefaultAccept;
+			}
+			else
+			{
+				this.buttonUse.ButtonStyle = ButtonStyle.DefaultAccept;
+				this.buttonCreate.ButtonStyle = ButtonStyle.Normal;
+			}
 		}
 
 		protected ResourceBundle CurrentBundle
