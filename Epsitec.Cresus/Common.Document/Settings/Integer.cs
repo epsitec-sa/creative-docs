@@ -313,7 +313,7 @@ namespace Epsitec.Common.Document.Settings
 				case "ImageFilterB":
 				case "ExportPDFImageFilterA":
 				case "ExportPDFImageFilterB":
-					return Properties.Image.FilterIndexToName(type);
+					return Properties.Image.FilterNameToText(Properties.Image.FilterIndexToName(type));
 			}
 			return "";
 		}
@@ -380,8 +380,7 @@ namespace Epsitec.Common.Document.Settings
 				case "ImageFilterB":
 				case "ExportPDFImageFilterA":
 				case "ExportPDFImageFilterB":
-					if ( rank < 4)  return rank;
-					return -1;
+					return Properties.Image.FilterRankToIndex(rank);
 			}
 			return -1;
 		}

@@ -271,88 +271,75 @@ namespace Epsitec.Common.Document.Properties
 			//	TODO: à vérifier !!!
 			switch (filter.Mode)
 			{
-				case ImageFilteringMode.None:
-					return Magick.FilterType.Point;
-
-				case ImageFilteringMode.Bilinear:
-					return Magick.FilterType.Box;
-
-				case ImageFilteringMode.Bicubic:
-					return Magick.FilterType.Cubic;
-
-				case ImageFilteringMode.Quadric:
-					return Magick.FilterType.Quadratic;
-
-				case ImageFilteringMode.Blackman:
-					return Magick.FilterType.Blackman;
-
-				case ImageFilteringMode.Gaussian:
-					return Magick.FilterType.Gaussian;
-
-				case ImageFilteringMode.Catrom:
-					return Magick.FilterType.Catrom;
-
-				case ImageFilteringMode.Mitchell:
-					return Magick.FilterType.Mitchell;
-
-				case ImageFilteringMode.Lanczos:
-					return Magick.FilterType.Lanczos;
-
-				case ImageFilteringMode.Bessel:
-					return Magick.FilterType.Bessel;
-
-				case ImageFilteringMode.Sinc:
-					return Magick.FilterType.Sinc;
-
-				default:
-					return Magick.FilterType.Cubic;
+				case ImageFilteringMode.None:      return Magick.FilterType.Point;
+				case ImageFilteringMode.Bilinear:  return Magick.FilterType.Box;
+				case ImageFilteringMode.Bicubic:   return Magick.FilterType.Cubic;
+				case ImageFilteringMode.Quadric:   return Magick.FilterType.Quadratic;
+				case ImageFilteringMode.Blackman:  return Magick.FilterType.Blackman;
+				case ImageFilteringMode.Gaussian:  return Magick.FilterType.Gaussian;
+				case ImageFilteringMode.Catrom:    return Magick.FilterType.Catrom;
+				case ImageFilteringMode.Mitchell:  return Magick.FilterType.Mitchell;
+				case ImageFilteringMode.Lanczos:   return Magick.FilterType.Lanczos;
+				case ImageFilteringMode.Bessel:    return Magick.FilterType.Bessel;
+				case ImageFilteringMode.Sinc:      return Magick.FilterType.Sinc;
+				default:                           return Magick.FilterType.Cubic;
 			}
 		}
 
 		public static int FilterNameToIndex(string name)
 		{
-			switch (name)
+			//	Conversion du nom du filtre en index pour le combo.
+			for (int i=0; i<100; i++)
 			{
-				case "None":
-					return 0;
-
-				case "Bilinear":
-					return 1;
-
-				case "Bicubic":
-					return 2;
-
-				case "Quadric":
-					return 3;
-
-				default:
-					return -1;
+				string n = Image.FilterIndexToName(i);
+				if (n == null)  break;
+				if (n == name)  return i;
 			}
+			return -1;
 		}
 
 		public static string FilterIndexToName(int index)
 		{
+			//	Conversion de l'index dans le combo en nom du filtre.
 			switch (index)
 			{
-				case 0:
-					return "None";
+				case 0:   return "None";      // pas de filtrage
+				case 1:   return "Bilinear";  // filtrage simple et rapide (mauvais si réduction)
+				case 2:   return "Bicubic";   // bon filtrage standard (bon si réduction)
+				case 3:   return "Quadric";   // filtrage exotique, à essayer...
+				default:  return null;
+			}
+		}
 
-				case 1:
-					return "Bilinear";
+		public static int FilterRankToIndex(int rank)
+		{
+			//	Conversion du rang en index pour le combo.
+			if (rank < 4)
+			{
+				return rank;
+			}
 
-				case 2:
-					return "Bicubic";
+			return -1;
+		}
 
-				case 3:
-					return "Quadric";
-
-				default:
-					return null;
+		public static string FilterNameToText(string name)
+		{
+			//	Conversion du nom du filtre en texte clair pour l'utilisateur.
+			//	Par exemple: "Bilinear" -> "Filtrage bi-cubique"
+			switch (name)
+			{
+				case "None":      return Res.Strings.Panel.Image.Filter.None;
+				case "Bilinear":  return Res.Strings.Panel.Image.Filter.Bilinear;
+				case "Bicubic":   return Res.Strings.Panel.Image.Filter.Bicubic;
+				default:          return string.Format(Res.Strings.Panel.Image.Filter.Other, name);
 			}
 		}
 
 		public static ImageFilter CategoryToFilter(DrawingContext context, int filterCategory, bool resampling)
 		{
+			//	Retourne le filtre défini dans un DrawingContext en fonction de la catégorie
+			//	(-1=aucun, 0=groupe A, 1=groupe B) et de mode de redimensionnement.
+			//	resampling = true lorsqu'on effectue une réduction, pour éviter les moirés.
 			if (filterCategory < 0)
 			{
 				return NameToFilter("None", resampling);
@@ -365,162 +352,27 @@ namespace Epsitec.Common.Document.Properties
 
 		protected static ImageFilter NameToFilter(string name, bool resampling)
 		{
+			//	Retourne le filtre en fonction du nom et du mode de redimensionnement.
 			//	resampling = true lorsqu'on effectue une réduction, pour éviter les moirés.
 			switch (name)
 			{
-				case "None":
-					return new ImageFilter(ImageFilteringMode.None);
-
-				case "Bilinear":
-					return new ImageFilter(ImageFilteringMode.Bilinear);
-
-				case "Bicubic":
-					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingBicubic : ImageFilteringMode.Bicubic);
-
-				case "Spline16":
-					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingSpline16 : ImageFilteringMode.Spline16);
-
-				case "Spline36":
-					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingSpline36 : ImageFilteringMode.Spline36);
-
-				case "Kaiser":
-					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingKaiser : ImageFilteringMode.Kaiser);
-
-				case "Quadric":
-					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingQuadric : ImageFilteringMode.Quadric);
-
-				case "Catrom":
-					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingCatrom : ImageFilteringMode.Catrom);
-
-				case "Gaussian":
-					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingGaussian : ImageFilteringMode.Gaussian);
-
-				case "Bessel":
-					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingBessel : ImageFilteringMode.Bessel);
-
-				case "Mitchell":
-					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingMitchell : ImageFilteringMode.Mitchell);
-
-				case "Sinc1":
-					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingSinc : ImageFilteringMode.Sinc, Image.normRadius);
-
-				case "Sinc2":
-					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingSinc : ImageFilteringMode.Sinc, Image.softRadius);
-
-				case "Lanczos1":
-					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingLanczos : ImageFilteringMode.Lanczos, Image.normRadius);
-
-				case "Lanczos2":
-					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingLanczos : ImageFilteringMode.Lanczos, Image.softRadius);
-
-				case "Blackman1":
-					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingBlackman : ImageFilteringMode.Blackman, Image.normRadius);
-
-				case "Blackman2":
-					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingBlackman : ImageFilteringMode.Blackman, Image.softRadius);
+				case "None":      return new ImageFilter(ImageFilteringMode.None);
+				case "Bilinear":  return new ImageFilter(ImageFilteringMode.Bilinear);
+				case "Bicubic":   return new ImageFilter(resampling ? ImageFilteringMode.ResamplingBicubic : ImageFilteringMode.Bicubic);
+				case "Spline16":  return new ImageFilter(resampling ? ImageFilteringMode.ResamplingSpline16 : ImageFilteringMode.Spline16);
+				case "Spline36":  return new ImageFilter(resampling ? ImageFilteringMode.ResamplingSpline36 : ImageFilteringMode.Spline36);
+				case "Kaiser":    return new ImageFilter(resampling ? ImageFilteringMode.ResamplingKaiser : ImageFilteringMode.Kaiser);
+				case "Quadric":   return new ImageFilter(resampling ? ImageFilteringMode.ResamplingQuadric : ImageFilteringMode.Quadric);
+				case "Catrom":    return new ImageFilter(resampling ? ImageFilteringMode.ResamplingCatrom : ImageFilteringMode.Catrom);
+				case "Gaussian":  return new ImageFilter(resampling ? ImageFilteringMode.ResamplingGaussian : ImageFilteringMode.Gaussian);
+				case "Bessel":    return new ImageFilter(resampling ? ImageFilteringMode.ResamplingBessel : ImageFilteringMode.Bessel);
+				case "Mitchell":  return new ImageFilter(resampling ? ImageFilteringMode.ResamplingMitchell : ImageFilteringMode.Mitchell);
+				case "Sinc":      return new ImageFilter(resampling ? ImageFilteringMode.ResamplingSinc : ImageFilteringMode.Sinc, 1.0);
+				case "Lanczos":   return new ImageFilter(resampling ? ImageFilteringMode.ResamplingLanczos : ImageFilteringMode.Lanczos, 1.0);
+				case "Blackman":  return new ImageFilter(resampling ? ImageFilteringMode.ResamplingBlackman : ImageFilteringMode.Blackman, 1.0);
+				default:          return new ImageFilter(ImageFilteringMode.None);
 			}
-
-			return new ImageFilter(ImageFilteringMode.None);
 		}
-
-		protected static string FilterToName(ImageFilter filter)
-		{
-			if (filter.Mode == ImageFilteringMode.None)
-			{
-				return "None";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Bilinear)
-			{
-				return "Bilinear";
-			}
-
-			if (filter.Mode == ImageFilteringMode.ResamplingBicubic)
-			{
-				return "Bicubic";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Spline16)
-			{
-				return "Spline16";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Spline36)
-			{
-				return "Spline36";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Kaiser)
-			{
-				return "Kaiser";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Quadric)
-			{
-				return "Quadric";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Catrom)
-			{
-				return "Catrom";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Gaussian)
-			{
-				return "Gaussian";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Bessel)
-			{
-				return "Bessel";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Mitchell)
-			{
-				return "Mitchell";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Sinc)
-			{
-				if (filter.Radius == Image.normRadius)
-				{
-					return "Sinc1";
-				}
-				else
-				{
-					return "Sinc2";
-				}
-			}
-
-			if (filter.Mode == ImageFilteringMode.Lanczos)
-			{
-				if (filter.Radius == Image.normRadius)
-				{
-					return "Lanczos1";
-				}
-				else
-				{
-					return "Lanczos2";
-				}
-			}
-
-			if (filter.Mode == ImageFilteringMode.Blackman)
-			{
-				if (filter.Radius == Image.normRadius)
-				{
-					return "Blackman1";
-				}
-				else
-				{
-					return "Blackman2";
-				}
-			}
-
-			return null;
-		}
-
-		protected static readonly double normRadius = 1.0;
-		protected static readonly double softRadius = 2.0;
 		#endregion
 
 
