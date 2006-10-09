@@ -358,26 +358,17 @@ namespace Epsitec.Common.Widgets.Helpers
 
 		public static CommandContext GetCommandContext(Visual visual)
 		{
-			while (visual != null)
+			CommandContextChain chain = CommandContextChain.BuildChain (visual);
+
+			if ((chain == null) ||
+				(chain.IsEmpty))
 			{
-				CommandContext context = CommandContext.GetContext (visual);
-
-				if (context != null)
-				{
-					return context;
-				}
-
-				Visual parent = visual.Parent;
-
-				if (parent == null)
-				{
-					return VisualTree.GetCommandContext (visual.Window);
-				}
-
-				visual = parent;
+				return null;
 			}
-
-			return null;
+			else
+			{
+				return chain.FirstContext;
+			}
 		}
 
 		public static CommandContext GetCommandContext(Window window)
