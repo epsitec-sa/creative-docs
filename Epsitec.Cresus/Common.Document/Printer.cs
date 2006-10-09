@@ -21,7 +21,7 @@ namespace Epsitec.Common.Document
 			this.imageAA = 1.0;
 
 			this.imageNameFilters = new string[2];
-			this.imageNameFilters[0] = "Bicubic";
+			this.imageNameFilters[0] = "Blackman";
 			this.imageNameFilters[1] = "Bicubic";
 		}
 
