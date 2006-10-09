@@ -69,6 +69,18 @@ namespace Epsitec.Common.Widgets
 				return false;
 			}
 		}
+
+		public bool								AutoDispose
+		{
+			get
+			{
+				return this.autoDisposeOnCleanup;
+			}
+			set
+			{
+				this.autoDisposeOnCleanup = value;
+			}
+		}
 		
 		public double							IconWidth
 		{
@@ -349,13 +361,25 @@ namespace Epsitec.Common.Widgets
 		private void HandleBehaviorAccepted(object sender)
 		{
 			this.OnAccepted ();
-			this.DisconnectEventHandlers ();
+			this.CleanUp ();
 		}
-		
+
 		private void HandleBehaviorRejected(object sender)
 		{
 			this.OnRejected ();
-			this.DisconnectEventHandlers ();
+			this.CleanUp ();
+		}
+
+		private void CleanUp()
+		{
+			if (this.autoDisposeOnCleanup)
+			{
+				this.Dispose ();
+			}
+			else
+			{
+				this.DisconnectEventHandlers ();
+			}
 		}
 		
 		
@@ -529,6 +553,7 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region MenuItemCollection Class
+		
 		public class MenuItemCollection : Collections.WidgetCollection
 		{
 			public MenuItemCollection(AbstractMenu menu) : base (menu)
@@ -550,7 +575,18 @@ namespace Epsitec.Common.Widgets
 					return base[name] as MenuItem;
 				}
 			}
+
+			public void AddItem(Command commandObject)
+			{
+				this.Add (new MenuItem (commandObject));
+			}
+
+			public void AddSeparator()
+			{
+				this.Add (new MenuSeparator ());
+			}
 		}
+		
 		#endregion
 		
 		protected virtual void OnAccepted()
@@ -603,5 +639,6 @@ namespace Epsitec.Common.Widgets
 		private double							icon_width;
 		private Widget							open_button;
 		private bool							is_connected;
+		private bool							autoDisposeOnCleanup;
 	}
 }
