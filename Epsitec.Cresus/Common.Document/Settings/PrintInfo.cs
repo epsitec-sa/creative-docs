@@ -76,7 +76,7 @@ namespace Epsitec.Common.Document.Settings
 			this.debugArea = false;
 
 			this.imageNameFilters = new string[2];
-			this.imageNameFilters[0] = "Bicubic";
+			this.imageNameFilters[0] = "Blackman";
 			this.imageNameFilters[1] = "Bicubic";
 		}
 

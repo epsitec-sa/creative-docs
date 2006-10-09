@@ -305,21 +305,11 @@ namespace Epsitec.Common.Document.Properties
 			{
 				case 0:   return "None";      // pas de filtrage
 				case 1:   return "Bilinear";  // filtrage simple et rapide (mauvais si réduction)
-				case 2:   return "Bicubic";   // bon filtrage standard (bon si réduction)
-				case 3:   return "Quadric";   // filtrage exotique, à essayer...
+				case 2:   return "Blackman";  // normal
+				case 3:   return "Bicubic";   // flou
+				case 4:   return "Sinc";      // accentué
 				default:  return null;
 			}
-		}
-
-		public static int FilterRankToIndex(int rank)
-		{
-			//	Conversion du rang en index pour le combo.
-			if (rank < 4)
-			{
-				return rank;
-			}
-
-			return -1;
 		}
 
 		public static string FilterNameToText(string name)
@@ -331,6 +321,8 @@ namespace Epsitec.Common.Document.Properties
 				case "None":      return Res.Strings.Panel.Image.Filter.None;
 				case "Bilinear":  return Res.Strings.Panel.Image.Filter.Bilinear;
 				case "Bicubic":   return Res.Strings.Panel.Image.Filter.Bicubic;
+				case "Blackman":  return Res.Strings.Panel.Image.Filter.Blackman;
+				case "Sinc":      return Res.Strings.Panel.Image.Filter.Sinc;
 				default:          return string.Format(Res.Strings.Panel.Image.Filter.Other, name);
 			}
 		}

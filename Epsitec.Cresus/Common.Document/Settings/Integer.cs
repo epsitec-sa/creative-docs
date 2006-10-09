@@ -380,7 +380,7 @@ namespace Epsitec.Common.Document.Settings
 				case "ImageFilterB":
 				case "ExportPDFImageFilterA":
 				case "ExportPDFImageFilterB":
-					return Properties.Image.FilterRankToIndex(rank);
+					return Properties.Image.FilterIndexToName(rank) == null ? -1 : rank;
 			}
 			return -1;
 		}

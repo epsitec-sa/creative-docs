@@ -69,7 +69,7 @@ namespace Epsitec.Common.Document
 			this.magnetLineProj   = new MagnetLine(this.document, this, MagnetLine.Type.Proj);
 
 			this.imageNameFilters = new string[2];
-			this.imageNameFilters[0] = "Bicubic";
+			this.imageNameFilters[0] = "Blackman";
 			this.imageNameFilters[1] = "Bicubic";
 		}
 
