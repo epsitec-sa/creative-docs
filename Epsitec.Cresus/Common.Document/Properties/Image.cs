@@ -315,13 +315,13 @@ namespace Epsitec.Common.Document.Properties
 		public static string FilterNameToText(string name)
 		{
 			//	Conversion du nom du filtre en texte clair pour l'utilisateur.
-			//	Par exemple: "Bilinear" -> "Filtrage bi-cubique"
+			//	Par exemple: "Bilinear" -> "Rapide (bilinéaire)"
 			switch (name)
 			{
 				case "None":      return Res.Strings.Panel.Image.Filter.None;
 				case "Bilinear":  return Res.Strings.Panel.Image.Filter.Bilinear;
-				case "Bicubic":   return Res.Strings.Panel.Image.Filter.Bicubic;
 				case "Blackman":  return Res.Strings.Panel.Image.Filter.Blackman;
+				case "Bicubic":   return Res.Strings.Panel.Image.Filter.Bicubic;
 				case "Sinc":      return Res.Strings.Panel.Image.Filter.Sinc;
 				default:          return string.Format(Res.Strings.Panel.Image.Filter.Other, name);
 			}
