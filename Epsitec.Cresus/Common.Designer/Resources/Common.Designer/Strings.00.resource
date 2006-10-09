@@ -230,6 +230,7 @@
   <data name="Error.Name.Invalid" id="025">Le nom contient un ou plusieurs caractères invalides !</data>
   <data name="Error.Name.AlreadyExist" id="035">Impossible d&amp;apos;utiliser ce nom, car il existe déjà !</data>
   <data name="Error.Name.Twofold" id="077" mod="1">Deux parties successives séparées par des&lt;br/&gt;points ne peuvent pas être identiques !</data>
+  <data name="Error.Name.SamePrefix" id="087" mod="1">Racine utilisée à double !</data>
   <data name="Error.ShortcutMany" id="0V5" mod="1">Raccourcis clavier &lt;i&gt;{0}&lt;/i&gt; utilisés plusieurs fois:</data>
   <data name="Error.CheckOK" id="006" mod="1">Aucune anomalie détectée.</data>
 </bundle>

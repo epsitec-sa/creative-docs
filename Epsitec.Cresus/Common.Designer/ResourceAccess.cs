@@ -695,13 +695,20 @@ namespace Epsitec.Common.Designer
 			}
 
 			//	Cherche si le nom existe déjà.
+			string err;
 			if (this.IsBundlesType)
 			{
 				string n = this.AddFilter(name, false);
-				ResourceBundle.Field field = this.primaryBundle[n];
-				if (field != null && field.Name != null)
+				foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
 				{
-					return Res.Strings.Error.Name.AlreadyExist;
+					if (field != null && field.Name != null)
+					{
+						err = ResourceAccess.CheckNames(field.Name, name);
+						if (err != null)
+						{
+							return err;
+						}
+					}
 				}
 			}
 
@@ -709,14 +716,48 @@ namespace Epsitec.Common.Designer
 			{
 				foreach (ResourceBundle bundle in this.panelsList)
 				{
-					if (bundle.Caption == name)
+					err = ResourceAccess.CheckNames(bundle.Caption, name);
+					if (err != null)
 					{
-						return Res.Strings.Error.Name.AlreadyExist;
+						return err;
 					}
 				}
 			}
 
 			return null;  // ok
+		}
+
+		protected static string CheckNames(string n1, string n2)
+		{
+			if (n1 == n2)
+			{
+				return Res.Strings.Error.Name.AlreadyExist;
+			}
+
+			if (!ResourceAccess.CheckNamesOnce(n1, n2))
+			{
+				return Res.Strings.Error.Name.SamePrefix;
+			}
+
+			if (!ResourceAccess.CheckNamesOnce(n2, n1))
+			{
+				return Res.Strings.Error.Name.SamePrefix;
+			}
+
+			return null;
+		}
+
+		protected static bool CheckNamesOnce(string n1, string n2)
+		{
+			if (n2.Length > n1.Length && n2.StartsWith(n1))
+			{
+				if (n2[n1.Length] == '.')
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		public string GetDuplicateName(string baseName)

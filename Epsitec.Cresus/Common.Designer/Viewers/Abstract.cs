@@ -265,9 +265,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 				if (fieldType == ResourceAccess.FieldType.Name)
 				{
+					string initialName = field.String;
+					this.access.SetField(searcher.Row, cultureName, fieldType, new ResourceAccess.Field("#temp#"));
+
 					string err = this.access.CheckNewName(ref text);
 					if (err != null)
 					{
+						this.access.SetField(searcher.Row, cultureName, fieldType, new ResourceAccess.Field(initialName));
+
 						this.module.MainWindow.DialogError(err);
 						return null;
 					}
@@ -992,9 +997,13 @@ namespace Epsitec.Common.Designer.Viewers
 			string editedName = edit.Text;
 			string initialName = this.access.GetField(sel, null, ResourceAccess.FieldType.Name).String;
 
+			this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field("#temp#"));
+
 			string err = this.access.CheckNewName(ref editedName);
 			if (err != null)
 			{
+				this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field(initialName));
+
 				this.ignoreChange = true;
 				edit.Text = initialName;
 				edit.SelectAll();
@@ -1008,11 +1017,6 @@ namespace Epsitec.Common.Designer.Viewers
 			edit.Text = editedName;
 			edit.SelectAll();
 			this.ignoreChange = false;
-
-			if (editedName == initialName)  // label inchangé ?
-			{
-				return;
-			}
 
 			this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field(editedName));
 			this.UpdateArrayField(0, sel, null, ResourceAccess.FieldType.Name);
