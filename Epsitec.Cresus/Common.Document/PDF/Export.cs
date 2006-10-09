@@ -90,6 +90,8 @@ namespace Epsitec.Common.Document.PDF
 			drawingContext = new DrawingContext(this.document, null);
 			drawingContext.ContainerSize = this.document.DocumentSize;
 			drawingContext.PreviewActive = true;
+			drawingContext.SetImageNameFilter(0, info.GetImageNameFilter(0));  // filtre A
+			drawingContext.SetImageNameFilter(1, info.GetImageNameFilter(1));  // filtre B
 
 			int max  = this.document.Modifier.PrintableTotalPages();
 			int from = 1;
@@ -545,7 +547,7 @@ namespace Epsitec.Common.Document.PDF
 							Properties.Image propImage = obj.PropertyImage;
 							System.Diagnostics.Debug.Assert(propImage != null);
 							string filename = propImage.Filename;
-							ImageFilter filter = propImage.ImageFilter;
+							ImageFilter filter = objImage.GetFilter(port, drawingContext);
 							Margins crop = propImage.CropMargins;
 							Size size = objImage.ImageBitmapSize;
 
@@ -1552,13 +1554,13 @@ namespace Epsitec.Common.Document.PDF
 			double finalDpiX = currentDpiX;
 			double finalDpiY = currentDpiY;
 
-			if ( this.imageMinDpi != 0.0 && image.Filter.Active )
+			if ( this.imageMinDpi != 0.0 )
 			{
 				finalDpiX = System.Math.Max(finalDpiX, this.imageMinDpi);
 				finalDpiY = System.Math.Max(finalDpiY, this.imageMinDpi);
 			}
 
-			if ( this.imageMaxDpi != 0.0 && image.Filter.Active )
+			if ( this.imageMaxDpi != 0.0 )
 			{
 				finalDpiX = System.Math.Min(finalDpiX, this.imageMaxDpi);
 				finalDpiY = System.Math.Min(finalDpiY, this.imageMaxDpi);
@@ -1695,7 +1697,7 @@ namespace Epsitec.Common.Document.PDF
 				
 				if ( resizeRequired )
 				{
-					copy.Zoom(dx, dy, Magick.FilterType.Cubic);
+					copy.Zoom(dx, dy, Properties.Image.FilterToMagick(image.Filter));
 				}
 
 				blob = new Magick.Blob();
@@ -1752,7 +1754,7 @@ namespace Epsitec.Common.Document.PDF
 
 				if ( bpp == -1 )  // alpha ?
 				{
-					byte[] bufferAlpha = this.CreateImageSurfaceChannel(magick, dx, dy, Magick.Channel.Alpha);
+					byte[] bufferAlpha = this.CreateImageSurfaceChannel(magick, dx, dy, Magick.Channel.Alpha, image.Filter);
 
 					data = new byte[dx*dy];
 					for ( int i=0 ; i<dx*dy ; i++ )
@@ -1764,8 +1766,8 @@ namespace Epsitec.Common.Document.PDF
 				if ( bpp == 1 )
 				{
 					magick.ImageType = Magick.ImageType.Grayscale;
-					
-					byte[] bufferGray = this.CreateImageSurfaceChannel(magick, dx, dy, Magick.Channel.Gray);
+
+					byte[] bufferGray = this.CreateImageSurfaceChannel(magick, dx, dy, Magick.Channel.Gray, image.Filter);
 
 					data = new byte[dx*dy];
 					for ( int i=0 ; i<dx*dy ; i++ )
@@ -1777,10 +1779,10 @@ namespace Epsitec.Common.Document.PDF
 				if ( bpp == 3 )
 				{
 					magick.ImageType = Magick.ImageType.TrueColor;
-					
-					byte[] bufferRed   = this.CreateImageSurfaceChannel(magick, dx, dy, Magick.Channel.Red);
-					byte[] bufferGreen = this.CreateImageSurfaceChannel(magick, dx, dy, Magick.Channel.Green);
-					byte[] bufferBlue  = this.CreateImageSurfaceChannel(magick, dx, dy, Magick.Channel.Blue);
+
+					byte[] bufferRed   = this.CreateImageSurfaceChannel(magick, dx, dy, Magick.Channel.Red, image.Filter);
+					byte[] bufferGreen = this.CreateImageSurfaceChannel(magick, dx, dy, Magick.Channel.Green, image.Filter);
+					byte[] bufferBlue  = this.CreateImageSurfaceChannel(magick, dx, dy, Magick.Channel.Blue, image.Filter);
 
 					data = new byte[dx*dy*3];
 					for ( int i=0 ; i<dx*dy ; i++ )
@@ -1794,11 +1796,11 @@ namespace Epsitec.Common.Document.PDF
 				if ( bpp == 4 )
 				{
 					magick.ImageType = Magick.ImageType.ColorSeparation;
-					
-					byte[] bufferCyan    = this.CreateImageSurfaceChannel(magick, dx, dy, Magick.Channel.Cyan);
-					byte[] bufferMagenta = this.CreateImageSurfaceChannel(magick, dx, dy, Magick.Channel.Magenta);
-					byte[] bufferYellow  = this.CreateImageSurfaceChannel(magick, dx, dy, Magick.Channel.Yellow);
-					byte[] bufferBlack   = this.CreateImageSurfaceChannel(magick, dx, dy, Magick.Channel.Black);
+
+					byte[] bufferCyan    = this.CreateImageSurfaceChannel(magick, dx, dy, Magick.Channel.Cyan, image.Filter);
+					byte[] bufferMagenta = this.CreateImageSurfaceChannel(magick, dx, dy, Magick.Channel.Magenta, image.Filter);
+					byte[] bufferYellow  = this.CreateImageSurfaceChannel(magick, dx, dy, Magick.Channel.Yellow, image.Filter);
+					byte[] bufferBlack   = this.CreateImageSurfaceChannel(magick, dx, dy, Magick.Channel.Black, image.Filter);
 
 					data = new byte[dx*dy*4];
 					for ( int i=0 ; i<dx*dy ; i++ )
@@ -1837,7 +1839,7 @@ namespace Epsitec.Common.Document.PDF
 			return useMask;
 		}
 
-		protected byte[] CreateImageSurfaceChannel(Magick.Image magick, int dx, int dy, Magick.Channel channel)
+		protected byte[] CreateImageSurfaceChannel(Magick.Image magick, int dx, int dy, Magick.Channel channel, ImageFilter filter)
 		{
 			Magick.Image copy = new Magick.Image(magick);
 			copy.SelectChannel(channel);
@@ -1848,7 +1850,7 @@ namespace Epsitec.Common.Document.PDF
 
 			if ( dx != magick.Width || dy != magick.Height )
 			{
-				copy.Zoom(dx, dy, Magick.FilterType.Cubic);
+				copy.Zoom(dx, dy, Properties.Image.FilterToMagick(filter));
 			}
 
 			byte[] buffer = new byte[dx*dy*4];

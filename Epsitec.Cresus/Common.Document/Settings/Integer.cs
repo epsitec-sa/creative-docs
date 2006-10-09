@@ -40,6 +40,14 @@ namespace Epsitec.Common.Document.Settings
 					this.conditionState = true;
 					break;
 
+				case "PrintImageFilterA":
+					this.text = Res.Strings.Dialog.Integer.ImageFilterA.Text;
+					break;
+
+				case "PrintImageFilterB":
+					this.text = Res.Strings.Dialog.Integer.ImageFilterB.Text;
+					break;
+
 				case "ImageDepth":
 					this.text = Res.Strings.Dialog.Integer.ImageDepth.Text;
 					break;
@@ -48,12 +56,28 @@ namespace Epsitec.Common.Document.Settings
 					this.text = Res.Strings.Dialog.Integer.ImageCompression.Text;
 					break;
 
+				case "ImageFilterA":
+					this.text = Res.Strings.Dialog.Integer.ImageFilterA.Text;
+					break;
+
+				case "ImageFilterB":
+					this.text = Res.Strings.Dialog.Integer.ImageFilterB.Text;
+					break;
+
 				case "ExportPDFColorConversion":
 					this.text = Res.Strings.Dialog.Integer.ExportPDFColorConversion.Text;
 					break;
 
 				case "ExportPDFImageCompression":
 					this.text = Res.Strings.Dialog.Integer.ExportPDFImageCompression.Text;
+					break;
+
+				case "ExportPDFImageFilterA":
+					this.text = Res.Strings.Dialog.Integer.ImageFilterA.Text;
+					break;
+
+				case "ExportPDFImageFilterB":
+					this.text = Res.Strings.Dialog.Integer.ImageFilterB.Text;
 					break;
 			}
 		}
@@ -73,17 +97,35 @@ namespace Epsitec.Common.Document.Settings
 					case "PrintCentring":
 						return (int) this.document.Settings.PrintInfo.Centring;
 
+					case "PrintImageFilterA":
+						return Properties.Image.FilterNameToIndex(this.document.Settings.PrintInfo.GetImageNameFilter(0));
+
+					case "PrintImageFilterB":
+						return Properties.Image.FilterNameToIndex(this.document.Settings.PrintInfo.GetImageNameFilter(1));
+
 					case "ImageDepth":
 						return this.document.Printer.ImageDepth;
 
 					case "ImageCompression":
 						return (int) this.document.Printer.ImageCompression;
 
+					case "ImageFilterA":
+						return Properties.Image.FilterNameToIndex(this.document.Printer.GetImageNameFilter(0));
+
+					case "ImageFilterB":
+						return Properties.Image.FilterNameToIndex(this.document.Printer.GetImageNameFilter(1));
+
 					case "ExportPDFColorConversion":
 						return (int) this.document.Settings.ExportPDFInfo.ColorConversion;
 
 					case "ExportPDFImageCompression":
 						return (int) this.document.Settings.ExportPDFInfo.ImageCompression;
+
+					case "ExportPDFImageFilterA":
+						return Properties.Image.FilterNameToIndex(this.document.Settings.ExportPDFInfo.GetImageNameFilter(0));
+
+					case "ExportPDFImageFilterB":
+						return Properties.Image.FilterNameToIndex(this.document.Settings.ExportPDFInfo.GetImageNameFilter(1));
 				}
 
 				return 0;
@@ -105,6 +147,14 @@ namespace Epsitec.Common.Document.Settings
 						this.document.Settings.PrintInfo.Centring = (PrintCentring) value;
 						break;
 
+					case "PrintImageFilterA":
+						this.document.Settings.PrintInfo.SetImageNameFilter(0, Properties.Image.FilterIndexToName(value));
+						break;
+
+					case "PrintImageFilterB":
+						this.document.Settings.PrintInfo.SetImageNameFilter(1, Properties.Image.FilterIndexToName(value));
+						break;
+
 					case "ImageDepth":
 						this.document.Printer.ImageDepth = value;
 						break;
@@ -113,12 +163,28 @@ namespace Epsitec.Common.Document.Settings
 						this.document.Printer.ImageCompression = (ImageCompression) value;
 						break;
 
+					case "ImageFilterA":
+						this.document.Printer.SetImageNameFilter(0, Properties.Image.FilterIndexToName(value));
+						break;
+
+					case "ImageFilterB":
+						this.document.Printer.SetImageNameFilter(1, Properties.Image.FilterIndexToName(value));
+						break;
+
 					case "ExportPDFColorConversion":
 						this.document.Settings.ExportPDFInfo.ColorConversion = (PDF.ColorConversion) value;
 						break;
 
 					case "ExportPDFImageCompression":
 						this.document.Settings.ExportPDFInfo.ImageCompression = (PDF.ImageCompression) value;
+						break;
+
+					case "ExportPDFImageFilterA":
+						this.document.Settings.ExportPDFInfo.SetImageNameFilter(0, Properties.Image.FilterIndexToName(value));
+						break;
+
+					case "ExportPDFImageFilterB":
+						this.document.Settings.ExportPDFInfo.SetImageNameFilter(1, Properties.Image.FilterIndexToName(value));
 						break;
 				}
 			}
@@ -240,6 +306,14 @@ namespace Epsitec.Common.Document.Settings
 					if ( imc == PDF.ImageCompression.ZIP  )  return Res.Strings.Dialog.Integer.ExportPDFImageCompression.ZIP;
 					if ( imc == PDF.ImageCompression.JPEG )  return Res.Strings.Dialog.Integer.ExportPDFImageCompression.JPEG;
 					break;
+
+				case "PrintImageFilterA":
+				case "PrintImageFilterB":
+				case "ImageFilterA":
+				case "ImageFilterB":
+				case "ExportPDFImageFilterA":
+				case "ExportPDFImageFilterB":
+					return Properties.Image.FilterIndexToName(type);
 			}
 			return "";
 		}
@@ -298,6 +372,15 @@ namespace Epsitec.Common.Document.Settings
 					if ( rank == 0 )  return (int) PDF.ImageCompression.None;
 					if ( rank == 1 )  return (int) PDF.ImageCompression.ZIP;
 					if ( rank == 2 )  return (int) PDF.ImageCompression.JPEG;
+					return -1;
+
+				case "PrintImageFilterA":
+				case "PrintImageFilterB":
+				case "ImageFilterA":
+				case "ImageFilterB":
+				case "ExportPDFImageFilterA":
+				case "ExportPDFImageFilterB":
+					if ( rank < 4)  return rank;
 					return -1;
 			}
 			return -1;

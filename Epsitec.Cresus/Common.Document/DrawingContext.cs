@@ -67,6 +67,10 @@ namespace Epsitec.Common.Document
 			this.magnetLinePerp   = new MagnetLine(this.document, this, MagnetLine.Type.Perp);
 			this.magnetLineInter  = new MagnetLine(this.document, this, MagnetLine.Type.Inter);
 			this.magnetLineProj   = new MagnetLine(this.document, this, MagnetLine.Type.Proj);
+
+			this.imageNameFilters = new string[2];
+			this.imageNameFilters[0] = "Bicubic";
+			this.imageNameFilters[1] = "Bicubic";
 		}
 
 		public Viewer Viewer
@@ -2159,6 +2163,23 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
+		#region ImageNameFilter
+		public string GetImageNameFilter(int rank)
+		{
+			//	Donne le nom d'un filtre pour l'image.
+			System.Diagnostics.Debug.Assert(rank >= 0 && rank < this.imageNameFilters.Length);
+			return this.imageNameFilters[rank];
+		}
+
+		public void SetImageNameFilter(int rank, string name)
+		{
+			//	Modifie le nom d'un filtre pour l'image.
+			System.Diagnostics.Debug.Assert(rank >= 0 && rank < this.imageNameFilters.Length);
+			this.imageNameFilters[rank] = name;
+		}
+		#endregion
+
+
 		#region RootStack
 		public System.Collections.ArrayList RootStack
 		{
@@ -2520,5 +2541,6 @@ namespace Epsitec.Common.Document
 		protected System.Collections.ArrayList	rootStack;
 		protected System.Collections.ArrayList	masterPageList;
 		protected System.Collections.ArrayList	magnetLayerList;
+		protected string[]						imageNameFilters;
 	}
 }

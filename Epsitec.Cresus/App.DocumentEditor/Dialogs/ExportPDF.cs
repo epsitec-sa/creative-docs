@@ -24,7 +24,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window = new Window();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
-				this.WindowInit("ExportPDF", 300, 220);
+				this.WindowInit("ExportPDF", 300, 274);
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowExportCloseClicked);

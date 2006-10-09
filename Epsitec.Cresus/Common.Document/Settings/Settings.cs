@@ -94,12 +94,16 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultDouble("Print", "PrintMargins");
 			this.CreateDefaultDouble("Print", "PrintDebord");
 			this.CreateDefaultBool("Print", "PrintTarget");
+			this.CreateDefaultInteger("Print", "PrintImageFilterA");
+			this.CreateDefaultInteger("Print", "PrintImageFilterB");
 
 			this.CreateDefaultDouble("Export", "ImageDpi");
 			this.CreateDefaultInteger("Export", "ImageDepth");
 			this.CreateDefaultInteger("Export", "ImageCompression");
 			this.CreateDefaultDouble("Export", "ImageQuality");
 			this.CreateDefaultDouble("Export", "ImageAA");
+			this.CreateDefaultInteger("Export", "ImageFilterA");
+			this.CreateDefaultInteger("Export", "ImageFilterB");
 
 			this.CreateDefaultRange("ExportPDF", "ExportPDFRange");
 			this.CreateDefaultDouble("ExportPDF", "ExportPDFDebord");
@@ -110,6 +114,8 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultDouble("ExportPDF", "ExportPDFJpegQuality");
 			this.CreateDefaultDouble("ExportPDF", "ExportPDFImageMinDpi");
 			this.CreateDefaultDouble("ExportPDF", "ExportPDFImageMaxDpi");
+			this.CreateDefaultInteger("ExportPDF", "ExportPDFImageFilterA");
+			this.CreateDefaultInteger("ExportPDF", "ExportPDFImageFilterB");
 		}
 
 		protected void CreateDefaultBool(string dialog, string name)

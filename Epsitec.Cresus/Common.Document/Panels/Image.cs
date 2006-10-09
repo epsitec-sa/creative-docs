@@ -84,33 +84,13 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonFilter = new IconButtonCombo(this);
 			this.buttonFilter.AutoFocus = false;
 			this.buttonFilter.IsLiveUpdateEnabled = false;
-			this.buttonFilter.IconName = Misc.Icon("ImageFilter");
+			//?this.buttonFilter.IconName = Misc.Icon("ImageFilter");
 			this.buttonFilter.ComboClosed += new EventHandler(this.HandleFilterComboClosed);
 			this.buttonFilter.TabIndex = tabIndex++;
 			this.buttonFilter.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-#if false
-			this.AddFilterCombo("None");
-			this.AddFilterCombo("Bilinear");
-			this.AddFilterCombo("Bicubic");
-			this.AddFilterCombo("Spline16");
-			this.AddFilterCombo("Spline36");
-			this.AddFilterCombo("Kaiser");
-			this.AddFilterCombo("Quadric");
-			this.AddFilterCombo("Catrom");
-			this.AddFilterCombo("Gaussian");
-			this.AddFilterCombo("Bessel");
-			this.AddFilterCombo("Mitchell");
-			this.AddFilterCombo("Sinc1");
-			this.AddFilterCombo("Sinc2");
-			this.AddFilterCombo("Lanczos1");
-			this.AddFilterCombo("Lanczos2");
-			this.AddFilterCombo("Blackman1");
-			this.AddFilterCombo("Blackman2");
-#else
-			this.AddFilterCombo("None");
-			this.AddFilterCombo("Bilinear");
-			this.AddFilterCombo("Bicubic");
-#endif
+			this.AddFilterCombo("ImageFilter0", Res.Strings.Panel.Image.Combo.Filter.None);
+			this.AddFilterCombo("ImageFilter1", Res.Strings.Panel.Image.Combo.Filter.FilterA);
+			this.AddFilterCombo("ImageFilter2", Res.Strings.Panel.Image.Combo.Filter.FilterB);
 			ToolTip.Default.SetToolTip(this.buttonFilter, Res.Strings.Panel.Image.Button.Filter);
 
 			this.buttonHomo = new IconButton(this);
@@ -187,189 +167,14 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected void AddFilterCombo(string name)
+		protected void AddFilterCombo(string icon, string text)
 		{
 			//	Ajoute une ligne au menu du filtre.
-			string text = Image.NameToText(name);
-			string icon = name == "None" ? "DeleteItem" : "ImageFilter";
-			string regularText  = text;
-			string selectedText = Misc.Bold(text);
+			string regularText  = string.Format("{0} {1}", Misc.Image(icon, -5), text);
+			string selectedText = string.Format("{0} {1}", Misc.Image(icon, -5), Misc.Bold(text));
 			string briefIcon    = Misc.Icon(icon);
-			IconButtonCombo.Item item = new IconButtonCombo.Item(name, briefIcon, regularText, selectedText);
+			IconButtonCombo.Item item = new IconButtonCombo.Item("", briefIcon, regularText, selectedText);
 			this.buttonFilter.Items.Add(item);
-		}
-
-		protected static ImageFilter NameToFilter(string name)
-		{
-			switch (name)
-			{
-				case "None":
-					return new ImageFilter(ImageFilteringMode.None);
-
-				case "Bilinear":
-					return new ImageFilter(ImageFilteringMode.Bilinear);
-
-				case "Bicubic":
-					return new ImageFilter(ImageFilteringMode.ResamplingBicubic);
-
-				case "Spline16":
-					return new ImageFilter(ImageFilteringMode.Spline16);
-
-				case "Spline36":
-					return new ImageFilter(ImageFilteringMode.Spline36);
-
-				case "Kaiser":
-					return new ImageFilter(ImageFilteringMode.Kaiser);
-
-				case "Quadric":
-					return new ImageFilter(ImageFilteringMode.Quadric);
-
-				case "Catrom":
-					return new ImageFilter(ImageFilteringMode.Catrom);
-
-				case "Gaussian":
-					return new ImageFilter(ImageFilteringMode.Gaussian);
-
-				case "Bessel":
-					return new ImageFilter(ImageFilteringMode.Bessel);
-
-				case "Mitchell":
-					return new ImageFilter(ImageFilteringMode.Mitchell);
-
-				case "Sinc1":
-					return new ImageFilter(ImageFilteringMode.Sinc, Image.normRadius);
-
-				case "Sinc2":
-					return new ImageFilter(ImageFilteringMode.Sinc, Image.softRadius);
-
-				case "Lanczos1":
-					return new ImageFilter(ImageFilteringMode.Lanczos, Image.normRadius);
-
-				case "Lanczos2":
-					return new ImageFilter(ImageFilteringMode.Lanczos, Image.softRadius);
-
-				case "Blackman1":
-					return new ImageFilter(ImageFilteringMode.Blackman, Image.normRadius);
-
-				case "Blackman2":
-					return new ImageFilter(ImageFilteringMode.Blackman, Image.softRadius);
-			}
-
-			return new ImageFilter(ImageFilteringMode.None);
-		}
-
-		protected static string NameToText(string name)
-		{
-			switch (name)
-			{
-				case "None":
-					return Res.Strings.Panel.Image.Filter.None;
-
-				case "Bilinear":
-					return Res.Strings.Panel.Image.Filter.Bilinear;
-
-				case "Bicubic":
-					return Res.Strings.Panel.Image.Filter.Bicubic;
-
-				default:
-					return string.Format(Res.Strings.Panel.Image.Filter.Other, name);
-			}
-		}
-
-		protected static string FilterToName(ImageFilter filter)
-		{
-			if (filter.Mode == ImageFilteringMode.None)
-			{
-				return "None";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Bilinear)
-			{
-				return "Bilinear";
-			}
-
-			if (filter.Mode == ImageFilteringMode.ResamplingBicubic)
-			{
-				return "Bicubic";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Spline16)
-			{
-				return "Spline16";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Spline36)
-			{
-				return "Spline36";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Kaiser)
-			{
-				return "Kaiser";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Quadric)
-			{
-				return "Quadric";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Catrom)
-			{
-				return "Catrom";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Gaussian)
-			{
-				return "Gaussian";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Bessel)
-			{
-				return "Bessel";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Mitchell)
-			{
-				return "Mitchell";
-			}
-
-			if (filter.Mode == ImageFilteringMode.Sinc)
-			{
-				if (filter.Radius == Image.normRadius)
-				{
-					return "Sinc1";
-				}
-				else
-				{
-					return "Sinc2";
-				}
-			}
-
-			if (filter.Mode == ImageFilteringMode.Lanczos)
-			{
-				if (filter.Radius == Image.normRadius)
-				{
-					return "Lanczos1";
-				}
-				else
-				{
-					return "Lanczos2";
-				}
-			}
-
-			if (filter.Mode == ImageFilteringMode.Blackman)
-			{
-				if (filter.Radius == Image.normRadius)
-				{
-					return "Blackman1";
-				}
-				else
-				{
-					return "Blackman2";
-				}
-			}
-
-			return null;
 		}
 
 
@@ -395,7 +200,7 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonHomo   .ActiveState = p.Homo      ? ActiveState.Yes : ActiveState.No;
 			this.buttonInside .ActiveState = p.InsideDoc ? ActiveState.Yes : ActiveState.No;
 
-			this.buttonFilter.SelectedName = Image.FilterToName(p.ImageFilter);
+			this.buttonFilter.SelectedIndex = p.FilterCategory+1;  // -1=aucun, 0=A, 1=B
 
 			this.cropper.Crop = p.CropMargins;
 
@@ -420,7 +225,7 @@ namespace Epsitec.Common.Document.Panels
 			p.Homo      = ( this.buttonHomo   .ActiveState == ActiveState.Yes );
 			p.InsideDoc = ( this.buttonInside .ActiveState == ActiveState.Yes );
 
-			p.ImageFilter = Image.NameToFilter(this.buttonFilter.SelectedName);
+			p.FilterCategory = this.buttonFilter.SelectedIndex-1;  // -1=aucun, 0=A, 1=B
 
 			p.CropMargins = this.cropper.Crop;
 		}
@@ -623,9 +428,6 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 		}
 
-
-		protected static readonly double normRadius = 1.0;
-		protected static readonly double softRadius = 2.0;
 
 		protected TextField					fieldFilename;
 		protected Button					buttonOpen;

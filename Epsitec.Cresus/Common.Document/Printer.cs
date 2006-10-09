@@ -19,6 +19,10 @@ namespace Epsitec.Common.Document
 			this.imageDepth = 24;
 			this.imageQuality = 0.85;
 			this.imageAA = 1.0;
+
+			this.imageNameFilters = new string[2];
+			this.imageNameFilters[0] = "Bicubic";
+			this.imageNameFilters[1] = "Bicubic";
 		}
 
 		public void Dispose()
@@ -37,20 +41,22 @@ namespace Epsitec.Common.Document
 
 		public string Export(string filename)
 		{
-			//	Exporte le document dans un fichier.
+			//	Exporte le document dans un fichier bitmap.
 			//	Crée le DrawingContext utilisé pour l'exportation.
 			DrawingContext drawingContext = new DrawingContext(this.document, null);
 			drawingContext.ContainerSize = this.document.PageSize;
 			drawingContext.PreviewActive = true;
 			drawingContext.IsBitmap = true;
 			drawingContext.GridShow = false;
+			drawingContext.SetImageNameFilter(0, this.document.Printer.GetImageNameFilter(0));  // filtre A
+			drawingContext.SetImageNameFilter(1, this.document.Printer.GetImageNameFilter(1));  // filtre B
 
 			return this.ExportGeometry(drawingContext, filename, this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage);
 		}
 
 		public bool Miniature(Size sizeHope, bool isModel, out string filename, out byte[] data)
 		{
-			//	Retourne les données pour l'image miniature de la première page.
+			//	Retourne les données pour l'image bitmap miniature de la première page.
 			DrawingContext drawingContext = new DrawingContext(this.document, null);
 			drawingContext.ContainerSize = this.document.PageSize;
 			drawingContext.PreviewActive = false;
@@ -130,6 +136,20 @@ namespace Epsitec.Common.Document
 			get { return this.imageAA; }
 			set { this.imageAA = value; }
 		}
+
+		public string GetImageNameFilter(int rank)
+		{
+			//	Donne le nom d'un filtre pour l'image.
+			System.Diagnostics.Debug.Assert(rank >= 0 && rank < this.imageNameFilters.Length);
+			return this.imageNameFilters[rank];
+		}
+
+		public void SetImageNameFilter(int rank, string name)
+		{
+			//	Modifie le nom d'un filtre pour l'image.
+			System.Diagnostics.Debug.Assert(rank >= 0 && rank < this.imageNameFilters.Length);
+			this.imageNameFilters[rank] = name;
+		}
 		#endregion
 
 
@@ -143,13 +163,15 @@ namespace Epsitec.Common.Document
 				this.pageList = new System.Collections.ArrayList();
 				this.pageCounter = 0;
 
+				Settings.PrintInfo pi = this.document.Settings.PrintInfo;
+
 				//	Crée le DrawingContext utilisé pour l'impression.
 				this.drawingContext = new DrawingContext(this.document, null);
 				this.drawingContext.ContainerSize = this.document.DocumentSize;
 				this.drawingContext.PreviewActive = true;
 				this.drawingContext.GridShow = false;
-
-				Settings.PrintInfo pi = this.document.Settings.PrintInfo;
+				this.drawingContext.SetImageNameFilter(0, pi.GetImageNameFilter(0));  // filtre A
+				this.drawingContext.SetImageNameFilter(1, pi.GetImageNameFilter(1));  // filtre B
 
 				if ( dp.Document.PrinterSettings.PrinterName != pi.PrintName )
 				{
@@ -1212,5 +1234,6 @@ namespace Epsitec.Common.Document
 		protected int						imageDepth;
 		protected double					imageQuality;
 		protected double					imageAA;
+		protected string[]					imageNameFilters;
 	}
 }

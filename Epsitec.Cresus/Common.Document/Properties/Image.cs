@@ -26,15 +26,15 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialize()
 		{
-			this.filename    = "";
-			this.shortName   = "";
-			this.insideDoc   = true;
-			this.rotation    = Rotation.Angle0;
-			this.mirrorH     = false;
-			this.mirrorV     = false;
-			this.homo        = true;
-			this.imageFilter = new ImageFilter(ImageFilteringMode.Bilinear);
-			this.cropMargins = Margins.Zero;
+			this.filename       = "";
+			this.shortName      = "";
+			this.insideDoc      = true;
+			this.rotation       = Rotation.Angle0;
+			this.mirrorH        = false;
+			this.mirrorV        = false;
+			this.homo           = true;
+			this.filterCategory = 0;  // catégorie A
+			this.cropMargins    = Margins.Zero;
 		}
 
 		public string Filename
@@ -156,19 +156,21 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		public ImageFilter ImageFilter
+		public int FilterCategory
 		{
+			//	Catégorie du filtre à utiliser.
+			//	-1 = aucun, 0 = groupe A, 1 = groupe B
 			get
 			{
-				return this.imageFilter;
+				return this.filterCategory;
 			}
 
 			set
 			{
-				if (this.imageFilter != value)
+				if (this.filterCategory != value)
 				{
 					this.NotifyBefore();
-					this.imageFilter = value;
+					this.filterCategory = value;
 					this.NotifyAfter();
 				}
 			}
@@ -224,15 +226,15 @@ namespace Epsitec.Common.Document.Properties
 			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			Image p = property as Image;
-			p.filename    = this.filename;
-			p.shortName   = this.shortName;
-			p.insideDoc   = this.insideDoc;
-			p.rotation    = this.rotation;
-			p.mirrorH     = this.mirrorH;
-			p.mirrorV     = this.mirrorV;
-			p.homo        = this.homo;
-			p.imageFilter = this.imageFilter;
-			p.cropMargins = this.cropMargins;
+			p.filename       = this.filename;
+			p.shortName      = this.shortName;
+			p.insideDoc      = this.insideDoc;
+			p.rotation       = this.rotation;
+			p.mirrorH        = this.mirrorH;
+			p.mirrorV        = this.mirrorV;
+			p.homo           = this.homo;
+			p.filterCategory = this.filterCategory;
+			p.cropMargins    = this.cropMargins;
 		}
 
 		public override bool Compare(Abstract property)
@@ -241,15 +243,15 @@ namespace Epsitec.Common.Document.Properties
 			if ( !base.Compare(property) )  return false;
 
 			Image p = property as Image;
-			if ( p.filename    != this.filename    )  return false;
-			if ( p.shortName   != this.shortName   )  return false;
-			if ( p.insideDoc   != this.insideDoc   )  return false;
-			if ( p.rotation    != this.rotation    )  return false;
-			if ( p.mirrorH     != this.mirrorH     )  return false;
-			if ( p.mirrorV     != this.mirrorV     )  return false;
-			if ( p.homo        != this.homo        )  return false;
-			if ( p.imageFilter != this.imageFilter )  return false;
-			if ( p.cropMargins != this.cropMargins )  return false;
+			if ( p.filename       != this.filename       )  return false;
+			if ( p.shortName      != this.shortName      )  return false;
+			if ( p.insideDoc      != this.insideDoc      )  return false;
+			if ( p.rotation       != this.rotation       )  return false;
+			if ( p.mirrorH        != this.mirrorH        )  return false;
+			if ( p.mirrorV        != this.mirrorV        )  return false;
+			if ( p.homo           != this.homo           )  return false;
+			if ( p.filterCategory != this.filterCategory )  return false;
+			if ( p.cropMargins    != this.cropMargins    )  return false;
 
 			return true;
 		}
@@ -260,6 +262,267 @@ namespace Epsitec.Common.Document.Properties
 			Panels.Abstract.StaticDocument = document;
 			return new Panels.Image(document);
 		}
+
+
+		#region ImageFilter
+		public static Magick.FilterType FilterToMagick(ImageFilter filter)
+		{
+			//	Conversion du type de filtre pour la librairie Magick.
+			//	TODO: à vérifier !!!
+			switch (filter.Mode)
+			{
+				case ImageFilteringMode.None:
+					return Magick.FilterType.Point;
+
+				case ImageFilteringMode.Bilinear:
+					return Magick.FilterType.Box;
+
+				case ImageFilteringMode.Bicubic:
+					return Magick.FilterType.Cubic;
+
+				case ImageFilteringMode.Quadric:
+					return Magick.FilterType.Quadratic;
+
+				case ImageFilteringMode.Blackman:
+					return Magick.FilterType.Blackman;
+
+				case ImageFilteringMode.Gaussian:
+					return Magick.FilterType.Gaussian;
+
+				case ImageFilteringMode.Catrom:
+					return Magick.FilterType.Catrom;
+
+				case ImageFilteringMode.Mitchell:
+					return Magick.FilterType.Mitchell;
+
+				case ImageFilteringMode.Lanczos:
+					return Magick.FilterType.Lanczos;
+
+				case ImageFilteringMode.Bessel:
+					return Magick.FilterType.Bessel;
+
+				case ImageFilteringMode.Sinc:
+					return Magick.FilterType.Sinc;
+
+				default:
+					return Magick.FilterType.Cubic;
+			}
+		}
+
+		public static int FilterNameToIndex(string name)
+		{
+			switch (name)
+			{
+				case "None":
+					return 0;
+
+				case "Bilinear":
+					return 1;
+
+				case "Bicubic":
+					return 2;
+
+				case "Quadric":
+					return 3;
+
+				default:
+					return -1;
+			}
+		}
+
+		public static string FilterIndexToName(int index)
+		{
+			switch (index)
+			{
+				case 0:
+					return "None";
+
+				case 1:
+					return "Bilinear";
+
+				case 2:
+					return "Bicubic";
+
+				case 3:
+					return "Quadric";
+
+				default:
+					return null;
+			}
+		}
+
+		public static ImageFilter CategoryToFilter(DrawingContext context, int filterCategory, bool resampling)
+		{
+			if (filterCategory < 0)
+			{
+				return NameToFilter("None", resampling);
+			}
+			else
+			{
+				return NameToFilter(context.GetImageNameFilter(filterCategory), resampling);
+			}
+		}
+
+		protected static ImageFilter NameToFilter(string name, bool resampling)
+		{
+			//	resampling = true lorsqu'on effectue une réduction, pour éviter les moirés.
+			switch (name)
+			{
+				case "None":
+					return new ImageFilter(ImageFilteringMode.None);
+
+				case "Bilinear":
+					return new ImageFilter(ImageFilteringMode.Bilinear);
+
+				case "Bicubic":
+					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingBicubic : ImageFilteringMode.Bicubic);
+
+				case "Spline16":
+					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingSpline16 : ImageFilteringMode.Spline16);
+
+				case "Spline36":
+					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingSpline36 : ImageFilteringMode.Spline36);
+
+				case "Kaiser":
+					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingKaiser : ImageFilteringMode.Kaiser);
+
+				case "Quadric":
+					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingQuadric : ImageFilteringMode.Quadric);
+
+				case "Catrom":
+					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingCatrom : ImageFilteringMode.Catrom);
+
+				case "Gaussian":
+					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingGaussian : ImageFilteringMode.Gaussian);
+
+				case "Bessel":
+					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingBessel : ImageFilteringMode.Bessel);
+
+				case "Mitchell":
+					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingMitchell : ImageFilteringMode.Mitchell);
+
+				case "Sinc1":
+					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingSinc : ImageFilteringMode.Sinc, Image.normRadius);
+
+				case "Sinc2":
+					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingSinc : ImageFilteringMode.Sinc, Image.softRadius);
+
+				case "Lanczos1":
+					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingLanczos : ImageFilteringMode.Lanczos, Image.normRadius);
+
+				case "Lanczos2":
+					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingLanczos : ImageFilteringMode.Lanczos, Image.softRadius);
+
+				case "Blackman1":
+					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingBlackman : ImageFilteringMode.Blackman, Image.normRadius);
+
+				case "Blackman2":
+					return new ImageFilter(resampling ? ImageFilteringMode.ResamplingBlackman : ImageFilteringMode.Blackman, Image.softRadius);
+			}
+
+			return new ImageFilter(ImageFilteringMode.None);
+		}
+
+		protected static string FilterToName(ImageFilter filter)
+		{
+			if (filter.Mode == ImageFilteringMode.None)
+			{
+				return "None";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Bilinear)
+			{
+				return "Bilinear";
+			}
+
+			if (filter.Mode == ImageFilteringMode.ResamplingBicubic)
+			{
+				return "Bicubic";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Spline16)
+			{
+				return "Spline16";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Spline36)
+			{
+				return "Spline36";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Kaiser)
+			{
+				return "Kaiser";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Quadric)
+			{
+				return "Quadric";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Catrom)
+			{
+				return "Catrom";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Gaussian)
+			{
+				return "Gaussian";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Bessel)
+			{
+				return "Bessel";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Mitchell)
+			{
+				return "Mitchell";
+			}
+
+			if (filter.Mode == ImageFilteringMode.Sinc)
+			{
+				if (filter.Radius == Image.normRadius)
+				{
+					return "Sinc1";
+				}
+				else
+				{
+					return "Sinc2";
+				}
+			}
+
+			if (filter.Mode == ImageFilteringMode.Lanczos)
+			{
+				if (filter.Radius == Image.normRadius)
+				{
+					return "Lanczos1";
+				}
+				else
+				{
+					return "Lanczos2";
+				}
+			}
+
+			if (filter.Mode == ImageFilteringMode.Blackman)
+			{
+				if (filter.Radius == Image.normRadius)
+				{
+					return "Blackman1";
+				}
+				else
+				{
+					return "Blackman2";
+				}
+			}
+
+			return null;
+		}
+
+		protected static readonly double normRadius = 1.0;
+		protected static readonly double softRadius = 2.0;
+		#endregion
+
 
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -284,7 +547,7 @@ namespace Epsitec.Common.Document.Properties
 			info.AddValue("MirrorH", this.mirrorH);
 			info.AddValue("MirrorV", this.mirrorV);
 			info.AddValue("Homo", this.homo);
-			info.AddValue("ImageFilter", this.imageFilter);
+			info.AddValue("FilterCategory", this.filterCategory);
 
 			info.AddValue("CropLeft", this.cropMargins.Left);
 			info.AddValue("CropRight", this.cropMargins.Right);
@@ -300,22 +563,13 @@ namespace Epsitec.Common.Document.Properties
 			this.mirrorV = info.GetBoolean("MirrorV");
 			this.homo = info.GetBoolean("Homo");
 
-			if ( this.document.IsRevisionGreaterOrEqual(1,2,4) )
+			if ( this.document.IsRevisionGreaterOrEqual(2, 0, 4) )
 			{
-				if (this.document.IsRevisionGreaterOrEqual(2, 0, 3))
-				{
-					this.imageFilter = (ImageFilter) info.GetValue("ImageFilter", typeof(ImageFilter));
-				}
-				else
-				{
-					bool filter = info.GetBoolean("Filter");
-					this.imageFilter = filter ? new ImageFilter(ImageFilteringMode.Bilinear) : new ImageFilter(ImageFilteringMode.None);
-				}
-
+				this.filterCategory = info.GetInt32("FilterCategory");
 			}
 			else
 			{
-				this.imageFilter = new ImageFilter(ImageFilteringMode.Bilinear);
+				this.filterCategory = 1;
 			}
 
 			//	Si le nom de l'image ne contient pas de nom de dossier (nom relatif),
@@ -358,7 +612,7 @@ namespace Epsitec.Common.Document.Properties
 		protected bool				mirrorH;
 		protected bool				mirrorV;
 		protected bool				homo;
-		protected ImageFilter		imageFilter;
+		protected int				filterCategory;
 		protected Margins			cropMargins;
 	}
 }

@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -29,6 +30,10 @@ namespace Epsitec.Common.Document.Settings
 			this.jpegQuality = 0.7;
 			this.imageMinDpi = 0.0;
 			this.imageMaxDpi = 300.0;
+
+			this.imageNameFilters = new string[2];
+			this.imageNameFilters[0] = "Bicubic";
+			this.imageNameFilters[1] = "Bicubic";
 		}
 
 		public PrintRange PageRange
@@ -110,11 +115,28 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
+		#region ImageNameFilter
+		public string GetImageNameFilter(int rank)
+		{
+			//	Donne le nom d'un filtre pour l'image.
+			System.Diagnostics.Debug.Assert(rank >= 0 && rank < this.imageNameFilters.Length);
+			return this.imageNameFilters[rank];
+		}
+
+		public void SetImageNameFilter(int rank, string name)
+		{
+			//	Modifie le nom d'un filtre pour l'image.
+			System.Diagnostics.Debug.Assert(rank >= 0 && rank < this.imageNameFilters.Length);
+			this.imageNameFilters[rank] = name;
+		}
+		#endregion
+
+
 		#region Serialization
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			//	Sérialise les réglages.
-			info.AddValue("Rev", 4);
+			info.AddValue("Rev", 5);
 			info.AddValue("PageRange", this.pageRange);
 			info.AddValue("PageFrom", this.pageFrom);
 			info.AddValue("PageTo", this.pageTo);
@@ -128,6 +150,7 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("JpegQuality", this.jpegQuality);
 			info.AddValue("ImageMinDpi", this.imageMinDpi);
 			info.AddValue("ImageMaxDpi", this.imageMaxDpi);
+			info.AddValue("ImageNameFilters", this.imageNameFilters);
 		}
 
 		protected ExportPDFInfo(SerializationInfo info, StreamingContext context)
@@ -167,6 +190,11 @@ namespace Epsitec.Common.Document.Settings
 				this.imageMinDpi = info.GetDouble("ImageMinDpi");
 				this.imageMaxDpi = info.GetDouble("ImageMaxDpi");
 			}
+
+			if ( rev >= 5 )
+			{
+				this.imageNameFilters = (string[]) info.GetValue("ImageNameFilters", typeof(string[]));
+			}
 		}
 		#endregion
 
@@ -185,5 +213,6 @@ namespace Epsitec.Common.Document.Settings
 		protected double					jpegQuality;
 		protected double					imageMinDpi;
 		protected double					imageMaxDpi;
+		protected string[]					imageNameFilters;
 	}
 }

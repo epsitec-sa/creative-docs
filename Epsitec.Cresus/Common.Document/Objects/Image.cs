@@ -372,6 +372,62 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		public ImageFilter GetFilter(IPaintPort port, DrawingContext drawingContext)
+		{
+			//	Retourne le filtre à utiliser pour l'image. Le filtre n'est pas le même selon
+			//	les dimensions de l'objet image, car il faut utiliser un filtre 'Resampling*'
+			//	lors d'une réduction, pour éviter les moirés.
+			ImageCache.Item item = this.Item;
+			if (item != null)
+			{
+				Drawing.Image image = item.Image;
+				if (image != null)
+				{
+					Size size = this.ImageBitmapSize;
+					Properties.Image pi = this.PropertyImage;
+					Margins crop = pi.CropMargins;
+
+					double scale = item.Scale;
+					crop.Left   /= scale;
+					crop.Right  /= scale;
+					crop.Bottom /= scale;
+					crop.Top    /= scale;
+					port.ImageCrop = crop;
+
+					Point center;
+					double width, height, angle;
+					this.ImageGeometry(out center, out width, out height, out angle);
+
+					if (width > 0 && height > 0)
+					{
+						Drawing.Rectangle cropRect = new Drawing.Rectangle(0, 0, image.Width, image.Height);
+						cropRect.Deflate(crop);
+
+						if (!cropRect.IsSurfaceZero)
+						{
+							if (pi.Homo)  // conserve les proportions ?
+							{
+								double rapport = cropRect.Height/cropRect.Width;
+								if (rapport < height/width)
+								{
+									height = width*rapport;
+								}
+								else
+								{
+									width  = height/rapport;
+								}
+							}
+
+							bool resampling = (width < cropRect.Width || height < cropRect.Height);
+							return Properties.Image.CategoryToFilter(drawingContext, pi.FilterCategory, resampling);
+						}
+					}
+				}
+			}
+
+			return new ImageFilter();
+		}
+
 		public override void DrawImage(IPaintPort port, DrawingContext drawingContext)
 		{
 			//	Dessine l'image.
@@ -381,9 +437,10 @@ namespace Epsitec.Common.Document.Objects
 			ImageCache.Item item = this.Item;
 			Size size = this.ImageBitmapSize;
 			Properties.Image pi = this.PropertyImage;
-			ImageFilter filter = pi.ImageFilter;
 			Margins crop = pi.CropMargins;
 			port.ImageFinalSize = size;
+
+			ImageFilter filter = this.GetFilter(port, drawingContext);
 
 			if (item != null)
 			{
@@ -415,7 +472,7 @@ namespace Epsitec.Common.Document.Objects
 				Path path = this.PathBuildOutline();
 				port.Color = Color.FromBrightness(0.5);
 				port.LineWidth = 1.0/drawingContext.ScaleX;
-				port.PaintOutline(path);
+				port.PaintOutline(path);  // dessine un rectangle avec une croix
 			}
 			else
 			{
@@ -435,8 +492,14 @@ namespace Epsitec.Common.Document.Objects
 						if (pi.Homo)  // conserve les proportions ?
 						{
 							double rapport = cropRect.Height/cropRect.Width;
-							if (rapport < height/width)  height = width*rapport;
-							else                         width  = height/rapport;
+							if (rapport < height/width)
+							{
+								height = width*rapport;
+							}
+							else
+							{
+								width  = height/rapport;
+							}
 						}
 
 #if false
@@ -462,7 +525,7 @@ namespace Epsitec.Common.Document.Objects
 						Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, 1.0, 1.0);
 						ImageFilter oldFilter = port.ImageFilter;
 						port.ImageFilter = filter;
-						port.PaintImage (image, rect, cropRect);
+						port.PaintImage(image, rect, cropRect);
 						port.ImageFilter = oldFilter;
 #endif
 					}

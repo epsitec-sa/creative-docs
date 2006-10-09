@@ -282,6 +282,18 @@ namespace Epsitec.Common.Document
 				this.CreateFilename(container, "PrintFilename");
 				Dialogs.CreateSeparator(container);
 
+				//	Onglet Images:
+				parent = book.FindChild("Image");
+				container = new Widget(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
+
+				this.tabIndex = 0;
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.Print.Image);
+				this.CreateCombo(container, "PrintImageFilterA");
+				this.CreateCombo(container, "PrintImageFilterB");
+				Dialogs.CreateSeparator(container);
+
 				//	Onglet Pré-presse:
 				parent = book.FindChild("Publisher");
 				container = new Widget(parent);
@@ -312,6 +324,8 @@ namespace Epsitec.Common.Document
 			this.UpdatePrinter("PrintName");
 			this.UpdateRangeField("PrintRange");
 			this.UpdateDialogSettings("Print");
+			this.UpdateCombo("PrintImageFilterA");
+			this.UpdateCombo("PrintImageFilterB");
 		}
 
 		public void UpdatePrintPages()
@@ -344,6 +358,8 @@ namespace Epsitec.Common.Document
 				this.CreateCombo(container, "ImageCompression");
 				this.CreateDouble(container, "ImageQuality");
 				this.CreateDouble(container, "ImageAA");
+				this.CreateCombo(container, "ImageFilterA");
+				this.CreateCombo(container, "ImageFilterB");
 				Dialogs.CreateSeparator(container);
 			}
 
@@ -362,6 +378,8 @@ namespace Epsitec.Common.Document
 			this.UpdateCombo("ImageDepth");
 			this.UpdateCombo("ImageCompression");
 			this.UpdateDouble("ImageQuality");
+			this.UpdateCombo("ImageFilterA");
+			this.UpdateCombo("ImageFilterB");
 		}
 		#endregion
 
@@ -414,6 +432,8 @@ namespace Epsitec.Common.Document
 				this.CreateDouble(container, "ExportPDFJpegQuality");
 				this.CreateDouble(container, "ExportPDFImageMinDpi");
 				this.CreateDouble(container, "ExportPDFImageMaxDpi");
+				this.CreateCombo(container, "ExportPDFImageFilterA");
+				this.CreateCombo(container, "ExportPDFImageFilterB");
 				Dialogs.CreateSeparator(container);
 
 				//	Onglet Pré-presse:
@@ -447,6 +467,8 @@ namespace Epsitec.Common.Document
 			this.UpdateDouble("ExportPDFJpegQuality");
 			this.UpdateDouble("ExportPDFImageMinDpi");
 			this.UpdateDouble("ExportPDFImageMaxDpi");
+			this.UpdateCombo("ExportPDFImageFilterA");
+			this.UpdateCombo("ExportPDFImageFilterB");
 		}
 
 		public void UpdateExportPDFPages()
@@ -1737,6 +1759,7 @@ namespace Epsitec.Common.Document
 				Widget parent = this.windowPrint.Root.FindChild("Book");
 				this.DeletePage(parent, "Printer");
 				this.DeletePage(parent, "Param");
+				this.DeletePage(parent, "Image");
 				this.DeletePage(parent, "Publisher");
 				this.windowPrint = null;
 			}
