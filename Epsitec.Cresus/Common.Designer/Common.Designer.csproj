@@ -45,6 +45,7 @@
     <Compile Include="Dialogs\Open.cs" />
     <Compile Include="Dialogs\Icon.cs" />
     <Compile Include="MyWidgets\AbstractTypeEditor.cs" />
+    <Compile Include="MyWidgets\TextFieldExName.cs" />
     <Compile Include="MyWidgets\TypeEditorStructured.cs" />
     <Compile Include="MyWidgets\TypeEditorEnum.cs" />
     <Compile Include="MyWidgets\TypeEditorString.cs" />

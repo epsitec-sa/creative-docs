@@ -43,7 +43,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelStatic.Text = Res.Strings.Viewers.Strings.Edit;
 			this.labelStatic.Visibility = (this.module.Mode != DesignerMode.Build);
 
-			this.labelEdit = new TextFieldEx(this);
+			this.labelEdit = new MyWidgets.TextFieldExName(this);
 			this.labelEdit.ButtonShowCondition = ShowCondition.WhenModified;
 			this.labelEdit.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
@@ -218,8 +218,8 @@ namespace Epsitec.Common.Designer.Viewers
 				if (column == 2)  edit = this.secondaryEdit;
 				if (edit != null && edit.Visibility)
 				{
-					edit.Focus();
 					edit.SelectAll();
+					edit.Focus();
 				}
 				else
 				{
@@ -539,12 +539,12 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected StaticText				labelStatic;
-		protected TextFieldEx				labelEdit;
-		protected TextFieldMulti			primaryEdit;
-		protected TextFieldMulti			secondaryEdit;
-		protected StaticText				labelAbout;
-		protected TextFieldMulti			primaryAbout;
-		protected TextFieldMulti			secondaryAbout;
+		protected StaticText					labelStatic;
+		protected MyWidgets.TextFieldExName		labelEdit;
+		protected TextFieldMulti				primaryEdit;
+		protected TextFieldMulti				secondaryEdit;
+		protected StaticText					labelAbout;
+		protected TextFieldMulti				primaryAbout;
+		protected TextFieldMulti				secondaryAbout;
 	}
 }
