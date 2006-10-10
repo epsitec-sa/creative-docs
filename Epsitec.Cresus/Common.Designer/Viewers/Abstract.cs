@@ -266,7 +266,9 @@ namespace Epsitec.Common.Designer.Viewers
 				if (fieldType == ResourceAccess.FieldType.Name)
 				{
 					string initialName = field.String;
-					this.access.SetField(searcher.Row, cultureName, fieldType, new ResourceAccess.Field("#temp#"));
+
+					//	Met un nom dont on est certain qu'il n'existe pas !
+					this.access.SetField(searcher.Row, cultureName, fieldType, new ResourceAccess.Field("wXrfGjkleWEuio"));
 
 					string err = this.access.CheckNewName(ref text, false);
 					if (err != null)
@@ -997,7 +999,8 @@ namespace Epsitec.Common.Designer.Viewers
 			string editedName = edit.Text;
 			string initialName = this.access.GetField(sel, null, ResourceAccess.FieldType.Name).String;
 
-			this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field("#temp#"));
+			//	Met un nom dont on est certain qu'il n'existe pas !
+			this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field("wXrfGjkleWEuio"));
 
 			string err = this.access.CheckNewName(ref editedName, false);
 			if (err != null)

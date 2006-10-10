@@ -37,7 +37,7 @@ namespace Epsitec.Common.Designer.Viewers
 			right.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			
 			//	Crée la partie gauche.			
-			this.labelEdit = new TextFieldEx(left);
+			this.labelEdit = new MyWidgets.TextFieldExName(left);
 			this.labelEdit.Name = "LabelEdit";
 			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
 			this.labelEdit.Dock = DockStyle.Bottom;
@@ -334,8 +334,8 @@ namespace Epsitec.Common.Designer.Viewers
 					this.SetTextField(this.secondaryAbout, sel, this.secondaryCulture, ResourceAccess.FieldType.About);
 				}
 
-				this.labelEdit.Focus();
 				this.labelEdit.SelectAll();
+				this.labelEdit.Focus();
 			}
 
 			this.ignoreChange = iic;
@@ -771,7 +771,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		protected Widget						secondaryCultureGroup;
-		protected TextFieldEx					labelEdit;
+		protected MyWidgets.TextFieldExName		labelEdit;
 		protected Scrollable					scrollable;
 		protected List<MyWidgets.StackedPanel>	leftContainers;
 		protected List<MyWidgets.StackedPanel>	rightContainers;

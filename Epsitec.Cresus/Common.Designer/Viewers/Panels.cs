@@ -23,7 +23,7 @@ namespace Epsitec.Common.Designer.Viewers
 			left.Dock = DockStyle.Left;
 			left.Padding = new Margins(10, 10, 10, 10);
 
-			this.labelEdit = new TextFieldEx(left);
+			this.labelEdit = new MyWidgets.TextFieldExName(left);
 			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
 			this.labelEdit.Dock = DockStyle.Bottom;
 			this.labelEdit.ButtonShowCondition = ShowCondition.WhenModified;
@@ -253,8 +253,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 				int index = this.access.AccessIndex;
 				this.SetTextField(this.labelEdit, index, null, ResourceAccess.FieldType.Name);
-				this.labelEdit.Focus();
 				this.labelEdit.SelectAll();
+				this.labelEdit.Focus();
 			}
 
 			this.ignoreChange = iic;
@@ -472,20 +472,20 @@ namespace Epsitec.Common.Designer.Viewers
 		public static readonly DependencyProperty PanelProperty = DependencyProperty.RegisterAttached("Panel", typeof(UI.Panel), typeof(Panels));
 
 
-		protected ProxyManager				proxyManager;
-		protected TextFieldEx				labelEdit;
-		protected VToolBar					toolBar;
-		protected Scrollable				scrollable;
-		protected UI.Panel					panelContainer;
-		protected MyWidgets.PanelEditor		panelEditor;
-		protected TabBook					tabBook;
+		protected ProxyManager					proxyManager;
+		protected MyWidgets.TextFieldExName		labelEdit;
+		protected VToolBar						toolBar;
+		protected Scrollable					scrollable;
+		protected UI.Panel						panelContainer;
+		protected MyWidgets.PanelEditor			panelEditor;
+		protected TabBook						tabBook;
 
-		protected TabPage					tabPageProperties;
-		protected Scrollable				propertiesScrollable;
+		protected TabPage						tabPageProperties;
+		protected Scrollable					propertiesScrollable;
 
-		protected TabPage					tabPageObjects;
+		protected TabPage						tabPageObjects;
 
-		protected TabPage					tabPageCultures;
-		protected List<IconButton>			cultureButtonList;
+		protected TabPage						tabPageCultures;
+		protected List<IconButton>				cultureButtonList;
 	}
 }
