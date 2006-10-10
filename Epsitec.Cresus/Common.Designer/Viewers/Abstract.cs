@@ -268,7 +268,7 @@ namespace Epsitec.Common.Designer.Viewers
 					string initialName = field.String;
 					this.access.SetField(searcher.Row, cultureName, fieldType, new ResourceAccess.Field("#temp#"));
 
-					string err = this.access.CheckNewName(ref text);
+					string err = this.access.CheckNewName(ref text, false);
 					if (err != null)
 					{
 						this.access.SetField(searcher.Row, cultureName, fieldType, new ResourceAccess.Field(initialName));
@@ -999,7 +999,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field("#temp#"));
 
-			string err = this.access.CheckNewName(ref editedName);
+			string err = this.access.CheckNewName(ref editedName, false);
 			if (err != null)
 			{
 				this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field(initialName));

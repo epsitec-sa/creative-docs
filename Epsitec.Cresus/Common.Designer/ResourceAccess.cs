@@ -668,16 +668,18 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public bool IsCorrectNewName(ref string name)
+		public bool IsCorrectNewName(ref string name, bool bypass)
 		{
 			//	Retourne true s'il est possible de créer cette nouvelle ressource.
-			return (this.CheckNewName(ref name) == null);
+			return (this.CheckNewName(ref name, bypass) == null);
 		}
 
-		public string CheckNewName(ref string name)
+		public string CheckNewName(ref string name, bool bypass)
 		{
 			//	Retourne l'éventuelle erreur si on tente de créer cette nouvelle ressource.
 			//	Retourne null si tout est correct.
+			System.Diagnostics.Debug.Assert(!bypass || this.bypassType != Type.Unknow);
+
 			if (!Misc.IsValidLabel(ref name))
 			{
 				return Res.Strings.Error.Name.Invalid;
@@ -696,30 +698,66 @@ namespace Epsitec.Common.Designer
 
 			//	Cherche si le nom existe déjà.
 			string err;
-			if (this.IsBundlesType)
+			if (bypass)
 			{
-				string n = this.AddFilter(name, false);
-				foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
+				string n = this.AddFilter(name, true);
+
+				foreach (Druid druid in this.bypassDruids)
 				{
+					ResourceBundle.Field field = this.primaryBundle[druid];
 					if (field != null && field.Name != null)
 					{
-						err = ResourceAccess.CheckNames(field.Name, name);
+						err = ResourceAccess.CheckNames(field.Name, n);
 						if (err != null)
 						{
 							return err;
 						}
 					}
 				}
-			}
 
-			if (this.type == Type.Panels)
-			{
-				foreach (ResourceBundle bundle in this.panelsList)
+				if (this.bypassExclude != null)
 				{
-					err = ResourceAccess.CheckNames(bundle.Caption, name);
-					if (err != null)
+					foreach (Druid druid in this.bypassExclude)
 					{
-						return err;
+						ResourceBundle.Field field = this.primaryBundle[druid];
+						if (field != null && field.Name != null)
+						{
+							err = ResourceAccess.CheckNames(field.Name, n);
+							if (err != null)
+							{
+								return err;
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				if (this.IsBundlesType)
+				{
+					string n = this.AddFilter(name, false);
+					foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
+					{
+						if (field != null && field.Name != null)
+						{
+							err = ResourceAccess.CheckNames(field.Name, n);
+							if (err != null)
+							{
+								return err;
+							}
+						}
+					}
+				}
+
+				if (this.type == Type.Panels)
+				{
+					foreach (ResourceBundle bundle in this.panelsList)
+					{
+						err = ResourceAccess.CheckNames(bundle.Caption, name);
+						if (err != null)
+						{
+							return err;
+						}
 					}
 				}
 			}
@@ -788,7 +826,7 @@ namespace Epsitec.Common.Designer
 			for (int i=nextNumber; i<nextNumber+100; i++)
 			{
 				newName = string.Concat(baseName, i.ToString(System.Globalization.CultureInfo.InvariantCulture));
-				if (this.IsCorrectNewName(ref newName))
+				if (this.IsCorrectNewName(ref newName, false))
 				{
 					break;
 				}
@@ -823,6 +861,8 @@ namespace Epsitec.Common.Designer
 					}
 				}
 			}
+
+			this.bypassExclude = exclude;
 		}
 
 		public int BypassFilterCount
@@ -979,6 +1019,7 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert(this.bypassType != Type.Unknow);
 			this.bypassType = Type.Unknow;
 			this.bypassDruids = null;
+			this.bypassExclude = null;
 		}
 		#endregion
 
@@ -2818,6 +2859,7 @@ namespace Epsitec.Common.Designer
 		protected Dictionary<Type, Searcher.SearchingMode>	filterModes;
 		protected Type										bypassType = Type.Unknow;
 		protected List<Druid>								bypassDruids;
+		protected List<Druid>								bypassExclude;
 		protected ResourceAccess.TypeType					lastTypeTypeCreatated = TypeType.String;
 	}
 }
