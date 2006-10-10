@@ -63,7 +63,6 @@ namespace Epsitec.Common.Designer.Viewers
 				sel = -1;
 			}
 
-			AbstractType type = null;
 			ResourceAccess.TypeType typeType = ResourceAccess.TypeType.None;
 
 			if (sel != -1)
@@ -71,7 +70,7 @@ namespace Epsitec.Common.Designer.Viewers
 				ResourceAccess.Field field = this.access.GetField(sel, null, ResourceAccess.FieldType.AbstractType);
 				if (field != null)
 				{
-					type = field.AbstractType;
+					AbstractType type = field.AbstractType;
 					typeType = ResourceAccess.CaptionTypeType(type);
 				}
 			}
@@ -99,14 +98,15 @@ namespace Epsitec.Common.Designer.Viewers
 					this.editor.SetParent(this.container.Container);
 					this.editor.Module = this.module;
 					this.editor.MainWindow = this.mainWindow;
+					this.editor.ResourceAccess = this.access;
 					this.editor.Dock = DockStyle.StackBegin;
 					this.editor.ContentChanged += new EventHandler(this.HandleEditorContentChanged);
 				}
 			}
 
-			if (this.editor != null && type != null)
+			if (this.editor != null)
 			{
-				this.editor.Type = type;  // donne le type et met à jour l'éditeur
+				this.editor.ResourceSelected = sel;
 			}
 
 			this.ignoreChange = iic;
@@ -132,8 +132,12 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Le contenu de l'éditeur de type a changé.
 			int sel = this.access.AccessIndex;
-			ResourceAccess.Field field = new ResourceAccess.Field(this.editor.Type);
-			this.access.SetField(sel, null, ResourceAccess.FieldType.AbstractType, field);
+
+			//	[Note1] Il n'est pas nécessaire de donner le type AbstractType, car il est déjà
+			//	dans le cache de ResourceAccess. Lorsqu'on utilise ResourceAccess.GetField
+			//	avec FieldType.AbstractType, on obtient un type qu'on peut directement
+			//	modifier !
+			this.access.SetField(sel, null, ResourceAccess.FieldType.AbstractType, null);
 		}
 
 

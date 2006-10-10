@@ -72,17 +72,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		public AbstractType Type
+		public ResourceAccess ResourceAccess
 		{
 			get
 			{
-				return this.type;
+				return this.resourceAccess;
 			}
 			set
 			{
-				if (this.type != value)
+				this.resourceAccess = value;
+			}
+		}
+
+		public int ResourceSelected
+		{
+			get
+			{
+				return this.resourceSelected;
+			}
+			set
+			{
+				if (this.resourceSelected != value)
 				{
-					this.type = value;
+					this.resourceSelected = value;
 					this.UpdateContent();
 				}
 			}
@@ -91,6 +103,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected virtual void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.
+		}
+
+		protected AbstractType AbstractType
+		{
+			//	Retourne les définitions du type, en fonction de l'index de la ressource
+			//	sélectionnée.
+			get
+			{
+				if (this.resourceSelected != -1)
+				{
+					ResourceAccess.Field field = this.resourceAccess.GetField(this.resourceSelected, null, ResourceAccess.FieldType.AbstractType);
+					if (field != null)
+					{
+						return field.AbstractType;
+					}
+				}
+
+				return null;
+			}
 		}
 
 
@@ -164,7 +195,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
-		protected AbstractType					type;
+		protected ResourceAccess				resourceAccess;
+		protected int							resourceSelected = -1;
 		protected Module						module;
 		protected MainWindow					mainWindow;
 		protected int							tabIndex = 0;

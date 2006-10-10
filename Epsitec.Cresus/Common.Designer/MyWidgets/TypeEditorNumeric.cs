@@ -104,7 +104,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected override void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.
-			AbstractNumericType type = this.type as AbstractNumericType;
+			AbstractNumericType type = this.AbstractType as AbstractNumericType;
 
 			this.ignoreChange = true;
 
@@ -148,7 +148,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			AbstractNumericType type = this.type as AbstractNumericType;
+			//	[Note1] On demande le type avec un ResourceAccess.GetField.
+			AbstractNumericType type = this.AbstractType as AbstractNumericType;
 
 			decimal min = type.Range.Minimum;
 			decimal max = type.Range.Maximum;
@@ -219,6 +220,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				type.DefinePreferredRange(new DecimalRange(pmin, pmax, pres));
 			}
 
+			//	[Note1] Cet appel va provoquer le ResourceAccess.SetField.
 			this.OnContentChanged();
 		}
 		

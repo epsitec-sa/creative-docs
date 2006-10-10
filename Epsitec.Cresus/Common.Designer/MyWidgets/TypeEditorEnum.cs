@@ -252,7 +252,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne la collection de l'énumération.
 			get
 			{
-				EnumType type = this.type as EnumType;
+				EnumType type = this.AbstractType as EnumType;
 				type.MakeEditable();
 				return type.EnumValues;
 			}
