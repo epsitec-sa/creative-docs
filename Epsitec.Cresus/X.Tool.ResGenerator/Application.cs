@@ -240,6 +240,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 			if (cmdFields.Count > 1)
 			{
 				Application.GenerateCommands (manager, buffer, generator, defaultNamespace, bundleId, bundle, cmdFields);
+				Application.GenerateCommandIds (manager, buffer, generator, defaultNamespace, bundleId, bundle, cmdFields);
 			}
 			if (capFields.Count > 1)
 			{
@@ -371,6 +372,112 @@ namespace Epsitec.Common.Tool.ResGenerator
 				buffer.Append ("_Initialize ();\n");
 			}
 			generator.EndBlock ();
+
+			generator.EndBlock ();
+		}
+
+		static void GenerateCommandIds(ResourceManager manager, System.Text.StringBuilder buffer, Generator generator, string defaultNamespace, string bundleId, ResourceBundle bundle, List<string> cmdFields)
+		{
+			string prefix   = "";
+			bool addNewline = false;
+
+			generator.BeginBlock ("public static class", "CommandIds");
+
+			string[] fields   = new string[cmdFields.Count];
+			string[] sortKeys = new string[cmdFields.Count];
+
+			for (int i=0; i<fields.Length; i++)
+			{
+				fields[i] = cmdFields[i];
+
+				int pos = fields[i].LastIndexOf ('.');
+				if (pos < 0)
+				{
+					sortKeys[i] = fields[i];
+				}
+				else
+				{
+					sortKeys[i] = string.Concat (fields[i].Substring (0, pos), "!", fields[i].Substring (pos+1));
+				}
+			}
+
+			System.Array.Sort (sortKeys, fields);
+
+			List<string> classes = new List<string> ();
+
+			for (int i=0; i<fields.Length; i++)
+			{
+				string field = fields[i].Substring (4);
+
+				while (prefix != "" && !field.StartsWith (prefix + "."))
+				{
+					//	Remonte d'un niveau dans la hiérarchie des classes.
+					string[] args = prefix.Split ('.');
+					string last = args[args.Length-1];
+
+					generator.EndBlock ();
+
+					prefix = prefix.Substring (0, System.Math.Max (0, prefix.Length-last.Length-1));
+					addNewline = true;
+				}
+
+				string delta = prefix.Length == 0 ? field : field.Substring (prefix.Length+1);
+
+				if (addNewline)
+				{
+					buffer.Append (generator.Tabs);
+					buffer.Append ("\n");
+					addNewline = false;
+				}
+
+				//	Crée les classes manquantes, si besoin :
+				while (delta.IndexOf ('.') > -1)
+				{
+					string[] args = delta.Split ('.');
+					string elem = args[0];
+
+					generator.BeginBlock ("public static class", elem);
+					classes.Add (elem);
+
+					buffer.Append (generator.Tabs);
+					buffer.Append ("\n");
+
+					if (prefix.Length == 0)
+					{
+						prefix = elem;
+					}
+					else
+					{
+						prefix = string.Concat (prefix, ".", elem);
+					}
+
+					delta = field.Substring (prefix.Length + 1);
+				}
+
+				//	Crée l'accesseur pour le champ actuel :
+				buffer.Append (generator.Tabs);
+
+				Support.Druid druid = bundle[fields[i]].Druid;
+
+				buffer.Append ("public const long ");
+				buffer.Append (delta);
+				buffer.Append (@" = 0x");
+				buffer.Append (Support.Druid.FromIds (manager.DefaultModuleId, druid.Local).ToString ("X"));
+				buffer.Append ("L;\n");
+			}
+
+			//	Referme les classes ouvertes :
+			if (prefix.Length > 0)
+			{
+				string[] args = prefix.Split ('.');
+
+				for (int j=0; j<args.Length; j++)
+				{
+					generator.EndBlock ();
+				}
+			}
+			buffer.Append (generator.Tabs);
+			buffer.Append ("\n");
 
 			generator.EndBlock ();
 		}
