@@ -519,7 +519,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.buttonUse.Enable = (this.array.SelectedRow != -1);
 
 			bool createEnable = false;
-			if (label != "" && text != "" && this.access.IsCorrectNewName(ref label))
+			if (label != "" && text != "" && this.access.IsCorrectNewName(ref label, true))
 			{
 				createEnable = true;
 			}
@@ -619,7 +619,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			string label = TextLayout.ConvertToSimpleText(this.filterLabel.Text);
 			string text  = TextLayout.ConvertToSimpleText(this.filterText.Text);
-			if (label != "" && text != "" && this.access.IsCorrectNewName(ref label))
+			if (label != "" && text != "" && this.access.IsCorrectNewName(ref label, true))
 			{
 				this.resource = this.access.BypassFilterCreate(this.CurrentBundle, label, text);
 			}
