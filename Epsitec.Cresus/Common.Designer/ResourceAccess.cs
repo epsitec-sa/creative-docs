@@ -938,8 +938,6 @@ namespace Epsitec.Common.Designer
 			{
 				Caption caption = new Caption();
 
-				Epsitec.Common.Debug.Tracker.Register (string.Format ("GetStrings-{0}", druid), caption);
-
 				string s = field.AsString;
 				if (!string.IsNullOrEmpty(s))
 				{
@@ -980,8 +978,6 @@ namespace Epsitec.Common.Designer
 					if (b == bundle)
 					{
 						Caption caption = new Caption();
-
-						Epsitec.Common.Debug.Tracker.Register (string.Format ("Create-{0}", name), caption);
 
 						ICollection<string> dst = caption.Labels;
 						dst.Add(text);
@@ -1137,6 +1133,11 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne les données d'un champ.
 			//	Si cultureName est nul, on accède à la culture de base.
+			//	[Note1] Lorsqu'on utilise FieldType.AbstractType ou FieldType.Panel,
+			//	les données peuvent être modifiées directement, sans qu'il faille les
+			//	redonner lors du SetField. Cela oblige à ne pas faire d'autres GetField
+			//	avant le SetField !
+			this.lastAccessField = fieldType;
 			this.CacheResource(index, cultureName);
 
 			if (this.IsBundlesType)
@@ -1376,6 +1377,13 @@ namespace Epsitec.Common.Designer
 			{
 				if (fieldType == FieldType.AbstractType)
 				{
+					//	[Note1] Curieusement, on n'utilise pas le paramètre 'field' passé en
+					//	entrée (premier Assert). En effet, le type AbstractType est déjà dans
+					//	la ressource en cache, dans this.accessCaption. Mais il faut être
+					//	certain de ne pas faire d'autres GetField avant ce SetField (ce qui
+					//	est vérifié par le deuxième Assert) !
+					System.Diagnostics.Debug.Assert(field == null);
+					System.Diagnostics.Debug.Assert(fieldType == this.lastAccessField);
 					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
 			}
@@ -1395,6 +1403,8 @@ namespace Epsitec.Common.Designer
 
 				if (fieldType == FieldType.Panel)
 				{
+					System.Diagnostics.Debug.Assert(field == null);
+					System.Diagnostics.Debug.Assert(fieldType == this.lastAccessField);
 				}
 			}
 
@@ -1652,8 +1662,6 @@ namespace Epsitec.Common.Designer
 					{
 						this.accessCaption = new Caption();
 
-						Epsitec.Common.Debug.Tracker.Register (string.Format ("ResAccess-{0}-{1}", index, cultureName ?? "<null>"), this.accessCaption);
-
 						if (this.accessField != null)
 						{
 							string s = this.accessField.AsString;
@@ -1881,8 +1889,6 @@ namespace Epsitec.Common.Designer
 			if (this.IsCaptionsType)
 			{
 				Caption caption = new Caption();
-
-				Epsitec.Common.Debug.Tracker.Register (string.Format ("FirstField-{0}-{1}", localId, name), caption);
 
 				//	Le Caption.Name doit contenir le nom de la commande, sans
 				//	le préfixe, dans le bundle par défaut.
@@ -2850,6 +2856,7 @@ namespace Epsitec.Common.Designer
 		protected int										accessCached;
 		protected ResourceBundle.Field						accessField;
 		protected Caption									accessCaption;
+		protected FieldType									lastAccessField = FieldType.None;
 		protected List<ResourceBundle>						panelsList;
 		protected List<ResourceBundle>						panelsToCreate;
 		protected List<ResourceBundle>						panelsToDelete;

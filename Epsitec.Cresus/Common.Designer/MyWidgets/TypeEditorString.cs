@@ -46,7 +46,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected override void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.
-			StringType type = this.type as StringType;
+			StringType type = this.AbstractType as StringType;
 
 			this.ignoreChange = true;
 			this.SetDecimal(this.fieldMin, type.MinimumLength);
@@ -62,7 +62,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			StringType type = this.type as StringType;
+			//	[Note1] On demande le type avec un ResourceAccess.GetField.
+			StringType type = this.AbstractType as StringType;
 
 			if (sender == this.fieldMin)
 			{
@@ -74,6 +75,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				type.DefineMaximumLength((int) this.GetDecimal(this.fieldMax));
 			}
 
+			//	[Note1] Cet appel va provoquer le ResourceAccess.SetField.
 			this.OnContentChanged();
 		}
 		

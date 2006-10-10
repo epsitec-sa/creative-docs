@@ -267,7 +267,7 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					string initialName = field.String;
 
-					//	Met un nom dont on est certain qu'il n'existe pas !
+					//	Met un nom dont on est certain qu'il est valide et qu'il n'existe pas !
 					this.access.SetField(searcher.Row, cultureName, fieldType, new ResourceAccess.Field("wXrfGjkleWEuio"));
 
 					string err = this.access.CheckNewName(ref text, false);
@@ -999,7 +999,7 @@ namespace Epsitec.Common.Designer.Viewers
 			string editedName = edit.Text;
 			string initialName = this.access.GetField(sel, null, ResourceAccess.FieldType.Name).String;
 
-			//	Met un nom dont on est certain qu'il n'existe pas !
+			//	Met un nom dont on est certain qu'il est valide et qu'il n'existe pas !
 			this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field("wXrfGjkleWEuio"));
 
 			string err = this.access.CheckNewName(ref editedName, false);
