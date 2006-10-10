@@ -1691,7 +1691,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			[Command ("Copy")]		public void CommandCopy(CommandDispatcher dispatcher, CommandEventArgs e)
+			[Command (Res.CommandIds.Copy)]		public void CommandCopy(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
 				string value = this.host.Selection;
 				
@@ -1709,7 +1709,7 @@ namespace Epsitec.Common.Widgets
 				e.Executed = true;
 			}
 			
-			[Command ("Cut")]		public void CommandCut(CommandDispatcher dispatcher, CommandEventArgs e)
+			[Command (Res.CommandIds.Cut)]		public void CommandCut(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
 				string value = this.host.Selection;
 				
@@ -1731,7 +1731,7 @@ namespace Epsitec.Common.Widgets
 				e.Executed = true;
 			}
 			
-			[Command ("Delete")]	public void CommandDelete(CommandDispatcher dispatcher, CommandEventArgs e)
+			[Command (Res.CommandIds.Delete)]	public void CommandDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
 				string value = this.host.Selection;
 				
@@ -1746,14 +1746,14 @@ namespace Epsitec.Common.Widgets
 				e.Executed = true;
 			}
 			
-			[Command ("SelectAll")]	public void CommandSelectAll(CommandDispatcher dispatcher, CommandEventArgs e)
+			[Command (Res.CommandIds.SelectAll)]	public void CommandSelectAll(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
 				this.host.SelectAll ();
 				
 				e.Executed = true;
 			}
 			
-			[Command ("Paste")]		public void CommandPaste(CommandDispatcher dispatcher, CommandEventArgs e)
+			[Command (Res.CommandIds.Paste)]		public void CommandPaste(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
 				Clipboard.ReadData data = Clipboard.GetData ();
 				

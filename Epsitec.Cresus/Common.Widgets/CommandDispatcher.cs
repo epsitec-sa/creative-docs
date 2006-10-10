@@ -392,8 +392,17 @@ namespace Epsitec.Common.Widgets
 			{
 				throw new System.FormatException (string.Format ("{0}.{1} uses invalid signature: {2}.", controller.GetType ().Name, method_info.Name, method_info.ToString ()));
 			}
+
+			string commandName = attribute.CommandName;
 			
-			this.Register (Command.Get (attribute.CommandName), handler);
+			if (string.IsNullOrEmpty (commandName))
+			{
+				this.Register (Command.Get (Support.Druid.FromLong (attribute.Druid)), handler);
+			}
+			else
+			{
+				this.Register (Command.Get (attribute.CommandName), handler);
+			}
 		}
 
 		private bool DispatchCommand(CommandContextChain contextChain, Command commandObject, object source)
