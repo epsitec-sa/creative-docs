@@ -1023,9 +1023,9 @@ namespace Epsitec.Common.Designer
 		public static string GetCaptionNiceDescription(Caption caption)
 		{
 			//	Construit un texte d'après les labels et la description.
-			//	Les labels sont séparés par des virgules.
-			//	La description vient sur une deuxième ligne, seulement si elle est
-			//	différente de tous les labels.
+			//	Les différents labels sont séparés par des virgules.
+			//	La description vient sur une deuxième ligne, mais seulement
+			//	si elle est différente de tous les labels.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 			string description = caption.Description;
@@ -1948,7 +1948,10 @@ namespace Epsitec.Common.Designer
 
 						//	Le Caption.Name doit contenir le nom de la commande, sans
 						//	le préfixe, dans le bundle par défaut. Dans les autres
-						//	bundles, il ne faut rien.
+						//	bundles, il ne faut rien. Pendant l'utilisation de Designer,
+						//	caption.Name n'est volontairement pas mis à jour. Il faut
+						//	donc prendre garde à ne pas l'utiliser, et lui préférer
+						//	Field.Name !
 						if (bundle == this.primaryBundle)
 						{
 							caption.Name = ResourceAccess.SubAllFilter(field.Name);
