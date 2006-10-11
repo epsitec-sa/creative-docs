@@ -1,24 +1,19 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe statique ApplicationCommands exporte les noms de commandes les
-	/// plus utilisées.
+	/// The <c>ApplicationCommands</c> class defines the commands which are the most
+	/// used by an application.
 	/// </summary>
-	public class ApplicationCommands
+	public static class ApplicationCommands
 	{
-		private ApplicationCommands()
-		{
-		}
-
-
-		public static readonly Command Cut			= Command.Get ("[0001]");
-		public static readonly Command Copy			= Command.Get ("[0002]");
-		public static readonly Command Paste		= Command.Get ("[0003]");
-		public static readonly Command Delete		= Command.Get ("[0004]");
-		public static readonly Command SelectAll	= Command.Get ("[0005]");
+		public static readonly Command Cut			= Res.Commands.Cut;
+		public static readonly Command Copy			= Res.Commands.Copy;
+		public static readonly Command Paste		= Res.Commands.Paste;
+		public static readonly Command Delete		= Res.Commands.Delete;
+		public static readonly Command SelectAll	= Res.Commands.SelectAll;
 		
 		//	Référence: http://winfx.msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/T_System_Windows_Input_ApplicationCommands_Members.asp
 
