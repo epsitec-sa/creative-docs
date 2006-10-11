@@ -404,6 +404,7 @@ namespace Epsitec.Common.Designer.Proxies
 
 		static Layout()
 		{
+#if false
 			EnumType childrenPlacementEnumType = new EnumType(typeof(ObjectModifier.ChildrenPlacement));
 			childrenPlacementEnumType.DefineDefaultController("Enum", "Icons");
 			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.Anchored].DefineCaptionId(Res.Captions.Layout.Anchored.Druid);
@@ -412,6 +413,12 @@ namespace Epsitec.Common.Designer.Proxies
 			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.Grid].DefineCaptionId(Res.Captions.Layout.Grid.Druid);
 			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineNamedType(childrenPlacementEnumType);
 			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.ChildrenPlacement.Druid);
+#else
+			EnumType childrenPlacementEnumType = Res.Types.Layout.ChildrenPlacement;
+			childrenPlacementEnumType.DefineDefaultController("Enum", "Icons");
+			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineNamedType(childrenPlacementEnumType);
+			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.ChildrenPlacement.Druid);
+#endif
 
 			EnumType anchoredHorizontalAttachmentEnumType = new EnumType(typeof(ObjectModifier.AnchoredHorizontalAttachment));
 			anchoredHorizontalAttachmentEnumType.DefineDefaultController("Enum", "Icons");

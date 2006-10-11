@@ -255,7 +255,6 @@ namespace Epsitec.Common.Tool.ResGenerator
 			
 			if (typFields.Count > 1)
 			{
-				// TODO: [PA] supprimer ce commentaire pour voir le problème.
 				Application.GenerateTypes (manager, buffer, generator, defaultNamespace, bundleId, bundle, typFields);
 			}
 			
@@ -781,16 +780,16 @@ namespace Epsitec.Common.Tool.ResGenerator
 				Types.AbstractType type = Types.AbstractType.GetCachedType(caption);
 				if (type == null)
 				{
-					type = Types.TypeRosetta.CreateTypeObject(caption);  // TODO: [PA] plantée ici !
-					//?System.Diagnostics.Debug.Assert(type != null);
+					type = Types.TypeRosetta.CreateTypeObject(caption);
 					if (type == null)
 					{
 						continue;
 					}
 					Types.AbstractType.SetCachedType(caption, type);
 				}
-				// TODO: [PA] est-ce bien le bon moyen pour obtenir le nom, par exemple "StringType" ?
-				string typeName = type.ToString();
+
+				// Cherche le nom du type, par exemple "StringType".
+				string typeName = type.ToString();  // par exemple "Epsitec.Common.Types.StringType"
 				int index = typeName.LastIndexOf('.');
 				if (index != -1)
 				{
