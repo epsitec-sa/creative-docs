@@ -107,6 +107,10 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>copy "$(ProjectDir)build.ini" "$(TargetDir)"</PostBuildEvent>
+    <PostBuildEvent>copy "$(ProjectDir)build.ini" "$(TargetDir)"
+xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+</PostBuildEvent>
   </PropertyGroup>
 </Project>
