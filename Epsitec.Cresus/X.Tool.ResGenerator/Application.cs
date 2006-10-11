@@ -255,6 +255,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 			
 			if (typFields.Count > 1)
 			{
+				// TODO: [PA] supprimer ce commentaire pour voir le problème.
 				//?Application.GenerateTypes (manager, buffer, generator, defaultNamespace, bundleId, bundle, typFields);
 			}
 			
@@ -769,9 +770,6 @@ namespace Epsitec.Common.Tool.ResGenerator
 				//	Crée l'accesseur pour le champ actuel :
 				buffer.Append(generator.Tabs);
 
-				double b=0;
-				double a = 10/b;
-
 				Support.ResourceBundle.Field f = bundle[fields[i]];
 				Support.Druid druid = f.Druid;
 
@@ -789,6 +787,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 					System.Diagnostics.Debug.Assert(type != null);
 					Types.AbstractType.SetCachedType(caption, type);
 				}
+				// TODO: [PA] est-ce bien le bon moyen pour obtenir le nom, par exemple "StringType" ?
 				string typeName = type.ToString();
 
 				buffer.Append("public static readonly Epsitec.Common.Types.");
