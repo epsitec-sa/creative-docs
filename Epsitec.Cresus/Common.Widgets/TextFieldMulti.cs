@@ -79,7 +79,7 @@ namespace Epsitec.Common.Widgets
 			{
 				double ratioBottom = (cursor.Bottom-this.scrollOffset.Y)/this.realSize.Height;  // 0..1
 				double ratioTop    = (cursor.Top   -this.scrollOffset.Y)/this.realSize.Height;  // 0..1
-				double zone = this.scrollZone*0.5;
+				double zone = this.ScrollZone*0.5;
 
 				double h = AbstractTextField.Infinity-end.Y;  // hauteur de tout le texte
 				if ( h <= this.realSize.Height || this.realSize.Height < 0 )

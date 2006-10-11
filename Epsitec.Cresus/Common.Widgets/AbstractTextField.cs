@@ -4,8 +4,8 @@ namespace Epsitec.Common.Widgets
 {
 	public enum TextFieldStyle
 	{
-		Flat,							// pas de cadre, ni de relief, fond blanc
 		Normal,							// ligne éditable normale
+		Flat,							// pas de cadre, ni de relief, fond blanc
 		Multi,							// ligne éditable Multi
 		Combo,							// ligne éditable Combo
 		UpDown,							// ligne éditable UpDown
@@ -33,13 +33,11 @@ namespace Epsitec.Common.Widgets
 			this.AutoFocus  = true;
 			this.AutoRepeat = true;
 			this.AutoDoubleClick = true;
-			
+
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
-			
-//@			this.InternalState &= ~ InternalState.AutoResolveResRef;
-			
-			this.ResetCursor();
+
+			this.ResetCursor ();
 			this.MouseCursor = MouseCursor.AsIBeam;
 
 			this.InitializeMargins ();
@@ -47,25 +45,24 @@ namespace Epsitec.Common.Widgets
 
 			this.navigator = new TextNavigator (base.TextLayout);
 			this.navigator.AboutToChange += new EventHandler (this.HandleNavigatorAboutToChange);
-			this.navigator.TextDeleted += new EventHandler(this.HandleNavigatorTextDeleted);
-			this.navigator.TextInserted += new EventHandler(this.HandleNavigatorTextInserted);
-			this.navigator.CursorScrolled += new EventHandler(this.HandleNavigatorCursorScrolled);
-			this.navigator.CursorChanged += new EventHandler(this.HandleNavigatorCursorChanged);
-			this.navigator.StyleChanged += new EventHandler(this.HandleNavigatorStyleChanged);
-			this.textFieldStyle = TextFieldStyle.Normal;
-			
-			this.copyPasteBehavior = new Behaviors.CopyPasteBehavior(this);
-			this.OnCursorChanged(true);
+			this.navigator.TextDeleted += new EventHandler (this.HandleNavigatorTextDeleted);
+			this.navigator.TextInserted += new EventHandler (this.HandleNavigatorTextInserted);
+			this.navigator.CursorScrolled += new EventHandler (this.HandleNavigatorCursorScrolled);
+			this.navigator.CursorChanged += new EventHandler (this.HandleNavigatorCursorChanged);
+			this.navigator.StyleChanged += new EventHandler (this.HandleNavigatorStyleChanged);
+
+			this.copyPasteBehavior = new Behaviors.CopyPasteBehavior (this);
+			this.OnCursorChanged (true);
 
 			CommandDispatcher dispatcher = new CommandDispatcher ("TextField", CommandDispatcherLevel.Secondary);
-			CommandContext    context    = new CommandContext ();
-			
+			CommandContext context    = new CommandContext ();
+
 			dispatcher.AutoForwardCommands = true;
 			dispatcher.RegisterController (new Dispatcher (this));
 
 			CommandDispatcher.SetDispatcher (this, dispatcher);
 			CommandContext.SetContext (this, context);
-			
+
 			this.IsFocusedChanged += this.HandleIsFocusedChanged;
 		}
 		
@@ -73,8 +70,19 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
-		
-		
+
+		#region Static Initializer
+
+		static AbstractTextField()
+		{
+			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.TopLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight + 2*(AbstractTextField.TextMargin+AbstractTextField.FrameMargin), Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+
+			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (AbstractTextField), metadataAlign);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (AbstractTextField), metadataHeight);
+		}
+
+		#endregion
 
 		public TextNavigator					TextNavigator
 		{
@@ -191,6 +199,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public Drawing.Rectangle				InnerTextBounds
+		{
+			get
+			{
+				return this.GetInnerTextBounds (this.Client.Bounds);
+			}
+		}
+
 		protected bool							IsEditing
 		{
 			get
@@ -225,142 +241,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		static AbstractTextField()
-		{
-			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.TopLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
-			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight + 2*(AbstractTextField.TextMargin+AbstractTextField.FrameMargin), Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			
-			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (AbstractTextField), metadataAlign);
-			Visual.PreferredHeightProperty.OverrideMetadata (typeof (AbstractTextField), metadataHeight);
-		}
-		
-		public void ProcessCut()
-		{
-			this.copyPasteBehavior.ProcessCopy();
-			this.copyPasteBehavior.ProcessDelete();
-		}
-
-		public void ProcessCopy()
-		{
-			this.copyPasteBehavior.ProcessCopy();
-		}
-
-		public void ProcessPaste()
-		{
-			this.copyPasteBehavior.ProcessPaste();
-		}
-
-#if false
-		public override Drawing.Point GetBaseLine()
-		{
-			if ( this.TextLayout != null )
-			{
-				Drawing.Point pos   = this.TextLayout.GetLineOrigin(0);
-				Drawing.Point shift = this.InnerTextBounds.Location;
-
-				double yFromTop = this.TextLayout.LayoutSize.Height - pos.Y;
-				double yFromBot = this.realSize.Height - yFromTop + shift.Y + this.GetBaseLineVerticalOffset ();
-
-				Drawing.Point point = new Drawing.Point (shift.X, yFromBot);
-
-				if (this.Parent == null)
-				{
-					return point;
-				}
-				else
-				{
-					return this.MapClientToParent (point) - this.ActualLocation;
-				}
-			}
-
-			return base.GetBaseLine ();
-		}
-#endif
-
-		public override Drawing.Point GetBaseLine(double width, double height, out double ascender, out double descender)
-		{
-			if (this.TextLayout != null)
-			{
-				//	Détermine la zone rectangulaire dans laquelle le texte est
-				//	affiché et utilise celle-ci comme référence pour les calculs
-				//	de hauteur :
-				
-				Drawing.Rectangle bounds = this.GetInnerTextBounds (new Drawing.Rectangle (0, 0, width, height));
-				
-				Drawing.Point origin = base.GetBaseLine (width, bounds.Height, out ascender, out descender);
-				Drawing.Point point  = bounds.Location + origin;
-
-				double hAbove = height - bounds.Top;
-				double hBelow = bounds.Bottom;
-
-				ascender  += hAbove;
-				descender -= hBelow;
-				
-				return point;
-			}
-
-			return base.GetBaseLine (width, height, out ascender, out descender);
-		}
-
-		protected override double GetBaseLineVerticalOffset()
-		{
-			return 1.0;
-		}
-
-		public override Drawing.Margins GetInternalPadding()
-		{
-			return this.GetInternalPadding (this.Client.Size);
-		}
-		
-		public Drawing.Rectangle				InnerTextBounds
-		{
-			get
-			{
-				return this.GetInnerTextBounds (this.Client.Bounds);
-			}
-		}
-
-		private Drawing.Margins GetInternalPadding(Drawing.Size size)
-		{
-			Drawing.Margins padding = this.margins;
-
-			if (this.textFieldStyle != TextFieldStyle.Flat)
-			{
-				double excess = System.Math.Max ((22-size.Height)/2, 0);
-				double x = System.Math.Max (1, AbstractTextField.FrameMargin-excess);
-				double y = System.Math.Max (0, AbstractTextField.FrameMargin-excess);
-				padding = padding + new Drawing.Margins (x, x, y, y);
-			}
-
-			return padding;
-		}
-
-		private Drawing.Rectangle GetInnerTextBounds(Drawing.Rectangle rect)
-		{
-			rect.Deflate (this.GetInternalPadding (rect.Size));
-			rect.Deflate (AbstractTextField.TextMargin, AbstractTextField.TextMargin);
-			return rect;
-		}
-		
-#if false	//#fix
-		public override Drawing.Size			MinSize
-		{
-			get
-			{
-				Drawing.Size min = base.MinSize;
-				
-				double width  = 20;
-				double height = this.DefaultHeight;
-				
-				return new Drawing.Size (System.Math.Max (min.Width, width), System.Math.Max (min.Height, height));
-			}
-			set
-			{
-				base.MinSize = value;
-			}
-		}
-#endif
-
 		
 		public int								MaxChar
 		{
@@ -561,6 +441,81 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
+		public void ProcessCut()
+		{
+			this.copyPasteBehavior.ProcessCopy();
+			this.copyPasteBehavior.ProcessDelete();
+		}
+
+		public void ProcessCopy()
+		{
+			this.copyPasteBehavior.ProcessCopy();
+		}
+
+		public void ProcessPaste()
+		{
+			this.copyPasteBehavior.ProcessPaste();
+		}
+
+		
+		public override Drawing.Point GetBaseLine(double width, double height, out double ascender, out double descender)
+		{
+			if (this.TextLayout != null)
+			{
+				//	Détermine la zone rectangulaire dans laquelle le texte est
+				//	affiché et utilise celle-ci comme référence pour les calculs
+				//	de hauteur :
+				
+				Drawing.Rectangle bounds = this.GetInnerTextBounds (new Drawing.Rectangle (0, 0, width, height));
+				
+				Drawing.Point origin = base.GetBaseLine (width, bounds.Height, out ascender, out descender);
+				Drawing.Point point  = bounds.Location + origin;
+
+				double hAbove = height - bounds.Top;
+				double hBelow = bounds.Bottom;
+
+				ascender  += hAbove;
+				descender -= hBelow;
+				
+				return point;
+			}
+
+			return base.GetBaseLine (width, height, out ascender, out descender);
+		}
+
+		protected override double GetBaseLineVerticalOffset()
+		{
+			return 1.0;
+		}
+
+		public override Drawing.Margins GetInternalPadding()
+		{
+			return this.GetInternalPadding (this.Client.Size);
+		}
+		
+		private Drawing.Margins GetInternalPadding(Drawing.Size size)
+		{
+			Drawing.Margins padding = this.margins;
+
+			if (this.textFieldStyle != TextFieldStyle.Flat)
+			{
+				double excess = System.Math.Max ((22-size.Height)/2, 0);
+				double x = System.Math.Max (1, AbstractTextField.FrameMargin-excess);
+				double y = System.Math.Max (0, AbstractTextField.FrameMargin-excess);
+				padding = padding + new Drawing.Margins (x, x, y, y);
+			}
+
+			return padding;
+		}
+
+		private Drawing.Rectangle GetInnerTextBounds(Drawing.Rectangle rect)
+		{
+			rect.Deflate (this.GetInternalPadding (rect.Size));
+			rect.Deflate (AbstractTextField.TextMargin, AbstractTextField.TextMargin);
+			return rect;
+		}
+		
 		public void DefineOpletQueue(OpletQueue queue)
 		{
 			CommandDispatcher dispatcher = CommandDispatcher.GetDispatcher (this);
@@ -599,8 +554,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("About to get focus on '{0}'.", this.Text));
-			
 			if ( mode != TabNavigationMode.Passive )
 			{
 				this.SelectAll();
@@ -996,8 +949,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		#region ContextMenu
-		
 		protected void ShowContextMenu(bool mouseBased)
 		{
 			CommandContext context = CommandContext.GetContext (this);
@@ -1063,9 +1014,6 @@ namespace Epsitec.Common.Widgets
 			this.contextMenu = null;
 		}
 		
-		#endregion
-
-		
 		private void HandleNavigatorAboutToChange(object sender)
 		{
 			this.StartEdition ();
@@ -1101,7 +1049,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void HandleFocused()
 		{
-			System.Diagnostics.Debug.WriteLine ("AbstractTextField focused");
 			TextField.blinking = this;
 			this.ResetCursor();
 			
@@ -1132,8 +1079,6 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void HandleDefocused()
 		{
-			System.Diagnostics.Debug.WriteLine ("AbstractTextField de-focused (KeyboardFocus="+this.KeyboardFocus+")");
-			
 			TextField.blinking = null;
 			
 			if (this.KeyboardFocus == false)
@@ -1275,7 +1220,6 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.has_edited_text == false)
 			{
-				System.Diagnostics.Debug.WriteLine ("Text edited. has_edited_text = true");
 				this.has_edited_text = true;
 				
 				this.UpdateButtonVisibility ();
@@ -1349,8 +1293,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnEditionStarted()
 		{
-			System.Diagnostics.Debug.WriteLine ("Started Edition");
-
 			EventHandler handler = (EventHandler) this.GetUserEventHandler("EditionStarted");
 			if (handler != null)
 			{
@@ -1360,8 +1302,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnEditionAccepted()
 		{
-			System.Diagnostics.Debug.WriteLine ("Accepted Edition");
-
 			EventHandler handler = (EventHandler) this.GetUserEventHandler("EditionAccepted");
 			if (handler != null)
 			{
@@ -1371,8 +1311,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnEditionRejected()
 		{
-			System.Diagnostics.Debug.WriteLine ("Rejected Edition");
-
 			EventHandler handler = (EventHandler) this.GetUserEventHandler("EditionRejected");
 			if (handler != null)
 			{
@@ -1933,27 +1871,30 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		internal static readonly double			TextMargin = 2;
-		internal static readonly double			FrameMargin = 2;
-		internal static readonly double			Infinity = 1000000;
+		internal const double					TextMargin = 2;
+		internal const double					FrameMargin = 2;
+		internal const double					Infinity = 1000000;
 		
 		private bool							autoSelectOnFocus;
 		private bool							autoEraseOnFocus;
+		
 		protected Drawing.Margins				margins;
 		protected Drawing.Size					realSize;
 		protected Drawing.Point					scrollOffset;
-		protected bool							mouseDown = false;
-		protected bool							scrollLeft = false;
-		protected bool							scrollRight = false;
-		protected bool							scrollBottom = false;
-		protected bool							scrollTop = false;
+		
+		protected bool							mouseDown;
+		protected bool							scrollLeft;
+		protected bool							scrollRight;
+		protected bool							scrollBottom;
+		protected bool							scrollTop;
+		
 		protected Drawing.Point					lastMousePos;
-		protected TextFieldStyle				textFieldStyle = TextFieldStyle.Normal;
-		protected double						scrollZone = 0.5;
-		protected TextDisplayMode				textDisplayMode = TextDisplayMode.Default;
+		protected TextFieldStyle				textFieldStyle;
+		private double							scrollZone = 0.5;
+		private TextDisplayMode					textDisplayMode;
 		private DefocusAction					defocus_action;
 		private ShowCondition					button_show_condition;
-		protected string initial_text;
+		protected string						initial_text;
 		protected TextDisplayMode				initial_text_display_mode;
 		private bool							is_editing;
 		private bool							is_modal;
@@ -1966,12 +1907,12 @@ namespace Epsitec.Common.Widgets
 		private int								lastCursorTo = -1;
 		
 		private Behaviors.CopyPasteBehavior		copyPasteBehavior;
+		private VMenu							contextMenu;
 		
 		private static Timer					flashTimer;
-		private static bool						flashTimerStarted = false;
+		private static bool						flashTimerStarted;
 		private static bool						showCursor = true;
 		
-		protected static AbstractTextField		blinking;
-		protected VMenu							contextMenu;
+		private static AbstractTextField		blinking;
 	}
 }
