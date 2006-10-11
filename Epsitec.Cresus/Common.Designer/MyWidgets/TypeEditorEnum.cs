@@ -111,7 +111,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					EnumValue value = collection[first+i];
 					Caption caption = value.Caption;
-					string name = caption.Name;
+
+					//	Ne surtout pas utiliser caption.Name ou value.Name, car cette
+					//	information n'est pas mise à jour pendant l'utilisation de
+					//	Designer, mais seulement lors de l'enregistrement
+					//	(dans ResourceAccess.AdjustBundlesBeforeSave).
+					string name = this.resourceAccess.DirectGetDisplayName(value.CaptionId);
 					string text = ResourceAccess.GetCaptionNiceDescription(caption);
 
 					this.array.SetLineString(0, first+i, name);
@@ -167,7 +172,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			Caption caption = this.module.ResourceManager.GetCaption(druid);
 			System.Diagnostics.Debug.Assert(caption != null);
-			caption.Name = this.module.AccessCaptions.DirectGetDisplayName(druid);
 
 			EnumValue item = new EnumValue(0, caption);
 			collection.Insert(sel+1, item);
