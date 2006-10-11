@@ -256,7 +256,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 			if (typFields.Count > 1)
 			{
 				// TODO: [PA] supprimer ce commentaire pour voir le problème.
-				//?Application.GenerateTypes (manager, buffer, generator, defaultNamespace, bundleId, bundle, typFields);
+				Application.GenerateTypes (manager, buffer, generator, defaultNamespace, bundleId, bundle, typFields);
 			}
 			
 			if (valFields.Count > 1)
@@ -768,8 +768,6 @@ namespace Epsitec.Common.Tool.ResGenerator
 				}
 
 				//	Crée l'accesseur pour le champ actuel :
-				buffer.Append(generator.Tabs);
-
 				Support.ResourceBundle.Field f = bundle[fields[i]];
 				Support.Druid druid = f.Druid;
 
@@ -784,12 +782,22 @@ namespace Epsitec.Common.Tool.ResGenerator
 				if (type == null)
 				{
 					type = Types.TypeRosetta.CreateTypeObject(caption);  // TODO: [PA] plantée ici !
-					System.Diagnostics.Debug.Assert(type != null);
+					//?System.Diagnostics.Debug.Assert(type != null);
+					if (type == null)
+					{
+						continue;
+					}
 					Types.AbstractType.SetCachedType(caption, type);
 				}
 				// TODO: [PA] est-ce bien le bon moyen pour obtenir le nom, par exemple "StringType" ?
 				string typeName = type.ToString();
+				int index = typeName.LastIndexOf('.');
+				if (index != -1)
+				{
+					typeName = typeName.Substring(index+1);  // supprime "Epsitec.Common.Types." !
+				}
 
+				buffer.Append(generator.Tabs);
 				buffer.Append("public static readonly Epsitec.Common.Types.");
 				buffer.Append(typeName);
 				buffer.Append(" ");
