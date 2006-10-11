@@ -156,6 +156,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Types.Collections.EnumValueCollection collection = this.Collection;
 
 			int sel = this.array.SelectedRow;
+			if (sel > collection.Count-1)
+			{
+				sel = collection.Count-1;
+			}
 
 			List<Druid> exclude = new List<Druid>();
 			foreach (EnumValue value in collection)
