@@ -57,9 +57,7 @@ namespace Epsitec.Common.Types
 		{
 			foreach (System.Type type in assembly.GetTypes ())
 			{
-				if ((type.IsEnum) &&
-					(! type.IsNested) &&
-					(type.IsPublic))
+				if (type.IsEnum)
 				{
 					string name = type.FullName;
 					Record record = new Record (type);
