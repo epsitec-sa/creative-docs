@@ -155,6 +155,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Ajoute une nouvelle valeur dans l'énumération.
 			Types.Collections.EnumValueCollection collection = this.Collection;
 
+#if false
 			int sel = this.array.SelectedRow;
 			if (sel > collection.Count-1)
 			{
@@ -188,6 +189,46 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.ShowSelectedRow();
 
 			this.OnContentChanged();
+#else
+			int sel = this.array.SelectedRow;
+			if (sel > collection.Count-1)
+			{
+				sel = collection.Count-1;
+			}
+
+			List<Druid> druids = new List<Druid>();
+			List<Druid> exclude = new List<Druid>();
+			foreach (EnumValue value in collection)
+			{
+				exclude.Add(value.Caption.Druid);
+			}
+
+			druids = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Values, druids, exclude);
+			if (druids == null)
+			{
+				return;
+			}
+
+			foreach (Druid druid in druids)
+			{
+				Caption caption = this.module.ResourceManager.GetCaption(druid);
+				System.Diagnostics.Debug.Assert(caption != null);
+
+				EnumValue item = new EnumValue(0, caption);
+				sel++;
+				collection.Insert(sel, item);
+			}
+
+			this.RenumCollection();
+
+			this.UpdateArray();
+			this.UpdateButtons();
+
+			this.array.SelectedRow = sel;
+			this.array.ShowSelectedRow();
+
+			this.OnContentChanged();
+#endif
 		}
 
 		protected void ArrayRemove()

@@ -194,6 +194,25 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		public void AccessOpenList(Module baseModule, ResourceAccess.Type type, List<Druid> resources, List<Druid> exclude)
+		{
+			//	Début de l'accès 'bypass' aux ressources pour le dialogue.
+			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Commands || type == ResourceAccess.Type.Values);
+
+			this.resourceType = type;
+			this.resource = Druid.Empty;
+			this.resources = resources;
+			this.exclude = exclude;
+
+			//	Cherche le module contenant le Druid de la ressource.
+			this.baseModule = baseModule;
+			this.module = baseModule;  // utilise le module de base
+
+			this.access = this.module.AccessCaptions;
+
+			this.module.AccessCaptions.BypassFilterOpenAccess(this.resourceType, this.exclude);
+		}
+
 		public void AccessOpen(Module baseModule, ResourceAccess.Type type, Druid resource, List<Druid> exclude)
 		{
 			//	Début de l'accès 'bypass' aux ressources pour le dialogue.
@@ -202,6 +221,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			System.Diagnostics.Debug.Assert(resource.Type != DruidType.ModuleRelative);
 
 			this.resource = resource;
+			this.resources = null;
 			this.exclude = exclude;
 
 			//	Cherche le module contenant le Druid de la ressource.
@@ -237,6 +257,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.module = module;
 			this.access = this.module.AccessCaptions;
 			this.module.AccessCaptions.BypassFilterOpenAccess(this.resourceType, this.exclude);
+		}
+
+		public List<Druid> AccessCloseList()
+		{
+			//	Fin de l'accès 'bypass' aux ressources pour le dialogue.
+			this.module.AccessCaptions.BypassFilterCloseAccess();
+			return this.resources;
 		}
 
 		public Druid AccessClose()
@@ -387,6 +414,11 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 			}
 
+			if (this.array.AllowMultipleSelection)
+			{
+				best = 0;
+			}
+
 			return best;
 		}
 
@@ -438,6 +470,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
+			this.array.AllowMultipleSelection = (this.resources != null);
 			this.array.TotalRows = this.druidsIndex.Count;
 
 			ResourceBundle bundle = this.CurrentBundle;
@@ -494,20 +527,37 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Sélectionne la bonne ressource dans le tableau.
 			int sel = -1;
 
-			if (this.resource.Type == DruidType.Full)
+			if (this.array.AllowMultipleSelection)
 			{
+				List<int> sels = new List<int>();
+
 				for (int i=0; i<this.druidsIndex.Count; i++)
 				{
-					if (this.druidsIndex[i] == this.resource)
+					if (this.resources.Contains(this.druidsIndex[i]))
 					{
-						sel = i;
-						break;
+						sels.Add(i);
 					}
 				}
-			}
 
-			this.array.SelectedRow = sel;
-			this.array.ShowSelectedRow();
+				this.array.SelectedRows = sels;
+			}
+			else
+			{
+				if (this.resource.Type == DruidType.Full)
+				{
+					for (int i=0; i<this.druidsIndex.Count; i++)
+					{
+						if (this.druidsIndex[i] == this.resource)
+						{
+							sel = i;
+							break;
+						}
+					}
+				}
+
+				this.array.SelectedRow = sel;
+				this.array.ShowSelectedRow();
+			}
 		}
 
 		protected void UpdateButtons()
@@ -516,7 +566,15 @@ namespace Epsitec.Common.Designer.Dialogs
 			string text  = TextLayout.ConvertToSimpleText(this.filterText.Text);
 
 			this.buttonClear.Enable = (label != "" || text != "");
-			this.buttonUse.Enable = (this.array.SelectedRow != -1);
+
+			if (this.array.AllowMultipleSelection)
+			{
+				this.buttonUse.Enable = (this.array.SelectedRows.Count > 0);
+			}
+			else
+			{
+				this.buttonUse.Enable = (this.array.SelectedRow != -1);
+			}
 
 			bool createEnable = false;
 			if (label != "" && text != "" && this.access.IsCorrectNewName(ref label, true))
@@ -600,14 +658,27 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.Hide();
 			this.OnClosed();
 
-			int sel = this.array.SelectedRow;
-			if (sel == -1)
+			if (this.array.AllowMultipleSelection)
 			{
-				this.resource = Druid.Empty;
+				this.resources = new List<Druid>();
+
+				List<int> sels = this.array.SelectedRows;
+				foreach (int sel in sels)
+				{
+					this.resources.Add(this.druidsIndex[sel]);
+				}
 			}
 			else
 			{
-				this.resource = this.druidsIndex[sel];
+				int sel = this.array.SelectedRow;
+				if (sel == -1)
+				{
+					this.resource = Druid.Empty;
+				}
+				else
+				{
+					this.resource = this.druidsIndex[sel];
+				}
 			}
 		}
 
@@ -621,7 +692,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			string text  = TextLayout.ConvertToSimpleText(this.filterText.Text);
 			if (label != "" && text != "" && this.access.IsCorrectNewName(ref label, true))
 			{
-				this.resource = this.access.BypassFilterCreate(this.CurrentBundle, label, text);
+				if (this.array.AllowMultipleSelection)
+				{
+					//	TODO:
+				}
+				else
+				{
+					this.resource = this.access.BypassFilterCreate(this.CurrentBundle, label, text);
+				}
 			}
 		}
 
@@ -678,6 +756,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void HandleArraySelectedRowDoubleClicked(object sender)
 		{
 			//	La ligne sélectionnée a été double cliquée.
+			if (this.array.AllowMultipleSelection)
+			{
+				return;
+			}
+
 			this.UpdateButtons();
 
 			this.parentWindow.MakeActive();
@@ -714,6 +797,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected Button						buttonCancel;
 
 		protected Druid							resource;
+		protected List<Druid>					resources;
 		protected List<Druid>					druidsIndex;
 		protected Widget						focusedWidget;
 	}
