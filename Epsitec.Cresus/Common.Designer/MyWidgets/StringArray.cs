@@ -265,6 +265,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public bool AllowMultipleSelection
 		{
 			//	Indique si les sélections multiples de lignes sont possibles.
+			//	En mode 'true' la sélection multiple est forcée, c'est-à-dire qu'il
+			//	n'est pas nécessaire d'utiliser la touche Ctrl.
 			get
 			{
 				return this.allowMultipleSelection;
@@ -311,7 +313,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public List<int> SelectedRows
 		{
-			//	Lignes sélectionnées.
+			//	Lignes sélectionnées. L'ordre obtenu dépend de l'ordre dans lequel
+			//	l'utilisateur a cliqué sur les lignes.
 			get
 			{
 				return this.selectedRows;

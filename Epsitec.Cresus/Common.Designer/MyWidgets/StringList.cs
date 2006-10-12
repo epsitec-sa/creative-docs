@@ -162,6 +162,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public bool AllowMultipleSelection
 		{
 			//	Indique si les sélections multiples sont possibles.
+			//	En mode 'true' la sélection multiple est forcée, c'est-à-dire qu'il
+			//	n'est pas nécessaire d'utiliser la touche Ctrl.
 			get
 			{
 				return this.allowMultipleSelection;

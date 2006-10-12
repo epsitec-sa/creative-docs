@@ -1076,6 +1076,36 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public Caption DirectGetCaption(Druid druid)
+		{
+			//	Retourne le caption d'une ressource, sans tenir compte du filtre.
+			//	La recherche s'effectue toujours dans la culture de base.
+			System.Diagnostics.Debug.Assert(this.IsBundlesType);
+			ResourceBundle.Field field = this.primaryBundle[druid];
+			if (field == null)
+			{
+				return null;
+			}
+
+			Caption caption = new Caption();
+
+			string s = field.AsString;
+			if (!string.IsNullOrEmpty(s))
+			{
+				caption.DeserializeFromString(s, this.resourceManager);
+			}
+
+			return caption;
+		}
+
+		public ResourceBundle.Field DirectGetField(Druid druid)
+		{
+			//	Retourne une ressource, sans tenir compte du filtre.
+			//	La recherche s'effectue toujours dans la culture de base.
+			System.Diagnostics.Debug.Assert(this.IsBundlesType);
+			return this.primaryBundle[druid];
+		}
+
 		public string DirectGetDisplayName(Druid druid)
 		{
 			//	Retourne le nom d'une ressource à afficher, sans tenir compte du filtre.

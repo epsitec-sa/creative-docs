@@ -52,6 +52,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.Dock = DockStyle.StackBegin;
 			this.array.PreferredHeight = 200;
 			this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
+			this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 		}
 
@@ -71,6 +72,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.buttonRemove.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 
 				this.array.CellCountChanged -= new EventHandler(this.HandleArrayCellCountChanged);
+				this.array.CellsContentChanged -= new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
 			}
 			
@@ -81,6 +83,41 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected override void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.
+			Types.Collections.EnumValueCollection collection = this.Collection;
+
+			//	Cherche tous les Druids de type Values existants.
+			this.resourceAccess.BypassFilterOpenAccess(ResourceAccess.Type.Values, null);
+			int count = this.resourceAccess.BypassFilterCount;
+			this.allDruids = new List<Druid>(count);
+			for (int i=0; i<count; i++)
+			{
+				this.allDruids.Add(this.resourceAccess.BypassFilterGetDruid(i));
+			}
+			this.resourceAccess.BypassFilterCloseAccess();
+
+			//	Construit le contenu de la liste.
+			this.listDruids = new List<Druid>();
+			List<int> sels = new List<int>();
+
+			int sel = 0;
+			foreach (EnumValue value in collection)
+			{
+				this.listDruids.Add(value.Caption.Druid);
+				sels.Add(sel++);
+			}
+
+			foreach (Druid druid in this.allDruids)
+			{
+				if (!this.listDruids.Contains(druid))
+				{
+					this.listDruids.Add(druid);
+				}
+			}
+
+			this.array.TotalRows = this.listDruids.Count;
+			this.array.AllowMultipleSelection = true;
+			this.array.SelectedRows = sels;
+
 			this.ignoreChange = true;
 			this.UpdateArray();
 			this.UpdateButtons();
@@ -100,23 +137,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			Types.Collections.EnumValueCollection collection = this.Collection;
-
-			this.array.TotalRows = collection.Count;
-
 			int first = this.array.FirstVisibleRow;
 			for (int i=0; i<this.array.LineCount; i++)
 			{
-				if (first+i < collection.Count)
+				if (first+i < this.listDruids.Count)
 				{
-					EnumValue value = collection[first+i];
-					Caption caption = value.Caption;
+					Druid druid = this.listDruids[first+i];
+					Caption caption = this.resourceAccess.DirectGetCaption(druid);
 
 					//	Ne surtout pas utiliser caption.Name ou value.Name, car cette
 					//	information n'est pas mise à jour pendant l'utilisation de
 					//	Designer, mais seulement lors de l'enregistrement
 					//	(dans ResourceAccess.AdjustBundlesBeforeSave).
-					string name = this.resourceAccess.DirectGetDisplayName(value.CaptionId);
+					string name = this.resourceAccess.DirectGetDisplayName(druid);
 					string text = ResourceAccess.GetCaptionNiceDescription(caption);
 
 					this.array.SetLineString(0, first+i, name);
@@ -337,6 +370,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.UpdateArray();
 		}
 
+		private void HandleArrayCellsContentChanged(object sender)
+		{
+			//	Le contenu des cellules a changé.
+			this.UpdateArray();
+		}
+
 		private void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
@@ -350,5 +389,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButton					buttonNext;
 		protected IconButton					buttonRemove;
 		protected MyWidgets.StringArray			array;
+		protected List<Druid>					allDruids;
+		protected List<Druid>					listDruids;
 	}
 }
