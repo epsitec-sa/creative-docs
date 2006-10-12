@@ -401,22 +401,9 @@ namespace Epsitec.Common.Designer.Proxies
 
 		//	(*)	Les propriétés Largeur ou Hauteur peuvent apparaître ou disparaître !
 
-		protected static System.Type Search(System.Type[] types, System.Type searched)
-		{
-			foreach (System.Type type in types)
-			{
-				if (type.FullName == searched.FullName)
-				{
-					return type;
-				}
-			}
-			return null;
-		}
 
 		static Layout()
 		{
-			System.Type[] types = Types.Collection.ToArray(EnumLister.GetPublicEnums());
-
 #if false
 			EnumType childrenPlacementEnumType = new EnumType(typeof(ObjectModifier.ChildrenPlacement));
 			childrenPlacementEnumType.DefineDefaultController("Enum", "Icons");
@@ -426,22 +413,8 @@ namespace Epsitec.Common.Designer.Proxies
 			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.Grid].DefineCaptionId(Res.Captions.Layout.Grid.Druid);
 			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineNamedType(childrenPlacementEnumType);
 			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.ChildrenPlacement.Druid);
-#endif
-#if false
+#else
 			EnumType childrenPlacementEnumType = Res.Types.Layout.ChildrenPlacement;
-			childrenPlacementEnumType.DefineDefaultController("Enum", "Icons");
-			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineNamedType(childrenPlacementEnumType);
-			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.ChildrenPlacement.Druid);
-#endif
-#if true
-			EnumType childrenPlacementEnumType = new EnumType(typeof(ObjectModifier.ChildrenPlacement), Res.Types.Layout.ChildrenPlacement.Caption);
-			childrenPlacementEnumType.DefineDefaultController("Enum", "Icons");
-			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineNamedType(childrenPlacementEnumType);
-			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.ChildrenPlacement.Druid);
-#endif
-#if false
-			System.Type t = Layout.Search(types, typeof(ObjectModifier.ChildrenPlacement));
-			EnumType childrenPlacementEnumType = new EnumType(t, Res.Types.Layout.ChildrenPlacement.Caption);
 			childrenPlacementEnumType.DefineDefaultController("Enum", "Icons");
 			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineNamedType(childrenPlacementEnumType);
 			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.ChildrenPlacement.Druid);
