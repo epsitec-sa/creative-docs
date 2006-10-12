@@ -262,6 +262,38 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public bool AllowMultipleSelection
+		{
+			//	Indique si les sélections multiples de lignes sont possibles.
+			get
+			{
+				return this.allowMultipleSelection;
+			}
+
+			set
+			{
+				if (this.allowMultipleSelection != value)
+				{
+					this.allowMultipleSelection = value;
+
+					if (this.allowMultipleSelection)
+					{
+						this.selectedRows = new List<int>();
+					}
+					else
+					{
+						this.selectedRows = null;
+					}
+					
+					for (int i=0; i<this.columns.Length; i++)
+					{
+						this.columns[i].AllowMultipleSelection = value;
+						this.columns[i].SelectedCells = this.selectedRows;
+					}
+				}
+			}
+		}
+
 		public int SelectedRow
 		{
 			//	Ligne sélectionnée.
@@ -272,7 +304,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			set
 			{
+				this.AllowMultipleSelection = false;
 				this.SetSelectedRow(value, -1);
+			}
+		}
+
+		public List<int> SelectedRows
+		{
+			//	Lignes sélectionnées.
+			get
+			{
+				return this.selectedRows;
+			}
+
+			set
+			{
+				this.AllowMultipleSelection = true;
+				this.selectedRows = value;
+				this.isDirtySelected = true;
+				this.Invalidate();
 			}
 		}
 
@@ -355,9 +405,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.isDirtySelected = false;
 
-				for (int i=0; i<this.columns.Length; i++)
+				if (this.allowMultipleSelection)
 				{
-					this.columns[i].SelectedCell = this.selectedRow-this.firstVisibleRow;
+					List<int> sels = new List<int>();
+					foreach (int sel in this.selectedRows)
+					{
+						sels.Add(sel-this.firstVisibleRow);
+					}
+
+					for (int i=0; i<this.columns.Length; i++)
+					{
+						this.columns[i].SelectedCells = sels;
+					}
+				}
+				else
+				{
+					for (int i=0; i<this.columns.Length; i++)
+					{
+						this.columns[i].SelectedCell = this.selectedRow-this.firstVisibleRow;
+					}
 				}
 			}
 		}
@@ -708,20 +774,41 @@ namespace Epsitec.Common.Designer.MyWidgets
 		void HandleFinalCellSelectionChanged(object sender)
 		{
 			MyWidgets.StringList array = sender as MyWidgets.StringList;
-			int sel = array.SelectedCell;
-			int column = -1;
 
-			for (int i=0; i<this.columns.Length; i++)
+			if (this.allowMultipleSelection)
 			{
-				this.columns[i].SelectedCell = sel;
+				List<int> sels = array.SelectedCells;
 
-				if (this.columns[i] == sender)
+				this.selectedRows.Clear();
+				foreach (int sel in sels)
 				{
-					column = i;
+					this.selectedRows.Add(this.firstVisibleRow+sel);
 				}
-			}
 
-			this.SetSelectedRow(this.firstVisibleRow+sel, column);
+				for (int i=0; i<this.columns.Length; i++)
+				{
+					this.columns[i].UpdateSelectedCell();
+				}
+
+				this.OnSelectedRowChanged();
+			}
+			else
+			{
+				int sel = array.SelectedCell;
+				int column = -1;
+
+				for (int i=0; i<this.columns.Length; i++)
+				{
+					this.columns[i].SelectedCell = sel;
+
+					if (this.columns[i] == sender)
+					{
+						column = i;
+					}
+				}
+
+				this.SetSelectedRow(this.firstVisibleRow+sel, column);
+			}
 		}
 
 		void HandleDoubleClicked(object sender, MessageEventArgs e)
@@ -856,8 +943,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected StringList[]				columns;
 		protected VScroller					scroller;
 		protected int						totalRows;
+		protected bool						allowMultipleSelection = false;
 		protected int						selectedRow = -1;
 		protected int						selectedColumn = -1;
+		protected List<int>					selectedRows;
 		protected int						firstVisibleRow = 0;
 		protected bool						ignoreChange = false;
 		protected bool						isDirtyScroller = true;

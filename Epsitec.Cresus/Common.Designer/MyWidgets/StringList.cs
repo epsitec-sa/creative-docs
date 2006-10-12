@@ -159,9 +159,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return this.cells[index].State;
 		}
 
+		public bool AllowMultipleSelection
+		{
+			//	Indique si les sélections multiples sont possibles.
+			get
+			{
+				return this.allowMultipleSelection;
+			}
+
+			set
+			{
+				this.allowMultipleSelection = value;
+			}
+		}
+
 		public int SelectedCell
 		{
 			//	Cellule sélectionnée.
+			//	Attention, les cellules sont comptés ici à partir de zéro, contraitement à
+			//	StringArray qui compte des lignes en tenant compte de la première ligne
+			//	visible.
 			get
 			{
 				return this.selectedCell;
@@ -170,19 +187,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 			set
 			{
 				this.selectedCell = value;
+				this.UpdateSelectedCell();
+			}
+		}
 
-				if (this.cells != null)
-				{
-					for (int i=0; i<this.cells.Length; i++)
-					{
-						bool selected = (i == value);
-						if (this.cells[i].Selected != selected)
-						{
-							this.cells[i].Selected = selected;
-							this.Invalidate();
-						}
-					}
-				}
+		public List<int> SelectedCells
+		{
+			//	Cellules sélectionnées.
+			//	Attention, les cellules sont comptés ici à partir de zéro, contraitement à
+			//	StringArray qui compte des lignes en tenant compte de la première ligne
+			//	visible.
+			get
+			{
+				return this.selectedCells;
+			}
+
+			set
+			{
+				this.selectedCells = value;
+				this.UpdateSelectedCell();
 			}
 		}
 
@@ -223,14 +246,33 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (message.Type == MessageType.MouseDown)
 				{
 					int cell = this.Detect(pos, true);
-					if (this.SelectedCell != cell)
+
+					if (this.allowMultipleSelection)
 					{
-						if (cell != -1)
+						if (this.selectedCells.Contains(cell))
 						{
-							this.SelectedCell = cell;
-							this.OnDraggingCellSelectionChanged();
+							this.selectedCells.Remove(cell);
+						}
+						else
+						{
+							this.selectedCells.Add(cell);
+						}
+
+						this.UpdateSelectedCell();
+						this.OnFinalCellSelectionChanged();
+					}
+					else
+					{
+						if (this.SelectedCell != cell)
+						{
+							if (cell != -1)
+							{
+								this.SelectedCell = cell;
+								this.OnDraggingCellSelectionChanged();
+							}
 						}
 					}
+
 					if (cell != -1)
 					{
 						this.isDragging = true;
@@ -245,7 +287,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					if (this.isDragging)
 					{
 						int cell = this.Detect(pos, false);
-						if (this.SelectedCell != cell)
+						if (!this.allowMultipleSelection && this.SelectedCell != cell)
 						{
 							this.SelectedCell = cell;
 							this.OnDraggingCellSelectionChanged();
@@ -259,8 +301,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (message.Type == MessageType.MouseUp)
 				{
 					int cell = this.Detect(pos, false);
-					this.SelectedCell = cell;
-					this.OnFinalCellSelectionChanged();
+
+					if (!this.allowMultipleSelection)
+					{
+						this.SelectedCell = cell;
+						this.OnFinalCellSelectionChanged();
+					}
+
 					this.isDragging = false;
 					message.Captured = true;
 					message.Consumer = this;
@@ -319,7 +366,36 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.cells[i].TextLayout.Alignment = this.alignment;
 				this.cells[i].TextLayout.BreakMode = this.breakMode;
 				this.cells[i].State = CellState.Normal;
-				this.cells[i].Selected = (i == this.selectedCell);
+				this.cells[i].Selected = this.IsSelectedCell(i);
+			}
+		}
+
+		public void UpdateSelectedCell()
+		{
+			if (this.cells != null)
+			{
+				for (int i=0; i<this.cells.Length; i++)
+				{
+					bool selected = this.IsSelectedCell(i);
+					if (this.cells[i].Selected != selected)
+					{
+						this.cells[i].Selected = selected;
+						this.Invalidate();
+					}
+				}
+			}
+		}
+
+		protected bool IsSelectedCell(int cell)
+		{
+			//	Indique si une cellule doit être sélectionnée.
+			if (this.allowMultipleSelection)
+			{
+				return this.selectedCells != null && this.selectedCells.Contains(cell);
+			}
+			else
+			{
+				return cell == this.selectedCell;
 			}
 		}
 
@@ -527,6 +603,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Cell[]					cells;
 		protected bool						isDynamicToolTips = false;
 		protected bool						isDragging = false;
+		protected bool						allowMultipleSelection = false;
 		protected int						selectedCell = -1;
+		protected List<int>					selectedCells;
 	}
 }

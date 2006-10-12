@@ -180,7 +180,7 @@ namespace Epsitec.Common.Designer
 			return TypeType.None;
 		}
 
-		public static AbstractType CreateTypeType(TypeType type)
+		protected static AbstractType CreateTypeType(TypeType type)
 		{
 			switch (type)
 			{

@@ -1104,6 +1104,16 @@ namespace Epsitec.Common.Designer
 			return this.dlgResourceSelector.AccessClose();
 		}
 
+		public List<Druid> DlgResourceSelector(Module baseModule, ResourceAccess.Type type, List<Druid> ressources, List<Druid> exclude)
+		{
+			//	Ouvre le dialogue pour choisir des ressources (sous forme d'une liste
+			//	de Druids) d'un type à choix.
+			//	Le type doit être connu.
+			this.dlgResourceSelector.AccessOpenList(baseModule, type, ressources, exclude);
+			this.dlgResourceSelector.Show();  // choix dans le dialogue...
+			return this.dlgResourceSelector.AccessCloseList();
+		}
+
 		public string DlgIcon(ResourceManager manager, string icon)
 		{
 			//	Ouvre le dialogue pour choisir une icône.
