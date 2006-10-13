@@ -154,7 +154,12 @@ namespace Epsitec.Common.Widgets
 			{
 				this.accept_reject_behavior.SetVisible (show);
 
-				this.Window.ForceLayout ();
+				Window window = this.Window;
+
+				if (window != null)
+				{
+					window.ForceLayout ();
+				}
 
 				this.UpdateButtonGeometry ();
 				this.UpdateButtonEnable ();
