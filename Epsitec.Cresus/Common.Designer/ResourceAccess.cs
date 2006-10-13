@@ -1024,8 +1024,9 @@ namespace Epsitec.Common.Designer
 		{
 			//	Construit un texte d'après les labels et la description.
 			//	Les différents labels sont séparés par des virgules.
-			//	La description vient sur une deuxième ligne, mais seulement
-			//	si elle est différente de tous les labels.
+			//	La description vient sur une deuxième ligne (si la hauteur
+			//	disponible le permet), mais seulement si elle est différente
+			//	de tous les labels.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 			string description = caption.Description;
@@ -1083,11 +1084,52 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public string DirectGetDisplayName(Druid druid)
+		{
+			//	Retourne le nom d'une ressource à afficher, sans tenir compte du filtre.
+			string name = this.DirectGetName(druid);
+			return ResourceAccess.SubAllFilter(name);
+		}
+
+		public string DirectGetName(Druid druid)
+		{
+			//	Retourne le nom d'une ressource, sans tenir compte du filtre.
+			//	La recherche s'effectue toujours dans la culture de base.
+			System.Diagnostics.Debug.Assert(this.IsBundlesType);
+			ResourceBundle.Field field = this.primaryBundle[druid];
+			return field.Name;
+		}
+
+		public string DirectGetIcon(Druid druid)
+		{
+			//	Retourne l'icône d'une ressource, sans tenir compte du filtre.
+			//	La recherche s'effectue toujours dans la culture de base.
+			Caption caption = this.DirectGetCaption(druid);
+			if (caption == null)
+			{
+				return null;
+			}
+
+			return caption.Icon;
+		}
+
+		public string DirectGetGroup(Druid druid)
+		{
+			//	Retourne le groupe d'une commande.
+			Caption caption = this.DirectGetCaption(druid);
+			if (caption == null)
+			{
+				return null;
+			}
+
+			return Command.GetGroup(caption);
+		}
+
 		public Caption DirectGetCaption(Druid druid)
 		{
 			//	Retourne le caption d'une ressource, sans tenir compte du filtre.
 			//	La recherche s'effectue toujours dans la culture de base.
-			System.Diagnostics.Debug.Assert(this.IsBundlesType);
+			System.Diagnostics.Debug.Assert(this.IsCaptionsType);
 			ResourceBundle.Field field = this.primaryBundle[druid];
 			if (field == null)
 			{
@@ -1113,55 +1155,11 @@ namespace Epsitec.Common.Designer
 			return this.primaryBundle[druid];
 		}
 
-		public string DirectGetDisplayName(Druid druid)
+		public Druid DirectGetDruid(int index)
 		{
-			//	Retourne le nom d'une ressource à afficher, sans tenir compte du filtre.
-			string name = this.DirectGetName(druid);
-			return ResourceAccess.SubAllFilter(name);
-		}
-
-		public string DirectGetName(Druid druid)
-		{
-			//	Retourne le nom d'une ressource, sans tenir compte du filtre.
-			//	La recherche s'effectue toujours dans la culture de base.
 			System.Diagnostics.Debug.Assert(this.IsBundlesType);
-			ResourceBundle.Field field = this.primaryBundle[druid];
-			return field.Name;
-		}
-
-		public string DirectGetIcon(Druid druid)
-		{
-			//	Retourne l'icône d'une ressource, sans tenir compte du filtre.
-			//	La recherche s'effectue toujours dans la culture de base.
-			System.Diagnostics.Debug.Assert(this.IsCaptionsType);
-			ResourceBundle.Field field = this.primaryBundle[druid];
-
-			Caption caption = new Caption();
-
-			string s = field.AsString;
-			if (!string.IsNullOrEmpty(s))
-			{
-				caption.DeserializeFromString(s, this.resourceManager);
-			}
-
-			return caption.Icon;
-		}
-
-		public string DirectGetGroup(int index)
-		{
-			//	Retourne le groupe d'une commande.
-			System.Diagnostics.Debug.Assert(this.type == Type.Commands);
 			ResourceBundle.Field field = this.primaryBundle[index];
-
-			Caption caption = new Caption();
-
-			string s = field.AsString;
-			if (!string.IsNullOrEmpty(s))
-			{
-				caption.DeserializeFromString(s, this.resourceManager);
-			}
-
-			return Command.GetGroup(caption);
+			return new Druid(field.Druid, this.primaryBundle.Module.Id);
 		}
 		#endregion
 
