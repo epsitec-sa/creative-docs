@@ -112,7 +112,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					EnumValue value = collection[first+i];
 					Caption caption = value.Caption;
 					string name = caption.Name;
-					string text = ResourceAccess.GetCaptionNiceDescription(caption);
+					string text = ResourceAccess.GetCaptionNiceDescription(caption, this.array.LineHeight);
 
 					this.array.SetLineString(0, first+i, name);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
