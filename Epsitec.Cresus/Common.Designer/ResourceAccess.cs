@@ -1494,6 +1494,22 @@ namespace Epsitec.Common.Designer
 						return ModificationState.Empty;
 					}
 
+					if (this.IsCaptionsType)
+					{
+						Caption caption = new Caption();
+
+						string s = this.accessField.AsString;
+						if (!string.IsNullOrEmpty(s))
+						{
+							caption.DeserializeFromString(s, this.resourceManager);
+						}
+
+						if (ResourceAccess.IsEmptyCollection(caption.Labels) && string.IsNullOrEmpty(caption.Description))
+						{
+							return ModificationState.Empty;
+						}
+					}
+
 					if (this.accessBundle != this.primaryBundle)  // culture secondaire ?
 					{
 						Druid druid = this.druidsIndex[index];
@@ -1508,6 +1524,25 @@ namespace Epsitec.Common.Designer
 			}
 
 			return ModificationState.Normal;
+		}
+
+		protected static bool IsEmptyCollection(ICollection<string> collection)
+		{
+			//	Indique si une collection de strings doit être considérée comme vide.
+			if (collection == null || collection.Count == 0)
+			{
+				return true;
+			}
+
+			foreach (string s in collection)
+			{
+				if (!string.IsNullOrEmpty(s))
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		public void ModificationClear(int index, string cultureName)
