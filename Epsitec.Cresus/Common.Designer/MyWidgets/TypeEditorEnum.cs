@@ -45,6 +45,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonSort.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonSort);
 
+			this.fieldSearch = new TextFieldCombo();
+			this.fieldSearch.PreferredWidth = 200;
+			this.fieldSearch.Margins = new Margins(30, 0, 1, 1);
+			this.toolbar.Items.Add(this.fieldSearch);
+
+			this.buttonSearchPrev = new IconButton();
+			this.buttonSearchPrev.CaptionDruid = Res.Captions.Editor.Type.SearchPrev.Druid;
+			this.buttonSearchPrev.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.toolbar.Items.Add(this.buttonSearchPrev);
+
+			this.buttonSearchNext = new IconButton();
+			this.buttonSearchNext.CaptionDruid = Res.Captions.Editor.Type.SearchNext.Druid;
+			this.buttonSearchNext.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.toolbar.Items.Add(this.buttonSearchNext);
+
 			HSlider slider = new HSlider(toolbar);
 			slider.PreferredWidth = 80;
 			slider.Margins = new Margins(2, 2, 4, 4);
@@ -89,6 +104,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.buttonPrev.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonNext.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonRemove.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonSort.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 
 				this.array.CellCountChanged -= new EventHandler(this.HandleArrayCellCountChanged);
 				this.array.CellsContentChanged -= new EventHandler(this.HandleArrayCellsContentChanged);
@@ -339,6 +355,41 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.OnContentChanged();
 		}
 
+		protected void ArraySearch(string searching, int direction)
+		{
+			//	Cherche en avant ou en arrière.
+			searching = Searcher.RemoveAccent(searching.ToLower());
+
+			int sel = this.array.SelectedRow;
+
+			for (int i=0; i<this.listDruids.Count; i++)
+			{
+				sel += direction;  // suivant, en avant ou en arrière
+
+				if (sel >= this.listDruids.Count)  // fin dépassée ?
+				{
+					sel = 0;  // revient au début
+				}
+
+				if (sel < 0)  // début dépassé ?
+				{
+					sel = this.listDruids.Count-1;  // va à la fin
+				}
+
+				string name = this.resourceAccess.DirectGetDisplayName(this.listDruids[sel]);
+				name = Searcher.RemoveAccent(name.ToLower());
+
+				if (name.Contains(searching))
+				{
+					this.array.SelectedRow = sel;
+					this.array.ShowSelectedRow();
+					return;
+				}
+			}
+
+			this.mainWindow.DialogMessage(Res.Strings.Dialog.Search.Message.Error);
+		}
+
 		protected void BuildCollection()
 		{
 			//	Renumérote toute la collection.
@@ -406,6 +457,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.ArraySort();
 			}
+
+			if (sender == this.buttonSearchPrev)
+			{
+				Misc.ComboMenuAdd(this.fieldSearch);
+				this.ArraySearch(this.fieldSearch.Text, -1);
+			}
+
+			if (sender == this.buttonSearchNext)
+			{
+				Misc.ComboMenuAdd(this.fieldSearch);
+				this.ArraySearch(this.fieldSearch.Text, 1);
+			}
 		}
 
 		private void HandleSliderChanged(object sender)
@@ -460,6 +523,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButton					buttonPrev;
 		protected IconButton					buttonNext;
 		protected IconButton					buttonSort;
+		protected TextFieldCombo				fieldSearch;
+		protected IconButton					buttonSearchPrev;
+		protected IconButton					buttonSearchNext;
 		protected MyWidgets.StringArray			array;
 		protected List<Druid>					allDruids;
 		protected List<Druid>					selDruids;
