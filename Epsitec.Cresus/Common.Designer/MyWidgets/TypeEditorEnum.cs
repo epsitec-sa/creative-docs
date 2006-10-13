@@ -45,6 +45,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonSort.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonSort);
 
+			HSlider slider = new HSlider(toolbar);
+			slider.PreferredWidth = 100;
+			slider.Margins = new Margins(2, 2, 4, 4);
+			slider.MinValue = 20.0M;
+			slider.MaxValue = 50.0M;
+			slider.SmallChange = 5.0M;
+			slider.LargeChange = 10.0M;
+			slider.Resolution = 1.0M;
+			slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+			slider.Value = 30.0M;
+			slider.Dock = DockStyle.Right;
+
 			this.array = new StringArray(this);
 			this.array.Columns = 4;
 			this.array.SetColumnsRelativeWidth(0, 0.05);
@@ -55,9 +67,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(2, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(3, ContentAlignment.MiddleCenter);
-			this.array.LineHeight = 30;  // plus haut, à cause des descriptions et des icônes
+			this.array.LineHeight = (double) slider.Value;
 			this.array.Dock = DockStyle.StackBegin;
-			this.array.PreferredHeight = 200;
+			this.array.PreferredHeight = 360;
 			this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
 			this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
@@ -387,6 +399,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.ArraySort();
 			}
+		}
+
+		private void HandleSliderChanged(object sender)
+		{
+			//	Appelé lorsque le slider a été déplacé.
+			if (this.array == null)
+			{
+				return;
+			}
+
+			HSlider slider = sender as HSlider;
+			this.array.LineHeight = (double) slider.Value;
 		}
 
 		private void HandleArrayCellCountChanged(object sender)
