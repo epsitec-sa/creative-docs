@@ -113,7 +113,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			int count = this.resourceAccess.BypassFilterCount;
 			for (int i=0; i<count; i++)
 			{
-				this.allDruids.Add(this.resourceAccess.BypassFilterGetDruid(i));
+				Druid druid = this.resourceAccess.BypassFilterGetDruid(i);
+				Caption caption = this.module.ResourceManager.GetCaption(druid);
+				if (caption != null)
+				{
+					this.allDruids.Add(druid);
+				}
 			}
 			this.resourceAccess.BypassFilterCloseAccess();
 
