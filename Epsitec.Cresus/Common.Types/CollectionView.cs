@@ -1,8 +1,15 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Types
 {
+	using SortDescriptionList=Collections.ObservableList<SortDescription>;
+	using GroupDescriptionList=Collections.ObservableList<AbstractGroupDescription>;
+	using ObjectList=Collections.ObservableList<object>;
+	using ReadOnlyObjectList=Collections.ReadOnlyObservableList<object>;
+	
 	/// <summary>
 	/// The <c>CollectionView</c> class represents a view of a collection. Views implement
 	/// grouping, sorting, filtering and the concept of a current item.
@@ -16,7 +23,7 @@ namespace Epsitec.Common.Types
 
 		#region ICollectionView Members
 
-		public System.Collections.IEnumerable SourceCollection
+		public System.Collections.IEnumerable	SourceCollection
 		{
 			get
 			{
@@ -24,7 +31,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public object CurrentItem
+		public object							CurrentItem
 		{
 			get
 			{
@@ -32,7 +39,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public int CurrentPosition
+		public int								CurrentPosition
 		{
 			get
 			{
@@ -40,7 +47,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public Collections.ReadOnlyObservableList<object> Groups
+		public ReadOnlyObjectList				Groups
 		{
 			get
 			{
@@ -53,7 +60,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public Collections.ObservableList<AbstractGroupDescription> GroupDescriptions
+		public GroupDescriptionList				GroupDescriptions
 		{
 			get
 			{
@@ -66,7 +73,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public Collections.ObservableList<SortDescription> SortDescriptions
+		public SortDescriptionList				SortDescriptions
 		{
 			get
 			{
@@ -87,7 +94,67 @@ namespace Epsitec.Common.Types
 				this.readOnlyGroups = new Collections.ReadOnlyObservableList<object> (this.groups);
 			}
 
+			List<object> list = new List<object> ();
+
+			foreach (object item in this.sourceCollection)
+			{
+				list.Add (item);
+			}
+
+			if (this.sortDescriptions != null)
+			{
+				System.Comparison<object>[] comparisons = new System.Comparison<object> [this.sortDescriptions.Count];
+
+				for (int i = 0; i < this.sortDescriptions.Count; i++)
+				{
+					comparisons[i] = CollectionView.CreateComparison (this.sortDescriptions[i]);
+				}
+
+				if (comparisons.Length == 1)
+				{
+					list.Sort (comparisons[0]);
+				}
+				else if (comparisons.Length > 1)
+				{
+					list.Sort
+						(
+							delegate (object x, object y)
+							{
+								for (int i = 0; i < comparisons.Length; i++)
+								{
+									int result = comparisons[i] (x, y);
+									
+									if (result != 0)
+									{
+										return result;
+									}
+								}
+								
+								return 0;
+							}
+						);
+				}
+			}
+			
 			//	TODO: refresh the contents of the groups
+		}
+
+		private static System.Comparison<object> CreateComparison(SortDescription sort)
+		{
+			string propertyName = sort.PropertyName;
+			ListSortDirection direction    = sort.Direction;
+
+			switch (direction)
+			{
+				case ListSortDirection.Ascending:
+					break;
+				case ListSortDirection.Descending:
+					break;
+			}
+
+			//	TODO: create the sorting delegate
+
+			return null;
 		}
 
 		public event Support.EventHandler CurrentChanged;
@@ -131,12 +198,12 @@ namespace Epsitec.Common.Types
 		}
 		
 		
-		private System.Collections.IEnumerable sourceCollection;
-		private int currentPosition;
-		private object currentItem;
-		private Collections.ObservableList<object> groups;
-		private Collections.ReadOnlyObservableList<object> readOnlyGroups;
-		private Collections.ObservableList<AbstractGroupDescription> groupDescriptions;
-		private Collections.ObservableList<SortDescription> sortDescriptions;
+		private System.Collections.IEnumerable	sourceCollection;
+		private int								currentPosition;
+		private object							currentItem;
+		private ObjectList						groups;
+		private ReadOnlyObjectList				readOnlyGroups;
+		private GroupDescriptionList			groupDescriptions;
+		private SortDescriptionList				sortDescriptions;
 	}
 }
