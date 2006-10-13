@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
@@ -356,6 +357,28 @@ namespace Epsitec.Common.Designer
 			return true;
 		}
 
+
+		static public void ComboMenuToList(TextFieldCombo combo, List<string> list)
+		{
+			//	Copie le contenu du combo-menu dans une liste.
+			list.Clear();
+
+			foreach (string s in combo.Items)
+			{
+				list.Add(s);
+			}
+		}
+
+		static public void ComboMenuFromList(TextFieldCombo combo, List<string> list)
+		{
+			//	Copie une liste dans le combo-menu.
+			combo.Items.Clear();
+
+			foreach (string s in list)
+			{
+				combo.Items.Add(s);
+			}
+		}
 
 		static public void ComboMenuAdd(TextFieldCombo combo)
 		{

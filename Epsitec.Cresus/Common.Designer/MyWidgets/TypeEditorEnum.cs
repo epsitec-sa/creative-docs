@@ -48,6 +48,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldSearch = new TextFieldCombo();
 			this.fieldSearch.PreferredWidth = 200;
 			this.fieldSearch.Margins = new Margins(30, 0, 1, 1);
+			Misc.ComboMenuFromList(this.fieldSearch, TypeEditorEnum.fieldSearchList);
 			this.toolbar.Items.Add(this.fieldSearch);
 
 			this.buttonSearchPrev = new IconButton();
@@ -461,12 +462,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (sender == this.buttonSearchPrev)
 			{
 				Misc.ComboMenuAdd(this.fieldSearch);
+				Misc.ComboMenuToList(this.fieldSearch, TypeEditorEnum.fieldSearchList);
 				this.ArraySearch(this.fieldSearch.Text, -1);
 			}
 
 			if (sender == this.buttonSearchNext)
 			{
 				Misc.ComboMenuAdd(this.fieldSearch);
+				Misc.ComboMenuToList(this.fieldSearch, TypeEditorEnum.fieldSearchList);
 				this.ArraySearch(this.fieldSearch.Text, 1);
 			}
 		}
@@ -516,6 +519,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		protected static double					arrayLineHeight = 20;
+		protected static List<string>			fieldSearchList = new List<string>();
 
 		protected HToolBar						toolbar;
 		protected IconButton					buttonAdd;
