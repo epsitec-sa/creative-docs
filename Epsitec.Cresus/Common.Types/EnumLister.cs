@@ -59,10 +59,15 @@ namespace Epsitec.Common.Types
 			{
 				if (type.IsEnum)
 				{
-					string name = type.FullName;
-					Record record = new Record (type);
-					EnumLister.types[name] = record;
-					EnumLister.cache = null;
+					object[] hiddenAttributes = type.GetCustomAttributes (typeof (HiddenAttribute), false);
+
+					if (hiddenAttributes.Length == 0)
+					{
+						string name = type.FullName;
+						Record record = new Record (type);
+						EnumLister.types[name] = record;
+						EnumLister.cache = null;
+					}
 				}
 			}
 		}
