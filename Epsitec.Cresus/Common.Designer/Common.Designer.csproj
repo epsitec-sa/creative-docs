@@ -388,6 +388,24 @@
   <ItemGroup>
     <EmbeddedResource Include="Images\PropertyAspect.icon" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\TypeEnumYes.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\TypeEnumAdd.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\TypeEnumNext.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\TypeEnumPrev.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\TypeEnumRemove.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\TypeEnumSort.icon" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
