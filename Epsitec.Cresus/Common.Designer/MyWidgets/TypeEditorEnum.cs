@@ -38,6 +38,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonNext.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonNext);
 
+			this.toolbar.Items.Add(new IconSeparator());
+
+			this.buttonSort = new IconButton();
+			this.buttonSort.CaptionDruid = Res.Captions.Editor.Type.Sort.Druid;
+			this.buttonSort.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.toolbar.Items.Add(this.buttonSort);
+
 			this.array = new StringArray(this);
 			this.array.Columns = 4;
 			this.array.SetColumnsRelativeWidth(0, 0.05);
@@ -115,6 +122,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.array.TotalRows = this.listDruids.Count;
 			this.array.FirstVisibleRow = 0;
+			this.array.SelectedRow = -1;
 
 			this.ignoreChange = true;
 			this.UpdateArray();
@@ -168,7 +176,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					Caption caption = this.resourceAccess.DirectGetCaption(druid);
 
 					bool active = this.selDruids.Contains(druid);
-					this.array.SetLineString(0, first+i, active ? Misc.Image("Check") : "");
+					this.array.SetLineString(0, first+i, active ? Misc.Image("TypeEnumYes") : "");
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 
 					//	Ne surtout pas utiliser caption.Name ou value.Name, car cette
@@ -289,6 +297,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.OnContentChanged();
 		}
 
+		protected void ArraySort()
+		{
+			//	Met les valeurs de l'énumération en tête de liste.
+			Types.Collections.EnumValueCollection collection = this.Collection;
+
+			int sel = this.array.SelectedRow;
+			Druid druid = (sel == -1) ? Druid.Empty : this.listDruids[sel];
+
+			this.UpdateContent();
+
+			if (druid.IsEmpty)
+			{
+				this.array.FirstVisibleRow = 0;
+			}
+			else
+			{
+				this.array.SelectedRow = this.listDruids.IndexOf(druid);
+				this.array.ShowSelectedRow();
+			}
+
+			this.OnContentChanged();
+		}
+
 		protected void BuildCollection()
 		{
 			//	Renumérote toute la collection.
@@ -337,6 +368,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ArrayAdd();
 			}
 
+			if (sender == this.buttonRemove)
+			{
+				this.ArrayRemove();
+			}
+
 			if (sender == this.buttonPrev)
 			{
 				this.ArrayMove(-1);
@@ -347,9 +383,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ArrayMove(1);
 			}
 
-			if (sender == this.buttonRemove)
+			if (sender == this.buttonSort)
 			{
-				this.ArrayRemove();
+				this.ArraySort();
 			}
 		}
 
@@ -386,9 +422,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected HToolBar						toolbar;
 		protected IconButton					buttonAdd;
+		protected IconButton					buttonRemove;
 		protected IconButton					buttonPrev;
 		protected IconButton					buttonNext;
-		protected IconButton					buttonRemove;
+		protected IconButton					buttonSort;
 		protected MyWidgets.StringArray			array;
 		protected List<Druid>					allDruids;
 		protected List<Druid>					selDruids;
