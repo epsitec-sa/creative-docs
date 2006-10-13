@@ -52,13 +52,13 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.fieldSearch.Dock = DockStyle.Fill;
 
 				this.searchNext = new IconButton(header);
-				this.searchNext.IconName = Misc.Icon("AccessNext");
+				this.searchNext.IconName = Misc.Icon("SearchNext");
 				this.searchNext.Dock = DockStyle.Right;
 				this.searchNext.Clicked += new MessageEventHandler(this.HandleSearchNextClicked);
 				ToolTip.Default.SetToolTip(this.searchNext, Res.Strings.Action.SearchNext);
 
 				this.searchPrev = new IconButton(header);
-				this.searchPrev.IconName = Misc.Icon("AccessPrev");
+				this.searchPrev.IconName = Misc.Icon("SearchPrev");
 				this.searchPrev.Dock = DockStyle.Right;
 				this.searchPrev.Clicked += new MessageEventHandler(this.HandleSearchPrevClicked);
 				ToolTip.Default.SetToolTip(this.searchPrev, Res.Strings.Action.SearchPrev);
