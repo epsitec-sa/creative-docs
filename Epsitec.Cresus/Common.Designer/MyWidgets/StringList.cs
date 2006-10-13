@@ -16,6 +16,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Warning,
 			Modified,
 			Disabled,
+			Unused,
 		}
 
 
@@ -442,6 +443,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					graphics.AddFilledRectangle(cell);
 					graphics.RenderSolid(adorner.ColorText(WidgetPaintState.None));
+				}
+
+				if (this.cells[i].State == CellState.Unused)
+				{
+					graphics.AddFilledRectangle(cell);
+					graphics.RenderSolid(Color.FromAlphaRgb(0.1, 0, 0, 0));  // gris très clair
 				}
 
 				if (this.cells[i].TextLayout.Text != null)

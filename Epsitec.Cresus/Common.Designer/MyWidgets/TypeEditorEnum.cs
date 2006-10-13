@@ -46,7 +46,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.toolbar.Items.Add(this.buttonSort);
 
 			HSlider slider = new HSlider(toolbar);
-			slider.PreferredWidth = 100;
+			slider.PreferredWidth = 80;
 			slider.Margins = new Margins(2, 2, 4, 4);
 			slider.MinValue = 20.0M;
 			slider.MaxValue = 50.0M;
@@ -193,8 +193,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 					Caption caption = this.resourceAccess.DirectGetCaption(druid);
 
 					bool active = this.selDruids.Contains(druid);
+					StringList.CellState cs = active ? StringList.CellState.Normal : StringList.CellState.Unused;
+
 					this.array.SetLineString(0, first+i, active ? Misc.Image("TypeEnumYes") : "");
-					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
+					this.array.SetLineState(0, first+i, cs);
 
 					//	Ne surtout pas utiliser caption.Name ou value.Name, car cette
 					//	information n'est pas mise à jour pendant l'utilisation de
@@ -204,10 +206,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 					string text = ResourceAccess.GetCaptionNiceDescription(caption, this.array.LineHeight);
 
 					this.array.SetLineString(1, first+i, name);
-					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
+					this.array.SetLineState(1, first+i, cs);
 
 					this.array.SetLineString(2, first+i, text);
-					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
+					this.array.SetLineState(2, first+i, cs);
 
 					string icon = caption.Icon;
 					if (string.IsNullOrEmpty(icon))
@@ -218,21 +220,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						this.array.SetLineString(3, first+i, Misc.ImageFull(icon));
 					}
-					this.array.SetLineState(3, first+i, MyWidgets.StringList.CellState.Normal);
+					this.array.SetLineState(3, first+i, cs);
 				}
 				else
 				{
 					this.array.SetLineString(0, first+i, "");
-					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.array.SetLineState(0, first+i, StringList.CellState.Disabled);
 
 					this.array.SetLineString(1, first+i, "");
-					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.array.SetLineState(1, first+i, StringList.CellState.Disabled);
 
 					this.array.SetLineString(2, first+i, "");
-					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.array.SetLineState(2, first+i, StringList.CellState.Disabled);
 
 					this.array.SetLineString(3, first+i, "");
-					this.array.SetLineState(3, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.array.SetLineState(3, first+i, StringList.CellState.Disabled);
 				}
 			}
 		}
