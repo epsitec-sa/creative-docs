@@ -162,7 +162,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					prev = index > 0;
 					next = index < this.selDruids.Count-1;
 				}
-				else  // hors de l'énumération ?
+				else  // pas dans l'énumération ?
 				{
 					add = true;
 				}
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					//	Designer, mais seulement lors de l'enregistrement
 					//	(dans ResourceAccess.AdjustBundlesBeforeSave).
 					string name = this.resourceAccess.DirectGetDisplayName(druid);
-					string text = ResourceAccess.GetCaptionNiceDescription(caption);
+					string text = ResourceAccess.GetCaptionNiceDescription(caption, this.array.LineHeight);
 
 					this.array.SetLineString(1, first+i, name);
 					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);

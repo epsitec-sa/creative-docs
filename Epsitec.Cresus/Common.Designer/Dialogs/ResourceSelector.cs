@@ -166,7 +166,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				string text;
 				bool isDefined;
-				this.access.BypassFilterGetStrings(this.resource, this.CurrentBundle, out label, out text, out isDefined);
+				this.access.BypassFilterGetStrings(this.resource, this.CurrentBundle, this.array.LineHeight, out label, out text, out isDefined);
 			}
 
 			this.ignoreChanged = true;
@@ -363,7 +363,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				string label, text;
 				bool isDefined;
-				this.access.BypassFilterGetStrings(druid, bundle, out label, out text, out isDefined);
+				this.access.BypassFilterGetStrings(druid, bundle, this.array.LineHeight, out label, out text, out isDefined);
 
 				bool add1 = false;
 				bool add2 = false;
@@ -482,7 +482,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					string label, text;
 					bool isDefined;
-					this.access.BypassFilterGetStrings(this.druidsIndex[first+i], bundle, out label, out text, out isDefined);
+					this.access.BypassFilterGetStrings(this.druidsIndex[first+i], bundle, this.array.LineHeight, out label, out text, out isDefined);
 
 					this.array.SetLineString(0, first+i, label);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);

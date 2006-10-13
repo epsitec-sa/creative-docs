@@ -889,22 +889,22 @@ namespace Epsitec.Common.Designer
 			return this.bypassDruids.IndexOf(druid);
 		}
 
-		public void BypassFilterGetStrings(Druid druid, ResourceBundle bundle, out string name, out string text, out bool isDefined)
+		public void BypassFilterGetStrings(Druid druid, ResourceBundle bundle, double availableHeight, out string name, out string text, out bool isDefined)
 		{
 			//	Retourne une ressource de l'accès 'bypass'.
 			System.Diagnostics.Debug.Assert(this.bypassType != Type.Unknow);
 			if (bundle == null)
 			{
-				this.BypassFilterGetStrings(druid, this.primaryBundle, out name, out text);
+				this.BypassFilterGetStrings(druid, this.primaryBundle, availableHeight, out name, out text);
 				isDefined = false;
 			}
 			else
 			{
-				this.BypassFilterGetStrings(druid, bundle, out name, out text);
+				this.BypassFilterGetStrings(druid, bundle, availableHeight, out name, out text);
 
 				if (string.IsNullOrEmpty(text) && bundle != this.primaryBundle)
 				{
-					this.BypassFilterGetStrings(druid, this.primaryBundle, out name, out text);
+					this.BypassFilterGetStrings(druid, this.primaryBundle, availableHeight, out name, out text);
 					isDefined = false;
 				}
 				else
@@ -914,7 +914,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void BypassFilterGetStrings(Druid druid, ResourceBundle bundle, out string name, out string text)
+		protected void BypassFilterGetStrings(Druid druid, ResourceBundle bundle, double availableHeight, out string name, out string text)
 		{
 			//	Retourne une ressource de l'accès 'bypass'.
 			ResourceBundle.Field field = bundle[druid];
@@ -944,7 +944,7 @@ namespace Epsitec.Common.Designer
 					caption.DeserializeFromString(s, this.resourceManager);
 				}
 
-				text = ResourceAccess.GetCaptionNiceDescription(caption);
+				text = ResourceAccess.GetCaptionNiceDescription(caption, availableHeight);
 			}
 		}
 
@@ -1020,7 +1020,7 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		public static string GetCaptionNiceDescription(Caption caption)
+		public static string GetCaptionNiceDescription(Caption caption, double availableHeight)
 		{
 			//	Construit un texte d'après les labels et la description.
 			//	Les différents labels sont séparés par des virgules.
@@ -1051,7 +1051,14 @@ namespace Epsitec.Common.Designer
 			{
 				if (builder.Length > 0)
 				{
-					builder.Append("<br/>");  // sur une deuxième ligne
+					if (availableHeight >= 30)
+					{
+						builder.Append("<br/>");  // sur une deuxième ligne
+					}
+					else
+					{
+						builder.Append(". ");  // sur la même ligne
+					}
 				}
 				builder.Append(description);
 			}
