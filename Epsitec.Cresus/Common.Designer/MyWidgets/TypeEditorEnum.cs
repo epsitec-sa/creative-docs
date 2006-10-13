@@ -54,7 +54,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			slider.LargeChange = 10.0M;
 			slider.Resolution = 1.0M;
 			slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
-			slider.Value = 30.0M;
+			slider.Value = (decimal) TypeEditorEnum.arrayLineHeight;
 			slider.Dock = DockStyle.Right;
 
 			this.array = new StringArray(this);
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(2, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(3, ContentAlignment.MiddleCenter);
-			this.array.LineHeight = (double) slider.Value;
+			this.array.LineHeight = TypeEditorEnum.arrayLineHeight;
 			this.array.Dock = DockStyle.StackBegin;
 			this.array.PreferredHeight = 360;
 			this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
@@ -410,7 +410,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			HSlider slider = sender as HSlider;
-			this.array.LineHeight = (double) slider.Value;
+			TypeEditorEnum.arrayLineHeight = (double) slider.Value;
+			this.array.LineHeight = TypeEditorEnum.arrayLineHeight;
 		}
 
 		private void HandleArrayCellCountChanged(object sender)
@@ -443,6 +444,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+
+		protected static double					arrayLineHeight = 20;
 
 		protected HToolBar						toolbar;
 		protected IconButton					buttonAdd;
