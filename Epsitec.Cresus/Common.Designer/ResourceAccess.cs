@@ -405,7 +405,7 @@ namespace Epsitec.Common.Designer
 					{
 						newField.SetStringValue("");
 					}
-					
+
 					if (this.type == Type.Types)
 					{
 						if (string.IsNullOrEmpty(newField.AsString))
@@ -425,14 +425,27 @@ namespace Epsitec.Common.Designer
 						}
 					}
 
+					if (this.IsCaptionsType)
+					{
+						Caption caption = new Caption();
+
+						string s = newField.AsString;
+						if (!string.IsNullOrEmpty(s))
+						{
+							caption.DeserializeFromString(s, this.resourceManager);
+						}
+
+						newField.SetStringValue(caption.SerializeToString());
+					}
+
 					if (bundle == this.primaryBundle)
 					{
-						newField.SetModificationId(1);
+						//?newField.SetModificationId(1);
 						bundle.Insert(aIndex+1, newField);
 					}
 					else
 					{
-						newField.SetModificationId(0);
+						//?newField.SetModificationId(0);
 						bundle.Add(newField);
 					}
 				}
@@ -1157,6 +1170,7 @@ namespace Epsitec.Common.Designer
 
 		public Druid DirectGetDruid(int index)
 		{
+			//	Retourne le Druid correspondant à un index.
 			System.Diagnostics.Debug.Assert(this.IsBundlesType);
 			ResourceBundle.Field field = this.primaryBundle[index];
 			return new Druid(field.Druid, this.primaryBundle.Module.Id);
