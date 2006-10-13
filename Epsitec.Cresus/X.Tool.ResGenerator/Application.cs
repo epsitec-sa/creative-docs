@@ -352,9 +352,9 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 				buffer.Append ("public static readonly Epsitec.Common.Widgets.Command ");
 				buffer.Append (delta);
-				buffer.Append (@" = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (Epsitec.Common.Support.Druid.FromModuleDruid (_moduleId, ");
+				buffer.Append (@" = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, ");
 				buffer.Append (druid.ToFieldId ());
-				buffer.Append (")));\n");
+				buffer.Append ("));\n");
 			}
 
 			//	Referme les classes ouvertes :
@@ -573,9 +573,9 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 				buffer.Append ("public static Epsitec.Common.Types.Caption ");
 				buffer.Append (delta);
-				buffer.Append (@" { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (Epsitec.Common.Support.Druid.FromModuleDruid (_moduleId, ");
+				buffer.Append (@" { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, ");
 				buffer.Append (druid.ToFieldId ());
-				buffer.Append ("))); } }\n");
+				buffer.Append (")); } }\n");
 			}
 
 			//	Referme les classes ouvertes :
@@ -673,9 +673,9 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 				buffer.Append("public static Epsitec.Common.Types.Caption ");
 				buffer.Append(delta);
-				buffer.Append(@" { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (Epsitec.Common.Support.Druid.FromModuleDruid (_moduleId, ");
+				buffer.Append(@" { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, ");
 				buffer.Append(druid.ToFieldId());
-				buffer.Append("))); } }\n");
+				buffer.Append(")); } }\n");
 			}
 
 			//	Referme les classes ouvertes :
@@ -803,9 +803,9 @@ namespace Epsitec.Common.Tool.ResGenerator
 				buffer.Append(delta);
 				buffer.Append(" = (Epsitec.Common.Types.");
 				buffer.Append(typeName);
-				buffer.Append(") Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (Epsitec.Common.Support.Druid.FromModuleDruid (_moduleId, ");
+				buffer.Append(") Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, ");
 				buffer.Append(druid.ToFieldId());
-				buffer.Append(")));\n");
+				buffer.Append("));\n");
 			}
 
 			//	Referme les classes ouvertes :
