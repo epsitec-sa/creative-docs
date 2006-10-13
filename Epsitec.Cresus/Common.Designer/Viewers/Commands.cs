@@ -201,7 +201,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			for (int i=0; i<this.access.TotalCount; i++)
 			{
-				string group = this.access.DirectGetGroup(i);
+				Druid druid = this.access.DirectGetDruid(i);
+				string group = this.access.DirectGetGroup(druid);
 				if (group != null && !list.Contains(group))
 				{
 					list.Add(group);
