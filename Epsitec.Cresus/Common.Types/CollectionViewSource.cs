@@ -3,6 +3,9 @@
 
 namespace Epsitec.Common.Types
 {
+	using SortDescriptionList=Collections.ObservableList<SortDescription>;
+	using GroupDescriptionList=Collections.ObservableList<AbstractGroupDescription>;
+
 	/// <summary>
 	/// The <c>CollectionViewSource</c> class represents a view of a data
 	/// collection.
@@ -15,7 +18,7 @@ namespace Epsitec.Common.Types
 			this.groupDescriptions = new Collections.HostedList<AbstractGroupDescription> (this.HandleGroupInsertion, this.HandleGroupRemoval);
 		}
 
-		public object Source
+		public object							Source
 		{
 			get
 			{
@@ -35,7 +38,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public System.Type CollectionViewType
+		public System.Type						CollectionViewType
 		{
 			get
 			{
@@ -47,7 +50,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public ICollectionView View
+		public ICollectionView					View
 		{
 			get
 			{
@@ -60,7 +63,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public Collections.ObservableList<SortDescription> SortDescriptions
+		public SortDescriptionList				SortDescriptions
 		{
 			get
 			{
@@ -68,7 +71,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public Collections.ObservableList<AbstractGroupDescription> GroupDescriptions
+		public GroupDescriptionList				GroupDescriptions
 		{
 			get
 			{
@@ -92,6 +95,7 @@ namespace Epsitec.Common.Types
 		{
 		}
 
+		
 		private static object GetSourceValue(DependencyObject obj)
 		{
 			CollectionViewSource that = (CollectionViewSource) obj;
@@ -104,12 +108,13 @@ namespace Epsitec.Common.Types
 			that.Source = value;
 		}
 
+		
 		public static readonly DependencyProperty SourceProperty = DependencyProperty.Register ("Source", typeof (object), typeof (CollectionViewSource), new DependencyPropertyMetadata (CollectionViewSource.GetSourceValue, CollectionViewSource.SetSourceValue));
 
-		private Collections.HostedList<SortDescription> sortDescriptions;
-		private Collections.HostedList<AbstractGroupDescription> groupDescriptions;
-		private object source;
-		private System.Type collectionViewType;
-		private ICollectionView view;
+		private SortDescriptionList				sortDescriptions;
+		private GroupDescriptionList			groupDescriptions;
+		private object							source;
+		private System.Type						collectionViewType;
+		private ICollectionView					view;
 	}
 }

@@ -40,7 +40,7 @@ namespace Epsitec.Common.Types
 		/// Gets the name of the property used for sorting.
 		/// </summary>
 		/// <value>The name of the property.</value>
-		public string PropertyName
+		public string							PropertyName
 		{
 			get
 			{
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Types
 		/// Gets the sort direction.
 		/// </summary>
 		/// <value>The sort direction.</value>
-		public ListSortDirection Direction
+		public ListSortDirection				Direction
 		{
 			get
 			{
@@ -139,7 +139,7 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
-		private string propertyName;
-		private ListSortDirection direction;
+		private string							propertyName;
+		private ListSortDirection				direction;
 	}
 }

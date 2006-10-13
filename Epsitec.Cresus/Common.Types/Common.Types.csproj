@@ -116,6 +116,7 @@
     <Compile Include="EnumLister.cs" />
     <Compile Include="CurrentChangingEventArgs.cs" />
     <Compile Include="ICollectionView.cs" />
+    <Compile Include="Support\DynamicCodeFactory.cs" />
     <Compile Include="UnknownValue.cs" />
     <Compile Include="PropertyGroupDescription.cs" />
     <Compile Include="ListSortDirection.cs" />
