@@ -180,7 +180,7 @@ namespace Epsitec.Common.Designer
 			return TypeType.None;
 		}
 
-		protected static AbstractType CreateTypeType(TypeType type)
+		protected static AbstractType CreateTypeType(TypeType type, System.Type stype)
 		{
 			switch (type)
 			{
@@ -191,8 +191,17 @@ namespace Epsitec.Common.Designer
 				case TypeType.Double:       return new DoubleType();
 				case TypeType.Decimal:      return new DecimalType();
 				case TypeType.String:       return new StringType();
-				case TypeType.Enum:         return new EnumType();
 				case TypeType.Structured:   return new StructuredType();
+
+				case TypeType.Enum:
+					if (stype == null)
+					{
+						return new EnumType();
+					}
+					else
+					{
+						return new EnumType(stype, new Caption());
+					}
 			}
 
 			return null;
@@ -413,14 +422,15 @@ namespace Epsitec.Common.Designer
 							if (first)
 							{
 								first = false;
-								TypeType tt = this.mainWindow.DlgResourceTypeType(this.resourceManager, this.lastTypeTypeCreatated);
+								TypeType tt = this.lastTypeTypeCreatated;
+								this.mainWindow.DlgResourceTypeType(ref tt, out this.lastTypeTypeSystem);
 								if (tt == TypeType.None)
 								{
 									return;
 								}
 								this.lastTypeTypeCreatated = tt;
 							}
-							AbstractType type = ResourceAccess.CreateTypeType(this.lastTypeTypeCreatated);
+							AbstractType type = ResourceAccess.CreateTypeType(this.lastTypeTypeCreatated, this.lastTypeTypeSystem);
 							newField.SetStringValue(type.Caption.SerializeToString());
 						}
 					}
@@ -2925,5 +2935,6 @@ namespace Epsitec.Common.Designer
 		protected List<Druid>								bypassDruids;
 		protected List<Druid>								bypassExclude;
 		protected ResourceAccess.TypeType					lastTypeTypeCreatated = TypeType.String;
+		protected System.Type								lastTypeTypeSystem = null;
 	}
 }
