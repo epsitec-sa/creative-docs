@@ -272,8 +272,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.selDruids.Add(druid);
 
 			this.BuildCollection();
-			this.RenumCollection();
-
 			this.UpdateArray();
 			this.UpdateButtons();
 
@@ -296,8 +294,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.selDruids.Remove(druid);
 
 			this.BuildCollection();
-			this.RenumCollection();
-
 			this.UpdateArray();
 			this.UpdateButtons();
 
@@ -323,8 +319,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.selDruids.Insert(index+direction, druid);
 
 			this.BuildCollection();
-			this.RenumCollection();
-
 			this.UpdateContent();
 
 			this.array.SelectedRow = this.listDruids.IndexOf(druid);
@@ -393,7 +387,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void BuildCollection()
 		{
-			//	Renumérote toute la collection.
+			//	Construit toute la collection en fonction des ressources sélectionnées
+			//	dans la liste puis renumérote toute la collection.
 			Types.Collections.EnumValueCollection collection = this.Collection;
 			collection.Clear();
 
@@ -405,17 +400,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				EnumValue item = new EnumValue(0, caption);
 				collection.Add(item);
 			}
-		}
-
-		protected void RenumCollection()
-		{
-			//	Renumérote toute la collection.
-			Types.Collections.EnumValueCollection collection = this.Collection;
 
 			for (int rank=0; rank<collection.Count; rank++)
 			{
-				EnumValue value = collection[rank];
-				value.DefineRank(rank);
+				EnumValue item = collection[rank];
+				item.DefineRank(rank);
 			}
 		}
 
