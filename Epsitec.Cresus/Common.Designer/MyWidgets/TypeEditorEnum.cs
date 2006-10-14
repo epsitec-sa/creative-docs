@@ -207,7 +207,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (first+i < this.listDruids.Count)
 				{
 					Druid druid = this.listDruids[first+i];
-					Caption caption = this.resourceAccess.DirectGetCaption(druid);
+					Caption caption = this.module.ResourceManager.GetCaption(druid);
 
 					bool active = this.selDruids.Contains(druid);
 					StringList.CellState cs = active ? StringList.CellState.Normal : StringList.CellState.Unused;
