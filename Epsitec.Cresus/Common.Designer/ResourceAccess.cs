@@ -413,7 +413,7 @@ namespace Epsitec.Common.Designer
 							if (first)
 							{
 								first = false;
-								TypeType tt = this.mainWindow.DlgResourceTypeType(this.lastTypeTypeCreatated);
+								TypeType tt = this.mainWindow.DlgResourceTypeType(this.resourceManager, this.lastTypeTypeCreatated);
 								if (tt == TypeType.None)
 								{
 									return;
