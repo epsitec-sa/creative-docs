@@ -1132,13 +1132,13 @@ namespace Epsitec.Common.Designer
 			return this.dlgNewCulture.Culture;
 		}
 
-		public ResourceAccess.TypeType DlgResourceTypeType(ResourceManager manager, ResourceAccess.TypeType type)
+		public void DlgResourceTypeType(ref ResourceAccess.TypeType type, out System.Type stype)
 		{
 			//	Ouvre le dialogue pour choisir le type d'un Caption.Type.
-			this.dlgResourceTypeType.SetResourceManager(manager);
 			this.dlgResourceTypeType.ContentType = type;
 			this.dlgResourceTypeType.Show();
-			return this.dlgResourceTypeType.ContentType;
+			type = this.dlgResourceTypeType.ContentType;
+			stype = this.dlgResourceTypeType.SystemType;
 		}
 
 		public Dialogs.Search DialogSearch

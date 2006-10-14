@@ -107,11 +107,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.ShowDialog();
 		}
 
-		public void SetResourceManager(ResourceManager manager)
-		{
-			this.manager = manager;
-		}
-
 		public ResourceAccess.TypeType ContentType
 		{
 			get
@@ -121,6 +116,21 @@ namespace Epsitec.Common.Designer.Dialogs
 			set
 			{
 				this.type = value;
+			}
+		}
+
+		public System.Type SystemType
+		{
+			get
+			{
+				if (this.type == ResourceAccess.TypeType.Enum && this.checkCSharp.ActiveState == ActiveState.Yes && this.enumList.SelectedIndex != -1)
+				{
+					return this.systemTypes[this.enumList.SelectedIndex];
+				}
+				else
+				{
+					return null;
+				}
 			}
 		}
 
@@ -168,15 +178,16 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateFilter()
 		{
+			//	Met à jour la liste des filtres.
 			this.filters = new List<string>();
 
 			System.Type[] types = Collection.ToArray(EnumLister.GetPublicEnums());
 			foreach (System.Type type in types)
 			{
 				string name = type.FullName;
-				if (name.StartsWith(ResourceTypeType.fix))
+				if (name.StartsWith(ResourceTypeType.filterPrefix))
 				{
-					name = name.Substring(ResourceTypeType.fix.Length);
+					name = name.Substring(ResourceTypeType.filterPrefix.Length);
 					int i = name.IndexOf('.');
 					if (i != -1)
 					{
@@ -199,23 +210,25 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateEnumList()
 		{
+			//	Met à jour la liste des énumérations C# en fonction du filtre.
 			string filter = null;
-
-			if (this.fieldFilter.SelectedIndex > 0)
+			if (this.fieldFilter.SelectedIndex > 0)  // pas "tout montrer" ?
 			{
 				filter = this.filters[this.fieldFilter.SelectedIndex-1];
 			}
 
+			this.systemTypes = new List<System.Type>();
 			this.enumList.Items.Clear();
 			System.Type[] types = Collection.ToArray(EnumLister.GetPublicEnums());
 			foreach (System.Type type in types)
 			{
 				string name = type.FullName;
-				if (name.StartsWith(ResourceTypeType.fix))
+				if (name.StartsWith(ResourceTypeType.filterPrefix))
 				{
-					name = name.Substring(ResourceTypeType.fix.Length);
+					name = name.Substring(ResourceTypeType.filterPrefix.Length);
 					if (filter == null || name.StartsWith(filter))
 					{
+						this.systemTypes.Add(type);
 						this.enumList.Items.Add(TextLayout.ConvertToTaggedText(name));
 					}
 				}
@@ -225,6 +238,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleRadioButtonActiveStateChanged(object sender)
 		{
+			//	Bouton radio cliqué.
 			if (this.ignoreChanged)
 			{
 				return;
@@ -239,6 +253,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleCheckCSharpActiveStateChanged(object sender)
 		{
+			//	Bouton C# cliqué.
 			this.UpdateRadios();
 		}
 
@@ -272,11 +287,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected static string					fix = "Epsitec.Common.";
+		protected static string					filterPrefix = "Epsitec.Common.";
 
-		protected ResourceManager				manager;
 		protected ResourceAccess.TypeType		type;
 		protected List<string>					filters;
+		protected List<System.Type>				systemTypes;
 
 		protected Widget						leftPanel;
 		protected List<RadioButton>				radioButtons;
