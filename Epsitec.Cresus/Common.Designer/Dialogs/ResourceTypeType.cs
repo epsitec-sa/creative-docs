@@ -22,13 +22,28 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
-				this.window.MakeFixedSizeWindow();
-				this.window.Root.WindowStyles = WindowStyles.None;
 				this.window.PreventAutoClose = true;
-				this.WindowInit("TypeType", 172, 190, true);
+				this.WindowInit("TypeType", 500, 250, true);
 				this.window.Text = Res.Strings.Dialog.TypeType.Title;
 				this.window.Owner = this.parentWindow;
+				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.Root.MinSize = new Size(220, 190);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
+
+				ResizeKnob resize = new ResizeKnob(this.window.Root);
+				resize.Anchor = AnchorStyles.BottomRight;
+				resize.Margins = new Margins(0, -8, 0, -8);
+				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
+
+				Widget main = new Widget(this.window.Root);
+				main.Dock = DockStyle.Fill;
+
+				this.leftPanel = new Widget(main);
+				this.leftPanel.PreferredWidth = 140;
+				this.leftPanel.Dock = DockStyle.Left;
+
+				this.rightPanel = new Widget(main);
+				this.rightPanel.Dock = DockStyle.Fill;
 
 				this.tabIndex = 0;
 				this.index = 0;
@@ -42,6 +57,23 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.CreateRadio(Res.Captions.Types.Type.Enum);
 				this.CreateRadio(Res.Captions.Types.Type.Structured);
 				this.tabIndex++;
+
+				this.checkCSharp = new CheckButton(this.rightPanel);
+				this.checkCSharp.Text = "Enumération C#";
+				this.checkCSharp.Margins = new Margins(0, 0, 0, 8);
+				this.checkCSharp.Dock = DockStyle.Top;
+				this.checkCSharp.ActiveStateChanged += new EventHandler(this.HandleCheckCSharpActiveStateChanged);
+
+				this.fieldFilter = new TextFieldCombo(this.rightPanel);
+				this.fieldFilter.Text = Res.Strings.Dialog.Icon.Filter.All;
+				this.fieldFilter.IsReadOnly = true;
+				this.fieldFilter.Margins = new Margins(0, 0, 0, 8);
+				this.fieldFilter.Dock = DockStyle.Top;
+				this.fieldFilter.ComboClosed += new EventHandler(this.HandleFieldFilterComboClosed);
+				this.UpdateFilter();
+
+				this.enumList = new ScrollList(this.rightPanel);
+				this.enumList.Dock = DockStyle.Fill;
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -70,8 +102,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			this.UpdateRadios();
+			this.UpdateEnumList();
 
 			this.window.ShowDialog();
+		}
+
+		public void SetResourceManager(ResourceManager manager)
+		{
+			this.manager = manager;
 		}
 
 		public ResourceAccess.TypeType ContentType
@@ -90,7 +128,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void CreateRadio(Caption caption)
 		{
 			//	Crée un bouton radio.
-			RadioButton button = new RadioButton(this.window.Root);
+			RadioButton button = new RadioButton(this.leftPanel);
 			button.CaptionDruid = caption.Druid;
 			System.Diagnostics.Debug.Assert(button.Name.StartsWith("Types.Type."));
 			button.Dock = DockStyle.Top;
@@ -122,6 +160,66 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 			}
 			this.ignoreChanged = false;
+
+			this.checkCSharp.Enable = (this.type == ResourceAccess.TypeType.Enum);
+			this.fieldFilter.Enable = (this.type == ResourceAccess.TypeType.Enum && this.checkCSharp.ActiveState == ActiveState.Yes);
+			this.enumList.Enable    = (this.type == ResourceAccess.TypeType.Enum && this.checkCSharp.ActiveState == ActiveState.Yes);
+		}
+
+		protected void UpdateFilter()
+		{
+			this.filters = new List<string>();
+
+			System.Type[] types = Collection.ToArray(EnumLister.GetPublicEnums());
+			foreach (System.Type type in types)
+			{
+				string name = type.FullName;
+				if (name.StartsWith(ResourceTypeType.fix))
+				{
+					name = name.Substring(ResourceTypeType.fix.Length);
+					int i = name.IndexOf('.');
+					if (i != -1)
+					{
+						string prefix = name.Substring(0, i);
+						if (!this.filters.Contains(prefix))
+						{
+							this.filters.Add(prefix);
+						}
+					}
+				}
+			}
+
+			this.fieldFilter.Items.Clear();
+			this.fieldFilter.Items.Add("Tout montrer");
+			foreach (string filter in this.filters)
+			{
+				this.fieldFilter.Items.Add(string.Format("Seulement {0}", filter));
+			}
+		}
+
+		protected void UpdateEnumList()
+		{
+			string filter = null;
+
+			if (this.fieldFilter.SelectedIndex > 0)
+			{
+				filter = this.filters[this.fieldFilter.SelectedIndex-1];
+			}
+
+			this.enumList.Items.Clear();
+			System.Type[] types = Collection.ToArray(EnumLister.GetPublicEnums());
+			foreach (System.Type type in types)
+			{
+				string name = type.FullName;
+				if (name.StartsWith(ResourceTypeType.fix))
+				{
+					name = name.Substring(ResourceTypeType.fix.Length);
+					if (filter == null || name.StartsWith(filter))
+					{
+						this.enumList.Items.Add(TextLayout.ConvertToTaggedText(name));
+					}
+				}
+			}
 		}
 
 
@@ -137,6 +235,24 @@ namespace Epsitec.Common.Designer.Dialogs
 			name = name.Substring(name.LastIndexOf('.')+1);  // enlève "Res.Captions.Types.Type."
 			this.type = ResourceAccess.ConvTypeType(name);
 			this.UpdateRadios();
+		}
+
+		private void HandleCheckCSharpActiveStateChanged(object sender)
+		{
+			this.UpdateRadios();
+		}
+
+		private void HandleFieldFilterComboClosed(object sender)
+		{
+			//	Menu pour choisir le filtre fermé.
+			this.UpdateEnumList();
+		}
+
+		private void HandleWindowCloseClicked(object sender)
+		{
+			this.parentWindow.MakeActive();
+			this.window.Hide();
+			this.OnClosed();
 		}
 
 		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
@@ -156,8 +272,20 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		protected static string					fix = "Epsitec.Common.";
+
+		protected ResourceManager				manager;
 		protected ResourceAccess.TypeType		type;
+		protected List<string>					filters;
+
+		protected Widget						leftPanel;
 		protected List<RadioButton>				radioButtons;
+
+		protected Widget						rightPanel;
+		protected CheckButton					checkCSharp;
+		protected TextFieldCombo				fieldFilter;
+		protected ScrollList					enumList;
+		
 		protected int							index;
 		protected int							tabIndex;
 	}
