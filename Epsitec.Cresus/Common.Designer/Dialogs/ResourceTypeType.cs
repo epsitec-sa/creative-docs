@@ -23,11 +23,11 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("TypeType", 500, 200, true);
+				this.WindowInit("TypeType", ResourceTypeType.windowWidthExtended, ResourceTypeType.windowHeight, true);
 				this.window.Text = Res.Strings.Dialog.TypeType.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
-				this.window.Root.MinSize = new Size(195, 200);
+				this.window.Root.MinSize = new Size(ResourceTypeType.windowWidthCompacted, ResourceTypeType.windowHeight);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.rightPanel.Visibility = this.isExtentended;
 
 			Size size = this.window.ClientSize;
-			size.Width = this.isExtentended ? 500 : 195;
+			size.Width = this.isExtentended ? ResourceTypeType.windowWidthExtended : ResourceTypeType.windowWidthCompacted;
 			this.window.ClientSize = size;
 		}
 
@@ -319,6 +319,9 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		protected static readonly double		windowWidthCompacted = 195;
+		protected static readonly double		windowWidthExtended = 500;
+		protected static readonly double		windowHeight = 200;
 		protected static string					filterPrefix = "Epsitec.Common.";
 
 		protected ResourceAccess.TypeType		typeEdited;
