@@ -23,11 +23,11 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("TypeType", 500, 250, true);
+				this.WindowInit("TypeType", 500, 200, true);
 				this.window.Text = Res.Strings.Dialog.TypeType.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
-				this.window.Root.MinSize = new Size(220, 190);
+				this.window.Root.MinSize = new Size(195, 200);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
@@ -99,6 +99,18 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = this.tabIndex++;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				this.optionsExtend = new GlyphButton(footer);
+				this.optionsExtend.PreferredWidth = 16;
+				this.optionsExtend.ButtonStyle = ButtonStyle.Slider;
+				this.optionsExtend.AutoFocus = false;
+				this.optionsExtend.TabNavigation = Widget.TabNavigationMode.Passive;
+				this.optionsExtend.Dock = DockStyle.Left;
+				this.optionsExtend.Margins = new Margins(6, 0, 3, 3);
+				this.optionsExtend.Clicked += new MessageEventHandler(this.HandleOptionsExtendClicked);
+				ToolTip.Default.SetToolTip(this.optionsExtend, "Montre ou cache les options des énumérations");
+
+				this.UpdateExtended();
 			}
 
 			this.UpdateRadios();
@@ -174,6 +186,16 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.checkCSharp.Enable = (this.type == ResourceAccess.TypeType.Enum);
 			this.fieldFilter.Enable = (this.type == ResourceAccess.TypeType.Enum && this.checkCSharp.ActiveState == ActiveState.Yes);
 			this.enumList.Enable    = (this.type == ResourceAccess.TypeType.Enum && this.checkCSharp.ActiveState == ActiveState.Yes);
+		}
+
+		protected void UpdateExtended()
+		{
+			this.optionsExtend.GlyphShape = this.isExtentended ? GlyphShape.ArrowLeft : GlyphShape.ArrowRight;
+			this.rightPanel.Visibility = this.isExtentended;
+
+			Size size = this.window.ClientSize;
+			size.Width = this.isExtentended ? 500 : 195;
+			this.window.ClientSize = size;
 		}
 
 		protected void UpdateFilter()
@@ -286,6 +308,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 		}
 
+		private void HandleOptionsExtendClicked(object sender, MessageEventArgs e)
+		{
+			this.isExtentended = !this.isExtentended;
+			this.UpdateExtended();
+		}
+
 
 		protected static string					filterPrefix = "Epsitec.Common.";
 
@@ -295,11 +323,13 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected Widget						leftPanel;
 		protected List<RadioButton>				radioButtons;
+		protected GlyphButton					optionsExtend;
 
 		protected Widget						rightPanel;
 		protected CheckButton					checkCSharp;
 		protected TextFieldCombo				fieldFilter;
 		protected ScrollList					enumList;
+		protected bool							isExtentended;
 		
 		protected int							index;
 		protected int							tabIndex;
