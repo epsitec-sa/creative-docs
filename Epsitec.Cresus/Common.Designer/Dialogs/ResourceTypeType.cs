@@ -35,6 +35,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				resize.Margins = new Margins(0, -8, 0, -8);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
+				//	Partie principale.
 				Widget main = new Widget(this.window.Root);
 				main.Dock = DockStyle.Fill;
 
@@ -45,6 +46,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.rightPanel = new Widget(main);
 				this.rightPanel.Dock = DockStyle.Fill;
 
+				//	Partie gauche.
 				this.tabIndex = 0;
 				this.index = 0;
 				this.radioButtons = new List<RadioButton>();
@@ -58,6 +60,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.CreateRadio(Res.Captions.Types.Type.Structured);
 				this.tabIndex++;
 
+				//	Partie droite.
 				this.checkCSharp = new CheckButton(this.rightPanel);
 				this.checkCSharp.Text = Res.Strings.Dialog.TypeType.EnumCSharp;
 				this.checkCSharp.Margins = new Margins(0, 0, 0, 8);
@@ -121,13 +124,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public ResourceAccess.TypeType ContentType
 		{
-			get
-			{
-				return this.type;
-			}
 			set
 			{
-				this.type = value;
+				this.typeEdited = value;
+				this.typeAccepted = ResourceAccess.TypeType.None;
+			}
+			get
+			{
+				return this.typeAccepted;
 			}
 		}
 
@@ -135,7 +139,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			get
 			{
-				if (this.type == ResourceAccess.TypeType.Enum && this.checkCSharp.ActiveState == ActiveState.Yes && this.enumList.SelectedIndex != -1)
+				if (this.typeAccepted == ResourceAccess.TypeType.Enum && this.checkCSharp.ActiveState == ActiveState.Yes && this.enumList.SelectedIndex != -1)
 				{
 					return this.systemTypes[this.enumList.SelectedIndex];
 				}
@@ -166,7 +170,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateRadios()
 		{
 			//	Met à jour le bouton radio enfoncé en fonction du type.
-			string actual = ResourceAccess.ConvTypeType(this.type);
+			string actual = ResourceAccess.ConvTypeType(this.typeEdited);
 
 			this.ignoreChanged = true;
 			foreach (RadioButton button in this.radioButtons)
@@ -183,9 +187,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 			this.ignoreChanged = false;
 
-			this.checkCSharp.Enable = (this.type == ResourceAccess.TypeType.Enum);
-			this.fieldFilter.Enable = (this.type == ResourceAccess.TypeType.Enum && this.checkCSharp.ActiveState == ActiveState.Yes);
-			this.enumList.Enable    = (this.type == ResourceAccess.TypeType.Enum && this.checkCSharp.ActiveState == ActiveState.Yes);
+			this.checkCSharp.Enable = (this.typeEdited == ResourceAccess.TypeType.Enum);
+			this.fieldFilter.Enable = (this.typeEdited == ResourceAccess.TypeType.Enum && this.checkCSharp.ActiveState == ActiveState.Yes);
+			this.enumList.Enable    = (this.typeEdited == ResourceAccess.TypeType.Enum && this.checkCSharp.ActiveState == ActiveState.Yes);
 		}
 
 		protected void UpdateExtended()
@@ -269,7 +273,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			RadioButton button = sender as RadioButton;
 			string name = button.Name;
 			name = name.Substring(name.LastIndexOf('.')+1);  // enlève "Res.Captions.Types.Type."
-			this.type = ResourceAccess.ConvTypeType(name);
+			this.typeEdited = ResourceAccess.ConvTypeType(name);
 			this.UpdateRadios();
 		}
 
@@ -294,8 +298,6 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
 		{
-			this.type = ResourceAccess.TypeType.None;
-
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
@@ -303,6 +305,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonOKClicked(object sender, MessageEventArgs e)
 		{
+			this.typeAccepted = this.typeEdited;
+
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
@@ -317,7 +321,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected static string					filterPrefix = "Epsitec.Common.";
 
-		protected ResourceAccess.TypeType		type;
+		protected ResourceAccess.TypeType		typeEdited;
+		protected ResourceAccess.TypeType		typeAccepted;
 		protected List<string>					filters;
 		protected List<System.Type>				systemTypes;
 
