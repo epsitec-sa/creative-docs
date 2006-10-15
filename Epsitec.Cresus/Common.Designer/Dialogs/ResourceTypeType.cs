@@ -59,7 +59,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.tabIndex++;
 
 				this.checkCSharp = new CheckButton(this.rightPanel);
-				this.checkCSharp.Text = "Enumération C#";
+				this.checkCSharp.Text = Res.Strings.Dialog.TypeType.EnumCSharp;
 				this.checkCSharp.Margins = new Margins(0, 0, 0, 8);
 				this.checkCSharp.Dock = DockStyle.Top;
 				this.checkCSharp.ActiveStateChanged += new EventHandler(this.HandleCheckCSharpActiveStateChanged);
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.optionsExtend.Dock = DockStyle.Left;
 				this.optionsExtend.Margins = new Margins(6, 0, 3, 3);
 				this.optionsExtend.Clicked += new MessageEventHandler(this.HandleOptionsExtendClicked);
-				ToolTip.Default.SetToolTip(this.optionsExtend, "Montre ou cache les options des énumérations");
+				ToolTip.Default.SetToolTip(this.optionsExtend, Res.Strings.Dialog.TypeType.Tooltip.Options);
 
 				this.UpdateExtended();
 			}
@@ -223,10 +223,10 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			this.fieldFilter.Items.Clear();
-			this.fieldFilter.Items.Add("Tout montrer");
+			this.fieldFilter.Items.Add(Res.Strings.Dialog.TypeType.EnumAll);
 			foreach (string filter in this.filters)
 			{
-				this.fieldFilter.Items.Add(string.Format("Seulement {0}", filter));
+				this.fieldFilter.Items.Add(string.Format(Res.Strings.Dialog.TypeType.EnumOne, filter));
 			}
 		}
 

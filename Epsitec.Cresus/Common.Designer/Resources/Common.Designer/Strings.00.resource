@@ -215,6 +215,10 @@
   <data name="Dialog.ResourceSelector.Button.Use" id="0R4">Utiliser</data>
   <data name="Dialog.ResourceSelector.Button.Create" id="0S4">Créer</data>
   <data name="Dialog.TypeType.Title" id="067" mod="1">Choix du type à créer</data>
+  <data name="Dialog.TypeType.EnumCSharp" id="097">Enumération C#</data>
+  <data name="Dialog.TypeType.Tooltip.Options" id="0A7">Montre ou cache les options des énumérations</data>
+  <data name="Dialog.TypeType.EnumAll" id="0B7">Tout montrer</data>
+  <data name="Dialog.TypeType.EnumOne" id="0C7">Seulement {0}</data>
   <data name="Dialog.Open.Title" id="0D6" mod="1">Ouvrir des ressources</data>
   <data name="Dialog.Open.Label" id="0E6" mod="1">Choix des ressources à ouvrir</data>
   <data name="Dialog.Open.Button.Open" id="0F6" mod="1">Ouvrir</data>
