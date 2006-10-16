@@ -1046,7 +1046,7 @@ namespace Epsitec.Common.Drawing
 
 		
 		private const double				AlmostInfinite = 1000000000.0;
-		private ImageFilter					image_filter;
+		private ImageFilter					image_filter = new ImageFilter(ImageFilteringMode.Bilinear);
 		private Margins						image_crop;
 		private Size						image_final_size;
 		
