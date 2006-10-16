@@ -77,6 +77,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.enumList = new ScrollList(this.rightPanel);
 				this.enumList.Dock = DockStyle.Fill;
+				this.enumList.SelectionActivated += new EventHandler(this.HandleEnumListSelectionActivated);
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -84,39 +85,40 @@ namespace Epsitec.Common.Designer.Dialogs
 				footer.Margins = new Margins(0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
 
-				Button buttonOk = new Button(footer);
-				buttonOk.PreferredWidth = 75;
-				buttonOk.Text = Res.Strings.Dialog.Button.OK;
-				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
-				buttonOk.Dock = DockStyle.Left;
-				buttonOk.Margins = new Margins(0, 6, 0, 0);
-				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonOKClicked);
-				buttonOk.TabIndex = this.tabIndex++;
-				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.buttonOk = new Button(footer);
+				this.buttonOk.PreferredWidth = 75;
+				this.buttonOk.Text = Res.Strings.Dialog.Button.OK;
+				this.buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
+				this.buttonOk.Dock = DockStyle.Left;
+				this.buttonOk.Margins = new Margins(0, 6, 0, 0);
+				this.buttonOk.Clicked += new MessageEventHandler(this.HandleButtonOKClicked);
+				this.buttonOk.TabIndex = this.tabIndex++;
+				this.buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				Button buttonClose = new Button(footer);
-				buttonClose.PreferredWidth = 75;
-				buttonClose.Text = Res.Strings.Dialog.Button.Cancel;
-				buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
-				buttonClose.Dock = DockStyle.Left;
-				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
-				buttonClose.TabIndex = this.tabIndex++;
-				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.buttonCancel = new Button(footer);
+				this.buttonCancel.PreferredWidth = 75;
+				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
+				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
+				this.buttonCancel.Dock = DockStyle.Left;
+				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCancelClicked);
+				this.buttonCancel.TabIndex = this.tabIndex++;
+				this.buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				this.optionsExtend = new GlyphButton(footer);
-				this.optionsExtend.PreferredWidth = 16;
-				this.optionsExtend.ButtonStyle = ButtonStyle.Slider;
-				this.optionsExtend.AutoFocus = false;
-				this.optionsExtend.TabNavigation = Widget.TabNavigationMode.Passive;
-				this.optionsExtend.Dock = DockStyle.Left;
-				this.optionsExtend.Margins = new Margins(6, 0, 3, 3);
-				this.optionsExtend.Clicked += new MessageEventHandler(this.HandleOptionsExtendClicked);
-				ToolTip.Default.SetToolTip(this.optionsExtend, Res.Strings.Dialog.TypeType.Tooltip.Options);
+				this.buttonExtend = new GlyphButton(footer);
+				this.buttonExtend.PreferredWidth = 16;
+				this.buttonExtend.ButtonStyle = ButtonStyle.Slider;
+				this.buttonExtend.AutoFocus = false;
+				this.buttonExtend.TabNavigation = Widget.TabNavigationMode.Passive;
+				this.buttonExtend.Dock = DockStyle.Left;
+				this.buttonExtend.Margins = new Margins(6, 0, 3, 3);
+				this.buttonExtend.Clicked += new MessageEventHandler(this.HandleButtonExtendClicked);
+				ToolTip.Default.SetToolTip(this.buttonExtend, Res.Strings.Dialog.TypeType.Tooltip.Options);
 
 				this.UpdateExtended();
 			}
 
 			this.UpdateRadios();
+			this.UpdateButtons();
 			this.UpdateEnumList();
 
 			this.window.ShowDialog();
@@ -194,12 +196,24 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateExtended()
 		{
-			this.optionsExtend.GlyphShape = this.isExtentended ? GlyphShape.ArrowLeft : GlyphShape.ArrowRight;
+			this.buttonExtend.GlyphShape = this.isExtentended ? GlyphShape.ArrowLeft : GlyphShape.ArrowRight;
 			this.rightPanel.Visibility = this.isExtentended;
 
 			Size size = this.window.ClientSize;
 			size.Width = this.isExtentended ? ResourceTypeType.windowWidthExtended : ResourceTypeType.windowWidthCompacted;
 			this.window.ClientSize = size;
+		}
+
+		protected void UpdateButtons()
+		{
+			bool enable = true;
+
+			if (this.typeEdited == ResourceAccess.TypeType.Enum && this.checkCSharp.ActiveState == ActiveState.Yes && this.enumList.SelectedIndex == -1)
+			{
+				enable = false;
+			}
+
+			this.buttonOk.Enable = enable;
 		}
 
 		protected void UpdateFilter()
@@ -275,18 +289,26 @@ namespace Epsitec.Common.Designer.Dialogs
 			name = name.Substring(name.LastIndexOf('.')+1);  // enlève "Res.Captions.Types.Type."
 			this.typeEdited = ResourceAccess.ConvTypeType(name);
 			this.UpdateRadios();
+			this.UpdateButtons();
 		}
 
 		private void HandleCheckCSharpActiveStateChanged(object sender)
 		{
 			//	Bouton C# cliqué.
 			this.UpdateRadios();
+			this.UpdateButtons();
 		}
 
 		private void HandleFieldFilterComboClosed(object sender)
 		{
 			//	Menu pour choisir le filtre fermé.
 			this.UpdateEnumList();
+			this.UpdateButtons();
+		}
+
+		private void HandleEnumListSelectionActivated(object sender)
+		{
+			this.UpdateButtons();
 		}
 
 		private void HandleWindowCloseClicked(object sender)
@@ -296,7 +318,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 		}
 
-		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
+		private void HandleButtonCancelClicked(object sender, MessageEventArgs e)
 		{
 			this.parentWindow.MakeActive();
 			this.window.Hide();
@@ -312,10 +334,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 		}
 
-		private void HandleOptionsExtendClicked(object sender, MessageEventArgs e)
+		private void HandleButtonExtendClicked(object sender, MessageEventArgs e)
 		{
 			this.isExtentended = !this.isExtentended;
 			this.UpdateExtended();
+			this.UpdateButtons();
 		}
 
 
@@ -328,18 +351,20 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected ResourceAccess.TypeType		typeAccepted;
 		protected List<string>					filters;
 		protected List<System.Type>				systemTypes;
+		protected bool							isExtentended;
+		protected int							index;
+		protected int							tabIndex;
 
 		protected Widget						leftPanel;
 		protected List<RadioButton>				radioButtons;
-		protected GlyphButton					optionsExtend;
 
 		protected Widget						rightPanel;
 		protected CheckButton					checkCSharp;
 		protected TextFieldCombo				fieldFilter;
 		protected ScrollList					enumList;
-		protected bool							isExtentended;
-		
-		protected int							index;
-		protected int							tabIndex;
+
+		protected Button						buttonOk;
+		protected Button						buttonCancel;
+		protected GlyphButton					buttonExtend;
 	}
 }
