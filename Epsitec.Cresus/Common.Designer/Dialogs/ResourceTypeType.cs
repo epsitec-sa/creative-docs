@@ -226,8 +226,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour la liste des filtres.
 			this.filters = new List<string>();
 
-			System.Type[] types = Collection.ToArray(EnumLister.GetPublicEnums());
-			foreach (System.Type type in types)
+			foreach (System.Type type in EnumLister.GetDesignerVisibleEnums())
 			{
 				string name = type.FullName;
 				if (name.StartsWith(ResourceTypeType.filterPrefix))
@@ -264,8 +263,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.systemTypes = new List<System.Type>();
 			this.enumList.Items.Clear();
-			System.Type[] types = Collection.ToArray(EnumLister.GetPublicEnums());
-			foreach (System.Type type in types)
+			foreach (System.Type type in EnumLister.GetDesignerVisibleEnums())
 			{
 				string name = type.FullName;
 				if (name.StartsWith(ResourceTypeType.filterPrefix))

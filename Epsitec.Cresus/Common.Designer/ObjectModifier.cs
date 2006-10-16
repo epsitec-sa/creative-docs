@@ -11,6 +11,7 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class ObjectModifier
 	{
+		[Types.Designer]
 		public enum ChildrenPlacement
 		{
 			[Types.Hidden] None,
@@ -20,6 +21,7 @@ namespace Epsitec.Common.Designer
 			Grid,
 		}
 
+		[Types.Designer]
 		public enum AnchoredHorizontalAttachment
 		{
 			[Types.Hidden] None,
@@ -28,6 +30,7 @@ namespace Epsitec.Common.Designer
 			Fill,
 		}
 
+		[Types.Designer]
 		public enum AnchoredVerticalAttachment
 		{
 			[Types.Hidden] None,
@@ -36,6 +39,7 @@ namespace Epsitec.Common.Designer
 			Fill,
 		}
 
+		[Types.Designer]
 		public enum StackedHorizontalAttachment
 		{
 			[Types.Hidden] None,
@@ -44,6 +48,7 @@ namespace Epsitec.Common.Designer
 			Fill,
 		}
 
+		[Types.Designer]
 		public enum StackedVerticalAttachment
 		{
 			[Types.Hidden] None,
@@ -52,6 +57,7 @@ namespace Epsitec.Common.Designer
 			Fill,
 		}
 
+		[Types.Designer]
 		public enum StackedHorizontalAlignment
 		{
 			[Types.Hidden] None,
@@ -61,6 +67,7 @@ namespace Epsitec.Common.Designer
 			Right,
 		}
 
+		[Types.Designer]
 		public enum StackedVerticalAlignment
 		{
 			[Types.Hidden] None,
@@ -71,6 +78,7 @@ namespace Epsitec.Common.Designer
 			BaseLine,
 		}
 
+		[Types.Designer]
 		public enum GridMode
 		{
 			[Types.Hidden] None,
@@ -79,6 +87,7 @@ namespace Epsitec.Common.Designer
 			Proportional,
 		}
 
+		[Types.Designer]
 		public enum BoundsMode
 		{
 			OriginX,
