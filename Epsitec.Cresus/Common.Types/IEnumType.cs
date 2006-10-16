@@ -11,7 +11,7 @@ namespace Epsitec.Common.Types
 	public interface IEnumType : INamedType
 	{
 		/// <summary>
-		/// Enumerates through the <see cref="T:IEnumValue"/>, sorted first by
+		/// Enumerates through the <see cref="IEnumValue"/>, sorted first by
 		/// rank, then by name.
 		/// </summary>
 		/// <value>The sorted enumeration values.</value>
@@ -21,9 +21,9 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Gets the first <see cref="T:IEnumValue"/> with the specified name.
+		/// Gets the first <see cref="IEnumValue"/> with the specified name.
 		/// </summary>
-		/// <value>The <see cref="T:IEnumValue"/> or <c>null</c> if no match could
+		/// <value>The <see cref="IEnumValue"/> or <c>null</c> if no match could
 		/// be found.</value>
 		IEnumValue this[string name]
 		{
@@ -31,9 +31,9 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Gets the first <see cref="T:IEnumValue"/> with the specified rank.
+		/// Gets the first <see cref="IEnumValue"/> with the specified rank.
 		/// </summary>
-		/// <value>The <see cref="T:IEnumValue"/> or <c>null</c> if no match could
+		/// <value>The <see cref="IEnumValue"/> or <c>null</c> if no match could
 		/// be found.</value>
 		IEnumValue this[int rank]
 		{

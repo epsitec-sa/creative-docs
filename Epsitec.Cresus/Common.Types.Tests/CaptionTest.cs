@@ -334,14 +334,19 @@ namespace Epsitec.Common.Types
 
 		private static EnumType GetMyEnumEnumType()
 		{
-			Support.Druid enumTypeDruid = Support.Druid.FromLong (0x0000400000000005L);
+			Caption caption = Support.Resources.DefaultManager.GetCaption (Support.Druid.FromLong (0x0000400000000005L));
+			
+			EnumType enumType = new EnumType (typeof (MyEnum), caption);
 
-			EnumType enumType = new EnumType (typeof (MyEnum), enumTypeDruid);
+			Assert.AreEqual (4, enumType.EnumValues.Count);
 
-			enumType[MyEnum.None].DefineCaptionId (Support.Druid.FromLong (0x0000400000000006L));
-			enumType[MyEnum.First].DefineCaptionId (Support.Druid.FromLong (0x0000400000000007L));
-			enumType[MyEnum.Second].DefineCaptionId (Support.Druid.FromLong (0x0000400000000008L));
-			enumType[MyEnum.Third].DefineCaptionId (Support.Druid.FromLong (0x0000400000000009L));
+			if (enumType.EnumValues[0].CaptionId.IsEmpty)
+			{
+				enumType[MyEnum.None].DefineCaption (Support.Resources.DefaultManager.GetCaption (Support.Druid.FromLong (0x0000400000000006L)));
+				enumType[MyEnum.First].DefineCaption (Support.Resources.DefaultManager.GetCaption (Support.Druid.FromLong (0x0000400000000007L)));
+				enumType[MyEnum.Second].DefineCaption (Support.Resources.DefaultManager.GetCaption (Support.Druid.FromLong (0x0000400000000008L)));
+				enumType[MyEnum.Third].DefineCaption (Support.Resources.DefaultManager.GetCaption (Support.Druid.FromLong (0x0000400000000009L)));
+			}
 
 			return enumType;
 		}

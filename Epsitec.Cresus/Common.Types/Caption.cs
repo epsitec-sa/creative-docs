@@ -15,15 +15,28 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public sealed class Caption : DependencyObject
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Caption"/> class.
+		/// </summary>
 		public Caption()
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Caption"/> class.
+		/// </summary>
+		/// <param name="druid">The DRUID associated with this caption.</param>
 		public Caption(Support.Druid druid) : this ()
 		{
 			this.druid = druid;
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this caption has labels.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this caption has labels; otherwise, <c>false</c>.
+		/// </value>
 		public bool								HasLabels
 		{
 			get
@@ -32,6 +45,12 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this caption has a description.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this caption has a description; otherwise, <c>false</c>.
+		/// </value>
 		public bool								HasDescription
 		{
 			get
@@ -41,6 +60,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this caption has an icon.
+		/// </summary>
+		/// <value><c>true</c> if this caption has an icon; otherwise, <c>false</c>.</value>
 		public bool								HasIcon
 		{
 			get
@@ -49,7 +72,11 @@ namespace Epsitec.Common.Types
 					&& !string.IsNullOrEmpty (this.Icon);
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the label collection.
+		/// </summary>
+		/// <value>The labels.</value>
 		public ICollection<string>				Labels
 		{
 			get
@@ -62,7 +89,12 @@ namespace Epsitec.Common.Types
 				return this.labels;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the sorted label collection. The first label returned is the
+		/// shortest.
+		/// </summary>
+		/// <value>The sorted labels.</value>
 		public IEnumerable<string>				SortedLabels
 		{
 			get
@@ -76,6 +108,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the description of the caption.
+		/// </summary>
+		/// <value>The description.</value>
 		public string							Description
 		{
 			get
@@ -87,7 +123,11 @@ namespace Epsitec.Common.Types
 				this.SetValue (Caption.DescriptionProperty, value);
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets or sets the name of the caption.
+		/// </summary>
+		/// <value>The name.</value>
 		public string							Name
 		{
 			get
@@ -106,7 +146,11 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the DRUID associated with the caption.
+		/// </summary>
+		/// <value>The DRUID.</value>
 		public Support.Druid					Druid
 		{
 			get
@@ -115,6 +159,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the icon of the caption.
+		/// </summary>
+		/// <value>The icon.</value>
 		public string							Icon
 		{
 			get
@@ -210,39 +258,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private static string CompressXml(string xml)
-		{
-			//	Fold known strings found in typical Caption serializations to
-			//	unambiguous shorter representations :
-
-			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.AbstractType""", @"s:name=""*aT""");
-			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.EnumType""", @"s:name=""*eT""");
-			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.AbstractNumericType""", @"s:name=""*aNT""");
-			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.Caption""", @"s:name=""*C""");
-			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.StructuredType""", @"s:name=""*S""");
-			xml = xml.Replace (@"xmlns:s=""http://www.epsitec.ch/XNS/storage-structure-1""", @"xmlns:s=""*1""");
-			xml = xml.Replace (@"xmlns:f=""http://www.epsitec.ch/XNS/storage-fields-1""", @"xmlns:f=""*1""");
-			xml = xml.Replace (@"SystemType=""Epsitec.Common.Types.NotAnEnum, Common.Types""", @"SystemType=""*NaE""");
-			
-			return xml;
-		}
-
-		private static string DecompressXml(string xml)
-		{
-			//	Restores the XML to what it was before the call to CompressXml.
-
-			xml = xml.Replace (@"s:name=""*aT""", @"s:name=""Epsitec.Common.Types.AbstractType""");
-			xml = xml.Replace (@"s:name=""*eT""", @"s:name=""Epsitec.Common.Types.EnumType""");
-			xml = xml.Replace (@"s:name=""*aNT""", @"s:name=""Epsitec.Common.Types.AbstractNumericType""");
-			xml = xml.Replace (@"s:name=""*C""", @"s:name=""Epsitec.Common.Types.Caption""");
-			xml = xml.Replace (@"s:name=""*S""", @"s:name=""Epsitec.Common.Types.StructuredType""");
-			xml = xml.Replace (@"xmlns:s=""*1""", @"xmlns:s=""http://www.epsitec.ch/XNS/storage-structure-1""");
-			xml = xml.Replace (@"xmlns:f=""*1""", @"xmlns:f=""http://www.epsitec.ch/XNS/storage-fields-1""");
-			xml = xml.Replace (@"SystemType=""*NaE""", @"SystemType=""Epsitec.Common.Types.NotAnEnum, Common.Types""");
-
-			return xml;
-		}
-
 		/// <summary>
 		/// Deserializes the caption object from a string representation.
 		/// </summary>
@@ -252,6 +267,11 @@ namespace Epsitec.Common.Types
 			this.DeserializeFromString (value, Support.Resources.DefaultManager);
 		}
 
+		/// <summary>
+		/// Deserializes the caption object from a string representation.
+		/// </summary>
+		/// <param name="value">The serialized caption.</param>
+		/// <param name="manager">The resource manager.</param>
 		public void DeserializeFromString(string value, Support.ResourceManager manager)
 		{
 			value = Caption.DecompressXml (value);
@@ -427,6 +447,39 @@ namespace Epsitec.Common.Types
 		{
 			this.sortedLabels = null;
 			this.NotifyChanged ();
+		}
+
+		private static string CompressXml(string xml)
+		{
+			//	Fold known strings found in typical Caption serializations to
+			//	unambiguous shorter representations :
+
+			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.AbstractType""", @"s:name=""*aT""");
+			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.EnumType""", @"s:name=""*eT""");
+			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.AbstractNumericType""", @"s:name=""*aNT""");
+			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.Caption""", @"s:name=""*C""");
+			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.StructuredType""", @"s:name=""*S""");
+			xml = xml.Replace (@"xmlns:s=""http://www.epsitec.ch/XNS/storage-structure-1""", @"xmlns:s=""*1""");
+			xml = xml.Replace (@"xmlns:f=""http://www.epsitec.ch/XNS/storage-fields-1""", @"xmlns:f=""*1""");
+			xml = xml.Replace (@"SystemType=""Epsitec.Common.Types.NotAnEnum, Common.Types""", @"SystemType=""*NaE""");
+
+			return xml;
+		}
+
+		private static string DecompressXml(string xml)
+		{
+			//	Restores the XML to what it was before the call to CompressXml.
+
+			xml = xml.Replace (@"s:name=""*aT""", @"s:name=""Epsitec.Common.Types.AbstractType""");
+			xml = xml.Replace (@"s:name=""*eT""", @"s:name=""Epsitec.Common.Types.EnumType""");
+			xml = xml.Replace (@"s:name=""*aNT""", @"s:name=""Epsitec.Common.Types.AbstractNumericType""");
+			xml = xml.Replace (@"s:name=""*C""", @"s:name=""Epsitec.Common.Types.Caption""");
+			xml = xml.Replace (@"s:name=""*S""", @"s:name=""Epsitec.Common.Types.StructuredType""");
+			xml = xml.Replace (@"xmlns:s=""*1""", @"xmlns:s=""http://www.epsitec.ch/XNS/storage-structure-1""");
+			xml = xml.Replace (@"xmlns:f=""*1""", @"xmlns:f=""http://www.epsitec.ch/XNS/storage-fields-1""");
+			xml = xml.Replace (@"SystemType=""*NaE""", @"SystemType=""Epsitec.Common.Types.NotAnEnum, Common.Types""");
+
+			return xml;
 		}
 
 		#region Methods used to handle the Changed event
@@ -616,6 +669,7 @@ namespace Epsitec.Common.Types
 			Caption that = (Caption) o;
 			return that.Labels;
 		}
+		
 		private static void NotifyLabelsChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			Caption caption = o as Caption;
