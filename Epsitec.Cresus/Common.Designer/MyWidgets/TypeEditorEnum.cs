@@ -145,8 +145,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Construit le contenu de la liste.
 			foreach (EnumValue value in collection)
 			{
-				this.selDruids.Add(value.Caption.Druid);
-				this.listDruids.Add(value.Caption.Druid);
+				Druid druid = value.Caption.Druid;
+				if (druid.IsValid)
+				{
+					this.selDruids.Add(druid);
+					this.listDruids.Add(druid);
+				}
 			}
 
 			foreach (Druid druid in this.allDruids)

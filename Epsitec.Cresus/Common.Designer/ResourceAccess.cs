@@ -513,25 +513,28 @@ namespace Epsitec.Common.Designer
 
 			foreach (EnumValue value in et.EnumValues)
 			{
-				string name = ResourceAccess.GetEnumBaseName(stype);
-				name = string.Concat(name, ".", value.Name);
-				string newName = string.Concat(ResourceAccess.GetFixFilter(Type.Values), name);
-
-				if (this.primaryBundle.IndexOf(newName) == -1)
+				if (!value.IsHidden)
 				{
-					Druid newDruid = this.CreateUniqueDruid();
-					ResourceBundle.Field newField = this.primaryBundle.CreateField(ResourceFieldType.Data);
-					newField.SetDruid(newDruid);
-					newField.SetName(newName);
+					string name = ResourceAccess.GetEnumBaseName(stype);
+					name = string.Concat(name, ".", value.Name);
+					string newName = string.Concat(ResourceAccess.GetFixFilter(Type.Values), name);
 
-					Caption caption = new Caption();
-					caption.DefineDruid(newDruid);
-					caption.Name = value.Name;
+					if (this.primaryBundle.IndexOf(newName) == -1)
+					{
+						Druid newDruid = this.CreateUniqueDruid();
+						ResourceBundle.Field newField = this.primaryBundle.CreateField(ResourceFieldType.Data);
+						newField.SetDruid(newDruid);
+						newField.SetName(newName);
 
-					newField.SetStringValue(caption.SerializeToString());
-					value.DefineCaption(caption);
+						Caption caption = new Caption();
+						caption.DefineDruid(newDruid);
+						caption.Name = value.Name;
 
-					this.primaryBundle.Add(newField);
+						newField.SetStringValue(caption.SerializeToString());
+						value.DefineCaption(caption);
+
+						this.primaryBundle.Add(newField);
+					}
 				}
 			}
 
