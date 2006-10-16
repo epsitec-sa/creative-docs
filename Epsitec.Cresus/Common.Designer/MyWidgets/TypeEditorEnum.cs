@@ -126,18 +126,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.listDruids = new List<Druid>();
 
 			//	Cherche tous les Druids de type Values existants.
-			this.resourceAccess.BypassFilterOpenAccess(ResourceAccess.Type.Values, null);
-			int count = this.resourceAccess.BypassFilterCount;
-			for (int i=0; i<count; i++)
+			if (!this.IsNativeEnum)
 			{
-				Druid druid = this.resourceAccess.BypassFilterGetDruid(i);
-				Caption caption = this.module.ResourceManager.GetCaption(druid);
-				if (caption != null)
+				this.resourceAccess.BypassFilterOpenAccess(ResourceAccess.Type.Values, null);
+				int count = this.resourceAccess.BypassFilterCount;
+				for (int i=0; i<count; i++)
 				{
-					this.allDruids.Add(druid);
+					Druid druid = this.resourceAccess.BypassFilterGetDruid(i);
+					Caption caption = this.module.ResourceManager.GetCaption(druid);
+					if (caption != null)
+					{
+						this.allDruids.Add(druid);
+					}
 				}
+				this.resourceAccess.BypassFilterCloseAccess();
 			}
-			this.resourceAccess.BypassFilterCloseAccess();
 
 			//	Construit le contenu de la liste.
 			foreach (EnumValue value in collection)
@@ -178,7 +181,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (this.selDruids.Contains(druid))  // fait partie de l'énumération ?
 				{
-					remove = true;
+					remove = !this.IsNativeEnum;
 
 					int index = this.selDruids.IndexOf(druid);
 					prev = index > 0;
@@ -186,7 +189,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 				else  // pas dans l'énumération ?
 				{
-					add = true;
+					add = !this.IsNativeEnum;
 				}
 			}
 
@@ -194,6 +197,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonRemove.Enable = remove;
 			this.buttonPrev.Enable   = prev;
 			this.buttonNext.Enable   = next;
+			this.buttonSort.Enable   = !this.IsNativeEnum;
 		}
 
 		protected void UpdateArray()
@@ -259,6 +263,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ArrayAdd()
 		{
 			//	Ajoute une nouvelle valeur dans l'énumération.
+			if (this.IsNativeEnum)
+			{
+				return;
+			}
+
 			Types.Collections.EnumValueCollection collection = this.Collection;
 
 			int sel = this.array.SelectedRow;
@@ -281,6 +290,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ArrayRemove()
 		{
 			//	Supprime une valeur de l'énumération.
+			if (this.IsNativeEnum)
+			{
+				return;
+			}
+
 			Types.Collections.EnumValueCollection collection = this.Collection;
 
 			int sel = this.array.SelectedRow;
@@ -417,6 +431,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 				EnumType type = this.AbstractType as EnumType;
 				type.MakeEditable();
 				return type.EnumValues;
+			}
+		}
+
+		protected bool IsNativeEnum
+		{
+			//	Indique s'il s'agit d'une énumération native.
+			get
+			{
+				EnumType type = this.AbstractType as EnumType;
+				return type.IsNativeEnum;
 			}
 		}
 
