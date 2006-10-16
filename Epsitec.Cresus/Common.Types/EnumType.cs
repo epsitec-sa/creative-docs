@@ -16,22 +16,38 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class EnumType : AbstractType, IEnumType
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EnumType"/> class.
+		/// </summary>
 		public EnumType()
 			: this (null, new Caption ())
 		{
 		}
-		
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EnumType"/> class.
+		/// </summary>
+		/// <param name="enumType">Type of the native enum to use as model.</param>
 		public EnumType(System.Type enumType)
 			: base (string.Concat ("Enumeration", " ", enumType.Name))
 		{
 			this.CreateEnumValues (enumType);
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EnumType"/> class.
+		/// </summary>
+		/// <param name="caption">The caption to use as model.</param>
 		public EnumType(Caption caption)
 			: this (null, caption)
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EnumType"/> class.
+		/// </summary>
+		/// <param name="enumType">Type of the enum to use as model.</param>
+		/// <param name="caption">The caption to use as model.</param>
 		public EnumType(System.Type enumType, Caption caption)
 			: base ()
 		{
@@ -51,25 +67,12 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public EnumType(Support.Druid druid)
-			: this (null, druid)
-		{
-		}
 
-		public EnumType(System.Type enumType, Support.Druid druid)
-			: base (druid)
-		{
-			if ((enumType == null) ||
-				(enumType == typeof (NotAnEnum)))
-			{
-				this.CreateEnumValues ();
-			}
-			else
-			{
-				this.CreateEnumValues (enumType);
-			}
-		}
-		
+		/// <summary>
+		/// Enumerates through the <see cref="EnumValue"/> values, sorted first by
+		/// rank, then by name.
+		/// </summary>
+		/// <value>The sorted enumeration values.</value>
 		public IEnumerable<EnumValue>			Values
 		{
 			get
@@ -77,7 +80,14 @@ namespace Epsitec.Common.Types
 				return this.EnumValues;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the first <see cref="EnumValue"/> with the specified name.
+		/// </summary>
+		/// <value>
+		/// The <see cref="EnumValue"/> or <c>null</c> if no match could
+		/// be found.
+		/// </value>
 		public EnumValue						this[string name]
 		{
 			get
@@ -85,7 +95,14 @@ namespace Epsitec.Common.Types
 				return this.FindValueFromName (name);
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the first <see cref="EnumValue"/> with the specified rank.
+		/// </summary>
+		/// <value>
+		/// The <see cref="EnumValue"/> or <c>null</c> if no match could
+		/// be found.
+		/// </value>
 		public EnumValue						this[int rank]
 		{
 			get
@@ -93,7 +110,12 @@ namespace Epsitec.Common.Types
 				return this.FindValueFromRank (rank);
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the <see cref="EnumValue"/> with the specified value.
+		/// </summary>
+		/// <value>The <see cref="EnumValue"/> or <c>null</c> if no match could
+		/// be found.</value>
 		public EnumValue						this[System.Enum value]
 		{
 			get
@@ -101,7 +123,12 @@ namespace Epsitec.Common.Types
 				return this.FindValueFromEnumValue (value);
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the <see cref="EnumValue"/> with the specified DRUID.
+		/// </summary>
+		/// <value>The <see cref="EnumValue"/> or <c>null</c> if no match could
+		/// be found.</value>
 		public EnumValue						this[Support.Druid druid]
 		{
 			get
@@ -110,6 +137,12 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this enumeration is based on a native CLR enum.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this enumeration is based on a native CLR enum; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsNativeEnum
 		{
 			get
@@ -126,6 +159,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the collection of <see cref="EnumValue"/> values, which can
+		/// be modified if <c>MakeEditable</c> was called.
+		/// </summary>
+		/// <value>The collection of <see cref="EnumValue"/> values.</value>
 		public Collections.EnumValueCollection	EnumValues
 		{
 			get
@@ -139,6 +177,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets a comparer which can be used to sort <see cref="EnumValue"/> values
+		/// by their rank.
+		/// </summary>
+		/// <value>The rank comparer.</value>
 		public static IComparer<EnumValue>		RankComparer
 		{
 			get
@@ -147,6 +190,9 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Makes the collection of <see cref="EnumValue"/> values editable.
+		/// </summary>
 		public void MakeEditable()
 		{
 			this.EnumValues.Unlock ();
@@ -220,6 +266,13 @@ namespace Epsitec.Common.Types
 			return null;
 		}
 
+		/// <summary>
+		/// Converts an integer value to the <c>enum</c> value of the underlying
+		/// type.
+		/// </summary>
+		/// <param name="value">The integer value.</param>
+		/// <returns>The <c>enum</c> value of the underlying type or <c>NotAnEnum.Instance</c>
+		/// if the conversion is not possible.</returns>
 		public System.Enum ConvertToEnum(int value)
 		{
 			if (this.enumType == typeof (NotAnEnum))
@@ -398,7 +451,12 @@ namespace Epsitec.Common.Types
 
 			EnumType.SetEnumValues (caption, internalValues);
 		}
-		
+
+		/// <summary>
+		/// Converts an <c>enum</c> value to an integer value.
+		/// </summary>
+		/// <param name="value">The <c>enum</c> value.</param>
+		/// <returns>The integer value for the specified <c>enum</c> value.</returns>
 		public static int ConvertToInt(System.Enum value)
 		{
 			//	TODO: optimize this code

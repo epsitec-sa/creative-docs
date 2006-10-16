@@ -49,7 +49,10 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				foreach (DependencyProperty property in this.properties.Keys)
+				DependencyProperty[] keys = new DependencyProperty[this.properties.Count];
+				this.properties.Keys.CopyTo (keys, 0);
+				
+				foreach (DependencyProperty property in keys)
 				{
 					yield return new PropertyValuePair (property, this.properties[property]);
 				}
