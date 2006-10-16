@@ -118,14 +118,16 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			this.UpdateRadios();
-			this.UpdateButtons();
 			this.UpdateEnumList();
+			this.UpdateButtons();
 
 			this.window.ShowDialog();
 		}
 
 		public ResourceAccess.TypeType ContentType
 		{
+			//	Set: spécifie le type initial.
+			//	Get: retourne le type choisi (None si le bouton Annuler est utilisé)
 			set
 			{
 				this.typeEdited = value;
@@ -139,6 +141,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public System.Type SystemType
 		{
+			//	Retourne le Sytem.Type à utiliser, lors d'une énumération C#.
 			get
 			{
 				if (this.typeAccepted == ResourceAccess.TypeType.Enum && this.checkCSharp.ActiveState == ActiveState.Yes && this.enumList.SelectedIndex != -1)
@@ -196,6 +199,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateExtended()
 		{
+			//	Met à jour le bouton pour montrer/cacher les options.
 			this.buttonExtend.GlyphShape = this.isExtentended ? GlyphShape.ArrowLeft : GlyphShape.ArrowRight;
 			this.rightPanel.Visibility = this.isExtentended;
 
@@ -206,6 +210,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateButtons()
 		{
+			//	Met à jour le bouton D'accord.
 			bool enable = true;
 
 			if (this.typeEdited == ResourceAccess.TypeType.Enum && this.checkCSharp.ActiveState == ActiveState.Yes && this.enumList.SelectedIndex == -1)
@@ -308,11 +313,13 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleEnumListSelectionActivated(object sender)
 		{
+			//	Sélection changée dans la liste des énumérations C#.
 			this.UpdateButtons();
 		}
 
 		private void HandleWindowCloseClicked(object sender)
 		{
+			//	Fenêtre fermée.
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
@@ -320,6 +327,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonCancelClicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton Annuler cliqué.
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
@@ -327,6 +335,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonOKClicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton D'accord cliqué.
 			this.typeAccepted = this.typeEdited;
 
 			this.parentWindow.MakeActive();
@@ -336,6 +345,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonExtendClicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton ">" ou "<" pour montrer/cacher les options cliqué.
 			this.isExtentended = !this.isExtentended;
 			this.UpdateExtended();
 			this.UpdateButtons();
