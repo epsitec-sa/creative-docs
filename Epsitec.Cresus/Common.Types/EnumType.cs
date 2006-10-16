@@ -109,8 +109,22 @@ namespace Epsitec.Common.Types
 				return this.FindValueFromDruid (druid);
 			}
 		}
-		
 
+		public bool								IsNativeEnum
+		{
+			get
+			{
+				if ((this.enumType == typeof (NotAnEnum)) ||
+					(this.enumType == null))
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+			}
+		}
 
 		public Collections.EnumValueCollection	EnumValues
 		{
