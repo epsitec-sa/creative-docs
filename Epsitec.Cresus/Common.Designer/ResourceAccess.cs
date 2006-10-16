@@ -380,7 +380,7 @@ namespace Epsitec.Common.Designer
 		public void Duplicate(string newName, bool duplicateContent)
 		{
 			//	Duplique la ressource courante.
-			if (this.type == Type.Types)
+			if (this.type == Type.Types && !duplicateContent)
 			{
 				TypeType tt = this.lastTypeTypeCreatated;
 				this.mainWindow.DlgResourceTypeType(ref tt, out this.lastTypeTypeSystem);
@@ -393,6 +393,7 @@ namespace Epsitec.Common.Designer
 				if (this.lastTypeTypeCreatated == TypeType.Enum && this.lastTypeTypeSystem != null)
 				{
 					this.CreateEnumValues(this.lastTypeTypeSystem);
+					newName = ResourceAccess.GetBaseName(this.lastTypeTypeSystem);
 				}
 			}
 
@@ -505,15 +506,9 @@ namespace Epsitec.Common.Designer
 
 		protected void CreateEnumValues(System.Type stype)
 		{
-			string prefix = "Epsitec.Common.";
-
 			foreach (int i in System.Enum.GetValues(stype))
 			{
-				string name = stype.FullName.Replace('+', '.');
-				if (name.StartsWith(prefix))
-				{
-					name = name.Substring(prefix.Length);
-				}
+				string name = ResourceAccess.GetBaseName(stype);
 				name = string.Concat(name, ".", i.ToString());  // TODO: faire mieux !!!
 				string newName = string.Concat(ResourceAccess.GetFixFilter(Type.Values), name);
 
@@ -530,6 +525,18 @@ namespace Epsitec.Common.Designer
 					this.primaryBundle.Add(newField);
 				}
 			}
+		}
+
+		protected static string GetBaseName(System.Type stype)
+		{
+			string name = stype.FullName.Replace('+', '.');
+
+			if (name.StartsWith(ResourceAccess.filterPrefix))
+			{
+				name = name.Substring(ResourceAccess.filterPrefix.Length);
+			}
+
+			return name;
 		}
 
 		public void Delete()
@@ -2553,6 +2560,17 @@ namespace Epsitec.Common.Designer
 		}
 
 
+
+		public static string FilterPrefix
+		{
+			//	Retourne le filtre fixe utilisé systématiquement.
+			get
+			{
+				return ResourceAccess.filterPrefix;
+			}
+		}
+
+
 		#region FixFilter
 		protected string AddFilter(string name, bool bypass)
 		{
@@ -2939,6 +2957,8 @@ namespace Epsitec.Common.Designer
 		public event Support.EventHandler DirtyChanged;
 		#endregion
 
+
+		protected static string								filterPrefix = "Epsitec.Common.";
 
 		protected Type										type;
 		protected ResourceManager							resourceManager;
