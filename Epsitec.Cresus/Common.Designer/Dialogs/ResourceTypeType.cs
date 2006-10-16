@@ -229,9 +229,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			foreach (System.Type type in EnumLister.GetDesignerVisibleEnums())
 			{
 				string name = type.FullName;
-				if (name.StartsWith(ResourceTypeType.filterPrefix))
+				if (name.StartsWith(ResourceAccess.FilterPrefix))
 				{
-					name = name.Substring(ResourceTypeType.filterPrefix.Length);
+					name = name.Substring(ResourceAccess.FilterPrefix.Length);
 					int i = name.IndexOf('.');
 					if (i != -1)
 					{
@@ -266,9 +266,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			foreach (System.Type type in EnumLister.GetDesignerVisibleEnums())
 			{
 				string name = type.FullName;
-				if (name.StartsWith(ResourceTypeType.filterPrefix))
+				if (name.StartsWith(ResourceAccess.FilterPrefix))
 				{
-					name = name.Substring(ResourceTypeType.filterPrefix.Length);
+					name = name.Substring(ResourceAccess.FilterPrefix.Length);
 					if (filter == null || name.StartsWith(filter))
 					{
 						this.systemTypes.Add(type);
@@ -353,7 +353,6 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected static readonly double		windowWidthCompacted = 195;
 		protected static readonly double		windowWidthExtended = 500;
 		protected static readonly double		windowHeight = 200;
-		protected static string					filterPrefix = "Epsitec.Common.";
 
 		protected ResourceAccess.TypeType		typeEdited;
 		protected ResourceAccess.TypeType		typeAccepted;
