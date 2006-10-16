@@ -33,16 +33,21 @@ namespace Epsitec.Common.Types
 		}
 
 		public EnumType(System.Type enumType, Caption caption)
-			: base (caption)
+			: base ()
 		{
 			if ((enumType == null) ||
 				(enumType == typeof (NotAnEnum)))
 			{
+				if (caption != null)
+				{
+					this.DefineCaption (caption);
+				}
+
 				this.CreateEnumValues ();
 			}
 			else
 			{
-				this.CreateEnumValues (enumType);
+				this.CreateEnumValues (enumType, caption);
 			}
 		}
 
@@ -413,12 +418,22 @@ namespace Epsitec.Common.Types
 
 		private void CreateEnumValues(System.Type enumType)
 		{
+			this.CreateEnumValues (enumType, null);
+		}
+		
+		private void CreateEnumValues(System.Type enumType, Caption caption)
+		{
 			System.Diagnostics.Debug.Assert (enumType != null);
 			System.Diagnostics.Debug.Assert (enumType != typeof (NotAnEnum));
 			
 			FieldInfo[] fields = enumType.GetFields (BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
 
 			this.enumType = enumType;
+
+			if (caption != null)
+			{
+				this.DefineCaption (caption);
+			}
 			
 			for (int i = 0; i < fields.Length; i++)
 			{

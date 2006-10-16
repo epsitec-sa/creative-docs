@@ -11,6 +11,11 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public abstract class AbstractType : NamedDependencyObject, INamedType, IDataConstraint
 	{
+		protected AbstractType()
+			: base ()
+		{
+		}
+
 		protected AbstractType(string name)
 			: base (name)
 		{
