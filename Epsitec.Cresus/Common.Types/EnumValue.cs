@@ -297,6 +297,17 @@ namespace Epsitec.Common.Types
 
 		public void DefineCaption(Caption caption)
 		{
+			if (caption == null)
+			{
+				throw new System.ArgumentNullException ("caption");
+			}
+
+			if ((this.caption != null) &&
+				(this.captionId.IsEmpty))
+			{
+				this.caption = null;
+			}
+			
 			if ((this.caption == null) &&
 				(caption != null) &&
 				(this.captionId.IsEmpty || (this.captionId == caption.Druid)))

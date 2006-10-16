@@ -746,6 +746,50 @@ namespace Epsitec.Common.Types
 			Assert.IsNotNull (et1);
 			Assert.AreEqual (et.SystemType, et1.SystemType);
 		}
+		
+		[Test]
+		public void CheckEnumSerialization3()
+		{
+			EnumType et = new EnumType (typeof (Common.Drawing.ColorCollectionType), new Caption ());
+
+			Assert.AreEqual (5, et.EnumValues.Count);
+
+			Assert.AreEqual ("Default", et.EnumValues[0].Name);
+			Assert.AreEqual ("Rainbow", et.EnumValues[1].Name);
+			Assert.AreEqual ("Light", et.EnumValues[2].Name);
+			Assert.AreEqual ("Dark", et.EnumValues[3].Name);
+			Assert.AreEqual ("Gray", et.EnumValues[4].Name);
+			
+			Assert.IsNotNull (et.EnumValues[0].Caption);
+
+			Caption caption = Support.Resources.DefaultManager.GetCaption (Support.Druid.Parse ("[400B]"));
+			
+			et.EnumValues[0].DefineCaption (caption);
+
+			Assert.AreEqual ("Default color palette", et.EnumValues[0].Caption.Description);
+			
+			string serial = et.Caption.SerializeToString ();
+
+			System.Console.Out.WriteLine ("{0}", serial);
+
+			caption = new Caption ();
+			caption.DeserializeFromString (serial);
+
+			EnumType et1 = TypeRosetta.CreateTypeObject (caption) as EnumType;
+
+			Assert.IsNotNull (et1);
+			Assert.AreEqual (et.SystemType, et1.SystemType);
+
+			Assert.AreEqual (5, et1.EnumValues.Count);
+
+			Assert.AreEqual ("Default", et1.EnumValues[0].Name);
+			Assert.AreEqual ("Default color palette", et1.EnumValues[0].Caption.Description);
+			Assert.AreEqual ("Rainbow", et1.EnumValues[1].Name);
+			Assert.AreEqual ("Light", et1.EnumValues[2].Name);
+			Assert.AreEqual ("Dark", et1.EnumValues[3].Name);
+			Assert.AreEqual ("Gray", et1.EnumValues[4].Name);
+		}
+
 
 		private MyItem CreateSampleTree(out MyItem ext)
 		{
