@@ -113,6 +113,7 @@
     <Compile Include="CollectionViewSource.cs" />
     <Compile Include="CollectionView.cs" />
     <Compile Include="CollectionViewGroup.cs" />
+    <Compile Include="DesignerAttribute.cs" />
     <Compile Include="EnumLister.cs" />
     <Compile Include="CurrentChangingEventArgs.cs" />
     <Compile Include="ICollectionView.cs" />

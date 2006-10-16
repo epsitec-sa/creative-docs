@@ -18,9 +18,10 @@ namespace Epsitec.Common.Types
 
 		public static IEnumerable<System.Type> GetPublicEnums()
 		{
-			if (EnumLister.cache == null)
+			if ((EnumLister.publicEnumCache == null) ||
+				(EnumLister.publicEnumCacheGeneration != EnumLister.generation))
 			{
-				EnumLister.cache = new System.Type[EnumLister.types.Count];
+				EnumLister.publicEnumCache = new System.Type[EnumLister.types.Count];
 				string[] names = new string[EnumLister.types.Count];
 
 				EnumLister.types.Keys.CopyTo (names, 0);
@@ -28,11 +29,37 @@ namespace Epsitec.Common.Types
 
 				for (int i = 0; i < names.Length; i++)
 				{
-					EnumLister.cache[i] = EnumLister.types[names[i]].Type;
+					EnumLister.publicEnumCache[i] = EnumLister.types[names[i]].Type;
 				}
+
+				EnumLister.publicEnumCacheGeneration = EnumLister.generation;
 			}
 
-			return EnumLister.cache;
+			return EnumLister.publicEnumCache;
+		}
+
+		public static IEnumerable<System.Type> GetDesignerVisibleEnums()
+		{
+			if ((EnumLister.designerVisibleEnumCache == null) ||
+				(EnumLister.designerVisibleEnumCacheGeneration != EnumLister.generation))
+			{
+				List<System.Type> types = new List<System.Type> ();
+
+				foreach (System.Type type in EnumLister.GetPublicEnums ())
+				{
+					object[] attributes = type.GetCustomAttributes (typeof (DesignerAttribute), false);
+					
+					if (attributes.Length > 0)
+					{
+						types.Add (type);
+					}
+				}
+
+				EnumLister.designerVisibleEnumCache = types.ToArray ();
+				EnumLister.designerVisibleEnumCacheGeneration = EnumLister.generation;
+			}
+
+			return EnumLister.designerVisibleEnumCache;
 		}
 
 		#region Setup and Run-Time Analysis Methods
@@ -66,7 +93,7 @@ namespace Epsitec.Common.Types
 						string name = type.FullName;
 						Record record = new Record (type);
 						EnumLister.types[name] = record;
-						EnumLister.cache = null;
+						EnumLister.generation++;
 					}
 				}
 			}
@@ -105,8 +132,16 @@ namespace Epsitec.Common.Types
 		private static System.AppDomain domain;
 		private static List<Assembly> assemblies;
 		private static Dictionary<string, Record> types;
+		private static int generation;
+
+		[System.ThreadStatic]
+		private static System.Type[] publicEnumCache;
+		[System.ThreadStatic]
+		private static int publicEnumCacheGeneration;
 		
 		[System.ThreadStatic]
-		private static System.Type[] cache;
+		private static System.Type[] designerVisibleEnumCache;
+		[System.ThreadStatic]
+		private static int designerVisibleEnumCacheGeneration;
 	}
 }
