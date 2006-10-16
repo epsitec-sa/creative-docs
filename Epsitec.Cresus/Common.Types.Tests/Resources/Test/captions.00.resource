@@ -12,4 +12,5 @@
   <data id="08">&lt;s:data id="_0" f:Name="Second" f:Description="2nd choice" /&gt;</data>
   <data id="09">&lt;s:data id="_0" f:Name="Third" f:Description="3rd choice" /&gt;</data>
   <data id="0A">&lt;s:data id="_0" f:Description="Borrowed Text" /&gt;</data>
+  <data id="0B">&lt;s:data id="_0" f:Name="Default" f:Description="Default color palette" f:Labels="{Collection {Text 'Default palette'}}" /&gt;</data>
 </bundle>
