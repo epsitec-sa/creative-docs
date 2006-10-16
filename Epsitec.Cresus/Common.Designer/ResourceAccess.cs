@@ -525,6 +525,8 @@ namespace Epsitec.Common.Designer
 					newField.SetName(newName);
 
 					Caption caption = new Caption();
+					caption.DefineDruid(newDruid);
+					caption.Name = value.Name;
 					newField.SetStringValue(caption.SerializeToString());
 					value.DefineCaption(caption);
 
