@@ -180,7 +180,7 @@ namespace Epsitec.Common.Designer
 			return TypeType.None;
 		}
 
-		protected static AbstractType CreateTypeType(TypeType type, System.Type stype)
+		protected static AbstractType CreateTypeType(TypeType type)
 		{
 			switch (type)
 			{
@@ -191,17 +191,8 @@ namespace Epsitec.Common.Designer
 				case TypeType.Double:       return new DoubleType();
 				case TypeType.Decimal:      return new DecimalType();
 				case TypeType.String:       return new StringType();
+				case TypeType.Enum:         return new EnumType();
 				case TypeType.Structured:   return new StructuredType();
-
-				case TypeType.Enum:
-					if (stype == null)
-					{
-						return new EnumType();
-					}
-					else
-					{
-						return new EnumType(stype, new Caption());
-					}
 			}
 
 			return null;
@@ -380,6 +371,8 @@ namespace Epsitec.Common.Designer
 		public void Duplicate(string newName, bool duplicateContent)
 		{
 			//	Duplique la ressource courante.
+			EnumType et = null;
+
 			if (this.type == Type.Types && !duplicateContent)
 			{
 				TypeType tt = this.lastTypeTypeCreatated;
@@ -392,8 +385,8 @@ namespace Epsitec.Common.Designer
 
 				if (this.lastTypeTypeCreatated == TypeType.Enum && this.lastTypeTypeSystem != null)
 				{
-					this.CreateEnumValues(this.lastTypeTypeSystem);
-					newName = ResourceAccess.GetBaseName(this.lastTypeTypeSystem);
+					et = this.CreateEnumValues(this.lastTypeTypeSystem);
+					newName = ResourceAccess.GetEnumBaseName(this.lastTypeTypeSystem);
 				}
 			}
 
@@ -435,7 +428,17 @@ namespace Epsitec.Common.Designer
 					{
 						if (string.IsNullOrEmpty(newField.AsString))
 						{
-							AbstractType type = ResourceAccess.CreateTypeType(this.lastTypeTypeCreatated, this.lastTypeTypeSystem);
+							AbstractType type;
+
+							if (et == null)
+							{
+								type = ResourceAccess.CreateTypeType(this.lastTypeTypeCreatated);
+							}
+							else
+							{
+								type = et;
+							}
+
 							newField.SetStringValue(type.Caption.SerializeToString());
 						}
 					}
@@ -504,12 +507,14 @@ namespace Epsitec.Common.Designer
 			this.IsDirty = true;
 		}
 
-		protected void CreateEnumValues(System.Type stype)
+		protected EnumType CreateEnumValues(System.Type stype)
 		{
-			foreach (int i in System.Enum.GetValues(stype))
+			EnumType et = new EnumType(stype, new Caption());
+
+			foreach (EnumValue value in et.EnumValues)
 			{
-				string name = ResourceAccess.GetBaseName(stype);
-				name = string.Concat(name, ".", i.ToString());  // TODO: faire mieux !!!
+				string name = ResourceAccess.GetEnumBaseName(stype);
+				name = string.Concat(name, ".", value.Name);
 				string newName = string.Concat(ResourceAccess.GetFixFilter(Type.Values), name);
 
 				if (this.primaryBundle.IndexOf(newName) == -1)
@@ -521,14 +526,18 @@ namespace Epsitec.Common.Designer
 
 					Caption caption = new Caption();
 					newField.SetStringValue(caption.SerializeToString());
+					value.DefineCaption(caption);
 
 					this.primaryBundle.Add(newField);
 				}
 			}
+
+			return et;
 		}
 
-		protected static string GetBaseName(System.Type stype)
+		public static string GetEnumBaseName(System.Type stype)
 		{
+			//	Retourne le nom de base à utiliser pour une énumération C#.
 			string name = stype.FullName.Replace('+', '.');
 
 			if (name.StartsWith(ResourceAccess.filterPrefix))
@@ -2557,17 +2566,6 @@ namespace Epsitec.Common.Designer
 			}
 
 			return null;
-		}
-
-
-
-		public static string FilterPrefix
-		{
-			//	Retourne le filtre fixe utilisé systématiquement.
-			get
-			{
-				return ResourceAccess.filterPrefix;
-			}
 		}
 
 
