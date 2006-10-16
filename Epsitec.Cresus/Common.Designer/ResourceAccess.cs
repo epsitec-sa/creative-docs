@@ -509,24 +509,26 @@ namespace Epsitec.Common.Designer
 
 			foreach (int i in System.Enum.GetValues(stype))
 			{
-				Druid newDruid = this.CreateUniqueDruid();
-
 				string name = stype.FullName.Replace('+', '.');
 				if (name.StartsWith(prefix))
 				{
 					name = name.Substring(prefix.Length);
 				}
-				name = string.Concat(name, ".", i.ToString());
+				name = string.Concat(name, ".", i.ToString());  // TODO: faire mieux !!!
 				string newName = string.Concat(ResourceAccess.GetFixFilter(Type.Values), name);
 
-				ResourceBundle.Field newField = this.primaryBundle.CreateField(ResourceFieldType.Data);
-				newField.SetDruid(newDruid);
-				newField.SetName(newName);
+				if (this.primaryBundle.IndexOf(newName) == -1)
+				{
+					Druid newDruid = this.CreateUniqueDruid();
+					ResourceBundle.Field newField = this.primaryBundle.CreateField(ResourceFieldType.Data);
+					newField.SetDruid(newDruid);
+					newField.SetName(newName);
 
-				Caption caption = new Caption();
-				newField.SetStringValue(caption.SerializeToString());
+					Caption caption = new Caption();
+					newField.SetStringValue(caption.SerializeToString());
 
-				this.primaryBundle.Add(newField);
+					this.primaryBundle.Add(newField);
+				}
 			}
 		}
 
