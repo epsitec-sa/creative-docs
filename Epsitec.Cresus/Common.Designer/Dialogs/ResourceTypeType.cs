@@ -61,11 +61,11 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.tabIndex++;
 
 				//	Partie droite.
-				this.checkCSharp = new CheckButton(this.rightPanel);
-				this.checkCSharp.Text = Res.Strings.Dialog.TypeType.EnumCSharp;
-				this.checkCSharp.Margins = new Margins(0, 0, 0, 8);
-				this.checkCSharp.Dock = DockStyle.Top;
-				this.checkCSharp.ActiveStateChanged += new EventHandler(this.HandleCheckCSharpActiveStateChanged);
+				this.checkNative = new CheckButton(this.rightPanel);
+				this.checkNative.Text = Res.Strings.Dialog.TypeType.EnumNative;
+				this.checkNative.Margins = new Margins(0, 0, 0, 8);
+				this.checkNative.Dock = DockStyle.Top;
+				this.checkNative.ActiveStateChanged += new EventHandler(this.HandleCheckNativeActiveStateChanged);
 
 				this.fieldFilter = new TextFieldCombo(this.rightPanel);
 				this.fieldFilter.Text = Res.Strings.Dialog.Icon.Filter.All;
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Retourne le Sytem.Type à utiliser, lors d'une énumération C#.
 			get
 			{
-				if (this.typeAccepted == ResourceAccess.TypeType.Enum && this.checkCSharp.ActiveState == ActiveState.Yes && this.enumList.SelectedIndex != -1)
+				if (this.typeAccepted == ResourceAccess.TypeType.Enum && this.checkNative.ActiveState == ActiveState.Yes && this.enumList.SelectedIndex != -1)
 				{
 					return this.systemTypes[this.enumList.SelectedIndex];
 				}
@@ -192,9 +192,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 			this.ignoreChanged = false;
 
-			this.checkCSharp.Enable = (this.typeEdited == ResourceAccess.TypeType.Enum);
-			this.fieldFilter.Enable = (this.typeEdited == ResourceAccess.TypeType.Enum && this.checkCSharp.ActiveState == ActiveState.Yes);
-			this.enumList.Enable    = (this.typeEdited == ResourceAccess.TypeType.Enum && this.checkCSharp.ActiveState == ActiveState.Yes);
+			this.checkNative.Enable = (this.typeEdited == ResourceAccess.TypeType.Enum);
+			this.fieldFilter.Enable = (this.typeEdited == ResourceAccess.TypeType.Enum && this.checkNative.ActiveState == ActiveState.Yes);
+			this.enumList.Enable    = (this.typeEdited == ResourceAccess.TypeType.Enum && this.checkNative.ActiveState == ActiveState.Yes);
 		}
 
 		protected void UpdateExtended()
@@ -213,7 +213,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour le bouton D'accord.
 			bool enable = true;
 
-			if (this.typeEdited == ResourceAccess.TypeType.Enum && this.checkCSharp.ActiveState == ActiveState.Yes && this.enumList.SelectedIndex == -1)
+			if (this.typeEdited == ResourceAccess.TypeType.Enum && this.checkNative.ActiveState == ActiveState.Yes && this.enumList.SelectedIndex == -1)
 			{
 				enable = false;
 			}
@@ -228,18 +228,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			foreach (System.Type type in EnumLister.GetDesignerVisibleEnums())
 			{
-				string name = type.FullName;
-				if (name.StartsWith(ResourceAccess.FilterPrefix))
+				string name = ResourceAccess.GetEnumBaseName(type);
+				int i = name.IndexOf('.');
+				if (i != -1)
 				{
-					name = name.Substring(ResourceAccess.FilterPrefix.Length);
-					int i = name.IndexOf('.');
-					if (i != -1)
+					string prefix = name.Substring(0, i);
+					if (!this.filters.Contains(prefix))
 					{
-						string prefix = name.Substring(0, i);
-						if (!this.filters.Contains(prefix))
-						{
-							this.filters.Add(prefix);
-						}
+						this.filters.Add(prefix);
 					}
 				}
 			}
@@ -265,15 +261,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.enumList.Items.Clear();
 			foreach (System.Type type in EnumLister.GetDesignerVisibleEnums())
 			{
-				string name = type.FullName;
-				if (name.StartsWith(ResourceAccess.FilterPrefix))
+				string name = ResourceAccess.GetEnumBaseName(type);
+				if (filter == null || name.StartsWith(filter))
 				{
-					name = name.Substring(ResourceAccess.FilterPrefix.Length);
-					if (filter == null || name.StartsWith(filter))
-					{
-						this.systemTypes.Add(type);
-						this.enumList.Items.Add(TextLayout.ConvertToTaggedText(name));
-					}
+					this.systemTypes.Add(type);
+					this.enumList.Items.Add(TextLayout.ConvertToTaggedText(name));
 				}
 			}
 		}
@@ -295,7 +287,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateButtons();
 		}
 
-		private void HandleCheckCSharpActiveStateChanged(object sender)
+		private void HandleCheckNativeActiveStateChanged(object sender)
 		{
 			//	Bouton C# cliqué.
 			this.UpdateRadios();
@@ -366,7 +358,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected List<RadioButton>				radioButtons;
 
 		protected Widget						rightPanel;
-		protected CheckButton					checkCSharp;
+		protected CheckButton					checkNative;
 		protected TextFieldCombo				fieldFilter;
 		protected ScrollList					enumList;
 
