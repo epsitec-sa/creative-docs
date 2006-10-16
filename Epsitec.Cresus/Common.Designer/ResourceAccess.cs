@@ -380,6 +380,22 @@ namespace Epsitec.Common.Designer
 		public void Duplicate(string newName, bool duplicateContent)
 		{
 			//	Duplique la ressource courante.
+			if (this.type == Type.Types)
+			{
+				TypeType tt = this.lastTypeTypeCreatated;
+				this.mainWindow.DlgResourceTypeType(ref tt, out this.lastTypeTypeSystem);
+				if (tt == TypeType.None)
+				{
+					return;
+				}
+				this.lastTypeTypeCreatated = tt;
+
+				if (this.lastTypeTypeCreatated == TypeType.Enum && this.lastTypeTypeSystem != null)
+				{
+					this.CreateEnumValues(this.lastTypeTypeSystem);
+				}
+			}
+
 			Druid newDruid = Druid.Empty;
 
 			if (this.IsBundlesType)
@@ -390,7 +406,6 @@ namespace Epsitec.Common.Designer
 				int aIndex = this.GetAbsoluteIndex(actualDruid);
 				newDruid = this.CreateUniqueDruid();
 
-				bool first = true;
 				foreach (ResourceBundle bundle in this.bundles)
 				{
 					ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
@@ -419,23 +434,6 @@ namespace Epsitec.Common.Designer
 					{
 						if (string.IsNullOrEmpty(newField.AsString))
 						{
-							if (first)
-							{
-								first = false;
-								TypeType tt = this.lastTypeTypeCreatated;
-								this.mainWindow.DlgResourceTypeType(ref tt, out this.lastTypeTypeSystem);
-								if (tt == TypeType.None)
-								{
-									return;
-								}
-								this.lastTypeTypeCreatated = tt;
-
-								if (this.lastTypeTypeCreatated == TypeType.Enum && this.lastTypeTypeSystem != null)
-								{
-									this.CreateEnumValues(this.lastTypeTypeSystem);
-								}
-							}
-
 							AbstractType type = ResourceAccess.CreateTypeType(this.lastTypeTypeCreatated, this.lastTypeTypeSystem);
 							newField.SetStringValue(type.Caption.SerializeToString());
 						}
