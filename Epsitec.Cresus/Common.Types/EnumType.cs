@@ -102,6 +102,16 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
+		public EnumValue						this[Support.Druid druid]
+		{
+			get
+			{
+				return this.FindValueFromDruid (druid);
+			}
+		}
+		
+
+
 		public Collections.EnumValueCollection	EnumValues
 		{
 			get
@@ -133,6 +143,19 @@ namespace Epsitec.Common.Types
 			for (int i = 0; i < this.EnumValues.Count; i++)
 			{
 				if (this.EnumValues[i].Rank == rank)
+				{
+					return this.EnumValues[i];
+				}
+			}
+
+			return null;
+		}
+
+		public EnumValue FindValueFromDruid(Support.Druid druid)
+		{
+			for (int i = 0; i < this.EnumValues.Count; i++)
+			{
+				if (this.EnumValues[i].CaptionId == druid)
 				{
 					return this.EnumValues[i];
 				}
@@ -327,11 +350,22 @@ namespace Epsitec.Common.Types
 			
 			foreach (EnumValue externalValue in externalValues)
 			{
-				string name = externalValue.Name;
+				EnumValue internalValue = null;
+				
+				string        name  = externalValue.Name;
+				Support.Druid druid = externalValue.CaptionId;
 
-				System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (name) == false);
-
-				EnumValue internalValue = this[name];
+				if (string.IsNullOrEmpty (name))
+				{
+					if (druid.IsValid)
+					{
+						internalValue = this[druid];
+					}
+				}
+				else
+				{
+					internalValue = this[name];
+				}
 
 				if (internalValue == null)
 				{
