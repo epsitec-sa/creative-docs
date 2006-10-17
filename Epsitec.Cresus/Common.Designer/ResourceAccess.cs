@@ -2073,7 +2073,14 @@ namespace Epsitec.Common.Designer
 						//	Field.Name !
 						if (bundle == this.primaryBundle)
 						{
-							caption.Name = ResourceAccess.SubAllFilter(field.Name);
+							if (this.type == Type.Values)
+							{
+								caption.Name = ResourceAccess.LastName(field.Name);
+							}
+							else
+							{
+								caption.Name = ResourceAccess.SubAllFilter(field.Name);
+							}
 						}
 						else
 						{
@@ -2572,6 +2579,19 @@ namespace Epsitec.Common.Designer
 			}
 
 			return null;
+		}
+
+
+		protected static string LastName(string name)
+		{
+			//	Retourne la dernière partie d'un nom séparé par des points.
+			//	"Toto.Titi.Tutu" retourne "Tutu".
+			int i = name.LastIndexOf('.');
+			if (i != -1)
+			{
+				name = name.Substring(i+1);
+			}
+			return name;
 		}
 
 
