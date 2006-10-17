@@ -53,6 +53,7 @@
   <data name="Viewers.Commands.Shortcut.Suppl" id="0S5" mod="1">Supplémentaire</data>
   <data name="Viewers.Commands.Group.Title" id="0T5" mod="1">Groupe</data>
   <data name="Viewers.Types.Editor.Title" id="057" mod="1">Définition du type &lt;b&gt;{0}&lt;/b&gt;</data>
+  <data name="Viewers.Types.Editor.Native" id="0D7">Native</data>
   <data name="Viewers.Types.Numeric.Min" id="0R6" mod="1">Valeur minimale</data>
   <data name="Viewers.Types.Numeric.Max" id="0S6" mod="1">Valeur maximale</data>
   <data name="Viewers.Types.Numeric.Resol" id="0T6" mod="1">Résolution</data>
@@ -215,7 +216,7 @@
   <data name="Dialog.ResourceSelector.Button.Use" id="0R4">Utiliser</data>
   <data name="Dialog.ResourceSelector.Button.Create" id="0S4">Créer</data>
   <data name="Dialog.TypeType.Title" id="067" mod="1">Choix du type à créer</data>
-  <data name="Dialog.TypeType.EnumNative" id="097">Enumération C#</data>
+  <data name="Dialog.TypeType.EnumNative" id="097">Enumération C# native</data>
   <data name="Dialog.TypeType.Tooltip.Options" id="0A7">Montre ou cache les options des énumérations</data>
   <data name="Dialog.TypeType.EnumAll" id="0B7">Tout montrer</data>
   <data name="Dialog.TypeType.EnumOne" id="0C7">Seulement {0}</data>

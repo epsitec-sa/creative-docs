@@ -573,6 +573,7 @@ namespace Epsitec.Common.Designer
 				{
 					public static class Editor
 					{
+						public static string Native { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (237)); } }
 						public static string Title { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (229)); } }
 					}
 					
