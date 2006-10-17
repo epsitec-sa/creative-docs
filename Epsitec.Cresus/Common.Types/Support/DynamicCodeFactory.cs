@@ -1,33 +1,43 @@
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using System.Reflection.Emit;
 
 namespace Epsitec.Common.Support
 {
-	public delegate void GenericSetter(object target, object value);
-	public delegate object GenericGetter(object target);
+	using OpCodes=System.Reflection.Emit.OpCodes;
+
+	public delegate void PropertySetter(object target, object value);
+	public delegate object PropertyGetter(object target);
 
 	public static class DynamicCodeFactory
 	{
-		public static GenericSetter CreateSetMethod(System.Reflection.PropertyInfo propertyInfo)
+		public static PropertySetter CreatePropertySetter(System.Type type, string propertyName)
 		{
-			System.Reflection.MethodInfo method = propertyInfo.GetSetMethod ();
+			return DynamicCodeFactory.CreatePropertySetter (type.GetProperty (propertyName));
+		}
+		
+		public static PropertySetter CreatePropertySetter(System.Reflection.PropertyInfo propertyInfo)
+		{
+			System.Reflection.MethodInfo method = propertyInfo.GetSetMethod (false);
 
-			if (method == null)
+			if ((method == null) ||
+				(propertyInfo.CanWrite == false))
 			{
 				return null;
 			}
 
+			System.Type   hostType  = propertyInfo.DeclaringType;
+			System.Type   propType  = propertyInfo.PropertyType;
 			System.Type[] arguments = new System.Type[2];
 			
 			arguments[0] = typeof (object);
 			arguments[1] = typeof (object);
 
-			string name = string.Concat ("_Set_", propertyInfo.Name, "_");
+			string name = string.Concat ("_PropertySetter_", propertyInfo.Name);
 
 			System.Reflection.Emit.DynamicMethod setter;
-			setter = new System.Reflection.Emit.DynamicMethod (name, typeof (void), arguments, propertyInfo.DeclaringType);
+			setter = new System.Reflection.Emit.DynamicMethod (name, null, arguments, hostType);
 
 			System.Reflection.Emit.ILGenerator generator = setter.GetILGenerator ();
 			
@@ -35,63 +45,73 @@ namespace Epsitec.Common.Support
 			generator.Emit (OpCodes.Castclass, propertyInfo.DeclaringType);
 			generator.Emit (OpCodes.Ldarg_1);
 
-			if (propertyInfo.PropertyType.IsClass)
+			if (propType.IsClass)
 			{
-				generator.Emit (OpCodes.Castclass, propertyInfo.PropertyType);
+				generator.Emit (OpCodes.Castclass, propType);
+			}
+			else if (propType.IsValueType)
+			{
+				generator.Emit (OpCodes.Unbox_Any, propType);
 			}
 			else
 			{
-				generator.Emit (OpCodes.Unbox_Any, propertyInfo.PropertyType);
+				throw new System.InvalidOperationException ("Invalid code path");
 			}
 
 			generator.EmitCall (OpCodes.Callvirt, method, null);
 			generator.Emit (OpCodes.Ret);
 			
-			return (GenericSetter) setter.CreateDelegate (typeof (GenericSetter));
+			return (PropertySetter) setter.CreateDelegate (typeof (PropertySetter));
 		}
 
-		public static GenericGetter CreateGetMethod(System.Type type, string propertyName)
+		public static PropertyGetter CreatePropertyGetter(System.Type type, string propertyName)
 		{
-			return DynamicCodeFactory.CreateGetMethod (type.GetProperty (propertyName, BindingFlags.Public));
+			return DynamicCodeFactory.CreatePropertyGetter (type.GetProperty (propertyName));
 		}
 		
-		public static GenericGetter CreateGetMethod(System.Reflection.PropertyInfo propertyInfo)
+		public static PropertyGetter CreatePropertyGetter(System.Reflection.PropertyInfo propertyInfo)
 		{
-			System.Reflection.MethodInfo getMethod = propertyInfo.GetGetMethod ();
+			System.Reflection.MethodInfo method = propertyInfo.GetGetMethod ();
 
-			if (getMethod == null)
+			if ((method == null) ||
+				(propertyInfo.CanRead == false))
 			{
 				return null;
 			}
 
+			System.Type   hostType  = propertyInfo.DeclaringType;
+			System.Type   propType  = propertyInfo.PropertyType;
 			System.Type[] arguments = new System.Type[1];
 			
 			arguments[0] = typeof (object);
 			
-			string name = string.Concat ("_Get", propertyInfo.Name, "_");
+			string name = string.Concat ("_PropertyGetter_", propertyInfo.Name);
 
 			System.Reflection.Emit.DynamicMethod getter;
-			getter = new System.Reflection.Emit.DynamicMethod (name, typeof (object), arguments, propertyInfo.DeclaringType);
+			getter = new System.Reflection.Emit.DynamicMethod (name, typeof (object), arguments, hostType);
 
 			System.Reflection.Emit.ILGenerator generator = getter.GetILGenerator ();
 			
-			generator.DeclareLocal (typeof (object));
 			generator.Emit (OpCodes.Ldarg_0);
 			generator.Emit (OpCodes.Castclass, propertyInfo.DeclaringType);
-			generator.EmitCall (OpCodes.Callvirt, getMethod, null);
+			generator.EmitCall (OpCodes.Callvirt, method, null);
 
-			if (propertyInfo.PropertyType.IsClass)
+			if (propType.IsClass)
 			{
 				//	No conversion needed.
 			}
+			else if (propType.IsValueType)
+			{
+				generator.Emit (OpCodes.Box, propType);
+			}
 			else
 			{
-				generator.Emit (OpCodes.Box, propertyInfo.PropertyType);
+				throw new System.InvalidOperationException ("Invalid code path");
 			}
 
 			generator.Emit (OpCodes.Ret);
 
-			return (GenericGetter) getter.CreateDelegate (typeof (GenericGetter));
+			return (PropertyGetter) getter.CreateDelegate (typeof (PropertyGetter));
 		}
 	}
 }

@@ -143,7 +143,7 @@ namespace Epsitec.Common.Types
 		{
 			string propertyName = sort.PropertyName;
 			
-			Support.GenericGetter getter = Support.DynamicCodeFactory.CreateGetMethod (type, propertyName);
+			Support.PropertyGetter getter = Support.DynamicCodeFactory.CreatePropertyGetter (type, propertyName);
 
 			switch (sort.Direction)
 			{
