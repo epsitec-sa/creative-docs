@@ -271,13 +271,18 @@ namespace Epsitec.Common.Types
 		/// type.
 		/// </summary>
 		/// <param name="value">The integer value.</param>
-		/// <returns>The <c>enum</c> value of the underlying type or <c>NotAnEnum.Instance</c>
-		/// if the conversion is not possible.</returns>
+		/// <returns>The <c>enum</c> value of the underlying type or: <c>NotAnEnum.Instance</c>
+		/// if the conversion is not possible, <c>UnresolvedEnum.Instance</c> if the <c>enum</c>
+		/// cannot be resolved because of a missing assembly.</returns>
 		public System.Enum ConvertToEnum(int value)
 		{
 			if (this.enumType == typeof (NotAnEnum))
 			{
 				return NotAnEnum.Instance;
+			}
+			else if (this.enumType == typeof (UnresolvedEnum))
+			{
+				return UnresolvedEnum.Instance;
 			}
 			else
 			{
@@ -531,8 +536,6 @@ namespace Epsitec.Common.Types
 		{
 			System.Diagnostics.Debug.Assert (enumType != null);
 			System.Diagnostics.Debug.Assert (enumType != typeof (NotAnEnum));
-			
-			FieldInfo[] fields = enumType.GetFields (BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
 
 			this.enumType = enumType;
 
@@ -540,34 +543,39 @@ namespace Epsitec.Common.Types
 			{
 				this.DefineCaption (caption);
 			}
-			
-			for (int i = 0; i < fields.Length; i++)
+
+			if (enumType != typeof (UnresolvedEnum))
 			{
-				object[] hiddenAttributes;
-				object[] rankAttributes;
+				FieldInfo[] fields = enumType.GetFields (BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
 
-				hiddenAttributes = fields[i].GetCustomAttributes (typeof (HiddenAttribute), false);
-				rankAttributes   = fields[i].GetCustomAttributes (typeof (RankAttribute), false);
-
-				string name = fields[i].Name;
-				bool hide = hiddenAttributes.Length == 1;
-				int rank;
-
-				System.Enum value = (System.Enum) System.Enum.Parse (this.enumType, name);
-
-				if (rankAttributes.Length == 1)
+				for (int i = 0; i < fields.Length; i++)
 				{
-					RankAttribute rankAttribute = rankAttributes[0] as RankAttribute;
-					rank = rankAttribute.Rank;
-				}
-				else
-				{
-					rank = EnumType.ConvertToInt (value);
-				}
+					object[] hiddenAttributes;
+					object[] rankAttributes;
 
-				this.EnumValues.Add (new EnumValue (value, rank, hide, name));
+					hiddenAttributes = fields[i].GetCustomAttributes (typeof (HiddenAttribute), false);
+					rankAttributes   = fields[i].GetCustomAttributes (typeof (RankAttribute), false);
+
+					string name = fields[i].Name;
+					bool hide = hiddenAttributes.Length == 1;
+					int rank;
+
+					System.Enum value = (System.Enum) System.Enum.Parse (this.enumType, name);
+
+					if (rankAttributes.Length == 1)
+					{
+						RankAttribute rankAttribute = rankAttributes[0] as RankAttribute;
+						rank = rankAttribute.Rank;
+					}
+					else
+					{
+						rank = EnumType.ConvertToInt (value);
+					}
+
+					this.EnumValues.Add (new EnumValue (value, rank, hide, name));
+				}
 			}
-
+			
 			this.FinishCreation ();
 		}
 
