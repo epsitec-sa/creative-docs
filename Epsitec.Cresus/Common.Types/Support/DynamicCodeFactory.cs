@@ -10,22 +10,27 @@ namespace Epsitec.Common.Support
 
 	public static class DynamicCodeFactory
 	{
-		public static GenericSetter CreateSetMethod(PropertyInfo propertyInfo)
+		public static GenericSetter CreateSetMethod(System.Reflection.PropertyInfo propertyInfo)
 		{
-			MethodInfo setMethod = propertyInfo.GetSetMethod ();
+			System.Reflection.MethodInfo method = propertyInfo.GetSetMethod ();
 
-			if (setMethod == null)
+			if (method == null)
 			{
 				return null;
 			}
 
 			System.Type[] arguments = new System.Type[2];
-			arguments[0] = arguments[1] = typeof (object);
+			
+			arguments[0] = typeof (object);
+			arguments[1] = typeof (object);
 
-			string name = string.Concat ("_Set", propertyInfo.Name, "_");
+			string name = string.Concat ("_Set_", propertyInfo.Name, "_");
 
-			DynamicMethod setter = new DynamicMethod (name, typeof (void), arguments, propertyInfo.DeclaringType);
-			ILGenerator generator = setter.GetILGenerator ();
+			System.Reflection.Emit.DynamicMethod setter;
+			setter = new System.Reflection.Emit.DynamicMethod (name, typeof (void), arguments, propertyInfo.DeclaringType);
+
+			System.Reflection.Emit.ILGenerator generator = setter.GetILGenerator ();
+			
 			generator.Emit (OpCodes.Ldarg_0);
 			generator.Emit (OpCodes.Castclass, propertyInfo.DeclaringType);
 			generator.Emit (OpCodes.Ldarg_1);
@@ -39,50 +44,53 @@ namespace Epsitec.Common.Support
 				generator.Emit (OpCodes.Unbox_Any, propertyInfo.PropertyType);
 			}
 
-			generator.EmitCall (OpCodes.Callvirt, setMethod, null);
+			generator.EmitCall (OpCodes.Callvirt, method, null);
 			generator.Emit (OpCodes.Ret);
-
-			/*
-			* Create the delegate and return it
-			*/
+			
 			return (GenericSetter) setter.CreateDelegate (typeof (GenericSetter));
 		}
 
-		///
-		/// Creates a dynamic getter for the property
-		///
-		private static GenericGetter CreateGetMethod(PropertyInfo propertyInfo)
+		public static GenericGetter CreateGetMethod(System.Type type, string propertyName)
 		{
-			/*
-			* If there’s no getter return null
-			*/
-			MethodInfo getMethod = propertyInfo.GetGetMethod ();
-			if (getMethod == null)
-				return null;
+			return DynamicCodeFactory.CreateGetMethod (type.GetProperty (propertyName, BindingFlags.Public));
+		}
+		
+		public static GenericGetter CreateGetMethod(System.Reflection.PropertyInfo propertyInfo)
+		{
+			System.Reflection.MethodInfo getMethod = propertyInfo.GetGetMethod ();
 
-			/*
-			* Create the dynamic method
-			*/
+			if (getMethod == null)
+			{
+				return null;
+			}
+
 			System.Type[] arguments = new System.Type[1];
+			
 			arguments[0] = typeof (object);
+			
 			string name = string.Concat ("_Get", propertyInfo.Name, "_");
-			DynamicMethod getter = new DynamicMethod (
-			  name,
-			  typeof (object), arguments, propertyInfo.DeclaringType);
-			ILGenerator generator = getter.GetILGenerator ();
+
+			System.Reflection.Emit.DynamicMethod getter;
+			getter = new System.Reflection.Emit.DynamicMethod (name, typeof (object), arguments, propertyInfo.DeclaringType);
+
+			System.Reflection.Emit.ILGenerator generator = getter.GetILGenerator ();
+			
 			generator.DeclareLocal (typeof (object));
 			generator.Emit (OpCodes.Ldarg_0);
 			generator.Emit (OpCodes.Castclass, propertyInfo.DeclaringType);
 			generator.EmitCall (OpCodes.Callvirt, getMethod, null);
 
-			if (!propertyInfo.PropertyType.IsClass)
+			if (propertyInfo.PropertyType.IsClass)
+			{
+				//	No conversion needed.
+			}
+			else
+			{
 				generator.Emit (OpCodes.Box, propertyInfo.PropertyType);
+			}
 
 			generator.Emit (OpCodes.Ret);
 
-			/*
-			* Create the delegate and return it
-			*/
 			return (GenericGetter) getter.CreateDelegate (typeof (GenericGetter));
 		}
 	}
