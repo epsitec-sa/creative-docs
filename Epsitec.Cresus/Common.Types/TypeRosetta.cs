@@ -437,7 +437,9 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				switch (systemTypeName)
+				string simpleTypeName = (systemTypeName.Length > 2) && (systemTypeName[1] == ':') ? systemTypeName.Substring (2) : systemTypeName;
+
+				switch (simpleTypeName)
 				{
 					case "System.Boolean":
 						type = new BooleanType (caption);
