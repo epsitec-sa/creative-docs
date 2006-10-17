@@ -280,11 +280,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			RadioButton button = sender as RadioButton;
-			string name = button.Name;
-			name = name.Substring(name.LastIndexOf('.')+1);  // enlève "Res.Captions.Types.Type."
-			this.typeEdited = ResourceAccess.ConvTypeType(name);
-			this.UpdateRadios();
-			this.UpdateButtons();
+			if (button.ActiveState == ActiveState.Yes)
+			{
+				string name = button.Name;
+				name = name.Substring(name.LastIndexOf('.')+1);  // enlève "Res.Captions.Types.Type."
+				this.typeEdited = ResourceAccess.ConvTypeType(name);
+				this.UpdateRadios();
+				this.UpdateButtons();
+			}
 		}
 
 		private void HandleCheckNativeActiveStateChanged(object sender)
