@@ -417,7 +417,7 @@ namespace Epsitec.Common.Designer.Proxies
 			EnumType childrenPlacementEnumType = Res.Types.ObjectModifier.ChildrenPlacement;
 			childrenPlacementEnumType.DefineDefaultController("Enum", "Icons");
 			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineNamedType(childrenPlacementEnumType);
-			//?Layout.ChildrenPlacementProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.ChildrenPlacement.Druid);
+			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.ChildrenPlacement.Druid);
 #endif
 
 			EnumType anchoredHorizontalAttachmentEnumType = new EnumType(typeof(ObjectModifier.AnchoredHorizontalAttachment));
