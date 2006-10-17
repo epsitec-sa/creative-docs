@@ -64,18 +64,29 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			ResourceAccess.TypeType typeType = ResourceAccess.TypeType.None;
+			AbstractType type = null;
 
 			if (sel != -1)
 			{
 				ResourceAccess.Field field = this.access.GetField(sel, null, ResourceAccess.FieldType.AbstractType);
 				if (field != null)
 				{
-					AbstractType type = field.AbstractType;
+					type = field.AbstractType;
 					typeType = ResourceAccess.CaptionTypeType(type);
 				}
 			}
 
-			this.container.Title = string.Format(Res.Strings.Viewers.Types.Editor.Title, typeType.ToString());
+			string typeName = typeType.ToString();
+			if (type is EnumType)
+			{
+				EnumType enumType = type as EnumType;
+				if (enumType.IsNativeEnum)
+				{
+					typeName = string.Concat(typeName, " (", Res.Strings.Viewers.Types.Editor.Native, ")");
+				}
+			}
+
+			this.container.Title = string.Format(Res.Strings.Viewers.Types.Editor.Title, typeName);
 
 			if (this.typeType != typeType)  // autre type ?
 			{
