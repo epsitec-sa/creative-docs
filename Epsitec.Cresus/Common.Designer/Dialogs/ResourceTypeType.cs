@@ -276,8 +276,11 @@ namespace Epsitec.Common.Designer.Dialogs
 				string name = this.resourceAccess.GetEnumBaseName(stype);
 				if (filter == null || name.StartsWith(filter))
 				{
-					this.systemTypes.Add(stype);
-					this.enumList.Items.Add(TextLayout.ConvertToTaggedText(name));
+					if (this.resourceAccess.IsCorrectNewName(ref name, false))
+					{
+						this.systemTypes.Add(stype);
+						this.enumList.Items.Add(TextLayout.ConvertToTaggedText(name));
+					}
 				}
 			}
 		}

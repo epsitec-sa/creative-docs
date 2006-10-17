@@ -548,13 +548,14 @@ namespace Epsitec.Common.Designer
 			//	Retourne le nom de base à utiliser pour une énumération native C#.
 			string name = stype.FullName.Replace('+', '.');
 
+			//	Enlève le préfixe "Epsitec.Common." s'il existe.
 			if (name.StartsWith(ResourceAccess.filterPrefix))
 			{
 				name = name.Substring(ResourceAccess.filterPrefix.Length);
 			}
 
-			string module = ResourceAccess.LastName(this.moduleInfo.Name) + ".";
-
+			//	Enlève son propre nom de module s'il existe.
+			string module = string.Concat(ResourceAccess.LastName(this.moduleInfo.Name), ".");
 			if (name.StartsWith(module))
 			{
 				name = name.Substring(module.Length);
