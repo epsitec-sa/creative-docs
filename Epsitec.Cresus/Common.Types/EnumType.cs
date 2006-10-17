@@ -527,6 +527,23 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public static bool GetIsNative(DependencyObject obj)
+		{
+			return (bool) obj.GetValue (EnumType.IsNativeProperty);
+		}
+
+		public static void SetIsNative(DependencyObject obj, bool value)
+		{
+			if (value)
+			{
+				obj.SetValue (EnumType.IsNativeProperty, value);
+			}
+			else
+			{
+				obj.ClearValue (EnumType.IsNativeProperty);
+			}
+		}
+
 		private void CreateEnumValues(System.Type enumType)
 		{
 			this.CreateEnumValues (enumType, null);
@@ -653,6 +670,7 @@ namespace Epsitec.Common.Types
 		}
 
 		public static DependencyProperty EnumValuesProperty = DependencyProperty.RegisterAttached ("EnumValues", typeof (Collections.EnumValueCollection), typeof (EnumType), new DependencyPropertyMetadata (EnumType.GetEnumValuesValue));
+		public static DependencyProperty IsNativeProperty = DependencyProperty.RegisterAttached ("IsNative", typeof (bool), typeof (EnumType), new DependencyPropertyMetadata (false));
 		
 		private static object exclusion = new object ();
 		private static Dictionary<System.Type, EnumType> cache = new Dictionary<System.Type, EnumType> ();

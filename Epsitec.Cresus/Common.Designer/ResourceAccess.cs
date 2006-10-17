@@ -526,9 +526,11 @@ namespace Epsitec.Common.Designer
 						newField.SetDruid(newDruid);
 						newField.SetName(newName);
 
-						Caption caption = new Caption();
+						Caption caption = value.Caption;
 						caption.DefineDruid(newDruid);
-						caption.Name = value.Name;
+						
+						System.Diagnostics.Debug.Assert(caption.Name == value.Name);
+						System.Diagnostics.Debug.Assert(value.IsNative);
 
 						newField.SetStringValue(caption.SerializeToString());
 						value.DefineCaption(caption);

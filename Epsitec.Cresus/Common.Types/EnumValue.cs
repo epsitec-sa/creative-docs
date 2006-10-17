@@ -32,6 +32,7 @@ namespace Epsitec.Common.Types
 			this.DefineValue (value);
 			this.DefineRank (rank);
 			this.DefineHidden (hidden);
+			this.DefineIsNative (value is NotAnEnum ? false : true);
 		}
 
 		public EnumValue(System.Enum value, int rank, bool hidden, Support.Druid captionId)
@@ -40,6 +41,7 @@ namespace Epsitec.Common.Types
 			this.DefineValue (value);
 			this.DefineRank (rank);
 			this.DefineHidden (hidden);
+			this.DefineIsNative (value is NotAnEnum ? false : true);
 		}
 
 		public EnumValue(System.Enum value, int rank, bool hidden, Caption caption)
@@ -48,6 +50,7 @@ namespace Epsitec.Common.Types
 			this.DefineValue (value);
 			this.DefineRank (rank);
 			this.DefineHidden (hidden);
+			this.DefineIsNative (value is NotAnEnum ? false : true);
 		}
 
 		private EnumValue(Support.Druid captionId)
@@ -105,6 +108,17 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this value belongs to a native <c>enum</c>.
+		/// </summary>
+		/// <value><c>true</c> if this value belongs to a native <c>enum</c>; otherwise, <c>false</c>.</value>
+		public bool IsNative
+		{
+			get
+			{
+				return this.isNative;
+			}
+		}
 
 		public void DefineValue(System.Enum value)
 		{
@@ -127,6 +141,20 @@ namespace Epsitec.Common.Types
 			if (this.IsHidden != hide)
 			{
 				this.isHidden = hide;
+			}
+		}
+
+		public void DefineIsNative(bool value)
+		{
+			if (this.IsNative != value)
+			{
+				this.isNative = value;
+			}
+			
+			if ((this.isNative) &&
+				(this.caption != null))
+			{
+				EnumType.SetIsNative (this.caption, this.isNative);
 			}
 		}
 
@@ -322,18 +350,6 @@ namespace Epsitec.Common.Types
 				throw new System.InvalidOperationException ("The caption cannot be changed");
 			}
 		}
-		
-		protected virtual void OnCaptionDefined()
-		{
-		}
-
-		private string name;
-		private bool isReadOnly;
-		private bool isHidden;
-		private Support.Druid captionId;
-		private Caption caption;
-		private System.Enum value;
-		private int rank;
 
 		internal static void CopyProperties(EnumValue srcValue, EnumValue dstValue)
 		{
@@ -345,5 +361,23 @@ namespace Epsitec.Common.Types
 				dstValue.rank      = srcValue.rank;
 			}
 		}
+		
+		protected virtual void OnCaptionDefined()
+		{
+			if ((this.isNative) &&
+				(this.caption != null))
+			{
+				EnumType.SetIsNative (this.caption, this.isNative);
+			}
+		}
+
+		private string name;
+		private bool isReadOnly;
+		private bool isHidden;
+		private bool isNative;
+		private Support.Druid captionId;
+		private Caption caption;
+		private System.Enum value;
+		private int rank;
 	}
 }
