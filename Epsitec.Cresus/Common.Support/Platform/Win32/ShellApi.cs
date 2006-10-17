@@ -310,7 +310,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 		// (the desktop). 
 
 		// Converts an item identifier list to a file system path. 
-		[DllImport ("shell32.dll")]
+		[DllImport ("shell32.dll", CharSet=CharSet.Unicode, EntryPoint="SHGetPathFromIDListW")]
 		public static extern int SHGetPathFromIDList(
 			System.IntPtr pidl,			// Address of an item identifier list that specifies a file or directory location 
 			// relative to the root of the namespace (the desktop). 
@@ -331,7 +331,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			System.IntPtr pidl);
 
 		// Takes the CSIDL of a folder and returns the pathname.
-		[DllImport ("shell32.dll")]
+		[DllImport ("shell32.dll", CharSet=CharSet.Unicode, EntryPoint="SHGetFolderPathW")]
 		public static extern int SHGetFolderPath(
 			System.IntPtr hwndOwner,			// Handle to an owner window.
 			int nFolder,				// A CSIDL value that identifies the folder whose path is to be retrieved.
