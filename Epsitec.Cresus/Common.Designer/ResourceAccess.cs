@@ -386,7 +386,7 @@ namespace Epsitec.Common.Designer
 				if (this.lastTypeTypeCreatated == TypeType.Enum && this.lastTypeTypeSystem != null)
 				{
 					et = this.CreateEnumValues(this.lastTypeTypeSystem);
-					newName = ResourceAccess.GetEnumBaseName(this.lastTypeTypeSystem);
+					newName = this.GetShortEnumBaseName(this.lastTypeTypeSystem);
 				}
 			}
 
@@ -515,7 +515,7 @@ namespace Epsitec.Common.Designer
 			{
 				if (!value.IsHidden)
 				{
-					string name = ResourceAccess.GetEnumBaseName(stype);
+					string name = this.GetShortEnumBaseName(stype);
 					name = string.Concat(name, ".", value.Name);
 					string newName = string.Concat(ResourceAccess.GetFixFilter(Type.Values), name);
 
@@ -543,15 +543,29 @@ namespace Epsitec.Common.Designer
 			return et;
 		}
 
+		public string GetShortEnumBaseName(System.Type stype)
+		{
+			string name = ResourceAccess.GetEnumBaseName(stype);
+			string module = ResourceAccess.LastName(this.moduleInfo.Name) + ".";
+
+			if (name.StartsWith(module))
+			{
+				name = name.Substring(module.Length);
+			}
+
+			return name;
+		}
+
 		public static string GetEnumBaseName(System.Type stype)
 		{
-			//	Retourne le nom de base à utiliser pour une énumération C#.
+			//	Retourne le nom de base à utiliser pour une énumération native C#.
 			string name = stype.FullName.Replace('+', '.');
 
 			if (name.StartsWith(ResourceAccess.filterPrefix))
 			{
 				name = name.Substring(ResourceAccess.filterPrefix.Length);
 			}
+
 
 			return name;
 		}
