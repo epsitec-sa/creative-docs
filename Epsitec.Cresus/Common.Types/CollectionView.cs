@@ -107,7 +107,7 @@ namespace Epsitec.Common.Types
 
 				for (int i = 0; i < this.sortDescriptions.Count; i++)
 				{
-					comparisons[i] = CollectionView.CreateComparison (this.sortDescriptions[i]);
+					comparisons[i] = CollectionView.CreateComparison (null, this.sortDescriptions[i]);
 				}
 
 				if (comparisons.Length == 1)
@@ -139,15 +139,25 @@ namespace Epsitec.Common.Types
 			//	TODO: refresh the contents of the groups
 		}
 
-		private static System.Comparison<object> CreateComparison(SortDescription sort)
+		private static System.Comparison<object> CreateComparison(System.Type type, SortDescription sort)
 		{
 			string propertyName = sort.PropertyName;
-			ListSortDirection direction    = sort.Direction;
+			
+			Support.GenericGetter getter = Support.DynamicCodeFactory.CreateGetMethod (type, propertyName);
 
-			switch (direction)
+			switch (sort.Direction)
 			{
 				case ListSortDirection.Ascending:
-					break;
+					return delegate (object x, object y)
+					{
+						object xValue = getter (x);
+						object yValue = getter (y);
+
+						//	TODO: ...
+						
+						return 0;
+					};
+				
 				case ListSortDirection.Descending:
 					break;
 			}
