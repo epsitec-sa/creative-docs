@@ -141,7 +141,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public System.Type SystemType
 		{
-			//	Retourne le Sytem.Type à utiliser, lors d'une énumération C#.
+			//	Retourne le Sytem.Type à utiliser, lors d'une énumération C# native.
 			get
 			{
 				if (this.typeAccepted == ResourceAccess.TypeType.Enum && this.checkNative.ActiveState == ActiveState.Yes && this.enumList.SelectedIndex != -1)
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateEnumList()
 		{
-			//	Met à jour la liste des énumérations C# en fonction du filtre.
+			//	Met à jour la liste des énumérations C# natives en fonction du filtre.
 			string filter = null;
 			if (this.fieldFilter.SelectedIndex > 0)  // pas "tout montrer" ?
 			{
@@ -292,7 +292,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleCheckNativeActiveStateChanged(object sender)
 		{
-			//	Bouton C# cliqué.
+			//	Bouton C# native cliqué.
 			this.UpdateRadios();
 			this.UpdateButtons();
 		}
@@ -306,7 +306,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleEnumListSelectionActivated(object sender)
 		{
-			//	Sélection changée dans la liste des énumérations C#.
+			//	Sélection changée dans la liste des énumérations C# natives.
 			this.UpdateButtons();
 		}
 

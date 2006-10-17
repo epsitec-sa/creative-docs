@@ -83,6 +83,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(2, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(3, ContentAlignment.MiddleCenter);
+			this.array.SetColumnBreakMode(1, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 			this.array.LineHeight = TypeEditorEnum.arrayLineHeight;
 			this.array.Dock = DockStyle.StackBegin;
 			this.array.PreferredHeight = 360;
