@@ -129,68 +129,23 @@ namespace Epsitec.Common.Designer
 		
 		public static class Types
 		{
-			public static class Grid
+			public static class ObjectModifier
 			{
-				public static readonly Epsitec.Common.Types.EnumType ColumnMode = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 341));
-				public static readonly Epsitec.Common.Types.EnumType RowMode = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 342));
-			}
-			
-			public static class Layout
-			{
-				public static readonly Epsitec.Common.Types.EnumType AnchoredHorizontalAttachment = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 334));
-				public static readonly Epsitec.Common.Types.EnumType AnchoredVerticalAttachment = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 335));
-				public static readonly Epsitec.Common.Types.EnumType ChildrenPlacement = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 315));
-				public static readonly Epsitec.Common.Types.EnumType StackedBaseLineAlignment = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 340));
-				public static readonly Epsitec.Common.Types.EnumType StackedHorizontalAlignment = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 338));
-				public static readonly Epsitec.Common.Types.EnumType StackedHorizontalAttachment = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 336));
-				public static readonly Epsitec.Common.Types.EnumType StackedVerticalAlignment = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 339));
-				public static readonly Epsitec.Common.Types.EnumType StackedVerticalAttachment = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 337));
+				public static readonly Epsitec.Common.Types.EnumType ChildrenPlacement = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 350));
 			}
 		}
 		
 		public static class Values
 		{
-			public static class Grid
+			public static Epsitec.Common.Types.Caption New { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 333)); } }
+			public static class ObjectModifier
 			{
-				public static class Mode
-				{
-					public static Epsitec.Common.Types.Caption Absolute { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 332)); } }
-					public static Epsitec.Common.Types.Caption Auto { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 333)); } }
-					public static Epsitec.Common.Types.Caption Proportional { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 331)); } }
-				}
-			}
-			
-			public static class Layout
-			{
-				public static class Alignment
-				{
-					public static Epsitec.Common.Types.Caption BaseLine { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 330)); } }
-					public static Epsitec.Common.Types.Caption Bottom { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 324)); } }
-					public static Epsitec.Common.Types.Caption HCenter { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 326)); } }
-					public static Epsitec.Common.Types.Caption HStretch { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 328)); } }
-					public static Epsitec.Common.Types.Caption Left { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 322)); } }
-					public static Epsitec.Common.Types.Caption Right { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 323)); } }
-					public static Epsitec.Common.Types.Caption Top { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 325)); } }
-					public static Epsitec.Common.Types.Caption VCenter { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 327)); } }
-					public static Epsitec.Common.Types.Caption VStretch { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 329)); } }
-				}
-				
-				public static class Attachment
-				{
-					public static Epsitec.Common.Types.Caption Bottom { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 318)); } }
-					public static Epsitec.Common.Types.Caption HFill { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 320)); } }
-					public static Epsitec.Common.Types.Caption Left { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 316)); } }
-					public static Epsitec.Common.Types.Caption Right { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 317)); } }
-					public static Epsitec.Common.Types.Caption Top { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 319)); } }
-					public static Epsitec.Common.Types.Caption VFill { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 321)); } }
-				}
-				
 				public static class ChildrenPlacement
 				{
-					public static Epsitec.Common.Types.Caption Anchored { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 292)); } }
-					public static Epsitec.Common.Types.Caption Grid { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 314)); } }
-					public static Epsitec.Common.Types.Caption HorizontalStacked { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 312)); } }
-					public static Epsitec.Common.Types.Caption VerticalStacked { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 313)); } }
+					public static Epsitec.Common.Types.Caption Anchored { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 346)); } }
+					public static Epsitec.Common.Types.Caption Grid { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 349)); } }
+					public static Epsitec.Common.Types.Caption HorizontalStacked { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 348)); } }
+					public static Epsitec.Common.Types.Caption VerticalStacked { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 347)); } }
 				}
 			}
 		}
