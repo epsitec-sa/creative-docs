@@ -1132,9 +1132,10 @@ namespace Epsitec.Common.Designer
 			return this.dlgNewCulture.Culture;
 		}
 
-		public void DlgResourceTypeType(ref ResourceAccess.TypeType type, out System.Type stype)
+		public void DlgResourceTypeType(ResourceAccess access, ref ResourceAccess.TypeType type, out System.Type stype)
 		{
 			//	Ouvre le dialogue pour choisir le type d'un Caption.Type.
+			this.dlgResourceTypeType.ResourceAccess = access;
 			this.dlgResourceTypeType.ContentType = type;
 			this.dlgResourceTypeType.Show();
 			type = this.dlgResourceTypeType.ContentType;
