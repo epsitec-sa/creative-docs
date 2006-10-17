@@ -497,6 +497,16 @@ namespace Epsitec.Common.Types
 
 			if (systemType == null)
 			{
+				//	System.Type cannot be resolved in the current context (a required assembly
+				//	might be missing).
+
+				SystemTypeFamily family = AbstractType.GetSystemTypeFamilyFromSystemTypeName (systemTypeName);
+
+				if (family == SystemTypeFamily.Enum)
+				{
+					return new EnumType (typeof (UnresolvedEnum), caption);
+				}
+
 				return null;
 			}
 

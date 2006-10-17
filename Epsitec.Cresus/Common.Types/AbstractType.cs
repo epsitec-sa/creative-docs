@@ -131,8 +131,21 @@ namespace Epsitec.Common.Types
 
 				name = string.Concat (typeName, ", ", typeAssembly);
 			}
-			
-			return name;
+
+			if (type.IsEnum)
+			{
+				return string.Concat ("E:", name);
+			}
+			if (type.IsClass)
+			{
+				return string.Concat ("C:", name);
+			}
+			if (type.IsValueType)
+			{
+				return string.Concat ("V:", name);
+			}
+
+			throw new System.ArgumentException (string.Format ("Type {0} has an unsupported name", name));
 		}
 
 		/// <summary>
@@ -142,6 +155,17 @@ namespace Epsitec.Common.Types
 		/// <returns>The type.</returns>
 		public static System.Type GetSystemTypeFromSystemTypeName(string name)
 		{
+			if ((name == null) ||
+				(name.Length < 3) ||
+				(name[1] != ':'))
+			{
+				throw new System.ArgumentException ("Invalid type name");
+			}
+
+			string prefix = name.Substring (0, 2);
+			
+			name = name.Substring (2);
+
 			if (!name.Contains (", "))
 			{
 				//	A name which has no assembly specification refers to a type from
@@ -150,7 +174,38 @@ namespace Epsitec.Common.Types
 				name = string.Concat (name, ", mscorlib");
 			}
 			
-			return System.Type.GetType (name, false);
+			System.Type type = System.Type.GetType (name, false);
+
+			switch (prefix)
+			{
+				case "E:": break;
+				case "C:": break;
+				case "V:": break;
+				
+				default:
+					throw new System.ArgumentException (string.Format ("Type {0} has wrong prefix ({1})", name, prefix));
+			}
+
+			return type;
+		}
+
+		public static SystemTypeFamily GetSystemTypeFamilyFromSystemTypeName(string name)
+		{
+			if ((name == null) ||
+				(name.Length < 3) ||
+				(name[1] != ':'))
+			{
+				throw new System.ArgumentException ("Invalid type name");
+			}
+
+			switch (name.Substring (0, 2))
+			{
+				case "E:": return SystemTypeFamily.Enum;
+				case "C:": return SystemTypeFamily.Class;
+				case "V:": return SystemTypeFamily.ValueType;
+			}
+
+			return SystemTypeFamily.Unknown;
 		}
 
 		/// <summary>

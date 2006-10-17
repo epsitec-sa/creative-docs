@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
+	[Designer]
 	public enum BindingMode : byte
 	{
 		None,
