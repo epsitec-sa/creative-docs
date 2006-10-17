@@ -124,6 +124,18 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.ShowDialog();
 		}
 
+		public ResourceAccess ResourceAccess
+		{
+			set
+			{
+				this.resourceAccess = value;
+			}
+			get
+			{
+				return this.resourceAccess;
+			}
+		}
+
 		public ResourceAccess.TypeType ContentType
 		{
 			//	Set: spécifie le type initial.
@@ -226,9 +238,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour la liste des filtres.
 			this.filters = new List<string>();
 
-			foreach (System.Type type in EnumLister.GetDesignerVisibleEnums())
+			foreach (System.Type stype in EnumLister.GetDesignerVisibleEnums())
 			{
-				string name = ResourceAccess.GetEnumBaseName(type);
+				string name = this.resourceAccess.GetEnumBaseName(stype);
 				int i = name.IndexOf('.');
 				if (i != -1)
 				{
@@ -259,12 +271,12 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.systemTypes = new List<System.Type>();
 			this.enumList.Items.Clear();
-			foreach (System.Type type in EnumLister.GetDesignerVisibleEnums())
+			foreach (System.Type stype in EnumLister.GetDesignerVisibleEnums())
 			{
-				string name = ResourceAccess.GetEnumBaseName(type);
+				string name = this.resourceAccess.GetEnumBaseName(stype);
 				if (filter == null || name.StartsWith(filter))
 				{
-					this.systemTypes.Add(type);
+					this.systemTypes.Add(stype);
 					this.enumList.Items.Add(TextLayout.ConvertToTaggedText(name));
 				}
 			}
@@ -349,6 +361,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected static readonly double		windowWidthExtended = 500;
 		protected static readonly double		windowHeight = 200;
 
+		protected ResourceAccess				resourceAccess;
 		protected ResourceAccess.TypeType		typeEdited;
 		protected ResourceAccess.TypeType		typeAccepted;
 		protected List<string>					filters;
