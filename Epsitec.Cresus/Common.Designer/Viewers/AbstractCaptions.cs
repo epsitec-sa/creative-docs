@@ -24,8 +24,9 @@ namespace Epsitec.Common.Designer.Viewers
 			left.TabIndex = this.tabIndex++;
 			left.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
-			VSplitter splitter = new VSplitter(this);
-			splitter.Dock = DockStyle.Left;
+			this.splitter = new VSplitter(this);
+			this.splitter.Dock = DockStyle.Left;
+			this.splitter.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
 			VSplitter.SetAutoCollapseEnable(left, true);
 
 			Widget right = new Widget(this);
@@ -203,6 +204,8 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
+				this.splitter.SplitterDragged -= new EventHandler(this.HandleSplitterDragged);
+
 				this.array.CellCountChanged -= new EventHandler(this.HandleArrayCellCountChanged);
 				this.array.CellsContentChanged -= new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
@@ -632,20 +635,25 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected void HandleArrayCellCountChanged(object sender)
+		private void HandleSplitterDragged(object sender)
+		{
+			//	Le splitter a été bougé.
+		}
+
+		private void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
 			this.UpdateArray();
 			this.array.ShowSelectedRow();
 		}
 
-		protected void HandleArrayCellsContentChanged(object sender)
+		private void HandleArrayCellsContentChanged(object sender)
 		{
 			//	Le contenu des cellules a changé.
 			this.UpdateArray();
 		}
 
-		protected void HandleArraySelectedRowChanged(object sender)
+		private void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
 			this.access.AccessIndex = this.array.SelectedRow;
@@ -655,7 +663,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
-		protected void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		private void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			//	Appelé lorsque la ligne éditable pour le label voit son focus changer.
 			TextFieldEx field = sender as TextFieldEx;
@@ -663,7 +671,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.HandleEditKeyboardFocusChanged(sender, e);
 		}
 
-		protected void HandleTextChanged(object sender)
+		private void HandleTextChanged(object sender)
 		{
 			//	Un texte éditable a changé.
 			if (this.ignoreChange)
@@ -704,7 +712,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateModificationsCulture();
 		}
 
-		protected void HandleStringTextCollectionChanged(object sender)
+		private void HandleStringTextCollectionChanged(object sender)
 		{
 			//	Une collection de textes a changé.
 			if (this.ignoreChange)
@@ -729,7 +737,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateModificationsCulture();
 		}
 
-		protected void HandleStringFocusCollectionChanged(object sender)
+		private void HandleStringFocusCollectionChanged(object sender)
 		{
 			//	Le focus a changé dans une collection.
 			if (this.ignoreChange)
@@ -741,7 +749,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.currentTextField = sc.FocusedTextField;
 		}
 
-		protected void HandleCursorChanged(object sender)
+		private void HandleCursorChanged(object sender)
 		{
 			//	Le curseur a été déplacé dans un texte éditable.
 			if (this.ignoreChange)
@@ -752,7 +760,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.lastActionIsReplace = false;
 		}
 
-		protected void HandlePrimaryIconClicked(object sender, MessageEventArgs e)
+		private void HandlePrimaryIconClicked(object sender, MessageEventArgs e)
 		{
 			//	Le boutons pour choisir l'icône a été cliqué.
 			ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Icon);
@@ -770,6 +778,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected VSplitter						splitter;
 		protected Widget						secondaryCultureGroup;
 		protected MyWidgets.TextFieldExName		labelEdit;
 		protected Scrollable					scrollable;
