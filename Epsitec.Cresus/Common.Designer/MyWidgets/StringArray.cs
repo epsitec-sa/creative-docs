@@ -715,28 +715,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.absoluteColumn != -1 && this.columns.Length > 1)  // une position absolue à imposer ?
 			{
+				//	Cherche toutes les largeurs absolues actuelles.
 				double[] aw = new double[this.columns.Length];
 				for (int c=0; c<this.columns.Length; c++)
 				{
 					aw[c] = this.GetColumnsAbsoluteWidth(c);
 				}
 
+				//	Calcule toutes les largeurs absolues futures.
 				double delta = (aw[this.absoluteColumn]-this.absoluteWidth) / (this.columns.Length-1);
 				double total = 0;
 				for (int c=0; c<this.columns.Length; c++)
 				{
 					if (c == this.absoluteColumn)
 					{
-						aw[c] = this.absoluteWidth;
+						aw[c] = this.absoluteWidth;  // met la largeur imposée
 					}
 					else
 					{
-						aw[c] += delta;
+						aw[c] += delta;  // modifie la largeur actuelle proportionnellement
 					}
 
 					total += aw[c];
 				}
 
+				//	Modifie toute les largeurs relatives, en fonction des largeurs absolues souhaitées.
 				for (int c=0; c<this.columns.Length; c++)
 				{
 					this.SetColumnsRelativeWidth(c, aw[c]/total);

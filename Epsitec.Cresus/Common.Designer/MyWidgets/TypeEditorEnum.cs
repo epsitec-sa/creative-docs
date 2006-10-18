@@ -76,8 +76,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array = new StringArray(this);
 			this.array.Columns = 4;
 			this.array.SetColumnsRelativeWidth(0, 0.05);
-			this.array.SetColumnsRelativeWidth(1, 0.40);
-			this.array.SetColumnsRelativeWidth(2, 0.50);
+			this.array.SetColumnsRelativeWidth(1, 0.45);
+			this.array.SetColumnsRelativeWidth(2, 0.45);
 			this.array.SetColumnsRelativeWidth(3, 0.05);
 			this.array.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
 			this.array.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
