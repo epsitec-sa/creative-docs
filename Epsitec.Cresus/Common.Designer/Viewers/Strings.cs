@@ -27,6 +27,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.SetColumnsRelativeWidth(0, 0.30);
 			this.array.SetColumnsRelativeWidth(1, 0.35);
 			this.array.SetColumnsRelativeWidth(2, 0.35);
+			this.array.SetColumnsAbsoluteWidth(0, Abstract.leftArrayWidth-20);
 			this.array.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 			this.array.SetDynamicToolTips(0, true);
 			this.array.SetDynamicToolTips(1, false);
@@ -459,6 +460,8 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	La largeur des colonnes a changé.
 			this.UpdateClientGeometry();
+
+			Abstract.leftArrayWidth = this.array.GetColumnsAbsoluteWidth(0)+20;
 		}
 
 		protected void HandleArrayCellCountChanged(object sender)

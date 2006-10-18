@@ -112,6 +112,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public void SetColumnsAbsoluteWidth(int column, double width)
+		{
+			//	Modifie la largeur absolue d'une colonne.
+			this.absoluteColumn = column;  // ce sera fait au prochain UpdateClientGeometry !
+			this.absoluteWidth = width;
+		}
+
 		public double GetColumnsAbsoluteWidth(int column)
 		{
 			//	Retourne la largeur absolue d'une colonne.
@@ -706,6 +713,38 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
+			if (this.absoluteColumn != -1 && this.columns.Length > 1)  // une position absolue à imposer ?
+			{
+				double[] aw = new double[this.columns.Length];
+				for (int c=0; c<this.columns.Length; c++)
+				{
+					aw[c] = this.GetColumnsAbsoluteWidth(c);
+				}
+
+				double delta = (aw[this.absoluteColumn]-this.absoluteWidth) / (this.columns.Length-1);
+				double total = 0;
+				for (int c=0; c<this.columns.Length; c++)
+				{
+					if (c == this.absoluteColumn)
+					{
+						aw[c] = this.absoluteWidth;
+					}
+					else
+					{
+						aw[c] += delta;
+					}
+
+					total += aw[c];
+				}
+
+				for (int c=0; c<this.columns.Length; c++)
+				{
+					this.SetColumnsRelativeWidth(c, aw[c]/total);
+				}
+
+				this.absoluteColumn = -1;  // c'est fait
+			}
+
 			Rectangle rect = this.Client.Bounds;
 
 			for (int i=0; i<this.columns.Length; i++)
@@ -956,6 +995,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool						isDirtySelected = true;
 		protected bool						isDirtyGeometry = true;
 		protected int						lastLineCount = 0;
+		protected int						absoluteColumn = -1;
+		protected double					absoluteWidth;
 
 		protected int						widthDraggingRank = -1;
 		protected double[]					widthDraggingAbsolutes;
