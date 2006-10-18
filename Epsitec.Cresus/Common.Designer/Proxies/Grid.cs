@@ -824,19 +824,13 @@ namespace Epsitec.Common.Designer.Proxies
 			Grid.GridColumnSpanProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnSpan.Druid);
 			Grid.GridRowSpanProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowSpan.Druid);
 
-			EnumType gridColumnModeEnumType = new EnumType(typeof(ObjectModifier.GridMode));
+			EnumType gridColumnModeEnumType = Res.Types.ObjectModifier.GridMode;
 			gridColumnModeEnumType.DefineDefaultController("Enum", "Icons");
-			gridColumnModeEnumType[ObjectModifier.GridMode.Proportional].DefineCaptionId(Res.Captions.Grid.Mode.Proportional.Druid);
-			gridColumnModeEnumType[ObjectModifier.GridMode.Absolute].DefineCaptionId(Res.Captions.Grid.Mode.Absolute.Druid);
-			gridColumnModeEnumType[ObjectModifier.GridMode.Auto].DefineCaptionId(Res.Captions.Grid.Mode.Auto.Druid);
 			Grid.GridColumnModeProperty.DefaultMetadata.DefineNamedType(gridColumnModeEnumType);
 			Grid.GridColumnModeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnMode.Druid);
 
-			EnumType gridRowModeEnumType = new EnumType(typeof(ObjectModifier.GridMode));
+			EnumType gridRowModeEnumType = Res.Types.ObjectModifier.GridMode;
 			gridRowModeEnumType.DefineDefaultController("Enum", "Icons");
-			gridRowModeEnumType[ObjectModifier.GridMode.Proportional].DefineCaptionId(Res.Captions.Grid.Mode.Proportional.Druid);
-			gridRowModeEnumType[ObjectModifier.GridMode.Absolute].DefineCaptionId(Res.Captions.Grid.Mode.Absolute.Druid);
-			gridRowModeEnumType[ObjectModifier.GridMode.Auto].DefineCaptionId(Res.Captions.Grid.Mode.Auto.Druid);
 			Grid.GridRowModeProperty.DefaultMetadata.DefineNamedType(gridRowModeEnumType);
 			Grid.GridRowModeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowMode.Druid);
 
