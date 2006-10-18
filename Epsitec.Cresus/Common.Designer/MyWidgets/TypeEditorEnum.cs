@@ -137,7 +137,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 					Caption caption = this.module.ResourceManager.GetCaption(druid);
 					if (caption != null)
 					{
-						this.allDruids.Add(druid);
+						if (!EnumType.GetIsNative(caption))
+						{
+							this.allDruids.Add(druid);
+						}
 					}
 				}
 				this.resourceAccess.BypassFilterCloseAccess();
