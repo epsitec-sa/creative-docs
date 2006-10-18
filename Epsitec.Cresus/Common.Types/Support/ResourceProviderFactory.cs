@@ -12,7 +12,7 @@ namespace Epsitec.Common.Support
 			this.LoadImplementation ();
 		}
 
-		public IEnumerable<Allocator> Allocators
+		public IEnumerable<Allocator<IResourceProvider, ResourceManager>> Allocators
 		{
 			get
 			{
@@ -33,30 +33,12 @@ namespace Epsitec.Common.Support
 					if ((type.GetInterface ("IResourceProvider") != null) &&
 						(type.GetConstructor (constructorArgumentTypes) != null))
 					{
-						this.allocators.Add (this.BuildDynamicAllocator (type));
+						this.allocators.Add (DynamicCodeFactory.CreateAllocator<IResourceProvider, ResourceManager> (type));
 					}
 				}
 			}
 		}
 
-		private Allocator BuildDynamicAllocator(System.Type type)
-		{
-			System.Type[] constructorArgumentTypes = new System.Type[] { typeof (ResourceManager) };
-
-			System.Reflection.Module module = typeof (ResourceProviderFactory).Module;
-			System.Reflection.Emit.DynamicMethod dynamicMethod = new System.Reflection.Emit.DynamicMethod ("DynamicAllocator", type, constructorArgumentTypes, module, true);
-			System.Reflection.Emit.ILGenerator ilGen = dynamicMethod.GetILGenerator ();
-
-			ilGen.Emit (System.Reflection.Emit.OpCodes.Nop);
-			ilGen.Emit (System.Reflection.Emit.OpCodes.Ldarg_0);
-			ilGen.Emit (System.Reflection.Emit.OpCodes.Newobj, type.GetConstructor (constructorArgumentTypes));
-			ilGen.Emit (System.Reflection.Emit.OpCodes.Ret);
-
-			return (Allocator) dynamicMethod.CreateDelegate (typeof (Allocator));
-		}
-
-		public delegate IResourceProvider Allocator(ResourceManager manager);
-
-		private List<Allocator> allocators = new List<Allocator> ();
+		private List<Allocator<IResourceProvider, ResourceManager>> allocators = new List<Allocator<IResourceProvider, ResourceManager>> ();
 	}
 }

@@ -126,7 +126,7 @@ namespace Epsitec.Common.Types
 				{
 					if (this.allocator == null)
 					{
-						this.BuildDynamicAllocator ();
+						this.allocator = Support.DynamicCodeFactory.CreateAllocator<DependencyObject> (this.systemType);
 					}
 				}
 			}
@@ -273,28 +273,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		private void BuildDynamicAllocator()
-		{
-			//	Create a small piece of dynamic code which does simply "new T()"
-			//	for the underlying system type. This code relies on lightweight
-			//	code generation and results in a very fast dynamic allocator.
-			
-			System.Reflection.Module module = typeof (DependencyObjectType).Module;
-			System.Reflection.Emit.DynamicMethod dynamicMethod = new System.Reflection.Emit.DynamicMethod ("DynamicAllocator", this.systemType, System.Type.EmptyTypes, module, true);
-			System.Reflection.Emit.ILGenerator ilGen = dynamicMethod.GetILGenerator ();
-			System.Reflection.ConstructorInfo constructor = this.systemType.GetConstructor (System.Type.EmptyTypes);
-
-			if (constructor == null)
-			{
-				throw new System.InvalidOperationException (string.Format ("Class {0} has no constructor", this.systemType.Name));
-			}
-			
-			ilGen.Emit (System.Reflection.Emit.OpCodes.Nop);
-			ilGen.Emit (System.Reflection.Emit.OpCodes.Newobj, constructor);
-			ilGen.Emit (System.Reflection.Emit.OpCodes.Ret);
-
-			this.allocator = (Allocator) dynamicMethod.CreateDelegate (typeof (Allocator));
-		}
+		
 		private void ExecuteTypeStaticConstructor()
 		{
 			System.Reflection.FieldInfo[] infos = this.systemType.GetFields (System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
@@ -365,8 +344,6 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
-		private delegate DependencyObject Allocator();
-
 		private DependencyObjectType			baseType;
 		private System.Type						systemType;
 		private List<DependencyProperty>		localStandardProperties = new List<DependencyProperty> ();
@@ -375,7 +352,7 @@ namespace Epsitec.Common.Types
 		private DependencyProperty[]			attachedPropertiesArray;
 		private Dictionary<string, DependencyProperty>	lookup;
 		private bool							initialized;
-		private Allocator						allocator;
+		private Support.Allocator<DependencyObject> allocator;
 
 		static Dictionary<System.Type, DependencyObjectType> types = new Dictionary<System.Type, DependencyObjectType> ();
 	}

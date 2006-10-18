@@ -56,7 +56,7 @@ namespace Epsitec.Common.Support
 			this.culture = CultureInfo.CurrentCulture;
 			this.defaultPath = string.IsNullOrEmpty (path) ? null : path;
 
-			foreach (ResourceProviderFactory.Allocator allocator in Resources.Factory.Allocators)
+			foreach (Allocator<IResourceProvider, ResourceManager> allocator in Resources.Factory.Allocators)
 			{
 				ProviderRecord record = new ProviderRecord (this, allocator);
 				this.providers.Add (record.Prefix, record);
@@ -1466,7 +1466,7 @@ namespace Epsitec.Common.Support
 
 		private class ProviderRecord
 		{
-			public ProviderRecord(ResourceManager manager, ResourceProviderFactory.Allocator allocator)
+			public ProviderRecord(ResourceManager manager, Allocator<IResourceProvider, ResourceManager> allocator)
 			{
 				this.manager = manager;
 				this.allocator = allocator;
@@ -1570,7 +1570,7 @@ namespace Epsitec.Common.Support
 			}
 
 			private ResourceManager manager;
-			private ResourceProviderFactory.Allocator allocator;
+			private Allocator<IResourceProvider, ResourceManager> allocator;
 			private IResourceProvider defaultProvider;
 			private IResourceProvider activeProvider;
 			private string prefix;

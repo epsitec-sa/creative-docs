@@ -9,7 +9,9 @@ namespace Epsitec.Common.Support
 
 	public delegate void PropertySetter(object target, object value);
 	public delegate object PropertyGetter(object target);
+	
 	public delegate T Allocator<T> ();
+	public delegate T Allocator<T, P> (P value);
 
 	/// <summary>
 	/// The <c>DynamicCodeFactory</c> class generates dynamic methods used to
@@ -121,20 +123,25 @@ namespace Epsitec.Common.Support
 
 		public static Allocator<T> CreateAllocator<T>()
 		{
+			return DynamicCodeFactory.CreateAllocator<T> (typeof (T));
+		}
+
+		public static Allocator<T> CreateAllocator<T>(System.Type type)
+		{
 			//	Create a small piece of dynamic code which does simply "new T()"
 			//	for the underlying system type. This code relies on lightweight
 			//	code generation and results in a very fast dynamic allocator.
 
-			string name = string.Concat ("_DynamicAllocator_", typeof (T).Name);
-			
-			System.Reflection.Module module = typeof (T).Module;
-			System.Reflection.Emit.DynamicMethod allocator = new System.Reflection.Emit.DynamicMethod (name, typeof (T), System.Type.EmptyTypes, module, true);
+			string name = string.Concat ("_DynamicAllocator_", type.Name);
+
+			System.Reflection.Module module = type.Module;
+			System.Reflection.Emit.DynamicMethod allocator = new System.Reflection.Emit.DynamicMethod (name, type, System.Type.EmptyTypes, module, true);
 			System.Reflection.Emit.ILGenerator generator = allocator.GetILGenerator ();
-			System.Reflection.ConstructorInfo constructor = typeof (T).GetConstructor (System.Type.EmptyTypes);
+			System.Reflection.ConstructorInfo constructor = type.GetConstructor (System.Type.EmptyTypes);
 
 			if (constructor == null)
 			{
-				throw new System.InvalidOperationException (string.Format ("Class {0} has no constructor", typeof (T).Name));
+				throw new System.InvalidOperationException (string.Format ("Class {0} has no constructor", type.Name));
 			}
 
 			generator.Emit (OpCodes.Nop);
@@ -144,5 +151,33 @@ namespace Epsitec.Common.Support
 			return (Allocator<T>) allocator.CreateDelegate (typeof (Allocator<T>));
 		}
 
+		public static Allocator<T, P> CreateAllocator<T, P>()
+		{
+			return DynamicCodeFactory.CreateAllocator<T, P> (typeof (T));
+		}
+		
+		public static Allocator<T, P> CreateAllocator<T, P>(System.Type type)
+		{
+			System.Type[] constructorArgumentTypes = new System.Type[] { typeof (P) };
+			
+			string name = string.Concat ("_DynamicAllocator_", type.Name);
+
+			System.Reflection.Module module = type.Module;
+			System.Reflection.Emit.DynamicMethod allocator = new System.Reflection.Emit.DynamicMethod (name, type, constructorArgumentTypes, module, true);
+			System.Reflection.Emit.ILGenerator generator = allocator.GetILGenerator ();
+			System.Reflection.ConstructorInfo constructor = type.GetConstructor (constructorArgumentTypes);
+
+			if (constructor == null)
+			{
+				throw new System.InvalidOperationException (string.Format ("Class {0} has no matching constructor", type.Name));
+			}
+
+			generator.Emit (OpCodes.Nop);
+			generator.Emit (OpCodes.Ldarg_0);
+			generator.Emit (OpCodes.Newobj, constructor);
+			generator.Emit (OpCodes.Ret);
+
+			return (Allocator<T, P>) allocator.CreateDelegate (typeof (Allocator<T, P>));
+		}
 	}
 }
