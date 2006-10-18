@@ -397,37 +397,30 @@ namespace Epsitec.Common.Designer.Proxies
 		static Layout()
 		{
 			EnumType childrenPlacementEnumType = Res.Types.ObjectModifier.ChildrenPlacement;
-			childrenPlacementEnumType.DefineDefaultController("Enum", "Icons");
 			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineNamedType(childrenPlacementEnumType);
 			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.ChildrenPlacement.Druid);
 
 			EnumType anchoredHorizontalAttachmentEnumType = Res.Types.ObjectModifier.AnchoredHorizontalAttachment;
-			anchoredHorizontalAttachmentEnumType.DefineDefaultController("Enum", "Icons");
 			Layout.AnchoredHorizontalAttachmentProperty.DefaultMetadata.DefineNamedType(anchoredHorizontalAttachmentEnumType);
 			Layout.AnchoredHorizontalAttachmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.AnchoredHorizontalAttachment.Druid);
 
 			EnumType anchoredVerticalAttachmentEnumType = Res.Types.ObjectModifier.AnchoredVerticalAttachment;
-			anchoredVerticalAttachmentEnumType.DefineDefaultController("Enum", "Icons");
 			Layout.AnchoredVerticalAttachmentProperty.DefaultMetadata.DefineNamedType(anchoredVerticalAttachmentEnumType);
 			Layout.AnchoredVerticalAttachmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.AnchoredVerticalAttachment.Druid);
 
 			EnumType stackedHorizontalAttachmentEnumType = Res.Types.ObjectModifier.StackedHorizontalAttachment;
-			stackedHorizontalAttachmentEnumType.DefineDefaultController("Enum", "Icons");
 			Layout.StackedHorizontalAttachmentProperty.DefaultMetadata.DefineNamedType(stackedHorizontalAttachmentEnumType);
 			Layout.StackedHorizontalAttachmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.StackedHorizontalAttachment.Druid);
 
 			EnumType stackedVerticalAttachmentEnumType = Res.Types.ObjectModifier.StackedVerticalAttachment;
-			stackedVerticalAttachmentEnumType.DefineDefaultController("Enum", "Icons");
 			Layout.StackedVerticalAttachmentProperty.DefaultMetadata.DefineNamedType(stackedVerticalAttachmentEnumType);
 			Layout.StackedVerticalAttachmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.StackedVerticalAttachment.Druid);
 
 			EnumType stackedHorizontalAlignmentEnumType = Res.Types.ObjectModifier.StackedHorizontalAlignment;
-			stackedHorizontalAlignmentEnumType.DefineDefaultController("Enum", "Icons");
 			Layout.StackedHorizontalAlignmentProperty.DefaultMetadata.DefineNamedType(stackedHorizontalAlignmentEnumType);
 			Layout.StackedHorizontalAlignmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.StackedHorizontalAlignment.Druid);
 
 			EnumType stackedVerticalAlignmentEnumType = Res.Types.ObjectModifier.StackedVerticalAlignment;
-			stackedVerticalAlignmentEnumType.DefineDefaultController("Enum", "Icons");
 			Layout.StackedVerticalAlignmentProperty.DefaultMetadata.DefineNamedType(stackedVerticalAlignmentEnumType);
 			Layout.StackedVerticalAlignmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.StackedVerticalAlignment.Druid);
 		}
