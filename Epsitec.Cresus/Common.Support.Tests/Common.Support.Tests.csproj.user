@@ -38,17 +38,14 @@
     <RemoteDebugEnabled>false</RemoteDebugEnabled>
     <RemoteDebugMachine>
     </RemoteDebugMachine>
-    <StartAction>Project</StartAction>
-    <StartArguments>
-    </StartArguments>
+    <StartAction>Program</StartAction>
+    <StartArguments>..\Common.Support.Tests\bin\Release\Common.Support.Tests.dll</StartArguments>
     <StartPage>
     </StartPage>
-    <StartProgram>
-    </StartProgram>
+    <StartProgram>S:\Epsitec.Cresus\External\nunit-gui.exe</StartProgram>
     <StartURL>
     </StartURL>
-    <StartWorkingDirectory>
-    </StartWorkingDirectory>
+    <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
     <StartWithIE>true</StartWithIE>
   </PropertyGroup>
 </Project>
