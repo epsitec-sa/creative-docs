@@ -1,8 +1,6 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System.Collections.Generic;
-
 namespace Epsitec.Common.Support
 {
 	using OpCodes=System.Reflection.Emit.OpCodes;
@@ -15,15 +13,30 @@ namespace Epsitec.Common.Support
 
 	/// <summary>
 	/// The <c>DynamicCodeFactory</c> class generates dynamic methods used to
-	/// access properties.
+	/// access properties, create objects, etc.
 	/// </summary>
 	public static class DynamicCodeFactory
 	{
+		/// <summary>
+		/// Creates a property setter for the specified property.
+		/// </summary>
+		/// <param name="type">The type of the object to access.</param>
+		/// <param name="propertyName">The name of the property.</param>
+		/// <returns>
+		/// A <see cref="PropertySetter"/> for the property.
+		/// </returns>
 		public static PropertySetter CreatePropertySetter(System.Type type, string propertyName)
 		{
 			return DynamicCodeFactory.CreatePropertySetter (type.GetProperty (propertyName));
 		}
-		
+
+		/// <summary>
+		/// Creates a property setter for the specified property.
+		/// </summary>
+		/// <param name="propertyInfo">The property info.</param>
+		/// <returns>
+		/// A <see cref="PropertySetter"/> for the property.
+		/// </returns>
 		public static PropertySetter CreatePropertySetter(System.Reflection.PropertyInfo propertyInfo)
 		{
 			System.Reflection.MethodInfo method = propertyInfo.GetSetMethod (false);
@@ -71,11 +84,26 @@ namespace Epsitec.Common.Support
 			return (PropertySetter) setter.CreateDelegate (typeof (PropertySetter));
 		}
 
+		/// <summary>
+		/// Creates a property getter for the specified property.
+		/// </summary>
+		/// <param name="type">The type of the object to access.</param>
+		/// <param name="propertyName">The name of the property.</param>
+		/// <returns>
+		/// A <see cref="PropertyGetter"/> for the property.
+		/// </returns>
 		public static PropertyGetter CreatePropertyGetter(System.Type type, string propertyName)
 		{
 			return DynamicCodeFactory.CreatePropertyGetter (type.GetProperty (propertyName));
 		}
-		
+
+		/// <summary>
+		/// Creates a property getter for the specified property.
+		/// </summary>
+		/// <param name="propertyInfo">The property info.</param>
+		/// <returns>
+		/// A <see cref="PropertyGetter"/> for the property.
+		/// </returns>
 		public static PropertyGetter CreatePropertyGetter(System.Reflection.PropertyInfo propertyInfo)
 		{
 			System.Reflection.MethodInfo method = propertyInfo.GetGetMethod ();
@@ -121,11 +149,24 @@ namespace Epsitec.Common.Support
 			return (PropertyGetter) getter.CreateDelegate (typeof (PropertyGetter));
 		}
 
+		/// <summary>
+		/// Creates an allocator for some type <c>T</c>.
+		/// </summary>
+		/// <returns>
+		/// An <see cref="Allocator&lt;T&gt;"/> for the type.
+		/// </returns>
 		public static Allocator<T> CreateAllocator<T>()
 		{
 			return DynamicCodeFactory.CreateAllocator<T> (typeof (T));
 		}
 
+		/// <summary>
+		/// Creates an allocator for some type.
+		/// </summary>
+		/// <param name="type">The type of the object which must be allocated.</param>
+		/// <returns>
+		/// An <see cref="Allocator&lt;T&gt;"/> for the type.
+		/// </returns>
 		public static Allocator<T> CreateAllocator<T>(System.Type type)
 		{
 			//	Create a small piece of dynamic code which does simply "new T()"
@@ -151,11 +192,26 @@ namespace Epsitec.Common.Support
 			return (Allocator<T>) allocator.CreateDelegate (typeof (Allocator<T>));
 		}
 
+		/// <summary>
+		/// Creates an allocator for some type <c>T</c>, using a constructor taking
+		/// an argument of type <c>P</c>.
+		/// </summary>
+		/// <returns>
+		/// An <see cref="Allocator&lt;T, P&gt;"/> for the type.
+		/// </returns>
 		public static Allocator<T, P> CreateAllocator<T, P>()
 		{
 			return DynamicCodeFactory.CreateAllocator<T, P> (typeof (T));
 		}
-		
+
+		/// <summary>
+		/// Creates an allocator for some type, using a constructor taking an argument
+		/// of type <c>P</c>.
+		/// </summary>
+		/// <param name="type">The type of the object which must be allocated.</param>
+		/// <returns>
+		/// An <see cref="Allocator&lt;T, P&gt;"/> for the type.
+		/// </returns>
 		public static Allocator<T, P> CreateAllocator<T, P>(System.Type type)
 		{
 			System.Type[] constructorArgumentTypes = new System.Type[] { typeof (P) };
