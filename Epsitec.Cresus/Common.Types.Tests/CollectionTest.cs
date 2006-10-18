@@ -1,3 +1,6 @@
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 using System.Collections.Generic;
 using NUnit.Framework;
 
@@ -87,7 +90,7 @@ namespace Epsitec.Common.Types
 			source.Add (new Record ("Rondelle", 41, 0.05M));
 			source.Add (new Record ("Clé M3", 7, 15.00M));
 			source.Add (new Record ("Tournevis", 2, 8.45M));
-			source.Add (new Record ("Tournevis", 7, 12.70M));
+			source.Add (new Record ("Tournevis", 7, 25.70M));
 
 			view.Refresh ();
 
@@ -98,10 +101,11 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Clé M3", ((Record) view.Groups[3]).Article);
 			Assert.AreEqual ("Tournevis", ((Record) view.Groups[4]).Article);
 			Assert.AreEqual ("Tournevis", ((Record) view.Groups[5]).Article);
-			
+
 			view.SortDescriptions.Add (new SortDescription (ListSortDirection.Ascending, "Article"));
+			view.SortDescriptions.Add (new SortDescription (ListSortDirection.Ascending, "Stock"));
 			view.Refresh ();
-			
+
 			Assert.AreEqual (6, view.Groups.Count);
 			Assert.AreEqual ("Clé M3", ((Record) view.Groups[0]).Article);
 			Assert.AreEqual ("Ecrou M3", ((Record) view.Groups[1]).Article);
@@ -109,6 +113,39 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Tournevis", ((Record) view.Groups[3]).Article);
 			Assert.AreEqual ("Tournevis", ((Record) view.Groups[4]).Article);
 			Assert.AreEqual ("Vis M3", ((Record) view.Groups[5]).Article);
+
+			Assert.AreEqual (2, ((Record) view.Groups[3]).Stock);
+			Assert.AreEqual (7, ((Record) view.Groups[4]).Stock);
+
+			view.SortDescriptions.RemoveAt (1);
+			view.SortDescriptions.Add (new SortDescription (ListSortDirection.Descending, "Stock"));
+			view.Refresh ();
+
+			Assert.AreEqual (6, view.Groups.Count);
+			Assert.AreEqual ("Clé M3", ((Record) view.Groups[0]).Article);
+			Assert.AreEqual ("Ecrou M3", ((Record) view.Groups[1]).Article);
+			Assert.AreEqual ("Rondelle", ((Record) view.Groups[2]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) view.Groups[3]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) view.Groups[4]).Article);
+			Assert.AreEqual ("Vis M3", ((Record) view.Groups[5]).Article);
+
+			Assert.AreEqual (7, ((Record) view.Groups[3]).Stock);
+			Assert.AreEqual (2, ((Record) view.Groups[4]).Stock);
+
+			view.SortDescriptions.Clear ();
+			view.SortDescriptions.Add (new SortDescription ("Price"));
+			view.Refresh ();
+
+			Assert.AreEqual (6, view.Groups.Count);
+			Assert.AreEqual ("Rondelle", ((Record) view.Groups[0]).Article);
+			Assert.AreEqual ("Ecrou M3", ((Record) view.Groups[1]).Article);
+			Assert.AreEqual ("Vis M3", ((Record) view.Groups[2]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) view.Groups[3]).Article);
+			Assert.AreEqual ("Clé M3", ((Record) view.Groups[4]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) view.Groups[5]).Article);
+
+			Assert.AreEqual (2, ((Record) view.Groups[3]).Stock);
+			Assert.AreEqual (7, ((Record) view.Groups[5]).Stock);
 		}
 
 
@@ -125,7 +162,6 @@ namespace Epsitec.Common.Types
 			{
 				get
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("Article: {0}", this.article ?? "<null>"));
 					return this.article;
 				}
 				set
