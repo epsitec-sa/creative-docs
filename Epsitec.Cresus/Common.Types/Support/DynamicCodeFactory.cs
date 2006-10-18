@@ -53,12 +53,13 @@ namespace Epsitec.Common.Support
 				return null;
 			}
 
+			System.Type   objType   = typeof (object);
 			System.Type   hostType  = propertyInfo.DeclaringType;
 			System.Type   propType  = propertyInfo.PropertyType;
 			System.Type[] arguments = new System.Type[2];
 			
-			arguments[0] = typeof (object);
-			arguments[1] = typeof (object);
+			arguments[0] = objType;
+			arguments[1] = objType;
 
 			string name = string.Concat ("_PropertySetter_", propertyInfo.Name);
 
@@ -120,16 +121,17 @@ namespace Epsitec.Common.Support
 				return null;
 			}
 
+			System.Type   objType   = typeof (object);
 			System.Type   hostType  = propertyInfo.DeclaringType;
 			System.Type   propType  = propertyInfo.PropertyType;
 			System.Type[] arguments = new System.Type[1];
 			
-			arguments[0] = typeof (object);
+			arguments[0] = objType;
 			
 			string name = string.Concat ("_PropertyGetter_", propertyInfo.Name);
 
 			System.Reflection.Emit.DynamicMethod getter;
-			getter = new System.Reflection.Emit.DynamicMethod (name, typeof (object), arguments, hostType);
+			getter = new System.Reflection.Emit.DynamicMethod (name, objType, arguments, hostType);
 
 			System.Reflection.Emit.ILGenerator generator = getter.GetILGenerator ();
 			
@@ -269,18 +271,19 @@ namespace Epsitec.Common.Support
 			{
 				return null;
 			}
-
-			System.Type hostType  = propertyInfo.DeclaringType;
-			System.Type propType  = propertyInfo.PropertyType;
-			System.Type[] arguments = new System.Type[2];
 			
+			System.Type   objType   = typeof (object);
+			System.Type   hostType  = propertyInfo.DeclaringType;
+			System.Type   propType  = propertyInfo.PropertyType;
+			System.Type[] arguments = new System.Type[2];
+
+			arguments[0] = objType;
+			arguments[1] = objType;
+
 			System.Type genericComparable = typeof (System.IComparable<>);
 			System.Type typedComparable = genericComparable.MakeGenericType (propType);
 
 			System.Reflection.MethodInfo compareToMethod = typedComparable.GetMethod ("CompareTo");
-
-			arguments[0] = typeof (object);
-			arguments[1] = typeof (object);
 
 			string name = string.Concat ("_PropertyComparer_", propertyInfo.Name);
 
@@ -339,7 +342,6 @@ namespace Epsitec.Common.Support
 			{
 				System.Reflection.Emit.LocalBuilder l1;
 				System.Reflection.Emit.LocalBuilder l2;
-				System.Reflection.Emit.Label label1 = generator.DefineLabel ();
 
 				l1 = generator.DeclareLocal (propType);
 				l2 = generator.DeclareLocal (propType);
@@ -354,26 +356,23 @@ namespace Epsitec.Common.Support
 				generator.EmitCall (OpCodes.Callvirt, method, null);
 				generator.Emit (OpCodes.Stloc_1);
 
-				System.Reflection.MethodInfo equalityMethod = propType.GetMethod ("op_Equality", new System.Type[] { propType, propType });
-
-				if (equalityMethod == null)
+				if (propType.IsPrimitive)
 				{
+					//	For primitive types, it is worth to check for equality
+					//	using a simply "bne" instruction, which could save us a
+					//	call to the generic CompareTo method.
+					
+					System.Reflection.Emit.Label label1 = generator.DefineLabel ();
+					
 					generator.Emit (OpCodes.Ldloc_0);
 					generator.Emit (OpCodes.Ldloc_1);
 					generator.Emit (OpCodes.Bne_Un_S, label1);
-				}
-				else
-				{
-					generator.Emit (OpCodes.Ldloc_0);
-					generator.Emit (OpCodes.Ldloc_1);
-					generator.EmitCall (OpCodes.Call, equalityMethod, null);
-					generator.Emit (OpCodes.Brfalse_S, label1);
+					generator.Emit (OpCodes.Ldc_I4_0);
+					generator.Emit (OpCodes.Ret);
+					
+					generator.MarkLabel (label1);
 				}
 
-				generator.Emit (OpCodes.Ldc_I4_0);
-				generator.Emit (OpCodes.Ret);
-
-				generator.MarkLabel (label1);
 				generator.Emit (OpCodes.Ldloc_0);
 				generator.Emit (OpCodes.Box, propType);
 				generator.Emit (OpCodes.Ldloc_1);
