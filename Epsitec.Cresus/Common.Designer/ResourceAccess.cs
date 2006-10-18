@@ -1314,7 +1314,7 @@ namespace Epsitec.Common.Designer
 			{
 				if (fieldType == FieldType.AbstractType)
 				{
-					AbstractType type = this.GetAbstractType();
+					AbstractType type = this.CachedAbstractType;
 					if (type == null)
 					{
 						return null;
@@ -1325,7 +1325,7 @@ namespace Epsitec.Common.Designer
 
 				if (fieldType == FieldType.Controller)
 				{
-					AbstractType type = this.GetAbstractType();
+					AbstractType type = this.CachedAbstractType;
 					if (type == null)
 					{
 						return null;
@@ -1498,7 +1498,7 @@ namespace Epsitec.Common.Designer
 
 				if (fieldType == FieldType.Controller)
 				{
-					AbstractType type = this.GetAbstractType();
+					AbstractType type = this.CachedAbstractType;
 					if (type == null)
 					{
 						return;
@@ -1541,21 +1541,26 @@ namespace Epsitec.Common.Designer
 			this.IsDirty = true;
 		}
 
-		protected AbstractType GetAbstractType()
+		protected AbstractType CachedAbstractType
 		{
-			AbstractType type = AbstractType.GetCachedType(this.accessCaption);
-
-			if (type == null)
+			//	Retourne le AbstractType correspondant au Caption dans le cache.
+			get
 			{
-				type = TypeRosetta.CreateTypeObject(this.accessCaption);
+				AbstractType type = AbstractType.GetCachedType(this.accessCaption);
+
 				if (type == null)
 				{
-					return null;
-				}
-				AbstractType.SetCachedType(this.accessCaption, type);
-			}
+					type = TypeRosetta.CreateTypeObject(this.accessCaption);
+					if (type == null)
+					{
+						return null;
+					}
 
-			return type;
+					AbstractType.SetCachedType(this.accessCaption, type);
+				}
+
+				return type;
+			}
 		}
 
 
