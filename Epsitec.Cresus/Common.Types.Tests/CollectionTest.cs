@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace Epsitec.Common.Types
@@ -71,6 +72,95 @@ namespace Epsitec.Common.Types
 			group.StringComparison = System.StringComparison.InvariantCultureIgnoreCase;
 			
 			Assert.IsTrue (group.NamesMatch ("A", "a"));
+		}
+
+		[Test]
+		public void CheckCollectionViewSort()
+		{
+			List<Record> source = new List<Record> ();
+			CollectionView view = new CollectionView (source);
+
+			Support.PropertyGetter articleGetter = Support.DynamicCodeFactory.CreatePropertyGetter (typeof (Record), "Article");
+
+			source.Add (new Record ("Vis M3", 10, 0.15M));
+			source.Add (new Record ("Ecrou M3", 19, 0.10M));
+			source.Add (new Record ("Rondelle", 41, 0.05M));
+			source.Add (new Record ("Clé M3", 7, 15.00M));
+			source.Add (new Record ("Tournevis", 2, 8.45M));
+			source.Add (new Record ("Tournevis", 7, 12.70M));
+
+			view.Refresh ();
+
+			Assert.AreEqual (6, view.Groups.Count);
+			Assert.AreEqual ("Vis M3", ((Record) view.Groups[0]).Article);
+			Assert.AreEqual ("Ecrou M3", ((Record) view.Groups[1]).Article);
+			Assert.AreEqual ("Rondelle", ((Record) view.Groups[2]).Article);
+			Assert.AreEqual ("Clé M3", ((Record) view.Groups[3]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) view.Groups[4]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) view.Groups[5]).Article);
+			
+			view.SortDescriptions.Add (new SortDescription (ListSortDirection.Ascending, "Article"));
+			view.Refresh ();
+			
+			Assert.AreEqual (6, view.Groups.Count);
+			Assert.AreEqual ("Clé M3", ((Record) view.Groups[0]).Article);
+			Assert.AreEqual ("Ecrou M3", ((Record) view.Groups[1]).Article);
+			Assert.AreEqual ("Rondelle", ((Record) view.Groups[2]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) view.Groups[3]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) view.Groups[4]).Article);
+			Assert.AreEqual ("Vis M3", ((Record) view.Groups[5]).Article);
+		}
+
+
+		private struct Record
+		{
+			public Record(string article, int stock, decimal price)
+			{
+				this.article = article;
+				this.stock = stock;
+				this.price = price;
+			}
+			 
+			public string Article
+			{
+				get
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Article: {0}", this.article ?? "<null>"));
+					return this.article;
+				}
+				set
+				{
+					this.article = value;
+				}
+			}
+
+			public int Stock
+			{
+				get
+				{
+					return this.stock;
+				}
+				set
+				{
+					this.stock = value;
+				}
+			}
+
+			public decimal Price
+			{
+				get
+				{
+					return this.price;
+				}
+				set
+				{
+					this.price = value;
+				}
+			}
+			
+			private string article;
+			private int stock;
+			private decimal price;
 		}
 
 		#region MyItem Class

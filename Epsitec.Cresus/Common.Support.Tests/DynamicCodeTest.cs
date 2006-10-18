@@ -135,6 +135,31 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
+		public void CheckValueTypePropertyAccess()
+		{
+			PropertyGetter   articleGetter   = DynamicCodeFactory.CreatePropertyGetter (typeof (Record), "Article");
+			PropertyComparer articleComparer = DynamicCodeFactory.CreatePropertyComparer (typeof (Record), "Article");
+
+			Record record1 = new Record ("Harddisk", 4, 402.00M);
+			Record record2 = new Record ("Computer", 1, 1580.00M);
+
+			Assert.AreEqual (record1.Article, articleGetter (record1));
+			Assert.AreEqual (record2.Article, articleGetter (record2));
+
+			Assert.AreEqual ( 0, articleComparer (record1, record1));
+			Assert.AreEqual ( 0, articleComparer (record2, record2));
+			Assert.AreEqual ( 1, articleComparer (record1, record2));
+			Assert.AreEqual (-1, articleComparer (record2, record1));
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.InvalidOperationException))]
+		public void CheckValueTypePropertyAccessEx1()
+		{
+			PropertySetter articleSetter = DynamicCodeFactory.CreatePropertySetter (typeof (Record), "Article");
+		}
+
+		[Test]
 		public void CheckPropertyGet()
 		{
 			PropertyGetter nameGetter = DynamicCodeFactory.CreatePropertyGetter (typeof (Dummy), "Name");
@@ -249,50 +274,60 @@ namespace Epsitec.Common.Support
 			System.Console.Out.WriteLine ("{0} static 'set' take {1} ms", count, watch.ElapsedMilliseconds);
 		}
 
-		[Test]
-		public void CheckXxx()
+		#region Record Structure
+
+		private struct Record
 		{
-			int x = 1;
-			int y = 2;
-
-			System.IComparable<int> c1 = x;
-			System.IComparable<int> c2 = y;
-
-			System.Console.Out.WriteLine ("x.CompareTo (y) : {0}", c1.CompareTo (y));
-			System.Console.Out.WriteLine ("y.CompareTo (x) : {0}", c2.CompareTo (x));
-
-			Dummy d1 = new Dummy ();
-			Dummy d2 = new Dummy ();
-
-			DynamicCodeTest.CompareDummies1 (d1, d2);
-			DynamicCodeTest.CompareDummies2 (d1, d2);
-		}
-
-		private static int CompareDummies1(Dummy d1, Dummy d2)
-		{
-			int v1 = d1.Age;
-			int v2 = d2.Age;
-
-			if (v1 == v2)
+			public Record(string article, int stock, decimal price)
 			{
-				return 0;
+				this.article = article;
+				this.stock = stock;
+				this.price = price;
 			}
 
-			return ((System.IComparable<int>) v1).CompareTo (v2);
-		}
-		
-		private static int CompareDummies2(Dummy d1, Dummy d2)
-		{
-			System.DateTime v1 = d1.Date;
-			System.DateTime v2 = d2.Date;
-
-			if (v1 == v2)
+			public string Article
 			{
-				return 0;
+				get
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Article: {0}", this.article ?? "<null>"));
+					return this.article;
+				}
+				set
+				{
+					this.article = value;
+				}
 			}
 
-			return ((System.IComparable<System.DateTime>) v1).CompareTo (v2);
+			public int Stock
+			{
+				get
+				{
+					return this.stock;
+				}
+				set
+				{
+					this.stock = value;
+				}
+			}
+
+			public decimal Price
+			{
+				get
+				{
+					return this.price;
+				}
+				set
+				{
+					this.price = value;
+				}
+			}
+
+			private string article;
+			private int stock;
+			private decimal price;
 		}
+
+		#endregion
 
 		#region Value Structure
 

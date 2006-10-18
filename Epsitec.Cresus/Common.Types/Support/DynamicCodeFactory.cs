@@ -61,15 +61,21 @@ namespace Epsitec.Common.Support
 			arguments[0] = objType;
 			arguments[1] = objType;
 
-			string name = string.Concat ("_PropertySetter_", propertyInfo.Name);
+			string name = string.Concat ("DynamicCode_PropertySetter_", propertyInfo.Name);
 
 			System.Reflection.Emit.DynamicMethod setter;
 			setter = new System.Reflection.Emit.DynamicMethod (name, null, arguments, hostType);
 
 			System.Reflection.Emit.ILGenerator generator = setter.GetILGenerator ();
-			
+
 			generator.Emit (OpCodes.Ldarg_0);
-			generator.Emit (OpCodes.Castclass, propertyInfo.DeclaringType);
+			
+			if (hostType.IsValueType)
+			{
+				throw new System.InvalidOperationException ("Cannot set property of boxed ValueType");
+			}
+			
+			generator.Emit (OpCodes.Castclass, hostType);
 			generator.Emit (OpCodes.Ldarg_1);
 
 			if (propType.IsClass)
@@ -84,7 +90,7 @@ namespace Epsitec.Common.Support
 			{
 				throw new System.InvalidOperationException ("Invalid code path");
 			}
-
+			
 			generator.EmitCall (OpCodes.Callvirt, method, null);
 			generator.Emit (OpCodes.Ret);
 			
@@ -127,17 +133,30 @@ namespace Epsitec.Common.Support
 			System.Type[] arguments = new System.Type[1];
 			
 			arguments[0] = objType;
-			
-			string name = string.Concat ("_PropertyGetter_", propertyInfo.Name);
+
+			string name = string.Concat ("DynamicCode_PropertyGetter_", propertyInfo.Name);
 
 			System.Reflection.Emit.DynamicMethod getter;
 			getter = new System.Reflection.Emit.DynamicMethod (name, objType, arguments, hostType);
 
 			System.Reflection.Emit.ILGenerator generator = getter.GetILGenerator ();
 			
-			generator.Emit (OpCodes.Ldarg_0);
-			generator.Emit (OpCodes.Castclass, propertyInfo.DeclaringType);
-			generator.EmitCall (OpCodes.Callvirt, method, null);
+			if (hostType.IsValueType)
+			{
+				System.Reflection.Emit.LocalBuilder local = generator.DeclareLocal (hostType);
+
+				generator.Emit (OpCodes.Ldarg_0);
+				generator.Emit (OpCodes.Unbox_Any, hostType);
+				generator.Emit (OpCodes.Stloc_S, local);
+				generator.Emit (OpCodes.Ldloca_S, local);
+				generator.EmitCall (OpCodes.Call, method, null);
+			}
+			else
+			{
+				generator.Emit (OpCodes.Ldarg_0);
+				generator.Emit (OpCodes.Castclass, hostType);
+				generator.EmitCall (OpCodes.Callvirt, method, null);
+			}
 
 			if (propType.IsClass)
 			{
@@ -181,7 +200,7 @@ namespace Epsitec.Common.Support
 			//	for the underlying system type. This code relies on lightweight
 			//	code generation and results in a very fast dynamic allocator.
 
-			string name = string.Concat ("_DynamicAllocator_", type.Name);
+			string name = string.Concat ("DynamicCode_Allocator_", type.Name);
 
 			System.Reflection.Module module = type.Module;
 			System.Reflection.Emit.DynamicMethod allocator = new System.Reflection.Emit.DynamicMethod (name, type, System.Type.EmptyTypes, module, true);
@@ -222,8 +241,8 @@ namespace Epsitec.Common.Support
 		public static Allocator<T, P> CreateAllocator<T, P>(System.Type type)
 		{
 			System.Type[] constructorArgumentTypes = new System.Type[] { typeof (P) };
-			
-			string name = string.Concat ("_DynamicAllocator_", type.Name);
+
+			string name = string.Concat ("DynamicCode_Allocator_", type.Name);
 
 			System.Reflection.Module module = type.Module;
 			System.Reflection.Emit.DynamicMethod allocator = new System.Reflection.Emit.DynamicMethod (name, type, constructorArgumentTypes, module, true);
@@ -285,7 +304,7 @@ namespace Epsitec.Common.Support
 
 			System.Reflection.MethodInfo compareToMethod = typedComparable.GetMethod ("CompareTo");
 
-			string name = string.Concat ("_PropertyComparer_", propertyInfo.Name);
+			string name = string.Concat ("DynamicCode_PropertyComparer_", propertyInfo.Name);
 
 			System.Reflection.Emit.DynamicMethod comparer;
 			comparer = new System.Reflection.Emit.DynamicMethod (name, typeof (int), arguments, hostType);
@@ -303,15 +322,39 @@ namespace Epsitec.Common.Support
 				l1 = generator.DeclareLocal (propType);
 				l2 = generator.DeclareLocal (propType);
 
-				generator.Emit (OpCodes.Ldarg_0);
-				generator.Emit (OpCodes.Castclass, propertyInfo.DeclaringType);
-				generator.EmitCall (OpCodes.Callvirt, method, null);
-				generator.Emit (OpCodes.Stloc_0);
+				if (hostType.IsValueType)
+				{
+					System.Reflection.Emit.LocalBuilder temp1 = generator.DeclareLocal (hostType);
+					System.Reflection.Emit.LocalBuilder temp2 = generator.DeclareLocal (hostType);
 
-				generator.Emit (OpCodes.Ldarg_1);
-				generator.Emit (OpCodes.Castclass, propertyInfo.DeclaringType);
-				generator.EmitCall (OpCodes.Callvirt, method, null);
-				generator.Emit (OpCodes.Stloc_1);
+					generator.Emit (OpCodes.Ldarg_0);
+					generator.Emit (OpCodes.Unbox_Any, hostType);
+					generator.Emit (OpCodes.Stloc_S, temp1);
+					
+					generator.Emit (OpCodes.Ldarg_1);
+					generator.Emit (OpCodes.Unbox_Any, hostType);
+					generator.Emit (OpCodes.Stloc_S, temp2);
+
+					generator.Emit (OpCodes.Ldloca_S, temp1);
+					generator.EmitCall (OpCodes.Call, method, null);
+					generator.Emit (OpCodes.Stloc_0);
+					
+					generator.Emit (OpCodes.Ldloca_S, temp2);
+					generator.EmitCall (OpCodes.Call, method, null);
+					generator.Emit (OpCodes.Stloc_1);
+				}
+				else
+				{
+					generator.Emit (OpCodes.Ldarg_0);
+					generator.Emit (OpCodes.Castclass, hostType);
+					generator.EmitCall (OpCodes.Callvirt, method, null);
+					generator.Emit (OpCodes.Stloc_0);
+					
+					generator.Emit (OpCodes.Ldarg_1);
+					generator.Emit (OpCodes.Castclass, hostType);
+					generator.EmitCall (OpCodes.Callvirt, method, null);
+					generator.Emit (OpCodes.Stloc_1);
+				}
 
 				generator.Emit (OpCodes.Ldloc_0);
 				generator.Emit (OpCodes.Ldloc_1);
@@ -347,12 +390,12 @@ namespace Epsitec.Common.Support
 				l2 = generator.DeclareLocal (propType);
 
 				generator.Emit (OpCodes.Ldarg_0);
-				generator.Emit (OpCodes.Castclass, propertyInfo.DeclaringType);
+				generator.Emit (OpCodes.Castclass, hostType);
 				generator.EmitCall (OpCodes.Callvirt, method, null);
 				generator.Emit (OpCodes.Stloc_0);
 
 				generator.Emit (OpCodes.Ldarg_1);
-				generator.Emit (OpCodes.Castclass, propertyInfo.DeclaringType);
+				generator.Emit (OpCodes.Castclass, hostType);
 				generator.EmitCall (OpCodes.Callvirt, method, null);
 				generator.Emit (OpCodes.Stloc_1);
 
