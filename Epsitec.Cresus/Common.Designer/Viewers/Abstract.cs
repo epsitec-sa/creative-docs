@@ -1141,7 +1141,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected static double				leftArrayWidth = 200;
+		protected static double				leftArrayWidth = 300;
 
 		protected Module					module;
 		protected PanelsContext				context;
