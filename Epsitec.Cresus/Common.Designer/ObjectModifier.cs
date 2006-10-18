@@ -87,7 +87,6 @@ namespace Epsitec.Common.Designer
 			Proportional,
 		}
 
-		[Types.Designer]
 		public enum BoundsMode
 		{
 			OriginX,
