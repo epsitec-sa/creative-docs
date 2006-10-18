@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
@@ -222,6 +223,7 @@ namespace Epsitec.Common.Widgets
 
 		void Epsitec.Common.Widgets.Behaviors.IDragBehaviorHost.OnDragEnd()
 		{
+			this.OnSplitterDragged();
 		}
 
 		#endregion
@@ -511,8 +513,33 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		
+
+
+		#region Event handlers
+		protected virtual void OnSplitterDragged()
+		{
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SplitterDragged");
+
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Support.EventHandler SplitterDragged
+		{
+			add
+			{
+				this.AddUserEventHandler("SplitterDragged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SplitterDragged", value);
+			}
+		}
+		#endregion
+
+
 		public static bool GetAutoCollapseEnable(DependencyObject o)
 		{
 			return (bool) o.GetValue (AbstractSplitter.AutoCollapseEnableProperty);
