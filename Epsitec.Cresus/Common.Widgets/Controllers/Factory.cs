@@ -121,7 +121,7 @@ namespace Epsitec.Common.Widgets.Controllers
 					{
 						if (this.allocator == null)
 						{
-							this.BuildDynamicAllocator ();
+							this.allocator = Support.DynamicCodeFactory.CreateAllocator<IController, string> (this.type);
 						}
 					}
 				}
@@ -129,28 +129,8 @@ namespace Epsitec.Common.Widgets.Controllers
 				return this.allocator (parameter);
 			}
 			
-			private void BuildDynamicAllocator()
-			{
-				//	See DependencyObjectType.BuildDynamicAllocator
-
-				System.Type[] constructorArgumentTypes = new System.Type[] { typeof (string) };
-
-				System.Reflection.Module module = typeof (Factory).Module;
-				System.Reflection.Emit.DynamicMethod dynamicMethod = new System.Reflection.Emit.DynamicMethod ("DynamicAllocator", this.type, constructorArgumentTypes, module, true);
-				System.Reflection.Emit.ILGenerator ilGen = dynamicMethod.GetILGenerator ();
-
-				ilGen.Emit (System.Reflection.Emit.OpCodes.Nop);
-				ilGen.Emit (System.Reflection.Emit.OpCodes.Ldarg_0);
-				ilGen.Emit (System.Reflection.Emit.OpCodes.Newobj, this.type.GetConstructor (constructorArgumentTypes));
-				ilGen.Emit (System.Reflection.Emit.OpCodes.Ret);
-
-				this.allocator = (Allocator) dynamicMethod.CreateDelegate (typeof (Allocator));
-			}
-			
-			private delegate IController Allocator(string parameter);
-			
 			private object exclusion;
-			private Allocator allocator;
+			private Support.Allocator<IController, string> allocator;
 			private System.Type type;
 		}
 
