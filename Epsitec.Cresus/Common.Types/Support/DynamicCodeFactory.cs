@@ -313,14 +313,12 @@ namespace Epsitec.Common.Support
 
 			if (propType.IsClass)
 			{
-				System.Reflection.Emit.LocalBuilder l1;
-				System.Reflection.Emit.LocalBuilder l2;
+				System.Reflection.Emit.LocalBuilder l1 = generator.DeclareLocal (propType);
+				System.Reflection.Emit.LocalBuilder l2 = generator.DeclareLocal (propType);
+
 				System.Reflection.Emit.Label label1 = generator.DefineLabel ();
 				System.Reflection.Emit.Label label2 = generator.DefineLabel ();
 				System.Reflection.Emit.Label label3 = generator.DefineLabel ();
-
-				l1 = generator.DeclareLocal (propType);
-				l2 = generator.DeclareLocal (propType);
 
 				if (hostType.IsValueType)
 				{
@@ -383,21 +381,42 @@ namespace Epsitec.Common.Support
 			}
 			else if (propType.IsValueType)
 			{
-				System.Reflection.Emit.LocalBuilder l1;
-				System.Reflection.Emit.LocalBuilder l2;
+				System.Reflection.Emit.LocalBuilder l1 = generator.DeclareLocal (propType);
+				System.Reflection.Emit.LocalBuilder l2 = generator.DeclareLocal (propType);
 
-				l1 = generator.DeclareLocal (propType);
-				l2 = generator.DeclareLocal (propType);
+				if (hostType.IsValueType)
+				{
+					System.Reflection.Emit.LocalBuilder temp1 = generator.DeclareLocal (hostType);
+					System.Reflection.Emit.LocalBuilder temp2 = generator.DeclareLocal (hostType);
 
-				generator.Emit (OpCodes.Ldarg_0);
-				generator.Emit (OpCodes.Castclass, hostType);
-				generator.EmitCall (OpCodes.Callvirt, method, null);
-				generator.Emit (OpCodes.Stloc_0);
+					generator.Emit (OpCodes.Ldarg_0);
+					generator.Emit (OpCodes.Unbox_Any, hostType);
+					generator.Emit (OpCodes.Stloc_S, temp1);
 
-				generator.Emit (OpCodes.Ldarg_1);
-				generator.Emit (OpCodes.Castclass, hostType);
-				generator.EmitCall (OpCodes.Callvirt, method, null);
-				generator.Emit (OpCodes.Stloc_1);
+					generator.Emit (OpCodes.Ldarg_1);
+					generator.Emit (OpCodes.Unbox_Any, hostType);
+					generator.Emit (OpCodes.Stloc_S, temp2);
+
+					generator.Emit (OpCodes.Ldloca_S, temp1);
+					generator.EmitCall (OpCodes.Call, method, null);
+					generator.Emit (OpCodes.Stloc_0);
+
+					generator.Emit (OpCodes.Ldloca_S, temp2);
+					generator.EmitCall (OpCodes.Call, method, null);
+					generator.Emit (OpCodes.Stloc_1);
+				}
+				else
+				{
+					generator.Emit (OpCodes.Ldarg_0);
+					generator.Emit (OpCodes.Castclass, hostType);
+					generator.EmitCall (OpCodes.Callvirt, method, null);
+					generator.Emit (OpCodes.Stloc_0);
+
+					generator.Emit (OpCodes.Ldarg_1);
+					generator.Emit (OpCodes.Castclass, hostType);
+					generator.EmitCall (OpCodes.Callvirt, method, null);
+					generator.Emit (OpCodes.Stloc_1);
+				}
 
 				if (propType.IsPrimitive)
 				{

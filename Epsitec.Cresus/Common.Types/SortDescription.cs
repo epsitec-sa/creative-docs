@@ -11,6 +11,16 @@ namespace Epsitec.Common.Types
 	public struct SortDescription : System.IEquatable<SortDescription>
 	{
 		/// <summary>
+		/// Initializes a new instance of the <see cref="SortDescription"/> class
+		/// using the ascending sort by default.
+		/// </summary>
+		/// <param name="propertyName">Name of the property used for sorting.</param>
+		public SortDescription(string propertyName)
+			: this (ListSortDirection.Ascending, propertyName)
+		{
+		}
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="SortDescription"/> class.
 		/// </summary>
 		/// <param name="direction">The sort direction.</param>

@@ -139,6 +139,7 @@ namespace Epsitec.Common.Support
 		{
 			PropertyGetter   articleGetter   = DynamicCodeFactory.CreatePropertyGetter (typeof (Record), "Article");
 			PropertyComparer articleComparer = DynamicCodeFactory.CreatePropertyComparer (typeof (Record), "Article");
+			PropertyComparer stockComparer   = DynamicCodeFactory.CreatePropertyComparer (typeof (Record), "Stock");
 
 			Record record1 = new Record ("Harddisk", 4, 402.00M);
 			Record record2 = new Record ("Computer", 1, 1580.00M);
@@ -150,6 +151,11 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ( 0, articleComparer (record2, record2));
 			Assert.AreEqual ( 1, articleComparer (record1, record2));
 			Assert.AreEqual (-1, articleComparer (record2, record1));
+
+			Assert.AreEqual (1, (record1.Stock).CompareTo (record2.Stock));
+			
+			Assert.AreEqual ( 1, stockComparer (record1, record2));
+			Assert.AreEqual (-1, stockComparer (record2, record1));
 		}
 
 		[Test]
@@ -289,7 +295,6 @@ namespace Epsitec.Common.Support
 			{
 				get
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("Article: {0}", this.article ?? "<null>"));
 					return this.article;
 				}
 				set
