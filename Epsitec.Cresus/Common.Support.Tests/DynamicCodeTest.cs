@@ -9,14 +9,23 @@ namespace Epsitec.Common.Support
 	public class DynamicCodeTest
 	{
 		[Test]
-		public void CheckAllocator()
+		public void CheckAllocators()
 		{
-			Allocator<Dummy> allocator = DynamicCodeFactory.CreateAllocator<Dummy> ();
+			Allocator<Dummy> allocator1 = DynamicCodeFactory.CreateAllocator<Dummy> ();
+			Allocator<Dummy, string> allocator2 = DynamicCodeFactory.CreateAllocator<Dummy, string> ();
 
-			Dummy instance = allocator ();
+			Dummy instance;
+			
+			instance = allocator1 ();
 
 			Assert.IsNotNull (instance);
 			Assert.AreEqual (typeof (Dummy), instance.GetType ());
+
+			instance = allocator2 ("Bill");
+
+			Assert.IsNotNull (instance);
+			Assert.AreEqual (typeof (Dummy), instance.GetType ());
+			Assert.AreEqual ("Bill", instance.Name);
 		}
 
 		[Test]
@@ -137,6 +146,15 @@ namespace Epsitec.Common.Support
 
 		private class Dummy
 		{
+			public Dummy()
+			{
+			}
+
+			public Dummy(string name)
+			{
+				this.name = name;
+			}
+
 			public string Name
 			{
 				get
