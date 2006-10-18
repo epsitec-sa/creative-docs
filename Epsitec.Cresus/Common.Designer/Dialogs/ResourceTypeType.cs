@@ -8,6 +8,8 @@ namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
 	/// Dialogue permettant de choisir le type d'un Caption.Type.
+	/// Pour les énumérations natives, il est possible d'étendre le dialogue
+	/// et de choisir une énumération C# dans une liste.
 	/// </summary>
 	public class ResourceTypeType : Abstract
 	{
