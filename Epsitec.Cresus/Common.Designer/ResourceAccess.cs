@@ -2083,7 +2083,7 @@ namespace Epsitec.Common.Designer
 						//	Field.Name !
 						if (bundle == this.primaryBundle)
 						{
-							if (this.type == Type.Values)
+							if (field.Name.StartsWith(ResourceAccess.GetFixFilter(Type.Values)))
 							{
 								caption.Name = ResourceAccess.LastName(field.Name);
 							}
