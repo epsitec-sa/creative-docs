@@ -16,14 +16,14 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			int tabIndex = 0;
 
-			Widget left = new Widget(this);
-			left.MinWidth = 80;
-			left.MaxWidth = 400;
-			left.PreferredWidth = 200;
-			left.Dock = DockStyle.Left;
-			left.Padding = new Margins(10, 10, 10, 10);
+			this.left = new Widget(this);
+			this.left.MinWidth = 80;
+			this.left.MaxWidth = 400;
+			this.left.PreferredWidth = Abstract.leftArrayWidth;
+			this.left.Dock = DockStyle.Left;
+			this.left.Padding = new Margins(10, 10, 10, 10);
 
-			this.labelEdit = new MyWidgets.TextFieldExName(left);
+			this.labelEdit = new MyWidgets.TextFieldExName(this.left);
 			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
 			this.labelEdit.Dock = DockStyle.Bottom;
 			this.labelEdit.ButtonShowCondition = ShowCondition.WhenModified;
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
 
-			this.array = new MyWidgets.StringArray(left);
+			this.array = new MyWidgets.StringArray(this.left);
 			this.array.Columns = 1;
 			this.array.SetColumnsRelativeWidth(0, 1.00);
 			this.array.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
@@ -45,9 +45,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.TabIndex = tabIndex++;
 			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			VSplitter splitter1 = new VSplitter(this);
-			splitter1.Dock = DockStyle.Left;
-			VSplitter.SetAutoCollapseEnable(left, true);
+			this.splitter1 = new VSplitter(this);
+			this.splitter1.Dock = DockStyle.Left;
+			this.splitter1.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
+			VSplitter.SetAutoCollapseEnable(this.left, true);
 
 			this.toolBar = new VToolBar(this);
 			this.toolBar.Margins = new Margins(0, 0, 0, 0);
@@ -138,8 +139,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.tabBook.ActivePage = this.tabPageProperties;
 
-			VSplitter splitter2 = new VSplitter(this);
-			splitter2.Dock = DockStyle.Right;
+			this.splitter2 = new VSplitter(this);
+			this.splitter2.Dock = DockStyle.Right;
 
 			this.UpdateEdit();
 		}
@@ -148,7 +149,9 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
-				this.array.CellCountChanged -= new EventHandler (this.HandleArrayCellCountChanged);
+				this.splitter1.SplitterDragged -= new EventHandler(this.HandleSplitterDragged);
+
+				this.array.CellCountChanged -= new EventHandler(this.HandleArrayCellCountChanged);
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
 
 				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
@@ -401,13 +404,19 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected void HandleArrayCellCountChanged(object sender)
+		private void HandleSplitterDragged(object sender)
+		{
+			//	Le splitter a été bougé.
+			Abstract.leftArrayWidth = this.left.ActualWidth;
+		}
+
+		private void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
 			this.UpdateArray();
 		}
 
-		protected void HandleArraySelectedRowChanged(object sender)
+		private void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
 			this.access.AccessIndex = this.array.SelectedRow;
@@ -417,7 +426,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.DefineProxies(this.panelEditor.SelectedObjects);
 		}
 
-		protected void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		private void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			//	Appelé lorsque la ligne éditable pour le label voit son focus changer.
 			TextFieldEx field = sender as TextFieldEx;
@@ -425,7 +434,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.HandleEditKeyboardFocusChanged(sender, e);
 		}
 
-		protected void HandleTextChanged(object sender)
+		private void HandleTextChanged(object sender)
 		{
 			//	Un texte éditable a changé.
 			if ( this.ignoreChange )  return;
@@ -437,23 +446,23 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateArray();
 		}
 
-		protected void HandlePanelEditorChildrenAdded(object sender)
+		private void HandlePanelEditorChildrenAdded(object sender)
 		{
 			this.UpdateCommands();
 		}
 
-		protected void HandlePanelEditorChildrenSelected(object sender)
+		private void HandlePanelEditorChildrenSelected(object sender)
 		{
 			this.UpdateCommands();
 			this.DefineProxies(this.panelEditor.SelectedObjects);
 		}
 
-		protected void HandlePanelEditorChildrenGeometryChanged(object sender)
+		private void HandlePanelEditorChildrenGeometryChanged(object sender)
 		{
 			this.UpdateProxies();
 		}
 
-		protected void HandlePanelEditorUpdateCommands(object sender)
+		private void HandlePanelEditorUpdateCommands(object sender)
 		{
 			this.UpdateCommands();
 		}
@@ -473,6 +482,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		protected ProxyManager					proxyManager;
+		protected Widget						left;
+		protected VSplitter						splitter1;
+		protected VSplitter						splitter2;
 		protected MyWidgets.TextFieldExName		labelEdit;
 		protected VToolBar						toolBar;
 		protected Scrollable					scrollable;

@@ -14,31 +14,31 @@ namespace Epsitec.Common.Designer.Viewers
 		public AbstractCaptions(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
 			//	Crée les 2 parties gauche/droite séparées par un splitter.
-			Widget left = new Widget(this);
-			left.Name = "Left";
-			left.MinWidth = 80;
-			left.MaxWidth = 400;
-			left.PreferredWidth = 200;
-			left.Dock = DockStyle.Left;
-			left.Padding = new Margins(10, 10, 10, 10);
-			left.TabIndex = this.tabIndex++;
-			left.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.left = new Widget(this);
+			this.left.Name = "Left";
+			this.left.MinWidth = 80;
+			this.left.MaxWidth = 400;
+			this.left.PreferredWidth = Abstract.leftArrayWidth;
+			this.left.Dock = DockStyle.Left;
+			this.left.Padding = new Margins(10, 10, 10, 10);
+			this.left.TabIndex = this.tabIndex++;
+			this.left.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			this.splitter = new VSplitter(this);
 			this.splitter.Dock = DockStyle.Left;
 			this.splitter.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
-			VSplitter.SetAutoCollapseEnable(left, true);
+			VSplitter.SetAutoCollapseEnable(this.left, true);
 
-			Widget right = new Widget(this);
-			right.Name = "Right";
-			right.MinWidth = 200;
-			right.Dock = DockStyle.Fill;
-			right.Padding = new Margins(1, 1, 1, 1);
-			right.TabIndex = this.tabIndex++;
-			right.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.right = new Widget(this);
+			this.right.Name = "Right";
+			this.right.MinWidth = 200;
+			this.right.Dock = DockStyle.Fill;
+			this.right.Padding = new Margins(1, 1, 1, 1);
+			this.right.TabIndex = this.tabIndex++;
+			this.right.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			
 			//	Crée la partie gauche.			
-			this.labelEdit = new MyWidgets.TextFieldExName(left);
+			this.labelEdit = new MyWidgets.TextFieldExName(this.left);
 			this.labelEdit.Name = "LabelEdit";
 			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
 			this.labelEdit.Dock = DockStyle.Bottom;
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
 			this.currentTextField = this.labelEdit;
 
-			this.array = new MyWidgets.StringArray(left);
+			this.array = new MyWidgets.StringArray(this.left);
 			this.array.Columns = 1;
 			this.array.SetColumnsRelativeWidth(0, 1.00);
 			this.array.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Crée la partie droite, bande supérieure pour les boutons des cultures.
-			Widget sup = new Widget(right);
+			Widget sup = new Widget(this.right);
 			sup.Name = "Sup";
 			sup.PreferredHeight = 40;
 			sup.Padding = new Margins(11, 27, 10, 0);
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryCultureGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			//	Crée la partie droite, bande inférieure pour la zone d'étition scrollable.
-			this.scrollable = new Scrollable(right);
+			this.scrollable = new Scrollable(this.right);
 			this.scrollable.Name = "Scrollable";
 			this.scrollable.MinWidth = 100;
 			this.scrollable.MinHeight = 100;
@@ -638,6 +638,7 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandleSplitterDragged(object sender)
 		{
 			//	Le splitter a été bougé.
+			Abstract.leftArrayWidth = this.left.ActualWidth;
 		}
 
 		private void HandleArrayCellCountChanged(object sender)
@@ -778,6 +779,8 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected Widget						left;
+		protected Widget						right;
 		protected VSplitter						splitter;
 		protected Widget						secondaryCultureGroup;
 		protected MyWidgets.TextFieldExName		labelEdit;
