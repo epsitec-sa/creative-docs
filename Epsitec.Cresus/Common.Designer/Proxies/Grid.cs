@@ -825,12 +825,10 @@ namespace Epsitec.Common.Designer.Proxies
 			Grid.GridRowSpanProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowSpan.Druid);
 
 			EnumType gridColumnModeEnumType = Res.Types.ObjectModifier.GridMode;
-			gridColumnModeEnumType.DefineDefaultController("Enum", "Icons");
 			Grid.GridColumnModeProperty.DefaultMetadata.DefineNamedType(gridColumnModeEnumType);
 			Grid.GridColumnModeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnMode.Druid);
 
 			EnumType gridRowModeEnumType = Res.Types.ObjectModifier.GridMode;
-			gridRowModeEnumType.DefineDefaultController("Enum", "Icons");
 			Grid.GridRowModeProperty.DefaultMetadata.DefineNamedType(gridRowModeEnumType);
 			Grid.GridRowModeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowMode.Druid);
 
