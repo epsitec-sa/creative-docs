@@ -11,6 +11,12 @@ namespace Epsitec.Common.Support
 	public delegate T Allocator<T> ();
 	public delegate T Allocator<T, P> (P value);
 
+	public delegate int PropertyComparer(object a, object b);
+
+	//	Links:
+	//	How to: Examine and Instanciate Generic Types with Reflection
+	//	ms-help://MS.VSCC.v80/MS.MSDN.v80/MS.VisualStudio.v80.en/dv_fxadvance/html/f93b03b0-1778-43fc-bc6d-35983d210e74.htm
+
 	/// <summary>
 	/// The <c>DynamicCodeFactory</c> class generates dynamic methods used to
 	/// access properties, create objects, etc.
@@ -185,7 +191,6 @@ namespace Epsitec.Common.Support
 				throw new System.InvalidOperationException (string.Format ("Class {0} has no constructor", type.Name));
 			}
 
-			generator.Emit (OpCodes.Nop);
 			generator.Emit (OpCodes.Newobj, constructor);
 			generator.Emit (OpCodes.Ret);
 
@@ -228,12 +233,97 @@ namespace Epsitec.Common.Support
 				throw new System.InvalidOperationException (string.Format ("Class {0} has no matching constructor", type.Name));
 			}
 
-			generator.Emit (OpCodes.Nop);
 			generator.Emit (OpCodes.Ldarg_0);
 			generator.Emit (OpCodes.Newobj, constructor);
 			generator.Emit (OpCodes.Ret);
 
 			return (Allocator<T, P>) allocator.CreateDelegate (typeof (Allocator<T, P>));
+		}
+
+		public static PropertyComparer CreatePropertyComparer(System.Type type, string propertyName)
+		{
+			return DynamicCodeFactory.CreatePropertyComparer (type.GetProperty (propertyName));
+		}
+
+		public static PropertyComparer CreatePropertyComparer(System.Reflection.PropertyInfo propertyInfo)
+		{
+			System.Reflection.MethodInfo method = propertyInfo.GetGetMethod (false);
+
+			if ((method == null) ||
+				(propertyInfo.CanRead == false))
+			{
+				return null;
+			}
+
+			System.Type hostType  = propertyInfo.DeclaringType;
+			System.Type propType  = propertyInfo.PropertyType;
+			System.Type[] arguments = new System.Type[2];
+			
+			System.Type genericComparable = typeof (System.IComparable<>);
+			System.Type typedComparable = genericComparable.MakeGenericType (propType);
+
+			if (propType.IsClass == false)
+			{
+				throw new System.NotImplementedException ();
+			}
+
+			System.Reflection.MethodInfo compareToMethod = typedComparable.GetMethod ("CompareTo");
+
+			arguments[0] = typeof (object);
+			arguments[1] = typeof (object);
+
+			string name = string.Concat ("_PropertyComparer_", propertyInfo.Name);
+
+			System.Reflection.Emit.DynamicMethod comparer;
+			comparer = new System.Reflection.Emit.DynamicMethod (name, typeof (int), arguments, hostType);
+
+			System.Reflection.Emit.ILGenerator generator = comparer.GetILGenerator ();
+
+			System.Reflection.Emit.LocalBuilder l1;
+			System.Reflection.Emit.LocalBuilder l2;
+			System.Reflection.Emit.Label label1 = generator.DefineLabel ();
+			System.Reflection.Emit.Label label2 = generator.DefineLabel ();
+			System.Reflection.Emit.Label label3 = generator.DefineLabel ();
+
+			l1 = generator.DeclareLocal (propType);
+			l2 = generator.DeclareLocal (propType);
+
+			generator.Emit (OpCodes.Ldarg_0);
+			generator.Emit (OpCodes.Castclass, propertyInfo.DeclaringType);
+			generator.EmitCall (OpCodes.Callvirt, method, null);
+			generator.Emit (OpCodes.Stloc_0);
+
+			generator.Emit (OpCodes.Ldarg_1);
+			generator.Emit (OpCodes.Castclass, propertyInfo.DeclaringType);
+			generator.EmitCall (OpCodes.Callvirt, method, null);
+			generator.Emit (OpCodes.Stloc_1);
+
+			generator.Emit (OpCodes.Ldloc_0);
+			generator.Emit (OpCodes.Ldloc_1);
+			generator.Emit (OpCodes.Bne_Un_S, label1);
+
+			generator.Emit (OpCodes.Ldc_I4_0);
+			generator.Emit (OpCodes.Ret);
+
+			generator.MarkLabel (label1);
+			generator.Emit (OpCodes.Ldloc_0);
+			generator.Emit (OpCodes.Brtrue_S, label2);
+			generator.Emit (OpCodes.Ldc_I4_M1);
+			generator.Emit (OpCodes.Ret);
+
+			generator.MarkLabel (label2);
+			generator.Emit (OpCodes.Ldloc_1);
+			generator.Emit (OpCodes.Brtrue_S, label3);
+			generator.Emit (OpCodes.Ldc_I4_1);
+			generator.Emit (OpCodes.Ret);
+
+			generator.MarkLabel (label3);
+			generator.Emit (OpCodes.Ldloc_0);
+			generator.Emit (OpCodes.Ldloc_1);
+			generator.EmitCall (OpCodes.Callvirt, compareToMethod, null);
+			generator.Emit (OpCodes.Ret);
+
+			return (PropertyComparer) comparer.CreateDelegate (typeof (PropertyComparer));
 		}
 	}
 }
