@@ -29,6 +29,101 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
+		public void CheckPropertyComparerForClassProperties()
+		{
+			PropertyComparer nameComparer = DynamicCodeFactory.CreatePropertyComparer (typeof (Dummy), "Name");
+
+			Dummy d1 = new Dummy ("Abc");
+			Dummy d2 = new Dummy ("Xyz");
+			Dummy d3 = new Dummy ("Abc");
+			Dummy d4 = new Dummy (null);
+
+			Assert.AreEqual (-1, nameComparer (d1, d2));
+			Assert.AreEqual (1, nameComparer (d2, d1));
+			Assert.AreEqual (0, nameComparer (d1, d3));
+			Assert.AreEqual (-1, nameComparer (d4, d1));
+			Assert.AreEqual (1, nameComparer (d1, d4));
+			Assert.AreEqual (0, nameComparer (d4, d4));
+
+			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+
+			watch.Reset ();
+			watch.Start ();
+
+			const int count = 1000000;
+			int n = 0;
+
+			for (int i = 0; i < count; i++)
+			{
+				n += nameComparer (d2, d1);
+			}
+
+			watch.Stop ();
+			Assert.AreEqual (n, count);
+
+			System.Console.Out.WriteLine ("{0} dynamic property CompareTo take {1} ms", count, watch.ElapsedMilliseconds);
+
+			{
+				System.IComparable<string> comparable = d2.Name;
+				n += comparable.CompareTo (d1.Name);
+			}
+
+			n = 0;
+			watch.Reset ();
+			watch.Start ();
+
+			for (int i = 0; i < count; i++)
+			{
+				System.IComparable<string> comparable = d2.Name;
+				n += comparable.CompareTo (d1.Name);
+			}
+
+			watch.Stop ();
+			Assert.AreEqual (n, count);
+
+			System.Console.Out.WriteLine ("{0} optimal property CompareTo take {1} ms", count, watch.ElapsedMilliseconds);
+
+			n = 0;
+			watch.Reset ();
+			watch.Start ();
+
+			System.Collections.Comparer comp = System.Collections.Comparer.Default;
+
+			for (int i = 0; i < count; i++)
+			{
+				n += comp.Compare (d2.Name, d1.Name);
+			}
+
+			watch.Stop ();
+			Assert.AreEqual (n, count);
+
+			System.Console.Out.WriteLine ("{0} Comparer-based property CompareTo take {1} ms", count, watch.ElapsedMilliseconds);
+		}
+
+		[Test]
+		public void CheckPropertyComparerForValueTypeProperties()
+		{
+			PropertyComparer ageComparer = DynamicCodeFactory.CreatePropertyComparer (typeof (Dummy), "Age");
+			PropertyComparer dateComparer = DynamicCodeFactory.CreatePropertyComparer (typeof (Dummy), "Date");
+
+			Dummy d1 = new Dummy ();
+			Dummy d2 = new Dummy ();
+			
+			d1.Age = 30;
+			d2.Age = 31;
+
+			d1.Date = new System.DateTime (2006, 10, 18);
+			d2.Date = new System.DateTime (2006, 10, 19);
+
+			Assert.AreEqual (-1, ageComparer (d1, d2));
+			Assert.AreEqual ( 1, ageComparer (d2, d1));
+			Assert.AreEqual ( 0, ageComparer (d1, d1));
+			Assert.AreEqual (-1, dateComparer (d1, d2));
+			Assert.AreEqual ( 1, dateComparer (d2, d1));
+			Assert.AreEqual ( 0, dateComparer (d1, d1));
+		}
+
+		[Test]
 		public void CheckPropertyGet()
 		{
 			PropertyGetter nameGetter = DynamicCodeFactory.CreatePropertyGetter (typeof (Dummy), "Name");
@@ -144,78 +239,6 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
-		public void CheckPropertyComparer()
-		{
-			PropertyComparer nameComparer = DynamicCodeFactory.CreatePropertyComparer (typeof (Dummy), "Name");
-
-			Dummy d1 = new Dummy ("Abc");
-			Dummy d2 = new Dummy ("Xyz");
-			Dummy d3 = new Dummy ("Abc");
-			Dummy d4 = new Dummy (null);
-
-			Assert.AreEqual (-1, nameComparer (d1, d2));
-			Assert.AreEqual (1, nameComparer (d2, d1));
-			Assert.AreEqual (0, nameComparer (d1, d3));
-			Assert.AreEqual (-1, nameComparer (d4, d1));
-			Assert.AreEqual (1, nameComparer (d1, d4));
-			Assert.AreEqual (0, nameComparer (d4, d4));
-
-			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
-
-			watch.Reset ();
-			watch.Start ();
-
-			const int count = 1000000;
-			int n = 0;
-
-			for (int i = 0; i < count; i++)
-			{
-				n += nameComparer (d2, d1);
-			}
-
-			watch.Stop ();
-			Assert.AreEqual (n, count);
-
-			System.Console.Out.WriteLine ("{0} dynamic property CompareTo take {1} ms", count, watch.ElapsedMilliseconds);
-			
-			{
-				System.IComparable<string> comparable = d2.Name;
-				n += comparable.CompareTo (d1.Name);
-			}
-
-			n = 0;
-			watch.Reset ();
-			watch.Start ();
-
-			for (int i = 0; i < count; i++)
-			{
-				System.IComparable<string> comparable = d2.Name;
-				n += comparable.CompareTo (d1.Name);
-			}
-
-			watch.Stop ();
-			Assert.AreEqual (n, count);
-
-			System.Console.Out.WriteLine ("{0} optimal property CompareTo take {1} ms", count, watch.ElapsedMilliseconds);
-
-			n = 0;
-			watch.Reset ();
-			watch.Start ();
-
-			System.Collections.Comparer comp = System.Collections.Comparer.Default;
-
-			for (int i = 0; i < count; i++)
-			{
-				n += comp.Compare (d2.Name, d1.Name);
-			}
-
-			watch.Stop ();
-			Assert.AreEqual (n, count);
-
-			System.Console.Out.WriteLine ("{0} Comparer-based property CompareTo take {1} ms", count, watch.ElapsedMilliseconds);
-		}
-
-		[Test]
 		public void CheckXxx()
 		{
 			int x = 1;
@@ -230,29 +253,34 @@ namespace Epsitec.Common.Support
 			Dummy d1 = new Dummy ();
 			Dummy d2 = new Dummy ();
 
-			DynamicCodeTest.CompareDummies (d1, d2);
+			DynamicCodeTest.CompareDummies1 (d1, d2);
+			DynamicCodeTest.CompareDummies2 (d1, d2);
 		}
 
-		private static int CompareDummies(Dummy d1, Dummy d2)
+		private static int CompareDummies1(Dummy d1, Dummy d2)
 		{
-			string v1 = d1.Name;
-			string v2 = d2.Name;
-			object o1 = v1;
+			int v1 = d1.Age;
+			int v2 = d2.Age;
 
-			if (o1 == v2)
+			if (v1 == v2)
 			{
 				return 0;
 			}
-			if (v1 == null)
+
+			return ((System.IComparable<int>) v1).CompareTo (v2);
+		}
+		
+		private static int CompareDummies2(Dummy d1, Dummy d2)
+		{
+			System.DateTime v1 = d1.Date;
+			System.DateTime v2 = d2.Date;
+
+			if (v1 == v2)
 			{
-				return -1;
-			}
-			if (v2 == null)
-			{
-				return 1;
+				return 0;
 			}
 
-			return ((System.IComparable<string>)v1).CompareTo (v2);
+			return ((System.IComparable<System.DateTime>) v1).CompareTo (v2);
 		}
 
 
