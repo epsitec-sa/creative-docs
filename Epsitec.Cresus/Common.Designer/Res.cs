@@ -67,39 +67,13 @@ namespace Epsitec.Common.Designer
 			
 			public static class Layout
 			{
-				public static Epsitec.Common.Types.Caption Anchored { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 33)); } }
 				public static Epsitec.Common.Types.Caption AnchoredHorizontalAttachment { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 13)); } }
 				public static Epsitec.Common.Types.Caption AnchoredVerticalAttachment { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 14)); } }
 				public static Epsitec.Common.Types.Caption ChildrenPlacement { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 12)); } }
-				public static Epsitec.Common.Types.Caption Grid { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 129)); } }
-				public static Epsitec.Common.Types.Caption HorizontalStacked { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 97)); } }
 				public static Epsitec.Common.Types.Caption StackedHorizontalAlignment { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 17)); } }
 				public static Epsitec.Common.Types.Caption StackedHorizontalAttachment { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 15)); } }
 				public static Epsitec.Common.Types.Caption StackedVerticalAlignment { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 18)); } }
 				public static Epsitec.Common.Types.Caption StackedVerticalAttachment { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 16)); } }
-				public static Epsitec.Common.Types.Caption VerticalStacked { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 65)); } }
-				public static class Alignment
-				{
-					public static Epsitec.Common.Types.Caption BaseLine { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 291)); } }
-					public static Epsitec.Common.Types.Caption Bottom { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 99)); } }
-					public static Epsitec.Common.Types.Caption HCenter { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 163)); } }
-					public static Epsitec.Common.Types.Caption HStretch { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 227)); } }
-					public static Epsitec.Common.Types.Caption Left { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 35)); } }
-					public static Epsitec.Common.Types.Caption Right { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 67)); } }
-					public static Epsitec.Common.Types.Caption Top { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 131)); } }
-					public static Epsitec.Common.Types.Caption VCenter { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 195)); } }
-					public static Epsitec.Common.Types.Caption VStretch { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 259)); } }
-				}
-				
-				public static class Attachment
-				{
-					public static Epsitec.Common.Types.Caption Botton { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 98)); } }
-					public static Epsitec.Common.Types.Caption HFill { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 162)); } }
-					public static Epsitec.Common.Types.Caption Left { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 34)); } }
-					public static Epsitec.Common.Types.Caption Right { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 66)); } }
-					public static Epsitec.Common.Types.Caption Top { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 130)); } }
-					public static Epsitec.Common.Types.Caption VFill { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 194)); } }
-				}
 			}
 			
 			public static class Padding
