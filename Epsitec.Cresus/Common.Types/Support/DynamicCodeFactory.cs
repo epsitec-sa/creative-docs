@@ -240,11 +240,26 @@ namespace Epsitec.Common.Support
 			return (Allocator<T, P>) allocator.CreateDelegate (typeof (Allocator<T, P>));
 		}
 
+		/// <summary>
+		/// Creates a property comparer for the specified property.
+		/// </summary>
+		/// <param name="type">The type of the object to access.</param>
+		/// <param name="propertyName">The name of the property.</param>
+		/// <returns>
+		/// A <see cref="PropertyComparer"/> for the property.
+		/// </returns>
 		public static PropertyComparer CreatePropertyComparer(System.Type type, string propertyName)
 		{
 			return DynamicCodeFactory.CreatePropertyComparer (type.GetProperty (propertyName));
 		}
 
+		/// <summary>
+		/// Creates a property comparer for the specified property.
+		/// </summary>
+		/// <param name="propertyInfo">The property info.</param>
+		/// <returns>
+		/// A <see cref="PropertyComparer"/> for the property.
+		/// </returns>
 		public static PropertyComparer CreatePropertyComparer(System.Reflection.PropertyInfo propertyInfo)
 		{
 			System.Reflection.MethodInfo method = propertyInfo.GetGetMethod (false);
@@ -262,11 +277,6 @@ namespace Epsitec.Common.Support
 			System.Type genericComparable = typeof (System.IComparable<>);
 			System.Type typedComparable = genericComparable.MakeGenericType (propType);
 
-			if (propType.IsClass == false)
-			{
-				throw new System.NotImplementedException ();
-			}
-
 			System.Reflection.MethodInfo compareToMethod = typedComparable.GetMethod ("CompareTo");
 
 			arguments[0] = typeof (object);
@@ -279,49 +289,97 @@ namespace Epsitec.Common.Support
 
 			System.Reflection.Emit.ILGenerator generator = comparer.GetILGenerator ();
 
-			System.Reflection.Emit.LocalBuilder l1;
-			System.Reflection.Emit.LocalBuilder l2;
-			System.Reflection.Emit.Label label1 = generator.DefineLabel ();
-			System.Reflection.Emit.Label label2 = generator.DefineLabel ();
-			System.Reflection.Emit.Label label3 = generator.DefineLabel ();
+			if (propType.IsClass)
+			{
+				System.Reflection.Emit.LocalBuilder l1;
+				System.Reflection.Emit.LocalBuilder l2;
+				System.Reflection.Emit.Label label1 = generator.DefineLabel ();
+				System.Reflection.Emit.Label label2 = generator.DefineLabel ();
+				System.Reflection.Emit.Label label3 = generator.DefineLabel ();
 
-			l1 = generator.DeclareLocal (propType);
-			l2 = generator.DeclareLocal (propType);
+				l1 = generator.DeclareLocal (propType);
+				l2 = generator.DeclareLocal (propType);
 
-			generator.Emit (OpCodes.Ldarg_0);
-			generator.Emit (OpCodes.Castclass, propertyInfo.DeclaringType);
-			generator.EmitCall (OpCodes.Callvirt, method, null);
-			generator.Emit (OpCodes.Stloc_0);
+				generator.Emit (OpCodes.Ldarg_0);
+				generator.Emit (OpCodes.Castclass, propertyInfo.DeclaringType);
+				generator.EmitCall (OpCodes.Callvirt, method, null);
+				generator.Emit (OpCodes.Stloc_0);
 
-			generator.Emit (OpCodes.Ldarg_1);
-			generator.Emit (OpCodes.Castclass, propertyInfo.DeclaringType);
-			generator.EmitCall (OpCodes.Callvirt, method, null);
-			generator.Emit (OpCodes.Stloc_1);
+				generator.Emit (OpCodes.Ldarg_1);
+				generator.Emit (OpCodes.Castclass, propertyInfo.DeclaringType);
+				generator.EmitCall (OpCodes.Callvirt, method, null);
+				generator.Emit (OpCodes.Stloc_1);
 
-			generator.Emit (OpCodes.Ldloc_0);
-			generator.Emit (OpCodes.Ldloc_1);
-			generator.Emit (OpCodes.Bne_Un_S, label1);
+				generator.Emit (OpCodes.Ldloc_0);
+				generator.Emit (OpCodes.Ldloc_1);
+				generator.Emit (OpCodes.Bne_Un_S, label1);
 
-			generator.Emit (OpCodes.Ldc_I4_0);
-			generator.Emit (OpCodes.Ret);
+				generator.Emit (OpCodes.Ldc_I4_0);
+				generator.Emit (OpCodes.Ret);
 
-			generator.MarkLabel (label1);
-			generator.Emit (OpCodes.Ldloc_0);
-			generator.Emit (OpCodes.Brtrue_S, label2);
-			generator.Emit (OpCodes.Ldc_I4_M1);
-			generator.Emit (OpCodes.Ret);
+				generator.MarkLabel (label1);
+				generator.Emit (OpCodes.Ldloc_0);
+				generator.Emit (OpCodes.Brtrue_S, label2);
+				generator.Emit (OpCodes.Ldc_I4_M1);
+				generator.Emit (OpCodes.Ret);
 
-			generator.MarkLabel (label2);
-			generator.Emit (OpCodes.Ldloc_1);
-			generator.Emit (OpCodes.Brtrue_S, label3);
-			generator.Emit (OpCodes.Ldc_I4_1);
-			generator.Emit (OpCodes.Ret);
+				generator.MarkLabel (label2);
+				generator.Emit (OpCodes.Ldloc_1);
+				generator.Emit (OpCodes.Brtrue_S, label3);
+				generator.Emit (OpCodes.Ldc_I4_1);
+				generator.Emit (OpCodes.Ret);
 
-			generator.MarkLabel (label3);
-			generator.Emit (OpCodes.Ldloc_0);
-			generator.Emit (OpCodes.Ldloc_1);
-			generator.EmitCall (OpCodes.Callvirt, compareToMethod, null);
-			generator.Emit (OpCodes.Ret);
+				generator.MarkLabel (label3);
+				generator.Emit (OpCodes.Ldloc_0);
+				generator.Emit (OpCodes.Ldloc_1);
+				generator.EmitCall (OpCodes.Callvirt, compareToMethod, null);
+				generator.Emit (OpCodes.Ret);
+			}
+			else if (propType.IsValueType)
+			{
+				System.Reflection.Emit.LocalBuilder l1;
+				System.Reflection.Emit.LocalBuilder l2;
+				System.Reflection.Emit.Label label1 = generator.DefineLabel ();
+
+				l1 = generator.DeclareLocal (propType);
+				l2 = generator.DeclareLocal (propType);
+
+				generator.Emit (OpCodes.Ldarg_0);
+				generator.Emit (OpCodes.Castclass, propertyInfo.DeclaringType);
+				generator.EmitCall (OpCodes.Callvirt, method, null);
+				generator.Emit (OpCodes.Stloc_0);
+
+				generator.Emit (OpCodes.Ldarg_1);
+				generator.Emit (OpCodes.Castclass, propertyInfo.DeclaringType);
+				generator.EmitCall (OpCodes.Callvirt, method, null);
+				generator.Emit (OpCodes.Stloc_1);
+
+				System.Reflection.MethodInfo equalityMethod = propType.GetMethod ("op_Equality", new System.Type[] { propType, propType });
+
+				if (equalityMethod == null)
+				{
+					generator.Emit (OpCodes.Ldloc_0);
+					generator.Emit (OpCodes.Ldloc_1);
+					generator.Emit (OpCodes.Bne_Un_S, label1);
+				}
+				else
+				{
+					generator.Emit (OpCodes.Ldloc_0);
+					generator.Emit (OpCodes.Ldloc_1);
+					generator.EmitCall (OpCodes.Call, equalityMethod, null);
+					generator.Emit (OpCodes.Brfalse_S, label1);
+				}
+
+				generator.Emit (OpCodes.Ldc_I4_0);
+				generator.Emit (OpCodes.Ret);
+
+				generator.MarkLabel (label1);
+				generator.Emit (OpCodes.Ldloc_0);
+				generator.Emit (OpCodes.Box, propType);
+				generator.Emit (OpCodes.Ldloc_1);
+				generator.EmitCall (OpCodes.Callvirt, compareToMethod, null);
+				generator.Emit (OpCodes.Ret);
+			}
 
 			return (PropertyComparer) comparer.CreateDelegate (typeof (PropertyComparer));
 		}
