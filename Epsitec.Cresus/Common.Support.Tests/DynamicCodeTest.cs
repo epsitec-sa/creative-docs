@@ -9,6 +9,17 @@ namespace Epsitec.Common.Support
 	public class DynamicCodeTest
 	{
 		[Test]
+		public void CheckAllocator()
+		{
+			Allocator<Dummy> allocator = DynamicCodeFactory.CreateAllocator<Dummy> ();
+
+			Dummy instance = allocator ();
+
+			Assert.IsNotNull (instance);
+			Assert.AreEqual (typeof (Dummy), instance.GetType ());
+		}
+
+		[Test]
 		public void CheckPropertyGet()
 		{
 			PropertyGetter nameGetter = DynamicCodeFactory.CreatePropertyGetter (typeof (Dummy), "Name");
