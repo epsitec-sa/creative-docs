@@ -9,7 +9,12 @@ namespace Epsitec.Common.Support
 
 	public delegate void PropertySetter(object target, object value);
 	public delegate object PropertyGetter(object target);
+	public delegate T Allocator<T> ();
 
+	/// <summary>
+	/// The <c>DynamicCodeFactory</c> class generates dynamic methods used to
+	/// access properties.
+	/// </summary>
 	public static class DynamicCodeFactory
 	{
 		public static PropertySetter CreatePropertySetter(System.Type type, string propertyName)
@@ -113,5 +118,31 @@ namespace Epsitec.Common.Support
 
 			return (PropertyGetter) getter.CreateDelegate (typeof (PropertyGetter));
 		}
+
+		public static Allocator<T> CreateAllocator<T>()
+		{
+			//	Create a small piece of dynamic code which does simply "new T()"
+			//	for the underlying system type. This code relies on lightweight
+			//	code generation and results in a very fast dynamic allocator.
+
+			string name = string.Concat ("_DynamicAllocator_", typeof (T).Name);
+			
+			System.Reflection.Module module = typeof (T).Module;
+			System.Reflection.Emit.DynamicMethod allocator = new System.Reflection.Emit.DynamicMethod (name, typeof (T), System.Type.EmptyTypes, module, true);
+			System.Reflection.Emit.ILGenerator generator = allocator.GetILGenerator ();
+			System.Reflection.ConstructorInfo constructor = typeof (T).GetConstructor (System.Type.EmptyTypes);
+
+			if (constructor == null)
+			{
+				throw new System.InvalidOperationException (string.Format ("Class {0} has no constructor", typeof (T).Name));
+			}
+
+			generator.Emit (OpCodes.Nop);
+			generator.Emit (OpCodes.Newobj, constructor);
+			generator.Emit (OpCodes.Ret);
+
+			return (Allocator<T>) allocator.CreateDelegate (typeof (Allocator<T>));
+		}
+
 	}
 }
