@@ -17,6 +17,21 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Editeur contenant toutes les définitions.
 			this.CreateBand(out this.container, "", 0.3);
 
+			MyWidgets.StackedPanel leftContainer;
+			this.CreateBand(out leftContainer, "Contrôleur", 0.7);
+
+			this.fieldController = new TextFieldCombo(leftContainer.Container);
+			this.fieldController.IsReadOnly = true;
+			this.fieldController.PreferredWidth = 200;
+			this.fieldController.HorizontalAlignment = HorizontalAlignment.Left;
+			this.fieldController.Dock = DockStyle.StackBegin;
+			this.fieldController.TextChanged += new EventHandler(this.HandleControllerTextChanged);
+			this.fieldController.TabIndex = this.tabIndex++;
+			this.fieldController.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldController.Items.Add("String");
+			this.fieldController.Items.Add("Numeric");
+			this.fieldController.Items.Add("Enum.Icons");
+
 			this.UpdateEdit();
 		}
 
@@ -24,6 +39,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
+				this.fieldController.TextChanged -= new EventHandler(this.HandleControllerTextChanged);
 			}
 
 			base.Dispose(disposing);
@@ -120,6 +136,15 @@ namespace Epsitec.Common.Designer.Viewers
 				this.editor.ResourceSelected = sel;
 			}
 
+			if (sel == -1)
+			{
+				this.SetTextField(this.fieldController, 0, null, ResourceAccess.FieldType.None);
+			}
+			else
+			{
+				this.SetTextField(this.fieldController, sel, null, ResourceAccess.FieldType.Controller);
+			}
+
 			this.ignoreChange = iic;
 
 			base.UpdateEdit();  // met à jour le reste
@@ -151,9 +176,23 @@ namespace Epsitec.Common.Designer.Viewers
 			this.access.SetField(sel, null, ResourceAccess.FieldType.AbstractType, null);
 		}
 
+		private void HandleControllerTextChanged(object sender)
+		{
+			//	Le texte éditable pour le contrôleur a changé.
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			int sel = this.access.AccessIndex;
+			string controller = this.fieldController.Text;
+			this.access.SetField(sel, null, ResourceAccess.FieldType.Controller, new ResourceAccess.Field(controller));
+		}
+
 
 		protected MyWidgets.StackedPanel		container;
 		protected ResourceAccess.TypeType		typeType = ResourceAccess.TypeType.None;
 		protected MyWidgets.AbstractTypeEditor	editor;
+		protected TextFieldCombo				fieldController;
 	}
 }

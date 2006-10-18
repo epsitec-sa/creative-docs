@@ -115,7 +115,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public void SetColumnsAbsoluteWidth(int column, double width)
 		{
 			//	Modifie la largeur absolue d'une colonne.
-			this.absoluteColumn = column;  // ce sera fait au prochain UpdateClientGeometry !
+			//	Il faut au préalable spécifier les largeurs relatives de toutes
+			//	les colonnes, avec SetColumnsRelativeWidth !
+			this.absoluteColumn = column;  // ce sera fait au prochain UpdateClientGeometry
 			this.absoluteWidth = width;
 		}
 

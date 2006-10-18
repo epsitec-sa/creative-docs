@@ -36,6 +36,7 @@ namespace Epsitec.Common.Designer
 			Statefull,
 			Shortcuts,
 			Group,
+			Controller,
 			AbstractType,
 			Panel,
 		}
@@ -1313,19 +1314,33 @@ namespace Epsitec.Common.Designer
 			{
 				if (fieldType == FieldType.AbstractType)
 				{
-					AbstractType type = AbstractType.GetCachedType(this.accessCaption);
-
+					AbstractType type = this.GetAbstractType();
 					if (type == null)
 					{
-						type = TypeRosetta.CreateTypeObject(this.accessCaption);
-						if (type == null)
-						{
-							return null;
-						}
-						AbstractType.SetCachedType(this.accessCaption, type);
+						return null;
 					}
 
 					return new Field(type);
+				}
+
+				if (fieldType == FieldType.Controller)
+				{
+					AbstractType type = this.GetAbstractType();
+					if (type == null)
+					{
+						return null;
+					}
+
+					string s;
+					if (string.IsNullOrEmpty(type.DefaultControllerParameter))
+					{
+						s = type.DefaultController;
+					}
+					else
+					{
+						s = string.Concat(type.DefaultController, ".", type.DefaultControllerParameter);
+					}
+					return new Field(s);
 				}
 			}
 
@@ -1480,6 +1495,27 @@ namespace Epsitec.Common.Designer
 					System.Diagnostics.Debug.Assert(fieldType == this.lastAccessField);
 					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
+
+				if (fieldType == FieldType.Controller)
+				{
+					AbstractType type = this.GetAbstractType();
+					if (type == null)
+					{
+						return;
+					}
+
+					string[] s = field.String.Split('.');
+					System.Diagnostics.Debug.Assert(s.Length == 1 || s.Length == 2);
+					if (s.Length == 1)
+					{
+						type.DefineDefaultController(s[0], null);
+					}
+					else
+					{
+						type.DefineDefaultController(s[0], s[1]);
+					}
+					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
+				}
 			}
 
 			if (this.type == Type.Panels)
@@ -1503,6 +1539,23 @@ namespace Epsitec.Common.Designer
 			}
 
 			this.IsDirty = true;
+		}
+
+		protected AbstractType GetAbstractType()
+		{
+			AbstractType type = AbstractType.GetCachedType(this.accessCaption);
+
+			if (type == null)
+			{
+				type = TypeRosetta.CreateTypeObject(this.accessCaption);
+				if (type == null)
+				{
+					return null;
+				}
+				AbstractType.SetCachedType(this.accessCaption, type);
+			}
+
+			return type;
 		}
 
 
