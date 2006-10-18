@@ -95,19 +95,43 @@ namespace Epsitec.Common.Types
 			}
 
 			List<object> list = new List<object> ();
+			
+			System.Type dataType = null;
 
 			foreach (object item in this.sourceCollection)
 			{
 				list.Add (item);
+
+				if (item == null)
+				{
+					throw new System.InvalidOperationException ("Source collection contains null items");
+				}
+				else
+				{
+					System.Type itemType = item.GetType ();
+					
+					if (dataType == null)
+					{
+						dataType = itemType;
+					}
+					else
+					{
+						if (dataType != itemType)
+						{
+							throw new System.InvalidOperationException (string.Format ("Source collection not orthogonal; found type {0} and {1}", dataType.Name, itemType.Name));
+						}
+					}
+				}
 			}
 
-			if (this.sortDescriptions != null)
+			if ((this.sortDescriptions != null) &&
+				(dataType != null))
 			{
 				System.Comparison<object>[] comparisons = new System.Comparison<object> [this.sortDescriptions.Count];
 
 				for (int i = 0; i < this.sortDescriptions.Count; i++)
 				{
-					comparisons[i] = CollectionView.CreateComparison (null, this.sortDescriptions[i]);
+					comparisons[i] = CollectionView.CreateComparison (dataType, this.sortDescriptions[i]);
 				}
 
 				if (comparisons.Length == 1)
@@ -135,36 +159,37 @@ namespace Epsitec.Common.Types
 						);
 				}
 			}
+
+			this.sortedItems = list;
 			
-			//	TODO: refresh the contents of the groups
+			//	TODO: add suspend/resume
+			
+			this.groups.Clear ();
+			this.groups.AddRange (list);
 		}
 
 		private static System.Comparison<object> CreateComparison(System.Type type, SortDescription sort)
 		{
 			string propertyName = sort.PropertyName;
-			
-			Support.PropertyGetter getter = Support.DynamicCodeFactory.CreatePropertyGetter (type, propertyName);
 
+			Support.PropertyComparer comparer = Support.DynamicCodeFactory.CreatePropertyComparer (type, propertyName);
+			
 			switch (sort.Direction)
 			{
 				case ListSortDirection.Ascending:
 					return delegate (object x, object y)
 					{
-						object xValue = getter (x);
-						object yValue = getter (y);
-
-						//	TODO: ...
-						
-						return 0;
+						return comparer (x, y);
 					};
 				
 				case ListSortDirection.Descending:
-					break;
+					return delegate (object x, object y)
+					{
+						return -comparer (x, y);
+					};
 			}
 
-			//	TODO: create the sorting delegate
-
-			return null;
+			throw new System.ArgumentException ("Invalid sort direction");
 		}
 
 		public event Support.EventHandler CurrentChanged;
@@ -209,6 +234,7 @@ namespace Epsitec.Common.Types
 		
 		
 		private System.Collections.IEnumerable	sourceCollection;
+		private List<object>					sortedItems;
 		private int								currentPosition;
 		private object							currentItem;
 		private ObjectList						groups;
