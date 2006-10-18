@@ -105,6 +105,7 @@ namespace Epsitec.Common.Support
 		{
 			PropertyComparer ageComparer = DynamicCodeFactory.CreatePropertyComparer (typeof (Dummy), "Age");
 			PropertyComparer dateComparer = DynamicCodeFactory.CreatePropertyComparer (typeof (Dummy), "Date");
+			PropertyComparer valueComparer = DynamicCodeFactory.CreatePropertyComparer (typeof (Dummy), "Value");
 
 			Dummy d1 = new Dummy ();
 			Dummy d2 = new Dummy ();
@@ -121,6 +122,16 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (-1, dateComparer (d1, d2));
 			Assert.AreEqual ( 1, dateComparer (d2, d1));
 			Assert.AreEqual ( 0, dateComparer (d1, d1));
+
+			Value v1 = new Value (1, 2, "A");
+			Value v2 = new Value (1, 2, "X");
+
+			d1.Value = v1;
+			d2.Value = v2;
+
+			Assert.AreEqual (-1, valueComparer (d1, d2));
+			Assert.AreEqual ( 1, valueComparer (d2, d1));
+			Assert.AreEqual ( 0, valueComparer (d1, d1));
 		}
 
 		[Test]
@@ -283,7 +294,41 @@ namespace Epsitec.Common.Support
 			return ((System.IComparable<System.DateTime>) v1).CompareTo (v2);
 		}
 
+		#region Value Structure
 
+		struct Value : System.IComparable<Value>
+		{
+			public Value(int a, int b, string c)
+			{
+				this.a = a;
+				this.b = b;
+				this.c = c;
+			}
+			
+			private int a;
+			private int b;
+			private string c;
+
+			#region IComparable<Value> Members
+
+			public int CompareTo(Value other)
+			{
+				if ((this.a == other.a) &&
+					(this.b == other.b) &&
+					(this.c == other.c))
+				{
+					return 0;
+				}
+				else
+				{
+					return this.c.CompareTo (other.c);
+				}
+			}
+
+			#endregion
+		}
+
+		#endregion
 
 		#region Dummy Class
 
@@ -334,9 +379,22 @@ namespace Epsitec.Common.Support
 				}
 			}
 
+			public Value Value
+			{
+				get
+				{
+					return this.value;
+				}
+				set
+				{
+					this.value = value;
+				}
+			}
+
 			private string name;
 			private int age;
 			private System.DateTime date;
+			private Value value;
 		}
 
 		#endregion
