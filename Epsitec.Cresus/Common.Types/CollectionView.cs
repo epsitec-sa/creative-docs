@@ -123,8 +123,83 @@ namespace Epsitec.Common.Types
 			
 			this.FillItemsList ();
 			this.SortItemsList ();
+			
+			this.GroupItemsInList ();
 
 			this.groups.AddRange (this.sortedItems);
+		}
+
+		private void GroupItemsInList()
+		{
+			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.CurrentCulture;
+			
+			GroupNode root = new GroupNode ();
+
+			AbstractGroupDescription[] rules = this.groupDescriptions.ToArray ();
+			
+			foreach (object item in this.sortedItems)
+			{
+				CollectionView.ProcessGroup (item, culture, rules, 0, root);
+			}
+		}
+
+		private static void ProcessGroup(object item, System.Globalization.CultureInfo culture, AbstractGroupDescription[] rules, int level, GroupNode node)
+		{
+			int nextLevel = level+1;
+			string[] names = rules[level].GetGroupNamesForItem (item, culture);
+
+			foreach (string name in names)
+			{
+				GroupNode subnode = node.GetSubnode (name);
+
+				if (nextLevel < rules.Length)
+				{
+					CollectionView.ProcessGroup (item, culture, rules, nextLevel, subnode);
+				}
+				else
+				{
+					subnode.Add (item);
+				}
+			}
+		}
+
+		private class GroupNode
+		{
+			public GroupNode()
+			{
+			}
+
+			public GroupNode GetSubnode(string name)
+			{
+				if (this.subnodes == null)
+				{
+					this.subnodes = new Dictionary<string, GroupNode> ();
+				}
+
+				GroupNode subnode;
+
+				if (this.subnodes.TryGetValue (name, out subnode))
+				{
+					return subnode;
+				}
+
+				subnode = new GroupNode ();
+				this.subnodes[name] = subnode;
+				return subnode;
+			}
+
+			public void Add(object item)
+			{
+				if (this.leaves == null)
+				{
+					this.leaves = new List<object> ();
+				}
+				
+				this.leaves.Add (item);
+			}
+			
+			private Dictionary<string, GroupNode> subnodes;
+			private List<object> leaves;
 		}
 
 		private void SortItemsList()
