@@ -951,7 +951,7 @@ namespace Epsitec.Common.Designer.Viewers
 				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldType);
 
 				textField.Enable = true;
-				textField.Text = field.String;
+				textField.Text = (field == null) ? "" : field.String;
 			}
 		}
 

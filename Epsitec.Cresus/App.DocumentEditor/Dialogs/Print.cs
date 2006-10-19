@@ -47,10 +47,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				bookParam.TabTitle = Res.Strings.Dialog.Print.TabPage.Param;
 				bookDoc.Items.Add(bookParam);
 
+				//	L'onglet 'Image' est provisoirement caché, puisque les choix pour les filtres
+				//	des groupes A et B ne sont pas supportés par le port d'impression.
 				TabPage bookImage = new TabPage();
 				bookImage.Name = "Image";
 				bookImage.TabTitle = Res.Strings.Dialog.Print.TabPage.Image;
-				//?bookDoc.Items.Add(bookImage);
+				//bookDoc.Items.Add(bookImage);
 
 				TabPage bookPublisher = new TabPage();
 				bookPublisher.Name = "Publisher";
