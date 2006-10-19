@@ -166,7 +166,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public static TypeType CaptionTypeType(AbstractType type)
+		public static TypeType AbstractTypeToTypeType(AbstractType type)
 		{
 			if (type is VoidType       )  return TypeType.Void;
 			if (type is BooleanType    )  return TypeType.Boolean;
@@ -181,7 +181,7 @@ namespace Epsitec.Common.Designer
 			return TypeType.None;
 		}
 
-		protected static string ControllerTypeType(AbstractType type)
+		protected static string TypeTypeController(AbstractType type)
 		{
 			if (type is VoidType       )  return null;
 			if (type is BooleanType    )  return "Boolean";
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
-		protected static string ControllerParameterTypeType(AbstractType type)
+		protected static string TypeTypeControllerParameter(AbstractType type)
 		{
 			if (type is VoidType       )  return null;
 			if (type is BooleanType    )  return null;
@@ -211,7 +211,7 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
-		protected static AbstractType CreateTypeType(TypeType type)
+		protected static AbstractType TypeTypeCreate(TypeType type)
 		{
 			switch (type)
 			{
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
-		public static string ConvTypeType(TypeType type)
+		public static string TypeTypeToName(TypeType type)
 		{
 			switch (type)
 			{
@@ -247,7 +247,7 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
-		public static TypeType ConvTypeType(string name)
+		public static TypeType NameToTypeType(string name)
 		{
 			switch (name)
 			{
@@ -463,14 +463,14 @@ namespace Epsitec.Common.Designer
 
 							if (et == null)
 							{
-								type = ResourceAccess.CreateTypeType(this.lastTypeTypeCreatated);
+								type = ResourceAccess.TypeTypeCreate(this.lastTypeTypeCreatated);
 							}
 							else
 							{
 								type = et;
 							}
 
-							type.DefineDefaultController(ResourceAccess.ControllerTypeType(type), ResourceAccess.ControllerParameterTypeType(type));
+							type.DefineDefaultController(ResourceAccess.TypeTypeController(type), ResourceAccess.TypeTypeControllerParameter(type));
 							newField.SetStringValue(type.Caption.SerializeToString());
 						}
 					}
@@ -1535,7 +1535,7 @@ namespace Epsitec.Common.Designer
 						return;
 					}
 
-					type.DefineDefaultController(ResourceAccess.ControllerTypeType(type), field.String);
+					type.DefineDefaultController(ResourceAccess.TypeTypeController(type), field.String);
 					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
 			}
