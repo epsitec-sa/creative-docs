@@ -26,8 +26,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldController.TextChanged += new EventHandler(this.HandleControllerTextChanged);
 			this.fieldController.TabIndex = this.tabIndex++;
 			this.fieldController.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.fieldController.Items.Add("Normal");
-			this.fieldController.Items.Add("Icons");
 
 			this.CreateBand(out this.container, "", 0.6);
 
@@ -135,6 +133,8 @@ namespace Epsitec.Common.Designer.Viewers
 				this.editor.ResourceSelected = sel;
 			}
 
+			this.UpdateController(typeType);
+
 			if (sel == -1)
 			{
 				this.SetTextField(this.fieldController, 0, null, ResourceAccess.FieldType.None);
@@ -147,6 +147,30 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ignoreChange = iic;
 
 			base.UpdateEdit();  // met à jour le reste
+		}
+
+		protected void UpdateController(ResourceAccess.TypeType typeType)
+		{
+			this.fieldController.Items.Clear();
+			this.fieldController.Items.Add("Normal");
+
+			if (typeType == ResourceAccess.TypeType.Decimal    ||
+				typeType == ResourceAccess.TypeType.Double     ||
+				typeType == ResourceAccess.TypeType.Integer    ||
+				typeType == ResourceAccess.TypeType.LongInteger)
+			{
+				this.fieldController.Items.Add("Simply");
+				this.fieldController.Items.Add("Slider");
+				this.fieldController.Items.Add("UpDown");
+			}
+
+			if (typeType == ResourceAccess.TypeType.Enum)
+			{
+				this.fieldController.Items.Add("Icons");
+				this.fieldController.Items.Add("RadioButtons");
+				this.fieldController.Items.Add("ScrollList");
+				this.fieldController.Items.Add("Combo");
+			}
 		}
 
 
