@@ -57,6 +57,19 @@ namespace Epsitec.Common.Types
 			get;
 		}
 
+		/// <summary>
+		/// Gets or sets a callback used to determine if an item is suitable for
+		/// inclusion in the view.
+		/// </summary>
+		/// <value>
+		/// A method used to determine if an item is suitable for inclusion in the view.
+		/// </value>
+		System.Predicate<object> Filter
+		{
+			get;
+			set;
+		}
+
 		void Refresh();
 
 		event Support.EventHandler CurrentChanged;

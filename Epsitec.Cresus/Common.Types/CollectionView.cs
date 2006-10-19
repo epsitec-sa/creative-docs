@@ -86,6 +86,18 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public System.Predicate<object>			Filter
+		{
+			get
+			{
+				return this.filter;
+			}
+			set
+			{
+				this.filter = value;
+			}
+		}
+
 		public void Refresh()
 		{
 			if (this.groups == null)
@@ -97,17 +109,17 @@ namespace Epsitec.Common.Types
 			List<object> list = new List<object> ();
 			
 			System.Type dataType = null;
-
+			
 			foreach (object item in this.sourceCollection)
 			{
-				list.Add (item);
-
 				if (item == null)
 				{
 					throw new System.InvalidOperationException ("Source collection contains null items");
 				}
-				else
+				else if ((this.filter == null) || (this.filter (item)))
 				{
+					list.Add (item);
+
 					System.Type itemType = item.GetType ();
 					
 					if (dataType == null)
@@ -241,5 +253,6 @@ namespace Epsitec.Common.Types
 		private ReadOnlyObjectList				readOnlyGroups;
 		private GroupDescriptionList			groupDescriptions;
 		private SortDescriptionList				sortDescriptions;
+		private System.Predicate<object>		filter;
 	}
 }
