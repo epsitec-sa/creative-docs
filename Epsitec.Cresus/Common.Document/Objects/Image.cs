@@ -392,11 +392,14 @@ namespace Epsitec.Common.Document.Objects
 					crop.Right  /= scale;
 					crop.Bottom /= scale;
 					crop.Top    /= scale;
-					port.ImageCrop = crop;
 
 					Point center;
 					double width, height, angle;
 					this.ImageGeometry(out center, out width, out height, out angle);
+
+					double zoom = port.Transform.GetZoom();
+					width  *= zoom;
+					height *= zoom;
 
 					if (width > 0 && height > 0)
 					{
