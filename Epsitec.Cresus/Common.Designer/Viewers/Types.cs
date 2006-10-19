@@ -28,9 +28,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldController.TextChanged += new EventHandler(this.HandleControllerTextChanged);
 			this.fieldController.TabIndex = this.tabIndex++;
 			this.fieldController.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.fieldController.Items.Add("String");
-			this.fieldController.Items.Add("Numeric");
-			this.fieldController.Items.Add("Enum.Icons");
+			this.fieldController.Items.Add("Normal");
+			this.fieldController.Items.Add("Icons");
 
 			this.UpdateEdit();
 		}

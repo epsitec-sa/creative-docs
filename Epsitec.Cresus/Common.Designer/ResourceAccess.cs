@@ -181,6 +181,36 @@ namespace Epsitec.Common.Designer
 			return TypeType.None;
 		}
 
+		protected static string ControllerTypeType(AbstractType type)
+		{
+			if (type is VoidType       )  return null;
+			if (type is BooleanType    )  return "Boolean";
+			if (type is IntegerType    )  return "Numeric";
+			if (type is LongIntegerType)  return "Numeric";
+			if (type is DoubleType     )  return "Numeric";
+			if (type is DecimalType    )  return "Numeric";
+			if (type is StringType     )  return "String";
+			if (type is EnumType       )  return "Enum";
+			if (type is StructuredType )  return null;
+
+			return null;
+		}
+
+		protected static string ControllerParameterTypeType(AbstractType type)
+		{
+			if (type is VoidType       )  return null;
+			if (type is BooleanType    )  return null;
+			if (type is IntegerType    )  return null;
+			if (type is LongIntegerType)  return null;
+			if (type is DoubleType     )  return null;
+			if (type is DecimalType    )  return null;
+			if (type is StringType     )  return null;
+			if (type is EnumType       )  return "Icons";
+			if (type is StructuredType )  return null;
+
+			return null;
+		}
+
 		protected static AbstractType CreateTypeType(TypeType type)
 		{
 			switch (type)
@@ -440,6 +470,7 @@ namespace Epsitec.Common.Designer
 								type = et;
 							}
 
+							type.DefineDefaultController(ResourceAccess.ControllerTypeType(type), ResourceAccess.ControllerParameterTypeType(type));
 							newField.SetStringValue(type.Caption.SerializeToString());
 						}
 					}
@@ -1334,11 +1365,11 @@ namespace Epsitec.Common.Designer
 					string s;
 					if (string.IsNullOrEmpty(type.DefaultControllerParameter))
 					{
-						s = type.DefaultController;
+						s = "";
 					}
 					else
 					{
-						s = string.Concat(type.DefaultController, ".", type.DefaultControllerParameter);
+						s = type.DefaultControllerParameter;
 					}
 					return new Field(s);
 				}
@@ -1504,16 +1535,7 @@ namespace Epsitec.Common.Designer
 						return;
 					}
 
-					string[] s = field.String.Split('.');
-					System.Diagnostics.Debug.Assert(s.Length == 1 || s.Length == 2);
-					if (s.Length == 1)
-					{
-						type.DefineDefaultController(s[0], null);
-					}
-					else
-					{
-						type.DefineDefaultController(s[0], s[1]);
-					}
+					type.DefineDefaultController(ResourceAccess.ControllerTypeType(type), field.String);
 					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
 			}
