@@ -51,7 +51,7 @@ namespace Epsitec.Common.Types
 			//	Automatic converter, no property :
 
 			Assert.AreEqual (1, group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture).Length);
-			Assert.AreEqual ("MyItem:X", string.Join (":", group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture)));
+			Assert.AreEqual ("MyItem=X", string.Join (":", group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture)));
 
 			//	No converter, no property :
 			
@@ -266,7 +266,7 @@ namespace Epsitec.Common.Types
 				public override string ToString(object value, System.Globalization.CultureInfo culture)
 				{
 					MyItem item = value as MyItem;
-					return item == null ? null : string.Concat ("MyItem:", item.Name);
+					return item == null ? null : string.Concat ("MyItem=", item.Name);
 				}
 			}
 
