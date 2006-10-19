@@ -50,7 +50,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				TabPage bookImage = new TabPage();
 				bookImage.Name = "Image";
 				bookImage.TabTitle = Res.Strings.Dialog.Print.TabPage.Image;
-				bookDoc.Items.Add(bookImage);
+				//?bookDoc.Items.Add(bookImage);
 
 				TabPage bookPublisher = new TabPage();
 				bookPublisher.Name = "Publisher";
