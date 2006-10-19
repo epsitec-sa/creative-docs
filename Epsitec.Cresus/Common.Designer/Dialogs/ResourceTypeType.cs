@@ -52,7 +52,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.tabIndex = 0;
 				this.index = 0;
 				this.radioButtons = new List<RadioButton>();
-				this.CreateRadio(Res.Captions.Types.Type.Void);
 				this.CreateRadio(Res.Captions.Types.Type.Boolean);
 				this.CreateRadio(Res.Captions.Types.Type.Integer);
 				this.CreateRadio(Res.Captions.Types.Type.LongInteger);
@@ -364,7 +363,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected static readonly double		windowWidthCompacted = 195;
 		protected static readonly double		windowWidthExtended = 500;
-		protected static readonly double		windowHeight = 200;
+		protected static readonly double		windowHeight = 180;
 
 		protected ResourceAccess				resourceAccess;
 		protected ResourceAccess.TypeType		typeEdited;
