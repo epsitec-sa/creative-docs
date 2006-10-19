@@ -15,10 +15,8 @@ namespace Epsitec.Common.Designer.Viewers
 		public Types(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
 			//	Editeur contenant toutes les définitions.
-			this.CreateBand(out this.container, "", 0.3);
-
 			MyWidgets.StackedPanel leftContainer;
-			this.CreateBand(out leftContainer, "Contrôleur", 0.7);
+			this.CreateBand(out leftContainer, "Contrôleur", 0.3);
 
 			this.fieldController = new TextFieldCombo(leftContainer.Container);
 			this.fieldController.IsReadOnly = true;
@@ -30,6 +28,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldController.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.fieldController.Items.Add("Normal");
 			this.fieldController.Items.Add("Icons");
+
+			this.CreateBand(out this.container, "", 0.6);
 
 			this.UpdateEdit();
 		}
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Designer.Viewers
 				if (field != null)
 				{
 					type = field.AbstractType;
-					typeType = ResourceAccess.CaptionTypeType(type);
+					typeType = ResourceAccess.AbstractTypeToTypeType(type);
 				}
 			}
 

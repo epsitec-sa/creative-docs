@@ -188,7 +188,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateRadios()
 		{
 			//	Met à jour le bouton radio enfoncé en fonction du type.
-			string actual = ResourceAccess.ConvTypeType(this.typeEdited);
+			string actual = ResourceAccess.TypeTypeToName(this.typeEdited);
 
 			this.ignoreChanged = true;
 			foreach (RadioButton button in this.radioButtons)
@@ -300,7 +300,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				string name = button.Name;
 				name = name.Substring(name.LastIndexOf('.')+1);  // enlève "Res.Captions.Types.Type."
-				this.typeEdited = ResourceAccess.ConvTypeType(name);
+				this.typeEdited = ResourceAccess.NameToTypeType(name);
 				this.UpdateRadios();
 				this.UpdateButtons();
 			}
