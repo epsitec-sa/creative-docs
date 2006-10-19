@@ -83,14 +83,7 @@ namespace Epsitec.Common.Types
 			List<Record> source = new List<Record> ();
 			CollectionView view = new CollectionView (source);
 
-			Support.PropertyGetter articleGetter = Support.DynamicCodeFactory.CreatePropertyGetter (typeof (Record), "Article");
-
-			source.Add (new Record ("Vis M3", 10, 0.15M));
-			source.Add (new Record ("Ecrou M3", 19, 0.10M));
-			source.Add (new Record ("Rondelle", 41, 0.05M));
-			source.Add (new Record ("Clé M3", 7, 15.00M));
-			source.Add (new Record ("Tournevis", 2, 8.45M));
-			source.Add (new Record ("Tournevis", 7, 25.70M));
+			CollectionTest.AddRecords (source);
 
 			view.Refresh ();
 
@@ -148,8 +141,48 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (7, ((Record) view.Groups[5]).Stock);
 		}
 
+		[Test]
+		public void CheckCollectionViewFilter()
+		{
+			List<Record> source = new List<Record> ();
+			CollectionView view = new CollectionView (source);
 
-		private struct Record
+			CollectionTest.AddRecords (source);
+
+			view.Filter = delegate (object item)
+			{
+				Record record = item as Record;
+				if ((record == null) ||
+					(record.Price < 1))
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+			};
+
+			view.Refresh ();
+
+			Assert.AreEqual (3, view.Groups.Count);
+			Assert.AreEqual ("Clé M3", ((Record) view.Groups[0]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) view.Groups[1]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) view.Groups[2]).Article);
+		}
+
+		private static void AddRecords(List<Record> source)
+		{
+			source.Add (new Record ("Vis M3", 10, 0.15M));
+			source.Add (new Record ("Ecrou M3", 19, 0.10M));
+			source.Add (new Record ("Rondelle", 41, 0.05M));
+			source.Add (new Record ("Clé M3", 7, 15.00M));
+			source.Add (new Record ("Tournevis", 2, 8.45M));
+			source.Add (new Record ("Tournevis", 7, 25.70M));
+		}
+
+
+		private class Record
 		{
 			public Record(string article, int stock, decimal price)
 			{
