@@ -100,15 +100,75 @@ namespace Epsitec.Common.Types
 
 		public void Refresh()
 		{
+			//	TODO: add suspend/resume for all observable collections
+
 			if (this.groups == null)
 			{
 				this.groups = new Collections.ObservableList<object> ();
 				this.readOnlyGroups = new Collections.ReadOnlyObservableList<object> (this.groups);
 			}
+			else
+			{
+				this.groups.Clear ();
+			}
 
-			List<object> list = new List<object> ();
+			if (this.sortedItems == null)
+			{
+				this.sortedItems = new List<object> ();
+			}
+			else
+			{
+				this.sortedItems.Clear ();
+			}
 			
-			System.Type dataType = null;
+			this.FillItemsList ();
+			this.SortItemsList ();
+
+			this.groups.AddRange (this.sortedItems);
+		}
+
+		private void SortItemsList()
+		{
+			if ((this.sortDescriptions != null) &&
+				(this.itemType != null))
+			{
+				System.Comparison<object>[] comparisons = new System.Comparison<object>[this.sortDescriptions.Count];
+
+				for (int i = 0; i < this.sortDescriptions.Count; i++)
+				{
+					comparisons[i] = CollectionView.CreateComparison (this.itemType, this.sortDescriptions[i]);
+				}
+
+				if (comparisons.Length == 1)
+				{
+					this.sortedItems.Sort (comparisons[0]);
+				}
+				else if (comparisons.Length > 1)
+				{
+					this.sortedItems.Sort
+						(
+							delegate (object x, object y)
+							{
+								for (int i = 0; i < comparisons.Length; i++)
+								{
+									int result = comparisons[i] (x, y);
+
+									if (result != 0)
+									{
+										return result;
+									}
+								}
+
+								return 0;
+							}
+						);
+				}
+			}
+		}
+
+		private void FillItemsList()
+		{
+			this.itemType = null;
 			
 			foreach (object item in this.sourceCollection)
 			{
@@ -118,66 +178,23 @@ namespace Epsitec.Common.Types
 				}
 				else if ((this.filter == null) || (this.filter (item)))
 				{
-					list.Add (item);
+					this.sortedItems.Add (item);
 
 					System.Type itemType = item.GetType ();
-					
-					if (dataType == null)
+
+					if (this.itemType == null)
 					{
-						dataType = itemType;
+						this.itemType = itemType;
 					}
 					else
 					{
-						if (dataType != itemType)
+						if (this.itemType != itemType)
 						{
-							throw new System.InvalidOperationException (string.Format ("Source collection not orthogonal; found type {0} and {1}", dataType.Name, itemType.Name));
+							throw new System.InvalidOperationException (string.Format ("Source collection not orthogonal; found type {0} and {1}", this.itemType.Name, itemType.Name));
 						}
 					}
 				}
 			}
-
-			if ((this.sortDescriptions != null) &&
-				(dataType != null))
-			{
-				System.Comparison<object>[] comparisons = new System.Comparison<object> [this.sortDescriptions.Count];
-
-				for (int i = 0; i < this.sortDescriptions.Count; i++)
-				{
-					comparisons[i] = CollectionView.CreateComparison (dataType, this.sortDescriptions[i]);
-				}
-
-				if (comparisons.Length == 1)
-				{
-					list.Sort (comparisons[0]);
-				}
-				else if (comparisons.Length > 1)
-				{
-					list.Sort
-						(
-							delegate (object x, object y)
-							{
-								for (int i = 0; i < comparisons.Length; i++)
-								{
-									int result = comparisons[i] (x, y);
-									
-									if (result != 0)
-									{
-										return result;
-									}
-								}
-								
-								return 0;
-							}
-						);
-				}
-			}
-
-			this.sortedItems = list;
-			
-			//	TODO: add suspend/resume
-			
-			this.groups.Clear ();
-			this.groups.AddRange (list);
 		}
 
 		private static System.Comparison<object> CreateComparison(System.Type type, SortDescription sort)
@@ -247,6 +264,7 @@ namespace Epsitec.Common.Types
 		
 		private System.Collections.IEnumerable	sourceCollection;
 		private List<object>					sortedItems;
+		private System.Type						itemType;
 		private int								currentPosition;
 		private object							currentItem;
 		private ObjectList						groups;
