@@ -87,65 +87,71 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckCollectionViewSort()
 		{
+			Record[] records;
+			
 			List<Record> source = new List<Record> ();
 			CollectionView view = new CollectionView (source);
 
 			CollectionTest.AddRecords (source);
 
 			view.Refresh ();
+			records = Collection.ToArray<Record> (view.Items);
 
-			Assert.AreEqual (6, view.Groups.Count);
-			Assert.AreEqual ("Vis M3", ((Record) view.Groups[0]).Article);
-			Assert.AreEqual ("Ecrou M3", ((Record) view.Groups[1]).Article);
-			Assert.AreEqual ("Rondelle", ((Record) view.Groups[2]).Article);
-			Assert.AreEqual ("Clé M3", ((Record) view.Groups[3]).Article);
-			Assert.AreEqual ("Tournevis", ((Record) view.Groups[4]).Article);
-			Assert.AreEqual ("Tournevis", ((Record) view.Groups[5]).Article);
+			Assert.AreEqual (6, records.Length);
+			Assert.AreEqual ("Vis M3", ((Record) records[0]).Article);
+			Assert.AreEqual ("Ecrou M3", ((Record) records[1]).Article);
+			Assert.AreEqual ("Rondelle", ((Record) records[2]).Article);
+			Assert.AreEqual ("Clé M3", ((Record) records[3]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) records[4]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) records[5]).Article);
 
 			view.SortDescriptions.Add (new SortDescription (ListSortDirection.Ascending, "Article"));
 			view.SortDescriptions.Add (new SortDescription (ListSortDirection.Ascending, "Stock"));
 			view.Refresh ();
+			records = Collection.ToArray<Record> (view.Items);
 
-			Assert.AreEqual (6, view.Groups.Count);
-			Assert.AreEqual ("Clé M3", ((Record) view.Groups[0]).Article);
-			Assert.AreEqual ("Ecrou M3", ((Record) view.Groups[1]).Article);
-			Assert.AreEqual ("Rondelle", ((Record) view.Groups[2]).Article);
-			Assert.AreEqual ("Tournevis", ((Record) view.Groups[3]).Article);
-			Assert.AreEqual ("Tournevis", ((Record) view.Groups[4]).Article);
-			Assert.AreEqual ("Vis M3", ((Record) view.Groups[5]).Article);
+			Assert.AreEqual (6, records.Length);
+			Assert.AreEqual ("Clé M3", ((Record) records[0]).Article);
+			Assert.AreEqual ("Ecrou M3", ((Record) records[1]).Article);
+			Assert.AreEqual ("Rondelle", ((Record) records[2]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) records[3]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) records[4]).Article);
+			Assert.AreEqual ("Vis M3", ((Record) records[5]).Article);
 
-			Assert.AreEqual (2, ((Record) view.Groups[3]).Stock);
-			Assert.AreEqual (7, ((Record) view.Groups[4]).Stock);
+			Assert.AreEqual (2, ((Record) records[3]).Stock);
+			Assert.AreEqual (7, ((Record) records[4]).Stock);
 
 			view.SortDescriptions.RemoveAt (1);
 			view.SortDescriptions.Add (new SortDescription (ListSortDirection.Descending, "Stock"));
 			view.Refresh ();
+			records = Collection.ToArray<Record> (view.Items);
 
-			Assert.AreEqual (6, view.Groups.Count);
-			Assert.AreEqual ("Clé M3", ((Record) view.Groups[0]).Article);
-			Assert.AreEqual ("Ecrou M3", ((Record) view.Groups[1]).Article);
-			Assert.AreEqual ("Rondelle", ((Record) view.Groups[2]).Article);
-			Assert.AreEqual ("Tournevis", ((Record) view.Groups[3]).Article);
-			Assert.AreEqual ("Tournevis", ((Record) view.Groups[4]).Article);
-			Assert.AreEqual ("Vis M3", ((Record) view.Groups[5]).Article);
+			Assert.AreEqual (6, records.Length);
+			Assert.AreEqual ("Clé M3", ((Record) records[0]).Article);
+			Assert.AreEqual ("Ecrou M3", ((Record) records[1]).Article);
+			Assert.AreEqual ("Rondelle", ((Record) records[2]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) records[3]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) records[4]).Article);
+			Assert.AreEqual ("Vis M3", ((Record) records[5]).Article);
 
-			Assert.AreEqual (7, ((Record) view.Groups[3]).Stock);
-			Assert.AreEqual (2, ((Record) view.Groups[4]).Stock);
+			Assert.AreEqual (7, ((Record) records[3]).Stock);
+			Assert.AreEqual (2, ((Record) records[4]).Stock);
 
 			view.SortDescriptions.Clear ();
 			view.SortDescriptions.Add (new SortDescription ("Price"));
 			view.Refresh ();
+			records = Collection.ToArray<Record> (view.Items);
 
-			Assert.AreEqual (6, view.Groups.Count);
-			Assert.AreEqual ("Rondelle", ((Record) view.Groups[0]).Article);
-			Assert.AreEqual ("Ecrou M3", ((Record) view.Groups[1]).Article);
-			Assert.AreEqual ("Vis M3", ((Record) view.Groups[2]).Article);
-			Assert.AreEqual ("Tournevis", ((Record) view.Groups[3]).Article);
-			Assert.AreEqual ("Clé M3", ((Record) view.Groups[4]).Article);
-			Assert.AreEqual ("Tournevis", ((Record) view.Groups[5]).Article);
+			Assert.AreEqual (6, records.Length);
+			Assert.AreEqual ("Rondelle", ((Record) records[0]).Article);
+			Assert.AreEqual ("Ecrou M3", ((Record) records[1]).Article);
+			Assert.AreEqual ("Vis M3", ((Record) records[2]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) records[3]).Article);
+			Assert.AreEqual ("Clé M3", ((Record) records[4]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) records[5]).Article);
 
-			Assert.AreEqual (2, ((Record) view.Groups[3]).Stock);
-			Assert.AreEqual (7, ((Record) view.Groups[5]).Stock);
+			Assert.AreEqual (2, ((Record) records[3]).Stock);
+			Assert.AreEqual (7, ((Record) records[5]).Stock);
 		}
 
 		[Test]
@@ -171,11 +177,12 @@ namespace Epsitec.Common.Types
 			};
 
 			view.Refresh ();
-
-			Assert.AreEqual (3, view.Groups.Count);
-			Assert.AreEqual ("Clé M3", ((Record) view.Groups[0]).Article);
-			Assert.AreEqual ("Tournevis", ((Record) view.Groups[1]).Article);
-			Assert.AreEqual ("Tournevis", ((Record) view.Groups[2]).Article);
+			Record[] records = Collection.ToArray<Record> (view.Items);
+			
+			Assert.AreEqual (3, records.Length);
+			Assert.AreEqual ("Clé M3", ((Record) records[0]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) records[1]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) records[2]).Article);
 		}
 
 		[Test]
@@ -233,11 +240,11 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (group1.HasSubgroups);
 			Assert.IsTrue (group2.HasSubgroups);
 
-			Assert.AreEqual (2, group1.ItemCount);
-			Assert.AreEqual (3, group2.ItemCount);
+			Assert.AreEqual (2, group1.Subgroups.Count);
+			Assert.AreEqual (3, group2.Subgroups.Count);
 
-			CollectionViewGroup subgroup1 = group1.Items[0] as CollectionViewGroup;
-			CollectionViewGroup subgroup2 = group1.Items[1] as CollectionViewGroup;
+			CollectionViewGroup subgroup1 = group1.Subgroups[0];
+			CollectionViewGroup subgroup2 = group1.Subgroups[1];
 
 			Assert.AreEqual ("Clé M3", subgroup1.Name);
 			Assert.AreEqual ("Tournevis", subgroup2.Name);

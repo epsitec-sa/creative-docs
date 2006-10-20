@@ -7,8 +7,8 @@ namespace Epsitec.Common.Types
 {
 	using SortDescriptionList=Collections.ObservableList<SortDescription>;
 	using GroupDescriptionList=Collections.ObservableList<AbstractGroupDescription>;
-	using ObjectList=Collections.ObservableList<object>;
-	using ReadOnlyObjectList=Collections.ReadOnlyObservableList<object>;
+	using GroupList=Collections.ObservableList<CollectionViewGroup>;
+	using ReadOnlyGroupList=Collections.ReadOnlyObservableList<CollectionViewGroup>;
 	
 	/// <summary>
 	/// The <c>CollectionView</c> class represents a view of a collection. Views implement
@@ -47,7 +47,22 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public ReadOnlyObjectList				Groups
+		public System.Collections.IList			Items
+		{
+			get
+			{
+				if (this.sortedList != null)
+				{
+					return this.sortedList;
+				}
+				else
+				{
+					return this.sourceList;
+				}
+			}
+		}
+		
+		public ReadOnlyGroupList				Groups
 		{
 			get
 			{
@@ -102,18 +117,8 @@ namespace Epsitec.Common.Types
 		{
 			//	TODO: add suspend/resume for all observable collections
 
-			if (this.groups == null)
-			{
-				this.groups = new Collections.ObservableList<object> ();
-				this.readOnlyGroups = new Collections.ReadOnlyObservableList<object> (this.groups);
-			}
-			else
-			{
-				this.groups.Clear ();
-			}
-
-			if ((this.filter != null) ||
-				(this.sortDescriptions.Count > 0))
+			if ((this.HasFilter) ||
+				(this.HasSortDescriptions))
 			{
 				this.sortedList = new List<object> ();
 				this.FillItemsList ();
@@ -123,8 +128,26 @@ namespace Epsitec.Common.Types
 			{
 				this.sortedList = null;
 			}
-			
-			this.GroupItemsInList ();
+
+			if (this.HasGroupDescriptions)
+			{
+				if (this.groups == null)
+				{
+					this.groups = new Collections.ObservableList<CollectionViewGroup> ();
+					this.readOnlyGroups = new Collections.ReadOnlyObservableList<CollectionViewGroup> (this.groups);
+				}
+				else
+				{
+					this.groups.Clear ();
+				}
+
+				this.GroupItemsInList ();
+			}
+			else
+			{
+				this.groups = null;
+				this.readOnlyGroups = null;
+			}
 		}
 
 		private void GroupItemsInList()
@@ -133,38 +156,37 @@ namespace Epsitec.Common.Types
 			
 			AbstractGroupDescription[] rules = this.groupDescriptions.ToArray ();
 
-			if (rules.Length > 0)
-			{
-				GroupNode root = new GroupNode (null);
+			System.Diagnostics.Debug.Assert (rules.Length > 0);
+			
+			GroupNode root = new GroupNode (null);
 
-				foreach (object item in this.sortedList)
-				{
-					CollectionView.ProcessGroup (item, culture, rules, 0, root);
-				}
-
-				this.PostProcessGroup (root, this.groups);
-			}
-			else
+			foreach (object item in this.sortedList)
 			{
-				this.groups.AddRange (this.sortedList);
+				CollectionView.ProcessGroup (item, culture, rules, 0, root);
 			}
+
+			CollectionViewGroup rootGroup = new CollectionViewGroup (null);
+
+			this.PostProcessGroup (root, rootGroup);
+			
+			this.groups.AddRange (rootGroup.Subgroups);
 		}
 
-		private void PostProcessGroup(GroupNode node, Collections.ObservableList<object> groups)
+		private void PostProcessGroup(GroupNode node, CollectionViewGroup rootGroup)
 		{
 			if (node.HasSubnodes)
 			{
 				foreach (GroupNode subnode in node.Subnodes)
 				{
 					CollectionViewGroup group = new CollectionViewGroup (subnode.Name);
-					this.PostProcessGroup (subnode, group.GetItems ());
-					groups.Add (group);
+					this.PostProcessGroup (subnode, group);
+					rootGroup.GetSubgroups ().Add (group);
 				}
 			}
 			
 			if (node.HasItems)
 			{
-				groups.AddRange (node.Items);
+				rootGroup.GetItems ().AddRange (node.Items);
 			}
 		}
 
@@ -383,6 +405,32 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		public bool HasSortDescriptions
+		{
+			get
+			{
+				return (this.sortDescriptions != null)
+					&& (this.sortDescriptions.Count > 0);
+			}
+		}
+
+		public bool HasGroupDescriptions
+		{
+			get
+			{
+				return (this.groupDescriptions != null)
+				    && (this.groupDescriptions.Count > 0);
+			}
+		}
+
+		public bool HasFilter
+		{
+			get
+			{
+				return this.filter != null;
+			}
+		}
+
 		#region INotifyCollectionChanged Members
 
 		public event Support.EventHandler<CollectionChangedEventArgs> CollectionChanged;
@@ -423,8 +471,8 @@ namespace Epsitec.Common.Types
 		private System.Type						itemType;
 		private int								currentPosition;
 		private object							currentItem;
-		private ObjectList						groups;
-		private ReadOnlyObjectList				readOnlyGroups;
+		private GroupList						groups;
+		private ReadOnlyGroupList				readOnlyGroups;
 		private GroupDescriptionList			groupDescriptions;
 		private SortDescriptionList				sortDescriptions;
 		private System.Predicate<object>		filter;

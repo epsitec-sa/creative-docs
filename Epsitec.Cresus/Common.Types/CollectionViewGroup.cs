@@ -28,15 +28,8 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				foreach (object item in this.items)
-				{
-					if (item is CollectionViewGroup)
-					{
-						return true;
-					}
-				}
-				
-				return false;
+				return (this.subgroups != null)
+					&& (this.subgroups.Count > 0);
 			}
 		}
 
@@ -82,6 +75,20 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public Collections.ReadOnlyObservableList<CollectionViewGroup> Subgroups
+		{
+			get
+			{
+				if ((this.readOnlySubgroups == null) &&
+					(this.subgroups != null))
+				{
+					this.readOnlySubgroups = new Collections.ReadOnlyObservableList<CollectionViewGroup> (this.subgroups);
+				}
+
+				return this.readOnlySubgroups;
+			}
+		}
+
 		private void HandleItemsCollectionChanged(object sender, CollectionChangedEventArgs e)
 		{
 			this.OnPropertyChanged (new DependencyPropertyChangedEventArgs ("Items"));
@@ -90,6 +97,16 @@ namespace Epsitec.Common.Types
 		internal Collections.ObservableList<object> GetItems()
 		{
 			return this.items;
+		}
+
+		internal Collections.ObservableList<CollectionViewGroup> GetSubgroups()
+		{
+			if (this.subgroups == null)
+			{
+				this.subgroups = new Collections.ObservableList<CollectionViewGroup> ();
+			}
+			
+			return this.subgroups;
 		}
 
 		
@@ -110,6 +127,8 @@ namespace Epsitec.Common.Types
 
 		private string							name;
 		private Collections.ObservableList<object> items;
+		private Collections.ObservableList<CollectionViewGroup> subgroups;
 		private Collections.ReadOnlyObservableList<object> readOnlyItems;
+		private Collections.ReadOnlyObservableList<CollectionViewGroup> readOnlySubgroups;
 	}
 }
