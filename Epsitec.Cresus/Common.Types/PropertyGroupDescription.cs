@@ -17,6 +17,15 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="PropertyGroupDescription"/> class.
+		/// </summary>
+		/// <param name="propertyName">Name of the property.</param>
+		public PropertyGroupDescription(string propertyName)
+		{
+			this.propertyName = propertyName;
+		}
+
+		/// <summary>
 		/// Gets or sets the string comparison mode.
 		/// </summary>
 		/// <value>The string comparison mode.</value>
@@ -135,7 +144,16 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				return UnknownValue.Instance;
+				Support.PropertyGetter getter = Support.DynamicCodeFactory.CreatePropertyGetter (item.GetType (), this.propertyName);
+
+				if (getter == null)
+				{
+					return UnknownValue.Instance;
+				}
+				else
+				{
+					return getter (item);
+				}
 			}
 		}
 
