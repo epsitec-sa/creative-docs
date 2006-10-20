@@ -201,6 +201,46 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual ("Tool", group1.Name);
 			Assert.AreEqual ("Part", group2.Name);
+
+			Assert.IsFalse (group1.HasSubgroups);
+			Assert.IsFalse (group2.HasSubgroups);
+			
+			Assert.AreEqual (3, group1.ItemCount);
+			Assert.AreEqual (3, group2.ItemCount);
+
+			Assert.AreEqual ("Clé M3", ((Record) group1.Items[0]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) group1.Items[1]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) group1.Items[2]).Article);
+			
+			Assert.AreEqual ("Ecrou M3", ((Record) group2.Items[0]).Article);
+			Assert.AreEqual ("Rondelle", ((Record) group2.Items[1]).Article);
+			Assert.AreEqual ("Vis M3", ((Record) group2.Items[2]).Article);
+
+			view.GroupDescriptions.Add (new PropertyGroupDescription ("Article"));
+			view.Refresh ();
+
+			Assert.AreEqual (2, view.Groups.Count);
+
+			group1 = view.Groups[0] as CollectionViewGroup;
+			group2 = view.Groups[1] as CollectionViewGroup;
+
+			Assert.IsNotNull (group1);
+			Assert.IsNotNull (group2);
+
+			Assert.AreEqual ("Tool", group1.Name);
+			Assert.AreEqual ("Part", group2.Name);
+
+			Assert.IsTrue (group1.HasSubgroups);
+			Assert.IsTrue (group2.HasSubgroups);
+
+			Assert.AreEqual (2, group1.ItemCount);
+			Assert.AreEqual (3, group2.ItemCount);
+
+			CollectionViewGroup subgroup1 = group1.Items[0] as CollectionViewGroup;
+			CollectionViewGroup subgroup2 = group1.Items[1] as CollectionViewGroup;
+
+			Assert.AreEqual ("Clé M3", subgroup1.Name);
+			Assert.AreEqual ("Tournevis", subgroup2.Name);
 		}
 
 		private static void AddRecords(List<Record> source)
