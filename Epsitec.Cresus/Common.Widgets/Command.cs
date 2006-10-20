@@ -96,6 +96,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public string							DefaultParameter
+		{
+			get
+			{
+				return Command.GetDefaultParameter (this.caption);
+			}
+		}
+
 		public string							Name
 		{
 			get
@@ -268,6 +276,20 @@ namespace Epsitec.Common.Widgets
 			}
 
 			Command.SetCommandType (this.caption, value);
+		}
+
+		public void DefineDefaultParameter(string value)
+		{
+			if (this.locked)
+			{
+				throw new Exceptions.CommandLockedException (this.CommandId);
+			}
+			if (this.temporary == false)
+			{
+				throw new System.InvalidOperationException (string.Format ("Command {0} may not be modified", this.CommandId));
+			}
+
+			Command.SetDefaultParameter (this.caption, value);
 		}
 
 		public void DefineShortcuts(Collections.ShortcutCollection value)
@@ -767,6 +789,16 @@ namespace Epsitec.Common.Widgets
 			return (CommandType) obj.GetValue (Command.CommandTypeProperty);
 		}
 
+		public static void SetDefaultParameter(DependencyObject obj, string value)
+		{
+			obj.SetValue (Command.DefaultParameterProperty, value);
+		}
+
+		public static string GetDefaultParameter(DependencyObject obj)
+		{
+			return (string) obj.GetValue (Command.DefaultParameterProperty);
+		}
+
 
 		private static object GetCaptionValue(DependencyObject obj)
 		{
@@ -788,6 +820,8 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty GroupProperty			= DependencyProperty.RegisterAttached ("Group", typeof (string), typeof (Command));
 		public static readonly DependencyProperty StatefullProperty		= DependencyProperty.RegisterAttached ("Statefull", typeof (bool), typeof (Command), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty CommandTypeProperty	= DependencyProperty.RegisterAttached ("CommandType", typeof (CommandType), typeof (Command), new DependencyPropertyMetadata (CommandType.Standard));
+		
+		public static readonly DependencyProperty DefaultParameterProperty = DependencyProperty.RegisterAttached ("DefaultParameter", typeof (string), typeof (Command));
 		
 		private static Dictionary<string, Command> commands = new Dictionary<string, Command> ();
 		private static int nextUniqueId;
