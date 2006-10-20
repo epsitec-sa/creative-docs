@@ -16,9 +16,9 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class CollectionView : ICollectionView, System.Collections.IEnumerable, INotifyCollectionChanged
 	{
-		public CollectionView(System.Collections.IEnumerable sourceCollection)
+		public CollectionView(System.Collections.IList sourceList)
 		{
-			this.sourceCollection = sourceCollection;
+			this.sourceList = sourceList;
 		}
 
 		#region ICollectionView Members
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.sourceCollection;
+				return this.sourceList;
 			}
 		}
 
@@ -112,17 +112,17 @@ namespace Epsitec.Common.Types
 				this.groups.Clear ();
 			}
 
-			if (this.sortedItems == null)
+			if ((this.filter != null) ||
+				(this.sortDescriptions.Count > 0))
 			{
-				this.sortedItems = new List<object> ();
+				this.sortedList = new List<object> ();
+				this.FillItemsList ();
+				this.SortItemsList ();
 			}
 			else
 			{
-				this.sortedItems.Clear ();
+				this.sortedList = null;
 			}
-			
-			this.FillItemsList ();
-			this.SortItemsList ();
 			
 			this.GroupItemsInList ();
 		}
@@ -137,7 +137,7 @@ namespace Epsitec.Common.Types
 			{
 				GroupNode root = new GroupNode (null);
 
-				foreach (object item in this.sortedItems)
+				foreach (object item in this.sortedList)
 				{
 					CollectionView.ProcessGroup (item, culture, rules, 0, root);
 				}
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				this.groups.AddRange (this.sortedItems);
+				this.groups.AddRange (this.sortedList);
 			}
 		}
 
@@ -297,11 +297,11 @@ namespace Epsitec.Common.Types
 
 				if (comparisons.Length == 1)
 				{
-					this.sortedItems.Sort (comparisons[0]);
+					this.sortedList.Sort (comparisons[0]);
 				}
 				else if (comparisons.Length > 1)
 				{
-					this.sortedItems.Sort
+					this.sortedList.Sort
 						(
 							delegate (object x, object y)
 							{
@@ -326,7 +326,7 @@ namespace Epsitec.Common.Types
 		{
 			this.itemType = null;
 			
-			foreach (object item in this.sourceCollection)
+			foreach (object item in this.sourceList)
 			{
 				if (item == null)
 				{
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Types
 				}
 				else if ((this.filter == null) || (this.filter (item)))
 				{
-					this.sortedItems.Add (item);
+					this.sortedList.Add (item);
 
 					System.Type itemType = item.GetType ();
 
@@ -418,8 +418,8 @@ namespace Epsitec.Common.Types
 		}
 		
 		
-		private System.Collections.IEnumerable	sourceCollection;
-		private List<object>					sortedItems;
+		private System.Collections.IList		sourceList;
+		private List<object>					sortedList;
 		private System.Type						itemType;
 		private int								currentPosition;
 		private object							currentItem;

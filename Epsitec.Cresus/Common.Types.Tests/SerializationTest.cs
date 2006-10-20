@@ -679,8 +679,8 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (st.Fields.ContainsKey ("Name"));
 			Assert.IsTrue (st.Fields.ContainsKey ("Age"));
 
-			Assert.AreEqual ("String", st.Fields["Name"].Type.Name);
-			Assert.AreEqual ("Integer", st.Fields["Age"].Type.Name);
+			Assert.AreEqual ("Default.String", st.Fields["Name"].Type.Name);
+			Assert.AreEqual ("Default.Integer", st.Fields["Age"].Type.Name);
 		}
 
 		[Test]
@@ -706,8 +706,8 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (st.Fields.ContainsKey ("Name"));
 			Assert.IsTrue (st.Fields.ContainsKey ("Angle"));
 
-			Assert.AreEqual ("String", st.Fields["Name"].Type.Name);
-			Assert.AreEqual ("Integer", st.Fields["Angle"].Type.Name);
+			Assert.AreEqual ("Default.String", st.Fields["Name"].Type.Name);
+			Assert.AreEqual ("Default.Integer", st.Fields["Angle"].Type.Name);
 		}
 
 		[Test]

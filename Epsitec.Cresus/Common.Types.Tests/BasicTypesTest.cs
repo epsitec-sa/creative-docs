@@ -442,16 +442,16 @@ namespace Epsitec.Common.Types
 			string intSerial;
 			string strSerial;
 
-			caption = TypeRosetta.GetTypeObject ("Integer").Caption;
+			caption = TypeRosetta.GetTypeObject ("Default.Integer").Caption;
 			intSerial = caption.SerializeToString ();
 
 			System.Console.WriteLine ("Integer caption ID: {0}", caption.Druid.ToString ());
 
-			Assert.AreEqual ("Integer", TypeRosetta.GetTypeObject ("Integer").Name);
-			Assert.AreEqual ("Integer", caption.Name);
-			Assert.AreEqual (typeof (int).FullName, caption.GetValue (AbstractType.SytemTypeProperty));
+			Assert.AreEqual ("Default.Integer", TypeRosetta.GetTypeObject ("Default.Integer").Name);
+			Assert.AreEqual ("Default.Integer", caption.Name);
+			Assert.AreEqual ("V:"+typeof (int).FullName, caption.GetValue (AbstractType.SytemTypeProperty));
 
-			caption = TypeRosetta.GetTypeObject ("String").Caption;
+			caption = TypeRosetta.GetTypeObject ("Default.String").Caption;
 			strSerial = caption.SerializeToString ();
 
 			System.Console.WriteLine ("String caption ID: {0}", caption.Druid.ToString ());
@@ -459,10 +459,10 @@ namespace Epsitec.Common.Types
 			System.Console.WriteLine ("Integer: {0}", intSerial);
 			System.Console.WriteLine ("String: {0}", strSerial);
 
-			AbstractType type = TypeRosetta.CreateTypeObject (TypeRosetta.GetTypeObject ("Integer").Caption);
+			AbstractType type = TypeRosetta.CreateTypeObject (TypeRosetta.GetTypeObject ("Default.Integer").Caption);
 
 			Assert.IsNotNull (type);
-			Assert.AreEqual ("Integer", type.Name);
+			Assert.AreEqual ("Default.Integer", type.Name);
 			Assert.AreEqual (typeof (int), type.SystemType);
 		}
 		

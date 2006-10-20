@@ -25,12 +25,12 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual ("Name", target.GetBindingExpression (Stuff.NameProperty).GetSourceName ());
 			Assert.AreEqual (Support.Druid.Empty, target.GetBindingExpression (Stuff.NameProperty).GetSourceCaptionId ());
-			Assert.AreEqual ("String", target.GetBindingExpression (Stuff.NameProperty).GetSourceNamedType ().Name);
+			Assert.AreEqual ("Default.String", target.GetBindingExpression (Stuff.NameProperty).GetSourceNamedType ().Name);
 			Assert.AreEqual ("StringType", target.GetBindingExpression (Stuff.NameProperty).GetSourceNamedType ().GetType ().Name);
 
 			Assert.AreEqual ("Text", target.GetBindingExpression (Stuff.TextProperty).GetSourceName ());
 			Assert.AreEqual (Support.Druid.FromLong (0x0000400000000004L), target.GetBindingExpression (Stuff.TextProperty).GetSourceCaptionId ());
-			Assert.AreEqual ("String", target.GetBindingExpression (Stuff.TextProperty).GetSourceNamedType ().Name);
+			Assert.AreEqual ("Default.String", target.GetBindingExpression (Stuff.TextProperty).GetSourceNamedType ().Name);
 
 			Assert.AreEqual ("Enum", target.GetBindingExpression (Stuff.EnumProperty).GetSourceName ());
 			Assert.AreEqual (Support.Druid.Empty, target.GetBindingExpression (Stuff.EnumProperty).GetSourceCaptionId ());
