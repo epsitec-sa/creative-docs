@@ -750,7 +750,7 @@ namespace Epsitec.Common.Document
 					// Fichier CrDoc au format ZIP, chargé avec succès.
 					using (MemoryStream stream = new MemoryStream(zip["document.data"].Data))
 					{
-						err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), zip);
+						err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), filename, zip);
 					}
 				}
 				else
@@ -758,7 +758,7 @@ namespace Epsitec.Common.Document
 					// Désérialisation standard; c'est un ancien fichier CrDoc.
 					using (Stream stream = File.OpenRead(filename))
 					{
-						err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), null);
+						err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), null, null);
 					}
 				}
 
@@ -793,10 +793,10 @@ namespace Epsitec.Common.Document
 		{
 			//	Ouvre un document sérialisé, soit parce que l'utilisateur veut ouvrir
 			//	explicitement un fichier, soit par Engine.
-			return this.Read(stream, directory, null);
+			return this.Read(stream, directory, null, null);
 		}
 
-		protected string Read(Stream stream, string directory, ZipFile zip)
+		protected string Read(Stream stream, string directory, string zipFilename, ZipFile zip)
 		{
 			//	Ouvre un document sérialisé, zippé ou non.
 			this.ioDirectory = directory;
@@ -839,7 +839,7 @@ namespace Epsitec.Common.Document
 					{
 						doc = (Document) formatter.Deserialize(stream);
 						doc.FontReadAll(zip);
-						doc.ImageCacheAll(zip, doc.imageIncludeMode);
+						doc.ImageCacheAll(zipFilename, zip, doc.imageIncludeMode);
 					}
 				}
 				catch ( System.Exception e )
@@ -1982,7 +1982,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected void ImageCacheAll(ZipFile zip, ImageIncludeMode imageIncludeMode)
+		protected void ImageCacheAll(string zipFilename, ZipFile zip, ImageIncludeMode imageIncludeMode)
 		{
 			//	Cache toutes les données pour les objets Images du document.
 			this.imageCache = new ImageCache();
@@ -1992,7 +1992,7 @@ namespace Epsitec.Common.Document
 				Properties.Image propImage = obj.PropertyImage;
 				if (propImage != null)
 				{
-					this.imageCache.ReadData(zip, imageIncludeMode, propImage);
+					this.imageCache.ReadData(zipFilename, zip, imageIncludeMode, propImage);
 				}
 			}
 		}

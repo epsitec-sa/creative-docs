@@ -51,7 +51,7 @@ namespace Epsitec.Common.Document
 
 				if (item == null)
 				{
-					this.Add(filename, null);
+					this.Add(filename, null, null, null);
 				}
 			}
 		}
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Document
 			return this.dico.ContainsKey(filename);
 		}
 
-		protected Item Add(string filename, byte[] data)
+		protected Item Add(string filename, string zipFilename, string zipShortName, byte[] data)
 		{
 			//	Ajoute une nouvelle image dans le cache.
 			//	Si les données 'data' n'existent pas, l'image est lue sur disque.
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				GlobalImageCache.Item gItem = GlobalImageCache.Add(filename, data);
+				GlobalImageCache.Item gItem = GlobalImageCache.Add(filename, zipFilename, zipShortName, data);
 				if (gItem == null || gItem.Data == null)
 				{
 					return null;
@@ -227,7 +227,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void ReadData(ZipFile zip, Document.ImageIncludeMode imageIncludeMode, Properties.Image propImage)
+		public void ReadData(string zipFilename, ZipFile zip, Document.ImageIncludeMode imageIncludeMode, Properties.Image propImage)
 		{
 			//	Lit les données d'une image.
 			if (!this.Contains(propImage.Filename))  // pas encore dans le cache ?
@@ -236,11 +236,11 @@ namespace Epsitec.Common.Document
 				{
 					string name = string.Format("images/{0}", propImage.ShortName);
 					byte[] data = zip[name].Data;  // lit les données dans le fichier zip
-					this.Add(propImage.Filename, data);
+					this.Add(propImage.Filename, zipFilename, propImage.ShortName, data);
 				}
 				else
 				{
-					this.Add(propImage.Filename, null);  // lit le fichier image sur disque
+					this.Add(propImage.Filename, null, null, null);  // lit le fichier image sur disque
 				}
 			}
 		}
