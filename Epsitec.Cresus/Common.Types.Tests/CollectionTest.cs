@@ -75,6 +75,13 @@ namespace Epsitec.Common.Types
 			group.StringComparison = System.StringComparison.InvariantCultureIgnoreCase;
 			
 			Assert.IsTrue (group.NamesMatch ("A", "a"));
+
+			Record record = new Record ("Computer", 1, 1234.50M, Category.ElectronicEquipment);
+
+			group.PropertyName = "Category";
+
+			Assert.AreEqual (1, group.GetGroupNamesForItem (record, System.Globalization.CultureInfo.InvariantCulture).Length);
+			Assert.AreEqual ("ElectronicEquipment", string.Join (":", group.GetGroupNamesForItem (record, System.Globalization.CultureInfo.InvariantCulture)));
 		}
 
 		[Test]
@@ -171,24 +178,57 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Tournevis", ((Record) view.Groups[2]).Article);
 		}
 
-		private static void AddRecords(List<Record> source)
+		[Test]
+		public void CheckCollectionViewSortAndGroup()
 		{
-			source.Add (new Record ("Vis M3", 10, 0.15M));
-			source.Add (new Record ("Ecrou M3", 19, 0.10M));
-			source.Add (new Record ("Rondelle", 41, 0.05M));
-			source.Add (new Record ("Clé M3", 7, 15.00M));
-			source.Add (new Record ("Tournevis", 2, 8.45M));
-			source.Add (new Record ("Tournevis", 7, 25.70M));
+			List<Record> source = new List<Record> ();
+			CollectionView view = new CollectionView (source);
+
+			CollectionTest.AddRecords (source);
+
+			view.SortDescriptions.Add (new SortDescription ("Article"));
+			view.SortDescriptions.Add (new SortDescription ("Price"));
+			view.GroupDescriptions.Add (new PropertyGroupDescription ("Category"));
+			view.Refresh ();
+
+			Assert.AreEqual (2, view.Groups.Count);
+
+			CollectionViewGroup group1 = view.Groups[0] as CollectionViewGroup;
+			CollectionViewGroup group2 = view.Groups[1] as CollectionViewGroup;
+
+			Assert.IsNotNull (group1);
+			Assert.IsNotNull (group2);
+
+			Assert.AreEqual ("Tool", group1.Name);
+			Assert.AreEqual ("Part", group2.Name);
 		}
 
+		private static void AddRecords(List<Record> source)
+		{
+			source.Add (new Record ("Vis M3", 10, 0.15M, Category.Part));
+			source.Add (new Record ("Ecrou M3", 19, 0.10M, Category.Part));
+			source.Add (new Record ("Rondelle", 41, 0.05M, Category.Part));
+			source.Add (new Record ("Clé M3", 7, 15.00M, Category.Tool));
+			source.Add (new Record ("Tournevis", 2, 8.45M, Category.Tool));
+			source.Add (new Record ("Tournevis", 7, 25.70M, Category.Tool));
+		}
+
+		private enum Category
+		{
+			Unknown,
+			Part,
+			Tool,
+			ElectronicEquipment
+		}
 
 		private class Record
 		{
-			public Record(string article, int stock, decimal price)
+			public Record(string article, int stock, decimal price, Category category)
 			{
 				this.article = article;
 				this.stock = stock;
 				this.price = price;
+				this.category = category;
 			}
 			 
 			public string Article
@@ -226,10 +266,23 @@ namespace Epsitec.Common.Types
 					this.price = value;
 				}
 			}
+
+			public Category Category
+			{
+				get
+				{
+					return this.category;
+				}
+				set
+				{
+					this.category = value;
+				}
+			}
 			
 			private string article;
 			private int stock;
 			private decimal price;
+			private Category category;
 		}
 
 		#region MyItem Class

@@ -1,6 +1,8 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Support
 {
 	using OpCodes=System.Reflection.Emit.OpCodes;
@@ -24,7 +26,8 @@ namespace Epsitec.Common.Support
 	public static class DynamicCodeFactory
 	{
 		/// <summary>
-		/// Creates a property setter for the specified property.
+		/// Creates a property setter for the specified property; setters are
+		/// cached and reused whenever possible.
 		/// </summary>
 		/// <param name="type">The type of the object to access.</param>
 		/// <param name="propertyName">The name of the property.</param>
@@ -33,7 +36,20 @@ namespace Epsitec.Common.Support
 		/// </returns>
 		public static PropertySetter CreatePropertySetter(System.Type type, string propertyName)
 		{
-			return DynamicCodeFactory.CreatePropertySetter (type.GetProperty (propertyName));
+			PropertySetter propertySetter;
+
+			string key = string.Concat (type.FullName, "/", propertyName);
+
+			if (DynamicCodeFactory.setterCache.TryGetValue (key, out propertySetter))
+			{
+				return propertySetter;
+			}
+
+			propertySetter = DynamicCodeFactory.CreatePropertySetter (type.GetProperty (propertyName));
+
+			DynamicCodeFactory.setterCache[key] = propertySetter;
+
+			return propertySetter;
 		}
 
 		/// <summary>
@@ -98,7 +114,8 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
-		/// Creates a property getter for the specified property.
+		/// Creates a property getter for the specified property; getters are
+		/// cached and reused whenever possible.
 		/// </summary>
 		/// <param name="type">The type of the object to access.</param>
 		/// <param name="propertyName">The name of the property.</param>
@@ -107,7 +124,20 @@ namespace Epsitec.Common.Support
 		/// </returns>
 		public static PropertyGetter CreatePropertyGetter(System.Type type, string propertyName)
 		{
-			return DynamicCodeFactory.CreatePropertyGetter (type.GetProperty (propertyName));
+			PropertyGetter propertyGetter;
+
+			string key = string.Concat (type.FullName, "/", propertyName);
+
+			if (DynamicCodeFactory.getterCache.TryGetValue (key, out propertyGetter))
+			{
+				return propertyGetter;
+			}
+			
+			propertyGetter = DynamicCodeFactory.CreatePropertyGetter (type.GetProperty (propertyName));
+
+			DynamicCodeFactory.getterCache[key] = propertyGetter;
+			
+			return propertyGetter;
 		}
 
 		/// <summary>
@@ -444,5 +474,12 @@ namespace Epsitec.Common.Support
 
 			return (PropertyComparer) comparer.CreateDelegate (typeof (PropertyComparer));
 		}
+
+
+		[System.ThreadStatic]
+		private static Dictionary<string, PropertyGetter> getterCache = new Dictionary<string, PropertyGetter> ();
+
+		[System.ThreadStatic]
+		private static Dictionary<string, PropertySetter> setterCache = new Dictionary<string, PropertySetter> ();
 	}
 }

@@ -125,8 +125,6 @@ namespace Epsitec.Common.Types
 			this.SortItemsList ();
 			
 			this.GroupItemsInList ();
-
-			this.groups.AddRange (this.sortedItems);
 		}
 
 		private void GroupItemsInList()
@@ -144,26 +142,29 @@ namespace Epsitec.Common.Types
 					CollectionView.ProcessGroup (item, culture, rules, 0, root);
 				}
 
-				this.PostProcessGroup (rules.Length, root, this.groups);
-			}
-		}
-
-		private void PostProcessGroup(int depth, GroupNode node, Collections.ObservableList<object> groups)
-		{
-			if (depth == 1)
-			{
-				groups.AddRange (node.Items);
+				this.PostProcessGroup (root, this.groups);
 			}
 			else
 			{
-				CollectionViewGroup group = new CollectionViewGroup (node.Name);
+				this.groups.AddRange (this.sortedItems);
+			}
+		}
 
+		private void PostProcessGroup(GroupNode node, Collections.ObservableList<object> groups)
+		{
+			if (node.HasSubnodes)
+			{
 				foreach (GroupNode subnode in node.Subnodes)
 				{
-					this.PostProcessGroup (depth-1, subnode, group.GetItems ());
+					CollectionViewGroup group = new CollectionViewGroup (subnode.Name);
+					this.PostProcessGroup (subnode, group.GetItems ());
+					groups.Add (group);
 				}
-
-				groups.Add (group);
+			}
+			
+			if (node.HasItems)
+			{
+				groups.AddRange (node.Items);
 			}
 		}
 
@@ -192,6 +193,22 @@ namespace Epsitec.Common.Types
 			public GroupNode(string name)
 			{
 				this.name = name;
+			}
+
+			public bool HasItems
+			{
+				get
+				{
+					return (this.leaves != null) && (this.leaves.Count > 0);
+				}
+			}
+
+			public bool HasSubnodes
+			{
+				get
+				{
+					return (this.subnodes != null) && (this.subnodes.Count > 0);
+				}
 			}
 
 			public IEnumerable<object> Items
