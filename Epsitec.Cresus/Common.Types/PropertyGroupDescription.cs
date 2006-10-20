@@ -73,6 +73,8 @@ namespace Epsitec.Common.Types
 			set
 			{
 				this.propertyName = value;
+				this.cachedType   = null;
+				this.cachedGetter = null;
 			}
 		}
 
@@ -136,29 +138,41 @@ namespace Epsitec.Common.Types
 				return item;
 			}
 
-			IStructuredData data = item as IStructuredData;
+			System.Type type = item.GetType ();
 
-			if (data != null)
+			if (this.cachedType != type)
 			{
-				return data.GetValue (this.propertyName);
+				this.cachedType = type;
+				this.cachedGetter = this.CreateGetter (item);
+			}
+
+			if (this.cachedGetter == null)
+			{
+				return UnknownValue.Instance;
 			}
 			else
 			{
-				Support.PropertyGetter getter = Support.DynamicCodeFactory.CreatePropertyGetter (item.GetType (), this.propertyName);
+				return this.cachedGetter (item);
+			}
+		}
 
-				if (getter == null)
-				{
-					return UnknownValue.Instance;
-				}
-				else
-				{
-					return getter (item);
-				}
+		private Support.PropertyGetter CreateGetter(object item)
+		{
+			if (item is IStructuredData)
+			{
+				return StructuredData.CreatePropertyGetter (this.propertyName);
+			}
+			else
+			{
+				return Support.DynamicCodeFactory.CreatePropertyGetter (this.cachedType, this.propertyName);
 			}
 		}
 
 		private System.StringComparison			stringComparison = System.StringComparison.Ordinal;
 		private IValueConverter					converter;
 		private string							propertyName;
+		
+		private System.Type						cachedType;
+		private Support.PropertyGetter			cachedGetter;
 	}
 }

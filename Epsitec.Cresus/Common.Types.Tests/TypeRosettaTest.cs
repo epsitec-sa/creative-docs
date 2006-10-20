@@ -38,21 +38,21 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckGetTypeObject()
 		{
-			Assert.IsNotNull (TypeRosetta.GetTypeObject ("Boolean"), "Boolean type not found");
-			Assert.IsNotNull (TypeRosetta.GetTypeObject ("Decimal"), "Decimal type not found");
-			Assert.IsNotNull (TypeRosetta.GetTypeObject ("Double"), "Double type not found");
-			Assert.IsNotNull (TypeRosetta.GetTypeObject ("Integer"), "Integer type not found");
-			Assert.IsNotNull (TypeRosetta.GetTypeObject ("LongInteger"), "LongInteger type not found");
-			Assert.IsNotNull (TypeRosetta.GetTypeObject ("String"), "String type not found");
-			Assert.IsNotNull (TypeRosetta.GetTypeObject ("Void"), "Void type not found");
+			Assert.IsNotNull (TypeRosetta.GetTypeObject ("Default.Boolean"), "Boolean type not found");
+			Assert.IsNotNull (TypeRosetta.GetTypeObject ("Default.Decimal"), "Decimal type not found");
+			Assert.IsNotNull (TypeRosetta.GetTypeObject ("Default.Double"), "Double type not found");
+			Assert.IsNotNull (TypeRosetta.GetTypeObject ("Default.Integer"), "Integer type not found");
+			Assert.IsNotNull (TypeRosetta.GetTypeObject ("Default.LongInteger"), "LongInteger type not found");
+			Assert.IsNotNull (TypeRosetta.GetTypeObject ("Default.String"), "String type not found");
+			Assert.IsNotNull (TypeRosetta.GetTypeObject ("Default.Void"), "Void type not found");
 
-			Assert.AreEqual (typeof (bool),		TypeRosetta.GetTypeObject ("Boolean").SystemType);
-			Assert.AreEqual (typeof (decimal),	TypeRosetta.GetTypeObject ("Decimal").SystemType);
-			Assert.AreEqual (typeof (double),	TypeRosetta.GetTypeObject ("Double").SystemType);
-			Assert.AreEqual (typeof (int),		TypeRosetta.GetTypeObject ("Integer").SystemType);
-			Assert.AreEqual (typeof (long),		TypeRosetta.GetTypeObject ("LongInteger").SystemType);
-			Assert.AreEqual (typeof (string),	TypeRosetta.GetTypeObject ("String").SystemType);
-			Assert.AreEqual (typeof (void),		TypeRosetta.GetTypeObject ("Void").SystemType);
+			Assert.AreEqual (typeof (bool),		TypeRosetta.GetTypeObject ("Default.Boolean").SystemType);
+			Assert.AreEqual (typeof (decimal),	TypeRosetta.GetTypeObject ("Default.Decimal").SystemType);
+			Assert.AreEqual (typeof (double),	TypeRosetta.GetTypeObject ("Default.Double").SystemType);
+			Assert.AreEqual (typeof (int),		TypeRosetta.GetTypeObject ("Default.Integer").SystemType);
+			Assert.AreEqual (typeof (long),		TypeRosetta.GetTypeObject ("Default.LongInteger").SystemType);
+			Assert.AreEqual (typeof (string),	TypeRosetta.GetTypeObject ("Default.String").SystemType);
+			Assert.AreEqual (typeof (void),		TypeRosetta.GetTypeObject ("Default.Void").SystemType);
 
 			Assert.AreEqual (typeof (bool),		TypeRosetta.GetTypeObject (Druid.Parse ("[1003]")).SystemType);
 			Assert.AreEqual (typeof (decimal),	TypeRosetta.GetTypeObject (Druid.Parse ("[1004]")).SystemType);
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (typeof (string),	TypeRosetta.GetTypeObject (Druid.Parse ("[1008]")).SystemType);
 			Assert.AreEqual (typeof (void),		TypeRosetta.GetTypeObject (Druid.Parse ("[1009]")).SystemType);
 
-			AbstractType t1 = TypeRosetta.GetTypeObject ("Boolean");
+			AbstractType t1 = TypeRosetta.GetTypeObject ("Default.Boolean");
 			AbstractType t2 = TypeRosetta.GetTypeObject (Druid.Parse ("[1003]"));
 			AbstractType t3 = TypeRosetta.CreateTypeObject (Druid.Parse ("[1003]"));
 			AbstractType t4 = TypeRosetta.CreateTypeObject (Druid.Parse ("[1003]"));
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Types
 			type = TypeRosetta.GetNamedTypeFromTypeObject (typeof (double));
 
 			Assert.IsNotNull (type);
-			Assert.AreEqual ("Double", type.Name);
+			Assert.AreEqual ("Default.Double", type.Name);
 			Assert.AreEqual (typeof (double), type.SystemType);
 
 			type = TypeRosetta.GetNamedTypeFromTypeObject (new IntegerType (0, 100));
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Types
 			type = TypeRosetta.GetNamedTypeFromTypeObject (DependencyObjectTree.NameProperty);
 
 			Assert.IsNotNull (type);
-			Assert.AreEqual ("String", type.Name);
+			Assert.AreEqual ("Default.String", type.Name);
 			Assert.AreEqual (typeof (string), type.SystemType);
 		}
 		
@@ -194,9 +194,9 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (typeof (IntegerType), t1x.GetType ());
 			Assert.AreEqual (MyObject.FooProperty.PropertyType, t2foo.SystemType);
 			Assert.AreEqual (typeof (DynamicStructuredType), t4self.GetType ());
-			
-			Assert.AreEqual ("Integer", TypeRosetta.GetNamedTypeFromTypeObject (t1x).Name);
-			Assert.AreEqual ("String", TypeRosetta.GetNamedTypeFromTypeObject (t2foo).Name);
+
+			Assert.AreEqual ("Default.Integer", TypeRosetta.GetNamedTypeFromTypeObject (t1x).Name);
+			Assert.AreEqual ("Default.String", TypeRosetta.GetNamedTypeFromTypeObject (t2foo).Name);
 			Assert.AreEqual ("DynamicStructure", TypeRosetta.GetNamedTypeFromTypeObject (t4self).Name);
 			Assert.AreEqual ("System.Int16", TypeRosetta.GetNamedTypeFromTypeObject (typeof (short)).Name);
 		}

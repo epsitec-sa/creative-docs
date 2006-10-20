@@ -241,6 +241,25 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+
+		public static Support.PropertyGetter CreatePropertyGetter(string propertyName)
+		{
+			return delegate (object obj)
+			{
+				IStructuredData data = obj as IStructuredData;
+				return data.GetValue (propertyName);
+			};
+		}
+
+		public static Support.PropertySetter CreatePropertySetter(string propertyName)
+		{
+			return delegate (object obj, object value)
+			{
+				IStructuredData data = obj as IStructuredData;
+				data.SetValue (propertyName, value);
+			};
+		}
+		
 		protected virtual bool CheckNameValidity(string name, out object type)
 		{
 			if (this.type == null)
