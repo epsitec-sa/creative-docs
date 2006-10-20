@@ -133,13 +133,37 @@ namespace Epsitec.Common.Types
 		{
 			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.CurrentCulture;
 			
-			GroupNode root = new GroupNode ();
-
 			AbstractGroupDescription[] rules = this.groupDescriptions.ToArray ();
-			
-			foreach (object item in this.sortedItems)
+
+			if (rules.Length > 0)
 			{
-				CollectionView.ProcessGroup (item, culture, rules, 0, root);
+				GroupNode root = new GroupNode (null);
+
+				foreach (object item in this.sortedItems)
+				{
+					CollectionView.ProcessGroup (item, culture, rules, 0, root);
+				}
+
+				this.PostProcessGroup (rules.Length, root, this.groups);
+			}
+		}
+
+		private void PostProcessGroup(int depth, GroupNode node, Collections.ObservableList<object> groups)
+		{
+			if (depth == 1)
+			{
+				groups.AddRange (node.Items);
+			}
+			else
+			{
+				CollectionViewGroup group = new CollectionViewGroup (node.Name);
+
+				foreach (GroupNode subnode in node.Subnodes)
+				{
+					this.PostProcessGroup (depth-1, subnode, group.GetItems ());
+				}
+
+				groups.Add (group);
 			}
 		}
 
@@ -165,8 +189,47 @@ namespace Epsitec.Common.Types
 
 		private class GroupNode
 		{
-			public GroupNode()
+			public GroupNode(string name)
 			{
+				this.name = name;
+			}
+
+			public IEnumerable<object> Items
+			{
+				get
+				{
+					if (this.leaves == null)
+					{
+						return Collections.EmptyEnumerable<object>.Instance;
+					}
+					else
+					{
+						return this.leaves;
+					}
+				}
+			}
+
+			public IEnumerable<GroupNode> Subnodes
+			{
+				get
+				{
+					if (this.subnodes == null)
+					{
+						return Collections.EmptyEnumerable<GroupNode>.Instance;
+					}
+					else
+					{
+						return this.subnodes.Values;
+					}
+				}
+			}
+
+			public string Name
+			{
+				get
+				{
+					return this.name;
+				}
 			}
 
 			public GroupNode GetSubnode(string name)
@@ -183,7 +246,7 @@ namespace Epsitec.Common.Types
 					return subnode;
 				}
 
-				subnode = new GroupNode ();
+				subnode = new GroupNode (name);
 				this.subnodes[name] = subnode;
 				return subnode;
 			}
@@ -197,7 +260,8 @@ namespace Epsitec.Common.Types
 				
 				this.leaves.Add (item);
 			}
-			
+
+			private string name;
 			private Dictionary<string, GroupNode> subnodes;
 			private List<object> leaves;
 		}
