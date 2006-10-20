@@ -64,6 +64,21 @@ namespace Epsitec.Common.Types
 			return list.ToArray ();
 		}
 
+		public static T[] ToArray<T>(System.Collections.IEnumerable collection)
+		{
+			List<T> list = new List<T> ();
+
+			if (collection != null)
+			{
+				foreach (T item in collection)
+				{
+					list.Add (item);
+				}
+			}
+
+			return list.ToArray ();
+		}
+
 		public static object[] ToObjectArray<T>(IEnumerable<T> collection)
 		{
 			List<T> list = new List<T> ();
