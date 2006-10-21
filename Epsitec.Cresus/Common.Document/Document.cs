@@ -1936,6 +1936,23 @@ namespace Epsitec.Common.Document
 		#endregion
 
 		#region Images
+		public List<string> ImageSearchFilenamesInPage(int pageRank)
+		{
+			//	Cherche tous les noms de fichier des images de la page.
+			List<string> list = new List<string>();
+			Objects.Page page = this.objects[pageRank] as Objects.Page;
+			foreach (Objects.Abstract obj in this.Deep(page))
+			{
+				if (obj is Objects.Image)
+				{
+					Properties.Image pi = obj.PropertyImage;
+					list.Add(pi.Filename);
+				}
+			}
+
+			return list;
+		}
+
 		protected void ImageFlushUnused()
 		{
 			//	Supprime toutes les images inutilisées du cache des images.

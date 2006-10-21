@@ -70,15 +70,20 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public static void Free()
+		public static void Lock(List<string> filenames)
 		{
-			//	Libère toutes les images, si nécessaire.
-#if false
+			//	Bloque toutes les images utilisées dans la page.
 			foreach (Item item in GlobalImageCache.dico.Values)
 			{
-				item.FreeOriginal();
+				if (filenames == null)
+				{
+					item.Locked = false;
+				}
+				else
+				{
+					item.Locked = filenames.Contains(item.Filename);
+				}
 			}
-#endif
 		}
 
 
@@ -89,64 +94,52 @@ namespace Epsitec.Common.Document
 			long total = 0;
 			foreach (Item item in GlobalImageCache.dico.Values)
 			{
-				total += item.KBUsed;  // total <- taille totale utilisée par le cache
+				total += item.KBUsed();  // total <- taille totale utilisée par le cache
 			}
 
-			//	Libère une partie des images originales.
+			GlobalImageCache.FreeOldest(ref total, ImagePart.LargeOriginal);
+			GlobalImageCache.FreeOldest(ref total, ImagePart.SmallOriginal);
+			GlobalImageCache.FreeOldest(ref total, ImagePart.Lowres);
+			GlobalImageCache.FreeOldest(ref total, ImagePart.Data);
+		}
+
+		protected static void FreeOldest(ref long total, ImagePart part)
+		{
+			//	Libère une partie des images les plus vieilles, pour que le total
+			//	du cache ne dépasse pas 0.5 GB.
 			while (total > GlobalImageCache.globalLimit)  // dépasse la limite globale ?
 			{
-				Item older = GlobalImageCache.SearchOlder(ImagePart.Original);
-				if (older == null)
+				Item older = GlobalImageCache.SearchOlder(part);
+
+				if (older == null)  // rien trouvé ?
 				{
-					break;
+					break;  // on arrête de libérer, même si la limite est dépassée
 				}
 
-				total -= older.FreeOriginal();
-			}
-
-			//	Libère une partie des images basse résolution.
-			while (total > GlobalImageCache.globalLimit)  // dépasse la limite globale ?
-			{
-				Item older = GlobalImageCache.SearchOlder(ImagePart.Lowres);
-				if (older == null)
-				{
-					break;
-				}
-
-				total -= older.FreeLowres();
-			}
-
-			//	Libère une partie des données de base.
-			while (total > GlobalImageCache.globalLimit)  // dépasse la limite globale ?
-			{
-				Item older = GlobalImageCache.SearchOlder(ImagePart.Data);
-				if (older == null)
-				{
-					break;
-				}
-
-				total -= older.FreeData();
+				total -= older.Free(part);
+				System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: total={0}", total.ToString()));
 			}
 		}
 
 		public enum ImagePart
 		{
-			Data,
-			Original,
-			Lowres,
+			LargeOriginal,	// image originale, seulement si elle est grande
+			SmallOriginal,	// image originale, dans tous les cas
+			Lowres,			// image en basse résolution
+			Data,			// données de base
 		}
 
 		protected static Item SearchOlder(ImagePart part)
 		{
-			//	Cherche l'image libèrable la plus vieille du cache.
-			long max = long.MaxValue;
+			//	Cherche la partie d'image libérable la plus vieille du cache.
+			long min = long.MaxValue;
 			Item older = null;
 
 			foreach (Item item in GlobalImageCache.dico.Values)
 			{
-				if (item.IsFreeable(part) && max > item.TimeStamp)
+				if (!item.Locked && item.IsFreeable(part) && min > item.TimeStamp)
 				{
-					max = item.TimeStamp;
+					min = item.TimeStamp;
 					older = item;
 				}
 			}
@@ -182,6 +175,8 @@ namespace Epsitec.Common.Document
 				{
 					this.data = null;
 				}
+
+				this.SetRecentTimeStamp();
 			}
 
 			public bool Reload()
@@ -205,17 +200,49 @@ namespace Epsitec.Common.Document
 				return true;
 			}
 
-			public bool IsFreeable(ImagePart part)
+			public long Free(ImagePart part)
 			{
-				//	Indique s'il est possible de libèrer quelque chose dans cette image.
-				if (part == ImagePart.Data)
+				//	Libère si possible une partie de l'image.
+				//	Retourne la taille libérée en KB.
+				long total = 0;
+
+				if (this.IsFreeable(part))
 				{
-					return (this.data != null);
+					System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: Free {0} {1}", this.filename, part.ToString()));
+					total = this.KBUsed(part);
+
+					if (part == ImagePart.LargeOriginal || part == ImagePart.SmallOriginal)
+					{
+						this.originalImage.Dispose();
+						this.originalImage = null;
+					}
+
+					if (part == ImagePart.Lowres)
+					{
+						this.lowresImage.Dispose();
+						this.lowresImage = null;
+					}
+
+					if (part == ImagePart.Data)
+					{
+						this.data = null;
+					}
 				}
 
-				if (part == ImagePart.Original)
+				return total;
+			}
+
+			public bool IsFreeable(ImagePart part)
+			{
+				//	Indique s'il est possible de libérer une partie de cette image.
+				if (part == ImagePart.LargeOriginal)
 				{
-					return (this.originalImage != null && this.IsBigOriginal);
+					return (this.originalImage != null && this.IsLargeOriginal);
+				}
+
+				if (part == ImagePart.SmallOriginal)
+				{
+					return (this.originalImage != null);
 				}
 
 				if (part == ImagePart.Lowres)
@@ -223,56 +250,78 @@ namespace Epsitec.Common.Document
 					return (this.lowresImage != null);
 				}
 
+				if (part == ImagePart.Data)
+				{
+					return (this.data != null);
+				}
+
 				return false;
 			}
 
-			public long FreeOriginal()
+			public long KBUsed()
 			{
-				//	Libère si possible l'image originale.
-				//	Retourne la taille libérée en KB.
+				//	Retourne la taille totale utilisée par l'image (toutes les parties) en KB.
+				//	Prend en compte l'image originale, l'image basse résolution et les données.
 				long total = 0;
 
-				if (this.originalImage != null)
-				{
-					total = this.KBOriginalWeight;
+				total += this.KBUsed(ImagePart.LargeOriginal);  // ne pas compter LargeOriginal + SmallOriginal !
+				total += this.KBUsed(ImagePart.Lowres);
+				total += this.KBUsed(ImagePart.Data);
 
-					this.originalImage.Dispose();
-					this.originalImage = null;
+				return total;
+			}
+
+			public long KBUsed(ImagePart part)
+			{
+				//	Retourne la taille utilisée par une partie de l'image.
+				//	Si la partie n'est pas utilisée, retourne zéro.
+				long total = 0;
+
+				if (part == ImagePart.LargeOriginal || part == ImagePart.SmallOriginal)
+				{
+					if (this.originalImage != null)
+					{
+						total += this.KBOriginalWeight;
+					}
+				}
+
+				if (part == ImagePart.Lowres)
+				{
+					if (this.lowresImage != null)
+					{
+						double w = this.originalSize.Width  / this.lowresScale;
+						double h = this.originalSize.Height / this.lowresScale;
+						total += ((long) w * (long) h) / (1024/4);
+					}
+				}
+
+				if (part == ImagePart.Data)
+				{
+					if (this.data != null)
+					{
+						total += this.data.Length/1024;
+					}
 				}
 
 				return total;
 			}
 
-			public long FreeLowres()
+			public long KBOriginalWeight
 			{
-				//	Libère si possible l'image basse résolution.
-				//	Retourne la taille libérée en KB.
-				long total = 0;
-
-				if (this.lowresImage != null)
+				//	Retourne la taille de l'image originale en KB, qu'elle existe ou pas.
+				get
 				{
-					total = this.KBLowresUsed;
-
-					this.lowresImage.Dispose();
-					this.lowresImage = null;
+					return ((long) this.originalSize.Width * (long) this.originalSize.Height) / (1024/4);
 				}
-
-				return total;
 			}
 
-			public long FreeData()
+			protected bool IsLargeOriginal
 			{
-				//	Libère si possible toutes les données de l'image.
-				//	Retourne la taille libérée en KB.
-				long total = 0;
-
-				if (this.data != null)
+				//	Retourne 'true' si l'image originale dépasse la limite.
+				get
 				{
-					total = this.KBDataUsed;
-					this.data = null;
+					return (this.KBOriginalWeight > GlobalImageCache.imageLimit);
 				}
-
-				return total;
 			}
 
 			public long TimeStamp
@@ -288,6 +337,18 @@ namespace Epsitec.Common.Document
 			{
 				//	Met la marque de vieillesse la plus récente.
 				this.timeStamp = GlobalImageCache.timeStamp++;
+			}
+
+			public bool Locked
+			{
+				get
+				{
+					return this.locked;
+				}
+				set
+				{
+					this.locked = value;
+				}
 			}
 
 			public void Write(string otherFilename)
@@ -353,6 +414,8 @@ namespace Epsitec.Common.Document
 			public Drawing.Image Image(bool isLowres)
 			{
 				//	Retourne l'objet Drawing.Image.
+				this.ReadImageData();
+
 				if (this.data == null)
 				{
 					return null;
@@ -378,78 +441,6 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			public long KBUsed
-			{
-				//	Retourne la taille totale utilisée par l'image en KB.
-				//	Prend en compte les données, l'image originale et l'image basse résolution.
-				get
-				{
-					long total = 0;
-
-					if (this.originalImage != null)
-					{
-						total += this.KBOriginalWeight;
-					}
-
-					total += this.KBDataUsed;
-					total += this.KBLowresUsed;
-
-					return total;
-				}
-			}
-
-			public long KBOriginalWeight
-			{
-				//	Retourne la taille de l'image originale en KB.
-				get
-				{
-					return ((long) this.originalSize.Width * (long) this.originalSize.Height) / (1024/4);
-				}
-			}
-
-			public long KBLowresUsed
-			{
-				//	Retourne la taille de l'image basse résolution en KB.
-				get
-				{
-					if (this.lowresImage == null)
-					{
-						return 0;
-					}
-					else
-					{
-						double w = this.originalSize.Width  / this.lowresScale;
-						double h = this.originalSize.Height / this.lowresScale;
-						return ((long) w * (long) h) / (1024/4);
-					}
-				}
-			}
-
-			public long KBDataUsed
-			{
-				//	Retourne la taille utilisée par les données de l'image en KB.
-				get
-				{
-					if (this.data == null)
-					{
-						return 0;
-					}
-					else
-					{
-						return this.data.Length/1024;
-					}
-				}
-			}
-
-			protected bool IsBigOriginal
-			{
-				//	Retourne 'true' si l'image originale dépasse la limite.
-				get
-				{
-					return (this.KBOriginalWeight > GlobalImageCache.imageLimit);
-				}
-			}
-
 			protected void ReadOriginalImage()
 			{
 				//	Lit l'image originale, si nécessaire.
@@ -460,9 +451,11 @@ namespace Epsitec.Common.Document
 					return;
 				}
 
+				System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: ReadOriginalImage {0}", this.filename));
 				this.originalImage = Bitmap.FromData(this.data);
 				System.Diagnostics.Debug.Assert(this.originalImage != null);
 				this.originalSize = this.originalImage.Size;
+				this.SetRecentTimeStamp();
 			}
 
 			protected void ReadImageData()
@@ -473,6 +466,7 @@ namespace Epsitec.Common.Document
 					return;
 				}
 
+				System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: ReadImageData {0}", this.filename));
 				if (this.zipFilename == null)
 				{
 					this.data = System.IO.File.ReadAllBytes(this.filename);
@@ -487,6 +481,8 @@ namespace Epsitec.Common.Document
 						this.data = zip[this.filenameToRead].Data;  // lit les données dans le fichier zip
 					}
 				}
+
+				this.SetRecentTimeStamp();
 			}
 
 			protected bool IsZipLoading(string entryName)
@@ -505,10 +501,11 @@ namespace Epsitec.Common.Document
 
 				this.ReadOriginalImage();
 
-				if (this.IsBigOriginal)  // image dépasse la limite ?
+				if (this.IsLargeOriginal)  // image dépasse la limite ?
 				{
 					//	Génère une image pour l'affichage (this.lowresImage) qui pèse
 					//	environ la limite fixée.
+					System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: ReadLowresImage {0}", this.filename));
 					this.lowresScale = System.Math.Sqrt(this.KBOriginalWeight/GlobalImageCache.imageLimit);
 					int dx = (int) (this.originalSize.Width/this.lowresScale);
 					int dy = (int) (this.originalSize.Height/this.lowresScale);
@@ -552,6 +549,7 @@ namespace Epsitec.Common.Document
 			protected Size					originalSize;
 			protected double				lowresScale;
 			protected long					timeStamp;
+			protected bool					locked;
 		}
 		#endregion
 
@@ -571,7 +569,8 @@ namespace Epsitec.Common.Document
 		}
 
 
-		protected static readonly long				globalLimit = 500000;  // limite globale de 0.5 GB
+		//?protected static readonly long				globalLimit = 500000;  // limite globale de 0.5 GB
+		protected static readonly long				globalLimit = 50000;  // limite globale de 0.5 GB
 		protected static readonly long				imageLimit  =   1000;  // limite par image de 1 MB
 
 		protected static Dictionary<string, Item>	dico = new Dictionary<string, Item>();

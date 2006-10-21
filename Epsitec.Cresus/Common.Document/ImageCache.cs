@@ -80,7 +80,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			if (item != null)  // image trouvé ?
+			if (item != null)  // image trouvée ?
 			{
 				item.GlobalItem.SetRecentTimeStamp();  // le plus récent
 				GlobalImageCache.FreeOldest();  // libère éventuellement des antiquités
@@ -232,11 +232,31 @@ namespace Epsitec.Common.Document
 			//	Lit les données d'une image.
 			if (!this.Contains(propImage.Filename))  // pas encore dans le cache ?
 			{
-				if (propImage.InsideDoc || imageIncludeMode == Document.ImageIncludeMode.All)
+				bool isZip = false;
+
+				if (imageIncludeMode == Document.ImageIncludeMode.All)
+				{
+					isZip = true;
+				}
+
+				if (imageIncludeMode == Document.ImageIncludeMode.Defined)
+				{
+					isZip = propImage.InsideDoc;
+				}
+
+				if (isZip)
 				{
 					string name = string.Format("images/{0}", propImage.ShortName);
 					byte[] data = zip[name].Data;  // lit les données dans le fichier zip
-					this.Add(propImage.Filename, zipFilename, propImage.ShortName, data);
+
+					if (data == null)
+					{
+						this.Add(propImage.Filename, null, null, null);  // lit le fichier image sur disque
+					}
+					else
+					{
+						this.Add(propImage.Filename, zipFilename, propImage.ShortName, data);
+					}
 				}
 				else
 				{

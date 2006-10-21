@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
@@ -4300,7 +4301,8 @@ namespace Epsitec.App.DocumentEditor
 				Objects.Page page = this.CurrentDocument.GetObjects[cp] as Objects.Page;
 				this.CurrentDocumentInfo.quickPageMenu.Text = page.ShortName;
 
-				GlobalImageCache.Free();  // libère toutes les images
+				List<string> list = this.CurrentDocument.ImageSearchFilenamesInPage(cp);
+				GlobalImageCache.Lock(list);  // libère toutes les images
 
 				this.dlgPageStack.Update();
 				this.dlgPrint.UpdatePages();
@@ -5074,7 +5076,7 @@ namespace Epsitec.App.DocumentEditor
 			this.currentDocument = rank;
 			this.PrepareOpenDocument();
 
-			GlobalImageCache.Free();  // libère toutes les images
+			GlobalImageCache.Lock(null);  // libère toutes les images
 
 			if (rank >= 0)
 			{
