@@ -107,7 +107,7 @@ namespace Epsitec.Common.Document
 			else
 			{
 				GlobalImageCache.Item gItem = GlobalImageCache.Add(filename, zipFilename, zipShortName, data);
-				if (gItem == null || gItem.Data == null)
+				if (gItem == null || !gItem.IsData)
 				{
 					return null;
 				}
