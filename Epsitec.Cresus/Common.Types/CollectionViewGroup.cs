@@ -90,6 +90,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the subgroups contained in this group.
+		/// </summary>
+		/// <value>The subgroups or an empty list if there are no subgroups.</value>
 		public Collections.ReadOnlyList<CollectionViewGroup> Subgroups
 		{
 			get
@@ -126,6 +130,14 @@ namespace Epsitec.Common.Types
 			if (this.parentGroup != null)
 			{
 				this.parentGroup.OnPropertyChanged (new DependencyPropertyChangedEventArgs ("Items"));
+			}
+		}
+
+		protected virtual void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+		{
+			if (this.PropertyChanged != null)
+			{
+				this.PropertyChanged (this, e);
 			}
 		}
 
@@ -196,15 +208,6 @@ namespace Epsitec.Common.Types
 						yield return item;
 					}
 				}
-			}
-		}
-
-		
-		protected virtual void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
-		{
-			if (this.PropertyChanged != null)
-			{
-				this.PropertyChanged (this, e);
 			}
 		}
 

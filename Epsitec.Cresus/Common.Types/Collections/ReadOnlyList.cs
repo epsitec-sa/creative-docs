@@ -12,6 +12,10 @@ namespace Epsitec.Common.Types.Collections
 	/// <typeparam name="T">The manipulated data type.</typeparam>
 	public class ReadOnlyList<T> : IList<T>, System.Collections.ICollection
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ReadOnlyList&lt;T&gt;"/> class.
+		/// </summary>
+		/// <param name="list">The list which will be wrapped into a read only shell.</param>
 		public ReadOnlyList(IList<T> list)
 		{
 			this.list = list;
@@ -156,6 +160,9 @@ namespace Epsitec.Common.Types.Collections
 
 		#endregion
 
+		/// <summary>
+		/// An empty read only list.
+		/// </summary>
 		public static readonly ReadOnlyList<T> Empty = new ReadOnlyList<T> (new List<T> ());
 
 		private IList<T> list;
