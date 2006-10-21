@@ -7,8 +7,6 @@ namespace Epsitec.Common.Types
 {
 	using SortDescriptionList=Collections.ObservableList<SortDescription>;
 	using GroupDescriptionList=Collections.ObservableList<AbstractGroupDescription>;
-	using GroupList=Collections.ObservableList<CollectionViewGroup>;
-	using ReadOnlyGroupList=Collections.ReadOnlyObservableList<CollectionViewGroup>;
 	
 	/// <summary>
 	/// The <c>CollectionView</c> class represents a view of a collection. Views implement
@@ -61,8 +59,8 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		
-		public ReadOnlyGroupList				Groups
+
+		public Collections.ReadOnlyObservableList<CollectionViewGroup> Groups
 		{
 			get
 			{
@@ -131,21 +129,10 @@ namespace Epsitec.Common.Types
 
 			if (this.HasGroupDescriptions)
 			{
-				if (this.groups == null)
-				{
-					this.groups = new Collections.ObservableList<CollectionViewGroup> ();
-					this.readOnlyGroups = new Collections.ReadOnlyObservableList<CollectionViewGroup> (this.groups);
-				}
-				else
-				{
-					this.groups.Clear ();
-				}
-
 				this.GroupItemsInList ();
 			}
 			else
 			{
-				this.groups = null;
 				this.readOnlyGroups = null;
 			}
 		}
@@ -165,28 +152,28 @@ namespace Epsitec.Common.Types
 				CollectionView.ProcessGroup (item, culture, rules, 0, root);
 			}
 
-			CollectionViewGroup rootGroup = new CollectionViewGroup (null, null);
+			this.rootGroup = new CollectionViewGroup (null, null);
 
-			this.PostProcessGroup (root, rootGroup, true);
+			this.PostProcessGroup (root, this.rootGroup);
 			
-			this.groups.AddRange (rootGroup.Subgroups);
+			this.readOnlyGroups = new Collections.ReadOnlyObservableList<CollectionViewGroup> (this.rootGroup.GetSubgroups ());
 		}
 
-		private void PostProcessGroup(GroupNode node, CollectionViewGroup rootGroup, bool isRoot)
+		private void PostProcessGroup(GroupNode node, CollectionViewGroup parentGroup)
 		{
 			if (node.HasSubnodes)
 			{
 				foreach (GroupNode subnode in node.Subnodes)
 				{
-					CollectionViewGroup group = new CollectionViewGroup (subnode.Name, isRoot ? null : rootGroup);
-					this.PostProcessGroup (subnode, group, false);
-					rootGroup.GetSubgroups ().Add (group);
+					CollectionViewGroup group = new CollectionViewGroup (subnode.Name, parentGroup);
+					this.PostProcessGroup (subnode, group);
+					parentGroup.GetSubgroups ().Add (group);
 				}
 			}
 			
 			if (node.HasItems)
 			{
-				rootGroup.GetItems ().AddRange (node.Items);
+				parentGroup.GetItems ().AddRange (node.Items);
 			}
 		}
 
@@ -471,8 +458,8 @@ namespace Epsitec.Common.Types
 		private System.Type						itemType;
 		private int								currentPosition;
 		private object							currentItem;
-		private GroupList						groups;
-		private ReadOnlyGroupList				readOnlyGroups;
+		private CollectionViewGroup				rootGroup;
+		private Collections.ReadOnlyObservableList<CollectionViewGroup> readOnlyGroups;
 		private GroupDescriptionList			groupDescriptions;
 		private SortDescriptionList				sortDescriptions;
 		private System.Predicate<object>		filter;
