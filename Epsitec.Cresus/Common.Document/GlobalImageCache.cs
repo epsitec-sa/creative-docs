@@ -47,14 +47,14 @@ namespace Epsitec.Common.Document
 			else
 			{
 				Item item = new Item(filename, zipFilename, zipShortName, data);
-				if (item.Data == null)
-				{
-					return null;
-				}
-				else
+				if (item.IsData)
 				{
 					GlobalImageCache.dico.Add(filename, item);
 					return item;
+				}
+				else
+				{
+					return null;
 				}
 			}
 		}
@@ -402,11 +402,21 @@ namespace Epsitec.Common.Document
 				}
 			}
 
+			public bool IsData
+			{
+				//	Indique si les données brutes de l'image existent.
+				get
+				{
+					return this.data != null;
+				}
+			}
+
 			public byte[] Data
 			{
 				//	Données brutes de l'image.
 				get
 				{
+					this.ReadImageData();
 					return this.data;
 				}
 			}
