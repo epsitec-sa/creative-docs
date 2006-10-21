@@ -579,8 +579,8 @@ namespace Epsitec.Common.Document
 		}
 
 
-		//?protected static readonly long				globalLimit = 500000;  // limite globale de 0.5 GB
-		protected static readonly long				globalLimit = 50000;  // limite globale de 0.5 GB
+		protected static readonly long				globalLimit = 500000;  // limite globale de 0.5 GB
+		//?protected static readonly long				globalLimit = 50000;  // limite globale de 0.5 GB
 		protected static readonly long				imageLimit  =   1000;  // limite par image de 1 MB
 
 		protected static Dictionary<string, Item>	dico = new Dictionary<string, Item>();

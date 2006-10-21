@@ -2021,7 +2021,8 @@ namespace Epsitec.Common.Document
 			//	Dessine le document.
 			if ( drawingContext.RootStackIsEmpty )  return;
 
-			this.imageCache.IsLowres = !drawingContext.PreviewActive;
+			//?this.imageCache.IsLowres = !drawingContext.PreviewActive;
+			this.imageCache.IsLowres = true;
 
 			if ( !clipRect.IsInfinite )
 			{
