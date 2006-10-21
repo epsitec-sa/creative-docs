@@ -111,10 +111,11 @@
     <Compile Include="AbstractBinding.cs" />
     <Compile Include="CollectionChangedEventArgs.cs" />
     <Compile Include="CollectionChangedAction.cs" />
-    <Compile Include="AbstractGroupDescription.cs" />
+    <Compile Include="GroupDescription.cs" />
     <Compile Include="CollectionViewSource.cs" />
     <Compile Include="CollectionView.cs" />
     <Compile Include="CollectionViewGroup.cs" />
+    <Compile Include="Internal\CollectionViewGroupItems.cs" />
     <Compile Include="UnresolvedEnum.cs" />
     <Compile Include="SystemTypeFamily.cs" />
     <Compile Include="DesignerAttribute.cs" />

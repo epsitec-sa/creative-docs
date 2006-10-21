@@ -5,9 +5,6 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	using SortDescriptionList=Collections.ObservableList<SortDescription>;
-	using GroupDescriptionList=Collections.ObservableList<AbstractGroupDescription>;
-	
 	/// <summary>
 	/// The <c>CollectionView</c> class represents a view of a collection. Views implement
 	/// grouping, sorting, filtering and the concept of a current item.
@@ -73,20 +70,20 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public GroupDescriptionList				GroupDescriptions
+		public Collections.ObservableList<GroupDescription> GroupDescriptions
 		{
 			get
 			{
 				if (this.groupDescriptions == null)
 				{
-					this.groupDescriptions = new Collections.ObservableList<AbstractGroupDescription> ();
+					this.groupDescriptions = new Collections.ObservableList<GroupDescription> ();
 				}
 				
 				return this.groupDescriptions;
 			}
 		}
 
-		public SortDescriptionList				SortDescriptions
+		public Collections.ObservableList<SortDescription> SortDescriptions
 		{
 			get
 			{
@@ -141,7 +138,7 @@ namespace Epsitec.Common.Types
 		{
 			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.CurrentCulture;
 			
-			AbstractGroupDescription[] rules = this.groupDescriptions.ToArray ();
+			GroupDescription[] rules = this.groupDescriptions.ToArray ();
 
 			System.Diagnostics.Debug.Assert (rules.Length > 0);
 			
@@ -177,7 +174,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private static void ProcessGroup(object item, System.Globalization.CultureInfo culture, AbstractGroupDescription[] rules, int level, GroupNode node)
+		private static void ProcessGroup(object item, System.Globalization.CultureInfo culture, GroupDescription[] rules, int level, GroupNode node)
 		{
 			int nextLevel = level+1;
 			string[] names = rules[level].GetGroupNamesForItem (item, culture);
@@ -460,8 +457,8 @@ namespace Epsitec.Common.Types
 		private object							currentItem;
 		private CollectionViewGroup				rootGroup;
 		private Collections.ReadOnlyObservableList<CollectionViewGroup> readOnlyGroups;
-		private GroupDescriptionList			groupDescriptions;
-		private SortDescriptionList				sortDescriptions;
+		private Collections.ObservableList<GroupDescription> groupDescriptions;
+		private Collections.ObservableList<SortDescription> sortDescriptions;
 		private System.Predicate<object>		filter;
 	}
 }
