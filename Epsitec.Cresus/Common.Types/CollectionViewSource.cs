@@ -4,7 +4,7 @@
 namespace Epsitec.Common.Types
 {
 	using SortDescriptionList=Collections.ObservableList<SortDescription>;
-	using GroupDescriptionList=Collections.ObservableList<AbstractGroupDescription>;
+	using GroupDescriptionList=Collections.ObservableList<GroupDescription>;
 
 	/// <summary>
 	/// The <c>CollectionViewSource</c> class represents a view of a data
@@ -15,7 +15,7 @@ namespace Epsitec.Common.Types
 		public CollectionViewSource()
 		{
 			this.sortDescriptions = new Collections.HostedList<SortDescription> (this.HandleSortInsertion, this.HandleSortRemoval);
-			this.groupDescriptions = new Collections.HostedList<AbstractGroupDescription> (this.HandleGroupInsertion, this.HandleGroupRemoval);
+			this.groupDescriptions = new Collections.HostedList<GroupDescription> (this.HandleGroupInsertion, this.HandleGroupRemoval);
 		}
 
 		public object							Source
@@ -87,11 +87,11 @@ namespace Epsitec.Common.Types
 		{
 		}
 
-		private void HandleGroupInsertion(AbstractGroupDescription item)
+		private void HandleGroupInsertion(GroupDescription item)
 		{
 		}
 
-		private void HandleGroupRemoval(AbstractGroupDescription item)
+		private void HandleGroupRemoval(GroupDescription item)
 		{
 		}
 

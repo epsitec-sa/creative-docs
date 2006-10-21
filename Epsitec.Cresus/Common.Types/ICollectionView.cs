@@ -34,7 +34,7 @@ namespace Epsitec.Common.Types
 		/// in the collection are grouped in a view.
 		/// </summary>
 		/// <value>The collection of group descriptions.</value>
-		Collections.ObservableList<AbstractGroupDescription> GroupDescriptions
+		Collections.ObservableList<GroupDescription> GroupDescriptions
 		{
 			get;
 		}

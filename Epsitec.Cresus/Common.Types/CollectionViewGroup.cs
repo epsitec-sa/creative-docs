@@ -7,8 +7,8 @@ namespace Epsitec.Common.Types
 {
 	/// <summary>
 	/// The <c>CollectionViewGrop</c> class represents a group created by a
-	/// <see cref="CollectionView"/> object, based on its <see cref="AbstractGroupDescription"/>
-	/// collection.
+	/// <see cref="CollectionView"/> object, based on a collection of
+	/// <see cref="GroupDescription"/> objects.
 	/// </summary>
 	public class CollectionViewGroup : INotifyPropertyChanged
 	{
@@ -75,18 +75,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				if (this.ItemCount == 0)
-				{
-					return Collections.EmptyEnumerable<object>.Instance;
-				}
-				else if (this.HasSubgroups)
-				{
-					return this.EnumerateSubgroupItems ();
-				}
-				else
-				{
-					return this.GetItems ();
-				}
+				return new Internal.CollectionViewGroupItems (this);
 			}
 		}
 
@@ -193,22 +182,6 @@ namespace Epsitec.Common.Types
 			}
 
 			return this.subgroups;
-		}
-
-		private IEnumerable<object> EnumerateSubgroupItems()
-		{
-			System.Diagnostics.Debug.Assert (this.HasSubgroups);
-			
-			foreach (CollectionViewGroup group in this.subgroups)
-			{
-				if (group.ItemCount > 0)
-				{
-					foreach (object item in group.Items)
-					{
-						yield return item;
-					}
-				}
-			}
 		}
 
 		#region INotifyPropertyChanged Members
