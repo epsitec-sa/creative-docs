@@ -165,21 +165,21 @@ namespace Epsitec.Common.Types
 				CollectionView.ProcessGroup (item, culture, rules, 0, root);
 			}
 
-			CollectionViewGroup rootGroup = new CollectionViewGroup (null);
+			CollectionViewGroup rootGroup = new CollectionViewGroup (null, null);
 
-			this.PostProcessGroup (root, rootGroup);
+			this.PostProcessGroup (root, rootGroup, true);
 			
 			this.groups.AddRange (rootGroup.Subgroups);
 		}
 
-		private void PostProcessGroup(GroupNode node, CollectionViewGroup rootGroup)
+		private void PostProcessGroup(GroupNode node, CollectionViewGroup rootGroup, bool isRoot)
 		{
 			if (node.HasSubnodes)
 			{
 				foreach (GroupNode subnode in node.Subnodes)
 				{
-					CollectionViewGroup group = new CollectionViewGroup (subnode.Name);
-					this.PostProcessGroup (subnode, group);
+					CollectionViewGroup group = new CollectionViewGroup (subnode.Name, isRoot ? null : rootGroup);
+					this.PostProcessGroup (subnode, group, false);
 					rootGroup.GetSubgroups ().Add (group);
 				}
 			}

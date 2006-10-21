@@ -52,6 +52,13 @@ namespace Epsitec.Common.Types
 			return list;
 		}
 
+		public static T[] ToArray<T>(IList<T> list)
+		{
+			T[] array = new T[list.Count];
+			list.CopyTo (array, 0);
+			return array;
+		}
+
 		public static T[] ToArray<T>(IEnumerable<T> collection)
 		{
 			List<T> list = new List<T> ();

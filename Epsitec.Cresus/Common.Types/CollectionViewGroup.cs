@@ -1,6 +1,8 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Types
 {
 	/// <summary>
@@ -10,12 +12,14 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class CollectionViewGroup : INotifyPropertyChanged
 	{
-		internal CollectionViewGroup(string name)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CollectionViewGroup"/> class.
+		/// </summary>
+		/// <param name="name">The name of the group.</param>
+		internal CollectionViewGroup(string name, CollectionViewGroup parentGroup)
 		{
 			this.name = name;
-			this.items = new Collections.ObservableList<object> ();
-			
-			this.items.CollectionChanged += this.HandleItemsCollectionChanged;
+			this.parentGroup = parentGroup;
 		}
 
 		/// <summary>
@@ -34,14 +38,20 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Gets the number of items in this group.
+		/// Gets the number of items in this group (this will also count
+		/// the items found in the subgroups, if any).
 		/// </summary>
 		/// <value>The number of items in this group.</value>
 		public int								ItemCount
 		{
 			get
 			{
-				return this.items.Count;
+				if (this.itemCount == -1)
+				{
+					this.RefreshItemCount ();
+				}
+
+				return this.itemCount;
 			}
 		}
 
@@ -58,44 +68,107 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Gets the items contained in this group. An item will be an instance
-		/// of <see cref="CollectionViewGroup"/> if it describes a subgroup.
+		/// Gets the items contained in this group (and possibly its subgroups).
 		/// </summary>
-		/// <value>A read-only collection of the items contained in this group.</value>
-		public Collections.ReadOnlyObservableList<object> Items
+		/// <value>The items containes in this group.</value>
+		public IEnumerable<object>				Items
 		{
 			get
 			{
-				if (this.readOnlyItems == null)
+				if (this.ItemCount == 0)
 				{
-					this.readOnlyItems = new Collections.ReadOnlyObservableList<object> (this.items);
+					return Collections.EmptyEnumerable<object>.Instance;
 				}
-				
-				return this.readOnlyItems;
+				else if (this.HasSubgroups)
+				{
+					return this.EnumerateSubgroupItems ();
+				}
+				else
+				{
+					return this.GetItems ();
+				}
 			}
 		}
 
-		public Collections.ReadOnlyObservableList<CollectionViewGroup> Subgroups
+		public Collections.ReadOnlyList<CollectionViewGroup> Subgroups
 		{
 			get
 			{
-				if ((this.readOnlySubgroups == null) &&
-					(this.subgroups != null))
+				if (this.HasSubgroups)
 				{
-					this.readOnlySubgroups = new Collections.ReadOnlyObservableList<CollectionViewGroup> (this.subgroups);
+					return new Collections.ReadOnlyList<CollectionViewGroup> (this.subgroups);
 				}
-
-				return this.readOnlySubgroups;
+				else
+				{
+					return Collections.ReadOnlyList<CollectionViewGroup>.Empty;
+				}
 			}
 		}
 
 		private void HandleItemsCollectionChanged(object sender, CollectionChangedEventArgs e)
 		{
+			this.InvalidateItemCount ();
 			this.OnPropertyChanged (new DependencyPropertyChangedEventArgs ("Items"));
+			
+			if (this.parentGroup != null)
+			{
+				this.parentGroup.OnPropertyChanged (new DependencyPropertyChangedEventArgs ("Items"));
+			}
+		}
+
+		private void HandleSubgroupsCollectionChanged(object sender, CollectionChangedEventArgs e)
+		{
+			this.InvalidateItemCount ();
+			
+			this.OnPropertyChanged (new DependencyPropertyChangedEventArgs ("Subgroups"));
+			this.OnPropertyChanged (new DependencyPropertyChangedEventArgs ("Items"));
+
+			if (this.parentGroup != null)
+			{
+				this.parentGroup.OnPropertyChanged (new DependencyPropertyChangedEventArgs ("Items"));
+			}
+		}
+
+		protected void RefreshItemCount()
+		{
+			int count = 0;
+
+			if (this.HasSubgroups)
+			{
+				foreach (CollectionViewGroup group in this.subgroups)
+				{
+					count += group.ItemCount;
+				}
+			}
+			else if (this.items != null)
+			{
+				count = this.items.Count;
+			}
+
+			this.itemCount = count;
+		}
+		
+		protected void InvalidateItemCount()
+		{
+			if (this.itemCount != -1)
+			{
+				this.itemCount = -1;
+				
+				if (this.parentGroup != null)
+				{
+					this.parentGroup.InvalidateItemCount ();
+				}
+			}
 		}
 		
 		internal Collections.ObservableList<object> GetItems()
 		{
+			if (this.items == null)
+			{
+				this.items = new Collections.ObservableList<object> ();
+				this.items.CollectionChanged += this.HandleItemsCollectionChanged;
+			}
+			
 			return this.items;
 		}
 
@@ -104,9 +177,26 @@ namespace Epsitec.Common.Types
 			if (this.subgroups == null)
 			{
 				this.subgroups = new Collections.ObservableList<CollectionViewGroup> ();
+				this.subgroups.CollectionChanged += this.HandleSubgroupsCollectionChanged;
 			}
-			
+
 			return this.subgroups;
+		}
+
+		private IEnumerable<object> EnumerateSubgroupItems()
+		{
+			System.Diagnostics.Debug.Assert (this.HasSubgroups);
+			
+			foreach (CollectionViewGroup group in this.subgroups)
+			{
+				if (group.ItemCount > 0)
+				{
+					foreach (object item in group.Items)
+					{
+						yield return item;
+					}
+				}
+			}
 		}
 
 		
@@ -126,9 +216,10 @@ namespace Epsitec.Common.Types
 
 
 		private string							name;
+		private int								itemCount;
+		private CollectionViewGroup				parentGroup;
+		
 		private Collections.ObservableList<object> items;
 		private Collections.ObservableList<CollectionViewGroup> subgroups;
-		private Collections.ReadOnlyObservableList<object> readOnlyItems;
-		private Collections.ReadOnlyObservableList<CollectionViewGroup> readOnlySubgroups;
 	}
 }
