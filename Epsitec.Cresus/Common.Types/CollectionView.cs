@@ -18,6 +18,10 @@ namespace Epsitec.Common.Types
 
 		#region ICollectionView Members
 
+		/// <summary>
+		/// Gets the underlying (unfiltered and unsorted) source collection.
+		/// </summary>
+		/// <value>The source collection.</value>
 		public System.Collections.IEnumerable	SourceCollection
 		{
 			get
@@ -42,6 +46,23 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this (filtered) view is empty.
+		/// </summary>
+		/// <value><c>true</c> if this view is empty; otherwise, <c>false</c>.</value>
+		public bool								IsEmpty
+		{
+			get
+			{
+				return this.Items.Count == 0;
+			}
+		}
+
+		/// <summary>
+		/// Gets the items. The collection might be sorted and filtered,
+		/// depending on the settings.
+		/// </summary>
+		/// <value>A read-only collection of the items.</value>
 		public System.Collections.IList			Items
 		{
 			get
@@ -50,18 +71,30 @@ namespace Epsitec.Common.Types
 				{
 					return this.sortedList;
 				}
-				else
+				else if (this.sourceList != null)
 				{
 					return this.sourceList;
+				}
+				else
+				{
+					return Collections.EmptyList<object>.Instance;
 				}
 			}
 		}
 
+		/// <summary>
+		/// Gets the top level groups.
+		/// </summary>
+		/// <value>
+		/// A read-only collection of the top level groups or <c>null</c>
+		/// if there are no groups configured for this view.
+		/// </value>
 		public Collections.ReadOnlyObservableList<CollectionViewGroup> Groups
 		{
 			get
 			{
-				if (this.readOnlyGroups == null)
+				if ((this.readOnlyGroups == null) &&
+					(this.HasGroupDescriptions))
 				{
 					this.Refresh ();
 				}
@@ -70,6 +103,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets a collection of group description objects that describe how
+		/// the items in the collection are grouped in a view.
+		/// </summary>
+		/// <value>The collection of group descriptions.</value>
 		public Collections.ObservableList<GroupDescription> GroupDescriptions
 		{
 			get
@@ -83,6 +121,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets a collection of <see cref="SortDescription"/> objects that
+		/// describe how the items in a collection are sorted within the groups.
+		/// </summary>
+		/// <value>The sort descriptions.</value>
 		public Collections.ObservableList<SortDescription> SortDescriptions
 		{
 			get
@@ -96,6 +139,13 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a callback used to determine if an item is suitable for
+		/// inclusion in the view.
+		/// </summary>
+		/// <value>
+		/// A method used to determine if an item is suitable for inclusion in the view.
+		/// </value>
 		public System.Predicate<object>			Filter
 		{
 			get
@@ -108,6 +158,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+
+		/// <summary>
+		/// Refreshes the contents of the view.
+		/// </summary>
 		public void Refresh()
 		{
 			//	TODO: add suspend/resume for all observable collections
@@ -134,14 +188,99 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Enter a defer cycle which can be used to do multiple changes to
+		/// the underlying source collection or to the view itself without
+		/// having multiple refreshes.
+		/// </summary>
+		/// <returns>
+		/// An instance of <c>System.IDisposable</c> which must be
+		/// disposed of at the end of the modifications to exit the deferred
+		/// refresh mode.
+		/// </returns>
+		public System.IDisposable DeferRefresh()
+		{
+			//	TODO: ...
+			
+			return null;
+		}
+
+		public event Support.EventHandler CurrentChanged;
+
+		public event Support.EventHandler<CurrentChangingEventArgs> CurrentChanging;
+
+		#endregion
+
+		/// <summary>
+		/// Gets a value indicating whether this view has sort descriptions.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this view has sort descriptions; otherwise, <c>false</c>.
+		/// </value>
+		public bool								HasSortDescriptions
+		{
+			get
+			{
+				return (this.sortDescriptions != null)
+					&& (this.sortDescriptions.Count > 0);
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this view has group descriptions.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this view has group descriptions; otherwise, <c>false</c>.
+		/// </value>
+		public bool								HasGroupDescriptions
+		{
+			get
+			{
+				return (this.groupDescriptions != null)
+				    && (this.groupDescriptions.Count > 0);
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this view has a filter.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this view has a filter; otherwise, <c>false</c>.
+		/// </value>
+		public bool								HasFilter
+		{
+			get
+			{
+				return this.filter != null;
+			}
+		}
+
+		#region INotifyCollectionChanged Members
+
+		public event Support.EventHandler<CollectionChangedEventArgs> CollectionChanged;
+
+		#endregion
+
+		#region IEnumerable Members
+
+		public System.Collections.IEnumerator GetEnumerator()
+		{
+			foreach (object group in this.Groups)
+			{
+				yield return group;
+			}
+		}
+
+		#endregion
+
 		private void GroupItemsInList()
 		{
 			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.CurrentCulture;
-			
+
 			GroupDescription[] rules = this.groupDescriptions.ToArray ();
 
 			System.Diagnostics.Debug.Assert (rules.Length > 0);
-			
+
 			GroupNode root = new GroupNode (null);
 
 			foreach (object item in this.sortedList)
@@ -152,7 +291,7 @@ namespace Epsitec.Common.Types
 			this.rootGroup = new CollectionViewGroup (null, null);
 
 			this.PostProcessGroup (root, this.rootGroup);
-			
+
 			this.readOnlyGroups = new Collections.ReadOnlyObservableList<CollectionViewGroup> (this.rootGroup.GetSubgroups ());
 		}
 
@@ -167,7 +306,7 @@ namespace Epsitec.Common.Types
 					parentGroup.GetSubgroups ().Add (group);
 				}
 			}
-			
+
 			if (node.HasItems)
 			{
 				parentGroup.GetItems ().AddRange (node.Items);
@@ -193,6 +332,8 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
+
+		#region GroupNode Class
 
 		private class GroupNode
 		{
@@ -280,7 +421,7 @@ namespace Epsitec.Common.Types
 				{
 					this.leaves = new List<object> ();
 				}
-				
+
 				this.leaves.Add (item);
 			}
 
@@ -288,6 +429,8 @@ namespace Epsitec.Common.Types
 			private Dictionary<string, GroupNode> subnodes;
 			private List<object> leaves;
 		}
+
+		#endregion
 
 		private void SortItemsList()
 		{
@@ -331,7 +474,7 @@ namespace Epsitec.Common.Types
 		private void FillItemsList()
 		{
 			this.itemType = null;
-			
+
 			foreach (object item in this.sourceList)
 			{
 				if (item == null)
@@ -364,7 +507,7 @@ namespace Epsitec.Common.Types
 			string propertyName = sort.PropertyName;
 
 			Support.PropertyComparer comparer = Support.DynamicCodeFactory.CreatePropertyComparer (type, propertyName);
-			
+
 			switch (sort.Direction)
 			{
 				case ListSortDirection.Ascending:
@@ -372,7 +515,7 @@ namespace Epsitec.Common.Types
 					{
 						return comparer (x, y);
 					};
-				
+
 				case ListSortDirection.Descending:
 					return delegate (object x, object y)
 					{
@@ -382,56 +525,6 @@ namespace Epsitec.Common.Types
 
 			throw new System.ArgumentException ("Invalid sort direction");
 		}
-
-		public event Support.EventHandler CurrentChanged;
-
-		public event Support.EventHandler<CurrentChangingEventArgs> CurrentChanging;
-
-		#endregion
-
-		public bool HasSortDescriptions
-		{
-			get
-			{
-				return (this.sortDescriptions != null)
-					&& (this.sortDescriptions.Count > 0);
-			}
-		}
-
-		public bool HasGroupDescriptions
-		{
-			get
-			{
-				return (this.groupDescriptions != null)
-				    && (this.groupDescriptions.Count > 0);
-			}
-		}
-
-		public bool HasFilter
-		{
-			get
-			{
-				return this.filter != null;
-			}
-		}
-
-		#region INotifyCollectionChanged Members
-
-		public event Support.EventHandler<CollectionChangedEventArgs> CollectionChanged;
-
-		#endregion
-
-		#region IEnumerable Members
-
-		public System.Collections.IEnumerator GetEnumerator()
-		{
-			foreach (object group in this.Groups)
-			{
-				yield return group;
-			}
-		}
-
-		#endregion
 
 		protected virtual void OnCurrentChanged()
 		{
