@@ -1,9 +1,16 @@
-using System;
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 using System.Collections.Generic;
-using System.Text;
 
 namespace Epsitec.Common.Types.Internal
 {
+	/// <summary>
+	/// The <c>CollectionViewGroupItems</c> class is an internal class used by
+	/// <see cref="CollectionViewGroup"/> to iterate over its items, pretending
+	/// that all items are flat, even when they are stored within multiple
+	/// subgroups.
+	/// </summary>
 	internal class CollectionViewGroupItems : IList<object>
 	{
 		public CollectionViewGroupItems(CollectionViewGroup host)
@@ -15,7 +22,18 @@ namespace Epsitec.Common.Types.Internal
 
 		public int IndexOf(object item)
 		{
-			throw new Exception ("The method or operation is not implemented.");
+			int index = 0;
+			
+			foreach (object x in this.EnumerateItems ())
+			{
+				if (item == x)
+				{
+					return index;
+				}
+				index++;
+			}
+			
+			return -1;
 		}
 
 		public void Insert(int index, object item)
@@ -32,7 +50,17 @@ namespace Epsitec.Common.Types.Internal
 		{
 			get
 			{
-				throw new Exception ("The method or operation is not implemented.");
+				CollectionViewGroup group = this.host;
+
+				if ((index < group.ItemCount) &&
+					(CollectionViewGroupItems.FindItemGroup (ref group, ref index)))
+				{
+					return group.GetItems ()[index];
+				}
+				else
+				{
+					throw new System.ArgumentOutOfRangeException ("index");
+				}
 			}
 			set
 			{
@@ -56,19 +84,30 @@ namespace Epsitec.Common.Types.Internal
 
 		public bool Contains(object item)
 		{
-			throw new Exception ("The method or operation is not implemented.");
+			foreach (object x in this.EnumerateItems ())
+			{
+				if (x == item)
+				{
+					return true;
+				}
+			}
+			
+			return false;
 		}
 
 		public void CopyTo(object[] array, int arrayIndex)
 		{
-			throw new Exception ("The method or operation is not implemented.");
+			foreach (object x in this.EnumerateItems ())
+			{
+				array[arrayIndex++] = x;
+			}
 		}
 
 		public int Count
 		{
 			get
 			{
-				throw new Exception ("The method or operation is not implemented.");
+				return this.host.ItemCount;
 			}
 		}
 
@@ -132,6 +171,54 @@ namespace Epsitec.Common.Types.Internal
 					foreach (object item in group.Items)
 					{
 						yield return item;
+					}
+				}
+			}
+		}
+
+		private static bool FindItemGroup(ref CollectionViewGroup group, ref int index)
+		{
+			while (true)
+			{
+				if (index < group.ItemCount)
+				{
+					if (group.HasSubgroups)
+					{
+						Collections.ObservableList<CollectionViewGroup> subgroups = group.GetSubgroups ();
+						group = subgroups[0];
+					}
+					else
+					{
+						return true;
+					}
+				}
+				else
+				{
+					index -= group.ItemCount;
+
+				moveUpOneGroup:
+
+					CollectionViewGroup parent = group.ParentGroup;
+
+					if (parent == null)
+					{
+						return false;
+					}
+
+					Collections.ObservableList<CollectionViewGroup> subgroups = parent.GetSubgroups ();
+					int groupIndex = subgroups.IndexOf (group) + 1;
+
+					System.Diagnostics.Debug.Assert (groupIndex > 0);
+					System.Diagnostics.Debug.Assert (groupIndex < subgroups.Count+1);
+
+					if (groupIndex == subgroups.Count)
+					{
+						group = parent;
+						goto moveUpOneGroup;
+					}
+					else
+					{
+						group = subgroups[groupIndex];
 					}
 				}
 			}
