@@ -5,6 +5,11 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types.Collections
 {
+	/// <summary>
+	/// The <c>EmptyEnumerable&lt;T&gt;</c> class implements the <c>IEnumerable&lt;T&gt;</c> and
+	/// <c>IEnumerable</c> interfaces for an empty collection.
+	/// </summary>
+	/// <typeparam name="T">Item type</typeparam>
 	public sealed class EmptyEnumerable<T> : IEnumerable<T>, IEnumerator<T>
 	{
 		private EmptyEnumerable()
