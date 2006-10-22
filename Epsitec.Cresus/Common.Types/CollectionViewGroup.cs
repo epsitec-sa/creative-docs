@@ -71,11 +71,23 @@ namespace Epsitec.Common.Types
 		/// Gets the items contained in this group (and possibly its subgroups).
 		/// </summary>
 		/// <value>The items containes in this group.</value>
-		public IEnumerable<object>				Items
+		public IList<object>					Items
 		{
 			get
 			{
 				return new Internal.CollectionViewGroupItems (this);
+			}
+		}
+
+		/// <summary>
+		/// Gets the parent group (internal use only).
+		/// </summary>
+		/// <value>The parent group.</value>
+		internal CollectionViewGroup			ParentGroup
+		{
+			get
+			{
+				return this.parentGroup;
 			}
 		}
 
@@ -161,7 +173,11 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the local item collection; create one if none exists yet.
+		/// </summary>
+		/// <returns>The local item collection.</returns>
 		internal Collections.ObservableList<object> GetItems()
 		{
 			if (this.items == null)
@@ -173,6 +189,10 @@ namespace Epsitec.Common.Types
 			return this.items;
 		}
 
+		/// <summary>
+		/// Gets the subgroup collection; create one if none exists yet.
+		/// </summary>
+		/// <returns>The subgroup collection.</returns>
 		internal Collections.ObservableList<CollectionViewGroup> GetSubgroups()
 		{
 			if (this.subgroups == null)

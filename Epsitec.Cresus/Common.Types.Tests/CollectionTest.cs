@@ -197,6 +197,27 @@ namespace Epsitec.Common.Types
 
 			view.SortDescriptions.Add (new SortDescription ("Article"));
 			view.SortDescriptions.Add (new SortDescription ("Price"));
+			view.Refresh ();
+
+			Assert.IsNull (view.Groups);
+			Assert.AreEqual (6, view.Items.Count);
+
+			records = new Record[8];
+			view.Items.CopyTo (records, 2);
+
+			Assert.AreEqual (records[2], ((Record) view.Items[0]));
+			Assert.AreEqual (records[7], ((Record) view.Items[5]));
+			Assert.IsTrue (view.Items.Contains (records[4]));
+			Assert.AreEqual (2, view.Items.IndexOf (records[4]));
+			Assert.AreEqual (-1, view.Items.IndexOf (new Record ("*", 1, 1, Category.Unknown)));
+
+			Assert.AreEqual ("Clé M3",    ((Record) view.Items[0]).Article);
+			Assert.AreEqual ("Ecrou M3",  ((Record) view.Items[1]).Article);
+			Assert.AreEqual ("Rondelle",  ((Record) view.Items[2]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) view.Items[3]).Article);
+			Assert.AreEqual ("Tournevis", ((Record) view.Items[4]).Article);
+			Assert.AreEqual ("Vis M3",    ((Record) view.Items[5]).Article);
+			
 			view.GroupDescriptions.Add (new PropertyGroupDescription ("Category"));
 			view.Refresh ();
 
