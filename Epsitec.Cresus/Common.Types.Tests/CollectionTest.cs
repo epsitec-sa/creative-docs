@@ -149,6 +149,51 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (5, view.Count);
 			Assert.IsNull (view.CurrentItem);
 			Assert.AreEqual (5, view.CurrentPosition);
+
+			Assert.IsTrue (view.MoveCurrentToPosition (3));
+			Assert.AreEqual (view.Items[3], view.CurrentItem);
+			Assert.AreEqual (3, view.CurrentPosition);
+
+			source.RemoveAt (3);
+			view.Refresh ();
+
+			Assert.AreEqual (4, view.Count);
+			Assert.AreEqual (view.Items[3], view.CurrentItem);
+			Assert.AreEqual (3, view.CurrentPosition);
+
+			source.RemoveAt (3);
+			view.Refresh ();
+
+			Assert.AreEqual (3, view.Count);
+			Assert.AreEqual (view.Items[2], view.CurrentItem);
+			Assert.AreEqual (2, view.CurrentPosition);
+
+			Assert.IsTrue (view.MoveCurrentToPosition (0));
+			Assert.AreEqual (view.Items[0], view.CurrentItem);
+			Assert.AreEqual (0, view.CurrentPosition);
+
+			source.RemoveAt (1);
+			view.Refresh ();
+
+			Assert.AreEqual (2, view.Count);
+			Assert.AreEqual (view.Items[0], view.CurrentItem);
+			Assert.AreEqual (0, view.CurrentPosition);
+
+			source.RemoveAt (0);
+			view.Refresh ();
+
+			Assert.AreEqual (1, view.Count);
+			Assert.AreEqual (view.Items[0], view.CurrentItem);
+			Assert.AreEqual (0, view.CurrentPosition);
+
+			source.RemoveAt (0);
+			view.Refresh ();
+
+			Assert.AreEqual (0, view.Count);
+			Assert.IsNull (view.CurrentItem);
+			Assert.AreEqual (-1, view.CurrentPosition);
+			Assert.IsTrue (view.IsCurrentBeforeFirst);
+			Assert.IsFalse (view.IsCurrentAfterLast);
 		}
 
 		[Test]

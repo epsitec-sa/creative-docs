@@ -822,7 +822,7 @@ namespace Epsitec.Common.Types
 				
 				if (position < 0)
 				{
-					position = currentPosition;
+					position = System.Math.Min (this.Count-1, currentPosition);
 				}
 
 				this.SetCurrentToPosition (position);
