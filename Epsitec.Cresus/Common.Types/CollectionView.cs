@@ -9,7 +9,7 @@ namespace Epsitec.Common.Types
 	/// The <c>CollectionView</c> class represents a view of a collection. Views implement
 	/// grouping, sorting, filtering and the concept of a current item.
 	/// </summary>
-	public class CollectionView : ICollectionView, System.Collections.IEnumerable, INotifyCollectionChanged, INotifyPropertyChanged
+	public class CollectionView : ICollectionView, System.Collections.IEnumerable, INotifyCollectionChanged, INotifyPropertyChanged, System.IDisposable
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CollectionView"/> class.
@@ -20,6 +20,16 @@ namespace Epsitec.Common.Types
 			this.sourceList = sourceList;
 			this.rootGroup = new CollectionViewGroup (null, null);
 			this.itemCount = this.sourceList == null ? 0 : this.sourceList.Count;
+
+			INotifyCollectionChanged changed = this.sourceList as INotifyCollectionChanged;
+			
+			if (changed != null)
+			{
+				//	TODO: use a weak delegate in order to avoid trouble if nobody disposes the view
+				
+				changed.CollectionChanged += this.HandleCollectionChanged;
+				this.hasDynamicSource = true;
+			}
 		}
 
 		#region ICollectionView Members
@@ -111,7 +121,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				this.RefreshContents ();
+				this.RefreshWhenInvalidated ();
 
 				if (this.sortedList != null)
 				{
@@ -141,7 +151,7 @@ namespace Epsitec.Common.Types
 			{
 				if (this.dirtyGroups)
 				{
-					this.RefreshContents ();
+					this.RefreshWhenInvalidated ();
 				}
 				
 				if (this.readOnlyGroups == null)
@@ -239,9 +249,7 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public System.IDisposable DeferRefresh()
 		{
-			//	TODO: ...
-			
-			return null;
+			return new DeferManager (this);
 		}
 
 		/// <summary>
@@ -364,7 +372,7 @@ namespace Epsitec.Common.Types
 			{
 				if (this.dirtySortedList)
 				{
-					this.RefreshContents ();
+					this.RefreshWhenInvalidated ();
 				}
 				
 				return this.itemCount;
@@ -466,6 +474,16 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+
+		#endregion
+		
 		/// <summary>
 		/// Returns a value indicating whether the specified item is valid
 		/// with respect to the filter.
@@ -493,6 +511,23 @@ namespace Epsitec.Common.Types
 			return e.Cancel == false;
 		}
 
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (this.hasDynamicSource)
+				{
+					INotifyCollectionChanged changed = this.sourceList as INotifyCollectionChanged;
+
+					if (changed != null)
+					{
+						changed.CollectionChanged -= this.HandleCollectionChanged;
+						this.hasDynamicSource = false;
+					}
+				}
+			}
+		}
+		
 		protected virtual void OnCurrentChanged()
 		{
 			if (this.CurrentChanged != null)
@@ -509,6 +544,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		private void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
+		{
+			this.InvalidateSortedList ();
+		}
 		
 		private void HandleGroupDescriptionsCollectionChanged(object sender, CollectionChangedEventArgs e)
 		{
@@ -689,16 +728,16 @@ namespace Epsitec.Common.Types
 			this.dirtySortedList = true;
 			this.dirtyGroups = true;
 
-			this.InvalidateRefresh ();
+			this.RefreshWhenInvalidated ();
 		}
 
 		private void InvalidateGroups()
 		{
 			this.dirtyGroups = true;
-			this.InvalidateRefresh ();
+			this.RefreshWhenInvalidated ();
 		}
 
-		private void InvalidateRefresh()
+		private void RefreshWhenInvalidated()
 		{
 			if (this.deferCounter == 0)
 			{
@@ -984,7 +1023,7 @@ namespace Epsitec.Common.Types
 				{
 					CollectionView view = this.view;
 					this.view = null;
-					this.view.EndDefer ();
+					view.EndDefer ();
 				}
 			}
 
@@ -1002,6 +1041,7 @@ namespace Epsitec.Common.Types
 		private int								itemCount;
 		private bool							dirtyGroups;
 		private bool							dirtySortedList;
+		private bool							hasDynamicSource;
 		private int								deferCounter;
 		private int								currentPosition;
 		private object							currentItem;
