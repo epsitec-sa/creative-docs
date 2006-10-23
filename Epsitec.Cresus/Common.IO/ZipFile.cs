@@ -256,6 +256,11 @@ namespace Epsitec.Common.IO
 		/// <param name="data">The data.</param>
 		public void AddEntry(string name, byte[] data)
 		{
+			this.AddEntry (name, data, System.DateTime.Now);
+		}
+
+		public void AddEntry(string name, byte[] data, System.DateTime dateTime)
+		{
 			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (name) == false);
 			System.Diagnostics.Debug.Assert (name.Contains ("\\") == false);
 			System.Diagnostics.Debug.Assert (name.StartsWith ("/") == false);
@@ -264,7 +269,7 @@ namespace Epsitec.Common.IO
 			this.AddDirectory (System.IO.Path.GetDirectoryName (name));
 			
 			this.entries.RemoveAll (delegate (Entry entry) { return (entry.Name == name); });
-			this.entries.Add (new Entry (name, data, System.DateTime.Now));
+			this.entries.Add (new Entry (name, data, dateTime));
 		}
 
 		/// <summary>
