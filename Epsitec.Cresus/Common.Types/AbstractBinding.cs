@@ -68,26 +68,43 @@ namespace Epsitec.Common.Types
 		protected abstract void RemoveExpression(BindingExpression expression);
 
 		protected abstract IEnumerable<BindingExpression> GetExpressions();
+
+		private void BeginDefer()
+		{
+			System.Threading.Interlocked.Increment (ref this.deferCounter);
+		}
+
+		private void EndDefer()
+		{
+			if (System.Threading.Interlocked.Decrement (ref this.deferCounter) == 0)
+			{
+				this.AttachAfterChanges ();
+			}
+		}
 		
 		#region Private DeferManager Class
 		
-		private struct DeferManager : System.IDisposable
+		private sealed class DeferManager : System.IDisposable
 		{
 			public DeferManager(AbstractBinding binding)
 			{
 				this.binding = binding;
-				System.Threading.Interlocked.Increment (ref this.binding.deferCounter);
+				this.binding.BeginDefer ();
 			}
 
 			#region IDisposable Members
-			public void Dispose()
+			
+			void System.IDisposable.Dispose()
 			{
-				if (System.Threading.Interlocked.Decrement (ref this.binding.deferCounter) == 0)
+				if (this.binding != null)
 				{
-					this.binding.AttachAfterChanges ();
+					AbstractBinding binding = this.binding;
+					this.binding = null;
+					binding.EndDefer ();
 				}
 			}
-			#endregion
+			
+#endregion
 
 			private AbstractBinding binding;
 		}

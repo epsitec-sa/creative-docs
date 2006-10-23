@@ -41,7 +41,7 @@ namespace Epsitec.Common.Types
 		/// Gets the top level groups.
 		/// </summary>
 		/// <value>
-		/// A read-only collection of the top level groups or <c>null</c>
+		/// A read-only collection of the top level groups; it is empty
 		/// if there are no groups configured for this view.
 		/// </value>
 		Collections.ReadOnlyObservableList<CollectionViewGroup> Groups

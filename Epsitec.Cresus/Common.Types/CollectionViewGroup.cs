@@ -204,6 +204,28 @@ namespace Epsitec.Common.Types
 			return this.subgroups;
 		}
 
+		/// <summary>
+		/// Clears the subgroup collection.
+		/// </summary>
+		internal void ClearSubgroups()
+		{
+			if (this.subgroups != null)
+			{
+				this.subgroups.Clear ();
+			}
+		}
+
+		/// <summary>
+		/// Clears the local item collection.
+		/// </summary>
+		internal void ClearItems()
+		{
+			if (this.items != null)
+			{
+				this.items.Clear ();
+			}
+		}
+		
 		#region INotifyPropertyChanged Members
 
 		public event Support.EventHandler<DependencyPropertyChangedEventArgs> PropertyChanged;
