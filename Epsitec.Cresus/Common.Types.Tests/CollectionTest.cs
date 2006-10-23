@@ -14,9 +14,9 @@ namespace Epsitec.Common.Types
 		{
 			List<Record> source1;
 			Collections.ObservableList<Record> source2;
-			
+
 			CollectionView view;
-			
+
 			source1 = new List<Record> ();
 			view    = new CollectionView (source1);
 
@@ -26,16 +26,31 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual (0, view.Count);
 			Assert.AreEqual (6, view.Items.Count);
-			
+
 			source2 = new Collections.ObservableList<Record> ();
 			view    = new CollectionView (source2);
 
 			Assert.AreEqual (0, view.Count);
-			
+
 			CollectionTest.AddRecords (source2);
 
 			Assert.AreEqual (6, view.Count);
 			Assert.AreEqual (6, view.Items.Count);
+
+			source2 = new Collections.ObservableList<Record> ();
+			view    = new CollectionView (source2);
+			
+			Assert.AreEqual (0, view.Count);
+
+			using (view.DeferRefresh ())
+			{
+				CollectionTest.AddRecords (source2);
+
+				Assert.AreEqual (0, view.Count);
+				Assert.AreEqual (6, view.Items.Count);
+			}
+			
+			Assert.AreEqual (6, view.Count);
 		}
 
 		[Test]
