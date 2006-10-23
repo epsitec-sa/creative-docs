@@ -49,13 +49,13 @@ namespace Epsitec.Common.Types
 
 		#region IStructuredData Members
 
-		public void AttachListener(string name, PropertyChangedEventHandler handler)
+		public void AttachListener(string id, PropertyChangedEventHandler handler)
 		{
 			object type;
 
-			if (!this.CheckNameValidity (name, out type))
+			if (!this.CheckFieldIdValidity (id, out type))
 			{
-				throw new System.Collections.Generic.KeyNotFoundException (string.Format ("The value '{0}' does not exist; it is not defined by the structure", name));
+				throw new System.Collections.Generic.KeyNotFoundException (string.Format ("The value '{0}' does not exist; it is not defined by the structure", id));
 			}
 			
 			if (this.values == null)
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Types
 
 			Record record;
 
-			if (this.values.TryGetValue (name, out record))
+			if (this.values.TryGetValue (id, out record))
 			{
 				record  = new Record (record.Data, (PropertyChangedEventHandler) System.Delegate.Combine (record.Handler, handler));
 			}
@@ -79,10 +79,10 @@ namespace Epsitec.Common.Types
 				record = new Record (UndefinedValue.Instance, handler);
 			}
 
-			this.values[name] = record;
+			this.values[id] = record;
 		}
 
-		public void DetachListener(string name, PropertyChangedEventHandler handler)
+		public void DetachListener(string id, PropertyChangedEventHandler handler)
 		{
 			if (this.values == null)
 			{
@@ -91,26 +91,24 @@ namespace Epsitec.Common.Types
 			
 			Record record;
 
-			if (this.values.TryGetValue (name, out record))
+			if (this.values.TryGetValue (id, out record))
 			{
 				record  = new Record (record.Data, (PropertyChangedEventHandler) System.Delegate.Remove (record.Handler, handler));
 				
 				if ((record.Data == UndefinedValue.Instance) &&
 					(record.Handler == null))
 				{
-					this.values.Remove (name);
+					this.values.Remove (id);
 				}
 				else
 				{
-					this.values[name] = record;
+					this.values[id] = record;
 				}
 			}
 		}
 
-		public IEnumerable<string> GetValueNames()
+		public IEnumerable<string> GetValueIds()
 		{
-			//	TODO: rename to GetValueIds ?
-			
 			if (this.type == null)
 			{
 				if (this.values == null)
@@ -119,11 +117,11 @@ namespace Epsitec.Common.Types
 				}
 				else
 				{
-					string[] names = new string[this.values.Count];
-					this.values.Keys.CopyTo (names, 0);
-					System.Array.Sort (names);
+					string[] ids = new string[this.values.Count];
+					this.values.Keys.CopyTo (ids, 0);
+					System.Array.Sort (ids);
 					
-					return names;
+					return ids;
 				}
 			}
 			else
@@ -132,11 +130,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public object GetValue(string name)
+		public object GetValue(string id)
 		{
 			object type;
 			
-			if (! this.CheckNameValidity (name, out type))
+			if (!this.CheckFieldIdValidity (id, out type))
 			{
 				return UnknownValue.Instance;
 			}
@@ -147,7 +145,7 @@ namespace Epsitec.Common.Types
 			{
 				return UndefinedValue.Instance;
 			}
-			else if (this.values.TryGetValue (name, out value))
+			else if (this.values.TryGetValue (id, out value))
 			{
 				return value.Data;
 			}
@@ -157,13 +155,13 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public void SetValue(string name, object value)
+		public void SetValue(string id, object value)
 		{
 			object type;
 			
-			if (!this.CheckNameValidity (name, out type))
+			if (!this.CheckFieldIdValidity (id, out type))
 			{
-				throw new System.Collections.Generic.KeyNotFoundException (string.Format ("The value '{0}' cannot be set; it is not defined by the structure", name));
+				throw new System.Collections.Generic.KeyNotFoundException (string.Format ("The value '{0}' cannot be set; it is not defined by the structure", id));
 			}
 			
 			if (UnknownValue.IsUnknownValue (value))
@@ -171,7 +169,7 @@ namespace Epsitec.Common.Types
 				throw new System.ArgumentException ("UnknownValue specified");
 			}
 
-			object oldValue = this.GetValue (name);
+			object oldValue = this.GetValue (id);
 			PropertyChangedEventHandler handler = null;
 
 			if (UndefinedValue.IsUndefinedValue (value))
@@ -180,18 +178,18 @@ namespace Epsitec.Common.Types
 				{
 					Record record;
 					
-					if (this.values.TryGetValue (name, out record))
+					if (this.values.TryGetValue (id, out record))
 					{
 						handler = record.Handler;
 
 						if (handler == null)
 						{
-							this.values.Remove (name);
+							this.values.Remove (id);
 						}
 						else
 						{
 							record = new Record (UndefinedValue.Instance, handler);
-							this.values[name] = record;
+							this.values[id] = record;
 						}
 					}
 				}
@@ -200,7 +198,7 @@ namespace Epsitec.Common.Types
 			{
 				if (!this.CheckValueValidity (type, value))
 				{
-					throw new System.ArgumentException (string.Format ("The value '{0}' has the wrong type or is not valid", name));
+					throw new System.ArgumentException (string.Format ("The value '{0}' has the wrong type or is not valid", id));
 				}
 
 				if (this.values == null)
@@ -215,7 +213,7 @@ namespace Epsitec.Common.Types
 
 				Record record;
 
-				if (this.values.TryGetValue (name, out record))
+				if (this.values.TryGetValue (id, out record))
 				{
 					handler = record.Handler;
 					record  = new Record (value, handler);
@@ -225,17 +223,17 @@ namespace Epsitec.Common.Types
 					record = new Record (value);
 				}
 
-				this.values[name] = record;
+				this.values[id] = record;
 			}
 
-			object newValue = this.GetValue (name);
+			object newValue = this.GetValue (id);
 
 			if (oldValue == newValue)
 			{
 			}
 			else if ((oldValue == null) || (!oldValue.Equals (newValue)))
 			{
-				this.InvalidateValue (name, oldValue, newValue, handler);
+				this.InvalidateValue (id, oldValue, newValue, handler);
 			}
 		}
 
@@ -260,7 +258,7 @@ namespace Epsitec.Common.Types
 			};
 		}
 		
-		protected virtual bool CheckNameValidity(string name, out object type)
+		protected virtual bool CheckFieldIdValidity(string id, out object type)
 		{
 			if (this.type == null)
 			{
@@ -270,7 +268,7 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				type = this.type.GetField (name).Type;
+				type = this.type.GetField (id).Type;
 
 				if (type == null)
 				{
@@ -296,32 +294,32 @@ namespace Epsitec.Common.Types
 			this.values = new Collections.HostedDictionary<string, Record> (this.NotifyInsertion, this.NotifyRemoval);
 		}
 
-		protected virtual void NotifyInsertion(string name, Record value)
+		protected virtual void NotifyInsertion(string id, Record value)
 		{
 		}
 
-		protected virtual void NotifyRemoval(string name, Record value)
+		protected virtual void NotifyRemoval(string id, Record value)
 		{
 		}
 
-		protected virtual void InvalidateValue(string name, object oldValue, object newValue, PropertyChangedEventHandler handler)
+		protected virtual void InvalidateValue(string id, object oldValue, object newValue, PropertyChangedEventHandler handler)
 		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("{0}: {1} --> {2}", name, oldValue, newValue));
+			System.Diagnostics.Debug.WriteLine (string.Format ("{0}: {1} --> {2}", id, oldValue, newValue));
 			
 			if (handler != null)
 			{
-				DependencyPropertyChangedEventArgs e = new DependencyPropertyChangedEventArgs (name, oldValue, newValue);
+				DependencyPropertyChangedEventArgs e = new DependencyPropertyChangedEventArgs (id, oldValue, newValue);
 				handler (this, e);
 			}
 
-			this.OnValueChanged (name, oldValue, newValue);
+			this.OnValueChanged (id, oldValue, newValue);
 		}
 
-		protected virtual void OnValueChanged(string name, object oldValue, object newValue)
+		protected virtual void OnValueChanged(string id, object oldValue, object newValue)
 		{
 			if (this.ValueChanged != null)
 			{
-				this.ValueChanged (this, new DependencyPropertyChangedEventArgs (name, oldValue, newValue));
+				this.ValueChanged (this, new DependencyPropertyChangedEventArgs (id, oldValue, newValue));
 			}
 		}
 

@@ -1137,45 +1137,45 @@ namespace Epsitec.Common.Types
 
 		#region IStructuredData Members
 
-		void IStructuredData.AttachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+		void IStructuredData.AttachListener(string id, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 		{
-			DependencyProperty property = this.ObjectType.GetProperty (name);
+			DependencyProperty property = this.ObjectType.GetProperty (id);
 
 			if (property == null)
 			{
-				throw new System.ArgumentException (string.Format ("Name '{0}' cannot map to DependencyProperty", name));
+				throw new System.ArgumentException (string.Format ("Identifier '{0}' cannot map to DependencyProperty", id));
 			}
 
 			this.AddEventHandler (property, handler);
 		}
 
-		void IStructuredData.DetachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+		void IStructuredData.DetachListener(string id, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 		{
-			DependencyProperty property = this.ObjectType.GetProperty (name);
+			DependencyProperty property = this.ObjectType.GetProperty (id);
 
 			if (property == null)
 			{
-				throw new System.ArgumentException (string.Format ("Name '{0}' cannot map to DependencyProperty", name));
+				throw new System.ArgumentException (string.Format ("Identifier '{0}' cannot map to DependencyProperty", id));
 			}
 
 			this.RemoveEventHandler (property, handler);
 		}
 
-		IEnumerable<string> IStructuredData.GetValueNames()
+		IEnumerable<string> IStructuredData.GetValueIds()
 		{
-			List<string> names = new List<string> ();
+			List<string> ids = new List<string> ();
 			
 			foreach (DependencyProperty property in this.DefinedProperties)
 			{
-				names.Add (property.Name);
+				ids.Add (property.Name);
 			}
 
-			return names;
+			return ids;
 		}
 
-		object IStructuredData.GetValue(string name)
+		object IStructuredData.GetValue(string id)
 		{
-			DependencyProperty property = this.ObjectType.GetProperty (name);
+			DependencyProperty property = this.ObjectType.GetProperty (id);
 
 			if (property == null)
 			{
@@ -1187,13 +1187,13 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		void IStructuredData.SetValue(string name, object value)
+		void IStructuredData.SetValue(string id, object value)
 		{
-			DependencyProperty property = this.ObjectType.GetProperty (name);
+			DependencyProperty property = this.ObjectType.GetProperty (id);
 
 			if (property == null)
 			{
-				throw new System.ArgumentException (string.Format ("Name '{0}' cannot be mapped to a DependencyProperty", name));
+				throw new System.ArgumentException (string.Format ("Identifier '{0}' cannot be mapped to a DependencyProperty", id));
 			}
 
 			this.SetValue (property, value);
