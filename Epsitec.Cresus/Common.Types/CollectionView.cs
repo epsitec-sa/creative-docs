@@ -30,6 +30,8 @@ namespace Epsitec.Common.Types
 				changed.CollectionChanged += this.HandleCollectionChanged;
 				this.hasDynamicSource = true;
 			}
+
+			this.SetCurrentToPosition (0);
 		}
 
 		#region ICollectionView Members
@@ -108,7 +110,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.Items.Count == 0;
+				return this.Count == 0;
 			}
 		}
 
@@ -353,7 +355,7 @@ namespace Epsitec.Common.Types
 		public bool MoveCurrentToPrevious()
 		{
 			this.VerfiyRefreshNotDeferred ();
-			return this.IsCurrentBeforeFirst ? false : this.MoveCurrentToPosition (this.currentPosition-1);
+			return this.IsCurrentBeforeFirst ? false : this.MoveCurrentToPosition (System.Math.Min (this.Count, this.currentPosition)-1);
 		}
 		
 		public event Support.EventHandler CurrentChanged;
@@ -820,7 +822,7 @@ namespace Epsitec.Common.Types
 				
 				if (position < 0)
 				{
-					position = 0;
+					position = currentPosition;
 				}
 
 				this.SetCurrentToPosition (position);
@@ -861,7 +863,8 @@ namespace Epsitec.Common.Types
 
 		private bool SetCurrentToPosition(int position)
 		{
-			if (position < 0)
+			if ((position < 0) ||
+				(this.IsEmpty))
 			{
 				this.currentPosition = -1;
 				this.currentItem     = null;
