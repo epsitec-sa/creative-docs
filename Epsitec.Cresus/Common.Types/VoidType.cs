@@ -41,6 +41,8 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
+				TypeRosetta.InitializeKnownTypes ();
+
 				if (VoidType.defaultValue == null)
 				{
 					VoidType.defaultValue = (VoidType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1009]"));

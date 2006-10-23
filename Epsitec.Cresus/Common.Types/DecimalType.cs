@@ -61,6 +61,8 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
+				TypeRosetta.InitializeKnownTypes ();
+
 				if (DecimalType.defaultValue == null)
 				{
 					DecimalType.defaultValue = (DecimalType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1004]"));

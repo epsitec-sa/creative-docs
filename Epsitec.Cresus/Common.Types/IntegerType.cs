@@ -57,6 +57,8 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
+				TypeRosetta.InitializeKnownTypes ();
+
 				if (IntegerType.defaultValue == null)
 				{
 					IntegerType.defaultValue = (IntegerType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1006]"));

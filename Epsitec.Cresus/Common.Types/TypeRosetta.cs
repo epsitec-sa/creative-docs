@@ -520,7 +520,7 @@ namespace Epsitec.Common.Types
 			return null;
 		}
 
-		private static void InitializeKnownTypes()
+		internal static void InitializeKnownTypes()
 		{
 			if (TypeRosetta.knownTypes == null)
 			{

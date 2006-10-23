@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
+
 using Epsitec.Common.Types;
 using Epsitec.Common.Support;
 
