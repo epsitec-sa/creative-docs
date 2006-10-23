@@ -260,7 +260,7 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public bool MoveCurrentTo(object item)
 		{
-			this.VerfiyRefreshNotDeferred ();
+			this.VerifyRefreshNotDeferred ();
 
 			if (object.Equals (this.CurrentItem, item))
 			{
@@ -286,7 +286,7 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public bool MoveCurrentToPosition(int position)
 		{
-			this.VerfiyRefreshNotDeferred ();
+			this.VerifyRefreshNotDeferred ();
 
 			if ((position < -1) ||
 				(position > this.Count))
@@ -315,7 +315,7 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public bool MoveCurrentToFirst()
 		{
-			this.VerfiyRefreshNotDeferred ();
+			this.VerifyRefreshNotDeferred ();
 			return this.MoveCurrentToPosition (0);
 		}
 
@@ -327,7 +327,7 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public bool MoveCurrentToLast()
 		{
-			this.VerfiyRefreshNotDeferred ();
+			this.VerifyRefreshNotDeferred ();
 			return this.MoveCurrentToPosition (this.Count-1);
 		}
 
@@ -339,7 +339,7 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public bool MoveCurrentToNext()
 		{
-			this.VerfiyRefreshNotDeferred ();
+			this.VerifyRefreshNotDeferred ();
 			return this.IsCurrentAfterLast ? false : this.MoveCurrentToPosition (this.currentPosition+1);
 		}
 
@@ -351,7 +351,7 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public bool MoveCurrentToPrevious()
 		{
-			this.VerfiyRefreshNotDeferred ();
+			this.VerifyRefreshNotDeferred ();
 			return this.IsCurrentBeforeFirst ? false : this.MoveCurrentToPosition (System.Math.Min (this.Count, this.currentPosition)-1);
 		}
 		
@@ -635,8 +635,44 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		private void FilterItemsList()
+		{
+			//	Create the filtered items list and check that all items have
+			//	the same type.
+			
+			this.itemType = null;
+
+			foreach (object item in this.sourceList)
+			{
+				if (item == null)
+				{
+					throw new System.InvalidOperationException ("Source collection contains null items");
+				}
+				else if (this.PassesFilter (item))
+				{
+					this.sortedList.Add (item);
+
+					System.Type itemType = item.GetType ();
+
+					if (this.itemType == null)
+					{
+						this.itemType = itemType;
+					}
+					else
+					{
+						if (this.itemType != itemType)
+						{
+							throw new System.InvalidOperationException (string.Format ("Source collection not orthogonal; found type {0} and {1}", this.itemType.Name, itemType.Name));
+						}
+					}
+				}
+			}
+		}
+
 		private void SortItemsList()
 		{
+			//	Sort the items list (it must have been filtered previously).
+			
 			if ((this.sortDescriptions != null) &&
 				(this.itemType != null))
 			{
@@ -674,43 +710,20 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private void FillItemsList()
-		{
-			this.itemType = null;
-
-			foreach (object item in this.sourceList)
-			{
-				if (item == null)
-				{
-					throw new System.InvalidOperationException ("Source collection contains null items");
-				}
-				else if (this.PassesFilter (item))
-				{
-					this.sortedList.Add (item);
-
-					System.Type itemType = item.GetType ();
-
-					if (this.itemType == null)
-					{
-						this.itemType = itemType;
-					}
-					else
-					{
-						if (this.itemType != itemType)
-						{
-							throw new System.InvalidOperationException (string.Format ("Source collection not orthogonal; found type {0} and {1}", this.itemType.Name, itemType.Name));
-						}
-					}
-				}
-			}
-		}
-
-		private void BeginDefer()
+		/// <summary>
+		/// Begins deferred refresh. This suspends any refresh operations caused
+		/// by invalidation.
+		/// </summary>
+		protected void BeginDeferredRefresh()
 		{
 			System.Threading.Interlocked.Increment (ref this.deferCounter);
 		}
 
-		private void EndDefer()
+		/// <summary>
+		/// Ends deferred refresh. This will execute any pending refreshes when
+		/// the defer counter reaches zero.
+		/// </summary>
+		protected void EndDeferredRefresh()
 		{
 			if (System.Threading.Interlocked.Decrement (ref this.deferCounter) == 0)
 			{
@@ -718,7 +731,12 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private void VerfiyRefreshNotDeferred()
+		/// <summary>
+		/// Verifies that the refresh is not currently in deferred mode. If
+		/// <c>IsRefreshDeferred</c> returns <c>true</c>, this will throw a
+		/// <see cref="System.InvalidOperationException"/> exception.
+		/// </summary>
+		protected void VerifyRefreshNotDeferred()
 		{
 			if (this.IsRefreshDeferred)
 			{
@@ -780,7 +798,7 @@ namespace Epsitec.Common.Types
 						this.sortedList.Clear ();
 					}
 					
-					this.FillItemsList ();
+					this.FilterItemsList ();
 					this.SortItemsList ();
 					
 					this.itemCount = this.sortedList.Count;
@@ -987,7 +1005,7 @@ namespace Epsitec.Common.Types
 			public DeferManager(CollectionView view)
 			{
 				this.view = view;
-				this.view.BeginDefer ();
+				this.view.BeginDeferredRefresh ();
 			}
 
 			#region IDisposable Members
@@ -998,7 +1016,7 @@ namespace Epsitec.Common.Types
 				{
 					CollectionView view = this.view;
 					this.view = null;
-					view.EndDefer ();
+					view.EndDeferredRefresh ();
 				}
 			}
 
