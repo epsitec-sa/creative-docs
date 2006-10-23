@@ -151,10 +151,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				if (this.dirtyGroups)
-				{
-					this.RefreshWhenInvalidated ();
-				}
+				System.Diagnostics.Debug.Assert (this.dirtyGroups == false, "Dirty groups");
 				
 				if (this.readOnlyGroups == null)
 				{
@@ -365,18 +362,14 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		/// <summary>
-		/// Gets the number of items in the view.
+		/// Gets the number of items in the view. This is a cached value which
+		/// might be incorrect when changes are deferred.
 		/// </summary>
 		/// <value>The number of items.</value>
 		public int								Count
 		{
 			get
 			{
-				if (this.dirtySortedList)
-				{
-					this.RefreshWhenInvalidated ();
-				}
-				
 				return this.itemCount;
 			}
 		}
@@ -763,8 +756,8 @@ namespace Epsitec.Common.Types
 
 			this.OnCurrentChanging (new CurrentChangingEventArgs ());
 			
-			//	TODO: add suspend/resume for all observable collections
-
+			//	Rebuild the filtered/sorted list :
+			
 			if (this.dirtySortedList)
 			{
 				if ((this.HasFilter) ||
@@ -793,6 +786,8 @@ namespace Epsitec.Common.Types
 				this.dirtySortedList = false;
 			}
 
+			//	Rebuild the groups :
+
 			if (this.dirtyGroups)
 			{
 				if (this.HasGroupDescriptions)
@@ -806,6 +801,8 @@ namespace Epsitec.Common.Types
 				
 				this.dirtyGroups = false;
 			}
+
+			//	Update the current item since the contents might have moved :
 
 			if ((this.IsEmpty) ||
 				(isCurrentBeforeFirst))
