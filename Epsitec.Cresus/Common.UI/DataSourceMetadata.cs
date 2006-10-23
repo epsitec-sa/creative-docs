@@ -14,7 +14,7 @@ namespace Epsitec.Common.UI
 	/// The <c>DataSourceMetadata</c> class describes the fields found in the data source
 	/// attached to a <see cref="Panel"/>.
 	/// </summary>
-	public class DataSourceMetadata : DependencyObject
+	public class DataSourceMetadata : DependencyObject, IStructuredType
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DataSourceMetadata"/> class.
@@ -40,6 +40,48 @@ namespace Epsitec.Common.UI
 				return this.fields;
 			}
 		}
+
+		#region IStructuredType Members
+
+		/// <summary>
+		/// Gets the field descriptor for the specified field identifier.
+		/// </summary>
+		/// <param name="fieldId">The field identifier.</param>
+		/// <returns>
+		/// The matching field descriptor; otherwise, <c>null</c>.
+		/// </returns>
+		public StructuredTypeField GetField(string fieldId)
+		{
+			if (this.fields != null)
+			{
+				foreach (StructuredTypeField field in this.fields)
+				{
+					if (field.Id == fieldId)
+					{
+						return field;
+					}
+				}
+			}
+			
+			return StructuredTypeField.Empty;
+		}
+
+		/// <summary>
+		/// Gets a collection of field identifiers.
+		/// </summary>
+		/// <returns>A collection of field identifiers.</returns>
+		public IEnumerable<string> GetFieldIds()
+		{
+			if (this.fields != null)
+			{
+				foreach (StructuredTypeField field in this.fields)
+				{
+					yield return field.Id;
+				}
+			}
+		}
+
+		#endregion
 		
 		private static object GetFieldsValue(DependencyObject obj)
 		{
