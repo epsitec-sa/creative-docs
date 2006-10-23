@@ -19,6 +19,7 @@ namespace Epsitec.Common.Types
 		{
 			this.sourceList = sourceList;
 			this.rootGroup = new CollectionViewGroup (null, null);
+			this.itemCount = this.sourceList == null ? 0 : this.sourceList.Count;
 		}
 
 		#region ICollectionView Members
@@ -48,10 +49,11 @@ namespace Epsitec.Common.Types
 			get
 			{
 				int position = this.currentPosition;
+				int count    = this.Count;
 
-				if (position > this.Count)
+				if (position > count)
 				{
-					position = this.Count;
+					position = count;
 				}
 				
 				return position;
@@ -84,7 +86,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.currentPosition >= this.Count;
+				return this.currentPosition == System.Int32.MaxValue;
 			}
 		}
 
@@ -360,7 +362,12 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.Items.Count;
+				if (this.dirtySortedList)
+				{
+					this.RefreshContents ();
+				}
+				
+				return this.itemCount;
 			}
 		}
 
@@ -654,6 +661,8 @@ namespace Epsitec.Common.Types
 					}
 				}
 			}
+
+			this.itemCount = this.sortedList.Count;
 		}
 
 		private void BeginDefer()
@@ -707,8 +716,8 @@ namespace Epsitec.Common.Types
 				return;
 			}
 
-			object currentItem     = this.CurrentItem;
-			int    currentPosition = this.CurrentPosition;
+			object currentItem     = this.currentItem;
+			int    currentPosition = this.currentPosition;
 			
 			bool isCurrentBeforeFirst = this.IsCurrentBeforeFirst;
 			bool isCurrentAfterLast   = this.IsCurrentAfterLast;
@@ -989,6 +998,7 @@ namespace Epsitec.Common.Types
 		private System.Collections.IList		sourceList;
 		private List<object>					sortedList;
 		private System.Type						itemType;
+		private int								itemCount;
 		private bool							dirtyGroups;
 		private bool							dirtySortedList;
 		private int								deferCounter;
