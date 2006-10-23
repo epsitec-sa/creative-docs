@@ -59,9 +59,132 @@ namespace Epsitec.Common.Types
 			List<Record> source = new List<Record> ();
 			CollectionView view = new CollectionView (source);
 
+			Assert.IsNull (view.CurrentItem);
+			Assert.AreEqual (-1, view.CurrentPosition);
+			Assert.IsTrue (view.IsCurrentBeforeFirst);
+			Assert.IsFalse (view.IsCurrentAfterLast);
+
 			CollectionTest.AddRecords (source);
 
+			Assert.IsNull (view.CurrentItem);
+			Assert.AreEqual (-1, view.CurrentPosition);
+			Assert.IsTrue (view.IsCurrentBeforeFirst);
+			Assert.IsFalse (view.IsCurrentAfterLast);
 
+			view.Refresh ();
+
+			Assert.IsNull (view.CurrentItem);
+			Assert.AreEqual (-1, view.CurrentPosition);
+			Assert.IsTrue (view.IsCurrentBeforeFirst);
+			Assert.IsFalse (view.IsCurrentAfterLast);
+
+			view = new CollectionView (source);
+
+			Assert.AreEqual (view.Items[0], view.CurrentItem);
+			Assert.AreEqual (0, view.CurrentPosition);
+			Assert.IsFalse (view.IsCurrentBeforeFirst);
+			Assert.IsFalse (view.IsCurrentAfterLast);
+
+			Assert.IsFalse (view.MoveCurrentToPrevious ());
+			Assert.AreEqual (-1, view.CurrentPosition);
+			Assert.IsFalse (view.MoveCurrentToPrevious ());
+			Assert.AreEqual (-1, view.CurrentPosition);
+			Assert.IsTrue (view.MoveCurrentToNext ());
+			Assert.AreEqual (0, view.CurrentPosition);
+			Assert.IsTrue (view.MoveCurrentToPosition (5));
+			Assert.AreEqual (5, view.CurrentPosition);
+			Assert.IsFalse (view.MoveCurrentToPosition (6));
+			Assert.AreEqual (6, view.CurrentPosition);
+			Assert.IsFalse (view.MoveCurrentToNext ());
+			Assert.AreEqual (6, view.CurrentPosition);
+			Assert.IsTrue (view.MoveCurrentToPrevious ());
+			Assert.AreEqual (5, view.CurrentPosition);
+			Assert.IsTrue (view.MoveCurrentToPrevious ());
+			Assert.AreEqual (4, view.CurrentPosition);
+			Assert.IsTrue (view.MoveCurrentToNext ());
+			Assert.AreEqual (5, view.CurrentPosition);
+
+			Assert.AreEqual (view.Items[5], view.CurrentItem);
+
+			Assert.IsTrue (view.MoveCurrentTo (view.Items[3]));
+			Assert.AreEqual (3, view.CurrentPosition);
+
+			source.Add (new Record ("Mouse", 8, 45.0M, Category.ElectronicEquipment));
+			view.Refresh ();
+
+			Assert.AreEqual (7, view.Count);
+			Assert.AreEqual (view.Items[3], view.CurrentItem);
+			Assert.AreEqual (3, view.CurrentPosition);
+			
+			source.Insert (2, new Record ("Keyboard", 12, 19.0M, Category.ElectronicEquipment));
+			view.Refresh ();
+
+			Assert.AreEqual (8, view.Count);
+			Assert.AreEqual (view.Items[4], view.CurrentItem);
+			Assert.AreEqual (4, view.CurrentPosition);
+
+			source.RemoveAt (2);
+			view.Refresh ();
+
+			Assert.AreEqual (7, view.Count);
+			Assert.AreEqual (view.Items[3], view.CurrentItem);
+			Assert.AreEqual (3, view.CurrentPosition);
+
+			//	Removing the current item moves the current item to the
+			//	next available item in the view...
+			
+			source.RemoveAt (3);
+			view.Refresh ();
+
+			Assert.AreEqual (6, view.Count);
+			Assert.AreEqual (view.Items[3], view.CurrentItem);
+			Assert.AreEqual (3, view.CurrentPosition);
+
+			Assert.IsTrue (view.MoveCurrentToLast ());
+			Assert.IsFalse (view.MoveCurrentToNext ());
+
+			source.RemoveAt (3);
+			view.Refresh ();
+			
+			Assert.AreEqual (5, view.Count);
+			Assert.IsNull (view.CurrentItem);
+			Assert.AreEqual (5, view.CurrentPosition);
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.ArgumentOutOfRangeException))]
+		public void CheckCollectionViewCurrentItemEx1()
+		{
+			List<Record> source = new List<Record> ();
+
+			CollectionTest.AddRecords (source);
+
+			CollectionView view = new CollectionView (source);
+
+			Assert.AreEqual (view.Items[0], view.CurrentItem);
+			Assert.AreEqual (0, view.CurrentPosition);
+			Assert.IsFalse (view.IsCurrentBeforeFirst);
+			Assert.IsFalse (view.IsCurrentAfterLast);
+
+			Assert.IsFalse (view.MoveCurrentToPosition (7));
+		}
+		
+		[Test]
+		[ExpectedException (typeof (System.ArgumentOutOfRangeException))]
+		public void CheckCollectionViewCurrentItemEx2()
+		{
+			List<Record> source = new List<Record> ();
+
+			CollectionTest.AddRecords (source);
+
+			CollectionView view = new CollectionView (source);
+
+			Assert.AreEqual (view.Items[0], view.CurrentItem);
+			Assert.AreEqual (0, view.CurrentPosition);
+			Assert.IsFalse (view.IsCurrentBeforeFirst);
+			Assert.IsFalse (view.IsCurrentAfterLast);
+
+			Assert.IsFalse (view.MoveCurrentToPosition (-2));
 		}
 
 		[Test]
