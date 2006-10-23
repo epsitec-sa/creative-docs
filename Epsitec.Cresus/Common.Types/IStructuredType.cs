@@ -12,16 +12,16 @@ namespace Epsitec.Common.Types
 	public interface IStructuredType
 	{
 		/// <summary>
-		/// Gets the field identifiers.
+		/// Gets a collection of field identifiers.
 		/// </summary>
-		/// <returns>An array of field identifiers.</returns>
+		/// <returns>A collection of field identifiers.</returns>
 		IEnumerable<string> GetFieldIds();
 
 		/// <summary>
 		/// Gets the field descriptor for the specified field identifier.
 		/// </summary>
 		/// <param name="fieldId">The field identifier.</param>
-		/// <returns>The matching field descriptor; othewise <c>null</c>.</returns>
+		/// <returns>The matching field descriptor; otherwise, <c>null</c>.</returns>
 		StructuredTypeField GetField(string fieldId);
 	}
 }

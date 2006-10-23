@@ -22,6 +22,7 @@ namespace Epsitec.Common.Types
 			this.id = id;
 			this.type = type;
 			this.captionId = Support.Druid.Empty;
+			this.rank = -1;
 		}
 
 		/// <summary>
@@ -35,6 +36,22 @@ namespace Epsitec.Common.Types
 			this.id = id;
 			this.type = type;
 			this.captionId = captionId;
+			this.rank = -1;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StructuredTypeField"/> class.
+		/// </summary>
+		/// <param name="id">The field id.</param>
+		/// <param name="type">The field type.</param>
+		/// <param name="captionId">The field caption DRUID.</param>
+		/// <param name="rank">The field rank when listed in a user interface.</param>
+		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank)
+		{
+			this.id = id;
+			this.type = type;
+			this.captionId = captionId;
+			this.rank = rank;
 		}
 
 		/// <summary>
@@ -73,6 +90,19 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the field rank; this is used to sort fields in the
+		/// user interface.
+		/// </summary>
+		/// <value>The field rank or <c>-1</c> if no rank has been defined.</value>
+		public int								Rank
+		{
+			get
+			{
+				return this.rank;
+			}
+		}
+
 		public static readonly StructuredTypeField Empty = new StructuredTypeField ();
 
 		#region SerializationConverter Class
@@ -85,13 +115,20 @@ namespace Epsitec.Common.Types
 			{
 				StructuredTypeField field = (StructuredTypeField) value;
 
+				string captionId = field.type.CaptionId.ToString ();
+				string rank = field.rank == -1 ? "" : field.rank.ToString (System.Globalization.CultureInfo.InvariantCulture);
+
 				if (field.captionId.IsValid)
 				{
-					return string.Concat (field.id, ";", field.type.CaptionId.ToString (), ";", field.captionId.ToString ());
+					return string.Concat (field.id, ";", captionId, ";", rank, ";", field.captionId.ToString ());
+				}
+				else if (string.IsNullOrEmpty (rank))
+				{
+					return string.Concat (field.id, ";", captionId);
 				}
 				else
 				{
-					return string.Concat (field.id, ";", field.type.CaptionId.ToString ());
+					return string.Concat (field.id, ";", captionId, ";", rank);
 				}
 			}
 
@@ -104,9 +141,10 @@ namespace Epsitec.Common.Types
 				string        name      = args[0];
 				Support.Druid druid     = Support.Druid.Parse (args[1]);
 				INamedType    type      = manager == null ? TypeRosetta.GetTypeObject (druid) : TypeRosetta.GetTypeObject (manager.GetCaption (druid));
-				Support.Druid captionId = args.Length < 3 ? Support.Druid.Empty : Support.Druid.Parse (args[2]);
+				string        rank      = args.Length < 3 ? "-1" : string.IsNullOrEmpty (args[2]) ? "-1" : args[2];
+				Support.Druid captionId = args.Length < 4 ? Support.Druid.Empty : Support.Druid.Parse (args[3]);
 				
-				return new StructuredTypeField (name, type, captionId);
+				return new StructuredTypeField (name, type, captionId, System.Int32.Parse (rank, System.Globalization.CultureInfo.InvariantCulture));
 			}
 
 			#endregion
@@ -117,5 +155,6 @@ namespace Epsitec.Common.Types
 		private string							id;
 		private INamedType						type;
 		private Support.Druid					captionId;
+		private int								rank;
 	}
 }
