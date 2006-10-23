@@ -28,10 +28,10 @@ namespace Epsitec.Common.Types
 		void DetachListener(string name, PropertyChangedEventHandler handler);
 
 		/// <summary>
-		/// Gets an array with the names of structured values.
+		/// Gets the collection of the names used to define the structured values.
 		/// </summary>
-		/// <returns>The array of names.</returns>
-		string[] GetValueNames();
+		/// <returns>The collection of names.</returns>
+		IEnumerable<string> GetValueNames();
 
 		/// <summary>
 		/// Gets the structured value with the specified name.

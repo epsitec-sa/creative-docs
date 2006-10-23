@@ -105,6 +105,8 @@ namespace Epsitec.Common.Types
 
 		public static readonly StructuredTypeField Empty = new StructuredTypeField ();
 
+		
+
 		#region SerializationConverter Class
 
 		public class SerializationConverter : ISerializationConverter
