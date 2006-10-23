@@ -79,6 +79,37 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		/// <summary>
+		/// Creates a comparison object based on the sort description which
+		/// can be used to sort items of a given type.
+		/// </summary>
+		/// <param name="type">The item type for which to create the comparison.</param>
+		/// <returns>The <c>System.Comparison&lt;object&gt;</c> which can be used
+		/// to sort items.</returns>
+		public System.Comparison<object> CreateComparison(System.Type type)
+		{
+			string propertyName = this.PropertyName;
+
+			Support.PropertyComparer comparer = Support.DynamicCodeFactory.CreatePropertyComparer (type, propertyName);
+
+			switch (this.Direction)
+			{
+				case ListSortDirection.Ascending:
+					return delegate (object x, object y)
+					{
+						return comparer (x, y);
+					};
+
+				case ListSortDirection.Descending:
+					return delegate (object x, object y)
+					{
+						return -comparer (x, y);
+					};
+			}
+
+			throw new System.ArgumentException ("Invalid sort direction");
+		}
+
 		public override bool Equals(object obj)
 		{
 			if (obj is SortDescription)
