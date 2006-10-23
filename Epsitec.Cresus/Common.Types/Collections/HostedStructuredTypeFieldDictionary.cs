@@ -49,8 +49,13 @@ namespace Epsitec.Common.Types.Collections
 
 			this.Add (id, new StructuredTypeField (id, type));
 		}
-		
+
 		public void Add(string id, INamedType type, Support.Druid captionId)
+		{
+			this.Add (id, type, captionId, -1);
+		}
+		
+		public void Add(string id, INamedType type, Support.Druid captionId, int rank)
 		{
 			if (string.IsNullOrEmpty (id))
 			{
@@ -62,7 +67,7 @@ namespace Epsitec.Common.Types.Collections
 				throw new System.ArgumentException ("Duplicate definition for field '{0}'", id);
 			}
 
-			this.Add (id, new StructuredTypeField (id, type, captionId));
+			this.Add (id, new StructuredTypeField (id, type, captionId, rank));
 		}
 	}
 }
