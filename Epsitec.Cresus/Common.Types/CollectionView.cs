@@ -9,7 +9,7 @@ namespace Epsitec.Common.Types
 	/// The <c>CollectionView</c> class represents a view of a collection. Views implement
 	/// grouping, sorting, filtering and the concept of a current item.
 	/// </summary>
-	public class CollectionView : ICollectionView, System.Collections.IEnumerable, INotifyCollectionChanged
+	public class CollectionView : ICollectionView, System.Collections.IEnumerable, INotifyCollectionChanged, INotifyPropertyChanged
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CollectionView"/> class.
@@ -47,7 +47,44 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.currentPosition;
+				int position = this.currentPosition;
+
+				if (position > this.Count)
+				{
+					position = this.Count;
+				}
+				
+				return position;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether the <c>CurrentItem</c> of this view is before
+		/// the first item.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the <c>CurrentItem</c> is before the first item; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsCurrentBeforeFirst
+		{
+			get
+			{
+				return this.currentPosition < 0;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether the <c>CurrentItem</c> of this view is after
+		/// the last item.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the <c>CurrentItem</c> is after the last item; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsCurrentAfterLast
+		{
+			get
+			{
+				return this.currentPosition >= this.Count;
 			}
 		}
 
@@ -205,11 +242,127 @@ namespace Epsitec.Common.Types
 			return null;
 		}
 
+		/// <summary>
+		/// Sets the specified item as the <see cref="CurrentItem"/> in the view.
+		/// </summary>
+		/// <param name="item">The item to set as the <see cref="CurrentItem"/>.</param>
+		/// <returns>
+		/// 	<c>true</c> if the resulting <c>CurrentItem</c> is within the view; otherwise, <c>false</c>.
+		/// </returns>
+		public bool MoveCurrentTo(object item)
+		{
+			this.VerfiyRefreshNotDeferred ();
+
+			if (object.Equals (this.CurrentItem, item))
+			{
+				return this.IsCurrentInView;
+			}
+
+			int position = -1;
+			
+			if (this.PassesFilter (item))
+			{
+				position = this.Items.IndexOf (item);
+			}
+
+			return this.MoveCurrentToPosition (position);
+		}
+
+		/// <summary>
+		/// Sets the item at the specified position to be the <see cref="CurrentItem"/> in the view.
+		/// </summary>
+		/// <param name="position">The position to set the <see cref="CurrentItem"/> to.</param>
+		/// <returns>
+		/// 	<c>true</c> if the resulting <c>CurrentItem</c> is within the view; otherwise, <c>false</c>.
+		/// </returns>
+		public bool MoveCurrentToPosition(int position)
+		{
+			this.VerfiyRefreshNotDeferred ();
+
+			if ((position < -1) ||
+				(position > this.Count))
+			{
+				throw new System.ArgumentOutOfRangeException ("position");
+			}
+
+			if ((this.CurrentPosition != position) &&
+				(this.AcceptsChangingCurrentPosition ()))
+			{
+				bool ok = this.SetCurrentToPosition (position);
+				this.OnCurrentChanged ();
+				return ok;
+			}
+			else
+			{
+				return this.IsCurrentInView;
+			}
+		}
+
+		/// <summary>
+		/// Sets the first item in the view as the <see cref="CurrentItem"/>.
+		/// </summary>
+		/// <returns>
+		/// 	<c>true</c> if the resulting <c>CurrentItem</c> is within the view; otherwise, <c>false</c>.
+		/// </returns>
+		public bool MoveCurrentToFirst()
+		{
+			this.VerfiyRefreshNotDeferred ();
+			return this.MoveCurrentToPosition (0);
+		}
+
+		/// <summary>
+		/// Sets the last item in the view as the <see cref="CurrentItem"/>.
+		/// </summary>
+		/// <returns>
+		/// 	<c>true</c> if the resulting <c>CurrentItem</c> is within the view; otherwise, <c>false</c>.
+		/// </returns>
+		public bool MoveCurrentToLast()
+		{
+			this.VerfiyRefreshNotDeferred ();
+			return this.MoveCurrentToPosition (this.Count-1);
+		}
+
+		/// <summary>
+		/// Sets the item after the <see cref="CurrentItem"/> as the <c>CurrentItem</c>.
+		/// </summary>
+		/// <returns>
+		/// 	<c>true</c> if the resulting <c>CurrentItem</c> is within the view; otherwise, <c>false</c>.
+		/// </returns>
+		public bool MoveCurrentToNext()
+		{
+			this.VerfiyRefreshNotDeferred ();
+			return this.IsCurrentAfterLast ? false : this.MoveCurrentToPosition (this.currentPosition+1);
+		}
+
+		/// <summary>
+		/// Sets the item before the <see cref="CurrentItem"/> as the <c>CurrentItem</c>.
+		/// </summary>
+		/// <returns>
+		/// 	<c>true</c> if the resulting <c>CurrentItem</c> is within the view; otherwise, <c>false</c>.
+		/// </returns>
+		public bool MoveCurrentToPrevious()
+		{
+			this.VerfiyRefreshNotDeferred ();
+			return this.IsCurrentBeforeFirst ? false : this.MoveCurrentToPosition (this.currentPosition-1);
+		}
+		
 		public event Support.EventHandler CurrentChanged;
 
 		public event Support.EventHandler<CurrentChangingEventArgs> CurrentChanging;
 
 		#endregion
+
+		/// <summary>
+		/// Gets the number of items in the view.
+		/// </summary>
+		/// <value>The number of items.</value>
+		public int								Count
+		{
+			get
+			{
+				return this.Items.Count;
+			}
+		}
 
 		/// <summary>
 		/// Gets a value indicating whether this view has sort descriptions.
@@ -259,7 +412,7 @@ namespace Epsitec.Common.Types
 		/// Gets a value indicating whether the refresh operations of this view are deferred.
 		/// </summary>
 		/// <value><c>true</c> if the refresh operations are deferred; otherwise, <c>false</c>.</value>
-		public bool								Deferred
+		public bool								IsRefreshDeferred
 		{
 			get
 			{
@@ -267,9 +420,30 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the <c>CurrentItem</c> belongs to this view.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the <c>CurrentItem</c> belongs to this view; otherwise, <c>false</c>.
+		/// </value>
+		protected bool							IsCurrentInView
+		{
+			get
+			{
+				return (this.currentPosition >= 0)
+				    && (this.currentPosition < this.Count);
+			}
+		}
+
 		#region INotifyCollectionChanged Members
 
 		public event Support.EventHandler<CollectionChangedEventArgs> CollectionChanged;
+
+		#endregion
+
+		#region INotifyPropertyChanged Members
+
+		public event Support.EventHandler<DependencyPropertyChangedEventArgs> PropertyChanged;
 
 		#endregion
 
@@ -284,6 +458,33 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Returns a value indicating whether the specified item is valid
+		/// with respect to the filter.
+		/// </summary>
+		/// <param name="item">The item to test.</param>
+		/// <returns>
+		/// 	<c>true</c> if the item is valid with respect to the filter; otherwise, <c>false</c>.
+		/// </returns>
+		public virtual bool PassesFilter(object item)
+		{
+			if (this.filter != null)
+			{
+				return this.filter (item);
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		protected bool AcceptsChangingCurrentPosition()
+		{
+			CurrentChangingEventArgs e = new CurrentChangingEventArgs (true);
+			this.OnCurrentChanging (e);
+			return e.Cancel == false;
+		}
 
 		protected virtual void OnCurrentChanged()
 		{
@@ -434,7 +635,7 @@ namespace Epsitec.Common.Types
 				{
 					throw new System.InvalidOperationException ("Source collection contains null items");
 				}
-				else if ((this.filter == null) || (this.filter (item)))
+				else if (this.PassesFilter (item))
 				{
 					this.sortedList.Add (item);
 
@@ -468,6 +669,14 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		private void VerfiyRefreshNotDeferred()
+		{
+			if (this.IsRefreshDeferred)
+			{
+				throw new System.InvalidOperationException ("Invalid operation while refresh is deferred");
+			}
+		}
+
 		private void InvalidateSortedList()
 		{
 			this.dirtySortedList = true;
@@ -492,6 +701,20 @@ namespace Epsitec.Common.Types
 
 		private void RefreshContents()
 		{
+			if ((this.dirtyGroups == false) &&
+				(this.dirtySortedList == false))
+			{
+				return;
+			}
+
+			object currentItem     = this.CurrentItem;
+			int    currentPosition = this.CurrentPosition;
+			
+			bool isCurrentBeforeFirst = this.IsCurrentBeforeFirst;
+			bool isCurrentAfterLast   = this.IsCurrentAfterLast;
+
+			this.OnCurrentChanging (new CurrentChangingEventArgs ());
+			
 			//	TODO: add suspend/resume for all observable collections
 
 			if (this.dirtySortedList)
@@ -531,6 +754,81 @@ namespace Epsitec.Common.Types
 				}
 				
 				this.dirtyGroups = false;
+			}
+
+			if ((this.IsEmpty) ||
+				(isCurrentBeforeFirst))
+			{
+				this.SetCurrentToPosition (-1);
+			}
+			else if (isCurrentAfterLast)
+			{
+				this.SetCurrentToPosition (System.Int32.MaxValue);
+			}
+			else if (currentItem != null)
+			{
+				int position = this.Items.IndexOf (currentItem);
+				
+				if (position < 0)
+				{
+					position = 0;
+				}
+
+				this.SetCurrentToPosition (position);
+			}
+
+			this.OnCurrentChanged ();
+
+			if (this.IsCurrentAfterLast != isCurrentAfterLast)
+			{
+				this.OnPropertyChanged ("IsCurrentAfterLast");
+			}
+			if (this.IsCurrentBeforeFirst != isCurrentBeforeFirst)
+			{
+				this.OnPropertyChanged ("IsCurrentBeforeFirst");
+			}
+			if (this.CurrentPosition != currentPosition)
+			{
+				this.OnPropertyChanged ("CurrentPosition");
+			}
+			if (this.CurrentItem != currentItem)
+			{
+				this.OnPropertyChanged ("CurrentItem");
+			}
+		}
+
+		private void OnPropertyChanged(string propertyName)
+		{
+			this.OnPropertyChanged (new DependencyPropertyChangedEventArgs (propertyName));
+		}
+
+		protected virtual void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+		{
+			if (this.PropertyChanged != null)
+			{
+				this.PropertyChanged (this, e);
+			}
+		}
+
+		private bool SetCurrentToPosition(int position)
+		{
+			if (position < 0)
+			{
+				this.currentPosition = -1;
+				this.currentItem     = null;
+				return false;
+			}
+			else if (position >= this.Count)
+			{
+				this.currentPosition = System.Int32.MaxValue;
+				this.currentItem     = null;
+				return false;
+			}
+			else
+			{
+				this.currentPosition = position;
+				this.currentItem     = this.Items[position];
+				return true;
 			}
 		}
 
@@ -686,6 +984,7 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
+
 		
 		private System.Collections.IList		sourceList;
 		private List<object>					sortedList;
