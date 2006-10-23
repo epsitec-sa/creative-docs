@@ -259,6 +259,13 @@ namespace Epsitec.Common.IO
 			this.AddEntry (name, data, System.DateTime.Now);
 		}
 
+		/// <summary>
+		/// Adds a file entry to the ZIP file.
+		/// </summary>
+		/// <param name="name">The file entry name. It can include a relative path using
+		/// exclusively forward slashes as separators.</param>
+		/// <param name="data">The data.</param>
+		/// <param name="dateTime">The creation date time.</param>
 		public void AddEntry(string name, byte[] data, System.DateTime dateTime)
 		{
 			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (name) == false);

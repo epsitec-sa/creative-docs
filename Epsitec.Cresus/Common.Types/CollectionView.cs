@@ -539,6 +539,14 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		protected virtual void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+		{
+			if (this.PropertyChanged != null)
+			{
+				this.PropertyChanged (this, e);
+			}
+		}
+
 		private void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
 		{
 			this.InvalidateSortedList ();
@@ -636,7 +644,7 @@ namespace Epsitec.Common.Types
 
 				for (int i = 0; i < this.sortDescriptions.Count; i++)
 				{
-					comparisons[i] = CollectionView.CreateComparison (this.itemType, this.sortDescriptions[i]);
+					comparisons[i] = this.sortDescriptions[i].CreateComparison (this.itemType);
 				}
 
 				if (comparisons.Length == 1)
@@ -850,14 +858,6 @@ namespace Epsitec.Common.Types
 			this.OnPropertyChanged (new DependencyPropertyChangedEventArgs (propertyName));
 		}
 
-		protected virtual void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
-		{
-			if (this.PropertyChanged != null)
-			{
-				this.PropertyChanged (this, e);
-			}
-		}
-
 		private bool SetCurrentToPosition(int position)
 		{
 			if ((position < 0) ||
@@ -880,31 +880,6 @@ namespace Epsitec.Common.Types
 				return true;
 			}
 		}
-
-		private static System.Comparison<object> CreateComparison(System.Type type, SortDescription sort)
-		{
-			string propertyName = sort.PropertyName;
-
-			Support.PropertyComparer comparer = Support.DynamicCodeFactory.CreatePropertyComparer (type, propertyName);
-
-			switch (sort.Direction)
-			{
-				case ListSortDirection.Ascending:
-					return delegate (object x, object y)
-					{
-						return comparer (x, y);
-					};
-
-				case ListSortDirection.Descending:
-					return delegate (object x, object y)
-					{
-						return -comparer (x, y);
-					};
-			}
-
-			throw new System.ArgumentException ("Invalid sort direction");
-		}
-
 
 		#region GroupNode Class
 
