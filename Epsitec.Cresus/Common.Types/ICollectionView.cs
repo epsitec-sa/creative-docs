@@ -29,6 +29,30 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether the <c>CurrentItem</c> of this view is before
+		/// the first item.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the <c>CurrentItem</c> is before the first item; otherwise, <c>false</c>.
+		/// </value>
+		bool IsCurrentBeforeFirst
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether the <c>CurrentItem</c> of this view is after
+		/// the last item.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the <c>CurrentItem</c> is after the last item; otherwise, <c>false</c>.
+		/// </value>
+		bool IsCurrentAfterLast
+		{
+			get;
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether this (filtered) view is empty.
 		/// </summary>
 		/// <value><c>true</c> if this view is empty; otherwise, <c>false</c>.</value>
@@ -91,6 +115,56 @@ namespace Epsitec.Common.Types
 			get;
 			set;
 		}
+
+		/// <summary>
+		/// Sets the specified item as the <see cref="CurrentItem"/> in the view.
+		/// </summary>
+		/// <param name="item">The item to set as the <see cref="CurrentItem"/>.</param>
+		/// <returns>
+		/// 	<c>true</c> if the resulting <c>CurrentItem</c> is within the view; otherwise, <c>false</c>.
+		/// </returns>
+		bool MoveCurrentTo(object item);
+
+		/// <summary>
+		/// Sets the item at the specified position to be the <see cref="CurrentItem"/> in the view.
+		/// </summary>
+		/// <param name="position">The position to set the <see cref="CurrentItem"/> to.</param>
+		/// <returns>
+		/// 	<c>true</c> if the resulting <c>CurrentItem</c> is within the view; otherwise, <c>false</c>.
+		/// </returns>
+		bool MoveCurrentToPosition(int position);
+
+		/// <summary>
+		/// Sets the first item in the view as the <see cref="CurrentItem"/>.
+		/// </summary>
+		/// <returns>
+		/// 	<c>true</c> if the resulting <c>CurrentItem</c> is within the view; otherwise, <c>false</c>.
+		/// </returns>
+		bool MoveCurrentToFirst();
+
+		/// <summary>
+		/// Sets the last item in the view as the <see cref="CurrentItem"/>.
+		/// </summary>
+		/// <returns>
+		/// 	<c>true</c> if the resulting <c>CurrentItem</c> is within the view; otherwise, <c>false</c>.
+		/// </returns>
+		bool MoveCurrentToLast();
+
+		/// <summary>
+		/// Sets the item after the <see cref="CurrentItem"/> as the <c>CurrentItem</c>.
+		/// </summary>
+		/// <returns>
+		/// 	<c>true</c> if the resulting <c>CurrentItem</c> is within the view; otherwise, <c>false</c>.
+		/// </returns>
+		bool MoveCurrentToNext();
+
+		/// <summary>
+		/// Sets the item before the <see cref="CurrentItem"/> as the <c>CurrentItem</c>.
+		/// </summary>
+		/// <returns>
+		/// 	<c>true</c> if the resulting <c>CurrentItem</c> is within the view; otherwise, <c>false</c>.
+		/// </returns>
+		bool MoveCurrentToPrevious();
 
 		/// <summary>
 		/// Refreshes the contents of the view.
