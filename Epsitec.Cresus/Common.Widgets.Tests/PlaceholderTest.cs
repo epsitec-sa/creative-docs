@@ -87,7 +87,7 @@ namespace Epsitec.Common.Widgets
 			data.SetValue ("Age", System.DateTime.Now.Year - 1972);
 			data.SetValue ("Sex", Sex.Male);
 
-			panel.DataSource = new UI.DataSourceCollection ();
+			panel.DataSource = new UI.DataSource ();
 			panel.DataSource.AddDataSource ("Person", data);
 			
 			Placeholder placeholder1 = new Placeholder ();
@@ -232,7 +232,7 @@ namespace Epsitec.Common.Widgets
 			data.SetValue ("Slow", new SlowIntValue ());
 			data.SetValue ("Sex", Sex.Male);
 
-			panel.DataSource = new UI.DataSourceCollection ();
+			panel.DataSource = new UI.DataSource ();
 			panel.DataSource.AddDataSource ("Person", data);
 
 			Placeholder placeholder1 = new Placeholder ();
@@ -463,7 +463,7 @@ namespace Epsitec.Common.Widgets
 			data.SetValue ("Forename", "Pierre");
 			data.SetValue ("Age", System.DateTime.Now.Year - 1972);
 
-			panel.DataSource = new UI.DataSourceCollection ();
+			panel.DataSource = new UI.DataSource ();
 			panel.DataSource.AddDataSource ("Person", data);
 
 			Placeholder placeholder1 = new Placeholder ();

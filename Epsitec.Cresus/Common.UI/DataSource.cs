@@ -8,15 +8,15 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.UI
 {
 	/// <summary>
-	/// The <c>DataSourceCollection</c> class provides the list of named objects
+	/// The <c>DataSource</c> class provides the list of named objects
 	/// to which a user interface can be data bound.
 	/// </summary>
-	public class DataSourceCollection : IStructuredType, IStructuredData
+	public class DataSource : IStructuredType, IStructuredData
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="T:DataSourceCollection"/> class.
+		/// Initializes a new instance of the <see cref="DataSource"/> class.
 		/// </summary>
-		public DataSourceCollection()
+		public DataSource()
 		{
 		}
 
@@ -200,7 +200,7 @@ namespace Epsitec.Common.UI
 		protected struct ItemRecord
 		{
 			/// <summary>
-			/// Initializes a new instance of the <see cref="T:ItemRecord"/> structure.
+			/// Initializes a new instance of the <see cref="ItemRecord"/> structure.
 			/// </summary>
 			/// <param name="name">The name of the item.</param>
 			/// <param name="data">The data of the item.</param>

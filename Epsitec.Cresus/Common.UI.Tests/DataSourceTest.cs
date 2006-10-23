@@ -7,19 +7,20 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.UI
 {
-	[TestFixture] public class DataSourceCollectionTest
+	[TestFixture]
+	public class DataSourceTest
 	{
 		[SetUp]
 		public void Initialize()
 		{
 			Epsitec.Common.Widgets.Widget.Initialize ();
 		}
-		
+
 		[Test]
 		public void CheckCreation()
 		{
-			DataSourceCollection collection = new DataSourceCollection ();
-			
+			DataSource collection = new DataSource ();
+
 			Widgets.Visual source1 = new Widgets.Visual ();
 			MySimpleDataSource source2 = new MySimpleDataSource ();
 
@@ -45,7 +46,7 @@ namespace Epsitec.Common.UI
 				System.Console.Out.WriteLine ("Name: {0}", name);
 
 				IStructuredData data = collection.GetDataSource (name);
-				object          type = TypeRosetta.GetTypeObjectFromValue (data);
+				object type = TypeRosetta.GetTypeObjectFromValue (data);
 				IStructuredType tree = TypeRosetta.GetStructuredTypeFromTypeObject (type);
 
 				Assert.IsNotNull (data);
@@ -73,13 +74,13 @@ namespace Epsitec.Common.UI
 				Assert.AreEqual (buffer1.ToString (), buffer2.ToString ());
 			}
 		}
-		
+
 		[Test]
 		public void CheckPanelSerializationContext()
 		{
 			Support.ResourceManager manager = new Support.ResourceManager ();
 			Panel panel = new UI.Panel ();
-			DataSourceCollection collection = new DataSourceCollection ();
+			DataSource collection = new DataSource ();
 
 			panel.DataSource = collection;
 
@@ -107,7 +108,7 @@ namespace Epsitec.Common.UI
 
 			Widgets.Button b1 = new Epsitec.Common.Widgets.Button ();
 			Binding binding = new Binding (BindingMode.OneWay, null, "A.Name");
-			
+
 			b1.Dock = Widgets.DockStyle.Top;
 			b1.SetBinding (Widgets.Visual.NameProperty, binding);
 
@@ -124,7 +125,7 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual ("X", b1.Name);
 
 			b1.Name = "Y";
-			
+
 			Assert.AreEqual ("X", source1.Name);
 			Assert.AreEqual ("Y", b1.Name);
 		}
@@ -133,10 +134,10 @@ namespace Epsitec.Common.UI
 		public void CheckPanelDataSourceBinding()
 		{
 			Panel panel = new UI.Panel ();
-			DataSourceCollection collection = new DataSourceCollection ();
+			DataSource collection = new DataSource ();
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
-			
+
 			type.Fields.Add ("Label", Types.StringType.Default);
 			data.SetValue ("Label", "Hello");
 
@@ -162,7 +163,7 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckGetFieldTypeObject()
 		{
-			DataSourceCollection collection = new DataSourceCollection ();
+			DataSource collection = new DataSource ();
 
 			Widgets.Visual source1 = new Widgets.Visual ();
 			MySimpleDataSource source2 = new MySimpleDataSource ();
@@ -176,7 +177,7 @@ namespace Epsitec.Common.UI
 			IStructuredType type = collection as IStructuredType;
 
 			Assert.IsNotNull (type);
-			
+
 			Assert.AreEqual (typeof (Widgets.Visual), StructuredTree.GetField (type, "A").Type.SystemType);
 			Assert.AreEqual (typeof (DynamicStructuredType), StructuredTree.GetField (type, "B").Type.GetType ());
 			Assert.AreEqual (typeof (StringType), StructuredTree.GetField (type, "A.Name").Type.GetType ());
@@ -194,7 +195,7 @@ namespace Epsitec.Common.UI
 		[ExpectedException (typeof (System.InvalidOperationException))]
 		public void CheckSetValueEx1()
 		{
-			DataSourceCollection collection = new DataSourceCollection ();
+			DataSource collection = new DataSource ();
 
 			Widgets.Visual source1 = new Widgets.Visual ();
 
@@ -206,7 +207,7 @@ namespace Epsitec.Common.UI
 		[ExpectedException (typeof (System.InvalidOperationException))]
 		public void CheckSetValueEx2()
 		{
-			DataSourceCollection collection = new DataSourceCollection ();
+			DataSource collection = new DataSource ();
 
 			Widgets.Visual source1 = new Widgets.Visual ();
 
@@ -218,7 +219,7 @@ namespace Epsitec.Common.UI
 			public MySimpleDataSource()
 			{
 			}
-			
+
 			#region IStructuredData Members
 
 			public void AttachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
