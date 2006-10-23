@@ -312,7 +312,7 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 
 			Properties.Image p = this.property as Properties.Image;
-			this.document.ImageCache.Load(p.Filename);
+			p.Date = this.document.ImageCache.Load(p.Filename);
 		}
 
 		private void HandleButtonPressed(object sender, MessageEventArgs e)

@@ -27,6 +27,7 @@ namespace Epsitec.Common.Document.Properties
 		protected override void Initialize()
 		{
 			this.filename       = "";
+			this.date           = System.DateTime.MinValue;
 			this.shortName      = "";
 			this.insideDoc      = true;
 			this.rotation       = Rotation.Angle0;
@@ -53,6 +54,20 @@ namespace Epsitec.Common.Document.Properties
 					this.filename = value;
 					this.NotifyAfter();
 				}
+			}
+		}
+
+		public System.DateTime Date
+		{
+			//	Date de dernière modification de l'image.
+			get
+			{
+				return this.date;
+			}
+
+			set
+			{
+				this.date = value;
 			}
 		}
 
@@ -227,6 +242,7 @@ namespace Epsitec.Common.Document.Properties
 			base.CopyTo(property);
 			Image p = property as Image;
 			p.filename       = this.filename;
+			p.date           = this.date;
 			p.shortName      = this.shortName;
 			p.insideDoc      = this.insideDoc;
 			p.rotation       = this.rotation;
@@ -244,6 +260,7 @@ namespace Epsitec.Common.Document.Properties
 
 			Image p = property as Image;
 			if ( p.filename       != this.filename       )  return false;
+			if ( p.date           != this.date           )  return false;
 			if ( p.shortName      != this.shortName      )  return false;
 			if ( p.insideDoc      != this.insideDoc      )  return false;
 			if ( p.rotation       != this.rotation       )  return false;
@@ -386,6 +403,7 @@ namespace Epsitec.Common.Document.Properties
 
 			info.AddValue("Filename", filename);
 			info.AddValue("ShortName", shortName);
+			info.AddValue("Date", this.date);
 			info.AddValue("InsideDoc", this.insideDoc);
 			info.AddValue("Rotation", this.rotation);
 			info.AddValue("MirrorH", this.mirrorH);
@@ -423,7 +441,7 @@ namespace Epsitec.Common.Document.Properties
 				 this.document.IoDirectory != "" &&
 				 System.IO.Path.GetDirectoryName(this.filename) == "" )
 			{
-				this.filename = this.document.IoDirectory + "\\" + this.filename;
+				this.filename = string.Concat(this.document.IoDirectory, "\\", this.filename);
 			}
 
 			if ( this.document.IsRevisionGreaterOrEqual(2, 0, 1) )
@@ -445,18 +463,29 @@ namespace Epsitec.Common.Document.Properties
 				this.cropMargins = Margins.Zero;
 				this.rotation = Rotation.Angle0;
 			}
+
+			if (this.document.IsRevisionGreaterOrEqual(2, 0, 5))
+			{
+				this.date = (System.DateTime) info.GetValue("Date", typeof(System.DateTime));
+			}
+			else
+			{
+				//	Met une date spéciale différente de System.DateTime.MinValue pour les anciens fichiers.
+				this.date = System.DateTime.MinValue.AddSeconds(1);
+			}
 		}
 		#endregion
 
 	
-		protected string			filename;
-		protected string			shortName;
-		protected bool				insideDoc;
-		protected Rotation			rotation;
-		protected bool				mirrorH;
-		protected bool				mirrorV;
-		protected bool				homo;
-		protected int				filterCategory;
-		protected Margins			cropMargins;
+		protected string				filename;
+		protected string				shortName;
+		protected System.DateTime		date;
+		protected bool					insideDoc;
+		protected Rotation				rotation;
+		protected bool					mirrorH;
+		protected bool					mirrorV;
+		protected bool					homo;
+		protected int					filterCategory;
+		protected Margins				cropMargins;
 	}
 }
