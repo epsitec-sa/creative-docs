@@ -661,8 +661,6 @@ namespace Epsitec.Common.Types
 					}
 				}
 			}
-
-			this.itemCount = this.sortedList.Count;
 		}
 
 		private void BeginDefer()
@@ -742,10 +740,13 @@ namespace Epsitec.Common.Types
 					
 					this.FillItemsList ();
 					this.SortItemsList ();
+					
+					this.itemCount = this.sortedList.Count;
 				}
 				else
 				{
 					this.sortedList = null;
+					this.itemCount  = this.sourceList == null ? 0 : this.sourceList.Count;
 				}
 
 				this.dirtySortedList = false;

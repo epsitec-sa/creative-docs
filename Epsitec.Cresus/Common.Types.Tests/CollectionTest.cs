@@ -10,23 +10,14 @@ namespace Epsitec.Common.Types
 	public class CollectionTest
 	{
 		[Test]
-		public void CheckSortDescription()
+		public void CheckCollectionViewCurrentItem()
 		{
-			SortDescription sort1 = new SortDescription (ListSortDirection.Ascending, "x");
-			SortDescription sort2 = new SortDescription (ListSortDirection.Descending, "y");
+			List<Record> source = new List<Record> ();
+			CollectionView view = new CollectionView (source);
 
-			Assert.AreEqual (ListSortDirection.Ascending, sort1.Direction);
-			Assert.AreEqual (ListSortDirection.Descending, sort2.Direction);
-			Assert.AreEqual ("x", sort1.PropertyName);
-			Assert.AreEqual ("y", sort2.PropertyName);
+			CollectionTest.AddRecords (source);
 
-			ISerializationConverter conv = InvariantConverter.GetSerializationConverter (typeof (SortDescription));
-
-			Assert.AreEqual ("A;x", conv.ConvertToString (sort1, null));
-			Assert.AreEqual ("D;y", conv.ConvertToString (sort2, null));
-
-			Assert.AreEqual (sort1, conv.ConvertFromString ("A;x", null));
-			Assert.AreEqual (sort2, conv.ConvertFromString ("D;y", null));
+			
 		}
 
 		[Test]
@@ -82,6 +73,40 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual (1, group.GetGroupNamesForItem (record, System.Globalization.CultureInfo.InvariantCulture).Length);
 			Assert.AreEqual ("ElectronicEquipment", string.Join (":", group.GetGroupNamesForItem (record, System.Globalization.CultureInfo.InvariantCulture)));
+		}
+
+		[Test]
+		public void CheckCollectionViewFilter()
+		{
+			List<Record> source = new List<Record> ();
+			CollectionView view = new CollectionView (source);
+
+			CollectionTest.AddRecords (source);
+
+			Assert.AreEqual (0, view.Count);
+			view.Refresh ();
+			Assert.AreEqual (6, view.Count);
+
+			view.Filter = delegate (object item)
+			{
+				Record record = item as Record;
+				if ((record == null) ||
+					(record.Price < 1))
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+			};
+
+			Record[] records = Collection.ToArray<Record> (view.Items);
+
+			Assert.AreEqual (3, records.Length);
+			Assert.AreEqual ("Clé M3", records[0].Article);
+			Assert.AreEqual ("Tournevis", records[1].Article);
+			Assert.AreEqual ("Tournevis", records[2].Article);
 		}
 
 		[Test]
@@ -151,36 +176,6 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual (2, records[3].Stock);
 			Assert.AreEqual (7, records[5].Stock);
-		}
-
-		[Test]
-		public void CheckCollectionViewFilter()
-		{
-			List<Record> source = new List<Record> ();
-			CollectionView view = new CollectionView (source);
-
-			CollectionTest.AddRecords (source);
-
-			view.Filter = delegate (object item)
-			{
-				Record record = item as Record;
-				if ((record == null) ||
-					(record.Price < 1))
-				{
-					return false;
-				}
-				else
-				{
-					return true;
-				}
-			};
-
-			Record[] records = Collection.ToArray<Record> (view.Items);
-			
-			Assert.AreEqual (3, records.Length);
-			Assert.AreEqual ("Clé M3", records[0].Article);
-			Assert.AreEqual ("Tournevis", records[1].Article);
-			Assert.AreEqual ("Tournevis", records[2].Article);
 		}
 
 		[Test]
@@ -271,6 +266,26 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual ("Clé M3", subgroup1.Name);
 			Assert.AreEqual ("Tournevis", subgroup2.Name);
+		}
+
+		[Test]
+		public void CheckSortDescription()
+		{
+			SortDescription sort1 = new SortDescription (ListSortDirection.Ascending, "x");
+			SortDescription sort2 = new SortDescription (ListSortDirection.Descending, "y");
+
+			Assert.AreEqual (ListSortDirection.Ascending, sort1.Direction);
+			Assert.AreEqual (ListSortDirection.Descending, sort2.Direction);
+			Assert.AreEqual ("x", sort1.PropertyName);
+			Assert.AreEqual ("y", sort2.PropertyName);
+
+			ISerializationConverter conv = InvariantConverter.GetSerializationConverter (typeof (SortDescription));
+
+			Assert.AreEqual ("A;x", conv.ConvertToString (sort1, null));
+			Assert.AreEqual ("D;y", conv.ConvertToString (sort2, null));
+
+			Assert.AreEqual (sort1, conv.ConvertFromString ("A;x", null));
+			Assert.AreEqual (sort2, conv.ConvertFromString ("D;y", null));
 		}
 
 		private static void AddRecords(List<Record> source)
