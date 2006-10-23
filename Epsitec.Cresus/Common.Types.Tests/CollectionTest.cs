@@ -94,7 +94,6 @@ namespace Epsitec.Common.Types
 
 			CollectionTest.AddRecords (source);
 
-			view.Refresh ();
 			records = Collection.ToArray<Record> (view.Items);
 
 			Assert.AreEqual (6, records.Length);
@@ -107,7 +106,7 @@ namespace Epsitec.Common.Types
 
 			view.SortDescriptions.Add (new SortDescription (ListSortDirection.Ascending, "Article"));
 			view.SortDescriptions.Add (new SortDescription (ListSortDirection.Ascending, "Stock"));
-			view.Refresh ();
+			
 			records = Collection.ToArray<Record> (view.Items);
 
 			Assert.AreEqual (6, records.Length);
@@ -123,7 +122,7 @@ namespace Epsitec.Common.Types
 
 			view.SortDescriptions.RemoveAt (1);
 			view.SortDescriptions.Add (new SortDescription (ListSortDirection.Descending, "Stock"));
-			view.Refresh ();
+			
 			records = Collection.ToArray<Record> (view.Items);
 
 			Assert.AreEqual (6, records.Length);
@@ -139,7 +138,7 @@ namespace Epsitec.Common.Types
 
 			view.SortDescriptions.Clear ();
 			view.SortDescriptions.Add (new SortDescription ("Price"));
-			view.Refresh ();
+			
 			records = Collection.ToArray<Record> (view.Items);
 
 			Assert.AreEqual (6, records.Length);
@@ -176,7 +175,6 @@ namespace Epsitec.Common.Types
 				}
 			};
 
-			view.Refresh ();
 			Record[] records = Collection.ToArray<Record> (view.Items);
 			
 			Assert.AreEqual (3, records.Length);
@@ -197,9 +195,9 @@ namespace Epsitec.Common.Types
 
 			view.SortDescriptions.Add (new SortDescription ("Article"));
 			view.SortDescriptions.Add (new SortDescription ("Price"));
-			view.Refresh ();
 
-			Assert.IsNull (view.Groups);
+			Assert.IsNotNull (view.Groups);
+			Assert.AreEqual (0, view.Groups.Count);
 			Assert.AreEqual (6, view.Items.Count);
 
 			records = new Record[8];
@@ -219,8 +217,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Vis M3",    ((Record) view.Items[5]).Article);
 			
 			view.GroupDescriptions.Add (new PropertyGroupDescription ("Category"));
-			view.Refresh ();
-
+			
 			Assert.AreEqual (2, view.Groups.Count);
 
 			CollectionViewGroup group1 = view.Groups[0] as CollectionViewGroup;
@@ -251,8 +248,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Vis M3", records[2].Article);
 
 			view.GroupDescriptions.Add (new PropertyGroupDescription ("Article"));
-			view.Refresh ();
-
+			
 			Assert.AreEqual (2, view.Groups.Count);
 
 			group1 = view.Groups[0] as CollectionViewGroup;

@@ -11,9 +11,14 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class CollectionView : ICollectionView, System.Collections.IEnumerable, INotifyCollectionChanged
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CollectionView"/> class.
+		/// </summary>
+		/// <param name="sourceList">The source list.</param>
 		public CollectionView(System.Collections.IList sourceList)
 		{
 			this.sourceList = sourceList;
+			this.rootGroup = new CollectionViewGroup (null, null);
 		}
 
 		#region ICollectionView Members
@@ -67,6 +72,8 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
+				this.RefreshContents ();
+
 				if (this.sortedList != null)
 				{
 					return this.sortedList;
@@ -86,17 +93,21 @@ namespace Epsitec.Common.Types
 		/// Gets the top level groups.
 		/// </summary>
 		/// <value>
-		/// A read-only collection of the top level groups or <c>null</c>
+		/// A read-only collection of the top level groups; it is empty
 		/// if there are no groups configured for this view.
 		/// </value>
 		public Collections.ReadOnlyObservableList<CollectionViewGroup> Groups
 		{
 			get
 			{
-				if ((this.readOnlyGroups == null) &&
-					(this.HasGroupDescriptions))
+				if (this.dirtyGroups)
 				{
-					this.Refresh ();
+					this.RefreshContents ();
+				}
+				
+				if (this.readOnlyGroups == null)
+				{
+					this.readOnlyGroups = new Collections.ReadOnlyObservableList<CollectionViewGroup> (this.rootGroup.GetSubgroups ());
 				}
 
 				return this.readOnlyGroups;
@@ -115,6 +126,7 @@ namespace Epsitec.Common.Types
 				if (this.groupDescriptions == null)
 				{
 					this.groupDescriptions = new Collections.ObservableList<GroupDescription> ();
+					this.groupDescriptions.CollectionChanged += this.HandleGroupDescriptionsCollectionChanged;
 				}
 				
 				return this.groupDescriptions;
@@ -133,6 +145,7 @@ namespace Epsitec.Common.Types
 				if (this.sortDescriptions == null)
 				{
 					this.sortDescriptions = new Collections.ObservableList<SortDescription> ();
+					this.sortDescriptions.CollectionChanged += this.HandleSortDescriptionsCollectionChanged;
 				}
 
 				return this.sortDescriptions;
@@ -154,7 +167,12 @@ namespace Epsitec.Common.Types
 			}
 			set
 			{
-				this.filter = value;
+				if (this.filter != value)
+				{
+					this.filter = value;
+					
+					this.InvalidateSortedList ();
+				}
 			}
 		}
 
@@ -164,28 +182,10 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		public void Refresh()
 		{
-			//	TODO: add suspend/resume for all observable collections
-
-			if ((this.HasFilter) ||
-				(this.HasSortDescriptions))
-			{
-				this.sortedList = new List<object> ();
-				this.FillItemsList ();
-				this.SortItemsList ();
-			}
-			else
-			{
-				this.sortedList = null;
-			}
-
-			if (this.HasGroupDescriptions)
-			{
-				this.GroupItemsInList ();
-			}
-			else
-			{
-				this.readOnlyGroups = null;
-			}
+			this.dirtyGroups = true;
+			this.dirtySortedList = true;
+			
+			this.RefreshContents ();
 		}
 
 		/// <summary>
@@ -255,6 +255,18 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the refresh operations of this view are deferred.
+		/// </summary>
+		/// <value><c>true</c> if the refresh operations are deferred; otherwise, <c>false</c>.</value>
+		public bool								Deferred
+		{
+			get
+			{
+				return this.deferCounter > 0;
+			}
+		}
+
 		#region INotifyCollectionChanged Members
 
 		public event Support.EventHandler<CollectionChangedEventArgs> CollectionChanged;
@@ -273,6 +285,33 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		protected virtual void OnCurrentChanged()
+		{
+			if (this.CurrentChanged != null)
+			{
+				this.CurrentChanged (this);
+			}
+		}
+
+		protected virtual void OnCurrentChanging(CurrentChangingEventArgs e)
+		{
+			if (this.CurrentChanging != null)
+			{
+				this.CurrentChanging (this, e);
+			}
+		}
+
+		
+		private void HandleGroupDescriptionsCollectionChanged(object sender, CollectionChangedEventArgs e)
+		{
+			this.InvalidateGroups ();
+		}
+
+		private void HandleSortDescriptionsCollectionChanged(object sender, CollectionChangedEventArgs e)
+		{
+			this.InvalidateSortedList ();
+		}
+
 		private void GroupItemsInList()
 		{
 			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.CurrentCulture;
@@ -285,46 +324,29 @@ namespace Epsitec.Common.Types
 
 			foreach (object item in this.sortedList)
 			{
-				CollectionView.ProcessGroup (item, culture, rules, 0, root);
+				CollectionView.ClassifyItemIntoGroups (item, culture, rules, 0, root);
 			}
 
-			this.rootGroup = new CollectionViewGroup (null, null);
-
-			this.PostProcessGroup (root, this.rootGroup);
-
-			this.readOnlyGroups = new Collections.ReadOnlyObservableList<CollectionViewGroup> (this.rootGroup.GetSubgroups ());
+			CollectionView.GenerateSubgroups (root, this.rootGroup);
 		}
 
-		private void PostProcessGroup(GroupNode node, CollectionViewGroup parentGroup)
+		private static void ClassifyItemIntoGroups(object item, System.Globalization.CultureInfo culture, GroupDescription[] rules, int level, GroupNode node)
 		{
-			if (node.HasSubnodes)
-			{
-				foreach (GroupNode subnode in node.Subnodes)
-				{
-					CollectionViewGroup group = new CollectionViewGroup (subnode.Name, parentGroup);
-					this.PostProcessGroup (subnode, group);
-					parentGroup.GetSubgroups ().Add (group);
-				}
-			}
+			//	Apply the specified level in the grouping rules to the item. When
+			//	we reach the last rule, we record the item in the group nodes tree.
 
-			if (node.HasItems)
-			{
-				parentGroup.GetItems ().AddRange (node.Items);
-			}
-		}
-
-		private static void ProcessGroup(object item, System.Globalization.CultureInfo culture, GroupDescription[] rules, int level, GroupNode node)
-		{
 			int nextLevel = level+1;
-			string[] names = rules[level].GetGroupNamesForItem (item, culture);
-
-			foreach (string name in names)
+			
+			//	An item may have one or more grouping names. If an item has more than
+			//	one grouping name, then it will appear within different groups.
+			
+			foreach (string name in rules[level].GetGroupNamesForItem (item, culture))
 			{
 				GroupNode subnode = node.GetSubnode (name);
 
 				if (nextLevel < rules.Length)
 				{
-					CollectionView.ProcessGroup (item, culture, rules, nextLevel, subnode);
+					CollectionView.ClassifyItemIntoGroups (item, culture, rules, nextLevel, subnode);
 				}
 				else
 				{
@@ -333,9 +355,213 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		private static void GenerateSubgroups(GroupNode node, CollectionViewGroup parentGroup)
+		{
+			//	Generate the subgroup collections based on the group node tree.
+
+			parentGroup.ClearSubgroups ();
+			parentGroup.ClearItems ();
+			
+			if (node.HasSubnodes)
+			{
+				List<CollectionViewGroup> groups = new List<CollectionViewGroup> ();
+				
+				foreach (GroupNode subnode in node.Subnodes)
+				{
+					CollectionViewGroup group = new CollectionViewGroup (subnode.Name, parentGroup);
+					CollectionView.GenerateSubgroups (subnode, group);
+					groups.Add (group);
+				}
+
+				//	Add all subgroups in one single insertion in order to avoid
+				//	multiple change events in the parent group.
+				
+				parentGroup.GetSubgroups ().AddRange (groups);
+			}
+
+			if (node.HasItems)
+			{
+				parentGroup.GetItems ().AddRange (node.Items);
+			}
+		}
+
+		private void SortItemsList()
+		{
+			if ((this.sortDescriptions != null) &&
+				(this.itemType != null))
+			{
+				System.Comparison<object>[] comparisons = new System.Comparison<object>[this.sortDescriptions.Count];
+
+				for (int i = 0; i < this.sortDescriptions.Count; i++)
+				{
+					comparisons[i] = CollectionView.CreateComparison (this.itemType, this.sortDescriptions[i]);
+				}
+
+				if (comparisons.Length == 1)
+				{
+					this.sortedList.Sort (comparisons[0]);
+				}
+				else if (comparisons.Length > 1)
+				{
+					this.sortedList.Sort
+						(
+							delegate (object x, object y)
+							{
+								for (int i = 0; i < comparisons.Length; i++)
+								{
+									int result = comparisons[i] (x, y);
+
+									if (result != 0)
+									{
+										return result;
+									}
+								}
+
+								return 0;
+							}
+						);
+				}
+			}
+		}
+
+		private void FillItemsList()
+		{
+			this.itemType = null;
+
+			foreach (object item in this.sourceList)
+			{
+				if (item == null)
+				{
+					throw new System.InvalidOperationException ("Source collection contains null items");
+				}
+				else if ((this.filter == null) || (this.filter (item)))
+				{
+					this.sortedList.Add (item);
+
+					System.Type itemType = item.GetType ();
+
+					if (this.itemType == null)
+					{
+						this.itemType = itemType;
+					}
+					else
+					{
+						if (this.itemType != itemType)
+						{
+							throw new System.InvalidOperationException (string.Format ("Source collection not orthogonal; found type {0} and {1}", this.itemType.Name, itemType.Name));
+						}
+					}
+				}
+			}
+		}
+
+		private void BeginDefer()
+		{
+			System.Threading.Interlocked.Increment (ref this.deferCounter);
+		}
+
+		private void EndDefer()
+		{
+			if (System.Threading.Interlocked.Decrement (ref this.deferCounter) == 0)
+			{
+				this.RefreshContents ();
+			}
+		}
+
+		private void InvalidateSortedList()
+		{
+			this.dirtySortedList = true;
+			this.dirtyGroups = true;
+
+			this.InvalidateRefresh ();
+		}
+
+		private void InvalidateGroups()
+		{
+			this.dirtyGroups = true;
+			this.InvalidateRefresh ();
+		}
+
+		private void InvalidateRefresh()
+		{
+			if (this.deferCounter == 0)
+			{
+				this.RefreshContents ();
+			}
+		}
+
+		private void RefreshContents()
+		{
+			//	TODO: add suspend/resume for all observable collections
+
+			if (this.dirtySortedList)
+			{
+				if ((this.HasFilter) ||
+					(this.HasSortDescriptions))
+				{
+					if (this.sortedList == null)
+					{
+						this.sortedList = new List<object> ();
+					}
+					else
+					{
+						this.sortedList.Clear ();
+					}
+					
+					this.FillItemsList ();
+					this.SortItemsList ();
+				}
+				else
+				{
+					this.sortedList = null;
+				}
+
+				this.dirtySortedList = false;
+			}
+
+			if (this.dirtyGroups)
+			{
+				if (this.HasGroupDescriptions)
+				{
+					this.GroupItemsInList ();
+				}
+				else
+				{
+					this.rootGroup.ClearSubgroups ();
+				}
+				
+				this.dirtyGroups = false;
+			}
+		}
+
+		private static System.Comparison<object> CreateComparison(System.Type type, SortDescription sort)
+		{
+			string propertyName = sort.PropertyName;
+
+			Support.PropertyComparer comparer = Support.DynamicCodeFactory.CreatePropertyComparer (type, propertyName);
+
+			switch (sort.Direction)
+			{
+				case ListSortDirection.Ascending:
+					return delegate (object x, object y)
+					{
+						return comparer (x, y);
+					};
+
+				case ListSortDirection.Descending:
+					return delegate (object x, object y)
+					{
+						return -comparer (x, y);
+					};
+			}
+
+			throw new System.ArgumentException ("Invalid sort direction");
+		}
+
+
 		#region GroupNode Class
 
-		private class GroupNode
+		private sealed class GroupNode
 		{
 			public GroupNode(string name)
 			{
@@ -432,120 +658,41 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
-		private void SortItemsList()
+		#region DeferManager Class
+
+		private sealed class DeferManager : System.IDisposable
 		{
-			if ((this.sortDescriptions != null) &&
-				(this.itemType != null))
+			public DeferManager(CollectionView view)
 			{
-				System.Comparison<object>[] comparisons = new System.Comparison<object>[this.sortDescriptions.Count];
-
-				for (int i = 0; i < this.sortDescriptions.Count; i++)
-				{
-					comparisons[i] = CollectionView.CreateComparison (this.itemType, this.sortDescriptions[i]);
-				}
-
-				if (comparisons.Length == 1)
-				{
-					this.sortedList.Sort (comparisons[0]);
-				}
-				else if (comparisons.Length > 1)
-				{
-					this.sortedList.Sort
-						(
-							delegate (object x, object y)
-							{
-								for (int i = 0; i < comparisons.Length; i++)
-								{
-									int result = comparisons[i] (x, y);
-
-									if (result != 0)
-									{
-										return result;
-									}
-								}
-
-								return 0;
-							}
-						);
-				}
-			}
-		}
-
-		private void FillItemsList()
-		{
-			this.itemType = null;
-
-			foreach (object item in this.sourceList)
-			{
-				if (item == null)
-				{
-					throw new System.InvalidOperationException ("Source collection contains null items");
-				}
-				else if ((this.filter == null) || (this.filter (item)))
-				{
-					this.sortedList.Add (item);
-
-					System.Type itemType = item.GetType ();
-
-					if (this.itemType == null)
-					{
-						this.itemType = itemType;
-					}
-					else
-					{
-						if (this.itemType != itemType)
-						{
-							throw new System.InvalidOperationException (string.Format ("Source collection not orthogonal; found type {0} and {1}", this.itemType.Name, itemType.Name));
-						}
-					}
-				}
-			}
-		}
-
-		private static System.Comparison<object> CreateComparison(System.Type type, SortDescription sort)
-		{
-			string propertyName = sort.PropertyName;
-
-			Support.PropertyComparer comparer = Support.DynamicCodeFactory.CreatePropertyComparer (type, propertyName);
-
-			switch (sort.Direction)
-			{
-				case ListSortDirection.Ascending:
-					return delegate (object x, object y)
-					{
-						return comparer (x, y);
-					};
-
-				case ListSortDirection.Descending:
-					return delegate (object x, object y)
-					{
-						return -comparer (x, y);
-					};
+				this.view = view;
+				this.view.BeginDefer ();
 			}
 
-			throw new System.ArgumentException ("Invalid sort direction");
+			#region IDisposable Members
+
+			void System.IDisposable.Dispose()
+			{
+				if (this.view != null)
+				{
+					CollectionView view = this.view;
+					this.view = null;
+					this.view.EndDefer ();
+				}
+			}
+
+			#endregion
+
+			private CollectionView view;
 		}
 
-		protected virtual void OnCurrentChanged()
-		{
-			if (this.CurrentChanged != null)
-			{
-				this.CurrentChanged (this);
-			}
-		}
-
-		protected virtual void OnCurrentChanging(CurrentChangingEventArgs e)
-		{
-			if (this.CurrentChanging != null)
-			{
-				this.CurrentChanging (this, e);
-			}
-		}
-		
+		#endregion
 		
 		private System.Collections.IList		sourceList;
 		private List<object>					sortedList;
 		private System.Type						itemType;
+		private bool							dirtyGroups;
+		private bool							dirtySortedList;
+		private int								deferCounter;
 		private int								currentPosition;
 		private object							currentItem;
 		private CollectionViewGroup				rootGroup;
