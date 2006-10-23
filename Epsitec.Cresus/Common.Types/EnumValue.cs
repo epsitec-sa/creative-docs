@@ -247,8 +247,8 @@ namespace Epsitec.Common.Types
 				//	We need to know the resource manager which is used for the
 				//	deserialization, so that we can properly map the DRUIDs to
 				//	their associated captions when working within the Designer :
-				
-				Support.ResourceManager manager = context == null ? null : context.ExternalMap.GetValue (Serialization.Context.WellKnownTagResourceManager) as Support.ResourceManager;
+
+				Support.ResourceManager manager = Serialization.Context.GetResourceManager (context);
 
 				if (manager == null)
 				{
