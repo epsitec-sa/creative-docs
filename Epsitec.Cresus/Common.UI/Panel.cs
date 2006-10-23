@@ -25,7 +25,7 @@ namespace Epsitec.Common.UI
 		/// Gets or sets the data source.
 		/// </summary>
 		/// <value>The data source.</value>
-		public DataSourceCollection DataSource
+		public DataSource DataSource
 		{
 			get
 			{
@@ -72,13 +72,13 @@ namespace Epsitec.Common.UI
 		/// <param name="context">The serialization context.</param>
 		/// <param name="dataSource">The data source.</param>
 		/// <param name="resourceManager">The resource manager.</param>
-		public static void FillSerializationContext(Types.Serialization.Context context, DataSourceCollection dataSource, Support.ResourceManager resourceManager)
+		public static void FillSerializationContext(Types.Serialization.Context context, DataSource dataSource, Support.ResourceManager resourceManager)
 		{
 			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagDataSource, dataSource);
 			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagResourceManager, resourceManager);
 		}
 
 		
-		private DataSourceCollection dataSource;
+		private DataSource dataSource;
 	}
 }
