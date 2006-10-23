@@ -97,11 +97,13 @@ namespace Epsitec.Common.Types
 
 			public object ConvertFromString(string value, IContextResolver context)
 			{
+				Support.ResourceManager manager = Serialization.Context.GetResourceManager (context);
+				
 				string[] args = value.Split (';');
 				
 				string        name      = args[0];
 				Support.Druid druid     = Support.Druid.Parse (args[1]);
-				INamedType    type      = TypeRosetta.GetTypeObject (druid);
+				INamedType    type      = manager == null ? TypeRosetta.GetTypeObject (druid) : TypeRosetta.GetTypeObject (manager.GetCaption (druid));
 				Support.Druid captionId = args.Length < 3 ? Support.Druid.Empty : Support.Druid.Parse (args[2]);
 				
 				return new StructuredTypeField (name, type, captionId);

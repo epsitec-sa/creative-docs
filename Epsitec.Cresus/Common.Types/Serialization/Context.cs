@@ -327,6 +327,18 @@ namespace Epsitec.Common.Types.Serialization
 			
 			return null;
 		}
+
+		public static Support.ResourceManager GetResourceManager(IContextResolver context)
+		{
+			if (context == null)
+			{
+				return null;
+			}
+			else
+			{
+				return context.ExternalMap.GetValue (Serialization.Context.WellKnownTagResourceManager) as Support.ResourceManager;
+			}
+		}
 		
 		public static string IdToString(int id)
 		{
