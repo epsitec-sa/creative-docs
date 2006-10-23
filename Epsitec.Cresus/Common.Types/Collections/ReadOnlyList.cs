@@ -10,7 +10,7 @@ namespace Epsitec.Common.Types.Collections
 	/// implementing <see cref="System.Collections.Generic.IList"/>.
 	/// </summary>
 	/// <typeparam name="T">The manipulated data type.</typeparam>
-	public class ReadOnlyList<T> : IList<T>, System.Collections.ICollection
+	public class ReadOnlyList<T> : IList<T>, System.Collections.ICollection, System.Collections.IList
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ReadOnlyList&lt;T&gt;"/> class.
@@ -39,12 +39,12 @@ namespace Epsitec.Common.Types.Collections
 
 		void IList<T>.Insert(int index, T item)
 		{
-			throw new System.NotSupportedException ();
+			throw new System.InvalidOperationException ();
 		}
 
 		void IList<T>.RemoveAt(int index)
 		{
-			throw new System.NotSupportedException ();
+			throw new System.InvalidOperationException ();
 		}
 
 		public T this[int index]
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Types.Collections
 			}
 			set
 			{
-				throw new System.NotSupportedException ();
+				throw new System.InvalidOperationException ();
 			}
 		}
 
@@ -65,12 +65,12 @@ namespace Epsitec.Common.Types.Collections
 
 		void ICollection<T>.Add(T item)
 		{
-			throw new System.NotSupportedException ();
+			throw new System.InvalidOperationException ();
 		}
 
 		void ICollection<T>.Clear()
 		{
-			throw new System.NotSupportedException ();
+			throw new System.InvalidOperationException ();
 		}
 
 		public bool Contains(T item)
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Types.Collections
 
 		bool ICollection<T>.Remove(T item)
 		{
-			throw new System.NotSupportedException ();
+			throw new System.InvalidOperationException ();
 		}
 
 		#endregion
@@ -155,6 +155,73 @@ namespace Epsitec.Common.Types.Collections
 			get
 			{
 				return this.list;
+			}
+		}
+
+		#endregion
+
+		#region IList Members
+
+		int System.Collections.IList.Add(object value)
+		{
+			throw new System.InvalidOperationException ();
+		}
+
+		void System.Collections.IList.Clear()
+		{
+			throw new System.InvalidOperationException ();
+		}
+
+		bool System.Collections.IList.Contains(object value)
+		{
+			return this.Contains ((T) value);
+		}
+
+		int System.Collections.IList.IndexOf(object value)
+		{
+			return this.IndexOf ((T) value);
+		}
+
+		void System.Collections.IList.Insert(int index, object value)
+		{
+			throw new System.InvalidOperationException ();
+		}
+
+		bool System.Collections.IList.IsFixedSize
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		bool System.Collections.IList.IsReadOnly
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		void System.Collections.IList.Remove(object value)
+		{
+			throw new System.InvalidOperationException ();
+		}
+
+		void System.Collections.IList.RemoveAt(int index)
+		{
+			throw new System.InvalidOperationException ();
+		}
+
+		object System.Collections.IList.this[int index]
+		{
+			get
+			{
+				return this[index];
+			}
+			set
+			{
+				throw new System.InvalidOperationException ();
 			}
 		}
 

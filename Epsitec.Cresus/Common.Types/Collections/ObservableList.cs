@@ -11,7 +11,7 @@ namespace Epsitec.Common.Types.Collections
 	/// refreshed.
 	/// </summary>
 	/// <typeparam name="T">The manipulated data type.</typeparam>
-	public class ObservableList<T> : IList<T>, INotifyCollectionChanged, System.Collections.ICollection
+	public class ObservableList<T> : IList<T>, INotifyCollectionChanged, System.Collections.ICollection, System.Collections.IList
 	{
 		public ObservableList()
 		{
@@ -211,6 +211,75 @@ namespace Epsitec.Common.Types.Collections
 		}
 
 		#endregion
+
+		#region IList Members
+
+		int System.Collections.IList.Add(object value)
+		{
+			this.Add ((T) value);
+			return this.Count-1;
+		}
+
+		void System.Collections.IList.Clear()
+		{
+			this.Clear ();
+		}
+
+		bool System.Collections.IList.Contains(object value)
+		{
+			return this.Contains ((T) value);
+		}
+
+		int System.Collections.IList.IndexOf(object value)
+		{
+			return this.IndexOf ((T) value);
+		}
+
+		void System.Collections.IList.Insert(int index, object value)
+		{
+			this.Insert (index, (T) value);
+		}
+
+		bool System.Collections.IList.IsFixedSize
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		bool System.Collections.IList.IsReadOnly
+		{
+			get
+			{
+				return this.IsReadOnly;
+			}
+		}
+
+		void System.Collections.IList.Remove(object value)
+		{
+			this.Remove ((T) value);
+		}
+
+		void System.Collections.IList.RemoveAt(int index)
+		{
+			this.RemoveAt (index);
+		}
+
+		object System.Collections.IList.this[int index]
+		{
+			get
+			{
+				return this[index];
+			}
+			set
+			{
+				this[index] = (T) value;
+			}
+		}
+
+		#endregion
+
 
 		protected virtual void NotifyBeforeChange()
 		{
