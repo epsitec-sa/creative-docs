@@ -22,10 +22,10 @@ namespace Epsitec.Common.UI
 		}
 
 		/// <summary>
-		/// Gets or sets the data source.
+		/// Gets or sets the <see cref="DataSource"/> used as the root data context.
 		/// </summary>
 		/// <value>The data source.</value>
-		public DataSource DataSource
+		public DataSource						DataSource
 		{
 			get
 			{
@@ -51,10 +51,27 @@ namespace Epsitec.Common.UI
 		}
 
 		/// <summary>
+		/// Gets the metadata associated with the <see cref="DataSource"/>.
+		/// </summary>
+		/// <value>The metadata associated with the data source.</value>
+		public DataSourceMetadata				DataSourceMetadata
+		{
+			get
+			{
+				if (this.dataSourceMetadata == null)
+				{
+					this.dataSourceMetadata = new DataSourceMetadata ();
+				}
+				
+				return this.dataSourceMetadata;
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the associated resource manager.
 		/// </summary>
 		/// <value>The resource manager.</value>
-		public Support.ResourceManager ResourceManager
+		public Support.ResourceManager			ResourceManager
 		{
 			get
 			{
@@ -78,7 +95,21 @@ namespace Epsitec.Common.UI
 			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagResourceManager, resourceManager);
 		}
 
+		private static object GetDataSourceMetadataValue(DependencyObject obj)
+		{
+			Panel panel = (Panel) obj;
+			return panel.DataSourceMetadata;
+		}
+
+		private static void SetDataSourceMetadataValue(DependencyObject obj, object value)
+		{
+			Panel panel = (Panel) obj;
+			panel.dataSourceMetadata = (DataSourceMetadata) value;
+		}
+
+		public static DependencyProperty DataSourceMetadataProperty = DependencyProperty.RegisterReadOnly ("DataSourceMetadata", typeof (DataSourceMetadata), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDataSourceMetadataValue, Panel.SetDataSourceMetadataValue).MakeReadOnlySerializable ());
 		
 		private DataSource dataSource;
+		private DataSourceMetadata dataSourceMetadata;
 	}
 }

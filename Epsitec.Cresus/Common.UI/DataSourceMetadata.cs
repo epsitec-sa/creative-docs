@@ -10,13 +10,24 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.UI
 {
+	/// <summary>
+	/// The <c>DataSourceMetadata</c> class describes the fields found in the data source
+	/// attached to a <see cref="Panel"/>.
+	/// </summary>
 	public class DataSourceMetadata : DependencyObject
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DataSourceMetadata"/> class.
+		/// </summary>
 		public DataSourceMetadata()
 		{
 		}
 
-
+		/// <summary>
+		/// Gets the structured type field collection; every field has a one-to-one
+		/// mapping with the fields found in the panel's <see cref="DataSource"/>.
+		/// </summary>
+		/// <value>The structured type field collection.</value>
 		public IList<StructuredTypeField> Fields
 		{
 			get
@@ -29,7 +40,6 @@ namespace Epsitec.Common.UI
 				return this.fields;
 			}
 		}
-		
 		
 		private static object GetFieldsValue(DependencyObject obj)
 		{
