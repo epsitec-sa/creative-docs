@@ -72,7 +72,7 @@ namespace Epsitec.Common.Widgets
 				this.data.DetachListener (name, handler);
 			}
 
-			string[] IStructuredData.GetValueNames()
+			IEnumerable<string> IStructuredData.GetValueNames()
 			{
 				return this.data.GetValueNames ();
 			}

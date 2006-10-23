@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using NUnit.Framework;
+
 using System.Collections.Generic;
 using Epsitec.Common.Support;
 
@@ -268,9 +269,9 @@ namespace Epsitec.Common.Types
 				throw new System.Exception ("The method or operation is not implemented.");
 			}
 
-			public string[] GetValueNames()
+			public IEnumerable<string> GetValueNames()
 			{
-				return new string[] { "Self" };
+				yield return "Self";
 			}
 
 			public object GetValue(string name)

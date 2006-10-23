@@ -107,7 +107,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public string[] GetValueNames()
+		public IEnumerable<string> GetValueNames()
 		{
 			//	TODO: rename to GetValueIds ?
 			
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Types
 			{
 				if (this.values == null)
 				{
-					return new string[0];
+					return Collections.EmptyEnumerable<string>.Instance;
 				}
 				else
 				{
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				return Collection.ToArray (this.type.GetFieldIds ());
+				return this.type.GetFieldIds ();
 			}
 		}
 

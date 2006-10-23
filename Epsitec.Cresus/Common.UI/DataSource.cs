@@ -28,7 +28,7 @@ namespace Epsitec.Common.UI
 		/// <param name="source">The data source.</param>
 		public void AddDataSource(string name, IStructuredData source)
 		{
-			this.AddDataSource (name, source, Support.Druid.Empty);
+			this.AddDataSource (name, source, Druid.Empty);
 		}
 
 		/// <summary>
@@ -37,7 +37,7 @@ namespace Epsitec.Common.UI
 		/// <param name="name">The name of the data source.</param>
 		/// <param name="source">The data source.</param>
 		/// <param name="captionId">The caption DRUID for the data source.</param>
-		public void AddDataSource(string name, IStructuredData source, Support.Druid captionId)
+		public void AddDataSource(string name, IStructuredData source, Druid captionId)
 		{
 			if (this.Contains (name))
 			{
@@ -115,7 +115,7 @@ namespace Epsitec.Common.UI
 
 		#region IStructuredData Members
 
-		public void AttachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+		public void AttachListener(string name, EventHandler<DependencyPropertyChangedEventArgs> handler)
 		{
 			ItemRecord record = this.GetItemRecord (name);
 			IStructuredData data = record.Data;
@@ -128,7 +128,7 @@ namespace Epsitec.Common.UI
 			//	Immutable roots...
 		}
 
-		public void DetachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+		public void DetachListener(string name, EventHandler<DependencyPropertyChangedEventArgs> handler)
 		{
 			ItemRecord record = this.GetItemRecord (name);
 			IStructuredData data = record.Data;
@@ -141,18 +141,9 @@ namespace Epsitec.Common.UI
 			//	Immutable roots...
 		}
 
-		public string[] GetValueNames()
+		IEnumerable<string> IStructuredData.GetValueNames()
 		{
-			string[] names = new string[this.items.Count];
-
-			for (int i = 0; i < this.items.Count; i++)
-			{
-				names[i] = this.items[i].Name;
-			}
-
-			System.Array.Sort (names);
-
-			return names;
+			return this.GetFieldIds ();
 		}
 		
 		object IStructuredData.GetValue(string name)
@@ -205,7 +196,7 @@ namespace Epsitec.Common.UI
 			/// </summary>
 			/// <param name="name">The name of the item.</param>
 			/// <param name="data">The data of the item.</param>
-			public ItemRecord(string name, IStructuredData data, Support.Druid captionId)
+			public ItemRecord(string name, IStructuredData data, Druid captionId)
 			{
 				this.data = data;
 				this.name = name;
@@ -240,7 +231,7 @@ namespace Epsitec.Common.UI
 			/// Gets or sets the caption DRUID of the datasource.
 			/// </summary>
 			/// <value>The caption DRUID of the datasource.</value>
-			public Support.Druid				CaptionId
+			public Druid						CaptionId
 			{
 				get
 				{
@@ -267,7 +258,7 @@ namespace Epsitec.Common.UI
 
 			private IStructuredData				data;
 			private string						name;
-			private Support.Druid				captionId;
+			private Druid						captionId;
 		}
 		
 		#endregion

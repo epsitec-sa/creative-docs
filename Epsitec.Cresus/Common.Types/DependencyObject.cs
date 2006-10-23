@@ -1161,7 +1161,7 @@ namespace Epsitec.Common.Types
 			this.RemoveEventHandler (property, handler);
 		}
 
-		string[] IStructuredData.GetValueNames()
+		IEnumerable<string> IStructuredData.GetValueNames()
 		{
 			List<string> names = new List<string> ();
 			
@@ -1170,7 +1170,7 @@ namespace Epsitec.Common.Types
 				names.Add (property.Name);
 			}
 
-			return names.ToArray ();
+			return names;
 		}
 
 		object IStructuredData.GetValue(string name)
