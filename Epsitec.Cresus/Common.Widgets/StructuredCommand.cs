@@ -16,35 +16,28 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
-#if false
-		public void AddField(string name, INamedType type)
-		{
-			this.type.AddField (name, type);
-		}
-#endif
-
-		public static void SetFieldValue(CommandState commandState, string name, object value)
+		public static void SetFieldValue(CommandState commandState, string id, object value)
 		{
 			StructuredState state = commandState as StructuredState;
 			IStructuredData data = state as IStructuredData;
 
 			System.Diagnostics.Debug.Assert (state != null);
 			System.Diagnostics.Debug.Assert (data != null);
-			System.Diagnostics.Debug.Assert (name != null);
+			System.Diagnostics.Debug.Assert (id != null);
 
-			data.SetValue (name, value);
+			data.SetValue (id, value);
 		}
 
-		public static object GetFieldValue(CommandState commandState, string name)
+		public static object GetFieldValue(CommandState commandState, string id)
 		{
 			StructuredState state = commandState as StructuredState;
 			IStructuredData data = state as IStructuredData;
 
 			System.Diagnostics.Debug.Assert (state != null);
 			System.Diagnostics.Debug.Assert (data != null);
-			System.Diagnostics.Debug.Assert (name != null);
+			System.Diagnostics.Debug.Assert (id != null);
 
-			return data.GetValue (name);
+			return data.GetValue (id);
 		}
 	
 		internal class StructuredState : CommandState, IStructuredData
@@ -62,29 +55,29 @@ namespace Epsitec.Common.Widgets
 
 			#region IStructuredData Members
 
-			void IStructuredData.AttachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+			void IStructuredData.AttachListener(string id, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 			{
-				this.data.AttachListener (name, handler);
+				this.data.AttachListener (id, handler);
 			}
 
-			void IStructuredData.DetachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+			void IStructuredData.DetachListener(string id, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 			{
-				this.data.DetachListener (name, handler);
+				this.data.DetachListener (id, handler);
 			}
 
-			IEnumerable<string> IStructuredData.GetValueNames()
+			IEnumerable<string> IStructuredData.GetValueIds()
 			{
-				return this.data.GetValueNames ();
+				return this.data.GetValueIds ();
 			}
 
-			object IStructuredData.GetValue(string name)
+			object IStructuredData.GetValue(string id)
 			{
-				return this.data.GetValue (name);
+				return this.data.GetValue (id);
 			}
 
-			void IStructuredData.SetValue(string name, object value)
+			void IStructuredData.SetValue(string id, object value)
 			{
-				this.data.SetValue (name, value);
+				this.data.SetValue (id, value);
 			}
 
 			#endregion

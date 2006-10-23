@@ -13,13 +13,13 @@ namespace Epsitec.Common.Types
 		{
 			StructuredData data = new StructuredData ();
 
-			Assert.AreEqual (0, Collection.Count (data.GetValueNames ()));
+			Assert.AreEqual (0, Collection.Count (data.GetValueIds ()));
 			Assert.AreEqual (0, Collection.Count (data.StructuredType.GetFieldIds ()));
 
 			data.SetValue ("A", 10);
 			data.SetValue ("B", 20);
 
-			Assert.AreEqual (2, Collection.Count (data.GetValueNames ()));
+			Assert.AreEqual (2, Collection.Count (data.GetValueIds ()));
 			Assert.AreEqual (2, Collection.Count (data.StructuredType.GetFieldIds ()));
 
 			Assert.AreEqual ("A", Collection.Extract (data.StructuredType.GetFieldIds (), 0));
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Types
 			
 			data.SetValue ("A", UndefinedValue.Instance);
 
-			Assert.AreEqual (1, Collection.Count (data.GetValueNames ()));
+			Assert.AreEqual (1, Collection.Count (data.GetValueIds ()));
 			Assert.AreEqual (1, Collection.Count (data.StructuredType.GetFieldIds ()));
 
 			Assert.AreEqual ("B", Collection.Extract (data.StructuredType.GetFieldIds (), 0));
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Types
 			type.Fields.Add ("A", new IntegerType (0, 100));
 			type.Fields.Add ("B", new IntegerType (0, 100));
 
-			Assert.AreEqual (2, Collection.Count (data.GetValueNames ()));
+			Assert.AreEqual (2, Collection.Count (data.GetValueIds ()));
 			Assert.AreEqual (2, Collection.Count (data.StructuredType.GetFieldIds ()));
 
 			Assert.AreEqual ("A", Collection.Extract (data.StructuredType.GetFieldIds (), 0));

@@ -233,7 +233,7 @@ namespace Epsitec.Common.UI
 				throw new System.Exception ("The method or operation is not implemented.");
 			}
 
-			public IEnumerable<string> GetValueNames()
+			public IEnumerable<string> GetValueIds()
 			{
 				string[] names = new string[this.data.Keys.Count];
 				this.data.Keys.CopyTo (names, 0);

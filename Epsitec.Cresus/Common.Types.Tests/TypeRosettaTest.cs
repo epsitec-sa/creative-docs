@@ -259,24 +259,24 @@ namespace Epsitec.Common.Types
 		{
 			#region IStructuredData Members
 
-			public void AttachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+			public void AttachListener(string id, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 			{
 				throw new System.Exception ("The method or operation is not implemented.");
 			}
 
-			public void DetachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+			public void DetachListener(string id, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 			{
 				throw new System.Exception ("The method or operation is not implemented.");
 			}
 
-			public IEnumerable<string> GetValueNames()
+			public IEnumerable<string> GetValueIds()
 			{
 				yield return "Self";
 			}
 
-			public object GetValue(string name)
+			public object GetValue(string id)
 			{
-				if (name == "Self")
+				if (id == "Self")
 				{
 					return this;
 				}
@@ -284,7 +284,7 @@ namespace Epsitec.Common.Types
 				throw new System.ArgumentException ();
 			}
 
-			public void SetValue(string name, object value)
+			public void SetValue(string id, object value)
 			{
 				throw new System.Exception ("The method or operation is not implemented.");
 			}

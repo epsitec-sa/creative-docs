@@ -8,7 +8,7 @@ namespace Epsitec.Common.Types
 	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
 	
 	/// <summary>
-	/// The <c>IStructuredData</c> interface provides a <see cref="T:Binding"/>
+	/// The <c>IStructuredData</c> interface provides a <see cref="Binding"/>
 	/// compatible way of accessing structured data (i.e. records, graphs, etc.)
 	/// </summary>
 	public interface IStructuredData
@@ -16,37 +16,37 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Attaches a listener to the specified structured value.
 		/// </summary>
-		/// <param name="name">The name of the value.</param>
+		/// <param name="id">The identifier of the value.</param>
 		/// <param name="handler">The handler which implements the listener.</param>
-		void AttachListener(string name, PropertyChangedEventHandler handler);
+		void AttachListener(string id, PropertyChangedEventHandler handler);
 
 		/// <summary>
 		/// Detaches a listener from the specified structured value.
 		/// </summary>
-		/// <param name="name">The name of the value.</param>
+		/// <param name="id">The identifier of the value.</param>
 		/// <param name="handler">The handler which implements the listener.</param>
-		void DetachListener(string name, PropertyChangedEventHandler handler);
+		void DetachListener(string id, PropertyChangedEventHandler handler);
 
 		/// <summary>
-		/// Gets the collection of the names used to define the structured values.
+		/// Gets the collection of identifiers used to define the structured values.
 		/// </summary>
-		/// <returns>The collection of names.</returns>
-		IEnumerable<string> GetValueNames();
+		/// <returns>The collection of identifiers.</returns>
+		IEnumerable<string> GetValueIds();
 
 		/// <summary>
-		/// Gets the structured value with the specified name.
+		/// Gets the structured value with the specified identifier.
 		/// </summary>
-		/// <param name="name">The name of the value.</param>
-		/// <returns>The value, or <see cref="T:UndefinedValue.Instance"/> if no
+		/// <param name="id">The identifier of the value.</param>
+		/// <returns>The value, or <see cref="UndefinedValue.Instance"/> if no
 		/// value exists in the structured data record.</returns>
-		object GetValue(string name);
+		object GetValue(string id);
 
 		/// <summary>
 		/// Sets the structured value.
 		/// </summary>
-		/// <param name="name">The name of the value.</param>
+		/// <param name="id">The identifier of the value.</param>
 		/// <param name="value">The value to store into the structure record;
-		/// specifying <see cref="T:UndefinedValue.Instance"/> clears the value.</param>
-		void SetValue(string name, object value);
+		/// specifying <see cref="UndefinedValue.Instance"/> clears the value.</param>
+		void SetValue(string id, object value);
 	}
 }

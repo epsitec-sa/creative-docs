@@ -37,7 +37,7 @@ namespace Epsitec.Common.Types
 
 		public IEnumerable<string> GetFieldIds()
 		{
-			return this.data.GetValueNames ();
+			return this.data.GetValueIds ();
 		}
 
 		#endregion
