@@ -56,6 +56,8 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
+				TypeRosetta.InitializeKnownTypes ();
+
 				if (LongIntegerType.defaultValue == null)
 				{
 					LongIntegerType.defaultValue = (LongIntegerType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1007]"));

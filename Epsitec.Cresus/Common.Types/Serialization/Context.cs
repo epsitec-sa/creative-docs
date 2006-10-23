@@ -106,7 +106,7 @@ namespace Epsitec.Common.Types.Serialization
 
 			if (type == null)
 			{
-				throw new System.ArgumentException (string.Format ("Type {0} cannot be resolved", name));
+				throw new System.ArgumentException (string.Format ("Type {0} cannot be resolved. Did you forget the [assembly: Epsitec.Common.Types.DependencyClass] attribute on the specified class?", name));
 			}
 
 			this.typeIds[type.SystemType] = id;

@@ -100,6 +100,8 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
+				TypeRosetta.InitializeKnownTypes ();
+
 				if (StringType.defaultValue == null)
 				{
 					StringType.defaultValue = (StringType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1008]"));

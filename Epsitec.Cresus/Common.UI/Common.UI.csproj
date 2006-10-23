@@ -112,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataSource.cs" />
+    <Compile Include="DataSourceMetadata.cs" />
     <Compile Include="ObsoleteAbstractPanel.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>

@@ -51,6 +51,8 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
+				TypeRosetta.InitializeKnownTypes ();
+				
 				if (BooleanType.defaultValue == null)
 				{
 					BooleanType.defaultValue = (BooleanType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1003]"));

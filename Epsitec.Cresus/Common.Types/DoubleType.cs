@@ -64,6 +64,8 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
+				TypeRosetta.InitializeKnownTypes ();
+
 				if (DoubleType.defaultValue == null)
 				{
 					DoubleType.defaultValue = (DoubleType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[1005]"));
