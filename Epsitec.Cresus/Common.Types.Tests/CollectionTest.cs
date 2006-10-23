@@ -10,6 +10,35 @@ namespace Epsitec.Common.Types
 	public class CollectionTest
 	{
 		[Test]
+		public void CheckCollectionViewAutoUpdate()
+		{
+			List<Record> source1;
+			Collections.ObservableList<Record> source2;
+			
+			CollectionView view;
+			
+			source1 = new List<Record> ();
+			view    = new CollectionView (source1);
+
+			Assert.AreEqual (0, view.Count);
+
+			CollectionTest.AddRecords (source1);
+
+			Assert.AreEqual (0, view.Count);
+			Assert.AreEqual (6, view.Items.Count);
+			
+			source2 = new Collections.ObservableList<Record> ();
+			view    = new CollectionView (source2);
+
+			Assert.AreEqual (0, view.Count);
+			
+			CollectionTest.AddRecords (source2);
+
+			Assert.AreEqual (6, view.Count);
+			Assert.AreEqual (6, view.Items.Count);
+		}
+
+		[Test]
 		public void CheckCollectionViewCurrentItem()
 		{
 			List<Record> source = new List<Record> ();
@@ -17,62 +46,7 @@ namespace Epsitec.Common.Types
 
 			CollectionTest.AddRecords (source);
 
-			
-		}
 
-		[Test]
-		public void CheckPropertyGroupDescription()
-		{
-			PropertyGroupDescription group = new PropertyGroupDescription ();
-
-			group.PropertyName = null;
-			group.Converter = Converters.AutomaticValueConverter.Instance;
-
-			//	Convert simple types to string
-			
-			Assert.AreEqual ("1.1", string.Join (":", group.GetGroupNamesForItem (1.1, System.Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag ("en-US"))));
-			Assert.AreEqual ("1,1", string.Join (":", group.GetGroupNamesForItem (1.1, System.Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag ("fr-FR"))));
-
-			Assert.AreEqual (0, group.GetGroupNamesForItem (null, System.Globalization.CultureInfo.InvariantCulture).Length);
-			
-			//	Convert DependencyObject to string
-			
-			MyItem item = new MyItem ("X");
-
-			//	Automatic converter, no property :
-
-			Assert.AreEqual (1, group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture).Length);
-			Assert.AreEqual ("MyItem=X", string.Join (":", group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture)));
-
-			//	No converter, no property :
-			
-			group.Converter = null;
-
-			Assert.AreEqual (1, group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture).Length);
-			Assert.AreEqual ("Epsitec.Common.Types.CollectionTest+MyItem", string.Join (":", group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture)));
-
-			//	Property, no converter :
-			
-			group.PropertyName = "Name";
-			
-			Assert.AreEqual (1, group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture).Length);
-			Assert.AreEqual ("X", string.Join (":", group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture)));
-
-			Assert.AreEqual (System.StringComparison.Ordinal, group.StringComparison);
-
-			Assert.IsTrue (group.NamesMatch ("A", "A"));
-			Assert.IsFalse (group.NamesMatch ("A", "a"));
-
-			group.StringComparison = System.StringComparison.InvariantCultureIgnoreCase;
-			
-			Assert.IsTrue (group.NamesMatch ("A", "a"));
-
-			Record record = new Record ("Computer", 1, 1234.50M, Category.ElectronicEquipment);
-
-			group.PropertyName = "Category";
-
-			Assert.AreEqual (1, group.GetGroupNamesForItem (record, System.Globalization.CultureInfo.InvariantCulture).Length);
-			Assert.AreEqual ("ElectronicEquipment", string.Join (":", group.GetGroupNamesForItem (record, System.Globalization.CultureInfo.InvariantCulture)));
 		}
 
 		[Test]
@@ -269,6 +243,61 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckPropertyGroupDescription()
+		{
+			PropertyGroupDescription group = new PropertyGroupDescription ();
+
+			group.PropertyName = null;
+			group.Converter = Converters.AutomaticValueConverter.Instance;
+
+			//	Convert simple types to string
+
+			Assert.AreEqual ("1.1", string.Join (":", group.GetGroupNamesForItem (1.1, System.Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag ("en-US"))));
+			Assert.AreEqual ("1,1", string.Join (":", group.GetGroupNamesForItem (1.1, System.Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag ("fr-FR"))));
+
+			Assert.AreEqual (0, group.GetGroupNamesForItem (null, System.Globalization.CultureInfo.InvariantCulture).Length);
+
+			//	Convert DependencyObject to string
+
+			MyItem item = new MyItem ("X");
+
+			//	Automatic converter, no property :
+
+			Assert.AreEqual (1, group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture).Length);
+			Assert.AreEqual ("MyItem=X", string.Join (":", group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture)));
+
+			//	No converter, no property :
+
+			group.Converter = null;
+
+			Assert.AreEqual (1, group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture).Length);
+			Assert.AreEqual ("Epsitec.Common.Types.CollectionTest+MyItem", string.Join (":", group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture)));
+
+			//	Property, no converter :
+
+			group.PropertyName = "Name";
+
+			Assert.AreEqual (1, group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture).Length);
+			Assert.AreEqual ("X", string.Join (":", group.GetGroupNamesForItem (item, System.Globalization.CultureInfo.InvariantCulture)));
+
+			Assert.AreEqual (System.StringComparison.Ordinal, group.StringComparison);
+
+			Assert.IsTrue (group.NamesMatch ("A", "A"));
+			Assert.IsFalse (group.NamesMatch ("A", "a"));
+
+			group.StringComparison = System.StringComparison.InvariantCultureIgnoreCase;
+
+			Assert.IsTrue (group.NamesMatch ("A", "a"));
+
+			Record record = new Record ("Computer", 1, 1234.50M, Category.ElectronicEquipment);
+
+			group.PropertyName = "Category";
+
+			Assert.AreEqual (1, group.GetGroupNamesForItem (record, System.Globalization.CultureInfo.InvariantCulture).Length);
+			Assert.AreEqual ("ElectronicEquipment", string.Join (":", group.GetGroupNamesForItem (record, System.Globalization.CultureInfo.InvariantCulture)));
+		}
+
+		[Test]
 		public void CheckSortDescription()
 		{
 			SortDescription sort1 = new SortDescription (ListSortDirection.Ascending, "x");
@@ -288,7 +317,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (sort2, conv.ConvertFromString ("D;y", null));
 		}
 
-		private static void AddRecords(List<Record> source)
+		private static void AddRecords(IList<Record> source)
 		{
 			source.Add (new Record ("Vis M3", 10, 0.15M, Category.Part));
 			source.Add (new Record ("Ecrou M3", 19, 0.10M, Category.Part));
