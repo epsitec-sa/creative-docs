@@ -35,7 +35,7 @@ namespace Epsitec.Common.Document
 			return GlobalImageCache.dico.ContainsKey(filename);
 		}
 
-		public static Item Add(string filename, string zipFilename, string zipShortName, byte[] data)
+		public static Item Add(string filename, string zipFilename, string zipShortName, byte[] data, System.DateTime date)
 		{
 			//	Ajoute une nouvelle image dans le cache.
 			//	Si les données 'data' n'existent pas, l'image est lue sur disque.
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				Item item = new Item(filename, zipFilename, zipShortName, data);
+				Item item = new Item(filename, zipFilename, zipShortName, data, date);
 				if (item.IsData)
 				{
 					GlobalImageCache.dico.Add(filename, item);
@@ -151,20 +151,31 @@ namespace Epsitec.Common.Document
 		#region Class Item
 		public class Item : System.IDisposable
 		{
-			public Item(string filename, string zipFilename, string zipShortName, byte[] data)
+			public Item(string filename, string zipFilename, string zipShortName, byte[] data, System.DateTime date)
 			{
 				//	Constructeur qui met en cache les données de l'image.
 				//	Si les données 'data' n'existent pas, l'image est lue sur disque.
 				//	Si les données existent, l'image est lue à partir des données en mémoire.
+				if (data == null)
+				{
+					System.Diagnostics.Debug.Assert(date == System.DateTime.MinValue);
+				}
+				else
+				{
+					System.Diagnostics.Debug.Assert(date != System.DateTime.MinValue);
+				}
+
 				this.filename = filename;
 				this.zipFilename= zipFilename;
 				this.zipShortName = zipShortName;
+				this.date = date;
 
 				try
 				{
 					if (data == null)  // lecture sur disque ?
 					{
 						this.data = System.IO.File.ReadAllBytes(this.filename);
+						this.date = GlobalImageCache.FilenameDate(this.filename);
 					}
 					else  // image en mémoire ?
 					{
@@ -188,6 +199,7 @@ namespace Epsitec.Common.Document
 				try
 				{
 					this.data = System.IO.File.ReadAllBytes(this.filename);
+					this.date = GlobalImageCache.FilenameDate(this.filename);
 				}
 				catch
 				{
@@ -402,6 +414,15 @@ namespace Epsitec.Common.Document
 				}
 			}
 
+			public System.DateTime Date
+			{
+				//	Retourne la date de dernière modification.
+				get
+				{
+					return this.date;
+				}
+			}
+
 			public bool IsData
 			{
 				//	Indique si les données brutes de l'image existent.
@@ -447,7 +468,50 @@ namespace Epsitec.Common.Document
 				else
 				{
 					this.ReadOriginalImage();
+
 					return this.originalImage;
+				}
+			}
+
+			protected void ReadLowresImage()
+			{
+				//	Si l'image originale est trop grosse, crée l'image basse résolution
+				//	pour l'affichage et libère l'image originale.
+				if (this.data == null || this.lowresImage != null)
+				{
+					return;
+				}
+
+				//	Cherche d'abord l'image dans le cache persistant.
+				string key = PersistentImageCache.Key(this.filename, this.zipFilename, this.zipShortName);
+				PersistentImageCache.Get(key, this.date, out this.lowresImage, out this.originalSize);
+				if (this.lowresImage == null)  // rien dans le cache persistant ?
+				{
+					this.ReadOriginalImage();
+
+					if (this.IsLargeOriginal)  // image dépasse la limite ?
+					{
+						//	Génère une image pour l'affichage (this.lowresImage) qui pèse
+						//	environ la limite fixée.
+						System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: ReadLowresImage {0}", this.filename));
+						this.lowresScale = System.Math.Sqrt(this.KBOriginalWeight/GlobalImageCache.imageLimit);
+						int dx = (int) (this.originalSize.Width/this.lowresScale);
+						int dy = (int) (this.originalSize.Height/this.lowresScale);
+						this.lowresImage = GlobalImageCache.ResizeImage(this.originalImage, dx, dy);
+
+						PersistentImageCache.Add(key, this.date, this.lowresImage, this.originalSize);
+
+						this.originalImage.Dispose();  // oublie tout de suite l'image originale
+						this.originalImage = null;
+					}
+					else
+					{
+						this.lowresScale = 1.0;
+					}
+				}
+				else  // trouvé dans le cache persistant ?
+				{
+					this.lowresScale = System.Math.Sqrt(this.KBOriginalWeight/GlobalImageCache.imageLimit);
 				}
 			}
 
@@ -480,6 +544,7 @@ namespace Epsitec.Common.Document
 				if (this.zipFilename == null)
 				{
 					this.data = System.IO.File.ReadAllBytes(this.filename);
+					this.date = GlobalImageCache.FilenameDate(this.filename);
 				}
 				else
 				{
@@ -498,36 +563,6 @@ namespace Epsitec.Common.Document
 			protected bool IsZipLoading(string entryName)
 			{
 				return (entryName == this.filenameToRead);
-			}
-
-			protected void ReadLowresImage()
-			{
-				//	Si l'image originale est trop grosse, crée l'image basse résolution
-				//	pour l'affichage et libère l'image originale.
-				if (this.data == null || this.lowresImage != null)
-				{
-					return;
-				}
-
-				this.ReadOriginalImage();
-
-				if (this.IsLargeOriginal)  // image dépasse la limite ?
-				{
-					//	Génère une image pour l'affichage (this.lowresImage) qui pèse
-					//	environ la limite fixée.
-					System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: ReadLowresImage {0}", this.filename));
-					this.lowresScale = System.Math.Sqrt(this.KBOriginalWeight/GlobalImageCache.imageLimit);
-					int dx = (int) (this.originalSize.Width/this.lowresScale);
-					int dy = (int) (this.originalSize.Height/this.lowresScale);
-					this.lowresImage = GlobalImageCache.ResizeImage(this.originalImage, dx, dy);
-
-					this.originalImage.Dispose();  // oublie tout de suite l'image originale
-					this.originalImage = null;
-				}
-				else
-				{
-					this.lowresScale = 1.0;
-				}
 			}
 
 			#region IDisposable Members
@@ -553,6 +588,7 @@ namespace Epsitec.Common.Document
 			protected string				zipFilename;
 			protected string				zipShortName;
 			protected string				filenameToRead;
+			protected System.DateTime		date;
 			protected byte[]				data;
 			protected Drawing.Image			originalImage;
 			protected Drawing.Image			lowresImage;
@@ -563,6 +599,20 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
+
+		protected static System.DateTime FilenameDate(string filename)
+		{
+			//	Retourne la date de dernière modification d'un fichier.
+			System.IO.FileInfo info = new System.IO.FileInfo(filename);
+			if (info.Exists)
+			{
+				return info.LastWriteTime;
+			}
+			else
+			{
+				return System.DateTime.MinValue;
+			}
+		}
 
 		protected static Drawing.Image ResizeImage(Drawing.Image image, int dx, int dy)
 		{

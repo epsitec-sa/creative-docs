@@ -41,7 +41,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void Load(string filename)
+		public System.DateTime Load(string filename)
 		{
 			//	Essaie de charger une image dans le cache.
 			//	Celle méthode est appelée chaque fois que le nom édité de l'image est changé.
@@ -51,9 +51,16 @@ namespace Epsitec.Common.Document
 
 				if (item == null)
 				{
-					this.Add(filename, null, null, null);
+					item = this.Add(filename, null, null, null, System.DateTime.MinValue);
+				}
+
+				if (item == null)
+				{
+					return item.GlobalItem.Date;
 				}
 			}
+
+			return System.DateTime.MinValue;
 		}
 
 		public Item Get(string filename)
@@ -95,18 +102,27 @@ namespace Epsitec.Common.Document
 			return this.dico.ContainsKey(filename);
 		}
 
-		protected Item Add(string filename, string zipFilename, string zipShortName, byte[] data)
+		protected Item Add(string filename, string zipFilename, string zipShortName, byte[] data, System.DateTime date)
 		{
 			//	Ajoute une nouvelle image dans le cache.
 			//	Si les données 'data' n'existent pas, l'image est lue sur disque.
 			//	Si les données existent, l'image est lue à partir des données en mémoire.
+			if (data == null)
+			{
+				System.Diagnostics.Debug.Assert(date == System.DateTime.MinValue);
+			}
+			else
+			{
+				System.Diagnostics.Debug.Assert(date != System.DateTime.MinValue);
+			}
+
 			if (this.dico.ContainsKey(filename))
 			{
 				return this.dico[filename];
 			}
 			else
 			{
-				GlobalImageCache.Item gItem = GlobalImageCache.Add(filename, zipFilename, zipShortName, data);
+				GlobalImageCache.Item gItem = GlobalImageCache.Add(filename, zipFilename, zipShortName, data, date);
 				if (gItem == null || !gItem.IsData)
 				{
 					return null;
@@ -125,6 +141,7 @@ namespace Epsitec.Common.Document
 			//	Supprime toutes les images du cache.
 			foreach (KeyValuePair<string, Item> pair in this.dico)
 			{
+				GlobalImageCache.Remove(pair.Value.GlobalItem.Filename);
 				pair.Value.Dispose();
 			}
 
@@ -249,18 +266,17 @@ namespace Epsitec.Common.Document
 					string name = string.Format("images/{0}", propImage.ShortName);
 					byte[] data = zip[name].Data;  // lit les données dans le fichier zip
 
-					if (data == null)
+					if (data != null)
 					{
-						this.Add(propImage.Filename, null, null, null);  // lit le fichier image sur disque
-					}
-					else
-					{
-						this.Add(propImage.Filename, zipFilename, propImage.ShortName, data);
+						this.Add(propImage.Filename, zipFilename, propImage.ShortName, data, propImage.Date);
+						return;
 					}
 				}
-				else
+
+				Item item = this.Add(propImage.Filename, null, null, null, System.DateTime.MinValue);  // lit le fichier image sur disque
+				if (item != null)
 				{
-					this.Add(propImage.Filename, null, null, null);  // lit le fichier image sur disque
+					propImage.Date = item.GlobalItem.Date;
 				}
 			}
 		}
