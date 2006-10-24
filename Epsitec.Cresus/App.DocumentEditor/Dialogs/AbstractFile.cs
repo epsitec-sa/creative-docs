@@ -813,8 +813,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.SetArraySize(5, rows);
 
 			this.table.SetWidthColumn(0, 50);
-			this.table.SetWidthColumn(1, 90);
-			this.table.SetWidthColumn(2, 90);
+			this.table.SetWidthColumn(1, 85);
+			this.table.SetWidthColumn(2, 95);
 			this.table.SetWidthColumn(3, 80);
 			this.table.SetWidthColumn(4, 40);
 

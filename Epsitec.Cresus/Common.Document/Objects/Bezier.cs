@@ -1345,13 +1345,13 @@ namespace Epsitec.Common.Document.Objects
 				case 0:
 					cmd  = "Object";
 					name = "CreateEnding";
-					text = Abstract.CreateAction("CreateEnding", "CreateCloseNo", Res.Strings.Object.Button.CreateEnding);
+					text = Abstract.CreateAction("CreateCloseNo", Res.Strings.Object.Button.CreateEnding);
 					return true;
 
 				case 1:
 					cmd  = "Object";
 					name = "CreateCloseEnding";
-					text = Abstract.CreateAction("CreateEnding", "CreateCloseYes", Res.Strings.Object.Button.CreateEnding);
+					text = Abstract.CreateAction("CreateCloseYes", Res.Strings.Object.Button.CreateEnding);
 					return true;
 
 				case 2:
@@ -1363,31 +1363,13 @@ namespace Epsitec.Common.Document.Objects
 				case 3:
 					cmd  = "Object";
 					name = "CreateAndSelect";
-					text = Abstract.CreateAction("CreateAndSelect", "CreateCloseNo", Res.Strings.Object.Button.CreateAndSelect);
+					text = Abstract.CreateAction("CreateAndSelect", Res.Strings.Object.Button.CreateAndSelect);
 					return true;
 
 				case 4:
 					cmd  = "Object";
-					name = "CreateCloseAndSelect";
-					text = Abstract.CreateAction("CreateAndSelect", "CreateCloseYes", Res.Strings.Object.Button.CreateAndSelect);
-					return true;
-
-				case 5:
-					cmd  = "";
-					name = "";
-					text = "";
-					return true;
-
-				case 6:
-					cmd  = "Object";
 					name = "CreateAndShaper";
-					text = Abstract.CreateAction("CreateAndShaper", "CreateCloseNo", Res.Strings.Object.Button.CreateAndShaper);
-					return true;
-
-				case 7:
-					cmd  = "Object";
-					name = "CreateCloseAndShaper";
-					text = Abstract.CreateAction("CreateAndShaper", "CreateCloseYes", Res.Strings.Object.Button.CreateAndShaper);
+					text = Abstract.CreateAction("CreateAndShaper", Res.Strings.Object.Button.CreateAndShaper);
 					return true;
 			}
 
