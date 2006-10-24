@@ -2409,9 +2409,9 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
-		protected static string CreateAction(string icon, string openClose, string text)
+		protected static string CreateAction(string icon, string text)
 		{
-			return string.Format("     {0} {1}  {2}", Misc.Image(icon), Misc.Image(openClose), text);
+			return string.Format("     {0}   {1}", Misc.Image(icon), text);
 		}
 
 		public virtual bool SelectAfterCreation()
