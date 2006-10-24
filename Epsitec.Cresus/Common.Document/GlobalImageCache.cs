@@ -62,9 +62,9 @@ namespace Epsitec.Common.Document
 		public static void Remove(string filename)
 		{
 			//	Supprime une image dans le cache.
-			Item item = GlobalImageCache.dico[filename];
-			if (item != null)
+			if (GlobalImageCache.dico.ContainsKey(filename))
 			{
+				Item item = GlobalImageCache.dico[filename];
 				GlobalImageCache.dico.Remove(filename);
 				item.Dispose();
 			}
@@ -632,7 +632,7 @@ namespace Epsitec.Common.Document
 
 
 		protected static readonly long				globalLimit = 500000;  // limite globale de 0.5 GB
-		//?protected static readonly long				globalLimit = 50000;  // limite globale de 0.5 GB
+		//?protected static readonly long				globalLimit = 50000;  // limite globale de 50 MB
 		protected static readonly long				imageLimit  =   1000;  // limite par image de 1 MB
 
 		protected static Dictionary<string, Item>	dico = new Dictionary<string, Item>();
