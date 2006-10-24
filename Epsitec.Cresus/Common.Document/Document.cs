@@ -1402,6 +1402,7 @@ namespace Epsitec.Common.Document
 			//	Retourne le nom du dossier contenant les exemples personnels.
 			get
 			{
+#if false
 				//	Attention, on reçoit:
 				//	C:\Documents and Settings\Daniel Roux\Application Data\Epsitec\Crésus Documents\2.0.2.0
 				//	'Crésus Documents' au lieu de 'Crésus documents' qui est le vrai nom !
@@ -1412,6 +1413,11 @@ namespace Epsitec.Common.Document
 					path = path.Substring(0, i);  // supprime le dossier "1.0.0.0" à la fin
 				}
 				return string.Concat(path, "\\", Document.DisplayMySamples);
+#else
+				FolderItem item = FileManager.GetFolderItem(FolderId.VirtualMyDocuments, FolderQueryMode.NoIcons);
+				string path = item.FullPath;
+				return string.Concat(path, "\\", Res.Strings.Directory.MyDocumentsRoot, "\\", Document.DisplayMySamples);
+#endif
 			}
 		}
 
