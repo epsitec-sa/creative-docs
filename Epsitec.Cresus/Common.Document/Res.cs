@@ -944,7 +944,8 @@ namespace Epsitec.Common.Document
 				{
 					public static string CreateAndSelect { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (251)); } }
 					public static string CreateAndShaper { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (252)); } }
-					public static string CreateEnding { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (250)); } }
+					public static string CreateEndingClose { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1360)); } }
+					public static string CreateEndingOpen { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (250)); } }
 				}
 				
 				public static class Image

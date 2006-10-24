@@ -1271,7 +1271,7 @@ namespace Epsitec.App.DocumentEditor
 
 			string title = Res.Strings.Application.TitleShort;
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
-			string message = error.Replace("\r\n", "<br/>");
+			string message = error.Replace("\r\n", "<br/>");  // remplace les fins de lignes dans les erreurs Window
 
 			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateOk(title, icon, message, "", this.commandDispatcher);
 			dialog.Owner = this.Window;
