@@ -170,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <EmbeddedResource Include="Images\Reset.icon" />
     <EmbeddedResource Include="Images\ImageFilter1.icon" />
     <EmbeddedResource Include="Images\ImageFilter2.icon" />
     <EmbeddedResource Include="Images\FavoriteRemove.icon" />

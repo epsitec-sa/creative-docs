@@ -906,6 +906,7 @@
   <data name="Action.ScaleDivFree" id="00R">Réduction</data>
   <data name="Action.ScaleMul" id="01R">Agrandissement {0}%</data>
   <data name="Action.ScaleDiv" id="02R">Réduction {0}%</data>
+  <data name="Action.Reset" id="0HA01">Remettre droit</data>
   <data name="Action.AlignMain" id="03R">Alignement</data>
   <data name="Action.Align" id="04R">Alignement</data>
   <data name="Action.AlignGrid" id="05R">Alignement sur la grille magnétique</data>
