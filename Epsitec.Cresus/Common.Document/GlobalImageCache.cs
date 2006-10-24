@@ -484,7 +484,8 @@ namespace Epsitec.Common.Document
 
 				//	Cherche d'abord l'image dans le cache persistant.
 				string key = PersistentImageCache.Key(this.filename, this.zipFilename, this.zipShortName);
-				PersistentImageCache.Get(key, this.date, out this.lowresImage, out this.originalSize);
+				Size size;
+				PersistentImageCache.Get(key, this.date, out this.lowresImage, out size);
 				if (this.lowresImage == null)  // rien dans le cache persistant ?
 				{
 					this.ReadOriginalImage();
@@ -511,6 +512,7 @@ namespace Epsitec.Common.Document
 				}
 				else  // trouvé dans le cache persistant ?
 				{
+					this.originalSize = size;
 					this.lowresScale = System.Math.Sqrt(this.KBOriginalWeight/GlobalImageCache.imageLimit);
 				}
 			}
