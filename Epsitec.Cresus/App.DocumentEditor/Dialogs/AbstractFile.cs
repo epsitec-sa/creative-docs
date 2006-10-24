@@ -812,11 +812,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.table.SetArraySize(5, rows);
 
-			this.table.SetWidthColumn(0,  50);
-			this.table.SetWidthColumn(1,  80);
-			this.table.SetWidthColumn(2, 100);
-			this.table.SetWidthColumn(3,  80);
-			this.table.SetWidthColumn(4,  40);
+			this.table.SetWidthColumn(0, 50);
+			this.table.SetWidthColumn(1, 85);
+			this.table.SetWidthColumn(2, 95);
+			this.table.SetWidthColumn(3, 80);
+			this.table.SetWidthColumn(4, 40);
 
 			this.table.SetHeaderTextH(0, Res.Strings.Dialog.File.Header.Preview);
 			this.table.SetHeaderTextH(1, Res.Strings.Dialog.File.Header.Filename);
