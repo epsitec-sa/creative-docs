@@ -54,7 +54,7 @@ namespace Epsitec.Common.Document
 					item = this.Add(filename, null, null, null, System.DateTime.MinValue);
 				}
 
-				if (item == null)
+				if (item != null)
 				{
 					return item.GlobalItem.Date;
 				}
