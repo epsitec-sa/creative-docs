@@ -16,6 +16,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonCombine    = this.CreateIconButton("Combine");
 			this.buttonUncombine  = this.CreateIconButton("Uncombine");
+			this.buttonReset      = this.CreateIconButton("Reset");
 			this.buttonToBezier   = this.CreateIconButton("ToBezier");
 			this.buttonToPoly     = this.CreateIconButton("ToPoly");
 			this.buttonToTextBox2 = this.CreateIconButton("ToTextBox2");
@@ -51,6 +52,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonCombine.SetManualBounds(rect);
 			rect.Offset(dx, 0);
 			this.buttonUncombine.SetManualBounds(rect);
+			rect.Offset(dx*2, 0);
+			this.buttonReset.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
@@ -67,6 +70,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected IconButton				buttonCombine;
 		protected IconButton				buttonUncombine;
+		protected IconButton				buttonReset;
 		protected IconButton				buttonToBezier;
 		protected IconButton				buttonToPoly;
 		protected IconButton				buttonToTextBox2;

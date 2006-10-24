@@ -2346,13 +2346,19 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.AlignSelection(-1, false);
 		}
 
-		[Command ("AlignGrid")]
+		[Command("AlignGrid")]
 		void CommandAlignGrid(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.CurrentDocument.Modifier.AlignGridSelection();
 		}
 
-		[Command ("ShareLeft")]
+		[Command("Reset")]
+		void CommandReset(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.ResetSelection();
+		}
+
+		[Command("ShareLeft")]
 		void CommandShareLeft(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.CurrentDocument.Modifier.ShareSelection(-1, true);
@@ -3478,6 +3484,8 @@ namespace Epsitec.App.DocumentEditor
 			this.alignBottomState = this.CreateCommandState("AlignBottom", "AlignBottom");
 			this.alignGridState = this.CreateCommandState("AlignGrid", "AlignGrid");
 
+			this.resetState = this.CreateCommandState("Reset", "Reset");
+
 			this.shareLeftState = this.CreateCommandState("ShareLeft", "ShareLeft");
 			this.shareCenterXState = this.CreateCommandState("ShareCenterX", "ShareCenterX");
 			this.shareSpaceXState = this.CreateCommandState("ShareSpaceX", "ShareSpaceX");
@@ -4007,7 +4015,8 @@ namespace Epsitec.App.DocumentEditor
 				this.alignTopState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
 				this.alignCenterYState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
 				this.alignBottomState.Enable = ( totalSelected > 1 && !isCreating && !isEdit );
-				this.alignGridState.Enable = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.alignGridState.Enable = (totalSelected > 0 && !isCreating && !isEdit);
+				this.resetState.Enable = (totalSelected > 0 && !isCreating && !isEdit);
 				this.shareLeftState.Enable = ( totalSelected > 2 && !isCreating && !isEdit );
 				this.shareCenterXState.Enable = ( totalSelected > 2 && !isCreating && !isEdit );
 				this.shareSpaceXState.Enable = ( totalSelected > 2 && !isCreating && !isEdit );
@@ -4147,6 +4156,7 @@ namespace Epsitec.App.DocumentEditor
 				this.alignCenterYState.Enable = false;
 				this.alignBottomState.Enable = false;
 				this.alignGridState.Enable = false;
+				this.resetState.Enable = false;
 				this.shareLeftState.Enable = false;
 				this.shareCenterXState.Enable = false;
 				this.shareSpaceXState.Enable = false;
@@ -5550,6 +5560,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					alignCenterYState;
 		protected CommandState					alignBottomState;
 		protected CommandState					alignGridState;
+		protected CommandState					resetState;
 		protected CommandState					shareSpaceXState;
 		protected CommandState					shareLeftState;
 		protected CommandState					shareCenterXState;

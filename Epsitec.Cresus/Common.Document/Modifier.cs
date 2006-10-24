@@ -2541,6 +2541,20 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
+		public void ResetSelection()
+		{
+			//	Remet droit et d'équerre tous les objets sélectionnés.
+			this.OpletQueueBeginAction(Res.Strings.Action.Reset);
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			foreach (Objects.Abstract obj in this.document.Flat(layer, true))
+			{
+				obj.Reset();
+			}
+			this.OpletQueueValidateAction();
+		}
+
+
 		#region Align and Share
 		public void AlignGridSelection()
 		{
