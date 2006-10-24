@@ -258,7 +258,8 @@
   <data name="Object.Poly.Menu.HandleDelete" id="0N7">Enlever le point</data>
   <data name="Object.Poly.Info1" id="0O7">lg={0} α={1}</data>
   <data name="Object.Poly.Info2" id="0P7">lg={0} α={2}  |  lg={1} α={3}</data>
-  <data name="Object.Button.CreateEnding" id="0Q7">Terminer la création</data>
+  <data name="Object.Button.CreateEndingOpen" id="0Q7">Terminer en l&amp;apos;état</data>
+  <data name="Object.Button.CreateEndingClose" id="0GA01">Terminer et fermer</data>
   <data name="Object.Button.CreateAndSelect" id="0R7">Terminer et sélectionner</data>
   <data name="Object.Button.CreateAndShaper" id="0S7">Terminer et modeler</data>
   <data name="Object.Text.Error" id="0T7">La police &lt;b&gt;{0}&lt;/b&gt; n&amp;apos;existe pas.</data>

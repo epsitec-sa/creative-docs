@@ -612,13 +612,13 @@ namespace Epsitec.Common.Document.Objects
 				case 0:
 					cmd  = "Object";
 					name = "CreateEnding";
-					text = Abstract.CreateAction("CreateCloseNo", Res.Strings.Object.Button.CreateEnding);
+					text = Abstract.CreateAction("CreateCloseNo", Res.Strings.Object.Button.CreateEndingOpen);
 					return true;
 
 				case 1:
 					cmd  = "Object";
 					name = "CreateCloseEnding";
-					text = Abstract.CreateAction("CreateCloseYes", Res.Strings.Object.Button.CreateEnding);
+					text = Abstract.CreateAction("CreateCloseYes", Res.Strings.Object.Button.CreateEndingClose);
 					return true;
 
 				case 2:
