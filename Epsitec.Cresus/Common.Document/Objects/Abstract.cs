@@ -2637,6 +2637,21 @@ namespace Epsitec.Common.Document.Objects
 			return System.Math.Max(width, detect ? context.MinimalWidth : 3.0/context.ScaleX);
 		}
 
+		protected virtual string NameToDisplay
+		{
+			//	Retourne le nom de l'objet à afficher (Label) en haut à gauche.
+			get
+			{
+				Properties.Name name = this.PropertyName;
+				if (name == null || string.IsNullOrEmpty(name.String))
+				{
+					return null;
+				}
+
+				return name.String;
+			}
+		}
+
 		public virtual void DrawText(IPaintPort port, DrawingContext drawingContext)
 		{
 			//	Dessine le texte.
@@ -2652,8 +2667,11 @@ namespace Epsitec.Common.Document.Objects
 			//	Dessine le nom de l'objet.
 			if ( this.isHide )  return;
 
-			Properties.Name name = this.PropertyName;
-			if ( name == null || name.String == "" )  return;
+			string name = this.NameToDisplay;
+			if (string.IsNullOrEmpty(name))
+			{
+				return;
+			}
 
 			double initialWidth = graphics.LineWidth;
 			graphics.LineWidth = 1.0/drawingContext.ScaleX;
@@ -2662,7 +2680,7 @@ namespace Epsitec.Common.Document.Objects
 			graphics.Align(ref bbox);
 			bbox.Inflate(0.5/drawingContext.ScaleX);
 
-			string s = TextLayout.ConvertToSimpleText(name.String);
+			string s = TextLayout.ConvertToSimpleText(name);
 			Point pos = bbox.TopLeft;
 			Font font = Misc.GetFont("Tahoma");
 			double fs = 9.5/drawingContext.ScaleX;

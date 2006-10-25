@@ -385,6 +385,30 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		protected override string NameToDisplay
+		{
+			//	Retourne le nom de l'objet à afficher (Label) en haut à gauche.
+			get
+			{
+				string name = base.NameToDisplay;
+
+				Properties.Image pi = this.PropertyImage;
+				if (pi != null)
+				{
+					if (string.IsNullOrEmpty(name))
+					{
+						name = Misc.ExtractName(pi.Filename);
+					}
+					else
+					{
+						name = string.Concat(name, " ", Misc.ExtractName(pi.Filename));
+					}
+				}
+
+				return name;
+			}
+		}
+
 		public ImageFilter GetFilter(IPaintPort port, DrawingContext drawingContext)
 		{
 			//	Retourne le filtre à utiliser pour l'image. Le filtre n'est pas le même selon
