@@ -117,6 +117,7 @@
     <Compile Include="CollectionView.cs" />
     <Compile Include="CollectionViewGroup.cs" />
     <Compile Include="Internal\CollectionViewGroupItems.cs" />
+    <Compile Include="Internal\CollectionViewResolver.cs" />
     <Compile Include="UnresolvedEnum.cs" />
     <Compile Include="SystemTypeFamily.cs" />
     <Compile Include="DesignerAttribute.cs" />
