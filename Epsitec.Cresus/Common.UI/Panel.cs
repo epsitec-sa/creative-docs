@@ -35,17 +35,8 @@ namespace Epsitec.Common.UI
 			{
 				if (this.dataSource != value)
 				{
-					if (this.dataSource != null)
-					{
-						DataObject.ClearDataContext (this);
-					}
-					
 					this.dataSource = value;
-
-					if (this.dataSource != null)
-					{
-						DataObject.SetDataContext (this, new Binding (this.dataSource));
-					}
+					this.SyncDataContextWithDataSource ();
 				}
 			}
 		}
@@ -95,6 +86,19 @@ namespace Epsitec.Common.UI
 			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagResourceManager, resourceManager);
 		}
 
+		private void SyncDataContextWithDataSource()
+		{
+			if (this.dataSource == null)
+			{
+				DataObject.ClearDataContext (this);
+			}
+			else
+			{
+				DataObject.SetDataContext (this, new Binding (this.dataSource));
+			}
+		}
+
+		
 		private static object GetDataSourceMetadataValue(DependencyObject obj)
 		{
 			Panel panel = (Panel) obj;

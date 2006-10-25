@@ -39,6 +39,11 @@ namespace Epsitec.Common.Types
 				this.nodes.Add (node);
 			}
 		}
+		
+		public void AddNode(ICollectionView cvSource)
+		{
+			throw new System.Exception ("The method or operation is not implemented.");
+		}
 
 		#region IDisposable Members
 
@@ -98,7 +103,7 @@ namespace Epsitec.Common.Types
 
 			private void AttachDependencyObject(PropertyChangedEventHandler handler)
 			{
-				DependencyObject source   = (DependencyObject) this.source;
+				DependencyObject   source   = (DependencyObject) this.source;
 				DependencyProperty property = (DependencyProperty) this.property;
 
 				source.AddEventHandler (property, handler);

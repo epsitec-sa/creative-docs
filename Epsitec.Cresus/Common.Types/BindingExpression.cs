@@ -349,11 +349,13 @@ namespace Epsitec.Common.Types
 			{
 				DependencyObject   doSource = root as DependencyObject;
 				IStructuredData    sdSource = root as IStructuredData;
+				ICollectionView    cvSource = this.FindCollectionView (root);
 				DependencyProperty property = null;
 				string             name     = null;
 
 				if ((doSource == null) &&
-					(sdSource == null))
+					(sdSource == null) &&
+					(cvSource == null))
 				{
 					if (root is IResourceBoundSource)
 					{
@@ -381,40 +383,58 @@ namespace Epsitec.Common.Types
 								breadcrumbs = new BindingBreadcrumbs (this.HandleBreadcrumbsChanged);
 							}
 
-							object value;
-							
 							if ((doSource != null) &&
 								(property != null))
 							{
 								breadcrumbs.AddNode (doSource, property);
-								value = doSource.GetValue (property);
+								root = doSource.GetValue (property);
 							}
 							else if ((sdSource != null) &&
 								/**/ (!string.IsNullOrEmpty (name)))
 							{
 								breadcrumbs.AddNode (sdSource, name);
-								value = sdSource.GetValue (name);
+								root = sdSource.GetValue (name);
 							}
 							else
 							{
-								value = null;
+								root = null;
 							}
 
-							if (value == Binding.DoNothing)
+							if (root == Binding.DoNothing)
 							{
-								value = null;
+								root = null;
 							}
-							
-							doSource = value as DependencyObject;
-							sdSource = value as IStructuredData;
+
+							doSource = root as DependencyObject;
+							sdSource = root as IStructuredData;
+							cvSource = this.FindCollectionView (root);
 
 							if ((doSource == null) &&
-								(sdSource == null))
+								(sdSource == null) &&
+								(cvSource == null))
 							{
 								return false;
 							}
 						}
 
+						if (cvSource != null)
+						{
+							if (breadcrumbs == null)
+							{
+								breadcrumbs = new BindingBreadcrumbs (this.HandleBreadcrumbsChanged);
+							}
+
+							breadcrumbs.AddNode (cvSource);
+
+							root = cvSource.CurrentItem;
+
+							doSource = root as DependencyObject;
+							sdSource = root as IStructuredData;
+							cvSource = this.FindCollectionView (root);
+
+							System.Diagnostics.Debug.Assert (cvSource == null, "CollectionView.CollectionView not accepted here");
+						}
+						
 						property = null;
 						name     = null;
 						
@@ -433,7 +453,7 @@ namespace Epsitec.Common.Types
 							return false;
 						}
 					}
-
+					
 					if ((doSource != null) &&
 						(property != null))
 					{
@@ -463,6 +483,23 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 
+		private ICollectionView FindCollectionView(object collection)
+		{
+			if (this.dataContext == null)
+			{
+				return null;
+			}
+
+			if (collection is System.Collections.IList)
+			{
+				//	OK, there is a data context which is used as the source binding
+				//	and the collection implements IList (the collection views are
+				//	associated with the data context).
+			}
+
+			return null;
+		}
+
 		/// <summary>
 		/// Finds the data source root based on the binding definition. This will either
 		/// use the binding source directly (if available) or derive the source from the
@@ -485,7 +522,7 @@ namespace Epsitec.Common.Types
 				if (this.dataContext != null)
 				{
 					sourceRoot = this.dataContext.Source;
-					sourcePath   = DependencyPropertyPath.Combine (this.dataContext.Path, sourcePath);
+					sourcePath = DependencyPropertyPath.Combine (this.dataContext.Path, sourcePath);
 				}
 			}
 			else
