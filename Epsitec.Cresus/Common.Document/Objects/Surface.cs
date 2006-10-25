@@ -149,6 +149,19 @@ namespace Epsitec.Common.Document.Objects
 			return ( len > drawingContext.MinimalSize );
 		}
 
+		public override void Reset()
+		{
+			//	Remet l'objet droit et d'équerre.
+			if (this.handles.Count >= 4)
+			{
+				Drawing.Rectangle box = this.BoundingBoxThin;
+				this.Handle(0).Position = box.BottomLeft;
+				this.Handle(1).Position = box.TopRight;
+				this.Handle(2).Position = box.TopLeft;
+				this.Handle(3).Position = box.BottomRight;
+			}
+		}
+
 		
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
