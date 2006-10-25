@@ -40,9 +40,16 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		public void AddNode(ICollectionView cvSource)
+		public void AddNode(ICollectionView source)
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			if (source != null)
+			{
+				Node node = new Node (source);
+
+				node.Attach (this.handler);
+
+				this.nodes.Add (node);
+			}
 		}
 
 		#region IDisposable Members
@@ -66,6 +73,8 @@ namespace Epsitec.Common.Types
 				this.type     = NodeType.DependencyObject;
 				this.source   = source;
 				this.property = property;
+				
+				this.handlerRelay = null;
 			}
 
 			public Node(IStructuredData source, string name)
@@ -73,6 +82,17 @@ namespace Epsitec.Common.Types
 				this.type     = NodeType.StructuredData;
 				this.source   = source;
 				this.property = name;
+				
+				this.handlerRelay = null;
+			}
+
+			public Node(ICollectionView source)
+			{
+				this.type     = NodeType.CollectionView;
+				this.source   = source;
+				this.property = null;
+				
+				this.handlerRelay = null;
 			}
 
 			public void Attach(PropertyChangedEventHandler handler)
@@ -84,6 +104,9 @@ namespace Epsitec.Common.Types
 						break;
 					case NodeType.StructuredData:
 						this.AttachStructuredData (handler);
+						break;
+					case NodeType.CollectionView:
+						this.AttachCollectionView (handler);
 						break;
 				}
 			}
@@ -97,6 +120,9 @@ namespace Epsitec.Common.Types
 						break;
 					case NodeType.StructuredData:
 						this.DetachStructuredData (handler);
+						break;
+					case NodeType.CollectionView:
+						this.DetachCollectionView (handler);
 						break;
 				}
 			}
@@ -116,7 +142,22 @@ namespace Epsitec.Common.Types
 
 				source.AttachListener (name, handler);
 			}
-			
+
+			private void AttachCollectionView(PropertyChangedEventHandler handler)
+			{
+				ICollectionView source = (ICollectionView) this.source;
+
+				System.Diagnostics.Debug.Assert (this.handlerRelay == null);
+
+				this.handlerRelay =
+					delegate (object sender)
+					{
+						handler (sender, new DependencyPropertyChangedEventArgs ("CurrentItem"));
+					};
+
+				source.CurrentChanged += this.handlerRelay;
+			}
+
 			private void DetachDependencyObject(PropertyChangedEventHandler handler)
 			{
 				DependencyObject source   = (DependencyObject) this.source;
@@ -132,10 +173,21 @@ namespace Epsitec.Common.Types
 
 				source.DetachListener (name, handler);
 			}
-			
+
+			private void DetachCollectionView(PropertyChangedEventHandler handler)
+			{
+				ICollectionView source = (ICollectionView) this.source;
+
+				System.Diagnostics.Debug.Assert (this.handlerRelay != null);
+
+				source.CurrentChanged += this.handlerRelay;
+				this.handlerRelay = null;
+			}
+
 			private NodeType type;
 			private object source;
 			private object property;
+			private Support.EventHandler handlerRelay;
 		}
 
 		private enum NodeType
@@ -143,6 +195,7 @@ namespace Epsitec.Common.Types
 			None,
 			DependencyObject,
 			StructuredData,
+			CollectionView,
 		}
 
 		private List<Node> nodes = new List<Node> ();
