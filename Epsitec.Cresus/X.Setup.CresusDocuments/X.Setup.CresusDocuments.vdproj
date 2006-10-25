@@ -1201,7 +1201,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:AntiGrain.NET, Version=2.4.640.1, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:AntiGrain.NET, Version=2.4.644.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_363160459BCCB9C2260AD3D844379BFB"
@@ -2021,14 +2021,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Crésus Documents"
-        "ProductCode" = "8:{9914CC56-F941-462A-AF4E-E4FCACF87A15}"
-        "PackageCode" = "8:{190EA19D-FD8F-4B92-B419-9EDAD9B20CAB}"
+        "ProductCode" = "8:{8EE15B9B-3A06-4946-9555-C51415344546}"
+        "PackageCode" = "8:{F5848091-9494-43A7-93BD-6209CD2C6CB5}"
         "UpgradeCode" = "8:{028E66AB-AF47-419F-A2DE-8EDC1BC9C240}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.6.1"
+        "ProductVersion" = "8:2.0.5"
         "Manufacturer" = "8:Epsitec"
         "ARPHELPTELEPHONE" = "8:0848 27 37 87"
         "ARPHELPLINK" = "8:"
