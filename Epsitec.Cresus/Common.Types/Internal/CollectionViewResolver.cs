@@ -5,9 +5,14 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types.Internal
 {
+	/// <summary>
+	/// The <c>CollectionViewResolver</c> class is used to map collections to their
+	/// default <see cref="ICollectionView"/>. The mapping is done relative to a
+	/// binding data context.
+	/// </summary>
 	internal class CollectionViewResolver
 	{
-		public CollectionViewResolver()
+		private CollectionViewResolver()
 		{
 		}
 
@@ -201,8 +206,8 @@ namespace Epsitec.Common.Types.Internal
 
 		public static readonly CollectionViewResolver Default = new CollectionViewResolver ();
 
-		private object exclusion = new object ();
-		private List<Context> contexts = new List<Context> ();
-		private int counter;
+		private object							exclusion = new object ();
+		private List<Context>					contexts  = new List<Context> ();
+		private int								counter;
 	}
 }
