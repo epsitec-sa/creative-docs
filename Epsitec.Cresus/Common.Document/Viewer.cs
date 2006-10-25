@@ -70,6 +70,8 @@ namespace Epsitec.Common.Document
 
 			this.document = document;
 			this.drawingContext = new DrawingContext(this.document, this);
+			this.drawingContext.SetImageNameFilter(0, "Bilinear");
+			this.drawingContext.SetImageNameFilter(1, "Bilinear");
 			this.selector = new Selector(this.document);
 			this.zoomer = new Selector(this.document);
 			this.mousePos = new Point(0,0);
