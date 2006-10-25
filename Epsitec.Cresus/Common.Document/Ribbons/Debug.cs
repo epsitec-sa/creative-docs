@@ -75,6 +75,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.MenuAdd(menu, "", "DebugDirty", "Make dirty", "F12");
 			this.MenuAdd(menu, "", "", "", "");
 			this.MenuAdd(menu, "", "ForceSaveAll", "Save and overwrite all", "");
+			this.MenuAdd(menu, "", "OverwriteAll", "Open, overwrite and close all", "");
 
 			menu.AdjustSize();
 			return menu;

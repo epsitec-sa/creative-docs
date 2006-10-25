@@ -1660,6 +1660,46 @@ namespace Epsitec.App.DocumentEditor
 			this.currentDocument = cd;
 			return true;
 		}
+
+		protected bool OverwriteAll()
+		{
+			//	Ouvre, réécrit et ferme plusieurs fichiers.
+			this.dlgSplash.Hide();
+
+			Common.Dialogs.FileOpen dialog = new Common.Dialogs.FileOpen();
+
+			dialog.InitialDirectory = this.globalSettings.InitialDirectory;
+			dialog.FileName = "";
+			if (this.documentType == DocumentType.Graphic)
+			{
+				dialog.Title = Res.Strings.Dialog.Open.TitleDoc;
+				dialog.Filters.Add("crdoc", Res.Strings.Dialog.FileDoc, "*.crdoc");
+			}
+			else
+			{
+				dialog.Title = Res.Strings.Dialog.Open.TitlePic;
+				dialog.Filters.Add("icon", Res.Strings.Dialog.FilePic, "*.icon");
+			}
+			dialog.AcceptMultipleSelection = true;
+			dialog.Owner = this.Window;
+			dialog.OpenDialog();
+			if (dialog.Result != Common.Dialogs.DialogResult.Accept)
+			{
+				return false;
+			}
+
+			string[] names = dialog.FileNames;
+			for (int i=0; i<names.Length; i++)
+			{
+				System.Diagnostics.Debug.WriteLine(string.Format("Open {0}", names[i]));
+				string err = this.CurrentDocument.Read(names[i]);
+				if (string.IsNullOrEmpty(err))
+				{
+					this.CurrentDocument.Write(names[i]);
+				}
+			}
+			return true;
+		}
 		#endregion
 
 		[Command ("New")]
@@ -1765,13 +1805,19 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		[Command ("ForceSaveAll")]
+		[Command("ForceSaveAll")]
 		void CommandForceSaveAll(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.ForceSaveAll();
 		}
 
-		[Command ("NextDocument")]
+		[Command("OverwriteAll")]
+		void CommandOverwriteAll(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.OverwriteAll();
+		}
+
+		[Command("NextDocument")]
 		void CommandNextDocument(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			int doc = this.currentDocument+1;
@@ -3415,6 +3461,7 @@ namespace Epsitec.App.DocumentEditor
 			this.closeState = this.CreateCommandState("Close", null, "Close", KeyCode.ModifierControl|KeyCode.FuncF4);
 			this.closeAllState = this.CreateCommandState("CloseAll", "CloseAll");
 			this.forceSaveAllState = this.CreateCommandState("ForceSaveAll");
+			this.overwriteAllState = this.CreateCommandState("OverwriteAll");
 			this.nextDocState = this.CreateCommandState("NextDocument", KeyCode.ModifierControl|KeyCode.FuncF6);
 			this.prevDocState = this.CreateCommandState("PrevDocument", KeyCode.ModifierControl|KeyCode.ModifierShift|KeyCode.FuncF6);
 			this.printState = this.CreateCommandState("Print", "Print", KeyCode.ModifierControl|KeyCode.AlphaP);
@@ -5186,6 +5233,7 @@ namespace Epsitec.App.DocumentEditor
 			this.closeState.Enable = (this.bookDocuments.PageCount > 0);
 			this.closeAllState.Enable = (this.bookDocuments.PageCount > 0);
 			this.forceSaveAllState.Enable = (this.bookDocuments.PageCount > 0);
+			this.overwriteAllState.Enable = (this.bookDocuments.PageCount > 0);
 			this.nextDocState.Enable = (this.bookDocuments.PageCount > 1);
 			this.prevDocState.Enable = (this.bookDocuments.PageCount > 1);
 			
@@ -5500,6 +5548,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					closeState;
 		protected CommandState					closeAllState;
 		protected CommandState					forceSaveAllState;
+		protected CommandState					overwriteAllState;
 		protected CommandState					nextDocState;
 		protected CommandState					prevDocState;
 		protected CommandState					printState;
