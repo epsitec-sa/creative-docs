@@ -69,12 +69,11 @@ namespace Epsitec.App.DocumentEditor
 			}
 
 #if DEBUG
-			this.debugMode = DebugMode.DebugCommands;
+			//?this.debugMode = DebugMode.DebugCommands;
+			this.debugMode = DebugMode.Release;
 #else
 			this.debugMode = DebugMode.Release;
 #endif
-			
-			this.debugMode = DebugMode.DebugCommands;	//	commenter cette ligne pour le code de production 1.8.1
 
 			if ( !this.ReadGlobalSettings() )
 			{
