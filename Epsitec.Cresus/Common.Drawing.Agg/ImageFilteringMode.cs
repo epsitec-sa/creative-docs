@@ -24,6 +24,7 @@ namespace Epsitec.Common.Drawing
 		Lanczos = 12,
 		Blackman = 13,
 		
+		ResamplingBilinear = -1,
 		ResamplingBicubic = -2,
 		ResamplingSpline16 = -3,
 		ResamplingSpline36 = -4,
