@@ -483,6 +483,12 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 
+		/// <summary>
+		/// Finds the <c>ICollectionView</c> for a given object; the object must
+		/// be a collection for this to work.
+		/// </summary>
+		/// <param name="collection">The probable collection object.</param>
+		/// <returns>An <c>ICollectionView</c> which represents the collection.</returns>
 		private ICollectionView FindCollectionView(object collection)
 		{
 			if (this.dataContext == null)
@@ -490,11 +496,13 @@ namespace Epsitec.Common.Types
 				return null;
 			}
 
-			if (collection is System.Collections.IList)
+			if (Internal.CollectionViewResolver.IsCollectionViewCompatible (collection))
 			{
 				//	OK, there is a data context which is used as the source binding
 				//	and the collection implements IList (the collection views are
 				//	associated with the data context).
+
+				return Internal.CollectionViewResolver.Default.GetCollectionView (this.dataContext, collection);
 			}
 
 			return null;
