@@ -152,8 +152,6 @@ namespace Epsitec.Common.Document.Objects
 		public override void Reset()
 		{
 			//	Remet l'objet droit et d'équerre.
-			base.Reset();
-
 			if (this.handles.Count >= 4)
 			{
 				Drawing.Rectangle box = this.BoundingBoxThin;

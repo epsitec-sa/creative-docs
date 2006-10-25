@@ -951,11 +951,6 @@ namespace Epsitec.Common.Document.Objects
 		public virtual void Reset()
 		{
 			//	Remet l'objet droit et d'équerre.
-			this.InsertOpletGeometry();
-			this.document.Notifier.NotifyArea(this.BoundingBox);
-			this.Direction = 0;
-			this.SetDirtyBbox();
-			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
 

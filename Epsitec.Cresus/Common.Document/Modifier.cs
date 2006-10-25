@@ -2501,6 +2501,27 @@ namespace Epsitec.Common.Document
 			this.TerminateOper();
 		}
 
+		public void ResetSelection()
+		{
+			//	Remet droit et d'équerre tous les objets sélectionnés.
+			this.PrepareOper(Res.Strings.Action.Reset);
+			Selector selector = new Selector(this.document);
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			foreach (Objects.Abstract obj in this.document.Flat(layer, true))
+			{
+				selector.QuickRotation(obj.BoundingBoxThin, -obj.Direction);
+				obj.MoveGlobalStartingProperties();
+				obj.MoveGlobalStarting();
+				obj.MoveGlobalProcessProperties(selector);
+				obj.MoveGlobalProcess(selector);
+				obj.SetDirtyBbox();
+				obj.Reset();
+			}
+			this.ActiveViewer.UpdateSelector();
+			this.TerminateOper();
+		}
+
 		protected void PrepareOper(string name)
 		{
 			//	Prépare pour l'opération.
@@ -2539,20 +2560,6 @@ namespace Epsitec.Common.Document
 			this.OpletQueueValidateAction();
 		}
 		#endregion
-
-
-		public void ResetSelection()
-		{
-			//	Remet droit et d'équerre tous les objets sélectionnés.
-			this.OpletQueueBeginAction(Res.Strings.Action.Reset);
-			DrawingContext context = this.ActiveViewer.DrawingContext;
-			Objects.Abstract layer = context.RootObject();
-			foreach (Objects.Abstract obj in this.document.Flat(layer, true))
-			{
-				obj.Reset();
-			}
-			this.OpletQueueValidateAction();
-		}
 
 
 		#region Align and Share

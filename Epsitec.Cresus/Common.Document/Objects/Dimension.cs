@@ -390,6 +390,15 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
+		public override void Reset()
+		{
+			//	Remet l'objet droit et d'équerre.
+			if (this.handles.Count >= 5 && !this.IsRight)
+			{
+				//	TODO:
+			}
+		}
+
 
 		public override void FillFontFaceList(List<OpenType.FontName> list)
 		{

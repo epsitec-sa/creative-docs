@@ -222,6 +222,26 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 
+		public void QuickRotation(Rectangle rect, double angle)
+		{
+			//	Initialise le sélectionneur pour effectuer une rotation rapide
+			//	(c'est-à-dire non interactif).
+			this.initialData.P1 = rect.BottomLeft;
+			this.initialData.P2 = rect.TopRight;
+			this.initialData.P3 = rect.TopLeft;
+			this.initialData.P4 = rect.BottomRight;
+			this.initialData.Center = rect.Center;
+			this.initialData.Angle = 0.0;
+
+			this.finalData.TypeInUse = SelectorType.Scaler;
+			this.finalData.P1 = rect.BottomLeft;
+			this.finalData.P2 = rect.TopRight;
+			this.finalData.P3 = rect.TopLeft;
+			this.finalData.P4 = rect.BottomRight;
+			this.finalData.Center = rect.Center;
+			this.finalData.Angle = angle;
+		}
+
 		public void QuickScale(Rectangle rInitial, Rectangle rFinal)
 		{
 			//	Initialise le sélectionneur pour effectuer une mise à l'échelle rapide
