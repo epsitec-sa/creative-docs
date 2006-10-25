@@ -356,9 +356,11 @@
     <Compile Include="Weak.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Common.Types\Captions.00.resource" />
     <Content Include="Resources\Common.Types\module.info" />
+    <Content Include="Resources\Common.Types\Captions.00.resource" />
+    <Content Include="Resources\Common.Types\Captions.en.resource" />
     <Content Include="Resources\Common.Types\Strings.00.resource" />
+    <Content Include="Resources\Common.Types\Strings.en.resource" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
