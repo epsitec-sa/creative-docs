@@ -105,6 +105,11 @@
     <Content Include="Resources\Common.Document\module.info" />
     <Content Include="Resources\Common.Document\Strings.00.resource" />
     <Content Include="Resources\Common.Document\Strings.en.resource" />
+    <Content Include="Resources\Common.Types\module.info" />
+    <Content Include="Resources\Common.Types\Captions.00.resource" />
+    <Content Include="Resources\Common.Types\Captions.en.resource" />
+    <Content Include="Resources\Common.Types\Strings.00.resource" />
+    <Content Include="Resources\Common.Types\Strings.en.resource" />
     <Content Include="Original Samples\normal.crmod" />
     <Compile Include="Application.cs">
       <SubType>Code</SubType>

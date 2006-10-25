@@ -8,7 +8,7 @@ namespace Epsitec.Common.Printing
 	/// </summary>
 	public class PrintPort : Drawing.IPaintPort
 	{
-		public PrintPort(System.Drawing.Graphics graphics, PageSettings settings)
+		public PrintPort(System.Drawing.Graphics graphics, PageSettings settings, System.Drawing.Printing.PrintPageEventArgs e)
 		{
 			this.graphics = graphics;
 			this.settings = settings;
@@ -17,9 +17,17 @@ namespace Epsitec.Common.Printing
 			
 			if (this.settings != null)
 			{
-				this.offset_x = (float) (- graphics.VisibleClipBounds.Left);
-				this.offset_y = (float) (graphics.VisibleClipBounds.Top + graphics.VisibleClipBounds.Height);
-				this.scale  = (float) (100.0 / 25.4);
+#if false
+				this.offsetX = (float) (- graphics.VisibleClipBounds.Left);
+				this.offsetY = (float) (graphics.VisibleClipBounds.Top + graphics.VisibleClipBounds.Height);
+#endif
+				System.Drawing.Rectangle bounds = PrintPort.GetRealMarginsBounds (e);
+
+				//	1 display unit = 0.01 in = 0.254 mm
+				
+				this.offsetX = (float) (bounds.Left);
+				this.offsetY = (float) (bounds.Top + bounds.Height);
+				this.scale   = (float) (100.0 / 25.4);
 			}
 			
 			this.transform = new Drawing.Transform ();
@@ -30,16 +38,56 @@ namespace Epsitec.Common.Printing
 			
 			this.ResetTransform ();
 		}
-		
+
+		#region GetRealMarginsBounds Interop Code
+
+		[System.Runtime.InteropServices.DllImport ("gdi32.dll")]
+		private static extern int GetDeviceCaps(System.IntPtr hdc, DeviceCapsIndex index);
+
+		private enum DeviceCapsIndex
+		{
+			PhysicalOffsetX = 112,
+			PhysicalOffsetY = 113,
+		}
+
+		private static System.Drawing.Rectangle GetRealMarginsBounds(System.Drawing.Printing.PrintPageEventArgs e)
+		{
+			int cx = 0;
+			int cy = 0;
+
+			System.IntPtr hdc = e.Graphics.GetHdc ();
+
+			try
+			{
+				cx = PrintPort.GetDeviceCaps (hdc, DeviceCapsIndex.PhysicalOffsetX);
+				cy = PrintPort.GetDeviceCaps (hdc, DeviceCapsIndex.PhysicalOffsetY);
+			}
+			finally
+			{
+				e.Graphics.ReleaseHdc (hdc);
+			}
+
+			System.Drawing.Rectangle bounds = e.MarginBounds;
+
+			int dpiX = (int) e.Graphics.DpiX;
+			int dpiY = (int) e.Graphics.DpiY;
+
+			bounds.Offset (-cx * 100 / dpiX, -cy * 100 / dpiY);
+			
+			return bounds;
+		}
+
+		#endregion
+
 		public PrintPort(System.Drawing.Graphics graphics, int dx, int dy)
 		{
 			this.graphics = graphics;
 			this.brush    = System.Drawing.Brushes.Black;
 			this.pen      = new System.Drawing.Pen (this.brush, 1.0f);
 			
-			this.offset_x = 0;
-			this.offset_y = (float) (dy);
-			this.scale    = 1.0f;
+			this.offsetX = 0;
+			this.offsetY = (float) (dy);
+			this.scale   = 1.0f;
 			
 			this.transform = new Drawing.Transform ();
 			
@@ -196,7 +244,51 @@ namespace Epsitec.Common.Printing
 			}
 			set
 			{
-				this.image_filter = value;
+				if (this.image_filter != value)
+				{
+					this.image_filter = value;
+
+					switch (this.image_filter.Mode)
+					{
+						case Epsitec.Common.Drawing.ImageFilteringMode.None:
+							this.graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+							break;
+
+						case Epsitec.Common.Drawing.ImageFilteringMode.Bilinear:
+							this.graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+							break;
+
+						case Epsitec.Common.Drawing.ImageFilteringMode.Bessel:
+						case Epsitec.Common.Drawing.ImageFilteringMode.Bicubic:
+						case Epsitec.Common.Drawing.ImageFilteringMode.Blackman:
+						case Epsitec.Common.Drawing.ImageFilteringMode.Catrom:
+						case Epsitec.Common.Drawing.ImageFilteringMode.Gaussian:
+						case Epsitec.Common.Drawing.ImageFilteringMode.Kaiser:
+						case Epsitec.Common.Drawing.ImageFilteringMode.Lanczos:
+						case Epsitec.Common.Drawing.ImageFilteringMode.Mitchell:
+						case Epsitec.Common.Drawing.ImageFilteringMode.Quadric:
+						case Epsitec.Common.Drawing.ImageFilteringMode.Sinc:
+						case Epsitec.Common.Drawing.ImageFilteringMode.Spline16:
+						case Epsitec.Common.Drawing.ImageFilteringMode.Spline36:
+							this.graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Bicubic;
+							break;
+
+						case Epsitec.Common.Drawing.ImageFilteringMode.ResamplingBessel:
+						case Epsitec.Common.Drawing.ImageFilteringMode.ResamplingBicubic:
+						case Epsitec.Common.Drawing.ImageFilteringMode.ResamplingBlackman:
+						case Epsitec.Common.Drawing.ImageFilteringMode.ResamplingCatrom:
+						case Epsitec.Common.Drawing.ImageFilteringMode.ResamplingGaussian:
+						case Epsitec.Common.Drawing.ImageFilteringMode.ResamplingKaiser:
+						case Epsitec.Common.Drawing.ImageFilteringMode.ResamplingLanczos:
+						case Epsitec.Common.Drawing.ImageFilteringMode.ResamplingMitchell:
+						case Epsitec.Common.Drawing.ImageFilteringMode.ResamplingQuadric:
+						case Epsitec.Common.Drawing.ImageFilteringMode.ResamplingSinc:
+						case Epsitec.Common.Drawing.ImageFilteringMode.ResamplingSpline16:
+						case Epsitec.Common.Drawing.ImageFilteringMode.ResamplingSpline36:
+							this.graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+							break;
+					}
+				}
 			}
 		}
 
@@ -749,7 +841,7 @@ namespace Epsitec.Common.Printing
 		protected void ResetTransform()
 		{
 			this.graphics.ResetTransform ();
-			this.graphics.TranslateTransform (this.offset_x, this.offset_y);
+			this.graphics.TranslateTransform (this.offsetX, this.offsetY);
 			this.graphics.ScaleTransform (this.scale, -this.scale);
 		}
 		
@@ -844,7 +936,7 @@ namespace Epsitec.Common.Printing
 		protected Drawing.Margins				image_crop;
 		protected Drawing.Size					image_final_size;
 		
-		protected float							offset_x, offset_y;
+		protected float							offsetX, offsetY;
 		protected float							scale;
 		
 		protected Drawing.Color					originalColor = Drawing.Color.FromRgb (0, 0, 0);
