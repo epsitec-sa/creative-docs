@@ -449,6 +449,34 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckCollectionBinding1()
+		{
+			StructuredData data = new StructuredData ();
+			ArticleList list = new ArticleList ();
+
+			list.Add (new Article ("Vis M3"));
+			list.Add (new Article ("Vis M4"));
+			list.Add (new Article ("Boulon M3"));
+			list.Add (new Article ("Tournevis"));
+			list.Add (new Article ("Clé M4"));
+			
+			data.SetValue ("Articles", list);
+			data.SetValue ("InvoiceId", "abc");
+
+			UserInterface ui = new UserInterface ();
+
+			Binding context = new Binding (data);
+
+			ui.SetBinding (UserInterface.InvoiceIdProperty, new Binding (BindingMode.TwoWay, "InvoiceId"));
+
+			Assert.IsNull (ui.InvoiceId);
+			
+			DataObject.SetDataContext (ui, context);
+
+			Assert.AreEqual (data.GetValue ("InvoiceId"), ui.InvoiceId);
+		}
+
+		[Test]
 		public void CheckPropertyGroupDescription()
 		{
 			PropertyGroupDescription group = new PropertyGroupDescription ();
@@ -603,6 +631,63 @@ namespace Epsitec.Common.Types
 			private int stock;
 			private decimal price;
 			private Category category;
+		}
+
+		private class UserInterface : DependencyObject
+		{
+			public string InvoiceId
+			{
+				get
+				{
+					return (string) this.GetValue (UserInterface.InvoiceIdProperty);
+				}
+				set
+				{
+					this.SetValue (UserInterface.InvoiceIdProperty, value);
+				}
+			}
+
+			public Article Article
+			{
+				get
+				{
+					return (Article) this.GetValue (UserInterface.ArticleProperty);
+				}
+				set
+				{
+					this.SetValue (UserInterface.ArticleProperty, value);
+				}
+			}
+
+			public static readonly DependencyProperty InvoiceIdProperty = DependencyProperty.Register ("InvoiceId", typeof (string), typeof (UserInterface));
+			public static readonly DependencyProperty ArticleProperty = DependencyProperty.Register ("Article", typeof (Article), typeof (UserInterface));
+		}
+
+		private class ArticleList : Collections.ObservableList<Article>
+		{
+		}
+		
+		private class Article : DependencyObject
+		{
+			public Article(string name)
+			{
+				this.Name = name;
+			}
+			
+			public string Name
+			{
+				get
+				{
+					return (string) this.GetValue (Article.NameProperty);
+				}
+				set
+				{
+					this.SetValue (Article.NameProperty, value);
+				}
+			}
+
+
+			public static readonly DependencyProperty NameProperty = DependencyProperty.Register ("Name", typeof (string), typeof (Article));
 		}
 
 		#region MyItem Class
