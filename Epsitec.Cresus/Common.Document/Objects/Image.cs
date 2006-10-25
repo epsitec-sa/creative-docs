@@ -385,6 +385,10 @@ namespace Epsitec.Common.Document.Objects
 		protected override string NameToDisplay
 		{
 			//	Retourne le nom de l'objet à afficher (Label) en haut à gauche.
+			//	Le nom est composé de trois parties:
+			//	1) Le nom de l'objet (s'il existe)
+			//	2) Le nom du fichier bitmap (sans dossiers ni extension)
+			//	3) La résolution en dpi (entre parenthéses)
 			get
 			{
 				string name = base.NameToDisplay;

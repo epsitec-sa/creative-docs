@@ -321,7 +321,7 @@ namespace Epsitec.Common.Document.Properties
 			switch (index)
 			{
 				case 0:   return "None";      // pas de filtrage
-				case 1:   return "Bilinear";  // filtrage simple et rapide (mauvais si réduction)
+				case 1:   return "Bilinear";  // filtrage simple et rapide
 				case 2:   return "Blackman";  // normal
 				case 3:   return "Bicubic";   // flou
 				case 4:   return "Sinc";      // accentué
@@ -366,7 +366,7 @@ namespace Epsitec.Common.Document.Properties
 			switch (name)
 			{
 				case "None":      return new ImageFilter(ImageFilteringMode.None);
-				case "Bilinear":  return new ImageFilter(ImageFilteringMode.Bilinear);
+				case "Bilinear":  return new ImageFilter(resampling ? ImageFilteringMode.ResamplingBilinear : ImageFilteringMode.Bilinear);
 				case "Bicubic":   return new ImageFilter(resampling ? ImageFilteringMode.ResamplingBicubic : ImageFilteringMode.Bicubic);
 				case "Spline16":  return new ImageFilter(resampling ? ImageFilteringMode.ResamplingSpline16 : ImageFilteringMode.Spline16);
 				case "Spline36":  return new ImageFilter(resampling ? ImageFilteringMode.ResamplingSpline36 : ImageFilteringMode.Spline36);
