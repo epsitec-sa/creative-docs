@@ -426,6 +426,29 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckInternalCollectionViewResolver()
+		{
+			Internal.CollectionViewResolver resolver = Internal.CollectionViewResolver.Default;
+
+			Binding binding1 = new Binding ();
+			Binding binding2 = new Binding ();
+
+			Assert.IsNull (resolver.GetCollectionView (binding1, null));
+
+			List<DependencyObject> list1 = new List<DependencyObject> ();
+			Collections.ObservableList<DependencyObject> list2 = new Collections.ObservableList<DependencyObject> ();
+
+			ICollectionView cv1 = resolver.GetCollectionView (binding1, list1);
+			ICollectionView cv2 = resolver.GetCollectionView (binding1, list2);
+			
+			Assert.AreSame (cv1, resolver.GetCollectionView (binding1, list1));
+			Assert.AreSame (cv2, resolver.GetCollectionView (binding1, list2));
+			
+			Assert.AreNotSame (cv1, resolver.GetCollectionView (binding2, list1));
+			Assert.AreNotSame (cv2, resolver.GetCollectionView (binding2, list2));
+		}
+
+		[Test]
 		public void CheckPropertyGroupDescription()
 		{
 			PropertyGroupDescription group = new PropertyGroupDescription ();

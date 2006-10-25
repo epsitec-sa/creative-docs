@@ -10,7 +10,7 @@ namespace Epsitec.Common.Types.Internal
 	/// default <see cref="ICollectionView"/>. The mapping is done relative to a
 	/// binding data context.
 	/// </summary>
-	internal class CollectionViewResolver
+	public class CollectionViewResolver
 	{
 		private CollectionViewResolver()
 		{
@@ -36,21 +36,31 @@ namespace Epsitec.Common.Types.Internal
 			}
 		}
 
-		private void TrimContexts()
+		public void TrimContexts()
 		{
+			System.Threading.Interlocked.Exchange (ref this.counter, 0);
+			
 			lock (this.exclusion)
 			{
 				this.contexts.RemoveAll
 					(
 						delegate (Context item)
 						{
-							return item.Binding == null ? true : false;
+							if (item.Binding == null)
+							{
+								item.Dispose ();
+								return true;
+							}
+							else
+							{
+								return false;
+							}
 						}
 					);
 			}
 		}
 
-		private static bool IsCollectionViewCompatible(object collection)
+		public static bool IsCollectionViewCompatible(object collection)
 		{
 			if (collection is System.Collections.IList)
 			{
@@ -165,6 +175,21 @@ namespace Epsitec.Common.Types.Internal
 				}
 			}
 
+			public void Dispose()
+			{
+				foreach (ViewDef viewDef in this.viewDefs)
+				{
+					System.IDisposable disposable = viewDef.View as System.IDisposable;
+					
+					if (disposable != null)
+					{
+						disposable.Dispose ();
+					}
+				}
+				
+				this.viewDefs.Clear ();
+			}
+			
 			private Weak<Binding>				binding;
 			private object						exclusion = new object ();
 			private List<ViewDef>				viewDefs = new List<ViewDef> ();
