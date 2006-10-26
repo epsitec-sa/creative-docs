@@ -489,7 +489,7 @@ namespace Epsitec.Common.Designer
 			this.window.Hide();
 	}
 
-		[Command("Glyphs")]
+		[Command("DesignerGlyphs")]
 		void CommandGlyphs(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if (this.glyphsState.ActiveState == ActiveState.No)
@@ -719,8 +719,8 @@ namespace Epsitec.Common.Designer
 			this.fontBoldState = this.CreateCommandState("FontBold", KeyCode.ModifierControl|KeyCode.AlphaB);
 			this.fontItalicState = this.CreateCommandState("FontItalic", KeyCode.ModifierControl|KeyCode.AlphaI);
 			this.fontUnderlinedState = this.CreateCommandState("FontUnderlined", KeyCode.ModifierControl|KeyCode.AlphaU);
-			
-			this.glyphsState = this.CreateCommandState("Glyphs");
+
+			this.glyphsState = this.CreateCommandState("DesignerGlyphs");
 			this.filterState = this.CreateCommandState("Filter");
 			
 			this.searchState = this.CreateCommandState("Search");

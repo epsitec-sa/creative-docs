@@ -824,14 +824,14 @@ namespace Epsitec.Common.Designer.Viewers
 				this.GetCommandState("FontBold").Enable = false;
 				this.GetCommandState("FontItalic").Enable = false;
 				this.GetCommandState("FontUnderlined").Enable = false;
-				this.GetCommandState("Glyphs").Enable = false;
+				this.GetCommandState("DesignerGlyphs").Enable = false;
 			}
 			else
 			{
 				this.GetCommandState("FontBold").Enable = (sel != -1);
 				this.GetCommandState("FontItalic").Enable = (sel != -1);
 				this.GetCommandState("FontUnderlined").Enable = (sel != -1);
-				this.GetCommandState("Glyphs").Enable = (sel != -1);
+				this.GetCommandState("DesignerGlyphs").Enable = (sel != -1);
 			}
 
 			if (this is Panels)

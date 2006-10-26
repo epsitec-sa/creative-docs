@@ -178,7 +178,7 @@
     <EmbeddedResource Include="Images\FontBold.icon" />
     <EmbeddedResource Include="Images\FontItalic.icon" />
     <EmbeddedResource Include="Images\FontUnderlined.icon" />
-    <EmbeddedResource Include="Images\Glyphs.icon" />
+    <EmbeddedResource Include="Images\DesignerGlyphs.icon" />
     <EmbeddedResource Include="Images\Filter.icon" />
     <EmbeddedResource Include="Images\Search.icon" />
     <EmbeddedResource Include="Images\AccessLast.icon" />
