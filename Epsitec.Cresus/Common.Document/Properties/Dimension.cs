@@ -38,15 +38,16 @@ namespace Epsitec.Common.Document.Properties
 			{
 				this.addLength = 50.0;  // 5mm
 				this.outLength = 20.0;  // 2mm
+				this.dimensionText = Res.Strings.Property.Dimension.TextMm;
 			}
 			else
 			{
 				this.addLength = 50.8;  // 0.2in
 				this.outLength = 25.4;  // 0.1in
+				this.dimensionText = Res.Strings.Property.Dimension.TextIn;
 			}
 			
 			this.fontOffset = 0.4;
-			this.dimensionText = Res.Strings.Property.Dimension.Text;
 			this.rotateText = false;
 		}
 
