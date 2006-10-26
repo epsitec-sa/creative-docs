@@ -1234,6 +1234,18 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert(button != null);
 
 			button.DisplayMode = mode;
+
+			if (mode == ButtonDisplayMode.Text)
+			{
+				button.ButtonStyle = ButtonStyle.Normal;
+				button.ContentAlignment = ContentAlignment.MiddleCenter;
+			}
+			else
+			{
+				button.ButtonStyle = ButtonStyle.ToolItem;
+				button.ContentAlignment = ContentAlignment.MiddleLeft;
+			}
+
 			this.Invalidate();
 		}
 		#endregion

@@ -282,7 +282,7 @@ namespace Epsitec.Common.Widgets
 					case ButtonStyle.DefaultAccept:
 					case ButtonStyle.DefaultAcceptAndCancel:
 					case ButtonStyle.DefaultCancel:
-						bounds.Deflate (4);
+						bounds.Deflate(4);
 						break;
 				}
 
