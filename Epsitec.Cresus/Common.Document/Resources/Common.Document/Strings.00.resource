@@ -386,7 +386,7 @@
   <data name="Panel.Image.Crop.Button.Reset" id="0N901" mod="1">Tout</data>
   <data name="Panel.Image.Filter.None" id="03A01" mod="1">Mosaïque (pas de filtrage)</data>
   <data name="Panel.Image.Filter.Bilinear" id="04A01" mod="1">Rapide (bilinéaire)</data>
-  <data name="Panel.Image.Filter.Bicubic" id="05A01" mod="1">Flou (bi-cubique)</data>
+  <data name="Panel.Image.Filter.Bicubic" id="05A01" mod="1">Doux (bicubique)</data>
   <data name="Panel.Image.Filter.Blackman" id="0DA01" mod="1">Normal (Blackman)</data>
   <data name="Panel.Image.Filter.Sinc" id="0EA01" mod="1">Accentué (Sinc)</data>
   <data name="Panel.Image.Filter.Other" id="06A01" mod="1">Filtrage {0}</data>
@@ -538,8 +538,7 @@
   <data name="TextPanel.Generator.Type.Num4" id="0JF">Numérotation a)</data>
   <data name="TextPanel.Generator.Type.Num5" id="0KF">Numérotation 1.1.1.</data>
   <data name="TextPanel.Generator.Type.Custom" id="0LF">Personnalisé</data>
-  <data name="TextPanel.Generator.Numerator.None" id="0MF">
-  </data>
+  <data name="TextPanel.Generator.Numerator.None" id="0MF">Aucun</data>
   <data name="TextPanel.Generator.Numerator.Numeric" id="0NF">1, 2...</data>
   <data name="TextPanel.Generator.Numerator.AlphaLower" id="0OF">a, b...</data>
   <data name="TextPanel.Generator.Numerator.AlphaUpper" id="0PF">A, B...</data>

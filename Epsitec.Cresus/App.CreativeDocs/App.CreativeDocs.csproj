@@ -85,6 +85,10 @@
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
       <Name>Common.Support.Implementation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.Types\Common.Types.csproj">
+      <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
+      <Name>Common.Types</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />

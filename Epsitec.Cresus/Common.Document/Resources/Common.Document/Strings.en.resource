@@ -251,8 +251,8 @@
   <data id="0O7">ln={0} α={1}</data>
   <data id="0P7">ln={0} α={2}  |  ln={1} α={3}</data>
   <data id="0Q7">Validate</data>
-  <data id="0R7">Validate and select</data>
-  <data id="0S7">Validate and shaper</data>
+  <data id="0R7">Validate and Select</data>
+  <data id="0S7">Validate and Modify</data>
   <data id="0T7">The font &lt;b&gt;{0}&lt;/b&gt; cannot be found.</data>
   <data id="0U7">File &lt;b&gt;{0}&lt;/b&gt; does not exist.</data>
   <data id="0V7">Expand or Collapse pannel</data>
@@ -349,7 +349,7 @@
   <data id="0QA">Horizontal flip</data>
   <data id="0RA">Vertical flip</data>
   <data id="0SA">Keep proportions</data>
-  <data id="0TA">Antialiasing filter</data>
+  <data id="0TA">Smoothing Filter</data>
   <data id="0UA">Image file name</data>
   <data id="0VA">Browse for an image</data>
   <data id="00B">Update image from a file</data>
@@ -794,10 +794,10 @@
   <data id="0OO">Close all</data>
   <data id="0PO">Save</data>
   <data id="0QO">Save as...</data>
-  <data id="0RO" mod="1">Save as template...</data>
+  <data id="0RO" mod="1">Save as Template...</data>
   <data id="0SO">Print...</data>
   <data id="0TO">Export...</data>
-  <data id="0UO">Recent files</data>
+  <data id="0UO">Recent Files</data>
   <data id="0VO">Quit</data>
   <data id="00P">Key...</data>
   <data id="01P">Check for Updates...</data>
@@ -1334,9 +1334,23 @@
   <data id="03901" mod="1">The file does not exist</data>
   <data id="0T901" mod="1">Open last template</data>
   <data id="0U901" mod="1">Open last templates</data>
-  <data id="0V901">Recent templates</data>
-  <data id="00A01">Empty document</data>
+  <data id="0V901" mod="1">Recent Templates</data>
+  <data id="00A01" mod="1">New (empty) document</data>
   <data id="01A01" mod="1" about="NE PAS MODIFIER (nom de dossier)">Original Samples</data>
-  <data id="02A01" mod="1" about="NE PAS MODIFIER (nom de dossier)">My Samples</data>
+  <data id="02A01" mod="2" about="NE PAS MODIFIER (nom de dossier)">Working Samples</data>
   <data id="0FA01" about="NE PAS MODIFIER (nom de dossier)">Creative Docs .NET</data>
+  <data id="0CA01" mod="1">Bitmap images</data>
+  <data id="07A01" mod="1">&amp;quot;A&amp;quot; Filter</data>
+  <data id="08A01" mod="1">&amp;quot;B&amp;quot; Filter</data>
+  <data id="0HA01">Reset shape</data>
+  <data id="0GA01">Close and Validate</data>
+  <data id="09A01" mod="1">No Filter</data>
+  <data id="0AA01" mod="1">&amp;quot;A&amp;quot; Filter</data>
+  <data id="0BA01" mod="1">&amp;quot;B&amp;quot; Filter</data>
+  <data id="03A01" mod="1">None</data>
+  <data id="04A01" mod="1">Fast (bilinear)</data>
+  <data id="05A01" mod="1">Smooth (bicubic)</data>
+  <data id="0DA01" mod="1">Normal (Blackman)</data>
+  <data id="0EA01" mod="1">Sharp (Sinc)</data>
+  <data id="06A01" mod="1">Filter {0}</data>
 </bundle>

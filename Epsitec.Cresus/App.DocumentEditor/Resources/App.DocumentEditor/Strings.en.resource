@@ -226,7 +226,7 @@
   <data id="0V6" mod="1">Document</data>
   <data id="007" mod="1">Document</data>
   <data id="017" mod="1">Browse</data>
-  <data id="037" mod="1">Create a New folder</data>
+  <data id="037" mod="1">New Folder</data>
   <data id="047" mod="1">Format: {0}&lt;br/&gt;Pages/layers: {1}/{2}&lt;br/&gt;Fonts/images: {5}/{6}&lt;br/&gt;Objects: {3}/{4}</data>
   <data id="0A7" mod="1">Save</data>
   <data id="0B7" mod="1">The document &lt;b&gt;{0}&lt;/b&gt; already exists.&lt;br/&gt;&lt;br/&gt;{1}&lt;br/&gt;&lt;br/&gt;Do you want to replace it?</data>
@@ -239,4 +239,17 @@
   <data id="0I7" mod="1">{0} MB</data>
   <data id="0J7" mod="1">{0} GB</data>
   <data id="0V7" mod="1">Date</data>
+  <data id="0G7" mod="1">Show or hide options</data>
+  <data id="0L7" mod="1">Show or hide save options</data>
+  <data id="0U7" mod="1">Visited Folder list</data>
+  <data id="0T7" mod="1">Save in</data>
+  <data id="0K7" mod="1">Font embedding</data>
+  <data id="0M7" mod="1">No font</data>
+  <data id="0N7" mod="1">Only fonts used in document</data>
+  <data id="0O7" mod="1">All used &amp;amp; defined fonts</data>
+  <data id="0P7" mod="1">Image embedding</data>
+  <data id="0Q7" mod="1">No image</data>
+  <data id="0R7" mod="1">As defined by image object</data>
+  <data id="0S7" mod="1">All images</data>
+  <data id="008" mod="1">Images</data>
 </bundle>
