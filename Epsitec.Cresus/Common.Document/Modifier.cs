@@ -132,26 +132,38 @@ namespace Epsitec.Common.Document
 
 					if ( this.tool == "ToolSelect" && isCreate )  // on vient de créer un objet ?
 					{
-						DrawingContext context = this.ActiveViewer.DrawingContext;
-						Objects.Abstract layer = context.RootObject();
-						Objects.Abstract obj = layer.Objects[layer.Objects.Count-1] as Objects.Abstract;
-						this.ActiveViewer.Select(obj, false, false);
+						int rank = this.ActiveViewer.CreatedRank;
+						if (rank != -1)
+						{
+							DrawingContext context = this.ActiveViewer.DrawingContext;
+							Objects.Abstract layer = context.RootObject();
+							Objects.Abstract obj = layer.Objects[rank] as Objects.Abstract;
+							this.ActiveViewer.Select(obj, false, false);
+						}
 					}
 
 					if ( this.tool == "ToolShaper" && isCreate )  // on vient de créer un objet ?
 					{
-						DrawingContext context = this.ActiveViewer.DrawingContext;
-						Objects.Abstract layer = context.RootObject();
-						Objects.Abstract obj = layer.Objects[layer.Objects.Count-1] as Objects.Abstract;
-						this.ActiveViewer.Select(obj, false, false);
+						int rank = this.ActiveViewer.CreatedRank;
+						if (rank != -1)
+						{
+							DrawingContext context = this.ActiveViewer.DrawingContext;
+							Objects.Abstract layer = context.RootObject();
+							Objects.Abstract obj = layer.Objects[rank] as Objects.Abstract;
+							this.ActiveViewer.Select(obj, false, false);
+						}
 					}
 
 					else if ( this.tool == "ToolEdit" && isCreate )  // on vient de créer un objet ?
 					{
-						DrawingContext context = this.ActiveViewer.DrawingContext;
-						Objects.Abstract layer = context.RootObject();
-						Objects.Abstract obj = layer.Objects[layer.Objects.Count-1] as Objects.Abstract;
-						this.ActiveViewer.Select(obj, true, false);
+						int rank = this.ActiveViewer.CreatedRank;
+						if (rank != -1)
+						{
+							DrawingContext context = this.ActiveViewer.DrawingContext;
+							Objects.Abstract layer = context.RootObject();
+							Objects.Abstract obj = layer.Objects[rank] as Objects.Abstract;
+							this.ActiveViewer.Select(obj, true, false);
+						}
 					}
 
 					else if ( this.tool == "ToolShaper" )

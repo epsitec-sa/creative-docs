@@ -730,18 +730,21 @@ namespace Epsitec.Common.Document
 		public void CreateEnding(bool delete, bool close)
 		{
 			//	Si nécessaire, termine la création en cours.
-			if ( this.createRank == -1 )  return;
+			if (this.createRank == -1)
+			{
+				return;
+			}
 
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			Objects.Abstract obj = layer.Objects[this.createRank] as Objects.Abstract;
 
-			if ( close )
+			if (close)
 			{
 				obj.ChangePropertyPolyClose(close);
 			}
 
 			this.document.Notifier.NotifyArea(obj.BoundingBox);
-			if ( obj.CreateEnding(this.drawingContext) && !delete )
+			if (obj.CreateEnding(this.drawingContext) && !delete)  // créeation ok ?
 			{
 				layer.Objects.RemoveAt(this.createRank);
 
@@ -749,14 +752,18 @@ namespace Epsitec.Common.Document
 				this.CreateRank = layer.Objects.Add(obj);  // ajoute à la fin de la liste
 				this.document.Modifier.GroupUpdateParents();
 				this.document.Modifier.OpletQueueValidateAction();
+
+				this.createdRank = this.createRank;
 			}
-			else
+			else  // création impossible ?
 			{
 				layer.Objects.RemoveAt(this.createRank);
 
 				this.document.Modifier.OpletQueueEnable = true;
 				obj.Dispose();
 				this.document.Modifier.OpletQueueCancelAction();  // annule les propriétés
+
+				this.createdRank = -1;
 			}
 			this.CreateRank = -1;
 			this.document.Notifier.NotifyCreateChanged();
@@ -786,7 +793,21 @@ namespace Epsitec.Common.Document
 				{
 					this.createRank = value;
 					this.document.Notifier.NotifySaveChanged();
+
+					if (this.createRank != -1)
+					{
+						this.createdRank = this.createRank;
+					}
 				}
+			}
+		}
+
+		public int CreatedRank
+		{
+			//	Rang de l'objet qui a été créé.
+			get
+			{
+				return this.createdRank;
 			}
 		}
 		#endregion
@@ -4716,6 +4737,7 @@ namespace Epsitec.Common.Document
 		protected Objects.Abstract				hiliteHandleObject;
 		protected int							hiliteHandleRank = -1;
 		protected int							createRank = -1;
+		protected int							createdRank = -1;
 		protected bool							debugDirty;
 		protected Timer							autoScrollTimer;
 		protected int							guideInteractive = -1;
