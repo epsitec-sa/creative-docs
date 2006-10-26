@@ -1,23 +1,19 @@
-@cls
 @echo off
 
-echo Signature du fichier "%1"
+echo Signing %1
 
-C:
-cd C:\Tools\CodeSigning
+S:
+cd S:\Epsitec.Cresus\External\CodeSigning
 
-signcode -a sha1 -ky signature -spc epsitec.spc -t http://timestamp.verisign.com/scripts/timstamp.dll -v epsitec.pvk "%1"
+signcode -a sha1 -ky signature -spc epsitec.spc -t http://timestamp.verisign.com/scripts/timstamp.dll -v epsitec.pvk %1
 
-if %ErrorLevel% EQU 0 goto ok
+if not ErrorLevel 1 goto ok
 
-echo -
-echo -
-echo -------------------------------
-echo -   ECHEC DE LA SIGNATURE !   -
-echo -------------------------------
-echo -
-echo -
+echo Error: Authenticode Signature failure !
 pause
+exit
 
 
-ok:
+:ok
+
+echo OK: Authenticode Signature Applied successfully
