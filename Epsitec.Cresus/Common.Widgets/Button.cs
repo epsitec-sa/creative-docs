@@ -55,7 +55,7 @@ namespace Epsitec.Common.Widgets
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (Button), metadataDy);
 		}
 		
-		public ButtonStyle				ButtonStyle
+		public virtual ButtonStyle		ButtonStyle
 		{
 			get
 			{
