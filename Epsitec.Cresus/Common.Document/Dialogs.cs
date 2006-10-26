@@ -1326,14 +1326,15 @@ namespace Epsitec.Common.Document
 
 		protected static string[] PaperList =
 		{
-			"Diapositive",
+			"Slide",
 			"Letter US",
 			"Legal",
 			"Tabloïd",
-			"Formulaire/Demi",
+			"Letter - Half",
+			"Legal - Half",
 			"Executive US",
 			"Listing",
-			"Affiche",
+			"Poster",
 			"A1",
 			"A2",
 			"A3+",
@@ -1361,41 +1362,42 @@ namespace Epsitec.Common.Document
 			Size size = new Size(500.0, 500.0);
 			switch ( rank )
 			{
-				case  1:  size = new Size(279.400, 186.182);  break;  // Diapositive
+				case  1:  size = new Size(279.400, 186.182);  break;  // Slide
 				case  2:  size = new Size(215.900, 279.400);  break;  // Lettre US
-				case  3:  size = new Size(215.900, 355.600);  break;  // Légal
+				case  3:  size = new Size(215.900, 355.600);  break;  // Legal
 				case  4:  size = new Size(279.400, 431.800);  break;  // Tabloïd
-				case  5:  size = new Size(139.700, 215.900);  break;  // Formulaire/Demi
-				case  6:  size = new Size(184.150, 266.700);  break;  // Exécutive US
-				case  7:  size = new Size(279.400, 377.952);  break;  // Listing
-				case  8:  size = new Size(457.200, 609.600);  break;  // Affiche
-				case  9:  size = new Size(594.000, 841.000);  break;  // A1
-				case 10:  size = new Size(420.000, 594.000);  break;  // A2
-				case 11:  size = new Size(329.000, 483.000);  break;  // A3+
-				case 12:  size = new Size(297.000, 420.000);  break;  // A3
-				case 13:  size = new Size(210.000, 297.000);  break;  // A4
-				case 14:  size = new Size(148.000, 210.000);  break;  // A5
-				case 15:  size = new Size(105.000, 148.000);  break;  // A6
-				case 16:  size = new Size(707.000,1000.000);  break;  // B1 (ISO)
-				case 17:  size = new Size(250.000, 353.000);  break;  // B4 (ISO)
-				case 18:  size = new Size(176.000, 250.000);  break;  // B5 (ISO)
-				case 19:  size = new Size(257.000, 364.000);  break;  // B4 (JIS)
-				case 20:  size = new Size(182.000, 257.000);  break;  // B5 (JIS)
-				case 21:  size = new Size(324.000, 458.000);  break;  // C3
-				case 22:  size = new Size(229.000, 324.000);  break;  // C4
-				case 23:  size = new Size(162.000, 229.000);  break;  // C5
-				case 24:  size = new Size(114.000, 162.000);  break;  // C6
-				case 25:  size = new Size(430.000, 610.000);  break;  // RA2
-				case 26:  size = new Size(305.000, 430.000);  break;  // RA3
-				case 27:  size = new Size(215.000, 305.000);  break;  // RA4
-				case 28:  size = new Size(220.000, 110.000);  break;  // DL
+				case  5:  size = new Size(139.700, 215.900);  break;  // Letter - Half
+				case  6:  size = new Size(177.800, 215.900);  break;  // Legal - Half
+				case  7:  size = new Size(184.150, 266.700);  break;  // Executive US
+				case  8:  size = new Size(279.400, 377.952);  break;  // Listing
+				case  9:  size = new Size(457.200, 609.600);  break;  // Poster
+				case 10:  size = new Size(594.000, 841.000);  break;  // A1
+				case 11:  size = new Size(420.000, 594.000);  break;  // A2
+				case 12:  size = new Size(329.000, 483.000);  break;  // A3+
+				case 13:  size = new Size(297.000, 420.000);  break;  // A3
+				case 14:  size = new Size(210.000, 297.000);  break;  // A4
+				case 15:  size = new Size(148.000, 210.000);  break;  // A5
+				case 16:  size = new Size(105.000, 148.000);  break;  // A6
+				case 17:  size = new Size(707.000,1000.000);  break;  // B1 (ISO)
+				case 18:  size = new Size(250.000, 353.000);  break;  // B4 (ISO)
+				case 19:  size = new Size(176.000, 250.000);  break;  // B5 (ISO)
+				case 20:  size = new Size(257.000, 364.000);  break;  // B4 (JIS)
+				case 21:  size = new Size(182.000, 257.000);  break;  // B5 (JIS)
+				case 22:  size = new Size(324.000, 458.000);  break;  // C3
+				case 23:  size = new Size(229.000, 324.000);  break;  // C4
+				case 24:  size = new Size(162.000, 229.000);  break;  // C5
+				case 25:  size = new Size(114.000, 162.000);  break;  // C6
+				case 26:  size = new Size(430.000, 610.000);  break;  // RA2
+				case 27:  size = new Size(305.000, 430.000);  break;  // RA3
+				case 28:  size = new Size(215.000, 305.000);  break;  // RA4
+				case 29:  size = new Size(220.000, 110.000);  break;  // DL
 			}
 			return size*10.0;
 		}
 
 		protected static int PaperSizeToRank(Size size)
 		{
-			for ( int rank=1 ; rank<=28 ; rank++ )
+			for ( int rank=1 ; rank<=Dialogs.PaperList.Length ; rank++ )
 			{
 				Size paper = Dialogs.PaperRankToSize(rank);
 				if ( size.Width == paper.Width  && size.Height == paper.Height )  return rank;
