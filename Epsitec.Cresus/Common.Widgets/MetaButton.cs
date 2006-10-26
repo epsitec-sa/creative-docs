@@ -24,6 +24,7 @@ namespace Epsitec.Common.Widgets
 	}
 
 
+
 	/// <summary>
 	/// La classe MetaButton est un Button pouvant contenir une icône et/ou un texte.
 	/// </summary>
@@ -49,6 +50,17 @@ namespace Epsitec.Common.Widgets
 			Visual.PreferredHeightProperty.OverrideMetadata(typeof(MetaButton), metadataDy);
 		}
 
+		public override ButtonStyle ButtonStyle
+		{
+			get
+			{
+				return base.ButtonStyle;
+			}
+			set
+			{
+				throw new System.InvalidOperationException ("Use DisplayMode instead");
+			}
+		}
 		
 		public ButtonDisplayMode DisplayMode
 		{
