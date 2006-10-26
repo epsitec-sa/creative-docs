@@ -86,7 +86,7 @@
   <data name="Action.FontBold" id="0G1">Gras</data>
   <data name="Action.FontItalic" id="0H1">Italique</data>
   <data name="Action.FontUnderlined" id="0I1">Souligné</data>
-  <data name="Action.Glyphs" id="0J1">Caractères spéciaux...</data>
+  <data name="Action.DesignerGlyphs" id="0J1">Caractères spéciaux...</data>
   <data name="Action.Filter" id="0K1">Filtrer les ressources visibles...</data>
   <data name="Action.Search" id="0L1">Rechercher et remplacer...</data>
   <data name="Action.SearchPrev" id="0M1">Rechercher en arrière</data>

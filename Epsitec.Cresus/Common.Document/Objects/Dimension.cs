@@ -462,7 +462,8 @@ namespace Epsitec.Common.Document.Objects
 			{
 				Properties.Dimension dimension = this.PropertyDimension;
 				double length = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
-				if ( !System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+				if (!System.Globalization.RegionInfo.CurrentRegion.IsMetric)
+				//?if (this.document.Modifier.RealUnitDimension == RealUnitType.DimensionInch)
 				{
 					length /= 25.4;  // en pouces
 				}

@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.buttonBold       = this.CreateIconButton("FontBold");
 			this.buttonItalic     = this.CreateIconButton("FontItalic");
 			this.buttonUnderlined = this.CreateIconButton("FontUnderlined");
-			this.buttonGlyphs     = this.CreateIconButton("Glyphs");
+			this.buttonGlyphs     = this.CreateIconButton("DesignerGlyphs");
 			
 			this.UpdateClientGeometry();
 		}
