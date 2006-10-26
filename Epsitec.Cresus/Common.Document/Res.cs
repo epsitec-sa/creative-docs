@@ -1595,7 +1595,8 @@ namespace Epsitec.Common.Document
 					public static string Left { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (686)); } }
 					public static string Outside { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (683)); } }
 					public static string Right { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (687)); } }
-					public static string Text { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (688)); } }
+					public static string TextIn { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1362)); } }
+					public static string TextMm { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (688)); } }
 				}
 				
 				public static class Gradient

@@ -725,7 +725,8 @@
   <data name="Property.Dimension.CenterOrRight" id="0DL">Texte centré (ou à droite)</data>
   <data name="Property.Dimension.Left" id="0EL">Texte à gauche</data>
   <data name="Property.Dimension.Right" id="0FL">Texte à droite</data>
-  <data name="Property.Dimension.Text" id="0GL"> # mm </data>
+  <data name="Property.Dimension.TextMm" id="0GL"> # mm </data>
+  <data name="Property.Dimension.TextIn" id="0IA01"> # in </data>
   <data name="Property.Gradient.None" id="0HL">Uniforme</data>
   <data name="Property.Gradient.Linear" id="0IL">Dégradé linéaire</data>
   <data name="Property.Gradient.Circle" id="0JL">Dégradé concentrique</data>

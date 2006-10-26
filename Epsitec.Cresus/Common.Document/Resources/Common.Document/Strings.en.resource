@@ -687,7 +687,7 @@
   <data id="0DL">Center text (or right)</data>
   <data id="0EL">Text on the left</data>
   <data id="0FL">Text on the right</data>
-  <data id="0GL"> # in </data>
+  <data id="0GL"> # mm </data>
   <data id="0HL">Uniform</data>
   <data id="0IL">Linear gradient</data>
   <data id="0JL">Circular gradient</data>
@@ -1353,4 +1353,5 @@
   <data id="0DA01" mod="1">Normal (Blackman)</data>
   <data id="0EA01" mod="1">Sharp (Sinc)</data>
   <data id="06A01" mod="1">Filter {0}</data>
+  <data id="0IA01"> # in </data>
 </bundle>
