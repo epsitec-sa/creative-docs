@@ -109,7 +109,7 @@ namespace Epsitec.Common.Document.Ribbons
 #else
 			button.CommandObject = c;
 //-			button.IconName = Misc.Icon(c.Icon);
-			button.PreferredIconSize = Misc.IconPreferredSize (iconSize);
+			button.PreferredIconSize = Misc.IconPreferredSize(iconSize);
 			button.AutoFocus = false;
 #endif
 

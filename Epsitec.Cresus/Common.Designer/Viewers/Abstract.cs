@@ -326,6 +326,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.SelectedRow = this.access.AccessIndex;
 			this.array.ShowSelectedRow();
 			this.UpdateCommands();
+
+			if (this.currentTextField != null)
+			{
+				this.currentTextField.SelectAll();
+			}
 		}
 
 		public void DoModification(string name)
@@ -421,6 +426,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.SelectedRow = this.access.AccessIndex;
 			this.array.ShowSelectedRow();
 			this.UpdateCommands();
+
+			if (this.currentTextField != null)
+			{
+				this.currentTextField.SelectAll();
+			}
 		}
 
 		public void DoMove(int direction)
