@@ -65,10 +65,10 @@
   <data id="0V1">Version</data>
   <data id="002">Language: English</data>
   <data id="012">Serial number</data>
-  <data id="022">© 2002-2006 EPSITEC SA, Daniel Roux, Pierre Arnaud</data>
+  <data id="022">© 2002-2006 EPSITEC SA, OPaC &lt;i&gt;bright ideas&lt;/i&gt;, P.Arnaud &amp;amp; D.Roux</data>
   <data id="032">Demo</data>
   <data id="042">Expired</data>
-  <data id="052">Evaluation</data>
+  <data id="052" about="Evaluation">BETA (β)</data>
   <data id="062">Check for Updates</data>
   <data id="072">Your application is up-to-date.</data>
   <data id="082">A new version is currently available:</data>
