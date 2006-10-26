@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Captions" type="Caption" culture="fr">
-  <data name="Cap.Aspect.ButtonDisplayMode" id="03C">&lt;s:data id="_0" f:Name="Aspect.ButtonDisplayMode" f:Labels="{Collection {Text 'Mode'}}" /&gt;</data>
+  <data name="Cap.Aspect.ButtonDisplayMode" id="03C">&lt;s:data id="_0" f:Name="Aspect.ButtonDisplayMode" f:Description="Mode pour le contenu des boutons" f:Labels="{Collection {Text 'Boutons'}, {Text 'Mode des boutons'}}" /&gt;</data>
   <data name="Cap.Geometry.LeftMargin" id="0">&lt;s:data id="_0" f:Description="Marge gauche" f:Name="Geometry.LeftMargin" f:Labels="{Collection {Text 'Marge gauche'}}" /&gt;</data>
   <data name="Cap.Geometry.RightMargin" id="01">&lt;s:data id="_0" f:Description="Marge droite" f:Name="Geometry.RightMargin" f:Labels="{Collection {Text 'Marge droite'}}" /&gt;</data>
   <data name="Cap.Geometry.TopMargin" id="02">&lt;s:data id="_0" f:Description="Marge supérieure" f:Name="Geometry.TopMargin" f:Labels="{Collection {Text 'Marge supérieure'}}" /&gt;</data>
