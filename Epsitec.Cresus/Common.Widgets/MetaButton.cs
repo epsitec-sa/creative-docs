@@ -5,6 +5,7 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
+	[Types.Designer]
 	public enum ButtonDisplayMode
 	{
 		Automatic,		// icône et/ou texte selon la taille disponible

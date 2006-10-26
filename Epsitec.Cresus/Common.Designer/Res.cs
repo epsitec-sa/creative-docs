@@ -9,6 +9,11 @@ namespace Epsitec.Common.Designer
 		
 		public static class Captions
 		{
+			public static class Aspect
+			{
+				public static Epsitec.Common.Types.Caption ButtonDisplayMode { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 387)); } }
+			}
+			
 			public static class Editor
 			{
 				public static class Type
@@ -114,6 +119,11 @@ namespace Epsitec.Common.Designer
 				public static readonly Epsitec.Common.Types.EnumType StackedVerticalAlignment = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 381));
 				public static readonly Epsitec.Common.Types.EnumType StackedVerticalAttachment = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 370));
 			}
+			
+			public static class Widgets
+			{
+				public static readonly Epsitec.Common.Types.EnumType ButtonDisplayMode = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 386));
+			}
 		}
 		
 		public static class Values
@@ -178,6 +188,17 @@ namespace Epsitec.Common.Designer
 					public static Epsitec.Common.Types.Caption Bottom { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 367)); } }
 					public static Epsitec.Common.Types.Caption Fill { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 369)); } }
 					public static Epsitec.Common.Types.Caption Top { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 368)); } }
+				}
+			}
+			
+			public static class Widgets
+			{
+				public static class ButtonDisplayMode
+				{
+					public static Epsitec.Common.Types.Caption Automatic { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 382)); } }
+					public static Epsitec.Common.Types.Caption Icon { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 383)); } }
+					public static Epsitec.Common.Types.Caption IconAndText { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 385)); } }
+					public static Epsitec.Common.Types.Caption Text { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 384)); } }
 				}
 			}
 		}

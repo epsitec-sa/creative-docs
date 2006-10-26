@@ -1205,6 +1205,40 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		#region ButtonDisplayMode
+		public bool HasButtonDisplayMode(Widget obj)
+		{
+			//	Indique s'il existe un mode pour le bouton.
+			MetaButton button = obj as MetaButton;
+			return (button != null);
+		}
+
+		public ButtonDisplayMode GetButtonDisplayMode(Widget obj)
+		{
+			//	Retourne le mode mode pour le bouton de l'objet.
+			//	Uniquement pour les objects MetaButton.
+			MetaButton button = obj as MetaButton;
+			if (button != null)
+			{
+				return button.DisplayMode;
+			}
+
+			return ButtonDisplayMode.Automatic;
+		}
+
+		public void SetButtonDisplayMode(Widget obj, ButtonDisplayMode mode)
+		{
+			//	Choix du mode pour le bouton de l'objet.
+			//	Uniquement pour les objects MetaButton.
+			MetaButton button = obj as MetaButton;
+			System.Diagnostics.Debug.Assert(button != null);
+
+			button.DisplayMode = mode;
+			this.Invalidate();
+		}
+		#endregion
+
+
 		public void AdaptFromParent(Widget obj, ObjectModifier.StackedHorizontalAttachment ha, ObjectModifier.StackedVerticalAttachment va)
 		{
 			//	Adapte un objet pour son parent.
