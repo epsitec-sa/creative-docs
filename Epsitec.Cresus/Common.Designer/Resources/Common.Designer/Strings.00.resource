@@ -110,7 +110,7 @@
   <data name="Action.PanelShowExpand" id="082">Espacer les groupes</data>
   <data name="Action.PanelShowConstrain" id="092">Activer les contraintes</data>
   <data name="Action.PanelShowAttachment" id="0A2">Afficher les ancrages</data>
-  <data name="Action.PanelRun" id="045" mod="1">Tester l&amp;apos;apos;interface</data>
+  <data name="Action.PanelRun" id="045" mod="1">Tester l&amp;apos;interface</data>
   <data name="Action.MoveLeft" id="0B2">Déplacement à gauche</data>
   <data name="Action.MoveRight" id="0C2">Déplacement à droite</data>
   <data name="Action.MoveDown" id="0D2">Déplacement en bas</data>
@@ -168,7 +168,7 @@
   <data name="Dialog.Filter.Label" id="0P3">Critère</data>
   <data name="Dialog.Filter.Radio.Begin" id="0Q3">Au début</data>
   <data name="Dialog.Filter.Radio.Any" id="0R3">N&amp;apos;importe où</data>
-  <data name="Dialog.Filter.Radio.Jocker" id="0S3">Avec des jockers</data>
+  <data name="Dialog.Filter.Radio.Jocker" id="0S3">Avec des jokers (*?)</data>
   <data name="Dialog.Filter.Check.Case" id="0T3">Respecter la casse</data>
   <data name="Dialog.Filter.Check.Word" id="0U3">Mots entiers</data>
   <data name="Dialog.Filter.Button.Insert" id="0V3">Filtrer</data>
@@ -216,7 +216,7 @@
   <data name="Dialog.ResourceSelector.Button.Use" id="0R4">Utiliser</data>
   <data name="Dialog.ResourceSelector.Button.Create" id="0S4">Créer</data>
   <data name="Dialog.TypeType.Title" id="067" mod="1">Choix du type à créer</data>
-  <data name="Dialog.TypeType.EnumNative" id="097">Enumération C# native</data>
+  <data name="Dialog.TypeType.EnumNative" id="097">Enumération .NET (&lt;b&gt;enum&lt;/b&gt;) native</data>
   <data name="Dialog.TypeType.Tooltip.Options" id="0A7">Montre ou cache les options des énumérations</data>
   <data name="Dialog.TypeType.EnumAll" id="0B7">Tout montrer</data>
   <data name="Dialog.TypeType.EnumOne" id="0C7">Seulement {0}</data>
@@ -236,6 +236,6 @@
   <data name="Error.Name.AlreadyExist" id="035">Impossible d&amp;apos;utiliser ce nom, car il existe déjà !</data>
   <data name="Error.Name.Twofold" id="077" mod="1">Deux parties successives séparées par des&lt;br/&gt;points ne peuvent pas être identiques !</data>
   <data name="Error.Name.SamePrefix" id="087" mod="1">Racine utilisée à double !</data>
-  <data name="Error.ShortcutMany" id="0V5" mod="1">Raccourcis clavier &lt;i&gt;{0}&lt;/i&gt; utilisés plusieurs fois:</data>
+  <data name="Error.ShortcutMany" id="0V5" mod="1">Raccourci clavier &lt;i&gt;{0}&lt;/i&gt; utilisés plusieurs fois :</data>
   <data name="Error.CheckOK" id="006" mod="1">Aucune anomalie détectée.</data>
 </bundle>

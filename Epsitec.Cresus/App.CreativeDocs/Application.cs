@@ -1,3 +1,6 @@
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.App.CreativeDocs
 {
 	public class Application
@@ -5,8 +8,7 @@ namespace Epsitec.App.CreativeDocs
 		[System.STAThread]
 		public static void Main() 
 		{
-			System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.GetCultureInfo (1033);
-			System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.GetCultureInfo (1033);
+			Epsitec.Common.Support.Resources.SetTwoLetterISOLanguageNameOverride ("en");
 			
 			Epsitec.App.DocumentEditor.Application.Start ("F");
 		}

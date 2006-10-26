@@ -354,6 +354,23 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 
+		public static void SetTwoLetterISOLanguageNameOverride(string value)
+		{
+			if ((value == null) ||
+				(value.Length == 2))
+			{
+				Resources.twoLetterISOLanguageNameOverride = value;
+			}
+			else
+			{
+				throw new System.ArgumentException ();
+			}
+		}
+		
+		public static string GetTwoLetterISOLanguageName(CultureInfo culture)
+		{
+			return Resources.twoLetterISOLanguageNameOverride ?? culture.TwoLetterISOLanguageName;
+		}
 		
 		public static bool EqualCultures(ResourceLevel levelA, CultureInfo cultureA, ResourceLevel levelB, CultureInfo cultureB)
 		{
@@ -483,5 +500,6 @@ namespace Epsitec.Common.Support
 
 		private static CultureInfo[]			cultures;
 		private static ResourceManager			manager;
+		private static string					twoLetterISOLanguageNameOverride;
 	}
 }
