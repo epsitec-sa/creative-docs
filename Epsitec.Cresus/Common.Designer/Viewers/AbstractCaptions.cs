@@ -155,27 +155,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 			//	Icône.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Captions.Icon.Title, 0.1);
-#if false
-			this.primaryIcon = new IconButton(leftContainer.Container);
-			this.primaryIcon.PreferredHeight = 30;
-			this.primaryIcon.PreferredWidth = 30;
-			this.primaryIcon.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.primaryIcon.Anchor = AnchorStyles.TopLeft;
-			this.primaryIcon.TabIndex = this.tabIndex++;
-			this.primaryIcon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.primaryIcon.Clicked += new MessageEventHandler(this.HandlePrimaryIconClicked);
-
-			this.primaryIconInfo = new StaticText(leftContainer.Container);
-			this.primaryIconInfo.PreferredHeight = 30;
-			this.primaryIconInfo.PreferredWidth = 300;
-			this.primaryIconInfo.Margins = new Margins(30+10, 0, 0, 0);
-			this.primaryIconInfo.Anchor = AnchorStyles.TopLeft;
-#else
-//-			leftContainer.Container.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-//-			leftContainer.Container.PreferredHeight = 30;
 
 			this.primaryIcon = new IconButton(leftContainer.Container);
-			this.primaryIcon.MinHeight = 30;
+			this.primaryIcon.MinHeight = 30;  // attention, très important !
 			this.primaryIcon.PreferredHeight = 30;
 			this.primaryIcon.PreferredWidth = 30;
 			this.primaryIcon.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -189,7 +171,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIconInfo.PreferredWidth = 300;
 			this.primaryIconInfo.Margins = new Margins(10, 0, 0, 0);
 			this.primaryIconInfo.Dock = DockStyle.Left;
-#endif
 
 			//	Commentaires.
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, 0.7);
