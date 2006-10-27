@@ -200,19 +200,25 @@ namespace Epsitec.Common.Types
 
 		public object ConvertValue(object value)
 		{
-			ICollectionView cv = this.FindCollectionView (value);
-			
-			if (cv != null)
+			System.Diagnostics.Debug.Assert (this.binding != null);
+
+			if ((this.binding.Mode == BindingMode.OneTime) ||
+				(this.binding.Mode == BindingMode.OneWay))
 			{
-				if (this.IsTargetObjectExpectingCollectionView ())
+				ICollectionView cv = this.FindCollectionView (value);
+
+				if (cv != null)
 				{
-					//	Nothing to do, since the target will be happy to get a collection view.
-					
-					return cv;
-				}
-				else
-				{
-					value = cv.CurrentItem;
+					if (this.IsTargetObjectExpectingCollectionView ())
+					{
+						//	Nothing to do, since the target will be happy to get a collection view.
+
+						return cv;
+					}
+					else
+					{
+						value = cv.CurrentItem;
+					}
 				}
 			}
 			
