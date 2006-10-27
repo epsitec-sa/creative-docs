@@ -468,11 +468,14 @@ namespace Epsitec.Common.Types
 
 			ui.SetBinding (UserInterface.InvoiceIdProperty, new Binding (BindingMode.TwoWay, "InvoiceId"));
 			ui.SetBinding (UserInterface.ArticleProperty, new Binding (BindingMode.OneWay, "Articles"));
+			ui.SetBinding (UserInterface.ArticleNameProperty, new Binding (BindingMode.TwoWay, "Articles.Name"));
 
 			//	No DataContext defined for the UserInterface object, so the binding
 			//	won't have any effect yet:
 			
 			Assert.IsNull (ui.InvoiceId);
+			Assert.IsNull (ui.Article);
+			Assert.IsNull (ui.ArticleName);
 			
 			//	Attach a DataContext to the UserInterface object; the bindings become
 			//	active:
@@ -486,7 +489,20 @@ namespace Epsitec.Common.Types
 			Assert.IsNotNull (cv);
 			Assert.IsNotNull (cv.CurrentItem);
 
+			Assert.AreEqual ("Vis M3", ((Article) cv.CurrentItem).Name);
 			Assert.AreEqual (cv.CurrentItem, ui.Article);
+			Assert.AreEqual ("Vis M3", ui.ArticleName);
+
+			cv.MoveCurrentToNext ();
+
+			Assert.AreEqual ("Vis M4", ((Article) cv.CurrentItem).Name);
+			Assert.AreEqual (cv.CurrentItem, ui.Article);
+			Assert.AreEqual ("Vis M4", ui.ArticleName);
+
+			ui.ArticleName = "Vis M4-X";
+
+			Assert.AreEqual ("Vis M4-X", ui.ArticleName);
+			Assert.AreEqual ("Vis M4-X", ((Article) cv.CurrentItem).Name);
 		}
 
 		[Test]
@@ -672,8 +688,21 @@ namespace Epsitec.Common.Types
 				}
 			}
 
+			public string ArticleName
+			{
+				get
+				{
+					return (string) this.GetValue (UserInterface.ArticleNameProperty);
+				}
+				set
+				{
+					this.SetValue (UserInterface.ArticleNameProperty, value);
+				}
+			}
+
 			public static readonly DependencyProperty InvoiceIdProperty = DependencyProperty.Register ("InvoiceId", typeof (string), typeof (UserInterface));
 			public static readonly DependencyProperty ArticleProperty = DependencyProperty.Register ("Article", typeof (Article), typeof (UserInterface));
+			public static readonly DependencyProperty ArticleNameProperty = DependencyProperty.Register ("ArticleName", typeof (string), typeof (UserInterface));
 		}
 
 		private class ArticleList : Collections.ObservableList<Article>
