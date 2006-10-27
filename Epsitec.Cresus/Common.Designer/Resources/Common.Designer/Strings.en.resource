@@ -237,4 +237,5 @@
   <data id="087" mod="1">Duplicate root!</data>
   <data id="0V5" mod="1">Shortcut &lt;i&gt;{0}&lt;/i&gt; used multiple times:</data>
   <data id="006" mod="1">No error found.</data>
+  <data id="0E7">Text Button</data>
 </bundle>
