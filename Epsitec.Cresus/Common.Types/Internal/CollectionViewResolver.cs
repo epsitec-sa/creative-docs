@@ -16,16 +16,43 @@ namespace Epsitec.Common.Types.Internal
 		{
 		}
 
+		/// <summary>
+		/// Gets the collection view. If there is no <see cref="ICollectionView"/>
+		/// for the collection object, it will be created automatically.
+		/// </summary>
+		/// <param name="binding">The data context binding.</param>
+		/// <param name="collection">The collection object.</param>
+		/// <returns>
+		/// An <c>ICollectionView</c> for the specified collection or
+		/// <c>null</c> if the collection is not supported.
+		/// </returns>
 		public ICollectionView GetCollectionView(Binding binding, object collection)
+		{
+			return this.GetCollectionView (binding, collection, true);
+		}
+
+		/// <summary>
+		/// Gets the collection view. If there is no <see cref="ICollectionView"/>
+		/// for the collection object, optionally create it.
+		/// </summary>
+		/// <param name="binding">The data context binding.</param>
+		/// <param name="collection">The collection object.</param>
+		/// <param name="autoCreate">If set to <c>true</c>, automatically creates
+		/// the <c>ICollectionView</c> when needed.</param>
+		/// <returns>
+		/// An <c>ICollectionView</c> for the specified collection or
+		/// <c>null</c> if the collection is not supported.
+		/// </returns>
+		public ICollectionView GetCollectionView(Binding binding, object collection, bool autoCreate)
 		{
 			if (CollectionViewResolver.IsCollectionViewCompatible (collection))
 			{
 				Context context = this.GetContext (binding);
-				ViewDef viewDef = context.GetViewDef (collection);
+				ViewDef viewDef = context.GetViewDef (collection, autoCreate);
 
 				if ((System.Threading.Interlocked.Increment (ref this.counter) % 1000) == 999)
 				{
-					this.TrimContexts ();
+					this.FreeDeadContexts ();
 				}
 
 				return viewDef.View;
@@ -36,8 +63,13 @@ namespace Epsitec.Common.Types.Internal
 			}
 		}
 
-		public void TrimContexts()
+		/// <summary>
+		/// Frees the dead contexts.
+		/// </summary>
+		public void FreeDeadContexts()
 		{
+			//	TODO: make sure that this gets invoked when a binding object attached to a context dies...
+			
 			System.Threading.Interlocked.Exchange (ref this.counter, 0);
 			
 			lock (this.exclusion)
@@ -60,6 +92,13 @@ namespace Epsitec.Common.Types.Internal
 			}
 		}
 
+		/// <summary>
+		/// Determines whether the specified collection object is compatible with <c>ICollectionView</c>.
+		/// </summary>
+		/// <param name="collection">The collection object.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified collection object is compatible with <c>ICollectionView</c>; otherwise, <c>false</c>.
+		/// </returns>
 		public static bool IsCollectionViewCompatible(object collection)
 		{
 			if (collection is System.Collections.IList)
@@ -120,6 +159,10 @@ namespace Epsitec.Common.Types.Internal
 
 		#region Private Context Class
 
+		/// <summary>
+		/// The <c>Context</c> class associates a set of collection/view pairs
+		/// represented by <c>ViewDef</c> with a given binding (data context).
+		/// </summary>
 		private class Context
 		{
 			public Context(Binding binding)
@@ -139,7 +182,16 @@ namespace Epsitec.Common.Types.Internal
 				}
 			}
 
-			public ViewDef GetViewDef(object collection)
+
+			/// <summary>
+			/// Gets the <c>ViewDef</c> for the specified collection object.
+			/// </summary>
+			/// <param name="collection">The collection object.</param>
+			/// <param name="autoCreate">If set to <c>true</c>, the <c>ICollectionView</c>
+			/// will be created automatically if none can be found for the
+			/// collection object.</param>
+			/// <returns>The <c>ViewDef</c> for the collection.</returns>
+			public ViewDef GetViewDef(object collection, bool autoCreate)
 			{
 				lock (this.exclusion)
 				{
@@ -160,13 +212,21 @@ namespace Epsitec.Common.Types.Internal
 							}
 						);
 
-					if (index < 0)
+					if ((index < 0) &&
+						(autoCreate))
 					{
+						//	The collection has no view associated with it. Create one
+						//	and record it for further references:
+
 						viewDef = new ViewDef (collection, CollectionViewResolver.CreateCollectionView (collection));
 						this.viewDefs.Insert (0, viewDef);
 					}
 					else if (index > 0)
 					{
+						//	The view/collection pair is not at the beginning of
+						//	our internal array; move it there so that we find it
+						//	faster next time.
+						
 						this.viewDefs.RemoveAt (index);
 						this.viewDefs.Insert (0, viewDef);
 					}
@@ -175,6 +235,10 @@ namespace Epsitec.Common.Types.Internal
 				}
 			}
 
+
+			/// <summary>
+			/// Disposes this instance.
+			/// </summary>
 			public void Dispose()
 			{
 				foreach (ViewDef viewDef in this.viewDefs)
@@ -199,6 +263,10 @@ namespace Epsitec.Common.Types.Internal
 
 		#region Private ViewDef Structure
 
+		/// <summary>
+		/// The <c>ViewDef</c> structure is used to represent a collection/view
+		/// pair.
+		/// </summary>
 		private struct ViewDef
 		{
 			public ViewDef(object collection, ICollectionView view)
@@ -228,7 +296,7 @@ namespace Epsitec.Common.Types.Internal
 		}
 
 		#endregion
-
+		
 		public static readonly CollectionViewResolver Default = new CollectionViewResolver ();
 
 		private object							exclusion = new object ();
