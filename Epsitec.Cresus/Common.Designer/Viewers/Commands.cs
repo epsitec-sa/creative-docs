@@ -20,24 +20,28 @@ namespace Epsitec.Common.Designer.Viewers
 
 			StaticText label = new StaticText(leftContainer.Container);
 			label.CaptionDruid = Res.Captions.Aspect.ButtonAspect.Druid;
-			label.PreferredWidth = 100;
-			label.Dock = DockStyle.StackBegin;
+			label.PreferredWidth = 110;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Margins = new Margins(0, 5, 0, 0);
+			label.Dock = DockStyle.Left;
 
 			this.primaryAspectDialog = new IconButton(leftContainer.Container);
+			this.primaryAspectDialog.MinSize = this.primaryAspectDialog.PreferredSize;  // attention, très important !
 			this.primaryAspectDialog.CommandDruid = Res.Values.Widgets.ButtonAspect.DialogButton.Druid;
-			this.primaryAspectDialog.Dock = DockStyle.StackBegin;
+			this.primaryAspectDialog.Dock = DockStyle.Left;
 			this.primaryAspectDialog.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
 
 			this.primaryAspectIcon = new IconButton(leftContainer.Container);
+			this.primaryAspectIcon.MinSize = this.primaryAspectIcon.PreferredSize;  // attention, très important !
 			this.primaryAspectIcon.CommandDruid = Res.Values.Widgets.ButtonAspect.IconButton.Druid;
-			this.primaryAspectIcon.Dock = DockStyle.StackBegin;
+			this.primaryAspectIcon.Dock = DockStyle.Left;
 			this.primaryAspectIcon.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
-
-			//?this.primaryDefaultParameter = new Placeholder(leftContainer.Container);
 
 			this.primaryStatefull = new CheckButton(leftContainer.Container);
 			this.primaryStatefull.Text = Res.Strings.Viewers.Commands.Statefull.CheckButton;
-			this.primaryStatefull.Dock = DockStyle.StackBegin;
+			this.primaryStatefull.PreferredWidth = 250;
+			this.primaryStatefull.Margins = new Margins(50, 0, 0, 0);
+			this.primaryStatefull.Dock = DockStyle.Left;
 			this.primaryStatefull.Pressed += new MessageEventHandler(this.HandleStatefullPressed);
 			this.primaryStatefull.TabIndex = this.tabIndex++;
 			this.primaryStatefull.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
