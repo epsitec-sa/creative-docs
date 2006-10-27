@@ -1426,18 +1426,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				MetaButton button = new MetaButton();
 				button.Text = Misc.Italic("Button");
-				this.objectModifier.SetButtonDisplayMode(button, ButtonDisplayMode.Text);
-				button.MinWidth = 20;
-				button.MinHeight = button.PreferredHeight;
-
-				item = button;
-			}
-
-			if (this.context.Tool == "ObjectMetaButton")
-			{
-				MetaButton button = new MetaButton();
-				button.Text = Misc.Italic("Button");
-				this.objectModifier.SetButtonDisplayMode(button, ButtonDisplayMode.Automatic);
+				this.objectModifier.SetButtonAspect(button, ButtonAspect.DialogButton);
 				button.MinWidth = 20;
 				button.MinHeight = button.PreferredHeight;
 
