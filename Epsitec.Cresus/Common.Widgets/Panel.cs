@@ -157,10 +157,22 @@ namespace Epsitec.Common.Widgets
 		protected override void MeasureMinMax(ref Drawing.Size min, ref Drawing.Size max)
 		{
 			base.MeasureMinMax (ref min, ref max);
+		}
+
+		protected override void  ArrangeOverride(Epsitec.Common.Widgets.Layouts.LayoutContext context)
+		{
+ 			base.ArrangeOverride(context);
 			
 			if (this.is_auto_fitting)
 			{
-				this.SurfaceSize = min;
+				Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth (this);
+				Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight (this);
+				
+				if ((measureDx != null) &&
+					(measureDy != null))
+				{
+					this.SurfaceSize = new Drawing.Size (measureDx.Min, measureDy.Min);
+				}
 			}
 		}
 
