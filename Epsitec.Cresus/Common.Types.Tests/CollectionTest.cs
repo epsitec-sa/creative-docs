@@ -459,12 +459,12 @@ namespace Epsitec.Common.Types
 			list.Add (new Article ("Boulon M3"));
 			list.Add (new Article ("Tournevis"));
 			list.Add (new Article ("Clé M4"));
-			
+
 			data.SetValue ("Articles", list);
 			data.SetValue ("InvoiceId", "abc");
 
 			UserInterface ui = new UserInterface ();
-			Binding  context = new Binding (data);
+			Binding context = new Binding (data);
 
 			ui.SetBinding (UserInterface.InvoiceIdProperty, new Binding (BindingMode.TwoWay, "InvoiceId"));
 			ui.SetBinding (UserInterface.ArticleProperty, new Binding (BindingMode.OneWay, "Articles"));
@@ -472,14 +472,14 @@ namespace Epsitec.Common.Types
 
 			//	No DataContext defined for the UserInterface object, so the binding
 			//	won't have any effect yet:
-			
+
 			Assert.IsNull (ui.InvoiceId);
 			Assert.IsNull (ui.Article);
 			Assert.IsNull (ui.ArticleName);
-			
+
 			//	Attach a DataContext to the UserInterface object; the bindings become
 			//	active:
-			
+
 			DataObject.SetDataContext (ui, context);
 
 			Assert.AreEqual (data.GetValue ("InvoiceId"), ui.InvoiceId);
@@ -503,6 +503,34 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual ("Vis M4-X", ui.ArticleName);
 			Assert.AreEqual ("Vis M4-X", ((Article) cv.CurrentItem).Name);
+		}
+
+		[Test]
+		public void CheckCollectionBinding2()
+		{
+			StructuredData data = new StructuredData ();
+			ArticleList list = new ArticleList ();
+
+			list.Add (new Article ("Vis M3"));
+			list.Add (new Article ("Vis M4"));
+			list.Add (new Article ("Boulon M3"));
+			list.Add (new Article ("Tournevis"));
+			list.Add (new Article ("Clé M4"));
+
+			data.SetValue ("Articles", list);
+			data.SetValue ("InvoiceId", "abc");
+
+			UserInterface ui = new UserInterface ();
+			Binding context = new Binding (data);
+
+			ui.SetBinding (UserInterface.ArticlesProperty, new Binding (BindingMode.OneWay, "Articles"));
+			
+			DataObject.SetDataContext (ui, context);
+
+			ICollectionView cv = Internal.CollectionViewResolver.Default.GetCollectionView (context, list);
+
+			Assert.IsNotNull (cv);
+			Assert.AreEqual (cv, ui.GetValue (UserInterface.ArticlesProperty));
 		}
 
 		[Test]
@@ -700,9 +728,10 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			public static readonly DependencyProperty InvoiceIdProperty = DependencyProperty.Register ("InvoiceId", typeof (string), typeof (UserInterface));
-			public static readonly DependencyProperty ArticleProperty = DependencyProperty.Register ("Article", typeof (Article), typeof (UserInterface));
-			public static readonly DependencyProperty ArticleNameProperty = DependencyProperty.Register ("ArticleName", typeof (string), typeof (UserInterface));
+			public static readonly DependencyProperty InvoiceIdProperty		= DependencyProperty.Register ("InvoiceId", typeof (string), typeof (UserInterface));
+			public static readonly DependencyProperty ArticleProperty		= DependencyProperty.Register ("Article", typeof (Article), typeof (UserInterface));
+			public static readonly DependencyProperty ArticleNameProperty	= DependencyProperty.Register ("ArticleName", typeof (string), typeof (UserInterface));
+			public static readonly DependencyProperty ArticlesProperty		= DependencyProperty.Register ("Articles", typeof (ICollectionView), typeof (UserInterface));
 		}
 
 		private class ArticleList : Collections.ObservableList<Article>

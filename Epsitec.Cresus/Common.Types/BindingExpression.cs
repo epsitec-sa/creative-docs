@@ -204,7 +204,16 @@ namespace Epsitec.Common.Types
 			
 			if (cv != null)
 			{
-				value = cv.CurrentItem;
+				if (this.IsTargetObjectExpectingCollectionView ())
+				{
+					//	Nothing to do, since the target will be happy to get a collection view.
+					
+					return cv;
+				}
+				else
+				{
+					value = cv.CurrentItem;
+				}
 			}
 			
 			return this.binding.ConvertValue (value, this.targetPropery.PropertyType);
@@ -385,21 +394,16 @@ namespace Epsitec.Common.Types
 					{
 						if (i > 0)
 						{
-							if (breadcrumbs == null)
-							{
-								breadcrumbs = new BindingBreadcrumbs (this.HandleBreadcrumbsChanged);
-							}
-
 							if ((doSource != null) &&
 								(property != null))
 							{
-								breadcrumbs.AddNode (doSource, property);
+								this.AddBreadcrumb (ref breadcrumbs, doSource, property);
 								root = doSource.GetValue (property);
 							}
 							else if ((sdSource != null) &&
 								/**/ (!string.IsNullOrEmpty (name)))
 							{
-								breadcrumbs.AddNode (sdSource, name);
+								this.AddBreadcrumb (ref breadcrumbs, sdSource, name);
 								root = sdSource.GetValue (name);
 							}
 							else
@@ -426,13 +430,7 @@ namespace Epsitec.Common.Types
 
 						if (cvSource != null)
 						{
-							if (breadcrumbs == null)
-							{
-								breadcrumbs = new BindingBreadcrumbs (this.HandleBreadcrumbsChanged);
-							}
-
-							breadcrumbs.AddNode (cvSource);
-
+							this.AddBreadcrumb (ref breadcrumbs, cvSource);
 							root = cvSource.CurrentItem;
 
 							doSource = root as DependencyObject;
@@ -484,16 +482,24 @@ namespace Epsitec.Common.Types
 
 					System.Diagnostics.Debug.Assert (type != DataSourceType.None);
 
+
 					cvSource = this.FindCollectionView (root);
 
 					if (cvSource != null)
 					{
-						if (breadcrumbs == null)
-						{
-							breadcrumbs = new BindingBreadcrumbs (this.HandleBreadcrumbsChanged);
-						}
+						//	We have successfully resolved the real source object (the last
+						//	element at the end of the source path) and it happens to be a
+						//	collection view backed object.
 
-						breadcrumbs.AddNode (cvSource);
+						if (this.IsTargetObjectExpectingCollectionView ())
+						{
+							//	The target object is expecting a collection view, so we do
+							//	not need to step in.
+						}
+						else
+						{
+							this.AddBreadcrumb (ref breadcrumbs, cvSource);
+						}
 					}
 
 					//	If we have traversed several data source objects to arrive
@@ -501,6 +507,51 @@ namespace Epsitec.Common.Types
 					//	to detect changes; this is done in InternalAttachToSource,
 					//	by the caller, based on the breadcrumbs.
 
+					return true;
+				}
+			}
+			
+			return false;
+		}
+
+		private void AddBreadcrumb(ref BindingBreadcrumbs breadcrumbs, DependencyObject source, DependencyProperty property)
+		{
+			if (breadcrumbs == null)
+			{
+				breadcrumbs = new BindingBreadcrumbs (this.HandleBreadcrumbsChanged);
+			}
+
+			breadcrumbs.AddNode (source, property);
+		}
+
+		private void AddBreadcrumb(ref BindingBreadcrumbs breadcrumbs, IStructuredData source, string name)
+		{
+			if (breadcrumbs == null)
+			{
+				breadcrumbs = new BindingBreadcrumbs (this.HandleBreadcrumbsChanged);
+			}
+
+			breadcrumbs.AddNode (source, name);
+		}
+
+		private void AddBreadcrumb(ref BindingBreadcrumbs breadcrumbs, ICollectionView source)
+		{
+			if (breadcrumbs == null)
+			{
+				breadcrumbs = new BindingBreadcrumbs (this.HandleBreadcrumbsChanged);
+			}
+
+			breadcrumbs.AddNode (source);
+		}
+
+		private bool IsTargetObjectExpectingCollectionView()
+		{
+			if (this.targetPropery != null)
+			{
+				System.Type propertyType = this.targetPropery.PropertyType;
+
+				if (TypeRosetta.DoesTypeImplementInterface (propertyType, typeof (ICollectionView)))
+				{
 					return true;
 				}
 			}
