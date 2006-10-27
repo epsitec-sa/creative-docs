@@ -1426,7 +1426,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				MetaButton button = new MetaButton();
 				button.Text = Misc.Italic("Button");
-				this.objectModifier.SetButtonAspect(button, ButtonAspect.DialogButton);
+				this.objectModifier.SetButtonAspect(button, ButtonAspect.IconButton);
 				button.MinWidth = 20;
 				button.MinHeight = button.PreferredHeight;
 
@@ -1516,7 +1516,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 				druid = this.module.MainWindow.DlgResourceSelector(this.module, type, druid, null);
 				this.objectModifier.SetDruid(obj, druid.ToString());
 
-				return !druid.IsEmpty;
+				if (druid.IsEmpty)
+				{
+					return false;
+				}
+
+				if (type == ResourceAccess.Type.Commands)
+				{
+					ButtonAspect aspect = ButtonAspect.None;
+
+					switch (this.module.AccessCaptions.DirectDefaultParameter(druid))
+					{
+						case "DialogButton":
+							aspect = ButtonAspect.DialogButton;
+							break;
+
+						case "IconButton":
+							aspect = ButtonAspect.IconButton;
+							break;
+					}
+
+					if (aspect != ButtonAspect.None)
+					{
+						this.objectModifier.SetButtonAspect(obj, aspect);
+					}
+				}
 			}
 
 			return true;

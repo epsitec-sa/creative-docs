@@ -1233,6 +1233,19 @@ namespace Epsitec.Common.Designer
 			return caption.Icon;
 		}
 
+		public string DirectDefaultParameter(Druid druid)
+		{
+			//	Retourne le paramètre par défaut d'une commande, sans tenir compte du filtre.
+			//	La recherche s'effectue toujours dans la culture de base.
+			Caption caption = this.resourceManager.GetCaption(druid);
+			if (caption == null)
+			{
+				return null;
+			}
+
+			return Command.GetDefaultParameter(caption);
+		}
+
 		public string DirectGetGroup(Druid druid)
 		{
 			//	Retourne le groupe d'une commande.

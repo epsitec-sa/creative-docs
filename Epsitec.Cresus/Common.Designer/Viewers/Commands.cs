@@ -15,7 +15,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
-			//	Aspect et Statefull.
+			//	Aspect (pour DefaultParameter) et Statefull.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, 0.1);
 
 			StaticText label = new StaticText(leftContainer.Container);
@@ -25,19 +25,19 @@ namespace Epsitec.Common.Designer.Viewers
 			label.Margins = new Margins(0, 5, 0, 0);
 			label.Dock = DockStyle.Left;
 
-			this.primaryAspectDialog = new IconButton(leftContainer.Container);
-			this.primaryAspectDialog.MinSize = this.primaryAspectDialog.PreferredSize;  // attention, très important !
-			this.primaryAspectDialog.CommandDruid = Res.Values.Widgets.ButtonAspect.DialogButton.Druid;
-			this.primaryAspectDialog.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.primaryAspectDialog.Dock = DockStyle.Left;
-			this.primaryAspectDialog.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
-
 			this.primaryAspectIcon = new IconButton(leftContainer.Container);
 			this.primaryAspectIcon.MinSize = this.primaryAspectIcon.PreferredSize;  // attention, très important !
 			this.primaryAspectIcon.CommandDruid = Res.Values.Widgets.ButtonAspect.IconButton.Druid;
-			this.primaryAspectIcon.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.primaryAspectIcon.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
 			this.primaryAspectIcon.Dock = DockStyle.Left;
 			this.primaryAspectIcon.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
+
+			this.primaryAspectDialog = new IconButton(leftContainer.Container);
+			this.primaryAspectDialog.MinSize = this.primaryAspectDialog.PreferredSize;  // attention, très important !
+			this.primaryAspectDialog.CommandDruid = Res.Values.Widgets.ButtonAspect.DialogButton.Druid;
+			this.primaryAspectDialog.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
+			this.primaryAspectDialog.Dock = DockStyle.Left;
+			this.primaryAspectDialog.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
 
 			this.primaryStatefull = new CheckButton(leftContainer.Container);
 			this.primaryStatefull.Text = Res.Strings.Viewers.Commands.Statefull.CheckButton;
@@ -170,10 +170,10 @@ namespace Epsitec.Common.Designer.Viewers
 				ResourceAccess.Field field;
 
 				field = this.access.GetField(sel, null, ResourceAccess.FieldType.Controller);
-				this.primaryAspectDialog.Enable = true;
-				this.primaryAspectDialog.ActiveState = (field.String == "DialogButton" || string.IsNullOrEmpty(field.String)) ? ActiveState.Yes : ActiveState.No;
 				this.primaryAspectIcon.Enable = true;
-				this.primaryAspectIcon.ActiveState = (field.String == "IconButton") ? ActiveState.Yes : ActiveState.No;
+				this.primaryAspectIcon.ActiveState = (field.String == "IconButton" || string.IsNullOrEmpty(field.String)) ? ActiveState.Yes : ActiveState.No;
+				this.primaryAspectDialog.Enable = true;
+				this.primaryAspectDialog.ActiveState = (field.String == "DialogButton") ? ActiveState.Yes : ActiveState.No;
 
 				field = this.access.GetField(sel, null, ResourceAccess.FieldType.Statefull);
 				bool statefull = field.Boolean;
@@ -459,8 +459,8 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 		
 
-		protected IconButton					primaryAspectDialog;
 		protected IconButton					primaryAspectIcon;
+		protected IconButton					primaryAspectDialog;
 		protected CheckButton					primaryStatefull;
 		protected ShortcutEditor				primaryShortcut1;
 		protected ShortcutEditor				primaryShortcut2;
