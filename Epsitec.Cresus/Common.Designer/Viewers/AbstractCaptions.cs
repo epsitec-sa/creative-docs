@@ -171,10 +171,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIconInfo.Margins = new Margins(30+10, 0, 0, 0);
 			this.primaryIconInfo.Anchor = AnchorStyles.TopLeft;
 #else
-			leftContainer.Container.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-			leftContainer.Container.PreferredHeight = 30;
+//-			leftContainer.Container.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+//-			leftContainer.Container.PreferredHeight = 30;
 
 			this.primaryIcon = new IconButton(leftContainer.Container);
+			this.primaryIcon.MinHeight = 30;
 			this.primaryIcon.PreferredHeight = 30;
 			this.primaryIcon.PreferredWidth = 30;
 			this.primaryIcon.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -186,6 +187,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIconInfo = new StaticText(leftContainer.Container);
 			this.primaryIconInfo.PreferredHeight = 30;
 			this.primaryIconInfo.PreferredWidth = 300;
+			this.primaryIconInfo.Margins = new Margins(10, 0, 0, 0);
 			this.primaryIconInfo.Dock = DockStyle.Left;
 #endif
 
