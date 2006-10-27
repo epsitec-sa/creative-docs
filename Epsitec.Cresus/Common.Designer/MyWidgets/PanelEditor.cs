@@ -1422,12 +1422,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 				item.MinHeight = item.PreferredHeight;
 			}
 
-			if (this.context.Tool == "ObjectButton")
+			if (this.context.Tool == "ObjectSquareButton")
 			{
 				MetaButton button = new MetaButton();
 				button.Text = Misc.Italic("Button");
 				this.objectModifier.SetButtonAspect(button, ButtonAspect.IconButton);
-				button.MinWidth = 20;
+				button.MinWidth = button.PreferredHeight;  // largeur minimale pour former un carré
+				button.MinHeight = button.PreferredHeight;
+				button.PreferredWidth = button.PreferredHeight;
+
+				item = button;
+			}
+
+			if (this.context.Tool == "ObjectRectButton")
+			{
+				MetaButton button = new MetaButton();
+				button.Text = Misc.Italic("Button");
+				this.objectModifier.SetButtonAspect(button, ButtonAspect.IconButton);
+				button.MinWidth = button.PreferredHeight;  // largeur minimale pour former un carré
 				button.MinHeight = button.PreferredHeight;
 
 				item = button;

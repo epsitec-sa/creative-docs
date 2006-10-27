@@ -203,7 +203,7 @@
     <EmbeddedResource Include="Images\ToolEdit.icon" />
     <EmbeddedResource Include="Images\ToolHand.icon" />
     <EmbeddedResource Include="Images\ToolZoom.icon" />
-    <EmbeddedResource Include="Images\ObjectButton.icon" />
+    <EmbeddedResource Include="Images\ObjectSquareButton.icon" />
     <EmbeddedResource Include="Images\ObjectText.icon" />
     <EmbeddedResource Include="Images\ObjectHLine.icon" />
     <EmbeddedResource Include="Images\CursorArrow.icon" />
@@ -408,6 +408,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\ButtonAspectDialog.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\ObjectRectButton.icon" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -143,7 +143,8 @@
   <data name="Action.ToolHand" id="073">Main</data>
   <data name="Action.ObjectHLine" id="083">Séparateur horizontal</data>
   <data name="Action.ObjectVLine" id="093">Séparateur vertical</data>
-  <data name="Action.ObjectButton" id="0A3" mod="1">Bouton pour une commande</data>
+  <data name="Action.ObjectSquareButton" id="0A3" mod="1">Bouton carré pour une commande</data>
+  <data name="Action.ObjectRectButton" id="0E7" mod="1">Bouton rectangulaire pour une commande</data>
   <data name="Action.ObjectText" id="0B3">Texte éditable</data>
   <data name="Action.ObjectStatic" id="0C3">Texte fixe</data>
   <data name="Action.ObjectGroup" id="0D3">Groupe invisible</data>
