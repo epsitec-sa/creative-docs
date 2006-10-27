@@ -200,6 +200,13 @@ namespace Epsitec.Common.Types
 
 		public object ConvertValue(object value)
 		{
+			ICollectionView cv = this.FindCollectionView (value);
+			
+			if (cv != null)
+			{
+				value = cv.CurrentItem;
+			}
+			
 			return this.binding.ConvertValue (value, this.targetPropery.PropertyType);
 		}
 
@@ -461,6 +468,8 @@ namespace Epsitec.Common.Types
 						
 						objectSource   = doSource;
 						objectProperty = property;
+						
+						root = doSource.GetValue (property);
 					}
 					else if ((sdSource != null) &&
 						/**/ (!string.IsNullOrEmpty (name)))
@@ -469,6 +478,22 @@ namespace Epsitec.Common.Types
 						
 						objectSource   = sdSource;
 						objectProperty = name;
+
+						root = sdSource.GetValue (name);
+					}
+
+					System.Diagnostics.Debug.Assert (type != DataSourceType.None);
+
+					cvSource = this.FindCollectionView (root);
+
+					if (cvSource != null)
+					{
+						if (breadcrumbs == null)
+						{
+							breadcrumbs = new BindingBreadcrumbs (this.HandleBreadcrumbsChanged);
+						}
+
+						breadcrumbs.AddNode (cvSource);
 					}
 
 					//	If we have traversed several data source objects to arrive

@@ -464,16 +464,29 @@ namespace Epsitec.Common.Types
 			data.SetValue ("InvoiceId", "abc");
 
 			UserInterface ui = new UserInterface ();
-
-			Binding context = new Binding (data);
+			Binding  context = new Binding (data);
 
 			ui.SetBinding (UserInterface.InvoiceIdProperty, new Binding (BindingMode.TwoWay, "InvoiceId"));
+			ui.SetBinding (UserInterface.ArticleProperty, new Binding (BindingMode.OneWay, "Articles"));
 
+			//	No DataContext defined for the UserInterface object, so the binding
+			//	won't have any effect yet:
+			
 			Assert.IsNull (ui.InvoiceId);
+			
+			//	Attach a DataContext to the UserInterface object; the bindings become
+			//	active:
 			
 			DataObject.SetDataContext (ui, context);
 
 			Assert.AreEqual (data.GetValue ("InvoiceId"), ui.InvoiceId);
+
+			ICollectionView cv = Internal.CollectionViewResolver.Default.GetCollectionView (context, list);
+
+			Assert.IsNotNull (cv);
+			Assert.IsNotNull (cv.CurrentItem);
+
+			Assert.AreEqual (cv.CurrentItem, ui.Article);
 		}
 
 		[Test]
