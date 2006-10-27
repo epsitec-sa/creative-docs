@@ -66,25 +66,7 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				ButtonAspect actual = (ButtonAspect) this.GetValue(MetaButton.AspectProperty);
-				if (actual != value)
-				{
-					this.SetValue(MetaButton.AspectProperty, value);
-
-					if (value == ButtonAspect.DialogButton)
-					{
-						this.SetValue(MetaButton.DisplayModeProperty, ButtonDisplayMode.Text);
-						base.ButtonStyle = ButtonStyle.Normal;
-						base.ContentAlignment = ContentAlignment.MiddleCenter;
-					}
-
-					if (value == ButtonAspect.IconButton)
-					{
-						this.SetValue(MetaButton.DisplayModeProperty, ButtonDisplayMode.Automatic);
-						base.ButtonStyle = ButtonStyle.ToolItem;
-						base.ContentAlignment = ContentAlignment.MiddleLeft;
-					}
-				}
+				this.SetValue(MetaButton.AspectProperty, value);
 			}
 		}
 
@@ -215,7 +197,7 @@ namespace Epsitec.Common.Widgets
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();
-			this.UpdateIcon(this.IconName);
+			this.UpdateIcon();
 		}
 
 		protected override void OnIconNameChanged(string oldIconName, string newIconName)
@@ -230,18 +212,25 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				this.UpdateIcon(newIconName);
+				this.UpdateIcon();
 			}
 		}
 
 
-		protected void UpdateIcon(string iconName)
+		protected void UpdateIcon()
 		{
 			//	Met à jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
 			//	suivi des différentes préférences (taille, langue et style).
+			
+			string iconName = this.IconName;
+			
 			if (string.IsNullOrEmpty(iconName) || this.DisplayMode == ButtonDisplayMode.Text)
 			{
-				this.iconLayout = null;
+				if (this.iconLayout != null)
+				{
+					this.iconLayout = null;
+					this.Invalidate ();
+				}
 			}
 			else
 			{
@@ -276,11 +265,20 @@ namespace Epsitec.Common.Widgets
 
 				if (this.iconLayout == null)
 				{
-					this.iconLayout = new TextLayout();
+					this.iconLayout = new TextLayout ();
+				}
+				else
+				{
+					if ((this.iconLayout.Text == builder.ToString ()) &&
+						(this.iconLayout.Alignment == ContentAlignment.MiddleCenter))
+					{
+						return;
+					}
 				}
 
 				this.iconLayout.Text = builder.ToString();
 				this.iconLayout.Alignment = ContentAlignment.MiddleCenter;
+				this.Invalidate ();
 			}
 		}
 
@@ -497,22 +495,47 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		private static void HandleAspectChanged(DependencyObject obj, object oldValue, object newValue)
+		{
+			MetaButton that = (MetaButton) obj;
+			that.UpdateAspect ((ButtonAspect) newValue);
+		}
 
-		private static void HandleGeometryChanged(DependencyObject obj, object oldValue, object newObject)
+		private void UpdateAspect(ButtonAspect aspect)
+		{
+			switch (aspect)
+			{
+				case ButtonAspect.DialogButton:
+					this.SetValue (MetaButton.DisplayModeProperty, ButtonDisplayMode.Text);
+					base.ButtonStyle = ButtonStyle.Normal;
+					base.ContentAlignment = ContentAlignment.MiddleCenter;
+					break;
+				
+				case ButtonAspect.IconButton:
+					this.SetValue (MetaButton.DisplayModeProperty, ButtonDisplayMode.Automatic);
+					base.ButtonStyle = ButtonStyle.ToolItem;
+					base.ContentAlignment = ContentAlignment.MiddleLeft;
+					break;
+
+				default:
+					throw new System.NotSupportedException (string.Format ("ButtonAspect.{0} not supported", aspect));
+			}
+		}
+
+		private static void HandleIconDefinitionChanged(DependencyObject obj, object oldValue, object newValue)
 		{
 			MetaButton that = obj as MetaButton;
 
-			that.UpdateIcon(that.IconName);
-			that.Invalidate();
+			that.UpdateIcon();
 		}
 
-		public static readonly DependencyProperty AspectProperty                = DependencyProperty.Register("Aspect", typeof(ButtonAspect), typeof(MetaButton), new DependencyPropertyMetadata(ButtonAspect.None, MetaButton.HandleGeometryChanged));
-		public static readonly DependencyProperty DisplayModeProperty           = DependencyProperty.Register("DisplayMode", typeof(ButtonDisplayMode), typeof(MetaButton), new DependencyPropertyMetadata(ButtonDisplayMode.Automatic, MetaButton.HandleGeometryChanged));
-		public static readonly DependencyProperty MarkDispositionProperty       = DependencyProperty.Register("MarkDisposition", typeof(ButtonMarkDisposition), typeof(MetaButton), new DependencyPropertyMetadata(ButtonMarkDisposition.None, MetaButton.HandleGeometryChanged));
-		public static readonly DependencyProperty MarkDimensionProperty         = DependencyProperty.Register("MarkDimension", typeof(double), typeof(MetaButton), new DependencyPropertyMetadata(8.0, MetaButton.HandleGeometryChanged));
-		public static readonly DependencyProperty BulletColorProperty           = DependencyProperty.Register("BulletColor", typeof(Color), typeof(MetaButton), new DependencyPropertyMetadata(Color.Empty, MetaButton.HandleGeometryChanged));
-		public static readonly DependencyProperty PreferredIconLanguageProperty = DependencyProperty.Register("PreferredIconLanguage", typeof(string), typeof(MetaButton), new DependencyPropertyMetadata(System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName, MetaButton.HandleGeometryChanged));
-		public static readonly DependencyProperty PreferredIconStyleProperty    = DependencyProperty.Register("PreferredIconStyle", typeof(string), typeof(MetaButton), new DependencyPropertyMetadata(null, MetaButton.HandleGeometryChanged));
+		public static readonly DependencyProperty AspectProperty                = DependencyProperty.Register("Aspect", typeof(ButtonAspect), typeof(MetaButton), new DependencyPropertyMetadata(ButtonAspect.None, MetaButton.HandleAspectChanged));
+		public static readonly DependencyProperty DisplayModeProperty           = DependencyProperty.Register("DisplayMode", typeof(ButtonDisplayMode), typeof(MetaButton), new DependencyPropertyMetadata(ButtonDisplayMode.Automatic, MetaButton.HandleIconDefinitionChanged));
+		public static readonly DependencyProperty MarkDispositionProperty       = DependencyProperty.Register("MarkDisposition", typeof(ButtonMarkDisposition), typeof(MetaButton), new DependencyPropertyMetadata(ButtonMarkDisposition.None, MetaButton.HandleIconDefinitionChanged));
+		public static readonly DependencyProperty MarkDimensionProperty         = DependencyProperty.Register("MarkDimension", typeof(double), typeof(MetaButton), new DependencyPropertyMetadata(8.0, MetaButton.HandleIconDefinitionChanged));
+		public static readonly DependencyProperty BulletColorProperty           = DependencyProperty.Register("BulletColor", typeof(Color), typeof(MetaButton), new DependencyPropertyMetadata(Color.Empty, MetaButton.HandleIconDefinitionChanged));
+		public static readonly DependencyProperty PreferredIconLanguageProperty = DependencyProperty.Register("PreferredIconLanguage", typeof(string), typeof(MetaButton), new DependencyPropertyMetadata(System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName, MetaButton.HandleIconDefinitionChanged));
+		public static readonly DependencyProperty PreferredIconStyleProperty    = DependencyProperty.Register("PreferredIconStyle", typeof(string), typeof(MetaButton), new DependencyPropertyMetadata(null, MetaButton.HandleIconDefinitionChanged));
 
 		protected TextLayout			iconLayout;
 	}
