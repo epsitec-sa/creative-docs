@@ -235,7 +235,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public static readonly DependencyProperty ButtonStyleProperty = DependencyProperty.Register ("ButtonStyle", typeof (ButtonStyle), typeof (MetaButton), new Helpers.VisualPropertyMetadata (ButtonStyle.Normal, Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty ButtonStyleProperty = DependencyProperty.Register ("ButtonStyle", typeof (ButtonStyle), typeof (Button), new Helpers.VisualPropertyMetadata (ButtonStyle.Normal, Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
 		
 		protected double				innerZoom = 1.0;
 	}
