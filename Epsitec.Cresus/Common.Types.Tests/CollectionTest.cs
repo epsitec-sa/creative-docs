@@ -438,6 +438,9 @@ namespace Epsitec.Common.Types
 			List<DependencyObject> list1 = new List<DependencyObject> ();
 			Collections.ObservableList<DependencyObject> list2 = new Collections.ObservableList<DependencyObject> ();
 
+			Assert.IsNull (resolver.GetCollectionView (binding1, list1, false));
+			Assert.IsNull (resolver.GetCollectionView (binding1, list2, false));
+			
 			ICollectionView cv1 = resolver.GetCollectionView (binding1, list1);
 			ICollectionView cv2 = resolver.GetCollectionView (binding1, list2);
 			
@@ -484,7 +487,7 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual (data.GetValue ("InvoiceId"), ui.InvoiceId);
 
-			ICollectionView cv = Internal.CollectionViewResolver.Default.GetCollectionView (context, list);
+			ICollectionView cv = DataObject.GetCollectionView (ui, list);
 
 			Assert.IsNotNull (cv);
 			Assert.IsNotNull (cv.CurrentItem);

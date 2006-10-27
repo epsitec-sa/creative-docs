@@ -40,6 +40,37 @@ namespace Epsitec.Common.Types
 			o.ClearValue (DataObject.DataContextProperty);
 		}
 
+		/// <summary>
+		/// Gets the collection view for a collection object in the context of
+		/// a dependency object.
+		/// </summary>
+		/// <param name="contextHost">An object with an associated data context.</param>
+		/// <param name="collection">The collection object.</param>
+		/// <returns>A collection view or <c>null</c> if the collection object is not
+		/// compatible with <c>ICollectionView</c>.</returns>
+		public static ICollectionView GetCollectionView(DependencyObject contextHost, object collection)
+		{
+			if (contextHost == null)
+			{
+				throw new System.ArgumentNullException ("contextHost");
+			}
+			if (collection == null)
+			{
+				throw new System.ArgumentNullException ("collection");
+			}
+
+			Binding binding = DataObject.GetDataContext (contextHost);
+
+			if (binding == null)
+			{
+				return null;
+			}
+			else
+			{
+				return Internal.CollectionViewResolver.Default.GetCollectionView (binding, collection);
+			}
+		}
+
 		public static readonly DependencyProperty DataContextProperty = DependencyProperty.RegisterAttached ("DataContext", typeof (Binding), typeof (DataObject), new DependencyPropertyMetadataWithInheritance ());
 	}
 }
