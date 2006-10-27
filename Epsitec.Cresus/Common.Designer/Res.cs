@@ -14,6 +14,11 @@ namespace Epsitec.Common.Designer
 				public static Epsitec.Common.Types.Caption ButtonAspect { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 387)); } }
 			}
 			
+			public static class Command
+			{
+				public static Epsitec.Common.Types.Caption ButtonAspect { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 391)); } }
+			}
+			
 			public static class Editor
 			{
 				public static class Type
