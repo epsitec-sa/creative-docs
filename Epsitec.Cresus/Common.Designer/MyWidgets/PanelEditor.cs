@@ -99,6 +99,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.selectedObjects.Clear();
 					this.GridClearSelection();
 					this.UpdateAfterSelectionChanged();
+					this.lastCreatedObject = null;
 					
 					this.panel = value;
 					this.sizeMark = this.panel.PreferredSize;
