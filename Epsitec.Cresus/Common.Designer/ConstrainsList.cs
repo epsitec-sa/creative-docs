@@ -283,6 +283,21 @@ namespace Epsitec.Common.Designer
 			{
 				if (!this.isDot)
 				{
+					if (obj is AbstractButton)
+					{
+						constrain = new Constrain(bounds.BottomLeft, Constrain.Type.Right, this.context.ConstrainMargin);
+						this.Add(constrain);
+
+						constrain = new Constrain(bounds.BottomRight, Constrain.Type.Left, this.context.ConstrainMargin);
+						this.Add(constrain);
+
+						constrain = new Constrain(bounds.BottomLeft, Constrain.Type.Top, this.context.ConstrainMargin);
+						this.Add(constrain);
+
+						constrain = new Constrain(bounds.TopLeft, Constrain.Type.Bottom, this.context.ConstrainMargin);
+						this.Add(constrain);
+					}
+
 					Point baseLine = bounds.BottomLeft;
 					baseLine.Y += this.editor.GetObjectBaseLine(obj);
 					constrain = new Constrain(baseLine, Constrain.Type.BaseLine, this.context.ConstrainMargin);
