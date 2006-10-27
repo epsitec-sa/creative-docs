@@ -157,14 +157,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (permeable != null)
 			{
-				permeable.UpdateGridSpan (ref columnSpan, ref rowSpan);
+				permeable.UpdateGridSpan(ref columnSpan, ref rowSpan);
 			}
 
 			int row = this.grid.RowDefinitions.Count;
 
-			for (int i = 0; i < rowSpan; i++)
+			for (int i=0; i<rowSpan; i++)
 			{
-				this.grid.RowDefinitions.Add (new RowDefinition ());
+				this.grid.RowDefinitions.Add(new RowDefinition());
 			}
 			
 			if (row > 0)
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			GridLayoutEngine.SetColumn(placeholder, 0);
 			GridLayoutEngine.SetRow(placeholder, row);
 			GridLayoutEngine.SetColumnSpan(placeholder, columnSpan);
-			GridLayoutEngine.SetRowSpan (placeholder, rowSpan);
+			GridLayoutEngine.SetRowSpan(placeholder, rowSpan);
 			this.container.Children.Add(placeholder);
 		}
 

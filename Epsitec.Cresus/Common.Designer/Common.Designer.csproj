@@ -383,9 +383,6 @@
     <EmbeddedResource Include="Images\PropertyContent.icon" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Images\ObjectMetaButton.icon" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Images\PropertyAspect.icon" />
   </ItemGroup>
   <ItemGroup>
