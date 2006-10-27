@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Captions" type="Caption" culture="fr">
-  <data name="Cap.Aspect.ButtonAspect" id="03C">&lt;s:data id="_0" f:Name="Aspect.ButtonAspect" f:Description="Aspect du contenu des boutons" f:Labels="{Collection {Text 'Boutons'}, {Text 'Aspect des boutons'}}" /&gt;</data>
+  <data name="Cap.Aspect.ButtonAspect" id="03C">&lt;s:data id="_0" f:Name="Aspect.ButtonAspect" f:Description="Aspect des boutons" f:Labels="{Collection {Text 'Boutons'}, {Text 'Aspect des boutons'}}" /&gt;</data>
+  <data name="Cap.Command.ButtonAspect" id="07C">&lt;s:data id="_0" f:Name="Command.ButtonAspect" f:Labels="{Collection {Text 'Aspect par défaut du bouton'}}" /&gt;</data>
   <data name="Cap.Geometry.LeftMargin" id="0">&lt;s:data id="_0" f:Description="Marge gauche" f:Name="Geometry.LeftMargin" f:Labels="{Collection {Text 'Marge gauche'}}" /&gt;</data>
   <data name="Cap.Geometry.RightMargin" id="01">&lt;s:data id="_0" f:Description="Marge droite" f:Name="Geometry.RightMargin" f:Labels="{Collection {Text 'Marge droite'}}" /&gt;</data>
   <data name="Cap.Geometry.TopMargin" id="02">&lt;s:data id="_0" f:Description="Marge supérieure" f:Name="Geometry.TopMargin" f:Labels="{Collection {Text 'Marge supérieure'}}" /&gt;</data>

@@ -19,8 +19,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, 0.1);
 
 			StaticText label = new StaticText(leftContainer.Container);
-			label.CaptionDruid = Res.Captions.Aspect.ButtonAspect.Druid;
-			label.PreferredWidth = 110;
+			label.CaptionDruid = Res.Captions.Command.ButtonAspect.Druid;
+			label.PreferredWidth = 150;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Margins = new Margins(0, 5, 0, 0);
 			label.Dock = DockStyle.Left;
