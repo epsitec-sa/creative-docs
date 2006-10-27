@@ -15,10 +15,8 @@ namespace Epsitec.Common.Widgets
 
 	public enum ButtonDisplayMode
 	{
+		TextOnly,		// texte seul
 		Automatic,		// icône et/ou texte selon la taille disponible
-		Icon,			// icône seule
-		Text,			// texte seul
-		IconAndText,	// icône à gauche et texte à droite
 	}
 
 	public enum ButtonMarkDisposition
@@ -172,14 +170,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public override bool HasTextLabel
-		{
-			get
-			{
-				return (this.DisplayMode == ButtonDisplayMode.Text || this.DisplayMode == ButtonDisplayMode.IconAndText);
-			}
-		}
-
 
 		public Rectangle InnerTextBounds
 		{
@@ -224,12 +214,12 @@ namespace Epsitec.Common.Widgets
 			
 			string iconName = this.IconName;
 			
-			if (string.IsNullOrEmpty(iconName) || this.DisplayMode == ButtonDisplayMode.Text)
+			if (string.IsNullOrEmpty(iconName) || this.DisplayMode == ButtonDisplayMode.TextOnly)
 			{
 				if (this.iconLayout != null)
 				{
 					this.iconLayout = null;
-					this.Invalidate ();
+					this.Invalidate();
 				}
 			}
 			else
@@ -265,11 +255,11 @@ namespace Epsitec.Common.Widgets
 
 				if (this.iconLayout == null)
 				{
-					this.iconLayout = new TextLayout ();
+					this.iconLayout = new TextLayout();
 				}
 				else
 				{
-					if ((this.iconLayout.Text == builder.ToString ()) &&
+					if ((this.iconLayout.Text == builder.ToString()) &&
 						(this.iconLayout.Alignment == ContentAlignment.MiddleCenter))
 					{
 						return;
@@ -278,7 +268,29 @@ namespace Epsitec.Common.Widgets
 
 				this.iconLayout.Text = builder.ToString();
 				this.iconLayout.Alignment = ContentAlignment.MiddleCenter;
-				this.Invalidate ();
+				this.Invalidate();
+			}
+		}
+
+		protected void UpdateAspect(ButtonAspect aspect)
+		{
+			//	Met à jour le bouton lorsque son aspect a changé.
+			switch (aspect)
+			{
+				case ButtonAspect.DialogButton:
+					this.SetValue(MetaButton.DisplayModeProperty, ButtonDisplayMode.TextOnly);
+					base.ButtonStyle = ButtonStyle.Normal;
+					base.ContentAlignment = ContentAlignment.MiddleCenter;
+					break;
+
+				case ButtonAspect.IconButton:
+					this.SetValue(MetaButton.DisplayModeProperty, ButtonDisplayMode.Automatic);
+					base.ButtonStyle = ButtonStyle.ToolItem;
+					base.ContentAlignment = ContentAlignment.MiddleLeft;
+					break;
+
+				default:
+					throw new System.NotSupportedException(string.Format("ButtonAspect.{0} not supported", aspect));
 			}
 		}
 
@@ -294,6 +306,12 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					Rectangle rect = this.InsideButtonBounds;
+
+					if (rect.Width < rect.Height*2)  // place seulement pour l'icône ?
+					{
+						rect.Left += System.Math.Floor((rect.Width-rect.Height)/2);
+					}
+
 					rect.Width = rect.Height;  // forcément un carré
 					return rect;
 				}
@@ -306,6 +324,11 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				Rectangle rect = this.InsideButtonBounds;
+
+				if (this.DisplayMode == ButtonDisplayMode.Automatic && rect.Width < rect.Height*2)  // place seulement pour l'icône ?
+				{
+					return Rectangle.Empty;
+				}
 
 				if (this.iconLayout != null)
 				{
@@ -460,66 +483,49 @@ namespace Epsitec.Common.Widgets
 			if (this.iconLayout != null)
 			{
 				Rectangle ricon = this.IconBounds;
-
-				if (this.innerZoom != 1.0)
+				if (!ricon.IsSurfaceZero)
 				{
-					double zoom = (this.innerZoom-1)/2+1;
-					this.iconLayout.LayoutSize = ricon.Size/this.innerZoom;
-					Transform transform = graphics.Transform;
-					graphics.ScaleTransform(zoom, zoom, 0, -this.Client.Size.Height*zoom);
-					adorner.PaintButtonTextLayout(graphics, ricon.BottomLeft, this.iconLayout, state, this.ButtonStyle);
-					graphics.Transform = transform;
-				}
-				else
-				{
-					this.iconLayout.LayoutSize = ricon.Size;
-					adorner.PaintButtonTextLayout(graphics, ricon.BottomLeft, this.iconLayout, state, this.ButtonStyle);
+					if (this.innerZoom != 1.0)
+					{
+						double zoom = (this.innerZoom-1)/2+1;
+						this.iconLayout.LayoutSize = ricon.Size/this.innerZoom;
+						Transform transform = graphics.Transform;
+						graphics.ScaleTransform(zoom, zoom, 0, -this.Client.Size.Height*zoom);
+						adorner.PaintButtonTextLayout(graphics, ricon.BottomLeft, this.iconLayout, state, this.ButtonStyle);
+						graphics.Transform = transform;
+					}
+					else
+					{
+						this.iconLayout.LayoutSize = ricon.Size;
+						adorner.PaintButtonTextLayout(graphics, ricon.BottomLeft, this.iconLayout, state, this.ButtonStyle);
+					}
 				}
 			}
 
 			//	Dessine le texte.
 			rect = this.TextBounds;
-
-			if (this.innerZoom != 1.0)
+			if (!rect.IsSurfaceZero)
 			{
-				this.TextLayout.LayoutSize = rect.Size/this.innerZoom;
-				Transform transform = graphics.Transform;
-				graphics.ScaleTransform(this.innerZoom, this.innerZoom, this.Client.Size.Width / 2, this.Client.Size.Height / 2);
-				adorner.PaintButtonTextLayout(graphics, rect.BottomLeft, this.TextLayout, state, this.ButtonStyle);
-				graphics.Transform = transform;
-			}
-			else
-			{
-				this.TextLayout.LayoutSize = rect.Size;
-				adorner.PaintButtonTextLayout(graphics, rect.BottomLeft, this.TextLayout, state, this.ButtonStyle);
+				if (this.innerZoom != 1.0)
+				{
+					this.TextLayout.LayoutSize = rect.Size/this.innerZoom;
+					Transform transform = graphics.Transform;
+					graphics.ScaleTransform(this.innerZoom, this.innerZoom, this.Client.Size.Width / 2, this.Client.Size.Height / 2);
+					adorner.PaintButtonTextLayout(graphics, rect.BottomLeft, this.TextLayout, state, this.ButtonStyle);
+					graphics.Transform = transform;
+				}
+				else
+				{
+					this.TextLayout.LayoutSize = rect.Size;
+					adorner.PaintButtonTextLayout(graphics, rect.BottomLeft, this.TextLayout, state, this.ButtonStyle);
+				}
 			}
 		}
 
 		private static void HandleAspectChanged(DependencyObject obj, object oldValue, object newValue)
 		{
 			MetaButton that = (MetaButton) obj;
-			that.UpdateAspect ((ButtonAspect) newValue);
-		}
-
-		private void UpdateAspect(ButtonAspect aspect)
-		{
-			switch (aspect)
-			{
-				case ButtonAspect.DialogButton:
-					this.SetValue (MetaButton.DisplayModeProperty, ButtonDisplayMode.Text);
-					base.ButtonStyle = ButtonStyle.Normal;
-					base.ContentAlignment = ContentAlignment.MiddleCenter;
-					break;
-				
-				case ButtonAspect.IconButton:
-					this.SetValue (MetaButton.DisplayModeProperty, ButtonDisplayMode.Automatic);
-					base.ButtonStyle = ButtonStyle.ToolItem;
-					base.ContentAlignment = ContentAlignment.MiddleLeft;
-					break;
-
-				default:
-					throw new System.NotSupportedException (string.Format ("ButtonAspect.{0} not supported", aspect));
-			}
+			that.UpdateAspect((ButtonAspect) newValue);
 		}
 
 		private static void HandleIconDefinitionChanged(DependencyObject obj, object oldValue, object newValue)
