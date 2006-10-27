@@ -1322,6 +1322,12 @@ namespace Epsitec.Common.Designer
 
 			if (this.type == Type.Commands)
 			{
+				if (fieldType == FieldType.Controller)
+				{
+					string dp = Command.GetDefaultParameter(this.accessCaption);
+					return new Field(dp);
+				}
+
 				if (fieldType == FieldType.Statefull)
 				{
 					bool statefull = Command.GetStatefull(this.accessCaption);
@@ -1491,6 +1497,13 @@ namespace Epsitec.Common.Designer
 
 			if (this.type == Type.Commands)
 			{
+				if (fieldType == FieldType.Controller)
+				{
+					string dp = field.String;
+					Command.SetDefaultParameter(this.accessCaption, dp);
+					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
+				}
+
 				if (fieldType == FieldType.Statefull)
 				{
 					bool statefull = field.Boolean;

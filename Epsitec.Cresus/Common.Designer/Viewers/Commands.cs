@@ -15,8 +15,25 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
-			//	Statefull.
+			//	Aspect et Statefull.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, 0.1);
+
+			StaticText label = new StaticText(leftContainer.Container);
+			label.CaptionDruid = Res.Captions.Aspect.ButtonAspect.Druid;
+			label.PreferredWidth = 100;
+			label.Dock = DockStyle.StackBegin;
+
+			this.primaryAspectDialog = new IconButton(leftContainer.Container);
+			this.primaryAspectDialog.CommandDruid = Res.Values.Widgets.ButtonAspect.DialogButton.Druid;
+			this.primaryAspectDialog.Dock = DockStyle.StackBegin;
+			this.primaryAspectDialog.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
+
+			this.primaryAspectIcon = new IconButton(leftContainer.Container);
+			this.primaryAspectIcon.CommandDruid = Res.Values.Widgets.ButtonAspect.IconButton.Druid;
+			this.primaryAspectIcon.Dock = DockStyle.StackBegin;
+			this.primaryAspectIcon.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
+
+			//?this.primaryDefaultParameter = new Placeholder(leftContainer.Container);
 
 			this.primaryStatefull = new CheckButton(leftContainer.Container);
 			this.primaryStatefull.Text = Res.Strings.Viewers.Commands.Statefull.CheckButton;
@@ -78,6 +95,8 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
+				this.primaryAspectDialog.Clicked -= new MessageEventHandler(this.HandlePrimaryAspectClicked);
+				this.primaryAspectIcon.Clicked -= new MessageEventHandler(this.HandlePrimaryAspectClicked);
 				this.primaryStatefull.Pressed -= new MessageEventHandler(this.HandleStatefullPressed);
 
 				this.primaryShortcut1.EditedShortcutChanged -= new EventHandler(this.HandleShortcutEditedShortcutChanged);
@@ -129,6 +148,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (sel == -1)
 			{
+				this.primaryAspectDialog.Enable = false;
+				this.primaryAspectIcon.Enable = false;
+
 				this.primaryStatefull.Enable = false;
 				this.primaryStatefull.ActiveState = ActiveState.No;
 
@@ -139,9 +161,16 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				ResourceAccess.Field field = this.access.GetField(sel, null, ResourceAccess.FieldType.Statefull);
-				bool statefull = field.Boolean;
+				ResourceAccess.Field field;
 
+				field = this.access.GetField(sel, null, ResourceAccess.FieldType.Controller);
+				this.primaryAspectDialog.Enable = true;
+				this.primaryAspectDialog.ActiveState = (field.String == "DialogButton" || string.IsNullOrEmpty(field.String)) ? ActiveState.Yes : ActiveState.No;
+				this.primaryAspectIcon.Enable = true;
+				this.primaryAspectIcon.ActiveState = (field.String == "IconButton") ? ActiveState.Yes : ActiveState.No;
+
+				field = this.access.GetField(sel, null, ResourceAccess.FieldType.Statefull);
+				bool statefull = field.Boolean;
 				this.primaryStatefull.Enable = true;
 				this.primaryStatefull.ActiveState = statefull ? ActiveState.Yes : ActiveState.No;
 
@@ -232,7 +261,29 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected void HandleStatefullPressed(object sender, MessageEventArgs e)
+		private void HandlePrimaryAspectClicked(object sender, MessageEventArgs e)
+		{
+			//	Bouton 'aspect' pressé.
+			string defaultParameter = null;
+
+			if (sender == this.primaryAspectDialog)
+			{
+				defaultParameter = "DialogButton";
+			}
+
+			if (sender == this.primaryAspectIcon)
+			{
+				defaultParameter = "IconButton";
+			}
+
+			int sel = this.access.AccessIndex;
+			this.access.SetField(sel, null, ResourceAccess.FieldType.Controller, new ResourceAccess.Field(defaultParameter));
+
+			this.UpdateEdit();
+			this.UpdateColor();
+		}
+
+		private void HandleStatefullPressed(object sender, MessageEventArgs e)
 		{
 			//	Bouton à cocher 'Statefull' pressé.
 			if (this.ignoreChange)
@@ -247,7 +298,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateColor();
 		}
 
-		protected void HandleShortcutEditedShortcutChanged(object sender)
+		private void HandleShortcutEditedShortcutChanged(object sender)
 		{
 			//	Un raccourci clavier a été changé.
 			if (this.ignoreChange)
@@ -375,13 +426,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateColor();
 		}
 
-		protected void HandleGroupComboOpening(object sender, CancelEventArgs e)
+		private void HandleGroupComboOpening(object sender, CancelEventArgs e)
 		{
 			//	Le combo pour le groupe va être ouvert.
 			this.UpdateGroupCombo();
 		}
 
-		protected void HandleGroupTextChanged(object sender)
+		private void HandleGroupTextChanged(object sender)
 		{
 			//	Le texte éditable pour le groupe a changé.
 			if (this.ignoreChange)
@@ -402,6 +453,8 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 		
 
+		protected IconButton					primaryAspectDialog;
+		protected IconButton					primaryAspectIcon;
 		protected CheckButton					primaryStatefull;
 		protected ShortcutEditor				primaryShortcut1;
 		protected ShortcutEditor				primaryShortcut2;
