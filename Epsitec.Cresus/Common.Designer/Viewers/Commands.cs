@@ -28,19 +28,21 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryAspectDialog = new IconButton(leftContainer.Container);
 			this.primaryAspectDialog.MinSize = this.primaryAspectDialog.PreferredSize;  // attention, très important !
 			this.primaryAspectDialog.CommandDruid = Res.Values.Widgets.ButtonAspect.DialogButton.Druid;
+			this.primaryAspectDialog.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.primaryAspectDialog.Dock = DockStyle.Left;
 			this.primaryAspectDialog.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
 
 			this.primaryAspectIcon = new IconButton(leftContainer.Container);
 			this.primaryAspectIcon.MinSize = this.primaryAspectIcon.PreferredSize;  // attention, très important !
 			this.primaryAspectIcon.CommandDruid = Res.Values.Widgets.ButtonAspect.IconButton.Druid;
+			this.primaryAspectIcon.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.primaryAspectIcon.Dock = DockStyle.Left;
 			this.primaryAspectIcon.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
 
 			this.primaryStatefull = new CheckButton(leftContainer.Container);
 			this.primaryStatefull.Text = Res.Strings.Viewers.Commands.Statefull.CheckButton;
 			this.primaryStatefull.PreferredWidth = 250;
-			this.primaryStatefull.Margins = new Margins(50, 0, 0, 0);
+			this.primaryStatefull.Margins = new Margins(40, 0, 0, 0);
 			this.primaryStatefull.Dock = DockStyle.Left;
 			this.primaryStatefull.Pressed += new MessageEventHandler(this.HandleStatefullPressed);
 			this.primaryStatefull.TabIndex = this.tabIndex++;
