@@ -606,6 +606,7 @@ namespace Epsitec.Common.Document
 				this.finalData.P1 = new Point(p1.X, center.Y*2-p1.Y);
 				this.finalData.P2 = new Point(p2.X, center.Y*2-p2.Y);
 			}
+			this.isTranslate = false;
 
 			this.document.Modifier.ActiveViewer.MoveGlobalProcess(this);
 			this.UpdateHandlePos();
@@ -634,6 +635,7 @@ namespace Epsitec.Common.Document
 			Point center = this.finalData.Center;
 			this.finalData.P1 = Point.Scale(center, this.finalData.P1, scale);
 			this.finalData.P2 = Point.Scale(center, this.finalData.P2, scale);
+			this.isTranslate = false;
 			this.document.Modifier.ActiveViewer.MoveGlobalProcess(this);
 			this.UpdateHandlePos();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
@@ -646,6 +648,7 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.document.Modifier.ActiveViewer.MoveGlobalStarting();
 			this.finalData.Angle += angle;
+			this.isTranslate = false;
 			this.document.Modifier.ActiveViewer.MoveGlobalProcess(this);
 			this.UpdateHandlePos();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
