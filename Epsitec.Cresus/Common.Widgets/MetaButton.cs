@@ -6,6 +6,13 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Widgets
 {
 	[Types.Designer]
+	public enum ButtonAspect
+	{
+		[Types.Hidden] None,
+		DialogButton,	// bouton textuel pour dialogue (typiquement: "D'accord", "Annuler", etc.)
+		IconButton,		// bouton automatique pour ruban, palette, etc.
+	}
+
 	public enum ButtonDisplayMode
 	{
 		Automatic,		// icône et/ou texte selon la taille disponible
@@ -32,7 +39,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public MetaButton()
 		{
-			this.ButtonStyle = ButtonStyle.ToolItem;
 		}
 
 		public MetaButton(Widget embedder) : this()
@@ -50,29 +56,45 @@ namespace Epsitec.Common.Widgets
 			Visual.PreferredHeightProperty.OverrideMetadata(typeof(MetaButton), metadataDy);
 		}
 
-		public override ButtonStyle ButtonStyle
+		public ButtonAspect Aspect
 		{
+			//	Aspect du bouton.
 			get
 			{
-				return base.ButtonStyle;
-			}
-			set
-			{
-				throw new System.InvalidOperationException ("Use DisplayMode instead");
-			}
-		}
-		
-		public ButtonDisplayMode DisplayMode
-		{
-			//	Mode d'affichage du contenu du bouton.
-			get
-			{
-				return (ButtonDisplayMode) this.GetValue(MetaButton.DisplayModeProperty);
+				return (ButtonAspect) this.GetValue(MetaButton.AspectProperty);
 			}
 
 			set
 			{
-				this.SetValue(MetaButton.DisplayModeProperty, value);
+				ButtonAspect actual = (ButtonAspect) this.GetValue(MetaButton.AspectProperty);
+				if (actual != value)
+				{
+					this.SetValue(MetaButton.AspectProperty, value);
+
+					if (value == ButtonAspect.DialogButton)
+					{
+						this.SetValue(MetaButton.DisplayModeProperty, ButtonDisplayMode.Text);
+						base.ButtonStyle = ButtonStyle.Normal;
+						base.ContentAlignment = ContentAlignment.MiddleCenter;
+					}
+
+					if (value == ButtonAspect.IconButton)
+					{
+						this.SetValue(MetaButton.DisplayModeProperty, ButtonDisplayMode.Automatic);
+						base.ButtonStyle = ButtonStyle.ToolItem;
+						base.ContentAlignment = ContentAlignment.MiddleLeft;
+					}
+				}
+			}
+		}
+
+		public ButtonDisplayMode DisplayMode
+		{
+			//	Mode d'affichage du contenu du bouton.
+			//	Pas de 'set' disponible; il faut utilser Aspect.
+			get
+			{
+				return (ButtonDisplayMode) this.GetValue(MetaButton.DisplayModeProperty);
 			}
 		}
 
@@ -141,6 +163,30 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.SetValue(MetaButton.PreferredIconStyleProperty, value);
+			}
+		}
+
+		public override ButtonStyle ButtonStyle
+		{
+			get
+			{
+				return base.ButtonStyle;
+			}
+			set
+			{
+				throw new System.InvalidOperationException("Use Aspect instead");
+			}
+		}
+
+		public override ContentAlignment ContentAlignment
+		{
+			get
+			{
+				return base.ContentAlignment;
+			}
+			set
+			{
+				throw new System.InvalidOperationException("Use Aspect instead");
 			}
 		}
 
@@ -460,6 +506,7 @@ namespace Epsitec.Common.Widgets
 			that.Invalidate();
 		}
 
+		public static readonly DependencyProperty AspectProperty                = DependencyProperty.Register("Aspect", typeof(ButtonAspect), typeof(MetaButton), new DependencyPropertyMetadata(ButtonAspect.None, MetaButton.HandleGeometryChanged));
 		public static readonly DependencyProperty DisplayModeProperty           = DependencyProperty.Register("DisplayMode", typeof(ButtonDisplayMode), typeof(MetaButton), new DependencyPropertyMetadata(ButtonDisplayMode.Automatic, MetaButton.HandleGeometryChanged));
 		public static readonly DependencyProperty MarkDispositionProperty       = DependencyProperty.Register("MarkDisposition", typeof(ButtonMarkDisposition), typeof(MetaButton), new DependencyPropertyMetadata(ButtonMarkDisposition.None, MetaButton.HandleGeometryChanged));
 		public static readonly DependencyProperty MarkDimensionProperty         = DependencyProperty.Register("MarkDimension", typeof(double), typeof(MetaButton), new DependencyPropertyMetadata(8.0, MetaButton.HandleGeometryChanged));

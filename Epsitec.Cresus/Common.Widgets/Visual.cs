@@ -282,7 +282,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public ContentAlignment					ContentAlignment
+		public virtual ContentAlignment			ContentAlignment
 		{
 			get
 			{

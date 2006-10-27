@@ -47,15 +47,15 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		public ButtonDisplayMode ButtonDisplayMode
+		public ButtonAspect ButtonAspect
 		{
 			get
 			{
-				return (ButtonDisplayMode) this.GetValue(Aspect.ButtonDisplayModeProperty);
+				return (ButtonAspect) this.GetValue(Aspect.ButtonAspectProperty);
 			}
 			set
 			{
-				this.SetValue(Aspect.ButtonDisplayModeProperty, value);
+				this.SetValue(Aspect.ButtonAspectProperty, value);
 			}
 		}
 
@@ -67,22 +67,22 @@ namespace Epsitec.Common.Designer.Proxies
 			
 			//	Recopie localement les diverses propriétés du widget sélectionné
 			//	pour pouvoir ensuite travailler dessus :
-			if (this.ObjectModifier.HasButtonDisplayMode(this.DefaultWidget))
+			if (this.ObjectModifier.HasButtonAspect(this.DefaultWidget))
 			{
-				ButtonDisplayMode bdm = this.ObjectModifier.GetButtonDisplayMode(this.DefaultWidget);
+				ButtonAspect aspect = this.ObjectModifier.GetButtonAspect(this.DefaultWidget);
 
-				this.ButtonDisplayMode = bdm;
+				this.ButtonAspect = aspect;
 			}
 		}
 
 
-		private static void NotifyButtonDisplayModeChanged(DependencyObject o, object oldValue, object newValue)
+		private static void NotifyButtonAspectChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			//	Cette méthode est appelée à la suite de la modification d'une de
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Aspect that = (Aspect) o;
-			ButtonDisplayMode bdm = (ButtonDisplayMode) newValue;
+			ButtonAspect aspect = (ButtonAspect) newValue;
 
 			if (that.IsNotSuspended)
 			{
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in that.Widgets)
 					{
-						that.ObjectModifier.SetButtonDisplayMode(obj, bdm);
+						that.ObjectModifier.SetButtonAspect(obj, aspect);
 					}
 				}
 				finally
@@ -105,12 +105,12 @@ namespace Epsitec.Common.Designer.Proxies
 		
 		static Aspect()
 		{
-			EnumType buttonDisplayModeEnumType = Res.Types.Widgets.ButtonDisplayMode;
-			Aspect.ButtonDisplayModeProperty.DefaultMetadata.DefineNamedType(buttonDisplayModeEnumType);
-			Aspect.ButtonDisplayModeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Aspect.ButtonDisplayMode.Druid);
+			EnumType ButtonAspectEnumType = Res.Types.Widgets.ButtonAspect;
+			Aspect.ButtonAspectProperty.DefaultMetadata.DefineNamedType(ButtonAspectEnumType);
+			Aspect.ButtonAspectProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Aspect.ButtonAspect.Druid);
 		}
 
 
-		public static readonly DependencyProperty ButtonDisplayModeProperty = DependencyProperty.Register("ButtonDisplayMode", typeof(ButtonDisplayMode), typeof(Aspect), new DependencyPropertyMetadata(ButtonDisplayMode.Automatic, Aspect.NotifyButtonDisplayModeChanged));
+		public static readonly DependencyProperty ButtonAspectProperty = DependencyProperty.Register("ButtonAspect", typeof(ButtonAspect), typeof(Aspect), new DependencyPropertyMetadata(ButtonAspect.None, Aspect.NotifyButtonAspectChanged));
 	}
 }

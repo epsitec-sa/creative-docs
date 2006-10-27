@@ -149,7 +149,6 @@
   <data id="083">Horizontal line</data>
   <data id="093">Vertical line</data>
   <data id="0A3">Text Button</data>
-  <data id="0Q6" mod="1">Mixed Button</data>
   <data id="0B3">Text Field</data>
   <data id="0C3">Text Label</data>
   <data id="0D3">Group (no frame)</data>
