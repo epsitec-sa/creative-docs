@@ -47,9 +47,13 @@ namespace Epsitec.Common.Widgets
 
 		static MetaButton()
 		{
+			Helpers.VisualPropertyMetadata metadataButtonStyle = new Helpers.VisualPropertyMetadata(ButtonStyle.Normal, Helpers.VisualPropertyMetadataOptions.AffectsDisplay);
 			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata(ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
 			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata(Widget.DefaultFontHeight+10, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
 
+			metadataButtonStyle.MakeNotSerializable();
+
+			Button.ButtonStyleProperty.OverrideMetadata(typeof(MetaButton), metadataButtonStyle);
 			Visual.ContentAlignmentProperty.OverrideMetadata(typeof(MetaButton), metadataAlign);
 			Visual.PreferredHeightProperty.OverrideMetadata(typeof(MetaButton), metadataDy);
 		}
@@ -536,7 +540,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		public static readonly DependencyProperty AspectProperty                = DependencyProperty.Register("Aspect", typeof(ButtonAspect), typeof(MetaButton), new DependencyPropertyMetadata(ButtonAspect.None, MetaButton.HandleAspectChanged));
-		public static readonly DependencyProperty DisplayModeProperty           = DependencyProperty.Register("DisplayMode", typeof(ButtonDisplayMode), typeof(MetaButton), new DependencyPropertyMetadata(ButtonDisplayMode.Automatic, MetaButton.HandleIconDefinitionChanged));
+		public static readonly DependencyProperty DisplayModeProperty           = DependencyProperty.RegisterReadOnly("DisplayMode", typeof(ButtonDisplayMode), typeof(MetaButton), new DependencyPropertyMetadata(ButtonDisplayMode.Automatic, MetaButton.HandleIconDefinitionChanged));
 		public static readonly DependencyProperty MarkDispositionProperty       = DependencyProperty.Register("MarkDisposition", typeof(ButtonMarkDisposition), typeof(MetaButton), new DependencyPropertyMetadata(ButtonMarkDisposition.None, MetaButton.HandleIconDefinitionChanged));
 		public static readonly DependencyProperty MarkDimensionProperty         = DependencyProperty.Register("MarkDimension", typeof(double), typeof(MetaButton), new DependencyPropertyMetadata(8.0, MetaButton.HandleIconDefinitionChanged));
 		public static readonly DependencyProperty BulletColorProperty           = DependencyProperty.Register("BulletColor", typeof(Color), typeof(MetaButton), new DependencyPropertyMetadata(Color.Empty, MetaButton.HandleIconDefinitionChanged));
