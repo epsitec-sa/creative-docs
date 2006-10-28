@@ -18,9 +18,12 @@ namespace Epsitec.Common.Widgets
 
 		static HToolBar()
 		{
-			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (28.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			Helpers.VisualPropertyMetadata metadataPadding = new Helpers.VisualPropertyMetadata (new Drawing.Margins (3, 3, 3, 3), Helpers.VisualPropertyMetadataOptions.AffectsChildrenLayout);
-
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataPadding = Visual.PaddingProperty.DefaultMetadata.Clone ();
+			
+			metadataDy.DefineDefaultValue (28.0);
+			metadataPadding.DefineDefaultValue (new Drawing.Margins (3, 3, 3, 3));
+			
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (HToolBar), metadataDy);
 			Visual.PaddingProperty.OverrideMetadata (typeof (HToolBar), metadataPadding);
 		}

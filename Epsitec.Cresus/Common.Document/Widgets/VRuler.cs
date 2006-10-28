@@ -20,7 +20,10 @@ namespace Epsitec.Common.Document.Widgets
 
 		static VRuler()
 		{
-			Common.Widgets.Helpers.VisualPropertyMetadata metadataDx = new Common.Widgets.Helpers.VisualPropertyMetadata(AbstractRuler.defaultBreadth, Common.Widgets.Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadataDx = Visual.PreferredWidthProperty.DefaultMetadata.Clone ();
+
+			metadataDx.DefineDefaultValue (AbstractRuler.defaultBreadth);
+			
 			Common.Widgets.Visual.PreferredWidthProperty.OverrideMetadata(typeof(VRuler), metadataDx);
 		}
 

@@ -32,11 +32,14 @@ namespace Epsitec.Common.Widgets
 		
 		static StaticText()
 		{
-			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
-			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadataAlign = Visual.ContentAlignmentProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+
+			metadataAlign.DefineDefaultValue (Drawing.ContentAlignment.MiddleLeft);
+			metadataDy.DefineDefaultValue (Widget.DefaultFontHeight);
 			
 			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (StaticText), metadataAlign);
-			Visual.PreferredHeightProperty.OverrideMetadata (typeof (StaticText), metadataHeight);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (StaticText), metadataDy);
 		}
 		
 		public PaintTextStyle					PaintTextStyle

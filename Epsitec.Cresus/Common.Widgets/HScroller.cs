@@ -21,9 +21,15 @@ namespace Epsitec.Common.Widgets
 		
 		static HScroller()
 		{
-			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (AbstractScroller.minimalThumb+6, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (AbstractScroller.defaultBreadth, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadataDx = Visual.PreferredWidthProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
 
+			double dx = AbstractScroller.minimalThumb+6;
+			double dy = AbstractScroller.defaultBreadth;
+
+			metadataDx.DefineDefaultValue (dx);
+			metadataDy.DefineDefaultValue (dy);
+			
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (HScroller), metadataDy);
 			Visual.MinWidthProperty.OverrideMetadata (typeof (HScroller), metadataDx);
 			Visual.MinHeightProperty.OverrideMetadata (typeof (HScroller), metadataDy);

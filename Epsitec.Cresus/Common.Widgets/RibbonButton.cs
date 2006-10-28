@@ -45,9 +45,12 @@ namespace Epsitec.Common.Widgets
 
 		static RibbonButton()
 		{
-			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata(RibbonButton.DefaultHeight, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			Visual.PreferredHeightProperty.OverrideMetadata(typeof(RibbonButton), metadataHeight);
-			Visual.MinHeightProperty.OverrideMetadata(typeof(RibbonButton), metadataHeight);
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+
+			metadataDy.DefineDefaultValue (RibbonButton.DefaultHeight);
+			
+			Visual.PreferredHeightProperty.OverrideMetadata(typeof(RibbonButton), metadataDy);
+			Visual.MinHeightProperty.OverrideMetadata(typeof(RibbonButton), metadataDy);
 		}
 
 

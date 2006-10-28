@@ -20,7 +20,9 @@ namespace Epsitec.Common.Widgets
 		
 		static StatusBar()
 		{
-			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight+6, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+
+			metadataDy.DefineDefaultValue (Widget.DefaultFontHeight+6);
 
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (StatusBar), metadataDy);
 		}

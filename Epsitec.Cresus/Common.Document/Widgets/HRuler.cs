@@ -34,7 +34,10 @@ namespace Epsitec.Common.Document.Widgets
 
 		static HRuler()
 		{
-			Common.Widgets.Helpers.VisualPropertyMetadata metadataDy = new Common.Widgets.Helpers.VisualPropertyMetadata(AbstractRuler.defaultBreadth, Common.Widgets.Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+
+			metadataDy.DefineDefaultValue (AbstractRuler.defaultBreadth);
+
 			Common.Widgets.Visual.PreferredHeightProperty.OverrideMetadata(typeof(HRuler), metadataDy);
 		}
 

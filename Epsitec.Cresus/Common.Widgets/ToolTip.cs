@@ -529,6 +529,11 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
+			protected override DependencyPropertyMetadata CloneNewObject()
+			{
+				return new PrivateDependencyPropertyMetadata ();
+			}
+
 			public static readonly PrivateDependencyPropertyMetadata Default = new PrivateDependencyPropertyMetadata ();
 		}
 		

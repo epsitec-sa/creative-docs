@@ -660,6 +660,11 @@ namespace Epsitec.Common.Types
 				Caption caption = sender as Caption;
 				caption.NotifyChanged ();
 			}
+
+			protected override DependencyPropertyMetadata CloneNewObject()
+			{
+				return new CaptionMetadata ();
+			}
 		}
 
 		#endregion

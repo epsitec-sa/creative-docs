@@ -47,11 +47,13 @@ namespace Epsitec.Common.Widgets
 
 		static MetaButton()
 		{
-			Helpers.VisualPropertyMetadata metadataButtonStyle = new Helpers.VisualPropertyMetadata(ButtonStyle.Normal, Helpers.VisualPropertyMetadataOptions.AffectsDisplay);
-			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata(ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
-			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata(Widget.DefaultFontHeight+10, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadataButtonStyle = Button.ButtonStyleProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataAlign = Visual.ContentAlignmentProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
 
-			metadataButtonStyle.MakeNotSerializable();
+			metadataButtonStyle.MakeNotSerializable ();
+			metadataAlign.DefineDefaultValue (Drawing.ContentAlignment.MiddleLeft);
+			metadataDy.DefineDefaultValue (Widget.DefaultFontHeight+10);
 
 			Button.ButtonStyleProperty.OverrideMetadata(typeof(MetaButton), metadataButtonStyle);
 			Visual.ContentAlignmentProperty.OverrideMetadata(typeof(MetaButton), metadataAlign);

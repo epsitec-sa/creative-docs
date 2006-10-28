@@ -47,9 +47,15 @@ namespace Epsitec.Common.Widgets
 
 		static IconButton()
 		{
-			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (22.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (22.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadataText = Widget.TextProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataDx = Visual.PreferredWidthProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+			
+			metadataText.MakeNotSerializable ();
+			metadataDx.DefineDefaultValue (22.0);
+			metadataDy.DefineDefaultValue (22.0);
 
+			Widget.TextProperty.OverrideMetadata (typeof (IconButton), metadataText);
 			Visual.PreferredWidthProperty.OverrideMetadata (typeof (IconButton), metadataDx);
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (IconButton), metadataDy);
 		}
@@ -202,6 +208,8 @@ namespace Epsitec.Common.Widgets
 
 		protected override void DefineTextFromCaption(string text)
 		{
+			//	Do nothing - we don't want the text to be associated with the
+			//	IconButton, as it is computed automatically anyway.
 		}
 
 

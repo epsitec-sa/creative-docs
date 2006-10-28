@@ -52,5 +52,10 @@ namespace Epsitec.Common.Types
 				return true;
 			}
 		}
+
+		protected override DependencyPropertyMetadata CloneNewObject()
+		{
+			return new DependencyPropertyMetadataWithInheritance ();
+		}
 	}
 }

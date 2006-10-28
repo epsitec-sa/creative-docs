@@ -24,11 +24,16 @@ namespace Epsitec.Common.Widgets
 
 		static CheckButton()
 		{
-			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
-			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight+1, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadataAlign = Visual.ContentAlignmentProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataHeight = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+
+			double height = Widget.DefaultFontHeight + 1;
+
+			metadataAlign.DefineDefaultValue (Drawing.ContentAlignment.MiddleLeft);
+			metadataHeight.DefineDefaultValue (height);
 
 			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (CheckButton), metadataAlign);
-			Visual.PreferredHeightProperty.OverrideMetadata (typeof (CheckButton), metadataDy);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (CheckButton), metadataHeight);
 		}
 
 		public Drawing.Point LabelOffset

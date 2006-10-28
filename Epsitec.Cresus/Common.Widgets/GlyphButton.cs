@@ -81,8 +81,11 @@ namespace Epsitec.Common.Widgets
 		
 		static GlyphButton()
 		{
-			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (17.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (17.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadataDx = Visual.PreferredWidthProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+
+			metadataDx.DefineDefaultValue (17.0);
+			metadataDy.DefineDefaultValue (17.0);
 
 			Visual.PreferredWidthProperty.OverrideMetadata (typeof (GlyphButton), metadataDx);
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (GlyphButton), metadataDy);

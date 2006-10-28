@@ -220,6 +220,27 @@ namespace Epsitec.Common.Widgets.Helpers
 			base.OnPropertyInvalidated (sender, old_value, new_value);
 		}
 
+		protected override Types.DependencyPropertyMetadata CloneNewObject()
+		{
+			return new VisualPropertyMetadata ();
+		}
+
+		protected override Types.DependencyPropertyMetadata CloneCopyToNewObject(Types.DependencyPropertyMetadata copy)
+		{
+			base.CloneCopyToNewObject (copy);
+
+			VisualPropertyMetadata that = (VisualPropertyMetadata) copy;
+
+			that.affectsArrange        = this.affectsArrange;
+			that.affectsChildrenLayout = this.affectsChildrenLayout;
+			that.affectsDisplay        = this.affectsDisplay;
+			that.affectsMeasure        = this.affectsMeasure;
+			that.affectsTextLayout     = this.affectsTextLayout;
+			that.inheritsValue         = this.inheritsValue;
+			that.notifiesChanges       = this.notifiesChanges;
+
+			return that;
+		}
 
 		private bool							affectsChildrenLayout;
 		private bool							affectsArrange;

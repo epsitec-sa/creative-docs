@@ -31,9 +31,13 @@ namespace Epsitec.Common.Widgets
 
 		static StatusField()
 		{
-			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
-			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (120.0, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
-			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadataAlign = Visual.ContentAlignmentProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataDx = Visual.PreferredWidthProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+
+			metadataAlign.DefineDefaultValue (Drawing.ContentAlignment.MiddleLeft);
+			metadataDx.DefineDefaultValue (120.0);
+			metadataDy.DefineDefaultValue (Widget.DefaultFontHeight);
 
 			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (StatusField), metadataAlign);
 			Visual.PreferredWidthProperty.OverrideMetadata (typeof (StatusField), metadataDx);

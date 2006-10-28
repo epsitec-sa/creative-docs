@@ -41,8 +41,9 @@ namespace Epsitec.Common.Widgets
 			//	sur le slider. Le plus simple est d'utiliser un override callback
 			//	sur la propriété BackColor :
 
-			Helpers.VisualPropertyMetadata metadata = new Helpers.VisualPropertyMetadata (Drawing.Color.Empty, Helpers.VisualPropertyMetadataOptions.AffectsDisplay);
-
+			Types.DependencyPropertyMetadata metadata = Visual.BackColorProperty.DefaultMetadata.Clone ();
+			
+			metadata.DefineDefaultValue (Drawing.Color.Empty);
 			metadata.SetValueOverride = new Epsitec.Common.Types.SetValueOverrideCallback (TextFieldSlider.SetBackColorValue);
 
 			Visual.BackColorProperty.OverrideMetadata (typeof (TextFieldSlider), metadata);

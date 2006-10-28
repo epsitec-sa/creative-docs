@@ -20,7 +20,10 @@ namespace Epsitec.Common.Widgets
 		
 		static GroupBox()
 		{
-			Helpers.VisualPropertyMetadata metadata = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.TopLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Types.DependencyPropertyMetadata metadata = Visual.ContentAlignmentProperty.DefaultMetadata.Clone ();
+
+			metadata.DefineDefaultValue (Drawing.ContentAlignment.TopLeft);
+
 			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (GroupBox), metadata);
 		}
 		

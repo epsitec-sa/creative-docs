@@ -37,8 +37,11 @@ namespace Epsitec.Common.Widgets
 		
 		static ResizeKnob()
 		{
-			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (15.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (15.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadataDx = Visual.PreferredWidthProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+
+			metadataDx.DefineDefaultValue (15.0);
+			metadataDy.DefineDefaultValue (15.0);
 
 			Visual.PreferredWidthProperty.OverrideMetadata (typeof (ResizeKnob), metadataDx);
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (ResizeKnob), metadataDy);

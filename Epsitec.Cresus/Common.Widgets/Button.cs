@@ -50,9 +50,13 @@ namespace Epsitec.Common.Widgets
 		
 		static Button()
 		{
-			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight+10, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadata = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
 			
-			Visual.PreferredHeightProperty.OverrideMetadata (typeof (Button), metadataDy);
+			double height = Widget.DefaultFontHeight+10;
+			
+			metadata.DefineDefaultValue (height);
+			
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (Button), metadata);
 		}
 		
 		public virtual ButtonStyle		ButtonStyle
