@@ -414,7 +414,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static readonly DependencyProperty ContextProperty = DependencyProperty.RegisterAttached ("Context", typeof (CommandContext), typeof (CommandContext));
+		public static readonly DependencyProperty ContextProperty = DependencyProperty.RegisterAttached ("Context", typeof (CommandContext), typeof (CommandContext), new DependencyPropertyMetadata ().MakeNotSerializable ());
 
 		
 		private Dictionary<int, bool> commandEnables = new Dictionary<int, bool> ();
