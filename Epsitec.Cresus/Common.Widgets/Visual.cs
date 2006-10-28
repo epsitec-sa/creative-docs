@@ -1352,10 +1352,20 @@ namespace Epsitec.Common.Widgets
 		{
 			if (visual == null)
 			{
+				//	Detaching from the parent visual means that this visual and all its
+				//	children no longer have to be recorded in the measure/arrange queues.
+				
 				Layouts.LayoutContext.RemoveFromQueues (this);
 				
 				this.Invalidate ();
 				this.parent = visual;
+
+				//	Make sure that we will measure the children if some of them have
+				//	never been measured (they lack the Layouts.LayoutMeasure records).
+
+				System.Diagnostics.Debug.Assert (Helpers.VisualTree.FindLayoutContext (this) == null);
+				
+				Layouts.LayoutContext.AddUnmeasuredChildrenToMeasureQueue (this);
 			}
 			else
 			{

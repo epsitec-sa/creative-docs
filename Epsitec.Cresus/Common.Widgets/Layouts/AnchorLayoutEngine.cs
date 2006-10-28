@@ -126,6 +126,12 @@ namespace Epsitec.Common.Widgets.Layouts
 				Layouts.LayoutMeasure measure_dx = Layouts.LayoutMeasure.GetWidth (child);
 				Layouts.LayoutMeasure measure_dy = Layouts.LayoutMeasure.GetHeight (child);
 
+				if ((measure_dx == null) ||
+					(measure_dy == null))
+				{
+					throw new System.InvalidOperationException ();
+				}
+
 				AnchorStyles anchor = child.Anchor;
 
 				switch (anchor & AnchorStyles.LeftAndRight)

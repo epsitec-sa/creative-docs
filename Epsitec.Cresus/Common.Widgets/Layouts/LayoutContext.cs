@@ -133,6 +133,44 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
+		/// <summary>
+		/// Adds the unmeasured children to the local measure queue. Unmeasured
+		/// visuals have no <c>LayoutMeasure</c> records.
+		/// </summary>
+		/// <param name="visual">The visual where to start.</param>
+		public static void AddUnmeasuredChildrenToMeasureQueue(Visual visual)
+		{
+			if (visual != null)
+			{
+				int depth;
+				LayoutContext context = Helpers.VisualTree.GetLayoutContext (visual, out depth);
+
+				context.AddUnmeasuredChildrenToMeasureQueue (visual, depth);
+			}
+		}
+
+		private void AddUnmeasuredChildrenToMeasureQueue(Visual visual, int depth)
+		{
+			depth++;
+			
+			if (visual.HasChildren)
+			{
+				foreach (Visual child in visual.Children)
+				{
+					LayoutMeasure measureWidth  = LayoutMeasure.GetWidth (child);
+					LayoutMeasure measureHeight = LayoutMeasure.GetHeight (child);
+
+					if ((measureWidth == null) ||
+						(measureHeight == null))
+					{
+						this.AddToMeasureQueue (child, depth);
+					}
+					
+					this.AddUnmeasuredChildrenToMeasureQueue (child, depth);
+				}
+			}
+		}
+
 		private void RemoveChildrenFromQueues(Visual visual)
 		{
 			if (visual.HasChildren)
