@@ -74,6 +74,7 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.SetValue (Visual.NameProperty, value);
+				Types.Serialization.BlackList.Clear (this, Visual.NameProperty);
 			}
 		}
 
