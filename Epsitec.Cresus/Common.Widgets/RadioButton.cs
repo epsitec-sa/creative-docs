@@ -33,8 +33,11 @@ namespace Epsitec.Common.Widgets
 		
 		static RadioButton()
 		{
-			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
-			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight+1, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadataAlign = Visual.ContentAlignmentProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+
+			metadataAlign.DefineDefaultValue (Drawing.ContentAlignment.MiddleLeft);
+			metadataDy.DefineDefaultValue (Widget.DefaultFontHeight+1);
 			
 			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (RadioButton), metadataAlign);
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (RadioButton), metadataDy);

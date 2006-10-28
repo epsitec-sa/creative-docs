@@ -23,8 +23,11 @@ namespace Epsitec.Common.Widgets
 		
 		static IconSeparator()
 		{
-			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (12.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (12.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadataDx = Visual.PreferredWidthProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+
+			metadataDx.DefineDefaultValue (12.0);
+			metadataDy.DefineDefaultValue (12.0);
 
 			Visual.PreferredWidthProperty.OverrideMetadata (typeof (IconSeparator), metadataDx);
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (IconSeparator), metadataDy);

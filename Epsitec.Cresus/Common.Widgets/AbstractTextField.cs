@@ -75,8 +75,13 @@ namespace Epsitec.Common.Widgets
 
 		static AbstractTextField()
 		{
-			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.TopLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
-			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight + 2*(AbstractTextField.TextMargin+AbstractTextField.FrameMargin), Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadataAlign = Visual.ContentAlignmentProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataHeight = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+			
+			double height = Widget.DefaultFontHeight + 2*(AbstractTextField.TextMargin+AbstractTextField.FrameMargin);
+
+			metadataAlign.DefineDefaultValue (Drawing.ContentAlignment.TopLeft);
+			metadataHeight.DefineDefaultValue (height);
 
 			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (AbstractTextField), metadataAlign);
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (AbstractTextField), metadataHeight);

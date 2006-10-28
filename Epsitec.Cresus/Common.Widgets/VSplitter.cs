@@ -17,7 +17,10 @@ namespace Epsitec.Common.Widgets
 
 		static VSplitter()
 		{
-			Helpers.VisualPropertyMetadata metadataWidth = new Helpers.VisualPropertyMetadata(4.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadataWidth = Visual.PreferredWidthProperty.DefaultMetadata.Clone ();
+
+			metadataWidth.DefineDefaultValue (4.0);
+			
 			Visual.PreferredWidthProperty.OverrideMetadata(typeof(VSplitter), metadataWidth);
 		}
 

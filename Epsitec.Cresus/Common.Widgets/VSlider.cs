@@ -24,10 +24,18 @@ namespace Epsitec.Common.Widgets
 
 		static VSlider()
 		{
-			Helpers.VisualPropertyMetadata metadataMinDx = new Helpers.VisualPropertyMetadata (AbstractSlider.defaultBreadth/2, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			Helpers.VisualPropertyMetadata metadataMinDy = new Helpers.VisualPropertyMetadata (AbstractSlider.minimalThumb+6, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (AbstractSlider.defaultBreadth, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadataMinDx = Visual.MinWidthProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataMinDy = Visual.MinHeightProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataDx = Visual.PreferredWidthProperty.DefaultMetadata.Clone ();
 
+			double minDx = AbstractSlider.defaultBreadth/2;
+			double minDy = AbstractSlider.minimalThumb+6;
+			double dx = AbstractSlider.defaultBreadth;
+
+			metadataMinDx.DefineDefaultValue (minDx);
+			metadataMinDy.DefineDefaultValue (minDy);
+			metadataDx.DefineDefaultValue (dx);
+			
 			Visual.MinWidthProperty.OverrideMetadata (typeof (VSlider), metadataMinDx);
 			Visual.MinHeightProperty.OverrideMetadata (typeof (VScroller), metadataMinDy);
 			Visual.PreferredWidthProperty.OverrideMetadata (typeof (VSlider), metadataDx);

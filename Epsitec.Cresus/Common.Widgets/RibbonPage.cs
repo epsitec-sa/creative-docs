@@ -22,10 +22,14 @@ namespace Epsitec.Common.Widgets
 
 		static RibbonPage()
 		{
-			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata (RibbonPage.FixHeight, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			Helpers.VisualPropertyMetadata metadataPadding = new Helpers.VisualPropertyMetadata (RibbonPage.FixPadding, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			Visual.MinHeightProperty.OverrideMetadata (typeof (RibbonPage), metadataHeight);
-			Visual.PreferredHeightProperty.OverrideMetadata (typeof (RibbonPage), metadataHeight);
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataPadding = Visual.PaddingProperty.DefaultMetadata.Clone ();
+
+			metadataDy.DefineDefaultValue (RibbonPage.FixHeight);
+			metadataPadding.DefineDefaultValue (RibbonPage.FixPadding);
+
+			Visual.MinHeightProperty.OverrideMetadata (typeof (RibbonPage), metadataDy);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (RibbonPage), metadataDy);
 			Visual.PaddingProperty.OverrideMetadata (typeof (RibbonPage), metadataPadding);
 		}
 

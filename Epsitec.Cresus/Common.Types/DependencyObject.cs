@@ -1031,6 +1031,9 @@ namespace Epsitec.Common.Types
 			{
 				DependencyProperty property = pair.Property;
 
+				//	Don't return properties which have been black-listed for
+				//	serialization.
+				
 				if ((blackList != null) &&
 					(blackList.Contains (property)))
 				{

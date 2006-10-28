@@ -32,8 +32,11 @@ namespace Epsitec.Common.Widgets
 		
 		static Tag()
 		{
-			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (18.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (18.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadataDx = Visual.PreferredWidthProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+
+			metadataDx.DefineDefaultValue (18.0);
+			metadataDy.DefineDefaultValue (18.0);
 
 			Visual.PreferredWidthProperty.OverrideMetadata (typeof (Tag), metadataDx);
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (Tag), metadataDy);

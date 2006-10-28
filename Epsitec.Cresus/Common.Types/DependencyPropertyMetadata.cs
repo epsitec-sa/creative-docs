@@ -220,6 +220,11 @@ namespace Epsitec.Common.Types
 			return this;
 		}
 
+		public void DefineDefaultValue(object value)
+		{
+			this.defaultValue = value;
+		}
+		
 		public virtual bool FilterSerializableItem(DependencyObject item)
 		{
 			return true;
@@ -244,6 +249,32 @@ namespace Epsitec.Common.Types
 			System.ICloneable cloneable = value as System.ICloneable;
 
 			return (cloneable == null) ? value : cloneable.Clone ();
+		}
+
+		public DependencyPropertyMetadata Clone()
+		{
+			return this.CloneCopyToNewObject (this.CloneNewObject ());
+		}
+
+		protected virtual DependencyPropertyMetadata CloneCopyToNewObject(DependencyPropertyMetadata copy)
+		{
+			copy.defaultValue = this.defaultValue;
+			copy.getValueOverride = this.getValueOverride;
+			copy.setValueOverride = this.setValueOverride;
+			copy.propertyInvalidated = this.propertyInvalidated;
+			copy.validateValueCallback = this.validateValueCallback;
+			copy.coerceValueCallback = this.coerceValueCallback;
+			copy.canSerializeReadOnly = this.canSerializeReadOnly;
+			copy.canSerializeReadWrite = this.canSerializeReadWrite;
+			copy.captionId = this.captionId;
+			copy.namedType = this.namedType;
+
+			return copy;
+		}
+
+		protected virtual DependencyPropertyMetadata CloneNewObject()
+		{
+			return new DependencyPropertyMetadata ();
 		}
 
 		#region ICaption Members

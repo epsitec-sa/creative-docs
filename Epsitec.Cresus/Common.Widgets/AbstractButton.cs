@@ -22,7 +22,10 @@ namespace Epsitec.Common.Widgets
 
 		static AbstractButton()
 		{
-			Helpers.VisualPropertyMetadata metadata = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleCenter, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Types.DependencyPropertyMetadata metadata = Visual.ContentAlignmentProperty.DefaultMetadata.Clone ();
+			
+			metadata.DefineDefaultValue (Drawing.ContentAlignment.MiddleCenter);
+			
 			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (AbstractButton), metadata);
 		}
 

@@ -18,8 +18,11 @@ namespace Epsitec.Common.Widgets
 
 		static VToolBar()
 		{
-			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (28.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			Helpers.VisualPropertyMetadata metadataPadding = new Helpers.VisualPropertyMetadata (new Drawing.Margins (3, 3, 3, 3), Helpers.VisualPropertyMetadataOptions.AffectsChildrenLayout);
+			Types.DependencyPropertyMetadata metadataDx = Visual.PreferredWidthProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataPadding = Visual.PaddingProperty.DefaultMetadata.Clone ();
+
+			metadataDx.DefineDefaultValue (28.0);
+			metadataPadding.DefineDefaultValue (new Drawing.Margins (3, 3, 3, 3));
 			
 			Visual.PreferredWidthProperty.OverrideMetadata (typeof (VToolBar), metadataDx);
 			Visual.PaddingProperty.OverrideMetadata (typeof (VToolBar), metadataPadding);

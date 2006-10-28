@@ -39,9 +39,11 @@ namespace Epsitec.Common.Widgets
 
 		static Filename()
 		{
-			double h = Filename.ExtendedHeight;
-			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata(h, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			Visual.PreferredHeightProperty.OverrideMetadata(typeof(Filename), metadataDy);
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+
+			metadataDy.DefineDefaultValue (Filename.ExtendedHeight);
+			
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (Filename), metadataDy);
 		}
 
 		

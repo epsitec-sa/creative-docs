@@ -209,8 +209,10 @@ namespace Epsitec.Common.Widgets
 		
 		static ColorSelector()
 		{
-			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (221.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
 
+			metadataDy.DefineDefaultValue (221.0);
+			
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (ColorSelector), metadataDy);
 		}
 
