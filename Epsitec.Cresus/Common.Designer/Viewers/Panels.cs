@@ -470,7 +470,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public static void SetPanel(DependencyObject obj, UI.Panel panel)
 		{
-			obj.SetValue(Panels.PanelProperty, panel);
+			if (panel == null)
+			{
+				obj.ClearValue (Panels.PanelProperty);
+			}
+			else
+			{
+				obj.SetValue (Panels.PanelProperty, panel);
+			}
 		}
 
 		public static UI.Panel GetPanel(DependencyObject obj)

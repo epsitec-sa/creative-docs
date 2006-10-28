@@ -76,6 +76,58 @@ namespace Epsitec.Common.Designer
 			return panel;
 		}
 
+		/// <summary>
+		/// Duplicates the specified user interface object (this can be a <c>UI.Panel</c> or
+		/// any <c>Widgets.Visual</c>).
+		/// </summary>
+		/// <param name="o">The user interface object.</param>
+		/// <param name="manager">The resource manager.</param>
+		/// <returns>The cloned user interface object.</returns>
+		public static Widgets.Visual Duplicate(Widgets.Visual visual, ResourceManager manager)
+		{
+			string xml;
+
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				System.IO.StringWriter stringWriter = new System.IO.StringWriter (buffer);
+				System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (stringWriter);
+
+				using (Types.Serialization.Context context = new Types.Serialization.SerializerContext (new Types.Serialization.IO.XmlWriter (xmlWriter)))
+				{
+					UI.Panel.FillSerializationContext (context, null, manager);
+
+					xmlWriter.Formatting = System.Xml.Formatting.None;
+					xmlWriter.WriteStartElement ("elem");
+
+					context.ActiveWriter.WriteAttributeStrings ();
+
+					Types.Storage.Serialize (visual, context);
+
+					xmlWriter.WriteEndElement ();
+					xmlWriter.Flush ();
+					xmlWriter.Close ();
+
+					xml = buffer.ToString ();
+				}
+			}
+			
+			{
+				System.IO.StringReader stringReader = new System.IO.StringReader (xml);
+				System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (stringReader);
+
+				xmlReader.Read ();
+
+				System.Diagnostics.Debug.Assert (xmlReader.NodeType == System.Xml.XmlNodeType.Element);
+				System.Diagnostics.Debug.Assert (xmlReader.LocalName == "elem");
+
+				Types.Serialization.Context context = new Types.Serialization.DeserializerContext (new Types.Serialization.IO.XmlReader (xmlReader));
+
+				UI.Panel.FillSerializationContext (context, null, manager);
+
+				return Types.Storage.Deserialize (context) as Widgets.Visual;
+			}
+		}
+		
 		public static void RunPanel(UI.Panel panel, ResourceManager manager, string name)
 		{
 			string xml = UserInterface.SerializePanel (panel, manager);

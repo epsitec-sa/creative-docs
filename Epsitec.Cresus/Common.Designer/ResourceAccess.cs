@@ -517,6 +517,11 @@ namespace Epsitec.Common.Designer
 					newBundle = actualBundle.Clone();
 					newBundle.DefineName(newDruid.ToBundleId());
 					newBundle.DefineCaption(newName);
+
+					UI.Panel actualPanel = Viewers.Panels.GetPanel(actualBundle);
+					UI.Panel newPanel = UserInterface.Duplicate(actualPanel, this.resourceManager) as UI.Panel;
+					
+					Viewers.Panels.SetPanel(newBundle, newPanel);
 				}
 				else
 				{
