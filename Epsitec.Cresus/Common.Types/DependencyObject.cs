@@ -1025,10 +1025,18 @@ namespace Epsitec.Common.Types
 		internal IEnumerable<PropertyValuePair> GetSerializableDefinedValues()
 		{
 			System.Type sysType = this.GetType ();
+			Serialization.BlackList blackList = Serialization.BlackList.GetSerializationBlackList (this);
 
 			foreach (PropertyValuePair pair in this.DefinedEntries)
 			{
 				DependencyProperty property = pair.Property;
+
+				if ((blackList != null) &&
+					(blackList.Contains (property)))
+				{
+					continue;
+				}
+				
 				DependencyPropertyMetadata metadata = property.GetMetadata (sysType);
 
 				if ((property.IsReadWrite && metadata.CanSerializeReadWrite) ||

@@ -2831,10 +2831,13 @@ namespace Epsitec.Common.Widgets
 				{
 					string textLabel = null;
 
-					if ((string.IsNullOrEmpty (caption.Name) == false) &&
-						(UndefinedValue.IsUndefinedValue (this.GetLocalValue (Visual.NameProperty))))
+					if (string.IsNullOrEmpty (caption.Name) == false)
 					{
-						this.Name = caption.Name;
+						if ((UndefinedValue.IsUndefinedValue (this.GetLocalValue (Visual.NameProperty))) ||
+							(Types.Serialization.BlackList.Contains (this, Visual.NameProperty)))
+						{
+							this.DefineNameFromCaption (caption);
+						}
 					}
 
 					if (caption.HasLabels)
@@ -2870,14 +2873,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected virtual void DefineNameFromCaption(Caption caption)
+		{
+			this.Name = caption.Name;
+			Types.Serialization.BlackList.Add (this, Visual.NameProperty);
+		}
+
 		protected virtual void DefineTextFromCaption(string text)
 		{
 			this.Text = text;
+			Types.Serialization.BlackList.Add (this, Widget.TextProperty);
 		}
 
 		protected virtual void DefineToolTipFromCaption(string tip)
 		{
 			ToolTip.Default.SetToolTip (this, tip);
+			Types.Serialization.BlackList.Add (this, ToolTip.ToolTipTextProperty);
 		}
 
 		protected virtual void DefineIconFromCaption(string icon)
@@ -2891,6 +2902,7 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				this.IconName = icon;
+				Types.Serialization.BlackList.Add (this, Widget.IconNameProperty);
 			}
 		}
 
