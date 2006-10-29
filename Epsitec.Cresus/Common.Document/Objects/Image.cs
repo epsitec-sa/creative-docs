@@ -533,7 +533,7 @@ namespace Epsitec.Common.Document.Objects
 					PDF.Port pdfPort = port as PDF.Port;
 					PDF.ImageSurface surface = pdfPort.SearchImageSurface(pi.Filename, size, crop, filter);
 					System.Diagnostics.Debug.Assert(surface != null);
-					image = surface.DrawingImage;
+					image = (surface == null) ? null : surface.DrawingImage;
 
 					port.ImageCrop = crop;
 				}

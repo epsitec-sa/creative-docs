@@ -554,14 +554,49 @@ namespace Epsitec.Common.Drawing
 				using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
 				{
 					System.Drawing.Imaging.Metafile metafile   = new System.Drawing.Imaging.Metafile (stream);
-					System.Drawing.Bitmap           dst_bitmap = new System.Drawing.Bitmap (metafile.Width, metafile.Height);
-					
+
 					double dpi_x = metafile.HorizontalResolution;
 					double dpi_y = metafile.VerticalResolution;
 					
+					int dx = metafile.Width;
+					int dy = metafile.Height;
+
+					int bitmapWidth = dx;
+					int bitmapHeight = dy;
+
+					//	Don't allocate a pixmap with more than 100 Mpixels... which is
+					//	already really huge.
+					
+					while ((bitmapWidth*bitmapHeight > 100*1000*1000)
+						&& (dpi_x * dpi_y > 100*100))
+					{
+						bitmapWidth  /= 2;
+						bitmapHeight /= 2;
+						dpi_x /= 2;
+						dpi_y /= 2;
+					}
+
+					if ((bitmapWidth != dx) ||
+						(bitmapHeight != dy))
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("Reduced WMF size from {0}x{1} to {2}x{3} pixels", dx, dy, bitmapWidth, bitmapHeight));
+					}
+					
+					System.Drawing.Bitmap dst_bitmap;
+
+					try
+					{
+						dst_bitmap = new System.Drawing.Bitmap (bitmapWidth, bitmapHeight);
+					}
+					catch
+					{
+						dst_bitmap = null;
+					}
+					
+					
 					using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dst_bitmap))
 					{
-						graphics.DrawImage (metafile, 0, 0, metafile.Width, metafile.Height);
+						graphics.DrawImage (metafile, 0, 0, bitmapWidth, bitmapHeight);
 					}
 					
 					Image image = Bitmap.FromNativeBitmap (dst_bitmap, origin, size);
