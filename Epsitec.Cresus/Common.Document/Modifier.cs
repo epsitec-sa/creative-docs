@@ -113,7 +113,7 @@ namespace Epsitec.Common.Document
 					this.ActiveViewer.ClearHilite();
 					this.ActiveViewer.ClearEditCreateRect();
 
-					bool isCreate = this.opletCreate;
+					bool isCreated = this.IsObjectJustCreated;
 					string name = string.Format(Res.Strings.Action.ChangeTool, this.ToolName(value));
 					this.OpletQueueBeginAction(name);
 					this.InsertOpletTool();
@@ -130,37 +130,37 @@ namespace Epsitec.Common.Document
 
 					this.ToolAdaptRibbon();
 
-					if ( this.tool == "ToolSelect" && isCreate )  // on vient de créer un objet ?
+					if (this.tool == "ToolSelect" && isCreated)  // on vient de créer un objet ?
 					{
-						int rank = this.ActiveViewer.CreatedRank;
+						DrawingContext context = this.ActiveViewer.DrawingContext;
+						Objects.Abstract layer = context.RootObject();
+						int rank = layer.Objects.Count-1;
 						if (rank != -1)
 						{
-							DrawingContext context = this.ActiveViewer.DrawingContext;
-							Objects.Abstract layer = context.RootObject();
 							Objects.Abstract obj = layer.Objects[rank] as Objects.Abstract;
 							this.ActiveViewer.Select(obj, false, false);
 						}
 					}
 
-					if ( this.tool == "ToolShaper" && isCreate )  // on vient de créer un objet ?
+					if (this.tool == "ToolShaper" && isCreated)  // on vient de créer un objet ?
 					{
-						int rank = this.ActiveViewer.CreatedRank;
+						DrawingContext context = this.ActiveViewer.DrawingContext;
+						Objects.Abstract layer = context.RootObject();
+						int rank = layer.Objects.Count-1;
 						if (rank != -1)
 						{
-							DrawingContext context = this.ActiveViewer.DrawingContext;
-							Objects.Abstract layer = context.RootObject();
 							Objects.Abstract obj = layer.Objects[rank] as Objects.Abstract;
 							this.ActiveViewer.Select(obj, false, false);
 						}
 					}
 
-					else if ( this.tool == "ToolEdit" && isCreate )  // on vient de créer un objet ?
+					else if (this.tool == "ToolEdit" && isCreated)  // on vient de créer un objet ?
 					{
-						int rank = this.ActiveViewer.CreatedRank;
+						DrawingContext context = this.ActiveViewer.DrawingContext;
+						Objects.Abstract layer = context.RootObject();
+						int rank = layer.Objects.Count-1;
 						if (rank != -1)
 						{
-							DrawingContext context = this.ActiveViewer.DrawingContext;
-							Objects.Abstract layer = context.RootObject();
 							Objects.Abstract obj = layer.Objects[rank] as Objects.Abstract;
 							this.ActiveViewer.Select(obj, true, false);
 						}
@@ -831,7 +831,7 @@ namespace Epsitec.Common.Document
 			this.document.Filename = "";
 			this.document.IsDirtySerialize = false;
 			this.ActiveViewer.SelectorType = SelectorType.Auto;
-			this.opletCreate = false;
+			this.IsObjectJustCreated = false;
 
 			this.OpletQueueEnable = true;
 			this.OpletQueuePurge();
@@ -843,6 +843,20 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyUndoRedoChanged();
 			this.document.Notifier.NotifyPagesChanged();
 			this.document.Notifier.NotifyLayersChanged();
+		}
+
+		public bool IsObjectJustCreated
+		{
+			//	Indique si l'on vient de créer un nouvel objet.
+			get
+			{
+				return this.opletCreate;
+			}
+
+			set
+			{
+				this.opletCreate = value;
+			}
 		}
 
 		protected void CreateObjectMemory()
@@ -1420,7 +1434,7 @@ namespace Epsitec.Common.Document
 			{
 				this.ActiveViewer.CreateEnding(false, false);
 
-				this.opletCreate = false;
+				this.IsObjectJustCreated = false;
 				this.Tool = "ToolSelect";
 
 				this.UpdateCounters();
@@ -1449,7 +1463,7 @@ namespace Epsitec.Common.Document
 			{
 				this.ActiveViewer.CreateEnding(false, false);
 
-				this.opletCreate = false;
+				this.IsObjectJustCreated = false;
 				this.Tool = "ToolSelect";
 
 				this.UpdateCounters();
@@ -1513,7 +1527,7 @@ namespace Epsitec.Common.Document
 			{
 				this.ActiveViewer.CreateEnding(false, false);
 
-				this.opletCreate = false;
+				this.IsObjectJustCreated = false;
 				this.Tool = "ToolSelect";
 
 				this.UpdateCounters();
@@ -2050,6 +2064,7 @@ namespace Epsitec.Common.Document
 
 			this.opletLastCmd = "";
 			this.opletLastId = 0;
+			this.IsObjectJustCreated = false;
 			this.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 			this.document.Notifier.NotifySelectionChanged();
 			this.document.Notifier.NotifyTextChanged();
@@ -2076,6 +2091,7 @@ namespace Epsitec.Common.Document
 
 			this.opletLastCmd = "";
 			this.opletLastId = 0;
+			this.IsObjectJustCreated = false;
 			this.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 			this.document.Notifier.NotifySelectionChanged();
 			this.document.Notifier.NotifyTextChanged();
@@ -6405,7 +6421,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			this.opletCreate = (cmd == "Create");
+			this.IsObjectJustCreated = (cmd == "Create");
 			this.opletLastCmd = cmd;
 			this.opletLastId = id;
 
@@ -6442,7 +6458,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			this.opletCreate = (cmd == "Create");
+			this.IsObjectJustCreated = (cmd == "Create");
 			this.opletLastCmd = cmd;
 			this.opletLastId = id;
 

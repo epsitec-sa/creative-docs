@@ -710,7 +710,10 @@ namespace Epsitec.Common.Document
 					this.document.Modifier.OpletQueueEnable = true;
 					obj.Dispose();
 					this.document.Modifier.OpletQueueCancelAction();  // annule les propriétés
+
+					this.document.Modifier.IsObjectJustCreated = false;
 				}
+
 				this.CreateRank = -1;
 			}
 
@@ -752,8 +755,6 @@ namespace Epsitec.Common.Document
 				this.CreateRank = layer.Objects.Add(obj);  // ajoute à la fin de la liste
 				this.document.Modifier.GroupUpdateParents();
 				this.document.Modifier.OpletQueueValidateAction();
-
-				this.createdRank = this.createRank;
 			}
 			else  // création impossible ?
 			{
@@ -763,8 +764,9 @@ namespace Epsitec.Common.Document
 				obj.Dispose();
 				this.document.Modifier.OpletQueueCancelAction();  // annule les propriétés
 
-				this.createdRank = -1;
+				this.document.Modifier.IsObjectJustCreated = false;
 			}
+
 			this.CreateRank = -1;
 			this.document.Notifier.NotifyCreateChanged();
 			this.document.Notifier.NotifySelectionChanged();
@@ -793,21 +795,7 @@ namespace Epsitec.Common.Document
 				{
 					this.createRank = value;
 					this.document.Notifier.NotifySaveChanged();
-
-					if (this.createRank != -1)
-					{
-						this.createdRank = this.createRank;
-					}
 				}
-			}
-		}
-
-		public int CreatedRank
-		{
-			//	Rang de l'objet qui a été créé.
-			get
-			{
-				return this.createdRank;
 			}
 		}
 		#endregion
@@ -4737,7 +4725,6 @@ namespace Epsitec.Common.Document
 		protected Objects.Abstract				hiliteHandleObject;
 		protected int							hiliteHandleRank = -1;
 		protected int							createRank = -1;
-		protected int							createdRank = -1;
 		protected bool							debugDirty;
 		protected Timer							autoScrollTimer;
 		protected int							guideInteractive = -1;
