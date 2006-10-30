@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -236,6 +236,7 @@ namespace Epsitec.Common.Types
 		
 		
 		#region INullable Members
+		
 		public bool								IsNull
 		{
 			get
@@ -243,6 +244,7 @@ namespace Epsitec.Common.Types
 				return (this.milliseconds == -1);
 			}
 		}
+		
 		#endregion
 		
 		#region IComparable Members
