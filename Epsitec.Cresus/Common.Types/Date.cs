@@ -184,6 +184,7 @@ namespace Epsitec.Common.Types
 		
 		
 		#region INullable Members
+		
 		public bool								IsNull
 		{
 			get
@@ -191,6 +192,7 @@ namespace Epsitec.Common.Types
 				return (this.days == -1);
 			}
 		}
+
 		#endregion
 		
 		#region IComparable Members

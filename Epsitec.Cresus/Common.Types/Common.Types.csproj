@@ -112,6 +112,7 @@
     <Compile Include="AbstractBinding.cs" />
     <Compile Include="CollectionChangedEventArgs.cs" />
     <Compile Include="CollectionChangedAction.cs" />
+    <Compile Include="INullableType.cs" />
     <Compile Include="GroupDescription.cs" />
     <Compile Include="CollectionViewSource.cs" />
     <Compile Include="CollectionView.cs" />

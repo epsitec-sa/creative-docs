@@ -9,7 +9,7 @@ namespace Epsitec.Common.Types
 	/// The <c>AbstractType</c> class implements the basic type properties by
 	/// storing them as attached properties in a <see cref="Caption"/>.
 	/// </summary>
-	public abstract class AbstractType : NamedDependencyObject, INamedType, IDataConstraint
+	public abstract class AbstractType : NamedDependencyObject, INamedType, IDataConstraint, INullableType
 	{
 		protected AbstractType()
 			: base ()
@@ -72,6 +72,23 @@ namespace Epsitec.Common.Types
 		
 		#endregion
 
+		#region INullableType Members
+
+		public bool IsNullable
+		{
+			get
+			{
+				return (bool) this.Caption.GetValue (AbstractType.IsNullableProperty);
+			}
+		}
+
+		public virtual bool IsNullValue(object value)
+		{
+			return value == null;
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Defines the default controller used to represent data of this type.
 		/// </summary>
@@ -86,6 +103,25 @@ namespace Epsitec.Common.Types
 			if (this.DefaultControllerParameter != controllerParameter)
 			{
 				this.Caption.SetValue (AbstractType.DefaultControllerParameterProperty, controllerParameter);
+			}
+		}
+
+		/// <summary>
+		/// Defines if this type is nullable or not.
+		/// </summary>
+		/// <param name="isNullable">If set to <c>true</c>, this type is nullable.</param>
+		public void DefineIsNullable(bool isNullable)
+		{
+			if (this.IsNullable != isNullable)
+			{
+				if (isNullable)
+				{
+					this.Caption.SetValue (AbstractType.IsNullableProperty, true);
+				}
+				else
+				{
+					this.Caption.ClearValue (AbstractType.IsNullableProperty);
+				}
 			}
 		}
 
@@ -306,5 +342,6 @@ namespace Epsitec.Common.Types
 		public static readonly DependencyProperty SytemTypeProperty = DependencyProperty.RegisterAttached ("SystemType", typeof (string), typeof (AbstractType));
 		public static readonly DependencyProperty CachedTypeProperty = DependencyProperty.RegisterAttached ("CachedType", typeof (AbstractType), typeof (AbstractType), new DependencyPropertyMetadata ().MakeNotSerializable ());
 		public static readonly DependencyProperty ComplexTypeProperty = DependencyProperty.RegisterAttached ("ComplexType", typeof (AbstractType), typeof (AbstractType));
+		public static readonly DependencyProperty IsNullableProperty = DependencyProperty.RegisterAttached ("IsNullable", typeof (bool), typeof (AbstractType), new DependencyPropertyMetadata (false));
 	}
 }
