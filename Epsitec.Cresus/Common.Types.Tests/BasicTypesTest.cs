@@ -7,6 +7,18 @@ namespace Epsitec.Common.Types
 	[TestFixture] public class BasicTypesTest
 	{
 		[Test]
+		public void CheckDefaultTypes()
+		{
+			Assert.IsNotNull (StringType.Default);
+			Assert.AreEqual ("Default.String", StringType.Default.Name);
+			Assert.IsTrue (StringType.Default.IsNullable);
+			
+			Assert.IsNotNull (IntegerType.Default);
+			Assert.AreEqual ("Default.Integer", IntegerType.Default.Name);
+			Assert.IsFalse (IntegerType.Default.IsNullable);
+		}
+		
+		[Test]
 		public void CheckEnumType1()
 		{
 			System.Type type = typeof (MyEnum);
