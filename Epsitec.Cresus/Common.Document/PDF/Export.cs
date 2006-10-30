@@ -499,6 +499,13 @@ namespace Epsitec.Common.Document.PDF
 		protected void FoundComplexSurfaces(Port port, DrawingContext drawingContext)
 		{
 			//	Trouve toutes les surfaces complexes dans toutes les pages.
+			port.Reset();
+
+			//	Il faut utiliser la bonne échelle à cause du filtre des images.
+			Transform gt = port.Transform;
+			gt.Scale(Export.mm2in);  // unité = 0.1mm
+			port.Transform = gt;
+
 			int id = 1;
 			foreach ( int page in this.pageList )
 			{
