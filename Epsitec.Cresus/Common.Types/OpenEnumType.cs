@@ -51,6 +51,12 @@ namespace Epsitec.Common.Types
 		
 		public override bool IsValidValue(object value)
 		{
+			if ((this.IsNullValue (value)) &&
+				(this.IsNullable))
+			{
+				return true;
+			}
+
 			if ((OpenEnumType.IsCustomName (value as string)) ||
 				(base.IsValidValue (value)))
 			{
