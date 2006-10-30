@@ -218,7 +218,12 @@ namespace Epsitec.Common.Document.Settings
 						return this.document.Modifier.OutsideArea;
 
 					case "PrintCopies":
-						return this.document.Settings.PrintInfo.Copies;
+						//	Retourne toujours 1, afin que le dialogue d'impresion propose '1 copie'
+						//	chaque fois qu'il est ouvert. Ainsi, si l'utilisateur imprime 50 copies
+						//	une première fois, une deuxième impression remet le compteur à 1, afin
+						//	d'éviter un éventuel gaspillage de papier (idée de CN).
+						//return this.document.Settings.PrintInfo.Copies;
+						return 1;
 
 					case "PrintDpi":
 						return this.document.Settings.PrintInfo.Dpi;
