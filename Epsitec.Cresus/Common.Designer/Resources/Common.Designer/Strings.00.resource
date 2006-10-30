@@ -64,6 +64,9 @@
   <data name="Viewers.Types.Numeric.LargeStep" id="027" mod="1">Grand pas</data>
   <data name="Viewers.Types.String.Min" id="037" mod="1">Longueur minimale</data>
   <data name="Viewers.Types.String.Max" id="047" mod="1">Longueur maximale</data>
+  <data name="Viewers.Types.Controller.Title" id="0H7">Contrôleur</data>
+  <data name="Viewers.Types.Nullable.Title" id="0F7">Etats</data>
+  <data name="Viewers.Types.Nullable.CheckButton" id="0G7">Accepte d&amp;apos;être nul</data>
   <data name="Action.New" id="0U">Nouveau</data>
   <data name="Action.Open" id="0V">Ouvrir...</data>
   <data name="Action.Close" id="001">Fermer</data>
