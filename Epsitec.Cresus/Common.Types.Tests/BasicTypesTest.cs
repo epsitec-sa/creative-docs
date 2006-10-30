@@ -343,6 +343,30 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckNullableTypes()
+		{
+			int? valueOne = 1;
+			int? valueNull = null;
+
+			IntegerType type1 = new IntegerType (0, 100);
+			IntegerType type2 = new IntegerType (0, 100);
+			
+			type1.DefineIsNullable (true);
+
+			Assert.IsTrue (type1.IsNullable);
+			Assert.IsFalse (type1.IsNullValue (valueOne));
+			Assert.IsTrue (type1.IsNullValue (valueNull));
+			Assert.IsTrue (type1.IsValidValue (valueOne));
+			Assert.IsTrue (type1.IsValidValue (valueNull));
+			
+			Assert.IsFalse (type2.IsNullable);
+			Assert.IsFalse (type2.IsNullValue (valueOne));
+			Assert.IsTrue (type2.IsNullValue (valueNull));
+			Assert.IsTrue (type2.IsValidValue (valueOne));
+			Assert.IsFalse (type2.IsValidValue (valueNull));
+		}
+
+		[Test]
 		public void CheckNumericTypes()
 		{
 			bool num1 = true;

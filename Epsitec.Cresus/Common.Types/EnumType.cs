@@ -293,6 +293,12 @@ namespace Epsitec.Common.Types
 		#region IDataConstraint Members
 		public override bool IsValidValue(object value)
 		{
+			if ((this.IsNullValue (value)) &&
+				(this.IsNullable))
+			{
+				return true;
+			}
+
 			try
 			{
 				System.Enum enumValue = (System.Enum) System.Enum.Parse (this.enumType, value.ToString ());

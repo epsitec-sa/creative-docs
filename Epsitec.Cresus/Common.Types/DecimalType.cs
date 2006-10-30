@@ -41,6 +41,12 @@ namespace Epsitec.Common.Types
 		
 		public override bool IsValidValue(object value)
 		{
+			if ((this.IsNullValue (value)) &&
+				(this.IsNullable))
+			{
+				return true;
+			}
+
 			if (value is decimal)
 			{
 				if (this.Range.IsEmpty)
