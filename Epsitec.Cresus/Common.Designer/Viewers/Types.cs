@@ -16,7 +16,9 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Editeur contenant toutes les définitions.
 			MyWidgets.StackedPanel leftContainer;
-			this.CreateBand(out leftContainer, "Contrôleur", 0.3);
+
+			//	Choix du contrôleur.
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Controller.Title, 0.3);
 
 			this.fieldController = new TextFieldCombo(leftContainer.Container);
 			this.fieldController.IsReadOnly = true;
@@ -27,6 +29,17 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldController.TabIndex = this.tabIndex++;
 			this.fieldController.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
+			//	Zone 'nullable'.
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Nullable.Title, 0.1);
+
+			this.primaryNullable = new CheckButton(leftContainer.Container);
+			this.primaryNullable.Text = Res.Strings.Viewers.Types.Nullable.CheckButton;
+			this.primaryNullable.Dock = DockStyle.StackBegin;
+			this.primaryNullable.Pressed += new MessageEventHandler(this.HandleNullablePressed);
+			this.primaryNullable.TabIndex = this.tabIndex++;
+			this.primaryNullable.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			//	Editeur du type.
 			this.CreateBand(out this.container, "", 0.6);
 
 			this.UpdateEdit();
@@ -37,6 +50,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (disposing)
 			{
 				this.fieldController.TextChanged -= new EventHandler(this.HandleControllerTextChanged);
+				this.primaryNullable.Pressed -= new MessageEventHandler(this.HandleNullablePressed);
 			}
 
 			base.Dispose(disposing);
@@ -138,10 +152,16 @@ namespace Epsitec.Common.Designer.Viewers
 			if (sel == -1)
 			{
 				this.SetTextField(this.fieldController, 0, null, ResourceAccess.FieldType.None);
+
+				this.primaryNullable.Enable = false;
+				this.primaryNullable.ActiveState = ActiveState.No;
 			}
 			else
 			{
 				this.SetTextField(this.fieldController, sel, null, ResourceAccess.FieldType.Controller);
+
+				this.primaryNullable.Enable = true;
+				this.primaryNullable.ActiveState = (type != null && type.IsNullable) ? ActiveState.Yes : ActiveState.No;
 			}
 
 			this.ignoreChange = iic;
@@ -212,9 +232,28 @@ namespace Epsitec.Common.Designer.Viewers
 			this.access.SetField(sel, null, ResourceAccess.FieldType.Controller, new ResourceAccess.Field(controller));
 		}
 
+		private void HandleNullablePressed(object sender, MessageEventArgs e)
+		{
+			//	Bouton à cocher 'Nullable' pressé.
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			bool nullable = (this.primaryNullable.ActiveState == ActiveState.No);
+			int sel = this.access.AccessIndex;
+			ResourceAccess.Field field = this.access.GetField(sel, null, ResourceAccess.FieldType.AbstractType);
+			AbstractType type = field.AbstractType;
+			type.DefineIsNullable(nullable);
+			this.access.SetField(sel, null, ResourceAccess.FieldType.AbstractType, null);
+
+			this.UpdateColor();
+		}
+
 
 		protected MyWidgets.StackedPanel		container;
 		protected ResourceAccess.TypeType		typeType = ResourceAccess.TypeType.None;
+		protected CheckButton					primaryNullable;
 		protected MyWidgets.AbstractTypeEditor	editor;
 		protected TextFieldCombo				fieldController;
 	}
