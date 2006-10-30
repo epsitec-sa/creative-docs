@@ -48,6 +48,13 @@ namespace Epsitec.Common.Types
 		
 		#region IStructuredType Members
 
+		/// <summary>
+		/// Gets the field descriptor for the specified field identifier.
+		/// </summary>
+		/// <param name="fieldId">The field identifier.</param>
+		/// <returns>
+		/// The matching field descriptor; otherwise, <c>null</c>.
+		/// </returns>
 		public StructuredTypeField GetField(string fieldId)
 		{
 			StructuredTypeField field;
@@ -61,7 +68,11 @@ namespace Epsitec.Common.Types
 				return StructuredTypeField.Empty;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets a collection of field identifiers, sorted by rank and identifier.
+		/// </summary>
+		/// <returns>A collection of field identifiers.</returns>
 		public IEnumerable<string> GetFieldIds()
 		{
 			StructuredTypeField[] fields = new StructuredTypeField[this.fields.Values.Count];
@@ -80,6 +91,11 @@ namespace Epsitec.Common.Types
 		
 		#region ISystemType Members
 
+		/// <summary>
+		/// Gets the system type described by this object. This is <c>null</c> for
+		/// structured type objects which are not mapped directly to a native class.
+		/// </summary>
+		/// <value>The system type described by this object.</value>
 		public override System.Type SystemType
 		{
 			get
@@ -117,7 +133,15 @@ namespace Epsitec.Common.Types
 		}
 		
 		#endregion
-		
+
+		/// <summary>
+		/// Determines whether the specified value is valid according to the
+		/// constraint.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified value is valid; otherwise, <c>false</c>.
+		/// </returns>
 		public override bool IsValidValue(object value)
 		{
 			if ((this.IsNullValue (value)) &&

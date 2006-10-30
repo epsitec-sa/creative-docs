@@ -39,6 +39,10 @@ namespace Epsitec.Common.Types
 
 		#region INamedType Members
 
+		/// <summary>
+		/// Gets the default controller used to represent data of this type.
+		/// </summary>
+		/// <value>The default controller.</value>
 		public string DefaultController
 		{
 			get
@@ -47,6 +51,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the parameter used with the default controller.
+		/// </summary>
+		/// <value>The default controller parameter.</value>
 		public string DefaultControllerParameter
 		{
 			get
@@ -58,7 +66,11 @@ namespace Epsitec.Common.Types
 		#endregion
 		
 		#region ISystemType Members
-		
+
+		/// <summary>
+		/// Gets the system type described by this object.
+		/// </summary>
+		/// <value>The system type described by this object.</value>
 		public abstract System.Type				SystemType
 		{
 			get;
@@ -67,7 +79,15 @@ namespace Epsitec.Common.Types
 		#endregion
 		
 		#region IDataConstraint Members
-		
+
+		/// <summary>
+		/// Determines whether the specified value is valid according to the
+		/// constraint.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified value is valid; otherwise, <c>false</c>.
+		/// </returns>
 		public abstract bool IsValidValue(object value);
 		
 		#endregion
