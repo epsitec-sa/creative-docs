@@ -69,8 +69,8 @@ namespace Epsitec.App.DocumentEditor
 			}
 
 #if DEBUG
-			this.debugMode = DebugMode.DebugCommands;
-			//?this.debugMode = DebugMode.Release;
+			//?this.debugMode = DebugMode.DebugCommands;
+			this.debugMode = DebugMode.Release;
 #else
 			this.debugMode = DebugMode.Release;
 #endif
