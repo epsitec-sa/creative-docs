@@ -312,6 +312,18 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (1, restoredType.Fields.Count);
 		}
 
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckStructuredTypeFieldInsertionEx1()
+		{
+			StructuredType type = new StructuredType ();
+			StructuredTypeField fieldAbc = new StructuredTypeField ("Abc", StringType.Default);
+			StructuredTypeField fieldXyz = new StructuredTypeField ("Xyz", StringType.Default);
+			
+			type.Fields.Add (fieldXyz);
+			type.Fields["Xyz"] = fieldAbc;
+		}
+
 		private static void Fill(StructuredType record)
 		{
 			StructuredType subRec1 = new StructuredType ();
