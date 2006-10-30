@@ -269,6 +269,8 @@ namespace Epsitec.Common.Types
 			type.Fields.Add ("Name", StringType.Default);
 			type.Fields.Add ("Age", IntegerType.Default);
 
+			type.Fields["Name"] = new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 1);
+
 			Assert.IsNull (type.SystemType);
 
 			string xml = type.Caption.SerializeToString ();
@@ -283,6 +285,20 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (type.Fields.Count, restoredType.Fields.Count);
 			Assert.AreEqual (type.GetField ("Name").Type.GetType ().Name, restoredType.GetField ("Name").Type.GetType ().Name);
 			Assert.AreEqual (type.GetField ("Age").Type.GetType ().Name, restoredType.GetField ("Age").Type.GetType ().Name);
+			Assert.AreEqual ("Name", restoredType.Fields["Name"].Id);
+			Assert.AreEqual ("Age", restoredType.Fields["Age"].Id);
+			Assert.AreEqual (1, restoredType.Fields["Name"].Rank);
+			Assert.AreEqual (-1, restoredType.Fields["Age"].Rank);
+
+			List<StructuredTypeField> fields = new List<StructuredTypeField> (restoredType.Fields.Values);
+
+			Assert.AreEqual ("Name", fields[0].Id);
+			Assert.AreEqual ("Age", fields[1].Id);
+
+			fields.Sort (StructuredType.RankComparer);
+
+			Assert.AreEqual ("Age", fields[0].Id);
+			Assert.AreEqual ("Name", fields[1].Id);
 		}
 
 		private static void Fill(StructuredType record)

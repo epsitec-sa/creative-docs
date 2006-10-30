@@ -33,6 +33,19 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets a comparer which can be used to sort <see cref="StructuredTypeField"/>
+		/// entries by their rank.
+		/// </summary>
+		/// <value>The rank comparer.</value>
+		public static IComparer<StructuredTypeField> RankComparer
+		{
+			get
+			{
+				return new RankComparerImplementation ();
+			}
+		}
+		
 		#region IStructuredType Members
 
 		public StructuredTypeField GetField(string fieldId)
@@ -71,6 +84,34 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		#region RankComparerImplementation Class
+		
+		private class RankComparerImplementation : IComparer<StructuredTypeField>
+		{
+			#region IComparer Members
+
+			public int Compare(StructuredTypeField valX, StructuredTypeField valY)
+			{
+				int rx = valX.Rank;
+				int ry = valY.Rank;
+
+				if (rx < ry)
+				{
+					return -1;
+				}
+				if (rx > ry)
+				{
+					return 1;
+				}
+
+				return string.CompareOrdinal (valX.Id, valY.Id);
+			}
+			
+			#endregion
+		}
+		
+		#endregion
+		
 		public override bool IsValidValue(object value)
 		{
 			StructuredData data = value as StructuredData;
