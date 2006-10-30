@@ -299,6 +299,17 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual ("Age", fields[0].Id);
 			Assert.AreEqual ("Name", fields[1].Id);
+
+			string[] fieldIds = Collection.ToArray<string> (restoredType.GetFieldIds ());
+			
+			Assert.AreEqual ("Age", fieldIds[0]);
+			Assert.AreEqual ("Name", fieldIds[1]);
+
+			restoredType.Fields.Remove ("Age");
+			Assert.AreEqual (1, restoredType.Fields.Count);
+			
+			restoredType.Fields.Remove ("Xxx");
+			Assert.AreEqual (1, restoredType.Fields.Count);
 		}
 
 		private static void Fill(StructuredType record)

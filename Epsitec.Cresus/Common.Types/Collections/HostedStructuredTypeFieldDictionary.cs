@@ -69,5 +69,15 @@ namespace Epsitec.Common.Types.Collections
 
 			this.Add (id, new StructuredTypeField (id, type, captionId, rank));
 		}
+
+		protected override void NotifyInsertion(string key, StructuredTypeField value)
+		{
+			if (key != value.Id)
+			{
+				throw new System.ArgumentException (string.Format ("Inserting a value with Id={0} and key={1}", value.Id, key));
+			}
+
+			base.NotifyInsertion (key, value);
+		}
 	}
 }
