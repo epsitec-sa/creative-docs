@@ -64,7 +64,13 @@ namespace Epsitec.Common.Types
 		
 		public IEnumerable<string> GetFieldIds()
 		{
-			foreach (StructuredTypeField field in this.fields.Values)
+			StructuredTypeField[] fields = new StructuredTypeField[this.fields.Values.Count];
+			
+			this.fields.Values.CopyTo (fields, 0);
+
+			System.Array.Sort (fields, StructuredType.RankComparer);
+			
+			foreach (StructuredTypeField field in fields)
 			{
 				yield return field.Id;
 			}

@@ -256,11 +256,12 @@ namespace Epsitec.Common.Types.Collections
 
 		#endregion
 
-		private void NotifyInsertion(K key, V value)
+		protected virtual void NotifyInsertion(K key, V value)
 		{
 			this.host.NotifyDictionaryInsertion (key, value);
 		}
-		private void NotifyRemoval(K key, V value)
+		
+		protected virtual void NotifyRemoval(K key, V value)
 		{
 			this.host.NotifyDictionaryRemoval (key, value);
 		}
