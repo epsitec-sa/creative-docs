@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.Database
 			db_access.LoginPassword = "masterkey";
 			db_access.Database		= "test";
 			db_access.Server		= "localhost";
-			db_access.Create		= force_db_creation;
+			db_access.CreateDatabase		= force_db_creation;
 			
 			return db_access;
 		}
@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Database
 			db_access.LoginPassword = "masterkey";
 			db_access.Database		= name;
 			db_access.Server		= "localhost";
-			db_access.Create		= false;
+			db_access.CreateDatabase		= false;
 			
 			return db_access;
 		}
@@ -213,7 +213,7 @@ namespace Epsitec.Cresus.Database
 			{
 				//	OK: la base existait déjà... on ne peut pas la créer !
 				
-				db_access.Create = false;
+				db_access.CreateDatabase = false;
 				db_abstraction = DbFactory.FindDbAbstraction (db_access);
 			}
 			

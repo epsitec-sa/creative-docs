@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Database
 			db_access.LoginPassword = "masterkey";
 			db_access.Database		= "employee";
 			db_access.Server		= "localhost";
-			db_access.Create		= false;
+			db_access.CreateDatabase		= false;
 			
 			return db_access;
 		}

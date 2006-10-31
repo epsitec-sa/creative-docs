@@ -1,29 +1,27 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// Définition d'un accès à une base de données.
+	/// The <c>DbAccess</c> structure defines a database access, which is used
+	/// to create a connection string.
 	/// </summary>
-	
 	[System.Serializable]
-	
 	public struct DbAccess
 	{
-		public DbAccess (string provider, string database, string server, string login_name, string login_pwd, bool create)
+		public DbAccess (string provider, string database, string server, string loginName, string loginPassword, bool createDatabase)
 		{
-			this.Provider		 = provider;
-			this.Database		 = database;
-			this.Server			 = server;
-			this.LoginName		 = login_name;
-			this.LoginPassword	 = login_pwd;
-			this.Create			 = create;
-			this.CheckConnection = true;
+			this.provider		 = provider;
+			this.database		 = database;
+			this.server			 = server;
+			this.loginName		 = loginName;
+			this.loginPassword	 = loginPassword;
+			this.createDatabase	 = createDatabase;
+			this.checkConnection = true;
 		}
 		
-		
-		public bool							IsValid
+		public bool								IsValid
 		{
 			get
 			{
@@ -33,16 +31,79 @@ namespace Epsitec.Cresus.Database
 					   (this.LoginName != null);
 			}
 		}
+
+		public string							Provider
+		{
+			get
+			{
+				return this.provider;
+			}
+		}
+
+		public string							Database
+		{
+			get
+			{
+				return this.database;
+			}
+		}
+
+		public string							Server
+		{
+			get
+			{
+				return this.server;
+			}
+		}
+
+		public string							LoginName
+		{
+			get
+			{
+				return this.loginName;
+			}
+		}
+
+		public string							LoginPassword
+		{
+			get
+			{
+				return this.loginPassword;
+			}
+		}
+
+		public bool								CreateDatabase
+		{
+			get
+			{
+				return this.createDatabase;
+			}
+			set
+			{
+				this.createDatabase = value;
+			}
+		}
+
+		public bool								CheckConnection
+		{
+			get
+			{
+				return this.checkConnection;
+			}
+			set
+			{
+				this.checkConnection = value;
+			}
+		}
+
+		public static readonly DbAccess			Empty;
 		
-		
-		public string						Provider;
-		public string						Database;
-		public string						Server;
-		public string						LoginName;
-		public string						LoginPassword;
-		public bool							Create;
-		public bool							CheckConnection;
-		
-		public static readonly DbAccess		Empty;
+		private string							provider;
+		private string							database;
+		private string							server;
+		private string							loginName;
+		private string							loginPassword;
+		private bool							createDatabase;
+		private bool							checkConnection;
 	}
 }
