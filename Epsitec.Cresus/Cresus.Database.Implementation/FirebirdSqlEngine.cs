@@ -1,14 +1,13 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using FirebirdSql.Data.FirebirdClient;
 
 namespace Epsitec.Cresus.Database.Implementation
 {
-	using Epsitec.Cresus.Database;
-	
 	/// <summary>
-	/// Implémentation de ISqlEngine pour Firebird.
+	/// The <c>FirebirdSqlEngine</c> class is the implementation of the <c>ISqlEngine</c>
+	/// interface for the Firebird engine.
 	/// </summary>
 	internal class FirebirdSqlEngine : ISqlEngine, System.IDisposable
 	{
@@ -17,9 +16,9 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.fb = fb;
 		}
 		
-		
 		#region ISqlEngine Members
-		public void Execute(System.Data.IDbCommand command, DbCommandType type, int command_count, out int result)
+		
+		public void Execute(System.Data.IDbCommand command, DbCommandType type, int commandCount, out int result)
 		{
 			result = 0;
 			
@@ -31,10 +30,10 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 				
 				default:
-					throw new Exceptions.GenericException (this.fb.DbAccess, "Illegal command type");
+					throw new Exceptions.GenericException (this.fb.DbAccess, string.Format ("Illegal command type {0}", type));
 			}
 			
-			if (command_count > 1)
+			if (commandCount > 1)
 			{
 				string[] commands = command.CommandText.Split ('\n');
 				
@@ -47,22 +46,21 @@ namespace Epsitec.Cresus.Database.Implementation
 					}
 				}
 			}
-			else if (command_count > 0)
+			else if (commandCount > 0)
 			{
 				result += command.ExecuteNonQuery ();
 			}
-			
 		}
 		
-		public void Execute(System.Data.IDbCommand command, DbCommandType type, int command_count, out object simple_data)
+		public void Execute(System.Data.IDbCommand command, DbCommandType type, int commandCount, out object simpleData)
 		{
-			if (command_count > 1)
+			if (commandCount > 1)
 			{
 				throw new Exceptions.GenericException (this.fb.DbAccess, "Multiple command not supported");
 			}
-			if (command_count < 1)
+			if (commandCount < 1)
 			{
-				simple_data = null;
+				simpleData = null;
 				return;
 			}
 			
@@ -70,11 +68,11 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				case DbCommandType.Silent:
 				case DbCommandType.NonQuery:
-					simple_data = command.ExecuteNonQuery ();
+					simpleData = command.ExecuteNonQuery ();
 					break;
 				
 				case DbCommandType.ReturningData:
-					simple_data = command.ExecuteScalar ();
+					simpleData = command.ExecuteScalar ();
 					break;
 				
 				default:
@@ -82,11 +80,11 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 		}
 		
-		public void Execute(System.Data.IDbCommand command, DbCommandType type, int command_count, out System.Data.DataSet data_set)
+		public void Execute(System.Data.IDbCommand command, DbCommandType type, int commandCount, out System.Data.DataSet dataSet)
 		{
-			if (command_count < 1)
+			if (commandCount < 1)
 			{
-				data_set = null;
+				dataSet = null;
 				return;
 			}
 			
@@ -96,14 +94,14 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				case DbCommandType.Silent:
 				case DbCommandType.NonQuery:
-					this.Execute (command, type, command_count, out result);
-					data_set = null;
+					this.Execute (command, type, commandCount, out result);
+					dataSet = null;
 					break;
 				
 				case DbCommandType.ReturningData:
 					System.Data.IDataAdapter adapter = this.fb.NewDataAdapter (command);
-					data_set = new System.Data.DataSet ();
-					adapter.Fill (data_set);
+					dataSet = new System.Data.DataSet ();
+					adapter.Fill (dataSet);
 					break;
 				
 				default:
@@ -111,15 +109,15 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 		}
 		
-		public void Execute(DbInfrastructure infrastructure, System.Data.IDbTransaction transaction, DbRichCommand rich_command)
+		public void Execute(DbInfrastructure infrastructure, System.Data.IDbTransaction transaction, DbRichCommand richCommand)
 		{
-			int num_commands = rich_command.Commands.Count;
+			int numCommands = richCommand.Commands.Count;
 			
-			System.Data.IDbDataAdapter[] adapters = new System.Data.IDbDataAdapter[num_commands];
+			System.Data.IDbDataAdapter[] adapters = new System.Data.IDbDataAdapter[numCommands];
 			
-			for (int i = 0; i < num_commands; i++)
+			for (int i = 0; i < numCommands; i++)
 			{
-				System.Data.IDbCommand command = rich_command.Commands[i];
+				System.Data.IDbCommand command = richCommand.Commands[i];
 				
 				FbDataAdapter    adapter = this.fb.NewDataAdapter (command) as FbDataAdapter;
 				FbCommandBuilder builder = new FbCommandBuilder (adapter);
@@ -127,25 +125,18 @@ namespace Epsitec.Cresus.Database.Implementation
 				adapters[i] = adapter;
 			}
 				
-			rich_command.InternalFillDataSet (this.fb.DbAccess, transaction, adapters);
+			richCommand.InternalFillDataSet (this.fb.DbAccess, transaction, adapters);
 		}
+		
 		#endregion
 		
 		#region IDisposable Members
+		
 		public void Dispose()
 		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
 		}
+		
 		#endregion
-		
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-			}
-		}
-		
 		
 		private FirebirdAbstraction		fb;
 	}
