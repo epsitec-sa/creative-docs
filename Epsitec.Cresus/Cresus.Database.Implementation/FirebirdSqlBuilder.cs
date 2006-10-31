@@ -563,12 +563,12 @@ namespace Epsitec.Cresus.Database.Implementation
 			fbParam.Value = value;
 		}
 		
-		public void GetCommandParameterValue(System.Data.IDbCommand command, int index, out object value)
+		public object GetCommandParameterValue(System.Data.IDbCommand command, int index)
 		{
 			FbCommand   fbCommand = command as FbCommand;
 			FbParameter fbParam   = fbCommand.Parameters[index] as FbParameter;
 			
-			value = fbParam.Value;
+			return fbParam.Value;
 		}
 		
 		#endregion
