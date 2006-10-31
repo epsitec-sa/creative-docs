@@ -120,6 +120,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Met à jour le contenu de l'éditeur.
 			this.ignoreChange = true;
+			this.AccessInitialise();
 			this.UpdateArray();
 			this.UpdateButtons();
 			this.ignoreChange = false;
@@ -127,7 +128,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateButtons()
 		{
-			this.AccessInitialise();
 			int sel = this.array.SelectedRow;
 
 			this.buttonPrev.Enable = (sel != -1 && sel > 0);
@@ -142,7 +142,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			this.AccessInitialise();
 			this.array.TotalRows = this.AccessCount;
 
 			int first = this.array.FirstVisibleRow;
@@ -190,47 +189,54 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void ArrayAdd()
 		{
-			//	Ajoute une nouvelle valeur dans l'énumération.
+			//	Ajoute une nouvelle valeur dans la structure.
+			StructuredType type = this.AbstractType as StructuredType;
+			type.Fields.Add("Vide", StringType.Default);
+
+			this.AccessInitialise();
+			this.UpdateArray();
+			this.UpdateButtons();
+			this.OnContentChanged();
 		}
 
 		protected void ArrayRemove()
 		{
-			//	Supprime une valeur de l'énumération.
+			//	Supprime une valeur de la structure.
+			StructuredType type = this.AbstractType as StructuredType;
 		}
 
 		protected void ArrayMove(int direction)
 		{
-			//	Déplace une valeur dans l'énumération.
+			//	Déplace une valeur dans la structure.
+			StructuredType type = this.AbstractType as StructuredType;
 		}
 
 		protected void RenumCollection()
 		{
-			//	Renumérote toute la collection.
+			//	Renumérote toute la structure.
+			StructuredType type = this.AbstractType as StructuredType;
 		}
 
 		protected void ChangeType()
 		{
+			StructuredType type = this.AbstractType as StructuredType;
 		}
 
 		protected void ChangeCaption()
 		{
+			StructuredType type = this.AbstractType as StructuredType;
 		}
 
 
 		protected void AccessInitialise()
 		{
-			if (this.lastIndex != this.resourceSelected)
+			StructuredType type = this.AbstractType as StructuredType;
+			System.Diagnostics.Debug.Assert(type != null);
+
+			this.ids = new List<string>();
+			foreach(string key in type.GetFieldIds())
 			{
-				this.lastIndex = this.resourceSelected;
-
-				StructuredType type = this.AbstractType as StructuredType;
-				System.Diagnostics.Debug.Assert(type != null);
-
-				this.ids = new List<string>();
-				foreach(string key in type.GetFieldIds())
-				{
-					this.ids.Add(key);
-				}
+				this.ids.Add(key);
 			}
 		}
 
@@ -319,6 +325,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		private void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
+			this.AccessInitialise();
 			this.UpdateArray();
 		}
 
@@ -358,7 +365,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Button						buttonType;
 		protected Button						buttonCaption;
 
-		protected int							lastIndex = -1;
 		protected List<string>					ids;
 	}
 }
