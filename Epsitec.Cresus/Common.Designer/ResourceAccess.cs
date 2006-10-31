@@ -470,12 +470,14 @@ namespace Epsitec.Common.Designer
 								type = et;
 							}
 
+#if false
 							if (type is StructuredType)
 							{
 								StructuredType st = type as StructuredType;
 								st.Fields.Add("Nom", StringType.Default);
 								st.Fields.Add("Prénom", StringType.Default);
 							}
+#endif
 
 							type.DefineDefaultController(ResourceAccess.TypeTypeController(type), ResourceAccess.TypeTypeControllerParameter(type));
 							newField.SetStringValue(type.Caption.SerializeToString());
