@@ -408,7 +408,7 @@ namespace Epsitec.Common.Designer
 			{
 				TypeType tt = this.lastTypeTypeCreatated;
 				this.mainWindow.DlgResourceTypeType(this, ref tt, out this.lastTypeTypeSystem);
-				if (tt == TypeType.None)
+				if (tt == TypeType.None)  // annuler ?
 				{
 					return;
 				}
@@ -468,6 +468,13 @@ namespace Epsitec.Common.Designer
 							else
 							{
 								type = et;
+							}
+
+							if (type is StructuredType)
+							{
+								StructuredType st = type as StructuredType;
+								st.Fields.Add("Nom", StringType.Default);
+								st.Fields.Add("Prénom", StringType.Default);
 							}
 
 							type.DefineDefaultController(ResourceAccess.TypeTypeController(type), ResourceAccess.TypeTypeControllerParameter(type));
