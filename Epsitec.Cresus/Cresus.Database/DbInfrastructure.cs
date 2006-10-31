@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			this.db_access = db_access;
-			this.db_access.Create = true;
+			this.db_access.CreateDatabase = true;
 
 			this.InitializeDatabaseAbstraction ();
 			
@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			this.db_access = db_access;
-			this.db_access.Create = false;
+			this.db_access.CreateDatabase = false;
 
 			this.InitializeDatabaseAbstraction ();
 			
@@ -344,16 +344,7 @@ namespace Epsitec.Cresus.Database
 		
 		public static DbAccess CreateDbAccess(string name)
 		{
-			DbAccess db_access = new DbAccess ();
-			
-			db_access.Provider		= "Firebird";
-			db_access.LoginName		= "sysdba";
-			db_access.LoginPassword = "masterkey";
-			db_access.Database		= name;
-			db_access.Server		= "localhost";
-			db_access.Create		= false;
-			
-			return db_access;
+			return new DbAccess ("Firebird", name, "localhost", "sysdba", "masterkey", false);
 		}
 		
 		

@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 			this.dbConnectionString = FirebirdAbstraction.MakeConnectionString (this.dbAccess, this.MakeDbFilePath (), this.serverType);
 			
-			if (this.dbAccess.Create)
+			if (this.dbAccess.CreateDatabase)
 			{
 				//	Si l'appelant a demandé la création de la base, commence par tenter d'ouvrir une
 				//	base existante. Si celle-ci existe, c'est considéré comme une erreur, et on génère
@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 		private void CreateDatabase()
 		{
-			System.Diagnostics.Debug.Assert (this.dbAccess.Create);
+			System.Diagnostics.Debug.Assert (this.dbAccess.CreateDatabase);
 			
 			//	L'appel FbConnection.CreateDatabase ne sait pas créer le dossier, si nécessaire.
 			//	Il faut donc que nous le créions nous-même s'il n'existe pas encore.

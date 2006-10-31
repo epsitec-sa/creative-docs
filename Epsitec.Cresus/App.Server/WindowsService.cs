@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Server
 			db_access.Server		= System.Configuration.ConfigurationSettings.AppSettings["DatabaseServer"];
 			db_access.LoginName		= System.Configuration.ConfigurationSettings.AppSettings["DatabaseUserName"];
 			db_access.LoginPassword = System.Configuration.ConfigurationSettings.AppSettings["DatabaseUserPass"];
-			db_access.Create		= false;
+			db_access.CreateDatabase		= false;
 			
 			return db_access;
 		}
