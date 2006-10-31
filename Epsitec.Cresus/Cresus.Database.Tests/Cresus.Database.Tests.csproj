@@ -24,8 +24,6 @@
     </StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -74,9 +72,9 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FirebirdSql.Data.Firebird">
-      <Name>FirebirdSql.Data.Firebird</Name>
-      <HintPath>..\External\FirebirdSql.Data.Firebird.dll</HintPath>
+    <Reference Include="FirebirdSql.Data.FirebirdClient">
+      <Name>FirebirdSql.Data.FirebirdClient</Name>
+      <HintPath>..\External\FirebirdSql.Data.FirebirdClient.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <Name>nunit.framework</Name>
@@ -222,11 +220,16 @@
     <Compile Include="TypeConverterTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Content Include="Resources\Common.Types\module.info" />
+    <Content Include="Resources\Common.Types\Captions.00.resource" />
+    <Content Include="Resources\Common.Types\Captions.en.resource" />
+    <Content Include="Resources\Common.Types\Strings.00.resource" />
+    <Content Include="Resources\Common.Types\Strings.en.resource" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+</PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>

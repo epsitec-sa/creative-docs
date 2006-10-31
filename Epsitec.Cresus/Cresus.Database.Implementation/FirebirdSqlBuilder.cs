@@ -1,7 +1,7 @@
 //	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using FirebirdSql.Data.Firebird;
+using FirebirdSql.Data.FirebirdClient;
 
 namespace Epsitec.Cresus.Database.Implementation
 {
@@ -784,7 +784,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		public System.Data.IDbCommand CreateCommand(System.Data.IDbTransaction transaction)
 		{
 			this.UpdateCommand ();
-			this.command_cache.Transaction = transaction as FirebirdSql.Data.Firebird.FbTransaction;
+			this.command_cache.Transaction = transaction as FirebirdSql.Data.FirebirdClient.FbTransaction;
 			return this.command_cache;
 		}
 		
@@ -793,7 +793,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			FbCommand command = this.fb.NewDbCommand () as FbCommand;
 			command.CommandText = text;
 			command.CommandType = System.Data.CommandType.Text;
-			command.Transaction = transaction as FirebirdSql.Data.Firebird.FbTransaction;
+			command.Transaction = transaction as FirebirdSql.Data.FirebirdClient.FbTransaction;
 			return command;
 		}
 				

@@ -3,7 +3,7 @@
 
 namespace Epsitec.Cresus.Database.Implementation
 {
-	using FirebirdSql.Data.Firebird;
+	using FirebirdSql.Data.FirebirdClient;
 	using Epsitec.Cresus.Database;
 	using System.IO;
 	
@@ -15,7 +15,21 @@ namespace Epsitec.Cresus.Database.Implementation
 		public FirebirdAbstraction(DbAccess db_access, IDbAbstractionFactory db_factory, EngineType engine_type)
 		{
 			this.engine_type = engine_type;
-			this.server_type = (int) engine_type;
+			
+			switch (this.engine_type)
+			{
+				case EngineType.Embedded:
+					this.server_type = FbServerType.Embedded;
+					break;
+				
+				case EngineType.Server:
+					this.server_type = FbServerType.Default;
+					break;
+				
+				default:
+					throw new System.ArgumentException ();
+			}
+			
 			this.db_access   = db_access;
 			this.db_factory  = db_factory;
 			this.db_connection_string = FirebirdAbstraction.MakeStandardConnectionString (db_access, this.MakeDbFileName (db_access), this.server_type);
@@ -68,7 +82,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			get { return this.db_access; }
 		}
 		
-		internal int					ServerType
+		internal FbServerType			ServerType
 		{
 			get
 			{
@@ -178,7 +192,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			FbConnection.CreateDatabase (connection, FirebirdAbstraction.fb_page_size, true, false);
 		}
 		
-		internal static string MakeCreationConnectionString(DbAccess db_access, string filename, int server_type)
+		internal static string MakeCreationConnectionString(DbAccess db_access, string filename, FbServerType server_type)
 		{
 			FirebirdAbstraction.ValidateName (db_access, db_access.LoginName);
 			FirebirdAbstraction.ValidateName (db_access, db_access.LoginPassword);
@@ -198,7 +212,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			return cs.ConnectionString;
 		}
 		
-		internal static string MakeStandardConnectionString(DbAccess db_access, string filename, int server_type)
+		internal static string MakeStandardConnectionString(DbAccess db_access, string filename, FbServerType server_type)
 		{
 			FirebirdAbstraction.ValidateName (db_access, db_access.LoginName);
 			FirebirdAbstraction.ValidateName (db_access, db_access.LoginPassword);
@@ -208,12 +222,12 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			buffer.AppendFormat ("User={0};", db_access.LoginName);
 			buffer.AppendFormat ("Password={0};", db_access.LoginPassword);
-			buffer.AppendFormat ("DataSource={0};", db_access.Server);
+			buffer.AppendFormat ("Data Source={0};", db_access.Server);
 			buffer.AppendFormat ("Database={0};", filename);
 			buffer.AppendFormat ("Port={0};", FirebirdAbstraction.fb_port);
 			buffer.AppendFormat ("Dialect={0};", FirebirdAbstraction.fb_dialect);
 			buffer.AppendFormat ("Packet Size={0};", FirebirdAbstraction.fb_page_size);
-			buffer.AppendFormat ("ServerType={0};", server_type);
+			buffer.AppendFormat ("Server Type={0};", server_type == FbServerType.Embedded ? 1 : 0);
 			buffer.AppendFormat ("Charset={0};", FirebirdAbstraction.fb_charset);
 			
 			buffer.Append ("Role=;");
@@ -419,7 +433,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 		#endregion
 		
-		private int						server_type;
+		private FbServerType			server_type;
 		private EngineType				engine_type;
 		
 		private DbAccess				db_access;

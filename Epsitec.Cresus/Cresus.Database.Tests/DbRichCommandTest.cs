@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using FirebirdSql.Data.Firebird;
+using FirebirdSql.Data.FirebirdClient;
 
 namespace Epsitec.Cresus.Database
 {

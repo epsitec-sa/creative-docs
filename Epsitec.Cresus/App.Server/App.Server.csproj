@@ -24,8 +24,6 @@
     </StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -175,11 +173,16 @@
     <EmbeddedResource Include="CustomInstaller.resx">
       <DependentUpon>CustomInstaller.cs</DependentUpon>
     </EmbeddedResource>
+    <Content Include="Resources\Common.Types\module.info" />
+    <Content Include="Resources\Common.Types\Captions.00.resource" />
+    <Content Include="Resources\Common.Types\Captions.en.resource" />
+    <Content Include="Resources\Common.Types\Strings.00.resource" />
+    <Content Include="Resources\Common.Types\Strings.en.resource" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+</PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>

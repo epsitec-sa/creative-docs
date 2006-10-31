@@ -1,8 +1,8 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using FirebirdSql.Data.Firebird;
-using FirebirdSql.Data.Firebird.Services;
+using FirebirdSql.Data.FirebirdClient;
+using FirebirdSql.Data.Services;
 
 namespace Epsitec.Cresus.Database.Implementation
 {
