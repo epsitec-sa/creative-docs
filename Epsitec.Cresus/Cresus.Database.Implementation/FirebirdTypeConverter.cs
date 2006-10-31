@@ -3,7 +3,7 @@
 
 namespace Epsitec.Cresus.Database.Implementation
 {
-	using FirebirdSql.Data.Firebird;
+	using FirebirdSql.Data.FirebirdClient;
 	
 	/// <summary>
 	/// La classe FirebirdTypeConverter implémente la conversion des types de

@@ -74,11 +74,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FirebirdSql.Data.Firebird">
-      <Name>FirebirdSql.Data.Firebird</Name>
-      <HintPath>..\External\FirebirdSql.Data.Firebird.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="FirebirdSql.Data.FirebirdClient, Version=2.0.0.0, Culture=neutral, PublicKeyToken=3750abcc3150b00c, processorArchitecture=MSIL" />
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
