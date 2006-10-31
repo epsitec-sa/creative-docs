@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Database
 			//	La base de données vient d'être créée. Elle est donc toute vide (aucune
 			//	table n'est encore définie).
 			
-			System.Diagnostics.Debug.Assert (this.db_abstraction.UserTableNames.Length == 0);
+			System.Diagnostics.Debug.Assert (this.db_abstraction.QueryUserTableNames ().Length == 0);
 			
 			//	Il faut créer les tables internes utilisées pour la gestion des méta-données.
 			
@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.Database
 
 			this.InitializeDatabaseAbstraction ();
 			
-			System.Diagnostics.Debug.Assert (this.db_abstraction.UserTableNames.Length > 0);
+			System.Diagnostics.Debug.Assert (this.db_abstraction.QueryUserTableNames ().Length > 0);
 			
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
