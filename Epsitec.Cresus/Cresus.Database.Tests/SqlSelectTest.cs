@@ -35,16 +35,7 @@ namespace Epsitec.Cresus.Database
 		{
 			//	défini un accès pour la base de donnée "employee"
 			//	qui doit déjà exister
-			DbAccess db_access = new DbAccess ();
-			
-			db_access.Provider		= "Firebird";
-			db_access.LoginName		= "sysdba";
-			db_access.LoginPassword = "masterkey";
-			db_access.Database		= "employee";
-			db_access.Server		= "localhost";
-			db_access.CreateDatabase		= false;
-			
-			return db_access;
+			return new DbAccess ("Firebird", "employee", "localhost", "sysdba", "masterkey", false);
 		}
 
 		[Test] public void Check01SqlSelectAll()

@@ -340,11 +340,16 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-		
-		
+
+
 		public static DbAccess CreateDbAccess(string name)
 		{
 			return new DbAccess ("Firebird", name, "localhost", "sysdba", "masterkey", false);
+		}
+
+		public static DbAccess CreateDbAccess(string provider, string name)
+		{
+			return new DbAccess (provider, name, "localhost", "sysdba", "masterkey", false);
 		}
 		
 		
