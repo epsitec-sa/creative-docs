@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Database
 			command.Dispose ();
 		}
 
-		[Test] public void CheckUserTableNames()
+		[Test] public void CheckQueryUserTableNames()
 		{
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Database
 				System.Console.WriteLine (e.Message);
 			}
 			
-			foreach (string name in db_abstraction.UserTableNames)
+			foreach (string name in db_abstraction.QueryUserTableNames ())
 			{
 				Assert.AreEqual (-1, name.IndexOf (' '), string.Format ("Name contains white space: ({0})", name));
 				System.Console.Out.WriteLine ("Table : " + name);

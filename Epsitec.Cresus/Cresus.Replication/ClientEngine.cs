@@ -280,7 +280,7 @@ namespace Epsitec.Cresus.Replication
 						//	La table a été modifiée (peut-être créée).
 						
 						string   find_sql_name    = def_table_runtime.CreateSqlName ();
-						string[] known_sql_tables = database.UserTableNames;
+						string[] known_sql_tables = database.QueryUserTableNames ();
 						
 						bool found = false;
 						

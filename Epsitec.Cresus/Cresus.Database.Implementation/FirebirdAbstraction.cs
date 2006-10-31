@@ -348,21 +348,18 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 		
 		
-		public string[]								UserTableNames
+		public string[] QueryUserTableNames()
 		{
-			get
+			List<string> list = new List<string> ();
+			
+			System.Data.DataTable tables = this.dbConnection.GetSchema ("Tables", new string[] { null, null, null, "TABLE" });
+
+			foreach (System.Data.DataRow row in tables.Rows)
 			{
-				List<string> list = new List<string> ();
-				
-				System.Data.DataTable tables = this.dbConnection.GetSchema ("Tables", new string[] { null, null, null, "TABLE" });
-
-				foreach (System.Data.DataRow row in tables.Rows)
-				{
-					list.Add (row["TABLE_NAME"] as string);
-				}
-
-				return list.ToArray ();
+				list.Add (row["TABLE_NAME"] as string);
 			}
+
+			return list.ToArray ();
 		}
 		
 		
@@ -444,7 +441,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		private static readonly byte			fbDialect			= 3;
 		private static readonly short			fbPageSize			= 8192;
 		private static readonly string			fbCharset			= "UNICODE_FSS";
-		private static readonly string			fbRootDbPath		= @"C:\Program Files\Firebird15\Data\Epsitec";
+		private static readonly string			fbRootDbPath		= @"C:\Program Files\Firebird\Data\Epsitec";
 		private static readonly string			fbDbFileExtension	= ".firebird";
 	}
 }

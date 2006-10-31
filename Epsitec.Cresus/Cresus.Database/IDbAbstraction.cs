@@ -17,8 +17,8 @@ namespace Epsitec.Cresus.Database
 		
 		bool						IsConnectionOpen	{ get; }
 		bool						IsConnectionAlive	{ get; }
-		
-		string[]					UserTableNames		{ get; }
+
+		string[] QueryUserTableNames();
 		
 		System.Data.IDbCommand NewDbCommand();
 		System.Data.IDataAdapter NewDataAdapter(System.Data.IDbCommand command);
