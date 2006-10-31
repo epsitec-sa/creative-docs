@@ -456,7 +456,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected void HandleArrayColumnsWidthChanged(object sender)
+		private void HandleArrayColumnsWidthChanged(object sender)
 		{
 			//	La largeur des colonnes a changé.
 			this.UpdateClientGeometry();
@@ -464,20 +464,20 @@ namespace Epsitec.Common.Designer.Viewers
 			Abstract.leftArrayWidth = this.array.GetColumnsAbsoluteWidth(0)+20;
 		}
 
-		protected void HandleArrayCellCountChanged(object sender)
+		private void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
 			this.UpdateArray();
 			this.array.ShowSelectedRow();
 		}
 
-		protected void HandleArrayCellsContentChanged(object sender)
+		private void HandleArrayCellsContentChanged(object sender)
 		{
 			//	Le contenu des cellules a changé.
 			this.UpdateArray();
 		}
 
-		protected void HandleArraySelectedRowChanged(object sender)
+		private void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
 			this.access.AccessIndex = this.array.SelectedRow;
@@ -486,7 +486,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
-		protected void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		private void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			//	Appelé lorsque la ligne éditable pour le label voit son focus changer.
 			TextFieldEx field = sender as TextFieldEx;
@@ -494,7 +494,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.HandleEditKeyboardFocusChanged(sender, e);
 		}
 
-		protected void HandleTextChanged(object sender)
+		private void HandleTextChanged(object sender)
 		{
 			//	Un texte éditable a changé.
 			if ( this.ignoreChange )  return;
@@ -533,7 +533,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateModificationsCulture();
 		}
 
-		protected void HandleCursorChanged(object sender)
+		private void HandleCursorChanged(object sender)
 		{
 			//	Le curseur a été déplacé dans un texte éditable.
 			if ( this.ignoreChange )  return;
