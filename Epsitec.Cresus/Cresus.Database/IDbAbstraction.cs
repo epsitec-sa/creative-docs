@@ -1,30 +1,116 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// L'interface IDbAbstraction est utilisée pour accéder aux mécanismes ADO.NET
-	/// dépendants d'un provider spécifique.
+	/// The <c>IDbAbstraction</c> interface gives access to ADO.NET through
+	/// a provider specific abstraction layer.
 	/// </summary>
 	public interface IDbAbstraction : System.IDisposable
 	{
-		IDbAbstractionFactory		Factory				{ get; }
-		System.Data.IDbConnection	Connection			{ get; }
-		ISqlBuilder					SqlBuilder			{ get; }
-		ISqlEngine					SqlEngine			{ get; }
-		IDbServiceTools				ServiceTools		{ get; }
-		
-		bool						IsConnectionOpen	{ get; }
-		bool						IsConnectionAlive	{ get; }
+		/// <summary>
+		/// Gets the database abstraction factory.
+		/// </summary>
+		/// <value>The database abstraction factory.</value>
+		IDbAbstractionFactory Factory
+		{
+			get;
+		}
 
+		/// <summary>
+		/// Gets the database connection.
+		/// </summary>
+		/// <value>The database connection.</value>
+		System.Data.IDbConnection Connection
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets the SQL builder.
+		/// </summary>
+		/// <value>The SQL builder.</value>
+		ISqlBuilder SqlBuilder
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets the SQL engine.
+		/// </summary>
+		/// <value>The SQL engine.</value>
+		ISqlEngine SqlEngine
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets the database service tools.
+		/// </summary>
+		/// <value>The database service tools.</value>
+		IDbServiceTools ServiceTools
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether the connection is open.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the connection is open; otherwise, <c>false</c>.
+		/// </value>
+		bool IsConnectionOpen
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether the connection is alive. This is the
+		/// case if the connection is open and not in the broken state.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this connection is alive; otherwise, <c>false</c>.
+		/// </value>
+		bool IsConnectionAlive
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Queries the names for the user tables in the database.
+		/// </summary>
+		/// <returns>An array of names.</returns>
 		string[] QueryUserTableNames();
-		
+
+		/// <summary>
+		/// Creates a new database command object.
+		/// </summary>
+		/// <returns>A database command object.</returns>
 		System.Data.IDbCommand NewDbCommand();
+
+		/// <summary>
+		/// Creates a new database adapter object for a given command.
+		/// </summary>
+		/// <param name="command">The command.</param>
+		/// <returns>A database adapter object.</returns>
 		System.Data.IDataAdapter NewDataAdapter(System.Data.IDbCommand command);
+
+		/// <summary>
+		/// Begins a read only transaction.
+		/// </summary>
+		/// <returns>The database transaction object.</returns>
 		System.Data.IDbTransaction BeginReadOnlyTransaction();
-		System.Data.IDbTransaction BeginReadWriteTransaction();
 		
+		/// <summary>
+		/// Begins a read-write transaction.
+		/// </summary>
+		/// <returns>The database transaction object.</returns>
+		System.Data.IDbTransaction BeginReadWriteTransaction();
+
+		/// <summary>
+		/// Releases the connection.
+		/// </summary>
 		void ReleaseConnection();
 	}
 }
