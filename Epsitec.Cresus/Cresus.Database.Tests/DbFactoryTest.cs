@@ -174,30 +174,12 @@ namespace Epsitec.Cresus.Database
 		
 		public static DbAccess CreateDbAccess(bool force_db_creation)
 		{
-			DbAccess db_access = new DbAccess ();
-			
-			db_access.Provider		= "Firebird";
-			db_access.LoginName		= "sysdba";
-			db_access.LoginPassword = "masterkey";
-			db_access.Database		= "test";
-			db_access.Server		= "localhost";
-			db_access.CreateDatabase		= force_db_creation;
-			
-			return db_access;
+			return new DbAccess ("Firebird", "test", "localhost", "sysdba", "masterkey", force_db_creation);
 		}
 		
 		public static DbAccess CreateDbAccess(string name)
 		{
-			DbAccess db_access = new DbAccess ();
-			
-			db_access.Provider		= "Firebird";
-			db_access.LoginName		= "sysdba";
-			db_access.LoginPassword = "masterkey";
-			db_access.Database		= name;
-			db_access.Server		= "localhost";
-			db_access.CreateDatabase		= false;
-			
-			return db_access;
+			return new DbAccess ("Firebird", name, "localhost", "sysdba", "masterkey", false);
 		}
 		
 		public static IDbAbstraction CreateDbAbstraction(bool force_db_creation)
