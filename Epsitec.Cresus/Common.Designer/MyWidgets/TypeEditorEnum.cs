@@ -437,6 +437,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			get
 			{
 				EnumType type = this.AbstractType as EnumType;
+				if (type == null)
+				{
+					return null;
+				}
+
 				type.MakeEditable();
 				return type.EnumValues;
 			}
