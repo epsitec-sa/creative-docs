@@ -89,46 +89,35 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateButtons()
 		{
-			Types.Collections.EnumValueCollection collection = this.Collection;
+			this.AccessInitialise();
 			int sel = this.array.SelectedRow;
 
 			this.buttonPrev.Enable = (sel != -1 && sel > 0);
-			this.buttonNext.Enable = (sel != -1 && sel < collection.Count-1);
+			this.buttonNext.Enable = (sel != -1 && sel < this.AccessCount-1);
 			this.buttonRemove.Enable = (sel != -1);
 		}
 
 		protected void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			Types.Collections.EnumValueCollection collection = this.Collection;
-
-			this.array.TotalRows = collection.Count;
+			this.AccessInitialise();
+			this.array.TotalRows = this.AccessCount;
 
 			int first = this.array.FirstVisibleRow;
 			for (int i=0; i<this.array.LineCount; i++)
 			{
-				if (first+i < collection.Count)
+				if (first+i < this.AccessCount)
 				{
-					EnumValue value = collection[first+i];
-					Caption caption = value.Caption;
-					string name = caption.Name;
-					string text = ResourceAccess.GetCaptionNiceDescription(caption, this.array.LineHeight);
+					StructuredTypeField field = this.AccessGet(first+i);
+					string name = field.Id;
 
 					this.array.SetLineString(0, first+i, name);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(1, first+i, text);
+					this.array.SetLineString(1, first+i, "");
 					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
 
-					string icon = caption.Icon;
-					if (string.IsNullOrEmpty(icon))
-					{
-						this.array.SetLineString(2, first+i, "");
-					}
-					else
-					{
-						this.array.SetLineString(2, first+i, Misc.ImageFull(icon));
-					}
+					this.array.SetLineString(2, first+i, "");
 					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
 				}
 				else
@@ -148,103 +137,60 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ArrayAdd()
 		{
 			//	Ajoute une nouvelle valeur dans l'énumération.
-			Types.Collections.EnumValueCollection collection = this.Collection;
-
-			int sel = this.array.SelectedRow;
-
-			Druid druid = Druid.Empty;
-			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Values, druid, null);
-
-			Caption caption = this.module.ResourceManager.GetCaption(druid);
-			System.Diagnostics.Debug.Assert(caption != null);
-			caption.Name = this.module.AccessCaptions.DirectGetDisplayName(druid);
-
-			EnumValue item = new EnumValue(0, caption);
-			collection.Insert(sel+1, item);
-			this.RenumCollection();
-
-			this.UpdateArray();
-			this.UpdateButtons();
-
-			this.array.SelectedRow = sel+1;
-			this.array.ShowSelectedRow();
-
-			this.OnContentChanged();
 		}
 
 		protected void ArrayRemove()
 		{
 			//	Supprime une valeur de l'énumération.
-			Types.Collections.EnumValueCollection collection = this.Collection;
-
-			int sel = this.array.SelectedRow;
-			if (sel == -1)
-			{
-				return;
-			}
-
-			collection.RemoveAt(sel);
-			this.RenumCollection();
-
-			this.UpdateArray();
-			this.UpdateButtons();
-
-			if (sel > collection.Count-1)
-			{
-				sel = collection.Count-1;
-			}
-			this.array.SelectedRow = sel;
-			this.array.ShowSelectedRow();
-
-			this.OnContentChanged();
 		}
 
 		protected void ArrayMove(int direction)
 		{
 			//	Déplace une valeur dans l'énumération.
-			Types.Collections.EnumValueCollection collection = this.Collection;
-
-			int sel = this.array.SelectedRow;
-			if (sel == -1)
-			{
-				return;
-			}
-
-			EnumValue value = collection[sel];
-			collection.RemoveAt(sel);
-			collection.Insert(sel+direction, value);
-			this.RenumCollection();
-
-			this.UpdateArray();
-			this.UpdateButtons();
-
-			this.array.SelectedRow = sel+direction;
-			this.array.ShowSelectedRow();
-
-			this.OnContentChanged();
 		}
 
 		protected void RenumCollection()
 		{
 			//	Renumérote toute la collection.
-			Types.Collections.EnumValueCollection collection = this.Collection;
-
-			for (int rank=0; rank<collection.Count; rank++)
-			{
-				EnumValue value = collection[rank];
-				value.DefineRank(rank);
-			}
 		}
 
 
-		protected Types.Collections.EnumValueCollection Collection
+		protected void AccessInitialise()
 		{
-			//	Retourne la collection de l'énumération.
+			if (this.lastIndex != this.resourceSelected)
+			{
+				this.lastIndex = this.resourceSelected;
+
+				StructuredType type = this.AbstractType as StructuredType;
+				System.Diagnostics.Debug.Assert(type != null);
+
+				this.ids = new List<string>();
+				foreach(string key in type.GetFieldIds())
+				{
+					this.ids.Add(key);
+				}
+			}
+		}
+
+		protected int AccessCount
+		{
 			get
 			{
-				EnumType type = this.AbstractType as EnumType;
-				type.MakeEditable();
-				return type.EnumValues;
+				return this.ids.Count;
+			}
+		}
+
+		protected StructuredTypeField AccessGet(int index)
+		{
+			if (index >= 0 && index < this.ids.Count)
+			{
+				string key = this.ids[index];
+				StructuredType type = this.AbstractType as StructuredType;
+				return type.Fields[key];
+			}
+			else
+			{
+				return StructuredTypeField.Empty;
 			}
 		}
 
@@ -291,5 +237,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButton					buttonNext;
 		protected IconButton					buttonRemove;
 		protected MyWidgets.StringArray			array;
+		protected int							lastIndex = -1;
+		protected List<string>					ids;
 	}
 }
