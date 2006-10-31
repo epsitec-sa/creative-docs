@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 		}
 		
-		public void Execute(DbInfrastructure infrastructure, System.Data.IDbTransaction transaction, DbRichCommand richCommand)
+		public void Execute(DbRichCommand richCommand, DbInfrastructure infrastructure, System.Data.IDbTransaction transaction)
 		{
 			int numCommands = richCommand.Commands.Count;
 			

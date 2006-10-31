@@ -1068,7 +1068,7 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			this.sql_engine.Execute (this, transaction.Transaction, command);
+			this.sql_engine.Execute (command, this, transaction.Transaction);
 		}
 		
 		
