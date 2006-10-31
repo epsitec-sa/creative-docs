@@ -12,7 +12,6 @@ namespace Epsitec.Cresus.Database
 		bool ValidateQualifiedName(string value);
 		bool ValidateString(string value);
 		bool ValidateNumber(string value);
-		void ThrowError(string message);
 		//	Vérification de la validité de noms et de valeurs SQL :
 		
 		
