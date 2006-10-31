@@ -1,14 +1,15 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using Epsitec.Cresus.Database;
 
 namespace Epsitec.Cresus.Database.Implementation
 {
-	using Epsitec.Cresus.Database;
-	
 	/// <summary>
-	/// Implémentation de IDbAbstractionFactory pour Firebird.
+	/// The <c>FirebirdAbstractionFactory</c> class implements the <c>IDbAbstractionFactory</c>
+	/// interface for the Firebird engine.
 	/// </summary>
-	public class FirebirdAbstractionFactory : IDbAbstractionFactory
+	internal sealed class FirebirdAbstractionFactory : IDbAbstractionFactory
 	{
 		public FirebirdAbstractionFactory()
 		{
@@ -16,26 +17,32 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 		
 		#region IDbAbstractionFactory Members
-		public IDbAbstraction NewDbAbstraction(DbAccess db_access)
+
+		public IDbAbstraction NewDbAbstraction(DbAccess dbAccess)
 		{
-			System.Diagnostics.Debug.Assert (db_access.Provider == this.ProviderName);
-			
-			FirebirdAbstraction fb = new FirebirdAbstraction (db_access, this, EngineType.Server);
-			
-			return fb;
+			System.Diagnostics.Debug.Assert (dbAccess.Provider == this.ProviderName);
+
+			return new FirebirdAbstraction (dbAccess, this, EngineType.Server);
+		}
+
+		public string							ProviderName
+		{
+			get
+			{
+				return "Firebird";
+			}
+		}
+
+		public ITypeConverter					TypeConverter
+		{
+			get
+			{
+				return this.typeConverter;
+			}
 		}
 		
-		public string								ProviderName
-		{
-			get	{ return "Firebird"; }
-		}
-		
-		public ITypeConverter						TypeConverter
-		{
-			get { return this.type_converter; }
-		}
 		#endregion
 		
-		protected FirebirdTypeConverter	type_converter = new FirebirdTypeConverter ();
+		private FirebirdTypeConverter			typeConverter = new FirebirdTypeConverter ();
 	}
 }
