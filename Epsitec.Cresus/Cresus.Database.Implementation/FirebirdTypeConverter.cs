@@ -1,31 +1,30 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using FirebirdSql.Data.FirebirdClient;
 
 namespace Epsitec.Cresus.Database.Implementation
 {
-	using FirebirdSql.Data.FirebirdClient;
-	
 	/// <summary>
-	/// La classe FirebirdTypeConverter implémente la conversion des types de
-	/// bruts pour Firebird.
+	/// The <c>FirebirdTypeConverter</c> class implements raw type conversions
+	/// for the Firebird engine.
 	/// </summary>
-	public class FirebirdTypeConverter : ITypeConverter
+	internal sealed class FirebirdTypeConverter : ITypeConverter
 	{
 		public FirebirdTypeConverter()
 		{
 		}
 		
-		
 		#region ITypeConverter Members
 
-		public object ConvertFromSimpleType(object value, Epsitec.Cresus.Database.DbSimpleType simple_type, DbNumDef num_def)
+		public object ConvertFromSimpleType(object value, Epsitec.Cresus.Database.DbSimpleType simpleType, DbNumDef numDef)
 		{
-			return TypeConverter.ConvertFromSimpleType (value, simple_type, num_def);
+			return TypeConverter.ConvertFromSimpleType (value, simpleType, numDef);
 		}
 
-		public object ConvertToSimpleType(object value, Epsitec.Cresus.Database.DbSimpleType simple_type, DbNumDef num_def)
+		public object ConvertToSimpleType(object value, Epsitec.Cresus.Database.DbSimpleType simpleType, DbNumDef numDef)
 		{
-			return TypeConverter.ConvertToSimpleType (value, simple_type, num_def);
+			return TypeConverter.ConvertToSimpleType (value, simpleType, numDef);
 		}
 
 		public bool CheckNativeSupport(Epsitec.Cresus.Database.DbRawType type)
@@ -49,10 +48,11 @@ namespace Epsitec.Cresus.Database.Implementation
 				
 				case DbRawType.Boolean:
 				case DbRawType.Guid:
-					break;
+					return false;
+
+				default:
+					throw new System.NotSupportedException (string.Format ("Unsupported DbRawType.{0}", type));
 			}
-			
-			return false;
 		}
 		
 		public bool GetRawTypeConverter(DbRawType type, out IRawTypeConverter converter)
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		#endregion
 
-		protected class BooleanConverter : IRawTypeConverter
+		private class BooleanConverter : IRawTypeConverter
 		{
 			public BooleanConverter()
 			{
@@ -77,25 +77,37 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			
 			#region IRawTypeConverter Members
-			
+
 			public DbRawType					ExternalType
 			{
-				get { return DbRawType.Boolean; }
+				get
+				{
+					return DbRawType.Boolean;
+				}
 			}
-			
+
 			public DbRawType					InternalType
 			{
-				get { return DbRawType.Int16; }
+				get
+				{
+					return DbRawType.Int16;
+				}
 			}
 
 			public int							Length
 			{
-				get { return 1; }
+				get
+				{
+					return 1;
+				}
 			}
-			
+
 			public bool							IsFixedLength
 			{
-				get { return true; }
+				get
+				{
+					return true;
+				}
 			}
 			
 			public object ConvertFromInternalType(object value)
@@ -107,6 +119,8 @@ namespace Epsitec.Cresus.Database.Implementation
 				
 				//	Un booléen est représenté au moyen d'une valeur 0 ou 1 dans
 				//	Firebird.
+
+				System.Diagnostics.Debug.Assert (value.GetType () == typeof (short));
 				
 				return ((short) value) != 0;
 			}
@@ -121,17 +135,19 @@ namespace Epsitec.Cresus.Database.Implementation
 				//	Un booléen est représenté au moyen d'une valeur 0 ou 1 dans
 				//	Firebird. On génère un Int16 en sortie, c'est le mieux que
 				//	l'on puisse faire.
+
+				System.Diagnostics.Debug.Assert (value.GetType () == typeof (bool));
 				
 				bool  test = (bool) value;
-				short i16  = test ? (short)1 : (short)0;
+				short i16  = (short) (test ? 1 : 0);
 				
 				return i16;
 			}
 
 			#endregion
 		}
-		
-		protected class GuidConverter : IRawTypeConverter
+
+		private class GuidConverter : IRawTypeConverter
 		{
 			public GuidConverter()
 			{
@@ -142,22 +158,34 @@ namespace Epsitec.Cresus.Database.Implementation
 
 			public DbRawType					ExternalType
 			{
-				get { return DbRawType.Guid; }
+				get
+				{
+					return DbRawType.Guid;
+				}
 			}
-			
+
 			public DbRawType					InternalType
 			{
-				get { return DbRawType.String; }
+				get
+				{
+					return DbRawType.String;
+				}
 			}
-			
+
 			public int							Length
 			{
-				get { return 32; }
+				get
+				{
+					return 32;
+				}
 			}
-			
+
 			public bool							IsFixedLength
 			{
-				get { return true; }
+				get
+				{
+					return true;
+				}
 			}
 			
 			
