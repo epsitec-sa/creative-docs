@@ -45,6 +45,28 @@ namespace Epsitec.Common.Types
 				return new RankComparerImplementation ();
 			}
 		}
+
+		/// <summary>
+		/// Finds a field which has matching rank. If there are several fields
+		/// with the same rank, which field will be returned is not defined.
+		/// </summary>
+		/// <param name="rank">The rank.</param>
+		/// <param name="field">The field.</param>
+		/// <returns><c>true</c> if a matching field was found; otherwise, <c>false</c>.</returns>
+		public bool FindFieldByRank(int rank, out StructuredTypeField field)
+		{
+			foreach (StructuredTypeField item in this.fields.Values)
+			{
+				if (item.Rank == rank)
+				{
+					field = item;
+					return true;
+				}
+			}
+
+			field = StructuredTypeField.Empty;
+			return false;
+		}
 		
 		#region IStructuredType Members
 
