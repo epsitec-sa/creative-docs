@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Database.Implementation
 	/// <summary>
 	/// Implémentation de ISqlBuilder pour Firebird.
 	/// </summary>
-	public class FirebirdSqlBuilder : ISqlBuilder
+	internal class FirebirdSqlBuilder : ISqlBuilder
 	{
 		public FirebirdSqlBuilder(FirebirdAbstraction fb)
 		{

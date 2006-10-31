@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Database.Implementation
 	/// <summary>
 	/// Implémentation de ISqlEngine pour Firebird.
 	/// </summary>
-	public class FirebirdServiceTools : IDbServiceTools, System.IDisposable
+	internal class FirebirdServiceTools : IDbServiceTools, System.IDisposable
 	{
 		public FirebirdServiceTools(FirebirdAbstraction fb)
 		{
@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			backup.BackupFiles.Add (new FbBackupFile (file_name, 2048));
 			
-			backup.ConnectionString = FirebirdAbstraction.MakeStandardConnectionString (fb.DbAccess, fb.MakeDbFileName (fb.DbAccess), fb.ServerType);
+			backup.ConnectionString = FirebirdAbstraction.MakeConnectionString (fb.DbAccess, fb.MakeDbFilePath (), fb.ServerType);
 			backup.Options          = FbBackupFlags.IgnoreLimbo;
 			backup.Verbose          = false;
 			backup.ServiceOutput   += new ServiceOutputEventHandler (FirebirdServiceTools.ServiceOutput);
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			FbRestore restore = new FbRestore();
 			
-			restore.ConnectionString = FirebirdAbstraction.MakeStandardConnectionString (fb.DbAccess, fb.MakeDbFileName (fb.DbAccess), fb.ServerType);
+			restore.ConnectionString = FirebirdAbstraction.MakeConnectionString (fb.DbAccess, fb.MakeDbFilePath (), fb.ServerType);
 			restore.BackupFiles.Add (new FbBackupFile (file_name, 2048));
 			
 			restore.Verbose        = false;
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		public string GetDatabasePath()
 		{
-			return this.fb.MakeDbFileName (this.fb.DbAccess);
+			return this.fb.MakeDbFilePath ();
 		}
 		#endregion
 		
