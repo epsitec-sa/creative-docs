@@ -1,46 +1,46 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
+using FirebirdSql.Data.FirebirdClient;
 
 namespace Epsitec.Cresus.Database.Implementation
 {
-	using FirebirdSql.Data.FirebirdClient;
-	using Epsitec.Cresus.Database;
-	using System.IO;
-	
 	/// <summary>
-	/// Implémentation de IDbAbstraction pour Firebird.
+	/// The <c>FirebirdAbstraction</c> class implements <c>IDbAbstraction</c> for Firebird.
 	/// </summary>
-	public class FirebirdAbstraction : IDbAbstraction
+	internal sealed class FirebirdAbstraction : IDbAbstraction, System.IDisposable
 	{
-		public FirebirdAbstraction(DbAccess db_access, IDbAbstractionFactory db_factory, EngineType engine_type)
+		public FirebirdAbstraction(DbAccess dbAccess, IDbAbstractionFactory dbFactory, EngineType engineType)
 		{
-			this.engine_type = engine_type;
-			
-			switch (this.engine_type)
+			switch (engineType)
 			{
-				case EngineType.Embedded:
-					this.server_type = FbServerType.Embedded;
-					break;
-				
 				case EngineType.Server:
-					this.server_type = FbServerType.Default;
+					this.serverType = FbServerType.Default;
+					this.engineType = engineType;
+					break;
+
+				case EngineType.Embedded:
+					this.serverType = FbServerType.Embedded;
+					this.engineType = engineType;
 					break;
 				
 				default:
 					throw new System.ArgumentException ();
 			}
 			
-			this.db_access   = db_access;
-			this.db_factory  = db_factory;
-			this.db_connection_string = FirebirdAbstraction.MakeStandardConnectionString (db_access, this.MakeDbFileName (db_access), this.server_type);
+			this.dbAccess  = dbAccess;
+			this.dbFactory = dbFactory;
+
+			this.dbConnectionString = FirebirdAbstraction.MakeConnectionString (this.dbAccess, this.MakeDbFilePath (), this.serverType);
 			
-			if (db_access.Create)
+			if (this.dbAccess.Create)
 			{
 				//	Si l'appelant a demandé la création de la base, commence par tenter d'ouvrir une
 				//	base existante. Si celle-ci existe, c'est considéré comme une erreur, et on génère
 				//	une exception.
 				
-				bool base_already_exists = false;
+				bool dbAlreadyExists = false;
 				
 				try
 				{
@@ -48,187 +48,164 @@ namespace Epsitec.Cresus.Database.Implementation
 					
 					//	Si on est arrivé ici, c'est que la base existait déjà... Aïe !
 					
-					base_already_exists = true;
+					dbAlreadyExists = true;
 				}
 				catch
 				{
-					this.CreateDatabase (db_access);
+					this.CreateDatabase ();
 					this.CreateConnection (true);
 				}
 				
-				if (base_already_exists)
+				if (dbAlreadyExists)
 				{
-					throw new Exceptions.ExistsException (db_access, "Cannot create existing database");
+					throw new Exceptions.ExistsException (this.dbAccess, "Cannot create existing database");
 				}
 			}
 			else
 			{
-				this.CreateConnection (db_access.CheckConnection);
+				this.CreateConnection (this.dbAccess.CheckConnection);
 			}
 			
-			this.sql_builder = new FirebirdSqlBuilder (this);
-			this.sql_engine  = new FirebirdSqlEngine (this);
-			this.db_service_tools = new FirebirdServiceTools (this);
+			this.sqlBuilder = new FirebirdSqlBuilder (this);
+			this.sqlEngine  = new FirebirdSqlEngine (this);
+			this.dbServiceTools = new FirebirdServiceTools (this);
 		}
 
-		~FirebirdAbstraction()
-		{
-			this.Dispose (false);
-		}
-		
-
-		public DbAccess					DbAccess
-		{
-			get { return this.db_access; }
-		}
-		
-		internal FbServerType			ServerType
+		public DbAccess							DbAccess
 		{
 			get
 			{
-				return this.server_type;
+				return this.dbAccess;
 			}
 		}
-		
-		
-		protected virtual void Dispose(bool disposing)
+
+		public FbServerType						ServerType
 		{
-			if (disposing)
+			get
 			{
-				if (this.sql_builder != null)
-				{
-					this.sql_builder.Dispose ();
-					this.sql_builder = null;
-				}
-				
-				if (this.sql_engine != null)
-				{
-					this.sql_engine.Dispose ();
-					this.sql_engine = null;
-				}
-				
-				if (this.db_connection != null)
-				{
-					this.db_connection.Dispose ();
-					this.db_connection = null;
-				}
+				return this.serverType;
 			}
 		}
 		
-		protected virtual void CreateConnection()
-		{
-			this.db_connection = new FbConnection (this.db_connection_string);
-		}
 		
-		protected virtual void CreateConnection(bool test_if_ok)
+		private void CreateConnection()
+		{
+			this.dbConnection = new FbConnection (this.dbConnectionString);
+		}
+
+		private void CreateConnection(bool testConnection)
 		{
 			try
 			{
 				this.CreateConnection ();
 				
-				if (test_if_ok)
+				if (testConnection)
 				{
 					this.TestConnection ();
 				}
 			}
 			catch
 			{
-				this.db_connection.Dispose ();
-				this.db_connection = null;
+				this.dbConnection.Dispose ();
+				this.dbConnection = null;
 				
 				throw;
 			}
 		}
-		
-		protected virtual void TestConnection()
+
+		private void TestConnection()
 		{
-			switch (this.db_connection.State)
+			switch (this.dbConnection.State)
 			{
 				case System.Data.ConnectionState.Closed:
-					this.db_connection.Open ();
-					this.db_connection.Close ();
+					this.dbConnection.Open ();
+					this.dbConnection.Close ();
 					break;
 				
 				case System.Data.ConnectionState.Broken:
-					this.db_connection.Close ();
-					this.db_connection.Open ();
+					this.dbConnection.Close ();
+					this.dbConnection.Open ();
 					break;
 			}
 		}
-		
-		protected virtual void EnsureConnection()
+
+		private void EnsureConnection()
 		{
-			if (this.auto_reopen_connection)
+			if (this.autoReopenConnection)
 			{
-				this.auto_reopen_connection = false;
-				this.db_connection.Open ();
+				this.autoReopenConnection = false;
+				this.dbConnection.Open ();
 			}
 			else
 			{
-				switch (this.db_connection.State)
+				switch (this.dbConnection.State)
 				{
 					case System.Data.ConnectionState.Closed:
-						this.db_connection.Open ();
+						this.dbConnection.Open ();
 						break;
 					
 					case System.Data.ConnectionState.Broken:
-						this.db_connection.Close ();
-						this.db_connection.Open ();
+						this.dbConnection.Close ();
+						this.dbConnection.Open ();
 						break;
 				}
 			}
+
+			System.Diagnostics.Debug.Assert (this.dbConnection.State == System.Data.ConnectionState.Open);
+		}
+
+		private void CreateDatabase()
+		{
+			System.Diagnostics.Debug.Assert (this.dbAccess.Create);
+			
+			//	L'appel FbConnection.CreateDatabase ne sait pas créer le dossier, si nécessaire.
+			//	Il faut donc que nous le créions nous-même s'il n'existe pas encore.
+			
+			string path = this.MakeDbFilePath ();
+			System.IO.Directory.CreateDirectory (System.IO.Path.GetDirectoryName (path));
+
+			string connection = FirebirdAbstraction.MakeConnectionStringForDbCreation (this.dbAccess, path, this.serverType);
+			
+			FbConnection.CreateDatabase (connection, FirebirdAbstraction.fbPageSize, true, false);
 		}
 		
-		protected virtual void CreateDatabase(DbAccess db_access)
+		public static string MakeConnectionStringForDbCreation(DbAccess dbAccess, string path, FbServerType serverType)
 		{
-			System.Diagnostics.Debug.Assert (db_access.Create);
-			
-			//	L'appel FbConnection.CreateDatabase ne sait pas créer le dossier si nécessaire
-			string filename = this.MakeDbFileName (db_access);
-			System.IO.Directory.CreateDirectory (Path.GetDirectoryName (filename));
-			
-			string connection = FirebirdAbstraction.MakeCreationConnectionString (db_access, filename, this.server_type);
-			
-			FbConnection.CreateDatabase (connection, FirebirdAbstraction.fb_page_size, true, false);
-		}
-		
-		internal static string MakeCreationConnectionString(DbAccess db_access, string filename, FbServerType server_type)
-		{
-			FirebirdAbstraction.ValidateName (db_access, db_access.LoginName);
-			FirebirdAbstraction.ValidateName (db_access, db_access.LoginPassword);
-			FirebirdAbstraction.ValidateName (db_access, db_access.Server);
+			FirebirdAbstraction.ValidateName (dbAccess, dbAccess.LoginName);
+			FirebirdAbstraction.ValidateName (dbAccess, dbAccess.LoginPassword);
+			FirebirdAbstraction.ValidateName (dbAccess, dbAccess.Server);
 			
 			FbConnectionStringBuilder cs = new FbConnectionStringBuilder ();
 			
-			cs.UserID     = db_access.LoginName;
-			cs.Password   = db_access.LoginPassword;
-			cs.DataSource = db_access.Server;
-			cs.Port       = FirebirdAbstraction.fb_port;
-			cs.Database   = filename;
-			cs.Dialect    = FirebirdAbstraction.fb_dialect;
-			cs.Charset    = FirebirdAbstraction.fb_charset;
-			cs.ServerType = server_type;
+			cs.UserID     = dbAccess.LoginName;
+			cs.Password   = dbAccess.LoginPassword;
+			cs.DataSource = dbAccess.Server;
+			cs.Port       = FirebirdAbstraction.fbPort;
+			cs.Database   = path;
+			cs.Dialect    = FirebirdAbstraction.fbDialect;
+			cs.Charset    = FirebirdAbstraction.fbCharset;
+			cs.ServerType = serverType;
 			
 			return cs.ConnectionString;
 		}
 		
-		internal static string MakeStandardConnectionString(DbAccess db_access, string filename, FbServerType server_type)
+		public static string MakeConnectionString(DbAccess dbAccess, string path, FbServerType serverType)
 		{
-			FirebirdAbstraction.ValidateName (db_access, db_access.LoginName);
-			FirebirdAbstraction.ValidateName (db_access, db_access.LoginPassword);
-			FirebirdAbstraction.ValidateName (db_access, db_access.Server);
+			FirebirdAbstraction.ValidateName (dbAccess, dbAccess.LoginName);
+			FirebirdAbstraction.ValidateName (dbAccess, dbAccess.LoginPassword);
+			FirebirdAbstraction.ValidateName (dbAccess, dbAccess.Server);
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			buffer.AppendFormat ("User={0};", db_access.LoginName);
-			buffer.AppendFormat ("Password={0};", db_access.LoginPassword);
-			buffer.AppendFormat ("Data Source={0};", db_access.Server);
-			buffer.AppendFormat ("Database={0};", filename);
-			buffer.AppendFormat ("Port={0};", FirebirdAbstraction.fb_port);
-			buffer.AppendFormat ("Dialect={0};", FirebirdAbstraction.fb_dialect);
-			buffer.AppendFormat ("Packet Size={0};", FirebirdAbstraction.fb_page_size);
-			buffer.AppendFormat ("Server Type={0};", server_type == FbServerType.Embedded ? 1 : 0);
-			buffer.AppendFormat ("Charset={0};", FirebirdAbstraction.fb_charset);
+			buffer.AppendFormat ("User={0};", dbAccess.LoginName);
+			buffer.AppendFormat ("Password={0};", dbAccess.LoginPassword);
+			buffer.AppendFormat ("Data Source={0};", dbAccess.Server);
+			buffer.AppendFormat ("Database={0};", path);
+			buffer.AppendFormat ("Port={0};", FirebirdAbstraction.fbPort);
+			buffer.AppendFormat ("Dialect={0};", FirebirdAbstraction.fbDialect);
+			buffer.AppendFormat ("Packet Size={0};", FirebirdAbstraction.fbPageSize);
+			buffer.AppendFormat ("Server Type={0};", serverType == FbServerType.Embedded ? 1 : 0);
+			buffer.AppendFormat ("Charset={0};", FirebirdAbstraction.fbCharset);
 			
 			buffer.Append ("Role=;");
 			buffer.Append ("Pooling=true;");
@@ -237,13 +214,13 @@ namespace Epsitec.Cresus.Database.Implementation
 			return buffer.ToString ();
 		}
 		
-		internal virtual string MakeDbFileName(DbAccess db_access)
+		public string MakeDbFilePath()
 		{
-			FirebirdAbstraction.ValidateName (db_access, db_access.Database);
+			FirebirdAbstraction.ValidateName (this.dbAccess, this.dbAccess.Database);
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			switch (this.engine_type)
+			switch (this.engineType)
 			{
 				case EngineType.Embedded:
 					buffer.Append (Common.Support.Globals.Directories.UserAppData);
@@ -251,61 +228,99 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 				
 				case EngineType.Server:
-					buffer.Append (FirebirdAbstraction.fb_root_db_path);
+					buffer.Append (FirebirdAbstraction.fbRootDbPath);
 					buffer.Append (System.IO.Path.DirectorySeparatorChar);
 					break;
 				
 				default:
-					throw new Database.Exceptions.FactoryException (string.Format ("EngineType {0} not supported.", this.engine_type));
+					throw new Database.Exceptions.FactoryException (string.Format ("EngineType {0} not supported.", this.engineType));
 			}
-			
-			buffer.Append (db_access.Database);
-			buffer.Append (FirebirdAbstraction.fb_db_extension);
+
+			buffer.Append (this.dbAccess.Database);
+			buffer.Append (FirebirdAbstraction.fbDbFileExtension);
 			
 			return buffer.ToString ();
 		}
 		
 		
-		protected static void ValidateName(DbAccess db_access, string name)
+		private static void ValidateName(DbAccess dbAccess, string name)
 		{
 			if (name.Length > 100)
 			{
-				throw new Exceptions.SyntaxException (db_access, string.Format ("Name is too long (length={0})", name));
+				throw new Exceptions.SyntaxException (dbAccess, string.Format ("Name is to long (length={0})", name));
 			}
 			
 			if (Epsitec.Common.Support.RegexFactory.AlphaNumName.IsMatch (name) == false)
 			{
-				throw new Exceptions.SyntaxException (db_access, string.Format ("{0} contains an invalid character", name));
+				throw new Exceptions.SyntaxException (dbAccess, string.Format ("{0} contains an invalid character", name));
 			}
 		}
-		
+
+		#region IDisposable Members
+
+		void System.IDisposable.Dispose()
+		{
+			if (this.sqlBuilder != null)
+			{
+				this.sqlBuilder.Dispose ();
+				this.sqlBuilder = null;
+			}
+
+			if (this.sqlEngine != null)
+			{
+				this.sqlEngine.Dispose ();
+				this.sqlEngine = null;
+			}
+
+			if (this.dbConnection != null)
+			{
+				this.dbConnection.Dispose ();
+				this.dbConnection = null;
+			}
+		}
+
+		#endregion
+
 		
 		#region IDbAbstraction Members
+		
 		public IDbAbstractionFactory				Factory
 		{
-			get { return this.db_factory; }
+			get
+			{
+				return this.dbFactory;
+			}
 		}
-		
+
 		public System.Data.IDbConnection			Connection
 		{
-			get { return this.db_connection; }
+			get
+			{
+				return this.dbConnection;
+			}
 		}
-		
+
 		public ISqlBuilder							SqlBuilder
 		{
-			get { return this.sql_builder; }
+			get
+			{
+				return this.sqlBuilder;
+			}
 		}
 
 		public ISqlEngine							SqlEngine
 		{
-			get { return this.sql_engine; }
+			get
+			{
+				return this.sqlEngine;
+			}
 		}
 
 		public IDbServiceTools						ServiceTools
 		{
 			get
 			{
-				return this.db_service_tools;
+				return this.dbServiceTools;
 			}
 		}
 		
@@ -313,12 +328,14 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			get
 			{
-				if (this.db_connection != null)
+				if (this.dbConnection != null)
 				{
-					return this.db_connection.State != System.Data.ConnectionState.Closed;
+					return this.dbConnection.State != System.Data.ConnectionState.Closed;
 				}
-				
-				return false;
+				else
+				{
+					return false;
+				}
 			}
 		}
 		
@@ -326,7 +343,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			get
 			{
-				return this.IsConnectionOpen && (this.db_connection.State != System.Data.ConnectionState.Broken);
+				return this.IsConnectionOpen && (this.dbConnection.State != System.Data.ConnectionState.Broken);
 			}
 		}
 		
@@ -335,35 +352,16 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			get
 			{
-				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				List<string> list = new List<string> ();
 				
-				using (System.Data.IDbTransaction transaction = this.BeginReadOnlyTransaction ())
+				System.Data.DataTable tables = this.dbConnection.GetSchema ("Tables", new string[] { null, null, null, "TABLE" });
+
+				foreach (System.Data.DataRow row in tables.Rows)
 				{
-					using (System.Data.IDbCommand command = this.NewDbCommand ())
-					{
-						//	TODO: essayer d'utiliser code de Carlos
-						//	DataTable tables = c.GetSchema("Tables", new string[] { null, null, null, "TABLE" });
-						
-						command.Transaction = transaction;
-						command.CommandText = "SELECT RDB$RELATION_NAME FROM RDB$RELATIONS WHERE RDB$SYSTEM_FLAG = 0 AND RDB$VIEW_BLR IS NULL;";
-						command.CommandType = System.Data.CommandType.Text;
-						
-						using (System.Data.IDataReader reader = command.ExecuteReader ())
-						{
-							while (reader.Read ())
-							{
-								string name = reader[0] as string;
-								list.Add (name.TrimEnd ());
-							}
-						}
-					}
-					
-					transaction.Commit ();
+					list.Add (row["TABLE_NAME"] as string);
 				}
-				
-				string[] names = new string[list.Count];
-				list.CopyTo (names);
-				return names;
+
+				return list.ToArray ();
 			}
 		}
 		
@@ -371,23 +369,25 @@ namespace Epsitec.Cresus.Database.Implementation
 		public System.Data.IDbCommand NewDbCommand()
 		{
 			this.EnsureConnection ();
-			return this.db_connection.CreateCommand ();
+			
+			return this.dbConnection.CreateCommand ();
 		}
 		
 		public System.Data.IDataAdapter NewDataAdapter(System.Data.IDbCommand command)
 		{
 			this.EnsureConnection ();
+			
 			System.Diagnostics.Debug.Assert (command.Connection != null);
 			System.Diagnostics.Debug.Assert (command.Connection.State != System.Data.ConnectionState.Closed);
 			
-			FbCommand fb_command = command as FbCommand;
+			FbCommand fbCommand = command as FbCommand;
 			
-			if (fb_command == null)
+			if (fbCommand == null)
 			{
-				throw new Exceptions.GenericException (this.db_access, "Invalid command object");
+				throw new Exceptions.GenericException (this.dbAccess, "Invalid command object");
 			}
 			
-			return new FbDataAdapter (fb_command);
+			return new FbDataAdapter (fbCommand);
 		}
 		
 		public System.Data.IDbTransaction BeginReadOnlyTransaction()
@@ -398,7 +398,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				/**/					   FbTransactionOptions.Wait |
 				/**/					   FbTransactionOptions.Read;
 			
-			return this.db_connection.BeginTransaction (options);
+			return this.dbConnection.BeginTransaction (options);
 		}
 		
 		public System.Data.IDbTransaction BeginReadWriteTransaction()
@@ -409,7 +409,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				/**/					   FbTransactionOptions.Wait |
 				/**/					   FbTransactionOptions.Write;
 			
-			return this.db_connection.BeginTransaction (options);
+			return this.dbConnection.BeginTransaction (options);
 		}
 		
 		public void ReleaseConnection()
@@ -417,41 +417,34 @@ namespace Epsitec.Cresus.Database.Implementation
 			//	Ferme la connexion à la base de données, en mettant un fanion pour ré-établir
 			//	automatiquement la connexion en cas de besoin.
 			
-			if (this.db_connection.State != System.Data.ConnectionState.Closed)
+			if (this.dbConnection.State != System.Data.ConnectionState.Closed)
 			{
-				this.db_connection.Close ();
-				this.auto_reopen_connection = true;
+				this.dbConnection.Close ();
+				this.autoReopenConnection = true;
 			}
 		}
+		
 		#endregion
 		
-		#region IDisposable Members
-		public void Dispose()
-		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
-		}
-		#endregion
 		
-		private FbServerType			server_type;
-		private EngineType				engine_type;
-		
-		private DbAccess				db_access;
-		private IDbAbstractionFactory	db_factory;
-		private FbConnection			db_connection;
-		private string					db_connection_string;
-		private FirebirdSqlBuilder		sql_builder;
-		private FirebirdSqlEngine		sql_engine;
-		private FirebirdServiceTools	db_service_tools;
-		
-		private bool					auto_reopen_connection;
-		
-		protected static int			fb_port				= 3050;
-		protected static byte			fb_dialect			= 3;
-		protected static short			fb_page_size		= 8192;
-		protected static string			fb_charset			= "UNICODE_FSS";
-		protected static string			fb_root_path		= @"C:\Program Files\Firebird15";
-		protected static string			fb_root_db_path		= @"C:\Program Files\Firebird15\Data\Epsitec";
-		protected static string			fb_db_extension		= ".firebird";
+		private FbServerType					serverType;
+		private EngineType						engineType;
+										
+		private DbAccess						dbAccess;
+		private IDbAbstractionFactory			dbFactory;
+		private FbConnection					dbConnection;
+		private string							dbConnectionString;
+		private FirebirdSqlBuilder				sqlBuilder;
+		private FirebirdSqlEngine				sqlEngine;
+		private FirebirdServiceTools			dbServiceTools;
+										
+		private bool							autoReopenConnection;
+										
+		private static readonly int				fbPort				= 3050;
+		private static readonly byte			fbDialect			= 3;
+		private static readonly short			fbPageSize			= 8192;
+		private static readonly string			fbCharset			= "UNICODE_FSS";
+		private static readonly string			fbRootDbPath		= @"C:\Program Files\Firebird15\Data\Epsitec";
+		private static readonly string			fbDbFileExtension	= ".firebird";
 	}
 }

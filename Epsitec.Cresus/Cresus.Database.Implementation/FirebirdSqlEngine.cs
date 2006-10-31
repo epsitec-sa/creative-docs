@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Database.Implementation
 	/// <summary>
 	/// Implémentation de ISqlEngine pour Firebird.
 	/// </summary>
-	public class FirebirdSqlEngine : ISqlEngine, System.IDisposable
+	internal class FirebirdSqlEngine : ISqlEngine, System.IDisposable
 	{
 		public FirebirdSqlEngine(FirebirdAbstraction fb)
 		{
