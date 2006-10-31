@@ -47,6 +47,12 @@ namespace Epsitec.Common.Types.Serialization
 
 				if (obj.GetBinding (entry.Property) == null)
 				{
+					if (entry.Value == null)
+					{
+						this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), MarkupExtension.NullToString ());
+						continue;
+					}
+					
 					if (this.ExternalMap.IsValueDefined (entry.Value))
 					{
 						//	This is an external reference. Record it as {External xxx}.
