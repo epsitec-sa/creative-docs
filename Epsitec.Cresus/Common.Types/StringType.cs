@@ -66,7 +66,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (bool) this.Caption.GetValue (StringType.FixedLengthProperty);
+				return (bool) this.Caption.GetValue (StringType.IsFixedLengthProperty);
 			}
 		}
 		
@@ -121,11 +121,11 @@ namespace Epsitec.Common.Types
 		{
 			if (value)
 			{
-				this.Caption.SetValue (StringType.FixedLengthProperty, value);
+				this.Caption.SetValue (StringType.IsFixedLengthProperty, value);
 			}
 			else
 			{
-				this.Caption.ClearValue (StringType.FixedLengthProperty);
+				this.Caption.ClearValue (StringType.IsFixedLengthProperty);
 			}
 		}
 
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Types
 
 		public static readonly DependencyProperty MinimumLengthProperty = DependencyProperty.RegisterAttached ("MinimumLength", typeof (int), typeof (StringType), new DependencyPropertyMetadata (0));
 		public static readonly DependencyProperty MaximumLengthProperty = DependencyProperty.RegisterAttached ("MaximumLength", typeof (int), typeof (StringType), new DependencyPropertyMetadata (100*1000));
-		public static readonly DependencyProperty FixedLengthProperty   = DependencyProperty.RegisterAttached ("FixedLength", typeof (bool), typeof (StringType), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty IsFixedLengthProperty = DependencyProperty.RegisterAttached ("IsFixedLength", typeof (bool), typeof (StringType), new DependencyPropertyMetadata (false));
 
 		private static StringType defaultValue;
 	}
