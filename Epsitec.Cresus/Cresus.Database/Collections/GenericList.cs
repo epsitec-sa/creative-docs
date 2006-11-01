@@ -10,12 +10,12 @@ using Epsitec.Common.Types.Collections;
 namespace Epsitec.Cresus.Database.Collections
 {
 	/// <summary>
-	/// The <c>AbstractList</c> class is the base class for all collections used
-	/// in the database layer.
+	/// The <c>Collections.GenericList</c> class implements a generic list with named
+	/// item access and insertion/removal events.
 	/// </summary>
-	public class AbstractList<T> : ObservableList<T> where T : class
+	public class GenericList<T> : ObservableList<T> where T : class
 	{
-		public AbstractList()
+		public GenericList()
 		{
 		}
 

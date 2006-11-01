@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Database.Collections
 	/// La classe Collections.SqlFields encapsule une collection d'instances de type SqlField.
 	/// SqlField.
 	/// </summary>
-	public class SqlFields : AbstractList<SqlField>
+	public class SqlFields : GenericList<SqlField>
 	{
 		public SqlFields()
 		{

@@ -108,10 +108,10 @@
     <Compile Include="Cache\DbTypes.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Collections\AbstractlList.cs">
+    <Compile Include="Collections\GenericList.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Collections\AbstractNameList.cs" />
+    <Compile Include="Collections\NameList.cs" />
     <Compile Include="Collections\DbColumns.cs">
       <SubType>Code</SubType>
     </Compile>

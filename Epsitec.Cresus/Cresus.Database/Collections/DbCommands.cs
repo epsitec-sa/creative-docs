@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Database.Collections
 	/// <summary>
 	/// La classe Collections.DbCommands encapsule une collection d'instances de type IDbCommand.
 	/// </summary>
-	public class DbCommands : AbstractList<IDbCommand>
+	public class DbCommands : GenericList<IDbCommand>
 	{
 		public DbCommands()
 		{

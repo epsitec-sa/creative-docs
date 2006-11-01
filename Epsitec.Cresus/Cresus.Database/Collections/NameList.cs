@@ -1,12 +1,14 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 namespace Epsitec.Cresus.Database.Collections
 {
 	/// <summary>
-	/// The <c>Collections.AbstractNameList</c> encapsulates a list of named items.
+	/// The <c>Collections.NameList</c> encapsulates a list of named items.
 	/// </summary>
-	public class NameList<T> : AbstractList<T> where T : class, Epsitec.Common.Types.IName
+	public class NameList<T> : GenericList<T> where T : class, IName
 	{
 		public NameList()
 		{
