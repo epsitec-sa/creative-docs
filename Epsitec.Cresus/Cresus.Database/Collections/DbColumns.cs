@@ -6,7 +6,7 @@ namespace Epsitec.Cresus.Database.Collections
 	/// <summary>
 	/// La classe DbColumns encapsule une collection d'instances de type DbColumn.
 	/// </summary>
-	public class DbColumns : AbstractList
+	public class DbColumns : AbstractList<DbColumn>
 	{
 		public DbColumns()
 		{
@@ -18,98 +18,25 @@ namespace Epsitec.Cresus.Database.Collections
 		}
 		
 		
-		public virtual DbColumn				this[int index]
-		{
-			get
-			{
-				return this.List[index] as DbColumn;
-			}
-		}
 		
-		public virtual DbColumn				this[string column_name]
+		public DbColumn							this[string columnName, DbColumnClass columnClass]
 		{
 			get
 			{
-				int index = this.IndexOf (column_name);
-				
-				if (index >= 0)
-				{
-					return this[index];
-				}
-				
-				return null;
-			}
-		}
-		
-		public virtual DbColumn				this[string column_name, DbColumnClass column_class]
-		{
-			get
-			{
-				int index = this.IndexOf (column_name);
+				int index = this.IndexOf (columnName);
 				
 				while (index >= 0)
 				{
-					if (this[index].ColumnClass == column_class)
+					if (this[index].ColumnClass == columnClass)
 					{
 						return this[index];
 					}
 					
-					index = this.IndexOf (column_name, index+1);
+					index = this.IndexOf (columnName, index+1);
 				}
 				
 				return null;
 			}
-		}
-		
-		
-		public virtual void Add(DbColumn column)
-		{
-			this.InternalAdd (column);
-		}
-
-		public virtual void AddRange(DbColumn[] columns)
-		{
-			this.InternalAddRange (columns);
-		}
-		
-		public virtual void Remove(DbColumn column)
-		{
-			this.InternalRemove (column);
-			this.OnChanged ();
-		}
-		
-		
-		public virtual bool Contains(DbColumn column)
-		{
-			return this.List.Contains (column);
-		}
-		
-		public virtual int IndexOf(DbColumn column)
-		{
-			return this.List.IndexOf (column);
-		}
-		
-		public override int IndexOf(string column_name)
-		{
-			return this.IndexOf (column_name, 0);
-		}
-		
-		public virtual int IndexOf(string column_name, int start)
-		{
-			if (start >= 0)
-			{
-				for (int i = start; i < this.List.Count; i++)
-				{
-					DbColumn column = this.List[i] as DbColumn;
-					
-					if (column.Name == column_name)
-					{
-						return i;
-					}
-				}
-			}
-			
-			return -1;
 		}
 		
 		

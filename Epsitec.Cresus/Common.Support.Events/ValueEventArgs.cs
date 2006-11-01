@@ -4,7 +4,8 @@
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// The ValueEventArgs class provides a value to the ValueEventHandler.
+	/// The <c>ValueEventArgs</c> class provides a value for events which are used
+	/// to notify insertions and removals, for instance.
 	/// </summary>
 	public class ValueEventArgs : EventArgs
 	{

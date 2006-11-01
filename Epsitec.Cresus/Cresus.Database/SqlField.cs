@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Database
 	/// La représentation dans SqlField est indépendante de tout dialecte SQL. C'est
 	/// ISqlBuilder qui sait convertir un SqlField en sa représentation SQL.
 	/// </summary>
-	public class SqlField
+	public class SqlField : Epsitec.Common.Types.IName
 	{
 		internal SqlField()
 		{
@@ -259,7 +259,19 @@ namespace Epsitec.Cresus.Database
 				return null;
 			}
 		}
-		
+
+
+		#region IName Members
+
+		string Epsitec.Common.Types.IName.Name
+		{
+			get
+			{
+				return this.alias;
+			}
+		}
+
+		#endregion
 		
 		public bool Validate(ISqlValidator validator)
 		{

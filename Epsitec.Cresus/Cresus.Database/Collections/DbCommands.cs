@@ -8,55 +8,10 @@ namespace Epsitec.Cresus.Database.Collections
 	/// <summary>
 	/// La classe Collections.DbCommands encapsule une collection d'instances de type IDbCommand.
 	/// </summary>
-	public class DbCommands : AbstractList
+	public class DbCommands : AbstractList<IDbCommand>
 	{
 		public DbCommands()
 		{
-		}
-		
-		
-		public virtual IDbCommand			this[int index]
-		{
-			get
-			{
-				return this.List[index] as IDbCommand;
-			}
-		}
-		
-		
-		public virtual void Add(IDbCommand command)
-		{
-			this.InternalAdd (command);
-		}
-		
-		public virtual void AddRange(IDbCommand[] commands)
-		{
-			this.InternalAddRange (commands);
-		}
-		
-		public virtual void Remove(IDbCommand command)
-		{
-			this.InternalRemove (command);
-		}
-		
-		
-		public virtual bool Contains(IDbCommand command)
-		{
-			return this.List.Contains (command);
-		}
-		
-		public virtual int IndexOf(IDbCommand command)
-		{
-			return this.List.IndexOf (command);
-		}
-		
-		
-		public virtual System.Data.IDbCommand[] ToArray()
-		{
-			int n = this.list.Count;
-			System.Data.IDbCommand[] commands = new System.Data.IDbCommand[n];
-			this.list.CopyTo (commands);
-			return commands;
 		}
 	}
 }
