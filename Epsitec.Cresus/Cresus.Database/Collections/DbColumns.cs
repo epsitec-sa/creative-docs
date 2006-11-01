@@ -6,7 +6,7 @@ namespace Epsitec.Cresus.Database.Collections
 	/// <summary>
 	/// La classe DbColumns encapsule une collection d'instances de type DbColumn.
 	/// </summary>
-	public class DbColumns : AbstractList<DbColumn>
+	public class DbColumns : GenericList<DbColumn>
 	{
 		public DbColumns()
 		{
