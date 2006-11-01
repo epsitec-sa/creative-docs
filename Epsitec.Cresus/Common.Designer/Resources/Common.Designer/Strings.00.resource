@@ -53,6 +53,14 @@
   <data name="Viewers.Commands.Shortcut.Suppl" id="0S5" mod="1">Supplémentaire</data>
   <data name="Viewers.Commands.Group.Title" id="0T5" mod="1">Groupe</data>
   <data name="Viewers.Types.Editor.Title" id="057" mod="1">Définition du type &lt;b&gt;{0}&lt;/b&gt;</data>
+  <data name="Viewers.Types.Editor.Void" id="0I7">Vide</data>
+  <data name="Viewers.Types.Editor.Boolean" id="0J7">Booléen</data>
+  <data name="Viewers.Types.Editor.Integer" id="0K7">Entier</data>
+  <data name="Viewers.Types.Editor.LongInteger" id="0L7">Entier long</data>
+  <data name="Viewers.Types.Editor.Decimal" id="0M7">Décimal</data>
+  <data name="Viewers.Types.Editor.String" id="0N7">Chaîne</data>
+  <data name="Viewers.Types.Editor.Enum" id="0O7">Enumération</data>
+  <data name="Viewers.Types.Editor.Structured" id="0P7">Structure d&amp;apos;une fiche</data>
   <data name="Viewers.Types.Editor.Native" id="0D7">Native</data>
   <data name="Viewers.Types.Numeric.Min" id="0R6" mod="1">Valeur minimale</data>
   <data name="Viewers.Types.Numeric.Max" id="0S6" mod="1">Valeur maximale</data>

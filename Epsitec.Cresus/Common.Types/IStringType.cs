@@ -25,5 +25,17 @@ namespace Epsitec.Common.Types
 		{
 			get;
 		}
+
+
+		/// <summary>
+		/// Gets a value indicating whether the string uses fixed length storage.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the string uses fixed length storage; otherwise, <c>false</c>.
+		/// </value>
+		bool UseFixedLengthStorage
+		{
+			get;
+		}
 	}
 }
