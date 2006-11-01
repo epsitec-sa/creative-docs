@@ -199,18 +199,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
 						{
-							string dn = this.resourceAccess.DirectGetDisplayName(caption.Druid);
 							string nd = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
-							captionType = string.Concat(dn, ":<br/>", nd);
+							captionType = string.Concat(caption.Name, ":<br/>", nd);
 						}
 						else
 						{
-							captionType = this.resourceAccess.DirectGetDisplayName(caption.Druid);
+							captionType = caption.Name;
 						}
 
-						if (!string.IsNullOrEmpty(caption.Icon))
+						iconType = this.resourceAccess.DirectGetIcon(caption.Druid);
+						if (!string.IsNullOrEmpty(iconType))
 						{
-							iconType = Misc.ImageFull(caption.Icon);
+							iconType = Misc.ImageFull(iconType);
 						}
 					}
 
