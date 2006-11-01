@@ -724,6 +724,33 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 
+		public static bool DoesTypeImplementGenericInterface(System.Type systemType, System.Type genericInterfaceType, out System.Type interfaceType)
+		{
+			if ((systemType.IsGenericType) &&
+				(systemType.IsGenericTypeDefinition == false) &&
+				(systemType.GetGenericTypeDefinition () == genericInterfaceType))
+			{
+				interfaceType = genericInterfaceType;
+				return true;
+			}
+			else
+			{
+				foreach (System.Type type in systemType.GetInterfaces ())
+				{
+					if ((type.IsGenericType) &&
+						(type.IsGenericTypeDefinition == false) &&
+						(type.GetGenericTypeDefinition () == genericInterfaceType))
+					{
+						interfaceType = type;
+						return true;
+					}
+				}
+			}
+			
+			interfaceType = null;
+			return false;
+		}
+
 
 		/// <summary>
 		/// Verifies if the type implements the specified generic interface.

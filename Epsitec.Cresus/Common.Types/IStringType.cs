@@ -26,14 +26,26 @@ namespace Epsitec.Common.Types
 			get;
 		}
 
-
 		/// <summary>
-		/// Gets a value indicating whether the string uses fixed length storage.
+		/// Gets a value indicating whether the strings use fixed length storage
+		/// (this information is required by the database engine, for instance).
 		/// </summary>
 		/// <value>
-		/// 	<c>true</c> if the string uses fixed length storage; otherwise, <c>false</c>.
+		/// 	<c>true</c> if the strings use fixed length storage; otherwise, <c>false</c>.
 		/// </value>
 		bool UseFixedLengthStorage
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether the strings use multilingual storage.
+		/// storage.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the strings use multilingual storage; otherwise, <c>false</c>.
+		/// </value>
+		bool UseMultilingualStorage
 		{
 			get;
 		}

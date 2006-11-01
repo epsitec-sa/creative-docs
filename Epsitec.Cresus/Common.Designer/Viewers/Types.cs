@@ -72,6 +72,50 @@ namespace Epsitec.Common.Designer.Viewers
 			base.Update();
 		}
 
+		protected override string RetTitle
+		{
+			get
+			{
+				int sel = this.access.AccessIndex;
+
+				if (sel == -1)
+				{
+					return "";
+				}
+				else
+				{
+					//	Cherche le nom du type du type.
+					string typeName = null;
+					ResourceAccess.Field field = this.access.GetField(sel, null, ResourceAccess.FieldType.AbstractType);
+					if (field != null)
+					{
+						AbstractType type = field.AbstractType;
+						ResourceAccess.TypeType typeType = ResourceAccess.AbstractTypeToTypeType(type);
+						typeName = ResourceAccess.TypeTypeToDisplay(typeType);
+
+						if (type is EnumType)
+						{
+							EnumType enumType = type as EnumType;
+							if (enumType.IsNativeEnum)
+							{
+								typeName = string.Concat(typeName, " ", Res.Strings.Viewers.Types.Editor.Native);
+							}
+						}
+					}
+
+					field = this.access.GetField(sel, null, ResourceAccess.FieldType.Name);
+					if (typeName == null)
+					{
+						return field.String;
+					}
+					else
+					{
+						return string.Concat(field.String, " (<b>", typeName, "</b>)");
+					}
+				}
+			}
+		}
+
 		protected override void UpdateEdit()
 		{
 			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.

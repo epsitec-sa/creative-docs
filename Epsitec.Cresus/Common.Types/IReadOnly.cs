@@ -9,6 +9,9 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public interface IReadOnly
 	{
-		bool	IsReadOnly		{ get; }
+		bool IsReadOnly
+		{
+			get;
+		}
 	}
 }

@@ -66,10 +66,18 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (bool) this.Caption.GetValue (StringType.IsFixedLengthProperty);
+				return (bool) this.Caption.GetValue (StringType.UseFixedLengthStorageProperty);
 			}
 		}
-		
+
+		public bool								UseMultilingualStorage
+		{
+			get
+			{
+				return (bool) this.Caption.GetValue (StringType.UseMultilingualStorageProperty);
+			}
+		}
+
 		#endregion
 
 		#region IDataConstraint Members
@@ -121,11 +129,23 @@ namespace Epsitec.Common.Types
 		{
 			if (value)
 			{
-				this.Caption.SetValue (StringType.IsFixedLengthProperty, value);
+				this.Caption.SetValue (StringType.UseFixedLengthStorageProperty, value);
 			}
 			else
 			{
-				this.Caption.ClearValue (StringType.IsFixedLengthProperty);
+				this.Caption.ClearValue (StringType.UseFixedLengthStorageProperty);
+			}
+		}
+
+		public void DefineUseMultilingualStorage(bool value)
+		{
+			if (value)
+			{
+				this.Caption.SetValue (StringType.UseMultilingualStorageProperty, value);
+			}
+			else
+			{
+				this.Caption.ClearValue (StringType.UseMultilingualStorageProperty);
 			}
 		}
 
@@ -146,7 +166,9 @@ namespace Epsitec.Common.Types
 
 		public static readonly DependencyProperty MinimumLengthProperty = DependencyProperty.RegisterAttached ("MinimumLength", typeof (int), typeof (StringType), new DependencyPropertyMetadata (0));
 		public static readonly DependencyProperty MaximumLengthProperty = DependencyProperty.RegisterAttached ("MaximumLength", typeof (int), typeof (StringType), new DependencyPropertyMetadata (100*1000));
-		public static readonly DependencyProperty IsFixedLengthProperty = DependencyProperty.RegisterAttached ("IsFixedLength", typeof (bool), typeof (StringType), new DependencyPropertyMetadata (false));
+		
+		public static readonly DependencyProperty UseFixedLengthStorageProperty  = DependencyProperty.RegisterAttached ("UseFixedLengthStorage",  typeof (bool), typeof (StringType), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty UseMultilingualStorageProperty = DependencyProperty.RegisterAttached ("UseMultilingualStorage", typeof (bool), typeof (StringType), new DependencyPropertyMetadata (false));
 
 		private static StringType defaultValue;
 	}

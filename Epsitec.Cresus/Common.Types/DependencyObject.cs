@@ -820,6 +820,10 @@ namespace Epsitec.Common.Types
 					{
 						//	Copied a string collection.
 					}
+					else if (DependencyObject.CopyValueTypeOrCloneableCollection (source, destination, property))
+					{
+						//	Copied a ValueType collection.
+					}
 					else
 					{
 						throw new System.InvalidOperationException ("Cannot copy unsupported collection");
@@ -868,7 +872,93 @@ namespace Epsitec.Common.Types
 				return false;
 			}
 		}
-		
+
+		private static bool CopyValueTypeOrCloneableCollection(DependencyObject src, DependencyObject dst, DependencyProperty property)
+		{
+			System.Type interfaceType;
+			
+			if ((TypeRosetta.DoesTypeImplementInterface (property.PropertyType, typeof (System.Collections.IList))) &&
+				(TypeRosetta.DoesTypeImplementGenericInterface (property.PropertyType, typeof (ICollection<>), out interfaceType)))
+			{
+				//	We must copy a ICollection<T> by using the IList implementation. This is
+				//	possible if T is a ValueType or if T implements ICloneable.
+				
+				System.Type[] genericArguments = interfaceType.GetGenericArguments ();
+
+				if (genericArguments.Length != 1)
+				{
+					return false;
+				}
+				
+				System.Collections.IList srcList = src.GetValue (property) as System.Collections.IList;
+
+				if (srcList.Count > 0)
+				{
+					System.Collections.IList dstList = dst.GetValue (property) as System.Collections.IList;
+					IReadOnlyLock readOnlyLock = null;
+
+					if (dstList == null)
+					{
+						throw new System.InvalidOperationException ("Cannot copy to null destination collection");
+					}
+					
+					//	If the destination collection is locked down, we must try to unlock
+					//	it in order to be able to overwrite it with the source values :
+					
+					if (dstList.IsReadOnly)
+					{
+						readOnlyLock = dstList as IReadOnlyLock;
+
+						if (readOnlyLock == null)
+						{
+							throw new System.InvalidOperationException ("Cannot copy to read only destination collection");
+						}
+
+						readOnlyLock.Unlock ();
+
+						System.Diagnostics.Debug.Assert (dstList.IsReadOnly == false);
+					}
+
+					if (genericArguments[0].IsValueType)
+					{
+						dstList.Clear ();
+
+						foreach (object item in srcList)
+						{
+							dstList.Add (item);
+						}
+					}
+					else if (TypeRosetta.DoesTypeImplementInterface (genericArguments[0], typeof (System.ICloneable)))
+					{
+						dstList.Clear ();
+
+						foreach (object item in srcList)
+						{
+							System.ICloneable cloneable = item as System.ICloneable;
+							dstList.Add (cloneable.Clone ());
+						}
+					}
+					else
+					{
+						return false;
+					}
+
+					//	In case we unlocked the collection, relock it.
+
+					if (readOnlyLock != null)
+					{
+						readOnlyLock.Lock ();
+					}
+				}
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 		/// <summary>
 		/// Compares two dependency objects based on their values.
 		/// </summary>

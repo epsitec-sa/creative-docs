@@ -53,6 +53,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.slider.Value = (decimal) TypeEditorStructured.arrayLineHeight;
 			this.slider.Dock = DockStyle.Right;
 
+			//	Crée l'en-tête du tableau.
+			this.header = new Widget(this);
+			this.header.Dock = DockStyle.StackBegin;
+			this.header.Margins = new Margins(0, 0, 4, 0);
+
+			this.headerName = new HeaderButton(this.header);
+			this.headerName.Text = "Nom";
+			this.headerName.Style = HeaderButtonStyle.Top;
+			this.headerName.Dock = DockStyle.Left;
+
+			this.headerType = new HeaderButton(this.header);
+			this.headerType.Text = "Type";
+			this.headerType.Style = HeaderButtonStyle.Top;
+			this.headerType.Dock = DockStyle.Left;
+
+			this.headerCaption = new HeaderButton(this.header);
+			this.headerCaption.Text = "Légende";
+			this.headerCaption.Style = HeaderButtonStyle.Top;
+			this.headerCaption.Dock = DockStyle.Left;
+
 			//	Crée le tableau principal.
 			this.array = new StringArray(this);
 			this.array.Columns = 5;
@@ -66,6 +86,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.SetColumnAlignment(2, ContentAlignment.MiddleCenter);
 			this.array.SetColumnAlignment(3, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(4, ContentAlignment.MiddleCenter);
+			this.array.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
+			this.array.SetColumnBreakMode(1, TextBreakMode.Ellipsis | TextBreakMode.Split);
+			this.array.SetColumnBreakMode(3, TextBreakMode.Ellipsis | TextBreakMode.Split);
 			this.array.LineHeight = TypeEditorStructured.arrayLineHeight;
 			this.array.Dock = DockStyle.StackBegin;
 			this.array.PreferredHeight = 200;
@@ -79,7 +102,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.footer.Margins = new Margins(0, 0, 5, 0);
 
 			this.fieldName = new TextFieldEx(this.footer);
-			this.fieldName.Margins = new Margins(1, 1, 0, 0);
+			this.fieldName.Margins = new Margins(1, 0, 0, 0);
 			this.fieldName.Dock = DockStyle.Left;
 			this.fieldName.ButtonShowCondition = ShowCondition.WhenModified;
 			this.fieldName.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
@@ -88,13 +111,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.buttonType = new Button(this.footer);
 			this.buttonType.Text = "Changer le type";
-			this.buttonType.Margins = new Margins(1, 1, 0, 0);
+			this.buttonType.Margins = new Margins(1, 0, 0, 0);
 			this.buttonType.Dock = DockStyle.Left;
 			this.buttonType.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonCaption = new Button(this.footer);
 			this.buttonCaption.Text = "Changer la légende";
-			this.buttonCaption.Margins = new Margins(1, 1, 0, 0);
+			this.buttonCaption.Margins = new Margins(1, 0, 0, 0);
 			this.buttonCaption.Dock = DockStyle.Left;
 			this.buttonCaption.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 		}
@@ -167,6 +190,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 					StructuredTypeField field = this.fields[first+i];
 					string name = field.Id;
 
+					string captionType = "";
+					string iconType = "";
+					AbstractType type = field.Type as AbstractType;
+					if (type != null)
+					{
+						Caption caption = type.Caption;
+
+						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
+						{
+							string nd = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
+							captionType = string.Concat(caption.Name, ":<br/>", nd);
+						}
+						else
+						{
+							captionType = caption.Name;
+						}
+
+						iconType = this.resourceAccess.DirectGetIcon(caption.Druid);
+						if (!string.IsNullOrEmpty(iconType))
+						{
+							iconType = Misc.ImageFull(iconType);
+						}
+					}
+
 					string captionText = "";
 					string iconText = "";
 					Druid druid = field.CaptionId;
@@ -194,10 +241,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.array.SetLineString(0, first+i, name);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(1, first+i, "");
+					this.array.SetLineString(1, first+i, captionType);
 					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(2, first+i, "");
+					this.array.SetLineString(2, first+i, iconType);
 					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
 
 					this.array.SetLineString(3, first+i, captionText);
@@ -245,9 +292,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Ajoute une nouvelle valeur dans la structure.
 			int sel = this.array.SelectedRow;
+			
+			AbstractType type = null;
+			if (sel != -1)
+			{
+				StructuredTypeField actualField = this.fields[sel];
+				type = actualField.Type as AbstractType;
+			}
+
 			string name = this.GetNewName();
-			StructuredTypeField field = new StructuredTypeField(name, StringType.Default);
-			this.fields.Insert(sel+1, field);
+			StructuredTypeField newField = new StructuredTypeField(name, type, Druid.Empty, 0);
+			this.fields.Insert(sel+1, newField);
 
 			this.FieldsOutput();
 			this.UpdateArray();
@@ -317,6 +372,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void ChangeType()
 		{
+			//	Choix du type.
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			StructuredTypeField actualField = this.fields[sel];
+			AbstractType type = actualField.Type as AbstractType;
+			Druid druid = (type == null) ? Druid.Empty : type.Caption.Druid;
+
+			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Types, druid, null);
+			if (druid.IsEmpty)
+			{
+				return;
+			}
+
+			type = TypeRosetta.GetTypeObject(this.module.ResourceManager.GetCaption(druid));
+			System.Diagnostics.Debug.Assert(type != null);
+			StructuredTypeField newField = new StructuredTypeField(actualField.Id, type, actualField.CaptionId, actualField.Rank);
+			this.fields[sel] = newField;
+
+			this.FieldsOutput();
+			this.UpdateArray();
+			this.OnContentChanged();
 		}
 
 		protected void ChangeCaption()
@@ -427,9 +507,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			double w2 = this.array.GetColumnsAbsoluteWidth(1) + this.array.GetColumnsAbsoluteWidth(2);
 			double w3 = this.array.GetColumnsAbsoluteWidth(3) + this.array.GetColumnsAbsoluteWidth(4);
 
+			this.headerName.PreferredWidth = w1;
+			this.headerType.PreferredWidth = w2;
+			this.headerCaption.PreferredWidth = w3+1;
+
 			this.fieldName.PreferredWidth = w1-1;
 			this.buttonType.PreferredWidth = w2-1;
-			this.buttonCaption.PreferredWidth = w3-1;
+			this.buttonCaption.PreferredWidth = w3+1;
 		}
 
 
@@ -546,7 +630,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			StructuredTypeField newField = new StructuredTypeField(name, StringType.Default);
+			StructuredTypeField newField = new StructuredTypeField(name, actualfield.Type, actualfield.CaptionId, actualfield.Rank);
 			this.fields[sel] = newField;
 
 			this.FieldsOutput();
@@ -576,6 +660,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButton					buttonRemove;
 		protected HSlider						slider;
 
+		protected Widget						header;
+		protected HeaderButton					headerName;
+		protected HeaderButton					headerType;
+		protected HeaderButton					headerCaption;
 		protected MyWidgets.StringArray			array;
 
 		protected Widget						footer;
