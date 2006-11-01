@@ -117,7 +117,7 @@ namespace Epsitec.Common.Types
 			{
 				StructuredTypeField field = (StructuredTypeField) value;
 
-				string captionId = field.type.CaptionId.ToString ();
+				string captionId = field.type == null ? Support.Druid.Empty.ToString () : field.type.CaptionId.ToString ();
 				string rank = field.rank == -1 ? "" : field.rank.ToString (System.Globalization.CultureInfo.InvariantCulture);
 
 				if (field.captionId.IsValid)
@@ -142,7 +142,7 @@ namespace Epsitec.Common.Types
 				
 				string        name      = args[0];
 				Support.Druid druid     = Support.Druid.Parse (args[1]);
-				INamedType    type      = manager == null ? TypeRosetta.GetTypeObject (druid) : TypeRosetta.GetTypeObject (manager.GetCaption (druid));
+				INamedType    type      = druid.IsEmpty ? null : (manager == null ? TypeRosetta.GetTypeObject (druid) : TypeRosetta.GetTypeObject (manager.GetCaption (druid)));
 				string        rank      = args.Length < 3 ? "-1" : string.IsNullOrEmpty (args[2]) ? "-1" : args[2];
 				Support.Druid captionId = args.Length < 4 ? Support.Druid.Empty : Support.Druid.Parse (args[3]);
 				
