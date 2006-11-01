@@ -229,6 +229,23 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
+		public static string TypeTypeToDisplay(TypeType type)
+		{
+			switch (type)
+			{
+				case TypeType.Void:         return Res.Strings.Viewers.Types.Editor.Void;
+				case TypeType.Boolean:      return Res.Strings.Viewers.Types.Editor.Boolean;
+				case TypeType.Integer:      return Res.Strings.Viewers.Types.Editor.Integer;
+				case TypeType.LongInteger:  return Res.Strings.Viewers.Types.Editor.LongInteger;
+				case TypeType.Decimal:      return Res.Strings.Viewers.Types.Editor.Decimal;
+				case TypeType.String:       return Res.Strings.Viewers.Types.Editor.String;
+				case TypeType.Enum:         return Res.Strings.Viewers.Types.Editor.Enum;
+				case TypeType.Structured:   return Res.Strings.Viewers.Types.Editor.Structured;
+			}
+
+			return null;
+		}
+
 		public static string TypeTypeToName(TypeType type)
 		{
 			switch (type)

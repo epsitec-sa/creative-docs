@@ -103,7 +103,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			string typeName = typeType.ToString();
+			string typeName = ResourceAccess.TypeTypeToDisplay(typeType);
 			if (type is EnumType)
 			{
 				EnumType enumType = type as EnumType;
