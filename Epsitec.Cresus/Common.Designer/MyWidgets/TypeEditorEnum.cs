@@ -61,17 +61,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonSearchNext.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonSearchNext);
 
-			HSlider slider = new HSlider(toolbar);
-			slider.PreferredWidth = 80;
-			slider.Margins = new Margins(2, 2, 4, 4);
-			slider.MinValue = 20.0M;
-			slider.MaxValue = 50.0M;
-			slider.SmallChange = 5.0M;
-			slider.LargeChange = 10.0M;
-			slider.Resolution = 1.0M;
-			slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
-			slider.Value = (decimal) TypeEditorEnum.arrayLineHeight;
-			slider.Dock = DockStyle.Right;
+			this.slider = new HSlider(toolbar);
+			this.slider.PreferredWidth = 80;
+			this.slider.Margins = new Margins(2, 2, 4, 4);
+			this.slider.MinValue = 20.0M;
+			this.slider.MaxValue = 50.0M;
+			this.slider.SmallChange = 5.0M;
+			this.slider.LargeChange = 10.0M;
+			this.slider.Resolution = 1.0M;
+			this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+			this.slider.Value = (decimal) TypeEditorEnum.arrayLineHeight;
+			this.slider.Dock = DockStyle.Right;
 
 			this.array = new StringArray(this);
 			this.array.Columns = 4;
@@ -107,6 +107,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.buttonNext.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonRemove.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonSort.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+
+				this.slider.ValueChanged -= new EventHandler(this.HandleSliderChanged);
 
 				this.array.CellCountChanged -= new EventHandler(this.HandleArrayCellCountChanged);
 				this.array.CellsContentChanged -= new EventHandler(this.HandleArrayCellsContentChanged);
@@ -556,6 +558,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected TextFieldCombo				fieldSearch;
 		protected IconButton					buttonSearchPrev;
 		protected IconButton					buttonSearchNext;
+		protected HSlider						slider;
 		protected MyWidgets.StringArray			array;
 		protected List<Druid>					allDruids;
 		protected List<Druid>					selDruids;

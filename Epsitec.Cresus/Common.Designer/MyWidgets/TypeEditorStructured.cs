@@ -41,6 +41,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonRemove.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonRemove);
 
+			this.slider = new HSlider(toolbar);
+			this.slider.PreferredWidth = 80;
+			this.slider.Margins = new Margins(2, 2, 4, 4);
+			this.slider.MinValue = 20.0M;
+			this.slider.MaxValue = 50.0M;
+			this.slider.SmallChange = 5.0M;
+			this.slider.LargeChange = 10.0M;
+			this.slider.Resolution = 1.0M;
+			this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+			this.slider.Value = (decimal) TypeEditorStructured.arrayLineHeight;
+			this.slider.Dock = DockStyle.Right;
+
 			//	Crée le tableau principal.
 			this.array = new StringArray(this);
 			this.array.Columns = 5;
@@ -54,7 +66,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.SetColumnAlignment(2, ContentAlignment.MiddleCenter);
 			this.array.SetColumnAlignment(3, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(4, ContentAlignment.MiddleCenter);
-			this.array.LineHeight = 30;  // plus haut, à cause des descriptions et des icônes
+			this.array.LineHeight = TypeEditorStructured.arrayLineHeight;
 			this.array.Dock = DockStyle.StackBegin;
 			this.array.PreferredHeight = 200;
 			this.array.ColumnsWidthChanged += new EventHandler(this.HandleArrayColumnsWidthChanged);
@@ -101,6 +113,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.buttonPrev.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonNext.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonRemove.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+
+				this.slider.ValueChanged -= new EventHandler(this.HandleSliderChanged);
 
 				this.array.ColumnsWidthChanged -= new EventHandler(this.HandleArrayColumnsWidthChanged);
 				this.array.CellCountChanged -= new EventHandler(this.HandleArrayCellCountChanged);
@@ -160,16 +174,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						Caption caption = this.module.ResourceManager.GetCaption(druid);
 
-						string dn = this.resourceAccess.DirectGetDisplayName(druid);
-						string nd = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
-
 						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
 						{
+							string dn = this.resourceAccess.DirectGetDisplayName(druid);
+							string nd = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
 							captionText = string.Concat(dn, ":<br/>", nd);
 						}
 						else
 						{
-							captionText = string.Concat(dn, ": ", nd);
+							captionText = this.resourceAccess.DirectGetDisplayName(druid);
 						}
 
 						if (!string.IsNullOrEmpty(caption.Icon))
@@ -453,6 +466,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		private void HandleSliderChanged(object sender)
+		{
+			//	Appelé lorsque le slider a été déplacé.
+			if (this.array == null)
+			{
+				return;
+			}
+
+			HSlider slider = sender as HSlider;
+			TypeEditorStructured.arrayLineHeight = (double) slider.Value;
+			this.array.LineHeight = TypeEditorStructured.arrayLineHeight;
+		}
+
 		private void HandleArrayColumnsWidthChanged(object sender)
 		{
 			//	La largeur des colonnes a changé.
@@ -541,11 +567,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		protected static double					arrayLineHeight = 30;
+
 		protected HToolBar						toolbar;
 		protected IconButton					buttonAdd;
 		protected IconButton					buttonPrev;
 		protected IconButton					buttonNext;
 		protected IconButton					buttonRemove;
+		protected HSlider						slider;
 
 		protected MyWidgets.StringArray			array;
 
