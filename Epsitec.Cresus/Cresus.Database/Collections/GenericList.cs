@@ -13,12 +13,20 @@ namespace Epsitec.Cresus.Database.Collections
 	/// The <c>Collections.GenericList</c> class implements a generic list with named
 	/// item access and insertion/removal events.
 	/// </summary>
-	public class GenericList<T> : ObservableList<T> where T : class
+	public class GenericList<T> : ObservableList<T>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="GenericList&lt;T&gt;"/> class.
+		/// </summary>
 		public GenericList()
 		{
 		}
 
+		/// <summary>
+		/// Gets the item with the specified name.
+		/// </summary>
+		/// <value>The item if it exists; otherwise, <c>null</c> or the default empty <c>T</c>
+		/// if <c>T</c> is a value type.</value>
 		public T this[string name]
 		{
 			get
@@ -27,7 +35,7 @@ namespace Epsitec.Cresus.Database.Collections
 				
 				if (index < 0)
 				{
-					return null;
+					return default (T);
 				}
 				else
 				{
@@ -35,7 +43,11 @@ namespace Epsitec.Cresus.Database.Collections
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Removes the item with the specified name.
+		/// </summary>
+		/// <param name="name">The name.</param>
 		public void Remove(string name)
 		{
 			int index = this.IndexOf (name);
@@ -45,26 +57,40 @@ namespace Epsitec.Cresus.Database.Collections
 				this.RemoveAt (index);
 			}
 		}
-		
+
+		/// <summary>
+		/// Determines whether the list contains the item with the specified name.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <returns>
+		/// 	<c>true</c> if the list contains the item with the specified name; otherwise, <c>false</c>.
+		/// </returns>
 		public bool Contains(string name)
 		{
 			return this.IndexOf (name) != -1;
 		}
 
+		/// <summary>
+		/// Returns the index of the first item with the specified name.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <returns>The index of the item or <c>-1</c>.</returns>
 		public int IndexOf(string name)
 		{
 			return this.IndexOf (name, 0);
 		}
 
+		/// <summary>
+		/// Returns the index of the first item with the specified name, starting at
+		/// the specified start index.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="start">The start index.</param>
+		/// <returns>The index of the item or <c>-1</c>.</returns>
 		public virtual int IndexOf(string name, int start)
 		{
-			//	Cette méthode retourne toujours -1, car on ne sait pas comment chercher
-			//	selon un nom. Par contre, les classes qui héritent de AbstractList
-			//	fournissent leur propre implémentation.
-
 			return -1;
 		}
-
 
 		protected override void OnCollectionChanged(CollectionChangedEventArgs e)
 		{
@@ -105,22 +131,21 @@ namespace Epsitec.Cresus.Database.Collections
 			}
 		}
 
-		protected virtual void NotifyInsertion(T item)
+		private void NotifyInsertion(T item)
 		{
 			if (this.ItemInserted != null)
 			{
 				this.ItemInserted (this, new ValueEventArgs (item));
 			}
 		}
-		
-		protected virtual void NotifyRemoval(T item)
+
+		private void NotifyRemoval(T item)
 		{
 			if (this.ItemRemoved != null)
 			{
 				this.ItemRemoved (this, new ValueEventArgs (item));
 			}
 		}
-
 
 		public event EventHandler<ValueEventArgs> ItemInserted;
 		public event EventHandler<ValueEventArgs> ItemRemoved;
