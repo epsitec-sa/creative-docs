@@ -729,6 +729,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (edit == this.labelEdit)
 			{
 				this.UpdateFieldName(edit, sel);
+				this.UpdateTitle();
 			}
 
 			if (edit == this.primaryDescription)
