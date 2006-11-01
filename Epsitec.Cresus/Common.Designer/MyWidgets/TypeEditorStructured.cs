@@ -292,9 +292,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Ajoute une nouvelle valeur dans la structure.
 			int sel = this.array.SelectedRow;
+			
+			AbstractType type = null;
+			if (sel != -1)
+			{
+				StructuredTypeField actualField = this.fields[sel];
+				type = actualField.Type as AbstractType;
+			}
+
 			string name = this.GetNewName();
-			StructuredTypeField field = new StructuredTypeField(name, null, Druid.Empty, 0);
-			this.fields.Insert(sel+1, field);
+			StructuredTypeField newField = new StructuredTypeField(name, type, Druid.Empty, 0);
+			this.fields.Insert(sel+1, newField);
 
 			this.FieldsOutput();
 			this.UpdateArray();
