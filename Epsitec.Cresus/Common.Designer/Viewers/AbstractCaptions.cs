@@ -94,12 +94,24 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryCultureGroup.TabIndex = this.tabIndex++;
 			this.secondaryCultureGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
+			//	Crée le titre.
+			this.titleBox = new FrameBox(this.right);
+			this.titleBox.DrawFullFrame = true;
+			this.titleBox.PreferredHeight = 32;
+			this.titleBox.Dock = DockStyle.Top;
+			this.titleBox.Margins = new Margins(1, 1, 1, -1);
+
+			this.titleText = new StaticText(this.titleBox);
+			this.titleText.ContentAlignment = ContentAlignment.MiddleCenter;
+			this.titleText.Dock = DockStyle.Fill;
+			this.titleText.Margins = new Margins(4, 4, 4, 4);
+
 			//	Crée la partie droite, bande inférieure pour la zone d'étition scrollable.
 			this.scrollable = new Scrollable(this.right);
 			this.scrollable.Name = "Scrollable";
 			this.scrollable.MinWidth = 100;
 			this.scrollable.MinHeight = 100;
-			this.scrollable.Margins = new Margins(1, 1, 1, 1);
+			this.scrollable.Margins = new Margins(1, 1, 0, 1);
 			this.scrollable.Dock = DockStyle.Fill;
 			this.scrollable.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
 			this.scrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
@@ -195,6 +207,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 			this.UpdateCultures();
+			this.UpdateTitle();
 			this.UpdateEdit();
 			this.UpdateColor();
 			this.UpdateModificationsCulture();
@@ -254,6 +267,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Met à jour le contenu du Viewer.
 			this.UpdateArray();
+			this.UpdateTitle();
 			this.UpdateEdit();
 			this.UpdateColor();
 			this.UpdateModificationsCulture();
@@ -286,6 +300,29 @@ namespace Epsitec.Common.Designer.Viewers
 			get
 			{
 				return this.secondaryCultureGroup;
+			}
+		}
+
+		protected void UpdateTitle()
+		{
+			this.titleText.Text = string.Concat("<font size=\"150%\">", this.RetTitle, "</font>");
+		}
+
+		protected virtual string RetTitle
+		{
+			get
+			{
+				int sel = this.access.AccessIndex;
+
+				if (sel == -1)
+				{
+					return "";
+				}
+				else
+				{
+					ResourceAccess.Field field = this.access.GetField(sel, null, ResourceAccess.FieldType.Name);
+					return field.String;
+				}
 			}
 		}
 
@@ -659,6 +696,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	La ligne sélectionnée a changé.
 			this.access.AccessIndex = this.array.SelectedRow;
+			this.UpdateTitle();
 			this.UpdateEdit();
 			this.UpdateColor();
 			this.UpdateModificationsCulture();
@@ -785,6 +823,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected VSplitter						splitter;
 		protected Widget						secondaryCultureGroup;
 		protected MyWidgets.TextFieldExName		labelEdit;
+		protected FrameBox						titleBox;
+		protected StaticText					titleText;
 		protected Scrollable					scrollable;
 		protected List<MyWidgets.StackedPanel>	leftContainers;
 		protected List<MyWidgets.StackedPanel>	rightContainers;
