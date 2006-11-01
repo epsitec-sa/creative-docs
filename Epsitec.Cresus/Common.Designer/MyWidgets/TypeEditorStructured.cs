@@ -56,25 +56,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Crée l'en-tête du tableau.
 			this.header = new Widget(this);
 			this.header.Dock = DockStyle.StackBegin;
-			this.header.Margins = new Margins(0, 0, 4, -1);
+			this.header.Margins = new Margins(0, 0, 4, 0);
 
-			this.headerName = new Button(this.header);
+			this.headerName = new HeaderButton(this.header);
 			this.headerName.Text = "Nom";
-			this.headerName.ButtonStyle = ButtonStyle.Icon;
+			this.headerName.Style = HeaderButtonStyle.Top;
 			this.headerName.Dock = DockStyle.Left;
-			this.headerName.Margins = new Margins(1, 0, 0, 0);
+			this.headerName.Margins = new Margins(0, 0, 0, 0);
 
-			this.headerType = new Button(this.header);
+			this.headerType = new HeaderButton(this.header);
 			this.headerType.Text = "Type";
-			this.headerType.ButtonStyle = ButtonStyle.Icon;
+			this.headerType.Style = HeaderButtonStyle.Top;
 			this.headerType.Dock = DockStyle.Left;
-			this.headerType.Margins = new Margins(1, 0, 0, 0);
+			this.headerType.Margins = new Margins(0, 0, 0, 0);
 
-			this.headerCaption = new Button(this.header);
+			this.headerCaption = new HeaderButton(this.header);
 			this.headerCaption.Text = "Légende";
-			this.headerCaption.ButtonStyle = ButtonStyle.Icon;
+			this.headerCaption.Style = HeaderButtonStyle.Top;
 			this.headerCaption.Dock = DockStyle.Left;
-			this.headerCaption.Margins = new Margins(1, 0, 0, 0);
+			this.headerCaption.Margins = new Margins(0, 0, 0, 0);
 
 			//	Crée le tableau principal.
 			this.array = new StringArray(this);
@@ -499,8 +499,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			double w2 = this.array.GetColumnsAbsoluteWidth(1) + this.array.GetColumnsAbsoluteWidth(2);
 			double w3 = this.array.GetColumnsAbsoluteWidth(3) + this.array.GetColumnsAbsoluteWidth(4);
 
-			this.headerName.PreferredWidth = w1-1;
-			this.headerType.PreferredWidth = w2-1;
+			this.headerName.PreferredWidth = w1;
+			this.headerType.PreferredWidth = w2;
 			this.headerCaption.PreferredWidth = w3+1;
 
 			this.fieldName.PreferredWidth = w1-1;
@@ -653,9 +653,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected HSlider						slider;
 
 		protected Widget						header;
-		protected Button						headerName;
-		protected Button						headerType;
-		protected Button						headerCaption;
+		protected HeaderButton					headerName;
+		protected HeaderButton					headerType;
+		protected HeaderButton					headerCaption;
 		protected MyWidgets.StringArray			array;
 
 		protected Widget						footer;
