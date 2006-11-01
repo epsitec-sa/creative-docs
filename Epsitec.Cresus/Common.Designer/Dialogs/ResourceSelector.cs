@@ -217,7 +217,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Début de l'accès 'bypass' aux ressources pour le dialogue.
 			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
-			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Unknow || type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Commands || type == ResourceAccess.Type.Values);
+			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Unknow || type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Commands || type == ResourceAccess.Type.Values || type == ResourceAccess.Type.Types);
 			System.Diagnostics.Debug.Assert(resource.Type != DruidType.ModuleRelative);
 
 			this.resource = resource;

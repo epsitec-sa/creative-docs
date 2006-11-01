@@ -167,6 +167,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 					StructuredTypeField field = this.fields[first+i];
 					string name = field.Id;
 
+					string captionType = "";
+					string iconType = "";
+					AbstractType type = field.Type as AbstractType;
+					if (type != null)
+					{
+						Caption caption = type.Caption;
+
+						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
+						{
+							string dn = this.resourceAccess.DirectGetDisplayName(caption.Druid);
+							string nd = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
+							captionType = string.Concat(dn, ":<br/>", nd);
+						}
+						else
+						{
+							captionType = this.resourceAccess.DirectGetDisplayName(caption.Druid);
+						}
+
+						if (!string.IsNullOrEmpty(caption.Icon))
+						{
+							iconType = Misc.ImageFull(caption.Icon);
+						}
+					}
+
 					string captionText = "";
 					string iconText = "";
 					Druid druid = field.CaptionId;
@@ -194,10 +218,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.array.SetLineString(0, first+i, name);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(1, first+i, "");
+					this.array.SetLineString(1, first+i, captionType);
 					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(2, first+i, "");
+					this.array.SetLineString(2, first+i, iconType);
 					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
 
 					this.array.SetLineString(3, first+i, captionText);
@@ -246,7 +270,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Ajoute une nouvelle valeur dans la structure.
 			int sel = this.array.SelectedRow;
 			string name = this.GetNewName();
-			StructuredTypeField field = new StructuredTypeField(name, StringType.Default);
+			StructuredTypeField field = new StructuredTypeField(name, null, Druid.Empty, 0);
 			this.fields.Insert(sel+1, field);
 
 			this.FieldsOutput();
@@ -317,6 +341,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void ChangeType()
 		{
+			//	Choix du type.
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			StructuredTypeField actualField = this.fields[sel];
+			AbstractType type = actualField.Type as AbstractType;
+			Druid druid = (type == null) ? Druid.Empty : type.Caption.Druid;
+
+			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Types, druid, null);
+			if (druid.IsEmpty)
+			{
+				return;
+			}
+
+			type = TypeRosetta.GetTypeObject(this.module.ResourceManager.GetCaption(druid));
+			System.Diagnostics.Debug.Assert(type != null);
+			StructuredTypeField newField = new StructuredTypeField(actualField.Id, type, actualField.CaptionId, actualField.Rank);
+			this.fields[sel] = newField;
+
+			this.FieldsOutput();
+			this.UpdateArray();
+			this.OnContentChanged();
 		}
 
 		protected void ChangeCaption()
@@ -546,7 +595,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			StructuredTypeField newField = new StructuredTypeField(name, StringType.Default);
+			StructuredTypeField newField = new StructuredTypeField(name, actualfield.Type, actualfield.CaptionId, actualfield.Rank);
 			this.fields[sel] = newField;
 
 			this.FieldsOutput();
