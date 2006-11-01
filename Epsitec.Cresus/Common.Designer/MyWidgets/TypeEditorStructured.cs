@@ -75,13 +75,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldName.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 
 			this.buttonType = new Button(this.footer);
-			this.buttonType.Text = "Choisir un type";
+			this.buttonType.Text = "Changer le type";
 			this.buttonType.Margins = new Margins(1, 1, 0, 0);
 			this.buttonType.Dock = DockStyle.Left;
 			this.buttonType.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonCaption = new Button(this.footer);
-			this.buttonCaption.Text = "Choisir une légende";
+			this.buttonCaption.Text = "Changer la légende";
 			this.buttonCaption.Margins = new Margins(1, 1, 0, 0);
 			this.buttonCaption.Dock = DockStyle.Left;
 			this.buttonCaption.Clicked += new MessageEventHandler(this.HandleButtonClicked);
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Met à jour le contenu de l'éditeur.
 			this.ignoreChange = true;
-			this.AccessInitialise();
+			this.FieldsInput();
 			this.UpdateArray();
 			this.UpdateButtons();
 			this.ignoreChange = false;
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			int sel = this.array.SelectedRow;
 
 			this.buttonPrev.Enable = (sel != -1 && sel > 0);
-			this.buttonNext.Enable = (sel != -1 && sel < this.AccessCount-1);
+			this.buttonNext.Enable = (sel != -1 && sel < this.fields.Count-1);
 			this.buttonRemove.Enable = (sel != -1);
 
 			this.fieldName.Enable = (sel != -1);
@@ -142,14 +142,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			this.array.TotalRows = this.AccessCount;
+			this.array.TotalRows = this.fields.Count;
 
 			int first = this.array.FirstVisibleRow;
 			for (int i=0; i<this.array.LineCount; i++)
 			{
-				if (first+i < this.AccessCount)
+				if (first+i < this.fields.Count)
 				{
-					StructuredTypeField field = this.AccessGet(first+i);
+					StructuredTypeField field = this.fields[first+i];
 					string name = field.Id;
 
 					this.array.SetLineString(0, first+i, name);
@@ -190,75 +190,120 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ArrayAdd()
 		{
 			//	Ajoute une nouvelle valeur dans la structure.
-			StructuredType type = this.AbstractType as StructuredType;
-			type.Fields.Add("Vide", StringType.Default);
+			int sel = this.array.SelectedRow;
+			string name = this.GetNewName();
+			StructuredTypeField field = new StructuredTypeField(name, StringType.Default);
+			this.fields.Insert(sel+1, field);
 
-			this.AccessInitialise();
+			this.FieldsOutput();
 			this.UpdateArray();
 			this.UpdateButtons();
+			this.array.SelectedRow = sel+1;
+			this.array.ShowSelectedRow();
 			this.OnContentChanged();
 		}
 
 		protected void ArrayRemove()
 		{
 			//	Supprime une valeur de la structure.
-			StructuredType type = this.AbstractType as StructuredType;
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			this.fields.RemoveAt(sel);
+
+			this.FieldsOutput();
+			this.UpdateArray();
+			this.UpdateButtons();
+			this.OnContentChanged();
 		}
 
 		protected void ArrayMove(int direction)
 		{
 			//	Déplace une valeur dans la structure.
-			StructuredType type = this.AbstractType as StructuredType;
-		}
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
 
-		protected void RenumCollection()
-		{
-			//	Renumérote toute la structure.
-			StructuredType type = this.AbstractType as StructuredType;
+			StructuredTypeField field = this.fields[sel];
+			this.fields.RemoveAt(sel);
+			this.fields.Insert(sel+direction, field);
+
+			this.FieldsOutput();
+			this.UpdateArray();
+			this.UpdateButtons();
+			this.array.SelectedRow = sel+direction;
+			this.array.ShowSelectedRow();
+			this.OnContentChanged();
 		}
 
 		protected void ChangeType()
 		{
-			StructuredType type = this.AbstractType as StructuredType;
 		}
 
 		protected void ChangeCaption()
 		{
-			StructuredType type = this.AbstractType as StructuredType;
 		}
 
 
-		protected void AccessInitialise()
+		protected string GetNewName()
 		{
-			StructuredType type = this.AbstractType as StructuredType;
-			System.Diagnostics.Debug.Assert(type != null);
-
-			this.ids = new List<string>();
-			foreach(string key in type.GetFieldIds())
+			for (int i=1; i<10000; i++)
 			{
-				this.ids.Add(key);
+				string name = string.Format("Rubrique{0}", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				if (!this.IsExistingName(name))
+				{
+					return name;
+				}
 			}
+			return null;
 		}
 
-		protected int AccessCount
+		protected bool IsExistingName(string name)
 		{
-			get
+			foreach (StructuredTypeField field in this.fields)
 			{
-				return this.ids.Count;
+				if (name == field.Id)
+				{
+					return true;
+				}
 			}
+
+			return false;
 		}
 
-		protected StructuredTypeField AccessGet(int index)
+
+		protected void FieldsInput()
 		{
-			if (index >= 0 && index < this.ids.Count)
+			//	Lit le dictionnaire des rubriques (StructuredTypeField) dans la liste
+			//	interne (this.fields).
+			if (this.lastIndex != this.resourceSelected)  // pas encore lu ?
 			{
-				string key = this.ids[index];
+				this.lastIndex = this.resourceSelected;
+
 				StructuredType type = this.AbstractType as StructuredType;
-				return type.Fields[key];
+				this.fields = new List<StructuredTypeField>();
+
+				foreach (string id in type.GetFieldIds())
+				{
+					StructuredTypeField field = type.Fields[id];
+					this.fields.Add(field);
+				}
 			}
-			else
+		}
+
+		protected void FieldsOutput()
+		{
+			StructuredType type = this.AbstractType as StructuredType;
+			type.Fields.Clear();
+
+			foreach (StructuredTypeField field in this.fields)
 			{
-				return StructuredTypeField.Empty;
+				type.Fields.Add(field);
 			}
 		}
 
@@ -325,7 +370,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		private void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
-			this.AccessInitialise();
+			this.FieldsInput();
 			this.UpdateArray();
 		}
 
@@ -365,6 +410,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Button						buttonType;
 		protected Button						buttonCaption;
 
-		protected List<string>					ids;
+		protected int							lastIndex = -1;
+		protected List<StructuredTypeField>		fields;
 	}
 }
