@@ -95,6 +95,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.ColumnsWidthChanged += new EventHandler(this.HandleArrayColumnsWidthChanged);
 			this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
+			this.array.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
 
 			//	Crée le pied pour éditer la ligne sélectionnée.
 			this.footer = new Widget(this);
@@ -142,6 +143,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.array.ColumnsWidthChanged -= new EventHandler(this.HandleArrayColumnsWidthChanged);
 				this.array.CellCountChanged -= new EventHandler(this.HandleArrayCellCountChanged);
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
+				this.array.SelectedRowDoubleClicked -= new EventHandler(this.HandleArraySelectedRowDoubleClicked);
 
 				this.fieldName.EditionAccepted -= new EventHandler(this.HandleTextChanged);
 				this.fieldName.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
@@ -586,6 +588,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.fieldName.SelectAll();
 				this.fieldName.Focus();
+			}
+		}
+
+		private void HandleArraySelectedRowDoubleClicked(object sender)
+		{
+			//	Une ligne a été double-cliquée.
+			int column = this.array.SelectedColumn;
+
+			if (column == 1 || column == 2)
+			{
+				this.ChangeType();
+			}
+
+			if (column == 3 || column == 4)
+			{
+				this.ChangeCaption();
 			}
 		}
 
