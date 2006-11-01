@@ -52,7 +52,7 @@
   <data name="Viewers.Commands.Shortcut.Main" id="0R5" mod="1">Principal</data>
   <data name="Viewers.Commands.Shortcut.Suppl" id="0S5" mod="1">Supplémentaire</data>
   <data name="Viewers.Commands.Group.Title" id="0T5" mod="1">Groupe</data>
-  <data name="Viewers.Types.Editor.Title" id="057" mod="1">Définition du type &lt;b&gt;{0}&lt;/b&gt;</data>
+  <data name="Viewers.Types.Editor.Title" id="057" mod="1">Définition du type</data>
   <data name="Viewers.Types.Editor.Void" id="0I7">Vide</data>
   <data name="Viewers.Types.Editor.Boolean" id="0J7">Booléen</data>
   <data name="Viewers.Types.Editor.Integer" id="0K7">Entier</data>
@@ -60,8 +60,8 @@
   <data name="Viewers.Types.Editor.Decimal" id="0M7">Décimal</data>
   <data name="Viewers.Types.Editor.String" id="0N7">Chaîne</data>
   <data name="Viewers.Types.Editor.Enum" id="0O7">Enumération</data>
-  <data name="Viewers.Types.Editor.Structured" id="0P7">Structure d&amp;apos;une fiche</data>
-  <data name="Viewers.Types.Editor.Native" id="0D7">Native</data>
+  <data name="Viewers.Types.Editor.Structured" id="0P7">Structure de données</data>
+  <data name="Viewers.Types.Editor.Native" id="0D7">native</data>
   <data name="Viewers.Types.Numeric.Min" id="0R6" mod="1">Valeur minimale</data>
   <data name="Viewers.Types.Numeric.Max" id="0S6" mod="1">Valeur maximale</data>
   <data name="Viewers.Types.Numeric.Resol" id="0T6" mod="1">Résolution</data>
@@ -75,6 +75,13 @@
   <data name="Viewers.Types.Controller.Title" id="0H7">Contrôleur</data>
   <data name="Viewers.Types.Nullable.Title" id="0F7">Etats</data>
   <data name="Viewers.Types.Nullable.CheckButton" id="0G7">Accepte d&amp;apos;être nul</data>
+  <data name="Viewers.Types.Enum.RowName" id="0Q7">Nom</data>
+  <data name="Viewers.Types.Enum.RowDescription" id="0R7">Textes et description</data>
+  <data name="Viewers.Types.Enum.RowIcon" id="0S7">Icône</data>
+  <data name="Viewers.Types.Structured.Name" id="0U7">Nom</data>
+  <data name="Viewers.Types.Structured.Type" id="0T7">Type</data>
+  <data name="Viewers.Types.Structured.Caption" id="0V7">Légende</data>
+  <data name="Viewers.Types.Structured.NewName" id="008">Rubrique{0}</data>
   <data name="Action.New" id="0U">Nouveau</data>
   <data name="Action.Open" id="0V">Ouvrir...</data>
   <data name="Action.Close" id="001">Fermer</data>

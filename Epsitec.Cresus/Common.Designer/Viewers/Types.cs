@@ -40,7 +40,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryNullable.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Editeur du type.
-			this.CreateBand(out this.container, "", 0.6);
+			this.CreateBand(out this.container, Res.Strings.Viewers.Types.Editor.Title, 0.6);
 
 			this.UpdateEdit();
 		}
@@ -146,18 +146,6 @@ namespace Epsitec.Common.Designer.Viewers
 					typeType = ResourceAccess.AbstractTypeToTypeType(type);
 				}
 			}
-
-			string typeName = ResourceAccess.TypeTypeToDisplay(typeType);
-			if (type is EnumType)
-			{
-				EnumType enumType = type as EnumType;
-				if (enumType.IsNativeEnum)
-				{
-					typeName = string.Concat(typeName, " (", Res.Strings.Viewers.Types.Editor.Native, ")");
-				}
-			}
-
-			this.container.Title = string.Format(Res.Strings.Viewers.Types.Editor.Title, typeName);
 
 			if (this.typeType != typeType)  // autre type ?
 			{

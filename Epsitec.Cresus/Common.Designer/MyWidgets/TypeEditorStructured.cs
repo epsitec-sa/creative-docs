@@ -59,17 +59,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.header.Margins = new Margins(0, 0, 4, 0);
 
 			this.headerName = new HeaderButton(this.header);
-			this.headerName.Text = "Nom";
+			this.headerName.Text = Res.Strings.Viewers.Types.Structured.Name;
 			this.headerName.Style = HeaderButtonStyle.Top;
 			this.headerName.Dock = DockStyle.Left;
 
 			this.headerType = new HeaderButton(this.header);
-			this.headerType.Text = "Type";
+			this.headerType.Text = Res.Strings.Viewers.Types.Structured.Type;
 			this.headerType.Style = HeaderButtonStyle.Top;
 			this.headerType.Dock = DockStyle.Left;
 
 			this.headerCaption = new HeaderButton(this.header);
-			this.headerCaption.Text = "Légende";
+			this.headerCaption.Text = Res.Strings.Viewers.Types.Structured.Caption;
 			this.headerCaption.Style = HeaderButtonStyle.Top;
 			this.headerCaption.Dock = DockStyle.Left;
 
@@ -110,13 +110,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldName.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 
 			this.buttonType = new Button(this.footer);
-			this.buttonType.Text = "Changer le type";
+			this.buttonType.CaptionDruid = Res.Captions.Editor.Structured.ChangeType.Druid;
 			this.buttonType.Margins = new Margins(1, 0, 0, 0);
 			this.buttonType.Dock = DockStyle.Left;
 			this.buttonType.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonCaption = new Button(this.footer);
-			this.buttonCaption.Text = "Changer la légende";
+			this.buttonCaption.CaptionDruid = Res.Captions.Editor.Structured.ChangeCaption.Druid;
 			this.buttonCaption.Margins = new Margins(1, 0, 0, 0);
 			this.buttonCaption.Dock = DockStyle.Left;
 			this.buttonCaption.Clicked += new MessageEventHandler(this.HandleButtonClicked);
@@ -431,7 +431,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Cherche un nouveau nom jamais utilisé.
 			for (int i=1; i<10000; i++)
 			{
-				string name = string.Format("Rubrique{0}", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				string name = string.Format(Res.Strings.Viewers.Types.Structured.NewName, i.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				if (!this.IsExistingName(name, -1))
 				{
 					return name;
