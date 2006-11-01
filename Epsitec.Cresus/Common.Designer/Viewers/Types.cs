@@ -74,6 +74,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override string RetTitle
 		{
+			//	Retourne le texte à utiliser pour le titre en dessus de la zone scrollable.
 			get
 			{
 				int sel = this.access.AccessIndex;
@@ -110,6 +111,7 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 					else
 					{
+						//	Ajoute le type du type, en gras et entre parenthèses.
 						return string.Concat(field.String, " (<b>", typeName, "</b>)");
 					}
 				}

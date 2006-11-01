@@ -103,6 +103,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.titleText = new StaticText(this.titleBox);
 			this.titleText.ContentAlignment = ContentAlignment.MiddleCenter;
+			this.titleText.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 			this.titleText.Dock = DockStyle.Fill;
 			this.titleText.Margins = new Margins(4, 4, 4, 4);
 
@@ -305,11 +306,13 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateTitle()
 		{
+			//	Met à jour le titre en dessus de la zone scrollable.
 			this.titleText.Text = string.Concat("<font size=\"150%\">", this.RetTitle, "</font>");
 		}
 
 		protected virtual string RetTitle
 		{
+			//	Retourne le texte à utiliser pour le titre en dessus de la zone scrollable.
 			get
 			{
 				int sel = this.access.AccessIndex;
