@@ -6,7 +6,7 @@ namespace Epsitec.Cresus.Database.Collections
 	/// <summary>
 	/// La classe Collection.SqlColumns encapsule une collection d'instances de type SqlColumn.
 	/// </summary>
-	public class SqlColumns : AbstractNameList<SqlColumn>
+	public class SqlColumns : NameList<SqlColumn>
 	{
 		public SqlColumns()
 		{
