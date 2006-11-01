@@ -130,6 +130,8 @@
     <Compile Include="Collections\SqlFields.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SqlFieldOrder.cs" />
+    <Compile Include="SqlFieldType.cs" />
     <Compile Include="DbAccess.cs">
       <SubType>Code</SubType>
     </Compile>

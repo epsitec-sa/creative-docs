@@ -1,10 +1,10 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Collections
 {
 	/// <summary>
-	/// La classe DbColumns encapsule une collection d'instances de type DbColumn.
+	/// The <c>Collections.DbColumns</c> class manages a list of <c>DbColumn</c> items.
 	/// </summary>
 	public class DbColumns : GenericList<DbColumn>
 	{

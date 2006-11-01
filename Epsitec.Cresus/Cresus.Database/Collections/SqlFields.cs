@@ -1,95 +1,141 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Collections
 {
 	/// <summary>
-	/// La classe Collections.SqlFields encapsule une collection d'instances de type SqlField.
-	/// SqlField.
+	/// The <c>Collections.SqlFields</c> class manages a list of <c>SqlField</c> items.
 	/// </summary>
-	public class SqlFields : GenericList<SqlField>
+	public sealed class SqlFields : GenericList<SqlField>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlFields"/> class.
+		/// </summary>
 		public SqlFields()
 		{
 		}
-		
-		
-		public virtual void Add(string alias, SqlField field)
+
+		/// <summary>
+		/// Adds the specified field with a given alias.
+		/// </summary>
+		/// <param name="alias">The alias.</param>
+		/// <param name="field">The field.</param>
+		public void Add(string alias, SqlField field)
 		{
+			field = field.Clone ();
 			field.Alias = alias;
-			this.Add (field);
-		}
-		
-		public virtual void Add(SqlField field, SqlFieldOrder order)
-		{
-			field.Order = order;
-			this.Add (field);
-		}
-		
-		public virtual void Add(string alias, SqlField field, SqlFieldOrder order)
-		{
-			field.Alias = alias;
-			field.Order = order;
-			this.Add (field);
-		}
-		
-		public virtual void Add(SqlFunction sql_function)
-		{
-			SqlField field = SqlField.CreateFunction (sql_function);
+			
 			this.Add (field);
 		}
 
-		public virtual void Add(string alias, SqlFunction sql_function)
+		/// <summary>
+		/// Adds the specified field with a given SQL ordering.
+		/// </summary>
+		/// <param name="field">The field.</param>
+		/// <param name="order">The order.</param>
+		public void Add(SqlField field, SqlFieldOrder order)
 		{
-			SqlField field = SqlField.CreateFunction (sql_function);
-			field.Alias = alias;
-			this.Add (field);
-		}
-		
-		public virtual void Add(SqlAggregate sql_aggregate)
-		{
-			SqlField field = SqlField.CreateAggregate (sql_aggregate);
+			field = field.Clone ();
+			field.Order = order;
+			
 			this.Add (field);
 		}
 
-		public virtual void Add(string alias, SqlAggregate sql_aggregate)
+		/// <summary>
+		/// Adds the specified field with a given alias and SQL ordering.
+		/// </summary>
+		/// <param name="alias">The alias.</param>
+		/// <param name="field">The field.</param>
+		/// <param name="order">The order.</param>
+		public void Add(string alias, SqlField field, SqlFieldOrder order)
 		{
-			SqlField field = SqlField.CreateAggregate (sql_aggregate);
+			field = field.Clone ();
+			field.Alias = alias;
+			field.Order = order;
+			
+			this.Add (field);
+		}
+
+		/// <summary>
+		/// Adds the specified SQL function.
+		/// </summary>
+		/// <param name="sqlFunction">The SQL function.</param>
+		public void Add(SqlFunction sqlFunction)
+		{
+			SqlField field = SqlField.CreateFunction (sqlFunction);
+			this.Add (field);
+		}
+
+		/// <summary>
+		/// Adds the specified SQL function with a given alias.
+		/// </summary>
+		/// <param name="alias">The alias.</param>
+		/// <param name="sqlFunction">The SQL function.</param>
+		public void Add(string alias, SqlFunction sqlFunction)
+		{
+			SqlField field = SqlField.CreateFunction (sqlFunction);
 			field.Alias = alias;
 			this.Add (field);
 		}
-		
-		public virtual void Add(SqlJoin sql_join)
+
+		/// <summary>
+		/// Adds the specified SQL aggregate.
+		/// </summary>
+		/// <param name="sqlAggregate">The SQL aggregate.</param>
+		public void Add(SqlAggregate sqlAggregate)
 		{
-			SqlField field = SqlField.CreateJoin (sql_join);
+			SqlField field = SqlField.CreateAggregate (sqlAggregate);
 			this.Add (field);
 		}
-		
-		public virtual SqlField Merge(SqlFunctionType op)
+
+		/// <summary>
+		/// Adds the specified SQL aggregate with a given alias.
+		/// </summary>
+		/// <param name="alias">The alias.</param>
+		/// <param name="sqlAggregate">The SQL aggregate.</param>
+		public void Add(string alias, SqlAggregate sqlAggregate)
 		{
-			//	Produit une expression du genre ((A op B) op (C op D)) en générant
-			//	un arbre aussi balancé que possible :
-			
-			SqlField[] fields = new SqlField[this.list.Count];
-			this.list.CopyTo (fields);
-			
-			return SqlFields.Merge (op, fields);
+			SqlField field = SqlField.CreateAggregate (sqlAggregate);
+			field.Alias = alias;
+			this.Add (field);
+		}
+
+		/// <summary>
+		/// Adds the specified SQL join.
+		/// </summary>
+		/// <param name="sqlJoin">The SQL join.</param>
+		public void Add(SqlJoin sqlJoin)
+		{
+			SqlField field = SqlField.CreateJoin (sqlJoin);
+			this.Add (field);
+		}
+
+		/// <summary>
+		/// Merges all fields by generating the SQL functions defined by a
+		/// given SQL operation. This will produce a tree encoding ((A op B)
+		/// op (C op D)), for instance.
+		/// </summary>
+		/// <param name="op">The SQL operation.</param>
+		/// <returns>A SQL field object encoding a function applied to all items.</returns>
+		public SqlField Merge(SqlFunctionType op)
+		{
+			return SqlFields.Merge (op, this.ToArray ());
 		}
 		
 		
-		protected static SqlField Merge(SqlFunctionType op, SqlField[] fields)
+		private static SqlField Merge(SqlFunctionType op, SqlField[] fields)
 		{
 			int n = fields.Length;
 			
 			switch (n)
 			{
 				case 0: return null;
-				case 1: return fields[0];
-				case 2: return SqlField.CreateFunction (new SqlFunction (op, fields[0], fields[1]));
+				case 1: return fields[0].Clone ();
+				case 2: return SqlField.CreateFunction (new SqlFunction (op, fields[0].Clone (), fields[1].Clone ()));
 			}
 			
 			SqlField[] h1 = new SqlField[n/2];
-			SqlField[] h2 = new SqlField[n-n/2];
+			SqlField[] h2 = new SqlField[n-h1.Length];
 			
 			System.Array.Copy (fields,   0, h1, 0, n/2);
 			System.Array.Copy (fields, n/2, h2, 0, n-n/2);
