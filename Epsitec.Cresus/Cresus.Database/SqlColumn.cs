@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Database
 	/// La classe SqlColumn décrit une colonne dans une table de la base de données.
 	/// Cette classe ressemble fortement à System.Data.DataColumn.
 	/// </summary>
-	public class SqlColumn
+	public class SqlColumn : Common.Types.IName
 	{
 		public SqlColumn()
 		{

@@ -1,28 +1,42 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System.Collections;
+using System.Collections.Generic;
+
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
 
 namespace Epsitec.Cresus.Database.Collections
 {
 	/// <summary>
-	/// Summary description for AbstractList.
+	/// The <c>AbstractList</c> class is the base class for all collections used
+	/// in the database layer.
 	/// </summary>
-	public abstract class AbstractList : AbstractBase
+	public class AbstractList<T> : ObservableList<T> where T : class
 	{
 		public AbstractList()
 		{
 		}
-		
-		
-		protected override ArrayList			List
+
+		public T this[string name]
 		{
-			get { return this.list; }
+			get
+			{
+				int index = this.IndexOf (name);
+				
+				if (index < 0)
+				{
+					return null;
+				}
+				else
+				{
+					return this[index];
+				}
+			}
 		}
 		
-		
-		public virtual void Remove(string name)
+		public void Remove(string name)
 		{
 			int index = this.IndexOf (name);
 			
@@ -32,95 +46,83 @@ namespace Epsitec.Cresus.Database.Collections
 			}
 		}
 		
-		public virtual void RemoveAt(int index)
-		{
-			this.OnRemoving (this.list[index]);
-			this.list.RemoveAt (index);
-			this.OnChanged ();
-		}
-		
-		public virtual bool Contains(string name)
+		public bool Contains(string name)
 		{
 			return this.IndexOf (name) != -1;
 		}
-		
-		public virtual int IndexOf(string name)
+
+		public int IndexOf(string name)
+		{
+			return this.IndexOf (name, 0);
+		}
+
+		public virtual int IndexOf(string name, int start)
 		{
 			//	Cette méthode retourne toujours -1, car on ne sait pas comment chercher
 			//	selon un nom. Par contre, les classes qui héritent de AbstractList
 			//	fournissent leur propre implémentation.
-			
+
 			return -1;
 		}
-		
-		public virtual void Clear()
+
+
+		protected override void OnCollectionChanged(CollectionChangedEventArgs e)
 		{
-			this.list.Clear ();
-			this.OnChanged ();
-		}
-		
-		
-		protected void InternalAdd(object element)
-		{
-			this.list.Add (element);
-			this.OnInserted (element);
-			this.OnChanged ();
-		}
-		
-		protected void InternalAddRange(System.Collections.ICollection elements)
-		{
-			if (elements == null)
+			base.OnCollectionChanged (e);
+
+			switch (e.Action)
 			{
-				return;
-			}
-			
-			this.list.AddRange (elements);
-			
-			foreach (object element in elements)
-			{
-				this.OnInserted (element);
-			}
-			
-			this.OnChanged ();
-		}
-		
-		protected void InternalRemove(object element)
-		{
-			this.OnRemoving (element);
-			this.list.Remove (element);
-			this.OnChanged ();
-		}
-		
-		
-		protected virtual void OnChanged()
-		{
-			if (this.Changed != null)
-			{
-				this.Changed (this);
+				case CollectionChangedAction.Add:
+					foreach (T item in e.NewItems)
+					{
+						this.NotifyInsertion (item);
+					}
+					break;
+
+				case CollectionChangedAction.Move:
+					break;
+
+				case CollectionChangedAction.Remove:
+					foreach (T item in e.OldItems)
+					{
+						this.NotifyRemoval (item);
+					}
+					break;
+
+				case CollectionChangedAction.Replace:
+					foreach (T item in e.OldItems)
+					{
+						this.NotifyRemoval (item);
+					}
+					foreach (T item in e.NewItems)
+					{
+						this.NotifyInsertion (item);
+					}
+					break;
+				
+				default:
+					throw new System.NotImplementedException (string.Format ("Action.{0} not implemented", e.Action));
 			}
 		}
-		
-		protected virtual void OnInserted(object element)
+
+		protected virtual void NotifyInsertion(T item)
 		{
-			if (this.Inserted != null)
+			if (this.ItemInserted != null)
 			{
-				this.Inserted (this, new Epsitec.Common.Support.ValueEventArgs (element));
+				this.ItemInserted (this, new ValueEventArgs (item));
 			}
 		}
 		
-		protected virtual void OnRemoving(object element)
+		protected virtual void NotifyRemoval(T item)
 		{
-			if (this.Removing != null)
+			if (this.ItemRemoved != null)
 			{
-				this.Removing (this, new Epsitec.Common.Support.ValueEventArgs (element));
+				this.ItemRemoved (this, new ValueEventArgs (item));
 			}
 		}
-		
-		
-		public event EventHandler<ValueEventArgs>	Removing;
-		public event EventHandler<ValueEventArgs>	Inserted;
-		public event EventHandler					Changed;
-		
-		protected ArrayList						list = new System.Collections.ArrayList ();
+
+
+		public event EventHandler<ValueEventArgs> ItemInserted;
+		public event EventHandler<ValueEventArgs> ItemRemoved;
 	}
 }

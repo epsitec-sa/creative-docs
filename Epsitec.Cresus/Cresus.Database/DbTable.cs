@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Database
 	/// La classe DbTable décrit la structure d'une table dans la base de données.
 	/// Cette classe ressemble dans l'esprit à System.Data.DataTable.
 	/// </summary>
-	public class DbTable : IDbAttributesHost, Common.Types.ICaption
+	public class DbTable : IDbAttributesHost, Common.Types.ICaption, Common.Types.IName
 	{
 		public DbTable()
 		{
@@ -471,24 +471,24 @@ namespace Epsitec.Cresus.Database
 		private void AttachColumns(Collections.DbColumns columns)
 		{
 			this.columns = columns;
-			
-			this.columns.Inserted += new EventHandler<ValueEventArgs> (this.HandleColumnInserted);
-			this.columns.Removing += new EventHandler<ValueEventArgs> (this.HandleColumnRemoving);
+
+			this.columns.ItemInserted += this.HandleColumnInserted;
+			this.columns.ItemRemoved += this.HandleColumnRemoved;
 			
 			foreach (DbColumn column in this.columns)
 			{
 				column.DefineTable (this);
 			}
 		}
-		
-		
+
+
 		private void HandleColumnInserted(object sender, Epsitec.Common.Support.ValueEventArgs e)
 		{
 			DbColumn column = e.Value as DbColumn;
 			column.DefineTable (this);
 		}
 		
-		private void HandleColumnRemoving(object sender, Epsitec.Common.Support.ValueEventArgs e)
+		private void HandleColumnRemoved(object sender, Epsitec.Common.Support.ValueEventArgs e)
 		{
 			DbColumn column = e.Value as DbColumn;
 			column.DefineTable (null);

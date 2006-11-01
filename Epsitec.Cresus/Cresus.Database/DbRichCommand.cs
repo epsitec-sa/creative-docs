@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Database
 		
 		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, DbTransaction transaction, Collections.DbTables tables)
 		{
-			return DbRichCommand.CreateFromTables (infrastructure, transaction, tables.Array);
+			return DbRichCommand.CreateFromTables (infrastructure, transaction, tables.ToArray ());
 		}
 		
 		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, DbTransaction transaction, params DbTable[] tables)
