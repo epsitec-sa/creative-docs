@@ -8,12 +8,11 @@ namespace Epsitec.Cresus.Database.Collections
 	/// <summary>
 	/// The <c>Collections.NameList</c> encapsulates a list of named items.
 	/// </summary>
-	public class NameList<T> : GenericList<T> where T : class, IName
+	public class NameList<T> : GenericList<T> where T : IName
 	{
 		public NameList()
 		{
 		}
-
 
 		public override int IndexOf(string name, int start)
 		{
