@@ -123,6 +123,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.FieldsInput();
 			this.UpdateArray();
 			this.UpdateButtons();
+			this.UpdateEdit();
 			this.ignoreChange = false;
 		}
 
@@ -187,6 +188,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		protected void UpdateEdit()
+		{
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				this.fieldName.Text = "";
+			}
+			else
+			{
+				StructuredTypeField field = this.fields[sel];
+				this.fieldName.Text = field.Id;
+			}
+		}
+
+
 		protected void ArrayAdd()
 		{
 			//	Ajoute une nouvelle valeur dans la structure.
@@ -197,9 +213,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.FieldsOutput();
 			this.UpdateArray();
-			this.UpdateButtons();
+
 			this.array.SelectedRow = sel+1;
 			this.array.ShowSelectedRow();
+
+			this.UpdateButtons();
+			this.UpdateEdit();
 			this.OnContentChanged();
 		}
 
@@ -214,9 +233,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.fields.RemoveAt(sel);
 
+			if (sel > this.fields.Count-1)
+			{
+				sel = this.fields.Count-1;
+			}
+
 			this.FieldsOutput();
 			this.UpdateArray();
+
+			this.array.SelectedRow = sel;
+			this.array.ShowSelectedRow();
+
 			this.UpdateButtons();
+			this.UpdateEdit();
 			this.OnContentChanged();
 		}
 
@@ -235,9 +264,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.FieldsOutput();
 			this.UpdateArray();
-			this.UpdateButtons();
+
 			this.array.SelectedRow = sel+direction;
 			this.array.ShowSelectedRow();
+
+			this.UpdateButtons();
+			this.UpdateEdit();
 			this.OnContentChanged();
 		}
 
@@ -252,10 +284,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected string GetNewName()
 		{
+			//	Cherche un nouveau nom jamais utilisé.
 			for (int i=1; i<10000; i++)
 			{
 				string name = string.Format("Rubrique{0}", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
-				if (!this.IsExistingName(name))
+				if (!this.IsExistingName(name, -1))
 				{
 					return name;
 				}
@@ -263,11 +296,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return null;
 		}
 
-		protected bool IsExistingName(string name)
+		protected bool IsExistingName(string name, int exclude)
 		{
-			foreach (StructuredTypeField field in this.fields)
+			//	Indique si un nom existe.
+			for (int i=0; i<this.fields.Count; i++)
 			{
-				if (name == field.Id)
+				StructuredTypeField field = this.fields[i];
+
+				if (i != exclude && name == field.Id)
 				{
 					return true;
 				}
@@ -298,6 +334,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void FieldsOutput()
 		{
+			//	Le dictionnaire des rubriques (StructuredTypeField) est régénéré à partir
+			//	de la liste interne (this.fields). 
 			StructuredType type = this.AbstractType as StructuredType;
 			type.Fields.Clear();
 
@@ -378,6 +416,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	La ligne sélectionnée a changé.
 			this.UpdateButtons();
+			this.UpdateEdit();
 		}
 
 		private void HandleTextChanged(object sender)
@@ -387,6 +426,46 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				return;
 			}
+
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			StructuredTypeField actualfield = this.fields[sel];
+			string name = this.fieldName.Text;
+
+			if (!Misc.IsValidLabel(ref name))
+			{
+				this.mainWindow.DialogError(Res.Strings.Error.Name.Invalid);
+
+				this.ignoreChange = true;
+				this.fieldName.Text = actualfield.Id;
+				this.fieldName.SelectAll();
+				this.ignoreChange = false;
+
+				return;
+			}
+
+			if (this.IsExistingName(name, sel))
+			{
+				this.mainWindow.DialogError("Ce nom de rubrique existe déjà !");
+
+				this.ignoreChange = true;
+				this.fieldName.Text = actualfield.Id;
+				this.fieldName.SelectAll();
+				this.ignoreChange = false;
+
+				return;
+			}
+
+			StructuredTypeField newField = new StructuredTypeField(name, StringType.Default);
+			this.fields[sel] = newField;
+
+			this.FieldsOutput();
+			this.UpdateArray();
+			this.OnContentChanged();
 		}
 
 		private void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
