@@ -6,7 +6,7 @@ namespace Epsitec.Cresus.Database.Collections
 	/// <summary>
 	/// La classe Collections.DbTables encapsule une collection d'instances de type DbTable.
 	/// </summary>
-	public class DbTables : AbstractNameList<DbTable>
+	public class DbTables : NameList<DbTable>
 	{
 		public DbTables()
 		{

@@ -6,7 +6,7 @@ namespace Epsitec.Cresus.Database.Collections
 	/// <summary>
 	/// La classe Collections.DbTypes encapsule une collection d'instances de type DbType.
 	/// </summary>
-	public class DbTypes : AbstractNameList<DbType>
+	public class DbTypes : NameList<DbType>
 	{
 		public DbTypes()
 		{

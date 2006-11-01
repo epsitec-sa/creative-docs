@@ -1,14 +1,14 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Collections
 {
 	/// <summary>
-	/// La classe Collection.SqlColumns encapsule une collection d'instances de type SqlColumn.
+	/// The <c>Collections.AbstractNameList</c> encapsulates a list of named items.
 	/// </summary>
-	public class AbstractNameList<T> : AbstractList<T> where T : class, Epsitec.Common.Types.IName
+	public class NameList<T> : AbstractList<T> where T : class, Epsitec.Common.Types.IName
 	{
-		public AbstractNameList()
+		public NameList()
 		{
 		}
 
