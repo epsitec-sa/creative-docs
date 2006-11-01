@@ -44,6 +44,14 @@ namespace Epsitec.Cresus.Database
 		{
 			get { return this.length; }
 		}
+
+		bool Epsitec.Common.Types.IStringType.UseFixedLengthStorage
+		{
+			get
+			{
+				return this.IsFixedLength;
+			}
+		}
 		
 		public bool								IsFixedLength
 		{
