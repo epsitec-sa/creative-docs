@@ -683,8 +683,10 @@ namespace Epsitec.Common.Designer
 					
 					public static class String
 					{
+						public static string FixedLength { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (257)); } }
 						public static string Max { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (228)); } }
 						public static string Min { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (227)); } }
+						public static string Multilingual { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (258)); } }
 					}
 					
 					public static class Structured

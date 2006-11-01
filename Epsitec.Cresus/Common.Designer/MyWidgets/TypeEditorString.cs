@@ -25,13 +25,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldMax.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			this.checkFixedLength = new CheckButton(this);
-			this.checkFixedLength.Text = "Longueur fixe dans la base de données";
+			this.checkFixedLength.Text = Res.Strings.Viewers.Types.String.FixedLength;
 			this.checkFixedLength.Dock = DockStyle.StackBegin;
 			this.checkFixedLength.Margins = new Margins(0, 0, 0, 3);
 			this.checkFixedLength.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 
 			this.checkMultilingual = new CheckButton(this);
-			this.checkMultilingual.Text = "Le texte existe en plusieurs langues";
+			this.checkMultilingual.Text = Res.Strings.Viewers.Types.String.Multilingual;
 			this.checkMultilingual.Dock = DockStyle.StackBegin;
 			this.checkMultilingual.Margins = new Margins(0, 0, 0, 0);
 			this.checkMultilingual.Clicked += new MessageEventHandler(this.HandleCheckClicked);
