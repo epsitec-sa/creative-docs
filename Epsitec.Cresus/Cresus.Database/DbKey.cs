@@ -1,13 +1,13 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe DbKey stocke une clef de la base de données. Cette
-	/// clef comporte en tout cas un identificateur (ID).
+	/// The <c>DbKey</c> class represents a key which can be used by the database
+	/// engine to index its data. The key has at least one identifier.
 	/// </summary>
-	public class DbKey : System.ICloneable, System.IComparable
+	public sealed class DbKey : System.ICloneable, System.IComparable
 	{
 		public DbKey()
 		{
@@ -176,12 +176,12 @@ namespace Epsitec.Cresus.Database
 		}
 		#endregion
 		
-		protected virtual object CloneNewObject()
+		private object CloneNewObject()
 		{
 			return new DbKey ();
 		}
 		
-		protected virtual object CloneCopyToNewObject(object o)
+		private object CloneCopyToNewObject(object o)
 		{
 			DbKey that = o as DbKey;
 			
@@ -233,10 +233,10 @@ namespace Epsitec.Cresus.Database
 		}
 		#endregion
 		
-		protected void SerializeXmlAttributes(System.Text.StringBuilder buffer)
+		private void SerializeXmlAttributes(System.Text.StringBuilder buffer)
 		{
 			buffer.Append (@" key.id=""");
-			buffer.Append (this.id.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			buffer.Append (this.id.ToString ());
 			buffer.Append (@"""");
 			
 			if (this.int_status != 0)
@@ -253,8 +253,8 @@ namespace Epsitec.Cresus.Database
 		
 		private static object					temp_lock	= new object ();
 		private static long						temp_id		= 0;
-		
-		protected DbId							id;
-		protected short							int_status;
+
+		private DbId id;
+		private short int_status;
 	}
 }

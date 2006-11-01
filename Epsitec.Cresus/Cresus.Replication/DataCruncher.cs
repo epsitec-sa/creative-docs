@@ -51,8 +51,8 @@ namespace Epsitec.Cresus.Replication
 			long sync_id_min = sync_start_id.Value;
 			long sync_id_max = sync_end_id.Value;
 			
-			System.Diagnostics.Debug.Assert (DbId.AnalyzeClass (sync_id_min) == DbIdClass.Standard);
-			System.Diagnostics.Debug.Assert (DbId.AnalyzeClass (sync_id_max) == DbIdClass.Standard);
+			System.Diagnostics.Debug.Assert (DbId.GetClass (sync_id_min) == DbIdClass.Standard);
+			System.Diagnostics.Debug.Assert (DbId.GetClass (sync_id_max) == DbIdClass.Standard);
 			
 			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.TypeConverter);
 			
