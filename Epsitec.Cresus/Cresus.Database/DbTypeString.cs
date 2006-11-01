@@ -49,7 +49,17 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
+				//	TODO: fix this
 				return this.IsFixedLength;
+			}
+		}
+
+		bool Epsitec.Common.Types.IStringType.UseMultilingualStorage
+		{
+			get
+			{
+				//	TODO: fix this
+				return false;
 			}
 		}
 		
