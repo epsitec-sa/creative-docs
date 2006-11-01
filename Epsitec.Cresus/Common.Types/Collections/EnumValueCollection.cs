@@ -6,11 +6,19 @@ namespace Epsitec.Common.Types.Collections
 	/// <summary>
 	/// The <c>EnumValueCollection</c> represents a collection of <see cref="EnumValue"/> items.
 	/// </summary>
-	public class EnumValueCollection : HostedList<EnumValue>
+	public class EnumValueCollection : HostedList<EnumValue>, IReadOnlyLock
 	{
 		public EnumValueCollection()
 			: base (null)
 		{
+		}
+
+		public override bool IsReadOnly
+		{
+			get
+			{
+				return this.isReadOnly;
+			}
 		}
 
 		/// <summary>
@@ -26,6 +34,32 @@ namespace Epsitec.Common.Types.Collections
 		{
 			this.isReadOnly = false;
 		}
+
+		#region IReadOnlyLock Members
+
+		void IReadOnlyLock.Lock()
+		{
+			this.Lock ();
+		}
+
+		void IReadOnlyLock.Unlock()
+		{
+			this.Unlock ();
+		}
+
+		#endregion
+
+		#region IReadOnly Members
+
+		bool IReadOnly.IsReadOnly
+		{
+			get
+			{
+				return this.IsReadOnly;
+			}
+		}
+
+		#endregion
 		
 		protected override void NotifyBeforeChange()
 		{

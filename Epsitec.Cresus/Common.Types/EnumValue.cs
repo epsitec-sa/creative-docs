@@ -10,7 +10,7 @@ namespace Epsitec.Common.Types
 	/// See also <see cref="T:EnumType"/>.
 	/// </summary>
 	[Types.SerializationConverter (typeof (EnumValue.SerializationConverter))]
-	public class EnumValue : IEnumValue
+	public sealed class EnumValue : IEnumValue, System.ICloneable
 	{
 		public EnumValue()
 		{
@@ -211,6 +211,26 @@ namespace Epsitec.Common.Types
 		
 		#endregion
 
+		#region ICloneable Members
+
+		public object Clone()
+		{
+			EnumValue copy = new EnumValue ();
+
+			copy.name = this.name;
+			copy.isReadOnly = this.isReadOnly;
+			copy.isHidden = this.isHidden;
+			copy.isNative = this.isNative;
+			copy.captionId = this.captionId;
+			copy.caption = this.caption;
+			copy.value = this.value;
+			copy.rank = this.rank;
+			
+			return copy;
+		}
+
+		#endregion
+
 		#region SerializationConverter Class
 
 		public class SerializationConverter : Types.ISerializationConverter, Types.ISerializationConverterFilter
@@ -362,7 +382,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		protected virtual void OnCaptionDefined()
+		private void OnCaptionDefined()
 		{
 			if ((this.isNative) &&
 				(this.caption != null))

@@ -134,7 +134,7 @@ namespace Epsitec.Common.Types.Collections
 			}
 		}
 
-		public bool IsReadOnly
+		public virtual bool IsReadOnly
 		{
 			get
 			{
