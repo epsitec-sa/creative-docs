@@ -13,6 +13,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public TypeEditorEnum()
 		{
+			//	Crée la toolbar.
 			this.toolbar = new HToolBar(this);
 			this.toolbar.Dock = DockStyle.StackBegin;
 
@@ -73,12 +74,38 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.slider.Value = (decimal) TypeEditorEnum.arrayLineHeight;
 			this.slider.Dock = DockStyle.Right;
 
+			//	Crée l'en-tête du tableau.
+			this.header = new Widget(this);
+			this.header.Dock = DockStyle.StackBegin;
+			this.header.Margins = new Margins(0, 0, 4, 0);
+
+			this.headerUse = new HeaderButton(this.header);
+			this.headerUse.Text = "";
+			this.headerUse.Style = HeaderButtonStyle.Top;
+			this.headerUse.Dock = DockStyle.Left;
+
+			this.headerName = new HeaderButton(this.header);
+			this.headerName.Text = "Nom";
+			this.headerName.Style = HeaderButtonStyle.Top;
+			this.headerName.Dock = DockStyle.Left;
+
+			this.headerDescription = new HeaderButton(this.header);
+			this.headerDescription.Text = "Textes et description";
+			this.headerDescription.Style = HeaderButtonStyle.Top;
+			this.headerDescription.Dock = DockStyle.Left;
+
+			this.headerIcon = new HeaderButton(this.header);
+			this.headerIcon.Text = "Icône";
+			this.headerIcon.Style = HeaderButtonStyle.Top;
+			this.headerIcon.Dock = DockStyle.Left;
+
+			//	Crée le tableau principal.
 			this.array = new StringArray(this);
 			this.array.Columns = 4;
 			this.array.SetColumnsRelativeWidth(0, 0.05);
 			this.array.SetColumnsRelativeWidth(1, 0.45);
-			this.array.SetColumnsRelativeWidth(2, 0.45);
-			this.array.SetColumnsRelativeWidth(3, 0.05);
+			this.array.SetColumnsRelativeWidth(2, 0.43);
+			this.array.SetColumnsRelativeWidth(3, 0.07);
 			this.array.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
 			this.array.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(2, ContentAlignment.MiddleLeft);
@@ -87,6 +114,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.LineHeight = TypeEditorEnum.arrayLineHeight;
 			this.array.Dock = DockStyle.StackBegin;
 			this.array.PreferredHeight = 360;
+			this.array.ColumnsWidthChanged += new EventHandler(this.HandleArrayColumnsWidthChanged);
 			this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
 			this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
@@ -110,6 +138,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.slider.ValueChanged -= new EventHandler(this.HandleSliderChanged);
 
+				this.array.ColumnsWidthChanged -= new EventHandler(this.HandleArrayColumnsWidthChanged);
 				this.array.CellCountChanged -= new EventHandler(this.HandleArrayCellCountChanged);
 				this.array.CellsContentChanged -= new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
@@ -460,6 +489,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		protected override void UpdateClientGeometry()
+		{
+			//	Met à jour la géométrie.
+			base.UpdateClientGeometry();
+
+			if (this.header == null)
+			{
+				return;
+			}
+
+			double w1 = this.array.GetColumnsAbsoluteWidth(0);
+			double w2 = this.array.GetColumnsAbsoluteWidth(1);
+			double w3 = this.array.GetColumnsAbsoluteWidth(2);
+			double w4 = this.array.GetColumnsAbsoluteWidth(3);
+
+			this.headerUse.PreferredWidth = w1;
+			this.headerName.PreferredWidth = w2;
+			this.headerDescription.PreferredWidth = w3;
+			this.headerIcon.PreferredWidth = w4+1;
+		}
+
+		
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
 			if (sender == this.buttonAdd)
@@ -515,6 +566,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.LineHeight = TypeEditorEnum.arrayLineHeight;
 		}
 
+		private void HandleArrayColumnsWidthChanged(object sender)
+		{
+			//	La largeur des colonnes a changé.
+			this.UpdateClientGeometry();
+		}
+
 		private void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
@@ -559,7 +616,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButton					buttonSearchPrev;
 		protected IconButton					buttonSearchNext;
 		protected HSlider						slider;
+
+		protected Widget						header;
+		protected HeaderButton					headerUse;
+		protected HeaderButton					headerName;
+		protected HeaderButton					headerDescription;
+		protected HeaderButton					headerIcon;
 		protected MyWidgets.StringArray			array;
+
 		protected List<Druid>					allDruids;
 		protected List<Druid>					selDruids;
 		protected List<Druid>					listDruids;

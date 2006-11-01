@@ -62,19 +62,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.headerName.Text = "Nom";
 			this.headerName.Style = HeaderButtonStyle.Top;
 			this.headerName.Dock = DockStyle.Left;
-			this.headerName.Margins = new Margins(0, 0, 0, 0);
 
 			this.headerType = new HeaderButton(this.header);
 			this.headerType.Text = "Type";
 			this.headerType.Style = HeaderButtonStyle.Top;
 			this.headerType.Dock = DockStyle.Left;
-			this.headerType.Margins = new Margins(0, 0, 0, 0);
 
 			this.headerCaption = new HeaderButton(this.header);
 			this.headerCaption.Text = "Légende";
 			this.headerCaption.Style = HeaderButtonStyle.Top;
 			this.headerCaption.Dock = DockStyle.Left;
-			this.headerCaption.Margins = new Margins(0, 0, 0, 0);
 
 			//	Crée le tableau principal.
 			this.array = new StringArray(this);
@@ -89,6 +86,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.SetColumnAlignment(2, ContentAlignment.MiddleCenter);
 			this.array.SetColumnAlignment(3, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(4, ContentAlignment.MiddleCenter);
+			this.array.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
+			this.array.SetColumnBreakMode(1, TextBreakMode.Ellipsis | TextBreakMode.Split);
+			this.array.SetColumnBreakMode(3, TextBreakMode.Ellipsis | TextBreakMode.Split);
 			this.array.LineHeight = TypeEditorStructured.arrayLineHeight;
 			this.array.Dock = DockStyle.StackBegin;
 			this.array.PreferredHeight = 200;
