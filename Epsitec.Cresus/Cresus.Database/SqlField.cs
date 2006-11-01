@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Database
 	/// La représentation dans SqlField est indépendante de tout dialecte SQL. C'est
 	/// ISqlBuilder qui sait convertir un SqlField en sa représentation SQL.
 	/// </summary>
-	public class SqlField : Epsitec.Common.Types.IName
+	public sealed class SqlField : Epsitec.Common.Types.IName
 	{
 		internal SqlField()
 		{
@@ -289,6 +289,19 @@ namespace Epsitec.Cresus.Database
 			
 			return true;
 		}
+
+		public SqlField Clone()
+		{
+			SqlField copy = new SqlField ();
+			
+			copy.type = this.type;
+			copy.order = this.order;
+			copy.raw_type = this.raw_type;
+			copy.value = this.value;
+			copy.alias = this.alias;
+			
+			return copy;
+		}
 		
 		
 		public void SetParameterOutResult(object raw_value)
@@ -505,44 +518,10 @@ namespace Epsitec.Cresus.Database
 
 		
 		
-		protected SqlFieldType					type		= SqlFieldType.Unsupported;
-		protected SqlFieldOrder					order		= SqlFieldOrder.None;
-		protected DbRawType						raw_type	= DbRawType.Unknown;
-		protected object						value;
-		protected string						alias;
-	}
-	
-	
-	public enum SqlFieldType
-	{
-		Unsupported,							//	champ non supporté (ou non défini)
-										
-		Null,									//	constante NULL
-		All,									//	constante spéciale pour aggrégats: *
-		Default,								//	constante spéciale pour INSERT INTO...
-		Constant,								//	constante (donnée compatible DbRawType)
-										
-		ParameterIn = Constant,					//	paramètre en entrée = comme constante
-		ParameterOut,							//	paramètre en sortie
-		ParameterInOut,							//	paramètre en entrée et en sortie
-		ParameterResult,						//	paramètre en sortie (résultat de procédure)
-										
-		Name,									//	nom simple (nom de colonne, nom de table, nom de type, ...)
-		QualifiedName,							//	nom qualifié (nom de table + nom de colonne)
-										
-		Aggregate,						
-		Variable,								//	variable SQL (?)
-		Function,								//	fonction SQL (?)
-		Procedure,								//	procédure SQL (?)
-										
-		SubQuery,								//	sous-requête
-		Join									//	jointure
-	}									
-										
-	public enum SqlFieldOrder			
-	{									
-		None,									//	pas de tri sur ce champ
-		Normal,									//	tri normal (ASC)
-		Inverse									//	tri inverse (DESC)
+		private SqlFieldType					type		= SqlFieldType.Unsupported;
+		private SqlFieldOrder order		= SqlFieldOrder.None;
+		private DbRawType raw_type	= DbRawType.Unknown;
+		private object value;
+		private string alias;
 	}
 }

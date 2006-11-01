@@ -10,10 +10,20 @@ namespace Epsitec.Cresus.Database.Collections
 	/// </summary>
 	public class NameList<T> : GenericList<T> where T : IName
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="NameList&lt;T&gt;"/> class.
+		/// </summary>
 		public NameList()
 		{
 		}
 
+		/// <summary>
+		/// Returns the index of the first item with the specified name, starting at
+		/// the specified start index.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="start">The start index.</param>
+		/// <returns>The index of the item or <c>-1</c>.</returns>
 		public override int IndexOf(string name, int start)
 		{
 			if (start >= 0)
