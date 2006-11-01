@@ -153,6 +153,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 					StructuredTypeField field = this.fields[first+i];
 					string name = field.Id;
 
+					string captionText = "";
+					string iconText = "";
+					Druid druid = field.CaptionId;
+					if (druid.IsValid)
+					{
+						Caption caption = this.module.ResourceManager.GetCaption(druid);
+
+						string dn = this.resourceAccess.DirectGetDisplayName(druid);
+						string nd = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
+
+						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
+						{
+							captionText = string.Concat(dn, ":<br/>", nd);
+						}
+						else
+						{
+							captionText = string.Concat(dn, ": ", nd);
+						}
+
+						if (!string.IsNullOrEmpty(caption.Icon))
+						{
+							iconText = Misc.ImageFull(caption.Icon);
+						}
+					}
+
 					this.array.SetLineString(0, first+i, name);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 
@@ -162,10 +187,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.array.SetLineString(2, first+i, "");
 					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(3, first+i, "");
+					this.array.SetLineString(3, first+i, captionText);
 					this.array.SetLineState(3, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(4, first+i, "");
+					this.array.SetLineString(4, first+i, iconText);
 					this.array.SetLineState(4, first+i, MyWidgets.StringList.CellState.Normal);
 				}
 				else
@@ -219,6 +244,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.UpdateButtons();
 			this.UpdateEdit();
+
+			this.fieldName.SelectAll();
+			this.fieldName.Focus();
+			
 			this.OnContentChanged();
 		}
 
@@ -279,6 +308,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void ChangeCaption()
 		{
+			//	Choix du caption.
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			StructuredTypeField actualField = this.fields[sel];
+			Druid druid = actualField.CaptionId;
+
+			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Captions, druid, null);
+			if (druid.IsEmpty)
+			{
+				return;
+			}
+
+			StructuredTypeField newField = new StructuredTypeField(actualField.Id, actualField.Type, druid, actualField.Rank);
+			this.fields[sel] = newField;
+
+			this.FieldsOutput();
+			this.UpdateArray();
+			this.OnContentChanged();
 		}
 
 
@@ -339,9 +390,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			StructuredType type = this.AbstractType as StructuredType;
 			type.Fields.Clear();
 
-			foreach (StructuredTypeField field in this.fields)
+			for (int i=0; i<this.fields.Count; i++)
 			{
-				type.Fields.Add(field);
+				StructuredTypeField actualField = this.fields[i];
+				StructuredTypeField newField = new StructuredTypeField(actualField.Id, actualField.Type, actualField.CaptionId, i);
+
+				type.Fields.Add(newField);
 			}
 		}
 
@@ -417,6 +471,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	La ligne sélectionnée a changé.
 			this.UpdateButtons();
 			this.UpdateEdit();
+
+			if (this.array.SelectedColumn == 0)
+			{
+				this.fieldName.SelectAll();
+				this.fieldName.Focus();
+			}
 		}
 
 		private void HandleTextChanged(object sender)
@@ -450,7 +510,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.IsExistingName(name, sel))
 			{
-				this.mainWindow.DialogError("Ce nom de rubrique existe déjà !");
+				this.mainWindow.DialogError(Res.Strings.Error.Name.AlreadyExist);
 
 				this.ignoreChange = true;
 				this.fieldName.Text = actualfield.Id;
@@ -466,6 +526,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.FieldsOutput();
 			this.UpdateArray();
 			this.OnContentChanged();
+
+			this.ignoreChange = true;
+			this.fieldName.Text = name;
+			this.fieldName.SelectAll();
+			this.ignoreChange = false;
 		}
 
 		private void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
