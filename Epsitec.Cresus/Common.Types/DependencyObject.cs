@@ -945,7 +945,7 @@ namespace Epsitec.Common.Types
 
 					//	In case we unlocked the collection, relock it.
 
-					if (readOnlyLock)
+					if (readOnlyLock != null)
 					{
 						readOnlyLock.Lock ();
 					}
