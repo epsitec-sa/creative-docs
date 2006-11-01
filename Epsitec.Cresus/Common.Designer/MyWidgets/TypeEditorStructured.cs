@@ -53,6 +53,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.slider.Value = (decimal) TypeEditorStructured.arrayLineHeight;
 			this.slider.Dock = DockStyle.Right;
 
+			//	Crée l'en-tête du tableau.
+			this.header = new Widget(this);
+			this.header.Dock = DockStyle.StackBegin;
+			this.header.Margins = new Margins(0, 0, 4, -1);
+
+			this.headerName = new Button(this.header);
+			this.headerName.Text = "Nom";
+			this.headerName.ButtonStyle = ButtonStyle.Icon;
+			this.headerName.Dock = DockStyle.Left;
+			this.headerName.Margins = new Margins(1, 0, 0, 0);
+
+			this.headerType = new Button(this.header);
+			this.headerType.Text = "Type";
+			this.headerType.ButtonStyle = ButtonStyle.Icon;
+			this.headerType.Dock = DockStyle.Left;
+			this.headerType.Margins = new Margins(1, 0, 0, 0);
+
+			this.headerCaption = new Button(this.header);
+			this.headerCaption.Text = "Légende";
+			this.headerCaption.ButtonStyle = ButtonStyle.Icon;
+			this.headerCaption.Dock = DockStyle.Left;
+			this.headerCaption.Margins = new Margins(1, 0, 0, 0);
+
 			//	Crée le tableau principal.
 			this.array = new StringArray(this);
 			this.array.Columns = 5;
@@ -79,7 +102,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.footer.Margins = new Margins(0, 0, 5, 0);
 
 			this.fieldName = new TextFieldEx(this.footer);
-			this.fieldName.Margins = new Margins(1, 1, 0, 0);
+			this.fieldName.Margins = new Margins(1, 0, 0, 0);
 			this.fieldName.Dock = DockStyle.Left;
 			this.fieldName.ButtonShowCondition = ShowCondition.WhenModified;
 			this.fieldName.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
@@ -88,13 +111,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.buttonType = new Button(this.footer);
 			this.buttonType.Text = "Changer le type";
-			this.buttonType.Margins = new Margins(1, 1, 0, 0);
+			this.buttonType.Margins = new Margins(1, 0, 0, 0);
 			this.buttonType.Dock = DockStyle.Left;
 			this.buttonType.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonCaption = new Button(this.footer);
 			this.buttonCaption.Text = "Changer la légende";
-			this.buttonCaption.Margins = new Margins(1, 1, 0, 0);
+			this.buttonCaption.Margins = new Margins(1, 0, 0, 0);
 			this.buttonCaption.Dock = DockStyle.Left;
 			this.buttonCaption.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 		}
@@ -476,9 +499,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			double w2 = this.array.GetColumnsAbsoluteWidth(1) + this.array.GetColumnsAbsoluteWidth(2);
 			double w3 = this.array.GetColumnsAbsoluteWidth(3) + this.array.GetColumnsAbsoluteWidth(4);
 
+			this.headerName.PreferredWidth = w1-1;
+			this.headerType.PreferredWidth = w2-1;
+			this.headerCaption.PreferredWidth = w3+1;
+
 			this.fieldName.PreferredWidth = w1-1;
 			this.buttonType.PreferredWidth = w2-1;
-			this.buttonCaption.PreferredWidth = w3-1;
+			this.buttonCaption.PreferredWidth = w3+1;
 		}
 
 
@@ -625,6 +652,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButton					buttonRemove;
 		protected HSlider						slider;
 
+		protected Widget						header;
+		protected Button						headerName;
+		protected Button						headerType;
+		protected Button						headerCaption;
 		protected MyWidgets.StringArray			array;
 
 		protected Widget						footer;
