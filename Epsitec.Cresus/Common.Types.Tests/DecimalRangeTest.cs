@@ -105,6 +105,11 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (0.0M,   range2.Constrain (0.0M));
 			Assert.AreEqual (0.00M,  range3.Constrain (0.0M));
 			Assert.AreEqual (0M,     range4.Constrain (0.0M));
+
+			Assert.AreEqual (0, range1.FractionalDigits);
+			Assert.AreEqual (1, range2.FractionalDigits);
+			Assert.AreEqual (2, range3.FractionalDigits);
+			Assert.AreEqual (0, range4.FractionalDigits);
 		}
 		
 		[Test] public void CheckConvertToString()

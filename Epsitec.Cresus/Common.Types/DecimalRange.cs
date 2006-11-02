@@ -54,6 +54,14 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public int								FractionalDigits
+		{
+			get
+			{
+				return this.fracDigits;
+			}
+		}
+
 		public bool								IsValid
 		{
 			get
@@ -308,8 +316,8 @@ namespace Epsitec.Common.Types
 
 			//	Pour une résolution de 0.05, par exemple, on va déterminer les facteurs
 			//	multiplicatifs pour créer les 2 décimales après la virgule au moyen d'une
-			//	suite d'opérations: multiplier par le, facteur 'digits_mul', tronquer et
-			//	multiplier par le facteur 'digits_div'.
+			//	suite d'opérations: multiplier par le, facteur 'digitsMul' tronquer et
+			//	multiplier par le facteur 'digitsDiv'.
 			//
 			//	Ceci est utile, car le nombre decimal 1M n'est pas représenté de la même
 			//	manière que les nombres 1.0M ou 1.00M, quand ils sont convertis en string.
