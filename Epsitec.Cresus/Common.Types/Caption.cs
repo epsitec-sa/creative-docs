@@ -457,6 +457,7 @@ namespace Epsitec.Common.Types
 			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.AbstractType""", @"s:name=""*aT""");
 			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.EnumType""", @"s:name=""*eT""");
 			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.AbstractNumericType""", @"s:name=""*aNT""");
+			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.AbstractDateTimeType""", @"s:name=""*aDTT""");
 			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.Caption""", @"s:name=""*C""");
 			xml = xml.Replace (@"s:name=""Epsitec.Common.Types.StructuredType""", @"s:name=""*S""");
 			xml = xml.Replace (@"xmlns:s=""http://www.epsitec.ch/XNS/storage-structure-1""", @"xmlns:s=""*1""");
@@ -473,6 +474,7 @@ namespace Epsitec.Common.Types
 			xml = xml.Replace (@"s:name=""*aT""", @"s:name=""Epsitec.Common.Types.AbstractType""");
 			xml = xml.Replace (@"s:name=""*eT""", @"s:name=""Epsitec.Common.Types.EnumType""");
 			xml = xml.Replace (@"s:name=""*aNT""", @"s:name=""Epsitec.Common.Types.AbstractNumericType""");
+			xml = xml.Replace (@"s:name=""*aDTT""", @"s:name=""Epsitec.Common.Types.AbstractDateTimeType""");
 			xml = xml.Replace (@"s:name=""*C""", @"s:name=""Epsitec.Common.Types.Caption""");
 			xml = xml.Replace (@"s:name=""*S""", @"s:name=""Epsitec.Common.Types.StructuredType""");
 			xml = xml.Replace (@"xmlns:s=""*1""", @"xmlns:s=""http://www.epsitec.ch/XNS/storage-structure-1""");

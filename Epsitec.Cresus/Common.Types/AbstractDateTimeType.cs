@@ -57,6 +57,22 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public System.TimeSpan TimeStep
+		{
+			get
+			{
+				return (System.TimeSpan) this.Caption.GetValue (AbstractDateTimeType.TimeStepProperty);
+			}
+		}
+
+		public System.TimeSpan DateStep
+		{
+			get
+			{
+				return (System.TimeSpan) this.Caption.GetValue (AbstractDateTimeType.DateStepProperty);
+			}
+		}
+
 		public void DefineResolution(TimeResolution resolution)
 		{
 			if (resolution == TimeResolution.Default)
@@ -117,6 +133,30 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public void DefineTimeStep(System.TimeSpan value)
+		{
+			if (value.TotalSeconds == 1.0)
+			{
+				this.Caption.ClearValue (AbstractDateTimeType.TimeStepProperty);
+			}
+			else
+			{
+				this.Caption.SetValue (AbstractDateTimeType.TimeStepProperty, value);
+			}
+		}
+
+		public void DefineDateStep(System.TimeSpan value)
+		{
+			if (value.TotalDays == 1.0)
+			{
+				this.Caption.ClearValue (AbstractDateTimeType.DateStepProperty);
+			}
+			else
+			{
+				this.Caption.SetValue (AbstractDateTimeType.DateStepProperty, value);
+			}
+		}
+		
 		public sealed override bool IsValidValue(object value)
 		{
 			if (this.IsNullValue (value))
@@ -139,5 +179,8 @@ namespace Epsitec.Common.Types
 		public static readonly DependencyProperty MaximumDateProperty = DependencyProperty.RegisterAttached ("MaxDate", typeof (Date), typeof (AbstractDateTimeType), new DependencyPropertyMetadata (Date.Null));
 		public static readonly DependencyProperty MinimumTimeProperty = DependencyProperty.RegisterAttached ("MinTime", typeof (Time), typeof (AbstractDateTimeType), new DependencyPropertyMetadata (Time.Null));
 		public static readonly DependencyProperty MaximumTimeProperty = DependencyProperty.RegisterAttached ("MaxTime", typeof (Time), typeof (AbstractDateTimeType), new DependencyPropertyMetadata (Time.Null));
+		
+		public static readonly DependencyProperty TimeStepProperty = DependencyProperty.RegisterAttached ("TimeStep", typeof (System.TimeSpan), typeof (AbstractDateTimeType), new DependencyPropertyMetadata (new System.TimeSpan (0, 0, 1)));
+		public static readonly DependencyProperty DateStepProperty = DependencyProperty.RegisterAttached ("DateStep", typeof (System.TimeSpan), typeof (AbstractDateTimeType), new DependencyPropertyMetadata (new System.TimeSpan (1, 0, 0, 0)));
 	}
 }

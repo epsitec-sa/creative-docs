@@ -456,8 +456,12 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (type.IsValidValue (new System.DateTime (1999, 12, 31, 8, 30, 17)));
 
 			type.DefineResolution (TimeResolution.Minutes);
+			type.DefineTimeStep (new System.TimeSpan (0, 0, 30));
+			type.DefineDateStep (new System.TimeSpan (7, 0, 0, 0));
 
 			string xml = type.Caption.SerializeToString ();
+
+			System.Console.Out.WriteLine (xml);
 
 			Caption caption = new Caption ();
 			caption.DeserializeFromString (xml);
