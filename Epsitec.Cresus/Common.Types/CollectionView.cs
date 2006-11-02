@@ -771,103 +771,115 @@ namespace Epsitec.Common.Types
 			if ((this.dirtyGroups == false) &&
 				(this.dirtySortedList == false))
 			{
-				return;
+				//	Nothing to do...
 			}
-
-			object currentItem     = this.currentItem;
-			int    currentPosition = this.currentPosition;
-			
-			bool isCurrentBeforeFirst = this.IsCurrentBeforeFirst;
-			bool isCurrentAfterLast   = this.IsCurrentAfterLast;
-
-			this.OnCurrentChanging (new CurrentChangingEventArgs ());
-			
-			//	Rebuild the filtered/sorted list :
-			
-			if (this.dirtySortedList)
+			else
 			{
-				if ((this.HasFilter) ||
-					(this.HasSortDescriptions))
+				object currentItem     = this.currentItem;
+				int    currentPosition = this.currentPosition;
+				
+				bool isCurrentBeforeFirst = this.IsCurrentBeforeFirst;
+				bool isCurrentAfterLast   = this.IsCurrentAfterLast;
+
+				this.OnCurrentChanging (new CurrentChangingEventArgs ());
+				
+				//	Rebuild the filtered/sorted list :
+				
+				if (this.dirtySortedList)
 				{
-					if (this.sortedList == null)
+					if ((this.HasFilter) ||
+						(this.HasSortDescriptions))
 					{
-						this.sortedList = new List<object> ();
+						if (this.sortedList == null)
+						{
+							this.sortedList = new List<object> ();
+						}
+						else
+						{
+							this.sortedList.Clear ();
+						}
+						
+						this.FilterItemsList ();
+						this.SortItemsList ();
+						
+						this.itemCount = this.sortedList.Count;
 					}
 					else
 					{
-						this.sortedList.Clear ();
+						this.sortedList = null;
+						this.itemCount  = this.sourceList == null ? 0 : this.sourceList.Count;
+					}
+
+					this.dirtySortedList = false;
+				}
+
+				//	Rebuild the groups :
+
+				if (this.dirtyGroups)
+				{
+					if (this.HasGroupDescriptions)
+					{
+						this.GroupItemsInList ();
+					}
+					else
+					{
+						this.rootGroup.ClearSubgroups ();
 					}
 					
-					this.FilterItemsList ();
-					this.SortItemsList ();
+					this.dirtyGroups = false;
+				}
+
+				//	Update the current item since the contents might have moved :
+
+				if ((this.IsEmpty) ||
+					(isCurrentBeforeFirst))
+				{
+					this.SetCurrentToPosition (-1);
+				}
+				else if (isCurrentAfterLast)
+				{
+					this.SetCurrentToPosition (System.Int32.MaxValue);
+				}
+				else if (currentItem != null)
+				{
+					int position = this.Items.IndexOf (currentItem);
 					
-					this.itemCount = this.sortedList.Count;
+					if (position < 0)
+					{
+						position = System.Math.Min (this.Count-1, currentPosition);
+					}
+
+					this.SetCurrentToPosition (position);
 				}
-				else
+
+				this.OnCurrentChanged ();
+
+				if (this.IsCurrentAfterLast != isCurrentAfterLast)
 				{
-					this.sortedList = null;
-					this.itemCount  = this.sourceList == null ? 0 : this.sourceList.Count;
+					this.OnPropertyChanged ("IsCurrentAfterLast");
 				}
-
-				this.dirtySortedList = false;
-			}
-
-			//	Rebuild the groups :
-
-			if (this.dirtyGroups)
-			{
-				if (this.HasGroupDescriptions)
+				if (this.IsCurrentBeforeFirst != isCurrentBeforeFirst)
 				{
-					this.GroupItemsInList ();
+					this.OnPropertyChanged ("IsCurrentBeforeFirst");
 				}
-				else
+				if (this.CurrentPosition != currentPosition)
 				{
-					this.rootGroup.ClearSubgroups ();
+					this.OnPropertyChanged ("CurrentPosition");
 				}
-				
-				this.dirtyGroups = false;
-			}
-
-			//	Update the current item since the contents might have moved :
-
-			if ((this.IsEmpty) ||
-				(isCurrentBeforeFirst))
-			{
-				this.SetCurrentToPosition (-1);
-			}
-			else if (isCurrentAfterLast)
-			{
-				this.SetCurrentToPosition (System.Int32.MaxValue);
-			}
-			else if (currentItem != null)
-			{
-				int position = this.Items.IndexOf (currentItem);
-				
-				if (position < 0)
+				if (this.CurrentItem != currentItem)
 				{
-					position = System.Math.Min (this.Count-1, currentPosition);
+					this.OnPropertyChanged ("CurrentItem");
 				}
-
-				this.SetCurrentToPosition (position);
 			}
 
-			this.OnCurrentChanged ();
+			this.OnCollectionChanged ();
+		}
 
-			if (this.IsCurrentAfterLast != isCurrentAfterLast)
+		private void OnCollectionChanged()
+		{
+			if (this.CollectionChanged != null)
 			{
-				this.OnPropertyChanged ("IsCurrentAfterLast");
-			}
-			if (this.IsCurrentBeforeFirst != isCurrentBeforeFirst)
-			{
-				this.OnPropertyChanged ("IsCurrentBeforeFirst");
-			}
-			if (this.CurrentPosition != currentPosition)
-			{
-				this.OnPropertyChanged ("CurrentPosition");
-			}
-			if (this.CurrentItem != currentItem)
-			{
-				this.OnPropertyChanged ("CurrentItem");
+				this.CollectionChanged (this, new CollectionChangedEventArgs (CollectionChangedAction.Reset));
 			}
 		}
 

@@ -115,6 +115,6 @@ namespace Epsitec.Common.Types
 		private GroupDescriptionList			groupDescriptions;
 		private object							source;
 		private System.Type						collectionViewType;
-		private ICollectionView					view;
+//		private ICollectionView					view;
 	}
 }
