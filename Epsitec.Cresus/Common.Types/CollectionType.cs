@@ -56,15 +56,9 @@ namespace Epsitec.Common.Types
 
 		public override bool IsValidValue(object value)
 		{
-			if ((this.IsNullable) &&
-				(this.IsNullValue (value)))
+			if (this.IsNullValue (value))
 			{
-				return true;
-			}
-
-			if (value == null)
-			{
-				return false;
+				return this.IsNullable;
 			}
 
 			System.Type     valueType  = value.GetType ();
