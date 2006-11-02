@@ -95,21 +95,31 @@ namespace Epsitec.Common.Types
 			DecimalRange range2 = new DecimalRange (0.0M, 100.0M, 0.1M);
 			DecimalRange range3 = new DecimalRange (0.0M, 100.0M, 0.01M);
 			DecimalRange range4 = new DecimalRange (0.0M, 100.0M, 10.0M);
+			DecimalRange range5 = new DecimalRange (0.090M, 0.099M, 0.002M);
 			
 			Assert.AreEqual (50M,    range1.Constrain (50.0M));
 			Assert.AreEqual (50.0M,  range2.Constrain (50.0M));
 			Assert.AreEqual (50.00M, range3.Constrain (50.0M));
 			Assert.AreEqual (50M,    range4.Constrain (50.0M));
+			Assert.AreEqual (0.094M, range5.ConstrainToZero (0.0959M));
 			
 			Assert.AreEqual (0M,     range1.Constrain (0.0M));
 			Assert.AreEqual (0.0M,   range2.Constrain (0.0M));
 			Assert.AreEqual (0.00M,  range3.Constrain (0.0M));
 			Assert.AreEqual (0M,     range4.Constrain (0.0M));
+			Assert.AreEqual (0.090M, range5.Constrain (0.0M));
 
 			Assert.AreEqual (0, range1.FractionalDigits);
 			Assert.AreEqual (1, range2.FractionalDigits);
 			Assert.AreEqual (2, range3.FractionalDigits);
 			Assert.AreEqual (0, range4.FractionalDigits);
+			Assert.AreEqual (3, range5.FractionalDigits);
+
+			Assert.AreEqual (3, range1.GetMaximumDigitCount ());
+			Assert.AreEqual (4, range2.GetMaximumDigitCount ());
+			Assert.AreEqual (5, range3.GetMaximumDigitCount ());
+			Assert.AreEqual (3, range4.GetMaximumDigitCount ());
+			Assert.AreEqual (1, range5.GetMaximumDigitCount ());
 		}
 		
 		[Test] public void CheckConvertToString()

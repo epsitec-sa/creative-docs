@@ -81,6 +81,20 @@ namespace Epsitec.Common.Types
 
 		public static readonly DecimalRange		Empty = new DecimalRange ();
 
+
+		public int GetMaximumDigitCount()
+		{
+			decimal value = (this.Maximum - this.Minimum) * this.digitsMul;
+			int     count = 0;
+
+			while (decimal.Truncate (value) > 0)
+			{
+				value /= 10M;
+				count++;
+			}
+
+			return count;
+		}
 		
 		public bool CheckInRange(decimal value)
 		{
