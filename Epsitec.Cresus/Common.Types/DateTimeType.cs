@@ -5,24 +5,42 @@
 
 namespace Epsitec.Common.Types
 {
+	/// <summary>
+	/// The <c>DateTimeType</c> class defines a <c>System.DateTime</c> based type.
+	/// </summary>
 	public sealed class DateTimeType : AbstractDateTimeType
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DateTimeType"/> class.
+		/// </summary>
 		public DateTimeType()
 			: this ("DateTime")
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DateTimeType"/> class.
+		/// </summary>
+		/// <param name="name">The type name.</param>
 		public DateTimeType(string name)
 			: base (name)
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DateTimeType"/> class.
+		/// </summary>
+		/// <param name="caption">The type caption.</param>
 		public DateTimeType(Caption caption)
 			: base (caption)
 		{
 		}
 
 
+		/// <summary>
+		/// Gets the system type described by this object.
+		/// </summary>
+		/// <value>The system type described by this object.</value>
 		public override System.Type SystemType
 		{
 			get
@@ -31,6 +49,13 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Determines whether the specified value is in a valid range.
+		/// </summary>
+		/// <param name="value">The value (never null and always of a valid type).</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified value is in a valid range; otherwise, <c>false</c>.
+		/// </returns>
 		protected override bool IsInRange(object value)
 		{
 			System.DateTime dateTime = (System.DateTime) value;

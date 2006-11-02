@@ -94,6 +94,12 @@ namespace Epsitec.Common.Types
 
 		#region INullableType Members
 
+		/// <summary>
+		/// Gets a value indicating whether this type may represent <c>null</c> values.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this type may represent <c>null</c> values; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsNullable
 		{
 			get
@@ -102,6 +108,13 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the value is null.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified value represents the <c>null</c> value; otherwise, <c>false</c>.
+		/// </returns>
 		public virtual bool IsNullValue(object value)
 		{
 			return value == null;

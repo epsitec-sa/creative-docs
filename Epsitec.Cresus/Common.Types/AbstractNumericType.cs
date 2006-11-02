@@ -5,6 +5,10 @@
 
 namespace Epsitec.Common.Types
 {
+	/// <summary>
+	/// The <c>AbstractNumericType</c> class is the base class used by all numeric
+	/// type definition classes.
+	/// </summary>
 	public abstract class AbstractNumericType : AbstractType, INumericType
 	{
 		protected AbstractNumericType(string name, DecimalRange range)
@@ -19,7 +23,11 @@ namespace Epsitec.Common.Types
 		}
 
 		#region INumericType Members
-		
+
+		/// <summary>
+		/// Gets the range of values accepted by this numeric type.
+		/// </summary>
+		/// <value>The range of values.</value>
 		public DecimalRange						Range
 		{
 			get
@@ -27,7 +35,12 @@ namespace Epsitec.Common.Types
 				return (DecimalRange) this.Caption.GetValue (AbstractNumericType.RangeProperty);
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the preferred range of values. This is not used as a constraint;
+		/// it is just a hint for the user interface controls.
+		/// </summary>
+		/// <value>The preferred range of values.</value>
 		public DecimalRange						PreferredRange
 		{
 			get
@@ -36,6 +49,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the value which should be used by the user interface to increment
+		/// or decrement a number by a small amount.
+		/// </summary>
+		/// <value>The small step value.</value>
 		public decimal							SmallStep
 		{
 			get
@@ -44,6 +62,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the value which should be used by the user interface to increment
+		/// or decrement a number by a large amount.
+		/// </summary>
+		/// <value>The large step value.</value>
 		public decimal							LargeStep
 		{
 			get
@@ -53,7 +76,11 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
-		
+
+		/// <summary>
+		/// Defines the valid range.
+		/// </summary>
+		/// <param name="range">The range.</param>
 		public void DefineRange(DecimalRange range)
 		{
 			if (range.IsEmpty)
@@ -66,6 +93,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Defines the preferred range.
+		/// </summary>
+		/// <param name="range">The range.</param>
 		public void DefinePreferredRange(DecimalRange range)
 		{
 			if (range.IsEmpty)
@@ -78,6 +109,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Defines the small increment.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public void DefineSmallStep(decimal value)
 		{
 			if (value == 0)
@@ -90,6 +125,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Defines the large increment.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public void DefineLargeStep(decimal value)
 		{
 			if (value == 0)
