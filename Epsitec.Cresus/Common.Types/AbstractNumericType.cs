@@ -75,6 +75,21 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+
+		/// <summary>
+		/// Gets a value indicating whether this numeric type should use compact storage.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this numeric type should use compact storage; otherwise, <c>false</c>.
+		/// </value>
+		public bool								UseCompactStorage
+		{
+			get
+			{
+				return (bool) this.Caption.GetValue (AbstractNumericType.UseCompactStorageProperty);
+			}
+		}
+
 		#endregion
 
 		/// <summary>
@@ -141,9 +156,26 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Defines whether to use compact storage for this numeric type.
+		/// </summary>
+		/// <param name="value">If set to <c>true</c>, uses compact storage for this numeric type.</param>
+		public void DefineUseCompactStorage(bool value)
+		{
+			if (value == false)
+			{
+				this.Caption.ClearValue (AbstractNumericType.UseCompactStorageProperty);
+			}
+			else
+			{
+				this.Caption.SetValue (AbstractNumericType.UseCompactStorageProperty, value);
+			}
+		}
+		
 		public static readonly DependencyProperty RangeProperty = DependencyProperty.RegisterAttached ("Range", typeof (DecimalRange), typeof (AbstractNumericType), new DependencyPropertyMetadata (DecimalRange.Empty));
 		public static readonly DependencyProperty PreferredRangeProperty = DependencyProperty.RegisterAttached ("PreferredRange", typeof (DecimalRange), typeof (AbstractNumericType), new DependencyPropertyMetadata (DecimalRange.Empty));
 		public static readonly DependencyProperty SmallStepProperty = DependencyProperty.RegisterAttached ("SmallStep", typeof (decimal), typeof (AbstractNumericType), new DependencyPropertyMetadata (0M));
 		public static readonly DependencyProperty LargeStepProperty = DependencyProperty.RegisterAttached ("LargeStep", typeof (decimal), typeof (AbstractNumericType), new DependencyPropertyMetadata (0M));
+		public static readonly DependencyProperty UseCompactStorageProperty = DependencyProperty.RegisterAttached ("UseCompactStorage", typeof (bool), typeof (AbstractNumericType), new DependencyPropertyMetadata (false));
 	}
 }
