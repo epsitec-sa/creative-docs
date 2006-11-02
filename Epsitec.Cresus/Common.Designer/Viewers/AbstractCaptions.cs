@@ -169,6 +169,15 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Icône.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Captions.Icon.Title, 0.1);
 
+			StaticText label = new StaticText(leftContainer.Container);
+			label.Text = Res.Strings.Viewers.Captions.Icon.Title;
+			label.MinHeight = 30;  // attention, très important !
+			label.PreferredHeight = 30;
+			label.PreferredWidth = 30;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Margins = new Margins(0, 5, 0, 0);
+			label.Dock = DockStyle.Left;
+
 			this.primaryIcon = new IconButton(leftContainer.Container);
 			this.primaryIcon.MinHeight = 30;  // attention, très important !
 			this.primaryIcon.PreferredHeight = 30;
@@ -189,7 +198,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, 0.7);
 
 			this.primaryAbout = new TextFieldMulti(leftContainer.Container);
-			this.primaryAbout.PreferredHeight = 20;
+			this.primaryAbout.PreferredHeight = 36;
 			this.primaryAbout.Dock = DockStyle.StackBegin;
 			this.primaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -198,7 +207,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryAbout = new TextFieldMulti(rightContainer.Container);
-			this.secondaryAbout.PreferredHeight = 20;
+			this.secondaryAbout.PreferredHeight = 36;
 			this.secondaryAbout.Dock = DockStyle.StackBegin;
 			this.secondaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);

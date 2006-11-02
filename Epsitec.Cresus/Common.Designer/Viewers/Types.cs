@@ -20,11 +20,21 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Choix du contrôleur.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Controller.Title, 0.3);
 
+			StaticText label = new StaticText(leftContainer.Container);
+			label.Text = Res.Strings.Viewers.Types.Controller.Title;
+			label.MinHeight = 20;  // attention, très important !
+			label.PreferredHeight = 20;
+			label.PreferredWidth = 60;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Margins = new Margins(0, 5, 0, 0);
+			label.Dock = DockStyle.Left;
+
 			this.fieldController = new TextFieldCombo(leftContainer.Container);
 			this.fieldController.IsReadOnly = true;
+			this.fieldController.MinHeight = 20;  // attention, très important !
 			this.fieldController.PreferredWidth = 200;
 			this.fieldController.HorizontalAlignment = HorizontalAlignment.Left;
-			this.fieldController.Dock = DockStyle.StackBegin;
+			this.fieldController.Dock = DockStyle.Left;
 			this.fieldController.TextChanged += new EventHandler(this.HandleControllerTextChanged);
 			this.fieldController.TabIndex = this.tabIndex++;
 			this.fieldController.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
