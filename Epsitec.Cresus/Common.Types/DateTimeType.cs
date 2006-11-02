@@ -38,6 +38,26 @@ namespace Epsitec.Common.Types
 
 
 		/// <summary>
+		/// Gets the default <c>DateTimeType</c>.
+		/// </summary>
+		/// <value>The default <c>DateTimeType</c>.</value>
+		public static DateTimeType Default
+		{
+			get
+			{
+				TypeRosetta.InitializeKnownTypes ();
+
+				if (DateTimeType.defaultValue == null)
+				{
+					//	TODO: use real DRUID here
+					DateTimeType.defaultValue = (DateTimeType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[xxxx]"));
+				}
+
+				return DateTimeType.defaultValue;
+			}
+		}
+
+		/// <summary>
 		/// Gets the system type described by this object.
 		/// </summary>
 		/// <value>The system type described by this object.</value>
@@ -83,5 +103,8 @@ namespace Epsitec.Common.Types
 
 			return true;
 		}
+
+
+		private static DateTimeType defaultValue;
 	}
 }

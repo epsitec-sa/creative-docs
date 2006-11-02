@@ -37,6 +37,26 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Gets the default <c>TimeType</c>.
+		/// </summary>
+		/// <value>The default <c>TimeType</c>.</value>
+		public static TimeType Default
+		{
+			get
+			{
+				TypeRosetta.InitializeKnownTypes ();
+
+				if (TimeType.defaultValue == null)
+				{
+					//	TODO: use real DRUID here
+					TimeType.defaultValue = (TimeType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[xxxx]"));
+				}
+
+				return TimeType.defaultValue;
+			}
+		}
+		
+		/// <summary>
 		/// Gets the system type described by this object.
 		/// </summary>
 		/// <value>The system type described by this object.</value>
@@ -95,5 +115,8 @@ namespace Epsitec.Common.Types
 				return true;
 			}
 		}
+		
+		
+		private static TimeType defaultValue;
 	}
 }
