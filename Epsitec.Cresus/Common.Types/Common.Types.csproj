@@ -101,6 +101,7 @@
     <Compile Include="Caption.cs" />
     <Compile Include="CollectionType.cs" />
     <Compile Include="AbstractDateTimeType.cs" />
+    <Compile Include="BinaryType.cs" />
     <Compile Include="DateTimeType.cs" />
     <Compile Include="TimeType.cs" />
     <Compile Include="DateType.cs" />

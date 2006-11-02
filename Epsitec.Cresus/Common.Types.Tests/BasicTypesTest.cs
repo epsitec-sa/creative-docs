@@ -7,6 +7,14 @@ namespace Epsitec.Common.Types
 	[TestFixture] public class BasicTypesTest
 	{
 		[Test]
+		public void CheckBinaryType()
+		{
+			BinaryType type = new BinaryType ();
+
+			System.Console.Out.WriteLine (type.Caption.SerializeToString ());
+		}
+
+		[Test]
 		public void CheckDefaultTypes()
 		{
 			Assert.IsNotNull (StringType.Default);
