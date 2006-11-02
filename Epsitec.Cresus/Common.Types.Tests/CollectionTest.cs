@@ -537,6 +537,34 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckCollectionType()
+		{
+			CollectionType type = new CollectionType ();
+
+			type.DefineItemType (IntegerType.Default);
+
+			string[] stringArray = new string[] { "a", "b" };
+			int[]    intArray    = new int[] { 1, 2, 3 };
+
+			Assert.IsFalse (type.IsValidValue (null));
+			Assert.IsFalse (type.IsValidValue ("xyz"));
+			Assert.IsFalse (type.IsValidValue (stringArray));
+
+			Assert.IsTrue (type.IsValidValue (intArray));
+		}
+
+		[Test]
+		[Ignore ("Implementation of IsValidValue validation based on generic IEnumerable<> type is missing")]
+		public void CheckCollectionTypeWithEmptyEnumeration()
+		{
+			CollectionType type = new CollectionType ();
+
+			type.DefineItemType (IntegerType.Default);
+			
+			Assert.IsFalse (type.IsValidValue (new string[0]));
+		}
+
+		[Test]
 		public void CheckPropertyGroupDescription()
 		{
 			PropertyGroupDescription group = new PropertyGroupDescription ();

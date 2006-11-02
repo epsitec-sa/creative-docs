@@ -200,6 +200,10 @@ namespace Epsitec.Common.Types
 			{
 				return string.Concat ("V:", name);
 			}
+			if (type.IsInterface)
+			{
+				return string.Concat ("I:", name);
+			}
 
 			throw new System.ArgumentException (string.Format ("Type {0} has an unsupported name", name));
 		}
@@ -237,6 +241,7 @@ namespace Epsitec.Common.Types
 				case "E:": break;
 				case "C:": break;
 				case "V:": break;
+				case "I:": break;
 				
 				default:
 					throw new System.ArgumentException (string.Format ("Type {0} has wrong prefix ({1})", name, prefix));
@@ -259,6 +264,7 @@ namespace Epsitec.Common.Types
 				case "E:": return SystemTypeFamily.Enum;
 				case "C:": return SystemTypeFamily.Class;
 				case "V:": return SystemTypeFamily.ValueType;
+				case "I:": return SystemTypeFamily.Interface;
 			}
 
 			return SystemTypeFamily.Unknown;

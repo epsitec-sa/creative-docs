@@ -98,6 +98,8 @@
     <Compile Include="BindingChangedEventArgs.cs" />
     <Compile Include="BindingBreadcrumbs.cs" />
     <Compile Include="Caption.cs" />
+    <Compile Include="CollectionType.cs" />
+    <Compile Include="ICollectionType.cs" />
     <Compile Include="IReadOnlyLock.cs" />
     <Compile Include="Collections\EmptyList.cs" />
     <Compile Include="Collections\ReadOnlyList.cs" />

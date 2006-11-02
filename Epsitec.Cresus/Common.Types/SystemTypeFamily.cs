@@ -7,7 +7,7 @@ namespace Epsitec.Common.Types
 {
 	/// <summary>
 	/// The <c>SystemTypeFamily</c> enumeration classifies the <c>System.Type</c> types
-	/// into families: classes, value types and enumerations.
+	/// into families: classes, value types, enumerations and interfaces.
 	/// </summary>
 	public enum SystemTypeFamily
 	{
@@ -15,6 +15,7 @@ namespace Epsitec.Common.Types
 
 		Class,
 		ValueType,
-		Enum
+		Enum,
+		Interface
 	}
 }
