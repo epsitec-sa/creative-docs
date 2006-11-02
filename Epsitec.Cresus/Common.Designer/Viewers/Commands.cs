@@ -16,7 +16,8 @@ namespace Epsitec.Common.Designer.Viewers
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
 			//	Aspect (pour DefaultParameter) et Statefull.
-			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, 0.1);
+			this.buttonSuiteCompact = this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.8);
+			this.buttonSuiteCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			StaticText label = new StaticText(leftContainer.Container);
 			label.CaptionDruid = Res.Captions.Command.ButtonAspect.Druid;
@@ -49,7 +50,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryStatefull.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Shortcuts.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Commands.Shortcut.Title, 0.3);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Commands.Shortcut.Title, BandMode.SuiteView, GlyphShape.None, false, 0.8);
 
 			this.primaryShortcut1 = new ShortcutEditor(leftContainer.Container);
 			this.primaryShortcut1.Title = Res.Strings.Viewers.Commands.Shortcut.Main;
@@ -82,7 +83,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryShortcut2.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			//	Group.
-			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Group.Title, 0.5);
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Group.Title, BandMode.SuiteView, GlyphShape.None, false, 0.8);
 
 			label = new StaticText(leftContainer.Container);
 			label.Text = Res.Strings.Viewers.Commands.Group.Title;
@@ -104,6 +105,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryGroup.TabIndex = this.tabIndex++;
 			this.primaryGroup.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
+			//	Résumé des paramètres.
+			this.buttonSuiteExtend = this.CreateBand(out leftContainer, "Résumé", BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.8);
+			this.buttonSuiteExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+
+			this.UpdateDisplayMode();
 			this.UpdateEdit();
 		}
 

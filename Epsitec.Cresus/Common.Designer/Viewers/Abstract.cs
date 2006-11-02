@@ -1061,6 +1061,11 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static Color GetBackgroundColor(ResourceAccess.ModificationState state, double intensity)
 		{
 			//	Donne une couleur pour un fond de panneau.
+			if (intensity == 0.0)
+			{
+				return Color.Empty;
+			}
+
 			switch (state)
 			{
 				case ResourceAccess.ModificationState.Empty:

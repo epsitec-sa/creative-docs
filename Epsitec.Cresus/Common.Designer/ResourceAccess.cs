@@ -39,6 +39,7 @@ namespace Epsitec.Common.Designer
 			Controller,
 			AbstractType,
 			Panel,
+			Caption,
 		}
 
 		public enum TypeType
@@ -1362,6 +1363,11 @@ namespace Epsitec.Common.Designer
 				{
 					return new Field(this.accessField.About);
 				}
+
+				if (fieldType == FieldType.Caption)
+				{
+					return new Field(this.accessCaption);
+				}
 			}
 
 			if (this.type == Type.Commands)
@@ -1536,6 +1542,11 @@ namespace Epsitec.Common.Designer
 				if (fieldType == FieldType.About)
 				{
 					this.accessField.SetAbout(field.String);
+				}
+
+				if (fieldType == FieldType.Caption)
+				{
+					throw new System.InvalidOperationException("Operation not suported");
 				}
 			}
 
@@ -2989,6 +3000,7 @@ namespace Epsitec.Common.Designer
 				Integer,
 				Shortcuts,
 				AbstractType,
+				Caption,
 			}
 
 			public Field(string value)
@@ -3031,6 +3043,12 @@ namespace Epsitec.Common.Designer
 			{
 				this.type = Type.AbstractType;
 				this.abstractType = value;
+			}
+
+			public Field(Caption value)
+			{
+				this.type = Type.Caption;
+				this.caption = value;
 			}
 
 			public Type FieldType
@@ -3104,6 +3122,15 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
+			public Caption Caption
+			{
+				get
+				{
+					System.Diagnostics.Debug.Assert(this.type == Type.Caption);
+					return this.caption;
+				}
+			}
+
 			protected Type type;
 			protected string									stringValue;
 			protected ICollection<string>						stringCollection;
@@ -3112,6 +3139,7 @@ namespace Epsitec.Common.Designer
 			protected int										integerValue;
 			protected Widgets.Collections.ShortcutCollection	shortcutCollection;
 			protected AbstractType								abstractType;
+			protected Caption									caption;
 		}
 		#endregion
 

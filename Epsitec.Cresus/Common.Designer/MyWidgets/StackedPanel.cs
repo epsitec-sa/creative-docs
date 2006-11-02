@@ -55,6 +55,86 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public bool IsNewSection
+		{
+			//	Indique si le panneau débute une nouvelle section.
+			get
+			{
+				return this.isNewSection;
+			}
+
+			set
+			{
+				if (this.isNewSection != value)
+				{
+					this.isNewSection = value;
+					this.UpdateExtendButton();
+				}
+			}
+		}
+
+		public GlyphButton ExtendButton
+		{
+			//	Retourne l'éventuel bouton permettant d'étendre le panneau.
+			get
+			{
+				return this.extendButton;
+			}
+		}
+
+		public GlyphShape ExtendShape
+		{
+			//	Aspect du bouton permettant d'étendre le panneau.
+			//	GlyphShape.None correspond à un bouton inexistant.
+			get
+			{
+				if (this.extendButton == null)
+				{
+					return GlyphShape.None;
+				}
+				else
+				{
+					return this.extendButton.GlyphShape;
+				}
+			}
+
+			set
+			{
+				if (value == GlyphShape.None)
+				{
+					if (this.extendButton != null)
+					{
+						this.extendButton.Dispose();
+					}
+
+					this.extendButton = null;
+				}
+				else
+				{
+					if (this.extendButton == null)
+					{
+						this.extendButton = new GlyphButton(this);
+						this.extendButton.Anchor = AnchorStyles.TopLeft;
+						this.extendButton.PreferredSize = new Size(16, 16);
+						this.UpdateExtendButton();
+					}
+
+					this.extendButton.GlyphShape = value;
+				}
+			}
+		}
+
+		protected void UpdateExtendButton()
+		{
+			//	Met à jour la position du bouton permettant d'étendre le panneau.
+			if (this.extendButton != null)
+			{
+				double left = this.Padding.Left;
+				double top = this.Padding.Top + (this.isNewSection ? 1 : 0);
+				this.extendButton.Margins = new Margins(-left, 0, -top, 0);
+			}
+		}
+
 		public string Title
 		{
 			//	Texte du titre affiché en haut à gauche du panneau.
@@ -69,15 +149,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					this.title = value;
 
-					ToolTip.Default.SetToolTip(this, this.title);
-
-					if (this.titleLayout == null)
+					if (string.IsNullOrEmpty(this.title))
 					{
-						this.titleLayout = new TextLayout();
-						this.titleLayout.Alignment = ContentAlignment.MiddleCenter;
+						this.titleLayout = null;
 					}
+					else
+					{
+						ToolTip.Default.SetToolTip(this, this.title);
 
-					this.titleLayout.Text = string.Concat("<font size=\"75%\">", this.title, "</font>");
+						if (this.titleLayout == null)
+						{
+							this.titleLayout = new TextLayout();
+							this.titleLayout.Alignment = ContentAlignment.MiddleCenter;
+						}
+
+						this.titleLayout.Text = string.Concat("<font size=\"75%\">", this.title, "</font>");
+					}
 				}
 			}
 		}
@@ -126,7 +213,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 
-			if (!this.backgroundColor.IsEmpty)
+			if (!this.backgroundColor.IsEmpty)  // pas un séparateur ?
 			{
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.backgroundColor);
@@ -139,7 +226,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			rect.Deflate(0.5, 0.5);
 			graphics.AddLine(rect.Left-0.5, rect.Bottom, rect.Right+0.5, rect.Bottom);  // - en bas
-			graphics.AddLine(rect.Left+15, rect.Bottom-0.5, rect.Left+15, rect.Top+0.5);  // | +15 à gauche
+
+			if (!this.backgroundColor.IsEmpty)  // pas un séparateur ?
+			{
+				graphics.AddLine(rect.Left+15, rect.Bottom-0.5, rect.Left+15, rect.Top+0.5);  // | +15 à gauche
+			}
 
 			if (this.isLeftPart)
 			{
@@ -150,20 +241,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.titleLayout != null)
 			{
-				Point center = new Point(rect.Left+14, rect.Bottom+1);
-				Transform it = graphics.Transform;
-				graphics.RotateTransformDeg(90, center.X, center.Y);
-				this.titleLayout.LayoutSize = new Size(rect.Height-2, 15);
-				this.titleLayout.Paint(center, graphics);
-				graphics.Transform = it;
+				double w = rect.Height-2;
+				if (this.extendButton != null)
+				{
+					w -= this.extendButton.PreferredHeight;
+				}
+
+				if (w > 22)
+				{
+					Point center = new Point(rect.Left+14, rect.Bottom+1);
+					Transform it = graphics.Transform;
+					graphics.RotateTransformDeg(90, center.X, center.Y);
+					this.titleLayout.LayoutSize = new Size(w, 15);
+					this.titleLayout.Paint(center, graphics);
+					graphics.Transform = it;
+				}
 			}
 		}
 
 
 		protected Color						backgroundColor = Color.Empty;
 		protected bool						isLeftPart = true;
+		protected bool						isNewSection = false;
 		protected string					title;
 		protected TextLayout				titleLayout;
+		protected GlyphButton				extendButton;
 		protected Widget					container;
 	}
 }
