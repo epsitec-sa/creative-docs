@@ -28,6 +28,35 @@ namespace Epsitec.Common.Types
 		}
 
 
+		/// <summary>
+		/// Gets the MIME type (or types) associated with this binary type.
+		/// </summary>
+		/// <value>The MIME types separated by <c>";"</c>.</value>
+		public string MimeType
+		{
+			get
+			{
+				return (string) this.Caption.GetValue (BinaryType.MimeTypeProperty);
+			}
+		}
+		
+		public static BinaryType Default
+		{
+			get
+			{
+				TypeRosetta.InitializeKnownTypes ();
+
+				if (BinaryType.defaultValue == null)
+				{
+					//	TODO: fix DRUID
+
+					BinaryType.defaultValue = (BinaryType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[xxxx]"));
+				}
+
+				return BinaryType.defaultValue;
+			}
+		}
+
 		#region ISystemType Members
 
 		/// <summary>
@@ -73,22 +102,29 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
-		public static BinaryType Default
+		/// <summary>
+		/// Defines the MIME type (or types) for this binary type.
+		/// </summary>
+		/// <param name="value">The MIME types separated by <c>";"</c>.</param>
+		public void DefineMimeType(string value)
 		{
-			get
+			if ((string.IsNullOrEmpty (value)) ||
+				(value.Trim ().Length == 0))
 			{
-				TypeRosetta.InitializeKnownTypes ();
-
-				if (BinaryType.defaultValue == null)
+				this.Caption.ClearValue (BinaryType.MimeTypeProperty);
+			}
+			else
+			{
+				if (value.Replace (";", "").Trim ().Length == 0)
 				{
-					//	TODO: fix DRUID
-
-					BinaryType.defaultValue = (BinaryType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[xxxx]"));
+					throw new System.ArgumentException (string.Format ("Invalid MIME type specification: '{0}'", value));
 				}
-
-				return BinaryType.defaultValue;
+				
+				this.Caption.SetValue (BinaryType.MimeTypeProperty, value);
 			}
 		}
+
+		public static readonly DependencyProperty MimeTypeProperty = DependencyProperty.RegisterAttached ("MimeType", typeof (string), typeof (BinaryType));
 
 		private static BinaryType defaultValue;
 	}

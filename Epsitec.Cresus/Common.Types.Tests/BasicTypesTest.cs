@@ -11,7 +11,18 @@ namespace Epsitec.Common.Types
 		{
 			BinaryType type = new BinaryType ();
 
+			type.DefineMimeType ("image/jpeg;image/tiff");
+
 			System.Console.Out.WriteLine (type.Caption.SerializeToString ());
+		}
+		
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckBinaryTypeEx1()
+		{
+			BinaryType type = new BinaryType ();
+
+			type.DefineMimeType ("; ;");
 		}
 
 		[Test]
