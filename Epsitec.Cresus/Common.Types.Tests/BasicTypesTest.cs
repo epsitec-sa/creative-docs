@@ -427,6 +427,51 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckDateTimeType()
+		{
+			DateTimeType type = new DateTimeType ();
+
+			Assert.AreEqual (typeof (System.DateTime), type.SystemType);
+			Assert.AreEqual (TimeResolution.Default, type.Resolution);
+			Assert.AreEqual (Time.Null, type.MinimumTime);
+			Assert.AreEqual (Time.Null, type.MaximumTime);
+
+			System.DateTime time = new System.DateTime (2006, 11, 2, 10, 52, 34, 942);
+
+			Assert.IsTrue (type.IsValidValue (time));
+			Assert.IsTrue (type.IsNullValue (null));
+			Assert.IsFalse (type.IsValidValue (null));
+			Assert.IsFalse (type.IsValidValue ("x"));
+
+			type.DefineMinimumTime (new Time (6, 0, 0));
+			type.DefineMaximumTime (new Time (16, 59, 59, 999));
+
+			type.DefineMinimumDate (new Date (2000, 1, 1));
+			type.DefineMaximumDate (new Date (2010, 12, 31));
+			
+			Assert.IsTrue (type.IsValidValue (new System.DateTime (2006, 11, 2, 8, 30, 17)));
+			Assert.IsFalse (type.IsValidValue (new System.DateTime (2006, 11, 2, 17, 34, 0)));
+			Assert.IsFalse (type.IsValidValue (new System.DateTime (2006, 11, 2, 1, 10, 0)));
+			Assert.IsFalse (type.IsValidValue (new System.DateTime (2032, 2, 11, 8, 30, 17)));
+			Assert.IsFalse (type.IsValidValue (new System.DateTime (1999, 12, 31, 8, 30, 17)));
+
+			type.DefineResolution (TimeResolution.Minutes);
+
+			string xml = type.Caption.SerializeToString ();
+
+			Caption caption = new Caption ();
+			caption.DeserializeFromString (xml);
+
+			DateTimeType copy = new DateTimeType (caption);
+
+			Assert.AreEqual (type.MinimumDate, copy.MinimumDate);
+			Assert.AreEqual (type.MinimumTime, copy.MinimumTime);
+			Assert.AreEqual (type.MaximumDate, copy.MaximumDate);
+			Assert.AreEqual (type.MaximumTime, copy.MaximumTime);
+			Assert.AreEqual (type.Resolution, copy.Resolution);
+		}
+
+		[Test]
 		public void CheckNullableTypes()
 		{
 			int? valueOne = 1;

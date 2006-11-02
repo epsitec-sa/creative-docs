@@ -33,9 +33,30 @@ namespace Epsitec.Common.Types
 
 		protected override bool IsInRange(object value)
 		{
-			System.DateTime time = (System.DateTime) value;
+			System.DateTime dateTime = (System.DateTime) value;
 
-			throw new System.Exception ("The method or operation is not implemented.");
+			Date date = new Date (dateTime);
+			Time time = new Time (dateTime);
+
+			Date minDate = this.MinimumDate;
+			Date maxDate = this.MaximumDate;
+
+			if (((!minDate.IsNull) && (date < minDate)) ||
+				((!maxDate.IsNull) && (date > maxDate)))
+			{
+				return false;
+			}
+			
+			Time minTime = this.MinimumTime;
+			Time maxTime = this.MaximumTime;
+
+			if (((!minTime.IsNull) && (time < minTime)) ||
+				((!maxTime.IsNull) && (time > maxTime)))
+			{
+				return false;
+			}
+
+			return true;
 		}
 	}
 }
