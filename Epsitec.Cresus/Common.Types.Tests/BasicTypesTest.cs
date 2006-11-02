@@ -7,6 +7,25 @@ namespace Epsitec.Common.Types
 	[TestFixture] public class BasicTypesTest
 	{
 		[Test]
+		public void CheckBinaryType()
+		{
+			BinaryType type = new BinaryType ();
+
+			type.DefineMimeType ("image/jpeg;image/tiff");
+
+			System.Console.Out.WriteLine (type.Caption.SerializeToString ());
+		}
+		
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckBinaryTypeEx1()
+		{
+			BinaryType type = new BinaryType ();
+
+			type.DefineMimeType ("; ;");
+		}
+
+		[Test]
 		public void CheckDefaultTypes()
 		{
 			Assert.IsNotNull (StringType.Default);
@@ -240,6 +259,128 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckDateSerialization()
+		{
+			Date date_1 = Date.Today;
+			Date date_2;
+
+			DateUser dt_1 = new DateUser ();
+			DateUser dt_2;
+
+			using (System.IO.Stream stream = System.IO.File.Open ("test.bin", System.IO.FileMode.Create))
+			{
+				BinaryFormatter formatter = new BinaryFormatter ();
+				formatter.Serialize (stream, date_1);
+			}
+
+			using (System.IO.Stream stream = System.IO.File.Open ("test.bin", System.IO.FileMode.Open))
+			{
+				BinaryFormatter formatter = new BinaryFormatter ();
+				date_2 = (Date) formatter.Deserialize (stream);
+			}
+
+			using (System.IO.Stream stream = System.IO.File.Open ("test.bin", System.IO.FileMode.Create))
+			{
+				BinaryFormatter formatter = new BinaryFormatter ();
+				formatter.Serialize (stream, dt_1);
+			}
+
+			using (System.IO.Stream stream = System.IO.File.Open ("test.bin", System.IO.FileMode.Open))
+			{
+				BinaryFormatter formatter = new BinaryFormatter ();
+				dt_2 = (DateUser) formatter.Deserialize (stream);
+			}
+
+			Assert.IsNotNull (dt_2);
+
+			System.IO.File.Delete ("test.bin");
+
+			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Create))
+			{
+				SoapFormatter formatter = new SoapFormatter ();
+				formatter.Serialize (stream, date_1);
+			}
+
+			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Open))
+			{
+				System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+				byte[] buffer = new byte[stream.Length];
+				stream.Read (buffer, 0, (int) stream.Length);
+				System.Console.Out.WriteLine ("{0}", encoding.GetString (buffer));
+			}
+
+			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Open))
+			{
+				SoapFormatter formatter = new SoapFormatter ();
+				date_2 = (Date) formatter.Deserialize (stream);
+			}
+
+			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Create))
+			{
+				SoapFormatter formatter = new SoapFormatter ();
+				formatter.Serialize (stream, dt_1);
+			}
+
+			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Open))
+			{
+				System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+				byte[] buffer = new byte[stream.Length];
+				stream.Read (buffer, 0, (int) stream.Length);
+				System.Console.Out.WriteLine ("{0}", encoding.GetString (buffer));
+			}
+
+			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Open))
+			{
+				SoapFormatter formatter = new SoapFormatter ();
+				dt_2 = (DateUser) formatter.Deserialize (stream);
+			}
+
+			System.IO.File.Delete ("test.soap");
+		}
+
+		[Test]
+		public void CheckDateType()
+		{
+			DateType type = new DateType ();
+
+			Assert.AreEqual (typeof (Date), type.SystemType);
+			Assert.AreEqual (TimeResolution.Default, type.Resolution);
+			Assert.AreEqual (Time.Null, type.MinimumTime);
+			Assert.AreEqual (Time.Null, type.MaximumTime);
+
+			Date date = new Date (2006, 11, 2);
+
+			Assert.IsTrue (type.IsValidValue (date));
+			Assert.IsTrue (type.IsNullValue (null));
+			Assert.IsTrue (type.IsNullValue (Date.Null));
+			Assert.IsFalse (type.IsValidValue (null));
+			Assert.IsFalse (type.IsValidValue (Date.Null));
+			Assert.IsFalse (type.IsValidValue ("x"));
+
+			type.DefineMinimumDate (new Date (2000, 1, 1));
+			type.DefineMaximumDate (new Date (2010, 12, 31));
+
+			Assert.IsTrue (type.IsValidValue (new Date (2006, 11, 2)));
+			Assert.IsFalse (type.IsValidValue (new Date (1999, 12, 31)));
+			Assert.IsFalse (type.IsValidValue (new Date (2032, 2, 11)));
+
+			type.DefineResolution (TimeResolution.Weeks);
+
+			string xml = type.Caption.SerializeToString ();
+
+			Caption caption = new Caption ();
+			caption.DeserializeFromString (xml);
+
+			DateType copy = new DateType (caption);
+
+			Assert.AreEqual (type.MinimumDate, copy.MinimumDate);
+			Assert.AreEqual (type.MinimumTime, copy.MinimumTime);
+			Assert.AreEqual (type.MaximumDate, copy.MaximumDate);
+			Assert.AreEqual (type.MaximumTime, copy.MaximumTime);
+			Assert.AreEqual (type.Resolution, copy.Resolution);
+		}
+
+		[Test]
 		public void CheckTime()
 		{
 			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (typeof (Time));
@@ -263,83 +404,94 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		public void CheckDateSerialization()
+		public void CheckTimeType()
 		{
-			Date date_1 = Date.Today;
-			Date date_2;
+			TimeType type = new TimeType ();
+
+			Assert.AreEqual (typeof (Time), type.SystemType);
+			Assert.AreEqual (TimeResolution.Default, type.Resolution);
+			Assert.AreEqual (Time.Null, type.MinimumTime);
+			Assert.AreEqual (Time.Null, type.MaximumTime);
+
+			Time time = new Time (9, 44, 13);
+
+			Assert.IsTrue (type.IsValidValue (time));
+			Assert.IsTrue (type.IsNullValue (null));
+			Assert.IsTrue (type.IsNullValue (Time.Null));
+			Assert.IsFalse (type.IsValidValue (null));
+			Assert.IsFalse (type.IsValidValue (Time.Null));
+			Assert.IsFalse (type.IsValidValue ("x"));
+
+			type.DefineMinimumTime (new Time (6, 0, 0));
+			type.DefineMaximumTime (new Time (16, 59, 59, 999));
+
+			Assert.IsTrue (type.IsValidValue (new Time (8, 30, 17)));
+			Assert.IsFalse (type.IsValidValue (new Time (17, 34, 0)));
+			Assert.IsFalse (type.IsValidValue (new Time (1, 10, 0)));
+
+			type.DefineResolution (TimeResolution.Seconds);
+
+			string xml = type.Caption.SerializeToString ();
+
+			Caption caption = new Caption ();
+			caption.DeserializeFromString (xml);
+
+			TimeType copy = new TimeType (caption);
+
+			Assert.AreEqual (type.MinimumDate, copy.MinimumDate);
+			Assert.AreEqual (type.MinimumTime, copy.MinimumTime);
+			Assert.AreEqual (type.MaximumDate, copy.MaximumDate);
+			Assert.AreEqual (type.MaximumTime, copy.MaximumTime);
+			Assert.AreEqual (type.Resolution, copy.Resolution);
+		}
+
+		[Test]
+		public void CheckDateTimeType()
+		{
+			DateTimeType type = new DateTimeType ();
+
+			Assert.AreEqual (typeof (System.DateTime), type.SystemType);
+			Assert.AreEqual (TimeResolution.Default, type.Resolution);
+			Assert.AreEqual (Time.Null, type.MinimumTime);
+			Assert.AreEqual (Time.Null, type.MaximumTime);
+
+			System.DateTime time = new System.DateTime (2006, 11, 2, 10, 52, 34, 942);
+
+			Assert.IsTrue (type.IsValidValue (time));
+			Assert.IsTrue (type.IsNullValue (null));
+			Assert.IsFalse (type.IsValidValue (null));
+			Assert.IsFalse (type.IsValidValue ("x"));
+
+			type.DefineMinimumTime (new Time (6, 0, 0));
+			type.DefineMaximumTime (new Time (16, 59, 59, 999));
+
+			type.DefineMinimumDate (new Date (2000, 1, 1));
+			type.DefineMaximumDate (new Date (2010, 12, 31));
 			
-			DateUser dt_1 = new DateUser ();
-			DateUser dt_2;
-			
-			using (System.IO.Stream stream = System.IO.File.Open ("test.bin", System.IO.FileMode.Create))
-			{
-				BinaryFormatter formatter = new BinaryFormatter ();
-				formatter.Serialize (stream, date_1);
-			}
-			
-			using (System.IO.Stream stream = System.IO.File.Open ("test.bin", System.IO.FileMode.Open))
-			{
-				BinaryFormatter formatter = new BinaryFormatter ();
-				date_2 = (Date) formatter.Deserialize (stream);
-			}
-			
-			using (System.IO.Stream stream = System.IO.File.Open ("test.bin", System.IO.FileMode.Create))
-			{
-				BinaryFormatter formatter = new BinaryFormatter ();
-				formatter.Serialize (stream, dt_1);
-			}
-			
-			using (System.IO.Stream stream = System.IO.File.Open ("test.bin", System.IO.FileMode.Open))
-			{
-				BinaryFormatter formatter = new BinaryFormatter ();
-				dt_2 = (DateUser) formatter.Deserialize (stream);
-			}
-			
-			Assert.IsNotNull (dt_2);
-			
-			System.IO.File.Delete ("test.bin");
-			
-			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Create))
-			{
-				SoapFormatter formatter = new SoapFormatter ();
-				formatter.Serialize (stream, date_1);
-			}
-			
-			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Open))
-			{
-				System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
-				byte[] buffer = new byte[stream.Length];
-				stream.Read (buffer, 0, (int) stream.Length);
-				System.Console.Out.WriteLine ("{0}", encoding.GetString (buffer));
-			}
-			
-			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Open))
-			{
-				SoapFormatter formatter = new SoapFormatter ();
-				date_2 = (Date) formatter.Deserialize (stream);
-			}
-			
-			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Create))
-			{
-				SoapFormatter formatter = new SoapFormatter ();
-				formatter.Serialize (stream, dt_1);
-			}
-			
-			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Open))
-			{
-				System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
-				byte[] buffer = new byte[stream.Length];
-				stream.Read (buffer, 0, (int) stream.Length);
-				System.Console.Out.WriteLine ("{0}", encoding.GetString (buffer));
-			}
-			
-			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Open))
-			{
-				SoapFormatter formatter = new SoapFormatter ();
-				dt_2 = (DateUser) formatter.Deserialize (stream);
-			}
-			
-			System.IO.File.Delete ("test.soap");
+			Assert.IsTrue (type.IsValidValue (new System.DateTime (2006, 11, 2, 8, 30, 17)));
+			Assert.IsFalse (type.IsValidValue (new System.DateTime (2006, 11, 2, 17, 34, 0)));
+			Assert.IsFalse (type.IsValidValue (new System.DateTime (2006, 11, 2, 1, 10, 0)));
+			Assert.IsFalse (type.IsValidValue (new System.DateTime (2032, 2, 11, 8, 30, 17)));
+			Assert.IsFalse (type.IsValidValue (new System.DateTime (1999, 12, 31, 8, 30, 17)));
+
+			type.DefineResolution (TimeResolution.Minutes);
+			type.DefineTimeStep (new System.TimeSpan (0, 0, 30));
+			type.DefineDateStep (new System.TimeSpan (7, 0, 0, 0));
+
+			string xml = type.Caption.SerializeToString ();
+
+			System.Console.Out.WriteLine (xml);
+
+			Caption caption = new Caption ();
+			caption.DeserializeFromString (xml);
+
+			DateTimeType copy = new DateTimeType (caption);
+
+			Assert.AreEqual (type.MinimumDate, copy.MinimumDate);
+			Assert.AreEqual (type.MinimumTime, copy.MinimumTime);
+			Assert.AreEqual (type.MaximumDate, copy.MaximumDate);
+			Assert.AreEqual (type.MaximumTime, copy.MaximumTime);
+			Assert.AreEqual (type.Resolution, copy.Resolution);
 		}
 
 		[Test]

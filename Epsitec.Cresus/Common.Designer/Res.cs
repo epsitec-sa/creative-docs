@@ -24,6 +24,8 @@ namespace Epsitec.Common.Designer
 				public static class Structured
 				{
 					public static Epsitec.Common.Types.Caption Add { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 392)); } }
+					public static Epsitec.Common.Types.Caption ChangeCaption { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 397)); } }
+					public static Epsitec.Common.Types.Caption ChangeType { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 396)); } }
 					public static Epsitec.Common.Types.Caption Next { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 395)); } }
 					public static Epsitec.Common.Types.Caption Prev { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 394)); } }
 					public static Epsitec.Common.Types.Caption Remove { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 393)); } }
@@ -654,6 +656,13 @@ namespace Epsitec.Common.Designer
 						public static string Void { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (242)); } }
 					}
 					
+					public static class Enum
+					{
+						public static string RowDescription { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (251)); } }
+						public static string RowIcon { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (252)); } }
+						public static string RowName { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (250)); } }
+					}
+					
 					public static class Nullable
 					{
 						public static string CheckButton { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (240)); } }
@@ -674,8 +683,18 @@ namespace Epsitec.Common.Designer
 					
 					public static class String
 					{
+						public static string FixedLength { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (257)); } }
 						public static string Max { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (228)); } }
 						public static string Min { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (227)); } }
+						public static string Multilingual { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (258)); } }
+					}
+					
+					public static class Structured
+					{
+						public static string Caption { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (255)); } }
+						public static string Name { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (254)); } }
+						public static string NewName { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (256)); } }
+						public static string Type { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (253)); } }
 					}
 				}
 			}

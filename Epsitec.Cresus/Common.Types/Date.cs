@@ -91,7 +91,9 @@ namespace Epsitec.Common.Types
 				return new Date (System.DateTime.Today);
 			}
 		}
-		
+
+		public static readonly Date				Null = new Date (null);
+
 		
 		public Date AddDays(int value)
 		{

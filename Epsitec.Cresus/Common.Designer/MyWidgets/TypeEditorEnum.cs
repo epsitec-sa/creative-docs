@@ -85,17 +85,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.headerUse.Dock = DockStyle.Left;
 
 			this.headerName = new HeaderButton(this.header);
-			this.headerName.Text = "Nom";
+			this.headerName.Text = Res.Strings.Viewers.Types.Enum.RowName;
 			this.headerName.Style = HeaderButtonStyle.Top;
 			this.headerName.Dock = DockStyle.Left;
 
 			this.headerDescription = new HeaderButton(this.header);
-			this.headerDescription.Text = "Textes et description";
+			this.headerDescription.Text = Res.Strings.Viewers.Types.Enum.RowDescription;
 			this.headerDescription.Style = HeaderButtonStyle.Top;
 			this.headerDescription.Dock = DockStyle.Left;
 
 			this.headerIcon = new HeaderButton(this.header);
-			this.headerIcon.Text = "Icône";
+			this.headerIcon.Text = Res.Strings.Viewers.Types.Enum.RowIcon;
 			this.headerIcon.Style = HeaderButtonStyle.Top;
 			this.headerIcon.Dock = DockStyle.Left;
 
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.SetColumnBreakMode(1, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 			this.array.LineHeight = TypeEditorEnum.arrayLineHeight;
 			this.array.Dock = DockStyle.StackBegin;
-			this.array.PreferredHeight = 360;
+			this.array.PreferredHeight = 220;
 			this.array.ColumnsWidthChanged += new EventHandler(this.HandleArrayColumnsWidthChanged);
 			this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
 			this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);

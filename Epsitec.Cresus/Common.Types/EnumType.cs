@@ -293,10 +293,9 @@ namespace Epsitec.Common.Types
 		#region IDataConstraint Members
 		public override bool IsValidValue(object value)
 		{
-			if ((this.IsNullValue (value)) &&
-				(this.IsNullable))
+			if (this.IsNullValue (value))
 			{
-				return true;
+				return this.IsNullable;
 			}
 
 			try

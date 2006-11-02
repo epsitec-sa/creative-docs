@@ -31,7 +31,7 @@ namespace Epsitec.Common.Types
 
 			this.isPropertyAnICollectionOfDependencyObject = TypeRosetta.DoesTypeImplementInterface (this.propertyType, typeof (ICollection<DependencyObject>));
 			this.isPropertyAnICollectionOfString = TypeRosetta.DoesTypeImplementInterface (this.propertyType, typeof (ICollection<string>));
-			this.isPropertyAnICollectionOfAny = TypeRosetta.DoesTypeImplementGenericInterface (this.propertyType, "ICollection");
+			this.isPropertyAnICollectionOfAny = TypeRosetta.DoesTypeImplementGenericInterface (this.propertyType, typeof (ICollection<>));
 
 			if ((this.isPropertyAnICollectionOfDependencyObject == false) &&
 				(this.isPropertyAnICollectionOfString == false) &&

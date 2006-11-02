@@ -20,11 +20,21 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Choix du contrôleur.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Controller.Title, 0.3);
 
+			StaticText label = new StaticText(leftContainer.Container);
+			label.Text = Res.Strings.Viewers.Types.Controller.Title;
+			label.MinHeight = 20;  // attention, très important !
+			label.PreferredHeight = 20;
+			label.PreferredWidth = 60;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Margins = new Margins(0, 5, 0, 0);
+			label.Dock = DockStyle.Left;
+
 			this.fieldController = new TextFieldCombo(leftContainer.Container);
 			this.fieldController.IsReadOnly = true;
+			this.fieldController.MinHeight = 20;  // attention, très important !
 			this.fieldController.PreferredWidth = 200;
 			this.fieldController.HorizontalAlignment = HorizontalAlignment.Left;
-			this.fieldController.Dock = DockStyle.StackBegin;
+			this.fieldController.Dock = DockStyle.Left;
 			this.fieldController.TextChanged += new EventHandler(this.HandleControllerTextChanged);
 			this.fieldController.TabIndex = this.tabIndex++;
 			this.fieldController.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -40,7 +50,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryNullable.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Editeur du type.
-			this.CreateBand(out this.container, "", 0.6);
+			this.CreateBand(out this.container, Res.Strings.Viewers.Types.Editor.Title, 0.6);
 
 			this.UpdateEdit();
 		}
@@ -74,6 +84,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override string RetTitle
 		{
+			//	Retourne le texte à utiliser pour le titre en dessus de la zone scrollable.
 			get
 			{
 				int sel = this.access.AccessIndex;
@@ -110,6 +121,7 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 					else
 					{
+						//	Ajoute le type du type, en gras et entre parenthèses.
 						return string.Concat(field.String, " (<b>", typeName, "</b>)");
 					}
 				}
@@ -146,18 +158,6 @@ namespace Epsitec.Common.Designer.Viewers
 					typeType = ResourceAccess.AbstractTypeToTypeType(type);
 				}
 			}
-
-			string typeName = ResourceAccess.TypeTypeToDisplay(typeType);
-			if (type is EnumType)
-			{
-				EnumType enumType = type as EnumType;
-				if (enumType.IsNativeEnum)
-				{
-					typeName = string.Concat(typeName, " (", Res.Strings.Viewers.Types.Editor.Native, ")");
-				}
-			}
-
-			this.container.Title = string.Format(Res.Strings.Viewers.Types.Editor.Title, typeName);
 
 			if (this.typeType != typeType)  // autre type ?
 			{

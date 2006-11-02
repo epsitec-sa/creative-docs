@@ -128,7 +128,8 @@ namespace Epsitec.Common.Types
 				return new Time (System.DateTime.Now);
 			}
 		}
-		
+
+		public static readonly Time				Null = new Time (null);
 		
 		public const long						TicksPerDay = 1000*60*60*24*10000L;
 		public const long						TicksPerSecond = 1000*10000L;

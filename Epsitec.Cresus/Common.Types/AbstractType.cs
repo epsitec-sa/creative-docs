@@ -94,6 +94,12 @@ namespace Epsitec.Common.Types
 
 		#region INullableType Members
 
+		/// <summary>
+		/// Gets a value indicating whether this type may represent <c>null</c> values.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this type may represent <c>null</c> values; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsNullable
 		{
 			get
@@ -102,6 +108,13 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the value is null.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified value represents the <c>null</c> value; otherwise, <c>false</c>.
+		/// </returns>
 		public virtual bool IsNullValue(object value)
 		{
 			return value == null;
@@ -200,6 +213,10 @@ namespace Epsitec.Common.Types
 			{
 				return string.Concat ("V:", name);
 			}
+			if (type.IsInterface)
+			{
+				return string.Concat ("I:", name);
+			}
 
 			throw new System.ArgumentException (string.Format ("Type {0} has an unsupported name", name));
 		}
@@ -237,6 +254,7 @@ namespace Epsitec.Common.Types
 				case "E:": break;
 				case "C:": break;
 				case "V:": break;
+				case "I:": break;
 				
 				default:
 					throw new System.ArgumentException (string.Format ("Type {0} has wrong prefix ({1})", name, prefix));
@@ -259,6 +277,7 @@ namespace Epsitec.Common.Types
 				case "E:": return SystemTypeFamily.Enum;
 				case "C:": return SystemTypeFamily.Class;
 				case "V:": return SystemTypeFamily.ValueType;
+				case "I:": return SystemTypeFamily.Interface;
 			}
 
 			return SystemTypeFamily.Unknown;

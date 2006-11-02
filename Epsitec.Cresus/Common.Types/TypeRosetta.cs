@@ -724,6 +724,15 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 
+		/// <summary>
+		/// Verifies if the type implements the specified generic interface.
+		/// </summary>
+		/// <param name="systemType">Type of the system.</param>
+		/// <param name="genericInterfaceType">Type of the generic interface.</param>
+		/// <param name="interfaceType">Real type of the interface.</param>
+		/// <returns>
+		/// 	<c>true</c> if the interface is found; otherwise, <c>false</c>.
+		/// </returns>
 		public static bool DoesTypeImplementGenericInterface(System.Type systemType, System.Type genericInterfaceType, out System.Type interfaceType)
 		{
 			if ((systemType.IsGenericType) &&
@@ -756,24 +765,14 @@ namespace Epsitec.Common.Types
 		/// Verifies if the type implements the specified generic interface.
 		/// </summary>
 		/// <param name="type">Type to check.</param>
-		/// <param name="name">The name of the interface to find.</param>
-		/// <returns><c>true</c> if the interface is found; otherwise, <c>false</c>.</returns>
-		public static bool DoesTypeImplementGenericInterface(System.Type type, string name)
+		/// <param name="genericType">Type of the generic interface.</param>
+		/// <returns>
+		/// 	<c>true</c> if the interface is found; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool DoesTypeImplementGenericInterface(System.Type type, System.Type genericInterfaceType)
 		{
-			System.Type[] types = type.GetInterfaces ();
-
-			name = string.Concat (name, "`");
-
-			foreach (System.Type item in types)
-			{
-				if ((item.Name.StartsWith (name)) &&
-					(item.IsGenericType))
-				{
-					return true;
-				}
-			}
-
-			return false;
+			System.Type interfaceType;
+			return TypeRosetta.DoesTypeImplementGenericInterface (type, genericInterfaceType, out interfaceType);
 		}
 		
 		public static readonly DependencyProperty TypeObjectProperty = DependencyProperty.RegisterAttached ("TypeObject", typeof (object), typeof (TypeRosetta.Properties));

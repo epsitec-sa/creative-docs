@@ -38,7 +38,8 @@
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
-    <NoWarn>1591;1587</NoWarn>
+    <NoWarn>
+    </NoWarn>
     <Optimize>false</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
@@ -98,6 +99,14 @@
     <Compile Include="BindingChangedEventArgs.cs" />
     <Compile Include="BindingBreadcrumbs.cs" />
     <Compile Include="Caption.cs" />
+    <Compile Include="CollectionType.cs" />
+    <Compile Include="AbstractDateTimeType.cs" />
+    <Compile Include="BinaryType.cs" />
+    <Compile Include="DateTimeType.cs" />
+    <Compile Include="TimeType.cs" />
+    <Compile Include="DateType.cs" />
+    <Compile Include="TimeResolution.cs" />
+    <Compile Include="ICollectionType.cs" />
     <Compile Include="IReadOnlyLock.cs" />
     <Compile Include="Collections\EmptyList.cs" />
     <Compile Include="Collections\ReadOnlyList.cs" />

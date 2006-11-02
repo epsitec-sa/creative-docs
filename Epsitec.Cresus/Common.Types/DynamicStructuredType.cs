@@ -56,10 +56,9 @@ namespace Epsitec.Common.Types
 
 		public override bool IsValidValue(object value)
 		{
-			if ((this.IsNullValue (value)) &&
-				(this.IsNullable))
+			if (this.IsNullValue (value))
 			{
-				return true;
+				return this.IsNullable;
 			}
 
 			StructuredData data = value as StructuredData;

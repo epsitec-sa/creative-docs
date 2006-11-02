@@ -84,10 +84,20 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Group.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Group.Title, 0.5);
 
+			label = new StaticText(leftContainer.Container);
+			label.Text = Res.Strings.Viewers.Commands.Group.Title;
+			label.MinHeight = 20;  // attention, très important !
+			label.PreferredHeight = 20;
+			label.PreferredWidth = 89;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Margins = new Margins(0, 5, 0, 0);
+			label.Dock = DockStyle.Left;
+
 			this.primaryGroup = new TextFieldCombo(leftContainer.Container);
-			this.primaryGroup.PreferredWidth = 200;
+			this.primaryGroup.MinHeight = 20;  // attention, très important !
+			this.primaryGroup.PreferredWidth = 216;
 			this.primaryGroup.HorizontalAlignment = HorizontalAlignment.Left;
-			this.primaryGroup.Dock = DockStyle.StackBegin;
+			this.primaryGroup.Dock = DockStyle.Left;
 			this.primaryGroup.TextChanged += new EventHandler(this.HandleGroupTextChanged);
 			this.primaryGroup.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.primaryGroup.ComboOpening += new EventHandler<CancelEventArgs>(this.HandleGroupComboOpening);

@@ -84,10 +84,9 @@ namespace Epsitec.Common.Types
 
 		public override bool IsValidValue(object value)
 		{
-			if ((this.IsNullValue (value)) &&
-				(this.IsNullable))
+			if (this.IsNullValue (value))
 			{
-				return true;
+				return this.IsNullable;
 			}
 
 			string text = value as string;
@@ -164,8 +163,8 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public static readonly DependencyProperty MinimumLengthProperty = DependencyProperty.RegisterAttached ("MinimumLength", typeof (int), typeof (StringType), new DependencyPropertyMetadata (0));
-		public static readonly DependencyProperty MaximumLengthProperty = DependencyProperty.RegisterAttached ("MaximumLength", typeof (int), typeof (StringType), new DependencyPropertyMetadata (100*1000));
+		public static readonly DependencyProperty MinimumLengthProperty = DependencyProperty.RegisterAttached ("MinLength", typeof (int), typeof (StringType), new DependencyPropertyMetadata (0));
+		public static readonly DependencyProperty MaximumLengthProperty = DependencyProperty.RegisterAttached ("MaxLength", typeof (int), typeof (StringType), new DependencyPropertyMetadata (100*1000));
 		
 		public static readonly DependencyProperty UseFixedLengthStorageProperty  = DependencyProperty.RegisterAttached ("UseFixedLengthStorage",  typeof (bool), typeof (StringType), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty UseMultilingualStorageProperty = DependencyProperty.RegisterAttached ("UseMultilingualStorage", typeof (bool), typeof (StringType), new DependencyPropertyMetadata (false));

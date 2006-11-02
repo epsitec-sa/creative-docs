@@ -67,7 +67,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Crée la partie droite, bande supérieure pour les boutons des cultures.
 			Widget sup = new Widget(this.right);
 			sup.Name = "Sup";
-			sup.PreferredHeight = 40;
+			sup.PreferredHeight = 35;
 			sup.Padding = new Margins(11, 27, 10, 0);
 			sup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			sup.Dock = DockStyle.Top;
@@ -77,8 +77,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryCulture = new IconButtonMark(sup);
 			this.primaryCulture.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.primaryCulture.SiteMark = ButtonMarkDisposition.Below;
-			this.primaryCulture.MarkDimension = 10;
-			this.primaryCulture.PreferredHeight = 35;
+			this.primaryCulture.MarkDimension = 5;
+			this.primaryCulture.PreferredHeight = 25;
 			this.primaryCulture.ActiveState = ActiveState.Yes;
 			this.primaryCulture.AutoFocus = false;
 			this.primaryCulture.TabIndex = this.tabIndex++;
@@ -97,14 +97,15 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Crée le titre.
 			this.titleBox = new FrameBox(this.right);
 			this.titleBox.DrawFullFrame = true;
-			this.titleBox.PreferredHeight = 32;
+			this.titleBox.PreferredHeight = 26;
 			this.titleBox.Dock = DockStyle.Top;
 			this.titleBox.Margins = new Margins(1, 1, 1, -1);
 
 			this.titleText = new StaticText(this.titleBox);
 			this.titleText.ContentAlignment = ContentAlignment.MiddleCenter;
+			this.titleText.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 			this.titleText.Dock = DockStyle.Fill;
-			this.titleText.Margins = new Margins(4, 4, 4, 4);
+			this.titleText.Margins = new Margins(4, 4, 0, 0);
 
 			//	Crée la partie droite, bande inférieure pour la zone d'étition scrollable.
 			this.scrollable = new Scrollable(this.right);
@@ -148,7 +149,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Description.Title, 0.3);
 
 			this.primaryDescription = new TextFieldMulti(leftContainer.Container);
-			this.primaryDescription.PreferredHeight = 70;
+			this.primaryDescription.PreferredHeight = 50;
 			this.primaryDescription.Dock = DockStyle.StackBegin;
 			this.primaryDescription.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryDescription.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -157,7 +158,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryDescription.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryDescription = new TextFieldMulti(rightContainer.Container);
-			this.secondaryDescription.PreferredHeight = 70;
+			this.secondaryDescription.PreferredHeight = 50;
 			this.secondaryDescription.Dock = DockStyle.StackBegin;
 			this.secondaryDescription.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryDescription.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -167,6 +168,15 @@ namespace Epsitec.Common.Designer.Viewers
 
 			//	Icône.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Captions.Icon.Title, 0.1);
+
+			StaticText label = new StaticText(leftContainer.Container);
+			label.Text = Res.Strings.Viewers.Captions.Icon.Title;
+			label.MinHeight = 30;  // attention, très important !
+			label.PreferredHeight = 30;
+			label.PreferredWidth = 30;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Margins = new Margins(0, 5, 0, 0);
+			label.Dock = DockStyle.Left;
 
 			this.primaryIcon = new IconButton(leftContainer.Container);
 			this.primaryIcon.MinHeight = 30;  // attention, très important !
@@ -188,7 +198,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, 0.7);
 
 			this.primaryAbout = new TextFieldMulti(leftContainer.Container);
-			this.primaryAbout.PreferredHeight = 50;
+			this.primaryAbout.PreferredHeight = 36;
 			this.primaryAbout.Dock = DockStyle.StackBegin;
 			this.primaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -197,7 +207,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryAbout = new TextFieldMulti(rightContainer.Container);
-			this.secondaryAbout.PreferredHeight = 50;
+			this.secondaryAbout.PreferredHeight = 36;
 			this.secondaryAbout.Dock = DockStyle.StackBegin;
 			this.secondaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -305,11 +315,13 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateTitle()
 		{
+			//	Met à jour le titre en dessus de la zone scrollable.
 			this.titleText.Text = string.Concat("<font size=\"150%\">", this.RetTitle, "</font>");
 		}
 
 		protected virtual string RetTitle
 		{
+			//	Retourne le texte à utiliser pour le titre en dessus de la zone scrollable.
 			get
 			{
 				int sel = this.access.AccessIndex;
@@ -726,6 +738,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (edit == this.labelEdit)
 			{
 				this.UpdateFieldName(edit, sel);
+				this.UpdateTitle();
 			}
 
 			if (edit == this.primaryDescription)
