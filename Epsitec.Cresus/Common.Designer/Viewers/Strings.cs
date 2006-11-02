@@ -245,7 +245,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 			Rectangle box = this.Client.Bounds;
 			box.Deflate(10);
-			box.Top -= 4;
 			Rectangle rect, r;
 
 			int lines = System.Math.Max((int)box.Height/50, 4);

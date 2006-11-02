@@ -14,7 +14,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			Separator sep = new Separator(this);
 			sep.PreferredHeight = 1;
-			sep.Margins = new Margins(0, 0, 10, 0);
+			sep.Margins = new Margins(0, 0, 0, 0);
 			sep.Dock = DockStyle.Bottom;
 
 			this.buttonStrings = new IconButtonMark(this);

@@ -12,11 +12,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public StackedPanel()
 		{
-			this.Padding = new Margins(10, 10, 5, 10);
+			this.Padding = new Margins(10, 10, 5, 5);
 
 			this.label = new StaticText(this);
 			this.label.Dock = DockStyle.Top;
 			this.label.Margins = new Margins(0, 0, 0, 5);
+			this.label.Visibility = false;
 
 			this.container = new Widget(this);
 			this.container.Dock = DockStyle.Fill;

@@ -91,7 +91,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.SetColumnBreakMode(3, TextBreakMode.Ellipsis | TextBreakMode.Split);
 			this.array.LineHeight = TypeEditorStructured.arrayLineHeight;
 			this.array.Dock = DockStyle.StackBegin;
-			this.array.PreferredHeight = 300;
+			this.array.PreferredHeight = 200;
 			this.array.ColumnsWidthChanged += new EventHandler(this.HandleArrayColumnsWidthChanged);
 			this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
