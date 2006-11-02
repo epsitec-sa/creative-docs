@@ -3,6 +3,7 @@
 
 namespace Epsitec.Common.Types
 {
+#if false
 	using SortDescriptionList=Collections.ObservableList<SortDescription>;
 	using GroupDescriptionList=Collections.ObservableList<GroupDescription>;
 
@@ -115,6 +116,7 @@ namespace Epsitec.Common.Types
 		private GroupDescriptionList			groupDescriptions;
 		private object							source;
 		private System.Type						collectionViewType;
-//		private ICollectionView					view;
+		private ICollectionView					view;
 	}
+#endif
 }
