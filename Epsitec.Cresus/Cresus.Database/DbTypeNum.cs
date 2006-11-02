@@ -162,5 +162,101 @@ namespace Epsitec.Cresus.Database
 		
 		
 		private DbNumDef						num_def;
+
+		#region INumericType Members
+
+		Epsitec.Common.Types.DecimalRange Epsitec.Common.Types.INumericType.Range
+		{
+			get
+			{
+				throw new System.Exception ("The method or operation is not implemented.");
+			}
+		}
+
+		Epsitec.Common.Types.DecimalRange Epsitec.Common.Types.INumericType.PreferredRange
+		{
+			get
+			{
+				throw new System.Exception ("The method or operation is not implemented.");
+			}
+		}
+
+		decimal Epsitec.Common.Types.INumericType.SmallStep
+		{
+			get
+			{
+				throw new System.Exception ("The method or operation is not implemented.");
+			}
+		}
+
+		decimal Epsitec.Common.Types.INumericType.LargeStep
+		{
+			get
+			{
+				throw new System.Exception ("The method or operation is not implemented.");
+			}
+		}
+
+		bool Epsitec.Common.Types.INumericType.UseCompactStorage
+		{
+			get
+			{
+				throw new System.Exception ("The method or operation is not implemented.");
+			}
+		}
+
+		System.Type Epsitec.Common.Types.ISystemType.SystemType
+		{
+			get
+			{
+				throw new System.Exception ("The method or operation is not implemented.");
+			}
+		}
+		
+		#endregion
+
+		#region INamedType Members
+
+		string Epsitec.Common.Types.INamedType.DefaultController
+		{
+			get
+			{
+				throw new System.Exception ("The method or operation is not implemented.");
+			}
+		}
+
+		string Epsitec.Common.Types.INamedType.DefaultControllerParameter
+		{
+			get
+			{
+				throw new System.Exception ("The method or operation is not implemented.");
+			}
+		}
+
+		#endregion
+
+		#region ICaption Members
+
+		Epsitec.Common.Support.Druid Epsitec.Common.Types.ICaption.CaptionId
+		{
+			get
+			{
+				throw new System.Exception ("The method or operation is not implemented.");
+			}
+		}
+
+		#endregion
+
+		#region IName Members
+
+		string Epsitec.Common.Types.IName.Name
+		{
+			get
+			{
+				throw new System.Exception ("The method or operation is not implemented.");
+			}
+		}
+
+		#endregion
 	}
 }

@@ -14,9 +14,9 @@ namespace Epsitec.Cresus.Database
 				DbNumDef num_def;
 				DbSimpleType simple;
 				
-				simple = TypeConverter.MapToSimpleType (raw, out num_def);
+				simple = TypeConverter.GetSimpleType (raw, out num_def);
 				
-				Assert.AreEqual (raw, TypeConverter.MapToRawType (simple, num_def), string.Format ("Cannot match {0}", raw.ToString ()));
+				Assert.AreEqual (raw, TypeConverter.GetRawType (simple, num_def), string.Format ("Cannot match {0}", raw.ToString ()));
 			}
 		}
 		

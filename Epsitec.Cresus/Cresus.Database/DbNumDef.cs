@@ -1,18 +1,26 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
 	/// La classe DbNumDef définit un format numérique.
-	/// digit_precision défini le nombre de digits acceptable pour le nombre (1 à 24)
-	/// digit_shift défini la position de la virgule
+	/// DigitPrecision définit le nombre de digits acceptable pour le nombre (1 à 24)
+	/// DigitShift définit la position de la virgule
 	/// par exemple, precision = 5, shift = 3, accepte les nombres de -99.999 à +99.999
 	/// </summary>
 	public class DbNumDef : System.ICloneable
 	{
 		public DbNumDef()
 		{
+		}
+
+		public DbNumDef(DecimalRange range)
+		{
+			this.digit_shift     = range.FractionalDigits;
+			this.digit_precision = range.GetMaximumDigitCount ();
 		}
 		
 		public DbNumDef(int digit_precision)

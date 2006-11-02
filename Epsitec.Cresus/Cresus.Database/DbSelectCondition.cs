@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Database
 		
 		public void AddCondition(DbColumn a, DbCompare comparison, decimal value, DbNumDef num_def)
 		{
-			DbRawType raw_type  = TypeConverter.MapToRawType (DbSimpleType.Decimal, num_def);
+			DbRawType raw_type  = TypeConverter.GetRawType (DbSimpleType.Decimal, num_def);
 			object    raw_value = TypeConverter.ConvertFromSimpleType (value, DbSimpleType.Decimal, num_def);
 			
 			this.AddConditionWithRawValue (a, comparison, raw_value, raw_type);

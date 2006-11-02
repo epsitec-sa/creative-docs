@@ -1,46 +1,60 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
+
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe TypeConverter réalise les conversions entre les données de bas
-	/// niveau (type décrit par DbRawType) et les données simplifiées (type décrit
-	/// par DbSimpleType).
+	///	The <c>TypeConverter</c> class provides type conversion between the low
+	///	level types (<c>DbRawType</c>) and the simplified types (<c>DbSimpleType</c>).
 	/// </summary>
-	public class TypeConverter
+	public static class TypeConverter
 	{
-		private TypeConverter()
-		{
-		}
-		
 		static TypeConverter()
 		{
-			TypeConverter.type_hash = new System.Collections.Hashtable ();
+			TypeConverter.sysTypeToSimpleType = new Dictionary<System.Type, DbSimpleType> ();
 			
 			//	Remplit la table de correspondances entre les types natifs et les types
 			//	simplifiés. Cette table est utilisée par la méthode IsCompatibleToSimpleType
 			
-			TypeConverter.type_hash[typeof (bool)]    = DbSimpleType.Decimal;
-			TypeConverter.type_hash[typeof (byte)]    = DbSimpleType.Decimal;
-			TypeConverter.type_hash[typeof (short)]   = DbSimpleType.Decimal;
-			TypeConverter.type_hash[typeof (int)]     = DbSimpleType.Decimal;
-			TypeConverter.type_hash[typeof (long)]    = DbSimpleType.Decimal;
-			TypeConverter.type_hash[typeof (decimal)] = DbSimpleType.Decimal;
-			TypeConverter.type_hash[typeof (string)]  = DbSimpleType.String;
-			TypeConverter.type_hash[typeof (byte[])]  = DbSimpleType.ByteArray;
+			TypeConverter.sysTypeToSimpleType[typeof (bool)]    = DbSimpleType.Decimal;
+			TypeConverter.sysTypeToSimpleType[typeof (byte)]    = DbSimpleType.Decimal;
+			TypeConverter.sysTypeToSimpleType[typeof (short)]   = DbSimpleType.Decimal;
+			TypeConverter.sysTypeToSimpleType[typeof (int)]     = DbSimpleType.Decimal;
+			TypeConverter.sysTypeToSimpleType[typeof (long)]    = DbSimpleType.Decimal;
+			TypeConverter.sysTypeToSimpleType[typeof (decimal)] = DbSimpleType.Decimal;
+			TypeConverter.sysTypeToSimpleType[typeof (string)]  = DbSimpleType.String;
+			TypeConverter.sysTypeToSimpleType[typeof (byte[])]  = DbSimpleType.ByteArray;
 			
-			TypeConverter.type_hash[typeof (Common.Types.Date)] = DbSimpleType.Date;
-			TypeConverter.type_hash[typeof (Common.Types.Time)] = DbSimpleType.Time;
-			TypeConverter.type_hash[typeof (System.DateTime)]   = DbSimpleType.DateTime;
+			TypeConverter.sysTypeToSimpleType[typeof (Date)]            = DbSimpleType.Date;
+			TypeConverter.sysTypeToSimpleType[typeof (Time)]            = DbSimpleType.Time;
+			TypeConverter.sysTypeToSimpleType[typeof (System.DateTime)] = DbSimpleType.DateTime;
 			
-			TypeConverter.type_hash[typeof (System.Guid)] = DbSimpleType.Guid;
+			TypeConverter.sysTypeToSimpleType[typeof (System.Guid)] = DbSimpleType.Guid;
+
+			TypeConverter.sysTypeToRawType = new Dictionary<System.Type, DbRawType> ();
+
+			TypeConverter.sysTypeToRawType[typeof (System.DBNull)] = DbRawType.Null;
+			TypeConverter.sysTypeToRawType[typeof (System.Boolean)] = DbRawType.Boolean;
+			TypeConverter.sysTypeToRawType[typeof (System.Int16)] = DbRawType.Int16;
+			TypeConverter.sysTypeToRawType[typeof (System.Int32)] = DbRawType.Int32;
+			TypeConverter.sysTypeToRawType[typeof (System.Int64)] = DbRawType.Int64;
+			TypeConverter.sysTypeToRawType[typeof (System.Decimal)] = DbRawType.SmallDecimal;
+			TypeConverter.sysTypeToRawType[typeof (System.String)] = DbRawType.String;
+			TypeConverter.sysTypeToRawType[typeof (Date)] = DbRawType.Date;
+			TypeConverter.sysTypeToRawType[typeof (Time)] = DbRawType.Time;
+			TypeConverter.sysTypeToRawType[typeof (System.DateTime)] = DbRawType.DateTime;
+			TypeConverter.sysTypeToRawType[typeof (byte[])] = DbRawType.ByteArray;
+			TypeConverter.sysTypeToRawType[typeof (System.Guid)] = DbRawType.Guid;
 		}
 		
 		
-		public static System.Type MapToNativeType(DbRawType raw_type)
+		public static System.Type GetNativeType(DbRawType rawType)
 		{
-			switch (raw_type)
+			switch (rawType)
 			{
 				case DbRawType.Null:			return typeof (System.DBNull);
 				case DbRawType.Boolean:			return typeof (System.Boolean);
@@ -59,19 +73,18 @@ namespace Epsitec.Cresus.Database
 			
 			return null;
 		}
-		
-		
-		public static DbSimpleType MapToSimpleType(DbRawType raw_type)
+
+		public static DbSimpleType GetSimpleType(DbRawType rawType)
 		{
-			DbNumDef num_def;
-			return TypeConverter.MapToSimpleType (raw_type, out num_def);
+			DbNumDef numDef;
+			return TypeConverter.GetSimpleType (rawType, out numDef);
 		}
 		
-		public static DbSimpleType MapToSimpleType(DbRawType raw_type, out DbNumDef num_def)
+		public static DbSimpleType GetSimpleType(DbRawType rawType, out DbNumDef numDef)
 		{
-			num_def = null;
+			numDef = null;
 			
-			switch (raw_type)
+			switch (rawType)
 			{
 				case DbRawType.Null:
 					return DbSimpleType.Null;
@@ -86,8 +99,8 @@ namespace Epsitec.Cresus.Database
 					//	C'est l'un des types numériques : il faut le convertir en une représentation
 					//	numérique (DbNumDef), puisque tous correspondent au même type simplifié.
 					
-					num_def = DbNumDef.FromRawType (raw_type);
-					System.Diagnostics.Debug.Assert (num_def != null);
+					numDef = DbNumDef.FromRawType (rawType);
+					System.Diagnostics.Debug.Assert (numDef != null);
 					return DbSimpleType.Decimal;
 				
 				case DbRawType.String:		return DbSimpleType.String;
@@ -100,23 +113,118 @@ namespace Epsitec.Cresus.Database
 			
 			return DbSimpleType.Unsupported;
 		}
-		
-		public static DbRawType MapToRawType(DbSimpleType simple_type, DbNumDef num_def)
+
+		public static DbSimpleType GetSimpleType(INamedType namedType, out DbNumDef numDef)
 		{
-			switch (simple_type)
+			numDef = null;
+			
+			DbSimpleType simpleType;
+			System.Type  systemType = namedType.SystemType;
+
+			if (TypeConverter.sysTypeToSimpleType.TryGetValue (systemType, out simpleType))
+			{
+				if (simpleType == DbSimpleType.Decimal)
+				{
+					INumericType numericType = namedType as INumericType;
+
+					if (numericType == null)
+					{
+						throw new System.ArgumentException (string.Format ("Type {0} cannot be mapped to {1}; missing INumericType interface", namedType.Name, simpleType));
+					}
+
+					if (numericType.UseCompactStorage)
+					{
+						//	The numeric type has request a compact storage of the data.
+						//	Let DbNumDef decide of the best possible representation which
+						//	uses the least amount of bits.
+						
+						numDef = new DbNumDef (numericType.Range);
+					}
+					else
+					{
+						//	The numeric type will be mapped to one of the standard raw
+						//	types (16-bit, 32-bit, 64-bit integer or small/large decimal)
+						//	depending on its settings.
+						
+						DbRawType rawType = TypeConverter.GetRawType (systemType);
+
+						if ((rawType == DbRawType.SmallDecimal) ||
+							(rawType == DbRawType.LargeDecimal))
+						{
+							//	Try to optimize the decimal representation in order to
+							//	properly encode all digits in the numeric type.
+
+							int shift     = numericType.Range.FractionalDigits;
+							int precision = numericType.Range.GetMaximumDigitCount ();
+
+							precision -= shift;
+
+							//	SmallDecimal : nnnnnnnnn.nnnnnnnnn
+							//	LargeDecimal : nnnnnnnnnnnnnnn.nnn
+
+							if (shift > 9)
+							{
+								throw new System.ArgumentException (string.Format ("Type {0} needs {1} fractional digits (max. is 9)", namedType.Name, shift));
+							}
+							else if (shift > 3)
+							{
+								//	Small decimal with 9 fractional digits
+
+								rawType = DbRawType.SmallDecimal;
+							}
+							else
+							{
+								//	Large decimal with only 3 fractional digits
+								
+								rawType = DbRawType.LargeDecimal;
+							}
+
+							precision += shift;
+							
+							if (precision > 18)
+							{
+								throw new System.ArgumentException (string.Format ("Type {0} needs {1} digits (max. is 18)", namedType.Name, precision));
+							}
+						}
+						
+						numDef = DbNumDef.FromRawType (rawType);
+					}
+				}
+				
+				return simpleType;
+			}
+
+			return DbSimpleType.Unsupported;
+		}
+
+		public static DbRawType GetRawType(System.Type type)
+		{
+			DbRawType rawType;
+
+			if (TypeConverter.sysTypeToRawType.TryGetValue (type, out rawType))
+			{
+				return rawType;
+			}
+
+			return DbRawType.Unknown;
+		}
+
+		public static DbRawType GetRawType(DbSimpleType simpleType, DbNumDef numDef)
+		{
+			switch (simpleType)
 			{
 				case DbSimpleType.Null:
 					return DbRawType.Null;
 				
 				case DbSimpleType.Decimal:
-					System.Diagnostics.Debug.Assert (num_def != null);
+					System.Diagnostics.Debug.Assert (numDef != null);
 					
-					if (num_def.IsConversionNeeded)
+					if (numDef.IsConversionNeeded)
 					{
 						//	Ce n'est pas un type numérique standard, donc il faut prévoir
 						//	une conversion éventuelle.
 						
-						int bits = num_def.MinimumBits;
+						int bits = numDef.MinimumBits;
 						
 						if (bits <= 16)
 						{
@@ -134,7 +242,7 @@ namespace Epsitec.Cresus.Database
 						throw new Exceptions.FormatException (string.Format ("Unsupported numeric format, {0} bits required", bits));
 					}
 					
-					return num_def.InternalRawType;
+					return numDef.InternalRawType;
 				
 				case DbSimpleType.String:		return DbRawType.String;
 				case DbSimpleType.Date:			return DbRawType.Date;
@@ -148,26 +256,26 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public static bool IsCompatibleToSimpleType(System.Type type, DbSimpleType simple_type)
+		public static bool IsCompatibleToSimpleType(System.Type type, DbSimpleType simpleType)
 		{
-			if (TypeConverter.type_hash.Contains (type))
+			if (TypeConverter.sysTypeToSimpleType.ContainsKey (type))
 			{
 				//	Le type natif est connu, on le compare simplement au type simplifié qui
 				//	a été stocké dans la table.
-				
-				DbSimpleType analysed_type = (DbSimpleType) TypeConverter.type_hash[type];
-				
-				return analysed_type == simple_type;
+
+				return TypeConverter.sysTypeToSimpleType[type] == simpleType;
 			}
-			
-			return false;
+			else
+			{
+				return false;
+			}
 		}
 		
 		
-		public static object ConvertToSimpleType(object value, DbSimpleType simple_type, DbNumDef num_def)
+		public static object ConvertToSimpleType(object value, DbSimpleType simpleType, DbNumDef numDef)
 		{
 			//	Convertit un objet en provenance de ADO.NET en sa représentation équivalente basée
-			//	sur le type simplifié 'simple_type' et la définition de son format numérique.
+			//	sur le type simplifié 'simpleType' et la définition de son format numérique.
 			
 			//	Cette méthode peut transformer une donnée numérique de manière significative,
 			//	par exemple de Int64 à decimal.
@@ -177,10 +285,10 @@ namespace Epsitec.Cresus.Database
 				return null;
 			}
 			
-			System.Diagnostics.Debug.Assert (simple_type != DbSimpleType.Unsupported);
-			System.Diagnostics.Debug.Assert (simple_type != DbSimpleType.Null);
+			System.Diagnostics.Debug.Assert (simpleType != DbSimpleType.Unsupported);
+			System.Diagnostics.Debug.Assert (simpleType != DbSimpleType.Null);
 			
-			switch (simple_type)
+			switch (simpleType)
 			{
 				case DbSimpleType.Decimal:
 					
@@ -217,13 +325,13 @@ namespace Epsitec.Cresus.Database
 						throw new Exceptions.FormatException (string.Format ("Expected numeric format, got {0}", value.GetType ().ToString ()));
 					}
 						
-					if (num_def.IsConversionNeeded)
+					if (numDef.IsConversionNeeded)
 					{
 						long i64 = (long) num;
-						num = num_def.ConvertFromInt64 (i64);
+						num = numDef.ConvertFromInt64 (i64);
 					}
 					
-					if (num_def.CheckCompatibility (num))
+					if (numDef.CheckCompatibility (num))
 					{
 						return num;
 					}
@@ -241,9 +349,9 @@ namespace Epsitec.Cresus.Database
 			return null;
 		}
 		
-		public static object ConvertFromSimpleType(object value, DbSimpleType simple_type, DbNumDef num_def)
+		public static object ConvertFromSimpleType(object value, DbSimpleType simpleType, DbNumDef numDef)
 		{
-			//	Convertit un objet basé sur le type simplifié 'simple_type' et la définition de son
+			//	Convertit un objet basé sur le type simplifié 'simpleType' et la définition de son
 			//	format numérique en un objet compatible avec ADO.NET.
 			
 			//	Cette méthode peut transformer une donnée numérique de manière siginificative,
@@ -254,17 +362,17 @@ namespace Epsitec.Cresus.Database
 				return null;
 			}
 			
-			System.Diagnostics.Debug.Assert (simple_type != DbSimpleType.Unsupported);
-			System.Diagnostics.Debug.Assert (simple_type != DbSimpleType.Null);
+			System.Diagnostics.Debug.Assert (simpleType != DbSimpleType.Unsupported);
+			System.Diagnostics.Debug.Assert (simpleType != DbSimpleType.Null);
 			
-			switch (simple_type)
+			switch (simpleType)
 			{
 				case DbSimpleType.Decimal:
 					System.Diagnostics.Debug.Assert (value is decimal);
 					
 					//	Le type simplifié numérique "Decimal" est toujours représenté au moyen du
 					//	type decimal de .NET. Par contre, son type ADO.NET peut être très différent,
-					//	en fonction des définitions numériques fournies par num_def.
+					//	en fonction des définitions numériques fournies par numDef.
 					//
 					//	En particulier:
 					//
@@ -275,7 +383,7 @@ namespace Epsitec.Cresus.Database
 					
 					decimal num = (decimal) value;
 					
-					switch (num_def.InternalRawType)
+					switch (numDef.InternalRawType)
 					{
 						case DbRawType.Boolean:			return (bool)(num != 0);
 						case DbRawType.Int16:			return (System.Int16) num;
@@ -289,10 +397,10 @@ namespace Epsitec.Cresus.Database
 					//	quelque chose d'universellement stockable (int) et déterminer ensuite
 					//	la précision requise.
 					
-					long i64 = num_def.ConvertToInt64 (num);
+					long i64 = numDef.ConvertToInt64 (num);
 					
-					if (num_def.MinimumBits <= 16)		return (System.Int16) i64;
-					if (num_def.MinimumBits <= 32)		return (System.Int32) i64;
+					if (numDef.MinimumBits <= 16)		return (System.Int16) i64;
+					if (numDef.MinimumBits <= 32)		return (System.Int32) i64;
 					
 					return i64;
 				
@@ -328,56 +436,63 @@ namespace Epsitec.Cresus.Database
 					return value;
 			}
 			
-			throw new Exceptions.FormatException (string.Format ("Invalid value format {0}, cannot convert to {1}", value.GetType ().ToString (), simple_type.ToString ()));
+			throw new Exceptions.FormatException (string.Format ("Invalid value format {0}, cannot convert to {1}", value.GetType ().ToString (), simpleType.ToString ()));
 		}
 		
 		
-		public static object ConvertToInternal(ITypeConverter converter, object value, DbRawType raw_type)
+		public static object ConvertToInternal(ITypeConverter converter, object value, DbRawType rawType)
 		{
-			if (converter.CheckNativeSupport (raw_type))
+			if (converter.CheckNativeSupport (rawType))
 			{
 				return value;
 			}
 			
-			IRawTypeConverter raw_converter;
+			IRawTypeConverter rawConverter;
 			
-			if (converter.GetRawTypeConverter (raw_type, out raw_converter))
+			if (converter.GetRawTypeConverter (rawType, out rawConverter))
 			{
-				return raw_converter.ConvertToInternalType (value);
+				return rawConverter.ConvertToInternalType (value);
 			}
 			
-			throw new System.InvalidOperationException (string.Format ("Cannot convert type {0} to internal representation.", raw_type));
+			throw new System.InvalidOperationException (string.Format ("Cannot convert type {0} to internal representation.", rawType));
 		}
 		
-		public static object ConvertFromInternal(ITypeConverter converter, object value, DbRawType raw_type)
+		public static object ConvertFromInternal(ITypeConverter converter, object value, DbRawType rawType)
 		{
-			if (converter.CheckNativeSupport (raw_type))
+			if (converter.CheckNativeSupport (rawType))
 			{
 				return value;
 			}
 			
-			IRawTypeConverter raw_converter;
+			IRawTypeConverter rawConverter;
 			
-			if (converter.GetRawTypeConverter (raw_type, out raw_converter))
+			if (converter.GetRawTypeConverter (rawType, out rawConverter))
 			{
-				return raw_converter.ConvertFromInternalType (value);
+				return rawConverter.ConvertFromInternalType (value);
 			}
 			
-			throw new System.InvalidOperationException (string.Format ("Cannot convert from internal representation to type {0}.", raw_type));
+			throw new System.InvalidOperationException (string.Format ("Cannot convert from internal representation to type {0}.", rawType));
 		}
-		
-		
-		public static System.IFormatProvider		CurrentFormatProvider
+
+
+		public static System.IFormatProvider	CurrentFormatProvider
 		{
-			get { return System.Globalization.CultureInfo.CurrentCulture; }
+			get
+			{
+				return System.Globalization.CultureInfo.CurrentCulture;
+			}
 		}
-		
-		public static System.IFormatProvider		InvariantFormatProvider
+
+		public static System.IFormatProvider	InvariantFormatProvider
 		{
-			get { return System.Globalization.CultureInfo.InvariantCulture; }
+			get
+			{
+				return System.Globalization.CultureInfo.InvariantCulture;
+			}
 		}
-		
-		
-		private static System.Collections.Hashtable type_hash;
+
+
+		private static Dictionary<System.Type, DbSimpleType>	sysTypeToSimpleType;
+		private static Dictionary<System.Type, DbRawType>		sysTypeToRawType;
 	}
 }

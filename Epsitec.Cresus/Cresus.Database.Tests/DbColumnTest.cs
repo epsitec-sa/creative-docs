@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (false, sql_b.IsNullAllowed);
 			Assert.IsTrue (sql_b.HasRawConverter);
 			Assert.AreEqual (sql_b.RawConverter.InternalType, sql_b.Type);
-			Assert.AreEqual (sql_b.RawConverter.ExternalType, TypeConverter.MapToRawType (column_b.SimpleType, column_b.NumDef));
+			Assert.AreEqual (sql_b.RawConverter.ExternalType, TypeConverter.GetRawType (column_b.SimpleType, column_b.NumDef));
 			
 			Assert.AreEqual (DbRawType.String, sql_c.Type);
 			Assert.AreEqual ("U_C", sql_c.Name);

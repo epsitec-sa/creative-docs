@@ -47,5 +47,14 @@ namespace Epsitec.Common.Types
 		{
 			get;
 		}
+
+		/// <summary>
+		/// Gets a value indicating whether this numeric type should use compact storage.
+		/// </summary>
+		/// <value><c>true</c> if this numeric type should use compact storage; otherwise, <c>false</c>.</value>
+		bool UseCompactStorage
+		{
+			get;
+		}
 	}
 }
