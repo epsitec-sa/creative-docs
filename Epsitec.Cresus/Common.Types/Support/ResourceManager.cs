@@ -239,7 +239,7 @@ namespace Epsitec.Common.Support
 		}
 
 
-		public void AnalyseFullId(string id, out string prefix, out string localId, out ResourceModuleInfo module)
+		public void AnalyseStringsFullId(string id, out string prefix, out string localId, out ResourceModuleInfo module)
 		{
 			if (!string.IsNullOrEmpty (id))
 			{
@@ -270,7 +270,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public string NormalizeFullId(string id)
+		public string NormalizeStringsFullId(string id)
 		{
 			string prefix;
 			string localId;
@@ -278,10 +278,10 @@ namespace Epsitec.Common.Support
 			Resources.SplitFullId (id, out prefix, out localId);
 			Resources.ResolveStringsDruidReference (ref prefix, ref localId);
 
-			return this.NormalizeFullId (prefix, localId);
+			return this.NormalizeStringsFullId (prefix, localId);
 		}
 		
-		public string NormalizeFullId(string prefix, string localId)
+		public string NormalizeStringsFullId(string prefix, string localId)
 		{
 			if (string.IsNullOrEmpty (localId))
 			{
@@ -611,19 +611,19 @@ namespace Epsitec.Common.Support
 		/// </summary>
 		/// <param name="druid">The DRUID of the field.</param>
 		/// <returns>The resource bundle field; otherwise, <c>ResourceBundle.Field.Empty</c>.</returns>
-		public ResourceBundle.Field GetBundleField(Druid druid)
+		public ResourceBundle.Field GetStringsBundleField(Druid druid)
 		{
-			return this.GetBundleField (druid, ResourceLevel.Merged, this.culture);
+			return this.GetStringsBundleField (druid, ResourceLevel.Merged, this.culture);
 		}
 		
-		public ResourceBundle.Field GetBundleField(Druid druid, ResourceLevel level)
+		public ResourceBundle.Field GetStringsBundleField(Druid druid, ResourceLevel level)
 		{
-			return this.GetBundleField (druid, level, this.culture);
+			return this.GetStringsBundleField (druid, level, this.culture);
 		}
 		
-		public ResourceBundle.Field GetBundleField(Druid druid, ResourceLevel level, CultureInfo culture)
+		public ResourceBundle.Field GetStringsBundleField(Druid druid, ResourceLevel level, CultureInfo culture)
 		{
-			string id = this.NormalizeFullId (druid.ToResourceId ());
+			string id = this.NormalizeStringsFullId (druid.ToResourceId ());
 			
 			string bundleName;
 			string fieldName;
@@ -746,7 +746,7 @@ namespace Epsitec.Common.Support
 			string bundleName;
 			string fieldName;
 			
-			resource = this.NormalizeFullId (resource);
+			resource = this.NormalizeStringsFullId (resource);
 
 			Caption caption = null;
 			
@@ -829,7 +829,9 @@ namespace Epsitec.Common.Support
 		{
 			if (bundle != null)
 			{
-				string source = bundle[druid].AsString;
+				ResourceBundle.Field field = bundle[druid];
+				
+				string source = field.AsString;
 				
 				if (string.IsNullOrEmpty (source))
 				{
@@ -840,6 +842,11 @@ namespace Epsitec.Common.Support
 				temp.DeserializeFromString (source);
 				
 				caption = (caption == null) ? temp : Caption.Merge (caption, temp);
+
+				if (caption.ContainsLocalValue (ResourceManager.SourceBundleProperty) == false)
+				{
+					ResourceManager.SetSourceBundle (caption, bundle);
+				}
 			}
 		}
 
@@ -1102,7 +1109,7 @@ namespace Epsitec.Common.Support
 
 		internal bool SetResourceBinding(ResourceBinding binding)
 		{
-			string resourceId = this.NormalizeFullId (binding.ResourceId);
+			string resourceId = this.NormalizeStringsFullId (binding.ResourceId);
 
 			string bundleName;
 			string fieldName;
@@ -1180,7 +1187,7 @@ namespace Epsitec.Common.Support
 				string localId;
 				ResourceModuleInfo module;
 
-				this.AnalyseFullId (name, out prefix, out localId, out module);
+				this.AnalyseStringsFullId (name, out prefix, out localId, out module);
 
 				string key = Resources.CreateBundleKey (prefix, module.Id, localId, level, culture);
 
@@ -1211,7 +1218,7 @@ namespace Epsitec.Common.Support
 			string localId;
 			ResourceModuleInfo module;
 
-			this.AnalyseFullId (bundleName, out prefix, out localId, out module);
+			this.AnalyseStringsFullId (bundleName, out prefix, out localId, out module);
 
 			string key = Resources.CreateBundleKey (prefix, module.Id, localId, level, culture);
 
@@ -1258,7 +1265,7 @@ namespace Epsitec.Common.Support
 		{
 			string prefix;
 
-			this.AnalyseFullId (fullId, out prefix, out localId, out module);
+			this.AnalyseStringsFullId (fullId, out prefix, out localId, out module);
 
 			if (string.IsNullOrEmpty (localId))
 			{
@@ -1631,9 +1638,27 @@ namespace Epsitec.Common.Support
 			return (ResourceManager) obj.GetValue (ResourceManager.ResourceManagerProperty);
 		}
 
+		public static void SetSourceBundle(DependencyObject obj, ResourceBundle value)
+		{
+			if (value == null)
+			{
+				obj.ClearValue (ResourceManager.SourceBundleProperty);
+			}
+			else
+			{
+				obj.SetValue (ResourceManager.SourceBundleProperty, value);
+			}
+		}
+
+		public static ResourceBundle GetSourceBundle(DependencyObject obj)
+		{
+			return (ResourceBundle) obj.GetValue (ResourceManager.SourceBundleProperty);
+		}
+
 		#endregion
 
 		public static DependencyProperty ResourceManagerProperty = DependencyProperty.RegisterAttached ("ResourceManager", typeof (ResourceManager), typeof (ResourceManager));
+		public static DependencyProperty SourceBundleProperty    = DependencyProperty.RegisterAttached ("SourceBundle", typeof (ResourceBundle), typeof (ResourceManager));
 		
 		private static long						nextSerialId = 1;
 		

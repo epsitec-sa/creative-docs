@@ -245,7 +245,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 					if (druid.IsValid)
 					{
 						Caption caption = this.module.ResourceManager.GetCaption(druid);
-						ResourceBundle.Field f = this.module.ResourceManager.GetBundleField(druid);
+						ResourceBundle bundle = ResourceManager.GetSourceBundle(caption);
+						ResourceBundle.Field f = bundle[druid];
 
 						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
 						{

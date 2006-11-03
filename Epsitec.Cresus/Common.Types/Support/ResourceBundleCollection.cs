@@ -81,7 +81,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.manager.NormalizeFullId (this.prefix, this.name);
+				return this.manager.NormalizeStringsFullId (this.prefix, this.name);
 			}
 		}
 		public string							Name
