@@ -131,12 +131,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.scrollable.TabIndex = this.tabIndex++;
 			this.scrollable.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
-			this.bandContainers = new List<Widget>();
-			this.leftContainers = new List<MyWidgets.StackedPanel>();
-			this.rightContainers = new List<MyWidgets.StackedPanel>();
-			this.modeContainers = new List<BandMode>();
-			this.intensityContainers = new List<double>();
-
+			this.bands = new List<Band>();
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
 			//	Résumé des captions.
@@ -371,26 +366,25 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateDisplayMode()
 		{
 			//	Metà jour le mode d'affichage des bandes.
-			for (int i=0; i<this.modeContainers.Count; i++)
+			for (int i=0; i<this.bands.Count; i++)
 			{
-				if (this.modeContainers[i] == BandMode.CaptionSummary)
+				switch (bands[i].bandMode)
 				{
-					this.bandContainers[i].Visibility = !AbstractCaptions.captionExtended;
-				}
+					case BandMode.CaptionSummary:
+						this.bands[i].bandContainer.Visibility = !AbstractCaptions.captionExtended;
+						break;
 
-				if (this.modeContainers[i] == BandMode.CaptionView)
-				{
-					this.bandContainers[i].Visibility = AbstractCaptions.captionExtended;
-				}
+					case BandMode.CaptionView:
+						this.bands[i].bandContainer.Visibility = AbstractCaptions.captionExtended;
+						break;
 
-				if (this.modeContainers[i] == BandMode.SuiteSummary)
-				{
-					this.bandContainers[i].Visibility = !AbstractCaptions.suiteExtended;
-				}
+					case BandMode.SuiteSummary:
+						this.bands[i].bandContainer.Visibility = !AbstractCaptions.suiteExtended;
+						break;
 
-				if (this.modeContainers[i] == BandMode.SuiteView)
-				{
-					this.bandContainers[i].Visibility = AbstractCaptions.suiteExtended;
+					case BandMode.SuiteView:
+						this.bands[i].bandContainer.Visibility = AbstractCaptions.suiteExtended;
+						break;
 				}
 			}
 		}
@@ -530,7 +524,6 @@ namespace Epsitec.Common.Designer.Viewers
 			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			band.TabIndex = this.tabIndex++;
 			band.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-			this.bandContainers.Add(band);
 
 			leftContainer = new MyWidgets.StackedPanel(band);
 			leftContainer.Name = "LeftContainer";
@@ -542,7 +535,6 @@ namespace Epsitec.Common.Designer.Viewers
 			leftContainer.Dock = DockStyle.StackFill;
 			leftContainer.TabIndex = this.tabIndex++;
 			leftContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-			this.leftContainers.Add(leftContainer);
 
 			rightContainer = new MyWidgets.StackedPanel(band);
 			rightContainer.Name = "RightContainer";
@@ -552,10 +544,8 @@ namespace Epsitec.Common.Designer.Viewers
 			rightContainer.Dock = DockStyle.StackFill;
 			rightContainer.TabIndex = this.tabIndex++;
 			rightContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-			this.rightContainers.Add(rightContainer);
 
-			this.modeContainers.Add(mode);
-			this.intensityContainers.Add(backgroundIntensity);
+			this.bands.Add(new Band(band, leftContainer, rightContainer, mode, backgroundIntensity));
 
 			return leftContainer.ExtendButton;
 		}
@@ -570,7 +560,6 @@ namespace Epsitec.Common.Designer.Viewers
 			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			band.TabIndex = this.tabIndex++;
 			band.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-			this.bandContainers.Add(band);
 
 			leftContainer = new MyWidgets.StackedPanel(band);
 			leftContainer.Name = "LeftContainer";
@@ -582,12 +571,8 @@ namespace Epsitec.Common.Designer.Viewers
 			leftContainer.Dock = DockStyle.StackFill;
 			leftContainer.TabIndex = this.tabIndex++;
 			leftContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-			this.leftContainers.Add(leftContainer);
 
-			this.rightContainers.Add(null);  // pour synchroniser les parties gauche/droite
-
-			this.modeContainers.Add(mode);
-			this.intensityContainers.Add(backgroundIntensity);
+			this.bands.Add(new Band(band, leftContainer, null, mode, backgroundIntensity));
 
 			return leftContainer.ExtendButton;
 		}
@@ -595,16 +580,16 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void ColoriseBands(ResourceAccess.ModificationState state1, ResourceAccess.ModificationState state2)
 		{
 			//	Colorise toutes les bandes horizontales.
-			for (int i=0; i<this.leftContainers.Count; i++)
+			for (int i=0; i<this.bands.Count; i++)
 			{
-				MyWidgets.StackedPanel lc = this.leftContainers[i];
-				MyWidgets.StackedPanel rc = this.rightContainers[i];
+				MyWidgets.StackedPanel lc = this.bands[i].leftContainer;
+				MyWidgets.StackedPanel rc = this.bands[i].rightContainer;
 
-				lc.BackgroundColor = Abstract.GetBackgroundColor(state1, this.intensityContainers[i]);
+				lc.BackgroundColor = Abstract.GetBackgroundColor(state1, this.bands[i].intensityContainer);
 
 				if (rc != null)
 				{
-					rc.BackgroundColor = Abstract.GetBackgroundColor(state2, this.intensityContainers[i]);
+					rc.BackgroundColor = Abstract.GetBackgroundColor(state2, this.bands[i].intensityContainer);
 					rc.Visibility = (this.secondaryCulture != null);
 				}
 			}
@@ -975,6 +960,25 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected struct Band
+		{
+			public Band(Widget band, MyWidgets.StackedPanel left, MyWidgets.StackedPanel right, BandMode mode, double intensity)
+			{
+				this.bandContainer = band;
+				this.leftContainer = left;
+				this.rightContainer = right;
+				this.bandMode = mode;
+				this.intensityContainer = intensity;
+			}
+
+			public Widget						bandContainer;
+			public MyWidgets.StackedPanel		leftContainer;
+			public MyWidgets.StackedPanel		rightContainer;
+			public BandMode						bandMode;
+			public double						intensityContainer;
+		}
+
+
 		protected static bool					captionExtended = false;
 		protected static bool					suiteExtended = false;
 
@@ -986,11 +990,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected FrameBox						titleBox;
 		protected StaticText					titleText;
 		protected Scrollable					scrollable;
-		protected List<Widget>					bandContainers;
-		protected List<MyWidgets.StackedPanel>	leftContainers;
-		protected List<MyWidgets.StackedPanel>	rightContainers;
-		protected List<BandMode>				modeContainers;
-		protected List<double>					intensityContainers;
+		protected List<Band>					bands;
 		protected StaticText					primarySummary;
 		protected IconButton					primarySummaryIcon;
 		protected StaticText					secondarySummary;
