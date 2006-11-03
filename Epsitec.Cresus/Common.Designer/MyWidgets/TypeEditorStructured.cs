@@ -220,19 +220,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 					AbstractType type = field.Type as AbstractType;
 					if (type != null)
 					{
-						Caption caption = type.Caption;
-						ResourceBundle bundle = ResourceManager.GetSourceBundle(caption);
-						ResourceBundle.Field rf = bundle[caption.Druid];
-						string dn = ResourceAccess.SubAllFilter(rf.Name);
+						Caption caption = this.module.ResourceManager.GetCaption(type.Caption.Druid);
+						//?ResourceBundle bundle = ResourceManager.GetSourceBundle(caption);
+						//?ResourceBundle.Field rf = bundle[caption.Druid];
+						//?string dn = ResourceAccess.SubAllFilter(rf.Name);
 
 						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
 						{
 							string nd = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
-							captionType = string.Concat(dn, ":<br/>", nd);
+							captionType = string.Concat(caption.Name, ":<br/>", nd);
 						}
 						else
 						{
-							captionType = dn;
+							captionType = caption.Name;
 						}
 
 						iconType = this.resourceAccess.DirectGetIcon(caption.Druid);
@@ -248,18 +248,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 					if (druid.IsValid)
 					{
 						Caption caption = this.module.ResourceManager.GetCaption(druid);
-						ResourceBundle bundle = ResourceManager.GetSourceBundle(caption);
-						ResourceBundle.Field rf = bundle[druid];
-						string dn = ResourceAccess.SubAllFilter(rf.Name);
+						//?ResourceBundle bundle = ResourceManager.GetSourceBundle(caption);
+						//?ResourceBundle.Field rf = bundle[druid];
+						//?string dn = ResourceAccess.SubAllFilter(rf.Name);
 
 						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
 						{
 							string nd = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
-							captionText = string.Concat(dn, ":<br/>", nd);
+							captionText = string.Concat(caption.Name, ":<br/>", nd);
 						}
 						else
 						{
-							captionText = dn;
+							captionText = caption.Name;
 						}
 
 						if (!string.IsNullOrEmpty(caption.Icon))

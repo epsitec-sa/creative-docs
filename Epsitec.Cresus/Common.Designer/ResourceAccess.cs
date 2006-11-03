@@ -453,7 +453,11 @@ namespace Epsitec.Common.Designer
 				{
 					ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
 					newField.SetDruid(newDruid);
-					newField.SetName(newName);
+					
+					if (bundle == this.primaryBundle)
+					{
+						newField.SetName(newName);
+					}
 
 					if (duplicateContent)
 					{
@@ -501,6 +505,11 @@ namespace Epsitec.Common.Designer
 						if (!string.IsNullOrEmpty(s))
 						{
 							caption.DeserializeFromString(s, this.resourceManager);
+						}
+
+						if (bundle == this.primaryBundle)
+						{
+							caption.Name = ResourceAccess.SubAllFilter(newField.Name);
 						}
 
 						newField.SetStringValue(caption.SerializeToString());
@@ -1125,6 +1134,11 @@ namespace Epsitec.Common.Designer
 						ICollection<string> dst = caption.Labels;
 						dst.Add(text);
 
+						if (bundle == this.primaryBundle)
+						{
+							caption.Name = ResourceAccess.SubAllFilter(newField.Name);
+						}
+
 						newField.SetStringValue(caption.SerializeToString());
 					}
 				}
@@ -1475,6 +1489,7 @@ namespace Epsitec.Common.Designer
 					string name = this.AddFilter(field.String, false);
 					this.accessField.SetName(name);
 
+#if false
 					Druid druid = this.druidsIndex[index];
 					foreach (ResourceBundle bundle in this.bundles)
 					{
@@ -1483,6 +1498,13 @@ namespace Epsitec.Common.Designer
 						{
 							f.SetName(name);
 						}
+					}
+#endif
+
+					if (this.IsCaptionsType)
+					{
+						this.accessCaption.Name = field.String;
+						this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 					}
 				}
 			}
@@ -1947,6 +1969,11 @@ namespace Epsitec.Common.Designer
 							if (!string.IsNullOrEmpty(s))
 							{
 								this.accessCaption.DeserializeFromString(s, this.resourceManager);
+							}
+
+							if (cultureName == null)
+							{
+								this.accessCaption.Name = ResourceAccess.SubAllFilter(this.accessField.Name);
 							}
 						}
 					}
