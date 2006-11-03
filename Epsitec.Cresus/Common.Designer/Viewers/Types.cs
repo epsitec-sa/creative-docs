@@ -18,7 +18,7 @@ namespace Epsitec.Common.Designer.Viewers
 			MyWidgets.StackedPanel leftContainer;
 
 			//	Choix du contrôleur.
-			this.buttonSuiteCompact = this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Controller.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.8);
+			this.buttonSuiteCompact = this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Controller.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.6);
 			this.buttonSuiteCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			StaticText label = new StaticText(leftContainer.Container);
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldController.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Zone 'nullable'.
-			this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Nullable.Title, BandMode.SuiteView, GlyphShape.None, false, 0.8);
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Nullable.Title, BandMode.SuiteView, GlyphShape.None, false, 0.6);
 
 			this.primaryNullable = new CheckButton(leftContainer.Container);
 			this.primaryNullable.Text = Res.Strings.Viewers.Types.Nullable.CheckButton;
@@ -51,10 +51,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryNullable.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Editeur du type.
-			this.CreateBand(out this.container, Res.Strings.Viewers.Types.Editor.Title, BandMode.SuiteView, GlyphShape.None, false, 0.8);
+			this.CreateBand(out this.container, Res.Strings.Viewers.Types.Editor.Title, BandMode.SuiteView, GlyphShape.None, false, 0.6);
 
 			//	Résumé des paramètres.
-			this.buttonSuiteExtend = this.CreateBand(out leftContainer, "Résumé", BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.8);
+			this.buttonSuiteExtend = this.CreateBand(out leftContainer, "Résumé", BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.6);
 			this.buttonSuiteExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.UpdateDisplayMode();

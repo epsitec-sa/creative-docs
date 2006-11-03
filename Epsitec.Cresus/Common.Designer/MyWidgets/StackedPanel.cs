@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public StackedPanel()
 		{
-			this.Padding = new Margins(15+10, 10, 5-1, 5);
+			this.Padding = new Margins(StackedPanel.leftMargin+10, 10, 5-1, 5);
 
 			this.container = new Widget(this);
 			this.container.Dock = DockStyle.Fill;
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						this.extendButton = new GlyphButton(this);
 						this.extendButton.Anchor = AnchorStyles.TopLeft;
-						this.extendButton.PreferredSize = new Size(16, 16);
+						this.extendButton.PreferredSize = new Size(StackedPanel.leftMargin+1, StackedPanel.leftMargin+1);
 						this.UpdateExtendButton();
 					}
 
@@ -218,10 +218,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.backgroundColor);
 
+				Color color = Color.FromAlphaRgb(1.0, this.backgroundColor.R, this.backgroundColor.G, this.backgroundColor.B);
 				Rectangle r = rect;
-				r.Width = 15;
+				r.Width = StackedPanel.leftMargin;
 				graphics.AddFilledRectangle(r);
-				graphics.RenderSolid(this.backgroundColor);
+				graphics.RenderSolid(color);  // marge gauche plus foncée
 			}
 
 			rect.Deflate(0.5, 0.5);
@@ -229,7 +230,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (!this.backgroundColor.IsEmpty)  // pas un séparateur ?
 			{
-				graphics.AddLine(rect.Left+15, rect.Bottom-0.5, rect.Left+15, rect.Top+0.5);  // | +15 à gauche
+				graphics.AddLine(rect.Left+StackedPanel.leftMargin, rect.Bottom-0.5, rect.Left+StackedPanel.leftMargin, rect.Top+0.5);  // | +marge à gauche
 			}
 
 			if (this.isLeftPart)
@@ -239,26 +240,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			graphics.RenderSolid(adorner.ColorBorder);
 
-			if (this.titleLayout != null)
+			if (this.titleLayout != null)  // texte existe ?
 			{
-				double w = rect.Height-2;
-				if (this.extendButton != null)
+				double w = rect.Height-2;  // hauteur disponible = largeur pour le texte, car vertical
+				if (this.extendButton != null)  // bouton extend existe ?
 				{
-					w -= this.extendButton.PreferredHeight;
+					w -= this.extendButton.PreferredHeight;  // enlève la hauteur du bouton
 				}
 
-				if (w > 22)
+				if (w > 20)  // largeur assez grande ?
 				{
 					Point center = new Point(rect.Left+14, rect.Bottom+1);
 					Transform it = graphics.Transform;
 					graphics.RotateTransformDeg(90, center.X, center.Y);
-					this.titleLayout.LayoutSize = new Size(w, 15);
+					this.titleLayout.LayoutSize = new Size(w, StackedPanel.leftMargin);
 					this.titleLayout.Paint(center, graphics);
 					graphics.Transform = it;
 				}
 			}
 		}
 
+
+		protected static readonly double	leftMargin = 15;
 
 		protected Color						backgroundColor = Color.Empty;
 		protected bool						isLeftPart = true;

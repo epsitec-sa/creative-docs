@@ -1077,7 +1077,7 @@ namespace Epsitec.Common.Designer.Viewers
 				default:
 					IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 					Color cap = adorner.ColorCaption;
-					return Color.FromAlphaRgb(intensity, 0.5+cap.R*0.5, 0.5+cap.G*0.5, 0.5+cap.B*0.5);
+					return Color.FromAlphaRgb(intensity, 0.4+cap.R*0.6, 0.4+cap.G*0.6, 0.4+cap.B*0.6);
 			}
 		}
 

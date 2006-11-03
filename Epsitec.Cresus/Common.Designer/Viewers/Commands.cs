@@ -16,7 +16,7 @@ namespace Epsitec.Common.Designer.Viewers
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
 			//	Aspect (pour DefaultParameter) et Statefull.
-			this.buttonSuiteCompact = this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.8);
+			this.buttonSuiteCompact = this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.6);
 			this.buttonSuiteCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			StaticText label = new StaticText(leftContainer.Container);
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryStatefull.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Shortcuts.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Commands.Shortcut.Title, BandMode.SuiteView, GlyphShape.None, false, 0.8);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Commands.Shortcut.Title, BandMode.SuiteView, GlyphShape.None, false, 0.6);
 
 			this.primaryShortcut1 = new ShortcutEditor(leftContainer.Container);
 			this.primaryShortcut1.Title = Res.Strings.Viewers.Commands.Shortcut.Main;
@@ -83,20 +83,20 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryShortcut2.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			//	Group.
-			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Group.Title, BandMode.SuiteView, GlyphShape.None, false, 0.8);
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Group.Title, BandMode.SuiteView, GlyphShape.None, false, 0.6);
 
 			label = new StaticText(leftContainer.Container);
 			label.Text = Res.Strings.Viewers.Commands.Group.Title;
 			label.MinHeight = 20;  // attention, très important !
 			label.PreferredHeight = 20;
-			label.PreferredWidth = 89;
+			label.PreferredWidth = 89;  // calqué sur ShortcutEditor
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Margins = new Margins(0, 5, 0, 0);
 			label.Dock = DockStyle.Left;
 
 			this.primaryGroup = new TextFieldCombo(leftContainer.Container);
 			this.primaryGroup.MinHeight = 20;  // attention, très important !
-			this.primaryGroup.PreferredWidth = 216;
+			this.primaryGroup.PreferredWidth = 216;  // calqué sur ShortcutEditor
 			this.primaryGroup.HorizontalAlignment = HorizontalAlignment.Left;
 			this.primaryGroup.Dock = DockStyle.Left;
 			this.primaryGroup.TextChanged += new EventHandler(this.HandleGroupTextChanged);
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryGroup.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Résumé des paramètres.
-			this.buttonSuiteExtend = this.CreateBand(out leftContainer, "Résumé", BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.8);
+			this.buttonSuiteExtend = this.CreateBand(out leftContainer, "Résumé", BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.6);
 			this.buttonSuiteExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.UpdateDisplayMode();

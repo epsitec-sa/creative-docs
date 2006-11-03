@@ -140,7 +140,7 @@ namespace Epsitec.Common.Designer.Viewers
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
 			//	Résumé des captions.
-			this.buttonCaptionExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.CaptionSummary, GlyphShape.ArrowDown, false, 0.3);
+			this.buttonCaptionExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.CaptionSummary, GlyphShape.ArrowDown, false, 0.2);
 			this.buttonCaptionExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.primarySummary = new StaticText(leftContainer.Container);
@@ -160,7 +160,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondarySummaryIcon.Dock = DockStyle.Right;
 
 			//	Textes.
-			this.buttonCaptionCompact = this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels.Title, BandMode.CaptionView, GlyphShape.ArrowUp, false, 0.3);
+			this.buttonCaptionCompact = this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels.Title, BandMode.CaptionView, GlyphShape.ArrowUp, false, 0.2);
 			this.buttonCaptionCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.primaryLabels = new MyWidgets.StringCollection(leftContainer.Container);
@@ -178,7 +178,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryLabels.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			//	Description.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Description.Title, BandMode.CaptionView, GlyphShape.None, false, 0.3);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Description.Title, BandMode.CaptionView, GlyphShape.None, false, 0.2);
 
 			this.primaryDescription = new TextFieldMulti(leftContainer.Container);
 			this.primaryDescription.PreferredHeight = 50;
@@ -199,7 +199,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryDescription.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Icône.
-			this.CreateBand(out leftContainer, Res.Strings.Viewers.Captions.Icon.Title, BandMode.CaptionView, GlyphShape.None, false, 0.3);
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Captions.Icon.Title, BandMode.CaptionView, GlyphShape.None, false, 0.2);
 
 			StaticText label = new StaticText(leftContainer.Container);
 			label.Text = Res.Strings.Viewers.Captions.Icon.Title;
@@ -227,7 +227,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIconInfo.Dock = DockStyle.Left;
 
 			//	Commentaires.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, BandMode.CaptionView, GlyphShape.None, false, 0.3);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, BandMode.CaptionView, GlyphShape.None, false, 0.2);
 
 			this.primaryAbout = new TextFieldMulti(leftContainer.Container);
 			this.primaryAbout.PreferredHeight = 36;
