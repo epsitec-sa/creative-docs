@@ -507,11 +507,7 @@ namespace Epsitec.Common.Designer
 							caption.DeserializeFromString(s, this.resourceManager);
 						}
 
-						if (bundle == this.primaryBundle)
-						{
-							caption.Name = ResourceAccess.SubAllFilter(newField.Name);
-						}
-
+						this.AdjustCaptionName(bundle, newField, caption);
 						newField.SetStringValue(caption.SerializeToString());
 					}
 
@@ -1134,11 +1130,7 @@ namespace Epsitec.Common.Designer
 						ICollection<string> dst = caption.Labels;
 						dst.Add(text);
 
-						if (bundle == this.primaryBundle)
-						{
-							caption.Name = ResourceAccess.SubAllFilter(newField.Name);
-						}
-
+						this.AdjustCaptionName(bundle, newField, caption);
 						newField.SetStringValue(caption.SerializeToString());
 					}
 				}
@@ -1503,7 +1495,7 @@ namespace Epsitec.Common.Designer
 
 					if (this.IsCaptionsType)
 					{
-						this.accessCaption.Name = field.String;
+						this.AdjustCaptionName(this.primaryBundle, this.accessField, this.accessCaption);
 						this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 					}
 				}
@@ -1971,10 +1963,7 @@ namespace Epsitec.Common.Designer
 								this.accessCaption.DeserializeFromString(s, this.resourceManager);
 							}
 
-							if (cultureName == null)
-							{
-								this.accessCaption.Name = ResourceAccess.SubAllFilter(this.accessField.Name);
-							}
+							this.AdjustCaptionName(this.accessBundle, this.accessField, this.accessCaption);
 						}
 					}
 				}
@@ -2196,10 +2185,7 @@ namespace Epsitec.Common.Designer
 			{
 				Caption caption = new Caption();
 
-				//	Le Caption.Name doit contenir le nom de la commande, sans
-				//	le préfixe, dans le bundle par défaut.
-				caption.Name = ResourceAccess.SubAllFilter(newField.Name);
-
+				this.AdjustCaptionName(bundle, newField, caption);
 				newField.SetStringValue(caption.SerializeToString());
 			}
 			else
@@ -2252,28 +2238,7 @@ namespace Epsitec.Common.Designer
 							caption.DeserializeFromString(s, this.resourceManager);
 						}
 
-						//	Le Caption.Name doit contenir le nom de la commande, sans
-						//	le préfixe, dans le bundle par défaut. Dans les autres
-						//	bundles, il ne faut rien. Pendant l'utilisation de Designer,
-						//	caption.Name n'est volontairement pas mis à jour. Il faut
-						//	donc prendre garde à ne pas l'utiliser, et lui préférer
-						//	Field.Name !
-						if (bundle == this.primaryBundle)
-						{
-							if (field.Name.StartsWith(ResourceAccess.GetFixFilter(Type.Values)))
-							{
-								caption.Name = ResourceAccess.LastName(field.Name);
-							}
-							else
-							{
-								caption.Name = ResourceAccess.SubAllFilter(field.Name);
-							}
-						}
-						else
-						{
-							caption.Name = null;
-						}
-
+						this.AdjustCaptionName(bundle, field, caption);
 						field.SetStringValue(caption.SerializeToString());
 					}
 
@@ -2293,6 +2258,29 @@ namespace Epsitec.Common.Designer
 						}
 					}
 				}
+			}
+		}
+
+		protected void AdjustCaptionName(ResourceBundle bundle, ResourceBundle.Field field, Caption caption)
+		{
+			//	Met à jour le caption.Name en fonction de field.Name.
+			//	Le Caption.Name doit contenir le nom de la commande, sans le préfixe,
+			//	dans le bundle par défaut. Dans les autres bundles, il ne faut rien.
+			//	Pour une Value, caption.Name ne contient que le dernier nom.
+			if (bundle == this.primaryBundle)
+			{
+				if (field.Name.StartsWith(ResourceAccess.GetFixFilter(Type.Values)))
+				{
+					caption.Name = ResourceAccess.LastName(field.Name);
+				}
+				else
+				{
+					caption.Name = ResourceAccess.SubAllFilter(field.Name);
+				}
+			}
+			else
+			{
+				caption.Name = null;
 			}
 		}
 
