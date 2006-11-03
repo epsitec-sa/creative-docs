@@ -859,7 +859,7 @@ namespace Epsitec.Cresus.Database
 			{
 				using (transaction = this.BeginTransaction ())
 				{
-					this.RegisterNewDbTable (transaction, table);
+					this.RegisterDbTable (transaction, table, check_for_known);
 					transaction.Commit ();
 					return;
 				}

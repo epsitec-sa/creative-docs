@@ -73,10 +73,8 @@ namespace Epsitec.Cresus.Database
 		
 		public void AddCondition(DbColumn a, DbCompare comparison, DbColumn b)
 		{
-			string      table_a  = a.Table.CreateSqlName ();
-			string      table_b  = b.Table.CreateSqlName ();
-			SqlField    field_a  = SqlField.CreateName (table_a, a.CreateSqlName ());
-			SqlField    field_b  = SqlField.CreateName (table_b, b.CreateSqlName ());
+			SqlField    field_a  = SqlField.CreateName (a);
+			SqlField    field_b  = SqlField.CreateName (b);
 			SqlFunction function = new SqlFunction (this.MapDbCompareToSqlFunctionType (comparison), field_a, field_b);
 			
 			this.sql_fields.Add (SqlField.CreateFunction (function));
@@ -84,8 +82,7 @@ namespace Epsitec.Cresus.Database
 		
 		public void AddConditionIsNull(DbColumn a)
 		{
-			string      table    = a.Table.CreateSqlName ();
-			SqlField    field_a  = SqlField.CreateName (table, a.CreateSqlName ());
+			SqlField    field_a  = SqlField.CreateName (a);
 			SqlFunction function = new SqlFunction (SqlFunctionType.CompareIsNull, field_a);
 			
 			this.sql_fields.Add (SqlField.CreateFunction (function));
@@ -93,8 +90,7 @@ namespace Epsitec.Cresus.Database
 		
 		public void AddConditionIsNotNull(DbColumn a)
 		{
-			string      table    = a.Table.CreateSqlName ();
-			SqlField    field_a  = SqlField.CreateName (table, a.CreateSqlName ());
+			SqlField    field_a  = SqlField.CreateName (a);
 			SqlFunction function = new SqlFunction (SqlFunctionType.CompareIsNotNull, field_a);
 			
 			this.sql_fields.Add (SqlField.CreateFunction (function));
@@ -141,8 +137,7 @@ namespace Epsitec.Cresus.Database
 		
 		protected void AddConditionWithRawValue(DbColumn a, DbCompare comparison, object raw_value, DbRawType raw_type)
 		{
-			string      table    = a.Table.CreateSqlName ();
-			SqlField    field_a  = SqlField.CreateName (table, a.CreateSqlName ());
+			SqlField    field_a  = SqlField.CreateName (a);
 			SqlField    field_b  = SqlField.CreateConstant (raw_value, raw_type);
 			SqlFunction function = new SqlFunction (this.MapDbCompareToSqlFunctionType (comparison), field_a, field_b);
 			

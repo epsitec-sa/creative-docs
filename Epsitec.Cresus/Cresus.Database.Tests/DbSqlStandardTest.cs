@@ -70,6 +70,9 @@ namespace Epsitec.Cresus.Database
 		{
 			string name = DbSqlStandard.QualifyName ("ABC" , "XYZ");
 			Assert.AreEqual ("ABC.XYZ", name);
+
+			Assert.AreEqual (@"""ABC"".XYZ", DbSqlStandard.QualifyName (@"""ABC""", "XYZ"));
+			Assert.AreEqual (@"ABC.""XYZ""", DbSqlStandard.QualifyName ("ABC", @"""XYZ"""));
 		}
 		
 		[Test] public void CheckSplitQualifiedName()
