@@ -245,16 +245,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 					if (druid.IsValid)
 					{
 						Caption caption = this.module.ResourceManager.GetCaption(druid);
+						ResourceBundle.Field f = this.module.ResourceManager.GetBundleField(druid);
 
 						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
 						{
-							string dn = this.resourceAccess.DirectGetDisplayName(druid);
+							//?string dn = this.resourceAccess.DirectGetDisplayName(druid);
+							string dn = f.Name;
 							string nd = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
 							captionText = string.Concat(dn, ":<br/>", nd);
 						}
 						else
 						{
-							captionText = this.resourceAccess.DirectGetDisplayName(druid);
+							//?captionText = this.resourceAccess.DirectGetDisplayName(druid);
+							captionText = f.Name;
 						}
 
 						if (!string.IsNullOrEmpty(caption.Icon))
