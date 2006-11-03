@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Server
@@ -35,15 +35,19 @@ namespace Epsitec.Cresus.Server
 		
 		protected override void OnStart(string[] args)
 		{
+			System.Diagnostics.Debug.WriteLine ("OnStart called: " + string.Join ("; ", args));
 			base.OnStart (args);
 			this.StartServices ();
+			System.Diagnostics.Debug.WriteLine ("OnStart done");
 			EventLog.WriteEntry ("Service started successfully.", System.Diagnostics.EventLogEntryType.Information);
 		}
 		
 		protected override void OnStop()
 		{
+			System.Diagnostics.Debug.WriteLine ("OnStop called");
 			base.OnStop ();
 			this.StopServices ();
+			System.Diagnostics.Debug.WriteLine ("OnStop done");
 			EventLog.WriteEntry ("Service stopped.", System.Diagnostics.EventLogEntryType.Information);
 		}
 		
@@ -127,9 +131,11 @@ namespace Epsitec.Cresus.Server
 					System.Diagnostics.Debug.WriteLine ("Trying to open database (2).");
 					infrastructure.AttachDatabase (access);
 				}
-				catch
+				catch (System.Exception ex)
 				{
 					System.Diagnostics.Debug.WriteLine ("Database could not be opened.");
+					System.Diagnostics.Debug.WriteLine (ex.Message);
+					System.Diagnostics.Debug.WriteLine (ex.StackTrace);
 					infrastructure.Dispose ();
 					infrastructure = null;
 				}
@@ -140,16 +146,13 @@ namespace Epsitec.Cresus.Server
 		
 		internal static Database.DbAccess CreateAccess()
 		{
-			Database.DbAccess db_access = new Database.DbAccess ();
+			string provider		 = System.Configuration.ConfigurationManager.AppSettings["DatabaseProvider"];
+			string database		 = System.Configuration.ConfigurationManager.AppSettings["DatabaseSource"];
+			string server		 = System.Configuration.ConfigurationManager.AppSettings["DatabaseServer"];
+			string loginName	 = System.Configuration.ConfigurationManager.AppSettings["DatabaseUserName"];
+			string loginPassword = System.Configuration.ConfigurationManager.AppSettings["DatabaseUserPass"];
 			
-			db_access.Provider		= System.Configuration.ConfigurationSettings.AppSettings["DatabaseProvider"];
-			db_access.Database		= System.Configuration.ConfigurationSettings.AppSettings["DatabaseSource"];
-			db_access.Server		= System.Configuration.ConfigurationSettings.AppSettings["DatabaseServer"];
-			db_access.LoginName		= System.Configuration.ConfigurationSettings.AppSettings["DatabaseUserName"];
-			db_access.LoginPassword = System.Configuration.ConfigurationSettings.AppSettings["DatabaseUserPass"];
-			db_access.CreateDatabase		= false;
-			
-			return db_access;
+			return new Database.DbAccess (provider, database, server, loginName, loginPassword, false);
 		}
 		
 		

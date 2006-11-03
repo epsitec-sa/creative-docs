@@ -81,6 +81,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_2F5985079F7215D731B0A6FEE7C2AA45"
+        "OwnerKey" = "8:_7E5FA7FA9849C802F200AD1D7F57F0AC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2F5985079F7215D731B0A6FEE7C2AA45"
+        "OwnerKey" = "8:_3D4900F97EB14F84B6D52BEE3811B31B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_3179C27B06A096D7FF01B53AA5C7EA60"
         "OwnerKey" = "8:_0E415A8CD33CF714D6B30F98D436D56B"
         "MsmSig" = "8:_UNDEFINED"
@@ -88,18 +100,6 @@
         "Entry"
         {
         "MsmKey" = "8:_3179C27B06A096D7FF01B53AA5C7EA60"
-        "OwnerKey" = "8:_3D4900F97EB14F84B6D52BEE3811B31B"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_38C7B23565B4D34A085BD6E7030C9FC0"
-        "OwnerKey" = "8:_7E5FA7FA9849C802F200AD1D7F57F0AC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_38C7B23565B4D34A085BD6E7030C9FC0"
         "OwnerKey" = "8:_3D4900F97EB14F84B6D52BEE3811B31B"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -532,7 +532,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_38C7B23565B4D34A085BD6E7030C9FC0"
+        "OwnerKey" = "8:_2F5985079F7215D731B0A6FEE7C2AA45"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -646,6 +646,16 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.2.0"
+                    {
+                    "Name" = "8:.NET Framework 2.0"
+                    "ProductCode" = "8:Microsoft.Net.Framework.2.0"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
                 }
             }
         }
@@ -916,20 +926,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3179C27B06A096D7FF01B53AA5C7EA60"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2F5985079F7215D731B0A6FEE7C2AA45"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Cresus.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:FirebirdSql.Data.FirebirdClient, Version=2.0.0.0, Culture=neutral, PublicKeyToken=3750abcc3150b00c, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_3179C27B06A096D7FF01B53AA5C7EA60"
+                    "_2F5985079F7215D731B0A6FEE7C2AA45"
                     {
-                    "Name" = "8:Cresus.Services.dll"
+                    "Name" = "8:FirebirdSql.Data.FirebirdClient.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Cresus.Services.dll"
+            "SourcePath" = "8:FirebirdSql.Data.FirebirdClient.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_06D1E95A5A3B4786A8AD329CB3F04353"
@@ -947,20 +957,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_38C7B23565B4D34A085BD6E7030C9FC0"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3179C27B06A096D7FF01B53AA5C7EA60"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:FirebirdSql.Data.Firebird, Version=1.7.0.14807, Culture=neutral, PublicKeyToken=fa843d180294369d"
+            "AssemblyAsmDisplayName" = "8:Cresus.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_38C7B23565B4D34A085BD6E7030C9FC0"
+                    "_3179C27B06A096D7FF01B53AA5C7EA60"
                     {
-                    "Name" = "8:FirebirdSql.Data.Firebird.dll"
+                    "Name" = "8:Cresus.Services.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:FirebirdSql.Data.Firebird.dll"
+            "SourcePath" = "8:Cresus.Services.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_06D1E95A5A3B4786A8AD329CB3F04353"
@@ -1137,7 +1147,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Cresus.Database.Implementation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Cresus.Database.Implementation, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_7E5FA7FA9849C802F200AD1D7F57F0AC"
@@ -1416,7 +1426,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Cresus.Database, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Cresus.Database, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_F4D8F6CEEF0D8D581022E5967E1DF54C"
@@ -1530,7 +1540,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Crésus Serveur"
         "ProductCode" = "8:{558A272B-F9A1-4405-ADE7-5FB00B624029}"
-        "PackageCode" = "8:{93ADBE50-1AF5-4994-A5F9-21E2DA594376}"
+        "PackageCode" = "8:{68D8220A-D9B9-4B92-87D2-9E6C68EEA558}"
         "UpgradeCode" = "8:{3DE9A3AB-24E3-4E87-95A4-DBCDB0C474A8}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"

@@ -162,5 +162,13 @@ namespace Epsitec.Cresus.Database
 		
 		
 		private DbNumDef						num_def;
+
+		bool Epsitec.Common.Types.INumericType.UseCompactStorage
+		{
+			get
+			{
+				throw new System.Exception ("The method or operation is not implemented.");
+			}
+		}
 	}
 }
