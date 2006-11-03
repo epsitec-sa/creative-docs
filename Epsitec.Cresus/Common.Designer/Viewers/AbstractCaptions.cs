@@ -967,8 +967,8 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected static bool					captionExtended = true;
-		protected static bool					suiteExtended = true;
+		protected static bool					captionExtended = false;
+		protected static bool					suiteExtended = false;
 
 		protected Widget						left;
 		protected Widget						right;

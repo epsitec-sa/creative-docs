@@ -219,7 +219,14 @@ namespace Epsitec.Common.Designer.Viewers
 				this.primaryNullable.Enable = true;
 				this.primaryNullable.ActiveState = (type != null && type.IsNullable) ? ActiveState.Yes : ActiveState.No;
 
-				this.primarySuiteSummary.Text = this.editor.GetSummary();
+				if (this.editor == null)
+				{
+					this.primarySuiteSummary.Text = "";
+				}
+				else
+				{
+					this.primarySuiteSummary.Text = this.editor.GetSummary();
+				}
 			}
 
 			this.ignoreChange = iic;
