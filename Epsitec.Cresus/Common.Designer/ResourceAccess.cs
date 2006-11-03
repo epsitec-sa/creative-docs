@@ -1219,6 +1219,17 @@ namespace Epsitec.Common.Designer
 			return builder.ToString();
 		}
 
+		public static string GetCaptionShortDescription(Caption caption)
+		{
+			//	Construit un texte très court d'après les labels et la description.
+			foreach (string label in caption.Labels)
+			{
+				return label;
+			}
+
+			return caption.Description;
+		}
+
 
 		#region Direct
 		public Type DirectGetType(Druid druid)

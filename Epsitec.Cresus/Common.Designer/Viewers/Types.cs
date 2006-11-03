@@ -57,6 +57,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.buttonSuiteExtend = this.CreateBand(out leftContainer, "Résumé", BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.6);
 			this.buttonSuiteExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
+			this.primarySuiteSummary = new StaticText(leftContainer.Container);
+			this.primarySuiteSummary.MinHeight = 30;
+			this.primarySuiteSummary.Dock = DockStyle.Fill;
+
 			this.UpdateDisplayMode();
 			this.UpdateEdit();
 		}
@@ -205,6 +209,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.primaryNullable.Enable = false;
 				this.primaryNullable.ActiveState = ActiveState.No;
+
+				this.primarySuiteSummary.Text = "";
 			}
 			else
 			{
@@ -212,6 +218,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.primaryNullable.Enable = true;
 				this.primaryNullable.ActiveState = (type != null && type.IsNullable) ? ActiveState.Yes : ActiveState.No;
+
+				this.primarySuiteSummary.Text = this.editor.GetSummary();
 			}
 
 			this.ignoreChange = iic;
@@ -306,5 +314,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected CheckButton					primaryNullable;
 		protected MyWidgets.AbstractTypeEditor	editor;
 		protected TextFieldCombo				fieldController;
+		protected StaticText					primarySuiteSummary;
 	}
 }

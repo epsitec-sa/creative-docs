@@ -109,21 +109,21 @@ namespace Epsitec.Common.Designer.Viewers
 			this.buttonSuiteExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.6);
 			this.buttonSuiteExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
-			this.primarySummary = new StaticText(leftContainer.Container);
-			this.primarySummary.MinHeight = 30;
-			this.primarySummary.Dock = DockStyle.Fill;
+			this.primarySuiteSummary = new StaticText(leftContainer.Container);
+			this.primarySuiteSummary.MinHeight = 30;
+			this.primarySuiteSummary.Dock = DockStyle.Fill;
 
-			this.primarySummaryIcon = new IconButton(leftContainer.Container);
-			this.primarySummaryIcon.MinSize = new Size(30, 30);
-			this.primarySummaryIcon.Dock = DockStyle.Right;
+			this.primarySuiteSummaryIcon = new IconButton(leftContainer.Container);
+			this.primarySuiteSummaryIcon.MinSize = new Size(30, 30);
+			this.primarySuiteSummaryIcon.Dock = DockStyle.Right;
 
-			this.secondarySummary = new StaticText(rightContainer.Container);
-			this.secondarySummary.MinHeight = 30;
-			this.secondarySummary.Dock = DockStyle.Fill;
+			this.secondarySuiteSummary = new StaticText(rightContainer.Container);
+			this.secondarySuiteSummary.MinHeight = 30;
+			this.secondarySuiteSummary.Dock = DockStyle.Fill;
 
-			this.secondarySummaryIcon = new IconButton(rightContainer.Container);
-			this.secondarySummaryIcon.MinSize = new Size(30, 30);
-			this.secondarySummaryIcon.Dock = DockStyle.Right;
+			this.secondarySuiteSummaryIcon = new IconButton(rightContainer.Container);
+			this.secondarySuiteSummaryIcon.MinSize = new Size(30, 30);
+			this.secondarySuiteSummaryIcon.Dock = DockStyle.Right;
 
 			this.UpdateDisplayMode();
 			this.UpdateEdit();
@@ -186,11 +186,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (sel == -1)
 			{
-				this.primarySummary.Text = "";
-				this.secondarySummary.Text = "";
-				this.SetTextField(this.primarySummaryIcon, 0, null, ResourceAccess.FieldType.None);
-				this.SetTextField(this.secondarySummaryIcon, 0, null, ResourceAccess.FieldType.None);
-
 				this.primaryAspectDialog.Enable = false;
 				this.primaryAspectIcon.Enable = false;
 
@@ -201,6 +196,11 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, 0, null, ResourceAccess.FieldType.None);
 
 				this.SetTextField(this.primaryGroup, 0, null, ResourceAccess.FieldType.None);
+
+				this.primarySuiteSummary.Text = "";
+				this.secondarySuiteSummary.Text = "";
+				this.SetTextField(this.primarySuiteSummaryIcon, 0, null, ResourceAccess.FieldType.None);
+				this.SetTextField(this.secondarySuiteSummaryIcon, 0, null, ResourceAccess.FieldType.None);
 			}
 			else
 			{
@@ -222,8 +222,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.SetTextField(this.primaryGroup, sel, null, ResourceAccess.FieldType.Group);
 
-				this.primarySummary.Text = this.GetSummary(this.primaryShortcut1, this.primaryShortcut2, this.primaryGroup);
-				this.secondarySummary.Text = this.GetSummary(this.secondaryShortcut1, this.secondaryShortcut2, this.primaryGroup);
+				this.primarySuiteSummary.Text = this.GetSummary(this.primaryShortcut1, this.primaryShortcut2, this.primaryGroup);
+				this.secondarySuiteSummary.Text = this.GetSummary(this.secondaryShortcut1, this.secondaryShortcut2, this.primaryGroup);
 
 				string icon = null;
 				if (this.primaryAspectIcon.ActiveState == ActiveState.Yes)
@@ -234,8 +234,8 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					icon = Misc.Icon("ButtonAspectDialog");
 				}
-				this.primarySummaryIcon.IconName = icon;
-				this.secondarySummaryIcon.IconName = icon;
+				this.primarySuiteSummaryIcon.IconName = icon;
+				this.secondarySuiteSummaryIcon.IconName = icon;
 			}
 
 			this.ignoreChange = iic;
@@ -554,9 +554,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected ShortcutEditor				secondaryShortcut1;
 		protected ShortcutEditor				secondaryShortcut2;
 		protected TextFieldCombo				primaryGroup;
-		protected StaticText					primarySummary;
-		protected IconButton					primarySummaryIcon;
-		protected StaticText					secondarySummary;
-		protected IconButton					secondarySummaryIcon;
+		protected StaticText					primarySuiteSummary;
+		protected IconButton					primarySuiteSummaryIcon;
+		protected StaticText					secondarySuiteSummary;
+		protected IconButton					secondarySuiteSummaryIcon;
 	}
 }

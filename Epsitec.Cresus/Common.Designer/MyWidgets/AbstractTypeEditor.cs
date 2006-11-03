@@ -100,6 +100,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public virtual string GetSummary()
+		{
+			//	Retourne le texte du résumé.
+			return "";
+		}
+
+
 		protected virtual void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.

@@ -148,6 +148,39 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		public override string GetSummary()
+		{
+			//	Retourne le texte du résumé.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			builder.Append(this.listDruids.Count.ToString());
+			builder.Append("×: ");
+
+			for (int i=0; i<this.listDruids.Count; i++)
+			{
+				Druid druid = this.listDruids[i];
+				Caption caption = this.module.ResourceManager.GetCaption(druid);
+
+				string icon = caption.Icon;
+				if (string.IsNullOrEmpty(icon))
+				{
+					builder.Append(ResourceAccess.GetCaptionShortDescription(caption));
+				}
+				else
+				{
+					builder.Append(Misc.ImageFull(icon, -5));
+				}
+
+				if (i < this.listDruids.Count-1)
+				{
+					builder.Append(", ");
+				}
+			}
+			
+			return builder.ToString();
+		}
+
+
 		protected override void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.

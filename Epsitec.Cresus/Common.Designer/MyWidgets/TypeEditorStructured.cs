@@ -155,6 +155,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		public override string GetSummary()
+		{
+			//	Retourne le texte du résumé.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			builder.Append(this.fields.Count.ToString());
+			builder.Append("×: ");
+
+			for (int i=0; i<this.fields.Count; i++)
+			{
+				StructuredTypeField field = this.fields[i];
+				builder.Append(field.Id);
+
+				if (i < this.fields.Count-1)
+				{
+					builder.Append(", ");
+				}
+			}
+			
+			return builder.ToString();
+		}
+
+
 		protected override void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.
