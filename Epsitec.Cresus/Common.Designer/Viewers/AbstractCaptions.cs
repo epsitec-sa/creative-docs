@@ -454,13 +454,8 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				Common.Types.Caption caption;
-
-				caption = this.access.GetField(sel, null, ResourceAccess.FieldType.Caption).Caption;
-				this.primarySummary.Text = ResourceAccess.GetCaptionNiceDescription(caption, 30);
-
-				caption = this.access.GetField(sel, this.secondaryCulture, ResourceAccess.FieldType.Caption).Caption;
-				this.secondarySummary.Text = ResourceAccess.GetCaptionNiceDescription(caption, 30);
+				this.primarySummary.Text = this.GetSummary(sel, null);
+				this.secondarySummary.Text = this.GetSummary(sel, this.secondaryCulture);
 
 				this.SetTextField(this.primarySummaryIcon, sel, null, ResourceAccess.FieldType.Icon);
 				this.SetTextField(this.secondarySummaryIcon, sel, null, ResourceAccess.FieldType.Icon);
@@ -492,6 +487,19 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ignoreChange = iic;
 
 			this.UpdateCommands();
+		}
+
+		protected string GetSummary(int sel, string culture)
+		{
+			Common.Types.Caption caption = this.access.GetField(sel, culture, ResourceAccess.FieldType.Caption).Caption;
+			string summary = ResourceAccess.GetCaptionNiceDescription(caption, 30);
+
+			if (string.IsNullOrEmpty(summary))
+			{
+				summary = Misc.Italic("(indéfini)");
+			}
+
+			return summary;
 		}
 
 		protected void UpdateIconInfo()

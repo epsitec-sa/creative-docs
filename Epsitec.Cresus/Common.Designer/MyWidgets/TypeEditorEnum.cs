@@ -153,12 +153,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne le texte du résumé.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
-			builder.Append(this.listDruids.Count.ToString());
+			builder.Append(this.selDruids.Count.ToString());
 			builder.Append("×: ");
 
-			for (int i=0; i<this.listDruids.Count; i++)
+			for (int i=0; i<this.selDruids.Count; i++)
 			{
-				Druid druid = this.listDruids[i];
+				Druid druid = this.selDruids[i];
 				Caption caption = this.module.ResourceManager.GetCaption(druid);
 
 				string icon = caption.Icon;
@@ -171,7 +171,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					builder.Append(Misc.ImageFull(icon, -5));
 				}
 
-				if (i < this.listDruids.Count-1)
+				if (i < this.selDruids.Count-1)
 				{
 					builder.Append(", ");
 				}
