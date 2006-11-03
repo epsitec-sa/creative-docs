@@ -2238,7 +2238,10 @@ namespace Epsitec.Common.Designer
 							caption.DeserializeFromString(s, this.resourceManager);
 						}
 
+						string name = caption.Name;
 						this.AdjustCaptionName(bundle, field, caption);
+						System.Diagnostics.Debug.Assert(caption.Name == name);
+
 						field.SetStringValue(caption.SerializeToString());
 					}
 

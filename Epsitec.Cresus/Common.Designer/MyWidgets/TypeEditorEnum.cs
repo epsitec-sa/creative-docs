@@ -291,10 +291,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.array.SetLineString(0, first+i, active ? Misc.Image("TypeEnumYes") : "");
 					this.array.SetLineState(0, first+i, cs);
 
-					//	Ne surtout pas utiliser caption.Name ou value.Name, car cette
-					//	information n'est pas mise à jour pendant l'utilisation de
-					//	Designer, mais seulement lors de l'enregistrement
-					//	(dans ResourceAccess.AdjustBundlesBeforeSave).
+					//	Ne surtout pas utiliser caption.Name ou value.Name, car ce texte
+					//	ne contient que la dernière partie du nom (voir dans
+					//	ResourceAccess.AdjustCaptionName).
 					string name = this.resourceAccess.DirectGetDisplayName(druid);
 					string text = ResourceAccess.GetCaptionNiceDescription(caption, this.array.LineHeight);
 
