@@ -106,8 +106,24 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryGroup.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Résumé des paramètres.
-			this.buttonSuiteExtend = this.CreateBand(out leftContainer, "Résumé", BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.6);
+			this.buttonSuiteExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.6);
 			this.buttonSuiteExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+
+			this.primarySummary = new StaticText(leftContainer.Container);
+			this.primarySummary.MinHeight = 30;
+			this.primarySummary.Dock = DockStyle.Fill;
+
+			this.primarySummaryIcon = new IconButton(leftContainer.Container);
+			this.primarySummaryIcon.MinSize = new Size(30, 30);
+			this.primarySummaryIcon.Dock = DockStyle.Right;
+
+			this.secondarySummary = new StaticText(rightContainer.Container);
+			this.secondarySummary.MinHeight = 30;
+			this.secondarySummary.Dock = DockStyle.Fill;
+
+			this.secondarySummaryIcon = new IconButton(rightContainer.Container);
+			this.secondarySummaryIcon.MinSize = new Size(30, 30);
+			this.secondarySummaryIcon.Dock = DockStyle.Right;
 
 			this.UpdateDisplayMode();
 			this.UpdateEdit();
@@ -170,6 +186,11 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (sel == -1)
 			{
+				this.primarySummary.Text = "";
+				this.secondarySummary.Text = "";
+				this.SetTextField(this.primarySummaryIcon, 0, null, ResourceAccess.FieldType.None);
+				this.SetTextField(this.secondarySummaryIcon, 0, null, ResourceAccess.FieldType.None);
+
 				this.primaryAspectDialog.Enable = false;
 				this.primaryAspectIcon.Enable = false;
 
@@ -200,11 +221,61 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, sel, this.secondaryCulture, ResourceAccess.FieldType.Shortcuts);
 
 				this.SetTextField(this.primaryGroup, sel, null, ResourceAccess.FieldType.Group);
+
+				this.primarySummary.Text = this.GetSummary(this.primaryShortcut1, this.primaryShortcut2, this.primaryGroup);
+				this.secondarySummary.Text = this.GetSummary(this.secondaryShortcut1, this.secondaryShortcut2, this.primaryGroup);
+
+				string icon = null;
+				if (this.primaryAspectIcon.ActiveState == ActiveState.Yes)
+				{
+					icon = Misc.Icon("ButtonAspectIcon");
+				}
+				if (this.primaryAspectDialog.ActiveState == ActiveState.Yes)
+				{
+					icon = Misc.Icon("ButtonAspectDialog");
+				}
+				this.primarySummaryIcon.IconName = icon;
+				this.secondarySummaryIcon.IconName = icon;
 			}
 
 			this.ignoreChange = iic;
 
 			base.UpdateEdit();
+		}
+
+		protected string GetSummary(ShortcutEditor editor1, ShortcutEditor editor2, TextFieldCombo group)
+		{
+			//	Construit le texte du résumé.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			string s;
+
+			s = editor1.Shortcut.ToString();
+			if (!string.IsNullOrEmpty(s))
+			{
+				builder.Append(s);
+			}
+			
+			s = editor2.Shortcut.ToString();
+			if (!string.IsNullOrEmpty(s))
+			{
+				if (builder.Length > 0)
+				{
+					builder.Append(", ");
+				}
+				builder.Append(s);
+			}
+
+			s = group.Text;
+			if (!string.IsNullOrEmpty(s))
+			{
+				if (builder.Length > 0)
+				{
+					builder.Append("<br/>");
+				}
+				builder.Append(s);
+			}
+
+			return builder.ToString();
 		}
 
 		protected void SetShortcut(ShortcutEditor editor1, ShortcutEditor editor2, int index, string cultureName, ResourceAccess.FieldType fieldType)
@@ -483,5 +554,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected ShortcutEditor				secondaryShortcut1;
 		protected ShortcutEditor				secondaryShortcut2;
 		protected TextFieldCombo				primaryGroup;
+		protected StaticText					primarySummary;
+		protected IconButton					primarySummaryIcon;
+		protected StaticText					secondarySummary;
+		protected IconButton					secondarySummaryIcon;
 	}
 }
