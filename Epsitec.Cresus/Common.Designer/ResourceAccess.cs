@@ -488,15 +488,6 @@ namespace Epsitec.Common.Designer
 								type = et;
 							}
 
-#if false
-							if (type is StructuredType)
-							{
-								StructuredType st = type as StructuredType;
-								st.Fields.Add("Nom", StringType.Default);
-								st.Fields.Add("Prénom", StringType.Default);
-							}
-#endif
-
 							type.DefineDefaultController(ResourceAccess.TypeTypeController(type), ResourceAccess.TypeTypeControllerParameter(type));
 							newField.SetStringValue(type.Caption.SerializeToString());
 						}
@@ -2803,7 +2794,7 @@ namespace Epsitec.Common.Designer
 			return name;
 		}
 
-		protected static string SubAllFilter(string name)
+		public static string SubAllFilter(string name)
 		{
 			//	Supprime tous les filtres fixes connus si nécessaire.
 			Type type = ResourceAccess.GetFilterType(name);

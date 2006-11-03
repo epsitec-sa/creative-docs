@@ -478,19 +478,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Types.Collections.EnumValueCollection collection = this.Collection;
 			collection.Clear();
 
+			int rank = 0;
 			foreach (Druid druid in this.selDruids)
 			{
 				Caption caption = this.module.ResourceManager.GetCaption(druid);
 				System.Diagnostics.Debug.Assert(caption != null);
 
-				EnumValue item = new EnumValue(0, caption);
+				EnumValue item = new EnumValue(rank++, caption);
 				collection.Add(item);
-			}
-
-			for (int rank=0; rank<collection.Count; rank++)
-			{
-				EnumValue item = collection[rank];
-				item.DefineRank(rank);
 			}
 		}
 
