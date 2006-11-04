@@ -839,7 +839,7 @@ namespace Epsitec.Common.Support
 				}
 
 				Caption temp = new Caption ();
-				temp.DeserializeFromString (source);
+				temp.DeserializeFromString (source, this);
 				
 				caption = (caption == null) ? temp : Caption.Merge (caption, temp);
 

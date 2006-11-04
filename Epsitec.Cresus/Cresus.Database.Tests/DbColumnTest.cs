@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Database
 			DbColumn column_1 = DbColumn.CreateRefColumn ("A", "ParentTable", DbColumnClass.RefId, new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId)), Nullable.Yes);
 			
 			Assert.AreEqual ("A", column_1.Name);
-			Assert.AreEqual ("ParentTable", column_1.ParentTableName);
+			Assert.AreEqual ("ParentTable", column_1.TargetTableName);
 			Assert.AreEqual ("CR_ID", column_1.ParentColumnName);
 		}
 		

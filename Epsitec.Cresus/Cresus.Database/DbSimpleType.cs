@@ -7,51 +7,51 @@ namespace Epsitec.Cresus.Database
 	/// The <c>DbSimpleType</c> enumeration lists the simplified types used to store
 	/// data into the intermediate database layer.
 	/// </summary>
-	public enum DbSimpleType
+	public enum DbSimpleType : byte
 	{
 		/// <summary>
 		/// Not supported.
 		/// </summary>
-		Unsupported,
+		Unsupported = 0,
 
 		/// <summary>
 		/// Null, type cannot be inferred.
 		/// </summary>
-		Null,
+		Null = 1,
 		
 		/// <summary>
 		/// Numeric data (boolean, integer, real, time span, etc.).
 		/// </summary>
-		Decimal,
+		Decimal = 2,
 
 		/// <summary>
 		/// Unicode text.
 		/// </summary>
-		String,
+		String = 3,
 
 		/// <summary>
 		/// Date only.
 		/// </summary>
-		Date,
+		Date = 4,
 
 		/// <summary>
 		/// Time only.
 		/// </summary>
-		Time,
+		Time = 5,
 
 		/// <summary>
 		/// Date and Time data with at least a 1ms resolution.
 		/// </summary>
-		DateTime,
+		DateTime = 6,
 
 		/// <summary>
 		/// Byte array.
 		/// </summary>
-		ByteArray,
+		ByteArray = 7,
 		
 		/// <summary>
 		/// Globally unique identifier, 128-bit value.
 		/// </summary>
-		Guid,
+		Guid = 8,
 	}
 }

@@ -56,46 +56,21 @@ namespace Epsitec.Cresus.Database
 			this.DefineCategory (category);
 		}
 
-		public DbColumn(System.Xml.XmlElement xml)
+		public DbColumn(System.Xml.XmlTextReader xmlReader)
 		{
-			this.ProcessXmlDefinition (xml);
+			this.Deserialize (xmlReader);
 		}
 
-
-		public static DbColumn CreateColumn(string xml)
-		{
-			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
-			doc.LoadXml (xml);
-			return DbColumn.CreateColumn (doc.DocumentElement);
-		}
-
-		public static DbColumn CreateColumn(System.Xml.XmlElement xml)
-		{
-			return (xml.Name == "null") ? null : new DbColumn (xml);
-		}
-
-		public static DbColumn CreateRefColumn(string column_name, string parent_table_name, DbColumnClass column_class, INamedType type)
-		{
-			return DbColumn.CreateRefColumn (column_name, parent_table_name, column_class, type, Nullable.Undefined);
-		}
-
-		public static DbColumn CreateRefColumn(string column_name, string parent_table_name, DbColumnClass column_class, INamedType type, Nullable nullable)
+		public static DbColumn CreateRefColumn(string columnName, string targetTableName, INamedType type)
 		{
 			System.Diagnostics.Debug.Assert (type != null);
+			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (targetTableName));
 
-			DbColumn column = new DbColumn (column_name, type);
+			DbColumn column = new DbColumn (columnName, type, DbColumnClass.RefId, DbElementCat.UserDataManaged);
 
-			column.DefineColumnClass (column_class);
-			column.DefineCategory (DbElementCat.UserDataManaged);
-			column.DefineParentTableName (parent_table_name);
-			column.IsNullAllowed = (nullable == Nullable.Yes);
-
+			column.DefineTargetTableName (targetTableName);
+			
 			return column;
-		}
-
-		public static DbColumn CreateUserDataColumn(string column_name, INamedType type)
-		{
-			return new DbColumn (column_name, type, DbColumnClass.Data, DbElementCat.UserDataManaged);
 		}
 
 
@@ -161,11 +136,11 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public string ParentTableName
+		public string TargetTableName
 		{
 			//	Lorsqu'une colonne appartient à l'une des classes DbColumnClass.RefXyz, cela signifie
 			//	que le colonne pointe sur une autre table (foreign key); le nom de cette table est défini
-			//	par la propriété ParentTableName :
+			//	par la propriété TargetTableName :
 
 			get
 			{
@@ -377,9 +352,9 @@ namespace Epsitec.Cresus.Database
 			this.table = table;
 		}
 
-		internal void DefineParentTableName(string parent_table_name)
+		internal void DefineTargetTableName(string parent_table_name)
 		{
-			string current_name = this.ParentTableName;
+			string current_name = this.TargetTableName;
 
 			if (current_name == parent_table_name)
 			{
@@ -646,26 +621,34 @@ namespace Epsitec.Cresus.Database
 
 		#endregion
 
+		public static DbColumn Deserialize(System.Xml.XmlTextReader xmlReader)
+		{
+			if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
+				(xmlReader.LocalName == "col"))
+			{
+				//	TODO: deserialize contents
+
+				return new DbColumn ();
+			}
+			else
+			{
+				throw new System.Xml.XmlException (string.Format ("Unexpected element {0}", xmlReader.LocalName), null, xmlReader.LineNumber, xmlReader.LinePosition);
+			}
+		}
+
+		
 		public void Serialize(System.Xml.XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteStartElement ("col");
 			
-			DbColumn.WriteAttribute ("cap", DbTools.DruidToString (this.CaptionId));
-			DbColumn.WriteAttribute ("typ", DbTools.TypeToString (this.Type));
-			DbColumn.WriteAttribute ("cat", DbTools.ElementCategoryToString (this.Category));
-			DbColumn.WriteAttribute ("rev", DbTools.RevisionModeToString (this.RevisionMode));
-			DbColumn.WriteAttribute ("cls", DbTools.ColumnClassToString (this.ColumnClass));
-			DbColumn.WriteAttribute ("loc", DbTools.ColumnLocalisationToString (this.ColumnLocalisation));
+			DbTools.WriteAttribute (xmlWriter, "cap", DbTools.DruidToString (this.CaptionId));
+			DbTools.WriteAttribute (xmlWriter, "typ", DbTools.TypeToString (this.Type));
+			DbTools.WriteAttribute (xmlWriter, "cat", DbTools.ElementCategoryToString (this.Category));
+			DbTools.WriteAttribute (xmlWriter, "rev", DbTools.RevisionModeToString (this.RevisionMode));
+			DbTools.WriteAttribute (xmlWriter, "cls", DbTools.ColumnClassToString (this.ColumnClass));
+			DbTools.WriteAttribute (xmlWriter, "loc", DbTools.ColumnLocalisationToString (this.ColumnLocalisation));
 			
 			xmlWriter.WriteEndElement ();
-		}
-
-		private static void WriteAttribute(System.Xml.XmlTextWriter xmlWriter, string name, string value)
-		{
-			if (!string.IsNullOrEmpty (value))
-			{
-				xmlWriter.WriteAttributeString (name, value);
-			}
 		}
 
 		protected void SerializeXmlDefinition(System.Text.StringBuilder buffer, bool full)

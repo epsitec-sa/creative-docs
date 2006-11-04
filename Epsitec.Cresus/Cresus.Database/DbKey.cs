@@ -246,7 +246,7 @@ namespace Epsitec.Cresus.Database
 				buffer.Append (@"""");
 			}
 		}
-		
+
 		
 		public const DbRawType					RawTypeForId		= DbRawType.Int64;
 		public const DbRawType					RawTypeForStatus	= DbRawType.Int16;

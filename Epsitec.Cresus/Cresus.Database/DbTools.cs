@@ -12,12 +12,20 @@ namespace Epsitec.Cresus.Database
 	/// La classe DbTools fournit quelques fonctions utilitaires qui n'ont pas
 	/// de rapport direct avec SQL, mais sont utiles aux classes DbXyz.
 	/// </summary>
-	public class DbTools
+	public static class DbTools
 	{
-		private DbTools()
+		public static void WriteAttribute(System.Xml.XmlTextWriter xmlWriter, string name, string value)
 		{
+			if (string.IsNullOrEmpty (value))
+			{
+				//	Nothing to do; an empty attribute will never be written to
+				//	the XML output.
+			}
+			else
+			{
+				xmlWriter.WriteAttributeString (name, value);
+			}
 		}
-		
 		
 		public static string BuildLocalisedName(string name, Common.Support.ResourceLevel level)
 		{
@@ -103,8 +111,10 @@ namespace Epsitec.Cresus.Database
 			{
 				return null;
 			}
-			
-			return InvariantConverter.ToString ((int) cat);
+			else
+			{
+				return InvariantConverter.ToString ((int) cat);
+			}
 		}
 		
 		public static string RevisionModeToString(DbRevisionMode mode)
@@ -172,6 +182,67 @@ namespace Epsitec.Cresus.Database
 			else
 			{
 				return value.CaptionId.ToString ();
+			}
+		}
+
+		public static string RawTypeToString(DbRawType dbRawType)
+		{
+			if (dbRawType == DbRawType.Unsupported)
+			{
+				return null;
+			}
+			else
+			{
+				return InvariantConverter.ToString ((int) dbRawType);
+			}
+		}
+		
+		public static string SimpleTypeToString(DbSimpleType dbSimpleType)
+		{
+			if (dbSimpleType == DbSimpleType.Unsupported)
+			{
+				return null;
+			}
+			else
+			{
+				return InvariantConverter.ToString ((int) dbSimpleType);
+			}
+		}
+
+
+		public static DbRawType ParseRawType(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return DbRawType.Unsupported;
+			}
+
+			int num;
+			InvariantConverter.Convert (value, out num);
+			return (DbRawType) num;
+		}
+
+		public static DbSimpleType ParseSimpleType(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return DbSimpleType.Unsupported;
+			}
+
+			int num;
+			InvariantConverter.Convert (value, out num);
+			return (DbSimpleType) num;
+		}
+
+		public static string IntToString(int value)
+		{
+			if (value == 0)
+			{
+				return null;
+			}
+			else
+			{
+				return InvariantConverter.ToString (value);
 			}
 		}
 	}

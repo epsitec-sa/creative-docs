@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Database
 	/// DigitShift définit la position de la virgule
 	/// par exemple, precision = 5, shift = 3, accepte les nombres de -99.999 à +99.999
 	/// </summary>
-	public class DbNumDef : System.ICloneable
+	public sealed class DbNumDef : System.ICloneable
 	{
 		public DbNumDef()
 		{
@@ -19,32 +19,32 @@ namespace Epsitec.Cresus.Database
 
 		public DbNumDef(DecimalRange range)
 		{
-			this.digit_shift     = range.FractionalDigits;
-			this.digit_precision = range.GetMaximumDigitCount ();
+			this.digit_shift     = (byte) range.FractionalDigits;
+			this.digit_precision = (byte) range.GetMaximumDigitCount ();
 		}
 		
 		public DbNumDef(int digit_precision)
 		{
 			System.Diagnostics.Debug.Assert ((digit_precision >= 0) && (digit_precision < DbNumDef.digit_max));
-			this.digit_precision = digit_precision;
+			this.digit_precision = (byte) digit_precision;
 		}
 		
 		public DbNumDef(int digit_precision, int digit_shift)
 		{
 			System.Diagnostics.Debug.Assert ((digit_precision >= 0) && (digit_precision < DbNumDef.digit_max));
 			System.Diagnostics.Debug.Assert ((digit_shift >= 0) && (digit_shift < DbNumDef.digit_max));
-			
-			this.digit_precision = digit_precision;
-			this.digit_shift     = digit_shift;
+
+			this.digit_precision = (byte) digit_precision;
+			this.digit_shift     = (byte) digit_shift;
 		}
 		
 		public DbNumDef(int digit_precision, int digit_shift, decimal min_value, decimal max_value)
 		{
 			System.Diagnostics.Debug.Assert ((digit_precision >= 0) && (digit_precision < DbNumDef.digit_max));
 			System.Diagnostics.Debug.Assert ((digit_shift >= 0) && (digit_shift < DbNumDef.digit_max));
-			
-			this.digit_precision = digit_precision;
-			this.digit_shift     = digit_shift;
+
+			this.digit_precision = (byte) digit_precision;
+			this.digit_shift     = (byte) digit_shift;
 			this.min_value       = min_value;
 			this.max_value       = max_value;
 
@@ -113,8 +113,8 @@ namespace Epsitec.Cresus.Database
 				//	On ne touche pas aux valeurs min/max, car l'utilisateur a peut-être décidé
 				//	de spécifier le min, le max, la précision puis le shift. C'est superflu,
 				//	mais il ne faudrait pas que ça altère les définitions.
-				
-				this.digit_precision = value;
+
+				this.digit_precision = (byte) value;
 			}
 		}
 		
@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Database
 			set 
 			{
 				//	Cf. remarque DigitPrecision.
-				this.digit_shift = value; 
+				this.digit_shift = (byte) value; 
 			}
 		}
 		
@@ -456,36 +456,28 @@ namespace Epsitec.Cresus.Database
 		
 		
 		#region ICloneable Members
+		
 		public object Clone()
 		{
-			return this.CloneCopyToNewObject (this.CloneNewObject ());
+			DbNumDef copy = new DbNumDef ();
+			
+			copy.raw_type  = this.raw_type;
+			
+			copy.min_value = this.min_value;
+			copy.max_value = this.max_value;
+			
+			copy.digit_precision = this.digit_precision;
+			copy.digit_shift     = this.digit_shift;
+			
+			copy.InvalidateAndUpdateAutoPrecision ();
+			
+			return copy;
 		}
+
 		#endregion
-		
-		protected virtual object CloneNewObject()
-		{
-			return new DbNumDef ();
-		}
-		
-		protected virtual object CloneCopyToNewObject(object o)
-		{
-			DbNumDef that = o as DbNumDef;
-			
-			that.raw_type  = this.raw_type;
-			
-			that.min_value = this.min_value;
-			that.max_value = this.max_value;
-			
-			that.digit_precision = this.digit_precision;
-			that.digit_shift     = this.digit_shift;
-			
-			that.InvalidateAndUpdateAutoPrecision ();
-			
-			return that;
-		}
-		
-		
-		protected void UpdateAutoPrecision()
+
+
+		private void UpdateAutoPrecision()
 		{
 			//	Détermine la précision nécessaire à la représentation d'un nombre donné.
 			
@@ -522,8 +514,8 @@ namespace Epsitec.Cresus.Database
 				System.Diagnostics.Debug.Assert (this.digit_precision_auto < DbNumDef.digit_max);
 			}
 		}
-		
-		protected void InvalidateAndUpdateAutoPrecision()
+
+		private void InvalidateAndUpdateAutoPrecision()
 		{
 			this.digit_precision_auto = 0;
 			this.digit_shift_auto     = 0;
@@ -535,8 +527,9 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		
-		[System.Diagnostics.Conditional ("DEBUG")] protected void DebugCheckAbsolute(decimal value)
+
+		[System.Diagnostics.Conditional ("DEBUG")]
+		private void DebugCheckAbsolute(decimal value)
 		{
 			//	Utilisé pour vérifier que ni le min_value, ni le max_value
 			//	n'est pas donné au delà des 24 digits autorisés. Cette méthode
@@ -546,6 +539,63 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (value >= min_absolute);
 			System.Diagnostics.Debug.Assert (value <= max_absolute);
 		}
+
+
+		public void Serialize(System.Xml.XmlTextWriter xmlWriter)
+		{
+			xmlWriter.WriteStartElement ("numdef");
+			this.SerializeAttributes (xmlWriter, "");
+			xmlWriter.WriteEndElement ();
+		}
+
+		public void SerializeAttributes(System.Xml.XmlTextWriter xmlWriter, string prefix)
+		{
+			if (this.InternalRawType == DbRawType.Unsupported)
+			{
+				xmlWriter.WriteAttributeString (prefix+"digits", InvariantConverter.ToString (this.DigitPrecision));
+				xmlWriter.WriteAttributeString (prefix+"shift", InvariantConverter.ToString (this.DigitShift));
+				xmlWriter.WriteAttributeString (prefix+"min", InvariantConverter.ToString (this.MinValue));
+				xmlWriter.WriteAttributeString (prefix+"max", InvariantConverter.ToString (this.MaxValue));
+			}
+			else
+			{
+				xmlWriter.WriteAttributeString (prefix+"raw", DbTools.RawTypeToString (this.InternalRawType));
+			}
+		}
+		
+		public static DbNumDef Deserialize(System.Xml.XmlTextReader xmlReader)
+		{
+			if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
+				(xmlReader.Name == "numdef"))
+			{
+				return DbNumDef.DeserializeAttributes (xmlReader, "");
+			}
+			else
+			{
+				throw new System.Xml.XmlException (string.Format ("Unexpected element {0}", xmlReader.LocalName), null, xmlReader.LineNumber, xmlReader.LinePosition);
+			}
+		}
+
+		public static DbNumDef DeserializeAttributes(System.Xml.XmlTextReader xmlReader, string prefix)
+		{
+			string rawArg = xmlReader.GetAttribute (prefix+"raw");
+
+			if (rawArg == null)
+			{
+				int digits  = InvariantConverter.ParseInt (xmlReader.GetAttribute (prefix+"digits"));
+				int shift   = InvariantConverter.ParseInt (xmlReader.GetAttribute (prefix+"shift"));
+				decimal min = InvariantConverter.ParseDecimal (xmlReader.GetAttribute (prefix+"min"));
+				decimal max = InvariantConverter.ParseDecimal (xmlReader.GetAttribute (prefix+"max"));
+
+				return new DbNumDef (digits, shift, min, max);
+			}
+			else
+			{
+				return DbNumDef.FromRawType (DbTools.ParseRawType (rawArg));
+			}
+		}
+
+
 		
 		
 		#region Static Setup
@@ -572,20 +622,20 @@ namespace Epsitec.Cresus.Database
 		}
 		#endregion		
 		
-		protected const int						digit_max		= 24;
-		protected const decimal					max_absolute	= 99999999999999999999999.0M;
-		protected const decimal					min_absolute	= -max_absolute;
-		
-		protected static decimal[]				digit_table;
-		protected static decimal[]				digit_table_scale;
-		
-		protected DbRawType						raw_type		= DbRawType.Unsupported;
-		protected int							digit_precision;
-		protected int							digit_shift;
-		protected decimal						min_value		=  max_absolute;
-		protected decimal						max_value		=  min_absolute;
-		
-		protected int							digit_precision_auto;	//	cache les val. dét. selon Min et Max
-		protected int							digit_shift_auto;		//	cache les val. dét. selon Min et Max
+		private const int digit_max		= 24;
+		private const decimal max_absolute	= 99999999999999999999999.0M;
+		private const decimal min_absolute	= -max_absolute;
+
+		private static decimal[] digit_table;
+		private static decimal[] digit_table_scale;
+
+		private DbRawType raw_type		= DbRawType.Unsupported;
+		private decimal min_value		=  max_absolute;
+		private decimal max_value		=  min_absolute;
+
+		private byte digit_precision;
+		private byte digit_shift;
+		private byte digit_precision_auto;	//	cache les val. dét. selon Min et Max
+		private byte digit_shift_auto;		//	cache les val. dét. selon Min et Max
 	}
 }

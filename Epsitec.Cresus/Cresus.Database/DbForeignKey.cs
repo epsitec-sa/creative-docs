@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.Database
 	{
 		public DbForeignKey(DbColumn a)
 		{
-			System.Diagnostics.Debug.Assert (a.ParentTableName != null);
-			System.Diagnostics.Debug.Assert (a.ParentTableName.Length > 0);
+			System.Diagnostics.Debug.Assert (a.TargetTableName != null);
+			System.Diagnostics.Debug.Assert (a.TargetTableName.Length > 0);
 			
 			if (a.ColumnClass == DbColumnClass.RefId)
 			{
@@ -35,11 +35,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public string							ParentTableName
+		public string							TargetTableName
 		{
 			get
 			{
-				return this.columns[0].ParentTableName;
+				return this.columns[0].TargetTableName;
 			}
 		}
 		

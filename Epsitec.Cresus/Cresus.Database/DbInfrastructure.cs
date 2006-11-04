@@ -568,16 +568,11 @@ namespace Epsitec.Cresus.Database
 		
 		public DbColumn[] CreateRefColumns(string column_name, string parent_table_name)
 		{
-			return this.CreateRefColumns (column_name, parent_table_name, Nullable.Undefined);
-		}
-		
-		public DbColumn[] CreateRefColumns(string column_name, string parent_table_name, Nullable nullable)
-		{
 			//	Crée la ou les colonnes nécessaires à la définition d'une référence à une autre
 			//	table.
 			
 			DbType type_id = this.internal_types[Tags.TypeKeyId];
-			return new DbColumn[] { DbColumn.CreateRefColumn (column_name, parent_table_name, DbColumnClass.RefId, type_id, nullable) };
+			return new DbColumn[] { DbColumn.CreateRefColumn (column_name, parent_table_name, type_id) };
 		}
 		
 		
@@ -610,7 +605,7 @@ namespace Epsitec.Cresus.Database
 				{
 					case DbColumnClass.RefId:
 						
-						string parent_name = column.ParentTableName;
+						string parent_name = column.TargetTableName;
 						
 						if (parent_name != null)
 						{
@@ -1576,7 +1571,7 @@ namespace Epsitec.Cresus.Database
 					
 //-					System.Diagnostics.Debug.WriteLine (string.Format ("Column {0}.{1} ({4}) refers to table {3} (ID {2}).", db_table.Name, db_column.Name, parent_key.Id, parent_table.Name, db_column.ColumnClass));
 					
-					db_column.DefineParentTableName (parent_table.Name);
+					db_column.DefineTargetTableName (parent_table.Name);
 				}
 				
 				DbType db_type = this.ResolveDbType (transaction, new DbKey (type_ref_id));
@@ -1595,11 +1590,11 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			//	TODO: il faut encore initialiser les champs ParentTableName des diverses colonnes
+			//	TODO: il faut encore initialiser les champs TargetTableName des diverses colonnes
 			//	qui établissent une relation avec une autre table. Pour cela, il faudra faire un
 			//	SELECT dans Tags.TableRelationDef pour les colonnes dont DbColumnClass est parmi
 			//	RefSimpleId/RefLiveId/RefTupleId/RefTupleRevision et déterminer le nom des tables
-			//	cibles, puis appeler DbColumn.DefineParentTableName...
+			//	cibles, puis appeler DbColumn.DefineTargetTableName...
 			
 			return tables;
 		}

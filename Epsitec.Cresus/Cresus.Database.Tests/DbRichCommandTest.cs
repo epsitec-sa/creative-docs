@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Database
 			db_table_b.Columns.Add (infrastructure.CreateColumn ("Ville", db_type_name));
 			db_table_b.Columns.Add (infrastructure.CreateColumn ("NPA", db_type_npa, Nullable.No));
 			
-			Assert.AreEqual ("Personnes", db_table_b.Columns[3].ParentTableName);
+			Assert.AreEqual ("Personnes", db_table_b.Columns[3].TargetTableName);
 			
 			System.Console.Out.WriteLine ("Table {0} has {1} columns.", db_table_a.Name, db_table_a.Columns.Count);
 			System.Console.Out.WriteLine ("Table {0} has {1} columns.", db_table_b.Name, db_table_b.Columns.Count);
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Database
 			
 			Assert.AreEqual ("Personne", db_table_b.Columns[3].Name);
 			Assert.AreEqual (DbColumnClass.RefId, db_table_b.Columns[3].ColumnClass);
-			Assert.AreEqual ("Personnes", db_table_b.Columns[3].ParentTableName);
+			Assert.AreEqual ("Personnes", db_table_b.Columns[3].TargetTableName);
 			
 			Assert.AreEqual ("Ville", db_table_b.Columns[4].Name);
 			Assert.AreEqual (db_type_name.InternalKey, db_table_b.Columns[4].Type.InternalKey);

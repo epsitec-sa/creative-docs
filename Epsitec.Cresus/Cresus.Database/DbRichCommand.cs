@@ -748,7 +748,7 @@ namespace Epsitec.Cresus.Database
 				{
 					int n = fk.Columns.Length;
 					
-					System.Data.DataTable ado_parent_table = this.data_set.Tables[fk.ParentTableName];
+					System.Data.DataTable ado_parent_table = this.data_set.Tables[fk.TargetTableName];
 					
 					if (ado_parent_table == null)
 					{
