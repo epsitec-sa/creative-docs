@@ -350,6 +350,8 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		public string[] QueryUserTableNames()
 		{
+			this.EnsureConnection ();
+			
 			List<string> list = new List<string> ();
 			
 			System.Data.DataTable tables = this.dbConnection.GetSchema ("Tables", new string[] { null, null, null, "TABLE" });

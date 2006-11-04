@@ -43,15 +43,15 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckNormalization()
 		{
-			Assert.AreEqual ("file/4:strings", this.manager.NormalizeFullId ("file/4:strings"));
-			Assert.AreEqual ("file/4:strings", this.manager.NormalizeFullId ("file/:strings"));
-			Assert.AreEqual ("file/4:strings", this.manager.NormalizeFullId ("file/Test:strings"));
-			Assert.AreEqual ("file/4:strings", this.manager.NormalizeFullId ("file:strings"));
-			Assert.AreEqual ("file/4:strings", this.manager.NormalizeFullId (":strings"));
-			Assert.AreEqual ("file/4:strings", this.manager.NormalizeFullId ("/:strings"));
-			Assert.AreEqual ("file/4:strings", this.manager.NormalizeFullId ("/4:strings"));
-			Assert.AreEqual ("file/4:strings", this.manager.NormalizeFullId ("/Test:strings"));
-			Assert.AreEqual ("file/4:strings", this.manager.NormalizeFullId ("strings"));
+			Assert.AreEqual ("file/4:strings", this.manager.NormalizeStringsFullId ("file/4:strings"));
+			Assert.AreEqual ("file/4:strings", this.manager.NormalizeStringsFullId ("file/:strings"));
+			Assert.AreEqual ("file/4:strings", this.manager.NormalizeStringsFullId ("file/Test:strings"));
+			Assert.AreEqual ("file/4:strings", this.manager.NormalizeStringsFullId ("file:strings"));
+			Assert.AreEqual ("file/4:strings", this.manager.NormalizeStringsFullId (":strings"));
+			Assert.AreEqual ("file/4:strings", this.manager.NormalizeStringsFullId ("/:strings"));
+			Assert.AreEqual ("file/4:strings", this.manager.NormalizeStringsFullId ("/4:strings"));
+			Assert.AreEqual ("file/4:strings", this.manager.NormalizeStringsFullId ("/Test:strings"));
+			Assert.AreEqual ("file/4:strings", this.manager.NormalizeStringsFullId ("strings"));
 		}
 
 		[Test]
@@ -115,8 +115,8 @@ namespace Epsitec.Common.Support
 			string t2 = "Druid - Hello, world";
 			string t3 = "Druid - Good bye...";
 
-			Assert.AreEqual (t2, this.manager.GetBundleField (Druid.Parse ("[4]"), ResourceLevel.Default).AsString);
-			Assert.AreEqual (t3, this.manager.GetBundleField (Druid.Parse ("[4001]"), ResourceLevel.Default).AsString);
+			Assert.AreEqual (t2, this.manager.GetStringsBundleField (Druid.Parse ("[4]"), ResourceLevel.Default).AsString);
+			Assert.AreEqual (t3, this.manager.GetStringsBundleField (Druid.Parse ("[4001]"), ResourceLevel.Default).AsString);
 		}
 
 		[Test]

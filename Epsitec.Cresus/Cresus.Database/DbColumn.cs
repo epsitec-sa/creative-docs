@@ -1,6 +1,8 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 namespace Epsitec.Cresus.Database
 {
 	using ResourceLevel = Epsitec.Common.Support.ResourceLevel;
@@ -28,7 +30,7 @@ namespace Epsitec.Cresus.Database
 	/// La classe DbColumn décrit une colonne dans une table de la base de données.
 	/// Cette classe ressemble dans l'esprit à System.Data.DataColumn.
 	/// </summary>
-	public class DbColumn : IDbAttributesHost, Common.Types.ICaption
+	public class DbColumn : IDbAttributesHost, Common.Types.ICaption, Common.Types.IName
 	{
 		public DbColumn()
 		{
@@ -69,45 +71,52 @@ namespace Epsitec.Cresus.Database
 			this.IsNullAllowed = (nullable == Nullable.Yes);
 		}
 		
-		public DbColumn(string name, DbType type) : this (name, type, Nullable.Undefined)
+		public DbColumn(string name, INamedType type) : this (name, type, Nullable.Undefined)
 		{
 		}
-		
-		public DbColumn(string name, DbType type, Nullable nullable) : this (name)
+
+		public DbColumn(string name, INamedType type, Nullable nullable)
+			: this (name)
 		{
 			this.type = type;
 			this.IsNullAllowed = (nullable == Nullable.Yes);
 		}
-		
-		public DbColumn(string name, DbType type, DbColumnClass column_class) : this (name, type, Nullable.Undefined)
+
+		public DbColumn(string name, INamedType type, DbColumnClass column_class)
+			: this (name, type, Nullable.Undefined)
 		{
 			this.DefineColumnClass (column_class);
 		}
-		
-		public DbColumn(string name, DbType type, DbColumnClass column_class, DbColumnLocalisation column_localisation) : this (name, type, Nullable.Undefined)
+
+		public DbColumn(string name, INamedType type, DbColumnClass column_class, DbColumnLocalisation column_localisation)
+			: this (name, type, Nullable.Undefined)
 		{
 			this.DefineColumnClass (column_class);
 			this.DefineColumnLocalisation (column_localisation);
 		}
-		
-		public DbColumn(string name, DbType type, DbColumnClass column_class, DbElementCat category) : this (name, type, Nullable.Undefined)
+
+		public DbColumn(string name, INamedType type, DbColumnClass column_class, DbElementCat category)
+			: this (name, type, Nullable.Undefined)
 		{
 			this.DefineColumnClass (column_class);
 			this.DefineCategory (category);
 		}
-		
-		public DbColumn(string name, DbType type, Nullable nullable, DbColumnClass column_class, DbElementCat category) : this (name, type, nullable)
+
+		public DbColumn(string name, INamedType type, Nullable nullable, DbColumnClass column_class, DbElementCat category)
+			: this (name, type, nullable)
 		{
 			this.DefineColumnClass (column_class);
 			this.DefineCategory (category);
 		}
-		
-		public DbColumn(string name, DbType type, Nullable nullable, DbColumnClass column_class) : this (name, type, nullable)
+
+		public DbColumn(string name, INamedType type, Nullable nullable, DbColumnClass column_class)
+			: this (name, type, nullable)
 		{
 			this.DefineColumnClass (column_class);
 		}
-		
-		public DbColumn(string name, DbType type, Nullable nullable, DbColumnClass column_class, DbColumnLocalisation column_localisation) : this (name, type, nullable)
+
+		public DbColumn(string name, INamedType type, Nullable nullable, DbColumnClass column_class, DbColumnLocalisation column_localisation)
+			: this (name, type, nullable)
 		{
 			this.DefineColumnClass (column_class);
 			this.DefineColumnLocalisation (column_localisation);
@@ -130,13 +139,13 @@ namespace Epsitec.Cresus.Database
 		{
 			return (xml.Name == "null") ? null : new DbColumn (xml);
 		}
-		
-		public static DbColumn CreateRefColumn(string column_name, string parent_table_name, DbColumnClass column_class, DbType type)
+
+		public static DbColumn CreateRefColumn(string column_name, string parent_table_name, DbColumnClass column_class, INamedType type)
 		{
 			return DbColumn.CreateRefColumn (column_name, parent_table_name, column_class, type, Nullable.Undefined);
 		}
-		
-		public static DbColumn CreateRefColumn(string column_name, string parent_table_name, DbColumnClass column_class, DbType type, Nullable nullable)
+
+		public static DbColumn CreateRefColumn(string column_name, string parent_table_name, DbColumnClass column_class, INamedType type, Nullable nullable)
 		{
 			System.Diagnostics.Debug.Assert (type != null);
 			
@@ -149,8 +158,8 @@ namespace Epsitec.Cresus.Database
 			
 			return column;
 		}
-		
-		public static DbColumn CreateUserDataColumn(string column_name, DbType type, Nullable nullable)
+
+		public static DbColumn CreateUserDataColumn(string column_name, INamedType type, Nullable nullable)
 		{
 			return new DbColumn (column_name, type, nullable, DbColumnClass.Data, DbElementCat.UserDataManaged);
 		}
@@ -246,9 +255,9 @@ namespace Epsitec.Cresus.Database
 				throw new System.InvalidOperationException ("Column not in valid table.");
 			}
 		}
-		
-		
-		public DbType							Type
+
+
+		public INamedType Type
 		{
 			get { return this.type; }
 		}
@@ -666,8 +675,8 @@ namespace Epsitec.Cresus.Database
 					break;
 			}
 		}
-		
-		internal void SetType(DbType type)
+
+		internal void SetType(INamedType type)
 		{
 			if (this.type != null)
 			{
@@ -811,7 +820,7 @@ namespace Epsitec.Cresus.Database
 		
 		
 		protected DbAttributes					attributes				= new DbAttributes ();
-		protected DbType						type;
+		protected INamedType					type;
 		protected DbTable						table;
 		
 		protected bool							is_null_allowed;

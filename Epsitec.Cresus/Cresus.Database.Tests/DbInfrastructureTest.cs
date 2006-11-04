@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Database
 			
 			try
 			{
-				System.IO.File.Delete (@"C:\Program Files\firebird15\Data\Epsitec\FICHE.FIREBIRD");
+				System.IO.File.Delete (@"C:\Program Files\firebird\Data\Epsitec\FICHE.FIREBIRD");
 			}
 			catch (System.IO.IOException ex)
 			{
@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Database
 				
 				try
 				{
-					System.IO.File.Delete (@"C:\Program Files\firebird15\Data\Epsitec\FICHE.FIREBIRD");
+					System.IO.File.Delete (@"C:\Program Files\firebird\Data\Epsitec\FICHE.FIREBIRD");
 				}
 				catch
 				{

@@ -39,6 +39,7 @@ namespace Epsitec.Common.Designer
 			Controller,
 			AbstractType,
 			Panel,
+			Caption,
 		}
 
 		public enum TypeType
@@ -452,7 +453,11 @@ namespace Epsitec.Common.Designer
 				{
 					ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
 					newField.SetDruid(newDruid);
-					newField.SetName(newName);
+					
+					if (bundle == this.primaryBundle)
+					{
+						newField.SetName(newName);
+					}
 
 					if (duplicateContent)
 					{
@@ -487,15 +492,6 @@ namespace Epsitec.Common.Designer
 								type = et;
 							}
 
-#if false
-							if (type is StructuredType)
-							{
-								StructuredType st = type as StructuredType;
-								st.Fields.Add("Nom", StringType.Default);
-								st.Fields.Add("Prénom", StringType.Default);
-							}
-#endif
-
 							type.DefineDefaultController(ResourceAccess.TypeTypeController(type), ResourceAccess.TypeTypeControllerParameter(type));
 							newField.SetStringValue(type.Caption.SerializeToString());
 						}
@@ -511,6 +507,7 @@ namespace Epsitec.Common.Designer
 							caption.DeserializeFromString(s, this.resourceManager);
 						}
 
+						this.AdjustCaptionName(bundle, newField, caption);
 						newField.SetStringValue(caption.SerializeToString());
 					}
 
@@ -1133,6 +1130,7 @@ namespace Epsitec.Common.Designer
 						ICollection<string> dst = caption.Labels;
 						dst.Add(text);
 
+						this.AdjustCaptionName(bundle, newField, caption);
 						newField.SetStringValue(caption.SerializeToString());
 					}
 				}
@@ -1216,6 +1214,17 @@ namespace Epsitec.Common.Designer
 			}
 
 			return builder.ToString();
+		}
+
+		public static string GetCaptionShortDescription(Caption caption)
+		{
+			//	Construit un texte très court d'après les labels et la description.
+			foreach (string label in caption.Labels)
+			{
+				return label;
+			}
+
+			return caption.Description;
 		}
 
 
@@ -1362,6 +1371,11 @@ namespace Epsitec.Common.Designer
 				{
 					return new Field(this.accessField.About);
 				}
+
+				if (fieldType == FieldType.Caption)
+				{
+					return new Field(this.accessCaption);
+				}
 			}
 
 			if (this.type == Type.Commands)
@@ -1467,6 +1481,7 @@ namespace Epsitec.Common.Designer
 					string name = this.AddFilter(field.String, false);
 					this.accessField.SetName(name);
 
+#if false
 					Druid druid = this.druidsIndex[index];
 					foreach (ResourceBundle bundle in this.bundles)
 					{
@@ -1475,6 +1490,13 @@ namespace Epsitec.Common.Designer
 						{
 							f.SetName(name);
 						}
+					}
+#endif
+
+					if (this.IsCaptionsType)
+					{
+						this.AdjustCaptionName(this.primaryBundle, this.accessField, this.accessCaption);
+						this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 					}
 				}
 			}
@@ -1536,6 +1558,11 @@ namespace Epsitec.Common.Designer
 				if (fieldType == FieldType.About)
 				{
 					this.accessField.SetAbout(field.String);
+				}
+
+				if (fieldType == FieldType.Caption)
+				{
+					throw new System.InvalidOperationException("Operation not suported");
 				}
 			}
 
@@ -1935,6 +1962,8 @@ namespace Epsitec.Common.Designer
 							{
 								this.accessCaption.DeserializeFromString(s, this.resourceManager);
 							}
+
+							this.AdjustCaptionName(this.accessBundle, this.accessField, this.accessCaption);
 						}
 					}
 				}
@@ -2156,10 +2185,7 @@ namespace Epsitec.Common.Designer
 			{
 				Caption caption = new Caption();
 
-				//	Le Caption.Name doit contenir le nom de la commande, sans
-				//	le préfixe, dans le bundle par défaut.
-				caption.Name = ResourceAccess.SubAllFilter(newField.Name);
-
+				this.AdjustCaptionName(bundle, newField, caption);
 				newField.SetStringValue(caption.SerializeToString());
 			}
 			else
@@ -2212,27 +2238,9 @@ namespace Epsitec.Common.Designer
 							caption.DeserializeFromString(s, this.resourceManager);
 						}
 
-						//	Le Caption.Name doit contenir le nom de la commande, sans
-						//	le préfixe, dans le bundle par défaut. Dans les autres
-						//	bundles, il ne faut rien. Pendant l'utilisation de Designer,
-						//	caption.Name n'est volontairement pas mis à jour. Il faut
-						//	donc prendre garde à ne pas l'utiliser, et lui préférer
-						//	Field.Name !
-						if (bundle == this.primaryBundle)
-						{
-							if (field.Name.StartsWith(ResourceAccess.GetFixFilter(Type.Values)))
-							{
-								caption.Name = ResourceAccess.LastName(field.Name);
-							}
-							else
-							{
-								caption.Name = ResourceAccess.SubAllFilter(field.Name);
-							}
-						}
-						else
-						{
-							caption.Name = null;
-						}
+						string name = caption.Name;
+						this.AdjustCaptionName(bundle, field, caption);
+						System.Diagnostics.Debug.Assert(caption.Name == name);
 
 						field.SetStringValue(caption.SerializeToString());
 					}
@@ -2253,6 +2261,29 @@ namespace Epsitec.Common.Designer
 						}
 					}
 				}
+			}
+		}
+
+		protected void AdjustCaptionName(ResourceBundle bundle, ResourceBundle.Field field, Caption caption)
+		{
+			//	Met à jour le caption.Name en fonction de field.Name.
+			//	Le Caption.Name doit contenir le nom de la commande, sans le préfixe,
+			//	dans le bundle par défaut. Dans les autres bundles, il ne faut rien.
+			//	Pour une Value, caption.Name ne contient que le dernier nom.
+			if (bundle == this.primaryBundle)
+			{
+				if (field.Name.StartsWith(ResourceAccess.GetFixFilter(Type.Values)))
+				{
+					caption.Name = ResourceAccess.LastName(field.Name);
+				}
+				else
+				{
+					caption.Name = ResourceAccess.SubAllFilter(field.Name);
+				}
+			}
+			else
+			{
+				caption.Name = null;
 			}
 		}
 
@@ -2781,7 +2812,7 @@ namespace Epsitec.Common.Designer
 			return name;
 		}
 
-		protected static string SubAllFilter(string name)
+		public static string SubAllFilter(string name)
 		{
 			//	Supprime tous les filtres fixes connus si nécessaire.
 			Type type = ResourceAccess.GetFilterType(name);
@@ -2989,6 +3020,7 @@ namespace Epsitec.Common.Designer
 				Integer,
 				Shortcuts,
 				AbstractType,
+				Caption,
 			}
 
 			public Field(string value)
@@ -3031,6 +3063,12 @@ namespace Epsitec.Common.Designer
 			{
 				this.type = Type.AbstractType;
 				this.abstractType = value;
+			}
+
+			public Field(Caption value)
+			{
+				this.type = Type.Caption;
+				this.caption = value;
 			}
 
 			public Type FieldType
@@ -3104,6 +3142,15 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
+			public Caption Caption
+			{
+				get
+				{
+					System.Diagnostics.Debug.Assert(this.type == Type.Caption);
+					return this.caption;
+				}
+			}
+
 			protected Type type;
 			protected string									stringValue;
 			protected ICollection<string>						stringCollection;
@@ -3112,6 +3159,7 @@ namespace Epsitec.Common.Designer
 			protected int										integerValue;
 			protected Widgets.Collections.ShortcutCollection	shortcutCollection;
 			protected AbstractType								abstractType;
+			protected Caption									caption;
 		}
 		#endregion
 

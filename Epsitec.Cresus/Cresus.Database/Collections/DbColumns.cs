@@ -6,7 +6,7 @@ namespace Epsitec.Cresus.Database.Collections
 	/// <summary>
 	/// The <c>Collections.DbColumns</c> class manages a list of <c>DbColumn</c> items.
 	/// </summary>
-	public class DbColumns : GenericList<DbColumn>
+	public class DbColumns : NameList<DbColumn>
 	{
 		public DbColumns()
 		{

@@ -11,6 +11,15 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public abstract class AbstractCaptions : Abstract
 	{
+		protected enum BandMode
+		{
+			CaptionSummary,
+			CaptionView,
+			Separator,
+			SuiteSummary,
+			SuiteView,
+		}
+
 		public AbstractCaptions(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
 			//	Crée les 2 parties gauche/droite séparées par un splitter.
@@ -122,14 +131,32 @@ namespace Epsitec.Common.Designer.Viewers
 			this.scrollable.TabIndex = this.tabIndex++;
 			this.scrollable.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
-			this.leftContainers = new List<MyWidgets.StackedPanel>();
-			this.rightContainers = new List<MyWidgets.StackedPanel>();
-			this.intensityContainers = new List<double>();
-
+			this.bands = new List<Band>();
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
+			//	Résumé des captions.
+			this.buttonCaptionExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.CaptionSummary, GlyphShape.ArrowDown, false, 0.2);
+			this.buttonCaptionExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+
+			this.primarySummary = new StaticText(leftContainer.Container);
+			this.primarySummary.MinHeight = 30;
+			this.primarySummary.Dock = DockStyle.Fill;
+
+			this.primarySummaryIcon = new IconButton(leftContainer.Container);
+			this.primarySummaryIcon.MinSize = new Size(30, 30);
+			this.primarySummaryIcon.Dock = DockStyle.Right;
+
+			this.secondarySummary = new StaticText(rightContainer.Container);
+			this.secondarySummary.MinHeight = 30;
+			this.secondarySummary.Dock = DockStyle.Fill;
+
+			this.secondarySummaryIcon = new IconButton(rightContainer.Container);
+			this.secondarySummaryIcon.MinSize = new Size(30, 30);
+			this.secondarySummaryIcon.Dock = DockStyle.Right;
+
 			//	Textes.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels.Title, 0.5);
+			this.buttonCaptionCompact = this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels.Title, BandMode.CaptionView, GlyphShape.ArrowUp, false, 0.2);
+			this.buttonCaptionCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.primaryLabels = new MyWidgets.StringCollection(leftContainer.Container);
 			this.primaryLabels.Dock = DockStyle.StackBegin;
@@ -146,7 +173,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryLabels.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			//	Description.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Description.Title, 0.3);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Description.Title, BandMode.CaptionView, GlyphShape.None, false, 0.2);
 
 			this.primaryDescription = new TextFieldMulti(leftContainer.Container);
 			this.primaryDescription.PreferredHeight = 50;
@@ -167,7 +194,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryDescription.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Icône.
-			this.CreateBand(out leftContainer, Res.Strings.Viewers.Captions.Icon.Title, 0.1);
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Captions.Icon.Title, BandMode.CaptionView, GlyphShape.None, false, 0.2);
 
 			StaticText label = new StaticText(leftContainer.Container);
 			label.Text = Res.Strings.Viewers.Captions.Icon.Title;
@@ -195,7 +222,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIconInfo.Dock = DockStyle.Left;
 
 			//	Commentaires.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, 0.7);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, BandMode.CaptionView, GlyphShape.None, false, 0.2);
 
 			this.primaryAbout = new TextFieldMulti(leftContainer.Container);
 			this.primaryAbout.PreferredHeight = 36;
@@ -215,7 +242,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryAbout.TabIndex = this.tabIndex++;
 			this.secondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
+			//	Séparateur.
+			this.CreateBand(out leftContainer, "", BandMode.Separator, GlyphShape.None, false, 0.0);
 
+			this.UpdateDisplayMode();
 			this.UpdateCultures();
 			this.UpdateTitle();
 			this.UpdateEdit();
@@ -258,6 +288,26 @@ namespace Epsitec.Common.Designer.Viewers
 				this.secondaryAbout.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.secondaryAbout.CursorChanged -= new EventHandler(this.HandleCursorChanged);
 				this.secondaryAbout.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+
+				if (this.buttonCaptionExtend != null)
+				{
+					this.buttonCaptionExtend.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+				}
+
+				if (this.buttonCaptionCompact != null)
+				{
+					this.buttonCaptionCompact.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+				}
+
+				if (this.buttonSuiteExtend != null)
+				{
+					this.buttonSuiteExtend.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+				}
+
+				if (this.buttonSuiteCompact != null)
+				{
+					this.buttonSuiteCompact.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+				}
 			}
 
 			base.Dispose(disposing);
@@ -313,6 +363,32 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+		protected void UpdateDisplayMode()
+		{
+			//	Metà jour le mode d'affichage des bandes.
+			for (int i=0; i<this.bands.Count; i++)
+			{
+				switch (bands[i].bandMode)
+				{
+					case BandMode.CaptionSummary:
+						this.bands[i].bandContainer.Visibility = !AbstractCaptions.captionExtended;
+						break;
+
+					case BandMode.CaptionView:
+						this.bands[i].bandContainer.Visibility = AbstractCaptions.captionExtended;
+						break;
+
+					case BandMode.SuiteSummary:
+						this.bands[i].bandContainer.Visibility = !AbstractCaptions.suiteExtended;
+						break;
+
+					case BandMode.SuiteView:
+						this.bands[i].bandContainer.Visibility = AbstractCaptions.suiteExtended;
+						break;
+				}
+			}
+		}
+
 		protected void UpdateTitle()
 		{
 			//	Met à jour le titre en dessus de la zone scrollable.
@@ -355,6 +431,11 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.SetTextField(this.labelEdit, 0, null, ResourceAccess.FieldType.None);
 
+				this.primarySummary.Text = "";
+				this.secondarySummary.Text = "";
+				this.SetTextField(this.primarySummaryIcon, 0, null, ResourceAccess.FieldType.None);
+				this.SetTextField(this.secondarySummaryIcon, 0, null, ResourceAccess.FieldType.None);
+
 				this.SetTextField(this.primaryLabels, 0, null, ResourceAccess.FieldType.None);
 				this.SetTextField(this.primaryDescription, 0, null, ResourceAccess.FieldType.None);
 				this.SetTextField(this.primaryIcon, 0, null, ResourceAccess.FieldType.None);
@@ -367,6 +448,12 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
+				this.primarySummary.Text = this.GetSummary(sel, null);
+				this.secondarySummary.Text = this.GetSummary(sel, this.secondaryCulture);
+
+				this.SetTextField(this.primarySummaryIcon, sel, null, ResourceAccess.FieldType.Icon);
+				this.SetTextField(this.secondarySummaryIcon, sel, null, ResourceAccess.FieldType.Icon);
+
 				this.SetTextField(this.labelEdit, sel, null, ResourceAccess.FieldType.Name);
 				this.SetTextField(this.primaryLabels, sel, null, ResourceAccess.FieldType.Labels);
 				this.SetTextField(this.primaryDescription, sel, null, ResourceAccess.FieldType.Description);
@@ -396,6 +483,19 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
+		protected string GetSummary(int sel, string culture)
+		{
+			Common.Types.Caption caption = this.access.GetField(sel, culture, ResourceAccess.FieldType.Caption).Caption;
+			string summary = ResourceAccess.GetCaptionNiceDescription(caption, 30);
+
+			if (string.IsNullOrEmpty(summary))
+			{
+				summary = Misc.Italic("(indéfini)");
+			}
+
+			return summary;
+		}
+
 		protected void UpdateIconInfo()
 		{
 			ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Icon);
@@ -414,7 +514,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected void CreateBand(out MyWidgets.StackedPanel leftContainer, out MyWidgets.StackedPanel rightContainer, string title, double backgroundIntensity)
+		protected GlyphButton CreateBand(out MyWidgets.StackedPanel leftContainer, out MyWidgets.StackedPanel rightContainer, string title, BandMode mode, GlyphShape extendShape, bool isNewSection, double backgroundIntensity)
 		{
 			//	Crée une bande horizontale avec deux containers gauche/droite pour les
 			//	ressources primaire/secondaire.
@@ -429,11 +529,12 @@ namespace Epsitec.Common.Designer.Viewers
 			leftContainer.Name = "LeftContainer";
 			leftContainer.Title = title;
 			leftContainer.IsLeftPart = true;
+			leftContainer.IsNewSection = isNewSection;
+			leftContainer.ExtendShape = extendShape;
 			leftContainer.MinWidth = 100;
 			leftContainer.Dock = DockStyle.StackFill;
 			leftContainer.TabIndex = this.tabIndex++;
 			leftContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-			this.leftContainers.Add(leftContainer);
 
 			rightContainer = new MyWidgets.StackedPanel(band);
 			rightContainer.Name = "RightContainer";
@@ -443,12 +544,13 @@ namespace Epsitec.Common.Designer.Viewers
 			rightContainer.Dock = DockStyle.StackFill;
 			rightContainer.TabIndex = this.tabIndex++;
 			rightContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-			this.rightContainers.Add(rightContainer);
 
-			this.intensityContainers.Add(backgroundIntensity);
+			this.bands.Add(new Band(band, leftContainer, rightContainer, mode, backgroundIntensity));
+
+			return leftContainer.ExtendButton;
 		}
 
-		protected void CreateBand(out MyWidgets.StackedPanel leftContainer, string title, double backgroundIntensity)
+		protected GlyphButton CreateBand(out MyWidgets.StackedPanel leftContainer, string title, BandMode mode, GlyphShape extendShape, bool isNewSection, double backgroundIntensity)
 		{
 			//	Crée une bande horizontale avec un seul container gauche pour la
 			//	ressource primaire.
@@ -463,30 +565,31 @@ namespace Epsitec.Common.Designer.Viewers
 			leftContainer.Name = "LeftContainer";
 			leftContainer.Title = title;
 			leftContainer.IsLeftPart = true;
+			leftContainer.IsNewSection = isNewSection;
+			leftContainer.ExtendShape = extendShape;
 			leftContainer.MinWidth = 100;
 			leftContainer.Dock = DockStyle.StackFill;
 			leftContainer.TabIndex = this.tabIndex++;
 			leftContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-			this.leftContainers.Add(leftContainer);
 
-			this.rightContainers.Add(null);  // pour synchroniser les parties gauche/droite
+			this.bands.Add(new Band(band, leftContainer, null, mode, backgroundIntensity));
 
-			this.intensityContainers.Add(backgroundIntensity);
+			return leftContainer.ExtendButton;
 		}
 
 		protected void ColoriseBands(ResourceAccess.ModificationState state1, ResourceAccess.ModificationState state2)
 		{
 			//	Colorise toutes les bandes horizontales.
-			for (int i=0; i<this.leftContainers.Count; i++)
+			for (int i=0; i<this.bands.Count; i++)
 			{
-				MyWidgets.StackedPanel lc = this.leftContainers[i];
-				MyWidgets.StackedPanel rc = this.rightContainers[i];
+				MyWidgets.StackedPanel lc = this.bands[i].leftContainer;
+				MyWidgets.StackedPanel rc = this.bands[i].rightContainer;
 
-				lc.BackgroundColor = Abstract.GetBackgroundColor(state1, this.intensityContainers[i]);
+				lc.BackgroundColor = Abstract.GetBackgroundColor(state1, this.bands[i].intensityContainer);
 
 				if (rc != null)
 				{
-					rc.BackgroundColor = Abstract.GetBackgroundColor(state2, this.intensityContainers[i]);
+					rc.BackgroundColor = Abstract.GetBackgroundColor(state2, this.bands[i].intensityContainer);
 					rc.Visibility = (this.secondaryCulture != null);
 				}
 			}
@@ -685,6 +788,32 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected void HandleButtonCompactOrExtendClicked(object sender, MessageEventArgs e)
+		{
+			//	Un bouton pour changer le mode d'affichage a été cliqué.
+			if (sender == this.buttonCaptionCompact)
+			{
+				AbstractCaptions.captionExtended = false;
+			}
+
+			if (sender == this.buttonCaptionExtend)
+			{
+				AbstractCaptions.captionExtended = true;
+			}
+
+			if (sender == this.buttonSuiteCompact)
+			{
+				AbstractCaptions.suiteExtended = false;
+			}
+
+			if (sender == this.buttonSuiteExtend)
+			{
+				AbstractCaptions.suiteExtended = true;
+			}
+
+			this.UpdateDisplayMode();
+		}
+
 		private void HandleSplitterDragged(object sender)
 		{
 			//	Le splitter a été bougé.
@@ -831,6 +960,28 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected struct Band
+		{
+			public Band(Widget band, MyWidgets.StackedPanel left, MyWidgets.StackedPanel right, BandMode mode, double intensity)
+			{
+				this.bandContainer = band;
+				this.leftContainer = left;
+				this.rightContainer = right;
+				this.bandMode = mode;
+				this.intensityContainer = intensity;
+			}
+
+			public Widget						bandContainer;
+			public MyWidgets.StackedPanel		leftContainer;
+			public MyWidgets.StackedPanel		rightContainer;
+			public BandMode						bandMode;
+			public double						intensityContainer;
+		}
+
+
+		protected static bool					captionExtended = false;
+		protected static bool					suiteExtended = false;
+
 		protected Widget						left;
 		protected Widget						right;
 		protected VSplitter						splitter;
@@ -839,9 +990,11 @@ namespace Epsitec.Common.Designer.Viewers
 		protected FrameBox						titleBox;
 		protected StaticText					titleText;
 		protected Scrollable					scrollable;
-		protected List<MyWidgets.StackedPanel>	leftContainers;
-		protected List<MyWidgets.StackedPanel>	rightContainers;
-		protected List<double>					intensityContainers;
+		protected List<Band>					bands;
+		protected StaticText					primarySummary;
+		protected IconButton					primarySummaryIcon;
+		protected StaticText					secondarySummary;
+		protected IconButton					secondarySummaryIcon;
 		protected MyWidgets.StringCollection	primaryLabels;
 		protected MyWidgets.StringCollection	secondaryLabels;
 		protected TextFieldMulti				primaryDescription;
@@ -850,5 +1003,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected StaticText					primaryIconInfo;
 		protected TextFieldMulti				primaryAbout;
 		protected TextFieldMulti				secondaryAbout;
+		protected GlyphButton					buttonCaptionExtend;
+		protected GlyphButton					buttonCaptionCompact;
+		protected GlyphButton					buttonSuiteExtend;
+		protected GlyphButton					buttonSuiteCompact;
 	}
 }

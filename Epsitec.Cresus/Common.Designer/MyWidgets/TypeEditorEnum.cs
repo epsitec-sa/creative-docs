@@ -148,6 +148,39 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		public override string GetSummary()
+		{
+			//	Retourne le texte du résumé.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			builder.Append(this.selDruids.Count.ToString());
+			builder.Append("×: ");
+
+			for (int i=0; i<this.selDruids.Count; i++)
+			{
+				Druid druid = this.selDruids[i];
+				Caption caption = this.module.ResourceManager.GetCaption(druid);
+
+				string icon = caption.Icon;
+				if (string.IsNullOrEmpty(icon))
+				{
+					builder.Append(ResourceAccess.GetCaptionShortDescription(caption));
+				}
+				else
+				{
+					builder.Append(Misc.ImageFull(icon, -5));
+				}
+
+				if (i < this.selDruids.Count-1)
+				{
+					builder.Append(", ");
+				}
+			}
+			
+			return builder.ToString();
+		}
+
+
 		protected override void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.
@@ -258,10 +291,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.array.SetLineString(0, first+i, active ? Misc.Image("TypeEnumYes") : "");
 					this.array.SetLineState(0, first+i, cs);
 
-					//	Ne surtout pas utiliser caption.Name ou value.Name, car cette
-					//	information n'est pas mise à jour pendant l'utilisation de
-					//	Designer, mais seulement lors de l'enregistrement
-					//	(dans ResourceAccess.AdjustBundlesBeforeSave).
+					//	Ne surtout pas utiliser caption.Name ou value.Name, car ce texte
+					//	ne contient que la dernière partie du nom (voir dans
+					//	ResourceAccess.AdjustCaptionName).
 					string name = this.resourceAccess.DirectGetDisplayName(druid);
 					string text = ResourceAccess.GetCaptionNiceDescription(caption, this.array.LineHeight);
 
@@ -445,19 +477,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Types.Collections.EnumValueCollection collection = this.Collection;
 			collection.Clear();
 
+			int rank = 0;
 			foreach (Druid druid in this.selDruids)
 			{
 				Caption caption = this.module.ResourceManager.GetCaption(druid);
 				System.Diagnostics.Debug.Assert(caption != null);
 
-				EnumValue item = new EnumValue(0, caption);
+				EnumValue item = new EnumValue(rank++, caption);
 				collection.Add(item);
-			}
-
-			for (int rank=0; rank<collection.Count; rank++)
-			{
-				EnumValue item = collection[rank];
-				item.DefineRank(rank);
 			}
 		}
 

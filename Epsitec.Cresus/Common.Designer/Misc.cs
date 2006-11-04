@@ -508,6 +508,12 @@ namespace Epsitec.Common.Designer
 			return string.Format(@"<img src=""{0}""/>", fullName);
 		}
 
+		static public string ImageFull(string fullName, double verticalOffset)
+		{
+			//	Retourne le texte pour mettre une image dans un texte.
+			return string.Format(@"<img src=""{0}"" voff=""{1}""/>", fullName, verticalOffset.ToString(System.Globalization.CultureInfo.InvariantCulture));
+		}
+
 		static public string Image(string icon)
 		{
 			//	Retourne le texte pour mettre une image dans un texte.

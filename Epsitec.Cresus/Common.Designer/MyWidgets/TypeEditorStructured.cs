@@ -155,6 +155,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		public override string GetSummary()
+		{
+			//	Retourne le texte du résumé.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			builder.Append(this.fields.Count.ToString());
+			builder.Append("×: ");
+
+			for (int i=0; i<this.fields.Count; i++)
+			{
+				StructuredTypeField field = this.fields[i];
+				builder.Append(field.Id);
+
+				if (i < this.fields.Count-1)
+				{
+					builder.Append(", ");
+				}
+			}
+			
+			return builder.ToString();
+		}
+
+
 		protected override void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.
@@ -197,7 +220,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 					AbstractType type = field.Type as AbstractType;
 					if (type != null)
 					{
-						Caption caption = type.Caption;
+						Caption caption = this.module.ResourceManager.GetCaption(type.Caption.Druid);
+						//?ResourceBundle bundle = ResourceManager.GetSourceBundle(caption);
+						//?ResourceBundle.Field rf = bundle[caption.Druid];
+						//?string dn = ResourceAccess.SubAllFilter(rf.Name);
 
 						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
 						{
@@ -222,16 +248,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 					if (druid.IsValid)
 					{
 						Caption caption = this.module.ResourceManager.GetCaption(druid);
+						//?ResourceBundle bundle = ResourceManager.GetSourceBundle(caption);
+						//?ResourceBundle.Field rf = bundle[druid];
+						//?string dn = ResourceAccess.SubAllFilter(rf.Name);
 
 						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
 						{
-							string dn = this.resourceAccess.DirectGetDisplayName(druid);
 							string nd = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
-							captionText = string.Concat(dn, ":<br/>", nd);
+							captionText = string.Concat(caption.Name, ":<br/>", nd);
 						}
 						else
 						{
-							captionText = this.resourceAccess.DirectGetDisplayName(druid);
+							captionText = caption.Name;
 						}
 
 						if (!string.IsNullOrEmpty(caption.Icon))

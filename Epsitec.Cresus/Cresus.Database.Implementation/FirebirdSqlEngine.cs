@@ -121,6 +121,10 @@ namespace Epsitec.Cresus.Database.Implementation
 				
 				FbDataAdapter    adapter = this.fb.NewDataAdapter (command) as FbDataAdapter;
 				FbCommandBuilder builder = new FbCommandBuilder (adapter);
+
+				//	FbCommandBuilder.RowUpdatingHandler pourrait bénéficier du rajout
+				//	suivant: e.Command.Transaction = this.DataAdapter.SelectCommand.Transaction
+				//	ce qui permettrait de garantir que l'on utilise le bon objet de transaction...
 				
 				adapters[i] = adapter;
 			}

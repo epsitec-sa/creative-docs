@@ -3,6 +3,7 @@
 
 namespace Epsitec.Cresus.Database
 {
+#if true
 	/// <summary>
 	/// La classe DbTypeNum définit les paramètres d'une valeur numérique.
 	/// </summary>
@@ -259,4 +260,5 @@ namespace Epsitec.Cresus.Database
 
 		#endregion
 	}
+#endif
 }

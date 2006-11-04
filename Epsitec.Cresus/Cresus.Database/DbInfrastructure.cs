@@ -137,6 +137,9 @@ namespace Epsitec.Cresus.Database
 		
 		public void CreateDatabase(DbAccess db_access)
 		{
+//-			System.Diagnostics.Debug.WriteLine ("Connect to DEBUGGER now");
+//-			System.Threading.Thread.Sleep (30*1000);
+			
 			//	Crée une base de données avec les structures de gestion requises par Crésus
 			//	(tables de description, etc.).
 			
@@ -856,7 +859,7 @@ namespace Epsitec.Cresus.Database
 			{
 				using (transaction = this.BeginTransaction ())
 				{
-					this.RegisterNewDbTable (transaction, table);
+					this.RegisterDbTable (transaction, table, check_for_known);
 					transaction.Commit ();
 					return;
 				}

@@ -439,6 +439,14 @@ namespace Epsitec.Cresus.Database
 			
 			throw new Exceptions.FormatException (string.Format ("{0} is not a valid SQL name.", name));
 		}
+
+		public static SqlField CreateName(DbColumn column)
+		{
+			string table_name = DbSqlStandard.MakeDelimitedIdentifier (column.Table.Name);
+			string column_name = column.CreateSqlName ();
+			
+			return SqlField.CreateName (table_name, column_name);
+		}
 		
 		public static SqlField CreateName(string table_name, string column_name)
 		{

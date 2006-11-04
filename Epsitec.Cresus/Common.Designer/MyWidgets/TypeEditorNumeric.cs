@@ -101,6 +101,42 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		public override string GetSummary()
+		{
+			//	Retourne le texte du résumé.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			AbstractNumericType type = this.AbstractType as AbstractNumericType;
+
+			if (!type.Range.IsEmpty)
+			{
+				builder.Append("Min = ");
+				builder.Append(type.Range.Minimum.ToString());
+				builder.Append(", Max = ");
+				builder.Append(type.Range.Maximum.ToString());
+				builder.Append(", Res = ");
+				builder.Append(type.Range.Resolution.ToString());
+			}
+
+			if (!type.PreferredRange.IsEmpty)
+			{
+				builder.Append("   —   Min = ");
+				builder.Append(type.PreferredRange.Minimum.ToString());
+				builder.Append(", Max = ");
+				builder.Append(type.PreferredRange.Maximum.ToString());
+				builder.Append(", Res = ");
+				builder.Append(type.PreferredRange.Resolution.ToString());
+			}
+
+			builder.Append("   —   Petit pas = ");
+			builder.Append(type.SmallStep.ToString());
+			builder.Append(", Grand pas = ");
+			builder.Append(type.LargeStep.ToString());
+
+			return builder.ToString();
+		}
+
+
 		protected override void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.

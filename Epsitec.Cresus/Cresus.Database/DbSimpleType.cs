@@ -1,23 +1,57 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// L'énumération DbSimpleType liste les types simplifiés utilisés pour le stockage
-	/// interne d'informations diverses.
+	/// The <c>DbSimpleType</c> enumeration lists the simplified types used to store
+	/// data into the intermediate database layer.
 	/// </summary>
 	public enum DbSimpleType
 	{
-		Unsupported,					//	type non supporté
-		Null,							//	type pas analysable, donnée absente
+		/// <summary>
+		/// Not supported.
+		/// </summary>
+		Unsupported,
+
+		/// <summary>
+		/// Null, type cannot be inferred.
+		/// </summary>
+		Null,
 		
-		Decimal,						//	tout ce qui est numérique (booléen, entier, réel, temps, ...)
-		String,							//	texte (Unicode)
-		Date,							//	date, uniquement
-		Time,							//	heure, uniquement
-		DateTime,						//	date et heure, 64 bits (résolution de 1ms ou mieux)
-		ByteArray,						//	tableau de bytes
-		Guid,							//	identificateur globalement unique, 128 bits
+		/// <summary>
+		/// Numeric data (boolean, integer, real, time span, etc.).
+		/// </summary>
+		Decimal,
+
+		/// <summary>
+		/// Unicode text.
+		/// </summary>
+		String,
+
+		/// <summary>
+		/// Date only.
+		/// </summary>
+		Date,
+
+		/// <summary>
+		/// Time only.
+		/// </summary>
+		Time,
+
+		/// <summary>
+		/// Date and Time data with at least a 1ms resolution.
+		/// </summary>
+		DateTime,
+
+		/// <summary>
+		/// Byte array.
+		/// </summary>
+		ByteArray,
+		
+		/// <summary>
+		/// Globally unique identifier, 128-bit value.
+		/// </summary>
+		Guid,
 	}
 }

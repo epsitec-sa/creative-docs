@@ -88,6 +88,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.arrayDetail.SetColumnsRelativeWidth(1, 0.30);  // nom du module
 				this.arrayDetail.SetColumnsRelativeWidth(2, 0.55);  // nom de l'icône
 				this.arrayDetail.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
+				this.arrayDetail.SetColumnBreakMode(1, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
+				this.arrayDetail.SetColumnBreakMode(2, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 				this.arrayDetail.LineHeight = 25;
 				this.arrayDetail.Dock = DockStyle.Fill;
 				this.arrayDetail.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);

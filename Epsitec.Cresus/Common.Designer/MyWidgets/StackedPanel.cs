@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public StackedPanel()
 		{
-			this.Padding = new Margins(15+10, 10, 5-1, 5);
+			this.Padding = new Margins(StackedPanel.leftMargin+10, 10, 5-1, 5);
 
 			this.container = new Widget(this);
 			this.container.Dock = DockStyle.Fill;
@@ -55,6 +55,86 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public bool IsNewSection
+		{
+			//	Indique si le panneau débute une nouvelle section.
+			get
+			{
+				return this.isNewSection;
+			}
+
+			set
+			{
+				if (this.isNewSection != value)
+				{
+					this.isNewSection = value;
+					this.UpdateExtendButton();
+				}
+			}
+		}
+
+		public GlyphButton ExtendButton
+		{
+			//	Retourne l'éventuel bouton permettant d'étendre le panneau.
+			get
+			{
+				return this.extendButton;
+			}
+		}
+
+		public GlyphShape ExtendShape
+		{
+			//	Aspect du bouton permettant d'étendre le panneau.
+			//	GlyphShape.None correspond à un bouton inexistant.
+			get
+			{
+				if (this.extendButton == null)
+				{
+					return GlyphShape.None;
+				}
+				else
+				{
+					return this.extendButton.GlyphShape;
+				}
+			}
+
+			set
+			{
+				if (value == GlyphShape.None)
+				{
+					if (this.extendButton != null)
+					{
+						this.extendButton.Dispose();
+					}
+
+					this.extendButton = null;
+				}
+				else
+				{
+					if (this.extendButton == null)
+					{
+						this.extendButton = new GlyphButton(this);
+						this.extendButton.Anchor = AnchorStyles.TopLeft;
+						this.extendButton.PreferredSize = new Size(StackedPanel.leftMargin+1, StackedPanel.leftMargin+1);
+						this.UpdateExtendButton();
+					}
+
+					this.extendButton.GlyphShape = value;
+				}
+			}
+		}
+
+		protected void UpdateExtendButton()
+		{
+			//	Met à jour la position du bouton permettant d'étendre le panneau.
+			if (this.extendButton != null)
+			{
+				double left = this.Padding.Left;
+				double top = this.Padding.Top + (this.isNewSection ? 1 : 0);
+				this.extendButton.Margins = new Margins(-left, 0, -top, 0);
+			}
+		}
+
 		public string Title
 		{
 			//	Texte du titre affiché en haut à gauche du panneau.
@@ -69,15 +149,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					this.title = value;
 
-					ToolTip.Default.SetToolTip(this, this.title);
-
-					if (this.titleLayout == null)
+					if (string.IsNullOrEmpty(this.title))
 					{
-						this.titleLayout = new TextLayout();
-						this.titleLayout.Alignment = ContentAlignment.MiddleCenter;
+						this.titleLayout = null;
 					}
+					else
+					{
+						ToolTip.Default.SetToolTip(this, this.title);
 
-					this.titleLayout.Text = string.Concat("<font size=\"75%\">", this.title, "</font>");
+						if (this.titleLayout == null)
+						{
+							this.titleLayout = new TextLayout();
+							this.titleLayout.Alignment = ContentAlignment.MiddleCenter;
+						}
+
+						this.titleLayout.Text = string.Concat("<font size=\"75%\">", this.title, "</font>");
+					}
 				}
 			}
 		}
@@ -126,20 +213,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 
-			if (!this.backgroundColor.IsEmpty)
+			if (!this.backgroundColor.IsEmpty)  // pas un séparateur ?
 			{
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.backgroundColor);
 
+				Color color = Color.FromAlphaRgb(1.0, this.backgroundColor.R, this.backgroundColor.G, this.backgroundColor.B);
 				Rectangle r = rect;
-				r.Width = 15;
+				r.Width = StackedPanel.leftMargin;
 				graphics.AddFilledRectangle(r);
-				graphics.RenderSolid(this.backgroundColor);
+				graphics.RenderSolid(color);  // marge gauche plus foncée
 			}
 
 			rect.Deflate(0.5, 0.5);
 			graphics.AddLine(rect.Left-0.5, rect.Bottom, rect.Right+0.5, rect.Bottom);  // - en bas
-			graphics.AddLine(rect.Left+15, rect.Bottom-0.5, rect.Left+15, rect.Top+0.5);  // | +15 à gauche
+
+			if (!this.backgroundColor.IsEmpty)  // pas un séparateur ?
+			{
+				graphics.AddLine(rect.Left+StackedPanel.leftMargin, rect.Bottom-0.5, rect.Left+StackedPanel.leftMargin, rect.Top+0.5);  // | +marge à gauche
+			}
 
 			if (this.isLeftPart)
 			{
@@ -148,22 +240,35 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			graphics.RenderSolid(adorner.ColorBorder);
 
-			if (this.titleLayout != null)
+			if (this.titleLayout != null)  // texte existe ?
 			{
-				Point center = new Point(rect.Left+14, rect.Bottom+1);
-				Transform it = graphics.Transform;
-				graphics.RotateTransformDeg(90, center.X, center.Y);
-				this.titleLayout.LayoutSize = new Size(rect.Height-2, 15);
-				this.titleLayout.Paint(center, graphics);
-				graphics.Transform = it;
+				double w = rect.Height-2;  // hauteur disponible = largeur pour le texte, car vertical
+				if (this.extendButton != null)  // bouton extend existe ?
+				{
+					w -= this.extendButton.PreferredHeight;  // enlève la hauteur du bouton
+				}
+
+				if (w > 20)  // largeur assez grande ?
+				{
+					Point center = new Point(rect.Left+14, rect.Bottom+1);
+					Transform it = graphics.Transform;
+					graphics.RotateTransformDeg(90, center.X, center.Y);
+					this.titleLayout.LayoutSize = new Size(w, StackedPanel.leftMargin);
+					this.titleLayout.Paint(center, graphics);
+					graphics.Transform = it;
+				}
 			}
 		}
 
 
+		protected static readonly double	leftMargin = 15;
+
 		protected Color						backgroundColor = Color.Empty;
 		protected bool						isLeftPart = true;
+		protected bool						isNewSection = false;
 		protected string					title;
 		protected TextLayout				titleLayout;
+		protected GlyphButton				extendButton;
 		protected Widget					container;
 	}
 }

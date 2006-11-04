@@ -16,7 +16,8 @@ namespace Epsitec.Common.Designer.Viewers
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
 			//	Aspect (pour DefaultParameter) et Statefull.
-			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, 0.1);
+			this.buttonSuiteCompact = this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.6);
+			this.buttonSuiteCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			StaticText label = new StaticText(leftContainer.Container);
 			label.CaptionDruid = Res.Captions.Command.ButtonAspect.Druid;
@@ -49,7 +50,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryStatefull.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Shortcuts.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Commands.Shortcut.Title, 0.3);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Commands.Shortcut.Title, BandMode.SuiteView, GlyphShape.None, false, 0.6);
 
 			this.primaryShortcut1 = new ShortcutEditor(leftContainer.Container);
 			this.primaryShortcut1.Title = Res.Strings.Viewers.Commands.Shortcut.Main;
@@ -82,20 +83,20 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryShortcut2.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			//	Group.
-			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Group.Title, 0.5);
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Group.Title, BandMode.SuiteView, GlyphShape.None, false, 0.6);
 
 			label = new StaticText(leftContainer.Container);
 			label.Text = Res.Strings.Viewers.Commands.Group.Title;
 			label.MinHeight = 20;  // attention, très important !
 			label.PreferredHeight = 20;
-			label.PreferredWidth = 89;
+			label.PreferredWidth = 89;  // calqué sur ShortcutEditor
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Margins = new Margins(0, 5, 0, 0);
 			label.Dock = DockStyle.Left;
 
 			this.primaryGroup = new TextFieldCombo(leftContainer.Container);
 			this.primaryGroup.MinHeight = 20;  // attention, très important !
-			this.primaryGroup.PreferredWidth = 216;
+			this.primaryGroup.PreferredWidth = 216;  // calqué sur ShortcutEditor
 			this.primaryGroup.HorizontalAlignment = HorizontalAlignment.Left;
 			this.primaryGroup.Dock = DockStyle.Left;
 			this.primaryGroup.TextChanged += new EventHandler(this.HandleGroupTextChanged);
@@ -104,6 +105,27 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryGroup.TabIndex = this.tabIndex++;
 			this.primaryGroup.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
+			//	Résumé des paramètres.
+			this.buttonSuiteExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.6);
+			this.buttonSuiteExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+
+			this.primarySuiteSummary = new StaticText(leftContainer.Container);
+			this.primarySuiteSummary.MinHeight = 30;
+			this.primarySuiteSummary.Dock = DockStyle.Fill;
+
+			this.primarySuiteSummaryIcon = new IconButton(leftContainer.Container);
+			this.primarySuiteSummaryIcon.MinSize = new Size(30, 30);
+			this.primarySuiteSummaryIcon.Dock = DockStyle.Right;
+
+			this.secondarySuiteSummary = new StaticText(rightContainer.Container);
+			this.secondarySuiteSummary.MinHeight = 30;
+			this.secondarySuiteSummary.Dock = DockStyle.Fill;
+
+			this.secondarySuiteSummaryIcon = new IconButton(rightContainer.Container);
+			this.secondarySuiteSummaryIcon.MinSize = new Size(30, 30);
+			this.secondarySuiteSummaryIcon.Dock = DockStyle.Right;
+
+			this.UpdateDisplayMode();
 			this.UpdateEdit();
 		}
 
@@ -174,6 +196,11 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, 0, null, ResourceAccess.FieldType.None);
 
 				this.SetTextField(this.primaryGroup, 0, null, ResourceAccess.FieldType.None);
+
+				this.primarySuiteSummary.Text = "";
+				this.secondarySuiteSummary.Text = "";
+				this.SetTextField(this.primarySuiteSummaryIcon, 0, null, ResourceAccess.FieldType.None);
+				this.SetTextField(this.secondarySuiteSummaryIcon, 0, null, ResourceAccess.FieldType.None);
 			}
 			else
 			{
@@ -194,11 +221,61 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, sel, this.secondaryCulture, ResourceAccess.FieldType.Shortcuts);
 
 				this.SetTextField(this.primaryGroup, sel, null, ResourceAccess.FieldType.Group);
+
+				this.primarySuiteSummary.Text = this.GetSummary(this.primaryShortcut1, this.primaryShortcut2, this.primaryGroup);
+				this.secondarySuiteSummary.Text = this.GetSummary(this.secondaryShortcut1, this.secondaryShortcut2, this.primaryGroup);
+
+				string icon = null;
+				if (this.primaryAspectIcon.ActiveState == ActiveState.Yes)
+				{
+					icon = Misc.Icon("ButtonAspectIcon");
+				}
+				if (this.primaryAspectDialog.ActiveState == ActiveState.Yes)
+				{
+					icon = Misc.Icon("ButtonAspectDialog");
+				}
+				this.primarySuiteSummaryIcon.IconName = icon;
+				this.secondarySuiteSummaryIcon.IconName = icon;
 			}
 
 			this.ignoreChange = iic;
 
 			base.UpdateEdit();
+		}
+
+		protected string GetSummary(ShortcutEditor editor1, ShortcutEditor editor2, TextFieldCombo group)
+		{
+			//	Construit le texte du résumé.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			string s;
+
+			s = editor1.Shortcut.ToString();
+			if (!string.IsNullOrEmpty(s))
+			{
+				builder.Append(s);
+			}
+			
+			s = editor2.Shortcut.ToString();
+			if (!string.IsNullOrEmpty(s))
+			{
+				if (builder.Length > 0)
+				{
+					builder.Append(", ");
+				}
+				builder.Append(s);
+			}
+
+			s = group.Text;
+			if (!string.IsNullOrEmpty(s))
+			{
+				if (builder.Length > 0)
+				{
+					builder.Append("<br/>");
+				}
+				builder.Append(s);
+			}
+
+			return builder.ToString();
 		}
 
 		protected void SetShortcut(ShortcutEditor editor1, ShortcutEditor editor2, int index, string cultureName, ResourceAccess.FieldType fieldType)
@@ -477,5 +554,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected ShortcutEditor				secondaryShortcut1;
 		protected ShortcutEditor				secondaryShortcut2;
 		protected TextFieldCombo				primaryGroup;
+		protected StaticText					primarySuiteSummary;
+		protected IconButton					primarySuiteSummaryIcon;
+		protected StaticText					secondarySuiteSummary;
+		protected IconButton					secondarySuiteSummaryIcon;
 	}
 }

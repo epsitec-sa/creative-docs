@@ -179,7 +179,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.manager.NormalizeFullId (this.Prefix, this.name);
+				return this.manager.NormalizeStringsFullId (this.Prefix, this.name);
 			}
 		}
 		
@@ -1103,7 +1103,7 @@ namespace Epsitec.Common.Support
 					throw new ResourceException (string.Format ("No default prefix specified, target '{0}' cannot be resolved.", target));
 				}
 				
-				target = this.manager.NormalizeFullId (this.prefix, target);
+				target = this.manager.NormalizeStringsFullId (this.prefix, target);
 			}
 			
 			return target;

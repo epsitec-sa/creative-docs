@@ -1,34 +1,88 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// L'énumération DbRawType liste tous les type bruts "supportés" par la base
-	/// de données, lesquels correspondent aux types fournis par ADO.NET.
+	/// The <c>DbRawType</c> enumeration lists all possible low level types
+	/// which can be used with an ADO.NET provider.
 	/// </summary>
 	public enum DbRawType
 	{
-		Unsupported,					//	type non supporté
-		Unknown = Unsupported,			//	type inconnu (= type non supporté)
-		Null,							//	type pas analysable, donnée absente
+		/// <summary>
+		/// Unsupported type.
+		/// </summary>
+		Unsupported,
 		
-		Boolean,						//	1 bit
+		/// <summary>
+		/// Unknown type.
+		/// </summary>
+		Unknown = Unsupported,
 		
-		Int16,							//	entier signé, 16 bits
-		Int32,							//	entier signé, 32 bits
-		Int64,							//	entier signé, 64 bits
+		/// <summary>
+		/// Null, type cannot be inferred.
+		/// </summary>
+		Null,
 		
-		SmallDecimal,					//	nombre à virgule à haute résolution (9 chiffres après la virgule)
-		LargeDecimal,					//	nombre à virgule de grande taille (mais seulement 3 chiffres après la virgule)
+		/// <summary>
+		/// Boolean (1-bit value).
+		/// </summary>
+		Boolean,
 		
-		Date,							//	date, uniquement
-		Time,							//	heure, uniquement
-		DateTime,						//	date et heure, 64 bits (résolution de 1ms ou mieux)
+		/// <summary>
+		/// Integer (16-bit value).
+		/// </summary>
+		Int16,
 		
-		String,							//	texte (Unicode)
-		ByteArray,						//	tableau de bytes
+		/// <summary>
+		/// Integer (32-bit value).
+		/// </summary>
+		Int32,
 		
-		Guid,							//	identificateur globalement unique, 128 bits
+		/// <summary>
+		/// Integer (64-bit value).
+		/// </summary>
+		Int64,
+		
+		/// <summary>
+		/// Small decimal value (9 digits integer part + 9 digits fractional part).
+		/// </summary>
+		SmallDecimal,
+
+		/// <summary>
+		/// Large decimal value (15 digits integer part + 3 digits fractional part).
+		/// </summary>
+		LargeDecimal,
+		
+		
+		/// <summary>
+		/// Date only.
+		/// </summary>
+		Date,
+		
+		/// <summary>
+		/// Time only.
+		/// </summary>
+		Time,
+		
+		/// <summary>
+		/// Date and Time data with at least a 1ms resolution.
+		/// </summary>
+		DateTime,
+
+		/// <summary>
+		/// Unicode text.
+		/// </summary>
+		String,
+		
+		/// <summary>
+		/// Byte array.
+		/// </summary>
+		ByteArray,
+
+		/// <summary>
+		/// Globally unique identifier, 128-bit value.
+		/// </summary>
+		Guid,
 	}
 }
