@@ -1,0 +1,38 @@
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
+namespace Epsitec.Cresus.Database
+{
+	/// <summary>
+	/// The <c>DbColumnClass</c> enumeration specifies what kind of data a column
+	/// stores.
+	/// </summary>
+	public enum DbColumnClass : byte
+	{
+		/// <summary>
+		/// The column contains data.
+		/// </summary>
+		Data				= 0,
+
+		/// <summary>
+		/// The column contains a key ID.
+		/// </summary>
+		KeyId				= 1,
+
+		/// <summary>
+		/// The column contains a key status.
+		/// </summary>
+		KeyStatus			= 2,
+
+		/// <summary>
+		/// The column contains a reference to a key ID.
+		/// </summary>
+		RefId				= 3,
+
+		/// <summary>
+		/// The column contains an internal reference which is not really handled
+		/// like a foreign key.
+		/// </summary>
+		RefInternal			= 4,
+	}
+}

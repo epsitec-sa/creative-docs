@@ -254,6 +254,13 @@ namespace Epsitec.Cresus.Database
 			
 			return DbRawType.Unsupported;
 		}
+
+		public static DbRawType GetRawType(INamedType namedType)
+		{
+			DbNumDef numDef;
+			DbSimpleType simpleType = TypeConverter.GetSimpleType (namedType, out numDef);
+			return TypeConverter.GetRawType (simpleType, numDef);
+		}
 		
 		
 		public static bool IsCompatibleToSimpleType(System.Type type, DbSimpleType simpleType)

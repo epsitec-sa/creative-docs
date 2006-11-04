@@ -1,6 +1,9 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+using Epsitec.Common.Support;
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -13,14 +16,14 @@ namespace Epsitec.Cresus.Database
 		{
 		}
 		
-		public static DbType CreateType(string xml)
+		public static INamedType CreateType(string xml)
 		{
 			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
 			doc.LoadXml (xml);
 			return DbTypeFactory.CreateType (doc.DocumentElement);
 		}
-		
-		public static DbType CreateType(System.Xml.XmlElement xml)
+
+		public static INamedType CreateType(System.Xml.XmlElement xml)
 		{
 			if (xml.Name == "null")
 			{
@@ -32,106 +35,31 @@ namespace Epsitec.Cresus.Database
 				throw new System.FormatException (string.Format ("Expected root element named <type>, but found <{0}>.", xml.Name));
 			}
 			
-			string type_class = xml.GetAttribute ("class");
+			string typeCaptionId = xml.GetAttribute ("id");
 			
-			if (type_class.Length == 0)
+			if (string.IsNullOrEmpty (typeCaptionId))
 			{
 				throw new System.FormatException (string.Format ("Tag <type> does not define attribute named 'class'."));
 			}
 			
-			DbType type = null;
-			
-			switch (type_class)
-			{
-				case "base":	type = new DbType ();			break;
-				case "enum":	type = new DbTypeEnum ();		break;
-				case "num":		type = new DbTypeNum ();		break;
-				case "str":		type = new DbTypeString ();		break;
-				case "bin":		type = new DbTypeByteArray ();	break;
-				case "d_t":		type = new DbTypeDateTime ();	break;
-				
-				default:
-					throw new System.FormatException (string.Format ("Unsupported value for <type class='{0}'>.", type_class));
-			}
-			
-			int index = 0;
-			
-			type.DeserializeXmlAttributes (xml);
-			type.DeserializeXmlElements (xml.ChildNodes, ref index);
-			
-			return type;
+			return TypeRosetta.GetTypeObject (Druid.Parse (typeCaptionId));
 		}
 		
-		public static string SerializeToXml(DbType type, bool full)
+		public static string SerializeToXml(INamedType type, bool full)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			DbTypeFactory.SerializeToXml (buffer, type, full);
 			return buffer.ToString ();
 		}
 		
-		public static void SerializeToXml(System.Text.StringBuilder buffer, DbType type, bool full)
+		public static void SerializeToXml(System.Text.StringBuilder buffer, INamedType type, bool full)
 		{
 			if (type != null)
 			{
-				System.Type type_type = type.GetType ();
-				string class_name;
-				
-				if (type_type == DbTypeFactory.type_base)
-				{
-					class_name = "base";
-				}
-				else if (type_type == DbTypeFactory.type_enum)
-				{
-					class_name = "enum";
-				}
-				else if (type_type == DbTypeFactory.type_num)
-				{
-					class_name = "num";
-				}
-				else if (type_type == DbTypeFactory.type_str)
-				{
-					class_name = "str";
-				}
-				else if (type_type == DbTypeFactory.type_bin)
-				{
-					class_name = "bin";
-				}
-				else if (type_type == DbTypeFactory.type_d_t)
-				{
-					class_name = "d_t";
-				}
-				else
-				{
-					throw new System.ArgumentException (string.Format ("Unsupported type specified: {0}.", type_type.Name));
-				}
-				
-				buffer.Append (@"<type class=""");
-				buffer.Append (class_name);
-				buffer.Append (@"""");
-				
-				//	Ajoute ce qui est propre à chaque classe...
-				
-				type.SerializeXmlAttributes (buffer, full);
-				
-				if (full)
-				{
-					buffer.Append (@">");
-					type.SerializeXmlElements (buffer, true);
-					buffer.Append (@"</type>");
-				}
-				else
-				{
-					buffer.Append (@"/>");
-				}
+				buffer.Append (@"<type id=""");
+				buffer.Append (type.CaptionId.ToString ());
+				buffer.Append (@""" />");
 			}
 		}
-		
-		
-		static readonly System.Type		type_base = typeof (DbType);
-		static readonly System.Type		type_enum = typeof (DbTypeEnum);
-		static readonly System.Type		type_num  = typeof (DbTypeNum);
-		static readonly System.Type		type_str  = typeof (DbTypeString);
-		static readonly System.Type		type_bin  = typeof (DbTypeByteArray);
-		static readonly System.Type		type_d_t  = typeof (DbTypeDateTime);
 	}
 }
