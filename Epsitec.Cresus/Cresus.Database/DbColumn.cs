@@ -2,32 +2,29 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Database
 {
-	using ResourceLevel = Epsitec.Common.Support.ResourceLevel;
-	using Converter		= Epsitec.Common.Types.InvariantConverter;
-	
-	
 	/// <summary>
-	/// La classe DbColumn décrit une colonne dans une table de la base de données.
-	/// Cette classe ressemble dans l'esprit à System.Data.DataColumn.
+	/// The <c>DbColumn</c> class describes a column in a database table.
+	/// This is our version of the column metadata wrapper (<see cref="System.Data.DataColumn"/>).
 	/// </summary>
-	public class DbColumn : IDbAttributesHost, Common.Types.ICaption, Common.Types.IName
+	public class DbColumn : IName, ICaption
 	{
 		public DbColumn()
 		{
 		}
 
 		public DbColumn(string name)
-			: this (name, null)
 		{
+			this.DefineName (name);
 		}
 
 		public DbColumn(string name, INamedType type)
+			: this (name)
 		{
-			this.attributes[Tags.Name] = name;
-			this.SetType (type);
+			this.DefineType (type);
 		}
 		
 		public DbColumn(string name, INamedType type, DbColumnClass columnClass)
@@ -85,46 +82,58 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		#region IName Members
+
 		public string Name
 		{
 			get
 			{
-				return this.Attributes[Tags.Name, ResourceLevel.Default];
+				if (this.name == null)
+				{
+					Caption caption = this.Caption;
+					return this.caption == null ? null this.caption.Name
+				}
+				else
+				{
+					return this.name;
+				}
 			}
 		}
 
-		public string Caption
+		#endregion
+
+		#region ICaption Members
+
+		public Druid CaptionId
 		{
 			get
 			{
-				return this.Attributes[Tags.Caption];
+				return this.captionId;
 			}
 		}
 
-		public string Description
+		#endregion
+
+		public Caption Caption
 		{
 			get
 			{
-				return this.Attributes[Tags.Description];
+				if (this.caption == null)
+				{
+					this.caption = DbContext.Current.ResourceManager.GetCaption (this.captionId) ?? DbColumn.nullCaption;
+				}
+
+				if (this.caption == DbColumn.nullCaption)
+				{
+					return null;
+				}
+				else
+				{
+					return this.caption;
+				}
 			}
 		}
 
-		public Common.Support.Druid CaptionId
-		{
-			get
-			{
-				return Common.Support.Druid.Empty;
-			}
-		}
-
-
-		public DbAttributes Attributes
-		{
-			get
-			{
-				return this.attributes;
-			}
-		}
 
 		public DbKey InternalKey
 		{
@@ -385,6 +394,29 @@ namespace Epsitec.Cresus.Database
 			this.internal_column_key = key.Clone () as DbKey;
 		}
 
+		internal void DefineName(string name)
+		{
+			if (Druid.IsValidResourceId (name))
+			{
+				this.captionId = Druid.Parse (name);
+				this.name = null;
+			}
+			else
+			{
+				this.name = name;
+			}
+		}
+
+		internal void DefineType(INamedType type)
+		{
+			if (this.type != null)
+			{
+				throw new System.InvalidOperationException ("Cannot reinitialise type of column.");
+			}
+
+			this.type = type;
+		}
+
 		internal void DefineColumnLocalisation(DbColumnLocalisation localisation)
 		{
 			this.localisation = localisation;
@@ -564,16 +596,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		internal void SetType(INamedType type)
-		{
-			if (this.type != null)
-			{
-				throw new System.InvalidOperationException ("Cannot reinitialise type of column.");
-			}
-
-			this.type = type;
-		}
-
 
 		#region Equals and GetHashCode support
 		public override bool Equals(object obj)
@@ -642,7 +664,7 @@ namespace Epsitec.Cresus.Database
 			if (this.column_class != DbColumnClass.Data)
 			{
 				buffer.Append (@" class=""");
-				buffer.Append (Converter.ToString ((int) this.column_class));
+				buffer.Append (InvariantConverter.ToString ((int) this.column_class));
 				buffer.Append (@"""");
 			}
 
@@ -650,7 +672,7 @@ namespace Epsitec.Cresus.Database
 			{
 				int num = (int) this.localisation;
 				buffer.Append (@" local=""");
-				buffer.Append (Converter.ToString ((int) this.localisation));
+				buffer.Append (InvariantConverter.ToString ((int) this.localisation));
 				buffer.Append (@"""");
 			}
 
@@ -696,8 +718,8 @@ namespace Epsitec.Cresus.Database
 			int column_class_code;
 			int localisation_code;
 
-			Converter.Convert (xml.GetAttribute ("class"), out column_class_code);
-			Converter.Convert (xml.GetAttribute ("local"), out localisation_code);
+			InvariantConverter.Convert (xml.GetAttribute ("class"), out column_class_code);
+			InvariantConverter.Convert (xml.GetAttribute ("local"), out localisation_code);
 
 			this.column_class        = (DbColumnClass) column_class_code;
 			this.localisation = (DbColumnLocalisation) localisation_code;
@@ -707,10 +729,15 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		private static readonly Caption nullCaption = new Caption ();
+
 		protected DbAttributes attributes				= new DbAttributes ();
 		protected INamedType type;
 		protected DbTable table;
 
+		private string name;
+		private Druid captionId;
+		private Caption caption;
 		private DbColumnLocalisation localisation;
 
 		protected bool is_null_allowed;

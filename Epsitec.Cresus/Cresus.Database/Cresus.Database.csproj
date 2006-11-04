@@ -132,6 +132,7 @@
     </Compile>
     <Compile Include="DbColumnClass.cs" />
     <Compile Include="DbColumnLocalisation.cs" />
+    <Compile Include="DbContext.cs" />
     <Compile Include="DbIdClass.cs" />
     <Compile Include="SqlFieldOrder.cs" />
     <Compile Include="SqlFieldType.cs" />
