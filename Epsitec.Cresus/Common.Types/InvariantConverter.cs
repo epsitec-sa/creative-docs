@@ -126,6 +126,19 @@ namespace Epsitec.Common.Types
 			InvariantConverter.Convert (obj, out value);
 			return (double) value;
 		}
+
+		public static int     ParseInt(string value)
+		{
+			return string.IsNullOrEmpty (value) ? 0 : int.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
+		}
+		public static long    ParseLong(string value)
+		{
+			return string.IsNullOrEmpty (value) ? 0 : long.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
+		}
+		public static decimal ParseDecimal(string value)
+		{
+			return string.IsNullOrEmpty (value) ? 0 : decimal.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
+		}
 		
 		public static bool SafeConvert(object obj, out string value)
 		{
