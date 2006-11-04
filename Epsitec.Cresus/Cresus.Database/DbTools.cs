@@ -1,7 +1,8 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Database
 {
@@ -124,6 +125,54 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			return InvariantConverter.ToString ((int) mode);
+		}
+
+		public static string ColumnClassToString(DbColumnClass value)
+		{
+			if (value == DbColumnClass.Data)
+			{
+				return null;
+			}
+			else
+			{
+				return InvariantConverter.ToString ((int) value);
+			}
+		}
+
+		public static string ColumnLocalisationToString(DbColumnLocalisation value)
+		{
+			if (value == DbColumnLocalisation.None)
+			{
+				return null;
+			}
+			else
+			{
+				return InvariantConverter.ToString ((int) value);
+			}
+		}
+
+		public static string DruidToString(Druid value)
+		{
+			if (value.IsEmpty)
+			{
+				return null;
+			}
+			else
+			{
+				return value.ToString ();
+			}
+		}
+
+		public static string TypeToString(INamedType value)
+		{
+			if (value == null)
+			{
+				return null;
+			}
+			else
+			{
+				return value.CaptionId.ToString ();
+			}
 		}
 	}
 }

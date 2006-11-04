@@ -26,7 +26,24 @@ namespace Epsitec.Cresus.Database
 		{
 			this.DefineType (type);
 		}
+
+		public DbColumn(Druid captionId)
+		{
+			this.DefineCaptionId (captionId);
+		}
 		
+		public DbColumn(Druid captionId, INamedType type)
+			: this (captionId)
+		{
+			this.DefineType (type);
+		}
+
+		public DbColumn(StructuredTypeField field)
+		{
+			this.DefineCaptionId (field.CaptionId);
+			this.DefineType (field.Type);
+		}
+
 		public DbColumn(string name, INamedType type, DbColumnClass columnClass)
 			: this (name, type)
 		{
@@ -91,7 +108,7 @@ namespace Epsitec.Cresus.Database
 				if (this.name == null)
 				{
 					Caption caption = this.Caption;
-					return this.caption == null ? null this.caption.Name
+					return caption == null ? null : caption.Name;
 				}
 				else
 				{
@@ -398,14 +415,22 @@ namespace Epsitec.Cresus.Database
 		{
 			if (Druid.IsValidResourceId (name))
 			{
-				this.captionId = Druid.Parse (name);
-				this.name = null;
+				this.DefineCaptionId (Druid.Parse (name));
 			}
 			else
 			{
 				this.name = name;
 			}
 		}
+
+		internal void DefineCaptionId(Druid captionId)
+		{
+			this.captionId = captionId;
+			this.caption = null;
+			this.name = null;
+		}
+		
+
 
 		internal void DefineType(INamedType type)
 		{
@@ -620,6 +645,28 @@ namespace Epsitec.Cresus.Database
 		}
 
 		#endregion
+
+		public void Serialize(System.Xml.XmlTextWriter xmlWriter)
+		{
+			xmlWriter.WriteStartElement ("col");
+			
+			DbColumn.WriteAttribute ("cap", DbTools.DruidToString (this.CaptionId));
+			DbColumn.WriteAttribute ("typ", DbTools.TypeToString (this.Type));
+			DbColumn.WriteAttribute ("cat", DbTools.ElementCategoryToString (this.Category));
+			DbColumn.WriteAttribute ("rev", DbTools.RevisionModeToString (this.RevisionMode));
+			DbColumn.WriteAttribute ("cls", DbTools.ColumnClassToString (this.ColumnClass));
+			DbColumn.WriteAttribute ("loc", DbTools.ColumnLocalisationToString (this.ColumnLocalisation));
+			
+			xmlWriter.WriteEndElement ();
+		}
+
+		private static void WriteAttribute(System.Xml.XmlTextWriter xmlWriter, string name, string value)
+		{
+			if (!string.IsNullOrEmpty (value))
+			{
+				xmlWriter.WriteAttributeString (name, value);
+			}
+		}
 
 		protected void SerializeXmlDefinition(System.Text.StringBuilder buffer, bool full)
 		{

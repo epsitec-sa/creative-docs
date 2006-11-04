@@ -51,13 +51,26 @@ namespace Epsitec.Cresus.Database.Collections
 		{
 			return (xml.Name == "null") ? null : new DbColumns (xml);
 		}
-		
-		
-		public static string SerializeToXml(DbColumns columns, string id)
+
+
+		public static void Serialize(System.Xml.XmlTextWriter xmlWriter, Collections.DbColumns columns)
 		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			DbColumns.SerializeToXml (buffer, columns, id);
-			return buffer.ToString ();
+			if (columns == null)
+			{
+				xmlWriter.WriteStartElement ("null");
+				xmlWriter.WriteEndElement ();
+			}
+			else
+			{
+				xmlWriter.WriteStartElement ("cols");
+
+				foreach (DbColumn column in columns)
+				{
+					column.Serialize (xmlWriter);
+				}
+				
+				xmlWriter.WriteEndElement ();
+			}
 		}
 		
 		public static void SerializeToXml(System.Text.StringBuilder buffer, DbColumns columns, string id)
