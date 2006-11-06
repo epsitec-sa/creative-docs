@@ -138,6 +138,15 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+		protected override void ClearCache()
+		{
+			//	Force une nouvelle mise à jour lors du prochain Update.
+			if (this.editor != null)
+			{
+				this.editor.ClearCache();
+			}
+		}
+
 		protected override void UpdateEdit()
 		{
 			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
