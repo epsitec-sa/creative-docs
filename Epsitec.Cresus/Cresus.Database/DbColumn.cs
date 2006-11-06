@@ -628,6 +628,9 @@ namespace Epsitec.Cresus.Database
 			{
 				//	TODO: deserialize contents
 
+				xmlReader.Read ();
+				xmlReader.ReadEndElement ();
+
 				return new DbColumn ();
 			}
 			else

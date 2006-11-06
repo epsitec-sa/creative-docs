@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Database
 	/// DigitShift définit la position de la virgule
 	/// par exemple, precision = 5, shift = 3, accepte les nombres de -99.999 à +99.999
 	/// </summary>
-	public sealed class DbNumDef : System.ICloneable
+	public sealed class DbNumDef : System.ICloneable, System.IEquatable<DbNumDef>
 	{
 		public DbNumDef()
 		{
@@ -476,6 +476,54 @@ namespace Epsitec.Cresus.Database
 
 		#endregion
 
+		#region IEquatable<DbNumDef> Members
+
+		public bool Equals(DbNumDef other)
+		{
+			return this == other;
+		}
+
+		#endregion
+
+		public override bool Equals(object obj)
+		{
+			return this.Equals (obj as DbNumDef);
+		}
+
+		public override int GetHashCode()
+		{
+			int hash = (this.digit_precision << 8) | (this.digit_shift);
+			
+			return this.raw_type.GetHashCode () ^ this.min_value.GetHashCode () ^ this.max_value.GetHashCode () ^ hash;
+		}
+
+		public static bool operator==(DbNumDef a, DbNumDef b)
+		{
+			if (object.ReferenceEquals (a, b))
+			{
+				return true;
+			}
+			if (object.ReferenceEquals (a, null))
+			{
+				return false;
+			}
+			if (object.ReferenceEquals (b, null))
+			{
+				return false;
+			}
+
+			return (a.raw_type == b.raw_type)
+				&& (a.min_value == b.min_value)
+				&& (a.max_value == b.max_value)
+				&& (a.digit_precision == b.digit_precision)
+				&& (a.digit_shift == b.digit_shift);
+		}
+
+		public static bool operator!=(DbNumDef a, DbNumDef b)
+		{
+			return !(a == b);
+		}
+
 
 		private void UpdateAutoPrecision()
 		{
@@ -568,12 +616,17 @@ namespace Epsitec.Cresus.Database
 			if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
 				(xmlReader.Name == "numdef"))
 			{
-				return DbNumDef.DeserializeAttributes (xmlReader, "");
+				return DbNumDef.DeserializeAttributes (xmlReader);
 			}
 			else
 			{
 				throw new System.Xml.XmlException (string.Format ("Unexpected element {0}", xmlReader.LocalName), null, xmlReader.LineNumber, xmlReader.LinePosition);
 			}
+		}
+
+		public static DbNumDef DeserializeAttributes(System.Xml.XmlTextReader xmlReader)
+		{
+			return DbNumDef.DeserializeAttributes (xmlReader, "");
 		}
 
 		public static DbNumDef DeserializeAttributes(System.Xml.XmlTextReader xmlReader, string prefix)
@@ -587,7 +640,17 @@ namespace Epsitec.Cresus.Database
 				decimal min = InvariantConverter.ParseDecimal (xmlReader.GetAttribute (prefix+"min"));
 				decimal max = InvariantConverter.ParseDecimal (xmlReader.GetAttribute (prefix+"max"));
 
-				return new DbNumDef (digits, shift, min, max);
+				if ((digits == 0) &&
+					(shift == 0) &&
+					(min == 0) &&
+					(max == 0))
+				{
+					return null;
+				}
+				else
+				{
+					return new DbNumDef (digits, shift, min, max);
+				}
 			}
 			else
 			{

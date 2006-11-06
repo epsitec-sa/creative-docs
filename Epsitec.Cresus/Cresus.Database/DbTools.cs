@@ -234,6 +234,35 @@ namespace Epsitec.Cresus.Database
 			return (DbSimpleType) num;
 		}
 
+		public static string ParseString(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return null;
+			}
+			else
+			{
+				return value;
+			}
+		}
+
+		public static int ParseInt(string value)
+		{
+			return InvariantConverter.ParseInt (value);
+		}
+
+		public static Druid ParseDruid(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return Druid.Empty;
+			}
+			else
+			{
+				return Druid.Parse (value);
+			}
+		}
+
 		public static string IntToString(int value)
 		{
 			if (value == 0)
@@ -243,6 +272,37 @@ namespace Epsitec.Cresus.Database
 			else
 			{
 				return InvariantConverter.ToString (value);
+			}
+		}
+
+		public static string BoolToString(bool value)
+		{
+			return value ? "Y" : null;
+		}
+
+		public static bool ParseBool(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return false;
+			}
+			else
+			{
+				System.Diagnostics.Debug.Assert (value == "Y");
+				
+				return true;
+			}
+		}
+
+		public static string StringToString(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return null;
+			}
+			else
+			{
+				return value;
 			}
 		}
 	}

@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Database
 
 		public static DbKey DeserializeAttributes(System.Xml.XmlTextReader xmlReader)
 		{
-			return DbKey.DeserializeAttributes (xmlReader, "key.");
+			return DbKey.DeserializeAttributes (xmlReader, "");
 		}
 
 		public static DbKey DeserializeAttributes(System.Xml.XmlTextReader xmlReader, string prefix)
@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Database
 
 		#endregion
 		
-		#region Equals, GetHashCode and ToString support
+		#region Equals, ==, !=, GetHashCode and ToString support
 		
 		public override bool Equals(object obj)
 		{
@@ -185,6 +185,16 @@ namespace Epsitec.Cresus.Database
 		public override string ToString()
 		{
 			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}", this.id);
+		}
+
+		public static bool operator==(DbKey a, DbKey b)
+		{
+			return a.Equals (b);
+		}
+
+		public static bool operator!=(DbKey a, DbKey b)
+		{
+			return !a.Equals (b);
 		}
 		
 		#endregion
