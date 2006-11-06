@@ -325,12 +325,36 @@ namespace Epsitec.Cresus.Database
 
 		public static T DeserializeFromXml<T>(string value)
 		{
+			using (System.IO.StringReader reader = new System.IO.StringReader (value))
+			{
+				using (System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (reader))
+				{
+					if (xmlReader.Read ())
+					{
+						return DbTools.DeserializeFromXml<T> (xmlReader);
+					}
+					else
+					{
+						throw new System.ArgumentException ("Invalid XML for deserialization", "value");
+					}
+				}
+			}
+		}
+
+		public static T DeserializeFromXml<T>(System.Xml.XmlTextReader xmlReader)
+		{
 			Deserializer<T> deserializer;
 			
 			lock (DbTools.exclusion)
 			{
 				object method;
 				DbTools.deserializers.TryGetValue (typeof (T), out method);
+
+				if (method == DbTools.noDeserializer)
+				{
+					throw new System.ArgumentException (string.Format ("No deserializer for type {0}", typeof (T).Name));
+				}
+				
 				deserializer = method as Deserializer<T>;
 			}
 
@@ -340,17 +364,20 @@ namespace Epsitec.Cresus.Database
 				
 				lock (DbTools.exclusion)
 				{
-					DbTools.deserializers[typeof (T)] = deserializer;
+					if (deserializer == null)
+					{
+						DbTools.deserializers[typeof (T)] = DbTools.noDeserializer;
+						
+						throw new System.ArgumentException (string.Format ("No deserializer for type {0}", typeof (T).Name));
+					}
+					else
+					{
+						DbTools.deserializers[typeof (T)] = deserializer;
+					}
 				}
 			}
 
-			using (System.IO.StringReader reader = new System.IO.StringReader (value))
-			{
-				using (System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (reader))
-				{
-					return deserializer (xmlReader);
-				}
-			}
+			return deserializer (xmlReader);
 		}
 
 
@@ -387,5 +414,6 @@ namespace Epsitec.Cresus.Database
 
 		private static object exclusion = new object ();
 		private static Dictionary<System.Type, object> deserializers = new Dictionary<System.Type, object> ();
+		private static object noDeserializer = new object ();
 	}
 }

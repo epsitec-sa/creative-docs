@@ -1603,7 +1603,7 @@ namespace Epsitec.Cresus.Database
 			
 			query.Tables.Add ("T_TYPE", SqlField.CreateName (Tags.TableTypeDef));
 			
-			if (key == null)
+			if (key.IsEmpty)
 			{
 				//	On extrait toutes les définitions de types qui correspondent à la version
 				//	'active'.
@@ -1633,13 +1633,13 @@ namespace Epsitec.Cresus.Database
 				//	qui correspond.
 
 				DbTypeDef typeDef = DbTools.DeserializeFromXml<DbTypeDef> (type_info);
+
+				System.Diagnostics.Debug.Assert (typeDef.Name == type_name);
 				
-				type.DefineName (type_name);
-				type.DefineInternalKey (new DbKey (type_id));
+				typeDef.DefineInternalKey (new DbKey (type_id));
 				
-				this.DefineLocalisedAttributes (data_row, "TYPE_CAPTION", Tags.ColumnCaption, type.Attributes, Tags.Caption);
-				this.DefineLocalisedAttributes (data_row, "TYPE_DESCRIPTION", Tags.ColumnDescription, type.Attributes, Tags.Description);
-				
+				//	TODO: handle enumeration types
+#if false
 				if (type is DbTypeEnum)
 				{
 					DbTypeEnum type_enum = type as DbTypeEnum;
@@ -1647,8 +1647,9 @@ namespace Epsitec.Cresus.Database
 					
 					type_enum.DefineValues (values);
 				}
+#endif
 				
-				types.Add (type);
+				types.Add (typeDef);
 			}
 			
 			return types;
