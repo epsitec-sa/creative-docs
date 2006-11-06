@@ -114,17 +114,68 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 		
-		public static string ToString(object obj)
+		public static string  ToString(object obj)
 		{
 			string value;
-			InvariantConverter.Convert (obj, out value);
-			return value;
+			if (InvariantConverter.Convert (obj, out value))
+			{
+				return value;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Value cannot be converted", "obj");
+			}
 		}
-		public static double ToDouble(object obj)
+		public static double  ToDouble(object obj)
 		{
 			decimal value;
-			InvariantConverter.Convert (obj, out value);
-			return (double) value;
+			if (InvariantConverter.Convert (obj, out value))
+			{
+				return (double) value;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Value cannot be converted", "obj");
+			}
+		}
+		public static long    ToInt(object obj)
+		{
+			int value;
+
+			if (InvariantConverter.Convert (obj, out value))
+			{
+				return value;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Value cannot be converted", "obj");
+			}
+		}
+		public static long    ToLong(object obj)
+		{
+			long value;
+
+			if (InvariantConverter.Convert (obj, out value))
+			{
+				return value;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Value cannot be converted", "obj");
+			}
+		}
+		public static decimal ToDecimal(object obj)
+		{
+			decimal value;
+
+			if (InvariantConverter.Convert (obj, out value))
+			{
+				return value;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Value cannot be converted", "obj");
+			}
 		}
 
 		public static int     ParseInt(string value)
@@ -138,59 +189,6 @@ namespace Epsitec.Common.Types
 		public static decimal ParseDecimal(string value)
 		{
 			return string.IsNullOrEmpty (value) ? 0 : decimal.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
-		}
-
-		public static long    ConvertToInt(object obj)
-		{
-			int value;
-
-			if (InvariantConverter.Convert (obj, out value))
-			{
-				return value;
-			}
-			else
-			{
-				throw new System.ArgumentException ("Value cannot be converted", "obj");
-			}
-		}
-		public static long    ConvertToLong(object obj)
-		{
-			long value;
-
-			if (InvariantConverter.Convert (obj, out value))
-			{
-				return value;
-			}
-			else
-			{
-				throw new System.ArgumentException ("Value cannot be converted", "obj");
-			}
-		}
-		public static decimal ConvertToDecimal(object obj)
-		{
-			decimal value;
-
-			if (InvariantConverter.Convert (obj, out value))
-			{
-				return value;
-			}
-			else
-			{
-				throw new System.ArgumentException ("Value cannot be converted", "obj");
-			}
-		}
-		public static string  ConvertToString(object obj)
-		{
-			string value;
-
-			if (InvariantConverter.Convert (obj, out value))
-			{
-				return value;
-			}
-			else
-			{
-				throw new System.ArgumentException ("Value cannot be converted", "obj");
-			}
 		}
 
 		
