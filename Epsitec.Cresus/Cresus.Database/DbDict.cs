@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Database
 			this.NotifyChanged ();
 		}
 		
-		public void Remove(string key)
+		public bool Remove(string key)
 		{
 			System.Data.DataRow row;
 			
@@ -129,12 +129,14 @@ namespace Epsitec.Cresus.Database
 			
 			if (row == null)
 			{
-				throw new System.ArgumentOutOfRangeException ("key", key, "Key does not exist in DbDict.");
+				return false;
 			}
 			
 			this.command.DeleteExistingRow (row);
 			
 			this.NotifyChanged ();
+			
+			return true;
 		}
 		
 		public void Clear()
@@ -146,7 +148,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public bool Contains(string key)
+		public bool ContainsKey(string key)
 		{
 			System.Data.DataRow row = this.FindRow (key, false);
 			return (row != null);
