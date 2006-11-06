@@ -214,12 +214,14 @@ namespace Epsitec.Cresus.Database
 				return;
 			}
 			
-			if (this.internal_table_key != null)
+			if (this.internal_table_key.IsEmpty)
+			{
+				this.internal_table_key = key;
+			}
+			else
 			{
 				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot change its internal key.", this.Name));
 			}
-			
-			this.internal_table_key = key.Clone () as DbKey;
 		}
 		
 		public void DefinePrimaryKey(DbColumn column)
@@ -303,7 +305,7 @@ namespace Epsitec.Cresus.Database
 		
 		public DbKey    CreateKeyFromRow(System.Data.DataRow row)
 		{
-			DbKey key = null;
+			DbKey key = DbKey.Empty;
 			
 			switch (this.category)
 			{
@@ -329,7 +331,7 @@ namespace Epsitec.Cresus.Database
 					break;
 			}
 			
-			if (key == null)
+			if (key.IsEmpty)
 			{
 				throw new Exceptions.GenericException (DbAccess.Empty, string.Format ("Table {0} uses unsupported key format.", this.Name));
 			}

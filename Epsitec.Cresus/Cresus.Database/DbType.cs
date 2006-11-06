@@ -122,12 +122,14 @@ namespace Epsitec.Cresus.Database
 				return;
 			}
 
-			if (this.internal_type_key != null)
+			if (this.internal_type_key.IsEmpty)
+			{
+				this.internal_type_key = key;
+			}
+			else
 			{
 				throw new System.InvalidOperationException (string.Format ("Type '{0}' cannot change its internal key.", this.Name));
 			}
-
-			this.internal_type_key = key.Clone () as DbKey;
 		}
 
 		internal void DefineAttributes(string[] attributes)

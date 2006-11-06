@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Database
 	/// engine to index or look up its data. The key has at least one identifier.
 	/// </summary>
 	[System.Serializable]
-	public struct DbKey : System.IComparable<DbKey>, System.IEquatable<DbKey>
+	public struct DbKey : System.IComparable<DbKey>, System.IEquatable<DbKey>, IXmlSerializable
 	{
 		public DbKey(DbId id) : this (id, DbRowStatus.Live)
 		{
@@ -110,6 +110,13 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		public static readonly DbKey			Empty = new DbKey ();
+
+		public void Serialize(System.Xml.XmlTextWriter xmlWriter)
+		{
+			xmlWriter.WriteStartElement ("key");
+			this.SerializeAttributes (xmlWriter);
+			xmlWriter.WriteEndElement ();
+		}
 		
 		public void SerializeAttributes(System.Xml.XmlTextWriter xmlWriter)
 		{
@@ -122,6 +129,21 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, prefix+"stat", this.status == 0 ? null : InvariantConverter.ToString (this.status));
 		}
 
+		public static DbKey Deserialize(System.Xml.XmlTextReader xmlReader)
+		{
+			if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
+				(xmlReader.Name == "key"))
+			{
+				DbKey key = DbKey.DeserializeAttributes (xmlReader);
+				xmlReader.ReadEndElement ();
+				return key;
+			}
+			else
+			{
+				throw new System.Xml.XmlException (string.Format ("Unexpected element {0}", xmlReader.LocalName), null, xmlReader.LineNumber, xmlReader.LinePosition);
+			}
+		}
+		
 		public static DbKey DeserializeAttributes(System.Xml.XmlTextReader xmlReader)
 		{
 			return DbKey.DeserializeAttributes (xmlReader, "");

@@ -101,6 +101,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Cache\DbTypeDefs.cs" />
     <Compile Include="Cache\Generic.cs" />
     <Compile Include="Cache\DbTables.cs">
       <SubType>Code</SubType>
@@ -131,6 +132,7 @@
     <Compile Include="Collections\SqlFields.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IXmlSerializable.cs" />
     <Compile Include="DbTypeDef.cs" />
     <Compile Include="DbColumnClass.cs" />
     <Compile Include="DbColumnLocalisation.cs" />

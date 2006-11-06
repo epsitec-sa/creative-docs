@@ -62,11 +62,6 @@ namespace Epsitec.Cresus.Database
 			this.DefineCategory (category);
 		}
 
-		public DbColumn(System.Xml.XmlTextReader xmlReader)
-		{
-			this.Deserialize (xmlReader);
-		}
-
 		public static DbColumn CreateRefColumn(string columnName, string targetTableName, INamedType type)
 		{
 			System.Diagnostics.Debug.Assert (type != null);
@@ -81,7 +76,7 @@ namespace Epsitec.Cresus.Database
 
 		public static DbColumn CreateRefColumn(string columnName, string targetTableName, DbTypeDef typeDef)
 		{
-			System.Diagnostics.Debug.Assert (type != null);
+			System.Diagnostics.Debug.Assert (typeDef != null);
 			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (targetTableName));
 
 			DbColumn column = new DbColumn (columnName, typeDef, DbColumnClass.RefId, DbElementCat.UserDataManaged);

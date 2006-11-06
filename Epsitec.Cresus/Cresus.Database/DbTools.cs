@@ -4,9 +4,12 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
+using System.Collections.Generic;
+
 namespace Epsitec.Cresus.Database
 {
-	using InvariantConverter = Epsitec.Common.Types.InvariantConverter;
+	using OpCodes=System.Reflection.Emit.OpCodes;
+	using InvariantConverter=Epsitec.Common.Types.InvariantConverter;
 	
 	/// <summary>
 	/// La classe DbTools fournit quelques fonctions utilitaires qui n'ont pas
@@ -305,5 +308,84 @@ namespace Epsitec.Cresus.Database
 				return value;
 			}
 		}
+
+		public static string GetCompactXml(IXmlSerializable value)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			System.IO.StringWriter writer = new System.IO.StringWriter (buffer);
+			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (writer);
+
+			value.Serialize (xmlWriter);
+
+			xmlWriter.Flush ();
+			xmlWriter.Close ();
+
+			return buffer.ToString ();
+		}
+
+		public static T DeserializeFromXml<T>(string value)
+		{
+			Deserializer<T> deserializer;
+			
+			lock (DbTools.exclusion)
+			{
+				object method;
+				DbTools.deserializers.TryGetValue (typeof (T), out method);
+				deserializer = method as Deserializer<T>;
+			}
+
+			if (deserializer == null)
+			{
+				deserializer = DbTools.CreateDeserializer<T> ();
+				
+				lock (DbTools.exclusion)
+				{
+					DbTools.deserializers[typeof (T)] = deserializer;
+				}
+			}
+
+			using (System.IO.StringReader reader = new System.IO.StringReader (value))
+			{
+				using (System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (reader))
+				{
+					return deserializer (xmlReader);
+				}
+			}
+		}
+
+
+		private delegate T Deserializer<T>(System.Xml.XmlTextReader xmlReader);
+
+		private static Deserializer<T> CreateDeserializer<T>()
+		{
+			System.Type type = typeof (T);
+			System.Type xmlType   = typeof (System.Xml.XmlTextReader);
+			System.Type hostType  = type;
+			System.Type[] arguments = new System.Type[] { xmlType };
+			
+			System.Reflection.MethodInfo method = type.GetMethod ("Deserialize", arguments);
+
+			if ((method == null) ||
+				(method.IsStatic == false))
+			{
+				return null;
+			}
+
+			string name = string.Concat ("DynamicCode_XmlDeserializer_", type.Name);
+
+			System.Reflection.Emit.DynamicMethod dynamic;
+			dynamic = new System.Reflection.Emit.DynamicMethod (name, type, arguments, type);
+
+			System.Reflection.Emit.ILGenerator generator = dynamic.GetILGenerator ();
+
+			generator.Emit (OpCodes.Ldarg_0);
+			generator.EmitCall (OpCodes.Call, method, null);
+			generator.Emit (OpCodes.Ret);
+
+			return (Deserializer<T>) dynamic.CreateDelegate (typeof (Deserializer<T>));
+		}
+
+		private static object exclusion = new object ();
+		private static Dictionary<System.Type, object> deserializers = new Dictionary<System.Type, object> ();
 	}
 }

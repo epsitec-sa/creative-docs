@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Database
 	/// The <c>DbTypeDef</c> class represents a type definition, as stored in
 	/// the database.
 	/// </summary>
-	public sealed class DbTypeDef : IName, System.IEquatable<DbTypeDef>
+	public sealed class DbTypeDef : IName, System.IEquatable<DbTypeDef>, IXmlSerializable
 	{
 		public DbTypeDef()
 		{
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Database
 			this.rawType    = TypeConverter.GetRawType (namedType);
 			this.simpleType = TypeConverter.GetSimpleType (namedType, out this.numDef);
 
-			IStringType stringType = namedTyped as IStringType;
+			IStringType stringType = namedType as IStringType;
 
 			if (stringType != null)
 			{
@@ -235,5 +235,10 @@ namespace Epsitec.Cresus.Database
 		private bool isFixedLength;
 		private bool isMultilingual;
 		private DbKey key;
+
+		internal void DefineInternalKey(DbKey key)
+		{
+			this.key = key;
+		}
 	}
 }
