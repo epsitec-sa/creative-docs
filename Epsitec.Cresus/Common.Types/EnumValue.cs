@@ -358,10 +358,10 @@ namespace Epsitec.Common.Types
 			
 			if ((this.caption == null) &&
 				(caption != null) &&
-				(this.captionId.IsEmpty || (this.captionId == caption.Druid)))
+				(this.captionId.IsEmpty || (this.captionId == caption.Id)))
 			{
 				this.caption = caption;
-				this.captionId = caption.Druid;
+				this.captionId = caption.Id;
 
 				this.OnCaptionDefined ();
 			}

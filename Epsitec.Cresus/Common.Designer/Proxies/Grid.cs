@@ -816,26 +816,26 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			Grid.GridColumnsCountProperty.DefaultMetadata.DefineNamedType(ProxyManager.GridNumericType);
 			Grid.GridRowsCountProperty.DefaultMetadata.DefineNamedType(ProxyManager.GridNumericType);
-			Grid.GridColumnsCountProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnsCount.Druid);
-			Grid.GridRowsCountProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowsCount.Druid);
+			Grid.GridColumnsCountProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnsCount.Id);
+			Grid.GridRowsCountProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowsCount.Id);
 
 			Grid.GridColumnSpanProperty.DefaultMetadata.DefineNamedType(ProxyManager.GridNumericType);
 			Grid.GridRowSpanProperty.DefaultMetadata.DefineNamedType(ProxyManager.GridNumericType);
-			Grid.GridColumnSpanProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnSpan.Druid);
-			Grid.GridRowSpanProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowSpan.Druid);
+			Grid.GridColumnSpanProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnSpan.Id);
+			Grid.GridRowSpanProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowSpan.Id);
 
 			EnumType gridColumnModeEnumType = Res.Types.ObjectModifier.GridMode;
 			Grid.GridColumnModeProperty.DefaultMetadata.DefineNamedType(gridColumnModeEnumType);
-			Grid.GridColumnModeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnMode.Druid);
+			Grid.GridColumnModeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnMode.Id);
 
 			EnumType gridRowModeEnumType = Res.Types.ObjectModifier.GridMode;
 			Grid.GridRowModeProperty.DefaultMetadata.DefineNamedType(gridRowModeEnumType);
-			Grid.GridRowModeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowMode.Druid);
+			Grid.GridRowModeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowMode.Id);
 
 			Grid.GridColumnValueProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 			Grid.GridRowValueProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
-			Grid.GridColumnValueProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnWidth.Druid);
-			Grid.GridRowValueProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowHeight.Druid);
+			Grid.GridColumnValueProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnWidth.Id);
+			Grid.GridRowValueProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowHeight.Id);
 
 			Grid.GridMinWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 			Grid.GridMaxWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
@@ -845,14 +845,14 @@ namespace Epsitec.Common.Designer.Proxies
 			Grid.GridRightBorderProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 			Grid.GridTopBorderProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 			Grid.GridBottomBorderProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
-			Grid.GridMinWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.MinWidth.Druid);
-			Grid.GridMaxWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.MaxWidth.Druid);
-			Grid.GridMinHeightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.MinHeight.Druid);
-			Grid.GridMaxHeightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.MaxHeight.Druid);
-			Grid.GridLeftBorderProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.LeftBorder.Druid);
-			Grid.GridRightBorderProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RightBorder.Druid);
-			Grid.GridTopBorderProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.TopBorder.Druid);
-			Grid.GridBottomBorderProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.BottomBorder.Druid);
+			Grid.GridMinWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.MinWidth.Id);
+			Grid.GridMaxWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.MaxWidth.Id);
+			Grid.GridMinHeightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.MinHeight.Id);
+			Grid.GridMaxHeightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.MaxHeight.Id);
+			Grid.GridLeftBorderProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.LeftBorder.Id);
+			Grid.GridRightBorderProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RightBorder.Id);
+			Grid.GridTopBorderProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.TopBorder.Id);
+			Grid.GridBottomBorderProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.BottomBorder.Id);
 		}
 
 

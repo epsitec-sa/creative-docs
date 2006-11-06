@@ -126,7 +126,7 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				Command command = this.CommandObject;
-				return command == null ? Support.Druid.Empty : command.Caption.Druid;
+				return command == null ? Support.Druid.Empty : command.Caption.Id;
 			}
 			set
 			{
@@ -189,7 +189,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.caption == null)
 				{
-					if (this.AttachCaption (this.CaptionDruid))
+					if (this.AttachCaption (this.CaptionId))
 					{
 						this.InvalidateDisplayCaption ();
 					}
@@ -199,15 +199,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public Support.Druid					CaptionDruid
+		public Support.Druid					CaptionId
 		{
 			get
 			{
-				return (Support.Druid) this.GetValue (Visual.CaptionDruidProperty);
+				return (Support.Druid) this.GetValue (Visual.CaptionIdProperty);
 			}
 			set
 			{
-				this.SetValue (Visual.CaptionDruidProperty, value);
+				this.SetValue (Visual.CaptionIdProperty, value);
 			}
 		}
 		
@@ -1302,7 +1302,7 @@ namespace Epsitec.Common.Widgets
 
 				if (manager != null)
 				{
-					commandCaption = manager.GetCaption (commandCaption.Druid);
+					commandCaption = manager.GetCaption (commandCaption.Id);
 				}
 			}
 
@@ -1702,7 +1702,7 @@ namespace Epsitec.Common.Widgets
 			that.OnCommandObjectChanged (new DependencyPropertyChangedEventArgs (Visual.CommandObjectProperty, oldValue, newValue));
 		}
 
-		private static void NotifyCaptionDruidChanged(DependencyObject o, object oldValue, object newValue)
+		private static void NotifyCaptionIdChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			Visual that = o as Visual;
 			
@@ -1934,7 +1934,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty BackColorProperty				= DependencyProperty.Register ("BackColor", typeof (Drawing.Color), typeof (Visual), new VisualPropertyMetadata (Drawing.Color.Empty, VisualPropertyMetadataOptions.AffectsDisplay));
 
 		public static readonly DependencyProperty CommandObjectProperty			= DependencyProperty.Register ("CommandObject", typeof (Command), typeof (Visual), new VisualPropertyMetadata (null, new PropertyInvalidatedCallback (Visual.NotifyCommandObjectChanged), VisualPropertyMetadataOptions.AffectsDisplay));
-		public static readonly DependencyProperty CaptionDruidProperty			= DependencyProperty.Register ("CaptionDruid", typeof (Support.Druid), typeof (Visual), new VisualPropertyMetadata (Support.Druid.Empty, new PropertyInvalidatedCallback (Visual.NotifyCaptionDruidChanged), VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty CaptionIdProperty				= DependencyProperty.Register ("CaptionId", typeof (Support.Druid), typeof (Visual), new VisualPropertyMetadata (Support.Druid.Empty, new PropertyInvalidatedCallback (Visual.NotifyCaptionIdChanged), VisualPropertyMetadataOptions.AffectsDisplay));
 
 		private static long						nextSerialId = 1;
 		

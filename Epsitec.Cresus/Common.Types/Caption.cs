@@ -151,7 +151,7 @@ namespace Epsitec.Common.Types
 		/// Gets the DRUID associated with the caption.
 		/// </summary>
 		/// <value>The DRUID.</value>
-		public Support.Druid					Druid
+		public Support.Druid					Id
 		{
 			get
 			{

@@ -398,31 +398,31 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			EnumType childrenPlacementEnumType = Res.Types.ObjectModifier.ChildrenPlacement;
 			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineNamedType(childrenPlacementEnumType);
-			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.ChildrenPlacement.Druid);
+			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.ChildrenPlacement.Id);
 
 			EnumType anchoredHorizontalAttachmentEnumType = Res.Types.ObjectModifier.AnchoredHorizontalAttachment;
 			Layout.AnchoredHorizontalAttachmentProperty.DefaultMetadata.DefineNamedType(anchoredHorizontalAttachmentEnumType);
-			Layout.AnchoredHorizontalAttachmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.AnchoredHorizontalAttachment.Druid);
+			Layout.AnchoredHorizontalAttachmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.AnchoredHorizontalAttachment.Id);
 
 			EnumType anchoredVerticalAttachmentEnumType = Res.Types.ObjectModifier.AnchoredVerticalAttachment;
 			Layout.AnchoredVerticalAttachmentProperty.DefaultMetadata.DefineNamedType(anchoredVerticalAttachmentEnumType);
-			Layout.AnchoredVerticalAttachmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.AnchoredVerticalAttachment.Druid);
+			Layout.AnchoredVerticalAttachmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.AnchoredVerticalAttachment.Id);
 
 			EnumType stackedHorizontalAttachmentEnumType = Res.Types.ObjectModifier.StackedHorizontalAttachment;
 			Layout.StackedHorizontalAttachmentProperty.DefaultMetadata.DefineNamedType(stackedHorizontalAttachmentEnumType);
-			Layout.StackedHorizontalAttachmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.StackedHorizontalAttachment.Druid);
+			Layout.StackedHorizontalAttachmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.StackedHorizontalAttachment.Id);
 
 			EnumType stackedVerticalAttachmentEnumType = Res.Types.ObjectModifier.StackedVerticalAttachment;
 			Layout.StackedVerticalAttachmentProperty.DefaultMetadata.DefineNamedType(stackedVerticalAttachmentEnumType);
-			Layout.StackedVerticalAttachmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.StackedVerticalAttachment.Druid);
+			Layout.StackedVerticalAttachmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.StackedVerticalAttachment.Id);
 
 			EnumType stackedHorizontalAlignmentEnumType = Res.Types.ObjectModifier.StackedHorizontalAlignment;
 			Layout.StackedHorizontalAlignmentProperty.DefaultMetadata.DefineNamedType(stackedHorizontalAlignmentEnumType);
-			Layout.StackedHorizontalAlignmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.StackedHorizontalAlignment.Druid);
+			Layout.StackedHorizontalAlignmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.StackedHorizontalAlignment.Id);
 
 			EnumType stackedVerticalAlignmentEnumType = Res.Types.ObjectModifier.StackedVerticalAlignment;
 			Layout.StackedVerticalAlignmentProperty.DefaultMetadata.DefineNamedType(stackedVerticalAlignmentEnumType);
-			Layout.StackedVerticalAlignmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.StackedVerticalAlignment.Druid);
+			Layout.StackedVerticalAlignmentProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Layout.StackedVerticalAlignment.Id);
 		}
 
 		

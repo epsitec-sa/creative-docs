@@ -374,7 +374,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 				//	Crée l'accesseur pour le champ actuel :
 				buffer.Append (generator.Tabs);
 
-				Support.Druid druid = bundle[fields[i]].Druid;
+				Support.Druid druid = bundle[fields[i]].Id;
 
 				buffer.Append ("public static readonly Epsitec.Common.Widgets.Command ");
 				buffer.Append (delta);
@@ -495,7 +495,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 				//	Crée l'accesseur pour le champ actuel :
 				buffer.Append (generator.Tabs);
 
-				Support.Druid druid = bundle[fields[i]].Druid;
+				Support.Druid druid = bundle[fields[i]].Id;
 
 				buffer.Append ("public const long ");
 				buffer.Append (delta);
@@ -593,7 +593,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 				//	Crée l'accesseur pour le champ actuel :
 				buffer.Append (generator.Tabs);
 
-				Support.Druid druid = bundle[fields[i]].Druid;
+				Support.Druid druid = bundle[fields[i]].Id;
 
 				buffer.Append ("public static Epsitec.Common.Types.Caption ");
 				buffer.Append (delta);
@@ -693,7 +693,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 				//	Crée l'accesseur pour le champ actuel :
 				buffer.Append (generator.Tabs);
 
-				Support.Druid druid = bundle[fields[i]].Druid;
+				Support.Druid druid = bundle[fields[i]].Id;
 
 				buffer.Append ("public static Epsitec.Common.Types.Caption ");
 				buffer.Append (delta);
@@ -790,7 +790,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 				//	Crée l'accesseur pour le champ actuel :
 				Support.ResourceBundle.Field f = bundle[fields[i]];
-				Support.Druid druid = f.Druid;
+				Support.Druid druid = f.Id;
 
 				string s = f.AsString;
 
@@ -918,7 +918,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 				buffer.Append (generator.Tabs);
 
-				Support.Druid druid = bundle[field].Druid;
+				Support.Druid druid = bundle[field].Id;
 
 				buffer.Append ("public static string ");
 				buffer.Append (delta);

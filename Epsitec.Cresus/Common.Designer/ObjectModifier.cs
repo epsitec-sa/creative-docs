@@ -133,7 +133,7 @@ namespace Epsitec.Common.Designer
 			}
 			else if (obj is StaticText || obj is GroupBox)
 			{
-				obj.CaptionDruid = d;
+				obj.CaptionId = d;
 			}
 		}
 
@@ -148,7 +148,7 @@ namespace Epsitec.Common.Designer
 			}
 			else if (obj is StaticText || obj is GroupBox)
 			{
-				druid = obj.CaptionDruid;
+				druid = obj.CaptionId;
 			}
 
 			return druid.ToString();

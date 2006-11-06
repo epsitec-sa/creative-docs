@@ -320,20 +320,20 @@ namespace Epsitec.Common.Designer.Proxies
 			Geometry.MinHeightProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 			Geometry.MaxHeightProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 
-			Geometry.LeftMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.LeftMargin.Druid);
-			Geometry.RightMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.RightMargin.Druid);
-			Geometry.TopMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.TopMargin.Druid);
-			Geometry.BottomMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.BottomMargin.Druid);
+			Geometry.LeftMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.LeftMargin.Id);
+			Geometry.RightMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.RightMargin.Id);
+			Geometry.TopMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.TopMargin.Id);
+			Geometry.BottomMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.BottomMargin.Id);
 
-			Geometry.OriginXProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.OriginX.Druid);
-			Geometry.OriginYProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.OriginY.Druid);
-			Geometry.WidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.Width.Druid);
-			Geometry.HeightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.Height.Druid);
+			Geometry.OriginXProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.OriginX.Id);
+			Geometry.OriginYProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.OriginY.Id);
+			Geometry.WidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.Width.Id);
+			Geometry.HeightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.Height.Id);
 
-			Geometry.MinWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.MinWidth.Druid);
-			Geometry.MaxWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.MaxWidth.Druid);
-			Geometry.MinHeightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.MinHeight.Druid);
-			Geometry.MaxHeightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.MaxHeight.Druid);
+			Geometry.MinWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.MinWidth.Id);
+			Geometry.MaxWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.MaxWidth.Id);
+			Geometry.MinHeightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.MinHeight.Id);
+			Geometry.MaxHeightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.MaxHeight.Id);
 		}
 
 

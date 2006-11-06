@@ -173,7 +173,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Crée un bouton radio.
 			RadioButton button = new RadioButton(this.leftPanel);
-			button.CaptionDruid = caption.Druid;
+			button.CaptionId = caption.Id;
 			System.Diagnostics.Debug.Assert(button.Name.StartsWith("Types.Type."));
 			button.Dock = DockStyle.Top;
 			button.Margins = new Margins(0, 0, 2, 2);

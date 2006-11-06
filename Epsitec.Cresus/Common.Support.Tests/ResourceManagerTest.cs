@@ -88,9 +88,9 @@ namespace Epsitec.Common.Support
 			Assert.IsNotNull (bundle);
 			Assert.AreEqual ("DruidExperimentalBundle", bundle.Caption);
 			Assert.AreEqual (1, bundle.FieldCount);
-			Assert.AreEqual (new Druid (4, 0, 0), bundle.Druid);
+			Assert.AreEqual (new Druid (4, 0, 0), bundle.Id);
 
-			Assert.IsTrue (this.manager.GetBundle ("Strings").Druid.IsEmpty);
+			Assert.IsTrue (this.manager.GetBundle ("Strings").Id.IsEmpty);
 			Assert.AreEqual ("Strings", this.manager.GetBundle ("file:Strings").Name);
 			Assert.AreEqual ("file/4:Strings", this.manager.GetBundle ("file:Strings").PrefixedName);
 		}

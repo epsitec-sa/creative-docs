@@ -1406,7 +1406,7 @@ namespace Epsitec.Common.Support
 					}
 					else
 					{
-						Types.Caption update = manager.GetCaption (caption.Druid, level, culture, false);
+						Types.Caption update = manager.GetCaption (caption.Id, level, culture, false);
 
 						if (update != null)
 						{

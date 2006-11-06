@@ -106,7 +106,7 @@ namespace Epsitec.Common.Support
 
 			Assert.IsNotNull (caption);
 			Assert.AreEqual ("Text Property", caption.Description);
-			Assert.AreEqual ("[4004]", caption.Druid.ToResourceId ());
+			Assert.AreEqual ("[4004]", caption.Id.ToResourceId ());
 
 			caption = CaptionCache.Instance.GetTypeCaption (this.manager_en, MyItem.EnumProperty);
 
@@ -123,12 +123,12 @@ namespace Epsitec.Common.Support
 			caption = CaptionCache.Instance.GetPropertyCaption (this.manager_en, MyItemX.TextProperty);
 
 			Assert.AreEqual ("Text Property", caption.Description);
-			Assert.AreEqual ("[4004]", caption.Druid.ToResourceId ());
+			Assert.AreEqual ("[4004]", caption.Id.ToResourceId ());
 
 			caption = CaptionCache.Instance.GetPropertyCaption (this.manager_en, typeof (MyItemX), MyItemX.TextProperty);
 
 			Assert.AreEqual ("Borrowed Text", caption.Description);
-			Assert.AreEqual ("[400A]", caption.Druid.ToResourceId ());
+			Assert.AreEqual ("[400A]", caption.Id.ToResourceId ());
 			
 			INamedType type3 = MyItem.EnumProperty.GetMetadata (typeof (MyItemX)).NamedType;
 
