@@ -9,6 +9,7 @@ namespace Epsitec.Cresus.Database
 	/// The <c>DbKey</c> class represents a key which can be used by the database
 	/// engine to index or look up its data. The key has at least one identifier.
 	/// </summary>
+	[System.Serializable]
 	public struct DbKey : System.IComparable<DbKey>, System.IEquatable<DbKey>
 	{
 		public DbKey(DbId id) : this (id, DbRowStatus.Live)
@@ -68,7 +69,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public DbId Id
+		public DbId								Id
 		{
 			get
 			{
@@ -99,65 +100,49 @@ namespace Epsitec.Cresus.Database
 				return DbKey.CheckTemporaryId (this.id);
 			}
 		}
-		
-		
-		public static DbId CreateTemporaryId()
+
+		public bool								IsEmpty
 		{
-			return DbId.CreateTempId (System.Threading.Interlocked.Increment (ref DbKey.tempId));
-		}
-		
-		public static bool CheckTemporaryId(DbId id)
-		{
-			if ((id >= DbId.MinimumTemp) &&
-				(id <= DbId.MaximumTemp))
+			get
 			{
-				return true;
+				return (this.id == 0) && (this.status == 0);
 			}
-			
-			return false;
 		}
 		
+		public static readonly DbKey			Empty = new DbKey ();
 		
-		public static short ConvertToIntStatus(DbRowStatus status)
+		public void SerializeAttributes(System.Xml.XmlTextWriter xmlWriter)
 		{
-			return (short) status;
+			this.SerializeAttributes (xmlWriter, "key.");
 		}
 		
-		public static DbRowStatus ConvertFromIntStatus(int status)
+		public void SerializeAttributes(System.Xml.XmlTextWriter xmlWriter, string prefix)
 		{
-			return (DbRowStatus) status;
+			DbTools.WriteAttribute (xmlWriter, prefix+"id", InvariantConverter.ToString (this.id));
+			DbTools.WriteAttribute (xmlWriter, prefix+"stat", this.status == 0 ? null : InvariantConverter.ToString (this.status));
 		}
-		
-		public static DbKey DeserializeFromXmlAttributes(System.Xml.XmlElement xml)
+
+		public static DbKey DeserializeAttributes(System.Xml.XmlTextReader xmlReader)
 		{
-			//	Utilise les attributs de l'élément passé en entrée pour reconstruire
-			//	une instance de DbKey. Retourne null si aucun attribut ne correspond.
-			
-			string arg_id   = xml.GetAttribute ("key.id");
-			string arg_stat = xml.GetAttribute ("key.stat");
-			
-			if ((arg_id == "") &&
-				(arg_stat == ""))
-			{
-				return null;
-			}
-			
-			DbId id         = 0;
-			int  int_status = 0;
-			
-			if (arg_id.Length > 0)
-			{
-				id = System.Int64.Parse (arg_id, System.Globalization.CultureInfo.InvariantCulture);
-			}
-			
-			if (arg_stat.Length > 0)
-			{
-				int_status = System.Int32.Parse (arg_stat, System.Globalization.CultureInfo.InvariantCulture);
-			}
-			
-			return new DbKey (id, DbKey.ConvertFromIntStatus (int_status));
+			return DbKey.DeserializeAttributes (xmlReader, "key.");
 		}
-		
+
+		public static DbKey DeserializeAttributes(System.Xml.XmlTextReader xmlReader, string prefix)
+		{
+			string argId   = xmlReader.GetAttribute (prefix+"id");
+			string argStat = xmlReader.GetAttribute (prefix+"stat");
+
+			if ((string.IsNullOrEmpty (argId)) &&
+				(string.IsNullOrEmpty (argStat)))
+			{
+				return DbKey.Empty;
+			}
+
+			DbId id     = InvariantConverter.ParseLong (argId);
+			int  status = InvariantConverter.ParseInt (argStat);
+
+			return new DbKey (id, DbKey.ConvertFromIntStatus (status));
+		}
 		
 		#region IComparable Members
 
@@ -204,17 +189,32 @@ namespace Epsitec.Cresus.Database
 		
 		#endregion
 
-		public void SerializeAttributes(System.Xml.XmlTextWriter xmlWriter)
+		public static DbId CreateTemporaryId()
 		{
-			this.SerializeAttributes (xmlWriter, "key.");
+			return DbId.CreateTempId (System.Threading.Interlocked.Increment (ref DbKey.tempId));
 		}
 		
-		public void SerializeAttributes(System.Xml.XmlTextWriter xmlWriter, string prefix)
+		public static bool CheckTemporaryId(DbId id)
 		{
-			DbTools.WriteAttribute (xmlWriter, prefix+"id", InvariantConverter.ToString (this.id));
-			DbTools.WriteAttribute (xmlWriter, prefix+"stat", this.status == 0 ? null : InvariantConverter.ToString (this.status));
+			if ((id >= DbId.MinimumTemp) &&
+				(id <= DbId.MaximumTemp))
+			{
+				return true;
+			}
+			
+			return false;
 		}
-
+		
+		public static short ConvertToIntStatus(DbRowStatus status)
+		{
+			return (short) status;
+		}
+		
+		public static DbRowStatus ConvertFromIntStatus(int status)
+		{
+			return (DbRowStatus) status;
+		}
+		
 		
 		public const DbRawType					RawTypeForId		= DbRawType.Int64;
 		public const DbRawType					RawTypeForStatus	= DbRawType.Int16;
