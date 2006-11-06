@@ -56,6 +56,12 @@ namespace Epsitec.Cresus.Database
 			this.DefineCategory (category);
 		}
 
+		public DbColumn(string name, DbTypeDef typeDef, DbColumnClass columnClass, DbElementCat category)
+			: this (name, typeDef, columnClass)
+		{
+			this.DefineCategory (category);
+		}
+
 		public DbColumn(System.Xml.XmlTextReader xmlReader)
 		{
 			this.Deserialize (xmlReader);
@@ -69,7 +75,19 @@ namespace Epsitec.Cresus.Database
 			DbColumn column = new DbColumn (columnName, type, DbColumnClass.RefId, DbElementCat.UserDataManaged);
 
 			column.DefineTargetTableName (targetTableName);
-			
+
+			return column;
+		}
+
+		public static DbColumn CreateRefColumn(string columnName, string targetTableName, DbTypeDef typeDef)
+		{
+			System.Diagnostics.Debug.Assert (type != null);
+			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (targetTableName));
+
+			DbColumn column = new DbColumn (columnName, typeDef, DbColumnClass.RefId, DbElementCat.UserDataManaged);
+
+			column.DefineTargetTableName (targetTableName);
+
 			return column;
 		}
 

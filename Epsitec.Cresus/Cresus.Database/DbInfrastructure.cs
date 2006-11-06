@@ -311,9 +311,9 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteNonQuery (transaction);
 		}
 		
-		protected void ResetIdColumn(DbTransaction transaction, DbTable table, string column_name, DbId id)
+		protected void ResetIdColumn(DbTransaction transaction, DbTable table, string columnName, DbId id)
 		{
-			DbColumn column     = table.Columns[column_name];
+			DbColumn column     = table.Columns[columnName];
 			string   sql_column = column.CreateSqlName ();
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
@@ -546,17 +546,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public DbColumn   CreateColumn(string column_name, DbType type)
+		public DbColumn CreateColumn(string columnName, DbTypeDef typeDef)
 		{
-			return new DbColumn (column_name, type, DbColumnClass.Data, DbElementCat.UserDataManaged);
+			return new DbColumn (columnName, typeDef, DbColumnClass.Data, DbElementCat.UserDataManaged);
 		}
 		
-		public DbColumn   CreateColumn(string column_name, DbType type, Nullable nullable)
-		{
-			return new DbColumn (column_name, type, nullable, DbColumnClass.Data, DbElementCat.UserDataManaged);
-		}
-		
-		public DbColumn[] CreateLocalisedColumns(string column_name, DbType type)
+		public DbColumn[] CreateLocalisedColumns(string columnName, DbTypeDef typeDef)
 		{
 			//	TODO: crée la ou les colonnes localisées
 			
@@ -566,13 +561,13 @@ namespace Epsitec.Cresus.Database
 			throw new System.NotImplementedException ("CreateLocalisedColumns not implemented.");
 		}
 		
-		public DbColumn[] CreateRefColumns(string column_name, string parent_table_name)
+		public DbColumn[] CreateRefColumns(string columnName, string targetTableName)
 		{
 			//	Crée la ou les colonnes nécessaires à la définition d'une référence à une autre
 			//	table.
 			
-			DbType type_id = this.internal_types[Tags.TypeKeyId];
-			return new DbColumn[] { DbColumn.CreateRefColumn (column_name, parent_table_name, type_id) };
+			DbTypeDef typeDef = this.internal_types[Tags.TypeKeyId];
+			return new DbColumn[] { DbColumn.CreateRefColumn (columnName, targetTableName, typeDef) };
 		}
 		
 		
@@ -621,19 +616,19 @@ namespace Epsitec.Cresus.Database
 							DbKey source_column_key = column.InternalKey;
 							DbKey parent_table_key  = parent_table.InternalKey;
 							
-							if (source_table_key == null)
+							if (source_table_key.IsEmpty)
 							{
 								string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered table '{1}'.", parent_name, table.Name, column.Name);
 								throw new Exceptions.GenericException (this.db_access, message);
 							}
-							
-							if (source_column_key == null)
+
+							if (source_column_key.IsEmpty)
 							{
 								string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered column '{2}'.", parent_name, table.Name, column.Name);
 								throw new Exceptions.GenericException (this.db_access, message);
 							}
-							
-							if (parent_table_key == null)
+
+							if (parent_table_key.IsEmpty)
 							{
 								string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered table '{0}'.", parent_name, table.Name, column.Name);
 								throw new Exceptions.GenericException (this.db_access, message);
@@ -798,7 +793,7 @@ namespace Epsitec.Cresus.Database
 		{
 			//	Liste tous les types.
 			
-			System.Collections.ArrayList list = this.LoadDbType (transaction, null, row_search_mode);
+			System.Collections.ArrayList list = this.LoadDbType (transaction, DbKey.Empty, row_search_mode);
 			
 			DbType[] types = new DbType[list.Count];
 			list.CopyTo (types, 0);
@@ -814,11 +809,11 @@ namespace Epsitec.Cresus.Database
 			
 			DbTable table = new DbTable (name);
 			
-			DbType type = this.internal_types[Tags.TypeKeyId];
+			DbTypeDef typeDef = this.internal_types[Tags.TypeKeyId];
 			
-			DbColumn col_id   = new DbColumn (Tags.ColumnId,     this.internal_types[Tags.TypeKeyId],     Nullable.No);
-			DbColumn col_stat = new DbColumn (Tags.ColumnStatus, this.internal_types[Tags.TypeKeyStatus], Nullable.No);
-			DbColumn col_log  = new DbColumn (Tags.ColumnRefLog, this.internal_types[Tags.TypeKeyId],     Nullable.No);
+			DbColumn col_id   = new DbColumn (Tags.ColumnId,     this.internal_types[Tags.TypeKeyId],     DbColumnClass.KeyId, DbElementCat.Internal);
+			DbColumn col_stat = new DbColumn (Tags.ColumnStatus, this.internal_types[Tags.TypeKeyStatus], DbColumnClass.KeyStatus, DbElementCat.Internal);
+			DbColumn col_log  = new DbColumn (Tags.ColumnRefLog, this.internal_types[Tags.TypeKeyId],     DbColumnClass.RefInternal, DbElementCat.Internal);
 			
 			col_id.DefineCategory (DbElementCat.Internal);
 			col_id.DefineColumnClass (DbColumnClass.KeyId);
@@ -1839,9 +1834,9 @@ namespace Epsitec.Cresus.Database
 			conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, name_col_id, constant_id));
 		}
 
-		protected static void AddKeyExtraction(Collections.SqlFields conditions, string source_table_name, string source_col_name, string parent_table_name)
+		protected static void AddKeyExtraction(Collections.SqlFields conditions, string source_table_name, string source_col_name, string targetTableName)
 		{
-			SqlField parent_col_id = SqlField.CreateName (parent_table_name, Tags.ColumnId);
+			SqlField parent_col_id = SqlField.CreateName (targetTableName, Tags.ColumnId);
 			SqlField source_col_id = SqlField.CreateName (source_table_name, source_col_name);
 			
 			conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, source_col_id, parent_col_id));
@@ -2017,12 +2012,12 @@ namespace Epsitec.Cresus.Database
 			transaction.SqlBuilder.UpdateData (Tags.TableColumnDef, fields, conds);
 			this.ExecuteSilent (transaction);
 		}
-		
-		protected void UpdateColumnRelation(DbTransaction transaction, string src_table_name, string src_column_name, string parent_table_name)
+
+		protected void UpdateColumnRelation(DbTransaction transaction, string src_table_name, string src_columnName, string targetTableName)
 		{
 			DbTable  source = this.internal_tables[src_table_name];
-			DbTable  parent = this.internal_tables[parent_table_name];
-			DbColumn column = source.Columns[src_column_name];
+			DbTable parent = this.internal_tables[targetTableName];
+			DbColumn column = source.Columns[src_columnName];
 			
 			DbKey src_table_key    = source.InternalKey;
 			DbKey src_column_key   = column.InternalKey;
@@ -2581,7 +2576,7 @@ namespace Epsitec.Cresus.Database
 		private Settings.Locals					locals;
 		
 		protected Collections.DbTables			internal_tables = new Collections.DbTables ();
-		protected Collections.DbTypes			internal_types  = new Collections.DbTypes ();
+		protected Collections.DbTypeDefs		internal_types  = new Collections.DbTypeDefs ();
 		
 		protected int							client_id;
 		

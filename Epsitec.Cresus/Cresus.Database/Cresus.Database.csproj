@@ -108,6 +108,7 @@
     <Compile Include="Cache\DbTypes.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Collections\DbTypeDefs.cs" />
     <Compile Include="Collections\GenericList.cs">
       <SubType>Code</SubType>
     </Compile>
