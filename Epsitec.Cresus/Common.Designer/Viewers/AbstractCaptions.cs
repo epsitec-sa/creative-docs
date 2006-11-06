@@ -70,8 +70,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
 			this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
-			this.array.TabIndex = this.tabIndex++;
-			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			//?this.array.TabIndex = this.tabIndex++;
+			//?this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Crée la partie droite, bande supérieure pour les boutons des cultures.
 			Widget sup = new Widget(this.right);
@@ -90,8 +90,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryCulture.PreferredHeight = 25;
 			this.primaryCulture.ActiveState = ActiveState.Yes;
 			this.primaryCulture.AutoFocus = false;
-			this.primaryCulture.TabIndex = this.tabIndex++;
-			this.primaryCulture.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			//?this.primaryCulture.TabIndex = this.tabIndex++;
+			//?this.primaryCulture.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.primaryCulture.Margins = new Margins(0, 10, 0, 0);
 			this.primaryCulture.Dock = DockStyle.StackFill;
 

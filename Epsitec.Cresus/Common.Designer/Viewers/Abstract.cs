@@ -715,8 +715,8 @@ namespace Epsitec.Common.Designer.Viewers
 					this.secondaryCultures[i].Name = list[i];
 					this.secondaryCultures[i].Text = Misc.CultureName(bundle.Culture);
 					this.secondaryCultures[i].AutoFocus = false;
-					this.secondaryCultures[i].TabIndex = i;
-					this.secondaryCultures[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+					//?this.secondaryCultures[i].TabIndex = i;
+					//?this.secondaryCultures[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 					if (isCaptions)
 					{
 						this.secondaryCultures[i].Margins = new Margins(0, (i==list.Count-1)?1:0, 0, 0);
