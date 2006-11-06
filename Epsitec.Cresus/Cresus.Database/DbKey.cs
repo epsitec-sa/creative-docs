@@ -1,85 +1,86 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
 	/// The <c>DbKey</c> class represents a key which can be used by the database
-	/// engine to index its data. The key has at least one identifier.
+	/// engine to index or look up its data. The key has at least one identifier.
 	/// </summary>
-	public sealed class DbKey : System.ICloneable, System.IComparable
+	public struct DbKey : System.IComparable<DbKey>, System.IEquatable<DbKey>
 	{
-		public DbKey()
-		{
-		}
-		
 		public DbKey(DbId id) : this (id, DbRowStatus.Live)
 		{
 		}
 		
 		public DbKey(DbId id, DbRowStatus status)
 		{
-			this.id         = id;
-			this.int_status = DbKey.ConvertToIntStatus (status);
+			this.id     = id;
+			this.status = DbKey.ConvertToIntStatus (status);
 		}
 		
-		public DbKey(System.Data.DataRow data_row)
+		public DbKey(System.Data.DataRow dataRow)
 		{
-			object value_id       = data_row[Tags.ColumnId];
-			object value_status   = data_row[Tags.ColumnStatus];
+			object valueId     = dataRow[Tags.ColumnId];
+			object valueStatus = dataRow[Tags.ColumnStatus];
 			
 			long id;
 			
-			if ((Common.Types.InvariantConverter.Convert (value_id, out id)) &&
+			if ((InvariantConverter.Convert (valueId, out id)) &&
 				(id >= 0))
 			{
 				short status;
 				
-				Common.Types.InvariantConverter.Convert (value_status, out status);
+				InvariantConverter.Convert (valueStatus, out status);
 				
-				this.id         = id;
-				this.int_status = status;
+				this.id     = id;
+				this.status = status;
 			}
 			else
 			{
-				throw new System.ArgumentException ("Row does not contain valid key.", "data_row");
+				throw new System.ArgumentException ("Row does not contain valid key", "dataRow");
 			}
 		}
 		
-		public DbKey(object[] data_row)
+		public DbKey(object[] dataRow)
 		{
-			object value_id       = data_row[0];
-			object value_status   = data_row[1];
+			object valueId     = dataRow[0];
+			object valueStatus = dataRow[1];
 			
 			long id;
 			
-			if ((Common.Types.InvariantConverter.Convert (value_id, out id)) &&
+			if ((InvariantConverter.Convert (valueId, out id)) &&
 				(id >= 0))
 			{
 				short status;
 				
-				Common.Types.InvariantConverter.Convert (value_status, out status);
+				InvariantConverter.Convert (valueStatus, out status);
 				
-				this.id         = id;
-				this.int_status = status;
+				this.id     = id;
+				this.status = status;
 			}
 			else
 			{
-				throw new System.ArgumentException ("Row does not contain valid key.", "data_row");
+				throw new System.ArgumentException ("Row does not contain valid key.", "dataRow");
 			}
 		}
-		
-		
-		public DbId								Id
+
+
+		public DbId Id
 		{
-			get { return this.id; }
+			get
+			{
+				return this.id;
+			}
 		}
 		
 		public DbRowStatus						Status
 		{
 			get
 			{
-				return DbKey.ConvertFromIntStatus (this.int_status);
+				return DbKey.ConvertFromIntStatus (this.status);
 			}
 		}
 		
@@ -87,7 +88,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.int_status;
+				return this.status;
 			}
 		}
 		
@@ -102,10 +103,7 @@ namespace Epsitec.Cresus.Database
 		
 		public static DbId CreateTemporaryId()
 		{
-			lock (DbKey.temp_lock)
-			{
-				return DbId.CreateTempId (DbKey.temp_id++);
-			}
+			return DbId.CreateTempId (System.Threading.Interlocked.Increment (ref DbKey.tempId));
 		}
 		
 		public static bool CheckTemporaryId(DbId id)
@@ -128,14 +126,6 @@ namespace Epsitec.Cresus.Database
 		public static DbRowStatus ConvertFromIntStatus(int status)
 		{
 			return (DbRowStatus) status;
-		}
-		
-		public static void SerializeToXmlAttributes(System.Text.StringBuilder buffer, DbKey key)
-		{
-			if (key != null)
-			{
-				key.SerializeXmlAttributes (buffer);
-			}
 		}
 		
 		public static DbKey DeserializeFromXmlAttributes(System.Xml.XmlElement xml)
@@ -169,57 +159,37 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		#region ICloneable Members
-		public object Clone()
-		{
-			return this.CloneCopyToNewObject (this.CloneNewObject ());
-		}
-		#endregion
-		
-		private object CloneNewObject()
-		{
-			return new DbKey ();
-		}
-		
-		private object CloneCopyToNewObject(object o)
-		{
-			DbKey that = o as DbKey;
-			
-			that.id         = this.id;
-			that.int_status = this.int_status;
-			
-			return that;
-		}
-		
-		
 		#region IComparable Members
-		public int CompareTo(object obj)
+
+		public int CompareTo(DbKey other)
 		{
-			DbKey key = obj as DbKey;
-			
-			if (key == null)
-			{
-				return 1;
-			}
-			
-			return this.id.CompareTo (key.id);
+			return this.id.CompareTo (other.id);
 		}
+
+		#endregion
+
+		#region IEquatable<DbKey> Members
+
+		public bool Equals(DbKey other)
+		{
+			return this.id == other.id;
+		}
+
 		#endregion
 		
 		#region Equals, GetHashCode and ToString support
+		
 		public override bool Equals(object obj)
 		{
-			//	Ne considère que Id et Revision pour la comparaison (et pour le
-			//	calcul d'une valeur de hachage).
-			
-			DbKey key = obj as DbKey;
-			
-			if (key == null)
+			if (obj is DbKey)
+			{
+				return this.Equals ((DbKey) obj);
+			}
+			else
 			{
 				return false;
+				
 			}
-			
-			return (key.id == this.id);
 		}
 		
 		public override int GetHashCode()
@@ -231,30 +201,27 @@ namespace Epsitec.Cresus.Database
 		{
 			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}", this.id);
 		}
-		#endregion
 		
-		private void SerializeXmlAttributes(System.Text.StringBuilder buffer)
+		#endregion
+
+		public void SerializeAttributes(System.Xml.XmlTextWriter xmlWriter)
 		{
-			buffer.Append (@" key.id=""");
-			buffer.Append (this.id.ToString ());
-			buffer.Append (@"""");
-			
-			if (this.int_status != 0)
-			{
-				buffer.Append (@" key.stat=""");
-				buffer.Append (this.int_status.ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append (@"""");
-			}
+			this.SerializeAttributes (xmlWriter, "key.");
+		}
+		
+		public void SerializeAttributes(System.Xml.XmlTextWriter xmlWriter, string prefix)
+		{
+			DbTools.WriteAttribute (xmlWriter, prefix+"id", InvariantConverter.ToString (this.id));
+			DbTools.WriteAttribute (xmlWriter, prefix+"stat", this.status == 0 ? null : InvariantConverter.ToString (this.status));
 		}
 
 		
 		public const DbRawType					RawTypeForId		= DbRawType.Int64;
 		public const DbRawType					RawTypeForStatus	= DbRawType.Int16;
 		
-		private static object					temp_lock	= new object ();
-		private static long						temp_id		= 0;
+		private static long						tempId;
 
 		private DbId id;
-		private short int_status;
+		private short status;
 	}
 }
