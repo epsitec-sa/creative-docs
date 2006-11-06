@@ -139,6 +139,60 @@ namespace Epsitec.Common.Types
 		{
 			return string.IsNullOrEmpty (value) ? 0 : decimal.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
 		}
+
+		public static long    ConvertToInt(object obj)
+		{
+			int value;
+
+			if (InvariantConverter.Convert (obj, out value))
+			{
+				return value;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Value cannot be converted", "obj");
+			}
+		}
+		public static long    ConvertToLong(object obj)
+		{
+			long value;
+
+			if (InvariantConverter.Convert (obj, out value))
+			{
+				return value;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Value cannot be converted", "obj");
+			}
+		}
+		public static decimal ConvertToDecimal(object obj)
+		{
+			decimal value;
+
+			if (InvariantConverter.Convert (obj, out value))
+			{
+				return value;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Value cannot be converted", "obj");
+			}
+		}
+		public static string  ConvertToString(object obj)
+		{
+			string value;
+
+			if (InvariantConverter.Convert (obj, out value))
+			{
+				return value;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Value cannot be converted", "obj");
+			}
+		}
+
 		
 		public static bool SafeConvert(object obj, out string value)
 		{
