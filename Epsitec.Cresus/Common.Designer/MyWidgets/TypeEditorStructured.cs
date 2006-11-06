@@ -18,26 +18,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.toolbar.Dock = DockStyle.StackBegin;
 
 			this.buttonAdd = new IconButton();
-			this.buttonAdd.CaptionDruid = Res.Captions.Editor.Structured.Add.Druid;
+			this.buttonAdd.CaptionId = Res.Captions.Editor.Structured.Add.Id;
 			this.buttonAdd.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonAdd);
 
 			this.toolbar.Items.Add(new IconSeparator());
 
 			this.buttonPrev = new IconButton();
-			this.buttonPrev.CaptionDruid = Res.Captions.Editor.Structured.Prev.Druid;
+			this.buttonPrev.CaptionId = Res.Captions.Editor.Structured.Prev.Id;
 			this.buttonPrev.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonPrev);
 
 			this.buttonNext = new IconButton();
-			this.buttonNext.CaptionDruid = Res.Captions.Editor.Structured.Next.Druid;
+			this.buttonNext.CaptionId = Res.Captions.Editor.Structured.Next.Id;
 			this.buttonNext.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonNext);
 
 			this.toolbar.Items.Add(new IconSeparator());
 
 			this.buttonRemove = new IconButton();
-			this.buttonRemove.CaptionDruid = Res.Captions.Editor.Structured.Remove.Druid;
+			this.buttonRemove.CaptionId = Res.Captions.Editor.Structured.Remove.Id;
 			this.buttonRemove.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonRemove);
 
@@ -111,13 +111,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldName.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 
 			this.buttonType = new Button(this.footer);
-			this.buttonType.CaptionDruid = Res.Captions.Editor.Structured.ChangeType.Druid;
+			this.buttonType.CaptionId = Res.Captions.Editor.Structured.ChangeType.Id;
 			this.buttonType.Margins = new Margins(1, 0, 0, 0);
 			this.buttonType.Dock = DockStyle.Left;
 			this.buttonType.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonCaption = new Button(this.footer);
-			this.buttonCaption.CaptionDruid = Res.Captions.Editor.Structured.ChangeCaption.Druid;
+			this.buttonCaption.CaptionId = Res.Captions.Editor.Structured.ChangeCaption.Id;
 			this.buttonCaption.Margins = new Margins(1, 0, 0, 0);
 			this.buttonCaption.Dock = DockStyle.Left;
 			this.buttonCaption.Clicked += new MessageEventHandler(this.HandleButtonClicked);
@@ -220,7 +220,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					AbstractType type = field.Type as AbstractType;
 					if (type != null)
 					{
-						Caption caption = this.module.ResourceManager.GetCaption(type.Caption.Druid);
+						Caption caption = this.module.ResourceManager.GetCaption(type.Caption.Id);
 						//?ResourceBundle bundle = ResourceManager.GetSourceBundle(caption);
 						//?ResourceBundle.Field rf = bundle[caption.Druid];
 						//?string dn = ResourceAccess.SubAllFilter(rf.Name);
@@ -235,7 +235,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 							captionType = caption.Name;
 						}
 
-						iconType = this.resourceAccess.DirectGetIcon(caption.Druid);
+						iconType = this.resourceAccess.DirectGetIcon(caption.Id);
 						if (!string.IsNullOrEmpty(iconType))
 						{
 							iconType = Misc.ImageFull(iconType);
@@ -411,7 +411,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			StructuredTypeField actualField = this.fields[sel];
 			AbstractType type = actualField.Type as AbstractType;
-			Druid druid = (type == null) ? Druid.Empty : type.Caption.Druid;
+			Druid druid = (type == null) ? Druid.Empty : type.Caption.Id;
 
 			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Types, druid, null);
 			if (druid.IsEmpty)

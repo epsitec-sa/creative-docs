@@ -81,6 +81,10 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
+    <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
+      <Project>{AF58270B-4B5C-49F7-81D8-723CFF122F2C}</Project>
+      <Name>Common.Debug</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Support.Events\Common.Support.Events.csproj">
       <Name>Common.Support.Events</Name>
       <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>

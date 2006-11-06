@@ -107,7 +107,7 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			EnumType ButtonAspectEnumType = Res.Types.Widgets.ButtonAspect;
 			Aspect.ButtonAspectProperty.DefaultMetadata.DefineNamedType(ButtonAspectEnumType);
-			Aspect.ButtonAspectProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Aspect.ButtonAspect.Druid);
+			Aspect.ButtonAspectProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Aspect.ButtonAspect.Id);
 		}
 
 

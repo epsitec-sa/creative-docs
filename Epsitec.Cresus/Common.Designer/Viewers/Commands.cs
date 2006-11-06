@@ -20,7 +20,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.buttonSuiteCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			StaticText label = new StaticText(leftContainer.Container);
-			label.CaptionDruid = Res.Captions.Command.ButtonAspect.Druid;
+			label.CaptionId = Res.Captions.Command.ButtonAspect.Id;
 			label.PreferredWidth = 150;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Margins = new Margins(0, 5, 0, 0);
@@ -28,14 +28,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.primaryAspectIcon = new IconButton(leftContainer.Container);
 			this.primaryAspectIcon.MinSize = this.primaryAspectIcon.PreferredSize;  // attention, très important !
-			this.primaryAspectIcon.CommandDruid = Res.Values.Widgets.ButtonAspect.IconButton.Druid;
+			this.primaryAspectIcon.CommandDruid = Res.Values.Widgets.ButtonAspect.IconButton.Id;
 			this.primaryAspectIcon.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
 			this.primaryAspectIcon.Dock = DockStyle.Left;
 			this.primaryAspectIcon.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
 
 			this.primaryAspectDialog = new IconButton(leftContainer.Container);
 			this.primaryAspectDialog.MinSize = this.primaryAspectDialog.PreferredSize;  // attention, très important !
-			this.primaryAspectDialog.CommandDruid = Res.Values.Widgets.ButtonAspect.DialogButton.Druid;
+			this.primaryAspectDialog.CommandDruid = Res.Values.Widgets.ButtonAspect.DialogButton.Id;
 			this.primaryAspectDialog.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
 			this.primaryAspectDialog.Dock = DockStyle.Left;
 			this.primaryAspectDialog.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);

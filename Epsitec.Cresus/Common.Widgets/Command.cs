@@ -62,7 +62,7 @@ namespace Epsitec.Common.Widgets
 			this.uniqueId = -1;
 			this.caption  = caption;
 			
-			this.InitializeCommandId (caption.Druid.ToResourceId (), manager);
+			this.InitializeCommandId (caption.Id.ToResourceId (), manager);
 		}
 
 		public static Command CreateTemporary(Types.Caption caption, Support.ResourceManager manager)
@@ -674,12 +674,12 @@ namespace Epsitec.Common.Widgets
 				Types.Caption caption = manager.GetCaption (druid);
 
 				System.Diagnostics.Debug.Assert (caption != null);
-				System.Diagnostics.Debug.Assert (caption.Druid.ToResourceId () == this.commandId);
+				System.Diagnostics.Debug.Assert (caption.Id.ToResourceId () == this.commandId);
 
 				this.caption = caption;
 			}
 			
-			System.Diagnostics.Debug.Assert (this.caption.Druid == druid);
+			System.Diagnostics.Debug.Assert (this.caption.Id == druid);
 		}
 
 		private void InitializeDummyCaption()

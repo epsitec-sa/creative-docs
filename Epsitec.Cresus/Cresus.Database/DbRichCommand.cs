@@ -787,6 +787,7 @@ namespace Epsitec.Cresus.Database
 			
 			for (int i = 0; i < this.commands.Count; i++)
 			{
+				string tag = Epsitec.Common.Debug.Tracker.Register (this.commands[i]);
 				this.commands[i].Transaction = transaction;
 			}
 		}

@@ -18,31 +18,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.toolbar.Dock = DockStyle.StackBegin;
 
 			this.buttonAdd = new IconButton();
-			this.buttonAdd.CaptionDruid = Res.Captions.Editor.Type.Add.Druid;
+			this.buttonAdd.CaptionId = Res.Captions.Editor.Type.Add.Id;
 			this.buttonAdd.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonAdd);
 
 			this.buttonRemove = new IconButton();
-			this.buttonRemove.CaptionDruid = Res.Captions.Editor.Type.Remove.Druid;
+			this.buttonRemove.CaptionId = Res.Captions.Editor.Type.Remove.Id;
 			this.buttonRemove.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonRemove);
 
 			this.toolbar.Items.Add(new IconSeparator());
 
 			this.buttonPrev = new IconButton();
-			this.buttonPrev.CaptionDruid = Res.Captions.Editor.Type.Prev.Druid;
+			this.buttonPrev.CaptionId = Res.Captions.Editor.Type.Prev.Id;
 			this.buttonPrev.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonPrev);
 
 			this.buttonNext = new IconButton();
-			this.buttonNext.CaptionDruid = Res.Captions.Editor.Type.Next.Druid;
+			this.buttonNext.CaptionId = Res.Captions.Editor.Type.Next.Id;
 			this.buttonNext.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonNext);
 
 			this.toolbar.Items.Add(new IconSeparator());
 
 			this.buttonSort = new IconButton();
-			this.buttonSort.CaptionDruid = Res.Captions.Editor.Type.Sort.Druid;
+			this.buttonSort.CaptionId = Res.Captions.Editor.Type.Sort.Id;
 			this.buttonSort.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonSort);
 
@@ -53,12 +53,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.toolbar.Items.Add(this.fieldSearch);
 
 			this.buttonSearchPrev = new IconButton();
-			this.buttonSearchPrev.CaptionDruid = Res.Captions.Editor.Type.SearchPrev.Druid;
+			this.buttonSearchPrev.CaptionId = Res.Captions.Editor.Type.SearchPrev.Id;
 			this.buttonSearchPrev.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonSearchPrev);
 
 			this.buttonSearchNext = new IconButton();
-			this.buttonSearchNext.CaptionDruid = Res.Captions.Editor.Type.SearchNext.Druid;
+			this.buttonSearchNext.CaptionId = Res.Captions.Editor.Type.SearchNext.Id;
 			this.buttonSearchNext.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonSearchNext);
 
@@ -213,7 +213,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Construit le contenu de la liste.
 			foreach (EnumValue value in collection)
 			{
-				Druid druid = value.Caption.Druid;
+				Druid druid = value.Caption.Id;
 				if (druid.IsValid)
 				{
 					this.selDruids.Add(druid);

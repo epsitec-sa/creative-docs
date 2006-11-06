@@ -378,13 +378,13 @@ namespace Epsitec.Common.Types
 				return type;
 			}
 
-			type = TypeRosetta.GetTypeObject (caption.Druid);
+			type = TypeRosetta.GetTypeObject (caption.Id);
 
 			if (type == null)
 			{
 				type = TypeRosetta.CreateTypeObject (caption);
 
-				System.Diagnostics.Debug.Assert ((type == null) || (TypeRosetta.knownTypes.ContainsKey (caption.Druid)));
+				System.Diagnostics.Debug.Assert ((type == null) || (TypeRosetta.knownTypes.ContainsKey (caption.Id)));
 			}
 
 			if (type != null)
@@ -423,7 +423,7 @@ namespace Epsitec.Common.Types
 				throw new System.ArgumentNullException ("caption");
 			}
 
-			Support.Druid typeId = caption.Druid;
+			Support.Druid typeId = caption.Id;
 			AbstractType  type   = null;
 			
 			string systemTypeName = AbstractType.GetSystemType (caption);

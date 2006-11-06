@@ -633,7 +633,7 @@ namespace Epsitec.Common.Types
 			caption = TypeRosetta.GetTypeObject ("Default.Integer").Caption;
 			intSerial = caption.SerializeToString ();
 
-			System.Console.WriteLine ("Integer caption ID: {0}", caption.Druid.ToString ());
+			System.Console.WriteLine ("Integer caption ID: {0}", caption.Id.ToString ());
 
 			Assert.AreEqual ("Default.Integer", TypeRosetta.GetTypeObject ("Default.Integer").Name);
 			Assert.AreEqual ("Default.Integer", caption.Name);
@@ -642,7 +642,7 @@ namespace Epsitec.Common.Types
 			caption = TypeRosetta.GetTypeObject ("Default.String").Caption;
 			strSerial = caption.SerializeToString ();
 
-			System.Console.WriteLine ("String caption ID: {0}", caption.Druid.ToString ());
+			System.Console.WriteLine ("String caption ID: {0}", caption.Id.ToString ());
 
 			System.Console.WriteLine ("Integer: {0}", intSerial);
 			System.Console.WriteLine ("String: {0}", strSerial);

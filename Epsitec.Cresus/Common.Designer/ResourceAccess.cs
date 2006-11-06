@@ -1001,7 +1001,7 @@ namespace Epsitec.Common.Designer
 				ResourceBundle.Field field = this.primaryBundle[i];
 				if (this.HasFixFilter(field.Name, true))
 				{
-					Druid fullDruid = new Druid(field.Druid, this.primaryBundle.Module.Id);
+					Druid fullDruid = new Druid(field.Id, this.primaryBundle.Module.Id);
 
 					if (exclude == null || !exclude.Contains(fullDruid))
 					{
@@ -1303,7 +1303,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne le Druid correspondant à un index.
 			System.Diagnostics.Debug.Assert(this.IsBundlesType);
 			ResourceBundle.Field field = this.primaryBundle[index];
-			return new Druid(field.Druid, this.primaryBundle.Module.Id);
+			return new Druid(field.Id, this.primaryBundle.Module.Id);
 		}
 		#endregion
 
@@ -2376,7 +2376,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				Druid fullDruid = new Druid(field.Druid, this.primaryBundle.Module.Id);
+				Druid fullDruid = new Druid(field.Id, this.primaryBundle.Module.Id);
 				this.druidsIndex.Add(fullDruid);
 			}
 
@@ -2430,7 +2430,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				this.druidsIndex.Add(bundle.Druid);
+				this.druidsIndex.Add(bundle.Id);
 			}
 
 			this.isExternalDirtyList = false;
@@ -2449,7 +2449,7 @@ namespace Epsitec.Common.Designer
 			{
 				for (int i=0; i<this.panelsList.Count; i++)
 				{
-					if (this.panelsList[i].Druid == druid)
+					if (this.panelsList[i].Id == druid)
 					{
 						return i;
 					}
@@ -2523,7 +2523,7 @@ namespace Epsitec.Common.Designer
 
 				foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
 				{
-					Druid druid = field.Druid;
+					Druid druid = field.Id;
 
 					if (druid.IsValid && druid.Developer == developerId && druid.Local >= localId)
 					{
@@ -2542,7 +2542,7 @@ namespace Epsitec.Common.Designer
 
 				foreach (ResourceBundle bundle in this.panelsList)
 				{
-					Druid druid = bundle.Druid;
+					Druid druid = bundle.Id;
 
 					if (druid.IsValid && druid.Developer == developerId && druid.Local >= localId)
 					{
@@ -2646,7 +2646,7 @@ namespace Epsitec.Common.Designer
 			//	Supprime tous les panneaux mis dans la liste 'à supprimer'.
 			foreach (ResourceBundle bundle in this.panelsToDelete)
 			{
-				this.resourceManager.RemoveBundle(bundle.Druid.ToBundleId(), ResourceLevel.Default, bundle.Culture);
+				this.resourceManager.RemoveBundle(bundle.Id.ToBundleId(), ResourceLevel.Default, bundle.Culture);
 			}
 			this.panelsToDelete.Clear();
 		}

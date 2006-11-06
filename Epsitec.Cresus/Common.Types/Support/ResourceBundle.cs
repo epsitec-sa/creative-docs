@@ -103,7 +103,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public Druid						Druid
+		public Druid						Id
 		{
 			get
 			{
@@ -451,7 +451,7 @@ namespace Epsitec.Common.Support
 
 			for (int i = 0; i < this.fields.Length; i++)
 			{
-				if (this.fields[i].Id == id)
+				if (this.fields[i].RawId == id)
 				{
 					return i;
 				}
@@ -583,7 +583,7 @@ namespace Epsitec.Common.Support
 				}
 				
 				string name = field.Name;
-				long   id   = field.Id;
+				long   id   = field.RawId;
 
 				if (id >= 0)
 				{
@@ -1391,7 +1391,7 @@ namespace Epsitec.Common.Support
 				}
 			}
 			
-			internal long					Id
+			internal long					RawId
 			{
 				get
 				{
@@ -1399,7 +1399,7 @@ namespace Epsitec.Common.Support
 				}
 			}
 
-			public Druid					Druid
+			public Druid					Id
 			{
 				get
 				{
