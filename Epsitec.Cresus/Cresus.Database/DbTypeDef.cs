@@ -51,6 +51,17 @@ namespace Epsitec.Cresus.Database
 				this.isNullable = nullableType.IsNullable;
 			}
 		}
+
+		public DbTypeDef(string name, DbSimpleType simpleType, DbNumDef numDef, int length, bool isFixedLength, Nullable isNullable)
+		{
+			this.name = name;
+			this.simpleType = simpleType;
+			this.numDef = numDef;
+			this.rawType = TypeConverter.GetRawType (this.simpleType, this.numDef);
+			this.length = length;
+			this.isFixedLength = isFixedLength;
+			this.isNullable = isNullable == Nullable.Yes;
+		}
 		
 		
 		public DbSimpleType SimpleType

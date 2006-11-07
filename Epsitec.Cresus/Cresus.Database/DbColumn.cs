@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Database
 			this.DefineCategory (category);
 		}
 
-		
+
 		public static DbColumn CreateRefColumn(string columnName, string targetTableName, DbTypeDef typeDef)
 		{
 			System.Diagnostics.Debug.Assert (typeDef != null);
@@ -61,6 +61,13 @@ namespace Epsitec.Cresus.Database
 			column.DefineTargetTableName (targetTableName);
 
 			return column;
+		}
+
+		public static DbColumn CreateUserDataColumn(string columnName, DbTypeDef typeDef)
+		{
+			System.Diagnostics.Debug.Assert (typeDef != null);
+
+			return new DbColumn (columnName, typeDef, DbColumnClass.Data, DbElementCat.UserDataManaged);
 		}
 
 

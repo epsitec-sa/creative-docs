@@ -42,19 +42,19 @@ namespace Epsitec.Cresus.Database
 				
 				Assert.IsNotNull (table);
 				Assert.AreEqual (1000000000001L, table.Key.Id);
-				Assert.AreEqual (8,  table.Columns.Count);
+				Assert.AreEqual (6,  table.Columns.Count);
 				
 				table = infrastructure.ResolveDbTable (null, "CR_COLUMN_DEF");
 				
 				Assert.IsNotNull (table);
 				Assert.AreEqual (1000000000002L, table.Key.Id);
-				Assert.AreEqual (10, table.Columns.Count);
+				Assert.AreEqual (8, table.Columns.Count);
 				
 				table = infrastructure.ResolveDbTable (null, "CR_TYPE_DEF");
 				
 				Assert.IsNotNull (table);
 				Assert.AreEqual (1000000000003L, table.Key.Id);
-				Assert.AreEqual (7,  table.Columns.Count);
+				Assert.AreEqual (5,  table.Columns.Count);
 				
 				Assert.AreEqual (0, infrastructure.CountMatchingRows (null, "CR_COLUMN_DEF", "CR_NAME", DbSqlStandard.MakeSimpleSqlName ("MyColumn")));
 				Assert.AreEqual (4, infrastructure.CountMatchingRows (null, "CR_COLUMN_DEF", "CR_NAME", "CR_INFO"));
@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 #endif
-#if false
+
 		[Test] public void Check05CreateDbTable()
 		{
 			//	Ce test ne marche que pour une base qui est propre (i.e. qui vient d'être
@@ -185,20 +185,20 @@ namespace Epsitec.Cresus.Database
 				
 				DbTable db_table1 = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
 				
-				DbType db_type_name  = infrastructure.CreateDbType ("Name", 80, false) as DbTypeString;
-				DbType db_type_level = infrastructure.CreateDbType ("Level", 4, false) as DbTypeString;
-				DbType db_type_type  = infrastructure.CreateDbType ("Type", 25, false) as DbTypeString;
-				DbType db_type_data  = infrastructure.CreateDbTypeByteArray ("Data");
+				DbTypeDef db_type_name  = new DbTypeDef ("Name",  DbSimpleType.String, null, 80, false, Nullable.No);
+				DbTypeDef db_type_level = new DbTypeDef ("Level", DbSimpleType.String, null, 4, false, Nullable.No);
+				DbTypeDef db_type_type  = new DbTypeDef ("Type", DbSimpleType.String, null, 25, false, Nullable.Yes);
+				DbTypeDef db_type_data  = new DbTypeDef ("Data", DbSimpleType.ByteArray, null, 0, false, Nullable.Yes);
 				
 				infrastructure.RegisterNewDbType (null, db_type_name);
 				infrastructure.RegisterNewDbType (null, db_type_level);
 				infrastructure.RegisterNewDbType (null, db_type_type);
 				infrastructure.RegisterNewDbType (null, db_type_data);
 				
-				DbColumn col1 = DbColumn.CreateUserDataColumn ("Name",  db_type_name,  Nullable.No);
-				DbColumn col2 = DbColumn.CreateUserDataColumn ("Level", db_type_level, Nullable.No);
-				DbColumn col3 = DbColumn.CreateUserDataColumn ("Type",  db_type_type,  Nullable.Yes);
-				DbColumn col4 = DbColumn.CreateUserDataColumn ("Data",  db_type_data,  Nullable.Yes);
+				DbColumn col1 = DbColumn.CreateUserDataColumn ("Name",  db_type_name);
+				DbColumn col2 = DbColumn.CreateUserDataColumn ("Level", db_type_level);
+				DbColumn col3 = DbColumn.CreateUserDataColumn ("Type",  db_type_type);
+				DbColumn col4 = DbColumn.CreateUserDataColumn ("Data",  db_type_data);
 				
 				db_table1.Columns.AddRange (new DbColumn[] { col1, col2, col3, col4 });
 				
@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Database
 				Assert.AreEqual (1000000000013L, db_table2.Key.Id);
 			}
 		}
-#endif
+
 		[Test] [ExpectedException (typeof (Exceptions.GenericException))] public void Check06CreateDbTableEx1()
 		{
 			//	Exécuter deux fois une création de table va nécessairement générer une exception.
