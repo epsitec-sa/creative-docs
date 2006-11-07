@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Database
 				if (this.raw_type == DbRawType.Unsupported)
 				{
 					if ((this.DigitShift == 0) &&
-						(this.GetPackOffsetAndScale () == 0))
+						(this.GetPackOffset () == 0))
 					{
 						return false;
 					}
@@ -382,59 +382,10 @@ namespace Epsitec.Cresus.Database
 			//	Convertit (encode) la valeur décimale en une représentation compacte,
 			//	occupant l'entier au mieux.
 
-			value -= this.GetPackOffsetAndScale ();
+			value -= this.GetPackOffset ();
 			value *= DbNumDef.digit_table[this.DigitShift];
 			
 			return (long) value;
-		}
-
-		private decimal GetPackOffsetAndScale()
-		{
-			decimal offset = this.MinValue + this.HalfRange;
-			decimal mul    = DbNumDef.digit_table[this.DigitShift];
-			
-			decimal range  = mul * (this.MaxValue - this.MinValue);
-			decimal max    = mul * this.MaxValue;
-			decimal min    = mul * this.MinValue;
-
-			if (range <= 255)
-			{
-				if ((max <= 127) &&
-					(min >= -128))
-				{
-					offset = 0;
-				}
-			}
-			else if (range <= System.UInt16.MaxValue)
-			{
-				if ((max <= System.Int16.MaxValue) &&
-					(min >= System.Int16.MinValue))
-				{
-					offset = 0;
-				}
-			}
-			else if (range <= System.UInt32.MaxValue)
-			{
-				if ((max <= System.Int32.MaxValue) &&
-					(min >= System.Int32.MinValue))
-				{
-					offset = 0;
-				}
-			}
-			else if (range <= System.UInt64.MaxValue)
-			{
-				if ((max <= System.Int64.MaxValue) &&
-					(min >= System.Int64.MinValue))
-				{
-					offset = 0;
-				}
-			}
-			else
-			{
-				throw new System.ArithmeticException ("Value cannot be packed into a 64-bit integer");
-			}
-
-			return offset;
 		}
 
 		public decimal ConvertFromInt64(long value)
@@ -445,7 +396,7 @@ namespace Epsitec.Cresus.Database
 			decimal conv = value;
 			
 			conv *= DbNumDef.digit_table_scale[this.DigitShift];
-			conv += this.GetPackOffsetAndScale ();
+			conv += this.GetPackOffset ();
 			
 			return (decimal) conv;
 		}
@@ -612,6 +563,55 @@ namespace Epsitec.Cresus.Database
 			return !(a == b);
 		}
 
+
+		private decimal GetPackOffset()
+		{
+			decimal offset = this.MinValue + this.HalfRange;
+			decimal mul    = DbNumDef.digit_table[this.DigitShift];
+
+			decimal range  = mul * (this.MaxValue - this.MinValue);
+			decimal max    = mul * this.MaxValue;
+			decimal min    = mul * this.MinValue;
+
+			if (range <= 255)
+			{
+				if ((max <= 127) &&
+					(min >= -128))
+				{
+					offset = 0;
+				}
+			}
+			else if (range <= System.UInt16.MaxValue)
+			{
+				if ((max <= System.Int16.MaxValue) &&
+					(min >= System.Int16.MinValue))
+				{
+					offset = 0;
+				}
+			}
+			else if (range <= System.UInt32.MaxValue)
+			{
+				if ((max <= System.Int32.MaxValue) &&
+					(min >= System.Int32.MinValue))
+				{
+					offset = 0;
+				}
+			}
+			else if (range <= System.UInt64.MaxValue)
+			{
+				if ((max <= System.Int64.MaxValue) &&
+					(min >= System.Int64.MinValue))
+				{
+					offset = 0;
+				}
+			}
+			else
+			{
+				throw new System.ArithmeticException ("Value cannot be packed into a 64-bit integer");
+			}
+
+			return offset;
+		}
 
 		private void UpdateAutoPrecision()
 		{

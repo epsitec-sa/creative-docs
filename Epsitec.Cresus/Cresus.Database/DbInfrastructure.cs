@@ -1701,6 +1701,7 @@ namespace Epsitec.Cresus.Database
 		}
 #endif
 		
+#if false
 		protected void DefineLocalisedAttributes(System.Data.DataRow row, string prefix, string column, DbAttributes attributes, string tag)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -1759,7 +1760,7 @@ namespace Epsitec.Cresus.Database
 				query.Fields.Add (index, SqlField.CreateName (table, column));
 			}
 		}
-
+#endif
 		
 		protected static void AddKeyExtraction(Collections.SqlFields conditions, string table_name, DbKey key)
 		{

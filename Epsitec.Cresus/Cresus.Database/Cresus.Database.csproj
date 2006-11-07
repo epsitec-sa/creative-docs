@@ -138,9 +138,6 @@
     <Compile Include="DbAccess.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DbAttributes.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DbClientManager.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -262,9 +259,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IDbAbstractionFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IDbAttributesHost.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IDbServiceTools.cs">
