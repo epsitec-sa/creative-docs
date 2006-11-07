@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public static bool ParseBool(string value)
+		public static bool ParseDefaultingToFalseBool(string value)
 		{
 			if (string.IsNullOrEmpty (value))
 			{
@@ -190,6 +190,20 @@ namespace Epsitec.Cresus.Database
 			else
 			{
 				System.Diagnostics.Debug.Assert (value == "Y");
+
+				return true;
+			}
+		}
+
+		public static bool ParseDefaultingToTrueBool(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return false;
+			}
+			else
+			{
+				System.Diagnostics.Debug.Assert (value == "N");
 
 				return true;
 			}
@@ -312,9 +326,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public static string BoolToString(bool value)
+		public static string BoolDefaultingToFalseToString(bool value)
 		{
 			return value ? "Y" : null;
+		}
+
+		public static string BoolDefaultingToTrueToString(bool value)
+		{
+			return value ? "N" : null;
 		}
 
 		public static string StringToString(string value)

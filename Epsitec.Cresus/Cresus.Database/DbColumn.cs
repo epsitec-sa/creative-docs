@@ -200,14 +200,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				if (this.typeDef.Length == 0)
-				{
-					return true;
-				}
-				else
-				{
-					return this.typeDef.IsFixedLength;
-				}
+				return this.typeDef.IsFixedLength;
 			}
 		}
 
@@ -613,9 +606,9 @@ namespace Epsitec.Cresus.Database
 				column.columnClass = DbTools.ParseColumnClass (xmlReader.GetAttribute ("class"));
 				column.localisation = DbTools.ParseLocalisation (xmlReader.GetAttribute ("loc"));
 
-				column.is_unique = DbTools.ParseBool (xmlReader.GetAttribute ("un"));
-				column.is_indexed = DbTools.ParseBool (xmlReader.GetAttribute ("idx"));
-				column.is_primary_key = DbTools.ParseBool (xmlReader.GetAttribute ("pk"));
+				column.is_unique = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("un"));
+				column.is_indexed = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("idx"));
+				column.is_primary_key = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("pk"));
 
 				if (!isEmptyElement)
 				{
@@ -643,9 +636,9 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "class", DbTools.ColumnClassToString (this.ColumnClass));
 			DbTools.WriteAttribute (xmlWriter, "loc", DbTools.ColumnLocalisationToString (this.Localisation));
 
-			DbTools.WriteAttribute (xmlWriter, "un", DbTools.BoolToString (this.IsUnique));
-			DbTools.WriteAttribute (xmlWriter, "idx", DbTools.BoolToString (this.IsIndexed));
-			DbTools.WriteAttribute (xmlWriter, "pk", DbTools.BoolToString (this.IsPrimaryKey));
+			DbTools.WriteAttribute (xmlWriter, "un", DbTools.BoolDefaultingToFalseToString (this.IsUnique));
+			DbTools.WriteAttribute (xmlWriter, "idx", DbTools.BoolDefaultingToFalseToString (this.IsIndexed));
+			DbTools.WriteAttribute (xmlWriter, "pk", DbTools.BoolDefaultingToFalseToString (this.IsPrimaryKey));
 			
 			xmlWriter.WriteEndElement ();
 		}

@@ -37,6 +37,12 @@ namespace Epsitec.Cresus.Database
 				this.isFixedLength  = stringType.UseFixedLengthStorage;
 				this.isMultilingual = stringType.UseMultilingualStorage;
 			}
+			else
+			{
+				this.length         = 1;
+				this.isFixedLength  = true;
+				this.isMultilingual = false;
+			}
 
 			INullableType nullableType = namedType as INullableType;
 
@@ -195,9 +201,9 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "raw", DbTools.RawTypeToString (this.rawType));
 			DbTools.WriteAttribute (xmlWriter, "simple", DbTools.SimpleTypeToString (this.simpleType));
 			DbTools.WriteAttribute (xmlWriter, "length", DbTools.IntToString (this.length));
-			DbTools.WriteAttribute (xmlWriter, "fixed", DbTools.BoolToString (this.isFixedLength));
-			DbTools.WriteAttribute (xmlWriter, "multi", DbTools.BoolToString (this.isMultilingual));
-			DbTools.WriteAttribute (xmlWriter, "null", DbTools.BoolToString (this.isNullable));
+			DbTools.WriteAttribute (xmlWriter, "fixed", DbTools.BoolDefaultingToTrueToString (this.isFixedLength));
+			DbTools.WriteAttribute (xmlWriter, "multi", DbTools.BoolDefaultingToFalseToString (this.isMultilingual));
+			DbTools.WriteAttribute (xmlWriter, "null", DbTools.BoolDefaultingToFalseToString (this.isNullable));
 
 			if (this.numDef != null)
 			{
@@ -225,9 +231,9 @@ namespace Epsitec.Cresus.Database
 				type.rawType        = DbTools.ParseRawType (xmlReader.GetAttribute ("raw"));
 				type.simpleType     = DbTools.ParseSimpleType (xmlReader.GetAttribute ("simple"));
 				type.length         = DbTools.ParseInt (xmlReader.GetAttribute ("length"));
-				type.isFixedLength  = DbTools.ParseBool (xmlReader.GetAttribute ("fixed"));
-				type.isMultilingual = DbTools.ParseBool (xmlReader.GetAttribute ("multi"));
-				type.isNullable     = DbTools.ParseBool (xmlReader.GetAttribute ("null"));
+				type.isFixedLength  = DbTools.ParseDefaultingToTrueBool (xmlReader.GetAttribute ("fixed"));
+				type.isMultilingual = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("multi"));
+				type.isNullable     = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("null"));
 
 				type.numDef = DbNumDef.DeserializeAttributes (xmlReader, "num.");
 				type.key    = DbKey.DeserializeAttributes (xmlReader, "key.");

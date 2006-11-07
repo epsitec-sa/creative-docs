@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.Database
 				case DbSimpleType.Decimal:
 					System.Diagnostics.Debug.Assert (numDef != null);
 					
-					if (numDef.IsConversionNeeded)
+					if (numDef.InternalRawType == DbRawType.Unsupported)
 					{
 						//	Ce n'est pas un type numérique standard, donc il faut prévoir
 						//	une conversion éventuelle.

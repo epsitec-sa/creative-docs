@@ -19,8 +19,12 @@ namespace Epsitec.Cresus.Database
 
 		public DbNumDef(DecimalRange range)
 		{
+			this.min_value = range.Minimum;
+			this.max_value = range.Maximum;
 			this.digit_shift     = (byte) range.FractionalDigits;
 			this.digit_precision = (byte) range.GetMaximumDigitCount ();
+
+			this.InvalidateAndUpdateAutoPrecision ();
 		}
 		
 		public DbNumDef(int digit_precision)
@@ -155,7 +159,22 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.raw_type == DbRawType.Unsupported;
+				if (this.raw_type == DbRawType.Unsupported)
+				{
+					if ((this.DigitShift == 0) &&
+						(this.GetPackOffsetAndScale () == 0))
+					{
+						return false;
+					}
+					else
+					{
+						return true;
+					}
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 		
@@ -221,6 +240,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public decimal							HalfRange
+		{
+			get
+			{
+				return (this.MaxValue - this.MinValue + DbNumDef.digit_table_scale[this.DigitShift]) / 2;
+			}
+		}
+		
 		public int								MinimumBits
 		{
 			get
@@ -249,12 +276,12 @@ namespace Epsitec.Cresus.Database
 				//	(entier positif) et déterminer combien de bits sont nécessaires à son
 				//	stockage :
 				
-				long span = this.ConvertToInt64 (this.MaxValue);
-				int  bits = 0;
+				ulong span = this.ConvertToUnsignedInt64 (this.MaxValue);
+				int   bits = 0;
 				
-				System.Diagnostics.Debug.Assert (span > 0);
+				System.Diagnostics.Debug.Assert (span != 0);
 				
-				while (span > 0)
+				while (span != 0)
 				{
 					span = span >> 1;
 					bits++;
@@ -337,27 +364,80 @@ namespace Epsitec.Cresus.Database
 			
 			return value;
 		}
-		
-		
+
+
+		private ulong ConvertToUnsignedInt64(decimal value)
+		{
+			//	Convertit (encode) la valeur décimale en une représentation compacte,
+			//	occupant au maximum 64 bits dans un entier non signé.
+
+			value -= this.MinValue;
+			value *= DbNumDef.digit_table[this.DigitShift];
+
+			return (ulong) value;
+		}
+
 		public long ConvertToInt64(decimal value)
 		{
 			//	Convertit (encode) la valeur décimale en une représentation compacte,
-			//	occupant au maximum 63 bits dans un entier positif.
-			
-			value -= this.MinValue;
+			//	occupant l'entier au mieux.
+
+			value -= this.GetPackOffsetAndScale ();
 			value *= DbNumDef.digit_table[this.DigitShift];
 			
 			return (long) value;
 		}
-		
+
+		private decimal GetPackOffsetAndScale()
+		{
+			decimal offset = this.MinValue + this.HalfRange;
+			decimal mul    = DbNumDef.digit_table[this.DigitShift];
+			
+			decimal range  = mul * (this.MaxValue - this.MinValue);
+			decimal max    = mul * this.MaxValue;
+			decimal min    = mul * this.MinValue;
+
+			if (range <= System.UInt16.MaxValue)
+			{
+				if ((max <= System.Int16.MaxValue) &&
+					(min >= System.Int16.MinValue))
+				{
+					offset = 0;
+				}
+			}
+			else if (range <= System.UInt32.MaxValue)
+			{
+				if ((max <= System.Int32.MaxValue) &&
+					(min >= System.Int32.MinValue))
+				{
+					offset = 0;
+				}
+			}
+			else if (range <= System.UInt64.MaxValue)
+			{
+				if ((max <= System.Int64.MaxValue) &&
+					(min >= System.Int64.MinValue))
+				{
+					offset = 0;
+				}
+			}
+			else
+			{
+				throw new System.ArithmeticException ("Value cannot be packed into a 64-bit integer");
+			}
+
+			return offset;
+		}
+
 		public decimal ConvertFromInt64(long value)
 		{
 			//	Convertit (décode) une représentation compacte générée par la méthode
 			//	ConvertToInt64 en sa valeur décimale d'origine.
 			
 			decimal conv = value;
+			
 			conv *= DbNumDef.digit_table_scale[this.DigitShift];
-			conv += this.MinValue;
+			conv += this.GetPackOffsetAndScale ();
 			
 			return (decimal) conv;
 		}
