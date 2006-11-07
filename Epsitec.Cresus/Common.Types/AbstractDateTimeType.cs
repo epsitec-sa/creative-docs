@@ -98,11 +98,11 @@ namespace Epsitec.Common.Types
 		/// Gets the date increment.
 		/// </summary>
 		/// <value>The date increment.</value>
-		public System.TimeSpan DateStep
+		public DateStep DateStep
 		{
 			get
 			{
-				return (System.TimeSpan) this.Caption.GetValue (AbstractDateTimeType.DateStepProperty);
+				return (DateStep) this.Caption.GetValue (AbstractDateTimeType.DateStepProperty);
 			}
 		}
 
@@ -206,9 +206,9 @@ namespace Epsitec.Common.Types
 		/// Defines the date increment.
 		/// </summary>
 		/// <param name="value">The value.</param>
-		public void DefineDateStep(System.TimeSpan value)
+		public void DefineDateStep(DateStep value)
 		{
-			if (value.TotalDays == 1.0)
+			if (value == new DateStep (1))
 			{
 				this.Caption.ClearValue (AbstractDateTimeType.DateStepProperty);
 			}
@@ -257,6 +257,6 @@ namespace Epsitec.Common.Types
 		public static readonly DependencyProperty MaximumTimeProperty = DependencyProperty.RegisterAttached ("MaxTime", typeof (Time), typeof (AbstractDateTimeType), new DependencyPropertyMetadata (Time.Null));
 		
 		public static readonly DependencyProperty TimeStepProperty = DependencyProperty.RegisterAttached ("TimeStep", typeof (System.TimeSpan), typeof (AbstractDateTimeType), new DependencyPropertyMetadata (new System.TimeSpan (0, 0, 1)));
-		public static readonly DependencyProperty DateStepProperty = DependencyProperty.RegisterAttached ("DateStep", typeof (System.TimeSpan), typeof (AbstractDateTimeType), new DependencyPropertyMetadata (new System.TimeSpan (1, 0, 0, 0)));
+		public static readonly DependencyProperty DateStepProperty = DependencyProperty.RegisterAttached ("DateStep", typeof (DateStep), typeof (AbstractDateTimeType), new DependencyPropertyMetadata (new DateStep (1)));
 	}
 }
