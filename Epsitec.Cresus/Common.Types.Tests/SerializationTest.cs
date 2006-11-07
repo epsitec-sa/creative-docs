@@ -793,7 +793,10 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckXmlReader()
 		{
-			string xml = @"<books><book price=""58.00"">The Firebird Book</book><magazine price=""10.00"">MSDN</magazine></books>";
+			Support.Druid druid = Support.Druid.FromLong (Support.Druid.FromIds (20, 0, 2));
+			System.Console.Out.WriteLine (druid);
+			
+			string xml = @"<books><book price=""58.00"">The Firebird Book</book><magazine price=""10.00"">MSDN</magazine><type id=""abc""/></books>";
 			System.IO.StringReader stringReader = new System.IO.StringReader (xml);
 			System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (stringReader);
 
@@ -815,6 +818,12 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (System.Xml.XmlNodeType.EndElement, xmlReader.NodeType);
 			Assert.AreEqual ("magazine", xmlReader.Name);
 			xmlReader.ReadEndElement ();
+
+			Assert.AreEqual ("type", xmlReader.Name);
+			Assert.AreEqual (System.Xml.XmlNodeType.Element, xmlReader.NodeType);
+			Assert.AreEqual (true, xmlReader.IsEmptyElement);
+
+			xmlReader.Read ();
 			
 			Assert.AreEqual ("books", xmlReader.Name);
 			
