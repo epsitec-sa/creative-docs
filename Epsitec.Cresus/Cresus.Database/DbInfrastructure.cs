@@ -2347,8 +2347,6 @@ namespace Epsitec.Cresus.Database
 
 			void InitializeOtherTypes()
 			{
-				//	TODO: compléter...
-
 				this.d_t_type_datetime   = new DbTypeDef (Res.Types.Other.DateTime);
 				this.bin_type_req_data   = new DbTypeDef (Res.Types.Other.ReqData);
 		
