@@ -14,7 +14,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			Widget group;
 
-			this.CreateComboLabeled("Résolution", this, out group, out this.fieldResol);
+			Widget band = new Widget(this);
+			band.TabIndex = this.tabIndex++;
+			band.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			band.Dock = DockStyle.StackBegin;
+			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+
+			Widget left = new Widget(band);
+			left.TabIndex = this.tabIndex++;
+			left.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			left.Dock = DockStyle.Fill;
+
+			Widget right = new Widget(band);
+			right.TabIndex = this.tabIndex++;
+			right.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			right.Dock = DockStyle.Fill;
+
+			this.CreateComboLabeled("Résolution", left, out group, out this.fieldResol);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 10);
 			this.fieldResol.TextChanged += new EventHandler(this.HandleTextFieldChanged);
@@ -27,34 +43,36 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldResol.Items.Add("Months");
 			this.fieldResol.Items.Add("Years");
 
-			this.CreateStringLabeled("Date minimale", this, out group, out this.fieldMinDate);
+			//	Date, à gauche.
+			this.CreateStringLabeled("Date minimale", left, out group, out this.fieldMinDate);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 2);
 			this.fieldMinDate.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateStringLabeled("Date maximale", this, out group, out this.fieldMaxDate);
+			this.CreateStringLabeled("Date maximale", left, out group, out this.fieldMaxDate);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 10);
 			this.fieldMaxDate.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateStringLabeled("Heure minimale", this, out group, out this.fieldMinTime);
+			this.CreateStringLabeled("Pas pour la date", left, out group, out this.fieldDateStep);
 			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 2);
+			group.Margins = new Margins(0, 0, 0, 0);
+			this.fieldDateStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+
+			//	Heure, à droite.
+			this.CreateStringLabeled("Heure minimale", right, out group, out this.fieldMinTime);
+			group.Dock = DockStyle.StackBegin;
+			group.Margins = new Margins(0, 0, 20+10, 2);
 			this.fieldMinTime.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateStringLabeled("Heure maximale", this, out group, out this.fieldMaxTime);
+			this.CreateStringLabeled("Heure maximale", right, out group, out this.fieldMaxTime);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 10);
 			this.fieldMaxTime.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateStringLabeled("Pas pour la date", this, out group, out this.fieldDateStep);
+			this.CreateStringLabeled("Pas pour l'heure", right, out group, out this.fieldTimeStep);
 			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 2);
-			this.fieldDateStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
-
-			this.CreateStringLabeled("Pas pour l'heure", this, out group, out this.fieldTimeStep);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 2);
+			group.Margins = new Margins(0, 0, 0, 0);
 			this.fieldTimeStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 		}
 
