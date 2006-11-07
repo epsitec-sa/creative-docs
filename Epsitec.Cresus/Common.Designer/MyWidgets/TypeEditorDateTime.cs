@@ -119,10 +119,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.PutSummaryLegend(builder, "Pas date = ");
-			builder.Append(type.DateStep.ToString());
+			builder.Append(TypeEditorDateTime.ToTimeSpan(type.DateStep));
 
 			this.PutSummaryLegend(builder, "Pas heure = ");
-			builder.Append(type.TimeStep.ToString());
+			builder.Append(TypeEditorDateTime.ToTimeSpan(type.TimeStep));
 
 			return builder.ToString();
 		}
@@ -149,6 +149,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			TypeEditorDateTime.ToDate(this.fieldMaxDate, type.MaximumDate);
 			TypeEditorDateTime.ToTime(this.fieldMinTime, type.MinimumTime);
 			TypeEditorDateTime.ToTime(this.fieldMaxTime, type.MaximumTime);
+			TypeEditorDateTime.ToTimeSpan(this.fieldDateStep, type.DateStep);
+			TypeEditorDateTime.ToTimeSpan(this.fieldTimeStep, type.TimeStep);
 			this.ignoreChange = false;
 		}
 
@@ -237,6 +239,32 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return Time.Null;
 		}
 
+		protected static void ToTimeSpan(TextField field, System.TimeSpan ts)
+		{
+			if (ts == System.TimeSpan.Zero)
+			{
+				field.Text = "";
+			}
+			else
+			{
+				field.Text = TypeEditorDateTime.ToTimeSpan(ts);
+			}
+		}
+
+		protected static System.TimeSpan ToTimeSpan(TextField field)
+		{
+			if (!string.IsNullOrEmpty(field.Text))
+			{
+				System.TimeSpan ts = TypeEditorDateTime.ToTimeSpan(field.Text);
+				if (ts != System.TimeSpan.Zero)
+				{
+					return ts;
+				}
+			}
+
+			return System.TimeSpan.Zero;
+		}
+
 		protected static string ToDate(System.DateTime dt)
 		{
 			//	(d) Short date: 4/17/2006
@@ -265,6 +293,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else
 			{
 				return System.DateTime.MinValue;
+			}
+		}
+
+		protected static string ToTimeSpan(System.TimeSpan ts)
+		{
+			return ts.ToString();
+		}
+
+		protected static System.TimeSpan ToTimeSpan(string text)
+		{
+			System.TimeSpan ts;
+			if (System.TimeSpan.TryParse(text, out ts))
+			{
+				return ts;
+			}
+			else
+			{
+				return System.TimeSpan.Zero;
 			}
 		}
 
@@ -302,6 +348,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (sender == this.fieldMaxTime)
 			{
 				type.DefineMaximumTime(TypeEditorDateTime.ToTime(this.fieldMaxTime));
+			}
+
+			if (sender == this.fieldDateStep)
+			{
+				type.DefineDateStep(TypeEditorDateTime.ToTimeSpan(this.fieldDateStep));
+			}
+
+			if (sender == this.fieldTimeStep)
+			{
+				type.DefineTimeStep(TypeEditorDateTime.ToTimeSpan(this.fieldTimeStep));
 			}
 
 			//	[Note1] Cet appel va provoquer le ResourceAccess.SetField.
