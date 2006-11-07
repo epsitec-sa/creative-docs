@@ -181,25 +181,45 @@ namespace Epsitec.Cresus.Database
 			Assert.IsTrue (def.CheckCompatibility ( 999999999999999M));
 			Assert.IsTrue (def.CheckCompatibility (1000000000000000M) == false);
 		}
-		
-		[Test] public void CheckConvert()
+
+		[Test]
+		public void CheckConvert1()
 		{
 			DbNumDef def = new DbNumDef (5, 2, 5.00M, 5.15M);
-			
-			Assert.AreEqual ( 0, def.ConvertToInt64 (def.ConvertFromInt64 (0)));
+
+			Assert.AreEqual (0, def.ConvertToInt64 (def.ConvertFromInt64 (0)));
 			Assert.AreEqual (15, def.ConvertToInt64 (def.ConvertFromInt64 (15)));
-			
+
 			Assert.AreEqual (5.00M, def.ConvertFromInt64 (def.ConvertToInt64 (5.00M)));
 			Assert.AreEqual (5.15M, def.ConvertFromInt64 (def.ConvertToInt64 (5.15M)));
-			
-			Assert.AreEqual ( 0, def.ConvertToInt64 (5.00M));
-			Assert.AreEqual (15, def.ConvertToInt64 (5.15M));
-			
-			Assert.AreEqual (5.00M, def.ConvertFromInt64 (0));
-			Assert.AreEqual (5.15M, def.ConvertFromInt64 (15));
+
+			Assert.AreEqual (-8, def.ConvertToInt64 (5.00M));
+			Assert.AreEqual (7, def.ConvertToInt64 (5.15M));
+
+			Assert.AreEqual (5.00M, def.ConvertFromInt64 (-8));
+			Assert.AreEqual (5.15M, def.ConvertFromInt64 (7));
 		}
-		
-		[Test] public void CheckCheckCompatibility()
+
+		[Test]
+		public void CheckConvert2()
+		{
+			DbNumDef def = new DbNumDef (5, 2, 1.00M, 0.01M);
+
+			Assert.AreEqual (0, def.ConvertToInt64 (def.ConvertFromInt64 (0)));
+			Assert.AreEqual (40, def.ConvertToInt64 (def.ConvertFromInt64 (40)));
+
+			Assert.AreEqual (0.01M, def.ConvertFromInt64 (def.ConvertToInt64 (0.01M)));
+			Assert.AreEqual (0.99M, def.ConvertFromInt64 (def.ConvertToInt64 (0.99M)));
+
+			Assert.AreEqual (1, def.ConvertToInt64 (0.01M));
+			Assert.AreEqual (100, def.ConvertToInt64 (1.00M));
+
+			Assert.AreEqual (0.01M, def.ConvertFromInt64 (1));
+			Assert.AreEqual (1.00M, def.ConvertFromInt64 (100));
+		}
+
+		[Test]
+		public void CheckCheckCompatibility()
 		{
 			DbNumDef def = new DbNumDef (6, 2, 0, 1000.00M);
 			

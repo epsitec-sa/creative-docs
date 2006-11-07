@@ -397,7 +397,15 @@ namespace Epsitec.Cresus.Database
 			decimal max    = mul * this.MaxValue;
 			decimal min    = mul * this.MinValue;
 
-			if (range <= System.UInt16.MaxValue)
+			if (range <= 255)
+			{
+				if ((max <= 127) &&
+					(min >= -128))
+				{
+					offset = 0;
+				}
+			}
+			else if (range <= System.UInt16.MaxValue)
 			{
 				if ((max <= System.Int16.MaxValue) &&
 					(min >= System.Int16.MinValue))
