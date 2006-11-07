@@ -161,6 +161,27 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Met à jour le contenu de l'éditeur.
 			AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
 
+			bool showDate = true;
+			bool showTime = true;
+
+			if (type is DateType)
+			{
+				showTime = false;
+			}
+
+			if (type is TimeType)
+			{
+				showDate = false;
+			}
+
+			this.fieldMinDate.Visibility = showDate;
+			this.fieldMaxDate.Visibility = showDate;
+			this.fieldDateStep.Visibility = showDate;
+
+			this.fieldMinDate.Visibility = showTime;
+			this.fieldMaxDate.Visibility = showTime;
+			this.fieldTimeStep.Visibility = showTime;
+
 			this.ignoreChange = true;
 			this.fieldResol.Text = TypeEditorDateTime.Convert(type.Resolution);
 			TypeEditorDateTime.ToDate(this.fieldMinDate, type.MinimumDate);
