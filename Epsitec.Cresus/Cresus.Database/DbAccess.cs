@@ -1,5 +1,5 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
@@ -38,10 +38,26 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return (this.Provider != null) &&
-					   (this.Database != null) &&
-					   (this.Server != null) &&
-					   (this.LoginName != null);
+				return (this.provider != null) &&
+					   (this.database != null) &&
+					   (this.server != null) &&
+					   (this.loginName != null);
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is empty.
+		/// </summary>
+		/// <value><c>true</c> if this instance is empty; otherwise, <c>false</c>.</value>
+		public bool								IsEmpty
+		{
+			get
+			{
+				return (this.provider == null)
+					&& (this.database == null)
+					&& (this.server == null)
+					&& (this.loginName == null)
+					&& (this.loginPassword == null);
 			}
 		}
 

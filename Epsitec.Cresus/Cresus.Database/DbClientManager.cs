@@ -1,12 +1,12 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe DbClientManager gère la table des clients connus (CR_CLIENT_DEF).
+	/// The <c>DbClientManager</c> class manages the table of known clients (stored
+	/// in the database as CR_CLIENT_DEF).
 	/// </summary>
-	
 	public sealed class DbClientManager : IAttachable, IPersistable
 	{
 		public DbClientManager()
@@ -24,51 +24,51 @@ namespace Epsitec.Cresus.Database
 				return DbClientManager.MinClientId;
 			}
 			
-			int[] used_ids = new int[n];
+			int[] usedIds = new int[n];
 			
 			for (int i = 0; i < n; i++)
 			{
-				used_ids[i] = entries[i].ClientId;
+				usedIds[i] = entries[i].ClientId;
 			}
 			
-			System.Array.Sort (used_ids);
+			System.Array.Sort (usedIds);
 			
-			int new_id = DbClientManager.MinClientId;
+			int newId = DbClientManager.MinClientId;
 			
 			for (int i = 0; i < n; i++)
 			{
-				if (new_id < used_ids[i])
+				if (newId < usedIds[i])
 				{
-					return new_id;
+					return newId;
 				}
-				new_id++;
+				newId++;
 			}
 			
-			if (new_id > DbClientManager.MaxClientId)
+			if (newId > DbClientManager.MaxClientId)
 			{
 				throw new Exceptions.InvalidIdException ("No more client IDs available.");
 			}
 			
-			return new_id;
+			return newId;
 		}
-		
-		
-		public DbClientManager.Entry CreateNewClient(string client_name)
+
+
+		public DbClientManager.Entry CreateNewClient(string clientName)
 		{
-			int  client_id   = this.FindFreeClientId ();
-			long sync_log_id = 0;
-			
-			Entry entry = new Entry (client_name, client_id, sync_log_id);
+			int clientId   = this.FindFreeClientId ();
+			long syncLogId = 0;
+
+			Entry entry = new Entry (clientName, clientId, syncLogId);
 			
 			return entry;
 		}
 
-		public DbClientManager.Entry CreateAndInsertNewClient(string client_name)
+		public DbClientManager.Entry CreateAndInsertNewClient(string clientName)
 		{
-			int  client_id   = this.FindFreeClientId ();
-			long sync_log_id = 0;
-			
-			Entry entry = new Entry (client_name, client_id, sync_log_id);
+			int clientId   = this.FindFreeClientId ();
+			long syncLogId = 0;
+
+			Entry entry = new Entry (clientName, clientId, syncLogId);
 			
 			this.Insert (entry);
 			
@@ -78,72 +78,72 @@ namespace Epsitec.Cresus.Database
 		
 		public void Insert(DbClientManager.Entry entry)
 		{
-			if (this.rich_command == null)
+			if (this.richCommand == null)
 			{
 				throw new Exceptions.InvalidIdException ("Cannot insert client: call RestoreFromBase first.");
 			}
 			
-			System.Data.DataTable data_table = this.rich_command.DataSet.Tables[0];
-			System.Data.DataRow   data_row;
+			System.Data.DataTable table = this.richCommand.DataSet.Tables[0];
+			System.Data.DataRow   row;
 			
-			for (int i = 0; i < data_table.Rows.Count; i++)
+			for (int i = 0; i < table.Rows.Count; i++)
 			{
-				data_row = data_table.Rows[i];
+				row = table.Rows[i];
 				
-				if (DbRichCommand.IsRowDeleted (data_row))
+				if (DbRichCommand.IsRowDeleted (row))
 				{
 					continue;
 				}
-				
-				int client_id;
-				
-				Common.Types.InvariantConverter.Convert (data_row[Tags.ColumnClientId], out client_id);
-				
-				if (client_id == entry.ClientId)
+
+				int clientId;
+
+				Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientId], out clientId);
+
+				if (clientId == entry.ClientId)
 				{
 					throw new Exceptions.ExistsException ("Cannot insert same client twice.");
 				}
 			}
 			
-			this.rich_command.CreateNewRow (data_table.TableName, out data_row);
+			this.richCommand.CreateNewRow (table.TableName, out row);
 			
-			data_row.BeginEdit ();
-			data_row[Tags.ColumnClientName]    = entry.ClientName;
-			data_row[Tags.ColumnClientId]      = entry.ClientId;
-			data_row[Tags.ColumnClientSync]    = entry.SyncLogId;
-			data_row[Tags.ColumnClientCreDate] = entry.CreationDateTime;
-			data_row[Tags.ColumnClientConDate] = entry.ConnectionDateTime;
-			data_row.EndEdit ();
+			row.BeginEdit ();
+			row[Tags.ColumnClientName]    = entry.ClientName;
+			row[Tags.ColumnClientId]      = entry.ClientId;
+			row[Tags.ColumnClientSync]    = entry.SyncLogId;
+			row[Tags.ColumnClientCreDate] = entry.CreationDateTime;
+			row[Tags.ColumnClientConDate] = entry.ConnectionDateTime;
+			row.EndEdit ();
 		}
 		
 		public void Update(DbClientManager.Entry entry)
 		{
-			if (this.rich_command == null)
+			if (this.richCommand == null)
 			{
 				throw new Exceptions.InvalidIdException ("Cannot update client: call RestoreFromBase first.");
 			}
 			
-			System.Data.DataTable data_table = this.rich_command.DataSet.Tables[0];
+			System.Data.DataTable table = this.richCommand.DataSet.Tables[0];
 			
-			for (int i = 0; i < data_table.Rows.Count; i++)
+			for (int i = 0; i < table.Rows.Count; i++)
 			{
-				System.Data.DataRow data_row = data_table.Rows[i];
+				System.Data.DataRow row = table.Rows[i];
 				
-				if (DbRichCommand.IsRowDeleted (data_row))
+				if (DbRichCommand.IsRowDeleted (row))
 				{
 					continue;
 				}
-				
-				int client_id;
-				
-				Common.Types.InvariantConverter.Convert (data_row[Tags.ColumnClientId], out client_id);
-				
-				if (client_id == entry.ClientId)
+
+				int clientId;
+
+				Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientId], out clientId);
+
+				if (clientId == entry.ClientId)
 				{
-					data_row.BeginEdit ();
-					data_row[Tags.ColumnClientSync]    = entry.SyncLogId;
-					data_row[Tags.ColumnClientConDate] = entry.ConnectionDateTime;
-					data_row.EndEdit ();
+					row.BeginEdit ();
+					row[Tags.ColumnClientSync]    = entry.SyncLogId;
+					row[Tags.ColumnClientConDate] = entry.ConnectionDateTime;
+					row.EndEdit ();
 					
 					return;
 				}
@@ -151,32 +151,32 @@ namespace Epsitec.Cresus.Database
 			
 			throw new Exceptions.InvalidIdException ("Cannot find client entry.");
 		}
-		
-		public void Remove(int entry_client_id)
+
+		public void Remove(int entryClientId)
 		{
-			if (this.rich_command == null)
+			if (this.richCommand == null)
 			{
 				throw new Exceptions.InvalidIdException ("Cannot remove client: call RestoreFromBase first.");
 			}
 			
-			System.Data.DataTable data_table = this.rich_command.DataSet.Tables[0];
+			System.Data.DataTable table = this.richCommand.DataSet.Tables[0];
 			
-			for (int i = 0; i < data_table.Rows.Count; i++)
+			for (int i = 0; i < table.Rows.Count; i++)
 			{
-				System.Data.DataRow data_row = data_table.Rows[i];
+				System.Data.DataRow row = table.Rows[i];
 				
-				if (DbRichCommand.IsRowDeleted (data_row))
+				if (DbRichCommand.IsRowDeleted (row))
 				{
 					continue;
 				}
-				
-				int client_id;
-				
-				Common.Types.InvariantConverter.Convert (data_row[Tags.ColumnClientId], out client_id);
-				
-				if (client_id == entry_client_id)
+
+				int clientId;
+
+				Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientId], out clientId);
+
+				if (clientId == entryClientId)
 				{
-					this.rich_command.DeleteExistingRow (data_row);
+					this.richCommand.DeleteExistingRow (row);
 					return;
 				}
 			}
@@ -187,39 +187,39 @@ namespace Epsitec.Cresus.Database
 		
 		public DbClientManager.Entry[] FindAllClients()
 		{
-			if (this.rich_command == null)
+			if (this.richCommand == null)
 			{
 				throw new Exceptions.InvalidIdException ("Cannot find clients: call RestoreFromBase first.");
 			}
 			
-			System.Data.DataTable data_table = this.rich_command.DataSet.Tables[0];
+			System.Data.DataTable table = this.richCommand.DataSet.Tables[0];
 			
-			int n = data_table.Rows.Count;
+			int n = table.Rows.Count;
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
 			for (int i = 0; i < n; i++)
 			{
-				System.Data.DataRow row = data_table.Rows[i];
+				System.Data.DataRow row = table.Rows[i];
 				
 				if (DbRichCommand.IsRowDeleted (row))
 				{
 					continue;
 				}
-				
-				string client_name;
-				int    client_id;
-				long   client_sync_log_id;
-				
-				System.DateTime creation_date_time;
-				System.DateTime connection_date_time;
-				
-				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientName], out client_name);
-				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientId], out client_id);
-				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientSync], out client_sync_log_id);
-				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientCreDate], out creation_date_time);
-				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientConDate], out connection_date_time);
-				
-				list.Add (new Entry (client_name, client_id, client_sync_log_id, creation_date_time, connection_date_time));
+
+				string clientName;
+				int clientId;
+				long clientSyncLogId;
+
+				System.DateTime creationDateTime;
+				System.DateTime connectionDateTime;
+
+				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientName], out clientName);
+				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientId], out clientId);
+				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientSync], out clientSyncLogId);
+				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientCreDate], out creationDateTime);
+				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientConDate], out connectionDateTime);
+
+				list.Add (new Entry (clientName, clientId, clientSyncLogId, creationDateTime, connectionDateTime));
 			}
 			
 			Entry[] entries = new Entry[list.Count];
@@ -234,8 +234,8 @@ namespace Epsitec.Cresus.Database
 		{
 			this.infrastructure = infrastructure;
 			this.table          = table;
-			this.table_key      = table.Key;
-			this.table_sql_name = table.CreateSqlName ();
+			this.tableKey      = table.Key;
+			this.tableSqlName = table.CreateSqlName ();
 		}
 		
 		public void Detach()
@@ -248,49 +248,50 @@ namespace Epsitec.Cresus.Database
 		#region IPersistable Members
 		public void SerializeToBase(DbTransaction transaction)
 		{
-			if (this.rich_command != null)
+			if (this.richCommand != null)
 			{
-				this.rich_command.UpdateLogIds ();
-				this.rich_command.UpdateRealIds (transaction);
-				this.rich_command.UpdateTables (transaction);
+				this.richCommand.UpdateLogIds ();
+				this.richCommand.UpdateRealIds (transaction);
+				this.richCommand.UpdateTables (transaction);
 			}
 		}
 		
 		public void RestoreFromBase(DbTransaction transaction)
 		{
-			if (this.rich_command != null)
+			if (this.richCommand != null)
 			{
-				this.rich_command.Dispose ();
-				this.rich_command = null;
+				this.richCommand.Dispose ();
+				this.richCommand = null;
 			}
 			
-			this.rich_command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, this.table);
+			this.richCommand = DbRichCommand.CreateFromTable (this.infrastructure, transaction, this.table);
 		}
 		#endregion
 		
 		#region Entry Class
-		public class Entry
+		
+		public sealed class Entry
 		{
 			public Entry() : this ("", 0, 0)
 			{
 			}
-			
-			public Entry(string client_name, int client_id, long sync_log_id)
+
+			public Entry(string clientName, int clientId, long syncLogId)
 			{
-				this.client_name   = client_name;
-				this.client_id     = client_id;
-				this.sync_log_id   = sync_log_id;
-				this.cre_date_time = System.DateTime.UtcNow;
-				this.con_date_time = this.cre_date_time;
+				this.clientName   = clientName;
+				this.clientId     = clientId;
+				this.syncLogId   = syncLogId;
+				this.creationDateTime = System.DateTime.UtcNow;
+				this.connectionDateTime = this.creationDateTime;
 			}
-			
-			public Entry(string client_name, int client_id, long sync_log_id, System.DateTime creation_date_time, System.DateTime connection_date_time)
+
+			public Entry(string clientName, int clientId, long syncLogId, System.DateTime creationDateTime, System.DateTime connectionDateTime)
 			{
-				this.client_name   = client_name;
-				this.client_id     = client_id;
-				this.sync_log_id   = sync_log_id;
-				this.cre_date_time = creation_date_time;
-				this.con_date_time = connection_date_time;
+				this.clientName   = clientName;
+				this.clientId     = clientId;
+				this.syncLogId   = syncLogId;
+				this.creationDateTime = creationDateTime;
+				this.connectionDateTime = connectionDateTime;
 			}
 			
 			
@@ -298,7 +299,7 @@ namespace Epsitec.Cresus.Database
 			{
 				get
 				{
-					return this.client_name;
+					return this.clientName;
 				}
 			}
 			
@@ -306,7 +307,7 @@ namespace Epsitec.Cresus.Database
 			{
 				get
 				{
-					return this.client_id;
+					return this.clientId;
 				}
 			}
 			
@@ -314,7 +315,7 @@ namespace Epsitec.Cresus.Database
 			{
 				get
 				{
-					return this.sync_log_id;
+					return this.syncLogId;
 				}
 			}
 			
@@ -322,7 +323,7 @@ namespace Epsitec.Cresus.Database
 			{
 				get
 				{
-					return this.cre_date_time;
+					return this.creationDateTime;
 				}
 			}
 			
@@ -330,24 +331,25 @@ namespace Epsitec.Cresus.Database
 			{
 				get
 				{
-					return this.con_date_time;
+					return this.connectionDateTime;
 				}
 			}
-			
-			
-			private string						client_name;
-			private int							client_id;
-			private long						sync_log_id;
-			private System.DateTime				cre_date_time;
-			private System.DateTime				con_date_time;
+
+
+			private string clientName;
+			private int clientId;
+			private long syncLogId;
+			private System.DateTime creationDateTime;
+			private System.DateTime connectionDateTime;
 		}
+		
 		#endregion
 		
 		private DbInfrastructure				infrastructure;
 		private DbTable							table;
-		private DbKey							table_key;
-		private string							table_sql_name;
-		private DbRichCommand					rich_command;
+		private DbKey							tableKey;
+		private string							tableSqlName;
+		private DbRichCommand					richCommand;
 		
 		public const int						MinClientId		= 1000;
 		public const int						MaxClientId		= 1999;

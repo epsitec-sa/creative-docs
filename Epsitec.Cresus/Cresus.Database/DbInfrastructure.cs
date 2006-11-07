@@ -2349,11 +2349,11 @@ namespace Epsitec.Cresus.Database
 			{
 				//	TODO: compléter...
 
-//-				this.d_t_type_datetime   = new DbTypeDef (Res.Types.Other.DateTime);
-//-				this.bin_type_req_data   = new DbTypeDef (Res.Types.Other.ReqData);
-			
-//-				this.infrastructure.internal_types.Add (this.d_t_type_datetime);
-//-				this.infrastructure.internal_types.Add (this.bin_type_req_data);
+				this.d_t_type_datetime   = new DbTypeDef (Res.Types.Other.DateTime);
+				this.bin_type_req_data   = new DbTypeDef (Res.Types.Other.ReqData);
+		
+				this.infrastructure.internal_types.Add (this.d_t_type_datetime);
+				this.infrastructure.internal_types.Add (this.bin_type_req_data);
 			}
 
 			void InitializeStrTypes()
