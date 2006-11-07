@@ -61,6 +61,11 @@
   <data name="Viewers.Types.Editor.String" id="0N7">Chaîne</data>
   <data name="Viewers.Types.Editor.Enum" id="0O7">Enumération</data>
   <data name="Viewers.Types.Editor.Structured" id="0P7">Structure de données</data>
+  <data name="Viewers.Types.Editor.Collection" id="038">Collection</data>
+  <data name="Viewers.Types.Editor.Date" id="048">Date</data>
+  <data name="Viewers.Types.Editor.Time" id="058">Heure</data>
+  <data name="Viewers.Types.Editor.DateTime" id="068">Date et heure</data>
+  <data name="Viewers.Types.Editor.Binary" id="078">Binaire</data>
   <data name="Viewers.Types.Editor.Native" id="0D7">native</data>
   <data name="Viewers.Types.Numeric.Min" id="0R6" mod="1">Valeur minimale</data>
   <data name="Viewers.Types.Numeric.Max" id="0S6" mod="1">Valeur maximale</data>
@@ -70,6 +75,7 @@
   <data name="Viewers.Types.Numeric.PreferredResol" id="007" mod="1">Résolution préférentielle</data>
   <data name="Viewers.Types.Numeric.SmallStep" id="017" mod="1">Petit pas</data>
   <data name="Viewers.Types.Numeric.LargeStep" id="027" mod="1">Grand pas</data>
+  <data name="Viewers.Types.Numeric.CompactStorage" id="088">Stockage compact</data>
   <data name="Viewers.Types.String.Min" id="037" mod="1">Longueur minimale</data>
   <data name="Viewers.Types.String.Max" id="047" mod="1">Longueur maximale</data>
   <data name="Viewers.Types.String.FixedLength" id="018">Longueur fixe dans la base de données</data>

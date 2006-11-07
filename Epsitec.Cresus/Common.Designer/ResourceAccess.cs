@@ -54,6 +54,11 @@ namespace Epsitec.Common.Designer
 			String,
 			Enum,
 			Structured,
+			Collection,
+			Date,
+			Time,
+			DateTime,
+			Binary,
 		}
 
 		public enum ModificationState
@@ -178,6 +183,11 @@ namespace Epsitec.Common.Designer
 			if (type is StringType     )  return TypeType.String;
 			if (type is EnumType       )  return TypeType.Enum;
 			if (type is StructuredType )  return TypeType.Structured;
+			if (type is CollectionType )  return TypeType.Collection;
+			if (type is DateType       )  return TypeType.Date;
+			if (type is TimeType       )  return TypeType.Time;
+			if (type is DateTimeType   )  return TypeType.DateTime;
+			if (type is BinaryType     )  return TypeType.Binary;
 
 			return TypeType.None;
 		}
@@ -193,6 +203,11 @@ namespace Epsitec.Common.Designer
 			if (type is StringType     )  return "String";
 			if (type is EnumType       )  return "Enum";
 			if (type is StructuredType )  return null;
+			if (type is CollectionType )  return null;
+			if (type is DateType       )  return "DateType";
+			if (type is TimeType       )  return "DateType";
+			if (type is DateTimeType   )  return "DateType";
+			if (type is BinaryType     )  return "Binary";
 
 			return null;
 		}
@@ -208,6 +223,11 @@ namespace Epsitec.Common.Designer
 			if (type is StringType     )  return null;
 			if (type is EnumType       )  return "Icons";
 			if (type is StructuredType )  return null;
+			if (type is CollectionType )  return null;
+			if (type is DateType       )  return null;
+			if (type is TimeType       )  return null;
+			if (type is DateTimeType   )  return null;
+			if (type is BinaryType     )  return null;
 
 			return null;
 		}
@@ -225,6 +245,11 @@ namespace Epsitec.Common.Designer
 				case TypeType.String:       return new StringType();
 				case TypeType.Enum:         return new EnumType();
 				case TypeType.Structured:   return new StructuredType();
+				case TypeType.Collection:   return new CollectionType();
+				case TypeType.Date:         return new DateType();
+				case TypeType.Time:         return new TimeType();
+				case TypeType.DateTime:     return new DateTimeType();
+				case TypeType.Binary:       return new BinaryType();
 			}
 
 			return null;
@@ -242,6 +267,11 @@ namespace Epsitec.Common.Designer
 				case TypeType.String:       return Res.Strings.Viewers.Types.Editor.String;
 				case TypeType.Enum:         return Res.Strings.Viewers.Types.Editor.Enum;
 				case TypeType.Structured:   return Res.Strings.Viewers.Types.Editor.Structured;
+				case TypeType.Collection:   return Res.Strings.Viewers.Types.Editor.Collection;
+				case TypeType.Date:         return Res.Strings.Viewers.Types.Editor.Date;
+				case TypeType.Time:         return Res.Strings.Viewers.Types.Editor.Time;
+				case TypeType.DateTime:     return Res.Strings.Viewers.Types.Editor.DateTime;
+				case TypeType.Binary:       return Res.Strings.Viewers.Types.Editor.Binary;
 			}
 
 			return null;
@@ -260,6 +290,11 @@ namespace Epsitec.Common.Designer
 				case TypeType.String:       return "String";
 				case TypeType.Enum:         return "Enum";
 				case TypeType.Structured:   return "Structured";
+				case TypeType.Collection:   return "Collection";
+				case TypeType.Date:         return "Date";
+				case TypeType.Time:         return "Time";
+				case TypeType.DateTime:     return "DateTime";
+				case TypeType.Binary:       return "Binary";
 			}
 
 			return null;
@@ -278,6 +313,11 @@ namespace Epsitec.Common.Designer
 				case "String":       return TypeType.String;
 				case "Enum":         return TypeType.Enum;
 				case "Structured":   return TypeType.Structured;
+				case "Collection":   return TypeType.Collection;
+				case "Date":         return TypeType.Date;
+				case "Time":         return TypeType.Time;
+				case "DateTime":     return TypeType.DateTime;
+				case "Binary":       return TypeType.Binary;
 			}
 
 			return TypeType.None;

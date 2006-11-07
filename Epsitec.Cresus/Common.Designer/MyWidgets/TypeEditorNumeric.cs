@@ -74,7 +74,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldLargeStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			this.checkCompactStorage = new CheckButton(right);
-			this.checkCompactStorage.Text = "Stockage compact";  // Res.Strings.Viewers.Types.String.FixedLength;
+			this.checkCompactStorage.Text = Res.Strings.Viewers.Types.Numeric.CompactStorage;
 			this.checkCompactStorage.Dock = DockStyle.StackBegin;
 			this.checkCompactStorage.Margins = new Margins(20, 0, 10+2, 0);
 			this.checkCompactStorage.Clicked += new MessageEventHandler(this.HandleCheckClicked);

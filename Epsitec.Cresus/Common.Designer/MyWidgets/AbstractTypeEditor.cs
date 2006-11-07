@@ -42,6 +42,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				case ResourceAccess.TypeType.String:       return new TypeEditorString();
 				case ResourceAccess.TypeType.Enum:         return new TypeEditorEnum();
 				case ResourceAccess.TypeType.Structured:   return new TypeEditorStructured();
+				//?case ResourceAccess.TypeType.Collection:   return new TypeEditorCollection();
+				case ResourceAccess.TypeType.Date:         return new TypeEditorDateTime();
+				case ResourceAccess.TypeType.Time:         return new TypeEditorDateTime();
+				case ResourceAccess.TypeType.DateTime:     return new TypeEditorDateTime();
+				case ResourceAccess.TypeType.Binary:       return new TypeEditorBinary();
 			}
 
 			return null;
@@ -139,6 +144,27 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Super widgets
+		protected void CreateStringLabeled(string label, Widget parent, out Widget group, out TextField field)
+		{
+			//	Crée un super-widget permettant d'éditer une chaîne, avec une étiquette à gauche.
+			group = new Widget(parent);
+			group.TabIndex = this.tabIndex++;
+			group.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+
+			StaticText text = new StaticText(group);
+			text.Text = label;
+			text.ContentAlignment = ContentAlignment.MiddleLeft;
+			text.PreferredWidth = 400;
+			text.Dock = DockStyle.Left;
+			text.Margins = new Margins(0, 8, 0, 0);
+
+			field = new TextField(group);
+			field.PreferredWidth = 80;
+			field.Dock = DockStyle.Left;
+			field.TabIndex = 0;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+		}
+
 		protected void CreateDecimalLabeled(string label, Widget parent, out Widget group, out TextField field)
 		{
 			//	Crée un super-widget permettant d'éditer une valeur décimale, avec une étiquette à gauche.
@@ -149,7 +175,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			StaticText text = new StaticText(group);
 			text.Text = label;
 			text.ContentAlignment = ContentAlignment.MiddleRight;
-			text.PreferredWidth = 200;
+			text.PreferredWidth = 250;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 8, 0, 0);
 
