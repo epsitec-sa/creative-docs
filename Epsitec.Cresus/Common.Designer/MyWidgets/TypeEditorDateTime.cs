@@ -44,35 +44,35 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldResol.Items.Add("Years");
 
 			//	Date, à gauche.
-			this.CreateStringLabeled("Date minimale", left, out group, out this.fieldMinDate);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 2);
+			this.CreateStringLabeled("Date minimale", left, out this.groupMinDate, out this.fieldMinDate);
+			this.groupMinDate.Dock = DockStyle.StackBegin;
+			this.groupMinDate.Margins = new Margins(0, 0, 0, 2);
 			this.fieldMinDate.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateStringLabeled("Date maximale", left, out group, out this.fieldMaxDate);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 10);
+			this.CreateStringLabeled("Date maximale", left, out this.groupMaxDate, out this.fieldMaxDate);
+			this.groupMaxDate.Dock = DockStyle.StackBegin;
+			this.groupMaxDate.Margins = new Margins(0, 0, 0, 10);
 			this.fieldMaxDate.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateStringLabeled("Pas pour la date", left, out group, out this.fieldDateStep);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 0);
+			this.CreateStringLabeled("Pas pour la date", left, out this.groupDateStep, out this.fieldDateStep);
+			this.groupDateStep.Dock = DockStyle.StackBegin;
+			this.groupDateStep.Margins = new Margins(0, 0, 0, 0);
 			this.fieldDateStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			//	Heure, à droite.
-			this.CreateStringLabeled("Heure minimale", right, out group, out this.fieldMinTime);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 20+10, 2);
+			this.CreateStringLabeled("Heure minimale", right, out this.groupMinTime, out this.fieldMinTime);
+			this.groupMinTime.Dock = DockStyle.StackBegin;
+			this.groupMinTime.Margins = new Margins(0, 0, 20+10, 2);
 			this.fieldMinTime.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateStringLabeled("Heure maximale", right, out group, out this.fieldMaxTime);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 10);
+			this.CreateStringLabeled("Heure maximale", right, out this.groupMaxTime, out this.fieldMaxTime);
+			this.groupMaxTime.Dock = DockStyle.StackBegin;
+			this.groupMaxTime.Margins = new Margins(0, 0, 0, 10);
 			this.fieldMaxTime.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateStringLabeled("Pas pour l'heure", right, out group, out this.fieldTimeStep);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 0);
+			this.CreateStringLabeled("Pas pour l'heure", right, out this.groupTimeStep, out this.fieldTimeStep);
+			this.groupTimeStep.Dock = DockStyle.StackBegin;
+			this.groupTimeStep.Margins = new Margins(0, 0, 0, 0);
 			this.fieldTimeStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 		}
 
@@ -87,11 +87,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if ( disposing )
 			{
 				this.fieldResol.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+
 				this.fieldMinDate.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMaxDate.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldDateStep.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+				
 				this.fieldMinTime.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMaxTime.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldDateStep.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldTimeStep.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 			}
 			
@@ -174,13 +176,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				showDate = false;
 			}
 
-			this.fieldMinDate.Visibility = showDate;
-			this.fieldMaxDate.Visibility = showDate;
-			this.fieldDateStep.Visibility = showDate;
+			this.groupMinDate.Visibility = showDate;
+			this.groupMaxDate.Visibility = showDate;
+			this.groupDateStep.Visibility = showDate;
 
-			this.fieldMinDate.Visibility = showTime;
-			this.fieldMaxDate.Visibility = showTime;
-			this.fieldTimeStep.Visibility = showTime;
+			this.groupMinTime.Visibility = showTime;
+			this.groupMaxTime.Visibility = showTime;
+			this.groupTimeStep.Visibility = showTime;
 
 			this.ignoreChange = true;
 			this.fieldResol.Text = TypeEditorDateTime.Convert(type.Resolution);
@@ -405,11 +407,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		protected TextFieldCombo				fieldResol;
+
+		protected Widget						groupMinDate;
 		protected TextField						fieldMinDate;
+		protected Widget						groupMaxDate;
 		protected TextField						fieldMaxDate;
-		protected TextField						fieldMinTime;
-		protected TextField						fieldMaxTime;
+		protected Widget						groupDateStep;
 		protected TextField						fieldDateStep;
+
+		protected Widget						groupMinTime;
+		protected TextField						fieldMinTime;
+		protected Widget						groupMaxTime;
+		protected TextField						fieldMaxTime;
+		protected Widget						groupTimeStep;
 		protected TextField						fieldTimeStep;
 	}
 }
