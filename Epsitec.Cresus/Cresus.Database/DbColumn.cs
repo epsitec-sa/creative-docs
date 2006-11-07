@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Database
 	/// The <c>DbColumn</c> class describes a column in a database table.
 	/// This is our version of the column metadata wrapper (<see cref="System.Data.DataColumn"/>).
 	/// </summary>
-	public class DbColumn : IName, ICaption
+	public class DbColumn : IName, ICaption, IXmlSerializable, System.IEquatable<DbColumn>
 	{
 		public DbColumn()
 		{
@@ -21,39 +21,27 @@ namespace Epsitec.Cresus.Database
 			this.DefineName (name);
 		}
 
-		public DbColumn(string name, INamedType type)
+		public DbColumn(string name, DbTypeDef typeDef)
 			: this (name)
 		{
-			this.DefineType (type);
+			this.DefineType (typeDef);
 		}
 
-		public DbColumn(Druid captionId)
+		public DbColumn(Druid captionId, DbTypeDef typeDef)
 		{
+			this.DefineType (typeDef);
 			this.DefineCaptionId (captionId);
-		}
-		
-		public DbColumn(Druid captionId, INamedType type)
-			: this (captionId)
-		{
-			this.DefineType (type);
 		}
 
 		public DbColumn(StructuredTypeField field)
+			: this (field.CaptionId, new DbTypeDef (field.Type))
 		{
-			this.DefineCaptionId (field.CaptionId);
-			this.DefineType (field.Type);
 		}
 
-		public DbColumn(string name, INamedType type, DbColumnClass columnClass)
-			: this (name, type)
+		public DbColumn(string name, DbTypeDef typeDef, DbColumnClass columnClass)
+			: this (name, typeDef)
 		{
 			this.DefineColumnClass (columnClass);
-		}
-
-		public DbColumn(string name, INamedType type, DbColumnClass columnClass, DbElementCat category)
-			: this (name, type, columnClass)
-		{
-			this.DefineCategory (category);
 		}
 
 		public DbColumn(string name, DbTypeDef typeDef, DbColumnClass columnClass, DbElementCat category)
@@ -62,18 +50,7 @@ namespace Epsitec.Cresus.Database
 			this.DefineCategory (category);
 		}
 
-		public static DbColumn CreateRefColumn(string columnName, string targetTableName, INamedType type)
-		{
-			System.Diagnostics.Debug.Assert (type != null);
-			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (targetTableName));
-
-			DbColumn column = new DbColumn (columnName, type, DbColumnClass.RefId, DbElementCat.UserDataManaged);
-
-			column.DefineTargetTableName (targetTableName);
-
-			return column;
-		}
-
+		
 		public static DbColumn CreateRefColumn(string columnName, string targetTableName, DbTypeDef typeDef)
 		{
 			System.Diagnostics.Debug.Assert (typeDef != null);
@@ -140,11 +117,11 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public DbKey InternalKey
+		public DbKey Key
 		{
 			get
 			{
-				return this.internal_column_key;
+				return this.key;
 			}
 		}
 
@@ -157,21 +134,21 @@ namespace Epsitec.Cresus.Database
 
 			get
 			{
-				return this.Attributes[Tags.Parent];
+				return this.targetTableName;
 			}
 		}
 
-		public string ParentColumnName
+		public string TargetColumnName
 		{
 			get
 			{
-				switch (this.column_class)
+				switch (this.columnClass)
 				{
 					case DbColumnClass.RefId:
 						return Tags.ColumnId;
 				}
 
-				throw new System.ArgumentException (string.Format ("Column of invalid class {0}.", this.column_class));
+				throw new System.ArgumentException (string.Format ("Column of invalid class {0}.", this.columnClass));
 			}
 		}
 
@@ -203,11 +180,11 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public INamedType Type
+		public DbTypeDef Type
 		{
 			get
 			{
-				return this.type;
+				return this.typeDef;
 			}
 		}
 		
@@ -215,18 +192,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				if (this.Type is DbTypeString)
-				{
-					DbTypeString type = this.type as DbTypeString;
-					return type.MaximumLength;
-				}
-				if (this.Type is DbTypeEnum)
-				{
-					DbTypeEnum type = this.Type as DbTypeEnum;
-					return type.MaxNameLength;
-				}
-
-				return 1;
+				return System.Math.Max (this.typeDef.Length, 1);
 			}
 		}
 
@@ -234,13 +200,22 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				if (this.type is DbTypeString)
+				if (this.typeDef.Length == 0)
 				{
-					DbTypeString type = this.type as DbTypeString;
-					return type.IsFixedLength;
+					return true;
 				}
+				else
+				{
+					return this.typeDef.IsFixedLength;
+				}
+			}
+		}
 
-				return true;
+		public bool IsMultilingual
+		{
+			get
+			{
+				return this.typeDef.IsMultilingual;
 			}
 		}
 
@@ -262,15 +237,11 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public bool IsNullAllowed
+		public bool IsNullable
 		{
 			get
 			{
-				return this.is_null_allowed;
-			}
-			set
-			{
-				this.is_null_allowed = value;
+				return this.typeDef.IsNullable;
 			}
 		}
 
@@ -280,10 +251,6 @@ namespace Epsitec.Cresus.Database
 			{
 				return this.is_unique;
 			}
-			set
-			{
-				this.is_unique = value;
-			}
 		}
 
 		public bool IsIndexed
@@ -291,10 +258,6 @@ namespace Epsitec.Cresus.Database
 			get
 			{
 				return this.is_indexed;
-			}
-			set
-			{
-				this.is_indexed = value;
 			}
 		}
 
@@ -307,7 +270,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public DbColumnLocalisation ColumnLocalisation
+		public DbColumnLocalisation Localisation
 		{
 			get
 			{
@@ -319,7 +282,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.column_class;
+				return this.columnClass;
 			}
 		}
 
@@ -354,49 +317,45 @@ namespace Epsitec.Cresus.Database
 			this.revision_mode = revision_mode;
 		}
 
-		public void DefineAttributes(params string[] attributes)
-		{
-			this.attributes.SetFromInitialisationList (attributes);
-		}
-
-
 		internal void DefineTable(DbTable table)
 		{
 			this.table = table;
 		}
 
-		internal void DefineTargetTableName(string parent_table_name)
+		internal void DefineTargetTableName(string targetTableName)
 		{
-			string current_name = this.TargetTableName;
-
-			if (current_name == parent_table_name)
+			if (this.targetTableName == targetTableName)
 			{
 				return;
 			}
 
-			if (current_name != null)
+			if (string.IsNullOrEmpty (this.targetTableName))
 			{
-				string message = string.Format ("Column '{0}' cannot change its parent table name from '{1}' to '{2}'.",
-					/**/						this.Name, current_name, parent_table_name);
+				string message = string.Format ("Column '{0}' cannot change its target table name from '{1}' to '{2}'.",
+					/**/						this.Name, this.TargetTableName, targetTableName);
 				throw new System.InvalidOperationException (message);
 			}
-
-			this.Attributes.SetAttribute (Tags.Parent, parent_table_name);
+			else
+			{
+				this.targetTableName = targetTableName;
+			}
 		}
 
-		internal void DefineInternalKey(DbKey key)
+		internal void DefineKey(DbKey key)
 		{
-			if (this.internal_column_key == key)
+			if (this.key == key)
 			{
 				return;
 			}
 
-			if (this.internal_column_key != null)
+			if (this.key.IsEmpty)
 			{
-				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot change its internal key.", this.Name));
+				this.key = key;
 			}
-
-			this.internal_column_key = key.Clone () as DbKey;
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot change its key", this.Name));
+			}
 		}
 
 		internal void DefineName(string name)
@@ -420,36 +379,41 @@ namespace Epsitec.Cresus.Database
 		
 
 
-		internal void DefineType(INamedType type)
+		internal void DefineType(DbTypeDef value)
 		{
-			if (this.type != null)
+			if (this.typeDef == value)
 			{
-				throw new System.InvalidOperationException ("Cannot reinitialise type of column.");
+				return;
+			}
+			
+			if (this.typeDef != null)
+			{
+				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot change its type", this.Name));
 			}
 
-			this.type = type;
+			this.typeDef = value;
 		}
 
-		internal void DefineColumnLocalisation(DbColumnLocalisation localisation)
+		internal void DefineLocalisation(DbColumnLocalisation value)
 		{
-			this.localisation = localisation;
+			this.localisation = value;
 		}
 
-		internal void DefineColumnClass(DbColumnClass column_class)
+		internal void DefineColumnClass(DbColumnClass value)
 		{
-			this.column_class = column_class;
+			this.columnClass = value;
 		}
 
-		internal void DefinePrimaryKey(bool is_primary_key)
+		internal void DefinePrimaryKey(bool value)
 		{
-			this.is_primary_key = is_primary_key;
+			this.is_primary_key = value;
 		}
 
 
-		public SqlColumn CreateSqlColumn(ITypeConverter type_converter)
+		public SqlColumn CreateSqlColumn(ITypeConverter typeConverter)
 		{
-			DbRawType raw_type = TypeConverter.GetRawType (this.type);
-			SqlColumn column   = null;
+			DbRawType rawType = this.typeDef.RawType;
+			SqlColumn column  = null;
 
 			//	Vérifie que la définition de la colonne est bien correcte. On ne permet ainsi
 			//	pas de localiser des colonnes de type référence (ça n'aurait pas de sens).
@@ -458,10 +422,16 @@ namespace Epsitec.Cresus.Database
 			{
 				case DbColumnLocalisation.Default:
 				case DbColumnLocalisation.Localised:
-					if (this.column_class != DbColumnClass.Data)
+					if (this.columnClass != DbColumnClass.Data)
 					{
-						string message = string.Format ("Column '{0}' specifies localisation {1} for class {2}.",
-							/**/						this.Name, this.localisation, this.column_class);
+						string message = string.Format ("Column '{0}' specifies localisation {1} for class {2}",
+							/**/						this.Name, this.localisation, this.columnClass);
+						throw new System.InvalidOperationException (message);
+					}
+					if (this.typeDef.IsMultilingual == false)
+					{
+						string message = string.Format ("Column '{0}' specifies localisation {1} but type is not multilingual",
+							/**/						this.Name, this.localisation);
 						throw new System.InvalidOperationException (message);
 					}
 					break;
@@ -470,45 +440,46 @@ namespace Epsitec.Cresus.Database
 					break;
 
 				default:
-					throw new System.InvalidOperationException (string.Format ("Column '{0}' specifies invalid localisation.", this.Name));
+					throw new System.InvalidOperationException (string.Format ("Column '{0}' specifies invalid localisation", this.Name));
 			}
 
-			switch (this.column_class)
+			switch (this.columnClass)
 			{
 				case DbColumnClass.KeyId:
 				case DbColumnClass.KeyStatus:
 					if (this.Category != DbElementCat.Internal)
 					{
-						throw new System.InvalidOperationException (string.Format ("Column '{0}' category should be internal, but is {1}.", this.Name, this.Category));
+						throw new System.InvalidOperationException (string.Format ("Column '{0}' category should be internal, but is {1}", this.Name, this.Category));
 					}
 					break;
+				
 				default:
 					break;
 			}
 
-			IRawTypeConverter raw_converter;
+			IRawTypeConverter rawConverter;
 
-			if (type_converter.CheckNativeSupport (raw_type))
+			if (typeConverter.CheckNativeSupport (rawType))
 			{
 				column = new SqlColumn ();
-				column.SetType (raw_type, this.Length, this.IsFixedLength);
+				column.SetType (rawType, this.Length, this.IsFixedLength);
 			}
-			else if (type_converter.GetRawTypeConverter (raw_type, out raw_converter))
+			else if (typeConverter.GetRawTypeConverter (rawType, out rawConverter))
 			{
 				column = new SqlColumn ();
-				column.SetRawConverter (raw_converter);
+				column.SetRawConverter (rawConverter);
 			}
 			else
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Conversion of DbColumn to SqlColumn not possible for {0}.", this.Name));
+				throw new System.InvalidOperationException (string.Format ("Conversion column '{0}' to SqlColumn not possible", this.Name));
 			}
 
 			if (column != null)
 			{
-				column.Name          = this.CreateSqlName ();
-				column.IsNullAllowed = this.IsNullAllowed;
-				column.IsUnique      = this.IsUnique;
-				column.IsIndexed     = this.IsIndexed;
+				column.Name       = this.CreateSqlName ();
+				column.IsNullable = this.IsNullable;
+				column.IsUnique   = this.IsUnique;
+				column.IsIndexed  = this.IsIndexed;
 			}
 
 			return column;
@@ -532,7 +503,7 @@ namespace Epsitec.Cresus.Database
 				return DbSqlStandard.MakeSimpleSqlName (this.Name, DbElementCat.Internal);
 			}
 
-			switch (this.column_class)
+			switch (this.columnClass)
 			{
 				case DbColumnClass.Data:
 					return DbSqlStandard.MakeSimpleSqlName (this.Name, this.Category);
@@ -544,7 +515,7 @@ namespace Epsitec.Cresus.Database
 					return DbSqlStandard.MakeSimpleSqlName (this.Name, "REF", "ID");
 			}
 
-			throw new System.NotSupportedException (string.Format ("Column '{0}' column class not supported.", this.Name));
+			throw new System.NotSupportedException (string.Format ("Column '{0}' has an unsupported class", this.Name));
 		}
 
 
@@ -582,48 +553,40 @@ namespace Epsitec.Cresus.Database
 
 		public SqlField CreateEmptySqlField(ITypeConverter type_converter)
 		{
-			DbRawType raw_type = TypeConverter.GetRawType (this.type);
-			SqlField field    = SqlField.CreateConstant (null, raw_type);
+			DbRawType raw_type = this.typeDef.RawType;
+			SqlField  field    = SqlField.CreateConstant (null, raw_type);
 			field.Alias = this.CreateSqlName ();
 			return field;
 		}
 
 
-		public static string SerializeToXml(DbColumn column, bool full)
-		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			DbColumn.SerializeToXml (buffer, column, full);
-			return buffer.ToString ();
-		}
-
-		public static void SerializeToXml(System.Text.StringBuilder buffer, DbColumn column, bool full)
-		{
-			if (column == null)
-			{
-				buffer.Append ("<null/>");
-			}
-			else
-			{
-				column.SerializeXmlDefinition (buffer, full);
-			}
-		}
 
 
+		#region IEquatable<DbColumn> Members
 
-		#region Equals and GetHashCode support
-		public override bool Equals(object obj)
+		public bool Equals(DbColumn other)
 		{
 			//	ATTENTION: L'égalité se base uniquement sur le nom des colonnes, pas sur les
 			//	détails internes...
-
-			DbColumn that = obj as DbColumn;
-
-			if (that == null)
+			
+			if (object.ReferenceEquals (other, null))
 			{
 				return false;
 			}
+			else
+			{
+				return this.Name == other.Name;
+			}
+		}
 
-			return (this.Name == that.Name);
+		#endregion
+
+
+		#region Equals and GetHashCode support
+		
+		public override bool Equals(object obj)
+		{
+			return this.Equals (obj as DbColumn);
 		}
 
 		public override int GetHashCode()
@@ -637,14 +600,29 @@ namespace Epsitec.Cresus.Database
 		public static DbColumn Deserialize(System.Xml.XmlTextReader xmlReader)
 		{
 			if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
-				(xmlReader.LocalName == "col"))
+				(xmlReader.LocalName == "column"))
 			{
+				DbColumn column = new DbColumn ();
+				bool isEmptyElement = xmlReader.IsEmptyElement;
+
 				//	TODO: deserialize contents
 
-				xmlReader.Read ();
-				xmlReader.ReadEndElement ();
+				column.captionId = DbTools.ParseDruid (xmlReader.GetAttribute ("capt"));
+				column.category  = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
+				column.revision_mode = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
+				column.columnClass = DbTools.ParseColumnClass (xmlReader.GetAttribute ("class"));
+				column.localisation = DbTools.ParseLocalisation (xmlReader.GetAttribute ("loc"));
 
-				return new DbColumn ();
+				column.is_unique = DbTools.ParseBool (xmlReader.GetAttribute ("un"));
+				column.is_indexed = DbTools.ParseBool (xmlReader.GetAttribute ("idx"));
+				column.is_primary_key = DbTools.ParseBool (xmlReader.GetAttribute ("pk"));
+
+				if (!isEmptyElement)
+				{
+					xmlReader.ReadEndElement ();
+				}
+
+				return column;
 			}
 			else
 			{
@@ -652,149 +630,49 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		
+
+		#region IXmlSerializable Members
+
 		public void Serialize(System.Xml.XmlTextWriter xmlWriter)
 		{
-			xmlWriter.WriteStartElement ("col");
-			
-			DbTools.WriteAttribute (xmlWriter, "cap", DbTools.DruidToString (this.CaptionId));
-			DbTools.WriteAttribute (xmlWriter, "typ", DbTools.TypeToString (this.Type));
+			xmlWriter.WriteStartElement ("column");
+
+			DbTools.WriteAttribute (xmlWriter, "capt", DbTools.DruidToString (this.CaptionId));
 			DbTools.WriteAttribute (xmlWriter, "cat", DbTools.ElementCategoryToString (this.Category));
 			DbTools.WriteAttribute (xmlWriter, "rev", DbTools.RevisionModeToString (this.RevisionMode));
-			DbTools.WriteAttribute (xmlWriter, "cls", DbTools.ColumnClassToString (this.ColumnClass));
-			DbTools.WriteAttribute (xmlWriter, "loc", DbTools.ColumnLocalisationToString (this.ColumnLocalisation));
+			DbTools.WriteAttribute (xmlWriter, "class", DbTools.ColumnClassToString (this.ColumnClass));
+			DbTools.WriteAttribute (xmlWriter, "loc", DbTools.ColumnLocalisationToString (this.Localisation));
+
+			DbTools.WriteAttribute (xmlWriter, "un", DbTools.BoolToString (this.IsUnique));
+			DbTools.WriteAttribute (xmlWriter, "idx", DbTools.BoolToString (this.IsIndexed));
+			DbTools.WriteAttribute (xmlWriter, "pk", DbTools.BoolToString (this.IsPrimaryKey));
 			
 			xmlWriter.WriteEndElement ();
 		}
 
-		protected void SerializeXmlDefinition(System.Text.StringBuilder buffer, bool full)
-		{
-			buffer.Append (@"<col");
+		#endregion
 
-			if (this.IsNullAllowed)
-			{
-				buffer.Append (@" null=""Y""");
-			}
-
-			if (this.IsUnique)
-			{
-				buffer.Append (@" uniq=""Y""");
-			}
-
-			if (this.IsIndexed)
-			{
-				buffer.Append (@" idx=""Y""");
-			}
-
-			if (this.is_primary_key)
-			{
-				buffer.Append (@" pk=""Y""");
-			}
-
-			string arg_cat = DbTools.ElementCategoryToString (this.category);
-			string arg_rev = DbTools.RevisionModeToString (this.revision_mode);
-
-			if (arg_cat != null)
-			{
-				buffer.Append (@" cat=""");
-				buffer.Append (arg_cat);
-				buffer.Append (@"""");
-			}
-			if (arg_rev != null)
-			{
-				buffer.Append (@" rev=""");
-				buffer.Append (arg_rev);
-				buffer.Append (@"""");
-			}
-
-			if (this.column_class != DbColumnClass.Data)
-			{
-				buffer.Append (@" class=""");
-				buffer.Append (InvariantConverter.ToString ((int) this.column_class));
-				buffer.Append (@"""");
-			}
-
-			if (this.localisation != DbColumnLocalisation.None)
-			{
-				int num = (int) this.localisation;
-				buffer.Append (@" local=""");
-				buffer.Append (InvariantConverter.ToString ((int) this.localisation));
-				buffer.Append (@"""");
-			}
-
-			if (full)
-			{
-				DbKey.SerializeToXmlAttributes (buffer, this.internal_column_key);
-				this.Attributes.SerializeXmlAttributes (buffer);
-				buffer.Append (@">");
-
-				DbTypeFactory.SerializeToXml (buffer, this.type, true);
-
-				buffer.Append (@"</col>");
-			}
-			else
-			{
-				buffer.Append (@"/>");
-			}
-		}
-
-		protected void ProcessXmlDefinition(System.Xml.XmlElement xml)
-		{
-			if (xml.Name != "col")
-			{
-				throw new System.FormatException (string.Format ("Expected root element named <col>, but found <{0}>.", xml.Name));
-			}
-
-			string arg_null   = xml.GetAttribute ("null");
-			string arg_unique = xml.GetAttribute ("uniq");
-			string arg_index  = xml.GetAttribute ("idx");
-			string arg_pk     = xml.GetAttribute ("pk");
-
-			this.is_null_allowed = (arg_null   == "Y");
-			this.is_unique       = (arg_unique == "Y");
-			this.is_indexed      = (arg_index  == "Y");
-			this.is_primary_key  = (arg_pk     == "Y");
-
-			string arg_cat = xml.GetAttribute ("cat");
-			string arg_rev = xml.GetAttribute ("revs");
-
-			this.category      = DbTools.ParseElementCategory (arg_cat);
-			this.revision_mode = DbTools.ParseRevisionMode (arg_rev);
-
-			int column_class_code;
-			int localisation_code;
-
-			InvariantConverter.Convert (xml.GetAttribute ("class"), out column_class_code);
-			InvariantConverter.Convert (xml.GetAttribute ("local"), out localisation_code);
-
-			this.column_class        = (DbColumnClass) column_class_code;
-			this.localisation = (DbColumnLocalisation) localisation_code;
-			this.internal_column_key = DbKey.DeserializeFromXmlAttributes (xml);
-
-			this.Attributes.DeserializeXmlAttributes (xml);
-		}
 
 
 		private static readonly Caption nullCaption = new Caption ();
 
-		protected DbAttributes attributes				= new DbAttributes ();
-		protected INamedType type;
-		protected DbTable table;
+		private DbTypeDef typeDef;
+		private DbTable table;
 
 		private string name;
+		private string targetTableName;
 		private Druid captionId;
 		private Caption caption;
 		private DbColumnLocalisation localisation;
 
-		protected bool is_null_allowed;
-		protected bool is_unique;
-		protected bool is_indexed;
-		protected bool is_primary_key;
-		protected DbElementCat category;
-		protected DbRevisionMode revision_mode;
-		protected DbKey internal_column_key;
+		private bool is_unique;
+		private bool is_indexed;
+		private bool is_primary_key;
+		private DbElementCat category;
+		private DbRevisionMode revision_mode;
+		private DbKey key;
 
-		protected DbColumnClass column_class			= DbColumnClass.Data;
+		private DbColumnClass columnClass			= DbColumnClass.Data;
 
 
 		internal const int MaxNameLength			= 50;
@@ -803,5 +681,10 @@ namespace Epsitec.Cresus.Database
 		internal const int MaxCaptionLength		= 100;
 		internal const int MaxDescriptionLength	= 500;
 		internal const int MaxInfoXmlLength		= 500;
+
+		internal void DefineTypeDef(DbTypeDef typeDef)
+		{
+			throw new System.Exception ("The method or operation is not implemented.");
+		}
 	}
 }

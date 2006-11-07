@@ -972,8 +972,7 @@ namespace Epsitec.Common.Designer
 				this.ignoreChange = false;
 
 				this.DialogSearchAdapt();
-				this.CurrentModule.Modifier.ActiveViewer.UpdateExternalDirtyList();
-				this.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
+				this.CurrentModule.Modifier.ActiveViewer.UpdateWhenModuleUsed();
 			}
 			else
 			{

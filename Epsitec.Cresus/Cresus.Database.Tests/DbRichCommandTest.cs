@@ -5,6 +5,7 @@ namespace Epsitec.Cresus.Database
 {
 	[TestFixture] public class DbRichCommandTest
 	{
+#if false
 		[Test] public void Check01Select()
 		{
 			//	Tout ceci est provisoire !!! Les structures SQL ne devraient pas être exposées, seulement
@@ -393,5 +394,6 @@ namespace Epsitec.Cresus.Database
 			
 			infrastructure.Dispose ();
 		}
+#endif
 	}
 }

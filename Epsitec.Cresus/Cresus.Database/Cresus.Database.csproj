@@ -106,9 +106,6 @@
     <Compile Include="Cache\DbTables.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Cache\DbTypes.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Collections\DbTypeDefs.cs" />
     <Compile Include="Collections\GenericList.cs">
       <SubType>Code</SubType>
@@ -123,9 +120,6 @@
     <Compile Include="Collections\DbTables.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Collections\DbTypes.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Collections\SqlColumns.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -138,6 +132,7 @@
     <Compile Include="DbColumnLocalisation.cs" />
     <Compile Include="DbContext.cs" />
     <Compile Include="DbIdClass.cs" />
+    <Compile Include="Res.cs" />
     <Compile Include="SqlFieldOrder.cs" />
     <Compile Include="SqlFieldType.cs" />
     <Compile Include="DbAccess.cs">
@@ -165,9 +160,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbElementCat.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbEnumValue.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbFactory.cs">
@@ -231,27 +223,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbTransactionMode.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbTypeByteArray.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbTypeDateTime.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbTypeEnum.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbTypeFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbTypeNum.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbTypeString.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Exceptions\ConflictingException.cs">
@@ -354,6 +325,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Content Include="TODO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Cresus.Database\Captions.00.resource" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Cresus.Database\module.info" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

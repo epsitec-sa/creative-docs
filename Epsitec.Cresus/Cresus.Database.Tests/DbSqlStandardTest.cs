@@ -87,6 +87,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual ("Y12", name);
 		}
 		
+#if false
 		[Test] public void CheckCreateSqlTableName()
 		{
 			string nam1 = "test-x";
@@ -97,6 +98,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual ("U_TEST_X_123", std1);
 			Assert.AreEqual ("CR_TEST",      std2);
 		}
+#endif
 		
 		[Test] [ExpectedException (typeof (Exceptions.GenericException))] public void CheckCreateSqlTableNameEx1()
 		{

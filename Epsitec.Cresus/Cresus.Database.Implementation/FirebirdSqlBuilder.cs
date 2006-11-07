@@ -1290,7 +1290,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			if (!column.IsNullAllowed)
+			if (!column.IsNullable)
 			{
 				buffer.Append (" NOT NULL");
 			}

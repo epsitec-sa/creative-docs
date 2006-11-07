@@ -42,8 +42,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.Dock = DockStyle.Fill;
 			this.array.CellCountChanged += new EventHandler (this.HandleArrayCellCountChanged);
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
-			this.array.TabIndex = tabIndex++;
-			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			//?this.array.TabIndex = tabIndex++;
+			//?this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.splitter1 = new VSplitter(this);
 			this.splitter1.Dock = DockStyle.Left;

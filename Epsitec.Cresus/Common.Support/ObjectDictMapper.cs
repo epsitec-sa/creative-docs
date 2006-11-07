@@ -31,7 +31,7 @@ namespace Epsitec.Common.Support
 					string key = prop.Name;
 					string value = Types.InvariantConverter.ToString (prop.GetValue (data, null));
 					
-					if (dict.Contains (key))
+					if (dict.ContainsKey (key))
 					{
 						dict[key] = value;
 					}
@@ -53,8 +53,8 @@ namespace Epsitec.Common.Support
 				System.Reflection.PropertyInfo prop = props[i];
 				
 				string key = prop.Name;
-				
-				if ((dict.Contains (key)) &&
+
+				if ((dict.ContainsKey (key)) &&
 					(prop.CanRead) &&
 					(prop.CanWrite) &&
 					(prop.GetIndexParameters ().Length == 0))
@@ -83,8 +83,8 @@ namespace Epsitec.Common.Support
 				System.Reflection.PropertyInfo prop = props[i];
 				
 				string key = prop.Name;
-				
-				if ((dict.Contains (key)) &&
+
+				if ((dict.ContainsKey (key)) &&
 					(prop.CanRead) &&
 					(prop.CanWrite) &&
 					(prop.GetIndexParameters ().Length == 0))

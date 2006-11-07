@@ -5,6 +5,7 @@ namespace Epsitec.Cresus.Database
 	[TestFixture]
 	public class DbColumnTest
 	{
+#if false
 		[Test] public void CheckNewDbColumn()
 		{
 			DbColumn column_a = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.SmallDecimal), Nullable.Yes);
@@ -125,11 +126,11 @@ namespace Epsitec.Cresus.Database
 			
 			Assert.AreEqual (DbRawType.SmallDecimal, sql_a.Type);
 			Assert.AreEqual ("U_A", sql_a.Name);
-			Assert.AreEqual (true, sql_a.IsNullAllowed);
+			Assert.AreEqual (true, sql_a.IsNullable);
 			
 			Assert.IsTrue (DbRawType.Guid != sql_b.Type);
 			Assert.AreEqual ("U_B", sql_b.Name);
-			Assert.AreEqual (false, sql_b.IsNullAllowed);
+			Assert.AreEqual (false, sql_b.IsNullable);
 			Assert.IsTrue (sql_b.HasRawConverter);
 			Assert.AreEqual (sql_b.RawConverter.InternalType, sql_b.Type);
 			Assert.AreEqual (sql_b.RawConverter.ExternalType, TypeConverter.GetRawType (column_b.SimpleType, column_b.NumDef));
@@ -137,12 +138,12 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (DbRawType.String, sql_c.Type);
 			Assert.AreEqual ("U_C", sql_c.Name);
 			Assert.AreEqual (true, sql_c.IsFixedLength);
-			Assert.AreEqual (false, sql_c.IsNullAllowed);
+			Assert.AreEqual (false, sql_c.IsNullable);
 			Assert.AreEqual (false, sql_c.HasRawConverter);
 
 			Assert.AreEqual (DbRawType.ByteArray, sql_d.Type);
 			Assert.AreEqual ("U_D", sql_d.Name);
-			Assert.AreEqual (false, sql_d.IsNullAllowed);
+			Assert.AreEqual (false, sql_d.IsNullable);
 			Assert.AreEqual (false, sql_d.HasRawConverter);
 
 			System.Console.Out.WriteLine ("Column {0} raw type is {1}, length={2}, fixed={3}.", sql_b.Name, sql_b.Type, sql_b.Length, sql_b.IsFixedLength);
@@ -164,5 +165,6 @@ namespace Epsitec.Cresus.Database
 			
 			System.Console.Out.WriteLine ("Converted string back to GUID {0}.", guid_object);
 		}
+#endif
 	}
 }

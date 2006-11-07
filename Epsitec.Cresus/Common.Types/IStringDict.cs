@@ -14,8 +14,8 @@ namespace Epsitec.Common.Types
 		int			Count				{ get; }
 		
 		void Add(string key, string value);
-		void Remove(string key);
+		bool Remove(string key);
 		void Clear();
-		bool Contains(string key);
+		bool ContainsKey(string key);
 	}
 }

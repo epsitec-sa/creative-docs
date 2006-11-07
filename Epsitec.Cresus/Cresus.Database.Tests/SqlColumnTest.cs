@@ -14,25 +14,25 @@ namespace Epsitec.Cresus.Database
 			
 			Assert.AreEqual ("A",				sql_col_a.Name);
 			Assert.AreEqual (DbRawType.Int32,	sql_col_a.Type);
-			Assert.AreEqual (false,				sql_col_a.IsNullAllowed);
+			Assert.AreEqual (false,				sql_col_a.IsNullable);
 			Assert.AreEqual (1,					sql_col_a.Length);
 			Assert.AreEqual (true,				sql_col_a.IsFixedLength);
 			
 			Assert.AreEqual ("B",				sql_col_b.Name);
 			Assert.AreEqual (DbRawType.Int64,	sql_col_b.Type);
-			Assert.AreEqual (true,				sql_col_b.IsNullAllowed);
+			Assert.AreEqual (true,				sql_col_b.IsNullable);
 			Assert.AreEqual (1,					sql_col_b.Length);
 			Assert.AreEqual (true,				sql_col_b.IsFixedLength);
 			
 			Assert.AreEqual ("C",				sql_col_c.Name);
 			Assert.AreEqual (DbRawType.String,	sql_col_c.Type);
-			Assert.AreEqual (false,				sql_col_c.IsNullAllowed);
+			Assert.AreEqual (false,				sql_col_c.IsNullable);
 			Assert.AreEqual (100,				sql_col_c.Length);
 			Assert.AreEqual (false,				sql_col_c.IsFixedLength);
 			
 			Assert.AreEqual ("D",				sql_col_d.Name);
 			Assert.AreEqual (DbRawType.ByteArray,sql_col_d.Type);
-			Assert.AreEqual (true,				sql_col_d.IsNullAllowed);
+			Assert.AreEqual (true,				sql_col_d.IsNullable);
 			Assert.AreEqual (1,					sql_col_d.Length);
 			Assert.AreEqual (true,				sql_col_d.IsFixedLength);
 		}

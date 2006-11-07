@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Replication
 			
 			data.row_count  = row_count;
 			data.table_name = table.Name;
-			data.table_key  = table.InternalKey.Id;
+			data.table_key  = table.Key.Id;
 			
 			for (int i = 0; i < col_count; i++)
 			{

@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.Database
 		{
 			this.infrastructure = infrastructure;
 			this.table          = table;
-			this.table_key      = table.InternalKey;
+			this.table_key      = table.Key;
 			this.table_sql_name = table.CreateSqlName ();
 		}
 		

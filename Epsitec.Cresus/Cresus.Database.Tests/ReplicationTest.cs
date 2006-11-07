@@ -8,6 +8,7 @@ namespace Epsitec.Cresus.Database
 	[TestFixture]
 	public class ReplicationTest
 	{
+#if false
 		[TestFixtureSetUp] public void Setup()
 		{
 			this.infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", true);
@@ -214,7 +215,7 @@ namespace Epsitec.Cresus.Database
 			
 			DbTable db_table = new DbTable ("A");
 			
-			db_table.DefineInternalKey (new DbKey ());
+			db_table.DefineKey (new DbKey ());
 			
 			Replication.PackedTableData packed = Replication.PackedTableData.CreateFromTable (db_table, table_a);
 			
@@ -412,5 +413,6 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
+#endif
 	}
 }

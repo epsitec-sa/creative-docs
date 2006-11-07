@@ -5,6 +5,7 @@ namespace Epsitec.Cresus.Database
 	[TestFixture]
 	public class DbTypeTest
 	{
+#if false
 		[Test] public void CheckDbTypeEnum()
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
@@ -46,7 +47,9 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual ("Madame", e_type["MME"].Caption);
 			Assert.AreEqual ("Mademoiselle", e_type["MLLE"].Caption);
 		}
-		
+#endif
+
+#if false
 		[Test] public void CheckDbTypeEnumXml()
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
@@ -118,7 +121,9 @@ namespace Epsitec.Cresus.Database
 				Assert.AreEqual (enumValues[i].Caption, copyValues[i].Caption);
 			}
 		}
-		
+#endif
+
+#if false
 		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckDbTypeEnumEx1()
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
@@ -129,7 +134,8 @@ namespace Epsitec.Cresus.Database
 			
 			DbTypeEnum e_type = new DbTypeEnum (list);
 		}
-		
+#endif
+#if false
 		[Test] public void CheckDbKeyXml()
 		{
 			DbKey k0 = null;
@@ -178,5 +184,6 @@ namespace Epsitec.Cresus.Database
 				Assert.AreEqual (k3, DbKey.DeserializeFromXmlAttributes (xml));
 			}
 		}
+#endif
 	}
 }

@@ -134,8 +134,15 @@ namespace Epsitec.Cresus.Database
 			if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
 				(xmlReader.Name == "key"))
 			{
+				bool isEmptyElement = xmlReader.IsEmptyElement;
+
 				DbKey key = DbKey.DeserializeAttributes (xmlReader);
-				xmlReader.ReadEndElement ();
+				
+				if (!isEmptyElement)
+				{
+					xmlReader.ReadEndElement ();
+				}
+				
 				return key;
 			}
 			else

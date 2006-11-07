@@ -107,6 +107,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		public void ClearCache()
+		{
+			//	Force une nouvelle mise à jour lors du prochain Update.
+			this.resourceSelected = -1;
+		}
+
 		protected virtual void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.

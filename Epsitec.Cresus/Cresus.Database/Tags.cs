@@ -6,26 +6,25 @@ namespace Epsitec.Cresus.Database
 	public class Tags : Epsitec.Common.Support.Tags
 	{
 		//	Noms des types "Crésus" fondamentaux :
-		
-		public const string	TypeKeyId			= "CR_KeyIdType";
-		public const string	TypeKeyStatus		= "CR_KeyStatusType";
-		public const string	TypeName			= "CR_NameType";
-		public const string	TypeCaption			= "CR_CaptionType";
-		public const string	TypeDescription		= "CR_DescriptionType";
-		public const string	TypeInfoXml			= "CR_InfoXmlType";
-		public const string	TypeDateTime		= "CR_DateTimeType";
-		public const string TypeDictKey			= "CR_DictKeyType";
-		public const string TypeDictValue		= "CR_DictValueType";
-		public const string TypeReqData			= "CR_RqDataType";
-		public const string TypeReqExState		= "CR_RqExStateType";
+
+		public const string TypeKeyId			= "Num.KeyId";
+		public const string TypeNullableKeyId	= "Num.NullableKeyId";
+		public const string TypeKeyStatus		= "Num.KeyStatus";
+		public const string	TypeName			= "Str.Name";
+		public const string	TypeInfoXml			= "Str.InfoXml";
+		public const string	TypeDateTime		= "Other.DateTime";
+		public const string TypeDictKey			= "Str.Dict.Key";
+		public const string TypeDictValue		= "Str.Dict.Value";
+		public const string TypeReqData			= "Other.ReqData";
+		public const string TypeReqExState		= "Num.ReqExecState";
 		
 		//	Noms des colonnes "Crésus" fondamentales :
 		
 		public const string	ColumnId			= "CR_ID";
 		public const string	ColumnStatus		= "CR_STAT";
 		public const string	ColumnName			= "CR_NAME";
-		public const string	ColumnCaption		= "CR_CAPTION";
-		public const string	ColumnDescription	= "CR_DESCRIPTION";
+//		public const string	ColumnCaption		= "CR_CAPTION";
+//		public const string	ColumnDescription	= "CR_DESCRIPTION";
 		public const string	ColumnInfoXml		= "CR_INFO";
 		public const string	ColumnNextId		= "CR_NEXT_ID";
 		public const string ColumnDateTime		= "CR_DATETIME";

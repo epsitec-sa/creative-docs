@@ -5,6 +5,7 @@ namespace Epsitec.Cresus.Database
 	[TestFixture]
 	public class DbTypeFactoryTest
 	{
+#if false
 		[Test] public void CheckNewTypeBase()
 		{
 			DbType type = DbTypeFactory.CreateType ("<type class='base'/>");
@@ -107,5 +108,6 @@ namespace Epsitec.Cresus.Database
 			System.Console.Out.WriteLine ("XML: {0}", xml);
 			Assert.IsTrue (temp.GetType () == type.GetType ());
 		}
+#endif
 	}
 }

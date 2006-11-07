@@ -1,6 +1,8 @@
 //	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -425,22 +427,23 @@ namespace Epsitec.Cresus.Database
 		
 		public static System.Data.DataRow[] CopyLiveRows(System.Collections.IEnumerable rows)
 		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			List<System.Data.DataRow> list = new List<System.Data.DataRow> ();
 			
 			foreach (System.Data.DataRow row in rows)
 			{
-				if (DbRichCommand.IsRowDeleted (row) == false)
+				if (DbRichCommand.IsRowLive (row))
 				{
 					list.Add (row);
 				}
 			}
 			
-			System.Data.DataRow[] copy = new System.Data.DataRow[list.Count];
-			list.CopyTo (copy);
-			
-			return copy;
+			return list.ToArray ();
 		}
-		
+
+		public static bool IsRowLive(System.Data.DataRow row)
+		{
+			return !DbRichCommand.IsRowDeleted (row);
+		}
 		
 		public static bool IsRowDeleted(System.Data.DataRow row)
 		{
@@ -747,27 +750,27 @@ namespace Epsitec.Cresus.Database
 				foreach (DbForeignKey fk in db_foreign_keys)
 				{
 					int n = fk.Columns.Length;
-					
-					System.Data.DataTable ado_parent_table = this.data_set.Tables[fk.TargetTableName];
-					
-					if (ado_parent_table == null)
+
+					System.Data.DataTable ado_target_table = this.data_set.Tables[fk.TargetTableName];
+
+					if (ado_target_table == null)
 					{
-						//	La table parent n'est pas chargée dans le DataSet, ce qui veut dire
+						//	La table cible n'est pas chargée dans le DataSet, ce qui veut dire
 						//	que l'on doit ignorer la relation.
 						
 						continue;
 					}
 					
-					System.Data.DataColumn[] ado_parent_cols = new System.Data.DataColumn[n];
+					System.Data.DataColumn[] ado_target_cols = new System.Data.DataColumn[n];
 					System.Data.DataColumn[] ado_child_cols  = new System.Data.DataColumn[n];
 					
 					for (int j = 0; j < n; j++)
 					{
 						ado_child_cols[j]  = ado_child_table.Columns[fk.Columns[j].CreateDisplayName ()];
-						ado_parent_cols[j] = ado_parent_table.Columns[fk.Columns[j].ParentColumnName];
+						ado_target_cols[j] = ado_target_table.Columns[fk.Columns[j].TargetColumnName];
 					}
-					
-					System.Data.DataRelation relation = new System.Data.DataRelation (null, ado_parent_cols, ado_child_cols);
+
+					System.Data.DataRelation relation = new System.Data.DataRelation (null, ado_target_cols, ado_child_cols);
 					this.data_set.Relations.Add (relation);
 					
 					System.Data.ForeignKeyConstraint constraint = relation.ChildKeyConstraint;

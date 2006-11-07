@@ -590,14 +590,22 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public void UpdateExternalDirtyList()
+		public void UpdateWhenModuleUsed()
 		{
-			//	Met à jour la liste des ressources si elle a été modifiée depuis l'extérieur.
-			if (this.access.IsExternalDirtyList)
-			{
-				this.UpdateArray();
-				this.access.IsExternalDirtyList = false;
-			}
+			//	Met à jour les ressources lorsque le module est utilisé.
+			//	Il faut remettre à jour la liste des ressources, car elle a pu être complétée
+			//	par ResourceAccess.BypassFilterCreate, par exemple.
+			//	Il faut également mettre à jour le contenu de la ressource en cours d'édition,
+			//	car un Name peut avoir changé (par exemple dans le tableau Structured).
+			this.ClearCache();
+			this.UpdateArray();
+			this.UpdateEdit();
+			this.UpdateCommands();
+		}
+
+		protected virtual void ClearCache()
+		{
+			//	Force une nouvelle mise à jour lors du prochain Update.
 		}
 
 		protected virtual void UpdateArray()
@@ -707,8 +715,8 @@ namespace Epsitec.Common.Designer.Viewers
 					this.secondaryCultures[i].Name = list[i];
 					this.secondaryCultures[i].Text = Misc.CultureName(bundle.Culture);
 					this.secondaryCultures[i].AutoFocus = false;
-					this.secondaryCultures[i].TabIndex = i;
-					this.secondaryCultures[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+					//?this.secondaryCultures[i].TabIndex = i;
+					//?this.secondaryCultures[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 					if (isCaptions)
 					{
 						this.secondaryCultures[i].Margins = new Margins(0, (i==list.Count-1)?1:0, 0, 0);

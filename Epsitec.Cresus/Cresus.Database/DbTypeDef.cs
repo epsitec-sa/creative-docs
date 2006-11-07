@@ -37,6 +37,13 @@ namespace Epsitec.Cresus.Database
 				this.isFixedLength  = stringType.UseFixedLengthStorage;
 				this.isMultilingual = stringType.UseMultilingualStorage;
 			}
+
+			INullableType nullableType = namedType as INullableType;
+
+			if (nullableType != null)
+			{
+				this.isNullable = nullableType.IsNullable;
+			}
 		}
 		
 		
@@ -85,6 +92,14 @@ namespace Epsitec.Cresus.Database
 			get
 			{
 				return this.isMultilingual;
+			}
+		}
+
+		public bool IsNullable
+		{
+			get
+			{
+				return this.isNullable;
 			}
 		}
 
@@ -176,13 +191,13 @@ namespace Epsitec.Cresus.Database
 		{
 			xmlWriter.WriteStartElement ("type");
 
-			DbTools.WriteAttribute (xmlWriter, "name", DbTools.StringToString (this.Name));
 			DbTools.WriteAttribute (xmlWriter, "type", DbTools.DruidToString (this.typeId));
 			DbTools.WriteAttribute (xmlWriter, "raw", DbTools.RawTypeToString (this.rawType));
 			DbTools.WriteAttribute (xmlWriter, "simple", DbTools.SimpleTypeToString (this.simpleType));
 			DbTools.WriteAttribute (xmlWriter, "length", DbTools.IntToString (this.length));
 			DbTools.WriteAttribute (xmlWriter, "fixed", DbTools.BoolToString (this.isFixedLength));
 			DbTools.WriteAttribute (xmlWriter, "multi", DbTools.BoolToString (this.isMultilingual));
+			DbTools.WriteAttribute (xmlWriter, "null", DbTools.BoolToString (this.isNullable));
 
 			if (this.numDef != null)
 			{
@@ -202,21 +217,26 @@ namespace Epsitec.Cresus.Database
 			if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
 				(xmlReader.Name == "type"))
 			{
+				bool isEmptyElement = xmlReader.IsEmptyElement;
+
 				DbTypeDef type = new DbTypeDef ();
 
-				type.name           = DbTools.ParseString (xmlReader.GetAttribute ("name"));
 				type.typeId         = DbTools.ParseDruid (xmlReader.GetAttribute ("type"));
 				type.rawType        = DbTools.ParseRawType (xmlReader.GetAttribute ("raw"));
 				type.simpleType     = DbTools.ParseSimpleType (xmlReader.GetAttribute ("simple"));
 				type.length         = DbTools.ParseInt (xmlReader.GetAttribute ("length"));
 				type.isFixedLength  = DbTools.ParseBool (xmlReader.GetAttribute ("fixed"));
 				type.isMultilingual = DbTools.ParseBool (xmlReader.GetAttribute ("multi"));
+				type.isNullable     = DbTools.ParseBool (xmlReader.GetAttribute ("null"));
 
 				type.numDef = DbNumDef.DeserializeAttributes (xmlReader, "num.");
 				type.key    = DbKey.DeserializeAttributes (xmlReader, "key.");
 
-				xmlReader.ReadEndElement ();
-
+				if (!isEmptyElement)
+				{
+					xmlReader.ReadEndElement ();
+				}
+				
 				return type;
 			}
 			else
@@ -234,11 +254,17 @@ namespace Epsitec.Cresus.Database
 		private int length;
 		private bool isFixedLength;
 		private bool isMultilingual;
+		private bool isNullable;
 		private DbKey key;
 
-		internal void DefineInternalKey(DbKey key)
+		internal void DefineKey(DbKey key)
 		{
 			this.key = key;
+		}
+
+		internal void DefineName(string name)
+		{
+			this.name = name;
 		}
 	}
 }

@@ -790,6 +790,36 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Gray", et1.EnumValues[4].Name);
 		}
 
+		[Test]
+		public void CheckXmlReader()
+		{
+			string xml = @"<books><book price=""58.00"">The Firebird Book</book><magazine price=""10.00"">MSDN</magazine></books>";
+			System.IO.StringReader stringReader = new System.IO.StringReader (xml);
+			System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (stringReader);
+
+			xmlReader.Read ();
+
+			Assert.AreEqual ("books", xmlReader.Name);
+
+			xmlReader.Read ();
+
+			Assert.AreEqual ("The Firebird Book", xmlReader.ReadElementContentAsString ("book", ""));
+			
+			Assert.AreEqual (System.Xml.XmlNodeType.Element, xmlReader.NodeType);
+			Assert.AreEqual ("magazine", xmlReader.Name);
+			Assert.AreEqual ("10.00", xmlReader.GetAttribute ("price"));
+
+			xmlReader.Read ();
+			Assert.AreEqual (System.Xml.XmlNodeType.Text, xmlReader.NodeType);
+			Assert.AreEqual ("MSDN", xmlReader.ReadString ());
+			Assert.AreEqual (System.Xml.XmlNodeType.EndElement, xmlReader.NodeType);
+			Assert.AreEqual ("magazine", xmlReader.Name);
+			xmlReader.ReadEndElement ();
+			
+			Assert.AreEqual ("books", xmlReader.Name);
+			
+			xmlReader.ReadEndElement ();
+		}
 
 		private MyItem CreateSampleTree(out MyItem ext)
 		{

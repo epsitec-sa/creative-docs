@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Replication
 			{
 				get
 				{
-					return this[table.InternalKey.Id];
+					return this[table.Key.Id];
 				}
 			}
 			
@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Replication
 			
 			public bool Contains(Database.DbTable table)
 			{
-				return this.Contains (table.InternalKey.Id);
+				return this.Contains (table.Key.Id);
 			}
 			
 			

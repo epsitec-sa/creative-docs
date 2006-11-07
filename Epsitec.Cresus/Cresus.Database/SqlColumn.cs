@@ -41,14 +41,14 @@ namespace Epsitec.Cresus.Database
 		{
 			this.Name = name;
 			this.SetType (raw_type);
-			this.IsNullAllowed = (nullable == Nullable.Yes);
+			this.IsNullable = (nullable == Nullable.Yes);
 		}
 		
 		public SqlColumn(string name, DbRawType raw_type, int length, bool is_fixed_length, Nullable nullable)
 		{
 			this.Name = name;
 			this.SetType (raw_type, length, is_fixed_length);
-			this.IsNullAllowed = (nullable == Nullable.Yes);
+			this.IsNullable = (nullable == Nullable.Yes);
 		}
 		
 		
@@ -85,10 +85,10 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public bool								IsNullAllowed
+		public bool								IsNullable
 		{
-			get { return this.is_null_allowed; }
-			set { this.is_null_allowed = value; }
+			get { return this.is_nullable; }
+			set { this.is_nullable = value; }
 		}
 		
 		public bool								IsUnique
@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Database
 		
 		protected string						name				= null;
 		protected DbRawType						type				= DbRawType.Null;
-		protected bool							is_null_allowed		= false;
+		protected bool							is_nullable			= false;
 		protected bool							is_unique			= false;
 		protected bool							is_indexed			= false;
 		protected bool							is_fixed_length		= true;

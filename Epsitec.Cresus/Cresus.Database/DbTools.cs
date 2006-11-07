@@ -70,44 +70,131 @@ namespace Epsitec.Cresus.Database
 		
 		public static DbElementCat   ParseElementCategory(string text)
 		{
-			if ((text == null) ||
-				(text.Length == 0))
+			if (string.IsNullOrEmpty (text))
 			{
 				return DbElementCat.Unknown;
 			}
-			
-			int cat;
-			InvariantConverter.Convert (text, out cat);
-			return (DbElementCat) cat;
+			else
+			{
+				return (DbElementCat) InvariantConverter.ParseInt (text);
+			}
 		}
 		
 		public static DbRevisionMode ParseRevisionMode(string text)
 		{
-			if ((text == null) ||
-				(text.Length == 0))
+			if (string.IsNullOrEmpty (text))
 			{
 				return DbRevisionMode.Unknown;
 			}
-			
-			int mode;
-			InvariantConverter.Convert (text, out mode);
-			return (DbRevisionMode) mode;
+			else
+			{
+				return (DbRevisionMode) InvariantConverter.ParseInt (text);
+			}
 		}
 		
 		public static DbReplicationMode ParseReplicationMode(string text)
 		{
-			if ((text == null) ||
-				(text.Length == 0))
+			if (string.IsNullOrEmpty (text))
 			{
 				return DbReplicationMode.Unknown;
 			}
-			
-			int mode;
-			InvariantConverter.Convert (text, out mode);
-			return (DbReplicationMode) mode;
+			else
+			{
+				return (DbReplicationMode) InvariantConverter.ParseInt (text);
+			}
 		}
-		
-		
+
+		public static DbColumnClass ParseColumnClass(string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return DbColumnClass.Data;
+			}
+			else
+			{
+				return (DbColumnClass) InvariantConverter.ParseInt (text);
+			}
+		}
+
+		public static DbColumnLocalisation ParseLocalisation(string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return DbColumnLocalisation.None;
+			}
+			else
+			{
+				return (DbColumnLocalisation) InvariantConverter.ParseInt (text);
+			}
+		}
+
+		public static DbRawType ParseRawType(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return DbRawType.Unsupported;
+			}
+
+			int num;
+			InvariantConverter.Convert (value, out num);
+			return (DbRawType) num;
+		}
+
+		public static DbSimpleType ParseSimpleType(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return DbSimpleType.Unsupported;
+			}
+
+			int num;
+			InvariantConverter.Convert (value, out num);
+			return (DbSimpleType) num;
+		}
+
+		public static string ParseString(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return null;
+			}
+			else
+			{
+				return value;
+			}
+		}
+
+		public static int ParseInt(string value)
+		{
+			return InvariantConverter.ParseInt (value);
+		}
+
+		public static Druid ParseDruid(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return Druid.Empty;
+			}
+			else
+			{
+				return Druid.Parse (value);
+			}
+		}
+
+		public static bool ParseBool(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return false;
+			}
+			else
+			{
+				System.Diagnostics.Debug.Assert (value == "Y");
+
+				return true;
+			}
+		}
+
 		public static string ElementCategoryToString(DbElementCat cat)
 		{
 			if (cat == DbElementCat.Unknown)
@@ -213,59 +300,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public static DbRawType ParseRawType(string value)
-		{
-			if (string.IsNullOrEmpty (value))
-			{
-				return DbRawType.Unsupported;
-			}
-
-			int num;
-			InvariantConverter.Convert (value, out num);
-			return (DbRawType) num;
-		}
-
-		public static DbSimpleType ParseSimpleType(string value)
-		{
-			if (string.IsNullOrEmpty (value))
-			{
-				return DbSimpleType.Unsupported;
-			}
-
-			int num;
-			InvariantConverter.Convert (value, out num);
-			return (DbSimpleType) num;
-		}
-
-		public static string ParseString(string value)
-		{
-			if (string.IsNullOrEmpty (value))
-			{
-				return null;
-			}
-			else
-			{
-				return value;
-			}
-		}
-
-		public static int ParseInt(string value)
-		{
-			return InvariantConverter.ParseInt (value);
-		}
-
-		public static Druid ParseDruid(string value)
-		{
-			if (string.IsNullOrEmpty (value))
-			{
-				return Druid.Empty;
-			}
-			else
-			{
-				return Druid.Parse (value);
-			}
-		}
-
 		public static string IntToString(int value)
 		{
 			if (value == 0)
@@ -281,20 +315,6 @@ namespace Epsitec.Cresus.Database
 		public static string BoolToString(bool value)
 		{
 			return value ? "Y" : null;
-		}
-
-		public static bool ParseBool(string value)
-		{
-			if (string.IsNullOrEmpty (value))
-			{
-				return false;
-			}
-			else
-			{
-				System.Diagnostics.Debug.Assert (value == "Y");
-				
-				return true;
-			}
 		}
 
 		public static string StringToString(string value)
@@ -393,7 +413,8 @@ namespace Epsitec.Cresus.Database
 			System.Reflection.MethodInfo method = type.GetMethod ("Deserialize", arguments);
 
 			if ((method == null) ||
-				(method.IsStatic == false))
+				(method.IsStatic == false) ||
+				(method.ReturnType != type))
 			{
 				return null;
 			}

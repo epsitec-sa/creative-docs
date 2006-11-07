@@ -242,7 +242,7 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-		
+#if false
 		[Test] public void Check08ExecutionEngine()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
@@ -320,7 +320,8 @@ namespace Epsitec.Cresus.Database
 			
 			infrastructure.UnregisterDbTable (null, db_table);
 		}
-		
+#endif
+#if false
 		[Test] public void Check09Orchestrator()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
@@ -383,7 +384,7 @@ namespace Epsitec.Cresus.Database
 			
 			infrastructure.UnregisterDbTable (null, db_table);
 		}
-
+#endif
 		[Test] public void Check10ExecutionQueueDump()
 		{
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", true))
@@ -814,7 +815,7 @@ namespace Epsitec.Cresus.Database
 		}
 #endif
 		
-		
+#if false
 		private static void CreateTestTable(DbInfrastructure infrastructure, string name)
 		{
 			DbType db_type_name = infrastructure.ResolveDbType (null, "Customer Name");
@@ -844,7 +845,7 @@ namespace Epsitec.Cresus.Database
 			
 			infrastructure.RegisterNewDbTable (null, db_table);
 		}
-		
+#endif
 		private static System.Data.DataTable GetDataTableFromTable(DbInfrastructure infrastructure, string name)
 		{
 			DbTable db_table = infrastructure.ResolveDbTable (null, name);
