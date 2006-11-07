@@ -225,6 +225,32 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (DbSimpleType.Decimal, type.SimpleType);
 			Assert.AreEqual (Res.Types.Num.ReqExecState.CaptionId, type.TypeId);
 			Assert.AreEqual (false, type.NumDef.IsConversionNeeded);
+
+			type = new DbTypeDef (Res.Types.Other.DateTime);
+
+			Assert.AreEqual (true, type.IsFixedLength);
+			Assert.AreEqual (false, type.IsMultilingual);
+			Assert.AreEqual (false, type.IsNullable);
+			Assert.AreEqual (1, type.Length);
+			Assert.AreEqual (DbKey.Empty, type.Key);
+			Assert.AreEqual ("Other.DateTime", type.Name);
+			Assert.AreEqual (DbRawType.DateTime, type.RawType);
+			Assert.AreEqual (DbSimpleType.DateTime, type.SimpleType);
+			Assert.AreEqual (Res.Types.Other.DateTime.CaptionId, type.TypeId);
+			Assert.AreEqual (null, type.NumDef);
+
+			type = new DbTypeDef (Res.Types.Other.ReqData);
+
+			Assert.AreEqual (true, type.IsFixedLength);
+			Assert.AreEqual (false, type.IsMultilingual);
+			Assert.AreEqual (false, type.IsNullable);
+			Assert.AreEqual (1, type.Length);
+			Assert.AreEqual (DbKey.Empty, type.Key);
+			Assert.AreEqual ("Other.ReqData", type.Name);
+			Assert.AreEqual (DbRawType.ByteArray, type.RawType);
+			Assert.AreEqual (DbSimpleType.ByteArray, type.SimpleType);
+			Assert.AreEqual (Res.Types.Other.ReqData.CaptionId, type.TypeId);
+			Assert.AreEqual (null, type.NumDef);
 		}
 	}
 }

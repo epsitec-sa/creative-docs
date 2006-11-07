@@ -324,13 +324,13 @@ namespace Epsitec.Cresus.Database
 
 			if (string.IsNullOrEmpty (this.targetTableName))
 			{
-				string message = string.Format ("Column '{0}' cannot change its target table name from '{1}' to '{2}'.",
-					/**/						this.Name, this.TargetTableName, targetTableName);
-				throw new System.InvalidOperationException (message);
+				this.targetTableName = targetTableName;
 			}
 			else
 			{
-				this.targetTableName = targetTableName;
+				string message = string.Format ("Column '{0}' cannot change its target table name from '{1}' to '{2}'.",
+					/**/						this.Name, this.TargetTableName, targetTableName);
+				throw new System.InvalidOperationException (message);
 			}
 		}
 
@@ -677,7 +677,18 @@ namespace Epsitec.Cresus.Database
 
 		internal void DefineTypeDef(DbTypeDef typeDef)
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			if (this.typeDef == typeDef)
+			{
+				return;
+			}
+			if (this.typeDef == null)
+			{
+				this.typeDef = typeDef;
+			}
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot define a new type", this.Name));
+			}
 		}
 	}
 }

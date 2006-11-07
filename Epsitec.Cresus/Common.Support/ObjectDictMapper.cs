@@ -28,16 +28,22 @@ namespace Epsitec.Common.Support
 					(prop.CanWrite) &&
 					(prop.GetIndexParameters ().Length == 0))
 				{
-					string key = prop.Name;
-					string value = Types.InvariantConverter.ToString (prop.GetValue (data, null));
-					
-					if (dict.ContainsKey (key))
+					object value = prop.GetValue (data, null);
+
+					if ((value != null) &&
+						(value != System.DBNull.Value))
 					{
-						dict[key] = value;
-					}
-					else
-					{
-						dict.Add (key, value);
+						string key = prop.Name;
+						string text = Types.InvariantConverter.ToString (value);
+
+						if (dict.ContainsKey (key))
+						{
+							dict[key] = text;
+						}
+						else
+						{
+							dict.Add (key, text);
+						}
 					}
 				}
 			}
