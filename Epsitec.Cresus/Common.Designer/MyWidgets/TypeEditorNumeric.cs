@@ -18,7 +18,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			band.TabIndex = this.tabIndex++;
 			band.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			band.Dock = DockStyle.StackBegin;
-			band.Margins = new Margins(0, 0, 0, 15);
 			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
 			Widget left = new Widget(band);
@@ -64,15 +63,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldPreferredRes.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			//	Steps.
-			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.SmallStep, this, out group, out this.fieldSmallStep);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.SmallStep, left, out group, out this.fieldSmallStep);
 			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 2);
+			group.Margins = new Margins(0, 0, 10, 2);
 			this.fieldSmallStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.LargeStep, this, out group, out this.fieldLargeStep);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.LargeStep, left, out group, out this.fieldLargeStep);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 0);
 			this.fieldLargeStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+
+			this.checkCompactStorage = new CheckButton(right);
+			this.checkCompactStorage.Text = "Stockage compact";  // Res.Strings.Viewers.Types.String.FixedLength;
+			this.checkCompactStorage.Dock = DockStyle.StackBegin;
+			this.checkCompactStorage.Margins = new Margins(20, 0, 10+2, 0);
+			this.checkCompactStorage.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 		}
 		
 		public TypeEditorNumeric(Widget embedder) : this()
@@ -95,6 +100,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.fieldSmallStep.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldLargeStep.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+
+				this.checkCompactStorage.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
 			}
 			
 			base.Dispose(disposing);
@@ -132,6 +139,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			builder.Append(type.SmallStep.ToString());
 			builder.Append(", Grand pas = ");
 			builder.Append(type.LargeStep.ToString());
+
+			if (type.UseCompactStorage)
+			{
+				builder.Append("   —   Compact");
+			}
 
 			return builder.ToString();
 		}
@@ -172,6 +184,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.SetDecimal(this.fieldSmallStep, type.SmallStep);
 			this.SetDecimal(this.fieldLargeStep, type.LargeStep);
+
+			this.checkCompactStorage.ActiveState = type.UseCompactStorage ? ActiveState.Yes : ActiveState.No;
 
 			this.ignoreChange = false;
 		}
@@ -259,7 +273,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	[Note1] Cet appel va provoquer le ResourceAccess.SetField.
 			this.OnContentChanged();
 		}
-		
+
+		private void HandleCheckClicked(object sender, MessageEventArgs e)
+		{
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			//	[Note1] On demande le type avec un ResourceAccess.GetField.
+			AbstractNumericType type = this.AbstractType as AbstractNumericType;
+
+			if (sender == this.checkCompactStorage)
+			{
+				type.DefineUseCompactStorage(!type.UseCompactStorage);
+			}
+
+			//	[Note1] Cet appel va provoquer le ResourceAccess.SetField.
+			this.OnContentChanged();
+		}
+
 
 		protected TextField						fieldMin;
 		protected TextField						fieldMax;
@@ -269,5 +302,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected TextField						fieldPreferredRes;
 		protected TextField						fieldSmallStep;
 		protected TextField						fieldLargeStep;
+		protected CheckButton					checkCompactStorage;
 	}
 }

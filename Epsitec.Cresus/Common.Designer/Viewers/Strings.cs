@@ -19,8 +19,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryCulture.MarkDimension = 5;
 			this.primaryCulture.ActiveState = ActiveState.Yes;
 			this.primaryCulture.AutoFocus = false;
-			//?this.primaryCulture.TabIndex = this.tabIndex++;
-			//?this.primaryCulture.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.array = new MyWidgets.StringArray(this);
 			this.array.Columns = 3;
@@ -36,8 +34,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.CellCountChanged += new EventHandler (this.HandleArrayCellCountChanged);
 			this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
-			//?this.array.TabIndex = this.tabIndex++;
-			//?this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.labelStatic = new StaticText(this);
 			this.labelStatic.ContentAlignment = ContentAlignment.MiddleRight;
