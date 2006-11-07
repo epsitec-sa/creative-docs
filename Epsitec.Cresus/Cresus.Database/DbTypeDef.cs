@@ -39,8 +39,8 @@ namespace Epsitec.Cresus.Database
 			}
 			else
 			{
-				this.length         = 1;
-				this.isFixedLength  = true;
+				this.length         = 0;
+				this.isFixedLength  = false;
 				this.isMultilingual = false;
 			}
 
@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.length;
+				return System.Math.Max (1, this.length);
 			}
 		}
 
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.isFixedLength;
+				return this.length == 0 ? true : this.isFixedLength;
 			}
 		}
 
@@ -205,16 +205,12 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "multi", DbTools.BoolDefaultingToFalseToString (this.isMultilingual));
 			DbTools.WriteAttribute (xmlWriter, "null", DbTools.BoolDefaultingToFalseToString (this.isNullable));
 
-			if (this.numDef != null)
+			if ((this.numDef != null) &&
+				(this.numDef.InternalRawType == DbRawType.Unsupported))
 			{
 				this.numDef.SerializeAttributes (xmlWriter, "num.");
 			}
 
-			if (!this.key.IsEmpty)
-			{
-				this.key.SerializeAttributes (xmlWriter, "key.");
-			}
-			
 			xmlWriter.WriteEndElement ();
 		}
 
@@ -236,7 +232,19 @@ namespace Epsitec.Cresus.Database
 				type.isNullable     = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("null"));
 
 				type.numDef = DbNumDef.DeserializeAttributes (xmlReader, "num.");
-				type.key    = DbKey.DeserializeAttributes (xmlReader, "key.");
+
+				if (type.numDef == null)
+				{
+					if (type.simpleType == DbSimpleType.Decimal)
+					{
+						type.numDef = DbNumDef.FromRawType (type.rawType);
+					}
+				}
+				else
+				{
+					System.Diagnostics.Debug.Assert (type.simpleType == DbSimpleType.Decimal);
+					System.Diagnostics.Debug.Assert (type.rawType == TypeConverter.GetRawType (type.simpleType, type.numDef));
+				}
 
 				if (!isEmptyElement)
 				{

@@ -169,6 +169,16 @@ namespace Epsitec.Cresus.Database
 			return InvariantConverter.ParseInt (value);
 		}
 
+		public static long ParseLong(string value)
+		{
+			return InvariantConverter.ParseLong (value);
+		}
+
+		public static decimal ParseDecimal(string value)
+		{
+			return InvariantConverter.ParseDecimal (value);
+		}
+
 		public static Druid ParseDruid(string value)
 		{
 			if (string.IsNullOrEmpty (value))
@@ -326,6 +336,30 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public static string LongToString(long value)
+		{
+			if (value == 0)
+			{
+				return null;
+			}
+			else
+			{
+				return InvariantConverter.ToString (value);
+			}
+		}
+
+		public static string DecimalToString(decimal value)
+		{
+			if (value == 0)
+			{
+				return null;
+			}
+			else
+			{
+				return InvariantConverter.ToString (value);
+			}
+		}
+		
 		public static string BoolDefaultingToFalseToString(bool value)
 		{
 			return value ? "Y" : null;

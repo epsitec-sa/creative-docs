@@ -18,13 +18,8 @@ namespace Epsitec.Cresus.Database
 		}
 
 		public DbNumDef(DecimalRange range)
+			: this (range.GetMaximumDigitCount (), range.FractionalDigits, range.Minimum, range.Maximum)
 		{
-			this.min_value = range.Minimum;
-			this.max_value = range.Maximum;
-			this.digit_shift     = (byte) range.FractionalDigits;
-			this.digit_precision = (byte) range.GetMaximumDigitCount ();
-
-			this.InvalidateAndUpdateAutoPrecision ();
 		}
 		
 		public DbNumDef(int digit_precision)
@@ -53,6 +48,25 @@ namespace Epsitec.Cresus.Database
 			this.max_value       = max_value;
 
 			this.InvalidateAndUpdateAutoPrecision ();
+			
+			if (this.digit_shift == 0)
+			{
+				if ((this.min_value == System.Int16.MinValue) &&
+					(this.max_value == System.Int16.MaxValue))
+				{
+					this.raw_type = DbRawType.Int16;
+				}
+				else if ((this.min_value == System.Int32.MinValue) &&
+					/**/ (this.max_value == System.Int32.MaxValue))
+				{
+					this.raw_type = DbRawType.Int32;
+				}
+				else if ((this.min_value == System.Int64.MinValue) &&
+					/**/ (this.max_value == System.Int64.MaxValue))
+				{
+					this.raw_type = DbRawType.Int64;
+				}
+			}
 		}
 		
 		
@@ -688,10 +702,10 @@ namespace Epsitec.Cresus.Database
 		{
 			if (this.InternalRawType == DbRawType.Unsupported)
 			{
-				xmlWriter.WriteAttributeString (prefix+"digits", InvariantConverter.ToString (this.DigitPrecision));
-				xmlWriter.WriteAttributeString (prefix+"shift", InvariantConverter.ToString (this.DigitShift));
-				xmlWriter.WriteAttributeString (prefix+"min", InvariantConverter.ToString (this.MinValue));
-				xmlWriter.WriteAttributeString (prefix+"max", InvariantConverter.ToString (this.MaxValue));
+				DbTools.WriteAttribute (xmlWriter, prefix+"digits", DbTools.IntToString (this.DigitPrecision));
+				DbTools.WriteAttribute (xmlWriter, prefix+"shift", DbTools.IntToString (this.DigitShift));
+				DbTools.WriteAttribute (xmlWriter, prefix+"min", DbTools.DecimalToString (this.MinValue));
+				DbTools.WriteAttribute (xmlWriter, prefix+"max", DbTools.DecimalToString (this.MaxValue));
 			}
 			else
 			{
@@ -723,10 +737,10 @@ namespace Epsitec.Cresus.Database
 
 			if (rawArg == null)
 			{
-				int digits  = InvariantConverter.ParseInt (xmlReader.GetAttribute (prefix+"digits"));
-				int shift   = InvariantConverter.ParseInt (xmlReader.GetAttribute (prefix+"shift"));
-				decimal min = InvariantConverter.ParseDecimal (xmlReader.GetAttribute (prefix+"min"));
-				decimal max = InvariantConverter.ParseDecimal (xmlReader.GetAttribute (prefix+"max"));
+				int digits  = DbTools.ParseInt (xmlReader.GetAttribute (prefix+"digits"));
+				int shift   = DbTools.ParseInt (xmlReader.GetAttribute (prefix+"shift"));
+				decimal min = DbTools.ParseDecimal (xmlReader.GetAttribute (prefix+"min"));
+				decimal max = DbTools.ParseDecimal (xmlReader.GetAttribute (prefix+"max"));
 
 				if ((digits == 0) &&
 					(shift == 0) &&

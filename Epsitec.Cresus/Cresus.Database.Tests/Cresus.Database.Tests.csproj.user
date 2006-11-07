@@ -27,7 +27,7 @@
     <StartProgram>S:\Epsitec.Cresus\External\nunit-gui.exe</StartProgram>
     <StartURL>
     </StartURL>
-    <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
+    <StartWorkingDirectory>S:\Epsitec.Cresus (db)\External</StartWorkingDirectory>
     <StartWithIE>false</StartWithIE>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
