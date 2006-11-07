@@ -468,6 +468,26 @@ namespace Epsitec.Common.Types
 					case "System.Void":
 						type = new VoidType (caption);
 						break;
+
+					case "System.Byte[]":
+						type = new BinaryType (caption);
+						break;
+
+					case "System.DateTime":
+						type = new DateTimeType (caption);
+						break;
+
+					case "Epsitec.Common.Types.Date":
+						type = new DateType (caption);
+						break;
+
+					case "Epsitec.Common.Types.Time":
+						type = new TimeType (caption);
+						break;
+
+					case "System.Collections.IEnumerable":
+						type = new CollectionType (caption);
+						break;
 					
 					default:
 						type = TypeRosetta.CreateSystemTypeBasedTypeObject (systemTypeName, caption);
