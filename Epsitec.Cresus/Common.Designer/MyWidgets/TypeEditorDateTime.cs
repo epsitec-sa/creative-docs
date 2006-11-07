@@ -97,25 +97,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (type.MinimumDate != Date.Null)
 			{
 				this.PutSummaryLegend(builder, "Date min = ");
-				builder.Append(type.MinimumDate.ToString());
+				builder.Append(TypeEditorDateTime.ToDate(type.MinimumDate.ToDateTime()));
 			}
 
 			if (type.MaximumDate != Date.Null)
 			{
 				this.PutSummaryLegend(builder, "Date max = ");
-				builder.Append(type.MaximumDate.ToString());
+				builder.Append(TypeEditorDateTime.ToDate(type.MaximumDate.ToDateTime()));
 			}
 
 			if (type.MinimumTime != Time.Null)
 			{
 				this.PutSummaryLegend(builder, "Heure min = ");
-				builder.Append(type.MinimumTime.ToString());
+				builder.Append(TypeEditorDateTime.ToTime(type.MinimumTime.ToDateTime()));
 			}
 
 			if (type.MaximumTime != Time.Null)
 			{
 				this.PutSummaryLegend(builder, "Heure max = ");
-				builder.Append(type.MaximumTime.ToString());
+				builder.Append(TypeEditorDateTime.ToTime(type.MaximumTime.ToDateTime()));
 			}
 
 			this.PutSummaryLegend(builder, "Pas date = ");
@@ -145,6 +145,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.ignoreChange = true;
 			this.fieldResol.Text = TypeEditorDateTime.Convert(type.Resolution);
+			TypeEditorDateTime.ToDate(this.fieldMinDate, type.MinimumDate);
+			TypeEditorDateTime.ToDate(this.fieldMaxDate, type.MaximumDate);
+			TypeEditorDateTime.ToTime(this.fieldMinTime, type.MinimumTime);
+			TypeEditorDateTime.ToTime(this.fieldMaxTime, type.MaximumTime);
 			this.ignoreChange = false;
 		}
 
@@ -181,6 +185,89 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		protected static void ToDate(TextField field, Date date)
+		{
+			if (date == Date.Null)
+			{
+				field.Text = "";
+			}
+			else
+			{
+				field.Text = TypeEditorDateTime.ToDate(date.ToDateTime());
+			}
+		}
+
+		protected static void ToTime(TextField field, Time time)
+		{
+			if (time == Time.Null)
+			{
+				field.Text = "";
+			}
+			else
+			{
+				field.Text = TypeEditorDateTime.ToTime(time.ToDateTime());
+			}
+		}
+
+		protected static Date ToDate(TextField field)
+		{
+			if (!string.IsNullOrEmpty(field.Text))
+			{
+				System.DateTime dt = TypeEditorDateTime.ToDateTime(field.Text);
+				if (dt != System.DateTime.MinValue)
+				{
+					return new Date(dt);
+				}
+			}
+
+			return Date.Null;
+		}
+
+		protected static Time ToTime(TextField field)
+		{
+			if (!string.IsNullOrEmpty(field.Text))
+			{
+				System.DateTime dt = TypeEditorDateTime.ToDateTime(field.Text);
+				if (dt != System.DateTime.MinValue)
+				{
+					return new Time(dt);
+				}
+			}
+
+			return Time.Null;
+		}
+
+		protected static string ToDate(System.DateTime dt)
+		{
+			//	(d) Short date: 4/17/2006
+			return dt.ToString("d", System.Globalization.CultureInfo.CurrentCulture);
+		}
+
+		protected static string ToTime(System.DateTime dt)
+		{
+			//	(T) Long time: 14:22:48
+			return dt.ToString("T", System.Globalization.CultureInfo.CurrentCulture);
+		}
+
+		protected static string ToDateTime(System.DateTime dt)
+		{
+			//	(G) General date/long time: 17.04.2006 14:22:48
+			return dt.ToString("G", System.Globalization.CultureInfo.CurrentCulture);
+		}
+
+		protected static System.DateTime ToDateTime(string text)
+		{
+			System.DateTime dt;
+			if (System.DateTime.TryParse(text, System.Globalization.CultureInfo.CurrentCulture, System.Globalization.DateTimeStyles.AssumeLocal|System.Globalization.DateTimeStyles.NoCurrentDateDefault, out dt))
+			{
+				return dt;
+			}
+			else
+			{
+				return System.DateTime.MinValue;
+			}
+		}
+
 
 		private void HandleTextFieldChanged(object sender)
 		{
@@ -199,10 +286,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (sender == this.fieldMinDate)
 			{
+				type.DefineMinimumDate(TypeEditorDateTime.ToDate(this.fieldMinDate));
 			}
 
 			if (sender == this.fieldMaxDate)
 			{
+				type.DefineMaximumDate(TypeEditorDateTime.ToDate(this.fieldMaxDate));
+			}
+
+			if (sender == this.fieldMinTime)
+			{
+				type.DefineMinimumTime(TypeEditorDateTime.ToTime(this.fieldMinTime));
+			}
+
+			if (sender == this.fieldMaxTime)
+			{
+				type.DefineMaximumTime(TypeEditorDateTime.ToTime(this.fieldMaxTime));
 			}
 
 			//	[Note1] Cet appel va provoquer le ResourceAccess.SetField.

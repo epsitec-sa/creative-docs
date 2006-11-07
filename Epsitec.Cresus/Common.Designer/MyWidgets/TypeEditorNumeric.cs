@@ -76,7 +76,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.checkCompactStorage = new CheckButton(right);
 			this.checkCompactStorage.Text = Res.Strings.Viewers.Types.Numeric.CompactStorage;
 			this.checkCompactStorage.Dock = DockStyle.StackBegin;
-			this.checkCompactStorage.Margins = new Margins(20, 0, 10+2, 0);
+			this.checkCompactStorage.Margins = new Margins(20, 0, 10+20, 0);
 			this.checkCompactStorage.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 		}
 		
