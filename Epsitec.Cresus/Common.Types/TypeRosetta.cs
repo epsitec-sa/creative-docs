@@ -477,11 +477,11 @@ namespace Epsitec.Common.Types
 						type = new DateTimeType (caption);
 						break;
 
-					case "Epsitec.Common.Types.Date":
+					case "Epsitec.Common.Types.Date, Common.Types":
 						type = new DateType (caption);
 						break;
 
-					case "Epsitec.Common.Types.Time":
+					case "Epsitec.Common.Types.Time, Common.Types":
 						type = new TimeType (caption);
 						break;
 
