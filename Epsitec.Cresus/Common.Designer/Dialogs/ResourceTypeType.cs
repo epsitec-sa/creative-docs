@@ -57,12 +57,12 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.CreateRadio(Res.Captions.Types.Type.LongInteger);
 				this.CreateRadio(Res.Captions.Types.Type.Decimal);
 				this.CreateRadio(Res.Captions.Types.Type.String);
-				this.CreateRadio(Res.Captions.Types.Type.Enum);
-				this.CreateRadio(Res.Captions.Types.Type.Structured);
-				this.CreateRadio(Res.Captions.Types.Type.Collection);
 				this.CreateRadio(Res.Captions.Types.Type.Date);
 				this.CreateRadio(Res.Captions.Types.Type.Time);
 				this.CreateRadio(Res.Captions.Types.Type.DateTime);
+				this.CreateRadio(Res.Captions.Types.Type.Enum);
+				this.CreateRadio(Res.Captions.Types.Type.Structured);
+				this.CreateRadio(Res.Captions.Types.Type.Collection);
 				this.CreateRadio(Res.Captions.Types.Type.Binary);
 				this.tabIndex++;
 

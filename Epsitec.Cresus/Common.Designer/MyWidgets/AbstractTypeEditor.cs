@@ -153,13 +153,35 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			StaticText text = new StaticText(group);
 			text.Text = label;
-			text.ContentAlignment = ContentAlignment.MiddleLeft;
-			text.PreferredWidth = 400;
+			text.ContentAlignment = ContentAlignment.MiddleRight;
+			text.PreferredWidth = 160;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 8, 0, 0);
 
 			field = new TextField(group);
-			field.PreferredWidth = 80;
+			field.PreferredWidth = 130;
+			field.Dock = DockStyle.Left;
+			field.TabIndex = 0;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+		}
+
+		protected void CreateComboLabeled(string label, Widget parent, out Widget group, out TextFieldCombo field)
+		{
+			//	Crée un super-widget permettant d'éditer une chaîne, avec une étiquette à gauche.
+			group = new Widget(parent);
+			group.TabIndex = this.tabIndex++;
+			group.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+
+			StaticText text = new StaticText(group);
+			text.Text = label;
+			text.ContentAlignment = ContentAlignment.MiddleRight;
+			text.PreferredWidth = 160;
+			text.Dock = DockStyle.Left;
+			text.Margins = new Margins(0, 8, 0, 0);
+
+			field = new TextFieldCombo(group);
+			field.IsReadOnly = true;
+			field.PreferredWidth = 130;
 			field.Dock = DockStyle.Left;
 			field.TabIndex = 0;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -175,12 +197,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			StaticText text = new StaticText(group);
 			text.Text = label;
 			text.ContentAlignment = ContentAlignment.MiddleRight;
-			text.PreferredWidth = 250;
+			text.PreferredWidth = 160;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 8, 0, 0);
 
 			field = new TextField(group);
-			field.PreferredWidth = 80;
+			field.PreferredWidth = 130;
 			field.Dock = DockStyle.Left;
 			field.TabIndex = 0;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

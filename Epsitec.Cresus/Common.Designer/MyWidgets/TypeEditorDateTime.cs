@@ -14,6 +14,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			Widget group;
 
+			this.CreateComboLabeled("Résolution", this, out group, out this.fieldResol);
+			group.Dock = DockStyle.StackBegin;
+			group.Margins = new Margins(0, 0, 0, 10);
+			this.fieldResol.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+			this.fieldResol.Items.Add("Milliseconds");
+			this.fieldResol.Items.Add("Seconds");
+			this.fieldResol.Items.Add("Minutes");
+			this.fieldResol.Items.Add("Hours");
+			this.fieldResol.Items.Add("Days");
+			this.fieldResol.Items.Add("Weeks");
+			this.fieldResol.Items.Add("Months");
+			this.fieldResol.Items.Add("Years");
+
 			this.CreateStringLabeled("Date minimale", this, out group, out this.fieldMinDate);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 2);
@@ -55,6 +68,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
+				this.fieldResol.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMinDate.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMaxDate.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMinTime.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
@@ -74,25 +88,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
 
-			if (type.MinimumDate == Date.Null)
+			if (type.Resolution != TimeResolution.Default)
+			{
+				builder.Append("Résolution = ");
+				builder.Append(TypeEditorDateTime.Convert(type.Resolution));
+			}
+
+			if (type.MinimumDate != Date.Null)
 			{
 				this.PutSummaryLegend(builder, "Date min = ");
 				builder.Append(type.MinimumDate.ToString());
 			}
 
-			if (type.MaximumDate == Date.Null)
+			if (type.MaximumDate != Date.Null)
 			{
 				this.PutSummaryLegend(builder, "Date max = ");
 				builder.Append(type.MaximumDate.ToString());
 			}
 
-			if (type.MinimumTime == Time.Null)
+			if (type.MinimumTime != Time.Null)
 			{
 				this.PutSummaryLegend(builder, "Heure min = ");
 				builder.Append(type.MinimumTime.ToString());
 			}
 
-			if (type.MaximumTime == Time.Null)
+			if (type.MaximumTime != Time.Null)
 			{
 				this.PutSummaryLegend(builder, "Heure max = ");
 				builder.Append(type.MaximumTime.ToString());
@@ -124,7 +144,41 @@ namespace Epsitec.Common.Designer.MyWidgets
 			AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
 
 			this.ignoreChange = true;
+			this.fieldResol.Text = TypeEditorDateTime.Convert(type.Resolution);
 			this.ignoreChange = false;
+		}
+
+
+		protected static TimeResolution Convert(string text)
+		{
+			switch (text)
+			{
+				case "Milliseconds":  return TimeResolution.Milliseconds;
+				case "Seconds":       return TimeResolution.Seconds;
+				case "Minutes":       return TimeResolution.Minutes;
+				case "Hours":         return TimeResolution.Hours;
+				case "Days":          return TimeResolution.Days;
+				case "Weeks":         return TimeResolution.Weeks;
+				case "Months":        return TimeResolution.Months;
+				case "Years":         return TimeResolution.Years;
+				default:              return TimeResolution.Default;
+			}
+		}
+
+		protected static string Convert(TimeResolution resol)
+		{
+			switch (resol)
+			{
+				case TimeResolution.Milliseconds:  return "Milliseconds";
+				case TimeResolution.Seconds:       return "Seconds";
+				case TimeResolution.Minutes:       return "Minutes";
+				case TimeResolution.Hours:         return "Hours";
+				case TimeResolution.Days:          return "Days";
+				case TimeResolution.Weeks:         return "Weeks";
+				case TimeResolution.Months:        return "Months";
+				case TimeResolution.Years:         return "Years";
+				default:                           return "";
+			}
 		}
 
 
@@ -137,6 +191,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			//	[Note1] On demande le type avec un ResourceAccess.GetField.
 			AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
+
+			if (sender == this.fieldResol)
+			{
+				type.DefineResolution(TypeEditorDateTime.Convert(this.fieldResol.Text));
+			}
 
 			if (sender == this.fieldMinDate)
 			{
@@ -151,7 +210,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		protected TextFieldCombo				fieldType;
+		protected TextFieldCombo				fieldResol;
 		protected TextField						fieldMinDate;
 		protected TextField						fieldMaxDate;
 		protected TextField						fieldMinTime;

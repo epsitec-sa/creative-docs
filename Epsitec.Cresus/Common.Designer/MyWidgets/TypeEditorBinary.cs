@@ -17,6 +17,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.CreateStringLabeled("Mime", this, out group, out this.fieldMime);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 0);
+			this.fieldMime.PreferredWidth = 400;
 			this.fieldMime.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 		}
 

@@ -194,20 +194,18 @@ namespace Epsitec.Common.Designer
 
 		protected static string TypeTypeController(AbstractType type)
 		{
-			if (type is VoidType       )  return null;
-			if (type is BooleanType    )  return "Boolean";
-			if (type is IntegerType    )  return "Numeric";
-			if (type is LongIntegerType)  return "Numeric";
-			if (type is DoubleType     )  return "Numeric";
-			if (type is DecimalType    )  return "Numeric";
-			if (type is StringType     )  return "String";
-			if (type is EnumType       )  return "Enum";
-			if (type is StructuredType )  return null;
-			if (type is CollectionType )  return null;
-			if (type is DateType       )  return "DateType";
-			if (type is TimeType       )  return "DateType";
-			if (type is DateTimeType   )  return "DateType";
-			if (type is BinaryType     )  return "Binary";
+			if (type is VoidType             )  return null;
+			if (type is BooleanType          )  return "Boolean";
+			if (type is IntegerType          )  return "Numeric";
+			if (type is LongIntegerType      )  return "Numeric";
+			if (type is DoubleType           )  return "Numeric";
+			if (type is DecimalType          )  return "Numeric";
+			if (type is StringType           )  return "String";
+			if (type is EnumType             )  return "Enum";
+			if (type is StructuredType       )  return null;
+			if (type is CollectionType       )  return null;
+			if (type is AbstractDateTimeType )  return "DateTime";
+			if (type is BinaryType           )  return "Binary";
 
 			return null;
 		}
