@@ -245,7 +245,7 @@ namespace Epsitec.Cresus.Database
 			}
 			finally
 			{
-				this.SetCommandTransaction (null);
+				this.PopCommandTransaction ();
 			}
 		}
 		
@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.Database
 			}
 			finally
 			{
-				this.SetCommandTransaction (null);
+				this.PopCommandTransaction ();
 			}
 		}
 		
@@ -423,7 +423,18 @@ namespace Epsitec.Cresus.Database
 				DbRichCommand.CheckRowIds (table);
 			}
 		}
-		
+
+		public System.Data.IDbTransaction GetActiveTransaction()
+		{
+			if (this.activeTransactions.Count == 0)
+			{
+				return null;
+			}
+			else
+			{
+				return this.activeTransactions.Peek ();
+			}
+		}
 		
 		public static System.Data.DataRow[] CopyLiveRows(System.Collections.IEnumerable rows)
 		{
@@ -780,20 +791,34 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-		
-		protected void SetCommandTransaction(System.Data.IDbTransaction transaction)
+
+		private void SetCommandTransaction(System.Data.IDbTransaction transaction)
 		{
 			if (transaction is DbTransaction)
 			{
 				transaction = ((DbTransaction) transaction).Transaction;
 			}
-			
+
+			System.Diagnostics.Debug.Assert (transaction != null);
+
 			for (int i = 0; i < this.commands.Count; i++)
 			{
 				this.commands[i].Transaction = transaction;
 			}
+
+			this.activeTransactions.Push (transaction);
 		}
-		
+
+		private void PopCommandTransaction()
+		{
+			this.activeTransactions.Pop ();
+			
+			for (int i = 0; i < this.commands.Count; i++)
+			{
+				this.commands[i].Transaction = null;
+			}
+		}
+
 		protected void CheckValidState()
 		{
 			if (this.db_access.IsValid == false)
@@ -1087,7 +1112,7 @@ namespace Epsitec.Cresus.Database
 			}
 			finally
 			{
-				this.SetCommandTransaction (null);
+				this.PopCommandTransaction ();
 			}
 			
 			this.CreateDataRelations ();
@@ -1166,6 +1191,8 @@ namespace Epsitec.Cresus.Database
 		protected System.Data.DataSet			data_set;
 		protected DbAccess						db_access;
 		protected System.Data.IDataAdapter[]	adapters;
+
+		Stack<System.Data.IDbTransaction>		activeTransactions = new Stack<System.Data.IDbTransaction> ();
 		
 		private bool							is_read_only;
 		private int								stat_replace_update_count;

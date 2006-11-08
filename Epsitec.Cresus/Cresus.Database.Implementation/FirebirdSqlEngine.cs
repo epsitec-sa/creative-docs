@@ -122,18 +122,31 @@ namespace Epsitec.Cresus.Database.Implementation
 				FbDataAdapter    adapter = this.fb.NewDataAdapter (command) as FbDataAdapter;
 				FbCommandBuilder builder = new FbCommandBuilder (adapter);
 
+				adapters[i] = adapter;
+				
+#if true
 				//	FbCommandBuilder.RowUpdatingHandler pourrait bénéficier du rajout
 				//	suivant: e.Command.Transaction = this.DataAdapter.SelectCommand.Transaction
-				//	ce qui permettrait de garantir que l'on utilise le bon objet de transaction...
+				//	ce qui permettrait de garantir que l'on utilise le bon objet de transaction;
+				//	en attendant, on détecte la mise à jour via la commande et on s'assure nous-
+				//	même que la transaction est bien correcte :
 				
-				adapters[i] = adapter;
+				adapter.RowUpdating += delegate (object sender, FbRowUpdatingEventArgs e)
+				{
+					if (e.Command.Transaction == null)
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("Fixed missing transaction for command:\n   {0}", e.Command.CommandText));
+						e.Command.Transaction = richCommand.GetActiveTransaction () as FbTransaction;
+					}
+				};
+#endif
 			}
 				
 			richCommand.InternalFillDataSet (this.fb.DbAccess, transaction, adapters);
 		}
 		
 		#endregion
-		
+			
 		#region IDisposable Members
 		
 		public void Dispose()
