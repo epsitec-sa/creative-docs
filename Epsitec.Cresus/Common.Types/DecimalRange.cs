@@ -84,8 +84,18 @@ namespace Epsitec.Common.Types
 
 		public int GetMaximumDigitCount()
 		{
-			decimal value = (this.Maximum - this.Minimum) * this.digitsMul;
-			int     count = 0;
+			return System.Math.Max (this.GetIntegerDigitCount (this.Maximum * this.digitsMul),
+				/**/				this.GetIntegerDigitCount (this.Minimum * this.digitsMul));
+		}
+
+		private int GetIntegerDigitCount(decimal value)
+		{
+			if (value < 0)
+			{
+				value = -value;
+			}
+			
+			int count = 0;
 
 			while (decimal.Truncate (value) > 0)
 			{
