@@ -151,6 +151,19 @@ namespace Epsitec.Common.Types
 				throw new System.ArgumentException ("Value cannot be converted", "obj");
 			}
 		}
+		public static short   ToShort(object obj)
+		{
+			short value;
+
+			if (InvariantConverter.Convert (obj, out value))
+			{
+				return value;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Value cannot be converted", "obj");
+			}
+		}
 		public static long    ToLong(object obj)
 		{
 			long value;
