@@ -1,11 +1,11 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// The <c>DbColumnClass</c> enumeration specifies what kind of data a column
-	/// stores.
+	/// The <c>DbColumnClass</c> enumeration specifies what class of data a
+	/// column stores.
 	/// </summary>
 	public enum DbColumnClass : byte
 	{

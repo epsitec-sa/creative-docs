@@ -5,7 +5,44 @@ namespace Epsitec.Cresus.Database
 	[TestFixture]
 	public class DbTableTest
 	{
-		[Test] public void CheckNewDbTable()
+		[TestFixtureSetUp]
+		public void Setup()
+		{
+			try
+			{
+				System.IO.File.Delete (@"C:\Program Files\firebird\Data\Epsitec\TABLETEST.FIREBIRD");
+			}
+			catch (System.IO.IOException ex)
+			{
+				System.Console.Out.WriteLine ("Cannot delete database file. Error message :\n{0}\nWaiting for 5 seconds...", ex.ToString ());
+				System.Threading.Thread.Sleep (5000);
+
+				try
+				{
+					System.IO.File.Delete (@"C:\Program Files\firebird\Data\Epsitec\TABLETEST.FIREBIRD");
+				}
+				catch
+				{
+				}
+			}
+
+			using (DbInfrastructure infrastructure = new DbInfrastructure ())
+			{
+				infrastructure.CreateDatabase (DbInfrastructure.CreateDbAccess ("tabletest"));
+			}
+
+			this.infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("tabletest", true);
+		}
+
+		[TestFixtureTearDown]
+		public void TearDown()
+		{
+			this.infrastructure.Dispose ();
+			this.infrastructure = null;
+		}
+
+		[Test]
+		public void CheckNewDbTable()
 		{
 			DbTable table = new DbTable ("Test");
 			
@@ -54,13 +91,14 @@ namespace Epsitec.Cresus.Database
 		}
 #endif
 		
-		[Test] public void CheckForeignKeys()
+		[Test]
+		public void CheckForeignKeys()
 		{
 			DbTable table = new DbTable ("Test");
 			
-			DbColumn column_1 = DbColumn.CreateRefColumn ("A", "ParentTable", new DbTypeDef (Res.Types.Num.NullableKeyId));
-			DbColumn column_2 = new DbColumn ("X", new DbTypeDef (new Epsitec.Common.Types.DecimalType (-999999999.999999999M, 999999999.999999999M, 0.000000001M)));
-			DbColumn column_3 = DbColumn.CreateRefColumn ("Z", "Customer", new DbTypeDef (Res.Types.Num.NullableKeyId));
+			DbColumn column_1 = this.infrastructure.CreateRefColumn ("A", "ParentTable", new DbTypeDef (Res.Types.Num.NullableKeyId));
+			DbColumn column_2 = this.infrastructure.CreateUserDataColumn ("X", new DbTypeDef (new Epsitec.Common.Types.DecimalType (-999999999.999999999M, 999999999.999999999M, 0.000000001M)));
+			DbColumn column_3 = this.infrastructure.CreateRefColumn ("Z", "Customer", new DbTypeDef (Res.Types.Num.NullableKeyId));
 			
 			table.Columns.Add (column_1);
 			table.Columns.Add (column_2);
@@ -229,5 +267,7 @@ namespace Epsitec.Cresus.Database
 			//	exception: colonne b à double
 		}
 #endif
+		
+		private DbInfrastructure infrastructure;
 	}
 }

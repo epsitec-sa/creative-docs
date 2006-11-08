@@ -570,10 +570,29 @@ namespace Epsitec.Cresus.Database
 			//	table.
 			
 			DbTypeDef typeDef = this.internal_types[Tags.TypeKeyId];
-			return new DbColumn[] { DbColumn.CreateRefColumn (columnName, targetTableName, typeDef) };
+			return new DbColumn[] { this.CreateRefColumn (columnName, targetTableName, typeDef) };
 		}
-		
-		
+
+		public DbColumn CreateRefColumn(string columnName, string targetTableName, DbTypeDef type)
+		{
+			System.Diagnostics.Debug.Assert (type != null);
+			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (targetTableName));
+
+			DbColumn column = new DbColumn (columnName, type, DbColumnClass.RefId, DbElementCat.UserDataManaged);
+
+			column.DefineTargetTableName (targetTableName);
+
+			return column;
+		}
+
+		public DbColumn CreateUserDataColumn(string columnName, DbTypeDef type)
+		{
+			System.Diagnostics.Debug.Assert (type != null);
+
+			return new DbColumn (columnName, type, DbColumnClass.Data, DbElementCat.UserDataManaged);
+		}
+
+
 		public void RegisterColumnRelations(DbTransaction transaction, DbTable table)
 		{
 			if (transaction == null)
@@ -1519,7 +1538,7 @@ namespace Epsitec.Cresus.Database
 
 				dbColumn.DefineName (columnName);
 				dbColumn.DefineKey (new DbKey (columnId));
-				dbColumn.DefineTypeDef (typeDef);
+				dbColumn.DefineType (typeDef);
 				dbColumn.DefineTargetTableName (targetName);
 				
 				dbTable.Columns.Add (dbColumn);

@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Support;
@@ -8,67 +8,74 @@ namespace Epsitec.Cresus.Database
 {
 	/// <summary>
 	/// The <c>DbColumn</c> class describes a column in a database table.
-	/// This is our version of the column metadata wrapper (<see cref="System.Data.DataColumn"/>).
+	/// This is our version of the column metadata wrapper (compare with the
+	/// ADO.NET <see cref="System.Data.DataColumn"/> class).
 	/// </summary>
 	public class DbColumn : IName, ICaption, IXmlSerializable, System.IEquatable<DbColumn>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbColumn"/> class.
+		/// </summary>
 		public DbColumn()
 		{
 		}
 
-		public DbColumn(string name)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbColumn"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="type">The type.</param>
+		public DbColumn(string name, DbTypeDef type)
 		{
 			this.DefineName (name);
+			this.DefineType (type);
 		}
 
-		public DbColumn(string name, DbTypeDef typeDef)
-			: this (name)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbColumn"/> class.
+		/// </summary>
+		/// <param name="captionId">The caption DRUID.</param>
+		/// <param name="type">The type.</param>
+		public DbColumn(Druid captionId, DbTypeDef type)
 		{
-			this.DefineType (typeDef);
-		}
-
-		public DbColumn(Druid captionId, DbTypeDef typeDef)
-		{
-			this.DefineType (typeDef);
+			this.DefineType (type);
 			this.DefineCaptionId (captionId);
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbColumn"/> class.
+		/// </summary>
+		/// <param name="field">The structured type field definition.</param>
 		public DbColumn(StructuredTypeField field)
 			: this (field.CaptionId, new DbTypeDef (field.Type))
 		{
 		}
 
-		public DbColumn(string name, DbTypeDef typeDef, DbColumnClass columnClass)
-			: this (name, typeDef)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbColumn"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="type">The type.</param>
+		/// <param name="columnClass">The column class.</param>
+		public DbColumn(string name, DbTypeDef type, DbColumnClass columnClass)
+			: this (name, type)
 		{
 			this.DefineColumnClass (columnClass);
 		}
 
-		public DbColumn(string name, DbTypeDef typeDef, DbColumnClass columnClass, DbElementCat category)
-			: this (name, typeDef, columnClass)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbColumn"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="type">The type.</param>
+		/// <param name="columnClass">The column class.</param>
+		/// <param name="category">The category.</param>
+		public DbColumn(string name, DbTypeDef type, DbColumnClass columnClass, DbElementCat category)
+			: this (name, type, columnClass)
 		{
 			this.DefineCategory (category);
 		}
 
-
-		public static DbColumn CreateRefColumn(string columnName, string targetTableName, DbTypeDef typeDef)
-		{
-			System.Diagnostics.Debug.Assert (typeDef != null);
-			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (targetTableName));
-
-			DbColumn column = new DbColumn (columnName, typeDef, DbColumnClass.RefId, DbElementCat.UserDataManaged);
-
-			column.DefineTargetTableName (targetTableName);
-
-			return column;
-		}
-
-		public static DbColumn CreateUserDataColumn(string columnName, DbTypeDef typeDef)
-		{
-			System.Diagnostics.Debug.Assert (typeDef != null);
-
-			return new DbColumn (columnName, typeDef, DbColumnClass.Data, DbElementCat.UserDataManaged);
-		}
 
 
 		#region IName Members
@@ -191,7 +198,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.typeDef;
+				return this.type;
 			}
 		}
 		
@@ -199,7 +206,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return System.Math.Max (this.typeDef.Length, 1);
+				return System.Math.Max (this.type.Length, 1);
 			}
 		}
 
@@ -207,7 +214,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.typeDef.IsFixedLength;
+				return this.type.IsFixedLength;
 			}
 		}
 
@@ -215,7 +222,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.typeDef.IsMultilingual;
+				return this.type.IsMultilingual;
 			}
 		}
 
@@ -241,7 +248,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.typeDef.IsNullable;
+				return this.type.IsNullable;
 			}
 		}
 
@@ -376,22 +383,24 @@ namespace Epsitec.Cresus.Database
 			this.caption = null;
 			this.name = null;
 		}
-		
+
 
 
 		internal void DefineType(DbTypeDef value)
 		{
-			if (this.typeDef == value)
+			if (this.type == value)
 			{
 				return;
 			}
-			
-			if (this.typeDef != null)
+
+			if (this.type == null)
+			{
+				this.type = value;
+			}
+			else
 			{
 				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot change its type", this.Name));
 			}
-
-			this.typeDef = value;
 		}
 
 		internal void DefineLocalisation(DbColumnLocalisation value)
@@ -412,7 +421,7 @@ namespace Epsitec.Cresus.Database
 
 		public SqlColumn CreateSqlColumn(ITypeConverter typeConverter)
 		{
-			DbRawType rawType = this.typeDef.RawType;
+			DbRawType rawType = this.type.RawType;
 			SqlColumn column  = null;
 
 			//	Vérifie que la définition de la colonne est bien correcte. On ne permet ainsi
@@ -428,7 +437,7 @@ namespace Epsitec.Cresus.Database
 							/**/						this.Name, this.localisation, this.columnClass);
 						throw new System.InvalidOperationException (message);
 					}
-					if (this.typeDef.IsMultilingual == false)
+					if (this.type.IsMultilingual == false)
 					{
 						string message = string.Format ("Column '{0}' specifies localisation {1} but type is not multilingual",
 							/**/						this.Name, this.localisation);
@@ -553,7 +562,7 @@ namespace Epsitec.Cresus.Database
 
 		public SqlField CreateEmptySqlField(ITypeConverter type_converter)
 		{
-			DbRawType raw_type = this.typeDef.RawType;
+			DbRawType raw_type = this.type.RawType;
 			SqlField  field    = SqlField.CreateConstant (null, raw_type);
 			field.Alias = this.CreateSqlName ();
 			return field;
@@ -656,7 +665,7 @@ namespace Epsitec.Cresus.Database
 
 		private static readonly Caption nullCaption = new Caption ();
 
-		private DbTypeDef typeDef;
+		private DbTypeDef type;
 		private DbTable table;
 
 		private string name;
@@ -681,21 +690,5 @@ namespace Epsitec.Cresus.Database
 		internal const int MaxCaptionLength		= 100;
 		internal const int MaxDescriptionLength	= 500;
 		internal const int MaxInfoXmlLength		= 500;
-
-		internal void DefineTypeDef(DbTypeDef typeDef)
-		{
-			if (this.typeDef == typeDef)
-			{
-				return;
-			}
-			if (this.typeDef == null)
-			{
-				this.typeDef = typeDef;
-			}
-			else
-			{
-				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot define a new type", this.Name));
-			}
-		}
 	}
 }
