@@ -1,17 +1,25 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Collections
 {
 	/// <summary>
 	/// The <c>Collections.DbColumns</c> class manages a list of <c>DbColumn</c> items.
 	/// </summary>
-	public class DbColumns : NameList<DbColumn>
+	public sealed class DbColumns : NameList<DbColumn>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbColumns"/> class.
+		/// </summary>
 		public DbColumns()
 		{
 		}
 
+		/// <summary>
+		/// Gets the <see cref="DbColumn"/> with the specified column name and
+		/// column class.
+		/// </summary>
+		/// <value>The <c>DbColumn</c>.</value>
 		public DbColumn this[string columnName, DbColumnClass columnClass]
 		{
 			get

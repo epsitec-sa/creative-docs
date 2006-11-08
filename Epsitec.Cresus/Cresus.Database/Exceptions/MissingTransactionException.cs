@@ -1,40 +1,60 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Exceptions
 {
 	/// <summary>
-	/// Exception signalant que la base de données a détecté une erreur de syntaxe
-	/// (au niveau des arguments de connexion, dans une requête SQL, dans un nom
-	/// de table, etc.)
+	/// The <c>MissingTransactionException</c> exception is raised when a command is
+	/// executed outside of a properly initialized transaction.
 	/// </summary>
-	
+
 	[System.Serializable]
-	
-	public class MissingTransactionException : GenericException
+
+	public sealed class MissingTransactionException : GenericException
 	{
-		public MissingTransactionException(DbAccess db_access) : base (db_access)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="MissingTransactionException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		public MissingTransactionException(DbAccess databaseAccess)
+			: base (databaseAccess)
 		{
 		}
-		
-		public MissingTransactionException(DbAccess db_access, string message) : base (db_access, message)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="MissingTransactionException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		/// <param name="message">The message.</param>
+		public MissingTransactionException(DbAccess databaseAccess, string message)
+			: base (databaseAccess, message)
 		{
 		}
-		
-		public MissingTransactionException(DbAccess db_access, string message, System.Exception inner_exception) : base (db_access, message, inner_exception)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="MissingTransactionException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		/// <param name="message">The message.</param>
+		/// <param name="innerException">The inner exception.</param>
+		public MissingTransactionException(DbAccess databaseAccess, string message, System.Exception innerException)
+			: base (databaseAccess, message, innerException)
 		{
 		}
-		
-		
+
+
 		#region ISerializable Members
-		protected MissingTransactionException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+
+		protected MissingTransactionException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+			: base (info, context)
 		{
 		}
-			
+
 		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
 			base.GetObjectData (info, context);
 		}
+
 		#endregion
 	}
 }

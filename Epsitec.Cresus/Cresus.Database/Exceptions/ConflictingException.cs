@@ -1,46 +1,77 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Exceptions
 {
 	/// <summary>
-	/// Exception signalant un conflit pendant une mise à jour.
+	/// The <c>ConflictingException</c> exception is raised when a conflict is detected
+	/// during an update.
 	/// </summary>
-	
+
 	[System.Serializable]
-	
-	public class ConflictingException : GenericException
+
+	public sealed class ConflictingException : GenericException
 	{
-		public ConflictingException() : base (DbAccess.Empty)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ConflictingException"/> class.
+		/// </summary>
+		public ConflictingException()
+			: base (DbAccess.Empty)
 		{
 		}
-		
-		public ConflictingException(string message) : base (DbAccess.Empty, message)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ConflictingException"/> class.
+		/// </summary>
+		/// <param name="message">The message.</param>
+		public ConflictingException(string message)
+			: base (DbAccess.Empty, message)
 		{
 		}
-		
-		public ConflictingException(DbAccess db_access) : base (db_access)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ConflictingException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		public ConflictingException(DbAccess databaseAccess)
+			: base (databaseAccess)
 		{
 		}
-		
-		public ConflictingException(DbAccess db_access, string message) : base (db_access, message)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ConflictingException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		/// <param name="message">The message.</param>
+		public ConflictingException(DbAccess databaseAccess, string message)
+			: base (databaseAccess, message)
 		{
 		}
-		
-		public ConflictingException(DbAccess db_access, string message, System.Exception inner_exception) : base (db_access, message, inner_exception)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ConflictingException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		/// <param name="message">The message.</param>
+		/// <param name="innerException">The inner exception.</param>
+		public ConflictingException(DbAccess databaseAccess, string message, System.Exception innerException)
+			: base (databaseAccess, message, innerException)
 		{
 		}
-		
-		
+
+
 		#region ISerializable Members
-		protected ConflictingException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+
+		protected ConflictingException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+			: base (info, context)
 		{
 		}
-		
+
 		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
 			base.GetObjectData (info, context);
 		}
+
 		#endregion
 	}
 }

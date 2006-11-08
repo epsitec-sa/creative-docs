@@ -1,40 +1,61 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Exceptions
 {
 	/// <summary>
-	/// Exception signalant que la base de données a détecté une erreur de syntaxe
-	/// (au niveau des arguments de connexion, dans une requête SQL, dans un nom
-	/// de table, etc.)
+	/// The <c>SyntaxException</c> exception is raised when a syntax error is
+	/// detected (invalid connection string, ill formed SQL request, wrong table
+	/// description, etc.)
 	/// </summary>
-	
+
 	[System.Serializable]
-	
-	public class SyntaxException : GenericException
+
+	public sealed class SyntaxException : GenericException
 	{
-		public SyntaxException(DbAccess db_access) : base (db_access)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SyntaxException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		public SyntaxException(DbAccess databaseAccess)
+			: base (databaseAccess)
 		{
 		}
-		
-		public SyntaxException(DbAccess db_access, string message) : base (db_access, message)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SyntaxException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		/// <param name="message">The message.</param>
+		public SyntaxException(DbAccess databaseAccess, string message)
+			: base (databaseAccess, message)
 		{
 		}
-		
-		public SyntaxException(DbAccess db_access, string message, System.Exception inner_exception) : base (db_access, message, inner_exception)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SyntaxException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		/// <param name="message">The message.</param>
+		/// <param name="innerException">The inner exception.</param>
+		public SyntaxException(DbAccess databaseAccess, string message, System.Exception innerException)
+			: base (databaseAccess, message, innerException)
 		{
 		}
-		
-		
+
+
 		#region ISerializable Members
-		protected SyntaxException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+		
+		protected SyntaxException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+			: base (info, context)
 		{
 		}
-			
+
 		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
 			base.GetObjectData (info, context);
 		}
+
 		#endregion
 	}
 }

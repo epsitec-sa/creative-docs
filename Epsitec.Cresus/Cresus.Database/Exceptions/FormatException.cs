@@ -1,39 +1,65 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Exceptions
 {
 	/// <summary>
-	/// L'exception FormatException représente une erreur de format (type invalide,
-	/// etc.) qui n'est pas encore forcément lié à une base.
+	/// The <c>FormatException</c> represents a format error related to the
+	/// database layer. It is similar to <see cref="System.FormatException"/>.
 	/// </summary>
 	
 	[System.Serializable]
 	
-	public class FormatException : GenericException
+	public sealed class FormatException : GenericException
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FormatException"/> class.
+		/// </summary>
 		public FormatException() : base (DbAccess.Empty)
 		{
 		}
-		
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FormatException"/> class.
+		/// </summary>
+		/// <param name="message">The message.</param>
 		public FormatException(string message) : base (DbAccess.Empty, message)
 		{
 		}
-		
-		public FormatException(string message, System.Exception inner_exception) : base (DbAccess.Empty, message, inner_exception)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FormatException"/> class.
+		/// </summary>
+		/// <param name="message">The message.</param>
+		/// <param name="innerException">The inner exception.</param>
+		public FormatException(string message, System.Exception innerException) : base (DbAccess.Empty, message, innerException)
 		{
 		}
-		
-		public FormatException(DbAccess db_access, string message) : base (db_access, message)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FormatException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		/// <param name="message">The message.</param>
+		public FormatException(DbAccess databaseAccess, string message)
+			: base (databaseAccess, message)
 		{
 		}
-		
-		public FormatException(DbAccess db_access, string message, System.Exception inner_exception) : base (db_access, message, inner_exception)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FormatException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		/// <param name="message">The message.</param>
+		/// <param name="innerException">The inner exception.</param>
+		public FormatException(DbAccess databaseAccess, string message, System.Exception innerException)
+			: base (databaseAccess, message, innerException)
 		{
 		}
 		
 		
 		#region ISerializable Members
+		
 		protected FormatException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
 		}
@@ -42,6 +68,7 @@ namespace Epsitec.Cresus.Database.Exceptions
 		{
 			base.GetObjectData (info, context);
 		}
+		
 		#endregion
 	}
 }

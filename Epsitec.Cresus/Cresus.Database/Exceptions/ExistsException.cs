@@ -1,39 +1,65 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Exceptions
 {
 	/// <summary>
-	/// Exception signalant que la base de données existe déjà (ou toute
-	/// autre structure).
+	/// The <c>ExistsException</c> exception is raised when a database or an object already
+	/// exists.
 	/// </summary>
 	
 	[System.Serializable]
 	
-	public class ExistsException : GenericException
+	public sealed class ExistsException : GenericException
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ExistsException"/> class.
+		/// </summary>
 		public ExistsException() : base (DbAccess.Empty)
 		{
 		}
-		
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ExistsException"/> class.
+		/// </summary>
+		/// <param name="message">The message.</param>
 		public ExistsException(string message) : base (DbAccess.Empty, message)
 		{
 		}
-		
-		public ExistsException(DbAccess db_access) : base (db_access)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ExistsException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		public ExistsException(DbAccess databaseAccess)
+			: base (databaseAccess)
 		{
 		}
-		
-		public ExistsException(DbAccess db_access, string message) : base (db_access, message)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ExistsException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		/// <param name="message">The message.</param>
+		public ExistsException(DbAccess databaseAccess, string message)
+			: base (databaseAccess, message)
 		{
 		}
-		
-		public ExistsException(DbAccess db_access, string message, System.Exception inner_exception) : base (db_access, message, inner_exception)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ExistsException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		/// <param name="message">The message.</param>
+		/// <param name="innerException">The inner exception.</param>
+		public ExistsException(DbAccess databaseAccess, string message, System.Exception innerException)
+			: base (databaseAccess, message, innerException)
 		{
 		}
 		
 		
 		#region ISerializable Members
+		
 		protected ExistsException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
 		}
@@ -42,6 +68,7 @@ namespace Epsitec.Cresus.Database.Exceptions
 		{
 			base.GetObjectData (info, context);
 		}
+		
 		#endregion
 	}
 }

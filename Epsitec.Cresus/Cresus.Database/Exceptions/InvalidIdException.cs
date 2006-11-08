@@ -1,52 +1,88 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Exceptions
 {
 	/// <summary>
-	/// Exception signalant que l'ID de la clef n'est pas valide dans
-	/// le contexte courant (soit parce que la clef n'a pas été initialisée,
-	/// soit parce que c'est une clef temporaire).
+	/// The <c>InvalidIdException</c> exception is thrown when the key ID is not
+	/// valid in a given context, either because the key is not properly initialized
+	/// or because a temporary key is specified where a real key is expected.
 	/// </summary>
-	
+
 	[System.Serializable]
-	
-	public class InvalidIdException : GenericException
+
+	public sealed class InvalidIdException : GenericException
 	{
-		public InvalidIdException() : base (DbAccess.Empty)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="InvalidIdException"/> class.
+		/// </summary>
+		public InvalidIdException()
+			: base (DbAccess.Empty)
 		{
 		}
-		
-		public InvalidIdException(string message) : base (DbAccess.Empty, message)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="InvalidIdException"/> class.
+		/// </summary>
+		/// <param name="message">The message.</param>
+		public InvalidIdException(string message)
+			: base (DbAccess.Empty, message)
 		{
 		}
-		
-		public InvalidIdException(string message, System.Exception inner_exception) : base (DbAccess.Empty, message, inner_exception)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="InvalidIdException"/> class.
+		/// </summary>
+		/// <param name="message">The message.</param>
+		/// <param name="innerException">The inner exception.</param>
+		public InvalidIdException(string message, System.Exception innerException)
+			: base (DbAccess.Empty, message, innerException)
 		{
 		}
-		
-		public InvalidIdException(DbAccess db_access) : base (db_access)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="InvalidIdException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		public InvalidIdException(DbAccess databaseAccess)
+			: base (databaseAccess)
 		{
 		}
-		
-		public InvalidIdException(DbAccess db_access, string message) : base (db_access, message)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="InvalidIdException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		/// <param name="message">The message.</param>
+		public InvalidIdException(DbAccess databaseAccess, string message)
+			: base (databaseAccess, message)
 		{
 		}
-		
-		public InvalidIdException(DbAccess db_access, string message, System.Exception inner_exception) : base (db_access, message, inner_exception)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="InvalidIdException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		/// <param name="message">The message.</param>
+		/// <param name="innerException">The inner exception.</param>
+		public InvalidIdException(DbAccess databaseAccess, string message, System.Exception innerException)
+			: base (databaseAccess, message, innerException)
 		{
 		}
-		
-		
+
+
 		#region ISerializable Members
-		protected InvalidIdException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+		
+		protected InvalidIdException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+			: base (info, context)
 		{
 		}
-			
+
 		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
 			base.GetObjectData (info, context);
 		}
+
 		#endregion
 	}
 }
