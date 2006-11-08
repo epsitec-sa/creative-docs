@@ -1,91 +1,100 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Settings
 {
 	/// <summary>
-	/// Summary description for Locals.
+	/// The <c>Locals</c> class stores local settings, backed by a database
+	/// table.
 	/// </summary>
 	public sealed class Locals : AbstractBase
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Locals"/> class.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="transaction">The transaction.</param>
 		internal Locals(DbInfrastructure infrastructure, DbTransaction transaction)
 		{
-			this.Setup (infrastructure, transaction, Locals.Name);
+			this.AttachAndLoad (infrastructure, transaction, Locals.Name);
 		}
-		
-		
-		internal static string					Name
-		{
-			get
-			{
-				return "CR_SETTINGS_LOCALS";
-			}
-		}
-		
-		
+
+		/// <summary>
+		/// Gets or sets the client id.
+		/// </summary>
+		/// <value>The client id.</value>
 		public int								ClientId
 		{
 			get
 			{
-				return this.client_id;
+				return this.clientId;
 			}
 			set
 			{
-				if (this.client_id != value)
+				if (this.clientId != value)
 				{
-					object old_value = this.client_id;
-					object new_value = value;
+					object oldValue = this.clientId;
+					object newValue = value;
 					
-					this.client_id = value;
+					this.clientId = value;
 					
-					this.NotifyPropertyChanged ("ClientId", old_value, new_value);
+					this.NotifyPropertyChanged ("ClientId", oldValue, newValue);
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this is a server.
+		/// </summary>
+		/// <value><c>true</c> if this is a server; otherwise, <c>false</c>.</value>
 		public bool								IsServer
 		{
 			get
 			{
-				return this.is_server;
+				return this.isServer;
 			}
 			set
 			{
-				if (this.is_server != value)
+				if (this.isServer != value)
 				{
-					object old_value = this.is_server;
-					object new_value = value;
+					object oldValue = this.isServer;
+					object newValue = value;
 					
-					this.is_server = value;
+					this.isServer = value;
 					
-					this.NotifyPropertyChanged ("IsServer", old_value, new_value);
+					this.NotifyPropertyChanged ("IsServer", oldValue, newValue);
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets or sets the synchronization log id.
+		/// </summary>
+		/// <value>The synchronization log id.</value>
 		public long								SyncLogId
 		{
 			get
 			{
-				return this.sync_log_id;
+				return this.syncLogId;
 			}
 			set
 			{
-				if (this.sync_log_id != value)
+				if (this.syncLogId != value)
 				{
-					object old_value = this.sync_log_id;
-					object new_value = value;
+					object oldValue = this.syncLogId;
+					object newValue = value;
 					
-					this.sync_log_id = value;
+					this.syncLogId = value;
 					
-					this.NotifyPropertyChanged ("SyncLogId", old_value, new_value);
+					this.NotifyPropertyChanged ("SyncLogId", oldValue, newValue);
 				}
 			}
 		}
 		
+		internal static readonly string			Name = "CR_SETTINGS_LOCALS";
 		
-		private int								client_id;
-		private bool							is_server;
-		private long							sync_log_id;
+		private int								clientId;
+		private bool							isServer;
+		private long							syncLogId;
 	}
 }
