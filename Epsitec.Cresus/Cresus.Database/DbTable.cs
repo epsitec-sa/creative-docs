@@ -238,7 +238,14 @@ namespace Epsitec.Cresus.Database
 
 			foreach (DbColumn db_column in this.columns)
 			{
-				SqlColumn sql_column = db_column.CreateSqlColumn (type_converter);
+				if ((db_column.IsPrimaryKey) &&
+					(db_column.Localization != DbColumnLocalization.None))
+				{
+					throw new Exceptions.SyntaxException (DbAccess.Empty, string.Format ("Primary key '{0}' may not be localized", db_column.Name));
+				}
+				
+				//	TODO: handle multiple cultures...
+				SqlColumn sql_column = db_column.CreateSqlColumn (type_converter, null);
 
 				//	Vérifions juste que personne n'introduit deux fois la même colonne dans une
 				//	définition de table.
@@ -357,6 +364,7 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "cat", DbTools.ElementCategoryToString (this.category));
 			DbTools.WriteAttribute (xmlWriter, "rev", DbTools.RevisionModeToString (this.revision_mode));
 			DbTools.WriteAttribute (xmlWriter, "rep", DbTools.ReplicationModeToString (this.replication_mode));
+			DbTools.WriteAttribute (xmlWriter, "l10n", DbTools.StringToString (this.localizations));
 
 			xmlWriter.WriteEndElement ();
 		}
@@ -371,9 +379,10 @@ namespace Epsitec.Cresus.Database
 				DbTable table = new DbTable ();
 				bool isEmptyElement = xmlReader.IsEmptyElement;
 
-				table.category        = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
+				table.category         = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
 				table.revision_mode    = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
 				table.replication_mode = DbTools.ParseReplicationMode (xmlReader.GetAttribute ("rep"));
+				table.localizations    = DbTools.ParseString (xmlReader.GetAttribute ("l10n"));
 
 				if (!isEmptyElement)
 				{
@@ -420,6 +429,7 @@ namespace Epsitec.Cresus.Database
 		private string name;
 		private Druid captionId;
 		private Caption caption;
+		private string localizations;
 
 		protected Collections.DbColumns columns;
 		protected Collections.DbColumns primary_keys;

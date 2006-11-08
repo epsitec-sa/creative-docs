@@ -884,8 +884,9 @@ namespace Epsitec.Cresus.Database
 			
 			for (int c = 0; c < col_count; c++)
 			{
+				//	TODO: handle multiple cultures...
 				DbColumn column = db_table.Columns[c];
-				sql_columns[c] = column.CreateSqlColumn (converter);
+				sql_columns[c] = column.CreateSqlColumn (converter, null);
 				
 				if ((options == null) ||
 					(options.IgnoreColumn (c, column) == false))

@@ -80,6 +80,11 @@ namespace Epsitec.Cresus.Database
 
 		#region IName Members
 
+		/// <summary>
+		/// Gets the name of the column. If no name is defined, uses the caption
+		/// name instead.
+		/// </summary>
+		/// <value>The name of the column.</value>
 		public string Name
 		{
 			get
@@ -100,6 +105,10 @@ namespace Epsitec.Cresus.Database
 
 		#region ICaption Members
 
+		/// <summary>
+		/// Gets the caption id for the column.
+		/// </summary>
+		/// <value>The caption DRUID.</value>
 		public Druid CaptionId
 		{
 			get
@@ -110,6 +119,10 @@ namespace Epsitec.Cresus.Database
 
 		#endregion
 
+		/// <summary>
+		/// Gets the caption for the column.
+		/// </summary>
+		/// <value>The caption or <c>null</c> if the <c>CaptionId</c> is not valid.</value>
 		public Caption Caption
 		{
 			get
@@ -131,6 +144,11 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Gets the key for the column, used internally to identify the column
+		/// metadata.
+		/// </summary>
+		/// <value>The key.</value>
 		public DbKey Key
 		{
 			get
@@ -140,33 +158,44 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Gets the name of the target table, if the column is a reference to
+		/// another table (foreign key).
+		/// </summary>
+		/// <value>The name of the target table.</value>
 		public string TargetTableName
 		{
-			//	Lorsqu'une colonne appartient à l'une des classes DbColumnClass.RefXyz, cela signifie
-			//	que le colonne pointe sur une autre table (foreign key); le nom de cette table est défini
-			//	par la propriété TargetTableName :
-
 			get
 			{
 				return this.targetTableName;
 			}
 		}
 
+		/// <summary>
+		/// Gets the name of the target column, if the column is a reference to
+		/// another table. The target column contains the key in the target table
+		/// which is used to create the relation.
+		/// </summary>
+		/// <value>The name of the target column.</value>
 		public string TargetColumnName
 		{
 			get
 			{
-				switch (this.columnClass)
+				if (this.columnClass == DbColumnClass.RefId)
 				{
-					case DbColumnClass.RefId:
-						return Tags.ColumnId;
+					return Tags.ColumnId;
 				}
-
-				throw new System.ArgumentException (string.Format ("Column of invalid class {0}.", this.columnClass));
+				else
+				{
+					return null;
+				}
 			}
 		}
 
-
+		/// <summary>
+		/// Gets the containing table.
+		/// </summary>
+		/// <value>The containing table.</value>
 		public DbTable Table
 		{
 			get
@@ -175,25 +204,31 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Gets the index of the column in the containing column.
+		/// </summary>
+		/// <value>The index of the column or <c>-1</c> if the column does not
+		/// belong to a table.</value>
 		public int TableColumnIndex
 		{
 			get
 			{
 				if (this.table != null)
 				{
-					int index = this.table.Columns.IndexOf (this);
-
-					if (index >= 0)
-					{
-						return index;
-					}
+					return this.table.Columns.IndexOf (this);
 				}
-
-				throw new System.InvalidOperationException ("Column not in valid table.");
+				else
+				{
+					return -1;
+				}
 			}
 		}
 
 
+		/// <summary>
+		/// Gets the type of the column.
+		/// </summary>
+		/// <value>The type definition.</value>
 		public DbTypeDef Type
 		{
 			get
@@ -201,32 +236,12 @@ namespace Epsitec.Cresus.Database
 				return this.type;
 			}
 		}
-		
-		public int Length
-		{
-			get
-			{
-				return System.Math.Max (this.type.Length, 1);
-			}
-		}
-
-		public bool IsFixedLength
-		{
-			get
-			{
-				return this.type.IsFixedLength;
-			}
-		}
-
-		public bool IsMultilingual
-		{
-			get
-			{
-				return this.type.IsMultilingual;
-			}
-		}
 
 
+		/// <summary>
+		/// Gets the category of the column (internal column or user data).
+		/// </summary>
+		/// <value>The category.</value>
 		public DbElementCat Category
 		{
 			get
@@ -235,53 +250,31 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public DbRevisionMode RevisionMode
-		{
-			get
-			{
-				return this.revision_mode;
-			}
-		}
 
-
-		public bool IsNullable
-		{
-			get
-			{
-				return this.type.IsNullable;
-			}
-		}
-
-		public bool IsUnique
-		{
-			get
-			{
-				return this.is_unique;
-			}
-		}
-
-		public bool IsIndexed
-		{
-			get
-			{
-				return this.is_indexed;
-			}
-		}
-
+		/// <summary>
+		/// Gets a value indicating whether this column is a primary key.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this column is a primary key; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsPrimaryKey
 		{
 			get
 			{
-				return this.is_primary_key;
+				return this.isPrimaryKey;
 			}
 		}
 
 
-		public DbColumnLocalisation Localisation
+		/// <summary>
+		/// Gets the column localization.
+		/// </summary>
+		/// <value>The column localization.</value>
+		public DbColumnLocalization Localization
 		{
 			get
 			{
-				return this.localisation;
+				return this.localization;
 			}
 		}
 
@@ -307,21 +300,6 @@ namespace Epsitec.Cresus.Database
 			}
 
 			this.category = category;
-		}
-
-		public void DefineRevisionMode(DbRevisionMode revision_mode)
-		{
-			if (this.revision_mode == revision_mode)
-			{
-				return;
-			}
-
-			if (this.revision_mode != DbRevisionMode.Unknown)
-			{
-				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot define a new revision mode.", this.Name));
-			}
-
-			this.revision_mode = revision_mode;
 		}
 
 		internal void DefineTable(DbTable table)
@@ -403,9 +381,9 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		internal void DefineLocalisation(DbColumnLocalisation value)
+		internal void DefineLocalization(DbColumnLocalization value)
 		{
-			this.localisation = value;
+			this.localization = value;
 		}
 
 		internal void DefineColumnClass(DbColumnClass value)
@@ -415,55 +393,67 @@ namespace Epsitec.Cresus.Database
 
 		internal void DefinePrimaryKey(bool value)
 		{
-			this.is_primary_key = value;
+			this.isPrimaryKey = value;
 		}
 
 
-		public SqlColumn CreateSqlColumn(ITypeConverter typeConverter)
+		public SqlColumn CreateSqlColumn(ITypeConverter typeConverter, string localizationSuffix)
 		{
 			DbRawType rawType = this.type.RawType;
 			SqlColumn column  = null;
+			
+			string suffix;
 
 			//	Vérifie que la définition de la colonne est bien correcte. On ne permet ainsi
 			//	pas de localiser des colonnes de type référence (ça n'aurait pas de sens).
 
-			switch (this.localisation)
+			if (this.localization == DbColumnLocalization.None)
 			{
-				case DbColumnLocalisation.Default:
-				case DbColumnLocalisation.Localised:
-					if (this.columnClass != DbColumnClass.Data)
-					{
-						string message = string.Format ("Column '{0}' specifies localisation {1} for class {2}",
-							/**/						this.Name, this.localisation, this.columnClass);
-						throw new System.InvalidOperationException (message);
-					}
-					if (this.type.IsMultilingual == false)
-					{
-						string message = string.Format ("Column '{0}' specifies localisation {1} but type is not multilingual",
-							/**/						this.Name, this.localisation);
-						throw new System.InvalidOperationException (message);
-					}
-					break;
+				if (!string.IsNullOrEmpty (localizationSuffix))
+				{
+					string message = string.Format ("Column '{0}' does not specify localization, but caller provides suffix '{1}'", this.Name, localizationSuffix);
+					throw new System.InvalidOperationException (message);
+				}
+				if (this.type.IsMultilingual)
+				{
+					string message = string.Format ("Column '{0}' does not specify localization, but type is multilingual", this.Name);
+					throw new System.InvalidOperationException (message);
+				}
 
-				case DbColumnLocalisation.None:
-					break;
+				suffix = "";
+			}
+			else if (this.localization == DbColumnLocalization.Localized)
+			{
+				if (string.IsNullOrEmpty (localizationSuffix))
+				{
+					string message = string.Format ("Column '{0}' specifies localization, but caller provides no suffix", this.Name);
+					throw new System.InvalidOperationException (message);
+				}
+				if (!this.type.IsMultilingual)
+				{
+					string message = string.Format ("Column '{0}' specifies localization, but type is not multilingual", this.Name);
+					throw new System.InvalidOperationException (message);
+				}
+				if (this.columnClass != DbColumnClass.Data)
+				{
+					string message = string.Format ("Column '{0}' specifies localization {1} for wrong class {2}", this.Name, this.localization, this.columnClass);
+					throw new System.InvalidOperationException (message);
+				}
 
-				default:
-					throw new System.InvalidOperationException (string.Format ("Column '{0}' specifies invalid localisation", this.Name));
+				suffix = string.Concat ("_", localizationSuffix);
+			}
+			else
+			{
+				throw new System.NotSupportedException (string.Format ("Column '{0}' specifies unsupported localization", this.Name));
 			}
 
-			switch (this.columnClass)
+			if ((this.columnClass == DbColumnClass.KeyId) ||
+				(this.columnClass == DbColumnClass.KeyStatus))
 			{
-				case DbColumnClass.KeyId:
-				case DbColumnClass.KeyStatus:
-					if (this.Category != DbElementCat.Internal)
-					{
-						throw new System.InvalidOperationException (string.Format ("Column '{0}' category should be internal, but is {1}", this.Name, this.Category));
-					}
-					break;
-				
-				default:
-					break;
+				if (this.Category != DbElementCat.Internal)
+				{
+					throw new System.InvalidOperationException (string.Format ("Column '{0}' category should be internal, but is {1}", this.Name, this.Category));
+				}
 			}
 
 			IRawTypeConverter rawConverter;
@@ -471,7 +461,7 @@ namespace Epsitec.Cresus.Database
 			if (typeConverter.CheckNativeSupport (rawType))
 			{
 				column = new SqlColumn ();
-				column.SetType (rawType, this.Length, this.IsFixedLength);
+				column.SetType (rawType, this.Type.Length, this.Type.IsFixedLength);
 			}
 			else if (typeConverter.GetRawTypeConverter (rawType, out rawConverter))
 			{
@@ -485,10 +475,10 @@ namespace Epsitec.Cresus.Database
 
 			if (column != null)
 			{
-				column.Name       = this.CreateSqlName ();
-				column.IsNullable = this.IsNullable;
-				column.IsUnique   = this.IsUnique;
-				column.IsIndexed  = this.IsIndexed;
+				column.Name       = string.IsNullOrEmpty (suffix) ? this.CreateSqlName () : string.Concat (this.CreateSqlName (), suffix);
+				column.IsNullable = this.Type.IsNullable;
+//				column.IsUnique   = this.IsUnique;
+//				column.IsIndexed  = this.IsIndexed;
 			}
 
 			return column;
@@ -618,13 +608,12 @@ namespace Epsitec.Cresus.Database
 
 				column.captionId = DbTools.ParseDruid (xmlReader.GetAttribute ("capt"));
 				column.category  = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
-				column.revision_mode = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
 				column.columnClass = DbTools.ParseColumnClass (xmlReader.GetAttribute ("class"));
-				column.localisation = DbTools.ParseLocalisation (xmlReader.GetAttribute ("loc"));
+				column.localization = DbTools.ParseLocalization (xmlReader.GetAttribute ("loc"));
 
-				column.is_unique = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("un"));
-				column.is_indexed = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("idx"));
-				column.is_primary_key = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("pk"));
+//				column.is_unique = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("un"));
+//				column.is_indexed = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("idx"));
+				column.isPrimaryKey = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("pk"));
 
 				if (!isEmptyElement)
 				{
@@ -648,12 +637,11 @@ namespace Epsitec.Cresus.Database
 
 			DbTools.WriteAttribute (xmlWriter, "capt", DbTools.DruidToString (this.CaptionId));
 			DbTools.WriteAttribute (xmlWriter, "cat", DbTools.ElementCategoryToString (this.Category));
-			DbTools.WriteAttribute (xmlWriter, "rev", DbTools.RevisionModeToString (this.RevisionMode));
 			DbTools.WriteAttribute (xmlWriter, "class", DbTools.ColumnClassToString (this.ColumnClass));
-			DbTools.WriteAttribute (xmlWriter, "loc", DbTools.ColumnLocalisationToString (this.Localisation));
+			DbTools.WriteAttribute (xmlWriter, "loc", DbTools.ColumnLocalizationToString (this.Localization));
 
-			DbTools.WriteAttribute (xmlWriter, "un", DbTools.BoolDefaultingToFalseToString (this.IsUnique));
-			DbTools.WriteAttribute (xmlWriter, "idx", DbTools.BoolDefaultingToFalseToString (this.IsIndexed));
+//			DbTools.WriteAttribute (xmlWriter, "un", DbTools.BoolDefaultingToFalseToString (this.IsUnique));
+//			DbTools.WriteAttribute (xmlWriter, "idx", DbTools.BoolDefaultingToFalseToString (this.IsIndexed));
 			DbTools.WriteAttribute (xmlWriter, "pk", DbTools.BoolDefaultingToFalseToString (this.IsPrimaryKey));
 			
 			xmlWriter.WriteEndElement ();
@@ -672,13 +660,10 @@ namespace Epsitec.Cresus.Database
 		private string targetTableName;
 		private Druid captionId;
 		private Caption caption;
-		private DbColumnLocalisation localisation;
+		private DbColumnLocalization localization;
 
-		private bool is_unique;
-		private bool is_indexed;
-		private bool is_primary_key;
+		private bool isPrimaryKey;
 		private DbElementCat category;
-		private DbRevisionMode revision_mode;
 		private DbKey key;
 
 		private DbColumnClass columnClass			= DbColumnClass.Data;

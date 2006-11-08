@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.Database
 	{
 		private DbContext()
 		{
+			this.resourceManager = Resources.DefaultManager;
 		}
 
 		public ResourceManager ResourceManager

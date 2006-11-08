@@ -221,7 +221,8 @@ namespace Epsitec.Cresus.Requests
 			
 			for (int i = 0; i < columns.Length; i++)
 			{
-				columns[i] = table.Columns[column_names[i]].CreateSqlColumn (converter);
+				//	TODO: handle multiple cultures...
+				columns[i] = table.Columns[column_names[i]].CreateSqlColumn (converter, null);
 			}
 			
 			return columns;

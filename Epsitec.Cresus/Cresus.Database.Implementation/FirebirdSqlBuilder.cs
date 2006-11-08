@@ -1295,13 +1295,6 @@ namespace Epsitec.Cresus.Database.Implementation
 				buffer.Append (" NOT NULL");
 			}
 			
-			if (column.IsUnique)
-			{
-				//	TODO: add a UNIQUE constraint; does this exist ?
-				
-				System.Diagnostics.Debug.WriteLine (string.Format ("Column {0} should be unique", column.Name));
-			}
-			
 			return buffer.ToString ();
 		}
 

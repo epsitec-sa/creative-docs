@@ -116,15 +116,15 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public static DbColumnLocalisation ParseLocalisation(string text)
+		public static DbColumnLocalization ParseLocalization(string text)
 		{
 			if (string.IsNullOrEmpty (text))
 			{
-				return DbColumnLocalisation.None;
+				return DbColumnLocalization.None;
 			}
 			else
 			{
-				return (DbColumnLocalisation) InvariantConverter.ParseInt (text);
+				return (DbColumnLocalization) InvariantConverter.ParseInt (text);
 			}
 		}
 
@@ -263,9 +263,9 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public static string ColumnLocalisationToString(DbColumnLocalisation value)
+		public static string ColumnLocalizationToString(DbColumnLocalization value)
 		{
-			if (value == DbColumnLocalisation.None)
+			if (value == DbColumnLocalization.None)
 			{
 				return null;
 			}

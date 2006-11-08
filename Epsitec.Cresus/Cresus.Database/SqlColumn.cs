@@ -91,18 +91,6 @@ namespace Epsitec.Cresus.Database
 			set { this.is_nullable = value; }
 		}
 		
-		public bool								IsUnique
-		{
-			get { return this.is_unique; }
-			set { this.is_unique = value; }
-		}
-		
-		public bool								IsIndexed
-		{
-			get { return this.is_indexed; }
-			set { this.is_indexed = value; }
-		}
-		
 		
 		public bool Validate(ISqlValidator validator)
 		{
@@ -191,8 +179,6 @@ namespace Epsitec.Cresus.Database
 		protected string						name				= null;
 		protected DbRawType						type				= DbRawType.Null;
 		protected bool							is_nullable			= false;
-		protected bool							is_unique			= false;
-		protected bool							is_indexed			= false;
 		protected bool							is_fixed_length		= true;
 		protected int							length				= 1;
 		protected IRawTypeConverter				raw_converter		= null;

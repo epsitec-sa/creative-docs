@@ -56,11 +56,7 @@ namespace Epsitec.Cresus.Database
 			set
 			{
 				//	Il n'est pas nécessaire de marquer les colonnes ajoutées ici comme
-				//	étant indexées (SqlColumn.IsIndexed). Si l'appelant le spécifie
-				//	néanmoins, des index supplémentaires seront créés pour les colonnes
-				//	spécifiées. Cela permet par exemple d'avoir l'indexage automatique
-				//	selon le tuple des clefs primaires, et l'indexage de chaque clef
-				//	individuellement.
+				//	étant indexées.
 				
 				if (this.primary_key == null)
 				{

@@ -108,7 +108,7 @@ localisées :
 - AddLocalisedColumns, ajoute les noms des colonnes à extraire
   pour une requête SELECT qui contient des colonnes localisées.
 
-Une colonne localisée possède un champ DbColumnLocalisation qui
+Une colonne localisée possède un champ DbColumnLocalization qui
 indique si celle-ci n'est pas localisable (None), est localisable
 et correspond à la valeur par défaut (sans suffixe; Default) ou
 est localisable et localisée (avec suffixe; Localised).
