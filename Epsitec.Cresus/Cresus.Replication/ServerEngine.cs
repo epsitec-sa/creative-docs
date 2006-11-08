@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.Replication
 				
 				this.ProcessLogTable (cruncher, sync_start, sync_end, log_table, data);
 				
-				ServerEngine.RemoveTables (tables, DbReplicationMode.Private);
+				ServerEngine.RemoveTables (tables, DbReplicationMode.None);
 				
 				System.Diagnostics.Debug.WriteLine (string.Format ("Scrubbed, remaining {0} tables.", tables.Count));
 				
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Replication
 				{
 					DbTable table = tables[i] as DbTable;
 					
-					System.Diagnostics.Debug.Assert (table.ReplicationMode == DbReplicationMode.Shared);
+					System.Diagnostics.Debug.Assert (table.ReplicationMode == DbReplicationMode.Automatic);
 					
 					this.ProcessTable (cruncher, pull, sync_start, sync_end, table, data);
 				}

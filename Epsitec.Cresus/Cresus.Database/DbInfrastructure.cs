@@ -197,8 +197,8 @@ namespace Epsitec.Cresus.Database
 				//	la base, donc nécessiter une validation de transaction avant que celles-ci
 				//	ne soient accessibles en écriture :
 				
-				Settings.Globals.CreateTable (this, transaction, Settings.Globals.Name, DbElementCat.Internal, DbRevisionMode.Disabled, DbReplicationMode.Shared);
-				Settings.Locals.CreateTable (this, transaction, Settings.Locals.Name, DbElementCat.Internal, DbRevisionMode.Disabled, DbReplicationMode.Private);
+				Settings.Globals.CreateTable (this, transaction, Settings.Globals.Name, DbElementCat.Internal, DbRevisionMode.Disabled, DbReplicationMode.Automatic);
+				Settings.Locals.CreateTable (this, transaction, Settings.Locals.Name, DbElementCat.Internal, DbRevisionMode.Disabled, DbReplicationMode.None);
 				
 				transaction.Commit ();
 			}
@@ -427,7 +427,7 @@ namespace Epsitec.Cresus.Database
 					throw new Exceptions.GenericException (this.db_access, string.Format ("User may not create internal table. Table '{0}'.", name));
 				
 				case DbElementCat.ManagedUserData:
-					return this.CreateTable(name, category, revision_mode, DbReplicationMode.Shared);
+					return this.CreateTable(name, category, revision_mode, DbReplicationMode.Automatic);
 				
 				default:
 					throw new Exceptions.GenericException (this.db_access, string.Format ("Unsupported category {0} specified. Table '{1}'.", category, name));
@@ -2298,7 +2298,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnDateTime,    types.DateTime,   DbColumnClass.Data)
 					};
 				
-				this.CreateTable (table, columns, DbReplicationMode.Private);
+				this.CreateTable (table, columns, DbReplicationMode.None);
 			}
 			
 			public void CreateTableClientDef()
@@ -2317,7 +2317,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnClientConDate,	types.DateTime,  DbColumnClass.Data)
 					};
 				
-				this.CreateTable (table, columns, DbReplicationMode.Private);
+				this.CreateTable (table, columns, DbReplicationMode.None);
 			}
 			
 			

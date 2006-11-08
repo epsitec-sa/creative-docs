@@ -1,5 +1,5 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
@@ -48,7 +48,6 @@ namespace Epsitec.Cresus.Database
 		/// Large decimal value (15 digits integer part + 3 digits fractional part).
 		/// </summary>
 		LargeDecimal = 7,
-		
 		
 		/// <summary>
 		/// Date only.

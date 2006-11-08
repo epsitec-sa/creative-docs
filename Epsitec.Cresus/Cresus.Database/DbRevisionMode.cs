@@ -1,14 +1,27 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
-	public enum DbRevisionMode
+	/// <summary>
+	/// The <c>DbRevisionMode</c> enumeration defines the revision modes
+	/// used by database tables.
+	/// </summary>
+	public enum DbRevisionMode : byte
 	{
-		Unsupported			= 0,		//	mode non supporté
-		Unknown = Unsupported,			//	mode inconnu (= non supporté)
+		/// <summary>
+		/// Unknown revision mode.
+		/// </summary>
+		Unknown = 0,
 		
-		Disabled			= 1,		//	n'utilise pas l'historique des révisions
-		Enabled				= 2,		//	utilise l'historique des révisions
+		/// <summary>
+		/// Without revision history.
+		/// </summary>
+		Disabled = 1,
+		
+		/// <summary>
+		/// With revision history.
+		/// </summary>
+		Enabled = 2,
 	}
 }
