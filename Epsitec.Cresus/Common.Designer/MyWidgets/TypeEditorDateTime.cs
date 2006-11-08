@@ -139,7 +139,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.PutSummaryLegend(builder, "Pas date = ");
-			builder.Append(TypeEditorDateTime.ToTimeSpan(type.DateStep));
+			builder.Append(TypeEditorDateTime.ToDateStep(type.DateStep));
 
 			this.PutSummaryLegend(builder, "Pas heure = ");
 			builder.Append(TypeEditorDateTime.ToTimeSpan(type.TimeStep));
@@ -190,7 +190,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			TypeEditorDateTime.ToDate(this.fieldMaxDate, type.MaximumDate);
 			TypeEditorDateTime.ToTime(this.fieldMinTime, type.MinimumTime);
 			TypeEditorDateTime.ToTime(this.fieldMaxTime, type.MaximumTime);
-			TypeEditorDateTime.ToTimeSpan(this.fieldDateStep, type.DateStep);
+			TypeEditorDateTime.ToDateStep(this.fieldDateStep, type.DateStep);
 			TypeEditorDateTime.ToTimeSpan(this.fieldTimeStep, type.TimeStep);
 			this.ignoreChange = false;
 		}
@@ -280,6 +280,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return Time.Null;
 		}
 
+		protected static void ToDateStep(TextField field, DateStep ds)
+		{
+			if (ds == new DateStep(0, 0, 0))
+			{
+				field.Text = "";
+			}
+			else
+			{
+				field.Text = TypeEditorDateTime.ToDateStep(ds);
+			}
+		}
+
+		protected static DateStep ToDateStep(TextField field)
+		{
+			if (!string.IsNullOrEmpty(field.Text))
+			{
+				return TypeEditorDateTime.ToDateStep(field.Text);
+			}
+
+			return new DateStep(0, 0, 0);
+		}
+
 		protected static void ToTimeSpan(TextField field, System.TimeSpan ts)
 		{
 			if (ts == System.TimeSpan.Zero)
@@ -334,6 +356,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else
 			{
 				return System.DateTime.MinValue;
+			}
+		}
+
+		protected static string ToDateStep(DateStep ds)
+		{
+			return ds.ToString();
+		}
+
+		protected static DateStep ToDateStep(string text)
+		{
+			try
+			{
+				return DateStep.Parse(text);
+			}
+			catch
+			{
+				return new DateStep(0, 0, 0);
 			}
 		}
 
@@ -393,7 +432,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (sender == this.fieldDateStep)
 			{
-				type.DefineDateStep(TypeEditorDateTime.ToTimeSpan(this.fieldDateStep));
+				type.DefineDateStep(TypeEditorDateTime.ToDateStep(this.fieldDateStep));
 			}
 
 			if (sender == this.fieldTimeStep)
