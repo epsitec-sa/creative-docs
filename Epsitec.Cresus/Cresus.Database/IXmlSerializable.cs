@@ -8,6 +8,10 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public interface IXmlSerializable
 	{
+		/// <summary>
+		/// Serializes the instance using the specified XML writer.
+		/// </summary>
+		/// <param name="xmlWriter">The XML writer.</param>
 		void Serialize(System.Xml.XmlTextWriter xmlWriter);
 	}
 }

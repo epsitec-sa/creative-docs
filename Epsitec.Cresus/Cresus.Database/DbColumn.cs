@@ -577,15 +577,15 @@ namespace Epsitec.Cresus.Database
 			throw new System.NotSupportedException (string.Format ("Column '{0}' has an unsupported class", this.Name));
 		}
 
-
-
 		#region IEquatable<DbColumn> Members
 
+		/// <summary>
+		/// Compares the column with another column.
+		/// </summary>
+		/// <param name="other">Column to compare with.</param>
+		/// <returns><c>true</c> if both columns have the same name.</returns>
 		public bool Equals(DbColumn other)
 		{
-			//	ATTENTION: L'égalité se base uniquement sur le nom des colonnes, pas sur les
-			//	détails internes...
-			
 			if (object.ReferenceEquals (other, null))
 			{
 				return false;
@@ -598,7 +598,6 @@ namespace Epsitec.Cresus.Database
 
 		#endregion
 
-
 		#region Equals and GetHashCode support
 		
 		public override bool Equals(object obj)
@@ -609,11 +608,16 @@ namespace Epsitec.Cresus.Database
 		public override int GetHashCode()
 		{
 			string name = this.Name;
-			return (name == null) ? 0 : name.GetHashCode ();
+			return string.IsNullOrEmpty (name) ? 0 : name.GetHashCode ();
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Deserializes a column from the specified XML reader.
+		/// </summary>
+		/// <param name="xmlReader">The XML reader.</param>
+		/// <returns>The column.</returns>
 		public static DbColumn Deserialize(System.Xml.XmlTextReader xmlReader)
 		{
 			if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
@@ -622,15 +626,10 @@ namespace Epsitec.Cresus.Database
 				DbColumn column = new DbColumn ();
 				bool isEmptyElement = xmlReader.IsEmptyElement;
 
-				//	TODO: deserialize contents
-
-				column.captionId = DbTools.ParseDruid (xmlReader.GetAttribute ("capt"));
-				column.category  = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
-				column.columnClass = DbTools.ParseColumnClass (xmlReader.GetAttribute ("class"));
+				column.captionId    = DbTools.ParseDruid (xmlReader.GetAttribute ("capt"));
+				column.category     = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
+				column.columnClass  = DbTools.ParseColumnClass (xmlReader.GetAttribute ("class"));
 				column.localization = DbTools.ParseLocalization (xmlReader.GetAttribute ("loc"));
-
-//				column.is_unique = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("un"));
-//				column.is_indexed = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("idx"));
 				column.isPrimaryKey = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("pk"));
 
 				if (!isEmptyElement)
@@ -646,9 +645,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
 		#region IXmlSerializable Members
 
+		/// <summary>
+		/// Serializes the column using the specified XML writer.
+		/// </summary>
+		/// <param name="xmlWriter">The XML writer.</param>
 		public void Serialize(System.Xml.XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteStartElement ("column");
@@ -657,9 +659,6 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "cat", DbTools.ElementCategoryToString (this.Category));
 			DbTools.WriteAttribute (xmlWriter, "class", DbTools.ColumnClassToString (this.ColumnClass));
 			DbTools.WriteAttribute (xmlWriter, "loc", DbTools.ColumnLocalizationToString (this.Localization));
-
-//			DbTools.WriteAttribute (xmlWriter, "un", DbTools.BoolDefaultingToFalseToString (this.IsUnique));
-//			DbTools.WriteAttribute (xmlWriter, "idx", DbTools.BoolDefaultingToFalseToString (this.IsIndexed));
 			DbTools.WriteAttribute (xmlWriter, "pk", DbTools.BoolDefaultingToFalseToString (this.IsPrimaryKey));
 			
 			xmlWriter.WriteEndElement ();
@@ -667,31 +666,21 @@ namespace Epsitec.Cresus.Database
 
 		#endregion
 
-
-
 		private static readonly Caption nullCaption = new Caption ();
 
-		private DbTypeDef type;
-		private DbTable table;
+		private DbTypeDef						type;
+		private DbTable							table;
 
-		private string name;
-		private string targetTableName;
-		private Druid captionId;
-		private Caption caption;
-		private DbColumnLocalization localization;
+		private string							name;
+		private string							targetTableName;
+		private Druid							captionId;
+		private Caption							caption;
 
-		private bool isPrimaryKey;
-		private DbElementCat category;
-		private DbKey key;
-
-		private DbColumnClass columnClass			= DbColumnClass.Data;
-
-
-		internal const int MaxNameLength			= 50;
-		internal const int MaxDictKeyLength		= 50;
-		internal const int MaxDictValueLength		= 1000;
-		internal const int MaxCaptionLength		= 100;
-		internal const int MaxDescriptionLength	= 500;
-		internal const int MaxInfoXmlLength		= 500;
+		private DbKey							key;
+		
+		private bool							isPrimaryKey;
+		private DbElementCat					category;
+		private DbColumnClass					columnClass;
+		private DbColumnLocalization			localization;
 	}
 }
