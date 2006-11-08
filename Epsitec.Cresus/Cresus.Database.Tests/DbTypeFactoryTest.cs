@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Database
 			
 			type = DbTypeFactory.CreateType ("<type class='num' digits='5' shift='2' min='0.00' max='200.00'/>") as DbTypeNum;
 			Assert.IsTrue (type.GetType () == typeof (DbTypeNum));
-			Assert.AreEqual (DbRawType.Unsupported, type.NumDef.InternalRawType);
+			Assert.AreEqual (DbRawType.Unknown, type.NumDef.InternalRawType);
 			Assert.AreEqual (5, type.NumDef.DigitPrecision);
 			Assert.AreEqual (2, type.NumDef.DigitShift);
 			Assert.AreEqual (  0.00M, type.NumDef.MinValue);

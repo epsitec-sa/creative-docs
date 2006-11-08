@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "null", DbTools.BoolDefaultingToFalseToString (this.isNullable));
 
 			if ((this.numDef != null) &&
-				(this.numDef.InternalRawType == DbRawType.Unsupported))
+				(this.numDef.InternalRawType == DbRawType.Unknown))
 			{
 				this.numDef.SerializeAttributes (xmlWriter, "num.");
 			}

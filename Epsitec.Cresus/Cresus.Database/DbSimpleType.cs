@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Not supported.
 		/// </summary>
-		Unsupported = 0,
+		Unknown = 0,
 
 		/// <summary>
 		/// Null, type cannot be inferred.

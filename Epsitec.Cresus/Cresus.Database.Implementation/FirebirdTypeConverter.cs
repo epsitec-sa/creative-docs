@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 		public bool CheckNativeSupport(Epsitec.Cresus.Database.DbRawType type)
 		{
-			System.Diagnostics.Debug.Assert (type != DbRawType.Unsupported);
+			System.Diagnostics.Debug.Assert (type != DbRawType.Unknown);
 			System.Diagnostics.Debug.Assert (type != DbRawType.Null);
 			
 			switch (type)

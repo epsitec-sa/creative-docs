@@ -1,130 +1,164 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe DbNumDef définit un format numérique.
-	/// DigitPrecision définit le nombre de digits acceptable pour le nombre (1 à 24)
-	/// DigitShift définit la position de la virgule
-	/// par exemple, precision = 5, shift = 3, accepte les nombres de -99.999 à +99.999
+	/// The <c>DbNumDef</c> class defines a numeric format used to represent
+	/// decimal and integer numbers. A number has at most <c>DigitPrecision</c>
+	/// digits (1..24). The <c>DigitShift</c> specifies the number of digits
+	/// after the decimal point.
 	/// </summary>
-	public sealed class DbNumDef : System.ICloneable, System.IEquatable<DbNumDef>
+	public sealed class DbNumDef : System.ICloneable, System.IEquatable<DbNumDef>, IXmlSerializable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbNumDef"/> class.
+		/// </summary>
 		public DbNumDef()
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbNumDef"/> class.
+		/// </summary>
+		/// <param name="range">The range definition.</param>
 		public DbNumDef(DecimalRange range)
 			: this (range.GetMaximumDigitCount (), range.FractionalDigits, range.Minimum, range.Maximum)
 		{
 		}
-		
-		public DbNumDef(int digit_precision)
-		{
-			System.Diagnostics.Debug.Assert ((digit_precision >= 0) && (digit_precision < DbNumDef.digit_max));
-			this.digit_precision = (byte) digit_precision;
-		}
-		
-		public DbNumDef(int digit_precision, int digit_shift)
-		{
-			System.Diagnostics.Debug.Assert ((digit_precision >= 0) && (digit_precision < DbNumDef.digit_max));
-			System.Diagnostics.Debug.Assert ((digit_shift >= 0) && (digit_shift < DbNumDef.digit_max));
 
-			this.digit_precision = (byte) digit_precision;
-			this.digit_shift     = (byte) digit_shift;
-		}
-		
-		public DbNumDef(int digit_precision, int digit_shift, decimal min_value, decimal max_value)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbNumDef"/> class.
+		/// </summary>
+		/// <param name="digitPrecision">The digit precision.</param>
+		public DbNumDef(int digitPrecision)
 		{
-			System.Diagnostics.Debug.Assert ((digit_precision >= 0) && (digit_precision < DbNumDef.digit_max));
-			System.Diagnostics.Debug.Assert ((digit_shift >= 0) && (digit_shift < DbNumDef.digit_max));
+			System.Diagnostics.Debug.Assert ((digitPrecision >= 0) && (digitPrecision < DbNumDef.digitMax));
+			this.digitPrecision = (byte) digitPrecision;
+		}
 
-			this.digit_precision = (byte) digit_precision;
-			this.digit_shift     = (byte) digit_shift;
-			this.min_value       = min_value;
-			this.max_value       = max_value;
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbNumDef"/> class.
+		/// </summary>
+		/// <param name="digitPrecision">The digit precision.</param>
+		/// <param name="digitShift">The digit shift.</param>
+		public DbNumDef(int digitPrecision, int digitShift)
+		{
+			System.Diagnostics.Debug.Assert ((digitPrecision >= 0) && (digitPrecision < DbNumDef.digitMax));
+			System.Diagnostics.Debug.Assert ((digitShift >= 0) && (digitShift < DbNumDef.digitMax));
+
+			this.digitPrecision = (byte) digitPrecision;
+			this.digitShift     = (byte) digitShift;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbNumDef"/> class.
+		/// </summary>
+		/// <param name="digitPrecision">The digit precision.</param>
+		/// <param name="digitShift">The digit shift.</param>
+		/// <param name="minValue">The minimum value.</param>
+		/// <param name="maxValue">The maximum value.</param>
+		public DbNumDef(int digitPrecision, int digitShift, decimal minValue, decimal maxValue)
+		{
+			System.Diagnostics.Debug.Assert ((digitPrecision >= 0) && (digitPrecision < DbNumDef.digitMax));
+			System.Diagnostics.Debug.Assert ((digitShift >= 0) && (digitShift < DbNumDef.digitMax));
+
+			this.digitPrecision = (byte) digitPrecision;
+			this.digitShift     = (byte) digitShift;
+			this.minValue       = minValue;
+			this.maxValue       = maxValue;
 
 			this.InvalidateAndUpdateAutoPrecision ();
-			
-			if (this.digit_shift == 0)
+
+			if (this.digitShift == 0)
 			{
-				if ((this.min_value == System.Int16.MinValue) &&
-					(this.max_value == System.Int16.MaxValue))
+				if ((this.minValue == System.Int16.MinValue) &&
+					(this.maxValue == System.Int16.MaxValue))
 				{
-					this.raw_type = DbRawType.Int16;
+					this.rawType = DbRawType.Int16;
 				}
-				else if ((this.min_value == System.Int32.MinValue) &&
-					/**/ (this.max_value == System.Int32.MaxValue))
+				else if ((this.minValue == System.Int32.MinValue) &&
+					/**/ (this.maxValue == System.Int32.MaxValue))
 				{
-					this.raw_type = DbRawType.Int32;
+					this.rawType = DbRawType.Int32;
 				}
-				else if ((this.min_value == System.Int64.MinValue) &&
-					/**/ (this.max_value == System.Int64.MaxValue))
+				else if ((this.minValue == System.Int64.MinValue) &&
+					/**/ (this.maxValue == System.Int64.MaxValue))
 				{
-					this.raw_type = DbRawType.Int64;
+					this.rawType = DbRawType.Int64;
 				}
 			}
 		}
-		
-		
-		public static DbNumDef FromRawType(DbRawType raw_type)
+
+
+		/// <summary>
+		/// Creates a <c>DbNumDef</c> matching a specific raw type.
+		/// </summary>
+		/// <param name="rawType">The raw type.</param>
+		/// <returns>The <c>DbNumDef</c>.</returns>
+		public static DbNumDef FromRawType(DbRawType rawType)
 		{
 			DbNumDef def;
-			
-			switch (raw_type)
+
+			switch (rawType)
 			{
 				case DbRawType.Boolean:
-					def = new DbNumDef ( 1, 0, 0, 1);
-					def.raw_type = raw_type;
+					def = new DbNumDef (1, 0, 0, 1);
+					def.rawType = rawType;
 					break;
-				
+
 				case DbRawType.Int16:
-					def = new DbNumDef ( 5, 0, System.Int16.MinValue, System.Int16.MaxValue);
-					def.raw_type = raw_type;
+					def = new DbNumDef (5, 0, System.Int16.MinValue, System.Int16.MaxValue);
+					def.rawType = rawType;
 					break;
-				
+
 				case DbRawType.Int32:
 					def = new DbNumDef (10, 0, System.Int32.MinValue, System.Int32.MaxValue);
-					def.raw_type = raw_type;
+					def.rawType = rawType;
 					break;
-				
+
 				case DbRawType.Int64:
 					def = new DbNumDef (19, 0, System.Int64.MinValue, System.Int64.MaxValue);
-					def.raw_type = raw_type;
+					def.rawType = rawType;
 					break;
-				
+
 				case DbRawType.SmallDecimal:
 					def = new DbNumDef (18, 9);
-					def.raw_type = raw_type;
+					def.rawType = rawType;
 					break;
-				
+
 				case DbRawType.LargeDecimal:
 					def = new DbNumDef (18, 3);
-					def.raw_type = raw_type;
+					def.rawType = rawType;
 					break;
-				
+
 				default:
 					def = null;
 					break;
 			}
-			
+
 			return def;
 		}
-		
-		
+
+
+		/// <summary>
+		/// Gets or sets the digit precision.
+		/// </summary>
+		/// <value>The digit precision.</value>
 		public int								DigitPrecision
 		{
 			get
 			{
-				if (this.digit_precision == 0)
+				if (this.digitPrecision == 0)
 				{
-					return this.digit_precision_auto;
+					return this.digitPrecisionAuto;
 				}
-				
-				return this.digit_precision;
+				else
+				{
+					return this.digitPrecision;
+				}
 			}
 			set
 			{
@@ -132,48 +166,74 @@ namespace Epsitec.Cresus.Database
 				//	de spécifier le min, le max, la précision puis le shift. C'est superflu,
 				//	mais il ne faudrait pas que ça altère les définitions.
 
-				this.digit_precision = (byte) value;
+				this.digitPrecision = (byte) value;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets or sets the digit shift.
+		/// </summary>
+		/// <value>The digit shift.</value>
 		public int								DigitShift
 		{
 			get
-			{ 
-				if (this.digit_precision == 0)
+			{
+				if (this.digitPrecision == 0)
 				{
-					return this.digit_shift_auto;
+					return this.digitShiftAuto;
 				}
-				return this.digit_shift;
+				else
+				{
+					return this.digitShift;
+				}
 			}
 			set 
 			{
 				//	Cf. remarque DigitPrecision.
-				this.digit_shift = (byte) value; 
+				this.digitShift = (byte) value; 
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets a value indicating whether a digit precision is defined.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if a digit precision is defined; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsDigitDefined
 		{
 			get
 			{
-				return this.digit_precision > 0;
+				return this.digitPrecision > 0;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets a value indicating whether the minimum and maximum values are defined.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the minimum and maximum values are defined; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsMinMaxDefined
 		{
 			get
 			{
-				return this.min_value < this.max_value;
+				return this.minValue < this.maxValue;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets a value indicating whether numbers adhering to this <c>DbNumDef</c>
+		/// need to be converted.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if numbers adhering to this <c>DbNumDef</c> need to be converted; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsConversionNeeded
 		{
 			get
 			{
-				if (this.raw_type == DbRawType.Unsupported)
+				if (this.rawType == DbRawType.Unknown)
 				{
 					if ((this.DigitShift == 0) &&
 						(this.GetPackOffset () == 0))
@@ -191,22 +251,30 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the internal raw type.
+		/// </summary>
+		/// <value>The internal raw type or <c>DbRawType.Unknown</c> if none has been specified.</value>
 		public DbRawType						InternalRawType
 		{
 			get
 			{
-				return this.raw_type;
+				return this.rawType;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets or sets the minimum value.
+		/// </summary>
+		/// <value>The minimum value.</value>
 		public decimal							MinValue
 		{
 			get
 			{
 				if (this.IsMinMaxDefined)
 				{
-					return this.min_value;
+					return this.minValue;
 				}
 				
 				//	MaxValue est peut-être définie. Si ce n'est pas le cas, il y a un
@@ -219,29 +287,33 @@ namespace Epsitec.Cresus.Database
 			{
 				this.DebugCheckAbsolute (value);
 
-				this.min_value = value;
+				this.minValue = value;
 				this.InvalidateAndUpdateAutoPrecision ();				
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets or sets the maximum value.
+		/// </summary>
+		/// <value>The maximum value.</value>
 		public decimal							MaxValue
 		{
 			get
 			{
 				if (this.IsMinMaxDefined)
 				{
-					return this.max_value;
+					return this.maxValue;
 				}
 				
 				//	Le maximum n'est pas défini, alors on va utiliser une valeur automatique
 				//	liée au nombre de décimales et à la précision (nombre de décimales après
 				//	le point décimal) :
-				
-				decimal max = DbNumDef.digit_table[this.digit_precision] - 1M;
+
+				decimal max = DbNumDef.digitTable[this.digitPrecision] - 1M;
 				
 				System.Diagnostics.Debug.Assert (max == decimal.Truncate (max));
-				
-				max *= DbNumDef.digit_table_scale[this.digit_shift];
+
+				max *= DbNumDef.digitTableScale[this.digitShift];
 				
 				return max;
 			}
@@ -249,19 +321,29 @@ namespace Epsitec.Cresus.Database
 			{
 				this.DebugCheckAbsolute (value);
 
-				this.max_value = value;
+				this.maxValue = value;
 				this.InvalidateAndUpdateAutoPrecision ();
 			}
 		}
-		
-		public decimal							HalfRange
+
+		/// <summary>
+		/// Gets the half range defined as the difference between the maximum
+		/// and the minium divided by two, rounded upwards.
+		/// </summary>
+		/// <value>The half range.</value>
+		internal decimal						HalfRange
 		{
 			get
 			{
-				return (this.MaxValue - this.MinValue + DbNumDef.digit_table_scale[this.DigitShift]) / 2;
+				return (this.MaxValue - this.MinValue + DbNumDef.digitTableScale[this.DigitShift]) / 2;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the minimum number of bits required to encode the full range
+		/// of numbers.
+		/// </summary>
+		/// <value>The minimum number of bits.</value>
 		public int								MinimumBits
 		{
 			get
@@ -270,19 +352,14 @@ namespace Epsitec.Cresus.Database
 				//	compris entre le minimum et le maximum (bornes comprises), en tenant
 				//	en outre compte de l'échelle (shift).
 
-				switch (this.raw_type)
+				switch (this.rawType)
 				{
-					case DbRawType.Boolean:
-						return 1;
-					case DbRawType.Int16:
-						return 16;
-					case DbRawType.Int32:
-						return 32;
-					case DbRawType.Int64:
-						return 64;
-					case DbRawType.SmallDecimal:
-					case DbRawType.LargeDecimal:
-						return 64;
+					case DbRawType.Boolean:			return 1;
+					case DbRawType.Int16:			return 16;
+					case DbRawType.Int32:			return 32;
+					case DbRawType.Int64:			return 64;
+					case DbRawType.SmallDecimal:	return 64;
+					case DbRawType.LargeDecimal:	return 64;
 				}
 				
 				//	Le nombre ne correspond à aucun format prédéfini. On va donc convertir
@@ -304,30 +381,52 @@ namespace Epsitec.Cresus.Database
 				return bits;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is valid.
+		/// </summary>
+		/// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
 		public bool								IsValid
 		{
 			get
 			{
-				if (this.IsMinMaxDefined && this.IsDigitDefined)
+				if ((this.IsMinMaxDefined) &&
+					(this.IsDigitDefined))
 				{
-					//	Contrôle que la précision donnée est suffisante pour représenter le min et le max
-					if ( this.digit_precision < this.digit_precision_auto ) return false;
-					if ( this.digit_shift     < this.digit_shift_auto     ) return false;
+					//	Contrôle que la précision donnée est suffisante pour représenter
+					//	les bornes extrêmes.
+
+					if (this.digitPrecision < this.digitPrecisionAuto)
+					{
+						return false;
+					}
+					if (this.digitShift < this.digitShiftAuto)
+					{
+						return false;
+					}
 				}
+				
 				return true;
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Checks if a value is compatible with the decimal range, including
+		/// the precision (a value having to many digits will be considered
+		/// to be incompatible).
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns><c>true</c> if the value is compatible; otherwise, <c>false</c>.</returns>
 		public bool CheckCompatibility(decimal value)
 		{
-			if ((value >= this.MinValue) && (value <= this.MaxValue))
+			if ((value >= this.MinValue) &&
+				(value <= this.MaxValue))
 			{
 				//	Vérifie que le nombre de décimales après le point décimal ne
 				//	dépasse le maximum autorisé :
-				
-				decimal v1 = value * DbNumDef.digit_table[this.digit_shift];
+
+				decimal v1 = value * DbNumDef.digitTable[this.digitShift];
 				decimal v2 = System.Decimal.Truncate (v1);
 				
 				return v1 == v2;
@@ -335,99 +434,133 @@ namespace Epsitec.Cresus.Database
 			
 			return false;
 		}
-		
+
+		/// <summary>
+		/// Checks if a value is compatible; clip and round the value.
+		/// </summary>
+		/// <param name="value">The value to clip and round.</param>
+		/// <returns><c>true</c> if the value is compatible; otherwise, <c>false</c>.</returns>
 		public bool CheckCompatibilityAndClipRound(ref decimal value)
 		{
 			if (this.CheckCompatibility (value))
 			{
 				//	Valeur compatible telle quelle, pas besoin de l'éditer !
-				
+
 				return true;
 			}
-			
-			value = this.Round (value);
-			value = this.Clip (value);
-			
-			return false;
+			else
+			{
+				value = this.Round (value);
+				value = this.Clip (value);
+
+				return false;
+			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Rounds the specified value based on the defined precision.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The rounded value.</returns>
 		public decimal Round(decimal value)
 		{
-			//	Arrondit la valeur selon l'échelle (shift) :
-			
-			value *= DbNumDef.digit_table[this.digit_shift];
+			value *= DbNumDef.digitTable[this.digitShift];
 			value  = System.Decimal.Truncate (value + 0.5M);
-			value *= DbNumDef.digit_table_scale[this.digit_shift];
+			value *= DbNumDef.digitTableScale[this.digitShift];
 			
 			return value;
 		}
-		
+
+		/// <summary>
+		/// Clips the specified value to the defined range.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The clipped value.</returns>
 		public decimal Clip(decimal value)
 		{
-			//	Limite la valeur aux bornes minimales/maximales actives.
-			
 			if (value < this.MinValue)
 			{
 				return this.MinValue;
 			}
-			if (value > this.MaxValue)
+			else if (value > this.MaxValue)
 			{
 				return this.MaxValue;
 			}
-			
-			return value;
+			else
+			{
+				return value;
+			}
 		}
 
 
+		/// <summary>
+		/// Converts the value to an encoded 64-bit unsigned integer. The encoding
+		/// is simply a distance from the minimum value.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The encoded value.</returns>
 		private ulong ConvertToUnsignedInt64(decimal value)
 		{
-			//	Convertit (encode) la valeur décimale en une représentation compacte,
-			//	occupant au maximum 64 bits dans un entier non signé.
-
 			value -= this.MinValue;
-			value *= DbNumDef.digit_table[this.DigitShift];
+			value *= DbNumDef.digitTable[this.DigitShift];
 
 			return (ulong) value;
 		}
 
+		/// <summary>
+		/// Converts the value to an encoded 64-bit integer. This attempts to
+		/// make the encoding as transparent as possible (e.g. only scaling,
+		/// if possible).
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The encoded value.</returns>
 		public long ConvertToInt64(decimal value)
 		{
-			//	Convertit (encode) la valeur décimale en une représentation compacte,
-			//	occupant l'entier au mieux.
-
 			value -= this.GetPackOffset ();
-			value *= DbNumDef.digit_table[this.DigitShift];
+			value *= DbNumDef.digitTable[this.DigitShift];
 			
 			return (long) value;
 		}
 
+		/// <summary>
+		/// Converts from back from an encoded 64-bit integer to a decimal
+		/// value.
+		/// </summary>
+		/// <param name="value">The encoded value.</param>
+		/// <returns>The decimal value.</returns>
 		public decimal ConvertFromInt64(long value)
 		{
-			//	Convertit (décode) une représentation compacte générée par la méthode
-			//	ConvertToInt64 en sa valeur décimale d'origine.
-			
 			decimal conv = value;
 			
-			conv *= DbNumDef.digit_table_scale[this.DigitShift];
+			conv *= DbNumDef.digitTableScale[this.DigitShift];
 			conv += this.GetPackOffset ();
 			
 			return (decimal) conv;
 		}
-		
-		
+
+
+		/// <summary>
+		/// Parses the specified value and checks that the value is compatible.
+		/// If not, an exception will be raised.
+		/// </summary>
+		/// <param name="value">The string.</param>
+		/// <returns>The value parsed using the current culture.</returns>
 		public decimal Parse(string value)
 		{
 			return this.Parse (value, System.Globalization.CultureInfo.CurrentCulture);
 		}
-		
-		public decimal Parse(string value, System.IFormatProvider format_provider)
+
+		/// <summary>
+		/// Parses the specified value and checks that the value is compatible.
+		/// If not, an exception will be raised.
+		/// </summary>
+		/// <param name="value">The string.</param>
+		/// <param name="formatProvider">The format provider.</param>
+		/// <returns>The value parsed using the specified format provider.</returns>
+		public decimal Parse(string value, System.IFormatProvider formatProvider)
 		{
-			//	Convertit le texte en une valeur numérique correspondante, vérifie que la
-			//	syntaxe est respectée et que la valeur est dans les bornes admises. Lève une
-			//	exception dans le cas contraire...
-			
-			decimal	retval = System.Decimal.Parse (value, format_provider);
+			decimal	retval = System.Decimal.Parse (value, formatProvider);
 			
 			if (!this.CheckCompatibility (retval))
 			{
@@ -436,29 +569,42 @@ namespace Epsitec.Cresus.Database
 			
 			return retval;
 		}
-		
-		
+
+
+		/// <summary>
+		/// Converts the decimal value to a string. This takes in account the
+		/// digit resolution and adds trailing zeroes, if needed.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The string representation using the current culture.</returns>
 		public string ToString(decimal value)
 		{
 			return this.ToString (value, System.Globalization.CultureInfo.CurrentCulture);
 		}
-		
-		public string ToString(decimal value, System.IFormatProvider format_provider)
+
+		/// <summary>
+		/// Converts the decimal value to a string. This takes in account the
+		/// digit resolution and adds trailing zeroes, if needed.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <param name="formatProvider">The format provider.</param>
+		/// <returns>The string representation using the specified format provider.</returns>
+		public string ToString(decimal value, System.IFormatProvider formatProvider)
 		{
 			if (!this.CheckCompatibility (value))
 			{
-				throw new System.OverflowException (value.ToString (format_provider));
+				throw new System.OverflowException (value.ToString (formatProvider));
 			}
 			
-			int frac_digits = this.DigitShift;
+			int fracDigits = this.DigitShift;
 			
 			//	Commence par faire en sorte de laisser tomber les zéros superflus (ce qui
 			//	peut arriver avec le type 'decimal', car 1.00M stocke en effet les deux
 			//	décimales).
 			
-			value *= DbNumDef.digit_table[frac_digits];
+			value *= DbNumDef.digitTable[fracDigits];
 			value  = decimal.Truncate (value);
-			value *= DbNumDef.digit_table_scale[frac_digits];
+			value *= DbNumDef.digitTableScale[fracDigits];
 			
 			//	Convertit la valeur en un texte, en tenant compte des divers réglages
 			//	internes (nombre de décimales, etc.)
@@ -466,65 +612,78 @@ namespace Epsitec.Cresus.Database
 			//	(1) Convertit déjà le nombre en chaîne selon ToString de la classe "decimal" :
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			string decimal_string = value.ToString (format_provider);
+			string decimalString = value.ToString (formatProvider);
 			
-			buffer.Append (decimal_string);
+			buffer.Append (decimalString);
 			
 			//	(2) Détermine quel séparateur utiliser :
 			
-			System.Globalization.CultureInfo culture = format_provider as System.Globalization.CultureInfo;
+			System.Globalization.CultureInfo culture = formatProvider as System.Globalization.CultureInfo;
 			string sep = (culture == null) ? "." : culture.NumberFormat.NumberDecimalSeparator;
 			
 			//	(3) Retrouve la position du séparateur décimal dans le nombre :
 			
-			int pos = decimal_string.IndexOf (sep);
+			int pos = decimalString.IndexOf (sep);
 			
 			if (pos < 0)
 			{
-				if (frac_digits > 0)
+				if (fracDigits > 0)
 				{
 					buffer.Append (sep);
 				}
 			}
 			else
 			{
-				frac_digits -= decimal_string.Length - pos - 1;
-				System.Diagnostics.Debug.Assert (frac_digits >= 0);
+				fracDigits -= decimalString.Length - pos - 1;
+				System.Diagnostics.Debug.Assert (fracDigits >= 0);
 			}
 			
-			if (frac_digits > 0)
+			if (fracDigits > 0)
 			{
-				buffer.Append ('0', frac_digits);
+				buffer.Append ('0', fracDigits);
 			}
 			
 			return buffer.ToString ();
 		}
-		
-		
+
+
+		/// <summary>
+		/// Converts the <c>DbNumDef</c> to a decimal range encoding.
+		/// </summary>
+		/// <returns>The decimal range.</returns>
 		public Common.Types.DecimalRange ToDecimalRange()
 		{
-			decimal resolution = DbNumDef.digit_table_scale[this.DigitShift];
+			decimal resolution = DbNumDef.digitTableScale[this.DigitShift];
 			return new Common.Types.DecimalRange (this.MinValue, this.MaxValue, resolution);
 		}
-		
+
+
+		/// <summary>
+		/// Clones this instance.
+		/// </summary>
+		/// <returns>The clone of this <c>DbNumDef</c>.</returns>
+		public DbNumDef Clone()
+		{
+			DbNumDef copy = new DbNumDef ();
+
+			copy.rawType  = this.rawType;
+
+			copy.minValue = this.minValue;
+			copy.maxValue = this.maxValue;
+
+			copy.digitPrecision = this.digitPrecision;
+			copy.digitShift     = this.digitShift;
+
+			copy.InvalidateAndUpdateAutoPrecision ();
+
+			return copy;
+		}
 		
 		#region ICloneable Members
 		
-		public object Clone()
+		object System.ICloneable.Clone()
 		{
-			DbNumDef copy = new DbNumDef ();
-			
-			copy.raw_type  = this.raw_type;
-			
-			copy.min_value = this.min_value;
-			copy.max_value = this.max_value;
-			
-			copy.digit_precision = this.digit_precision;
-			copy.digit_shift     = this.digit_shift;
-			
-			copy.InvalidateAndUpdateAutoPrecision ();
-			
-			return copy;
+			return this.Clone ();
 		}
 
 		#endregion
@@ -545,9 +704,13 @@ namespace Epsitec.Cresus.Database
 
 		public override int GetHashCode()
 		{
-			int hash = (this.digit_precision << 8) | (this.digit_shift);
+			int hash = (this.digitPrecision << 8) | (this.digitShift);
 			
-			return this.raw_type.GetHashCode () ^ this.min_value.GetHashCode () ^ this.max_value.GetHashCode () ^ hash;
+			hash ^= this.rawType.GetHashCode ();
+			hash ^= this.minValue.GetHashCode ();
+			hash ^= this.maxValue.GetHashCode ();
+			
+			return hash;
 		}
 
 		public static bool operator==(DbNumDef a, DbNumDef b)
@@ -565,11 +728,11 @@ namespace Epsitec.Cresus.Database
 				return false;
 			}
 
-			return (a.raw_type == b.raw_type)
-				&& (a.min_value == b.min_value)
-				&& (a.max_value == b.max_value)
-				&& (a.digit_precision == b.digit_precision)
-				&& (a.digit_shift == b.digit_shift);
+			return (a.rawType == b.rawType)
+				&& (a.minValue == b.minValue)
+				&& (a.maxValue == b.maxValue)
+				&& (a.digitPrecision == b.digitPrecision)
+				&& (a.digitShift == b.digitShift);
 		}
 
 		public static bool operator!=(DbNumDef a, DbNumDef b)
@@ -577,11 +740,126 @@ namespace Epsitec.Cresus.Database
 			return !(a == b);
 		}
 
+		#region IXmlSerializable Members
 
+		/// <summary>
+		/// Serializes the instance using the specified XML writer.
+		/// </summary>
+		/// <param name="xmlWriter">The XML writer.</param>
+		public void Serialize(System.Xml.XmlTextWriter xmlWriter)
+		{
+			xmlWriter.WriteStartElement ("numdef");
+			this.SerializeAttributes (xmlWriter);
+			xmlWriter.WriteEndElement ();
+		}
+
+		#endregion
+
+		/// <summary>
+		/// Serializes the instance as XML attributes.
+		/// </summary>
+		/// <param name="xmlWriter">The XML writer.</param>
+		public void SerializeAttributes(System.Xml.XmlTextWriter xmlWriter)
+		{
+			this.SerializeAttributes (xmlWriter, "");
+		}
+
+		/// <summary>
+		/// Serializes the instance as XML attributes. The attributes will be
+		/// prefixed as specified.
+		/// </summary>
+		/// <param name="xmlWriter">The XML writer.</param>
+		/// <param name="prefix">The prefix.</param>
+		public void SerializeAttributes(System.Xml.XmlTextWriter xmlWriter, string prefix)
+		{
+			if (this.InternalRawType == DbRawType.Unknown)
+			{
+				DbTools.WriteAttribute (xmlWriter, prefix+"digits", DbTools.IntToString (this.DigitPrecision));
+				DbTools.WriteAttribute (xmlWriter, prefix+"shift", DbTools.IntToString (this.DigitShift));
+				DbTools.WriteAttribute (xmlWriter, prefix+"min", DbTools.DecimalToString (this.MinValue));
+				DbTools.WriteAttribute (xmlWriter, prefix+"max", DbTools.DecimalToString (this.MaxValue));
+			}
+			else
+			{
+				xmlWriter.WriteAttributeString (prefix+"raw", DbTools.RawTypeToString (this.InternalRawType));
+			}
+		}
+
+		/// <summary>
+		/// Deserializes a <c>DbNumDef</c> from the specified XML reader.
+		/// </summary>
+		/// <param name="xmlReader">The XML reader.</param>
+		/// <returns>The <c>DbNumDef</c> instance.</returns>
+		public static DbNumDef Deserialize(System.Xml.XmlTextReader xmlReader)
+		{
+			if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
+				(xmlReader.Name == "numdef"))
+			{
+				return DbNumDef.DeserializeAttributes (xmlReader);
+			}
+			else
+			{
+				throw new System.Xml.XmlException (string.Format ("Unexpected element {0}", xmlReader.LocalName), null, xmlReader.LineNumber, xmlReader.LinePosition);
+			}
+		}
+
+		/// <summary>
+		/// Deserializes a <c>DbNumDef</c> based on XML attributes.
+		/// </summary>
+		/// <param name="xmlReader">The XML reader.</param>
+		/// <returns>The <c>DbNumDef</c> instance.</returns>
+		public static DbNumDef DeserializeAttributes(System.Xml.XmlTextReader xmlReader)
+		{
+			return DbNumDef.DeserializeAttributes (xmlReader, "");
+		}
+
+		/// <summary>
+		/// Deserializes a <c>DbNumDef</c> based on XML attributes.
+		/// </summary>
+		/// <param name="xmlReader">The XML reader.</param>
+		/// <param name="prefix">The prefix.</param>
+		/// <returns>The <c>DbNumDef</c> instance.</returns>
+		public static DbNumDef DeserializeAttributes(System.Xml.XmlTextReader xmlReader, string prefix)
+		{
+			string rawArg = xmlReader.GetAttribute (prefix+"raw");
+
+			if (rawArg == null)
+			{
+				int digits  = DbTools.ParseInt (xmlReader.GetAttribute (prefix+"digits"));
+				int shift   = DbTools.ParseInt (xmlReader.GetAttribute (prefix+"shift"));
+				decimal min = DbTools.ParseDecimal (xmlReader.GetAttribute (prefix+"min"));
+				decimal max = DbTools.ParseDecimal (xmlReader.GetAttribute (prefix+"max"));
+
+				if ((digits == 0) &&
+					(shift == 0) &&
+					(min == 0) &&
+					(max == 0))
+				{
+					return null;
+				}
+				else
+				{
+					return new DbNumDef (digits, shift, min, max);
+				}
+			}
+			else
+			{
+				return DbNumDef.FromRawType (DbTools.ParseRawType (rawArg));
+			}
+		}
+
+
+
+		/// <summary>
+		/// Gets the pack offset, i.e. the value to substract to a decimal value
+		/// in order to center into the available range. If the available range
+		/// does not require centering, the pack offset will be zero.
+		/// </summary>
+		/// <returns>The pack offset.</returns>
 		private decimal GetPackOffset()
 		{
 			decimal offset = this.MinValue + this.HalfRange;
-			decimal mul    = DbNumDef.digit_table[this.DigitShift];
+			decimal mul    = DbNumDef.digitTable[this.DigitShift];
 
 			decimal range  = mul * (this.MaxValue - this.MinValue);
 			decimal max    = mul * this.MaxValue;
@@ -627,52 +905,56 @@ namespace Epsitec.Cresus.Database
 			return offset;
 		}
 
+		/// <summary>
+		/// Updates the auto precision based on the minimum and maximum values.
+		/// This generates a synthetic <c>DigitShift</c> and <c>DigitPrecision</c>.
+		/// </summary>
 		private void UpdateAutoPrecision()
 		{
 			//	Détermine la précision nécessaire à la représentation d'un nombre donné.
-			
+
 			//	La routine donne à la fois la précision (nombre total de décimales) et
 			//	le "shift" (nombre de décimales après le point décimal).
-			
+
 			//	Le résultat est mémorisé de manière à ne pas devoir recalculer cela à
 			//	chaque fois que nécessaire.
-			
-			System.Diagnostics.Debug.Assert (this.IsMinMaxDefined);		
-			System.Diagnostics.Debug.Assert (this.digit_shift_auto == 0);
-			System.Diagnostics.Debug.Assert (this.digit_precision_auto == 0);
-			
+
+			System.Diagnostics.Debug.Assert (this.IsMinMaxDefined);
+			System.Diagnostics.Debug.Assert (this.digitShiftAuto == 0);
+			System.Diagnostics.Debug.Assert (this.digitPrecisionAuto == 0);
+
 			decimal min = System.Math.Abs (this.MinValue);
 			decimal max = System.Math.Abs (this.MaxValue);
 
 			//	Cherche déjà le nombre de décimales :
-			
-			while ((System.Decimal.Truncate(min) != min) ||
-				(System.Decimal.Truncate(max) != max))
+
+			while ((System.Decimal.Truncate (min) != min)
+				|| (System.Decimal.Truncate (max) != max))
 			{
-				this.digit_shift_auto++;
-				min *= 10M; 
-				max *= 10M; 
+				this.digitShiftAuto++;
+				min *= 10M;
+				max *= 10M;
 			}
-			System.Diagnostics.Debug.Assert (this.digit_shift_auto < DbNumDef.digit_max);
-			
+
+			System.Diagnostics.Debug.Assert (this.digitShiftAuto < DbNumDef.digitMax);
+
 			//	Puis cherche le nombre de digits :
-			
-			while ((DbNumDef.digit_table[this.digit_precision_auto] <= min) || 
-				(DbNumDef.digit_table[this.digit_precision_auto] <= max))
+
+			while ((DbNumDef.digitTable[this.digitPrecisionAuto] <= min)
+				|| (DbNumDef.digitTable[this.digitPrecisionAuto] <= max))
 			{
-				this.digit_precision_auto++;
-				System.Diagnostics.Debug.Assert (this.digit_precision_auto < DbNumDef.digit_max);
+				this.digitPrecisionAuto++;
+				System.Diagnostics.Debug.Assert (this.digitPrecisionAuto < DbNumDef.digitMax);
 			}
 		}
 
 		private void InvalidateAndUpdateAutoPrecision()
 		{
-			this.digit_precision_auto = 0;
-			this.digit_shift_auto     = 0;
+			this.digitPrecisionAuto = 0;
+			this.digitShiftAuto     = 0;
 
 			if (this.IsMinMaxDefined)
 			{
-				//	Détermine de suite la précision selon Min et Max
 				this.UpdateAutoPrecision ();
 			}
 		}
@@ -681,126 +963,54 @@ namespace Epsitec.Cresus.Database
 		[System.Diagnostics.Conditional ("DEBUG")]
 		private void DebugCheckAbsolute(decimal value)
 		{
-			//	Utilisé pour vérifier que ni le min_value, ni le max_value
+			//	Utilisé pour vérifier que ni le minValue, ni le maxValue
 			//	n'est pas donné au delà des 24 digits autorisés. Cette méthode
 			//	de vérification n'est pas appelée si le projet est compilé en
 			//	mode 'Release'.
-			
-			System.Diagnostics.Debug.Assert (value >= min_absolute);
-			System.Diagnostics.Debug.Assert (value <= max_absolute);
+
+			System.Diagnostics.Debug.Assert (value >= minAbsolute);
+			System.Diagnostics.Debug.Assert (value <= maxAbsolute);
 		}
-
-
-		public void Serialize(System.Xml.XmlTextWriter xmlWriter)
-		{
-			xmlWriter.WriteStartElement ("numdef");
-			this.SerializeAttributes (xmlWriter, "");
-			xmlWriter.WriteEndElement ();
-		}
-
-		public void SerializeAttributes(System.Xml.XmlTextWriter xmlWriter, string prefix)
-		{
-			if (this.InternalRawType == DbRawType.Unsupported)
-			{
-				DbTools.WriteAttribute (xmlWriter, prefix+"digits", DbTools.IntToString (this.DigitPrecision));
-				DbTools.WriteAttribute (xmlWriter, prefix+"shift", DbTools.IntToString (this.DigitShift));
-				DbTools.WriteAttribute (xmlWriter, prefix+"min", DbTools.DecimalToString (this.MinValue));
-				DbTools.WriteAttribute (xmlWriter, prefix+"max", DbTools.DecimalToString (this.MaxValue));
-			}
-			else
-			{
-				xmlWriter.WriteAttributeString (prefix+"raw", DbTools.RawTypeToString (this.InternalRawType));
-			}
-		}
-		
-		public static DbNumDef Deserialize(System.Xml.XmlTextReader xmlReader)
-		{
-			if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
-				(xmlReader.Name == "numdef"))
-			{
-				return DbNumDef.DeserializeAttributes (xmlReader);
-			}
-			else
-			{
-				throw new System.Xml.XmlException (string.Format ("Unexpected element {0}", xmlReader.LocalName), null, xmlReader.LineNumber, xmlReader.LinePosition);
-			}
-		}
-
-		public static DbNumDef DeserializeAttributes(System.Xml.XmlTextReader xmlReader)
-		{
-			return DbNumDef.DeserializeAttributes (xmlReader, "");
-		}
-
-		public static DbNumDef DeserializeAttributes(System.Xml.XmlTextReader xmlReader, string prefix)
-		{
-			string rawArg = xmlReader.GetAttribute (prefix+"raw");
-
-			if (rawArg == null)
-			{
-				int digits  = DbTools.ParseInt (xmlReader.GetAttribute (prefix+"digits"));
-				int shift   = DbTools.ParseInt (xmlReader.GetAttribute (prefix+"shift"));
-				decimal min = DbTools.ParseDecimal (xmlReader.GetAttribute (prefix+"min"));
-				decimal max = DbTools.ParseDecimal (xmlReader.GetAttribute (prefix+"max"));
-
-				if ((digits == 0) &&
-					(shift == 0) &&
-					(min == 0) &&
-					(max == 0))
-				{
-					return null;
-				}
-				else
-				{
-					return new DbNumDef (digits, shift, min, max);
-				}
-			}
-			else
-			{
-				return DbNumDef.FromRawType (DbTools.ParseRawType (rawArg));
-			}
-		}
-
-
 		
 		
 		#region Static Setup
+		
 		static DbNumDef()
 		{
-			//	Constructeur statique de la classe.
-			
 			//	Initialise la table de conversion entre nombre de décimales après la
 			//	virgule et facteur multiplicatif/facteur d'échelle.
 			
-			DbNumDef.digit_table = new decimal[DbNumDef.digit_max];
-			DbNumDef.digit_table_scale = new decimal[DbNumDef.digit_max];
+			DbNumDef.digitTable = new decimal[DbNumDef.digitMax];
+			DbNumDef.digitTableScale = new decimal[DbNumDef.digitMax];
 			
 			decimal multiple = 1;
 			decimal scale = 1;
 			
-			for (int i = 0; i < DbNumDef.digit_max; i++)
+			for (int i = 0; i < DbNumDef.digitMax; i++)
 			{
-				DbNumDef.digit_table[i] = multiple;
-				DbNumDef.digit_table_scale[i] = scale;
+				DbNumDef.digitTable[i] = multiple;
+				DbNumDef.digitTableScale[i] = scale;
 				multiple *= 10M;
 				scale *= 0.1M;
 			}
 		}
+		
 		#endregion		
 		
-		private const int digit_max		= 24;
-		private const decimal max_absolute	= 99999999999999999999999.0M;
-		private const decimal min_absolute	= -max_absolute;
+		private const int						digitMax		= 24;
+		private const decimal					maxAbsolute	= 99999999999999999999999.0M;
+		private const decimal					minAbsolute	= -maxAbsolute;
 
-		private static decimal[] digit_table;
-		private static decimal[] digit_table_scale;
+		private static decimal[]				digitTable;
+		private static decimal[]				digitTableScale;
 
-		private DbRawType raw_type		= DbRawType.Unsupported;
-		private decimal min_value		=  max_absolute;
-		private decimal max_value		=  min_absolute;
+		private DbRawType						rawType;
+		private decimal							minValue	=  maxAbsolute;
+		private decimal							maxValue	=  minAbsolute;
 
-		private byte digit_precision;
-		private byte digit_shift;
-		private byte digit_precision_auto;	//	cache les val. dét. selon Min et Max
-		private byte digit_shift_auto;		//	cache les val. dét. selon Min et Max
+		private byte							digitPrecision;
+		private byte							digitShift;
+		private byte							digitPrecisionAuto;	//	cache les val. dét. selon Min et Max
+		private byte							digitShiftAuto;		//	cache les val. dét. selon Min et Max
 	}
 }

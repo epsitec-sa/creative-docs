@@ -10,14 +10,9 @@ namespace Epsitec.Cresus.Database
 	public enum DbRawType : byte
 	{
 		/// <summary>
-		/// Unsupported type.
+		/// Unknown or unsupported type.
 		/// </summary>
-		Unsupported = 0,
-		
-		/// <summary>
-		/// Unknown type.
-		/// </summary>
-		Unknown = Unsupported,
+		Unknown = 0,
 		
 		/// <summary>
 		/// Null, type cannot be inferred.

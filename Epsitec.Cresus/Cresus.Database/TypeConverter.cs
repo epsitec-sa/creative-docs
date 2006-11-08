@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Database
 				case DbRawType.Guid:		return DbSimpleType.Guid;
 			}
 			
-			return DbSimpleType.Unsupported;
+			return DbSimpleType.Unknown;
 		}
 
 		public static DbSimpleType GetSimpleType(INamedType namedType, out DbNumDef numDef)
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Database
 				return simpleType;
 			}
 
-			return DbSimpleType.Unsupported;
+			return DbSimpleType.Unknown;
 		}
 
 		public static DbRawType GetRawType(System.Type type)
@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.Database
 				case DbSimpleType.Decimal:
 					System.Diagnostics.Debug.Assert (numDef != null);
 					
-					if (numDef.InternalRawType == DbRawType.Unsupported)
+					if (numDef.InternalRawType == DbRawType.Unknown)
 					{
 						//	Ce n'est pas un type numérique standard, donc il faut prévoir
 						//	une conversion éventuelle.
@@ -252,7 +252,7 @@ namespace Epsitec.Cresus.Database
 				case DbSimpleType.Guid:			return DbRawType.Guid;
 			}
 			
-			return DbRawType.Unsupported;
+			return DbRawType.Unknown;
 		}
 
 		public static DbRawType GetRawType(INamedType namedType)
@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.Database
 				return null;
 			}
 			
-			System.Diagnostics.Debug.Assert (simpleType != DbSimpleType.Unsupported);
+			System.Diagnostics.Debug.Assert (simpleType != DbSimpleType.Unknown);
 			System.Diagnostics.Debug.Assert (simpleType != DbSimpleType.Null);
 			
 			switch (simpleType)
@@ -369,7 +369,7 @@ namespace Epsitec.Cresus.Database
 				return null;
 			}
 			
-			System.Diagnostics.Debug.Assert (simpleType != DbSimpleType.Unsupported);
+			System.Diagnostics.Debug.Assert (simpleType != DbSimpleType.Unknown);
 			System.Diagnostics.Debug.Assert (simpleType != DbSimpleType.Null);
 			
 			switch (simpleType)

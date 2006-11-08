@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Database
 		{
 			if (string.IsNullOrEmpty (value))
 			{
-				return DbRawType.Unsupported;
+				return DbRawType.Unknown;
 			}
 
 			int num;
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Database
 		{
 			if (string.IsNullOrEmpty (value))
 			{
-				return DbSimpleType.Unsupported;
+				return DbSimpleType.Unknown;
 			}
 
 			int num;
@@ -301,7 +301,7 @@ namespace Epsitec.Cresus.Database
 
 		public static string RawTypeToString(DbRawType dbRawType)
 		{
-			if (dbRawType == DbRawType.Unsupported)
+			if (dbRawType == DbRawType.Unknown)
 			{
 				return null;
 			}
@@ -313,7 +313,7 @@ namespace Epsitec.Cresus.Database
 		
 		public static string SimpleTypeToString(DbSimpleType dbSimpleType)
 		{
-			if (dbSimpleType == DbSimpleType.Unsupported)
+			if (dbSimpleType == DbSimpleType.Unknown)
 			{
 				return null;
 			}
