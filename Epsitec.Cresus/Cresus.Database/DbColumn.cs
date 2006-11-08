@@ -578,48 +578,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public SqlField CreateSqlField(ITypeConverter type_converter, int value)
-		{
-			//	TODO: pas une bonne idée d'avoir ces méthodes de création qui ne tiennent
-			//	pas compte des types internes supportés par la base... c'est valable pour
-			//	toutes les variantes de CreateSqlField.
-
-			SqlField field = SqlField.CreateConstant (value, DbRawType.Int32);
-			field.Alias = this.Name;
-			return field;
-		}
-
-		public SqlField CreateSqlField(ITypeConverter type_converter, long value)
-		{
-			SqlField field = SqlField.CreateConstant (value, DbRawType.Int64);
-			field.Alias = this.Name;
-			return field;
-		}
-
-		public SqlField CreateSqlField(ITypeConverter type_converter, string value)
-		{
-			SqlField field = SqlField.CreateConstant (value, DbRawType.String);
-			field.Alias = this.Name;
-			return field;
-		}
-
-		public SqlField CreateSqlField(ITypeConverter type_converter, System.DateTime value)
-		{
-			SqlField field = SqlField.CreateConstant (value, DbRawType.DateTime);
-			field.Alias = this.Name;
-			return field;
-		}
-
-		public SqlField CreateEmptySqlField(ITypeConverter type_converter)
-		{
-			DbRawType raw_type = this.type.RawType;
-			SqlField  field    = SqlField.CreateConstant (null, raw_type);
-			field.Alias = this.CreateSqlName ();
-			return field;
-		}
-
-
-
 
 		#region IEquatable<DbColumn> Members
 

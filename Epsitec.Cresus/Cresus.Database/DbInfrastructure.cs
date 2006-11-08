@@ -789,8 +789,51 @@ namespace Epsitec.Cresus.Database
 			
 			return this.LoadDbType (transaction, DbKey.Empty, row_search_mode).ToArray ();
 		}
+
 		
-		
+		public SqlField CreateSqlField(DbColumn column, int value)
+		{
+			//	TODO: pas une bonne idée d'avoir ces méthodes de création qui ne tiennent
+			//	pas compte des types internes supportés par la base... c'est valable pour
+			//	toutes les variantes de CreateSqlField.
+
+			SqlField field = SqlField.CreateConstant (value, DbRawType.Int32);
+			field.Alias = column.Name;
+			return field;
+		}
+
+		public SqlField CreateSqlField(DbColumn column, long value)
+		{
+			SqlField field = SqlField.CreateConstant (value, DbRawType.Int64);
+			field.Alias = column.Name;
+			return field;
+		}
+
+		public SqlField CreateSqlField(DbColumn column, string value)
+		{
+			SqlField field = SqlField.CreateConstant (value, DbRawType.String);
+			field.Alias = column.Name;
+			return field;
+		}
+
+		public SqlField CreateSqlField(DbColumn column, System.DateTime value)
+		{
+			SqlField field = SqlField.CreateConstant (value, DbRawType.DateTime);
+			field.Alias = column.Name;
+			return field;
+		}
+
+		public SqlField CreateEmptySqlField(DbColumn column)
+		{
+			DbRawType raw_type = column.Type.RawType;
+			SqlField field    = SqlField.CreateConstant (null, raw_type);
+			field.Alias = column.CreateSqlName ();
+			return field;
+		}
+
+
+
+
 		
 		internal DbTable CreateTable(string name, DbElementCat category, DbRevisionMode revision_mode, DbReplicationMode replication_mode)
 		{
@@ -1991,12 +2034,12 @@ namespace Epsitec.Cresus.Database
 			//	Insère une ligne dans la table de définition des types.
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
-			
-			fields.Add (type_def_table.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, typeDef.Key.Id));
-			fields.Add (type_def_table.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, typeDef.Key.IntStatus));
-			fields.Add (type_def_table.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.logger.CurrentId));
-			fields.Add (type_def_table.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, typeDef.Name));
-			fields.Add (type_def_table.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTools.GetCompactXml (typeDef)));
+
+			fields.Add (this.CreateSqlField (type_def_table.Columns[Tags.ColumnId], typeDef.Key.Id));
+			fields.Add (this.CreateSqlField (type_def_table.Columns[Tags.ColumnStatus], typeDef.Key.IntStatus));
+			fields.Add (this.CreateSqlField (type_def_table.Columns[Tags.ColumnRefLog], this.logger.CurrentId));
+			fields.Add (this.CreateSqlField (type_def_table.Columns[Tags.ColumnName], typeDef.Name));
+			fields.Add (this.CreateSqlField (type_def_table.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (typeDef)));
 			
 			//	TODO: Initializer les colonnes descriptives
 			
@@ -2040,13 +2083,13 @@ namespace Epsitec.Cresus.Database
 			//	Insère une ligne dans la table de définition des tables.
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
-			
-			fields.Add (table_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, table.Key.Id));
-			fields.Add (table_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, table.Key.IntStatus));
-			fields.Add (table_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.logger.CurrentId));
-			fields.Add (table_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, table.Name));
-			fields.Add (table_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTools.GetCompactXml (table)));
-			fields.Add (table_def.Columns[Tags.ColumnNextId]  .CreateSqlField (this.type_converter, DbId.CreateId (1, this.client_id)));
+
+			fields.Add (this.CreateSqlField (table_def.Columns[Tags.ColumnId], table.Key.Id));
+			fields.Add (this.CreateSqlField (table_def.Columns[Tags.ColumnStatus], table.Key.IntStatus));
+			fields.Add (this.CreateSqlField (table_def.Columns[Tags.ColumnRefLog], this.logger.CurrentId));
+			fields.Add (this.CreateSqlField (table_def.Columns[Tags.ColumnName], table.Name));
+			fields.Add (this.CreateSqlField (table_def.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (table)));
+			fields.Add (this.CreateSqlField (table_def.Columns[Tags.ColumnNextId], DbId.CreateId (1, this.client_id)));
 			
 			//	TODO: Initialiser les colonnes descriptives
 			
@@ -2064,14 +2107,14 @@ namespace Epsitec.Cresus.Database
 			//	Insère une ligne dans la table de définition des colonnes.
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
-			
-			fields.Add (column_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, column.Key.Id));
-			fields.Add (column_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, column.Key.IntStatus));
-			fields.Add (column_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.logger.CurrentId));
-			fields.Add (column_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, column.Name));
-			fields.Add (column_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTools.GetCompactXml (column)));
-			fields.Add (column_def.Columns[Tags.ColumnRefTable].CreateSqlField (this.type_converter, table.Key.Id));
-			fields.Add (column_def.Columns[Tags.ColumnRefType] .CreateSqlField (this.type_converter, column.Type.Key.Id));
+
+			fields.Add (this.CreateSqlField (column_def.Columns[Tags.ColumnId], column.Key.Id));
+			fields.Add (this.CreateSqlField (column_def.Columns[Tags.ColumnStatus], column.Key.IntStatus));
+			fields.Add (this.CreateSqlField (column_def.Columns[Tags.ColumnRefLog], this.logger.CurrentId));
+			fields.Add (this.CreateSqlField (column_def.Columns[Tags.ColumnName], column.Name));
+			fields.Add (this.CreateSqlField (column_def.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (column)));
+			fields.Add (this.CreateSqlField (column_def.Columns[Tags.ColumnRefTable], table.Key.Id));
+			fields.Add (this.CreateSqlField (column_def.Columns[Tags.ColumnRefType], column.Type.Key.Id));
 			
 			//	TODO: Initialiser les colonnes descriptives
 			

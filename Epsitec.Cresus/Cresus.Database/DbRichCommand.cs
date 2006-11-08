@@ -894,8 +894,8 @@ namespace Epsitec.Cresus.Database
 					//	Aucune option particulière pour cette colonne. Ajoute simplement
 					//	la colonne à la fois pour le UPDATE et pour le INSERT :
 					
-					sql_update.Add (column.CreateEmptySqlField (converter));
-					sql_insert.Add (column.CreateEmptySqlField (converter));
+					sql_update.Add (this.infrastructure.CreateEmptySqlField (column));
+					sql_insert.Add (this.infrastructure.CreateEmptySqlField (column));
 					
 					update_map[c]     = c;
 					insert_default[c] = null;
@@ -905,7 +905,7 @@ namespace Epsitec.Cresus.Database
 					//	Les options indiquent que l'on doit ignorer cette colonne lors du
 					//	UPDATE; on va aussi fournir une valeur par défaut pour le INSERT :
 					
-					sql_insert.Add (column.CreateEmptySqlField (converter));
+					sql_insert.Add (this.infrastructure.CreateEmptySqlField (column));
 					
 					update_map[c]     = -1;
 					insert_default[c] = options.GetDefaultValue (c, column);
