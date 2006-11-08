@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.Database
 					}
 					throw new Exceptions.GenericException (DbAccess.Empty, string.Format ("'{0}' is an invalid internal table name.", name));
 				
-				case DbElementCat.UserDataManaged:
+				case DbElementCat.ManagedUserData:
 					buffer = new System.Text.StringBuilder ();
 					buffer.Append ("U_");
 					break;
@@ -286,7 +286,7 @@ namespace Epsitec.Cresus.Database
 					}
 					throw new Exceptions.GenericException (DbAccess.Empty, string.Format ("'{0}' is an invalid internal name.", name));
 				
-				case DbElementCat.UserDataManaged:
+				case DbElementCat.ManagedUserData:
 					buffer = new System.Text.StringBuilder ();
 					buffer.Append ("U_");
 					break;

@@ -8,6 +8,10 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Database
 {
+	/// <summary>
+	/// The <c>DbContext</c> class defines a per-thread context which gives
+	/// access to the resource manager, etc.
+	/// </summary>
 	public sealed class DbContext
 	{
 		private DbContext()
@@ -15,7 +19,11 @@ namespace Epsitec.Cresus.Database
 			this.resourceManager = Resources.DefaultManager;
 		}
 
-		public ResourceManager ResourceManager
+		/// <summary>
+		/// Gets or sets the resource manager associated with the context.
+		/// </summary>
+		/// <value>The resource manager.</value>
+		public ResourceManager					ResourceManager
 		{
 			get
 			{
@@ -28,8 +36,24 @@ namespace Epsitec.Cresus.Database
 				this.resourceManager = value;
 			}
 		}
-		
-		public static DbContext Current
+
+		/// <summary>
+		/// Gets the context owner thread.
+		/// </summary>
+		/// <value>The context owner thread.</value>
+		public System.Threading.Thread			OwnerThread
+		{
+			get
+			{
+				return this.ownerThread;
+			}
+		}
+
+		/// <summary>
+		/// Gets the context associated with the current thread.
+		/// </summary>
+		/// <value>The current context.</value>
+		public static DbContext					Current
 		{
 			get
 			{
@@ -58,12 +82,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		private static object globalExclusion = new object ();
+		private static object					globalExclusion = new object ();
 		
 		[System.ThreadStatic]
-		private static DbContext threadContext;
+		private static DbContext				threadContext;
 
-		private System.Threading.Thread ownerThread;
-		private ResourceManager resourceManager;
+		private System.Threading.Thread			ownerThread;
+		private ResourceManager					resourceManager;
 	}
 }

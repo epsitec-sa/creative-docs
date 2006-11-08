@@ -1,5 +1,5 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
 
@@ -12,63 +12,57 @@ namespace Epsitec.Cresus.Database
 	[System.Serializable]
 	public struct DbKey : System.IComparable<DbKey>, System.IEquatable<DbKey>, IXmlSerializable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbKey"/> class.
+		/// </summary>
+		/// <param name="id">The id.</param>
 		public DbKey(DbId id) : this (id, DbRowStatus.Live)
 		{
 		}
-		
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbKey"/> class.
+		/// </summary>
+		/// <param name="id">The id.</param>
+		/// <param name="status">The status.</param>
 		public DbKey(DbId id, DbRowStatus status)
 		{
 			this.id     = id;
 			this.status = DbKey.ConvertToIntStatus (status);
 		}
-		
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbKey"/> class.
+		/// </summary>
+		/// <param name="dataRow">The data row.</param>
 		public DbKey(System.Data.DataRow dataRow)
 		{
+			this.id = 0;
+			this.status = 0;
+			
 			object valueId     = dataRow[Tags.ColumnId];
 			object valueStatus = dataRow[Tags.ColumnStatus];
 			
-			long id;
-			
-			if ((InvariantConverter.Convert (valueId, out id)) &&
-				(id >= 0))
-			{
-				short status;
-				
-				InvariantConverter.Convert (valueStatus, out status);
-				
-				this.id     = id;
-				this.status = status;
-			}
-			else
-			{
-				throw new System.ArgumentException ("Row does not contain valid key", "dataRow");
-			}
+			this.DefineIdAndStatus (dataRow[Tags.ColumnId], dataRow[Tags.ColumnStatus]);
 		}
-		
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbKey"/> class.
+		/// </summary>
+		/// <param name="dataRow">The data row.</param>
 		public DbKey(object[] dataRow)
 		{
-			object valueId     = dataRow[0];
-			object valueStatus = dataRow[1];
-			
-			long id;
-			
-			if ((InvariantConverter.Convert (valueId, out id)) &&
-				(id >= 0))
-			{
-				short status;
-				
-				InvariantConverter.Convert (valueStatus, out status);
-				
-				this.id     = id;
-				this.status = status;
-			}
-			else
-			{
-				throw new System.ArgumentException ("Row does not contain valid key.", "dataRow");
-			}
+			this.id = 0;
+			this.status = 0;
+
+			this.DefineIdAndStatus (dataRow[0], dataRow[1]);
 		}
 
 
+		/// <summary>
+		/// Gets the key id.
+		/// </summary>
+		/// <value>The id.</value>
 		public DbId								Id
 		{
 			get
@@ -76,7 +70,11 @@ namespace Epsitec.Cresus.Database
 				return this.id;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the row status.
+		/// </summary>
+		/// <value>The status.</value>
 		public DbRowStatus						Status
 		{
 			get
@@ -84,15 +82,25 @@ namespace Epsitec.Cresus.Database
 				return DbKey.ConvertFromIntStatus (this.status);
 			}
 		}
-		
-		public short							IntStatus
+
+		/// <summary>
+		/// Gets the row status, represented as a number.
+		/// </summary>
+		/// <value>The int status.</value>
+		internal short							IntStatus
 		{
 			get
 			{
 				return this.status;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets a value indicating whether this instance represents a temporary key.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance represents a temporary key; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsTemporary
 		{
 			get
@@ -101,6 +109,10 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this instance represents an empty key.
+		/// </summary>
+		/// <value><c>true</c> if this instance represents an empty key; otherwise, <c>false</c>.</value>
 		public bool								IsEmpty
 		{
 			get
@@ -111,18 +123,36 @@ namespace Epsitec.Cresus.Database
 		
 		public static readonly DbKey			Empty = new DbKey ();
 
+		#region IXmlSerializable Members
+
+		/// <summary>
+		/// Serializes the instance using the specified XML writer.
+		/// </summary>
+		/// <param name="xmlWriter">The XML writer.</param>
 		public void Serialize(System.Xml.XmlTextWriter xmlWriter)
 		{
 			xmlWriter.WriteStartElement ("key");
 			this.SerializeAttributes (xmlWriter);
 			xmlWriter.WriteEndElement ();
 		}
-		
+
+		#endregion
+
+		/// <summary>
+		/// Serializes the key as XML attributes.
+		/// </summary>
+		/// <param name="xmlWriter">The XML writer.</param>
 		public void SerializeAttributes(System.Xml.XmlTextWriter xmlWriter)
 		{
 			this.SerializeAttributes (xmlWriter, "key.");
 		}
-		
+
+		/// <summary>
+		/// Serializes the key as XML attributes, using the specified prefix for
+		/// the attribute names.
+		/// </summary>
+		/// <param name="xmlWriter">The XML writer.</param>
+		/// <param name="prefix">The prefix.</param>
 		public void SerializeAttributes(System.Xml.XmlTextWriter xmlWriter, string prefix)
 		{
 			DbTools.WriteAttribute (xmlWriter, prefix+"id", InvariantConverter.ToString (this.id));
@@ -150,12 +180,24 @@ namespace Epsitec.Cresus.Database
 				throw new System.Xml.XmlException (string.Format ("Unexpected element {0}", xmlReader.LocalName), null, xmlReader.LineNumber, xmlReader.LinePosition);
 			}
 		}
-		
+
+		/// <summary>
+		/// Deserializes the key from XML attributes.
+		/// </summary>
+		/// <param name="xmlReader">The XML reader.</param>
+		/// <returns></returns>
 		public static DbKey DeserializeAttributes(System.Xml.XmlTextReader xmlReader)
 		{
 			return DbKey.DeserializeAttributes (xmlReader, "");
 		}
 
+		/// <summary>
+		/// Deserializes the key from XML attributes, using the specified prefix
+		/// for the attribute names.
+		/// </summary>
+		/// <param name="xmlReader">The XML reader.</param>
+		/// <param name="prefix">The prefix.</param>
+		/// <returns></returns>
 		public static DbKey DeserializeAttributes(System.Xml.XmlTextReader xmlReader, string prefix)
 		{
 			string argId   = xmlReader.GetAttribute (prefix+"id");
@@ -228,11 +270,20 @@ namespace Epsitec.Cresus.Database
 		
 		#endregion
 
+		/// <summary>
+		/// Creates a temporary id.
+		/// </summary>
+		/// <returns></returns>
 		public static DbId CreateTemporaryId()
 		{
 			return DbId.CreateTempId (System.Threading.Interlocked.Increment (ref DbKey.tempId));
 		}
-		
+
+		/// <summary>
+		/// Checks whether the id is a temporary id.
+		/// </summary>
+		/// <param name="id">The id to check.</param>
+		/// <returns><c>true</c> if the id is a temporary id; otherwise, <c>false</c>.</returns>
 		public static bool CheckTemporaryId(DbId id)
 		{
 			if ((id >= DbId.MinimumTemp) &&
@@ -243,24 +294,49 @@ namespace Epsitec.Cresus.Database
 			
 			return false;
 		}
-		
-		public static short ConvertToIntStatus(DbRowStatus status)
+
+		/// <summary>
+		/// Converts the status to an integer representation.
+		/// </summary>
+		/// <param name="status">The status.</param>
+		/// <returns>The status represented as an integer.</returns>
+		internal static short ConvertToIntStatus(DbRowStatus status)
 		{
 			return (short) status;
 		}
-		
-		public static DbRowStatus ConvertFromIntStatus(int status)
+
+		/// <summary>
+		/// Converts an integer representation of the status back to a status.
+		/// </summary>
+		/// <param name="status">The value.</param>
+		/// <returns>The status.</returns>
+		internal static DbRowStatus ConvertFromIntStatus(int status)
 		{
 			return (DbRowStatus) status;
 		}
-		
+
+		private void DefineIdAndStatus(object valueId, object valueStatus)
+		{
+			long id;
+
+			if ((InvariantConverter.Convert (valueId, out id)) &&
+				(id >= 0))
+			{
+				this.id     = id;
+				this.status = InvariantConverter.ToShort (valueStatus);
+			}
+			else
+			{
+				throw new System.ArgumentException ("Invalid key specification");
+			}
+		}
 		
 		public const DbRawType					RawTypeForId		= DbRawType.Int64;
 		public const DbRawType					RawTypeForStatus	= DbRawType.Int16;
 		
 		private static long						tempId;
 
-		private DbId id;
-		private short status;
+		private DbId							id;
+		private short							status;
 	}
 }

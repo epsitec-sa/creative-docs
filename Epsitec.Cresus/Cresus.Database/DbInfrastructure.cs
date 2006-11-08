@@ -286,7 +286,7 @@ namespace Epsitec.Cresus.Database
 					
 					this.logger = new DbLogger ();
 					this.logger.DefineClientId (client_id);
-					this.logger.DefineLogId (1);
+					this.logger.DefineInitialLogId (1);
 					this.logger.Attach (this, this.internal_tables[Tags.TableLog]);
 					this.logger.CreateInitialEntry (transaction);
 					
@@ -426,7 +426,7 @@ namespace Epsitec.Cresus.Database
 				case DbElementCat.Internal:
 					throw new Exceptions.GenericException (this.db_access, string.Format ("User may not create internal table. Table '{0}'.", name));
 				
-				case DbElementCat.UserDataManaged:
+				case DbElementCat.ManagedUserData:
 					return this.CreateTable(name, category, revision_mode, DbReplicationMode.Shared);
 				
 				default:
@@ -551,7 +551,7 @@ namespace Epsitec.Cresus.Database
 		
 		public DbColumn CreateColumn(string columnName, DbTypeDef typeDef)
 		{
-			return new DbColumn (columnName, typeDef, DbColumnClass.Data, DbElementCat.UserDataManaged);
+			return new DbColumn (columnName, typeDef, DbColumnClass.Data, DbElementCat.ManagedUserData);
 		}
 		
 		public DbColumn[] CreateLocalisedColumns(string columnName, DbTypeDef typeDef)
@@ -578,7 +578,7 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (type != null);
 			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (targetTableName));
 
-			DbColumn column = new DbColumn (columnName, type, DbColumnClass.RefId, DbElementCat.UserDataManaged);
+			DbColumn column = new DbColumn (columnName, type, DbColumnClass.RefId, DbElementCat.ManagedUserData);
 
 			column.DefineTargetTableName (targetTableName);
 
@@ -589,7 +589,7 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (type != null);
 
-			return new DbColumn (columnName, type, DbColumnClass.Data, DbElementCat.UserDataManaged);
+			return new DbColumn (columnName, type, DbColumnClass.Data, DbElementCat.ManagedUserData);
 		}
 
 
@@ -1918,7 +1918,7 @@ namespace Epsitec.Cresus.Database
 			
 			this.logger = new DbLogger ();
 			this.logger.DefineClientId (this.client_id);
-			this.logger.DefineLogId (1);
+			this.logger.DefineInitialLogId (1);
 			
 			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId == 1);
 			

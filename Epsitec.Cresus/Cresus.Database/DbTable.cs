@@ -309,7 +309,7 @@ namespace Epsitec.Cresus.Database
 			switch (this.category)
 			{
 				case DbElementCat.Internal:
-				case DbElementCat.UserDataManaged:
+				case DbElementCat.ManagedUserData:
 					if (this.PrimaryKeys.Count == 1)
 					{
 						System.Diagnostics.Debug.Assert (this.PrimaryKeys[0].Name.ToUpper () == Tags.ColumnId);

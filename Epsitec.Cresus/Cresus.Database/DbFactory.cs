@@ -1,103 +1,120 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
+
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe DbFactory permet d'obtenir une référence à une instance du gestionnaire
-	/// de données universel (IDbAbstraction), à partir d'une définition d'accès DbAccess.
+	/// The <c>DbFactory</c> class gives access to the universal database abstractions,
+	/// accessible through the <c>IDbAbstraction</c> interface.
 	/// </summary>
-	public class DbFactory
+	public static class DbFactory
 	{
-		private DbFactory()
-		{
-			//	instanciation impossible
-		}
-		
 		static DbFactory()
 		{
 			DbFactory.Initialize ();
 		}
 		
-		
-		protected static void Initialize()
+		private static void Initialize()
 		{
-			System.Reflection.Assembly assembly = Common.Support.AssemblyLoader.Load ("Cresus.Database.Implementation");
-			System.Type[] types_in_assembly = assembly.GetTypes ();
-			
-			foreach (System.Type type in types_in_assembly)
+			System.Reflection.Assembly assembly = AssemblyLoader.Load ("Cresus.Database.Implementation");
+
+			foreach (System.Type type in assembly.GetTypes ())
 			{
-				if (type.GetInterface ("IDbAbstractionFactory") != null)
+				if ((type.IsClass) &&
+					(type.GetInterface ("IDbAbstractionFactory") != null))
 				{
 					System.Activator.CreateInstance (type);
 				}
 			}
 		}
-		
-		
-		public static IDbAbstraction FindDbAbstraction(DbAccess db_access)
+
+		/// <summary>
+		/// Finds the database abstraction for a given database access.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		/// <returns>
+		/// The database abstraction or <c>null</c> if there is no supported means of
+		/// connecting to the specified database.
+		/// </returns>
+		public static IDbAbstraction FindDbAbstraction(DbAccess databaseAccess)
 		{
-			System.Diagnostics.Debug.Assert (db_access.Provider != null);
-			
-			foreach (IDbAbstractionFactory db_factory in DbFactory.db_factories)
+			IDbAbstractionFactory factory = DbFactory.FindDbAbstractionFactory (databaseAccess.Provider);
+
+			if (factory != null)
 			{
-				if (db_factory.ProviderName == db_access.Provider)
+				try
 				{
-					try
-					{
-						return db_factory.NewDbAbstraction (db_access);
-					}
-					catch (Exceptions.FactoryException)
-					{
-						//	mange l'exception
-					}
+					return factory.NewDbAbstraction (databaseAccess);
+				}
+				catch (Exceptions.FactoryException)
+				{
+					//	Eat the factory exception, if any.
 				}
 			}
 			
 			return null;
 		}
-		
+
+		/// <summary>
+		/// Finds the database abstraction factory based on a provider name.
+		/// </summary>
+		/// <param name="provider">The provider name.</param>
+		/// <returns>The database abstraction factory.</returns>
 		public static IDbAbstractionFactory FindDbAbstractionFactory(string provider)
 		{
-			System.Diagnostics.Debug.Assert (provider != null);
-			
-			foreach (IDbAbstractionFactory db_factory in DbFactory.db_factories)
+			if (string.IsNullOrEmpty (provider))
 			{
-				if (db_factory.ProviderName == provider)
+				throw new System.ArgumentNullException ("Null database provider specified");
+			}
+			
+			foreach (IDbAbstractionFactory factory in DbFactory.factories)
+			{
+				if (factory.ProviderName == provider)
 				{
-					return db_factory;
+					return factory;
 				}
 			}
 			
 			return null;
 		}
-		
+
+		/// <summary>
+		/// Dumps the registered database abstractions.
+		/// </summary>
 		public static void DebugDumpRegisteredDbAbstractions()
 		{
-			foreach (IDbAbstractionFactory entry in DbFactory.db_factories)
+			foreach (IDbAbstractionFactory factory in DbFactory.factories)
 			{
 				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 				
-				buffer.Append (entry.ProviderName);
+				buffer.Append (factory.ProviderName);
 				buffer.Append (": type=");
-				buffer.Append (entry.GetType ().FullName);
+				buffer.Append (factory.GetType ().FullName);
 				buffer.Append (", assembly=");
-				buffer.Append (entry.GetType ().Assembly.FullName);
+				buffer.Append (factory.GetType ().Assembly.FullName);
 				
 				System.Diagnostics.Debug.WriteLine (buffer.ToString ());
 			}
 		}
-		
-		public static void RegisterDbAbstraction(IDbAbstractionFactory db_factory)
+
+		/// <summary>
+		/// Registers the specified database abstraction factory.
+		/// </summary>
+		/// <param name="factory">The database factory abstraction.</param>
+		public static void RegisterDbAbstraction(IDbAbstractionFactory factory)
 		{
-			System.Diagnostics.Debug.Assert (db_factory != null);
-			System.Diagnostics.Debug.Assert (db_factory.ProviderName != null);
-			System.Diagnostics.Debug.Assert (DbFactory.db_factories.Contains (db_factory) == false);
+			System.Diagnostics.Debug.Assert (factory != null);
+			System.Diagnostics.Debug.Assert (factory.ProviderName != null);
+			System.Diagnostics.Debug.Assert (DbFactory.factories.Contains (factory) == false);
 			
-			DbFactory.db_factories.Add (db_factory);
+			DbFactory.factories.Add (factory);
 		}
-		
-		
-		protected static System.Collections.ArrayList	db_factories = new System.Collections.ArrayList ();
+
+
+		static List<IDbAbstractionFactory>		factories = new List<IDbAbstractionFactory> ();
 	}
 }

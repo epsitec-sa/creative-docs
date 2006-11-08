@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Database
 			{
 				infrastructure.Logger.CreateTemporaryEntry (null);
 
-				DbTable db_table1 = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
+				DbTable db_table1 = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.Disabled);
 
 				DbTypeDef db_type_name  = new DbTypeDef ("Name", DbSimpleType.String, null, 80, false, Nullable.No);
 				DbTypeDef db_type_level = new DbTypeDef ("Level", DbSimpleType.String, null, 4, false, Nullable.No);
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Database
 
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
-				DbTable db_table = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
+				DbTable db_table = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.Disabled);
 				infrastructure.RegisterNewDbTable (null, db_table);
 			}
 		}
@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.Database
 
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
-				DbTable db_table = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
+				DbTable db_table = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.Disabled);
 				infrastructure.RegisterNewDbTable (null, db_table);
 
 				Assert.IsNotNull (infrastructure.ResolveDbTable (null, db_table.Name));

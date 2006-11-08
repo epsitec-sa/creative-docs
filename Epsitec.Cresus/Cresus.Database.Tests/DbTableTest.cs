@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Database
 			DbTable table = new DbTable ("Test");
 			
 			table.DefineCategory (DbElementCat.Internal);
-			table.DefineCategory (DbElementCat.UserDataExternal);
+			table.DefineCategory (DbElementCat.ExternalUserData);
 		}
 		
 #if false

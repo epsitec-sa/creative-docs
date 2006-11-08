@@ -1,5 +1,5 @@
 //	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
 
@@ -8,16 +8,23 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// The <c>DbDict</c> class manages a database backed dictionary of string
-	/// key/value pairs.
+	/// The <c>DbDict</c> class manages a database backed dictionary of key/value
+	/// pairs, where both keys and values are represented using <c>string</c>.
 	/// </summary>
 	public sealed class DbDict : IStringDict, IPersistable, IAttachable, System.IDisposable, IDictionary<string, string>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbDict"/> class.
+		/// </summary>
 		public DbDict()
 		{
 		}
 
-		public int ChangeCount
+		/// <summary>
+		/// Gets the change count for this dictionary.
+		/// </summary>
+		/// <value>The change count.</value>
+		public int								ChangeCount
 		{
 			get
 			{
@@ -26,8 +33,12 @@ namespace Epsitec.Cresus.Database
 		}
 
 		#region IStringDict Members
-		
-		public string this[string key]
+
+		/// <summary>
+		/// Gets or sets the value with the specified key.
+		/// </summary>
+		/// <value>The <c>string</c> value.</value>
+		public string							this[string key]
 		{
 			get
 			{
@@ -74,7 +85,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public string[] Keys
+		/// <summary>
+		/// Gets the keys of the known values.
+		/// </summary>
+		/// <value>The keys.</value>
+		public string[]							Keys
 		{
 			get
 			{
@@ -90,7 +105,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public int Count
+		/// <summary>
+		/// Gets the number of known values.
+		/// </summary>
+		/// <value>The number of known values.</value>
+		public int								Count
 		{
 			get
 			{
@@ -110,6 +129,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Adds the specified key/value pair to the dictionary.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value.</param>
 		public void Add(string key, string value)
 		{
 			if (string.IsNullOrEmpty (key))
@@ -138,6 +162,13 @@ namespace Epsitec.Cresus.Database
 			this.NotifyChanged ();
 		}
 
+		/// <summary>
+		/// Removes the specified key/value pair from the dictionary.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <returns>
+		/// 	<c>true</c> if the key was successfully removed; otherwise, <c>false</c>.
+		/// </returns>
 		public bool Remove(string key)
 		{
 			System.Data.DataRow row;
@@ -158,6 +189,9 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Clears the dictionary.
+		/// </summary>
 		public void Clear()
 		{
 			if (this.dataTable.Rows.Count > 0)
@@ -167,6 +201,13 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Determines whether the dictionary contains the specified key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <returns>
+		/// 	<c>true</c> if the dictionary contains the specified key; otherwise, <c>false</c>.
+		/// </returns>
 		public bool ContainsKey(string key)
 		{
 			return this.FindRow (key) == null ? false : true;
@@ -175,13 +216,21 @@ namespace Epsitec.Cresus.Database
 		#endregion
 
 		#region IAttachable Members
-		
+
+		/// <summary>
+		/// Attaches this instance to the specified database table.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="table">The database table.</param>
 		public void Attach(DbInfrastructure infrastructure, DbTable table)
 		{
 			this.infrastructure = infrastructure;
 			this.table          = table;
 		}
 
+		/// <summary>
+		/// Detaches this instance from the database.
+		/// </summary>
 		public void Detach()
 		{
 			if (this.dataSet != null)
@@ -199,7 +248,11 @@ namespace Epsitec.Cresus.Database
 		#endregion
 
 		#region IPersistable Members
-		
+
+		/// <summary>
+		/// Saves the instance data to the database.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		public void PersistToBase(DbTransaction transaction)
 		{
 			this.command.UpdateLogIds ();
@@ -207,6 +260,10 @@ namespace Epsitec.Cresus.Database
 			this.command.UpdateTables (transaction);
 		}
 
+		/// <summary>
+		/// Loads the instance data from the database.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		public void LoadFromBase(DbTransaction transaction)
 		{
 			this.command   = DbRichCommand.CreateFromTable (this.infrastructure, transaction, this.table, DbSelectRevision.LiveActive);
@@ -217,7 +274,10 @@ namespace Epsitec.Cresus.Database
 		#endregion
 
 		#region IDisposable Members
-		
+
+		/// <summary>
+		/// Disposes the dictionary; this will call <c>Detach</c> if needed.
+		/// </summary>
 		public void Dispose()
 		{
 			if (this.infrastructure != null)
@@ -230,6 +290,10 @@ namespace Epsitec.Cresus.Database
 
 		#region IDictionary<string,string> Members
 
+		/// <summary>
+		/// Gets the keys of the known values.
+		/// </summary>
+		/// <value>The keys.</value>
 		ICollection<string> IDictionary<string, string>.Keys
 		{
 			get
@@ -238,6 +302,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Tries to get the value for the specified key.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value.</param>
+		/// <returns><c>true</c> if the value was found; otherwise, <c>false</c>.</returns>
 		public bool TryGetValue(string key, out string value)
 		{
 			System.Data.DataRow row = this.FindRow (key);
@@ -254,6 +324,10 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Gets the values contained in the dictionary.
+		/// </summary>
+		/// <returns>The values contained in the dictionary.</returns>
 		public ICollection<string> Values
 		{
 			get
@@ -273,11 +347,22 @@ namespace Epsitec.Cresus.Database
 
 		#region ICollection<KeyValuePair<string,string>> Members
 
+		/// <summary>
+		/// Adds an item to the collection.</see>.
+		/// </summary>
+		/// <param name="item">The item to add.</param>
 		public void Add(KeyValuePair<string, string> item)
 		{
 			this.Add (item.Key, item.Value);
 		}
 
+		/// <summary>
+		/// Determines whether the collection contains a specific item.
+		/// </summary>
+		/// <param name="item">The item to locate.</param>
+		/// <returns>
+		/// 	<c>true</c> if the collection contains the item; otherwise, <c>false</c>.
+		/// </returns>
 		public bool Contains(KeyValuePair<string, string> item)
 		{
 			string value;
@@ -292,6 +377,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Copies the elements the collection to the array.
+		/// </summary>
+		/// <param name="array">The output array.</param>
+		/// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
 		public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex)
 		{
 			foreach (KeyValuePair<string, string> item in this)
@@ -300,6 +390,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the collection is read-only.
+		/// </summary>
+		/// <value></value>
+		/// <returns><c>true</c> if the collection is read-only; otherwise, <c>false</c>.</returns>
 		public bool IsReadOnly
 		{
 			get
@@ -308,6 +403,13 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Removes the specified item from the collection.
+		/// </summary>
+		/// <param name="item">The item to remove.</param>
+		/// <returns>
+		/// 	<c>true</c> if item was successfully removed; otherwise <c>false</c>.
+		/// </returns>
 		public bool Remove(KeyValuePair<string, string> item)
 		{
 			if (this.Contains (item))
@@ -324,6 +426,12 @@ namespace Epsitec.Cresus.Database
 
 		#region IEnumerable<KeyValuePair<string,string>> Members
 
+		/// <summary>
+		/// Returns an enumerator that iterates through the collection.
+		/// </summary>
+		/// <returns>
+		/// An enumerator that can be used to iterate through the collection.
+		/// </returns>
 		public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
 		{
 			List<KeyValuePair<string, string>> pairs = new List<KeyValuePair<string, string>> ();
@@ -340,6 +448,12 @@ namespace Epsitec.Cresus.Database
 
 		#region IEnumerable Members
 
+		/// <summary>
+		/// Returns an enumerator that iterates through the collection.
+		/// </summary>
+		/// <returns>
+		/// An enumerator that can be used to iterate through the collection.
+		/// </returns>
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
 			return this.GetEnumerator ();
@@ -347,15 +461,30 @@ namespace Epsitec.Cresus.Database
 
 		#endregion
 
+		/// <summary>
+		/// Creates a table in the database which can then be used to store
+		/// the contents of the dictionary.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="tableName">Name of the table.</param>
 		public static void CreateTable(DbInfrastructure infrastructure, DbTransaction transaction, string tableName)
 		{
-			DbDict.CreateTable (infrastructure, transaction, tableName, DbElementCat.UserDataManaged, DbRevisionMode.Disabled, DbReplicationMode.Shared);
+			DbDict.CreateTable (infrastructure, transaction, tableName, DbElementCat.ManagedUserData, DbRevisionMode.Disabled, DbReplicationMode.Shared);
 		}
 
+		/// <summary>
+		/// Creates a table in the database which can then be used to store
+		/// the contents of the dictionary.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="tableName">Name of the table.</param>
+		/// <param name="category">The table category.</param>
+		/// <param name="revisionMode">The table revision mode.</param>
+		/// <param name="replicationMode">The table replication mode.</param>
 		public static void CreateTable(DbInfrastructure infrastructure, DbTransaction transaction, string tableName, DbElementCat category, DbRevisionMode revisionMode, DbReplicationMode replicationMode)
 		{
-			//	Crée une table pour stocker un dictionnaire.
-
 			DbTable table = infrastructure.CreateTable (tableName, category, revisionMode, replicationMode);
 
 			DbTypeDef typeDictKey   = infrastructure.ResolveDbType (transaction, Tags.TypeDictKey);
@@ -392,11 +521,11 @@ namespace Epsitec.Cresus.Database
 			this.changeCount++;
 		}
 
-		private DbInfrastructure infrastructure;
-		private DbTable table;
-		private DbRichCommand command;
-		private System.Data.DataSet dataSet;
-		private System.Data.DataTable dataTable;
-		private int changeCount;
+		private DbInfrastructure				infrastructure;
+		private DbTable							table;
+		private DbRichCommand					command;
+		private System.Data.DataSet				dataSet;
+		private System.Data.DataTable			dataTable;
+		private int								changeCount;
 	}
 }

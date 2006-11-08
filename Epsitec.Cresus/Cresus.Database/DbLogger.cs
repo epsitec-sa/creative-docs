@@ -1,60 +1,84 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
+
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe DbLogger gère le journal des modifications (CR_LOG).
+	/// The <c>DbLogger</c> class manages the modification log (stored in a "CR_LOG"
+	/// table, in the database).
 	/// </summary>
 	
 	public sealed class DbLogger : IAttachable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbLogger"/> class.
+		/// </summary>
 		public DbLogger()
 		{
 		}
-		
-		
+
+
+		/// <summary>
+		/// Gets the current id used to tag actions in the log.
+		/// </summary>
+		/// <value>The current id.</value>
 		public DbId								CurrentId
 		{
 			get
 			{
-				if ((this.client_id != -1) &&
-					(this.next_id != -1))
+				if ((this.clientId != -1) &&
+					(this.nextId != -1))
 				{
-					return this.current_id;
+					return this.currentId;
 				}
 				
-				throw new System.InvalidOperationException ("DbLogger not initialised.");
+				throw new System.InvalidOperationException ("DbLogger not initialised");
 			}
 		}
-		
-		
-		internal void DefineClientId(int client_id)
+
+
+		/// <summary>
+		/// Defines the client id.
+		/// </summary>
+		/// <param name="clientId">The client id.</param>
+		internal void DefineClientId(int clientId)
 		{
-			System.Diagnostics.Debug.Assert (this.client_id == -1);
-			System.Diagnostics.Debug.Assert (this.next_id == -1);
+			System.Diagnostics.Debug.Assert (this.clientId == -1);
+			System.Diagnostics.Debug.Assert (this.nextId == -1);
 			System.Diagnostics.Debug.Assert (this.infrastructure == null);
 			
-			this.client_id = client_id;
+			this.clientId = clientId;
 		}
-		
-		internal void DefineLogId(long log_id)
+
+		/// <summary>
+		/// Defines the initial log id.
+		/// </summary>
+		/// <param name="logId">The log id.</param>
+		internal void DefineInitialLogId(long logId)
 		{
-			System.Diagnostics.Debug.Assert (this.client_id != -1);
-			System.Diagnostics.Debug.Assert (this.next_id == -1);
+			System.Diagnostics.Debug.Assert (this.clientId != -1);
+			System.Diagnostics.Debug.Assert (this.nextId == -1);
 			System.Diagnostics.Debug.Assert (this.infrastructure == null);
-			System.Diagnostics.Debug.Assert (log_id > 0);
-			System.Diagnostics.Debug.Assert (log_id < DbId.LocalRange);
+			System.Diagnostics.Debug.Assert (logId > 0);
+			System.Diagnostics.Debug.Assert (logId < DbId.LocalRange);
 			
-			this.current_id = DbId.CreateId (log_id, this.client_id);
-			this.next_id    = log_id + 1;
+			this.currentId = DbId.CreateId (logId, this.clientId);
+			this.nextId    = logId + 1;
 		}
-		
-		
+
+
+		/// <summary>
+		/// Resets the current log id based on the log found in the database.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		internal void ResetCurrentLogId(DbTransaction transaction)
 		{
-			System.Diagnostics.Debug.Assert (this.client_id != -1);
-			System.Diagnostics.Debug.Assert (this.next_id == -1);
+			System.Diagnostics.Debug.Assert (this.clientId != -1);
+			System.Diagnostics.Debug.Assert (this.nextId == -1);
 			System.Diagnostics.Debug.Assert (this.infrastructure != null);
 			System.Diagnostics.Debug.Assert (this.table != null);
 			
@@ -63,42 +87,60 @@ namespace Epsitec.Cresus.Database
 			//	enregistré dans le LOG. Ainsi, id.ClientId n'est pas nécessairement égal à
 			//	l'identificateur de client actif.
 			
-			DbId id = this.infrastructure.NextRowIdInTable (transaction, this.table_key);
+			DbId id = this.infrastructure.NextRowIdInTable (transaction, this.tableKey);
 			
-			this.next_id    = id.LocalId;
-			this.current_id = DbId.CreateId (this.next_id - 1, id.ClientId);
+			this.nextId    = id.LocalId;
+			this.currentId = DbId.CreateId (this.nextId - 1, id.ClientId);
 			
-			System.Diagnostics.Debug.Assert (this.next_id > 0);
-			System.Diagnostics.Debug.Assert (this.next_id < DbId.LocalRange);
+			System.Diagnostics.Debug.Assert (this.nextId > 0);
+			System.Diagnostics.Debug.Assert (this.nextId < DbId.LocalRange);
 		}
-		
+
+		/// <summary>
+		/// Creates the initial log entry.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		internal void CreateInitialEntry(DbTransaction transaction)
 		{
-			this.Insert (transaction, new Entry (DbId.CreateId (1, this.client_id)));
+			this.Insert (transaction, new DbLogEntry (DbId.CreateId (1, this.clientId)));
 		}
-		
-		
+
+
+		/// <summary>
+		/// Creates a permanent entry into the log.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <returns>The id for the log entry.</returns>
 		public DbId CreatePermanentEntry(DbTransaction transaction)
 		{
-			lock (this)
+			lock (this.exclusion)
 			{
-				return this.Insert (transaction, new Entry (DbId.CreateId (this.next_id, this.client_id)));
+				return this.Insert (transaction, new DbLogEntry (DbId.CreateId (this.nextId, this.clientId)));
 			}
 		}
-		
+
+		/// <summary>
+		/// Creates a temporary entry into the log.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <returns>The id for the log entry.</returns>
 		public DbId CreateTemporaryEntry(DbTransaction transaction)
 		{
-			lock (this)
+			lock (this.exclusion)
 			{
-				return this.Insert (transaction, new Entry (DbId.CreateTempId (this.next_id)));
+				return this.Insert (transaction, new DbLogEntry (DbId.CreateTempId (this.nextId)));
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Removes the specified entry from the log.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="id">The id of the entry.</param>
+		/// <returns><c>true</c> if the entry was removed; otherwise, <c>false</c>.</returns>
 		public bool Remove(DbTransaction transaction, DbId id)
 		{
-			//	Supprime l'élément spécifié du log.
-			
 			if (transaction == null)
 			{
 				try
@@ -116,10 +158,10 @@ namespace Epsitec.Cresus.Database
 			{
 				Collections.SqlFields conditions = new Collections.SqlFields ();
 				
-				SqlField log_id_name  = SqlField.CreateName (this.table_sql_name, Tags.ColumnId);
-				SqlField log_id_value = SqlField.CreateConstant (id.Value, DbKey.RawTypeForId);
+				SqlField logIdName  = SqlField.CreateName (this.tableSqlName, Tags.ColumnId);
+				SqlField logIdValue = SqlField.CreateConstant (id.Value, DbKey.RawTypeForId);
 				
-				conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, log_id_name, log_id_value));
+				conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, logIdName, logIdValue));
 				
 				transaction.SqlBuilder.RemoveData (this.table.CreateSqlName (), conditions);
 				int result = (int) this.infrastructure.ExecuteNonQuery (transaction);
@@ -127,22 +169,33 @@ namespace Epsitec.Cresus.Database
 				return 1 == result;
 			}
 		}
-		
-		public void RemoveRange(DbTransaction transaction, DbId id_start)
+
+		/// <summary>
+		/// Removes a range of consecutive entries, starting at the specified entry
+		/// up to the end of the log.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="startId">The start id.</param>
+		public void RemoveRange(DbTransaction transaction, DbId startId)
 		{
-			this.RemoveRange (transaction, id_start, DbId.CreateId (DbId.LocalRange - 1, id_start.ClientId));
+			this.RemoveRange (transaction, startId, DbId.CreateId (DbId.LocalRange - 1, startId.ClientId));
 		}
-		
-		public void RemoveRange(DbTransaction transaction, DbId id_start, DbId id_end)
+
+		/// <summary>
+		/// Removes a range of consecutive entries, from start to stop, including
+		/// the start and stop entries.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="startId">The start id.</param>
+		/// <param name="endId">The end id.</param>
+		public void RemoveRange(DbTransaction transaction, DbId startId, DbId endId)
 		{
-			//	Supprime les éléments allant de start à end, y compris start et end.
-			
 			if (transaction == null)
 			{
 				try
 				{
 					transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite);
-					this.RemoveRange (transaction, id_start, id_end);
+					this.RemoveRange (transaction, startId, endId);
 				}
 				finally
 				{
@@ -154,29 +207,35 @@ namespace Epsitec.Cresus.Database
 			{
 				Collections.SqlFields conditions = new Collections.SqlFields ();
 				
-				SqlField log_id_name  = SqlField.CreateName (this.table_sql_name, Tags.ColumnId);
-				SqlField log_id_val_1 = SqlField.CreateConstant (id_start.Value, DbKey.RawTypeForId);
-				SqlField log_id_val_2 = SqlField.CreateConstant (id_end.Value, DbKey.RawTypeForId);
+				SqlField logIdName = SqlField.CreateName (this.tableSqlName, Tags.ColumnId);
+				SqlField logIdVal1 = SqlField.CreateConstant (startId.Value, DbKey.RawTypeForId);
+				SqlField logIdVal2 = SqlField.CreateConstant (endId.Value, DbKey.RawTypeForId);
 				
-				conditions.Add (new SqlFunction (SqlFunctionType.CompareGreaterThanOrEqual, log_id_name, log_id_val_1));
-				conditions.Add (new SqlFunction (SqlFunctionType.CompareLessThanOrEqual, log_id_name, log_id_val_2));
+				conditions.Add (new SqlFunction (SqlFunctionType.CompareGreaterThanOrEqual, logIdName, logIdVal1));
+				conditions.Add (new SqlFunction (SqlFunctionType.CompareLessThanOrEqual, logIdName, logIdVal2));
 				
 				transaction.SqlBuilder.RemoveData (this.table.CreateSqlName (), conditions);
 				this.infrastructure.ExecuteSilent (transaction);
 			}
 		}
-		
-		
-		public DbLogger.Entry[] Find(DbTransaction transaction, DbId id_start, DbId id_end)
+
+
+		/// <summary>
+		/// Finds the specified log entries with ids between start and end, including
+		/// start and end.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="startId">The start id.</param>
+		/// <param name="endId">The end id.</param>
+		/// <returns>The log entries.</returns>
+		public DbLogEntry[] Find(DbTransaction transaction, DbId startId, DbId endId)
 		{
-			//	Trouve les éléments allant de start à end, y compris start et end.
-			
 			if (transaction == null)
 			{
 				try
 				{
 					transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite);
-					return this.Find (transaction, id_start, id_end);
+					return this.Find (transaction, startId, endId);
 				}
 				finally
 				{
@@ -186,36 +245,33 @@ namespace Epsitec.Cresus.Database
 			}
 			else
 			{
-				SqlField log_id_name  = SqlField.CreateName ("T", Tags.ColumnId);
-				SqlField log_id_val_1 = SqlField.CreateConstant (id_start.Value, DbKey.RawTypeForId);
-				SqlField log_id_val_2 = SqlField.CreateConstant (id_end.Value, DbKey.RawTypeForId);
+				SqlField logIdName = SqlField.CreateName ("T", Tags.ColumnId);
+				SqlField logIdVal1 = SqlField.CreateConstant (startId.Value, DbKey.RawTypeForId);
+				SqlField logIdVal2 = SqlField.CreateConstant (endId.Value, DbKey.RawTypeForId);
 				
 				SqlSelect query = new SqlSelect ();
 				
 				query.Fields.Add ("T_ID", SqlField.CreateName ("T", Tags.ColumnId));
 				query.Fields.Add ("T_DT", SqlField.CreateName ("T", Tags.ColumnDateTime));
 				
-				query.Tables.Add ("T", SqlField.CreateName (this.table_sql_name));
+				query.Tables.Add ("T", SqlField.CreateName (this.tableSqlName));
 				
-				query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareGreaterThanOrEqual, log_id_name, log_id_val_1));
-				query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareLessThanOrEqual, log_id_name, log_id_val_2));
+				query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareGreaterThanOrEqual, logIdName, logIdVal1));
+				query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareLessThanOrEqual, logIdName, logIdVal2));
 				
-				System.Data.DataTable data_table = this.infrastructure.ExecuteSqlSelect (transaction, query, 0);
+				System.Data.DataTable table = this.infrastructure.ExecuteSqlSelect (transaction, query, 0);
 				
-				int n = data_table.Rows.Count;
-				Entry[] entries = new Entry[n];
+				int n = table.Rows.Count;
+				DbLogEntry[] entries = new DbLogEntry[n];
 				
 				for (int i = 0; i < n; i++)
 				{
-					System.Data.DataRow row = data_table.Rows[i];
+					System.Data.DataRow row = table.Rows[i];
 					
-					long            log_id;
-					System.DateTime date_time;
+					long            logId    = InvariantConverter.ToLong (row["T_ID"]);
+					System.DateTime dateTime = InvariantConverter.ToDateTime (row["T_DT"]);
 					
-					Epsitec.Common.Types.InvariantConverter.Convert (row["T_ID"], out log_id);
-					Epsitec.Common.Types.InvariantConverter.Convert (row["T_DT"], out date_time);
-					
-					entries[i] = new Entry (new DbId (log_id), date_time);
+					entries[i] = new DbLogEntry (new DbId (logId), dateTime);
 				}
 				
 				return entries;
@@ -224,78 +280,32 @@ namespace Epsitec.Cresus.Database
 		
 		
 		#region IAttachable Members
+
+		/// <summary>
+		/// Attaches this instance to the specified database table.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="table">The database table.</param>
 		public void Attach(DbInfrastructure infrastructure, DbTable table)
 		{
 			this.infrastructure = infrastructure;
 			this.table          = table;
-			this.table_key      = table.Key;
-			this.table_sql_name = table.CreateSqlName ();
+			this.tableKey       = table.Key;
+			this.tableSqlName   = table.CreateSqlName ();
 		}
-		
+
+		/// <summary>
+		/// Detaches this instance from the database.
+		/// </summary>
 		public void Detach()
 		{
 			this.infrastructure = null;
 			this.table          = null;
 		}
+		
 		#endregion
 		
-		#region Entry Class
-		public sealed class Entry
-		{
-			public Entry(DbId id)
-			{
-				this.id        = id;
-				this.date_time = System.DateTime.UtcNow;
-			}
-			
-			public Entry(DbId id, System.DateTime date_time)
-			{
-				this.id        = id;
-				this.date_time = date_time;
-			}
-			
-			
-			public DbId							Id
-			{
-				get
-				{
-					return this.id;
-				}
-			}
-			
-			public System.DateTime				DateTime
-			{
-				get
-				{
-					return this.date_time;
-				}
-			}
-			
-			
-			public override bool Equals(object obj)
-			{
-				Entry that = obj as Entry;
-				
-				if (that == null)
-				{
-					return false;
-				}
-				
-				return (this.Id == that.Id) && (this.DateTime == that.DateTime);
-			}
-			
-			public override int GetHashCode()
-			{
-				return (this.Id.Value).GetHashCode () ^ this.DateTime.GetHashCode ();
-			}
-
-
-			private DbId						id;
-			private System.DateTime				date_time;
-		}
-		#endregion
-		
-		private DbId Insert(DbTransaction transaction, DbLogger.Entry entry)
+		private DbId Insert(DbTransaction transaction, DbLogEntry entry)
 		{
 			if (transaction == null)
 			{
@@ -316,32 +326,34 @@ namespace Epsitec.Cresus.Database
 
 				fields.Add (this.infrastructure.CreateSqlField (this.table.Columns[Tags.ColumnId], entry.Id));
 				fields.Add (this.infrastructure.CreateSqlField (this.table.Columns[Tags.ColumnDateTime], entry.DateTime));
-				
-				long next_id = entry.Id.LocalId + 1;
-				
-				transaction.SqlBuilder.InsertData (this.table_sql_name, fields);
+
+				long nextId = entry.Id.LocalId + 1;
+
+				transaction.SqlBuilder.InsertData (this.tableSqlName, fields);
 				this.infrastructure.ExecuteSilent (transaction);
-				
+
 				//	Enregistre dans la base le prochain ID à utiliser, en prenant note du
 				//	ClientId appliqué à l'élément que l'on vient d'enregistrer dans le LOG :
+
+				this.infrastructure.UpdateTableNextId (transaction, this.tableKey, DbId.CreateId (nextId, entry.Id.ClientId));
+
+				this.nextId    = nextId;
+				this.currentId = entry.Id;
 				
-				this.infrastructure.UpdateTableNextId (transaction, this.table_key, DbId.CreateId (next_id, entry.Id.ClientId));
-				
-				this.next_id    = next_id;
-				this.current_id = entry.Id;
-				
-				return this.current_id;
+				return entry.Id;
 			}
 		}
 		
 		
 		private DbInfrastructure				infrastructure;
 		private DbTable							table;
-		private DbKey							table_key;
-		private string							table_sql_name;
+		private DbKey							tableKey;
+		private string							tableSqlName;
+
+		private object							exclusion = new object ();
 		
-		private int								client_id  = -1;
-		private long							next_id    = -1;
-		private DbId							current_id;
+		private int								clientId  = -1;
+		private long							nextId    = -1;
+		private DbId							currentId;
 	}
 }
