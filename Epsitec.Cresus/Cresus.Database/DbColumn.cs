@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Database
 	/// This is our version of the column metadata wrapper (compare with the
 	/// ADO.NET <see cref="System.Data.DataColumn"/> class).
 	/// </summary>
-	public class DbColumn : IName, ICaption, IXmlSerializable, System.IEquatable<DbColumn>
+	public sealed class DbColumn : IName, ICaption, IXmlSerializable, System.IEquatable<DbColumn>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DbColumn"/> class.
