@@ -178,6 +178,20 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public static System.DateTime ToDateTime(object obj)
+		{
+			System.DateTime value;
+
+			if (InvariantConverter.Convert (obj, out value))
+			{
+				return value;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Value cannot be converted", "obj");
+			}
+		}
+
 		public static int     ParseInt(string value)
 		{
 			return string.IsNullOrEmpty (value) ? 0 : int.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
