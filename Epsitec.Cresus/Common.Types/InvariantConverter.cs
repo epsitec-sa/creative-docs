@@ -138,7 +138,7 @@ namespace Epsitec.Common.Types
 				throw new System.ArgumentException ("Value cannot be converted", "obj");
 			}
 		}
-		public static long    ToInt(object obj)
+		public static int     ToInt(object obj)
 		{
 			int value;
 
