@@ -316,7 +316,7 @@ namespace Epsitec.Cresus.Requests
 			{
 				this.execution_engine.Execute (transaction, request);
 				this.execution_queue.SetRequestExecutionState (row, ExecutionState.ExecutedByClient);
-				this.execution_queue.SerializeToBase (transaction);
+				this.execution_queue.PersistToBase (transaction);
 				
 				transaction.Commit ();
 			}
@@ -407,7 +407,7 @@ namespace Epsitec.Cresus.Requests
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
 			{
 				this.execution_queue.SetRequestExecutionState (row, ExecutionState.SentToServer);
-				this.execution_queue.SerializeToBase (transaction);
+				this.execution_queue.PersistToBase (transaction);
 				transaction.Commit ();
 			}
 		}
@@ -567,7 +567,7 @@ namespace Epsitec.Cresus.Requests
 			
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
 			{
-				this.execution_queue.SerializeToBase (transaction);
+				this.execution_queue.PersistToBase (transaction);
 				transaction.Commit ();
 			}
 		}
@@ -578,7 +578,7 @@ namespace Epsitec.Cresus.Requests
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
 			{
 				this.execution_queue.SetRequestExecutionState (row, ExecutionState.ExecutedByServer);
-				this.execution_queue.SerializeToBase (transaction);
+				this.execution_queue.PersistToBase (transaction);
 				transaction.Commit ();
 			}
 			
@@ -597,7 +597,7 @@ namespace Epsitec.Cresus.Requests
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
 			{
 				this.execution_queue.SetRequestExecutionState (row, ExecutionState.ConflictingOnServer);
-				this.execution_queue.SerializeToBase (transaction);
+				this.execution_queue.PersistToBase (transaction);
 				transaction.Commit ();
 			}
 			
@@ -641,7 +641,7 @@ namespace Epsitec.Cresus.Requests
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
 			{
 				this.execution_queue.SetRequestExecutionState (row, ExecutionState.Conflicting);
-				this.execution_queue.SerializeToBase (transaction);
+				this.execution_queue.PersistToBase (transaction);
 				transaction.Commit ();
 			}
 		}

@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Database
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				this.dict.RestoreFromBase (transaction);
+				this.dict.LoadFromBase (transaction);
 				
 				Assert.AreEqual (0, this.dict.Count);
 				transaction.Commit ();
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Database
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				this.dict.SerializeToBase (transaction);
+				this.dict.PersistToBase (transaction);
 				transaction.Commit ();
 			}
 		}
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				this.dict.SerializeToBase (transaction);
+				this.dict.PersistToBase (transaction);
 				transaction.Commit ();
 			}
 		}
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				this.dict.SerializeToBase (transaction);
+				this.dict.PersistToBase (transaction);
 				transaction.Commit ();
 			}
 		}
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Database
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				this.dict.RestoreFromBase (transaction);
+				this.dict.LoadFromBase (transaction);
 				transaction.Commit ();
 				
 				Assert.AreEqual (2, this.dict.Count);

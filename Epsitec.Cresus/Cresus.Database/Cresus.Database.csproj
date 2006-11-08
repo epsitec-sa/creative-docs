@@ -126,6 +126,7 @@
     <Compile Include="Collections\SqlFields.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DbClientRecord.cs" />
     <Compile Include="IXmlSerializable.cs" />
     <Compile Include="DbTypeDef.cs" />
     <Compile Include="DbColumnClass.cs" />

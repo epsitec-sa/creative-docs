@@ -9,7 +9,16 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public interface IAttachable
 	{
+		/// <summary>
+		/// Attaches this instance to the specified database table.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="table">The database table.</param>
 		void Attach(DbInfrastructure infrastructure, DbTable table);
+		
+		/// <summary>
+		/// Detaches this instance from the database.
+		/// </summary>
 		void Detach();
 	}
 }

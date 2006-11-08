@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Database
 						using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
 						{
 							this.client_manager.Attach (this, this.ResolveDbTable (transaction, Tags.TableClientDef));
-							this.client_manager.RestoreFromBase (transaction);
+							this.client_manager.LoadFromBase (transaction);
 							transaction.Commit ();
 						}
 					}

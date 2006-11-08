@@ -1,6 +1,10 @@
 //	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+
+using Epsitec.Common.Types;
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -9,29 +13,40 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public sealed class DbClientManager : IAttachable, IPersistable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbClientManager"/> class.
+		/// </summary>
 		public DbClientManager()
 		{
 		}
-		
-		
+
+		/// <summary>
+		/// Finds a free client id.
+		/// </summary>
+		/// <returns>A free client id.</returns>
 		public int FindFreeClientId()
 		{
-			Entry[] entries  = this.FindAllClients ();
-			int     n        = entries.Length;
+			DbClientRecord[] records = this.FindAllClients ();
+			int n = records.Length;
 			
 			if (n == 0)
 			{
 				return DbClientManager.MinClientId;
 			}
 			
+			//	Create a sorted table of all known client ids :
+			
 			int[] usedIds = new int[n];
 			
 			for (int i = 0; i < n; i++)
 			{
-				usedIds[i] = entries[i].ClientId;
+				usedIds[i] = records[i].ClientId;
 			}
 			
 			System.Array.Sort (usedIds);
+			
+			//	Find the first hole in the current client id numbering sequence
+			//	and re-use it :
 			
 			int newId = DbClientManager.MinClientId;
 			
@@ -41,8 +56,14 @@ namespace Epsitec.Cresus.Database
 				{
 					return newId;
 				}
+				
+				System.Diagnostics.Debug.Assert (newId == usedIds[i]);
+
 				newId++;
 			}
+
+			//	There was no hole in the id numbering sequence; allocate a fresh
+			//	client id...
 			
 			if (newId > DbClientManager.MaxClientId)
 			{
@@ -52,201 +73,199 @@ namespace Epsitec.Cresus.Database
 			return newId;
 		}
 
+		/// <summary>
+		/// Creates a new client record.
+		/// </summary>
+		/// <param name="clientName">Name of the client.</param>
+		/// <returns>The client record.</returns>
+		public DbClientRecord CreateNewClient(string clientName)
+		{
+			int  clientId  = this.FindFreeClientId ();
+			long syncLogId = 0;
 
-		public DbClientManager.Entry CreateNewClient(string clientName)
+			return new DbClientRecord (clientName, clientId, syncLogId);
+		}
+
+		/// <summary>
+		/// Creates a new client record and inserts it into the database.
+		/// </summary>
+		/// <param name="clientName">Name of the client.</param>
+		/// <returns>The client record.</returns>
+		public DbClientRecord CreateAndInsertNewClient(string clientName)
 		{
 			int clientId   = this.FindFreeClientId ();
 			long syncLogId = 0;
 
-			Entry entry = new Entry (clientName, clientId, syncLogId);
-			
-			return entry;
+			DbClientRecord record = new DbClientRecord (clientName, clientId, syncLogId);
+
+			this.Insert (record);
+
+			return record;
 		}
 
-		public DbClientManager.Entry CreateAndInsertNewClient(string clientName)
-		{
-			int clientId   = this.FindFreeClientId ();
-			long syncLogId = 0;
-
-			Entry entry = new Entry (clientName, clientId, syncLogId);
-			
-			this.Insert (entry);
-			
-			return entry;
-		}
-
-		
-		public void Insert(DbClientManager.Entry entry)
+		/// <summary>
+		/// Inserts the specified client record into the database.
+		/// </summary>
+		/// <param name="record">The client record.</param>
+		public void Insert(DbClientRecord record)
 		{
 			if (this.richCommand == null)
 			{
-				throw new Exceptions.InvalidIdException ("Cannot insert client: call RestoreFromBase first.");
+				throw new Exceptions.InvalidIdException ("Cannot insert client: call LoadFromBase first");
 			}
 			
-			System.Data.DataTable table = this.richCommand.DataSet.Tables[0];
-			System.Data.DataRow   row;
+			//	First, make sure that we don't create a duplicate client
+			//	record :
 			
-			for (int i = 0; i < table.Rows.Count; i++)
+			System.Data.DataTable table = this.richCommand.DataSet.Tables[0];
+			
+			foreach (System.Data.DataRow row in table.Rows)
 			{
-				row = table.Rows[i];
-				
 				if (DbRichCommand.IsRowDeleted (row))
 				{
 					continue;
 				}
 
-				int clientId;
+				int clientId = InvariantConverter.ToInt (row[Tags.ColumnClientId]);
 
-				Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientId], out clientId);
-
-				if (clientId == entry.ClientId)
+				if (clientId == record.ClientId)
 				{
-					throw new Exceptions.ExistsException ("Cannot insert same client twice.");
+					throw new Exceptions.ExistsException ("Cannot insert same client twice");
 				}
 			}
 			
-			this.richCommand.CreateNewRow (table.TableName, out row);
+			//	Fill in a new row with the client record contents :
 			
-			row.BeginEdit ();
-			row[Tags.ColumnClientName]    = entry.ClientName;
-			row[Tags.ColumnClientId]      = entry.ClientId;
-			row[Tags.ColumnClientSync]    = entry.SyncLogId;
-			row[Tags.ColumnClientCreDate] = entry.CreationDateTime;
-			row[Tags.ColumnClientConDate] = entry.ConnectionDateTime;
-			row.EndEdit ();
+			record.SaveToEmptyRow (this.richCommand.CreateNewRow (table.TableName));
 		}
-		
-		public void Update(DbClientManager.Entry entry)
+
+		/// <summary>
+		/// Updates the specified record in the database table.
+		/// </summary>
+		/// <param name="record">The record.</param>
+		public void Update(DbClientRecord record)
 		{
 			if (this.richCommand == null)
 			{
-				throw new Exceptions.InvalidIdException ("Cannot update client: call RestoreFromBase first.");
+				throw new Exceptions.InvalidIdException ("Cannot update client: call LoadFromBase first");
 			}
 			
 			System.Data.DataTable table = this.richCommand.DataSet.Tables[0];
 			
-			for (int i = 0; i < table.Rows.Count; i++)
+			foreach (System.Data.DataRow row in table.Rows)
 			{
-				System.Data.DataRow row = table.Rows[i];
-				
 				if (DbRichCommand.IsRowDeleted (row))
 				{
 					continue;
 				}
+				
+				int clientId = InvariantConverter.ToInt (row[Tags.ColumnClientId]);
 
-				int clientId;
-
-				Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientId], out clientId);
-
-				if (clientId == entry.ClientId)
+				if (clientId == record.ClientId)
 				{
-					row.BeginEdit ();
-					row[Tags.ColumnClientSync]    = entry.SyncLogId;
-					row[Tags.ColumnClientConDate] = entry.ConnectionDateTime;
-					row.EndEdit ();
-					
+					record.UpdateRow (row);
 					return;
 				}
 			}
-			
-			throw new Exceptions.InvalidIdException ("Cannot find client entry.");
+
+			throw new Exceptions.InvalidIdException ("Cannot find client record");
 		}
 
-		public void Remove(int entryClientId)
+		/// <summary>
+		/// Removes the specified record from the database table.
+		/// </summary>
+		/// <param name="recordClientId">The record client id.</param>
+		public void Remove(int recordClientId)
 		{
 			if (this.richCommand == null)
 			{
-				throw new Exceptions.InvalidIdException ("Cannot remove client: call RestoreFromBase first.");
+				throw new Exceptions.InvalidIdException ("Cannot remove client: call LoadFromBase first");
 			}
 			
 			System.Data.DataTable table = this.richCommand.DataSet.Tables[0];
 			
-			for (int i = 0; i < table.Rows.Count; i++)
+			foreach (System.Data.DataRow row in table.Rows)
 			{
-				System.Data.DataRow row = table.Rows[i];
-				
 				if (DbRichCommand.IsRowDeleted (row))
 				{
 					continue;
 				}
 
-				int clientId;
+				int clientId = InvariantConverter.ToInt (row[Tags.ColumnClientId]);
 
-				Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientId], out clientId);
-
-				if (clientId == entryClientId)
+				if (clientId == recordClientId)
 				{
 					this.richCommand.DeleteExistingRow (row);
 					return;
 				}
 			}
-			
-			throw new Exceptions.InvalidIdException ("Cannot find client entry.");
+
+			throw new Exceptions.InvalidIdException ("Cannot find client record");
 		}
-		
-		
-		public DbClientManager.Entry[] FindAllClients()
+
+		/// <summary>
+		/// Finds all client records.
+		/// </summary>
+		/// <returns>The client records.</returns>
+		public DbClientRecord[] FindAllClients()
 		{
 			if (this.richCommand == null)
 			{
-				throw new Exceptions.InvalidIdException ("Cannot find clients: call RestoreFromBase first.");
+				throw new Exceptions.InvalidIdException ("Cannot find clients: call LoadFromBase first");
 			}
 			
 			System.Data.DataTable table = this.richCommand.DataSet.Tables[0];
+			List<DbClientRecord>  list  = new List<DbClientRecord> ();
 			
-			int n = table.Rows.Count;
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			
-			for (int i = 0; i < n; i++)
+			foreach (System.Data.DataRow row in table.Rows)
 			{
-				System.Data.DataRow row = table.Rows[i];
-				
 				if (DbRichCommand.IsRowDeleted (row))
 				{
 					continue;
 				}
 
-				string clientName;
-				int clientId;
-				long clientSyncLogId;
-
-				System.DateTime creationDateTime;
-				System.DateTime connectionDateTime;
-
-				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientName], out clientName);
-				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientId], out clientId);
-				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientSync], out clientSyncLogId);
-				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientCreDate], out creationDateTime);
-				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientConDate], out connectionDateTime);
-
-				list.Add (new Entry (clientName, clientId, clientSyncLogId, creationDateTime, connectionDateTime));
+				DbClientRecord record = new DbClientRecord ();
+				record.LoadFromRow (row);
+				list.Add (record);
 			}
 			
-			Entry[] entries = new Entry[list.Count];
-			list.CopyTo (entries);
-			
-			return entries;
+			return list.ToArray ();
 		}
 		
 		
 		#region IAttachable Members
+
+		/// <summary>
+		/// Attaches this instance to the specified database table.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="table">The database table.</param>
 		public void Attach(DbInfrastructure infrastructure, DbTable table)
 		{
 			this.infrastructure = infrastructure;
 			this.table          = table;
-			this.tableKey      = table.Key;
-			this.tableSqlName = table.CreateSqlName ();
+			this.tableKey       = table.Key;
+			this.tableSqlName   = table.CreateSqlName ();
 		}
-		
+
+		/// <summary>
+		/// Detaches this instance from the database.
+		/// </summary>
 		public void Detach()
 		{
 			this.infrastructure = null;
 			this.table          = null;
 		}
+
 		#endregion
 		
 		#region IPersistable Members
-		public void SerializeToBase(DbTransaction transaction)
+
+		/// <summary>
+		/// Persists the instance data to the database.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		public void PersistToBase(DbTransaction transaction)
 		{
 			if (this.richCommand != null)
 			{
@@ -255,8 +274,12 @@ namespace Epsitec.Cresus.Database
 				this.richCommand.UpdateTables (transaction);
 			}
 		}
-		
-		public void RestoreFromBase(DbTransaction transaction)
+
+		/// <summary>
+		/// Loads the instance data from the database.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		public void LoadFromBase(DbTransaction transaction)
 		{
 			if (this.richCommand != null)
 			{
@@ -265,82 +288,6 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			this.richCommand = DbRichCommand.CreateFromTable (this.infrastructure, transaction, this.table);
-		}
-		#endregion
-		
-		#region Entry Class
-		
-		public sealed class Entry
-		{
-			public Entry() : this ("", 0, 0)
-			{
-			}
-
-			public Entry(string clientName, int clientId, long syncLogId)
-			{
-				this.clientName   = clientName;
-				this.clientId     = clientId;
-				this.syncLogId   = syncLogId;
-				this.creationDateTime = System.DateTime.UtcNow;
-				this.connectionDateTime = this.creationDateTime;
-			}
-
-			public Entry(string clientName, int clientId, long syncLogId, System.DateTime creationDateTime, System.DateTime connectionDateTime)
-			{
-				this.clientName   = clientName;
-				this.clientId     = clientId;
-				this.syncLogId   = syncLogId;
-				this.creationDateTime = creationDateTime;
-				this.connectionDateTime = connectionDateTime;
-			}
-			
-			
-			public string						ClientName
-			{
-				get
-				{
-					return this.clientName;
-				}
-			}
-			
-			public int							ClientId
-			{
-				get
-				{
-					return this.clientId;
-				}
-			}
-			
-			public long							SyncLogId
-			{
-				get
-				{
-					return this.syncLogId;
-				}
-			}
-			
-			public System.DateTime				CreationDateTime
-			{
-				get
-				{
-					return this.creationDateTime;
-				}
-			}
-			
-			public System.DateTime				ConnectionDateTime
-			{
-				get
-				{
-					return this.connectionDateTime;
-				}
-			}
-
-
-			private string clientName;
-			private int clientId;
-			private long syncLogId;
-			private System.DateTime creationDateTime;
-			private System.DateTime connectionDateTime;
 		}
 		
 		#endregion

@@ -431,54 +431,54 @@ namespace Epsitec.Cresus.Database
 				Assert.IsNotNull (cm);
 				Assert.AreEqual (0, cm.FindAllClients ().Length);
 
-				DbClientManager.Entry entry_1;
-				DbClientManager.Entry entry_2;
-				DbClientManager.Entry entry_3;
+				DbClientRecord client_1;
+				DbClientRecord client_2;
+				DbClientRecord client_3;
 
-				entry_1 = cm.CreateNewClient ("A");
-				entry_2 = cm.CreateNewClient ("B");
+				client_1 = cm.CreateNewClient ("A");
+				client_2 = cm.CreateNewClient ("B");
 
-				Assert.AreEqual (DbClientManager.MinClientId, entry_1.ClientId);
-				Assert.AreEqual (DbClientManager.MinClientId, entry_2.ClientId);
-				Assert.AreEqual (entry_1.CreationDateTime, entry_1.ConnectionDateTime);
-				Assert.AreEqual (entry_2.CreationDateTime, entry_2.ConnectionDateTime);
+				Assert.AreEqual (DbClientManager.MinClientId, client_1.ClientId);
+				Assert.AreEqual (DbClientManager.MinClientId, client_2.ClientId);
+				Assert.AreEqual (client_1.CreationDateTime, client_1.ConnectionDateTime);
+				Assert.AreEqual (client_2.CreationDateTime, client_2.ConnectionDateTime);
 
-				entry_1 = cm.CreateAndInsertNewClient ("A");
-				entry_2 = cm.CreateAndInsertNewClient ("B");
-				entry_3 = cm.CreateAndInsertNewClient ("C");
+				client_1 = cm.CreateAndInsertNewClient ("A");
+				client_2 = cm.CreateAndInsertNewClient ("B");
+				client_3 = cm.CreateAndInsertNewClient ("C");
 
-				Assert.AreEqual (DbClientManager.MinClientId + 0, entry_1.ClientId);
-				Assert.AreEqual (DbClientManager.MinClientId + 1, entry_2.ClientId);
-				Assert.AreEqual (DbClientManager.MinClientId + 2, entry_3.ClientId);
+				Assert.AreEqual (DbClientManager.MinClientId + 0, client_1.ClientId);
+				Assert.AreEqual (DbClientManager.MinClientId + 1, client_2.ClientId);
+				Assert.AreEqual (DbClientManager.MinClientId + 2, client_3.ClientId);
 
-				cm.Remove (entry_2.ClientId);
+				cm.Remove (client_2.ClientId);
 
-				entry_2 = cm.CreateNewClient ("D");
+				client_2 = cm.CreateNewClient ("D");
 
-				Assert.AreEqual (DbClientManager.MinClientId + 1, entry_2.ClientId);
+				Assert.AreEqual (DbClientManager.MinClientId + 1, client_2.ClientId);
 
-				cm.Insert (entry_2);
+				cm.Insert (client_2);
 
 				using (DbTransaction transaction = infrastructure.BeginTransaction ())
 				{
-					cm.SerializeToBase (transaction);
+					cm.PersistToBase (transaction);
 					transaction.Commit ();
 				}
 
-				cm.Remove (entry_2.ClientId);
+				cm.Remove (client_2.ClientId);
 
-				entry_2 = cm.CreateNewClient ("E");
+				client_2 = cm.CreateNewClient ("E");
 
-				Assert.AreEqual (DbClientManager.MinClientId + 1, entry_2.ClientId);
+				Assert.AreEqual (DbClientManager.MinClientId + 1, client_2.ClientId);
 
-				cm.Insert (entry_2);
-				cm.Remove (entry_1.ClientId);
-				cm.Remove (entry_2.ClientId);
-				cm.Remove (entry_3.ClientId);
+				cm.Insert (client_2);
+				cm.Remove (client_1.ClientId);
+				cm.Remove (client_2.ClientId);
+				cm.Remove (client_3.ClientId);
 
 				using (DbTransaction transaction = infrastructure.BeginTransaction ())
 				{
-					cm.SerializeToBase (transaction);
+					cm.PersistToBase (transaction);
 					transaction.Commit ();
 				}
 			}
@@ -494,14 +494,14 @@ namespace Epsitec.Cresus.Database
 				DbClientManager cm = infrastructure.ClientManager;
 				infrastructure.LocalSettings.IsServer = false;
 
-				DbClientManager.Entry entry_1;
-				DbClientManager.Entry entry_2;
+				DbClientRecord client_1;
+				DbClientRecord client_2;
 
-				entry_1 = cm.CreateNewClient ("A");
-				entry_2 = cm.CreateNewClient ("B");
+				client_1 = cm.CreateNewClient ("A");
+				client_2 = cm.CreateNewClient ("B");
 
-				cm.Insert (entry_1);
-				cm.Insert (entry_2);
+				cm.Insert (client_1);
+				cm.Insert (client_2);
 			}
 		}
 

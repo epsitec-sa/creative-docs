@@ -371,7 +371,13 @@ namespace Epsitec.Cresus.Database
 				data_table.AcceptChanges ();
 			}
 		}
-		
+
+		public System.Data.DataRow CreateNewRow(string tableName)
+		{
+			System.Data.DataRow row;
+			this.CreateNewRow (tableName, out row);
+			return row;
+		}
 		
 		public void CreateNewRow(string table_name, out System.Data.DataRow data_row)
 		{

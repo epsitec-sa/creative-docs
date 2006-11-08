@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.Database
 					Assert.AreEqual (DbIdClass.Temporary, DbId.GetClass ((long) row[Tags.ColumnId]));
 					Assert.AreEqual (Requests.ExecutionState.Pending, queue.GetRequestExecutionState (row));
 					
-					queue.SerializeToBase (transaction);
+					queue.PersistToBase (transaction);
 					
 					Assert.AreEqual (DbIdClass.Standard, DbId.GetClass ((long) row[Tags.ColumnId]));
 					
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.Database
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
 					queue.ClearQueue ();
-					queue.SerializeToBase (transaction);
+					queue.PersistToBase (transaction);
 					transaction.Commit ();
 				}
 			}
@@ -424,7 +424,7 @@ namespace Epsitec.Cresus.Database
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
 					queue.ClearQueue ();
-					queue.SerializeToBase (transaction);
+					queue.PersistToBase (transaction);
 					transaction.Commit ();
 				}
 			}

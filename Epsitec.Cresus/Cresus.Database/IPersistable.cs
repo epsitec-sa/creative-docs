@@ -9,7 +9,16 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public interface IPersistable
 	{
-		void SerializeToBase(DbTransaction transaction);
-		void RestoreFromBase(DbTransaction transaction);
+		/// <summary>
+		/// Saves the instance data to the database.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		void PersistToBase(DbTransaction transaction);
+		
+		/// <summary>
+		/// Loads the instance data from the database.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		void LoadFromBase(DbTransaction transaction);
 	}
 }

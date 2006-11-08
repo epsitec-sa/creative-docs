@@ -138,7 +138,7 @@ namespace Epsitec.Common.Types
 				throw new System.ArgumentException ("Value cannot be converted", "obj");
 			}
 		}
-		public static long    ToInt(object obj)
+		public static int     ToInt(object obj)
 		{
 			int value;
 
@@ -167,6 +167,20 @@ namespace Epsitec.Common.Types
 		public static decimal ToDecimal(object obj)
 		{
 			decimal value;
+
+			if (InvariantConverter.Convert (obj, out value))
+			{
+				return value;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Value cannot be converted", "obj");
+			}
+		}
+
+		public static System.DateTime ToDateTime(object obj)
+		{
+			System.DateTime value;
 
 			if (InvariantConverter.Convert (obj, out value))
 			{

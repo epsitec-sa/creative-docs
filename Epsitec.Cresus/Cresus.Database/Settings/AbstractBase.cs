@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Database.Settings
 				
 				try
 				{
-					this.dict.SerializeToBase (transaction);
+					this.dict.PersistToBase (transaction);
 				}
 				catch
 				{
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Database.Settings
 		{
 			this.dict = new DbDict ();
 			this.dict.Attach (infrastructure, infrastructure.ResolveDbTable (transaction, AbstractBase.CreateTableName (name)));
-			this.dict.RestoreFromBase (transaction);
+			this.dict.LoadFromBase (transaction);
 			
 			Epsitec.Common.Support.ObjectDictMapper.CopyFromDict (this, this.dict);
 		}
