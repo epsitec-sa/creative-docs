@@ -59,8 +59,9 @@ namespace Epsitec.Cresus.Database.Exceptions
 		
 		
 		#region ISerializable Members
-		
-		protected FormatException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+
+		private FormatException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+			: base (info, context)
 		{
 		}
 		

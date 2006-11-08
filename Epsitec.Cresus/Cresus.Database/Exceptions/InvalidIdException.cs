@@ -72,8 +72,8 @@ namespace Epsitec.Cresus.Database.Exceptions
 
 
 		#region ISerializable Members
-		
-		protected InvalidIdException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+
+		private InvalidIdException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 			: base (info, context)
 		{
 		}

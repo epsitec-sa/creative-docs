@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Database.Exceptions
 
 		#region ISerializable Members
 
-		protected DeadLockException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+		private DeadLockException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 			: base (info, context)
 		{
 		}

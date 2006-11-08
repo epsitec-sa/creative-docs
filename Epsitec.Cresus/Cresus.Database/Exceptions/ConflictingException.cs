@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Database.Exceptions
 
 		#region ISerializable Members
 
-		protected ConflictingException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+		private ConflictingException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 			: base (info, context)
 		{
 		}

@@ -38,8 +38,9 @@ namespace Epsitec.Cresus.Database.Exceptions
 		
 		
 		#region ISerializable Members
-		
-		protected FactoryException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+
+		private FactoryException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+			: base (info, context)
 		{
 		}
 		

@@ -6,11 +6,11 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe DbRichCommand permet de regrouper plusieurs commandes pour
-	/// n'en faire qu'une qui peut ensuite être exécutée au moyen de ISqlEngine,
-	/// avec récupération des données dans les tables ad hoc.
+	/// The <c>DbRichCommand</c> class manages one or several commands which can
+	/// be executed with <c>ISqlEngine</c>. It handles the select, update, insert
+	/// and delete of information in data tables.
 	/// </summary>
-	public class DbRichCommand : System.IDisposable
+	public sealed class DbRichCommand : System.IDisposable
 	{
 		public DbRichCommand(DbInfrastructure infrastructure)
 		{
@@ -751,9 +751,9 @@ namespace Epsitec.Cresus.Database
 			
 			System.Diagnostics.Debug.WriteLine (buffer.ToString ());
 		}
-		
-		
-		protected void CreateDataRelations ()
+
+
+		private void CreateDataRelations()
 		{
 			//	Crée pour le DataSet actuel les relations entre les diverses colonnes,
 			//	en s'appuyant sur les propriétés de DbTable/DbColumn.
@@ -825,7 +825,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		protected void CheckValidState()
+		private void CheckValidState()
 		{
 			if (this.access.IsValid == false)
 			{
@@ -858,8 +858,8 @@ namespace Epsitec.Cresus.Database
 				throw new Exceptions.GenericException (this.access, "No infrastructure defined.");
 			}
 		}
-		
-		protected void ReplaceTable(DbTransaction transaction, System.Data.DataTable dataTable, DbTable dbTable, IReplaceOptions options)
+
+		private void ReplaceTable(DbTransaction transaction, System.Data.DataTable dataTable, DbTable dbTable, IReplaceOptions options)
 		{
 			string tableName = dbTable.CreateSqlName ();
 			
@@ -1127,10 +1127,23 @@ namespace Epsitec.Cresus.Database
 		
 		
 		#region IDisposable Members
+		
 		public void Dispose()
 		{
-			this.Dispose (true);
+			if (this.dataSet != null)
+			{
+				this.dataSet.Dispose ();
+				this.dataSet = null;
+			}
+
+			System.Data.IDbCommand[] commands = this.commands.ToArray ();
+
+			for (int i = 0; i < commands.Length; i++)
+			{
+				commands[i].Dispose ();
+			}
 		}
+		
 		#endregion
 		
 		#region IReplaceOptions Interface
@@ -1171,33 +1184,14 @@ namespace Epsitec.Cresus.Database
 			System.Collections.Hashtable		columns;
 		}
 		#endregion
-		
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				if (this.dataSet != null)
-				{
-					this.dataSet.Dispose ();
-					this.dataSet = null;
-				}
-				
-				System.Data.IDbCommand[] commands = this.commands.ToArray ();
-				
-				for (int i = 0; i < commands.Length; i++)
-				{
-					commands[i].Dispose ();
-				}
-			}
-		}
-		
-		
-		protected DbInfrastructure				infrastructure;
-		protected Collections.DbCommands		commands;
-		protected Collections.DbTables			tables;
-		protected System.Data.DataSet			dataSet;
-		protected DbAccess						access;
-		protected System.Data.IDataAdapter[]	adapters;
+
+
+		private DbInfrastructure infrastructure;
+		private Collections.DbCommands commands;
+		private Collections.DbTables tables;
+		private System.Data.DataSet dataSet;
+		private DbAccess access;
+		private System.Data.IDataAdapter[] adapters;
 
 		Stack<System.Data.IDbTransaction>		activeTransactions = new Stack<System.Data.IDbTransaction> ();
 		
