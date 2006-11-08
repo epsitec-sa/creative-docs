@@ -278,6 +278,10 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Gets the column class (data, reference, key, etc.).
+		/// </summary>
+		/// <value>The column class.</value>
 		public DbColumnClass ColumnClass
 		{
 			get
@@ -287,26 +291,42 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public void DefineCategory(DbElementCat category)
+		/// <summary>
+		/// Defines the column category. A column category may not be changed
+		/// after it has been defined.
+		/// </summary>
+		/// <param name="category">The category.</param>
+		internal void DefineCategory(DbElementCat category)
 		{
 			if (this.category == category)
 			{
 				return;
 			}
 
-			if (this.category != DbElementCat.Unknown)
+			if (this.category == DbElementCat.Unknown)
 			{
-				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot define a new category.", this.Name));
+				this.category = category;
 			}
-
-			this.category = category;
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot define a new category", this.Name));
+			}
 		}
 
+		/// <summary>
+		/// Defines the containing table.
+		/// </summary>
+		/// <param name="table">The table.</param>
 		internal void DefineTable(DbTable table)
 		{
 			this.table = table;
 		}
 
+		/// <summary>
+		/// Defines the name of the target table. A target table may not be changed
+		/// after it has been defined.
+		/// </summary>
+		/// <param name="targetTableName">Name of the target table.</param>
 		internal void DefineTargetTableName(string targetTableName)
 		{
 			if (this.targetTableName == targetTableName)
@@ -326,6 +346,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Defines the column key. A column key may not be changed
+		/// after it has been defined.
+		/// </summary>
+		/// <param name="key">The key.</param>
 		internal void DefineKey(DbKey key)
 		{
 			if (this.key == key)
@@ -343,6 +368,10 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Defines the column name.
+		/// </summary>
+		/// <param name="name">The name or a caption DRUID (like <c>"[1234]"</c>).</param>
 		internal void DefineName(string name)
 		{
 			if (Druid.IsValidResourceId (name))
@@ -355,15 +384,25 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Defines the caption id for the column. This clears the name, as it
+		/// will be derived automatically from the caption.
+		/// </summary>
+		/// <param name="captionId">The caption DRUID.</param>
 		internal void DefineCaptionId(Druid captionId)
 		{
 			this.captionId = captionId;
-			this.caption = null;
-			this.name = null;
+			this.caption   = null;
+			this.name      = null;
 		}
 
 
 
+		/// <summary>
+		/// Defines the column type. The column type may not be changed
+		/// after it has been defined.
+		/// </summary>
+		/// <param name="value">The type definition.</param>
 		internal void DefineType(DbTypeDef value)
 		{
 			if (this.type == value)
@@ -374,6 +413,7 @@ namespace Epsitec.Cresus.Database
 			if (this.type == null)
 			{
 				this.type = value;
+				this.localization = this.type.IsMultilingual ? DbColumnLocalization.Localized : DbColumnLocalization.None;
 			}
 			else
 			{
@@ -381,31 +421,49 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Defines the localization for the column.
+		/// </summary>
+		/// <param name="value">The localization mode.</param>
 		internal void DefineLocalization(DbColumnLocalization value)
 		{
 			this.localization = value;
 		}
 
+		/// <summary>
+		/// Defines the column class (data, reference, key, etc.).
+		/// </summary>
+		/// <param name="value">The column class.</param>
 		internal void DefineColumnClass(DbColumnClass value)
 		{
 			this.columnClass = value;
 		}
 
+		/// <summary>
+		/// Defines whether the column is used as part of the primary key.
+		/// </summary>
+		/// <param name="value">if set to <c>true</c>, the column is part of the primary key.</param>
 		internal void DefinePrimaryKey(bool value)
 		{
 			this.isPrimaryKey = value;
 		}
 
 
+		/// <summary>
+		/// Creates the SQL column for this column definition.
+		/// </summary>
+		/// <param name="typeConverter">The type converter.</param>
+		/// <param name="localizationSuffix">The localization suffix.</param>
+		/// <returns>The SQL column.</returns>
 		public SqlColumn CreateSqlColumn(ITypeConverter typeConverter, string localizationSuffix)
 		{
 			DbRawType rawType = this.type.RawType;
-			SqlColumn column  = null;
+			SqlColumn column;
 			
 			string suffix;
 
-			//	Vérifie que la définition de la colonne est bien correcte. On ne permet ainsi
-			//	pas de localiser des colonnes de type référence (ça n'aurait pas de sens).
+			//	Verify that we do not attempt to create an SQL column based on
+			//	incorrect settings; check localization related constraints :
 
 			if (this.localization == DbColumnLocalization.None)
 			{
@@ -456,6 +514,9 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 
+			//	OK. The column is properly formed and we can now attempt to
+			//	generate the SQL column definition for it :
+			
 			IRawTypeConverter rawConverter;
 
 			if (typeConverter.CheckNativeSupport (rawType))
@@ -470,48 +531,47 @@ namespace Epsitec.Cresus.Database
 			}
 			else
 			{
-				throw new System.InvalidOperationException (string.Format ("Conversion column '{0}' to SqlColumn not possible", this.Name));
+				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot be translated to an SQL column", this.Name));
 			}
 
-			if (column != null)
-			{
-				column.Name       = string.IsNullOrEmpty (suffix) ? this.CreateSqlName () : string.Concat (this.CreateSqlName (), suffix);
-				column.IsNullable = this.Type.IsNullable;
-//				column.IsUnique   = this.IsUnique;
-//				column.IsIndexed  = this.IsIndexed;
-			}
+			string sqlName = this.CreateSqlName ();
 
+			column.Name       = string.IsNullOrEmpty (suffix) ? sqlName : sqlName+suffix;
+			column.IsNullable = this.Type.IsNullable;
+			
 			return column;
 		}
 
+		/// <summary>
+		/// Creates the display name of the column.
+		/// </summary>
+		/// <returns>The display name.</returns>
 		public string CreateDisplayName()
 		{
 			return this.Name;
 		}
 
+		/// <summary>
+		/// Creates the SQL name of the column. This name will most certainly
+		/// be different from the high level <c>DbColumn.Name</c>.
+		/// </summary>
+		/// <returns>The SQL name.</returns>
 		public string CreateSqlName()
 		{
-			//	Crée le nom SQL de la colonne. Ce nom peut être différent du nom "haut niveau"
-			//	utilisé par DbColumn, indépendamment des caractères autorisés.
-
 			if (this.Category == DbElementCat.Internal)
 			{
-				//	Les colonnes "internes" doivent déjà avoir un nom valide et elles sont
-				//	traitées de manière spéciale ici :
+				//	Make sure the name of the internal column is properly prefixed
+				//	with "CR_" or "CREF_" :
 
 				return DbSqlStandard.MakeSimpleSqlName (this.Name, DbElementCat.Internal);
 			}
 
 			switch (this.columnClass)
 			{
-				case DbColumnClass.Data:
-					return DbSqlStandard.MakeSimpleSqlName (this.Name, this.Category);
-				case DbColumnClass.KeyId:
-					return Tags.ColumnId;
-				case DbColumnClass.KeyStatus:
-					return Tags.ColumnStatus;
-				case DbColumnClass.RefId:
-					return DbSqlStandard.MakeSimpleSqlName (this.Name, "REF", "ID");
+				case DbColumnClass.Data:		return DbSqlStandard.MakeSimpleSqlName (this.Name, this.Category);
+				case DbColumnClass.KeyId:		return Tags.ColumnId;
+				case DbColumnClass.KeyStatus:	return Tags.ColumnStatus;
+				case DbColumnClass.RefId:		return DbSqlStandard.MakeSimpleSqlName (this.Name, "REF", "ID");
 			}
 
 			throw new System.NotSupportedException (string.Format ("Column '{0}' has an unsupported class", this.Name));

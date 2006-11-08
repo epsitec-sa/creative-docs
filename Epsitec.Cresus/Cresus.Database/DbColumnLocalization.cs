@@ -10,13 +10,18 @@ namespace Epsitec.Cresus.Database
 	public enum DbColumnLocalization : byte
 	{
 		/// <summary>
+		/// No localization has been defined; this is the unknown state.
+		/// </summary>
+		Unknown=0,
+
+		/// <summary>
 		/// The column may not store localized data.
 		/// </summary>
-		None=0,
+		None=1,
 
 		/// <summary>
 		/// The column may contain localized data.
 		/// </summary>
-		Localized=1,
+		Localized=2,
 	}
 }
