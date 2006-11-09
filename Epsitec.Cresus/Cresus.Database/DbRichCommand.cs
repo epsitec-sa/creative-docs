@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Database
 	/// be executed with <c>ISqlEngine</c>. It handles the select, update, insert
 	/// and delete of information in data tables.
 	/// </summary>
-	public sealed class DbRichCommand : System.IDisposable
+	public sealed class DbRichCommand : System.IDisposable, IReadOnly
 	{
 		public DbRichCommand(DbInfrastructure infrastructure)
 		{
@@ -1262,7 +1262,7 @@ namespace Epsitec.Cresus.Database
 			
 			foreach (DbColumn column in dbTable.Columns)
 			{
-				bool ignoreColumn = (options != null) && options.IgnoreColumn (column);
+				bool ignoreColumn = (options != null) && options.ShouldIgnoreColumn (column);
 				
 				foreach (SqlColumn sqlColumn in dbTable.CreateSqlColumns (converter, column))
 				{
