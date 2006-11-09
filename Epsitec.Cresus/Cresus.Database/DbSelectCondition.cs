@@ -1,27 +1,40 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe DbSelectCondition représente une condition pour la clause
-	/// WHERE d'un SELECT.
+	/// The <c>DbSelectCondition</c> class represents a condition for the
+	/// WHERE clause.
 	/// </summary>
-	public class DbSelectCondition
+	public sealed class DbSelectCondition
 	{
-		public DbSelectCondition(ITypeConverter type_converter)
-			: this (type_converter, DbSelectRevision.All)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbSelectCondition"/> class.
+		/// </summary>
+		/// <param name="typeConverter">The type converter.</param>
+		public DbSelectCondition(ITypeConverter typeConverter)
+			: this (typeConverter, DbSelectRevision.All)
 		{
 		}
 
-		public DbSelectCondition(ITypeConverter type_converter, DbSelectRevision revision)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbSelectCondition"/> class.
+		/// </summary>
+		/// <param name="typeConverter">The type converter.</param>
+		/// <param name="revision">The expected revision.</param>
+		public DbSelectCondition(ITypeConverter typeConverter, DbSelectRevision revision)
 		{
-			this.type_converter = type_converter;
-			this.sql_fields     = new Collections.SqlFields ();
-			this.revision       = revision;
+			this.typeConverter = typeConverter;
+			this.sqlFields     = new Collections.SqlFields ();
+			this.revision      = revision;
 		}
-		
-		
+
+
+		/// <summary>
+		/// Gets or sets the expected revision.
+		/// </summary>
+		/// <value>The revision.</value>
 		public DbSelectRevision					Revision
 		{
 			get
@@ -33,7 +46,11 @@ namespace Epsitec.Cresus.Database
 				this.revision = value;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets or sets the logical condition combiner.
+		/// </summary>
+		/// <value>The combiner.</value>
 		public DbCompareCombiner				Combiner
 		{
 			get
@@ -45,76 +62,145 @@ namespace Epsitec.Cresus.Database
 				this.combiner = value;
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Adds a condition.
+		/// </summary>
+		/// <param name="a">The column.</param>
+		/// <param name="comparison">The comparison.</param>
+		/// <param name="value">The value.</param>
 		public void AddCondition(DbColumn a, DbCompare comparison, short value)
 		{
 			this.AddConditionWithRawValue (a, comparison, value, DbRawType.Int16);
 		}
-		
+
+		/// <summary>
+		/// Adds a condition.
+		/// </summary>
+		/// <param name="a">The column.</param>
+		/// <param name="comparison">The comparison.</param>
+		/// <param name="value">The value.</param>
 		public void AddCondition(DbColumn a, DbCompare comparison, int value)
 		{
 			this.AddConditionWithRawValue (a, comparison, value, DbRawType.Int32);
 		}
-		
+
+		/// <summary>
+		/// Adds a condition.
+		/// </summary>
+		/// <param name="a">The column.</param>
+		/// <param name="comparison">The comparison.</param>
+		/// <param name="value">The value.</param>
 		public void AddCondition(DbColumn a, DbCompare comparison, long value)
 		{
 			this.AddConditionWithRawValue (a, comparison, value, DbRawType.Int64);
 		}
-		
-		public void AddCondition(DbColumn a, DbCompare comparison, decimal value, DbNumDef num_def)
+
+		/// <summary>
+		/// Adds a condition.
+		/// </summary>
+		/// <param name="a">The column.</param>
+		/// <param name="comparison">The comparison.</param>
+		/// <param name="value">The value.</param>
+		/// <param name="numDef">The numeric definition.</param>
+		public void AddCondition(DbColumn a, DbCompare comparison, decimal value, DbNumDef numDef)
 		{
-			DbRawType raw_type  = TypeConverter.GetRawType (DbSimpleType.Decimal, num_def);
-			object    raw_value = TypeConverter.ConvertFromSimpleType (value, DbSimpleType.Decimal, num_def);
+			DbRawType rawType  = TypeConverter.GetRawType (DbSimpleType.Decimal, numDef);
+			object    rawValue = TypeConverter.ConvertFromSimpleType (value, DbSimpleType.Decimal, numDef);
 			
-			this.AddConditionWithRawValue (a, comparison, raw_value, raw_type);
+			this.AddConditionWithRawValue (a, comparison, rawValue, rawType);
 		}
-		
+
+		/// <summary>
+		/// Adds a condition.
+		/// </summary>
+		/// <param name="a">The column.</param>
+		/// <param name="comparison">The comparison.</param>
+		/// <param name="value">The value.</param>
 		public void AddCondition(DbColumn a, DbCompare comparison, string value)
 		{
 			this.AddConditionWithRawValue (a, comparison, value, DbRawType.String);
 		}
-		
-		
+
+
+		/// <summary>
+		/// Adds a condition.
+		/// </summary>
+		/// <param name="a">The first column.</param>
+		/// <param name="comparison">The comparison.</param>
+		/// <param name="b">The second column.</param>
 		public void AddCondition(DbColumn a, DbCompare comparison, DbColumn b)
 		{
-			SqlField    field_a  = SqlField.CreateName (a);
-			SqlField    field_b  = SqlField.CreateName (b);
-			SqlFunction function = new SqlFunction (this.MapDbCompareToSqlFunctionType (comparison), field_a, field_b);
+			SqlField    fieldA   = SqlField.CreateName (a);
+			SqlField    fieldB   = SqlField.CreateName (b);
+			SqlFunction function = new SqlFunction (this.MapDbCompareToSqlFunctionType (comparison), fieldA, fieldB);
 			
-			this.sql_fields.Add (SqlField.CreateFunction (function));
+			this.sqlFields.Add (SqlField.CreateFunction (function));
 		}
-		
+
+		/// <summary>
+		/// Adds the "is null" condition.
+		/// </summary>
+		/// <param name="a">The column.</param>
 		public void AddConditionIsNull(DbColumn a)
 		{
-			SqlField    field_a  = SqlField.CreateName (a);
-			SqlFunction function = new SqlFunction (SqlFunctionType.CompareIsNull, field_a);
+			SqlField    field    = SqlField.CreateName (a);
+			SqlFunction function = new SqlFunction (SqlFunctionType.CompareIsNull, field);
 			
-			this.sql_fields.Add (SqlField.CreateFunction (function));
+			this.sqlFields.Add (SqlField.CreateFunction (function));
 		}
-		
+
+		/// <summary>
+		/// Adds the "is not null" condition.
+		/// </summary>
+		/// <param name="a">The column.</param>
 		public void AddConditionIsNotNull(DbColumn a)
 		{
-			SqlField    field_a  = SqlField.CreateName (a);
-			SqlFunction function = new SqlFunction (SqlFunctionType.CompareIsNotNull, field_a);
+			SqlField    field    = SqlField.CreateName (a);
+			SqlFunction function = new SqlFunction (SqlFunctionType.CompareIsNotNull, field);
 			
-			this.sql_fields.Add (SqlField.CreateFunction (function));
+			this.sqlFields.Add (SqlField.CreateFunction (function));
 		}
-		
-		
-		internal void CreateConditions(DbTable main_table, Collections.SqlFields fields)
+
+
+		/// <summary>
+		/// Creates the conditions based on the previous <c>AddCondition</c>
+		/// calls and using the expected revision.
+		/// </summary>
+		/// <param name="mainTable">The main table.</param>
+		/// <param name="fields">The collection to which the conditions will be added.</param>
+		internal void CreateConditions(DbTable mainTable, Collections.SqlFields fields)
 		{
 			switch (this.revision)
 			{
 				case DbSelectRevision.LiveAll:
-					this.AddCondition (main_table.Columns[Tags.ColumnStatus], DbCompare.LessThan, DbKey.ConvertToIntStatus (DbRowStatus.Deleted));
+					
+					//	Select all live revisions of the rows: live (0), copied (1)
+					//	and archive copy (2) are all < deleted (3).
+					
+					this.AddCondition (mainTable.Columns[Tags.ColumnStatus],
+						/**/		   DbCompare.LessThan,
+						/**/		   DbKey.ConvertToIntStatus (DbRowStatus.Deleted));
+					
 					break;
 				
 				case DbSelectRevision.LiveActive:
-					this.AddCondition (main_table.Columns[Tags.ColumnStatus], DbCompare.LessThan, DbKey.ConvertToIntStatus (DbRowStatus.ArchiveCopy));
+					
+					//	Select only the active revisions of the rows: live (0) and
+					//	copied (1) both describe active rows and are < archive copy (2).
+					
+					this.AddCondition (mainTable.Columns[Tags.ColumnStatus],
+						/**/		   DbCompare.LessThan,
+						/**/		   DbKey.ConvertToIntStatus (DbRowStatus.ArchiveCopy));
+					
 					break;
 				
 				case DbSelectRevision.All:
+
+					//	Select all revisions of the rows; there is no need to add an
+					//	additional condition for this !
+					
 					break;
 				
 				default:
@@ -124,33 +210,33 @@ namespace Epsitec.Cresus.Database
 			switch (this.combiner)
 			{
 				case DbCompareCombiner.And:
-					fields.AddRange (this.sql_fields);
+					fields.AddRange (this.sqlFields);
 					break;
 				
 				case DbCompareCombiner.Or:
-					if (this.sql_fields.Count > 0)
+					if (this.sqlFields.Count > 0)
 					{
-						fields.Add (this.sql_fields.Merge (SqlFunctionType.LogicOr));
+						SqlField or = this.sqlFields.Merge (SqlFunctionType.LogicOr);
+						fields.Add (or);
 					}
 					break;
 				
 				default:
-					throw new System.InvalidOperationException (string.Format ("Cannot create conditions with {0} combiner.", this.combiner));
+					throw new System.InvalidOperationException (string.Format ("Cannot create conditions with {0} combiner", this.combiner));
 			}
 		}
 		
-		
-		protected void AddConditionWithRawValue(DbColumn a, DbCompare comparison, object raw_value, DbRawType raw_type)
+		private void AddConditionWithRawValue(DbColumn a, DbCompare comparison, object rawValue, DbRawType rawType)
 		{
-			SqlField    field_a  = SqlField.CreateName (a);
-			SqlField    field_b  = SqlField.CreateConstant (raw_value, raw_type);
-			SqlFunction function = new SqlFunction (this.MapDbCompareToSqlFunctionType (comparison), field_a, field_b);
+			SqlField fieldA = SqlField.CreateName (a);
+			SqlField fieldB = SqlField.CreateConstant (rawValue, rawType);
 			
-			this.sql_fields.Add (SqlField.CreateFunction (function));
+			SqlFunction function = new SqlFunction (this.MapDbCompareToSqlFunctionType (comparison), fieldA, fieldB);
+			
+			this.sqlFields.Add (SqlField.CreateFunction (function));
 		}
 		
-		
-		protected SqlFunctionType MapDbCompareToSqlFunctionType(DbCompare comparison)
+		private SqlFunctionType MapDbCompareToSqlFunctionType(DbCompare comparison)
 		{
 			switch (comparison)
 			{
@@ -164,13 +250,11 @@ namespace Epsitec.Cresus.Database
 				case DbCompare.NotLike:				return SqlFunctionType.CompareNotLike;
 			}
 			
-			throw new System.ArgumentException (string.Format ("Unsupported comparison {0}.", comparison), "comparison");
+			throw new System.ArgumentException (string.Format ("Unsupported comparison {0}", comparison), "comparison");
 		}
-		
-		
-		
-		private ITypeConverter					type_converter;
-		private Collections.SqlFields			sql_fields;
+
+		private ITypeConverter					typeConverter;
+		private Collections.SqlFields			sqlFields;
 		private DbSelectRevision				revision;
 		private DbCompareCombiner				combiner = DbCompareCombiner.And;
 	}
