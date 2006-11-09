@@ -289,12 +289,8 @@ namespace Epsitec.Cresus.Requests
 			int length = data.Length;
 			
 			System.Diagnostics.Debug.Assert (length > 0);
-			
-			System.Data.DataRow row;
-			
-			DbId log_id = this.CreateLogId (transaction);
-			
-			DbRichCommand.CreateRow (this.queue_data_table, log_id, out row);
+
+			System.Data.DataRow row = DbRichCommand.CreateRow (this.queue_data_table, this.CreateLogId (transaction));
 			
 			row.BeginEdit ();
 			row[Tags.ColumnReqData]    = data;

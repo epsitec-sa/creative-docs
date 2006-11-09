@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 
+using Epsitec.Common.Types;
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -501,7 +503,7 @@ namespace Epsitec.Cresus.Database
 				if ((changeCount > 0) ||
 					(deleteCount > 0))
 				{
-					this.ReplaceTable (transaction, table, this.Tables[i], options);
+					this.ReplaceTablesWithoutValidityChecking (transaction, table, this.Tables[i], options);
 				}
 
 				this.AcceptChanges (transaction, table.TableName);
@@ -514,7 +516,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="tableName">Name of the table.</param>
 		/// <returns>The new row.</returns>
-		public System.Data.DataRow CreateNewRow(string tableName)
+		public System.Data.DataRow CreateRow(string tableName)
 		{
 			if (this.isReadOnly)
 			{
@@ -698,7 +700,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="table">The table.</param>
 		public static void AssignRealRowIds(DbInfrastructure infrastructure, DbTransaction transaction, System.Data.DataTable table)
 		{
-			ICollection<System.Data.DataRow> list = DbRichCommand.FindRowsUsingTemporaryIds (table);
+			List<System.Data.DataRow> list = Collection.ToList<System.Data.DataRow> (DbRichCommand.FindRowsUsingTemporaryIds (table.Rows));
 			
 			if (list.Count == 0)
 			{
@@ -742,24 +744,32 @@ namespace Epsitec.Cresus.Database
 				{
 					case System.Data.DataRowState.Added:
 					case System.Data.DataRowState.Modified:
-						row.BeginEdit ();
-						row[Tags.ColumnRefLog] = logId.Value;
-						row.EndEdit ();
+						DbRichCommand.DefineLogId (row, logId);
 						break;
 				}
 			}
 		}
-		
-		public static void DefineLogId(System.Data.DataRow row, DbId logId)
+
+		/// <summary>
+		/// Defines the log id for the specified row.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		/// <param name="logId">The log id.</param>
+		private static void DefineLogId(System.Data.DataRow row, DbId logId)
 		{
-			if (row.RowState != System.Data.DataRowState.Deleted)
-			{
-				row.BeginEdit ();
-				row[Tags.ColumnRefLog] = logId.Value;
-				row.EndEdit ();
-			}
+			System.Diagnostics.Debug.Assert (row.RowState != System.Data.DataRowState.Deleted);
+			
+			row.BeginEdit ();
+			row[Tags.ColumnRefLog] = logId.Value;
+			row.EndEdit ();
 		}
-		
+
+		/// <summary>
+		/// Creates a new row in the specified table. The row id will be set to a new
+		/// temporary row id.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		/// <returns>The row.</returns>
 		public static System.Data.DataRow CreateRow(System.Data.DataTable table)
 		{
 			//	Crée une ligne, mais ne l'ajoute pas à la table. L'ID affecté à la
@@ -776,45 +786,69 @@ namespace Epsitec.Cresus.Database
 
 			return row;
 		}
-		public static void CreateRow(System.Data.DataTable table, DbId logId, out System.Data.DataRow row)
+
+		/// <summary>
+		/// Creates a new row in the specified table. The row id will be set to a new
+		/// temporary row id and it will be associated with the specified log id.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		/// <param name="logId">The log id.</param>
+		/// <returns>The row.</returns>
+		public static System.Data.DataRow CreateRow(System.Data.DataTable table, DbId logId)
 		{
-			row = DbRichCommand.CreateRow (table);
+			System.Data.DataRow row = DbRichCommand.CreateRow (table);
 			DbRichCommand.DefineLogId (row, logId);
+			return row;
 		}
-		
-		public static void DeleteRow(System.Data.DataRow dataRow)
+
+		/// <summary>
+		/// Deletes the specified row. Rows which already exist in the database are simply
+		/// marked as deleted, but never really removed from their data table.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		public static void DeleteRow(System.Data.DataRow row)
 		{
-			DbKey rowKey = new DbKey (dataRow);
+			DbKey rowKey = new DbKey (row);
 			
-			//	Si la ligne a encore une clef temporaire, cela signifie qu'elle n'a pas encore
-			//	été écrite dans la base; on peut donc simplement supprimer la ligne de la table.
-			//	Dans le cas contraire, on ne supprime jamais réellement les lignes effacées et
-			//	on change simplement le statut de la ligne à "deleted".
+			//	If the row still has a temporary key associated with it, then this
+			//	means we can safely discard it as it has not yet been persisted to
+			//	the database.
 			
 			if (rowKey.IsTemporary)
 			{
-				System.Data.DataTable table = dataRow.Table;
-				table.Rows.Remove (dataRow);
+				System.Data.DataTable table = row.Table;
+				table.Rows.Remove (row);
 			}
 			else
 			{
-				dataRow[Tags.ColumnStatus] = DbKey.ConvertToIntStatus (DbRowStatus.Deleted);
+				row.BeginEdit ();
+				row[Tags.ColumnStatus] = DbKey.ConvertToIntStatus (DbRowStatus.Deleted);
+				row.EndEdit ();
 			}
 		}
-		
+
+		/// <summary>
+		/// Kills the specified row. This really removes the row from its data
+		/// table. Prefer <c>DeleteRow</c> which is non-destructive.
+		/// </summary>
+		/// <param name="row">The row.</param>
 		public static void KillRow(System.Data.DataRow row)
 		{
-			//	Supprime réellement la ligne de la table. Cette méthode est réservée à un
-			//	usage très limité; en principe, on utilisera DeleteRow, sauf pour la queue
-			//	des requêtes, par exemple.
+			//	This really deletes the row from its table; use this only where
+			//	needed, as in the request queue, for instance.
 			
 			if (row.RowState != System.Data.DataRowState.Deleted)
 			{
 				row.Delete ();
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Creates a copy of the specified row.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		/// <returns>The copy of the row or <c>null</c> if the specified row is not valid.</returns>
 		public static System.Data.DataRow CopyRowIfValid(System.Data.DataRow row)
 		{
 			if ((row == null) ||
@@ -836,95 +870,80 @@ namespace Epsitec.Cresus.Database
 			
 			return copy;
 		}
-		
+
+		/// <summary>
+		/// Finds a row in a data table based on a row id.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		/// <param name="id">The id.</param>
+		/// <returns>The row or <c>null</c> if it cannot be found in the table.</returns>
 		public static System.Data.DataRow FindRow(System.Data.DataTable table, DbId id)
 		{
-			int n = table.Rows.Count;
-			
-			for (int i = 0; i < n; i++)
-			{
-				System.Data.DataRow row = table.Rows[i];
-				long rowId;
-				
-				if (row.RowState == System.Data.DataRowState.Deleted)
-				{
-					rowId = (long) row[Tags.ColumnId, System.Data.DataRowVersion.Original];
-				}
-				else if (row.RowState == System.Data.DataRowState.Detached)
-				{
-					continue;
-				}
-				else
-				{
-					rowId = (long) row[Tags.ColumnId];
-				}
-						
-				if (id.Value == rowId)
-				{
-					return row;
-				}
-			}
-			
-			return null;
+			return DbRichCommand.FindRow (table.Rows, id);
 		}
-		
-		public static System.Data.DataRow FindRow(System.Data.DataRow[] rows, DbId id)
-		{
-			int n = rows.Length;
-			
-			for (int i = 0; i < n; i++)
-			{
-				System.Data.DataRow row = rows[i];
-				long rowId;
-				
-				if (row.RowState == System.Data.DataRowState.Deleted)
-				{
-					rowId = (long) row[Tags.ColumnId, System.Data.DataRowVersion.Original];
-				}
-				else if (row.RowState == System.Data.DataRowState.Detached)
-				{
-					continue;
-				}
-				else
-				{
-					rowId = (long) row[Tags.ColumnId];
-				}
-				
-				if (id.Value == rowId)
-				{
-					return row;
-				}
-			}
-			
-			return null;
-		}
-		
-		public static ICollection<System.Data.DataRow> FindRowsUsingTemporaryIds(System.Data.DataTable table)
-		{
-			//	Passe en revue toutes les lignes de la table pour déterminer s'il y a des
-			//	clefs temporaires en utilisation et retourne la liste des lignes concernées.
 
-			List<System.Data.DataRow> list = new List<System.Data.DataRow> ();
-			
-			for (int i = 0; i < table.Rows.Count; i++)
+		/// <summary>
+		/// Finds the row in a collection of rows based on a row id.
+		/// </summary>
+		/// <param name="rows">The rows.</param>
+		/// <param name="id">The id.</param>
+		/// <returns>The row or <c>null</c> if it cannot be found in the collection.</returns>
+		public static System.Data.DataRow FindRow(System.Collections.IEnumerable rows, DbId id)
+		{
+			foreach (System.Data.DataRow row in rows)
 			{
-				System.Data.DataRow row = table.Rows[i];
+				long rowId;
 				
+				if (row.RowState == System.Data.DataRowState.Deleted)
+				{
+					rowId = (long) row[Tags.ColumnId, System.Data.DataRowVersion.Original];
+				}
+				else if (row.RowState == System.Data.DataRowState.Detached)
+				{
+					continue;
+				}
+				else
+				{
+					rowId = (long) row[Tags.ColumnId];
+				}
+				
+				if (id.Value == rowId)
+				{
+					return row;
+				}
+			}
+			
+			return null;
+		}
+
+		/// <summary>
+		/// Finds the temporary rows in the collection.
+		/// </summary>
+		/// <param name="rows">The rows.</param>
+		/// <returns>A collection of temporary rows.</returns>
+		public static IEnumerable<System.Data.DataRow> FindRowsUsingTemporaryIds(System.Collections.IEnumerable rows)
+		{
+			foreach (System.Data.DataRow row in rows)
+			{
 				if (row.RowState != System.Data.DataRowState.Deleted)
 				{
 					DbKey key = new DbKey (row);
 					
 					if (key.IsTemporary)
 					{
-						list.Add (row);
+						yield return row;
 					}
 				}
 			}
-			
-			return list;
 		}
-		
-		
+
+
+		/// <summary>
+		/// For debugging: dumps the specified command to the debug trace,
+		/// including its parameter names and values.
+		/// </summary>
+		/// <param name="command">The command.</param>
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void DebugDumpCommand(System.Data.IDbCommand command)
 		{
 			System.Diagnostics.Debug.WriteLine (command.CommandText);
@@ -934,7 +953,12 @@ namespace Epsitec.Cresus.Database
 				System.Diagnostics.Debug.WriteLine (string.Format ("  {0} = {1}, type {2}", commandParameter.ParameterName, commandParameter.Value, commandParameter.Value.GetType ().FullName));
 			}
 		}
-		
+
+		/// <summary>
+		/// For debugging: dumps the specified row to the debug trace.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void DebugDumpRow(System.Data.DataRow row)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -955,38 +979,38 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Creates the data relations between the columns of the data set
+		/// by exploiting the properties of the <c>DbTable</c> and <c>DbColumn</c>
+		/// definitions.
+		/// </summary>
 		private void CreateDataRelations()
 		{
-			//	Crée pour le DataSet actuel les relations entre les diverses colonnes,
-			//	en s'appuyant sur les propriétés de DbTable/DbColumn.
-			
-			for (int i = 0; i < this.tables.Count; i++)
+			foreach (DbTable dbChildTable in this.tables)
 			{
-				DbTable               dbChildTable  = this.tables[i];
 				System.Data.DataTable adoChildTable = this.dataSet.Tables[dbChildTable.Name];
-				DbForeignKey[]        dbForeignKeys = dbChildTable.ForeignKeys;
 				
-				foreach (DbForeignKey fk in dbForeignKeys)
+				foreach (DbForeignKey fk in dbChildTable.ForeignKeys)
 				{
-					int n = fk.Columns.Length;
-
 					System.Data.DataTable adoTargetTable = this.dataSet.Tables[fk.TargetTableName];
 
 					if (adoTargetTable == null)
 					{
-						//	La table cible n'est pas chargée dans le DataSet, ce qui veut dire
-						//	que l'on doit ignorer la relation.
+						//	If the target table is not available in the data set, simply
+						//	ignore the relation.
 						
 						continue;
 					}
+
+					int n = fk.Columns.Length;
 					
 					System.Data.DataColumn[] adoTargetCols = new System.Data.DataColumn[n];
 					System.Data.DataColumn[] adoChildCols  = new System.Data.DataColumn[n];
 					
-					for (int j = 0; j < n; j++)
+					for (int i = 0; i < n; i++)
 					{
-						adoChildCols[j]  = adoChildTable.Columns[fk.Columns[j].CreateDisplayName ()];
-						adoTargetCols[j] = adoTargetTable.Columns[fk.Columns[j].TargetColumnName];
+						adoChildCols[i]  = adoChildTable.Columns[fk.Columns[i].Name];
+						adoTargetCols[i] = adoTargetTable.Columns[fk.Columns[i].TargetColumnName];
 					}
 
 					System.Data.DataRelation relation = new System.Data.DataRelation (null, adoTargetCols, adoChildCols);
@@ -1000,30 +1024,52 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Sets the active command transaction and pushes it on top of the
+		/// active transaction stack.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		private void SetCommandTransaction(DbTransaction transaction)
 		{
-			System.Data.IDbTransaction dataTransaction = transaction.Transaction;
-			
 			System.Diagnostics.Debug.Assert (transaction != null);
-
-			for (int i = 0; i < this.commands.Count; i++)
-			{
-				this.commands[i].Transaction = dataTransaction;
-			}
+			System.Diagnostics.Debug.Assert (transaction.Transaction != null);
+			
+			System.Data.IDbTransaction dataTransaction = transaction.Transaction;
 
 			this.activeTransactions.Push (transaction);
+
+			try
+			{
+				foreach (System.Data.IDbCommand command in this.commands)
+				{
+					command.Transaction = dataTransaction;
+				}
+			}
+			catch
+			{
+				this.activeTransactions.Pop ();
+				throw;
+			}
 		}
 
+		/// <summary>
+		/// Pops the active command transaction and resets all command transactions
+		/// to <c>null</c>.
+		/// </summary>
 		private void PopCommandTransaction()
 		{
 			this.activeTransactions.Pop ();
-			
-			for (int i = 0; i < this.commands.Count; i++)
+
+			foreach (System.Data.IDbCommand command in this.commands)
 			{
-				this.commands[i].Transaction = null;
+				command.Transaction = null;
 			}
 		}
 
+		/// <summary>
+		/// Checks the validity of the <c>DbRichCommand</c> state. If some
+		/// internal state is not valid, throws an exception.
+		/// </summary>
 		private void CheckValidState()
 		{
 			if (this.access.IsValid == false)
@@ -1058,9 +1104,18 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		private void ReplaceTable(DbTransaction transaction, System.Data.DataTable dataTable, DbTable dbTable, IReplaceOptions options)
+		/// <summary>
+		/// Replaces the table contents in the database without validity checking.
+		/// This will effectively overwrite the data, even if it was changed by
+		/// someone else in the meantime.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="dataTable">The data table.</param>
+		/// <param name="dbTable">The table definition.</param>
+		/// <param name="options">The replace options.</param>
+		private void ReplaceTablesWithoutValidityChecking(DbTransaction transaction, System.Data.DataTable dataTable, DbTable dbTable, IReplaceOptions options)
 		{
-			string tableName = dbTable.CreateSqlName ();
+			string sqlTableName = dbTable.CreateSqlName ();
 			
 			IDbAbstraction database  = transaction.Database;
 			ISqlBuilder    builder   = database.SqlBuilder;
@@ -1073,13 +1128,14 @@ namespace Epsitec.Cresus.Database
 			int colCount = dbTable.Columns.Count;
 			int rowCount = dataTable.Rows.Count;
 			
-			//	Crée pour chaque colonne de la table une représentation SQL et un
-			//	champ qui permettra de stocker la valeur :
+			//	For every row in the table, create an SQL representation of it, including the
+			//	fields to store the data.
 			
 			SqlColumn[] sqlColumns = new SqlColumn[colCount];
 			
-			int[]    updateMap     = new int[colCount];
-			object[] insertDefault = new object[colCount];
+			int[]    updateParamIndex = new int[colCount];
+			int[]    insertParamIndex = new int[colCount];
+			object[] insertDefault  = new object[colCount];
 			
 			for (int c = 0; c < colCount; c++)
 			{
@@ -1090,30 +1146,33 @@ namespace Epsitec.Cresus.Database
 				if ((options == null) ||
 					(options.IgnoreColumn (c, column) == false))
 				{
-					//	Aucune option particulière pour cette colonne. Ajoute simplement
-					//	la colonne à la fois pour le UPDATE et pour le INSERT :
+					//	The column is to be included by the UPDATE command. Remember
+					//	the parameter index for the specified column and don't provide
+					//	a default value for the INSERT command.
+
+					updateParamIndex[c] = sqlUpdate.Count;
+					insertParamIndex[c] = sqlInsert.Count;
+					insertDefault[c]    = null;
 					
 					sqlUpdate.Add (this.infrastructure.CreateEmptySqlField (column));
 					sqlInsert.Add (this.infrastructure.CreateEmptySqlField (column));
-					
-					updateMap[c]     = c;
-					insertDefault[c] = null;
 				}
 				else
 				{
 					//	Les options indiquent que l'on doit ignorer cette colonne lors du
 					//	UPDATE; on va aussi fournir une valeur par défaut pour le INSERT :
-					
+
+					updateParamIndex[c] = -1;
+					insertParamIndex[c] = sqlInsert.Count;
+					insertDefault[c]    = options.GetDefaultValue (c, column);
+
 					sqlInsert.Add (this.infrastructure.CreateEmptySqlField (column));
-					
-					updateMap[c]     = -1;
-					insertDefault[c] = options.GetDefaultValue (c, column);
 				}
 			}
 			
 			//	Crée la condition pour le UPDATE ... WHERE CR_ID = n
 			
-			SqlField fieldIdName  = SqlField.CreateName (tableName, sqlColumns[0].Name);
+			SqlField fieldIdName  = SqlField.CreateName (sqlTableName, sqlColumns[0].Name);
 			SqlField fieldIdValue = sqlUpdate[0];
 			
 			sqlConds.Add (new SqlFunction (SqlFunctionType.CompareEqual, fieldIdName, fieldIdValue));
@@ -1126,17 +1185,17 @@ namespace Epsitec.Cresus.Database
 			System.Data.IDbCommand deleteCommand;
 			
 			builder.Clear ();
-			builder.UpdateData (tableName, sqlUpdate, sqlConds);
+			builder.UpdateData (sqlTableName, sqlUpdate, sqlConds);
 			
 			updateCommand = builder.Command;
 			
 			builder.Clear ();
-			builder.InsertData (tableName, sqlInsert);
+			builder.InsertData (sqlTableName, sqlInsert);
 			
 			insertCommand = builder.Command;
 			
 			builder.Clear ();
-			builder.RemoveData (tableName, sqlConds);
+			builder.RemoveData (sqlTableName, sqlConds);
 			
 			deleteCommand = builder.Command;
 			
@@ -1144,7 +1203,7 @@ namespace Epsitec.Cresus.Database
 			insertCommand.Transaction = transaction.Transaction;
 			deleteCommand.Transaction = transaction.Transaction;
 			
-			int paramIdIndex = updateCommand.Parameters.Count - 1;
+			int whereParamIndex = updateCommand.Parameters.Count - 1;
 			
 			try
 			{
@@ -1182,16 +1241,14 @@ namespace Epsitec.Cresus.Database
 						
 						int    count;
 						object valueId = sqlColumns[0].ConvertToInternalType (row[0, System.Data.DataRowVersion.Current]);
-						
-						builder.SetCommandParameterValue (updateCommand, paramIdIndex, valueId);
+
+						builder.SetCommandParameterValue (updateCommand, whereParamIndex, valueId);
 						
 						for (int c = 0; c < colCount; c++)
 						{
-							int mapC = updateMap[c];
-							
 							//	La colonne peut-elle être utilisée telle quelle dans un UPDATE ?
-							
-							if (mapC < 0)
+
+							if (updateParamIndex[c] < 0)
 							{
 								//	La colonne ne sera utilisée que pour le INSERT; dans ce cas
 								//	il faudra utiliser une valeur par défaut en lieu et place de
@@ -1202,9 +1259,9 @@ namespace Epsitec.Cresus.Database
 							else
 							{
 								object value = sqlColumns[c].ConvertToInternalType (row[c]);
-								
-								builder.SetCommandParameterValue (updateCommand, mapC, value);
-								builder.SetCommandParameterValue (insertCommand, c, value);
+
+								builder.SetCommandParameterValue (updateCommand, updateParamIndex[c], value);
+								builder.SetCommandParameterValue (insertCommand, insertParamIndex[c], value);
 							}
 						}
 						
@@ -1219,7 +1276,7 @@ namespace Epsitec.Cresus.Database
 							
 							if (count != 1)
 							{
-								throw new Exceptions.FormatException (string.Format ("Insert into table {0} produced {1} changes (ID = {2}). Expected exactly 1.", tableName, count, insertCommand.Parameters[0]));
+								throw new Exceptions.FormatException (string.Format ("Insert into table {0} produced {1} changes (ID = {2}). Expected exactly 1.", sqlTableName, count, insertCommand.Parameters[0]));
 							}
 							
 							this.statReplaceInsertCount++;
@@ -1230,7 +1287,7 @@ namespace Epsitec.Cresus.Database
 						}
 						else
 						{
-							throw new Exceptions.FormatException (string.Format ("Update of table {0} produced {1} changes (ID = {2}). Expected 0 or 1.", tableName, count, updateCommand.Parameters[0]));
+							throw new Exceptions.FormatException (string.Format ("Update of table {0} produced {1} changes (ID = {2}). Expected 0 or 1.", sqlTableName, count, updateCommand.Parameters[0]));
 						}
 					}
 				}

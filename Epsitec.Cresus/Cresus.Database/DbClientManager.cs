@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Database
 			
 			//	Fill in a new row with the client record contents :
 			
-			record.SaveToEmptyRow (this.richCommand.CreateNewRow (table.TableName));
+			record.SaveToEmptyRow (this.richCommand.CreateRow (table.TableName));
 		}
 
 		/// <summary>

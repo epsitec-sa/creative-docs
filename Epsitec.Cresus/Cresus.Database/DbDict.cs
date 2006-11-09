@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Database
 				throw new System.ArgumentException (string.Format ("Key {0} already exists in dictionary", key));
 			}
 
-			System.Data.DataRow row = this.command.CreateNewRow (this.table.Name);
+			System.Data.DataRow row = this.command.CreateRow (this.table.Name);
 
 			System.Diagnostics.Debug.Assert (row != null);
 
