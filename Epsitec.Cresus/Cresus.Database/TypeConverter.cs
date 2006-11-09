@@ -1,5 +1,5 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -50,8 +50,13 @@ namespace Epsitec.Cresus.Database
 			TypeConverter.sysTypeToRawType[typeof (byte[])] = DbRawType.ByteArray;
 			TypeConverter.sysTypeToRawType[typeof (System.Guid)] = DbRawType.Guid;
 		}
-		
-		
+
+
+		/// <summary>
+		/// Gets the native type for a raw type.
+		/// </summary>
+		/// <param name="rawType">The raw type.</param>
+		/// <returns>The native type.</returns>
 		public static System.Type GetNativeType(DbRawType rawType)
 		{
 			switch (rawType)
@@ -74,12 +79,23 @@ namespace Epsitec.Cresus.Database
 			return null;
 		}
 
+		/// <summary>
+		/// Gets the simple type for a raw type.
+		/// </summary>
+		/// <param name="rawType">The raw type.</param>
+		/// <returns>The simple type.</returns>
 		public static DbSimpleType GetSimpleType(DbRawType rawType)
 		{
 			DbNumDef numDef;
 			return TypeConverter.GetSimpleType (rawType, out numDef);
 		}
-		
+
+		/// <summary>
+		/// Gets the simple type for a raw type.
+		/// </summary>
+		/// <param name="rawType">The raw type.</param>
+		/// <param name="numDef">The numeric definition.</param>
+		/// <returns>The simple type.</returns>
 		public static DbSimpleType GetSimpleType(DbRawType rawType, out DbNumDef numDef)
 		{
 			numDef = null;
@@ -96,8 +112,8 @@ namespace Epsitec.Cresus.Database
 				case DbRawType.SmallDecimal:
 				case DbRawType.LargeDecimal:
 					
-					//	C'est l'un des types numériques : il faut le convertir en une représentation
-					//	numérique (DbNumDef), puisque tous correspondent au même type simplifié.
+					//	This is one of the numeric types : we must find the numeric definition
+					//	to differentiate the raw types (they all map to DbSimpleType.Decimal).
 					
 					numDef = DbNumDef.FromRawType (rawType);
 					System.Diagnostics.Debug.Assert (numDef != null);
@@ -114,6 +130,12 @@ namespace Epsitec.Cresus.Database
 			return DbSimpleType.Unknown;
 		}
 
+		/// <summary>
+		/// Gets the simple type for a named type.
+		/// </summary>
+		/// <param name="namedType">The named type.</param>
+		/// <param name="numDef">The numeric definition.</param>
+		/// <returns>The simple type.</returns>
 		public static DbSimpleType GetSimpleType(INamedType namedType, out DbNumDef numDef)
 		{
 			numDef = null;
@@ -197,6 +219,11 @@ namespace Epsitec.Cresus.Database
 			return DbSimpleType.Unknown;
 		}
 
+		/// <summary>
+		/// Get the raw type for a native type.
+		/// </summary>
+		/// <param name="type">The native type.</param>
+		/// <returns>The raw type or <c>DbRawType.Unknown</c> if no mapping exists.</returns>
 		public static DbRawType GetRawType(System.Type type)
 		{
 			DbRawType rawType;
@@ -209,6 +236,14 @@ namespace Epsitec.Cresus.Database
 			return DbRawType.Unknown;
 		}
 
+		/// <summary>
+		/// Get the raw type for a simple type.
+		/// </summary>
+		/// <param name="simpleType">The simple type.</param>
+		/// <param name="numDef">The numeric definition.</param>
+		/// <returns>
+		/// The raw type or <c>DbRawType.Unknown</c> if no mapping exists.
+		/// </returns>
 		public static DbRawType GetRawType(DbSimpleType simpleType, DbNumDef numDef)
 		{
 			switch (simpleType)
@@ -255,21 +290,31 @@ namespace Epsitec.Cresus.Database
 			return DbRawType.Unknown;
 		}
 
+		/// <summary>
+		/// Get the raw type for a named type.
+		/// </summary>
+		/// <param name="namedType">The named type.</param>
+		/// <returns>The raw type or <c>DbRawType.Unknown</c> if no mapping exists.</returns>
 		public static DbRawType GetRawType(INamedType namedType)
 		{
 			DbNumDef numDef;
 			DbSimpleType simpleType = TypeConverter.GetSimpleType (namedType, out numDef);
 			return TypeConverter.GetRawType (simpleType, numDef);
 		}
-		
-		
+
+
+		/// <summary>
+		/// Determines whether a native type is compatible to the specified simple type.
+		/// </summary>
+		/// <param name="type">The native type.</param>
+		/// <param name="simpleType">The simple type.</param>
+		/// <returns>
+		/// 	<c>true</c> if the types are compatible; otherwise, <c>false</c>.
+		/// </returns>
 		public static bool IsCompatibleToSimpleType(System.Type type, DbSimpleType simpleType)
 		{
 			if (TypeConverter.sysTypeToSimpleType.ContainsKey (type))
 			{
-				//	Le type natif est connu, on le compare simplement au type simplifié qui
-				//	a été stocké dans la table.
-
 				return TypeConverter.sysTypeToSimpleType[type] == simpleType;
 			}
 			else
@@ -277,16 +322,18 @@ namespace Epsitec.Cresus.Database
 				return false;
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Converts a value from ADO.NET to the specified simple type. This can produce
+		/// important changes to the data (e.g. map a <c>long</c> to a <c>decimal</c>).
+		/// </summary>
+		/// <param name="value">The ADO.NET value.</param>
+		/// <param name="simpleType">The simple type.</param>
+		/// <param name="numDef">The numeric definition.</param>
+		/// <returns>The converted value.</returns>
 		public static object ConvertToSimpleType(object value, DbSimpleType simpleType, DbNumDef numDef)
 		{
-			//	Convertit un objet en provenance de ADO.NET en sa représentation équivalente basée
-			//	sur le type simplifié 'simpleType' et la définition de son format numérique.
-			
-			//	Cette méthode peut transformer une donnée numérique de manière significative,
-			//	par exemple de Int64 à decimal.
-			
 			if (value == null)
 			{
 				return null;
@@ -355,15 +402,17 @@ namespace Epsitec.Cresus.Database
 			
 			return null;
 		}
-		
+
+		/// <summary>
+		/// Converts a value from the specified simple type to an ADO.NET compatible value.
+		/// This can produce important changes to the data (e.g. map a <c>decimal</c> to a <c>long</c>).
+		/// </summary>
+		/// <param name="value">The raw value.</param>
+		/// <param name="simpleType">The simple type.</param>
+		/// <param name="numDef">The numeric definition.</param>
+		/// <returns>The converted value, compatible with ADO.NET.</returns>
 		public static object ConvertFromSimpleType(object value, DbSimpleType simpleType, DbNumDef numDef)
 		{
-			//	Convertit un objet basé sur le type simplifié 'simpleType' et la définition de son
-			//	format numérique en un objet compatible avec ADO.NET.
-			
-			//	Cette méthode peut transformer une donnée numérique de manière siginificative,
-			//	par exemple de Int64 en decimal.
-			
 			if (value == null)
 			{
 				return null;
@@ -445,8 +494,15 @@ namespace Epsitec.Cresus.Database
 			
 			throw new Exceptions.FormatException (string.Format ("Invalid value format {0}, cannot convert to {1}", value.GetType ().ToString (), simpleType.ToString ()));
 		}
-		
-		
+
+		/// <summary>
+		/// Converts an ADO.NET compatible value to an internal value (such as
+		/// it will be stored in the database by a specific provider).
+		/// </summary>
+		/// <param name="converter">The type converter.</param>
+		/// <param name="value">The ADO.NET compatible value.</param>
+		/// <param name="rawType">The raw type.</param>
+		/// <returns>The value for internal use.</returns>
 		public static object ConvertToInternal(ITypeConverter converter, object value, DbRawType rawType)
 		{
 			if (converter.CheckNativeSupport (rawType))
@@ -458,12 +514,22 @@ namespace Epsitec.Cresus.Database
 			
 			if (converter.GetRawTypeConverter (rawType, out rawConverter))
 			{
+				//	This might map a Boolean to a 16-bit integer or a Guid to a fixed length
+				//	string, for instance :
+				
 				return rawConverter.ConvertToInternalType (value);
 			}
 			
 			throw new System.InvalidOperationException (string.Format ("Cannot convert type {0} to internal representation.", rawType));
 		}
-		
+
+		/// <summary>
+		/// Converts an internal value back to an ADO.NET compatible value.
+		/// </summary>
+		/// <param name="converter">The type converter.</param>
+		/// <param name="value">The internal value.</param>
+		/// <param name="rawType">The raw type.</param>
+		/// <returns>The ADO.NET compatible value.</returns>
 		public static object ConvertFromInternal(ITypeConverter converter, object value, DbRawType rawType)
 		{
 			if (converter.CheckNativeSupport (rawType))
@@ -475,6 +541,8 @@ namespace Epsitec.Cresus.Database
 			
 			if (converter.GetRawTypeConverter (rawType, out rawConverter))
 			{
+				//	This might convert a 16-bit integer back to a Boolean, for instance :
+				
 				return rawConverter.ConvertFromInternalType (value);
 			}
 			
@@ -482,14 +550,10 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public static System.IFormatProvider	CurrentFormatProvider
-		{
-			get
-			{
-				return System.Globalization.CultureInfo.CurrentCulture;
-			}
-		}
-
+		/// <summary>
+		/// Gets the invariant format provider.
+		/// </summary>
+		/// <value>The invariant format provider.</value>
 		public static System.IFormatProvider	InvariantFormatProvider
 		{
 			get
