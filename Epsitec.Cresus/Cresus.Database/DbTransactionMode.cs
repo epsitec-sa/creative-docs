@@ -1,18 +1,27 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// L'énumération DbTransactionMode définit le type de transaction
-	/// requise pour une opération donnée avec DbInfrastructure.
+	/// The <c>DbTransactionMode</c> enumeration defines the transactions
+	/// modes supported by <c>DbInfrastructure</c>.
 	/// </summary>
 	public enum DbTransactionMode
 	{
-		Unsupported		= 0,
-		Unknown			= Unsupported,
+		/// <summary>
+		/// Unknown transaction mode.
+		/// </summary>
+		Unknown = 0,
 		
-		ReadWrite		= 1,
-		ReadOnly		= 2
+		/// <summary>
+		/// Read/write transaction.
+		/// </summary>
+		ReadWrite = 1,
+
+		/// <summary>
+		/// Read only transaction.
+		/// </summary>
+		ReadOnly = 2,
 	}
 }
