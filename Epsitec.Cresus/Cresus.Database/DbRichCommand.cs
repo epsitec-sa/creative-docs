@@ -344,7 +344,7 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			this.CheckValidState ();
-			this.CheckRowIds ();
+			this.AssertValidRowIds ();
 			
 			this.SetCommandTransaction (transaction);
 			
@@ -452,24 +452,27 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			this.CheckValidState ();
-			this.CheckRowIds ();
+			this.AssertValidRowIds ();
 			
 			this.ReplaceTablesWithoutValidityChecking(transaction, options);
 		}
-		
+
+		/// <summary>
+		/// Replaces the table contents in the database without validity checking.
+		/// This will effectively overwrite the data, even if it was changed by
+		/// someone else in the meantime.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="options">The replace options or <c>null</c>.</param>
 		public void ReplaceTablesWithoutValidityChecking(DbTransaction transaction, IReplaceOptions options)
 		{
-			//	ATTENTION: Cette méthode ne gère pas les conflits; elle écrase les données
-			//	dans la base en fonction du contenu des tables du DataSet.
-			
 			if (this.isReadOnly)
 			{
 				throw new Exceptions.ReadOnlyException (this.access);
 			}
 			
-			//	On ne touche à rien dans les tables ! Le log ID par exemple est conservé
-			//	tel quel. On va simplement exécuter "à la main" une série de UPDATE et
-			//	si besoin de INSERT.
+			//	Don't touch the contents of the tables; writes them as is to the
+			//	database, by using either UPDATE or INSERT.
 			
 			for (int i = 0; i < this.adapters.Length; i++)
 			{
@@ -500,22 +503,19 @@ namespace Epsitec.Cresus.Database
 				{
 					this.ReplaceTable (transaction, table, this.Tables[i], options);
 				}
-				
-				table.AcceptChanges ();
+
+				this.AcceptChanges (transaction, table.TableName);
 			}
 		}
 
+		/// <summary>
+		/// Creates a new row in the specified table. The row id will be set to a new
+		/// temporary row id.
+		/// </summary>
+		/// <param name="tableName">Name of the table.</param>
+		/// <returns>The new row.</returns>
 		public System.Data.DataRow CreateNewRow(string tableName)
 		{
-			System.Data.DataRow row;
-			this.CreateNewRow (tableName, out row);
-			return row;
-		}
-		
-		public void CreateNewRow(string tableName, out System.Data.DataRow dataRow)
-		{
-			//	Crée une ligne et ajoute celle-ci dans la table.
-			
 			if (this.isReadOnly)
 			{
 				throw new Exceptions.ReadOnlyException (this.access);
@@ -529,41 +529,85 @@ namespace Epsitec.Cresus.Database
 			{
 				throw new System.ArgumentException (string.Format ("Table {0} not found.", tableName), "tableName");
 			}
+
+			System.Data.DataRow row = DbRichCommand.CreateRow (table);
 			
-			DbRichCommand.CreateRow (table, out dataRow);
-			
-			table.Rows.Add (dataRow);
+			table.Rows.Add (row);
+
+			return row;
 		}
-		
-		public void DeleteExistingRow(System.Data.DataRow dataRow)
+
+		/// <summary>
+		/// Deletes an existing row.
+		/// </summary>
+		/// <param name="row">The row to delete.</param>
+		public void DeleteExistingRow(System.Data.DataRow row)
 		{
 			if (this.isReadOnly)
 			{
 				throw new Exceptions.ReadOnlyException (this.access);
 			}
 			
-			DbRichCommand.DeleteRow (dataRow);
+			DbRichCommand.DeleteRow (row);
 		}
-		
-		public void AcceptChanges()
+
+		/// <summary>
+		/// Accepts the changes for all the tables attached to this instance.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		public void AcceptChanges(DbTransaction transaction)
 		{
+			if (transaction == null)
+			{
+				throw new System.ArgumentNullException ("No transaction specified");
+			}
 			if (this.isReadOnly)
 			{
 				throw new Exceptions.ReadOnlyException (this.access);
 			}
-			
+
+			//	TODO: AcceptChanges should only be called when the transaction is committed successfully.
+
 			this.dataSet.AcceptChanges ();
 		}
-		
-		public void CheckRowIds()
+
+		/// <summary>
+		/// Accepts the changes for the specified table attached to this instance.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="tableName">Name of the table.</param>
+		public void AcceptChanges(DbTransaction transaction, string tableName)
+		{
+			if (transaction == null)
+			{
+				throw new System.ArgumentNullException ("No transaction specified");
+			}
+			if (this.isReadOnly)
+			{
+				throw new Exceptions.ReadOnlyException (this.access);
+			}
+
+			//	TODO: AcceptChanges should only be called when the transaction is committed successfully.
+
+			this.dataSet.Tables[tableName].AcceptChanges ();
+		}
+
+		/// <summary>
+		/// Checks all the row ids to make sure that none contains temporary row ids.
+		/// </summary>
+		public void AssertValidRowIds()
 		{
 			foreach (System.Data.DataTable table in this.dataSet.Tables)
 			{
-				DbRichCommand.CheckRowIds (table);
+				DbRichCommand.AssertValidRowIds (table);
 			}
 		}
 
-		public System.Data.IDbTransaction GetActiveTransaction()
+		/// <summary>
+		/// Gets the active transaction.
+		/// </summary>
+		/// <returns>The active transaction or <c>null</c> if no transaction is currently active.</returns>
+		public DbTransaction GetActiveTransaction()
 		{
 			if (this.activeTransactions.Count == 0)
 			{
@@ -574,8 +618,13 @@ namespace Epsitec.Cresus.Database
 				return this.activeTransactions.Peek ();
 			}
 		}
-		
-		public static System.Data.DataRow[] CopyLiveRows(System.Collections.IEnumerable rows)
+
+		/// <summary>
+		/// Extracts the live rows from a given collection.
+		/// </summary>
+		/// <param name="rows">A collection of rows.</param>
+		/// <returns>The live rows.</returns>
+		public static System.Data.DataRow[] GetLiveRows(System.Collections.IEnumerable rows)
 		{
 			List<System.Data.DataRow> list = new List<System.Data.DataRow> ();
 			
@@ -590,11 +639,25 @@ namespace Epsitec.Cresus.Database
 			return list.ToArray ();
 		}
 
+		/// <summary>
+		/// Determines whether the specified row is live.
+		/// </summary>
+		/// <param name="row">The row to check.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified row is live; otherwise, <c>false</c>.
+		/// </returns>
 		public static bool IsRowLive(System.Data.DataRow row)
 		{
 			return !DbRichCommand.IsRowDeleted (row);
 		}
-		
+
+		/// <summary>
+		/// Determines whether the specified row is deleted.
+		/// </summary>
+		/// <param name="row">The row to check.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified row is deleted; otherwise, <c>false</c>.
+		/// </returns>
 		public static bool IsRowDeleted(System.Data.DataRow row)
 		{
 			if (row.RowState == System.Data.DataRowState.Deleted)
@@ -603,21 +666,19 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			DbKey key = new DbKey (row);
-			
-			if (key.Status == DbRowStatus.Deleted)
-			{
-				return true;
-			}
-			
-			return false;
+
+			return (key.Status == DbRowStatus.Deleted);
 		}
-		
-		public static void CheckRowIds(System.Data.DataTable table)
+
+		/// <summary>
+		/// Checks all the row ids for the given table to make sure that none contains
+		/// temporary row ids.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		public static void AssertValidRowIds(System.Data.DataTable table)
 		{
-			for (int i = 0; i < table.Rows.Count; i++)
+			foreach (System.Data.DataRow row in table.Rows)
 			{
-				System.Data.DataRow row = table.Rows[i];
-				
 				if (row.RowState != System.Data.DataRowState.Deleted)
 				{
 					DbKey key = new DbKey (row);
@@ -627,26 +688,27 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Assign real row ids to the new data table rows for a given table.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
 		public static void AssignRealRowIds(DbInfrastructure infrastructure, DbTransaction transaction, System.Data.DataTable table)
 		{
-			System.Collections.ArrayList list = DbRichCommand.FindRowsUsingTemporaryIds (table);
+			ICollection<System.Data.DataRow> list = DbRichCommand.FindRowsUsingTemporaryIds (table);
 			
 			if (list.Count == 0)
 			{
 				return;
 			}
 			
-			//	Trouve la clef identifiant la table courante (la recherche est basée sur
-			//	le nom de la table) :
-			
 			DbKey tableKey = infrastructure.FindDbTableKey (transaction, table.TableName);
 			
-			//	Alloue une série de clefs (contiguës) pour la table et attribue les
-			//	séquentiellement aux diverses clefs temporaires; grâce aux relations
-			//	mises en place dans le DataSet, les foreign keys seront automatiquement
-			//	synchronisées aussi.
+			//	Allocate real row ids for the temporary rows; thanks to the relations
+			//	defined at the data set level, the foreign keys will be updated too.
 			
 			long id = infrastructure.NewRowIdInTable (transaction, tableKey, list.Count);
 			
@@ -666,18 +728,23 @@ namespace Epsitec.Cresus.Database
 				row.EndEdit ();
 			}
 		}
-		
+
+		/// <summary>
+		/// Updates the log ids associated with the table, using the specified log id.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		/// <param name="logId">The log id.</param>
 		public static void UpdateLogIds(System.Data.DataTable table, DbId logId)
 		{
-			for (int i = 0; i < table.Rows.Count; i++)
+			foreach (System.Data.DataRow row in table.Rows)
 			{
-				System.Data.DataRow row = table.Rows[i];
-				
 				switch (row.RowState)
 				{
 					case System.Data.DataRowState.Added:
 					case System.Data.DataRowState.Modified:
+						row.BeginEdit ();
 						row[Tags.ColumnRefLog] = logId.Value;
+						row.EndEdit ();
 						break;
 				}
 			}
@@ -693,12 +760,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public static void CreateRow(System.Data.DataTable table, out System.Data.DataRow row)
+		public static System.Data.DataRow CreateRow(System.Data.DataTable table)
 		{
 			//	Crée une ligne, mais ne l'ajoute pas à la table. L'ID affecté à la
 			//	ligne est temporaire (mais unique); cf. DbKey.CheckTemporaryId.
-			
-			row = table.NewRow ();
+
+			System.Data.DataRow row = table.NewRow ();
 			
 			DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
 			
@@ -706,11 +773,13 @@ namespace Epsitec.Cresus.Database
 			row[Tags.ColumnId]     = key.Id.Value;
 			row[Tags.ColumnStatus] = key.IntStatus;
 			row.EndEdit ();
+
+			return row;
 		}
-		public static void CreateRow(System.Data.DataTable table, DbId logId, out System.Data.DataRow dataRow)
+		public static void CreateRow(System.Data.DataTable table, DbId logId, out System.Data.DataRow row)
 		{
-			DbRichCommand.CreateRow (table, out dataRow);
-			DbRichCommand.DefineLogId (dataRow, logId);
+			row = DbRichCommand.CreateRow (table);
+			DbRichCommand.DefineLogId (row, logId);
 		}
 		
 		public static void DeleteRow(System.Data.DataRow dataRow)
@@ -830,12 +899,12 @@ namespace Epsitec.Cresus.Database
 			return null;
 		}
 		
-		public static System.Collections.ArrayList FindRowsUsingTemporaryIds(System.Data.DataTable table)
+		public static ICollection<System.Data.DataRow> FindRowsUsingTemporaryIds(System.Data.DataTable table)
 		{
 			//	Passe en revue toutes les lignes de la table pour déterminer s'il y a des
 			//	clefs temporaires en utilisation et retourne la liste des lignes concernées.
-			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+
+			List<System.Data.DataRow> list = new List<System.Data.DataRow> ();
 			
 			for (int i = 0; i < table.Rows.Count; i++)
 			{
@@ -931,18 +1000,15 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		private void SetCommandTransaction(System.Data.IDbTransaction transaction)
+		private void SetCommandTransaction(DbTransaction transaction)
 		{
-			if (transaction is DbTransaction)
-			{
-				transaction = ((DbTransaction) transaction).Transaction;
-			}
-
+			System.Data.IDbTransaction dataTransaction = transaction.Transaction;
+			
 			System.Diagnostics.Debug.Assert (transaction != null);
 
 			for (int i = 0; i < this.commands.Count; i++)
 			{
-				this.commands[i].Transaction = transaction;
+				this.commands[i].Transaction = dataTransaction;
 			}
 
 			this.activeTransactions.Push (transaction);
@@ -1178,7 +1244,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public void InternalFillDataSet(DbAccess access, System.Data.IDbTransaction transaction, System.Data.IDbDataAdapter[] adapters)
+		public void InternalFillDataSet(DbAccess access, DbTransaction transaction, System.Data.IDbDataAdapter[] adapters)
 		{
 			//	Utiliser DbInfrastructure.Execute en lieu et place de cette méthode !
 			
@@ -1288,7 +1354,7 @@ namespace Epsitec.Cresus.Database
 		private DbAccess access;
 		private System.Data.IDataAdapter[] adapters;
 
-		Stack<System.Data.IDbTransaction>		activeTransactions = new Stack<System.Data.IDbTransaction> ();
+		Stack<DbTransaction>					activeTransactions = new Stack<DbTransaction> ();
 		
 		private bool							isReadOnly;
 		private int								statReplaceUpdateCount;

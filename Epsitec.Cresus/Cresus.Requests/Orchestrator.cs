@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.Requests
 		{
 			//	Passe en revue la queue à la recherche de requêtes en attente d'exécution.
 			
-			System.Data.DataRow[] rows = DbRichCommand.CopyLiveRows (this.execution_queue.DateTimeSortedRows);
+			System.Data.DataRow[] rows = DbRichCommand.GetLiveRows (this.execution_queue.DateTimeSortedRows);
 			
 			//	Prend note du nombre de lignes dans la queue; si des nouvelles lignes sont
 			//	rajoutées pendant notre exécution, on les ignore. Elles seront traitées au
@@ -354,7 +354,7 @@ namespace Epsitec.Cresus.Requests
 			//	au serveur. Dans l'implémentation actuelle, on envoie une requête à la
 			//	fois pour simplifier la détection des conflits.
 			
-			System.Data.DataRow[] rows = DbRichCommand.CopyLiveRows (this.execution_queue.DateTimeSortedRows);
+			System.Data.DataRow[] rows = DbRichCommand.GetLiveRows (this.execution_queue.DateTimeSortedRows);
 			
 			//	Prend note du nombre de lignes dans la queue; si des nouvelles lignes sont
 			//	rajoutées pendant notre exécution, on les ignore. Elles seront traitées au

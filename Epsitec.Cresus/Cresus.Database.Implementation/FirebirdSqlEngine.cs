@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 		}
 		
-		public void Execute(DbRichCommand richCommand, DbInfrastructure infrastructure, System.Data.IDbTransaction transaction)
+		public void Execute(DbRichCommand richCommand, DbInfrastructure infrastructure, DbTransaction transaction)
 		{
 			int numCommands = richCommand.Commands.Count;
 			
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					if (e.Command.Transaction == null)
 					{
 						System.Diagnostics.Debug.WriteLine (string.Format ("Fixed missing transaction for command:\n   {0}", e.Command.CommandText));
-						e.Command.Transaction = richCommand.GetActiveTransaction () as FbTransaction;
+						e.Command.Transaction = richCommand.GetActiveTransaction ().Transaction as FbTransaction;
 					}
 				};
 #endif

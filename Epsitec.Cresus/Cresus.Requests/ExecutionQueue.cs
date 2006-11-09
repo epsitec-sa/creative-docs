@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Requests
 			{
 				lock (this)
 				{
-					System.Data.DataRow[] rows = DbRichCommand.CopyLiveRows (this.Rows);
+					System.Data.DataRow[] rows = DbRichCommand.GetLiveRows (this.Rows);
 					System.Array.Sort (rows, new DateTimeRowComparer ());
 					return rows;
 				}
@@ -434,8 +434,7 @@ namespace Epsitec.Cresus.Requests
 			{
 				this.queue_command.AssignRealRowIds (transaction);
 				this.queue_command.UpdateTables (transaction);
-				
-				this.queue_command.AcceptChanges ();
+				this.queue_command.AcceptChanges (transaction);
 			}
 		}
 		
