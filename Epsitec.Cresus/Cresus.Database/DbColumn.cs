@@ -498,7 +498,7 @@ namespace Epsitec.Cresus.Database
 					throw new System.InvalidOperationException (message);
 				}
 
-				suffix = string.Concat ("_", localizationSuffix);
+				suffix = string.Concat ("_", DbSqlStandard.MakeSimpleSqlName (localizationSuffix));
 			}
 			else
 			{

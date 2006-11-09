@@ -22,7 +22,6 @@ namespace Epsitec.Cresus.Database
 			this.tables   = new Collections.DbTables ();
 		}
 
-
 		/// <summary>
 		/// Gets the individual commands associated with this rich command.
 		/// </summary>
@@ -71,7 +70,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
 		/// <summary>
 		/// Gets a value indicating whether this instance is read only.
 		/// </summary>
@@ -99,7 +97,6 @@ namespace Epsitec.Cresus.Database
 				return !this.isReadOnly;
 			}
 		}
-
 
 		/// <summary>
 		/// Gets the insert count for the replace statistics.
@@ -287,7 +284,6 @@ namespace Epsitec.Cresus.Database
 			return command;
 		}
 
-
 		/// <summary>
 		/// Relaxes the data table constraints set up by ADO.NET so that we can
 		/// fill the rows with partial data.
@@ -314,7 +310,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
 		/// <summary>
 		/// Locks the tables and make them read only. This prevents accidental calls
 		/// to <c>UpdateTables</c> and <c>UpdateRealIds</c>.
@@ -323,7 +318,6 @@ namespace Epsitec.Cresus.Database
 		{
 			this.isReadOnly = true;
 		}
-
 
 		/// <summary>
 		/// Updates the tables by writing their contents to the database.
@@ -424,7 +418,6 @@ namespace Epsitec.Cresus.Database
 				DbRichCommand.UpdateLogIds (table, logId);
 			}
 		}
-
 
 		/// <summary>
 		/// Replaces the contents of the tables in the database by the contents
@@ -622,6 +615,131 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Fills the data set. This method may only be called by the <c>DbInfrastructure</c>
+		/// class and this is verified at execution time by doing a stack walk. Use the
+		/// <c>DbInfrastructure.Execute</c> method instead.
+		/// </summary>
+		/// <param name="access">The access.</param>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="adapters">The adapters.</param>
+		public void InternalFillDataSet(DbAccess access, DbTransaction transaction, System.Data.IDbDataAdapter[] adapters)
+		{
+			//	Verify that we have been called by DbInfrastructure through the
+			//	ISqlEngine layer :
+			//
+			//	xxx --> DbInfrastructure --> ISqlEngine --> DbRichCommand
+			
+			System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace (true);
+			System.Diagnostics.StackFrame caller1 = trace.GetFrame (1);
+			System.Diagnostics.StackFrame caller2 = trace.GetFrame (2);
+			
+			System.Type callerClassType = caller1.GetMethod ().DeclaringType;
+			System.Type reqInterfType   = typeof (Epsitec.Cresus.Database.ISqlEngine);
+			
+			if ((callerClassType.GetInterface (reqInterfType.FullName) != reqInterfType) ||
+				(caller2.GetMethod ().DeclaringType != typeof (DbInfrastructure)))
+			{
+				throw new System.InvalidOperationException (string.Format ("Method may not be called by {0}.{1}", callerClassType.FullName, caller1.GetMethod ().Name));
+			}
+
+			System.Diagnostics.Debug.Assert (access.IsValid);
+			
+			if (transaction == null)
+			{
+				throw new Exceptions.MissingTransactionException (access);
+			}
+			
+			if (this.dataSet != null)
+			{
+				throw new Exceptions.GenericException (access, "DataSet already exists.");
+			}
+			
+			//	Fill the data set based on the adapter objects provided by
+			//	the caller :
+
+			this.access   = access;
+			this.dataSet  = new System.Data.DataSet ();
+			this.adapters = adapters;
+			
+			this.SetCommandTransaction (transaction);
+			
+			try
+			{
+				for (int i = 0; i < this.tables.Count; i++)
+				{
+					DbTable dbTable = this.tables[i];
+					
+					string  adoNameTable = "Table";
+					string  dbNameTable  = dbTable.Name;
+					
+					//	Ensure that the column and table names match what we expect,
+					//	based on the DbColumn and DbTable names.
+					
+					System.Data.ITableMapping mapping = this.adapters[i].TableMappings.Add (adoNameTable, dbNameTable);
+					
+					foreach (DbColumn dbColumn in dbTable.Columns)
+					{
+						if (dbColumn.Localization == DbColumnLocalization.Localized)
+						{
+							foreach (string localizationSuffix in dbTable.Localizations)
+							{
+								string dbNameColumn  = string.Concat (dbColumn.Name, " (", localizationSuffix, ")");
+								string adoNameColumn = string.Concat (dbColumn.CreateSqlName (), "_", DbSqlStandard.MakeSimpleSqlName (localizationSuffix));
+
+								mapping.ColumnMappings.Add (adoNameColumn, dbNameColumn);
+							}
+						}
+						else
+						{
+							string dbNameColumn  = dbColumn.Name;
+							string adoNameColumn = dbColumn.CreateSqlName ();
+
+							mapping.ColumnMappings.Add (adoNameColumn, dbNameColumn);
+						}
+					}
+					
+					this.adapters[i].MissingSchemaAction = System.Data.MissingSchemaAction.AddWithKey;
+					this.adapters[i].Fill (this.dataSet);
+				}
+			}
+			finally
+			{
+				this.PopCommandTransaction ();
+			}
+			
+			this.CreateDataRelations ();
+		}
+		
+		#region IDisposable Members
+
+		/// <summary>
+		/// Releases the data set and the associated commands.
+		/// </summary>
+		public void Dispose()
+		{
+			System.Diagnostics.Debug.Assert (this.activeTransactions.Count == 0);
+			
+			if (this.dataSet != null)
+			{
+				this.dataSet.Dispose ();
+				this.dataSet = null;
+			}
+
+			foreach (System.Data.IDbCommand command in this.commands.ToArray ())
+			{
+				command.Dispose ();
+			}
+
+			this.commands.Clear ();
+			this.tables.Clear ();
+
+			this.infrastructure = null;
+			this.adapters = null;
+		}
+		
+		#endregion
+
+		/// <summary>
 		/// Extracts the live rows from a given collection.
 		/// </summary>
 		/// <param name="rows">A collection of rows.</param>
@@ -690,7 +808,6 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Assign real row ids to the new data table rows for a given table.
@@ -842,7 +959,6 @@ namespace Epsitec.Cresus.Database
 				row.Delete ();
 			}
 		}
-
 
 		/// <summary>
 		/// Creates a copy of the specified row.
@@ -1137,24 +1253,29 @@ namespace Epsitec.Cresus.Database
 			int[]    insertParamIndex = new int[colCount];
 			object[] insertDefault    = new object[colCount];
 			
-			int c = 0;
+			int index = 0;
 
+			//	Create the SQL columns and decide how to map the row items to
+			//	the SQL columns. This must take into account the fact that the
+			//	DbTable may produce several low level SQL columns for every
+			//	single high level DbColumn...
+			
 			foreach (DbColumn column in dbTable.Columns)
 			{
 				bool ignoreColumn = (options != null) && options.IgnoreColumn (column);
 				
 				foreach (SqlColumn sqlColumn in dbTable.CreateSqlColumns (converter, column))
 				{
-					sqlColumns[c] = sqlColumn;
+					sqlColumns[index] = sqlColumn;
 
 					if (ignoreColumn)
 					{
 						//	Ignore this column when using the UPDATE command, but still
 						//	provide a default value for the INSERT command.
 						
-						updateParamIndex[c] = -1;
-						insertParamIndex[c] = sqlInsert.Count;
-						insertDefault[c]    = options.GetDefaultValue (column);
+						updateParamIndex[index] = -1;
+						insertParamIndex[index] = sqlInsert.Count;
+						insertDefault[index]    = options.GetDefaultValue (column);
 
 						sqlInsert.Add (this.infrastructure.CreateEmptySqlField (column));
 					}
@@ -1164,19 +1285,19 @@ namespace Epsitec.Cresus.Database
 						//	the parameter index for the specified column and don't provide
 						//	a default value for the INSERT command.
 
-						updateParamIndex[c] = sqlUpdate.Count;
-						insertParamIndex[c] = sqlInsert.Count;
-						insertDefault[c]    = null;
+						updateParamIndex[index] = sqlUpdate.Count;
+						insertParamIndex[index] = sqlInsert.Count;
+						insertDefault[index]    = null;
 
 						sqlUpdate.Add (this.infrastructure.CreateEmptySqlField (column));
 						sqlInsert.Add (this.infrastructure.CreateEmptySqlField (column));
 					}
 
-					c++;
+					index++;
 				}
 			}
 			
-			//	Crée la condition pour le UPDATE ... WHERE CR_ID = n
+			//	Create the condition for the UPDATE .. WHERE or DELETE .. WHERE clause :
 			
 			SqlField fieldIdName  = SqlField.CreateName (sqlTableName, sqlColumns[0].Name);
 			SqlField fieldIdValue = sqlUpdate[0];
@@ -1184,7 +1305,7 @@ namespace Epsitec.Cresus.Database
 			sqlConds.Add (new SqlFunction (SqlFunctionType.CompareEqual, fieldIdName, fieldIdValue));
 			
 			
-			//	Crée les commandes pour le UPDATE et pour le INSERT :
+			//	Create the UPDATE, INSERT and DELETE commands :
 			
 			System.Data.IDbCommand updateCommand;
 			System.Data.IDbCommand insertCommand;
@@ -1213,12 +1334,11 @@ namespace Epsitec.Cresus.Database
 			
 			try
 			{
-				//	Passe en revue toutes les lignes de la table :
+				//	For every row in the table, decide what to do : either update,
+				//	insert or remove it, depending on its row state.
 				
-				for (int r = 0; r < rowCount; r++)
+				foreach (System.Data.DataRow row in dataTable.Rows)
 				{
-					System.Data.DataRow row = dataTable.Rows[r];
-					
 					if ((row.RowState != System.Data.DataRowState.Added) &&
 						(row.RowState != System.Data.DataRowState.Modified) &&
 						(row.RowState != System.Data.DataRowState.Deleted))
@@ -1228,42 +1348,39 @@ namespace Epsitec.Cresus.Database
 					
 					if (row.RowState == System.Data.DataRowState.Deleted)
 					{
-						//	Supprime la ligne en question de la table; met juste à jour l'ID de
-						//	la ligne dans la commande avant d'exécuter celle-ci :
+						//	Delete the row from the database. This will use a DELETE
+						//	command with the specified row id as the WHERE condition :
 						
-						int    count;
 						object valueId = sqlColumns[0].ConvertToInternalType (row[0, System.Data.DataRowVersion.Original]);
 						
 						builder.SetCommandParameterValue (deleteCommand, 0, valueId);
-						count = deleteCommand.ExecuteNonQuery ();
 						
-						this.statReplaceDeleteCount += count;
+						this.statReplaceDeleteCount += deleteCommand.ExecuteNonQuery ();
 					}
 					else
 					{
-						//	Met à jour la ligne en question dans la table. Tente d'abord un UPDATE
-						//	et en cas d'échec, recourt à INSERT.
-						//	Commence par mettre à jour tous les paramètres des deux commandes :
+						//	Update the row in the database. Try an UPDATE command and
+						//	if it does not modify the table, use INSERT instead.
 						
-						int    count;
 						object valueId = sqlColumns[0].ConvertToInternalType (row[0, System.Data.DataRowVersion.Current]);
 
 						builder.SetCommandParameterValue (updateCommand, whereParamIndex, valueId);
 
 						for (int i = 0; i < colCount; i++)
 						{
-							//	La colonne peut-elle être utilisée telle quelle dans un UPDATE ?
-
 							if (updateParamIndex[i] < 0)
 							{
-								//	La colonne ne sera utilisée que pour le INSERT; dans ce cas
-								//	il faudra utiliser une valeur par défaut en lieu et place de
-								//	la valeur proposée dans la source :
+								//	The column should be ignored when updating and used
+								//	only when inserting a new row, and then, we must use
+								//	a specific default value :
 								
-								builder.SetCommandParameterValue (insertCommand, i, insertDefault[c]);
+								builder.SetCommandParameterValue (insertCommand, i, insertDefault[index]);
 							}
 							else
 							{
+								//	The column has a value and will be updated or inserted
+								//	normally :
+
 								object value = sqlColumns[i].ConvertToInternalType (row[i]);
 
 								builder.SetCommandParameterValue (updateCommand, updateParamIndex[i], value);
@@ -1271,18 +1388,19 @@ namespace Epsitec.Cresus.Database
 							}
 						}
 						
-						count = updateCommand.ExecuteNonQuery ();
+						//	Execute the UPDATE command. If no row was modified, then we
+						//	must execute the INSERT command to make sure our data gets
+						//	persisted in the database :
+						
+						int count = updateCommand.ExecuteNonQuery ();
 						
 						if (count == 0)
 						{
-							//	Le UPDATE n'a modifié aucune ligne dans la base de données; cela signifie que la
-							//	ligne n'était pas connue. On va donc procéder à son insertion :
-							
 							count = insertCommand.ExecuteNonQuery ();
 							
 							if (count != 1)
 							{
-								throw new Exceptions.FormatException (string.Format ("Insert into table {0} produced {1} changes (ID = {2}). Expected exactly 1.", sqlTableName, count, insertCommand.Parameters[0]));
+								throw new Exceptions.FormatException (string.Format ("Insert into table {0} produced {1} changes (ID = {2}); 1 was expected", sqlTableName, count, insertCommand.Parameters[0]));
 							}
 							
 							this.statReplaceInsertCount++;
@@ -1293,7 +1411,7 @@ namespace Epsitec.Cresus.Database
 						}
 						else
 						{
-							throw new Exceptions.FormatException (string.Format ("Update of table {0} produced {1} changes (ID = {2}). Expected 0 or 1.", sqlTableName, count, updateCommand.Parameters[0]));
+							throw new Exceptions.FormatException (string.Format ("Update of table {0} produced {1} changes (ID = {2}); 0 or 1 expected", sqlTableName, count, updateCommand.Parameters[0]));
 						}
 					}
 				}
@@ -1305,119 +1423,16 @@ namespace Epsitec.Cresus.Database
 				insertCommand.Dispose ();
 			}
 		}
-		
-		
-		public void InternalFillDataSet(DbAccess access, DbTransaction transaction, System.Data.IDbDataAdapter[] adapters)
-		{
-			//	Utiliser DbInfrastructure.Execute en lieu et place de cette méthode !
-			
-			//	Cette méthode ne devrait jamais être appelée par un utilisateur : elle est réservée
-			//	aux classes implémentant ISqlEngine. Pour s'assurer que personne ne se trompe, on
-			//	vérifie l'identité de l'appelant :
-			//
-			//	xxx --> DbInfrastructure --> ISqlEngine --> DbRichCommand
-			
-			System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace (true);
-			System.Diagnostics.StackFrame caller1 = trace.GetFrame (1);
-			System.Diagnostics.StackFrame caller2 = trace.GetFrame (2);
-			
-			System.Type callerClassType = caller1.GetMethod ().DeclaringType;
-			System.Type reqInterfType   = typeof (Epsitec.Cresus.Database.ISqlEngine);
-			
-			if ((callerClassType.GetInterface (reqInterfType.FullName) != reqInterfType) ||
-				(caller2.GetMethod ().DeclaringType != typeof (DbInfrastructure)))
-			{
-				throw new System.InvalidOperationException (string.Format ("Method may not be called by {0}.{1}", callerClassType.FullName, caller1.GetMethod ().Name));
-			}
-
-			System.Diagnostics.Debug.Assert (access.IsValid);
-			
-			if (transaction == null)
-			{
-				throw new Exceptions.MissingTransactionException (access);
-			}
-			
-			if (this.dataSet != null)
-			{
-				throw new Exceptions.GenericException (access, "DataSet already exists.");
-			}
-			
-			//	Définit et remplit le DataSet en se basant sur les données fournies
-			//	par l'objet 'adapter' (ADO.NET).
-
-			this.access    = access;
-			this.dataSet  = new System.Data.DataSet ();
-			this.adapters  = adapters;
-			
-			this.SetCommandTransaction (transaction);
-			
-			try
-			{
-				for (int i = 0; i < this.tables.Count; i++)
-				{
-					DbTable dbTable = this.tables[i];
-					
-					string  adoNameTable = "Table";
-					string  dbNameTable  = dbTable.Name;
-					
-					//	Il faut (re)nommer les tables afin d'avoir les noms qui correspondent
-					//	à ce que définit DbTable, et faire pareil pour les colonnes.
-					
-					System.Data.ITableMapping mapping = this.adapters[i].TableMappings.Add (adoNameTable, dbNameTable);
-					
-					for (int c = 0; c < dbTable.Columns.Count; c++)
-					{
-						DbColumn dbColumn = dbTable.Columns[c];
-						
-						string dbNameColumn  = dbColumn.CreateDisplayName ();
-						string adoNameColumn = dbColumn.CreateSqlName ();
-						
-						mapping.ColumnMappings.Add (adoNameColumn, dbNameColumn);
-					}
-					
-					this.adapters[i].MissingSchemaAction = System.Data.MissingSchemaAction.AddWithKey;
-					this.adapters[i].Fill (this.dataSet);
-				}
-			}
-			finally
-			{
-				this.PopCommandTransaction ();
-			}
-			
-			this.CreateDataRelations ();
-		}
-		
-		
-		#region IDisposable Members
-		
-		public void Dispose()
-		{
-			if (this.dataSet != null)
-			{
-				this.dataSet.Dispose ();
-				this.dataSet = null;
-			}
-
-			System.Data.IDbCommand[] commands = this.commands.ToArray ();
-
-			for (int i = 0; i < commands.Length; i++)
-			{
-				commands[i].Dispose ();
-			}
-		}
-		
-		#endregion
-		
 
 
-		private DbInfrastructure infrastructure;
-		private Collections.DbCommands commands;
-		private Collections.DbTables tables;
-		private System.Data.DataSet dataSet;
-		private DbAccess access;
-		private System.Data.IDataAdapter[] adapters;
+		private DbInfrastructure				infrastructure;
+		private Collections.DbCommands			commands;
+		private Collections.DbTables			tables;
+		private System.Data.DataSet				dataSet;
+		private DbAccess						access;
+		private System.Data.IDataAdapter[]		adapters;
 
-		Stack<DbTransaction>					activeTransactions = new Stack<DbTransaction> ();
+		private Stack<DbTransaction>			activeTransactions = new Stack<DbTransaction> ();
 		
 		private bool							isReadOnly;
 		private int								statReplaceUpdateCount;
