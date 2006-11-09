@@ -6,7 +6,7 @@ namespace Epsitec.Cresus.Database
 	/// <summary>
 	/// The <c>DbRowStatus</c> enumeration defines the possible row status.
 	/// </summary>
-	public enum DbRowStatus
+	public enum DbRowStatus : short
 	{
 		/// <summary>
 		/// Live row (default).
