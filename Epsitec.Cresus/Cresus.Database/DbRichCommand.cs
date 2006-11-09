@@ -1125,7 +1125,7 @@ namespace Epsitec.Cresus.Database
 			Collections.SqlFields sqlInsert = new Collections.SqlFields ();
 			Collections.SqlFields sqlConds  = new Collections.SqlFields ();
 			
-			int colCount = dbTable.Columns.Count;
+			int colCount = dbTable.GetSqlColumnCount ();
 			int rowCount = dataTable.Rows.Count;
 			
 			//	For every row in the table, create an SQL representation of it, including the
@@ -1135,38 +1135,44 @@ namespace Epsitec.Cresus.Database
 			
 			int[]    updateParamIndex = new int[colCount];
 			int[]    insertParamIndex = new int[colCount];
-			object[] insertDefault  = new object[colCount];
+			object[] insertDefault    = new object[colCount];
 			
-			for (int c = 0; c < colCount; c++)
+			int c = 0;
+
+			foreach (DbColumn column in dbTable.Columns)
 			{
-				//	TODO: handle multiple cultures...
-				DbColumn column = dbTable.Columns[c];
-				sqlColumns[c] = column.CreateSqlColumn (converter, null);
+				bool ignoreColumn = (options != null) && options.IgnoreColumn (column);
 				
-				if ((options == null) ||
-					(options.IgnoreColumn (c, column) == false))
+				foreach (SqlColumn sqlColumn in dbTable.CreateSqlColumns (converter, column))
 				{
-					//	The column is to be included by the UPDATE command. Remember
-					//	the parameter index for the specified column and don't provide
-					//	a default value for the INSERT command.
+					sqlColumns[c] = sqlColumn;
 
-					updateParamIndex[c] = sqlUpdate.Count;
-					insertParamIndex[c] = sqlInsert.Count;
-					insertDefault[c]    = null;
-					
-					sqlUpdate.Add (this.infrastructure.CreateEmptySqlField (column));
-					sqlInsert.Add (this.infrastructure.CreateEmptySqlField (column));
-				}
-				else
-				{
-					//	Les options indiquent que l'on doit ignorer cette colonne lors du
-					//	UPDATE; on va aussi fournir une valeur par défaut pour le INSERT :
+					if (ignoreColumn)
+					{
+						//	Ignore this column when using the UPDATE command, but still
+						//	provide a default value for the INSERT command.
+						
+						updateParamIndex[c] = -1;
+						insertParamIndex[c] = sqlInsert.Count;
+						insertDefault[c]    = options.GetDefaultValue (column);
 
-					updateParamIndex[c] = -1;
-					insertParamIndex[c] = sqlInsert.Count;
-					insertDefault[c]    = options.GetDefaultValue (c, column);
+						sqlInsert.Add (this.infrastructure.CreateEmptySqlField (column));
+					}
+					else
+					{
+						//	The column is to be included by the UPDATE command. Remember
+						//	the parameter index for the specified column and don't provide
+						//	a default value for the INSERT command.
 
-					sqlInsert.Add (this.infrastructure.CreateEmptySqlField (column));
+						updateParamIndex[c] = sqlUpdate.Count;
+						insertParamIndex[c] = sqlInsert.Count;
+						insertDefault[c]    = null;
+
+						sqlUpdate.Add (this.infrastructure.CreateEmptySqlField (column));
+						sqlInsert.Add (this.infrastructure.CreateEmptySqlField (column));
+					}
+
+					c++;
 				}
 			}
 			
@@ -1243,25 +1249,25 @@ namespace Epsitec.Cresus.Database
 						object valueId = sqlColumns[0].ConvertToInternalType (row[0, System.Data.DataRowVersion.Current]);
 
 						builder.SetCommandParameterValue (updateCommand, whereParamIndex, valueId);
-						
-						for (int c = 0; c < colCount; c++)
+
+						for (int i = 0; i < colCount; i++)
 						{
 							//	La colonne peut-elle être utilisée telle quelle dans un UPDATE ?
 
-							if (updateParamIndex[c] < 0)
+							if (updateParamIndex[i] < 0)
 							{
 								//	La colonne ne sera utilisée que pour le INSERT; dans ce cas
 								//	il faudra utiliser une valeur par défaut en lieu et place de
 								//	la valeur proposée dans la source :
 								
-								builder.SetCommandParameterValue (insertCommand, c, insertDefault[c]);
+								builder.SetCommandParameterValue (insertCommand, i, insertDefault[c]);
 							}
 							else
 							{
-								object value = sqlColumns[c].ConvertToInternalType (row[c]);
+								object value = sqlColumns[i].ConvertToInternalType (row[i]);
 
-								builder.SetCommandParameterValue (updateCommand, updateParamIndex[c], value);
-								builder.SetCommandParameterValue (insertCommand, insertParamIndex[c], value);
+								builder.SetCommandParameterValue (updateCommand, updateParamIndex[i], value);
+								builder.SetCommandParameterValue (insertCommand, insertParamIndex[i], value);
 							}
 						}
 						

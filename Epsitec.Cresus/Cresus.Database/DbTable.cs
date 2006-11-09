@@ -526,5 +526,22 @@ namespace Epsitec.Cresus.Database
 				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot be renamed to '{1}'", this.name, value));
 			}
 		}
+
+		internal IEnumerable<SqlColumn> CreateSqlColumns(ITypeConverter converter, DbColumn column)
+		{
+			if (column.Localization == DbColumnLocalization.Localized)
+			{
+				System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (this.localizations) == false);
+
+				foreach (string localizationSuffix in this.Localizations)
+				{
+					yield return column.CreateSqlColumn (converter, localizationSuffix);
+				}
+			}
+			else
+			{
+				yield return column.CreateSqlColumn (converter, null);
+			}
+		}
 	}
 }

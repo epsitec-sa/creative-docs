@@ -5,7 +5,7 @@ namespace Epsitec.Cresus.Database
 {
 	public interface IReplaceOptions
 	{
-		bool IgnoreColumn(int index, DbColumn column);
-		object GetDefaultValue(int index, DbColumn column);
+		bool IgnoreColumn(DbColumn column);
+		object GetDefaultValue(DbColumn column);
 	}
 }
