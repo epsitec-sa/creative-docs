@@ -123,7 +123,6 @@ namespace Epsitec.Cresus.Database
 			this.AddConditionWithRawValue (a, comparison, value, DbRawType.String);
 		}
 
-
 		/// <summary>
 		/// Adds a condition.
 		/// </summary>
