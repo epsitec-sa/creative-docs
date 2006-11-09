@@ -1,5 +1,7 @@
 using NUnit.Framework;
 
+using Epsitec.Common.Types;
+
 namespace Epsitec.Cresus.Database
 {
 	[TestFixture]
@@ -49,7 +51,7 @@ namespace Epsitec.Cresus.Database
 			Assert.IsNotNull (table);
 			Assert.AreEqual ("Test", table.Name);
 			Assert.AreEqual (DbElementCat.Unknown, table.Category);
-			Assert.AreEqual (false, table.HasPrimaryKey);
+			Assert.AreEqual (false, table.HasPrimaryKeys);
 			Assert.AreEqual (0, table.PrimaryKeys.Count);
 			Assert.AreEqual (0, table.Columns.Count);
 			
@@ -104,7 +106,9 @@ namespace Epsitec.Cresus.Database
 			table.Columns.Add (column_2);
 			table.Columns.Add (column_3);
 			
-			DbForeignKey[] fk = table.ForeignKeys;
+			DbForeignKey[] fk;
+			
+			fk = Collection.ToArray<DbForeignKey> (table.ForeignKeys);
 			
 			Assert.AreEqual (2, fk.Length);
 			Assert.AreEqual (1, fk[0].Columns.Length);
@@ -117,7 +121,7 @@ namespace Epsitec.Cresus.Database
 			table.Columns.Add (column_2);
 			table.Columns.Add (column_1);
 			
-			fk = table.ForeignKeys;
+			fk = Collection.ToArray<DbForeignKey> (table.ForeignKeys);
 			
 			Assert.AreEqual (1, fk.Length);
 			Assert.AreEqual (1, fk[0].Columns.Length);
