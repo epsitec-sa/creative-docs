@@ -4,6 +4,8 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support;
 
+using System.Collections.Generic;
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -64,6 +66,45 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public string[] Localizations
+		{
+			get
+			{
+				if (string.IsNullOrEmpty (this.localizations))
+				{
+					return new string[0];
+				}
+				else
+				{
+					return this.localizations.Split ('/');
+				}
+			}
+		}
+
+		public int LocalizationCount
+		{
+			get
+			{
+				if (string.IsNullOrEmpty (this.localizations))
+				{
+					return 1;
+				}
+				else
+				{
+					int count = 1;
+					
+					for (int i = 0; i < this.localizations.Length; i++)
+					{
+						if (this.localizations[i] == '/')
+						{
+							count++;
+						}
+					}
+
+					return count;
+				}
+			}
+		}
 
 		public Collections.DbColumns Columns
 		{
@@ -229,6 +270,11 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (this.primary_keys[0] == column);
 		}
 
+		public void DefineLocalizations(IEnumerable<string> localizations)
+		{
+			string[] array = Collection.ToArray<string> (localizations);
+			this.localizations = array.Length == 0 ? null : string.Join ("/", array);
+		}
 
 		public SqlTable CreateSqlTable(ITypeConverter type_converter)
 		{
@@ -338,6 +384,33 @@ namespace Epsitec.Cresus.Database
 			return key;
 		}
 
+		public int GetSqlColumnCount()
+		{
+			int localizationCount = this.LocalizationCount;
+
+			if (localizationCount > 1)
+			{
+				int count = 0;
+
+				foreach (DbColumn column in this.columns)
+				{
+					if (column.Localization == DbColumnLocalization.Localized)
+					{
+						count += localizationCount;
+					}
+					else
+					{
+						count += 1;
+					}
+				}
+				
+				return count;
+			}
+			else
+			{
+				return this.columns.Count;
+			}
+		}
 
 		internal void UpdatePrimaryKeyInfo()
 		{
