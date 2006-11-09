@@ -35,7 +35,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
 		/// <summary>
 		/// Makes a composite name based on a list of strings. The individual
 		/// names are joined using the "_" character. No trailing "_" will be
@@ -54,9 +53,13 @@ namespace Epsitec.Cresus.Database
 			
 			return (num == 0) ? "" : string.Join ("_", list, 0, num);
 		}
-		
-		
-		public static DbElementCat   ParseElementCategory(string text)
+
+		/// <summary>
+		/// Parses the element category.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>The value or <c>DbElementCat.Unknown</c> if the text is empty.</returns>
+		public static DbElementCat ParseElementCategory(string text)
 		{
 			if (string.IsNullOrEmpty (text))
 			{
@@ -67,7 +70,12 @@ namespace Epsitec.Cresus.Database
 				return (DbElementCat) InvariantConverter.ParseInt (text);
 			}
 		}
-		
+
+		/// <summary>
+		/// Parses the revision mode.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>The value or <c>DbRevisionMode.Unknown</c> if the text is empty.</returns>
 		public static DbRevisionMode ParseRevisionMode(string text)
 		{
 			if (string.IsNullOrEmpty (text))
@@ -79,7 +87,12 @@ namespace Epsitec.Cresus.Database
 				return (DbRevisionMode) InvariantConverter.ParseInt (text);
 			}
 		}
-		
+
+		/// <summary>
+		/// Parses the replication mode.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>The value or <c>DbReplicationMode.Unknown</c> if the text is empty.</returns>
 		public static DbReplicationMode ParseReplicationMode(string text)
 		{
 			if (string.IsNullOrEmpty (text))
@@ -92,6 +105,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Parses the column class.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>The value or <c>DbColumnClass.Data</c> if the text is empty.</returns>
 		public static DbColumnClass ParseColumnClass(string text)
 		{
 			if (string.IsNullOrEmpty (text))
@@ -104,6 +122,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Parses the localization.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>The value or <c>DbColumnLocalization.None</c> if the text is empty.</returns>
 		public static DbColumnLocalization ParseLocalization(string text)
 		{
 			if (string.IsNullOrEmpty (text))
@@ -116,129 +139,198 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public static DbRawType ParseRawType(string value)
+		/// <summary>
+		/// Parses the type of the raw.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>
+		/// The value or <c>DbRawType.Unknown</c> if the text is empty.
+		/// </returns>
+		public static DbRawType ParseRawType(string text)
 		{
-			if (string.IsNullOrEmpty (value))
+			if (string.IsNullOrEmpty (text))
 			{
 				return DbRawType.Unknown;
 			}
 
 			int num;
-			InvariantConverter.Convert (value, out num);
+			InvariantConverter.Convert (text, out num);
 			return (DbRawType) num;
 		}
 
-		public static DbSimpleType ParseSimpleType(string value)
+		/// <summary>
+		/// Parses the simple type.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>
+		/// The value or <c>DbSimpleType.Unknown</c> if the text is empty.
+		/// </returns>
+		public static DbSimpleType ParseSimpleType(string text)
 		{
-			if (string.IsNullOrEmpty (value))
+			if (string.IsNullOrEmpty (text))
 			{
 				return DbSimpleType.Unknown;
 			}
 
 			int num;
-			InvariantConverter.Convert (value, out num);
+			InvariantConverter.Convert (text, out num);
 			return (DbSimpleType) num;
 		}
 
-		public static string ParseString(string value)
+		/// <summary>
+		/// Parses the string.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>The value or <c>null</c> if the text is empty.</returns>
+		public static string ParseString(string text)
 		{
-			if (string.IsNullOrEmpty (value))
+			if (string.IsNullOrEmpty (text))
 			{
 				return null;
 			}
 			else
 			{
-				return value;
+				return text;
 			}
 		}
 
-		public static int ParseInt(string value)
+		/// <summary>
+		/// Parses the int.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>The value or <c>0</c> if the text is empty.</returns>
+		public static int ParseInt(string text)
 		{
-			return InvariantConverter.ParseInt (value);
+			return InvariantConverter.ParseInt (text);
 		}
 
-		public static long ParseLong(string value)
+		/// <summary>
+		/// Parses the long.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>The value or <c>0</c> if the text is empty.</returns>
+		public static long ParseLong(string text)
 		{
-			return InvariantConverter.ParseLong (value);
+			return InvariantConverter.ParseLong (text);
 		}
 
-		public static decimal ParseDecimal(string value)
+		/// <summary>
+		/// Parses the decimal.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>The value or <c>0</c> if the text is empty.</returns>
+		public static decimal ParseDecimal(string text)
 		{
-			return InvariantConverter.ParseDecimal (value);
+			return InvariantConverter.ParseDecimal (text);
 		}
 
-		public static Druid ParseDruid(string value)
+		/// <summary>
+		/// Parses the druid.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>The value or <c>Druid.Empty</c> if the text is empty.</returns>
+		public static Druid ParseDruid(string text)
 		{
-			if (string.IsNullOrEmpty (value))
+			if (string.IsNullOrEmpty (text))
 			{
 				return Druid.Empty;
 			}
 			else
 			{
-				return Druid.Parse (value);
+				return Druid.Parse (text);
 			}
 		}
 
-		public static bool ParseDefaultingToFalseBool(string value)
+		/// <summary>
+		/// Parses the boolean defaulting to <c>false</c>.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>The value or <c>false</c> if the text is empty.</returns>
+		public static bool ParseDefaultingToFalseBool(string text)
 		{
-			if (string.IsNullOrEmpty (value))
+			if (string.IsNullOrEmpty (text))
 			{
 				return false;
 			}
 			else
 			{
-				System.Diagnostics.Debug.Assert (value == "Y");
+				System.Diagnostics.Debug.Assert (text == "Y");
 
 				return true;
 			}
 		}
 
-		public static bool ParseDefaultingToTrueBool(string value)
+		/// <summary>
+		/// Parses the boolean defaulting to <c>true</c>.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>The value or <c>true</c> if the text is empty.</returns>
+		public static bool ParseDefaultingToTrueBool(string text)
 		{
-			if (string.IsNullOrEmpty (value))
+			if (string.IsNullOrEmpty (text))
 			{
 				return false;
 			}
 			else
 			{
-				System.Diagnostics.Debug.Assert (value == "N");
+				System.Diagnostics.Debug.Assert (text == "N");
 
 				return true;
 			}
 		}
 
-		public static string ElementCategoryToString(DbElementCat cat)
+		/// <summary>
+		/// Converts the value to a string.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The textual representation of the value or <c>null</c> if it is the default value.</returns>
+		public static string ElementCategoryToString(DbElementCat value)
 		{
-			if (cat == DbElementCat.Unknown)
+			if (value == DbElementCat.Unknown)
 			{
 				return null;
 			}
 			else
 			{
-				return InvariantConverter.ToString ((int) cat);
+				return InvariantConverter.ToString ((int) value);
 			}
-		}
-		
-		public static string RevisionModeToString(DbRevisionMode mode)
-		{
-			if (mode == DbRevisionMode.Unknown)
-			{
-				return null;
-			}
-			
-			return InvariantConverter.ToString ((int) mode);
-		}
-		
-		public static string ReplicationModeToString(DbReplicationMode mode)
-		{
-			if (mode == DbReplicationMode.Unknown)
-			{
-				return null;
-			}
-			
-			return InvariantConverter.ToString ((int) mode);
 		}
 
+		/// <summary>
+		/// Converts the value to a string.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The textual representation of the value or <c>null</c> if it is the default value.</returns>
+		public static string RevisionModeToString(DbRevisionMode value)
+		{
+			if (value == DbRevisionMode.Unknown)
+			{
+				return null;
+			}
+			
+			return InvariantConverter.ToString ((int) value);
+		}
+
+		/// <summary>
+		/// Converts the value to a string.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The textual representation of the value or <c>null</c> if it is the default value.</returns>
+		public static string ReplicationModeToString(DbReplicationMode value)
+		{
+			if (value == DbReplicationMode.Unknown)
+			{
+				return null;
+			}
+			
+			return InvariantConverter.ToString ((int) value);
+		}
+
+		/// <summary>
+		/// Converts the value to a string.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The textual representation of the value or <c>null</c> if it is the default value.</returns>
 		public static string ColumnClassToString(DbColumnClass value)
 		{
 			if (value == DbColumnClass.Data)
@@ -251,6 +343,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Converts the value to a string.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The textual representation of the value or <c>null</c> if it is the default value.</returns>
 		public static string ColumnLocalizationToString(DbColumnLocalization value)
 		{
 			if (value == DbColumnLocalization.None)
@@ -263,6 +360,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Converts the value to a string.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The textual representation of the value or <c>null</c> if it is <c>Druid.Empty</c>.</returns>
 		public static string DruidToString(Druid value)
 		{
 			if (value.IsEmpty)
@@ -275,6 +377,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Converts the value to a string.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The textual representation of the value or <c>null</c> if it is a <c>null</c> type.</returns>
 		public static string TypeToString(INamedType value)
 		{
 			if (value == null)
@@ -287,31 +394,45 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public static string RawTypeToString(DbRawType dbRawType)
+		/// <summary>
+		/// Converts the value to a string.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The textual representation of the value or <c>null</c> if it is the default value.</returns>
+		public static string RawTypeToString(DbRawType value)
 		{
-			if (dbRawType == DbRawType.Unknown)
+			if (value == DbRawType.Unknown)
 			{
 				return null;
 			}
 			else
 			{
-				return InvariantConverter.ToString ((int) dbRawType);
+				return InvariantConverter.ToString ((int) value);
 			}
 		}
-		
-		public static string SimpleTypeToString(DbSimpleType dbSimpleType)
+
+		/// <summary>
+		/// Converts the value to a string.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The textual representation of the value or <c>null</c> if it is the default value.</returns>
+		public static string SimpleTypeToString(DbSimpleType value)
 		{
-			if (dbSimpleType == DbSimpleType.Unknown)
+			if (value == DbSimpleType.Unknown)
 			{
 				return null;
 			}
 			else
 			{
-				return InvariantConverter.ToString ((int) dbSimpleType);
+				return InvariantConverter.ToString ((int) value);
 			}
 		}
 
-
+		/// <summary>
+		/// Converts the value to a string.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The textual representation of the value or <c>null</c> if it is the zero value.</returns>
 		public static string IntToString(int value)
 		{
 			if (value == 0)
@@ -324,6 +445,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Converts the value to a string.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The textual representation of the value or <c>null</c> if it is the zero value.</returns>
 		public static string LongToString(long value)
 		{
 			if (value == 0)
@@ -336,6 +462,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Converts the value to a string.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The textual representation of the value or <c>null</c> if it is the zero value.</returns>
 		public static string DecimalToString(decimal value)
 		{
 			if (value == 0)
@@ -347,17 +478,32 @@ namespace Epsitec.Cresus.Database
 				return InvariantConverter.ToString (value);
 			}
 		}
-		
+
+		/// <summary>
+		/// Converts the value to a string.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The textual representation of the value or <c>null</c> if it is the <c>false</c> value.</returns>
 		public static string BoolDefaultingToFalseToString(bool value)
 		{
 			return value ? "Y" : null;
 		}
 
+		/// <summary>
+		/// Converts the value to a string.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The textual representation of the value or <c>null</c> if it is the <c>true</c> value.</returns>
 		public static string BoolDefaultingToTrueToString(bool value)
 		{
 			return value ? "N" : null;
 		}
 
+		/// <summary>
+		/// Converts the value to a string.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The textual representation of the value or <c>null</c> if it is the empty string.</returns>
 		public static string StringToString(string value)
 		{
 			if (string.IsNullOrEmpty (value))
@@ -370,6 +516,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Gets the compact XML representation of a serializable value.
+		/// </summary>
+		/// <param name="value">The serializable value.</param>
+		/// <returns>The compact XML representation.</returns>
 		public static string GetCompactXml(IXmlSerializable value)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -384,6 +535,11 @@ namespace Epsitec.Cresus.Database
 			return buffer.ToString ();
 		}
 
+		/// <summary>
+		/// Deserializes an object from XML.
+		/// </summary>
+		/// <param name="value">The source XML.</param>
+		/// <returns>The deserialized object.</returns>
 		public static T DeserializeFromXml<T>(string value)
 		{
 			using (System.IO.StringReader reader = new System.IO.StringReader (value))
@@ -402,6 +558,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Deserializes an object from XML.
+		/// </summary>
+		/// <param name="xmlReader">The XML reader.</param>
+		/// <returns>The deserialized object.</returns>
 		public static T DeserializeFromXml<T>(System.Xml.XmlTextReader xmlReader)
 		{
 			Deserializer<T> deserializer;
@@ -441,9 +602,13 @@ namespace Epsitec.Cresus.Database
 			return deserializer (xmlReader);
 		}
 
+		#region Private Methods
 
-		private delegate T Deserializer<T>(System.Xml.XmlTextReader xmlReader);
-
+		/// <summary>
+		/// Creates a deserializer for a given type. This builds a small piece
+		/// of dynamic code to handle the deserialization.
+		/// </summary>
+		/// <returns>The deserializer delegate.</returns>
 		private static Deserializer<T> CreateDeserializer<T>()
 		{
 			System.Type type = typeof (T);
@@ -474,8 +639,12 @@ namespace Epsitec.Cresus.Database
 			return (Deserializer<T>) dynamic.CreateDelegate (typeof (Deserializer<T>));
 		}
 
-		private static object exclusion = new object ();
-		private static Dictionary<System.Type, object> deserializers = new Dictionary<System.Type, object> ();
-		private static object noDeserializer = new object ();
+		private delegate T Deserializer<T>(System.Xml.XmlTextReader xmlReader);
+
+		#endregion
+
+		static object							exclusion      = new object ();
+		static Dictionary<System.Type, object>	deserializers  = new Dictionary<System.Type, object> ();
+		static object							noDeserializer = new object ();
 	}
 }
