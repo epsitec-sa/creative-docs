@@ -497,8 +497,6 @@ namespace Epsitec.Cresus.Database
 					string message = string.Format ("Column '{0}' specifies localization {1} for wrong class {2}", this.Name, this.localization, this.columnClass);
 					throw new System.InvalidOperationException (message);
 				}
-
-				suffix = string.Concat ("_", DbSqlStandard.MakeSimpleSqlName (localizationSuffix));
 			}
 			else
 			{
@@ -534,9 +532,7 @@ namespace Epsitec.Cresus.Database
 				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot be translated to an SQL column", this.Name));
 			}
 
-			string sqlName = this.CreateSqlName ();
-
-			column.Name       = string.IsNullOrEmpty (suffix) ? sqlName : sqlName+suffix;
+			column.Name       = this.MakeLocalizedSqlName (localizationSuffix);
 			column.IsNullable = this.Type.IsNullable;
 			
 			return column;
@@ -665,6 +661,16 @@ namespace Epsitec.Cresus.Database
 		}
 
 		#endregion
+
+		internal string MakeLocalizedName(string localizationSuffix)
+		{
+			return string.Concat (this.Name, " (", localizationSuffix, ")");
+		}
+		
+		internal string MakeLocalizedSqlName(string localizationSuffix)
+		{
+			return DbTools.MakeCompositeName (this.CreateSqlName (), DbSqlStandard.MakeSimpleSqlName (localizationSuffix));
+		}
 
 		private static readonly Caption nullCaption = new Caption ();
 

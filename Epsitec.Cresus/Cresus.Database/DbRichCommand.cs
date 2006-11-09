@@ -683,8 +683,8 @@ namespace Epsitec.Cresus.Database
 						{
 							foreach (string localizationSuffix in dbTable.Localizations)
 							{
-								string dbNameColumn  = string.Concat (dbColumn.Name, " (", localizationSuffix, ")");
-								string adoNameColumn = string.Concat (dbColumn.CreateSqlName (), "_", DbSqlStandard.MakeSimpleSqlName (localizationSuffix));
+								string dbNameColumn  = dbColumn.MakeLocalizedName (localizationSuffix);
+								string adoNameColumn = dbColumn.MakeLocalizedSqlName (localizationSuffix);
 
 								mapping.ColumnMappings.Add (adoNameColumn, dbNameColumn);
 							}

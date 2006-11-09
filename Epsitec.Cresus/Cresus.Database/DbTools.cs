@@ -1,5 +1,5 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
@@ -8,15 +8,20 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Database
 {
-	using OpCodes=System.Reflection.Emit.OpCodes;
-	using InvariantConverter=Epsitec.Common.Types.InvariantConverter;
+	using OpCodes = System.Reflection.Emit.OpCodes;
+	using InvariantConverter = Epsitec.Common.Types.InvariantConverter;
 	
 	/// <summary>
-	/// La classe DbTools fournit quelques fonctions utilitaires qui n'ont pas
-	/// de rapport direct avec SQL, mais sont utiles aux classes DbXyz.
+	/// The <c>DbTools</c> class provides a set of useful methods.
 	/// </summary>
 	public static class DbTools
 	{
+		/// <summary>
+		/// Writes the XML attribute to the XML writer if the value is not empty.
+		/// </summary>
+		/// <param name="xmlWriter">The XML writer.</param>
+		/// <param name="name">The attribute name.</param>
+		/// <param name="value">The attribute value.</param>
 		public static void WriteAttribute(System.Xml.XmlTextWriter xmlWriter, string name, string value)
 		{
 			if (string.IsNullOrEmpty (value))
@@ -29,37 +34,20 @@ namespace Epsitec.Cresus.Database
 				xmlWriter.WriteAttributeString (name, value);
 			}
 		}
-		
-		public static string BuildLocalisedName(string name, Common.Support.ResourceLevel level)
-		{
-			//	TODO: gérer les suffixes en fonction de la culture active, non en fonction de
-			//	la culture par défaut du gestionnaire de ressources par défaut !
-			
-			System.Globalization.CultureInfo culture = Resources.DefaultManager.ActiveCulture;
-			ResourceManager                  manager = Resources.DefaultManager;
-			
-			switch (level)
-			{
-				case ResourceLevel.Default:
-					return name;
-				
-				case ResourceLevel.Customized:
-				case ResourceLevel.Localized:
-					return DbTools.BuildCompositeName (name, manager.MapToSuffix (level, culture));
-			}
-			
-			throw new System.ArgumentException (string.Format ("Level {0} not valid here (name='{1}').", level, name), "level");
-		}
-		
-		public static string BuildCompositeName(params string[] list)
+
+
+		/// <summary>
+		/// Makes a composite name based on a list of strings. The individual
+		/// names are joined using the "_" character. No trailing "_" will be
+		/// generated.
+		/// </summary>
+		/// <param name="list">The list of strings.</param>
+		/// <returns>The composite name.</returns>
+		public static string MakeCompositeName(params string[] list)
 		{
 			int num = list.Length;
 			
-			//	Retire de la liste toutes les chaînes vides qui pourraient s'être
-			//	accumulées à la fin; ça évite que la composition de "a" avec "" ne
-			//	donne "a_" en fin de compte (le résultat sera "a", simplement).
-			
-			while ((num > 0) && (list[num-1].Length == 0))
+			while ((num > 0) && (string.IsNullOrEmpty (list[num-1])))
 			{
 				num--;
 			}
