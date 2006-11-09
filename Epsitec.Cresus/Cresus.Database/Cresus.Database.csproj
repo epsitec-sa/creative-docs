@@ -126,6 +126,7 @@
     <Compile Include="Collections\SqlFields.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IReplaceOptions.cs" />
     <Compile Include="DbLogEntry.cs" />
     <Compile Include="DbClientRecord.cs" />
     <Compile Include="IXmlSerializable.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="DbColumnLocalization.cs" />
     <Compile Include="DbContext.cs" />
     <Compile Include="DbIdClass.cs" />
+    <Compile Include="Options\ReplaceIgnoreColumns.cs" />
     <Compile Include="Res.cs" />
     <Compile Include="SqlFieldOrder.cs" />
     <Compile Include="SqlFieldType.cs" />

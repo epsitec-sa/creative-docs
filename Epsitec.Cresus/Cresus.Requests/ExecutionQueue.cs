@@ -432,7 +432,7 @@ namespace Epsitec.Cresus.Requests
 			
 			lock (this)
 			{
-				this.queue_command.UpdateRealIds (transaction);
+				this.queue_command.AssignRealRowIds (transaction);
 				this.queue_command.UpdateTables (transaction);
 				
 				this.queue_command.AcceptChanges ();

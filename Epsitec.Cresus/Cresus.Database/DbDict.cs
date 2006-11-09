@@ -256,7 +256,7 @@ namespace Epsitec.Cresus.Database
 		public void PersistToBase(DbTransaction transaction)
 		{
 			this.command.UpdateLogIds ();
-			this.command.UpdateRealIds (transaction);
+			this.command.AssignRealRowIds (transaction);
 			this.command.UpdateTables (transaction);
 		}
 

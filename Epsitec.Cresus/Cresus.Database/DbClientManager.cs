@@ -270,7 +270,7 @@ namespace Epsitec.Cresus.Database
 			if (this.richCommand != null)
 			{
 				this.richCommand.UpdateLogIds ();
-				this.richCommand.UpdateRealIds (transaction);
+				this.richCommand.AssignRealRowIds (transaction);
 				this.richCommand.UpdateTables (transaction);
 			}
 		}

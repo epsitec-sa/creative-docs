@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Replication
 					//	être répliquée dans son entier. La colonne CR_NEXT_ID doit être
 					//	sautée (ou initialisée avec des valeurs par défaut) :
 					
-					DbRichCommand.ReplaceIgnoreColumns options = new DbRichCommand.ReplaceIgnoreColumns ();
+					Database.Options.ReplaceIgnoreColumns options = new Database.Options.ReplaceIgnoreColumns ();
 					
 					options.AddIgnoreColumn (Tags.ColumnNextId, DbId.CreateId (1, this.infrastructure.LocalSettings.ClientId).Value);
 					

@@ -10,10 +10,15 @@ namespace Epsitec.Cresus.Database
 	public class DbSelectCondition
 	{
 		public DbSelectCondition(ITypeConverter type_converter)
+			: this (type_converter, DbSelectRevision.All)
+		{
+		}
+
+		public DbSelectCondition(ITypeConverter type_converter, DbSelectRevision revision)
 		{
 			this.type_converter = type_converter;
 			this.sql_fields     = new Collections.SqlFields ();
-			this.revision       = DbSelectRevision.All;
+			this.revision       = revision;
 		}
 		
 		

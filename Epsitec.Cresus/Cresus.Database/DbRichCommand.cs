@@ -19,8 +19,12 @@ namespace Epsitec.Cresus.Database
 			this.commands = new Collections.DbCommands ();
 			this.tables   = new Collections.DbTables ();
 		}
-		
-		
+
+
+		/// <summary>
+		/// Gets the individual commands associated with this rich command.
+		/// </summary>
+		/// <value>The commands.</value>
 		public Collections.DbCommands			Commands
 		{
 			get
@@ -28,7 +32,11 @@ namespace Epsitec.Cresus.Database
 				return this.commands;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the individual table definitions associated with this rich command.
+		/// </summary>
+		/// <value>The table definitions.</value>
 		public Collections.DbTables				Tables
 		{
 			get
@@ -36,7 +44,11 @@ namespace Epsitec.Cresus.Database
 				return this.tables;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the data set associated with this rich command.
+		/// </summary>
+		/// <value>The data set or <c>null</c> if there is no data set.</value>
 		public System.Data.DataSet				DataSet
 		{
 			get
@@ -44,7 +56,11 @@ namespace Epsitec.Cresus.Database
 				return this.dataSet;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the infrastructure associated with this rich command.
+		/// </summary>
+		/// <value>The infrastructure.</value>
 		public DbInfrastructure					Infrastructure
 		{
 			get
@@ -52,8 +68,14 @@ namespace Epsitec.Cresus.Database
 				return this.infrastructure;
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is read only.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is read only; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsReadOnly
 		{
 			get
@@ -61,16 +83,26 @@ namespace Epsitec.Cresus.Database
 				return this.isReadOnly;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is read/write.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is read/write; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsReadWrite
 		{
 			get
 			{
-				return ! this.isReadOnly;
+				return !this.isReadOnly;
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Gets the insert count for the replace statistics.
+		/// </summary>
+		/// <value>The insert count for the replace statistics.</value>
 		public int								ReplaceStatisticsInsertCount
 		{
 			get
@@ -78,7 +110,11 @@ namespace Epsitec.Cresus.Database
 				return this.statReplaceInsertCount;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the update count for the replace statistics.
+		/// </summary>
+		/// <value>The update count for the replace statistics.</value>
 		public int								ReplaceStatisticsUpdateCount
 		{
 			get
@@ -86,7 +122,11 @@ namespace Epsitec.Cresus.Database
 				return this.statReplaceUpdateCount;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the delete count for the replace statistics.
+		/// </summary>
+		/// <value>The delete count for the replace statistics.</value>
 		public int								ReplaceStatisticsDeleteCount
 		{
 			get
@@ -94,38 +134,93 @@ namespace Epsitec.Cresus.Database
 				return this.statReplaceDeleteCount;
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Creates a rich command from a table definition which can then be
+		/// used to load the table into the data set.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table definition.</param>
+		/// <returns>The <c>DbRichCommand</c> instance.</returns>
 		public static DbRichCommand CreateFromTable(DbInfrastructure infrastructure, DbTransaction transaction, DbTable table)
 		{
 			return DbRichCommand.CreateFromTables (infrastructure, transaction, new DbTable[] { table }, new DbSelectCondition[] { null });
 		}
-		
+
+		/// <summary>
+		/// Creates a rich command from a table definition which can then be
+		/// used to load a specific revision (all, live, copied, archive) of
+		/// the data into the data set.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// <param name="selectRevision">The revision to select.</param>
+		/// <returns>The <c>DbRichCommand</c> instance.</returns>
 		public static DbRichCommand CreateFromTable(DbInfrastructure infrastructure, DbTransaction transaction, DbTable table, DbSelectRevision selectRevision)
 		{
-			DbSelectCondition condition = new DbSelectCondition (infrastructure.TypeConverter);
-			condition.Revision = selectRevision;
-			return DbRichCommand.CreateFromTable (infrastructure, transaction, table, condition);
+			return DbRichCommand.CreateFromTable (infrastructure, transaction, table, new DbSelectCondition (infrastructure.TypeConverter, selectRevision));
 		}
-		
+
+		/// <summary>
+		/// Creates a rich command from a table definition which can then be
+		/// used to load the table into the data set, using a specific selection.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// <param name="condition">The select condition or <c>null</c> to select nothing.</param>
+		/// <returns>The <c>DbRichCommand</c> instance.</returns>
 		public static DbRichCommand CreateFromTable(DbInfrastructure infrastructure, DbTransaction transaction, DbTable table, DbSelectCondition condition)
 		{
 			return DbRichCommand.CreateFromTables (infrastructure, transaction, new DbTable[] { table }, new DbSelectCondition[] { condition });
 		}
-		
+
+		/// <summary>
+		/// Creates a rich command from the definition of a collection of tables
+		/// which can then be used to load the table into the data set.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="tables">The table definitions.</param>
+		/// <returns>The <c>DbRichCommand</c> instance.</returns>
 		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, DbTransaction transaction, Collections.DbTables tables)
 		{
 			return DbRichCommand.CreateFromTables (infrastructure, transaction, tables.ToArray ());
 		}
-		
+
+		/// <summary>
+		/// Creates a rich command from the definition of a collection of tables
+		/// which can then be used to load the table into the data set.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="tables">The table definitions.</param>
+		/// <returns>The <c>DbRichCommand</c> instance.</returns>
 		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, DbTransaction transaction, params DbTable[] tables)
 		{
 			return DbRichCommand.CreateFromTables (infrastructure, transaction, tables, new DbSelectCondition[tables.Length]);
 		}
-		
+
+		/// <summary>
+		/// Creates a rich command from the definition of a collection of tables
+		/// which can then be used to load the table into the data set, using
+		/// specific selections.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="tables">The table definitions.</param>
+		/// <param name="conditions">The select conditions (one for every table definition); use a
+		/// <c>null</c> condition to select nothing for a given table.</param>
+		/// <returns>The <c>DbRichCommand</c> instance.</returns>
 		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, DbTransaction transaction, DbTable[] tables, DbSelectCondition[] conditions)
 		{
-			System.Diagnostics.Debug.Assert (tables.Length == conditions.Length);
+			if (tables.Length != conditions.Length)
+			{
+				throw new System.ArgumentException ("Mismatch of tables and conditions");
+			}
 			
 			if (transaction == null)
 			{
@@ -147,14 +242,18 @@ namespace Epsitec.Cresus.Database
 			
 			for (int i = 0; i < n; i++)
 			{
-				DbTable           table     = tables[i];
+				DbTable table = tables[i];
 				DbSelectCondition condition = conditions[i];
 				
-				SqlSelect   select  = new SqlSelect ();
+				SqlSelect select = new SqlSelect ();
 				ISqlBuilder builder = transaction.SqlBuilder;
 				
 				select.Fields.Add (SqlField.CreateAll ());
 				select.Tables.Add (table.Name, SqlField.CreateName (table.CreateSqlName ()));
+				
+				//	If there is no condition, this means we don't want to get any data
+				//	for the specific table; just fetch the empty table by using an always
+				//	false WHERE clause.
 				
 				if (condition == null)
 				{
@@ -171,7 +270,12 @@ namespace Epsitec.Cresus.Database
 				command.Tables.Add (table);
 			}
 			
+			//	Fetch the table contents into a data set :
+			
 			infrastructure.Execute (transaction, command);
+			
+			//	Relax the constraints imposed by ADO.NET based on the table schemas, so
+			//	that we can fill the rows with partial data without getting exceptions :
 			
 			foreach (System.Data.DataTable table in command.DataSet.Tables)
 			{
@@ -180,9 +284,14 @@ namespace Epsitec.Cresus.Database
 			
 			return command;
 		}
-		
-		
-		public static void RelaxConstraints(System.Data.DataTable table)
+
+
+		/// <summary>
+		/// Relaxes the data table constraints set up by ADO.NET so that we can
+		/// fill the rows with partial data.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		internal static void RelaxConstraints(System.Data.DataTable table)
 		{
 			if (table.Columns[Tags.ColumnId].Unique == false)
 			{
@@ -190,10 +299,9 @@ namespace Epsitec.Cresus.Database
 				table.Columns[Tags.ColumnId].Unique = true;
 			}
 			
-			//	Si certaines colonnes empêchent l'utilisateur de valeurs 'null' dans la
-			//	base de données, il faut effacer ces fanions pour éviter des problèmes
-			//	pendant le peuplement de la table (où toutes les colonnes ne sont pas
-			//	encore affectées) :
+			//	If some columns are declared as non-nullable in the database, we have to
+			//	remove set the AllowDBNull so that we can fill the table with partial
+			//	rows without having ADO.NET complain about the broken constraint.
 			
 			foreach (System.Data.DataColumn column in table.Columns)
 			{
@@ -203,17 +311,22 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Locks the tables and make them read only. This prevents accidental calls
+		/// to <c>UpdateTables</c> and <c>UpdateRealIds</c>.
+		/// </summary>
 		public void LockReadOnly()
 		{
-			//	En verrouillant le DbRichCommand contre les modifications, on évite que
-			//	l'utilisateur n'appelle par inadvertance UpdateTables ou UpdateRealIds.
-			
 			this.isReadOnly = true;
 		}
-		
-		
+
+
+		/// <summary>
+		/// Updates the tables by writing their contents to the database.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		public void UpdateTables(DbTransaction transaction)
 		{
 			if (this.isReadOnly)
@@ -221,10 +334,9 @@ namespace Epsitec.Cresus.Database
 				throw new Exceptions.ReadOnlyException (this.access);
 			}
 			
-			//	Sauve les données du DataSet dans la base de données (mise à jour soit
-			//	par UPDATE, soit par INSERT, en fonction de l'état de chaque ligne);
-			//	pour que cela fonctionne, il faut que DbRichCommand ait été rempli
-			//	correctement au préalable, au moyen de DbInfrastructure.Execute.
+			//	Saves the data from the data set to the database, using either UPADTE or
+			//	INSERT commands for each row. The DbRichCommand must have been filled with
+			//	a call to Execute for this to work.
 			
 			if (transaction == null)
 			{
@@ -248,15 +360,17 @@ namespace Epsitec.Cresus.Database
 				this.PopCommandTransaction ();
 			}
 		}
-		
-		public void UpdateRealIds(DbTransaction transaction)
+
+		/// <summary>
+		/// Assign real row ids to the new data table rows.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		public void AssignRealRowIds(DbTransaction transaction)
 		{
 			if (this.isReadOnly)
 			{
 				throw new Exceptions.ReadOnlyException (this.access);
 			}
-			
-			//	Met à jour les IDs des nouvelles lignes des diverses tables.
 			
 			if (transaction == null)
 			{
@@ -270,11 +384,10 @@ namespace Epsitec.Cresus.Database
 			{
 				foreach (System.Data.DataTable table in this.dataSet.Tables)
 				{
-					//	S'il y a des clefs temporaires dans la table, on va les remplacer par
-					//	des clefs définitives; en effet, on n'a pas le droit de "persister" des
-					//	lignes utilisant des clefs temporaires dans la base.
+					//	If there are temporary rows in the table, assign them real row ids, as
+					//	we may not persist tables with temporary row ids :
 					
-					DbRichCommand.UpdateRealIds (this.infrastructure, transaction, table);
+					DbRichCommand.AssignRealRowIds (this.infrastructure, transaction, table);
 				}
 			}
 			finally
@@ -282,12 +395,21 @@ namespace Epsitec.Cresus.Database
 				this.PopCommandTransaction ();
 			}
 		}
-		
+
+		/// <summary>
+		/// Updates the log ids associated with the data set, using the most
+		/// current log id.
+		/// </summary>
 		public void UpdateLogIds()
 		{
 			this.UpdateLogIds (this.infrastructure.Logger.CurrentId);
 		}
-		
+
+		/// <summary>
+		/// Updates the log ids associated with the data set, using the specified
+		/// log id.
+		/// </summary>
+		/// <param name="logId">The log id.</param>
 		public void UpdateLogIds(DbId logId)
 		{
 			if (this.isReadOnly)
@@ -300,19 +422,30 @@ namespace Epsitec.Cresus.Database
 				DbRichCommand.UpdateLogIds (table, logId);
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Replaces the contents of the tables in the database by the contents
+		/// of the data set. This is similar to <c>UpdateTables</c>, but overwriting
+		/// the database contents even if the data changed since the call to
+		/// <c>Execute</c>.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		public void ReplaceTables(DbTransaction transaction)
 		{
 			this.ReplaceTables (transaction, null);
 		}
-		
+
+		/// <summary>
+		/// Replaces the contents of the tables in the database by the contents
+		/// of the data set. This is similar to <c>UpdateTables</c>, but overwriting
+		/// the database contents even if the data changed since the call to
+		/// <c>Execute</c>.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="options">The replace options.</param>
 		public void ReplaceTables(DbTransaction transaction, IReplaceOptions options)
 		{
-			//	Similaire à UpdateTables, mais en écrasant les données contenues dans
-			//	la base, sans égard pour d'éventuelles anciennes données déjà présentes
-			//	(là aussi, UPDATE sera utilisé d'abord et INSERT en cas de besoin).
-			
 			if (transaction == null)
 			{
 				throw new Exceptions.MissingTransactionException (this.access);
@@ -496,7 +629,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public static void UpdateRealIds(DbInfrastructure infrastructure, DbTransaction transaction, System.Data.DataTable table)
+		public static void AssignRealRowIds(DbInfrastructure infrastructure, DbTransaction transaction, System.Data.DataTable table)
 		{
 			System.Collections.ArrayList list = DbRichCommand.FindRowsUsingTemporaryIds (table);
 			
@@ -1146,44 +1279,6 @@ namespace Epsitec.Cresus.Database
 		
 		#endregion
 		
-		#region IReplaceOptions Interface
-		public interface IReplaceOptions
-		{
-			bool IgnoreColumn(int index, DbColumn column);
-			object GetDefaultValue(int index, DbColumn column);
-		}
-		#endregion
-		
-		#region ReplaceIgnoreColumns Class
-		public class ReplaceIgnoreColumns : IReplaceOptions
-		{
-			public ReplaceIgnoreColumns()
-			{
-				this.columns = new System.Collections.Hashtable ();
-			}
-			
-			
-			public void AddIgnoreColumn(string name, object defaultValue)
-			{
-				this.columns[name] = defaultValue;
-			}
-			
-			
-			#region IReplaceOptions Members
-			public bool IgnoreColumn(int index, DbColumn column)
-			{
-				return this.columns.ContainsKey (column.Name);
-			}
-			
-			public object GetDefaultValue(int index, DbColumn column)
-			{
-				return this.columns[column.Name];
-			}
-			#endregion
-			
-			System.Collections.Hashtable		columns;
-		}
-		#endregion
 
 
 		private DbInfrastructure infrastructure;
