@@ -1,11 +1,15 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
-	public class Tags : Epsitec.Common.Support.Tags
+	/// <summary>
+	/// The <c>Tags</c> class defines all well known tags (texts) used to name
+	/// columns, tables, types, etc.
+	/// </summary>
+	public static class Tags
 	{
-		//	Noms des types "Crésus" fondamentaux :
+		//	Basic CRESUS type names :
 
 		public const string TypeKeyId			= "Num.KeyId";
 		public const string TypeNullableKeyId	= "Num.NullableKeyId";
@@ -18,13 +22,11 @@ namespace Epsitec.Cresus.Database
 		public const string TypeReqData			= "Other.ReqData";
 		public const string TypeReqExState		= "Num.ReqExecState";
 		
-		//	Noms des colonnes "Crésus" fondamentales :
+		//	Basic CRESUS column names :
 		
 		public const string	ColumnId			= "CR_ID";
 		public const string	ColumnStatus		= "CR_STAT";
 		public const string	ColumnName			= "CR_NAME";
-//		public const string	ColumnCaption		= "CR_CAPTION";
-//		public const string	ColumnDescription	= "CR_DESCRIPTION";
 		public const string	ColumnInfoXml		= "CR_INFO";
 		public const string	ColumnNextId		= "CR_NEXT_ID";
 		public const string ColumnDateTime		= "CR_DATETIME";
@@ -47,7 +49,7 @@ namespace Epsitec.Cresus.Database
 		public const string ColumnClientCreDate	= "CR_CLIENT_CRE_DATE";
 		public const string ColumnClientConDate	= "CR_CLIENT_CON_DATE";
 		
-		//	Noms des tables "Crésus" fondamentales :
+		//	Basic CRESUS table names :
 		
 		public const string	TableTableDef		= "CR_TABLE_DEF";
 		public const string	TableColumnDef		= "CR_COLUMN_DEF";
