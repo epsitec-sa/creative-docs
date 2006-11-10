@@ -507,30 +507,17 @@ namespace Epsitec.Cresus.Database
 
 
 		#region Support Code
+
 		internal static DbInfrastructure GetInfrastructureFromBase(string name, bool debug_attach)
 		{
 			DbInfrastructure infrastructure = new DbInfrastructure ();
 			DbAccess db_access = DbInfrastructure.CreateDbAccess (name);
 
-			if (debug_attach)
-			{
-				infrastructure.DisplayDataSet = new CallbackDisplayDataSet (DbInfrastructureTest.DisplayDataSet);
-				infrastructure.AttachDatabase (db_access);
-			}
-			else
-			{
-				infrastructure.AttachDatabase (db_access);
-				infrastructure.DisplayDataSet = new CallbackDisplayDataSet (DbInfrastructureTest.DisplayDataSet);
-			}
-
+			infrastructure.AttachDatabase (db_access);
+			
 			return infrastructure;
 		}
-
-		public static void DisplayDataSet(DbInfrastructure infrastructure, string name, System.Data.DataTable table)
-		{
-			//			DbInfrastructureTest.display.AddTable (name, table);
-			//			DbInfrastructureTest.display.ShowWindow ();
-		}
+		
 		#endregion
 	}
 }
