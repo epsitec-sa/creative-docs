@@ -194,10 +194,10 @@ namespace Epsitec.Cresus.Database
 
 				DbTable db_table1 = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.Disabled);
 
-				DbTypeDef db_type_name  = new DbTypeDef ("Name", DbSimpleType.String, null, 80, false, Nullable.No);
-				DbTypeDef db_type_level = new DbTypeDef ("Level", DbSimpleType.String, null, 4, false, Nullable.No);
-				DbTypeDef db_type_type  = new DbTypeDef ("Type", DbSimpleType.String, null, 25, false, Nullable.Yes);
-				DbTypeDef db_type_data  = new DbTypeDef ("Data", DbSimpleType.ByteArray, null, 0, false, Nullable.Yes);
+				DbTypeDef db_type_name  = new DbTypeDef ("Name", DbSimpleType.String, null, 80, false, DbNullability.No);
+				DbTypeDef db_type_level = new DbTypeDef ("Level", DbSimpleType.String, null, 4, false, DbNullability.No);
+				DbTypeDef db_type_type  = new DbTypeDef ("Type", DbSimpleType.String, null, 25, false, DbNullability.Yes);
+				DbTypeDef db_type_data  = new DbTypeDef ("Data", DbSimpleType.ByteArray, null, 0, false, DbNullability.Yes);
 
 				infrastructure.RegisterNewDbType (null, db_type_name);
 				infrastructure.RegisterNewDbType (null, db_type_level);

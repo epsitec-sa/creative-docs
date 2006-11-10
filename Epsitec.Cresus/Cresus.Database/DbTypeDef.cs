@@ -72,8 +72,8 @@ namespace Epsitec.Cresus.Database
 		/// <param name="numDef">The numeric defition.</param>
 		/// <param name="length">The length (if this is a string).</param>
 		/// <param name="isFixedLength">If set to <c>true</c>, denotes a fixed length string.</param>
-		/// <param name="isNullable">The nullable mode.</param>
-		public DbTypeDef(string name, DbSimpleType simpleType, DbNumDef numDef, int length, bool isFixedLength, Nullable isNullable)
+		/// <param name="nullableMode">The nullable mode.</param>
+		public DbTypeDef(string name, DbSimpleType simpleType, DbNumDef numDef, int length, bool isFixedLength, DbNullability nullableMode)
 		{
 			this.name = name;
 			this.simpleType = simpleType;
@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Database
 			this.rawType = TypeConverter.GetRawType (this.simpleType, this.numDef);
 			this.length = length;
 			this.isFixedLength = isFixedLength;
-			this.isNullable = isNullable == Nullable.Yes;
+			this.isNullable = nullableMode == DbNullability.Yes;
 		}
 
 

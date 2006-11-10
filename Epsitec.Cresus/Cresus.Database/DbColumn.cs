@@ -525,7 +525,7 @@ namespace Epsitec.Cresus.Database
 			else if (typeConverter.GetRawTypeConverter (rawType, out rawConverter))
 			{
 				column = new SqlColumn ();
-				column.SetRawConverter (rawConverter);
+				column.SetConverter (rawConverter);
 			}
 			else
 			{
@@ -662,14 +662,31 @@ namespace Epsitec.Cresus.Database
 
 		#endregion
 
+		/// <summary>
+		/// Creates a localized column name.
+		/// </summary>
+		/// <param name="localizationSuffix">The localization suffix.</param>
+		/// <returns>The localized column name.</returns>
 		internal string MakeLocalizedName(string localizationSuffix)
 		{
 			return string.Concat (this.Name, " (", localizationSuffix, ")");
 		}
-		
+
+		/// <summary>
+		/// Creates a localized SQL column name.
+		/// </summary>
+		/// <param name="localizationSuffix">The localization suffix.</param>
+		/// <returns>The localized SQL column name.</returns>
 		internal string MakeLocalizedSqlName(string localizationSuffix)
 		{
-			return DbTools.MakeCompositeName (this.CreateSqlName (), DbSqlStandard.MakeSimpleSqlName (localizationSuffix));
+			if (string.IsNullOrEmpty (localizationSuffix))
+			{
+				return this.CreateSqlName ();
+			}
+			else
+			{
+				return DbTools.MakeCompositeName (this.CreateSqlName (), DbSqlStandard.MakeSimpleSqlName (localizationSuffix));
+			}
 		}
 
 		private static readonly Caption nullCaption = new Caption ();

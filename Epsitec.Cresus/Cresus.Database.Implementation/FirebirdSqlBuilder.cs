@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			foreach (SqlColumn column in table.Columns)
 			{
-				if (!column.Validate (this))
+				if (!this.ValidateName (column.Name))
 				{
 					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid column {0} in table {1}", column.Name, table.Name));
 				}
@@ -234,7 +234,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			foreach (SqlColumn column in columns)
 			{
-				if (!column.Validate (this))
+				if (!this.ValidateName (column.Name))
 				{
 					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid column {0} in table {1}", column.Name, tableName));
 				}
@@ -289,7 +289,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			foreach (SqlColumn column in columns)
 			{
-				if (!column.Validate (this))
+				if (!this.ValidateName (column.Name))
 				{
 					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid column {0} in table {1}", column.Name, tableName));
 				}
@@ -732,30 +732,30 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		private void Append(SqlAggregate sqlAggregate)
 		{
-			switch (sqlAggregate.Type)
+			switch (sqlAggregate.Function)
 			{
-				case SqlAggregateType.Count:
+				case SqlAggregateFunction.Count:
 					this.Append ("COUNT(");
 					break;
 				
-				case SqlAggregateType.Max:
+				case SqlAggregateFunction.Max:
 					this.Append ("MAX(");
 					break;
 				
-				case SqlAggregateType.Min:
+				case SqlAggregateFunction.Min:
 					this.Append ("MIN(");
 					break;
 				
-				case SqlAggregateType.Sum:
+				case SqlAggregateFunction.Sum:
 					this.Append ("SUM(");
 					break;
 				
-				case SqlAggregateType.Average:
+				case SqlAggregateFunction.Average:
 					this.Append ("AVG(");
 					break;
 				
 				default:
-					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Aggregate {0} not supported", sqlAggregate.Type));
+					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Aggregate {0} not supported", sqlAggregate.Function));
 			}
 			
 			this.Append (sqlAggregate.Field);

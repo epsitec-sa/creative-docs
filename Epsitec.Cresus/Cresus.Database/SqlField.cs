@@ -13,11 +13,11 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public sealed class SqlField : Epsitec.Common.Types.IName
 	{
-		internal SqlField()
+		public SqlField()
 		{
 		}
 
-		internal SqlField(string name)
+		public SqlField(string name)
 		{
 			//	Comme on ne sait pas à priori si l'appelant passe un nom qualifié ou un nom
 			//	simple, on doit bien l'analyser. On utiliser l'analyse SQL générique, dans
@@ -36,12 +36,12 @@ namespace Epsitec.Cresus.Database
 			this.value = name;
 		}
 		
-		internal SqlField(string name, string alias) : this (name)
+		public SqlField(string name, string alias) : this (name)
 		{
 			this.alias = alias;
 		}
 		
-		internal SqlField(string name, string alias, SqlFieldOrder order) : this (name, alias)
+		public SqlField(string name, string alias, SqlFieldOrder order) : this (name, alias)
 		{
 			this.order = order;
 		}
@@ -188,10 +188,12 @@ namespace Epsitec.Cresus.Database
 			{
 				if (this.type == SqlFieldType.Aggregate)
 				{
-					return this.value as SqlAggregate;
+					return (SqlAggregate) this.value;
 				}
-				
-				return null;
+				else
+				{
+					return SqlAggregate.Empty;
+				}
 			}
 		}
 		
@@ -470,7 +472,7 @@ namespace Epsitec.Cresus.Database
 			return field;
 		}
 		
-		public static SqlField CreateAggregate(SqlAggregateType aggregate_type, SqlField field)
+		public static SqlField CreateAggregate(SqlAggregateFunction aggregate_type, SqlField field)
 		{
 			return SqlField.CreateAggregate (new SqlAggregate(aggregate_type, field));
 		}

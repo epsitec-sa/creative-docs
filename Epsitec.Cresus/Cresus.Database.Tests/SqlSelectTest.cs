@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Database
 			sql_select.Tables.Add (SqlField.CreateName ("EMPLOYEE"));
 
 			SqlSelect sub_query = new SqlSelect ();
-			sub_query.Fields.Add (SqlField.CreateAggregate (SqlAggregateType.Max, SqlField.CreateName ("JOB_GRADE")));
+			sub_query.Fields.Add (SqlField.CreateAggregate (SqlAggregateFunction.Max, SqlField.CreateName ("JOB_GRADE")));
 			sub_query.Tables.Add (SqlField.CreateName ("EMPLOYEE"));
 
 			//	défini la fonction JOB_GRADE == max(JOB_GRADE)
@@ -307,7 +307,7 @@ namespace Epsitec.Cresus.Database
 			SqlSelect sql_select = new SqlSelect ();
 
 			sql_select.Fields.Add (SqlField.CreateName ("JOB_COUNTRY"));
-			sql_select.Fields.Add (SqlField.CreateAggregate (SqlAggregateType.Sum, SqlField.CreateName ("SALARY")));
+			sql_select.Fields.Add (SqlField.CreateAggregate (SqlAggregateFunction.Sum, SqlField.CreateName ("SALARY")));
 			sql_select.Fields.Add (SqlField.CreateName ("LAST_NAME"));
 
 			SqlField table = SqlField.CreateName ("EMPLOYEE");
@@ -316,7 +316,7 @@ namespace Epsitec.Cresus.Database
 
 			//	ajoute une condition HAVING... sur la somme
 			SqlFunction sql_func = new SqlFunction (SqlFunctionType.CompareGreaterThan, 
-				SqlField.CreateAggregate (SqlAggregateType.Sum, SqlField.CreateName ("SALARY")),
+				SqlField.CreateAggregate (SqlAggregateFunction.Sum, SqlField.CreateName ("SALARY")),
 				SqlField.CreateConstant (50000, DbRawType.Int16));
 			sql_select.Conditions.Add (SqlField.CreateFunction(sql_func));
 

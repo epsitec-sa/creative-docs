@@ -1,16 +1,20 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe SqlAggregate décrit une fonction de type aggrégat SQL. La
-	/// propriété Field peut faire référence à une colonne, une constante
-	/// ou une fonction, mais pas à un autre aggrégat.
+	/// The <c>SqlAggregate</c> structure describes an aggregate SQL function.
+	/// The field cannot itself be another aggregate.
 	/// </summary>
-	public class SqlAggregate
+	public struct SqlAggregate
 	{
-		public SqlAggregate(SqlAggregateType type, SqlField field)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlAggregate"/> structure.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="field">The field.</param>
+		public SqlAggregate(SqlAggregateFunction type, SqlField field)
 		{
 			switch (field.Type)
 			{
@@ -21,41 +25,54 @@ namespace Epsitec.Cresus.Database
 				case SqlFieldType.Function:
 				case SqlFieldType.Procedure:
 					break;
-				
+
 				default:
 					throw new System.NotSupportedException ("SqlField type not supported");
 			}
-			
-			this.type = type;
+
+			this.function  = type;
 			this.field = field;
 		}
-		
-		
-		public SqlAggregateType					Type
+
+		/// <summary>
+		/// Gets the aggregate function.
+		/// </summary>
+		/// <value>The aggregate function.</value>
+		public SqlAggregateFunction				Function
 		{
-			get { return this.type; }
+			get
+			{
+				return this.function;
+			}
 		}
-		
+
+		/// <summary>
+		/// Gets the field on which to apply the aggregate function.
+		/// </summary>
+		/// <value>The field.</value>
 		public SqlField							Field
 		{
-			get { return this.field; }
+			get
+			{
+				return this.field;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this aggregate is empty.
+		/// </summary>
+		/// <value><c>true</c> if this aggregate is empty; otherwise, <c>false</c>.</value>
+		public bool								IsEmpty
+		{
+			get
+			{
+				return (this.function == SqlAggregateFunction.Unknown) && (this.field == null);
+			}
 		}
 		
-		
-	
-		protected SqlAggregateType				type	= SqlAggregateType.Unsupported;
-		protected SqlField						field	= null;
-	}
-	
-	
-	public enum SqlAggregateType
-	{
-		Unsupported,
-		
-		Count,
-		Min,
-		Max,
-		Average,
-		Sum
+		public static readonly SqlAggregate		Empty;
+
+		private SqlAggregateFunction			function;
+		private SqlField						field;
 	}
 }

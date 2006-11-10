@@ -171,9 +171,9 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (DbRawType.Unknown, sql_field1.RawType);
 
 			//	crée un champ pour un aggrégat concernant la colonne ci-dessus
-			sql_field2 = SqlField.CreateAggregate (new SqlAggregate (SqlAggregateType.Sum, sql_field1));
+			sql_field2 = SqlField.CreateAggregate (new SqlAggregate (SqlAggregateFunction.Sum, sql_field1));
 			Assert.AreEqual (SqlFieldType.Aggregate, sql_field2.Type);
-			Assert.AreEqual (SqlAggregateType.Sum, sql_field2.AsAggregate.Type);
+			Assert.AreEqual (SqlAggregateFunction.Sum, sql_field2.AsAggregate.Function);
 			Assert.AreEqual (null, sql_field2.AsQualifiedName);
 			Assert.AreEqual (null, sql_field2.AsName);
 			Assert.AreEqual (null, sql_field2.Alias);
@@ -181,9 +181,9 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (DbRawType.Unknown, sql_field2.RawType);
 
 			//	idem en donnant juste le type d'aggrégat souhaité
-			sql_field2 = SqlField.CreateAggregate (SqlAggregateType.Count, sql_field1);
+			sql_field2 = SqlField.CreateAggregate (SqlAggregateFunction.Count, sql_field1);
 			Assert.AreEqual (SqlFieldType.Aggregate, sql_field2.Type);
-			Assert.AreEqual (SqlAggregateType.Count, sql_field2.AsAggregate.Type);
+			Assert.AreEqual (SqlAggregateFunction.Count, sql_field2.AsAggregate.Function);
 			Assert.AreEqual (null, sql_field2.AsQualifiedName);
 			Assert.AreEqual (null, sql_field2.AsName);
 			Assert.AreEqual (null, sql_field2.Alias);

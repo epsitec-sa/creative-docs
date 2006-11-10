@@ -1369,7 +1369,7 @@ namespace Epsitec.Cresus.Database
 			
 			SqlSelect query = new SqlSelect ();
 			
-			query.Fields.Add ("N", new SqlAggregate (SqlAggregateType.Count, SqlField.CreateAll ()));
+			query.Fields.Add ("N", new SqlAggregate (SqlAggregateFunction.Count, SqlField.CreateAll ()));
 			query.Tables.Add ("T", SqlField.CreateName (table_name));
 			
 			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName ("T", name_column), SqlField.CreateConstant (value, DbRawType.String)));

@@ -126,6 +126,8 @@
     <Compile Include="Collections\SqlFields.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DbNullability.cs" />
+    <Compile Include="SqlAggregateFunction.cs" />
     <Compile Include="IReplaceOptions.cs" />
     <Compile Include="DbLogEntry.cs" />
     <Compile Include="DbClientRecord.cs" />

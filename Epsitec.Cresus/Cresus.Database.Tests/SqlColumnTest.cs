@@ -8,9 +8,9 @@ namespace Epsitec.Cresus.Database
 		[Test] public void CheckNewSqlColumn()
 		{
 			SqlColumn sql_col_a = new SqlColumn ("A", DbRawType.Int32);
-			SqlColumn sql_col_b = new SqlColumn ("B", DbRawType.Int64, Nullable.Yes);
-			SqlColumn sql_col_c = new SqlColumn ("C", DbRawType.String, 100, false, Nullable.Undefined);
-			SqlColumn sql_col_d = new SqlColumn ("D", DbRawType.ByteArray, Nullable.Yes);
+			SqlColumn sql_col_b = new SqlColumn ("B", DbRawType.Int64, DbNullability.Yes);
+			SqlColumn sql_col_c = new SqlColumn ("C", DbRawType.String, 100, false, DbNullability.Undefined);
+			SqlColumn sql_col_d = new SqlColumn ("D", DbRawType.ByteArray, DbNullability.Yes);
 			
 			Assert.AreEqual ("A",				sql_col_a.Name);
 			Assert.AreEqual (DbRawType.Int32,	sql_col_a.Type);
