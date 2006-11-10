@@ -389,8 +389,8 @@ namespace Epsitec.Cresus.Database
 			DbTable db_table_a = infrastructure.ResolveDbTable (null, "Personnes");
 			DbTable db_table_b = infrastructure.ResolveDbTable (null, "Domiciles");
 			
-			infrastructure.UnregisterDbTable (null, db_table_a);
-			infrastructure.UnregisterDbTable (null, db_table_b);
+			infrastructure.UnregisterDbTable (, db_table_a);
+			infrastructure.UnregisterDbTable (, db_table_b);
 			
 			infrastructure.Dispose ();
 		}

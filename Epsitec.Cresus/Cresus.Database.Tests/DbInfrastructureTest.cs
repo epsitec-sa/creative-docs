@@ -204,10 +204,10 @@ namespace Epsitec.Cresus.Database
 				infrastructure.RegisterNewDbType (null, db_type_type);
 				infrastructure.RegisterNewDbType (null, db_type_data);
 
-				DbColumn col1 = infrastructure.CreateUserDataColumn ("Name", db_type_name);
-				DbColumn col2 = infrastructure.CreateUserDataColumn ("Level", db_type_level);
-				DbColumn col3 = infrastructure.CreateUserDataColumn ("Type", db_type_type);
-				DbColumn col4 = infrastructure.CreateUserDataColumn ("Data", db_type_data);
+				DbColumn col1 = DbInfrastructure.CreateUserDataColumn ("Name", db_type_name);
+				DbColumn col2 = DbInfrastructure.CreateUserDataColumn ("Level", db_type_level);
+				DbColumn col3 = DbInfrastructure.CreateUserDataColumn ("Type", db_type_type);
+				DbColumn col4 = DbInfrastructure.CreateUserDataColumn ("Data", db_type_data);
 
 				db_table1.Columns.AddRange (new DbColumn[] { col1, col2, col3, col4 });
 
@@ -305,7 +305,7 @@ namespace Epsitec.Cresus.Database
 
 				Assert.IsNotNull (db_table1);
 
-				infrastructure.UnregisterDbTable (null, db_table1);
+				infrastructure.UnregisterDbTable (db_table1);
 
 				DbTable db_table2 = infrastructure.ResolveDbTable (null, "SimpleTest");
 
@@ -341,9 +341,9 @@ namespace Epsitec.Cresus.Database
 
 				Assert.IsNotNull (db_table);
 
-				infrastructure.UnregisterDbTable (null, db_table);
+				infrastructure.UnregisterDbTable (db_table);
 				Assert.IsNull (infrastructure.ResolveDbTable (null, db_table.Name));
-				infrastructure.UnregisterDbTable (null, db_table);
+				infrastructure.UnregisterDbTable (db_table);
 			}
 		}
 

@@ -98,9 +98,9 @@ namespace Epsitec.Cresus.Database
 		{
 			DbTable table = new DbTable ("Test");
 			
-			DbColumn column_1 = this.infrastructure.CreateRefColumn ("A", "ParentTable", new DbTypeDef (Res.Types.Num.NullableKeyId));
-			DbColumn column_2 = this.infrastructure.CreateUserDataColumn ("X", new DbTypeDef (new Epsitec.Common.Types.DecimalType (-999999999.999999999M, 999999999.999999999M, 0.000000001M)));
-			DbColumn column_3 = this.infrastructure.CreateRefColumn ("Z", "Customer", new DbTypeDef (Res.Types.Num.NullableKeyId));
+			DbColumn column_1 = DbInfrastructure.CreateRefColumn ("A", "ParentTable", new DbTypeDef (Res.Types.Num.NullableKeyId));
+			DbColumn column_2 = DbInfrastructure.CreateUserDataColumn ("X", new DbTypeDef (new Epsitec.Common.Types.DecimalType (-999999999.999999999M, 999999999.999999999M, 0.000000001M)));
+			DbColumn column_3 = DbInfrastructure.CreateRefColumn ("Z", "Customer", new DbTypeDef (Res.Types.Num.NullableKeyId));
 			
 			table.Columns.Add (column_1);
 			table.Columns.Add (column_2);

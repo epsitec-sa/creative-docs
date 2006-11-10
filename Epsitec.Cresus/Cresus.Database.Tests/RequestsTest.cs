@@ -318,7 +318,7 @@ namespace Epsitec.Cresus.Database
 			
 			transaction.Commit ();
 			
-			infrastructure.UnregisterDbTable (null, db_table);
+			infrastructure.UnregisterDbTable (, db_table);
 		}
 #endif
 #if false
@@ -382,7 +382,7 @@ namespace Epsitec.Cresus.Database
 			orchestrator.ExecutionQueue.Enqueue (null, factory.CreateGroup ());
 			orchestrator.Dispose ();
 			
-			infrastructure.UnregisterDbTable (null, db_table);
+			infrastructure.UnregisterDbTable (, db_table);
 		}
 #endif
 		[Test] public void Check10ExecutionQueueDump()
@@ -881,7 +881,7 @@ namespace Epsitec.Cresus.Database
 		private static void DeleteTestTable(DbInfrastructure infrastructure, string name)
 		{
 			DbTable db_table = infrastructure.ResolveDbTable (null, name);
-			infrastructure.UnregisterDbTable (null, db_table);
+			infrastructure.UnregisterDbTable (db_table);
 		}
 		
 		

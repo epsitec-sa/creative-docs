@@ -518,56 +518,94 @@ namespace Epsitec.Cresus.Database
 					throw new Exceptions.GenericException (this.access, string.Format ("Unsupported category {0} specified for table '{1}'", category, name));
 			}
 		}
-		
-		public void      RegisterNewDbTable(DbTransaction transaction, DbTable table)
+
+		/// <summary>
+		/// Registers a new table for this database. This creates both the
+		/// metadata and the database table itself.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		public void RegisterNewDbTable(DbTransaction transaction, DbTable table)
 		{
 			this.RegisterDbTable (transaction, table, false);
 		}
-		
-		public void      RegisterKnownDbTable(DbTransaction transaction, DbTable table)
+
+		/// <summary>
+		/// Registers a known table for this database. This call is reserved for
+		/// the replication service which must be able to create tables in the
+		/// database for which there already exists metadata.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		public void RegisterKnownDbTable(DbTransaction transaction, DbTable table)
 		{
 			this.RegisterDbTable (transaction, table, true);
 		}
-		
-		public void      UnregisterDbTable(DbTransaction transaction, DbTable table)
+
+		/// <summary>
+		/// Unregisters a table from the database. The metadata is updated but
+		/// the real database table is not dropped for security reasons.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		public void UnregisterDbTable(DbTable table)
 		{
-			//	Supprime la description de la table de la base. Pour des raisons de sécurité,
-			//	la table SQL n'est pas réellement supprimée.
-			
-			if (transaction == null)
+			using (DbTransaction transaction = this.BeginTransaction ())
 			{
-				using (transaction = this.BeginTransaction ())
-				{
-					this.UnregisterDbTable (transaction, table);
-					transaction.Commit ();
-					return;
-				}
+				this.UnregisterDbTable (transaction, table);
+				transaction.Commit ();
 			}
+		}
+
+		/// <summary>
+		/// Unregisters a table from the database. The metadata is updated but
+		/// the real database table is not dropped for security reasons.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		public void UnregisterDbTable(DbTransaction transaction, DbTable table)
+		{
+			System.Diagnostics.Debug.Assert (transaction != null);
 			
 			this.CheckForKnownTable (transaction, table);
 			
-			DbKey old_key = table.Key;
-			DbKey new_key = new DbKey (old_key.Id, DbRowStatus.Deleted);
+			DbKey oldKey = table.Key;
+			DbKey newKey = new DbKey (oldKey.Id, DbRowStatus.Deleted);
 			
-			this.UpdateKeyInRow (transaction, Tags.TableTableDef, old_key, new_key);
+			this.UpdateKeyInRow (transaction, Tags.TableTableDef, oldKey, newKey);
 		}
-		
-		public DbTable   ResolveDbTable(DbTransaction transaction, string table_name)
+
+		/// <summary>
+		/// Resolves the database table definition with the specified name. This
+		/// will return the same object when called multiple times with the same
+		/// name, unless the cache is cleared with <c>ClearCaches</c>.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="tableName">Name of the table.</param>
+		/// <returns>The table definition.</returns>
+		public DbTable ResolveDbTable(DbTransaction transaction, string tableName)
 		{
-			DbKey key = this.FindDbTableKey (transaction, table_name);
+			DbKey key = this.FindDbTableKey (transaction, tableName);
 			return this.ResolveDbTable (transaction, key);
 		}
-		
-		public DbTable   ResolveDbTable(DbTransaction transaction, DbKey key)
+
+		/// <summary>
+		/// Resolves the database table definition with the specified key. This
+		/// will return the same object when called multiple times with the same
+		/// key, unless the cache is cleared with <c>ClearCaches</c>.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="key">The key to the table metadata.</param>
+		/// <returns>The table definition.</returns>
+		public DbTable ResolveDbTable(DbTransaction transaction, DbKey key)
 		{
 			if (key.IsEmpty)
 			{
 				return null;
 			}
 
-			lock (this.cache_db_tables)
+			lock (this.tableCache)
 			{
-				DbTable table = this.cache_db_tables[key];
+				DbTable table = this.tableCache[key];
 				
 				if (table == null)
 				{
@@ -575,90 +613,74 @@ namespace Epsitec.Cresus.Database
 					
 					if (tables.Count > 0)
 					{
-						table = tables[0];
-						
-//-						System.Diagnostics.Debug.WriteLine (string.Format ("Loaded {0} {1} from database.", table.GetType ().Name, table.Name));
 						System.Diagnostics.Debug.Assert (tables.Count == 1);
-						System.Diagnostics.Debug.Assert (table.Key == key);
+						System.Diagnostics.Debug.Assert (tables[0].Key == key);
+						System.Diagnostics.Debug.Assert (this.tableCache[key] == tables[0]);
+						
+						table = tables[0];
 					}
 				}
 				
 				return table;
 			}
 		}
-		
+
+		/// <summary>
+		/// Finds all live database table definitions belonging to the specified
+		/// category (either internal or user data).
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="category">The table category.</param>
+		/// <returns>The table definitions or an empty array.</returns>
 		public DbTable[] FindDbTables(DbTransaction transaction, DbElementCat category)
 		{
 			return this.FindDbTables (transaction, category, DbRowSearchMode.LiveActive);
 		}
-		
-		public DbTable[] FindDbTables(DbTransaction transaction, DbElementCat category, DbRowSearchMode row_search_mode)
+
+		/// <summary>
+		/// Finds the database table definitions belonging to the specified
+		/// category (either internal or user data).
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="category">The table category.</param>
+		/// <param name="rowSearchMode">The row search mode.</param>
+		/// <returns>The table definitions or an empty array.</returns>
+		public DbTable[] FindDbTables(DbTransaction transaction, DbElementCat category, DbRowSearchMode rowSearchMode)
 		{
-			//	Liste toutes les tables appartenant à la catégorie spécifiée.
-			
-			List<DbTable> list = this.LoadDbTable (transaction, DbKey.Empty, row_search_mode);
+			List<DbTable> list = this.LoadDbTable (transaction, DbKey.Empty, rowSearchMode);
 			
 			if (category != DbElementCat.Any)
 			{
-				for (int i = 0; i < list.Count; )
-				{
-					DbTable table = list[i];
-					
-					if (table.Category != category)
-					{
-						list.RemoveAt (i);
-					}
-					else
-					{
-						i++;
-					}
-				}
+				list.RemoveAll
+					(
+						delegate (DbTable table)
+						{
+							return table.Category != category;
+						}
+					);
 			}
 			
-			DbTable[] tables = new DbTable[list.Count];
-			list.CopyTo (tables, 0);
-			
-			return tables;
-		}
-		
-		
-		public void ClearCaches()
-		{
-			lock (this.cache_db_tables)
-			{
-				this.cache_db_tables.ClearCache ();
-			}
-			lock (this.cache_db_types)
-			{
-				this.cache_db_types.ClearCache ();
-			}
-		}
-		
-		public DbColumn CreateColumn(string columnName, DbTypeDef typeDef)
-		{
-			return new DbColumn (columnName, typeDef, DbColumnClass.Data, DbElementCat.ManagedUserData);
-		}
-		
-		public DbColumn[] CreateLocalisedColumns(string columnName, DbTypeDef typeDef)
-		{
-			//	TODO: crée la ou les colonnes localisées
-			
-			//	Note: utilise DbColumnClass.Data et DbElementCat.UserDataManaged pour ces
-			//	colonnes, puisqu'elles appartiennent à l'utilisateur.
-			
-			throw new System.NotImplementedException ("CreateLocalisedColumns not implemented.");
-		}
-		
-		public DbColumn[] CreateRefColumns(string columnName, string targetTableName)
-		{
-			//	Crée la ou les colonnes nécessaires à la définition d'une référence à une autre
-			//	table.
-			
-			DbTypeDef typeDef = this.internalTypes[Tags.TypeKeyId];
-			return new DbColumn[] { this.CreateRefColumn (columnName, targetTableName, typeDef) };
+			return list.ToArray ();
 		}
 
-		public DbColumn CreateRefColumn(string columnName, string targetTableName, DbTypeDef type)
+
+		/// <summary>
+		/// Clears the table and type caches. This will force a reload of the
+		/// table definitions and type definitions.
+		/// </summary>
+		public void ClearCaches()
+		{
+			lock (this.tableCache)
+			{
+				this.tableCache.ClearCache ();
+			}
+			lock (this.typeCache)
+			{
+				this.typeCache.ClearCache ();
+			}
+		}
+		
+		public static DbColumn CreateRefColumn(string columnName, string targetTableName, DbTypeDef type)
 		{
 			System.Diagnostics.Debug.Assert (type != null);
 			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (targetTableName));
@@ -670,7 +692,7 @@ namespace Epsitec.Cresus.Database
 			return column;
 		}
 
-		public DbColumn CreateUserDataColumn(string columnName, DbTypeDef type)
+		public static DbColumn CreateUserDataColumn(string columnName, DbTypeDef type)
 		{
 			System.Diagnostics.Debug.Assert (type != null);
 
@@ -839,9 +861,9 @@ namespace Epsitec.Cresus.Database
 
 			//	Trouve le type corredpondant à une clef spécifique.
 			
-			lock (this.cache_db_types)
+			lock (this.typeCache)
 			{
-				DbTypeDef typeDef = this.cache_db_types[key];
+				DbTypeDef typeDef = this.typeCache[key];
 				
 				if (typeDef == null)
 				{
@@ -855,7 +877,7 @@ namespace Epsitec.Cresus.Database
 						System.Diagnostics.Debug.Assert (types.Count == 1);
 						System.Diagnostics.Debug.Assert (typeDef.Key == key);
 						
-						this.cache_db_types[key] = typeDef;
+						this.typeCache[key] = typeDef;
 					}
 				}
 				
@@ -1600,7 +1622,7 @@ namespace Epsitec.Cresus.Database
 					string tableName = InvariantConverter.ToString (row["T_NAME"]);
 					DbKey  tableKey  = key.IsEmpty ? new DbKey (rowId) : key;
 					
-					dbTable = this.cache_db_tables[tableKey];
+					dbTable = this.tableCache[tableKey];
 					
 					if (dbTable == null)
 					{
@@ -1614,10 +1636,10 @@ namespace Epsitec.Cresus.Database
 						//	aussi d'éviter des boucles sans fin dans le cas de tables qui ont des références circulaires, car
 						//	la prochaine recherche avec ResolveDbTable s'appliquant à cette table se terminera avec succès.
 						
-						if ((tableKey.Status != DbRowStatus.Live) ||
+						if ((tableKey.Status == DbRowStatus.Live) ||
 							(tableKey.Status == DbRowStatus.Copied))
 						{
-							this.cache_db_tables[tableKey] = dbTable;
+							this.tableCache[tableKey] = dbTable;
 						}
 					}
 					else
@@ -2594,8 +2616,8 @@ namespace Epsitec.Cresus.Database
 		
 		string									localizations;
 		
-		Cache.DbTypeDefs						cache_db_types = new Cache.DbTypeDefs ();
-		Cache.DbTables							cache_db_tables = new Cache.DbTables ();
+		Cache.DbTypeDefs						typeCache = new Cache.DbTypeDefs ();
+		Cache.DbTables							tableCache = new Cache.DbTables ();
 
 		private List<DbTransaction> liveTransactions;
 		private List<IDbAbstraction> releaseRequested;

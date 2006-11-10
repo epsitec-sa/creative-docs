@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] public void Check99RemoveTable()
 		{
-			this.infrastructure.UnregisterDbTable (null, this.table);
+			this.infrastructure.UnregisterDbTable (this.table);
 			this.table = null;
 		}
 
