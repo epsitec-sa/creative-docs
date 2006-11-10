@@ -8,11 +8,24 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public enum SqlJoinCode
 	{
+		/// <summary>
+		/// Unknown join.
+		/// </summary>
 		Unknown,
 		
-		Inner,									//	A.a, B.b -> A INNER JOIN B ON A.a = B.b
+		/// <summary>
+		/// Inner join; A.a, B.b -&gt; A INNER JOIN B ON A.a = B.b.
+		/// </summary>
+		Inner,
 		
+		/// <summary>
+		/// Outer left join.
+		/// </summary>
 		OuterLeft,
+
+		/// <summary>
+		/// Outer right join.
+		/// </summary>
 		OuterRight
 	}
 }

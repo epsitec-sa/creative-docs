@@ -1,99 +1,107 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe SqlSelect décrit une requête SELECT. C'est l'une des requêtes
-	/// les plus complexes...
+	/// The <c>SqlSelect</c> class describes a SELECT command.
 	/// </summary>
-	public class SqlSelect
+	public sealed class SqlSelect
 	{
 		public SqlSelect()
 		{
 		}
-		
+
 
 		public void Add(SqlSelect set_query, SqlSelectSetOp set_op)
 		{
-			if (this.set_query == null)
+			if (this.setQuery == null)
 			{
 				if (set_op == SqlSelectSetOp.None)
 				{
 					throw new System.ArgumentException ("Invalid set operation");
 				}
-				
-				this.set_query = set_query;
-				this.set_op    = set_op;
+
+				this.setQuery = set_query;
+				this.setOp    = set_op;
 			}
 			else
 			{
-				this.set_query.Add (set_query, set_op);
+				this.setQuery.Add (set_query, set_op);
 			}
 		}
-		
-		
-		public SqlSelectPredicate				Predicate
+
+
+		public SqlSelectPredicate Predicate
 		{
-			get { return this.predicate; }
-			set { this.predicate = value; }
-		}
-		
-		public Collections.SqlFields			Fields
-		{
-			get { return this.field_coll; }
+			get
+			{
+				return this.predicate;
+			}
+			set
+			{
+				this.predicate = value;
+			}
 		}
 
-		public Collections.SqlFields			Tables
+		public Collections.SqlFields Fields
 		{
-			get { return this.table_coll; }
-		}
-		
-		public Collections.SqlFields			Conditions
-		{
-			get { return this.where_coll; }
+			get
+			{
+				return this.fields;
+			}
 		}
 
-		public Collections.SqlFields			Joins
+		public Collections.SqlFields Tables
 		{
-			get { return this.join_coll; }
+			get
+			{
+				return this.tables;
+			}
 		}
-		
-		
-		public SqlSelect						SelectSetQuery
+
+		public Collections.SqlFields Conditions
 		{
-			get { return this.set_query; }
+			get
+			{
+				return this.wheres;
+			}
 		}
-		
-		public SqlSelectSetOp					SelectSetOp
+
+		public Collections.SqlFields Joins
 		{
-			get { return this.set_op; }
+			get
+			{
+				return this.joins;
+			}
 		}
-		
-		
-		
-		protected Collections.SqlFields			field_coll	= new Collections.SqlFields ();
-		protected Collections.SqlFields			table_coll	= new Collections.SqlFields ();
-		protected Collections.SqlFields			where_coll	= new Collections.SqlFields ();
-		protected Collections.SqlFields			join_coll	= new Collections.SqlFields ();
-		
-		protected SqlSelectPredicate			predicate	= SqlSelectPredicate.All;
-		protected SqlSelectSetOp				set_op		= SqlSelectSetOp.None;
-		protected SqlSelect						set_query;
-	}
-	
-	public enum SqlSelectPredicate
-	{
-		All,									//	SELECT ALL ...
-		Distinct								//	SELECT DISTINCT ...
-	}
-	
-	public enum SqlSelectSetOp
-	{
-		None,									//	un seul SELECT, pas de combinaison...
-		
-		Union,									//	SELECT ... UNION [ALL|DISTINCT] SELECT ...
-		Except,									//	SELECT ... EXCEPT [ALL|DISTINCT] SELECT ...
-		Intersect								//	SELECT ... INTERSECT [ALL|DISTINCT] SELECT ...
+
+
+		public SqlSelect SelectSetQuery
+		{
+			get
+			{
+				return this.setQuery;
+			}
+		}
+
+		public SqlSelectSetOp SelectSetOp
+		{
+			get
+			{
+				return this.setOp;
+			}
+		}
+
+
+
+		private Collections.SqlFields fields	= new Collections.SqlFields ();
+		private Collections.SqlFields tables	= new Collections.SqlFields ();
+		private Collections.SqlFields wheres	= new Collections.SqlFields ();
+		private Collections.SqlFields joins	= new Collections.SqlFields ();
+
+		private SqlSelectPredicate predicate	= SqlSelectPredicate.All;
+		private SqlSelectSetOp setOp		= SqlSelectSetOp.None;
+		private SqlSelect setQuery;
 	}
 }
