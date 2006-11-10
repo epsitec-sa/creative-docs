@@ -204,10 +204,10 @@ namespace Epsitec.Cresus.Database
 				infrastructure.RegisterNewDbType (null, db_type_type);
 				infrastructure.RegisterNewDbType (null, db_type_data);
 
-				DbColumn col1 = DbInfrastructure.CreateUserDataColumn ("Name", db_type_name);
-				DbColumn col2 = DbInfrastructure.CreateUserDataColumn ("Level", db_type_level);
-				DbColumn col3 = DbInfrastructure.CreateUserDataColumn ("Type", db_type_type);
-				DbColumn col4 = DbInfrastructure.CreateUserDataColumn ("Data", db_type_data);
+				DbColumn col1 = DbTable.CreateUserDataColumn ("Name", db_type_name);
+				DbColumn col2 = DbTable.CreateUserDataColumn ("Level", db_type_level);
+				DbColumn col3 = DbTable.CreateUserDataColumn ("Type", db_type_type);
+				DbColumn col4 = DbTable.CreateUserDataColumn ("Data", db_type_data);
 
 				db_table1.Columns.AddRange (new DbColumn[] { col1, col2, col3, col4 });
 

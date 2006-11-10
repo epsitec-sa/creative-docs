@@ -668,6 +668,40 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Creates a foreign key reference column pointing to the specified target
+		/// table.
+		/// </summary>
+		/// <param name="columnName">Name of the column.</param>
+		/// <param name="targetTableName">Name of the target table.</param>
+		/// <param name="nullability">The column nullability.</param>
+		/// <returns>The column.</returns>
+		public static DbColumn CreateRefColumn(string columnName, string targetTableName, DbNullability nullability)
+		{
+			System.Diagnostics.Debug.Assert (nullability != DbNullability.Undefined);
+			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (targetTableName));
+
+			DbTypeDef  type = new DbTypeDef (nullability == DbNullability.Yes ? Res.Types.Num.NullableKeyId : Res.Types.Num.KeyId);
+			DbColumn column = new DbColumn (columnName, type, DbColumnClass.RefId, DbElementCat.ManagedUserData);
+
+			column.DefineTargetTableName (targetTableName);
+
+			return column;
+		}
+
+		/// <summary>
+		/// Creates a column for user data.
+		/// </summary>
+		/// <param name="columnName">Name of the column.</param>
+		/// <param name="type">The type.</param>
+		/// <returns>The column.</returns>
+		public static DbColumn CreateUserDataColumn(string columnName, DbTypeDef type)
+		{
+			System.Diagnostics.Debug.Assert (type != null);
+
+			return new DbColumn (columnName, type, DbColumnClass.Data, DbElementCat.ManagedUserData);
+		}
+
 		#region Private Methods
 
 		private void HandleColumnInserted(object sender, ValueEventArgs e)

@@ -680,25 +680,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public static DbColumn CreateRefColumn(string columnName, string targetTableName, DbTypeDef type)
-		{
-			System.Diagnostics.Debug.Assert (type != null);
-			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (targetTableName));
-
-			DbColumn column = new DbColumn (columnName, type, DbColumnClass.RefId, DbElementCat.ManagedUserData);
-
-			column.DefineTargetTableName (targetTableName);
-
-			return column;
-		}
-
-		public static DbColumn CreateUserDataColumn(string columnName, DbTypeDef type)
-		{
-			System.Diagnostics.Debug.Assert (type != null);
-
-			return new DbColumn (columnName, type, DbColumnClass.Data, DbElementCat.ManagedUserData);
-		}
-
 
 		public void RegisterColumnRelations(DbTransaction transaction, DbTable table)
 		{
