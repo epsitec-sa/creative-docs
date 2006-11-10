@@ -1162,24 +1162,24 @@ namespace Epsitec.Cresus.Database.Implementation
 
 			//	Traite encore les UNION s'il y a lieu :
 			
-			if (sqlQuery.SelectSetQuery != null)
+			if (sqlQuery.SetQuery != null)
 			{
-				switch (sqlQuery.SelectSetOp)
+				switch (sqlQuery.SetOp)
 				{
 					case SqlSelectSetOp.Union:		this.Append (" UNION ");		break;
 					case SqlSelectSetOp.Except:		this.Append (" EXCEPT ");		break;
 					case SqlSelectSetOp.Intersect:	this.Append (" INTERSECT ");	break;
 					
 					default:
-						throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid union {0} of 2 SELECT", sqlQuery.SelectSetOp));
+						throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid union {0} of 2 SELECT", sqlQuery.SetOp));
 				}
 
-				if (sqlQuery.SelectSetQuery.Predicate == SqlSelectPredicate.All)
+				if (sqlQuery.SetQuery.Predicate == SqlSelectPredicate.All)
 				{
 					this.Append ( "ALL ");
 				}
 
-				this.Append (sqlQuery.SelectSetQuery);
+				this.Append (sqlQuery.SetQuery);
 			}
 		}
 

@@ -8,31 +8,19 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public sealed class SqlSelect
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlSelect"/> class.
+		/// </summary>
 		public SqlSelect()
 		{
 		}
 
 
-		public void Add(SqlSelect set_query, SqlSelectSetOp set_op)
-		{
-			if (this.setQuery == null)
-			{
-				if (set_op == SqlSelectSetOp.None)
-				{
-					throw new System.ArgumentException ("Invalid set operation");
-				}
-
-				this.setQuery = set_query;
-				this.setOp    = set_op;
-			}
-			else
-			{
-				this.setQuery.Add (set_query, set_op);
-			}
-		}
-
-
-		public SqlSelectPredicate Predicate
+		/// <summary>
+		/// Gets or sets the SELECT predicate.
+		/// </summary>
+		/// <value>The SELECT predicate.</value>
+		public SqlSelectPredicate				Predicate
 		{
 			get
 			{
@@ -44,7 +32,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public Collections.SqlFields Fields
+		/// <summary>
+		/// Gets the fields for the columns.
+		/// </summary>
+		/// <value>The fields.</value>
+		public Collections.SqlFields			Fields
 		{
 			get
 			{
@@ -52,7 +44,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public Collections.SqlFields Tables
+		/// <summary>
+		/// Gets the tables.
+		/// </summary>
+		/// <value>The tables.</value>
+		public Collections.SqlFields			Tables
 		{
 			get
 			{
@@ -60,7 +56,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public Collections.SqlFields Conditions
+		/// <summary>
+		/// Gets the conditions for the WHERE clause.
+		/// </summary>
+		/// <value>The conditions.</value>
+		public Collections.SqlFields			Conditions
 		{
 			get
 			{
@@ -68,7 +68,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public Collections.SqlFields Joins
+		/// <summary>
+		/// Gets the joins.
+		/// </summary>
+		/// <value>The joins.</value>
+		public Collections.SqlFields			Joins
 		{
 			get
 			{
@@ -76,8 +80,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
-		public SqlSelect SelectSetQuery
+		/// <summary>
+		/// Gets the SELECT set query.
+		/// </summary>
+		/// <value>The SELECT set query.</value>
+		public SqlSelect						SetQuery
 		{
 			get
 			{
@@ -85,7 +92,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public SqlSelectSetOp SelectSetOp
+		/// <summary>
+		/// Gets the SELECT set operation.
+		/// </summary>
+		/// <value>The SELECT set operation.</value>
+		public SqlSelectSetOp					SetOp
 		{
 			get
 			{
@@ -94,14 +105,36 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Adds the specified set query.
+		/// </summary>
+		/// <param name="setQuery">The SELECT set query.</param>
+		/// <param name="setOp">The SELECT set operation.</param>
+		public void Add(SqlSelect setQuery, SqlSelectSetOp setOp)
+		{
+			if (this.setQuery == null)
+			{
+				if (setOp == SqlSelectSetOp.None)
+				{
+					throw new System.ArgumentException ("Invalid set operation");
+				}
 
-		private Collections.SqlFields fields	= new Collections.SqlFields ();
-		private Collections.SqlFields tables	= new Collections.SqlFields ();
-		private Collections.SqlFields wheres	= new Collections.SqlFields ();
-		private Collections.SqlFields joins	= new Collections.SqlFields ();
+				this.setQuery = setQuery;
+				this.setOp    = setOp;
+			}
+			else
+			{
+				this.setQuery.Add (setQuery, setOp);
+			}
+		}
 
-		private SqlSelectPredicate predicate	= SqlSelectPredicate.All;
-		private SqlSelectSetOp setOp		= SqlSelectSetOp.None;
-		private SqlSelect setQuery;
+		private Collections.SqlFields			fields	= new Collections.SqlFields ();
+		private Collections.SqlFields			tables	= new Collections.SqlFields ();
+		private Collections.SqlFields			wheres	= new Collections.SqlFields ();
+		private Collections.SqlFields			joins	= new Collections.SqlFields ();
+
+		private SqlSelectPredicate				predicate;
+		private SqlSelectSetOp					setOp;
+		private SqlSelect						setQuery;
 	}
 }
