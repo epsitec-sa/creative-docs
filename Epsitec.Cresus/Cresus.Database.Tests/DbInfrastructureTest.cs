@@ -117,9 +117,9 @@ namespace Epsitec.Cresus.Database
 				DbTypeNum    db_type_num  = infrastructure.CreateDbType ("NUPO", new DbNumDef (4, 0, 1000, 9999)) as DbTypeNum;
 				DbTypeEnum   db_type_enum = infrastructure.CreateDbType ("Titre", values) as DbTypeEnum;
 				
-				infrastructure.RegisterNewDbType (null, db_type_str);
-				infrastructure.RegisterNewDbType (null, db_type_num);
-				infrastructure.RegisterNewDbType (null, db_type_enum);
+				infrastructure.RegisterNewDbType (db_type_str);
+				infrastructure.RegisterNewDbType (db_type_num);
+				infrastructure.RegisterNewDbType (db_type_enum);
 				
 				DbType db_type_1 = infrastructure.ResolveDbType (null, "Nom");
 				DbType db_type_2 = infrastructure.ResolveDbType (null, "NUPO");
@@ -137,9 +137,9 @@ namespace Epsitec.Cresus.Database
 				infrastructure.Logger.CreateTemporaryEntry (null);
 
 #if false
-				infrastructure.UnregisterDbType (null, db_type_1);
-				infrastructure.UnregisterDbType (null, db_type_2);
-//				infrastructure.UnregisterDbType (null, db_type_3);
+				infrastructure.UnregisterDbType (db_type_1);
+				infrastructure.UnregisterDbType (db_type_2);
+//				infrastructure.UnregisterDbType (db_type_3);
 				
 				db_type_1 = infrastructure.ResolveDbType (null, "Nom");
 				db_type_2 = infrastructure.ResolveDbType (null, "NUPO");
@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.Database
 				
 				Assert.AreEqual ("Titre", db_type_3.Name);
 				
-				infrastructure.UnregisterDbType (null, db_type_3);
+				infrastructure.UnregisterDbType (db_type_3);
 				
 				db_type_3 = infrastructure.ResolveDbType (null, "Titre");
 				
@@ -199,10 +199,10 @@ namespace Epsitec.Cresus.Database
 				DbTypeDef db_type_type  = new DbTypeDef ("Type", DbSimpleType.String, null, 25, false, DbNullability.Yes);
 				DbTypeDef db_type_data  = new DbTypeDef ("Data", DbSimpleType.ByteArray, null, 0, false, DbNullability.Yes);
 
-				infrastructure.RegisterNewDbType (null, db_type_name);
-				infrastructure.RegisterNewDbType (null, db_type_level);
-				infrastructure.RegisterNewDbType (null, db_type_type);
-				infrastructure.RegisterNewDbType (null, db_type_data);
+				infrastructure.RegisterNewDbType (db_type_name);
+				infrastructure.RegisterNewDbType (db_type_level);
+				infrastructure.RegisterNewDbType (db_type_type);
+				infrastructure.RegisterNewDbType (db_type_data);
 
 				DbColumn col1 = DbTable.CreateUserDataColumn ("Name", db_type_name);
 				DbColumn col2 = DbTable.CreateUserDataColumn ("Level", db_type_level);

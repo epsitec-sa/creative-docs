@@ -34,11 +34,11 @@ namespace Epsitec.Cresus.Database
 			System.Console.Out.WriteLine ("Table {0} has {1} columns.", db_table_a.Name, db_table_a.Columns.Count);
 			System.Console.Out.WriteLine ("Table {0} has {1} columns.", db_table_b.Name, db_table_b.Columns.Count);
 			
-			infrastructure.RegisterNewDbTable (null, db_table_a);
-			infrastructure.RegisterNewDbTable (null, db_table_b);
+			infrastructure.RegisterNewDbTable (db_table_a);
+			infrastructure.RegisterNewDbTable (db_table_b);
 			
-			infrastructure.RegisterColumnRelations (null, db_table_a);
-			infrastructure.RegisterColumnRelations (null, db_table_b);
+			infrastructure.RegisterColumnRelations (db_table_a);
+			infrastructure.RegisterColumnRelations (db_table_b);
 			
 			SqlSelect select_a = new SqlSelect ();
 			SqlSelect select_b = new SqlSelect ();

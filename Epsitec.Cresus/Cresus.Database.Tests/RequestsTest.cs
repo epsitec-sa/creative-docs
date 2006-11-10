@@ -259,13 +259,13 @@ namespace Epsitec.Cresus.Database
 			if (db_type_name == null)
 			{
 				db_type_name = infrastructure.CreateDbType ("Customer Name", 80, false);
-				infrastructure.RegisterNewDbType (null, db_type_name);
+				infrastructure.RegisterNewDbType (db_type_name);
 			}
 			
 			if (db_type_date == null)
 			{
 				db_type_date = infrastructure.CreateDbTypeDateTime ("Birth Date");
-				infrastructure.RegisterNewDbType (null, db_type_date);
+				infrastructure.RegisterNewDbType (db_type_date);
 			}
 			
 			DbTable db_table = infrastructure.CreateDbTable ("Simple Exec Table Test", DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
@@ -824,13 +824,13 @@ namespace Epsitec.Cresus.Database
 			if (db_type_name == null)
 			{
 				db_type_name = infrastructure.CreateDbType ("Customer Name", 80, false);
-				infrastructure.RegisterNewDbType (null, db_type_name);
+				infrastructure.RegisterNewDbType (db_type_name);
 			}
 			
 			if (db_type_date == null)
 			{
 				db_type_date = infrastructure.CreateDbTypeDateTime ("Birth Date");
-				infrastructure.RegisterNewDbType (null, db_type_date);
+				infrastructure.RegisterNewDbType (db_type_date);
 			}
 			
 			Assert.IsNotNull (db_type_name);

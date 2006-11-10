@@ -679,152 +679,126 @@ namespace Epsitec.Cresus.Database
 				this.typeCache.ClearCache ();
 			}
 		}
-		
 
+
+		/// <summary>
+		/// Registers the column relations by generating the associated database
+		/// metadata. Every foreign key found in the table generates one relation.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
 		public void RegisterColumnRelations(DbTransaction transaction, DbTable table)
 		{
-			if (transaction == null)
+			System.Diagnostics.Debug.Assert (transaction != null);
+			
+			foreach (DbColumn column in table.Columns)
 			{
-				using (transaction = this.BeginTransaction ())
+				if (column.ColumnClass == DbColumnClass.RefId)
 				{
-					this.RegisterColumnRelations (transaction, table);
-					transaction.Commit ();
-					return;
-				}
-			}
-			
-			//	Passe en revue toutes les colonnes de type ID qui font référence à une table
-			//	et enregistre l'information dans la table de définition des références.
-			//
-			//	Note: il faut que les tables aient été enregistrées auprès de Crésus pour
-			//	que cette méthode fonctionne (on a besoin des IDs des tables et des colonnes
-			//	concernées).
-			
-			System.Collections.Hashtable ref_columns = new System.Collections.Hashtable ();
-			
-			for (int i = 0; i < table.Columns.Count; i++)
-			{
-				DbColumn column = table.Columns[i];
-				
-				switch (column.ColumnClass)
-				{
-					case DbColumnClass.RefId:
-						
-						string parent_name = column.TargetTableName;
-						
-						if (parent_name != null)
-						{
-							DbTable parent_table = this.ResolveDbTable (transaction, parent_name);
-							
-							if (parent_table == null)
-							{
-								string message = string.Format ("Table '{0}' referenced from '{1}.{2}' not found in database.", parent_name, table.Name, column.Name);
-								throw new Exceptions.GenericException (this.access, message);
-							}
-							
-							DbKey source_table_key  = table.Key;
-							DbKey source_column_key = column.Key;
-							DbKey parent_table_key  = parent_table.Key;
-							
-							if (source_table_key.IsEmpty)
-							{
-								string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered table '{1}'.", parent_name, table.Name, column.Name);
-								throw new Exceptions.GenericException (this.access, message);
-							}
-
-							if (source_column_key.IsEmpty)
-							{
-								string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered column '{2}'.", parent_name, table.Name, column.Name);
-								throw new Exceptions.GenericException (this.access, message);
-							}
-
-							if (parent_table_key.IsEmpty)
-							{
-								string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered table '{0}'.", parent_name, table.Name, column.Name);
-								throw new Exceptions.GenericException (this.access, message);
-							}
-							
-							this.UpdateColumnRelation (transaction, source_table_key, source_column_key, parent_table_key);
-						}
-						break;
+					string targetTableName = column.TargetTableName;
 					
-					default:
-						break;
+					if (! string.IsNullOrEmpty (targetTableName))
+					{
+						DbTable targetTable = this.ResolveDbTable (transaction, targetTableName);
+						
+						if (targetTable == null)
+						{
+							string message = string.Format ("Table '{0}' referenced from '{1}.{2}' not found in database", targetTableName, table.Name, column.Name);
+							throw new Exceptions.GenericException (this.access, message);
+						}
+						
+						DbKey sourceTableKey  = table.Key;
+						DbKey sourceColumnKey = column.Key;
+						DbKey targetTableKey  = targetTable.Key;
+						
+						if (sourceTableKey.IsEmpty)
+						{
+							string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered table '{1}'", targetTableName, table.Name, column.Name);
+							throw new Exceptions.GenericException (this.access, message);
+						}
+
+						if (sourceColumnKey.IsEmpty)
+						{
+							string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered column '{2}'", targetTableName, table.Name, column.Name);
+							throw new Exceptions.GenericException (this.access, message);
+						}
+
+						if (targetTableKey.IsEmpty)
+						{
+							string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered table '{0}'", targetTableName, table.Name, column.Name);
+							throw new Exceptions.GenericException (this.access, message);
+						}
+						
+						//	We have found a valid relation between the source column
+						//	and the arget table. Update it in our metadata:
+						
+						this.UpdateColumnRelation (transaction, sourceTableKey, sourceColumnKey, targetTableKey);
+					}
 				}
 			}
 		}
 
 
-		public void      RegisterNewDbType(DbTransaction transaction, DbTypeDef typeDef)
+		/// <summary>
+		/// Registers a new type and stores it into the database metadata.
+		/// </summary>
+		/// <param name="typeDef">The type definition.</param>
+		public void RegisterNewDbType(DbTypeDef typeDef)
 		{
-			//	Enregistre un nouveau type dans la base de données. Ceci va attribuer au
-			//	type une clef DbKey et vérifier qu'il n'y a pas de collision avec un
-			//	éventuel type déjà existant.
-			
-			if (transaction == null)
+			using (DbTransaction transaction = this.BeginTransaction ())
 			{
-				using (transaction = this.BeginTransaction ())
-				{
-					this.RegisterNewDbType (transaction, typeDef);
-					transaction.Commit ();
-					return;
-				}
+				this.RegisterNewDbType (transaction, typeDef);
+				transaction.Commit ();
 			}
+		}
+
+		/// <summary>
+		/// Registers a new type and stores it into the database metadata. If
+		/// a type with the same name already exists in the database, this will
+		/// throw an exception.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="typeDef">The type definition.</param>
+		public void RegisterNewDbType(DbTransaction transaction, DbTypeDef typeDef)
+		{
+			System.Diagnostics.Debug.Assert (transaction != null);
 			
 			this.CheckForUnknownType (transaction, typeDef);
 
-			long table_id = this.NewRowIdInTable (transaction, this.internalTables[Tags.TableTypeDef].Key, 1);
+			long tableId = this.NewRowIdInTable (transaction, this.internalTables[Tags.TableTypeDef], 1);
 
-#if false
-			//	TODO: handle enumeration types here:
-			
-			DbTypeEnum type_enum = typeDef as DbTypeEnum;
-			
-			long enum_id  = (type_enum == null) ? 0 : this.NewRowIdInTable (transaction, this.internal_tables[Tags.TableEnumValDef].Key, type_enum.Count);
-#endif
-
-			//	Crée la ligne de description du type :
-			
-			typeDef.DefineKey (new DbKey (table_id));
+			typeDef.DefineKey (new DbKey (tableId));
 			this.InsertTypeDefRow (transaction, typeDef);
-#if false
-			if (type_enum != null)
-			{
-				//	Crée les lignes de description des valeurs de l'énumération :
-				
-				int i = 0;
-				
-				foreach (DbEnumValue value in type_enum.Values)
-				{
-					value.DefineInternalKey (new DbKey (enum_id + i));
-					this.InsertEnumValueDefRow (transaction, type, value);
-					i++;
-				}
-			}
-#endif
 		}
-		
-		public void      UnregisterDbType(DbTransaction transaction, DbTypeDef typeDef)
+
+		/// <summary>
+		/// Unregisters the type from the database. This will not drop the
+		/// type but mark it as deleted for security reasons.
+		/// </summary>
+		/// <param name="typeDef">The type definition.</param>
+		public void UnregisterDbType(DbTypeDef typeDef)
 		{
-			//	Supprime la description du type de la base. Pour des raisons de sécurité,
-			//	le type SQL n'est pas réellement supprimé.
-			
-			if (transaction == null)
+			using (DbTransaction transaction = this.BeginTransaction ())
 			{
-				using (transaction = this.BeginTransaction ())
-				{
-					this.UnregisterDbType (transaction, typeDef);
-					transaction.Commit ();
-					return;
-				}
+				this.UnregisterDbType (transaction, typeDef);
+				transaction.Commit ();
 			}
-			
+		}
+
+		/// <summary>
+		/// Unregisters the type from the database. This will not drop the
+		/// type but mark it as deleted for security reasons.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="typeDef">The type definition.</param>
+		public void UnregisterDbType(DbTransaction transaction, DbTypeDef typeDef)
+		{
 			this.CheckForKnownType (transaction, typeDef);
 			
-			DbKey old_key = typeDef.Key;
-			DbKey new_key = new DbKey (old_key.Id, DbRowStatus.Deleted);
+			DbKey oldKey = typeDef.Key;
+			DbKey newKey = new DbKey (oldKey.Id, DbRowStatus.Deleted);
 			
-			this.UpdateKeyInRow (transaction, Tags.TableTypeDef, old_key, new_key);
+			this.UpdateKeyInRow (transaction, Tags.TableTypeDef, oldKey, newKey);
 		}
 		
 		public DbTypeDef ResolveDbType(DbTransaction transaction, string type_name)
@@ -1749,6 +1723,11 @@ namespace Epsitec.Cresus.Database
 		public long NextRowIdInTable(DbTransaction transaction, DbKey key)
 		{
 			return this.NewRowIdInTable (transaction, key, 0);
+		}
+
+		public long NewRowIdInTable(DbTransaction transaction, DbTable table, int numKeys)
+		{
+			return this.NewRowIdInTable (transaction, table.Key, numKeys);
 		}
 		
 		public long NewRowIdInTable(DbTransaction transaction, DbKey key, int numKeys)
