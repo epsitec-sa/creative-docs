@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Database
 				SqlField logIdName  = SqlField.CreateName (this.tableSqlName, Tags.ColumnId);
 				SqlField logIdValue = SqlField.CreateConstant (id.Value, DbKey.RawTypeForId);
 				
-				conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, logIdName, logIdValue));
+				conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, logIdName, logIdValue));
 				
 				transaction.SqlBuilder.RemoveData (this.table.CreateSqlName (), conditions);
 				int result = (int) this.infrastructure.ExecuteNonQuery (transaction);
@@ -211,8 +211,8 @@ namespace Epsitec.Cresus.Database
 				SqlField logIdVal1 = SqlField.CreateConstant (startId.Value, DbKey.RawTypeForId);
 				SqlField logIdVal2 = SqlField.CreateConstant (endId.Value, DbKey.RawTypeForId);
 				
-				conditions.Add (new SqlFunction (SqlFunctionType.CompareGreaterThanOrEqual, logIdName, logIdVal1));
-				conditions.Add (new SqlFunction (SqlFunctionType.CompareLessThanOrEqual, logIdName, logIdVal2));
+				conditions.Add (new SqlFunction (SqlFunctionCode.CompareGreaterThanOrEqual, logIdName, logIdVal1));
+				conditions.Add (new SqlFunction (SqlFunctionCode.CompareLessThanOrEqual, logIdName, logIdVal2));
 				
 				transaction.SqlBuilder.RemoveData (this.table.CreateSqlName (), conditions);
 				this.infrastructure.ExecuteSilent (transaction);
@@ -256,8 +256,8 @@ namespace Epsitec.Cresus.Database
 				
 				query.Tables.Add ("T", SqlField.CreateName (this.tableSqlName));
 				
-				query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareGreaterThanOrEqual, logIdName, logIdVal1));
-				query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareLessThanOrEqual, logIdName, logIdVal2));
+				query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareGreaterThanOrEqual, logIdName, logIdVal1));
+				query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareLessThanOrEqual, logIdName, logIdVal2));
 				
 				System.Data.DataTable table = this.infrastructure.ExecuteSqlSelect (transaction, query, 0);
 				

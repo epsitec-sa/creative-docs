@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Database
 			SqlSelect sql_select = new SqlSelect ();
 			sql_select.Predicate = SqlSelectPredicate.Distinct;
 
-			sql_select.Fields.Add (SqlField.CreateName ("LAST_NAME"), SqlFieldOrder.Inverse);
+			sql_select.Fields.Add (SqlField.CreateName ("LAST_NAME"), SqlSortOrder.Descending);
 			sql_select.Tables.Add (SqlField.CreateName ("EMPLOYEE"));
 
 			//	construit la commande d'extraction
@@ -160,14 +160,14 @@ namespace Epsitec.Cresus.Database
 			sql_select.Tables.Add (SqlField.CreateName ("EMPLOYEE"));
 
 			//	défini la fonction JOB_COUNTRY <> 'England'
-			SqlFunction sql_func = new SqlFunction (SqlFunctionType.CompareNotEqual, 
+			SqlFunction sql_func = new SqlFunction (SqlFunctionCode.CompareNotEqual, 
 													SqlField.CreateName("JOB_COUNTRY"),
 													SqlField.CreateConstant("England", DbRawType.String));
 
 			sql_select.Conditions.Add (SqlField.CreateFunction(sql_func));
 
 			//	et JOB_GRADE > 3
-			sql_func = new SqlFunction (SqlFunctionType.CompareGreaterThan, 
+			sql_func = new SqlFunction (SqlFunctionCode.CompareGreaterThan, 
 				SqlField.CreateName ("JOB_GRADE"),
 				SqlField.CreateConstant (3, DbRawType.Int16));
 
@@ -212,7 +212,7 @@ namespace Epsitec.Cresus.Database
 			sub_query.Tables.Add (SqlField.CreateName ("EMPLOYEE"));
 
 			//	défini la fonction JOB_GRADE == max(JOB_GRADE)
-			SqlFunction sql_func = new SqlFunction (SqlFunctionType.CompareEqual, 
+			SqlFunction sql_func = new SqlFunction (SqlFunctionCode.CompareEqual, 
 				SqlField.CreateName ("JOB_GRADE"),
 				SqlField.CreateSubQuery (sub_query));
 
@@ -264,13 +264,13 @@ namespace Epsitec.Cresus.Database
 			sql_select.Tables.Add (table3);
 
 			//	défini la fonction INNER JOIN ...
-			SqlJoin sql_join = new SqlJoin (SqlJoinType.Inner, 
+			SqlJoin sql_join = new SqlJoin (SqlJoinCode.Inner, 
 				SqlField.CreateName ("A1", "EMP_NO"), 
 				SqlField.CreateName ("A2", "EMP_NO"));
 			sql_select.Joins.Add (SqlField.CreateJoin(sql_join));
 
 			//	cumule un second INNER JOIN ...
-			sql_join = new SqlJoin (SqlJoinType.Inner, 
+			sql_join = new SqlJoin (SqlJoinCode.Inner, 
 				SqlField.CreateName ("A1", "PROJ_ID"), 
 				SqlField.CreateName ("A3", "PROJ_ID"));
 			sql_select.Joins.Add (sql_join);
@@ -315,13 +315,13 @@ namespace Epsitec.Cresus.Database
 			sql_select.Tables.Add (table);
 
 			//	ajoute une condition HAVING... sur la somme
-			SqlFunction sql_func = new SqlFunction (SqlFunctionType.CompareGreaterThan, 
+			SqlFunction sql_func = new SqlFunction (SqlFunctionCode.CompareGreaterThan, 
 				SqlField.CreateAggregate (SqlAggregateFunction.Sum, SqlField.CreateName ("SALARY")),
 				SqlField.CreateConstant (50000, DbRawType.Int16));
 			sql_select.Conditions.Add (SqlField.CreateFunction(sql_func));
 
 			//	ainsi qu'une condition sur le pays
-			sql_func = new SqlFunction (SqlFunctionType.CompareNotEqual, 
+			sql_func = new SqlFunction (SqlFunctionCode.CompareNotEqual, 
 				SqlField.CreateName("JOB_COUNTRY"),
 				SqlField.CreateConstant("England", DbRawType.String));
 			sql_select.Conditions.Add (SqlField.CreateFunction(sql_func));
@@ -361,7 +361,7 @@ namespace Epsitec.Cresus.Database
 			sql_select1.Tables.Add (SqlField.CreateName ("EMPLOYEE"));
 
 			//	défini la fonction JOB_COUNTRY == 'England'
-			SqlFunction sql_func = new SqlFunction (SqlFunctionType.CompareEqual, 
+			SqlFunction sql_func = new SqlFunction (SqlFunctionCode.CompareEqual, 
 				SqlField.CreateName("JOB_COUNTRY"),
 				SqlField.CreateConstant("England", DbRawType.String));
 
@@ -377,7 +377,7 @@ namespace Epsitec.Cresus.Database
 			sql_select2.Tables.Add (SqlField.CreateName ("EMPLOYEE"));
 
 			//	défini la fonction JOB_COUNTRY == 'Canada'
-			sql_func = new SqlFunction (SqlFunctionType.CompareEqual, 
+			sql_func = new SqlFunction (SqlFunctionCode.CompareEqual, 
 				SqlField.CreateName("JOB_CODE"),
 				SqlField.CreateConstant("Admin", DbRawType.String));
 

@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="field">The field.</param>
 		public SqlAggregate(SqlAggregateFunction type, SqlField field)
 		{
-			switch (field.Type)
+			switch (field.FieldType)
 			{
 				case SqlFieldType.All:
 				case SqlFieldType.Constant:

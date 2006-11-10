@@ -1322,7 +1322,7 @@ namespace Epsitec.Cresus.Database
 			
 			query.Tables.Add ("T", SqlField.CreateName (table_name));
 			
-			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName ("T", Tags.ColumnName), SqlField.CreateConstant (row_name, DbRawType.String)));
+			query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, SqlField.CreateName ("T", Tags.ColumnName), SqlField.CreateConstant (row_name, DbRawType.String)));
 			
 			System.Data.DataTable data_table = this.ExecuteSqlSelect (transaction, query, 0);
 			
@@ -1372,7 +1372,7 @@ namespace Epsitec.Cresus.Database
 			query.Fields.Add ("N", new SqlAggregate (SqlAggregateFunction.Count, SqlField.CreateAll ()));
 			query.Tables.Add ("T", SqlField.CreateName (table_name));
 			
-			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName ("T", name_column), SqlField.CreateConstant (value, DbRawType.String)));
+			query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, SqlField.CreateName ("T", name_column), SqlField.CreateConstant (value, DbRawType.String)));
 
 			DbInfrastructure.AddKeyExtraction (query.Conditions, "T", DbRowSearchMode.LiveActive);
 			
@@ -1687,7 +1687,7 @@ namespace Epsitec.Cresus.Database
 			SqlField fieldNextId = SqlField.CreateName (Tags.ColumnNextId);
 			SqlField fieldConstN = SqlField.CreateConstant (numKeys, DbRawType.Int32);
 			
-			fields.Add (Tags.ColumnNextId, new SqlFunction (SqlFunctionType.MathAdd, fieldNextId, fieldConstN));
+			fields.Add (Tags.ColumnNextId, new SqlFunction (SqlFunctionCode.MathAdd, fieldNextId, fieldConstN));
 			
 			DbInfrastructure.AddKeyExtraction (conds, Tags.TableTableDef, key);
 			
@@ -1829,7 +1829,7 @@ namespace Epsitec.Cresus.Database
 			SqlField name_col_id = SqlField.CreateName (table_name, Tags.ColumnId);
 			SqlField constant_id = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
 			
-			conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, name_col_id, constant_id));
+			conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, name_col_id, constant_id));
 		}
 
 		protected static void AddKeyExtraction(Collections.SqlFields conditions, string sourceTableName, string sourceColumnName, string parentTableName)
@@ -1837,7 +1837,7 @@ namespace Epsitec.Cresus.Database
 			SqlField parentColumnId = SqlField.CreateName (parentTableName, Tags.ColumnId);
 			SqlField sourceColumnId = SqlField.CreateName (sourceTableName, sourceColumnName);
 			
-			conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, sourceColumnId, parentColumnId));
+			conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, sourceColumnId, parentColumnId));
 		}
 		
 		protected static void AddKeyExtraction(Collections.SqlFields conditions, string source_table_name, string source_col_name, DbKey key)
@@ -1845,7 +1845,7 @@ namespace Epsitec.Cresus.Database
 			SqlField source_col_id = SqlField.CreateName (source_table_name, source_col_name);
 			SqlField constant_id   = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
 			
-			conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, source_col_id, constant_id));
+			conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, source_col_id, constant_id));
 		}
 
 		protected static void AddKeyExtraction(Collections.SqlFields conditions, string table_name, DbRowSearchMode search_mode)
@@ -1853,17 +1853,17 @@ namespace Epsitec.Cresus.Database
 			//	Génère la condition d'extraction pour une recherche selon le statut des lignes
 			//	(voir aussi la définition de DbRowStatus).
 			
-			SqlFunctionType function;
+			SqlFunctionCode function;
 			DbRowStatus     status;
 			
 			switch (search_mode)
 			{
-				case DbRowSearchMode.Copied:		status = DbRowStatus.Copied;		function = SqlFunctionType.CompareEqual;	break;
-				case DbRowSearchMode.Live:			status = DbRowStatus.Live;			function = SqlFunctionType.CompareEqual;	break;
-				case DbRowSearchMode.LiveActive:	status = DbRowStatus.ArchiveCopy;	function = SqlFunctionType.CompareLessThan;	break;
-				case DbRowSearchMode.ArchiveCopy:	status = DbRowStatus.ArchiveCopy;	function = SqlFunctionType.CompareEqual;	break;
-				case DbRowSearchMode.LiveAll:		status = DbRowStatus.Deleted;		function = SqlFunctionType.CompareLessThan;	break;
-				case DbRowSearchMode.Deleted:		status = DbRowStatus.Deleted;		function = SqlFunctionType.CompareEqual;	break;
+				case DbRowSearchMode.Copied:		status = DbRowStatus.Copied;		function = SqlFunctionCode.CompareEqual;	break;
+				case DbRowSearchMode.Live:			status = DbRowStatus.Live;			function = SqlFunctionCode.CompareEqual;	break;
+				case DbRowSearchMode.LiveActive:	status = DbRowStatus.ArchiveCopy;	function = SqlFunctionCode.CompareLessThan;	break;
+				case DbRowSearchMode.ArchiveCopy:	status = DbRowStatus.ArchiveCopy;	function = SqlFunctionCode.CompareEqual;	break;
+				case DbRowSearchMode.LiveAll:		status = DbRowStatus.Deleted;		function = SqlFunctionCode.CompareLessThan;	break;
+				case DbRowSearchMode.Deleted:		status = DbRowStatus.Deleted;		function = SqlFunctionCode.CompareEqual;	break;
 				
 				case DbRowSearchMode.All:
 					return;

@@ -1,80 +1,130 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe SqlField représente un champ SQL. Un champ peut être, en fonction
-	/// du contexte, un nom de colonne qualifié, une variable automatique SQL (?),
-	/// une constante, une fonction, une procédure ou une sous-requête SQL (subquery).
-	/// 
-	/// La représentation dans SqlField est indépendante de tout dialecte SQL. C'est
-	/// ISqlBuilder qui sait convertir un SqlField en sa représentation SQL.
+	/// The <c>SqlField</c> class represents a field in an SQL query. This can
+	/// be a qualified column name, a constant, a function, a subquery, etc. The
+	/// representation is independent from the SQL dialect.
 	/// </summary>
-	public sealed class SqlField : Epsitec.Common.Types.IName
+	public sealed class SqlField
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlField"/> class.
+		/// </summary>
 		public SqlField()
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlField"/> class.
+		/// </summary>
+		/// <param name="fieldType">Type of the field.</param>
+		private SqlField(SqlFieldType fieldType)
+		{
+			this.fieldType = fieldType;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlField"/> class.
+		/// </summary>
+		/// <param name="fieldType">Type of the field.</param>
+		/// <param name="value">The raw value.</param>
+		/// <param name="rawType">The raw type of the value.</param>
+		private SqlField(SqlFieldType fieldType, object value, DbRawType rawType)
+		{
+			this.fieldType = fieldType;
+			this.value     = value;
+			this.rawType   = rawType;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlField"/> class.
+		/// </summary>
+		/// <param name="name">The field name or qualified field name.</param>
 		public SqlField(string name)
 		{
-			//	Comme on ne sait pas à priori si l'appelant passe un nom qualifié ou un nom
-			//	simple, on doit bien l'analyser. On utiliser l'analyse SQL générique, dans
-			//	l'espoir qu'aucune implémentation de SQL n'utilise d'autres règles pour
-			//	définir un nom qualifié.
-			
 			if (DbSqlStandard.ValidateQualifiedName (name))
 			{
-				this.type = SqlFieldType.QualifiedName;
+				this.fieldType  = SqlFieldType.QualifiedName;
+				this.value = name;
 			}
 			else
 			{
-				this.type = SqlFieldType.Name;
+				this.fieldType  = SqlFieldType.Name;
+				this.value = name;
 			}
-			
-			this.value = name;
 		}
-		
-		public SqlField(string name, string alias) : this (name)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlField"/> class.
+		/// </summary>
+		/// <param name="name">The field name or qualified field name.</param>
+		/// <param name="alias">The alias.</param>
+		public SqlField(string name, string alias)
+			: this (name)
 		{
 			this.alias = alias;
 		}
-		
-		public SqlField(string name, string alias, SqlFieldOrder order) : this (name, alias)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlField"/> class.
+		/// </summary>
+		/// <param name="name">The field name or qualified field name.</param>
+		/// <param name="alias">The alias.</param>
+		/// <param name="order">The SQL sort order.</param>
+		public SqlField(string name, string alias, SqlSortOrder order)
+			: this (name, alias)
 		{
-			this.order = order;
+			this.sortOrder = order;
 		}
-		
-		
-		public SqlFieldType						Type
+
+
+		/// <summary>
+		/// Gets the field type.
+		/// </summary>
+		/// <value>The field type.</value>
+		public SqlFieldType						FieldType
 		{
 			get
 			{
-				return this.type;
+				return this.fieldType;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the raw type for the field.
+		/// </summary>
+		/// <value>The raw type for the field.</value>
 		public DbRawType						RawType
 		{
 			get
 			{
-				return this.raw_type;
+				return this.rawType;
 			}
 		}
-		
-		public SqlFieldOrder					Order
+
+		/// <summary>
+		/// Gets or sets the sort order.
+		/// </summary>
+		/// <value>The sort order.</value>
+		public SqlSortOrder						SortOrder
 		{
 			get
 			{
-				return this.order;
+				return this.sortOrder;
 			}
 			set
 			{
-				this.order = value;
+				this.sortOrder = value;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets or sets the alias.
+		/// </summary>
+		/// <value>The alias.</value>
 		public string							Alias
 		{
 			get
@@ -86,7 +136,11 @@ namespace Epsitec.Cresus.Database
 				this.alias = value;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the field value.
+		/// </summary>
+		/// <value>The field value.</value>
 		public object							Value
 		{
 			get
@@ -94,99 +148,133 @@ namespace Epsitec.Cresus.Database
 				return this.value;
 			}
 		}
-		
-		
+
+		/// <summary>
+		/// Gets the field value as a constant.
+		/// </summary>
+		/// <value>The field value as a constant.</value>
 		public object							AsConstant
 		{
 			get
 			{
-				if (this.type == SqlFieldType.Constant)
+				if (this.fieldType == SqlFieldType.Constant)
 				{
 					return this.value;
 				}
-				
-				return null;
+				else
+				{
+					return null;
+				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the field value as a parameter.
+		/// </summary>
+		/// <value>The field value as a parameter.</value>
 		public object							AsParameter
 		{
 			get
 			{
-				if ((this.type == SqlFieldType.ParameterIn) ||
-					(this.type == SqlFieldType.ParameterInOut) ||
-					(this.type == SqlFieldType.ParameterOut) ||
-					(this.type == SqlFieldType.ParameterResult))
+				if ((this.fieldType == SqlFieldType.ParameterIn) ||
+					(this.fieldType == SqlFieldType.ParameterInOut) ||
+					(this.fieldType == SqlFieldType.ParameterOut) ||
+					(this.fieldType == SqlFieldType.ParameterResult))
 				{
 					return this.value;
 				}
-				
-				return null;
+				else
+				{
+					return null;
+				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the field value as a name.
+		/// </summary>
+		/// <value>The field value as a name.</value>
 		public string							AsName
 		{
 			get
 			{
-				if (this.type == SqlFieldType.Name)
+				if (this.fieldType == SqlFieldType.Name)
 				{
 					return this.value as string;
 				}
-				if (this.type == SqlFieldType.QualifiedName)
+				else if (this.fieldType == SqlFieldType.QualifiedName)
 				{
 					string qualifier;
 					string name;
-					
+
 					DbSqlStandard.SplitQualifiedName (this.AsQualifiedName, out qualifier, out name);
-					
+
 					return name;
 				}
-				
-				return null;
+				else
+				{
+					return null;
+				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the field value as a qualified name.
+		/// </summary>
+		/// <value>The field value as a qualified name.</value>
 		public string							AsQualifiedName
 		{
 			get
 			{
-				if (this.type == SqlFieldType.QualifiedName)
+				if (this.fieldType == SqlFieldType.QualifiedName)
 				{
 					return this.value as string;
 				}
-				
-				return null;
+				else
+				{
+					return null;
+				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the field value as a qualifier.
+		/// </summary>
+		/// <value>The field value as a qualifier.</value>
 		public string							AsQualifier
 		{
 			get
 			{
-				if (this.type == SqlFieldType.Name)
+				if (this.fieldType == SqlFieldType.Name)
 				{
-					throw new Exceptions.FormatException (string.Format ("{0} is not a qualified name.", this.AsName));
+					throw new Exceptions.FormatException (string.Format ("{0} is not a qualified name", this.AsName));
 				}
-				if (this.type == SqlFieldType.QualifiedName)
+				
+				if (this.fieldType == SqlFieldType.QualifiedName)
 				{
 					string qualifier;
 					string name;
-					
+
 					DbSqlStandard.SplitQualifiedName (this.AsQualifiedName, out qualifier, out name);
-					
+
 					return qualifier;
 				}
-				
-				return null;
+				else
+				{
+					return null;
+				}
 			}
 		}
 
+		/// <summary>
+		/// Gets the field value as an aggregate.
+		/// </summary>
+		/// <value>The field value as an aggregate.</value>
 		public SqlAggregate						AsAggregate
 		{
 			get
 			{
-				if (this.type == SqlFieldType.Aggregate)
+				if (this.fieldType == SqlFieldType.Aggregate)
 				{
 					return (SqlAggregate) this.value;
 				}
@@ -196,342 +284,312 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the field value as a variable.
+		/// </summary>
+		/// <value>The field value as a variable.</value>
 		public object							AsVariable
 		{
 			get
 			{
-				if (this.type == SqlFieldType.Variable)
+				if (this.fieldType == SqlFieldType.Variable)
 				{
 					return this.value;
 				}
-				
-				return null;
+				else
+				{
+					return null;
+				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the field value as a function.
+		/// </summary>
+		/// <value>The field value as a function.</value>
 		public SqlFunction						AsFunction
 		{
 			get
 			{
-				if (this.type == SqlFieldType.Function)
+				if (this.fieldType == SqlFieldType.Function)
 				{
 					return this.value as SqlFunction;
 				}
-				
-				return null;
+				else
+				{
+					return null;
+				}
 			}
 		}
 
+		/// <summary>
+		/// Gets the field value as a join.
+		/// </summary>
+		/// <value>The field value as a join.</value>
 		public SqlJoin							AsJoin
 		{
 			get
 			{
-				if (this.type == SqlFieldType.Join)
+				if (this.fieldType == SqlFieldType.Join)
 				{
 					return this.value as SqlJoin;
 				}
-				
-				return null;
+				else
+				{
+					return null;
+				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the field value as a procedure.
+		/// </summary>
+		/// <value>The field value as a procedure.</value>
 		public string							AsProcedure
 		{
 			get
 			{
-				if (this.type == SqlFieldType.Procedure)
+				if (this.fieldType == SqlFieldType.Procedure)
 				{
 					return this.value as string;
 				}
-				
-				return null;
+				else
+				{
+					return null;
+				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the field value as a subquery.
+		/// </summary>
+		/// <value>The field value as a subquery.</value>
 		public SqlSelect						AsSubQuery
 		{
 			get
 			{
-				if (this.type == SqlFieldType.SubQuery)
+				if (this.fieldType == SqlFieldType.SubQuery)
 				{
 					return this.value as SqlSelect;
 				}
-				
-				return null;
+				else
+				{
+					return null;
+				}
 			}
 		}
 
 
-		#region IName Members
-
-		string Epsitec.Common.Types.IName.Name
-		{
-			get
-			{
-				return this.alias;
-			}
-		}
-
-		#endregion
-		
+		/// <summary>
+		/// Validates the field contents.
+		/// </summary>
+		/// <param name="validator">The validator.</param>
+		/// <returns><c>true</c> if the field is valid; otherwise, <c>false</c>.</returns>
 		public bool Validate(ISqlValidator validator)
 		{
-			//	TODO: valide en fonction du validator et du type du SqlField.
-			//
-			//	Il faudra compléter au fur et à mesure si ISqlValidator sait
-			//	valider d'autres types de champs. On pourrait imaginer valider
-			//	une procédure SQL...
-			
-			switch (this.Type)
+			switch (this.FieldType)
 			{
 				case SqlFieldType.Name:				return validator.ValidateName (this.AsName);
 				case SqlFieldType.QualifiedName:	return validator.ValidateQualifiedName (this.AsQualifiedName);
 			}
-			
+
 			return true;
 		}
 
+		/// <summary>
+		/// Clones this SQL field.
+		/// </summary>
+		/// <returns>The copied SQL field.</returns>
 		public SqlField Clone()
 		{
 			SqlField copy = new SqlField ();
-			
-			copy.type = this.type;
-			copy.order = this.order;
-			copy.raw_type = this.raw_type;
-			copy.value = this.value;
-			copy.alias = this.alias;
-			
+
+			copy.Overwrite (this);
+
 			return copy;
 		}
-		
-		
-		public void SetParameterOutResult(object raw_value)
+
+		/// <summary>
+		/// Sets the out result of <c>ISqlBuilder.GetSqlParameters</c>.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		public void SetParameterOutResult(object value)
 		{
-			if ((this.type == SqlFieldType.ParameterInOut) ||
-				(this.type == SqlFieldType.ParameterOut) ||
-				(this.type == SqlFieldType.ParameterResult))
+			if ((this.fieldType == SqlFieldType.ParameterInOut) ||
+				(this.fieldType == SqlFieldType.ParameterOut) ||
+				(this.fieldType == SqlFieldType.ParameterResult))
 			{
-				this.value = raw_value;
+				this.value = value;
 			}
 			else
 			{
 				throw new System.InvalidOperationException ("Field must be an 'out' parameter");
 			}
 		}
-		
+
+		/// <summary>
+		/// Overwrites this field with the contents of the specified field.
+		/// </summary>
+		/// <param name="field">The source field.</param>
 		public void Overwrite(SqlField field)
 		{
-			this.type     = field.type;
-			this.order    = field.order;
-			this.raw_type = field.raw_type;
-			this.alias    = field.alias;
-			this.value    = field.value;
+			this.fieldType = field.fieldType;
+			this.sortOrder = field.sortOrder;
+			this.rawType   = field.rawType;
+			this.alias     = field.alias;
+			this.value     = field.value;
 		}
-		
+
+
+		/// <summary>
+		/// Creates a field representing the <c>null</c> value.
+		/// </summary>
+		/// <returns>The field.</returns>
 		public static SqlField CreateNull()
 		{
-			SqlField field = new SqlField ();
-			
-			field.type = SqlFieldType.Null;
-			
-			return field;
+			return new SqlField (SqlFieldType.Null);
 		}
-		
+
+		/// <summary>
+		/// Creates a field representing the default value.
+		/// </summary>
+		/// <returns>The field.</returns>
 		public static SqlField CreateDefault()
 		{
+			return new SqlField (SqlFieldType.Default);
+		}
+
+		/// <summary>
+		/// Creates a field representing the specified constant value. The caller
+		/// must ensure that the raw value is compatible with the raw type, as
+		/// this is not enforced by this method.
+		/// </summary>
+		/// <param name="value">The raw value.</param>
+		/// <param name="type">The raw type.</param>
+		/// <returns>The field.</returns>
+		public static SqlField CreateConstant(object value, DbRawType type)
+		{
+			//	A constant has usually no alias name; if the constant is used for
+			//	an insert, then the alias will be mapped to the column name.
+
 			SqlField field = new SqlField ();
-			
-			field.type = SqlFieldType.Default;
-			
-			return field;
-		}
-		
-		public static SqlField CreateConstant(object raw_value, DbRawType raw_type)
-		{
-			//	Crée et initialise une instance de SqlField. Dans le cas
-			//	d'une constante, la valeur est 'raw_value', et le type de la
-			//	valeur est 'raw_type'. On espère que l'appelant utilise un
-			//	type cohérent (ex.: raw_value est un objet decimal, raw_type
-			//	est DbRawType.SmallDecimal et la valeur est "correcte"),
-			//	mais ce serait trop compliqué à vérifier ici.
-			
-			//	Exemple de constantes : 1.5, "X", etc.
-			
-			//	Une constante n'a généralement pas de nom d'alias, sauf si la
-			//	constante est un paramètre à insérer. Dans ce cas, le nom d'alias
-			//	est alors le nom de la colonne dans la table.
-			
-			SqlField field	= new SqlField ();
-			
-			//	Si on a reçu en entrée un DbId, on remplace silencieusement celui-
-			//	ci par un long :
-			
-			if (raw_value is DbId)
+
+			//	Automatically convert DbId to long and null to DBNull...
+
+			if (value is DbId)
 			{
-				raw_value = ((DbId) raw_value).Value;
+				value = ((DbId) value).Value;
 			}
-			if (raw_value == null)
+			else if (value == null)
 			{
-				raw_value = System.DBNull.Value;
+				value = System.DBNull.Value;
 			}
-			
-			field.type		= SqlFieldType.Constant;
-			field.raw_type	= raw_type;
-			field.value		= raw_value;
 
-			return field;
+			return new SqlField (SqlFieldType.Constant, value, type);
 		}
-		
-		public static SqlField CreateParameterIn(object raw_value, DbRawType raw_type)
-		{
-			return SqlField.CreateConstant (raw_value, raw_type);
-		}
-		
-		public static SqlField CreateParameterInOut(object raw_value, DbRawType raw_type)
-		{
-			SqlField field	= new SqlField ();
-			
-			field.type		= SqlFieldType.ParameterInOut;
-			field.raw_type	= raw_type;
-			field.value		= raw_value;
 
-			return field;
-		}
-		
-		public static SqlField CreateParameterOut(DbRawType raw_type)
+		public static SqlField CreateParameterIn(object value, DbRawType type)
 		{
-			SqlField field	= new SqlField ();
-			
-			field.type		= SqlFieldType.ParameterOut;
-			field.raw_type	= raw_type;
-//			field.value		= null;
-
-			return field;
+			return new SqlField (SqlFieldType.ParameterIn, value, type);
 		}
-		
-		public static SqlField CreateParameterResult(DbRawType raw_type)
+
+		public static SqlField CreateParameterInOut(object value, DbRawType type)
 		{
-			SqlField field	= new SqlField ();
-			
-			field.type		= SqlFieldType.ParameterResult;
-			field.raw_type	= raw_type;
-//			field.value		= null;
-
-			return field;
+			return new SqlField (SqlFieldType.ParameterInOut, value, type);
 		}
-		
+
+		public static SqlField CreateParameterOut(DbRawType type)
+		{
+			return new SqlField (SqlFieldType.ParameterOut, null, type);
+		}
+
+		public static SqlField CreateParameterResult(DbRawType type)
+		{
+			return new SqlField (SqlFieldType.ParameterResult, null, type);
+		}
+
 		public static SqlField CreateAll()
 		{
-			//	crée un champs pour représenter une sélection de tout ( * )
-			SqlField field	= new SqlField ();
-
-			field.type = SqlFieldType.All;
-
-			return field;
+			return new SqlField (SqlFieldType.All);
 		}
-		
+
 		public static SqlField CreateName(string name)
 		{
-			if (/*DbSqlStandard.ValidateQualifiedName (name) ||*/
-				DbSqlStandard.ValidateName (name) )
+			if (DbSqlStandard.ValidateName (name))
 			{
 				return new SqlField (name);
 			}
-			
-			throw new Exceptions.FormatException (string.Format ("{0} is not a valid SQL name.", name));
+
+			throw new Exceptions.FormatException (string.Format ("{0} is not a valid SQL name", name));
 		}
 
+		/// <summary>
+		/// Creates the qualified name based on the high level table name and
+		/// the SQL column name.
+		/// </summary>
+		/// <param name="column">The column.</param>
+		/// <returns>The field.</returns>
 		public static SqlField CreateName(DbColumn column)
 		{
-			string table_name = DbSqlStandard.MakeDelimitedIdentifier (column.Table.Name);
-			string column_name = column.CreateSqlName ();
-			
-			return SqlField.CreateName (table_name, column_name);
+			string tableName  = DbSqlStandard.MakeDelimitedIdentifier (column.Table.Name);
+			string columnName = column.CreateSqlName ();
+
+			return SqlField.CreateName (tableName, columnName);
 		}
-		
-		public static SqlField CreateName(string table_name, string column_name)
+
+		public static SqlField CreateName(string tableName, string columnName)
 		{
-			string name = DbSqlStandard.QualifyName (table_name, column_name);
-			
+			string name = DbSqlStandard.QualifyName (tableName, columnName);
+
 			if (DbSqlStandard.ValidateQualifiedName (name))
 			{
 				return new SqlField (name);
 			}
-			
+
 			throw new Exceptions.FormatException (string.Format ("{0} is not a valid SQL name.", name));
 		}
-		
+
 		public static SqlField CreateAggregate(SqlAggregate aggregate)
 		{
-			SqlField field	= new SqlField ();
-			
-			field.type		= SqlFieldType.Aggregate;
-			field.value		= aggregate;
+			return new SqlField (SqlFieldType.Aggregate, aggregate, DbRawType.Unknown);
+		}
 
-			return field;
-		}
-		
-		public static SqlField CreateAggregate(SqlAggregateFunction aggregate_type, SqlField field)
+		public static SqlField CreateAggregate(SqlAggregateFunction aggregateFunction, SqlField field)
 		{
-			return SqlField.CreateAggregate (new SqlAggregate(aggregate_type, field));
+			return SqlField.CreateAggregate (new SqlAggregate (aggregateFunction, field));
 		}
-		
+
 		public static SqlField CreateVariable()
 		{
-			SqlField field	= new SqlField ();
-			
-			field.type		= SqlFieldType.Variable;
-
-			return field;
+			return new SqlField (SqlFieldType.Variable);
 		}
-		
-		public static SqlField CreateFunction(SqlFunction sql_function)
+
+		public static SqlField CreateFunction(SqlFunction sqlFunction)
 		{
-			SqlField field	= new SqlField ();
-			
-			field.type		= SqlFieldType.Function;
-			field.value		= sql_function;
-
-			return field;
+			return new SqlField (SqlFieldType.Function, sqlFunction, DbRawType.Unknown);
 		}
 
-		public static SqlField CreateJoin(SqlJoin sql_join)
+		public static SqlField CreateJoin(SqlJoin sqlJoin)
 		{
-			SqlField field	= new SqlField ();
-			
-			field.type		= SqlFieldType.Join;
-			field.value		= sql_join;
-
-			return field;
+			return new SqlField (SqlFieldType.Join, sqlJoin, DbRawType.Unknown);
 		}
-		
-		public static SqlField CreateProcedure(string procedure_name)
+
+		public static SqlField CreateProcedure(string procedureName)
 		{
-			SqlField field	= new SqlField ();
-			
-			field.type		= SqlFieldType.Procedure;
-			field.value		= procedure_name;
-
-			return field;
+			return new SqlField (SqlFieldType.Procedure, procedureName, DbRawType.Unknown);
 		}
-		
-		public static SqlField CreateSubQuery(SqlSelect sub_query)
+
+		public static SqlField CreateSubQuery(SqlSelect subQuery)
 		{
-			SqlField field	= new SqlField ();
-			
-			field.type		= SqlFieldType.SubQuery;
-			field.value		= sub_query;
-
-			return field;
+			return new SqlField (SqlFieldType.SubQuery, subQuery, DbRawType.Unknown);
 		}
 
-		
-		
-		private SqlFieldType					type		= SqlFieldType.Unsupported;
-		private SqlFieldOrder order		= SqlFieldOrder.None;
-		private DbRawType raw_type	= DbRawType.Unknown;
-		private object value;
-		private string alias;
+
+		private SqlFieldType					fieldType;
+		private SqlSortOrder					sortOrder;
+		private DbRawType						rawType;
+		private object							value;
+		private string							alias;
 	}
 }

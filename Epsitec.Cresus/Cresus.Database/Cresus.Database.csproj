@@ -126,6 +126,8 @@
     <Compile Include="Collections\SqlFields.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SqlJoinCode.cs" />
+    <Compile Include="SqlFunctionCode.cs" />
     <Compile Include="DbNullability.cs" />
     <Compile Include="SqlAggregateFunction.cs" />
     <Compile Include="IReplaceOptions.cs" />
@@ -139,7 +141,7 @@
     <Compile Include="DbIdClass.cs" />
     <Compile Include="Options\ReplaceIgnoreColumns.cs" />
     <Compile Include="Res.cs" />
-    <Compile Include="SqlFieldOrder.cs" />
+    <Compile Include="SqlSortOrder.cs" />
     <Compile Include="SqlFieldType.cs" />
     <Compile Include="DbAccess.cs">
       <SubType>Code</SubType>

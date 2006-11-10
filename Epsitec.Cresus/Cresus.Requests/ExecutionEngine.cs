@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Requests
 				SqlField name  = SqlField.CreateName (sql_cond_columns[i].Name);
 				SqlField value = sql_cond_values[i];
 				
-				sql_cond_fields.Add (new SqlFunction (SqlFunctionType.CompareEqual, name, value));
+				sql_cond_fields.Add (new SqlFunction (SqlFunctionCode.CompareEqual, name, value));
 			}
 			
 			this.PrepareNewCommand ();

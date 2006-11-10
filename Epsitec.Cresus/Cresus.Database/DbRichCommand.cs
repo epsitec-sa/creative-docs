@@ -256,7 +256,7 @@ namespace Epsitec.Cresus.Database
 				
 				if (condition == null)
 				{
-					select.Conditions.Add (new SqlFunction (SqlFunctionType.CompareFalse));
+					select.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareFalse));
 				}
 				else
 				{
@@ -1302,7 +1302,7 @@ namespace Epsitec.Cresus.Database
 			SqlField fieldIdName  = SqlField.CreateName (sqlTableName, sqlColumns[0].Name);
 			SqlField fieldIdValue = sqlUpdate[0];
 			
-			sqlConds.Add (new SqlFunction (SqlFunctionType.CompareEqual, fieldIdName, fieldIdValue));
+			sqlConds.Add (new SqlFunction (SqlFunctionCode.CompareEqual, fieldIdName, fieldIdValue));
 			
 			
 			//	Create the UPDATE, INSERT and DELETE commands :

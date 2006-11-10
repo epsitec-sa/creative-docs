@@ -268,11 +268,11 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private string name;
-		private DbRawType type;
-		private bool isNullable;
-		private bool isFixedLength;
-		private int length;
-		private IRawTypeConverter converter;
+		private string							name;
+		private DbRawType						type;
+		private bool							isNullable;
+		private bool							isFixedLength;
+		private int								length;
+		private IRawTypeConverter				converter;
 	}
 }

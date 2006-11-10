@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Database
 		public void AddConditionIsNull(DbColumn a)
 		{
 			SqlField    field    = SqlField.CreateName (a);
-			SqlFunction function = new SqlFunction (SqlFunctionType.CompareIsNull, field);
+			SqlFunction function = new SqlFunction (SqlFunctionCode.CompareIsNull, field);
 			
 			this.sqlFields.Add (SqlField.CreateFunction (function));
 		}
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Database
 		public void AddConditionIsNotNull(DbColumn a)
 		{
 			SqlField    field    = SqlField.CreateName (a);
-			SqlFunction function = new SqlFunction (SqlFunctionType.CompareIsNotNull, field);
+			SqlFunction function = new SqlFunction (SqlFunctionCode.CompareIsNotNull, field);
 			
 			this.sqlFields.Add (SqlField.CreateFunction (function));
 		}
@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.Database
 				case DbCompareCombiner.Or:
 					if (this.sqlFields.Count > 0)
 					{
-						SqlField or = this.sqlFields.Merge (SqlFunctionType.LogicOr);
+						SqlField or = this.sqlFields.Merge (SqlFunctionCode.LogicOr);
 						fields.Add (or);
 					}
 					break;
@@ -235,18 +235,18 @@ namespace Epsitec.Cresus.Database
 			this.sqlFields.Add (SqlField.CreateFunction (function));
 		}
 		
-		private SqlFunctionType MapDbCompareToSqlFunctionType(DbCompare comparison)
+		private SqlFunctionCode MapDbCompareToSqlFunctionType(DbCompare comparison)
 		{
 			switch (comparison)
 			{
-				case DbCompare.Equal:				return SqlFunctionType.CompareEqual;
-				case DbCompare.NotEqual:			return SqlFunctionType.CompareNotEqual;
-				case DbCompare.LessThan:			return SqlFunctionType.CompareLessThan;
-				case DbCompare.LessThanOrEqual:		return SqlFunctionType.CompareLessThanOrEqual;
-				case DbCompare.GreaterThan:			return SqlFunctionType.CompareGreaterThan;
-				case DbCompare.GreaterThanOrEqual:	return SqlFunctionType.CompareGreaterThanOrEqual;
-				case DbCompare.Like:				return SqlFunctionType.CompareLike;
-				case DbCompare.NotLike:				return SqlFunctionType.CompareNotLike;
+				case DbCompare.Equal:				return SqlFunctionCode.CompareEqual;
+				case DbCompare.NotEqual:			return SqlFunctionCode.CompareNotEqual;
+				case DbCompare.LessThan:			return SqlFunctionCode.CompareLessThan;
+				case DbCompare.LessThanOrEqual:		return SqlFunctionCode.CompareLessThanOrEqual;
+				case DbCompare.GreaterThan:			return SqlFunctionCode.CompareGreaterThan;
+				case DbCompare.GreaterThanOrEqual:	return SqlFunctionCode.CompareGreaterThanOrEqual;
+				case DbCompare.Like:				return SqlFunctionCode.CompareLike;
+				case DbCompare.NotLike:				return SqlFunctionCode.CompareNotLike;
 			}
 			
 			throw new System.ArgumentException (string.Format ("Unsupported comparison {0}", comparison), "comparison");

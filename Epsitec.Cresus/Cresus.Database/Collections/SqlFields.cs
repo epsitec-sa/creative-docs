@@ -33,10 +33,10 @@ namespace Epsitec.Cresus.Database.Collections
 		/// </summary>
 		/// <param name="field">The field.</param>
 		/// <param name="order">The order.</param>
-		public void Add(SqlField field, SqlFieldOrder order)
+		public void Add(SqlField field, SqlSortOrder order)
 		{
 			field = field.Clone ();
-			field.Order = order;
+			field.SortOrder = order;
 			
 			this.Add (field);
 		}
@@ -47,11 +47,11 @@ namespace Epsitec.Cresus.Database.Collections
 		/// <param name="alias">The alias.</param>
 		/// <param name="field">The field.</param>
 		/// <param name="order">The order.</param>
-		public void Add(string alias, SqlField field, SqlFieldOrder order)
+		public void Add(string alias, SqlField field, SqlSortOrder order)
 		{
 			field = field.Clone ();
 			field.Alias = alias;
-			field.Order = order;
+			field.SortOrder = order;
 			
 			this.Add (field);
 		}
@@ -117,13 +117,13 @@ namespace Epsitec.Cresus.Database.Collections
 		/// </summary>
 		/// <param name="op">The SQL operation.</param>
 		/// <returns>A SQL field object encoding a function applied to all items.</returns>
-		public SqlField Merge(SqlFunctionType op)
+		public SqlField Merge(SqlFunctionCode op)
 		{
 			return SqlFields.Merge (op, this.ToArray ());
 		}
 		
 		
-		private static SqlField Merge(SqlFunctionType op, SqlField[] fields)
+		private static SqlField Merge(SqlFunctionCode op, SqlField[] fields)
 		{
 			int n = fields.Length;
 			

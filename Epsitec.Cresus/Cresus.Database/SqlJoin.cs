@@ -1,64 +1,78 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe SqlJoin décrit les jointures pour SqlSelect.
-	/// A priori, il y a toujours 2 arguments.
+	/// The <c>SqlJoin</c> class describes joins for <c>SqlSelect</c>.
 	/// </summary>
-	public class SqlJoin
+	public sealed class SqlJoin
 	{
-		public SqlJoin(SqlJoinType type, params SqlField[] fields)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlJoin"/> class.
+		/// </summary>
+		/// <param name="code">The join code.</param>
+		/// <param name="fields">The fields.</param>
+		public SqlJoin(SqlJoinCode code, params SqlField[] fields)
 		{
-			this.type = type;
-			
+			this.code = code;
+
 			if (fields.Length != 2)
 			{
-				throw new System.ArgumentOutOfRangeException (string.Format ("Join ({0}) requires 2 fields, got {1}.", type, fields.Length));
+				throw new System.ArgumentOutOfRangeException (string.Format ("Join ({0}) requires 2 fields, got {1}.", code, fields.Length));
 			}
-			
+
 			for (int i = 0; i < fields.Length; i++)
 			{
-				if (fields[i].Type != SqlFieldType.QualifiedName)
+				if (fields[i].FieldType != SqlFieldType.QualifiedName)
 				{
-					throw new System.ArgumentException (string.Format ("Join argument {0} must be a qualified names (specified {1}).", i, fields[i].Type));
+					throw new System.ArgumentException (string.Format ("Join argument {0} must be a qualified names (specified {1}).", i, fields[i].FieldType));
 				}
 			}
-			
+
 			this.a = fields[0];
 			this.b = fields[1];
 		}
-		
-		
-		public SqlJoinType						Type
+
+
+		/// <summary>
+		/// Gets the join code.
+		/// </summary>
+		/// <value>The join code.</value>
+		public SqlJoinCode						Code
 		{
-			get { return this.type; }
+			get
+			{
+				return this.code;
+			}
 		}
-		
+
+		/// <summary>
+		/// Gets the A field.
+		/// </summary>
+		/// <value>The A field.</value>
 		public SqlField							A
 		{
-			get { return this.a; }
+			get
+			{
+				return this.a;
+			}
 		}
-		
+
+		/// <summary>
+		/// Gets the B field.
+		/// </summary>
+		/// <value>The B field.</value>
 		public SqlField							B
 		{
-			get { return this.b; }
+			get
+			{
+				return this.b;
+			}
 		}
-		
-		
-		
-		protected SqlJoinType					type;
-		protected SqlField						a, b;
-	}
-	
-	public enum SqlJoinType
-	{
-		Unsupported,
-		
-		Inner,									//	A.a, B.b -> A INNER JOIN B ON A.a = B.b
-		
-		OuterLeft,
-		OuterRight
+
+
+		private SqlJoinCode						code;
+		private SqlField						a, b;
 	}
 }

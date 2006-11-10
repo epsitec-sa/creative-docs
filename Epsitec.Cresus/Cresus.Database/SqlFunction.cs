@@ -1,174 +1,183 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe SqlFunction décrit toute une famille de fonctions SQL:
-	/// des opérations mathématiques simples (+, -, *...), des opérations
-	/// de comparaison (=, &lt;, &gt;, &lt;&gt;, IS NULL, LIKE,...), des
-	/// tests d'appartenance (IN, NOT IN, BETWEEN, NOT BETWEEN, EXISTS,
-	/// NOT EXISTS...)
+	/// The <c>SqlFunction</c> class describes the SQL functions such as
+	/// simple mathematic operators (+, -, *, etc.), comparisons
+	/// (=, &lt;, &gt;, &lt;&gt;, IS NULL, LIKE, etc.) and tests (IN,
+	/// NOT IN, BETWEEN, NOT BETWEEN, EXISTS, NOT EXISTS, etc.).
 	/// </summary>
-	public class SqlFunction
+	public sealed class SqlFunction
 	{
-		public SqlFunction(SqlFunctionType type, params SqlField[] fields)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlFunction"/> class.
+		/// </summary>
+		/// <param name="code">The function code.</param>
+		/// <param name="fields">The fields.</param>
+		public SqlFunction(SqlFunctionCode code, params SqlField[] fields)
 		{
-			this.type = type;
-			
-			int count_provided  = fields.Length;
-			int count_expected = this.ArgumentCount;
-			
-			if (count_provided != count_expected)
+			this.code = code;
+
+			int countProvided = fields.Length;
+			int countExpected = this.ArgumentCount;
+
+			if (countProvided != countExpected)
 			{
-				throw new System.ArgumentOutOfRangeException (string.Format ("{0} requires {1} field(s).", type, count_expected));
+				throw new System.ArgumentOutOfRangeException (string.Format ("{0} requires {1} field(s).", code, countExpected));
 			}
-			
-			switch (count_provided)
+
+			switch (countProvided)
 			{
-				case 0: break;
-				case 1: this.a = fields[0]; break;
-				case 2: this.a = fields[0]; this.b = fields[1]; break;
-				case 3: this.a = fields[0]; this.b = fields[1]; this.c = fields[2]; break;
+				case 0:
+					break;
+				
+				case 1:
+					this.a = fields[0];
+					break;
+				
+				case 2:
+					this.a = fields[0];
+					this.b = fields[1];
+					break;
+				
+				case 3:
+					this.a = fields[0];
+					this.b = fields[1];
+					this.c = fields[2];
+					break;
 			}
 		}
-		
-		
-		public SqlFunctionType					Type
+
+
+		/// <summary>
+		/// Gets the function code.
+		/// </summary>
+		/// <value>The function code.</value>
+		public SqlFunctionCode					Code
 		{
-			get { return this.type; }
+			get
+			{
+				return this.code;
+			}
 		}
-		
+
+		/// <summary>
+		/// Gets the argument count.
+		/// </summary>
+		/// <value>The argument count.</value>
 		public int								ArgumentCount
 		{
 			get
 			{
-				switch (this.type)
+				switch (this.code)
 				{
-					case SqlFunctionType.MathAdd:
-					case SqlFunctionType.MathSubstract:
-					case SqlFunctionType.MathMultiply:
-					case SqlFunctionType.MathDivide:
-						return 2;
-					
-					
-					case SqlFunctionType.CompareEqual:
-					case SqlFunctionType.CompareNotEqual:
-					case SqlFunctionType.CompareLessThan:
-					case SqlFunctionType.CompareLessThanOrEqual:
-					case SqlFunctionType.CompareGreaterThan:
-					case SqlFunctionType.CompareGreaterThanOrEqual:
-						return 2;
-					
-					case SqlFunctionType.CompareIsNull:
-					case SqlFunctionType.CompareIsNotNull:
-						return 1;
-					
-					case SqlFunctionType.CompareLike:
-					case SqlFunctionType.CompareNotLike:
+					//	Math :
+
+					case SqlFunctionCode.MathAdd:
+					case SqlFunctionCode.MathSubstract:
+					case SqlFunctionCode.MathMultiply:
+					case SqlFunctionCode.MathDivide:
 						return 2;
 
-					case SqlFunctionType.CompareFalse:
-					case SqlFunctionType.CompareTrue:
+					// Comparisons :
+					
+					case SqlFunctionCode.CompareEqual:
+					case SqlFunctionCode.CompareNotEqual:
+					case SqlFunctionCode.CompareLessThan:
+					case SqlFunctionCode.CompareLessThanOrEqual:
+					case SqlFunctionCode.CompareGreaterThan:
+					case SqlFunctionCode.CompareGreaterThanOrEqual:
+						return 2;
+
+					case SqlFunctionCode.CompareIsNull:
+					case SqlFunctionCode.CompareIsNotNull:
+						return 1;
+
+					case SqlFunctionCode.CompareLike:
+					case SqlFunctionCode.CompareNotLike:
+						return 2;
+
+					case SqlFunctionCode.CompareFalse:
+					case SqlFunctionCode.CompareTrue:
 						return 0;
-					
-					
-					case SqlFunctionType.SetIn:
-					case SqlFunctionType.SetNotIn:
-						return 2;
-					
-					case SqlFunctionType.SetBetween:
-					case SqlFunctionType.SetNotBetween:
-						return 3;
-					
-					case SqlFunctionType.SetExists:
-					case SqlFunctionType.SetNotExists:
-						return 1;
-					
-					case SqlFunctionType.LogicNot:
-						return 1;
 
-					case SqlFunctionType.LogicAnd:
-					case SqlFunctionType.LogicOr:
+					//	Sets :
+
+					case SqlFunctionCode.SetIn:
+					case SqlFunctionCode.SetNotIn:
 						return 2;
 
-/*					case SqlFunctionType.JoinInner:
-						return 2;*/
-
-					case SqlFunctionType.Substring:
+					case SqlFunctionCode.SetBetween:
+					case SqlFunctionCode.SetNotBetween:
 						return 3;
 
-					case SqlFunctionType.Upper:
+					case SqlFunctionCode.SetExists:
+					case SqlFunctionCode.SetNotExists:
 						return 1;
+
+					//	Logic :
 					
+					case SqlFunctionCode.LogicNot:
+						return 1;
+
+					case SqlFunctionCode.LogicAnd:
+					case SqlFunctionCode.LogicOr:
+						return 2;
+
+					//	Other :
+					
+					case SqlFunctionCode.Substring:
+						return 3;
+
+					case SqlFunctionCode.Upper:
+						return 1;
+
 					default:
 						return 0;
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the A field.
+		/// </summary>
+		/// <value>The A field.</value>
 		public SqlField							A
 		{
-			get { return this.a; }
-		}
-		
-		public SqlField							B
-		{
-			get { return this.b; }
-		}
-		
-		public SqlField							C
-		{
-			get { return this.c; }
+			get
+			{
+				return this.a;
+			}
 		}
 
-		
-		protected SqlFunctionType				type;
-		protected SqlField						a, b, c;
-	}
-	
-	public enum SqlFunctionType
-	{
-		Unsupported,
-		
-		MathAdd,								//	a + b
-		MathSubstract,							//	a - b
-		MathMultiply,							//	a * b
-		MathDivide,								//	a / b
-		
-		CompareEqual,							//	a = b
-		CompareNotEqual,						//	a <> b
-		CompareLessThan,						//	a < b
-		CompareLessThanOrEqual,					//	a <= b
-		CompareGreaterThan,						//	a > b
-		CompareGreaterThanOrEqual,				//	a <= b
-		CompareIsNull,							//	a IS NULL
-		CompareIsNotNull,						//	a NOT IS NULL
-		CompareLike,							//	a LIKE b
-		CompareNotLike,							//	a NOT LIKE b
-		CompareFalse,							//	0 = 1
-		CompareTrue,							//	1 = 1
-		
-		SetIn,									//	a IN b
-		SetNotIn,								//	a NOT IN b
-		SetBetween,								//	a BETWEEN b AND c
-		SetNotBetween,							//	a NOT BETWEEN b AND c
-		SetExists,								//	a EXISTS
-		SetNotExists,							//	a NOT EXISTS
-		
-		LogicNot,								//	NOT a
-		LogicAnd,								//	a AND b
-		LogicOr,								//	a OR b
-		
-		Substring,								//	SUBSTRING(a FROM b FOR c)
-		Upper,									//	UPPER(a)
-		Cast,									//	CAST(a AS b)
-		
-		//	Equivalents :
-		
-		CompareNotLessThan						= CompareGreaterThanOrEqual,
-		CompareNotGreaterThan					= CompareLessThanOrEqual,
-		CompareNotLessThanOrEqual				= CompareGreaterThan,
-		CompareNotGreaterThanOrEqual			= CompareLessThan,
+		/// <summary>
+		/// Gets the B field.
+		/// </summary>
+		/// <value>The B field.</value>
+		public SqlField							B
+		{
+			get
+			{
+				return this.b;
+			}
+		}
+
+		/// <summary>
+		/// Gets the C field.
+		/// </summary>
+		/// <value>The C field.</value>
+		public SqlField							C
+		{
+			get
+			{
+				return this.c;
+			}
+		}
+
+
+		private SqlFunctionCode					code;
+		private SqlField						a, b, c;
 	}
 }

@@ -319,14 +319,14 @@ namespace Epsitec.Cresus.Database
 			field2.Alias = "Cr_REV";
 			
 			//	défini la fonction Cr_ID == 123
-			SqlFunction sql_func = new SqlFunction (SqlFunctionType.CompareEqual, 
+			SqlFunction sql_func = new SqlFunction (SqlFunctionCode.CompareEqual, 
 				SqlField.CreateName("Cr_ID"),
 				field1);
 
 			conditions.Add (SqlField.CreateFunction(sql_func));
 
 			//	défini la fonction Cr_REV == 456
-			sql_func = new SqlFunction (SqlFunctionType.CompareEqual, 
+			sql_func = new SqlFunction (SqlFunctionCode.CompareEqual, 
 				SqlField.CreateName("Cr_REV"),
 				field2);
 
@@ -543,7 +543,7 @@ namespace Epsitec.Cresus.Database
 			sql_select.Tables.Add (SqlField.CreateName ("FbTestArrayTable"));
 
 			//	défini la fonction CR_ID == valeur
-			SqlFunction sql_func = new SqlFunction (SqlFunctionType.CompareEqual, 
+			SqlFunction sql_func = new SqlFunction (SqlFunctionCode.CompareEqual, 
 				SqlField.CreateName ("Cr_ID"),
 				field_ID);
 
