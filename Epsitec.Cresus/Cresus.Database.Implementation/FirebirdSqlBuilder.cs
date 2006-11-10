@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 		public void InsertTable(SqlTable table)
 		{
-			if (!table.Validate (this))
+			if (!this.ValidateName (table.Name))
 			{
 				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid table {0}", table.Name));
 			}
