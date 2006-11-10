@@ -8,17 +8,16 @@ using Epsitec.Common.Types;
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe DbInfrastructure offre le support pour l'infrastructure
-	/// nécessaire à toute base de données "Crésus" (tables internes, méta-
-	/// données, etc.)
+	/// The <c>DbInfrastructure</c> class provides support for the database
+	/// infrastructure needed by CRESUS (internal tables, metadata, etc.)
 	/// </summary>
 	public sealed class DbInfrastructure : System.IDisposable
 	{
 		public DbInfrastructure()
 		{
 			this.localizations    = "fr";
-			this.liveTransactions = new System.Collections.Hashtable (20, 0.2f);
-			this.releaseRequested = new System.Collections.ArrayList ();
+			this.liveTransactions = new List<DbTransaction> ();
+			this.releaseRequested = new List<IDbAbstraction> ();
 		}
 		
 		
@@ -61,7 +60,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.sql_engine;
+				return this.sqlEngine;
 			}
 		}
 		
@@ -73,11 +72,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public ITypeConverter					TypeConverter
+		public ITypeConverter					Converter
 		{
 			get
 			{
-				return this.type_converter;
+				return this.converter;
 			}
 		}
 		
@@ -87,9 +86,7 @@ namespace Epsitec.Cresus.Database
 			{
 				lock (this.liveTransactions)
 				{
-					DbTransaction[] transactions = new DbTransaction[this.liveTransactions.Count];
-					this.liveTransactions.Values.CopyTo (transactions, 0);
-					return transactions;
+					return this.liveTransactions.ToArray ();
 				}
 			}
 		}
@@ -106,22 +103,14 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				if (this.clientManager == null)
+				if (this.LocalSettings.IsServer)
 				{
-					if (this.LocalSettings.IsServer)
-					{
-						this.clientManager = new DbClientManager ();
-						
-						using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
-						{
-							this.clientManager.Attach (this, this.ResolveDbTable (transaction, Tags.TableClientDef));
-							this.clientManager.LoadFromBase (transaction);
-							transaction.Commit ();
-						}
-					}
+					return this.clientManager;
 				}
-				
-				return this.clientManager;
+				else
+				{
+					return null;
+				}
 			}
 		}
 		
@@ -148,19 +137,31 @@ namespace Epsitec.Cresus.Database
 				return this.locals;
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Creates a new database using the specified database access. This
+		/// is only possible if the <c>DbInfrastructure</c> is not yet connected
+		/// to any database.
+		/// </summary>
+		/// <param name="access">The database access.</param>
 		public void CreateDatabase(DbAccess access)
 		{
-//-			System.Diagnostics.Debug.WriteLine ("Connect to DEBUGGER now");
-//-			System.Threading.Thread.Sleep (30*1000);
-			
-			//	Crée une base de données avec les structures de gestion requises par Crésus
-			//	(tables de description, etc.).
-			
+			this.CreateDatabase (access, false);
+		}
+
+		/// <summary>
+		/// Creates a new database using the specified database access. This
+		/// is only possible if the <c>DbInfrastructure</c> is not yet connected
+		/// to any database.
+		/// </summary>
+		/// <param name="access">The database access.</param>
+		/// <param name="isServer">If set to <c>true</c> creates the database for a server.</param>
+		public void CreateDatabase(DbAccess access, bool isServer)
+		{
 			if (this.access.IsValid)
 			{
-				throw new Exceptions.GenericException (this.access, "A database already exists for this DbInfrastructure.");
+				throw new Exceptions.GenericException (this.access, "A database already exists for this DbInfrastructure");
 			}
 			
 			this.access = access;
@@ -170,17 +171,18 @@ namespace Epsitec.Cresus.Database
 			
 			this.types.RegisterTypes ();
 			
-			//	La base de données vient d'être créée. Elle est donc toute vide (aucune
-			//	table n'est encore définie).
+			//	The database is now ready to be filled. At this point, it is totally
+			//	empty of any tables.
 			
 			System.Diagnostics.Debug.Assert (this.abstraction.QueryUserTableNames ().Length == 0);
-			
-			//	Il faut créer les tables internes utilisées pour la gestion des méta-données.
 			
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				BootHelper helper = new BootHelper (this, transaction);
-				
+
+				//	Create the tables required for our own metadata management. The
+				//	created tables must be commited before they can be populated.
+
 				helper.CreateTableTableDef ();
 				helper.CreateTableColumnDef ();
 				helper.CreateTableTypeDef ();
@@ -189,56 +191,56 @@ namespace Epsitec.Cresus.Database
 				helper.CreateTableRequestQueue ();
 				helper.CreateTableClientDef ();
 				
-				//	Valide la création de toutes ces tables avant de commencer à peupler
-				//	les tables. Firebird requiert ce mode de fonctionnement.
-				
 				transaction.Commit ();
 			}
 			
-			//	Les tables de description ont toutes été créées. Il faut maintenant les remplir
-			//	avec les informations de initiales.
+			//	TODO: handle clientId
+			this.clientId = 1;
+			
+			//	Fill the tables with the initial metadata.
 			
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				//	TODO: gérer client_id
-				
-				this.clientId = 1;
-				
 				this.SetupTables (transaction);
 				
-				//	Crée aussi les réglages globaux et locaux, ce qui va créer des tables dans
-				//	la base, donc nécessiter une validation de transaction avant que celles-ci
-				//	ne soient accessibles en écriture :
-				
+				transaction.Commit ();
+			}
+
+			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
+			{
 				Settings.Globals.CreateTable (this, transaction, Settings.Globals.Name, DbElementCat.Internal, DbRevisionMode.Disabled, DbReplicationMode.Automatic);
 				Settings.Locals.CreateTable (this, transaction, Settings.Locals.Name, DbElementCat.Internal, DbRevisionMode.Disabled, DbReplicationMode.None);
 				
 				transaction.Commit ();
 			}
 			
-			//	Crée les valeurs par défaut dans les réglages (Globals et Locals) :
+			//	Create the default values for the global and local settings :
 			
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				Settings.Globals globals = new Settings.Globals (this, transaction);
 				Settings.Locals  locals  = new Settings.Locals (this, transaction);
 				
-				globals.PersistToBase (transaction);
-				
 				locals.ClientId = this.clientId;
-				locals.IsServer = false;			//	TODO: gérer IsServer
+				locals.IsServer = isServer;
+
+				globals.PersistToBase (transaction);
 				locals.PersistToBase (transaction);
-				
-				globals = null;
-				locals  = null;
 
 				transaction.Commit ();
 			}
 			
+			//	The database is ready. Start using it...
+			
 			this.StartUsingDatabase ();
 		}
-		
-		public void AttachDatabase(DbAccess access)
+
+		/// <summary>
+		/// Attaches to an existing database. This is only possible if the
+		/// <c>DbInfrastructure</c> is not yet connected to any database.
+		/// </summary>
+		/// <param name="access">The database access.</param>
+		public void AttachToDatabase(DbAccess access)
 		{
 			if (this.access.IsValid)
 			{
@@ -249,6 +251,9 @@ namespace Epsitec.Cresus.Database
 			this.access.CreateDatabase = false;
 
 			this.InitializeDatabaseAbstraction ();
+			
+			//	The database must have user tables (at least, it has our metadata
+			//	tables)...
 			
 			System.Diagnostics.Debug.Assert (this.abstraction.QueryUserTableNames ().Length > 0);
 			
@@ -269,136 +274,199 @@ namespace Epsitec.Cresus.Database
 			
 			this.StartUsingDatabase ();
 		}
-		
-		public void SetupRoamingDatabase(int client_id)
+
+		/// <summary>
+		/// Sets up a roaming database. Call <c>AttachToDatabase</c> first.
+		/// </summary>
+		/// <param name="clientId">The current client id.</param>
+		public void SetupRoamingDatabase(int clientId)
 		{
-			if (this.clientId != client_id)
+			if (this.clientId != clientId)
 			{
 				using (DbTransaction transaction = this.BeginTransaction ())
 				{
-					//	Prend note du dernier ID stocké dans le LOG; il sert à définir le ID actif
-					//	au moment de la synchronisation (puisqu'on part d'une 'image' de la base,
-					//	ça revient à considérer qu'on a fait une synchronisation).
+					//	The last ID stored in the log is considered to be the active id at the
+					//	synchronization point (setting up a roaming database requires an image
+					//	of the server database to start its operations).
 					
-					DbId last_server_id = this.logger.CurrentId;
+					DbId lastServerId = this.logger.CurrentId;
 					
-					//	Les prochains IDs affectés aux diverses lignes des diverses tables vont
-					//	tous commencer à 1, combiné avec notre ID de client.
+					//	Since this is a fresh roaming database, all table ids will be reset to
+					//	one (1) :
 					
-					this.ResetIdColumn (transaction, this.internalTables[Tags.TableTableDef], Tags.ColumnNextId, DbId.CreateId (1, client_id));
+					this.ResetColumnData (transaction, this.internalTables[Tags.TableTableDef], Tags.ColumnNextId, DbId.CreateId (1, clientId));
 					
-					//	Vide les tables des requêtes et des clients, qui ne sont normalement pas
-					//	répliquées :
+					//	Clear tables which should not be replicated between the server and the
+					//	client databases :
 					
 					this.ClearTable (transaction, this.internalTables[Tags.TableRequestQueue]);
 					this.ClearTable (transaction, this.internalTables[Tags.TableClientDef]);
 					
-					//	Met à jour le Logger afin d'utiliser dès à présent notre ID de client :
+					//	Update the logger in order to use the new client id instead of the
+					//	id found in the copied database :
 					
 					this.logger.Detach ();
 					
 					this.logger = new DbLogger ();
-					this.logger.DefineClientId (client_id);
+					this.logger.DefineClientId (clientId);
 					this.logger.DefineInitialLogId (1);
 					this.logger.Attach (this, this.internalTables[Tags.TableLog]);
 					this.logger.CreateInitialEntry (transaction);
 					
-					//	Adapte les divers réglages locaux en fonction du client :
+					//	Define local settings based on the client :
 					
-					this.LocalSettings.ClientId  = client_id;
+					this.LocalSettings.ClientId  = clientId;
 					this.LocalSettings.IsServer  = false;
-					this.LocalSettings.SyncLogId = last_server_id.Value;
+					this.LocalSettings.SyncLogId = lastServerId.Value;
 					
 					this.LocalSettings.PersistToBase (transaction);
 					
-					//	...et dès maintenant, nous sommes prêts à travailler !
-					
 					transaction.Commit ();
 					
-					this.clientId = client_id;
+					this.clientId = clientId;
 				}
 			}
 		}
 
+		/// <summary>
+		/// Clears the table by removing all rows.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
 		private void ClearTable(DbTransaction transaction, DbTable table)
 		{
 			transaction.SqlBuilder.RemoveData (table.CreateSqlName (), null);
 			this.ExecuteNonQuery (transaction);
 		}
 
-		private void ResetIdColumn(DbTransaction transaction, DbTable table, string columnName, DbId id)
+		/// <summary>
+		/// Resets the data in the specified column to the specified value.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// <param name="columnName">Name of the column.</param>
+		/// <param name="data">The data.</param>
+		private void ResetColumnData(DbTransaction transaction, DbTable table, string columnName, DbId data)
 		{
-			DbColumn column     = table.Columns[columnName];
-			string   sql_column = column.CreateSqlName ();
-			
+			DbColumn              column = table.Columns[columnName];
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			
-			fields.Add (sql_column, SqlField.CreateConstant (id.Value, DbKey.RawTypeForId));
+			fields.Add (column.CreateSqlName (), SqlField.CreateConstant (data));
 			
 			transaction.SqlBuilder.UpdateData (table.CreateSqlName (), fields, null);
+			
 			this.ExecuteNonQuery (transaction);
 		}
-		
+
+		/// <summary>
+		/// Releases the database connection. If transactions are still active
+		/// for this database, the connection will be released autmatically
+		/// when the transactions finish.
+		/// </summary>
 		public void ReleaseConnection()
 		{
 			this.ReleaseConnection (this.abstraction);
 		}
-		
-		public void ReleaseConnection(IDbAbstraction abstraction)
+
+		/// <summary>
+		/// Releases the database connection. If transactions are still active
+		/// for this database, the connection will be released autmatically
+		/// when the transactions finish.
+		/// </summary>
+		/// <param name="abstraction">The database abstraction.</param>
+		private void ReleaseConnection(IDbAbstraction abstraction)
 		{
 			lock (this.liveTransactions)
 			{
-				if (this.liveTransactions.ContainsKey (abstraction))
+				foreach (DbTransaction item in this.liveTransactions)
 				{
-					this.releaseRequested.Add (abstraction);
+					if (item.Database == abstraction)
+					{
+						this.releaseRequested.Add (abstraction);
+						return;
+					}
 				}
-				else
-				{
-					abstraction.ReleaseConnection ();
-				}
-			}
+			}				
+			
+			abstraction.ReleaseConnection ();
 		}
 
 
-		public static DbAccess CreateDbAccess(string name)
+		/// <summary>
+		/// Creates the database access.
+		/// </summary>
+		/// <param name="name">The database file name.</param>
+		/// <returns>The database access.</returns>
+		public static DbAccess CreateDatabaseAccess(string name)
 		{
 			return new DbAccess ("Firebird", name, "localhost", "sysdba", "masterkey", false);
 		}
 
-		public static DbAccess CreateDbAccess(string provider, string name)
+		/// <summary>
+		/// Creates the database access.
+		/// </summary>
+		/// <param name="provider">The database provider.</param>
+		/// <param name="name">The database file name.</param>
+		/// <returns>The database access.</returns>
+		public static DbAccess CreateDatabaseAccess(string provider, string name)
 		{
 			return new DbAccess (provider, name, "localhost", "sysdba", "masterkey", false);
 		}
-		
-		
-		public IDbAbstraction CreateDbAbstraction()
+
+
+		/// <summary>
+		/// Creates a new database abstraction. This will create a new connection
+		/// with the database.
+		/// </summary>
+		/// <returns>The database abstraction.</returns>
+		public IDbAbstraction CreateDatabaseAbstraction()
 		{
-			IDbAbstraction abstraction = DbFactory.FindDbAbstraction (this.access);
+			IDbAbstraction abstraction = DbFactory.CreateDatabaseAbstraction (this.access);
 			
 			abstraction.SqlBuilder.AutoClear = true;
 			
 			return abstraction;
 		}
-		
-		
+
+
+		/// <summary>
+		/// Begins a read and write transaction for the default database abstraction.
+		/// </summary>
+		/// <returns>The transaction.</returns>
 		public DbTransaction BeginTransaction()
 		{
 			return this.BeginTransaction (DbTransactionMode.ReadWrite);
 		}
-		
+
+		/// <summary>
+		/// Begins the specified transaction for the default database abstraction.
+		/// </summary>
+		/// <param name="mode">The transaction mode.</param>
+		/// <returns>The transaction.</returns>
 		public DbTransaction BeginTransaction(DbTransactionMode mode)
 		{
 			return this.BeginTransaction (mode, this.abstraction);
 		}
-		
+
+		/// <summary>
+		/// Begins a transaction for the specified database abstraction.
+		/// </summary>
+		/// <param name="mode">The transaction mode.</param>
+		/// <param name="abstraction">The database abstraction.</param>
+		/// <returns>The transaction.</returns>
 		public DbTransaction BeginTransaction(DbTransactionMode mode, IDbAbstraction abstraction)
 		{
 			System.Diagnostics.Debug.Assert (abstraction != null);
 			
-			//	Débute une nouvelle transaction. Ceci n'est possible que si aucune
-			//	autre transaction n'est actuellement en cours sur cette connexion.
+			//	We currently allow a single transaction per database abstraction,
+			//	because some ADO.NET providers do not support cascaded transactions.
 			
 			DbTransaction transaction = null;
+			
+			//	Make sure we can get a lock on the database. If not, this means
+			//	that someone holds a global lock and we may not access the database
+			//	at all, even within a transaction. This is the case when restoring
+			//	a database, for instance.
 			
 			this.DatabaseLock (abstraction);
 			
@@ -415,7 +483,7 @@ namespace Epsitec.Cresus.Database
 						break;
 					
 					default:
-						throw new System.ArgumentOutOfRangeException ("mode", mode, string.Format ("Transaction mode {0} not accepted.", mode.ToString ()));
+						throw new System.ArgumentOutOfRangeException ("mode", mode, string.Format ("Transaction mode {0} not supported", mode.ToString ()));
 				}
 			}
 			catch
@@ -426,24 +494,28 @@ namespace Epsitec.Cresus.Database
 			
 			return transaction;
 		}
-		
-		
-		public DbTable   CreateDbTable(string name, DbElementCat category, DbRevisionMode revision_mode)
+
+
+		/// <summary>
+		/// Creates a minimal database table definition. This will only contain
+		/// the basic id and status columns required by <c>DbInfrastructure</c>.
+		/// </summary>
+		/// <param name="name">The table name.</param>
+		/// <param name="category">The category.</param>
+		/// <param name="revisionMode">The revision mode.</param>
+		/// <returns>The database table definition.</returns>
+		public DbTable CreateDbTable(string name, DbElementCat category, DbRevisionMode revisionMode)
 		{
-			//	Crée la description d'une table qui ne contient que le strict minimum nécessaire au fonctionnement
-			//	de Crésus (tuple pour la clef primaire, statut). Il faudra compléter les colonnes en fonction des
-			//	besoins, puis appeler la méthode RegisterNewDbTable.
-			
 			switch (category)
 			{
 				case DbElementCat.Internal:
-					throw new Exceptions.GenericException (this.access, string.Format ("User may not create internal table. Table '{0}'.", name));
+					throw new Exceptions.GenericException (this.access, string.Format ("Users may not create internal tables (table '{0}')", name));
 				
 				case DbElementCat.ManagedUserData:
-					return this.CreateTable(name, category, revision_mode, DbReplicationMode.Automatic);
+					return this.CreateTable(name, category, revisionMode, DbReplicationMode.Automatic);
 				
 				default:
-					throw new Exceptions.GenericException (this.access, string.Format ("Unsupported category {0} specified. Table '{1}'.", category, name));
+					throw new Exceptions.GenericException (this.access, string.Format ("Unsupported category {0} specified for table '{1}'", category, name));
 			}
 		}
 		
@@ -922,7 +994,7 @@ namespace Epsitec.Cresus.Database
 			
 			//	Finalement, il faut créer la table elle-même :
 			
-			SqlTable sql_table = table.CreateSqlTable (this.type_converter);
+			SqlTable sql_table = table.CreateSqlTable (this.converter);
 			
 			transaction.SqlBuilder.InsertTable (sql_table);
 			this.ExecuteSilent (transaction);
@@ -1048,12 +1120,15 @@ namespace Epsitec.Cresus.Database
 			
 			lock (this.liveTransactions)
 			{
-				if (this.liveTransactions.ContainsKey (abstraction))
+				foreach (DbTransaction item in this.liveTransactions)
 				{
-					throw new Exceptions.GenericException (this.access, string.Format ("Nested transactions not supported."));
+					if (item.Database == abstraction)
+					{
+						throw new Exceptions.GenericException (this.access, string.Format ("Nested transactions not supported."));
+					}
 				}
 				
-				this.liveTransactions[abstraction] = transaction;
+				this.liveTransactions.Add (transaction);
 			}
 		}
 		
@@ -1062,21 +1137,26 @@ namespace Epsitec.Cresus.Database
 			IDbAbstraction abstraction = transaction.Database;
 			
 			this.DatabaseUnlock (abstraction);
+
+			bool release = false;
 			
 			lock (this.liveTransactions)
 			{
-				if (this.liveTransactions[abstraction] != transaction)
+				if (this.liveTransactions.Remove (transaction) == false)
 				{
 					throw new Exceptions.GenericException (this.access, string.Format ("Ending wrong transaction."));
 				}
 				
-				this.liveTransactions.Remove (abstraction);
-				
 				if (this.releaseRequested.Contains (abstraction))
 				{
 					this.releaseRequested.Remove (abstraction);
-					this.ReleaseConnection (abstraction);
+					release = true;
 				}
+			}
+
+			if (release)
+			{
+				this.ReleaseConnection (abstraction);
 			}
 		}
 		
@@ -1093,7 +1173,7 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			this.sql_engine.Execute (command, this, transaction);
+			this.sqlEngine.Execute (command, this, transaction);
 		}
 		
 		
@@ -1129,7 +1209,7 @@ namespace Epsitec.Cresus.Database
 			using (System.Data.IDbCommand command = builder.CreateCommand (transaction.Transaction))
 			{
 				int result;
-				this.sql_engine.Execute (command, DbCommandType.Silent, count, out result);
+				this.sqlEngine.Execute (command, DbCommandType.Silent, count, out result);
 				return result;
 			}
 		}
@@ -1167,7 +1247,7 @@ namespace Epsitec.Cresus.Database
 			{
 				object data;
 				
-				this.sql_engine.Execute (command, DbCommandType.ReturningData, count, out data);
+				this.sqlEngine.Execute (command, DbCommandType.ReturningData, count, out data);
 				
 				return data;
 			}
@@ -1206,7 +1286,7 @@ namespace Epsitec.Cresus.Database
 			{
 				object data;
 				
-				this.sql_engine.Execute (command, DbCommandType.NonQuery, count, out data);
+				this.sqlEngine.Execute (command, DbCommandType.NonQuery, count, out data);
 				
 				return data;
 			}
@@ -1245,7 +1325,7 @@ namespace Epsitec.Cresus.Database
 			{
 				System.Data.DataSet data;
 				
-				this.sql_engine.Execute (command, DbCommandType.ReturningData, count, out data);
+				this.sqlEngine.Execute (command, DbCommandType.ReturningData, count, out data);
 				
 				return data;
 			}
@@ -1831,6 +1911,11 @@ namespace Epsitec.Cresus.Database
 				
 				this.clientId = this.locals.ClientId;
 				this.SetupLogger (transaction);
+
+				this.clientManager = new DbClientManager ();
+
+				this.clientManager.Attach (this, this.ResolveDbTable (transaction, Tags.TableClientDef));
+				this.clientManager.LoadFromBase (transaction);
 				
 				transaction.Commit ();
 			}
@@ -2089,12 +2174,12 @@ namespace Epsitec.Cresus.Database
 					System.Diagnostics.Debug.Assert (this.abstraction.IsConnectionOpen == false);
 					
 					this.abstraction = null;
-					this.sql_engine     = null;
-					this.type_converter = null;
+					this.sqlEngine     = null;
+					this.converter = null;
 				}
 				
-				System.Diagnostics.Debug.Assert (this.sql_engine == null);
-				System.Diagnostics.Debug.Assert (this.type_converter == null);
+				System.Diagnostics.Debug.Assert (this.sqlEngine == null);
+				System.Diagnostics.Debug.Assert (this.converter == null);
 			}
 		}
 		
@@ -2104,15 +2189,15 @@ namespace Epsitec.Cresus.Database
 		{
 			this.types = new TypeHelper (this);
 			
-			this.abstraction = this.CreateDbAbstraction ();
+			this.abstraction = this.CreateDatabaseAbstraction ();
 			
-			this.sql_engine  = this.abstraction.SqlEngine;
+			this.sqlEngine  = this.abstraction.SqlEngine;
 			
-			System.Diagnostics.Debug.Assert (this.sql_engine != null);
+			System.Diagnostics.Debug.Assert (this.sqlEngine != null);
 			
-			this.type_converter = this.abstraction.Factory.TypeConverter;
+			this.converter = this.abstraction.Factory.TypeConverter;
 			
-			System.Diagnostics.Debug.Assert (this.type_converter != null);
+			System.Diagnostics.Debug.Assert (this.converter != null);
 			
 			this.abstraction.SqlBuilder.AutoClear = true;
 		}
@@ -2276,7 +2361,7 @@ namespace Epsitec.Cresus.Database
 				
 				this.infrastructure.internalTables.Add (table);
 				
-				SqlTable sql_table = table.CreateSqlTable (this.infrastructure.type_converter);
+				SqlTable sql_table = table.CreateSqlTable (this.infrastructure.converter);
 				this.infrastructure.DefaultSqlBuilder.InsertTable (sql_table);
 				this.infrastructure.ExecuteSilent (this.transaction);
 			}
@@ -2492,8 +2577,8 @@ namespace Epsitec.Cresus.Database
 		private DbAccess access;
 		private IDbAbstraction abstraction;
 
-		private ISqlEngine sql_engine;
-		private ITypeConverter type_converter;
+		private ISqlEngine sqlEngine;
+		private ITypeConverter converter;
 		
 		private TypeHelper						types;
 		private DbLogger						logger;
@@ -2512,8 +2597,8 @@ namespace Epsitec.Cresus.Database
 		Cache.DbTypeDefs						cache_db_types = new Cache.DbTypeDefs ();
 		Cache.DbTables							cache_db_tables = new Cache.DbTables ();
 
-		private System.Collections.Hashtable liveTransactions;
-		private System.Collections.ArrayList releaseRequested;
+		private List<DbTransaction> liveTransactions;
+		private List<IDbAbstraction> releaseRequested;
 		private int lockTimeout = 15000;
 		System.Threading.ReaderWriterLock		globalLock = new System.Threading.ReaderWriterLock ();
 	}

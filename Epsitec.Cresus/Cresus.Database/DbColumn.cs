@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="name">The name.</param>
 		/// <param name="type">The type.</param>
 		public DbColumn(string name, DbTypeDef type)
+			: this ()
 		{
 			this.DefineName (name);
 			this.DefineType (type);
@@ -37,6 +38,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="captionId">The caption DRUID.</param>
 		/// <param name="type">The type.</param>
 		public DbColumn(Druid captionId, DbTypeDef type)
+			: this ()
 		{
 			this.DefineType (type);
 			this.DefineCaptionId (captionId);
@@ -123,7 +125,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the caption for the column.
 		/// </summary>
 		/// <value>The caption or <c>null</c> if the <c>CaptionId</c> is not valid.</value>
-		public Caption Caption
+		public Caption							Caption
 		{
 			get
 			{
@@ -149,7 +151,7 @@ namespace Epsitec.Cresus.Database
 		/// metadata.
 		/// </summary>
 		/// <value>The key.</value>
-		public DbKey Key
+		public DbKey							Key
 		{
 			get
 			{
@@ -163,7 +165,7 @@ namespace Epsitec.Cresus.Database
 		/// another table (foreign key).
 		/// </summary>
 		/// <value>The name of the target table.</value>
-		public string TargetTableName
+		public string							TargetTableName
 		{
 			get
 			{
@@ -177,7 +179,7 @@ namespace Epsitec.Cresus.Database
 		/// which is used to create the relation.
 		/// </summary>
 		/// <value>The name of the target column.</value>
-		public string TargetColumnName
+		public string							TargetColumnName
 		{
 			get
 			{
@@ -196,7 +198,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the containing table.
 		/// </summary>
 		/// <value>The containing table.</value>
-		public DbTable Table
+		public DbTable							Table
 		{
 			get
 			{
@@ -209,7 +211,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <value>The index of the column or <c>-1</c> if the column does not
 		/// belong to a table.</value>
-		public int TableColumnIndex
+		public int								TableColumnIndex
 		{
 			get
 			{
@@ -229,7 +231,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the type of the column.
 		/// </summary>
 		/// <value>The type definition.</value>
-		public DbTypeDef Type
+		public DbTypeDef						Type
 		{
 			get
 			{
@@ -242,11 +244,23 @@ namespace Epsitec.Cresus.Database
 		/// Gets the category of the column (internal column or user data).
 		/// </summary>
 		/// <value>The category.</value>
-		public DbElementCat Category
+		public DbElementCat						Category
 		{
 			get
 			{
 				return this.category;
+			}
+		}
+
+		/// <summary>
+		/// Gets the revision mode for the column.
+		/// </summary>
+		/// <value>The revision mode.</value>
+		public DbRevisionMode					RevisionMode
+		{
+			get
+			{
+				return this.revisionMode;
 			}
 		}
 
@@ -257,7 +271,7 @@ namespace Epsitec.Cresus.Database
 		/// <value>
 		/// 	<c>true</c> if this column is a primary key; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsPrimaryKey
+		public bool								IsPrimaryKey
 		{
 			get
 			{
@@ -270,7 +284,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the column localization.
 		/// </summary>
 		/// <value>The column localization.</value>
-		public DbColumnLocalization Localization
+		public DbColumnLocalization				Localization
 		{
 			get
 			{
@@ -282,7 +296,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the column class (data, reference, key, etc.).
 		/// </summary>
 		/// <value>The column class.</value>
-		public DbColumnClass ColumnClass
+		public DbColumnClass					ColumnClass
 		{
 			get
 			{
@@ -310,6 +324,28 @@ namespace Epsitec.Cresus.Database
 			else
 			{
 				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot define a new category", this.Name));
+			}
+		}
+
+		/// <summary>
+		/// Defines the revision mode. A column revision mode may not be changed
+		/// after it has been defined.
+		/// </summary>
+		/// <param name="revisionMode">The revision mode.</param>
+		internal void DefineRevisionMode(DbRevisionMode revisionMode)
+		{
+			if (this.revisionMode == revisionMode)
+			{
+				return;
+			}
+
+			if (this.revisionMode == DbRevisionMode.Unknown)
+			{
+				this.revisionMode = revisionMode;
+			}
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot define a new revision mode", this.Name));
 			}
 		}
 
@@ -624,6 +660,7 @@ namespace Epsitec.Cresus.Database
 
 				column.captionId    = DbTools.ParseDruid (xmlReader.GetAttribute ("capt"));
 				column.category     = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
+				column.revisionMode = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
 				column.columnClass  = DbTools.ParseColumnClass (xmlReader.GetAttribute ("class"));
 				column.localization = DbTools.ParseLocalization (xmlReader.GetAttribute ("loc"));
 				column.isPrimaryKey = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("pk"));
@@ -653,6 +690,7 @@ namespace Epsitec.Cresus.Database
 
 			DbTools.WriteAttribute (xmlWriter, "capt", DbTools.DruidToString (this.CaptionId));
 			DbTools.WriteAttribute (xmlWriter, "cat", DbTools.ElementCategoryToString (this.Category));
+			DbTools.WriteAttribute (xmlWriter, "rev", DbTools.RevisionModeToString (this.revisionMode));
 			DbTools.WriteAttribute (xmlWriter, "class", DbTools.ColumnClassToString (this.ColumnClass));
 			DbTools.WriteAttribute (xmlWriter, "loc", DbTools.ColumnLocalizationToString (this.Localization));
 			DbTools.WriteAttribute (xmlWriter, "pk", DbTools.BoolDefaultingToFalseToString (this.IsPrimaryKey));
@@ -703,6 +741,7 @@ namespace Epsitec.Cresus.Database
 		
 		private bool							isPrimaryKey;
 		private DbElementCat					category;
+		private DbRevisionMode					revisionMode;
 		private DbColumnClass					columnClass;
 		private DbColumnLocalization			localization;
 	}

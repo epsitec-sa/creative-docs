@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Database
 
 			using (DbInfrastructure infrastructure = new DbInfrastructure ())
 			{
-				infrastructure.CreateDatabase (DbInfrastructure.CreateDbAccess ("fiche"));
+				infrastructure.CreateDatabase (DbInfrastructure.CreateDatabaseAccess ("fiche"));
 			}
 			
 			this.infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", true);

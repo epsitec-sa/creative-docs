@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Database
 			DbAccess db_access = SqlSelectTest.CreateDbAccess ();
 
 			IDbAbstraction db_abstraction = null;
-			db_abstraction = DbFactory.FindDbAbstraction (db_access);
+			db_abstraction = DbFactory.CreateDatabaseAbstraction (db_access);
 
 			ISqlEngine     sql_engine    = db_abstraction.SqlEngine;
 			ISqlBuilder    sql_builder   = db_abstraction.SqlBuilder;
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Database
 			DbAccess db_access = SqlSelectTest.CreateDbAccess ();
 
 			IDbAbstraction db_abstraction = null;
-			db_abstraction = DbFactory.FindDbAbstraction (db_access);
+			db_abstraction = DbFactory.CreateDatabaseAbstraction (db_access);
 
 			ISqlEngine     sql_engine    = db_abstraction.SqlEngine;
 			ISqlBuilder    sql_builder   = db_abstraction.SqlBuilder;
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Database
 			DbAccess db_access = SqlSelectTest.CreateDbAccess ();
 
 			IDbAbstraction db_abstraction = null;
-			db_abstraction = DbFactory.FindDbAbstraction (db_access);
+			db_abstraction = DbFactory.CreateDatabaseAbstraction (db_access);
 
 			ISqlEngine     sql_engine    = db_abstraction.SqlEngine;
 			ISqlBuilder    sql_builder   = db_abstraction.SqlBuilder;
@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.Database
 			DbAccess db_access = SqlSelectTest.CreateDbAccess ();
 
 			IDbAbstraction db_abstraction = null;
-			db_abstraction = DbFactory.FindDbAbstraction (db_access);
+			db_abstraction = DbFactory.CreateDatabaseAbstraction (db_access);
 
 			ISqlEngine     sql_engine    = db_abstraction.SqlEngine;
 			ISqlBuilder    sql_builder   = db_abstraction.SqlBuilder;
@@ -242,7 +242,7 @@ namespace Epsitec.Cresus.Database
 			DbAccess db_access = SqlSelectTest.CreateDbAccess ();
 
 			IDbAbstraction db_abstraction = null;
-			db_abstraction = DbFactory.FindDbAbstraction (db_access);
+			db_abstraction = DbFactory.CreateDatabaseAbstraction (db_access);
 
 			ISqlEngine     sql_engine    = db_abstraction.SqlEngine;
 			ISqlBuilder    sql_builder   = db_abstraction.SqlBuilder;
@@ -299,7 +299,7 @@ namespace Epsitec.Cresus.Database
 			DbAccess db_access = SqlSelectTest.CreateDbAccess ();
 
 			IDbAbstraction db_abstraction = null;
-			db_abstraction = DbFactory.FindDbAbstraction (db_access);
+			db_abstraction = DbFactory.CreateDatabaseAbstraction (db_access);
 
 			ISqlEngine     sql_engine    = db_abstraction.SqlEngine;
 			ISqlBuilder    sql_builder   = db_abstraction.SqlBuilder;
@@ -348,7 +348,7 @@ namespace Epsitec.Cresus.Database
 			DbAccess db_access = SqlSelectTest.CreateDbAccess ();
 
 			IDbAbstraction db_abstraction = null;
-			db_abstraction = DbFactory.FindDbAbstraction (db_access);
+			db_abstraction = DbFactory.CreateDatabaseAbstraction (db_access);
 
 			ISqlEngine     sql_engine    = db_abstraction.SqlEngine;
 			ISqlBuilder    sql_builder   = db_abstraction.SqlBuilder;

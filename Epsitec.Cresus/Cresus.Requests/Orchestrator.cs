@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Requests
 		public Orchestrator(DbInfrastructure infrastructure)
 		{
 			this.infrastructure   = infrastructure;
-			this.database         = this.infrastructure.CreateDbAbstraction ();
+			this.database         = this.infrastructure.CreateDatabaseAbstraction ();
 			this.execution_engine = new ExecutionEngine (this.infrastructure);
 			this.execution_queue  = new ExecutionQueue (this.infrastructure, this.database);
 			

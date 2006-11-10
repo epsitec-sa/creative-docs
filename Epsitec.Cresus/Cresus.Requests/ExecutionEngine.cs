@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.Requests
 		private SqlColumn[] CreateSqlColumns(DbTable table, string[] column_names)
 		{
 			SqlColumn[]    columns   = new SqlColumn[column_names.Length];
-			ITypeConverter converter = this.infrastructure.TypeConverter;
+			ITypeConverter converter = this.infrastructure.Converter;
 			
 			for (int i = 0; i < columns.Length; i++)
 			{

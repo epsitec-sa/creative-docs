@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] public void CheckDebugDumpRegisteredDbAbstractions ()
 		{
-			DbFactory.DebugDumpRegisteredDbAbstractions ();
+			DbFactory.DebugDumpRegisteredDatabaseAbstractions ();
 		}
 		
 		
@@ -189,14 +189,14 @@ namespace Epsitec.Cresus.Database
 			
 			try
 			{
-				db_abstraction = DbFactory.FindDbAbstraction (db_access);
+				db_abstraction = DbFactory.CreateDatabaseAbstraction (db_access);
 			}
 			catch (Exceptions.ExistsException)
 			{
 				//	OK: la base existait déjà... on ne peut pas la créer !
 				
 				db_access.CreateDatabase = false;
-				db_abstraction = DbFactory.FindDbAbstraction (db_access);
+				db_abstraction = DbFactory.CreateDatabaseAbstraction (db_access);
 			}
 			
 			return db_abstraction;
@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.Database
 		
 		public static IDbAbstractionFactory CreateDbAbstractionFactory()
 		{
-			return DbFactory.FindDbAbstractionFactory ("Firebird");
+			return DbFactory.FindDatabaseAbstractionFactory ("Firebird");
 		}
 	}
 }

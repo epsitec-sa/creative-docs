@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Database
 
 			using (DbInfrastructure infrastructure = new DbInfrastructure ())
 			{
-				DbAccess db_access = DbInfrastructure.CreateDbAccess ("fiche");
+				DbAccess db_access = DbInfrastructure.CreateDatabaseAccess ("fiche");
 
 				infrastructure.CreateDatabase (db_access);
 
@@ -389,8 +389,8 @@ namespace Epsitec.Cresus.Database
 			{
 				Assert.IsNotNull (infrastructure);
 
-				IDbAbstraction dba1 = infrastructure.CreateDbAbstraction ();
-				IDbAbstraction dba2 = infrastructure.CreateDbAbstraction ();
+				IDbAbstraction dba1 = infrastructure.CreateDatabaseAbstraction ();
+				IDbAbstraction dba2 = infrastructure.CreateDatabaseAbstraction ();
 
 				Assert.IsFalse (dba1 == dba2);
 				Assert.IsFalse (dba1.SqlBuilder == dba2.SqlBuilder);
@@ -511,9 +511,9 @@ namespace Epsitec.Cresus.Database
 		internal static DbInfrastructure GetInfrastructureFromBase(string name, bool debug_attach)
 		{
 			DbInfrastructure infrastructure = new DbInfrastructure ();
-			DbAccess db_access = DbInfrastructure.CreateDbAccess (name);
+			DbAccess db_access = DbInfrastructure.CreateDatabaseAccess (name);
 
-			infrastructure.AttachDatabase (db_access);
+			infrastructure.AttachToDatabase (db_access);
 			
 			return infrastructure;
 		}

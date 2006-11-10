@@ -40,15 +40,15 @@ namespace Epsitec.Cresus.Database
 		/// The database abstraction or <c>null</c> if there is no supported means of
 		/// connecting to the specified database.
 		/// </returns>
-		public static IDbAbstraction FindDbAbstraction(DbAccess databaseAccess)
+		public static IDbAbstraction CreateDatabaseAbstraction(DbAccess databaseAccess)
 		{
-			IDbAbstractionFactory factory = DbFactory.FindDbAbstractionFactory (databaseAccess.Provider);
+			IDbAbstractionFactory factory = DbFactory.FindDatabaseAbstractionFactory (databaseAccess.Provider);
 
 			if (factory != null)
 			{
 				try
 				{
-					return factory.NewDbAbstraction (databaseAccess);
+					return factory.CreateDatabaseAbstraction (databaseAccess);
 				}
 				catch (Exceptions.FactoryException)
 				{
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="provider">The provider name.</param>
 		/// <returns>The database abstraction factory.</returns>
-		public static IDbAbstractionFactory FindDbAbstractionFactory(string provider)
+		public static IDbAbstractionFactory FindDatabaseAbstractionFactory(string provider)
 		{
 			if (string.IsNullOrEmpty (provider))
 			{
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Dumps the registered database abstractions.
 		/// </summary>
-		public static void DebugDumpRegisteredDbAbstractions()
+		public static void DebugDumpRegisteredDatabaseAbstractions()
 		{
 			foreach (IDbAbstractionFactory factory in DbFactory.factories)
 			{
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Database
 		/// Registers the specified database abstraction factory.
 		/// </summary>
 		/// <param name="factory">The database factory abstraction.</param>
-		public static void RegisterDbAbstraction(IDbAbstractionFactory factory)
+		public static void RegisterDatabaseAbstraction(IDbAbstractionFactory factory)
 		{
 			System.Diagnostics.Debug.Assert (factory != null);
 			System.Diagnostics.Debug.Assert (factory.ProviderName != null);

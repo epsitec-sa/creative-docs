@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Replication
 		
 		public System.Data.DataTable ExtractDataUsingLogId(DbTable table, DbId log_id)
 		{
-			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.TypeConverter);
+			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter);
 			
 			condition.AddCondition (table.Columns[Tags.ColumnRefLog], DbCompare.Equal, log_id);
 			
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Replication
 			long sync_id_min = sync_start_id.Value;
 			long sync_id_max = sync_end_id.Value;
 			
-			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.TypeConverter);
+			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter);
 			
 			condition.AddCondition (table.Columns[Tags.ColumnRefLog], DbCompare.GreaterThanOrEqual, sync_id_min);
 			condition.AddCondition (table.Columns[Tags.ColumnRefLog], DbCompare.LessThanOrEqual, sync_id_max);
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Replication
 			System.Diagnostics.Debug.Assert (DbId.GetClass (sync_id_min) == DbIdClass.Standard);
 			System.Diagnostics.Debug.Assert (DbId.GetClass (sync_id_max) == DbIdClass.Standard);
 			
-			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.TypeConverter);
+			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter);
 			
 			condition.AddCondition (table.Columns[Tags.ColumnId], DbCompare.GreaterThanOrEqual, sync_id_min);
 			condition.AddCondition (table.Columns[Tags.ColumnId], DbCompare.LessThanOrEqual, sync_id_max);
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Replication
 		
 		public System.Data.DataTable ExtractDataUsingIds(DbTable table, long[] ids)
 		{
-			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.TypeConverter);
+			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter);
 			DbColumn          id_column = table.Columns[Tags.ColumnId];
 			
 			condition.Combiner = DbCompareCombiner.Or;

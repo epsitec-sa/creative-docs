@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The <c>DbRichCommand</c> instance.</returns>
 		public static DbRichCommand CreateFromTable(DbInfrastructure infrastructure, DbTransaction transaction, DbTable table, DbSelectRevision selectRevision)
 		{
-			return DbRichCommand.CreateFromTable (infrastructure, transaction, table, new DbSelectCondition (infrastructure.TypeConverter, selectRevision));
+			return DbRichCommand.CreateFromTable (infrastructure, transaction, table, new DbSelectCondition (infrastructure.Converter, selectRevision));
 		}
 
 		/// <summary>
@@ -1235,7 +1235,7 @@ namespace Epsitec.Cresus.Database
 			
 			IDbAbstraction database  = transaction.Database;
 			ISqlBuilder    builder   = database.SqlBuilder;
-			ITypeConverter converter = this.infrastructure.TypeConverter;
+			ITypeConverter converter = this.infrastructure.Converter;
 			
 			Collections.SqlFields sqlUpdate = new Collections.SqlFields ();
 			Collections.SqlFields sqlInsert = new Collections.SqlFields ();

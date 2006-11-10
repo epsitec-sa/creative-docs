@@ -33,6 +33,6 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="dbAccess">The database access definition.</param>
 		/// <returns>The database abstraction object.</returns>
-		IDbAbstraction NewDbAbstraction(DbAccess dbAccess);
+		IDbAbstraction CreateDatabaseAbstraction(DbAccess dbAccess);
 	}
 }

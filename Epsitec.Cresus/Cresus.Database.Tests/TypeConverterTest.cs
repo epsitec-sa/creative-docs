@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Database
 		[Test] public void CheckInternalConversions()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
-			ITypeConverter   converter      = infrastructure.TypeConverter;
+			ITypeConverter   converter      = infrastructure.Converter;
 			
 			object a = TypeConverter.ConvertToInternal (converter, "ABC", DbRawType.String);
 			object b = TypeConverter.ConvertToInternal (converter, true, DbRawType.Boolean);

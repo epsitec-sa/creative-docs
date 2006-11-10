@@ -489,6 +489,11 @@ namespace Epsitec.Cresus.Database
 			return new SqlField (SqlFieldType.Constant, value, type);
 		}
 
+		public static SqlField CreateConstant(DbId value)
+		{
+			return new SqlField (SqlFieldType.Constant, value.Value, DbKey.RawTypeForId);
+		}
+		
 		public static SqlField CreateParameterIn(object value, DbRawType type)
 		{
 			return new SqlField (SqlFieldType.ParameterIn, value, type);
