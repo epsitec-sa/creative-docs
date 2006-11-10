@@ -352,9 +352,6 @@
     <Compile Include="Support\ResourceProviderFactory.cs" />
     <Compile Include="Support\Resources.cs" />
     <Compile Include="Support\ResourceSetMode.cs" />
-    <Compile Include="Tags.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Time.cs">
       <SubType>Code</SubType>
     </Compile>

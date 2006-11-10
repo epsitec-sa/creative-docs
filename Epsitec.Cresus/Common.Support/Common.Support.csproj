@@ -207,9 +207,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="FolderId.cs" />
-    <Compile Include="Tags.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="TimedLock.cs" />
     <Compile Include="VersionChecker.cs">
       <SubType>Code</SubType>

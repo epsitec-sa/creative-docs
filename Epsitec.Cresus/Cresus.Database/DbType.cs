@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Database
 		{
 			if (this.attributes != null)
 			{
-				this.attributes.SetAttribute (Epsitec.Common.Support.Tags.Name, name);
+				this.attributes.SetAttribute (Tags.Name, name);
 			}
 			else
 			{

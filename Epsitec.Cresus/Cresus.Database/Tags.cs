@@ -3,8 +3,14 @@
 
 namespace Epsitec.Cresus.Database
 {
-	public class Tags : Epsitec.Common.Support.Tags
+	public class Tags
 	{
+		public const string Id = "id";
+		public const string Parent = "prnt";
+		public const string Caption = "capt";
+		public const string Description = "desc";
+		public const string Name = "name";
+		
 		//	Noms des types "Crésus" fondamentaux :
 		
 		public const string	TypeKeyId			= "CR_KeyIdType";
