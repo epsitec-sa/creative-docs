@@ -214,6 +214,47 @@ namespace Epsitec.Cresus.Database
 				Assert.AreEqual (db_table1.PrimaryKeys[0].Name, db_table2.PrimaryKeys[0].Name);
 				Assert.AreEqual (db_table1.Columns.Count, db_table2.Columns.Count);
 				Assert.AreEqual (1000000000013L, db_table2.Key.Id);
+
+				//	Now try to put data into the table...
+
+				DbRichCommand command;
+
+				using (DbTransaction transaction = infrastructure.BeginTransaction ())
+				{
+					command = DbRichCommand.CreateFromTable (infrastructure, transaction, db_table1);
+					transaction.Commit ();
+				}
+
+				System.Data.DataTable dataTable = command.DataSet.Tables["SimpleTest"];
+				System.Data.DataRow   dataRow   = command.CreateRow ("SimpleTest");
+
+				dataRow.BeginEdit ();
+				dataRow["Name"] = "Pierre ARNAUD";
+				dataRow["Level"] = "S-DV";
+				dataRow["Data"] = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+				dataRow["Guid"] = TypeConverter.ConvertToInternal (infrastructure.Converter, new System.Guid (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11), DbRawType.Guid);
+				dataRow.EndEdit ();
+				
+				using (DbTransaction transaction = infrastructure.BeginTransaction ())
+				{
+					command.UpdateLogIds ();
+					command.AssignRealRowIds (transaction);
+					command.UpdateTables (transaction);
+					
+					transaction.Commit ();
+				}
+				
+				using (DbTransaction transaction = infrastructure.BeginTransaction ())
+				{
+					command = DbRichCommand.CreateFromTable (infrastructure, transaction, db_table1, DbSelectRevision.LiveActive);
+					transaction.Commit ();
+				}
+
+				dataTable = command.DataSet.Tables["SimpleTest"];
+
+				Assert.AreEqual ("Pierre ARNAUD", dataTable.Rows[0]["Name"]);
+				Assert.AreEqual ("S-DV", dataTable.Rows[0]["Level"]);
+				Assert.AreEqual (System.DBNull.Value, dataTable.Rows[0]["Type"]);
 			}
 		}
 
