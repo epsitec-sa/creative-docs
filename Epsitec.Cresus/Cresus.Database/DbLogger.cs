@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Database
 			//	enregistré dans le LOG. Ainsi, id.ClientId n'est pas nécessairement égal à
 			//	l'identificateur de client actif.
 			
-			DbId id = this.infrastructure.NextRowIdInTable (transaction, this.tableKey);
+			DbId id = this.infrastructure.NextRowIdInTable (transaction, this.table);
 			
 			this.nextId    = id.LocalId;
 			this.currentId = DbId.CreateId (this.nextId - 1, id.ClientId);
@@ -290,7 +290,6 @@ namespace Epsitec.Cresus.Database
 		{
 			this.infrastructure = infrastructure;
 			this.table          = table;
-			this.tableKey       = table.Key;
 			this.tableSqlName   = table.CreateSqlName ();
 		}
 
@@ -335,7 +334,7 @@ namespace Epsitec.Cresus.Database
 				//	Enregistre dans la base le prochain ID à utiliser, en prenant note du
 				//	ClientId appliqué à l'élément que l'on vient d'enregistrer dans le LOG :
 
-				this.infrastructure.UpdateTableNextId (transaction, this.tableKey, DbId.CreateId (nextId, entry.Id.ClientId));
+				this.infrastructure.UpdateTableNextId (transaction, this.table, DbId.CreateId (nextId, entry.Id.ClientId));
 
 				this.nextId    = nextId;
 				this.currentId = entry.Id;
@@ -347,7 +346,6 @@ namespace Epsitec.Cresus.Database
 		
 		private DbInfrastructure				infrastructure;
 		private DbTable							table;
-		private DbKey							tableKey;
 		private string							tableSqlName;
 
 		private object							exclusion = new object ();

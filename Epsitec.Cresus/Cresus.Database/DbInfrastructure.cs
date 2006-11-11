@@ -186,7 +186,6 @@ namespace Epsitec.Cresus.Database
 				helper.CreateTableTableDef ();
 				helper.CreateTableColumnDef ();
 				helper.CreateTableTypeDef ();
-				helper.CreateTableEnumValDef ();
 				helper.CreateTableLog ();
 				helper.CreateTableRequestQueue ();
 				helper.CreateTableClientDef ();
@@ -263,7 +262,6 @@ namespace Epsitec.Cresus.Database
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTableDef));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableColumnDef));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTypeDef));
-				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableEnumValDef));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableClientDef));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableRequestQueue));
 				
@@ -1081,8 +1079,8 @@ namespace Epsitec.Cresus.Database
 			{
 				this.CheckForUnknownTable (transaction, table);
 				
-				long tableId  = this.NewRowIdInTable (transaction, this.internalTables[Tags.TableTableDef] .Key, 1);
-				long columnId = this.NewRowIdInTable (transaction, this.internalTables[Tags.TableColumnDef].Key, table.Columns.Count);
+				long tableId  = this.NewRowIdInTable (transaction, this.internalTables[Tags.TableTableDef], 1);
+				long columnId = this.NewRowIdInTable (transaction, this.internalTables[Tags.TableColumnDef], table.Columns.Count);
 				
 				//	Create the table description in the CR_TABLE_DEF table :
 				
@@ -1654,16 +1652,16 @@ namespace Epsitec.Cresus.Database
 		/// is used when a new column is created to derive the column key.
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
-		/// <param name="key">The table key.</param>
+		/// <param name="table">The table.</param>
 		/// <param name="nextId">The next column id.</param>
-		internal void UpdateTableNextId(DbTransaction transaction, DbKey key, DbId nextId)
+		internal void UpdateTableNextId(DbTransaction transaction, DbTable table, DbId nextId)
 		{
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			Collections.SqlFields conds  = new Collections.SqlFields ();
 			
 			fields.Add (Tags.ColumnNextId, SqlField.CreateConstant (nextId, DbKey.RawTypeForId));
 			
-			DbInfrastructure.AddKeyExtraction (conds, Tags.TableTableDef, key);
+			DbInfrastructure.AddKeyExtraction (conds, Tags.TableTableDef, table.Key);
 			
 			transaction.SqlBuilder.UpdateData (Tags.TableTableDef, fields, conds);
 			this.ExecuteSilent (transaction);
@@ -1680,6 +1678,8 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The table definitions.</returns>
 		public List<DbTable> LoadDbTable(DbTransaction transaction, DbKey key, DbRowSearchMode rowSearchMode)
 		{
+			System.Diagnostics.Debug.Assert (transaction != null);
+			
 			//	We will build a join in order to query both the table definition
 			//	and the column definitions with a single SQL request.
 			
@@ -1697,7 +1697,7 @@ namespace Epsitec.Cresus.Database
 			query.Fields.Add ("C_NAME",   SqlField.CreateName ("T_COLUMN", Tags.ColumnName));
 			query.Fields.Add ("C_INFO",   SqlField.CreateName ("T_COLUMN", Tags.ColumnInfoXml));
 			query.Fields.Add ("C_TYPE",   SqlField.CreateName ("T_COLUMN", Tags.ColumnRefType));
-			query.Fields.Add ("C_PARENT", SqlField.CreateName ("T_COLUMN", Tags.ColumnRefParent));
+			query.Fields.Add ("C_TARGET", SqlField.CreateName ("T_COLUMN", Tags.ColumnRefTarget));
 			
 			//	Tables to query :
 			
@@ -1726,7 +1726,8 @@ namespace Epsitec.Cresus.Database
 			DbTable		  dbTable = null;
 			bool          recycle = false;
 			
-			//	Analyse the returned rows which are expected to be sorted by tables.
+			//	Analyse the returned rows which are expected to be sorted first
+			//	by table definitions and second by column definitions.
 			
 			foreach (System.Data.DataRow row in dataTable.Rows)
 			{
@@ -1776,7 +1777,7 @@ namespace Epsitec.Cresus.Database
 					continue;
 				}
 				
-				//	Chaque ligne contient une définition de colonne.
+				//	Every row defines one column :
 
 				long   typeDefId  = InvariantConverter.ToLong (row["C_TYPE"]);
 				long   columnId   = InvariantConverter.ToLong (row["C_ID"]);
@@ -1784,12 +1785,17 @@ namespace Epsitec.Cresus.Database
 				string columnInfo = InvariantConverter.ToString (row["C_INFO"]);
 				string targetName = null;
 
-				if (InvariantConverter.IsNotNull (row["C_PARENT"]))
+				if (InvariantConverter.IsNotNull (row["C_TARGET"]))
 				{
-					DbKey   parentKey   = new DbKey (InvariantConverter.ToLong (row["C_PARENT"]));
-					DbTable parentTable = this.ResolveDbTable (transaction, parentKey);
+					//	Resolve the reference to the target table; this won't
+					//	produce an endless loop if both tables refer to each
+					//	other, as the tables get cached even if they are not
+					//	yet fully initialized...
+					
+					DbKey   targetKey   = new DbKey (InvariantConverter.ToLong (row["C_TARGET"]));
+					DbTable targetTable = this.ResolveDbTable (transaction, targetKey);
 
-					targetName = parentTable.Name;
+					targetName = targetTable.Name;
 				}
 
 				DbKey     typeDefKey = new DbKey (typeDefId);
@@ -1817,17 +1823,21 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			//	TODO: il faut encore initialiser les champs TargetTableName des diverses colonnes
-			//	qui établissent une relation avec une autre table. Pour cela, il faudra faire un
-			//	SELECT dans Tags.TableRelationDef pour les colonnes dont DbColumnClass est parmi
-			//	RefSimpleId/RefLiveId/RefTupleId/RefTupleRevision et déterminer le nom des tables
-			//	cibles, puis appeler DbColumn.DefineTargetTableName...
-			
 			return tables;
 		}
-		
+
+		/// <summary>
+		/// Loads the type definitions based on the metadata type key and the
+		/// specified search mode.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="key">The type key or <c>DbKey.Empty</c> to load all type definitions based on the search mode.</param>
+		/// <param name="rowSearchMode">The search mode (live, deleted, etc.) if the key is set to <c>DbKey.Empty</c>, ignored otherwise.</param>
+		/// <returns>The type definitions.</returns>
 		public List<DbTypeDef> LoadDbType(DbTransaction transaction, DbKey typeKey, DbRowSearchMode rowSearchMode)
 		{
+			System.Diagnostics.Debug.Assert (transaction != null);
+			
 			SqlSelect query = new SqlSelect ();
 			
 			query.Fields.Add ("T_ID",   SqlField.CreateName ("T_TYPE", Tags.ColumnId));
@@ -1838,15 +1848,10 @@ namespace Epsitec.Cresus.Database
 			
 			if (typeKey.IsEmpty)
 			{
-				//	On extrait toutes les définitions de types qui correspondent à la version
-				//	'active'.
-				
 				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TYPE", rowSearchMode);
 			}
 			else
 			{
-				//	Cherche la ligne de la table dont 'CR_ID = typeKey'.
-				
 				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TYPE", typeKey);
 			}
 			
@@ -1876,33 +1881,32 @@ namespace Epsitec.Cresus.Database
 			
 			return types;
 		}
-		
-		
-		public long NextRowIdInTable(DbTransaction transaction, DbKey key)
+
+
+		/// <summary>
+		/// Gets the next row id in the specified table. This does not allocate
+		/// any keys.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// <returns>The next row id.</returns>
+		internal long NextRowIdInTable(DbTransaction transaction, DbTable table)
 		{
-			return this.NewRowIdInTable (transaction, key, 0);
+			return this.NewRowIdInTable (transaction, table, 0);
 		}
 
+		/// <summary>
+		/// Gets the first available row id in the specified table and allocates
+		/// room for the specified number of keys.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// <param name="numKeys">The number of keys to allocate.</param>
+		/// <returns>The first row id of a contiguous range.</returns>
 		public long NewRowIdInTable(DbTransaction transaction, DbTable table, int numKeys)
 		{
-			return this.NewRowIdInTable (transaction, table.Key, numKeys);
-		}
-		
-		public long NewRowIdInTable(DbTransaction transaction, DbKey key, int numKeys)
-		{
-			//	Attribue 'numKeys' clef consécutives dans la table spécifiée.
-			
+			System.Diagnostics.Debug.Assert (transaction != null);
 			System.Diagnostics.Debug.Assert (numKeys >= 0);
-			
-			if (transaction == null)
-			{
-				using (transaction = this.BeginTransaction ())
-				{
-					long id = this.NewRowIdInTable (transaction, key, numKeys);
-					transaction.Commit ();
-					return id;
-				}
-			}
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			Collections.SqlFields conds  = new Collections.SqlFields ();
@@ -1912,7 +1916,7 @@ namespace Epsitec.Cresus.Database
 			
 			fields.Add (Tags.ColumnNextId, new SqlFunction (SqlFunctionCode.MathAdd, fieldNextId, fieldConstN));
 			
-			DbInfrastructure.AddKeyExtraction (conds, Tags.TableTableDef, key);
+			DbInfrastructure.AddKeyExtraction (conds, Tags.TableTableDef, table.Key);
 			
 			if (numKeys > 0)
 			{
@@ -1932,94 +1936,69 @@ namespace Epsitec.Cresus.Database
 			
 			return InvariantConverter.ToLong (this.ExecuteScalar (transaction)) - numKeys;
 		}
-		
-#if false
-		private DbEnumValue[] LoadEnumValues(DbTransaction transaction, DbTypeEnum type_enum)
-		{
-			System.Diagnostics.Debug.Assert (type_enum != null);
-			System.Diagnostics.Debug.Assert (type_enum.Count == 0);
-			
-			SqlSelect query = new SqlSelect ();
-			
-			query.Fields.Add ("E_ID",   SqlField.CreateName ("T_ENUM", Tags.ColumnId));
-			query.Fields.Add ("E_NAME", SqlField.CreateName ("T_ENUM", Tags.ColumnName));
-			query.Fields.Add ("E_INFO", SqlField.CreateName ("T_ENUM", Tags.ColumnInfoXml));
-			
-			this.AddLocalisedColumns (query, "ENUM_CAPTION", "T_ENUM", Tags.ColumnCaption);
-			this.AddLocalisedColumns (query, "ENUM_DESCRIPTION", "T_ENUM", Tags.ColumnDescription);
-			
-			query.Tables.Add ("T_ENUM", SqlField.CreateName (Tags.TableEnumValDef));
-			
-			//	Cherche les lignes de la table dont la colonne CREF_TYPE correspond à l'ID du type.
-			
-			DbInfrastructure.AddKeyExtraction (query.Conditions, "T_ENUM", Tags.ColumnRefType, type_enum.InternalKey);
-			
-			System.Data.DataTable data_table = this.ExecuteSqlSelect (transaction, query, 1);
-			
-			DbEnumValue[] values = new DbEnumValue[data_table.Rows.Count];
-			
-			for (int i = 0; i < data_table.Rows.Count; i++)
-			{
-				System.Data.DataRow data_row = data_table.Rows[i];
-				
-				//	Pour chaque valeur retournée dans la table, il y a une ligne. Cette ligne
-				//	contient toute l'information nécessaire à la création d'une instance de la
-				//	class DbEnumValue :
-				
-				string val_name = InvariantConverter.ToString (data_row["E_NAME"]);
-				string val_id   = InvariantConverter.ToString (data_row["E_ID"]);
-				string val_info = InvariantConverter.ToString (data_row["E_INFO"]);
-				
-				System.Xml.XmlDocument xml = new System.Xml.XmlDocument ();
-				xml.LoadXml (val_info);
-				
-				values[i] = new DbEnumValue (xml.DocumentElement);
-				
-				values[i].Attributes.SetAttribute (Tags.Name, val_name);
-				values[i].Attributes.SetAttribute (Tags.Id, val_id);
-				
-				this.DefineLocalisedAttributes (data_row, "ENUM_CAPTION", Tags.ColumnCaption, values[i].Attributes, Tags.Caption);
-				this.DefineLocalisedAttributes (data_row, "ENUM_DESCRIPTION", Tags.ColumnDescription, values[i].Attributes, Tags.Description);
-			}
-			
-			return values;
-		}
-#endif
 
 
-		private static void AddKeyExtraction(Collections.SqlFields conditions, string table_name, DbKey key)
+		/// <summary>
+		/// Adds a SELECT extraction condition for a key in a table.
+		/// </summary>
+		/// <param name="conditions">The conditions.</param>
+		/// <param name="tableName">Name of the table.</param>
+		/// <param name="key">The key.</param>
+		private static void AddKeyExtraction(Collections.SqlFields conditions, string tableName, DbKey key)
 		{
-			SqlField name_col_id = SqlField.CreateName (table_name, Tags.ColumnId);
-			SqlField constant_id = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
+			SqlField nameColId  = SqlField.CreateName (tableName, Tags.ColumnId);
+			SqlField constantId = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
 			
-			conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, name_col_id, constant_id));
+			conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, nameColId, constantId));
 		}
 
-		private static void AddKeyExtraction(Collections.SqlFields conditions, string sourceTableName, string sourceColumnName, string parentTableName)
+		/// <summary>
+		/// Adds a SELECT extraction condition for a key in a target table
+		/// matching a foreign key defined by the source table and column.
+		/// </summary>
+		/// <param name="conditions">The conditions.</param>
+		/// <param name="sourceTableName">Name of the source table.</param>
+		/// <param name="sourceColumnName">Name of the source column.</param>
+		/// <param name="targetTableName">Name of the target table.</param>
+		private static void AddKeyExtraction(Collections.SqlFields conditions, string sourceTableName, string sourceColumnName, string targetTableName)
 		{
-			SqlField parentColumnId = SqlField.CreateName (parentTableName, Tags.ColumnId);
+			SqlField targetColumnId = SqlField.CreateName (targetTableName, Tags.ColumnId);
 			SqlField sourceColumnId = SqlField.CreateName (sourceTableName, sourceColumnName);
-			
-			conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, sourceColumnId, parentColumnId));
+
+			conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, sourceColumnId, targetColumnId));
 		}
 
-		private static void AddKeyExtraction(Collections.SqlFields conditions, string source_table_name, string source_col_name, DbKey key)
+		/// <summary>
+		/// Adds a SELECT extraction condition for a key matching a foreign
+		/// key defined by the source table and column.
+		/// </summary>
+		/// <param name="conditions">The conditions.</param>
+		/// <param name="sourceTableName">Name of the source table.</param>
+		/// <param name="sourceColumnName">Name of the source column.</param>
+		/// <param name="key">The key.</param>
+		private static void AddKeyExtraction(Collections.SqlFields conditions, string sourceTableName, string sourceColumnName, DbKey key)
 		{
-			SqlField source_col_id = SqlField.CreateName (source_table_name, source_col_name);
-			SqlField constant_id   = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
+			SqlField sourceColId = SqlField.CreateName (sourceTableName, sourceColumnName);
+			SqlField constantId  = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
 			
-			conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, source_col_id, constant_id));
+			conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, sourceColId, constantId));
 		}
 
-		private static void AddKeyExtraction(Collections.SqlFields conditions, string table_name, DbRowSearchMode search_mode)
+		/// <summary>
+		/// Adds a SELECT extraction condition for any keys in a table matching
+		/// the search mode (live, deleted, etc.)
+		/// </summary>
+		/// <param name="conditions">The conditions.</param>
+		/// <param name="tableName">Name of the table.</param>
+		/// <param name="searchMode">The search mode (live, deleted, etc.).</param>
+		private static void AddKeyExtraction(Collections.SqlFields conditions, string tableName, DbRowSearchMode searchMode)
 		{
-			//	Génère la condition d'extraction pour une recherche selon le statut des lignes
-			//	(voir aussi la définition de DbRowStatus).
-			
 			SqlFunctionCode function;
 			DbRowStatus     status;
 			
-			switch (search_mode)
+			//	See the definitions of DbRowStatus and DbRowSearchMode...
+			
+			switch (searchMode)
 			{
 				case DbRowSearchMode.Copied:		status = DbRowStatus.Copied;		function = SqlFunctionCode.CompareEqual;	break;
 				case DbRowSearchMode.Live:			status = DbRowStatus.Live;			function = SqlFunctionCode.CompareEqual;	break;
@@ -2032,16 +2011,20 @@ namespace Epsitec.Cresus.Database
 					return;
 				
 				default:
-					throw new System.ArgumentException (string.Format ("Search mode {0} not supported.", search_mode), "search_mode");
+					throw new System.ArgumentException (string.Format ("Search mode {0} not supported", searchMode), "searchMode");
 			}
 			
-			SqlField name_status  = SqlField.CreateName (table_name, Tags.ColumnStatus);
-			SqlField const_status = SqlField.CreateConstant (DbKey.ConvertToIntStatus (status), DbKey.RawTypeForStatus);
+			SqlField nameStatus  = SqlField.CreateName (tableName, Tags.ColumnStatus);
+			SqlField constStatus = SqlField.CreateConstant (DbKey.ConvertToIntStatus (status), DbKey.RawTypeForStatus);
 			
-			conditions.Add (new SqlFunction (function, name_status, const_status));
+			conditions.Add (new SqlFunction (function, nameStatus, constStatus));
 		}
 
 
+		/// <summary>
+		/// Starts using the database. This loads the global and local settings
+		/// and instanciates the client manager.
+		/// </summary>
 		private void StartUsingDatabase()
 		{
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
@@ -2060,8 +2043,12 @@ namespace Epsitec.Cresus.Database
 				transaction.Commit ();
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Sets up the database logger.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		private void SetupLogger(DbTransaction transaction)
 		{
 			this.logger = new DbLogger ();
@@ -2069,20 +2056,23 @@ namespace Epsitec.Cresus.Database
 			this.logger.Attach (this, this.internalTables[Tags.TableLog]);
 			this.logger.ResetCurrentLogId (transaction);
 		}
-		
+
+		/// <summary>
+		/// Sets up the metadata table definitions by filling them with the
+		/// defaults required by an empty database.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		private void SetupTables(DbTransaction transaction)
 		{
-			//	Remplit les tables de gestion (CR_*) avec les valeurs par défaut et
-			//	les définitions initiales de la structure interne de la base vide.
+			long typeKeyId   = DbId.CreateId (1, this.clientId);
+			long tableKeyId  = DbId.CreateId (1, this.clientId);
+			long columnKeyId = DbId.CreateId (1, this.clientId);
+			long clientKeyId = DbId.CreateId (1, this.clientId);
+
+			System.Diagnostics.Debug.Assert (this.logger == null);
 			
-			long type_key_id     = DbId.CreateId (1, this.clientId);
-			long table_key_id    = DbId.CreateId (1, this.clientId);
-			long column_key_id   = DbId.CreateId (1, this.clientId);
-			long enum_val_key_id = DbId.CreateId (1, this.clientId);
-			long client_key_id   = DbId.CreateId (1, this.clientId);
-			
-			//	Initialisation partielle de DbLogger (juste ce qu'il faut pour pouvoir
-			//	accéder à this.logger.CurrentId) :
+			//	Minimal logger definition. We must be able to access to the
+			//	logger's CurrentId property, that's all :
 			
 			this.logger = new DbLogger ();
 			this.logger.DefineClientId (this.clientId);
@@ -2090,64 +2080,56 @@ namespace Epsitec.Cresus.Database
 			
 			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId == 1);
 			
-			//	Il faut commencer par finir d'initialiser les descriptions des types, parce
-			//	que les description des colonnes doivent y faire référence.
+			//	First, fill the type table so that we can reference them from
+			//	the column definition table :
 			
 			foreach (DbTypeDef typeDef in this.internalTypes)
 			{
-				//	Attribue à chaque type interne une clef unique et établit les informations de base
-				//	dans la table de définition des types.
-				
-				typeDef.DefineKey (new DbKey (type_key_id++));
+				typeDef.DefineKey (new DbKey (typeKeyId++));
 				this.InsertTypeDefRow (transaction, typeDef);
 			}
 			
+			//	Then, fill the table definition table and the column definition
+			//	table :
+			
 			foreach (DbTable table in this.internalTables)
 			{
-				//	Attribue à chaque table interne une clef unique et établit les informations de base
-				//	dans la table de définition des tables.
-				
-				table.DefineKey (new DbKey (table_key_id++));
+				table.DefineKey (new DbKey (tableKeyId++));
 				table.UpdatePrimaryKeyInfo ();
 				
 				this.InsertTableDefRow (transaction, table);
 				
 				foreach (DbColumn column in table.Columns)
 				{
-					//	Pour chaque colonne de la table, établit les informations de base dans la table de
-					//	définition des colonnes.
-					
-					column.DefineKey (new DbKey (column_key_id++));
+					column.DefineKey (new DbKey (columnKeyId++));
 					this.InsertColumnDefRow (transaction, table, column);
 				}
 			}
 			
-			//	Complète encore les informations au sujet des relations :
-			//
-			//	- La description d'une colonne fait référence à la table et à un type.
-			//	- La description d'une valeur d'enum fait référence à un type.
-			//	- La description d'une référence fait elle-même référence à la table
-			//	  source et destination, ainsi qu'à la colonne.
+			//	At last, fill in the relations :
+			//	
+			//	- A column definition refers to its containing table definition.
+			//	- A column definition refers to a type definition.
+			//	- A column definition refers to a target table definition if
+			//	  this is a foreign key.
 			
-			this.UpdateColumnRelation (transaction, Tags.TableColumnDef,   Tags.ColumnRefTable,  Tags.TableTableDef);
-			this.UpdateColumnRelation (transaction, Tags.TableColumnDef,   Tags.ColumnRefType,   Tags.TableTypeDef);
-			this.UpdateColumnRelation (transaction, Tags.TableColumnDef,   Tags.ColumnRefParent, Tags.TableTypeDef);
-			this.UpdateColumnRelation (transaction, Tags.TableEnumValDef,  Tags.ColumnRefType,   Tags.TableTypeDef);
+			this.UpdateColumnRelation (transaction, Tags.TableColumnDef, Tags.ColumnRefTable,  Tags.TableTableDef);
+			this.UpdateColumnRelation (transaction, Tags.TableColumnDef, Tags.ColumnRefType,   Tags.TableTypeDef);
+			this.UpdateColumnRelation (transaction, Tags.TableColumnDef, Tags.ColumnRefTarget, Tags.TableTableDef);
 			
-			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableTableDef].Key, table_key_id);
-			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableColumnDef].Key, column_key_id);
-			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableTypeDef].Key, type_key_id);
-			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableEnumValDef].Key, enum_val_key_id);
-			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableClientDef].Key, client_key_id);
+			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableTableDef], tableKeyId);
+			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableColumnDef], columnKeyId);
+			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableTypeDef], typeKeyId);
+			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableClientDef], clientKeyId);
 			
-			//	On ne peut attacher le DbLogger qu'ici, car avant, les tables et les clefs
-			//	indispensables ne sont pas encore utilisables :
+			//	Now that everything is properly defined, we may attach the
+			//	logger to the database :
 			
 			this.logger.Attach (this, this.internalTables[Tags.TableLog]);
 			this.logger.CreateInitialEntry (transaction);
 			
 			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId == 1);
-			System.Diagnostics.Debug.Assert (this.NextRowIdInTable (transaction, this.internalTables[Tags.TableLog].Key) == DbId.CreateId (2, this.clientId));
+			System.Diagnostics.Debug.Assert (this.NextRowIdInTable (transaction, this.internalTables[Tags.TableLog]) == DbId.CreateId (2, this.clientId));
 		}
 
 
@@ -2160,18 +2142,18 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private void UpdateColumnRelation(DbTransaction transaction, DbKey source_table_key, DbKey source_column_key, DbKey parent_table_key)
+		private void UpdateColumnRelation(DbTransaction transaction, DbKey source_table_key, DbKey source_column_key, DbKey targetTableKey)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 			
 			System.Diagnostics.Debug.Assert (source_table_key  != null);
 			System.Diagnostics.Debug.Assert (source_column_key != null);
-			System.Diagnostics.Debug.Assert (parent_table_key  != null);
+			System.Diagnostics.Debug.Assert (targetTableKey  != null);
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			Collections.SqlFields conds  = new Collections.SqlFields ();
 			
-			fields.Add (Tags.ColumnRefParent, SqlField.CreateConstant (parent_table_key.Id, DbKey.RawTypeForId));
+			fields.Add (Tags.ColumnRefTarget, SqlField.CreateConstant (targetTableKey.Id, DbKey.RawTypeForId));
 
 			DbInfrastructure.AddKeyExtraction (conds, Tags.TableColumnDef, source_column_key);
 			
@@ -2182,14 +2164,14 @@ namespace Epsitec.Cresus.Database
 		private void UpdateColumnRelation(DbTransaction transaction, string src_table_name, string src_columnName, string targetTableName)
 		{
 			DbTable  source = this.internalTables[src_table_name];
-			DbTable parent = this.internalTables[targetTableName];
+			DbTable target = this.internalTables[targetTableName];
 			DbColumn column = source.Columns[src_columnName];
 			
 			DbKey src_table_key    = source.Key;
 			DbKey src_column_key   = column.Key;
-			DbKey parent_table_key = parent.Key;
+			DbKey target_table_key = target.Key;
 			
-			this.UpdateColumnRelation (transaction, src_table_key, src_column_key, parent_table_key);
+			this.UpdateColumnRelation (transaction, src_table_key, src_column_key, target_table_key);
 		}
 
 
@@ -2397,7 +2379,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	   DbColumnClass.Data),
 						new DbColumn (Tags.ColumnRefTable,	  types.KeyId,         DbColumnClass.RefId),
 						new DbColumn (Tags.ColumnRefType,	  types.KeyId,         DbColumnClass.RefId),
-						new DbColumn (Tags.ColumnRefParent,	  types.NullableKeyId, DbColumnClass.RefId)
+						new DbColumn (Tags.ColumnRefTarget,	  types.NullableKeyId, DbColumnClass.RefId)
 					};
 				
 				this.CreateTable (table, columns, DbReplicationMode.Manual);
@@ -2414,23 +2396,6 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 DbColumnClass.RefInternal),
 						new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data),
 						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data)
-					};
-				
-				this.CreateTable (table, columns, DbReplicationMode.Manual);
-			}
-			
-			public void CreateTableEnumValDef()
-			{
-				TypeHelper types   = this.infrastructure.types;
-				DbTable    table   = new DbTable (Tags.TableEnumValDef);
-				DbColumn[] columns = new DbColumn[]
-					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		DbColumnClass.KeyId),
-						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	DbColumnClass.KeyStatus),
-						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		DbColumnClass.RefInternal),
-						new DbColumn (Tags.ColumnName,		  types.Name,		DbColumnClass.Data),
-						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	DbColumnClass.Data),
-						new DbColumn (Tags.ColumnRefType,	  types.KeyId,      DbColumnClass.RefId)
 					};
 				
 				this.CreateTable (table, columns, DbReplicationMode.Manual);

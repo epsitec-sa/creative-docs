@@ -824,12 +824,12 @@ namespace Epsitec.Cresus.Database
 				return;
 			}
 			
-			DbKey tableKey = infrastructure.FindDbTableKey (transaction, table.TableName);
+			DbTable dbTable = infrastructure.ResolveDbTable (transaction, table.TableName);
 			
 			//	Allocate real row ids for the temporary rows; thanks to the relations
 			//	defined at the data set level, the foreign keys will be updated too.
 			
-			long id = infrastructure.NewRowIdInTable (transaction, tableKey, list.Count);
+			long id = infrastructure.NewRowIdInTable (transaction, dbTable, list.Count);
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("Allocating {0} new IDs for table {1} starting at {2}.", list.Count, table.TableName, id));
 			

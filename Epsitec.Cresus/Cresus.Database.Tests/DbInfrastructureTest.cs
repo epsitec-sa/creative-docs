@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Database
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 				{
 					Assert.AreEqual (0, infrastructure.CountMatchingRows (transaction, "CR_COLUMN_DEF", "CR_NAME", DbSqlStandard.MakeSimpleSqlName ("MyColumn")));
-					Assert.AreEqual (4, infrastructure.CountMatchingRows (transaction, "CR_COLUMN_DEF", "CR_NAME", "CR_INFO"));
+					Assert.AreEqual (3, infrastructure.CountMatchingRows (transaction, "CR_COLUMN_DEF", "CR_NAME", "CR_INFO"));
 				}
 
 				//	Vérifie que les statements UPDATE ... lors de la création ont bien passé,
@@ -69,9 +69,14 @@ namespace Epsitec.Cresus.Database
 
 				table = infrastructure.ResolveDbTable ("CR_TABLE_DEF");
 
-				Assert.AreEqual (1000000000010L, infrastructure.NewRowIdInTable (null, table.Key, 2));
-				Assert.AreEqual (1000000000012L, infrastructure.NewRowIdInTable (null, table.Key, 0));
-				Assert.AreEqual (1000000000012L, infrastructure.NewRowIdInTable (null, table.Key, 1));
+				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					Assert.AreEqual (1000000000009L, infrastructure.NewRowIdInTable (transaction, table, 3));
+					Assert.AreEqual (1000000000012L, infrastructure.NewRowIdInTable (transaction, table, 0));
+					Assert.AreEqual (1000000000012L, infrastructure.NewRowIdInTable (transaction, table, 1));
+
+					transaction.Commit ();
+				}
 			}
 		}
 

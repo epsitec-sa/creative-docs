@@ -81,7 +81,6 @@ namespace Epsitec.Cresus.Replication
 			PackedTableData def_table   = ClientEngine.FindPackedTable (list, Tags.TableTableDef);
 			PackedTableData def_column  = ClientEngine.FindPackedTable (list, Tags.TableColumnDef);
 			PackedTableData def_type    = ClientEngine.FindPackedTable (list, Tags.TableTypeDef);
-			PackedTableData def_enumval = ClientEngine.FindPackedTable (list, Tags.TableEnumValDef);
 			PackedTableData log_table   = ClientEngine.FindPackedTable (list, Tags.TableLog);
 			
 			if (log_table != null)
@@ -94,8 +93,7 @@ namespace Epsitec.Cresus.Replication
 			
 			if ((def_table != null) ||
 				(def_column != null) ||
-				(def_type != null) ||
-				(def_enumval != null))
+				(def_type != null))
 			{
 				//	Ces opérations ne sont possibles qu'au sein d'un bloc d'exclusion global au
 				//	niveau des accès à la base de données :
@@ -109,7 +107,6 @@ namespace Epsitec.Cresus.Replication
 						if (def_table  != null)  this.ApplyChanges (transaction, def_table);
 						if (def_column != null)  this.ApplyChanges (transaction, def_column);
 						if (def_type   != null)  this.ApplyChanges (transaction, def_type);
-						if (def_enumval != null) this.ApplyChanges (transaction, def_enumval);
 						
 						//	Il est indispensable de valider la transaction à ce stade, car on va peut-être
 						//	modifier la structure interne de la base de données, et cela ne sera visible
@@ -123,7 +120,6 @@ namespace Epsitec.Cresus.Replication
 					list.Remove (def_table);
 					list.Remove (def_column);
 					list.Remove (def_type);
-					list.Remove (def_enumval);
 					
 					//	Met à jour la structure de la base de données selon les nouvelles descriptions de
 					//	tables/colonnes/types :
