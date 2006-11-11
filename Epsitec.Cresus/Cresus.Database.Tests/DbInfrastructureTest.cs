@@ -271,7 +271,7 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
-				DbTypeDef[] types = infrastructure.FindDbTypes (null);
+				DbTypeDef[] types = infrastructure.FindDbTypes ();
 				
 				for (int i = 0; i < types.Length; i++)
 				{

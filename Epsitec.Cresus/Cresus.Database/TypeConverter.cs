@@ -329,6 +329,18 @@ namespace Epsitec.Cresus.Database
 		/// important changes to the data (e.g. map a <c>long</c> to a <c>decimal</c>).
 		/// </summary>
 		/// <param name="value">The ADO.NET value.</param>
+		/// <param name="type">The type definition.</param>
+		/// <returns>The converted value.</returns>
+		public static object ConvertToSimpleType(object value, DbTypeDef type)
+		{
+			return TypeConverter.ConvertToSimpleType (value, type.SimpleType, type.NumDef);
+		}
+
+		/// <summary>
+		/// Converts a value from ADO.NET to the specified simple type. This can produce
+		/// important changes to the data (e.g. map a <c>long</c> to a <c>decimal</c>).
+		/// </summary>
+		/// <param name="value">The ADO.NET value.</param>
 		/// <param name="simpleType">The simple type.</param>
 		/// <param name="numDef">The numeric definition.</param>
 		/// <returns>The converted value.</returns>
@@ -357,6 +369,10 @@ namespace Epsitec.Cresus.Database
 					{
 						num = (System.Decimal) value;
 					}
+					else if (value is System.Boolean)
+					{
+						num = (System.Boolean) value ? 1 : 0;
+					}
 					else if (value is System.Int16)
 					{
 						num = (System.Int16) value;
@@ -368,6 +384,10 @@ namespace Epsitec.Cresus.Database
 					else if (value is System.Int64)
 					{
 						num = (System.Int64) value;
+					}
+					else if (value is DbId)
+					{
+						num = (DbId) value;
 					}
 					else if (value is System.String)
 					{

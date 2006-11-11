@@ -351,7 +351,7 @@ namespace Epsitec.Cresus.Database
 			DbColumn              column = table.Columns[columnName];
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			
-			fields.Add (column.CreateSqlName (), SqlField.CreateConstant (data));
+			fields.Add (column.CreateSqlName (), this.CreateSqlField (column, data));
 			
 			transaction.SqlBuilder.UpdateData (table.CreateSqlName (), fields, null);
 			
@@ -881,56 +881,56 @@ namespace Epsitec.Cresus.Database
 				return typeDef;
 			}
 		}
-		
-		public DbTypeDef[]  FindDbTypes(DbTransaction transaction)
+
+		/// <summary>
+		/// Finds all the live type definitions.
+		/// </summary>
+		/// <returns>The type definitions.</returns>
+		public DbTypeDef[] FindDbTypes()
 		{
+			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbTypeDef[] value = this.FindDbTypes (transaction);
+				transaction.Commit ();
+				return value;
+			}
+		}
+
+		/// <summary>
+		/// Finds all the live type definitions.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <returns>The type definitions.</returns>
+		public DbTypeDef[] FindDbTypes(DbTransaction transaction)
+		{
+			System.Diagnostics.Debug.Assert (transaction != null);
 			return this.FindDbTypes (transaction, DbRowSearchMode.LiveActive);
 		}
-		
-		public DbTypeDef[]  FindDbTypes(DbTransaction transaction, DbRowSearchMode row_search_mode)
+
+		/// <summary>
+		/// Finds all the type definitions using a specific search mode.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="rowSearchMode">The row search mode.</param>
+		/// <returns>The type definitions.</returns>
+		public DbTypeDef[] FindDbTypes(DbTransaction transaction, DbRowSearchMode rowSearchMode)
 		{
-			//	Liste tous les types.
-			
-			return this.LoadDbType (transaction, DbKey.Empty, row_search_mode).ToArray ();
+			System.Diagnostics.Debug.Assert (transaction != null);
+			return this.LoadDbType (transaction, DbKey.Empty, rowSearchMode).ToArray ();
 		}
 
-		
-		public SqlField CreateSqlField(DbColumn column, int value)
-		{
-			//	TODO: pas une bonne idée d'avoir ces méthodes de création qui ne tiennent
-			//	pas compte des types internes supportés par la base... c'est valable pour
-			//	toutes les variantes de CreateSqlField.
 
-			SqlField field = SqlField.CreateConstant (value, DbRawType.Int32);
-			field.Alias = column.Name;
-			return field;
-		}
-
-		public SqlField CreateSqlField(DbColumn column, long value)
+		public SqlField CreateSqlField(DbColumn column, object value)
 		{
-			SqlField field = SqlField.CreateConstant (value, DbRawType.Int64);
-			field.Alias = column.Name;
-			return field;
-		}
-
-		public SqlField CreateSqlField(DbColumn column, string value)
-		{
-			SqlField field = SqlField.CreateConstant (value, DbRawType.String);
-			field.Alias = column.Name;
-			return field;
-		}
-
-		public SqlField CreateSqlField(DbColumn column, System.DateTime value)
-		{
-			SqlField field = SqlField.CreateConstant (value, DbRawType.DateTime);
+			SqlField field = SqlField.CreateConstant (TypeConverter.ConvertToSimpleType (value, column.Type), column.Type.RawType);
 			field.Alias = column.Name;
 			return field;
 		}
 
 		public SqlField CreateEmptySqlField(DbColumn column)
 		{
-			DbRawType raw_type = column.Type.RawType;
-			SqlField field    = SqlField.CreateConstant (null, raw_type);
+			DbRawType rawType = column.Type.RawType;
+			SqlField field    = SqlField.CreateConstant (null, rawType);
 			field.Alias = column.CreateSqlName ();
 			return field;
 		}
