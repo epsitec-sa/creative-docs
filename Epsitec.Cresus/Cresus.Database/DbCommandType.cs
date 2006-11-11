@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Database
 		None			= 0,
 		
 		/// <summary>
-		/// Silent command for which <c>ExecuteNonQuery</c> returns <c>-1</c>.
+		/// Command for which <c>ExecuteNonQuery</c> returns no meaningful value.
 		/// </summary>
 		Silent			= 1,
 		

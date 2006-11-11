@@ -58,8 +58,11 @@ namespace Epsitec.Cresus.Database
 				Assert.AreEqual (1000000000003L, table.Key.Id);
 				Assert.AreEqual (5, table.Columns.Count);
 
-				Assert.AreEqual (0, infrastructure.CountMatchingRows (null, "CR_COLUMN_DEF", "CR_NAME", DbSqlStandard.MakeSimpleSqlName ("MyColumn")));
-				Assert.AreEqual (4, infrastructure.CountMatchingRows (null, "CR_COLUMN_DEF", "CR_NAME", "CR_INFO"));
+				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					Assert.AreEqual (0, infrastructure.CountMatchingRows (transaction, "CR_COLUMN_DEF", "CR_NAME", DbSqlStandard.MakeSimpleSqlName ("MyColumn")));
+					Assert.AreEqual (4, infrastructure.CountMatchingRows (transaction, "CR_COLUMN_DEF", "CR_NAME", "CR_INFO"));
+				}
 
 				//	Vérifie que les statements UPDATE ... lors de la création ont bien passé,
 				//	puis vérifie aussi que l'incrément de l'ID fonctionne correctement.
