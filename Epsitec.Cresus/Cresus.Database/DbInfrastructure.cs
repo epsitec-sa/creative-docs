@@ -389,7 +389,6 @@ namespace Epsitec.Cresus.Database
 			abstraction.ReleaseConnection ();
 		}
 
-
 		/// <summary>
 		/// Creates the database access.
 		/// </summary>
@@ -411,7 +410,6 @@ namespace Epsitec.Cresus.Database
 			return new DbAccess (provider, name, "localhost", "sysdba", "masterkey", false);
 		}
 
-
 		/// <summary>
 		/// Creates a new database abstraction. This will create a new connection
 		/// with the database.
@@ -425,7 +423,6 @@ namespace Epsitec.Cresus.Database
 			
 			return abstraction;
 		}
-
 
 		/// <summary>
 		/// Begins a read and write transaction for the default database abstraction.
@@ -729,7 +726,6 @@ namespace Epsitec.Cresus.Database
 			return list.ToArray ();
 		}
 
-
 		/// <summary>
 		/// Clears the table and type caches. This will force a reload of the
 		/// table definitions and type definitions.
@@ -745,7 +741,6 @@ namespace Epsitec.Cresus.Database
 				this.typeCache.ClearCache ();
 			}
 		}
-
 
 		/// <summary>
 		/// Registers the column relations by generating the associated database
@@ -803,7 +798,6 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Registers a new type and stores it into the database metadata.
@@ -968,7 +962,6 @@ namespace Epsitec.Cresus.Database
 			return this.LoadDbType (transaction, DbKey.Empty, rowSearchMode).ToArray ();
 		}
 
-
 		/// <summary>
 		/// Creates an SQL field definining a constant value for a given column.
 		/// The value is automatically converted to the internal data type.
@@ -1019,10 +1012,6 @@ namespace Epsitec.Cresus.Database
 			return field;
 		}
 
-
-
-
-
 		/// <summary>
 		/// Creates a table definition with the minimum id, status and log columns.
 		/// </summary>
@@ -1056,7 +1045,6 @@ namespace Epsitec.Cresus.Database
 			
 			return table;
 		}
-
 
 		/// <summary>
 		/// Registers a table for this database. This creates both the metadata and
@@ -1105,7 +1093,6 @@ namespace Epsitec.Cresus.Database
 			transaction.SqlBuilder.InsertTable (sqlTable);
 			this.ExecuteSilent (transaction);
 		}
-
 
 		/// <summary>
 		/// Checks that all types used by the column definitions for the specified
@@ -1198,7 +1185,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
 		/// <summary>
 		/// Acquires the global lock on the database (this is connection
 		/// independent; all database connections created through this
@@ -1218,7 +1204,6 @@ namespace Epsitec.Cresus.Database
 		{
 			this.globalLock.ReleaseWriterLock ();
 		}
-
 
 		/// <summary>
 		/// Locks a specific database connection. This prevents that the global
@@ -1245,7 +1230,6 @@ namespace Epsitec.Cresus.Database
 			this.globalLock.ReleaseReaderLock ();
 			System.Threading.Monitor.Exit (database);
 		}
-
 
 		/// <summary>
 		/// Notifies that a transaction begins. This is called by <c>DbTransaction</c>
@@ -1304,7 +1288,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
 		/// <summary>
 		/// Executes the specified rich command. This is called by <c>DbRichCommand</c>
 		/// when the command is initially created through its <c>CreateFromTables</c>
@@ -1318,7 +1301,6 @@ namespace Epsitec.Cresus.Database
 			
 			this.sqlEngine.Execute (command, this, transaction);
 		}
-
 
 		/// <summary>
 		/// Silently executes the command attached to the transaction.
@@ -1519,7 +1501,6 @@ namespace Epsitec.Cresus.Database
 			return dataTable;
 		}
 
-
 		/// <summary>
 		/// Finds the key for the specified table.
 		/// </summary>
@@ -1541,7 +1522,6 @@ namespace Epsitec.Cresus.Database
 		{
 			return this.FindLiveKey (this.FindDbKeys (transaction, Tags.TableTypeDef, name));
 		}
-
 
 		/// <summary>
 		/// Finds the first live key in the collection.
@@ -1592,7 +1572,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
 		/// <summary>
 		/// Counts the rows of the specified table which have a matching value in
 		/// a given column.
@@ -1617,7 +1596,6 @@ namespace Epsitec.Cresus.Database
 			
 			return InvariantConverter.ToInt (this.ExecuteScalar (transaction));
 		}
-
 
 		/// <summary>
 		/// Updates the specified row to use a new key.
@@ -1666,7 +1644,6 @@ namespace Epsitec.Cresus.Database
 			transaction.SqlBuilder.UpdateData (Tags.TableTableDef, fields, conds);
 			this.ExecuteSilent (transaction);
 		}
-
 
 		/// <summary>
 		/// Loads the table definitions based on the metadata table key and the
@@ -1882,7 +1859,6 @@ namespace Epsitec.Cresus.Database
 			return types;
 		}
 
-
 		/// <summary>
 		/// Gets the next row id in the specified table. This does not allocate
 		/// any keys.
@@ -1936,7 +1912,6 @@ namespace Epsitec.Cresus.Database
 			
 			return InvariantConverter.ToLong (this.ExecuteScalar (transaction)) - numKeys;
 		}
-
 
 		/// <summary>
 		/// Adds a SELECT extraction condition for a key in a table.
@@ -2020,7 +1995,6 @@ namespace Epsitec.Cresus.Database
 			conditions.Add (new SqlFunction (function, nameStatus, constStatus));
 		}
 
-
 		/// <summary>
 		/// Starts using the database. This loads the global and local settings
 		/// and instanciates the client manager.
@@ -2043,7 +2017,6 @@ namespace Epsitec.Cresus.Database
 				transaction.Commit ();
 			}
 		}
-
 
 		/// <summary>
 		/// Sets up the database logger.
@@ -2132,22 +2105,21 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (this.NextRowIdInTable (transaction, this.internalTables[Tags.TableLog]) == DbId.CreateId (2, this.clientId));
 		}
 
-
-		private static void SetCategory(DbColumn[] columns, DbElementCat cat)
-		{
-			for (int i = 0; i < columns.Length; i++)
-			{
-				columns[i].DefineCategory (cat);
-			}
-		}
-
-
-		private void UpdateColumnRelation(DbTransaction transaction, DbKey source_table_key, DbKey source_column_key, DbKey targetTableKey)
+		/// <summary>
+		/// Updates the column relation information. This will record the relation
+		/// in the CR_COLUMN_DEF table by specifying the target table for a given
+		/// source column.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="sourceTableKey">The source table key.</param>
+		/// <param name="sourceColumnKey">The source column key.</param>
+		/// <param name="targetTableKey">The target table key.</param>
+		private void UpdateColumnRelation(DbTransaction transaction, DbKey sourceTableKey, DbKey sourceColumnKey, DbKey targetTableKey)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 			
-			System.Diagnostics.Debug.Assert (source_table_key  != null);
-			System.Diagnostics.Debug.Assert (source_column_key != null);
+			System.Diagnostics.Debug.Assert (sourceTableKey  != null);
+			System.Diagnostics.Debug.Assert (sourceColumnKey != null);
 			System.Diagnostics.Debug.Assert (targetTableKey  != null);
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
@@ -2155,186 +2127,163 @@ namespace Epsitec.Cresus.Database
 			
 			fields.Add (Tags.ColumnRefTarget, SqlField.CreateConstant (targetTableKey.Id, DbKey.RawTypeForId));
 
-			DbInfrastructure.AddKeyExtraction (conds, Tags.TableColumnDef, source_column_key);
+			DbInfrastructure.AddKeyExtraction (conds, Tags.TableColumnDef, sourceColumnKey);
 			
 			transaction.SqlBuilder.UpdateData (Tags.TableColumnDef, fields, conds);
 			this.ExecuteSilent (transaction);
 		}
 
-		private void UpdateColumnRelation(DbTransaction transaction, string src_table_name, string src_columnName, string targetTableName)
+		/// <summary>
+		/// Updates the column relation information. This will record the relation
+		/// in the CR_COLUMN_DEF table by specifying the target table for a given
+		/// source column.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="sourceTableName">Name of the source table.</param>
+		/// <param name="sourceColumnName">Name of the source column.</param>
+		/// <param name="targetTableName">Name of the target table.</param>
+		private void UpdateColumnRelation(DbTransaction transaction, string sourceTableName, string sourceColumnName, string targetTableName)
 		{
-			DbTable  source = this.internalTables[src_table_name];
-			DbTable target = this.internalTables[targetTableName];
-			DbColumn column = source.Columns[src_columnName];
+			DbTable  source = this.internalTables[sourceTableName];
+			DbTable  target = this.internalTables[targetTableName];
+			DbColumn column = source.Columns[sourceColumnName];
 			
-			DbKey src_table_key    = source.Key;
-			DbKey src_column_key   = column.Key;
-			DbKey target_table_key = target.Key;
-			
-			this.UpdateColumnRelation (transaction, src_table_key, src_column_key, target_table_key);
+			this.UpdateColumnRelation (transaction, source.Key, column.Key, target.Key);
 		}
 
 
+		/// <summary>
+		/// Inserts a type definition row into the CR_TYPE_DEF table.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="typeDef">The type definition.</param>
 		private void InsertTypeDefRow(DbTransaction transaction, DbTypeDef typeDef)
 		{
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
-			
-			DbTable type_def_table = this.internalTables[Tags.TableTypeDef];
-			
-			//	Insère une ligne dans la table de définition des types.
-			
-			Collections.SqlFields fields = new Collections.SqlFields ();
-
-			fields.Add (this.CreateSqlField (type_def_table.Columns[Tags.ColumnId], typeDef.Key.Id));
-			fields.Add (this.CreateSqlField (type_def_table.Columns[Tags.ColumnStatus], typeDef.Key.IntStatus));
-			fields.Add (this.CreateSqlField (type_def_table.Columns[Tags.ColumnRefLog], this.logger.CurrentId));
-			fields.Add (this.CreateSqlField (type_def_table.Columns[Tags.ColumnName], typeDef.Name));
-			fields.Add (this.CreateSqlField (type_def_table.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (typeDef)));
-			
-			//	TODO: Initializer les colonnes descriptives
-			
-			transaction.SqlBuilder.InsertData (type_def_table.CreateSqlName (), fields);
-			this.ExecuteSilent (transaction);
-		}
-
-#if false
-		private void InsertEnumValueDefRow(DbTransaction transaction, DbType type, DbEnumValue value)
-		{
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
 			System.Diagnostics.Debug.Assert (transaction != null);
+			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
 			
-			DbTable enum_def = this.internal_tables[Tags.TableEnumValDef];
-			
-			//	Insère une ligne dans la table de définition des énumérations.
+			DbTable typeDefTable = this.internalTables[Tags.TableTypeDef];
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
+
+			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnId],      typeDef.Key.Id));
+			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnStatus],  typeDef.Key.IntStatus));
+			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnRefLog],  this.logger.CurrentId));
+			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnName],    typeDef.Name));
+			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (typeDef)));
 			
-			fields.Add (enum_def.Columns[Tags.ColumnId]	     .CreateSqlField (this.type_converter, value.InternalKey.Id));
-			fields.Add (enum_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, value.InternalKey.IntStatus));
-			fields.Add (enum_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.logger.CurrentId));
-			fields.Add (enum_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, value.Name));
-			fields.Add (enum_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbEnumValue.SerializeToXml (value, false)));
-			fields.Add (enum_def.Columns[Tags.ColumnRefType] .CreateSqlField (this.type_converter, type.InternalKey.Id));
-			
-			//	TODO: Initialiser les colonnes descriptives
-			
-			transaction.SqlBuilder.InsertData (enum_def.CreateSqlName (), fields);
+			transaction.SqlBuilder.InsertData (typeDefTable.CreateSqlName (), fields);
 			this.ExecuteSilent (transaction);
 		}
-#endif
 
+		/// <summary>
+		/// Inserts a table definition row into the CR_TABLE_DEF table.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table definition.</param>
 		private void InsertTableDefRow(DbTransaction transaction, DbTable table)
 		{
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
 			System.Diagnostics.Debug.Assert (transaction != null);
+			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
 			
-			DbTable table_def = this.internalTables[Tags.TableTableDef];
-			
-			//	Insère une ligne dans la table de définition des tables.
+			DbTable tableDefTable = this.internalTables[Tags.TableTableDef];
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
 
-			fields.Add (this.CreateSqlField (table_def.Columns[Tags.ColumnId], table.Key.Id));
-			fields.Add (this.CreateSqlField (table_def.Columns[Tags.ColumnStatus], table.Key.IntStatus));
-			fields.Add (this.CreateSqlField (table_def.Columns[Tags.ColumnRefLog], this.logger.CurrentId));
-			fields.Add (this.CreateSqlField (table_def.Columns[Tags.ColumnName], table.Name));
-			fields.Add (this.CreateSqlField (table_def.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (table)));
-			fields.Add (this.CreateSqlField (table_def.Columns[Tags.ColumnNextId], DbId.CreateId (1, this.clientId)));
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnId],		table.Key.Id));
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnStatus],  table.Key.IntStatus));
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnRefLog],  this.logger.CurrentId));
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnName],    table.Name));
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (table)));
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnNextId],  DbId.CreateId (1, this.clientId)));
 			
-			//	TODO: Initialiser les colonnes descriptives
-			
-			transaction.SqlBuilder.InsertData (table_def.CreateSqlName (), fields);
+			transaction.SqlBuilder.InsertData (tableDefTable.CreateSqlName (), fields);
 			this.ExecuteSilent (transaction);
 		}
 
+		/// <summary>
+		/// Inserts a column definition row into the CR_COLUMN_DEF table.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table definition.</param>
+		/// <param name="column">The column definition.</param>
 		private void InsertColumnDefRow(DbTransaction transaction, DbTable table, DbColumn column)
 		{
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
 			System.Diagnostics.Debug.Assert (transaction != null);
+			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
 			
-			DbTable column_def = this.internalTables[Tags.TableColumnDef];
-			
-			//	Insère une ligne dans la table de définition des colonnes.
+			DbTable columnDefTable = this.internalTables[Tags.TableColumnDef];
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
 
-			fields.Add (this.CreateSqlField (column_def.Columns[Tags.ColumnId], column.Key.Id));
-			fields.Add (this.CreateSqlField (column_def.Columns[Tags.ColumnStatus], column.Key.IntStatus));
-			fields.Add (this.CreateSqlField (column_def.Columns[Tags.ColumnRefLog], this.logger.CurrentId));
-			fields.Add (this.CreateSqlField (column_def.Columns[Tags.ColumnName], column.Name));
-			fields.Add (this.CreateSqlField (column_def.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (column)));
-			fields.Add (this.CreateSqlField (column_def.Columns[Tags.ColumnRefTable], table.Key.Id));
-			fields.Add (this.CreateSqlField (column_def.Columns[Tags.ColumnRefType], column.Type.Key.Id));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnId],       column.Key.Id));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnStatus],   column.Key.IntStatus));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefLog],   this.logger.CurrentId));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnName],     column.Name));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnInfoXml],  DbTools.GetCompactXml (column)));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefTable], table.Key.Id));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefType],  column.Type.Key.Id));
 			
-			//	TODO: Initialiser les colonnes descriptives
-			
-			transaction.SqlBuilder.InsertData (column_def.CreateSqlName (), fields);
+			transaction.SqlBuilder.InsertData (columnDefTable.CreateSqlName (), fields);
 			this.ExecuteSilent (transaction);
 		}
 
+		#region IDisposable Members
 
-		private void Dispose(bool disposing)
+		public void Dispose()
 		{
-			if (disposing)
+			if (this.globalLock != null)
 			{
-				if (this.globalLock != null)
-				{
-					this.globalLock.ReleaseLock ();
-					this.globalLock = null;
-				}
-				
-				if (this.logger != null)
-				{
-					this.logger.Detach ();
-					this.logger = null;
-				}
-				
-				if (this.abstraction != null)
-				{
-					this.abstraction.Dispose ();
-					
-					System.Diagnostics.Debug.Assert (this.abstraction.IsConnectionOpen == false);
-					
-					this.abstraction = null;
-					this.sqlEngine     = null;
-					this.converter = null;
-				}
-				
-				System.Diagnostics.Debug.Assert (this.sqlEngine == null);
-				System.Diagnostics.Debug.Assert (this.converter == null);
+				this.globalLock.ReleaseLock ();
+				this.globalLock = null;
 			}
+			
+			if (this.logger != null)
+			{
+				this.logger.Detach ();
+				this.logger = null;
+			}
+			
+			if (this.abstraction != null)
+			{
+				this.abstraction.Dispose ();
+				
+				System.Diagnostics.Debug.Assert (this.abstraction.IsConnectionOpen == false);
+				
+				this.abstraction = null;
+				this.sqlEngine   = null;
+				this.converter   = null;
+			}
+			
+			System.Diagnostics.Debug.Assert (this.sqlEngine == null);
+			System.Diagnostics.Debug.Assert (this.converter == null);
 		}
-		
-		
+
+		#endregion
+
 		#region Initialisation
+
+		/// <summary>
+		/// Initializes the database abstraction.
+		/// </summary>
 		private void InitializeDatabaseAbstraction()
 		{
-			this.types = new TypeHelper (this);
-			
+			this.types       = new TypeHelper (this);
 			this.abstraction = this.CreateDatabaseAbstraction ();
-			
-			this.sqlEngine  = this.abstraction.SqlEngine;
-			
+			this.sqlEngine   = this.abstraction.SqlEngine;
+			this.converter   = this.abstraction.Factory.TypeConverter;
+
 			System.Diagnostics.Debug.Assert (this.sqlEngine != null);
-			
-			this.converter = this.abstraction.Factory.TypeConverter;
-			
 			System.Diagnostics.Debug.Assert (this.converter != null);
 			
 			this.abstraction.SqlBuilder.AutoClear = true;
 		}
-		#endregion
-		
-		#region IDisposable Members
-		public void Dispose()
-		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
-		}
+
 		#endregion
 		
 		#region BootHelper Class
-		public class BootHelper
+		
+		private sealed class BootHelper
 		{
 			public BootHelper(DbInfrastructure infrastructure, DbTransaction transaction)
 			{
@@ -2347,7 +2296,6 @@ namespace Epsitec.Cresus.Database
 				System.Diagnostics.Debug.Assert (this.infrastructure.types.Name.IsNullable == false);
 				System.Diagnostics.Debug.Assert (this.infrastructure.types.InfoXml.IsNullable == false);
 			}
-			
 			
 			public void CreateTableTableDef()
 			{
@@ -2411,8 +2359,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnDateTime,	  types.DateTime,	DbColumnClass.Data)
 					};
 				
-				//	TODO: ajouter ici une colonne définissant la nature du changement (et l'utilisateur
-				//	qui en est la cause).
+				//	TODO: add a column recording the nature of the change and the author of the change...
 				
 				this.CreateTable (table, columns, DbReplicationMode.Manual);
 			}
@@ -2453,39 +2400,121 @@ namespace Epsitec.Cresus.Database
 				this.CreateTable (table, columns, DbReplicationMode.None);
 			}
 			
-			
-			private void CreateTable(DbTable table, DbColumn[] columns, DbReplicationMode replication_mode)
+			private void CreateTable(DbTable table, DbColumn[] columns, DbReplicationMode replicationMode)
 			{
-				DbInfrastructure.SetCategory (columns, DbElementCat.Internal);
+				for (int i = 0; i < columns.Length; i++)
+				{
+					columns[i].DefineCategory (DbElementCat.Internal);
+				}
 				
 				table.Columns.AddRange (columns);
 				
 				table.DefineCategory (DbElementCat.Internal);
 				table.DefinePrimaryKey (columns[0]);
-				table.DefineReplicationMode (replication_mode);
+				table.DefineReplicationMode (replicationMode);
 				
 				this.infrastructure.internalTables.Add (table);
 				
-				SqlTable sql_table = table.CreateSqlTable (this.infrastructure.converter);
-				this.infrastructure.DefaultSqlBuilder.InsertTable (sql_table);
+				SqlTable sqlTable = table.CreateSqlTable (this.infrastructure.converter);
+				this.infrastructure.DefaultSqlBuilder.InsertTable (sqlTable);
 				this.infrastructure.ExecuteSilent (this.transaction);
 			}
 		
-			
 			private DbInfrastructure			infrastructure;
 			private DbTransaction				transaction;
 		}
+		
 		#endregion
 		
 		#region TypeHelper Class
-		private class TypeHelper
+		
+		private sealed class TypeHelper
 		{
 			public TypeHelper(DbInfrastructure infrastructure)
 			{
 				this.infrastructure = infrastructure;
 			}
 			
-			
+			public DbTypeDef					KeyId
+			{
+				get
+				{
+					return this.numTypeKeyId;
+				}
+			}
+
+			public DbTypeDef					NullableKeyId
+			{
+				get
+				{
+					return this.numTypeNullableKeyId;
+				}
+			}
+
+			public DbTypeDef					KeyStatus
+			{
+				get
+				{
+					return this.numTypeKeyStatus;
+				}
+			}
+
+			public DbTypeDef					ReqExecState
+			{
+				get
+				{
+					return this.numTypeReqExState;
+				}
+			}
+
+			public DbTypeDef					DateTime
+			{
+				get
+				{
+					return this.otherTypeDateTime;
+				}
+			}
+
+			public DbTypeDef					ReqData
+			{
+				get
+				{
+					return this.otherTypeReqData;
+				}
+			}
+
+			public DbTypeDef					Name
+			{
+				get
+				{
+					return this.strTypeName;
+				}
+			}
+
+			public DbTypeDef					InfoXml
+			{
+				get
+				{
+					return this.strTypeInfoXml;
+				}
+			}
+
+			public DbTypeDef					DictKey
+			{
+				get
+				{
+					return this.strTypeDictKey;
+				}
+			}
+
+			public DbTypeDef					DictValue
+			{
+				get
+				{
+					return this.strTypeDictValue;
+				}
+			}
+
 			public void RegisterTypes()
 			{
 				this.InitializeNumTypes ();
@@ -2497,193 +2526,110 @@ namespace Epsitec.Cresus.Database
 			
 			public void ResolveTypes(DbTransaction transaction)
 			{
-				this.num_type_key_id          = this.infrastructure.ResolveDbType (transaction, Tags.TypeKeyId);
-				this.num_type_nullable_key_id = this.infrastructure.ResolveDbType (transaction, Tags.TypeNullableKeyId);
-				this.num_type_key_status      = this.infrastructure.ResolveDbType (transaction, Tags.TypeKeyStatus);
-				this.num_type_req_ex_state    = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqExState);
+				this.numTypeKeyId         = this.infrastructure.ResolveDbType (transaction, Tags.TypeKeyId);
+				this.numTypeNullableKeyId = this.infrastructure.ResolveDbType (transaction, Tags.TypeNullableKeyId);
+				this.numTypeKeyStatus     = this.infrastructure.ResolveDbType (transaction, Tags.TypeKeyStatus);
+				this.numTypeReqExState    = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqExState);
 				
-				this.str_type_name        = this.infrastructure.ResolveDbType (transaction, Tags.TypeName);
-				this.str_type_info_xml    = this.infrastructure.ResolveDbType (transaction, Tags.TypeInfoXml);
-				this.str_type_dict_key    = this.infrastructure.ResolveDbType (transaction, Tags.TypeDictKey);
-				this.str_type_dict_value  = this.infrastructure.ResolveDbType (transaction, Tags.TypeDictValue);
+				this.strTypeName          = this.infrastructure.ResolveDbType (transaction, Tags.TypeName);
+				this.strTypeInfoXml       = this.infrastructure.ResolveDbType (transaction, Tags.TypeInfoXml);
+				this.strTypeDictKey       = this.infrastructure.ResolveDbType (transaction, Tags.TypeDictKey);
+				this.strTypeDictValue     = this.infrastructure.ResolveDbType (transaction, Tags.TypeDictValue);
 				
-				this.d_t_type_datetime    = this.infrastructure.ResolveDbType (transaction, Tags.TypeDateTime);
-				this.bin_type_req_data    = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqData);
+				this.otherTypeDateTime    = this.infrastructure.ResolveDbType (transaction, Tags.TypeDateTime);
+				this.otherTypeReqData     = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqData);
 				
-				this.infrastructure.internalTypes.Add (this.num_type_key_id);
-				this.infrastructure.internalTypes.Add (this.num_type_nullable_key_id);
-				this.infrastructure.internalTypes.Add (this.num_type_key_status);
-				this.infrastructure.internalTypes.Add (this.num_type_req_ex_state);
+				this.infrastructure.internalTypes.Add (this.numTypeKeyId);
+				this.infrastructure.internalTypes.Add (this.numTypeNullableKeyId);
+				this.infrastructure.internalTypes.Add (this.numTypeKeyStatus);
+				this.infrastructure.internalTypes.Add (this.numTypeReqExState);
 				
-				this.infrastructure.internalTypes.Add (this.str_type_name);
-				this.infrastructure.internalTypes.Add (this.str_type_info_xml);
-				this.infrastructure.internalTypes.Add (this.str_type_dict_key);
-				this.infrastructure.internalTypes.Add (this.str_type_dict_value);
+				this.infrastructure.internalTypes.Add (this.strTypeName);
+				this.infrastructure.internalTypes.Add (this.strTypeInfoXml);
+				this.infrastructure.internalTypes.Add (this.strTypeDictKey);
+				this.infrastructure.internalTypes.Add (this.strTypeDictValue);
 				
-				this.infrastructure.internalTypes.Add (this.d_t_type_datetime);
-				this.infrastructure.internalTypes.Add (this.bin_type_req_data);
+				this.infrastructure.internalTypes.Add (this.otherTypeDateTime);
+				this.infrastructure.internalTypes.Add (this.otherTypeReqData);
 				
 				this.AssertAllTypesReady ();
 			}
 
-
-			void InitializeNumTypes()
+			private void InitializeNumTypes()
 			{
-				this.num_type_key_id          = new DbTypeDef (Res.Types.Num.KeyId);
-				this.num_type_nullable_key_id = new DbTypeDef (Res.Types.Num.NullableKeyId);
-				this.num_type_key_status      = new DbTypeDef (Res.Types.Num.KeyStatus);
-				this.num_type_req_ex_state    = new DbTypeDef (Res.Types.Num.ReqExecState);
+				this.numTypeKeyId         = new DbTypeDef (Res.Types.Num.KeyId);
+				this.numTypeNullableKeyId = new DbTypeDef (Res.Types.Num.NullableKeyId);
+				this.numTypeKeyStatus     = new DbTypeDef (Res.Types.Num.KeyStatus);
+				this.numTypeReqExState    = new DbTypeDef (Res.Types.Num.ReqExecState);
 			
-				this.infrastructure.internalTypes.Add (this.num_type_key_id);
-				this.infrastructure.internalTypes.Add (this.num_type_nullable_key_id);
-				this.infrastructure.internalTypes.Add (this.num_type_key_status);
-				this.infrastructure.internalTypes.Add (this.num_type_req_ex_state);
+				this.infrastructure.internalTypes.Add (this.numTypeKeyId);
+				this.infrastructure.internalTypes.Add (this.numTypeNullableKeyId);
+				this.infrastructure.internalTypes.Add (this.numTypeKeyStatus);
+				this.infrastructure.internalTypes.Add (this.numTypeReqExState);
 			}
 
-			void InitializeOtherTypes()
+			private void InitializeOtherTypes()
 			{
-				this.d_t_type_datetime   = new DbTypeDef (Res.Types.Other.DateTime);
-				this.bin_type_req_data   = new DbTypeDef (Res.Types.Other.ReqData);
+				this.otherTypeDateTime = new DbTypeDef (Res.Types.Other.DateTime);
+				this.otherTypeReqData  = new DbTypeDef (Res.Types.Other.ReqData);
 		
-				this.infrastructure.internalTypes.Add (this.d_t_type_datetime);
-				this.infrastructure.internalTypes.Add (this.bin_type_req_data);
+				this.infrastructure.internalTypes.Add (this.otherTypeDateTime);
+				this.infrastructure.internalTypes.Add (this.otherTypeReqData);
 			}
 
-			void InitializeStrTypes()
+			private void InitializeStrTypes()
 			{
-				this.str_type_name        = new DbTypeDef (Res.Types.Str.Name);
-				this.str_type_info_xml    = new DbTypeDef (Res.Types.Str.InfoXml);
-				this.str_type_dict_key    = new DbTypeDef (Res.Types.Str.Dict.Key);
-				this.str_type_dict_value  = new DbTypeDef (Res.Types.Str.Dict.Value);
+				this.strTypeName      = new DbTypeDef (Res.Types.Str.Name);
+				this.strTypeInfoXml   = new DbTypeDef (Res.Types.Str.InfoXml);
+				this.strTypeDictKey   = new DbTypeDef (Res.Types.Str.Dict.Key);
+				this.strTypeDictValue = new DbTypeDef (Res.Types.Str.Dict.Value);
 			
-				this.infrastructure.internalTypes.Add (this.str_type_name);
-				this.infrastructure.internalTypes.Add (this.str_type_info_xml);
-				this.infrastructure.internalTypes.Add (this.str_type_dict_key);
-				this.infrastructure.internalTypes.Add (this.str_type_dict_value);
+				this.infrastructure.internalTypes.Add (this.strTypeName);
+				this.infrastructure.internalTypes.Add (this.strTypeInfoXml);
+				this.infrastructure.internalTypes.Add (this.strTypeDictKey);
+				this.infrastructure.internalTypes.Add (this.strTypeDictValue);
 			}
-			
-			
-			void AssertAllTypesReady ()
+
+			private void AssertAllTypesReady()
 			{
-				System.Diagnostics.Debug.Assert (this.num_type_key_id != null);
-				System.Diagnostics.Debug.Assert (this.num_type_nullable_key_id != null);
-				System.Diagnostics.Debug.Assert (this.num_type_key_status != null);
-				System.Diagnostics.Debug.Assert (this.num_type_req_ex_state != null);
+				System.Diagnostics.Debug.Assert (this.numTypeKeyId != null);
+				System.Diagnostics.Debug.Assert (this.numTypeNullableKeyId != null);
+				System.Diagnostics.Debug.Assert (this.numTypeKeyStatus != null);
+				System.Diagnostics.Debug.Assert (this.numTypeReqExState != null);
 				
-				System.Diagnostics.Debug.Assert (this.str_type_name != null);
-				System.Diagnostics.Debug.Assert (this.str_type_info_xml != null);
-				System.Diagnostics.Debug.Assert (this.str_type_dict_key != null);
-				System.Diagnostics.Debug.Assert (this.str_type_dict_value != null);
+				System.Diagnostics.Debug.Assert (this.strTypeName != null);
+				System.Diagnostics.Debug.Assert (this.strTypeInfoXml != null);
+				System.Diagnostics.Debug.Assert (this.strTypeDictKey != null);
+				System.Diagnostics.Debug.Assert (this.strTypeDictValue != null);
 				
-				System.Diagnostics.Debug.Assert (this.d_t_type_datetime != null);
-				System.Diagnostics.Debug.Assert (this.bin_type_req_data != null);
-			}
-			
-			
-			public DbTypeDef					KeyId
-			{
-				get
-				{
-					return this.num_type_key_id;
-				}
+				System.Diagnostics.Debug.Assert (this.otherTypeDateTime != null);
+				System.Diagnostics.Debug.Assert (this.otherTypeReqData != null);
 			}
 
-			public DbTypeDef					NullableKeyId
-			{
-				get
-				{
-					return this.num_type_nullable_key_id;
-				}
-			}
+			private DbInfrastructure			infrastructure;
 
-			public DbTypeDef					KeyStatus
-			{
-				get
-				{
-					return this.num_type_key_status;
-				}
-			}
+			private DbTypeDef					numTypeKeyId;
+			private DbTypeDef					numTypeNullableKeyId;
+			private DbTypeDef					numTypeKeyStatus;
+			private DbTypeDef					numTypeReqExState;
 
-			public DbTypeDef ReqExecState
-			{
-				get
-				{
-					return this.num_type_req_ex_state;
-				}
-			}
+			private DbTypeDef					otherTypeDateTime;
+			private DbTypeDef					otherTypeReqData;
 
-			public DbTypeDef					DateTime
-			{
-				get
-				{
-					return this.d_t_type_datetime;
-				}
-			}
-
-			public DbTypeDef ReqData
-			{
-				get
-				{
-					return this.bin_type_req_data;
-				}
-			}
-
-			public DbTypeDef Name
-			{
-				get
-				{
-					return this.str_type_name;
-				}
-			}
-
-			public DbTypeDef InfoXml
-			{
-				get
-				{
-					return this.str_type_info_xml;
-				}
-			}
-
-			public DbTypeDef DictKey
-			{
-				get
-				{
-					return this.str_type_dict_key;
-				}
-			}
-
-			public DbTypeDef DictValue
-			{
-				get
-				{
-					return this.str_type_dict_value;
-				}
-			}
-
-
-			private DbInfrastructure infrastructure;
-
-			private DbTypeDef num_type_key_id;
-			private DbTypeDef num_type_nullable_key_id;
-			private DbTypeDef num_type_key_status;
-			private DbTypeDef num_type_req_ex_state;
-
-			private DbTypeDef d_t_type_datetime;
-			private DbTypeDef bin_type_req_data;
-
-			private DbTypeDef str_type_name;
-			private DbTypeDef str_type_info_xml;
-			private DbTypeDef str_type_dict_key;
-			private DbTypeDef str_type_dict_value;
+			private DbTypeDef					strTypeName;
+			private DbTypeDef					strTypeInfoXml;
+			private DbTypeDef					strTypeDictKey;
+			private DbTypeDef					strTypeDictValue;
 		}
+		
 		#endregion
 
 
-		private DbAccess access;
-		private IDbAbstraction abstraction;
+		private DbAccess						access;
+		private IDbAbstraction					abstraction;
 
-		private ISqlEngine sqlEngine;
-		private ITypeConverter converter;
+		private ISqlEngine						sqlEngine;
+		private ITypeConverter					converter;
 		
 		private TypeHelper						types;
 		private DbLogger						logger;
@@ -2692,19 +2638,20 @@ namespace Epsitec.Cresus.Database
 		private Settings.Globals				globals;
 		private Settings.Locals					locals;
 
-		private Collections.DbTables internalTables = new Collections.DbTables ();
-		private Collections.DbTypeDefs internalTypes = new Collections.DbTypeDefs ();
+		private Collections.DbTables			internalTables = new Collections.DbTables ();
+		private Collections.DbTypeDefs			internalTypes = new Collections.DbTypeDefs ();
 
-		private int clientId;
+		private int								clientId;
 		
-		string									localizations;
-		
-		Cache.DbTypeDefs						typeCache = new Cache.DbTypeDefs ();
-		Cache.DbTables							tableCache = new Cache.DbTables ();
+		private string							localizations;
 
-		private List<DbTransaction> liveTransactions;
-		private List<IDbAbstraction> releaseRequested;
-		private int lockTimeout = 15000;
+		private Cache.DbTypeDefs				typeCache = new Cache.DbTypeDefs ();
+		private Cache.DbTables					tableCache = new Cache.DbTables ();
+
+		private List<DbTransaction>				liveTransactions;
+		private List<IDbAbstraction>			releaseRequested;
+		
+		private int								lockTimeout = 15000;
 		System.Threading.ReaderWriterLock		globalLock = new System.Threading.ReaderWriterLock ();
 	}
 }
