@@ -275,7 +275,7 @@ namespace Epsitec.Cresus.Database
 			
 			db_table.Columns.AddRange (new DbColumn[] { db_col_1, db_col_2 });
 			
-			infrastructure.RegisterNewDbTable (null, db_table);
+			infrastructure.RegisterNewDbTable (db_table);
 			
 			DbColumn db_col_id   = db_table.Columns[0];
 			DbColumn db_col_stat = db_table.Columns[1];
@@ -342,7 +342,7 @@ namespace Epsitec.Cresus.Database
 			
 			db_table.Columns.AddRange (new DbColumn[] { db_col_1, db_col_2 });
 			
-			infrastructure.RegisterNewDbTable (null, db_table);
+			infrastructure.RegisterNewDbTable (db_table);
 			
 			DbColumn db_col_id   = db_table.Columns[0];
 			DbColumn db_col_stat = db_table.Columns[1];
@@ -843,7 +843,7 @@ namespace Epsitec.Cresus.Database
 			
 			db_table.Columns.AddRange (new DbColumn[] { db_col_1, db_col_2 });
 			
-			infrastructure.RegisterNewDbTable (null, db_table);
+			infrastructure.RegisterNewDbTable (db_table);
 		}
 #endif
 		private static System.Data.DataTable GetDataTableFromTable(DbInfrastructure infrastructure, string name)

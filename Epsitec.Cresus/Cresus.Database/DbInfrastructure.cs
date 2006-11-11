@@ -523,6 +523,20 @@ namespace Epsitec.Cresus.Database
 		/// Registers a new table for this database. This creates both the
 		/// metadata and the database table itself.
 		/// </summary>
+		/// <param name="table">The table.</param>
+		public void RegisterNewDbTable(DbTable table)
+		{
+			using (DbTransaction transaction = this.BeginTransaction ())
+			{
+				this.RegisterNewDbTable (transaction, table);
+				transaction.Commit ();
+			}
+		}
+
+		/// <summary>
+		/// Registers a new table for this database. This creates both the
+		/// metadata and the database table itself.
+		/// </summary>
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="table">The table.</param>
 		public void RegisterNewDbTable(DbTransaction transaction, DbTable table)
@@ -920,6 +934,13 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Creates an SQL field definining a constant value for a given column.
+		/// The value is automatically converted to the internal data type.
+		/// </summary>
+		/// <param name="column">The column.</param>
+		/// <param name="value">The high level value.</param>
+		/// <returns>The SQL field.</returns>
 		public SqlField CreateSqlField(DbColumn column, object value)
 		{
 			DbRawType rawType = column.Type.RawType;
@@ -932,6 +953,13 @@ namespace Epsitec.Cresus.Database
 			return field;
 		}
 
+		/// <summary>
+		/// Creates an SQL field definining a constant value for a given column.
+		/// The value is automatically converted to the internal data type.
+		/// </summary>
+		/// <param name="column">The column.</param>
+		/// <param name="value">The value.</param>
+		/// <returns>The SQL field.</returns>
 		public SqlField CreateSqlField(SqlColumn column, object value)
 		{
 			DbRawType rawType = column.Type;
@@ -944,10 +972,14 @@ namespace Epsitec.Cresus.Database
 			return field;
 		}
 
+		/// <summary>
+		/// Creates an the empty SQL field defining a constant.
+		/// </summary>
+		/// <param name="column">The column.</param>
+		/// <returns>The SQL field.</returns>
 		public SqlField CreateEmptySqlField(DbColumn column)
 		{
-			DbRawType rawType = column.Type.RawType;
-			SqlField field    = SqlField.CreateConstant (null, rawType);
+			SqlField field = SqlField.CreateConstant (null, column.Type.RawType);
 			field.Alias = column.CreateSqlName ();
 			return field;
 		}
@@ -955,53 +987,56 @@ namespace Epsitec.Cresus.Database
 
 
 
-		
-		internal DbTable CreateTable(string name, DbElementCat category, DbRevisionMode revision_mode, DbReplicationMode replication_mode)
+
+		/// <summary>
+		/// Creates a table definition with the minimum id, status and log columns.
+		/// </summary>
+		/// <param name="name">The table name.</param>
+		/// <param name="category">The table category.</param>
+		/// <param name="revisionMode">The table revision mode.</param>
+		/// <param name="replicationMode">The table replication mode.</param>
+		/// <returns></returns>
+		internal DbTable CreateTable(string name, DbElementCat category, DbRevisionMode revisionMode, DbReplicationMode replicationMode)
 		{
-			System.Diagnostics.Debug.Assert (revision_mode != DbRevisionMode.Unknown);
+			System.Diagnostics.Debug.Assert (revisionMode != DbRevisionMode.Unknown);
+			System.Diagnostics.Debug.Assert (replicationMode != DbReplicationMode.Unknown);
 			
 			DbTable table = new DbTable (name);
 			
 			DbTypeDef typeDef = this.internalTypes[Tags.TypeKeyId];
 			
-			DbColumn col_id   = new DbColumn (Tags.ColumnId,     this.internalTypes[Tags.TypeKeyId],     DbColumnClass.KeyId, DbElementCat.Internal);
-			DbColumn col_stat = new DbColumn (Tags.ColumnStatus, this.internalTypes[Tags.TypeKeyStatus], DbColumnClass.KeyStatus, DbElementCat.Internal);
-			DbColumn col_log  = new DbColumn (Tags.ColumnRefLog, this.internalTypes[Tags.TypeKeyId],     DbColumnClass.RefInternal, DbElementCat.Internal);
+			DbColumn colId   = new DbColumn (Tags.ColumnId,     this.internalTypes[Tags.TypeKeyId],     DbColumnClass.KeyId, DbElementCat.Internal);
+			DbColumn colStat = new DbColumn (Tags.ColumnStatus, this.internalTypes[Tags.TypeKeyStatus], DbColumnClass.KeyStatus, DbElementCat.Internal);
+			DbColumn colLog  = new DbColumn (Tags.ColumnRefLog, this.internalTypes[Tags.TypeKeyId],     DbColumnClass.RefInternal, DbElementCat.Internal);
 			
 			table.DefineCategory (category);
-			table.DefineRevisionMode (revision_mode);
-			table.DefineReplicationMode (replication_mode);
+			table.DefineRevisionMode (revisionMode);
+			table.DefineReplicationMode (replicationMode);
 			
-			table.Columns.Add (col_id);
-			table.Columns.Add (col_stat);
-			table.Columns.Add (col_log);
+			table.Columns.Add (colId);
+			table.Columns.Add (colStat);
+			table.Columns.Add (colLog);
 			
-			table.PrimaryKeys.Add (col_id);
+			table.PrimaryKeys.Add (colId);
 			
 			return table;
 		}
 
 
-		private void RegisterDbTable(DbTransaction transaction, DbTable table, bool check_for_known)
+		/// <summary>
+		/// Registers a table for this database. This creates both the metadata and
+		/// the database table itself (if needed).
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// <param name="checkForKnownTable">If set to <c>true</c>, checks that the table is indeed known.</param>
+		private void RegisterDbTable(DbTransaction transaction, DbTable table, bool checkForKnownTable)
 		{
-			//	Enregistre une nouvelle table dans la base de données. Ceci va attribuer à
-			//	la table une clef DbKey et vérifier qu'il n'y a pas de collision avec une
-			//	éventuelle table déjà existante. Cela va aussi attribuer des colonnes pour
-			//	la nouvelle table.
-			
-			if (transaction == null)
-			{
-				using (transaction = this.BeginTransaction ())
-				{
-					this.RegisterDbTable (transaction, table, check_for_known);
-					transaction.Commit ();
-					return;
-				}
-			}
+			System.Diagnostics.Debug.Assert (transaction != null);
 			
 			this.CheckForRegisteredTypes (transaction, table);
 			
-			if (check_for_known)
+			if (checkForKnownTable)
 			{
 				this.CheckForKnownTable (transaction, table);
 			}
@@ -1009,57 +1044,66 @@ namespace Epsitec.Cresus.Database
 			{
 				this.CheckForUnknownTable (transaction, table);
 				
-				long table_id  = this.NewRowIdInTable (transaction, this.internalTables[Tags.TableTableDef] .Key, 1);
-				long column_id = this.NewRowIdInTable (transaction, this.internalTables[Tags.TableColumnDef].Key, table.Columns.Count);
+				long tableId  = this.NewRowIdInTable (transaction, this.internalTables[Tags.TableTableDef] .Key, 1);
+				long columnId = this.NewRowIdInTable (transaction, this.internalTables[Tags.TableColumnDef].Key, table.Columns.Count);
 				
-				//	Crée la ligne de description de la table :
+				//	Create the table description in the CR_TABLE_DEF table :
 				
-				table.DefineKey (new DbKey (table_id));
+				table.DefineKey (new DbKey (tableId));
 				table.UpdatePrimaryKeyInfo ();
 				
 				this.InsertTableDefRow (transaction, table);
 				
-				//	Crée les lignes de description des colonnes :
+				//	Create the column descriptions in the CR_COLUMN_DEF table :
 				
 				for (int i = 0; i < table.Columns.Count; i++)
 				{
-					table.Columns[i].DefineKey (new DbKey (column_id + i));
+					table.Columns[i].DefineKey (new DbKey (columnId + i));
 					this.InsertColumnDefRow (transaction, table, table.Columns[i]);
 				}
 			}
 			
-			//	Finalement, il faut créer la table elle-même :
+			//	Create the table itself :
 			
-			SqlTable sql_table = table.CreateSqlTable (this.converter);
+			SqlTable sqlTable = table.CreateSqlTable (this.converter);
 			
-			transaction.SqlBuilder.InsertTable (sql_table);
+			transaction.SqlBuilder.InsertTable (sqlTable);
 			this.ExecuteSilent (transaction);
 		}
 
 
+		/// <summary>
+		/// Checks that all types used by the column definitions for the specified
+		/// table are properly registered. Otherwise, throws an exception.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// /// <exception cref="Exceptions.GenericException">Thrown if a type is not registered.</exception>
 		private void CheckForRegisteredTypes(DbTransaction transaction, DbTable table)
 		{
-			//	Vérifie que tous les types utilisés dans la définition des colonnes sont bien
-			//	connus (on vérifie qu'ils ont une clef valide).
-			
-			Collections.DbColumns columns = table.Columns;
-			
-			for (int i = 0; i < columns.Count; i++)
+			foreach (DbColumn column in table.Columns)
 			{
-				DbTypeDef typeDef = columns[i].Type;
+				DbTypeDef typeDef = column.Type;
 				
 				System.Diagnostics.Debug.Assert (typeDef != null);
 				
 				if (typeDef.Key.IsEmpty)
 				{
 					string message = string.Format ("Unregistered type '{0}' used in table '{1}', column '{2}'.",
-						/**/						typeDef.Name, table.Name, columns[i].Name);
+						/**/						typeDef.Name, table.Name, column.Name);
 					
 					throw new Exceptions.GenericException (this.access, message);
 				}
 			}
 		}
 
+		/// <summary>
+		/// Checks that the specified type is not yet known. Otherwise, throws an
+		/// exception.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="typeDef">The type definition.</param>
+		/// <exception cref="Exceptions.GenericException">Thrown if the type already exists.</exception>
 		private void CheckForUnknownType(DbTransaction transaction, DbTypeDef typeDef)
 		{
 			System.Diagnostics.Debug.Assert (typeDef != null);
@@ -1071,6 +1115,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Checks that the specified type is known. Otherwise, throws an exception.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="typeDef">The type definition.</param>
+		/// <exception cref="Exceptions.GenericException">Thrown if the type does not exist.</exception>
 		private void CheckForKnownType(DbTransaction transaction, DbTypeDef typeDef)
 		{
 			System.Diagnostics.Debug.Assert (typeDef != null);
@@ -1082,18 +1132,15 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Checks that the specified table is not yet known. Otherwise, throws an
+		/// exception.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// <exception cref="Exceptions.GenericException">Thrown if the table already exists.</exception>
 		private void CheckForUnknownTable(DbTransaction transaction, DbTable table)
 		{
-			//	Cherche si une table avec ce nom existe dans la base. Si c'est le cas,
-			//	génère une exception.
-			//
-			//	NOTE:
-			//
-			//	On cherche les lignes dans CR_TABLE_DEF dont la colonne CR_NAME contient le nom
-			//	spécifié et dont CR_REV = 0. Cette seconde condition est nécessaire, car une table
-			//	détruite figure encore dans CR_TABLE_DEF avec CR_REV > 0, et elle ne doit pas être
-			//	comptée.
-			
 			if (this.CountMatchingRows (transaction, Tags.TableTableDef, Tags.ColumnName, table.Name) > 0)
 			{
 				string message = string.Format ("Table {0} already exists in database.", table.Name);
@@ -1101,37 +1148,48 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Checks that the specified table is known. Otherwise, throws an exception.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// <exception cref="Exceptions.GenericException">Thrown if the table does not exist.</exception>
 		private void CheckForKnownTable(DbTransaction transaction, DbTable table)
 		{
-			//	Cherche si une table avec ce nom existe dans la base. Si ce n'est pas le cas,
-			//	génère une exception.
-			//
-			//	NOTE:
-			//
-			//	On cherche les lignes dans CR_TABLE_DEF dont la colonne CR_NAME contient le nom
-			//	spécifié et dont CR_REV = 0. Cette seconde condition est nécessaire, car une table
-			//	détruite figure encore dans CR_TABLE_DEF avec CR_REV > 0, et elle ne doit pas être
-			//	comptée.
-			
 			if (this.CountMatchingRows (transaction, Tags.TableTableDef, Tags.ColumnName, table.Name) == 0)
 			{
 				string message = string.Format ("Table {0} does not exist in database.", table.Name);
 				throw new Exceptions.GenericException (this.access, message);
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Acquires the global lock on the database (this is connection
+		/// independent; all database connections created through this
+		/// <c>DbInfrastructure</c> will be locked).
+		/// Neither <c>GlobalLock</c> nor <c>DatabaseLock</c> is allowed
+		/// until <c>GlobalUnlcok</c> is called.
+		/// </summary>
 		public void GlobalLock()
 		{
 			this.globalLock.AcquireWriterLock (this.lockTimeout);
 		}
-		
+
+		/// <summary>
+		/// Releases the global lock from the database. See <see cref="GlobalLock"/>.
+		/// </summary>
 		public void GlobalUnlock()
 		{
 			this.globalLock.ReleaseWriterLock ();
 		}
-		
-		
+
+
+		/// <summary>
+		/// Locks a specific database connection. This prevents that the global
+		/// lock gets locked until this database connection is unlocked again.
+		/// </summary>
+		/// <param name="database">The database abstraction.</param>
 		internal void DatabaseLock(IDbAbstraction database)
 		{
 			this.globalLock.AcquireReaderLock (this.lockTimeout);
@@ -1142,14 +1200,24 @@ namespace Epsitec.Cresus.Database
 				throw new Exceptions.DeadLockException (this.access, "Cannot lock database.");
 			}
 		}
-		
+
+		/// <summary>
+		/// Unlocks a specific database connection.
+		/// </summary>
+		/// <param name="database">The database abstraction.</param>
 		internal void DatabaseUnlock(IDbAbstraction database)
 		{
 			this.globalLock.ReleaseReaderLock ();
 			System.Threading.Monitor.Exit (database);
 		}
-		
-		
+
+
+		/// <summary>
+		/// Notifies that a transaction begins. This is called by <c>DbTransaction</c>
+		/// when a new transaction object is created. Checks that there is at most
+		/// one active transaction for every database abstraction.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		internal void NotifyBeginTransaction(DbTransaction transaction)
 		{
 			IDbAbstraction abstraction = transaction.Database;
@@ -1167,7 +1235,12 @@ namespace Epsitec.Cresus.Database
 				this.liveTransactions.Add (transaction);
 			}
 		}
-		
+
+		/// <summary>
+		/// Notifies that the transaction ended. This is called by <c>DbTransaction</c>
+		/// when a transaction is committed, rolled back or disposed.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		internal void NotifyEndTransaction(DbTransaction transaction)
 		{
 			IDbAbstraction abstraction = transaction.Database;
@@ -1195,19 +1268,18 @@ namespace Epsitec.Cresus.Database
 				this.ReleaseConnection (abstraction);
 			}
 		}
-		
-		
-		public void Execute(DbTransaction transaction, DbRichCommand command)
+
+
+		/// <summary>
+		/// Executes the specified rich command. This is called by <c>DbRichCommand</c>
+		/// when the command is initially created through its <c>CreateFromTables</c>
+		/// method.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="command">The command.</param>
+		internal void Execute(DbTransaction transaction, DbRichCommand command)
 		{
-			if (transaction == null)
-			{
-				using (transaction = this.BeginTransaction ())
-				{
-					this.Execute (transaction, command);
-					transaction.Commit ();
-					return;
-				}
-			}
+			System.Diagnostics.Debug.Assert (transaction != null);
 			
 			this.sqlEngine.Execute (command, this, transaction);
 		}

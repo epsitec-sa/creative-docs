@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Database
 				db_table1.DefineLocalizations (infrastructure.DefaultLocalizations);
 				db_table1.UpdateRevisionMode ();
 
-				infrastructure.RegisterNewDbTable (null, db_table1);
+				infrastructure.RegisterNewDbTable (db_table1);
 
 				DbTable db_table2 = infrastructure.ResolveDbTable (null, "SimpleTest");
 
@@ -274,7 +274,7 @@ namespace Epsitec.Cresus.Database
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
 				DbTable db_table = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.Disabled);
-				infrastructure.RegisterNewDbTable (null, db_table);
+				infrastructure.RegisterNewDbTable (db_table);
 			}
 		}
 
@@ -359,7 +359,7 @@ namespace Epsitec.Cresus.Database
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
 				DbTable db_table = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.Disabled);
-				infrastructure.RegisterNewDbTable (null, db_table);
+				infrastructure.RegisterNewDbTable (db_table);
 
 				Assert.IsNotNull (infrastructure.ResolveDbTable (null, db_table.Name));
 				Assert.AreEqual (1000000000014L, db_table.Key.Id);
