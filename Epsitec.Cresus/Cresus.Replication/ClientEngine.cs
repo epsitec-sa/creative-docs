@@ -264,7 +264,7 @@ namespace Epsitec.Cresus.Replication
 				for (int i = 0; i < def_table_rows.Length; i++)
 				{
 					DbKey   def_table_row_key = new DbKey (def_table_rows[i]);
-					DbTable def_table_runtime = this.infrastructure.ResolveDbTable (null, def_table_row_key);
+					DbTable def_table_runtime = this.infrastructure.ResolveDbTable (def_table_row_key);
 					
 					System.Diagnostics.Debug.Assert (def_table_runtime != null);
 					

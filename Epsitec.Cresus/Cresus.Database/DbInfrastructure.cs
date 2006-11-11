@@ -606,6 +606,23 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Resolves the database table definition with the specified key. This
+		/// will return the same object when called multiple times with the same
+		/// key, unless the cache is cleared with <c>ClearCaches</c>.
+		/// </summary>
+		/// <param name="key">The key to the table metadata.</param>
+		/// <returns>The table definition.</returns>
+		public DbTable ResolveDbTable(DbKey key)
+		{
+			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbTable value = this.ResolveDbTable (transaction, key);
+				transaction.Commit ();
+				return value;
+			}
+		}
+
+		/// <summary>
 		/// Resolves the database table definition with the specified name. This
 		/// will return the same object when called multiple times with the same
 		/// name, unless the cache is cleared with <c>ClearCaches</c>.
@@ -657,6 +674,22 @@ namespace Epsitec.Cresus.Database
 				}
 				
 				return table;
+			}
+		}
+
+		/// <summary>
+		/// Finds all live database table definitions belonging to the specified
+		/// category (either internal or user data).
+		/// </summary>
+		/// <param name="category">The table category.</param>
+		/// <returns>The table definitions or an empty array.</returns>
+		public DbTable[] FindDbTables(DbElementCat category)
+		{
+			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbTable[] value = this.FindDbTables (transaction, category);
+				transaction.Commit ();
+				return value;
 			}
 		}
 

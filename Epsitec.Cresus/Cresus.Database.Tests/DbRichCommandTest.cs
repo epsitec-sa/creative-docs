@@ -131,8 +131,8 @@ namespace Epsitec.Cresus.Database
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			
-			DbTable db_table_a = infrastructure.ResolveDbTable (null, "Personnes");
-			DbTable db_table_b = infrastructure.ResolveDbTable (null, "Domiciles");
+			DbTable db_table_a = infrastructure.ResolveDbTable ("Personnes");
+			DbTable db_table_b = infrastructure.ResolveDbTable ("Domiciles");
 			
 			DbType db_type_name = infrastructure.ResolveDbType ("CR_NameType");
 			DbType db_type_id   = infrastructure.ResolveDbType ("CR_KeyIdType");
@@ -168,8 +168,8 @@ namespace Epsitec.Cresus.Database
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			
-			DbTable db_table_a = infrastructure.ResolveDbTable (null, "Personnes");
-			DbTable db_table_b = infrastructure.ResolveDbTable (null, "Domiciles");
+			DbTable db_table_a = infrastructure.ResolveDbTable ("Personnes");
+			DbTable db_table_b = infrastructure.ResolveDbTable ("Domiciles");
 			
 			System.Data.DataRow row_1;
 			System.Data.DataRow row_2;
@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Database
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			
-			DbTable db_table_a = infrastructure.ResolveDbTable (null, "Personnes");
+			DbTable db_table_a = infrastructure.ResolveDbTable ("Personnes");
 			
 			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, null, db_table_a);
 			
@@ -242,8 +242,8 @@ namespace Epsitec.Cresus.Database
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			
-			DbTable db_table_a = infrastructure.ResolveDbTable (null, "Personnes");
-			DbTable db_table_b = infrastructure.ResolveDbTable (null, "Domiciles");
+			DbTable db_table_a = infrastructure.ResolveDbTable ("Personnes");
+			DbTable db_table_b = infrastructure.ResolveDbTable ("Domiciles");
 			
 			System.Data.DataRow row_1;
 			System.Data.DataRow row_2;
@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.Database
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			
-			DbTable db_table_a = infrastructure.ResolveDbTable (null, "Personnes");
+			DbTable db_table_a = infrastructure.ResolveDbTable ("Personnes");
 			
 			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, null, db_table_a);
 			
@@ -386,8 +386,8 @@ namespace Epsitec.Cresus.Database
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			
-			DbTable db_table_a = infrastructure.ResolveDbTable (null, "Personnes");
-			DbTable db_table_b = infrastructure.ResolveDbTable (null, "Domiciles");
+			DbTable db_table_a = infrastructure.ResolveDbTable ("Personnes");
+			DbTable db_table_b = infrastructure.ResolveDbTable ("Domiciles");
 			
 			infrastructure.UnregisterDbTable (, db_table_a);
 			infrastructure.UnregisterDbTable (, db_table_b);

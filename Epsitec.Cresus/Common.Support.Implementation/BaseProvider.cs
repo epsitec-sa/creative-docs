@@ -118,7 +118,7 @@ namespace Epsitec.Common.Support.Implementation
 				return false;
 			}
 			
-			this.data_table = this.dbi.ResolveDbTable (null, BaseProvider.DataTableName);
+			this.data_table = this.dbi.ResolveDbTable (BaseProvider.DataTableName);
 			
 			if (this.data_table == null)
 			{

@@ -40,19 +40,19 @@ namespace Epsitec.Cresus.Database
 
 				//	Vérifie que les tables principales ont été créées correctement :
 
-				table = infrastructure.ResolveDbTable (null, "CR_TABLE_DEF");
+				table = infrastructure.ResolveDbTable ("CR_TABLE_DEF");
 
 				Assert.IsNotNull (table);
 				Assert.AreEqual (1000000000001L, table.Key.Id);
 				Assert.AreEqual (6, table.Columns.Count);
 
-				table = infrastructure.ResolveDbTable (null, "CR_COLUMN_DEF");
+				table = infrastructure.ResolveDbTable ("CR_COLUMN_DEF");
 
 				Assert.IsNotNull (table);
 				Assert.AreEqual (1000000000002L, table.Key.Id);
 				Assert.AreEqual (8, table.Columns.Count);
 
-				table = infrastructure.ResolveDbTable (null, "CR_TYPE_DEF");
+				table = infrastructure.ResolveDbTable ("CR_TYPE_DEF");
 
 				Assert.IsNotNull (table);
 				Assert.AreEqual (1000000000003L, table.Key.Id);
@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Database
 				//	Vérifie que les statements UPDATE ... lors de la création ont bien passé,
 				//	puis vérifie aussi que l'incrément de l'ID fonctionne correctement.
 
-				table = infrastructure.ResolveDbTable (null, "CR_TABLE_DEF");
+				table = infrastructure.ResolveDbTable ("CR_TABLE_DEF");
 
 				Assert.AreEqual (1000000000010L, infrastructure.NewRowIdInTable (null, table.Key, 2));
 				Assert.AreEqual (1000000000012L, infrastructure.NewRowIdInTable (null, table.Key, 0));
@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Database
 			{
 				Assert.IsNotNull (infrastructure);
 
-				DbTable db_table = infrastructure.ResolveDbTable (null, "CR_TABLE_DEF");
+				DbTable db_table = infrastructure.ResolveDbTable ("CR_TABLE_DEF");
 				DbTypeDef db_type1 = infrastructure.ResolveDbType (Tags.TypeName);
 				DbTypeDef db_type2 = infrastructure.ResolveDbType (Tags.TypeName);
 				DbTypeDef db_type3 = infrastructure.ResolveDbType (Tags.TypeKeyId);
@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Database
 
 				infrastructure.RegisterNewDbTable (db_table1);
 
-				DbTable db_table2 = infrastructure.ResolveDbTable (null, "SimpleTest");
+				DbTable db_table2 = infrastructure.ResolveDbTable ("SimpleTest");
 
 				Assert.IsNotNull (db_table2);
 //-				Assert.IsTrue (db_table1 == db_table2);
@@ -290,9 +290,9 @@ namespace Epsitec.Cresus.Database
 			{
 				System.Diagnostics.Debug.WriteLine ("FindDbTables :");
 				System.Diagnostics.Debug.WriteLine ("--------------");
-				DbTable[] tables = infrastructure.FindDbTables (null, DbElementCat.Any);
+				DbTable[] tables = infrastructure.FindDbTables (DbElementCat.Any);
 				System.Diagnostics.Debug.WriteLine ("-- (cached) --");
-				infrastructure.FindDbTables (null, DbElementCat.Any);
+				infrastructure.FindDbTables (DbElementCat.Any);
 				System.Diagnostics.Debug.WriteLine ("--- (done) ---");
 
 				for (int i = 0; i < tables.Length; i++)
@@ -342,13 +342,13 @@ namespace Epsitec.Cresus.Database
 			{
 				infrastructure.Logger.CreateTemporaryEntry (null);
 
-				DbTable db_table1 = infrastructure.ResolveDbTable (null, "SimpleTest");
+				DbTable db_table1 = infrastructure.ResolveDbTable ("SimpleTest");
 
 				Assert.IsNotNull (db_table1);
 
 				infrastructure.UnregisterDbTable (db_table1);
 
-				DbTable db_table2 = infrastructure.ResolveDbTable (null, "SimpleTest");
+				DbTable db_table2 = infrastructure.ResolveDbTable ("SimpleTest");
 
 				Assert.IsNull (db_table2);
 			}
@@ -364,7 +364,7 @@ namespace Epsitec.Cresus.Database
 				DbTable db_table = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.Disabled);
 				infrastructure.RegisterNewDbTable (db_table);
 
-				Assert.IsNotNull (infrastructure.ResolveDbTable (null, db_table.Name));
+				Assert.IsNotNull (infrastructure.ResolveDbTable (db_table.Name));
 				Assert.AreEqual (1000000000014L, db_table.Key.Id);
 				Assert.AreEqual (DbRowStatus.Live, db_table.Key.Status);
 			}
@@ -378,12 +378,12 @@ namespace Epsitec.Cresus.Database
 
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
-				DbTable db_table = infrastructure.ResolveDbTable (null, "SimpleTest");
+				DbTable db_table = infrastructure.ResolveDbTable ("SimpleTest");
 
 				Assert.IsNotNull (db_table);
 
 				infrastructure.UnregisterDbTable (db_table);
-				Assert.IsNull (infrastructure.ResolveDbTable (null, db_table.Name));
+				Assert.IsNull (infrastructure.ResolveDbTable (db_table.Name));
 				infrastructure.UnregisterDbTable (db_table);
 			}
 		}

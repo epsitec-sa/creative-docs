@@ -703,7 +703,7 @@ namespace Epsitec.Cresus.Database
 				
 				orchestrator.DefineRemotingService (service, client);
 				
-				DbTable       db_table = infrastructure.ResolveDbTable (null, "ServiceTest");
+				DbTable       db_table = infrastructure.ResolveDbTable ("ServiceTest");
 				DbRichCommand command  = DbRichCommand.CreateFromTable (infrastructure, null, db_table, DbSelectRevision.LiveActive);
 				
 				System.Data.DataTable    table   = command.DataSet.Tables[0];
@@ -814,7 +814,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 #endif
-		
+
 #if false
 		private static void CreateTestTable(DbInfrastructure infrastructure, string name)
 		{
@@ -848,7 +848,7 @@ namespace Epsitec.Cresus.Database
 #endif
 		private static System.Data.DataTable GetDataTableFromTable(DbInfrastructure infrastructure, string name)
 		{
-			DbTable db_table = infrastructure.ResolveDbTable (null, name);
+			DbTable db_table = infrastructure.ResolveDbTable (name);
 			
 			DbColumn db_col_id   = db_table.Columns[0];
 			DbColumn db_col_stat = db_table.Columns[1];
@@ -880,7 +880,7 @@ namespace Epsitec.Cresus.Database
 			
 		private static void DeleteTestTable(DbInfrastructure infrastructure, string name)
 		{
-			DbTable db_table = infrastructure.ResolveDbTable (null, name);
+			DbTable db_table = infrastructure.ResolveDbTable (name);
 			infrastructure.UnregisterDbTable (db_table);
 		}
 		
