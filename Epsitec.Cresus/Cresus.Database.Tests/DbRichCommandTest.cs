@@ -18,9 +18,9 @@ namespace Epsitec.Cresus.Database
 			DbTable db_table_a = infrastructure.CreateDbTable ("Personnes", DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
 			DbTable db_table_b = infrastructure.CreateDbTable ("Domiciles", DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
 			
-			DbType db_type_name = infrastructure.ResolveDbType (null, "CR_NameType");
-			DbType db_type_id   = infrastructure.ResolveDbType (null, "CR_KeyIdType");
-			DbType db_type_npa  = infrastructure.ResolveDbType (null, "CR_KeyStatusType");
+			DbType db_type_name = infrastructure.ResolveDbType ("CR_NameType");
+			DbType db_type_id   = infrastructure.ResolveDbType ("CR_KeyIdType");
+			DbType db_type_npa  = infrastructure.ResolveDbType ("CR_KeyStatusType");
 			
 			db_table_a.Columns.Add (infrastructure.CreateColumn ("Nom", db_type_name));
 			db_table_a.Columns.Add (infrastructure.CreateColumn ("Prenom", db_type_name));
@@ -134,8 +134,8 @@ namespace Epsitec.Cresus.Database
 			DbTable db_table_a = infrastructure.ResolveDbTable (null, "Personnes");
 			DbTable db_table_b = infrastructure.ResolveDbTable (null, "Domiciles");
 			
-			DbType db_type_name = infrastructure.ResolveDbType (null, "CR_NameType");
-			DbType db_type_id   = infrastructure.ResolveDbType (null, "CR_KeyIdType");
+			DbType db_type_name = infrastructure.ResolveDbType ("CR_NameType");
+			DbType db_type_id   = infrastructure.ResolveDbType ("CR_KeyIdType");
 			
 			Assert.AreEqual (5, db_table_a.Columns.Count);
 			Assert.AreEqual (6, db_table_b.Columns.Count);

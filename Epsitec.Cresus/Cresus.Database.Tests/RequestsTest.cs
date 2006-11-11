@@ -253,8 +253,8 @@ namespace Epsitec.Cresus.Database
 			
 			infrastructure.Logger.CreateTemporaryEntry (null);
 			
-			DbType db_type_name = infrastructure.ResolveDbType (null, "Customer Name");
-			DbType db_type_date = infrastructure.ResolveDbType (null, "Birth Date");
+			DbType db_type_name = infrastructure.ResolveDbType ("Customer Name");
+			DbType db_type_date = infrastructure.ResolveDbType ("Birth Date");
 			
 			if (db_type_name == null)
 			{
@@ -329,8 +329,8 @@ namespace Epsitec.Cresus.Database
 			
 			infrastructure.Logger.CreateTemporaryEntry (null);
 			
-			DbType db_type_name = infrastructure.ResolveDbType (null, "Customer Name");
-			DbType db_type_date = infrastructure.ResolveDbType (null, "Birth Date");
+			DbType db_type_name = infrastructure.ResolveDbType ("Customer Name");
+			DbType db_type_date = infrastructure.ResolveDbType ("Birth Date");
 			
 			Assert.IsNotNull (db_type_name);
 			Assert.IsNotNull (db_type_date);
@@ -818,8 +818,8 @@ namespace Epsitec.Cresus.Database
 #if false
 		private static void CreateTestTable(DbInfrastructure infrastructure, string name)
 		{
-			DbType db_type_name = infrastructure.ResolveDbType (null, "Customer Name");
-			DbType db_type_date = infrastructure.ResolveDbType (null, "Birth Date");
+			DbType db_type_name = infrastructure.ResolveDbType ("Customer Name");
+			DbType db_type_date = infrastructure.ResolveDbType ("Birth Date");
 			
 			if (db_type_name == null)
 			{

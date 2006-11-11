@@ -80,9 +80,9 @@ namespace Epsitec.Cresus.Database
 				Assert.IsNotNull (infrastructure);
 
 				DbTable db_table = infrastructure.ResolveDbTable (null, "CR_TABLE_DEF");
-				DbTypeDef db_type1 = infrastructure.ResolveDbType (null, Tags.TypeName);
-				DbTypeDef db_type2 = infrastructure.ResolveDbType (null, Tags.TypeName);
-				DbTypeDef db_type3 = infrastructure.ResolveDbType (null, Tags.TypeKeyId);
+				DbTypeDef db_type1 = infrastructure.ResolveDbType (Tags.TypeName);
+				DbTypeDef db_type2 = infrastructure.ResolveDbType (Tags.TypeName);
+				DbTypeDef db_type3 = infrastructure.ResolveDbType (Tags.TypeKeyId);
 
 				Assert.IsNotNull (db_table);
 				Assert.IsNotNull (db_type1);
@@ -121,9 +121,9 @@ namespace Epsitec.Cresus.Database
 				infrastructure.RegisterNewDbType (db_type_num);
 				infrastructure.RegisterNewDbType (db_type_enum);
 				
-				DbType db_type_1 = infrastructure.ResolveDbType (null, "Nom");
-				DbType db_type_2 = infrastructure.ResolveDbType (null, "NUPO");
-				DbType db_type_3 = infrastructure.ResolveDbType (null, "Titre");
+				DbType db_type_1 = infrastructure.ResolveDbType ("Nom");
+				DbType db_type_2 = infrastructure.ResolveDbType ("NUPO");
+				DbType db_type_3 = infrastructure.ResolveDbType ("Titre");
 				
 				Assert.IsNotNull (db_type_1);
 				Assert.IsNotNull (db_type_2);
@@ -141,9 +141,9 @@ namespace Epsitec.Cresus.Database
 				infrastructure.UnregisterDbType (db_type_2);
 //				infrastructure.UnregisterDbType (db_type_3);
 				
-				db_type_1 = infrastructure.ResolveDbType (null, "Nom");
-				db_type_2 = infrastructure.ResolveDbType (null, "NUPO");
-//				db_type_3 = infrastructure.ResolveDbType (null, "Titre");
+				db_type_1 = infrastructure.ResolveDbType ("Nom");
+				db_type_2 = infrastructure.ResolveDbType ("NUPO");
+//				db_type_3 = infrastructure.ResolveDbType ("Titre");
 				
 				Assert.IsNull (db_type_1);
 				Assert.IsNull (db_type_2);
@@ -163,9 +163,9 @@ namespace Epsitec.Cresus.Database
 				infrastructure.Logger.CreateTemporaryEntry (null);
 
 #if false
-				DbType db_type_1 = infrastructure.ResolveDbType (null, "Nom");
-				DbType db_type_2 = infrastructure.ResolveDbType (null, "NUPO");
-				DbType db_type_3 = infrastructure.ResolveDbType (null, "Titre");
+				DbType db_type_1 = infrastructure.ResolveDbType ("Nom");
+				DbType db_type_2 = infrastructure.ResolveDbType ("NUPO");
+				DbType db_type_3 = infrastructure.ResolveDbType ("Titre");
 				
 				Assert.IsNull (db_type_1);
 				Assert.IsNull (db_type_2);
@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.Database
 				
 				infrastructure.UnregisterDbType (db_type_3);
 				
-				db_type_3 = infrastructure.ResolveDbType (null, "Titre");
+				db_type_3 = infrastructure.ResolveDbType ("Titre");
 				
 				Assert.IsNull (db_type_3);
 #endif

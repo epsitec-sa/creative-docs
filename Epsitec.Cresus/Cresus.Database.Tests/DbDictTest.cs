@@ -42,12 +42,17 @@ namespace Epsitec.Cresus.Database
 		[Test] public void Check01CreateDict()
 		{
 			Assert.IsNotNull (infrastructure);
-			DbDict.CreateTable (infrastructure, null, "TestDict");
+
+			using (DbTransaction transaction = infrastructure.BeginTransaction ())
+			{
+				DbDict.CreateTable (infrastructure, transaction, "TestDict");
+				transaction.Commit ();
+			}
 		}
 		
 		[Test] public void Check02Attach()
 		{
-			this.table = this.infrastructure.ResolveDbTable (null, "TestDict");
+			this.table = this.infrastructure.ResolveDbTable ("TestDict");
 			
 			Assert.IsNotNull (this.table);
 			
