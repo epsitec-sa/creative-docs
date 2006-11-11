@@ -922,7 +922,24 @@ namespace Epsitec.Cresus.Database
 
 		public SqlField CreateSqlField(DbColumn column, object value)
 		{
-			SqlField field = SqlField.CreateConstant (TypeConverter.ConvertToSimpleType (value, column.Type), column.Type.RawType);
+			DbRawType rawType = column.Type.RawType;
+
+			value = TypeConverter.ConvertToSimpleType (value, column.Type);
+			value = TypeConverter.ConvertToInternal (this.converter, value, rawType);
+			
+			SqlField field = SqlField.CreateConstant (value, rawType);
+			field.Alias = column.Name;
+			return field;
+		}
+
+		public SqlField CreateSqlField(SqlColumn column, object value)
+		{
+			DbRawType rawType = column.Type;
+
+			value = TypeConverter.ConvertToSimpleType (value, rawType);
+			value = TypeConverter.ConvertToInternal (this.converter, value, rawType);
+
+			SqlField field = SqlField.CreateConstant (value, rawType);
 			field.Alias = column.Name;
 			return field;
 		}

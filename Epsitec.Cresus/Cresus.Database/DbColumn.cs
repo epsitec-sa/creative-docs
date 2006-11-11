@@ -561,7 +561,7 @@ namespace Epsitec.Cresus.Database
 			else if (typeConverter.GetRawTypeConverter (rawType, out rawConverter))
 			{
 				column = new SqlColumn ();
-				column.SetConverter (rawConverter);
+				column.SetType (rawConverter.InternalType, rawConverter.Length, rawConverter.IsFixedLength);
 			}
 			else
 			{

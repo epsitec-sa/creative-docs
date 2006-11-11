@@ -131,34 +131,6 @@ namespace Epsitec.Cresus.Database
 
 
 		/// <summary>
-		/// Gets a value indicating whether this column has a raw type converter.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this column has a raw type converter; otherwise, <c>false</c>.
-		/// </value>
-		public bool								HasConverter
-		{
-			get
-			{
-				return this.converter != null;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets the raw type converter for this column.
-		/// </summary>
-		/// <value>The converter.</value>
-		public IRawTypeConverter				Converter
-		{
-			get
-			{
-				return this.converter;
-			}
-		}
-
-
-		/// <summary>
 		/// Gets or sets a value indicating whether this column is nullable.
 		/// </summary>
 		/// <value>
@@ -176,16 +148,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
-		/// <summary>
-		/// Sets the converter.
-		/// </summary>
-		/// <param name="converter">The converter.</param>
-		public void SetConverter(IRawTypeConverter converter)
-		{
-			this.converter = converter;
-			this.SetType (converter.InternalType, converter.Length, converter.IsFixedLength);
-		}
 
 		/// <summary>
 		/// Sets the type.
@@ -232,47 +194,10 @@ namespace Epsitec.Cresus.Database
 			this.isFixedLength = isFixedLength;
 		}
 
-
-		/// <summary>
-		/// Converts the ADO.NET value to an internal value.
-		/// </summary>
-		/// <param name="data">The data.</param>
-		/// <returns></returns>
-		public object ConvertToInternalType(object data)
-		{
-			if (this.HasConverter)
-			{
-				return this.Converter.ConvertToInternalType (data);
-			}
-			else
-			{
-				return data;
-			}
-		}
-
-		/// <summary>
-		/// Converts the internal value to an ADO.NET value.
-		/// </summary>
-		/// <param name="data">The data.</param>
-		/// <returns></returns>
-		public object ConvertFromInternalType(object data)
-		{
-			if (this.HasConverter)
-			{
-				return this.Converter.ConvertFromInternalType (data);
-			}
-			else
-			{
-				return data;
-			}
-		}
-
-
 		private string							name;
 		private DbRawType						type;
 		private bool							isNullable;
 		private bool							isFixedLength;
 		private int								length;
-		private IRawTypeConverter				converter;
 	}
 }

@@ -1350,8 +1350,8 @@ namespace Epsitec.Cresus.Database
 					{
 						//	Delete the row from the database. This will use a DELETE
 						//	command with the specified row id as the WHERE condition :
-						
-						object valueId = sqlColumns[0].ConvertToInternalType (row[0, System.Data.DataRowVersion.Original]);
+
+						object valueId = TypeConverter.ConvertToInternal (this.infrastructure.Converter, row[0, System.Data.DataRowVersion.Original], sqlColumns[0].Type);
 						
 						builder.SetCommandParameterValue (deleteCommand, 0, valueId);
 						
@@ -1361,8 +1361,8 @@ namespace Epsitec.Cresus.Database
 					{
 						//	Update the row in the database. Try an UPDATE command and
 						//	if it does not modify the table, use INSERT instead.
-						
-						object valueId = sqlColumns[0].ConvertToInternalType (row[0, System.Data.DataRowVersion.Current]);
+
+						object valueId = TypeConverter.ConvertToInternal (this.infrastructure.Converter, row[0, System.Data.DataRowVersion.Current], sqlColumns[0].Type);
 
 						builder.SetCommandParameterValue (updateCommand, whereParamIndex, valueId);
 
@@ -1381,7 +1381,7 @@ namespace Epsitec.Cresus.Database
 								//	The column has a value and will be updated or inserted
 								//	normally :
 
-								object value = sqlColumns[i].ConvertToInternalType (row[i]);
+								object value = TypeConverter.ConvertToInternal (this.infrastructure.Converter, row[i], sqlColumns[i].Type);
 
 								builder.SetCommandParameterValue (updateCommand, updateParamIndex[i], value);
 								builder.SetCommandParameterValue (insertCommand, insertParamIndex[i], value);

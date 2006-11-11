@@ -106,37 +106,28 @@ namespace Epsitec.Cresus.Database
 			{
 				infrastructure.Logger.CreateTemporaryEntry (null);
 
-#if false
-				DbEnumValue[] values = new DbEnumValue[3];
-				
-				values[0] = new DbEnumValue (1, "M");		values[0].DefineAttributes ("capt=Monsieur");
-				values[1] = new DbEnumValue (2, "Mme");		values[1].DefineAttributes ("capt=Madame");
-				values[2] = new DbEnumValue (3, "Mlle");	values[2].DefineAttributes ("capt=Mademoiselle");
-				
-				DbTypeString db_type_str  = infrastructure.CreateDbType ("Nom", 40, false) as DbTypeString;
-				DbTypeNum    db_type_num  = infrastructure.CreateDbType ("NUPO", new DbNumDef (4, 0, 1000, 9999)) as DbTypeNum;
-				DbTypeEnum   db_type_enum = infrastructure.CreateDbType ("Titre", values) as DbTypeEnum;
+				DbTypeDef db_type_str  = new DbTypeDef ("Nom", DbSimpleType.String, null, 40, false, DbNullability.Yes);
+				DbTypeDef db_type_num  = new DbTypeDef ("NUPO", DbSimpleType.Decimal, new DbNumDef (4, 0, 1000, 9999), 0, false, DbNullability.Yes);
+				DbTypeDef db_type_bool = new DbTypeDef ("IsMale", DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Boolean), 0, false, DbNullability.Yes);
 				
 				infrastructure.RegisterNewDbType (db_type_str);
 				infrastructure.RegisterNewDbType (db_type_num);
-				infrastructure.RegisterNewDbType (db_type_enum);
+				infrastructure.RegisterNewDbType (db_type_bool);
 				
-				DbType db_type_1 = infrastructure.ResolveDbType ("Nom");
-				DbType db_type_2 = infrastructure.ResolveDbType ("NUPO");
-				DbType db_type_3 = infrastructure.ResolveDbType ("Titre");
+				DbTypeDef db_type_1 = infrastructure.ResolveDbType ("Nom");
+				DbTypeDef db_type_2 = infrastructure.ResolveDbType ("NUPO");
+				DbTypeDef db_type_3 = infrastructure.ResolveDbType ("IsMale");
 				
 				Assert.IsNotNull (db_type_1);
 				Assert.IsNotNull (db_type_2);
 				Assert.IsNotNull (db_type_3);
 				
-				Assert.AreEqual ("Nom",   db_type_1.Name);
-				Assert.AreEqual ("NUPO",  db_type_2.Name);
-				Assert.AreEqual ("Titre", db_type_3.Name);
-#endif
+				Assert.AreEqual ("Nom",    db_type_1.Name);
+				Assert.AreEqual ("NUPO",   db_type_2.Name);
+				Assert.AreEqual ("IsMale", db_type_3.Name);
 
 				infrastructure.Logger.CreateTemporaryEntry (null);
 
-#if false
 				infrastructure.UnregisterDbType (db_type_1);
 				infrastructure.UnregisterDbType (db_type_2);
 //				infrastructure.UnregisterDbType (db_type_3);
@@ -148,7 +139,6 @@ namespace Epsitec.Cresus.Database
 				Assert.IsNull (db_type_1);
 				Assert.IsNull (db_type_2);
 //				Assert.IsNull (db_type_3);
-#endif
 			}
 		}
 
@@ -162,23 +152,21 @@ namespace Epsitec.Cresus.Database
 			{
 				infrastructure.Logger.CreateTemporaryEntry (null);
 
-#if false
-				DbType db_type_1 = infrastructure.ResolveDbType ("Nom");
-				DbType db_type_2 = infrastructure.ResolveDbType ("NUPO");
-				DbType db_type_3 = infrastructure.ResolveDbType ("Titre");
+				DbTypeDef db_type_1 = infrastructure.ResolveDbType ("Nom");
+				DbTypeDef db_type_2 = infrastructure.ResolveDbType ("NUPO");
+				DbTypeDef db_type_3 = infrastructure.ResolveDbType ("IsMale");
 				
 				Assert.IsNull (db_type_1);
 				Assert.IsNull (db_type_2);
 				Assert.IsNotNull (db_type_3);
 				
-				Assert.AreEqual ("Titre", db_type_3.Name);
+				Assert.AreEqual ("IsMale", db_type_3.Name);
 				
 				infrastructure.UnregisterDbType (db_type_3);
 				
-				db_type_3 = infrastructure.ResolveDbType ("Titre");
+				db_type_3 = infrastructure.ResolveDbType ("IsMale");
 				
 				Assert.IsNull (db_type_3);
-#endif
 			}
 		}
 
@@ -198,18 +186,21 @@ namespace Epsitec.Cresus.Database
 				DbTypeDef db_type_level = new DbTypeDef ("Level", DbSimpleType.String, null, 4, false, DbNullability.No);
 				DbTypeDef db_type_type  = new DbTypeDef ("Type", DbSimpleType.String, null, 25, false, DbNullability.Yes);
 				DbTypeDef db_type_data  = new DbTypeDef ("Data", DbSimpleType.ByteArray, null, 0, false, DbNullability.Yes);
+				DbTypeDef db_type_guid  = new DbTypeDef ("Guid", DbSimpleType.Guid, null, 0, false, DbNullability.Yes);
 
 				infrastructure.RegisterNewDbType (db_type_name);
 				infrastructure.RegisterNewDbType (db_type_level);
 				infrastructure.RegisterNewDbType (db_type_type);
 				infrastructure.RegisterNewDbType (db_type_data);
+				infrastructure.RegisterNewDbType (db_type_guid);
 
 				DbColumn col1 = DbTable.CreateUserDataColumn ("Name", db_type_name);
 				DbColumn col2 = DbTable.CreateUserDataColumn ("Level", db_type_level);
 				DbColumn col3 = DbTable.CreateUserDataColumn ("Type", db_type_type);
 				DbColumn col4 = DbTable.CreateUserDataColumn ("Data", db_type_data);
+				DbColumn col5 = DbTable.CreateUserDataColumn ("Guid", db_type_guid);
 
-				db_table1.Columns.AddRange (new DbColumn[] { col1, col2, col3, col4 });
+				db_table1.Columns.AddRange (new DbColumn[] { col1, col2, col3, col4, col5 });
 
 				infrastructure.RegisterNewDbTable (null, db_table1);
 

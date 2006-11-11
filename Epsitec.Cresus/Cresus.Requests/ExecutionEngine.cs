@@ -234,7 +234,7 @@ namespace Epsitec.Cresus.Requests
 			
 			for (int i = 0; i < columns.Length; i++)
 			{
-				SqlField field = SqlField.CreateConstant (columns[i].ConvertToInternalType (values[i]), columns[i].Type);
+				SqlField field = this.infrastructure.CreateSqlField (columns[i], values[i]);
 				string   alias = columns[i].Name;
 				sql_fields.Add (alias, field);
 			}
