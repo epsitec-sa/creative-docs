@@ -242,6 +242,11 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
+				if (this.revisionMode == DbRevisionMode.Unknown)
+				{
+					this.UpdateRevisionMode ();
+				}
+				
 				return this.revisionMode;
 			}
 		}
@@ -271,6 +276,24 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+
+		/// <summary>
+		/// Updates the revision mode based on the column definitions. This method
+		/// overwrites the <c>RevisionMode</c> defined by <c>DefineRevisionMode</c>.
+		/// </summary>
+		public void UpdateRevisionMode()
+		{
+			foreach (DbColumn column in this.columns)
+			{
+				if (column.RevisionMode == DbRevisionMode.Enabled)
+				{
+					this.revisionMode = DbRevisionMode.Enabled;
+					return;
+				}
+			}
+
+			this.revisionMode = DbRevisionMode.Disabled;
+		}
 
 		/// <summary>
 		/// Defines the name for this table. A table name may not be changed
@@ -630,7 +653,7 @@ namespace Epsitec.Cresus.Database
 			xmlWriter.WriteStartElement ("table");
 
 			DbTools.WriteAttribute (xmlWriter, "cat", DbTools.ElementCategoryToString (this.category));
-			DbTools.WriteAttribute (xmlWriter, "rev", DbTools.RevisionModeToString (this.revisionMode));
+			DbTools.WriteAttribute (xmlWriter, "rev", DbTools.RevisionModeToString (this.RevisionMode));
 			DbTools.WriteAttribute (xmlWriter, "rep", DbTools.ReplicationModeToString (this.replicationMode));
 			DbTools.WriteAttribute (xmlWriter, "l10n", DbTools.StringToString (this.localizations));
 

@@ -203,6 +203,7 @@ namespace Epsitec.Cresus.Database
 
 				db_table1.Columns.AddRange (new DbColumn[] { col1, col2, col3, col4, col5 });
 				db_table1.DefineLocalizations (infrastructure.DefaultLocalizations);
+				db_table1.UpdateRevisionMode ();
 
 				infrastructure.RegisterNewDbTable (null, db_table1);
 
