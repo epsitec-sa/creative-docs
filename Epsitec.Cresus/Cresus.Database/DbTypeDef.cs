@@ -72,8 +72,23 @@ namespace Epsitec.Cresus.Database
 		/// <param name="numDef">The numeric defition.</param>
 		/// <param name="length">The length (if this is a string).</param>
 		/// <param name="isFixedLength">If set to <c>true</c>, denotes a fixed length string.</param>
-		/// <param name="nullableMode">The nullable mode.</param>
-		public DbTypeDef(string name, DbSimpleType simpleType, DbNumDef numDef, int length, bool isFixedLength, DbNullability nullableMode)
+		/// <param name="nullability">The nullability mode.</param>
+		public DbTypeDef(string name, DbSimpleType simpleType, DbNumDef numDef, int length, bool isFixedLength, DbNullability nullability)
+			: this (name, simpleType, numDef, length, isFixedLength, nullability, false)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbTypeDef"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="simpleType">The simple type.</param>
+		/// <param name="numDef">The numeric defition.</param>
+		/// <param name="length">The length (if this is a string).</param>
+		/// <param name="isFixedLength">If set to <c>true</c>, denotes a fixed length string.</param>
+		/// <param name="nullability">The nullability mode.</param>
+		/// <param name="isMultilingual">If set to <c>true</c>, denotes a multilingual type.</param>
+		public DbTypeDef(string name, DbSimpleType simpleType, DbNumDef numDef, int length, bool isFixedLength, DbNullability nullability, bool isMultilingual)
 		{
 			this.name = name;
 			this.simpleType = simpleType;
@@ -81,7 +96,8 @@ namespace Epsitec.Cresus.Database
 			this.rawType = TypeConverter.GetRawType (this.simpleType, this.numDef);
 			this.length = length;
 			this.isFixedLength = isFixedLength;
-			this.isNullable = nullableMode == DbNullability.Yes;
+			this.isNullable = nullability == DbNullability.Yes;
+			this.isMultilingual = isMultilingual;
 		}
 
 

@@ -421,8 +421,10 @@ namespace Epsitec.Cresus.Database
 				string[] array = Collection.ToArray<string> (localizations);
 				this.localizations = array.Length == 0 ? null : string.Join ("/", array);
 			}
-
-			throw new System.InvalidOperationException (string.Format ("Table '{0}' may not change its localization", this.Name));
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Table '{0}' may not change its localization", this.Name));
+			}
 		}
 
 

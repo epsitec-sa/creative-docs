@@ -178,13 +178,14 @@ namespace Epsitec.Cresus.Database
 
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
+				infrastructure.DefaultLocalizations = new string[] { "fr", "de", "it", "en" };
 				infrastructure.Logger.CreateTemporaryEntry (null);
 
 				DbTable db_table1 = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.Disabled);
 
 				DbTypeDef db_type_name  = new DbTypeDef ("Name", DbSimpleType.String, null, 80, false, DbNullability.No);
 				DbTypeDef db_type_level = new DbTypeDef ("Level", DbSimpleType.String, null, 4, false, DbNullability.No);
-				DbTypeDef db_type_type  = new DbTypeDef ("Type", DbSimpleType.String, null, 25, false, DbNullability.Yes);
+				DbTypeDef db_type_type  = new DbTypeDef ("Type", DbSimpleType.String, null, 25, false, DbNullability.Yes, true);
 				DbTypeDef db_type_data  = new DbTypeDef ("Data", DbSimpleType.ByteArray, null, 0, false, DbNullability.Yes);
 				DbTypeDef db_type_guid  = new DbTypeDef ("Guid", DbSimpleType.Guid, null, 0, false, DbNullability.Yes);
 
@@ -201,12 +202,14 @@ namespace Epsitec.Cresus.Database
 				DbColumn col5 = DbTable.CreateUserDataColumn ("Guid", db_type_guid);
 
 				db_table1.Columns.AddRange (new DbColumn[] { col1, col2, col3, col4, col5 });
+				db_table1.DefineLocalizations (infrastructure.DefaultLocalizations);
 
 				infrastructure.RegisterNewDbTable (null, db_table1);
 
 				DbTable db_table2 = infrastructure.ResolveDbTable (null, "SimpleTest");
 
 				Assert.IsNotNull (db_table2);
+//-				Assert.IsTrue (db_table1 == db_table2);
 
 				Assert.AreEqual (db_table1.Name, db_table2.Name);
 				Assert.AreEqual (db_table1.Category, db_table2.Category);
@@ -254,7 +257,9 @@ namespace Epsitec.Cresus.Database
 
 				Assert.AreEqual ("Pierre ARNAUD", dataTable.Rows[0]["Name"]);
 				Assert.AreEqual ("S-DV", dataTable.Rows[0]["Level"]);
-				Assert.AreEqual (System.DBNull.Value, dataTable.Rows[0]["Type"]);
+				Assert.AreEqual (System.DBNull.Value, dataTable.Rows[0]["Type (fr)"]);
+				Assert.AreEqual (10, ((byte[]) dataTable.Rows[0]["Data"])[9]);
+				Assert.AreEqual (new System.Guid (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11), TypeConverter.ConvertFromInternal (infrastructure.Converter, dataTable.Rows[0]["Guid"], DbRawType.Guid));
 			}
 		}
 
