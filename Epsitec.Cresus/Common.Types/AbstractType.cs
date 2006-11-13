@@ -122,6 +122,10 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		/// <summary>
+		/// Gets the default value for this type.
+		/// </summary>
+		/// <value>The default value or <c>null</c>.</value>
 		public object DefaultValue
 		{
 			get
@@ -130,6 +134,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the sample value for this type.
+		/// </summary>
+		/// <value>The sample value or <c>null</c>.</value>
 		public object SampleValue
 		{
 			get
@@ -174,12 +182,20 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Defines the default value for this type.
+		/// </summary>
+		/// <param name="value">The value or <c>null</c>.</param>
 		public void DefineDefaultValue(object value)
 		{
 			System.Diagnostics.Debug.Assert ((value == null) || (this.IsValidValue (value)));
 			AbstractType.SetDefaultValue (this.Caption, value);
 		}
 
+		/// <summary>
+		/// Defines the sample value for this type.
+		/// </summary>
+		/// <param name="value">The value or <c>null</c>.</param>
 		public void DefineSampleValue(object value)
 		{
 			System.Diagnostics.Debug.Assert ((value == null) || (this.IsValidValue (value)));

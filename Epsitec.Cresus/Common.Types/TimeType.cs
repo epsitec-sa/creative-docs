@@ -48,8 +48,7 @@ namespace Epsitec.Common.Types
 
 				if (TimeType.defaultValue == null)
 				{
-					//	TODO: use real DRUID here
-					TimeType.defaultValue = (TimeType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[xxxx]"));
+					TimeType.defaultValue = (TimeType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[100I]"));
 				}
 
 				return TimeType.defaultValue;

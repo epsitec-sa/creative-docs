@@ -49,8 +49,7 @@ namespace Epsitec.Common.Types
 
 				if (DateTimeType.defaultValue == null)
 				{
-					//	TODO: use real DRUID here
-					DateTimeType.defaultValue = (DateTimeType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[xxxx]"));
+					DateTimeType.defaultValue = (DateTimeType) TypeRosetta.CreateTypeObject (Support.Druid.Parse ("[100J]"));
 				}
 
 				return DateTimeType.defaultValue;

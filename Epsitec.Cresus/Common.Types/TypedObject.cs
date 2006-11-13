@@ -3,15 +3,28 @@
 
 namespace Epsitec.Common.Types
 {
+	/// <summary>
+	/// The <c>TypedObject</c> structure is used to make any type for which
+	/// there is a converter, compatible with the <c>DependencyProperty</c>
+	/// serialization.
+	/// </summary>
 	[System.Serializable]
 	[System.ComponentModel.TypeConverter (typeof (TypedObject.Converter))]
 	public struct TypedObject
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TypedObject"/> structure.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public TypedObject(object value)
 		{
 			this.value = value;
 		}
 
+		/// <summary>
+		/// Gets the value of this typed object.
+		/// </summary>
+		/// <value>The value.</value>
 		public object Value
 		{
 			get
@@ -20,6 +33,12 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Converts the value to a string representation.
+		/// </summary>
+		/// <returns>
+		/// A string representation of the value.
+		/// </returns>
 		public override string ToString()
 		{
 			if (this.value == null)
@@ -34,6 +53,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Parses the specified value and returns a typed object.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The typed object.</returns>
 		public static TypedObject Parse(string value)
 		{
 			if (value == "<null>")
@@ -51,7 +75,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-
 		#region Converter Class
 		
 		public class Converter : AbstractStringConverter

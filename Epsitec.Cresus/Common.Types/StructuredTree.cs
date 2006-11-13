@@ -134,6 +134,62 @@ namespace Epsitec.Common.Types
 			return UnknownValue.Instance;
 		}
 
+		public static object GetSampleValue(IStructuredData root, string path)
+		{
+			if (string.IsNullOrEmpty (path))
+			{
+				throw new System.ArgumentException ();
+			}
+
+			string originalPath = path;
+
+			while (root != null)
+			{
+				string name  = StructuredTree.GetRootName (path);
+				object value = root.GetValue (name);
+
+				if ((UnknownValue.IsUnknownValue (value)) ||
+					(UndefinedValue.IsUndefinedValue (value)))
+				{
+					IStructuredTypeProvider provider = root as IStructuredTypeProvider;
+					IStructuredType type = provider == null ? root as IStructuredType : provider.GetStructuredType ();
+
+					if (type == null)
+					{
+						return UndefinedValue.Instance;
+					}
+					
+					StructuredTypeField field = type.GetField (name);
+					
+					AbstractType    fieldType      = field.Type as AbstractType;
+					IStructuredType fieldStructure = fieldType as IStructuredType;
+
+					if (fieldType == null)
+					{
+						return UndefinedValue.Instance;
+					}
+
+					value = fieldType.SampleValue;
+
+					if ((value == null) &&
+						(fieldStructure != null))
+					{
+						value = new StructuredData (fieldStructure);
+					}
+				}
+
+				if (name == path)
+				{
+					return value;
+				}
+
+				root = value as IStructuredData;
+				path = StructuredTree.GetSubPath (path, 1);
+			}
+
+			return UnknownValue.Instance;
+		}
+
 		public static void SetValue(IStructuredData root, string path, object value)
 		{
 			if (string.IsNullOrEmpty (path))

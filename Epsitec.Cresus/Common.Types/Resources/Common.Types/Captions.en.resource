@@ -13,4 +13,7 @@
   <data id="0D">&lt;s:data id="_0" f:Labels="{Collection {Text 'One way binding'}}" /&gt;</data>
   <data id="0E">&lt;s:data id="_0" f:Labels="{Collection {Text 'Inverted one way binding'}}" /&gt;</data>
   <data id="0F">&lt;s:data id="_0" f:Labels="{Collection {Text 'Two way binding'}}" /&gt;</data>
+  <data id="0H">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:_1.SystemType="V:Epsitec.Common.Types.Date, Common.Types" f:_1.DefaultController="DateTime" /&gt;</data>
+  <data id="0I">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:_1.SystemType="V:Epsitec.Common.Types.Time, Common.Types" f:_1.DefaultController="DateTime" /&gt;</data>
+  <data id="0J">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:_1.SystemType="V:System.DateTime" f:_1.DefaultController="DateTime" /&gt;</data>
 </bundle>

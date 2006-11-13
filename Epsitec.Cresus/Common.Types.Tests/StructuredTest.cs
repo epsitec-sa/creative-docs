@@ -184,6 +184,44 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckStructuredTreeGetSampleValue()
+		{
+			StringType strType = new StringType ();
+			DateType dateType = new DateType ();
+			
+			strType.DefineSampleValue ("Abc");
+			dateType.DefineSampleValue (Date.Today);
+			
+			StructuredType rec1 = new StructuredType ();
+			StructuredType rec2 = new StructuredType ();
+			StructuredType rec3 = new StructuredType ();
+
+			rec1.Fields.Add ("Employee", rec2);
+			
+			rec2.Fields.Add ("FirstName", strType);
+			rec2.Fields.Add ("LastName", strType);
+			rec2.Fields.Add ("History", rec3);
+
+			rec3.Fields.Add ("HireDate", dateType);
+			rec3.Fields.Add ("FireDate", dateType);
+
+			StructuredData data = new StructuredData (rec1);
+
+			Assert.IsNotNull (StructuredTree.GetSampleValue (data, "Employee"));
+			Assert.AreEqual (typeof (StructuredData), StructuredTree.GetSampleValue (data, "Employee").GetType ());
+
+			Assert.IsNotNull (StructuredTree.GetSampleValue (data, "Employee.FirstName"));
+			Assert.IsNotNull (StructuredTree.GetSampleValue (data, "Employee.LastName"));
+			Assert.IsNotNull (StructuredTree.GetSampleValue (data, "Employee.History"));
+			
+			Assert.AreEqual ("Abc", StructuredTree.GetSampleValue (data, "Employee.FirstName"));
+			Assert.AreEqual ("Abc", StructuredTree.GetSampleValue (data, "Employee.LastName"));
+
+			Assert.AreEqual (Date.Today, StructuredTree.GetSampleValue (data, "Employee.History.HireDate"));
+			Assert.AreEqual (Date.Today, StructuredTree.GetSampleValue (data, "Employee.History.FireDate"));
+		}
+		
+		[Test]
 		public void CheckStructuredTreeMisc()
 		{
 			Assert.AreEqual ("a*b*c", string.Join ("*", StructuredTree.SplitPath ("a.b.c")));
