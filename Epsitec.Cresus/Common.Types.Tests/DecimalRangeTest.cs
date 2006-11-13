@@ -119,7 +119,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (4, range2.GetMaximumDigitCount ());
 			Assert.AreEqual (5, range3.GetMaximumDigitCount ());
 			Assert.AreEqual (3, range4.GetMaximumDigitCount ());
-			Assert.AreEqual (1, range5.GetMaximumDigitCount ());
+			Assert.AreEqual (2, range5.GetMaximumDigitCount ());	//	..90 --> ..99 = 2 digits
 		}
 		
 		[Test] public void CheckConvertToString()
