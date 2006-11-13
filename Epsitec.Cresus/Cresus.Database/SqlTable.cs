@@ -1,6 +1,8 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -69,6 +71,28 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether this table has any foreign keys.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this column has any foreign keys; otherwise, <c>false</c>.
+		/// </value>
+		public bool								HasForeignKeys
+		{
+			get
+			{
+				foreach (SqlColumn column in this.columns)
+				{
+					if (column.IsForeignKey)
+					{
+						return true;
+					}
+				}
+				
+				return false;
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the primary key. A primary key can span several columns
 		/// which are organised to form a tuple. The tuple must be unique in the
 		/// database.
@@ -108,6 +132,24 @@ namespace Epsitec.Cresus.Database
 				{
 					this.primaryKey.Clear ();
 					this.primaryKey.AddRange (value);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the foreign keys.
+		/// </summary>
+		/// <value>The foreign keys.</value>
+		public IEnumerable<SqlColumn>			ForeignKeys
+		{
+			get
+			{
+				foreach (SqlColumn column in this.columns)
+				{
+					if (column.IsForeignKey)
+					{
+						yield return column;
+					}
 				}
 			}
 		}

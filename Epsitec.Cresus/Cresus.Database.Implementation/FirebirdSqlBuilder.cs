@@ -202,6 +202,11 @@ namespace Epsitec.Cresus.Database.Implementation
 
 				System.Diagnostics.Debug.Assert (isFirstField == false);
 			}
+
+			if (table.HasForeignKeys)
+			{
+				//	TODO: add the missing foreign key (FK_) constraints
+			}
 		}
 
 		public void RemoveTable(string tableName)

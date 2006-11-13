@@ -129,6 +129,23 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether this column defines a foreign key.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance column defines a foreign key; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsForeignKey
+		{
+			get
+			{
+				return this.isForeignKey;
+			}
+			set
+			{
+				this.isForeignKey = value;
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this column is nullable.
@@ -198,6 +215,7 @@ namespace Epsitec.Cresus.Database
 		private DbRawType						type;
 		private bool							isNullable;
 		private bool							isFixedLength;
+		private bool							isForeignKey;
 		private int								length;
 	}
 }

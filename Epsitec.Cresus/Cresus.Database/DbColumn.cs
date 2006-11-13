@@ -303,7 +303,7 @@ namespace Epsitec.Cresus.Database
 			get
 			{
 				return (string.IsNullOrEmpty (this.TargetTableName) == false)
-					&& (string.IsNullOrEmpty (this.TargetColumnName) == false));
+					&& (string.IsNullOrEmpty (this.TargetColumnName) == false);
 			}
 		}
 
@@ -523,8 +523,6 @@ namespace Epsitec.Cresus.Database
 			DbRawType rawType = this.type.RawType;
 			SqlColumn column;
 			
-			string suffix;
-
 			//	Verify that we do not attempt to create an SQL column based on
 			//	incorrect settings; check localization related constraints :
 
@@ -540,8 +538,6 @@ namespace Epsitec.Cresus.Database
 					string message = string.Format ("Column '{0}' does not specify localization, but type is multilingual", this.Name);
 					throw new System.InvalidOperationException (message);
 				}
-
-				suffix = "";
 			}
 			else if (this.localization == DbColumnLocalization.Localized)
 			{
@@ -595,8 +591,9 @@ namespace Epsitec.Cresus.Database
 				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot be translated to an SQL column", this.Name));
 			}
 
-			column.Name       = this.MakeLocalizedSqlName (localizationSuffix);
-			column.IsNullable = this.Type.IsNullable;
+			column.Name         = this.MakeLocalizedSqlName (localizationSuffix);
+			column.IsNullable   = this.Type.IsNullable;
+			column.IsForeignKey = this.IsForeignKey;
 			
 			return column;
 		}
