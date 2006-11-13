@@ -248,7 +248,7 @@ namespace Epsitec.Cresus.Database
 				ISqlBuilder builder = transaction.SqlBuilder;
 				
 				select.Fields.Add (SqlField.CreateAll ());
-				select.Tables.Add (table.Name, SqlField.CreateName (table.CreateSqlName ()));
+				select.Tables.Add (table.Name, SqlField.CreateName (table.GetSqlName ()));
 				
 				//	If there is no condition, this means we don't want to get any data
 				//	for the specific table; just fetch the empty table by using an always
@@ -692,7 +692,7 @@ namespace Epsitec.Cresus.Database
 						else
 						{
 							string dbNameColumn  = dbColumn.Name;
-							string adoNameColumn = dbColumn.CreateSqlName ();
+							string adoNameColumn = dbColumn.GetSqlName ();
 
 							mapping.ColumnMappings.Add (adoNameColumn, dbNameColumn);
 						}
@@ -1231,7 +1231,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="options">The replace options.</param>
 		private void ReplaceTablesWithoutValidityChecking(DbTransaction transaction, System.Data.DataTable dataTable, DbTable dbTable, IReplaceOptions options)
 		{
-			string sqlTableName = dbTable.CreateSqlName ();
+			string sqlTableName = dbTable.GetSqlName ();
 			
 			IDbAbstraction database  = transaction.Database;
 			ISqlBuilder    builder   = database.SqlBuilder;

@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.Database
 				infrastructure.RegisterNewDbType (db_type_data);
 				infrastructure.RegisterNewDbType (db_type_guid);
 
-				DbColumn col1 = DbTable.CreateUserDataColumn ("Name", db_type_name);
+				DbColumn col1 = DbTable.CreateUserDataColumn ("Name", db_type_name, DbRevisionMode.Enabled);
 				DbColumn col2 = DbTable.CreateUserDataColumn ("Level", db_type_level);
 				DbColumn col3 = DbTable.CreateUserDataColumn ("Type", db_type_type);
 				DbColumn col4 = DbTable.CreateUserDataColumn ("Data", db_type_data);

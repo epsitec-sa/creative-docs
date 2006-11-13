@@ -39,5 +39,11 @@ namespace Epsitec.Cresus.Database
 		/// Any element; this is only valid as an extraction criterion.
 		/// </summary>
 		Any	= 5,
+
+		/// <summary>
+		/// Revision history; used to describe revision history tables and not
+		/// intended for public use.
+		/// </summary>
+		RevisionHistory = 6,
 	}
 }

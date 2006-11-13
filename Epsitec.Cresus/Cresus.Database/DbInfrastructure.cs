@@ -333,7 +333,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="table">The table.</param>
 		private void ClearTable(DbTransaction transaction, DbTable table)
 		{
-			transaction.SqlBuilder.RemoveData (table.CreateSqlName (), null);
+			transaction.SqlBuilder.RemoveData (table.GetSqlName (), null);
 			this.ExecuteNonQuery (transaction);
 		}
 
@@ -349,9 +349,9 @@ namespace Epsitec.Cresus.Database
 			DbColumn              column = table.Columns[columnName];
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			
-			fields.Add (column.CreateSqlName (), this.CreateSqlField (column, data));
+			fields.Add (column.GetSqlName (), this.CreateSqlField (column, data));
 			
-			transaction.SqlBuilder.UpdateData (table.CreateSqlName (), fields, null);
+			transaction.SqlBuilder.UpdateData (table.GetSqlName (), fields, null);
 			
 			this.ExecuteNonQuery (transaction);
 		}
@@ -1008,7 +1008,7 @@ namespace Epsitec.Cresus.Database
 		public SqlField CreateEmptySqlField(DbColumn column)
 		{
 			SqlField field = SqlField.CreateConstant (null, column.Type.RawType);
-			field.Alias = column.CreateSqlName ();
+			field.Alias = column.GetSqlName ();
 			return field;
 		}
 
@@ -1092,6 +1092,16 @@ namespace Epsitec.Cresus.Database
 			
 			transaction.SqlBuilder.InsertTable (sqlTable);
 			this.ExecuteSilent (transaction);
+
+			if (table.RevisionMode == DbRevisionMode.Enabled)
+			{
+				sqlTable = new SqlTable (table.GetRevisionTableName ());
+				sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefId, DbKey.RawTypeForId, DbNullability.No));
+				sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefModel, DbKey.RawTypeForId, DbNullability.No));
+
+				transaction.SqlBuilder.InsertTable (sqlTable);
+				this.ExecuteSilent (transaction);
+			}
 		}
 
 		/// <summary>
@@ -2172,7 +2182,7 @@ namespace Epsitec.Cresus.Database
 			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnName],    typeDef.Name));
 			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (typeDef)));
 			
-			transaction.SqlBuilder.InsertData (typeDefTable.CreateSqlName (), fields);
+			transaction.SqlBuilder.InsertData (typeDefTable.GetSqlName (), fields);
 			this.ExecuteSilent (transaction);
 		}
 
@@ -2197,7 +2207,7 @@ namespace Epsitec.Cresus.Database
 			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (table)));
 			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnNextId],  DbId.CreateId (1, this.clientId)));
 			
-			transaction.SqlBuilder.InsertData (tableDefTable.CreateSqlName (), fields);
+			transaction.SqlBuilder.InsertData (tableDefTable.GetSqlName (), fields);
 			this.ExecuteSilent (transaction);
 		}
 
@@ -2224,7 +2234,7 @@ namespace Epsitec.Cresus.Database
 			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefTable], table.Key.Id));
 			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefType],  column.Type.Key.Id));
 			
-			transaction.SqlBuilder.InsertData (columnDefTable.CreateSqlName (), fields);
+			transaction.SqlBuilder.InsertData (columnDefTable.GetSqlName (), fields);
 			this.ExecuteSilent (transaction);
 		}
 

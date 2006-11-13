@@ -460,7 +460,7 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (this.ReplicationMode != DbReplicationMode.Unknown);
 
-			SqlTable sqlTable = new SqlTable (this.CreateSqlName ());
+			SqlTable sqlTable = new SqlTable (this.GetSqlName ());
 
 			foreach (DbColumn dbColumn in this.columns)
 			{
@@ -496,7 +496,7 @@ namespace Epsitec.Cresus.Database
 				for (int i = 0; i < n; i++)
 				{
 					DbColumn dbPrimaryKey   = this.PrimaryKeys[i];
-					string   primaryKeyName = dbPrimaryKey.CreateSqlName ();
+					string   primaryKeyName = dbPrimaryKey.GetSqlName ();
 
 					if (sqlTable.Columns.IndexOf (primaryKeyName) < 0)
 					{
@@ -548,9 +548,26 @@ namespace Epsitec.Cresus.Database
 		/// Creates the SQL name for this table.
 		/// </summary>
 		/// <returns>The SQL name.</returns>
-		public string CreateSqlName()
+		public string GetSqlName()
 		{
 			return DbSqlStandard.MakeSqlTableName (this.Name, this.Category, this.Key);
+		}
+
+		/// <summary>
+		/// Gets the name of the corresponding revision table.
+		/// </summary>
+		/// <returns>The name of the corresponding revision table or <c>null</c> if
+		/// the table is not revisioned.</returns>
+		public string GetRevisionTableName()
+		{
+			if (this.RevisionMode == DbRevisionMode.Enabled)
+			{
+				return DbSqlStandard.MakeSqlTableName (this.Name, DbElementCat.RevisionHistory, this.Key);
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		/// <summary>
@@ -725,6 +742,20 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (type != null);
 
 			return new DbColumn (columnName, type, DbColumnClass.Data, DbElementCat.ManagedUserData);
+		}
+
+		/// <summary>
+		/// Creates a column for user data.
+		/// </summary>
+		/// <param name="columnName">Name of the column.</param>
+		/// <param name="type">The type.</param>
+		/// <param name="revisionMode">The revision mode.</param>
+		/// <returns>The column.</returns>
+		public static DbColumn CreateUserDataColumn(string columnName, DbTypeDef type, DbRevisionMode revisionMode)
+		{
+			System.Diagnostics.Debug.Assert (type != null);
+
+			return new DbColumn (columnName, type, DbColumnClass.Data, DbElementCat.ManagedUserData, revisionMode);
 		}
 
 		#region Private Methods

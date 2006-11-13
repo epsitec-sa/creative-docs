@@ -533,7 +533,7 @@ namespace Epsitec.Cresus.Database
 		public static SqlField CreateName(DbColumn column)
 		{
 			string tableName  = DbSqlStandard.MakeDelimitedIdentifier (column.Table.Name);
-			string columnName = column.CreateSqlName ();
+			string columnName = column.GetSqlName ();
 
 			return SqlField.CreateName (tableName, columnName);
 		}

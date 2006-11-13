@@ -245,7 +245,7 @@ namespace Epsitec.Cresus.Database
 			this.infrastructure = infrastructure;
 			this.table          = table;
 			this.tableKey       = table.Key;
-			this.tableSqlName   = table.CreateSqlName ();
+			this.tableSqlName   = table.GetSqlName ();
 		}
 
 		/// <summary>

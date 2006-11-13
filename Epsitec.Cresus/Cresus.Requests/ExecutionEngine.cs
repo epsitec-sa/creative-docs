@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Requests
 			}
 			
 			this.PrepareNewCommand ();
-			this.CurrentSqlBuilder.InsertData (table.CreateSqlName (), sql_fields);
+			this.CurrentSqlBuilder.InsertData (table.GetSqlName (), sql_fields);
 			
 			this.expected_rows_changed++;
 		}
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Requests
 			}
 			
 			this.PrepareNewCommand ();
-			this.CurrentSqlBuilder.UpdateData (table.CreateSqlName (), sql_data_fields, sql_cond_fields);
+			this.CurrentSqlBuilder.UpdateData (table.GetSqlName (), sql_data_fields, sql_cond_fields);
 			
 			this.expected_rows_changed++;
 		}
@@ -165,10 +165,10 @@ namespace Epsitec.Cresus.Requests
 					//	le champ correspondant :
 					
 					System.Diagnostics.Debug.Assert (fields[i].RawType == DbKey.RawTypeForId);
-					System.Diagnostics.Debug.Assert (fields[i].Alias == table.Columns[Tags.ColumnRefLog].CreateSqlName ());
+					System.Diagnostics.Debug.Assert (fields[i].Alias == table.Columns[Tags.ColumnRefLog].GetSqlName ());
 					
 					fields[i].Overwrite (SqlField.CreateConstant (this.CurrentLogId.Value, DbKey.RawTypeForId));
-					fields[i].Alias = table.Columns[Tags.ColumnRefLog].CreateSqlName ();
+					fields[i].Alias = table.Columns[Tags.ColumnRefLog].GetSqlName ();
 					
 					return;
 				}
@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Requests
 			//	avec cette valeur :
 			
 			SqlField field = SqlField.CreateConstant (this.CurrentLogId.Value, DbKey.RawTypeForId);
-			string   alias = table.Columns[Tags.ColumnRefLog].CreateSqlName ();
+			string   alias = table.Columns[Tags.ColumnRefLog].GetSqlName ();
 			
 			fields.Add (alias, field);
 		}

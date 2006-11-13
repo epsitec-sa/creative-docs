@@ -284,6 +284,11 @@ namespace Epsitec.Cresus.Database
 					buffer = new System.Text.StringBuilder ();
 					buffer.Append ("U_");
 					break;
+
+				case DbElementCat.RevisionHistory:
+					buffer = new System.Text.StringBuilder ();
+					buffer.Append ("R_");
+					break;
 				
 				default:
 					throw new System.NotImplementedException (string.Format ("Support for category {0} not implemented", category));

@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.Database
 				
 				conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, logIdName, logIdValue));
 				
-				transaction.SqlBuilder.RemoveData (this.table.CreateSqlName (), conditions);
+				transaction.SqlBuilder.RemoveData (this.table.GetSqlName (), conditions);
 				int result = (int) this.infrastructure.ExecuteNonQuery (transaction);
 				
 				return 1 == result;
@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.Database
 				conditions.Add (new SqlFunction (SqlFunctionCode.CompareGreaterThanOrEqual, logIdName, logIdVal1));
 				conditions.Add (new SqlFunction (SqlFunctionCode.CompareLessThanOrEqual, logIdName, logIdVal2));
 				
-				transaction.SqlBuilder.RemoveData (this.table.CreateSqlName (), conditions);
+				transaction.SqlBuilder.RemoveData (this.table.GetSqlName (), conditions);
 				this.infrastructure.ExecuteSilent (transaction);
 			}
 		}
@@ -290,7 +290,7 @@ namespace Epsitec.Cresus.Database
 		{
 			this.infrastructure = infrastructure;
 			this.table          = table;
-			this.tableSqlName   = table.CreateSqlName ();
+			this.tableSqlName   = table.GetSqlName ();
 		}
 
 		/// <summary>

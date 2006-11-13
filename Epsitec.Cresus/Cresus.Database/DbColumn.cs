@@ -78,6 +78,19 @@ namespace Epsitec.Cresus.Database
 			this.DefineCategory (category);
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbColumn"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="type">The type.</param>
+		/// <param name="columnClass">The column class.</param>
+		/// <param name="category">The category.</param>
+		/// <param name="revisionMode">The revision mode.</param>
+		public DbColumn(string name, DbTypeDef type, DbColumnClass columnClass, DbElementCat category, DbRevisionMode revisionMode)
+			: this (name, type, columnClass, category)
+		{
+			this.DefineRevisionMode (revisionMode);
+		}
 
 
 		#region IName Members
@@ -279,6 +292,20 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this column defines a foreign key.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this column defines a foreign key; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsForeignKey
+		{
+			get
+			{
+				return (string.IsNullOrEmpty (this.TargetTableName) == false)
+					&& (string.IsNullOrEmpty (this.TargetColumnName) == false));
+			}
+		}
 
 		/// <summary>
 		/// Gets the column localization.
@@ -578,7 +605,7 @@ namespace Epsitec.Cresus.Database
 		/// Creates the display name of the column.
 		/// </summary>
 		/// <returns>The display name.</returns>
-		public string CreateDisplayName()
+		public string GetDisplayName()
 		{
 			return this.Name;
 		}
@@ -588,7 +615,7 @@ namespace Epsitec.Cresus.Database
 		/// be different from the high level <c>DbColumn.Name</c>.
 		/// </summary>
 		/// <returns>The SQL name.</returns>
-		public string CreateSqlName()
+		public string GetSqlName()
 		{
 			if (this.Category == DbElementCat.Internal)
 			{
@@ -719,11 +746,11 @@ namespace Epsitec.Cresus.Database
 		{
 			if (string.IsNullOrEmpty (localizationSuffix))
 			{
-				return this.CreateSqlName ();
+				return this.GetSqlName ();
 			}
 			else
 			{
-				return DbTools.MakeCompositeName (this.CreateSqlName (), DbSqlStandard.MakeSimpleSqlName (localizationSuffix));
+				return DbTools.MakeCompositeName (this.GetSqlName (), DbSqlStandard.MakeSimpleSqlName (localizationSuffix));
 			}
 		}
 
