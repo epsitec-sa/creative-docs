@@ -312,21 +312,41 @@ namespace Epsitec.Cresus.Database
 			return (DbRowStatus) status;
 		}
 
+		/// <summary>
+		/// Gets the row id.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		/// <returns>The row id.</returns>
 		public static DbId GetRowId(System.Data.DataRow row)
 		{
 			return InvariantConverter.ToLong (row[Tags.ColumnId]);
 		}
 
+		/// <summary>
+		/// Gets the row status.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		/// <returns>The row status.</returns>
 		public static DbRowStatus GetRowStatus(System.Data.DataRow row)
 		{
 			return DbKey.ConvertFromIntStatus (InvariantConverter.ToShort (row[Tags.ColumnStatus]));
 		}
 
+		/// <summary>
+		/// Sets the row id.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		/// <param name="id">The row id.</param>
 		public static void SetRowId(System.Data.DataRow row, DbId id)
 		{
 			row[Tags.ColumnId] = id.Value;
 		}
 
+		/// <summary>
+		/// Sets the row status.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		/// <param name="status">The row status.</param>
 		public static void SetRowStatus(System.Data.DataRow row, DbRowStatus status)
 		{
 			row[Tags.ColumnStatus] = (short) status;

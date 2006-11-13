@@ -560,7 +560,8 @@ namespace Epsitec.Cresus.Database
 
 		/// <summary>
 		/// Makes the specified row immutable. This creates a new row, if needed,
-		/// which can then be further modified.
+		/// which can then be further modified. This method has no effect if the
+		/// table does not use <c>DbRevisionMode.Enabled</c>.
 		/// </summary>
 		/// <param name="row">The original row.</param>
 		/// <returns>The row which replaces the original row.</returns>
@@ -588,7 +589,7 @@ namespace Epsitec.Cresus.Database
 						break;
 					
 					case DbRowStatus.Live:
-						DbRichCommand.CopyLiveRowAndMakeImmutable (ref row);
+						DbRichCommand.ArchiveRowAndCreateNewCopy (ref row);
 						break;
 					
 					default:
@@ -1078,22 +1079,29 @@ namespace Epsitec.Cresus.Database
 			return copy;
 		}
 
-		private static void CopyLiveRowAndMakeImmutable(ref System.Data.DataRow live)
+		/// <summary>
+		/// Archives the specified live row and creates new working copy.
+		/// </summary>
+		/// <param name="live">The live row.</param>
+		private static void ArchiveRowAndCreateNewCopy(ref System.Data.DataRow live)
 		{
-			System.Data.DataRow copy = live.Table.NewRow ();
+			System.Diagnostics.Debug.Assert (DbKey.GetRowStatus (live) == DbRowStatus.Live);
 
-			copy.ItemArray = live.ItemArray;
+			System.Data.DataTable table   = live.Table;
+			System.Data.DataRow   archive = live;
+			System.Data.DataRow   copy    = table.NewRow ();
+
+			live = null;
+			copy.ItemArray = archive.ItemArray;
 			
 			DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Copied);
 
-			copy.BeginEdit ();
 			DbKey.SetRowId (copy, key.Id);
 			DbKey.SetRowStatus (copy, key.Status);
-			copy.EndEdit ();
-
-			live.Table.Rows.Add (copy);
-
-			DbKey.SetRowStatus (live, DbRowStatus.ArchiveCopy);
+			
+			DbKey.SetRowStatus (archive, DbRowStatus.ArchiveCopy);
+			
+			table.Rows.Add (copy);
 
 			live = copy;
 		}
