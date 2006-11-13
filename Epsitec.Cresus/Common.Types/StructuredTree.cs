@@ -221,7 +221,7 @@ namespace Epsitec.Common.Types
 
 					StructuredTypeField field = type.GetField (name);
 
-					AbstractType fieldType      = field.Type as AbstractType;
+					AbstractType    fieldType      = field.Type as AbstractType;
 					IStructuredType fieldStructure = fieldType as IStructuredType;
 
 					if (fieldType == null)

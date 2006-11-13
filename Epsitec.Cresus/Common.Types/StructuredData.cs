@@ -33,6 +33,18 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public UndefinedValueMode UndefinedValueMode
+		{
+			get
+			{
+				return this.undefinedValueMode;
+			}
+			set
+			{
+				this.undefinedValueMode = value;
+			}
+		}
+
 		public int InternalGetValueCount()
 		{
 			return this.values == null ? -1 : this.values.Count;
@@ -51,7 +63,7 @@ namespace Epsitec.Common.Types
 
 		public void AttachListener(string id, PropertyChangedEventHandler handler)
 		{
-			object type;
+			INamedType type;
 
 			if (!this.CheckFieldIdValidity (id, out type))
 			{
@@ -132,7 +144,7 @@ namespace Epsitec.Common.Types
 
 		public object GetValue(string id)
 		{
-			object type;
+			INamedType type;
 			
 			if (!this.CheckFieldIdValidity (id, out type))
 			{
@@ -143,25 +155,21 @@ namespace Epsitec.Common.Types
 			
 			if (this.values == null)
 			{
-				return UndefinedValue.Instance;
+				return this.GetUndefinedValue (type, id);
 			}
 			else if (this.values.TryGetValue (id, out value))
 			{
 				return value.Data;
 			}
-			else if (this.type == null)
-			{
-				return UndefinedValue.Instance;
-			}
 			else
 			{
-				return this.type.GetField (id).IsEmpty ? (object) UnknownValue.Instance : (object) UndefinedValue.Instance;
+				return this.GetUndefinedValue (type, id);
 			}
 		}
 
 		public void SetValue(string id, object value)
 		{
-			object type;
+			INamedType type;
 			
 			if (!this.CheckFieldIdValidity (id, out type))
 			{
@@ -261,8 +269,55 @@ namespace Epsitec.Common.Types
 				data.SetValue (propertyName, value);
 			};
 		}
-		
-		protected virtual bool CheckFieldIdValidity(string id, out object type)
+
+		protected virtual object GetUndefinedValue(INamedType namedType, string id)
+		{
+			AbstractType type = namedType as AbstractType;
+
+			if (type != null)
+			{
+				object value;
+				
+				switch (this.undefinedValueMode)
+				{
+					case UndefinedValueMode.Undefined:
+						value = UndefinedValue.Instance;
+						break;
+
+					case UndefinedValueMode.Default:
+						value = type.DefaultValue;
+						break;
+
+					case UndefinedValueMode.Sample:
+						value = type.SampleValue;
+						break;
+
+					default:
+						throw new System.NotSupportedException (string.Format ("Mode {0} not supported", this.undefinedValueMode));
+				}
+
+				if ((value == null) ||
+					(value == UndefinedValue.Instance))
+				{
+					IStructuredType structuredType = type as IStructuredType;
+
+					if (structuredType != null)
+					{
+						StructuredData data = new StructuredData (StructuredType);
+
+						data.UndefinedValueMode = this.UndefinedValueMode;
+
+						value = data;
+					}
+				}
+				
+				return value;
+			}
+
+			return UndefinedValue.Instance;
+		}
+
+		protected virtual bool CheckFieldIdValidity(string id, out INamedType type)
 		{
 			if (this.type == null)
 			{
@@ -369,5 +424,6 @@ namespace Epsitec.Common.Types
 
 		private IStructuredType type;
 		private IDictionary<string, Record> values;
+		private UndefinedValueMode undefinedValueMode;
 	}
 }

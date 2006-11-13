@@ -132,6 +132,7 @@
     <Compile Include="Internal\CollectionViewGroupItems.cs" />
     <Compile Include="Internal\CollectionViewResolver.cs" />
     <Compile Include="Serialization\BlackList.cs" />
+    <Compile Include="UndefinedValueMode.cs" />
     <Compile Include="UnresolvedEnum.cs" />
     <Compile Include="SystemTypeFamily.cs" />
     <Compile Include="DesignerAttribute.cs" />
