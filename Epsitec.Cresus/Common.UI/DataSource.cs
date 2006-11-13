@@ -12,7 +12,7 @@ namespace Epsitec.Common.UI
 	/// The <c>DataSource</c> class provides the list of named objects
 	/// to which a user interface can be data bound.
 	/// </summary>
-	public class DataSource : IStructuredType, IStructuredData
+	public class DataSource : IStructuredType, IStructuredData, IStructuredTypeProvider
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DataSource"/> class.
@@ -21,6 +21,24 @@ namespace Epsitec.Common.UI
 		{
 		}
 
+
+		/// <summary>
+		/// Gets or sets the metadata associated with the data source.
+		/// </summary>
+		/// <value>The metadata.</value>
+		public DataSourceMetadata Metadata
+		{
+			get
+			{
+				return this.metadata;
+			}
+			set
+			{
+				this.metadata = value;
+			}
+		}
+
+		
 		/// <summary>
 		/// Adds a named data source.
 		/// </summary>
@@ -82,6 +100,13 @@ namespace Epsitec.Common.UI
 
 		#region IStructuredType Members
 
+		/// <summary>
+		/// Gets the field descriptor for the specified field identifier.
+		/// </summary>
+		/// <param name="fieldId">The field identifier.</param>
+		/// <returns>
+		/// The matching field descriptor; otherwise, <c>null</c>.
+		/// </returns>
 		StructuredTypeField IStructuredType.GetField(string fieldId)
 		{
 			ItemRecord record = this.GetItemRecord (fieldId);
@@ -162,6 +187,22 @@ namespace Epsitec.Common.UI
 		void IStructuredData.SetValue(string id, object value)
 		{
 			throw new System.InvalidOperationException ("You cannot modify a DataSource with SetValue");
+		}
+
+		#endregion
+
+		#region IStructuredTypeProvider Members
+
+		public IStructuredType GetStructuredType()
+		{
+			if (this.metadata == null)
+			{
+				return this;
+			}
+			else
+			{
+				return this.metadata;
+			}
 		}
 
 		#endregion
@@ -264,5 +305,6 @@ namespace Epsitec.Common.UI
 		#endregion
 
 		List<ItemRecord> items = new List<ItemRecord> ();
+		private DataSourceMetadata metadata;
 	}
 }

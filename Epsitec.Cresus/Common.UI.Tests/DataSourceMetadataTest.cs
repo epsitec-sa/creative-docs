@@ -16,6 +16,28 @@ namespace Epsitec.Common.UI
 		{
 			Epsitec.Common.Widgets.Widget.Initialize ();
 		}
+		
+		[Test]
+		public void CheckPanelMetadata()
+		{
+			Panel panel = new Panel ();
+			DataSourceMetadata metadata = panel.DataSourceMetadata;
+			DataSource source = new DataSource ();
+
+			panel.DataSource = source;
+
+			Assert.AreEqual (metadata, panel.DataSource.Metadata);
+			Assert.AreEqual (metadata, panel.DataSource.GetStructuredType ());
+			
+			string xml = DataSourceMetadataTest.SerializeToString (panel);
+			
+			panel = DataSourceMetadataTest.DeserializePanelFromString (xml);
+			metadata = panel.DataSourceMetadata;
+			source = new DataSource ();
+			panel.DataSource = source;
+
+			Assert.AreEqual (panel.DataSource.GetStructuredType (), panel.DataSource.Metadata);
+		}
 
 		[Test]
 		public void CheckSerialization()

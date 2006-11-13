@@ -33,9 +33,22 @@ namespace Epsitec.Common.UI
 			}
 			set
 			{
-				if (this.dataSource != value)
+				DataSource oldSource = this.dataSource;
+				DataSource newSource = value;
+				
+				if (oldSource != newSource)
 				{
-					this.dataSource = value;
+					this.dataSource = newSource;
+
+					if (oldSource != null)
+					{
+						oldSource.Metadata = null;
+					}
+					if (newSource != null)
+					{
+						newSource.Metadata = this.dataSourceMetadata;
+					}
+					
 					this.SyncDataContextWithDataSource ();
 				}
 			}
@@ -52,6 +65,11 @@ namespace Epsitec.Common.UI
 				if (this.dataSourceMetadata == null)
 				{
 					this.dataSourceMetadata = new DataSourceMetadata ();
+
+					if (this.dataSource != null)
+					{
+						this.dataSource.Metadata = this.dataSourceMetadata;
+					}
 				}
 				
 				return this.dataSourceMetadata;
