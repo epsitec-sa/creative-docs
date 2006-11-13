@@ -230,9 +230,13 @@ namespace Epsitec.Common.Types
 			StructuredData data = new StructuredData (record);
 
 			record.Fields.Add ("X", StringType.Default);
+			record.Fields.Add ("Z", StringType.Default);
+
+			data.SetValue ("Z", "z");
 
 			Assert.AreEqual (UndefinedValue.Instance, StructuredTree.GetValue (data, "X"));
 			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (data, "Y"));
+			Assert.AreEqual ("z", StructuredTree.GetValue (data, "Z"));
 		}
 
 		
