@@ -103,6 +103,18 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this field is empty.
+		/// </summary>
+		/// <value><c>true</c> if this field is empty; otherwise, <c>false</c>.</value>
+		public bool								IsEmpty
+		{
+			get
+			{
+				return (this.id == null) && (this.type == null) && (this.rank == 0) && (this.captionId.IsEmpty);
+			}
+		}
+
 		public static readonly StructuredTypeField Empty = new StructuredTypeField ();
 
 		

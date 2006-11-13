@@ -5,6 +5,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
+	/// <summary>
+	/// The <c>StructuredTree</c> class is used to walk through a tree built
+	/// with <c>IStructuredData</c> and <c>IStructuredType</c> objects.
+	/// </summary>
 	public static class StructuredTree
 	{
 		public static string[] SplitPath(string path)
@@ -119,62 +123,17 @@ namespace Epsitec.Common.Types
 
 				if (UnknownValue.IsUnknownValue (value))
 				{
-					return value;
-				}
-
-				if (name == path)
-				{
-					return value;
-				}
-
-				root = value as IStructuredData;
-				path = StructuredTree.GetSubPath (path, 1);
-			}
-
-			return UnknownValue.Instance;
-		}
-
-		public static object GetSampleValue(IStructuredData root, string path)
-		{
-			if (string.IsNullOrEmpty (path))
-			{
-				throw new System.ArgumentException ();
-			}
-
-			string originalPath = path;
-
-			while (root != null)
-			{
-				string name  = StructuredTree.GetRootName (path);
-				object value = root.GetValue (name);
-
-				if ((UnknownValue.IsUnknownValue (value)) ||
-					(UndefinedValue.IsUndefinedValue (value)))
-				{
 					IStructuredTypeProvider provider = root as IStructuredTypeProvider;
 					IStructuredType type = provider == null ? root as IStructuredType : provider.GetStructuredType ();
 
-					if (type == null)
+					if ((type == null) ||
+						(type.GetField (name).IsEmpty))
+					{
+						return value;
+					}
+					else
 					{
 						return UndefinedValue.Instance;
-					}
-					
-					StructuredTypeField field = type.GetField (name);
-					
-					AbstractType    fieldType      = field.Type as AbstractType;
-					IStructuredType fieldStructure = fieldType as IStructuredType;
-
-					if (fieldType == null)
-					{
-						return UndefinedValue.Instance;
-					}
-
-					value = fieldType.SampleValue;
-
-					if ((value == null) &&
-						(fieldStructure != null))
-					{
-						value = new StructuredData (fieldStructure);
 					}
 				}
 
@@ -225,6 +184,70 @@ namespace Epsitec.Common.Types
 			}
 
 			throw new System.ArgumentException (string.Format ("Path {0} cannot be resolved", originalPath));
+		}
+
+		/// <summary>
+		/// Gets a sample value for the specified path. If the structured data
+		/// has some undefined nodes along the path, they will be replaced with
+		/// empty <c>StructuredData</c> records whenever this is applicable.
+		/// </summary>
+		/// <param name="root">The root.</param>
+		/// <param name="path">The path.</param>
+		/// <returns>The sample value.</returns>
+		public static object GetSampleValue(IStructuredData root, string path)
+		{
+			if (string.IsNullOrEmpty (path))
+			{
+				throw new System.ArgumentException ();
+			}
+
+			string originalPath = path;
+
+			while (root != null)
+			{
+				string name  = StructuredTree.GetRootName (path);
+				object value = root.GetValue (name);
+
+				if ((UnknownValue.IsUnknownValue (value)) ||
+					(UndefinedValue.IsUndefinedValue (value)))
+				{
+					IStructuredTypeProvider provider = root as IStructuredTypeProvider;
+					IStructuredType type = provider == null ? root as IStructuredType : provider.GetStructuredType ();
+
+					if (type == null)
+					{
+						return UndefinedValue.Instance;
+					}
+
+					StructuredTypeField field = type.GetField (name);
+
+					AbstractType fieldType      = field.Type as AbstractType;
+					IStructuredType fieldStructure = fieldType as IStructuredType;
+
+					if (fieldType == null)
+					{
+						return UndefinedValue.Instance;
+					}
+
+					value = fieldType.SampleValue;
+
+					if ((value == null) &&
+						(fieldStructure != null))
+					{
+						value = new StructuredData (fieldStructure);
+					}
+				}
+
+				if (name == path)
+				{
+					return value;
+				}
+
+				root = value as IStructuredData;
+				path = StructuredTree.GetSubPath (path, 1);
+			}
+
+			return UnknownValue.Instance;
 		}
 
 

@@ -197,6 +197,7 @@ namespace Epsitec.Common.Types
 			StructuredType rec3 = new StructuredType ();
 
 			rec1.Fields.Add ("Employee", rec2);
+			rec1.Fields.Add ("Comment", strType);
 			
 			rec2.Fields.Add ("FirstName", strType);
 			rec2.Fields.Add ("LastName", strType);
@@ -209,7 +210,8 @@ namespace Epsitec.Common.Types
 
 			Assert.IsNotNull (StructuredTree.GetSampleValue (data, "Employee"));
 			Assert.AreEqual (typeof (StructuredData), StructuredTree.GetSampleValue (data, "Employee").GetType ());
-
+			Assert.AreEqual ("Abc", StructuredTree.GetSampleValue (data, "Comment"));
+			
 			Assert.IsNotNull (StructuredTree.GetSampleValue (data, "Employee.FirstName"));
 			Assert.IsNotNull (StructuredTree.GetSampleValue (data, "Employee.LastName"));
 			Assert.IsNotNull (StructuredTree.GetSampleValue (data, "Employee.History"));
@@ -220,6 +222,19 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (Date.Today, StructuredTree.GetSampleValue (data, "Employee.History.HireDate"));
 			Assert.AreEqual (Date.Today, StructuredTree.GetSampleValue (data, "Employee.History.FireDate"));
 		}
+		
+		[Test]
+		public void CheckStructuredTreeGetValue()
+		{
+			StructuredType record = new StructuredType ();
+			StructuredData data = new StructuredData (record);
+
+			record.Fields.Add ("X", StringType.Default);
+
+			Assert.AreEqual (UndefinedValue.Instance, StructuredTree.GetValue (data, "X"));
+			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (data, "Y"));
+		}
+
 		
 		[Test]
 		public void CheckStructuredTreeMisc()
