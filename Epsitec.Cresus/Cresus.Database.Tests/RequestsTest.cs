@@ -214,12 +214,12 @@ namespace Epsitec.Cresus.Database
 					System.Data.DataRow row = rows[n];
 					
 					Assert.AreEqual (n+1, rows.Length);
-					Assert.AreEqual (DbIdClass.Temporary, DbId.GetClass ((long) row[Tags.ColumnId]));
+					Assert.AreEqual (DbIdClass.Temporary, DbId.GetClass (DbKey.GetRowId (row)));
 					Assert.AreEqual (Requests.ExecutionState.Pending, queue.GetRequestExecutionState (row));
 					
 					queue.PersistToBase (transaction);
 					
-					Assert.AreEqual (DbIdClass.Standard, DbId.GetClass ((long) row[Tags.ColumnId]));
+					Assert.AreEqual (DbIdClass.Standard, DbId.GetClass (DbKey.GetRowId (row)));
 					
 					transaction.Commit ();
 				}

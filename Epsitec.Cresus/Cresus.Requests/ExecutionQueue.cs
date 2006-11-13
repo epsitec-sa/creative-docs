@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.Requests
 					//	qu'elles proviennent d'un client distant qui a déjà attribué
 					//	des IDs aux requêtes).
 					
-					row[Tags.ColumnId] = ids[i].Value;
+					DbKey.SetRowId (row, ids[i]);
 					
 					if ((find != null) &&
 						(find.RowState != System.Data.DataRowState.Deleted))

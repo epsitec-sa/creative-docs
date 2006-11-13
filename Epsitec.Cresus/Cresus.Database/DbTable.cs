@@ -587,7 +587,7 @@ namespace Epsitec.Cresus.Database
 					{
 						System.Diagnostics.Debug.Assert (this.PrimaryKeys[0].Name == Tags.ColumnId);
 
-						key = new DbKey ((long) row[Tags.ColumnId]);
+						key = new DbKey (DbKey.GetRowId (row), DbKey.GetRowStatus (row));
 					}
 					break;
 

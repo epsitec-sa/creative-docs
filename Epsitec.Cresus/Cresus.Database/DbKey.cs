@@ -40,9 +40,6 @@ namespace Epsitec.Cresus.Database
 			this.id = 0;
 			this.status = 0;
 			
-			object valueId     = dataRow[Tags.ColumnId];
-			object valueStatus = dataRow[Tags.ColumnStatus];
-			
 			this.DefineIdAndStatus (dataRow[Tags.ColumnId], dataRow[Tags.ColumnStatus]);
 		}
 
@@ -313,6 +310,26 @@ namespace Epsitec.Cresus.Database
 		internal static DbRowStatus ConvertFromIntStatus(int status)
 		{
 			return (DbRowStatus) status;
+		}
+
+		public static DbId GetRowId(System.Data.DataRow row)
+		{
+			return InvariantConverter.ToLong (row[Tags.ColumnId]);
+		}
+
+		public static DbRowStatus GetRowStatus(System.Data.DataRow row)
+		{
+			return DbKey.ConvertFromIntStatus (InvariantConverter.ToShort (row[Tags.ColumnStatus]));
+		}
+
+		public static void SetRowId(System.Data.DataRow row, DbId id)
+		{
+			row[Tags.ColumnId] = id.Value;
+		}
+
+		public static void SetRowStatus(System.Data.DataRow row, DbRowStatus status)
+		{
+			row[Tags.ColumnStatus] = (short) status;
 		}
 
 		private void DefineIdAndStatus(object valueId, object valueStatus)

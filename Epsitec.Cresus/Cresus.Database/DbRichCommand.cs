@@ -320,6 +320,18 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Saves the tables by assigning real row ids to the rows, defining
+		/// their log id and finally calling <c>UpdateTables</c>.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		public void SaveTables(DbTransaction transaction)
+		{
+			this.UpdateLogIds ();
+			this.AssignRealRowIds (transaction);
+			this.UpdateTables (transaction);
+		}
+
+		/// <summary>
 		/// Updates the tables by writing their contents to the database.
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
@@ -544,6 +556,47 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			DbRichCommand.DeleteRow (row);
+		}
+
+		/// <summary>
+		/// Makes the specified row immutable. This creates a new row, if needed,
+		/// which can then be further modified.
+		/// </summary>
+		/// <param name="row">The original row.</param>
+		/// <returns>The row which replaces the original row.</returns>
+		public System.Data.DataRow MakeRowImmutable(System.Data.DataRow row)
+		{
+			if (this.isReadOnly)
+			{
+				throw new Exceptions.ReadOnlyException (this.access);
+			}
+
+			DbTable table = this.tables[row.Table.TableName];
+
+			if (table.RevisionMode == DbRevisionMode.Enabled)
+			{
+				DbRowStatus status = DbKey.GetRowStatus (row);
+
+				switch (status)
+				{
+					case DbRowStatus.ArchiveCopy:
+					case DbRowStatus.Copied:
+						break;
+					
+					case DbRowStatus.Deleted:
+						System.Diagnostics.Debug.WriteLine ("Deleted row is considered as an immutable row");
+						break;
+					
+					case DbRowStatus.Live:
+						DbRichCommand.CopyLiveRowAndMakeImmutable (ref row);
+						break;
+					
+					default:
+						throw new System.NotSupportedException (string.Format ("Status {0} not supported", status));
+				}
+			}
+
+			return row;
 		}
 
 		/// <summary>
@@ -839,11 +892,11 @@ namespace Epsitec.Cresus.Database
 				
 				System.Diagnostics.Debug.Assert (key.IsTemporary);
 				
-				key = new DbKey (id++);
+				key = new DbKey (id++, key.Status);
 				
 				row.BeginEdit ();
-				row[Tags.ColumnId]     = key.Id.Value;
-				row[Tags.ColumnStatus] = key.IntStatus;
+				DbKey.SetRowId (row, key.Id);
+				DbKey.SetRowStatus (row, key.Status);
 				row.EndEdit ();
 			}
 		}
@@ -860,8 +913,16 @@ namespace Epsitec.Cresus.Database
 				switch (row.RowState)
 				{
 					case System.Data.DataRowState.Added:
-					case System.Data.DataRowState.Modified:
+						row.BeginEdit ();
 						DbRichCommand.DefineLogId (row, logId);
+						row.EndEdit ();
+						break;
+					
+					case System.Data.DataRowState.Modified:
+						row.BeginEdit ();
+						DbRichCommand.DefineLogId (row, logId);
+						DbRichCommand.UpdateRowStatusAfterModification (row);
+						row.EndEdit ();
 						break;
 				}
 			}
@@ -876,10 +937,40 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (row.RowState != System.Data.DataRowState.Deleted);
 			
-			row.BeginEdit ();
 			row[Tags.ColumnRefLog] = logId.Value;
-			row.EndEdit ();
 		}
+
+		/// <summary>
+		/// Updates the row status after a modification. This will change the status
+		/// from <c>DbRowStatus.Copied</c> to <c>DbRowStatus.Live</c>.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		private static void UpdateRowStatusAfterModification(System.Data.DataRow row)
+		{
+			DbRowStatus status = DbKey.GetRowStatus (row);
+
+			switch (status)
+			{
+				case DbRowStatus.Copied:
+					DbKey.SetRowStatus (row, DbRowStatus.Live);
+					break;
+
+				case DbRowStatus.Live:
+					break;
+
+				case DbRowStatus.Deleted:
+					System.Diagnostics.Debug.WriteLine ("WARNING: modifying deleted row");
+					break;
+
+				case DbRowStatus.ArchiveCopy:
+					System.Diagnostics.Debug.WriteLine ("WARNING: modifying archived row");
+					break;
+
+				default:
+					throw new System.NotSupportedException (string.Format ("Status {0} not supported", status));
+			}
+		}
+
 
 		/// <summary>
 		/// Creates a new row in the specified table. The row id will be set to a new
@@ -897,8 +988,8 @@ namespace Epsitec.Cresus.Database
 			DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
 			
 			row.BeginEdit ();
-			row[Tags.ColumnId]     = key.Id.Value;
-			row[Tags.ColumnStatus] = key.IntStatus;
+			DbKey.SetRowId (row, key.Id);
+			DbKey.SetRowStatus (row, key.Status);
 			row.EndEdit ();
 
 			return row;
@@ -986,6 +1077,28 @@ namespace Epsitec.Cresus.Database
 			
 			return copy;
 		}
+
+		private static void CopyLiveRowAndMakeImmutable(ref System.Data.DataRow live)
+		{
+			System.Data.DataRow copy = live.Table.NewRow ();
+
+			copy.ItemArray = live.ItemArray;
+			
+			DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Copied);
+
+			copy.BeginEdit ();
+			DbKey.SetRowId (copy, key.Id);
+			DbKey.SetRowStatus (copy, key.Status);
+			copy.EndEdit ();
+
+			live.Table.Rows.Add (copy);
+
+			DbKey.SetRowStatus (live, DbRowStatus.ArchiveCopy);
+
+			live = copy;
+		}
+
+
 
 		/// <summary>
 		/// Finds a row in a data table based on a row id.

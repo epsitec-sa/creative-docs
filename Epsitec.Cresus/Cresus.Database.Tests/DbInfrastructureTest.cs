@@ -241,20 +241,43 @@ namespace Epsitec.Cresus.Database
 				System.Data.DataRow   dataRow   = command.CreateRow ("SimpleTest");
 
 				dataRow.BeginEdit ();
-				dataRow["Name"] = "Pierre ARNAUD";
+				dataRow["Name"] = "Pierre Arnaud";
 				dataRow["Level"] = "S-DV";
 				dataRow["Data"] = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
 				dataRow["Guid"] = TypeConverter.ConvertToInternal (infrastructure.Converter, new System.Guid (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11), DbRawType.Guid);
 				dataRow.EndEdit ();
+
+				using (DbTransaction transaction = infrastructure.BeginTransaction ())
+				{
+					command.SaveTables (transaction);
+					transaction.Commit ();
+				}
+
+				Assert.AreEqual (DbRowStatus.Live, DbKey.GetRowStatus (dataRow));
+
+				System.Data.DataRow origRow = dataRow;
+
+				using (DbTransaction transaction = infrastructure.BeginTransaction ())
+				{
+					dataRow = command.MakeRowImmutable (dataRow);
+					command.SaveTables (transaction);
+					transaction.Commit ();
+				}
+
+				Assert.AreEqual (DbRowStatus.Copied, DbKey.GetRowStatus (dataRow));
+				Assert.AreEqual (DbRowStatus.ArchiveCopy, DbKey.GetRowStatus (origRow));
+				
+				dataRow.BeginEdit ();
+				dataRow["Name"] = "Pierre ARNAUD";
+				dataRow.EndEdit ();
 				
 				using (DbTransaction transaction = infrastructure.BeginTransaction ())
 				{
-					command.UpdateLogIds ();
-					command.AssignRealRowIds (transaction);
-					command.UpdateTables (transaction);
-					
+					command.SaveTables (transaction);
 					transaction.Commit ();
 				}
+
+				Assert.AreEqual (DbRowStatus.Live, DbKey.GetRowStatus (dataRow));
 				
 				using (DbTransaction transaction = infrastructure.BeginTransaction ())
 				{
