@@ -174,14 +174,15 @@ namespace Epsitec.Common.UI
 		object IStructuredData.GetValue(string id)
 		{
 			ItemRecord record = this.GetItemRecord (id);
-			IStructuredData data = record.Data;
-
-			if (data == null)
-			{
-				throw new System.ArgumentException (string.Format ("Identifier '{0}' cannot be resolved", id));
-			}
 			
-			return record.Data;
+			if (record.Data == null)
+			{
+				return UnknownValue.Instance;
+			}
+			else
+			{
+				return record.Data;
+			}
 		}
 
 		void IStructuredData.SetValue(string id, object value)

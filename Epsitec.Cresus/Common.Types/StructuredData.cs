@@ -149,9 +149,13 @@ namespace Epsitec.Common.Types
 			{
 				return value.Data;
 			}
-			else
+			else if (this.type == null)
 			{
 				return UndefinedValue.Instance;
+			}
+			else
+			{
+				return this.type.GetField (id).IsEmpty ? (object) UnknownValue.Instance : (object) UndefinedValue.Instance;
 			}
 		}
 

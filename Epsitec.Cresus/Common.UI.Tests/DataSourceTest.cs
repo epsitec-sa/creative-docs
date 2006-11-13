@@ -77,6 +77,31 @@ namespace Epsitec.Common.UI
 		}
 
 		[Test]
+		public void CheckGetValue()
+		{
+			DataSource source = new DataSource ();
+			StructuredType recType = new StructuredType ();
+			StructuredData rec = new StructuredData (recType);
+
+			recType.Fields.Add ("A", StringType.Default);
+			recType.Fields.Add ("B", StringType.Default);
+
+			rec.SetValue ("A", "a");
+
+			source.AddDataSource ("X", rec);
+
+			IStructuredData data = source;
+
+			Assert.AreEqual (rec, data.GetValue ("X"));
+			Assert.AreEqual (UnknownValue.Instance, data.GetValue ("Y"));
+
+			Assert.AreEqual (rec, StructuredTree.GetValue (data, "X"));
+			Assert.AreEqual ("a", StructuredTree.GetValue (data, "X.A"));
+			Assert.AreEqual (UndefinedValue.Instance, StructuredTree.GetValue (data, "X.B"));
+			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (data, "X.C"));
+		}
+
+		[Test]
 		public void CheckPanelSerializationContext()
 		{
 			Support.ResourceManager manager = new Support.ResourceManager ();
