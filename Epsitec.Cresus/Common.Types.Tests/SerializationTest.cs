@@ -709,6 +709,26 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Default.String", st.Fields["Name"].Type.Name);
 			Assert.AreEqual ("Default.Integer", st.Fields["Angle"].Type.Name);
 		}
+		
+		[Test]
+		public void CheckStructuredTypeSerializationUsingCaptionWithDefaultValue()
+		{
+			IntegerType type1 = new IntegerType (1, 100);
+			System.Console.Out.WriteLine (type1.Caption.SerializeToString ());
+
+			type1.DefineDefaultValue (1);
+			type1.DefineSampleValue (12);
+			
+			System.Console.Out.WriteLine (type1.Caption.SerializeToString ());
+
+			Caption caption = new Caption ();
+			caption.DeserializeFromString (type1.Caption.SerializeToString ());
+
+			AbstractType type2 = TypeRosetta.CreateTypeObject (caption);
+
+			Assert.AreEqual (type1.DefaultValue, type2.DefaultValue);
+			Assert.AreEqual (type1.SampleValue, type2.SampleValue);
+		}
 
 		[Test]
 		public void CheckEnumSerialization1()

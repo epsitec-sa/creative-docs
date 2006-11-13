@@ -1,0 +1,74 @@
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
+namespace Epsitec.Common.Types
+{
+	[System.Serializable]
+	[System.ComponentModel.TypeConverter (typeof (TypedObject.Converter))]
+	public struct TypedObject
+	{
+		public TypedObject(object value)
+		{
+			this.value = value;
+		}
+
+		public object Value
+		{
+			get
+			{
+				return this.value;
+			}
+		}
+
+		public override string ToString()
+		{
+			if (this.value == null)
+			{
+				return "<null>";
+			}
+			else
+			{
+				System.Type type = this.value.GetType ();
+				ISerializationConverter converter = InvariantConverter.GetSerializationConverter (type);
+				return string.Concat (type.FullName, "/", converter.ConvertToString (this.value, null));
+			}
+		}
+
+		public static TypedObject Parse(string value)
+		{
+			if (value == "<null>")
+			{
+				return new TypedObject (null);
+			}
+			else
+			{
+				int pos = value.IndexOf ('/');
+				string typeName = value.Substring (0, pos);
+				string strValue = value.Substring (pos+1);
+				System.Type type = System.Type.GetType (typeName);
+				ISerializationConverter converter = InvariantConverter.GetSerializationConverter (type);
+				return new TypedObject (converter.ConvertFromString (strValue, null));
+			}
+		}
+		
+
+		#region Converter Class
+		
+		public class Converter : AbstractStringConverter
+		{
+			public override object ParseString(string value, System.Globalization.CultureInfo culture)
+			{
+				return TypedObject.Parse (value);
+			}
+
+			public override string ToString(object value, System.Globalization.CultureInfo culture)
+			{
+				return ((TypedObject) value).ToString ();
+			}
+		}
+		
+		#endregion
+
+		private object value;
+	}
+}

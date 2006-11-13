@@ -122,6 +122,22 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		public object DefaultValue
+		{
+			get
+			{
+				return AbstractType.GetDefaultValue (this.Caption);
+			}
+		}
+
+		public object SampleValue
+		{
+			get
+			{
+				return AbstractType.GetSampleValue (this.Caption);
+			}
+		}
+
 		/// <summary>
 		/// Defines the default controller used to represent data of this type.
 		/// </summary>
@@ -156,6 +172,18 @@ namespace Epsitec.Common.Types
 					this.Caption.ClearValue (AbstractType.IsNullableProperty);
 				}
 			}
+		}
+
+		public void DefineDefaultValue(object value)
+		{
+			System.Diagnostics.Debug.Assert ((value == null) || (this.IsValidValue (value)));
+			AbstractType.SetDefaultValue (this.Caption, value);
+		}
+
+		public void DefineSampleValue(object value)
+		{
+			System.Diagnostics.Debug.Assert ((value == null) || (this.IsValidValue (value)));
+			AbstractType.SetSampleValue (this.Caption, value);
 		}
 
 		protected override void OnCaptionDefined()
@@ -263,6 +291,11 @@ namespace Epsitec.Common.Types
 			return type;
 		}
 
+		/// <summary>
+		/// Gets the name of the system type family from the tagged system type name.
+		/// </summary>
+		/// <param name="name">The tagged system type name.</param>
+		/// <returns>The <c>SystemTypeFamily</c>.</returns>
 		public static SystemTypeFamily GetSystemTypeFamilyFromSystemTypeName(string name)
 		{
 			if ((name == null) ||
@@ -294,6 +327,28 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Gets the default value.
+		/// </summary>
+		/// <param name="caption">The caption.</param>
+		/// <returns></returns>
+		public static object GetDefaultValue(Caption caption)
+		{
+			object value = caption.GetValue (AbstractType.DefaultValueProperty);
+			return value == null ? null : ((TypedObject) value).Value;
+		}
+
+		/// <summary>
+		/// Gets the template value.
+		/// </summary>
+		/// <param name="caption">The caption.</param>
+		/// <returns></returns>
+		public static object GetSampleValue(Caption caption)
+		{
+			object value = caption.GetValue (AbstractType.SampleValueProperty);
+			return value == null ? null : ((TypedObject) value).Value;
+		}
+
+		/// <summary>
 		/// Gets the value of the <c>CachedTypeProperty</c> dependency property.
 		/// </summary>
 		/// <param name="caption">The caption to query.</param>
@@ -317,19 +372,24 @@ namespace Epsitec.Common.Types
 		/// Sets the value of the <c>SystemTypeProperty</c> dependency property.
 		/// </summary>
 		/// <param name="caption">The caption to modify.</param>
-		/// <param name="value">The value.</param>
-		public static void SetSystemType(Caption caption, string value)
+		/// <param name="value">The system type name as returned by <c>GetSystemTypeNameFromSystemType</c>.</param>
+		public static void SetSystemType(Caption caption, string typeName)
 		{
-			if (string.IsNullOrEmpty (value))
+			if (string.IsNullOrEmpty (typeName))
 			{
 				caption.ClearValue (AbstractType.SytemTypeProperty);
 			}
 			else
 			{
-				caption.SetValue (AbstractType.SytemTypeProperty, value);
+				caption.SetValue (AbstractType.SytemTypeProperty, typeName);
 			}
 		}
 
+		/// <summary>
+		/// Sets the value of the <c>SystemTypeProperty</c> dependency property.
+		/// </summary>
+		/// <param name="caption">The caption to modify.</param>
+		/// <param name="type">The system type.</param>
 		public static void SetSystemType(Caption caption, System.Type type)
 		{
 			if (type == null)
@@ -339,6 +399,40 @@ namespace Epsitec.Common.Types
 			else
 			{
 				AbstractType.SetSystemType (caption, AbstractType.GetSystemTypeNameFromSystemType (type));
+			}
+		}
+
+		/// <summary>
+		/// Sets the default value.
+		/// </summary>
+		/// <param name="caption">The caption.</param>
+		/// <param name="value">The value.</param>
+		public static void SetDefaultValue(Caption caption, object value)
+		{
+			if (value == null)
+			{
+				caption.ClearValue (AbstractType.DefaultValueProperty);
+			}
+			else
+			{
+				caption.SetValue (AbstractType.DefaultValueProperty, new TypedObject (value));
+			}
+		}
+
+		/// <summary>
+		/// Sets the template value.
+		/// </summary>
+		/// <param name="caption">The caption.</param>
+		/// <param name="value">The value.</param>
+		public static void SetSampleValue(Caption caption, object value)
+		{
+			if (value == null)
+			{
+				caption.ClearValue (AbstractType.SampleValueProperty);
+			}
+			else
+			{
+				caption.SetValue (AbstractType.SampleValueProperty, new TypedObject (value));
 			}
 		}
 
@@ -382,5 +476,7 @@ namespace Epsitec.Common.Types
 		public static readonly DependencyProperty CachedTypeProperty = DependencyProperty.RegisterAttached ("CachedType", typeof (AbstractType), typeof (AbstractType), new DependencyPropertyMetadata ().MakeNotSerializable ());
 		public static readonly DependencyProperty ComplexTypeProperty = DependencyProperty.RegisterAttached ("ComplexType", typeof (AbstractType), typeof (AbstractType));
 		public static readonly DependencyProperty IsNullableProperty = DependencyProperty.RegisterAttached ("IsNullable", typeof (bool), typeof (AbstractType), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty DefaultValueProperty = DependencyProperty.RegisterAttached ("DefaultValue", typeof (TypedObject), typeof (AbstractType));
+		public static readonly DependencyProperty SampleValueProperty = DependencyProperty.RegisterAttached ("SampleValue", typeof (TypedObject), typeof (AbstractType));
 	}
 }
