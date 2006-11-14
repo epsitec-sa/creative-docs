@@ -27,11 +27,16 @@ namespace Epsitec.Common.UI.Panels
 			}
 		}
 
-		public override Panel EditionPanel
+		public override Panel GetPanel(PanelMode mode)
+		{
+			return this.owner.GetPanel (mode);
+		}
+
+		public override PanelMode PanelMode
 		{
 			get
 			{
-				return null;
+				return PanelMode.Edition;
 			}
 		}
 

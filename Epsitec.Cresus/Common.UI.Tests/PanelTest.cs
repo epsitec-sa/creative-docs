@@ -64,18 +64,6 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (1, Collection.Count<Widgets.Visual> (copy.EditionPanel.Children));
 			Assert.AreEqual (new Drawing.Size (100, 80), copy.PreferredSize);
 			Assert.AreEqual (new Drawing.Size (200, 96), copy.EditionPanel.PreferredSize);
-			
-			panel.PanelMode = PanelMode.Edition;
-			
-			xml = this.SerializePanel (panel, manager);
-			System.Console.Out.WriteLine ("{0}", xml);
-			copy = this.DeserializePanel (xml, manager);
-
-			Assert.AreEqual (PanelMode.Default, copy.PanelMode);
-			Assert.AreEqual (2, Collection.Count<Widgets.Visual> (copy.Children));
-			Assert.AreEqual (1, Collection.Count<Widgets.Visual> (copy.EditionPanel.Children));
-			Assert.AreEqual (new Drawing.Size (100, 80), copy.PreferredSize);
-			Assert.AreEqual (new Drawing.Size (200, 96), copy.EditionPanel.PreferredSize);
 		}
 
 		[Test]

@@ -12,7 +12,7 @@ namespace Epsitec.Common.UI
 	/// The <c>Panel</c> class is used as the (local) root in a widget tree
 	/// built by the dynamic user interface designer.
 	/// </summary>
-	public class Panel : Widgets.AbstractGroup, Types.Serialization.IDeserialization
+	public class Panel : Widgets.AbstractGroup
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Panel"/> class.
@@ -106,33 +106,54 @@ namespace Epsitec.Common.UI
 		}
 
 		/// <summary>
-		/// Gets or sets the panel mode.
+		/// Gets the panel mode for this panel.
 		/// </summary>
 		/// <value>The panel mode.</value>
-		public PanelMode						PanelMode
+		public virtual PanelMode				PanelMode
 		{
 			get
 			{
-				return (PanelMode) this.GetValue (Panel.PanelModeProperty);
-			}
-			set
-			{
-				this.SetValue (Panel.PanelModeProperty, value);
+				return PanelMode.Default;
 			}
 		}
 
-		public virtual Panel					EditionPanel
+		public Panel							EditionPanel
 		{
 			get
 			{
-				if (this.editionPanel == null)
-				{
-					this.editionPanel = new Panels.EditPanel (this);
-					DataObject.SetDataContext (this.editionPanel, DataObject.GetDataContext (this));
-				}
-
-				return this.editionPanel;
+				return this.GetPanel (PanelMode.Edition);
 			}
+		}
+
+		public Panel							SearchPanel
+		{
+			get
+			{
+				return this.GetPanel (PanelMode.Search);
+			}
+		}
+
+		public virtual Panel GetPanel(PanelMode mode)
+		{
+			switch (mode)
+			{
+				case PanelMode.Edition:
+					if (this.editionPanel == null)
+					{
+						this.editionPanel = new Panels.EditPanel (this);
+						DataObject.SetDataContext (this.editionPanel, DataObject.GetDataContext (this));
+					}
+
+					return this.editionPanel;
+
+				case PanelMode.Search:
+					return null;
+
+				case PanelMode.Default:
+					return this;
+			}
+			
+			return null;
 		}
 		
 		/// <summary>
@@ -146,20 +167,6 @@ namespace Epsitec.Common.UI
 			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagDataSource, dataSource);
 			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagResourceManager, resourceManager);
 		}
-
-		#region IDeserialization Members
-
-		void Types.Serialization.IDeserialization.NotifyDeserializationStarted(Types.Serialization.Context context)
-		{
-			this.PanelMode = PanelMode.None;
-		}
-
-		void Types.Serialization.IDeserialization.NotifyDeserializationCompleted(Types.Serialization.Context context)
-		{
-			this.PanelMode = PanelMode.Default;
-		}
-
-		#endregion
 
 		private void SyncDataContextWithDataSource()
 		{
@@ -212,10 +219,22 @@ namespace Epsitec.Common.UI
 			panel.editionPanel = (Panels.EditPanel) value;
 		}
 
+		private static object GetSearchPanelValue(DependencyObject obj)
+		{
+			Panel panel = (Panel) obj;
+			return panel.SearchPanel;
+		}
+
+		private static void SetSearchPanelValue(DependencyObject obj, object value)
+		{
+			Panel panel = (Panel) obj;
+			//	TODO: searchPanel = ...
+		}
+
 
 		public static DependencyProperty DataSourceMetadataProperty = DependencyProperty.RegisterReadOnly ("DataSourceMetadata", typeof (DataSourceMetadata), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDataSourceMetadataValue, Panel.SetDataSourceMetadataValue).MakeReadOnlySerializable ());
-		public static DependencyProperty PanelModeProperty = DependencyProperty.Register ("PanelMode", typeof (PanelMode), typeof (Panel), new DependencyPropertyMetadata (PanelMode.Default, Panel.NotifyPanelModeChanged));
 		public static DependencyProperty EditionPanelProperty = DependencyProperty.Register ("EditionPanel", typeof (Panels.EditPanel), typeof (Panel), new DependencyPropertyMetadata (Panel.GetEditionPanelValue, Panel.SetEditionPanelValue));
+		public static DependencyProperty SearchPanelProperty  = DependencyProperty.Register ("SearchPanel", typeof (Panels.EditPanel), typeof (Panel), new DependencyPropertyMetadata (Panel.GetSearchPanelValue, Panel.SetSearchPanelValue));
 		
 		private DataSource dataSource;
 		private DataSourceMetadata dataSourceMetadata;

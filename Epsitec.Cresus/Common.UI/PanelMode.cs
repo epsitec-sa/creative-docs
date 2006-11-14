@@ -12,5 +12,6 @@ namespace Epsitec.Common.UI
 		
 		Default,
 		Edition,
+		Search,
 	}
 }
