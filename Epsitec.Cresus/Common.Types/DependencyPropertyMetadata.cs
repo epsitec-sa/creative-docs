@@ -164,7 +164,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return false;
+				return this.filter != null;
 			}
 		}
 		public bool								CanSerializeReadOnly
@@ -224,10 +224,22 @@ namespace Epsitec.Common.Types
 		{
 			this.defaultValue = value;
 		}
+
+		public void DefineFilter(System.Predicate<object> filter)
+		{
+			this.filter = filter;
+		}
 		
 		public virtual bool FilterSerializableItem(object item)
 		{
-			return true;
+			if (this.filter == null)
+			{
+				return true;
+			}
+			else
+			{
+				return this.filter (item);
+			}
 		}
 		public virtual IEnumerable<DependencyObject> FilterSerializableCollection(IEnumerable<DependencyObject> collection)
 		{
@@ -333,5 +345,6 @@ namespace Epsitec.Common.Types
 		private bool							canSerializeReadWrite = true;
 		private Support.Druid					captionId;
 		private INamedType						namedType;
+		private System.Predicate<object>		filter;
 	}
 }

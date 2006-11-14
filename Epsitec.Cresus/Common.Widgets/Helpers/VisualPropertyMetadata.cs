@@ -165,7 +165,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 			else
 			{
-				return true;
+				return base.FilterSerializableItem (item);
 			}
 		}
 		

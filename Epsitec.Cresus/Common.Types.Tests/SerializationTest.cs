@@ -906,7 +906,9 @@ namespace Epsitec.Common.Types
 			r.Labels.Add ("First");
 			r.Labels.Add ("Second");
 			r.Labels.Add (@"Third & last -- }, {;/<\'"" ");
+			r.Labels.Add ("*Fourth");
 			r.Labels.Add (null);
+			r.Labels.Add ("*xyz");
 
 			c1.Price = 125.95M;
 			c2.Price = 3899.20M;
@@ -1145,6 +1147,27 @@ namespace Epsitec.Common.Types
 			{
 				MyItem tt = o as MyItem;
 				return tt.Labels;
+			}
+
+			static MyItem()
+			{
+				MyItem.LabelsProperty.DefaultMetadata.DefineFilter
+					(
+						delegate (object item)
+						{
+							string x = item as string;
+							
+							if ((string.IsNullOrEmpty (x)) ||
+								(x.StartsWith ("*") == false))
+							{
+								return true;
+							}
+							else
+							{
+								return false;
+							}
+						}
+					);
 			}
 
 			public static DependencyProperty NameProperty = DependencyObjectTree.NameProperty.AddOwner (typeof (MyItem));
