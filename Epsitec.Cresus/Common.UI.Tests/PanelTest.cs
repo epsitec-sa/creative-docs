@@ -18,7 +18,7 @@ namespace Epsitec.Common.UI
 		}
 		
 		[Test]
-		public void CheckSerialization1()
+		public void CheckSerialization()
 		{
 			Support.ResourceManager manager = new Support.ResourceManager ();
 			
@@ -36,6 +36,8 @@ namespace Epsitec.Common.UI
 			panel.Children.Add (a);
 			panel.Children.Add (b);
 
+			panel.PreferredSize = new Drawing.Size (100, 80);
+
 			string xml;
 			Panel copy;
 			
@@ -45,15 +47,20 @@ namespace Epsitec.Common.UI
 			
 			panel.PanelMode = PanelMode.Edition;
 			panel.Children.Add (c);
+			panel.PreferredSize = new Drawing.Size (200, 96);
 			panel.PanelMode = PanelMode.Default;
 
 			xml = this.SerializePanel (panel, manager);
 			System.Console.Out.WriteLine ("{0}", xml);
 			copy = this.DeserializePanel (xml, manager);
 
+			Assert.AreEqual (PanelMode.Default, copy.PanelMode);
 			Assert.AreEqual (2, Collection.Count<Widgets.Visual> (copy.Children));
 			Assert.AreEqual (2, Collection.Count<Widgets.Visual> (copy.DefaultVisuals));
 			Assert.AreEqual (1, Collection.Count<Widgets.Visual> (copy.EditVisuals));
+			Assert.AreEqual (new Drawing.Size (100, 80), copy.PreferredSize);
+			Assert.AreEqual (new Drawing.Size (100, 80), copy.DefaultPreferredSize);
+			Assert.AreEqual (new Drawing.Size (200, 96), copy.EditionPreferredSize);
 			
 			panel.PanelMode = PanelMode.Edition;
 			
@@ -61,11 +68,17 @@ namespace Epsitec.Common.UI
 			System.Console.Out.WriteLine ("{0}", xml);
 			copy = this.DeserializePanel (xml, manager);
 
+			Assert.AreEqual (PanelMode.Default, copy.PanelMode);
 			Assert.AreEqual (2, Collection.Count<Widgets.Visual> (copy.Children));
 			Assert.AreEqual (2, Collection.Count<Widgets.Visual> (copy.DefaultVisuals));
 			Assert.AreEqual (1, Collection.Count<Widgets.Visual> (copy.EditVisuals));
+			Assert.AreEqual (new Drawing.Size (100, 80), copy.PreferredSize);
+			Assert.AreEqual (new Drawing.Size (100, 80), copy.DefaultPreferredSize);
+			Assert.AreEqual (new Drawing.Size (200, 96), copy.EditionPreferredSize);
 		}
-		
+
+		#region Support Code
+
 		string SerializePanel(Panel panel, Support.ResourceManager manager)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -107,5 +120,7 @@ namespace Epsitec.Common.UI
 
 			return Types.Storage.Deserialize (context) as Panel;
 		}
+
+		#endregion
 	}
 }

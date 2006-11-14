@@ -131,12 +131,12 @@ namespace Epsitec.Common.UI
 				}
 				else
 				{
-					if (this.editVisuals == null)
+					if (this.editionVisuals == null)
 					{
-						this.editVisuals = new Types.Collections.HostedDependencyObjectList<Widgets.Visual> (null);
+						this.editionVisuals = new Types.Collections.HostedDependencyObjectList<Widgets.Visual> (null);
 					}
 
-					return this.editVisuals;
+					return this.editionVisuals;
 				}
 			}
 		}
@@ -154,10 +154,39 @@ namespace Epsitec.Common.UI
 					if (this.defaultVisuals == null)
 					{
 						this.defaultVisuals = new Types.Collections.HostedDependencyObjectList<Widgets.Visual> (null);
-						;
 					}
 
 					return this.defaultVisuals;
+				}
+			}
+		}
+
+		public Drawing.Size EditionPreferredSize
+		{
+			get
+			{
+				if (this.PanelMode == PanelMode.Edition)
+				{
+					return this.PreferredSize;
+				}
+				else
+				{
+					return this.editionPreferredSize;
+				}
+			}
+		}
+
+		public Drawing.Size DefaultPreferredSize
+		{
+			get
+			{
+				if (this.PanelMode == PanelMode.Default)
+				{
+					return this.PreferredSize;
+				}
+				else
+				{
+					return this.defaultPreferredSize;
 				}
 			}
 		}
@@ -175,6 +204,11 @@ namespace Epsitec.Common.UI
 		}
 
 		#region IDeserialization Members
+
+		void Types.Serialization.IDeserialization.NotifyDeserializationStarted(Types.Serialization.Context context)
+		{
+			this.PanelMode = PanelMode.None;
+		}
 
 		void Types.Serialization.IDeserialization.NotifyDeserializationCompleted(Types.Serialization.Context context)
 		{
@@ -199,14 +233,19 @@ namespace Epsitec.Common.UI
 		{
 			switch (oldMode)
 			{
+				case PanelMode.None:
+					return;
+					
 				case PanelMode.Default:
 					this.defaultVisuals = new Types.Collections.HostedDependencyObjectList<Widgets.Visual> (null);
 					this.defaultVisuals.AddRange (this.Children);
+					this.defaultPreferredSize = this.PreferredSize;
 					break;
 				
 				case PanelMode.Edition:
-					this.editVisuals = new Types.Collections.HostedDependencyObjectList<Widgets.Visual> (null);
-					this.editVisuals.AddRange (this.Children);
+					this.editionVisuals = new Types.Collections.HostedDependencyObjectList<Widgets.Visual> (null);
+					this.editionVisuals.AddRange (this.Children);
+					this.editionPreferredSize = this.PreferredSize;
 					break;
 			}
 
@@ -216,10 +255,12 @@ namespace Epsitec.Common.UI
 			{
 				case PanelMode.Default:
 					this.Children.AddRange (this.defaultVisuals);
+					this.PreferredSize = this.defaultPreferredSize;
 					break;
 
 				case PanelMode.Edition:
-					this.Children.AddRange (this.editVisuals);
+					this.Children.AddRange (this.editionVisuals);
+					this.PreferredSize = this.editionPreferredSize;
 					break;
 			}
 		}
@@ -254,14 +295,42 @@ namespace Epsitec.Common.UI
 			return panel.DefaultVisuals;
 		}
 
+		private static object GetEditionPreferredSizeValue(DependencyObject obj)
+		{
+			Panel panel = (Panel) obj;
+			return panel.EditionPreferredSize;
+		}
+
+		private static void SetEditionPreferredSizeValue(DependencyObject obj, object value)
+		{
+			Panel panel = (Panel) obj;
+			panel.editionPreferredSize = (Drawing.Size) value;
+		}
+
+		private static object GetDefaultPreferredSizeValue(DependencyObject obj)
+		{
+			Panel panel = (Panel) obj;
+			return panel.DefaultPreferredSize;
+		}
+
+		private static void SetDefaultPreferredSizeValue(DependencyObject obj, object value)
+		{
+			Panel panel = (Panel) obj;
+			panel.defaultPreferredSize = (Drawing.Size) value;
+		}
+
 		public static DependencyProperty DataSourceMetadataProperty = DependencyProperty.RegisterReadOnly ("DataSourceMetadata", typeof (DataSourceMetadata), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDataSourceMetadataValue, Panel.SetDataSourceMetadataValue).MakeReadOnlySerializable ());
 		public static DependencyProperty PanelModeProperty = DependencyProperty.Register ("PanelMode", typeof (PanelMode), typeof (Panel), new DependencyPropertyMetadata (PanelMode.Default, Panel.NotifyPanelModeChanged));
 		public static DependencyProperty EditVisualsProperty = DependencyProperty.RegisterReadOnly ("EditVisuals", typeof (ICollection<DependencyObject>), typeof (Panel), new DependencyPropertyMetadata (Panel.GetEditVisualsValue).MakeReadOnlySerializable ());
 		public static DependencyProperty DefaultVisualsProperty = DependencyProperty.RegisterReadOnly ("DefaultVisuals", typeof (ICollection<DependencyObject>), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDefaultVisualsValue).MakeReadOnlySerializable ());
+		public static DependencyProperty EditionPreferredSizeProperty = DependencyProperty.Register ("EditionPreferredSize", typeof (Drawing.Size), typeof (Panel), new DependencyPropertyMetadata (Panel.GetEditionPreferredSizeValue, Panel.SetEditionPreferredSizeValue));
+		public static DependencyProperty DefaultPreferredSizeProperty = DependencyProperty.Register ("DefaultPreferredSize", typeof (Drawing.Size), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDefaultPreferredSizeValue, Panel.SetDefaultPreferredSizeValue));
 
 		private DataSource dataSource;
 		private DataSourceMetadata dataSourceMetadata;
 		private Types.Collections.HostedDependencyObjectList<Widgets.Visual> defaultVisuals;
-		private Types.Collections.HostedDependencyObjectList<Widgets.Visual> editVisuals;
+		private Types.Collections.HostedDependencyObjectList<Widgets.Visual> editionVisuals;
+		private Drawing.Size defaultPreferredSize;
+		private Drawing.Size editionPreferredSize;
 	}
 }

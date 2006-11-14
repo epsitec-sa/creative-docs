@@ -9,6 +9,7 @@ namespace Epsitec.Common.Types.Serialization
 	/// </summary>
 	public interface IDeserialization
 	{
+		void NotifyDeserializationStarted(Serialization.Context context);
 		void NotifyDeserializationCompleted(Serialization.Context context);
 	}
 }

@@ -78,18 +78,32 @@ namespace Epsitec.Common.Types
 				{
 					context.RestoreExternalDefinition ();
 				}
+				
 				for (int i = 0; i < typeCount; i++)
 				{
 					context.RestoreTypeDefinition ();
 				}
+				
 				for (int i = 0; i < objectCount; i++)
 				{
 					list.Add (context.RestoreObjectDefinition ());
 				}
+				
+				foreach (DependencyObject obj in list)
+				{
+					Serialization.IDeserialization deserialization = obj as Serialization.IDeserialization;
+
+					if (deserialization != null)
+					{
+						deserialization.NotifyDeserializationStarted (context);
+					}
+				}
+				
 				foreach (DependencyObject obj in list)
 				{
 					context.RestoreObjectData (context.ObjectMap.GetId (obj), obj);
 				}
+				
 				foreach (DependencyObject obj in list)
 				{
 					Serialization.IDeserialization deserialization = obj as Serialization.IDeserialization;
