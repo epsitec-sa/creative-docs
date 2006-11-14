@@ -93,6 +93,19 @@ namespace Epsitec.Common.UI
 		}
 
 		/// <summary>
+		/// Gets the owner of this panel. This is overridden by <c>EditPanel</c>
+		/// and the other specialized panels.
+		/// </summary>
+		/// <value>The owner (always <c>null</c> if not overridden).</value>
+		public virtual Panel					Owner
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+		/// <summary>
 		/// Fills the serialization context <c>ExternalMap</c> property.
 		/// </summary>
 		/// <param name="context">The serialization context.</param>

@@ -24,7 +24,23 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			return new Drawing.Point (x, y);
 		}
-		
+
+		public static Drawing.Point MapVisualToAncestor(Visual visual, Visual ancestor, Drawing.Point value)
+		{
+			while (visual != ancestor)
+			{
+				if (visual == null)
+				{
+					throw new System.ArgumentException ("Ancestor is not valid for this visual");
+				}
+				
+				value  = VisualTree.MapVisualToParent (visual, value);
+				visual = visual.Parent;
+			}
+			
+			return value;
+		}
+
 		public static Drawing.Point MapVisualToRoot(Visual visual, Drawing.Point value)
 		{
 			double x = value.X;
@@ -115,8 +131,24 @@ namespace Epsitec.Common.Widgets.Helpers
 			Window window = VisualTree.GetWindow (visual);
 			return window.MapWindowToScreen (VisualTree.MapVisualToRoot (visual, VisualTree.MapParentToVisual (visual, value)));
 		}
-		
-		
+
+
+		public static Drawing.Rectangle MapVisualToAncestor(Visual visual, Visual ancestor, Drawing.Rectangle value)
+		{
+			while (visual != ancestor)
+			{
+				if (visual == null)
+				{
+					throw new System.ArgumentException ("Ancestor is not valid for this visual");
+				}
+
+				value  = VisualTree.MapVisualToParent (visual, value);
+				visual = visual.Parent;
+			}
+
+			return value;
+		}
+
 		public static Drawing.Rectangle MapVisualToParent(Visual visual, Drawing.Rectangle value)
 		{
 			bool flip_x = value.Width < 0;

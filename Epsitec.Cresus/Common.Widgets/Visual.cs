@@ -1400,7 +1400,6 @@ namespace Epsitec.Common.Widgets
 					Layouts.LayoutContext.ClearLayoutContext (this);
 					Layouts.LayoutContext.AddToMeasureQueue (this, context);
 				}
-
 			}
 		}
 
