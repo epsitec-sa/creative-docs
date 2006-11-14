@@ -20,25 +20,23 @@ namespace Epsitec.Common.UI
 		{
 			this.editPanels.Push (panel);
 
-			Panel owner = panel.Owner;
-			Drawing.Rectangle bounds1 = Drawing.Rectangle.Empty;
-			Drawing.Rectangle bounds2 = Widgets.Helpers.VisualTree.MapVisualToAncestor (owner, this, owner.Client.Bounds);
-
-			bounds1.Width  = System.Math.Max (panel.PreferredWidth, panel.MinWidth);
-			bounds1.Height = System.Math.Max (panel.PreferredHeight, panel.MinHeight);
-
-			Drawing.Point center1 = bounds1.Center;
-			Drawing.Point center2 = bounds2.Center;
-
-			bounds1.Offset (center2-center1);
-
-			//	TODO: fit into this.Client.Bounds...
-
-			panel.SetManualBounds (bounds1);
+			panel.Owner.BoundsChanged += this.HandleOwnerBoundsChanged;
 			panel.SetParent (this);
-			panel.Show ();
 			
-			this.UpdateMask ();
+			this.UpdateEditPanelBounds (panel);
+			
+			panel.Show ();
+		}
+
+		private void HandleOwnerBoundsChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
+		{
+			foreach (Panel panel in this.editPanels)
+			{
+				if (panel.Owner == sender)
+				{
+					this.UpdateEditPanelBounds (panel);
+				}
+			}
 		}
 
 		public bool EndEdition(Panel panel)
@@ -52,6 +50,8 @@ namespace Epsitec.Common.UI
 					item = this.editPanels.Pop ();
 
 					item.Hide ();
+					
+					item.Owner.BoundsChanged -= this.HandleOwnerBoundsChanged;
 					item.SetParent (null);
 				}
 				while (item != panel);
@@ -88,6 +88,27 @@ namespace Epsitec.Common.UI
 			base.SetBoundsOverride (oldRect, newRect);
 
 			this.mask.SetManualBounds (new Drawing.Rectangle (0, 0, newRect.Width, newRect.Height));
+		}
+
+		private void UpdateEditPanelBounds(Panel panel)
+		{
+			System.Diagnostics.Debug.Assert (this.editPanels.Count > 0);
+			System.Diagnostics.Debug.Assert (this.editPanels.Contains (panel));
+			
+			Panel owner = panel.Owner;
+			
+			Drawing.Rectangle stackBounds = this.Client.Bounds;
+			Drawing.Rectangle panelBounds = new Drawing.Rectangle (0, 0, System.Math.Max (panel.PreferredWidth, panel.MinWidth), System.Math.Max (panel.PreferredHeight, panel.MinHeight));
+			Drawing.Rectangle ownerBounds = Widgets.Helpers.VisualTree.MapVisualToAncestor (owner, this, owner.Client.Bounds);
+
+			panelBounds.Offset (ownerBounds.Center-panelBounds.Center);
+
+			panel.SetManualBounds (Drawing.Rectangle.Constrain (panelBounds, stackBounds));
+
+			if (panel == this.editPanels.Peek ())
+			{
+				this.UpdateMask ();
+			}
 		}
 
 		private void UpdateMask()

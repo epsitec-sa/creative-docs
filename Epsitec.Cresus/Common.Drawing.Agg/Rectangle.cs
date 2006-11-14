@@ -366,7 +366,6 @@ namespace Epsitec.Common.Drawing
 			return (!this.IsEmpty) && (r.x1 >= this.x1) && (r.x2 <= this.x2) && (r.y1 >= this.y1) && (r.y2 <= this.y2);
 		}
 		
-		
 		public Point Constrain(Point p)
 		{
 			if (this.IsValid)
@@ -736,6 +735,35 @@ namespace Epsitec.Common.Drawing
 			return ((x1 > x2) || (y1 > y2)) ? Rectangle.Empty : Rectangle.FromPoints (x1, y1, x2, y2);
 		}
 
+		public static Rectangle Constrain(Rectangle r, Rectangle bounds)
+		{
+			double dx = System.Math.Min (r.Width, bounds.Width);
+			double dy = System.Math.Min (r.Height, bounds.Height);
+
+			if (r.x1 < bounds.x1)
+			{
+				r.x1 = bounds.x1;
+				r.x2 = bounds.x1 + dx;
+			}
+			else if (r.x2 > bounds.x2)
+			{
+				r.x1 = bounds.x2 - dx;
+				r.x2 = bounds.x2;
+			}
+
+			if (r.y1 < bounds.y1)
+			{
+				r.y1 = bounds.y1;
+				r.y2 = bounds.y1 + dy;
+			}
+			else if (r.y2 > bounds.y2)
+			{
+				r.y1 = bounds.y2 - dy;
+				r.y2 = bounds.y2;
+			}
+
+			return r;
+		}
 		
 		public static Rectangle Parse(string value)
 		{

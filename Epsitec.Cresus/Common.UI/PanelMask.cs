@@ -31,7 +31,21 @@ namespace Epsitec.Common.UI
 				}
 			}
 		}
-		
+
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		{
+			Drawing.Path pathA = new Drawing.Path (this.Client.Bounds);
+			Drawing.Path pathB = new Drawing.Path (this.Aperture);
+			
+			Drawing.Path shape = Drawing.Path.Combine (pathA, pathB, Drawing.PathOperation.AMinusB);
+
+			graphics.Rasterizer.AddSurface (shape);
+			graphics.RenderSolid (Drawing.Color.FromAlphaRgb (0.2, 0.8, 0.8, 0.8));
+
+			shape.Dispose ();
+			pathA.Dispose ();
+			pathB.Dispose ();
+		}
 		
 		private Drawing.Rectangle aperture;
 	}

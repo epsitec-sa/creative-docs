@@ -1001,6 +1001,8 @@ namespace Epsitec.Common.Widgets
 				{
 					//	TODO: on pourrait générer un événement ici
 				}
+
+				this.OnBoundsChanged (oldValue, newValue);
 			}
 			
 			if (this.dirtyDisplay)
@@ -1487,6 +1489,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected virtual void OnBoundsChanged(Drawing.Rectangle oldValue, Drawing.Rectangle newValue)
+		{
+			PropertyChangedEventHandler handler = (PropertyChangedEventHandler) this.GetUserEventHandler ("BoundsChanged");
+
+			if (handler != null)
+			{
+				handler (this, new DependencyPropertyChangedEventArgs ("Bounds", oldValue, newValue));
+			}
+		}
+
 		protected virtual void OnChildrenChanged()
 		{
 			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler ("ChildrenChanged");
@@ -1866,6 +1878,18 @@ namespace Epsitec.Common.Widgets
 			remove
 			{
 				this.RemoveUserEventHandler ("DisplayCaptionChanged", value);
+			}
+		}
+
+		public event PropertyChangedEventHandler	BoundsChanged
+		{
+			add
+			{
+				this.AddUserEventHandler ("BoundsChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("BoundsChanged", value);
 			}
 		}
 
