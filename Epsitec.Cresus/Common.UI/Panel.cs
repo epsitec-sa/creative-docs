@@ -121,7 +121,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public IEnumerable<Widgets.Visual> EditVisuals
+		public IEnumerable<Widgets.Visual>		EditVisuals
 		{
 			get
 			{
@@ -141,7 +141,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public IEnumerable<Widgets.Visual> DefaultVisuals
+		public IEnumerable<Widgets.Visual>		DefaultVisuals
 		{
 			get
 			{
@@ -161,7 +161,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public Drawing.Size EditionPreferredSize
+		public Drawing.Size						EditionPreferredSize
 		{
 			get
 			{
@@ -176,7 +176,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public Drawing.Size DefaultPreferredSize
+		public Drawing.Size						DefaultPreferredSize
 		{
 			get
 			{
@@ -191,6 +191,19 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+
+		public Panel GetEditPanel()
+		{
+			if (this.editPanel == null)
+			{
+				this.editPanel = new Panels.EditPanel (this);
+				this.editPanel.PreferredSize = this.EditionPreferredSize;
+				this.editPanel.Children.AddRange (this.EditVisuals);
+			}
+			
+			return this.editPanel;
+		}
+		
 		/// <summary>
 		/// Fills the serialization context <c>ExternalMap</c> property.
 		/// </summary>
@@ -332,5 +345,6 @@ namespace Epsitec.Common.UI
 		private Types.Collections.HostedDependencyObjectList<Widgets.Visual> editionVisuals;
 		private Drawing.Size defaultPreferredSize;
 		private Drawing.Size editionPreferredSize;
+		private Panels.EditPanel editPanel;
 	}
 }

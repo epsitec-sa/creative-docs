@@ -15,6 +15,13 @@ namespace Epsitec.Common.UI
 		public void Initialize()
 		{
 			Epsitec.Common.Widgets.Widget.Initialize ();
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
+		}
+		
+		[Test]
+		public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
 		}
 		
 		[Test]
@@ -75,6 +82,65 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (new Drawing.Size (100, 80), copy.PreferredSize);
 			Assert.AreEqual (new Drawing.Size (100, 80), copy.DefaultPreferredSize);
 			Assert.AreEqual (new Drawing.Size (200, 96), copy.EditionPreferredSize);
+		}
+
+		[Test]
+		public void CheckInteractive()
+		{
+			Widgets.Window window = new Widgets.Window ();
+			
+			window.Text = "PanelTest.CheckInteractive";
+			window.ClientSize = new Drawing.Size (400, 300);
+
+			PanelStack panelStack = new PanelStack ();
+			
+			panelStack.Dock = Widgets.DockStyle.Fill;
+			panelStack.Margins = new Drawing.Margins (4, 4, 8, 8);
+			panelStack.BackColor = Drawing.Color.FromRgb (1, 0.8, 0.8);
+
+			Panel panel = new Panel ();
+
+			Widgets.Button buttonEdit = new Widgets.Button (panel);
+
+			buttonEdit.TabIndex = 1;
+			buttonEdit.TabNavigation = Widgets.Widget.TabNavigationMode.ActivateOnTab;
+			buttonEdit.Dock = Widgets.DockStyle.Fill;
+			buttonEdit.Text = "Edit";
+			buttonEdit.Clicked += delegate (object sender, Widgets.MessageEventArgs e)
+			{
+				Panel editPanel = panel.GetEditPanel ();
+				panelStack.StartEdition (editPanel);
+			};
+
+			panel.PreferredSize = new Drawing.Size (100, 100);
+			panel.Anchor = Widgets.AnchorStyles.TopRight;
+			panel.Margins = new Drawing.Margins (4, 4, 4, 4);
+			panel.BackColor = Drawing.Color.FromRgb (0.8, 1, 0.8);
+
+			panel.PanelMode = PanelMode.Edition;
+			panel.PreferredSize = new Drawing.Size (180, 120);
+			
+			Widgets.Button buttonEnd = new Widgets.Button ();
+			
+			buttonEnd.TabIndex = 1;
+			buttonEnd.TabNavigation = Widgets.Widget.TabNavigationMode.ActivateOnTab;
+			buttonEnd.Dock = Widgets.DockStyle.Bottom;
+			buttonEnd.Text = "End Edit";
+			buttonEnd.Clicked += delegate (object sender, Widgets.MessageEventArgs e)
+			{
+				panelStack.EndEdition ();
+			};
+
+			panel.Children.Add (buttonEnd);
+			panel.PanelMode = PanelMode.Default;
+
+			panelStack.Children.Add (panel);
+
+			window.Root.Children.Add (panelStack);
+
+			window.Show ();
+			
+			Widgets.Window.RunInTestEnvironment (window);
 		}
 
 		#region Support Code

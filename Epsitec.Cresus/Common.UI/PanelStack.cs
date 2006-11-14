@@ -13,6 +13,7 @@ namespace Epsitec.Common.UI
 		{
 			this.editPanels = new Stack<Panel> ();
 			this.mask = new PanelMask (this);
+			this.mask.Hide ();
 		}
 
 
@@ -26,6 +27,7 @@ namespace Epsitec.Common.UI
 			this.UpdateEditPanelBounds (panel);
 			
 			panel.Show ();
+			panel.SetFocusOnTabWidget ();
 		}
 
 		private void HandleOwnerBoundsChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
@@ -37,6 +39,11 @@ namespace Epsitec.Common.UI
 					this.UpdateEditPanelBounds (panel);
 				}
 			}
+		}
+
+		public void EndEdition()
+		{
+			this.EndEdition (this.editPanels.Peek ());
 		}
 
 		public bool EndEdition(Panel panel)
@@ -52,11 +59,11 @@ namespace Epsitec.Common.UI
 					item.Hide ();
 					
 					item.Owner.BoundsChanged -= this.HandleOwnerBoundsChanged;
-					item.SetParent (null);
 				}
 				while (item != panel);
 
 				this.UpdateMask ();
+				panel.Owner.SetFocusOnTabWidget ();
 				
 				return true;
 			}
@@ -117,7 +124,7 @@ namespace Epsitec.Common.UI
 			{
 				Panel topPanel = this.editPanels.Peek ();
 				
-				this.mask.Aperture = topPanel.Client.Bounds;
+				this.mask.Aperture = topPanel.ActualBounds;
 				this.mask.ZOrder = 1;
 				this.mask.Show ();
 			}
