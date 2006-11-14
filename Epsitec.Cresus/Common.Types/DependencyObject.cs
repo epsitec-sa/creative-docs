@@ -1112,7 +1112,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		internal IEnumerable<PropertyValuePair> GetSerializableDefinedValues()
+		public IEnumerable<PropertyValuePair> GetSerializableDefinedValues()
 		{
 			System.Type sysType = this.GetType ();
 			Serialization.BlackList blackList = Serialization.BlackList.GetSerializationBlackList (this);

@@ -121,87 +121,18 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public IEnumerable<Widgets.Visual>		EditVisuals
+		public virtual Panel					EditionPanel
 		{
 			get
 			{
-				if (this.PanelMode == PanelMode.Edition)
+				if (this.editionPanel == null)
 				{
-					return this.Children;
+					this.editionPanel = new Panels.EditPanel (this);
+					DataObject.SetDataContext (this.editionPanel, DataObject.GetDataContext (this));
 				}
-				else
-				{
-					if (this.editionVisuals == null)
-					{
-						this.editionVisuals = new Types.Collections.HostedDependencyObjectList<Widgets.Visual> (null);
-					}
 
-					return this.editionVisuals;
-				}
+				return this.editionPanel;
 			}
-		}
-
-		public IEnumerable<Widgets.Visual>		DefaultVisuals
-		{
-			get
-			{
-				if (this.PanelMode == PanelMode.Default)
-				{
-					return this.Children;
-				}
-				else
-				{
-					if (this.defaultVisuals == null)
-					{
-						this.defaultVisuals = new Types.Collections.HostedDependencyObjectList<Widgets.Visual> (null);
-					}
-
-					return this.defaultVisuals;
-				}
-			}
-		}
-
-		public Drawing.Size						EditionPreferredSize
-		{
-			get
-			{
-				if (this.PanelMode == PanelMode.Edition)
-				{
-					return this.PreferredSize;
-				}
-				else
-				{
-					return this.editionPreferredSize;
-				}
-			}
-		}
-
-		public Drawing.Size						DefaultPreferredSize
-		{
-			get
-			{
-				if (this.PanelMode == PanelMode.Default)
-				{
-					return this.PreferredSize;
-				}
-				else
-				{
-					return this.defaultPreferredSize;
-				}
-			}
-		}
-
-
-		public Panel GetEditPanel()
-		{
-			if (this.editPanel == null)
-			{
-				this.editPanel = new Panels.EditPanel (this);
-				this.editPanel.PreferredSize = this.EditionPreferredSize;
-				this.editPanel.Children.AddRange (this.EditVisuals);
-			}
-			
-			return this.editPanel;
 		}
 		
 		/// <summary>
@@ -240,44 +171,17 @@ namespace Epsitec.Common.UI
 			{
 				DataObject.SetDataContext (this, new Binding (this.dataSource));
 			}
+			
+			if (this.editionPanel != null)
+			{
+				DataObject.SetDataContext (this.editionPanel, DataObject.GetDataContext (this));
+			}
 		}
 
 		private void HandlePanelModeChanged(PanelMode oldMode, PanelMode newMode)
 		{
-			switch (oldMode)
-			{
-				case PanelMode.None:
-					return;
-					
-				case PanelMode.Default:
-					this.defaultVisuals = new Types.Collections.HostedDependencyObjectList<Widgets.Visual> (null);
-					this.defaultVisuals.AddRange (this.Children);
-					this.defaultPreferredSize = this.PreferredSize;
-					break;
-				
-				case PanelMode.Edition:
-					this.editionVisuals = new Types.Collections.HostedDependencyObjectList<Widgets.Visual> (null);
-					this.editionVisuals.AddRange (this.Children);
-					this.editionPreferredSize = this.PreferredSize;
-					break;
-			}
-
-			this.Children.Clear ();
-			
-			switch (newMode)
-			{
-				case PanelMode.Default:
-					this.Children.AddRange (this.defaultVisuals);
-					this.PreferredSize = this.defaultPreferredSize;
-					break;
-
-				case PanelMode.Edition:
-					this.Children.AddRange (this.editionVisuals);
-					this.PreferredSize = this.editionPreferredSize;
-					break;
-			}
 		}
-		
+
 		private static object GetDataSourceMetadataValue(DependencyObject obj)
 		{
 			Panel panel = (Panel) obj;
@@ -296,55 +200,25 @@ namespace Epsitec.Common.UI
 			panel.HandlePanelModeChanged ((PanelMode) oldValue, (PanelMode) newValue);
 		}
 
-		private static object GetEditVisualsValue(DependencyObject obj)
+		private static object GetEditionPanelValue(DependencyObject obj)
 		{
 			Panel panel = (Panel) obj;
-			return panel.EditVisuals;
+			return panel.EditionPanel;
 		}
 
-		private static object GetDefaultVisualsValue(DependencyObject obj)
+		private static void SetEditionPanelValue(DependencyObject obj, object value)
 		{
 			Panel panel = (Panel) obj;
-			return panel.DefaultVisuals;
+			panel.editionPanel = (Panels.EditPanel) value;
 		}
 
-		private static object GetEditionPreferredSizeValue(DependencyObject obj)
-		{
-			Panel panel = (Panel) obj;
-			return panel.EditionPreferredSize;
-		}
-
-		private static void SetEditionPreferredSizeValue(DependencyObject obj, object value)
-		{
-			Panel panel = (Panel) obj;
-			panel.editionPreferredSize = (Drawing.Size) value;
-		}
-
-		private static object GetDefaultPreferredSizeValue(DependencyObject obj)
-		{
-			Panel panel = (Panel) obj;
-			return panel.DefaultPreferredSize;
-		}
-
-		private static void SetDefaultPreferredSizeValue(DependencyObject obj, object value)
-		{
-			Panel panel = (Panel) obj;
-			panel.defaultPreferredSize = (Drawing.Size) value;
-		}
 
 		public static DependencyProperty DataSourceMetadataProperty = DependencyProperty.RegisterReadOnly ("DataSourceMetadata", typeof (DataSourceMetadata), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDataSourceMetadataValue, Panel.SetDataSourceMetadataValue).MakeReadOnlySerializable ());
 		public static DependencyProperty PanelModeProperty = DependencyProperty.Register ("PanelMode", typeof (PanelMode), typeof (Panel), new DependencyPropertyMetadata (PanelMode.Default, Panel.NotifyPanelModeChanged));
-		public static DependencyProperty EditVisualsProperty = DependencyProperty.RegisterReadOnly ("EditVisuals", typeof (ICollection<DependencyObject>), typeof (Panel), new DependencyPropertyMetadata (Panel.GetEditVisualsValue).MakeReadOnlySerializable ());
-		public static DependencyProperty DefaultVisualsProperty = DependencyProperty.RegisterReadOnly ("DefaultVisuals", typeof (ICollection<DependencyObject>), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDefaultVisualsValue).MakeReadOnlySerializable ());
-		public static DependencyProperty EditionPreferredSizeProperty = DependencyProperty.Register ("EditionPreferredSize", typeof (Drawing.Size), typeof (Panel), new DependencyPropertyMetadata (Panel.GetEditionPreferredSizeValue, Panel.SetEditionPreferredSizeValue));
-		public static DependencyProperty DefaultPreferredSizeProperty = DependencyProperty.Register ("DefaultPreferredSize", typeof (Drawing.Size), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDefaultPreferredSizeValue, Panel.SetDefaultPreferredSizeValue));
-
+		public static DependencyProperty EditionPanelProperty = DependencyProperty.Register ("EditionPanel", typeof (Panels.EditPanel), typeof (Panel), new DependencyPropertyMetadata (Panel.GetEditionPanelValue, Panel.SetEditionPanelValue));
+		
 		private DataSource dataSource;
 		private DataSourceMetadata dataSourceMetadata;
-		private Types.Collections.HostedDependencyObjectList<Widgets.Visual> defaultVisuals;
-		private Types.Collections.HostedDependencyObjectList<Widgets.Visual> editionVisuals;
-		private Drawing.Size defaultPreferredSize;
-		private Drawing.Size editionPreferredSize;
-		private Panels.EditPanel editPanel;
+		private Panels.EditPanel editionPanel;
 	}
 }

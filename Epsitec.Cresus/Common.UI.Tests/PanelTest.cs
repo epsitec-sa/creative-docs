@@ -52,22 +52,18 @@ namespace Epsitec.Common.UI
 			System.Console.Out.WriteLine ("{0}", xml);
 			copy = this.DeserializePanel (xml, manager);
 			
-			panel.PanelMode = PanelMode.Edition;
-			panel.Children.Add (c);
-			panel.PreferredSize = new Drawing.Size (200, 96);
-			panel.PanelMode = PanelMode.Default;
-
+			panel.EditionPanel.Children.Add (c);
+			panel.EditionPanel.PreferredSize = new Drawing.Size (200, 96);
+			
 			xml = this.SerializePanel (panel, manager);
 			System.Console.Out.WriteLine ("{0}", xml);
 			copy = this.DeserializePanel (xml, manager);
 
 			Assert.AreEqual (PanelMode.Default, copy.PanelMode);
 			Assert.AreEqual (2, Collection.Count<Widgets.Visual> (copy.Children));
-			Assert.AreEqual (2, Collection.Count<Widgets.Visual> (copy.DefaultVisuals));
-			Assert.AreEqual (1, Collection.Count<Widgets.Visual> (copy.EditVisuals));
+			Assert.AreEqual (1, Collection.Count<Widgets.Visual> (copy.EditionPanel.Children));
 			Assert.AreEqual (new Drawing.Size (100, 80), copy.PreferredSize);
-			Assert.AreEqual (new Drawing.Size (100, 80), copy.DefaultPreferredSize);
-			Assert.AreEqual (new Drawing.Size (200, 96), copy.EditionPreferredSize);
+			Assert.AreEqual (new Drawing.Size (200, 96), copy.EditionPanel.PreferredSize);
 			
 			panel.PanelMode = PanelMode.Edition;
 			
@@ -77,11 +73,9 @@ namespace Epsitec.Common.UI
 
 			Assert.AreEqual (PanelMode.Default, copy.PanelMode);
 			Assert.AreEqual (2, Collection.Count<Widgets.Visual> (copy.Children));
-			Assert.AreEqual (2, Collection.Count<Widgets.Visual> (copy.DefaultVisuals));
-			Assert.AreEqual (1, Collection.Count<Widgets.Visual> (copy.EditVisuals));
+			Assert.AreEqual (1, Collection.Count<Widgets.Visual> (copy.EditionPanel.Children));
 			Assert.AreEqual (new Drawing.Size (100, 80), copy.PreferredSize);
-			Assert.AreEqual (new Drawing.Size (100, 80), copy.DefaultPreferredSize);
-			Assert.AreEqual (new Drawing.Size (200, 96), copy.EditionPreferredSize);
+			Assert.AreEqual (new Drawing.Size (200, 96), copy.EditionPanel.PreferredSize);
 		}
 
 		[Test]
@@ -108,7 +102,7 @@ namespace Epsitec.Common.UI
 			buttonEdit.Text = "Edit";
 			buttonEdit.Clicked += delegate (object sender, Widgets.MessageEventArgs e)
 			{
-				Panel editPanel = panel.GetEditPanel ();
+				Panel editPanel = panel.EditionPanel;
 				panelStack.StartEdition (editPanel);
 			};
 
@@ -117,8 +111,7 @@ namespace Epsitec.Common.UI
 			panel.Margins = new Drawing.Margins (4, 4, 4, 4);
 			panel.BackColor = Drawing.Color.FromRgb (0.8, 1, 0.8);
 
-			panel.PanelMode = PanelMode.Edition;
-			panel.PreferredSize = new Drawing.Size (180, 120);
+			panel.EditionPanel.PreferredSize = new Drawing.Size (180, 120);
 			
 			Widgets.Button buttonEnd = new Widgets.Button ();
 			
@@ -131,8 +124,7 @@ namespace Epsitec.Common.UI
 				panelStack.EndEdition ();
 			};
 
-			panel.Children.Add (buttonEnd);
-			panel.PanelMode = PanelMode.Default;
+			panel.EditionPanel.Children.Add (buttonEnd);
 
 			panelStack.Children.Add (panel);
 
