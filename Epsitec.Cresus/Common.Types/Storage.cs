@@ -90,6 +90,15 @@ namespace Epsitec.Common.Types
 				{
 					context.RestoreObjectData (context.ObjectMap.GetId (obj), obj);
 				}
+				foreach (DependencyObject obj in list)
+				{
+					Serialization.IDeserialization deserialization = obj as Serialization.IDeserialization;
+
+					if (deserialization != null)
+					{
+						deserialization.NotifyDeserializationCompleted (context);
+					}
+				}
 
 				root = context.ObjectMap.GetValue (rootId);
 			}

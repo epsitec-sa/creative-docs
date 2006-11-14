@@ -51,6 +51,17 @@ namespace Epsitec.Common.UI
 			System.Console.Out.WriteLine ("{0}", xml);
 			copy = this.DeserializePanel (xml, manager);
 
+			Assert.AreEqual (2, Collection.Count<Widgets.Visual> (copy.Children));
+			Assert.AreEqual (2, Collection.Count<Widgets.Visual> (copy.DefaultVisuals));
+			Assert.AreEqual (1, Collection.Count<Widgets.Visual> (copy.EditVisuals));
+			
+			panel.PanelMode = PanelMode.Edition;
+			
+			xml = this.SerializePanel (panel, manager);
+			System.Console.Out.WriteLine ("{0}", xml);
+			copy = this.DeserializePanel (xml, manager);
+
+			Assert.AreEqual (2, Collection.Count<Widgets.Visual> (copy.Children));
 			Assert.AreEqual (2, Collection.Count<Widgets.Visual> (copy.DefaultVisuals));
 			Assert.AreEqual (1, Collection.Count<Widgets.Visual> (copy.EditVisuals));
 		}

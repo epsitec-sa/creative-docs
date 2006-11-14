@@ -12,7 +12,7 @@ namespace Epsitec.Common.UI
 	/// The <c>Panel</c> class is used as the (local) root in a widget tree
 	/// built by the dynamic user interface designer.
 	/// </summary>
-	public class Panel : Widgets.AbstractGroup
+	public class Panel : Widgets.AbstractGroup, Types.Serialization.IDeserialization
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Panel"/> class.
@@ -105,6 +105,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the panel mode.
+		/// </summary>
+		/// <value>The panel mode.</value>
 		public PanelMode						PanelMode
 		{
 			get
@@ -169,6 +173,15 @@ namespace Epsitec.Common.UI
 			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagDataSource, dataSource);
 			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagResourceManager, resourceManager);
 		}
+
+		#region IDeserialization Members
+
+		void Types.Serialization.IDeserialization.NotifyDeserializationCompleted(Types.Serialization.Context context)
+		{
+			this.PanelMode = PanelMode.Default;
+		}
+
+		#endregion
 
 		private void SyncDataContextWithDataSource()
 		{
@@ -242,7 +255,7 @@ namespace Epsitec.Common.UI
 		}
 
 		public static DependencyProperty DataSourceMetadataProperty = DependencyProperty.RegisterReadOnly ("DataSourceMetadata", typeof (DataSourceMetadata), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDataSourceMetadataValue, Panel.SetDataSourceMetadataValue).MakeReadOnlySerializable ());
-		public static DependencyProperty PanelModeProperty = DependencyProperty.Register ("PanelMode", typeof (PanelMode), typeof (Panel), new DependencyPropertyMetadata (PanelMode.Default, Panel.NotifyPanelModeChanged).MakeNotSerializable ());
+		public static DependencyProperty PanelModeProperty = DependencyProperty.Register ("PanelMode", typeof (PanelMode), typeof (Panel), new DependencyPropertyMetadata (PanelMode.Default, Panel.NotifyPanelModeChanged));
 		public static DependencyProperty EditVisualsProperty = DependencyProperty.RegisterReadOnly ("EditVisuals", typeof (ICollection<DependencyObject>), typeof (Panel), new DependencyPropertyMetadata (Panel.GetEditVisualsValue).MakeReadOnlySerializable ());
 		public static DependencyProperty DefaultVisualsProperty = DependencyProperty.RegisterReadOnly ("DefaultVisuals", typeof (ICollection<DependencyObject>), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDefaultVisualsValue).MakeReadOnlySerializable ());
 

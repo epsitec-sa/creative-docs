@@ -102,6 +102,7 @@
     <Compile Include="CollectionType.cs" />
     <Compile Include="AbstractDateTimeType.cs" />
     <Compile Include="BinaryType.cs" />
+    <Compile Include="Serialization\IDeserialization.cs" />
     <Compile Include="TypedObject.cs" />
     <Compile Include="DateStep.cs" />
     <Compile Include="DateTimeType.cs" />
