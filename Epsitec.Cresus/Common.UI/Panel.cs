@@ -105,6 +105,59 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public PanelMode						PanelMode
+		{
+			get
+			{
+				return (PanelMode) this.GetValue (Panel.PanelModeProperty);
+			}
+			set
+			{
+				this.SetValue (Panel.PanelModeProperty, value);
+			}
+		}
+
+		public IEnumerable<Widgets.Visual> EditVisuals
+		{
+			get
+			{
+				if (this.PanelMode == PanelMode.Edition)
+				{
+					return this.Children;
+				}
+				else
+				{
+					if (this.editVisuals == null)
+					{
+						this.editVisuals = new Types.Collections.HostedDependencyObjectList<Widgets.Visual> (null);
+					}
+
+					return this.editVisuals;
+				}
+			}
+		}
+
+		public IEnumerable<Widgets.Visual> DefaultVisuals
+		{
+			get
+			{
+				if (this.PanelMode == PanelMode.Default)
+				{
+					return this.Children;
+				}
+				else
+				{
+					if (this.defaultVisuals == null)
+					{
+						this.defaultVisuals = new Types.Collections.HostedDependencyObjectList<Widgets.Visual> (null);
+						;
+					}
+
+					return this.defaultVisuals;
+				}
+			}
+		}
+
 		/// <summary>
 		/// Fills the serialization context <c>ExternalMap</c> property.
 		/// </summary>
@@ -129,6 +182,34 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		private void HandlePanelModeChanged(PanelMode oldMode, PanelMode newMode)
+		{
+			switch (oldMode)
+			{
+				case PanelMode.Default:
+					this.defaultVisuals = new Types.Collections.HostedDependencyObjectList<Widgets.Visual> (null);
+					this.defaultVisuals.AddRange (this.Children);
+					break;
+				
+				case PanelMode.Edition:
+					this.editVisuals = new Types.Collections.HostedDependencyObjectList<Widgets.Visual> (null);
+					this.editVisuals.AddRange (this.Children);
+					break;
+			}
+
+			this.Children.Clear ();
+			
+			switch (newMode)
+			{
+				case PanelMode.Default:
+					this.Children.AddRange (this.defaultVisuals);
+					break;
+
+				case PanelMode.Edition:
+					this.Children.AddRange (this.editVisuals);
+					break;
+			}
+		}
 		
 		private static object GetDataSourceMetadataValue(DependencyObject obj)
 		{
@@ -142,9 +223,32 @@ namespace Epsitec.Common.UI
 			panel.dataSourceMetadata = (DataSourceMetadata) value;
 		}
 
+		private static void NotifyPanelModeChanged(DependencyObject obj, object oldValue, object newValue)
+		{
+			Panel panel = (Panel) obj;
+			panel.HandlePanelModeChanged ((PanelMode) oldValue, (PanelMode) newValue);
+		}
+
+		private static object GetEditVisualsValue(DependencyObject obj)
+		{
+			Panel panel = (Panel) obj;
+			return panel.EditVisuals;
+		}
+
+		private static object GetDefaultVisualsValue(DependencyObject obj)
+		{
+			Panel panel = (Panel) obj;
+			return panel.DefaultVisuals;
+		}
+
 		public static DependencyProperty DataSourceMetadataProperty = DependencyProperty.RegisterReadOnly ("DataSourceMetadata", typeof (DataSourceMetadata), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDataSourceMetadataValue, Panel.SetDataSourceMetadataValue).MakeReadOnlySerializable ());
-		
+		public static DependencyProperty PanelModeProperty = DependencyProperty.Register ("PanelMode", typeof (PanelMode), typeof (Panel), new DependencyPropertyMetadata (PanelMode.Default, Panel.NotifyPanelModeChanged).MakeNotSerializable ());
+		public static DependencyProperty EditVisualsProperty = DependencyProperty.RegisterReadOnly ("EditVisuals", typeof (ICollection<DependencyObject>), typeof (Panel), new DependencyPropertyMetadata (Panel.GetEditVisualsValue).MakeReadOnlySerializable ());
+		public static DependencyProperty DefaultVisualsProperty = DependencyProperty.RegisterReadOnly ("DefaultVisuals", typeof (ICollection<DependencyObject>), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDefaultVisualsValue).MakeReadOnlySerializable ());
+
 		private DataSource dataSource;
 		private DataSourceMetadata dataSourceMetadata;
+		private Types.Collections.HostedDependencyObjectList<Widgets.Visual> defaultVisuals;
+		private Types.Collections.HostedDependencyObjectList<Widgets.Visual> editVisuals;
 	}
 }
