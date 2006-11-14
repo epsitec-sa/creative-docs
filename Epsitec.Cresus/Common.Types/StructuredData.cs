@@ -303,7 +303,7 @@ namespace Epsitec.Common.Types
 
 					if (structuredType != null)
 					{
-						StructuredData data = new StructuredData (StructuredType);
+						StructuredData data = new StructuredData (structuredType);
 
 						data.UndefinedValueMode = this.UndefinedValueMode;
 

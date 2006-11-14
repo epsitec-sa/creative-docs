@@ -66,9 +66,10 @@ namespace Epsitec.Common.Types.Serialization
 
 						ICollection<DependencyObject> dependencyObjectCollection = entry.Value as ICollection<DependencyObject>;
 
-						if (dependencyObjectCollection != null)
+						if ((dependencyObjectCollection != null) &&
+							(dependencyObjectCollection.Count > 0))
 						{
-							foreach (DependencyObject node in metadata.FilterSerializableCollection (dependencyObjectCollection, entry.Property))
+							foreach (DependencyObject node in metadata.FilterSerializableCollection (dependencyObjectCollection))
 							{
 								GraphVisitor.VisitSerializableNodes (node, context, visitor);
 							}
@@ -84,7 +85,7 @@ namespace Epsitec.Common.Types.Serialization
 					DependencyPropertyMetadata metadata = property.GetMetadata (obj);
 					ICollection<DependencyObject> dependencyObjectCollection = DependencyObjectTree.GetChildren (obj);
 
-					foreach (DependencyObject node in metadata.FilterSerializableCollection (dependencyObjectCollection, property))
+					foreach (DependencyObject node in metadata.FilterSerializableCollection (dependencyObjectCollection))
 					{
 						GraphVisitor.VisitSerializableNodes (node, context, visitor);
 					}

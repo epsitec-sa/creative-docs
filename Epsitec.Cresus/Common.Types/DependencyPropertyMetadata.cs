@@ -225,11 +225,11 @@ namespace Epsitec.Common.Types
 			this.defaultValue = value;
 		}
 		
-		public virtual bool FilterSerializableItem(DependencyObject item)
+		public virtual bool FilterSerializableItem(object item)
 		{
 			return true;
 		}
-		public virtual IEnumerable<DependencyObject> FilterSerializableCollection(IEnumerable<DependencyObject> collection, DependencyProperty property)
+		public virtual IEnumerable<DependencyObject> FilterSerializableCollection(IEnumerable<DependencyObject> collection)
 		{
 			//	Skip items in collection which may not be serialized.
 			

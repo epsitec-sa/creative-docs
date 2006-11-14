@@ -152,7 +152,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 
-		public override bool FilterSerializableItem(Types.DependencyObject item)
+		public override bool FilterSerializableItem(object item)
 		{
 			//	Return true for items which may be serialized.
 			

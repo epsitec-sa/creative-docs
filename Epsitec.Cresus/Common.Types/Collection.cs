@@ -137,5 +137,24 @@ namespace Epsitec.Common.Types
 
 			return ignore.Count == values.Count;
 		}
+
+		public static IEnumerable<T> Filter<T>(IEnumerable<T> collection, System.Predicate<T> predicate)
+		{
+			foreach (T item in collection)
+			{
+				if (predicate.Invoke (item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		public static IEnumerable<object> EnumerateObjects(System.Collections.IEnumerable collection)
+		{
+			foreach (object item in collection)
+			{
+				yield return item;
+			}
+		}
 	}
 }

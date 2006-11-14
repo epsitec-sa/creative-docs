@@ -321,7 +321,7 @@ namespace Epsitec.Common.Types.Serialization
 			return (i < 0) ? null : buffer.ToString ();
 		}
 
-		public static string EnumerableToString(System.Collections.IEnumerable enumerable, Context context, ISerializationConverter converter)
+		public static string EnumerableToString(IEnumerable<object> enumerable, Context context, ISerializationConverter converter)
 		{
 			System.Text.StringBuilder     buffer = new System.Text.StringBuilder ();
 			ISerializationConverterFilter filter = converter as ISerializationConverterFilter;

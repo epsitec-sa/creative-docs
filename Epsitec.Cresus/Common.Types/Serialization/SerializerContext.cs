@@ -127,7 +127,7 @@ namespace Epsitec.Common.Types.Serialization
 
 				if (dependencyObjectCollection.Count > 0)
 				{
-					string markup = MarkupExtension.CollectionToString (metadata.FilterSerializableCollection (dependencyObjectCollection, entry.Property), this);
+					string markup = MarkupExtension.CollectionToString (metadata.FilterSerializableCollection (dependencyObjectCollection), this);
 
 					if (!string.IsNullOrEmpty (markup))
 					{
@@ -153,7 +153,20 @@ namespace Epsitec.Common.Types.Serialization
 
 				if (stringCollection.Count > 0)
 				{
-					string markup = MarkupExtension.CollectionToString (stringCollection, this);
+					string markup;
+
+					if (metadata.HasSerializationFilter)
+					{
+						markup = MarkupExtension.CollectionToString (Collection.Filter<string> (stringCollection,
+							/**/																delegate (string item)
+							/**/																{
+							/**/																	return metadata.FilterSerializableItem (item);
+							/**/																}), this);
+					}
+					else
+					{
+						markup = MarkupExtension.CollectionToString (stringCollection, this);
+					}
 
 					if (!string.IsNullOrEmpty (markup))
 					{
@@ -171,23 +184,38 @@ namespace Epsitec.Common.Types.Serialization
 
 		private bool StoreFieldAsStringifyableCollection(DependencyObject obj, PropertyValuePair entry, DependencyPropertyMetadata metadata)
 		{
-			System.Collections.IEnumerable enumerable = entry.Value as System.Collections.IEnumerable;
+			System.Collections.IEnumerable enumerableOfAnything = entry.Value as System.Collections.IEnumerable;
 
-			if (enumerable == null)
+			if (enumerableOfAnything == null)
 			{
 				return false;
 			}
 
+			IEnumerable<object> enumerable = Collection.EnumerateObjects (enumerableOfAnything);
+
+			object collection = entry.Value;
 			System.Type type;
-			ISerializationConverter converter = this.FindConverterForCollection (entry.Value.GetType (), out type);
+			ISerializationConverter converter = this.FindConverterForCollection (collection.GetType (), out type);
 
 			if (converter != null)
 			{
-				int count = (int) type.InvokeMember ("Count", System.Reflection.BindingFlags.GetProperty, null, entry.Value, new object[0]);
+				int count = (int) type.InvokeMember ("Count", System.Reflection.BindingFlags.GetProperty, null, collection, new object[0]);
 
 				if (count > 0)
 				{
-					string markup = MarkupExtension.EnumerableToString (enumerable, this, converter);
+					string markup;
+					if (metadata.HasSerializationFilter)
+					{
+						markup = MarkupExtension.EnumerableToString (Collection.Filter<object> (enumerable,
+							/**/																delegate (object item)
+							/**/																{
+							/**/																	return metadata.FilterSerializableItem (item);
+							/**/																}), this, converter);
+					}
+					else
+					{
+						markup = MarkupExtension.EnumerableToString (enumerable, this, converter);
+					}
 
 					if (!string.IsNullOrEmpty (markup))
 					{
@@ -210,7 +238,7 @@ namespace Epsitec.Common.Types.Serialization
 				DependencyPropertyMetadata metadata = property.GetMetadata (obj);
 				ICollection<DependencyObject> dependencyObjectCollection = DependencyObjectTree.GetChildren (obj);
 
-				string markup = MarkupExtension.CollectionToString (metadata.FilterSerializableCollection (dependencyObjectCollection, property), this);
+				string markup = MarkupExtension.CollectionToString (metadata.FilterSerializableCollection (dependencyObjectCollection), this);
 				
 				if (!string.IsNullOrEmpty (markup))
 				{
