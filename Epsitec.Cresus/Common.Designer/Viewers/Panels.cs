@@ -102,20 +102,20 @@ namespace Epsitec.Common.Designer.Viewers
 			this.right.PreferredWidth = 240;
 			this.right.MaxWidth = 400;
 			this.right.Dock = DockStyle.Right;
-			this.right.Padding = new Margins(1, 1, 1, 1);
 
 			//	Crée la toolbar horizontale, au dessus des onglets.
 			this.hToolBar = new HToolBar(this.right);
 			this.hToolBar.Margins = new Margins(0, 0, 0, 5);
 			this.hToolBar.Dock = DockStyle.Top;
-			this.HToolBarAdd(Widgets.Command.Get("ToolSelect"));
-			this.HToolBarAdd(Widgets.Command.Get("ToolGlobal"));
-			this.HToolBarAdd(Widgets.Command.Get("ToolGrid"));
+			this.hButtonDefault = this.HToolBarAdd(Res.Captions.PanelMode.Default.Id);
+			this.hButtonEdition = this.HToolBarAdd(Res.Captions.PanelMode.Edition.Id);
+			this.hButtonSearch  = this.HToolBarAdd(Res.Captions.PanelMode.Search.Id);
 
 			//	Crée le tabbook pour les onglets.
 			this.tabBook = new TabBook(this.right);
 			this.tabBook.Arrows = TabBookArrows.Stretch;
 			this.tabBook.Dock = DockStyle.Fill;
+			this.tabBook.Padding = new Margins(1, 1, 1, 1);
 
 			//	Crée l'onglet 'propriétés'.
 			this.tabPageProperties = new TabPage();
@@ -154,6 +154,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.splitter2.Dock = DockStyle.Right;
 
 			this.UpdateEdit();
+			this.UpdateButtons();
 		}
 
 		protected override void Dispose(bool disposing)
@@ -167,6 +168,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
 				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
+
+				this.hButtonDefault.Clicked -= new MessageEventHandler(HandleHbuttonClicked);
+				this.hButtonEdition.Clicked -= new MessageEventHandler(HandleHbuttonClicked);
+				this.hButtonSearch.Clicked -= new MessageEventHandler(HandleHbuttonClicked);
 			}
 
 			base.Dispose(disposing);
@@ -285,6 +290,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
+		protected void UpdateButtons()
+		{
+			//	Met à jour les boutons de la toolbar horizontale.
+			this.hButtonDefault.ActiveState = (this.panelMode == UI.PanelMode.Default) ? ActiveState.Yes : ActiveState.No;
+			this.hButtonEdition.ActiveState = (this.panelMode == UI.PanelMode.Edition) ? ActiveState.Yes : ActiveState.No;
+			this.hButtonSearch.ActiveState = (this.panelMode == UI.PanelMode.Search) ? ActiveState.Yes : ActiveState.No;
+		}
+
 
 		protected void CreateCultureButtons()
 		{
@@ -353,23 +366,17 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected Widget HToolBarAdd(Command command)
+		protected IconButton HToolBarAdd(Druid caption)
 		{
-			//	Ajoute une icône dans la toolbar horizontale.
-			if (command == null)
-			{
-				IconSeparator sep = new IconSeparator();
-				sep.IsHorizontal = false;
-				this.hToolBar.Items.Add(sep);
-				return sep;
-			}
-			else
-			{
-				IconButton button = new IconButton(command);
-				this.hToolBar.Items.Add(button);
-				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
-				return button;
-			}
+			//	Ajoute un bouton dans la toolbar horizontale.
+			IconButton button = new IconButton();
+			button.CaptionId = caption;
+			button.ButtonStyle = ButtonStyle.ActivableIcon;
+			button.Clicked += new MessageEventHandler(HandleHbuttonClicked);
+
+			this.hToolBar.Items.Add(button);
+			
+			return button;
 		}
 
 
@@ -497,6 +504,26 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
+		private void HandleHbuttonClicked(object sender, MessageEventArgs e)
+		{
+			if (sender == this.hButtonDefault)
+			{
+				this.panelMode = UI.PanelMode.Default;
+			}
+
+			if (sender == this.hButtonEdition)
+			{
+				this.panelMode = UI.PanelMode.Edition;
+			}
+			
+			if (sender == this.hButtonSearch)
+			{
+				this.panelMode = UI.PanelMode.Search;
+			}
+
+			this.UpdateButtons();
+		}
+
 
 		public static void SetPanel(DependencyObject obj, UI.Panel panel)
 		{
@@ -529,6 +556,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected MyWidgets.PanelEditor			panelEditor;
 		protected Widget						right;
 		protected HToolBar						hToolBar;
+		protected IconButton					hButtonDefault;
+		protected IconButton					hButtonEdition;
+		protected IconButton					hButtonSearch;
 		protected TabBook						tabBook;
 
 		protected TabPage						tabPageProperties;
@@ -538,5 +568,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected TabPage						tabPageCultures;
 		protected List<IconButton>				cultureButtonList;
+
+		protected UI.PanelMode					panelMode = UI.PanelMode.Default;
 	}
 }
