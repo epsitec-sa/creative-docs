@@ -48,16 +48,16 @@ namespace Epsitec.Common.UI
 			string xml;
 			Panel copy;
 			
-			xml = this.SerializePanel (panel, manager);
+			xml = Panel.SerializePanel (panel);
 			System.Console.Out.WriteLine ("{0}", xml);
-			copy = this.DeserializePanel (xml, manager);
+			copy = Panel.DeserializePanel (xml, null, manager);
 			
 			panel.EditionPanel.Children.Add (c);
 			panel.EditionPanel.PreferredSize = new Drawing.Size (200, 96);
 			
-			xml = this.SerializePanel (panel, manager);
+			xml = Panel.SerializePanel (panel);
 			System.Console.Out.WriteLine ("{0}", xml);
-			copy = this.DeserializePanel (xml, manager);
+			copy = Panel.DeserializePanel (xml, null, manager);
 
 			Assert.AreEqual (PanelMode.Default, copy.PanelMode);
 			Assert.AreEqual (2, Collection.Count<Widgets.Visual> (copy.Children));
@@ -153,51 +153,5 @@ namespace Epsitec.Common.UI
 			
 			Widgets.Window.RunInTestEnvironment (window);
 		}
-
-		#region Support Code
-
-		string SerializePanel(Panel panel, Support.ResourceManager manager)
-		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			System.IO.StringWriter stringWriter = new System.IO.StringWriter (buffer);
-			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (stringWriter);
-
-			using (Types.Serialization.Context context = new Types.Serialization.SerializerContext (new Types.Serialization.IO.XmlWriter (xmlWriter)))
-			{
-				Panel.FillSerializationContext (context, null, manager);
-
-				xmlWriter.Formatting = System.Xml.Formatting.Indented;
-				xmlWriter.WriteStartElement ("panel");
-
-				context.ActiveWriter.WriteAttributeStrings ();
-
-				Types.Storage.Serialize (panel, context);
-
-				xmlWriter.WriteEndElement ();
-				xmlWriter.Flush ();
-				xmlWriter.Close ();
-
-				return buffer.ToString ();
-			}
-		}
-		
-		Panel DeserializePanel(string xml, Support.ResourceManager manager)
-		{
-			System.IO.StringReader stringReader = new System.IO.StringReader (xml);
-			System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (stringReader);
-
-			xmlReader.Read ();
-
-			System.Diagnostics.Debug.Assert (xmlReader.NodeType == System.Xml.XmlNodeType.Element);
-			System.Diagnostics.Debug.Assert (xmlReader.LocalName == "panel");
-
-			Types.Serialization.Context context = new Types.Serialization.DeserializerContext (new Types.Serialization.IO.XmlReader (xmlReader));
-
-			Panel.FillSerializationContext (context, null, manager);
-
-			return Types.Storage.Deserialize (context) as Panel;
-		}
-
-		#endregion
 	}
 }

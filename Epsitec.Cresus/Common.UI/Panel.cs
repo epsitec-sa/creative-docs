@@ -23,6 +23,41 @@ namespace Epsitec.Common.UI
 		{
 		}
 
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (this.isDataContextChangeHandlerRegistered)
+				{
+					this.RemoveEventHandler (DataObject.DataContextProperty, this.HandleDataContextChanged);
+					this.isDataContextChangeHandlerRegistered = false;
+				}
+
+				if (this.editionPanel != null)
+				{
+					this.editionPanel.Dispose ();
+					this.editionPanel = null;
+				}
+			}
+			
+			base.Dispose (disposing);
+		}
+		
+		private void SetupDataContextChangeHandler()
+		{
+			if (this.isDataContextChangeHandlerRegistered == false)
+			{
+				this.AddEventHandler (DataObject.DataContextProperty, this.HandleDataContextChanged);
+				this.isDataContextChangeHandlerRegistered = true;
+			}
+		}
+
+		private void HandleDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			this.dataSourceBinding = DataObject.GetDataContext (this);
+			this.SyncDataContext ();
+		}
+
 		/// <summary>
 		/// Gets or sets the <see cref="DataSource"/> used as the root data context.
 		/// </summary>
@@ -51,8 +86,8 @@ namespace Epsitec.Common.UI
 					{
 						newSource.Metadata = this.dataSourceMetadata;
 					}
-					
-					this.SyncDataContext ();
+
+					DataObject.SetDataContext (this, this.dataSourceBinding);
 				}
 			}
 		}
@@ -156,6 +191,7 @@ namespace Epsitec.Common.UI
 				case PanelMode.Edition:
 					if (this.editionPanel == null)
 					{
+						this.SetupDataContextChangeHandler ();
 						this.editionPanel = new Panels.EditPanel (this);
 						this.SyncDataContext (this.editionPanel);
 					}
@@ -236,7 +272,6 @@ namespace Epsitec.Common.UI
 		
 		private void SyncDataContext()
 		{
-			this.SyncDataContext (this);
 			this.SyncDataContext (this.editionPanel);
 			//	...
 		}
@@ -311,5 +346,6 @@ namespace Epsitec.Common.UI
 		private Binding dataSourceBinding;
 		private DataSourceMetadata dataSourceMetadata;
 		private Panels.EditPanel editionPanel;
+		private bool isDataContextChangeHandlerRegistered;
 	}
 }
