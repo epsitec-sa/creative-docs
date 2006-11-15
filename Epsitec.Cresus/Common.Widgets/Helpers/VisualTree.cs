@@ -27,6 +27,10 @@ namespace Epsitec.Common.Widgets.Helpers
 
 		public static Drawing.Point MapVisualToAncestor(Visual visual, Visual ancestor, Drawing.Point value)
 		{
+			if (ancestor == null)
+			{
+				return value;
+			}
 			while (visual != ancestor)
 			{
 				if (visual == null)
@@ -135,6 +139,10 @@ namespace Epsitec.Common.Widgets.Helpers
 
 		public static Drawing.Rectangle MapVisualToAncestor(Visual visual, Visual ancestor, Drawing.Rectangle value)
 		{
+			if (ancestor == null)
+			{
+				return value;
+			}
 			while (visual != ancestor)
 			{
 				if (visual == null)

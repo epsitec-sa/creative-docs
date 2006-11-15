@@ -25,6 +25,19 @@ namespace Epsitec.Common.UI
 		}
 
 
+		public MiniPanel						EditPanel
+		{
+			get
+			{
+				if (this.editPanel == null)
+				{
+					this.editPanel = new MiniPanel ();
+				}
+				
+				return this.editPanel;
+			}
+		}
+
 		public Binding							ValueBinding
 		{
 			get
@@ -184,6 +197,14 @@ namespace Epsitec.Common.UI
 		protected override void OnBoundsChanged(Drawing.Rectangle oldValue, Drawing.Rectangle newValue)
 		{
 			base.OnBoundsChanged (oldValue, newValue);
+
+			if (this.editPanel != null)
+			{
+				PanelStack panelStack = PanelStack.GetPanelStack (this);
+
+				this.editPanel.PanelStack = panelStack;
+				this.editPanel.Aperture = Widgets.Helpers.VisualTree.MapVisualToAncestor (this, panelStack, this.Client.Bounds);
+			}
 		}
 
 		private void UpdateController()
@@ -397,5 +418,6 @@ namespace Epsitec.Common.UI
 		private string							valueName;
 		private string							controllerName;
 		private string							controllerParameter;
+		private MiniPanel						editPanel;
 	}
 }
