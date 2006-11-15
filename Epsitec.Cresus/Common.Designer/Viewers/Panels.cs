@@ -48,24 +48,24 @@ namespace Epsitec.Common.Designer.Viewers
 			this.splitter1.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
 			VSplitter.SetAutoCollapseEnable(this.left, true);
 
-			this.toolBar = new VToolBar(this);
-			this.toolBar.Margins = new Margins(0, 0, 0, 0);
-			this.toolBar.Dock = DockStyle.Left;
-			this.ToolBarAdd(Widgets.Command.Get("ToolSelect"));
-			this.ToolBarAdd(Widgets.Command.Get("ToolGlobal"));
-			this.ToolBarAdd(Widgets.Command.Get("ToolGrid"));
+			this.vToolBar = new VToolBar(this);
+			this.vToolBar.Margins = new Margins(0, 0, 0, 0);
+			this.vToolBar.Dock = DockStyle.Left;
+			this.VToolBarAdd(Widgets.Command.Get("ToolSelect"));
+			this.VToolBarAdd(Widgets.Command.Get("ToolGlobal"));
+			this.VToolBarAdd(Widgets.Command.Get("ToolGrid"));
 			//?this.ToolBarAdd(Widgets.Command.Get("ToolEdit"));
 			//?this.ToolBarAdd(Widgets.Command.Get("ToolZoom"));
 			//?this.ToolBarAdd(Widgets.Command.Get("ToolHand"));
-			this.ToolBarAdd(null);
-			this.ToolBarAdd(Widgets.Command.Get("ObjectVLine"));
-			this.ToolBarAdd(Widgets.Command.Get("ObjectHLine"));
-			this.ToolBarAdd(Widgets.Command.Get("ObjectStatic"));
-			this.ToolBarAdd(Widgets.Command.Get("ObjectSquareButton"));
-			this.ToolBarAdd(Widgets.Command.Get("ObjectRectButton"));
-			this.ToolBarAdd(Widgets.Command.Get("ObjectText"));
-			this.ToolBarAdd(Widgets.Command.Get("ObjectGroup"));
-			this.ToolBarAdd(Widgets.Command.Get("ObjectGroupBox"));
+			this.VToolBarAdd(null);
+			this.VToolBarAdd(Widgets.Command.Get("ObjectVLine"));
+			this.VToolBarAdd(Widgets.Command.Get("ObjectHLine"));
+			this.VToolBarAdd(Widgets.Command.Get("ObjectStatic"));
+			this.VToolBarAdd(Widgets.Command.Get("ObjectSquareButton"));
+			this.VToolBarAdd(Widgets.Command.Get("ObjectRectButton"));
+			this.VToolBarAdd(Widgets.Command.Get("ObjectText"));
+			this.VToolBarAdd(Widgets.Command.Get("ObjectGroup"));
+			this.VToolBarAdd(Widgets.Command.Get("ObjectGroupBox"));
 
 			this.scrollable = new Scrollable(this);
 			this.scrollable.MinWidth = 100;
@@ -96,13 +96,26 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelEditor.ChildrenGeometryChanged += new EventHandler(this.HandlePanelEditorChildrenGeometryChanged);
 			this.panelEditor.UpdateCommands += new EventHandler(this.HandlePanelEditorUpdateCommands);
 
-			this.tabBook = new TabBook(this);
-			this.tabBook.MinWidth = 150;
-			this.tabBook.PreferredWidth = 240;
-			this.tabBook.MaxWidth = 400;
+			//	Crée le groupe droite.
+			this.right = new Widget(this);
+			this.right.MinWidth = 150;
+			this.right.PreferredWidth = 240;
+			this.right.MaxWidth = 400;
+			this.right.Dock = DockStyle.Right;
+			this.right.Padding = new Margins(1, 1, 1, 1);
+
+			//	Crée la toolbar horizontale, au dessus des onglets.
+			this.hToolBar = new HToolBar(this.right);
+			this.hToolBar.Margins = new Margins(0, 0, 0, 5);
+			this.hToolBar.Dock = DockStyle.Top;
+			this.HToolBarAdd(Widgets.Command.Get("ToolSelect"));
+			this.HToolBarAdd(Widgets.Command.Get("ToolGlobal"));
+			this.HToolBarAdd(Widgets.Command.Get("ToolGrid"));
+
+			//	Crée le tabbook pour les onglets.
+			this.tabBook = new TabBook(this.right);
 			this.tabBook.Arrows = TabBookArrows.Stretch;
-			this.tabBook.Margins = new Margins(1, 1, 1, 1);
-			this.tabBook.Dock = DockStyle.Right;
+			this.tabBook.Dock = DockStyle.Fill;
 
 			//	Crée l'onglet 'propriétés'.
 			this.tabPageProperties = new TabPage();
@@ -305,7 +318,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Un bouton pour changer de culture a été cliqué.
 			IconButton button = sender as IconButton;
 			this.module.ResourceManager.ActiveCulture = Resources.FindSpecificCultureInfo(button.Name);
-			this.panelContainer.UpdateDisplayCaptions ();
+			this.panelContainer.UpdateDisplayCaptions();
 			this.UpdateCultureButtons();
 		}
 
@@ -321,20 +334,39 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected Widget ToolBarAdd(Command command)
+		protected Widget VToolBarAdd(Command command)
 		{
-			//	Ajoute une icône.
+			//	Ajoute une icône dans la toolbar verticale.
 			if (command == null)
 			{
 				IconSeparator sep = new IconSeparator();
 				sep.IsHorizontal = false;
-				this.toolBar.Items.Add(sep);
+				this.vToolBar.Items.Add(sep);
 				return sep;
 			}
 			else
 			{
 				IconButton button = new IconButton(command);
-				this.toolBar.Items.Add(button);
+				this.vToolBar.Items.Add(button);
+				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
+				return button;
+			}
+		}
+
+		protected Widget HToolBarAdd(Command command)
+		{
+			//	Ajoute une icône dans la toolbar horizontale.
+			if (command == null)
+			{
+				IconSeparator sep = new IconSeparator();
+				sep.IsHorizontal = false;
+				this.hToolBar.Items.Add(sep);
+				return sep;
+			}
+			else
+			{
+				IconButton button = new IconButton(command);
+				this.hToolBar.Items.Add(button);
 				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
 				return button;
 			}
@@ -470,11 +502,11 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (panel == null)
 			{
-				obj.ClearValue (Panels.PanelProperty);
+				obj.ClearValue(Panels.PanelProperty);
 			}
 			else
 			{
-				obj.SetValue (Panels.PanelProperty, panel);
+				obj.SetValue(Panels.PanelProperty, panel);
 			}
 		}
 
@@ -491,10 +523,12 @@ namespace Epsitec.Common.Designer.Viewers
 		protected VSplitter						splitter1;
 		protected VSplitter						splitter2;
 		protected MyWidgets.TextFieldExName		labelEdit;
-		protected VToolBar						toolBar;
+		protected VToolBar						vToolBar;
 		protected Scrollable					scrollable;
 		protected UI.Panel						panelContainer;
 		protected MyWidgets.PanelEditor			panelEditor;
+		protected Widget						right;
+		protected HToolBar						hToolBar;
 		protected TabBook						tabBook;
 
 		protected TabPage						tabPageProperties;
