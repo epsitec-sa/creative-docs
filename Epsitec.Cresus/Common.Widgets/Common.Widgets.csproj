@@ -129,13 +129,8 @@
     <Compile Include="CommandContext.cs" />
     <Compile Include="CommandDispatcherChain.cs" />
     <Compile Include="CommandContextChain.cs" />
-    <Compile Include="Controllers\NumericController.cs" />
-    <Compile Include="Controllers\EnumController.cs" />
-    <Compile Include="Controllers\Factory.cs" />
-    <Compile Include="ControllerAttribute.cs" />
     <Compile Include="CommandState.cs" />
     <Compile Include="CloneView.cs" />
-    <Compile Include="Controllers\StringController.cs" />
     <Compile Include="CommandType.cs" />
     <Compile Include="MetaButton.cs" />
     <Compile Include="Filename.cs" />
@@ -346,21 +341,17 @@
     <Compile Include="Command.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controllers\AbstractController.cs" />
     <Compile Include="ActiveState.cs" />
     <Compile Include="AbstractSplitter.cs" />
     <Compile Include="RibbonBook.cs" />
     <Compile Include="RibbonPage.cs" />
     <Compile Include="HSplitter.cs" />
-    <Compile Include="Validators\ControllerBasedValidator.cs" />
     <Compile Include="VSplitter.cs" />
     <Compile Include="Helpers\IClientInfo.cs" />
-    <Compile Include="IController.cs" />
     <Compile Include="Layouts\LayoutMode.cs" />
     <Compile Include="Layouts\NoOpLayoutEngine.cs" />
     <Compile Include="Layouts\LayoutContext.cs" />
     <Compile Include="Layouts\LayoutMeasure.cs" />
-    <Compile Include="Placeholder.cs" />
     <Compile Include="RibbonButton.cs" />
     <Compile Include="VerticalAlignment.cs" />
     <Compile Include="HorizontalAlignment.cs" />

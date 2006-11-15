@@ -111,6 +111,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ControllerAttribute.cs" />
+    <Compile Include="Controllers\AbstractController.cs" />
+    <Compile Include="Controllers\EnumController.cs" />
+    <Compile Include="Controllers\Factory.cs" />
+    <Compile Include="Controllers\NumericController.cs" />
+    <Compile Include="Controllers\StringController.cs" />
+    <Compile Include="IController.cs" />
     <Compile Include="PanelMode.cs" />
     <Compile Include="PanelMask.cs" />
     <Compile Include="DataSource.cs" />
@@ -124,6 +131,8 @@
     <Compile Include="Panel.cs" />
     <Compile Include="PanelStack.cs" />
     <Compile Include="Panels\EditPanel.cs" />
+    <Compile Include="Placeholder.cs" />
+    <Compile Include="Validators\ControllerBasedValidator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
