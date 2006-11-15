@@ -184,6 +184,56 @@ namespace Epsitec.Common.UI
 			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagResourceManager, resourceManager);
 		}
 
+		public static string SerializePanel(Panel panel)
+		{
+			DataSource              dataSource = panel.DataSource;
+			Support.ResourceManager manager    = panel.ResourceManager;
+			
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			System.IO.StringWriter stringWriter = new System.IO.StringWriter (buffer);
+			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (stringWriter);
+
+			using (Types.Serialization.Context context = new Types.Serialization.SerializerContext (new Types.Serialization.IO.XmlWriter (xmlWriter)))
+			{
+				UI.Panel.FillSerializationContext (context, dataSource, manager);
+
+				xmlWriter.Formatting = System.Xml.Formatting.None;
+				xmlWriter.WriteStartElement ("panel");
+
+				context.ActiveWriter.WriteAttributeStrings ();
+
+				Types.Storage.Serialize (panel, context);
+
+				xmlWriter.WriteEndElement ();
+				xmlWriter.Flush ();
+				xmlWriter.Close ();
+
+				return buffer.ToString ();
+			}
+		}
+
+		public static UI.Panel DeserializePanel(string xml, DataSource dataSource, Support.ResourceManager manager)
+		{
+			System.IO.StringReader stringReader = new System.IO.StringReader (xml);
+			System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (stringReader);
+
+			xmlReader.Read ();
+
+			System.Diagnostics.Debug.Assert (xmlReader.NodeType == System.Xml.XmlNodeType.Element);
+			System.Diagnostics.Debug.Assert (xmlReader.LocalName == "panel");
+
+			Types.Serialization.Context context = new Types.Serialization.DeserializerContext (new Types.Serialization.IO.XmlReader (xmlReader));
+
+			UI.Panel.FillSerializationContext (context, dataSource, manager);
+
+			UI.Panel panel = Types.Storage.Deserialize (context) as UI.Panel;
+
+			System.Diagnostics.Debug.Assert (panel.DataSource == dataSource);
+			System.Diagnostics.Debug.Assert (panel.ResourceManager == manager);
+
+			return panel;
+		}
+		
 		private void SyncDataContext()
 		{
 			this.SyncDataContext (this);

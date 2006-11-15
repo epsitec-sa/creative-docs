@@ -130,6 +130,7 @@
     <Compile Include="Data\ObsoleteField.cs" />
     <Compile Include="Data\ObsoleteRecord.cs" />
     <Compile Include="Panel.cs" />
+    <Compile Include="PanelPlaceholder.cs" />
     <Compile Include="PanelStack.cs" />
     <Compile Include="Panels\EditPanel.cs" />
     <Compile Include="Placeholder.cs" />

@@ -132,6 +132,7 @@
     <Compile Include="CommandState.cs" />
     <Compile Include="CloneView.cs" />
     <Compile Include="CommandType.cs" />
+    <Compile Include="FormTextField.cs" />
     <Compile Include="MetaButton.cs" />
     <Compile Include="Filename.cs" />
     <Compile Include="ImageShower.cs" />

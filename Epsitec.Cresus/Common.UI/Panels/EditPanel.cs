@@ -1,10 +1,13 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System.Collections.Generic;
 using Epsitec.Common.Types;
+using Epsitec.Common.UI;
+using Epsitec.Common.UI.Panels;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.UI.Panels.EditPanel))]
+using System.Collections.Generic;
+
+[assembly: DependencyClass (typeof (EditPanel))]
 
 namespace Epsitec.Common.UI.Panels
 {
@@ -40,6 +43,12 @@ namespace Epsitec.Common.UI.Panels
 			}
 		}
 
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		{
+			graphics.AddFilledRectangle (Drawing.Rectangle.Intersection (clipRect, this.Client.Bounds));
+			graphics.RenderSolid (Drawing.Color.FromRgb (1, 1, 1));
+		}
+		
 		private static object GetOwnerValue(DependencyObject obj)
 		{
 			EditPanel panel = (EditPanel) obj;

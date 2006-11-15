@@ -29,12 +29,18 @@ namespace Epsitec.Common.UI
 				{
 					this.Detach ();
 					this.panelStack = value;
-					
-					if (this.panelStack != null)
-					{
-						this.panelStack.Add (this);
-					}
 				}
+			}
+		}
+
+		public void Attach()
+		{
+			if ((this.panelStack != null) &&
+				(this.isAttached == false))
+			{
+				this.isAttached = true;
+				this.panelStack.Add (this);
+				this.panelStack.Window.FocusedWidgetChanged += this.HandleWindowFocusedWidgetChanged;
 			}
 		}
 
@@ -69,9 +75,39 @@ namespace Epsitec.Common.UI
 		{
 			if (this.panelStack != null)
 			{
+				this.panelStack.Window.FocusedWidgetChanged -= this.HandleWindowFocusedWidgetChanged;
 				this.panelStack.Remove (this);
 				this.panelStack = null;
 			}
+		}
+
+		private void HandleWindowFocusedWidgetChanged(object sender)
+		{
+			if (this.ContainsKeyboardFocus)
+			{
+				if (this.keyboardFocus == false)
+				{
+					this.keyboardFocus = true;
+				}
+			}
+			else
+			{
+				if (this.keyboardFocus == true)
+				{
+					this.keyboardFocus = false;
+					this.OnLostKeyboardFocus ();
+				}
+			}
+		}
+
+		protected void OnLostKeyboardFocus()
+		{
+			if (this.LostKeyboardFocus != null)
+			{
+				this.LostKeyboardFocus (this);
+			}
+
+			this.Detach ();
 		}
 
 		protected void OnApertureChanged(DependencyPropertyChangedEventArgs e)
@@ -82,9 +118,12 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public event Support.EventHandler LostKeyboardFocus;
 		public event Support.EventHandler<DependencyPropertyChangedEventArgs> ApertureChanged;
 
 		private Drawing.Rectangle aperture;
 		private PanelStack panelStack;
+		private bool keyboardFocus;
+		private bool isAttached;
 	}
 }

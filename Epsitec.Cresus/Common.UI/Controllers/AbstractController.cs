@@ -161,7 +161,7 @@ namespace Epsitec.Common.UI.Controllers
 
 			if (this.placeholder != null)
 			{
-				this.placeholder.Children.Add (widget);
+				widget.SetEmbedder (this.placeholder);
 			}
 		}
 
@@ -261,7 +261,7 @@ namespace Epsitec.Common.UI.Controllers
 			{
 				foreach (Widget widget in this.widgets)
 				{
-					view.Children.Add (widget);
+					widget.SetEmbedder (view);
 				}
 			}
 		}

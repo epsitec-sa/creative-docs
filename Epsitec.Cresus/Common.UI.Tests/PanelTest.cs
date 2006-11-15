@@ -102,6 +102,10 @@ namespace Epsitec.Common.UI
 			panel.EditionPanel.PreferredSize = new Drawing.Size (180, 120);
 			
 			Widgets.Button buttonEnd = new Widgets.Button ();
+			Widgets.StaticText text1 = new Widgets.StaticText ();
+			Widgets.StaticText text2 = new Widgets.StaticText ();
+			Widgets.FormTextField field1 = new Widgets.FormTextField ();
+			Widgets.FormTextField field2 = new Widgets.FormTextField ();
 			
 			buttonEnd.TabIndex = 1;
 			buttonEnd.TabNavigation = Widgets.Widget.TabNavigationMode.ActivateOnTab;
@@ -112,7 +116,34 @@ namespace Epsitec.Common.UI
 				panelStack.EndEdition ();
 			};
 
+			text1.Text = "Nom :";
+			text1.ContentAlignment = Epsitec.Common.Drawing.ContentAlignment.MiddleRight;
+			text1.Anchor = Epsitec.Common.Widgets.AnchorStyles.TopLeft;
+			text1.Margins = new Epsitec.Common.Drawing.Margins (4, 0, 4, 0);
+			text1.PreferredSize = new Epsitec.Common.Drawing.Size (60, 16);
+
+			text2.Text = "Prénom :";
+			text2.ContentAlignment = Epsitec.Common.Drawing.ContentAlignment.MiddleRight;
+			text2.Anchor = Epsitec.Common.Widgets.AnchorStyles.TopLeft;
+			text2.Margins = new Epsitec.Common.Drawing.Margins (4, 0, 20, 0);
+			text2.PreferredSize = new Epsitec.Common.Drawing.Size (60, 16);
+
+			field1.Text = "Arnaud";
+			field1.Anchor = Epsitec.Common.Widgets.AnchorStyles.TopLeft | Epsitec.Common.Widgets.AnchorStyles.Right;
+			field1.Margins = new Epsitec.Common.Drawing.Margins (68, 4, 4+0.5, 0);
+			field1.PreferredSize = new Epsitec.Common.Drawing.Size (100, 16);
+			
+			field2.Text = "Pierre";
+			field2.Anchor = Epsitec.Common.Widgets.AnchorStyles.TopLeft | Epsitec.Common.Widgets.AnchorStyles.Right;
+			field2.Margins = new Epsitec.Common.Drawing.Margins (68, 4, 20+0.5, 0);
+			field2.PreferredSize = new Epsitec.Common.Drawing.Size (100, 16);
+
+			panel.EditionPanel.Padding = new Drawing.Margins (2, 2, 2, 2);
 			panel.EditionPanel.Children.Add (buttonEnd);
+			panel.EditionPanel.Children.Add (text1);
+			panel.EditionPanel.Children.Add (text2);
+			panel.EditionPanel.Children.Add (field1);
+			panel.EditionPanel.Children.Add (field2);
 
 			panelStack.Children.Add (panel);
 
