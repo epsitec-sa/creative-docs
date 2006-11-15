@@ -165,7 +165,6 @@
     </Compile>
     <Compile Include="CommandTest.cs" />
     <Compile Include="GridTest.cs" />
-    <Compile Include="PlaceholderTest.cs" />
     <Compile Include="RibbonTest.cs" />
     <Compile Include="LayoutTest.cs" />
     <Compile Include="VisualTreeTest.cs" />

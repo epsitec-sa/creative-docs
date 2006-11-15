@@ -132,6 +132,7 @@
     <Compile Include="PanelTest.cs" />
     <Compile Include="DataSourceMetadataTest.cs" />
     <Compile Include="DataSourceTest.cs" />
+    <Compile Include="PlaceholderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />

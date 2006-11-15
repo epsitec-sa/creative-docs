@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using NUnit.Framework;
+
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
@@ -10,7 +11,8 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
-	[TestFixture] public class PlaceholderTest
+	[TestFixture]
+	public class PlaceholderTest
 	{
 		[SetUp]
 		public void Initialize()
@@ -18,7 +20,7 @@ namespace Epsitec.Common.Widgets
 			Epsitec.Common.Widgets.Widget.Initialize ();
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 		}
-		
+
 		[Test]
 		public void AutomatedTestEnvironment()
 		{
@@ -62,10 +64,10 @@ namespace Epsitec.Common.Widgets
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
 			grid.RowDefinitions.Add (new Layouts.RowDefinition (new Layouts.GridLength (1, Layouts.GridUnitType.Proportional)));
-//			grid.RowDefinitions.Add (new Layouts.RowDefinition ()); // en pas assez
+			//			grid.RowDefinitions.Add (new Layouts.RowDefinition ()); // en pas assez
 
 			grid.ColumnDefinitions[0].RightBorder = 1;
-			
+
 			grid.RowDefinitions[0].BottomBorder = 1;
 			grid.RowDefinitions[2].TopBorder = -1;
 			grid.RowDefinitions[3].TopBorder = -1;
@@ -77,7 +79,7 @@ namespace Epsitec.Common.Widgets
 
 			IntegerType ageType = new IntegerType (16, 80);
 			ageType.DefinePreferredRange (new DecimalRange (20, 65, 10));
-			
+
 			type.Fields.Add ("Name", new StringType (1));
 			type.Fields.Add ("Forename", new StringType (1));
 			type.Fields.Add ("Age", ageType);
@@ -90,7 +92,7 @@ namespace Epsitec.Common.Widgets
 
 			panel.DataSource = new UI.DataSource ();
 			panel.DataSource.AddDataSource ("Person", data);
-			
+
 			Placeholder placeholder1 = new Placeholder ();
 			Placeholder placeholder2 = new Placeholder ();
 			Placeholder placeholder3 = new Placeholder ();
@@ -138,7 +140,7 @@ namespace Epsitec.Common.Widgets
 
 			panel.Padding = new Drawing.Margins (8, 8, 5, 5);
 			panel.Dock = DockStyle.Fill;
-			
+
 			panel.Children.Add (placeholder1);
 			panel.Children.Add (placeholder2);
 			panel.Children.Add (placeholder3);
@@ -157,7 +159,7 @@ namespace Epsitec.Common.Widgets
 			Layouts.GridLayoutEngine.SetColumn (text, 0);
 			Layouts.GridLayoutEngine.SetRow (text, 0);
 			panel.Children.Add (text);
-			
+
 			text = new StaticText ();
 			text.Text = "Data fields";
 			text.PreferredWidth = 40;
@@ -184,7 +186,7 @@ namespace Epsitec.Common.Widgets
 
 			window.Root.Children.Add (panel);
 			window.Show ();
-			
+
 			Window.RunInTestEnvironment (window);
 		}
 
@@ -207,7 +209,7 @@ namespace Epsitec.Common.Widgets
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
 			grid.RowDefinitions.Add (new Layouts.RowDefinition (new Layouts.GridLength (1, Layouts.GridUnitType.Proportional)));
-//			grid.RowDefinitions.Add (new Layouts.RowDefinition ()); // en pas assez
+			//			grid.RowDefinitions.Add (new Layouts.RowDefinition ()); // en pas assez
 
 			grid.ColumnDefinitions[0].RightBorder = 1;
 
@@ -418,34 +420,36 @@ namespace Epsitec.Common.Widgets
 			public void HandleValueChanged(object sender, DependencyPropertyChangedEventArgs e)
 			{
 				StructuredData data = sender as StructuredData;
-				
+
 				if (data != null)
 				{
 					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 					buffer.Append (data.GetValue ("Forename"));
 					buffer.Append (" ");
 					buffer.Append (data.GetValue ("Name"));
-//					buffer.Append (", ");
-//					buffer.Append (data.GetValue ("Slow.Age"));
-//					buffer.Append (" years old");
+					//					buffer.Append (", ");
+					//					buffer.Append (data.GetValue ("Slow.Age"));
+					//					buffer.Append (" years old");
 					buffer.Append ("; ");
 					buffer.Append (data.GetValue ("Sex"));
 					buffer.Append (", ");
 					buffer.Append (@"<font size=""80%"">(");
 					buffer.Append (this.counter++);
 					buffer.Append (@" changes)</font>");
-					
+
 					this.widget.Text = buffer.ToString ();
 				}
 			}
-			
+
 			Widget widget;
 			int counter = 1;
 		}
 
 		enum Sex
 		{
-			Unknown, Male, Female
+			Unknown,
+			Male,
+			Female
 		}
 
 		[Test]
@@ -487,13 +491,13 @@ namespace Epsitec.Common.Widgets
 			panel.Children.Add (placeholder2);
 			panel.Children.Add (placeholder3);
 
-			Assert.AreEqual ("Name",		placeholder1.ValueName);
-			Assert.AreEqual ("Forename",	placeholder2.ValueName);
-			Assert.AreEqual ("Age",			placeholder3.ValueName);
+			Assert.AreEqual ("Name", placeholder1.ValueName);
+			Assert.AreEqual ("Forename", placeholder2.ValueName);
+			Assert.AreEqual ("Age", placeholder3.ValueName);
 
-			Assert.AreEqual (typeof (StringType),	placeholder1.ValueType.GetType ());
-			Assert.AreEqual (typeof (StringType),	placeholder2.ValueType.GetType ());
-			Assert.AreEqual (typeof (IntegerType),	placeholder3.ValueType.GetType ());
+			Assert.AreEqual (typeof (StringType), placeholder1.ValueType.GetType ());
+			Assert.AreEqual (typeof (StringType), placeholder2.ValueType.GetType ());
+			Assert.AreEqual (typeof (IntegerType), placeholder3.ValueType.GetType ());
 		}
 
 		#region TestController1 Class
@@ -512,7 +516,7 @@ namespace Epsitec.Common.Widgets
 					return this.parameter;
 				}
 			}
-			
+
 			protected override void CreateUserInterface(INamedType valueType, string valueName, Caption caption)
 			{
 				throw new System.Exception ("The method or operation is not implemented.");
@@ -525,7 +529,7 @@ namespace Epsitec.Common.Widgets
 
 			private string parameter;
 		}
-		
+
 		#endregion
 	}
 }

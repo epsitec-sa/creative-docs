@@ -3,7 +3,6 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
-using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 
@@ -12,9 +11,11 @@ using System.Collections.Generic;
 namespace Epsitec.Common.UI
 {
 	/// <summary>
-	/// 
+	/// The <c>AbstractPlaceholder</c> class is the base class for the
+	/// <see cref="Placeholder"/> and <see cref="PanelPlaceholder"/>
+	/// classes.
 	/// </summary>
-	public abstract class AbstractPlaceholder : AbstractGroup
+	public abstract class AbstractPlaceholder : Widgets.FrameBox
 	{
 		protected AbstractPlaceholder()
 		{
@@ -36,7 +37,6 @@ namespace Epsitec.Common.UI
 				return this.GetBindingExpression (AbstractPlaceholder.ValueProperty);
 			}
 		}
-
 
 		public INamedType						ValueType
 		{
