@@ -1,22 +1,28 @@
-using Epsitec.Common.Types;
-using Epsitec.Common.Drawing;
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
 
-[assembly: Epsitec.Common.Types.DependencyClass(typeof(Epsitec.Common.Widgets.FrameBox))]
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
+
+[assembly: DependencyClass (typeof(FrameBox))]
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// Summary description for FrameBox.
+	/// The <c>FrameBox</c> class is a very simple group which knows how to
+	/// paint a thin frame around itself.
 	/// </summary>
 	public class FrameBox : AbstractGroup
 	{
 		public FrameBox()
 		{
 		}
-		
-		public FrameBox(Widget embedder) : this()
+
+		public FrameBox(Widget embedder)
+			: this ()
 		{
-			this.SetEmbedder(embedder);
+			this.SetEmbedder (embedder);
 		}
 
 
@@ -27,9 +33,9 @@ namespace Epsitec.Common.Widgets
 				IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 				Rectangle rect = this.Client.Bounds;
-				rect.Deflate(0.5);
-				graphics.AddRectangle(rect);
-				graphics.RenderSolid(adorner.ColorBorder);
+				rect.Deflate (0.5);
+				graphics.AddRectangle (rect);
+				graphics.RenderSolid (adorner.ColorBorder);
 			}
 
 			if (this.DrawDesignerFrame)
@@ -37,33 +43,41 @@ namespace Epsitec.Common.Widgets
 				IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 				Rectangle rect = this.Client.Bounds;
-				rect.Deflate(0.5);
-				Path path = new Path();
-				path.AppendRectangle(rect);
-				FrameBox.DrawPathDash(graphics, path, 1, 4, 4, adorner.ColorBorder);
+				rect.Deflate (0.5);
+				
+				using (Path path = new Path (rect))
+				{
+					FrameBox.DrawPathDash (graphics, path, 1, 4, 4, adorner.ColorBorder);
+				}
 			}
 		}
 
 		static protected void DrawPathDash(Graphics graphics, Path path, double width, double dash, double gap, Color color)
 		{
 			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
+
 			if (path.IsEmpty)
+			{
 				return;
-
-			DashedPath dp = new DashedPath();
-			dp.Append(path);
-
-			if (dash == 0.0)  // juste un point ?
-			{
-				dash = 0.00001;
-				gap -= dash;
 			}
-			dp.AddDash(dash, gap);
 
-			using (Path temp = dp.GenerateDashedPath())
+			using (DashedPath dp = new DashedPath ())
 			{
-				graphics.Rasterizer.AddOutline(temp, width, CapStyle.Square, JoinStyle.Round, 5.0);
-				graphics.RenderSolid(color);
+				dp.Append (path);
+
+				if (dash == 0.0)  // juste un point ?
+				{
+					dash = 0.00001;
+					gap -= dash;
+				}
+				
+				dp.AddDash (dash, gap);
+
+				using (Path temp = dp.GenerateDashedPath ())
+				{
+					graphics.Rasterizer.AddOutline (temp, width, CapStyle.Square, JoinStyle.Round, 5.0);
+					graphics.RenderSolid (color);
+				}
 			}
 		}
 	}

@@ -20,6 +20,11 @@ namespace Epsitec.Common.UI
 			this.mask.Hide ();
 		}
 
+		public PanelStack(Widgets.Widget embedder)
+			: this ()
+		{
+			this.SetEmbedder (embedder);
+		}
 
 		public void StartEdition(Panel panel)
 		{

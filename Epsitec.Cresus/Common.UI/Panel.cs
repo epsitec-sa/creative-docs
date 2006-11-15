@@ -24,6 +24,16 @@ namespace Epsitec.Common.UI
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="Panel"/> class.
+		/// </summary>
+		/// <param name="embedder">The embedder.</param>
+		public Panel(Widgets.Widget embedder)
+			: this ()
+		{
+			this.SetEmbedder (embedder);
+		}
+
+		/// <summary>
 		/// Gets or sets the <see cref="DataSource"/> used as the root data context.
 		/// </summary>
 		/// <value>The data source.</value>

@@ -14,8 +14,9 @@ namespace Epsitec.Common.UI
 		}
 
 		public PanelMask(Widgets.Widget embedder)
-			: base (embedder)
+			: this ()
 		{
+			this.SetEmbedder (embedder);
 		}
 
 		public Drawing.Rectangle Aperture

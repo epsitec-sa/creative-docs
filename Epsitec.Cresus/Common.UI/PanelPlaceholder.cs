@@ -17,8 +17,9 @@ namespace Epsitec.Common.UI
 		}
 
 		public PanelPlaceholder(Widgets.Widget embedder)
-			: base (embedder)
+			: this ()
 		{
+			this.SetEmbedder (embedder);
 		}
 
 		public Support.ResourceManager ResourceManager
