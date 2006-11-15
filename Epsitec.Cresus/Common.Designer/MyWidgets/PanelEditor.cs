@@ -1490,6 +1490,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				panel.PreferredSize = new Size(200, 100);
 				panel.MinWidth = 50;
 				panel.MinHeight = 50;
+				panel.DrawDesignerFrame = true;  // nécessaire pour voir le cadre pendant la création
+				panel.ResourceManager = this.module.ResourceManager;
 
 				item = panel;
 			}

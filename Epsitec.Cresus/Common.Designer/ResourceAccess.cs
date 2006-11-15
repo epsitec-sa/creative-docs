@@ -1014,23 +1014,38 @@ namespace Epsitec.Common.Designer
 		{
 			//	Ouvre l'accès 'bypass'.
 			//	Ce type d'accès n'est possible que sur une ressource 'Caption' (Captions,
-			//	Commands, Types et Values).
-			System.Diagnostics.Debug.Assert(this.IsCaptionsType);
+			//	Commands, Types et Values) et 'Panel'.
 			System.Diagnostics.Debug.Assert(this.bypassType == Type.Unknow);
 			this.bypassType = type;
 			System.Diagnostics.Debug.Assert(this.bypassType != Type.Unknow);
 
 			this.bypassDruids = new List<Druid>();
-			for (int i=0; i<this.primaryBundle.FieldCount; i++)
-			{
-				ResourceBundle.Field field = this.primaryBundle[i];
-				if (this.HasFixFilter(field.Name, true))
-				{
-					Druid fullDruid = new Druid(field.Id, this.primaryBundle.Module.Id);
 
-					if (exclude == null || !exclude.Contains(fullDruid))
+			if (this.IsCaptionsType)
+			{
+				for (int i=0; i<this.primaryBundle.FieldCount; i++)
+				{
+					ResourceBundle.Field field = this.primaryBundle[i];
+					if (this.HasFixFilter(field.Name, true))
 					{
-						this.bypassDruids.Add(fullDruid);
+						Druid fullDruid = new Druid(field.Id, this.primaryBundle.Module.Id);
+
+						if (exclude == null || !exclude.Contains(fullDruid))
+						{
+							this.bypassDruids.Add(fullDruid);
+						}
+					}
+				}
+			}
+			else
+			{
+				foreach (ResourceBundle bundle in this.panelsList)
+				{
+					Druid druid = bundle.Id;
+
+					if (!druid.IsEmpty && (exclude == null || !exclude.Contains(druid)))
+					{
+						this.bypassDruids.Add(druid);
 					}
 				}
 			}
@@ -1066,23 +1081,40 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne une ressource de l'accès 'bypass'.
 			System.Diagnostics.Debug.Assert(this.bypassType != Type.Unknow);
-			if (bundle == null)
+			if (this.bypassType == Type.Panels)
 			{
-				this.BypassFilterGetStrings(druid, this.primaryBundle, availableHeight, out name, out text);
+				name = "";
+				text = "";
 				isDefined = false;
+
+				int i = this.GetAbsoluteIndex(druid);
+				if (i != -1)
+				{
+					bundle = this.panelsList[i];
+					name = this.SubFilter(bundle.Caption, false);
+					isDefined = true;
+				}
 			}
 			else
 			{
-				this.BypassFilterGetStrings(druid, bundle, availableHeight, out name, out text);
-
-				if (string.IsNullOrEmpty(text) && bundle != this.primaryBundle)
+				if (bundle == null)
 				{
 					this.BypassFilterGetStrings(druid, this.primaryBundle, availableHeight, out name, out text);
 					isDefined = false;
 				}
 				else
 				{
-					isDefined = true;
+					this.BypassFilterGetStrings(druid, bundle, availableHeight, out name, out text);
+
+					if (string.IsNullOrEmpty(text) && bundle != this.primaryBundle)
+					{
+						this.BypassFilterGetStrings(druid, this.primaryBundle, availableHeight, out name, out text);
+						isDefined = false;
+					}
+					else
+					{
+						isDefined = true;
+					}
 				}
 			}
 		}

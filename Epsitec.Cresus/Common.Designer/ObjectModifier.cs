@@ -137,7 +137,9 @@ namespace Epsitec.Common.Designer
 			}
 			else if (obj is UI.PanelPlaceholder)
 			{
-				//	TODO:
+				UI.PanelPlaceholder panel = obj as UI.PanelPlaceholder;
+				System.Diagnostics.Debug.Assert(panel.ResourceManager != null);
+				panel.PanelId = d;
 			}
 		}
 
@@ -156,7 +158,8 @@ namespace Epsitec.Common.Designer
 			}
 			else if (obj is UI.PanelPlaceholder)
 			{
-				//	TODO:
+				UI.PanelPlaceholder panel = obj as UI.PanelPlaceholder;
+				druid = panel.PanelId;
 			}
 
 			return druid.ToString();

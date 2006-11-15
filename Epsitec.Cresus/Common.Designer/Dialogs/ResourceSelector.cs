@@ -210,14 +210,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.access = this.module.AccessCaptions;
 
-			this.module.AccessCaptions.BypassFilterOpenAccess(this.resourceType, this.exclude);
+			this.access.BypassFilterOpenAccess(this.resourceType, this.exclude);
 		}
 
 		public void AccessOpen(Module baseModule, ResourceAccess.Type type, Druid resource, List<Druid> exclude)
 		{
 			//	Début de l'accès 'bypass' aux ressources pour le dialogue.
 			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
-			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Unknow || type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Commands || type == ResourceAccess.Type.Values || type == ResourceAccess.Type.Types);
+			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Unknow || type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Commands || type == ResourceAccess.Type.Values || type == ResourceAccess.Type.Types || type == ResourceAccess.Type.Panels);
 			System.Diagnostics.Debug.Assert(resource.Type != DruidType.ModuleRelative);
 
 			this.resource = resource;
@@ -233,12 +233,19 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.module = this.baseModule;  // utilise le module de base
 			}
 
-			this.access = this.module.AccessCaptions;
+			if (type == ResourceAccess.Type.Panels)
+			{
+				this.access = this.module.AccessPanels;
+			}
+			else
+			{
+				this.access = this.module.AccessCaptions;
+			}
 
 			//	Utilise le type spécifié s'il est défini, ou le type de la ressource dans le cas contraire.
 			if (type == ResourceAccess.Type.Unknow)
 			{
-				this.resourceType = this.module.AccessCaptions.DirectGetType(this.resource);
+				this.resourceType = this.access.DirectGetType(this.resource);
 				System.Diagnostics.Debug.Assert(this.resourceType != ResourceAccess.Type.Unknow);
 			}
 			else
@@ -246,7 +253,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.resourceType = type;
 			}
 
-			this.module.AccessCaptions.BypassFilterOpenAccess(this.resourceType, this.exclude);
+			this.access.BypassFilterOpenAccess(this.resourceType, this.exclude);
 		}
 
 		protected void AccessChange(Module module)
@@ -255,21 +262,30 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.AccessClose();
 
 			this.module = module;
-			this.access = this.module.AccessCaptions;
-			this.module.AccessCaptions.BypassFilterOpenAccess(this.resourceType, this.exclude);
+
+			if (this.resourceType == ResourceAccess.Type.Panels)
+			{
+				this.access = this.module.AccessPanels;
+			}
+			else
+			{
+				this.access = this.module.AccessCaptions;
+			}
+
+			this.access.BypassFilterOpenAccess(this.resourceType, this.exclude);
 		}
 
 		public List<Druid> AccessCloseList()
 		{
 			//	Fin de l'accès 'bypass' aux ressources pour le dialogue.
-			this.module.AccessCaptions.BypassFilterCloseAccess();
+			this.access.BypassFilterCloseAccess();
 			return this.resources;
 		}
 
 		public Druid AccessClose()
 		{
 			//	Fin de l'accès 'bypass' aux ressources pour le dialogue.
-			this.module.AccessCaptions.BypassFilterCloseAccess();
+			this.access.BypassFilterCloseAccess();
 			return this.resource;
 		}
 
@@ -324,17 +340,34 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateColumnsWidth()
 		{
-			//	TODO: étrange problème lors du redimensionnement de la fenêtre...
-			double w1 = this.array.GetColumnsAbsoluteWidth(0);
-			double w2 = this.array.GetColumnsAbsoluteWidth(1);
+			if (this.array.Columns == 1)
+			{
+				this.header2.Visibility = false;
+				this.filterText.Visibility = false;
+				this.buttonCreate.Visibility = false;
 
-			this.header1.PreferredWidth = w1;
-			this.filterLabel.PreferredWidth = w1;
+				double w1 = this.array.GetColumnsAbsoluteWidth(0)-20;
+				this.header1.PreferredWidth = w1;
+				this.filterLabel.PreferredWidth = w1;
+			}
+			else
+			{
+				this.header2.Visibility = true;
+				this.filterText.Visibility = true;
+				this.buttonCreate.Visibility = true;
 
-			this.header2.PreferredWidth = w2;
-			this.filterText.PreferredWidth = w2;
+				//	TODO: étrange problème lors du redimensionnement de la fenêtre...
+				double w1 = this.array.GetColumnsAbsoluteWidth(0);
+				double w2 = this.array.GetColumnsAbsoluteWidth(1);
 
-			System.Diagnostics.Debug.WriteLine (string.Format ("Widths : {0}, {1}", w1, w2));
+				this.header1.PreferredWidth = w1;
+				this.filterLabel.PreferredWidth = w1;
+
+				this.header2.PreferredWidth = w2;
+				this.filterText.PreferredWidth = w2;
+
+				System.Diagnostics.Debug.WriteLine(string.Format("Widths : {0}, {1}", w1, w2));
+			}
 		}
 
 		protected int UpdateDruidsIndex()
@@ -425,17 +458,32 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateResourceType()
 		{
 			//	Met à jour le tableau en fonction du type des ressources.
-			int columns = 2;  // 2 colonnes pour les Strings
-			if (this.access.ResourceType != ResourceAccess.Type.Strings)
+			int columns;
+			if (this.resourceType == ResourceAccess.Type.Strings)
 			{
-				columns = 3;  // 3 colonnes pour les Captions, COmmands et Types
+				columns = 2;  // 2 colonnes pour les Strings
+			}
+			else if (this.resourceType == ResourceAccess.Type.Panels)
+			{
+				columns = 1;  // 1 colonne pour les Panels
+			}
+			else
+			{
+				columns = 3;  // 3 colonnes pour les Captions, Commands et Types
 			}
 
 			if (this.array.Columns != columns)  // changement du nombre de colonnes ?
 			{
 				this.array.Columns = columns;
 
-				if (columns == 2)
+				if (columns == 1)
+				{
+					this.array.SetColumnsRelativeWidth(0, 1.0);
+					this.array.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
+					this.array.SetDynamicToolTips(0, false);  // tellement large que le tooltip est inutile
+					this.array.LineHeight = 20;  // hauteur standard
+				}
+				else if (columns == 2)
 				{
 					this.array.SetColumnsRelativeWidth(0, 0.5);
 					this.array.SetColumnsRelativeWidth(1, 0.5);
@@ -487,22 +535,25 @@ namespace Epsitec.Common.Designer.Dialogs
 					this.array.SetLineString(0, first+i, label);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(1, first+i, text);
-					this.array.SetLineState(1, first+i, isDefined ? MyWidgets.StringList.CellState.Normal : MyWidgets.StringList.CellState.Warning);
-
-					if (this.access.ResourceType != ResourceAccess.Type.Strings)
+					if (this.resourceType != ResourceAccess.Type.Panels)
 					{
-						string icon = this.access.DirectGetIcon(this.druidsIndex[first+i]);
+						this.array.SetLineString(1, first+i, text);
+						this.array.SetLineState(1, first+i, isDefined ? MyWidgets.StringList.CellState.Normal : MyWidgets.StringList.CellState.Warning);
 
-						if (string.IsNullOrEmpty(icon))
+						if (this.resourceType != ResourceAccess.Type.Strings)
 						{
-							this.array.SetLineString(2, first+i, "");
+							string icon = this.access.DirectGetIcon(this.druidsIndex[first+i]);
+
+							if (string.IsNullOrEmpty(icon))
+							{
+								this.array.SetLineString(2, first+i, "");
+							}
+							else
+							{
+								this.array.SetLineString(2, first+i, Misc.ImageFull(icon));
+							}
+							this.array.SetLineState(2, first+i, isDefined ? MyWidgets.StringList.CellState.Normal : MyWidgets.StringList.CellState.Warning);
 						}
-						else
-						{
-							this.array.SetLineString(2, first+i, Misc.ImageFull(icon));
-						}
-						this.array.SetLineState(2, first+i, isDefined ? MyWidgets.StringList.CellState.Normal : MyWidgets.StringList.CellState.Warning);
 					}
 				}
 				else
@@ -510,13 +561,16 @@ namespace Epsitec.Common.Designer.Dialogs
 					this.array.SetLineString(0, first+i, "");
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
 
-					this.array.SetLineString(1, first+i, "");
-					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
-
-					if (this.access.ResourceType != ResourceAccess.Type.Strings)
+					if (this.resourceType != ResourceAccess.Type.Panels)
 					{
-						this.array.SetLineString(2, first+i, "");
-						this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Disabled);
+						this.array.SetLineString(1, first+i, "");
+						this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
+
+						if (this.resourceType != ResourceAccess.Type.Strings)
+						{
+							this.array.SetLineString(2, first+i, "");
+							this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Disabled);
+						}
 					}
 				}
 			}
@@ -577,7 +631,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			bool createEnable = false;
-			if (label != "" && text != "" && this.access.IsCorrectNewName(ref label, true))
+			if (this.resourceType != ResourceAccess.Type.Panels &&
+				label != "" && text != "" && this.access.IsCorrectNewName(ref label, true))
 			{
 				createEnable = true;
 			}
@@ -601,8 +656,15 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	l'onglet 'Cultures'.
 			get
 			{
-				string culture = Misc.CultureBaseName(this.mainWindow.CurrentModule.ResourceManager.ActiveCulture);
-				return this.access.GetCultureBundle(culture);
+				if (this.resourceType == ResourceAccess.Type.Panels)
+				{
+					return null;
+				}
+				else
+				{
+					string culture = Misc.CultureBaseName(this.mainWindow.CurrentModule.ResourceManager.ActiveCulture);
+					return this.access.GetCultureBundle(culture);
+				}
 			}
 		}
 
