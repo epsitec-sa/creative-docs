@@ -257,9 +257,13 @@ namespace Epsitec.Common.Designer
 
 		static ProxyManager()
 		{
-			StringType druidStringType = new StringType();
-			druidStringType.DefineDefaultController("Druid", "");  // utilise DruidController
-			ProxyManager.DruidStringType = druidStringType;
+			StringType druidCaptionStringType = new StringType();
+			druidCaptionStringType.DefineDefaultController("DruidCaption", "");  // utilise DruidCaptionController
+			ProxyManager.DruidCaptionStringType = druidCaptionStringType;
+
+			StringType druidPanelStringType = new StringType();
+			druidPanelStringType.DefineDefaultController("DruidPanel", "");  // utilise DruidPanelController
+			ProxyManager.DruidPanelStringType = druidPanelStringType;
 
 			DoubleType locationNumericType = new DoubleType(-9999, 9999, 1.0M);
 			locationNumericType.DefinePreferredRange(new DecimalRange(0, 1000, 2));
@@ -278,7 +282,8 @@ namespace Epsitec.Common.Designer
 			ProxyManager.GridNumericType = gridNumericType;
 		}
 
-		public static readonly IStringType  DruidStringType;
+		public static readonly IStringType  DruidCaptionStringType;
+		public static readonly IStringType  DruidPanelStringType;
 		public static readonly INumericType LocationNumericType;
 		public static readonly INumericType SizeNumericType;
 		public static readonly INumericType MarginNumericType;

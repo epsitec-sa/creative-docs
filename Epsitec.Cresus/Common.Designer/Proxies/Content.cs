@@ -31,15 +31,27 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		public string Druid
+		public string DruidCaption
 		{
 			get
 			{
-				return (string) this.GetValue(Content.DruidProperty);
+				return (string) this.GetValue(Content.DruidCaptionProperty);
 			}
 			set
 			{
-				this.SetValue(Content.DruidProperty, value);
+				this.SetValue(Content.DruidCaptionProperty, value);
+			}
+		}
+
+		public string DruidPanel
+		{
+			get
+			{
+				return (string) this.GetValue(Content.DruidPanelProperty);
+			}
+			set
+			{
+				this.SetValue(Content.DruidPanelProperty, value);
 			}
 		}
 
@@ -53,7 +65,14 @@ namespace Epsitec.Common.Designer.Proxies
 			//	pour pouvoir ensuite travailler dessus :
 			if (this.ObjectModifier.HasDruid(this.DefaultWidget))
 			{
-				this.Druid = this.ObjectModifier.GetDruid(this.DefaultWidget);
+				if (this.DefaultWidget is UI.PanelPlaceholder)
+				{
+					this.DruidPanel = this.ObjectModifier.GetDruid(this.DefaultWidget);
+				}
+				else
+				{
+					this.DruidCaption = this.ObjectModifier.GetDruid(this.DefaultWidget);
+				}
 			}
 		}
 
@@ -82,7 +101,8 @@ namespace Epsitec.Common.Designer.Proxies
 
 		static Content()
 		{
-			Content.DruidProperty.DefaultMetadata.DefineNamedType(ProxyManager.DruidStringType);
+			Content.DruidCaptionProperty.DefaultMetadata.DefineNamedType(ProxyManager.DruidCaptionStringType);
+			Content.DruidPanelProperty.DefaultMetadata.DefineNamedType(ProxyManager.DruidPanelStringType);
 		}
 
 
@@ -94,6 +114,7 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
-		public static readonly DependencyProperty DruidProperty	= DependencyProperty.Register("Druid", typeof(string), typeof(Content), new DependencyPropertyMetadata(0.0, Content.NotifyDruidChanged));
+		public static readonly DependencyProperty DruidCaptionProperty	= DependencyProperty.Register("DruidCaption", typeof(string), typeof(Content), new DependencyPropertyMetadata(0.0, Content.NotifyDruidChanged));
+		public static readonly DependencyProperty DruidPanelProperty	= DependencyProperty.Register("DruidPanel",   typeof(string), typeof(Content), new DependencyPropertyMetadata(0.0, Content.NotifyDruidChanged));
 	}
 }

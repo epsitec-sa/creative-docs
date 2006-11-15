@@ -8,13 +8,13 @@ using Epsitec.Common.UI.Controllers;
 using Epsitec.Common.Types;
 using Epsitec.Common.Support;
 
-[assembly: Controller(typeof(Epsitec.Common.Designer.Controllers.DruidController))]
+[assembly: Controller(typeof(Epsitec.Common.Designer.Controllers.AbstractDruidController))]
 
 namespace Epsitec.Common.Designer.Controllers
 {
-	public class DruidController : AbstractController, Widgets.Layouts.IGridPermeable
+	public abstract class AbstractDruidController : AbstractController, Widgets.Layouts.IGridPermeable
 	{
-		public DruidController(string parameter)
+		public AbstractDruidController(string parameter)
 		{
 		}
 
@@ -79,19 +79,33 @@ namespace Epsitec.Common.Designer.Controllers
 				}
 				else
 				{
-					string text = ResourceAccess.TypeDisplayName(module.AccessCaptions.DirectGetType(d), false);
+					ResourceAccess access = null;
+
+					if (this is DruidCaptionController)
+					{
+						access = module.AccessCaptions;
+					}
+
+					if (this is DruidPanelController)
+					{
+						access = module.AccessPanels;
+					}
+
+					System.Diagnostics.Debug.Assert(access != null);
+
+					string text = ResourceAccess.TypeDisplayName(access.DirectGetType(d), false);
 					this.title.Text = string.Concat("<font size=\"150%\"><b>", text, "</b></font>");
 
 					if (module == mainWindow.CurrentModule)
 					{
-						string part2 = module.AccessCaptions.DirectGetDisplayName(d);
+						string part2 = access.DirectGetDisplayName(d);
 						this.button.Text = part2;
 						this.button.PreferredHeight = 8+14*1;  // place pour une seule ligne
 					}
 					else
 					{
 						string part1 = Misc.Italic(module.ModuleInfo.Name);
-						string part2 = module.AccessCaptions.DirectGetDisplayName(d);
+						string part2 = access.DirectGetDisplayName(d);
 						this.button.Text = string.Concat(part1, "<br/>", part2);
 						this.button.PreferredHeight = 8+14*2;  // place pour deux lignes
 					}
