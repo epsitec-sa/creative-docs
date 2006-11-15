@@ -31,7 +31,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Rectangle frame  = this.FrameRectangle;
 			Drawing.Rectangle title  = this.TitleRectangle;
-			Drawing.Rectangle client = this.Client.Bounds;
+			Drawing.Rectangle client = this.IsActualGeometryValid ? this.Client.Bounds : new Drawing.Rectangle (0, 0, this.PreferredWidth, this.PreferredHeight);
 
 			if (title.IsValid)
 			{
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				Drawing.Rectangle rect  = this.Client.Bounds;
+				Drawing.Rectangle rect  = this.IsActualGeometryValid ? this.Client.Bounds : new Drawing.Rectangle (0, 0, this.PreferredWidth, this.PreferredHeight);
 				Drawing.Rectangle title = this.TitleRectangle;
 				
 				if (title.IsValid)
