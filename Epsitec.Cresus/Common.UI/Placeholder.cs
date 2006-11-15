@@ -12,7 +12,7 @@ namespace Epsitec.Common.UI
 	/// La classe Placeholder représente un conteneur utilisé par des widgets
 	/// intelligents, remplis par data binding.
 	/// </summary>
-	public class Placeholder : AbstractGroup, Widgets.Layouts.IGridPermeable
+	public class Placeholder : AbstractPlaceholder, Widgets.Layouts.IGridPermeable
 	{
 		public Placeholder()
 		{
@@ -35,76 +35,6 @@ namespace Epsitec.Common.UI
 				}
 				
 				return this.editPanel;
-			}
-		}
-
-		public Binding							ValueBinding
-		{
-			get
-			{
-				return this.GetBinding (Placeholder.ValueProperty);
-			}
-		}
-		
-		public BindingExpression				ValueBindingExpression
-		{
-			get
-			{
-				return this.GetBindingExpression (Placeholder.ValueProperty);
-			}
-		}
-
-
-		public INamedType						ValueType
-		{
-			get
-			{
-				return this.valueType;
-			}
-		}
-
-		public string							ValueName
-		{
-			get
-			{
-				return this.valueName;
-			}
-		}
-		
-		public Caption							ValueCaption
-		{
-			get
-			{
-				BindingExpression expression = this.ValueBindingExpression;
-				
-				if (expression == null)
-				{
-					return null;
-				}
-
-				Support.Druid captionId = expression.GetSourceCaptionId ();
-
-				if (captionId.IsEmpty)
-				{
-					return null;
-				}
-				
-				Support.ResourceManager manager = Widgets.Helpers.VisualTree.GetResourceManager (this);
-				
-				return Support.CaptionCache.Instance.GetCaption (manager, captionId);
-			}
-		}
-		
-		
-		public object							Value
-		{
-			get
-			{
-				return this.GetValue (Placeholder.ValueProperty);
-			}
-			set
-			{
-				this.SetValue (Placeholder.ValueProperty, value);
 			}
 		}
 
@@ -182,16 +112,11 @@ namespace Epsitec.Common.UI
 			
 			base.LayoutArrange (engine);
 		}
-		
-		protected override void OnBindingChanged(DependencyProperty property)
-		{
-			if (property == Placeholder.ValueProperty)
-			{
-				this.UpdateController ();
-				this.UpdateValueType ();
-			}
 
-			base.OnBindingChanged (property);
+		protected override void OnValueBindingChanged()
+		{
+			this.UpdateController ();
+			base.OnValueBindingChanged ();
 		}
 
 		protected override void OnBoundsChanged(Drawing.Rectangle oldValue, Drawing.Rectangle newValue)
@@ -289,60 +214,31 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		internal INamedType UpdateValueType()
+		protected override void UpdateValueType(object oldValueType, object newValueType)
 		{
-			INamedType oldValueType = this.valueType;
-			INamedType newValueType = null;
-			string oldValueName = this.valueName;
-			string newValueName = null;
+			this.UpdateController ();
+			base.UpdateValueType (oldValueType, newValueType);
 			
-			BindingExpression expression = this.GetBindingExpression (Placeholder.ValueProperty);
-
-			if (expression != null)
-			{
-				newValueType = expression.GetSourceNamedType ();
-				newValueName = expression.GetSourceName ();
-			}
-
-			this.valueType = newValueType;
-			this.valueName = newValueName;
-
-			if (oldValueType == newValueType)
-			{
-				//	OK, do nothing...
-			}
-			else if ((oldValueType == null) ||
-				/**/ (oldValueType.Equals (newValueType) == false))
-			{
-				this.UpdateValueType (oldValueType, newValueType);
-			}
-
-			if (oldValueName != newValueName)
-			{
-				this.UpdateValueName (oldValueName, newValueName);
-			}
-			
-			return this.valueType;
-		}
-
-		private void UpdateValueType(object oldValueType, object newValueType)
-		{
 			if (this.controller != null)
 			{
 				Application.QueueAsyncCallback (this.RecreateUserInterface);
 			}
 		}
 
-		private void UpdateValueName(string oldValueName, string newValueName)
+		protected override void UpdateValueName(string oldValueName, string newValueName)
 		{
+			base.UpdateValueName (oldValueName, newValueName);
+			
 			if (this.controller != null)
 			{
 				Application.QueueAsyncCallback (this.RecreateUserInterface);
 			}
 		}
 
-		private void UpdateValue(object oldValue, object newValue)
+		protected override void UpdateValue(object oldValue, object newValue)
 		{
+			base.UpdateValue (oldValue, newValue);
+			
 			if (this.controller != null)
 			{
 				Application.ExecuteAsyncCallbacks ();
@@ -390,15 +286,6 @@ namespace Epsitec.Common.UI
 			Controllers.Factory.Setup ();
 		}
 
-		private static void NotifyValueChanged(DependencyObject o, object oldValue, object newValue)
-		{
-			Placeholder that = (Placeholder) o;
-
-			that.UpdateController ();
-			that.UpdateValueType ();
-			that.UpdateValue (oldValue, newValue);
-		}
-
 		private static void NotifyControllerChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			Placeholder that = (Placeholder) o;
@@ -406,16 +293,12 @@ namespace Epsitec.Common.UI
 			that.UpdateController ();
 		}
 		
-		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (object), typeof (Placeholder), new DependencyPropertyMetadata (Placeholder.NotifyValueChanged));
 		public static readonly DependencyProperty ControllerProperty = DependencyProperty.Register ("Controller", typeof (string), typeof (Placeholder), new DependencyPropertyMetadata (Placeholder.NotifyControllerChanged));
 		public static readonly DependencyProperty ControllerParameterProperty = DependencyProperty.Register ("ControllerParameter", typeof (string), typeof (Placeholder), new DependencyPropertyMetadata (Placeholder.NotifyControllerChanged));
-
 
 		static readonly NoOpGridPermeableHelper	noOpGridPermeableHelper = new NoOpGridPermeableHelper ();
 		
 		private IController						controller;
-		private INamedType						valueType;
-		private string							valueName;
 		private string							controllerName;
 		private string							controllerParameter;
 		private MiniPanel						editPanel;

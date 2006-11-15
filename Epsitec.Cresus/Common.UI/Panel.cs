@@ -197,6 +197,11 @@ namespace Epsitec.Common.UI
 			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagResourceManager, resourceManager);
 		}
 
+		/// <summary>
+		/// Serializes the specified panel.
+		/// </summary>
+		/// <param name="panel">The panel.</param>
+		/// <returns>An XML representation of the panel.</returns>
 		public static string SerializePanel(Panel panel)
 		{
 			DataSource              dataSource = panel.DataSource;
@@ -208,7 +213,7 @@ namespace Epsitec.Common.UI
 
 			using (Types.Serialization.Context context = new Types.Serialization.SerializerContext (new Types.Serialization.IO.XmlWriter (xmlWriter)))
 			{
-				UI.Panel.FillSerializationContext (context, dataSource, manager);
+				Panel.FillSerializationContext (context, dataSource, manager);
 
 				xmlWriter.Formatting = System.Xml.Formatting.None;
 				xmlWriter.WriteStartElement ("panel");
@@ -225,7 +230,14 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public static UI.Panel DeserializePanel(string xml, DataSource dataSource, Support.ResourceManager manager)
+		/// <summary>
+		/// Deserializes the panel from an XML representation.
+		/// </summary>
+		/// <param name="xml">The XML representation.</param>
+		/// <param name="dataSource">The data source (or <c>null</c>).</param>
+		/// <param name="manager">The resource manager.</param>
+		/// <returns>A live <c>Panel</c>.</returns>
+		public static Panel DeserializePanel(string xml, DataSource dataSource, Support.ResourceManager manager)
 		{
 			System.IO.StringReader stringReader = new System.IO.StringReader (xml);
 			System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (stringReader);
@@ -237,9 +249,9 @@ namespace Epsitec.Common.UI
 
 			Types.Serialization.Context context = new Types.Serialization.DeserializerContext (new Types.Serialization.IO.XmlReader (xmlReader));
 
-			UI.Panel.FillSerializationContext (context, dataSource, manager);
+			Panel.FillSerializationContext (context, dataSource, manager);
 
-			UI.Panel panel = Types.Storage.Deserialize (context) as UI.Panel;
+			Panel panel = Types.Storage.Deserialize (context) as Panel;
 
 			System.Diagnostics.Debug.Assert (panel.DataSource == dataSource);
 			System.Diagnostics.Debug.Assert (panel.ResourceManager == manager);

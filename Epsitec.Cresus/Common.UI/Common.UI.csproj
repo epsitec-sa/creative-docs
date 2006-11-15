@@ -117,6 +117,7 @@
     <Compile Include="Controllers\Factory.cs" />
     <Compile Include="Controllers\NumericController.cs" />
     <Compile Include="Controllers\StringController.cs" />
+    <Compile Include="AbstractPlaceholder.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="MiniPanel.cs" />
     <Compile Include="PanelMode.cs" />
