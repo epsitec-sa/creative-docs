@@ -56,14 +56,20 @@ namespace Epsitec.Common.UI.Panels
 			graphics.AddFilledRectangle (Drawing.Rectangle.Intersection (clipRect, this.Client.Bounds));
 			graphics.RenderSolid (Drawing.Color.FromRgb (1, 1, 1));
 		}
-		
+
 		private static object GetOwnerValue(DependencyObject obj)
 		{
 			EditPanel panel = (EditPanel) obj;
 			return panel.Owner;
 		}
 
-		public static DependencyProperty OwnerProperty = DependencyProperty.RegisterReadOnly ("Owner", typeof (Panel), typeof (EditPanel), new DependencyPropertyMetadata (EditPanel.GetOwnerValue).MakeReadOnlySerializable ());
+		private static void SetOwnerValue(DependencyObject obj, object value)
+		{
+			EditPanel panel = (EditPanel) obj;
+			panel.owner = (Panel) value;
+		}
+
+		public static DependencyProperty OwnerProperty = DependencyProperty.Register ("Owner", typeof (Panel), typeof (EditPanel), new DependencyPropertyMetadata (EditPanel.GetOwnerValue, EditPanel.SetOwnerValue));
 		
 		private Panel owner;
 	}

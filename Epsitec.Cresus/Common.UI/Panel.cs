@@ -181,7 +181,7 @@ namespace Epsitec.Common.UI
 				case PanelMode.Default:
 					return this;
 			}
-			
+
 			return null;
 		}
 		
@@ -269,11 +269,15 @@ namespace Epsitec.Common.UI
 					this.isDataContextChangeHandlerRegistered = false;
 				}
 
-				if (this.editionPanel != null)
+				if (this.PanelMode == PanelMode.Default)
 				{
-					this.editionPanel.Dispose ();
-					this.editionPanel = null;
+					if (this.editionPanel != null)
+					{
+						this.editionPanel.Dispose ();
+					}
 				}
+
+				this.editionPanel = null;
 			}
 
 			base.Dispose (disposing);

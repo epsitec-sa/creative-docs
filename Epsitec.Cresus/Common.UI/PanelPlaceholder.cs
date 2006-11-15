@@ -101,6 +101,7 @@ namespace Epsitec.Common.UI
 
 				this.panel = Panel.DeserializePanel (field.AsString, null, manager);
 				this.panel.SetEmbedder (this);
+				this.panel.Dock = Widgets.DockStyle.Fill;
 			}
 		}
 

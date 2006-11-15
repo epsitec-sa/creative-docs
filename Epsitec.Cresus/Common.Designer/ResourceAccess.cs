@@ -1287,6 +1287,10 @@ namespace Epsitec.Common.Designer
 		#region Direct
 		public Type DirectGetType(Druid druid)
 		{
+			if (this.type == Type.Panels)
+			{
+				return Type.Panels;
+			}
 			//	Retourne le type d'une ressource 'Caption'.
 			System.Diagnostics.Debug.Assert(this.IsCaptionsType);
 			string name = this.DirectGetName(druid);
@@ -1309,6 +1313,17 @@ namespace Epsitec.Common.Designer
 
 		public string DirectGetName(Druid druid)
 		{
+			if (this.type == Type.Panels)
+			{
+				foreach (ResourceBundle bundle in this.panelsList)
+				{
+					if (bundle.Id == druid)
+					{
+						return bundle.Caption;
+					}
+				}
+				return "?";
+			}
 			//	Retourne le nom d'une ressource, sans tenir compte du filtre.
 			//	La recherche s'effectue toujours dans la culture de base.
 			System.Diagnostics.Debug.Assert(this.IsBundlesType);
