@@ -181,6 +181,11 @@ namespace Epsitec.Common.UI
 			base.OnBindingChanged (property);
 		}
 
+		protected override void OnBoundsChanged(Drawing.Rectangle oldValue, Drawing.Rectangle newValue)
+		{
+			base.OnBoundsChanged (oldValue, newValue);
+		}
+
 		private void UpdateController()
 		{
 			string oldControllerName = this.controllerName;
@@ -390,7 +395,7 @@ namespace Epsitec.Common.UI
 		private IController						controller;
 		private INamedType						valueType;
 		private string							valueName;
-		private string controllerName;
-		private string controllerParameter;
+		private string							controllerName;
+		private string							controllerParameter;
 	}
 }

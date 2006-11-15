@@ -1,9 +1,12 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+using Epsitec.Common.UI;
+
 using System.Collections.Generic;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.UI.PanelStack))]
+[assembly: DependencyClass (typeof (PanelStack))]
 
 namespace Epsitec.Common.UI
 {
@@ -12,6 +15,7 @@ namespace Epsitec.Common.UI
 		public PanelStack()
 		{
 			this.editPanels = new Stack<Panel> ();
+			this.miniPanels = new List<MiniPanel> ();
 			this.mask = new PanelMask (this);
 			this.mask.Hide ();
 		}
@@ -21,24 +25,14 @@ namespace Epsitec.Common.UI
 		{
 			this.editPanels.Push (panel);
 
-			panel.Owner.BoundsChanged += this.HandleOwnerBoundsChanged;
+			panel.Owner.BoundsChanged += this.HandlePanelOwnerBoundsChanged;
 			panel.SetParent (this);
+			panel.ZOrder = 0;
 			
 			this.UpdateEditPanelBounds (panel);
 			
 			panel.Show ();
 			panel.SetFocusOnTabWidget ();
-		}
-
-		private void HandleOwnerBoundsChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
-		{
-			foreach (Panel panel in this.editPanels)
-			{
-				if (panel.Owner == sender)
-				{
-					this.UpdateEditPanelBounds (panel);
-				}
-			}
 		}
 
 		public void EndEdition()
@@ -58,7 +52,7 @@ namespace Epsitec.Common.UI
 
 					item.Hide ();
 					
-					item.Owner.BoundsChanged -= this.HandleOwnerBoundsChanged;
+					item.Owner.BoundsChanged -= this.HandlePanelOwnerBoundsChanged;
 				}
 				while (item != panel);
 
@@ -70,6 +64,30 @@ namespace Epsitec.Common.UI
 			else
 			{
 				return false;
+			}
+		}
+
+		internal void Add(MiniPanel panel)
+		{
+			this.miniPanels.Add (panel);
+
+			panel.ApertureChanged += this.HandleMiniPanelApertureChanged;
+			panel.SetParent (this);
+			panel.ZOrder = 0;
+
+			this.UpdateMiniPanelBounds (panel);
+
+			panel.Show ();
+			panel.SetFocusOnTabWidget ();
+		}
+
+		internal void Remove(MiniPanel panel)
+		{
+			if (this.miniPanels.Contains (panel))
+			{
+				this.miniPanels.Remove (panel);
+
+				panel.ApertureChanged -= this.HandleMiniPanelApertureChanged;
 			}
 		}
 
@@ -97,6 +115,30 @@ namespace Epsitec.Common.UI
 			this.mask.SetManualBounds (new Drawing.Rectangle (0, 0, newRect.Width, newRect.Height));
 		}
 
+		private void HandlePanelOwnerBoundsChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			foreach (Panel panel in this.editPanels)
+			{
+				if (panel.Owner == sender)
+				{
+					this.UpdateEditPanelBounds (panel);
+					break;
+				}
+			}
+		}
+
+		private void HandleMiniPanelApertureChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			foreach (MiniPanel panel in this.miniPanels)
+			{
+				if (panel == sender)
+				{
+					this.UpdateMiniPanelBounds (panel);
+					break;
+				}
+			}
+		}
+
 		private void UpdateEditPanelBounds(Panel panel)
 		{
 			System.Diagnostics.Debug.Assert (this.editPanels.Count > 0);
@@ -118,14 +160,29 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		private void UpdateMiniPanelBounds(MiniPanel panel)
+		{
+			System.Diagnostics.Debug.Assert (this.miniPanels.Count > 0);
+			System.Diagnostics.Debug.Assert (this.miniPanels.Contains (panel));
+
+			Drawing.Rectangle stackBounds = this.Client.Bounds;
+			Drawing.Rectangle panelBounds = new Drawing.Rectangle (0, 0, System.Math.Max (panel.PreferredWidth, panel.MinWidth), System.Math.Max (panel.PreferredHeight, panel.MinHeight));
+			Drawing.Rectangle ownerBounds = panel.Aperture;
+
+			panelBounds.Offset (ownerBounds.Left, ownerBounds.Center.Y-panelBounds.Center.Y);
+
+			panel.SetManualBounds (Drawing.Rectangle.Constrain (panelBounds, stackBounds));
+		}
+
 		private void UpdateMask()
 		{
 			if (this.editPanels.Count > 0)
 			{
 				Panel topPanel = this.editPanels.Peek ();
-				
+
 				this.mask.Aperture = topPanel.ActualBounds;
-				this.mask.ZOrder = 1;
+				this.mask.ZOrder = 0;
+				this.mask.ZOrder = topPanel.ZOrder;
 				this.mask.Show ();
 			}
 			else
@@ -135,6 +192,7 @@ namespace Epsitec.Common.UI
 		}
 
 		private Stack<Panel> editPanels;
+		private List<MiniPanel> miniPanels;
 		private PanelMask mask;
 	}
 }

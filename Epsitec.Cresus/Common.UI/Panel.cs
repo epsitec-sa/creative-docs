@@ -1,10 +1,12 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System.Collections.Generic;
 using Epsitec.Common.Types;
+using Epsitec.Common.UI;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.UI.Panel))]
+using System.Collections.Generic;
+
+[assembly: DependencyClass (typeof (Panel))]
 
 namespace Epsitec.Common.UI
 {

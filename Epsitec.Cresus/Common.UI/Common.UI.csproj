@@ -118,6 +118,7 @@
     <Compile Include="Controllers\NumericController.cs" />
     <Compile Include="Controllers\StringController.cs" />
     <Compile Include="IController.cs" />
+    <Compile Include="MiniPanel.cs" />
     <Compile Include="PanelMode.cs" />
     <Compile Include="PanelMask.cs" />
     <Compile Include="DataSource.cs" />
