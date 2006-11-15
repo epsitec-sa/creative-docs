@@ -23,47 +23,56 @@ namespace Epsitec.Common.UI
 		{
 			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
 		}
-		
+
 		[Test]
-		public void CheckSerialization()
+		public void CheckDataContext()
 		{
-			Support.ResourceManager manager = new Support.ResourceManager ();
-			
 			Panel panel = new Panel ();
-			panel.ResourceManager = manager;
+			DataSourceMetadata metadata = panel.DataSourceMetadata;
+			DataSource source1 = new DataSource ();
+			DataSource source2 = new DataSource ();
 
-			Widgets.Widget a = new Widgets.Widget ();
-			Widgets.Widget b = new Widgets.Widget ();
-			Widgets.Widget c = new Widgets.Widget ();
+			panel.DataSource = source1;
 
-			a.Name = "a";
-			b.Name = "b";
-			c.Name = "c";
+			Widgets.Widget    root  = new Widgets.Widget ();
+			Widgets.TextField field = new Widgets.TextField (panel);
 
-			panel.Children.Add (a);
-			panel.Children.Add (b);
+			Binding binding;
 
-			panel.PreferredSize = new Drawing.Size (100, 80);
+			binding = DataObject.GetDataContext (panel);
 
-			string xml;
-			Panel copy;
+			Assert.AreEqual (source1, binding.Source);
+			Assert.AreEqual (null, binding.Path);
+
+			binding = DataObject.GetDataContext (field);
+
+			Assert.AreEqual (source1, binding.Source);
+			Assert.AreEqual (null, binding.Path);
 			
-			xml = Panel.SerializePanel (panel);
-			System.Console.Out.WriteLine ("{0}", xml);
-			copy = Panel.DeserializePanel (xml, null, manager);
-			
-			panel.EditionPanel.Children.Add (c);
-			panel.EditionPanel.PreferredSize = new Drawing.Size (200, 96);
-			
-			xml = Panel.SerializePanel (panel);
-			System.Console.Out.WriteLine ("{0}", xml);
-			copy = Panel.DeserializePanel (xml, null, manager);
+			DataObject.SetDataContext (root, new Binding (this, "Dummy"));
 
-			Assert.AreEqual (PanelMode.Default, copy.PanelMode);
-			Assert.AreEqual (2, Collection.Count<Widgets.Visual> (copy.Children));
-			Assert.AreEqual (1, Collection.Count<Widgets.Visual> (copy.EditionPanel.Children));
-			Assert.AreEqual (new Drawing.Size (100, 80), copy.PreferredSize);
-			Assert.AreEqual (new Drawing.Size (200, 96), copy.EditionPanel.PreferredSize);
+			binding = DataObject.GetDataContext (root);
+
+			Assert.AreEqual (this, binding.Source);
+			Assert.AreEqual ("Dummy", binding.Path);
+
+			//	Verify that the edition panel inherits the data context of its
+			//	owner panel, not from its parent widget.
+			
+			Panel edition = panel.GetPanel (PanelMode.Edition);
+			edition.SetEmbedder (root);
+
+			binding = DataObject.GetDataContext (edition);
+
+			Assert.AreEqual (source1, binding.Source);
+			Assert.AreEqual (null, binding.Path);
+
+			panel.DataSource = source2;
+
+			binding = DataObject.GetDataContext (edition);
+
+			Assert.AreEqual (source2, binding.Source);
+			Assert.AreEqual (null, binding.Path);
 		}
 
 		[Test]
@@ -152,6 +161,48 @@ namespace Epsitec.Common.UI
 			window.Show ();
 			
 			Widgets.Window.RunInTestEnvironment (window);
+		}
+
+		[Test]
+		public void CheckSerialization()
+		{
+			Support.ResourceManager manager = new Support.ResourceManager ();
+
+			Panel panel = new Panel ();
+			panel.ResourceManager = manager;
+
+			Widgets.Widget a = new Widgets.Widget ();
+			Widgets.Widget b = new Widgets.Widget ();
+			Widgets.Widget c = new Widgets.Widget ();
+
+			a.Name = "a";
+			b.Name = "b";
+			c.Name = "c";
+
+			panel.Children.Add (a);
+			panel.Children.Add (b);
+
+			panel.PreferredSize = new Drawing.Size (100, 80);
+
+			string xml;
+			Panel copy;
+
+			xml = Panel.SerializePanel (panel);
+			System.Console.Out.WriteLine ("{0}", xml);
+			copy = Panel.DeserializePanel (xml, null, manager);
+
+			panel.EditionPanel.Children.Add (c);
+			panel.EditionPanel.PreferredSize = new Drawing.Size (200, 96);
+
+			xml = Panel.SerializePanel (panel);
+			System.Console.Out.WriteLine ("{0}", xml);
+			copy = Panel.DeserializePanel (xml, null, manager);
+
+			Assert.AreEqual (PanelMode.Default, copy.PanelMode);
+			Assert.AreEqual (2, Collection.Count<Widgets.Visual> (copy.Children));
+			Assert.AreEqual (1, Collection.Count<Widgets.Visual> (copy.EditionPanel.Children));
+			Assert.AreEqual (new Drawing.Size (100, 80), copy.PreferredSize);
+			Assert.AreEqual (new Drawing.Size (200, 96), copy.EditionPanel.PreferredSize);
 		}
 	}
 }
