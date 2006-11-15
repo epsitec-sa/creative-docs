@@ -349,6 +349,10 @@ namespace Epsitec.Common.Designer
 			{
 				return true;
 			}
+			else if (obj is UI.PanelPlaceholder)
+			{
+				return true;
+			}
 
 			return false;
 		}
@@ -384,6 +388,10 @@ namespace Epsitec.Common.Designer
 				return true;
 			}
 			else if (obj is FrameBox)
+			{
+				return true;
+			}
+			else if (obj is UI.PanelPlaceholder)
 			{
 				return true;
 			}

@@ -66,6 +66,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.VToolBarAdd(Widgets.Command.Get("ObjectText"));
 			this.VToolBarAdd(Widgets.Command.Get("ObjectGroup"));
 			this.VToolBarAdd(Widgets.Command.Get("ObjectGroupBox"));
+			this.VToolBarAdd(Widgets.Command.Get("ObjectPanel"));
 
 			this.scrollable = new Scrollable(this);
 			this.scrollable.MinWidth = 100;

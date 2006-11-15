@@ -1481,6 +1481,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 				item = group;
 			}
 
+			if (this.context.Tool == "ObjectPanel")
+			{
+				UI.PanelPlaceholder panel = new UI.PanelPlaceholder();
+				panel.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
+				panel.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+				panel.Text = Misc.Italic("Panel");
+				panel.PreferredSize = new Size(200, 100);
+				panel.MinWidth = 50;
+				panel.MinHeight = 50;
+
+				item = panel;
+			}
+
 			return item;
 		}
 
@@ -1512,13 +1525,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Choix de la ressource (un Druid) pour l'objet.
 			//	Retourne false s'il fallait choisir un Druid et que l'utilisateur ne l'a pas fait.
-			if (obj is AbstractButton || obj is StaticText || obj is GroupBox)
+			if (obj is AbstractButton || obj is StaticText || obj is GroupBox || obj is UI.PanelPlaceholder)
 			{
 				ResourceAccess.Type type;
 
 				if (obj is AbstractButton)
 				{
 					type = ResourceAccess.Type.Commands;
+				}
+				else if (obj is UI.PanelPlaceholder)
+				{
+					type = ResourceAccess.Type.Panels;
 				}
 				else
 				{

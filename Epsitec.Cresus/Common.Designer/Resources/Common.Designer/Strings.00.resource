@@ -175,6 +175,7 @@
   <data name="Action.ObjectStatic" id="0C3">Texte fixe</data>
   <data name="Action.ObjectGroup" id="0D3">Groupe invisible</data>
   <data name="Action.ObjectGroupBox" id="055" mod="1">Groupe avec cadre et étiquette</data>
+  <data name="Action.ObjectPanel" id="098">Interface imbriquée</data>
   <data name="StringCollection.Add" id="0E5" mod="1">Créer un nouveau texte</data>
   <data name="StringCollection.Duplicate" id="0F5" mod="1">Dupliquer le texte</data>
   <data name="StringCollection.Remove" id="0G5" mod="1">Supprimer le texte</data>

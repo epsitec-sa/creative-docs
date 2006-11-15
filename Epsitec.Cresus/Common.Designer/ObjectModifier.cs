@@ -115,7 +115,7 @@ namespace Epsitec.Common.Designer
 		public bool HasDruid(Widget obj)
 		{
 			//	Indique si l'objet a un druid.
-			return (obj is AbstractButton || obj is StaticText || obj is GroupBox);
+			return (obj is AbstractButton || obj is StaticText || obj is GroupBox || obj is UI.PanelPlaceholder);
 		}
 
 		public void SetDruid(Widget obj, string druid)
@@ -135,6 +135,10 @@ namespace Epsitec.Common.Designer
 			{
 				obj.CaptionId = d;
 			}
+			else if (obj is UI.PanelPlaceholder)
+			{
+				//	TODO:
+			}
 		}
 
 		public string GetDruid(Widget obj)
@@ -149,6 +153,10 @@ namespace Epsitec.Common.Designer
 			else if (obj is StaticText || obj is GroupBox)
 			{
 				druid = obj.CaptionId;
+			}
+			else if (obj is UI.PanelPlaceholder)
+			{
+				//	TODO:
 			}
 
 			return druid.ToString();

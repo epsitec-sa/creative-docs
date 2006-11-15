@@ -767,6 +767,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommandTool("ObjectStatic");
 			this.UpdateCommandTool("ObjectGroup");
 			this.UpdateCommandTool("ObjectGroupBox");
+			this.UpdateCommandTool("ObjectPanel");
 
 			this.GetCommandState("Save").Enable = this.module.IsDirty;
 			this.GetCommandState("SaveAs").Enable = true;

@@ -277,6 +277,7 @@ namespace Epsitec.Common.Designer
 				public static string ObjectGroup { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (109)); } }
 				public static string ObjectGroupBox { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (165)); } }
 				public static string ObjectHLine { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (104)); } }
+				public static string ObjectPanel { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (265)); } }
 				public static string ObjectRectButton { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (238)); } }
 				public static string ObjectSquareButton { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (106)); } }
 				public static string ObjectStatic { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (108)); } }
