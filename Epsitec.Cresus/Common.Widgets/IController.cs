@@ -1,9 +1,11 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Widgets;
+
 using System.Collections.Generic;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.UI
 {
 	/// <summary>
 	/// The <c>IController</c> interface is used by the <see cref="T:Placeholder"/>
@@ -34,7 +36,7 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		/// <returns>Object implementing interface <see cref="T:Layouts.IGridPermeable"/>
 		/// for this controller, or <c>null</c>.</returns>
-		Layouts.IGridPermeable GetGridPermeableLayoutHelper();
+		Widgets.Layouts.IGridPermeable GetGridPermeableLayoutHelper();
 		
 		/// <summary>
 		/// Gets or sets the placeholder associated with this controller.

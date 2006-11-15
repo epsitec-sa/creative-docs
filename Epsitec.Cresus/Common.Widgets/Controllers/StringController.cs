@@ -3,14 +3,15 @@
 
 using System.Collections.Generic;
 
+using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
-[assembly: Controller (typeof (Epsitec.Common.Widgets.Controllers.StringController))]
+[assembly: Controller (typeof (Epsitec.Common.UI.Controllers.StringController))]
 
-namespace Epsitec.Common.Widgets.Controllers
+namespace Epsitec.Common.UI.Controllers
 {
-	public class StringController : AbstractController, Layouts.IGridPermeable
+	public class StringController : AbstractController, Widgets.Layouts.IGridPermeable
 	{
 		public StringController(string parameter)
 		{
@@ -21,7 +22,7 @@ namespace Epsitec.Common.Widgets.Controllers
 			return this.field.Text;
 		}
 
-		protected override Layouts.IGridPermeable GetGridPermeableLayoutHelper()
+		protected override Widgets.Layouts.IGridPermeable GetGridPermeableLayoutHelper()
 		{
 			return this;
 		}
@@ -93,13 +94,13 @@ namespace Epsitec.Common.Widgets.Controllers
 		
 		#region IGridPermeable Members
 
-		IEnumerable<Layouts.PermeableCell> Layouts.IGridPermeable.GetChildren(int column, int row, int columnSpan, int rowSpan)
+		IEnumerable<Widgets.Layouts.PermeableCell> Widgets.Layouts.IGridPermeable.GetChildren(int column, int row, int columnSpan, int rowSpan)
 		{
-			yield return new Layouts.PermeableCell (this.label, column+0, row+0, 1, 1);
-			yield return new Layouts.PermeableCell (this.field, column+1, row+0, columnSpan-1, 1);
+			yield return new Widgets.Layouts.PermeableCell (this.label, column+0, row+0, 1, 1);
+			yield return new Widgets.Layouts.PermeableCell (this.field, column+1, row+0, columnSpan-1, 1);
 		}
 
-		bool Layouts.IGridPermeable.UpdateGridSpan(ref int columnSpan, ref int rowSpan)
+		bool Widgets.Layouts.IGridPermeable.UpdateGridSpan(ref int columnSpan, ref int rowSpan)
 		{
 			columnSpan = System.Math.Max (columnSpan, 2);
 			rowSpan    = System.Math.Max (rowSpan, 1);

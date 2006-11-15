@@ -2,15 +2,17 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
+
 using System.Collections.Generic;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.UI
 {
 	/// <summary>
 	/// La classe Placeholder représente un conteneur utilisé par des widgets
 	/// intelligents, remplis par data binding.
 	/// </summary>
-	public class Placeholder : AbstractGroup, Layouts.IGridPermeable
+	public class Placeholder : AbstractGroup, Widgets.Layouts.IGridPermeable
 	{
 		public Placeholder()
 		{
@@ -74,7 +76,7 @@ namespace Epsitec.Common.Widgets
 					return null;
 				}
 				
-				Support.ResourceManager manager = Helpers.VisualTree.GetResourceManager (this);
+				Support.ResourceManager manager = Widgets.Helpers.VisualTree.GetResourceManager (this);
 				
 				return Support.CaptionCache.Instance.GetCaption (manager, captionId);
 			}
@@ -117,11 +119,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private Layouts.IGridPermeable			ControllerIGridPermeable
+		private Widgets.Layouts.IGridPermeable	ControllerIGridPermeable
 		{
 			get
 			{
-				Layouts.IGridPermeable helper = null;
+				Widgets.Layouts.IGridPermeable helper = null;
 
 				if ((this.controller == null) &&
 					(this.controllerName != null))
@@ -146,17 +148,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override void LayoutArrange(Layouts.ILayoutEngine engine)
+		protected override void LayoutArrange(Widgets.Layouts.ILayoutEngine engine)
 		{
 			Widget parent = this.Parent;
 			
 			if ((parent != null) &&
-				(Layouts.GridLayoutEngine.GetColumn (this) >= 0) &&
-				(Layouts.GridLayoutEngine.GetRow (this) >= 0))
+				(Widgets.Layouts.GridLayoutEngine.GetColumn (this) >= 0) &&
+				(Widgets.Layouts.GridLayoutEngine.GetRow (this) >= 0))
 			{
-				Layouts.ILayoutEngine parentEngine = Layouts.LayoutEngine.GetLayoutEngine (parent);
-				
-				if (parentEngine is Layouts.GridLayoutEngine)
+				Widgets.Layouts.ILayoutEngine parentEngine = Widgets.Layouts.LayoutEngine.GetLayoutEngine (parent);
+
+				if (parentEngine is Widgets.Layouts.GridLayoutEngine)
 				{
 					//	This placeholder is in a grid. No need to arrange the children;
 					//	they get arranged by the grid itself !
@@ -324,12 +326,12 @@ namespace Epsitec.Common.Widgets
 
 		#region IGridPermeable Members
 
-		IEnumerable<Layouts.PermeableCell> Layouts.IGridPermeable.GetChildren(int column, int row, int columnSpan, int rowSpan)
+		IEnumerable<Widgets.Layouts.PermeableCell> Widgets.Layouts.IGridPermeable.GetChildren(int column, int row, int columnSpan, int rowSpan)
 		{
 			return this.ControllerIGridPermeable.GetChildren (column, row, columnSpan, rowSpan);
 		}
 
-		bool Layouts.IGridPermeable.UpdateGridSpan(ref int columnSpan, ref int rowSpan)
+		bool Widgets.Layouts.IGridPermeable.UpdateGridSpan(ref int columnSpan, ref int rowSpan)
 		{
 			return this.ControllerIGridPermeable.UpdateGridSpan (ref columnSpan, ref rowSpan);
 		}
@@ -338,11 +340,11 @@ namespace Epsitec.Common.Widgets
 
 		#region NoOpGridPermeableHelper Class
 
-		private class NoOpGridPermeableHelper : Layouts.IGridPermeable
+		private class NoOpGridPermeableHelper : Widgets.Layouts.IGridPermeable
 		{
 			#region IGridPermeable Members
 
-			public IEnumerable<Layouts.PermeableCell> GetChildren(int column, int row, int columnSpan, int rowSpan)
+			public IEnumerable<Widgets.Layouts.PermeableCell> GetChildren(int column, int row, int columnSpan, int rowSpan)
 			{
 				yield break;
 			}

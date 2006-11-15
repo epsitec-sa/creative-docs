@@ -1,15 +1,15 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-namespace Epsitec.Common.Widgets.Validators
+namespace Epsitec.Common.UI.Validators
 {
-	public class ControllerBasedValidator : AbstractValidator
+	public class ControllerBasedValidator : Widgets.Validators.AbstractValidator
 	{
 		public ControllerBasedValidator() : base (null)
 		{
 		}
 
-		public ControllerBasedValidator(Widget widget, Controllers.AbstractController controller) : base (widget)
+		public ControllerBasedValidator(Widgets.Widget widget, UI.Controllers.AbstractController controller) : base (widget)
 		{
 			this.controller = controller;
 		}
@@ -21,16 +21,16 @@ namespace Epsitec.Common.Widgets.Validators
 			if ((this.controller != null) &&
 				(this.controller.IsValidValue (this.controller.GetActualValue ())))
 			{
-				this.SetState (ValidationState.Ok);
+				this.SetState (Widgets.ValidationState.Ok);
 			}
 			else
 			{
-				this.SetState (ValidationState.Error);
+				this.SetState (Widgets.ValidationState.Error);
 			}
 		}
 		
 		
-		protected override void AttachWidget(Widget widget)
+		protected override void AttachWidget(Widgets.Widget widget)
 		{
 			base.AttachWidget (widget);
 
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Widgets.Validators
 			}
 		}
 		
-		protected override void DetachWidget(Widget widget)
+		protected override void DetachWidget(Widgets.Widget widget)
 		{
 			if (this.controller != null)
 			{

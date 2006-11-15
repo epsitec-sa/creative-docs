@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using NUnit.Framework;
+using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
@@ -27,8 +28,8 @@ namespace Epsitec.Common.Widgets
 		[Test]
 		public void CheckControllerCreation()
 		{
-			IController c1 = Controllers.Factory.CreateController ("Test1", "x");
-			IController c2 = Controllers.Factory.CreateController ("Test1", "y");
+			IController c1 = UI.Controllers.Factory.CreateController ("Test1", "x");
+			IController c2 = UI.Controllers.Factory.CreateController ("Test1", "y");
 
 			Assert.IsNotNull (c1);
 			Assert.IsNotNull (c2);
@@ -497,7 +498,7 @@ namespace Epsitec.Common.Widgets
 
 		#region TestController1 Class
 
-		internal class Test1Controller : Controllers.AbstractController
+		internal class Test1Controller : UI.Controllers.AbstractController
 		{
 			public Test1Controller(string parameter)
 			{

@@ -2,9 +2,11 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
+
 using System.Collections.Generic;
 
-namespace Epsitec.Common.Widgets.Controllers
+namespace Epsitec.Common.UI.Controllers
 {
 	using Assembly=System.Reflection.Assembly;
 

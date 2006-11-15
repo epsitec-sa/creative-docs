@@ -39,6 +39,7 @@ namespace Epsitec.Common.UI
 				if (oldSource != newSource)
 				{
 					this.dataSource = newSource;
+					this.dataSourceBinding = new Binding (this.dataSource);
 
 					if (oldSource != null)
 					{
@@ -49,7 +50,7 @@ namespace Epsitec.Common.UI
 						newSource.Metadata = this.dataSourceMetadata;
 					}
 					
-					this.SyncDataContextWithDataSource ();
+					this.SyncDataContext ();
 				}
 			}
 		}
@@ -117,6 +118,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets the edition panel.
+		/// </summary>
+		/// <value>The edition panel.</value>
 		public Panel							EditionPanel
 		{
 			get
@@ -125,6 +130,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets the search panel.
+		/// </summary>
+		/// <value>The search panel.</value>
 		public Panel							SearchPanel
 		{
 			get
@@ -133,6 +142,11 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets the panel for the specified panel mode.
+		/// </summary>
+		/// <param name="mode">The panel mode.</param>
+		/// <returns>The panel for the specified panel mode.</returns>
 		public virtual Panel GetPanel(PanelMode mode)
 		{
 			switch (mode)
@@ -141,7 +155,7 @@ namespace Epsitec.Common.UI
 					if (this.editionPanel == null)
 					{
 						this.editionPanel = new Panels.EditPanel (this);
-						DataObject.SetDataContext (this.editionPanel, DataObject.GetDataContext (this));
+						this.SyncDataContext (this.editionPanel);
 					}
 
 					return this.editionPanel;
@@ -168,23 +182,28 @@ namespace Epsitec.Common.UI
 			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagResourceManager, resourceManager);
 		}
 
-		private void SyncDataContextWithDataSource()
+		private void SyncDataContext()
 		{
-			if (this.dataSource == null)
-			{
-				DataObject.ClearDataContext (this);
-			}
-			else
-			{
-				DataObject.SetDataContext (this, new Binding (this.dataSource));
-			}
-			
-			if (this.editionPanel != null)
-			{
-				DataObject.SetDataContext (this.editionPanel, DataObject.GetDataContext (this));
-			}
+			this.SyncDataContext (this);
+			this.SyncDataContext (this.editionPanel);
+			//	...
 		}
 
+		private void SyncDataContext(Panel panel)
+		{
+			if (panel != null)
+			{
+				if (this.dataSourceBinding == null)
+				{
+					DataObject.ClearDataContext (panel);
+				}
+				else
+				{
+					DataObject.SetDataContext (panel, this.dataSourceBinding);
+				}
+			}
+		}
+		
 		private void HandlePanelModeChanged(PanelMode oldMode, PanelMode newMode)
 		{
 		}
@@ -237,6 +256,7 @@ namespace Epsitec.Common.UI
 		public static DependencyProperty SearchPanelProperty  = DependencyProperty.Register ("SearchPanel", typeof (Panels.EditPanel), typeof (Panel), new DependencyPropertyMetadata (Panel.GetSearchPanelValue, Panel.SetSearchPanelValue));
 		
 		private DataSource dataSource;
+		private Binding dataSourceBinding;
 		private DataSourceMetadata dataSourceMetadata;
 		private Panels.EditPanel editionPanel;
 	}

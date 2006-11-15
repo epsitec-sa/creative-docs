@@ -1,7 +1,8 @@
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
+using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Layouts;
-using Epsitec.Common.Support;
-using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Designer.MyWidgets
 {

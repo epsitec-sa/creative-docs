@@ -3,7 +3,8 @@
 
 using System.Collections.Generic;
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Widgets.Controllers;
+using Epsitec.Common.UI;
+using Epsitec.Common.UI.Controllers;
 using Epsitec.Common.Types;
 using Epsitec.Common.Support;
 

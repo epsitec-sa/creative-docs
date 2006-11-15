@@ -1,7 +1,8 @@
 using System.Collections.Generic;
-using Epsitec.Common.Types;
-using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
+using Epsitec.Common.UI;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Designer
 {

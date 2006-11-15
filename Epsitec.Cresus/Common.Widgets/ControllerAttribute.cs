@@ -1,9 +1,11 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Widgets;
+
 using System.Collections.Generic;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.UI
 {
 	[System.AttributeUsage(System.AttributeTargets.Assembly, AllowMultiple=true)]
 	public class ControllerAttribute : System.Attribute

@@ -2,9 +2,11 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
+
 using System.Collections.Generic;
 
-namespace Epsitec.Common.Widgets.Controllers
+namespace Epsitec.Common.UI.Controllers
 {
 	/// <summary>
 	/// La classe AbstractController sert de base à tous les contrôleurs qui lient
@@ -125,7 +127,7 @@ namespace Epsitec.Common.Widgets.Controllers
 			}
 		}
 
-		Layouts.IGridPermeable IController.GetGridPermeableLayoutHelper()
+		Widgets.Layouts.IGridPermeable IController.GetGridPermeableLayoutHelper()
 		{
 			return this.GetGridPermeableLayoutHelper ();
 		}
@@ -136,9 +138,9 @@ namespace Epsitec.Common.Widgets.Controllers
 		{
 			return UndefinedValue.Instance;
 		}
-		
-		
-		protected virtual Layouts.IGridPermeable GetGridPermeableLayoutHelper()
+
+
+		protected virtual Widgets.Layouts.IGridPermeable GetGridPermeableLayoutHelper()
 		{
 			return null;
 		}

@@ -3,12 +3,13 @@
 
 using System.Collections.Generic;
 
+using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
-[assembly: Controller (typeof (Epsitec.Common.Widgets.Controllers.EnumController))]
+[assembly: Controller (typeof (Epsitec.Common.UI.Controllers.EnumController))]
 
-namespace Epsitec.Common.Widgets.Controllers
+namespace Epsitec.Common.UI.Controllers
 {
 	public class EnumController : AbstractController
 	{
@@ -42,7 +43,7 @@ namespace Epsitec.Common.Widgets.Controllers
 			return this.helper.GetSelectedName ();
 		}
 
-		protected override Layouts.IGridPermeable GetGridPermeableLayoutHelper()
+		protected override Widgets.Layouts.IGridPermeable GetGridPermeableLayoutHelper()
 		{
 			return this.helper;
 		}
@@ -89,7 +90,7 @@ namespace Epsitec.Common.Widgets.Controllers
 			None, Combo, Icons, Radio
 		}
 
-		private abstract class Helper : System.IDisposable, Layouts.IGridPermeable
+		private abstract class Helper : System.IDisposable, Widgets.Layouts.IGridPermeable
 		{
 			public Helper(EnumController host)
 			{
@@ -111,7 +112,7 @@ namespace Epsitec.Common.Widgets.Controllers
 
 			#region IGridPermeable Members
 
-			public abstract IEnumerable<Layouts.PermeableCell> GetChildren(int column, int row, int columnSpan, int rowSpan);
+			public abstract IEnumerable<Widgets.Layouts.PermeableCell> GetChildren(int column, int row, int columnSpan, int rowSpan);
 			public abstract bool UpdateGridSpan(ref int columnSpan, ref int rowSpan);
 
 			#endregion
@@ -167,7 +168,7 @@ namespace Epsitec.Common.Widgets.Controllers
 
 				if (enumType != null)
 				{
-					Support.ResourceManager manager = Helpers.VisualTree.GetResourceManager (this.host.Placeholder);
+					Support.ResourceManager manager = Widgets.Helpers.VisualTree.GetResourceManager (this.host.Placeholder);
 					
 					foreach (IEnumValue enumValue in enumType.Values)
 					{
@@ -193,10 +194,10 @@ namespace Epsitec.Common.Widgets.Controllers
 				this.host.AddWidget (this.combo);
 			}
 
-			public override IEnumerable<Layouts.PermeableCell> GetChildren(int column, int row, int columnSpan, int rowSpan)
+			public override IEnumerable<Widgets.Layouts.PermeableCell> GetChildren(int column, int row, int columnSpan, int rowSpan)
 			{
-				yield return new Layouts.PermeableCell (this.label, column+0, row+0, 1, 1);
-				yield return new Layouts.PermeableCell (this.combo, column+1, row+0, columnSpan-1, 1);
+				yield return new Widgets.Layouts.PermeableCell (this.label, column+0, row+0, 1, 1);
+				yield return new Widgets.Layouts.PermeableCell (this.combo, column+1, row+0, columnSpan-1, 1);
 			}
 
 			public override bool UpdateGridSpan(ref int columnSpan, ref int rowSpan)
@@ -282,7 +283,7 @@ namespace Epsitec.Common.Widgets.Controllers
 
 				if (enumType != null)
 				{
-					Support.ResourceManager manager = Helpers.VisualTree.GetResourceManager (this.host.Placeholder);
+					Support.ResourceManager manager = Widgets.Helpers.VisualTree.GetResourceManager (this.host.Placeholder);
 
 					foreach (IEnumValue enumValue in enumType.Values)
 					{
@@ -316,10 +317,10 @@ namespace Epsitec.Common.Widgets.Controllers
 				this.host.AddWidget (this.combo);
 			}
 
-			public override IEnumerable<Layouts.PermeableCell> GetChildren(int column, int row, int columnSpan, int rowSpan)
+			public override IEnumerable<Widgets.Layouts.PermeableCell> GetChildren(int column, int row, int columnSpan, int rowSpan)
 			{
-				yield return new Layouts.PermeableCell (this.label, column+0, row+0, 1, 1);
-				yield return new Layouts.PermeableCell (this.combo, column+1, row+0, columnSpan-1, 1);
+				yield return new Widgets.Layouts.PermeableCell (this.label, column+0, row+0, 1, 1);
+				yield return new Widgets.Layouts.PermeableCell (this.combo, column+1, row+0, columnSpan-1, 1);
 			}
 
 			public override bool UpdateGridSpan(ref int columnSpan, ref int rowSpan)
