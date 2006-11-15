@@ -67,6 +67,9 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (source1, binding.Source);
 			Assert.AreEqual (null, binding.Path);
 
+			//	Changing the panel data source will also change the edition panel
+			//	data context accordingly.
+			
 			panel.DataSource = source2;
 
 			binding = DataObject.GetDataContext (edition);

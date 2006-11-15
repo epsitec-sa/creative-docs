@@ -30,6 +30,14 @@ namespace Epsitec.Common.UI.Panels
 			}
 		}
 
+		public override DataSourceMetadata DataSourceMetadata
+		{
+			get
+			{
+				return this.owner.DataSourceMetadata;
+			}
+		}
+
 		public override Panel GetPanel(PanelMode mode)
 		{
 			return this.owner.GetPanel (mode);

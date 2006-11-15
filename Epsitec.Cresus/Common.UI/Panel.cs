@@ -14,48 +14,13 @@ namespace Epsitec.Common.UI
 	/// The <c>Panel</c> class is used as the (local) root in a widget tree
 	/// built by the dynamic user interface designer.
 	/// </summary>
-	public class Panel : Widgets.AbstractGroup
+	public class Panel : Widgets.FrameBox
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Panel"/> class.
 		/// </summary>
 		public Panel()
 		{
-		}
-
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				if (this.isDataContextChangeHandlerRegistered)
-				{
-					this.RemoveEventHandler (DataObject.DataContextProperty, this.HandleDataContextChanged);
-					this.isDataContextChangeHandlerRegistered = false;
-				}
-
-				if (this.editionPanel != null)
-				{
-					this.editionPanel.Dispose ();
-					this.editionPanel = null;
-				}
-			}
-			
-			base.Dispose (disposing);
-		}
-		
-		private void SetupDataContextChangeHandler()
-		{
-			if (this.isDataContextChangeHandlerRegistered == false)
-			{
-				this.AddEventHandler (DataObject.DataContextProperty, this.HandleDataContextChanged);
-				this.isDataContextChangeHandlerRegistered = true;
-			}
-		}
-
-		private void HandleDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			this.dataSourceBinding = DataObject.GetDataContext (this);
-			this.SyncDataContext ();
 		}
 
 		/// <summary>
@@ -70,6 +35,8 @@ namespace Epsitec.Common.UI
 			}
 			set
 			{
+				System.Diagnostics.Debug.Assert (this.PanelMode == PanelMode.Default);
+				
 				DataSource oldSource = this.dataSource;
 				DataSource newSource = value;
 				
@@ -96,7 +63,7 @@ namespace Epsitec.Common.UI
 		/// Gets the metadata associated with the <see cref="DataSource"/>.
 		/// </summary>
 		/// <value>The metadata associated with the data source.</value>
-		public DataSourceMetadata				DataSourceMetadata
+		public virtual DataSourceMetadata		DataSourceMetadata
 		{
 			get
 			{
@@ -269,6 +236,26 @@ namespace Epsitec.Common.UI
 
 			return panel;
 		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (this.isDataContextChangeHandlerRegistered)
+				{
+					this.RemoveEventHandler (DataObject.DataContextProperty, this.HandleDataContextChanged);
+					this.isDataContextChangeHandlerRegistered = false;
+				}
+
+				if (this.editionPanel != null)
+				{
+					this.editionPanel.Dispose ();
+					this.editionPanel = null;
+				}
+			}
+
+			base.Dispose (disposing);
+		}
 		
 		private void SyncDataContext()
 		{
@@ -289,6 +276,21 @@ namespace Epsitec.Common.UI
 					DataObject.SetDataContext (panel, this.dataSourceBinding);
 				}
 			}
+		}
+
+		private void SetupDataContextChangeHandler()
+		{
+			if (this.isDataContextChangeHandlerRegistered == false)
+			{
+				this.AddEventHandler (DataObject.DataContextProperty, this.HandleDataContextChanged);
+				this.isDataContextChangeHandlerRegistered = true;
+			}
+		}
+
+		private void HandleDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			this.dataSourceBinding = DataObject.GetDataContext (this);
+			this.SyncDataContext ();
 		}
 		
 		private void HandlePanelModeChanged(PanelMode oldMode, PanelMode newMode)

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.UI
 {
-	public class PanelPlaceholder : Widgets.AbstractGroup, Types.Serialization.IDeserialization
+	public class PanelPlaceholder : Widgets.FrameBox, Types.Serialization.IDeserialization
 	{
 		public PanelPlaceholder()
 		{
