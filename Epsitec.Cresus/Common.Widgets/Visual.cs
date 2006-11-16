@@ -954,6 +954,8 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert (this.Anchor == AnchorStyles.None);
 			System.Diagnostics.Debug.Assert (this.Dock == DockStyle.None);
+
+			Layouts.LayoutContext.SyncMeasure (this);
 			
 			this.SetBounds (value);
 			this.Arrange (null);
