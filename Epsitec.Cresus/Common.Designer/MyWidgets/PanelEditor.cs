@@ -2501,7 +2501,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				if (direction == 0)
 				{
-					obj.TabNavigation = TabNavigationMode.Passive;
+					obj.ClearValue (Widget.TabNavigationModeProperty);
+					obj.ClearValue (Widget.TabIndexProperty);
 				}
 				else
 				{
