@@ -295,16 +295,28 @@ namespace Epsitec.Common.UI
 				PanelStack panelStack = PanelStack.GetPanelStack (this);
 
 				if ((panelStack != null) &&
-					(message.IsMouseType) &&
 					(window != null))
 				{
 					if (message.Type == Widgets.MessageType.MouseLeave)
 					{
 						window.MouseCursor = Widgets.MouseCursor.Default;
 					}
-					else
+					else if (message.IsMouseType)
 					{
 						window.MouseCursor = Widgets.MouseCursor.AsIBeam;
+					}
+					else if (message.IsKeyType)
+					{
+						Widgets.IFeel feel = Widgets.Feel.Factory.Active;
+
+						if (feel.TestSelectItemKey (message))
+						{
+							this.StartEdition (message, null, panelStack);
+						}
+						else if (feel.TestNavigationKey (message))
+						{
+							return base.PreProcessMessage (message, pos);
+						}
 					}
 
 					if (message.Button == Widgets.MouseButtons.Left)
@@ -318,16 +330,7 @@ namespace Epsitec.Common.UI
 							if (this.isMouseDown)
 							{
 								this.isMouseDown = false;
-								Widgets.Widget widget = this.FindChild (pos, ChildFindMode.Deep | ChildFindMode.SkipHidden | ChildFindMode.SkipDisabled);
-								string focusWidgetName = null;
-
-								if ((widget != null) &&
-									(widget != this))
-								{
-									focusWidgetName = widget.Name;
-								}
-
-								panelStack.StartEdition (this.EditionPanel, focusWidgetName);
+								this.StartEdition (message, this.FindChild (pos, ChildFindMode.Deep | ChildFindMode.SkipHidden | ChildFindMode.SkipDisabled), panelStack);
 							}
 						}
 					}
@@ -338,7 +341,59 @@ namespace Epsitec.Common.UI
 			
 			return base.PreProcessMessage (message, pos);
 		}
-		
+
+		public override Widgets.TabNavigationMode TabNavigation
+		{
+			get
+			{
+				if (this.HasValidEditionPanel)
+				{
+					return base.TabNavigation & ~Widgets.TabNavigationMode.ForwardToChildren & ~Widgets.TabNavigationMode.ForwardOnly;
+				}
+				else
+				{
+					return base.TabNavigation;
+				}
+			}
+			set
+			{
+				base.TabNavigation = value;
+			}
+		}
+
+		private void StartEdition(Widgets.Message message, Widgets.Widget focusWidget, PanelStack panelStack)
+		{
+			string focusWidgetName = null;
+
+			if ((focusWidget != null) &&
+				(focusWidget != this))
+			{
+				focusWidgetName = focusWidget.Name;
+			}
+
+			panelStack.StartEdition (this.EditionPanel, focusWidgetName);
+
+			if (message != null)
+			{
+				message.Swallowed = true;
+				message.Consumer  = this;
+			}
+		}
+
+		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clipRect)
+		{
+			base.PaintBackgroundImplementation (graphics, clipRect);
+
+			if ((this.PaintState & Epsitec.Common.Widgets.WidgetPaintState.Focused) != 0)
+			{
+				Drawing.Rectangle rect = this.Client.Bounds;
+				
+				rect.Deflate (1.5);
+				
+				graphics.AddRectangle (rect);
+				graphics.RenderSolid (Widgets.Adorners.Factory.Active.ColorCaption);
+			}
+		}
 
 		protected override void Dispose(bool disposing)
 		{
