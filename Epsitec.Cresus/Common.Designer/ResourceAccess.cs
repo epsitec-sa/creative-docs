@@ -2749,17 +2749,19 @@ namespace Epsitec.Common.Designer
 		public UI.Panel CreateEmptyPanel()
 		{
 			UI.Panel panel = new UI.Panel();
+			this.InitializePanel(panel);
+			return panel;
+		}
+
+		internal void InitializePanel(UI.Panel panel)
+		{
 			panel.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
-			//?panel.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
-			//?panel.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			panel.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
-			panel.PreferredSize = new Size(200, 200);
+			panel.PreferredSize = new Size (200, 200);
 			panel.Anchor = AnchorStyles.BottomLeft;
-			panel.Padding = new Margins(20, 20, 20, 20);
+			panel.Padding = new Margins (20, 20, 20, 20);
 			panel.DrawDesignerFrame = true;
 			panel.ResourceManager = this.resourceManager;
-
-			return panel;
 		}
 
 		protected ResourceBundle PanelBundle(int index)

@@ -89,7 +89,7 @@ namespace Epsitec.Common.UI
 			PanelStack panelStack = new PanelStack ();
 			
 			panelStack.Dock = Widgets.DockStyle.Fill;
-			panelStack.Margins = new Drawing.Margins (4, 4, 8, 8);
+			panelStack.Margins = new Drawing.Margins (8, 8, 4, 4);
 			panelStack.BackColor = Drawing.Color.FromRgb (1, 0.8, 0.8);
 
 			Panel panel = new Panel ();
@@ -99,15 +99,17 @@ namespace Epsitec.Common.UI
 
 			static1.Dock = Widgets.DockStyle.Top;
 			static2.Dock = Widgets.DockStyle.Top;
-			static1.Text = "Pierre";
-			static2.Text = "Arnaud";
-			static1.Name = "FirstName";
-			static2.Name = "LastName";
+			static1.Text = "Arnaud";
+			static2.Text = "Pierre";
+			static1.Name = "LastName";
+			static2.Name = "FirstName";
 			
-			panel.PreferredSize = new Drawing.Size (100, 40);
+			panel.PreferredSize = new Drawing.Size (80, 40);
 			panel.Anchor = Widgets.AnchorStyles.TopRight;
 			panel.Margins = new Drawing.Margins (4, 4, 4, 4);
+			panel.Padding = new Drawing.Margins (8, 8, 4, 4);
 			panel.BackColor = Drawing.Color.FromRgb (0.8, 1, 0.8);
+			panel.DrawFullFrame = true;
 
 			panel.EditionPanel.PreferredSize = new Drawing.Size (180, 68);
 			

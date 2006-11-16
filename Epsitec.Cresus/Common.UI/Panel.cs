@@ -187,7 +187,17 @@ namespace Epsitec.Common.UI
 					if (this.editionPanel == null)
 					{
 						this.SetupDataContextChangeHandler ();
+						
 						this.editionPanel = new Panels.EditPanel (this);
+						
+						this.editionPanel.ChildrenLayoutMode = this.ChildrenLayoutMode;
+						this.editionPanel.ContainerLayoutMode = this.ContainerLayoutMode;
+						this.editionPanel.PreferredSize = this.PreferredSize;
+						this.editionPanel.Anchor = this.Anchor;
+						this.editionPanel.Dock = this.Dock;
+						this.editionPanel.Margins = this.Margins;
+						this.editionPanel.Padding = this.Padding;
+						
 						this.SyncDataContext (this.editionPanel);
 					}
 

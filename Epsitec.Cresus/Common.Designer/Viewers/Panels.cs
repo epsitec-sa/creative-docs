@@ -269,6 +269,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.panelContainer = this.access.NewPanel(sel).GetPanel(this.panelMode);
 				this.panelContainer.SetParent(this.panelEditor.Parent);
 				this.panelContainer.ZOrder = this.panelEditor.ZOrder+1;
+				this.panelContainer.DrawDesignerFrame = true;
 				this.panelEditor.Panel = this.panelContainer;
 				this.panelEditor.Druid = this.access.AccessDruid(sel);
 
