@@ -20,7 +20,7 @@ namespace Epsitec.Common.Widgets
 				this.palette[i] = new ColorSample(this);
 				this.palette[i].Clicked += new MessageEventHandler(this.HandleColorClicked);
 				this.palette[i].TabIndex = i;
-				this.palette[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.palette[i].TabNavigation = TabNavigationMode.ActivateOnTab;
 
 				int x = i/this.nbRows;
 				int y = i%this.nbRows;

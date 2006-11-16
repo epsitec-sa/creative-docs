@@ -52,7 +52,7 @@ namespace Epsitec.Common.Document.Widgets
 				this.textFieldSimple.PreferredWidth = TextFieldLabel.DefaultTextWidth;
 				this.textFieldSimple.Dock = DockStyle.Right;
 				this.textFieldSimple.TabIndex = 0;
-				this.textFieldSimple.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.textFieldSimple.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 				this.textFieldSimple.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 				this.textFieldSimple.AutoSelectOnFocus = true;
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Document.Widgets
 				this.textFieldReal.PreferredWidth = TextFieldLabel.DefaultTextWidth;
 				this.textFieldReal.Dock = DockStyle.Right;
 				this.textFieldReal.TabIndex = 0;
-				this.textFieldReal.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.textFieldReal.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 				this.textFieldReal.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 				this.textFieldReal.AutoSelectOnFocus = true;
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Document.Widgets
 				this.textFieldReal.PreferredWidth = TextFieldLabel.DefaultTextWidth;
 				this.textFieldReal.Dock = DockStyle.None;
 				this.textFieldReal.TabIndex = 0;
-				this.textFieldReal.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.textFieldReal.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 				this.textFieldReal.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 				this.textFieldReal.AutoSelectOnFocus = true;
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Document.Widgets
 				this.textFieldPercent.PreferredWidth = TextFieldLabel.DefaultTextWidth;
 				this.textFieldPercent.Dock = DockStyle.None;
 				this.textFieldPercent.TabIndex = 0;
-				this.textFieldPercent.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.textFieldPercent.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 				this.textFieldPercent.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 				this.textFieldPercent.AutoSelectOnFocus = true;

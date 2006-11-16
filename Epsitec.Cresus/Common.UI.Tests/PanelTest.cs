@@ -132,7 +132,7 @@ namespace Epsitec.Common.UI
 
 			field1.Text = "Arnaud";
 			field1.TabIndex = 1;
-			field1.TabNavigation = Widgets.Widget.TabNavigationMode.ActivateOnTab;
+			field1.TabNavigation = Widgets.TabNavigationMode.ActivateOnTab;
 			field1.Anchor = Epsitec.Common.Widgets.AnchorStyles.TopLeft | Epsitec.Common.Widgets.AnchorStyles.Right;
 			field1.Margins = new Epsitec.Common.Drawing.Margins (68, 4, 4+4, 0);
 			field1.PreferredSize = new Epsitec.Common.Drawing.Size (100, 24);
@@ -140,7 +140,7 @@ namespace Epsitec.Common.UI
 			
 			field2.Text = "Pierre";
 			field2.TabIndex = 2;
-			field2.TabNavigation = Widgets.Widget.TabNavigationMode.ActivateOnTab;
+			field2.TabNavigation = Widgets.TabNavigationMode.ActivateOnTab;
 			field2.Anchor = Epsitec.Common.Widgets.AnchorStyles.TopLeft | Epsitec.Common.Widgets.AnchorStyles.Right;
 			field2.Margins = new Epsitec.Common.Drawing.Margins (68, 4, 28+4, 0);
 			field2.PreferredSize = new Epsitec.Common.Drawing.Size (100, 24);

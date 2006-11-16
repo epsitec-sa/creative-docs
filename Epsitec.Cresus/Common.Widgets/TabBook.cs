@@ -45,7 +45,7 @@ namespace Epsitec.Common.Widgets
 			this.buttonClose.ButtonStyle = ButtonStyle.Scroller;
 			this.buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 			
-			this.TabNavigation = Widget.TabNavigationMode.ForwardTabActive;
+			this.TabNavigation = TabNavigationMode.ForwardTabActive;
 		}
 		
 		public TabBook(Widget embedder) : this()

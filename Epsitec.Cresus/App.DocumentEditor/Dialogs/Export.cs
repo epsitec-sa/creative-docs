@@ -43,7 +43,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonOk.Margins = new Margins(10, 0, 0, 10);
 				buttonOk.Clicked += new MessageEventHandler(this.HandleExportButtonOkClicked);
 				buttonOk.TabIndex = 10;
-				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				buttonOk.TabNavigation = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonOk, Res.Strings.Dialog.Export.Tooltip.OK);
 
 				Button buttonCancel = new Button(this.window.Root);
@@ -54,7 +54,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonCancel.Margins = new Margins(10+75+10, 0, 0, 10);
 				buttonCancel.Clicked += new MessageEventHandler(this.HandleExportButtonCancelClicked);
 				buttonCancel.TabIndex = 11;
-				buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				buttonCancel.TabNavigation = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonCancel, Res.Strings.Dialog.Export.Tooltip.Cancel);
 			}
 

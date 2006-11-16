@@ -52,7 +52,7 @@ namespace Epsitec.Common.UI.Controllers
 			this.field.PreferredWidth = 40;
 			
 			this.field.TabIndex = 1;
-			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.field.TabNavigation = TabNavigationMode.ActivateOnTab;
 			this.field.Dock = DockStyle.Stacked;
 			
 			this.AddWidget (this.label);

@@ -79,7 +79,7 @@ namespace Epsitec.Common.Dialogs
 			this.list.SetManualBounds(new Drawing.Rectangle(0, extra, body.ActualWidth, label.ActualLocation.Y - 4 - extra));
 			this.list.Items.AddRange (this.data);
 			this.list.TabIndex       = 1;
-			this.list.TabNavigation  = Widget.TabNavigationMode.ActivateOnTab;
+			this.list.TabNavigation  = TabNavigationMode.ActivateOnTab;
 			this.list.DoubleClicked += new MessageEventHandler (this.HandleListDoubleClicked);
 			
 			this.AddExtraWidgets (body);

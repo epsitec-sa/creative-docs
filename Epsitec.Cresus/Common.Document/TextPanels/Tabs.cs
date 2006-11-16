@@ -33,7 +33,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldPos.SetRangeDimension(this.document, 0.0, 1.0, 0.0, 1.0);
 			this.fieldPos.TextFieldReal.TextChanged += new EventHandler(this.HandlePosValueChanged);
 			this.fieldPos.TabIndex = this.tabIndex++;
-			this.fieldPos.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldPos.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldPos, Res.Strings.TextPanel.Tabs.Tooltip.Pos);
 			this.ProposalTextFieldLabel(this.fieldPos, false);  // toujours défini
 

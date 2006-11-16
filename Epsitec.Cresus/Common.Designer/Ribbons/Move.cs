@@ -78,7 +78,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			field.Resolution           =   1.0M;
 			field.InternalValue = field.InternalDefaultValue;
 			field.TabIndex = this.tabIndex++;
-			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			field.TabNavigation = TabNavigationMode.ActivateOnTab;
 			field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
 			ToolTip.Default.SetToolTip(field, tooltip);
 		}

@@ -24,7 +24,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonParagraph.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonParagraph.AutoFocus = false;
 			this.buttonParagraph.TabIndex = this.tabIndex++;
-			this.buttonParagraph.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.buttonParagraph.TabNavigation = TabNavigationMode.ActivateOnTab;
 			this.buttonParagraph.Clicked += new MessageEventHandler(this.HandleParagraphClicked);
 			ToolTip.Default.SetToolTip(this.buttonParagraph, Res.Strings.Panel.Style.ParagraphDefinition);
 
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonCharacter.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonCharacter.AutoFocus = false;
 			this.buttonCharacter.TabIndex = this.tabIndex++;
-			this.buttonCharacter.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.buttonCharacter.TabNavigation = TabNavigationMode.ActivateOnTab;
 			this.buttonCharacter.Clicked += new MessageEventHandler(this.HandleCharacterClicked);
 			ToolTip.Default.SetToolTip(this.buttonCharacter, Res.Strings.Panel.Style.CharacterDefinition);
 
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.comboStyle.AllLinesWidthSameWidth = true;
 			this.comboStyle.AutoFocus = false;
 			this.comboStyle.TabIndex = this.tabIndex++;
-			this.comboStyle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.comboStyle.TabNavigation = TabNavigationMode.ActivateOnTab;
 			this.comboStyle.SelectedIndexChanged += new EventHandler(this.HandleSelectedIndexChanged);
 			this.comboStyle.FirstIconChanged += new EventHandler(this.HandleFirstIconChanged);
 

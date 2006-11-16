@@ -62,7 +62,7 @@ namespace Epsitec.Common.UI
 			
 			this.widget.PreferredSize = this.Size;
 			this.widget.MinSize = this.Size;
-			this.widget.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.widget.TabNavigation = TabNavigationMode.ForwardTabPassive;
 			
 			this.CreateWidgets (this.widget);
 		}

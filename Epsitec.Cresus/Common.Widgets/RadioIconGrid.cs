@@ -60,7 +60,7 @@ namespace Epsitec.Common.Widgets
 			icon.EndOfLine = endOfLine;
 			icon.SetParent(this);
 			icon.TabIndex = this.list.Count;
-			icon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			icon.TabNavigation = TabNavigationMode.ActivateOnTab;
 			icon.Group = this.controller.Group;
 			ToolTip.Default.SetToolTip(icon, tooltip);
 			this.list.Add(icon);

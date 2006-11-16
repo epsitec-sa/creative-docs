@@ -15,7 +15,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldColor.PossibleSource = true;
 			this.fieldColor.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
 			this.fieldColor.TabIndex = 1;
-			this.fieldColor.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldColor.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.fieldRadius = new TextFieldReal(this);
 			this.fieldRadius.FactorMinRange = 0.0M;
@@ -24,7 +24,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldRadius);
 			this.fieldRadius.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldRadius.TabIndex = 2;
-			this.fieldRadius.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldRadius.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.fieldOx = new TextFieldReal(this);
 			this.fieldOx.FactorMinRange = 0.0M;
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldOx);
 			this.fieldOx.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldOx.TabIndex = 3;
-			this.fieldOx.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldOx.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.fieldOy = new TextFieldReal(this);
 			this.fieldOy.FactorMinRange = 0.0M;
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldOy);
 			this.fieldOy.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldOy.TabIndex = 4;
-			this.fieldOy.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldOy.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.labelRadius = new StaticText(this);
 			this.labelRadius.Text = "R";

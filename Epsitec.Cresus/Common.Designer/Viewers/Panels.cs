@@ -30,7 +30,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
 			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 			this.labelEdit.TabIndex = tabIndex++;
-			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.labelEdit.TabNavigation = TabNavigationMode.ActivateOnTab;
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
 
 			this.array = new MyWidgets.StringArray(this.left);
@@ -319,7 +319,7 @@ namespace Epsitec.Common.Designer.Viewers
 				button.Dock = DockStyle.Top;
 				button.Margins = new Margins(0, 0, 0, 2);
 				button.TabIndex = tabIndex++;
-				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				button.TabNavigation = TabNavigationMode.ActivateOnTab;
 				button.Clicked += new MessageEventHandler(this.HandleCultureButtonClicked);
 				ToolTip.Default.SetToolTip(button, Misc.CultureLongName(culture));
 

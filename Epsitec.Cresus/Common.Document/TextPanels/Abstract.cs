@@ -27,7 +27,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.extendedButton.AutoFocus = false;
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
 			this.extendedButton.TabIndex = 0;
-			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.extendedButton.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.extendedButton, Res.Strings.Panel.Abstract.Extend);
 		}
 
@@ -350,7 +350,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			button.TabIndex = this.tabIndex++;
-			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			button.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(c));
 			return button;
 		}
@@ -384,7 +384,7 @@ namespace Epsitec.Common.Document.TextPanels
 			button.AutoFocus = false;
 			button.Clicked += handler;
 			button.TabIndex = this.tabIndex++;
-			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			button.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(button, tooltip);
 			return button;
 		}
@@ -414,7 +414,7 @@ namespace Epsitec.Common.Document.TextPanels
 			button.AutoFocus = false;
 			button.Clicked += handler;
 			button.TabIndex = this.tabIndex++;
-			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			button.TabNavigation = TabNavigationMode.ActivateOnTab;
 			button.IconName = Misc.Icon("Nothing");
 			ToolTip.Default.SetToolTip(button, Res.Strings.TextPanel.Clear);
 			
@@ -432,7 +432,7 @@ namespace Epsitec.Common.Document.TextPanels
 			button.AutoFocus = false;
 			button.Clicked += handler;
 			button.TabIndex = this.tabIndex++;
-			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			button.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(button, tooltip);
 
 			return button;
@@ -464,7 +464,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			field.TabIndex = this.tabIndex++;
-			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			field.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(field, tooltip);
 
 			return field;
@@ -482,7 +482,7 @@ namespace Epsitec.Common.Document.TextPanels
 			field.TextFieldReal.EditionAccepted += handler;
 			
 			field.TabIndex = this.tabIndex++;
-			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			field.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(field, tooltip);
 			
 			return field;
@@ -601,7 +601,7 @@ namespace Epsitec.Common.Document.TextPanels
 			sample.Clicked += handlerClicked;
 			sample.Changed += handlerChanged;
 			sample.TabIndex = this.tabIndex++;
-			sample.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			sample.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(sample, tooltip);
 
 			return sample;

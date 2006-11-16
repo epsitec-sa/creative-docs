@@ -20,21 +20,21 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.Dock = DockStyle.Top;
 			this.toolBar.Margins = new Margins(0, 0, 0, -1);
 			this.toolBar.TabIndex = 1;
-			this.toolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.toolBar.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			int index = 0;
 
 			this.buttonNew = new IconButton("PageNew", Misc.Icon("PageNew"));
 			this.toolBar.Items.Add(this.buttonNew);
 			this.buttonNew.TabIndex = index++;
-			this.buttonNew.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.buttonNew.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonNew, Res.Strings.Action.PageNewLong);
 			this.Synchro(this.buttonNew);
 
 			this.buttonDuplicate = new IconButton("PageDuplicate", Misc.Icon("DuplicateItem"));
 			this.toolBar.Items.Add(this.buttonDuplicate);
 			this.buttonDuplicate.TabIndex = index++;
-			this.buttonDuplicate.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.buttonDuplicate.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonDuplicate, Res.Strings.Action.PageDuplicate);
 			this.Synchro(this.buttonDuplicate);
 
@@ -43,14 +43,14 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonUp = new IconButton("PageUp", Misc.Icon("Up"));
 			this.toolBar.Items.Add(this.buttonUp);
 			this.buttonUp.TabIndex = index++;
-			this.buttonUp.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.buttonUp.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonUp, Res.Strings.Action.PageUp);
 			this.Synchro(this.buttonUp);
 
 			this.buttonDown = new IconButton("PageDown", Misc.Icon("Down"));
 			this.toolBar.Items.Add(this.buttonDown);
 			this.buttonDown.TabIndex = index++;
-			this.buttonDown.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.buttonDown.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonDown, Res.Strings.Action.PageDown);
 			this.Synchro(this.buttonDown);
 
@@ -59,7 +59,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonDelete = new IconButton("PageDelete", Misc.Icon("DeleteItem"));
 			this.toolBar.Items.Add(this.buttonDelete);
 			this.buttonDelete.TabIndex = index++;
-			this.buttonDelete.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.buttonDelete.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonDelete, Res.Strings.Action.PageDelete);
 			this.Synchro(this.buttonDelete);
 
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Document.Containers
 			this.table.StyleV |= CellArrayStyles.SelectLine;
 			this.table.DefHeight = 16;
 			this.table.TabIndex = 2;
-			this.table.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.table.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			//	--- Début panelMisc
 			this.buttonPageStack = new Button(this);
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonPageStack.CommandObject = Command.Get("PageStack");
 			this.buttonPageStack.Text = Res.Strings.Container.Pages.Button.PageStack;
 			this.buttonPageStack.TabIndex = 100;
-			this.buttonPageStack.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.buttonPageStack.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			
 			this.panelMisc = new Widget(this);
@@ -93,7 +93,7 @@ namespace Epsitec.Common.Document.Containers
 			this.panelMisc.Margins = new Margins(0, 0, 5, 0);
 			this.panelMisc.PreferredHeight = (this.document.Type == DocumentType.Pictogram) ? 186+24+24 : 186;
 			this.panelMisc.TabIndex = 99;
-			this.panelMisc.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.panelMisc.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 
 			if ( this.document.Type == DocumentType.Pictogram )
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Document.Containers
 				this.languageGroup.Margins = new Margins(0, 0, 0, 4);
 				this.languageGroup.PreferredHeight = 20;
 				this.languageGroup.TabIndex = 4;
-				this.languageGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+				this.languageGroup.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 				StaticText labelLanguage = new StaticText(this.languageGroup);
 				labelLanguage.Text = Res.Strings.Container.Pages.Language.Label;
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Document.Containers
 				this.styleGroup.Margins = new Margins(0, 0, 0, 4);
 				this.styleGroup.PreferredHeight = 20;
 				this.styleGroup.TabIndex = 4;
-				this.styleGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+				this.styleGroup.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 				StaticText labelStyle = new StaticText(this.styleGroup);
 				labelStyle.Text = Res.Strings.Container.Pages.Style.Label;
@@ -152,7 +152,7 @@ namespace Epsitec.Common.Document.Containers
 			this.pageSizeGroup.Margins = new Margins(0, 0, 0, 4);
 			this.pageSizeGroup.PreferredHeight = 22;
 			this.pageSizeGroup.TabIndex = 3;
-			this.pageSizeGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.pageSizeGroup.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			StaticText labelSize = new StaticText(this.pageSizeGroup);
 			labelSize.Text = Res.Strings.Container.Pages.Size.Label;
@@ -170,7 +170,7 @@ namespace Epsitec.Common.Document.Containers
 			this.pageSizeWidth.FactorStep     = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.pageSizeWidth);
 			this.pageSizeWidth.TabIndex = 1;
-			this.pageSizeWidth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.pageSizeWidth.TabNavigation = TabNavigationMode.ActivateOnTab;
 			this.pageSizeWidth.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.pageSizeWidth.AutoSelectOnFocus = true;
 			this.pageSizeWidth.SwallowEscape = true;
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Document.Containers
 			this.pageSizeSwap.Dock = DockStyle.Left;
 			this.pageSizeSwap.Margins = new Margins(0, 0, 0, 0);
 			this.pageSizeSwap.TabIndex = 2;
-			this.pageSizeSwap.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.pageSizeSwap.TabNavigation = TabNavigationMode.ActivateOnTab;
 			this.pageSizeSwap.Clicked += new MessageEventHandler(this.HandlePageSwapClicked);
 			ToolTip.Default.SetToolTip(this.pageSizeSwap, Res.Strings.Container.Pages.Size.Swap);
 
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Document.Containers
 			this.pageSizeHeight.FactorStep     = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.pageSizeHeight);
 			this.pageSizeHeight.TabIndex = 3;
-			this.pageSizeHeight.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.pageSizeHeight.TabNavigation = TabNavigationMode.ActivateOnTab;
 			this.pageSizeHeight.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.pageSizeHeight.AutoSelectOnFocus = true;
 			this.pageSizeHeight.SwallowEscape = true;
@@ -212,7 +212,7 @@ namespace Epsitec.Common.Document.Containers
 			this.pageSizeClear.Dock = DockStyle.Left;
 			this.pageSizeClear.Margins = new Margins(0, 0, 0, 0);
 			this.pageSizeClear.TabIndex = 4;
-			this.pageSizeClear.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.pageSizeClear.TabNavigation = TabNavigationMode.ActivateOnTab;
 			this.pageSizeClear.Clicked += new MessageEventHandler(this.HandlePageClearClicked);
 			ToolTip.Default.SetToolTip(this.pageSizeClear, Res.Strings.Container.Pages.Size.Clear);
 
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioMasterGroup.PreferredHeight = 130;
 			this.radioMasterGroup.Text = Res.Strings.Container.Pages.Button.MasterGroup;
 			this.radioMasterGroup.TabIndex = 2;
-			this.radioMasterGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.radioMasterGroup.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			this.radioAll = new RadioButton(this.radioMasterGroup);
 			this.radioAll.Dock = DockStyle.Top;
@@ -232,7 +232,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioAll.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioAll.Index = 1;
 			this.radioAll.TabIndex = 1;
-			this.radioAll.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.radioAll.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.radioOdd = new RadioButton(this.radioMasterGroup);
 			this.radioOdd.Dock = DockStyle.Top;
@@ -241,7 +241,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioOdd.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioOdd.Index = 2;
 			this.radioOdd.TabIndex = 2;
-			this.radioOdd.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.radioOdd.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.radioEven = new RadioButton(this.radioMasterGroup);
 			this.radioEven.Dock = DockStyle.Top;
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioEven.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioEven.Index = 3;
 			this.radioEven.TabIndex = 3;
-			this.radioEven.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.radioEven.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.radioNone = new RadioButton(this.radioMasterGroup);
 			this.radioNone.Dock = DockStyle.Top;
@@ -259,7 +259,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioNone.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioNone.Index = 4;
 			this.radioNone.TabIndex = 4;
-			this.radioNone.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.radioNone.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.checkAutoStop = new CheckButton(this.radioMasterGroup);
 			this.checkAutoStop.Dock = DockStyle.Top;
@@ -267,14 +267,14 @@ namespace Epsitec.Common.Document.Containers
 			this.checkAutoStop.Text = Res.Strings.Container.Pages.Button.MasterStop;
 			this.checkAutoStop.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 			this.checkAutoStop.TabIndex = 5;
-			this.checkAutoStop.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.checkAutoStop.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.specificGroup = new Widget(this.radioMasterGroup);
 			this.specificGroup.Dock = DockStyle.Top;
 			this.specificGroup.Margins = new Margins(10, 10, 2, 0);
 			this.specificGroup.PreferredWidth = 170;
 			this.specificGroup.TabIndex = 6;
-			this.specificGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.specificGroup.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			this.checkSpecific = new CheckButton(this.specificGroup);
 			this.checkSpecific.PreferredWidth = 160;
@@ -283,7 +283,7 @@ namespace Epsitec.Common.Document.Containers
 			this.checkSpecific.Text = Res.Strings.Container.Pages.Button.MasterSpecific;
 			this.checkSpecific.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 			this.checkSpecific.TabIndex = 1;
-			this.checkSpecific.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.checkSpecific.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.specificMasterPage = new TextFieldCombo(this.specificGroup);
 			this.specificMasterPage.PreferredWidth = 50;
@@ -293,7 +293,7 @@ namespace Epsitec.Common.Document.Containers
 			this.specificMasterPage.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleComboOpening);
 			this.specificMasterPage.ComboClosed += new EventHandler(this.HandleComboClosed);
 			this.specificMasterPage.TabIndex = 2;
-			this.specificMasterPage.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.specificMasterPage.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 
 			this.radioSlaveGroup = new GroupBox(this.panelMisc);
@@ -302,14 +302,14 @@ namespace Epsitec.Common.Document.Containers
 			this.radioSlaveGroup.PreferredHeight = 130;
 			this.radioSlaveGroup.Text = Res.Strings.Container.Pages.Button.SlaveGroup;
 			this.radioSlaveGroup.TabIndex = 3;
-			this.radioSlaveGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.radioSlaveGroup.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			this.radioGroupLeft = new Widget(this.radioSlaveGroup);
 			this.radioGroupLeft.Dock = DockStyle.Left;
 			this.radioGroupLeft.Margins = new Margins(0, 0, 5, 0);
 			this.radioGroupLeft.PreferredWidth = 170;
 			this.radioGroupLeft.TabIndex = 1;
-			this.radioGroupLeft.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.radioGroupLeft.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			this.radioNever = new RadioButton(this.radioGroupLeft);
 			this.radioNever.Dock = DockStyle.Top;
@@ -318,7 +318,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioNever.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioNever.Index = 1;
 			this.radioNever.TabIndex = 1;
-			this.radioNever.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.radioNever.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.radioDefault = new RadioButton(this.radioGroupLeft);
 			this.radioDefault.Dock = DockStyle.Top;
@@ -327,7 +327,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioDefault.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioDefault.Index = 2;
 			this.radioDefault.TabIndex = 2;
-			this.radioDefault.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.radioDefault.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.radioSpecific = new RadioButton(this.radioGroupLeft);
 			this.radioSpecific.Dock = DockStyle.Top;
@@ -336,7 +336,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioSpecific.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioSpecific.Index = 3;
 			this.radioSpecific.TabIndex = 3;
-			this.radioSpecific.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.radioSpecific.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.checkGuides = new CheckButton(this.radioGroupLeft);
 			this.checkGuides.Dock = DockStyle.Top;
@@ -344,14 +344,14 @@ namespace Epsitec.Common.Document.Containers
 			this.checkGuides.Text = Res.Strings.Container.Pages.Button.SlaveGuides;
 			this.checkGuides.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 			this.checkGuides.TabIndex = 4;
-			this.checkGuides.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.checkGuides.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.radioGroupRight = new Widget(this.radioSlaveGroup);
 			this.radioGroupRight.Dock = DockStyle.Left;
 			this.radioGroupRight.Margins = new Margins(0, 0, 5, 0);
 			this.radioGroupRight.PreferredWidth = 50;
 			this.radioGroupRight.TabIndex = 2;
-			this.radioGroupRight.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.radioGroupRight.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			this.specificSlavePage = new TextFieldCombo(this.radioGroupRight);
 			this.specificSlavePage.IsReadOnly = true;
@@ -360,7 +360,7 @@ namespace Epsitec.Common.Document.Containers
 			this.specificSlavePage.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleComboOpening);
 			this.specificSlavePage.ComboClosed += new EventHandler(this.HandleComboClosed);
 			this.specificSlavePage.TabIndex = 1;
-			this.specificSlavePage.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.specificSlavePage.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 
 			this.radioGroup = new Widget(this.panelMisc);
@@ -368,7 +368,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioGroup.Margins = new Margins(0, 0, 0, 4);
 			this.radioGroup.PreferredHeight = 20;
 			this.radioGroup.TabIndex = 1;
-			this.radioGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.radioGroup.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			this.radioSlave = new RadioButton(this.radioGroup);
 			this.radioSlave.PreferredWidth = 100;
@@ -378,7 +378,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioSlave.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioSlave.Index = 1;
 			this.radioSlave.TabIndex = 1;
-			this.radioSlave.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.radioSlave.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.radioMaster = new RadioButton(this.radioGroup);
 			this.radioMaster.PreferredWidth = 100;
@@ -388,7 +388,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioMaster.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioMaster.Index = 2;
 			this.radioMaster.TabIndex = 2;
-			this.radioMaster.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.radioMaster.TabNavigation = TabNavigationMode.ActivateOnTab;
 			//	--- Fin panelMisc
 			
 			this.extendedButton = new GlyphButton(this);
@@ -396,9 +396,9 @@ namespace Epsitec.Common.Document.Containers
 			this.extendedButton.Margins = new Margins(0, 0, 5, 0);
 			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
-			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.extendedButton.TabNavigation = TabNavigationMode.ActivateOnTab;
 			this.extendedButton.TabIndex = 98;
-			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.extendedButton.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.extendedButton, Res.Strings.Dialog.Button.More);
 			
 
@@ -406,7 +406,7 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBarName.Dock = DockStyle.Bottom;
 			this.toolBarName.Margins = new Margins(0, 0, 0, 0);
 			this.toolBarName.TabIndex = 97;
-			this.toolBarName.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.toolBarName.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			StaticText st = new StaticText();
 			st.PreferredWidth = 80;
@@ -418,7 +418,7 @@ namespace Epsitec.Common.Document.Containers
 			this.name.Margins = new Margins(0, 0, 1, 1);
 			this.name.TextChanged += new EventHandler(this.HandleNameTextChanged);
 			this.name.TabIndex = 1;
-			this.name.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.name.TabNavigation = TabNavigationMode.ActivateOnTab;
 			this.toolBarName.Items.Add(this.name);
 			ToolTip.Default.SetToolTip(this.name, Res.Strings.Panel.PageName.Tooltip.Name);
 

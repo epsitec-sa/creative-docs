@@ -32,7 +32,7 @@ namespace Epsitec.Common.Document.Panels
 			this.extendedButton.AutoFocus = false;
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
 			this.extendedButton.TabIndex = 0;
-			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.extendedButton.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.extendedButton, Res.Strings.Panel.Abstract.Extend);
 
 			this.colorBlack = Drawing.Color.FromName("WindowFrame");

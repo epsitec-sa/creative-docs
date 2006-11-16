@@ -79,7 +79,7 @@ namespace Epsitec.Common.Widgets
 			return base.ProcessKeyDown (message, pos);
 		}
 
-		protected override bool AboutToLoseFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode)
+		protected override bool AboutToLoseFocus(TabNavigationDir dir, TabNavigationMode mode)
 		{
 //			if (this.accept_reject_behavior.IsVisible)
 			{
@@ -93,7 +93,7 @@ namespace Epsitec.Common.Widgets
 			return base.AboutToLoseFocus (dir, mode);
 		}
 		
-		protected override bool AboutToGetFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode, out Widget focus)
+		protected override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
 			return base.AboutToGetFocus (dir, mode, out focus);
 		}

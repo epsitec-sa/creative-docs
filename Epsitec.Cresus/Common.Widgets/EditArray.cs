@@ -444,7 +444,7 @@ namespace Epsitec.Common.Widgets
 						if (edition_widget != null)
 						{
 							if ((edition_widget.AcceptsDefocus == false) ||
-								(edition_widget.InternalAboutToLoseFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive) == false))
+								(edition_widget.InternalAboutToLoseFocus (TabNavigationDir.None, TabNavigationMode.Passive) == false))
 							{
 								return false;
 							}
@@ -584,7 +584,7 @@ namespace Epsitec.Common.Widgets
 				this.host = host;
 				
 				this.SetEmbedder (this.host);
-				this.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+				this.TabNavigation = TabNavigationMode.ForwardTabPassive;
 			}
 			
 			

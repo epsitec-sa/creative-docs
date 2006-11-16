@@ -68,7 +68,7 @@ namespace Epsitec.Common.Script.Developer.Panels
 			Widget panel = new Widget (parent);
 			
 			panel.TabIndex      = 10;
-			panel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			panel.TabNavigation = TabNavigationMode.ForwardTabPassive;
 			panel.PreferredSize = this.panel_size;
 			panel.Dock          = DockStyle.Left;
 			
@@ -81,10 +81,10 @@ namespace Epsitec.Common.Script.Developer.Panels
 			widget_proto.SetEmbedder (panel);
 			widget_param.SetEmbedder (panel);
 			
-			widget_proto.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			widget_proto.TabNavigation = TabNavigationMode.ForwardTabPassive;
 			widget_proto.TabIndex      = 15;
 			
-			widget_param.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			widget_param.TabNavigation = TabNavigationMode.ForwardTabPassive;
 			widget_param.TabIndex      = 20;
 			
 			widget_proto.Dock = DockStyle.Top;
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Script.Developer.Panels
 			this.text_source.TextLayout.DefaultFontSize = font_size;
 			this.text_source.TextEdited += new EventHandler (this.HandleTextSourceEdited);
 			
-			this.text_source.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.text_source.TabNavigation = TabNavigationMode.ActivateOnTab;
 			this.text_source.TabIndex      = 10;
 			this.text_source.MaxChar       = 100000;
 			

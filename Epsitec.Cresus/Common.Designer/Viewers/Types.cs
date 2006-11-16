@@ -38,7 +38,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldController.Dock = DockStyle.Left;
 			this.fieldController.TextChanged += new EventHandler(this.HandleControllerTextChanged);
 			this.fieldController.TabIndex = this.tabIndex++;
-			this.fieldController.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldController.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			//	Zone 'nullable'.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Nullable.Title, BandMode.SuiteView, GlyphShape.None, false, 0.6);
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryNullable.Dock = DockStyle.StackBegin;
 			this.primaryNullable.Pressed += new MessageEventHandler(this.HandleNullablePressed);
 			this.primaryNullable.TabIndex = this.tabIndex++;
-			this.primaryNullable.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.primaryNullable.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			//	Editeur du type.
 			this.CreateBand(out this.container, Res.Strings.Viewers.Types.Editor.Title, BandMode.SuiteView, GlyphShape.None, false, 0.6);

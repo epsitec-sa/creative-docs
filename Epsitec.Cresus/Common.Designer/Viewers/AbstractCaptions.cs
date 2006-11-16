@@ -31,7 +31,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.left.Dock = DockStyle.Left;
 			this.left.Padding = new Margins(10, 10, 10, 10);
 			this.left.TabIndex = this.tabIndex++;
-			this.left.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.left.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			this.splitter = new VSplitter(this);
 			this.splitter.Dock = DockStyle.Left;
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.right.Dock = DockStyle.Fill;
 			this.right.Padding = new Margins(1, 1, 1, 1);
 			this.right.TabIndex = this.tabIndex++;
-			this.right.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.right.TabNavigation = TabNavigationMode.ForwardTabPassive;
 			
 			//	Crée la partie gauche.			
 			this.labelEdit = new MyWidgets.TextFieldExName(this.left);
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
 			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 			this.labelEdit.TabIndex = this.tabIndex++;
-			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.labelEdit.TabNavigation = TabNavigationMode.ActivateOnTab;
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
 			this.currentTextField = this.labelEdit;
 
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Designer.Viewers
 			sup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			sup.Dock = DockStyle.Top;
 			sup.TabIndex = this.tabIndex++;
-			sup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			sup.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			this.primaryCulture = new IconButtonMark(sup);
 			this.primaryCulture.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryCultureGroup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.secondaryCultureGroup.Dock = DockStyle.StackFill;
 			this.secondaryCultureGroup.TabIndex = this.tabIndex++;
-			this.secondaryCultureGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.secondaryCultureGroup.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			//	Crée le titre.
 			this.titleBox = new FrameBox(this.right);
@@ -125,7 +125,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.scrollable.IsForegroundFrame = true;
 			this.scrollable.Panel.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 			this.scrollable.TabIndex = this.tabIndex++;
-			this.scrollable.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.scrollable.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			this.bands = new List<Band>();
 			MyWidgets.StackedPanel leftContainer, rightContainer;
@@ -159,14 +159,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryLabels.StringTextChanged += new EventHandler(this.HandleStringTextCollectionChanged);
 			this.primaryLabels.StringFocusChanged += new EventHandler(this.HandleStringFocusCollectionChanged);
 			this.primaryLabels.TabIndex = this.tabIndex++;
-			this.primaryLabels.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.primaryLabels.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			this.secondaryLabels = new MyWidgets.StringCollection(rightContainer.Container);
 			this.secondaryLabels.Dock = DockStyle.StackBegin;
 			this.secondaryLabels.StringTextChanged += new EventHandler(this.HandleStringTextCollectionChanged);
 			this.secondaryLabels.StringFocusChanged += new EventHandler(this.HandleStringFocusCollectionChanged);
 			this.secondaryLabels.TabIndex = this.tabIndex++;
-			this.secondaryLabels.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.secondaryLabels.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			//	Description.
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Description.Title, BandMode.CaptionView, GlyphShape.None, false, 0.2);
@@ -178,7 +178,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryDescription.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.primaryDescription.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.primaryDescription.TabIndex = this.tabIndex++;
-			this.primaryDescription.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.primaryDescription.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.secondaryDescription = new TextFieldMulti(rightContainer.Container);
 			this.secondaryDescription.PreferredHeight = 50;
@@ -187,7 +187,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryDescription.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.secondaryDescription.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.secondaryDescription.TabIndex = this.tabIndex++;
-			this.secondaryDescription.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.secondaryDescription.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			//	Icône.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Captions.Icon.Title, BandMode.CaptionView, GlyphShape.None, false, 0.2);
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIcon.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.primaryIcon.Dock = DockStyle.Left;
 			this.primaryIcon.TabIndex = this.tabIndex++;
-			this.primaryIcon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.primaryIcon.TabNavigation = TabNavigationMode.ActivateOnTab;
 			this.primaryIcon.Clicked += new MessageEventHandler(this.HandlePrimaryIconClicked);
 
 			this.primaryIconInfo = new StaticText(leftContainer.Container);
@@ -227,7 +227,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.primaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.primaryAbout.TabIndex = this.tabIndex++;
-			this.primaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.primaryAbout.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.secondaryAbout = new TextFieldMulti(rightContainer.Container);
 			this.secondaryAbout.PreferredHeight = 36;
@@ -236,7 +236,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.secondaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.secondaryAbout.TabIndex = this.tabIndex++;
-			this.secondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.secondaryAbout.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			//	Séparateur.
 			this.CreateBand(out leftContainer, "", BandMode.Separator, GlyphShape.None, false, 0.0);
@@ -519,7 +519,7 @@ namespace Epsitec.Common.Designer.Viewers
 			band.Dock = DockStyle.StackBegin;
 			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			band.TabIndex = this.tabIndex++;
-			band.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			band.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			leftContainer = new MyWidgets.StackedPanel(band);
 			leftContainer.Name = "LeftContainer";
@@ -530,7 +530,7 @@ namespace Epsitec.Common.Designer.Viewers
 			leftContainer.MinWidth = 100;
 			leftContainer.Dock = DockStyle.StackFill;
 			leftContainer.TabIndex = this.tabIndex++;
-			leftContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			leftContainer.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			rightContainer = new MyWidgets.StackedPanel(band);
 			rightContainer.Name = "RightContainer";
@@ -539,7 +539,7 @@ namespace Epsitec.Common.Designer.Viewers
 			rightContainer.MinWidth = 100;
 			rightContainer.Dock = DockStyle.StackFill;
 			rightContainer.TabIndex = this.tabIndex++;
-			rightContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			rightContainer.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			this.bands.Add(new Band(band, leftContainer, rightContainer, mode, backgroundIntensity));
 
@@ -555,7 +555,7 @@ namespace Epsitec.Common.Designer.Viewers
 			band.Dock = DockStyle.StackBegin;
 			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			band.TabIndex = this.tabIndex++;
-			band.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			band.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			leftContainer = new MyWidgets.StackedPanel(band);
 			leftContainer.Name = "LeftContainer";
@@ -566,7 +566,7 @@ namespace Epsitec.Common.Designer.Viewers
 			leftContainer.MinWidth = 100;
 			leftContainer.Dock = DockStyle.StackFill;
 			leftContainer.TabIndex = this.tabIndex++;
-			leftContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			leftContainer.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			this.bands.Add(new Band(band, leftContainer, null, mode, backgroundIntensity));
 
@@ -720,7 +720,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*0, 0, 0, 0);
-			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.TabNavigation = TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.Label);
 
@@ -730,7 +730,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*1, 0, 0, 0);
-			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.TabNavigation = TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryLabels);
 
@@ -740,7 +740,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*2, 0, 0, 0);
-			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.TabNavigation = TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryLabels);
 
@@ -749,7 +749,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*1, 0, 16, 0);
-			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.TabNavigation = TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryDescription);
 
@@ -758,7 +758,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*2, 0, 16, 0);
-			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.TabNavigation = TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryDescription);
 
@@ -767,7 +767,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*1, 0, 32, 0);
-			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.TabNavigation = TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryAbout);
 
@@ -776,7 +776,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*2, 0, 32, 0);
-			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.TabNavigation = TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryAbout);
 

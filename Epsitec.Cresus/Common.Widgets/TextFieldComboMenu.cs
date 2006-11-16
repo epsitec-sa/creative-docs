@@ -108,7 +108,7 @@ namespace Epsitec.Common.Widgets
 			base.Dispose (disposing);
 		}
 		
-		protected override bool AboutToGetFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode, out Widget focus)
+		protected override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
 			if (this.contents != null)
 			{

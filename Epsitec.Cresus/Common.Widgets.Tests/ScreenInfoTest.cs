@@ -200,7 +200,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			
-			protected override bool AboutToLoseFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode)
+			protected override bool AboutToLoseFocus(TabNavigationDir dir, TabNavigationMode mode)
 			{
 				return false;
 			}

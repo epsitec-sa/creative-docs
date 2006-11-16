@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Panels
 			this.grid = new RadioIconGrid(this);
 			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.grid.TabIndex = 0;
-			this.grid.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.grid.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.AddRadioIcon(Properties.VolumeType.BoxClose);
 			this.AddRadioIcon(Properties.VolumeType.BoxOpen);
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealPercent(this.fieldRapport.TextFieldReal);
 			this.fieldRapport.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldRapport.TabIndex = 2;
-			this.fieldRapport.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldRapport.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldRapport, Res.Strings.Panel.Volume.Tooltip.Rapport);
 
 			this.fieldLeft = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldLeft.TextFieldReal.InternalMaxValue = 90.0M;
 			this.fieldLeft.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldLeft.TabIndex = 3;
-			this.fieldLeft.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldLeft.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldLeft, Res.Strings.Panel.Volume.Tooltip.Left);
 
 			this.fieldRight = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldRight.TextFieldReal.InternalMaxValue = 90.0M;
 			this.fieldRight.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldRight.TabIndex = 4;
-			this.fieldRight.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldRight.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldRight, Res.Strings.Panel.Volume.Tooltip.Right);
 
 			this.isNormalAndExtended = true;

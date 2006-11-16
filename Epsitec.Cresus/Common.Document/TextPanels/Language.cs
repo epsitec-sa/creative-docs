@@ -21,7 +21,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldLanguage.IsReadOnly = true;
 			this.fieldLanguage.TextChanged += new EventHandler(this.HandleLanguageChanged);
 			this.fieldLanguage.TabIndex = this.tabIndex++;
-			this.fieldLanguage.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldLanguage.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldLanguage, Res.Strings.TextPanel.Language.Tooltip.Language);
 
 			this.buttonHyphen = this.CreateIconButton(Misc.Icon("TextHyphen"), Res.Strings.Action.ParagraphHyphen, new MessageEventHandler(this.HandleHyphenClicked));

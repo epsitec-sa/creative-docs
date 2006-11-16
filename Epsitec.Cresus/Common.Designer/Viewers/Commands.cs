@@ -47,7 +47,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryStatefull.Dock = DockStyle.Left;
 			this.primaryStatefull.Pressed += new MessageEventHandler(this.HandleStatefullPressed);
 			this.primaryStatefull.TabIndex = this.tabIndex++;
-			this.primaryStatefull.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.primaryStatefull.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			//	Shortcuts.
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Commands.Shortcut.Title, BandMode.SuiteView, GlyphShape.None, false, 0.6);
@@ -58,14 +58,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryShortcut1.Dock = DockStyle.StackBegin;
 			this.primaryShortcut1.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
 			this.primaryShortcut1.TabIndex = this.tabIndex++;
-			this.primaryShortcut1.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.primaryShortcut1.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			this.primaryShortcut2 = new ShortcutEditor(leftContainer.Container);
 			this.primaryShortcut2.Title = Res.Strings.Viewers.Commands.Shortcut.Suppl;
 			this.primaryShortcut2.Dock = DockStyle.StackBegin;
 			this.primaryShortcut2.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
 			this.primaryShortcut2.TabIndex = this.tabIndex++;
-			this.primaryShortcut2.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.primaryShortcut2.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			this.secondaryShortcut1 = new ShortcutEditor(rightContainer.Container);
 			this.secondaryShortcut1.Title = Res.Strings.Viewers.Commands.Shortcut.Main;
@@ -73,14 +73,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryShortcut1.Dock = DockStyle.StackBegin;
 			this.secondaryShortcut1.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
 			this.secondaryShortcut1.TabIndex = this.tabIndex++;
-			this.secondaryShortcut1.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.secondaryShortcut1.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			this.secondaryShortcut2 = new ShortcutEditor(rightContainer.Container);
 			this.secondaryShortcut2.Title = Res.Strings.Viewers.Commands.Shortcut.Suppl;
 			this.secondaryShortcut2.Dock = DockStyle.StackBegin;
 			this.secondaryShortcut2.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
 			this.secondaryShortcut2.TabIndex = this.tabIndex++;
-			this.secondaryShortcut2.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.secondaryShortcut2.TabNavigation = TabNavigationMode.ForwardTabPassive;
 
 			//	Group.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Group.Title, BandMode.SuiteView, GlyphShape.None, false, 0.6);
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryGroup.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.primaryGroup.ComboOpening += new EventHandler<CancelEventArgs>(this.HandleGroupComboOpening);
 			this.primaryGroup.TabIndex = this.tabIndex++;
-			this.primaryGroup.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.primaryGroup.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			//	Résumé des paramètres.
 			this.buttonSuiteExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.6);

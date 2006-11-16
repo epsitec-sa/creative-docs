@@ -47,7 +47,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 			this.labelEdit.TabIndex = this.tabIndex++;
-			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.labelEdit.TabNavigation = TabNavigationMode.ActivateOnTab;
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
 			this.currentTextField = this.labelEdit;
 
@@ -56,14 +56,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryEdit.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.primaryEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.primaryEdit.TabIndex = this.tabIndex++;
-			this.primaryEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.primaryEdit.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.secondaryEdit = new TextFieldMulti(this);
 			this.secondaryEdit.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryEdit.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.secondaryEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.secondaryEdit.TabIndex = this.tabIndex++;
-			this.secondaryEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.secondaryEdit.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.labelAbout = new StaticText(this);
 			this.labelAbout.ContentAlignment = ContentAlignment.MiddleRight;
@@ -74,14 +74,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.primaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.primaryAbout.TabIndex = this.tabIndex++;
-			this.primaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.primaryAbout.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.secondaryAbout = new TextFieldMulti(this);
 			this.secondaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.secondaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.secondaryAbout.TabIndex = this.tabIndex++;
-			this.secondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.secondaryAbout.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.UpdateCultures();
 			this.UpdateEdit();
@@ -405,7 +405,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*0, 0, 0, 0);
-			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.TabNavigation = TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.Label);
 
@@ -415,7 +415,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*1, 0, 0, 0);
-			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.TabNavigation = TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryText);
 
@@ -425,7 +425,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*2, 0, 0, 0);
-			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.TabNavigation = TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryText);
 
@@ -434,7 +434,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*1, 0, 16, 0);
-			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.TabNavigation = TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryAbout);
 
@@ -443,7 +443,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*2, 0, 16, 0);
-			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.TabNavigation = TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryAbout);
 

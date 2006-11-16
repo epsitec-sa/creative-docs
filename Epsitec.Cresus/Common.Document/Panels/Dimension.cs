@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Panels
 			this.gridForm = new RadioIconGrid(this);
 			this.gridForm.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.gridForm.TabIndex = 0;
-			this.gridForm.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.gridForm.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.AddRadioIcon(Properties.DimensionForm.Auto);
 			this.AddRadioIcon(Properties.DimensionForm.Inside);
@@ -23,7 +23,7 @@ namespace Epsitec.Common.Document.Panels
 			this.gridJustif = new RadioIconGrid(this);
 			this.gridJustif.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.gridJustif.TabIndex = 1;
-			this.gridJustif.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.gridJustif.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.AddRadioIcon(Properties.DimensionJustif.CenterOrLeft);
 			this.AddRadioIcon(Properties.DimensionJustif.CenterOrRight);
@@ -39,7 +39,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealDimension(this.addLength.TextFieldReal);
 			this.addLength.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.addLength.TabIndex = 10;
-			this.addLength.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.addLength.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.addLength, Res.Strings.Panel.Dimension.Tooltip.AddLength);
 
 			this.outLength = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
@@ -51,13 +51,13 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealDimension(this.outLength.TextFieldReal);
 			this.outLength.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.outLength.TabIndex = 11;
-			this.outLength.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.outLength.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.outLength, Res.Strings.Panel.Dimension.Tooltip.OutLength);
 
 			this.rotateText = new IconButton(this);
 			this.rotateText.Clicked += new MessageEventHandler(this.HandleRotateTextClicked);
 			this.rotateText.TabIndex = 12;
-			this.rotateText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.rotateText.TabNavigation = TabNavigationMode.ActivateOnTab;
 			this.rotateText.IconName = Misc.Icon("DimensionRotateText");
 			this.rotateText.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
 			ToolTip.Default.SetToolTip(this.rotateText, Res.Strings.Panel.Dimension.Tooltip.RotateText);
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fontOffset.TextFieldReal.TextSuffix = "%";
 			this.fontOffset.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fontOffset.TabIndex = 13;
-			this.fontOffset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fontOffset.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontOffset, Res.Strings.Panel.Dimension.Tooltip.FontOffset);
 
 			this.dimensionText = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextField);
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Document.Panels
 			this.dimensionText.LabelLongText  = Res.Strings.Panel.Dimension.Long.Text;
 			this.dimensionText.TextField.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.dimensionText.TabIndex = 14;
-			this.dimensionText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.dimensionText.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.dimensionText, Res.Strings.Panel.Dimension.Tooltip.Text);
 
 			this.isNormalAndExtended = true;

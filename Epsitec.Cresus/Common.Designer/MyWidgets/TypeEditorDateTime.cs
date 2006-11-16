@@ -16,18 +16,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			Widget band = new Widget(this);
 			band.TabIndex = this.tabIndex++;
-			band.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			band.TabNavigation = TabNavigationMode.ForwardTabPassive;
 			band.Dock = DockStyle.StackBegin;
 			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
 			Widget left = new Widget(band);
 			left.TabIndex = this.tabIndex++;
-			left.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			left.TabNavigation = TabNavigationMode.ForwardTabPassive;
 			left.Dock = DockStyle.Fill;
 
 			Widget right = new Widget(band);
 			right.TabIndex = this.tabIndex++;
-			right.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			right.TabNavigation = TabNavigationMode.ForwardTabPassive;
 			right.Dock = DockStyle.Fill;
 
 			this.CreateComboLabeled("Résolution", left, out group, out this.fieldResol);

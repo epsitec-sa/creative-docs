@@ -56,7 +56,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonClose.Margins = new Margins(10, 0, 0, 10);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleUpdateButtonCloseClicked);
 				buttonClose.TabIndex = 1000;
-				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				buttonClose.TabNavigation = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
 			}
 

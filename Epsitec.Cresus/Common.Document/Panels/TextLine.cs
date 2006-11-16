@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Panels
 			this.gridHorizontal = new RadioIconGrid(this);
 			this.gridHorizontal.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.gridHorizontal.TabIndex = 0;
-			this.gridHorizontal.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.gridHorizontal.TabNavigation = TabNavigationMode.ActivateOnTab;
 
 			this.AddRadioIcon(Properties.JustifHorizontal.Left);
 			this.AddRadioIcon(Properties.JustifHorizontal.Center);
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldOffset.TextFieldReal.TextSuffix = "%";
 			this.fieldOffset.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldOffset.TabIndex = 20;
-			this.fieldOffset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldOffset.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldOffset, Res.Strings.Panel.TextLine.Tooltip.Offset);
 
 			this.fieldAdd = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldAdd.TextFieldReal.TextSuffix = "%";
 			this.fieldAdd.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldAdd.TabIndex = 21;
-			this.fieldAdd.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldAdd.TabNavigation = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldAdd, Res.Strings.Panel.TextLine.Tooltip.Add);
 
 			this.isNormalAndExtended = true;

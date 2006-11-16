@@ -86,7 +86,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonClose.Margins = new Margins(posx, 0, 0, 6);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = this.tabIndex++;
-				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				buttonClose.TabNavigation = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
 
 				//	Bouton d'aide.
@@ -98,7 +98,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonHelp.Margins = new Margins(posx, 0, 0, 6);
 				buttonHelp.Clicked += new MessageEventHandler(this.HandleButtonHelpClicked);
 				buttonHelp.TabIndex = this.tabIndex++;
-				buttonHelp.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				buttonHelp.TabNavigation = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonHelp, Res.Strings.Dialog.Tooltip.Help);
 
 				double dim = buttonClose.PreferredHeight;
@@ -112,7 +112,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.pagePrev.Margins = new Margins(posx, 0, 0, 6);
 				this.pagePrev.Clicked += new MessageEventHandler(this.HandlePagePrevClicked);
 				this.pagePrev.TabIndex = this.tabIndex++;
-				this.pagePrev.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.pagePrev.TabNavigation = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.pagePrev, DocumentEditor.GetRes("Action.PagePrev"));
 
 				posx += pagePrev.PreferredWidth+1;
@@ -123,7 +123,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.pageMenu.Margins = new Margins(posx, 0, 0, 6);
 				this.pageMenu.Clicked += new MessageEventHandler(this.HandlePageMenuClicked);
 				this.pageMenu.TabIndex = this.tabIndex++;
-				this.pageMenu.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.pageMenu.TabNavigation = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.pageMenu, DocumentEditor.GetRes("Action.PageMenu"));
 
 				posx += pageMenu.PreferredWidth+1;
@@ -135,7 +135,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.pageNext.Margins = new Margins(posx, 0, 0, 6);
 				this.pageNext.Clicked += new MessageEventHandler(this.HandlePageNextClicked);
 				this.pageNext.TabIndex = this.tabIndex++;
-				this.pageNext.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.pageNext.TabNavigation = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.pageNext, DocumentEditor.GetRes("Action.PageNext"));
 
 				//	Bouton page courante.
@@ -147,7 +147,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonCurrent.Margins = new Margins(posx, 0, 0, 6);
 				this.buttonCurrent.Clicked += new MessageEventHandler(this.HandleButtonCurrentClicked);
 				this.buttonCurrent.TabIndex = this.tabIndex++;
-				this.buttonCurrent.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.buttonCurrent.TabNavigation = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.buttonCurrent, Res.Strings.Dialog.PageStack.Tooltip.Current);
 			}
 

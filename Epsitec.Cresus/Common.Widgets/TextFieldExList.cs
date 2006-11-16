@@ -221,7 +221,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override bool AboutToLoseFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode)
+		protected override bool AboutToLoseFocus(TabNavigationDir dir, TabNavigationMode mode)
 		{
 			if (this.Mode == TextFieldExListMode.EditActive)
 			{
@@ -235,10 +235,10 @@ namespace Epsitec.Common.Widgets
 			return base.AboutToLoseFocus (dir, mode);
 		}
 		
-		protected override bool AboutToGetFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode, out Widget focus)
+		protected override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
 			if ((this.mode == TextFieldExListMode.EditPassive) &&
-				(mode != Widget.TabNavigationMode.Passive))
+				(mode != TabNavigationMode.Passive))
 			{
 				//	Si on entre par un TAB dans ce widget, il faut passer en mode édition active,
 				//	si l'état précédent était passif :

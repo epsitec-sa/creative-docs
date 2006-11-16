@@ -60,7 +60,7 @@ namespace Epsitec.Common.UI.Panels
 			base.PaintBackgroundImplementation (graphics, clipRect);
 		}
 		
-		protected override bool ProcessTabChildrenExit(Widgets.Widget.TabNavigationDir dir, Widgets.Widget.TabNavigationMode mode, out Widgets.Widget focus)
+		protected override bool ProcessTabChildrenExit(Widgets.TabNavigationDir dir, Widgets.TabNavigationMode mode, out Widgets.Widget focus)
 		{
 			PanelStack stack = PanelStack.GetPanelStack (this);
 			
