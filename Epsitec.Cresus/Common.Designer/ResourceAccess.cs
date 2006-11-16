@@ -1292,16 +1292,18 @@ namespace Epsitec.Common.Designer
 			{
 				return Type.Panels;
 			}
-
-			System.Diagnostics.Debug.Assert(this.IsCaptionsType);
-			string name = this.DirectGetName(druid);
-			if (string.IsNullOrEmpty(name))
-			{
-				return Type.Unknow;
-			}
 			else
 			{
-				return ResourceAccess.GetFilterType(name);
+				System.Diagnostics.Debug.Assert(this.IsCaptionsType);
+				string name = this.DirectGetName(druid);
+				if (string.IsNullOrEmpty(name))
+				{
+					return Type.Unknow;
+				}
+				else
+				{
+					return ResourceAccess.GetFilterType(name);
+				}
 			}
 		}
 
@@ -1314,6 +1316,8 @@ namespace Epsitec.Common.Designer
 
 		public string DirectGetName(Druid druid)
 		{
+			//	Retourne le nom d'une ressource, sans tenir compte du filtre.
+			//	La recherche s'effectue toujours dans la culture de base.
 			if (this.type == Type.Panels)
 			{
 				foreach (ResourceBundle bundle in this.panelsList)
@@ -1325,11 +1329,12 @@ namespace Epsitec.Common.Designer
 				}
 				return "?";
 			}
-			//	Retourne le nom d'une ressource, sans tenir compte du filtre.
-			//	La recherche s'effectue toujours dans la culture de base.
-			System.Diagnostics.Debug.Assert(this.IsBundlesType);
-			ResourceBundle.Field field = this.primaryBundle[druid];
-			return field.Name;
+			else
+			{
+				System.Diagnostics.Debug.Assert(this.IsBundlesType);
+				ResourceBundle.Field field = this.primaryBundle[druid];
+				return field.Name;
+			}
 		}
 
 		public string DirectGetIcon(Druid druid)

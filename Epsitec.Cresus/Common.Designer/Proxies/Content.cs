@@ -114,7 +114,7 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
-		public static readonly DependencyProperty DruidCaptionProperty	= DependencyProperty.Register("DruidCaption", typeof(string), typeof(Content), new DependencyPropertyMetadata(0.0, Content.NotifyDruidChanged));
-		public static readonly DependencyProperty DruidPanelProperty	= DependencyProperty.Register("DruidPanel",   typeof(string), typeof(Content), new DependencyPropertyMetadata(0.0, Content.NotifyDruidChanged));
+		public static readonly DependencyProperty DruidCaptionProperty = DependencyProperty.Register("DruidCaption", typeof(string), typeof(Content), new DependencyPropertyMetadata(0.0, Content.NotifyDruidChanged));
+		public static readonly DependencyProperty DruidPanelProperty   = DependencyProperty.Register("DruidPanel",   typeof(string), typeof(Content), new DependencyPropertyMetadata(0.0, Content.NotifyDruidChanged));
 	}
 }

@@ -258,11 +258,11 @@ namespace Epsitec.Common.Designer
 		static ProxyManager()
 		{
 			StringType druidCaptionStringType = new StringType();
-			druidCaptionStringType.DefineDefaultController("DruidCaption", "");  // utilise DruidCaptionController
+			druidCaptionStringType.DefineDefaultController("Druid", "Caption");  // utilise DruidCaptionController
 			ProxyManager.DruidCaptionStringType = druidCaptionStringType;
 
 			StringType druidPanelStringType = new StringType();
-			druidPanelStringType.DefineDefaultController("DruidPanel", "");  // utilise DruidPanelController
+			druidPanelStringType.DefineDefaultController("Druid", "Panel");  // utilise DruidPanelController
 			ProxyManager.DruidPanelStringType = druidPanelStringType;
 
 			DoubleType locationNumericType = new DoubleType(-9999, 9999, 1.0M);

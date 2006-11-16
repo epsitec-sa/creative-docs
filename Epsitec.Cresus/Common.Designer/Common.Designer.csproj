@@ -40,9 +40,7 @@
     <Compile Include="Comparers\WidgetDisposition.cs" />
     <Compile Include="Constrain.cs" />
     <Compile Include="ConstrainsList.cs" />
-    <Compile Include="Controllers\AbstractDruidController.cs" />
-    <Compile Include="Controllers\DruidPanelController.cs" />
-    <Compile Include="Controllers\DruidCaptionController.cs" />
+    <Compile Include="Controllers\DruidController.cs" />
     <Compile Include="Dialogs\ResourceTypeType.cs" />
     <Compile Include="Dialogs\Open.cs" />
     <Compile Include="Dialogs\Icon.cs" />

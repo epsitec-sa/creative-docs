@@ -8,14 +8,16 @@ using Epsitec.Common.UI.Controllers;
 using Epsitec.Common.Types;
 using Epsitec.Common.Support;
 
-[assembly: Controller(typeof(Epsitec.Common.Designer.Controllers.AbstractDruidController))]
+[assembly: Controller(typeof(Epsitec.Common.Designer.Controllers.DruidController))]
 
 namespace Epsitec.Common.Designer.Controllers
 {
-	public abstract class AbstractDruidController : AbstractController, Widgets.Layouts.IGridPermeable
+	public class DruidController : AbstractController, Widgets.Layouts.IGridPermeable
 	{
-		public AbstractDruidController(string parameter)
+		public DruidController(string parameter)
 		{
+			System.Diagnostics.Debug.Assert(parameter == "Caption" || parameter == "Panel");
+			this.parameter = parameter;
 		}
 
 		public override object GetActualValue()
@@ -79,19 +81,16 @@ namespace Epsitec.Common.Designer.Controllers
 				}
 				else
 				{
-					ResourceAccess access = null;
+					ResourceAccess access;
 
-					if (this is DruidCaptionController)
+					if (this.parameter == "Caption")
 					{
 						access = module.AccessCaptions;
 					}
-
-					if (this is DruidPanelController)
+					else
 					{
 						access = module.AccessPanels;
 					}
-
-					System.Diagnostics.Debug.Assert(access != null);
 
 					string text = ResourceAccess.TypeDisplayName(access.DirectGetType(d), false);
 					this.title.Text = string.Concat("<font size=\"150%\"><b>", text, "</b></font>");
@@ -119,12 +118,11 @@ namespace Epsitec.Common.Designer.Controllers
 
 			Druid d = Druid.Parse(this.druid);
 
-			if (this is DruidCaptionController)
+			if (this.parameter == "Caption")
 			{
 				d = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Unknow, d, null);
 			}
-
-			if (this is DruidPanelController)
+			else
 			{
 				d = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Panels, d, null);
 			}
@@ -167,6 +165,7 @@ namespace Epsitec.Common.Designer.Controllers
 		#endregion
 
 
+		private string					parameter;
 		private string					druid;
 		private StaticText				title;
 		private Button					button;
