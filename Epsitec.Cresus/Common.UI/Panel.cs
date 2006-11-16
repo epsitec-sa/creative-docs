@@ -156,6 +156,23 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public bool								HasValidEditionPanel
+		{
+			get
+			{
+				if ((this.PanelMode == PanelMode.Default) &&
+					(this.editionPanel != null) &&
+					(this.editionPanel.HasChildren))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+
 		/// <summary>
 		/// Gets the panel for the specified panel mode.
 		/// </summary>
@@ -258,6 +275,41 @@ namespace Epsitec.Common.UI
 
 			return panel;
 		}
+
+		protected override bool PreProcessMessage(Widgets.Message message, Drawing.Point pos)
+		{
+			if (this.HasValidEditionPanel)
+			{
+				Widgets.Window window = this.Window;
+				PanelStack panelStack = PanelStack.GetPanelStack (this);
+
+				if (panelStack != null)
+				{
+					if ((message.IsMouseType) &&
+						(window != null))
+					{
+						if (message.Type == Widgets.MessageType.MouseLeave)
+						{
+							window.MouseCursor = Widgets.MouseCursor.Default;
+						}
+						else
+						{
+							window.MouseCursor = Widgets.MouseCursor.AsIBeam;
+						}
+					}
+
+					if (message.Type == Widgets.MessageType.MouseDown)
+					{
+						panelStack.StartEdition (this.EditionPanel);
+					}
+
+					return false;
+				}
+			}
+			
+			return base.PreProcessMessage (message, pos);
+		}
+		
 
 		protected override void Dispose(bool disposing)
 		{

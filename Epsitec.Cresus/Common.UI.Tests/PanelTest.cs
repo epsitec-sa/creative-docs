@@ -100,11 +100,11 @@ namespace Epsitec.Common.UI
 			buttonEdit.TabNavigation = Widgets.Widget.TabNavigationMode.ActivateOnTab;
 			buttonEdit.Dock = Widgets.DockStyle.Fill;
 			buttonEdit.Text = "Edit";
-			buttonEdit.Clicked += delegate (object sender, Widgets.MessageEventArgs e)
-			{
-				Panel editPanel = panel.EditionPanel;
-				panelStack.StartEdition (editPanel);
-			};
+			//buttonEdit.Clicked += delegate (object sender, Widgets.MessageEventArgs e)
+			//{
+			//    Panel editPanel = panel.EditionPanel;
+			//    panelStack.StartEdition (editPanel);
+			//};
 
 			panel.PreferredSize = new Drawing.Size (100, 100);
 			panel.Anchor = Widgets.AnchorStyles.TopRight;
