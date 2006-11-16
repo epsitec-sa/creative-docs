@@ -815,6 +815,12 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public Druid AccessDruid(int index)
+		{
+			//	Retourne le druid d'un index donné.
+			return this.druidsIndex[index];
+		}
+
 		public int AccessIndex
 		{
 			//	Index de l'accès en cours.

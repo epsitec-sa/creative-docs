@@ -270,6 +270,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.panelContainer.SetParent(this.panelEditor.Parent);
 				this.panelContainer.ZOrder = this.panelEditor.ZOrder+1;
 				this.panelEditor.Panel = this.panelContainer;
+				this.panelEditor.Druid = this.access.AccessDruid(sel);
 
 				int index = this.access.AccessIndex;
 				this.SetTextField(this.labelEdit, index, null, ResourceAccess.FieldType.Name);

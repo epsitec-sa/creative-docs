@@ -109,6 +109,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public Druid Druid
+		{
+			//	Druid du conteneur des widgets.
+			get
+			{
+				return this.druid;
+			}
+			set
+			{
+				this.druid = value;
+			}
+		}
+
 		public ObjectModifier ObjectModifier
 		{
 			//	Retourne le modificateur d'objets.
@@ -1530,6 +1543,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (obj is AbstractButton || obj is StaticText || obj is GroupBox || obj is UI.PanelPlaceholder)
 			{
 				ResourceAccess.Type type;
+				List<Druid> exclude = null;
 
 				if (obj is AbstractButton)
 				{
@@ -1538,6 +1552,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				else if (obj is UI.PanelPlaceholder)
 				{
 					type = ResourceAccess.Type.Panels;
+
+					exclude = new List<Druid>();
+					exclude.Add(this.druid);
 				}
 				else
 				{
@@ -1545,7 +1562,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 
 				Druid druid = Druid.Parse(this.objectModifier.GetDruid(obj));
-				druid = this.module.MainWindow.DlgResourceSelector(this.module, type, druid, null);
+				druid = this.module.MainWindow.DlgResourceSelector(this.module, type, druid, exclude);
 				this.objectModifier.SetDruid(obj, druid.ToString());
 
 				if (druid.IsEmpty)
@@ -4594,6 +4611,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected Module					module;
 		protected UI.Panel					panel;
+		protected Druid						druid;
 		protected PanelsContext				context;
 		protected ObjectModifier			objectModifier;
 		protected ConstrainsList			constrainsList;
