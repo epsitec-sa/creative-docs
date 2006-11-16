@@ -761,15 +761,15 @@ namespace Epsitec.Common.Widgets
 				{
 					this.SetValue (Widget.TabIndexProperty, value);
 					
-					if ((this.tab_navigation_mode == TabNavigationMode.Passive) &&
+					if ((this.TabNavigation == TabNavigationMode.Passive) &&
 						(value > 0))
 					{
-						this.tab_navigation_mode = TabNavigationMode.ActivateOnTab;
+						this.TabNavigation = TabNavigationMode.ActivateOnTab;
 					}
-					else if ((this.tab_navigation_mode == TabNavigationMode.ActivateOnTab) &&
+					else if ((this.TabNavigation == TabNavigationMode.ActivateOnTab) &&
 						/**/ (value <= 0))
 					{
-						this.tab_navigation_mode = TabNavigationMode.Passive;
+						this.TabNavigation = TabNavigationMode.Passive;
 					}
 				}
 			}
@@ -779,11 +779,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.tab_navigation_mode;
+				return (TabNavigationMode) this.GetValue (Widget.TabNavigationModeProperty);
 			}
 			set
 			{
-				this.tab_navigation_mode = value;
+				this.SetValue (Widget.TabNavigationModeProperty, value);
 			}
 		}
 		
@@ -2298,7 +2298,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			if ((!disable_first_enter) &&
-				((this.tab_navigation_mode & TabNavigationMode.ForwardToChildren) != 0) &&
+				((this.TabNavigation & TabNavigationMode.ForwardToChildren) != 0) &&
 				(this.HasChildren))
 			{
 				//	Ce widget permet aux enfants d'entrer dans la liste accessible par la
@@ -2327,9 +2327,9 @@ namespace Epsitec.Common.Widgets
 			
 			if (accept_focus)
 			{
-				if ((this.tab_navigation_mode & mode) != 0)
+				if ((this.TabNavigation & mode) != 0)
 				{
-					if ((this.tab_navigation_mode & TabNavigationMode.ForwardOnly) != 0)
+					if ((this.TabNavigation & TabNavigationMode.ForwardOnly) != 0)
 					{
 						if (dir != TabNavigationDir.Backwards)
 						{
@@ -2365,7 +2365,7 @@ namespace Epsitec.Common.Widgets
 							
 							if (find != null)
 							{
-								if (((find.tab_navigation_mode & TabNavigationMode.ForwardToChildren) != 0) &&
+								if (((find.TabNavigation & TabNavigationMode.ForwardToChildren) != 0) &&
 									(find.HasChildren))
 								{
 									//	Entre en marche arrière dans le widget...
@@ -2387,8 +2387,8 @@ namespace Epsitec.Common.Widgets
 							
 							if (find != null)
 							{
-								if (((find.tab_navigation_mode & TabNavigationMode.ForwardToChildren) != 0) &&
-									((find.tab_navigation_mode & TabNavigationMode.ForwardOnly) != 0))
+								if (((find.TabNavigation & TabNavigationMode.ForwardToChildren) != 0) &&
+									((find.TabNavigation & TabNavigationMode.ForwardOnly) != 0))
 								{
 									if (find.HasChildren)
 									{
@@ -2425,7 +2425,7 @@ namespace Epsitec.Common.Widgets
 						find = this.Children.FindPrevious (find) as Widget;
 					}
 					if ((find == null) ||
-						((find.tab_navigation_mode & mode) != 0))
+						((find.TabNavigation & mode) != 0))
 					{
 						break;
 					}
@@ -2448,14 +2448,14 @@ namespace Epsitec.Common.Widgets
 					
 					find = null;
 
-					if ((parent.tab_navigation_mode & TabNavigationMode.ForwardToChildren) != 0)
+					if ((parent.TabNavigation & TabNavigationMode.ForwardToChildren) != 0)
 					{
 						bool accept;
 						
 						switch (dir)
 						{
 							case TabNavigationDir.Backwards:
-								accept = (parent.tab_navigation_mode & TabNavigationMode.ForwardOnly) == 0;
+								accept = (parent.TabNavigation & TabNavigationMode.ForwardOnly) == 0;
 								find   = parent.FindTabWidget (dir, mode, true, accept);
 								break;
 							
@@ -4111,6 +4111,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty TextProperty = DependencyProperty.Register ("Text", typeof (string), typeof (Widget), new DependencyPropertyMetadata (Widget.GetTextValue, Widget.SetTextValue, Widget.NotifyTextChanged));
 		public static readonly DependencyProperty TabIndexProperty = DependencyProperty.Register ("TabIndex", typeof (int), typeof (Widget), new DependencyPropertyMetadata (0));
 		public static readonly DependencyProperty IconNameProperty = DependencyProperty.Register ("IconName", typeof (string), typeof (Widget), new Helpers.VisualPropertyMetadata (null, Widget.NotifyIconNameChanged, Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty TabNavigationModeProperty = DependencyProperty.Register ("TabNavigationMode", typeof (TabNavigationMode), typeof (Widget), new DependencyPropertyMetadata (TabNavigationMode.Passive));
 		
 		private InternalState					internal_state;
 		
@@ -4118,7 +4119,6 @@ namespace Epsitec.Common.Widgets
 		private HypertextInfo					hypertext;
 		
 		private TextLayout						text_layout;
-		private TabNavigationMode				tab_navigation_mode;
 		private Collections.ShortcutCollection	shortcuts;
 		private double							default_font_height;
 		private MouseCursor						mouse_cursor;
