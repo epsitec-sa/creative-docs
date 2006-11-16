@@ -1,5 +1,5 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
@@ -12,16 +12,21 @@ namespace Epsitec.Common.UI
 {
 	/// <summary>
 	/// The <c>AbstractPlaceholder</c> class is the base class for the
-	/// <see cref="Placeholder"/> and <see cref="PanelPlaceholder"/>
-	/// classes.
+	/// <see cref="Placeholder"/> and <see cref="PanelPlaceholder"/> classes.
+	/// Data binding with a source is done by attaching a <c>Binding</c> to
+	/// the <c>AbstractPlaceholder.ValueProperty</c>.
 	/// </summary>
 	public abstract class AbstractPlaceholder : Widgets.FrameBox
 	{
 		protected AbstractPlaceholder()
 		{
 		}
-		
 
+
+		/// <summary>
+		/// Gets the binding for the value property.
+		/// </summary>
+		/// <value>The binding for the value property.</value>
 		public Binding							ValueBinding
 		{
 			get
@@ -29,7 +34,11 @@ namespace Epsitec.Common.UI
 				return this.GetBinding (AbstractPlaceholder.ValueProperty);
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the binding expression for the value property.
+		/// </summary>
+		/// <value>The binding expression for the value property.</value>
 		public BindingExpression				ValueBindingExpression
 		{
 			get
@@ -38,6 +47,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets the type of the data-bound value.
+		/// </summary>
+		/// <value>The type of the data-bound value.</value>
 		public INamedType						ValueType
 		{
 			get
@@ -46,6 +59,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets the name of the data-bound value.
+		/// </summary>
+		/// <value>The name of the data-bound value.</value>
 		public string							ValueName
 		{
 			get
@@ -53,7 +70,11 @@ namespace Epsitec.Common.UI
 				return this.valueName;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the caption of the data-bound value.
+		/// </summary>
+		/// <value>The caption of the data-bound value.</value>
 		public Caption							ValueCaption
 		{
 			get
@@ -77,8 +98,11 @@ namespace Epsitec.Common.UI
 				return Support.CaptionCache.Instance.GetCaption (manager, captionId);
 			}
 		}
-		
-		
+
+		/// <summary>
+		/// Gets or sets the value of the data-bound value.
+		/// </summary>
+		/// <value>The value.</value>
 		public object							Value
 		{
 			get
@@ -89,6 +113,18 @@ namespace Epsitec.Common.UI
 			{
 				this.SetValue (AbstractPlaceholder.ValueProperty, value);
 			}
+		}
+
+
+		/// <summary>
+		/// Gets the type of the value after executing <c>UpdateValueType</c>.
+		/// This method is reserved for internal use.
+		/// </summary>
+		/// <returns>The named type for the value or <c>null</c>.</returns>
+		internal INamedType InternalUpdateValueType()
+		{
+			this.UpdateValueType ();
+			return this.valueType;
 		}
 
 		protected override void OnBindingChanged(DependencyProperty property)
@@ -106,7 +142,7 @@ namespace Epsitec.Common.UI
 			this.UpdateValueType ();
 		}
 
-		internal INamedType UpdateValueType()
+		protected virtual void UpdateValueType()
 		{
 			INamedType oldValueType = this.valueType;
 			INamedType newValueType = null;
@@ -138,8 +174,6 @@ namespace Epsitec.Common.UI
 			{
 				this.UpdateValueName (oldValueName, newValueName);
 			}
-
-			return this.valueType;
 		}
 
 		protected virtual void UpdateValueType(object oldValueType, object newValueType)
@@ -154,7 +188,7 @@ namespace Epsitec.Common.UI
 		{
 		}
 
-		protected virtual void HandleValueChanged(object oldValue, object newValue)
+		private void HandleValueChanged(object oldValue, object newValue)
 		{
 			this.UpdateValueType ();
 			this.UpdateValue (oldValue, newValue);

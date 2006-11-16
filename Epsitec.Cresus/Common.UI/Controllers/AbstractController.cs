@@ -64,7 +64,7 @@ namespace Epsitec.Common.UI.Controllers
 
 				if (type == null)
 				{
-					type = this.placeholder.UpdateValueType ();
+					type = this.placeholder.InternalUpdateValueType ();
 				}
 				
 				if (type != null)

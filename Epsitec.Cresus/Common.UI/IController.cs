@@ -1,5 +1,5 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
 
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.UI
 {
 	/// <summary>
-	/// The <c>IController</c> interface is used by the <see cref="T:Placeholder"/>
+	/// The <c>IController</c> interface is used by the <see cref="Placeholder"/>
 	/// class to communicate with its controller.
 	/// </summary>
 	public interface IController

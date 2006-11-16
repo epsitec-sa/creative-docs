@@ -1,12 +1,18 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.UI;
 
 using System.Collections.Generic;
 
 namespace Epsitec.Common.UI
 {
+	/// <summary>
+	/// The <c>PanelMask</c> class defines a translucent mask which covers part
+	/// of a <see cref="PanelStack"/>. It is used with the <c>Panels.EditPanel</c>
+	/// class to focus the user's attention on the important areas of the display.
+	/// </summary>
 	public class PanelMask : Widgets.Widget
 	{
 		public PanelMask()
@@ -58,7 +64,7 @@ namespace Epsitec.Common.UI
 		{
 #if true
 			graphics.AddFilledRectangle (this.Client.Bounds);
-			graphics.RenderSolid (Drawing.Color.FromAlphaRgb (0.5, 1.0, 0.0, 0.0));
+			graphics.RenderSolid (this.MaskColor);
 #else
 			Drawing.Path pathA = new Drawing.Path (this.Client.Bounds);
 			Drawing.Path pathB = new Drawing.Path (this.Aperture);
@@ -73,7 +79,7 @@ namespace Epsitec.Common.UI
 #endif
 		}
 
-		public static readonly DependencyProperty MaskColorProperty = DependencyProperty.Register ("MaskColor", typeof (Drawing.Color), typeof (PanelMask), new Widgets.Helpers.VisualPropertyMetadata (Drawing.Color.FromAlphaRgb (0.2, 0.8, 0.8, 0.8), Widgets.Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty MaskColorProperty = DependencyProperty.Register ("MaskColor", typeof (Drawing.Color), typeof (PanelMask), new Widgets.Helpers.VisualPropertyMetadata (Drawing.Color.FromAlphaRgb (0.5, 0.8, 0.8, 0.8), Widgets.Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
 
 		private Drawing.Rectangle aperture;
 	}

@@ -1,5 +1,7 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+//	******* EN CHANTIER *******
 
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
@@ -10,6 +12,13 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.UI
 {
+	//	TODO: terminer cette classe.
+	
+	//	L'idée est de pouvoir utiliser un Placeholder dont le contenu peut éventuellement
+	//	s'élargir au besoin, en cours d'édition, même si son parent direct est trop petit.
+	//	On place les widgets de l'interface graphique du Placeholder provisoirement dans
+	//	un MiniPanel qui est un enfant du PanelStack.
+	
 	public class MiniPanel : Widgets.AbstractGroup
 	{
 		public MiniPanel()

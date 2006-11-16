@@ -1,12 +1,13 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
-using Epsitec.Common.Types;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+using Epsitec.Common.UI;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.UI.DataSourceMetadata))]
+[assembly: DependencyClass (typeof (DataSourceMetadata))]
 
 namespace Epsitec.Common.UI
 {
