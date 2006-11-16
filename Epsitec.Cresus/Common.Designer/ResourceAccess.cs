@@ -1287,11 +1287,12 @@ namespace Epsitec.Common.Designer
 		#region Direct
 		public Type DirectGetType(Druid druid)
 		{
+			//	Retourne le type d'une ressource 'Caption'.
 			if (this.type == Type.Panels)
 			{
 				return Type.Panels;
 			}
-			//	Retourne le type d'une ressource 'Caption'.
+
 			System.Diagnostics.Debug.Assert(this.IsCaptionsType);
 			string name = this.DirectGetName(druid);
 			if (string.IsNullOrEmpty(name))

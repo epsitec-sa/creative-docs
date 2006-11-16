@@ -118,7 +118,17 @@ namespace Epsitec.Common.Designer.Controllers
 			MainWindow mainWindow = this.MainWindow;
 
 			Druid d = Druid.Parse(this.druid);
-			d = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Unknow, d, null);
+
+			if (this is DruidCaptionController)
+			{
+				d = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Unknow, d, null);
+			}
+
+			if (this is DruidPanelController)
+			{
+				d = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Panels, d, null);
+			}
+
 			this.druid = d.ToString();
 
 			this.OnActualValueChanged();
