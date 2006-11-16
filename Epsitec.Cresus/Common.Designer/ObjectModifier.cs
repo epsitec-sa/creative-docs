@@ -159,7 +159,14 @@ namespace Epsitec.Common.Designer
 			{
 				return ObjectType.StaticText;
 			}
-				
+
+			//	Ce test doit s'exécuter avant FrameBox, car un PanelPlaceholder est
+			//	aussi un FrameBox !
+			if (obj is UI.PanelPlaceholder)
+			{
+				return ObjectType.Panel;
+			}
+
 			if (obj is FrameBox)
 			{
 				return ObjectType.Group;
@@ -168,11 +175,6 @@ namespace Epsitec.Common.Designer
 			if (obj is GroupBox)
 			{
 				return ObjectType.GroupBox;
-			}
-				
-			if (obj is UI.PanelPlaceholder)
-			{
-				return ObjectType.Panel;
 			}
 				
 			return ObjectType.Unknow;
