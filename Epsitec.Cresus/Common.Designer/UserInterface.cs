@@ -95,7 +95,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		public static void RunPanel(UI.Panel panel, ResourceManager manager, string name)
+		public static void RunPanel(UI.Panel panel, ResourceManager manager, Widgets.Window mainWindow, string name)
 		{
 			string xml = UserInterface.SerializePanel (panel, manager);
 			UI.Panel clone = UserInterface.DeserializePanel (xml, manager);
@@ -110,8 +110,8 @@ namespace Epsitec.Common.Designer
 			clone.Dock = Widgets.DockStyle.Fill;
 
 			stack.Children.Add (clone);
-			
-			window.Owner = panel.Window;
+
+			window.Owner = mainWindow;
 			window.Text = name;
 
 			window.ForceLayout ();
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Designer
 			Point center = UserInterface.runPanelCenter;
 			if (center.IsZero)
 			{
-				center = panel.Window.WindowBounds.Center;
+				center = mainWindow.WindowBounds.Center;
 			}
 			Rectangle rect = new Rectangle (center.X-dx/2, center.Y-dy/2, dx, dy);
 			window.WindowBounds = rect;

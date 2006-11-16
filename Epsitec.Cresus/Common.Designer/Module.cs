@@ -201,7 +201,7 @@ namespace Epsitec.Common.Designer
 
 			if (panel != null)
 			{
-				UserInterface.RunPanel(panel, this.resourceManager, name);
+				UserInterface.RunPanel(panel, this.resourceManager, this.mainWindow.Window, name);
 			}
 		}
 
