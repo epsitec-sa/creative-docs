@@ -18,6 +18,7 @@ namespace Epsitec.Common.UI.Panels
 		}
 		
 		public EditPanel(Panel owner)
+			: this ()
 		{
 			this.owner = owner;
 		}
@@ -55,6 +56,20 @@ namespace Epsitec.Common.UI.Panels
 		{
 			graphics.AddFilledRectangle (Drawing.Rectangle.Intersection (clipRect, this.Client.Bounds));
 			graphics.RenderSolid (Drawing.Color.FromRgb (1, 1, 1));
+		}
+		
+		protected override bool ProcessTabChildrenExit(Widgets.Widget.TabNavigationDir dir, Widgets.Widget.TabNavigationMode mode, out Widgets.Widget focus)
+		{
+			PanelStack stack = PanelStack.GetPanelStack (this);
+			
+			if (stack != null)
+			{
+				stack.EndEdition ();
+				focus = this.Owner;
+				return true;
+			}
+
+			return base.ProcessTabChildrenExit (dir, mode, out focus);
 		}
 
 		private static object GetOwnerValue(DependencyObject obj)

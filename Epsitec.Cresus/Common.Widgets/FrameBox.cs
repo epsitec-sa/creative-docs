@@ -4,6 +4,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Helpers;
 
 [assembly: DependencyClass (typeof(FrameBox))]
 
@@ -23,6 +24,19 @@ namespace Epsitec.Common.Widgets
 			: this ()
 		{
 			this.SetEmbedder (embedder);
+		}
+
+
+		public bool DrawFullFrame
+		{
+			get
+			{
+				return (bool) this.GetValue (FrameBox.DrawFullFrameProperty);
+			}
+			set
+			{
+				this.SetValue (FrameBox.DrawFullFrameProperty, value);
+			}
 		}
 
 
@@ -80,5 +94,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
+		public static readonly DependencyProperty DrawFullFrameProperty = DependencyProperty.Register ("DrawFullFrame", typeof (bool), typeof (FrameBox), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay));
 	}
 }

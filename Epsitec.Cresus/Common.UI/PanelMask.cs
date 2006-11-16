@@ -1,6 +1,7 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 
@@ -57,6 +58,12 @@ namespace Epsitec.Common.UI
 
 		protected override void ProcessMessage(Widgets.Message message, Drawing.Point pos)
 		{
+			if (message.Type == Widgets.MessageType.MouseDown)
+			{
+				message.Swallowed = true;
+				this.OnMaskPressed ();
+			}
+			
 			message.Consumer = this;
 		}
 		
@@ -78,6 +85,16 @@ namespace Epsitec.Common.UI
 			pathB.Dispose ();
 #endif
 		}
+
+		protected virtual void OnMaskPressed()
+		{
+			if (this.MaskPressed != null)
+			{
+				this.MaskPressed (this);
+			}
+		}
+
+		public event EventHandler MaskPressed;
 
 		public static readonly DependencyProperty MaskColorProperty = DependencyProperty.Register ("MaskColor", typeof (Drawing.Color), typeof (PanelMask), new Widgets.Helpers.VisualPropertyMetadata (Drawing.Color.FromAlphaRgb (0.5, 0.8, 0.8, 0.8), Widgets.Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
 

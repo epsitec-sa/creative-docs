@@ -21,6 +21,7 @@ namespace Epsitec.Common.UI
 		/// </summary>
 		public Panel()
 		{
+			base.TabNavigation = Widgets.Widget.TabNavigationMode.ForwardTabActive;
 		}
 
 		/// <summary>

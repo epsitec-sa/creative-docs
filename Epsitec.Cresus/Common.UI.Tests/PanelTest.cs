@@ -104,28 +104,18 @@ namespace Epsitec.Common.UI
 			static1.Name = "FirstName";
 			static2.Name = "LastName";
 			
-			panel.PreferredSize = new Drawing.Size (100, 100);
+			panel.PreferredSize = new Drawing.Size (100, 40);
 			panel.Anchor = Widgets.AnchorStyles.TopRight;
 			panel.Margins = new Drawing.Margins (4, 4, 4, 4);
 			panel.BackColor = Drawing.Color.FromRgb (0.8, 1, 0.8);
 
-			panel.EditionPanel.PreferredSize = new Drawing.Size (180, 120);
+			panel.EditionPanel.PreferredSize = new Drawing.Size (180, 68);
 			
-			Widgets.Button buttonEnd = new Widgets.Button ();
 			Widgets.StaticText text1 = new Widgets.StaticText ();
 			Widgets.StaticText text2 = new Widgets.StaticText ();
 			Widgets.FormTextField field1 = new Widgets.FormTextField ();
 			Widgets.FormTextField field2 = new Widgets.FormTextField ();
 			
-			buttonEnd.TabIndex = 100;
-			buttonEnd.TabNavigation = Widgets.Widget.TabNavigationMode.ActivateOnTab;
-			buttonEnd.Dock = Widgets.DockStyle.Bottom;
-			buttonEnd.Text = "End Edit";
-			buttonEnd.Clicked += delegate (object sender, Widgets.MessageEventArgs e)
-			{
-				panelStack.EndEdition ();
-			};
-
 			text1.Text = "Nom :";
 			text1.ContentAlignment = Epsitec.Common.Drawing.ContentAlignment.MiddleRight;
 			text1.Anchor = Epsitec.Common.Widgets.AnchorStyles.TopLeft;
@@ -155,7 +145,6 @@ namespace Epsitec.Common.UI
 			field2.Name = "FirstName";
 
 			panel.EditionPanel.Padding = new Drawing.Margins (2, 2, 2, 2);
-			panel.EditionPanel.Children.Add (buttonEnd);
 			panel.EditionPanel.Children.Add (text1);
 			panel.EditionPanel.Children.Add (text2);
 			panel.EditionPanel.Children.Add (field1);

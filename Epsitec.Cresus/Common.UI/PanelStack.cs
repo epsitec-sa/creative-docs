@@ -18,6 +18,10 @@ namespace Epsitec.Common.UI
 			this.miniPanels = new List<MiniPanel> ();
 			this.mask = new PanelMask (this);
 			this.mask.Hide ();
+			this.mask.MaskPressed += delegate (object sender)
+			{
+				this.EndEdition ();
+			};
 		}
 
 		public PanelStack(Widgets.Widget embedder)

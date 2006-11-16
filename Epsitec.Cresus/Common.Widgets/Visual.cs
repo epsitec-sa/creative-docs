@@ -2,16 +2,17 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Helpers;
+
 using System.Collections.Generic;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Visual))]
+[assembly: DependencyClass (typeof (Visual))]
 
 namespace Epsitec.Common.Widgets
 {
 	using PropertyChangedEventHandler=Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
 	using FlatChildrenCollection=Collections.FlatChildrenCollection;
-	using VisualPropertyMetadata=Helpers.VisualPropertyMetadata;
-	using VisualPropertyMetadataOptions=Helpers.VisualPropertyMetadataOptions;
 	using ContentAlignment=Drawing.ContentAlignment;
 	
 	/// <summary>
@@ -860,19 +861,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool								DrawFullFrame
-		{
-			get
-			{
-				return (bool) this.GetValue (Visual.DrawFullFrameProperty);
-			}
-			set
-			{
-				this.SetValue (Visual.DrawFullFrameProperty, value);
-			}
-		}
-
-		
 		public Drawing.Color					BackColor
 		{
 			get
@@ -1930,7 +1918,6 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty InheritsParentFocusProperty	= DependencyProperty.Register ("InheritsParentFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, Visual.SetInheritsParentFocus, VisualPropertyMetadataOptions.None));
 
 		public static readonly DependencyProperty DrawDesignerFrameProperty		= DependencyProperty.Register("DrawDesignerFrame", typeof(bool), typeof(Visual), new VisualPropertyMetadata(false, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay).MakeNotSerializable());
-		public static readonly DependencyProperty DrawFullFrameProperty			= DependencyProperty.Register("DrawFullFrame", typeof(bool), typeof(Visual), new VisualPropertyMetadata(false, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay).MakeNotSerializable());
 		
 		public static readonly DependencyProperty IsVisibleProperty				= DependencyProperty.RegisterReadOnly ("IsVisible", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsArrange | VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty IsEnabledProperty				= DependencyProperty.RegisterReadOnly ("IsEnabled", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay));
