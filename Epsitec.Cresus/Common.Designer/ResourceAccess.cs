@@ -2629,6 +2629,26 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
+				foreach (ResourceBundle bundle in this.panelsToDelete)
+				{
+					Druid druid = bundle.Id;
+
+					if (druid.IsValid && druid.Developer == developerId && druid.Local >= localId)
+					{
+						localId = druid.Local+1;
+					}
+				}
+
+				foreach (ResourceBundle bundle in this.panelsToCreate)
+				{
+					Druid druid = bundle.Id;
+
+					if (druid.IsValid && druid.Developer == developerId && druid.Local >= localId)
+					{
+						localId = druid.Local+1;
+					}
+				}
+
 				return new Druid(moduleId, developerId, localId);
 			}
 
