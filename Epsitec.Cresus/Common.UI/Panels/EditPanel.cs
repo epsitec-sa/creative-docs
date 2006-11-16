@@ -56,6 +56,8 @@ namespace Epsitec.Common.UI.Panels
 		{
 			graphics.AddFilledRectangle (Drawing.Rectangle.Intersection (clipRect, this.Client.Bounds));
 			graphics.RenderSolid (Drawing.Color.FromRgb (1, 1, 1));
+
+			base.PaintBackgroundImplementation (graphics, clipRect);
 		}
 		
 		protected override bool ProcessTabChildrenExit(Widgets.Widget.TabNavigationDir dir, Widgets.Widget.TabNavigationMode mode, out Widgets.Widget focus)

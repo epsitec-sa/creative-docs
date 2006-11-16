@@ -176,6 +176,9 @@ namespace Epsitec.Common.UI
 
 			panelBounds.Offset (ownerBounds.Center-panelBounds.Center);
 
+			panel.Dock   = Widgets.DockStyle.None;
+			panel.Anchor = Widgets.AnchorStyles.None;
+			
 			panel.SetManualBounds (Drawing.Rectangle.Constrain (panelBounds, stackBounds));
 
 			if (panel == this.editPanels.Peek ())
