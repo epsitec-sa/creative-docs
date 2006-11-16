@@ -2730,9 +2730,10 @@ namespace Epsitec.Common.Designer
 			this.panelsToDelete.Clear();
 		}
 
-		public UI.Panel NewPanel(int index)
+		public UI.Panel GetPanel(int index)
 		{
-			//	Crée le UI.Panel associé à une ressource.
+			//	Retourne le UI.Panel associé à une ressource.
+			//	Si nécessaire, il est créé la première fois.
 			ResourceBundle bundle = this.PanelBundle(index);
 
 			UI.Panel newPanel = Viewers.Panels.GetPanel(bundle);
@@ -2748,6 +2749,7 @@ namespace Epsitec.Common.Designer
 
 		public UI.Panel CreateEmptyPanel()
 		{
+			//	Crée un nouveau panneau vide.
 			UI.Panel panel = new UI.Panel();
 			this.InitializePanel(panel);
 			return panel;
@@ -2757,9 +2759,9 @@ namespace Epsitec.Common.Designer
 		{
 			panel.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
 			panel.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
-			panel.PreferredSize = new Size (200, 200);
+			panel.PreferredSize = new Size(200, 200);
 			panel.Anchor = AnchorStyles.BottomLeft;
-			panel.Padding = new Margins (20, 20, 20, 20);
+			panel.Padding = new Margins(20, 20, 20, 20);
 			panel.DrawDesignerFrame = true;
 			panel.ResourceManager = this.resourceManager;
 		}
