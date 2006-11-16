@@ -2000,7 +2000,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				Widget widget = children[i];
 
-				if (widget.Visibility == false)
+				if (!widget.Visibility || widget.IsEmbedded)
 				{
 					continue;
 				}
@@ -2021,11 +2021,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 						{
 							continue;
 						}
-					}
-
-					if (widget.IsEmbedded)
-					{
-						continue;
 					}
 
 					if (sameParent && this.selectedObjects.Count > 0)

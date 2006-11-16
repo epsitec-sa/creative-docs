@@ -140,6 +140,11 @@ namespace Epsitec.Common.Designer
 		{
 			//	Initialise les contraintes pour tous les objets dont la distance est
 			//	inférieure ou égale à une distance donnée.
+			if (parent.IsEmbedded)
+			{
+				return;
+			}
+
 			Point center = rect.Center;
 			double distance;
 			Constrain constrain;
@@ -193,7 +198,7 @@ namespace Epsitec.Common.Designer
 			{
 				foreach (Widget obj in parent.Children)
 				{
-					if (!this.IsContained(excludes, obj))
+					if (!this.IsContained(excludes, obj) && !obj.IsEmbedded)
 					{
 						Rectangle bounds = this.editor.GetObjectPreferredBounds(obj);
 
