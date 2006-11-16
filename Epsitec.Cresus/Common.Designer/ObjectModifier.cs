@@ -95,6 +95,19 @@ namespace Epsitec.Common.Designer
 			Height,
 		}
 
+		public enum ObjectType
+		{
+			Unknow,
+			HSeparator,
+			VSeparator,
+			Button,
+			TextField,
+			StaticText,
+			Group,
+			GroupBox,
+			Panel,
+		}
+
 
 		public ObjectModifier(MyWidgets.PanelEditor panelEditor)
 		{
@@ -111,11 +124,67 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public static bool IsAbstractGroup(Widget obj)
+		{
+			ObjectType type = ObjectModifier.GetObjectType(obj);
+			return (type == ObjectType.Group || type == ObjectType.GroupBox);
+		}
+
+		public static ObjectType GetObjectType(Widget obj)
+		{
+			//	Retourne le type d'un objet.
+			if (obj is AbstractButton)
+			{
+				return ObjectType.Button;
+			}
+
+			if (obj is Separator)
+			{
+				if (obj.PreferredHeight == 1)  // séparateur horizontal ?
+				{
+					return ObjectType.HSeparator;
+				}
+				else  // séparateur vertical ?
+				{
+					return ObjectType.VSeparator;
+				}
+			}
+
+			if (obj is AbstractTextField)
+			{
+				return ObjectType.TextField;
+			}
+
+			if (obj is StaticText)
+			{
+				return ObjectType.StaticText;
+			}
+				
+			if (obj is FrameBox)
+			{
+				return ObjectType.Group;
+			}
+				
+			if (obj is GroupBox)
+			{
+				return ObjectType.GroupBox;
+			}
+				
+			if (obj is UI.PanelPlaceholder)
+			{
+				return ObjectType.Panel;
+			}
+				
+			return ObjectType.Unknow;
+		}
+
+
 		#region Druid
 		public bool HasDruid(Widget obj)
 		{
 			//	Indique si l'objet a un druid.
-			return (obj is AbstractButton || obj is StaticText || obj is GroupBox || obj is UI.PanelPlaceholder);
+			ObjectType type = ObjectModifier.GetObjectType(obj);
+			return (type == ObjectType.Button || type == ObjectType.StaticText || type == ObjectType.GroupBox || type == ObjectType.Panel);
 		}
 
 		public void SetDruid(Widget obj, string druid)
@@ -127,15 +196,16 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
-			if (obj is AbstractButton)
+			ObjectType type = ObjectModifier.GetObjectType(obj);
+			if (type == ObjectType.Button)
 			{
 				obj.CommandDruid = d;
 			}
-			else if (obj is StaticText || obj is GroupBox)
+			else if (type == ObjectType.StaticText || type == ObjectType.GroupBox)
 			{
 				obj.CaptionId = d;
 			}
-			else if (obj is UI.PanelPlaceholder)
+			else if (type == ObjectType.Panel)
 			{
 				UI.PanelPlaceholder panel = obj as UI.PanelPlaceholder;
 				System.Diagnostics.Debug.Assert(panel.ResourceManager != null);
@@ -148,15 +218,16 @@ namespace Epsitec.Common.Designer
 			//	Retourne le druid de l'objet.
 			Druid druid = Druid.Empty;
 
-			if (obj is AbstractButton)
+			ObjectType type = ObjectModifier.GetObjectType(obj);
+			if (type == ObjectType.Button)
 			{
 				druid = obj.CommandDruid;
 			}
-			else if (obj is StaticText || obj is GroupBox)
+			else if (type == ObjectType.StaticText || type == ObjectType.GroupBox)
 			{
 				druid = obj.CaptionId;
 			}
-			else if (obj is UI.PanelPlaceholder)
+			else if (type == ObjectType.Panel)
 			{
 				UI.PanelPlaceholder panel = obj as UI.PanelPlaceholder;
 				druid = panel.PanelId;
@@ -1285,17 +1356,10 @@ namespace Epsitec.Common.Designer
 				this.SetMargins(obj, new Margins(0, 0, 0, 0));
 			}
 
-			if (obj is StaticText)
-			{
-				obj.PreferredHeight = obj.MinHeight;
-			}
-
-			if (obj is AbstractButton)
-			{
-				obj.PreferredHeight = obj.MinHeight;
-			}
-
-			if (obj is TextField)
+			ObjectType type = ObjectModifier.GetObjectType(obj);
+			if (type == ObjectType.StaticText ||
+				type == ObjectType.Button ||
+				type == ObjectType.TextField)
 			{
 				obj.PreferredHeight = obj.MinHeight;
 			}
@@ -1500,7 +1564,8 @@ namespace Epsitec.Common.Designer
 		public bool HasPadding(Widget obj)
 		{
 			//	Indique si l'objet a des marges internes.
-			return (obj is AbstractGroup);
+			ObjectType type = ObjectModifier.GetObjectType(obj);
+			return (type == ObjectType.Group || type == ObjectType.GroupBox);
 		}
 
 		public Margins GetPadding(Widget obj)

@@ -318,85 +318,36 @@ namespace Epsitec.Common.Designer
 		static public bool HasWidthHandles(Widget obj)
 		{
 			//	Indique s'il est possible de modifier la largeur d'un objet.
-			if (obj is TextField)
+			switch (ObjectModifier.GetObjectType(obj))
 			{
-				return true;
-			}
-			else if (obj is Button)
-			{
-				return true;
-			}
-			else if (obj is Separator)
-			{
-				if (obj.PreferredHeight == 1)  // séparateur horizontal ?
-				{
+				case ObjectModifier.ObjectType.Button:
+				case ObjectModifier.ObjectType.HSeparator:
+				case ObjectModifier.ObjectType.TextField:
+				case ObjectModifier.ObjectType.StaticText:
+				case ObjectModifier.ObjectType.Group:
+				case ObjectModifier.ObjectType.GroupBox:
+				case ObjectModifier.ObjectType.Panel:
 					return true;
-				}
-				else  // séparateur vertical ?
-				{
-					return false;
-				}
-			}
-			else if (obj is StaticText)
-			{
-				return true;
-			}
-			else if (obj is GroupBox)
-			{
-				return true;
-			}
-			else if (obj is FrameBox)
-			{
-				return true;
-			}
-			else if (obj is UI.PanelPlaceholder)
-			{
-				return true;
-			}
 
-			return false;
+				default:
+					return false;
+			}
 		}
 
 		static public bool HasHeightHandles(Widget obj)
 		{
 			//	Indique s'il est possible de modifier la hauteur d'un objet.
-			if (obj is TextField)
+			switch (ObjectModifier.GetObjectType(obj))
 			{
-				return false;
-			}
-			else if (obj is Button)
-			{
-				return false;
-			}
-			else if (obj is Separator)
-			{
-				if (obj.PreferredHeight == 1)  // séparateur horizontal ?
-				{
-					return false;
-				}
-				else  // séparateur vertical ?
-				{
+				case ObjectModifier.ObjectType.VSeparator:
+				case ObjectModifier.ObjectType.Group:
+				case ObjectModifier.ObjectType.GroupBox:
+				case ObjectModifier.ObjectType.Panel:
 					return true;
-				}
-			}
-			else if (obj is StaticText)
-			{
-				return false;
-			}
-			else if (obj is GroupBox)
-			{
-				return true;
-			}
-			else if (obj is FrameBox)
-			{
-				return true;
-			}
-			else if (obj is UI.PanelPlaceholder)
-			{
-				return true;
-			}
 
-			return false;
+				default:
+					return false;
+			}
 		}
 
 

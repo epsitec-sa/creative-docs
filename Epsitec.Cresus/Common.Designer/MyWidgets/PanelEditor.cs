@@ -1540,16 +1540,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Choix de la ressource (un Druid) pour l'objet.
 			//	Retourne false s'il fallait choisir un Druid et que l'utilisateur ne l'a pas fait.
-			if (obj is AbstractButton || obj is StaticText || obj is GroupBox || obj is UI.PanelPlaceholder)
+			if (ObjectModifier.HasDruid(obj))
 			{
 				ResourceAccess.Type type;
 				List<Druid> exclude = null;
 
-				if (obj is AbstractButton)
+				ObjectModifier.ObjectType oType = ObjectModifier.GetObjectType(obj);
+				if (oType == ObjectModifier.ObjectType.Button)
 				{
 					type = ResourceAccess.Type.Commands;
 				}
-				else if (obj is UI.PanelPlaceholder)
+				else if (oType == ObjectModifier.ObjectType.Panel)
 				{
 					type = ResourceAccess.Type.Panels;
 
@@ -2031,7 +2032,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						return deep;
 					}
 
-					if (widget is AbstractGroup)
+					if (ObjectModifier.IsAbstractGroup(widget))
 					{
 						rect.Deflate(this.GetDetectPadding(widget, onlyGrid));
 						if (rect.Contains(pos))
@@ -2187,7 +2188,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					}
 					else
 					{
-						if (obj is AbstractGroup)
+						if (ObjectModifier.IsAbstractGroup(obj))
 						{
 							this.SelectObjectsInRectangle(sel, obj);
 						}
@@ -2487,7 +2488,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				obj.TabIndex = index++;
 				obj.TabNavigation = TabNavigationMode.ActivateOnTab;
 
-				if (obj is AbstractGroup)
+				if (ObjectModifier.IsAbstractGroup(obj))
 				{
 					this.SelectTabIndexRenum(obj);
 				}
@@ -3263,7 +3264,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				foreach (Widget obj in parent.Children)
 				{
-					if (obj is AbstractGroup)
+					if (ObjectModifier.IsAbstractGroup(obj))
 					{
 						if (obj != exclude && GridSelection.Get(obj) != null)
 						{
@@ -3676,7 +3677,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DrawPadding(Graphics graphics, Widget obj)
 		{
 			//	Dessine les marges de padding d'un objet, sous forme de hachures.
-			if (obj is AbstractGroup)
+			if (ObjectModifier.IsAbstractGroup(obj))
 			{
 				Rectangle bounds = this.objectModifier.GetActualBounds(obj);
 				graphics.Align(ref bounds);
@@ -3713,7 +3714,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			Color color = PanelsContext.ColorHiliteSurface;
 
-			if (obj is AbstractGroup)
+			if (ObjectModifier.IsAbstractGroup(obj))
 			{
 				this.DrawPadding(graphics, obj);
 
@@ -4207,7 +4208,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
 					graphics.RenderSolid(PanelsContext.ColorZOrder);
 
-					if (obj is AbstractGroup)
+					if (ObjectModifier.IsAbstractGroup(obj))
 					{
 						this.DrawZOrder(graphics, obj);
 					}
@@ -4232,7 +4233,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
 					graphics.RenderSolid(PanelsContext.ColorTabIndex);
 
-					if (obj is AbstractGroup)
+					if (ObjectModifier.IsAbstractGroup(obj))
 					{
 						this.DrawTabIndex(graphics, obj);
 					}
@@ -4405,7 +4406,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				foreach (Widget obj in parent.Children)
 				{
-					if (obj is Separator)
+					ObjectModifier.ObjectType type = ObjectModifier.GetObjectType(obj);
+					if (type == ObjectModifier.ObjectType.HSeparator ||
+						type == ObjectModifier.ObjectType.VSeparator)
 					{
 						Separator sep = obj as Separator;
 						sep.Alpha = alpha;

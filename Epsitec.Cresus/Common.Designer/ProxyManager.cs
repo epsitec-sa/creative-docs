@@ -96,7 +96,8 @@ namespace Epsitec.Common.Designer
 			//	Supprime l'interface utilisateur (panneaux) pour la liste des proxies.
 			foreach (Widget obj in container.Children)
 			{
-				if (obj is MyWidgets.PropertyPanel)
+				ObjectModifier.ObjectType type = ObjectModifier.GetObjectType(obj);
+				if (type == ObjectModifier.ObjectType.Panel)
 				{
 					MyWidgets.PropertyPanel panel = obj as MyWidgets.PropertyPanel;
 					panel.ExtendedSize -= new Epsitec.Common.Support.EventHandler(this.HandlePanelExtendedSize);

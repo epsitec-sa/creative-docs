@@ -65,7 +65,8 @@ namespace Epsitec.Common.Designer.Proxies
 			//	pour pouvoir ensuite travailler dessus :
 			if (this.ObjectModifier.HasDruid(this.DefaultWidget))
 			{
-				if (this.DefaultWidget is UI.PanelPlaceholder)
+				ObjectModifier.ObjectType type = ObjectModifier.GetObjectType(this.DefaultWidget);
+				if (type == ObjectModifier.ObjectType.Panel)
 				{
 					this.DruidPanel = this.ObjectModifier.GetDruid(this.DefaultWidget);
 				}

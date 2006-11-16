@@ -128,7 +128,7 @@ namespace Epsitec.Common.Designer
 						}
 					}
 
-					if (obj is AbstractGroup)
+					if (ObjectModifier.IsAbstractGroup(obj))
 					{
 						this.NearestDistance(rect, obj, out minX, out minY, excludes);
 					}
@@ -215,7 +215,7 @@ namespace Epsitec.Common.Designer
 						}
 					}
 
-					if (obj is AbstractGroup)
+					if (ObjectModifier.IsAbstractGroup(obj))
 					{
 						this.NearestObjects(rect, obj, distanceX, distanceY, excludes);
 					}
@@ -262,7 +262,7 @@ namespace Epsitec.Common.Designer
 			constrain = new Constrain(bounds.TopLeft, Constrain.Type.Top, this.context.ConstrainMargin);
 			this.Add(constrain);
 
-			if (obj is AbstractGroup)
+			if (ObjectModifier.IsAbstractGroup(obj))
 			{
 				constrain = new Constrain(bounds.BottomLeft-this.context.ConstrainSpacing, Constrain.Type.Top, this.context.ConstrainMargin);
 				this.Add(constrain);
@@ -288,7 +288,8 @@ namespace Epsitec.Common.Designer
 			{
 				if (!this.isDot)
 				{
-					if (obj is AbstractButton)
+					ObjectModifier.ObjectType type = ObjectModifier.GetObjectType(obj);
+					if (type == ObjectModifier.ObjectType.Button)
 					{
 						constrain = new Constrain(bounds.BottomLeft, Constrain.Type.Right, this.context.ConstrainMargin);
 						this.Add(constrain);
