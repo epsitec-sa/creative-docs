@@ -32,47 +32,14 @@ namespace Epsitec.Common.Designer
 
 		public static string SerializePanel(UI.Panel panel, ResourceManager manager)
 		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-			System.IO.StringWriter stringWriter = new System.IO.StringWriter(buffer);
-			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter(stringWriter);
-
-			using (Types.Serialization.Context context = new Types.Serialization.SerializerContext (new Types.Serialization.IO.XmlWriter (xmlWriter)))
-			{
-				UI.Panel.FillSerializationContext (context, null, manager);
-				
-				xmlWriter.Formatting = System.Xml.Formatting.None;
-				xmlWriter.WriteStartElement ("panel");
-
-				context.ActiveWriter.WriteAttributeStrings ();
-				
-				Types.Storage.Serialize (panel, context);
-
-				xmlWriter.WriteEndElement ();
-				xmlWriter.Flush ();
-				xmlWriter.Close ();
-
-				return buffer.ToString ();
-			}
+			System.Diagnostics.Debug.Assert (manager == panel.ResourceManager);
+			return UI.Panel.SerializePanel (panel);
 		}
 
 		public static UI.Panel DeserializePanel(string xml, ResourceManager manager)
 		{
-			System.IO.StringReader stringReader = new System.IO.StringReader(xml);
-			System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader(stringReader);
-
-			xmlReader.Read();
-			
-			System.Diagnostics.Debug.Assert(xmlReader.NodeType == System.Xml.XmlNodeType.Element);
-			System.Diagnostics.Debug.Assert(xmlReader.LocalName == "panel");
-
-			Types.Serialization.Context context = new Types.Serialization.DeserializerContext(new Types.Serialization.IO.XmlReader(xmlReader));
-
-			UI.Panel.FillSerializationContext (context, null, manager);
-			
-			UI.Panel panel = Types.Storage.Deserialize(context) as UI.Panel;
-			
-			System.Diagnostics.Debug.Assert(panel.ResourceManager == manager);
-			
+			UI.Panel panel = UI.Panel.DeserializePanel (xml, null, manager);
+			System.Diagnostics.Debug.Assert (manager == panel.ResourceManager);
 			return panel;
 		}
 
@@ -132,13 +99,18 @@ namespace Epsitec.Common.Designer
 		{
 			string xml = UserInterface.SerializePanel (panel, manager);
 			UI.Panel clone = UserInterface.DeserializePanel (xml, manager);
-			Widgets.Window window = new Epsitec.Common.Widgets.Window ();
+			UI.PanelStack stack = new UI.PanelStack ();
+			Widgets.Window window = new Widgets.Window ();
 
 			window.MakeSecondaryWindow ();
 			window.ShowWindowIcon = false;
-			window.Root.Children.Add (clone);
+			window.Root.Children.Add (stack);
 
+			stack.Dock = Widgets.DockStyle.Fill;
 			clone.Dock = Widgets.DockStyle.Fill;
+
+			stack.Children.Add (clone);
+			
 			window.Owner = panel.Window;
 			window.Text = name;
 

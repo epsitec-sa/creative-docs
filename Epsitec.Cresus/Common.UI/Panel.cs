@@ -283,24 +283,42 @@ namespace Epsitec.Common.UI
 				Widgets.Window window = this.Window;
 				PanelStack panelStack = PanelStack.GetPanelStack (this);
 
-				if (panelStack != null)
+				if ((panelStack != null) &&
+					(message.IsMouseType) &&
+					(window != null))
 				{
-					if ((message.IsMouseType) &&
-						(window != null))
+					if (message.Type == Widgets.MessageType.MouseLeave)
 					{
-						if (message.Type == Widgets.MessageType.MouseLeave)
-						{
-							window.MouseCursor = Widgets.MouseCursor.Default;
-						}
-						else
-						{
-							window.MouseCursor = Widgets.MouseCursor.AsIBeam;
-						}
+						window.MouseCursor = Widgets.MouseCursor.Default;
+					}
+					else
+					{
+						window.MouseCursor = Widgets.MouseCursor.AsIBeam;
 					}
 
-					if (message.Type == Widgets.MessageType.MouseDown)
+					if (message.Button == Widgets.MouseButtons.Left)
 					{
-						panelStack.StartEdition (this.EditionPanel);
+						if (message.Type == Widgets.MessageType.MouseDown)
+						{
+							this.isMouseDown = true;
+						}
+						else if (message.Type == Widgets.MessageType.MouseUp)
+						{
+							if (this.isMouseDown)
+							{
+								this.isMouseDown = false;
+								Widgets.Widget widget = this.FindChild (pos, ChildFindMode.Deep | ChildFindMode.SkipHidden | ChildFindMode.SkipDisabled);
+								string focusWidgetName = null;
+
+								if ((widget != null) &&
+									(widget != this))
+								{
+									focusWidgetName = widget.Name;
+								}
+
+								panelStack.StartEdition (this.EditionPanel, focusWidgetName);
+							}
+						}
 					}
 
 					return false;
@@ -427,5 +445,6 @@ namespace Epsitec.Common.UI
 		private DataSourceMetadata dataSourceMetadata;
 		private Panels.EditPanel editionPanel;
 		private bool isDataContextChangeHandlerRegistered;
+		private bool isMouseDown;
 	}
 }

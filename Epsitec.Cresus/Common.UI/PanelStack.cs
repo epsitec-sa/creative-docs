@@ -26,6 +26,21 @@ namespace Epsitec.Common.UI
 			this.SetEmbedder (embedder);
 		}
 
+		public void StartEdition(Panel panel, string focusWidgetName)
+		{
+			this.StartEdition (panel);
+			
+			if (! string.IsNullOrEmpty (focusWidgetName))
+			{
+				Widgets.Widget focus = panel.FindChild (focusWidgetName);
+				
+				if (focus != null)
+				{
+					focus.SetFocusOnTabWidget ();
+				}
+			}
+		}
+
 		public void StartEdition(Panel panel)
 		{
 			this.editPanels.Push (panel);

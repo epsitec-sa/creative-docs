@@ -2216,14 +2216,23 @@ namespace Epsitec.Common.Widgets
 		
 		public void SetFocusOnTabWidget()
 		{
-			Widget widget = this.FindTabWidget (TabNavigationDir.Forwards, TabNavigationMode.ActivateOnTab, false, true);
+			Window window  = this.Window;
+			Widget focused = window == null ? null : window.FocusedWidget;
+			Widget focus   = this.FindTabWidget (TabNavigationDir.Forwards, TabNavigationMode.ActivateOnTab, false, true);
 			
-			if (widget == null)
+			if (focus == null)
 			{
-				widget = this;
+				focus = this;
 			}
 
-			widget.Focus ();
+			if ((focused == null) ||
+				(focused.InternalAboutToLoseFocus (TabNavigationDir.Forwards, TabNavigationMode.ActivateOnTab)))
+			{
+				if (focus.InternalAboutToGetFocus (TabNavigationDir.Forwards, TabNavigationMode.ActivateOnTab, out focus))
+				{
+					focus.SetFocused (true);
+				}
+			}
 		}
 		
 		public Widget FindTabWidget(TabNavigationDir dir, TabNavigationMode mode)

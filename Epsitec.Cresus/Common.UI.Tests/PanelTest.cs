@@ -94,18 +94,16 @@ namespace Epsitec.Common.UI
 
 			Panel panel = new Panel ();
 
-			Widgets.Button buttonEdit = new Widgets.Button (panel);
+			Widgets.StaticText static1 = new Widgets.StaticText (panel);
+			Widgets.StaticText static2 = new Widgets.StaticText (panel);
 
-			buttonEdit.TabIndex = 1;
-			buttonEdit.TabNavigation = Widgets.Widget.TabNavigationMode.ActivateOnTab;
-			buttonEdit.Dock = Widgets.DockStyle.Fill;
-			buttonEdit.Text = "Edit";
-			//buttonEdit.Clicked += delegate (object sender, Widgets.MessageEventArgs e)
-			//{
-			//    Panel editPanel = panel.EditionPanel;
-			//    panelStack.StartEdition (editPanel);
-			//};
-
+			static1.Dock = Widgets.DockStyle.Top;
+			static2.Dock = Widgets.DockStyle.Top;
+			static1.Text = "Pierre";
+			static2.Text = "Arnaud";
+			static1.Name = "FirstName";
+			static2.Name = "LastName";
+			
 			panel.PreferredSize = new Drawing.Size (100, 100);
 			panel.Anchor = Widgets.AnchorStyles.TopRight;
 			panel.Margins = new Drawing.Margins (4, 4, 4, 4);
@@ -119,7 +117,7 @@ namespace Epsitec.Common.UI
 			Widgets.FormTextField field1 = new Widgets.FormTextField ();
 			Widgets.FormTextField field2 = new Widgets.FormTextField ();
 			
-			buttonEnd.TabIndex = 1;
+			buttonEnd.TabIndex = 100;
 			buttonEnd.TabNavigation = Widgets.Widget.TabNavigationMode.ActivateOnTab;
 			buttonEnd.Dock = Widgets.DockStyle.Bottom;
 			buttonEnd.Text = "End Edit";
@@ -132,23 +130,29 @@ namespace Epsitec.Common.UI
 			text1.ContentAlignment = Epsitec.Common.Drawing.ContentAlignment.MiddleRight;
 			text1.Anchor = Epsitec.Common.Widgets.AnchorStyles.TopLeft;
 			text1.Margins = new Epsitec.Common.Drawing.Margins (4, 0, 4, 0);
-			text1.PreferredSize = new Epsitec.Common.Drawing.Size (60, 16);
+			text1.PreferredSize = new Epsitec.Common.Drawing.Size (60, 24);
 
 			text2.Text = "Prénom :";
 			text2.ContentAlignment = Epsitec.Common.Drawing.ContentAlignment.MiddleRight;
 			text2.Anchor = Epsitec.Common.Widgets.AnchorStyles.TopLeft;
-			text2.Margins = new Epsitec.Common.Drawing.Margins (4, 0, 20, 0);
-			text2.PreferredSize = new Epsitec.Common.Drawing.Size (60, 16);
+			text2.Margins = new Epsitec.Common.Drawing.Margins (4, 0, 28, 0);
+			text2.PreferredSize = new Epsitec.Common.Drawing.Size (60, 24);
 
 			field1.Text = "Arnaud";
+			field1.TabIndex = 1;
+			field1.TabNavigation = Widgets.Widget.TabNavigationMode.ActivateOnTab;
 			field1.Anchor = Epsitec.Common.Widgets.AnchorStyles.TopLeft | Epsitec.Common.Widgets.AnchorStyles.Right;
-			field1.Margins = new Epsitec.Common.Drawing.Margins (68, 4, 4+0.5, 0);
-			field1.PreferredSize = new Epsitec.Common.Drawing.Size (100, 16);
+			field1.Margins = new Epsitec.Common.Drawing.Margins (68, 4, 4+4, 0);
+			field1.PreferredSize = new Epsitec.Common.Drawing.Size (100, 24);
+			field1.Name = "LastName";			
 			
 			field2.Text = "Pierre";
+			field2.TabIndex = 2;
+			field2.TabNavigation = Widgets.Widget.TabNavigationMode.ActivateOnTab;
 			field2.Anchor = Epsitec.Common.Widgets.AnchorStyles.TopLeft | Epsitec.Common.Widgets.AnchorStyles.Right;
-			field2.Margins = new Epsitec.Common.Drawing.Margins (68, 4, 20+0.5, 0);
-			field2.PreferredSize = new Epsitec.Common.Drawing.Size (100, 16);
+			field2.Margins = new Epsitec.Common.Drawing.Margins (68, 4, 28+4, 0);
+			field2.PreferredSize = new Epsitec.Common.Drawing.Size (100, 24);
+			field2.Name = "FirstName";
 
 			panel.EditionPanel.Padding = new Drawing.Margins (2, 2, 2, 2);
 			panel.EditionPanel.Children.Add (buttonEnd);

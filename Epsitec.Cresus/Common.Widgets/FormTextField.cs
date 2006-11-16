@@ -17,6 +17,33 @@ namespace Epsitec.Common.Widgets
 			this.TextFieldStyle = TextFieldStyle.Flat;
 			this.BackColor = Drawing.Color.Transparent;
 		}
+		
+		public override Drawing.Font DefaultFont
+		{
+			get
+			{
+				if (FormTextField.defaultFont == null)
+				{
+					FormTextField.defaultFont = Drawing.Font.GetFont ("Calibri", "Regular");
+					
+					if (FormTextField.defaultFont == null)
+					{
+						FormTextField.defaultFont = Drawing.Font.DefaultFont;
+					}
+				}
+				
+				return FormTextField.defaultFont;
+			}
+		}
+
+		public override double DefaultFontSize
+		{
+			get
+			{
+				return 16.0;
+			}
+		}
+		
 
 		protected override void PaintTextFieldBackground(Drawing.Graphics graphics, IAdorner adorner, WidgetPaintState state, Drawing.Rectangle fill, Drawing.Point pos)
 		{
@@ -30,5 +57,7 @@ namespace Epsitec.Common.Widgets
 				graphics.RenderSolid (Drawing.Color.FromAlphaRgb (0.5, 0.2, 0.2, 0.5));
 			}
 		}
+		
+		private static Drawing.Font defaultFont;
 	}
 }
