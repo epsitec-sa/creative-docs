@@ -246,7 +246,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					}
 				}
 				
-				if (message.Type == MessageType.MouseDown)
+				if (message.MessageType == MessageType.MouseDown)
 				{
 					int cell = this.Detect(pos, true);
 
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					}
 				}
 
-				if (message.Type == MessageType.MouseMove)
+				if (message.MessageType == MessageType.MouseMove)
 				{
 					if (this.isDragging)
 					{
@@ -301,7 +301,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					}
 				}
 
-				if (message.Type == MessageType.MouseUp)
+				if (message.MessageType == MessageType.MouseUp)
 				{
 					int cell = this.Detect(pos, false);
 
@@ -317,7 +317,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					return;
 				}
 
-				if (message.Type == MessageType.MouseLeave)
+				if (message.MessageType == MessageType.MouseLeave)
 				{
 					message.Captured = true;
 					message.Consumer = this;

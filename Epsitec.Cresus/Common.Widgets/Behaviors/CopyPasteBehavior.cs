@@ -27,7 +27,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			if (this.host.IsEnabled)
 			{
-				if (message.Type == MessageType.KeyPress)
+				if (message.MessageType == MessageType.KeyPress)
 				{
 					if (message.IsControlPressed)
 					{

@@ -721,7 +721,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)
 		{
-			if ( message.Type == MessageType.KeyDown )
+			if ( message.MessageType == MessageType.KeyDown )
 			{
 				int dir = 0;
 				bool cycle = false;

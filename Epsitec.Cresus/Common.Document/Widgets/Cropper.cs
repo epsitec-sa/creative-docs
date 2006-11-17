@@ -639,7 +639,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected override void ProcessMessage(Message message, Point pos)
 		{
 			//	Gestion des événements.
-			switch (message.Type)
+			switch (message.MessageType)
 			{
 				case MessageType.MouseDown:
 					if (this.hilited != Part.None)

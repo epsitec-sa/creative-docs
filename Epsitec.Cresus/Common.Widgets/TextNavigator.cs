@@ -434,7 +434,7 @@ namespace Epsitec.Common.Widgets
 			try
 			{
 				this.textLayout.SuspendTextChangeNotifications ();
-				switch (message.Type)
+				switch (message.MessageType)
 				{
 					case MessageType.KeyDown:
 						if (message.IsAltPressed && !message.IsControlPressed)

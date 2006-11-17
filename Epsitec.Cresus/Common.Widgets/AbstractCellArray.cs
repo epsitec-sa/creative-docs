@@ -809,7 +809,7 @@ namespace Epsitec.Common.Widgets
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
 			//	Gestion d'un événement.
-			switch ( message.Type )
+			switch ( message.MessageType )
 			{
 				case MessageType.MouseEnter:
 					break;

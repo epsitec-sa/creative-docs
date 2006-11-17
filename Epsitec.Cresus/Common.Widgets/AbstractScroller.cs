@@ -322,7 +322,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.is_scrolling)
 				{
-					if (message.Type == MessageType.MouseUp)
+					if (message.MessageType == MessageType.MouseUp)
 					{
 						this.is_scrolling = false;
 						message.Consumer = this;
@@ -331,14 +331,14 @@ namespace Epsitec.Common.Widgets
 					return;
 				}
 				
-				if (! this.is_dragging && (message.Type != MessageType.MouseLeave))
+				if (! this.is_dragging && (message.MessageType != MessageType.MouseLeave))
 				{
 					this.HiliteZone = this.DetectZone (pos);
 					
 					if ((this.HiliteZone == Zone.PageDown) ||
 						(this.HiliteZone == Zone.PageUp))
 					{
-						if ((message.Type == MessageType.MouseDown) &&
+						if ((message.MessageType == MessageType.MouseDown) &&
 							(message.Button == MouseButtons.Left))
 						{
 							this.is_scrolling = true;

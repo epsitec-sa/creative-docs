@@ -352,11 +352,11 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			switch ( message.Type )
+			switch ( message.MessageType )
 			{
 				case MessageType.KeyDown:
 				case MessageType.KeyUp:
-					if ( message.Type == MessageType.KeyDown &&
+					if ( message.MessageType == MessageType.KeyDown &&
 						 this.ProcessKeyDown(message.KeyCode) )
 					{
 						message.Consumer = this;

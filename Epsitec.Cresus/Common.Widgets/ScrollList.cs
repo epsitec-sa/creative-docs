@@ -358,7 +358,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Gestion d'un événement.
 			
-			switch ( message.Type )
+			switch ( message.MessageType )
 			{
 				case MessageType.MouseEnter:
 				case MessageType.MouseLeave:

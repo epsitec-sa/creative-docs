@@ -1289,7 +1289,7 @@ namespace Epsitec.Common.Widgets
 				(point_in_widget.Y < 0) ||
 				(point_in_widget.X >= widget.Client.Size.Width) ||
 				(point_in_widget.Y >= widget.Client.Size.Height) ||
-				(message.Type == MessageType.MouseLeave))
+				(message.MessageType == MessageType.MouseLeave))
 			{
 				widget.SetEntered (false);
 			}
@@ -3183,7 +3183,7 @@ namespace Epsitec.Common.Widgets
 								//	la souris auparavant.
 								
 								if ((widget.IsEntered == false) &&
-									(message.Type != MessageType.MouseLeave))
+									(message.MessageType != MessageType.MouseLeave))
 								{
 									widget.SetEntered (true);
 								}
@@ -3229,7 +3229,7 @@ namespace Epsitec.Common.Widgets
 			{
 				bool is_entered = this.IsEntered;
 				
-				switch (message.Type)
+				switch (message.MessageType)
 				{
 					case MessageType.MouseUp:
 						

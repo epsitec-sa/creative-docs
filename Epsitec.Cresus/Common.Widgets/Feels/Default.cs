@@ -13,7 +13,7 @@ namespace Epsitec.Common.Widgets.Feel
 		#region IFeel Members
 		public bool TestAcceptKey(Epsitec.Common.Widgets.Message message)
 		{
-			if (((message.Type == MessageType.KeyPress) || (message.Type == MessageType.KeyDown)) &&
+			if (((message.MessageType == MessageType.KeyPress) || (message.MessageType == MessageType.KeyDown)) &&
 				(message.IsShiftPressed == false) &&
 				(message.IsControlPressed == false) &&
 				(message.IsAltPressed == false))
@@ -26,7 +26,7 @@ namespace Epsitec.Common.Widgets.Feel
 		
 		public bool TestSelectItemKey(Message message)
 		{
-			if (((message.Type == MessageType.KeyPress) || (message.Type == MessageType.KeyDown)) &&
+			if (((message.MessageType == MessageType.KeyPress) || (message.MessageType == MessageType.KeyDown)) &&
 				(message.IsShiftPressed == false) &&
 				(message.IsControlPressed == false) &&
 				(message.IsAltPressed == false))
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Widgets.Feel
 		
 		public bool TestPressButtonKey(Message message)
 		{
-			if (((message.Type == MessageType.KeyPress) || (message.Type == MessageType.KeyDown)) &&
+			if (((message.MessageType == MessageType.KeyPress) || (message.MessageType == MessageType.KeyDown)) &&
 				(message.IsShiftPressed == false) &&
 				(message.IsControlPressed == false) &&
 				(message.IsAltPressed == false))
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Widgets.Feel
 		
 		public bool TestCancelKey(Epsitec.Common.Widgets.Message message)
 		{
-			if (((message.Type == MessageType.KeyPress) || (message.Type == MessageType.KeyDown)) &&
+			if (((message.MessageType == MessageType.KeyPress) || (message.MessageType == MessageType.KeyDown)) &&
 				(message.IsShiftPressed == false) &&
 				(message.IsControlPressed == false) &&
 				(message.IsAltPressed == false))
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Widgets.Feel
 		
 		public bool TestNavigationKey(Epsitec.Common.Widgets.Message message)
 		{
-			if (((message.Type == MessageType.KeyPress) || (message.Type == MessageType.KeyDown)) &&
+			if (((message.MessageType == MessageType.KeyPress) || (message.MessageType == MessageType.KeyDown)) &&
 				(message.IsControlPressed == false) &&
 				(message.IsAltPressed == false))
 			{
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Widgets.Feel
 		
 		public bool TestComboOpenKey(Message message)
 		{
-			if (((message.Type == MessageType.KeyPress) || (message.Type == MessageType.KeyDown)) &&
+			if (((message.MessageType == MessageType.KeyPress) || (message.MessageType == MessageType.KeyDown)) &&
 				(message.IsShiftPressed == false) &&
 				(message.IsControlPressed == false) &&
 				(message.IsAltPressed == false))

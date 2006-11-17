@@ -259,7 +259,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			switch ( message.Type )
+			switch ( message.MessageType )
 			{
 				case MessageType.MouseWheel:
 					if ( message.Wheel > 0 )

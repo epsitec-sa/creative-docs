@@ -1413,7 +1413,7 @@ namespace Epsitec.Common.Widgets
 		{
 			int row, column;
 
-			switch (message.Type)
+			switch (message.MessageType)
 			{
 				case MessageType.MouseDown:
 					if (this.HitTestTable (pos, out row, out column) && message.IsLeftButton && this.is_select_enabled)

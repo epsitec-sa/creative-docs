@@ -300,7 +300,7 @@ namespace Epsitec.Common.Widgets
 			//	Gestion des événements.
 			if ( !this.IsEnabled )  return;
 
-			switch ( message.Type )
+			switch ( message.MessageType )
 			{
 				case MessageType.MouseDown:
 					this.mouseDown = true;

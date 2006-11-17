@@ -52,7 +52,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( !this.IsEnabled )  return;
 
-			switch ( message.Type )
+			switch ( message.MessageType )
 			{
 				case MessageType.MouseDown:
 					if (this.Window.StartWindowManagerOperation (Platform.WindowManagerOperation.ResizeBottomRight))

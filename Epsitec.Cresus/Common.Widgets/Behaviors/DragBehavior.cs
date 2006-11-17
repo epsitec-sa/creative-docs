@@ -51,7 +51,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			if (this.widget.IsEnabled)
 			{
-				switch (message.Type)
+				switch (message.MessageType)
 				{
 					case MessageType.MouseDown:
 						if ((message.Button == MouseButtons.Left) &&

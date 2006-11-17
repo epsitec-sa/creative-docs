@@ -224,7 +224,7 @@ namespace Epsitec.Common.Document.Widgets
 				this.document.Modifier.ActiveViewer.DrawingContext.IsAlt = message.IsAltPressed;
 			}
 
-			switch ( message.Type )
+			switch ( message.MessageType )
 			{
 				case MessageType.MouseDown:
 					if ( this.edited )

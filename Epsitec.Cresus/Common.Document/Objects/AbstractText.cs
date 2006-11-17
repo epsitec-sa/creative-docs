@@ -183,21 +183,21 @@ namespace Epsitec.Common.Document.Objects
 				this.document.Modifier.ActiveViewer.CloseMiniBar(false);
 			}
 
-			if ( message.Type == MessageType.KeyDown   ||
-				 message.Type == MessageType.KeyPress  ||
-				 message.Type == MessageType.MouseDown )
+			if ( message.MessageType == MessageType.KeyDown   ||
+				 message.MessageType == MessageType.KeyPress  ||
+				 message.MessageType == MessageType.MouseDown )
 			{
 				this.SetAutoScroll();
 			}
 
-			if ( message.Type == MessageType.KeyPress )
+			if ( message.MessageType == MessageType.KeyPress )
 			{
 				if ( this.EditProcessKeyPress(message) )  return true;
 			}
 
 			if ( message.KeyCodeOnly == KeyCode.Tab )
 			{
-				if ( message.Type == MessageType.KeyDown )
+				if ( message.MessageType == MessageType.KeyDown )
 				{
 					this.ProcessTabKey();
 				}
@@ -218,12 +218,12 @@ namespace Epsitec.Common.Document.Objects
 			
 			if ( !this.MetaNavigator.ProcessMessage(message, ppos, frame) )  return false;
 			
-			if ( message.Type == MessageType.MouseDown )
+			if ( message.MessageType == MessageType.MouseDown )
 			{
 				this.document.Modifier.ActiveViewer.CloseMiniBar(false);
 			}
 
-			if ( message.Type == MessageType.MouseUp )
+			if ( message.MessageType == MessageType.MouseUp )
 			{
 				if ( this.textFlow.TextNavigator.SelectionCount > 0 )
 				{

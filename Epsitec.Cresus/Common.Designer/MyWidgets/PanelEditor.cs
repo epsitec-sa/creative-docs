@@ -380,7 +380,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if (!this.isEditEnabled)  return;
 
-			switch (message.Type)
+			switch (message.MessageType)
 			{
 				case MessageType.MouseDown:
 					this.SetDirty();

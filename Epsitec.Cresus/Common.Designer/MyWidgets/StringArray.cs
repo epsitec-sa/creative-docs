@@ -498,13 +498,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			if (message.Type == MessageType.MouseWheel)
+			if (message.MessageType == MessageType.MouseWheel)
 			{
 				if (message.Wheel > 0)  this.FirstVisibleRow -= 3;
 				if (message.Wheel < 0)  this.FirstVisibleRow += 3;
 			}
 
-			if (message.Type == MessageType.MouseDown)
+			if (message.MessageType == MessageType.MouseDown)
 			{
 				this.WidthDraggingBegin(pos);
 				if (this.widthDraggingRank != -1)
@@ -515,7 +515,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
-			if (message.Type == MessageType.MouseMove)
+			if (message.MessageType == MessageType.MouseMove)
 			{
 				if (this.widthDraggingRank == -1)
 				{
@@ -539,7 +539,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
-			if (message.Type == MessageType.MouseUp)
+			if (message.MessageType == MessageType.MouseUp)
 			{
 				if (this.widthDraggingRank != -1)
 				{
@@ -550,7 +550,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
-			if (message.Type == MessageType.KeyDown)
+			if (message.MessageType == MessageType.KeyDown)
 			{
 				if (message.KeyCode == KeyCode.ArrowUp)
 				{

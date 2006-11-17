@@ -192,7 +192,7 @@ namespace Epsitec.Common.Widgets
 		{
 			KeyCode keyCode = message.KeyCodeOnly;
 
-			if (message.Type == MessageType.KeyDown)
+			if (message.MessageType == MessageType.KeyDown)
 			{
 				if ((keyCode != KeyCode.None) &&
 					(message.IsAltPressed))
@@ -278,7 +278,7 @@ namespace Epsitec.Common.Widgets
 					return new Shortcut (keyCode);
 				}
 			}
-			else if (message.Type == MessageType.KeyPress)
+			else if (message.MessageType == MessageType.KeyPress)
 			{
 				if (message.IsControlPressed)
 				{
@@ -292,7 +292,7 @@ namespace Epsitec.Common.Widgets
 
 				return new Shortcut (keyCode);
 			}
-			else if (message.Type == MessageType.ApplicationCommand)
+			else if (message.MessageType == MessageType.ApplicationCommand)
 			{
 				switch (message.Command)
 				{

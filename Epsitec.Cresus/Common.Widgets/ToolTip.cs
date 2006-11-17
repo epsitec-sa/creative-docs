@@ -309,14 +309,14 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleWidgetPreProcessing(object sender, MessageEventArgs e)
 		{
-			if ((e.Message.Type == MessageType.MouseMove) &&
+			if ((e.Message.MessageType == MessageType.MouseMove) &&
 				(this.ProcessToolTipHost (this.widget as Helpers.IToolTipHost, e.Point)))
 			{
 				return;
 			}
 
 			if ((this.is_displayed) &&
-				(e.Message.Type == MessageType.MouseMove))
+				(e.Message.MessageType == MessageType.MouseMove))
 			{
 				Drawing.Point mouse = Helpers.VisualTree.MapVisualToScreen (this.widget, e.Point);
 				

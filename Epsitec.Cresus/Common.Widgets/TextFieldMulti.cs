@@ -163,7 +163,7 @@ namespace Epsitec.Common.Widgets
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
 			decimal v;
-			switch ( message.Type )
+			switch ( message.MessageType )
 			{
 				case MessageType.KeyDown:
 					if ( message.KeyCode == KeyCode.ArrowUp && message.IsControlPressed )

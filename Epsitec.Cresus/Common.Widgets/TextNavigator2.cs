@@ -57,7 +57,7 @@ namespace Epsitec.Common.Widgets
 		
 		public bool ProcessMessage(Message message, Drawing.Point pos, Text.ITextFrame frame)
 		{
-			switch (message.Type)
+			switch (message.MessageType)
 			{
 				case MessageType.KeyDown:
 					return this.ProcessKeyDown (message);

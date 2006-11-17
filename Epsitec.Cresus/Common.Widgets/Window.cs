@@ -1564,7 +1564,7 @@ namespace Epsitec.Common.Widgets
 						//	Le message a été mangé. Il faut donc aussi manger le message
 						//	correspondant si les messages viennent par paire.
 							
-						switch (message.Type)
+						switch (message.MessageType)
 						{
 							case MessageType.MouseDown:
 								this.window.FilterMouseMessages = true;
@@ -2070,7 +2070,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget consumer = message.Consumer;
 			
-			if (message.Type == MessageType.KeyUp)
+			if (message.MessageType == MessageType.KeyUp)
 			{
 				if (this.EngagedWidget != null)
 				{
@@ -2095,7 +2095,7 @@ namespace Epsitec.Common.Widgets
 			if ((consumer != null) &&
 				(consumer.Visibility))
 			{
-				switch (message.Type)
+				switch (message.MessageType)
 				{
 					case MessageType.MouseDown:
 						if ((consumer.AutoCapture) ||
@@ -2197,7 +2197,7 @@ namespace Epsitec.Common.Widgets
 				//	Le message a été mangé. Il faut donc aussi manger le message
 				//	correspondant si les messages viennent par paire.
 						
-				switch (message.Type)
+				switch (message.MessageType)
 				{
 					case MessageType.MouseDown:
 						this.window.FilterMouseMessages = true;

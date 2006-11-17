@@ -248,7 +248,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
 			//	Gestion des événements clavier/souris.
-			if ( message.Type == MessageType.MouseDown )
+			if ( message.MessageType == MessageType.MouseDown )
 			{
 				if ( pos.X < this.ActualBounds.Right-this.scroller.ActualWidth )
 				{
@@ -278,7 +278,7 @@ namespace Epsitec.Common.Document.Widgets
 					}
 				}
 			}
-			else if ( message.Type == MessageType.MouseWheel )
+			else if ( message.MessageType == MessageType.MouseWheel )
 			{
 				if ( message.Wheel > 0 )
 				{
@@ -289,7 +289,7 @@ namespace Epsitec.Common.Document.Widgets
 					this.FirstLine = this.FirstLine+3;
 				}
 			}
-			else if ( message.Type == MessageType.KeyDown )
+			else if ( message.MessageType == MessageType.KeyDown )
 			{
 				bool ok = true;
 				
@@ -398,7 +398,7 @@ namespace Epsitec.Common.Document.Widgets
 					this.searchOnTheFly = "";
 				}
 			}
-			else if ( message.Type == MessageType.KeyPress )
+			else if ( message.MessageType == MessageType.KeyPress )
 			{
 				System.TimeSpan time = Types.Time.Now - this.searchTime;
 				double timeSeconds = time.TotalSeconds;

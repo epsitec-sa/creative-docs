@@ -120,7 +120,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public MessageType					Type
+		public MessageType					MessageType
 		{
 			get { return this.type; }
 		}

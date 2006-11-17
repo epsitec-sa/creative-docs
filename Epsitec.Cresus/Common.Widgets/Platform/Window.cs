@@ -1930,7 +1930,7 @@ namespace Epsitec.Common.Widgets.Platform
 				{
 					if (message.IsKeyType)
 					{
-						if (message.Type != MessageType.KeyDown)
+						if (message.MessageType != MessageType.KeyDown)
 						{
 							return true;
 						}

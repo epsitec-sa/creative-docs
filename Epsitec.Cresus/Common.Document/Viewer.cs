@@ -296,14 +296,14 @@ namespace Epsitec.Common.Document
 
 			//	Après un MouseUp, on reçoit toujours un MouseMove inutile,
 			//	qui est filtré ici !!!
-			if ( message.Type == MessageType.MouseMove &&
+			if ( message.MessageType == MessageType.MouseMove &&
 				 this.lastMessageType == MessageType.MouseUp &&
 				 pos == this.mousePosWidget )
 			{
 				//?System.Diagnostics.Debug.WriteLine("ProcessMessage: MouseMove après MouseUp poubellisé !");
 				return;
 			}
-			this.lastMessageType = message.Type;
+			this.lastMessageType = message.MessageType;
 
 			this.mousePosWidget = pos;
 			pos = this.ScreenToInternal(pos);  // position en coordonnées internes
@@ -319,7 +319,7 @@ namespace Epsitec.Common.Document
 			this.drawingContext.IsCtrl  = message.IsControlPressed;
 			this.drawingContext.IsAlt   = message.IsAltPressed;
 
-			switch ( message.Type )
+			switch ( message.MessageType )
 			{
 				case MessageType.MouseDown:
 					if ( !this.mouseDragging )

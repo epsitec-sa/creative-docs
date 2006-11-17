@@ -198,7 +198,7 @@ namespace Epsitec.Common.Widgets
 		protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)
 		{
 			if ((this.filter_disabled) &&
-				(message.Type == MessageType.KeyDown))
+				(message.MessageType == MessageType.KeyDown))
 			{
 				IFeel feel    = Feel.Factory.Active;
 				bool  forward = false;

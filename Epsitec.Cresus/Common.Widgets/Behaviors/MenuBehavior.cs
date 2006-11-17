@@ -1496,7 +1496,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			//	le menu est traité par le menu item lui-même. Un relâchement de
 			//	bouton dans un menu item est considéré comme un clic.
 			
-			switch (message.Type)
+			switch (message.MessageType)
 			{
 				case MessageType.MouseDown:
 					if (!mouse_in_menu)
@@ -1694,7 +1694,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			bool swallow_message = true;
 			
-			if (message.Type == MessageType.KeyDown)
+			if (message.MessageType == MessageType.KeyDown)
 			{
 				IFeel feel = Feel.Factory.Active;
 				

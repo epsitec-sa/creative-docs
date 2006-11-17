@@ -791,7 +791,7 @@ namespace Epsitec.Common.Widgets
 			pos.Y -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
 			pos += this.scrollOffset;
 
-			switch ( message.Type )
+			switch ( message.MessageType )
 			{
 				case MessageType.MouseDown:
 					if ( this.ProcessMouseDown(message, pos) )

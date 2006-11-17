@@ -58,7 +58,7 @@ namespace Epsitec.Common.UI
 
 		protected override void ProcessMessage(Widgets.Message message, Drawing.Point pos)
 		{
-			if (message.Type == Widgets.MessageType.MouseDown)
+			if (message.MessageType == Widgets.MessageType.MouseDown)
 			{
 				message.Swallowed = true;
 				this.OnMaskPressed ();

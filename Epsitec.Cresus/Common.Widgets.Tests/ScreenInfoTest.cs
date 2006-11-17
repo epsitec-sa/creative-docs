@@ -123,7 +123,7 @@ namespace Epsitec.Common.Widgets
 			
 			protected override void ProcessMessage(Message message, Point pos)
 			{
-				switch (message.Type)
+				switch (message.MessageType)
 				{
 					case MessageType.MouseDown:
 						if (message.IsLeftButton)

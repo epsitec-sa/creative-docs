@@ -297,7 +297,7 @@ namespace Epsitec.Common.UI
 				if ((panelStack != null) &&
 					(window != null))
 				{
-					if (message.Type == Widgets.MessageType.MouseLeave)
+					if (message.MessageType == Widgets.MessageType.MouseLeave)
 					{
 						window.MouseCursor = Widgets.MouseCursor.Default;
 					}
@@ -321,11 +321,11 @@ namespace Epsitec.Common.UI
 
 					if (message.Button == Widgets.MouseButtons.Left)
 					{
-						if (message.Type == Widgets.MessageType.MouseDown)
+						if (message.MessageType == Widgets.MessageType.MouseDown)
 						{
 							this.isMouseDown = true;
 						}
-						else if (message.Type == Widgets.MessageType.MouseUp)
+						else if (message.MessageType == Widgets.MessageType.MouseUp)
 						{
 							if (this.isMouseDown)
 							{

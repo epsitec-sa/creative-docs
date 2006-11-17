@@ -166,7 +166,7 @@ namespace Epsitec.Common.Widgets
 		private void MessageFilter(object sender, Message message)
 		{
 			//	Appelé même lorsque la souris n'est plus sur le widget.
-			if ( message.Type == MessageType.MouseMove )
+			if ( message.MessageType == MessageType.MouseMove )
 			{
 				Window window = sender as Window;
 				
