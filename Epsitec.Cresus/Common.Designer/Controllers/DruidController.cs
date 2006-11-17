@@ -119,7 +119,7 @@ namespace Epsitec.Common.Designer.Controllers
 
 			Druid d = Druid.Parse(this.druid);
 
-			Proxies.Abstract sourceProxy = this.Placeholder.ValueBinding.Source as Proxies.Abstract;
+			IProxy sourceProxy = this.Placeholder.ValueBinding.Source as IProxy;
 			IEnumerable<Widget> sourceWidgets = sourceProxy.Widgets;
 			// TODO: exploiter ici les widgets sélectionnés...
 
