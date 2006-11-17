@@ -955,7 +955,7 @@ namespace Epsitec.Common.Widgets
 			//?multi.TextLayout.JustifMode = TextJustifMode.NoLine;
 			multi.TextLayout.ShowLineBreak = true;
 			multi.TextLayout.ShowTab = true;
-			multi.OpletQueue = new OpletQueue();
+//-			Assert.IsNotNull (multi.OpletQueue);
 			multi.ScrollZone = 0.2;
 			multi.Anchor = AnchorStyles.All;
 			multi.Margins = new Margins(10, 10, 40, 30);

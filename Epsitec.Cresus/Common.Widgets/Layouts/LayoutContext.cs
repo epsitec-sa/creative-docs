@@ -93,6 +93,15 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			if (visual != null)
 			{
+				if (LayoutEngine.GetLayoutMode (visual) == LayoutMode.None)
+				{
+					if ((merge == null) ||
+						(merge.MeasureQueueLength == 0))
+					{
+						return;
+					}
+				}
+
 				int depth;
 				LayoutContext context = Helpers.VisualTree.GetLayoutContext (visual, out depth);
 

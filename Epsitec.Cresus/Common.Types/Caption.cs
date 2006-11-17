@@ -449,7 +449,7 @@ namespace Epsitec.Common.Types
 			this.NotifyChanged ();
 		}
 
-		private static string CompressXml(string xml)
+		public static string CompressXml(string xml)
 		{
 			//	Fold known strings found in typical Caption serializations to
 			//	unambiguous shorter representations :
@@ -467,7 +467,7 @@ namespace Epsitec.Common.Types
 			return xml;
 		}
 
-		private static string DecompressXml(string xml)
+		public static string DecompressXml(string xml)
 		{
 			//	Restores the XML to what it was before the call to CompressXml.
 

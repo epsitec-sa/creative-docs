@@ -390,6 +390,8 @@ namespace Epsitec.Common.Widgets
 			
 			TextFrame      frame     = new TextFrame ();
 			TextNavigator2 navigator = frame.TextNavigator;
+
+			Assert.IsNotNull (frame.OpletQueue);
 			
 			Text.TextStory   story     = frame.TextStory;
 			Text.TextStyle[] no_styles = new Text.TextStyle[0];

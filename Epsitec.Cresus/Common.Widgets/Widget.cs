@@ -2216,9 +2216,10 @@ namespace Epsitec.Common.Widgets
 		
 		public void SetFocusOnTabWidget()
 		{
+			int iterations = 0;
 			Window window  = this.Window;
 			Widget focused = window == null ? null : window.FocusedWidget;
-			Widget focus   = this.FindTabWidget (TabNavigationDir.Forwards, TabNavigationMode.ActivateOnTab, false, true);
+			Widget focus   = this.FindTabWidget (TabNavigationDir.Forwards, TabNavigationMode.ActivateOnTab, false, true, ref iterations);
 			
 			if (focus == null)
 			{
@@ -2237,12 +2238,18 @@ namespace Epsitec.Common.Widgets
 		
 		public Widget FindTabWidget(TabNavigationDir dir, TabNavigationMode mode)
 		{
-			return this.FindTabWidget (dir, mode, false, false);
+			int iterations = 0;
+			return this.FindTabWidget (dir, mode, false, false, ref iterations);
 		}
 		
 		
-		protected virtual Widget FindTabWidget(TabNavigationDir dir, TabNavigationMode mode, bool disable_first_enter, bool accept_focus)
+		private Widget FindTabWidget(TabNavigationDir dir, TabNavigationMode mode, bool disable_first_enter, bool accept_focus, ref int iterations)
 		{
+			if (iterations > 2)
+			{
+				return null;
+			}
+			
 			if (this.ProcessTab (dir, mode))
 			{
 				return this;
@@ -2310,12 +2317,12 @@ namespace Epsitec.Common.Widgets
 				{
 					if (dir == TabNavigationDir.Forwards)
 					{
-						find = candidates[0].FindTabWidget (dir, mode, false, true);
+						find = candidates[0].FindTabWidget (dir, mode, false, true, ref iterations);
 					}
 					else if (accept_focus)
 					{
 						int count = candidates.Length;
-						find = candidates[count-1].FindTabWidget (dir, mode, false, true);
+						find = candidates[count-1].FindTabWidget (dir, mode, false, true, ref iterations);
 					}
 					
 					if (find != null)
@@ -2375,7 +2382,11 @@ namespace Epsitec.Common.Widgets
 									if (candidates.Length > 0)
 									{
 										int count = candidates.Length;
-										find = candidates[count-1].FindTabWidget (dir, mode, false, true);
+										find = candidates[count-1].FindTabWidget (dir, mode, false, true, ref iterations);
+									}
+									else if ((find.TabNavigation & TabNavigationMode.ForwardOnly) != 0)
+									{
+										find = null;
 									}
 								}
 							}
@@ -2395,7 +2406,18 @@ namespace Epsitec.Common.Widgets
 										//	Entre en marche avant dans le widget...
 
 										Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (mode);
-										find = (candidates.Length > 0) ? candidates[0].FindTabWidget (dir, mode, false, true) : null;
+										
+										find = null;
+										
+										foreach (Widget candidate in candidates)
+										{
+											find = candidate.FindTabWidget (dir, mode, false, true, ref iterations);
+											
+											if (find != null)
+											{
+												break;
+											}
+										}
 									}
 									else
 									{
@@ -2456,12 +2478,12 @@ namespace Epsitec.Common.Widgets
 						{
 							case TabNavigationDir.Backwards:
 								accept = (parent.TabNavigation & TabNavigationMode.ForwardOnly) == 0;
-								find   = parent.FindTabWidget (dir, mode, true, accept);
+								find   = parent.FindTabWidget (dir, mode, true, accept, ref iterations);
 								break;
 							
 							case TabNavigationDir.Forwards:
 								accept = false;
-								find   = parent.FindTabWidget (dir, mode, true, accept);
+								find   = parent.FindTabWidget (dir, mode, true, accept, ref iterations);
 								break;
 						}
 					}
@@ -2473,17 +2495,18 @@ namespace Epsitec.Common.Widgets
 					//	premier descendant trouvé :
 					
 					Widget[] candidates = this.Children.Widgets[0].FindTabWidgets (mode);
+					iterations++;
 					
 					if (candidates.Length > 0)
 					{
 						if (dir == TabNavigationDir.Forwards)
 						{
-							find = candidates[0].FindTabWidget (dir, mode, false, true);
+							find = candidates[0].FindTabWidget (dir, mode, false, true, ref iterations);
 						}
-						else if (accept_focus)
+						else//? if (accept_focus)
 						{
 							int count = candidates.Length;
-							find = candidates[count-1].FindTabWidget (dir, mode, false, true);
+							find = candidates[count-1].FindTabWidget (dir, mode, false, true, ref iterations);
 						}
 						
 						if (find != null)
@@ -2502,12 +2525,15 @@ namespace Epsitec.Common.Widgets
 				{
 					switch (dir)
 					{
-						case TabNavigationDir.Backwards:
-							find = siblings[siblings.Length-1].FindTabWidget (dir, mode, false, true);
-							break;
-							
 						case TabNavigationDir.Forwards:
-							find = siblings[0].FindTabWidget (dir, mode, false, true);
+							find = siblings[0].FindTabWidget (dir, mode, false, true, ref iterations);
+							break;
+						
+						case TabNavigationDir.Backwards:
+//?							if (accept_focus)
+							{
+								find = siblings[siblings.Length-1].FindTabWidget (dir, mode, false, true, ref iterations);
+							}
 							break;
 					}
 				}

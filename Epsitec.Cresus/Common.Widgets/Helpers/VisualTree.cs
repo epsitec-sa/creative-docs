@@ -483,12 +483,15 @@ namespace Epsitec.Common.Widgets.Helpers
 		public static Support.OpletQueue GetOpletQueue(Visual visual)
 		{
 			CommandDispatcherChain chain = CommandDispatcherChain.BuildChain (visual);
-			
-			foreach (CommandDispatcher dispatcher in chain.Dispatchers)
+
+			if (chain != null)
 			{
-				if (dispatcher.OpletQueue != null)
+				foreach (CommandDispatcher dispatcher in chain.Dispatchers)
 				{
-					return dispatcher.OpletQueue;
+					if (dispatcher.OpletQueue != null)
+					{
+						return dispatcher.OpletQueue;
+					}
 				}
 			}
 			
