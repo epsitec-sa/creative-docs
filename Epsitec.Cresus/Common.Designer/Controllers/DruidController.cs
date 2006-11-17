@@ -117,7 +117,7 @@ namespace Epsitec.Common.Designer.Controllers
 		{
 			MainWindow mainWindow = this.MainWindow;
 
-			Druid d = Druid.Parse(this.druid);
+			Druid druid = Druid.Parse(this.druid);
 
 			IProxy sourceProxy = this.Placeholder.ValueBinding.Source as IProxy;
 			IEnumerable<Widget> sourceWidgets = sourceProxy.Widgets;
@@ -125,14 +125,14 @@ namespace Epsitec.Common.Designer.Controllers
 
 			if (this.parameter == "Caption")
 			{
-				d = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Unknow, d, null);
+				druid = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Unknow, druid, null);
 			}
 			else
 			{
-				d = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Panels, d, null);
+				druid = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Panels, druid, null);
 			}
 
-			this.druid = d.ToString();
+			this.druid = druid.ToString();
 
 			this.OnActualValueChanged();
 		}

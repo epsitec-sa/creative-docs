@@ -524,6 +524,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.panelMode = UI.PanelMode.Search;
 			}
 
+			this.panelEditor.DeselectAll();
 			this.UpdateButtons();
 			this.UpdateEdit();
 		}

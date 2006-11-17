@@ -98,14 +98,14 @@ namespace Epsitec.Common.Designer
 		public enum ObjectType
 		{
 			Unknow,
-			HSeparator,
-			VSeparator,
-			Button,
-			TextField,
-			StaticText,
-			Group,
-			GroupBox,
-			Panel,
+			HSeparator,			// séparateur horizontal
+			VSeparator,			// séparateur vertical
+			Button,				// bouton associé à une commande
+			TextField,			// texte éditable
+			StaticText,			// texte fixe
+			Group,				// conteneur invisible
+			GroupBox,			// conteneur avec cadre et titre
+			Panel,				// sous-panneau
 		}
 
 
@@ -126,6 +126,7 @@ namespace Epsitec.Common.Designer
 
 		public static bool IsAbstractGroup(Widget obj)
 		{
+			//	Retourne true si l'objet est un conteneur (invisible ou avec cadre).
 			ObjectType type = ObjectModifier.GetObjectType(obj);
 			return (type == ObjectType.Group || type == ObjectType.GroupBox);
 		}

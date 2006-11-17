@@ -1591,6 +1591,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.objectModifier.SetButtonAspect(obj, aspect);
 					}
 				}
+
+				if (type == ResourceAccess.Type.Panels)
+				{
+					Rectangle bounds = this.objectModifier.GetPreferredBounds(obj);
+					//	TODO: comment obtenir la taille selon le druid spécifié ?
+					this.objectModifier.SetPreferredBounds(obj, bounds);
+				}
 			}
 
 			return true;
