@@ -34,6 +34,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the panel id for the embedded panel.
+		/// </summary>
+		/// <value>The panel id.</value>
 		public Support.Druid PanelId
 		{
 			get
@@ -46,8 +50,20 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets all panel ids within the specified widget hierarchy.
+		/// </summary>
+		/// <param name="root">The root widget.</param>
+		/// <returns>The DRUIDs for the embedded panels.</returns>
 		public static IEnumerable<Support.Druid> GetAllPanelIds(Widgets.Widget root)
 		{
+			PanelPlaceholder placeholder = root as PanelPlaceholder;
+
+			if (placeholder != null)
+			{
+				yield return placeholder.PanelId;
+			}
+
 			foreach (PanelPlaceholder widget in root.FindAllChildren (
 						delegate (Widgets.Widget child)
 						{
