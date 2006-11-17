@@ -46,6 +46,14 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Refreshes the panel by reloading it from the resources and then
+		/// regenerating all its widgets.
+		/// </summary>
+		public void RefreshPanel()
+		{
+			this.RecreateUserInterface ();
+		}
 
 		#region IDeserialization Members
 
