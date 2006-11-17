@@ -10,6 +10,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.UI
 {
+	/// <summary>
+	/// The <c>PanelStack</c> class manages a stack of <c>Panel</c> instances
+	/// (used when the panels are switched to <c>PanelMode.Edition</c>).
+	/// </summary>
 	public class PanelStack : Widgets.AbstractGroup
 	{
 		public PanelStack()

@@ -1404,6 +1404,11 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 //			System.Diagnostics.Debug.WriteLine (msg.ToString ());
 			Application.ExecuteAsyncCallbacks ();
+
+			if (RestartManager.HandleWndProc (ref msg))
+			{
+				return;
+			}
 			
 			if (Window.is_sync_requested)
 			{

@@ -43,7 +43,16 @@ namespace Epsitec.Common.Widgets.Platform
 		[DllImport ("User32.dll")]  internal extern static System.IntPtr GetKeyboardLayout(int thread_id);
 		[DllImport ("User32.dll")]	internal extern static bool SetWindowPos(System.IntPtr hWnd, System.IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
+		[DllImport ("Kernel32.dll")] internal extern static uint RegisterApplicationRestart(string pszCommandLine, int dwFlags);
+		[DllImport ("Kernel32.dll")] internal extern static uint RegisterApplicationRecoveryCallback(System.IntPtr pRecoveryCallback, System.IntPtr pvParameter, int dwPingInterval, int dwFlags);
+		[DllImport ("Kernel32.dll")] internal extern static uint ApplicationRecoveryInProgress(out bool pbCancelled);
+		[DllImport ("Kernel32.dll")] internal extern static uint ApplicationRecoveryFinished(bool bSuccess);
 
+		internal static uint RegisterApplicationRecoveryCallback(ApplicationRecoveryCallback callback, System.IntPtr parameter, int pingInterval, int flags)
+		{
+			System.IntPtr callbackPointer = Marshal.GetFunctionPointerForDelegate (callback);
+			return Win32Api.RegisterApplicationRecoveryCallback (callbackPointer, parameter, pingInterval, flags);
+		}
 
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr CreateCompatibleDC(System.IntPtr dc);
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr SelectObject(System.IntPtr dc, System.IntPtr handle_object);
@@ -51,6 +60,8 @@ namespace Epsitec.Common.Widgets.Platform
 		[DllImport ("GDI32.dll")]	internal extern static bool DeleteDC(System.IntPtr dc);
 		[DllImport ("GDI32.dll")]	internal extern static void SetStretchBltMode(System.IntPtr dc, int mode);
 		[DllImport ("GDI32.dll")]	internal extern static void StretchBlt(System.IntPtr dc, int x, int y, int dx, int dy, System.IntPtr src_dc, int src_x, int src_y, int src_dx, int src_dy, int rop);
+
+		internal delegate int ApplicationRecoveryCallback(System.IntPtr pvParameter);
 		
 		internal static bool GetKeyName(KeyCode key, out string name)
 		{

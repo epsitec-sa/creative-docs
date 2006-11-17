@@ -9,6 +9,8 @@ namespace Epsitec.Common.Widgets.Platform
 	internal class Win32Const
 	{
 		public const int WM_ACTIVATE		= 0x0006;
+		public const int WM_QUERYENDSESSION	= 0x0011;
+		public const int WM_ENDSESSION		= 0x0016;
 		public const int WM_ACTIVATEAPP		= 0x001C;
 		public const int WM_MOUSEACTIVATE	= 0x0021;
 		public const int WM_GETMINMAXINFO   = 0x0024;
@@ -148,5 +150,7 @@ namespace Epsitec.Common.Widgets.Platform
 		public const int WMSZ_BOTTOM = 6;
 		public const int WMSZ_BOTTOMLEFT = 7;
 		public const int WMSZ_BOTTOMRIGHT = 8;
+
+		public const int ENDSESSION_CLOSEAPP = 1;
 	}
 }

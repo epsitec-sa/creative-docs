@@ -133,6 +133,7 @@
     <Compile Include="CloneView.cs" />
     <Compile Include="CommandType.cs" />
     <Compile Include="ILogicalTree.cs" />
+    <Compile Include="Platform\RestartManager.cs" />
     <Compile Include="TabNavigationDir.cs" />
     <Compile Include="TabNavigationMode.cs" />
     <Compile Include="FormTextField.cs" />

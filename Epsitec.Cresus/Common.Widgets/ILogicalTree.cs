@@ -9,6 +9,10 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public interface ILogicalTree
 	{
+		/// <summary>
+		/// Gets the logical parent of the object.
+		/// </summary>
+		/// <value>The logical parent.</value>
 		Visual Parent
 		{
 			get;
