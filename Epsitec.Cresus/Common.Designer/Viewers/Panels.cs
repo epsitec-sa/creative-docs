@@ -529,26 +529,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public static void SetPanel(DependencyObject obj, UI.Panel panel)
-		{
-			if (panel == null)
-			{
-				obj.ClearValue(Panels.PanelProperty);
-			}
-			else
-			{
-				obj.SetValue(Panels.PanelProperty, panel);
-			}
-		}
-
-		public static UI.Panel GetPanel(DependencyObject obj)
-		{
-			return (UI.Panel) obj.GetValue(Panels.PanelProperty);
-		}
-		
-		public static readonly DependencyProperty PanelProperty = DependencyProperty.RegisterAttached("Panel", typeof(UI.Panel), typeof(Panels));
-
-
 		protected ProxyManager					proxyManager;
 		protected Widget						left;
 		protected VSplitter						splitter1;

@@ -566,10 +566,10 @@ namespace Epsitec.Common.Designer
 					newBundle.DefineName(newDruid.ToBundleId());
 					newBundle.DefineCaption(newName);
 
-					UI.Panel actualPanel = Viewers.Panels.GetPanel(actualBundle);
+					UI.Panel actualPanel = UI.Panel.GetPanel (actualBundle);
 					UI.Panel newPanel = UserInterface.Duplicate(actualPanel, this.resourceManager) as UI.Panel;
-					
-					Viewers.Panels.SetPanel(newBundle, newPanel);
+
+					UI.Panel.SetPanel (newBundle, newPanel);
 				}
 				else
 				{
@@ -583,6 +583,8 @@ namespace Epsitec.Common.Designer
 
 				this.panelsList.Insert(this.accessIndex, newBundle);
 				this.panelsToCreate.Add(newBundle);
+				
+				this.resourceManager.SetBundle (newBundle, ResourceSetMode.None);
 			}
 
 			this.druidsIndex.Insert(this.accessIndex+1, newDruid);
@@ -2698,7 +2700,7 @@ namespace Epsitec.Common.Designer
 					{
 						UI.Panel panel = UserInterface.DeserializePanel(field.AsString, this.resourceManager);
 						panel.DrawDesignerFrame = true;
-						Viewers.Panels.SetPanel(bundle, panel);
+						UI.Panel.SetPanel (bundle, panel);
 					}
 				}
 
@@ -2717,7 +2719,7 @@ namespace Epsitec.Common.Designer
 			{
 				ResourceBundle bundle = this.panelsList[i];
 				bundle.DefineRank(i);
-				UI.Panel panel = Viewers.Panels.GetPanel(bundle);
+				UI.Panel panel = UI.Panel.GetPanel (bundle);
 
 				if (panel != null)
 				{
@@ -2756,12 +2758,12 @@ namespace Epsitec.Common.Designer
 			//	Si nécessaire, il est créé la première fois.
 			ResourceBundle bundle = this.PanelBundle(index);
 
-			UI.Panel newPanel = Viewers.Panels.GetPanel(bundle);
+			UI.Panel newPanel = UI.Panel.GetPanel (bundle);
 
 			if (newPanel == null)
 			{
 				newPanel = this.CreateEmptyPanel();
-				Viewers.Panels.SetPanel(bundle, newPanel);
+				UI.Panel.SetPanel (bundle, newPanel);
 			}
 
 			return newPanel;

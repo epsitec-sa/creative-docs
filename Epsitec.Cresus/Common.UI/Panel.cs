@@ -501,10 +501,27 @@ namespace Epsitec.Common.UI
 			//	TODO: searchPanel = ...
 		}
 
+		public static void SetPanel(DependencyObject obj, Panel panel)
+		{
+			if (panel == null)
+			{
+				obj.ClearValue (Panel.PanelProperty);
+			}
+			else
+			{
+				obj.SetValue (Panel.PanelProperty, panel);
+			}
+		}
 
-		public static DependencyProperty DataSourceMetadataProperty = DependencyProperty.RegisterReadOnly ("DataSourceMetadata", typeof (DataSourceMetadata), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDataSourceMetadataValue, Panel.SetDataSourceMetadataValue).MakeReadOnlySerializable ());
-		public static DependencyProperty EditionPanelProperty = DependencyProperty.Register ("EditionPanel", typeof (Panels.EditPanel), typeof (Panel), new DependencyPropertyMetadata (Panel.GetEditionPanelValue, Panel.SetEditionPanelValue));
-		public static DependencyProperty SearchPanelProperty  = DependencyProperty.Register ("SearchPanel", typeof (Panels.EditPanel), typeof (Panel), new DependencyPropertyMetadata (Panel.GetSearchPanelValue, Panel.SetSearchPanelValue));
+		public static Panel GetPanel(DependencyObject obj)
+		{
+			return (Panel) obj.GetValue (Panel.PanelProperty);
+		}
+
+		public static readonly DependencyProperty PanelProperty = DependencyProperty.RegisterAttached ("Panel", typeof (Panel), typeof (Panel));
+		public static readonly DependencyProperty DataSourceMetadataProperty = DependencyProperty.RegisterReadOnly ("DataSourceMetadata", typeof (DataSourceMetadata), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDataSourceMetadataValue, Panel.SetDataSourceMetadataValue).MakeReadOnlySerializable ());
+		public static readonly DependencyProperty EditionPanelProperty = DependencyProperty.Register ("EditionPanel", typeof (Panels.EditPanel), typeof (Panel), new DependencyPropertyMetadata (Panel.GetEditionPanelValue, Panel.SetEditionPanelValue));
+		public static readonly DependencyProperty SearchPanelProperty  = DependencyProperty.Register ("SearchPanel", typeof (Panels.EditPanel), typeof (Panel), new DependencyPropertyMetadata (Panel.GetSearchPanelValue, Panel.SetSearchPanelValue));
 		
 		private DataSource dataSource;
 		private Binding dataSourceBinding;

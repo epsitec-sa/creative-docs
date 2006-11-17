@@ -93,13 +93,25 @@ namespace Epsitec.Common.UI
 				}
 
 				Support.ResourceBundle.Field field = bundle["Panel"];
+				string xml;
 
 				if (field.IsEmpty)
 				{
-					throw new System.InvalidOperationException (string.Format ("Cannot create user interface: panel field for bundle {0} not found", this.PanelId));
+					Panel cachedPanel = Panel.GetPanel (bundle);
+					
+					if (cachedPanel == null)
+					{
+						throw new System.InvalidOperationException (string.Format ("Cannot create user interface: panel field for bundle {0} not found", this.PanelId));
+					}
+
+					xml = Panel.SerializePanel (cachedPanel);
+				}
+				else
+				{
+					xml = field.AsString;
 				}
 
-				this.panel = Panel.DeserializePanel (field.AsString, null, manager);
+				this.panel = Panel.DeserializePanel (xml, null, manager);
 				this.panel.SetEmbedder (this);
 				this.panel.Dock = Widgets.DockStyle.Fill;
 			}

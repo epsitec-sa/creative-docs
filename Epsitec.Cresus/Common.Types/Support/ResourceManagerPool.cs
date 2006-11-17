@@ -113,6 +113,12 @@ namespace Epsitec.Common.Support
 			this.SyncBundleRelatedCaches ();
 		}
 
+		public void RefreshBundle(string key, ResourceBundle bundle)
+		{
+			this.AddBundle (key, bundle);
+			this.SyncBundleRelatedCaches ();
+		}
+
 		public override string ToString()
 		{
 			return string.Format ("{0}:{1}:{2}", this.name ?? "<auto>", this.bundles.Count, this.managers.Count);

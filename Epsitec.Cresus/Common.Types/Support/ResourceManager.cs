@@ -945,10 +945,18 @@ namespace Epsitec.Common.Support
 			string key = Resources.CreateBundleKey (prefix, module.Id, id, ResourceLevel.Merged, culture);
 
 			this.pool.RemoveBundle (key);
+
+			key = Resources.CreateBundleKey (prefix, module.Id, id, level, culture);
+			this.pool.RefreshBundle (key, bundle);
 		}
 		
 		public bool SetBinaryData(string id, ResourceLevel level, CultureInfo culture, byte[] data, ResourceSetMode mode)
 		{
+			if (mode == ResourceSetMode.None)
+			{
+				return true;
+			}
+			
 			culture = culture ?? this.culture;
 			
 			switch (level)
