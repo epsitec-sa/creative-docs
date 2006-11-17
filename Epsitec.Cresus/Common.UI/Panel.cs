@@ -157,6 +157,12 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this panel has a valid edition panel.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this panel has a valid edition panel; otherwise, <c>false</c>.
+		/// </value>
 		public bool								HasValidEditionPanel
 		{
 			get
@@ -210,6 +216,11 @@ namespace Epsitec.Common.UI
 					return this;
 			}
 
+			return null;
+		}
+
+		public virtual Drawing.Path CreateAperturePath(bool parentRelative)
+		{
 			return null;
 		}
 		

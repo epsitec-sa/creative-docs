@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.UI.Panels
 {
-	internal class EditPanel : Panel
+	internal class EditPanel : Panel, Widgets.ILogicalTree
 	{
 		public EditPanel()
 		{
@@ -52,10 +52,71 @@ namespace Epsitec.Common.UI.Panels
 			}
 		}
 
+		public override Drawing.Path CreateAperturePath(bool parentRelative)
+		{
+			if (this.Parent is PanelStack)
+			{
+				Drawing.Rectangle bounds = parentRelative ? this.ActualBounds : this.Client.Bounds;
+				Drawing.Path path   = new Drawing.Path ();
+
+				bounds.Deflate (1.0);
+
+				double radius = 3;
+
+				double x1 = bounds.Left;
+				double x2 = bounds.Right;
+				double y1 = bounds.Bottom;
+				double y2 = bounds.Top;
+				double dr = radius * 0.7;
+
+				path.MoveTo (x1, y1+radius);
+				path.LineTo (x1, y2-radius);
+				path.CurveTo (x1, y2-radius+dr, x1+radius-dr, y2, x1+radius, y2);
+				path.LineTo (x2-radius, y2);
+				path.CurveTo (x2-radius+dr, y2, x2, y2-radius+dr, x2, y2-radius);
+				path.LineTo (x2, y1+radius);
+				path.CurveTo (x2, y1+radius-dr, x2-radius+dr, y1, x2-radius, y1);
+				path.LineTo (x1+radius, y1);
+				path.CurveTo (x1+radius-dr, y1, x1, y1+radius-dr, x1, y1+radius);
+				path.Close ();
+
+				return path;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		#region ILogicalTree Members
+
+		Widgets.Visual Widgets.ILogicalTree.Parent
+		{
+			get
+			{
+				return this.owner ?? this.Parent;
+			}
+		}
+
+		#endregion
+
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			graphics.AddFilledRectangle (Drawing.Rectangle.Intersection (clipRect, this.Client.Bounds));
-			graphics.RenderSolid (Drawing.Color.FromRgb (1, 1, 1));
+			Drawing.Path path = this.CreateAperturePath (false);
+
+			if (path == null)
+			{
+				graphics.AddFilledRectangle (Drawing.Rectangle.Intersection (clipRect, this.Client.Bounds));
+				graphics.RenderSolid (Drawing.Color.FromAlphaRgb (0.5, 1, 1, 1));
+			}
+			else
+			{
+				graphics.Rasterizer.AddSurface (path);
+				graphics.RenderSolid (Drawing.Color.FromAlphaRgb (0.9, 1, 1, 1));
+
+				graphics.Rasterizer.AddOutline (path, 2.0, Epsitec.Common.Drawing.CapStyle.Round, Epsitec.Common.Drawing.JoinStyle.Round);
+				graphics.RenderSolid (Drawing.Color.FromName ("ActiveCaption"));
+			}
 
 			base.PaintBackgroundImplementation (graphics, clipRect);
 		}

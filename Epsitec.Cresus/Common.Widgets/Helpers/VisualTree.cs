@@ -390,7 +390,16 @@ namespace Epsitec.Common.Widgets.Helpers
 					break;
 				}
 
-				visual = visual.Parent;
+				ILogicalTree logicalTree = visual as ILogicalTree;
+				
+				if (logicalTree == null)
+				{
+					visual = visual.Parent;
+				}
+				else
+				{
+					visual = logicalTree.Parent;
+				}
 			}
 			
 			return null;
@@ -439,7 +448,18 @@ namespace Epsitec.Common.Widgets.Helpers
 					return context;
 				}
 
-				Visual parent = visual.Parent;
+				Visual parent;
+				
+				ILogicalTree logicalTree = visual as ILogicalTree;
+				
+				if (logicalTree == null)
+				{
+					parent = visual.Parent;
+				}
+				else
+				{
+					parent = logicalTree.Parent;
+				}
 
 				if (parent == null)
 				{
@@ -658,7 +678,16 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			if (visual != null)
 			{
-				visual = visual.Parent;
+				ILogicalTree logicalTree = visual as ILogicalTree;
+
+				if (logicalTree == null)
+				{
+					visual = visual.Parent;
+				}
+				else
+				{
+					visual = logicalTree.Parent;
+				}
 				
 				while (visual != null)
 				{
@@ -666,8 +695,17 @@ namespace Epsitec.Common.Widgets.Helpers
 					{
 						return visual;
 					}
-					
-					visual = visual.Parent;
+
+					logicalTree = visual as ILogicalTree;
+
+					if (logicalTree == null)
+					{
+						visual = visual.Parent;
+					}
+					else
+					{
+						visual = logicalTree.Parent;
+					}
 				}
 			}
 			
@@ -675,12 +713,23 @@ namespace Epsitec.Common.Widgets.Helpers
 		}
 		
 		#region AddToDispatcherList (Private Methods)
+		
 		private static void AddToDispatcherList(List<CommandDispatcher> list, Visual visual)
 		{
 			while (visual != null)
 			{
 				VisualTree.AddToDispatcherList (list, CommandDispatcher.GetDispatcher (visual));
-				visual = visual.Parent;
+				
+				ILogicalTree logicalTree = visual as ILogicalTree;
+
+				if (logicalTree == null)
+				{
+					visual = visual.Parent;
+				}
+				else
+				{
+					visual = logicalTree.Parent;
+				}
 			}
 		}
 

@@ -37,7 +37,49 @@ namespace Epsitec.Common.UI
 				if (this.aperture != value)
 				{
 					this.Invalidate (Drawing.Rectangle.Union (this.aperture, value));
-					this.aperture = value;
+
+					if (this.aperturePath != null)
+					{
+						this.aperturePath.Dispose ();
+						this.aperturePath = null;
+					}
+					
+					this.aperture     = value;
+					this.aperturePath = new Drawing.Path (this.aperture);
+				}
+			}
+		}
+
+		public Drawing.Path AperturePath
+		{
+			get
+			{
+				return this.aperturePath;
+			}
+			set
+			{
+				if (this.aperturePath != value)
+				{
+					if (this.aperturePath != null)
+					{
+						this.aperturePath.Dispose ();
+						this.aperturePath = null;
+					}
+					
+					if (value != null)
+					{
+						Drawing.Rectangle bounds = value.ComputeBounds ();
+						
+						this.Invalidate (Drawing.Rectangle.Union (this.aperture, bounds));
+						
+						this.aperture     = bounds;
+						this.aperturePath = value;
+					}
+					else
+					{
+						this.aperture     = Drawing.Rectangle.Empty;
+						this.aperturePath = null;
+					}
 				}
 			}
 		}
@@ -69,21 +111,22 @@ namespace Epsitec.Common.UI
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-#if true
-			graphics.AddFilledRectangle (this.Client.Bounds);
-			graphics.RenderSolid (this.MaskColor);
-#else
-			Drawing.Path pathA = new Drawing.Path (this.Client.Bounds);
-			Drawing.Path pathB = new Drawing.Path (this.Aperture);
-			Drawing.Path shape = Drawing.Path.Combine (pathA, pathB, Drawing.PathOperation.AMinusB);
+			if (this.aperturePath == null)
+			{
+				graphics.AddFilledRectangle (this.Client.Bounds);
+				graphics.RenderSolid (this.MaskColor);
+			}
+			else
+			{
+				Drawing.Path path  = new Drawing.Path (this.Client.Bounds);
+				Drawing.Path shape = Drawing.Path.Combine (path, this.aperturePath, Drawing.PathOperation.AMinusB);
 
-			graphics.Rasterizer.AddSurface (shape);
-			graphics.RenderSolid (Drawing.Color.FromAlphaRgb (0.5, 1.0, 0.0, 0.0));
+				graphics.Rasterizer.AddSurface (shape);
+				graphics.RenderSolid (this.MaskColor);
 
-			shape.Dispose ();
-			pathA.Dispose ();
-			pathB.Dispose ();
-#endif
+				shape.Dispose ();
+				path.Dispose ();
+			}
 		}
 
 		protected virtual void OnMaskPressed()
@@ -99,5 +142,6 @@ namespace Epsitec.Common.UI
 		public static readonly DependencyProperty MaskColorProperty = DependencyProperty.Register ("MaskColor", typeof (Drawing.Color), typeof (PanelMask), new Widgets.Helpers.VisualPropertyMetadata (Drawing.Color.FromAlphaRgb (0.5, 0.8, 0.8, 0.8), Widgets.Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
 
 		private Drawing.Rectangle aperture;
+		private Drawing.Path aperturePath;
 	}
 }

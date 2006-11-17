@@ -207,7 +207,17 @@ namespace Epsitec.Common.UI
 			{
 				Panel topPanel = this.editPanels.Peek ();
 
-				this.mask.Aperture = topPanel.ActualBounds;
+				Drawing.Path path = topPanel.CreateAperturePath (true);
+
+				if (path == null)
+				{
+					this.mask.Aperture = topPanel.ActualBounds;
+				}
+				else
+				{
+					this.mask.AperturePath = path;
+				}
+				
 				this.mask.ZOrder = 0;
 				this.mask.ZOrder = topPanel.ZOrder;
 				this.mask.Show ();
