@@ -1,12 +1,13 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Responsable: Daniel ROUX
 
 using System.Collections.Generic;
-using Epsitec.Common.Widgets;
+
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.UI.Controllers;
-using Epsitec.Common.Types;
-using Epsitec.Common.Support;
+using Epsitec.Common.Widgets;
 
 [assembly: Controller(typeof(Epsitec.Common.Designer.Controllers.DruidController))]
 
@@ -117,6 +118,10 @@ namespace Epsitec.Common.Designer.Controllers
 			MainWindow mainWindow = this.MainWindow;
 
 			Druid d = Druid.Parse(this.druid);
+
+			Proxies.Abstract sourceProxy = this.Placeholder.ValueBinding.Source as Proxies.Abstract;
+			IEnumerable<Widget> sourceWidgets = sourceProxy.Widgets;
+			// TODO: exploiter ici les widgets sélectionnés...
 
 			if (this.parameter == "Caption")
 			{
