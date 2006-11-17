@@ -156,5 +156,12 @@ namespace Epsitec.Common.Types
 				yield return item;
 			}
 		}
+
+		public static IEnumerable<T> Reverse<T>(IEnumerable<T> collection)
+		{
+			List<T> list = new List<T> (collection);
+			list.Reverse ();
+			return list;
+		}
 	}
 }

@@ -1036,14 +1036,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			if (root != null)
 			{
-				Widget[] children = root.FindAllChildren ();
-				
-				for (int i = 0; i < children.Length; i++)
+				foreach (Widget item in root.FindAllChildren ())
 				{
-					if ((children[i] is MenuItem) &&
-						(! (children[i] is MenuSeparator)))
+					if ((item is MenuItem) && (! (item is MenuSeparator)))
 					{
-						return children[i] as MenuItem;
+						return item as MenuItem;
 					}
 				}
 			}
@@ -1055,14 +1052,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			if (root != null)
 			{
-				Widget[] children = root.FindAllChildren ();
-				
-				for (int i = children.Length-1; i >= 0; i--)
+				foreach (Widget item in Types.Collection.Reverse<Widget> (root.FindAllChildren ()))
 				{
-					if ((children[i] is MenuItem) &&
-						(! (children[i] is MenuSeparator)))
+					if ((item is MenuItem) && (!(item is MenuSeparator)))
 					{
-						return children[i] as MenuItem;
+						return item as MenuItem;
 					}
 				}
 			}
@@ -1074,22 +1068,17 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			if (root != null)
 			{
-				Widget[] children = root.FindAllChildren ();
-				bool     found    = false;
+				bool found = false;
 				
-				for (int i = 0; i < children.Length; i++)
+				foreach (Widget child in root.FindAllChildren ())
 				{
-					if (children[i] == item)
+					if (child == item)
 					{
 						found = true;
 					}
-					else if ((children[i] is MenuItem) &&
-						/**/ (! (children[i] is MenuSeparator)))
+					else if ((found) && (child is MenuItem) && (! (child is MenuSeparator)))
 					{
-						if (found)
-						{
-							return children[i] as MenuItem;
-						}
+						return child as MenuItem;
 					}
 				}
 			}
@@ -1101,22 +1090,17 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			if (root != null)
 			{
-				Widget[] children = root.FindAllChildren ();
-				bool     found    = false;
-				
-				for (int i = children.Length-1; i >= 0; i--)
+				bool found = false;
+
+				foreach (Widget child in Types.Collection.Reverse<Widget> (root.FindAllChildren ()))
 				{
-					if (children[i] == item)
+					if (child == item)
 					{
 						found = true;
 					}
-					else if ((children[i] is MenuItem) &&
-						/**/ (! (children[i] is MenuSeparator)))
+					else if ((found) && (child is MenuItem) && (!(child is MenuSeparator)))
 					{
-						if (found)
-						{
-							return children[i] as MenuItem;
-						}
+						return child as MenuItem;
 					}
 				}
 			}

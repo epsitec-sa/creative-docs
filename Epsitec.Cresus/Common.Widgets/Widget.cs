@@ -2024,19 +2024,22 @@ namespace Epsitec.Common.Widgets
 			
 			return null;
 		}
-		
-		public Widget[]         FindAllChildren()
+
+		public IEnumerable<Widget> FindAllChildren()
 		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			this.FindAllChildren (list);
-			
-			Widget[] widgets = new Widget[list.Count];
-			list.CopyTo (widgets);
-			
-			return widgets;
+			List<Widget> list = new List<Widget> ();
+			this.FindAllChildren (list, null);
+			return list;
 		}
-		
-		public Widget			FindFocusedChild()
+
+		public IEnumerable<Widget> FindAllChildren(System.Predicate<Widget> predicate)
+		{
+			List<Widget> list = new List<Widget> ();
+			this.FindAllChildren (list, predicate);
+			return list;
+		}
+
+		public Widget FindFocusedChild()
 		{
 			Window window = this.Window;
 			Widget focused = (window == null) ? null : window.FocusedWidget;
@@ -2080,12 +2083,20 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 		
-		private void FindAllChildren(System.Collections.ArrayList list)
+		private void FindAllChildren(List<Widget> list, System.Predicate<Widget> predicate)
 		{
-			foreach (Widget child in this.Children)
+			if (this.HasChildren)
 			{
-				list.Add (child);
-				child.FindAllChildren (list);
+				foreach (Widget child in this.Children)
+				{
+					if ((predicate == null) ||
+						(predicate (child)))
+					{
+						list.Add (child);
+					}
+					
+					child.FindAllChildren (list, predicate);
+				}
 			}
 		}
 		

@@ -712,8 +712,7 @@ namespace Epsitec.Common.Document
 		protected void AdaptAllTextFieldReal(Widget parent)
 		{
 			//	Modifie tous les widgets d'un panneau qui sera utilisé.
-			Widget[] widgets = parent.FindAllChildren();
-			foreach ( Widget widget in widgets )
+			foreach ( Widget widget in parent.FindAllChildren() )
 			{
 				if ( widget is TextFieldReal )
 				{

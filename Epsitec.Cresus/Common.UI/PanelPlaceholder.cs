@@ -46,6 +46,18 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public static IEnumerable<Support.Druid> GetAllPanelIds(Widgets.Widget root)
+		{
+			foreach (PanelPlaceholder widget in root.FindAllChildren (
+						delegate (Widgets.Widget child)
+						{
+							return child is PanelPlaceholder;
+						}))
+			{
+				yield return widget.PanelId;
+			}
+		}
+
 		/// <summary>
 		/// Refreshes the panel by reloading it from the resources and then
 		/// regenerating all its widgets.
