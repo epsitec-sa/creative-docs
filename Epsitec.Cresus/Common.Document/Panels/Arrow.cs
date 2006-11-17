@@ -22,7 +22,7 @@ namespace Epsitec.Common.Document.Panels
 				this.grid[j] = new RadioIconGrid(this);
 				this.grid[j].SelectionChanged += new EventHandler(HandleTypeChanged);
 				this.grid[j].TabIndex = index++;
-				this.grid[j].TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.grid[j].TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.AddRadioIcon(j, Properties.ArrowType.Right, false);
 				this.AddRadioIcon(j, Properties.ArrowType.ArrowSimply, false);
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Document.Panels
 				this.document.Modifier.AdaptTextFieldRealDimension(this.fieldLength[j].TextFieldReal);
 				this.fieldLength[j].TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 				this.fieldLength[j].TabIndex = index++;
-				this.fieldLength[j].TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.fieldLength[j].TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.fieldLength[j], Res.Strings.Panel.Arrow.Tooltip.Length);
 
 				this.fieldEffect1[j] = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldEffect1[j].TextFieldReal.TextSuffix = "%";
 				this.fieldEffect1[j].TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 				this.fieldEffect1[j].TabIndex = index++;
-				this.fieldEffect1[j].TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.fieldEffect1[j].TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.fieldEffect1[j], Res.Strings.Panel.Arrow.Tooltip.Effect1);
 
 				this.fieldEffect2[j] = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldEffect2[j].TextFieldReal.TextSuffix = "%";
 				this.fieldEffect2[j].TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 				this.fieldEffect2[j].TabIndex = index++;
-				this.fieldEffect2[j].TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.fieldEffect2[j].TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.fieldEffect2[j], Res.Strings.Panel.Arrow.Tooltip.Effect2);
 			}
 

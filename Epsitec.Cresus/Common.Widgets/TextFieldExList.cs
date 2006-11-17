@@ -238,7 +238,7 @@ namespace Epsitec.Common.Widgets
 		protected override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
 			if ((this.mode == TextFieldExListMode.EditPassive) &&
-				(mode != TabNavigationMode.Passive))
+				(mode != TabNavigationMode.None))
 			{
 				//	Si on entre par un TAB dans ce widget, il faut passer en mode édition active,
 				//	si l'état précédent était passif :

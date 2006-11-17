@@ -51,7 +51,7 @@ namespace Epsitec.Common.Document.Containers
 			this.graphicList.FlyOverChanged += new EventHandler(this.HandleAggregatesTableFlyOverChanged);
 			this.graphicList.DoubleClicked += new MessageEventHandler(this.HandleAggregatesTableDoubleClicked);
 			this.graphicList.TabIndex = 2;
-			this.graphicList.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.graphicList.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			//	Table des styles de paragraphe.
 			this.paragraphList = new Widgets.TextStylesList();
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Document.Containers
 			this.paragraphList.FinalSelectionChanged += new EventHandler(this.HandleStylesTableSelectionChanged);
 			this.paragraphList.DoubleClicked += new MessageEventHandler(this.HandleStylesTableDoubleClicked);
 			this.paragraphList.TabIndex = 2;
-			this.paragraphList.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.paragraphList.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			//	Table des styles de caractère.
 			this.characterList = new Widgets.TextStylesList();
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Document.Containers
 			this.characterList.FinalSelectionChanged += new EventHandler(this.HandleStylesTableSelectionChanged);
 			this.characterList.DoubleClicked += new MessageEventHandler(this.HandleStylesTableDoubleClicked);
 			this.characterList.TabIndex = 2;
-			this.characterList.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.characterList.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.CreateNameToolBar();
 			this.CreateChildrenToolBar();
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Document.Containers
 			this.panelContainer.Dock = DockStyle.Top;
 			this.panelContainer.Margins = new Margins(0, 1, 0, 0);
 			this.panelContainer.TabIndex = 99;
-			this.panelContainer.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.panelContainer.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			
 			//	Roue des couleurs.
 			this.colorSelector = new ColorSelector();
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.Dock = DockStyle.Top;
 			this.colorSelector.Margins = new Margins(1, 3, 5, 2);
 			this.colorSelector.TabIndex = 100;
-			this.colorSelector.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.colorSelector.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			this.colorSelector.Visibility = false;
 
 			this.category = StyleCategory.Graphic;
@@ -134,7 +134,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryContainer.Dock = DockStyle.Top;
 			this.categoryContainer.Margins = new Margins(0, 0, 0, 0);
 			this.categoryContainer.TabIndex = 1;
-			this.categoryContainer.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.categoryContainer.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.index = 0;
 
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryGraphic.Dock = DockStyle.Left;
 			this.categoryGraphic.Margins = new Margins(0, 0, 0, 0);
 			this.categoryGraphic.TabIndex = this.index++;
-			this.categoryGraphic.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.categoryGraphic.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			this.categoryGraphic.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
 
 			this.categoryParagraph = new IconButtonMark(this.categoryContainer);
@@ -157,7 +157,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryParagraph.Dock = DockStyle.Left;
 			this.categoryParagraph.Margins = new Margins(0, 0, 0, 0);
 			this.categoryParagraph.TabIndex = this.index++;
-			this.categoryParagraph.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.categoryParagraph.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			this.categoryParagraph.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
 
 			this.categoryCharacter = new IconButtonMark(this.categoryContainer);
@@ -168,7 +168,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryCharacter.Dock = DockStyle.Left;
 			this.categoryCharacter.Margins = new Margins(0, 0, 0, 0);
 			this.categoryCharacter.TabIndex = this.index++;
-			this.categoryCharacter.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.categoryCharacter.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			this.categoryCharacter.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
 
 			this.SetCategory("Graphic");
@@ -181,35 +181,35 @@ namespace Epsitec.Common.Document.Containers
 			this.aggregateToolBar.Dock = DockStyle.Top;
 			this.aggregateToolBar.Margins = new Margins(0, 0, 0, -1);
 			this.aggregateToolBar.TabIndex = 1;
-			this.aggregateToolBar.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.aggregateToolBar.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.index = 0;
 
 			this.buttonAggregateNewEmpty = new IconButton(Misc.Icon("AggregateNewEmpty"));
 			this.buttonAggregateNewEmpty.Clicked += new MessageEventHandler(this.HandleButtonAggregateNewEmpty);
 			this.buttonAggregateNewEmpty.TabIndex = this.index++;
-			this.buttonAggregateNewEmpty.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonAggregateNewEmpty.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.aggregateToolBar.Items.Add(this.buttonAggregateNewEmpty);
 			ToolTip.Default.SetToolTip(this.buttonAggregateNewEmpty, Res.Strings.Action.AggregateNewEmpty);
 
 			this.buttonAggregateNew3 = new IconButton(Misc.Icon("AggregateNew3"));
 			this.buttonAggregateNew3.Clicked += new MessageEventHandler(this.HandleButtonAggregateNew3);
 			this.buttonAggregateNew3.TabIndex = this.index++;
-			this.buttonAggregateNew3.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonAggregateNew3.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.aggregateToolBar.Items.Add(this.buttonAggregateNew3);
 			ToolTip.Default.SetToolTip(this.buttonAggregateNew3, Res.Strings.Action.AggregateNew3);
 
 			this.buttonAggregateNewAll = new IconButton(Misc.Icon("AggregateNewAll"));
 			this.buttonAggregateNewAll.Clicked += new MessageEventHandler(this.HandleButtonAggregateNewAll);
 			this.buttonAggregateNewAll.TabIndex = this.index++;
-			this.buttonAggregateNewAll.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonAggregateNewAll.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.aggregateToolBar.Items.Add(this.buttonAggregateNewAll);
 			ToolTip.Default.SetToolTip(this.buttonAggregateNewAll, Res.Strings.Action.AggregateNewAll);
 
 			this.buttonAggregateDuplicate = new IconButton(Misc.Icon("AggregateDuplicate"));
 			this.buttonAggregateDuplicate.Clicked += new MessageEventHandler(this.HandleButtonAggregateDuplicate);
 			this.buttonAggregateDuplicate.TabIndex = this.index++;
-			this.buttonAggregateDuplicate.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonAggregateDuplicate.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.aggregateToolBar.Items.Add(this.buttonAggregateDuplicate);
 			ToolTip.Default.SetToolTip(this.buttonAggregateDuplicate, Res.Strings.Action.AggregateDuplicate);
 
@@ -218,14 +218,14 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonAggregateUp = new IconButton(Misc.Icon("AggregateUp"));
 			this.buttonAggregateUp.Clicked += new MessageEventHandler(this.HandleButtonAggregateUp);
 			this.buttonAggregateUp.TabIndex = this.index++;
-			this.buttonAggregateUp.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonAggregateUp.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.aggregateToolBar.Items.Add(this.buttonAggregateUp);
 			ToolTip.Default.SetToolTip(this.buttonAggregateUp, Res.Strings.Action.AggregateUp);
 
 			this.buttonAggregateDown = new IconButton(Misc.Icon("AggregateDown"));
 			this.buttonAggregateDown.Clicked += new MessageEventHandler(this.HandleButtonAggregateDown);
 			this.buttonAggregateDown.TabIndex = this.index++;
-			this.buttonAggregateDown.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonAggregateDown.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.aggregateToolBar.Items.Add(this.buttonAggregateDown);
 			ToolTip.Default.SetToolTip(this.buttonAggregateDown, Res.Strings.Action.AggregateDown);
 
@@ -234,7 +234,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonAggregateDelete = new IconButton(Misc.Icon("AggregateDelete"));
 			this.buttonAggregateDelete.Clicked += new MessageEventHandler(this.HandleButtonAggregateDelete);
 			this.buttonAggregateDelete.TabIndex = this.index++;
-			this.buttonAggregateDelete.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonAggregateDelete.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.aggregateToolBar.Items.Add(this.buttonAggregateDelete);
 			ToolTip.Default.SetToolTip(this.buttonAggregateDelete, Res.Strings.Action.AggregateDelete);
 		}
@@ -246,7 +246,7 @@ namespace Epsitec.Common.Document.Containers
 			this.childrenToolBar.Dock = DockStyle.Top;
 			this.childrenToolBar.Margins = new Margins(0, 0, 0, 0);
 			this.childrenToolBar.TabIndex = 95;
-			this.childrenToolBar.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.childrenToolBar.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			StaticText st = new StaticText();
 			st.PreferredWidth = 45;
@@ -267,7 +267,7 @@ namespace Epsitec.Common.Document.Containers
 			this.nameChildren.Dock = DockStyle.Fill;
 			this.nameChildren.Margins = new Margins(2, 2, 0, 0);
 			this.nameChildren.TabIndex = 1;
-			this.nameChildren.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.nameChildren.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 		}
 
 		protected void CreateNameToolBar()
@@ -277,7 +277,7 @@ namespace Epsitec.Common.Document.Containers
 			this.nameToolBar.Dock = DockStyle.Top;
 			this.nameToolBar.Margins = new Margins(0, 0, 0, 0);
 			this.nameToolBar.TabIndex = 94;
-			this.nameToolBar.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.nameToolBar.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			StaticText st = new StaticText();
 			st.PreferredWidth = 45;
@@ -292,7 +292,7 @@ namespace Epsitec.Common.Document.Containers
 			this.name.TextChanged += new EventHandler(this.HandleNameTextChanged);
 			this.name.AutoSelectOnFocus = true;
 			this.name.TabIndex = 1;
-			this.name.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.name.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.nameToolBar.Items.Add(this.name);
 			ToolTip.Default.SetToolTip(this.name, Res.Strings.Panel.AggregateName.Tooltip.Name);
 		}
@@ -305,14 +305,14 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorContainer.Dock = DockStyle.Top;
 			this.selectorContainer.Margins = new Margins(0, 0, 5, 0);
 			this.selectorContainer.TabIndex = 97;
-			this.selectorContainer.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.selectorContainer.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.selectorToolBar = new Widget(this.selectorContainer);
 			this.selectorToolBar.PreferredHeight = Styles.selectorSize+8;
 			this.selectorToolBar.Dock = DockStyle.Fill;
 			this.selectorToolBar.Margins = new Margins(0, 0, 0, 0);
 			this.selectorToolBar.TabIndex = 1;
-			this.selectorToolBar.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.selectorToolBar.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.buttonStyleDelete = new IconButton(this.selectorContainer);
 			this.buttonStyleDelete.IconName = Misc.Icon("AggregateStyleDelete");
@@ -321,7 +321,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonStyleDelete.Dock = DockStyle.Right;
 			this.buttonStyleDelete.Margins = new Margins(0, 0, 0, 6);
 			this.buttonStyleDelete.TabIndex = 3;
-			this.buttonStyleDelete.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonStyleDelete.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonStyleDelete, Res.Strings.Action.AggregateStyleDelete);
 
 			this.buttonStyleNew = new IconButton(this.selectorContainer);
@@ -331,7 +331,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonStyleNew.Dock = DockStyle.Right;
 			this.buttonStyleNew.Margins = new Margins(0, 0, 0, 6);
 			this.buttonStyleNew.TabIndex = 2;
-			this.buttonStyleNew.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonStyleNew.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonStyleNew, Res.Strings.Action.AggregateStyleNew);
 
 			this.separatorStyle = new IconSeparator(this.selectorContainer);
@@ -771,7 +771,7 @@ namespace Epsitec.Common.Document.Containers
 					this.panel.SetParent(this.panelContainer);
 					this.panel.Dock = DockStyle.Fill;
 					this.panel.TabIndex = 1;
-					this.panel.TabNavigation = TabNavigationMode.ForwardTabPassive;
+					this.panel.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 					this.panelContainer.PreferredHeight = this.panel.DefaultHeight;
 //-					this.panelContainer.ForceLayout();
@@ -816,7 +816,7 @@ namespace Epsitec.Common.Document.Containers
 					this.textPanel.SetParent(this.panelContainer);
 					this.textPanel.Dock = DockStyle.Fill;
 					this.textPanel.TabIndex = 1;
-					this.textPanel.TabNavigation = TabNavigationMode.ForwardTabPassive;
+					this.textPanel.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 					this.textPanel.UpdateAfterAttach();
 
 					this.panelContainer.PreferredHeight = this.textPanel.DefaultHeight;

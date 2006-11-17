@@ -559,7 +559,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
-			if ( mode != TabNavigationMode.Passive )
+			if ( mode != TabNavigationMode.None )
 			{
 				this.SelectAll();
 			}

@@ -149,7 +149,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Crée un super-widget permettant d'éditer une chaîne, avec une étiquette à gauche.
 			group = new Widget(parent);
 			group.TabIndex = this.tabIndex++;
-			group.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			group.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			StaticText text = new StaticText(group);
 			text.Text = label;
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			field.PreferredWidth = 130;
 			field.Dock = DockStyle.Left;
 			field.TabIndex = 0;
-			field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 		}
 
 		protected void CreateComboLabeled(string label, Widget parent, out Widget group, out TextFieldCombo field)
@@ -170,7 +170,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Crée un super-widget permettant d'éditer une chaîne, avec une étiquette à gauche.
 			group = new Widget(parent);
 			group.TabIndex = this.tabIndex++;
-			group.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			group.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			StaticText text = new StaticText(group);
 			text.Text = label;
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			field.PreferredWidth = 130;
 			field.Dock = DockStyle.Left;
 			field.TabIndex = 0;
-			field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 		}
 
 		protected void CreateDecimalLabeled(string label, Widget parent, out Widget group, out TextField field)
@@ -192,7 +192,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Crée un super-widget permettant d'éditer une valeur décimale, avec une étiquette à gauche.
 			group = new Widget(parent);
 			group.TabIndex = this.tabIndex++;
-			group.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			group.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			StaticText text = new StaticText(group);
 			text.Text = label;
@@ -205,7 +205,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			field.PreferredWidth = 130;
 			field.Dock = DockStyle.Left;
 			field.TabIndex = 0;
-			field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 		}
 
 		protected decimal GetDecimal(TextField field)

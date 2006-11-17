@@ -53,7 +53,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldType.AutoFocus = false;
 			this.fieldType.ComboClosed += new EventHandler(this.HandleTypeChanged);
 			this.fieldType.TabIndex = this.tabIndex++;
-			this.fieldType.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fieldType.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			Generator.InitComboType(this.fieldType);
 
 			this.buttonAdd = this.CreateIconButton(Misc.Icon("ShaperHandleAdd"), Res.Strings.TextPanel.Generator.Tooltip.Generator.Add, new MessageEventHandler(this.HandleAddClicked));
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldText.AutoFocus = false;
 			this.fieldText.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldText.TabIndex = this.tabIndex++;
-			this.fieldText.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fieldText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.colorText = this.CreateColorSample(Res.Strings.TextPanel.Generator.Tooltip.Color, new MessageEventHandler(this.HandleSampleColorClicked), new EventHandler(this.HandleSampleColorChanged));
 

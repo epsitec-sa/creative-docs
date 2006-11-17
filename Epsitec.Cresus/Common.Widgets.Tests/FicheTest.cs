@@ -443,9 +443,9 @@ namespace Epsitec.Common.Widgets
 				b2.TabIndex = 2;
 				b3.TabIndex = 3;
 				
-				b1.TabNavigation = TabNavigationMode.ActivateOnTab;
-				b2.TabNavigation = TabNavigationMode.ActivateOnTab;
-				b3.TabNavigation = TabNavigationMode.ActivateOnTab;
+				b1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				b2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				b3.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				
 				helpMenuItemContainer3.Padding = new Margins (0, 0, 4, 4);
 				

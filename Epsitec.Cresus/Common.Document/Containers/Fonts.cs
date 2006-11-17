@@ -15,14 +15,14 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.Dock = DockStyle.Top;
 			this.toolBar.Margins = new Margins(0, 0, 0, -1);
 			this.toolBar.TabIndex = 2;
-			this.toolBar.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.toolBar.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			int tabIndex = 0;
 
 			this.buttonDefault = new IconButton(Misc.Icon("QuickDefault"));
 			this.buttonDefault.Clicked += new MessageEventHandler(this.HandleButtonDefault);
 			this.buttonDefault.TabIndex = tabIndex++;
-			this.buttonDefault.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonDefault.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonDefault);
 			ToolTip.Default.SetToolTip(this.buttonDefault, Res.Strings.Dialog.Settings.Fonts.Default);
 
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonClear = new IconButton(Misc.Icon("QuickClear"));
 			this.buttonClear.Clicked += new MessageEventHandler(this.HandleButtonClear);
 			this.buttonClear.TabIndex = tabIndex++;
-			this.buttonClear.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonClear.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonClear);
 			ToolTip.Default.SetToolTip(this.buttonClear, Res.Strings.Dialog.Settings.Fonts.Clear);
 
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonAbc.CommandObject = Command.Get("TextFontSampleAbc");
 			this.buttonAbc.Margins = new Margins(10, 0, 0, 0);
 			this.buttonAbc.TabIndex = tabIndex++;
-			this.buttonAbc.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonAbc.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonAbc);
 			ToolTip.Default.SetToolTip(this.buttonAbc, Res.Strings.Dialog.Bool.TextFontSampleAbc);
 

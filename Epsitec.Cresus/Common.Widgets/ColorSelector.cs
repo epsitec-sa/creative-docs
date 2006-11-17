@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 				this.labels[i] = new StaticText(this);
 				this.fields[i] = new TextFieldSlider(this);
 
-				this.fields[i].TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.fields[i].TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.fields[i].Value = 0;
 
 				this.fields[i].DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
@@ -142,7 +142,7 @@ namespace Epsitec.Common.Widgets
 			this.fieldHexa.SwallowEscape = true;
 			this.fieldHexa.EditionAccepted += new EventHandler(this.HandleTextHexaChanged);
 			this.fieldHexa.TabIndex = 200;
-			this.fieldHexa.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fieldHexa.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldHexa, Res.Strings.ColorSelector.LongHexa);
 
 			this.circle = new ColorWheel(this);
@@ -153,7 +153,7 @@ namespace Epsitec.Common.Widgets
 			this.palette.Export += new EventHandler(this.HandlePaletteExport);
 			this.palette.Import += new EventHandler(this.HandlePaletteImport);
 			this.palette.TabIndex = 10;
-			this.palette.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.palette.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.picker = new Tools.Magnifier.DragSource(this);
 			this.picker.HotColorChanged += new EventHandler(this.HandlePickerHotColorChanged);
@@ -164,7 +164,7 @@ namespace Epsitec.Common.Widgets
 			this.buttonClose.ButtonStyle = ButtonStyle.Normal;
 			this.buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 			this.buttonClose.TabIndex = 1;
-			this.buttonClose.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonClose, Res.Strings.ColorSelector.Close);
 			
 			this.colorSpaceController = Helpers.GroupController.GetGroupController(this, "ColorSpace");
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Widgets
 			this.buttonRgb.Index = 1;
 			this.buttonRgb.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceRGB.icon";
 			this.buttonRgb.TabIndex = 21;
-			this.buttonRgb.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonRgb.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonRgb, Res.Strings.ColorSelector.ColorSpace.Rgb);
 
 			this.buttonCmyk = new IconButton(this);
@@ -187,7 +187,7 @@ namespace Epsitec.Common.Widgets
 			this.buttonCmyk.Index = 2;
 			this.buttonCmyk.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceCMYK.icon";
 			this.buttonCmyk.TabIndex = 21;
-			this.buttonCmyk.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonCmyk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonCmyk, Res.Strings.ColorSelector.ColorSpace.Cmyk);
 
 			this.buttonGray = new IconButton(this);
@@ -197,7 +197,7 @@ namespace Epsitec.Common.Widgets
 			this.buttonGray.Index = 3;
 			this.buttonGray.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceGray.icon";
 			this.buttonGray.TabIndex = 21;
-			this.buttonGray.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonGray.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonGray, Res.Strings.ColorSelector.ColorSpace.Gray);
 		}
 		

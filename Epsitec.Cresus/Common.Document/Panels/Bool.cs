@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Panels
 			this.grid = new RadioIconGrid(this);
 			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.grid.TabIndex = 0;
-			this.grid.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.grid.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.AddRadioIcon(false);
 			this.AddRadioIcon(true);

@@ -38,14 +38,14 @@ namespace Epsitec.Common.Document.Widgets
 			this.buttonReset = new Button(this);
 			this.buttonReset.Text = Res.Strings.Panel.Image.Crop.Button.Reset;
 			this.buttonReset.TabIndex = tabIndex++;
-			this.buttonReset.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonReset.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.buttonReset.Clicked += new MessageEventHandler(this.HandleButtonReset);
 			ToolTip.Default.SetToolTip(this.buttonReset, Res.Strings.Panel.Image.Crop.Tooltip.Reset);
 
 			this.buttonFill = new Button(this);
 			this.buttonFill.Text = Res.Strings.Panel.Image.Crop.Button.Fill;
 			this.buttonFill.TabIndex = tabIndex++;
-			this.buttonFill.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonFill.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.buttonFill.Clicked += new MessageEventHandler(this.HandleButtonFill);
 			ToolTip.Default.SetToolTip(this.buttonFill, Res.Strings.Panel.Image.Crop.Tooltip.Fill);
 
@@ -53,28 +53,28 @@ namespace Epsitec.Common.Document.Widgets
 			Cropper.InitTextFieldReal(this.fieldCropTop);
 			this.fieldCropTop.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldCropTop.TabIndex = tabIndex++;
-			this.fieldCropTop.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fieldCropTop.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldCropTop, Res.Strings.Panel.Image.Crop.Tooltip.CropTop);
 
 			this.fieldCropLeft = new TextFieldReal(this);
 			Cropper.InitTextFieldReal(this.fieldCropLeft);
 			this.fieldCropLeft.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldCropLeft.TabIndex = tabIndex++;
-			this.fieldCropLeft.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fieldCropLeft.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldCropLeft, Res.Strings.Panel.Image.Crop.Tooltip.CropLeft);
 
 			this.fieldCropRight = new TextFieldReal(this);
 			Cropper.InitTextFieldReal(this.fieldCropRight);
 			this.fieldCropRight.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldCropRight.TabIndex = tabIndex++;
-			this.fieldCropRight.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fieldCropRight.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldCropRight, Res.Strings.Panel.Image.Crop.Tooltip.CropRight);
 
 			this.fieldCropBottom = new TextFieldReal(this);
 			Cropper.InitTextFieldReal(this.fieldCropBottom);
 			this.fieldCropBottom.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldCropBottom.TabIndex = tabIndex++;
-			this.fieldCropBottom.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fieldCropBottom.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldCropBottom, Res.Strings.Panel.Image.Crop.Tooltip.CropBottom);
 
 			this.sliderZoom = new VSlider(this);
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.sliderZoom.Resolution = 0.000000001M;
 			this.sliderZoom.ValueChanged += new EventHandler(this.HandleSliderZoomChanged);
 			this.sliderZoom.TabIndex = tabIndex++;
-			this.sliderZoom.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.sliderZoom.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.sliderZoom, Res.Strings.Panel.Image.Crop.Tooltip.Zoom);
 		}
 

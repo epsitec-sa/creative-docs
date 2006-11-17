@@ -16,7 +16,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fontFace.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleFontFaceComboOpening);
 			this.fontFace.ComboClosed += new EventHandler(this.HandleFontFaceTextChanged);
 			this.fontFace.TabIndex = 1;
-			this.fontFace.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fontFace.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontFace, Res.Strings.TextPanel.Font.Tooltip.Face);
 
 			this.buttonFilter = new IconButton(this);
@@ -26,7 +26,7 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonFilter.AutoFocus = false;
 			this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonFilter.TabIndex = 2;
-			this.buttonFilter.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonFilter.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonFilter, Res.Strings.Action.TextFontFilter);
 
 			this.fontSize = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
@@ -35,7 +35,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealFontSize(this.fontSize.TextFieldReal);
 			this.fontSize.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fontSize.TabIndex = 3;
-			this.fontSize.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fontSize.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontSize, Res.Strings.Panel.Font.Tooltip.Size);
 
 			this.fontColor = new ColorSample(this);
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fontColor.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
 			this.fontColor.Changed += new EventHandler(this.HandleFieldColorChanged);
 			this.fontColor.TabIndex = 4;
-			this.fontColor.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fontColor.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontColor, Res.Strings.Panel.Font.Tooltip.Color);
 
 			this.labelColor = new StaticText(this);

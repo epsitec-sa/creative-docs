@@ -17,28 +17,28 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldFilename = new TextField(this);
 			this.fieldFilename.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldFilename.TabIndex = tabIndex++;
-			this.fieldFilename.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fieldFilename.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldFilename, Res.Strings.Panel.Image.Tooltip.Filename);
 
 			this.buttonOpen = new Button(this);
 			this.buttonOpen.Text = Res.Strings.Panel.Image.Button.Open;
 			this.buttonOpen.Clicked += new MessageEventHandler(this.HandleOpenClicked);
 			this.buttonOpen.TabIndex = tabIndex++;
-			this.buttonOpen.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonOpen.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonOpen, Res.Strings.Panel.Image.Tooltip.Open);
 
 			this.buttonUpdate = new Button(this);
 			this.buttonUpdate.Text = Res.Strings.Panel.Image.Button.Update;
 			this.buttonUpdate.Clicked += new MessageEventHandler(this.HandleUpdateClicked);
 			this.buttonUpdate.TabIndex = tabIndex++;
-			this.buttonUpdate.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonUpdate.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonUpdate, Res.Strings.Panel.Image.Tooltip.Update);
 
 			this.buttonSave = new Button(this);
 			this.buttonSave.Text = Res.Strings.Panel.Image.Button.Save;
 			this.buttonSave.Clicked += new MessageEventHandler(this.HandleSaveClicked);
 			this.buttonSave.TabIndex = tabIndex++;
-			this.buttonSave.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonSave.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonSave, Res.Strings.Panel.Image.Tooltip.Save);
 
 			this.buttonRotation90 = new IconButton(this);
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonRotation90.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonRotation90.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 			this.buttonRotation90.TabIndex = tabIndex++;
-			this.buttonRotation90.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonRotation90.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonRotation90, Res.Strings.Panel.Image.Button.Rotation90);
 
 			this.buttonRotation180 = new IconButton(this);
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonRotation180.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonRotation180.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 			this.buttonRotation180.TabIndex = tabIndex++;
-			this.buttonRotation180.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonRotation180.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonRotation180, Res.Strings.Panel.Image.Button.Rotation180);
 
 			this.buttonRotation270 = new IconButton(this);
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonRotation270.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonRotation270.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 			this.buttonRotation270.TabIndex = tabIndex++;
-			this.buttonRotation270.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonRotation270.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonRotation270, Res.Strings.Panel.Image.Button.Rotation270);
 
 			this.buttonMirrorH = new IconButton(this);
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonMirrorH.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonMirrorH.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 			this.buttonMirrorH.TabIndex = tabIndex++;
-			this.buttonMirrorH.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonMirrorH.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonMirrorH, Res.Strings.Panel.Image.Button.MirrorX);
 
 			this.buttonMirrorV = new IconButton(this);
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonMirrorV.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonMirrorV.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 			this.buttonMirrorV.TabIndex = tabIndex++;
-			this.buttonMirrorV.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonMirrorV.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonMirrorV, Res.Strings.Panel.Image.Button.MirrorY);
 
 			this.buttonFilter = new IconButtonCombo(this);
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Document.Panels
 			//?this.buttonFilter.IconName = Misc.Icon("ImageFilter");
 			this.buttonFilter.ComboClosed += new EventHandler(this.HandleFilterComboClosed);
 			this.buttonFilter.TabIndex = tabIndex++;
-			this.buttonFilter.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonFilter.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.AddFilterCombo("ImageFilter0", Res.Strings.Panel.Image.Combo.Filter.None);
 			this.AddFilterCombo("ImageFilter1", Res.Strings.Panel.Image.Combo.Filter.FilterA);
 			this.AddFilterCombo("ImageFilter2", Res.Strings.Panel.Image.Combo.Filter.FilterB);
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonHomo.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonHomo.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 			this.buttonHomo.TabIndex = tabIndex++;
-			this.buttonHomo.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonHomo.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonHomo, Res.Strings.Panel.Image.Button.Homo);
 
 			this.cropper = new Widgets.Cropper(this);
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonInside.Text = Res.Strings.Panel.Image.Button.Inside;
 			this.buttonInside.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
 			this.buttonInside.TabIndex = tabIndex++;
-			this.buttonInside.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonInside.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.isNormalAndExtended = true;
 		}

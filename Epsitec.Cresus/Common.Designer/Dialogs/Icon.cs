@@ -97,14 +97,14 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.arrayDetail.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 				this.arrayDetail.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
 				this.arrayDetail.TabIndex = tabIndex++;
-				this.arrayDetail.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.arrayDetail.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.arrayCompact = new MyWidgets.IconArray(this.window.Root);
 				this.arrayCompact.CellSize = this.arrayDetail.LineHeight;
 				this.arrayCompact.Dock = DockStyle.Fill;
 				this.arrayCompact.ChangeSelected += new EventHandler(this.HandleArrayCompactChangeSelected);
 				this.arrayCompact.TabIndex = tabIndex++;
-				this.arrayCompact.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.arrayCompact.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.arrayCompact, "*");
 
 				//	Pied.
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonOk.Margins = new Margins(0, 6, 0, 0);
 				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonInsertClicked);
 				buttonOk.TabIndex = tabIndex++;
-				buttonOk.TabNavigation = TabNavigationMode.ActivateOnTab;
+				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				Button buttonClose = new Button(footer);
 				buttonClose.PreferredWidth = 75;
@@ -131,14 +131,14 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.Margins = new Margins(0, 6, 0, 0);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = tabIndex++;
-				buttonClose.TabNavigation = TabNavigationMode.ActivateOnTab;
+				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.slider = new HSlider(footer);
 				this.slider.PreferredWidth = 80;
 				this.slider.Dock = DockStyle.Right;
 				this.slider.Margins = new Margins(0, 0, 4, 4);
 				this.slider.TabIndex = tabIndex++;
-				this.slider.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.slider.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.slider.MinValue = 20.0M;
 				this.slider.MaxValue = 50.0M;
 				this.slider.SmallChange = 1.0M;

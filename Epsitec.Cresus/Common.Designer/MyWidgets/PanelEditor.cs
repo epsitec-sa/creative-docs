@@ -1332,7 +1332,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						this.creatingObject = this.CreateObjectItem();
 						this.creatingObject.SetParent(parent);
-						this.creatingObject.TabNavigation = TabNavigationMode.Passive;
+						this.creatingObject.TabNavigationMode = TabNavigationMode.None;
 						this.objectModifier.AdaptFromParent(this.creatingObject, ObjectModifier.StackedHorizontalAttachment.None, ObjectModifier.StackedVerticalAttachment.None);
 						this.SetObjectPosition(this.creatingObject, pos);
 					}
@@ -1349,7 +1349,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.creatingObject = this.CreateObjectItem();
 						this.creatingObject.SetParent(group);
 						this.creatingObject.ZOrder = order;
-						this.creatingObject.TabNavigation = TabNavigationMode.Passive;
+						this.creatingObject.TabNavigationMode = TabNavigationMode.None;
 						this.objectModifier.AdaptFromParent(this.creatingObject, ha, va);
 					}
 
@@ -2486,7 +2486,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			foreach (Widget obj in list)
 			{
 				obj.TabIndex = index++;
-				obj.TabNavigation = TabNavigationMode.ActivateOnTab;
+				obj.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				if (ObjectModifier.IsAbstractGroup(obj))
 				{
@@ -2513,7 +2513,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					index = System.Math.Min(index, obj.Parent.Children.Count-1);
 					this.SelectTabIndex(obj.Parent, index, oldIndex);
 					obj.TabIndex = index;
-					obj.TabNavigation = TabNavigationMode.ActivateOnTab;
+					obj.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				}
 			}
 
@@ -2530,7 +2530,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (PanelEditor.IsObjectTabActive(obj) && obj.TabIndex == oldIndex)
 				{
 					obj.TabIndex = newIndex;
-					obj.TabNavigation = TabNavigationMode.ActivateOnTab;
+					obj.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				}
 			}
 		}
@@ -2741,7 +2741,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected static bool IsObjectTabActive(Widget obj)
 		{
 			//	Indique si l'objet à un ordre pour la touche Tab.
-			return (obj.TabNavigation & TabNavigationMode.ActivateOnTab) != 0;
+			return (obj.TabNavigationMode & TabNavigationMode.ActivateOnTab) != 0;
 		}
 
 		protected string GetObjectZOrder(Widget obj)

@@ -44,7 +44,7 @@ namespace Epsitec.Common.Designer.Controllers
 			this.button = new Button();
 			this.button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.button.TabIndex = 1;
-			this.button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.button.HorizontalAlignment = HorizontalAlignment.Stretch;
 			this.button.VerticalAlignment = VerticalAlignment.Stretch;
 			this.button.Dock = DockStyle.Stacked;

@@ -99,7 +99,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOk.Margins = new Margins(0, 6, 0, 0);
 				this.buttonOk.Clicked += new MessageEventHandler(this.HandleButtonOKClicked);
 				this.buttonOk.TabIndex = this.tabIndex++;
-				this.buttonOk.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonCancel = new Button(footer);
 				this.buttonCancel.PreferredWidth = 75;
@@ -108,13 +108,13 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.Dock = DockStyle.Left;
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCancelClicked);
 				this.buttonCancel.TabIndex = this.tabIndex++;
-				this.buttonCancel.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonExtend = new GlyphButton(footer);
 				this.buttonExtend.PreferredWidth = 16;
 				this.buttonExtend.ButtonStyle = ButtonStyle.Slider;
 				this.buttonExtend.AutoFocus = false;
-				this.buttonExtend.TabNavigation = TabNavigationMode.Passive;
+				this.buttonExtend.TabNavigationMode = TabNavigationMode.None;
 				this.buttonExtend.Dock = DockStyle.Left;
 				this.buttonExtend.Margins = new Margins(6, 0, 3, 3);
 				this.buttonExtend.Clicked += new MessageEventHandler(this.HandleButtonExtendClicked);
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			button.Margins = new Margins(0, 0, 2, 2);
 			button.Index = this.index++;
 			button.TabIndex = this.tabIndex;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			button.ActiveStateChanged += new EventHandler(this.HandleRadioButtonActiveStateChanged);
 
 			this.radioButtons.Add(button);

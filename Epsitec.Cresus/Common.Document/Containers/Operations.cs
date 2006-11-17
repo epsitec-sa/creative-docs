@@ -97,13 +97,13 @@ namespace Epsitec.Common.Document.Containers
 			group.Text = title;
 			group.Dock = DockStyle.Top;
 			group.Margins = new Margins(0, 0, 0, 10);
-			group.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			group.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			bar = new HToolBar(group);
 			bar.Dock = DockStyle.Top;
 			bar.Margins = new Margins(0, 0, 0, 10);
 			bar.TabIndex = this.tabIndex++;
-			bar.TabNavigation = TabNavigationMode.ForwardTabActive;
+			bar.TabNavigationMode = TabNavigationMode.ForwardTabActive;
 		}
 
 		protected void CreateButton(HToolBar bar, ref IconButton button, string icon, string tooltip, MessageEventHandler handler)
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Document.Containers
 			button = new IconButton(Misc.Icon(icon));
 			button.Clicked += handler;
 			button.TabIndex = this.tabIndex++;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(button, tooltip);
 			bar.Items.Add(button);
 		}
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Document.Containers
 				field.InternalValue = 100.0M;  // 10mm
 			}
 			field.TabIndex = this.tabIndex++;
-			field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(field, tooltip);
 			bar.Items.Add(field);
 		}
@@ -145,7 +145,7 @@ namespace Epsitec.Common.Document.Containers
 			field.PreferredWidth = 50;
 			field.InternalValue = 10.0M;
 			field.TabIndex = tabIndex++;
-			field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(field, tooltip);
 			bar.Items.Add(field);
 		}
@@ -163,7 +163,7 @@ namespace Epsitec.Common.Document.Containers
 			field.Resolution = 0.01M;
 			field.InternalValue = 1.2M;
 			field.TabIndex = tabIndex++;
-			field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(field, tooltip);
 			bar.Items.Add(field);
 		}
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Document.Containers
 			field.DefaultValue = 0.1M;
 			field.InternalValue = 0.1M;
 			field.TabIndex = tabIndex++;
-			field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(field, tooltip);
 			bar.Items.Add(field);
 		}

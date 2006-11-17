@@ -21,7 +21,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.comboFont.AllLinesWidthSameWidth = true;
 			this.comboFont.AutoFocus = false;
 			this.comboFont.TabIndex = this.tabIndex++;
-			this.comboFont.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.comboFont.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.comboFont.SelectedIndexChanged += new EventHandler(this.HandleSelectedIndexChanged);
 			this.comboFont.FirstIconChanged += new EventHandler(this.HandleFirstIconChanged);
 
@@ -269,7 +269,7 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 
 			button.TabIndex = this.tabIndex++;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			return button;
 		}

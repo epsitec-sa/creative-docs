@@ -227,7 +227,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					//	TODO: bug pour Pierre avec ce mode !
 					//?field.VerticalAlignment = VerticalAlignment.BaseLine;
 					field.TabIndex = count;
-					field.TabNavigation = TabNavigationMode.ActivateOnTab;
+					field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 					field.TextNavigator.AllowTabInsertion = false;
 					this.AdaptTextFieldLines(field);
 					GridLayoutEngine.SetColumn(field, 2);

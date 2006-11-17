@@ -231,7 +231,7 @@ namespace Epsitec.Common.Widgets
 			button.SetManualBounds(new Drawing.Rectangle (10, 170, 40, 25));
 			button.SetParent (window.Root);
 			button.TabIndex = 1;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			button.Focus();
 			button.ButtonStyle = ButtonStyle.DefaultAccept;
 			
@@ -239,20 +239,20 @@ namespace Epsitec.Common.Widgets
 			button.SetManualBounds(new Drawing.Rectangle (10, 140, 40, 25));
 			button.SetParent (window.Root);
 			button.TabIndex = 2;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			button.Enable = false;
 			
 			button = new Button ("C");
 			button.SetManualBounds(new Drawing.Rectangle (10, 110, 40, 25));
 			button.SetParent (window.Root);
 			button.TabIndex = 3;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			button = new Button ("D");
 			button.SetManualBounds(new Drawing.Rectangle (10, 80, 40, 25));
 			button.SetParent (window.Root);
 			button.TabIndex = 4;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			group = new GroupBox ();
 			group.SetManualBounds(new Drawing.Rectangle (60, 110, 110, 85));
@@ -265,25 +265,25 @@ namespace Epsitec.Common.Widgets
 			button.SetManualBounds(new Drawing.Rectangle (10, 40, 40, 25));
 			button.SetParent (group);
 			button.TabIndex = 1;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			button = new Button ("B");
 			button.SetManualBounds(new Drawing.Rectangle (10, 10, 40, 25));
 			button.SetParent (group);
 			button.TabIndex = 2;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			button = new Button ("C");
 			button.SetManualBounds(new Drawing.Rectangle (55, 40, 40, 25));
 			button.SetParent (group);
 			button.TabIndex = 3;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			button = new Button ("D");
 			button.SetManualBounds(new Drawing.Rectangle (55, 10, 40, 25));
 			button.SetParent (group);
 			button.TabIndex = 4;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			group = new GroupBox ();
 			group.SetManualBounds(new Drawing.Rectangle (180, 110, 110, 85));
@@ -296,25 +296,25 @@ namespace Epsitec.Common.Widgets
 			button.SetManualBounds(new Drawing.Rectangle (10, 40, 40, 25));
 			button.SetParent (group);
 			button.TabIndex = 1;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			button = new Button ("B");
 			button.SetManualBounds(new Drawing.Rectangle (10, 10, 40, 25));
 			button.SetParent (group);
 			button.TabIndex = 2;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			button = new Button ("C");
 			button.SetManualBounds(new Drawing.Rectangle (55, 40, 40, 25));
 			button.SetParent (group);
 			button.TabIndex = 3;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			button = new Button ("D");
 			button.SetManualBounds(new Drawing.Rectangle (55, 10, 40, 25));
 			button.SetParent (group);
 			button.TabIndex = 4;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			group = new GroupBox ();
 			group.SetManualBounds(new Drawing.Rectangle (300, 110, 110, 85));
@@ -327,55 +327,55 @@ namespace Epsitec.Common.Widgets
 			button.SetManualBounds(new Drawing.Rectangle (10, 40, 40, 25));
 			button.SetParent (group);
 			button.TabIndex = 1;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			button = new Button ("B");
 			button.SetManualBounds(new Drawing.Rectangle (10, 10, 40, 25));
 			button.SetParent (group);
 			button.TabIndex = 2;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			button = new Button ("C");
 			button.SetManualBounds(new Drawing.Rectangle (55, 40, 40, 25));
 			button.SetParent (group);
 			button.TabIndex = 3;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			button = new Button ("D");
 			button.SetManualBounds(new Drawing.Rectangle (55, 10, 40, 25));
 			button.SetParent (group);
 			button.TabIndex = 4;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			button = new Button ("E");
 			button.SetManualBounds(new Drawing.Rectangle (10, 50, 40, 25));
 			button.SetParent (window.Root);
 			button.TabIndex = 20;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			button = new Button ("F");
 			button.SetManualBounds(new Drawing.Rectangle (10, 20, 40, 25));
 			button.SetParent (window.Root);
 			button.TabIndex = 21;
-			button.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			widget = new TextField ();
 			widget.SetManualBounds(new Drawing.Rectangle (60, 74, 100, 22));
 			widget.SetParent (window.Root);
 			widget.TabIndex = 30;
-			widget.TabNavigation = TabNavigationMode.ActivateOnTab;
+			widget.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			widget = new TextFieldUpDown ();
 			widget.SetManualBounds(new Drawing.Rectangle (165, 74, 40, 22));
 			widget.SetParent (window.Root);
 			widget.TabIndex = 31;
-			widget.TabNavigation = TabNavigationMode.ActivateOnTab;
+			widget.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			widget = new TextFieldUpDown ();
 			widget.SetManualBounds(new Drawing.Rectangle (210, 74, 40, 22));
 			widget.SetParent (window.Root);
 			widget.TabIndex = 32;
-			widget.TabNavigation = TabNavigationMode.ActivateOnTab;
+			widget.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			StaticText text = new StaticText ();
 			
@@ -399,7 +399,7 @@ namespace Epsitec.Common.Widgets
 			radio.Index  = 0;
 			radio.SetParent (window.Root);
 			radio.TabIndex = 40;
-			radio.TabNavigation = TabNavigationMode.ActivateOnTab;
+			radio.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			radio.ActiveState = ActiveState.Yes;
 			
 			radio = new RadioButton ();
@@ -409,7 +409,7 @@ namespace Epsitec.Common.Widgets
 			radio.Index  = 1;
 			radio.SetParent (window.Root);
 			radio.TabIndex = 40;
-			radio.TabNavigation = TabNavigationMode.ActivateOnTab;
+			radio.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			radio = new RadioButton ();
 			radio.SetManualBounds(new Drawing.Rectangle (260, 47+7, 40, 20));
@@ -418,7 +418,7 @@ namespace Epsitec.Common.Widgets
 			radio.Index  = 2;
 			radio.SetParent (window.Root);
 			radio.TabIndex = 40;
-			radio.TabNavigation = TabNavigationMode.ActivateOnTab;
+			radio.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			radio = new RadioButton ();
 			radio.SetManualBounds(new Drawing.Rectangle (300, 75+7, 40, 20));
@@ -427,7 +427,7 @@ namespace Epsitec.Common.Widgets
 			radio.Index  = 0;
 			radio.SetParent (window.Root);
 			radio.TabIndex = 41;
-			radio.TabNavigation = TabNavigationMode.ActivateOnTab;
+			radio.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			radio.ActiveState = ActiveState.Yes;
 			
 			radio = new RadioButton ();
@@ -437,7 +437,7 @@ namespace Epsitec.Common.Widgets
 			radio.Index  = 1;
 			radio.SetParent (window.Root);
 			radio.TabIndex = 41;
-			radio.TabNavigation = TabNavigationMode.ActivateOnTab;
+			radio.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			radio = new RadioButton ();
 			radio.SetManualBounds(new Drawing.Rectangle (300, 47+7, 40, 20));
@@ -446,14 +446,14 @@ namespace Epsitec.Common.Widgets
 			radio.Index  = 2;
 			radio.SetParent (window.Root);
 			radio.TabIndex = 41;
-			radio.TabNavigation = TabNavigationMode.ActivateOnTab;
+			radio.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			check = new CheckButton ();
 			check.SetManualBounds(new Drawing.Rectangle (340, 75+7, 40, 20));
 			check.Text   = "G";
 			check.SetParent (window.Root);
 			check.TabIndex = 50;
-			check.TabNavigation = TabNavigationMode.ActivateOnTab;
+			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			check.ActiveState = ActiveState.Yes;
 			
 			check = new CheckButton ();
@@ -461,14 +461,14 @@ namespace Epsitec.Common.Widgets
 			check.Text   = "H";
 			check.SetParent (window.Root);
 			check.TabIndex = 51;
-			check.TabNavigation = TabNavigationMode.ActivateOnTab;
+			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			check = new CheckButton ();
 			check.SetManualBounds(new Drawing.Rectangle (340, 47+7, 40, 20));
 			check.Text   = "I";
 			check.SetParent (window.Root);
 			check.TabIndex = 52;
-			check.TabNavigation = TabNavigationMode.ActivateOnTab;
+			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			window.Show ();
 			Window.RunInTestEnvironment (window);

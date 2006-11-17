@@ -79,14 +79,14 @@ namespace Epsitec.Common.Dialogs
 			body.SetParent (this.window.Root);
 			body.SetManualBounds(new Drawing.Rectangle(8, 16+24+16, dx, dy));
 			body.TabIndex      = 1;
-			body.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			body.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			
 			button1               = new Button (this.window.Root);
 			button1.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 2*75 - 2*8, 16, 75, button1.PreferredHeight));
 			button1.Text          = Widgets.Res.Strings.Dialog.Button.OK;
 			button1.CommandObject = Dialog.ValidateDialogCommand;
 			button1.TabIndex      = 2;
-			button1.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			button1.Shortcuts.Add (Widgets.Feel.Factory.Active.AcceptShortcut);
 			
 			if (this.hide_cancel == false)
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Dialogs
 				button2.Name          = "Cancel";
 				button2.CommandObject = Dialog.QuitDialogCommand;
 				button2.TabIndex      = 3;
-				button2.TabNavigation = TabNavigationMode.ActivateOnTab;
+				button2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				button2.Shortcuts.Add (Widgets.Feel.Factory.Active.CancelShortcut);
 			}
 			

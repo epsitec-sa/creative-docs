@@ -49,7 +49,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldNextStyle.IsReadOnly = true;
 			this.fieldNextStyle.AutoFocus = false;
 			this.fieldNextStyle.TabIndex = this.tabIndex++;
-			this.fieldNextStyle.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fieldNextStyle.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.fieldNextStyle.ComboClosed += new EventHandler(this.HandleStyleComboClosed);
 			ToolTip.Default.SetToolTip(this.fieldNextStyle, Res.Strings.TextPanel.Keep.Tooltip.NextStyle);
 

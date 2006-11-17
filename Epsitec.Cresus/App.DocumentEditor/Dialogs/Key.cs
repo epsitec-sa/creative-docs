@@ -47,7 +47,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.radio1.ActiveStateChanged += new EventHandler(this.HandleRadioActiveStateChanged);
 				this.radio1.TabIndex = this.tabIndex++;
 				this.radio1.Index = 1;
-				this.radio1.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.radio1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.radio2 = new RadioButton(this.window.Root);
 				this.radio2.PreferredHeight = radio2.PreferredHeight*1.2;
@@ -58,7 +58,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.radio2.ActiveStateChanged += new EventHandler(this.HandleRadioActiveStateChanged);
 				this.radio2.TabIndex = this.tabIndex++;
 				this.radio2.Index = 2;
-				this.radio2.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.radio2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.keyLabel = new StaticText(this.window.Root);
 				this.keyLabel.Text = Res.Strings.Dialog.Key.Number;
@@ -76,7 +76,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.key1.Dock = DockStyle.Left;
 				this.key1.TextChanged += new EventHandler(this.HandleKeyTextChanged);
 				this.key1.TabIndex = this.tabIndex++;
-				this.key1.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.key1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				label = new StaticText(keys);
 				label.PreferredWidth = 15;
@@ -89,7 +89,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.key2.Dock = DockStyle.Left;
 				this.key2.TextChanged += new EventHandler(this.HandleKeyTextChanged);
 				this.key2.TabIndex = this.tabIndex++;
-				this.key2.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.key2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				label = new StaticText(keys);
 				label.PreferredWidth = 15;
@@ -102,7 +102,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.key3.Dock = DockStyle.Left;
 				this.key3.TextChanged += new EventHandler(this.HandleKeyTextChanged);
 				this.key3.TabIndex = this.tabIndex++;
-				this.key3.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.key3.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				label = new StaticText(keys);
 				label.PreferredWidth = 15;
@@ -115,7 +115,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.key4.Dock = DockStyle.Left;
 				this.key4.TextChanged += new EventHandler(this.HandleKeyTextChanged);
 				this.key4.TabIndex = this.tabIndex++;
-				this.key4.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.key4.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				//	Bouton OK.
 				this.buttonOK = new Button(this.window.Root);
@@ -126,7 +126,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonOK.Margins = new Margins(10, 0, 0, 10);
 				this.buttonOK.Clicked += new MessageEventHandler(this.HandleKeyButtonOKClicked);
 				this.buttonOK.TabIndex = this.tabIndex++;
-				this.buttonOK.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonOK.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				//	Bouton annuler.
 				this.buttonCancel = new Button(this.window.Root);
@@ -137,7 +137,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonCancel.Margins = new Margins(10+75+10, 0, 0, 10);
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleKeyButtonCancelClicked);
 				this.buttonCancel.TabIndex = this.tabIndex++;
-				this.buttonCancel.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
 			this.KeyFields = Common.Support.SerialAlgorithm.ReadSerial();

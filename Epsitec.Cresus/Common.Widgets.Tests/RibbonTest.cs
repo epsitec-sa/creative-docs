@@ -44,14 +44,14 @@ namespace Epsitec.Common.Widgets
 			RibbonBook book = new RibbonBook();
 			book.Dock = DockStyle.Top;
 			book.TabIndex = 2;
-			book.TabNavigation = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren;
+			book.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren;
 			window.Root.Children.Add(book);
 
 			//	Crée l'onglet 1.
 			RibbonPage page1 = new RibbonPage();
 			page1.RibbonTitle = "Principal";
 			page1.TabIndex = 1;
-			page1.TabNavigation = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
+			page1.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 			book.Items.Add(page1);
 
 			RibbonSection p1s1 = new RibbonSection();
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Widgets
 			RibbonPage page2 = new RibbonPage();
 			page2.RibbonTitle = "Edition";
 			page2.TabIndex = 2;
-			page2.TabNavigation = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
+			page2.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 			book.Items.Add(page2);
 
 			RibbonSection p2s1 = new RibbonSection();
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Widgets
 			RibbonPage page3 = new RibbonPage();
 			page3.RibbonTitle = "Edition";
 			page3.TabIndex = 2;
-			page3.TabNavigation = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
+			page3.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 			book.Items.Add(page3);
 
 			RibbonSection p3s1 = new RibbonSection();

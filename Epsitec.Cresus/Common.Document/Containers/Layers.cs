@@ -20,28 +20,28 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.Dock = DockStyle.Top;
 			this.toolBar.Margins = new Margins(0, 0, 0, -1);
 			this.toolBar.TabIndex = 1;
-			this.toolBar.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.toolBar.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			int index = 0;
 
 			this.buttonNew = new IconButton("LayerNew", Misc.Icon("LayerNew"));
 			this.toolBar.Items.Add(this.buttonNew);
 			this.buttonNew.TabIndex = index++;
-			this.buttonNew.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonNew.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonNew, Res.Strings.Action.LayerNewLong);
 			this.Synchro(this.buttonNew);
 
 			this.buttonDuplicate = new IconButton("LayerDuplicate", Misc.Icon("DuplicateItem"));
 			this.toolBar.Items.Add(this.buttonDuplicate);
 			this.buttonDuplicate.TabIndex = index++;
-			this.buttonDuplicate.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonDuplicate.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonDuplicate, Res.Strings.Action.LayerDuplicate);
 			this.Synchro(this.buttonDuplicate);
 
 			this.buttonNewSel = new IconButton("LayerNewSel", Misc.Icon("LayerNewSel"));
 			this.toolBar.Items.Add(this.buttonNewSel);
 			this.buttonNewSel.TabIndex = index++;
-			this.buttonNewSel.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonNewSel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonNewSel, Res.Strings.Action.LayerNewSel);
 			this.Synchro(this.buttonNewSel);
 
@@ -50,14 +50,14 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonMergeUp = new IconButton("LayerMergeUp", Misc.Icon("LayerMergeUp"));
 			this.toolBar.Items.Add(this.buttonMergeUp);
 			this.buttonMergeUp.TabIndex = index++;
-			this.buttonMergeUp.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonMergeUp.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonMergeUp, Res.Strings.Action.LayerMergeUp);
 			this.Synchro(this.buttonMergeUp);
 
 			this.buttonMergeDown = new IconButton("LayerMergeDown", Misc.Icon("LayerMergeDown"));
 			this.toolBar.Items.Add(this.buttonMergeDown);
 			this.buttonMergeDown.TabIndex = index++;
-			this.buttonMergeDown.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonMergeDown.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonMergeDown, Res.Strings.Action.LayerMergeDown);
 			this.Synchro(this.buttonMergeDown);
 
@@ -66,14 +66,14 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonUp = new IconButton("LayerUp", Misc.Icon("Up"));
 			this.toolBar.Items.Add(this.buttonUp);
 			this.buttonUp.TabIndex = index++;
-			this.buttonUp.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonUp.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonUp, Res.Strings.Action.LayerUp);
 			this.Synchro(this.buttonUp);
 
 			this.buttonDown = new IconButton("LayerDown", Misc.Icon("Down"));
 			this.toolBar.Items.Add(this.buttonDown);
 			this.buttonDown.TabIndex = index++;
-			this.buttonDown.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonDown.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonDown, Res.Strings.Action.LayerDown);
 			this.Synchro(this.buttonDown);
 
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonDelete = new IconButton("LayerDelete", Misc.Icon("DeleteItem"));
 			this.toolBar.Items.Add(this.buttonDelete);
 			this.buttonDelete.TabIndex = index++;
-			this.buttonDelete.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonDelete.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonDelete, Res.Strings.Action.LayerDelete);
 			this.Synchro(this.buttonDelete);
 
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Document.Containers
 			this.table.StyleV |= CellArrayStyles.SelectLine;
 			this.table.DefHeight = 18;
 			this.table.TabIndex = 2;
-			this.table.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.table.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			Panels.Abstract.StaticDocument = this.document;
 			this.panelModColor = new Panels.ModColor(this.document);
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Document.Containers
 			this.panelModColor.Margins = new Margins(0, 0, 5, 0);
 			this.panelModColor.SetParent(this);
 			this.panelModColor.TabIndex = 100;
-			this.panelModColor.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.panelModColor.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			//	--- Début panelMisc
 			this.panelMisc = new Widget(this);
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Document.Containers
 			this.panelMisc.Margins = new Margins(0, 0, 5, 0);
 			this.panelMisc.PreferredHeight = 70;
 			this.panelMisc.TabIndex = 98;
-			this.panelMisc.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.panelMisc.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			
 			this.panelButton = new Widget(this.panelMisc);
 			this.panelButton.Dock = DockStyle.Left;
@@ -125,7 +125,7 @@ namespace Epsitec.Common.Document.Containers
 			this.panelButton.PreferredWidth = 126;
 			this.panelButton.PreferredHeight = this.panelMisc.PreferredHeight;
 			this.panelButton.TabIndex = 1;
-			this.panelButton.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.panelButton.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			
 			this.buttonShow = new Button(this.panelButton);
 			this.buttonShow.Dock = DockStyle.Top;
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonShow.Text = Res.Strings.Container.Layers.Button.Show;
 			this.buttonShow.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.buttonShow.TabIndex = 1;
-			this.buttonShow.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonShow.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonShow, Res.Strings.Container.Layers.Button.HelpShow);
 
 			this.buttonDimmed = new Button(this.panelButton);
@@ -142,7 +142,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonDimmed.Text = Res.Strings.Container.Layers.Button.Dimmed;
 			this.buttonDimmed.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.buttonDimmed.TabIndex = 2;
-			this.buttonDimmed.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonDimmed.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonDimmed, Res.Strings.Container.Layers.Button.HelpDimmed);
 
 			this.buttonHide = new Button(this.panelButton);
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonHide.Text = Res.Strings.Container.Layers.Button.Hide;
 			this.buttonHide.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.buttonHide.TabIndex = 3;
-			this.buttonHide.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.buttonHide.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonHide, Res.Strings.Container.Layers.Button.HelpHide);
 
 			this.radioGroupPrint = new GroupBox(this.panelMisc);
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioGroupPrint.PreferredHeight = this.panelMisc.PreferredHeight;
 			this.radioGroupPrint.Text = Res.Strings.Container.Layers.Button.PrintGroup;
 			this.radioGroupPrint.TabIndex = 2;
-			this.radioGroupPrint.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.radioGroupPrint.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.radioShowPrint = new RadioButton(this.radioGroupPrint);
 			this.radioShowPrint.Dock = DockStyle.Top;
@@ -170,7 +170,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioShowPrint.ActiveStateChanged += new EventHandler(this.HandleRadioPrintChanged);
 			this.radioShowPrint.Index = 1;
 			this.radioShowPrint.TabIndex = 1;
-			this.radioShowPrint.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.radioShowPrint.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.radioDimmedPrint = new RadioButton(this.radioGroupPrint);
 			this.radioDimmedPrint.Dock = DockStyle.Top;
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioDimmedPrint.ActiveStateChanged += new EventHandler(this.HandleRadioPrintChanged);
 			this.radioDimmedPrint.Index = 2;
 			this.radioDimmedPrint.TabIndex = 2;
-			this.radioDimmedPrint.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.radioDimmedPrint.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.radioHidePrint = new RadioButton(this.radioGroupPrint);
 			this.radioHidePrint.Dock = DockStyle.Top;
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioHidePrint.ActiveStateChanged += new EventHandler(this.HandleRadioPrintChanged);
 			this.radioHidePrint.Index = 3;
 			this.radioHidePrint.TabIndex = 3;
-			this.radioHidePrint.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.radioHidePrint.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			//	--- Fin panelMisc
 			
 			this.extendedButton = new GlyphButton(this);
@@ -196,9 +196,9 @@ namespace Epsitec.Common.Document.Containers
 			this.extendedButton.Margins = new Margins(0, 0, 5, 0);
 			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
-			this.extendedButton.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.extendedButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.extendedButton.TabIndex = 97;
-			this.extendedButton.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.extendedButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.extendedButton, Res.Strings.Dialog.Button.More);
 
 			
@@ -206,7 +206,7 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBarName.Dock = DockStyle.Bottom;
 			this.toolBarName.Margins = new Margins(0, 0, 0, 0);
 			this.toolBarName.TabIndex = 96;
-			this.toolBarName.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			this.toolBarName.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			StaticText st = new StaticText();
 			st.PreferredWidth = 80;
@@ -218,7 +218,7 @@ namespace Epsitec.Common.Document.Containers
 			this.name.Margins = new Margins(0, 0, 1, 1);
 			this.name.TextChanged += new EventHandler(this.HandleNameTextChanged);
 			this.name.TabIndex = 1;
-			this.name.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.name.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.toolBarName.Items.Add(this.name);
 			ToolTip.Default.SetToolTip(this.name, Res.Strings.Panel.LayerName.Tooltip.Name);
 

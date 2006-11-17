@@ -128,7 +128,7 @@ namespace Epsitec.Common.Document
 					this.containerGuides.Dock = DockStyle.Fill;
 					this.containerGuides.Margins = new Margins(10, 10, 4, 10);
 					this.containerGuides.TabIndex = this.tabIndex++;
-					this.containerGuides.TabNavigation = TabNavigationMode.ForwardTabPassive;
+					this.containerGuides.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 				}
 				this.containerGuides.SetParent(container);
 
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Document
 					this.containerFonts.Dock = DockStyle.Fill;
 					this.containerFonts.Margins = new Margins(10, 10, 4, 10);
 					this.containerFonts.TabIndex = this.tabIndex++;
-					this.containerFonts.TabNavigation = TabNavigationMode.ForwardTabPassive;
+					this.containerFonts.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 				}
 				this.containerFonts.SetParent(container);
 			}
@@ -581,7 +581,7 @@ namespace Epsitec.Common.Document
 			check.Name = sBool.Name;
 			check.ActiveState = sBool.Value ? ActiveState.Yes : ActiveState.No;
 			check.TabIndex = this.tabIndex++;
-			check.TabNavigation = TabNavigationMode.ActivateOnTab;
+			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			check.Dock = DockStyle.Top;
 			check.Margins = new Margins(10, 10, 0, 5);
 			check.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
@@ -658,7 +658,7 @@ namespace Epsitec.Common.Document
 			field.InternalValue = (decimal) sDouble.Value;
 			field.ValueChanged += new EventHandler(this.HandleFieldDoubleChanged);
 			field.TabIndex = this.tabIndex++;
-			field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
 			field.Margins = new Margins(0, 0, 0, 0);
 			this.WidgetsTableAdd(field, "");
@@ -783,7 +783,7 @@ namespace Epsitec.Common.Document
 			field.InternalValue = (decimal) sPoint.Value.X;
 			field.ValueChanged += new EventHandler(this.HandleFieldPointXChanged);
 			field.TabIndex = this.tabIndex++;
-			field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
 			field.Margins = new Margins(0, 0, 0, 0);
 			this.WidgetsTableAdd(field, ".X");
@@ -821,7 +821,7 @@ namespace Epsitec.Common.Document
 			field.InternalValue = (decimal) sPoint.Value.Y;
 			field.ValueChanged += new EventHandler(this.HandleFieldPointYChanged);
 			field.TabIndex = this.tabIndex++;
-			field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
 			field.Margins = new Margins(0, 0, 0, 0);
 			this.WidgetsTableAdd(field, ".Y");
@@ -838,7 +838,7 @@ namespace Epsitec.Common.Document
 			ib.Name = sPoint.Name;
 			Dialogs.UpdateLink(ib, sep, sPoint.Link);
 			ib.TabIndex = this.tabIndex++;
-			ib.TabNavigation = TabNavigationMode.ActivateOnTab;
+			ib.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ib.Dock = DockStyle.Left;
 			double m = System.Math.Floor ((container.PreferredHeight-ib.PreferredHeight)/2);
 			ib.Margins = new Margins(-1, 8, m, m);
@@ -870,7 +870,7 @@ namespace Epsitec.Common.Document
 				button.Text = @"<font size=""80%"">" + "\u00F72</font>";  // /2
 //-				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
-				button.TabNavigation = TabNavigationMode.ActivateOnTab;
+				button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				button.Dock = DockStyle.Left;
 				button.Margins = new Margins(0, 0, 2, 2);
 				button.Clicked += new MessageEventHandler(HandleDoublerPointDivXClicked);
@@ -883,7 +883,7 @@ namespace Epsitec.Common.Document
 				button.Text = @"<font size=""80%"">" + "\u00D72</font>";  // x2
 //-				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
-				button.TabNavigation = TabNavigationMode.ActivateOnTab;
+				button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				button.Dock = DockStyle.Left;
 				button.Margins = new Margins(-1, 0, 2, 2);
 				button.Clicked += new MessageEventHandler(HandleDoublerPointMulXClicked);
@@ -903,7 +903,7 @@ namespace Epsitec.Common.Document
 				button.Text = @"<font size=""80%"">" + "\u00F72</font>";  // /2
 //-				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
-				button.TabNavigation = TabNavigationMode.ActivateOnTab;
+				button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				button.Dock = DockStyle.Left;
 				button.Margins = new Margins(0, 0, 2, 2);
 				button.Clicked += new MessageEventHandler(HandleDoublerPointDivYClicked);
@@ -916,7 +916,7 @@ namespace Epsitec.Common.Document
 				button.Text = @"<font size=""80%"">" + "\u00D72</font>";  // x2
 //-				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
-				button.TabNavigation = TabNavigationMode.ActivateOnTab;
+				button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				button.Dock = DockStyle.Left;
 				button.Margins = new Margins(-1, 0, 2, 2);
 				button.Clicked += new MessageEventHandler(HandleDoublerPointMulYClicked);
@@ -1056,7 +1056,7 @@ namespace Epsitec.Common.Document
 			sInteger.InitCombo(field);
 			field.SelectedIndexChanged += new EventHandler(this.HandleFieldComboChanged);
 			field.TabIndex = this.tabIndex++;
-			field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
 			field.Margins = new Margins(0, 0, 0, 0);
 			this.WidgetsTableAdd(field, "");
@@ -1182,7 +1182,7 @@ namespace Epsitec.Common.Document
 			radio.Text = Res.Strings.Dialog.Print.Paper.Portrait;
 			radio.Clicked += new MessageEventHandler(this.HandlePaperActiveStateChanged);
 			radio.TabIndex = this.tabIndex++;
-			radio.TabNavigation = TabNavigationMode.ActivateOnTab;
+			radio.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			radio.Dock = DockStyle.Left;
 			radio.Margins = new Margins(0, 0, 0, 0);
 			radio.Index = 1;
@@ -1194,7 +1194,7 @@ namespace Epsitec.Common.Document
 			radio.Text = Res.Strings.Dialog.Print.Paper.Landscape;
 			radio.Clicked += new MessageEventHandler(this.HandlePaperActiveStateChanged);
 			radio.TabIndex = this.tabIndex++;
-			radio.TabNavigation = TabNavigationMode.ActivateOnTab;
+			radio.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			radio.Dock = DockStyle.Left;
 			radio.Index = 2;
 			this.WidgetsTableAdd(radio, "");
@@ -1224,7 +1224,7 @@ namespace Epsitec.Common.Document
 
 			field.SelectedIndexChanged += new EventHandler(this.HandleFieldPaperChanged);
 			field.TabIndex = this.tabIndex++;
-			field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
 			field.Margins = new Margins(0, 0, 0, 0);
 			this.WidgetsTableAdd(field, "");
@@ -1528,7 +1528,7 @@ namespace Epsitec.Common.Document
 			radio.Name = sRange.Name;
 			radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.All) ? ActiveState.Yes : ActiveState.No;
 			radio.TabIndex = this.tabIndex++;
-			radio.TabNavigation = TabNavigationMode.ActivateOnTab;
+			radio.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			radio.Dock = DockStyle.Top;
 			radio.Margins = new Margins(10, 10, 0, 0);
 			radio.ActiveStateChanged += new EventHandler(this.HandleRangeRadioActiveStateChanged);
@@ -1549,7 +1549,7 @@ namespace Epsitec.Common.Document
 			radio.Name = sRange.Name;
 			radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.FromTo) ? ActiveState.Yes : ActiveState.No;
 			radio.TabIndex = this.tabIndex++;
-			radio.TabNavigation = TabNavigationMode.ActivateOnTab;
+			radio.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			radio.Dock = DockStyle.Left;
 			radio.Margins = new Margins(0, 0, 0, 0);
 			radio.ActiveStateChanged += new EventHandler(this.HandleRangeRadioActiveStateChanged);
@@ -1567,7 +1567,7 @@ namespace Epsitec.Common.Document
 			field.InternalValue = (decimal) sRange.From;
 			field.ValueChanged += new EventHandler(this.HandleRangeFieldChanged);
 			field.TabIndex = this.tabIndex++;
-			field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
 			field.Margins = new Margins(0, 0, 0, 0);
 			this.WidgetsTableAdd(field, ".From");
@@ -1591,7 +1591,7 @@ namespace Epsitec.Common.Document
 			field.InternalValue = (decimal) sRange.To;
 			field.ValueChanged += new EventHandler(this.HandleRangeFieldChanged);
 			field.TabIndex = this.tabIndex++;
-			field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
 			field.Margins = new Margins(0, 0, 0, 0);
 			this.WidgetsTableAdd(field, ".To");
@@ -1604,7 +1604,7 @@ namespace Epsitec.Common.Document
 			radio.Name = sRange.Name;
 			radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.Current) ? ActiveState.Yes : ActiveState.No;
 			radio.TabIndex = this.tabIndex++;
-			radio.TabNavigation = TabNavigationMode.ActivateOnTab;
+			radio.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			radio.Dock = DockStyle.Top;
 			radio.Margins = new Margins(10, 10, 0, 5);
 			radio.ActiveStateChanged += new EventHandler(this.HandleRangeRadioActiveStateChanged);

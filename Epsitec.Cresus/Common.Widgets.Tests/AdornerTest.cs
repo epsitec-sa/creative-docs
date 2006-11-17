@@ -256,7 +256,7 @@ namespace Epsitec.Common.Widgets
 			t1.ComboArrowMode = ComboArrowMode.Cycle;
 			t1.IsLiveUpdateEnabled = false;
 			t1.TabIndex = 1;
-			t1.TabNavigation = TabNavigationMode.ActivateOnTab;
+			t1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			TextFieldCombo t2 = new TextFieldCombo();
 			t2.PreferredWidth = 70;
@@ -268,7 +268,7 @@ namespace Epsitec.Common.Widgets
 			t2.ComboArrowMode = ComboArrowMode.Cycle;
 			t2.IsReadOnly = true;
 			t2.TabIndex = 2;
-			t2.TabNavigation = TabNavigationMode.ActivateOnTab;
+			t2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			tb.Items.Add(t1);
 			tb.Items.Add(t2);
@@ -297,7 +297,7 @@ namespace Epsitec.Common.Widgets
 			a.Anchor = AnchorStyles.BottomLeft;
 			a.Margins = new Margins(10, 0, 0, 30);
 			a.TabIndex = 20;
-			a.TabNavigation = TabNavigationMode.ActivateOnTab;
+			a.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			Assert.IsFalse (a.IsVisible);
 			Assert.IsTrue (a.Visibility);
@@ -316,7 +316,7 @@ namespace Epsitec.Common.Widgets
 			b.Anchor = AnchorStyles.BottomLeft;
 			b.Margins = new Margins(95, 0, 0, 30);
 			b.TabIndex = 21;
-			b.TabNavigation = TabNavigationMode.ActivateOnTab;
+			b.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			window.Root.Children.Add(b);
 			tip.SetToolTip(b, "Annule tout<br/>Deuxieme ligne, juste pour voir !");
 
@@ -328,7 +328,7 @@ namespace Epsitec.Common.Widgets
 			c.Anchor = AnchorStyles.BottomLeft;
 			c.Margins = new Margins(245, 0, 0, 30);
 			c.TabIndex = 22;
-			c.TabNavigation = TabNavigationMode.ActivateOnTab;
+			c.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			window.Root.Children.Add(c);
 			
 			Widget      tip_widget = new ToolTip.Contents ();
@@ -461,7 +461,7 @@ namespace Epsitec.Common.Widgets
 			radio1.Group = "RGB";
 			radio1.TabIndex = 1;
 			radio1.Index = 1;
-			radio1.TabNavigation = TabNavigationMode.ActivateOnTab;
+			radio1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			radio1.Clicked += new MessageEventHandler (AdornerTest.HandleRadio);
 			box.Children.Add(radio1);
 			tip.SetToolTip(radio1, "Couleur rouge");
@@ -472,7 +472,7 @@ namespace Epsitec.Common.Widgets
 			radio2.Group = "RGB";
 			radio2.TabIndex = 1;
 			radio2.Index = 2;
-			radio2.TabNavigation = TabNavigationMode.ActivateOnTab;
+			radio2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			radio2.Clicked += new MessageEventHandler (AdornerTest.HandleRadio);
 			box.Children.Add(radio2);
 			tip.SetToolTip(radio2, "Couleur verte");
@@ -483,7 +483,7 @@ namespace Epsitec.Common.Widgets
 			radio3.Group = "RGB";
 			radio3.TabIndex = 1;
 			radio3.Index = 3;
-			radio3.TabNavigation = TabNavigationMode.ActivateOnTab;
+			radio3.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			radio3.Clicked += new MessageEventHandler (AdornerTest.HandleRadio);
 			box.Children.Add(radio3);
 			tip.SetToolTip(radio3, "Couleur bleue");
@@ -497,7 +497,7 @@ namespace Epsitec.Common.Widgets
 			check.Anchor = AnchorStyles.BottomLeft;
 			check.Margins = new Margins(10, 0, 0, 70);
 			check.TabIndex = 3;
-			check.TabNavigation = TabNavigationMode.ActivateOnTab;
+			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			check.Clicked += new MessageEventHandler (AdornerTest.HandleCheck);
 			window.Root.Children.Add(check);
 			tip.SetToolTip(check, "Juste pour voir");
@@ -580,7 +580,7 @@ namespace Epsitec.Common.Widgets
 			combo.Anchor = AnchorStyles.BottomLeft;
 			combo.Margins = new Margins(160, 0, 0, 220);
 			combo.TabIndex = 10;
-			combo.TabNavigation = TabNavigationMode.ActivateOnTab;
+			combo.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			combo.ButtonShowCondition = ShowCondition.Always;
 			combo.ComboArrowMode = ComboArrowMode.Open;
 			window.Root.Children.Add(combo);
@@ -592,7 +592,7 @@ namespace Epsitec.Common.Widgets
 			text.Anchor = AnchorStyles.BottomLeft;
 			text.Margins = new Margins(160, 0, 0, 190);
 			text.TabIndex = 11;
-			text.TabNavigation = TabNavigationMode.ActivateOnTab;
+			text.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			window.Root.Children.Add(text);
 
 			TextFieldUpDown tud = new TextFieldUpDown();
@@ -611,7 +611,7 @@ namespace Epsitec.Common.Widgets
 			tud.Anchor = AnchorStyles.BottomLeft;
 			tud.Margins = new Margins(160, 0, 0, 160);
 			tud.TabIndex = 12;
-			tud.TabNavigation = TabNavigationMode.ActivateOnTab;
+			tud.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			window.Root.Children.Add(tud);
 
 			TextFieldSlider slider = new TextFieldSlider();
@@ -624,7 +624,7 @@ namespace Epsitec.Common.Widgets
 			slider.Anchor = AnchorStyles.BottomLeft;
 			slider.Margins = new Margins(215, 0, 0, 160);
 			slider.TabIndex = 13;
-			slider.TabNavigation = TabNavigationMode.ActivateOnTab;
+			slider.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			window.Root.Children.Add(slider);
 
 			TextFieldMulti multi = new TextFieldMulti();
@@ -634,7 +634,7 @@ namespace Epsitec.Common.Widgets
 			multi.Anchor = AnchorStyles.BottomLeft;
 			multi.Margins = new Margins(160, 0, 0, 100);
 			multi.TabIndex = 14;
-			multi.TabNavigation = TabNavigationMode.ActivateOnTab;
+			multi.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			window.Root.Children.Add(multi);
 
 			TabBook tab = new TabBook();
@@ -644,7 +644,7 @@ namespace Epsitec.Common.Widgets
 			tab.HasMenuButton = true;
 			tab.HasCloseButton = true;
 			tab.TabIndex = 15;
-			tab.TabNavigation = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren;
+			tab.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren;
 			window.Root.Children.Add(tab);
 
 			window.ForceLayout ();
@@ -657,7 +657,7 @@ namespace Epsitec.Common.Widgets
 //			page1.SetManualBounds(inside);
 			page1.TabTitle = "<m>P</m>remier";
 			page1.TabIndex = 1;
-			page1.TabNavigation = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
+			page1.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page1);
 
 			ScrollList sl = new ScrollList();
@@ -680,7 +680,7 @@ namespace Epsitec.Common.Widgets
 			sl.Anchor = AnchorStyles.Top|AnchorStyles.Left;
 			sl.Margins = new Margins(10, 0, 10, 10);
 			sl.TabIndex = 1;
-			sl.TabNavigation = TabNavigationMode.ActivateOnTab;
+			sl.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			page1.Children.Add(sl);
 			tip.SetToolTip(sl, "Choix du mois");
 
@@ -715,7 +715,7 @@ namespace Epsitec.Common.Widgets
 			combofix.Anchor = AnchorStyles.TopLeft;
 			combofix.Margins = new Margins(160, 0, 80, 0);
 			combofix.TabIndex = 2;
-			combofix.TabNavigation = TabNavigationMode.ActivateOnTab;
+			combofix.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			combofix.ButtonShowCondition = ShowCondition.Always;
 			page1.Children.Add(combofix);
 
@@ -724,7 +724,7 @@ namespace Epsitec.Common.Widgets
 //			page2.SetManualBounds(inside);
 			page2.TabTitle = "<m>D</m>euxième";
 			page2.TabIndex = 2;
-			page2.TabNavigation = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
+			page2.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page2);
 
 			CellTable table = new CellTable();
@@ -762,7 +762,7 @@ namespace Epsitec.Common.Widgets
 			table.Anchor = AnchorStyles.All;
 			table.Margins = new Margins(10, 10, 10, 10);
 			table.TabIndex = 1;
-			table.TabNavigation = TabNavigationMode.ActivateOnTab;
+			table.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			page2.Children.Add(table);
 
 			//	Crée l'onglet 3.
@@ -827,7 +827,7 @@ namespace Epsitec.Common.Widgets
 			new Validators.RegexValidator (text_ex_8, Support.RegexFactory.AlphaName);
 			
 			page3.TabIndex = 3;
-			page3.TabNavigation = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
+			page3.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page3);
 
 			//	Crée l'onglet 4.
@@ -835,7 +835,7 @@ namespace Epsitec.Common.Widgets
 			page4.SetManualBounds(inside);
 			page4.TabTitle = "<m>Q</m>uatrième";
 			page4.TabIndex = 4;
-			page4.TabNavigation = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
+			page4.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page4);
 			
 			TextFieldUpDown text_up_down = new TextFieldUpDown (page4);
@@ -851,7 +851,7 @@ namespace Epsitec.Common.Widgets
 			page5.SetManualBounds(inside);
 			page5.TabTitle = "<m>C</m>inquième";
 			page5.TabIndex = 5;
-			page5.TabNavigation = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
+			page5.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page5);
 
 			TextField text_1 = new TextField();
@@ -879,7 +879,7 @@ namespace Epsitec.Common.Widgets
 			page6.SetManualBounds(inside);
 			page6.TabTitle = "<m>S</m>ixième";
 			page6.TabIndex = 6;
-			page6.TabNavigation = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
+			page6.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page6);
 
 			tab.ActivePage = page2;
@@ -1642,7 +1642,7 @@ namespace Epsitec.Common.Widgets
 			if ( tab != -1 )
 			{
 				sl.TabIndex = tab;
-				sl.TabNavigation = TabNavigationMode.ActivateOnTab;
+				sl.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
 			string[] list = Widgets.Adorners.Factory.AdornerNames;

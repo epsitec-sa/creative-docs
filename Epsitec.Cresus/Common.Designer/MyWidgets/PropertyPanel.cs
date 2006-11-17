@@ -35,7 +35,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.extendedButton.AutoFocus = false;
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
 			this.extendedButton.TabIndex = 0;
-			this.extendedButton.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.extendedButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.extendedButton.PreferredSize = new Size(this.extendedZoneWidth-4, this.extendedZoneWidth-4);
 			this.extendedButton.Margins = new Margins(2, 1, 2, 2);
 			this.extendedButton.Dock = DockStyle.Right;

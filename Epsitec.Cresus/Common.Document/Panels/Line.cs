@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Panels
 			this.grid = new RadioIconGrid(this);
 			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.grid.TabIndex = 1;
-			this.grid.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.grid.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.AddRadioIcon(Properties.StandardDashType.Full);
 			this.AddRadioIcon(Properties.StandardDashType.Line);
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Document.Panels
 			this.gridCap = new RadioIconGrid(this);
 			this.gridCap.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.gridCap.TabIndex = 100;
-			this.gridCap.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.gridCap.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.AddRadioIcon(CapStyle.Round);
 			this.AddRadioIcon(CapStyle.Square);
@@ -38,7 +38,7 @@ namespace Epsitec.Common.Document.Panels
 			this.gridJoin = new RadioIconGrid(this);
 			this.gridJoin.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.gridJoin.TabIndex = 101;
-			this.gridJoin.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.gridJoin.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.AddRadioIcon(JoinStyle.Round);
 			this.AddRadioIcon(JoinStyle.Miter);
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Document.Panels
 			this.nothingButton = new IconButton(this);
 			this.nothingButton.Clicked += new MessageEventHandler(this.HandleNothingClicked);
 			this.nothingButton.TabIndex = 2;
-			this.nothingButton.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.nothingButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.nothingButton.IconName = Misc.Icon("Nothing");
 			ToolTip.Default.SetToolTip(this.nothingButton, Res.Strings.Panel.Line.Tooltip.Nothing);
 
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealDimension(this.field.TextFieldReal);
 			this.field.TextFieldReal.EditionAccepted += new EventHandler(this.HandleTextChanged);
 			this.field.TabIndex = 2;
-			this.field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.field, Res.Strings.Panel.Line.Tooltip.Width);
 
 			this.radioDashRank = new RadioButton[Properties.Line.DashMax];
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Document.Panels
 				this.radioDashRank[i].ActiveStateChanged += new EventHandler(this.HandleDashRankChanged);
 				this.radioDashRank[i].Index = i;
 				this.radioDashRank[i].TabIndex = 10+i;
-				this.radioDashRank[i].TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.radioDashRank[i].TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.radioDashRank[i].Index = i;
 			}
 			ToolTip.Default.SetToolTip(this.radioDashRank[0], Res.Strings.Panel.Line.Tooltip.Dash1);
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldStandardLength.TextFieldReal);
 			this.fieldStandardLength.TextFieldReal.EditionAccepted += new EventHandler(this.HandleDashChanged);
 			this.fieldStandardLength.TabIndex = 20;
-			this.fieldStandardLength.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fieldStandardLength.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldStandardLength, Res.Strings.Panel.Line.Tooltip.DashLength);
 
 			this.fieldDashPen = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldDashPen.TextFieldReal);
 			this.fieldDashPen.TextFieldReal.EditionAccepted += new EventHandler(this.HandleDashChanged);
 			this.fieldDashPen.TabIndex = 21;
-			this.fieldDashPen.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fieldDashPen.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldDashPen, Res.Strings.Panel.Line.Tooltip.DashPen);
 
 			this.fieldDashGap = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldDashGap.TextFieldReal);
 			this.fieldDashGap.TextFieldReal.EditionAccepted += new EventHandler(this.HandleDashChanged);
 			this.fieldDashGap.TabIndex = 22;
-			this.fieldDashGap.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fieldDashGap.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldDashGap, Res.Strings.Panel.Line.Tooltip.DashGap);
 
 			this.isNormalAndExtended = true;

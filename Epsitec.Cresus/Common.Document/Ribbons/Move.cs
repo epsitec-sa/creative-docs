@@ -81,7 +81,7 @@ namespace Epsitec.Common.Document.Ribbons
 			field = new TextFieldReal(this);
 			field.PreferredWidth = 50;
 			field.TabIndex = this.tabIndex++;
-			field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
 			ToolTip.Default.SetToolTip(field, tooltip);
 		}

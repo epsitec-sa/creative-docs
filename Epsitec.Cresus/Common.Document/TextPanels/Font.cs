@@ -24,7 +24,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fontFace.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleFontFaceComboOpening);
 			this.fontFace.ComboClosed += new EventHandler(this.HandleFontFaceTextChanged);
 			this.fontFace.TabIndex = this.tabIndex++;
-			this.fontFace.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fontFace.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontFace, Res.Strings.TextPanel.Font.Tooltip.Face);
 
 			this.buttonFilter = this.CreateIconButton("TextFontFilter");
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fontStyle.AutoFocus = false;
 			this.fontStyle.ComboClosed += new EventHandler(this.HandleFontStyleTextChanged);
 			this.fontStyle.TabIndex = this.tabIndex++;
-			this.fontStyle.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fontStyle.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontStyle, Res.Strings.TextPanel.Font.Tooltip.Style);
 
 			this.fontFeatures = this.CreateIconButton(Misc.Icon("FontFeatures"), Res.Strings.TextPanel.Font.Tooltip.Features, new MessageEventHandler(this.HandleFeaturesClicked));
@@ -57,13 +57,13 @@ namespace Epsitec.Common.Document.TextPanels
 			this.checkBold = new CheckButton(this);
 			this.checkBold.Text = Res.Strings.Action.FontInvertBold;
 			this.checkBold.TabIndex = this.tabIndex++;
-			this.checkBold.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.checkBold.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.checkBold.ActiveStateChanged += new EventHandler(this.HandleCheckBoldActiveStateChanged);
 
 			this.checkItalic = new CheckButton(this);
 			this.checkItalic.Text = Res.Strings.Action.FontInvertItalic;
 			this.checkItalic.TabIndex = this.tabIndex++;
-			this.checkItalic.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.checkItalic.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.checkItalic.ActiveStateChanged += new EventHandler(this.HandleCheckItalicActiveStateChanged);
 
 			this.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);

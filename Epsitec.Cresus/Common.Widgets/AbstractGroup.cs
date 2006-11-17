@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 		public AbstractGroup()
 		{
 			this.InternalState |= InternalState.PossibleContainer;
-			base.TabNavigation  = TabNavigationMode.ForwardTabPassive;
+			base.TabNavigationMode  = TabNavigationMode.ForwardTabPassive;
 		}
 		
 		public AbstractGroup(Widget embedder) : this ()
@@ -22,11 +22,11 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 		
-		public override TabNavigationMode		TabNavigation
+		public override TabNavigationMode		TabNavigationMode
 		{
 			get
 			{
-				return base.TabNavigation;
+				return base.TabNavigationMode;
 			}
 			set
 			{
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Comme this.TabNavigation, mais sans aucun garde-fou.
 			
-			base.TabNavigation = value;
+			base.TabNavigationMode = value;
 		}
 
 

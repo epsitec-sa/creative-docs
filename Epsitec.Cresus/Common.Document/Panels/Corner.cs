@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Panels
 			this.grid = new RadioIconGrid(this);
 			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.grid.TabIndex = 1;
-			this.grid.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.grid.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.AddRadioIcon(Properties.CornerType.Right, false);
 			this.AddRadioIcon(Properties.CornerType.Round, false);
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldRadius.TextFieldReal);
 			this.fieldRadius.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldRadius.TabIndex = 2;
-			this.fieldRadius.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fieldRadius.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldRadius, Res.Strings.Panel.Corner.Tooltip.Radius);
 
 			this.fieldEffect1 = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldEffect1.TextFieldReal.TextSuffix = "%";
 			this.fieldEffect1.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldEffect1.TabIndex = 3;
-			this.fieldEffect1.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fieldEffect1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldEffect1, Res.Strings.Panel.Corner.Tooltip.Effect1);
 
 			this.fieldEffect2 = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldEffect2.TextFieldReal.TextSuffix = "%";
 			this.fieldEffect2.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldEffect2.TabIndex = 4;
-			this.fieldEffect2.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fieldEffect2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldEffect2, Res.Strings.Panel.Corner.Tooltip.Effect2);
 
 			this.isNormalAndExtended = true;

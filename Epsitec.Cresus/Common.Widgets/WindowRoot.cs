@@ -254,7 +254,7 @@ namespace Epsitec.Common.Widgets
 					return false;
 				}
 				
-				TabNavigationMode mode = TabNavigationMode.Passive;
+				TabNavigationMode mode = TabNavigationMode.None;
 				TabNavigationDir  dir  = TabNavigationDir.None;
 				
 				switch (shortcut.KeyCodeOnly)
@@ -305,7 +305,7 @@ namespace Epsitec.Common.Widgets
 						break;
 				}
 				
-				if ((mode != TabNavigationMode.Passive) &&
+				if ((mode != TabNavigationMode.None) &&
 					(dir != TabNavigationDir.None))
 				{
 					//	Navigue dans la hiérarchie...

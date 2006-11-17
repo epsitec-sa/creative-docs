@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Panels
 			this.grid = new RadioIconGrid(this);
 			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.grid.TabIndex = 0;
-			this.grid.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.grid.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.AddRadioIcon(Properties.SurfaceType.ParallelT, false);
 			this.AddRadioIcon(Properties.SurfaceType.ParallelB, false);
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Document.Panels
 				this.document.Modifier.AdaptTextFieldRealPercent(this.fieldFactor[i].TextFieldReal);
 				this.fieldFactor[i].TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 				this.fieldFactor[i].TabIndex = 2+i;
-				this.fieldFactor[i].TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.fieldFactor[i].TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
 			this.fieldScalar = new Widgets.TextFieldLabel[2];
@@ -58,14 +58,14 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldScalar[i].TextFieldReal.Step = 1;
 				this.fieldScalar[i].TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 				this.fieldScalar[i].TabIndex = 2+i;
-				this.fieldScalar[i].TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.fieldScalar[i].TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
 			this.resetButton = new Button(this);
 			this.resetButton.Text = Res.Strings.Panel.Surface.Button.Reset;
 			this.resetButton.Clicked += new MessageEventHandler(this.HandleResetButton);
 			this.resetButton.TabIndex = 100;
-			this.resetButton.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.resetButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.resetButton, Res.Strings.Panel.Surface.Tooltip.Reset);
 
 			this.isNormalAndExtended = true;

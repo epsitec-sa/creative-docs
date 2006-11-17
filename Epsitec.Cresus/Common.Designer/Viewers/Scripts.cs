@@ -29,7 +29,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
 			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 			this.labelEdit.TabIndex = tabIndex++;
-			this.labelEdit.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.labelEdit.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
 
 			this.array = new MyWidgets.StringArray(left);
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.edit.EditionAccepted += new EventHandler(this.HandleTextChanged);
 			this.edit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.edit.TabIndex = tabIndex++;
-			this.edit.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.edit.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 		}
 
 		protected override void Dispose(bool disposing)

@@ -42,7 +42,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array = new MyWidgets.GlyphArray(this.window.Root);
 				this.array.Dock = DockStyle.Fill;
 				this.array.TabIndex = tabIndex++;
-				this.array.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.array.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.array.SetFont(this.fontFace, this.fontStyle);
 				this.array.SelectedIndex = -1;
 				this.array.DoubleClicked += new MessageEventHandler(this.HandleDoubleClicked);
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonOk.Margins = new Margins(0, 6, 0, 0);
 				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonInsertClicked);
 				buttonOk.TabIndex = tabIndex++;
-				buttonOk.TabNavigation = TabNavigationMode.ActivateOnTab;
+				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				Button buttonClose = new Button(footer);
 				buttonClose.PreferredWidth = 75;
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.Margins = new Margins(0, 6, 0, 0);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = tabIndex++;
-				buttonClose.TabNavigation = TabNavigationMode.ActivateOnTab;
+				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				//	Barre de statut.
 				Widget band = new Widget(this.window.Root);
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.slider.Dock = DockStyle.Right;
 				this.slider.Margins = new Margins(6, 0, 3, 3);
 				this.slider.TabIndex = tabIndex++;
-				this.slider.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.slider.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.slider.MinValue = 20.0M;
 				this.slider.MaxValue = 50.0M;
 				this.slider.SmallChange = 1.0M;

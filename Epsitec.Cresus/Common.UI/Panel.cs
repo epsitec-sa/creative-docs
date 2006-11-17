@@ -21,7 +21,7 @@ namespace Epsitec.Common.UI
 		/// </summary>
 		public Panel()
 		{
-			base.TabNavigation = Widgets.TabNavigationMode.ForwardTabActive;
+			base.TabNavigationMode = Widgets.TabNavigationMode.ForwardTabActive;
 		}
 
 		/// <summary>
@@ -342,22 +342,22 @@ namespace Epsitec.Common.UI
 			return base.PreProcessMessage (message, pos);
 		}
 
-		public override Widgets.TabNavigationMode TabNavigation
+		public override Widgets.TabNavigationMode TabNavigationMode
 		{
 			get
 			{
 				if (this.HasValidEditionPanel)
 				{
-					return base.TabNavigation & ~Widgets.TabNavigationMode.ForwardToChildren & ~Widgets.TabNavigationMode.ForwardOnly;
+					return base.TabNavigationMode & ~Widgets.TabNavigationMode.ForwardToChildren & ~Widgets.TabNavigationMode.ForwardOnly;
 				}
 				else
 				{
-					return base.TabNavigation;
+					return base.TabNavigationMode;
 				}
 			}
 			set
 			{
-				base.TabNavigation = value;
+				base.TabNavigationMode = value;
 			}
 		}
 

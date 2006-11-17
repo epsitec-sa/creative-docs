@@ -46,7 +46,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.fieldFilter = new TextFieldCombo(header);
 				this.fieldFilter.Dock = DockStyle.Fill;
 				this.fieldFilter.TabIndex = tabIndex++;
-				this.fieldFilter.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.fieldFilter.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				//	Boutons radio de gauche.
 				Widget main = new Widget(this.window.Root);
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioBegin.Dock = DockStyle.Top;
 				this.radioBegin.Margins = new Margins(0, 0, 0, 3);
 				this.radioBegin.TabIndex = tabIndex++;
-				this.radioBegin.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.radioBegin.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.radioAny = new RadioButton(left);
 				this.radioAny.ActiveState = ActiveState.Yes;
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioAny.Dock = DockStyle.Top;
 				this.radioAny.Margins = new Margins(0, 0, 0, 3);
 				this.radioAny.TabIndex = tabIndex++;
-				this.radioAny.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.radioAny.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.radioJocker = new RadioButton(left);
 				this.radioJocker.Group = "Part";
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioJocker.Dock = DockStyle.Top;
 				this.radioJocker.Margins = new Margins(0, 0, 0, 3);
 				this.radioJocker.TabIndex = tabIndex++;
-				this.radioJocker.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.radioJocker.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.radioJocker.ActiveStateChanged += new EventHandler(this.HandleRadioJockerActiveStateChanged);
 
 				//	Boutons à cocher de droite.
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkCase.Dock = DockStyle.Top;
 				this.checkCase.Margins = new Margins(0, 0, 0, 3);
 				this.checkCase.TabIndex = tabIndex++;
-				this.checkCase.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.checkCase.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.checkWord = new CheckButton(right);
 				this.checkWord.PreferredWidth = 120;
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkWord.Dock = DockStyle.Top;
 				this.checkWord.Margins = new Margins(0, 0, 0, 3);
 				this.checkWord.TabIndex = tabIndex++;
-				this.checkWord.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.checkWord.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				//	Pied.
 				Widget footer = new Widget(this.window.Root);
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonOk.Margins = new Margins(0, 6, 0, 0);
 				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonFilterClicked);
 				buttonOk.TabIndex = tabIndex++;
-				buttonOk.TabNavigation = TabNavigationMode.ActivateOnTab;
+				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				Button buttonAll = new Button(footer);
 				buttonAll.PreferredWidth = 75;
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonAll.Margins = new Margins(0, 6, 0, 0);
 				buttonAll.Clicked += new MessageEventHandler(this.HandleButtonAllClicked);
 				buttonAll.TabIndex = tabIndex++;
-				buttonAll.TabNavigation = TabNavigationMode.ActivateOnTab;
+				buttonAll.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				Button buttonClose = new Button(footer);
 				buttonClose.PreferredWidth = 75;
@@ -137,7 +137,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.Dock = DockStyle.Right;
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = tabIndex++;
-				buttonClose.TabNavigation = TabNavigationMode.ActivateOnTab;
+				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
 			this.window.Show();

@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Panels
 			this.grid = new RadioIconGrid(this);
 			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
 			this.grid.TabIndex = 1;
-			this.grid.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.grid.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.AddRadioIcon(Properties.ArcType.Full);
 			this.AddRadioIcon(Properties.ArcType.Open);
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldStarting.TextFieldReal);
 			this.fieldStarting.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldStarting.TabIndex = 2;
-			this.fieldStarting.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fieldStarting.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldStarting, Res.Strings.Panel.Arc.Tooltip.Initial);
 
 			this.fieldEnding = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldEnding.TextFieldReal);
 			this.fieldEnding.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldEnding.TabIndex = 3;
-			this.fieldEnding.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.fieldEnding.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldEnding, Res.Strings.Panel.Arc.Tooltip.Final);
 
 			this.isNormalAndExtended = true;

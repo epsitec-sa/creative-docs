@@ -168,33 +168,33 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				toolBar.Dock = DockStyle.Top;
 				toolBar.Margins = new Margins (10, 10, 2, -1);
 				toolBar.TabIndex = tabIndex ++;
-				toolBar.TabNavigation = TabNavigationMode.ForwardTabPassive;
+				toolBar.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 				this.buttonQuickFirst = new IconButton(Misc.Icon("First"));
 				this.buttonQuickFirst.Clicked += new MessageEventHandler(this.HandleButtonQuickFirst);
 				this.buttonQuickFirst.TabIndex = tabIndex++;
-				this.buttonQuickFirst.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonQuickFirst.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				toolBar.Items.Add(this.buttonQuickFirst);
 				ToolTip.Default.SetToolTip(this.buttonQuickFirst, Res.Strings.Dialog.Settings.QuickFirst);
 
 				this.buttonQuickUp = new IconButton(Misc.Icon("Up"));
 				this.buttonQuickUp.Clicked += new MessageEventHandler(this.HandleButtonQuickUp);
 				this.buttonQuickUp.TabIndex = tabIndex++;
-				this.buttonQuickUp.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonQuickUp.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				toolBar.Items.Add(this.buttonQuickUp);
 				ToolTip.Default.SetToolTip(this.buttonQuickUp, Res.Strings.Dialog.Settings.QuickUp);
 
 				this.buttonQuickDown = new IconButton(Misc.Icon("Down"));
 				this.buttonQuickDown.Clicked += new MessageEventHandler(this.HandleButtonQuickDown);
 				this.buttonQuickDown.TabIndex = tabIndex++;
-				this.buttonQuickDown.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonQuickDown.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				toolBar.Items.Add(this.buttonQuickDown);
 				ToolTip.Default.SetToolTip(this.buttonQuickDown, Res.Strings.Dialog.Settings.QuickDown);
 
 				this.buttonQuickLast = new IconButton(Misc.Icon("Last"));
 				this.buttonQuickLast.Clicked += new MessageEventHandler(this.HandleButtonQuickLast);
 				this.buttonQuickLast.TabIndex = tabIndex++;
-				this.buttonQuickLast.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonQuickLast.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				toolBar.Items.Add(this.buttonQuickLast);
 				ToolTip.Default.SetToolTip(this.buttonQuickLast, Res.Strings.Dialog.Settings.QuickLast);
 
@@ -203,7 +203,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonQuickDefault = new IconButton(Misc.Icon("QuickDefault"));
 				this.buttonQuickDefault.Clicked += new MessageEventHandler(this.HandleButtonQuickDefault);
 				this.buttonQuickDefault.TabIndex = tabIndex++;
-				this.buttonQuickDefault.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonQuickDefault.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				toolBar.Items.Add(this.buttonQuickDefault);
 				ToolTip.Default.SetToolTip(this.buttonQuickDefault, Res.Strings.Dialog.Settings.QuickDefault);
 
@@ -212,7 +212,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonQuickClear = new IconButton(Misc.Icon("QuickClear"));
 				this.buttonQuickClear.Clicked += new MessageEventHandler(this.HandleButtonQuickClear);
 				this.buttonQuickClear.TabIndex = tabIndex++;
-				this.buttonQuickClear.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonQuickClear.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				toolBar.Items.Add(this.buttonQuickClear);
 				ToolTip.Default.SetToolTip(this.buttonQuickClear, Res.Strings.Dialog.Settings.QuickClear);
 
@@ -278,7 +278,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonClose.Margins = new Margins(6, 0, 0, 6);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleSettingsButtonCloseClicked);
 				buttonClose.TabIndex = 1000;
-				buttonClose.TabNavigation = TabNavigationMode.ActivateOnTab;
+				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
 
 				this.ActiveBook("BookDocument");
@@ -358,7 +358,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			field.Name = name;
 			field.SelectedIndexChanged += new EventHandler(this.HandleComboSettingsChanged);
 			field.TabIndex = this.tabIndex++;
-			field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
 			field.Margins = new Margins (0, 0, 0, 0);
 			return field;
@@ -384,7 +384,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			field.Name = name;
 			field.ValueChanged += new EventHandler(this.HandleDoubleSettingsChanged);
 			field.TabIndex = this.tabIndex++;
-			field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
 			field.Margins = new Margins (0, 0, 0, 0);
 			return field;
@@ -398,7 +398,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			check.Name = name;
 			check.Clicked +=new MessageEventHandler(this.HandleCheckSettingsClicked);
 			check.TabIndex = this.tabIndex++;
-			check.TabNavigation = TabNavigationMode.ActivateOnTab;
+			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			check.Dock = DockStyle.Top;
 			check.Margins = new Margins (10+100, 0, 0, 5);
 			return check;

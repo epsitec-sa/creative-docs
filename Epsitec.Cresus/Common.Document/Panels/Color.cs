@@ -16,7 +16,7 @@ namespace Epsitec.Common.Document.Panels
 			this.field.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
 			this.field.Changed += new EventHandler(this.HandleFieldColorChanged);
 			this.field.TabIndex = 1;
-			this.field.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.field, Res.Strings.Panel.Color.Tooltip.Main);
 		}
 		

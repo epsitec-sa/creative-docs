@@ -82,7 +82,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.filterLabel.TextChanged += new EventHandler(this.HandleFilterTextChanged);
 				this.filterLabel.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFilterKeyboardFocusChanged);
 				this.filterLabel.TabIndex = tabIndex++;
-				this.filterLabel.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.filterLabel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.filterLabel.Dock = DockStyle.Left;
 				this.filterLabel.Margins = new Margins(0, 1, 0, 0);
 
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.filterText.TextChanged += new EventHandler(this.HandleFilterTextChanged);
 				this.filterText.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFilterKeyboardFocusChanged);
 				this.filterText.TabIndex = tabIndex++;
-				this.filterText.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.filterText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.filterText.Dock = DockStyle.Left;
 				this.filterText.Margins = new Margins(0, 1, 0, 0);
 
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonClear.Text = Res.Strings.Dialog.ResourceSelector.Button.Clear;
 				this.buttonClear.PreferredSize = new Size(16, 20);
 				this.buttonClear.TabIndex = tabIndex++;
-				this.buttonClear.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonClear.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.buttonClear.Dock = DockStyle.Fill;
 				this.buttonClear.Clicked += new MessageEventHandler(this.HandleButtonClearClicked);
 
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 				this.array.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
 				this.array.TabIndex = tabIndex++;
-				this.array.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.array.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.array.Dock = DockStyle.Fill;
 
 				//	Boutons de fermeture.
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
 				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
 				this.buttonUse.TabIndex = tabIndex++;
-				this.buttonUse.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonUse.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonCreate = new Button(footer);
 				this.buttonCreate.PreferredWidth = 75;
@@ -137,7 +137,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCreate.Margins = new Margins(0, 6, 0, 0);
 				this.buttonCreate.Clicked += new MessageEventHandler(this.HandleButtonCreateClicked);
 				this.buttonCreate.TabIndex = tabIndex++;
-				this.buttonCreate.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonCreate.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonCancel = new Button(footer);
 				this.buttonCancel.PreferredWidth = 75;
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.Dock = DockStyle.Right;
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				this.buttonCancel.TabIndex = tabIndex++;
-				this.buttonCancel.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
 			this.ignoreChanged = true;

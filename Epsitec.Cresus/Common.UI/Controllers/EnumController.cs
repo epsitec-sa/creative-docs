@@ -163,7 +163,7 @@ namespace Epsitec.Common.UI.Controllers
 				this.combo.PreferredWidth = 40;
 
 				this.combo.TabIndex = 1;
-				this.combo.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.combo.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.combo.Dock = DockStyle.Stacked;
 
 				if (enumType != null)
@@ -278,7 +278,7 @@ namespace Epsitec.Common.UI.Controllers
 				this.combo.PreferredHeight = 22;
 
 				this.combo.TabIndex = 1;
-				this.combo.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.combo.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.combo.Dock = DockStyle.Stacked;
 
 				if (enumType != null)

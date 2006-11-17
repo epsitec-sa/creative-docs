@@ -26,7 +26,7 @@ namespace Epsitec.Common.Document.Panels
 				
 				this.fieldArray[i].TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
 				this.fieldArray[i].TabIndex = 1+i;
-				this.fieldArray[i].TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.fieldArray[i].TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				if ( i == 0 )
 				{
 					this.document.Modifier.AdaptTextFieldRealAngle(this.fieldArray[i].TextFieldReal);
@@ -61,21 +61,21 @@ namespace Epsitec.Common.Document.Panels
 			this.negativ = new CheckButton(this);
 			this.negativ.Text = Res.Strings.Panel.ModColor.Short.Negativ;
 			this.negativ.TabIndex = 10;
-			this.negativ.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.negativ.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.negativ.ActiveStateChanged += new EventHandler(this.HandleNegativChanged);
 			ToolTip.Default.SetToolTip(this.negativ, Res.Strings.Panel.ModColor.Tooltip.Negativ);
 
 			this.draft = new Button(this);
 			this.draft.Text = Res.Strings.Panel.ModColor.Short.Draft;
 			this.draft.TabIndex = 11;
-			this.draft.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.draft.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.draft.Clicked += new MessageEventHandler(this.HandleDraft);
 			ToolTip.Default.SetToolTip(this.draft, Res.Strings.Panel.ModColor.Tooltip.Draft);
 
 			this.reset = new Button(this);
 			this.reset.Text = Res.Strings.Panel.ModColor.Button.Reset;
 			this.reset.TabIndex = 12;
-			this.reset.TabNavigation = TabNavigationMode.ActivateOnTab;
+			this.reset.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.reset.Clicked += new MessageEventHandler(this.HandleReset);
 			ToolTip.Default.SetToolTip(this.reset, Res.Strings.Panel.ModColor.Tooltip.Reset);
 

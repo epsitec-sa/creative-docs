@@ -63,7 +63,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 				this.array.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
 				this.array.TabIndex = tabIndex++;
-				this.array.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.array.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.array.Dock = DockStyle.Fill;
 
 				//	Boutons de fermeture.
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOpen.Margins = new Margins(0, 6, 0, 0);
 				this.buttonOpen.Clicked += new MessageEventHandler(this.HandleButtonOpenClicked);
 				this.buttonOpen.TabIndex = tabIndex++;
-				this.buttonOpen.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonOpen.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonCancel = new Button(footer);
 				this.buttonCancel.PreferredWidth = 75;
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.Margins = new Margins(0, 6, 0, 0);
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				this.buttonCancel.TabIndex = tabIndex++;
-				this.buttonCancel.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
 			this.UpdateModules();

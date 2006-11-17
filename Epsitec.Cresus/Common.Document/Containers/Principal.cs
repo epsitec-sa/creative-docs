@@ -26,7 +26,7 @@ namespace Epsitec.Common.Document.Containers
 			this.detailButton.Dock = DockStyle.Top;
 			this.detailButton.Margins = new Margins(0, 0, 5, 5);
 			this.detailButton.TabIndex = 1;
-			this.detailButton.TabNavigation = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
+			this.detailButton.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 			this.detailButton.Clicked +=new MessageEventHandler(this.HandleDetailButtonClicked);
 
 			this.scrollable = new Scrollable();
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.Changed += new EventHandler(this.HandleColorSelectorChanged);
 			this.colorSelector.CloseClicked += new EventHandler(this.HandleColorSelectorClosed);
 			this.colorSelector.TabIndex = 100;
-			this.colorSelector.TabNavigation = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
+			this.colorSelector.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 			this.colorSelector.SetParent(this);
 			this.colorSelector.Visibility = false;
 		}
@@ -464,7 +464,7 @@ namespace Epsitec.Common.Document.Containers
 						{
 							double tm = (index == 1) ? 0 : panel.TopMargin;
 							panel.TabIndex = index++;
-							panel.TabNavigation = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
+							panel.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 							panel.Dock = DockStyle.Top;
 							panel.Margins = new Margins(0, 1, tm, -1);
 							panel.IsExtendedSize = this.document.Modifier.IsTextPanelExtended(panel);
@@ -507,7 +507,7 @@ namespace Epsitec.Common.Document.Containers
 					panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
 
 					panel.TabIndex = index++;
-					panel.TabNavigation = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
+					panel.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 					panel.Dock = DockStyle.Top;
 					panel.Margins = new Margins(0, 1, topMargin, -1);
 					panel.SetParent(this.scrollable.Panel);

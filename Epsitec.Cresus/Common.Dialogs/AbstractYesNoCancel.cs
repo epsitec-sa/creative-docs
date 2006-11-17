@@ -64,14 +64,14 @@ namespace Epsitec.Common.Dialogs
 			body.SetParent (this.window.Root);
 			body.SetManualBounds(new Drawing.Rectangle(8, 16+24+16, dx, dy));
 			body.TabIndex      = 1;
-			body.TabNavigation = TabNavigationMode.ForwardTabPassive;
+			body.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			
 			button1               = new Button (this.window.Root);
 			button1.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 3*75 - 3*8, 16, 75, button1.PreferredHeight));
 			button1.Text          = Widgets.Res.Strings.Dialog.Button.Yes;
 			button1.CommandObject = Dialog.ValidateDialogYesCommand;
 			button1.TabIndex      = 2;
-			button1.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			button1.ButtonStyle   = ButtonStyle.DefaultAccept;
 			
 			button2               = new Button (this.window.Root);
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Dialogs
 			button2.Text          = Widgets.Res.Strings.Dialog.Button.No;
 			button2.CommandObject = Dialog.ValidateDialogNoCommand;
 			button2.TabIndex      = 3;
-			button2.TabNavigation = TabNavigationMode.ActivateOnTab;
+			button2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
 			if (this.hide_cancel == false)
 			{
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Dialogs
 				button3.Name          = "Cancel";
 				button3.CommandObject = Dialog.QuitDialogCommand;
 				button3.TabIndex      = 4;
-				button3.TabNavigation = TabNavigationMode.ActivateOnTab;
+				button3.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				button3.ButtonStyle   = ButtonStyle.DefaultCancel;
 			}
 			

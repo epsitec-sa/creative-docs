@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.InternalState &= ~InternalState.PossibleContainer;
 
-			this.TabNavigation = TabNavigationMode.ForwardTabActive;
+			this.TabNavigationMode = TabNavigationMode.ForwardTabActive;
 
 			//	Partie inférieure, qui contiendra les pages.
 			this.pages = new Widget(this);

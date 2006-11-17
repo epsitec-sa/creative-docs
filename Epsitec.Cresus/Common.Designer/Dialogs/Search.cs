@@ -47,7 +47,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.fieldSearch = new TextFieldCombo(header1);
 				this.fieldSearch.Dock = DockStyle.Fill;
 				this.fieldSearch.TabIndex = tabIndex++;
-				this.fieldSearch.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.fieldSearch.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.fieldSearch.TextChanged += new EventHandler(this.HandleFieldSearchTextChanged);
 
 				Widget header2 = new Widget(this.window.Root);
@@ -64,7 +64,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.fieldReplace = new TextFieldCombo(header2);
 				this.fieldReplace.Dock = DockStyle.Fill;
 				this.fieldReplace.TabIndex = tabIndex++;
-				this.fieldReplace.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.fieldReplace.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				//	Partie principale.
 				Widget main = new Widget(this.window.Root);
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.groupStrings.Dock = DockStyle.Top;
 				this.groupStrings.Padding = new Margins(5, 5, 5, 5);
 				this.groupStrings.TabIndex = tabIndex++;
-				this.groupStrings.TabNavigation = TabNavigationMode.ForwardTabPassive;
+				this.groupStrings.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 				Viewers.Abstract.SearchCreateFilterGroup(this.groupStrings, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Strings);
 
@@ -94,7 +94,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.groupCaptions.Dock = DockStyle.Top;
 				this.groupCaptions.Padding = new Margins(5, 5, 5, 5);
 				this.groupCaptions.TabIndex = tabIndex++;
-				this.groupCaptions.TabNavigation = TabNavigationMode.ForwardTabPassive;
+				this.groupCaptions.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 				Viewers.Abstract.SearchCreateFilterGroup(this.groupCaptions, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Captions);
 
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkCase.Dock = DockStyle.Top;
 				this.checkCase.Margins = new Margins(0, 0, 0, 3);
 				this.checkCase.TabIndex = tabIndex++;
-				this.checkCase.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.checkCase.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.checkWord = new CheckButton(right);
 				this.checkWord.PreferredWidth = 130;
@@ -118,7 +118,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkWord.Dock = DockStyle.Top;
 				this.checkWord.Margins = new Margins(0, 0, 0, 3);
 				this.checkWord.TabIndex = tabIndex++;
-				this.checkWord.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.checkWord.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				//	Boutons de fermeture.
 				Widget footer2 = new Widget(this.window.Root);
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonSearchNext.Margins = new Margins(0, 6, 0, 0);
 				this.buttonSearchNext.Clicked += new MessageEventHandler(this.HandleButtonSearchClicked);
 				this.buttonSearchNext.TabIndex = tabIndex++;
-				this.buttonSearchNext.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonSearchNext.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonReplaceNext = new Button(footer2);
 				this.buttonReplaceNext.Name = "ReplaceNext";
@@ -145,7 +145,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonReplaceNext.Margins = new Margins(0, 6, 0, 0);
 				this.buttonReplaceNext.Clicked += new MessageEventHandler(this.HandleButtonReplaceClicked);
 				this.buttonReplaceNext.TabIndex = tabIndex++;
-				this.buttonReplaceNext.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonReplaceNext.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonReplaceAll = new Button(footer2);
 				this.buttonReplaceAll.Name = "ReplaceAll";
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonReplaceAll.Margins = new Margins(0, 6, 0, 0);
 				this.buttonReplaceAll.Clicked += new MessageEventHandler(this.HandleButtonReplaceAllClicked);
 				this.buttonReplaceAll.TabIndex = tabIndex++;
-				this.buttonReplaceAll.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonReplaceAll.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				Button buttonClose = new Button(footer2);
 				buttonClose.PreferredWidth = 75;
@@ -164,7 +164,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.Dock = DockStyle.Right;
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = tabIndex++;
-				buttonClose.TabNavigation = TabNavigationMode.ActivateOnTab;
+				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				Widget footer1 = new Widget(this.window.Root);
 				footer1.PreferredHeight = 22;
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonSearchPrev.Margins = new Margins(0, 6, 0, 0);
 				this.buttonSearchPrev.Clicked += new MessageEventHandler(this.HandleButtonSearchClicked);
 				this.buttonSearchPrev.TabIndex = tabIndex++;
-				this.buttonSearchPrev.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonSearchPrev.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonReplacePrev = new Button(footer1);
 				this.buttonReplacePrev.Name = "ReplacePrev";
@@ -189,7 +189,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonReplacePrev.Margins = new Margins(0, 6, 0, 0);
 				this.buttonReplacePrev.Clicked += new MessageEventHandler(this.HandleButtonReplaceClicked);
 				this.buttonReplacePrev.TabIndex = tabIndex++;
-				this.buttonReplacePrev.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonReplacePrev.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonCount = new Button(footer1);
 				this.buttonCount.Name = "Count";
@@ -199,7 +199,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCount.Margins = new Margins(0, 6, 0, 0);
 				this.buttonCount.Clicked += new MessageEventHandler(this.HandleButtonCountClicked);
 				this.buttonCount.TabIndex = tabIndex++;
-				this.buttonCount.TabNavigation = TabNavigationMode.ActivateOnTab;
+				this.buttonCount.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.HandleFieldSearchTextChanged(null);
 				this.UpdateBundleType();

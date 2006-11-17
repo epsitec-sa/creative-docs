@@ -56,7 +56,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonOk.Margins = new Margins(0, 6, 0, 0);
 				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonFilterClicked);
 				buttonOk.TabIndex = tabIndex++;
-				buttonOk.TabNavigation = TabNavigationMode.ActivateOnTab;
+				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				Button buttonClose = new Button(footer);
 				buttonClose.PreferredWidth = 75;
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.Dock = DockStyle.Left;
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = tabIndex++;
-				buttonClose.TabNavigation = TabNavigationMode.ActivateOnTab;
+				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
 			this.UpdateList();
