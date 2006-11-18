@@ -5,8 +5,8 @@ namespace Epsitec.Cresus.Database
 {
 	[TestFixture] public class DbRichCommandTest
 	{
-#if false
-		[Test] public void Check01Select()
+		[Test]
+		public void Check01Select()
 		{
 			//	Tout ceci est provisoire !!! Les structures SQL ne devraient pas être exposées, seulement
 			//	leur variante Db... neutre. Cela va certainement migrer dans DbInfrastructure.
@@ -15,58 +15,50 @@ namespace Epsitec.Cresus.Database
 			ISqlBuilder sql_builder = infrastructure.DefaultSqlBuilder;
 			ISqlEngine  sql_engine  = infrastructure.DefaultSqlEngine;
 			
-			DbTable db_table_a = infrastructure.CreateDbTable ("Personnes", DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
-			DbTable db_table_b = infrastructure.CreateDbTable ("Domiciles", DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
+			DbTable db_table_a = infrastructure.CreateDbTable ("Personnes", DbElementCat.ManagedUserData, DbRevisionMode.Disabled);
+			DbTable db_table_b = infrastructure.CreateDbTable ("Domiciles", DbElementCat.ManagedUserData, DbRevisionMode.Disabled);
 			
-			DbType db_type_name = infrastructure.ResolveDbType ("CR_NameType");
-			DbType db_type_id   = infrastructure.ResolveDbType ("CR_KeyIdType");
-			DbType db_type_npa  = infrastructure.ResolveDbType ("CR_KeyStatusType");
+			DbTypeDef db_type_name = infrastructure.ResolveDbType (Tags.TypeName);
+			DbTypeDef db_type_id   = infrastructure.ResolveDbType (Tags.TypeKeyId);
+			DbTypeDef db_type_npa  = infrastructure.ResolveDbType (Tags.TypeKeyStatus);
+
+			db_table_a.Columns.Add (DbTable.CreateUserDataColumn ("Nom", db_type_name));
+			db_table_a.Columns.Add (DbTable.CreateUserDataColumn ("Prenom", db_type_name));
 			
-			db_table_a.Columns.Add (infrastructure.CreateColumn ("Nom", db_type_name));
-			db_table_a.Columns.Add (infrastructure.CreateColumn ("Prenom", db_type_name));
-			
-			db_table_b.Columns.AddRange (infrastructure.CreateRefColumns ("Personne", "Personnes", Nullable.Yes));
-			db_table_b.Columns.Add (infrastructure.CreateColumn ("Ville", db_type_name));
-			db_table_b.Columns.Add (infrastructure.CreateColumn ("NPA", db_type_npa, Nullable.No));
+			db_table_b.Columns.Add (DbTable.CreateRefColumn (infrastructure, "Personne", "Personnes", DbNullability.Yes));
+			db_table_b.Columns.Add (DbTable.CreateUserDataColumn ("Ville", db_type_name));
+			db_table_b.Columns.Add (DbTable.CreateUserDataColumn ("NPA", db_type_npa));
 			
 			Assert.AreEqual ("Personnes", db_table_b.Columns[3].TargetTableName);
 			
 			System.Console.Out.WriteLine ("Table {0} has {1} columns.", db_table_a.Name, db_table_a.Columns.Count);
 			System.Console.Out.WriteLine ("Table {0} has {1} columns.", db_table_b.Name, db_table_b.Columns.Count);
+
+			using (DbTransaction transaction = infrastructure.BeginTransaction ())
+			{
+				infrastructure.RegisterNewDbTable (transaction, db_table_a);
+				infrastructure.RegisterNewDbTable (transaction, db_table_b);
+
+				infrastructure.RegisterColumnRelations (transaction, db_table_a);
+				infrastructure.RegisterColumnRelations (transaction, db_table_b);
+				
+				transaction.Commit ();
+			}
 			
-			infrastructure.RegisterNewDbTable (db_table_a);
-			infrastructure.RegisterNewDbTable (db_table_b);
-			
-			infrastructure.RegisterColumnRelations (db_table_a);
-			infrastructure.RegisterColumnRelations (db_table_b);
-			
-			SqlSelect select_a = new SqlSelect ();
-			SqlSelect select_b = new SqlSelect ();
-			
-			select_a.Fields.Add (SqlField.CreateAll ());
-			select_b.Fields.Add (SqlField.CreateAll ());
-			
-			select_a.Tables.Add ("A", SqlField.CreateName (db_table_a.CreateSqlName ()));
-			select_b.Tables.Add ("B", SqlField.CreateName (db_table_b.CreateSqlName ()));
-			
-			DbRichCommand command = new DbRichCommand (infrastructure);
-			
-			sql_builder.SelectData (select_a);
-			System.Data.IDbCommand command_a = sql_builder.Command;
-			
-			sql_builder.SelectData (select_b);
-			System.Data.IDbCommand command_b = sql_builder.Command;
-			
-			command.Commands.Add (command_a);
-			command.Commands.Add (command_b);
-			
-			command.Tables.Add (db_table_a);
-			command.Tables.Add (db_table_b);
-			
-			infrastructure.Execute (null, command);
-			
-			DbRichCommand.RelaxConstraints (command.DataSet.Tables["Personnes"]);
-			DbRichCommand.RelaxConstraints (command.DataSet.Tables["Domiciles"]);
+			DbSelectCondition condition_a = new DbSelectCondition (infrastructure.Converter, DbSelectRevision.LiveActive);
+			DbSelectCondition condition_b = new DbSelectCondition (infrastructure.Converter, DbSelectRevision.LiveActive);
+
+			DbTable[] tables = new DbTable[] { db_table_a, db_table_b };
+			DbSelectCondition[] conditions = new DbSelectCondition[] { condition_a, condition_b };
+
+			DbRichCommand command;
+
+			using (DbTransaction transaction = infrastructure.BeginTransaction ())
+			{
+				command = DbRichCommand.CreateFromTables (infrastructure, transaction, tables, conditions);
+				
+				transaction.Commit ();
+			}
 			
 			System.Console.Out.WriteLine ("Tables : {0}", command.DataSet.Tables.Count);
 			
@@ -79,7 +71,7 @@ namespace Epsitec.Cresus.Database
 				System.Console.Out.WriteLine ("Table {0} has {1} columns:", table.TableName, table.Columns.Count);
 				foreach (System.Data.DataColumn column in table.Columns)
 				{
-					System.Console.Out.WriteLine ("  {0} {1} {2}", column.ColumnName, column.Unique, column.DataType);
+					System.Console.Out.WriteLine ("  {0} {1} {2}", column.ColumnName, column.Unique ? "- unique -" : "-", column.DataType);
 				}
 			}
 			
@@ -88,14 +80,15 @@ namespace Epsitec.Cresus.Database
 			
 			System.Data.DataRow row_p1, row_p2, row_p3;
 			System.Data.DataRow row_d1, row_d2, row_d3, row_d4;
-			
-			command.CreateNewRow ("Personnes", out row_p1);
-			command.CreateNewRow ("Personnes", out row_p2);
-			command.CreateNewRow ("Personnes", out row_p3);
-			command.CreateNewRow ("Domiciles", out row_d1);
-			command.CreateNewRow ("Domiciles", out row_d2);
-			command.CreateNewRow ("Domiciles", out row_d3);
-			command.CreateNewRow ("Domiciles", out row_d4);
+
+			row_p1 = command.CreateRow ("Personnes");
+			row_p2 = command.CreateRow ("Personnes");
+			row_p3 = command.CreateRow ("Personnes");
+
+			row_d1 = command.CreateRow ("Domiciles");
+			row_d2 = command.CreateRow ("Domiciles");
+			row_d3 = command.CreateRow ("Domiciles");
+			row_d4 = command.CreateRow ("Domiciles");
 			
 			row_p1.BeginEdit (); row_p1["Nom"] = "Arnaud";   row_p1["Prenom"] = "Pierre"; row_p1.EndEdit ();
 			row_p2.BeginEdit (); row_p2["Nom"] = "Dumoulin"; row_p2["Prenom"] = "Denis";  row_p2.EndEdit ();
@@ -106,14 +99,9 @@ namespace Epsitec.Cresus.Database
 			row_d3.BeginEdit (); row_d3["Ville"] = "Saverne";  row_d3["NPA"] = 9999; row_d3["Personne"] = row_p2["CR_ID"]; row_d3.EndEdit ();
 			row_d4.BeginEdit (); row_d4["Ville"] = "Crissier"; row_d4["NPA"] = 1023; row_d4["Personne"] = row_p3["CR_ID"]; row_d4.EndEdit ();
 			
-			DbInfrastructureTest.DisplayDataSet (infrastructure, ado_table_a.TableName, ado_table_a);
-			DbInfrastructureTest.DisplayDataSet (infrastructure, ado_table_b.TableName, ado_table_b);
-			
 			using (DbTransaction transaction = infrastructure.BeginTransaction ())
 			{
-				command.UpdateLogIds ();
-				command.UpdateRealIds (transaction);
-				command.UpdateTables (transaction);
+				command.SaveTables (transaction);
 				transaction.Commit ();
 			}
 			
@@ -126,30 +114,31 @@ namespace Epsitec.Cresus.Database
 			
 			infrastructure.Dispose ();
 		}
-		
-		[Test] public void Check02CreateEmptyDataSet()
+
+		[Test]
+		public void Check02CreateEmptyDataSet()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			
 			DbTable db_table_a = infrastructure.ResolveDbTable ("Personnes");
 			DbTable db_table_b = infrastructure.ResolveDbTable ("Domiciles");
 			
-			DbType db_type_name = infrastructure.ResolveDbType ("CR_NameType");
-			DbType db_type_id   = infrastructure.ResolveDbType ("CR_KeyIdType");
+			DbTypeDef db_type_name = infrastructure.ResolveDbType (Tags.TypeName);
+			DbTypeDef db_type_id   = infrastructure.ResolveDbType (Tags.TypeKeyId);
 			
 			Assert.AreEqual (5, db_table_a.Columns.Count);
 			Assert.AreEqual (6, db_table_b.Columns.Count);
 			
 			Assert.AreEqual ("Nom",    db_table_a.Columns[3].Name);
 			Assert.AreEqual ("Prenom", db_table_a.Columns[4].Name);
-			Assert.AreEqual (db_type_name.InternalKey,  db_table_a.Columns[3].Type.InternalKey);
+			Assert.AreEqual (db_type_name.Key,  db_table_a.Columns[3].Type.Key);
 			
 			Assert.AreEqual ("Personne", db_table_b.Columns[3].Name);
 			Assert.AreEqual (DbColumnClass.RefId, db_table_b.Columns[3].ColumnClass);
 			Assert.AreEqual ("Personnes", db_table_b.Columns[3].TargetTableName);
 			
 			Assert.AreEqual ("Ville", db_table_b.Columns[4].Name);
-			Assert.AreEqual (db_type_name.InternalKey, db_table_b.Columns[4].Type.InternalKey);
+			Assert.AreEqual (db_type_name.Key, db_table_b.Columns[4].Type.Key);
 			
 			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, null, db_table_a, db_table_b);
 			
@@ -164,6 +153,7 @@ namespace Epsitec.Cresus.Database
 			infrastructure.Dispose ();
 		}
 		
+#if false		
 		[Test] public void Check03CreateNewRow()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);

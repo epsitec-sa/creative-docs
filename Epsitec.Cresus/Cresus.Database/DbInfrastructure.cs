@@ -1048,7 +1048,9 @@ namespace Epsitec.Cresus.Database
 
 		/// <summary>
 		/// Registers a table for this database. This creates both the metadata and
-		/// the database table itself (if needed).
+		/// the database table itself (if needed), but does not initialize the
+		/// relations between the columns and their target tables. See also the
+		/// <see cref="RegisterColumnRelations"/> method.
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="table">The table.</param>
@@ -2212,7 +2214,9 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Inserts a column definition row into the CR_COLUMN_DEF table.
+		/// Inserts a column definition row into the CR_COLUMN_DEF table. This
+		/// does not generate the relation between the column and the target
+		/// table, if any.
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="table">The table definition.</param>

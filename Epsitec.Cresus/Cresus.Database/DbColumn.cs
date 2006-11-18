@@ -579,12 +579,12 @@ namespace Epsitec.Cresus.Database
 			if (typeConverter.CheckNativeSupport (rawType))
 			{
 				column = new SqlColumn ();
-				column.SetType (rawType, this.Type.Length, this.Type.IsFixedLength);
+				column.SetType (rawType, this.Type.Length, this.Type.IsFixedLength, DbCharacterEncoding.Unicode);
 			}
 			else if (typeConverter.GetRawTypeConverter (rawType, out rawConverter))
 			{
 				column = new SqlColumn ();
-				column.SetType (rawConverter.InternalType, rawConverter.Length, rawConverter.IsFixedLength);
+				column.SetType (rawConverter.InternalType, rawConverter.Length, rawConverter.IsFixedLength, rawConverter.Encoding);
 			}
 			else
 			{

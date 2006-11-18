@@ -48,6 +48,15 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Gets the character encoding.
+		/// </summary>
+		/// <value>The character encoding.</value>
+		DbCharacterEncoding Encoding
+		{
+			get;
+		}
+
+		/// <summary>
 		/// Converts the value from the external raw type to its internal representation.
 		/// </summary>
 		/// <param name="value">The value.</param>

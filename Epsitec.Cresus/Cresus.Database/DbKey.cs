@@ -352,6 +352,11 @@ namespace Epsitec.Cresus.Database
 			row[Tags.ColumnStatus] = (short) status;
 		}
 
+		/// <summary>
+		/// Defines the id and status of the key based on object values.
+		/// </summary>
+		/// <param name="valueId">The id value (<c>long</c>).</param>
+		/// <param name="valueStatus">The status value (<c>short</c>).</param>
 		private void DefineIdAndStatus(object valueId, object valueStatus)
 		{
 			long id;

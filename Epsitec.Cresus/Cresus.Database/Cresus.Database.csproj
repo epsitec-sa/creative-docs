@@ -126,6 +126,7 @@
     <Compile Include="Collections\SqlFields.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DbCharacterEncoding.cs" />
     <Compile Include="SqlSelectSetOp.cs" />
     <Compile Include="SqlSelectPredicate.cs" />
     <Compile Include="SqlJoinCode.cs" />

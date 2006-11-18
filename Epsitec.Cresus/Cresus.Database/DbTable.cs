@@ -714,16 +714,17 @@ namespace Epsitec.Cresus.Database
 		/// Creates a foreign key reference column pointing to the specified target
 		/// table.
 		/// </summary>
+		/// <param name="infrastructure">The database infrastructure.</param>
 		/// <param name="columnName">Name of the column.</param>
 		/// <param name="targetTableName">Name of the target table.</param>
 		/// <param name="nullability">The column nullability.</param>
 		/// <returns>The column.</returns>
-		public static DbColumn CreateRefColumn(string columnName, string targetTableName, DbNullability nullability)
+		public static DbColumn CreateRefColumn(DbInfrastructure infrastructure, string columnName, string targetTableName, DbNullability nullability)
 		{
 			System.Diagnostics.Debug.Assert (nullability != DbNullability.Undefined);
 			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (targetTableName));
 
-			DbTypeDef  type = new DbTypeDef (nullability == DbNullability.Yes ? Res.Types.Num.NullableKeyId : Res.Types.Num.KeyId);
+			DbTypeDef  type = infrastructure.ResolveDbType (nullability == DbNullability.Yes ? Tags.TypeNullableKeyId : Tags.TypeKeyId);
 			DbColumn column = new DbColumn (columnName, type, DbColumnClass.RefId, DbElementCat.ManagedUserData);
 
 			column.DefineTargetTableName (targetTableName);

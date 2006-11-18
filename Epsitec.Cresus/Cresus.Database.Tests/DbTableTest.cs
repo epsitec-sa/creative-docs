@@ -97,10 +97,10 @@ namespace Epsitec.Cresus.Database
 		public void CheckForeignKeys()
 		{
 			DbTable table = new DbTable ("Test");
-			
-			DbColumn column_1 = DbTable.CreateRefColumn ("A", "ParentTable", DbNullability.Yes);
+
+			DbColumn column_1 = DbTable.CreateRefColumn (this.infrastructure, "A", "ParentTable", DbNullability.Yes);
 			DbColumn column_2 = DbTable.CreateUserDataColumn ("X", new DbTypeDef (new Epsitec.Common.Types.DecimalType (-999999999.999999999M, 999999999.999999999M, 0.000000001M)));
-			DbColumn column_3 = DbTable.CreateRefColumn ("Z", "Customer", DbNullability.Yes);
+			DbColumn column_3 = DbTable.CreateRefColumn (this.infrastructure, "Z", "Customer", DbNullability.Yes);
 			
 			table.Columns.Add (column_1);
 			table.Columns.Add (column_2);

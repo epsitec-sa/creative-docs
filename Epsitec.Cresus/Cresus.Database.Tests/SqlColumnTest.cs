@@ -40,19 +40,19 @@ namespace Epsitec.Cresus.Database
 		[Test] [ExpectedException (typeof (System.ArgumentOutOfRangeException))] public void CheckEx1()
 		{
 			SqlColumn sql_col = new SqlColumn ();
-			sql_col.SetType (DbRawType.Int32, 2, true);
+			sql_col.SetType (DbRawType.Int32, 2, true, DbCharacterEncoding.Unicode);
 		}
 
 		[Test] [ExpectedException (typeof (System.ArgumentOutOfRangeException))] public void CheckEx2()
 		{
 			SqlColumn sql_col = new SqlColumn ();
-			sql_col.SetType (DbRawType.Int32, 1, false);
+			sql_col.SetType (DbRawType.Int32, 1, false, DbCharacterEncoding.Unicode);
 		}
 
 		[Test] [ExpectedException (typeof (System.ArgumentOutOfRangeException))] public void CheckEx3()
 		{
 			SqlColumn sql_col = new SqlColumn ();
-			sql_col.SetType (DbRawType.String, 0, false);
+			sql_col.SetType (DbRawType.String, 0, false, DbCharacterEncoding.Unicode);
 		}
 	}
 }

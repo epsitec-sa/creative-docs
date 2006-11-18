@@ -109,6 +109,14 @@ namespace Epsitec.Cresus.Database.Implementation
 					return true;
 				}
 			}
+
+			public DbCharacterEncoding			Encoding
+			{
+				get
+				{
+					return DbCharacterEncoding.Unicode;
+				}
+			}
 			
 			public object ConvertFromInternalType(object value)
 			{
@@ -187,7 +195,14 @@ namespace Epsitec.Cresus.Database.Implementation
 					return true;
 				}
 			}
-			
+
+			public DbCharacterEncoding Encoding
+			{
+				get
+				{
+					return DbCharacterEncoding.Ascii;
+				}
+			}
 			
 			public object ConvertFromInternalType(object value)
 			{

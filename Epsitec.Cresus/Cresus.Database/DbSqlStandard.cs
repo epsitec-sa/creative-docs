@@ -389,7 +389,6 @@ namespace Epsitec.Cresus.Database
 		public static string MakeDelimitedIdentifier(string name)
 		{
 			bool ok  = true;
-			bool bad = false;
 			
 			for (int i = 0; i < name.Length; i++)
 			{

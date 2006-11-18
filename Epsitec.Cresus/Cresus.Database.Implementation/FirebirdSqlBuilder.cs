@@ -1232,6 +1232,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			string basicType = null;
 			string length;
+			string encoding;
 
 			//	Construit le nom du type SQL en fonction de la description de la
 			//	colonne.
@@ -1265,7 +1266,8 @@ namespace Epsitec.Cresus.Database.Implementation
 
 				case DbRawType.String:
 					length    = column.Length.ToString (TypeConverter.InvariantFormatProvider);
-					basicType = (column.IsFixedLength ? "CHAR(" : "VARCHAR(") + length + ") CHARACTER SET UNICODE_FSS";
+					encoding  = column.Encoding == DbCharacterEncoding.Ascii ? "ASCII" : "UTF8";
+					basicType = (column.IsFixedLength ? "CHAR(" : "VARCHAR(") + length + ") CHARACTER SET " + encoding;
 					break;
 
 				case DbRawType.ByteArray:
