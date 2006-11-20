@@ -9,7 +9,7 @@ using Epsitec.Common.Types;
 
 [assembly: Controller (typeof (PlaceholderTest.Test1Controller))]
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.UI
 {
 	[TestFixture]
 	public class PlaceholderTest
@@ -51,20 +51,20 @@ namespace Epsitec.Common.Widgets
 		{
 			Window window = new Window ();
 
-			Layouts.GridLayoutEngine grid = new Layouts.GridLayoutEngine ();
+			Widgets.Layouts.GridLayoutEngine grid = new Widgets.Layouts.GridLayoutEngine ();
 
-			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition ());
-			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition (new Layouts.GridLength (40)));
-			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition ());
-			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition (new Layouts.GridLength (1, Layouts.GridUnitType.Proportional), 60, double.PositiveInfinity));
-			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition ()); // en trop
+			grid.ColumnDefinitions.Add (new Widgets.Layouts.ColumnDefinition ());
+			grid.ColumnDefinitions.Add (new Widgets.Layouts.ColumnDefinition (new Widgets.Layouts.GridLength (40)));
+			grid.ColumnDefinitions.Add (new Widgets.Layouts.ColumnDefinition ());
+			grid.ColumnDefinitions.Add (new Widgets.Layouts.ColumnDefinition (new Widgets.Layouts.GridLength (1, Widgets.Layouts.GridUnitType.Proportional), 60, double.PositiveInfinity));
+			grid.ColumnDefinitions.Add (new Widgets.Layouts.ColumnDefinition ()); // en trop
 
-			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
-			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
-			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
-			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
-			grid.RowDefinitions.Add (new Layouts.RowDefinition (new Layouts.GridLength (1, Layouts.GridUnitType.Proportional)));
-			//			grid.RowDefinitions.Add (new Layouts.RowDefinition ()); // en pas assez
+			grid.RowDefinitions.Add (new Widgets.Layouts.RowDefinition ());
+			grid.RowDefinitions.Add (new Widgets.Layouts.RowDefinition ());
+			grid.RowDefinitions.Add (new Widgets.Layouts.RowDefinition ());
+			grid.RowDefinitions.Add (new Widgets.Layouts.RowDefinition ());
+			grid.RowDefinitions.Add (new Widgets.Layouts.RowDefinition (new Widgets.Layouts.GridLength (1, Widgets.Layouts.GridUnitType.Proportional)));
+//			grid.RowDefinitions.Add (new Widgets.Layouts.RowDefinition ()); // en pas assez
 
 			grid.ColumnDefinitions[0].RightBorder = 1;
 
@@ -101,30 +101,30 @@ namespace Epsitec.Common.Widgets
 			placeholder1.Controller = "*";
 			placeholder1.PreferredHeight = 20;
 			placeholder1.TabIndex = 1;
-			Layouts.GridLayoutEngine.SetColumn (placeholder1, 0);
-			Layouts.GridLayoutEngine.SetRow (placeholder1, 1);
-			Layouts.GridLayoutEngine.SetColumnSpan (placeholder1, 4);
+			Widgets.Layouts.GridLayoutEngine.SetColumn (placeholder1, 0);
+			Widgets.Layouts.GridLayoutEngine.SetRow (placeholder1, 1);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan (placeholder1, 4);
 
 			placeholder2.Controller = "*";
 			placeholder2.PreferredHeight = 20;
 			placeholder2.TabIndex = 2;
-			Layouts.GridLayoutEngine.SetColumn (placeholder2, 0);
-			Layouts.GridLayoutEngine.SetRow (placeholder2, 2);
-			Layouts.GridLayoutEngine.SetColumnSpan (placeholder2, 4);
+			Widgets.Layouts.GridLayoutEngine.SetColumn (placeholder2, 0);
+			Widgets.Layouts.GridLayoutEngine.SetRow (placeholder2, 2);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan (placeholder2, 4);
 
 			placeholder3.Controller = "*";
 			placeholder3.PreferredHeight = 20;
 			placeholder3.TabIndex = 3;
-			Layouts.GridLayoutEngine.SetColumn (placeholder3, 0);
-			Layouts.GridLayoutEngine.SetRow (placeholder3, 3);
+			Widgets.Layouts.GridLayoutEngine.SetColumn (placeholder3, 0);
+			Widgets.Layouts.GridLayoutEngine.SetRow (placeholder3, 3);
 
 			placeholder4.Controller = "Enum";
 			placeholder4.ControllerParameter = "Combo";
 			placeholder4.PreferredHeight = 20;
 			placeholder4.TabIndex = 4;
-			Layouts.GridLayoutEngine.SetColumn (placeholder4, 2);
-			Layouts.GridLayoutEngine.SetRow (placeholder4, 3);
-			Layouts.GridLayoutEngine.SetColumnSpan (placeholder4, 2);
+			Widgets.Layouts.GridLayoutEngine.SetColumn (placeholder4, 2);
+			Widgets.Layouts.GridLayoutEngine.SetRow (placeholder4, 3);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan (placeholder4, 2);
 
 			Binding binding1 = new Binding (BindingMode.TwoWay, "Person.Name");
 			Binding binding2 = new Binding (BindingMode.TwoWay, "Person.Forename");
@@ -136,7 +136,7 @@ namespace Epsitec.Common.Widgets
 			placeholder3.SetBinding (Placeholder.ValueProperty, binding3);
 			placeholder4.SetBinding (Placeholder.ValueProperty, binding4);
 
-			Layouts.LayoutEngine.SetLayoutEngine (panel, grid);
+			Widgets.Layouts.LayoutEngine.SetLayoutEngine (panel, grid);
 
 			panel.Padding = new Drawing.Margins (8, 8, 5, 5);
 			panel.Dock = DockStyle.Fill;
@@ -156,8 +156,8 @@ namespace Epsitec.Common.Widgets
 			text.Margins = new Drawing.Margins (0, 0, 0, 0);
 			text.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
 			text.VerticalAlignment = VerticalAlignment.BaseLine;
-			Layouts.GridLayoutEngine.SetColumn (text, 0);
-			Layouts.GridLayoutEngine.SetRow (text, 0);
+			Widgets.Layouts.GridLayoutEngine.SetColumn (text, 0);
+			Widgets.Layouts.GridLayoutEngine.SetRow (text, 0);
 			panel.Children.Add (text);
 
 			text = new StaticText ();
@@ -168,16 +168,16 @@ namespace Epsitec.Common.Widgets
 			text.Margins = new Drawing.Margins (0, 0, 0, 0);
 			text.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
 			text.VerticalAlignment = VerticalAlignment.BaseLine;
-			Layouts.GridLayoutEngine.SetColumn (text, 1);
-			Layouts.GridLayoutEngine.SetRow (text, 0);
-			Layouts.GridLayoutEngine.SetColumnSpan (text, 3);
+			Widgets.Layouts.GridLayoutEngine.SetColumn (text, 1);
+			Widgets.Layouts.GridLayoutEngine.SetRow (text, 0);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan (text, 3);
 			panel.Children.Add (text);
 
 			text = new StaticText ();
 			text.PreferredHeight = 20;
-			Layouts.GridLayoutEngine.SetColumn (text, 0);
-			Layouts.GridLayoutEngine.SetRow (text, 5);
-			Layouts.GridLayoutEngine.SetColumnSpan (text, 4);
+			Widgets.Layouts.GridLayoutEngine.SetColumn (text, 0);
+			Widgets.Layouts.GridLayoutEngine.SetRow (text, 5);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan (text, 4);
 			panel.Children.Add (text);
 
 			StructureChangeListener listener = new StructureChangeListener (text);
@@ -195,21 +195,21 @@ namespace Epsitec.Common.Widgets
 		{
 			Window window = new Window ();
 
-			Layouts.GridLayoutEngine grid = new Layouts.GridLayoutEngine ();
+			Widgets.Layouts.GridLayoutEngine grid = new Widgets.Layouts.GridLayoutEngine ();
 
-			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition ());
-			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition (new Layouts.GridLength (40)));
-			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition ());
-			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition (new Layouts.GridLength (1, Layouts.GridUnitType.Proportional), 60, double.PositiveInfinity));
-			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition ()); // en trop
+			grid.ColumnDefinitions.Add (new Widgets.Layouts.ColumnDefinition ());
+			grid.ColumnDefinitions.Add (new Widgets.Layouts.ColumnDefinition (new Widgets.Layouts.GridLength (40)));
+			grid.ColumnDefinitions.Add (new Widgets.Layouts.ColumnDefinition ());
+			grid.ColumnDefinitions.Add (new Widgets.Layouts.ColumnDefinition (new Widgets.Layouts.GridLength (1, Widgets.Layouts.GridUnitType.Proportional), 60, double.PositiveInfinity));
+			grid.ColumnDefinitions.Add (new Widgets.Layouts.ColumnDefinition ()); // en trop
 
-			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
-			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
-			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
-			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
-			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
-			grid.RowDefinitions.Add (new Layouts.RowDefinition (new Layouts.GridLength (1, Layouts.GridUnitType.Proportional)));
-			//			grid.RowDefinitions.Add (new Layouts.RowDefinition ()); // en pas assez
+			grid.RowDefinitions.Add (new Widgets.Layouts.RowDefinition ());
+			grid.RowDefinitions.Add (new Widgets.Layouts.RowDefinition ());
+			grid.RowDefinitions.Add (new Widgets.Layouts.RowDefinition ());
+			grid.RowDefinitions.Add (new Widgets.Layouts.RowDefinition ());
+			grid.RowDefinitions.Add (new Widgets.Layouts.RowDefinition ());
+			grid.RowDefinitions.Add (new Widgets.Layouts.RowDefinition (new Widgets.Layouts.GridLength (1, Widgets.Layouts.GridUnitType.Proportional)));
+			//			grid.RowDefinitions.Add (new Widgets.Layouts.RowDefinition ()); // en pas assez
 
 			grid.ColumnDefinitions[0].RightBorder = 1;
 
@@ -248,42 +248,42 @@ namespace Epsitec.Common.Widgets
 			placeholder1.Controller = "*";
 			placeholder1.PreferredHeight = 20;
 			placeholder1.TabIndex = 1;
-			Layouts.GridLayoutEngine.SetColumn (placeholder1, 0);
-			Layouts.GridLayoutEngine.SetRow (placeholder1, 1);
-			Layouts.GridLayoutEngine.SetColumnSpan (placeholder1, 4);
+			Widgets.Layouts.GridLayoutEngine.SetColumn (placeholder1, 0);
+			Widgets.Layouts.GridLayoutEngine.SetRow (placeholder1, 1);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan (placeholder1, 4);
 
 			placeholder2.Controller = "*";
 			placeholder2.PreferredHeight = 20;
 			placeholder2.TabIndex = 2;
-			Layouts.GridLayoutEngine.SetColumn (placeholder2, 0);
-			Layouts.GridLayoutEngine.SetRow (placeholder2, 2);
-			Layouts.GridLayoutEngine.SetColumnSpan (placeholder2, 4);
+			Widgets.Layouts.GridLayoutEngine.SetColumn (placeholder2, 0);
+			Widgets.Layouts.GridLayoutEngine.SetRow (placeholder2, 2);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan (placeholder2, 4);
 
 			placeholder3.Controller = "Numeric";
 			placeholder3.PreferredHeight = 20;
 			placeholder3.TabIndex = 3;
-			Layouts.GridLayoutEngine.SetColumn (placeholder3, 0);
-			Layouts.GridLayoutEngine.SetRow (placeholder3, 3);
+			Widgets.Layouts.GridLayoutEngine.SetColumn (placeholder3, 0);
+			Widgets.Layouts.GridLayoutEngine.SetRow (placeholder3, 3);
 
 			placeholder4.Controller = "Enum";
 			placeholder4.ControllerParameter = "Combo";
 			placeholder4.PreferredHeight = 20;
 			placeholder4.TabIndex = 4;
-			Layouts.GridLayoutEngine.SetColumn (placeholder4, 2);
-			Layouts.GridLayoutEngine.SetRow (placeholder4, 3);
-			Layouts.GridLayoutEngine.SetColumnSpan (placeholder4, 2);
+			Widgets.Layouts.GridLayoutEngine.SetColumn (placeholder4, 2);
+			Widgets.Layouts.GridLayoutEngine.SetRow (placeholder4, 3);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan (placeholder4, 2);
 
 			placeholder5.Controller = "Numeric";
 			placeholder5.PreferredHeight = 20;
 			placeholder5.TabIndex = 5;
-			Layouts.GridLayoutEngine.SetColumn (placeholder5, 0);
-			Layouts.GridLayoutEngine.SetRow (placeholder5, 4);
+			Widgets.Layouts.GridLayoutEngine.SetColumn (placeholder5, 0);
+			Widgets.Layouts.GridLayoutEngine.SetRow (placeholder5, 4);
 
 			placeholder6.Controller = "Numeric";
 			placeholder6.PreferredHeight = 20;
 			placeholder6.TabIndex = 6;
-			Layouts.GridLayoutEngine.SetColumn (placeholder6, 2);
-			Layouts.GridLayoutEngine.SetRow (placeholder6, 4);
+			Widgets.Layouts.GridLayoutEngine.SetColumn (placeholder6, 2);
+			Widgets.Layouts.GridLayoutEngine.SetRow (placeholder6, 4);
 
 
 			Binding binding1 = new Binding (BindingMode.TwoWay, "Person.Name");
@@ -304,7 +304,7 @@ namespace Epsitec.Common.Widgets
 			placeholder5.SetBinding (Placeholder.ValueProperty, binding5);
 			placeholder6.SetBinding (Placeholder.ValueProperty, binding6);
 
-			Layouts.LayoutEngine.SetLayoutEngine (panel, grid);
+			Widgets.Layouts.LayoutEngine.SetLayoutEngine (panel, grid);
 
 			panel.Padding = new Drawing.Margins (8, 8, 5, 5);
 			panel.Dock = DockStyle.Fill;
@@ -326,8 +326,8 @@ namespace Epsitec.Common.Widgets
 			text.Margins = new Drawing.Margins (0, 0, 0, 0);
 			text.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
 			text.VerticalAlignment = VerticalAlignment.BaseLine;
-			Layouts.GridLayoutEngine.SetColumn (text, 0);
-			Layouts.GridLayoutEngine.SetRow (text, 0);
+			Widgets.Layouts.GridLayoutEngine.SetColumn (text, 0);
+			Widgets.Layouts.GridLayoutEngine.SetRow (text, 0);
 			panel.Children.Add (text);
 
 			text = new StaticText ();
@@ -338,16 +338,16 @@ namespace Epsitec.Common.Widgets
 			text.Margins = new Drawing.Margins (0, 0, 0, 0);
 			text.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
 			text.VerticalAlignment = VerticalAlignment.BaseLine;
-			Layouts.GridLayoutEngine.SetColumn (text, 1);
-			Layouts.GridLayoutEngine.SetRow (text, 0);
-			Layouts.GridLayoutEngine.SetColumnSpan (text, 3);
+			Widgets.Layouts.GridLayoutEngine.SetColumn (text, 1);
+			Widgets.Layouts.GridLayoutEngine.SetRow (text, 0);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan (text, 3);
 			panel.Children.Add (text);
 
 			text = new StaticText ();
 			text.PreferredHeight = 20;
-			Layouts.GridLayoutEngine.SetColumn (text, 0);
-			Layouts.GridLayoutEngine.SetRow (text, 5);
-			Layouts.GridLayoutEngine.SetColumnSpan (text, 4);
+			Widgets.Layouts.GridLayoutEngine.SetColumn (text, 0);
+			Widgets.Layouts.GridLayoutEngine.SetRow (text, 5);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan (text, 4);
 			panel.Children.Add (text);
 
 			StructureChangeListener listener = new StructureChangeListener (text);

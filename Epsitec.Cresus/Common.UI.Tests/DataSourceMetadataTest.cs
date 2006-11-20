@@ -20,7 +20,9 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckPanelMetadata()
 		{
+			Support.ResourceManager manager = Support.Resources.DefaultManager;
 			Panel panel = new Panel ();
+			panel.ResourceManager = manager;
 			DataSourceMetadata metadata = panel.DataSourceMetadata;
 			DataSource source = new DataSource ();
 
@@ -29,13 +31,16 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (metadata, panel.DataSource.Metadata);
 			Assert.AreEqual (metadata, panel.DataSource.GetStructuredType ());
 			
-			string xml = DataSourceMetadataTest.SerializeToString (panel);
-			
-			panel = DataSourceMetadataTest.DeserializePanelFromString (xml);
-			metadata = panel.DataSourceMetadata;
-			source = new DataSource ();
-			panel.DataSource = source;
+			string xml = Panel.SerializePanel (panel);
 
+			System.Console.Out.WriteLine (xml);
+
+			panel = Panel.DeserializePanel (xml, new DataSource (), manager);
+			metadata = panel.DataSourceMetadata;
+			source = panel.DataSource;
+
+			Assert.IsNotNull (metadata);
+			Assert.IsNotNull (source);
 			Assert.AreEqual (panel.DataSource.GetStructuredType (), panel.DataSource.Metadata);
 		}
 
@@ -65,17 +70,20 @@ namespace Epsitec.Common.UI
 		public void CheckSerializationWithPanel()
 		{
 			string xml;
+			Support.ResourceManager manager = Support.Resources.DefaultManager;
 			Panel panel = new Panel ();
+			panel.ResourceManager = manager;
+			panel.DataSource = new DataSource ();
 			DataSourceMetadata metadata = panel.DataSourceMetadata;
 
 			metadata.Fields.Add (new StructuredTypeField ("Name", StringType.Default));
 			metadata.Fields.Add (new StructuredTypeField ("Price", DecimalType.Default));
 
-			xml = DataSourceMetadataTest.SerializeToString (panel);
+			xml = Panel.SerializePanel (panel);
 
 			System.Console.Out.WriteLine (xml);
 
-			Panel panelCopy = DataSourceMetadataTest.DeserializePanelFromString (xml);
+			Panel panelCopy = Panel.DeserializePanel (xml, new DataSource (), manager);
 			DataSourceMetadata copy = panelCopy.DataSourceMetadata;
 
 			Assert.AreEqual (metadata.Fields.Count, copy.Fields.Count);
@@ -97,16 +105,6 @@ namespace Epsitec.Common.UI
 		private static DataSourceMetadata DeserializeMetadataFromString(string xml)
 		{
 			return Types.Serialization.SimpleSerialization.DeserializeFromString (xml, "metadata") as DataSourceMetadata;
-		}
-
-		private static string SerializeToString(Panel panel)
-		{
-			return Types.Serialization.SimpleSerialization.SerializeToString (panel, "panel", System.Xml.Formatting.Indented);
-		}
-
-		private static Panel DeserializePanelFromString(string xml)
-		{
-			return Types.Serialization.SimpleSerialization.DeserializeFromString (xml, "panel") as Panel;
 		}
 
 		#endregion

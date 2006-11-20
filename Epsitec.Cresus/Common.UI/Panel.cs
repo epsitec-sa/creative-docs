@@ -80,12 +80,7 @@ namespace Epsitec.Common.UI
 			{
 				if (this.dataSourceMetadata == null)
 				{
-					this.dataSourceMetadata = new DataSourceMetadata ();
-
-					if (this.dataSource != null)
-					{
-						this.dataSource.Metadata = this.dataSourceMetadata;
-					}
+					this.AttachDataSourceMetadata (new DataSourceMetadata ());
 				}
 				
 				return this.dataSourceMetadata;
@@ -254,7 +249,7 @@ namespace Epsitec.Common.UI
 			{
 				Panel.FillSerializationContext (context, dataSource, manager);
 
-				xmlWriter.Formatting = System.Xml.Formatting.None;
+				xmlWriter.Formatting = System.Xml.Formatting.Indented;
 				xmlWriter.WriteStartElement ("panel");
 
 				context.ActiveWriter.WriteAttributeStrings ();
@@ -429,6 +424,16 @@ namespace Epsitec.Common.UI
 
 			base.Dispose (disposing);
 		}
+
+		private void AttachDataSourceMetadata(DataSourceMetadata dataSourceMetadata)
+		{
+			this.dataSourceMetadata = dataSourceMetadata;
+
+			if (this.dataSource != null)
+			{
+				this.dataSource.Metadata = this.dataSourceMetadata;
+			}
+		}
 		
 		private void SyncDataContext()
 		{
@@ -479,7 +484,19 @@ namespace Epsitec.Common.UI
 		private static void SetDataSourceMetadataValue(DependencyObject obj, object value)
 		{
 			Panel panel = (Panel) obj;
-			panel.dataSourceMetadata = (DataSourceMetadata) value;
+			panel.AttachDataSourceMetadata ((DataSourceMetadata) value);
+		}
+
+		private static object GetDataSourceValue(DependencyObject obj)
+		{
+			Panel panel = (Panel) obj;
+			return panel.DataSource;
+		}
+
+		private static void SetDataSourceValue(DependencyObject obj, object value)
+		{
+			Panel panel = (Panel) obj;
+			panel.dataSource = (DataSource) value;
 		}
 
 		private static void NotifyPanelModeChanged(DependencyObject obj, object oldValue, object newValue)
@@ -531,6 +548,7 @@ namespace Epsitec.Common.UI
 
 		public static readonly DependencyProperty PanelProperty = DependencyProperty.RegisterAttached ("Panel", typeof (Panel), typeof (Panel));
 		public static readonly DependencyProperty DataSourceMetadataProperty = DependencyProperty.RegisterReadOnly ("DataSourceMetadata", typeof (DataSourceMetadata), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDataSourceMetadataValue, Panel.SetDataSourceMetadataValue).MakeReadOnlySerializable ());
+		public static readonly DependencyProperty DataSourceProperty = DependencyProperty.Register ("DataSource", typeof (DataSource), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDataSourceValue, Panel.SetDataSourceValue));
 		public static readonly DependencyProperty EditionPanelProperty = DependencyProperty.Register ("EditionPanel", typeof (Panels.EditPanel), typeof (Panel), new DependencyPropertyMetadata (Panel.GetEditionPanelValue, Panel.SetEditionPanelValue));
 		public static readonly DependencyProperty SearchPanelProperty  = DependencyProperty.Register ("SearchPanel", typeof (Panels.EditPanel), typeof (Panel), new DependencyPropertyMetadata (Panel.GetSearchPanelValue, Panel.SetSearchPanelValue));
 		
