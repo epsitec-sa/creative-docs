@@ -1594,8 +1594,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (type == ResourceAccess.Type.Panels)
 				{
-					Rectangle bounds = this.objectModifier.GetPreferredBounds(obj);
-					//	TODO: comment obtenir la taille selon le druid spécifié ?
+					UI.PanelPlaceholder panel = obj as UI.PanelPlaceholder;
+					Size size = panel.PanelPreferredSize;
+					Point center = this.objectModifier.GetPreferredBounds(obj).Center;
+
+					Rectangle bounds = new Rectangle(center-size/2, size);
 					this.objectModifier.SetPreferredBounds(obj, bounds);
 				}
 			}
