@@ -2,9 +2,12 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
+
+[assembly: DependencyClass (typeof (Placeholder))]
 
 namespace Epsitec.Common.UI
 {

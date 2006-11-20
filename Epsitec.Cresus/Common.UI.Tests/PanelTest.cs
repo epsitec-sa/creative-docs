@@ -162,6 +162,95 @@ namespace Epsitec.Common.UI
 		}
 
 		[Test]
+		public void CheckSampleDataSource()
+		{
+			StringType strType = new StringType ();
+			IntegerType intType = new IntegerType (1, 999);
+
+			strType.DefineDefaultValue ("");
+			strType.DefineSampleValue ("Abc");
+
+			intType.DefineDefaultValue (1);
+			intType.DefineSampleValue (123);
+
+			Panel panel = new Panel ();
+			DataSourceMetadata metadata = panel.DataSourceMetadata;
+
+			StructuredType recType = new StructuredType ();
+
+			recType.Fields.Add ("A", strType);
+			recType.Fields.Add ("B", intType);
+			recType.Fields.Add ("R", recType);
+
+			metadata.Fields.Add (new StructuredTypeField ("Record", recType));
+
+			string xml = Panel.SerializePanel (panel);
+
+			System.Console.Out.WriteLine (xml);
+
+			panel.SetupSampleDataSource ();
+
+			Assert.AreEqual ("Abc", StructuredTree.GetValue (panel.DataSource, "Record.A"));
+			Assert.AreEqual (123, StructuredTree.GetValue (panel.DataSource, "Record.B"));
+			Assert.AreEqual ("Abc", StructuredTree.GetValue (panel.DataSource, "Record.R.R.A"));
+		}
+
+		[Test]
+		public void CheckSampleDataSourceWithBinding()
+		{
+			StringType strType = new StringType ();
+			IntegerType intType = new IntegerType (1, 999);
+
+			strType.DefineDefaultValue ("");
+			strType.DefineSampleValue ("Abc");
+
+			intType.DefineDefaultValue (1);
+			intType.DefineSampleValue (123);
+
+			Panel panel = new Panel ();
+			DataSourceMetadata metadata = panel.DataSourceMetadata;
+
+			StructuredType recType = new StructuredType ();
+
+			recType.Fields.Add ("A", strType);
+			recType.Fields.Add ("B", intType);
+			recType.Fields.Add ("R", recType);
+
+			metadata.Fields.Add (new StructuredTypeField ("Record", recType));
+
+			Placeholder placeholder1 = new Placeholder ();
+			Placeholder placeholder2 = new Placeholder ();
+			Placeholder placeholder3 = new Placeholder ();
+
+			panel.Children.Add (placeholder1);
+			panel.Children.Add (placeholder2);
+			panel.Children.Add (placeholder3);
+
+			Assert.IsNull (panel.DataSource);
+			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (panel.DataSource, "Record.A"));
+			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (panel.DataSource, "Record.B"));
+			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (panel.DataSource, "Record.R"));
+
+			placeholder1.SetBinding (Placeholder.ValueProperty, new Binding (BindingMode.OneWay, "Record.A"));
+			placeholder2.SetBinding (Placeholder.ValueProperty, new Binding (BindingMode.OneWay, "Record.B"));
+			placeholder3.SetBinding (Placeholder.ValueProperty, new Binding (BindingMode.OneWay, "Record.R.R.A"));
+			
+			string xml = Panel.SerializePanel (panel);
+
+			System.Console.Out.WriteLine (xml);
+
+			panel.SetupSampleDataSource ();
+
+			Assert.AreEqual ("Abc", StructuredTree.GetValue (panel.DataSource, "Record.A"));
+			Assert.AreEqual (123, StructuredTree.GetValue (panel.DataSource, "Record.B"));
+			Assert.AreEqual ("Abc", StructuredTree.GetValue (panel.DataSource, "Record.R.R.A"));
+
+			Assert.AreEqual ("Abc", placeholder1.Value);
+			Assert.AreEqual (123, placeholder2.Value);
+			Assert.AreEqual ("Abc", placeholder3.Value);
+		}
+
+		[Test]
 		public void CheckSerialization()
 		{
 			Support.ResourceManager manager = new Support.ResourceManager ();

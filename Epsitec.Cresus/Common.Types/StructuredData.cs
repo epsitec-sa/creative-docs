@@ -159,7 +159,14 @@ namespace Epsitec.Common.Types
 			}
 			else if (this.values.TryGetValue (id, out value))
 			{
-				return value.Data;
+				if (UndefinedValue.IsUndefinedValue (value.Data))
+				{
+					return this.GetUndefinedValue (type, id);
+				}
+				else
+				{
+					return value.Data;
+				}
 			}
 			else
 			{
