@@ -253,7 +253,11 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckSampleDataSourceWithBindingRealTypes()
 		{
+			Support.ResourceManager manager = new Support.ResourceManager ();
+
 			Panel panel = new Panel ();
+			panel.ResourceManager = manager;
+			
 			DataSourceMetadata metadata = panel.DataSourceMetadata;
 
 			metadata.Fields.Add (new StructuredTypeField ("Person", Res.Types.Record.Person));
@@ -284,7 +288,26 @@ namespace Epsitec.Common.UI
 
 			System.Console.Out.WriteLine (xml);
 
+			Panel clone = Panel.DeserializePanel (xml, null, manager);
 			panel.SetupSampleDataSource ();
+
+			placeholder1.Value = "Pierre";
+			placeholder2.Value = "Arnaud";
+			placeholder3.Value = 1400;
+			placeholder4.Value = "Yverdon-les-Bains";
+
+			Assert.AreEqual ("Pierre", StructuredTree.GetValue (panel.DataSource, "Person.FirstName"));
+			Assert.AreEqual ("Arnaud", StructuredTree.GetValue (panel.DataSource, "Person.LastName"));
+			Assert.AreEqual (1400, StructuredTree.GetValue (panel.DataSource, "Person.Zip"));
+			Assert.AreEqual ("Yverdon-les-Bains", StructuredTree.GetValue (panel.DataSource, "Person.City"));
+
+			panel = clone;
+			panel.SetupSampleDataSource ();
+
+			placeholder1 = panel.Children[0] as Placeholder;
+			placeholder2 = panel.Children[1] as Placeholder;
+			placeholder3 = panel.Children[2] as Placeholder;
+			placeholder4 = panel.Children[3] as Placeholder;
 
 			Assert.AreEqual ("Abc", StructuredTree.GetValue (panel.DataSource, "Person.FirstName"));
 			Assert.AreEqual ("Abc", StructuredTree.GetValue (panel.DataSource, "Person.LastName"));

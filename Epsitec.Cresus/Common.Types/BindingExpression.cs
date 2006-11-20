@@ -600,7 +600,7 @@ namespace Epsitec.Common.Types
 		private void FindDataSourceRoot(out object sourceRoot, out string sourcePath)
 		{
 			sourceRoot = this.binding.Source;
-			sourcePath   = this.binding.Path;
+			sourcePath = this.binding.Path;
 
 			if (sourceRoot == null)
 			{
