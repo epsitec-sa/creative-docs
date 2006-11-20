@@ -51,6 +51,26 @@ namespace Epsitec.Common.UI
 		}
 
 		/// <summary>
+		/// Gets the preferred size of the embedded panel.
+		/// </summary>
+		/// <value>The preferred size of the embedded panel or <c>Drawing.Size.Empty</c>
+		/// if no panel is currently defined.</value>
+		public Drawing.Size PanelPreferredSize
+		{
+			get
+			{
+				if (this.panel == null)
+				{
+					return Drawing.Size.Empty;
+				}
+				else
+				{
+					return this.panel.PreferredSize;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Gets all panel ids within the specified widget hierarchy.
 		/// </summary>
 		/// <param name="root">The root widget.</param>
