@@ -66,6 +66,8 @@ namespace Epsitec.Common.UI
 					}
 
 					DataObject.SetDataContext (this, this.dataSourceBinding);
+
+					this.InvalidateProperty (Panel.DataSourceProperty, oldSource, newSource);
 				}
 			}
 		}
@@ -427,12 +429,17 @@ namespace Epsitec.Common.UI
 
 		private void AttachDataSourceMetadata(DataSourceMetadata dataSourceMetadata)
 		{
+			object oldValue = this.dataSourceMetadata;
+			object newValue = dataSourceMetadata;
+			
 			this.dataSourceMetadata = dataSourceMetadata;
 
 			if (this.dataSource != null)
 			{
 				this.dataSource.Metadata = this.dataSourceMetadata;
 			}
+
+			this.InvalidateProperty (Panel.DataSourceMetadataProperty, oldValue, newValue);
 		}
 		
 		private void SyncDataContext()
