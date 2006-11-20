@@ -431,9 +431,19 @@ namespace Epsitec.Common.Types
 			if (string.IsNullOrEmpty (systemTypeName))
 			{
 				//	This is not a simple type, based on one of the well known .NET
-				//	types :
+				//	types. The type definition was serialized and attached to the
+				//	caption as a complex object type :
 
 				type = AbstractType.GetComplexType (caption);
+
+				//	Re-bind the caption with the type, when needed (e.g. if the
+				//	serialization of the complex object type does not keep track
+				//	of the associated caption) :
+
+				if (type.IsCaptionDefined == false)
+				{
+					type.DefineCaption (caption);
+				}
 			}
 			else
 			{

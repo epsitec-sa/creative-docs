@@ -234,7 +234,7 @@ namespace Epsitec.Common.UI
 			placeholder1.SetBinding (Placeholder.ValueProperty, new Binding (BindingMode.OneWay, "Record.A"));
 			placeholder2.SetBinding (Placeholder.ValueProperty, new Binding (BindingMode.OneWay, "Record.B"));
 			placeholder3.SetBinding (Placeholder.ValueProperty, new Binding (BindingMode.OneWay, "Record.R.R.A"));
-			
+
 			string xml = Panel.SerializePanel (panel);
 
 			System.Console.Out.WriteLine (xml);
@@ -248,6 +248,53 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual ("Abc", placeholder1.Value);
 			Assert.AreEqual (123, placeholder2.Value);
 			Assert.AreEqual ("Abc", placeholder3.Value);
+		}
+
+		[Test]
+		public void CheckSampleDataSourceWithBindingRealTypes()
+		{
+			Panel panel = new Panel ();
+			DataSourceMetadata metadata = panel.DataSourceMetadata;
+
+			metadata.Fields.Add (new StructuredTypeField ("Person", Res.Types.Record.Person));
+
+			Placeholder placeholder1 = new Placeholder ();
+			Placeholder placeholder2 = new Placeholder ();
+			Placeholder placeholder3 = new Placeholder ();
+			Placeholder placeholder4 = new Placeholder ();
+
+			panel.Children.Add (placeholder1);
+			panel.Children.Add (placeholder2);
+			panel.Children.Add (placeholder3);
+			panel.Children.Add (placeholder4);
+
+			Assert.IsNull (panel.DataSource);
+			
+			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (panel.DataSource, "Person.FirstName"));
+			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (panel.DataSource, "Person.LastName"));
+			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (panel.DataSource, "Person.Zip"));
+			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (panel.DataSource, "Person.City"));
+
+			placeholder1.SetBinding (Placeholder.ValueProperty, new Binding (BindingMode.TwoWay, "Person.FirstName"));
+			placeholder2.SetBinding (Placeholder.ValueProperty, new Binding (BindingMode.TwoWay, "Person.LastName"));
+			placeholder3.SetBinding (Placeholder.ValueProperty, new Binding (BindingMode.TwoWay, "Person.Zip"));
+			placeholder4.SetBinding (Placeholder.ValueProperty, new Binding (BindingMode.TwoWay, "Person.City"));
+
+			string xml = Panel.SerializePanel (panel);
+
+			System.Console.Out.WriteLine (xml);
+
+			panel.SetupSampleDataSource ();
+
+			Assert.AreEqual ("Abc", StructuredTree.GetValue (panel.DataSource, "Person.FirstName"));
+			Assert.AreEqual ("Abc", StructuredTree.GetValue (panel.DataSource, "Person.LastName"));
+			Assert.AreEqual (1000, StructuredTree.GetValue (panel.DataSource, "Person.Zip"));
+			Assert.AreEqual ("Abc", StructuredTree.GetValue (panel.DataSource, "Person.City"));
+
+			Assert.AreEqual ("Abc", placeholder1.Value);
+			Assert.AreEqual ("Abc", placeholder2.Value);
+			Assert.AreEqual (1000, placeholder3.Value);
+			Assert.AreEqual ("Abc", placeholder4.Value);
 		}
 
 		[Test]

@@ -74,6 +74,28 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the caption is defined.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the caption is defined; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsCaptionDefined
+		{
+			get
+			{
+				if ((this.caption == null) &&
+					(this.captionId.IsEmpty))
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+			}
+		}
+
 
 		#region IName Members
 
