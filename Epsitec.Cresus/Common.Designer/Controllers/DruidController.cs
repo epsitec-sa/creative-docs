@@ -119,17 +119,52 @@ namespace Epsitec.Common.Designer.Controllers
 
 			Druid druid = Druid.Parse(this.druid);
 
-			IProxy sourceProxy = this.Placeholder.ValueBinding.Source as IProxy;
-			IEnumerable<Widget> sourceWidgets = sourceProxy.Widgets;
-			// TODO: exploiter ici les widgets sélectionnés...
-
 			if (this.parameter == "Caption")
 			{
 				druid = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Unknow, druid, null);
 			}
 			else
 			{
+#if false
+				//	TODO: ça ne marche pas, je pose les plaques !
+				List<Druid> exclude = new List<Druid>();
+
+				IProxy sourceProxy = this.Placeholder.ValueBinding.Source as IProxy;
+				IEnumerable<Widget> sourceWidgets = sourceProxy.Widgets;  // liste des objets sélectionnés
+				foreach (Widget obj in sourceWidgets)
+				{
+					ObjectModifier.ObjectType type = ObjectModifier.GetObjectType(obj);
+					if (type == ObjectModifier.ObjectType.Panel)
+					{
+						Widget parent = obj;
+						while (true)
+						{
+							parent = parent.Parent;
+							if (parent == null)
+							{
+								break;
+							}
+
+							type = ObjectModifier.GetObjectType(parent);
+							if (type == ObjectModifier.ObjectType.Unknow)
+							{
+								break;
+							}
+
+							if (type == ObjectModifier.ObjectType.Panel ||
+								type == ObjectModifier.ObjectType.Group)
+							{
+								Druid d = Druid.Parse(ObjectModifier.GetDruid(parent));
+								exclude.Add(d);
+							}
+						}
+					}
+				}
+
+				druid = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Panels, druid, exclude);
+#else
 				druid = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Panels, druid, null);
+#endif
 			}
 
 			this.druid = druid.ToString();

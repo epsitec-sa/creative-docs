@@ -63,16 +63,16 @@ namespace Epsitec.Common.Designer.Proxies
 			
 			//	Recopie localement les diverses propriétés du widget sélectionné
 			//	pour pouvoir ensuite travailler dessus :
-			if (this.ObjectModifier.HasDruid(this.DefaultWidget))
+			if (ObjectModifier.HasDruid(this.DefaultWidget))
 			{
 				ObjectModifier.ObjectType type = ObjectModifier.GetObjectType(this.DefaultWidget);
 				if (type == ObjectModifier.ObjectType.Panel)
 				{
-					this.DruidPanel = this.ObjectModifier.GetDruid(this.DefaultWidget);
+					this.DruidPanel = ObjectModifier.GetDruid(this.DefaultWidget);
 				}
 				else
 				{
-					this.DruidCaption = this.ObjectModifier.GetDruid(this.DefaultWidget);
+					this.DruidCaption = ObjectModifier.GetDruid(this.DefaultWidget);
 				}
 			}
 		}
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in this.Widgets)
 					{
-						this.ObjectModifier.SetDruid(obj, druid);
+						ObjectModifier.SetDruid(obj, druid);
 					}
 				}
 				finally

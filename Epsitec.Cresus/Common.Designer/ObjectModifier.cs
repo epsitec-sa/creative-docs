@@ -183,14 +183,14 @@ namespace Epsitec.Common.Designer
 
 
 		#region Druid
-		public bool HasDruid(Widget obj)
+		public static bool HasDruid(Widget obj)
 		{
 			//	Indique si l'objet a un druid.
 			ObjectType type = ObjectModifier.GetObjectType(obj);
 			return (type == ObjectType.Button || type == ObjectType.StaticText || type == ObjectType.GroupBox || type == ObjectType.Panel);
 		}
 
-		public void SetDruid(Widget obj, string druid)
+		public static void SetDruid(Widget obj, string druid)
 		{
 			//	Modifie le druid de l'objet.
 			Druid d = Druid.Parse(druid);
@@ -216,7 +216,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public string GetDruid(Widget obj)
+		public static string GetDruid(Widget obj)
 		{
 			//	Retourne le druid de l'objet.
 			Druid druid = Druid.Empty;

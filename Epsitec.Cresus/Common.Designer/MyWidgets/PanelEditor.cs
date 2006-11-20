@@ -1562,9 +1562,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 					type = ResourceAccess.Type.Captions;
 				}
 
-				Druid druid = Druid.Parse(this.objectModifier.GetDruid(obj));
+				Druid druid = Druid.Parse(ObjectModifier.GetDruid(obj));
 				druid = this.module.MainWindow.DlgResourceSelector(this.module, type, druid, exclude);
-				this.objectModifier.SetDruid(obj, druid.ToString());
+				ObjectModifier.SetDruid(obj, druid.ToString());
 
 				if (druid.IsEmpty)
 				{
