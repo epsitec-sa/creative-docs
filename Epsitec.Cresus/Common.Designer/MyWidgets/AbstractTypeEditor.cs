@@ -111,6 +111,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return "";
 		}
 
+		protected void PutSummaryDefaultAndSample(System.Text.StringBuilder builder, AbstractType type)
+		{
+			if (type.DefaultValue != null || type.SampleValue != null)
+			{
+				builder.Append("   —   ");
+
+				if (type.DefaultValue != null)
+				{
+					builder.Append("Défaut = ");
+					builder.Append(type.DefaultValue.ToString());
+				}
+
+				if (type.SampleValue != null)
+				{
+					if (type.DefaultValue != null)
+					{
+						builder.Append(", ");
+					}
+
+					builder.Append("Exemple = ");
+					builder.Append(type.SampleValue.ToString());
+				}
+			}
+		}
+
 
 		public void ClearCache()
 		{
@@ -206,6 +231,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 			field.Dock = DockStyle.Left;
 			field.TabIndex = 0;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+		}
+
+		protected object GetStringObject(TextField field)
+		{
+			if (string.IsNullOrEmpty(field.Text))
+			{
+				return null;
+			}
+			else
+			{
+				return field.Text;
+			}
+		}
+
+		protected void SetStringObject(TextField field, object value)
+		{
+			if (value == null)
+			{
+				field.Text = "";
+			}
+			else
+			{
+				field.Text = (string) value;
+			}
 		}
 
 		protected object GetDecimalObject(TextField field)

@@ -24,6 +24,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			group.Margins = new Margins(0, 0, 0, 10);
 			this.fieldMax.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
+			this.CreateStringLabeled("Chaîne par défaut", this, out group, out this.fieldDefault);
+			group.Dock = DockStyle.StackBegin;
+			group.Margins = new Margins(0, 0, 0, 2);
+			this.fieldDefault.PreferredWidth = 400;
+			this.fieldDefault.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+
+			this.CreateStringLabeled("Exemple de chaîne", this, out group, out this.fieldSample);
+			group.Dock = DockStyle.StackBegin;
+			group.Margins = new Margins(0, 0, 0, 10);
+			this.fieldSample.PreferredWidth = 400;
+			this.fieldSample.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+			
 			this.checkFixedLength = new CheckButton(this);
 			this.checkFixedLength.Text = Res.Strings.Viewers.Types.String.FixedLength;
 			this.checkFixedLength.Dock = DockStyle.StackBegin;
@@ -49,6 +61,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.fieldMin.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMax.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldDefault.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldSample.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.checkFixedLength.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
 				this.checkMultilingual.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
 			}
@@ -79,6 +93,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				builder.Append(", Multi");
 			}
 
+			this.PutSummaryDefaultAndSample(builder, type);
+
 			return builder.ToString();
 		}
 
@@ -91,6 +107,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.ignoreChange = true;
 			this.SetDecimal(this.fieldMin, type.MinimumLength);
 			this.SetDecimal(this.fieldMax, type.MaximumLength);
+			this.SetStringObject(this.fieldDefault, type.DefaultValue);
+			this.SetStringObject(this.fieldSample, type.SampleValue);
 			this.checkFixedLength.ActiveState = type.UseFixedLengthStorage ? ActiveState.Yes : ActiveState.No;
 			this.checkMultilingual.ActiveState = type.UseMultilingualStorage ? ActiveState.Yes : ActiveState.No;
 			this.ignoreChange = false;
@@ -115,6 +133,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (sender == this.fieldMax)
 			{
 				type.DefineMaximumLength((int) this.GetDecimal(this.fieldMax));
+			}
+
+			if (sender == this.fieldDefault)
+			{
+				type.DefineDefaultValue(this.GetStringObject(this.fieldDefault));
+			}
+
+			if (sender == this.fieldSample)
+			{
+				type.DefineSampleValue(this.GetStringObject(this.fieldSample));
 			}
 
 			//	[Note1] Cet appel va provoquer le ResourceAccess.SetField.
@@ -148,6 +176,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected TextField						fieldMin;
 		protected TextField						fieldMax;
+		protected TextField						fieldDefault;
+		protected TextField						fieldSample;
 		protected CheckButton					checkFixedLength;
 		protected CheckButton					checkMultilingual;
 	}

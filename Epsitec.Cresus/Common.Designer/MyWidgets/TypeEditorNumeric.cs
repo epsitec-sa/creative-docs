@@ -154,27 +154,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			builder.Append(", Grand pas = ");
 			builder.Append(type.LargeStep.ToString());
 
-			if (type.DefaultValue != null || type.SampleValue != null)
-			{
-				builder.Append("   —   ");
-
-				if (type.DefaultValue != null)
-				{
-					builder.Append("Défaut = ");
-					builder.Append(type.DefaultValue.ToString());
-				}
-
-				if (type.SampleValue != null)
-				{
-					if (type.DefaultValue != null)
-					{
-						builder.Append(", ");
-					}
-
-					builder.Append("Exemple = ");
-					builder.Append(type.SampleValue.ToString());
-				}
-			}
+			this.PutSummaryDefaultAndSample(builder, type);
 
 			if (type.UseCompactStorage)
 			{
