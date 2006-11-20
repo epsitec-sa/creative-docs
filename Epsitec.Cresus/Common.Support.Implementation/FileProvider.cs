@@ -263,6 +263,13 @@ namespace Epsitec.Common.Support.Implementation
 
 		private static int GetModuleId(string path)
 		{
+			string fileName = System.IO.Path.Combine (path, "module.info");
+			
+			if (!System.IO.File.Exists (fileName))
+			{
+				return -1;
+			}
+			
 			int moduleId = -1;
 			try
 			{
@@ -271,7 +278,7 @@ namespace Epsitec.Common.Support.Implementation
 				//	identifier :
 
 				System.Xml.XmlDocument xml = new System.Xml.XmlDocument ();
-				xml.Load (System.IO.Path.Combine (path, "module.info"));
+				xml.Load (fileName);
 				System.Xml.XmlElement root = xml.DocumentElement;
 
 				if (root.Name == "ModuleInfo")
