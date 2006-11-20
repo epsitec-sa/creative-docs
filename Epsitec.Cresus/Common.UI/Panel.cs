@@ -575,6 +575,13 @@ namespace Epsitec.Common.UI
 			else
 			{
 				obj.SetValue (Panel.PanelProperty, panel);
+
+				Support.ResourceBundle bundle = obj as Support.ResourceBundle;
+
+				if (bundle != null)
+				{
+					Panel.SetBundleId (panel, bundle.Id);
+				}
 			}
 		}
 
@@ -583,7 +590,25 @@ namespace Epsitec.Common.UI
 			return (Panel) obj.GetValue (Panel.PanelProperty);
 		}
 
+		public static void SetBundleId(DependencyObject obj, Support.Druid id)
+		{
+			if (id.IsEmpty)
+			{
+				obj.ClearValue (Panel.BundleIdProperty);
+			}
+			else
+			{
+				obj.SetValue (Panel.BundleIdProperty, id);
+			}
+		}
+
+		public static Support.Druid GetBundleId(DependencyObject obj)
+		{
+			return (Support.Druid) obj.GetValue (Panel.BundleIdProperty);
+		}
+
 		public static readonly DependencyProperty PanelProperty = DependencyProperty.RegisterAttached ("Panel", typeof (Panel), typeof (Panel));
+		public static readonly DependencyProperty BundleIdProperty = DependencyProperty.RegisterAttached ("BundleId", typeof (Support.Druid), typeof (Panel), new DependencyPropertyMetadata (Support.Druid.Empty));
 		public static readonly DependencyProperty DataSourceMetadataProperty = DependencyProperty.RegisterReadOnly ("DataSourceMetadata", typeof (DataSourceMetadata), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDataSourceMetadataValue, Panel.SetDataSourceMetadataValue).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty DataSourceProperty = DependencyProperty.Register ("DataSource", typeof (DataSource), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDataSourceValue, Panel.SetDataSourceValue));
 		public static readonly DependencyProperty EditionPanelProperty = DependencyProperty.Register ("EditionPanel", typeof (Panels.EditPanel), typeof (Panel), new DependencyPropertyMetadata (Panel.GetEditionPanelValue, Panel.SetEditionPanelValue));
