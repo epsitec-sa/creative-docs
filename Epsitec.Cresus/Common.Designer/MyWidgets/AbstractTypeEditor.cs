@@ -208,6 +208,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 		}
 
+		protected object GetDecimalObject(TextField field)
+		{
+			if (string.IsNullOrEmpty(field.Text))
+			{
+				return null;
+			}
+			else
+			{
+				return this.GetDecimal(field);
+			}
+		}
+
+		protected void SetDecimalObject(TextField field, object value)
+		{
+			if (value == null)
+			{
+				field.Text = "";
+			}
+			else
+			{
+				this.SetDecimal(field, (decimal) value);
+			}
+		}
+
 		protected decimal GetDecimal(TextField field)
 		{
 			decimal value;

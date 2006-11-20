@@ -73,6 +73,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 			group.Margins = new Margins(0, 0, 0, 0);
 			this.fieldLargeStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
+			//	Default et Sample.
+			this.CreateDecimalLabeled("Valeur par défaut", left, out group, out this.fieldDefault);
+			group.Dock = DockStyle.StackBegin;
+			group.Margins = new Margins(0, 0, 10, 2);
+			this.fieldDefault.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+
+			this.CreateDecimalLabeled("Exemple de valeur", left, out group, out this.fieldSample);
+			group.Dock = DockStyle.StackBegin;
+			group.Margins = new Margins(0, 0, 0, 0);
+			this.fieldSample.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+
 			this.checkCompactStorage = new CheckButton(right);
 			this.checkCompactStorage.Text = Res.Strings.Viewers.Types.Numeric.CompactStorage;
 			this.checkCompactStorage.Dock = DockStyle.StackBegin;
@@ -100,6 +111,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.fieldSmallStep.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldLargeStep.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+
+				this.fieldDefault.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldSample.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 
 				this.checkCompactStorage.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
 			}
@@ -139,6 +153,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 			builder.Append(type.SmallStep.ToString());
 			builder.Append(", Grand pas = ");
 			builder.Append(type.LargeStep.ToString());
+
+			if (type.DefaultValue != null || type.SampleValue != null)
+			{
+				builder.Append("   —   ");
+
+				if (type.DefaultValue != null)
+				{
+					builder.Append("Défaut = ");
+					builder.Append(type.DefaultValue.ToString());
+				}
+
+				if (type.SampleValue != null)
+				{
+					if (type.DefaultValue != null)
+					{
+						builder.Append(", ");
+					}
+
+					builder.Append("Exemple = ");
+					builder.Append(type.SampleValue.ToString());
+				}
+			}
 
 			if (type.UseCompactStorage)
 			{
@@ -184,6 +220,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.SetDecimal(this.fieldSmallStep, type.SmallStep);
 			this.SetDecimal(this.fieldLargeStep, type.LargeStep);
+
+			this.SetDecimalObject(this.fieldDefault, type.DefaultValue);
+			this.SetDecimalObject(this.fieldSample, type.SampleValue);
 
 			this.checkCompactStorage.ActiveState = type.UseCompactStorage ? ActiveState.Yes : ActiveState.No;
 
@@ -252,6 +291,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 				type.DefineLargeStep(this.GetDecimal(this.fieldLargeStep));
 			}
 
+			if (sender == this.fieldDefault)
+			{
+				type.DefineDefaultValue(this.GetDecimalObject(this.fieldDefault));
+			}
+
+			if (sender == this.fieldSample)
+			{
+				type.DefineSampleValue(this.GetDecimalObject(this.fieldSample));
+			}
+
 			if (min == 0 && max == 0 && res == 0)
 			{
 				type.DefineRange(new DecimalRange());
@@ -302,6 +351,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected TextField						fieldPreferredRes;
 		protected TextField						fieldSmallStep;
 		protected TextField						fieldLargeStep;
+		protected TextField						fieldDefault;
+		protected TextField						fieldSample;
 		protected CheckButton					checkCompactStorage;
 	}
 }
