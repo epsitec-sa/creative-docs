@@ -1,5 +1,5 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
@@ -45,6 +45,6 @@ namespace Epsitec.Cresus.Database
 		/// <param name="command">The command.</param>
 		/// <param name="infrastructure">The associated database infrastructure.</param>
 		/// <param name="transaction">The associated transaction.</param>
-		void Execute(DbRichCommand command, DbInfrastructure infrastructure, System.Data.IDbTransaction transaction);
+		void Execute(DbRichCommand command, DbInfrastructure infrastructure, DbTransaction transaction);
 	}
 }

@@ -1,128 +1,159 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	using System.Text.RegularExpressions;
 	
 	/// <summary>
-	/// La classe DbSqlStandard implémente les services de base liés à la norme
-	/// SQL.
+	/// The <c>DbSqlStandard</c> class implements SQL related validation functions.
 	/// </summary>
-	public class DbSqlStandard
+	public static class DbSqlStandard
 	{
-		private DbSqlStandard()
-		{
-		}
-		
 		static DbSqlStandard()
 		{
-			//	Un nom SQL valide est composé soit de:
+			//	A valid SQL name is defined as :
 			//
-			//	- Un caractère alphabétique, suivi de 0-n caractères alphanumériques, y
-			//	  compris le "_".
-			//	- Un texte entre guillemets pouvant contenir tous les caractères supportés
-			//	  par le jeu de caractères actif; les guillemets doivent être doublés s'ils
-			//	  apparaissent dans le texte.
+			//	- An alphabetic character followed by 0-n alphanumeric characters, including
+			//	  the "_" underscore character.
+			//
+			//	- A quoted text which can contain all possible characters; quotes must be
+			//	  doubled if they are part of the SQL name.
+
+			DbSqlStandard.regexName = new Regex (@"^([a-zA-Z][a-zA-Z0-9_]*|""([^""]|"""")*"")$", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 			
-			DbSqlStandard.regex_name = new Regex (@"^([a-zA-Z][a-zA-Z0-9_]*|""([^""]|"""")*"")$", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+			//	A valid SQL string is enclosed within single quotes; single quotes must be
+			//	doubled if they are part of the SQL string.
 			
-			//	Une chaîne SQL valide est composée d'un texte entre apostrophes; les apostrophes
-			//	doivent être doublés s'ils apparaissent dans le texte.
+			DbSqlStandard.regexString = new Regex (@"^'([^']|'')*'$", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 			
-			DbSqlStandard.regex_string = new Regex (@"^'([^']|'')*'$", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+			//	A valid SQL number is defined as an optional minus sign followed by 1-n digits
+			//	and then an optional decimal point and more digits.
 			
-			//	Une valeur numérique SQL valide est composée d'un signe négatif optionnel, suivi
-			//	d'un ou plusieurs chiffres, et en option d'un point décimal et de un ou plusieurs
-			//	chiffres.
-			
-			DbSqlStandard.regex_number = new Regex (@"^-?[0-9]+(\.[0-9]+)?$", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+			DbSqlStandard.regexNumber = new Regex (@"^-?[0-9]+(\.[0-9]+)?$", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 		}
-		
-		
+
+
+		/// <summary>
+		/// Concatenates two SQL names.
+		/// </summary>
+		/// <param name="a">First part of the name.</param>
+		/// <param name="b">Second part of the name.</param>
+		/// <returns>The SQL name.</returns>
 		public static string ConcatNames(string a, string b)
 		{
 			if (DbSqlStandard.ValidateName (a) &&
 				DbSqlStandard.ValidateName (b))
 			{
-				bool force_quotes = false;
+				bool forceQuotes = false;
 				
 				if (a.StartsWith (@""""))
 				{
-					force_quotes = true;
+					forceQuotes = true;
 					a = a.Substring (1, a.Length-2);
 				}
 				if (b.StartsWith (@""""))
 				{
-					force_quotes = true;
+					forceQuotes = true;
 					b = b.Substring (1, b.Length-2);
 				}
-				
-				if (force_quotes)
+
+				if (forceQuotes)
 				{
-					return @"""" + a + b + @"""";
+					return string.Concat (@"""", a, b, @"""");
 				}
-				
-				return a + b;
+				else
+				{
+					return a + b;
+				}
 			}
 			
-			throw new Exceptions.FormatException (string.Format ("Expected two names: {0} and {1}", a, b));
+			throw new Exceptions.FormatException (string.Format ("Expected two valid names: {0} and {1}", a, b));
 		}
-		
+
+		/// <summary>
+		/// Concatenates two SQL strings.
+		/// </summary>
+		/// <param name="a">The first SQL string.</param>
+		/// <param name="b">The second SQL string.</param>
+		/// <returns>The SQL string.</returns>
 		public static string ConcatStrings(string a, string b)
 		{
 			if (DbSqlStandard.ValidateString (a) &&
 				DbSqlStandard.ValidateString (b))
 			{
-				return "'" + a.Substring (1, a.Length-2) + b.Substring (1, b.Length-2) + "'";
+				return string.Concat ("'", a.Substring (1, a.Length-2), b.Substring (1, b.Length-2), "'");
 			}
 			
-			throw new Exceptions.FormatException (string.Format ("Expected two strings: {0} and {1}", a, b));
+			throw new Exceptions.FormatException (string.Format ("Expected two valid strings: {0} and {1}", a, b));
 		}
-		
-		
+
+
+		/// <summary>
+		/// Quotes the text to make it a valid SQL string. This will double
+		/// single quotes found in the text.
+		/// </summary>
+		/// <param name="value">The text.</param>
+		/// <returns>The SQL String.</returns>
 		public static string QuoteString(string value)
 		{
-			return "'" + value.Replace ("'", "''") + "'";
+			return string.Concat ("'", value.Replace ("'", "''"), "'");
 		}
-		
-		
+
+
+		/// <summary>
+		/// Creates a qualified name from a simple name and a qualifier.
+		/// </summary>
+		/// <param name="qualifier">The qualifier.</param>
+		/// <param name="name">The name.</param>
+		/// <returns>The qualified SQL name.</returns>
 		public static string QualifyName(string qualifier, string name)
 		{
 			if (DbSqlStandard.ValidateName (qualifier) &&
 				DbSqlStandard.ValidateName (name))
 			{
-				return qualifier + "." + name;
+				return string.Concat (qualifier, ".", name);
 			}
 			
 			throw new Exceptions.FormatException (string.Format ("Cannot make qualified name from {0} and {1}", qualifier, name));
 		}
-		
+
+		/// <summary>
+		/// Splits the qualified name.
+		/// </summary>
+		/// <param name="value">The qualified name.</param>
+		/// <param name="qualifier">The qualifier.</param>
+		/// <param name="name">The name.</param>
 		public static void SplitQualifiedName(string value, out string qualifier, out string name)
 		{
 			if (DbSqlStandard.ValidateQualifiedName (value))
 			{
-				//	Si le qualifier est entre guillemets, il peut lui aussi contenir un "."...
-				//	Exemple valide "A.B".C où le résultat doit être qualifier="A.B" et name="C".
+				//	Caution: a qualified name can have dots embedded between quotes, such
+				//	as "A.B".C which maps to: qualifier="A.B", name="C".
 
 				string[] tokens;
-				int nb = Common.Support.Utilities.StringToTokens (value, '.', out tokens);
+				int count = Common.Support.Utilities.StringToTokens (value, '.', out tokens);
 
-				if ( nb != 2 )
+				if (count != 2)
 				{
 					throw new Exceptions.FormatException (string.Format ("{0} is not a qualified name", value));
 				}
 
-				qualifier = tokens [0];
-				name      = tokens [1];
+				qualifier = tokens[0];
+				name      = tokens[1];
 				
 				return;
 			}
 			
 			throw new Exceptions.FormatException (string.Format ("{0} is not a qualified name", value));
 		}
-		
-		
+
+
+		/// <summary>
+		/// Validates the SQL name.
+		/// </summary>
+		/// <param name="value">The SQL name.</param>
+		/// <returns><c>true</c> if the name is valid; otherwise, <c>false</c>.</returns>
 		public static bool ValidateName(string value)
 		{
 			if (value != null)
@@ -130,84 +161,112 @@ namespace Epsitec.Cresus.Database
 				int len = value.Length;
 				if ((len > 0) && (len < 128))
 				{
-					return DbSqlStandard.regex_name.IsMatch (value);
+					return DbSqlStandard.regexName.IsMatch (value);
 				}
 			}
 			
 			return false;
 		}
-		
+
+		/// <summary>
+		/// Validates the SQL string.
+		/// </summary>
+		/// <param name="value">The SQL string.</param>
+		/// <returns><c>true</c> if the string is valid; otherwise, <c>false</c>.</returns>
 		public static bool ValidateString(string value)
 		{
 			if (value != null)
 			{
 				int len = value.Length;
-				if ((len > 1) && (len < 10000))
+
+				if ((len > 1) &&
+					(len < 10000))
 				{
-					return DbSqlStandard.regex_string.IsMatch (value);
+					return DbSqlStandard.regexString.IsMatch (value);
 				}
 			}
 			
 			return false;
 		}
-		
+
+		/// <summary>
+		/// Validates the SQL number.
+		/// </summary>
+		/// <param name="value">The SQL number.</param>
+		/// <returns><c>true</c> if the number is valid; otherwise, <c>false</c>.</returns>
 		public static bool ValidateNumber(string value)
 		{
 			if (value != null)
 			{
 				int len = value.Length;
-				if ((len > 0) && (len < 40))
+				
+				if ((len > 0) &&
+					(len < 40))
 				{
-					return DbSqlStandard.regex_number.IsMatch (value);
+					return DbSqlStandard.regexNumber.IsMatch (value);
 				}
 			}
 			
 			return false;
 		}
-		
+
+		///	<summary>
+		/// Validates the qualified SQL name.
+		/// </summary>
+		/// <param name="value">The qualified SQL name.</param>
+		/// <returns><c>true</c> if the qualified name is valid; otherwise, <c>false</c>.</returns>
 		public static bool ValidateQualifiedName(string value)
 		{
 			if (value != null)
 			{
 				int len = value.Length;
-				if ((len > 0) && (len < 256))
+				
+				if ((len > 0) &&
+					(len < 256))
 				{
 					string[] tokens;
-					int		nb;
+					int count;
 
-					//	Valide un nom qualifié de type N1.N2 où N1 est un nom
-					//	bien formé (pouvant être entre guillemets).
+					//	Validate a qualified name N1.N2 where both N1 and N2 can
+					//	be quoted names.
 
 					try
 					{
-						nb = Common.Support.Utilities.StringToTokens (value, '.', out tokens);
+						count = Common.Support.Utilities.StringToTokens (value, '.', out tokens);
 					}
 					catch
 					{
-						//	en cas d'erreur dans le nombre de guillemets
 						return false;
 					}
 
-					if ( nb != 2 )
+					if (count != 2)
 					{
 						return false;
 					}
-
-					return (ValidateName (tokens [0]) && ValidateName (tokens [1]));
+					else
+					{
+						return ValidateName (tokens[0])
+							&& ValidateName (tokens[1]);
+					}
 				}
 			}
 			
 			return false;
 		}
-		
-		
+
+
+		/// <summary>
+		/// Create an SQL table name based on a high level name and an element
+		/// category. This will prefix the name with "U_" if the table is a user
+		/// data table and suffix it with the key id. This is required to allow
+		/// several tables with the same name in the life of the database.
+		/// </summary>
+		/// <param name="name">The high level name.</param>
+		/// <param name="category">The table category.</param>
+		/// <param name="key">The key.</param>
+		/// <returns>The SQL table name.</returns>
 		public static string MakeSqlTableName(string name, DbElementCat category, DbKey key)
 		{
-			//	Crée un nom de table SQL à partir du nom "haut niveau" ainsi que de la catégorie
-			//	de la table (les tables de l'utilisateur sont préfixées par "U_" et se terminent
-			//	par l'ID de la table, pour permettre d'avoir plusieurs tables avec le même nom
-			//	dans la durée de vie de la base).
-			
 			System.Text.StringBuilder buffer;
 			
 			switch (category)
@@ -218,22 +277,27 @@ namespace Epsitec.Cresus.Database
 					{
 						return name;
 					}
-					throw new Exceptions.GenericException (DbAccess.Empty, string.Format ("'{0}' is an invalid internal table name.", name));
+					
+					throw new Exceptions.GenericException (DbAccess.Empty, string.Format ("'{0}' is not an internal table name", name));
 				
-				case DbElementCat.UserDataManaged:
+				case DbElementCat.ManagedUserData:
 					buffer = new System.Text.StringBuilder ();
 					buffer.Append ("U_");
 					break;
+
+				case DbElementCat.RevisionHistory:
+					buffer = new System.Text.StringBuilder ();
+					buffer.Append ("R_");
+					break;
 				
 				default:
-					throw new System.NotImplementedException (string.Format ("Support for category {0} is not implemented.", category));
+					throw new System.NotImplementedException (string.Format ("Support for category {0} not implemented", category));
 			}
 			
 			DbSqlStandard.CreateSimpleSqlName (name, buffer);
 			
-			//	On limite la taille des noms de tables à 30 caractères maximum, car certaines bases
-			//	sont assez restrictives en la matière. Et comme on rajoute 18 digits (au plus), il
-			//	ne reste plus que 12 caractères effectifs pour le nom :
+			//	Limit table name to at most 30 characters. As we add a maximum of 18 digits
+			//	long suffix, only 12 characters are usable for the name itself :
 			
 			if (buffer.Length > 30-18)
 			{
@@ -244,21 +308,29 @@ namespace Epsitec.Cresus.Database
 			
 			return buffer.ToString ();
 		}
-		
+
+		/// <summary>
+		/// Creates a simple SQL name by stripping or replacing invalid characters
+		/// found in the high level name.
+		/// </summary>
+		/// <param name="name">The high level name.</param>
+		/// <returns>The simple SQL name.</returns>
 		public static string MakeSimpleSqlName(string name)
 		{
-			//	Simplifie le nom passé en entrée pour ne conserver plus que des
-			//	majuscules, des chiffres et le "_". Les caractères non reconnus
-			//	sont remplacés par des "_".
-			
-			//	En début de nom, ni "_", ni un chiffre n'est permis; ces caractères
-			//	sont simplement supprimés.
-			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			DbSqlStandard.CreateSimpleSqlName (name, buffer);
 			return buffer.ToString ();
 		}
-		
+
+		/// <summary>
+		/// Creates a simple SQL name by stripping or replacing invalid characters
+		/// found in the high level name. The high level name is the concatenation
+		/// of the prefix, the name and the suffix.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="prefix">The prefix.</param>
+		/// <param name="suffix">The suffix.</param>
+		/// <returns>The simple concatenaed SQL name.</returns>
 		public static string MakeSimpleSqlName(string name, string prefix, string suffix)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -271,7 +343,15 @@ namespace Epsitec.Cresus.Database
 			
 			return buffer.ToString ();
 		}
-		
+
+		/// <summary>
+		/// Creates a simple SQL name by stripping or replacing invalid characters
+		/// found in the high level name, prefixing it with "U_" if the element
+		/// belongs to the user.
+		/// </summary>
+		/// <param name="name">The high level name.</param>
+		/// <param name="category">The category for the named element.</param>
+		/// <returns>The simple SQL name.</returns>
 		public static string MakeSimpleSqlName(string name, DbElementCat category)
 		{
 			System.Text.StringBuilder buffer;
@@ -284,26 +364,31 @@ namespace Epsitec.Cresus.Database
 					{
 						return name;
 					}
-					throw new Exceptions.GenericException (DbAccess.Empty, string.Format ("'{0}' is an invalid internal name.", name));
+					
+					throw new Exceptions.GenericException (DbAccess.Empty, string.Format ("'{0}' is an invalid internal name", name));
 				
-				case DbElementCat.UserDataManaged:
+				case DbElementCat.ManagedUserData:
 					buffer = new System.Text.StringBuilder ();
 					buffer.Append ("U_");
 					break;
 				
 				default:
-					throw new System.NotImplementedException (string.Format ("Support for category {0} is not implemented.", category));
+					throw new System.NotImplementedException (string.Format ("Support for category {0} not implemented", category));
 			}
 			
 			DbSqlStandard.CreateSimpleSqlName (name, buffer);
 			return buffer.ToString ();
 		}
-		
-		
+
+
+		/// <summary>
+		/// Add quotes to the name, if needed; existing quotes will be doubled.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <returns>An SQL name.</returns>
 		public static string MakeDelimitedIdentifier(string name)
 		{
 			bool ok  = true;
-			bool bad = false;
 			
 			for (int i = 0; i < name.Length; i++)
 			{
@@ -320,28 +405,28 @@ namespace Epsitec.Cresus.Database
 				{
 					continue;
 				}
-				if (c == '"')
-				{
-					bad = true;
-				}
+				
 				ok = false;
 			}
-			
+
 			if (ok)
 			{
 				return name;
 			}
-			
-			if (bad)
+			else
 			{
-				throw new Exceptions.FormatException (string.Format ("Expected valid name: {0}", name));
+				return string.Concat (@"""", name.Replace (@"""", @""""""), @"""");
 			}
-			
-			return string.Concat (@"""", name, @"""");
 		}
-		
-		
-		protected static void CreateSimpleSqlName(string name, System.Text.StringBuilder buffer)
+
+
+		/// <summary>
+		/// Creates a simple SQL name by stripping or replacing invalid characters
+		/// found in the high level name. The result will be in upper case ASCII.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="buffer">The buffer.</param>
+		private static void CreateSimpleSqlName(string name, System.Text.StringBuilder buffer)
 		{
 			for (int i = 0; i < name.Length; i++)
 			{
@@ -350,27 +435,19 @@ namespace Epsitec.Cresus.Database
 				if ((c >= 'a') && (c <= 'z'))
 				{
 					buffer.Append ((char)(c + 'A' - 'a'));
-					continue;
 				}
-				
-				if ((c >= 'A') && (c <= 'Z'))
+				else if ((c >= 'A') && (c <= 'Z'))
 				{
 					buffer.Append (c);
-					continue;
 				}
-				
-				if ((c >= '0') && (c <= '9'))
+				else if ((c >= '0') && (c <= '9'))
 				{
 					if (buffer.Length > 0)
 					{
 						buffer.Append (c);
 					}
-					continue;
 				}
-				
-				//	Remplace les caractères inconnus par des "_".
-				
-				if (buffer.Length > 0)
+				else if (buffer.Length > 0)
 				{
 					buffer.Append ('_');
 				}
@@ -378,8 +455,8 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		protected static Regex					regex_name;
-		protected static Regex					regex_string;
-		protected static Regex					regex_number;
+		private static Regex					regexName;
+		private static Regex					regexString;
+		private static Regex					regexNumber;
 	}
 }

@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Database
 
 			using (DbInfrastructure infrastructure = new DbInfrastructure ())
 			{
-				infrastructure.CreateDatabase (DbInfrastructure.CreateDbAccess ("fiche"));
+				infrastructure.CreateDatabase (DbInfrastructure.CreateDatabaseAccess ("fiche"));
 			}
 			
 			this.infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", true);
@@ -42,12 +42,17 @@ namespace Epsitec.Cresus.Database
 		[Test] public void Check01CreateDict()
 		{
 			Assert.IsNotNull (infrastructure);
-			DbDict.CreateTable (infrastructure, null, "TestDict");
+
+			using (DbTransaction transaction = infrastructure.BeginTransaction ())
+			{
+				DbDict.CreateTable (infrastructure, transaction, "TestDict");
+				transaction.Commit ();
+			}
 		}
 		
 		[Test] public void Check02Attach()
 		{
-			this.table = this.infrastructure.ResolveDbTable (null, "TestDict");
+			this.table = this.infrastructure.ResolveDbTable ("TestDict");
 			
 			Assert.IsNotNull (this.table);
 			
@@ -59,7 +64,7 @@ namespace Epsitec.Cresus.Database
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				this.dict.RestoreFromBase (transaction);
+				this.dict.LoadFromBase (transaction);
 				
 				Assert.AreEqual (0, this.dict.Count);
 				transaction.Commit ();
@@ -70,7 +75,7 @@ namespace Epsitec.Cresus.Database
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				this.dict.SerializeToBase (transaction);
+				this.dict.PersistToBase (transaction);
 				transaction.Commit ();
 			}
 		}
@@ -93,7 +98,7 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				this.dict.SerializeToBase (transaction);
+				this.dict.PersistToBase (transaction);
 				transaction.Commit ();
 			}
 		}
@@ -111,7 +116,7 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				this.dict.SerializeToBase (transaction);
+				this.dict.PersistToBase (transaction);
 				transaction.Commit ();
 			}
 		}
@@ -120,7 +125,7 @@ namespace Epsitec.Cresus.Database
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				this.dict.RestoreFromBase (transaction);
+				this.dict.LoadFromBase (transaction);
 				transaction.Commit ();
 				
 				Assert.AreEqual (2, this.dict.Count);
@@ -134,7 +139,7 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] public void Check99RemoveTable()
 		{
-			this.infrastructure.UnregisterDbTable (null, this.table);
+			this.infrastructure.UnregisterDbTable (this.table);
 			this.table = null;
 		}
 

@@ -842,6 +842,11 @@ namespace Epsitec.Common.Support
 				temp.DeserializeFromString (source, this);
 				
 				caption = (caption == null) ? temp : Caption.Merge (caption, temp);
+
+				if (caption.ContainsLocalValue (ResourceManager.SourceBundleProperty) == false)
+				{
+					ResourceManager.SetSourceBundle (caption, bundle);
+				}
 			}
 		}
 
@@ -1641,9 +1646,27 @@ namespace Epsitec.Common.Support
 			return (ResourceManager) obj.GetValue (ResourceManager.ResourceManagerProperty);
 		}
 
+		public static void SetSourceBundle(DependencyObject obj, ResourceBundle value)
+		{
+			if (value == null)
+			{
+				obj.ClearValue (ResourceManager.SourceBundleProperty);
+			}
+			else
+			{
+				obj.SetValue (ResourceManager.SourceBundleProperty, value);
+			}
+		}
+
+		public static ResourceBundle GetSourceBundle(DependencyObject obj)
+		{
+			return (ResourceBundle) obj.GetValue (ResourceManager.SourceBundleProperty);
+		}
+
 		#endregion
 
 		public static DependencyProperty ResourceManagerProperty = DependencyProperty.RegisterAttached ("ResourceManager", typeof (ResourceManager), typeof (ResourceManager));
+		public static DependencyProperty SourceBundleProperty    = DependencyProperty.RegisterAttached ("SourceBundle", typeof (ResourceBundle), typeof (ResourceManager));
 		
 		private static long						nextSerialId = 1;
 		

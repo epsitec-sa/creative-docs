@@ -105,13 +105,12 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Cache\DbTypeDefs.cs" />
     <Compile Include="Cache\Generic.cs" />
     <Compile Include="Cache\DbTables.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Cache\DbTypes.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Collections\DbTypeDefs.cs" />
     <Compile Include="Collections\GenericList.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -125,22 +124,33 @@
     <Compile Include="Collections\DbTables.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Collections\DbTypes.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Collections\SqlColumns.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Collections\SqlFields.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DbCharacterEncoding.cs" />
+    <Compile Include="SqlSelectSetOp.cs" />
+    <Compile Include="SqlSelectPredicate.cs" />
+    <Compile Include="SqlJoinCode.cs" />
+    <Compile Include="SqlFunctionCode.cs" />
+    <Compile Include="DbNullability.cs" />
+    <Compile Include="SqlAggregateFunction.cs" />
+    <Compile Include="IReplaceOptions.cs" />
+    <Compile Include="DbLogEntry.cs" />
+    <Compile Include="DbClientRecord.cs" />
+    <Compile Include="IXmlSerializable.cs" />
+    <Compile Include="DbTypeDef.cs" />
+    <Compile Include="DbColumnClass.cs" />
+    <Compile Include="DbColumnLocalization.cs" />
+    <Compile Include="DbContext.cs" />
     <Compile Include="DbIdClass.cs" />
-    <Compile Include="SqlFieldOrder.cs" />
+    <Compile Include="Options\ReplaceIgnoreColumns.cs" />
+    <Compile Include="Res.cs" />
+    <Compile Include="SqlSortOrder.cs" />
     <Compile Include="SqlFieldType.cs" />
     <Compile Include="DbAccess.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbAttributes.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbClientManager.cs">
@@ -162,9 +172,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbElementCat.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbEnumValue.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbFactory.cs">
@@ -230,27 +237,6 @@
     <Compile Include="DbTransactionMode.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DbType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbTypeByteArray.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbTypeDateTime.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbTypeEnum.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbTypeFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbTypeNum.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbTypeString.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Exceptions\ConflictingException.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -288,9 +274,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IDbAbstractionFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IDbAttributesHost.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IDbServiceTools.cs">
@@ -351,6 +334,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Content Include="TODO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Cresus.Database\Captions.00.resource" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Cresus.Database\module.info" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

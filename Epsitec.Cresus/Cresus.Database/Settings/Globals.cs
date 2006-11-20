@@ -1,70 +1,75 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Settings
 {
 	/// <summary>
-	/// Summary description for Globals.
+	/// The <c>Globals</c> class stores global settings, backed by a database
+	/// table.
 	/// </summary>
 	public sealed class Globals : AbstractBase
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Globals"/> class.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="transaction">The transaction.</param>
 		internal Globals(DbInfrastructure infrastructure, DbTransaction transaction)
 		{
-			this.Setup (infrastructure, transaction, Globals.Name);
+			this.AttachAndLoad (infrastructure, transaction, Globals.Name);
 		}
-		
-		
-		internal static string					Name
-		{
-			get
-			{
-				return "CR_SETTINGS_GLOBALS";
-			}
-		}
-		
-		
+
+		/// <summary>
+		/// Gets or sets the customer licence.
+		/// </summary>
+		/// <value>The customer licence.</value>
 		public string							CustomerLicence
 		{
 			get
 			{
-				return this.customer_licence;
+				return this.customerLicence;
 			}
 			set
 			{
-				if (this.customer_licence != value)
+				if (this.customerLicence != value)
 				{
-					object old_value = this.customer_licence;
-					object new_value = value;
+					object oldValue = this.customerLicence;
+					object newValue = value;
 					
-					this.customer_licence = value;
+					this.customerLicence = value;
 					
-					this.NotifyPropertyChanged ("CustomerLicence", old_value, new_value);
+					this.NotifyPropertyChanged ("CustomerLicence", oldValue, newValue);
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets or sets the customer id.
+		/// </summary>
+		/// <value>The customer id.</value>
 		public string							CustomerId
 		{
 			get
 			{
-				return this.customer_id;
+				return this.customerId;
 			}
 			set
 			{
-				if (this.customer_id != value)
+				if (this.customerId != value)
 				{
-					object old_value = this.customer_id;
-					object new_value = value;
+					object oldValue = this.customerId;
+					object newValue = value;
 					
-					this.customer_id = value;
+					this.customerId = value;
 					
-					this.NotifyPropertyChanged ("CustomerId", old_value, new_value);
+					this.NotifyPropertyChanged ("CustomerId", oldValue, newValue);
 				}
 			}
 		}
 		
+		internal static readonly string			Name = "CR_SETTINGS_GLOBALS";
 		
-		private string							customer_licence;
-		private string							customer_id;
+		private string							customerLicence;
+		private string							customerId;
 	}
 }

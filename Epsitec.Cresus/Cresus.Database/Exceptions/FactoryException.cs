@@ -1,32 +1,46 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Exceptions
 {
 	/// <summary>
-	/// L'exception FactoryException est utilisée par les gestionnaires de données
-	/// universels pour les erreurs internes qui leur sont propres.
+	/// The <c>FactoryException</c> exception is raised by the database factory
+	/// classes when they encounter internal errors.
 	/// </summary>
 	
 	[System.Serializable]
 	
-	public class FactoryException : GenericException
+	public sealed class FactoryException : GenericException
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FactoryException"/> class.
+		/// </summary>
 		public FactoryException() : base (DbAccess.Empty)
 		{
 		}
-		
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FactoryException"/> class.
+		/// </summary>
+		/// <param name="message">The message.</param>
 		public FactoryException(string message) : base (DbAccess.Empty, message)
 		{
 		}
-		
-		public FactoryException(string message, System.Exception inner_exception) : base (DbAccess.Empty, message, inner_exception)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FactoryException"/> class.
+		/// </summary>
+		/// <param name="message">The message.</param>
+		/// <param name="innerException">The inner exception.</param>
+		public FactoryException(string message, System.Exception innerException) : base (DbAccess.Empty, message, innerException)
 		{
 		}
 		
 		
 		#region ISerializable Members
-		protected FactoryException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+
+		private FactoryException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+			: base (info, context)
 		{
 		}
 		
@@ -34,6 +48,7 @@ namespace Epsitec.Cresus.Database.Exceptions
 		{
 			base.GetObjectData (info, context);
 		}
+
 		#endregion
 	}
 }

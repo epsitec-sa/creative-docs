@@ -442,7 +442,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		private static readonly int				fbPort				= 3050;
 		private static readonly byte			fbDialect			= 3;
 		private static readonly short			fbPageSize			= 8192;
-		private static readonly string			fbCharset			= "UNICODE_FSS";
+		private static readonly string			fbCharset			= "UNICODE_FSS";	// does not work with UTF8 here: a DataAdapter seeing CHAR(1) adds 3 extra spaces !
 		private static readonly string			fbRootDbPath		= @"C:\Program Files\Firebird\Data\Epsitec";
 		private static readonly string			fbDbFileExtension	= ".firebird";
 	}

@@ -1,226 +1,216 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Database
 {
-	using ResourceLevel = Epsitec.Common.Support.ResourceLevel;
-	using Converter		= Epsitec.Common.Types.InvariantConverter;
-	
-	
-	public enum DbColumnLocalisation : byte
-	{
-		None				= 0,		//	n'est pas/ne peut pas être localisée
-		Default				= 1,		//	peut être localisée, elle contient les valeurs par défaut
-		Localised			= 2			//	est localisée pour une langue particulière
-	}
-	
-	
-	public enum DbColumnClass : byte
-	{
-		Data				= 0,		//	contient des données
-		KeyId				= 1,		//	définit une clef (ID)
-		KeyStatus			= 2,		//	définit un statut
-		RefId				= 3,		//	définit une référence à une clef (ID)
-		RefInternal			= 4,		//	définit une référence interne (pas véritable Foreign Key)
-	}
-	
 	/// <summary>
-	/// La classe DbColumn décrit une colonne dans une table de la base de données.
-	/// Cette classe ressemble dans l'esprit à System.Data.DataColumn.
+	/// The <c>DbColumn</c> class describes a column in a database table.
+	/// This is our version of the column metadata wrapper (compare with the
+	/// ADO.NET <see cref="System.Data.DataColumn"/> class).
 	/// </summary>
-	public class DbColumn : IDbAttributesHost, Common.Types.ICaption, Common.Types.IName
+	public sealed class DbColumn : IName, ICaption, IXmlSerializable, System.IEquatable<DbColumn>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbColumn"/> class.
+		/// </summary>
 		public DbColumn()
 		{
 		}
-		
-		public DbColumn(string name)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbColumn"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="type">The type.</param>
+		public DbColumn(string name, DbTypeDef type)
+			: this ()
 		{
-			this.attributes[Tags.Name] = name;
-		}
-		
-		public DbColumn(string name, DbSimpleType type) : this (name, type, 1, true, null, Nullable.Undefined)
-		{
-		}
-		
-		public DbColumn(string name, DbSimpleType type, Nullable nullable) : this (name, type, 1, true, null, nullable)
-		{
-		}
-		
-		public DbColumn(string name, DbSimpleType type, int length, bool is_fixed_length) : this (name, type, length, is_fixed_length, null, Nullable.Undefined)
-		{
-		}
-		
-		public DbColumn(string name, DbSimpleType type, int length, bool is_fixed_length, Nullable nullable) : this (name, type, length, is_fixed_length, null, nullable)
-		{
-		}
-		
-		public DbColumn(string name, DbNumDef num_def) : this (name, DbSimpleType.Decimal, 1, true, num_def, Nullable.Undefined)
-		{
-		}
-		
-		public DbColumn(string name, DbNumDef num_def, Nullable nullable) : this (name, DbSimpleType.Decimal, 1, true, num_def, nullable)
-		{
-		}
-		
-		public DbColumn(string name, DbSimpleType type, int length, bool is_fixed_length, DbNumDef num_def, Nullable nullable) : this (name)
-		{
-			this.SetTypeAndLength (type, length, is_fixed_length, num_def);
-			this.IsNullAllowed = (nullable == Nullable.Yes);
-		}
-		
-		public DbColumn(string name, DbType type) : this (name, type, Nullable.Undefined)
-		{
-		}
-		
-		public DbColumn(string name, DbType type, Nullable nullable) : this (name)
-		{
-			this.type = type;
-			this.IsNullAllowed = (nullable == Nullable.Yes);
-		}
-		
-		public DbColumn(string name, DbType type, DbColumnClass column_class) : this (name, type, Nullable.Undefined)
-		{
-			this.DefineColumnClass (column_class);
-		}
-		
-		public DbColumn(string name, DbType type, DbColumnClass column_class, DbColumnLocalisation column_localisation) : this (name, type, Nullable.Undefined)
-		{
-			this.DefineColumnClass (column_class);
-			this.DefineColumnLocalisation (column_localisation);
-		}
-		
-		public DbColumn(string name, DbType type, DbColumnClass column_class, DbElementCat category) : this (name, type, Nullable.Undefined)
-		{
-			this.DefineColumnClass (column_class);
-			this.DefineCategory (category);
-		}
-		
-		public DbColumn(string name, DbType type, Nullable nullable, DbColumnClass column_class, DbElementCat category) : this (name, type, nullable)
-		{
-			this.DefineColumnClass (column_class);
-			this.DefineCategory (category);
-		}
-		
-		public DbColumn(string name, DbType type, Nullable nullable, DbColumnClass column_class) : this (name, type, nullable)
-		{
-			this.DefineColumnClass (column_class);
-		}
-		
-		public DbColumn(string name, DbType type, Nullable nullable, DbColumnClass column_class, DbColumnLocalisation column_localisation) : this (name, type, nullable)
-		{
-			this.DefineColumnClass (column_class);
-			this.DefineColumnLocalisation (column_localisation);
-		}
-		
-		public DbColumn(System.Xml.XmlElement xml)
-		{
-			this.ProcessXmlDefinition (xml);
-		}
-		
-		
-		public static DbColumn CreateColumn(string xml)
-		{
-			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
-			doc.LoadXml (xml);
-			return DbColumn.CreateColumn (doc.DocumentElement);
-		}
-		
-		public static DbColumn CreateColumn(System.Xml.XmlElement xml)
-		{
-			return (xml.Name == "null") ? null : new DbColumn (xml);
-		}
-		
-		public static DbColumn CreateRefColumn(string column_name, string parent_table_name, DbColumnClass column_class, DbType type)
-		{
-			return DbColumn.CreateRefColumn (column_name, parent_table_name, column_class, type, Nullable.Undefined);
-		}
-		
-		public static DbColumn CreateRefColumn(string column_name, string parent_table_name, DbColumnClass column_class, DbType type, Nullable nullable)
-		{
-			System.Diagnostics.Debug.Assert (type != null);
-			
-			DbColumn column = new DbColumn (column_name, type);
-			
-			column.DefineColumnClass (column_class);
-			column.DefineCategory (DbElementCat.UserDataManaged);
-			column.DefineParentTableName (parent_table_name);
-			column.IsNullAllowed = (nullable == Nullable.Yes);
-			
-			return column;
-		}
-		
-		public static DbColumn CreateUserDataColumn(string column_name, DbType type, Nullable nullable)
-		{
-			return new DbColumn (column_name, type, nullable, DbColumnClass.Data, DbElementCat.UserDataManaged);
-		}
-		
-		
-		public string							Name
-		{
-			get { return this.Attributes[Tags.Name, ResourceLevel.Default]; }
-		}
-		
-		public string							Caption
-		{
-			get { return this.Attributes[Tags.Caption]; }
-		}
-		
-		public string							Description
-		{
-			get { return this.Attributes[Tags.Description]; }
+			this.DefineName (name);
+			this.DefineType (type);
 		}
 
-		public Common.Support.Druid				CaptionId
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbColumn"/> class.
+		/// </summary>
+		/// <param name="captionId">The caption DRUID.</param>
+		/// <param name="type">The type.</param>
+		public DbColumn(Druid captionId, DbTypeDef type)
+			: this ()
+		{
+			this.DefineType (type);
+			this.DefineCaptionId (captionId);
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbColumn"/> class.
+		/// </summary>
+		/// <param name="field">The structured type field definition.</param>
+		public DbColumn(StructuredTypeField field)
+			: this (field.CaptionId, new DbTypeDef (field.Type))
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbColumn"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="type">The type.</param>
+		/// <param name="columnClass">The column class.</param>
+		public DbColumn(string name, DbTypeDef type, DbColumnClass columnClass)
+			: this (name, type)
+		{
+			this.DefineColumnClass (columnClass);
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbColumn"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="type">The type.</param>
+		/// <param name="columnClass">The column class.</param>
+		/// <param name="category">The category.</param>
+		public DbColumn(string name, DbTypeDef type, DbColumnClass columnClass, DbElementCat category)
+			: this (name, type, columnClass)
+		{
+			this.DefineCategory (category);
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbColumn"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="type">The type.</param>
+		/// <param name="columnClass">The column class.</param>
+		/// <param name="category">The category.</param>
+		/// <param name="revisionMode">The revision mode.</param>
+		public DbColumn(string name, DbTypeDef type, DbColumnClass columnClass, DbElementCat category, DbRevisionMode revisionMode)
+			: this (name, type, columnClass, category)
+		{
+			this.DefineRevisionMode (revisionMode);
+		}
+
+
+		#region IName Members
+
+		/// <summary>
+		/// Gets the name of the column. If no name is defined, uses the caption
+		/// name instead.
+		/// </summary>
+		/// <value>The name of the column.</value>
+		public string Name
 		{
 			get
 			{
-				return Common.Support.Druid.Empty;
-			}
-		}
-		
-		
-		public DbAttributes						Attributes
-		{
-			get
-			{
-				return this.attributes;
-			}
-		}
-		
-		public DbKey							InternalKey
-		{
-			get { return this.internal_column_key; }
-		}
-		
-		
-		public string							ParentTableName
-		{
-			//	Lorsqu'une colonne appartient à l'une des classes DbColumnClass.RefXyz, cela signifie
-			//	que le colonne pointe sur une autre table (foreign key); le nom de cette table est défini
-			//	par la propriété ParentTableName :
-			
-			get
-			{
-				return this.Attributes[Tags.Parent];
-			}
-		}
-		
-		public string							ParentColumnName
-		{
-			get
-			{
-				switch (this.column_class)
+				if (this.name == null)
 				{
-					case DbColumnClass.RefId:
-						return Tags.ColumnId;
+					Caption caption = this.Caption;
+					return caption == null ? null : caption.Name;
 				}
-				
-				throw new System.ArgumentException (string.Format ("Column of invalid class {0}.", this.column_class));
+				else
+				{
+					return this.name;
+				}
 			}
 		}
-		
-		
+
+		#endregion
+
+		#region ICaption Members
+
+		/// <summary>
+		/// Gets the caption id for the column.
+		/// </summary>
+		/// <value>The caption DRUID.</value>
+		public Druid CaptionId
+		{
+			get
+			{
+				return this.captionId;
+			}
+		}
+
+		#endregion
+
+		/// <summary>
+		/// Gets the caption for the column.
+		/// </summary>
+		/// <value>The caption or <c>null</c> if the <c>CaptionId</c> is not valid.</value>
+		public Caption							Caption
+		{
+			get
+			{
+				if (this.caption == null)
+				{
+					this.caption = DbContext.Current.ResourceManager.GetCaption (this.captionId) ?? DbColumn.nullCaption;
+				}
+
+				if (this.caption == DbColumn.nullCaption)
+				{
+					return null;
+				}
+				else
+				{
+					return this.caption;
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Gets the key for the column, used internally to identify the column
+		/// metadata.
+		/// </summary>
+		/// <value>The key.</value>
+		public DbKey							Key
+		{
+			get
+			{
+				return this.key;
+			}
+		}
+
+
+		/// <summary>
+		/// Gets the name of the target table, if the column is a reference to
+		/// another table (foreign key).
+		/// </summary>
+		/// <value>The name of the target table.</value>
+		public string							TargetTableName
+		{
+			get
+			{
+				return this.targetTableName;
+			}
+		}
+
+		/// <summary>
+		/// Gets the name of the target column, if the column is a reference to
+		/// another table. The target column contains the key in the target table
+		/// which is used to create the relation.
+		/// </summary>
+		/// <value>The name of the target column.</value>
+		public string							TargetColumnName
+		{
+			get
+			{
+				if (this.columnClass == DbColumnClass.RefId)
+				{
+					return Tags.ColumnId;
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the containing table.
+		/// </summary>
+		/// <value>The containing table.</value>
 		public DbTable							Table
 		{
 			get
@@ -228,609 +218,555 @@ namespace Epsitec.Cresus.Database
 				return this.table;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the index of the column in the containing column.
+		/// </summary>
+		/// <value>The index of the column or <c>-1</c> if the column does not
+		/// belong to a table.</value>
 		public int								TableColumnIndex
 		{
 			get
 			{
 				if (this.table != null)
 				{
-					int index = this.table.Columns.IndexOf (this);
-					
-					if (index >= 0)
-					{
-						return index;
-					}
+					return this.table.Columns.IndexOf (this);
 				}
-				
-				throw new System.InvalidOperationException ("Column not in valid table.");
+				else
+				{
+					return -1;
+				}
 			}
 		}
-		
-		
-		public DbType							Type
-		{
-			get { return this.type; }
-		}
-		public DbSimpleType						SimpleType
-		{
-			get { return this.type.SimpleType; }
-		}
-		
-		public DbNumDef							NumDef
+
+
+		/// <summary>
+		/// Gets the type of the column.
+		/// </summary>
+		/// <value>The type definition.</value>
+		public DbTypeDef						Type
 		{
 			get
 			{
-				if (this.type is DbTypeNum)
-				{
-					DbTypeNum type = this.type as DbTypeNum;
-					return type.NumDef;
-				}
-				
-				return null;
+				return this.type;
 			}
 		}
-		
-		public int								Length
-		{
-			get
-			{
-				if (this.Type is DbTypeString)
-				{
-					DbTypeString type = this.type as DbTypeString;
-					return type.MaximumLength;
-				}
-				if (this.Type is DbTypeEnum)
-				{
-					DbTypeEnum type = this.Type as DbTypeEnum;
-					return type.MaxNameLength;
-				}
-				
-				return 1;
-			}
-		}
-		
-		public bool								IsFixedLength
-		{
-			get
-			{
-				if (this.type is DbTypeString)
-				{
-					DbTypeString type = this.type as DbTypeString;
-					return type.IsFixedLength;
-				}
-				
-				return true;
-			}
-		}
-		
-		
+
+
+		/// <summary>
+		/// Gets the category of the column (internal column or user data).
+		/// </summary>
+		/// <value>The category.</value>
 		public DbElementCat						Category
 		{
-			get { return this.category; }
+			get
+			{
+				return this.category;
+			}
 		}
-		
+
+		/// <summary>
+		/// Gets the revision mode for the column.
+		/// </summary>
+		/// <value>The revision mode.</value>
 		public DbRevisionMode					RevisionMode
 		{
-			get { return this.revision_mode; }
+			get
+			{
+				return this.revisionMode;
+			}
 		}
-		
-		
-		public bool								IsNullAllowed
-		{
-			get { return this.is_null_allowed; }
-			set { this.is_null_allowed = value; }
-		}
-		
-		public bool								IsUnique
-		{
-			get { return this.is_unique; }
-			set { this.is_unique = value; }
-		}
-		
-		public bool								IsIndexed
-		{
-			get { return this.is_indexed; }
-			set { this.is_indexed = value; }
-		}
-		
+
+
+		/// <summary>
+		/// Gets a value indicating whether this column is a primary key.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this column is a primary key; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsPrimaryKey
 		{
-			get { return this.is_primary_key; }
+			get
+			{
+				return this.isPrimaryKey;
+			}
 		}
-		
-		
-		public DbColumnLocalisation				ColumnLocalisation
+
+		/// <summary>
+		/// Gets a value indicating whether this column defines a foreign key.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this column defines a foreign key; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsForeignKey
 		{
-			get { return this.column_localisation; }
+			get
+			{
+				return (string.IsNullOrEmpty (this.TargetTableName) == false)
+					&& (string.IsNullOrEmpty (this.TargetColumnName) == false);
+			}
 		}
-		
+
+		/// <summary>
+		/// Gets the column localization.
+		/// </summary>
+		/// <value>The column localization.</value>
+		public DbColumnLocalization				Localization
+		{
+			get
+			{
+				return this.localization;
+			}
+		}
+
+		/// <summary>
+		/// Gets the column class (data, reference, key, etc.).
+		/// </summary>
+		/// <value>The column class.</value>
 		public DbColumnClass					ColumnClass
 		{
-			get { return this.column_class; }
+			get
+			{
+				return this.columnClass;
+			}
 		}
-		
-		
-		public void DefineCategory(DbElementCat category)
+
+
+		/// <summary>
+		/// Defines the column category. A column category may not be changed
+		/// after it has been defined.
+		/// </summary>
+		/// <param name="category">The category.</param>
+		internal void DefineCategory(DbElementCat category)
 		{
 			if (this.category == category)
 			{
 				return;
 			}
-			
-			if (this.category != DbElementCat.Unknown)
+
+			if (this.category == DbElementCat.Unknown)
 			{
-				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot define a new category.", this.Name));
+				this.category = category;
 			}
-			
-			this.category = category;
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot define a new category", this.Name));
+			}
 		}
-		
-		public void DefineRevisionMode(DbRevisionMode revision_mode)
+
+		/// <summary>
+		/// Defines the revision mode. A column revision mode may not be changed
+		/// after it has been defined.
+		/// </summary>
+		/// <param name="revisionMode">The revision mode.</param>
+		internal void DefineRevisionMode(DbRevisionMode revisionMode)
 		{
-			if (this.revision_mode == revision_mode)
+			if (this.revisionMode == revisionMode)
 			{
 				return;
 			}
-			
-			if (this.revision_mode != DbRevisionMode.Unknown)
+
+			if (this.revisionMode == DbRevisionMode.Unknown)
 			{
-				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot define a new revision mode.", this.Name));
+				this.revisionMode = revisionMode;
 			}
-			
-			this.revision_mode = revision_mode;
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot define a new revision mode", this.Name));
+			}
 		}
-		
-		public void DefineAttributes(params string[] attributes)
-		{
-			this.attributes.SetFromInitialisationList (attributes);
-		}
-		
-		
+
+		/// <summary>
+		/// Defines the containing table.
+		/// </summary>
+		/// <param name="table">The table.</param>
 		internal void DefineTable(DbTable table)
 		{
 			this.table = table;
 		}
-		
-		internal void DefineParentTableName(string parent_table_name)
+
+		/// <summary>
+		/// Defines the name of the target table. A target table may not be changed
+		/// after it has been defined.
+		/// </summary>
+		/// <param name="targetTableName">Name of the target table.</param>
+		internal void DefineTargetTableName(string targetTableName)
 		{
-			string current_name = this.ParentTableName;
-			
-			if (current_name == parent_table_name)
+			if (this.targetTableName == targetTableName)
 			{
 				return;
-			}
-			
-			if (current_name != null)
-			{
-				string message = string.Format ("Column '{0}' cannot change its parent table name from '{1}' to '{2}'.",
-					/**/						this.Name, current_name, parent_table_name);
-				throw new System.InvalidOperationException (message);
 			}
 
-			this.Attributes.SetAttribute (Tags.Parent, parent_table_name);
-		}
-		
-		internal void DefineInternalKey(DbKey key)
-		{
-			if (this.internal_column_key == key)
+			if (string.IsNullOrEmpty (this.targetTableName))
 			{
-				return;
-			}
-			
-			if (this.internal_column_key != null)
-			{
-				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot change its internal key.", this.Name));
-			}
-			
-			this.internal_column_key = key.Clone () as DbKey;
-		}
-		
-		internal void DefineColumnLocalisation(DbColumnLocalisation column_localisation)
-		{
-			this.column_localisation = column_localisation;
-		}
-		
-		internal void DefineColumnClass(DbColumnClass column_class)
-		{
-			this.column_class = column_class;
-		}
-		
-		internal void DefinePrimaryKey(bool is_primary_key)
-		{
-			this.is_primary_key = is_primary_key;
-		}
-		
-		
-		public SqlColumn CreateSqlColumn(ITypeConverter type_converter)
-		{
-			DbRawType raw_type = TypeConverter.MapToRawType (this.SimpleType, this.NumDef);
-			SqlColumn column   = null;
-			
-			//	Vérifie que la définition de la colonne est bien correcte. On ne permet ainsi
-			//	pas de localiser des colonnes de type référence (ça n'aurait pas de sens).
-			
-			switch (this.column_localisation)
-			{
-				case DbColumnLocalisation.Default:
-				case DbColumnLocalisation.Localised:
-					if (this.column_class != DbColumnClass.Data)
-					{
-						string message = string.Format ("Column '{0}' specifies localisation {1} for class {2}.",
-							/**/						this.Name, this.column_localisation, this.column_class);
-						throw new System.InvalidOperationException (message);
-					}
-					break;
-				
-				case DbColumnLocalisation.None:
-					break;
-				
-				default:
-					throw new System.InvalidOperationException (string.Format ("Column '{0}' specifies invalid localisation.", this.Name));
-			}
-			
-			switch (this.column_class)
-			{
-				case DbColumnClass.KeyId:
-				case DbColumnClass.KeyStatus:
-					if (this.Category != DbElementCat.Internal)
-					{
-						throw new System.InvalidOperationException (string.Format ("Column '{0}' category should be internal, but is {1}.", this.Name, this.Category));
-					}
-					break;
-				default:
-					break;
-			}
-			
-			IRawTypeConverter raw_converter;
-			
-			if (type_converter.CheckNativeSupport (raw_type))
-			{
-				column = new SqlColumn ();
-				column.SetType (raw_type, this.Length, this.IsFixedLength);
-			}
-			else if (type_converter.GetRawTypeConverter (raw_type, out raw_converter))
-			{
-				column = new SqlColumn ();
-				column.SetRawConverter (raw_converter);
+				this.targetTableName = targetTableName;
 			}
 			else
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Conversion of DbColumn to SqlColumn not possible for {0}.", this.Name));
+				string message = string.Format ("Column '{0}' cannot change its target table name from '{1}' to '{2}'.",
+					/**/						this.Name, this.TargetTableName, targetTableName);
+				throw new System.InvalidOperationException (message);
 			}
-			
-			if (column != null)
+		}
+
+		/// <summary>
+		/// Defines the column key. A column key may not be changed
+		/// after it has been defined.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		internal void DefineKey(DbKey key)
+		{
+			if (this.key == key)
 			{
-				column.Name          = this.CreateSqlName ();
-				column.IsNullAllowed = this.IsNullAllowed;
-				column.IsUnique      = this.IsUnique;
-				column.IsIndexed     = this.IsIndexed;
+				return;
 			}
+
+			if (this.key.IsEmpty)
+			{
+				this.key = key;
+			}
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot change its key", this.Name));
+			}
+		}
+
+		/// <summary>
+		/// Defines the column name.
+		/// </summary>
+		/// <param name="name">The name or a caption DRUID (like <c>"[1234]"</c>).</param>
+		internal void DefineName(string name)
+		{
+			if (Druid.IsValidResourceId (name))
+			{
+				this.DefineCaptionId (Druid.Parse (name));
+			}
+			else
+			{
+				this.name = name;
+			}
+		}
+
+		/// <summary>
+		/// Defines the caption id for the column. This clears the name, as it
+		/// will be derived automatically from the caption.
+		/// </summary>
+		/// <param name="captionId">The caption DRUID.</param>
+		internal void DefineCaptionId(Druid captionId)
+		{
+			this.captionId = captionId;
+			this.caption   = null;
+			this.name      = null;
+		}
+
+
+
+		/// <summary>
+		/// Defines the column type. The column type may not be changed
+		/// after it has been defined.
+		/// </summary>
+		/// <param name="value">The type definition.</param>
+		internal void DefineType(DbTypeDef value)
+		{
+			if (this.type == value)
+			{
+				return;
+			}
+
+			if (this.type == null)
+			{
+				this.type = value;
+				this.localization = this.type.IsMultilingual ? DbColumnLocalization.Localized : DbColumnLocalization.None;
+			}
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot change its type", this.Name));
+			}
+		}
+
+		/// <summary>
+		/// Defines the localization for the column.
+		/// </summary>
+		/// <param name="value">The localization mode.</param>
+		internal void DefineLocalization(DbColumnLocalization value)
+		{
+			this.localization = value;
+		}
+
+		/// <summary>
+		/// Defines the column class (data, reference, key, etc.).
+		/// </summary>
+		/// <param name="value">The column class.</param>
+		internal void DefineColumnClass(DbColumnClass value)
+		{
+			this.columnClass = value;
+		}
+
+		/// <summary>
+		/// Defines whether the column is used as part of the primary key.
+		/// </summary>
+		/// <param name="value">if set to <c>true</c>, the column is part of the primary key.</param>
+		internal void DefinePrimaryKey(bool value)
+		{
+			this.isPrimaryKey = value;
+		}
+
+
+		/// <summary>
+		/// Creates the SQL column for this column definition.
+		/// </summary>
+		/// <param name="typeConverter">The type converter.</param>
+		/// <param name="localizationSuffix">The localization suffix.</param>
+		/// <returns>The SQL column.</returns>
+		public SqlColumn CreateSqlColumn(ITypeConverter typeConverter, string localizationSuffix)
+		{
+			DbRawType rawType = this.type.RawType;
+			SqlColumn column;
+			
+			//	Verify that we do not attempt to create an SQL column based on
+			//	incorrect settings; check localization related constraints :
+
+			if (this.localization == DbColumnLocalization.None)
+			{
+				if (!string.IsNullOrEmpty (localizationSuffix))
+				{
+					string message = string.Format ("Column '{0}' does not specify localization, but caller provides suffix '{1}'", this.Name, localizationSuffix);
+					throw new System.InvalidOperationException (message);
+				}
+				if (this.type.IsMultilingual)
+				{
+					string message = string.Format ("Column '{0}' does not specify localization, but type is multilingual", this.Name);
+					throw new System.InvalidOperationException (message);
+				}
+			}
+			else if (this.localization == DbColumnLocalization.Localized)
+			{
+				if (string.IsNullOrEmpty (localizationSuffix))
+				{
+					string message = string.Format ("Column '{0}' specifies localization, but caller provides no suffix", this.Name);
+					throw new System.InvalidOperationException (message);
+				}
+				if (!this.type.IsMultilingual)
+				{
+					string message = string.Format ("Column '{0}' specifies localization, but type is not multilingual", this.Name);
+					throw new System.InvalidOperationException (message);
+				}
+				if (this.columnClass != DbColumnClass.Data)
+				{
+					string message = string.Format ("Column '{0}' specifies localization {1} for wrong class {2}", this.Name, this.localization, this.columnClass);
+					throw new System.InvalidOperationException (message);
+				}
+			}
+			else
+			{
+				throw new System.NotSupportedException (string.Format ("Column '{0}' specifies unsupported localization", this.Name));
+			}
+
+			if ((this.columnClass == DbColumnClass.KeyId) ||
+				(this.columnClass == DbColumnClass.KeyStatus))
+			{
+				if (this.Category != DbElementCat.Internal)
+				{
+					throw new System.InvalidOperationException (string.Format ("Column '{0}' category should be internal, but is {1}", this.Name, this.Category));
+				}
+			}
+
+			//	OK. The column is properly formed and we can now attempt to
+			//	generate the SQL column definition for it :
+			
+			IRawTypeConverter rawConverter;
+
+			if (typeConverter.CheckNativeSupport (rawType))
+			{
+				column = new SqlColumn ();
+				column.SetType (rawType, this.Type.Length, this.Type.IsFixedLength, DbCharacterEncoding.Unicode);
+			}
+			else if (typeConverter.GetRawTypeConverter (rawType, out rawConverter))
+			{
+				column = new SqlColumn ();
+				column.SetType (rawConverter.InternalType, rawConverter.Length, rawConverter.IsFixedLength, rawConverter.Encoding);
+			}
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot be translated to an SQL column", this.Name));
+			}
+
+			column.Name         = this.MakeLocalizedSqlName (localizationSuffix);
+			column.IsNullable   = this.Type.IsNullable;
+			column.IsForeignKey = this.IsForeignKey;
 			
 			return column;
 		}
-		
-		public string    CreateDisplayName()
+
+		/// <summary>
+		/// Creates the display name of the column.
+		/// </summary>
+		/// <returns>The display name.</returns>
+		public string GetDisplayName()
 		{
 			return this.Name;
 		}
-		
-		public string    CreateSqlName()
+
+		/// <summary>
+		/// Creates the SQL name of the column. This name will most certainly
+		/// be different from the high level <c>DbColumn.Name</c>.
+		/// </summary>
+		/// <returns>The SQL name.</returns>
+		public string GetSqlName()
 		{
-			//	Crée le nom SQL de la colonne. Ce nom peut être différent du nom "haut niveau"
-			//	utilisé par DbColumn, indépendamment des caractères autorisés.
-			
 			if (this.Category == DbElementCat.Internal)
 			{
-				//	Les colonnes "internes" doivent déjà avoir un nom valide et elles sont
-				//	traitées de manière spéciale ici :
-				
+				//	Make sure the name of the internal column is properly prefixed
+				//	with "CR_" or "CREF_" :
+
 				return DbSqlStandard.MakeSimpleSqlName (this.Name, DbElementCat.Internal);
 			}
-			
-			switch (this.column_class)
+
+			switch (this.columnClass)
 			{
 				case DbColumnClass.Data:		return DbSqlStandard.MakeSimpleSqlName (this.Name, this.Category);
 				case DbColumnClass.KeyId:		return Tags.ColumnId;
 				case DbColumnClass.KeyStatus:	return Tags.ColumnStatus;
 				case DbColumnClass.RefId:		return DbSqlStandard.MakeSimpleSqlName (this.Name, "REF", "ID");
 			}
-			
-			throw new System.NotSupportedException (string.Format ("Column '{0}' column class not supported.", this.Name));
+
+			throw new System.NotSupportedException (string.Format ("Column '{0}' has an unsupported class", this.Name));
 		}
-		
-		
-		public SqlField CreateSqlField(ITypeConverter type_converter, int value)
+
+		#region IEquatable<DbColumn> Members
+
+		/// <summary>
+		/// Compares the column with another column.
+		/// </summary>
+		/// <param name="other">Column to compare with.</param>
+		/// <returns><c>true</c> if both columns have the same name.</returns>
+		public bool Equals(DbColumn other)
 		{
-			//	TODO: pas une bonne idée d'avoir ces méthodes de création qui ne tiennent
-			//	pas compte des types internes supportés par la base... c'est valable pour
-			//	toutes les variantes de CreateSqlField.
-			
-			SqlField field = SqlField.CreateConstant (value, DbRawType.Int32);
-			field.Alias = this.Name;
-			return field;
-		}
-		
-		public SqlField CreateSqlField(ITypeConverter type_converter, long value)
-		{
-			SqlField field = SqlField.CreateConstant (value, DbRawType.Int64);
-			field.Alias = this.Name;
-			return field;
-		}
-		
-		public SqlField CreateSqlField(ITypeConverter type_converter, string value)
-		{
-			SqlField field = SqlField.CreateConstant (value, DbRawType.String);
-			field.Alias = this.Name;
-			return field;
-		}
-		
-		public SqlField CreateSqlField(ITypeConverter type_converter, System.DateTime value)
-		{
-			SqlField field = SqlField.CreateConstant (value, DbRawType.DateTime);
-			field.Alias = this.Name;
-			return field;
-		}
-		
-		public SqlField CreateEmptySqlField(ITypeConverter type_converter)
-		{
-			DbRawType raw_type = TypeConverter.MapToRawType (this.SimpleType, this.NumDef);
-			SqlField  field    = SqlField.CreateConstant (null, raw_type);
-			field.Alias = this.CreateSqlName ();
-			return field;
-		}
-		
-		
-		public static string SerializeToXml(DbColumn column, bool full)
-		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			DbColumn.SerializeToXml (buffer, column, full);
-			return buffer.ToString ();
-		}
-		
-		public static void   SerializeToXml(System.Text.StringBuilder buffer, DbColumn column, bool full)
-		{
-			if (column == null)
-			{
-				buffer.Append ("<null/>");
-			}
-			else
-			{
-				column.SerializeXmlDefinition (buffer, full);
-			}
-		}
-		
-		
-		internal void SetType(DbSimpleType type)
-		{
-			this.SetTypeAndLength (type, 1, true, null);
-		}
-		
-		internal void SetType(DbSimpleType type, DbNumDef num_def)
-		{
-			this.SetTypeAndLength (type, 1, true, num_def);
-		}
-		
-		internal void SetTypeAndLength(DbSimpleType type, int length, bool is_fixed_length)
-		{
-			this.SetTypeAndLength (type, length, is_fixed_length, null);
-		}
-		
-		internal void SetTypeAndLength(DbSimpleType type, int length, bool is_fixed_length, DbNumDef num_def)
-		{
-			if (this.type != null)
-			{
-				throw new System.InvalidOperationException ("Cannot reinitialise type of column.");
-			}
-			
-			if (length < 1)
-			{
-				throw new System.ArgumentOutOfRangeException ("length", length, "Invalid length");
-			}
-			
-			switch (type)
-			{
-				case DbSimpleType.String:
-					//	C'est le seul type qui accepte une spécification de taille (le ByteArray n'a pas
-					//	de taille maximale en SQL, donc on ignore son paramètre de longueur).
-					break;
-				
-				default:
-					if (length != 1)
-					{
-						throw new System.ArgumentOutOfRangeException ("length", length, "Length must be 1.");
-					}
-					if (is_fixed_length != true)
-					{
-						throw new System.ArgumentOutOfRangeException ("is_fixed_length", is_fixed_length, "Type must be of fixed length.");
-					}
-					break;
-			}
-			
-			switch (type)
-			{
-				case DbSimpleType.String:
-					this.type = new DbTypeString (length, is_fixed_length);
-					break;
-				
-				case DbSimpleType.ByteArray:
-					this.type = new DbTypeByteArray ();
-					break;
-					
-				case DbSimpleType.Decimal:
-					this.type = new DbTypeNum (num_def);
-					break;
-				
-				default:
-					this.type = new DbType (type);
-					break;
-			}
-		}
-		
-		internal void SetType(DbType type)
-		{
-			if (this.type != null)
-			{
-				throw new System.InvalidOperationException ("Cannot reinitialise type of column.");
-			}
-			
-			this.type = type;
-		}
-		
-		
-		#region Equals and GetHashCode support
-		public override bool Equals(object obj)
-		{
-			//	ATTENTION: L'égalité se base uniquement sur le nom des colonnes, pas sur les
-			//	détails internes...
-			
-			DbColumn that = obj as DbColumn;
-			
-			if (that == null)
+			if (object.ReferenceEquals (other, null))
 			{
 				return false;
 			}
-			
-			return (this.Name == that.Name);
-		}
-		
-		public override int GetHashCode()
-		{
-			string name = this.Name;
-			return (name == null) ? 0 : name.GetHashCode ();
+			else
+			{
+				return this.Name == other.Name;
+			}
 		}
 
 		#endregion
+
+		#region Equals and GetHashCode support
 		
-		protected void SerializeXmlDefinition(System.Text.StringBuilder buffer, bool full)
+		public override bool Equals(object obj)
 		{
-			buffer.Append (@"<col");
-			
-			if (this.IsNullAllowed)
+			return this.Equals (obj as DbColumn);
+		}
+
+		public override int GetHashCode()
+		{
+			string name = this.Name;
+			return string.IsNullOrEmpty (name) ? 0 : name.GetHashCode ();
+		}
+
+		#endregion
+
+		/// <summary>
+		/// Deserializes a column from the specified XML reader.
+		/// </summary>
+		/// <param name="xmlReader">The XML reader.</param>
+		/// <returns>The column.</returns>
+		public static DbColumn Deserialize(System.Xml.XmlTextReader xmlReader)
+		{
+			if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
+				(xmlReader.LocalName == "column"))
 			{
-				buffer.Append (@" null=""Y""");
-			}
-			
-			if (this.IsUnique)
-			{
-				buffer.Append (@" uniq=""Y""");
-			}
-			
-			if (this.IsIndexed)
-			{
-				buffer.Append (@" idx=""Y""");
-			}
-			
-			if (this.is_primary_key)
-			{
-				buffer.Append (@" pk=""Y""");
-			}
-			
-			string arg_cat = DbTools.ElementCategoryToString (this.category);
-			string arg_rev = DbTools.RevisionModeToString (this.revision_mode);
-			
-			if (arg_cat != null)
-			{
-				buffer.Append (@" cat=""");
-				buffer.Append (arg_cat);
-				buffer.Append (@"""");
-			}
-			if (arg_rev != null)
-			{
-				buffer.Append (@" rev=""");
-				buffer.Append (arg_rev);
-				buffer.Append (@"""");
-			}
-			
-			if (this.column_class != DbColumnClass.Data)
-			{
-				buffer.Append (@" class=""");
-				buffer.Append (Converter.ToString ((int) this.column_class));
-				buffer.Append (@"""");
-			}
-			
-			if (this.column_localisation != DbColumnLocalisation.None)
-			{
-				int num = (int) this.column_localisation;
-				buffer.Append (@" local=""");
-				buffer.Append (Converter.ToString ((int) this.column_localisation));
-				buffer.Append (@"""");
-			}
-			
-			if (full)
-			{
-				DbKey.SerializeToXmlAttributes (buffer, this.internal_column_key);
-				this.Attributes.SerializeXmlAttributes (buffer);
-				buffer.Append (@">");
-				
-				DbTypeFactory.SerializeToXml (buffer, this.type, true);
-				
-				buffer.Append (@"</col>");
+				DbColumn column = new DbColumn ();
+				bool isEmptyElement = xmlReader.IsEmptyElement;
+
+				column.captionId    = DbTools.ParseDruid (xmlReader.GetAttribute ("capt"));
+				column.category     = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
+				column.revisionMode = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
+				column.columnClass  = DbTools.ParseColumnClass (xmlReader.GetAttribute ("class"));
+				column.localization = DbTools.ParseLocalization (xmlReader.GetAttribute ("loc"));
+				column.isPrimaryKey = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("pk"));
+
+				if (!isEmptyElement)
+				{
+					xmlReader.ReadEndElement ();
+				}
+
+				return column;
 			}
 			else
 			{
-				buffer.Append (@"/>");
+				throw new System.Xml.XmlException (string.Format ("Unexpected element {0}", xmlReader.LocalName), null, xmlReader.LineNumber, xmlReader.LinePosition);
 			}
 		}
-		
-		protected void ProcessXmlDefinition(System.Xml.XmlElement xml)
+
+		#region IXmlSerializable Members
+
+		/// <summary>
+		/// Serializes the column using the specified XML writer.
+		/// </summary>
+		/// <param name="xmlWriter">The XML writer.</param>
+		public void Serialize(System.Xml.XmlTextWriter xmlWriter)
 		{
-			if (xml.Name != "col")
-			{
-				throw new System.FormatException (string.Format ("Expected root element named <col>, but found <{0}>.", xml.Name));
-			}
+			xmlWriter.WriteStartElement ("column");
+
+			DbTools.WriteAttribute (xmlWriter, "capt", DbTools.DruidToString (this.CaptionId));
+			DbTools.WriteAttribute (xmlWriter, "cat", DbTools.ElementCategoryToString (this.Category));
+			DbTools.WriteAttribute (xmlWriter, "rev", DbTools.RevisionModeToString (this.revisionMode == DbRevisionMode.Unknown ? DbRevisionMode.Disabled : this.revisionMode));
+			DbTools.WriteAttribute (xmlWriter, "class", DbTools.ColumnClassToString (this.ColumnClass));
+			DbTools.WriteAttribute (xmlWriter, "loc", DbTools.ColumnLocalizationToString (this.Localization));
+			DbTools.WriteAttribute (xmlWriter, "pk", DbTools.BoolDefaultingToFalseToString (this.IsPrimaryKey));
 			
-			string arg_null   = xml.GetAttribute ("null");
-			string arg_unique = xml.GetAttribute ("uniq");
-			string arg_index  = xml.GetAttribute ("idx");
-			string arg_pk     = xml.GetAttribute ("pk");
-			
-			this.is_null_allowed = (arg_null   == "Y");
-			this.is_unique       = (arg_unique == "Y");
-			this.is_indexed      = (arg_index  == "Y");
-			this.is_primary_key  = (arg_pk     == "Y");
-			
-			string arg_cat = xml.GetAttribute ("cat");
-			string arg_rev = xml.GetAttribute ("revs");
-			
-			this.category      = DbTools.ParseElementCategory (arg_cat);
-			this.revision_mode = DbTools.ParseRevisionMode (arg_rev);
-			
-			int column_class_code;
-			int column_localisation_code;
-			
-			Converter.Convert (xml.GetAttribute ("class"), out column_class_code);
-			Converter.Convert (xml.GetAttribute ("local"), out column_localisation_code);
-			
-			this.column_class        = (DbColumnClass) column_class_code;
-			this.column_localisation = (DbColumnLocalisation) column_localisation_code;
-			this.internal_column_key = DbKey.DeserializeFromXmlAttributes (xml);
-			
-			this.Attributes.DeserializeXmlAttributes (xml);
+			xmlWriter.WriteEndElement ();
 		}
+
+		#endregion
+
+		/// <summary>
+		/// Creates a localized column name.
+		/// </summary>
+		/// <param name="localizationSuffix">The localization suffix.</param>
+		/// <returns>The localized column name.</returns>
+		internal string MakeLocalizedName(string localizationSuffix)
+		{
+			return string.Concat (this.Name, " (", localizationSuffix, ")");
+		}
+
+		/// <summary>
+		/// Creates a localized SQL column name.
+		/// </summary>
+		/// <param name="localizationSuffix">The localization suffix.</param>
+		/// <returns>The localized SQL column name.</returns>
+		internal string MakeLocalizedSqlName(string localizationSuffix)
+		{
+			if (string.IsNullOrEmpty (localizationSuffix))
+			{
+				return this.GetSqlName ();
+			}
+			else
+			{
+				return DbTools.MakeCompositeName (this.GetSqlName (), DbSqlStandard.MakeSimpleSqlName (localizationSuffix));
+			}
+		}
+
+		private static readonly Caption nullCaption = new Caption ();
+
+		private DbTypeDef						type;
+		private DbTable							table;
+
+		private string							name;
+		private string							targetTableName;
+		private Druid							captionId;
+		private Caption							caption;
+
+		private DbKey							key;
 		
-		
-		protected DbAttributes					attributes				= new DbAttributes ();
-		protected DbType						type;
-		protected DbTable						table;
-		
-		protected bool							is_null_allowed;
-		protected bool							is_unique;
-		protected bool							is_indexed;
-		protected bool							is_primary_key;
-		protected DbElementCat					category;
-		protected DbRevisionMode				revision_mode;
-		protected DbKey							internal_column_key;
-		
-		protected DbColumnLocalisation			column_localisation		= DbColumnLocalisation.None;
-		protected DbColumnClass					column_class			= DbColumnClass.Data;
-		
-		
-		internal const int						MaxNameLength			= 50;
-		internal const int						MaxDictKeyLength		= 50;
-		internal const int						MaxDictValueLength		= 1000;
-		internal const int						MaxCaptionLength		= 100;
-		internal const int						MaxDescriptionLength	= 500;
-		internal const int						MaxInfoXmlLength		= 500;
+		private bool							isPrimaryKey;
+		private DbElementCat					category;
+		private DbRevisionMode					revisionMode;
+		private DbColumnClass					columnClass;
+		private DbColumnLocalization			localization;
 	}
 }

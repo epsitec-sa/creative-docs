@@ -1,20 +1,34 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// L'énumération DbCommandType décrit les divers types de commandes, permettant
-	/// de savoir s'il faut appeler ExecuteNonQuery ou l'une des variantes retournant
-	/// des données (ExecuteScalar, ExecuteReader, IDataAdapter.Fill, etc.).
+	/// The <c>DbCommandType</c> enumeration describes the different command types;
+	/// this allows the database infrastructure to decide which <c>Execute</c> method
+	/// to call (<c>ExecuteNonQuery</c>, <c>ExecuteScalar</c>, <c>ExecuteReader</c>,
+	/// <c>IDataAdapter.Fill</c>, etc.).
 	/// </summary>
-	public enum DbCommandType
+	public enum DbCommandType : byte
 	{
-		None			= 0,			//	pas de commande
+		/// <summary>
+		/// No command defined.
+		/// </summary>
+		None			= 0,
 		
-		Silent			= 1,			//	ExecuteNonQuery retourne -1
-		NonQuery		= 2,			//	ExecuteNonQuery retourne nb. lignes affectées
+		/// <summary>
+		/// Command for which <c>ExecuteNonQuery</c> returns no meaningful value.
+		/// </summary>
+		Silent			= 1,
 		
-		ReturningData	= 3				//	retourne des données (requête SELECT)
+		/// <summary>
+		/// Command for which <c>ExecuteNonQuery</c> returns the number of affected rows.
+		/// </summary>
+		NonQuery		= 2,
+		
+		/// <summary>
+		/// Command returning data (such as a <c>SELECT</c> statement).
+		/// </summary>
+		ReturningData	= 3
 	}
 }

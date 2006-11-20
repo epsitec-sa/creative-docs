@@ -1,200 +1,234 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
-	public enum Nullable
-	{
-		Undefined,
-		No,
-		Yes
-	}
-	
 	/// <summary>
-	/// La classe SqlColumn décrit une colonne dans une table de la base de données.
-	/// Cette classe ressemble fortement à System.Data.DataColumn.
+	/// The <c>SqlColumn</c> class describes a column at the SQL level. Compare
+	/// with <see cref="DbColumn"/>.
 	/// </summary>
-	public class SqlColumn : Common.Types.IName
+	public sealed class SqlColumn : Common.Types.IName
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlColumn"/> class.
+		/// </summary>
 		public SqlColumn()
+			: this (null)
 		{
 		}
-		
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlColumn"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
 		public SqlColumn(string name)
+			: this (name, DbRawType.Unknown)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlColumn"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="type">The type.</param>
+		public SqlColumn(string name, DbRawType type)
+			: this (name, type, 1, true)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlColumn"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="type">The type.</param>
+		/// <param name="length">The length.</param>
+		/// <param name="isFixedLength">If set to <c>true</c>, uses a fixed length.</param>
+		public SqlColumn(string name, DbRawType type, int length, bool isFixedLength)
+			: this (name, type, length, isFixedLength, DbNullability.No)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlColumn"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="type">The type.</param>
+		/// <param name="nullability">The nullability.</param>
+		public SqlColumn(string name, DbRawType type, DbNullability nullability)
+			: this (name, type, 1, true, nullability)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlColumn"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="type">The type.</param>
+		/// <param name="length">The length.</param>
+		/// <param name="isFixedLength">If set to <c>true</c>, uses a fixed length.</param>
+		/// <param name="nullability">The nullability.</param>
+		public SqlColumn(string name, DbRawType type, int length, bool isFixedLength, DbNullability nullability)
 		{
 			this.Name = name;
+			this.SetType (type, length, isFixedLength, DbCharacterEncoding.Unicode);
+			this.IsNullable = (nullability == DbNullability.Yes);
 		}
-		
-		public SqlColumn(string name, DbRawType raw_type)
-		{
-			this.Name = name;
-			this.SetType (raw_type);
-		}
-		
-		public SqlColumn(string name, DbRawType raw_type, int length, bool is_fixed_length)
-		{
-			this.Name = name;
-			this.SetType (raw_type, length, is_fixed_length);
-		}
-		
-		public SqlColumn(string name, DbRawType raw_type, Nullable nullable)
-		{
-			this.Name = name;
-			this.SetType (raw_type);
-			this.IsNullAllowed = (nullable == Nullable.Yes);
-		}
-		
-		public SqlColumn(string name, DbRawType raw_type, int length, bool is_fixed_length, Nullable nullable)
-		{
-			this.Name = name;
-			this.SetType (raw_type, length, is_fixed_length);
-			this.IsNullAllowed = (nullable == Nullable.Yes);
-		}
-		
-		
+
+
+		/// <summary>
+		/// Gets the name of the column.
+		/// </summary>
+		/// <value>The name of the column.</value>
 		public string							Name
 		{
-			get { return this.name; }
-			set { this.name = value; }
+			get
+			{
+				return this.name;
+			}
+			set
+			{
+				this.name = value;
+			}
 		}
-		
+
+		/// <summary>
+		/// Gets the type of the column.
+		/// </summary>
+		/// <value>The type of the column.</value>
 		public DbRawType						Type
 		{
-			get { return this.type; }
+			get
+			{
+				return this.type;
+			}
 		}
-		
+
+		/// <summary>
+		/// Gets the length of the column.
+		/// </summary>
+		/// <value>The length of the column.</value>
 		public int								Length
 		{
-			get { return this.length; }
+			get
+			{
+				return this.length;
+			}
 		}
-		
+
+		/// <summary>
+		/// Gets a value indicating whether this column is fixed length.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this column is fixed length; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsFixedLength
 		{
-			get { return this.is_fixed_length; }
+			get
+			{
+				return this.isFixedLength;
+			}
 		}
-		
-		
-		public bool								HasRawConverter
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this column defines a foreign key.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance column defines a foreign key; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsForeignKey
 		{
-			get { return this.raw_converter != null; }
+			get
+			{
+				return this.isForeignKey;
+			}
+			set
+			{
+				this.isForeignKey = value;
+			}
 		}
-		
-		public IRawTypeConverter				RawConverter
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this column is nullable.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this column is nullable; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsNullable
 		{
-			get { return this.raw_converter; }
+			get
+			{
+				return this.isNullable;
+			}
+			set
+			{
+				this.isNullable = value;
+			}
 		}
-		
-		
-		public bool								IsNullAllowed
+
+		/// <summary>
+		/// Gets the character encoding (if this column defines a string).
+		/// </summary>
+		/// <value>The character encoding.</value>
+		public DbCharacterEncoding				Encoding
 		{
-			get { return this.is_null_allowed; }
-			set { this.is_null_allowed = value; }
+			get
+			{
+				return this.encoding;
+			}
 		}
-		
-		public bool								IsUnique
-		{
-			get { return this.is_unique; }
-			set { this.is_unique = value; }
-		}
-		
-		public bool								IsIndexed
-		{
-			get { return this.is_indexed; }
-			set { this.is_indexed = value; }
-		}
-		
-		
-		public bool Validate(ISqlValidator validator)
-		{
-			return validator.ValidateName (this.name);
-		}
-		
-		
-		public void SetRawConverter(IRawTypeConverter raw_converter)
-		{
-			this.raw_converter = raw_converter;
-			this.SetType (raw_converter.InternalType, raw_converter.Length, raw_converter.IsFixedLength);
-		}
-		
+
+		/// <summary>
+		/// Sets the type.
+		/// </summary>
+		/// <param name="type">The type.</param>
 		public void SetType(DbRawType type)
 		{
-			this.SetType (type, 1, true);
+			this.SetType (type, 1, true, DbCharacterEncoding.Unicode);
 		}
-		
-		public void SetType(DbRawType type, int length, bool is_fixed_length)
+
+		/// <summary>
+		/// Sets the type.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="length">The length.</param>
+		/// <param name="isFixedLength">If set to <c>true</c>, this column is fixed length.</param>
+		public void SetType(DbRawType type, int length, bool isFixedLength, DbCharacterEncoding encoding)
 		{
 			if (length < 1)
 			{
 				throw new System.ArgumentOutOfRangeException ("Invalid length");
 			}
-			
+
 			switch (type)
 			{
 				case DbRawType.String:
-					//	C'est le seul type qui accepte une spécification de taille (le ByteArray n'a pas
-					//	de taille maximale définie dans la base, donc on ignore son paramètre de longueur).
+					
+					//	This is the only raw type which accepts a length specification.
+					//	The byte array does not require it.
+					
 					break;
-				
+
 				default:
 					if ((length != 1) ||
-						(is_fixed_length != true))
+						(!isFixedLength))
 					{
-						throw new System.ArgumentOutOfRangeException ("Length/Type mismatch");
+						throw new System.ArgumentOutOfRangeException ("Length/type mismatch");
 					}
 					break;
 			}
-			
-			this.type = type;
-			this.length = length;
-			this.is_fixed_length = is_fixed_length;
+
+			this.type          = type;
+			this.length        = length;
+			this.isFixedLength = isFixedLength;
+			this.encoding      = encoding;
 		}
-		
-		
-		public object ConvertToInternalType(object data)
-		{
-			if (this.HasRawConverter)
-			{
-				data = this.RawConverter.ConvertToInternalType (data);
-			}
-			
-			return data;
-		}
-		
-		public object ConvertFromInternalType(object data)
-		{
-			if (this.HasRawConverter)
-			{
-				data = this.RawConverter.ConvertFromInternalType (data);
-			}
-			
-			return data;
-		}
-		
-		
-		public void ConvertToInternalType(ref object data)
-		{
-			if (this.HasRawConverter)
-			{
-				data = this.RawConverter.ConvertToInternalType (data);
-			}
-		}
-		
-		public void ConvertFromInternalType(ref object data)
-		{
-			if (this.HasRawConverter)
-			{
-				data = this.RawConverter.ConvertFromInternalType (data);
-			}
-		}
-		
-		
-		protected string						name				= null;
-		protected DbRawType						type				= DbRawType.Null;
-		protected bool							is_null_allowed		= false;
-		protected bool							is_unique			= false;
-		protected bool							is_indexed			= false;
-		protected bool							is_fixed_length		= true;
-		protected int							length				= 1;
-		protected IRawTypeConverter				raw_converter		= null;
+
+		private string							name;
+		private DbRawType						type;
+		private bool							isNullable;
+		private bool							isFixedLength;
+		private bool							isForeignKey;
+		private DbCharacterEncoding				encoding;
+		private int								length;
 	}
 }

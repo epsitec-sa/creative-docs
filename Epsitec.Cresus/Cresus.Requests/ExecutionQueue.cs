@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Requests
 				DbTable table = this.infrastructure.ResolveDbTable (transaction, Tags.TableRequestQueue);
 				
 				this.Attach (infrastructure, table);
-				this.RestoreFromBase (transaction);
+				this.LoadFromBase (transaction);
 				
 				transaction.Commit ();
 			}
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Requests
 			{
 				lock (this)
 				{
-					System.Data.DataRow[] rows = DbRichCommand.CopyLiveRows (this.Rows);
+					System.Data.DataRow[] rows = DbRichCommand.GetLiveRows (this.Rows);
 					System.Array.Sort (rows, new DateTimeRowComparer ());
 					return rows;
 				}
@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.Requests
 					//	qu'elles proviennent d'un client distant qui a déjà attribué
 					//	des IDs aux requêtes).
 					
-					row[Tags.ColumnId] = ids[i].Value;
+					DbKey.SetRowId (row, ids[i]);
 					
 					if ((find != null) &&
 						(find.RowState != System.Data.DataRowState.Deleted))
@@ -289,12 +289,8 @@ namespace Epsitec.Cresus.Requests
 			int length = data.Length;
 			
 			System.Diagnostics.Debug.Assert (length > 0);
-			
-			System.Data.DataRow row;
-			
-			DbId log_id = this.CreateLogId (transaction);
-			
-			DbRichCommand.CreateRow (this.queue_data_table, log_id, out row);
+
+			System.Data.DataRow row = DbRichCommand.CreateRow (this.queue_data_table, this.CreateLogId (transaction));
 			
 			row.BeginEdit ();
 			row[Tags.ColumnReqData]    = data;
@@ -409,7 +405,8 @@ namespace Epsitec.Cresus.Requests
 		#endregion
 		
 		#region IPersistable Members
-		public void RestoreFromBase(DbTransaction transaction)
+		
+		public void LoadFromBase(DbTransaction transaction)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 			System.Diagnostics.Debug.Assert (this.infrastructure != null);
@@ -424,19 +421,19 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
-		public void SerializeToBase(DbTransaction transaction)
+		public void PersistToBase(DbTransaction transaction)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 			System.Diagnostics.Debug.Assert (this.queue_command != null);
 			
 			lock (this)
 			{
-				this.queue_command.UpdateRealIds (transaction);
+				this.queue_command.AssignRealRowIds (transaction);
 				this.queue_command.UpdateTables (transaction);
-				
-				this.queue_command.AcceptChanges ();
+				this.queue_command.AcceptChanges (transaction);
 			}
 		}
+		
 		#endregion
 		
 		#region DateTimeRowComparer Class

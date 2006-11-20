@@ -15,11 +15,11 @@ namespace Epsitec.Cresus.Services
 			//	simplement supprimée.
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			Database.DbAccess         access = Database.DbInfrastructure.CreateDbAccess ("FirebirdEmbedded", database_name);
+			Database.DbAccess         access = Database.DbInfrastructure.CreateDatabaseAccess ("FirebirdEmbedded", database_name);
 			
 			access.CheckConnection = false;
 			
-			Database.IDbServiceTools  tools  = Database.DbFactory.FindDbAbstraction (access).ServiceTools;
+			Database.IDbServiceTools  tools  = Database.DbFactory.CreateDatabaseAbstraction (access).ServiceTools;
 			Common.IO.TemporaryFile   temp   = new Common.IO.TemporaryFile ();
 			
 			string database_path = tools.GetDatabasePath ();
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Services
 			
 			using (Database.DbInfrastructure infrastructure = new Database.DbInfrastructure ())
 			{
-				infrastructure.AttachDatabase (access);
+				infrastructure.AttachToDatabase (access);
 				infrastructure.SetupRoamingDatabase (client.ClientId);
 			}
 		}

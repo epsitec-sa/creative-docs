@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Requests
 			}
 			
 			this.PrepareNewCommand ();
-			this.CurrentSqlBuilder.InsertData (table.CreateSqlName (), sql_fields);
+			this.CurrentSqlBuilder.InsertData (table.GetSqlName (), sql_fields);
 			
 			this.expected_rows_changed++;
 		}
@@ -140,11 +140,11 @@ namespace Epsitec.Cresus.Requests
 				SqlField name  = SqlField.CreateName (sql_cond_columns[i].Name);
 				SqlField value = sql_cond_values[i];
 				
-				sql_cond_fields.Add (new SqlFunction (SqlFunctionType.CompareEqual, name, value));
+				sql_cond_fields.Add (new SqlFunction (SqlFunctionCode.CompareEqual, name, value));
 			}
 			
 			this.PrepareNewCommand ();
-			this.CurrentSqlBuilder.UpdateData (table.CreateSqlName (), sql_data_fields, sql_cond_fields);
+			this.CurrentSqlBuilder.UpdateData (table.GetSqlName (), sql_data_fields, sql_cond_fields);
 			
 			this.expected_rows_changed++;
 		}
@@ -165,10 +165,10 @@ namespace Epsitec.Cresus.Requests
 					//	le champ correspondant :
 					
 					System.Diagnostics.Debug.Assert (fields[i].RawType == DbKey.RawTypeForId);
-					System.Diagnostics.Debug.Assert (fields[i].Alias == table.Columns[Tags.ColumnRefLog].CreateSqlName ());
+					System.Diagnostics.Debug.Assert (fields[i].Alias == table.Columns[Tags.ColumnRefLog].GetSqlName ());
 					
 					fields[i].Overwrite (SqlField.CreateConstant (this.CurrentLogId.Value, DbKey.RawTypeForId));
-					fields[i].Alias = table.Columns[Tags.ColumnRefLog].CreateSqlName ();
+					fields[i].Alias = table.Columns[Tags.ColumnRefLog].GetSqlName ();
 					
 					return;
 				}
@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Requests
 			//	avec cette valeur :
 			
 			SqlField field = SqlField.CreateConstant (this.CurrentLogId.Value, DbKey.RawTypeForId);
-			string   alias = table.Columns[Tags.ColumnRefLog].CreateSqlName ();
+			string   alias = table.Columns[Tags.ColumnRefLog].GetSqlName ();
 			
 			fields.Add (alias, field);
 		}
@@ -217,11 +217,12 @@ namespace Epsitec.Cresus.Requests
 		private SqlColumn[] CreateSqlColumns(DbTable table, string[] column_names)
 		{
 			SqlColumn[]    columns   = new SqlColumn[column_names.Length];
-			ITypeConverter converter = this.infrastructure.TypeConverter;
+			ITypeConverter converter = this.infrastructure.Converter;
 			
 			for (int i = 0; i < columns.Length; i++)
 			{
-				columns[i] = table.Columns[column_names[i]].CreateSqlColumn (converter);
+				//	TODO: handle multiple cultures...
+				columns[i] = table.Columns[column_names[i]].CreateSqlColumn (converter, null);
 			}
 			
 			return columns;
@@ -233,7 +234,7 @@ namespace Epsitec.Cresus.Requests
 			
 			for (int i = 0; i < columns.Length; i++)
 			{
-				SqlField field = SqlField.CreateConstant (columns[i].ConvertToInternalType (values[i]), columns[i].Type);
+				SqlField field = this.infrastructure.CreateSqlField (columns[i], values[i]);
 				string   alias = columns[i].Name;
 				sql_fields.Add (alias, field);
 			}

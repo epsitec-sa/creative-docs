@@ -1,14 +1,18 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
+
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe DbRichCommand permet de regrouper plusieurs commandes pour
-	/// n'en faire qu'une qui peut ensuite être exécutée au moyen de ISqlEngine,
-	/// avec récupération des données dans les tables ad hoc.
+	/// The <c>DbRichCommand</c> class manages one or several commands which can
+	/// be executed with <c>ISqlEngine</c>. It handles the select, update, insert
+	/// and delete of information in data tables.
 	/// </summary>
-	public class DbRichCommand : System.IDisposable
+	public sealed class DbRichCommand : System.IDisposable, IReadOnly
 	{
 		public DbRichCommand(DbInfrastructure infrastructure)
 		{
@@ -17,8 +21,11 @@ namespace Epsitec.Cresus.Database
 			this.commands = new Collections.DbCommands ();
 			this.tables   = new Collections.DbTables ();
 		}
-		
-		
+
+		/// <summary>
+		/// Gets the individual commands associated with this rich command.
+		/// </summary>
+		/// <value>The commands.</value>
 		public Collections.DbCommands			Commands
 		{
 			get
@@ -26,7 +33,11 @@ namespace Epsitec.Cresus.Database
 				return this.commands;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the individual table definitions associated with this rich command.
+		/// </summary>
+		/// <value>The table definitions.</value>
 		public Collections.DbTables				Tables
 		{
 			get
@@ -34,15 +45,23 @@ namespace Epsitec.Cresus.Database
 				return this.tables;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the data set associated with this rich command.
+		/// </summary>
+		/// <value>The data set or <c>null</c> if there is no data set.</value>
 		public System.Data.DataSet				DataSet
 		{
 			get
 			{
-				return this.data_set;
+				return this.dataSet;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the infrastructure associated with this rich command.
+		/// </summary>
+		/// <value>The infrastructure.</value>
 		public DbInfrastructure					Infrastructure
 		{
 			get
@@ -50,80 +69,157 @@ namespace Epsitec.Cresus.Database
 				return this.infrastructure;
 			}
 		}
-		
-		
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is read only.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is read only; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsReadOnly
 		{
 			get
 			{
-				return this.is_read_only;
+				return this.isReadOnly;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is read/write.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is read/write; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsReadWrite
 		{
 			get
 			{
-				return ! this.is_read_only;
+				return !this.isReadOnly;
 			}
 		}
-		
-		
+
+		/// <summary>
+		/// Gets the insert count for the replace statistics.
+		/// </summary>
+		/// <value>The insert count for the replace statistics.</value>
 		public int								ReplaceStatisticsInsertCount
 		{
 			get
 			{
-				return this.stat_replace_insert_count;
+				return this.statReplaceInsertCount;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the update count for the replace statistics.
+		/// </summary>
+		/// <value>The update count for the replace statistics.</value>
 		public int								ReplaceStatisticsUpdateCount
 		{
 			get
 			{
-				return this.stat_replace_update_count;
+				return this.statReplaceUpdateCount;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the delete count for the replace statistics.
+		/// </summary>
+		/// <value>The delete count for the replace statistics.</value>
 		public int								ReplaceStatisticsDeleteCount
 		{
 			get
 			{
-				return this.stat_replace_delete_count;
+				return this.statReplaceDeleteCount;
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Creates a rich command from a table definition which can then be
+		/// used to load the table into the data set.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table definition.</param>
+		/// <returns>The <c>DbRichCommand</c> instance.</returns>
 		public static DbRichCommand CreateFromTable(DbInfrastructure infrastructure, DbTransaction transaction, DbTable table)
 		{
 			return DbRichCommand.CreateFromTables (infrastructure, transaction, new DbTable[] { table }, new DbSelectCondition[] { null });
 		}
-		
-		public static DbRichCommand CreateFromTable(DbInfrastructure infrastructure, DbTransaction transaction, DbTable table, DbSelectRevision select_revision)
+
+		/// <summary>
+		/// Creates a rich command from a table definition which can then be
+		/// used to load a specific revision (all, live, copied, archive) of
+		/// the data into the data set.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// <param name="selectRevision">The revision to select.</param>
+		/// <returns>The <c>DbRichCommand</c> instance.</returns>
+		public static DbRichCommand CreateFromTable(DbInfrastructure infrastructure, DbTransaction transaction, DbTable table, DbSelectRevision selectRevision)
 		{
-			DbSelectCondition condition = new DbSelectCondition (infrastructure.TypeConverter);
-			condition.Revision = select_revision;
-			return DbRichCommand.CreateFromTable (infrastructure, transaction, table, condition);
+			return DbRichCommand.CreateFromTable (infrastructure, transaction, table, new DbSelectCondition (infrastructure.Converter, selectRevision));
 		}
-		
+
+		/// <summary>
+		/// Creates a rich command from a table definition which can then be
+		/// used to load the table into the data set, using a specific selection.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// <param name="condition">The select condition or <c>null</c> to select nothing.</param>
+		/// <returns>The <c>DbRichCommand</c> instance.</returns>
 		public static DbRichCommand CreateFromTable(DbInfrastructure infrastructure, DbTransaction transaction, DbTable table, DbSelectCondition condition)
 		{
 			return DbRichCommand.CreateFromTables (infrastructure, transaction, new DbTable[] { table }, new DbSelectCondition[] { condition });
 		}
-		
+
+		/// <summary>
+		/// Creates a rich command from the definition of a collection of tables
+		/// which can then be used to load the table into the data set.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="tables">The table definitions.</param>
+		/// <returns>The <c>DbRichCommand</c> instance.</returns>
 		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, DbTransaction transaction, Collections.DbTables tables)
 		{
 			return DbRichCommand.CreateFromTables (infrastructure, transaction, tables.ToArray ());
 		}
-		
+
+		/// <summary>
+		/// Creates a rich command from the definition of a collection of tables
+		/// which can then be used to load the table into the data set.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="tables">The table definitions.</param>
+		/// <returns>The <c>DbRichCommand</c> instance.</returns>
 		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, DbTransaction transaction, params DbTable[] tables)
 		{
 			return DbRichCommand.CreateFromTables (infrastructure, transaction, tables, new DbSelectCondition[tables.Length]);
 		}
-		
+
+		/// <summary>
+		/// Creates a rich command from the definition of a collection of tables
+		/// which can then be used to load the table into the data set, using
+		/// specific selections.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="tables">The table definitions.</param>
+		/// <param name="conditions">The select conditions (one for every table definition); use a
+		/// <c>null</c> condition to select nothing for a given table.</param>
+		/// <returns>The <c>DbRichCommand</c> instance.</returns>
 		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, DbTransaction transaction, DbTable[] tables, DbSelectCondition[] conditions)
 		{
-			System.Diagnostics.Debug.Assert (tables.Length == conditions.Length);
+			if (tables.Length != conditions.Length)
+			{
+				throw new System.ArgumentException ("Mismatch of tables and conditions");
+			}
 			
 			if (transaction == null)
 			{
@@ -145,18 +241,22 @@ namespace Epsitec.Cresus.Database
 			
 			for (int i = 0; i < n; i++)
 			{
-				DbTable           table     = tables[i];
+				DbTable table = tables[i];
 				DbSelectCondition condition = conditions[i];
 				
-				SqlSelect   select  = new SqlSelect ();
+				SqlSelect select = new SqlSelect ();
 				ISqlBuilder builder = transaction.SqlBuilder;
 				
 				select.Fields.Add (SqlField.CreateAll ());
-				select.Tables.Add (table.Name, SqlField.CreateName (table.CreateSqlName ()));
+				select.Tables.Add (table.Name, SqlField.CreateName (table.GetSqlName ()));
+				
+				//	If there is no condition, this means we don't want to get any data
+				//	for the specific table; just fetch the empty table by using an always
+				//	false WHERE clause.
 				
 				if (condition == null)
 				{
-					select.Conditions.Add (new SqlFunction (SqlFunctionType.CompareFalse));
+					select.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareFalse));
 				}
 				else
 				{
@@ -169,68 +269,90 @@ namespace Epsitec.Cresus.Database
 				command.Tables.Add (table);
 			}
 			
+			//	Fetch the table contents into a data set :
+			
 			infrastructure.Execute (transaction, command);
 			
-			foreach (System.Data.DataTable data_table in command.DataSet.Tables)
+			//	Relax the constraints imposed by ADO.NET based on the table schemas, so
+			//	that we can fill the rows with partial data without getting exceptions :
+			
+			foreach (System.Data.DataTable table in command.DataSet.Tables)
 			{
-				DbRichCommand.RelaxConstraints (data_table);
+				DbRichCommand.RelaxConstraints (table);
 			}
 			
 			return command;
 		}
-		
-		
-		public static void RelaxConstraints(System.Data.DataTable data_table)
+
+		/// <summary>
+		/// Relaxes the data table constraints set up by ADO.NET so that we can
+		/// fill the rows with partial data.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		internal static void RelaxConstraints(System.Data.DataTable table)
 		{
-			if (data_table.Columns[Tags.ColumnId].Unique == false)
+			if (table.Columns[Tags.ColumnId].Unique == false)
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Warning: Table {0} ID not unique, fixing.", data_table.TableName));
-				data_table.Columns[Tags.ColumnId].Unique = true;
+				System.Diagnostics.Debug.WriteLine (string.Format ("Warning: Table {0} ID not unique, fixing.", table.TableName));
+				table.Columns[Tags.ColumnId].Unique = true;
 			}
 			
-			//	Si certaines colonnes empêchent l'utilisateur de valeurs 'null' dans la
-			//	base de données, il faut effacer ces fanions pour éviter des problèmes
-			//	pendant le peuplement de la table (où toutes les colonnes ne sont pas
-			//	encore affectées) :
+			//	If some columns are declared as non-nullable in the database, we have to
+			//	remove set the AllowDBNull so that we can fill the table with partial
+			//	rows without having ADO.NET complain about the broken constraint.
 			
-			foreach (System.Data.DataColumn data_column in data_table.Columns)
+			foreach (System.Data.DataColumn column in table.Columns)
 			{
-				if (data_column.AllowDBNull == false)
+				if (column.AllowDBNull == false)
 				{
-					data_column.AllowDBNull = true;
+					column.AllowDBNull = true;
 				}
 			}
 		}
-		
-		
+
+		/// <summary>
+		/// Locks the tables and make them read only. This prevents accidental calls
+		/// to <c>UpdateTables</c> and <c>UpdateRealIds</c>.
+		/// </summary>
 		public void LockReadOnly()
 		{
-			//	En verrouillant le DbRichCommand contre les modifications, on évite que
-			//	l'utilisateur n'appelle par inadvertance UpdateTables ou UpdateRealIds.
-			
-			this.is_read_only = true;
+			this.isReadOnly = true;
 		}
-		
-		
+
+		/// <summary>
+		/// Saves the tables by assigning real row ids to the rows, defining
+		/// their log id and finally calling <c>UpdateTables</c>.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		public void SaveTables(DbTransaction transaction)
+		{
+			this.UpdateLogIds ();
+			this.AssignRealRowIds (transaction);
+			this.UpdateTables (transaction);
+		}
+
+		/// <summary>
+		/// Updates the tables by writing their contents to the database.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		public void UpdateTables(DbTransaction transaction)
 		{
-			if (this.is_read_only)
+			if (this.isReadOnly)
 			{
-				throw new Exceptions.ReadOnlyException (this.db_access);
+				throw new Exceptions.ReadOnlyException (this.access);
 			}
 			
-			//	Sauve les données du DataSet dans la base de données (mise à jour soit
-			//	par UPDATE, soit par INSERT, en fonction de l'état de chaque ligne);
-			//	pour que cela fonctionne, il faut que DbRichCommand ait été rempli
-			//	correctement au préalable, au moyen de DbInfrastructure.Execute.
+			//	Saves the data from the data set to the database, using either UPADTE or
+			//	INSERT commands for each row. The DbRichCommand must have been filled with
+			//	a call to Execute for this to work.
 			
 			if (transaction == null)
 			{
-				throw new Exceptions.MissingTransactionException (this.db_access);
+				throw new Exceptions.MissingTransactionException (this.access);
 			}
 			
 			this.CheckValidState ();
-			this.CheckRowIds ();
+			this.AssertValidRowIds ();
 			
 			this.SetCommandTransaction (transaction);
 			
@@ -238,27 +360,29 @@ namespace Epsitec.Cresus.Database
 			{
 				for (int i = 0; i < this.adapters.Length; i++)
 				{
-					this.adapters[i].Update (this.data_set);
+					this.adapters[i].Update (this.dataSet);
 				}
 			}
 			finally
 			{
-				this.SetCommandTransaction (null);
+				this.PopCommandTransaction ();
 			}
 		}
-		
-		public void UpdateRealIds(DbTransaction transaction)
+
+		/// <summary>
+		/// Assign real row ids to the new data table rows.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		public void AssignRealRowIds(DbTransaction transaction)
 		{
-			if (this.is_read_only)
+			if (this.isReadOnly)
 			{
-				throw new Exceptions.ReadOnlyException (this.db_access);
+				throw new Exceptions.ReadOnlyException (this.access);
 			}
-			
-			//	Met à jour les IDs des nouvelles lignes des diverses tables.
 			
 			if (transaction == null)
 			{
-				throw new Exceptions.MissingTransactionException (this.db_access);
+				throw new Exceptions.MissingTransactionException (this.access);
 			}
 			
 			this.CheckValidState ();
@@ -266,182 +390,448 @@ namespace Epsitec.Cresus.Database
 			
 			try
 			{
-				foreach (System.Data.DataTable table in this.data_set.Tables)
+				foreach (System.Data.DataTable table in this.dataSet.Tables)
 				{
-					//	S'il y a des clefs temporaires dans la table, on va les remplacer par
-					//	des clefs définitives; en effet, on n'a pas le droit de "persister" des
-					//	lignes utilisant des clefs temporaires dans la base.
+					//	If there are temporary rows in the table, assign them real row ids, as
+					//	we may not persist tables with temporary row ids :
 					
-					DbRichCommand.UpdateRealIds (this.infrastructure, transaction, table);
+					DbRichCommand.AssignRealRowIds (this.infrastructure, transaction, table);
 				}
 			}
 			finally
 			{
-				this.SetCommandTransaction (null);
+				this.PopCommandTransaction ();
 			}
 		}
-		
+
+		/// <summary>
+		/// Updates the log ids associated with the data set, using the most
+		/// current log id.
+		/// </summary>
 		public void UpdateLogIds()
 		{
 			this.UpdateLogIds (this.infrastructure.Logger.CurrentId);
 		}
-		
-		public void UpdateLogIds(DbId log_id)
+
+		/// <summary>
+		/// Updates the log ids associated with the data set, using the specified
+		/// log id.
+		/// </summary>
+		/// <param name="logId">The log id.</param>
+		public void UpdateLogIds(DbId logId)
 		{
-			if (this.is_read_only)
+			if (this.isReadOnly)
 			{
-				throw new Exceptions.ReadOnlyException (this.db_access);
+				throw new Exceptions.ReadOnlyException (this.access);
 			}
 			
-			foreach (System.Data.DataTable table in this.data_set.Tables)
+			foreach (System.Data.DataTable table in this.dataSet.Tables)
 			{
-				DbRichCommand.UpdateLogIds (table, log_id);
+				DbRichCommand.UpdateLogIds (table, logId);
 			}
 		}
-		
-		
+
+		/// <summary>
+		/// Replaces the contents of the tables in the database by the contents
+		/// of the data set. This is similar to <c>UpdateTables</c>, but overwriting
+		/// the database contents even if the data changed since the call to
+		/// <c>Execute</c>.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		public void ReplaceTables(DbTransaction transaction)
 		{
 			this.ReplaceTables (transaction, null);
 		}
-		
+
+		/// <summary>
+		/// Replaces the contents of the tables in the database by the contents
+		/// of the data set. This is similar to <c>UpdateTables</c>, but overwriting
+		/// the database contents even if the data changed since the call to
+		/// <c>Execute</c>.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="options">The replace options.</param>
 		public void ReplaceTables(DbTransaction transaction, IReplaceOptions options)
 		{
-			//	Similaire à UpdateTables, mais en écrasant les données contenues dans
-			//	la base, sans égard pour d'éventuelles anciennes données déjà présentes
-			//	(là aussi, UPDATE sera utilisé d'abord et INSERT en cas de besoin).
-			
 			if (transaction == null)
 			{
-				throw new Exceptions.MissingTransactionException (this.db_access);
+				throw new Exceptions.MissingTransactionException (this.access);
 			}
 			
 			this.CheckValidState ();
-			this.CheckRowIds ();
+			this.AssertValidRowIds ();
 			
 			this.ReplaceTablesWithoutValidityChecking(transaction, options);
 		}
-		
+
+		/// <summary>
+		/// Replaces the table contents in the database without validity checking.
+		/// This will effectively overwrite the data, even if it was changed by
+		/// someone else in the meantime.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="options">The replace options or <c>null</c>.</param>
 		public void ReplaceTablesWithoutValidityChecking(DbTransaction transaction, IReplaceOptions options)
 		{
-			//	ATTENTION: Cette méthode ne gère pas les conflits; elle écrase les données
-			//	dans la base en fonction du contenu des tables du DataSet.
-			
-			if (this.is_read_only)
+			if (this.isReadOnly)
 			{
-				throw new Exceptions.ReadOnlyException (this.db_access);
+				throw new Exceptions.ReadOnlyException (this.access);
 			}
 			
-			//	On ne touche à rien dans les tables ! Le log ID par exemple est conservé
-			//	tel quel. On va simplement exécuter "à la main" une série de UPDATE et
-			//	si besoin de INSERT.
+			//	Don't touch the contents of the tables; writes them as is to the
+			//	database, by using either UPDATE or INSERT.
 			
 			for (int i = 0; i < this.adapters.Length; i++)
 			{
-				System.Data.DataTable data_table = this.data_set.Tables[i];
+				System.Data.DataTable table = this.dataSet.Tables[i];
 				
-				int change_count = 0;
-				int delete_count = 0;
+				int changeCount = 0;
+				int deleteCount = 0;
 				
-				for (int r = 0; r < data_table.Rows.Count; r++)
+				for (int r = 0; r < table.Rows.Count; r++)
 				{
-					System.Data.DataRow data_row = data_table.Rows[r];
+					System.Data.DataRow row = table.Rows[r];
 					
-					switch (data_row.RowState)
+					switch (row.RowState)
 					{
 						case System.Data.DataRowState.Added:
 						case System.Data.DataRowState.Modified:
-							change_count++;
+							changeCount++;
 							break;
 						
 						case System.Data.DataRowState.Deleted:
-							delete_count++;
+							deleteCount++;
 							break;
 					}
 				}
 				
-				if ((change_count > 0) ||
-					(delete_count > 0))
+				if ((changeCount > 0) ||
+					(deleteCount > 0))
 				{
-					this.ReplaceTable (transaction, data_table, this.Tables[i], options);
+					this.ReplaceTablesWithoutValidityChecking (transaction, table, this.Tables[i], options);
 				}
-				
-				data_table.AcceptChanges ();
+
+				this.AcceptChanges (transaction, table.TableName);
 			}
 		}
-		
-		
-		public void CreateNewRow(string table_name, out System.Data.DataRow data_row)
+
+		/// <summary>
+		/// Creates a new row in the specified table. The row id will be set to a new
+		/// temporary row id.
+		/// </summary>
+		/// <param name="tableName">Name of the table.</param>
+		/// <returns>The new row.</returns>
+		public System.Data.DataRow CreateRow(string tableName)
 		{
-			//	Crée une ligne et ajoute celle-ci dans la table.
-			
-			if (this.is_read_only)
+			if (this.isReadOnly)
 			{
-				throw new Exceptions.ReadOnlyException (this.db_access);
+				throw new Exceptions.ReadOnlyException (this.access);
 			}
 			
 			this.CheckValidState ();
 			
-			System.Data.DataTable table = this.data_set.Tables[table_name];
+			System.Data.DataTable table = this.dataSet.Tables[tableName];
 			
 			if (table == null)
 			{
-				throw new System.ArgumentException (string.Format ("Table {0} not found.", table_name), "table_name");
+				throw new System.ArgumentException (string.Format ("Table {0} not found.", tableName), "tableName");
 			}
+
+			System.Data.DataRow row = DbRichCommand.CreateRow (table);
 			
-			DbRichCommand.CreateRow (table, out data_row);
-			
-			table.Rows.Add (data_row);
+			table.Rows.Add (row);
+
+			return row;
 		}
-		
-		public void DeleteExistingRow(System.Data.DataRow data_row)
+
+		/// <summary>
+		/// Deletes an existing row.
+		/// </summary>
+		/// <param name="row">The row to delete.</param>
+		public void DeleteExistingRow(System.Data.DataRow row)
 		{
-			if (this.is_read_only)
+			if (this.isReadOnly)
 			{
-				throw new Exceptions.ReadOnlyException (this.db_access);
+				throw new Exceptions.ReadOnlyException (this.access);
 			}
 			
-			DbRichCommand.DeleteRow (data_row);
+			DbRichCommand.DeleteRow (row);
 		}
-		
-		public void AcceptChanges()
+
+		/// <summary>
+		/// Makes the specified row immutable. This creates a new row, if needed,
+		/// which can then be further modified. This method has no effect if the
+		/// table does not use <c>DbRevisionMode.Enabled</c>.
+		/// </summary>
+		/// <param name="row">The original row.</param>
+		/// <returns>The row which replaces the original row.</returns>
+		public System.Data.DataRow MakeRowImmutable(System.Data.DataRow row)
 		{
-			if (this.is_read_only)
+			if (this.isReadOnly)
 			{
-				throw new Exceptions.ReadOnlyException (this.db_access);
+				throw new Exceptions.ReadOnlyException (this.access);
+			}
+
+			DbTable table = this.tables[row.Table.TableName];
+
+			if (table.RevisionMode == DbRevisionMode.Enabled)
+			{
+				DbRowStatus status = DbKey.GetRowStatus (row);
+
+				switch (status)
+				{
+					case DbRowStatus.ArchiveCopy:
+					case DbRowStatus.Copied:
+						break;
+					
+					case DbRowStatus.Deleted:
+						System.Diagnostics.Debug.WriteLine ("Deleted row is considered as an immutable row");
+						break;
+					
+					case DbRowStatus.Live:
+						DbRichCommand.ArchiveRowAndCreateNewCopy (ref row);
+						break;
+					
+					default:
+						throw new System.NotSupportedException (string.Format ("Status {0} not supported", status));
+				}
+			}
+
+			return row;
+		}
+
+		/// <summary>
+		/// Accepts the changes for all the tables attached to this instance.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		public void AcceptChanges(DbTransaction transaction)
+		{
+			if (transaction == null)
+			{
+				throw new System.ArgumentNullException ("No transaction specified");
+			}
+			if (this.isReadOnly)
+			{
+				throw new Exceptions.ReadOnlyException (this.access);
+			}
+
+			//	TODO: AcceptChanges should only be called when the transaction is committed successfully.
+
+			this.dataSet.AcceptChanges ();
+		}
+
+		/// <summary>
+		/// Accepts the changes for the specified table attached to this instance.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="tableName">Name of the table.</param>
+		public void AcceptChanges(DbTransaction transaction, string tableName)
+		{
+			if (transaction == null)
+			{
+				throw new System.ArgumentNullException ("No transaction specified");
+			}
+			if (this.isReadOnly)
+			{
+				throw new Exceptions.ReadOnlyException (this.access);
+			}
+
+			//	TODO: AcceptChanges should only be called when the transaction is committed successfully.
+
+			this.dataSet.Tables[tableName].AcceptChanges ();
+		}
+
+		/// <summary>
+		/// Checks all the row ids to make sure that none contains temporary row ids.
+		/// </summary>
+		public void AssertValidRowIds()
+		{
+			foreach (System.Data.DataTable table in this.dataSet.Tables)
+			{
+				DbRichCommand.AssertValidRowIds (table);
+			}
+		}
+
+		/// <summary>
+		/// Gets the active transaction.
+		/// </summary>
+		/// <returns>The active transaction or <c>null</c> if no transaction is currently active.</returns>
+		public DbTransaction GetActiveTransaction()
+		{
+			if (this.activeTransactions.Count == 0)
+			{
+				return null;
+			}
+			else
+			{
+				return this.activeTransactions.Peek ();
+			}
+		}
+
+		/// <summary>
+		/// Fills the data set. This method may only be called by the <c>DbInfrastructure</c>
+		/// class and this is verified at execution time by doing a stack walk. Use the
+		/// <c>DbInfrastructure.Execute</c> method instead.
+		/// </summary>
+		/// <param name="access">The access.</param>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="adapters">The adapters.</param>
+		public void InternalFillDataSet(DbAccess access, DbTransaction transaction, System.Data.IDbDataAdapter[] adapters)
+		{
+			//	Verify that we have been called by DbInfrastructure through the
+			//	ISqlEngine layer :
+			//
+			//	xxx --> DbInfrastructure --> ISqlEngine --> DbRichCommand
+			
+			System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace (true);
+			System.Diagnostics.StackFrame caller1 = trace.GetFrame (1);
+			System.Diagnostics.StackFrame caller2 = trace.GetFrame (2);
+			
+			System.Type callerClassType = caller1.GetMethod ().DeclaringType;
+			System.Type reqInterfType   = typeof (Epsitec.Cresus.Database.ISqlEngine);
+			
+			if ((callerClassType.GetInterface (reqInterfType.FullName) != reqInterfType) ||
+				(caller2.GetMethod ().DeclaringType != typeof (DbInfrastructure)))
+			{
+				throw new System.InvalidOperationException (string.Format ("Method may not be called by {0}.{1}", callerClassType.FullName, caller1.GetMethod ().Name));
+			}
+
+			System.Diagnostics.Debug.Assert (access.IsValid);
+			
+			if (transaction == null)
+			{
+				throw new Exceptions.MissingTransactionException (access);
 			}
 			
-			this.data_set.AcceptChanges ();
-		}
-		
-		public void CheckRowIds()
-		{
-			foreach (System.Data.DataTable table in this.data_set.Tables)
+			if (this.dataSet != null)
 			{
-				DbRichCommand.CheckRowIds (table);
+				throw new Exceptions.GenericException (access, "DataSet already exists.");
 			}
+			
+			//	Fill the data set based on the adapter objects provided by
+			//	the caller :
+
+			this.access   = access;
+			this.dataSet  = new System.Data.DataSet ();
+			this.adapters = adapters;
+			
+			this.SetCommandTransaction (transaction);
+			
+			try
+			{
+				for (int i = 0; i < this.tables.Count; i++)
+				{
+					DbTable dbTable = this.tables[i];
+					
+					string  adoNameTable = "Table";
+					string  dbNameTable  = dbTable.Name;
+					
+					//	Ensure that the column and table names match what we expect,
+					//	based on the DbColumn and DbTable names.
+					
+					System.Data.ITableMapping mapping = this.adapters[i].TableMappings.Add (adoNameTable, dbNameTable);
+					
+					foreach (DbColumn dbColumn in dbTable.Columns)
+					{
+						if (dbColumn.Localization == DbColumnLocalization.Localized)
+						{
+							foreach (string localizationSuffix in dbTable.Localizations)
+							{
+								string dbNameColumn  = dbColumn.MakeLocalizedName (localizationSuffix);
+								string adoNameColumn = dbColumn.MakeLocalizedSqlName (localizationSuffix);
+
+								mapping.ColumnMappings.Add (adoNameColumn, dbNameColumn);
+							}
+						}
+						else
+						{
+							string dbNameColumn  = dbColumn.Name;
+							string adoNameColumn = dbColumn.GetSqlName ();
+
+							mapping.ColumnMappings.Add (adoNameColumn, dbNameColumn);
+						}
+					}
+					
+					this.adapters[i].MissingSchemaAction = System.Data.MissingSchemaAction.AddWithKey;
+					this.adapters[i].Fill (this.dataSet);
+				}
+			}
+			finally
+			{
+				this.PopCommandTransaction ();
+			}
+			
+			this.CreateDataRelations ();
 		}
 		
-		
-		public static System.Data.DataRow[] CopyLiveRows(System.Collections.IEnumerable rows)
+		#region IDisposable Members
+
+		/// <summary>
+		/// Releases the data set and the associated commands.
+		/// </summary>
+		public void Dispose()
 		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			System.Diagnostics.Debug.Assert (this.activeTransactions.Count == 0);
+			
+			if (this.dataSet != null)
+			{
+				this.dataSet.Dispose ();
+				this.dataSet = null;
+			}
+
+			foreach (System.Data.IDbCommand command in this.commands.ToArray ())
+			{
+				command.Dispose ();
+			}
+
+			this.commands.Clear ();
+			this.tables.Clear ();
+
+			this.infrastructure = null;
+			this.adapters = null;
+		}
+		
+		#endregion
+
+		/// <summary>
+		/// Extracts the live rows from a given collection.
+		/// </summary>
+		/// <param name="rows">A collection of rows.</param>
+		/// <returns>The live rows.</returns>
+		public static System.Data.DataRow[] GetLiveRows(System.Collections.IEnumerable rows)
+		{
+			List<System.Data.DataRow> list = new List<System.Data.DataRow> ();
 			
 			foreach (System.Data.DataRow row in rows)
 			{
-				if (DbRichCommand.IsRowDeleted (row) == false)
+				if (DbRichCommand.IsRowLive (row))
 				{
 					list.Add (row);
 				}
 			}
 			
-			System.Data.DataRow[] copy = new System.Data.DataRow[list.Count];
-			list.CopyTo (copy);
-			
-			return copy;
+			return list.ToArray ();
 		}
-		
-		
+
+		/// <summary>
+		/// Determines whether the specified row is live.
+		/// </summary>
+		/// <param name="row">The row to check.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified row is live; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool IsRowLive(System.Data.DataRow row)
+		{
+			return !DbRichCommand.IsRowDeleted (row);
+		}
+
+		/// <summary>
+		/// Determines whether the specified row is deleted.
+		/// </summary>
+		/// <param name="row">The row to check.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified row is deleted; otherwise, <c>false</c>.
+		/// </returns>
 		public static bool IsRowDeleted(System.Data.DataRow row)
 		{
 			if (row.RowState == System.Data.DataRowState.Deleted)
@@ -450,21 +840,19 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			DbKey key = new DbKey (row);
-			
-			if (key.Status == DbRowStatus.Deleted)
-			{
-				return true;
-			}
-			
-			return false;
+
+			return (key.Status == DbRowStatus.Deleted);
 		}
-		
-		public static void CheckRowIds(System.Data.DataTable table)
+
+		/// <summary>
+		/// Checks all the row ids for the given table to make sure that none contains
+		/// temporary row ids.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		public static void AssertValidRowIds(System.Data.DataTable table)
 		{
-			for (int i = 0; i < table.Rows.Count; i++)
+			foreach (System.Data.DataRow row in table.Rows)
 			{
-				System.Data.DataRow row = table.Rows[i];
-				
 				if (row.RowState != System.Data.DataRowState.Deleted)
 				{
 					DbKey key = new DbKey (row);
@@ -474,125 +862,201 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-		
-		
-		public static void UpdateRealIds(DbInfrastructure infrastructure, DbTransaction transaction, System.Data.DataTable table)
+
+		/// <summary>
+		/// Assign real row ids to the new data table rows for a given table.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		public static void AssignRealRowIds(DbInfrastructure infrastructure, DbTransaction transaction, System.Data.DataTable table)
 		{
-			System.Collections.ArrayList list = DbRichCommand.FindRowsUsingTemporaryIds (table);
+			List<System.Data.DataRow> list = Collection.ToList<System.Data.DataRow> (DbRichCommand.FindRowsUsingTemporaryIds (table.Rows));
 			
 			if (list.Count == 0)
 			{
 				return;
 			}
 			
-			//	Trouve la clef identifiant la table courante (la recherche est basée sur
-			//	le nom de la table) :
+			DbTable dbTable = infrastructure.ResolveDbTable (transaction, table.TableName);
 			
-			DbKey table_key = infrastructure.FindDbTableKey (transaction, table.TableName);
+			//	Allocate real row ids for the temporary rows; thanks to the relations
+			//	defined at the data set level, the foreign keys will be updated too.
 			
-			//	Alloue une série de clefs (contiguës) pour la table et attribue les
-			//	séquentiellement aux diverses clefs temporaires; grâce aux relations
-			//	mises en place dans le DataSet, les foreign keys seront automatiquement
-			//	synchronisées aussi.
-			
-			long id = infrastructure.NewRowIdInTable (transaction, table_key, list.Count);
+			long id = infrastructure.NewRowIdInTable (transaction, dbTable, list.Count);
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("Allocating {0} new IDs for table {1} starting at {2}.", list.Count, table.TableName, id));
 			
-			foreach (System.Data.DataRow data_row in list)
+			foreach (System.Data.DataRow row in list)
 			{
-				DbKey key = new DbKey (data_row);
+				DbKey key = new DbKey (row);
 				
 				System.Diagnostics.Debug.Assert (key.IsTemporary);
 				
-				key = new DbKey (id++);
+				key = new DbKey (id++, key.Status);
 				
-				data_row.BeginEdit ();
-				data_row[Tags.ColumnId]     = key.Id.Value;
-				data_row[Tags.ColumnStatus] = key.IntStatus;
-				data_row.EndEdit ();
+				row.BeginEdit ();
+				DbKey.SetRowId (row, key.Id);
+				DbKey.SetRowStatus (row, key.Status);
+				row.EndEdit ();
 			}
 		}
-		
-		public static void UpdateLogIds(System.Data.DataTable table, DbId log_id)
+
+		/// <summary>
+		/// Updates the log ids associated with the table, using the specified log id.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		/// <param name="logId">The log id.</param>
+		public static void UpdateLogIds(System.Data.DataTable table, DbId logId)
 		{
-			for (int i = 0; i < table.Rows.Count; i++)
+			foreach (System.Data.DataRow row in table.Rows)
 			{
-				System.Data.DataRow row = table.Rows[i];
-				
 				switch (row.RowState)
 				{
 					case System.Data.DataRowState.Added:
+						row.BeginEdit ();
+						DbRichCommand.DefineLogId (row, logId);
+						row.EndEdit ();
+						break;
+					
 					case System.Data.DataRowState.Modified:
-						row[Tags.ColumnRefLog] = log_id.Value;
+						row.BeginEdit ();
+						DbRichCommand.DefineLogId (row, logId);
+						DbRichCommand.UpdateRowStatusAfterModification (row);
+						row.EndEdit ();
 						break;
 				}
 			}
 		}
-		
-		public static void DefineLogId(System.Data.DataRow row, DbId log_id)
+
+		/// <summary>
+		/// Defines the log id for the specified row.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		/// <param name="logId">The log id.</param>
+		private static void DefineLogId(System.Data.DataRow row, DbId logId)
 		{
-			if (row.RowState != System.Data.DataRowState.Deleted)
+			System.Diagnostics.Debug.Assert (row.RowState != System.Data.DataRowState.Deleted);
+			
+			row[Tags.ColumnRefLog] = logId.Value;
+		}
+
+		/// <summary>
+		/// Updates the row status after a modification. This will change the status
+		/// from <c>DbRowStatus.Copied</c> to <c>DbRowStatus.Live</c>.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		private static void UpdateRowStatusAfterModification(System.Data.DataRow row)
+		{
+			DbRowStatus status = DbKey.GetRowStatus (row);
+
+			switch (status)
 			{
-				row.BeginEdit ();
-				row[Tags.ColumnRefLog] = log_id.Value;
-				row.EndEdit ();
+				case DbRowStatus.Copied:
+					DbKey.SetRowStatus (row, DbRowStatus.Live);
+					break;
+
+				case DbRowStatus.Live:
+					break;
+
+				case DbRowStatus.Deleted:
+					System.Diagnostics.Debug.WriteLine ("WARNING: modifying deleted row");
+					break;
+
+				case DbRowStatus.ArchiveCopy:
+					System.Diagnostics.Debug.WriteLine ("WARNING: modifying archived row");
+					break;
+
+				default:
+					throw new System.NotSupportedException (string.Format ("Status {0} not supported", status));
 			}
 		}
-		
-		public static void CreateRow(System.Data.DataTable table, out System.Data.DataRow data_row)
+
+
+		/// <summary>
+		/// Creates a new row in the specified table. The row id will be set to a new
+		/// temporary row id.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		/// <returns>The row.</returns>
+		public static System.Data.DataRow CreateRow(System.Data.DataTable table)
 		{
 			//	Crée une ligne, mais ne l'ajoute pas à la table. L'ID affecté à la
 			//	ligne est temporaire (mais unique); cf. DbKey.CheckTemporaryId.
-			
-			data_row = table.NewRow ();
+
+			System.Data.DataRow row = table.NewRow ();
 			
 			DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
 			
-			data_row.BeginEdit ();
-			data_row[Tags.ColumnId]     = key.Id.Value;
-			data_row[Tags.ColumnStatus] = key.IntStatus;
-			data_row.EndEdit ();
+			row.BeginEdit ();
+			DbKey.SetRowId (row, key.Id);
+			DbKey.SetRowStatus (row, key.Status);
+			row.EndEdit ();
+
+			return row;
 		}
-		public static void CreateRow(System.Data.DataTable table, DbId log_id, out System.Data.DataRow data_row)
+
+		/// <summary>
+		/// Creates a new row in the specified table. The row id will be set to a new
+		/// temporary row id and it will be associated with the specified log id.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		/// <param name="logId">The log id.</param>
+		/// <returns>The row.</returns>
+		public static System.Data.DataRow CreateRow(System.Data.DataTable table, DbId logId)
 		{
-			DbRichCommand.CreateRow (table, out data_row);
-			DbRichCommand.DefineLogId (data_row, log_id);
+			System.Data.DataRow row = DbRichCommand.CreateRow (table);
+			DbRichCommand.DefineLogId (row, logId);
+			return row;
 		}
-		
-		public static void DeleteRow(System.Data.DataRow data_row)
+
+		/// <summary>
+		/// Deletes the specified row. Rows which already exist in the database are simply
+		/// marked as deleted, but never really removed from their data table.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		public static void DeleteRow(System.Data.DataRow row)
 		{
-			DbKey row_key = new DbKey (data_row);
+			DbKey rowKey = new DbKey (row);
 			
-			//	Si la ligne a encore une clef temporaire, cela signifie qu'elle n'a pas encore
-			//	été écrite dans la base; on peut donc simplement supprimer la ligne de la table.
-			//	Dans le cas contraire, on ne supprime jamais réellement les lignes effacées et
-			//	on change simplement le statut de la ligne à "deleted".
+			//	If the row still has a temporary key associated with it, then this
+			//	means we can safely discard it as it has not yet been persisted to
+			//	the database.
 			
-			if (row_key.IsTemporary)
+			if (rowKey.IsTemporary)
 			{
-				System.Data.DataTable data_table = data_row.Table;
-				data_table.Rows.Remove (data_row);
+				System.Data.DataTable table = row.Table;
+				table.Rows.Remove (row);
 			}
 			else
 			{
-				data_row[Tags.ColumnStatus] = DbKey.ConvertToIntStatus (DbRowStatus.Deleted);
+				row.BeginEdit ();
+				row[Tags.ColumnStatus] = DbKey.ConvertToIntStatus (DbRowStatus.Deleted);
+				row.EndEdit ();
 			}
 		}
-		
-		public static void KillRow(System.Data.DataRow data_row)
+
+		/// <summary>
+		/// Kills the specified row. This really removes the row from its data
+		/// table. Prefer <c>DeleteRow</c> which is non-destructive.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		public static void KillRow(System.Data.DataRow row)
 		{
-			//	Supprime réellement la ligne de la table. Cette méthode est réservée à un
-			//	usage très limité; en principe, on utilisera DeleteRow, sauf pour la queue
-			//	des requêtes, par exemple.
+			//	This really deletes the row from its table; use this only where
+			//	needed, as in the request queue, for instance.
 			
-			if (data_row.RowState != System.Data.DataRowState.Deleted)
+			if (row.RowState != System.Data.DataRowState.Deleted)
 			{
-				data_row.Delete ();
+				row.Delete ();
 			}
 		}
-		
-		
+
+		/// <summary>
+		/// Creates a copy of the specified row.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		/// <returns>The copy of the row or <c>null</c> if the specified row is not valid.</returns>
 		public static System.Data.DataRow CopyRowIfValid(System.Data.DataRow row)
 		{
 			if ((row == null) ||
@@ -614,19 +1078,62 @@ namespace Epsitec.Cresus.Database
 			
 			return copy;
 		}
-		
+
+		/// <summary>
+		/// Archives the specified live row and creates new working copy.
+		/// </summary>
+		/// <param name="live">The live row.</param>
+		private static void ArchiveRowAndCreateNewCopy(ref System.Data.DataRow live)
+		{
+			System.Diagnostics.Debug.Assert (DbKey.GetRowStatus (live) == DbRowStatus.Live);
+
+			System.Data.DataTable table   = live.Table;
+			System.Data.DataRow   archive = live;
+			System.Data.DataRow   copy    = table.NewRow ();
+
+			live = null;
+			copy.ItemArray = archive.ItemArray;
+			
+			DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Copied);
+
+			DbKey.SetRowId (copy, key.Id);
+			DbKey.SetRowStatus (copy, key.Status);
+			
+			DbKey.SetRowStatus (archive, DbRowStatus.ArchiveCopy);
+			
+			table.Rows.Add (copy);
+
+			live = copy;
+		}
+
+
+
+		/// <summary>
+		/// Finds a row in a data table based on a row id.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		/// <param name="id">The id.</param>
+		/// <returns>The row or <c>null</c> if it cannot be found in the table.</returns>
 		public static System.Data.DataRow FindRow(System.Data.DataTable table, DbId id)
 		{
-			int n = table.Rows.Count;
-			
-			for (int i = 0; i < n; i++)
+			return DbRichCommand.FindRow (table.Rows, id);
+		}
+
+		/// <summary>
+		/// Finds the row in a collection of rows based on a row id.
+		/// </summary>
+		/// <param name="rows">The rows.</param>
+		/// <param name="id">The id.</param>
+		/// <returns>The row or <c>null</c> if it cannot be found in the collection.</returns>
+		public static System.Data.DataRow FindRow(System.Collections.IEnumerable rows, DbId id)
+		{
+			foreach (System.Data.DataRow row in rows)
 			{
-				System.Data.DataRow row = table.Rows[i];
-				long row_id;
+				long rowId;
 				
 				if (row.RowState == System.Data.DataRowState.Deleted)
 				{
-					row_id = (long) row[Tags.ColumnId, System.Data.DataRowVersion.Original];
+					rowId = (long) row[Tags.ColumnId, System.Data.DataRowVersion.Original];
 				}
 				else if (row.RowState == System.Data.DataRowState.Detached)
 				{
@@ -634,10 +1141,10 @@ namespace Epsitec.Cresus.Database
 				}
 				else
 				{
-					row_id = (long) row[Tags.ColumnId];
+					rowId = (long) row[Tags.ColumnId];
 				}
-						
-				if (id.Value == row_id)
+				
+				if (id.Value == rowId)
 				{
 					return row;
 				}
@@ -645,74 +1152,50 @@ namespace Epsitec.Cresus.Database
 			
 			return null;
 		}
-		
-		public static System.Data.DataRow FindRow(System.Data.DataRow[] rows, DbId id)
+
+		/// <summary>
+		/// Finds the temporary rows in the collection.
+		/// </summary>
+		/// <param name="rows">The rows.</param>
+		/// <returns>A collection of temporary rows.</returns>
+		public static IEnumerable<System.Data.DataRow> FindRowsUsingTemporaryIds(System.Collections.IEnumerable rows)
 		{
-			int n = rows.Length;
-			
-			for (int i = 0; i < n; i++)
+			foreach (System.Data.DataRow row in rows)
 			{
-				System.Data.DataRow row = rows[i];
-				long row_id;
-				
-				if (row.RowState == System.Data.DataRowState.Deleted)
-				{
-					row_id = (long) row[Tags.ColumnId, System.Data.DataRowVersion.Original];
-				}
-				else if (row.RowState == System.Data.DataRowState.Detached)
-				{
-					continue;
-				}
-				else
-				{
-					row_id = (long) row[Tags.ColumnId];
-				}
-				
-				if (id.Value == row_id)
-				{
-					return row;
-				}
-			}
-			
-			return null;
-		}
-		
-		public static System.Collections.ArrayList FindRowsUsingTemporaryIds(System.Data.DataTable table)
-		{
-			//	Passe en revue toutes les lignes de la table pour déterminer s'il y a des
-			//	clefs temporaires en utilisation et retourne la liste des lignes concernées.
-			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			
-			for (int i = 0; i < table.Rows.Count; i++)
-			{
-				System.Data.DataRow row = table.Rows[i];
-				
 				if (row.RowState != System.Data.DataRowState.Deleted)
 				{
 					DbKey key = new DbKey (row);
 					
 					if (key.IsTemporary)
 					{
-						list.Add (row);
+						yield return row;
 					}
 				}
 			}
-			
-			return list;
 		}
-		
-		
+
+
+		/// <summary>
+		/// For debugging: dumps the specified command to the debug trace,
+		/// including its parameter names and values.
+		/// </summary>
+		/// <param name="command">The command.</param>
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void DebugDumpCommand(System.Data.IDbCommand command)
 		{
 			System.Diagnostics.Debug.WriteLine (command.CommandText);
 			
-			foreach (System.Data.IDataParameter command_parameter in command.Parameters)
+			foreach (System.Data.IDataParameter commandParameter in command.Parameters)
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("  {0} = {1}, type {2}", command_parameter.ParameterName, command_parameter.Value, command_parameter.Value.GetType ().FullName));
+				System.Diagnostics.Debug.WriteLine (string.Format ("  {0} = {1}, type {2}", commandParameter.ParameterName, commandParameter.Value, commandParameter.Value.GetType ().FullName));
 			}
 		}
-		
+
+		/// <summary>
+		/// For debugging: dumps the specified row to the debug trace.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void DebugDumpRow(System.Data.DataRow row)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -731,44 +1214,44 @@ namespace Epsitec.Cresus.Database
 			
 			System.Diagnostics.Debug.WriteLine (buffer.ToString ());
 		}
-		
-		
-		protected void CreateDataRelations ()
+
+
+		/// <summary>
+		/// Creates the data relations between the columns of the data set
+		/// by exploiting the properties of the <c>DbTable</c> and <c>DbColumn</c>
+		/// definitions.
+		/// </summary>
+		private void CreateDataRelations()
 		{
-			//	Crée pour le DataSet actuel les relations entre les diverses colonnes,
-			//	en s'appuyant sur les propriétés de DbTable/DbColumn.
-			
-			for (int i = 0; i < this.tables.Count; i++)
+			foreach (DbTable dbChildTable in this.tables)
 			{
-				DbTable               db_child_table  = this.tables[i];
-				System.Data.DataTable ado_child_table = this.data_set.Tables[db_child_table.Name];
-				DbForeignKey[]        db_foreign_keys = db_child_table.ForeignKeys;
+				System.Data.DataTable adoChildTable = this.dataSet.Tables[dbChildTable.Name];
 				
-				foreach (DbForeignKey fk in db_foreign_keys)
+				foreach (DbForeignKey fk in dbChildTable.ForeignKeys)
 				{
-					int n = fk.Columns.Length;
-					
-					System.Data.DataTable ado_parent_table = this.data_set.Tables[fk.ParentTableName];
-					
-					if (ado_parent_table == null)
+					System.Data.DataTable adoTargetTable = this.dataSet.Tables[fk.TargetTableName];
+
+					if (adoTargetTable == null)
 					{
-						//	La table parent n'est pas chargée dans le DataSet, ce qui veut dire
-						//	que l'on doit ignorer la relation.
+						//	If the target table is not available in the data set, simply
+						//	ignore the relation.
 						
 						continue;
 					}
+
+					int n = fk.Columns.Length;
 					
-					System.Data.DataColumn[] ado_parent_cols = new System.Data.DataColumn[n];
-					System.Data.DataColumn[] ado_child_cols  = new System.Data.DataColumn[n];
+					System.Data.DataColumn[] adoTargetCols = new System.Data.DataColumn[n];
+					System.Data.DataColumn[] adoChildCols  = new System.Data.DataColumn[n];
 					
-					for (int j = 0; j < n; j++)
+					for (int i = 0; i < n; i++)
 					{
-						ado_child_cols[j]  = ado_child_table.Columns[fk.Columns[j].CreateDisplayName ()];
-						ado_parent_cols[j] = ado_parent_table.Columns[fk.Columns[j].ParentColumnName];
+						adoChildCols[i]  = adoChildTable.Columns[fk.Columns[i].Name];
+						adoTargetCols[i] = adoTargetTable.Columns[fk.Columns[i].TargetColumnName];
 					}
-					
-					System.Data.DataRelation relation = new System.Data.DataRelation (null, ado_parent_cols, ado_child_cols);
-					this.data_set.Relations.Add (relation);
+
+					System.Data.DataRelation relation = new System.Data.DataRelation (null, adoTargetCols, adoChildCols);
+					this.dataSet.Relations.Add (relation);
 					
 					System.Data.ForeignKeyConstraint constraint = relation.ChildKeyConstraint;
 					
@@ -777,150 +1260,206 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-		
-		protected void SetCommandTransaction(System.Data.IDbTransaction transaction)
+
+		/// <summary>
+		/// Sets the active command transaction and pushes it on top of the
+		/// active transaction stack.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		private void SetCommandTransaction(DbTransaction transaction)
 		{
-			if (transaction is DbTransaction)
-			{
-				transaction = ((DbTransaction) transaction).Transaction;
-			}
+			System.Diagnostics.Debug.Assert (transaction != null);
+			System.Diagnostics.Debug.Assert (transaction.Transaction != null);
 			
-			for (int i = 0; i < this.commands.Count; i++)
+			System.Data.IDbTransaction dataTransaction = transaction.Transaction;
+
+			this.activeTransactions.Push (transaction);
+
+			try
 			{
-				string tag = Epsitec.Common.Debug.Tracker.Register (this.commands[i]);
-				this.commands[i].Transaction = transaction;
+				foreach (System.Data.IDbCommand command in this.commands)
+				{
+					command.Transaction = dataTransaction;
+				}
+			}
+			catch
+			{
+				this.activeTransactions.Pop ();
+				throw;
 			}
 		}
-		
-		protected void CheckValidState()
+
+		/// <summary>
+		/// Pops the active command transaction and resets all command transactions
+		/// to <c>null</c>.
+		/// </summary>
+		private void PopCommandTransaction()
 		{
-			if (this.db_access.IsValid == false)
+			this.activeTransactions.Pop ();
+
+			foreach (System.Data.IDbCommand command in this.commands)
+			{
+				command.Transaction = null;
+			}
+		}
+
+		/// <summary>
+		/// Checks the validity of the <c>DbRichCommand</c> state. If some
+		/// internal state is not valid, throws an exception.
+		/// </summary>
+		private void CheckValidState()
+		{
+			if (this.access.IsValid == false)
 			{
 				throw new System.InvalidOperationException ("No database access defined.");
 			}
 			
-			if (this.data_set == null)
+			if (this.dataSet == null)
 			{
-				throw new Exceptions.GenericException (this.db_access, "No data set defined.");
+				throw new Exceptions.GenericException (this.access, "No data set defined.");
 			}
 			
 			if ((this.adapters == null) ||
 				(this.adapters.Length == 0))
 			{
-				throw new Exceptions.GenericException (this.db_access, "No adapters defined.");
+				throw new Exceptions.GenericException (this.access, "No adapters defined.");
 			}
 			
 			if (this.commands.Count == 0)
 			{
-				throw new Exceptions.GenericException (this.db_access, "No commands defined.");
+				throw new Exceptions.GenericException (this.access, "No commands defined.");
 			}
 			
 			if (this.tables.Count == 0)
 			{
-				throw new Exceptions.GenericException (this.db_access, "No tables defined.");
+				throw new Exceptions.GenericException (this.access, "No tables defined.");
 			}
 			
 			if (this.infrastructure == null)
 			{
-				throw new Exceptions.GenericException (this.db_access, "No infrastructure defined.");
+				throw new Exceptions.GenericException (this.access, "No infrastructure defined.");
 			}
 		}
-		
-		protected void ReplaceTable(DbTransaction transaction, System.Data.DataTable data_table, DbTable db_table, IReplaceOptions options)
+
+		/// <summary>
+		/// Replaces the table contents in the database without validity checking.
+		/// This will effectively overwrite the data, even if it was changed by
+		/// someone else in the meantime.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="dataTable">The data table.</param>
+		/// <param name="dbTable">The table definition.</param>
+		/// <param name="options">The replace options.</param>
+		private void ReplaceTablesWithoutValidityChecking(DbTransaction transaction, System.Data.DataTable dataTable, DbTable dbTable, IReplaceOptions options)
 		{
-			string table_name = db_table.CreateSqlName ();
+			string sqlTableName = dbTable.GetSqlName ();
 			
 			IDbAbstraction database  = transaction.Database;
 			ISqlBuilder    builder   = database.SqlBuilder;
-			ITypeConverter converter = this.infrastructure.TypeConverter;
+			ITypeConverter converter = this.infrastructure.Converter;
 			
-			Collections.SqlFields sql_update = new Collections.SqlFields ();
-			Collections.SqlFields sql_insert = new Collections.SqlFields ();
-			Collections.SqlFields sql_conds  = new Collections.SqlFields ();
+			Collections.SqlFields sqlUpdate = new Collections.SqlFields ();
+			Collections.SqlFields sqlInsert = new Collections.SqlFields ();
+			Collections.SqlFields sqlConds  = new Collections.SqlFields ();
 			
-			int col_count = db_table.Columns.Count;
-			int row_count = data_table.Rows.Count;
+			int colCount = dbTable.GetSqlColumnCount ();
+			int rowCount = dataTable.Rows.Count;
 			
-			//	Crée pour chaque colonne de la table une représentation SQL et un
-			//	champ qui permettra de stocker la valeur :
+			//	For every row in the table, create an SQL representation of it, including the
+			//	fields to store the data.
 			
-			SqlColumn[] sql_columns = new SqlColumn[col_count];
+			SqlColumn[] sqlColumns = new SqlColumn[colCount];
 			
-			int[]    update_map     = new int[col_count];
-			object[] insert_default = new object[col_count];
+			int[]    updateParamIndex = new int[colCount];
+			int[]    insertParamIndex = new int[colCount];
+			object[] insertDefault    = new object[colCount];
 			
-			for (int c = 0; c < col_count; c++)
+			int index = 0;
+
+			//	Create the SQL columns and decide how to map the row items to
+			//	the SQL columns. This must take into account the fact that the
+			//	DbTable may produce several low level SQL columns for every
+			//	single high level DbColumn...
+			
+			foreach (DbColumn column in dbTable.Columns)
 			{
-				DbColumn column = db_table.Columns[c];
-				sql_columns[c] = column.CreateSqlColumn (converter);
+				bool ignoreColumn = (options != null) && options.ShouldIgnoreColumn (column);
 				
-				if ((options == null) ||
-					(options.IgnoreColumn (c, column) == false))
+				foreach (SqlColumn sqlColumn in dbTable.CreateSqlColumns (converter, column))
 				{
-					//	Aucune option particulière pour cette colonne. Ajoute simplement
-					//	la colonne à la fois pour le UPDATE et pour le INSERT :
-					
-					sql_update.Add (column.CreateEmptySqlField (converter));
-					sql_insert.Add (column.CreateEmptySqlField (converter));
-					
-					update_map[c]     = c;
-					insert_default[c] = null;
-				}
-				else
-				{
-					//	Les options indiquent que l'on doit ignorer cette colonne lors du
-					//	UPDATE; on va aussi fournir une valeur par défaut pour le INSERT :
-					
-					sql_insert.Add (column.CreateEmptySqlField (converter));
-					
-					update_map[c]     = -1;
-					insert_default[c] = options.GetDefaultValue (c, column);
+					sqlColumns[index] = sqlColumn;
+
+					if (ignoreColumn)
+					{
+						//	Ignore this column when using the UPDATE command, but still
+						//	provide a default value for the INSERT command.
+						
+						updateParamIndex[index] = -1;
+						insertParamIndex[index] = sqlInsert.Count;
+						insertDefault[index]    = options.GetDefaultValue (column);
+
+						sqlInsert.Add (this.infrastructure.CreateEmptySqlField (column));
+					}
+					else
+					{
+						//	The column is to be included by the UPDATE command. Remember
+						//	the parameter index for the specified column and don't provide
+						//	a default value for the INSERT command.
+
+						updateParamIndex[index] = sqlUpdate.Count;
+						insertParamIndex[index] = sqlInsert.Count;
+						insertDefault[index]    = null;
+
+						sqlUpdate.Add (this.infrastructure.CreateEmptySqlField (column));
+						sqlInsert.Add (this.infrastructure.CreateEmptySqlField (column));
+					}
+
+					index++;
 				}
 			}
 			
-			//	Crée la condition pour le UPDATE ... WHERE CR_ID = n
+			//	Create the condition for the UPDATE .. WHERE or DELETE .. WHERE clause :
 			
-			SqlField field_id_name  = SqlField.CreateName (table_name, sql_columns[0].Name);
-			SqlField field_id_value = sql_update[0];
+			SqlField fieldIdName  = SqlField.CreateName (sqlTableName, sqlColumns[0].Name);
+			SqlField fieldIdValue = sqlUpdate[0];
 			
-			sql_conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, field_id_name, field_id_value));
+			sqlConds.Add (new SqlFunction (SqlFunctionCode.CompareEqual, fieldIdName, fieldIdValue));
 			
 			
-			//	Crée les commandes pour le UPDATE et pour le INSERT :
+			//	Create the UPDATE, INSERT and DELETE commands :
 			
-			System.Data.IDbCommand update_command;
-			System.Data.IDbCommand insert_command;
-			System.Data.IDbCommand delete_command;
-			
-			builder.Clear ();
-			builder.UpdateData (table_name, sql_update, sql_conds);
-			
-			update_command = builder.Command;
+			System.Data.IDbCommand updateCommand;
+			System.Data.IDbCommand insertCommand;
+			System.Data.IDbCommand deleteCommand;
 			
 			builder.Clear ();
-			builder.InsertData (table_name, sql_insert);
+			builder.UpdateData (sqlTableName, sqlUpdate, sqlConds);
 			
-			insert_command = builder.Command;
+			updateCommand = builder.Command;
 			
 			builder.Clear ();
-			builder.RemoveData (table_name, sql_conds);
+			builder.InsertData (sqlTableName, sqlInsert);
 			
-			delete_command = builder.Command;
+			insertCommand = builder.Command;
 			
-			update_command.Transaction = transaction.Transaction;
-			insert_command.Transaction = transaction.Transaction;
-			delete_command.Transaction = transaction.Transaction;
+			builder.Clear ();
+			builder.RemoveData (sqlTableName, sqlConds);
 			
-			int param_id_index = update_command.Parameters.Count - 1;
+			deleteCommand = builder.Command;
+			
+			updateCommand.Transaction = transaction.Transaction;
+			insertCommand.Transaction = transaction.Transaction;
+			deleteCommand.Transaction = transaction.Transaction;
+			
+			int whereParamIndex = updateCommand.Parameters.Count - 1;
 			
 			try
 			{
-				//	Passe en revue toutes les lignes de la table :
+				//	For every row in the table, decide what to do : either update,
+				//	insert or remove it, depending on its row state.
 				
-				for (int r = 0; r < row_count; r++)
+				foreach (System.Data.DataRow row in dataTable.Rows)
 				{
-					System.Data.DataRow row = data_table.Rows[r];
-					
 					if ((row.RowState != System.Data.DataRowState.Added) &&
 						(row.RowState != System.Data.DataRowState.Modified) &&
 						(row.RowState != System.Data.DataRowState.Deleted))
@@ -930,244 +1469,95 @@ namespace Epsitec.Cresus.Database
 					
 					if (row.RowState == System.Data.DataRowState.Deleted)
 					{
-						//	Supprime la ligne en question de la table; met juste à jour l'ID de
-						//	la ligne dans la commande avant d'exécuter celle-ci :
+						//	Delete the row from the database. This will use a DELETE
+						//	command with the specified row id as the WHERE condition :
+
+						object valueId = TypeConverter.ConvertToInternal (this.infrastructure.Converter, row[0, System.Data.DataRowVersion.Original], sqlColumns[0].Type);
 						
-						int    count;
-						object value_id = sql_columns[0].ConvertToInternalType (row[0, System.Data.DataRowVersion.Original]);
+						builder.SetCommandParameterValue (deleteCommand, 0, valueId);
 						
-						builder.SetCommandParameterValue (delete_command, 0, value_id);
-						count = delete_command.ExecuteNonQuery ();
-						
-						this.stat_replace_delete_count += count;
+						this.statReplaceDeleteCount += deleteCommand.ExecuteNonQuery ();
 					}
 					else
 					{
-						//	Met à jour la ligne en question dans la table. Tente d'abord un UPDATE
-						//	et en cas d'échec, recourt à INSERT.
-						//	Commence par mettre à jour tous les paramètres des deux commandes :
-						
-						int    count;
-						object value_id = sql_columns[0].ConvertToInternalType (row[0, System.Data.DataRowVersion.Current]);
-						
-						builder.SetCommandParameterValue (update_command, param_id_index, value_id);
-						
-						for (int c = 0; c < col_count; c++)
+						//	Update the row in the database. Try an UPDATE command and
+						//	if it does not modify the table, use INSERT instead.
+
+						object valueId = TypeConverter.ConvertToInternal (this.infrastructure.Converter, row[0, System.Data.DataRowVersion.Current], sqlColumns[0].Type);
+
+						builder.SetCommandParameterValue (updateCommand, whereParamIndex, valueId);
+
+						for (int i = 0; i < colCount; i++)
 						{
-							int map_c = update_map[c];
-							
-							//	La colonne peut-elle être utilisée telle quelle dans un UPDATE ?
-							
-							if (map_c < 0)
+							if (updateParamIndex[i] < 0)
 							{
-								//	La colonne ne sera utilisée que pour le INSERT; dans ce cas
-								//	il faudra utiliser une valeur par défaut en lieu et place de
-								//	la valeur proposée dans la source :
+								//	The column should be ignored when updating and used
+								//	only when inserting a new row, and then, we must use
+								//	a specific default value :
 								
-								builder.SetCommandParameterValue (insert_command, c, insert_default[c]);
+								builder.SetCommandParameterValue (insertCommand, i, insertDefault[index]);
 							}
 							else
 							{
-								object value = sql_columns[c].ConvertToInternalType (row[c]);
-								
-								builder.SetCommandParameterValue (update_command, map_c, value);
-								builder.SetCommandParameterValue (insert_command, c, value);
+								//	The column has a value and will be updated or inserted
+								//	normally :
+
+								object value = TypeConverter.ConvertToInternal (this.infrastructure.Converter, row[i], sqlColumns[i].Type);
+
+								builder.SetCommandParameterValue (updateCommand, updateParamIndex[i], value);
+								builder.SetCommandParameterValue (insertCommand, insertParamIndex[i], value);
 							}
 						}
 						
-						count = update_command.ExecuteNonQuery ();
+						//	Execute the UPDATE command. If no row was modified, then we
+						//	must execute the INSERT command to make sure our data gets
+						//	persisted in the database :
+						
+						int count = updateCommand.ExecuteNonQuery ();
 						
 						if (count == 0)
 						{
-							//	Le UPDATE n'a modifié aucune ligne dans la base de données; cela signifie que la
-							//	ligne n'était pas connue. On va donc procéder à son insertion :
-							
-							count = insert_command.ExecuteNonQuery ();
+							count = insertCommand.ExecuteNonQuery ();
 							
 							if (count != 1)
 							{
-								throw new Exceptions.FormatException (string.Format ("Insert into table {0} produced {1} changes (ID = {2}). Expected exactly 1.", table_name, count, insert_command.Parameters[0]));
+								throw new Exceptions.FormatException (string.Format ("Insert into table {0} produced {1} changes (ID = {2}); 1 was expected", sqlTableName, count, insertCommand.Parameters[0]));
 							}
 							
-							this.stat_replace_insert_count++;
+							this.statReplaceInsertCount++;
 						}
 						else if (count == 1)
 						{
-							this.stat_replace_update_count++;
+							this.statReplaceUpdateCount++;
 						}
 						else
 						{
-							throw new Exceptions.FormatException (string.Format ("Update of table {0} produced {1} changes (ID = {2}). Expected 0 or 1.", table_name, count, update_command.Parameters[0]));
+							throw new Exceptions.FormatException (string.Format ("Update of table {0} produced {1} changes (ID = {2}); 0 or 1 expected", sqlTableName, count, updateCommand.Parameters[0]));
 						}
 					}
 				}
 			}
 			finally
 			{
-				delete_command.Dispose ();
-				update_command.Dispose ();
-				insert_command.Dispose ();
+				deleteCommand.Dispose ();
+				updateCommand.Dispose ();
+				insertCommand.Dispose ();
 			}
 		}
+
+
+		private DbInfrastructure				infrastructure;
+		private Collections.DbCommands			commands;
+		private Collections.DbTables			tables;
+		private System.Data.DataSet				dataSet;
+		private DbAccess						access;
+		private System.Data.IDataAdapter[]		adapters;
+
+		private Stack<DbTransaction>			activeTransactions = new Stack<DbTransaction> ();
 		
-		
-		public void InternalFillDataSet(DbAccess db_access, System.Data.IDbTransaction transaction, System.Data.IDbDataAdapter[] adapters)
-		{
-			//	Utiliser DbInfrastructure.Execute en lieu et place de cette méthode !
-			
-			//	Cette méthode ne devrait jamais être appelée par un utilisateur : elle est réservée
-			//	aux classes implémentant ISqlEngine. Pour s'assurer que personne ne se trompe, on
-			//	vérifie l'identité de l'appelant :
-			//
-			//	xxx --> DbInfrastructure --> ISqlEngine --> DbRichCommand
-			
-			System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace (true);
-			System.Diagnostics.StackFrame caller_1 = trace.GetFrame (1);
-			System.Diagnostics.StackFrame caller_2 = trace.GetFrame (2);
-			
-			System.Type caller_class_type = caller_1.GetMethod ().DeclaringType;
-			System.Type req_interf_type   = typeof (Epsitec.Cresus.Database.ISqlEngine);
-			
-			if ((caller_class_type.GetInterface (req_interf_type.FullName) != req_interf_type) ||
-				(caller_2.GetMethod ().DeclaringType != typeof (DbInfrastructure)))
-			{
-				throw new System.InvalidOperationException (string.Format ("Method may not be called by {0}.{1}", caller_class_type.FullName, caller_1.GetMethod ().Name));
-			}
-			
-			System.Diagnostics.Debug.Assert (db_access.IsValid);
-			
-			if (transaction == null)
-			{
-				throw new Exceptions.MissingTransactionException (db_access);
-			}
-			
-			if (this.data_set != null)
-			{
-				throw new Exceptions.GenericException (db_access, "DataSet already exists.");
-			}
-			
-			//	Définit et remplit le DataSet en se basant sur les données fournies
-			//	par l'objet 'adapter' (ADO.NET).
-			
-			this.db_access = db_access;
-			this.data_set  = new System.Data.DataSet ();
-			this.adapters  = adapters;
-			
-			this.SetCommandTransaction (transaction);
-			
-			try
-			{
-				for (int i = 0; i < this.tables.Count; i++)
-				{
-					DbTable db_table = this.tables[i];
-					
-					string  ado_name_table = "Table";
-					string  db_name_table  = db_table.Name;
-					
-					//	Il faut (re)nommer les tables afin d'avoir les noms qui correspondent
-					//	à ce que définit DbTable, et faire pareil pour les colonnes.
-					
-					System.Data.ITableMapping mapping = this.adapters[i].TableMappings.Add (ado_name_table, db_name_table);
-					
-					for (int c = 0; c < db_table.Columns.Count; c++)
-					{
-						DbColumn db_column = db_table.Columns[c];
-						
-						string db_name_column  = db_column.CreateDisplayName ();
-						string ado_name_column = db_column.CreateSqlName ();
-						
-						mapping.ColumnMappings.Add (ado_name_column, db_name_column);
-					}
-					
-					this.adapters[i].MissingSchemaAction = System.Data.MissingSchemaAction.AddWithKey;
-					this.adapters[i].Fill (this.data_set);
-				}
-			}
-			finally
-			{
-				this.SetCommandTransaction (null);
-			}
-			
-			this.CreateDataRelations ();
-		}
-		
-		
-		#region IDisposable Members
-		public void Dispose()
-		{
-			this.Dispose (true);
-		}
-		#endregion
-		
-		#region IReplaceOptions Interface
-		public interface IReplaceOptions
-		{
-			bool IgnoreColumn(int index, DbColumn column);
-			object GetDefaultValue(int index, DbColumn column);
-		}
-		#endregion
-		
-		#region ReplaceIgnoreColumns Class
-		public class ReplaceIgnoreColumns : IReplaceOptions
-		{
-			public ReplaceIgnoreColumns()
-			{
-				this.columns = new System.Collections.Hashtable ();
-			}
-			
-			
-			public void AddIgnoreColumn(string name, object default_value)
-			{
-				this.columns[name] = default_value;
-			}
-			
-			
-			#region IReplaceOptions Members
-			public bool IgnoreColumn(int index, DbColumn column)
-			{
-				return this.columns.ContainsKey (column.Name);
-			}
-			
-			public object GetDefaultValue(int index, DbColumn column)
-			{
-				return this.columns[column.Name];
-			}
-			#endregion
-			
-			System.Collections.Hashtable		columns;
-		}
-		#endregion
-		
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				if (this.data_set != null)
-				{
-					this.data_set.Dispose ();
-					this.data_set = null;
-				}
-				
-				System.Data.IDbCommand[] commands = this.commands.ToArray ();
-				
-				for (int i = 0; i < commands.Length; i++)
-				{
-					commands[i].Dispose ();
-				}
-			}
-		}
-		
-		
-		protected DbInfrastructure				infrastructure;
-		protected Collections.DbCommands		commands;
-		protected Collections.DbTables			tables;
-		protected System.Data.DataSet			data_set;
-		protected DbAccess						db_access;
-		protected System.Data.IDataAdapter[]	adapters;
-		
-		private bool							is_read_only;
-		private int								stat_replace_update_count;
-		private int								stat_replace_insert_count;
-		private int								stat_replace_delete_count;
+		private bool							isReadOnly;
+		private int								statReplaceUpdateCount;
+		private int								statReplaceInsertCount;
+		private int								statReplaceDeleteCount;
 	}
 }

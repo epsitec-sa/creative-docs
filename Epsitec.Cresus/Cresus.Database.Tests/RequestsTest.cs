@@ -214,12 +214,12 @@ namespace Epsitec.Cresus.Database
 					System.Data.DataRow row = rows[n];
 					
 					Assert.AreEqual (n+1, rows.Length);
-					Assert.AreEqual (DbIdClass.Temporary, DbId.GetClass ((long) row[Tags.ColumnId]));
+					Assert.AreEqual (DbIdClass.Temporary, DbId.GetClass (DbKey.GetRowId (row)));
 					Assert.AreEqual (Requests.ExecutionState.Pending, queue.GetRequestExecutionState (row));
 					
-					queue.SerializeToBase (transaction);
+					queue.PersistToBase (transaction);
 					
-					Assert.AreEqual (DbIdClass.Standard, DbId.GetClass ((long) row[Tags.ColumnId]));
+					Assert.AreEqual (DbIdClass.Standard, DbId.GetClass (DbKey.GetRowId (row)));
 					
 					transaction.Commit ();
 				}
@@ -237,12 +237,12 @@ namespace Epsitec.Cresus.Database
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
 					queue.ClearQueue ();
-					queue.SerializeToBase (transaction);
+					queue.PersistToBase (transaction);
 					transaction.Commit ();
 				}
 			}
 		}
-		
+#if false
 		[Test] public void Check08ExecutionEngine()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
@@ -253,19 +253,19 @@ namespace Epsitec.Cresus.Database
 			
 			infrastructure.Logger.CreateTemporaryEntry (null);
 			
-			DbType db_type_name = infrastructure.ResolveDbType (null, "Customer Name");
-			DbType db_type_date = infrastructure.ResolveDbType (null, "Birth Date");
+			DbType db_type_name = infrastructure.ResolveDbType ("Customer Name");
+			DbType db_type_date = infrastructure.ResolveDbType ("Birth Date");
 			
 			if (db_type_name == null)
 			{
 				db_type_name = infrastructure.CreateDbType ("Customer Name", 80, false);
-				infrastructure.RegisterNewDbType (null, db_type_name);
+				infrastructure.RegisterNewDbType (db_type_name);
 			}
 			
 			if (db_type_date == null)
 			{
 				db_type_date = infrastructure.CreateDbTypeDateTime ("Birth Date");
-				infrastructure.RegisterNewDbType (null, db_type_date);
+				infrastructure.RegisterNewDbType (db_type_date);
 			}
 			
 			DbTable db_table = infrastructure.CreateDbTable ("Simple Exec Table Test", DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
@@ -275,7 +275,7 @@ namespace Epsitec.Cresus.Database
 			
 			db_table.Columns.AddRange (new DbColumn[] { db_col_1, db_col_2 });
 			
-			infrastructure.RegisterNewDbTable (null, db_table);
+			infrastructure.RegisterNewDbTable (db_table);
 			
 			DbColumn db_col_id   = db_table.Columns[0];
 			DbColumn db_col_stat = db_table.Columns[1];
@@ -318,9 +318,10 @@ namespace Epsitec.Cresus.Database
 			
 			transaction.Commit ();
 			
-			infrastructure.UnregisterDbTable (null, db_table);
+			infrastructure.UnregisterDbTable (, db_table);
 		}
-		
+#endif
+#if false
 		[Test] public void Check09Orchestrator()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
@@ -328,8 +329,8 @@ namespace Epsitec.Cresus.Database
 			
 			infrastructure.Logger.CreateTemporaryEntry (null);
 			
-			DbType db_type_name = infrastructure.ResolveDbType (null, "Customer Name");
-			DbType db_type_date = infrastructure.ResolveDbType (null, "Birth Date");
+			DbType db_type_name = infrastructure.ResolveDbType ("Customer Name");
+			DbType db_type_date = infrastructure.ResolveDbType ("Birth Date");
 			
 			Assert.IsNotNull (db_type_name);
 			Assert.IsNotNull (db_type_date);
@@ -341,7 +342,7 @@ namespace Epsitec.Cresus.Database
 			
 			db_table.Columns.AddRange (new DbColumn[] { db_col_1, db_col_2 });
 			
-			infrastructure.RegisterNewDbTable (null, db_table);
+			infrastructure.RegisterNewDbTable (db_table);
 			
 			DbColumn db_col_id   = db_table.Columns[0];
 			DbColumn db_col_stat = db_table.Columns[1];
@@ -381,9 +382,9 @@ namespace Epsitec.Cresus.Database
 			orchestrator.ExecutionQueue.Enqueue (null, factory.CreateGroup ());
 			orchestrator.Dispose ();
 			
-			infrastructure.UnregisterDbTable (null, db_table);
+			infrastructure.UnregisterDbTable (, db_table);
 		}
-
+#endif
 		[Test] public void Check10ExecutionQueueDump()
 		{
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", true))
@@ -423,7 +424,7 @@ namespace Epsitec.Cresus.Database
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
 					queue.ClearQueue ();
-					queue.SerializeToBase (transaction);
+					queue.PersistToBase (transaction);
 					transaction.Commit ();
 				}
 			}
@@ -702,7 +703,7 @@ namespace Epsitec.Cresus.Database
 				
 				orchestrator.DefineRemotingService (service, client);
 				
-				DbTable       db_table = infrastructure.ResolveDbTable (null, "ServiceTest");
+				DbTable       db_table = infrastructure.ResolveDbTable ("ServiceTest");
 				DbRichCommand command  = DbRichCommand.CreateFromTable (infrastructure, null, db_table, DbSelectRevision.LiveActive);
 				
 				System.Data.DataTable    table   = command.DataSet.Tables[0];
@@ -813,23 +814,23 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 #endif
-		
-		
+
+#if false
 		private static void CreateTestTable(DbInfrastructure infrastructure, string name)
 		{
-			DbType db_type_name = infrastructure.ResolveDbType (null, "Customer Name");
-			DbType db_type_date = infrastructure.ResolveDbType (null, "Birth Date");
+			DbType db_type_name = infrastructure.ResolveDbType ("Customer Name");
+			DbType db_type_date = infrastructure.ResolveDbType ("Birth Date");
 			
 			if (db_type_name == null)
 			{
 				db_type_name = infrastructure.CreateDbType ("Customer Name", 80, false);
-				infrastructure.RegisterNewDbType (null, db_type_name);
+				infrastructure.RegisterNewDbType (db_type_name);
 			}
 			
 			if (db_type_date == null)
 			{
 				db_type_date = infrastructure.CreateDbTypeDateTime ("Birth Date");
-				infrastructure.RegisterNewDbType (null, db_type_date);
+				infrastructure.RegisterNewDbType (db_type_date);
 			}
 			
 			Assert.IsNotNull (db_type_name);
@@ -842,12 +843,12 @@ namespace Epsitec.Cresus.Database
 			
 			db_table.Columns.AddRange (new DbColumn[] { db_col_1, db_col_2 });
 			
-			infrastructure.RegisterNewDbTable (null, db_table);
+			infrastructure.RegisterNewDbTable (db_table);
 		}
-		
+#endif
 		private static System.Data.DataTable GetDataTableFromTable(DbInfrastructure infrastructure, string name)
 		{
-			DbTable db_table = infrastructure.ResolveDbTable (null, name);
+			DbTable db_table = infrastructure.ResolveDbTable (name);
 			
 			DbColumn db_col_id   = db_table.Columns[0];
 			DbColumn db_col_stat = db_table.Columns[1];
@@ -879,8 +880,8 @@ namespace Epsitec.Cresus.Database
 			
 		private static void DeleteTestTable(DbInfrastructure infrastructure, string name)
 		{
-			DbTable db_table = infrastructure.ResolveDbTable (null, name);
-			infrastructure.UnregisterDbTable (null, db_table);
+			DbTable db_table = infrastructure.ResolveDbTable (name);
+			infrastructure.UnregisterDbTable (db_table);
 		}
 		
 		

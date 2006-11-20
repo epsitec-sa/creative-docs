@@ -78,7 +78,7 @@ namespace Epsitec.Common.Support
 
 			bundle = Resources.DefaultManager.GetBundle ("file:button.cancel", ResourceLevel.Localized);
 			Assert.IsNotNull (bundle);
-			System.Console.Out.WriteLine ("Bundle with localised level only:");
+			System.Console.Out.WriteLine ("Bundle with localized level only:");
 			
 			foreach (string tag in bundle.FieldNames)
 			{
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Support
 			
 			bundle = Resources.GetBundle ("base:button.cancel", ResourceLevel.Localised);
 			Assert.IsNotNull (bundle);
-			System.Console.Out.WriteLine ("Bundle with localised level only:");
+			System.Console.Out.WriteLine ("Bundle with localized level only:");
 			
 			foreach (string tag in bundle.FieldNames)
 			{
@@ -251,7 +251,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 #endif
-		
+
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckGetBundleRecursive()
 		{
 			ResourceBundle bundle = Resources.DefaultManager.GetBundle ("file:recursive");
@@ -314,15 +314,15 @@ namespace Epsitec.Common.Support
 			{
 				System.Console.Out.WriteLine (" {0} : {1}", i, names_1[i]);
 			}
-			
-			System.Console.Out.WriteLine ("file:*, level=localised");
+
+			System.Console.Out.WriteLine ("file:*, level=localized");
 			
 			for (int i = 0; i < names_2.Length; i++)
 			{
 				System.Console.Out.WriteLine (" {0} : {1}", i, names_2[i]);
 			}
-			
-			System.Console.Out.WriteLine ("file:*, type=String, level=localised");
+
+			System.Console.Out.WriteLine ("file:*, type=String, level=localized");
 			
 			for (int i = 0; i < names_3.Length; i++)
 			{
@@ -346,10 +346,10 @@ namespace Epsitec.Common.Support
 				switch (level)
 				{
 					case ResourceLevel.Localized:
-						about = "localised to " + culture.EnglishName;
+						about = "localized to " + culture.EnglishName;
 						break;
 					case ResourceLevel.Customized:
-						about = "customised for " + culture.EnglishName;
+						about = "customized for " + culture.EnglishName;
 						break;
 				}
 				

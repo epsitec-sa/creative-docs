@@ -226,9 +226,15 @@
     <Content Include="Resources\Common.Types\Strings.00.resource" />
     <Content Include="Resources\Common.Types\Strings.en.resource" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cresus.Database\Captions.00.resource" />
+    <None Include="Resources\Cresus.Database\module.info" />
+    <None Include="Resources\Cresus.Database\Strings.00.resource" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Cresus.Database\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 </PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>

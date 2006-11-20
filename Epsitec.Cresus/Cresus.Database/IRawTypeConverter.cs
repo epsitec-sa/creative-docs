@@ -1,5 +1,5 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
@@ -43,6 +43,15 @@ namespace Epsitec.Cresus.Database
 		/// 	<c>true</c> if the emulated raw type has a fixed length; otherwise, <c>false</c>.
 		/// </value>
 		bool IsFixedLength
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets the character encoding.
+		/// </summary>
+		/// <value>The character encoding.</value>
+		DbCharacterEncoding Encoding
 		{
 			get;
 		}

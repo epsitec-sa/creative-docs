@@ -1,5 +1,5 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Database.Cache
 	/// The <c>Generic&lt;T&gt;</c> class is used to implement a <c>DbKey</c> indexed
 	/// item of <c>T</c> cache.
 	/// </summary>
-	public class Generic<T> where T : class
+	internal class Generic<T> where T : class
 	{
 		public Generic()
 		{

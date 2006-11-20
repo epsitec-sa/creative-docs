@@ -1,49 +1,73 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe DbForeignKey décrit une clef, constituée par une ou plusieurs
-	/// colonnes DbColumn.
+	/// The <c>DbForeignKey</c> structure represents a foreign key, which maps
+	/// to one or several <c>DbColumn</c>s.
 	/// </summary>
-	public class DbForeignKey
+	public struct DbForeignKey
 	{
-		public DbForeignKey(DbColumn a)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbForeignKey"/> structure.
+		/// </summary>
+		/// <param name="column">The single column.</param>
+		public DbForeignKey(DbColumn column)
 		{
-			System.Diagnostics.Debug.Assert (a.ParentTableName != null);
-			System.Diagnostics.Debug.Assert (a.ParentTableName.Length > 0);
+			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (column.TargetTableName));
 			
-			if (a.ColumnClass == DbColumnClass.RefId)
+			if (column.ColumnClass == DbColumnClass.RefId)
 			{
-				this.columns = new DbColumn[] { a };
+				this.columns = new DbColumn[] { column };
 			}
 			else
 			{
-				throw new System.ArgumentException (string.Format ("Invalid column, DbColumnClass set to {0}.", a.ColumnClass));
+				throw new System.ArgumentException (string.Format ("Invalid column, DbColumnClass set to {0}.", column.ColumnClass));
 			}
 		}
-		
-		
+
+		/// <summary>
+		/// Gets the columns which encode the foreign key.
+		/// </summary>
+		/// <value>The columns which encode the foreign key.</value>
 		public DbColumn[]						Columns
 		{
 			get
 			{
-				DbColumn[] copy = new DbColumn[this.columns.Length];
-				this.columns.CopyTo (copy, 0);
-				return copy;
+				if (this.columns == null)
+				{
+					return new DbColumn[0];
+				}
+				else
+				{
+					DbColumn[] copy = new DbColumn[this.columns.Length];
+					this.columns.CopyTo (copy, 0);
+					return copy;
+				}
 			}
 		}
-		
-		public string							ParentTableName
+
+		/// <summary>
+		/// Gets the name of the target table.
+		/// </summary>
+		/// <value>The name of the target table.</value>
+		public string							TargetTableName
 		{
 			get
 			{
-				return this.columns[0].ParentTableName;
+				if (this.columns == null)
+				{
+					return null;
+				}
+				else
+				{
+					return this.columns[0].TargetTableName;
+				}
 			}
 		}
 		
 		
-		protected DbColumn[]					columns;
+		private DbColumn[]						columns;
 	}
 }

@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Database
 			
 			SqlTable  sql_table = new SqlTable ("Test");
 			SqlColumn sql_col_a = new SqlColumn ("A", DbRawType.Int32);
-			SqlColumn sql_col_b = new SqlColumn ("B", DbRawType.Int64, Nullable.Yes);
+			SqlColumn sql_col_b = new SqlColumn ("B", DbRawType.Int64, DbNullability.Yes);
 			SqlColumn sql_col_c = new SqlColumn ("C", DbRawType.Int32);
 			
 			sql_table.Columns.Add (sql_col_a);
@@ -94,8 +94,8 @@ namespace Epsitec.Cresus.Database
 			
 			SqlColumn sql_col_1 = new SqlColumn ("Cr_ID", DbRawType.Int32);
 			SqlColumn sql_col_2 = new SqlColumn ("Cr_REV", DbRawType.Int32);
-			SqlColumn sql_col_3 = new SqlColumn ("StringDynamic", DbRawType.String, 100, false, Nullable.Yes);
-			SqlColumn sql_col_4 = new SqlColumn ("StringFixed",   DbRawType.String,  50, false, Nullable.Yes);
+			SqlColumn sql_col_3 = new SqlColumn ("StringDynamic", DbRawType.String, 100, false, DbNullability.Yes);
+			SqlColumn sql_col_4 = new SqlColumn ("StringFixed",   DbRawType.String,  50, false, DbNullability.Yes);
 			
 			sql_table.Name = "FbTestTable";
 			sql_table.Columns.Add (sql_col_1);
@@ -138,8 +138,8 @@ namespace Epsitec.Cresus.Database
 	
 			SqlColumn sql_col_1 = new SqlColumn ("Cr_ID2", DbRawType.Int32);
 			SqlColumn sql_col_2 = new SqlColumn ("Cr_REV2", DbRawType.Int32);
-			SqlColumn sql_col_3 = new SqlColumn ("StringDynamic2", DbRawType.String, 100, true, Nullable.Yes);
-			SqlColumn sql_col_4 = new SqlColumn ("StringFixed2",   DbRawType.String,  50, false, Nullable.Yes);
+			SqlColumn sql_col_3 = new SqlColumn ("StringDynamic2", DbRawType.String, 100, true, DbNullability.Yes);
+			SqlColumn sql_col_4 = new SqlColumn ("StringFixed2",   DbRawType.String,  50, false, DbNullability.Yes);
 			
 			SqlColumn[] columns = { sql_col_1, sql_col_2, sql_col_3, sql_col_4 };
 			sql_builder.InsertTableColumns ("FbTestTable", columns);
@@ -172,8 +172,8 @@ namespace Epsitec.Cresus.Database
 	
 			SqlColumn sql_col_1 = new SqlColumn ("Cr_ID2", DbRawType.Int32);
 			SqlColumn sql_col_2 = new SqlColumn ("Cr_REV2", DbRawType.Int32);
-			SqlColumn sql_col_3 = new SqlColumn ("StringDynamic2", DbRawType.String, 100, true, Nullable.Yes);
-			SqlColumn sql_col_4 = new SqlColumn ("StringFixed2",   DbRawType.String,  50, false, Nullable.Yes);
+			SqlColumn sql_col_3 = new SqlColumn ("StringDynamic2", DbRawType.String, 100, true, DbNullability.Yes);
+			SqlColumn sql_col_4 = new SqlColumn ("StringFixed2",   DbRawType.String,  50, false, DbNullability.Yes);
 			
 			SqlColumn[] columns = { sql_col_1, sql_col_2, sql_col_3, sql_col_4 };
 			sql_builder.RemoveTableColumns ("FbTestTable", columns);
@@ -319,14 +319,14 @@ namespace Epsitec.Cresus.Database
 			field2.Alias = "Cr_REV";
 			
 			//	défini la fonction Cr_ID == 123
-			SqlFunction sql_func = new SqlFunction (SqlFunctionType.CompareEqual, 
+			SqlFunction sql_func = new SqlFunction (SqlFunctionCode.CompareEqual, 
 				SqlField.CreateName("Cr_ID"),
 				field1);
 
 			conditions.Add (SqlField.CreateFunction(sql_func));
 
 			//	défini la fonction Cr_REV == 456
-			sql_func = new SqlFunction (SqlFunctionType.CompareEqual, 
+			sql_func = new SqlFunction (SqlFunctionCode.CompareEqual, 
 				SqlField.CreateName("Cr_REV"),
 				field2);
 
@@ -380,8 +380,8 @@ namespace Epsitec.Cresus.Database
 			
 			SqlColumn sql_col_1 = new SqlColumn ("Cr_ID", DbRawType.Int32);
 			SqlColumn sql_col_2 = new SqlColumn ("Cr_REV", DbRawType.Int32);
-			SqlColumn sql_col_3 = new SqlColumn ("StringDynamic", DbRawType.String, 100, false, Nullable.Yes);
-			SqlColumn sql_col_4 = new SqlColumn ("StringFixed",   DbRawType.String,  50, false, Nullable.Yes);
+			SqlColumn sql_col_3 = new SqlColumn ("StringDynamic", DbRawType.String, 100, false, DbNullability.Yes);
+			SqlColumn sql_col_4 = new SqlColumn ("StringFixed",   DbRawType.String,  50, false, DbNullability.Yes);
 			
 			sql_table.Name = "FbTestTable";
 			sql_table.Columns.AddRange (new SqlColumn[] { sql_col_1, sql_col_2, sql_col_3, sql_col_4 });
@@ -476,7 +476,7 @@ namespace Epsitec.Cresus.Database
 			
 			SqlColumn sql_col_1 = new SqlColumn ("Cr_ID", DbRawType.Int32);
 			SqlColumn sql_col_2 = new SqlColumn ("ArrayDynamic", DbRawType.ByteArray);
-			SqlColumn sql_col_3 = new SqlColumn ("ArrayFixed",   DbRawType.ByteArray, Nullable.Yes);	// les blobs fixes n'existent pas !
+			SqlColumn sql_col_3 = new SqlColumn ("ArrayFixed",   DbRawType.ByteArray, DbNullability.Yes);	// les blobs fixes n'existent pas !
 			
 			sql_table.Name = "FbTestArrayTable";
 			sql_table.Columns.Add (sql_col_1);
@@ -543,7 +543,7 @@ namespace Epsitec.Cresus.Database
 			sql_select.Tables.Add (SqlField.CreateName ("FbTestArrayTable"));
 
 			//	défini la fonction CR_ID == valeur
-			SqlFunction sql_func = new SqlFunction (SqlFunctionType.CompareEqual, 
+			SqlFunction sql_func = new SqlFunction (SqlFunctionCode.CompareEqual, 
 				SqlField.CreateName ("Cr_ID"),
 				field_ID);
 

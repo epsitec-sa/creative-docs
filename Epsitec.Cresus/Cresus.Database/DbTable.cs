@@ -1,82 +1,167 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
 using Epsitec.Common.Support;
+
+using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Database
 {
-	using ResourceLevel = Epsitec.Common.Support.ResourceLevel;
-	
 	/// <summary>
-	/// La classe DbTable décrit la structure d'une table dans la base de données.
-	/// Cette classe ressemble dans l'esprit à System.Data.DataTable.
+	/// The <c>DbTable</c> class describes a table in a database. This is our
+	/// version of the table metadata wrapper (compare with the ADO.NET
+	/// <see cref="System.Data.DataTable"/> class).
 	/// </summary>
-	public class DbTable : IDbAttributesHost, Common.Types.ICaption, Common.Types.IName
+	public sealed class DbTable : ICaption, IName, IXmlSerializable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbTable"/> class.
+		/// </summary>
 		public DbTable()
 		{
-			this.AttachColumns (new Collections.DbColumns ());
-		}
-		
-		public DbTable(string name) : this ()
-		{
-			this.Attributes.SetAttribute (Tags.Name, name);
-		}
-		
-		public DbTable(System.Xml.XmlElement xml) : this ()
-		{
-			this.ProcessXmlDefinition (xml);
-		}
-		
-		
-		public static DbTable CreateTable(string xml)
-		{
-			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
-			
-			doc.LoadXml (xml);
-			
-			return DbTable.CreateTable (doc.DocumentElement);
-		}
-		
-		public static DbTable CreateTable(System.Xml.XmlElement xml)
-		{
-			return (xml.Name == "null") ? null : new DbTable (xml);
-		}
-		
-		
-		public string							Name
-		{
-			get { return this.Attributes[Tags.Name, ResourceLevel.Default]; }
-		}
-		
-		public string							Caption
-		{
-			get { return this.Attributes[Tags.Caption]; }
-		}
-		
-		public string							Description
-		{
-			get { return this.Attributes[Tags.Description]; }
+			this.columns = new Collections.DbColumns ();
+
+			this.columns.ItemInserted += this.HandleColumnInserted;
+			this.columns.ItemRemoved  += this.HandleColumnRemoved;
 		}
 
-		public Common.Support.Druid				CaptionId
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbTable"/> class.
+		/// </summary>
+		/// <param name="name">The table name.</param>
+		public DbTable(string name)
+			: this ()
+		{
+			this.DefineName (name);
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbTable"/> class.
+		/// </summary>
+		/// <param name="captionId">The caption DRUID.</param>
+		public DbTable(Druid captionId)
+			: this ()
+		{
+			this.DefineCaptionId (captionId);
+		}
+
+		#region IName Members
+
+		/// <summary>
+		/// Gets the name of the table.
+		/// </summary>
+		/// <value>The name of the table.</value>
+		public string							Name
 		{
 			get
 			{
-				return Common.Support.Druid.Empty;
+				if (this.name == null)
+				{
+					Caption caption = this.Caption;
+					return caption == null ? null : caption.Name;
+				}
+				else
+				{
+					return this.name;
+				}
 			}
 		}
-		
-		
-		public DbAttributes						Attributes
+
+		#endregion
+
+		#region ICaption Members
+
+		/// <summary>
+		/// Gets the caption id for the table.
+		/// </summary>
+		/// <value>The caption DRUID.</value>
+		public Druid							CaptionId
 		{
 			get
 			{
-				return this.attributes;
+				return this.captionId;
 			}
 		}
-		
-		
+
+		#endregion
+
+		/// <summary>
+		/// Gets the caption for the table.
+		/// </summary>
+		/// <value>The caption or <c>null</c> if the <c>CaptionId</c> is not valid.</value>
+		public Caption							Caption
+		{
+			get
+			{
+				if (this.caption == null)
+				{
+					this.caption = DbContext.Current.ResourceManager.GetCaption (this.captionId) ?? DbTable.nullCaption;
+				}
+
+				if (this.caption == DbTable.nullCaption)
+				{
+					return null;
+				}
+				else
+				{
+					return this.caption;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the table localizations.
+		/// </summary>
+		/// <value>The table localizations or an empty array if there are no localizations.</value>
+		public string[]							Localizations
+		{
+			get
+			{
+				if (string.IsNullOrEmpty (this.localizations))
+				{
+					return new string[0];
+				}
+				else
+				{
+					return this.localizations.Split ('/');
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the number of localizations for this table.
+		/// </summary>
+		/// <value>The localization count or <c>0</c> if there are no localizations.</value>
+		public int								LocalizationCount
+		{
+			get
+			{
+				if (string.IsNullOrEmpty (this.localizations))
+				{
+					return 0;
+				}
+				else
+				{
+					int count = 1;
+					
+					for (int i = 0; i < this.localizations.Length; i++)
+					{
+						if (this.localizations[i] == '/')
+						{
+							count++;
+						}
+					}
+
+					return count;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the columns defined for the table.
+		/// </summary>
+		/// <value>The columns.</value>
 		public Collections.DbColumns			Columns
 		{
 			get
@@ -84,283 +169,484 @@ namespace Epsitec.Cresus.Database
 				return this.columns;
 			}
 		}
-		
-		public bool								HasPrimaryKey
+
+		/// <summary>
+		/// Gets a value indicating whether this table has primary keys.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this table has primary keys; otherwise, <c>false</c>.
+		/// </value>
+		public bool								HasPrimaryKeys
 		{
-			get { return (this.primary_keys != null) && (this.primary_keys.Count > 0); }
+			get
+			{
+				return (this.primaryKeys != null) && (this.primaryKeys.Count > 0);
+			}
 		}
-		
+
+		/// <summary>
+		/// Gets the primary keys. The tuples formed by the columns must
+		/// be unique.
+		/// </summary>
+		/// <value>The primary keys.</value>
 		public Collections.DbColumns			PrimaryKeys
 		{
 			get
 			{
-				//	NB: les clefs primaires spécifiées par PrimaryKeys sont utilisées
-				//	pour former un 'tuple' (par exemple une paire de clef). Déclarer
-				//	une série de colonnes comme PrimaryKeys implique que les tuples
-				//	doivent être uniques !
-				
-				if (this.primary_keys == null)
+				if (this.primaryKeys == null)
 				{
-					this.primary_keys = new Collections.DbColumns ();
+					this.primaryKeys = new Collections.DbColumns ();
 				}
-				
-				return this.primary_keys;
+
+				return this.primaryKeys;
 			}
 		}
-		
-		public DbForeignKey[]					ForeignKeys
+
+		/// <summary>
+		/// Gets the foreign keys defined in this table.
+		/// </summary>
+		/// <value>The foreign keys.</value>
+		public IEnumerable<DbForeignKey>		ForeignKeys
 		{
 			get
 			{
-				System.Collections.ArrayList list = new System.Collections.ArrayList ();
-				
 				foreach (DbColumn column in this.Columns)
 				{
 					switch (column.ColumnClass)
 					{
 						case DbColumnClass.RefId:
-							list.Add (new DbForeignKey (column));
+							yield return new DbForeignKey (column);
 							break;
 					}
 				}
-				
-				DbForeignKey[] keys = new DbForeignKey[list.Count];
-				list.CopyTo (keys);
-				return keys;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the category for this table.
+		/// </summary>
+		/// <value>The category.</value>
 		public DbElementCat						Category
 		{
-			get { return this.category; }
+			get
+			{
+				return this.category;
+			}
 		}
-		
+
+		/// <summary>
+		/// Gets the revision mode for this table.
+		/// </summary>
+		/// <value>The revision mode.</value>
 		public DbRevisionMode					RevisionMode
 		{
 			get
 			{
-				return this.revision_mode;
+				if (this.revisionMode == DbRevisionMode.Unknown)
+				{
+					this.UpdateRevisionMode ();
+				}
+				
+				return this.revisionMode;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the replication mode for this table.
+		/// </summary>
+		/// <value>The replication mode.</value>
 		public DbReplicationMode				ReplicationMode
 		{
 			get
 			{
-				return this.replication_mode;
+				return this.replicationMode;
 			}
 		}
-		
-		public DbKey							InternalKey
+
+		/// <summary>
+		/// Gets the key for the table, used internally to identify the table
+		/// metadata.
+		/// </summary>
+		/// <value>The key.</value>
+		public DbKey							Key
 		{
-			get { return this.internal_table_key; }
+			get
+			{
+				return this.key;
+			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Updates the revision mode based on the column definitions. This method
+		/// overwrites the <c>RevisionMode</c> defined by <c>DefineRevisionMode</c>.
+		/// </summary>
+		public void UpdateRevisionMode()
+		{
+			foreach (DbColumn column in this.columns)
+			{
+				if (column.RevisionMode == DbRevisionMode.Enabled)
+				{
+					this.revisionMode = DbRevisionMode.Enabled;
+					return;
+				}
+			}
+
+			this.revisionMode = DbRevisionMode.Disabled;
+		}
+
+		/// <summary>
+		/// Defines the name for this table. A table name may not be changed
+		/// after it has been defined.
+		/// </summary>
+		/// <param name="value">The table name.</param>
+		public void DefineName(string value)
+		{
+			if (this.name == value)
+			{
+				return;
+			}
+			if (this.name == null)
+			{
+				this.name = value;
+			}
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot be renamed to '{1}'", this.name, value));
+			}
+		}
+
+		/// <summary>
+		/// Defines the caption id for the table. This clears the name, as it
+		/// will be derived automatically from the caption.
+		/// </summary>
+		/// <param name="captionId">The caption DRUID.</param>
+		public void DefineCaptionId(Druid captionId)
+		{
+			this.captionId = captionId;
+			this.caption   = null;
+			this.name      = null;
+		}
+
+		/// <summary>
+		/// Defines the category for this table. A table category may not be changed
+		/// after it has been defined.
+		/// </summary>
+		/// <param name="category">The category.</param>
 		public void DefineCategory(DbElementCat category)
 		{
 			if (this.category == category)
 			{
 				return;
 			}
-			
-			if (this.category != DbElementCat.Unknown)
+
+			if (this.category == DbElementCat.Unknown)
 			{
-				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot define a new category.", this.Name));
-			}
-			
-			this.category = category;
-		}
-		
-		public void DefineRevisionMode(DbRevisionMode revision_mode)
-		{
-			if (this.revision_mode == revision_mode)
-			{
-				return;
-			}
-			
-			if (this.revision_mode != DbRevisionMode.Unknown)
-			{
-				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot define a new revision mode.", this.Name));
-			}
-			
-			this.revision_mode = revision_mode;
-		}
-		
-		public void DefineReplicationMode(DbReplicationMode replication_mode)
-		{
-			if (this.replication_mode == replication_mode)
-			{
-				return;
-			}
-			
-			if (this.replication_mode != DbReplicationMode.Unknown)
-			{
-				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot define a new replication mode.", this.Name));
-			}
-			
-			this.replication_mode = replication_mode;
-		}
-		
-		public void DefineAttributes(params string[] attributes)
-		{
-			this.attributes.SetFromInitialisationList (attributes);
-		}
-		
-		public void DefineInternalKey(DbKey key)
-		{
-			if (this.internal_table_key == key)
-			{
-				return;
-			}
-			
-			if (this.internal_table_key != null)
-			{
-				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot change its internal key.", this.Name));
-			}
-			
-			this.internal_table_key = key.Clone () as DbKey;
-		}
-		
-		public void DefinePrimaryKey(DbColumn column)
-		{
-			if (this.primary_keys != null)
-			{
-				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot change its primary key.", this.Name));
-			}
-			
-			this.PrimaryKeys.Add (column);
-			
-			System.Diagnostics.Debug.Assert (this.primary_keys.Count == 1);
-			System.Diagnostics.Debug.Assert (this.primary_keys[0] == column);
-		}
-		
-		
-		public SqlTable CreateSqlTable(ITypeConverter type_converter)
-		{
-			System.Diagnostics.Debug.Assert (this.ReplicationMode != DbReplicationMode.Unknown);
-			
-			SqlTable sql_table = new SqlTable (this.CreateSqlName ());
-			
-			foreach (DbColumn db_column in this.columns)
-			{
-				SqlColumn sql_column = db_column.CreateSqlColumn (type_converter);
-				
-				//	Vérifions juste que personne n'introduit deux fois la même colonne dans une
-				//	définition de table.
-				
-				if (sql_table.Columns.IndexOf (sql_column.Name) >= 0)
-				{
-					string message = string.Format ("Multiple columns with same name ({0}) are forbidden", sql_column.Name);
-					throw new Exceptions.SyntaxException (DbAccess.Empty, message);
-				}
-				
-				sql_table.Columns.Add (sql_column);
-			}
-			
-			if (this.HasPrimaryKey)
-			{
-				//	S'il y a des clefs primaires définies, reprend simplement les clefs qui
-				//	correspondent (elles doivent être définies dans la collection des colonnes
-				//	de la table).
-				
-				int n = this.PrimaryKeys.Count;
-				
-				SqlColumn[] primary_keys = new SqlColumn[n];
-				
-				for (int i = 0; i < n; i++)
-				{
-					DbColumn db_key   = this.PrimaryKeys[i];
-					string   key_name = db_key.CreateSqlName ();
-					
-					if (sql_table.Columns.IndexOf (key_name) < 0)
-					{
-						string message = string.Format ("Primary key {0} not found in columns", key_name);
-						throw new Exceptions.SyntaxException (DbAccess.Empty, message);
-					}
-					
-					SqlColumn sql_key  = sql_table.Columns[key_name];
-					
-					if (sql_key.IsNullAllowed)
-					{
-						string message = string.Format ("Primary key {0} may not be nullable", key_name);
-						throw new Exceptions.SyntaxException (DbAccess.Empty, message);
-					}
-					
-					primary_keys[i] = sql_key;
-				}
-				
-				sql_table.PrimaryKey = primary_keys;
-			}
-			
-			return sql_table;
-		}
-		
-		public string   CreateSqlName()
-		{
-			return DbSqlStandard.MakeSqlTableName (this.Name, this.Category, this.InternalKey);
-		}
-		
-		public DbKey    CreateKeyFromRow(System.Data.DataRow row)
-		{
-			DbKey key = null;
-			
-			switch (this.category)
-			{
-				case DbElementCat.Internal:
-				case DbElementCat.UserDataManaged:
-					if (this.PrimaryKeys.Count == 1)
-					{
-						System.Diagnostics.Debug.Assert (this.PrimaryKeys[0].Name.ToUpper () == Tags.ColumnId);
-						
-						long id = (long) row[Tags.ColumnId];
-						
-						key = new DbKey (id);
-					}
-					break;
-				
-				default:
-					if (this.PrimaryKeys.Count == 1)
-					{
-						long id = (long) row[this.PrimaryKeys[0].Name];
-						
-						key = new DbKey (id);
-					}
-					break;
-			}
-			
-			if (key == null)
-			{
-				throw new Exceptions.GenericException (DbAccess.Empty, string.Format ("Table {0} uses unsupported key format.", this.Name));
-			}
-			
-			return key;
-		}
-		
-		
-		public static string SerializeToXml(DbTable table, bool full)
-		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			DbTable.SerializeToXml (buffer, table, full);
-			return buffer.ToString ();
-		}
-		
-		public static void   SerializeToXml(System.Text.StringBuilder buffer, DbTable table, bool full)
-		{
-			if (table == null)
-			{
-				buffer.Append ("<null/>");
+				this.category = category;
 			}
 			else
 			{
-				table.SerializeXmlDefinition (buffer, full);
+				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot define a new category", this.Name));
 			}
 		}
-		
-		
+
+		/// <summary>
+		/// Defines the revision mode for this table. A revision mode may not be changed
+		/// after it has been defined.
+		/// </summary>
+		/// <param name="revisionMode">The revision mode.</param>
+		public void DefineRevisionMode(DbRevisionMode revisionMode)
+		{
+			if (this.revisionMode == revisionMode)
+			{
+				return;
+			}
+
+			if (this.revisionMode == DbRevisionMode.Unknown)
+			{
+				this.revisionMode = revisionMode;
+			}
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot define a new revision mode", this.Name));
+			}
+		}
+
+		/// <summary>
+		/// Defines the replication mode for the table. A repliaction mode may not be changed
+		/// after it has been defined.
+		/// </summary>
+		/// <param name="replicationMode">The replication mode.</param>
+		public void DefineReplicationMode(DbReplicationMode replicationMode)
+		{
+			if (this.replicationMode == replicationMode)
+			{
+				return;
+			}
+
+			if (this.replicationMode == DbReplicationMode.Unknown)
+			{
+				this.replicationMode = replicationMode;
+			}
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot define a new replication mode", this.Name));
+			}
+		}
+
+		/// <summary>
+		/// Defines the key for the table metadata. A key may not be changed
+		/// after it has been defined.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		public void DefineKey(DbKey key)
+		{
+			if (this.key == key)
+			{
+				return;
+			}
+
+			if (this.key.IsEmpty)
+			{
+				this.key = key;
+			}
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot change its internal key", this.Name));
+			}
+		}
+
+		/// <summary>
+		/// Defines the primary key for this table.
+		/// </summary>
+		/// <param name="column">The column used as primary key.</param>
+		public void DefinePrimaryKey(DbColumn column)
+		{
+			if (this.primaryKeys != null)
+			{
+				throw new System.InvalidOperationException (string.Format ("Table '{0}' may not change its primary key", this.Name));
+			}
+
+			this.PrimaryKeys.Add (column);
+
+			System.Diagnostics.Debug.Assert (this.primaryKeys.Count == 1);
+			System.Diagnostics.Debug.Assert (this.primaryKeys[0] == column);
+		}
+
+		/// <summary>
+		/// Defines the localizations for this table.
+		/// </summary>
+		/// <param name="localizations">The localizations.</param>
+		public void DefineLocalizations(IEnumerable<string> localizations)
+		{
+			if (string.IsNullOrEmpty (this.localizations))
+			{
+				string[] array = Collection.ToArray<string> (localizations);
+				this.localizations = array.Length == 0 ? null : string.Join ("/", array);
+			}
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Table '{0}' may not change its localization", this.Name));
+			}
+		}
+
+
+		/// <summary>
+		/// Creates an SQL table definition based on this high level table definition.
+		/// </summary>
+		/// <param name="converter">The type converter.</param>
+		/// <returns>An SQL table definition.</returns>
+		public SqlTable CreateSqlTable(ITypeConverter converter)
+		{
+			System.Diagnostics.Debug.Assert (this.ReplicationMode != DbReplicationMode.Unknown);
+
+			SqlTable sqlTable = new SqlTable (this.GetSqlName ());
+
+			foreach (DbColumn dbColumn in this.columns)
+			{
+				if ((dbColumn.IsPrimaryKey) &&
+					(dbColumn.Localization != DbColumnLocalization.None))
+				{
+					throw new Exceptions.SyntaxException (DbAccess.Empty, string.Format ("Primary key '{0}' may not be localized", dbColumn.Name));
+				}
+
+				foreach (SqlColumn sqlColumn in this.CreateSqlColumns (converter, dbColumn))
+				{
+					//	Make sure we don't try to create an SQL column more than once.
+
+					if (sqlTable.Columns.IndexOf (sqlColumn.Name) >= 0)
+					{
+						string message = string.Format ("Multiple columns with same name ({0}) are forbidden", sqlColumn.Name);
+						throw new Exceptions.SyntaxException (DbAccess.Empty, message);
+					}
+
+					sqlTable.Columns.Add (sqlColumn);
+				}
+			}
+
+			if (this.HasPrimaryKeys)
+			{
+				//	If there are primary keys for this table, simple map them to the
+				//	already created SQL columns.
+
+				int n = this.PrimaryKeys.Count;
+
+				SqlColumn[] primaryKeys = new SqlColumn[n];
+
+				for (int i = 0; i < n; i++)
+				{
+					DbColumn dbPrimaryKey   = this.PrimaryKeys[i];
+					string   primaryKeyName = dbPrimaryKey.GetSqlName ();
+
+					if (sqlTable.Columns.IndexOf (primaryKeyName) < 0)
+					{
+						string message = string.Format ("Primary key {0} not found in columns", primaryKeyName);
+						throw new Exceptions.SyntaxException (DbAccess.Empty, message);
+					}
+
+					SqlColumn sqlPrimaryKey = sqlTable.Columns[primaryKeyName];
+
+					if (sqlPrimaryKey.IsNullable)
+					{
+						string message = string.Format ("Primary key {0} may not be nullable", primaryKeyName);
+						throw new Exceptions.SyntaxException (DbAccess.Empty, message);
+					}
+
+					primaryKeys[i] = sqlPrimaryKey;
+				}
+
+				sqlTable.PrimaryKey = primaryKeys;
+			}
+
+			return sqlTable;
+		}
+
+		/// <summary>
+		/// Creates the SQL columns for a given column.
+		/// </summary>
+		/// <param name="converter">The type converter.</param>
+		/// <param name="column">The column.</param>
+		/// <returns>The SQL columns.</returns>
+		internal IEnumerable<SqlColumn> CreateSqlColumns(ITypeConverter converter, DbColumn column)
+		{
+			if (column.Localization == DbColumnLocalization.Localized)
+			{
+				System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (this.localizations) == false);
+
+				foreach (string localizationSuffix in this.Localizations)
+				{
+					yield return column.CreateSqlColumn (converter, localizationSuffix);
+				}
+			}
+			else
+			{
+				yield return column.CreateSqlColumn (converter, null);
+			}
+		}
+
+		/// <summary>
+		/// Creates the SQL name for this table.
+		/// </summary>
+		/// <returns>The SQL name.</returns>
+		public string GetSqlName()
+		{
+			return DbSqlStandard.MakeSqlTableName (this.Name, this.Category, this.Key);
+		}
+
+		/// <summary>
+		/// Gets the name of the corresponding revision table.
+		/// </summary>
+		/// <returns>The name of the corresponding revision table or <c>null</c> if
+		/// the table is not revisioned.</returns>
+		public string GetRevisionTableName()
+		{
+			if (this.RevisionMode == DbRevisionMode.Enabled)
+			{
+				return DbSqlStandard.MakeSqlTableName (this.Name, DbElementCat.RevisionHistory, this.Key);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// Extracts the key from the specified row.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		/// <returns>The key found in the row.</returns>
+		public DbKey ExtractKeyFromRow(System.Data.DataRow row)
+		{
+			DbKey key = DbKey.Empty;
+
+			switch (this.category)
+			{
+				case DbElementCat.Internal:
+				case DbElementCat.ManagedUserData:
+					if (this.PrimaryKeys.Count == 1)
+					{
+						System.Diagnostics.Debug.Assert (this.PrimaryKeys[0].Name == Tags.ColumnId);
+
+						key = new DbKey (DbKey.GetRowId (row), DbKey.GetRowStatus (row));
+					}
+					break;
+
+				default:
+					if (this.PrimaryKeys.Count == 1)
+					{
+						key = new DbKey ((long) row[this.PrimaryKeys[0].Name]);
+					}
+					break;
+			}
+
+			if (key.IsEmpty)
+			{
+				throw new Exceptions.GenericException (DbAccess.Empty, string.Format ("Table {0} uses unsupported key format", this.Name));
+			}
+
+			return key;
+		}
+
+		/// <summary>
+		/// Gets the number of SQL columns. This may be different from the number
+		/// of columns defined in the table (localized columns need several columns
+		/// to represent their data, for instance).
+		/// </summary>
+		/// <returns>The number of SQL columns.</returns>
+		public int GetSqlColumnCount()
+		{
+			int localizationCount = this.LocalizationCount;
+
+			if (localizationCount > 1)
+			{
+				int count = 0;
+
+				foreach (DbColumn column in this.columns)
+				{
+					if (column.Localization == DbColumnLocalization.Localized)
+					{
+						count += localizationCount;
+					}
+					else
+					{
+						count += 1;
+					}
+				}
+				
+				return count;
+			}
+			else
+			{
+				return this.columns.Count;
+			}
+		}
+
+		/// <summary>
+		/// Updates the primary key flags of the table columns.
+		/// </summary>
 		internal void UpdatePrimaryKeyInfo()
 		{
-			if (this.HasPrimaryKey)
+			if (this.HasPrimaryKeys)
 			{
 				foreach (DbColumn column in this.Columns)
 				{
@@ -372,135 +658,138 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-		
-		
-		protected void SerializeXmlDefinition(System.Text.StringBuilder buffer, bool full)
+
+		#region IXmlSerializable Members
+
+		/// <summary>
+		/// Serializes the instance using the specified XML writer.
+		/// </summary>
+		/// <param name="xmlWriter">The XML writer.</param>
+		public void Serialize(System.Xml.XmlTextWriter xmlWriter)
 		{
-			this.UpdatePrimaryKeyInfo ();
-			
-			buffer.Append (@"<table");
-			
-			string arg_cat = DbTools.ElementCategoryToString (this.category);
-			string arg_rev = DbTools.RevisionModeToString (this.revision_mode);
-			string arg_rep = DbTools.ReplicationModeToString (this.replication_mode);
-			
-			if (arg_cat != null)
+			xmlWriter.WriteStartElement ("table");
+
+			DbTools.WriteAttribute (xmlWriter, "cat", DbTools.ElementCategoryToString (this.category));
+			DbTools.WriteAttribute (xmlWriter, "rev", DbTools.RevisionModeToString (this.RevisionMode));
+			DbTools.WriteAttribute (xmlWriter, "rep", DbTools.ReplicationModeToString (this.replicationMode));
+			DbTools.WriteAttribute (xmlWriter, "l10n", DbTools.StringToString (this.localizations));
+
+			xmlWriter.WriteEndElement ();
+		}
+
+		#endregion
+
+		/// <summary>
+		/// Deserializes a <c>DbTable</c> from its XML representation.
+		/// </summary>
+		/// <param name="xmlReader">The XML reader.</param>
+		/// <returns>The <c>DbTable</c>.</returns>
+		public static DbTable Deserialize(System.Xml.XmlTextReader xmlReader)
+		{
+			if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
+				(xmlReader.Name == "table"))
 			{
-				buffer.Append (@" cat=""");
-				buffer.Append (arg_cat);
-				buffer.Append (@"""");
-			}
-			if (arg_rev != null)
-			{
-				buffer.Append (@" rev=""");
-				buffer.Append (arg_rev);
-				buffer.Append (@"""");
-			}
-			if (arg_rep != null)
-			{
-				buffer.Append (@" rep=""");
-				buffer.Append (arg_rep);
-				buffer.Append (@"""");
-			}
-			
-			if (full)
-			{
-				DbKey.SerializeToXmlAttributes (buffer, this.internal_table_key);
-				this.Attributes.SerializeXmlAttributes (buffer);
-				buffer.Append (@">");
-				
-				Collections.DbColumns.SerializeToXml (buffer, this.primary_keys, "keys");
-				Collections.DbColumns.SerializeToXml (buffer, this.columns, "cols");
-				
-				buffer.Append (@"</table>");
+				DbTable table = new DbTable ();
+				bool isEmptyElement = xmlReader.IsEmptyElement;
+
+				table.category         = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
+				table.revisionMode    = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
+				table.replicationMode = DbTools.ParseReplicationMode (xmlReader.GetAttribute ("rep"));
+				table.localizations    = DbTools.ParseString (xmlReader.GetAttribute ("l10n"));
+
+				if (!isEmptyElement)
+				{
+					xmlReader.ReadEndElement ();
+				}
+
+				return table;
 			}
 			else
 			{
-				buffer.Append (@"/>");
-			}
-		}
-		
-		protected void ProcessXmlDefinition(System.Xml.XmlElement xml)
-		{
-			if (xml.Name != "table")
-			{
-				throw new System.FormatException (string.Format ("Expected root element named <table>, but found <{0}>.", xml.Name));
-			}
-			
-			string arg_cat = xml.GetAttribute ("cat");
-			string arg_rev = xml.GetAttribute ("rev");
-			string arg_rep = xml.GetAttribute ("rep");
-			
-			this.category         = DbTools.ParseElementCategory (arg_cat);
-			this.revision_mode    = DbTools.ParseRevisionMode (arg_rev);
-			this.replication_mode = DbTools.ParseReplicationMode (arg_rep);
-			
-			this.internal_table_key = DbKey.DeserializeFromXmlAttributes (xml);
-			this.Attributes.DeserializeXmlAttributes (xml);
-			
-			for (int i = 0; i < xml.ChildNodes.Count; i++)
-			{
-				System.Xml.XmlElement node = xml.ChildNodes[i] as System.Xml.XmlElement;
-				
-				if ((node == null) ||
-					(node.GetAttribute ("id") == ""))
-				{
-					new System.FormatException (string.Format ("Expected nodes with id in {0}.", xml.InnerXml));
-				}
-				
-				string id = node.GetAttribute ("id");
-				
-				switch (id)
-				{
-					case "keys":
-						this.primary_keys = Collections.DbColumns.CreateCollection (node);
-						break;
-					case "cols":
-						this.AttachColumns (Collections.DbColumns.CreateCollection (node));
-						break;
-					
-					default:
-						throw new System.FormatException (string.Format ("Expected id not found, '{0}' is not recognized.", id));
-				}
-			}
-			
-			this.UpdatePrimaryKeyInfo ();
-		}
-		
-		
-		private void AttachColumns(Collections.DbColumns columns)
-		{
-			this.columns = columns;
-
-			this.columns.ItemInserted += this.HandleColumnInserted;
-			this.columns.ItemRemoved += this.HandleColumnRemoved;
-			
-			foreach (DbColumn column in this.columns)
-			{
-				column.DefineTable (this);
+				throw new System.Xml.XmlException (string.Format ("Unexpected element {0}", xmlReader.LocalName), null, xmlReader.LineNumber, xmlReader.LinePosition);
 			}
 		}
 
-
-		private void HandleColumnInserted(object sender, Epsitec.Common.Support.ValueEventArgs e)
+		/// <summary>
+		/// Creates a foreign key reference column pointing to the specified target
+		/// table.
+		/// </summary>
+		/// <param name="infrastructure">The database infrastructure.</param>
+		/// <param name="columnName">Name of the column.</param>
+		/// <param name="targetTableName">Name of the target table.</param>
+		/// <param name="nullability">The column nullability.</param>
+		/// <returns>The column.</returns>
+		public static DbColumn CreateRefColumn(DbInfrastructure infrastructure, string columnName, string targetTableName, DbNullability nullability)
 		{
+			System.Diagnostics.Debug.Assert (nullability != DbNullability.Undefined);
+			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (targetTableName));
+
+			DbTypeDef  type = infrastructure.ResolveDbType (nullability == DbNullability.Yes ? Tags.TypeNullableKeyId : Tags.TypeKeyId);
+			DbColumn column = new DbColumn (columnName, type, DbColumnClass.RefId, DbElementCat.ManagedUserData);
+
+			column.DefineTargetTableName (targetTableName);
+
+			return column;
+		}
+
+		/// <summary>
+		/// Creates a column for user data.
+		/// </summary>
+		/// <param name="columnName">Name of the column.</param>
+		/// <param name="type">The type.</param>
+		/// <returns>The column.</returns>
+		public static DbColumn CreateUserDataColumn(string columnName, DbTypeDef type)
+		{
+			System.Diagnostics.Debug.Assert (type != null);
+
+			return new DbColumn (columnName, type, DbColumnClass.Data, DbElementCat.ManagedUserData);
+		}
+
+		/// <summary>
+		/// Creates a column for user data.
+		/// </summary>
+		/// <param name="columnName">Name of the column.</param>
+		/// <param name="type">The type.</param>
+		/// <param name="revisionMode">The revision mode.</param>
+		/// <returns>The column.</returns>
+		public static DbColumn CreateUserDataColumn(string columnName, DbTypeDef type, DbRevisionMode revisionMode)
+		{
+			System.Diagnostics.Debug.Assert (type != null);
+
+			return new DbColumn (columnName, type, DbColumnClass.Data, DbElementCat.ManagedUserData, revisionMode);
+		}
+
+		#region Private Methods
+
+		private void HandleColumnInserted(object sender, ValueEventArgs e)
+		{
+			//	When a column is added to the table, the column must be made aware
+			//	of the relation with its containing table.
+			
 			DbColumn column = e.Value as DbColumn;
 			column.DefineTable (this);
 		}
-		
-		private void HandleColumnRemoved(object sender, Epsitec.Common.Support.ValueEventArgs e)
+
+		private void HandleColumnRemoved(object sender, ValueEventArgs e)
 		{
 			DbColumn column = e.Value as DbColumn;
 			column.DefineTable (null);
 		}
-		
-		
-		protected DbAttributes					attributes	= new DbAttributes ();
-		protected Collections.DbColumns			columns;
-		protected Collections.DbColumns			primary_keys;
-		protected DbElementCat					category;
-		protected DbRevisionMode				revision_mode;
-		protected DbReplicationMode				replication_mode;
-		protected DbKey							internal_table_key;
+
+		#endregion
+
+		private static readonly Caption			nullCaption = new Caption ();
+
+		private DbKey							key;
+		private string							name;
+		private Druid							captionId;
+		private Caption							caption;
+		private string							localizations;
+
+		private Collections.DbColumns			columns;
+		private Collections.DbColumns			primaryKeys;
+		private DbElementCat					category;
+		private DbRevisionMode					revisionMode;
+		private DbReplicationMode				replicationMode;
 	}
 }

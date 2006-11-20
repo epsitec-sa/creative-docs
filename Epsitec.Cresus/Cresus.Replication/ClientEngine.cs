@@ -81,7 +81,6 @@ namespace Epsitec.Cresus.Replication
 			PackedTableData def_table   = ClientEngine.FindPackedTable (list, Tags.TableTableDef);
 			PackedTableData def_column  = ClientEngine.FindPackedTable (list, Tags.TableColumnDef);
 			PackedTableData def_type    = ClientEngine.FindPackedTable (list, Tags.TableTypeDef);
-			PackedTableData def_enumval = ClientEngine.FindPackedTable (list, Tags.TableEnumValDef);
 			PackedTableData log_table   = ClientEngine.FindPackedTable (list, Tags.TableLog);
 			
 			if (log_table != null)
@@ -94,8 +93,7 @@ namespace Epsitec.Cresus.Replication
 			
 			if ((def_table != null) ||
 				(def_column != null) ||
-				(def_type != null) ||
-				(def_enumval != null))
+				(def_type != null))
 			{
 				//	Ces opérations ne sont possibles qu'au sein d'un bloc d'exclusion global au
 				//	niveau des accès à la base de données :
@@ -109,7 +107,6 @@ namespace Epsitec.Cresus.Replication
 						if (def_table  != null)  this.ApplyChanges (transaction, def_table);
 						if (def_column != null)  this.ApplyChanges (transaction, def_column);
 						if (def_type   != null)  this.ApplyChanges (transaction, def_type);
-						if (def_enumval != null) this.ApplyChanges (transaction, def_enumval);
 						
 						//	Il est indispensable de valider la transaction à ce stade, car on va peut-être
 						//	modifier la structure interne de la base de données, et cela ne sera visible
@@ -123,7 +120,6 @@ namespace Epsitec.Cresus.Replication
 					list.Remove (def_table);
 					list.Remove (def_column);
 					list.Remove (def_type);
-					list.Remove (def_enumval);
 					
 					//	Met à jour la structure de la base de données selon les nouvelles descriptions de
 					//	tables/colonnes/types :
@@ -192,7 +188,7 @@ namespace Epsitec.Cresus.Replication
 					//	être répliquée dans son entier. La colonne CR_NEXT_ID doit être
 					//	sautée (ou initialisée avec des valeurs par défaut) :
 					
-					DbRichCommand.ReplaceIgnoreColumns options = new DbRichCommand.ReplaceIgnoreColumns ();
+					Database.Options.ReplaceIgnoreColumns options = new Database.Options.ReplaceIgnoreColumns ();
 					
 					options.AddIgnoreColumn (Tags.ColumnNextId, DbId.CreateId (1, this.infrastructure.LocalSettings.ClientId).Value);
 					
@@ -264,7 +260,7 @@ namespace Epsitec.Cresus.Replication
 				for (int i = 0; i < def_table_rows.Length; i++)
 				{
 					DbKey   def_table_row_key = new DbKey (def_table_rows[i]);
-					DbTable def_table_runtime = this.infrastructure.ResolveDbTable (null, def_table_row_key);
+					DbTable def_table_runtime = this.infrastructure.ResolveDbTable (def_table_row_key);
 					
 					System.Diagnostics.Debug.Assert (def_table_runtime != null);
 					
@@ -279,7 +275,7 @@ namespace Epsitec.Cresus.Replication
 					{
 						//	La table a été modifiée (peut-être créée).
 						
-						string   find_sql_name    = def_table_runtime.CreateSqlName ();
+						string   find_sql_name    = def_table_runtime.GetSqlName ();
 						string[] known_sql_tables = database.QueryUserTableNames ();
 						
 						bool found = false;

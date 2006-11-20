@@ -1,22 +1,49 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// L'énumération DbElementCat définit les catégories des éléments
-	/// (table, colonne) de la base.
+	/// The <c>DbElementCat</c> enumeration defines the categories to which
+	/// database elements (such as tables or columns) belong.
 	/// </summary>
 	public enum DbElementCat : byte
 	{
-		Unsupported			= 0,		//	catégorie non supportée
-		Unknown = Unsupported,			//	catégorie inconnue (= non supportée)
+		/// <summary>
+		/// Unknown category.
+		/// </summary>
+		Unknown = 0,
 		
-		Internal			= 1,		//	élément à usage interne
-		UserDataManaged		= 2,		//	élément sous contrôle de l'utilisateur, géré par Crésus
-		UserDataExternal	= 3,		//	élément sous contrôle de l'utilisateur, non géré (source externe)
+		/// <summary>
+		/// Internal element; this is used by the database infrastructure and
+		/// should never be manipulated directly by the user code.
+		/// </summary>
+		Internal = 1,
 		
-		Synthetic			= 4,		//	élément synthétique (n'existe pas en tant que tel dans la base)
-		Any					= 5,		//	n'importe (utilisable uniquement dans les critères d'extraction)
+		/// <summary>
+		/// User data, managed by the Cresus database code.
+		/// </summary>
+		ManagedUserData = 2,
+		
+		/// <summary>
+		/// External user data, not managed by the Cresus database code.
+		/// </summary>
+		ExternalUserData = 3,
+		
+		/// <summary>
+		/// Synthetic element; it has no real existence.
+		/// </summary>
+		Synthetic = 4,
+		
+		/// <summary>
+		/// Any element; this is only valid as an extraction criterion.
+		/// </summary>
+		Any	= 5,
+
+		/// <summary>
+		/// Revision history; used to describe revision history tables and not
+		/// intended for public use.
+		/// </summary>
+		RevisionHistory = 6,
 	}
 }

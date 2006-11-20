@@ -14,9 +14,9 @@ namespace Epsitec.Cresus.Database
 				DbNumDef num_def;
 				DbSimpleType simple;
 				
-				simple = TypeConverter.MapToSimpleType (raw, out num_def);
+				simple = TypeConverter.GetSimpleType (raw, out num_def);
 				
-				Assert.AreEqual (raw, TypeConverter.MapToRawType (simple, num_def), string.Format ("Cannot match {0}", raw.ToString ()));
+				Assert.AreEqual (raw, TypeConverter.GetRawType (simple, num_def), string.Format ("Cannot match {0}", raw.ToString ()));
 			}
 		}
 		
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Database
 		[Test] public void CheckInternalConversions()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
-			ITypeConverter   converter      = infrastructure.TypeConverter;
+			ITypeConverter   converter      = infrastructure.Converter;
 			
 			object a = TypeConverter.ConvertToInternal (converter, "ABC", DbRawType.String);
 			object b = TypeConverter.ConvertToInternal (converter, true, DbRawType.Boolean);
@@ -167,6 +167,90 @@ namespace Epsitec.Cresus.Database
 			
 			Assert.AreEqual ("ABC", c);
 			Assert.AreEqual (true, d);
+		}
+
+		[Test]
+		public void CheckGetSimpleType()
+		{
+			DbTypeDef type;
+
+			type = new DbTypeDef (Res.Types.Num.KeyId);
+
+			Assert.AreEqual (true, type.IsFixedLength);
+			Assert.AreEqual (false, type.IsMultilingual);
+			Assert.AreEqual (false, type.IsNullable);
+			Assert.AreEqual (1, type.Length);
+			Assert.AreEqual (DbKey.Empty, type.Key);
+			Assert.AreEqual ("Num.KeyId", type.Name);
+			Assert.AreEqual (DbRawType.Int64, type.RawType);
+			Assert.AreEqual (DbSimpleType.Decimal, type.SimpleType);
+			Assert.AreEqual (Res.Types.Num.KeyId.CaptionId, type.TypeId);
+			Assert.AreEqual (false, type.NumDef.IsConversionNeeded);
+
+			type = new DbTypeDef (Res.Types.Num.NullableKeyId);
+
+			Assert.AreEqual (true, type.IsFixedLength);
+			Assert.AreEqual (false, type.IsMultilingual);
+			Assert.AreEqual (true, type.IsNullable);
+			Assert.AreEqual (1, type.Length);
+			Assert.AreEqual (DbKey.Empty, type.Key);
+			Assert.AreEqual ("Num.NullableKeyId", type.Name);
+			Assert.AreEqual (DbRawType.Int64, type.RawType);
+			Assert.AreEqual (DbSimpleType.Decimal, type.SimpleType);
+			Assert.AreEqual (Res.Types.Num.NullableKeyId.CaptionId, type.TypeId);
+			Assert.AreEqual (false, type.NumDef.IsConversionNeeded);
+
+			type = new DbTypeDef (Res.Types.Num.KeyStatus);
+
+			Assert.AreEqual (true, type.IsFixedLength);
+			Assert.AreEqual (false, type.IsMultilingual);
+			Assert.AreEqual (false, type.IsNullable);
+			Assert.AreEqual (1, type.Length);
+			Assert.AreEqual (DbKey.Empty, type.Key);
+			Assert.AreEqual ("Num.KeyStatus", type.Name);
+			Assert.AreEqual (DbRawType.Int16, type.RawType);
+			Assert.AreEqual (DbSimpleType.Decimal, type.SimpleType);
+			Assert.AreEqual (Res.Types.Num.KeyStatus.CaptionId, type.TypeId);
+			Assert.AreEqual (false, type.NumDef.IsConversionNeeded);
+
+			type = new DbTypeDef (Res.Types.Num.ReqExecState);
+
+			Assert.AreEqual (true, type.IsFixedLength);
+			Assert.AreEqual (false, type.IsMultilingual);
+			Assert.AreEqual (false, type.IsNullable);
+			Assert.AreEqual (1, type.Length);
+			Assert.AreEqual (DbKey.Empty, type.Key);
+			Assert.AreEqual ("Num.ReqExecState", type.Name);
+			Assert.AreEqual (DbRawType.Int16, type.RawType);
+			Assert.AreEqual (DbSimpleType.Decimal, type.SimpleType);
+			Assert.AreEqual (Res.Types.Num.ReqExecState.CaptionId, type.TypeId);
+			Assert.AreEqual (false, type.NumDef.IsConversionNeeded);
+
+			type = new DbTypeDef (Res.Types.Other.DateTime);
+
+			Assert.AreEqual (true, type.IsFixedLength);
+			Assert.AreEqual (false, type.IsMultilingual);
+			Assert.AreEqual (false, type.IsNullable);
+			Assert.AreEqual (1, type.Length);
+			Assert.AreEqual (DbKey.Empty, type.Key);
+			Assert.AreEqual ("Other.DateTime", type.Name);
+			Assert.AreEqual (DbRawType.DateTime, type.RawType);
+			Assert.AreEqual (DbSimpleType.DateTime, type.SimpleType);
+			Assert.AreEqual (Res.Types.Other.DateTime.CaptionId, type.TypeId);
+			Assert.AreEqual (null, type.NumDef);
+
+			type = new DbTypeDef (Res.Types.Other.ReqData);
+
+			Assert.AreEqual (true, type.IsFixedLength);
+			Assert.AreEqual (false, type.IsMultilingual);
+			Assert.AreEqual (false, type.IsNullable);
+			Assert.AreEqual (1, type.Length);
+			Assert.AreEqual (DbKey.Empty, type.Key);
+			Assert.AreEqual ("Other.ReqData", type.Name);
+			Assert.AreEqual (DbRawType.ByteArray, type.RawType);
+			Assert.AreEqual (DbSimpleType.ByteArray, type.SimpleType);
+			Assert.AreEqual (Res.Types.Other.ReqData.CaptionId, type.TypeId);
+			Assert.AreEqual (null, type.NumDef);
 		}
 	}
 }

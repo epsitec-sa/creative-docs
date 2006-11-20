@@ -1,46 +1,76 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Exceptions
 {
 	/// <summary>
-	/// Exception signalant un problème de dead-lock.
+	/// The <c>DeadLockException</c> exception is raised when a deadlock is detected.
 	/// </summary>
-	
+
 	[System.Serializable]
-	
-	public class DeadLockException : GenericException
+
+	public sealed class DeadLockException : GenericException
 	{
-		public DeadLockException() : base (DbAccess.Empty)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DeadLockException"/> class.
+		/// </summary>
+		public DeadLockException()
+			: base (DbAccess.Empty)
 		{
 		}
-		
-		public DeadLockException(string message) : base (DbAccess.Empty, message)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DeadLockException"/> class.
+		/// </summary>
+		/// <param name="message">The message.</param>
+		public DeadLockException(string message)
+			: base (DbAccess.Empty, message)
 		{
 		}
-		
-		public DeadLockException(DbAccess db_access) : base (db_access)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DeadLockException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		public DeadLockException(DbAccess databaseAccess)
+			: base (databaseAccess)
 		{
 		}
-		
-		public DeadLockException(DbAccess db_access, string message) : base (db_access, message)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DeadLockException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		/// <param name="message">The message.</param>
+		public DeadLockException(DbAccess databaseAccess, string message)
+			: base (databaseAccess, message)
 		{
 		}
-		
-		public DeadLockException(DbAccess db_access, string message, System.Exception inner_exception) : base (db_access, message, inner_exception)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DeadLockException"/> class.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		/// <param name="message">The message.</param>
+		/// <param name="innerException">The inner exception.</param>
+		public DeadLockException(DbAccess databaseAccess, string message, System.Exception innerException)
+			: base (databaseAccess, message, innerException)
 		{
 		}
-		
-		
+
+
 		#region ISerializable Members
-		protected DeadLockException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+
+		private DeadLockException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+			: base (info, context)
 		{
 		}
-		
+
 		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
 			base.GetObjectData (info, context);
 		}
+
 		#endregion
 	}
 }

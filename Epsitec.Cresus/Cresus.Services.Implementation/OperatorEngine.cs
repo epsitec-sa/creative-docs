@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Services
 					
 					this.client_id = client_manager.CreateAndInsertNewClient (this.client_name).ClientId;
 					
-					client_manager.SerializeToBase (transaction);
+					client_manager.PersistToBase (transaction);
 					
 					transaction.Commit ();
 				}

@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 		public bool CheckNativeSupport(Epsitec.Cresus.Database.DbRawType type)
 		{
-			System.Diagnostics.Debug.Assert (type != DbRawType.Unsupported);
+			System.Diagnostics.Debug.Assert (type != DbRawType.Unknown);
 			System.Diagnostics.Debug.Assert (type != DbRawType.Null);
 			
 			switch (type)
@@ -107,6 +107,14 @@ namespace Epsitec.Cresus.Database.Implementation
 				get
 				{
 					return true;
+				}
+			}
+
+			public DbCharacterEncoding			Encoding
+			{
+				get
+				{
+					return DbCharacterEncoding.Unicode;
 				}
 			}
 			
@@ -187,7 +195,14 @@ namespace Epsitec.Cresus.Database.Implementation
 					return true;
 				}
 			}
-			
+
+			public DbCharacterEncoding Encoding
+			{
+				get
+				{
+					return DbCharacterEncoding.Ascii;
+				}
+			}
 			
 			public object ConvertFromInternalType(object value)
 			{

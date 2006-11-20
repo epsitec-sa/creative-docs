@@ -1,59 +1,53 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// L'interface ITypeConverter est utilisée pour convertir des types entre
-	/// une représentation brute publique et une représentation interne propre au
-	/// provider ADO.NET, et vice versa.
+	/// The <c>ITypeConverter</c> is used to convert types between the public
+	/// raw type and the internal reprsentation used by the ADO.NET provider.
 	/// </summary>
 	public interface ITypeConverter
 	{
 		/// <summary>
-		/// Vérifie si le type brut spécifié est supporté par la base de données
-		/// sous-jacente. Le type <c>DbRawType.Guid</c> n'est par exemple pas supporté
-		/// par Firebird.
+		/// Verifies that the raw type is supported by the ADO.NET provider. The
+		/// <c>DbRawType.Guid</c> for instance could not be supported by some
+		/// providers.
 		/// </summary>
-		/// <param name="type">type brut à analyser</param>
-		/// <returns><c>true</c> si le type est supporté de manière native</returns>
+		/// <param name="type">Raw type to check.</param>
+		/// <returns>
+		/// 	<c>true</c> if the raw type is supported natively; otherwise, <c>false</c>.
+		/// </returns>
 		bool CheckNativeSupport(DbRawType type);
 		
 		/// <summary>
-		/// Trouve le convertisseur de types correspondant.
+		/// Find the matching type converter.
 		/// </summary>
-		/// <param name="type">type brut à analyser</param>
-		/// <param name="converter">convertisseur (ou null si le type est supporté
-		/// nativement par la base</param>
-		/// <returns>true si un convertisseur existe</returns>
+		/// <param name="type">Raw type for which to get the converter.</param>
+		/// <param name="converter">The converter or <c>null</c> if the raw type is supported natively.</param>
+		/// <returns><c>true</c> if a converter exists; otherwise, <c>false</c>.</returns>
 		bool GetRawTypeConverter(DbRawType type, out IRawTypeConverter converter);
 		
 		/// <summary>
-		/// Transforme un objet tel qu'il a été fourni par le provider ADO.NET en
-		/// un objet simplifié. De manière interne, cette méthode appelle à son
-		/// tour TypeConverter.ConvertToSimpleType pour gérer tous les cas de
-		/// conversion normaux.
-		/// En aucun cas, il faut appeler cette méthode pour des types non supportés par
-		/// la base de données (vérifier avec CheckNativeSupport).
+		/// Converts an object managed by ADO.NET to the specified simple type.
+		/// Never call this method if the raw type is not supported natively.
+		/// This usually maps to <c>TypeConverter.ConvertToSimpleType</c>.
 		/// </summary>
-		/// <param name="value">objet brut fourni par ADO.NET</param>
-		/// <param name="simple_type">type simplifié attendu</param>
-		/// <param name="num_def">format numérique attendu</param>
-		/// <returns>objet converti</returns>
-		object ConvertToSimpleType(object value, DbSimpleType simple_type, DbNumDef num_def);
+		/// <param name="value">Raw object provided by ADO.NET.</param>
+		/// <param name="simpleType">Expected simple type.</param>
+		/// <param name="numDef">Expected numeric format.</param>
+		/// <returns>Converted object.</returns>
+		object ConvertToSimpleType(object value, DbSimpleType simpleType, DbNumDef numDef);
 		
 		/// <summary>
-		/// Transforme un objet simplifié en une représentation compréhensible par
-		/// le provider ADO.NET. C'est la réciproque de la méthode ConvertToSimpleType.
-		/// De manière interne, cette méthode appelle TypeConverter.ConvertFromSimpleType
-		/// pour gérer les cas de conversion normaux.
-		/// En aucun cas, il faut appeler cette méthode pour des types non supportés par
-		/// la base de données (vérifier avec CheckNativeSupport).
+		/// Converts an object from a specified simple type to an ADO.NET compatible
+		/// object. Never call this method if the raw type is not supported natively.
+		/// This usually maps to <c>TypeConverter.ConvertFromSimpleType</c>.
 		/// </summary>
-		/// <param name="value">objet de type simplifié</param>
-		/// <param name="simple_type">type de l'objet</param>
-		/// <param name="num_def">format numérique de l'objet</param>
-		/// <returns>objet converti</returns>
-		object ConvertFromSimpleType(object value, DbSimpleType simple_type, DbNumDef num_def);
+		/// <param name="value">Object to convert.</param>
+		/// <param name="simpleType">Simple type.</param>
+		/// <param name="numDef">Numeric format.</param>
+		/// <returns>Converted object.</returns>
+		object ConvertFromSimpleType(object value, DbSimpleType simpleType, DbNumDef numDef);
 	}
 }

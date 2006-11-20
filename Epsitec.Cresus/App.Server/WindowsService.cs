@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Server
 			try
 			{
 				System.Diagnostics.Debug.WriteLine ("Trying to open database.");
-				infrastructure.AttachDatabase (access);
+				infrastructure.AttachToDatabase (access);
 			}
 			catch
 			{
@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Server
 					System.Diagnostics.Debug.WriteLine ("Creating database.");
 					InitialDatabase.Create (this);
 					System.Diagnostics.Debug.WriteLine ("Trying to open database (2).");
-					infrastructure.AttachDatabase (access);
+					infrastructure.AttachToDatabase (access);
 				}
 				catch (System.Exception ex)
 				{

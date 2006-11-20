@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Requests
 		public Orchestrator(DbInfrastructure infrastructure)
 		{
 			this.infrastructure   = infrastructure;
-			this.database         = this.infrastructure.CreateDbAbstraction ();
+			this.database         = this.infrastructure.CreateDatabaseAbstraction ();
 			this.execution_engine = new ExecutionEngine (this.infrastructure);
 			this.execution_queue  = new ExecutionQueue (this.infrastructure, this.database);
 			
@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.Requests
 		{
 			//	Passe en revue la queue à la recherche de requêtes en attente d'exécution.
 			
-			System.Data.DataRow[] rows = DbRichCommand.CopyLiveRows (this.execution_queue.DateTimeSortedRows);
+			System.Data.DataRow[] rows = DbRichCommand.GetLiveRows (this.execution_queue.DateTimeSortedRows);
 			
 			//	Prend note du nombre de lignes dans la queue; si des nouvelles lignes sont
 			//	rajoutées pendant notre exécution, on les ignore. Elles seront traitées au
@@ -316,7 +316,7 @@ namespace Epsitec.Cresus.Requests
 			{
 				this.execution_engine.Execute (transaction, request);
 				this.execution_queue.SetRequestExecutionState (row, ExecutionState.ExecutedByClient);
-				this.execution_queue.SerializeToBase (transaction);
+				this.execution_queue.PersistToBase (transaction);
 				
 				transaction.Commit ();
 			}
@@ -354,7 +354,7 @@ namespace Epsitec.Cresus.Requests
 			//	au serveur. Dans l'implémentation actuelle, on envoie une requête à la
 			//	fois pour simplifier la détection des conflits.
 			
-			System.Data.DataRow[] rows = DbRichCommand.CopyLiveRows (this.execution_queue.DateTimeSortedRows);
+			System.Data.DataRow[] rows = DbRichCommand.GetLiveRows (this.execution_queue.DateTimeSortedRows);
 			
 			//	Prend note du nombre de lignes dans la queue; si des nouvelles lignes sont
 			//	rajoutées pendant notre exécution, on les ignore. Elles seront traitées au
@@ -407,7 +407,7 @@ namespace Epsitec.Cresus.Requests
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
 			{
 				this.execution_queue.SetRequestExecutionState (row, ExecutionState.SentToServer);
-				this.execution_queue.SerializeToBase (transaction);
+				this.execution_queue.PersistToBase (transaction);
 				transaction.Commit ();
 			}
 		}
@@ -567,7 +567,7 @@ namespace Epsitec.Cresus.Requests
 			
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
 			{
-				this.execution_queue.SerializeToBase (transaction);
+				this.execution_queue.PersistToBase (transaction);
 				transaction.Commit ();
 			}
 		}
@@ -578,7 +578,7 @@ namespace Epsitec.Cresus.Requests
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
 			{
 				this.execution_queue.SetRequestExecutionState (row, ExecutionState.ExecutedByServer);
-				this.execution_queue.SerializeToBase (transaction);
+				this.execution_queue.PersistToBase (transaction);
 				transaction.Commit ();
 			}
 			
@@ -597,7 +597,7 @@ namespace Epsitec.Cresus.Requests
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
 			{
 				this.execution_queue.SetRequestExecutionState (row, ExecutionState.ConflictingOnServer);
-				this.execution_queue.SerializeToBase (transaction);
+				this.execution_queue.PersistToBase (transaction);
 				transaction.Commit ();
 			}
 			
@@ -641,7 +641,7 @@ namespace Epsitec.Cresus.Requests
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
 			{
 				this.execution_queue.SetRequestExecutionState (row, ExecutionState.Conflicting);
-				this.execution_queue.SerializeToBase (transaction);
+				this.execution_queue.PersistToBase (transaction);
 				transaction.Commit ();
 			}
 		}

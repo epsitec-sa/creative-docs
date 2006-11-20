@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Replication
 		public ServerEngine(DbInfrastructure infrastructure)
 		{
 			this.infrastructure = infrastructure;
-			this.database       = this.infrastructure.CreateDbAbstraction ();
+			this.database       = this.infrastructure.CreateDatabaseAbstraction ();
 			this.queue          = new System.Collections.Queue ();
 			
 			this.abort_event    = new System.Threading.ManualResetEvent (false);
@@ -162,7 +162,6 @@ namespace Epsitec.Cresus.Replication
 				DbTable def_table_table   = ServerEngine.FindTable (tables, Tags.TableTableDef);
 				DbTable def_column_table  = ServerEngine.FindTable (tables, Tags.TableColumnDef);
 				DbTable def_type_table    = ServerEngine.FindTable (tables, Tags.TableTypeDef);
-				DbTable def_enumval_table = ServerEngine.FindTable (tables, Tags.TableEnumValDef);
 				DbTable log_table         = ServerEngine.FindTable (tables, Tags.TableLog);
 				
 				//	Ces tables sont répliquées de manière un peu particulière, alors on les retire
@@ -171,7 +170,6 @@ namespace Epsitec.Cresus.Replication
 				tables.Remove (def_table_table);
 				tables.Remove (def_column_table);
 				tables.Remove (def_type_table);
-				tables.Remove (def_enumval_table);
 				tables.Remove (log_table);
 				
 				ReplicationData data = new ReplicationData ();
@@ -179,11 +177,10 @@ namespace Epsitec.Cresus.Replication
 				this.ProcessTable (cruncher, pull, sync_start, sync_end, def_table_table, data);
 				this.ProcessTable (cruncher, pull, sync_start, sync_end, def_column_table, data);
 				this.ProcessTable (cruncher, pull, sync_start, sync_end, def_type_table, data);
-				this.ProcessTable (cruncher, pull, sync_start, sync_end, def_enumval_table, data);
 				
 				this.ProcessLogTable (cruncher, sync_start, sync_end, log_table, data);
 				
-				ServerEngine.RemoveTables (tables, DbReplicationMode.Private);
+				ServerEngine.RemoveTables (tables, DbReplicationMode.None);
 				
 				System.Diagnostics.Debug.WriteLine (string.Format ("Scrubbed, remaining {0} tables.", tables.Count));
 				
@@ -191,7 +188,7 @@ namespace Epsitec.Cresus.Replication
 				{
 					DbTable table = tables[i] as DbTable;
 					
-					System.Diagnostics.Debug.Assert (table.ReplicationMode == DbReplicationMode.Shared);
+					System.Diagnostics.Debug.Assert (table.ReplicationMode == DbReplicationMode.Automatic);
 					
 					this.ProcessTable (cruncher, pull, sync_start, sync_end, table, data);
 				}

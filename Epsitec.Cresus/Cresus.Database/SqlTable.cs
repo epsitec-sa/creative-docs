@@ -1,91 +1,162 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe SqlTable décrit une table dans la base de données. Cette classe
-	/// ressemble fortement à System.Data.DataTable.
+	/// The <c>SqlTable</c> class describes a table at the SQL level. Compare
+	/// with <see cref="DbTable"/>.
 	/// </summary>
-	public class SqlTable
+	public sealed class SqlTable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlTable"/> class.
+		/// </summary>
 		public SqlTable()
 		{
 		}
-		
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlTable"/> class.
+		/// </summary>
+		/// <param name="name">The table name.</param>
 		public SqlTable(string name)
 		{
 			this.Name = name;
 		}
-		
-		
+
+
+		/// <summary>
+		/// Gets or sets the table name.
+		/// </summary>
+		/// <value>The table name.</value>
 		public string							Name
 		{
-			get { return this.name; }
-			set { this.name = value; }
+			get
+			{
+				return this.name;
+			}
+			set
+			{
+				this.name = value;
+			}
 		}
-		
+
+		/// <summary>
+		/// Gets the columns collection.
+		/// </summary>
+		/// <value>The columns.</value>
 		public Collections.SqlColumns			Columns
 		{
-			get { return this.columns; }
+			get
+			{
+				return this.columns;
+			}
 		}
-		
+
+		/// <summary>
+		/// Gets a value indicating whether this table has a primary key.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this column has a primary key; otherwise, <c>false</c>.
+		/// </value>
 		public bool								HasPrimaryKey
 		{
-			get { return (this.primary_key != null) && (this.primary_key.Count > 0); }
+			get
+			{
+				return (this.primaryKey != null) && (this.primaryKey.Count > 0);
+			}
 		}
-		
+
+		/// <summary>
+		/// Gets a value indicating whether this table has any foreign keys.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this column has any foreign keys; otherwise, <c>false</c>.
+		/// </value>
+		public bool								HasForeignKeys
+		{
+			get
+			{
+				foreach (SqlColumn column in this.columns)
+				{
+					if (column.IsForeignKey)
+					{
+						return true;
+					}
+				}
+				
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the primary key. A primary key can span several columns
+		/// which are organised to form a tuple. The tuple must be unique in the
+		/// database.
+		/// </summary>
+		/// <value>The primary key.</value>
 		public SqlColumn[]						PrimaryKey
 		{
 			get
 			{
-				//	NB: les clefs primaires spécifiées par PrimaryKey sont utilisées
-				//	pour former un 'tuple' (par exemple une paire de clef). Déclarer
-				//	une série de colonnes comme PrimaryKey implique que les tuples
-				//	doivent être uniques !
-				
-				if (this.primary_key == null)
+				if (this.primaryKey == null)
 				{
 					return new SqlColumn[0];
 				}
-				
-				SqlColumn[] columns = new SqlColumn[this.primary_key.Count];
-				this.primary_key.CopyTo (columns, 0);
-				return columns;
+				else
+				{
+					return this.primaryKey.ToArray ();
+				}
 			}
 			set
 			{
-				//	Il n'est pas nécessaire de marquer les colonnes ajoutées ici comme
-				//	étant indexées (SqlColumn.IsIndexed). Si l'appelant le spécifie
-				//	néanmoins, des index supplémentaires seront créés pour les colonnes
-				//	spécifiées. Cela permet par exemple d'avoir l'indexage automatique
-				//	selon le tuple des clefs primaires, et l'indexage de chaque clef
-				//	individuellement.
-				
-				if (this.primary_key == null)
+				if (this.primaryKey == null)
 				{
 					if (value == null)
 					{
 						return;
 					}
-					
-					this.primary_key = new Collections.SqlColumns ();
+
+					this.primaryKey = new Collections.SqlColumns ();
 				}
-				
-				this.primary_key.Clear ();
-				this.primary_key.AddRange (value);
+
+				if ((value == null) ||
+					(value.Length == 0))
+				{
+					this.primaryKey = null;
+				}
+				else
+				{
+					this.primaryKey.Clear ();
+					this.primaryKey.AddRange (value);
+				}
 			}
 		}
-		
-		
-		public bool Validate(ISqlValidator validator)
+
+		/// <summary>
+		/// Gets the foreign keys.
+		/// </summary>
+		/// <value>The foreign keys.</value>
+		public IEnumerable<SqlColumn>			ForeignKeys
 		{
-			return validator.ValidateName (this.name);
+			get
+			{
+				foreach (SqlColumn column in this.columns)
+				{
+					if (column.IsForeignKey)
+					{
+						yield return column;
+					}
+				}
+			}
 		}
-		
-		
-		protected string						name;
-		protected Collections.SqlColumns		columns		= new Collections.SqlColumns ();
-		protected Collections.SqlColumns		primary_key;
+
+
+		private string							name;
+		private Collections.SqlColumns			columns = new Collections.SqlColumns ();
+		private Collections.SqlColumns			primaryKey;
 	}
 }

@@ -4,8 +4,6 @@ Ce qu'il reste à faire dans "Database"
 
 -	La classe DbInfrastructure n'est pas terminée, en particulier:
 
-	o	La méthode CreateLocalisedColumns n'est pas implémentée.
-
 -	Soit créer une classe DbSelect pour réaliser ce que SqlSelect fait,
 	en se basant sur des données et des descriptions "abstraites" et
 	indépendants de SQL, ou alors ajouter un ensemble de méthodes dans
@@ -40,16 +38,15 @@ d'éviter des problèmes avec des anciens moteurs SQL.
 
 Les tables suivantes sont définies :
 
-    CR_TABLE_DEF        (nom DbTable.TagTableDef)
-    CR_COLUMN_DEF       (nom DbTable.TagColumnDef)
-    CR_TYPE_DEF         (nom DbTable.TagTypeDef)
-    CR_ENUM_VAL_DEF     (nom DbTable.TagEnumValDef)
+    CR_TABLE_DEF
+    CR_COLUMN_DEF
+    CR_TYPE_DEF
+    CR_ENUM_VAL_DEF
 
 - CR_TABLE_DEF définit les informations de base d'une table :
 
     o Clef.
     o Nom de haut niveau (CR_NAME).
-    o Titre (CR_CAPTION) et description (CR_DESCRIPTION).
     o Info supplémentaire XML (CR_INFO).
     o ID (clef) de la prochaine ligne dans la table (CR_NEXT_ID).
 
@@ -65,12 +62,12 @@ Les tables suivantes sont définies :
 - CR_TYPE_DEF définit un type de donnée :
 
     o Clef.
-    o Nom de haut niveau, titre, description, info XML.
+    o Nom de haut niveau, info XML.
 
 - CR_ENUM_VAL_DEF définit une valeur d'une énumération :
 
     o Clef.
-    o Nom de haut niveau, titre, description, info XML.
+    o Nom de haut niveau, info XML.
     o Référence au type (CREF_TYPE) qui utilise cette valeur.
 
 La clef est soit une clef simple (CR_ID), soit une clef avec
@@ -90,25 +87,3 @@ les statuts suivants sont supportés :
     o DbRowStatus.Temp..., ligne temporaire (pour synchro).
 
 -----------------------------------------------------------------
-LOCALISATION DE L'INFORMATION
------------------------------------------------------------------
-
-Il existe des colonnes CR_CAPTION_xx, CR_DESCRIPTION_xx, etc. où
-xx est le nom (2 lettres) de la langue ("fr", "de", "en", "it").
-
-DbInfrastructure.localisations contient une table de tous ces
-suffixes supportés par une base donnée. Les méthodes suivantes
-peuvent être utilisées pour simplifier le travail avec des colonnes
-localisées :
-
-- DefineLocalisedAttributes, extrait d'une ligne d'une DataTable
-  les infos de la colonne localisée et définit les valeurs dans
-  la collection DbAttributes de DbColumn/DbTable.
-
-- AddLocalisedColumns, ajoute les noms des colonnes à extraire
-  pour une requête SELECT qui contient des colonnes localisées.
-
-Une colonne localisée possède un champ DbColumnLocalisation qui
-indique si celle-ci n'est pas localisable (None), est localisable
-et correspond à la valeur par défaut (sans suffixe; Default) ou
-est localisable et localisée (avec suffixe; Localised).

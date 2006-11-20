@@ -1,15 +1,32 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
-	public enum DbReplicationMode
+	/// <summary>
+	/// The <c>DbReplicationMode</c> enumeration defines the replication
+	/// modes supported by the database.
+	/// </summary>
+	public enum DbReplicationMode : byte
 	{
-		Unsupported			= 0,		//	mode non supporté
-		Unknown = Unsupported,			//	mode inconnu (= non supporté)
+		/// <summary>
+		/// Unknown replication mode.
+		/// </summary>
+		Unknown = 0,
 		
-		Private				= 1,		//	information privée, pas de réplication
-		Shared				= 2,		//	information partagée par tous, répliquée
-		Manual				= 3,		//	information partagée, répliquée manuellement
+		/// <summary>
+		/// Private information without any replication.
+		/// </summary>
+		None = 1,
+		
+		/// <summary>
+		/// Shared information with automatic replication.
+		/// </summary>
+		Automatic = 2,
+		
+		/// <summary>
+		/// Shared information with manual repliaction.
+		/// </summary>
+		Manual = 3,
 	}
 }

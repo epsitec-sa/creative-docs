@@ -1,36 +1,50 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
+
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Database
 {
-	using InvariantConverter = Epsitec.Common.Types.InvariantConverter;
-	
-	public delegate void CallbackDisplayDataSet(DbInfrastructure infrastructure, string name, System.Data.DataTable table);
-	
 	/// <summary>
-	/// La classe DbInfrastructure offre le support pour l'infrastructure
-	/// nécessaire à toute base de données "Crésus" (tables internes, méta-
-	/// données, etc.)
+	/// The <c>DbInfrastructure</c> class provides support for the database
+	/// infrastructure needed by CRESUS (internal tables, metadata, etc.)
 	/// </summary>
-	public class DbInfrastructure : System.IDisposable
+	public sealed class DbInfrastructure : System.IDisposable
 	{
 		public DbInfrastructure()
 		{
-			this.localisations     = new string[] { "", "FR" };
-			this.live_transactions = new System.Collections.Hashtable (20, 0.2f);
-			this.release_requested = new System.Collections.ArrayList ();
+			this.localizations    = "fr";
+			this.liveTransactions = new List<DbTransaction> ();
+			this.releaseRequested = new List<IDbAbstraction> ();
 		}
 		
 		
-		public CallbackDisplayDataSet			DisplayDataSet
+		public string[]							DefaultLocalizations
 		{
 			get
 			{
-				return this.display_data_set;
+				if (string.IsNullOrEmpty (this.localizations))
+				{
+					return new string[0];
+				}
+				else
+				{
+					return this.localizations.Split ('/');
+				}
 			}
 			set
 			{
-				this.display_data_set = value;
+				if ((value == null) ||
+					(value.Length == 0))
+				{
+					this.localizations = null;
+				}
+				else
+				{
+					this.localizations = string.Join ("/", value);
+				}
 			}
 		}
 		
@@ -38,7 +52,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.db_abstraction.SqlBuilder;
+				return this.abstraction.SqlBuilder;
 			}
 		}
 		
@@ -46,7 +60,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.sql_engine;
+				return this.sqlEngine;
 			}
 		}
 		
@@ -54,15 +68,15 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.db_abstraction;
+				return this.abstraction;
 			}
 		}
 		
-		public ITypeConverter					TypeConverter
+		public ITypeConverter					Converter
 		{
 			get
 			{
-				return this.type_converter;
+				return this.converter;
 			}
 		}
 		
@@ -70,11 +84,9 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				lock (this.live_transactions)
+				lock (this.liveTransactions)
 				{
-					DbTransaction[] transactions = new DbTransaction[this.live_transactions.Count];
-					this.live_transactions.Values.CopyTo (transactions, 0);
-					return transactions;
+					return this.liveTransactions.ToArray ();
 				}
 			}
 		}
@@ -91,22 +103,14 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				if (this.client_manager == null)
+				if (this.LocalSettings.IsServer)
 				{
-					if (this.LocalSettings.IsServer)
-					{
-						this.client_manager = new DbClientManager ();
-						
-						using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
-						{
-							this.client_manager.Attach (this, this.ResolveDbTable (transaction, Tags.TableClientDef));
-							this.client_manager.RestoreFromBase (transaction);
-							transaction.Commit ();
-						}
-					}
+					return this.clientManager;
 				}
-				
-				return this.client_manager;
+				else
+				{
+					return null;
+				}
 			}
 		}
 		
@@ -114,7 +118,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.global_lock.IsWriterLockHeld;
+				return this.globalLock.IsWriterLockHeld;
 			}
 		}
 		
@@ -133,119 +137,133 @@ namespace Epsitec.Cresus.Database
 				return this.locals;
 			}
 		}
-		
-		
-		public void CreateDatabase(DbAccess db_access)
+
+
+		/// <summary>
+		/// Creates a new database using the specified database access. This
+		/// is only possible if the <c>DbInfrastructure</c> is not yet connected
+		/// to any database.
+		/// </summary>
+		/// <param name="access">The database access.</param>
+		public void CreateDatabase(DbAccess access)
 		{
-//-			System.Diagnostics.Debug.WriteLine ("Connect to DEBUGGER now");
-//-			System.Threading.Thread.Sleep (30*1000);
-			
-			//	Crée une base de données avec les structures de gestion requises par Crésus
-			//	(tables de description, etc.).
-			
-			if (this.db_access.IsValid)
+			this.CreateDatabase (access, false);
+		}
+
+		/// <summary>
+		/// Creates a new database using the specified database access. This
+		/// is only possible if the <c>DbInfrastructure</c> is not yet connected
+		/// to any database.
+		/// </summary>
+		/// <param name="access">The database access.</param>
+		/// <param name="isServer">If set to <c>true</c> creates the database for a server.</param>
+		public void CreateDatabase(DbAccess access, bool isServer)
+		{
+			if (this.access.IsValid)
 			{
-				throw new Exceptions.GenericException (this.db_access, "A database already exists for this DbInfrastructure.");
+				throw new Exceptions.GenericException (this.access, "A database already exists for this DbInfrastructure");
 			}
 			
-			this.db_access = db_access;
-			this.db_access.CreateDatabase = true;
+			this.access = access;
+			this.access.CreateDatabase = true;
 
 			this.InitializeDatabaseAbstraction ();
 			
 			this.types.RegisterTypes ();
 			
-			//	La base de données vient d'être créée. Elle est donc toute vide (aucune
-			//	table n'est encore définie).
+			//	The database is now ready to be filled. At this point, it is totally
+			//	empty of any tables.
 			
-			System.Diagnostics.Debug.Assert (this.db_abstraction.QueryUserTableNames ().Length == 0);
-			
-			//	Il faut créer les tables internes utilisées pour la gestion des méta-données.
+			System.Diagnostics.Debug.Assert (this.abstraction.QueryUserTableNames ().Length == 0);
 			
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				BootHelper helper = new BootHelper (this, transaction);
-				
+
+				//	Create the tables required for our own metadata management. The
+				//	created tables must be commited before they can be populated.
+
 				helper.CreateTableTableDef ();
 				helper.CreateTableColumnDef ();
 				helper.CreateTableTypeDef ();
-				helper.CreateTableEnumValDef ();
 				helper.CreateTableLog ();
 				helper.CreateTableRequestQueue ();
 				helper.CreateTableClientDef ();
 				
-				//	Valide la création de toutes ces tables avant de commencer à peupler
-				//	les tables. Firebird requiert ce mode de fonctionnement.
-				
 				transaction.Commit ();
 			}
 			
-			//	Les tables de description ont toutes été créées. Il faut maintenant les remplir
-			//	avec les informations de initiales.
+			//	TODO: handle clientId
+			this.clientId = 1;
+			
+			//	Fill the tables with the initial metadata.
 			
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				//	TODO: gérer client_id
-				
-				this.client_id = 1;
-				
 				this.SetupTables (transaction);
 				
-				//	Crée aussi les réglages globaux et locaux, ce qui va créer des tables dans
-				//	la base, donc nécessiter une validation de transaction avant que celles-ci
-				//	ne soient accessibles en écriture :
-				
-				Settings.Globals.CreateTable (this, transaction, Settings.Globals.Name, DbElementCat.Internal, DbRevisionMode.Disabled, DbReplicationMode.Shared);
-				Settings.Locals.CreateTable (this, transaction, Settings.Locals.Name, DbElementCat.Internal, DbRevisionMode.Disabled, DbReplicationMode.Private);
+				transaction.Commit ();
+			}
+
+			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				Settings.Globals.CreateTable (this, transaction, Settings.Globals.Name, DbElementCat.Internal, DbRevisionMode.Disabled, DbReplicationMode.Automatic);
+				Settings.Locals.CreateTable (this, transaction, Settings.Locals.Name, DbElementCat.Internal, DbRevisionMode.Disabled, DbReplicationMode.None);
 				
 				transaction.Commit ();
 			}
 			
-			//	Crée les valeurs par défaut dans les réglages (Globals et Locals) :
+			//	Create the default values for the global and local settings :
 			
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				Settings.Globals globals = new Settings.Globals (this, transaction);
 				Settings.Locals  locals  = new Settings.Locals (this, transaction);
 				
+				locals.ClientId = this.clientId;
+				locals.IsServer = isServer;
+
 				globals.PersistToBase (transaction);
-				
-				locals.ClientId = this.client_id;
-				locals.IsServer = false;			//	TODO: gérer IsServer
 				locals.PersistToBase (transaction);
-				
-				globals = null;
-				locals  = null;
 
 				transaction.Commit ();
 			}
 			
+			//	The database is ready. Start using it...
+			
 			this.StartUsingDatabase ();
 		}
-		
-		public void AttachDatabase(DbAccess db_access)
+
+		/// <summary>
+		/// Attaches to an existing database. This is only possible if the
+		/// <c>DbInfrastructure</c> is not yet connected to any database.
+		/// </summary>
+		/// <param name="access">The database access.</param>
+		public void AttachToDatabase(DbAccess access)
 		{
-			if (this.db_access.IsValid)
+			if (this.access.IsValid)
 			{
-				throw new Exceptions.GenericException (this.db_access, "Database already attached");
+				throw new Exceptions.GenericException (this.access, "Database already attached");
 			}
 			
-			this.db_access = db_access;
-			this.db_access.CreateDatabase = false;
+			this.access = access;
+			this.access.CreateDatabase = false;
 
 			this.InitializeDatabaseAbstraction ();
 			
-			System.Diagnostics.Debug.Assert (this.db_abstraction.QueryUserTableNames ().Length > 0);
+			//	The database must have user tables (at least, it has our metadata
+			//	tables)...
+			
+			System.Diagnostics.Debug.Assert (this.abstraction.QueryUserTableNames ().Length > 0);
 			
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableLog));
-				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableTableDef));
-				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableColumnDef));
-				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableTypeDef));
-				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableEnumValDef));
-				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableClientDef));
-				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableRequestQueue));
+				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableLog));
+				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTableDef));
+				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableColumnDef));
+				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTypeDef));
+				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableClientDef));
+				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableRequestQueue));
 				
 				this.types.ResolveTypes (transaction);
 				
@@ -254,620 +272,796 @@ namespace Epsitec.Cresus.Database
 			
 			this.StartUsingDatabase ();
 		}
-		
-		public void SetupRoamingDatabase(int client_id)
+
+		/// <summary>
+		/// Sets up a roaming database. Call <c>AttachToDatabase</c> first.
+		/// </summary>
+		/// <param name="clientId">The current client id.</param>
+		public void SetupRoamingDatabase(int clientId)
 		{
-			if (this.client_id != client_id)
+			if (this.clientId != clientId)
 			{
 				using (DbTransaction transaction = this.BeginTransaction ())
 				{
-					//	Prend note du dernier ID stocké dans le LOG; il sert à définir le ID actif
-					//	au moment de la synchronisation (puisqu'on part d'une 'image' de la base,
-					//	ça revient à considérer qu'on a fait une synchronisation).
+					//	The last ID stored in the log is considered to be the active id at the
+					//	synchronization point (setting up a roaming database requires an image
+					//	of the server database to start its operations).
 					
-					DbId last_server_id = this.logger.CurrentId;
+					DbId lastServerId = this.logger.CurrentId;
 					
-					//	Les prochains IDs affectés aux diverses lignes des diverses tables vont
-					//	tous commencer à 1, combiné avec notre ID de client.
+					//	Since this is a fresh roaming database, all table ids will be reset to
+					//	one (1) :
 					
-					this.ResetIdColumn (transaction, this.internal_tables[Tags.TableTableDef], Tags.ColumnNextId, DbId.CreateId (1, client_id));
+					this.ResetColumnData (transaction, this.internalTables[Tags.TableTableDef], Tags.ColumnNextId, DbId.CreateId (1, clientId));
 					
-					//	Vide les tables des requêtes et des clients, qui ne sont normalement pas
-					//	répliquées :
+					//	Clear tables which should not be replicated between the server and the
+					//	client databases :
 					
-					this.ClearTable (transaction, this.internal_tables[Tags.TableRequestQueue]);
-					this.ClearTable (transaction, this.internal_tables[Tags.TableClientDef]);
+					this.ClearTable (transaction, this.internalTables[Tags.TableRequestQueue]);
+					this.ClearTable (transaction, this.internalTables[Tags.TableClientDef]);
 					
-					//	Met à jour le Logger afin d'utiliser dès à présent notre ID de client :
+					//	Update the logger in order to use the new client id instead of the
+					//	id found in the copied database :
 					
 					this.logger.Detach ();
 					
 					this.logger = new DbLogger ();
-					this.logger.DefineClientId (client_id);
-					this.logger.DefineLogId (1);
-					this.logger.Attach (this, this.internal_tables[Tags.TableLog]);
+					this.logger.DefineClientId (clientId);
+					this.logger.DefineInitialLogId (1);
+					this.logger.Attach (this, this.internalTables[Tags.TableLog]);
 					this.logger.CreateInitialEntry (transaction);
 					
-					//	Adapte les divers réglages locaux en fonction du client :
+					//	Define local settings based on the client :
 					
-					this.LocalSettings.ClientId  = client_id;
+					this.LocalSettings.ClientId  = clientId;
 					this.LocalSettings.IsServer  = false;
-					this.LocalSettings.SyncLogId = last_server_id.Value;
+					this.LocalSettings.SyncLogId = lastServerId.Value;
 					
 					this.LocalSettings.PersistToBase (transaction);
 					
-					//	...et dès maintenant, nous sommes prêts à travailler !
-					
 					transaction.Commit ();
 					
-					this.client_id = client_id;
+					this.clientId = clientId;
 				}
 			}
 		}
-		
-		protected void ClearTable(DbTransaction transaction, DbTable table)
+
+		/// <summary>
+		/// Clears the table by removing all rows.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		private void ClearTable(DbTransaction transaction, DbTable table)
 		{
-			transaction.SqlBuilder.RemoveData (table.CreateSqlName (), null);
+			transaction.SqlBuilder.RemoveData (table.GetSqlName (), null);
 			this.ExecuteNonQuery (transaction);
 		}
-		
-		protected void ResetIdColumn(DbTransaction transaction, DbTable table, string column_name, DbId id)
+
+		/// <summary>
+		/// Resets the data in the specified column to the specified value.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// <param name="columnName">Name of the column.</param>
+		/// <param name="data">The data.</param>
+		private void ResetColumnData(DbTransaction transaction, DbTable table, string columnName, DbId data)
 		{
-			DbColumn column     = table.Columns[column_name];
-			string   sql_column = column.CreateSqlName ();
-			
+			DbColumn              column = table.Columns[columnName];
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			
-			fields.Add (sql_column, SqlField.CreateConstant (id.Value, DbKey.RawTypeForId));
+			fields.Add (column.GetSqlName (), this.CreateSqlField (column, data));
 			
-			transaction.SqlBuilder.UpdateData (table.CreateSqlName (), fields, null);
+			transaction.SqlBuilder.UpdateData (table.GetSqlName (), fields, null);
+			
 			this.ExecuteNonQuery (transaction);
 		}
-		
+
+		/// <summary>
+		/// Releases the database connection. If transactions are still active
+		/// for this database, the connection will be released autmatically
+		/// when the transactions finish.
+		/// </summary>
 		public void ReleaseConnection()
 		{
-			this.ReleaseConnection (this.db_abstraction);
+			this.ReleaseConnection (this.abstraction);
 		}
-		
-		public void ReleaseConnection(IDbAbstraction db_abstraction)
+
+		/// <summary>
+		/// Releases the database connection. If transactions are still active
+		/// for this database, the connection will be released autmatically
+		/// when the transactions finish.
+		/// </summary>
+		/// <param name="abstraction">The database abstraction.</param>
+		private void ReleaseConnection(IDbAbstraction abstraction)
 		{
-			lock (this.live_transactions)
+			lock (this.liveTransactions)
 			{
-				if (this.live_transactions.ContainsKey (db_abstraction))
+				foreach (DbTransaction item in this.liveTransactions)
 				{
-					this.release_requested.Add (db_abstraction);
+					if (item.Database == abstraction)
+					{
+						this.releaseRequested.Add (abstraction);
+						return;
+					}
 				}
-				else
-				{
-					db_abstraction.ReleaseConnection ();
-				}
-			}
+			}				
+			
+			abstraction.ReleaseConnection ();
 		}
 
-
-		public static DbAccess CreateDbAccess(string name)
+		/// <summary>
+		/// Creates the database access.
+		/// </summary>
+		/// <param name="name">The database file name.</param>
+		/// <returns>The database access.</returns>
+		public static DbAccess CreateDatabaseAccess(string name)
 		{
 			return new DbAccess ("Firebird", name, "localhost", "sysdba", "masterkey", false);
 		}
 
-		public static DbAccess CreateDbAccess(string provider, string name)
+		/// <summary>
+		/// Creates the database access.
+		/// </summary>
+		/// <param name="provider">The database provider.</param>
+		/// <param name="name">The database file name.</param>
+		/// <returns>The database access.</returns>
+		public static DbAccess CreateDatabaseAccess(string provider, string name)
 		{
 			return new DbAccess (provider, name, "localhost", "sysdba", "masterkey", false);
 		}
-		
-		
-		public IDbAbstraction CreateDbAbstraction()
+
+		/// <summary>
+		/// Creates a new database abstraction. This will create a new connection
+		/// with the database.
+		/// </summary>
+		/// <returns>The database abstraction.</returns>
+		public IDbAbstraction CreateDatabaseAbstraction()
 		{
-			IDbAbstraction db_abstraction = DbFactory.FindDbAbstraction (this.db_access);
+			IDbAbstraction abstraction = DbFactory.CreateDatabaseAbstraction (this.access);
 			
-			db_abstraction.SqlBuilder.AutoClear = true;
+			abstraction.SqlBuilder.AutoClear = true;
 			
-			return db_abstraction;
+			return abstraction;
 		}
-		
-		
+
+		/// <summary>
+		/// Begins a read and write transaction for the default database abstraction.
+		/// </summary>
+		/// <returns>The transaction.</returns>
 		public DbTransaction BeginTransaction()
 		{
 			return this.BeginTransaction (DbTransactionMode.ReadWrite);
 		}
-		
+
+		/// <summary>
+		/// Begins the specified transaction for the default database abstraction.
+		/// </summary>
+		/// <param name="mode">The transaction mode.</param>
+		/// <returns>The transaction.</returns>
 		public DbTransaction BeginTransaction(DbTransactionMode mode)
 		{
-			return this.BeginTransaction (mode, this.db_abstraction);
+			return this.BeginTransaction (mode, this.abstraction);
 		}
-		
-		public DbTransaction BeginTransaction(DbTransactionMode mode, IDbAbstraction db_abstraction)
+
+		/// <summary>
+		/// Begins a transaction for the specified database abstraction.
+		/// </summary>
+		/// <param name="mode">The transaction mode.</param>
+		/// <param name="abstraction">The database abstraction.</param>
+		/// <returns>The transaction.</returns>
+		public DbTransaction BeginTransaction(DbTransactionMode mode, IDbAbstraction abstraction)
 		{
-			System.Diagnostics.Debug.Assert (db_abstraction != null);
+			System.Diagnostics.Debug.Assert (abstraction != null);
 			
-			//	Débute une nouvelle transaction. Ceci n'est possible que si aucune
-			//	autre transaction n'est actuellement en cours sur cette connexion.
+			//	We currently allow a single transaction per database abstraction,
+			//	because some ADO.NET providers do not support cascaded transactions.
 			
 			DbTransaction transaction = null;
 			
-			this.DatabaseLock (db_abstraction);
+			//	Make sure we can get a lock on the database. If not, this means
+			//	that someone holds a global lock and we may not access the database
+			//	at all, even within a transaction. This is the case when restoring
+			//	a database, for instance.
+			
+			this.DatabaseLock (abstraction);
 			
 			try
 			{
 				switch (mode)
 				{
 					case DbTransactionMode.ReadOnly:
-						transaction = new DbTransaction (db_abstraction.BeginReadOnlyTransaction (), db_abstraction, this, mode);
+						transaction = new DbTransaction (abstraction.BeginReadOnlyTransaction (), abstraction, this, mode);
 						break;
 					
 					case DbTransactionMode.ReadWrite:
-						transaction = new DbTransaction (db_abstraction.BeginReadWriteTransaction (), db_abstraction, this, mode);
+						transaction = new DbTransaction (abstraction.BeginReadWriteTransaction (), abstraction, this, mode);
 						break;
 					
 					default:
-						throw new System.ArgumentOutOfRangeException ("mode", mode, string.Format ("Transaction mode {0} not accepted.", mode.ToString ()));
+						throw new System.ArgumentOutOfRangeException ("mode", mode, string.Format ("Transaction mode {0} not supported", mode.ToString ()));
 				}
 			}
 			catch
 			{
-				this.DatabaseUnlock (db_abstraction);
+				this.DatabaseUnlock (abstraction);
 				throw;
 			}
 			
 			return transaction;
 		}
-		
-		
-		public DbTable   CreateDbTable(string name, DbElementCat category, DbRevisionMode revision_mode)
+
+
+		/// <summary>
+		/// Creates a minimal database table definition. This will only contain
+		/// the basic id and status columns required by <c>DbInfrastructure</c>.
+		/// </summary>
+		/// <param name="name">The table name.</param>
+		/// <param name="category">The category.</param>
+		/// <param name="revisionMode">The revision mode.</param>
+		/// <returns>The database table definition.</returns>
+		public DbTable CreateDbTable(string name, DbElementCat category, DbRevisionMode revisionMode)
 		{
-			//	Crée la description d'une table qui ne contient que le strict minimum nécessaire au fonctionnement
-			//	de Crésus (tuple pour la clef primaire, statut). Il faudra compléter les colonnes en fonction des
-			//	besoins, puis appeler la méthode RegisterNewDbTable.
-			
 			switch (category)
 			{
 				case DbElementCat.Internal:
-					throw new Exceptions.GenericException (this.db_access, string.Format ("User may not create internal table. Table '{0}'.", name));
+					throw new Exceptions.GenericException (this.access, string.Format ("Users may not create internal tables (table '{0}')", name));
 				
-				case DbElementCat.UserDataManaged:
-					return this.CreateTable(name, category, revision_mode, DbReplicationMode.Shared);
+				case DbElementCat.ManagedUserData:
+					return this.CreateTable(name, category, revisionMode, DbReplicationMode.Automatic);
 				
 				default:
-					throw new Exceptions.GenericException (this.db_access, string.Format ("Unsupported category {0} specified. Table '{1}'.", category, name));
+					throw new Exceptions.GenericException (this.access, string.Format ("Unsupported category {0} specified for table '{1}'", category, name));
 			}
 		}
-		
-		public void      RegisterNewDbTable(DbTransaction transaction, DbTable table)
+
+		/// <summary>
+		/// Registers a new table for this database. This creates both the
+		/// metadata and the database table itself.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		public void RegisterNewDbTable(DbTable table)
+		{
+			using (DbTransaction transaction = this.BeginTransaction ())
+			{
+				this.RegisterNewDbTable (transaction, table);
+				transaction.Commit ();
+			}
+		}
+
+		/// <summary>
+		/// Registers a new table for this database. This creates both the
+		/// metadata and the database table itself.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		public void RegisterNewDbTable(DbTransaction transaction, DbTable table)
 		{
 			this.RegisterDbTable (transaction, table, false);
 		}
-		
-		public void      RegisterKnownDbTable(DbTransaction transaction, DbTable table)
+
+		/// <summary>
+		/// Registers a known table for this database. This call is reserved for
+		/// the replication service which must be able to create tables in the
+		/// database for which there already exists metadata.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		public void RegisterKnownDbTable(DbTransaction transaction, DbTable table)
 		{
 			this.RegisterDbTable (transaction, table, true);
 		}
-		
-		public void      UnregisterDbTable(DbTransaction transaction, DbTable table)
+
+		/// <summary>
+		/// Unregisters a table from the database. The metadata is updated but
+		/// the real database table is not dropped for security reasons.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		public void UnregisterDbTable(DbTable table)
 		{
-			//	Supprime la description de la table de la base. Pour des raisons de sécurité,
-			//	la table SQL n'est pas réellement supprimée.
-			
-			if (transaction == null)
+			using (DbTransaction transaction = this.BeginTransaction ())
 			{
-				using (transaction = this.BeginTransaction ())
-				{
-					this.UnregisterDbTable (transaction, table);
-					transaction.Commit ();
-					return;
-				}
+				this.UnregisterDbTable (transaction, table);
+				transaction.Commit ();
 			}
+		}
+
+		/// <summary>
+		/// Unregisters a table from the database. The metadata is updated but
+		/// the real database table is not dropped for security reasons.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		public void UnregisterDbTable(DbTransaction transaction, DbTable table)
+		{
+			System.Diagnostics.Debug.Assert (transaction != null);
 			
 			this.CheckForKnownTable (transaction, table);
 			
-			DbKey old_key = table.InternalKey;
-			DbKey new_key = new DbKey (old_key.Id, DbRowStatus.Deleted);
+			DbKey oldKey = table.Key;
+			DbKey newKey = new DbKey (oldKey.Id, DbRowStatus.Deleted);
 			
-			this.UpdateKeyInRow (transaction, Tags.TableTableDef, old_key, new_key);
+			this.UpdateKeyInRow (transaction, Tags.TableTableDef, oldKey, newKey);
 		}
-		
-		public DbTable   ResolveDbTable(DbTransaction transaction, string table_name)
+
+		/// <summary>
+		/// Resolves the database table definition with the specified name. This
+		/// will return the same object when called multiple times with the same
+		/// name, unless the cache is cleared with <c>ClearCaches</c>.
+		/// </summary>
+		/// <param name="tableName">Name of the table.</param>
+		/// <returns>The table definition.</returns>
+		public DbTable ResolveDbTable(string tableName)
 		{
-			DbKey key = this.FindDbTableKey (transaction, table_name);
+			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbTable value = this.ResolveDbTable (transaction, tableName);
+				transaction.Commit ();
+				return value;
+			}
+		}
+
+		/// <summary>
+		/// Resolves the database table definition with the specified key. This
+		/// will return the same object when called multiple times with the same
+		/// key, unless the cache is cleared with <c>ClearCaches</c>.
+		/// </summary>
+		/// <param name="key">The key to the table metadata.</param>
+		/// <returns>The table definition.</returns>
+		public DbTable ResolveDbTable(DbKey key)
+		{
+			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbTable value = this.ResolveDbTable (transaction, key);
+				transaction.Commit ();
+				return value;
+			}
+		}
+
+		/// <summary>
+		/// Resolves the database table definition with the specified name. This
+		/// will return the same object when called multiple times with the same
+		/// name, unless the cache is cleared with <c>ClearCaches</c>.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="tableName">Name of the table.</param>
+		/// <returns>The table definition.</returns>
+		public DbTable ResolveDbTable(DbTransaction transaction, string tableName)
+		{
+			System.Diagnostics.Debug.Assert (transaction != null);
+			
+			DbKey key = this.FindDbTableKey (transaction, tableName);
 			return this.ResolveDbTable (transaction, key);
 		}
-		
-		public DbTable   ResolveDbTable(DbTransaction transaction, DbKey key)
+
+		/// <summary>
+		/// Resolves the database table definition with the specified key. This
+		/// will return the same object when called multiple times with the same
+		/// key, unless the cache is cleared with <c>ClearCaches</c>.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="key">The key to the table metadata.</param>
+		/// <returns>The table definition.</returns>
+		public DbTable ResolveDbTable(DbTransaction transaction, DbKey key)
 		{
-			if (key == null)
+			System.Diagnostics.Debug.Assert (transaction != null);
+			
+			if (key.IsEmpty)
 			{
 				return null;
 			}
 
-			lock (this.cache_db_tables)
+			lock (this.tableCache)
 			{
-				DbTable table = this.cache_db_tables[key];
+				DbTable table = this.tableCache[key];
 				
 				if (table == null)
 				{
-					System.Collections.ArrayList tables = this.LoadDbTable (transaction, key, DbRowSearchMode.LiveActive);
+					List<DbTable> tables = this.LoadDbTable (transaction, key, DbRowSearchMode.LiveActive);
 					
 					if (tables.Count > 0)
 					{
-						table = tables[0] as DbTable;
-						
-//-						System.Diagnostics.Debug.WriteLine (string.Format ("Loaded {0} {1} from database.", table.GetType ().Name, table.Name));
 						System.Diagnostics.Debug.Assert (tables.Count == 1);
+						System.Diagnostics.Debug.Assert (tables[0].Key == key);
+						System.Diagnostics.Debug.Assert (this.tableCache[key] == tables[0]);
+						
+						table = tables[0];
 					}
 				}
 				
 				return table;
 			}
 		}
-		
+
+		/// <summary>
+		/// Finds all live database table definitions belonging to the specified
+		/// category (either internal or user data).
+		/// </summary>
+		/// <param name="category">The table category.</param>
+		/// <returns>The table definitions or an empty array.</returns>
+		public DbTable[] FindDbTables(DbElementCat category)
+		{
+			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbTable[] value = this.FindDbTables (transaction, category);
+				transaction.Commit ();
+				return value;
+			}
+		}
+
+		/// <summary>
+		/// Finds all live database table definitions belonging to the specified
+		/// category (either internal or user data).
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="category">The table category.</param>
+		/// <returns>The table definitions or an empty array.</returns>
 		public DbTable[] FindDbTables(DbTransaction transaction, DbElementCat category)
 		{
 			return this.FindDbTables (transaction, category, DbRowSearchMode.LiveActive);
 		}
-		
-		public DbTable[] FindDbTables(DbTransaction transaction, DbElementCat category, DbRowSearchMode row_search_mode)
+
+		/// <summary>
+		/// Finds the database table definitions belonging to the specified
+		/// category (either internal or user data).
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="category">The table category.</param>
+		/// <param name="rowSearchMode">The row search mode.</param>
+		/// <returns>The table definitions or an empty array.</returns>
+		public DbTable[] FindDbTables(DbTransaction transaction, DbElementCat category, DbRowSearchMode rowSearchMode)
 		{
-			//	Liste toutes les tables appartenant à la catégorie spécifiée.
-			
-			System.Collections.ArrayList list = this.LoadDbTable (transaction, null, row_search_mode);
+			List<DbTable> list = this.LoadDbTable (transaction, DbKey.Empty, rowSearchMode);
 			
 			if (category != DbElementCat.Any)
 			{
-				for (int i = 0; i < list.Count; )
-				{
-					DbTable table = list[i] as DbTable;
-					
-					if (table.Category != category)
-					{
-						list.RemoveAt (i);
-					}
-					else
-					{
-						i++;
-					}
-				}
+				list.RemoveAll
+					(
+						delegate (DbTable table)
+						{
+							return table.Category != category;
+						}
+					);
 			}
 			
-			DbTable[] tables = new DbTable[list.Count];
-			list.CopyTo (tables, 0);
-			
-			return tables;
+			return list.ToArray ();
 		}
-		
-		
+
+		/// <summary>
+		/// Clears the table and type caches. This will force a reload of the
+		/// table definitions and type definitions.
+		/// </summary>
 		public void ClearCaches()
 		{
-			lock (this.cache_db_tables)
+			lock (this.tableCache)
 			{
-				this.cache_db_tables.ClearCache ();
+				this.tableCache.ClearCache ();
 			}
-			lock (this.cache_db_types)
+			lock (this.typeCache)
 			{
-				this.cache_db_types.ClearCache ();
+				this.typeCache.ClearCache ();
 			}
 		}
-		
-		public DbColumn   CreateColumn(string column_name, DbType type)
-		{
-			return new DbColumn (column_name, type, DbColumnClass.Data, DbElementCat.UserDataManaged);
-		}
-		
-		public DbColumn   CreateColumn(string column_name, DbType type, Nullable nullable)
-		{
-			return new DbColumn (column_name, type, nullable, DbColumnClass.Data, DbElementCat.UserDataManaged);
-		}
-		
-		public DbColumn[] CreateLocalisedColumns(string column_name, DbType type)
-		{
-			//	TODO: crée la ou les colonnes localisées
-			
-			//	Note: utilise DbColumnClass.Data et DbElementCat.UserDataManaged pour ces
-			//	colonnes, puisqu'elles appartiennent à l'utilisateur.
-			
-			throw new System.NotImplementedException ("CreateLocalisedColumns not implemented.");
-		}
-		
-		public DbColumn[] CreateRefColumns(string column_name, string parent_table_name)
-		{
-			return this.CreateRefColumns (column_name, parent_table_name, Nullable.Undefined);
-		}
-		
-		public DbColumn[] CreateRefColumns(string column_name, string parent_table_name, Nullable nullable)
-		{
-			//	Crée la ou les colonnes nécessaires à la définition d'une référence à une autre
-			//	table.
-			
-			DbType type_id = this.internal_types[Tags.TypeKeyId];
-			return new DbColumn[] { DbColumn.CreateRefColumn (column_name, parent_table_name, DbColumnClass.RefId, type_id, nullable) };
-		}
-		
-		
+
+		/// <summary>
+		/// Registers the column relations by generating the associated database
+		/// metadata. Every foreign key found in the table generates one relation.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
 		public void RegisterColumnRelations(DbTransaction transaction, DbTable table)
 		{
-			if (transaction == null)
+			System.Diagnostics.Debug.Assert (transaction != null);
+			
+			foreach (DbColumn column in table.Columns)
 			{
-				using (transaction = this.BeginTransaction ())
+				if (column.ColumnClass == DbColumnClass.RefId)
 				{
-					this.RegisterColumnRelations (transaction, table);
-					transaction.Commit ();
-					return;
-				}
-			}
-			
-			//	Passe en revue toutes les colonnes de type ID qui font référence à une table
-			//	et enregistre l'information dans la table de définition des références.
-			//
-			//	Note: il faut que les tables aient été enregistrées auprès de Crésus pour
-			//	que cette méthode fonctionne (on a besoin des IDs des tables et des colonnes
-			//	concernées).
-			
-			System.Collections.Hashtable ref_columns = new System.Collections.Hashtable ();
-			
-			for (int i = 0; i < table.Columns.Count; i++)
-			{
-				DbColumn column = table.Columns[i];
-				
-				switch (column.ColumnClass)
-				{
-					case DbColumnClass.RefId:
-						
-						string parent_name = column.ParentTableName;
-						
-						if (parent_name != null)
-						{
-							DbTable parent_table = this.ResolveDbTable (transaction, parent_name);
-							
-							if (parent_table == null)
-							{
-								string message = string.Format ("Table '{0}' referenced from '{1}.{2}' not found in database.", parent_name, table.Name, column.Name);
-								throw new Exceptions.GenericException (this.db_access, message);
-							}
-							
-							DbKey source_table_key  = table.InternalKey;
-							DbKey source_column_key = column.InternalKey;
-							DbKey parent_table_key  = parent_table.InternalKey;
-							
-							if (source_table_key == null)
-							{
-								string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered table '{1}'.", parent_name, table.Name, column.Name);
-								throw new Exceptions.GenericException (this.db_access, message);
-							}
-							
-							if (source_column_key == null)
-							{
-								string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered column '{2}'.", parent_name, table.Name, column.Name);
-								throw new Exceptions.GenericException (this.db_access, message);
-							}
-							
-							if (parent_table_key == null)
-							{
-								string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered table '{0}'.", parent_name, table.Name, column.Name);
-								throw new Exceptions.GenericException (this.db_access, message);
-							}
-							
-							this.UpdateColumnRelation (transaction, source_table_key, source_column_key, parent_table_key);
-						}
-						break;
+					string targetTableName = column.TargetTableName;
 					
-					default:
-						break;
+					if (! string.IsNullOrEmpty (targetTableName))
+					{
+						DbTable targetTable = this.ResolveDbTable (transaction, targetTableName);
+						
+						if (targetTable == null)
+						{
+							string message = string.Format ("Table '{0}' referenced from '{1}.{2}' not found in database", targetTableName, table.Name, column.Name);
+							throw new Exceptions.GenericException (this.access, message);
+						}
+						
+						DbKey sourceTableKey  = table.Key;
+						DbKey sourceColumnKey = column.Key;
+						DbKey targetTableKey  = targetTable.Key;
+						
+						if (sourceTableKey.IsEmpty)
+						{
+							string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered table '{1}'", targetTableName, table.Name, column.Name);
+							throw new Exceptions.GenericException (this.access, message);
+						}
+
+						if (sourceColumnKey.IsEmpty)
+						{
+							string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered column '{2}'", targetTableName, table.Name, column.Name);
+							throw new Exceptions.GenericException (this.access, message);
+						}
+
+						if (targetTableKey.IsEmpty)
+						{
+							string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered table '{0}'", targetTableName, table.Name, column.Name);
+							throw new Exceptions.GenericException (this.access, message);
+						}
+						
+						//	We have found a valid relation between the source column
+						//	and the arget table. Update it in our metadata:
+						
+						this.UpdateColumnRelation (transaction, sourceTableKey, sourceColumnKey, targetTableKey);
+					}
 				}
 			}
 		}
-		
-		
-		public DbType    CreateDbType(string name, int length, bool is_fixed)
+
+		/// <summary>
+		/// Registers a new type and stores it into the database metadata.
+		/// </summary>
+		/// <param name="typeDef">The type definition.</param>
+		public void RegisterNewDbType(DbTypeDef typeDef)
 		{
-			DbTypeString type = new DbTypeString (length, is_fixed);
-			type.DefineName (name);
-			return type;
-		}
-		
-		public DbType    CreateDbType(string name, DbNumDef num_def)
-		{
-			DbTypeNum type = new DbTypeNum (num_def);
-			type.DefineName (name);
-			return type;
-		}
-		
-		public DbType    CreateDbType(string name, DbEnumValue[] values)
-		{
-			DbTypeEnum type = new DbTypeEnum (values);
-			type.DefineName (name);
-			return type;
-		}
-		
-		public DbType    CreateDbTypeByteArray(string name)
-		{
-			DbTypeByteArray type = new DbTypeByteArray ();
-			type.DefineName (name);
-			return type;
-		}
-		
-		public DbType    CreateDbTypeDateTime(string name)
-		{
-			DbTypeDateTime type = new DbTypeDateTime ();
-			type.DefineName (name);
-			return type;
-		}
-		
-		public void      RegisterNewDbType(DbTransaction transaction, DbType type)
-		{
-			//	Enregistre un nouveau type dans la base de données. Ceci va attribuer au
-			//	type une clef DbKey et vérifier qu'il n'y a pas de collision avec un
-			//	éventuel type déjà existant.
-			
-			if (transaction == null)
+			using (DbTransaction transaction = this.BeginTransaction ())
 			{
-				using (transaction = this.BeginTransaction ())
-				{
-					this.RegisterNewDbType (transaction, type);
-					transaction.Commit ();
-					return;
-				}
-			}
-			
-			this.CheckForUnknownType (transaction, type);
-			
-			DbTypeEnum type_enum = type as DbTypeEnum;
-			
-			long table_id = this.NewRowIdInTable (transaction, this.internal_tables[Tags.TableTypeDef].InternalKey, 1);
-			long enum_id  = (type_enum == null) ? 0 : this.NewRowIdInTable (transaction, this.internal_tables[Tags.TableEnumValDef].InternalKey, type_enum.Count);
-			
-			//	Crée la ligne de description du type :
-			
-			type.DefineInternalKey (new DbKey (table_id));
-			this.InsertTypeDefRow (transaction, type);
-			
-			if (type_enum != null)
-			{
-				//	Crée les lignes de description des valeurs de l'énumération :
-				
-				int i = 0;
-				
-				foreach (DbEnumValue value in type_enum.Values)
-				{
-					value.DefineInternalKey (new DbKey (enum_id + i));
-					this.InsertEnumValueDefRow (transaction, type, value);
-					i++;
-				}
+				this.RegisterNewDbType (transaction, typeDef);
+				transaction.Commit ();
 			}
 		}
-		
-		public void      UnregisterDbType(DbTransaction transaction, DbType type)
+
+		/// <summary>
+		/// Registers a new type and stores it into the database metadata. If
+		/// a type with the same name already exists in the database, this will
+		/// throw an exception.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="typeDef">The type definition.</param>
+		public void RegisterNewDbType(DbTransaction transaction, DbTypeDef typeDef)
 		{
-			//	Supprime la description du type de la base. Pour des raisons de sécurité,
-			//	le type SQL n'est pas réellement supprimé.
+			System.Diagnostics.Debug.Assert (transaction != null);
 			
-			if (transaction == null)
-			{
-				using (transaction = this.BeginTransaction ())
-				{
-					this.UnregisterDbType (transaction, type);
-					transaction.Commit ();
-					return;
-				}
-			}
-			
-			this.CheckForKnownType (transaction, type);
-			
-			DbKey old_key = type.InternalKey;
-			DbKey new_key = new DbKey (old_key.Id, DbRowStatus.Deleted);
-			
-			this.UpdateKeyInRow (transaction, Tags.TableTypeDef, old_key, new_key);
+			this.CheckForUnknownType (transaction, typeDef);
+
+			long tableId = this.NewRowIdInTable (transaction, this.internalTables[Tags.TableTypeDef], 1);
+
+			typeDef.DefineKey (new DbKey (tableId));
+			this.InsertTypeDefRow (transaction, typeDef);
 		}
-		
-		public DbType    ResolveDbType(DbTransaction transaction, string type_name)
+
+		/// <summary>
+		/// Unregisters the type from the database. This will not drop the
+		/// type but mark it as deleted for security reasons.
+		/// </summary>
+		/// <param name="typeDef">The type definition.</param>
+		public void UnregisterDbType(DbTypeDef typeDef)
 		{
-			DbKey key = this.FindDbTypeKey (transaction, type_name);
+			using (DbTransaction transaction = this.BeginTransaction ())
+			{
+				this.UnregisterDbType (transaction, typeDef);
+				transaction.Commit ();
+			}
+		}
+
+		/// <summary>
+		/// Unregisters the type from the database. This will not drop the
+		/// type but mark it as deleted for security reasons.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="typeDef">The type definition.</param>
+		public void UnregisterDbType(DbTransaction transaction, DbTypeDef typeDef)
+		{
+			this.CheckForKnownType (transaction, typeDef);
+			
+			DbKey oldKey = typeDef.Key;
+			DbKey newKey = new DbKey (oldKey.Id, DbRowStatus.Deleted);
+			
+			this.UpdateKeyInRow (transaction, Tags.TableTypeDef, oldKey, newKey);
+		}
+
+		/// <summary>
+		/// Resolves a type definition from its name.
+		/// </summary>
+		/// <param name="typeName">Name of the type.</param>
+		/// <returns>The type definition.</returns>
+		public DbTypeDef ResolveDbType(string typeName)
+		{
+			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbTypeDef value = this.ResolveDbType (transaction, typeName);
+				transaction.Commit ();
+				return value;
+			}
+		}
+
+		/// <summary>
+		/// Resolves a type definition from its name.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="typeName">Name of the type.</param>
+		/// <returns>The type definition.</returns>
+		public DbTypeDef ResolveDbType(DbTransaction transaction, string typeName)
+		{
+			System.Diagnostics.Debug.Assert (transaction != null);
+			
+			DbKey key = this.FindDbTypeKey (transaction, typeName);
 			return this.ResolveDbType (transaction, key);
 		}
-		
-		public DbType    ResolveDbType(DbTransaction transaction, DbKey key)
+
+		/// <summary>
+		/// Resolves a type definition from its key.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="key">The metadata key for the type.</param>
+		/// <returns>The type definition.</returns>
+		private DbTypeDef ResolveDbType(DbTransaction transaction, DbKey key)
 		{
-			if (key == null)
+			if (key.IsEmpty)
 			{
 				return null;
 			}
 
-			//	Trouve le type corredpondant à une clef spécifique.
-			
-			lock (this.cache_db_types)
+			lock (this.typeCache)
 			{
-				DbType type = this.cache_db_types[key];
+				DbTypeDef typeDef = this.typeCache[key];
 				
-				if (type == null)
+				if (typeDef == null)
 				{
-					System.Collections.ArrayList types = this.LoadDbType (transaction, key, DbRowSearchMode.LiveActive);
+					List<DbTypeDef> types = this.LoadDbType (transaction, key, DbRowSearchMode.LiveActive);
 					
 					if (types.Count > 0)
 					{
-						type = types[0] as DbType;
-						
-//-						System.Diagnostics.Debug.WriteLine (string.Format ("Loaded {0} {1} from database.", type.GetType ().Name, type.Name));
 						System.Diagnostics.Debug.Assert (types.Count == 1);
-						
-						this.cache_db_types[key] = type;
+						System.Diagnostics.Debug.Assert (types[0].Key == key);
+						System.Diagnostics.Debug.Assert (this.typeCache[key] == types[0]);
+
+						typeDef = types[0] as DbTypeDef;
 					}
 				}
 				
-				return type;
+				return typeDef;
 			}
 		}
-		
-		public DbType[]  FindDbTypes(DbTransaction transaction)
+
+		/// <summary>
+		/// Finds all the live type definitions.
+		/// </summary>
+		/// <returns>The type definitions.</returns>
+		public DbTypeDef[] FindDbTypes()
 		{
+			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbTypeDef[] value = this.FindDbTypes (transaction);
+				transaction.Commit ();
+				return value;
+			}
+		}
+
+		/// <summary>
+		/// Finds all the live type definitions.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <returns>The type definitions.</returns>
+		public DbTypeDef[] FindDbTypes(DbTransaction transaction)
+		{
+			System.Diagnostics.Debug.Assert (transaction != null);
 			return this.FindDbTypes (transaction, DbRowSearchMode.LiveActive);
 		}
-		
-		public DbType[]  FindDbTypes(DbTransaction transaction, DbRowSearchMode row_search_mode)
+
+		/// <summary>
+		/// Finds all the type definitions using a specific search mode.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="rowSearchMode">The row search mode.</param>
+		/// <returns>The type definitions.</returns>
+		public DbTypeDef[] FindDbTypes(DbTransaction transaction, DbRowSearchMode rowSearchMode)
 		{
-			//	Liste tous les types.
-			
-			System.Collections.ArrayList list = this.LoadDbType (transaction, null, row_search_mode);
-			
-			DbType[] types = new DbType[list.Count];
-			list.CopyTo (types, 0);
-			
-			return types;
+			System.Diagnostics.Debug.Assert (transaction != null);
+			return this.LoadDbType (transaction, DbKey.Empty, rowSearchMode).ToArray ();
 		}
-		
-		
-		
-		internal DbTable CreateTable(string name, DbElementCat category, DbRevisionMode revision_mode, DbReplicationMode replication_mode)
+
+		/// <summary>
+		/// Creates an SQL field definining a constant value for a given column.
+		/// The value is automatically converted to the internal data type.
+		/// </summary>
+		/// <param name="column">The column.</param>
+		/// <param name="value">The high level value.</param>
+		/// <returns>The SQL field.</returns>
+		public SqlField CreateSqlField(DbColumn column, object value)
 		{
-			System.Diagnostics.Debug.Assert (revision_mode != DbRevisionMode.Unknown);
+			DbRawType rawType = column.Type.RawType;
+
+			value = TypeConverter.ConvertToSimpleType (value, column.Type);
+			value = TypeConverter.ConvertToInternal (this.converter, value, rawType);
+			
+			SqlField field = SqlField.CreateConstant (value, rawType);
+			field.Alias = column.Name;
+			return field;
+		}
+
+		/// <summary>
+		/// Creates an SQL field definining a constant value for a given column.
+		/// The value is automatically converted to the internal data type.
+		/// </summary>
+		/// <param name="column">The column.</param>
+		/// <param name="value">The value.</param>
+		/// <returns>The SQL field.</returns>
+		public SqlField CreateSqlField(SqlColumn column, object value)
+		{
+			DbRawType rawType = column.Type;
+
+			value = TypeConverter.ConvertToSimpleType (value, rawType);
+			value = TypeConverter.ConvertToInternal (this.converter, value, rawType);
+
+			SqlField field = SqlField.CreateConstant (value, rawType);
+			field.Alias = column.Name;
+			return field;
+		}
+
+		/// <summary>
+		/// Creates an the empty SQL field defining a constant.
+		/// </summary>
+		/// <param name="column">The column.</param>
+		/// <returns>The SQL field.</returns>
+		public SqlField CreateEmptySqlField(DbColumn column)
+		{
+			SqlField field = SqlField.CreateConstant (null, column.Type.RawType);
+			field.Alias = column.GetSqlName ();
+			return field;
+		}
+
+		/// <summary>
+		/// Creates a table definition with the minimum id, status and log columns.
+		/// </summary>
+		/// <param name="name">The table name.</param>
+		/// <param name="category">The table category.</param>
+		/// <param name="revisionMode">The table revision mode.</param>
+		/// <param name="replicationMode">The table replication mode.</param>
+		/// <returns></returns>
+		internal DbTable CreateTable(string name, DbElementCat category, DbRevisionMode revisionMode, DbReplicationMode replicationMode)
+		{
+			System.Diagnostics.Debug.Assert (revisionMode != DbRevisionMode.Unknown);
+			System.Diagnostics.Debug.Assert (replicationMode != DbReplicationMode.Unknown);
 			
 			DbTable table = new DbTable (name);
 			
-			DbType type = this.internal_types[Tags.TypeKeyId];
+			DbTypeDef typeDef = this.internalTypes[Tags.TypeKeyId];
 			
-			DbColumn col_id   = new DbColumn (Tags.ColumnId,     this.internal_types[Tags.TypeKeyId],     Nullable.No);
-			DbColumn col_stat = new DbColumn (Tags.ColumnStatus, this.internal_types[Tags.TypeKeyStatus], Nullable.No);
-			DbColumn col_log  = new DbColumn (Tags.ColumnRefLog, this.internal_types[Tags.TypeKeyId],     Nullable.No);
-			
-			col_id.DefineCategory (DbElementCat.Internal);
-			col_id.DefineColumnClass (DbColumnClass.KeyId);
-			
-			col_stat.DefineCategory (DbElementCat.Internal);
-			col_stat.DefineColumnClass (DbColumnClass.KeyStatus);
-			
-			col_log.DefineCategory (DbElementCat.Internal);
-			col_log.DefineColumnClass (DbColumnClass.RefInternal);
+			DbColumn colId   = new DbColumn (Tags.ColumnId,     this.internalTypes[Tags.TypeKeyId],     DbColumnClass.KeyId, DbElementCat.Internal);
+			DbColumn colStat = new DbColumn (Tags.ColumnStatus, this.internalTypes[Tags.TypeKeyStatus], DbColumnClass.KeyStatus, DbElementCat.Internal);
+			DbColumn colLog  = new DbColumn (Tags.ColumnRefLog, this.internalTypes[Tags.TypeKeyId],     DbColumnClass.RefInternal, DbElementCat.Internal);
 			
 			table.DefineCategory (category);
-			table.DefineRevisionMode (revision_mode);
-			table.DefineReplicationMode (replication_mode);
+			table.DefineRevisionMode (revisionMode);
+			table.DefineReplicationMode (replicationMode);
 			
-			table.Columns.Add (col_id);
-			table.Columns.Add (col_stat);
-			table.Columns.Add (col_log);
+			table.Columns.Add (colId);
+			table.Columns.Add (colStat);
+			table.Columns.Add (colLog);
 			
-			table.PrimaryKeys.Add (col_id);
+			table.PrimaryKeys.Add (colId);
 			
 			return table;
 		}
-		
-		
-		protected void RegisterDbTable(DbTransaction transaction, DbTable table, bool check_for_known)
+
+		/// <summary>
+		/// Registers a table for this database. This creates both the metadata and
+		/// the database table itself (if needed), but does not initialize the
+		/// relations between the columns and their target tables. See also the
+		/// <see cref="RegisterColumnRelations"/> method.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// <param name="checkForKnownTable">If set to <c>true</c>, checks that the table is indeed known.</param>
+		private void RegisterDbTable(DbTransaction transaction, DbTable table, bool checkForKnownTable)
 		{
-			//	Enregistre une nouvelle table dans la base de données. Ceci va attribuer à
-			//	la table une clef DbKey et vérifier qu'il n'y a pas de collision avec une
-			//	éventuelle table déjà existante. Cela va aussi attribuer des colonnes pour
-			//	la nouvelle table.
-			
-			if (transaction == null)
-			{
-				using (transaction = this.BeginTransaction ())
-				{
-					this.RegisterDbTable (transaction, table, check_for_known);
-					transaction.Commit ();
-					return;
-				}
-			}
+			System.Diagnostics.Debug.Assert (transaction != null);
 			
 			this.CheckForRegisteredTypes (transaction, table);
 			
-			if (check_for_known)
+			if (checkForKnownTable)
 			{
 				this.CheckForKnownTable (transaction, table);
 			}
@@ -875,219 +1069,267 @@ namespace Epsitec.Cresus.Database
 			{
 				this.CheckForUnknownTable (transaction, table);
 				
-				long table_id  = this.NewRowIdInTable (transaction, this.internal_tables[Tags.TableTableDef] .InternalKey, 1);
-				long column_id = this.NewRowIdInTable (transaction, this.internal_tables[Tags.TableColumnDef].InternalKey, table.Columns.Count);
+				long tableId  = this.NewRowIdInTable (transaction, this.internalTables[Tags.TableTableDef], 1);
+				long columnId = this.NewRowIdInTable (transaction, this.internalTables[Tags.TableColumnDef], table.Columns.Count);
 				
-				//	Crée la ligne de description de la table :
+				//	Create the table description in the CR_TABLE_DEF table :
 				
-				table.DefineInternalKey (new DbKey (table_id));
+				table.DefineKey (new DbKey (tableId));
 				table.UpdatePrimaryKeyInfo ();
 				
 				this.InsertTableDefRow (transaction, table);
 				
-				//	Crée les lignes de description des colonnes :
+				//	Create the column descriptions in the CR_COLUMN_DEF table :
 				
 				for (int i = 0; i < table.Columns.Count; i++)
 				{
-					table.Columns[i].DefineInternalKey (new DbKey (column_id + i));
+					table.Columns[i].DefineKey (new DbKey (columnId + i));
 					this.InsertColumnDefRow (transaction, table, table.Columns[i]);
 				}
 			}
 			
-			//	Finalement, il faut créer la table elle-même :
+			//	Create the table itself :
 			
-			SqlTable sql_table = table.CreateSqlTable (this.type_converter);
+			SqlTable sqlTable = table.CreateSqlTable (this.converter);
 			
-			transaction.SqlBuilder.InsertTable (sql_table);
+			transaction.SqlBuilder.InsertTable (sqlTable);
 			this.ExecuteSilent (transaction);
-		}
-		
-		
-		protected void CheckForRegisteredTypes(DbTransaction transaction, DbTable table)
-		{
-			//	Vérifie que tous les types utilisés dans la définition des colonnes sont bien
-			//	connus (on vérifie qu'ils ont une clef valide).
-			
-			Collections.DbColumns columns = table.Columns;
-			
-			for (int i = 0; i < columns.Count; i++)
+
+			if (table.RevisionMode == DbRevisionMode.Enabled)
 			{
-				DbType type = columns[i].Type;
+				sqlTable = new SqlTable (table.GetRevisionTableName ());
+				sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefId, DbKey.RawTypeForId, DbNullability.No));
+				sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefModel, DbKey.RawTypeForId, DbNullability.No));
+
+				transaction.SqlBuilder.InsertTable (sqlTable);
+				this.ExecuteSilent (transaction);
+			}
+		}
+
+		/// <summary>
+		/// Checks that all types used by the column definitions for the specified
+		/// table are properly registered. Otherwise, throws an exception.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// /// <exception cref="Exceptions.GenericException">Thrown if a type is not registered.</exception>
+		private void CheckForRegisteredTypes(DbTransaction transaction, DbTable table)
+		{
+			foreach (DbColumn column in table.Columns)
+			{
+				DbTypeDef typeDef = column.Type;
 				
-				System.Diagnostics.Debug.Assert (type != null);
+				System.Diagnostics.Debug.Assert (typeDef != null);
 				
-				if (type.InternalKey == null)
+				if (typeDef.Key.IsEmpty)
 				{
 					string message = string.Format ("Unregistered type '{0}' used in table '{1}', column '{2}'.",
-						type.Name, table.Name, columns[i].Name);
+						/**/						typeDef.Name, table.Name, column.Name);
 					
-					throw new Exceptions.GenericException (this.db_access, message);
+					throw new Exceptions.GenericException (this.access, message);
 				}
 			}
 		}
-		
-		protected void CheckForUnknownType(DbTransaction transaction, DbType type)
+
+		/// <summary>
+		/// Checks that the specified type is not yet known. Otherwise, throws an
+		/// exception.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="typeDef">The type definition.</param>
+		/// <exception cref="Exceptions.GenericException">Thrown if the type already exists.</exception>
+		private void CheckForUnknownType(DbTransaction transaction, DbTypeDef typeDef)
 		{
-			System.Diagnostics.Debug.Assert (type != null);
+			System.Diagnostics.Debug.Assert (typeDef != null);
 			
-			if (this.CountMatchingRows (transaction, Tags.TableTypeDef, Tags.ColumnName, type.Name) > 0)
+			if (this.CountMatchingRows (transaction, Tags.TableTypeDef, Tags.ColumnName, typeDef.Name) > 0)
 			{
-				string message = string.Format ("Type {0} already exists in database.", type.Name);
-				throw new Exceptions.GenericException (this.db_access, message);
+				string message = string.Format ("Type {0} already exists in database.", typeDef.Name);
+				throw new Exceptions.GenericException (this.access, message);
 			}
 		}
-		
-		protected void CheckForKnownType(DbTransaction transaction, DbType type)
+
+		/// <summary>
+		/// Checks that the specified type is known. Otherwise, throws an exception.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="typeDef">The type definition.</param>
+		/// <exception cref="Exceptions.GenericException">Thrown if the type does not exist.</exception>
+		private void CheckForKnownType(DbTransaction transaction, DbTypeDef typeDef)
 		{
-			System.Diagnostics.Debug.Assert (type != null);
+			System.Diagnostics.Debug.Assert (typeDef != null);
 			
-			if (this.CountMatchingRows (transaction, Tags.TableTypeDef, Tags.ColumnName, type.Name) == 0)
+			if (this.CountMatchingRows (transaction, Tags.TableTypeDef, Tags.ColumnName, typeDef.Name) == 0)
 			{
-				string message = string.Format ("Type {0} does not exist in database.", type.Name);
-				throw new Exceptions.GenericException (this.db_access, message);
+				string message = string.Format ("Type {0} does not exist in database.", typeDef.Name);
+				throw new Exceptions.GenericException (this.access, message);
 			}
 		}
-		
-		protected void CheckForUnknownTable(DbTransaction transaction, DbTable table)
+
+		/// <summary>
+		/// Checks that the specified table is not yet known. Otherwise, throws an
+		/// exception.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// <exception cref="Exceptions.GenericException">Thrown if the table already exists.</exception>
+		private void CheckForUnknownTable(DbTransaction transaction, DbTable table)
 		{
-			//	Cherche si une table avec ce nom existe dans la base. Si c'est le cas,
-			//	génère une exception.
-			//
-			//	NOTE:
-			//
-			//	On cherche les lignes dans CR_TABLE_DEF dont la colonne CR_NAME contient le nom
-			//	spécifié et dont CR_REV = 0. Cette seconde condition est nécessaire, car une table
-			//	détruite figure encore dans CR_TABLE_DEF avec CR_REV > 0, et elle ne doit pas être
-			//	comptée.
-			
 			if (this.CountMatchingRows (transaction, Tags.TableTableDef, Tags.ColumnName, table.Name) > 0)
 			{
 				string message = string.Format ("Table {0} already exists in database.", table.Name);
-				throw new Exceptions.GenericException (this.db_access, message);
+				throw new Exceptions.GenericException (this.access, message);
 			}
 		}
-		
-		protected void CheckForKnownTable(DbTransaction transaction, DbTable table)
+
+		/// <summary>
+		/// Checks that the specified table is known. Otherwise, throws an exception.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// <exception cref="Exceptions.GenericException">Thrown if the table does not exist.</exception>
+		private void CheckForKnownTable(DbTransaction transaction, DbTable table)
 		{
-			//	Cherche si une table avec ce nom existe dans la base. Si ce n'est pas le cas,
-			//	génère une exception.
-			//
-			//	NOTE:
-			//
-			//	On cherche les lignes dans CR_TABLE_DEF dont la colonne CR_NAME contient le nom
-			//	spécifié et dont CR_REV = 0. Cette seconde condition est nécessaire, car une table
-			//	détruite figure encore dans CR_TABLE_DEF avec CR_REV > 0, et elle ne doit pas être
-			//	comptée.
-			
 			if (this.CountMatchingRows (transaction, Tags.TableTableDef, Tags.ColumnName, table.Name) == 0)
 			{
 				string message = string.Format ("Table {0} does not exist in database.", table.Name);
-				throw new Exceptions.GenericException (this.db_access, message);
+				throw new Exceptions.GenericException (this.access, message);
 			}
 		}
-		
-		
+
+		/// <summary>
+		/// Acquires the global lock on the database (this is connection
+		/// independent; all database connections created through this
+		/// <c>DbInfrastructure</c> will be locked).
+		/// Neither <c>GlobalLock</c> nor <c>DatabaseLock</c> is allowed
+		/// until <c>GlobalUnlcok</c> is called.
+		/// </summary>
 		public void GlobalLock()
 		{
-			this.global_lock.AcquireWriterLock (this.lock_timeout);
+			this.globalLock.AcquireWriterLock (this.lockTimeout);
 		}
-		
+
+		/// <summary>
+		/// Releases the global lock from the database. See <see cref="GlobalLock"/>.
+		/// </summary>
 		public void GlobalUnlock()
 		{
-			this.global_lock.ReleaseWriterLock ();
+			this.globalLock.ReleaseWriterLock ();
 		}
-		
-		
+
+		/// <summary>
+		/// Locks a specific database connection. This prevents that the global
+		/// lock gets locked until this database connection is unlocked again.
+		/// </summary>
+		/// <param name="database">The database abstraction.</param>
 		internal void DatabaseLock(IDbAbstraction database)
 		{
-			this.global_lock.AcquireReaderLock (this.lock_timeout);
+			this.globalLock.AcquireReaderLock (this.lockTimeout);
 			
-			if (System.Threading.Monitor.TryEnter (database, this.lock_timeout) == false)
+			if (System.Threading.Monitor.TryEnter (database, this.lockTimeout) == false)
 			{
-				this.global_lock.ReleaseReaderLock ();
-				throw new Exceptions.DeadLockException (this.db_access, "Cannot lock database.");
+				this.globalLock.ReleaseReaderLock ();
+				throw new Exceptions.DeadLockException (this.access, "Cannot lock database.");
 			}
 		}
-		
+
+		/// <summary>
+		/// Unlocks a specific database connection.
+		/// </summary>
+		/// <param name="database">The database abstraction.</param>
 		internal void DatabaseUnlock(IDbAbstraction database)
 		{
-			this.global_lock.ReleaseReaderLock ();
+			this.globalLock.ReleaseReaderLock ();
 			System.Threading.Monitor.Exit (database);
 		}
-		
-		
+
+		/// <summary>
+		/// Notifies that a transaction begins. This is called by <c>DbTransaction</c>
+		/// when a new transaction object is created. Checks that there is at most
+		/// one active transaction for every database abstraction.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		internal void NotifyBeginTransaction(DbTransaction transaction)
 		{
-			IDbAbstraction db_abstraction = transaction.Database;
+			IDbAbstraction abstraction = transaction.Database;
 			
-			lock (this.live_transactions)
+			lock (this.liveTransactions)
 			{
-				if (this.live_transactions.ContainsKey (db_abstraction))
+				foreach (DbTransaction item in this.liveTransactions)
 				{
-					throw new Exceptions.GenericException (this.db_access, string.Format ("Nested transactions not supported."));
+					if (item.Database == abstraction)
+					{
+						throw new Exceptions.GenericException (this.access, string.Format ("Nested transactions not supported."));
+					}
 				}
 				
-				this.live_transactions[db_abstraction] = transaction;
+				this.liveTransactions.Add (transaction);
 			}
 		}
-		
+
+		/// <summary>
+		/// Notifies that the transaction ended. This is called by <c>DbTransaction</c>
+		/// when a transaction is committed, rolled back or disposed.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		internal void NotifyEndTransaction(DbTransaction transaction)
 		{
-			IDbAbstraction db_abstraction = transaction.Database;
+			IDbAbstraction abstraction = transaction.Database;
 			
-			this.DatabaseUnlock (db_abstraction);
+			this.DatabaseUnlock (abstraction);
+
+			bool release = false;
 			
-			lock (this.live_transactions)
+			lock (this.liveTransactions)
 			{
-				if (this.live_transactions[db_abstraction] != transaction)
+				if (this.liveTransactions.Remove (transaction) == false)
 				{
-					throw new Exceptions.GenericException (this.db_access, string.Format ("Ending wrong transaction."));
+					throw new Exceptions.GenericException (this.access, string.Format ("Ending wrong transaction."));
 				}
 				
-				this.live_transactions.Remove (db_abstraction);
-				
-				if (this.release_requested.Contains (db_abstraction))
+				if (this.releaseRequested.Contains (abstraction))
 				{
-					this.release_requested.Remove (db_abstraction);
-					this.ReleaseConnection (db_abstraction);
+					this.releaseRequested.Remove (abstraction);
+					release = true;
 				}
 			}
+
+			if (release)
+			{
+				this.ReleaseConnection (abstraction);
+			}
 		}
-		
-		
-		public void Execute(DbTransaction transaction, DbRichCommand command)
+
+		/// <summary>
+		/// Executes the specified rich command. This is called by <c>DbRichCommand</c>
+		/// when the command is initially created through its <c>CreateFromTables</c>
+		/// method.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="command">The command.</param>
+		internal void Execute(DbTransaction transaction, DbRichCommand command)
 		{
-			if (transaction == null)
-			{
-				using (transaction = this.BeginTransaction ())
-				{
-					this.Execute (transaction, command);
-					transaction.Commit ();
-					return;
-				}
-			}
+			System.Diagnostics.Debug.Assert (transaction != null);
 			
-			this.sql_engine.Execute (command, this, transaction.Transaction);
+			this.sqlEngine.Execute (command, this, transaction);
 		}
-		
-		
+
+		/// <summary>
+		/// Silently executes the command attached to the transaction.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <returns>Zero if no command was executed.</returns>
 		public int ExecuteSilent(DbTransaction transaction)
 		{
-			if (transaction == null)
-			{
-				using (transaction = this.BeginTransaction ())
-				{
-					int result = this.ExecuteSilent (transaction, transaction.SqlBuilder);
-					transaction.Commit ();
-					return result;
-				}
-			}
-			else
-			{
-				return this.ExecuteSilent (transaction, transaction.SqlBuilder);
-			}
+			return this.ExecuteSilent (transaction, transaction.SqlBuilder);
 		}
-		
+
+		/// <summary>
+		/// Silently executes the command defined by the SQL command builder.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="builder">The SQL command builder.</param>
+		/// <returns>Zero if no command was executed.</returns>
 		public int ExecuteSilent(DbTransaction transaction, ISqlBuilder builder)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
@@ -1103,28 +1345,27 @@ namespace Epsitec.Cresus.Database
 			using (System.Data.IDbCommand command = builder.CreateCommand (transaction.Transaction))
 			{
 				int result;
-				this.sql_engine.Execute (command, DbCommandType.Silent, count, out result);
+				this.sqlEngine.Execute (command, DbCommandType.Silent, count, out result);
 				return result;
 			}
 		}
-		
+
+		/// <summary>
+		/// Executes the command attached to the transaction.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <returns>The first column of the first row returned by the command or <c>null</c>.</returns>
 		public object ExecuteScalar(DbTransaction transaction)
 		{
-			if (transaction == null)
-			{
-				using (transaction = this.BeginTransaction ())
-				{
-					object value = this.ExecuteScalar (transaction, transaction.SqlBuilder);
-					transaction.Commit ();
-					return value;
-				}
-			}
-			else
-			{
-				return this.ExecuteScalar (transaction, transaction.SqlBuilder);
-			}
+			return this.ExecuteScalar (transaction, transaction.SqlBuilder);
 		}
-		
+
+		/// <summary>
+		/// Executes the command defined by the SQL command builder.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="builder">The SQL command builder.</param>
+		/// <returns>The first column of the first row returned by the command or <c>null</c> if no command was executed.</returns>
 		public object ExecuteScalar(DbTransaction transaction, ISqlBuilder builder)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
@@ -1141,29 +1382,28 @@ namespace Epsitec.Cresus.Database
 			{
 				object data;
 				
-				this.sql_engine.Execute (command, DbCommandType.ReturningData, count, out data);
+				this.sqlEngine.Execute (command, DbCommandType.ReturningData, count, out data);
 				
 				return data;
 			}
 		}
-		
+
+		/// <summary>
+		/// Executes the command attached to the transaction.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <returns>The number of rows affected or <c>null</c> if no command was executed.</returns>
 		public object ExecuteNonQuery(DbTransaction transaction)
 		{
-			if (transaction == null)
-			{
-				using (transaction = this.BeginTransaction ())
-				{
-					object value = this.ExecuteNonQuery (transaction, transaction.SqlBuilder);
-					transaction.Commit ();
-					return value;
-				}
-			}
-			else
-			{
-				return this.ExecuteNonQuery (transaction, transaction.SqlBuilder);
-			}
+			return this.ExecuteNonQuery (transaction, transaction.SqlBuilder);
 		}
-		
+
+		/// <summary>
+		/// Executes the command defined by the SQL command builder.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="builder">The SQL command builder.</param>
+		/// <returns>The number of rows affected or <c>null</c> if no command was executed.</returns>
 		public object ExecuteNonQuery(DbTransaction transaction, ISqlBuilder builder)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
@@ -1180,29 +1420,28 @@ namespace Epsitec.Cresus.Database
 			{
 				object data;
 				
-				this.sql_engine.Execute (command, DbCommandType.NonQuery, count, out data);
+				this.sqlEngine.Execute (command, DbCommandType.NonQuery, count, out data);
 				
 				return data;
 			}
 		}
-		
+
+		/// <summary>
+		/// Executes the command attached to the transaction.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <returns>The data set or <c>null</c> if no command was executed.</returns>
 		public System.Data.DataSet ExecuteRetData(DbTransaction transaction)
 		{
-			if (transaction == null)
-			{
-				using (transaction = this.BeginTransaction ())
-				{
-					System.Data.DataSet value = this.ExecuteRetData (transaction, transaction.SqlBuilder);
-					transaction.Commit ();
-					return value;
-				}
-			}
-			else
-			{
-				return this.ExecuteRetData (transaction, transaction.SqlBuilder);
-			}
+			return this.ExecuteRetData (transaction, transaction.SqlBuilder);
 		}
 		
+		/// <summary>
+		/// Executes the command defined by the SQL command builder.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="builder">The SQL command builder.</param>
+		/// <returns>The data set or <c>null</c> if no command was executed.</returns>
 		public System.Data.DataSet ExecuteRetData(DbTransaction transaction, ISqlBuilder builder)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
@@ -1219,330 +1458,307 @@ namespace Epsitec.Cresus.Database
 			{
 				System.Data.DataSet data;
 				
-				this.sql_engine.Execute (command, DbCommandType.ReturningData, count, out data);
+				this.sqlEngine.Execute (command, DbCommandType.ReturningData, count, out data);
 				
 				return data;
 			}
 		}
-		
-		public System.Data.DataTable ExecuteSqlSelect(DbTransaction transaction, SqlSelect query, int min_rows)
+
+		/// <summary>
+		/// Executes a SELECT command.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="query">The SELECT query.</param>
+		/// <param name="minRows">The minimum number of rows expected.</param>
+		/// <returns>The data set.</returns>
+		public System.Data.DataTable ExecuteSqlSelect(DbTransaction transaction, SqlSelect query, int minRows)
 		{
-			if (transaction == null)
-			{
-				using (transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
-				{
-					System.Data.DataTable value = this.ExecuteSqlSelect (transaction, transaction.SqlBuilder, query, min_rows);
-					transaction.Commit ();
-					return value;
-				}
-			}
-			else
-			{
-				return this.ExecuteSqlSelect (transaction, transaction.SqlBuilder, query, min_rows);
-			}
+			return this.ExecuteSqlSelect (transaction, transaction.SqlBuilder, query, minRows);
 		}
-		
-		public System.Data.DataTable ExecuteSqlSelect(DbTransaction transaction, ISqlBuilder builder, SqlSelect query, int min_rows)
+
+		/// <summary>
+		/// Executes a SELECT command.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="builder">The SQL command builder.</param>
+		/// <param name="query">The SELECT query.</param>
+		/// <param name="minRows">The minimum number of rows expected.</param>
+		/// <returns>The data set.</returns>
+		/// <exception cref="Exceptions.GenericException">Thrown if the query failed or returned less rows than expected.</exception>
+		public System.Data.DataTable ExecuteSqlSelect(DbTransaction transaction, ISqlBuilder builder, SqlSelect query, int minRows)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 			System.Diagnostics.Debug.Assert (builder != null);
 			
 			builder.SelectData (query);
 			
-			System.Data.DataSet data_set;
-			System.Data.DataTable data_table;
+			System.Data.DataSet dataSet;
+			System.Data.DataTable dataTable;
 			
-			data_set = this.ExecuteRetData (transaction);
+			dataSet = this.ExecuteRetData (transaction);
 			
-			if ((data_set == null) ||
-				(data_set.Tables.Count != 1))
+			if ((dataSet == null) ||
+				(dataSet.Tables.Count != 1))
 			{
-				throw new Exceptions.GenericException (this.db_access, string.Format ("Query failed."));
+				throw new Exceptions.GenericException (this.access, string.Format ("Query failed"));
 			}
 			
-			data_table = data_set.Tables[0];
+			dataTable = dataSet.Tables[0];
 			
-			if (data_table.Rows.Count < min_rows)
+			if (dataTable.Rows.Count < minRows)
 			{
-				throw new Exceptions.GenericException (this.db_access, string.Format ("Query returned to few rows; expected {0}, found {1}.", min_rows, data_table.Rows.Count));
+				throw new Exceptions.GenericException (this.access, string.Format ("Query returned to few rows; expected {0}, found {1}", minRows, dataTable.Rows.Count));
 			}
 			
-			return data_table;
+			return dataTable;
 		}
-		
-		
+
+		/// <summary>
+		/// Finds the key for the specified table.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="name">The table name.</param>
+		/// <returns>The key to the table metadata.</returns>
 		public DbKey FindDbTableKey(DbTransaction transaction, string name)
 		{
 			return this.FindLiveKey (this.FindDbKeys (transaction, Tags.TableTableDef, name));
 		}
-		
+
+		/// <summary>
+		/// Finds the key for the specified type.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="name">The type name.</param>
+		/// <returns>The key to the type metadata.</returns>
 		public DbKey FindDbTypeKey(DbTransaction transaction, string name)
 		{
 			return this.FindLiveKey (this.FindDbKeys (transaction, Tags.TableTypeDef, name));
 		}
-		
-		
-		internal DbKey FindLiveKey(DbKey[] keys)
+
+		/// <summary>
+		/// Finds the first live key in the collection.
+		/// </summary>
+		/// <param name="keys">The keys.</param>
+		/// <returns>The live key or <c>DbKey.Empty</c>.</returns>
+		internal DbKey FindLiveKey(IEnumerable<DbKey> keys)
 		{
-			for (int i = 0; i < keys.Length; i++)
+			foreach (DbKey key in keys)
 			{
-				switch (keys[i].Status)
+				switch (key.Status)
 				{
 					case DbRowStatus.Live:
 					case DbRowStatus.Copied:
-						return keys[i];
+						return key;
 				}
 			}
 			
-			return null;
+			return DbKey.Empty;
 		}
-		
-		internal DbKey[] FindDbKeys(DbTransaction transaction, string table_name, string row_name)
+
+		/// <summary>
+		/// Finds the keys for the named rows in the specified table.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="tableName">Name of the table.</param>
+		/// <param name="rowName">Name of the row or rows.</param>
+		/// <returns>The keys.</returns>
+		internal IEnumerable<DbKey> FindDbKeys(DbTransaction transaction, string tableName, string rowName)
 		{
-			//	Trouve la (ou les) clefs des lignes de la table 'table_name', pour lesquelles le
-			//	contenu de la colonne CR_NAME correspond au nom défini par 'row_name'.
-			
 			SqlSelect query = new SqlSelect ();
 			
 			query.Fields.Add ("T_ID",   SqlField.CreateName ("T", Tags.ColumnId));
 			query.Fields.Add ("T_STAT",	SqlField.CreateName ("T", Tags.ColumnStatus));
 			
-			query.Tables.Add ("T", SqlField.CreateName (table_name));
+			query.Tables.Add ("T", SqlField.CreateName (tableName));
 			
-			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName ("T", Tags.ColumnName), SqlField.CreateConstant (row_name, DbRawType.String)));
+			query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, SqlField.CreateName ("T", Tags.ColumnName), SqlField.CreateConstant (rowName, DbRawType.String)));
 			
-			System.Data.DataTable data_table = this.ExecuteSqlSelect (transaction, query, 0);
+			System.Data.DataTable dataTable = this.ExecuteSqlSelect (transaction, query, 0);
 			
-			if (this.display_data_set != null)
+			foreach (System.Data.DataRow row in dataTable.Rows)
 			{
-				this.display_data_set (this, table_name, data_table);
+				long  id     = InvariantConverter.ToLong (row["T_ID"]);
+				short status = InvariantConverter.ToShort (row["T_STAT"]);
+				
+				yield return new DbKey (id, DbKey.ConvertFromIntStatus (status));
 			}
-			
-			DbKey[] keys = new DbKey[data_table.Rows.Count];
-			
-			for (int i = 0; i < data_table.Rows.Count; i++)
-			{
-				System.Data.DataRow row = data_table.Rows[i];
-				
-				long id;
-				int  status;
-				
-				InvariantConverter.Convert (row["T_ID"],   out id);
-				InvariantConverter.Convert (row["T_STAT"], out status);
-				
-				keys[i] = new DbKey (id, DbKey.ConvertFromIntStatus (status));
-			}
-			
-			return keys;
 		}
-		
-		
-		public int CountMatchingRows(DbTransaction transaction, string table_name, string name_column, string value)
+
+		/// <summary>
+		/// Counts the rows of the specified table which have a matching value in
+		/// a given column.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="tableName">Name of the table.</param>
+		/// <param name="nameColumn">Name of the column.</param>
+		/// <param name="value">The value.</param>
+		/// <returns>The number of matching rows.</returns>
+		public int CountMatchingRows(DbTransaction transaction, string tableName, string nameColumn, string value)
 		{
-			int count = 0;
-			
-			//	Compte combien de lignes dans la table ont le texte spécifié dans la colonne spécifiée.
-			//	Ne considère que les lignes actives.
-			
-			if (transaction == null)
-			{
-				using (transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
-				{
-					count = this.CountMatchingRows (transaction, table_name, name_column, value);
-					transaction.Commit ();
-					return count;
-				}
-			}
-			
 			SqlSelect query = new SqlSelect ();
 			
-			query.Fields.Add ("N", new SqlAggregate (SqlAggregateType.Count, SqlField.CreateAll ()));
-			query.Tables.Add ("T", SqlField.CreateName (table_name));
+			query.Fields.Add ("N", new SqlAggregate (SqlAggregateFunction.Count, SqlField.CreateAll ()));
+			query.Tables.Add ("T", SqlField.CreateName (tableName));
 			
-			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName ("T", name_column), SqlField.CreateConstant (value, DbRawType.String)));
+			query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, SqlField.CreateName ("T", nameColumn), SqlField.CreateConstant (value, DbRawType.String)));
 
 			DbInfrastructure.AddKeyExtraction (query.Conditions, "T", DbRowSearchMode.LiveActive);
 			
 			transaction.SqlBuilder.SelectData (query);
 			
-			InvariantConverter.Convert (this.ExecuteScalar (transaction), out count);
-			
-			return count;
+			return InvariantConverter.ToInt (this.ExecuteScalar (transaction));
 		}
-		
-		
-		public void UpdateKeyInRow(DbTransaction transaction, string table_name, DbKey old_key, DbKey new_key)
+
+		/// <summary>
+		/// Updates the specified row to use a new key.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="tableName">Name of the table.</param>
+		/// <param name="oldKey">The old key of the row.</param>
+		/// <param name="newKey">The new key of the row.</param>
+		private void UpdateKeyInRow(DbTransaction transaction, string tableName, DbKey oldKey, DbKey newKey)
 		{
-			//	Met à jour la clef de la ligne spécifiée. Ceci est utile pour mettre à jour
-			//	le champ DbRowStatus.
-			
-			if (transaction == null)
-			{
-				using (transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
-				{
-					this.UpdateKeyInRow (transaction, table_name, old_key, new_key);
-					transaction.Commit ();
-					return;
-				}
-			}
-			
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			Collections.SqlFields conds  = new Collections.SqlFields ();
 			
-			fields.Add (Tags.ColumnId,     SqlField.CreateConstant (new_key.Id,            DbKey.RawTypeForId));
-			fields.Add (Tags.ColumnStatus, SqlField.CreateConstant (new_key.IntStatus,     DbKey.RawTypeForStatus));
+			fields.Add (Tags.ColumnId,     SqlField.CreateConstant (newKey.Id,             DbKey.RawTypeForId));
+			fields.Add (Tags.ColumnStatus, SqlField.CreateConstant (newKey.IntStatus,      DbKey.RawTypeForStatus));
 			fields.Add (Tags.ColumnRefLog, SqlField.CreateConstant (this.logger.CurrentId, DbKey.RawTypeForId));
 			
-			DbInfrastructure.AddKeyExtraction (conds, table_name, old_key);
+			DbInfrastructure.AddKeyExtraction (conds, tableName, oldKey);
 			
-			transaction.SqlBuilder.UpdateData (table_name, fields, conds);
+			transaction.SqlBuilder.UpdateData (tableName, fields, conds);
 			
-			int num_rows_affected;
+			int numRowsAffected = InvariantConverter.ToInt (this.ExecuteNonQuery (transaction));
 			
-			InvariantConverter.Convert (this.ExecuteNonQuery (transaction), out num_rows_affected);
-			
-			if (num_rows_affected != 1)
+			if (numRowsAffected != 1)
 			{
-				throw new Exceptions.GenericException (this.db_access, string.Format ("Update of row {0} in table {1} produced {2} updates.", old_key, table_name, num_rows_affected));
+				throw new Exceptions.GenericException (this.access, string.Format ("Update of row {0} in table {1} produced {2} updates.", oldKey, tableName, numRowsAffected));
 			}
 		}
-		
-		public void UpdateTableNextId(DbTransaction transaction, DbKey key, DbId next_id)
+
+		/// <summary>
+		/// Updates the next column id in the table definition metadata. This
+		/// is used when a new column is created to derive the column key.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// <param name="nextId">The next column id.</param>
+		internal void UpdateTableNextId(DbTransaction transaction, DbTable table, DbId nextId)
 		{
-			if (transaction == null)
-			{
-				using (transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
-				{
-					this.UpdateTableNextId (transaction, key, next_id);
-					transaction.Commit ();
-					return;
-				}
-			}
-			
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			Collections.SqlFields conds  = new Collections.SqlFields ();
 			
-			fields.Add (Tags.ColumnNextId, SqlField.CreateConstant (next_id, DbKey.RawTypeForId));
+			fields.Add (Tags.ColumnNextId, SqlField.CreateConstant (nextId, DbKey.RawTypeForId));
 			
-			DbInfrastructure.AddKeyExtraction (conds, Tags.TableTableDef, key);
+			DbInfrastructure.AddKeyExtraction (conds, Tags.TableTableDef, table.Key);
 			
 			transaction.SqlBuilder.UpdateData (Tags.TableTableDef, fields, conds);
 			this.ExecuteSilent (transaction);
 		}
-		
-		
-		public System.Collections.ArrayList LoadDbTable(DbTransaction transaction, DbKey key, DbRowSearchMode row_search_mode)
+
+		/// <summary>
+		/// Loads the table definitions based on the metadata table key and the
+		/// specified search mode.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="key">The table key or <c>DbKey.Empty</c> to load all table definitions based on the search mode.</param>
+		/// <param name="rowSearchMode">The search mode (live, deleted, etc.) if the key is set to <c>DbKey.Empty</c>, ignored otherwise.</param>
+		/// <returns>The table definitions.</returns>
+		public List<DbTable> LoadDbTable(DbTransaction transaction, DbKey key, DbRowSearchMode rowSearchMode)
 		{
-			//	Charge les définitions pour la table au moyen d'une requête unique qui va
-			//	aussi retourner les diverses définitions de colonnes.
+			System.Diagnostics.Debug.Assert (transaction != null);
+			
+			//	We will build a join in order to query both the table definition
+			//	and the column definitions with a single SQL request.
 			
 			SqlSelect query = new SqlSelect ();
 			
-			//	Ce qui est propre à la table :
+			//	Table related informations :
 			
 			query.Fields.Add ("T_ID",   SqlField.CreateName ("T_TABLE", Tags.ColumnId));
 			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TABLE", Tags.ColumnName));
 			query.Fields.Add ("T_INFO", SqlField.CreateName ("T_TABLE", Tags.ColumnInfoXml));
 			
-			this.AddLocalisedColumns (query, "TABLE_CAPTION", "T_TABLE", Tags.ColumnCaption);
-			this.AddLocalisedColumns (query, "TABLE_DESCRIPTION", "T_TABLE", Tags.ColumnDescription);
-			
-			//	Ce qui est propre aux colonnes :
+			//	Column related informations :
 			
 			query.Fields.Add ("C_ID",     SqlField.CreateName ("T_COLUMN", Tags.ColumnId));
 			query.Fields.Add ("C_NAME",   SqlField.CreateName ("T_COLUMN", Tags.ColumnName));
 			query.Fields.Add ("C_INFO",   SqlField.CreateName ("T_COLUMN", Tags.ColumnInfoXml));
 			query.Fields.Add ("C_TYPE",   SqlField.CreateName ("T_COLUMN", Tags.ColumnRefType));
-			query.Fields.Add ("C_PARENT", SqlField.CreateName ("T_COLUMN", Tags.ColumnRefParent));
+			query.Fields.Add ("C_TARGET", SqlField.CreateName ("T_COLUMN", Tags.ColumnRefTarget));
 			
-			this.AddLocalisedColumns (query, "COLUMN_CAPTION", "T_COLUMN", Tags.ColumnCaption);
-			this.AddLocalisedColumns (query, "COLUMN_DESCRIPTION", "T_COLUMN", Tags.ColumnDescription);
-			
-			//	Les deux tables utilisées pour l'extraction :
+			//	Tables to query :
 			
 			query.Tables.Add ("T_TABLE",  SqlField.CreateName (Tags.TableTableDef));
 			query.Tables.Add ("T_COLUMN", SqlField.CreateName (Tags.TableColumnDef));
 			
-			if (key == null)
+			if (key.IsEmpty)
 			{
-				//	On extrait toutes les définitions de tables qui correspondent à une version
-				//	'active' (ignore les versions archivées et détruites). Extrait aussi les colonnes
-				//	correspondantes.
+				//	Extract all tables and columns...
 				
-				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TABLE", row_search_mode);
+				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TABLE", rowSearchMode);
 				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_COLUMN", Tags.ColumnRefTable, "T_TABLE");
 			}
 			else
 			{
-				//	On extrait toutes les lignes de T_TABLE qui ont un CR_ID = key, ainsi que
-				//	les lignes correspondantes de T_COLUMN qui ont un CREF_TABLE = key.
+				//	Extract only matching tables...
 				
 				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TABLE", key);
 				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_COLUMN", Tags.ColumnRefTable, key);
 			}
 			
-			System.Data.DataTable data_table = this.ExecuteSqlSelect (transaction, query, 1);
+			System.Data.DataTable dataTable = this.ExecuteSqlSelect (transaction, query, 1);
 			
-			if (this.display_data_set != null)
+			long          rowId   = -1;
+			List<DbTable> tables  = new List<DbTable> ();
+			DbTable		  dbTable = null;
+			bool          recycle = false;
+			
+			//	Analyse the returned rows which are expected to be sorted first
+			//	by table definitions and second by column definitions.
+			
+			foreach (System.Data.DataRow row in dataTable.Rows)
 			{
-				this.display_data_set (this, string.Format ("DbTable.{0}", key), data_table);
-			}
-			
-			System.Data.DataRowCollection rows     = data_table.Rows;
-			long                          row_id   = -1;
-			System.Collections.ArrayList  tables   = new System.Collections.ArrayList ();
-			DbTable						  db_table = null;
-			bool                          recycle  = false;
-			
-			
-			//	Analyse toutes les lignes retournées. On suppose que les lignes sont groupées
-			//	logiquement par tables.
-			
-			for (int i = 0; i < rows.Count; i++)
-			{
-				long current_row_id;
-				System.Data.DataRow data_row = rows[i];
+				long currentRowId = InvariantConverter.ToLong (row["T_ID"]);
 				
-				InvariantConverter.Convert (data_row["T_ID"], out current_row_id);
-				
-				if (row_id != current_row_id)
+				if (rowId != currentRowId)
 				{
-					row_id   = current_row_id;
-					db_table = null;
+					//	Found a new table definition :
 					
-					string table_info = InvariantConverter.ToString (data_row["T_INFO"]);
-					DbKey  table_key  = (key == null) ? new DbKey (row_id) : key;
+					rowId   = currentRowId;
+					dbTable = null;
 					
-					db_table = this.cache_db_tables[table_key];
+					string tableInfo = InvariantConverter.ToString (row["T_INFO"]);
+					string tableName = InvariantConverter.ToString (row["T_NAME"]);
+					DbKey  tableKey  = key.IsEmpty ? new DbKey (rowId) : key;
 					
-					if (db_table == null)
+					dbTable = this.tableCache[tableKey];
+					
+					if (dbTable == null)
 					{
-						db_table = DbTable.CreateTable (table_info);
-						recycle  = false;
+						//	The table is not yet loaded in the cache, so deserialize
+						//	it and initialize it, then put it into the cache :
 						
-						db_table.Attributes.SetAttribute (Tags.Name, InvariantConverter.ToString (data_row["T_NAME"]));
-						db_table.DefineInternalKey (table_key);
+						dbTable = DbTools.DeserializeFromXml<DbTable> (tableInfo);
+						recycle = false;
+
+						dbTable.DefineName (tableName);
+						dbTable.DefineKey (tableKey);
 						
-						this.DefineLocalisedAttributes (data_row, "TABLE_CAPTION", Tags.ColumnCaption, db_table.Attributes, Tags.Caption);
-						this.DefineLocalisedAttributes (data_row, "TABLE_DESCRIPTION", Tags.ColumnDescription, db_table.Attributes, Tags.Description);
-						
-						//	Afin d'éviter de recharger cette table plus tard, on va en prendre note tout de suite; ça permet
-						//	aussi d'éviter des boucles sans fin dans le cas de tables qui ont des références circulaires, car
-						//	la prochaine recherche avec ResolveDbTable s'appliquant à cette table se terminera avec succès.
-						
-						if ((table_key.Status != DbRowStatus.Live) ||
-							(table_key.Status == DbRowStatus.Copied))
+						if ((tableKey.Status == DbRowStatus.Live) ||
+							(tableKey.Status == DbRowStatus.Copied))
 						{
-							this.cache_db_tables[table_key] = db_table;
+							this.tableCache[tableKey] = dbTable;
 						}
 					}
 					else
 					{
-						System.Diagnostics.Debug.WriteLine (string.Format ("Recycling known table {0}.", db_table.Name));
+						System.Diagnostics.Debug.WriteLine (string.Format ("Recycling known table {0}", dbTable.Name));
 						recycle = true;
 					}
 					
-					tables.Add (db_table);
+					tables.Add (dbTable);
 				}
 				
 				if (recycle)
@@ -1550,157 +1766,147 @@ namespace Epsitec.Cresus.Database
 					continue;
 				}
 				
-				//	Chaque ligne contient une définition de colonne.
-				
-				long type_ref_id;
-				long parent_table_ref_id;
-				long column_id;
-				
-				DbColumn db_column = DbColumn.CreateColumn (InvariantConverter.ToString (data_row["C_INFO"]));
-				
-				InvariantConverter.Convert (data_row["C_ID"], out column_id);
-				InvariantConverter.Convert (data_row["C_TYPE"], out type_ref_id);
-				
-				bool has_parent_table = InvariantConverter.Convert (data_row["C_PARENT"], out parent_table_ref_id);
-				
-				db_column.Attributes.SetAttribute (Tags.Name, InvariantConverter.ToString (data_row["C_NAME"]));
-				db_column.DefineInternalKey (new DbKey (column_id));
-				
-				this.DefineLocalisedAttributes (data_row, "COLUMN_CAPTION", Tags.ColumnCaption, db_column.Attributes, Tags.Caption);
-				this.DefineLocalisedAttributes (data_row, "COLUMN_DESCRIPTION", Tags.ColumnDescription, db_column.Attributes, Tags.Description);
-				
-				if (has_parent_table)
+				//	Every row defines one column :
+
+				long   typeDefId  = InvariantConverter.ToLong (row["C_TYPE"]);
+				long   columnId   = InvariantConverter.ToLong (row["C_ID"]);
+				string columnName = InvariantConverter.ToString (row["C_NAME"]);
+				string columnInfo = InvariantConverter.ToString (row["C_INFO"]);
+				string targetName = null;
+
+				if (InvariantConverter.IsNotNull (row["C_TARGET"]))
 				{
-					DbKey   parent_key   = new DbKey (parent_table_ref_id);
-					DbTable parent_table = this.ResolveDbTable (transaction, parent_key);
+					//	Resolve the reference to the target table; this won't
+					//	produce an endless loop if both tables refer to each
+					//	other, as the tables get cached even if they are not
+					//	yet fully initialized...
 					
-//-					System.Diagnostics.Debug.WriteLine (string.Format ("Column {0}.{1} ({4}) refers to table {3} (ID {2}).", db_table.Name, db_column.Name, parent_key.Id, parent_table.Name, db_column.ColumnClass));
-					
-					db_column.DefineParentTableName (parent_table.Name);
+					DbKey   targetKey   = new DbKey (InvariantConverter.ToLong (row["C_TARGET"]));
+					DbTable targetTable = this.ResolveDbTable (transaction, targetKey);
+
+					targetName = targetTable.Name;
 				}
+
+				DbKey     typeDefKey = new DbKey (typeDefId);
+				DbTypeDef typeDef    = this.ResolveDbType (transaction, typeDefKey);
 				
-				DbType db_type = this.ResolveDbType (transaction, new DbKey (type_ref_id));
-				
-				if (db_type == null)
+				if (typeDef == null)
 				{
-					throw new Exceptions.GenericException (this.db_access, string.Format ("Missing type for column {0} in table {1}.", db_column.Name, db_table.Name));
+					throw new Exceptions.GenericException (this.access, string.Format ("Missing type for column '{0}' in table '{1}'", columnName, dbTable.Name));
 				}
+
+				System.Diagnostics.Debug.Assert (typeDef.Key == typeDefKey);
+
+				DbColumn dbColumn = DbTools.DeserializeFromXml<DbColumn> (columnInfo);
+
+				dbColumn.DefineName (columnName);
+				dbColumn.DefineKey (new DbKey (columnId));
+				dbColumn.DefineType (typeDef);
+				dbColumn.DefineTargetTableName (targetName);
 				
-				db_column.SetType (db_type);
-				db_table.Columns.Add (db_column);
+				dbTable.Columns.Add (dbColumn);
 				
-				if (db_column.IsPrimaryKey)
+				if (dbColumn.IsPrimaryKey)
 				{
-					db_table.PrimaryKeys.Add (db_column);
+					dbTable.PrimaryKeys.Add (dbColumn);
 				}
 			}
 			
-			//	TODO: il faut encore initialiser les champs ParentTableName des diverses colonnes
-			//	qui établissent une relation avec une autre table. Pour cela, il faudra faire un
-			//	SELECT dans Tags.TableRelationDef pour les colonnes dont DbColumnClass est parmi
-			//	RefSimpleId/RefLiveId/RefTupleId/RefTupleRevision et déterminer le nom des tables
-			//	cibles, puis appeler DbColumn.DefineParentTableName...
-			
 			return tables;
 		}
-		
-		public System.Collections.ArrayList LoadDbType(DbTransaction transaction, DbKey key, DbRowSearchMode row_search_mode)
+
+		/// <summary>
+		/// Loads the type definitions based on the metadata type key and the
+		/// specified search mode.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="key">The type key or <c>DbKey.Empty</c> to load all type definitions based on the search mode.</param>
+		/// <param name="rowSearchMode">The search mode (live, deleted, etc.) if the key is set to <c>DbKey.Empty</c>, ignored otherwise.</param>
+		/// <returns>The type definitions.</returns>
+		public List<DbTypeDef> LoadDbType(DbTransaction transaction, DbKey typeKey, DbRowSearchMode rowSearchMode)
 		{
+			System.Diagnostics.Debug.Assert (transaction != null);
+			
 			SqlSelect query = new SqlSelect ();
 			
 			query.Fields.Add ("T_ID",   SqlField.CreateName ("T_TYPE", Tags.ColumnId));
 			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TYPE", Tags.ColumnName));
 			query.Fields.Add ("T_INFO", SqlField.CreateName ("T_TYPE", Tags.ColumnInfoXml));
 			
-			this.AddLocalisedColumns (query, "TYPE_CAPTION", "T_TYPE", Tags.ColumnCaption);
-			this.AddLocalisedColumns (query, "TYPE_DESCRIPTION", "T_TYPE", Tags.ColumnDescription);
-			
 			query.Tables.Add ("T_TYPE", SqlField.CreateName (Tags.TableTypeDef));
 			
-			if (key == null)
+			if (typeKey.IsEmpty)
 			{
-				//	On extrait toutes les définitions de types qui correspondent à la version
-				//	'active'.
-				
-				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TYPE", row_search_mode);
+				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TYPE", rowSearchMode);
 			}
 			else
 			{
-				//	Cherche la ligne de la table dont 'CR_ID = key'.
-				
-				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TYPE", key);
+				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TYPE", typeKey);
 			}
 			
-			System.Data.DataTable        data_table = this.ExecuteSqlSelect (transaction, query, 1);
-			System.Collections.ArrayList types      = new System.Collections.ArrayList ();
+			System.Data.DataTable dataTable = this.ExecuteSqlSelect (transaction, query, 1);
+			List<DbTypeDef> types = new List<DbTypeDef> ();
 			
-			foreach (System.Data.DataRow data_row in data_table.Rows)
+			foreach (System.Data.DataRow row in dataTable.Rows)
 			{
-				long type_id;
+				long   typeId   = InvariantConverter.ToLong (row["T_ID"]);
+				string typeName = InvariantConverter.ToString (row["T_NAME"]);
+				string typeInfo = InvariantConverter.ToString (row["T_INFO"]);
 				
-				InvariantConverter.Convert (data_row["T_ID"], out type_id);
-				
-				string type_name = data_row["T_NAME"] as string;
-				string type_info = data_row["T_INFO"] as string;
-				
-				//	A partir de l'information trouvée dans la base, génère l'objet DbType
-				//	qui correspond.
-				
-				DbType type = DbTypeFactory.CreateType (type_info);
-				
-				type.DefineName (type_name);
-				type.DefineInternalKey (new DbKey (type_id));
-				
-				this.DefineLocalisedAttributes (data_row, "TYPE_CAPTION", Tags.ColumnCaption, type.Attributes, Tags.Caption);
-				this.DefineLocalisedAttributes (data_row, "TYPE_DESCRIPTION", Tags.ColumnDescription, type.Attributes, Tags.Description);
-				
-				if (type is DbTypeEnum)
+				DbTypeDef typeDef = this.typeCache[typeKey];
+
+				if (typeDef == null)
 				{
-					DbTypeEnum type_enum = type as DbTypeEnum;
-					DbEnumValue[] values = this.LoadEnumValues (transaction, type_enum);
-					
-					type_enum.DefineValues (values);
+					typeDef = DbTools.DeserializeFromXml<DbTypeDef> (typeInfo);
+
+					typeDef.DefineName (typeName);
+					typeDef.DefineKey (new DbKey (typeId));
+
+					this.typeCache[typeKey] = typeDef;
 				}
 				
-				types.Add (type);
+				types.Add (typeDef);
 			}
 			
 			return types;
 		}
-		
-		
-		public long NextRowIdInTable(DbTransaction transaction, DbKey key)
+
+		/// <summary>
+		/// Gets the next row id in the specified table. This does not allocate
+		/// any keys.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// <returns>The next row id.</returns>
+		internal long NextRowIdInTable(DbTransaction transaction, DbTable table)
 		{
-			return this.NewRowIdInTable (transaction, key, 0);
+			return this.NewRowIdInTable (transaction, table, 0);
 		}
-		
-		public long NewRowIdInTable(DbTransaction transaction, DbKey key, int num_keys)
+
+		/// <summary>
+		/// Gets the first available row id in the specified table and allocates
+		/// room for the specified number of keys.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// <param name="numKeys">The number of keys to allocate.</param>
+		/// <returns>The first row id of a contiguous range.</returns>
+		public long NewRowIdInTable(DbTransaction transaction, DbTable table, int numKeys)
 		{
-			//	Attribue 'num_keys' clef consécutives dans la table spécifiée.
-			
-			System.Diagnostics.Debug.Assert (num_keys >= 0);
-			
-			if (transaction == null)
-			{
-				using (transaction = this.BeginTransaction ())
-				{
-					long id = this.NewRowIdInTable (transaction, key, num_keys);
-					transaction.Commit ();
-					return id;
-				}
-			}
+			System.Diagnostics.Debug.Assert (transaction != null);
+			System.Diagnostics.Debug.Assert (numKeys >= 0);
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			Collections.SqlFields conds  = new Collections.SqlFields ();
 			
-			SqlField field_next_id  = SqlField.CreateName (Tags.ColumnNextId);
-			SqlField field_const_n  = SqlField.CreateConstant (num_keys, DbRawType.Int32);
+			SqlField fieldNextId = SqlField.CreateName (Tags.ColumnNextId);
+			SqlField fieldConstN = SqlField.CreateConstant (numKeys, DbRawType.Int32);
 			
-			fields.Add (Tags.ColumnNextId, new SqlFunction (SqlFunctionType.MathAdd, field_next_id, field_const_n));
+			fields.Add (Tags.ColumnNextId, new SqlFunction (SqlFunctionCode.MathAdd, fieldNextId, fieldConstN));
 			
-			DbInfrastructure.AddKeyExtraction (conds, Tags.TableTableDef, key);
+			DbInfrastructure.AddKeyExtraction (conds, Tags.TableTableDef, table.Key);
 			
-			if (num_keys != 0)
+			if (numKeys > 0)
 			{
 				transaction.SqlBuilder.UpdateData (Tags.TableTableDef, fields, conds);
 				this.ExecuteSilent (transaction);
@@ -1710,498 +1916,400 @@ namespace Epsitec.Cresus.Database
 
 			System.Diagnostics.Debug.Assert (conds.Count == 1);
 
-			query.Fields.Add (field_next_id);
+			query.Fields.Add (fieldNextId);
 			query.Tables.Add (SqlField.CreateName (Tags.TableTableDef));
 			query.Conditions.Add (conds[0]);
 			
 			transaction.SqlBuilder.SelectData (query);
 			
-			long new_row_id;
-			
-			InvariantConverter.Convert (this.ExecuteScalar (transaction), out new_row_id);
-			
-			return new_row_id - num_keys;
-		}
-		
-		
-		protected DbEnumValue[] LoadEnumValues(DbTransaction transaction, DbTypeEnum type_enum)
-		{
-			System.Diagnostics.Debug.Assert (type_enum != null);
-			System.Diagnostics.Debug.Assert (type_enum.Count == 0);
-			
-			SqlSelect query = new SqlSelect ();
-			
-			query.Fields.Add ("E_ID",   SqlField.CreateName ("T_ENUM", Tags.ColumnId));
-			query.Fields.Add ("E_NAME", SqlField.CreateName ("T_ENUM", Tags.ColumnName));
-			query.Fields.Add ("E_INFO", SqlField.CreateName ("T_ENUM", Tags.ColumnInfoXml));
-			
-			this.AddLocalisedColumns (query, "ENUM_CAPTION", "T_ENUM", Tags.ColumnCaption);
-			this.AddLocalisedColumns (query, "ENUM_DESCRIPTION", "T_ENUM", Tags.ColumnDescription);
-			
-			query.Tables.Add ("T_ENUM", SqlField.CreateName (Tags.TableEnumValDef));
-			
-			//	Cherche les lignes de la table dont la colonne CREF_TYPE correspond à l'ID du type.
-			
-			DbInfrastructure.AddKeyExtraction (query.Conditions, "T_ENUM", Tags.ColumnRefType, type_enum.InternalKey);
-			
-			System.Data.DataTable data_table = this.ExecuteSqlSelect (transaction, query, 1);
-			
-			DbEnumValue[] values = new DbEnumValue[data_table.Rows.Count];
-			
-			for (int i = 0; i < data_table.Rows.Count; i++)
-			{
-				System.Data.DataRow data_row = data_table.Rows[i];
-				
-				//	Pour chaque valeur retournée dans la table, il y a une ligne. Cette ligne
-				//	contient toute l'information nécessaire à la création d'une instance de la
-				//	class DbEnumValue :
-				
-				string val_name = InvariantConverter.ToString (data_row["E_NAME"]);
-				string val_id   = InvariantConverter.ToString (data_row["E_ID"]);
-				string val_info = InvariantConverter.ToString (data_row["E_INFO"]);
-				
-				System.Xml.XmlDocument xml = new System.Xml.XmlDocument ();
-				xml.LoadXml (val_info);
-				
-				values[i] = new DbEnumValue (xml.DocumentElement);
-				
-				values[i].Attributes.SetAttribute (Tags.Name, val_name);
-				values[i].Attributes.SetAttribute (Tags.Id, val_id);
-				
-				this.DefineLocalisedAttributes (data_row, "ENUM_CAPTION", Tags.ColumnCaption, values[i].Attributes, Tags.Caption);
-				this.DefineLocalisedAttributes (data_row, "ENUM_DESCRIPTION", Tags.ColumnDescription, values[i].Attributes, Tags.Description);
-			}
-			
-			return values;
-		}
-		
-		
-		protected void DefineLocalisedAttributes(System.Data.DataRow row, string prefix, string column, DbAttributes attributes, string tag)
-		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
-			buffer.Append ("LOC_");
-			buffer.Append (prefix);
-			
-			int initial_length = buffer.Length;
-			
-			string value;
-			
-			for (int i = 0; i < this.localisations.Length; i++)
-			{
-				string locale = this.localisations[i];
-				buffer.Length = initial_length;
-				
-				if (locale.Length > 0)
-				{
-					buffer.Append ("_");
-					buffer.Append (locale);
-				}
-				
-				string index = buffer.ToString ();
-				
-				if (InvariantConverter.Convert (row[index], out value))
-				{
-					attributes.SetAttribute (tag, value, locale);
-				}
-			}
-		}
-		
-		protected void AddLocalisedColumns(SqlSelect query, string prefix, string table, string column)
-		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
-			buffer.Append ("LOC_");
-			buffer.Append (prefix);
-			
-			int initial_length = buffer.Length;
-			
-			for (int i = 0; i < this.localisations.Length; i++)
-			{
-				string locale = this.localisations[i];
-				buffer.Length = initial_length;
-				
-				if (locale.Length > 0)
-				{
-					buffer.Append ("_");
-					buffer.Append (locale);
-				}
-				
-				string index = buffer.ToString ();
-				
-				//	TODO: adapte le nom de la colonne en fonction de la localisation
-				
-				query.Fields.Add (index, SqlField.CreateName (table, column));
-			}
+			return InvariantConverter.ToLong (this.ExecuteScalar (transaction)) - numKeys;
 		}
 
-		
-		protected static void AddKeyExtraction(Collections.SqlFields conditions, string table_name, DbKey key)
+		/// <summary>
+		/// Adds a SELECT extraction condition for a key in a table.
+		/// </summary>
+		/// <param name="conditions">The conditions.</param>
+		/// <param name="tableName">Name of the table.</param>
+		/// <param name="key">The key.</param>
+		private static void AddKeyExtraction(Collections.SqlFields conditions, string tableName, DbKey key)
 		{
-			SqlField name_col_id = SqlField.CreateName (table_name, Tags.ColumnId);
-			SqlField constant_id = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
+			SqlField nameColId  = SqlField.CreateName (tableName, Tags.ColumnId);
+			SqlField constantId = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
 			
-			conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, name_col_id, constant_id));
+			conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, nameColId, constantId));
 		}
 
-		protected static void AddKeyExtraction(Collections.SqlFields conditions, string source_table_name, string source_col_name, string parent_table_name)
+		/// <summary>
+		/// Adds a SELECT extraction condition for a key in a target table
+		/// matching a foreign key defined by the source table and column.
+		/// </summary>
+		/// <param name="conditions">The conditions.</param>
+		/// <param name="sourceTableName">Name of the source table.</param>
+		/// <param name="sourceColumnName">Name of the source column.</param>
+		/// <param name="targetTableName">Name of the target table.</param>
+		private static void AddKeyExtraction(Collections.SqlFields conditions, string sourceTableName, string sourceColumnName, string targetTableName)
 		{
-			SqlField parent_col_id = SqlField.CreateName (parent_table_name, Tags.ColumnId);
-			SqlField source_col_id = SqlField.CreateName (source_table_name, source_col_name);
-			
-			conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, source_col_id, parent_col_id));
-		}
-		
-		protected static void AddKeyExtraction(Collections.SqlFields conditions, string source_table_name, string source_col_name, DbKey key)
-		{
-			SqlField source_col_id = SqlField.CreateName (source_table_name, source_col_name);
-			SqlField constant_id   = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
-			
-			conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, source_col_id, constant_id));
+			SqlField targetColumnId = SqlField.CreateName (targetTableName, Tags.ColumnId);
+			SqlField sourceColumnId = SqlField.CreateName (sourceTableName, sourceColumnName);
+
+			conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, sourceColumnId, targetColumnId));
 		}
 
-		protected static void AddKeyExtraction(Collections.SqlFields conditions, string table_name, DbRowSearchMode search_mode)
+		/// <summary>
+		/// Adds a SELECT extraction condition for a key matching a foreign
+		/// key defined by the source table and column.
+		/// </summary>
+		/// <param name="conditions">The conditions.</param>
+		/// <param name="sourceTableName">Name of the source table.</param>
+		/// <param name="sourceColumnName">Name of the source column.</param>
+		/// <param name="key">The key.</param>
+		private static void AddKeyExtraction(Collections.SqlFields conditions, string sourceTableName, string sourceColumnName, DbKey key)
 		{
-			//	Génère la condition d'extraction pour une recherche selon le statut des lignes
-			//	(voir aussi la définition de DbRowStatus).
+			SqlField sourceColId = SqlField.CreateName (sourceTableName, sourceColumnName);
+			SqlField constantId  = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
 			
-			SqlFunctionType function;
+			conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, sourceColId, constantId));
+		}
+
+		/// <summary>
+		/// Adds a SELECT extraction condition for any keys in a table matching
+		/// the search mode (live, deleted, etc.)
+		/// </summary>
+		/// <param name="conditions">The conditions.</param>
+		/// <param name="tableName">Name of the table.</param>
+		/// <param name="searchMode">The search mode (live, deleted, etc.).</param>
+		private static void AddKeyExtraction(Collections.SqlFields conditions, string tableName, DbRowSearchMode searchMode)
+		{
+			SqlFunctionCode function;
 			DbRowStatus     status;
 			
-			switch (search_mode)
+			//	See the definitions of DbRowStatus and DbRowSearchMode...
+			
+			switch (searchMode)
 			{
-				case DbRowSearchMode.Copied:		status = DbRowStatus.Copied;		function = SqlFunctionType.CompareEqual;	break;
-				case DbRowSearchMode.Live:			status = DbRowStatus.Live;			function = SqlFunctionType.CompareEqual;	break;
-				case DbRowSearchMode.LiveActive:	status = DbRowStatus.ArchiveCopy;	function = SqlFunctionType.CompareLessThan;	break;
-				case DbRowSearchMode.ArchiveCopy:	status = DbRowStatus.ArchiveCopy;	function = SqlFunctionType.CompareEqual;	break;
-				case DbRowSearchMode.LiveAll:		status = DbRowStatus.Deleted;		function = SqlFunctionType.CompareLessThan;	break;
-				case DbRowSearchMode.Deleted:		status = DbRowStatus.Deleted;		function = SqlFunctionType.CompareEqual;	break;
+				case DbRowSearchMode.Copied:		status = DbRowStatus.Copied;		function = SqlFunctionCode.CompareEqual;	break;
+				case DbRowSearchMode.Live:			status = DbRowStatus.Live;			function = SqlFunctionCode.CompareEqual;	break;
+				case DbRowSearchMode.LiveActive:	status = DbRowStatus.ArchiveCopy;	function = SqlFunctionCode.CompareLessThan;	break;
+				case DbRowSearchMode.ArchiveCopy:	status = DbRowStatus.ArchiveCopy;	function = SqlFunctionCode.CompareEqual;	break;
+				case DbRowSearchMode.LiveAll:		status = DbRowStatus.Deleted;		function = SqlFunctionCode.CompareLessThan;	break;
+				case DbRowSearchMode.Deleted:		status = DbRowStatus.Deleted;		function = SqlFunctionCode.CompareEqual;	break;
 				
 				case DbRowSearchMode.All:
 					return;
 				
 				default:
-					throw new System.ArgumentException (string.Format ("Search mode {0} not supported.", search_mode), "search_mode");
+					throw new System.ArgumentException (string.Format ("Search mode {0} not supported", searchMode), "searchMode");
 			}
 			
-			SqlField name_status  = SqlField.CreateName (table_name, Tags.ColumnStatus);
-			SqlField const_status = SqlField.CreateConstant (DbKey.ConvertToIntStatus (status), DbKey.RawTypeForStatus);
+			SqlField nameStatus  = SqlField.CreateName (tableName, Tags.ColumnStatus);
+			SqlField constStatus = SqlField.CreateConstant (DbKey.ConvertToIntStatus (status), DbKey.RawTypeForStatus);
 			
-			conditions.Add (new SqlFunction (function, name_status, const_status));
+			conditions.Add (new SqlFunction (function, nameStatus, constStatus));
 		}
 
-
-		protected virtual void StartUsingDatabase()
+		/// <summary>
+		/// Starts using the database. This loads the global and local settings
+		/// and instanciates the client manager.
+		/// </summary>
+		private void StartUsingDatabase()
 		{
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				this.globals = new Settings.Globals (this, transaction);
 				this.locals  = new Settings.Locals (this, transaction);
 				
-				this.client_id = this.locals.ClientId;
+				this.clientId = this.locals.ClientId;
 				this.SetupLogger (transaction);
+
+				this.clientManager = new DbClientManager ();
+
+				this.clientManager.Attach (this, this.ResolveDbTable (transaction, Tags.TableClientDef));
+				this.clientManager.LoadFromBase (transaction);
 				
 				transaction.Commit ();
 			}
 		}
-		
-		
+
+		/// <summary>
+		/// Sets up the database logger.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		private void SetupLogger(DbTransaction transaction)
 		{
 			this.logger = new DbLogger ();
-			this.logger.DefineClientId (this.client_id);
-			this.logger.Attach (this, this.internal_tables[Tags.TableLog]);
+			this.logger.DefineClientId (this.clientId);
+			this.logger.Attach (this, this.internalTables[Tags.TableLog]);
 			this.logger.ResetCurrentLogId (transaction);
 		}
-		
+
+		/// <summary>
+		/// Sets up the metadata table definitions by filling them with the
+		/// defaults required by an empty database.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		private void SetupTables(DbTransaction transaction)
 		{
-			//	Remplit les tables de gestion (CR_*) avec les valeurs par défaut et
-			//	les définitions initiales de la structure interne de la base vide.
+			long typeKeyId   = DbId.CreateId (1, this.clientId);
+			long tableKeyId  = DbId.CreateId (1, this.clientId);
+			long columnKeyId = DbId.CreateId (1, this.clientId);
+			long clientKeyId = DbId.CreateId (1, this.clientId);
+
+			System.Diagnostics.Debug.Assert (this.logger == null);
 			
-			long type_key_id     = DbId.CreateId (1, this.client_id);
-			long table_key_id    = DbId.CreateId (1, this.client_id);
-			long column_key_id   = DbId.CreateId (1, this.client_id);
-			long enum_val_key_id = DbId.CreateId (1, this.client_id);
-			long client_key_id   = DbId.CreateId (1, this.client_id);
-			
-			//	Initialisation partielle de DbLogger (juste ce qu'il faut pour pouvoir
-			//	accéder à this.logger.CurrentId) :
+			//	Minimal logger definition. We must be able to access to the
+			//	logger's CurrentId property, that's all :
 			
 			this.logger = new DbLogger ();
-			this.logger.DefineClientId (this.client_id);
-			this.logger.DefineLogId (1);
+			this.logger.DefineClientId (this.clientId);
+			this.logger.DefineInitialLogId (1);
 			
 			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId == 1);
 			
-			//	Il faut commencer par finir d'initialiser les descriptions des types, parce
-			//	que les description des colonnes doivent y faire référence.
+			//	First, fill the type table so that we can reference them from
+			//	the column definition table :
 			
-			foreach (DbType type in this.internal_types)
+			foreach (DbTypeDef typeDef in this.internalTypes)
 			{
-				//	Attribue à chaque type interne une clef unique et établit les informations de base
-				//	dans la table de définition des types.
-				
-				type.DefineInternalKey (new DbKey (type_key_id++));
-				this.InsertTypeDefRow (transaction, type);
+				typeDef.DefineKey (new DbKey (typeKeyId++));
+				this.InsertTypeDefRow (transaction, typeDef);
 			}
 			
-			foreach (DbTable table in this.internal_tables)
+			//	Then, fill the table definition table and the column definition
+			//	table :
+			
+			foreach (DbTable table in this.internalTables)
 			{
-				//	Attribue à chaque table interne une clef unique et établit les informations de base
-				//	dans la table de définition des tables.
-				
-				table.DefineInternalKey (new DbKey (table_key_id++));
+				table.DefineKey (new DbKey (tableKeyId++));
 				table.UpdatePrimaryKeyInfo ();
 				
 				this.InsertTableDefRow (transaction, table);
 				
 				foreach (DbColumn column in table.Columns)
 				{
-					//	Pour chaque colonne de la table, établit les informations de base dans la table de
-					//	définition des colonnes.
-					
-					column.DefineInternalKey (new DbKey (column_key_id++));
+					column.DefineKey (new DbKey (columnKeyId++));
 					this.InsertColumnDefRow (transaction, table, column);
 				}
 			}
 			
-			//	Complète encore les informations au sujet des relations :
-			//
-			//	- La description d'une colonne fait référence à la table et à un type.
-			//	- La description d'une valeur d'enum fait référence à un type.
-			//	- La description d'une référence fait elle-même référence à la table
-			//	  source et destination, ainsi qu'à la colonne.
+			//	At last, fill in the relations :
+			//	
+			//	- A column definition refers to its containing table definition.
+			//	- A column definition refers to a type definition.
+			//	- A column definition refers to a target table definition if
+			//	  this is a foreign key.
 			
-			this.UpdateColumnRelation (transaction, Tags.TableColumnDef,   Tags.ColumnRefTable,  Tags.TableTableDef);
-			this.UpdateColumnRelation (transaction, Tags.TableColumnDef,   Tags.ColumnRefType,   Tags.TableTypeDef);
-			this.UpdateColumnRelation (transaction, Tags.TableColumnDef,   Tags.ColumnRefParent, Tags.TableTypeDef);
-			this.UpdateColumnRelation (transaction, Tags.TableEnumValDef,  Tags.ColumnRefType,   Tags.TableTypeDef);
+			this.UpdateColumnRelation (transaction, Tags.TableColumnDef, Tags.ColumnRefTable,  Tags.TableTableDef);
+			this.UpdateColumnRelation (transaction, Tags.TableColumnDef, Tags.ColumnRefType,   Tags.TableTypeDef);
+			this.UpdateColumnRelation (transaction, Tags.TableColumnDef, Tags.ColumnRefTarget, Tags.TableTableDef);
 			
-			this.UpdateTableNextId (transaction, this.internal_tables[Tags.TableTableDef].InternalKey, table_key_id);
-			this.UpdateTableNextId (transaction, this.internal_tables[Tags.TableColumnDef].InternalKey, column_key_id);
-			this.UpdateTableNextId (transaction, this.internal_tables[Tags.TableTypeDef].InternalKey, type_key_id);
-			this.UpdateTableNextId (transaction, this.internal_tables[Tags.TableEnumValDef].InternalKey, enum_val_key_id);
-			this.UpdateTableNextId (transaction, this.internal_tables[Tags.TableClientDef].InternalKey, client_key_id);
+			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableTableDef], tableKeyId);
+			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableColumnDef], columnKeyId);
+			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableTypeDef], typeKeyId);
+			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableClientDef], clientKeyId);
 			
-			//	On ne peut attacher le DbLogger qu'ici, car avant, les tables et les clefs
-			//	indispensables ne sont pas encore utilisables :
+			//	Now that everything is properly defined, we may attach the
+			//	logger to the database :
 			
-			this.logger.Attach (this, this.internal_tables[Tags.TableLog]);
+			this.logger.Attach (this, this.internalTables[Tags.TableLog]);
 			this.logger.CreateInitialEntry (transaction);
 			
 			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId == 1);
-			System.Diagnostics.Debug.Assert (this.NextRowIdInTable (transaction, this.internal_tables[Tags.TableLog].InternalKey) == DbId.CreateId (2, this.client_id));
+			System.Diagnostics.Debug.Assert (this.NextRowIdInTable (transaction, this.internalTables[Tags.TableLog]) == DbId.CreateId (2, this.clientId));
 		}
-		
-		
-		protected static void SetCategory(DbColumn[] columns, DbElementCat cat)
-		{
-			for (int i = 0; i < columns.Length; i++)
-			{
-				columns[i].DefineCategory (cat);
-			}
-		}
-		
-		
-		protected void UpdateColumnRelation(DbTransaction transaction, DbKey source_table_key, DbKey source_column_key, DbKey parent_table_key)
+
+		/// <summary>
+		/// Updates the column relation information. This will record the relation
+		/// in the CR_COLUMN_DEF table by specifying the target table for a given
+		/// source column.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="sourceTableKey">The source table key.</param>
+		/// <param name="sourceColumnKey">The source column key.</param>
+		/// <param name="targetTableKey">The target table key.</param>
+		private void UpdateColumnRelation(DbTransaction transaction, DbKey sourceTableKey, DbKey sourceColumnKey, DbKey targetTableKey)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 			
-			System.Diagnostics.Debug.Assert (source_table_key  != null);
-			System.Diagnostics.Debug.Assert (source_column_key != null);
-			System.Diagnostics.Debug.Assert (parent_table_key  != null);
+			System.Diagnostics.Debug.Assert (sourceTableKey  != null);
+			System.Diagnostics.Debug.Assert (sourceColumnKey != null);
+			System.Diagnostics.Debug.Assert (targetTableKey  != null);
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			Collections.SqlFields conds  = new Collections.SqlFields ();
 			
-			fields.Add (Tags.ColumnRefParent, SqlField.CreateConstant (parent_table_key.Id, DbKey.RawTypeForId));
+			fields.Add (Tags.ColumnRefTarget, SqlField.CreateConstant (targetTableKey.Id, DbKey.RawTypeForId));
 
-			DbInfrastructure.AddKeyExtraction (conds, Tags.TableColumnDef, source_column_key);
+			DbInfrastructure.AddKeyExtraction (conds, Tags.TableColumnDef, sourceColumnKey);
 			
 			transaction.SqlBuilder.UpdateData (Tags.TableColumnDef, fields, conds);
 			this.ExecuteSilent (transaction);
 		}
-		
-		protected void UpdateColumnRelation(DbTransaction transaction, string src_table_name, string src_column_name, string parent_table_name)
+
+		/// <summary>
+		/// Updates the column relation information. This will record the relation
+		/// in the CR_COLUMN_DEF table by specifying the target table for a given
+		/// source column.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="sourceTableName">Name of the source table.</param>
+		/// <param name="sourceColumnName">Name of the source column.</param>
+		/// <param name="targetTableName">Name of the target table.</param>
+		private void UpdateColumnRelation(DbTransaction transaction, string sourceTableName, string sourceColumnName, string targetTableName)
 		{
-			DbTable  source = this.internal_tables[src_table_name];
-			DbTable  parent = this.internal_tables[parent_table_name];
-			DbColumn column = source.Columns[src_column_name];
+			DbTable  source = this.internalTables[sourceTableName];
+			DbTable  target = this.internalTables[targetTableName];
+			DbColumn column = source.Columns[sourceColumnName];
 			
-			DbKey src_table_key    = source.InternalKey;
-			DbKey src_column_key   = column.InternalKey;
-			DbKey parent_table_key = parent.InternalKey;
-			
-			this.UpdateColumnRelation (transaction, src_table_key, src_column_key, parent_table_key);
+			this.UpdateColumnRelation (transaction, source.Key, column.Key, target.Key);
 		}
-				
-		
-		protected void InsertTypeDefRow(DbTransaction transaction, DbType type)
+
+
+		/// <summary>
+		/// Inserts a type definition row into the CR_TYPE_DEF table.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="typeDef">The type definition.</param>
+		private void InsertTypeDefRow(DbTransaction transaction, DbTypeDef typeDef)
 		{
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
-			
-			DbTable type_def = this.internal_tables[Tags.TableTypeDef];
-			
-			//	Insère une ligne dans la table de définition des types.
-			
-			Collections.SqlFields fields = new Collections.SqlFields ();
-			
-			fields.Add (type_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, type.InternalKey.Id));
-			fields.Add (type_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, type.InternalKey.IntStatus));
-			fields.Add (type_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.logger.CurrentId));
-			fields.Add (type_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, type.Name));
-			fields.Add (type_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTypeFactory.SerializeToXml (type, false)));
-			
-			//	TODO: Initializer les colonnes descriptives
-			
-			transaction.SqlBuilder.InsertData (type_def.CreateSqlName (), fields);
-			this.ExecuteSilent (transaction);
-		}
-		
-		protected void InsertEnumValueDefRow(DbTransaction transaction, DbType type, DbEnumValue value)
-		{
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
 			System.Diagnostics.Debug.Assert (transaction != null);
-			
-			DbTable enum_def = this.internal_tables[Tags.TableEnumValDef];
-			
-			//	Insère une ligne dans la table de définition des énumérations.
-			
-			Collections.SqlFields fields = new Collections.SqlFields ();
-			
-			fields.Add (enum_def.Columns[Tags.ColumnId]	     .CreateSqlField (this.type_converter, value.InternalKey.Id));
-			fields.Add (enum_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, value.InternalKey.IntStatus));
-			fields.Add (enum_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.logger.CurrentId));
-			fields.Add (enum_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, value.Name));
-			fields.Add (enum_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbEnumValue.SerializeToXml (value, false)));
-			fields.Add (enum_def.Columns[Tags.ColumnRefType] .CreateSqlField (this.type_converter, type.InternalKey.Id));
-			
-			//	TODO: Initialiser les colonnes descriptives
-			
-			transaction.SqlBuilder.InsertData (enum_def.CreateSqlName (), fields);
-			this.ExecuteSilent (transaction);
-		}
-		
-		protected void InsertTableDefRow(DbTransaction transaction, DbTable table)
-		{
 			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
-			System.Diagnostics.Debug.Assert (transaction != null);
 			
-			DbTable table_def = this.internal_tables[Tags.TableTableDef];
-			
-			//	Insère une ligne dans la table de définition des tables.
+			DbTable typeDefTable = this.internalTables[Tags.TableTypeDef];
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
+
+			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnId],      typeDef.Key.Id));
+			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnStatus],  typeDef.Key.IntStatus));
+			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnRefLog],  this.logger.CurrentId));
+			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnName],    typeDef.Name));
+			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (typeDef)));
 			
-			fields.Add (table_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, table.InternalKey.Id));
-			fields.Add (table_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, table.InternalKey.IntStatus));
-			fields.Add (table_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.logger.CurrentId));
-			fields.Add (table_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, table.Name));
-			fields.Add (table_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTable.SerializeToXml (table, false)));
-			fields.Add (table_def.Columns[Tags.ColumnNextId]  .CreateSqlField (this.type_converter, DbId.CreateId (1, this.client_id)));
-			
-			//	TODO: Initialiser les colonnes descriptives
-			
-			transaction.SqlBuilder.InsertData (table_def.CreateSqlName (), fields);
+			transaction.SqlBuilder.InsertData (typeDefTable.GetSqlName (), fields);
 			this.ExecuteSilent (transaction);
 		}
-		
-		protected void InsertColumnDefRow(DbTransaction transaction, DbTable table, DbColumn column)
+
+		/// <summary>
+		/// Inserts a table definition row into the CR_TABLE_DEF table.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table definition.</param>
+		private void InsertTableDefRow(DbTransaction transaction, DbTable table)
 		{
+			System.Diagnostics.Debug.Assert (transaction != null);
 			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
-			System.Diagnostics.Debug.Assert (transaction != null);
 			
-			DbTable column_def = this.internal_tables[Tags.TableColumnDef];
-			
-			//	Insère une ligne dans la table de définition des colonnes.
+			DbTable tableDefTable = this.internalTables[Tags.TableTableDef];
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
+
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnId],		table.Key.Id));
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnStatus],  table.Key.IntStatus));
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnRefLog],  this.logger.CurrentId));
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnName],    table.Name));
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (table)));
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnNextId],  DbId.CreateId (1, this.clientId)));
 			
-			fields.Add (column_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, column.InternalKey.Id));
-			fields.Add (column_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, column.InternalKey.IntStatus));
-			fields.Add (column_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.logger.CurrentId));
-			fields.Add (column_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, column.Name));
-			fields.Add (column_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbColumn.SerializeToXml (column, false)));
-			fields.Add (column_def.Columns[Tags.ColumnRefTable].CreateSqlField (this.type_converter, table.InternalKey.Id));
-			fields.Add (column_def.Columns[Tags.ColumnRefType] .CreateSqlField (this.type_converter, column.Type.InternalKey.Id));
-			
-			//	TODO: Initialiser les colonnes descriptives
-			
-			transaction.SqlBuilder.InsertData (column_def.CreateSqlName (), fields);
+			transaction.SqlBuilder.InsertData (tableDefTable.GetSqlName (), fields);
 			this.ExecuteSilent (transaction);
 		}
-		
-		
-		protected virtual void Dispose(bool disposing)
+
+		/// <summary>
+		/// Inserts a column definition row into the CR_COLUMN_DEF table. This
+		/// does not generate the relation between the column and the target
+		/// table, if any.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table definition.</param>
+		/// <param name="column">The column definition.</param>
+		private void InsertColumnDefRow(DbTransaction transaction, DbTable table, DbColumn column)
 		{
-			if (disposing)
-			{
-				if (this.global_lock != null)
-				{
-					this.global_lock.ReleaseLock ();
-					this.global_lock = null;
-				}
-				
-				if (this.logger != null)
-				{
-					this.logger.Detach ();
-					this.logger = null;
-				}
-				
-				if (this.db_abstraction != null)
-				{
-					this.db_abstraction.Dispose ();
-					
-					System.Diagnostics.Debug.Assert (this.db_abstraction.IsConnectionOpen == false);
-					
-					this.db_abstraction = null;
-					this.sql_engine     = null;
-					this.type_converter = null;
-				}
-				
-				System.Diagnostics.Debug.Assert (this.sql_engine == null);
-				System.Diagnostics.Debug.Assert (this.type_converter == null);
-			}
+			System.Diagnostics.Debug.Assert (transaction != null);
+			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
+			
+			DbTable columnDefTable = this.internalTables[Tags.TableColumnDef];
+			
+			Collections.SqlFields fields = new Collections.SqlFields ();
+
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnId],       column.Key.Id));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnStatus],   column.Key.IntStatus));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefLog],   this.logger.CurrentId));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnName],     column.Name));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnInfoXml],  DbTools.GetCompactXml (column)));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefTable], table.Key.Id));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefType],  column.Type.Key.Id));
+			
+			transaction.SqlBuilder.InsertData (columnDefTable.GetSqlName (), fields);
+			this.ExecuteSilent (transaction);
 		}
-		
-		
-		#region Initialisation
-		protected void InitializeDatabaseAbstraction()
-		{
-			this.types = new TypeHelper (this);
-			
-			this.db_abstraction = this.CreateDbAbstraction ();
-			
-			this.sql_engine  = this.db_abstraction.SqlEngine;
-			
-			System.Diagnostics.Debug.Assert (this.sql_engine != null);
-			
-			this.type_converter = this.db_abstraction.Factory.TypeConverter;
-			
-			System.Diagnostics.Debug.Assert (this.type_converter != null);
-			
-			this.db_abstraction.SqlBuilder.AutoClear = true;
-		}
-		#endregion
-		
+
 		#region IDisposable Members
+
 		public void Dispose()
 		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
+			if (this.globalLock != null)
+			{
+				this.globalLock.ReleaseLock ();
+				this.globalLock = null;
+			}
+			
+			if (this.logger != null)
+			{
+				this.logger.Detach ();
+				this.logger = null;
+			}
+			
+			if (this.abstraction != null)
+			{
+				this.abstraction.Dispose ();
+				
+				System.Diagnostics.Debug.Assert (this.abstraction.IsConnectionOpen == false);
+				
+				this.abstraction = null;
+				this.sqlEngine   = null;
+				this.converter   = null;
+			}
+			
+			System.Diagnostics.Debug.Assert (this.sqlEngine == null);
+			System.Diagnostics.Debug.Assert (this.converter == null);
 		}
+
+		#endregion
+
+		#region Initialisation
+
+		/// <summary>
+		/// Initializes the database abstraction.
+		/// </summary>
+		private void InitializeDatabaseAbstraction()
+		{
+			this.types       = new TypeHelper (this);
+			this.abstraction = this.CreateDatabaseAbstraction ();
+			this.sqlEngine   = this.abstraction.SqlEngine;
+			this.converter   = this.abstraction.Factory.TypeConverter;
+
+			System.Diagnostics.Debug.Assert (this.sqlEngine != null);
+			System.Diagnostics.Debug.Assert (this.converter != null);
+			
+			this.abstraction.SqlBuilder.AutoClear = true;
+		}
+
 		#endregion
 		
 		#region BootHelper Class
-		public class BootHelper
+		
+		private sealed class BootHelper
 		{
 			public BootHelper(DbInfrastructure infrastructure, DbTransaction transaction)
 			{
 				this.infrastructure = infrastructure;
 				this.transaction    = transaction;
+
+				System.Diagnostics.Debug.Assert (this.infrastructure.types.KeyId.IsNullable == false);
+				System.Diagnostics.Debug.Assert (this.infrastructure.types.KeyStatus.IsNullable == false);
+				System.Diagnostics.Debug.Assert (this.infrastructure.types.NullableKeyId.IsNullable == true);
+				System.Diagnostics.Debug.Assert (this.infrastructure.types.Name.IsNullable == false);
+				System.Diagnostics.Debug.Assert (this.infrastructure.types.InfoXml.IsNullable == false);
 			}
-			
 			
 			public void CreateTableTableDef()
 			{
@@ -2209,16 +2317,14 @@ namespace Epsitec.Cresus.Database
 				DbTable    table   = new DbTable (Tags.TableTableDef);
 				DbColumn[] columns = new DbColumn[]
 					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		 Nullable.No,  DbColumnClass.KeyId),
-						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 Nullable.No,  DbColumnClass.KeyStatus),
-						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 Nullable.No,  DbColumnClass.RefInternal),
-						new DbColumn (Tags.ColumnName,		  types.Name,		 Nullable.No,  DbColumnClass.Data),
-						new DbColumn (Tags.ColumnCaption,	  types.Caption,	 Nullable.Yes, DbColumnClass.Data, DbColumnLocalisation.Default),
-						new DbColumn (Tags.ColumnDescription, types.Description, Nullable.Yes, DbColumnClass.Data, DbColumnLocalisation.Default),
-						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 Nullable.No,  DbColumnClass.Data),
-						new DbColumn (Tags.ColumnNextId,	  types.KeyId,		 Nullable.No,  DbColumnClass.RefInternal)
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		 DbColumnClass.KeyId),
+						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 DbColumnClass.KeyStatus),
+						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 DbColumnClass.RefInternal),
+						new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data),
+						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data),
+						new DbColumn (Tags.ColumnNextId,	  types.KeyId,		 DbColumnClass.RefInternal)
 					};
-				
+
 				this.CreateTable (table, columns, DbReplicationMode.Manual);
 			}
 			
@@ -2228,16 +2334,14 @@ namespace Epsitec.Cresus.Database
 				DbTable    table   = new DbTable (Tags.TableColumnDef);
 				DbColumn[] columns = new DbColumn[]
 					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		 Nullable.No,  DbColumnClass.KeyId),
-						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 Nullable.No,  DbColumnClass.KeyStatus),
-						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 Nullable.No,  DbColumnClass.RefInternal),
-						new DbColumn (Tags.ColumnName,		  types.Name,		 Nullable.No,  DbColumnClass.Data),
-						new DbColumn (Tags.ColumnCaption,	  types.Caption,	 Nullable.Yes, DbColumnClass.Data, DbColumnLocalisation.Default),
-						new DbColumn (Tags.ColumnDescription, types.Description, Nullable.Yes, DbColumnClass.Data, DbColumnLocalisation.Default),
-						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 Nullable.No,  DbColumnClass.Data),
-						new DbColumn (Tags.ColumnRefTable,	  types.KeyId,       Nullable.No,  DbColumnClass.RefId),
-						new DbColumn (Tags.ColumnRefType,	  types.KeyId,       Nullable.No,  DbColumnClass.RefId),
-						new DbColumn (Tags.ColumnRefParent,	  types.KeyId,       Nullable.Yes, DbColumnClass.RefId)
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		   DbColumnClass.KeyId),
+						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	   DbColumnClass.KeyStatus),
+						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		   DbColumnClass.RefInternal),
+						new DbColumn (Tags.ColumnName,		  types.Name,		   DbColumnClass.Data),
+						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	   DbColumnClass.Data),
+						new DbColumn (Tags.ColumnRefTable,	  types.KeyId,         DbColumnClass.RefId),
+						new DbColumn (Tags.ColumnRefType,	  types.KeyId,         DbColumnClass.RefId),
+						new DbColumn (Tags.ColumnRefTarget,	  types.NullableKeyId, DbColumnClass.RefId)
 					};
 				
 				this.CreateTable (table, columns, DbReplicationMode.Manual);
@@ -2249,32 +2353,11 @@ namespace Epsitec.Cresus.Database
 				DbTable    table   = new DbTable (Tags.TableTypeDef);
 				DbColumn[] columns = new DbColumn[]
 					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		 Nullable.No,  DbColumnClass.KeyId),
-						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 Nullable.No,  DbColumnClass.KeyStatus),
-						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 Nullable.No,  DbColumnClass.RefInternal),
-						new DbColumn (Tags.ColumnName,		  types.Name,		 Nullable.No,  DbColumnClass.Data),
-						new DbColumn (Tags.ColumnCaption,	  types.Caption,	 Nullable.Yes, DbColumnClass.Data, DbColumnLocalisation.Default),
-						new DbColumn (Tags.ColumnDescription, types.Description, Nullable.Yes, DbColumnClass.Data, DbColumnLocalisation.Default),
-						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 Nullable.No,  DbColumnClass.Data)
-					};
-				
-				this.CreateTable (table, columns, DbReplicationMode.Manual);
-			}
-			
-			public void CreateTableEnumValDef()
-			{
-				TypeHelper types   = this.infrastructure.types;
-				DbTable    table   = new DbTable (Tags.TableEnumValDef);
-				DbColumn[] columns = new DbColumn[]
-					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		 Nullable.No,  DbColumnClass.KeyId),
-						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 Nullable.No,  DbColumnClass.KeyStatus),
-						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 Nullable.No,  DbColumnClass.RefInternal),
-						new DbColumn (Tags.ColumnName,		  types.Name,		 Nullable.No,  DbColumnClass.Data),
-						new DbColumn (Tags.ColumnCaption,	  types.Caption,	 Nullable.Yes, DbColumnClass.Data, DbColumnLocalisation.Default),
-						new DbColumn (Tags.ColumnDescription, types.Description, Nullable.Yes, DbColumnClass.Data, DbColumnLocalisation.Default),
-						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 Nullable.No,  DbColumnClass.Data),
-						new DbColumn (Tags.ColumnRefType,	  types.KeyId,       Nullable.No,  DbColumnClass.RefId)
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		 DbColumnClass.KeyId),
+						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 DbColumnClass.KeyStatus),
+						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 DbColumnClass.RefInternal),
+						new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data),
+						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data)
 					};
 				
 				this.CreateTable (table, columns, DbReplicationMode.Manual);
@@ -2286,12 +2369,11 @@ namespace Epsitec.Cresus.Database
 				DbTable    table   = new DbTable (Tags.TableLog);
 				DbColumn[] columns = new DbColumn[]
 					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		 Nullable.No,  DbColumnClass.KeyId),
-						new DbColumn (Tags.ColumnDateTime,	  types.DateTime,	 Nullable.No,  DbColumnClass.Data)
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		DbColumnClass.KeyId),
+						new DbColumn (Tags.ColumnDateTime,	  types.DateTime,	DbColumnClass.Data)
 					};
 				
-				//	TODO: ajouter ici une colonne définissant la nature du changement (et l'utilisateur
-				//	qui en est la cause).
+				//	TODO: add a column recording the nature of the change and the author of the change...
 				
 				this.CreateTable (table, columns, DbReplicationMode.Manual);
 			}
@@ -2302,15 +2384,15 @@ namespace Epsitec.Cresus.Database
 				DbTable    table   = new DbTable (Tags.TableRequestQueue);
 				DbColumn[] columns = new DbColumn[]
 					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		 Nullable.No,  DbColumnClass.KeyId),
-						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 Nullable.No,  DbColumnClass.KeyStatus),
-						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 Nullable.No,  DbColumnClass.RefInternal),
-						new DbColumn (Tags.ColumnReqExState,  types.ReqExState,  Nullable.No,  DbColumnClass.Data),
-						new DbColumn (Tags.ColumnReqData,	  types.ReqRawData,	 Nullable.No,  DbColumnClass.Data),
-						new DbColumn (Tags.ColumnDateTime,    types.DateTime,    Nullable.No,  DbColumnClass.Data)
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		DbColumnClass.KeyId),
+						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	DbColumnClass.KeyStatus),
+						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		DbColumnClass.RefInternal),
+						new DbColumn (Tags.ColumnReqExState,  types.ReqExecState, DbColumnClass.Data),
+						new DbColumn (Tags.ColumnReqData,	  types.ReqData,	DbColumnClass.Data),
+						new DbColumn (Tags.ColumnDateTime,    types.DateTime,   DbColumnClass.Data)
 					};
 				
-				this.CreateTable (table, columns, DbReplicationMode.Private);
+				this.CreateTable (table, columns, DbReplicationMode.None);
 			}
 			
 			public void CreateTableClientDef()
@@ -2319,52 +2401,134 @@ namespace Epsitec.Cresus.Database
 				DbTable    table   = new DbTable (Tags.TableClientDef);
 				DbColumn[] columns = new DbColumn[]
 					{
-						new DbColumn (Tags.ColumnId,			types.KeyId,	 Nullable.No,  DbColumnClass.KeyId),
-						new DbColumn (Tags.ColumnStatus,		types.KeyStatus, Nullable.No,  DbColumnClass.KeyStatus),
-						new DbColumn (Tags.ColumnRefLog,		types.KeyId,	 Nullable.No,  DbColumnClass.RefInternal),
-						new DbColumn (Tags.ColumnClientId,		types.KeyId,	 Nullable.No,  DbColumnClass.Data),
-						new DbColumn (Tags.ColumnClientName,	types.Name,      Nullable.No,  DbColumnClass.Data),
-						new DbColumn (Tags.ColumnClientSync,	types.KeyId,	 Nullable.No,  DbColumnClass.Data),
-						new DbColumn (Tags.ColumnClientCreDate,	types.DateTime,  Nullable.No,  DbColumnClass.Data),
-						new DbColumn (Tags.ColumnClientConDate,	types.DateTime,  Nullable.No,  DbColumnClass.Data)
+						new DbColumn (Tags.ColumnId,			types.KeyId,	 DbColumnClass.KeyId),
+						new DbColumn (Tags.ColumnStatus,		types.KeyStatus, DbColumnClass.KeyStatus),
+						new DbColumn (Tags.ColumnRefLog,		types.KeyId,	 DbColumnClass.RefInternal),
+						new DbColumn (Tags.ColumnClientId,		types.KeyId,	 DbColumnClass.Data),
+						new DbColumn (Tags.ColumnClientName,	types.Name,      DbColumnClass.Data),
+						new DbColumn (Tags.ColumnClientSync,	types.KeyId,	 DbColumnClass.Data),
+						new DbColumn (Tags.ColumnClientCreDate,	types.DateTime,  DbColumnClass.Data),
+						new DbColumn (Tags.ColumnClientConDate,	types.DateTime,  DbColumnClass.Data)
 					};
 				
-				this.CreateTable (table, columns, DbReplicationMode.Private);
+				this.CreateTable (table, columns, DbReplicationMode.None);
 			}
 			
-			
-			private void CreateTable(DbTable table, DbColumn[] columns, DbReplicationMode replication_mode)
+			private void CreateTable(DbTable table, DbColumn[] columns, DbReplicationMode replicationMode)
 			{
-				DbInfrastructure.SetCategory (columns, DbElementCat.Internal);
+				for (int i = 0; i < columns.Length; i++)
+				{
+					columns[i].DefineCategory (DbElementCat.Internal);
+				}
 				
 				table.Columns.AddRange (columns);
 				
 				table.DefineCategory (DbElementCat.Internal);
 				table.DefinePrimaryKey (columns[0]);
-				table.DefineReplicationMode (replication_mode);
+				table.DefineReplicationMode (replicationMode);
 				
-				this.infrastructure.internal_tables.Add (table);
+				this.infrastructure.internalTables.Add (table);
 				
-				SqlTable sql_table = table.CreateSqlTable (this.infrastructure.type_converter);
-				this.infrastructure.DefaultSqlBuilder.InsertTable (sql_table);
+				SqlTable sqlTable = table.CreateSqlTable (this.infrastructure.converter);
+				this.infrastructure.DefaultSqlBuilder.InsertTable (sqlTable);
 				this.infrastructure.ExecuteSilent (this.transaction);
 			}
 		
-			
 			private DbInfrastructure			infrastructure;
 			private DbTransaction				transaction;
 		}
+		
 		#endregion
 		
 		#region TypeHelper Class
-		protected class TypeHelper
+		
+		private sealed class TypeHelper
 		{
 			public TypeHelper(DbInfrastructure infrastructure)
 			{
 				this.infrastructure = infrastructure;
 			}
 			
-			
+			public DbTypeDef					KeyId
+			{
+				get
+				{
+					return this.numTypeKeyId;
+				}
+			}
+
+			public DbTypeDef					NullableKeyId
+			{
+				get
+				{
+					return this.numTypeNullableKeyId;
+				}
+			}
+
+			public DbTypeDef					KeyStatus
+			{
+				get
+				{
+					return this.numTypeKeyStatus;
+				}
+			}
+
+			public DbTypeDef					ReqExecState
+			{
+				get
+				{
+					return this.numTypeReqExState;
+				}
+			}
+
+			public DbTypeDef					DateTime
+			{
+				get
+				{
+					return this.otherTypeDateTime;
+				}
+			}
+
+			public DbTypeDef					ReqData
+			{
+				get
+				{
+					return this.otherTypeReqData;
+				}
+			}
+
+			public DbTypeDef					Name
+			{
+				get
+				{
+					return this.strTypeName;
+				}
+			}
+
+			public DbTypeDef					InfoXml
+			{
+				get
+				{
+					return this.strTypeInfoXml;
+				}
+			}
+
+			public DbTypeDef					DictKey
+			{
+				get
+				{
+					return this.strTypeDictKey;
+				}
+			}
+
+			public DbTypeDef					DictValue
+			{
+				get
+				{
+					return this.strTypeDictValue;
+				}
+			}
+
 			public void RegisterTypes()
 			{
 				this.InitializeNumTypes ();
@@ -2376,229 +2540,132 @@ namespace Epsitec.Cresus.Database
 			
 			public void ResolveTypes(DbTransaction transaction)
 			{
-				this.num_type_key_id       = this.infrastructure.ResolveDbType (transaction, Tags.TypeKeyId) as DbTypeNum;
-				this.num_type_key_status   = this.infrastructure.ResolveDbType (transaction, Tags.TypeKeyStatus) as DbTypeNum;
-				this.num_type_req_ex_state = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqExState) as DbTypeNum;
+				this.numTypeKeyId         = this.infrastructure.ResolveDbType (transaction, Tags.TypeKeyId);
+				this.numTypeNullableKeyId = this.infrastructure.ResolveDbType (transaction, Tags.TypeNullableKeyId);
+				this.numTypeKeyStatus     = this.infrastructure.ResolveDbType (transaction, Tags.TypeKeyStatus);
+				this.numTypeReqExState    = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqExState);
 				
-				this.str_type_name        = this.infrastructure.ResolveDbType (transaction, Tags.TypeName) as DbTypeString;
-				this.str_type_caption     = this.infrastructure.ResolveDbType (transaction, Tags.TypeCaption) as DbTypeString;
-				this.str_type_description = this.infrastructure.ResolveDbType (transaction, Tags.TypeDescription) as DbTypeString;
-				this.str_type_info_xml    = this.infrastructure.ResolveDbType (transaction, Tags.TypeInfoXml) as DbTypeString;
-				this.str_type_dict_key    = this.infrastructure.ResolveDbType (transaction, Tags.TypeDictKey) as DbTypeString;
-				this.str_type_dict_value  = this.infrastructure.ResolveDbType (transaction, Tags.TypeDictValue) as DbTypeString;
+				this.strTypeName          = this.infrastructure.ResolveDbType (transaction, Tags.TypeName);
+				this.strTypeInfoXml       = this.infrastructure.ResolveDbType (transaction, Tags.TypeInfoXml);
+				this.strTypeDictKey       = this.infrastructure.ResolveDbType (transaction, Tags.TypeDictKey);
+				this.strTypeDictValue     = this.infrastructure.ResolveDbType (transaction, Tags.TypeDictValue);
 				
-				this.d_t_type_datetime    = this.infrastructure.ResolveDbType (transaction, Tags.TypeDateTime) as DbTypeDateTime;
-				this.bin_type_raw_data    = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqData) as DbTypeByteArray;
+				this.otherTypeDateTime    = this.infrastructure.ResolveDbType (transaction, Tags.TypeDateTime);
+				this.otherTypeReqData     = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqData);
 				
-				this.infrastructure.internal_types.Add (this.num_type_key_id);
-				this.infrastructure.internal_types.Add (this.num_type_key_status);
-				this.infrastructure.internal_types.Add (this.num_type_req_ex_state);
+				this.infrastructure.internalTypes.Add (this.numTypeKeyId);
+				this.infrastructure.internalTypes.Add (this.numTypeNullableKeyId);
+				this.infrastructure.internalTypes.Add (this.numTypeKeyStatus);
+				this.infrastructure.internalTypes.Add (this.numTypeReqExState);
 				
-				this.infrastructure.internal_types.Add (this.str_type_name);
-				this.infrastructure.internal_types.Add (this.str_type_caption);
-				this.infrastructure.internal_types.Add (this.str_type_description);
-				this.infrastructure.internal_types.Add (this.str_type_info_xml);
-				this.infrastructure.internal_types.Add (this.str_type_dict_key);
-				this.infrastructure.internal_types.Add (this.str_type_dict_value);
+				this.infrastructure.internalTypes.Add (this.strTypeName);
+				this.infrastructure.internalTypes.Add (this.strTypeInfoXml);
+				this.infrastructure.internalTypes.Add (this.strTypeDictKey);
+				this.infrastructure.internalTypes.Add (this.strTypeDictValue);
 				
-				this.infrastructure.internal_types.Add (this.d_t_type_datetime);
-				this.infrastructure.internal_types.Add (this.bin_type_raw_data);
+				this.infrastructure.internalTypes.Add (this.otherTypeDateTime);
+				this.infrastructure.internalTypes.Add (this.otherTypeReqData);
 				
 				this.AssertAllTypesReady ();
 			}
 
-
-			void InitializeNumTypes()
+			private void InitializeNumTypes()
 			{
-				this.num_type_key_id       = new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId),     Tags.Name + "=" + Tags.TypeKeyId);
-				this.num_type_key_status   = new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForStatus), Tags.Name + "=" + Tags.TypeKeyStatus);
-				this.num_type_req_ex_state = new DbTypeNum (new DbNumDef (1, 0, 0M, 9M),                   Tags.Name + "=" + Tags.TypeReqExState);
+				this.numTypeKeyId         = new DbTypeDef (Res.Types.Num.KeyId);
+				this.numTypeNullableKeyId = new DbTypeDef (Res.Types.Num.NullableKeyId);
+				this.numTypeKeyStatus     = new DbTypeDef (Res.Types.Num.KeyStatus);
+				this.numTypeReqExState    = new DbTypeDef (Res.Types.Num.ReqExecState);
 			
-				this.infrastructure.internal_types.Add (this.num_type_key_id);
-				this.infrastructure.internal_types.Add (this.num_type_key_status);
-				this.infrastructure.internal_types.Add (this.num_type_req_ex_state);
+				this.infrastructure.internalTypes.Add (this.numTypeKeyId);
+				this.infrastructure.internalTypes.Add (this.numTypeNullableKeyId);
+				this.infrastructure.internalTypes.Add (this.numTypeKeyStatus);
+				this.infrastructure.internalTypes.Add (this.numTypeReqExState);
 			}
 
-			void InitializeOtherTypes()
+			private void InitializeOtherTypes()
 			{
-				this.d_t_type_datetime   = new DbTypeDateTime (Tags.Name + "=" + Tags.TypeDateTime);
-				this.bin_type_raw_data   = new DbTypeByteArray (Tags.Name + "=" + Tags.TypeReqData);
-			
-				this.infrastructure.internal_types.Add (this.d_t_type_datetime);
-				this.infrastructure.internal_types.Add (this.bin_type_raw_data);
+				this.otherTypeDateTime = new DbTypeDef (Res.Types.Other.DateTime);
+				this.otherTypeReqData  = new DbTypeDef (Res.Types.Other.ReqData);
+		
+				this.infrastructure.internalTypes.Add (this.otherTypeDateTime);
+				this.infrastructure.internalTypes.Add (this.otherTypeReqData);
 			}
 
-			void InitializeStrTypes()
+			private void InitializeStrTypes()
 			{
-				this.str_type_name        = new DbTypeString (DbColumn.MaxNameLength, false,		Tags.Name + "=" + Tags.TypeName);
-				this.str_type_caption     = new DbTypeString (DbColumn.MaxCaptionLength, false,		Tags.Name + "=" + Tags.TypeCaption);
-				this.str_type_description = new DbTypeString (DbColumn.MaxDescriptionLength, false, Tags.Name + "=" + Tags.TypeDescription);
-				this.str_type_info_xml    = new DbTypeString (DbColumn.MaxInfoXmlLength, false,		Tags.Name + "=" + Tags.TypeInfoXml);
-				this.str_type_dict_key    = new DbTypeString (DbColumn.MaxDictKeyLength, false,		Tags.Name + "=" + Tags.TypeDictKey);
-				this.str_type_dict_value  = new DbTypeString (DbColumn.MaxDictValueLength, false,	Tags.Name + "=" + Tags.TypeDictValue);
+				this.strTypeName      = new DbTypeDef (Res.Types.Str.Name);
+				this.strTypeInfoXml   = new DbTypeDef (Res.Types.Str.InfoXml);
+				this.strTypeDictKey   = new DbTypeDef (Res.Types.Str.Dict.Key);
+				this.strTypeDictValue = new DbTypeDef (Res.Types.Str.Dict.Value);
 			
-				this.infrastructure.internal_types.Add (this.str_type_name);
-				this.infrastructure.internal_types.Add (this.str_type_caption);
-				this.infrastructure.internal_types.Add (this.str_type_description);
-				this.infrastructure.internal_types.Add (this.str_type_info_xml);
-				this.infrastructure.internal_types.Add (this.str_type_dict_key);
-				this.infrastructure.internal_types.Add (this.str_type_dict_value);
+				this.infrastructure.internalTypes.Add (this.strTypeName);
+				this.infrastructure.internalTypes.Add (this.strTypeInfoXml);
+				this.infrastructure.internalTypes.Add (this.strTypeDictKey);
+				this.infrastructure.internalTypes.Add (this.strTypeDictValue);
 			}
-			
-			
-			void AssertAllTypesReady ()
+
+			private void AssertAllTypesReady()
 			{
-				System.Diagnostics.Debug.Assert (this.num_type_key_id != null);
-				System.Diagnostics.Debug.Assert (this.num_type_key_status != null);
-				System.Diagnostics.Debug.Assert (this.num_type_req_ex_state != null);
+				System.Diagnostics.Debug.Assert (this.numTypeKeyId != null);
+				System.Diagnostics.Debug.Assert (this.numTypeNullableKeyId != null);
+				System.Diagnostics.Debug.Assert (this.numTypeKeyStatus != null);
+				System.Diagnostics.Debug.Assert (this.numTypeReqExState != null);
 				
-				System.Diagnostics.Debug.Assert (this.str_type_name != null);
-				System.Diagnostics.Debug.Assert (this.str_type_caption != null);
-				System.Diagnostics.Debug.Assert (this.str_type_description != null);
-				System.Diagnostics.Debug.Assert (this.str_type_info_xml != null);
-				System.Diagnostics.Debug.Assert (this.str_type_dict_key != null);
-				System.Diagnostics.Debug.Assert (this.str_type_dict_value != null);
+				System.Diagnostics.Debug.Assert (this.strTypeName != null);
+				System.Diagnostics.Debug.Assert (this.strTypeInfoXml != null);
+				System.Diagnostics.Debug.Assert (this.strTypeDictKey != null);
+				System.Diagnostics.Debug.Assert (this.strTypeDictValue != null);
 				
-				System.Diagnostics.Debug.Assert (this.d_t_type_datetime != null);
-				System.Diagnostics.Debug.Assert (this.bin_type_raw_data != null);
+				System.Diagnostics.Debug.Assert (this.otherTypeDateTime != null);
+				System.Diagnostics.Debug.Assert (this.otherTypeReqData != null);
 			}
-			
-			
-			public DbTypeNum					KeyId
-			{
-				get
-				{
-					return this.num_type_key_id;
-				}
-			}
-			
-			public DbTypeNum					KeyStatus
-			{
-				get
-				{
-					return this.num_type_key_status;
-				}
-			}
-			
-			public DbTypeNum					ReqExState
-			{
-				get
-				{
-					return this.num_type_req_ex_state;
-				}
-			}
-			
-			public DbTypeDateTime				DateTime
-			{
-				get
-				{
-					return this.d_t_type_datetime;
-				}
-			}
-			
-			public DbTypeByteArray				ReqRawData
-			{
-				get
-				{
-					return this.bin_type_raw_data;
-				}
-			}
-			
-			public DbTypeString					Name
-			{
-				get
-				{
-					return this.str_type_name;
-				}
-			}
-			
-			public DbTypeString					Caption
-			{
-				get
-				{
-					return this.str_type_caption;
-				}
-			}
-			
-			public DbTypeString					Description
-			{
-				get
-				{
-					return this.str_type_description;
-				}
-			}
-			
-			public DbTypeString					InfoXml
-			{
-				get
-				{
-					return this.str_type_info_xml;
-				}
-			}
-			
-			public DbTypeString					DictKey
-			{
-				get
-				{
-					return this.str_type_dict_key;
-				}
-			}
-			
-			public DbTypeString					DictValue
-			{
-				get
-				{
-					return this.str_type_dict_value;
-				}
-			}
-			
-			
-			protected DbInfrastructure			infrastructure;
-			
-			protected DbTypeNum					num_type_key_id;
-			protected DbTypeNum					num_type_key_status;
-			protected DbTypeNum					num_type_req_ex_state;
-			
-			protected DbTypeDateTime			d_t_type_datetime;
-			protected DbTypeByteArray			bin_type_raw_data;
-			
-			protected DbTypeString				str_type_name;
-			protected DbTypeString				str_type_caption;
-			protected DbTypeString				str_type_description;
-			protected DbTypeString				str_type_info_xml;
-			protected DbTypeString				str_type_dict_key;
-			protected DbTypeString				str_type_dict_value;
+
+			private DbInfrastructure			infrastructure;
+
+			private DbTypeDef					numTypeKeyId;
+			private DbTypeDef					numTypeNullableKeyId;
+			private DbTypeDef					numTypeKeyStatus;
+			private DbTypeDef					numTypeReqExState;
+
+			private DbTypeDef					otherTypeDateTime;
+			private DbTypeDef					otherTypeReqData;
+
+			private DbTypeDef					strTypeName;
+			private DbTypeDef					strTypeInfoXml;
+			private DbTypeDef					strTypeDictKey;
+			private DbTypeDef					strTypeDictValue;
 		}
+		
 		#endregion
-		
-		
-		protected DbAccess						db_access;
-		protected IDbAbstraction				db_abstraction;
-		
-		protected ISqlEngine					sql_engine;
-		protected ITypeConverter				type_converter;
+
+
+		private DbAccess						access;
+		private IDbAbstraction					abstraction;
+
+		private ISqlEngine						sqlEngine;
+		private ITypeConverter					converter;
 		
 		private TypeHelper						types;
 		private DbLogger						logger;
-		private DbClientManager					client_manager;
+		private DbClientManager					clientManager;
 		
 		private Settings.Globals				globals;
 		private Settings.Locals					locals;
+
+		private Collections.DbTables			internalTables = new Collections.DbTables ();
+		private Collections.DbTypeDefs			internalTypes = new Collections.DbTypeDefs ();
+
+		private int								clientId;
 		
-		protected Collections.DbTables			internal_tables = new Collections.DbTables ();
-		protected Collections.DbTypes			internal_types  = new Collections.DbTypes ();
+		private string							localizations;
+
+		private Cache.DbTypeDefs				typeCache = new Cache.DbTypeDefs ();
+		private Cache.DbTables					tableCache = new Cache.DbTables ();
+
+		private List<DbTransaction>				liveTransactions;
+		private List<IDbAbstraction>			releaseRequested;
 		
-		protected int							client_id;
-		
-		CallbackDisplayDataSet					display_data_set;
-		string[]								localisations;
-		
-		Cache.DbTypes							cache_db_types = new Cache.DbTypes ();
-		Cache.DbTables							cache_db_tables = new Cache.DbTables ();
-		
-		protected System.Collections.Hashtable	live_transactions;
-		protected System.Collections.ArrayList	release_requested;
-		protected int							lock_timeout = 15000;
-		System.Threading.ReaderWriterLock		global_lock = new System.Threading.ReaderWriterLock ();
+		private int								lockTimeout = 15000;
+		System.Threading.ReaderWriterLock		globalLock = new System.Threading.ReaderWriterLock ();
 	}
 }

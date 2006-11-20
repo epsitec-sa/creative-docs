@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 		public void InsertTable(SqlTable table)
 		{
-			if (!table.Validate (this))
+			if (!this.ValidateName (table.Name))
 			{
 				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid table {0}", table.Name));
 			}
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			foreach (SqlColumn column in table.Columns)
 			{
-				if (!column.Validate (this))
+				if (!this.ValidateName (column.Name))
 				{
 					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid column {0} in table {1}", column.Name, table.Name));
 				}
@@ -202,6 +202,11 @@ namespace Epsitec.Cresus.Database.Implementation
 
 				System.Diagnostics.Debug.Assert (isFirstField == false);
 			}
+
+			if (table.HasForeignKeys)
+			{
+				//	TODO: add the missing foreign key (FK_) constraints
+			}
 		}
 
 		public void RemoveTable(string tableName)
@@ -234,7 +239,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			foreach (SqlColumn column in columns)
 			{
-				if (!column.Validate (this))
+				if (!this.ValidateName (column.Name))
 				{
 					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid column {0} in table {1}", column.Name, tableName));
 				}
@@ -289,7 +294,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			foreach (SqlColumn column in columns)
 			{
-				if (!column.Validate (this))
+				if (!this.ValidateName (column.Name))
 				{
 					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid column {0} in table {1}", column.Name, tableName));
 				}
@@ -367,14 +372,14 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				string data = null;
 				
-				switch (field.Type)
+				switch (field.FieldType)
 				{
 					case SqlFieldType.Default:		data = "DEFAULT";						break;
 					case SqlFieldType.Null:			data = "NULL";							break;
 					case SqlFieldType.Constant:		data = this.MakeCommandParam (field);	break;
 					
 					default:
-						throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid field type {0} for field {1} in table {2}", field.Type.ToString (), field.Alias, tableName));
+						throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid field type {0} for field {1} in table {2}", field.FieldType.ToString (), field.Alias, tableName));
 				}
 				
 				if (isFirstField)
@@ -452,7 +457,7 @@ namespace Epsitec.Cresus.Database.Implementation
 						this.Append (" AND ");
 					}
 					
-					if (field.Type != SqlFieldType.Function)
+					if (field.FieldType != SqlFieldType.Function)
 					{
 						throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid field {0} in UPDATE ... WHERE", field.AsName));
 					}
@@ -496,7 +501,7 @@ namespace Epsitec.Cresus.Database.Implementation
 						this.Append (" AND ");
 					}
 
-					if (field.Type != SqlFieldType.Function)
+					if (field.FieldType != SqlFieldType.Function)
 					{
 						throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid field {0} in UPDATE ... WHERE", field.AsName));
 					}
@@ -632,7 +637,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					//	paramètres de la commande (on aurait pu imaginer accepter ici les résultats d'une
 					//	sous-requête ou encore d'une procédure SQL) :
 					
-					System.Diagnostics.Debug.Assert (field.Type == SqlFieldType.Constant);
+					System.Diagnostics.Debug.Assert (field.FieldType == SqlFieldType.Constant);
 					
 					fbParam.Value = field.AsConstant;
 					fbParam.SourceColumn = field.Alias;
@@ -678,7 +683,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			//	Ajoute au buffer un champ, quel que soit son type
 
-			switch (field.Type)
+			switch (field.FieldType)
 			{
 				case SqlFieldType.Null:
 					this.Append ("NULL");
@@ -726,36 +731,36 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 				
 				default:
-					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Field {0} not supported", field.Type));
+					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Field {0} not supported", field.FieldType));
 			}
 		}
 		
 		private void Append(SqlAggregate sqlAggregate)
 		{
-			switch (sqlAggregate.Type)
+			switch (sqlAggregate.Function)
 			{
-				case SqlAggregateType.Count:
+				case SqlAggregateFunction.Count:
 					this.Append ("COUNT(");
 					break;
 				
-				case SqlAggregateType.Max:
+				case SqlAggregateFunction.Max:
 					this.Append ("MAX(");
 					break;
 				
-				case SqlAggregateType.Min:
+				case SqlAggregateFunction.Min:
 					this.Append ("MIN(");
 					break;
 				
-				case SqlAggregateType.Sum:
+				case SqlAggregateFunction.Sum:
 					this.Append ("SUM(");
 					break;
 				
-				case SqlAggregateType.Average:
+				case SqlAggregateFunction.Average:
 					this.Append ("AVG(");
 					break;
 				
 				default:
-					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Aggregate {0} not supported", sqlAggregate.Type));
+					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Aggregate {0} not supported", sqlAggregate.Function));
 			}
 			
 			this.Append (sqlAggregate.Field);
@@ -779,27 +784,27 @@ namespace Epsitec.Cresus.Database.Implementation
 					this.Append ('(');
 					this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
 					
-					switch (sqlFunction.Type)
+					switch (sqlFunction.Code)
 					{
-						case SqlFunctionType.MathAdd:					this.Append (" + ");		break;
-						case SqlFunctionType.MathSubstract:				this.Append (" - ");		break;
-						case SqlFunctionType.MathMultiply:				this.Append (" * ");		break;
-						case SqlFunctionType.MathDivide:				this.Append (" / ");		break;
-						case SqlFunctionType.CompareEqual:				this.Append (" = ");		break;
-						case SqlFunctionType.CompareNotEqual:			this.Append (" <> ");		break;
-						case SqlFunctionType.CompareLessThan:			this.Append (" < ");		break;
-						case SqlFunctionType.CompareLessThanOrEqual:	this.Append (" <= ");		break;
-						case SqlFunctionType.CompareGreaterThan:		this.Append (" > ");		break;
-						case SqlFunctionType.CompareGreaterThanOrEqual:	this.Append (" >= ");		break;
-						case SqlFunctionType.CompareLike:				this.Append (" LIKE ");		break;
-						case SqlFunctionType.CompareNotLike:			this.Append (" NOT LIKE ");	break;
-						case SqlFunctionType.SetIn:						this.Append (" IN ");		break;
-						case SqlFunctionType.SetNotIn:					this.Append (" NOT IN ");	break;
-						case SqlFunctionType.LogicAnd:					this.Append (" AND ");		break;
-						case SqlFunctionType.LogicOr:					this.Append (" OR ");		break;
+						case SqlFunctionCode.MathAdd:					this.Append (" + ");		break;
+						case SqlFunctionCode.MathSubstract:				this.Append (" - ");		break;
+						case SqlFunctionCode.MathMultiply:				this.Append (" * ");		break;
+						case SqlFunctionCode.MathDivide:				this.Append (" / ");		break;
+						case SqlFunctionCode.CompareEqual:				this.Append (" = ");		break;
+						case SqlFunctionCode.CompareNotEqual:			this.Append (" <> ");		break;
+						case SqlFunctionCode.CompareLessThan:			this.Append (" < ");		break;
+						case SqlFunctionCode.CompareLessThanOrEqual:	this.Append (" <= ");		break;
+						case SqlFunctionCode.CompareGreaterThan:		this.Append (" > ");		break;
+						case SqlFunctionCode.CompareGreaterThanOrEqual:	this.Append (" >= ");		break;
+						case SqlFunctionCode.CompareLike:				this.Append (" LIKE ");		break;
+						case SqlFunctionCode.CompareNotLike:			this.Append (" NOT LIKE ");	break;
+						case SqlFunctionCode.SetIn:						this.Append (" IN ");		break;
+						case SqlFunctionCode.SetNotIn:					this.Append (" NOT IN ");	break;
+						case SqlFunctionCode.LogicAnd:					this.Append (" AND ");		break;
+						case SqlFunctionCode.LogicOr:					this.Append (" OR ");		break;
 						
 						default:
-							throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} not supported", sqlFunction.Type));
+							throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} not supported", sqlFunction.Code));
 					}
 					
 					this.Append (sqlFunction.B, onlyAcceptQualifiedNames);
@@ -807,57 +812,57 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 
 				case 0:
-					switch (sqlFunction.Type)
+					switch (sqlFunction.Code)
 					{
-						case SqlFunctionType.CompareFalse:				this.Append ("(0 = 1)");	break;
-						case SqlFunctionType.CompareTrue:				this.Append ("(1 = 1)");	break;
+						case SqlFunctionCode.CompareFalse:				this.Append ("(0 = 1)");	break;
+						case SqlFunctionCode.CompareTrue:				this.Append ("(1 = 1)");	break;
 
 						default:
-							throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} not supported", sqlFunction.Type));
+							throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} not supported", sqlFunction.Code));
 					}
 					break;
 
 				case 1:
-					switch (sqlFunction.Type)
+					switch (sqlFunction.Code)
 					{
-						case SqlFunctionType.LogicNot:
+						case SqlFunctionCode.LogicNot:
 							this.Append ("NOT ");
 							this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
 							break;
 						
-						case SqlFunctionType.CompareIsNull:
+						case SqlFunctionCode.CompareIsNull:
 							this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
 							this.Append (" IS NULL");
 							break;
 						
-						case SqlFunctionType.CompareIsNotNull:
+						case SqlFunctionCode.CompareIsNotNull:
 							this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
 							this.Append (" IS NOT NULL");
 							break;
 						
-						case SqlFunctionType.SetExists:
+						case SqlFunctionCode.SetExists:
 							this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
 							this.Append (" EXISTS");
 							break;
 
-						case SqlFunctionType.SetNotExists:
+						case SqlFunctionCode.SetNotExists:
 							this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
 							this.Append (" NOT EXISTS");
 							break;
 						
-						case SqlFunctionType.Upper:
+						case SqlFunctionCode.Upper:
 							this.Append ("UPPER(");
 							this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
 							this.Append (")");
 							break;
 						
 						default:
-							throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} not supported", sqlFunction.Type));
+							throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} not supported", sqlFunction.Code));
 					}
 					break;
 
 				case 3:
-					if (sqlFunction.Type == SqlFunctionType.Substring)
+					if (sqlFunction.Code == SqlFunctionCode.Substring)
 					{
 						this.Append ("SUBSTRING(");
 						this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
@@ -871,15 +876,15 @@ namespace Epsitec.Cresus.Database.Implementation
 					{
 						this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
 
-						switch (sqlFunction.Type)
+						switch (sqlFunction.Code)
 						{
-							case SqlFunctionType.SetBetween:
+							case SqlFunctionCode.SetBetween:
 								this.Append (" BETWEEN ");
 								this.Append (sqlFunction.B, onlyAcceptQualifiedNames);
 								this.Append (" AND ");
 								break;
 
-							case SqlFunctionType.SetNotBetween:
+							case SqlFunctionCode.SetNotBetween:
 								this.Append (" NOT BETWEEN ");
 								this.Append (sqlFunction.B, onlyAcceptQualifiedNames);
 								this.Append (" AND ");
@@ -895,7 +900,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 
 				default:
-					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} not supported", sqlFunction.Type));
+					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} not supported", sqlFunction.Code));
 			}
 		}
 
@@ -917,14 +922,14 @@ namespace Epsitec.Cresus.Database.Implementation
 				}
 			}
 
-			switch (sqlJoin.Type)
+			switch (sqlJoin.Code)
 			{
-				case SqlJoinType.Inner:			this.Append (" INNER JOIN ");		break;
-				case SqlJoinType.OuterLeft:		this.Append (" LEFT OUTER JOIN ");	break;
-				case SqlJoinType.OuterRight:	this.Append (" RIGHT OUTER JOIN ");	break;
+				case SqlJoinCode.Inner:			this.Append (" INNER JOIN ");		break;
+				case SqlJoinCode.OuterLeft:		this.Append (" LEFT OUTER JOIN ");	break;
+				case SqlJoinCode.OuterRight:	this.Append (" RIGHT OUTER JOIN ");	break;
 
 				default:
-					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Join {0} not supported", sqlJoin.Type));
+					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Join {0} not supported", sqlJoin.Code));
 			}
 			
 			this.Append (sqlTables[row]);
@@ -966,7 +971,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					this.Append (", ");
 				}
 
-				switch (field.Type)
+				switch (field.FieldType)
 				{
 					case SqlFieldType.All:
 						this.Append ("*");
@@ -1030,7 +1035,7 @@ namespace Epsitec.Cresus.Database.Implementation
 						this.Append (", ");
 					}
 
-					switch (field.Type)
+					switch (field.FieldType)
 					{
 						case SqlFieldType.Name:
 							this.Append (field.AsName);
@@ -1060,8 +1065,8 @@ namespace Epsitec.Cresus.Database.Implementation
 
 				foreach (SqlField field in sqlQuery.Fields)
 				{
-					if ((field.Type == SqlFieldType.All) ||
-						(field.Type == SqlFieldType.Aggregate))
+					if ((field.FieldType == SqlFieldType.All) ||
+						(field.FieldType == SqlFieldType.Aggregate))
 					{
 						continue;
 					}
@@ -1075,7 +1080,7 @@ namespace Epsitec.Cresus.Database.Implementation
 						this.Append (", ");
 					}
 
-					switch (field.Type)
+					switch (field.FieldType)
 					{
 						case SqlFieldType.Name:
 							this.Append (field.AsName);
@@ -1088,7 +1093,7 @@ namespace Epsitec.Cresus.Database.Implementation
 							break;
 
 						default:
-							throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Unsupported field type {0} in GROUP BY clause", field.Type));
+							throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Unsupported field type {0} in GROUP BY clause", field.FieldType));
 					}
 				}
             }
@@ -1116,7 +1121,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					this.Append (" AND ");
 				}
 
-				if (field.Type != SqlFieldType.Function)
+				if (field.FieldType != SqlFieldType.Function)
 				{
 					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid field {0} in SELECT ... WHERE clause", field.AsName));
 				}
@@ -1131,7 +1136,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 			foreach (SqlField field in sqlQuery.Fields)
 			{
-				if (field.Order == SqlFieldOrder.None)
+				if (field.SortOrder == SqlSortOrder.None)
 				{
 					continue;
 				}
@@ -1145,7 +1150,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				//	TODO:	sinon faut-il utiliser le nom qualifié de préférence ?
 				this.Append (field.AsName);
 
-				if (field.Order == SqlFieldOrder.Inverse)
+				if (field.SortOrder == SqlSortOrder.Descending)
 				{
 					this.Append (" DESC");
 				}
@@ -1162,24 +1167,24 @@ namespace Epsitec.Cresus.Database.Implementation
 
 			//	Traite encore les UNION s'il y a lieu :
 			
-			if (sqlQuery.SelectSetQuery != null)
+			if (sqlQuery.SetQuery != null)
 			{
-				switch (sqlQuery.SelectSetOp)
+				switch (sqlQuery.SetOp)
 				{
 					case SqlSelectSetOp.Union:		this.Append (" UNION ");		break;
 					case SqlSelectSetOp.Except:		this.Append (" EXCEPT ");		break;
 					case SqlSelectSetOp.Intersect:	this.Append (" INTERSECT ");	break;
 					
 					default:
-						throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid union {0} of 2 SELECT", sqlQuery.SelectSetOp));
+						throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid union {0} of 2 SELECT", sqlQuery.SetOp));
 				}
 
-				if (sqlQuery.SelectSetQuery.Predicate == SqlSelectPredicate.All)
+				if (sqlQuery.SetQuery.Predicate == SqlSelectPredicate.All)
 				{
 					this.Append ( "ALL ");
 				}
 
-				this.Append (sqlQuery.SelectSetQuery);
+				this.Append (sqlQuery.SetQuery);
 			}
 		}
 
@@ -1213,7 +1218,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				this.buffer.Append (alias);
 			}
-			else if (field.Type == SqlFieldType.QualifiedName)
+			else if (field.FieldType == SqlFieldType.QualifiedName)
 			{
 				this.buffer.Append (field.AsQualifiedName);
 			}
@@ -1227,6 +1232,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			string basicType = null;
 			string length;
+			string encoding;
 
 			//	Construit le nom du type SQL en fonction de la description de la
 			//	colonne.
@@ -1260,7 +1266,8 @@ namespace Epsitec.Cresus.Database.Implementation
 
 				case DbRawType.String:
 					length    = column.Length.ToString (TypeConverter.InvariantFormatProvider);
-					basicType = (column.IsFixedLength ? "CHAR(" : "VARCHAR(") + length + ") CHARACTER SET UNICODE_FSS";
+					encoding  = column.Encoding == DbCharacterEncoding.Ascii ? "ASCII" : "UTF8";
+					basicType = (column.IsFixedLength ? "CHAR(" : "VARCHAR(") + length + ") CHARACTER SET " + encoding;
 					break;
 
 				case DbRawType.ByteArray:
@@ -1290,16 +1297,9 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			if (!column.IsNullAllowed)
+			if (!column.IsNullable)
 			{
 				buffer.Append (" NOT NULL");
-			}
-			
-			if (column.IsUnique)
-			{
-				//	TODO: add a UNIQUE constraint; does this exist ?
-				
-				System.Diagnostics.Debug.WriteLine (string.Format ("Column {0} should be unique", column.Name));
 			}
 			
 			return buffer.ToString ();

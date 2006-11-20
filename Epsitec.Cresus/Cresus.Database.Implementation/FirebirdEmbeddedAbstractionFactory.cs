@@ -14,12 +14,12 @@ namespace Epsitec.Cresus.Database.Implementation
 	{
 		public FirebirdEmbeddedAbstractionFactory()
 		{
-			DbFactory.RegisterDbAbstraction (this);
+			DbFactory.RegisterDatabaseAbstraction (this);
 		}
 		
 		#region IDbAbstractionFactory Members
 
-		public IDbAbstraction NewDbAbstraction(DbAccess dbAccess)
+		public IDbAbstraction CreateDatabaseAbstraction(DbAccess dbAccess)
 		{
 			System.Diagnostics.Debug.Assert (dbAccess.Provider == this.ProviderName);
 

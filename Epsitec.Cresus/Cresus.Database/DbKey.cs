@@ -1,96 +1,103 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
 	/// The <c>DbKey</c> class represents a key which can be used by the database
-	/// engine to index its data. The key has at least one identifier.
+	/// engine to index or look up its data. The key has at least one identifier.
 	/// </summary>
-	public sealed class DbKey : System.ICloneable, System.IComparable
+	[System.Serializable]
+	public struct DbKey : System.IComparable<DbKey>, System.IEquatable<DbKey>, IXmlSerializable
 	{
-		public DbKey()
-		{
-		}
-		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbKey"/> class.
+		/// </summary>
+		/// <param name="id">The id.</param>
 		public DbKey(DbId id) : this (id, DbRowStatus.Live)
 		{
 		}
-		
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbKey"/> class.
+		/// </summary>
+		/// <param name="id">The id.</param>
+		/// <param name="status">The status.</param>
 		public DbKey(DbId id, DbRowStatus status)
 		{
-			this.id         = id;
-			this.int_status = DbKey.ConvertToIntStatus (status);
+			this.id     = id;
+			this.status = DbKey.ConvertToIntStatus (status);
 		}
-		
-		public DbKey(System.Data.DataRow data_row)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbKey"/> class.
+		/// </summary>
+		/// <param name="dataRow">The data row.</param>
+		public DbKey(System.Data.DataRow dataRow)
 		{
-			object value_id       = data_row[Tags.ColumnId];
-			object value_status   = data_row[Tags.ColumnStatus];
+			this.id = 0;
+			this.status = 0;
 			
-			long id;
-			
-			if ((Common.Types.InvariantConverter.Convert (value_id, out id)) &&
-				(id >= 0))
-			{
-				short status;
-				
-				Common.Types.InvariantConverter.Convert (value_status, out status);
-				
-				this.id         = id;
-				this.int_status = status;
-			}
-			else
-			{
-				throw new System.ArgumentException ("Row does not contain valid key.", "data_row");
-			}
+			this.DefineIdAndStatus (dataRow[Tags.ColumnId], dataRow[Tags.ColumnStatus]);
 		}
-		
-		public DbKey(object[] data_row)
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbKey"/> class.
+		/// </summary>
+		/// <param name="dataRow">The data row.</param>
+		public DbKey(object[] dataRow)
 		{
-			object value_id       = data_row[0];
-			object value_status   = data_row[1];
-			
-			long id;
-			
-			if ((Common.Types.InvariantConverter.Convert (value_id, out id)) &&
-				(id >= 0))
-			{
-				short status;
-				
-				Common.Types.InvariantConverter.Convert (value_status, out status);
-				
-				this.id         = id;
-				this.int_status = status;
-			}
-			else
-			{
-				throw new System.ArgumentException ("Row does not contain valid key.", "data_row");
-			}
+			this.id = 0;
+			this.status = 0;
+
+			this.DefineIdAndStatus (dataRow[0], dataRow[1]);
 		}
-		
-		
+
+
+		/// <summary>
+		/// Gets the key id.
+		/// </summary>
+		/// <value>The id.</value>
 		public DbId								Id
 		{
-			get { return this.id; }
+			get
+			{
+				return this.id;
+			}
 		}
-		
+
+		/// <summary>
+		/// Gets the row status.
+		/// </summary>
+		/// <value>The status.</value>
 		public DbRowStatus						Status
 		{
 			get
 			{
-				return DbKey.ConvertFromIntStatus (this.int_status);
+				return DbKey.ConvertFromIntStatus (this.status);
 			}
 		}
-		
-		public short							IntStatus
+
+		/// <summary>
+		/// Gets the row status, represented as a number.
+		/// </summary>
+		/// <value>The int status.</value>
+		internal short							IntStatus
 		{
 			get
 			{
-				return this.int_status;
+				return this.status;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets a value indicating whether this instance represents a temporary key.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance represents a temporary key; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsTemporary
 		{
 			get
@@ -98,128 +105,144 @@ namespace Epsitec.Cresus.Database
 				return DbKey.CheckTemporaryId (this.id);
 			}
 		}
-		
-		
-		public static DbId CreateTemporaryId()
+
+		/// <summary>
+		/// Gets a value indicating whether this instance represents an empty key.
+		/// </summary>
+		/// <value><c>true</c> if this instance represents an empty key; otherwise, <c>false</c>.</value>
+		public bool								IsEmpty
 		{
-			lock (DbKey.temp_lock)
+			get
 			{
-				return DbId.CreateTempId (DbKey.temp_id++);
+				return (this.id == 0) && (this.status == 0);
 			}
 		}
 		
-		public static bool CheckTemporaryId(DbId id)
+		public static readonly DbKey			Empty = new DbKey ();
+
+		#region IXmlSerializable Members
+
+		/// <summary>
+		/// Serializes the instance using the specified XML writer.
+		/// </summary>
+		/// <param name="xmlWriter">The XML writer.</param>
+		public void Serialize(System.Xml.XmlTextWriter xmlWriter)
 		{
-			if ((id >= DbId.MinimumTemp) &&
-				(id <= DbId.MaximumTemp))
-			{
-				return true;
-			}
-			
-			return false;
+			xmlWriter.WriteStartElement ("key");
+			this.SerializeAttributes (xmlWriter);
+			xmlWriter.WriteEndElement ();
 		}
-		
-		
-		public static short ConvertToIntStatus(DbRowStatus status)
-		{
-			return (short) status;
-		}
-		
-		public static DbRowStatus ConvertFromIntStatus(int status)
-		{
-			return (DbRowStatus) status;
-		}
-		
-		public static void SerializeToXmlAttributes(System.Text.StringBuilder buffer, DbKey key)
-		{
-			if (key != null)
-			{
-				key.SerializeXmlAttributes (buffer);
-			}
-		}
-		
-		public static DbKey DeserializeFromXmlAttributes(System.Xml.XmlElement xml)
-		{
-			//	Utilise les attributs de l'élément passé en entrée pour reconstruire
-			//	une instance de DbKey. Retourne null si aucun attribut ne correspond.
-			
-			string arg_id   = xml.GetAttribute ("key.id");
-			string arg_stat = xml.GetAttribute ("key.stat");
-			
-			if ((arg_id == "") &&
-				(arg_stat == ""))
-			{
-				return null;
-			}
-			
-			DbId id         = 0;
-			int  int_status = 0;
-			
-			if (arg_id.Length > 0)
-			{
-				id = System.Int64.Parse (arg_id, System.Globalization.CultureInfo.InvariantCulture);
-			}
-			
-			if (arg_stat.Length > 0)
-			{
-				int_status = System.Int32.Parse (arg_stat, System.Globalization.CultureInfo.InvariantCulture);
-			}
-			
-			return new DbKey (id, DbKey.ConvertFromIntStatus (int_status));
-		}
-		
-		
-		#region ICloneable Members
-		public object Clone()
-		{
-			return this.CloneCopyToNewObject (this.CloneNewObject ());
-		}
+
 		#endregion
-		
-		private object CloneNewObject()
+
+		/// <summary>
+		/// Serializes the key as XML attributes.
+		/// </summary>
+		/// <param name="xmlWriter">The XML writer.</param>
+		public void SerializeAttributes(System.Xml.XmlTextWriter xmlWriter)
 		{
-			return new DbKey ();
+			this.SerializeAttributes (xmlWriter, "key.");
 		}
-		
-		private object CloneCopyToNewObject(object o)
+
+		/// <summary>
+		/// Serializes the key as XML attributes, using the specified prefix for
+		/// the attribute names.
+		/// </summary>
+		/// <param name="xmlWriter">The XML writer.</param>
+		/// <param name="prefix">The prefix.</param>
+		public void SerializeAttributes(System.Xml.XmlTextWriter xmlWriter, string prefix)
 		{
-			DbKey that = o as DbKey;
-			
-			that.id         = this.id;
-			that.int_status = this.int_status;
-			
-			return that;
+			DbTools.WriteAttribute (xmlWriter, prefix+"id", InvariantConverter.ToString (this.id));
+			DbTools.WriteAttribute (xmlWriter, prefix+"stat", this.status == 0 ? null : InvariantConverter.ToString (this.status));
 		}
-		
+
+		public static DbKey Deserialize(System.Xml.XmlTextReader xmlReader)
+		{
+			if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
+				(xmlReader.Name == "key"))
+			{
+				bool isEmptyElement = xmlReader.IsEmptyElement;
+
+				DbKey key = DbKey.DeserializeAttributes (xmlReader);
+				
+				if (!isEmptyElement)
+				{
+					xmlReader.ReadEndElement ();
+				}
+				
+				return key;
+			}
+			else
+			{
+				throw new System.Xml.XmlException (string.Format ("Unexpected element {0}", xmlReader.LocalName), null, xmlReader.LineNumber, xmlReader.LinePosition);
+			}
+		}
+
+		/// <summary>
+		/// Deserializes the key from XML attributes.
+		/// </summary>
+		/// <param name="xmlReader">The XML reader.</param>
+		/// <returns></returns>
+		public static DbKey DeserializeAttributes(System.Xml.XmlTextReader xmlReader)
+		{
+			return DbKey.DeserializeAttributes (xmlReader, "");
+		}
+
+		/// <summary>
+		/// Deserializes the key from XML attributes, using the specified prefix
+		/// for the attribute names.
+		/// </summary>
+		/// <param name="xmlReader">The XML reader.</param>
+		/// <param name="prefix">The prefix.</param>
+		/// <returns></returns>
+		public static DbKey DeserializeAttributes(System.Xml.XmlTextReader xmlReader, string prefix)
+		{
+			string argId   = xmlReader.GetAttribute (prefix+"id");
+			string argStat = xmlReader.GetAttribute (prefix+"stat");
+
+			if ((string.IsNullOrEmpty (argId)) &&
+				(string.IsNullOrEmpty (argStat)))
+			{
+				return DbKey.Empty;
+			}
+
+			DbId id     = InvariantConverter.ParseLong (argId);
+			int  status = InvariantConverter.ParseInt (argStat);
+
+			return new DbKey (id, DbKey.ConvertFromIntStatus (status));
+		}
 		
 		#region IComparable Members
-		public int CompareTo(object obj)
+
+		public int CompareTo(DbKey other)
 		{
-			DbKey key = obj as DbKey;
-			
-			if (key == null)
-			{
-				return 1;
-			}
-			
-			return this.id.CompareTo (key.id);
+			return this.id.CompareTo (other.id);
 		}
+
+		#endregion
+
+		#region IEquatable<DbKey> Members
+
+		public bool Equals(DbKey other)
+		{
+			return this.id == other.id;
+		}
+
 		#endregion
 		
-		#region Equals, GetHashCode and ToString support
+		#region Equals, ==, !=, GetHashCode and ToString support
+		
 		public override bool Equals(object obj)
 		{
-			//	Ne considère que Id et Revision pour la comparaison (et pour le
-			//	calcul d'une valeur de hachage).
-			
-			DbKey key = obj as DbKey;
-			
-			if (key == null)
+			if (obj is DbKey)
+			{
+				return this.Equals ((DbKey) obj);
+			}
+			else
 			{
 				return false;
+				
 			}
-			
-			return (key.id == this.id);
 		}
 		
 		public override int GetHashCode()
@@ -231,30 +254,131 @@ namespace Epsitec.Cresus.Database
 		{
 			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}", this.id);
 		}
-		#endregion
-		
-		private void SerializeXmlAttributes(System.Text.StringBuilder buffer)
+
+		public static bool operator==(DbKey a, DbKey b)
 		{
-			buffer.Append (@" key.id=""");
-			buffer.Append (this.id.ToString ());
-			buffer.Append (@"""");
-			
-			if (this.int_status != 0)
-			{
-				buffer.Append (@" key.stat=""");
-				buffer.Append (this.int_status.ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append (@"""");
-			}
+			return a.Equals (b);
+		}
+
+		public static bool operator!=(DbKey a, DbKey b)
+		{
+			return !a.Equals (b);
 		}
 		
+		#endregion
+
+		/// <summary>
+		/// Creates a temporary id.
+		/// </summary>
+		/// <returns></returns>
+		public static DbId CreateTemporaryId()
+		{
+			return DbId.CreateTempId (System.Threading.Interlocked.Increment (ref DbKey.tempId));
+		}
+
+		/// <summary>
+		/// Checks whether the id is a temporary id.
+		/// </summary>
+		/// <param name="id">The id to check.</param>
+		/// <returns><c>true</c> if the id is a temporary id; otherwise, <c>false</c>.</returns>
+		public static bool CheckTemporaryId(DbId id)
+		{
+			if ((id >= DbId.MinimumTemp) &&
+				(id <= DbId.MaximumTemp))
+			{
+				return true;
+			}
+			
+			return false;
+		}
+
+		/// <summary>
+		/// Converts the status to an integer representation.
+		/// </summary>
+		/// <param name="status">The status.</param>
+		/// <returns>The status represented as an integer.</returns>
+		internal static short ConvertToIntStatus(DbRowStatus status)
+		{
+			return (short) status;
+		}
+
+		/// <summary>
+		/// Converts an integer representation of the status back to a status.
+		/// </summary>
+		/// <param name="status">The value.</param>
+		/// <returns>The status.</returns>
+		internal static DbRowStatus ConvertFromIntStatus(int status)
+		{
+			return (DbRowStatus) status;
+		}
+
+		/// <summary>
+		/// Gets the row id.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		/// <returns>The row id.</returns>
+		public static DbId GetRowId(System.Data.DataRow row)
+		{
+			return InvariantConverter.ToLong (row[Tags.ColumnId]);
+		}
+
+		/// <summary>
+		/// Gets the row status.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		/// <returns>The row status.</returns>
+		public static DbRowStatus GetRowStatus(System.Data.DataRow row)
+		{
+			return DbKey.ConvertFromIntStatus (InvariantConverter.ToShort (row[Tags.ColumnStatus]));
+		}
+
+		/// <summary>
+		/// Sets the row id.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		/// <param name="id">The row id.</param>
+		public static void SetRowId(System.Data.DataRow row, DbId id)
+		{
+			row[Tags.ColumnId] = id.Value;
+		}
+
+		/// <summary>
+		/// Sets the row status.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		/// <param name="status">The row status.</param>
+		public static void SetRowStatus(System.Data.DataRow row, DbRowStatus status)
+		{
+			row[Tags.ColumnStatus] = (short) status;
+		}
+
+		/// <summary>
+		/// Defines the id and status of the key based on object values.
+		/// </summary>
+		/// <param name="valueId">The id value (<c>long</c>).</param>
+		/// <param name="valueStatus">The status value (<c>short</c>).</param>
+		private void DefineIdAndStatus(object valueId, object valueStatus)
+		{
+			long id;
+
+			if ((InvariantConverter.Convert (valueId, out id)) &&
+				(id >= 0))
+			{
+				this.id     = id;
+				this.status = InvariantConverter.ToShort (valueStatus);
+			}
+			else
+			{
+				throw new System.ArgumentException ("Invalid key specification");
+			}
+		}
 		
 		public const DbRawType					RawTypeForId		= DbRawType.Int64;
 		public const DbRawType					RawTypeForStatus	= DbRawType.Int16;
 		
-		private static object					temp_lock	= new object ();
-		private static long						temp_id		= 0;
+		private static long						tempId;
 
-		private DbId id;
-		private short int_status;
+		private DbId							id;
+		private short							status;
 	}
 }
