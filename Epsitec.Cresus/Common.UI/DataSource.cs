@@ -32,7 +32,7 @@ namespace Epsitec.Common.UI
 			{
 				return this.metadata;
 			}
-			set
+			internal set
 			{
 				this.metadata = value;
 			}
