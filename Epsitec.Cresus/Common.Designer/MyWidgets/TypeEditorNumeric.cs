@@ -273,12 +273,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (sender == this.fieldDefault)
 			{
-				type.DefineDefaultValue(this.GetDecimalObject(this.fieldDefault));
+				type.DefineDefaultValue(this.GetDecimalObject(this.fieldDefault, type.SystemType));
 			}
 
 			if (sender == this.fieldSample)
 			{
-				type.DefineSampleValue(this.GetDecimalObject(this.fieldSample));
+				type.DefineSampleValue(this.GetDecimalObject(this.fieldSample, type.SystemType));
 			}
 
 			if (min == 0 && max == 0 && res == 0)

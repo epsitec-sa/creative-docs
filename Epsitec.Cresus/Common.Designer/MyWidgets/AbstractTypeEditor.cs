@@ -113,6 +113,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void PutSummaryDefaultAndSample(System.Text.StringBuilder builder, AbstractType type)
 		{
+			//	Met les informations DefaultValue et SampleValue dans le résumé, si elles existent.
 			if (type.DefaultValue != null || type.SampleValue != null)
 			{
 				builder.Append("   —   ");
@@ -257,7 +258,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected object GetDecimalObject(TextField field)
+		protected object GetDecimalObject(TextField field, System.Type type)
 		{
 			if (string.IsNullOrEmpty(field.Text))
 			{
@@ -265,7 +266,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
-				return this.GetDecimal(field);
+				return Types.Converters.AutomaticValueConverter.Instance.Convert(field.Text, type, null, System.Globalization.CultureInfo.InvariantCulture);
 			}
 		}
 
@@ -277,7 +278,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
-				this.SetDecimal(field, (decimal) value);
+				string s = (string) Types.Converters.AutomaticValueConverter.Instance.Convert(value, typeof(string), null, System.Globalization.CultureInfo.InvariantCulture);
+				field.Text = s;
 			}
 		}
 
