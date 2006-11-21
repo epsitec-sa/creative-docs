@@ -1050,14 +1050,19 @@ namespace Epsitec.Common.Widgets
 				this.ManualArrange ();
 			}
 
-			if (this.dirtyDisplay)
+			if (this.IsActualGeometryValid)
 			{
-				this.Invalidate ();
-			}
+				if (this.dirtyDisplay)
+				{
+					this.Invalidate ();
+				}
 
-			if (context != null)
-			{
-				context.RemoveVisualFromArrangeQueue (this);
+				if (context != null)
+				{
+					context.RemoveVisualFromArrangeQueue (this);
+				}
+				
+				System.Diagnostics.Debug.Assert (this.IsActualGeometryValid);
 			}
 		}
 
