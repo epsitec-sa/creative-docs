@@ -247,7 +247,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		void HandlePanelExtendedSize(object sender)
+		private void HandlePanelExtendedSize(object sender)
 		{
 			MyWidgets.PropertyPanel panel = sender as MyWidgets.PropertyPanel;
 			System.Diagnostics.Debug.Assert(panel != null);
