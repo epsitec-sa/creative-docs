@@ -9,7 +9,7 @@ namespace Epsitec.Common.Types
 	/// The <c>CollectionView</c> class represents a view of a collection. Views implement
 	/// grouping, sorting, filtering and the concept of a current item.
 	/// </summary>
-	public class CollectionView : ICollectionView, System.Collections.IEnumerable, INotifyCollectionChanged, INotifyPropertyChanged, System.IDisposable
+	public class CollectionView : ICollectionView, System.Collections.IEnumerable, INotifyPropertyChanged, System.IDisposable
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CollectionView"/> class.

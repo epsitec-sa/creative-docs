@@ -119,6 +119,8 @@
     <Compile Include="Controllers\StringController.cs" />
     <Compile Include="AbstractPlaceholder.cs" />
     <Compile Include="IController.cs" />
+    <Compile Include="ItemPanel.cs" />
+    <Compile Include="ItemView.cs" />
     <Compile Include="MiniPanel.cs" />
     <Compile Include="PanelMode.cs" />
     <Compile Include="PanelMask.cs" />

@@ -7,7 +7,7 @@ namespace Epsitec.Common.Types
 	/// The <c>ICollectionView</c> interface enables collections to have functionalities
 	/// such as current record management, sorting, filtering and grouping.
 	/// </summary>
-	public interface ICollectionView
+	public interface ICollectionView : INotifyCollectionChanged
 	{
 		/// <summary>
 		/// Gets the underlying (unfiltered and unsorted) source collection.
