@@ -533,6 +533,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
+#if false
+			//	TODO: très très lent avec ces instructions:
 			double w1 = this.array.GetColumnsAbsoluteWidth(0);
 			double w2 = this.array.GetColumnsAbsoluteWidth(1) + this.array.GetColumnsAbsoluteWidth(2);
 			double w3 = this.array.GetColumnsAbsoluteWidth(3) + this.array.GetColumnsAbsoluteWidth(4);
@@ -544,6 +546,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldName.PreferredWidth = w1-1;
 			this.buttonType.PreferredWidth = w2-1;
 			this.buttonCaption.PreferredWidth = w3+1;
+#endif
 		}
 
 

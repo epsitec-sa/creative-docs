@@ -1465,6 +1465,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				item.Text = Misc.Italic("TextField");
 				item.MinWidth = 20;
 				item.MinHeight = item.PreferredHeight;
+				item.DrawDesignerFrame = true;  // nécessaire pour voir le cadre pendant la création
 			}
 
 			if (this.context.Tool == "ObjectGroup")
