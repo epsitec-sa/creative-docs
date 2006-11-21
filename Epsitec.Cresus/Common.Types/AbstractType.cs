@@ -188,6 +188,11 @@ namespace Epsitec.Common.Types
 		/// <param name="value">The value or <c>null</c>.</param>
 		public void DefineDefaultValue(object value)
 		{
+			if (this.IsNullValue (value))
+			{
+				value = null;
+			}
+			
 			System.Diagnostics.Debug.Assert ((value == null) || (this.IsValidValue (value)));
 			AbstractType.SetDefaultValue (this.Caption, value);
 		}
@@ -198,6 +203,11 @@ namespace Epsitec.Common.Types
 		/// <param name="value">The value or <c>null</c>.</param>
 		public void DefineSampleValue(object value)
 		{
+			if (this.IsNullValue (value))
+			{
+				value = null;
+			}
+
 			System.Diagnostics.Debug.Assert ((value == null) || (this.IsValidValue (value)));
 			AbstractType.SetSampleValue (this.Caption, value);
 		}
