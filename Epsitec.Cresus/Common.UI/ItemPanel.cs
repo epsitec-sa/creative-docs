@@ -10,6 +10,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.UI
 {
+	/// <summary>
+	/// The <c>ItemPanel</c> class represents a collection of items in a panel,
+	/// where the collection is defined through a <see cref="ICollectionView"/>.
+	/// </summary>
 	public class ItemPanel : Widgets.FrameBox
 	{
 		public ItemPanel()
@@ -66,10 +70,37 @@ namespace Epsitec.Common.UI
 
 			if (items.Groups.Count == 0)
 			{
+				this.CreateItemViews (items.Items, currentViews);
 			}
 			else
 			{
+				this.CreateItemViews (items.Groups, currentViews);
 			}
+		}
+
+		private void CreateItemViews(System.Collections.IList list, Dictionary<object, ItemView> currentViews)
+		{
+			foreach (object item in list)
+			{
+				ItemView view;
+
+				if (currentViews.TryGetValue (item, out view))
+				{
+					currentViews.Remove (item);
+					this.views.Add (view);
+				}
+				else
+				{
+					this.views.Add (this.CreateItemView (item));
+				}
+			}
+		}
+
+		private ItemView CreateItemView(object item)
+		{
+			//	TODO: create the proper item view for this item
+			
+			return new ItemView (item, this.itemViewDefaultSize);
 		}
 
 		private static void NotifyItemsChanged(DependencyObject obj, object oldValue, object newValue)
@@ -82,5 +113,6 @@ namespace Epsitec.Common.UI
 
 		List<ItemView> views = new List<ItemView> ();
 		object exclusion = new object ();
+		Drawing.Size itemViewDefaultSize = new Drawing.Size (80, 20);
 	}
 }
