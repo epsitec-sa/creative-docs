@@ -340,6 +340,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateColumnsWidth()
 		{
+			//	Place les widgets en dessus du tableau en fonction des largeurs des colonnes.
 			if (this.array.Columns == 1)
 			{
 				this.header2.Visibility = false;

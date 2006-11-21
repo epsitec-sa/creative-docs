@@ -53,6 +53,33 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.slider.Value = (decimal) TypeEditorStructured.arrayLineHeight;
 			this.slider.Dock = DockStyle.Right;
 
+#if true
+			//	Crée le pied pour éditer la ligne sélectionnée.
+			this.footer = new Widget(this);
+			this.footer.Dock = DockStyle.StackBegin;
+			this.footer.Margins = new Margins(0, 0, 5, 0);
+
+			this.fieldName = new TextFieldEx(this.footer);
+			this.fieldName.Margins = new Margins(1, 0, 0, 0);
+			this.fieldName.Dock = DockStyle.Left;
+			this.fieldName.ButtonShowCondition = ShowCondition.WhenModified;
+			this.fieldName.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
+			this.fieldName.EditionAccepted += new EventHandler(this.HandleTextChanged);
+			this.fieldName.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
+
+			this.buttonType = new Button(this.footer);
+			this.buttonType.CaptionId = Res.Captions.Editor.Structured.ChangeType.Id;
+			this.buttonType.Margins = new Margins(1, 0, 0, 0);
+			this.buttonType.Dock = DockStyle.Left;
+			this.buttonType.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
+			this.buttonCaption = new Button(this.footer);
+			this.buttonCaption.CaptionId = Res.Captions.Editor.Structured.ChangeCaption.Id;
+			this.buttonCaption.Margins = new Margins(1, 0, 0, 0);
+			this.buttonCaption.Dock = DockStyle.Left;
+			this.buttonCaption.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+#endif
+
 			//	Crée l'en-tête du tableau.
 			this.header = new Widget(this);
 			this.header.Dock = DockStyle.StackBegin;
@@ -102,6 +129,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 			this.array.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
 
+#if false
 			//	Crée le pied pour éditer la ligne sélectionnée.
 			this.footer = new Widget(this);
 			this.footer.Dock = DockStyle.StackBegin;
@@ -126,6 +154,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCaption.Margins = new Margins(1, 0, 0, 0);
 			this.buttonCaption.Dock = DockStyle.Left;
 			this.buttonCaption.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+#endif
 		}
 
 		public TypeEditorStructured(Widget embedder) : this()
@@ -528,24 +557,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		protected override void UpdateClientGeometry()
-		{
-			//	Met à jour la géométrie.
-			base.UpdateClientGeometry();
-
-			if (this.footer == null)
-			{
-				return;
-			}
-
-			this.UpdateArrayGeometry();
-		}
-
-		protected void UpdateArrayGeometry()
+		protected void UpdateColumnsWidth()
 		{
 			//	Place les widgets en dessus et en dessous du tableau en fonction des
 			//	largeurs des colonnes.
-#if false
+//?#if false
 			//	TODO: très très lent avec ces instructions:
 			double w1 = this.array.GetColumnsAbsoluteWidth(0);
 			double w2 = this.array.GetColumnsAbsoluteWidth(1) + this.array.GetColumnsAbsoluteWidth(2);
@@ -558,7 +574,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldName.PreferredWidth = w1-1;
 			this.buttonType.PreferredWidth = w2-1;
 			this.buttonCaption.PreferredWidth = w3+1;
-#endif
+//?#endif
 		}
 
 
@@ -611,7 +627,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		private void HandleArrayColumnsWidthChanged(object sender)
 		{
 			//	La largeur des colonnes a changé.
-			this.UpdateArrayGeometry();
+			this.UpdateColumnsWidth();
 		}
 
 		private void HandleArrayCellCountChanged(object sender)
