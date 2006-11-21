@@ -42,6 +42,42 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the default data type for the data source.
+		/// </summary>
+		/// <value>The default data type.</value>
+		public IStructuredType DefaultDataType
+		{
+			get
+			{
+				return this.GetField ("*").Type as IStructuredType;
+			}
+			set
+			{
+				INamedType namedType = value as INamedType;
+
+				if ((value != null) &&
+					(namedType == null))
+				{
+					throw new System.ArgumentException ("Specified default data type does not implement INamedType");
+				}
+
+				if (this.fields != null)
+				{
+					for (int i = 0; i < this.fields.Count; i++)
+					{
+						if (this.fields[i].Id == "*")
+						{
+							this.fields[i] = new StructuredTypeField ("*", namedType);
+							return;
+						}
+					}
+				}
+
+				this.Fields.Add (new StructuredTypeField ("*", namedType));
+			}
+		}
+
 		#region IStructuredType Members
 
 		/// <summary>
