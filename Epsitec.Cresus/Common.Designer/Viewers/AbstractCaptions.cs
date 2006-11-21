@@ -808,7 +808,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.UpdateDisplayMode();
-			this.UpdateEdit();
+			this.UpdateEdit();  // pour que le résumé prenne en compte les modifications
 		}
 
 		private void HandleSplitterDragged(object sender)

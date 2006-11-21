@@ -260,18 +260,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else
 			{
 				AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
-				System.DateTime dt = (System.DateTime) value;
 
 				if (type is DateType)
 				{
-					field.Text = TypeEditorDateTime.DateTimeToDateString(dt);
+					Date date = (Date) value;
+					field.Text = TypeEditorDateTime.DateTimeToDateString(date.ToDateTime());
 				}
 				else if (type is TimeType)
 				{
-					field.Text = TypeEditorDateTime.DateTimeToTimeString(dt);
+					Time time = (Time) value;
+					field.Text = TypeEditorDateTime.DateTimeToTimeString(time.ToDateTime());
 				}
 				else  // DateTime ?
 				{
+					System.DateTime dt = (System.DateTime) value;
 					field.Text = TypeEditorDateTime.DateTimeToDateTimeString(dt);
 				}
 			}
