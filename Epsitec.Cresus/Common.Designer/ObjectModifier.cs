@@ -101,7 +101,7 @@ namespace Epsitec.Common.Designer
 			HSeparator,			// séparateur horizontal
 			VSeparator,			// séparateur vertical
 			Button,				// bouton associé à une commande
-			TextField,			// texte éditable
+			Placeholder,		// texte éditable lié à la base de données
 			StaticText,			// texte fixe
 			Group,				// conteneur invisible
 			GroupBox,			// conteneur avec cadre et titre
@@ -151,9 +151,9 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (obj is AbstractTextField)
+			if (obj is UI.Placeholder)
 			{
-				return ObjectType.TextField;
+				return ObjectType.Placeholder;
 			}
 
 			if (obj is StaticText)
@@ -1362,7 +1362,7 @@ namespace Epsitec.Common.Designer
 			ObjectType type = ObjectModifier.GetObjectType(obj);
 			if (type == ObjectType.StaticText ||
 				type == ObjectType.Button ||
-				type == ObjectType.TextField)
+				type == ObjectType.Placeholder)
 			{
 				obj.PreferredHeight = obj.MinHeight;
 			}

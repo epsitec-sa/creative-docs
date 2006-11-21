@@ -322,7 +322,7 @@ namespace Epsitec.Common.Designer
 			{
 				case ObjectModifier.ObjectType.Button:
 				case ObjectModifier.ObjectType.HSeparator:
-				case ObjectModifier.ObjectType.TextField:
+				case ObjectModifier.ObjectType.Placeholder:
 				case ObjectModifier.ObjectType.StaticText:
 				case ObjectModifier.ObjectType.Group:
 				case ObjectModifier.ObjectType.GroupBox:

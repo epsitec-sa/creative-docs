@@ -1461,7 +1461,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.context.Tool == "ObjectText")
 			{
-				item = new TextField();
+				item = new UI.Placeholder();
 				item.Text = Misc.Italic("TextField");
 				item.MinWidth = 20;
 				item.MinHeight = item.PreferredHeight;
