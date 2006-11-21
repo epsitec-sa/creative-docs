@@ -537,6 +537,63 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckCollectionBinding3()
+		{
+			StructuredData data = new StructuredData ();
+			ArticleList list = new ArticleList ();
+
+			list.Add (new Article ("Vis M3"));
+			list.Add (new Article ("Vis M4"));
+			list.Add (new Article ("Boulon M3"));
+			list.Add (new Article ("Tournevis"));
+			list.Add (new Article ("Clé M4"));
+
+			data.SetValue ("Articles", list);
+			data.SetValue ("InvoiceId", "abc");
+
+			UserInterface ui = new UserInterface ();
+			Binding context = new Binding (data);
+
+			ui.SetBinding (UserInterface.InvoiceIdProperty, new Binding (BindingMode.TwoWay, "InvoiceId"));
+			ui.SetBinding (UserInterface.ArticleProperty, new Binding (BindingMode.OneWay, "Articles"));
+			ui.SetBinding (UserInterface.ArticleNameProperty, new Binding (BindingMode.TwoWay, "*.Articles.*.Name"));
+
+			//	No DataContext defined for the UserInterface object, so the binding
+			//	won't have any effect yet:
+
+			Assert.IsNull (ui.InvoiceId);
+			Assert.IsNull (ui.Article);
+			Assert.IsNull (ui.ArticleName);
+
+			//	Attach a DataContext to the UserInterface object; the bindings become
+			//	active:
+
+			DataObject.SetDataContext (ui, context);
+
+			Assert.AreEqual (data.GetValue ("InvoiceId"), ui.InvoiceId);
+
+			ICollectionView cv = DataObject.GetCollectionView (ui, list);
+
+			Assert.IsNotNull (cv);
+			Assert.IsNotNull (cv.CurrentItem);
+
+			Assert.AreEqual ("Vis M3", ((Article) cv.CurrentItem).Name);
+			Assert.AreEqual (cv.CurrentItem, ui.Article);
+			Assert.AreEqual ("Vis M3", ui.ArticleName);
+
+			cv.MoveCurrentToNext ();
+
+			Assert.AreEqual ("Vis M4", ((Article) cv.CurrentItem).Name);
+			Assert.AreEqual (cv.CurrentItem, ui.Article);
+			Assert.AreEqual ("Vis M4", ui.ArticleName);
+
+			ui.ArticleName = "Vis M4-X";
+
+			Assert.AreEqual ("Vis M4-X", ui.ArticleName);
+			Assert.AreEqual ("Vis M4-X", ((Article) cv.CurrentItem).Name);
+		}
+
+		[Test]
 		public void CheckCollectionType()
 		{
 			CollectionType type = new CollectionType ();

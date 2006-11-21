@@ -157,7 +157,7 @@ namespace Epsitec.Common.Types
 			{
 				bindingXyz.Mode = BindingMode.TwoWay;
 				bindingXyz.Source = mySource;
-				bindingXyz.Path = "Sibling.Xyz";
+				bindingXyz.Path = "Sibling.*.Xyz";
 
 				myTarget.SetBinding (MyObject.XyzProperty, bindingXyz);
 			}

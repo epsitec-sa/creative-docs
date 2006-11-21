@@ -395,10 +395,39 @@ namespace Epsitec.Common.Types
 					//	at the root.
 
 					string[] elements = path.Split ('.');
+					int firstItemIndex = 0;
 
 					for (int i = 0; i < elements.Length; i++)
 					{
-						if (i > 0)
+						firstItemIndex++;
+						
+						if (elements[i] == "*")
+						{
+							if (doSource != null)
+							{
+								//	Skip "*" elements. We cannot - ever - have a DependencyObject
+								//	source with such a property name.
+								
+								continue;
+							}
+							if (sdSource != null)
+							{
+								object star = sdSource.GetValue ("*");
+
+								if ((UnknownValue.IsUnknownValue (star)) ||
+									(UndefinedValue.IsUndefinedValue (star)))
+								{
+									//	If the structured data source does not contain a "*" node,
+									//	then simply ignore the "*" element.
+
+									continue;
+								}
+							}
+						}
+
+						firstItemIndex--;
+
+						if (i > firstItemIndex)
 						{
 							if ((doSource != null) &&
 								(property != null))
