@@ -89,6 +89,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 			this.array.SetColumnBreakMode(1, TextBreakMode.Ellipsis | TextBreakMode.Split);
 			this.array.SetColumnBreakMode(3, TextBreakMode.Ellipsis | TextBreakMode.Split);
+			this.array.SetDynamicToolTips(0, true);
+			this.array.SetDynamicToolTips(1, false);
+			this.array.SetDynamicToolTips(2, false);
+			this.array.SetDynamicToolTips(3, false);
+			this.array.SetDynamicToolTips(4, false);
 			this.array.LineHeight = TypeEditorStructured.arrayLineHeight;
 			this.array.Dock = DockStyle.StackBegin;
 			this.array.PreferredHeight = 200;
@@ -533,6 +538,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
+			this.UpdateArrayGeometry();
+		}
+
+		protected void UpdateArrayGeometry()
+		{
+			//	Place les widgets en dessus et en dessous du tableau en fonction des
+			//	largeurs des colonnes.
 #if false
 			//	TODO: très très lent avec ces instructions:
 			double w1 = this.array.GetColumnsAbsoluteWidth(0);
@@ -599,7 +611,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		private void HandleArrayColumnsWidthChanged(object sender)
 		{
 			//	La largeur des colonnes a changé.
-			this.UpdateClientGeometry();
+			this.UpdateArrayGeometry();
 		}
 
 		private void HandleArrayCellCountChanged(object sender)
