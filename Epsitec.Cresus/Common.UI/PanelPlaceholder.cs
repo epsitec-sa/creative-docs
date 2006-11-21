@@ -103,6 +103,24 @@ namespace Epsitec.Common.UI
 			this.RecreateUserInterface ();
 		}
 
+		public void DefinePanel(Panel panel)
+		{
+			if (this.panel != null)
+			{
+				DataObject.ClearDataContext (this.panel);
+			}
+			
+			this.panel = panel;
+
+			if (this.panel != null)
+			{
+				this.panel.SetEmbedder (this);
+				this.panel.Dock = Widgets.DockStyle.Fill;
+				
+				DataObject.SetDataContext (this.panel, new Binding (this, "Value"));
+			}
+		}
+
 		#region IDeserialization Members
 
 		void Types.Serialization.IDeserialization.NotifyDeserializationStarted(Types.Serialization.Context context)
@@ -167,9 +185,7 @@ namespace Epsitec.Common.UI
 					xml = field.AsString;
 				}
 
-				this.panel = Panel.DeserializePanel (xml, null, manager);
-				this.panel.SetEmbedder (this);
-				this.panel.Dock = Widgets.DockStyle.Fill;
+				this.DefinePanel (Panel.DeserializePanel (xml, null, manager));
 			}
 		}
 

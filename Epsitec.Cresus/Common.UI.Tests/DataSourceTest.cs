@@ -175,7 +175,7 @@ namespace Epsitec.Common.UI
 		}
 
 		[Test]
-		public void CheckPanelDataSourceBinding()
+		public void CheckPanelDataSourceBinding1()
 		{
 			Panel panel = new UI.Panel ();
 			DataSource collection = new DataSource ();
@@ -202,6 +202,58 @@ namespace Epsitec.Common.UI
 			data.SetValue ("Label", "Good bye");
 
 			Assert.AreEqual ("Good bye", b1.Name);
+		}
+
+		[Test]
+		public void CheckPanelDataSourceBinding2()
+		{
+			Panel panel = new UI.Panel ();
+			DataSource source = new DataSource ();
+			
+			StructuredType type1 = new StructuredType ();
+			StructuredType type2 = new StructuredType ();
+			
+			StructuredData data1 = new StructuredData (type1);
+			StructuredData data2 = new StructuredData (type2);
+
+			type1.Fields.Add ("A", Types.StringType.Default);
+			type1.Fields.Add ("R", type2);
+
+			type2.Fields.Add ("B", Types.StringType.Default);
+			
+			data1.SetValue ("A", "a");
+			data1.SetValue ("R", data2);
+
+			data2.SetValue ("B", "b");
+
+			panel.DataSource = source;
+
+			source.AddDataSource ("*", data1);
+
+			Widgets.Button b1 = new Epsitec.Common.Widgets.Button ();
+			Widgets.Button b2 = new Epsitec.Common.Widgets.Button ();
+
+			panel.Children.Add (b1);
+
+			b1.SetBinding (Widgets.Visual.NameProperty, new Binding (BindingMode.OneWay, null, "*.A"));
+			b2.SetBinding (Widgets.Visual.NameProperty, new Binding (BindingMode.OneWay, null, "*.B"));
+
+			Assert.AreEqual ("a", b1.Name);
+			Assert.AreEqual (null, b2.Name);
+
+			PanelPlaceholder placeholder = new PanelPlaceholder ();
+			Panel subPanel = new Panel ();
+
+			subPanel.Children.Add (b2);
+
+			placeholder.DefinePanel (subPanel);
+			
+			placeholder.SetBinding (Placeholder.ValueProperty, new Binding (BindingMode.OneWay, null, "*.R"));
+
+			panel.Children.Add (placeholder);
+
+			Assert.AreEqual ("a", b1.Name);
+			Assert.AreEqual ("b", b2.Name);
 		}
 
 		[Test]

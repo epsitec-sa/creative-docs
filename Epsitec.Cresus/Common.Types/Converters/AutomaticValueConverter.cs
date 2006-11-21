@@ -43,6 +43,11 @@ namespace Epsitec.Common.Types.Converters
 					System.Diagnostics.Debug.WriteLine ("Convert enum value " + value.ToString () + " to type " + expectedType.Name);
 				}
 
+				if (expectedType == typeof (object))
+				{
+					return value;
+				}
+
 				return System.Convert.ChangeType (value, expectedType, culture);
 			}
 			catch (System.InvalidCastException)
@@ -106,6 +111,15 @@ namespace Epsitec.Common.Types.Converters
 							return enumValue;
 						}
 					}
+				}
+				else
+				{
+					return value;
+				}
+				
+				if (expectedType == typeof (object))
+				{
+					return value;
 				}
 
 				return System.Convert.ChangeType (value, expectedType, culture);
