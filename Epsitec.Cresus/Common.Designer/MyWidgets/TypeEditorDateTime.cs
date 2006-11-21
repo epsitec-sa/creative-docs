@@ -56,7 +56,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.CreateStringLabeled("Pas pour la date", left, out this.groupDateStep, out this.fieldDateStep);
 			this.groupDateStep.Dock = DockStyle.StackBegin;
-			this.groupDateStep.Margins = new Margins(0, 0, 0, 0);
+			this.groupDateStep.Margins = new Margins(0, 0, 0, 10);
 			this.fieldDateStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			//	Heure, à droite.
@@ -74,6 +74,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupTimeStep.Dock = DockStyle.StackBegin;
 			this.groupTimeStep.Margins = new Margins(0, 0, 0, 0);
 			this.fieldTimeStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+
+			//	Default et Sample, à gauche.
+			this.CreateStringLabeled("Valeur par défaut", left, out this.groupDefault, out this.fieldDefault);
+			this.groupDefault.Dock = DockStyle.StackBegin;
+			this.groupDefault.Margins = new Margins(0, 0, 0, 2);
+			this.fieldDefault.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+
+			this.CreateStringLabeled("Exemple de valeur", left, out this.groupSample, out this.fieldSample);
+			this.groupSample.Dock = DockStyle.StackBegin;
+			this.groupSample.Margins = new Margins(0, 0, 0, 0);
+			this.fieldSample.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 		}
 
 		public TypeEditorDateTime(Widget embedder) : this()
@@ -95,6 +106,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.fieldMinTime.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMaxTime.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldTimeStep.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+
+				this.fieldDefault.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldSample.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -144,6 +158,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.PutSummaryLegend(builder, "Pas heure = ");
 			builder.Append(TypeEditorDateTime.ToTimeSpan(type.TimeStep));
 
+			this.PutSummaryDefaultAndSample(builder, type);
+
 			return builder.ToString();
 		}
 
@@ -185,13 +201,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupTimeStep.Visibility = showTime;
 
 			this.ignoreChange = true;
+
 			this.fieldResol.Text = TypeEditorDateTime.Convert(type.Resolution);
+
 			TypeEditorDateTime.ToDate(this.fieldMinDate, type.MinimumDate);
 			TypeEditorDateTime.ToDate(this.fieldMaxDate, type.MaximumDate);
 			TypeEditorDateTime.ToTime(this.fieldMinTime, type.MinimumTime);
 			TypeEditorDateTime.ToTime(this.fieldMaxTime, type.MaximumTime);
+
 			TypeEditorDateTime.ToDateStep(this.fieldDateStep, type.DateStep);
 			TypeEditorDateTime.ToTimeSpan(this.fieldTimeStep, type.TimeStep);
+
+			this.ToObjectDateTime(this.fieldDefault, type.DefaultValue);
+			this.ToObjectDateTime(this.fieldSample, type.SampleValue);
+
 			this.ignoreChange = false;
 		}
 
@@ -225,6 +248,57 @@ namespace Epsitec.Common.Designer.MyWidgets
 				case TimeResolution.Months:        return "Months";
 				case TimeResolution.Years:         return "Years";
 				default:                           return "";
+			}
+		}
+
+		protected void ToObjectDateTime(TextField field, object value)
+		{
+			if (value == null)
+			{
+				field.Text = "";
+			}
+			else
+			{
+				AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
+				System.DateTime dt = (System.DateTime) value;
+
+				if (type is DateType)
+				{
+					field.Text = TypeEditorDateTime.ToDate(dt);
+				}
+				else if (type is TimeType)
+				{
+					field.Text = TypeEditorDateTime.ToTime(dt);
+				}
+				else  // DateTime ?
+				{
+					field.Text = TypeEditorDateTime.ToDateTime(dt);
+				}
+			}
+		}
+
+		protected object ToObjectDateTime(TextField field)
+		{
+			if (string.IsNullOrEmpty(field.Text))
+			{
+				return null;
+			}
+			else
+			{
+				AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
+
+				if (type is DateType)
+				{
+					return TypeEditorDateTime.ToDate(field);
+				}
+				else if (type is TimeType)
+				{
+					return TypeEditorDateTime.ToTime(field);
+				}
+				else  // DateTime ?
+				{
+					return TypeEditorDateTime.ToDateTime(field);
+				}
 			}
 		}
 
@@ -278,6 +352,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			return Time.Null;
+		}
+
+		protected static System.DateTime ToDateTime(TextField field)
+		{
+			if (!string.IsNullOrEmpty(field.Text))
+			{
+				return TypeEditorDateTime.ToDateTime(field.Text);
+			}
+
+			return System.DateTime.MinValue;
 		}
 
 		protected static void ToDateStep(TextField field, DateStep ds)
@@ -440,6 +524,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 				type.DefineTimeStep(TypeEditorDateTime.ToTimeSpan(this.fieldTimeStep));
 			}
 
+			if (sender == this.fieldDefault)
+			{
+				type.DefineDefaultValue(this.ToObjectDateTime(this.fieldDefault));
+			}
+
+			if (sender == this.fieldSample)
+			{
+				type.DefineSampleValue(this.ToObjectDateTime(this.fieldSample));
+			}
+
 			//	[Note1] Cet appel va provoquer le ResourceAccess.SetField.
 			this.OnContentChanged();
 		}
@@ -460,5 +554,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected TextField						fieldMaxTime;
 		protected Widget						groupTimeStep;
 		protected TextField						fieldTimeStep;
+
+		protected Widget						groupDefault;
+		protected TextField						fieldDefault;
+		protected Widget						groupSample;
+		protected TextField						fieldSample;
 	}
 }
