@@ -241,6 +241,46 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		#region Binding
+		public static bool HasBinding(Widget obj)
+		{
+			//	Indique si l'objet a du binding.
+			ObjectType type = ObjectModifier.GetObjectType(obj);
+			return type == ObjectType.Placeholder;
+		}
+
+		public static void SetBinding(Widget obj, string source)
+		{
+			//	Modifie le binding de l'objet.
+			//	Si l'objet est lié au champ "Toto" d'un StructuredType, source doit contenir "*.Toto".
+			ObjectType type = ObjectModifier.GetObjectType(obj);
+			if (type == ObjectType.Placeholder)
+			{
+				UI.Placeholder ph = obj as UI.Placeholder;
+				ph.SetBinding(UI.Placeholder.ValueProperty, new Types.Binding(Types.BindingMode.TwoWay, source)); 
+			}
+		}
+
+		public static string GetBinding(Widget obj)
+		{
+			//	Retourne le binding de l'objet.
+			//	Si l'objet est lié au champ "Toto" d'un StructuredType, retourne "*.Toto".
+			ObjectType type = ObjectModifier.GetObjectType(obj);
+			if (type == ObjectType.Placeholder)
+			{
+				UI.Placeholder ph = obj as UI.Placeholder;
+				Types.Binding binding = ph.GetBinding(UI.Placeholder.ValueProperty);
+				if (binding != null)
+				{
+					return binding.Path;
+				}
+			}
+
+			return null;
+		}
+		#endregion
+
+
 		#region ChildrenPlacement
 		public bool AreChildrenAnchored(Widget obj)
 		{

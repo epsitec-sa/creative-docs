@@ -536,6 +536,7 @@ namespace Epsitec.Common.Designer.Viewers
 					druid = type.CaptionId;
 				}
 
+				//	TODO: ajouter un paramètre pour restreindre le choix dans le dialogue aux StructuredType !
 				druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Types, druid, null);
 				if (!druid.IsEmpty)
 				{
