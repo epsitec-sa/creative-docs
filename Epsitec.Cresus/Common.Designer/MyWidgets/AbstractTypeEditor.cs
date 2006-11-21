@@ -121,7 +121,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (type.DefaultValue != null)
 				{
 					builder.Append("Défaut = ");
-					builder.Append(type.DefaultValue.ToString());
+					builder.Append(this.TypeToString(type.DefaultValue));
 				}
 
 				if (type.SampleValue != null)
@@ -132,9 +132,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 					}
 
 					builder.Append("Exemple = ");
-					builder.Append(type.SampleValue.ToString());
+					builder.Append(this.TypeToString(type.SampleValue));
 				}
 			}
+		}
+
+		protected virtual string TypeToString(object value)
+		{
+			return value.ToString();
 		}
 
 

@@ -173,6 +173,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 			builder.Append(legend);
 		}
 
+		protected override string TypeToString(object value)
+		{
+			if (value is Date)
+			{
+				Date date = (Date) value;
+				return TypeEditorDateTime.DateTimeToDateString(date.ToDateTime());
+			}
+			else if (value is Time)
+			{
+				Time time = (Time) value;
+				return TypeEditorDateTime.DateTimeToTimeString(time.ToDateTime());
+			}
+			else
+			{
+				System.DateTime dt = (System.DateTime) value;
+				return TypeEditorDateTime.DateTimeToDateTimeString(dt);
+			}
+		}
+
 
 		protected override void UpdateContent()
 		{
