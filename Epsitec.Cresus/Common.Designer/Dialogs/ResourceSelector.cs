@@ -194,12 +194,13 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void AccessOpenList(Module baseModule, ResourceAccess.Type type, List<Druid> resources, List<Druid> exclude)
+		public void AccessOpenList(Module baseModule, ResourceAccess.Type type, ResourceAccess.TypeType typeType, List<Druid> resources, List<Druid> exclude)
 		{
 			//	Début de l'accès 'bypass' aux ressources pour le dialogue.
 			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Commands || type == ResourceAccess.Type.Values);
 
 			this.resourceType = type;
+			this.resourceTypeType = typeType;
 			this.resource = Druid.Empty;
 			this.resources = resources;
 			this.exclude = exclude;
@@ -210,16 +211,17 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.access = this.module.AccessCaptions;
 
-			this.access.BypassFilterOpenAccess(this.resourceType, this.exclude);
+			this.access.BypassFilterOpenAccess(this.resourceType, this.resourceTypeType, this.exclude);
 		}
 
-		public void AccessOpen(Module baseModule, ResourceAccess.Type type, Druid resource, List<Druid> exclude)
+		public void AccessOpen(Module baseModule, ResourceAccess.Type type, ResourceAccess.TypeType typeType, Druid resource, List<Druid> exclude)
 		{
 			//	Début de l'accès 'bypass' aux ressources pour le dialogue.
 			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
 			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Unknow || type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Commands || type == ResourceAccess.Type.Values || type == ResourceAccess.Type.Types || type == ResourceAccess.Type.Panels);
 			System.Diagnostics.Debug.Assert(resource.Type != DruidType.ModuleRelative);
 
+			this.resourceTypeType = typeType;
 			this.resource = resource;
 			this.resources = null;
 			this.exclude = exclude;
@@ -253,7 +255,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.resourceType = type;
 			}
 
-			this.access.BypassFilterOpenAccess(this.resourceType, this.exclude);
+			this.access.BypassFilterOpenAccess(this.resourceType, this.resourceTypeType, this.exclude);
 		}
 
 		protected void AccessChange(Module module)
@@ -272,7 +274,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.access = this.module.AccessCaptions;
 			}
 
-			this.access.BypassFilterOpenAccess(this.resourceType, this.exclude);
+			this.access.BypassFilterOpenAccess(this.resourceType, this.resourceTypeType, this.exclude);
 		}
 
 		public List<Druid> AccessCloseList()
@@ -845,6 +847,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected Module						baseModule;
 		protected Module						module;
 		protected ResourceAccess.Type			resourceType;
+		protected ResourceAccess.TypeType		resourceTypeType;
 		protected ResourceAccess				access;
 		protected List<Druid>					exclude;
 		protected StaticText					title;

@@ -1018,7 +1018,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region ByPassFilter
-		public void BypassFilterOpenAccess(Type type, List<Druid> exclude)
+		public void BypassFilterOpenAccess(Type type, TypeType typeType, List<Druid> exclude)
 		{
 			//	Ouvre l'accès 'bypass'.
 			//	Ce type d'accès n'est possible que sur une ressource 'Caption' (Captions,
@@ -1040,6 +1040,16 @@ namespace Epsitec.Common.Designer
 
 						if (exclude == null || !exclude.Contains(fullDruid))
 						{
+							if (type == Type.Types && typeType != TypeType.None)
+							{
+								AbstractType at = this.DirectGetAbstractType(fullDruid);
+								TypeType tt = ResourceAccess.AbstractTypeToTypeType(at);
+								if (tt != typeType)
+								{
+									continue;
+								}
+							}
+
 							this.bypassDruids.Add(fullDruid);
 						}
 					}
