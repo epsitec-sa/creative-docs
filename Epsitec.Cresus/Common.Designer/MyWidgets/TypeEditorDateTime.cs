@@ -30,7 +30,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			right.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			right.Dock = DockStyle.Fill;
 
-			this.CreateComboLabeled("Résolution", left, out group, out this.fieldResol);
+			this.CreateComboLabeled(Res.Strings.Viewers.Types.DateTime.Resolution, left, out group, out this.fieldResol);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 10);
 			this.fieldResol.TextChanged += new EventHandler(this.HandleTextFieldChanged);
@@ -44,44 +44,44 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldResol.Items.Add("Years");
 
 			//	Date, à gauche.
-			this.CreateStringLabeled("Date minimale", left, out this.groupMinDate, out this.fieldMinDate);
+			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.DateMin, left, out this.groupMinDate, out this.fieldMinDate);
 			this.groupMinDate.Dock = DockStyle.StackBegin;
 			this.groupMinDate.Margins = new Margins(0, 0, 0, 2);
 			this.fieldMinDate.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateStringLabeled("Date maximale", left, out this.groupMaxDate, out this.fieldMaxDate);
+			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.DateMax, left, out this.groupMaxDate, out this.fieldMaxDate);
 			this.groupMaxDate.Dock = DockStyle.StackBegin;
 			this.groupMaxDate.Margins = new Margins(0, 0, 0, 10);
 			this.fieldMaxDate.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateStringLabeled("Pas pour la date", left, out this.groupDateStep, out this.fieldDateStep);
+			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.DateStep, left, out this.groupDateStep, out this.fieldDateStep);
 			this.groupDateStep.Dock = DockStyle.StackBegin;
 			this.groupDateStep.Margins = new Margins(0, 0, 0, 10);
 			this.fieldDateStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			//	Heure, à droite.
-			this.CreateStringLabeled("Heure minimale", right, out this.groupMinTime, out this.fieldMinTime);
+			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeMin, right, out this.groupMinTime, out this.fieldMinTime);
 			this.groupMinTime.Dock = DockStyle.StackBegin;
 			this.groupMinTime.Margins = new Margins(0, 0, 20+10, 2);
 			this.fieldMinTime.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateStringLabeled("Heure maximale", right, out this.groupMaxTime, out this.fieldMaxTime);
+			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeMax, right, out this.groupMaxTime, out this.fieldMaxTime);
 			this.groupMaxTime.Dock = DockStyle.StackBegin;
 			this.groupMaxTime.Margins = new Margins(0, 0, 0, 10);
 			this.fieldMaxTime.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateStringLabeled("Pas pour l'heure", right, out this.groupTimeStep, out this.fieldTimeStep);
+			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeStep, right, out this.groupTimeStep, out this.fieldTimeStep);
 			this.groupTimeStep.Dock = DockStyle.StackBegin;
 			this.groupTimeStep.Margins = new Margins(0, 0, 0, 0);
 			this.fieldTimeStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			//	Default et Sample, à gauche.
-			this.CreateStringLabeled("Valeur par défaut", left, out this.groupDefault, out this.fieldDefault);
+			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.Default, left, out this.groupDefault, out this.fieldDefault);
 			this.groupDefault.Dock = DockStyle.StackBegin;
 			this.groupDefault.Margins = new Margins(0, 0, 0, 2);
 			this.fieldDefault.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateStringLabeled("Exemple de valeur", left, out this.groupSample, out this.fieldSample);
+			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.Sample, left, out this.groupSample, out this.fieldSample);
 			this.groupSample.Dock = DockStyle.StackBegin;
 			this.groupSample.Margins = new Margins(0, 0, 0, 0);
 			this.fieldSample.TextChanged += new EventHandler(this.HandleTextFieldChanged);
@@ -119,58 +119,41 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Retourne le texte du résumé.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			this.PutSummaryInitialise();
 
 			AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
 
 			if (type.Resolution != TimeResolution.Default)
 			{
-				builder.Append("Résolution = ");
-				builder.Append(TypeEditorDateTime.TimeResolutionToString(type.Resolution));
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Resolution, TypeEditorDateTime.TimeResolutionToString(type.Resolution));
 			}
 
 			if (type.MinimumDate != Date.Null)
 			{
-				this.PutSummaryLegend(builder, "Date min = ");
-				builder.Append(TypeEditorDateTime.DateTimeToDateString(type.MinimumDate.ToDateTime()));
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.DateMin, TypeEditorDateTime.DateTimeToDateString(type.MinimumDate.ToDateTime()));
 			}
 
 			if (type.MaximumDate != Date.Null)
 			{
-				this.PutSummaryLegend(builder, "Date max = ");
-				builder.Append(TypeEditorDateTime.DateTimeToDateString(type.MaximumDate.ToDateTime()));
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.DateMax, TypeEditorDateTime.DateTimeToDateString(type.MaximumDate.ToDateTime()));
 			}
 
 			if (type.MinimumTime != Time.Null)
 			{
-				this.PutSummaryLegend(builder, "Heure min = ");
-				builder.Append(TypeEditorDateTime.DateTimeToTimeString(type.MinimumTime.ToDateTime()));
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.TimeMin, TypeEditorDateTime.DateTimeToTimeString(type.MinimumTime.ToDateTime()));
 			}
 
 			if (type.MaximumTime != Time.Null)
 			{
-				this.PutSummaryLegend(builder, "Heure max = ");
-				builder.Append(TypeEditorDateTime.DateTimeToTimeString(type.MaximumTime.ToDateTime()));
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.TimeMax, TypeEditorDateTime.DateTimeToTimeString(type.MaximumTime.ToDateTime()));
 			}
 
-			this.PutSummaryLegend(builder, "Pas date = ");
-			builder.Append(TypeEditorDateTime.DateStepToString(type.DateStep));
-
-			this.PutSummaryLegend(builder, "Pas heure = ");
-			builder.Append(TypeEditorDateTime.TimeSpanToString(type.TimeStep));
+			this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.DateStep, TypeEditorDateTime.DateStepToString(type.DateStep));
+			this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.TimeStep, TypeEditorDateTime.TimeSpanToString(type.TimeStep));
 
 			this.PutSummaryDefaultAndSample(builder, type);
 
 			return builder.ToString();
-		}
-
-		protected void PutSummaryLegend(System.Text.StringBuilder builder, string legend)
-		{
-			if (builder.Length > 0)
-			{
-				builder.Append(", ");
-			}
-
-			builder.Append(legend);
 		}
 
 		protected override string TypeToString(object value)

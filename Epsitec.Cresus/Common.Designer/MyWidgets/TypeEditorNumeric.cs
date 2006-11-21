@@ -74,12 +74,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldLargeStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			//	Default et Sample.
-			this.CreateDecimalLabeled("Valeur par défaut", left, out group, out this.fieldDefault);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Default, left, out group, out this.fieldDefault);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 10, 2);
 			this.fieldDefault.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled("Exemple de valeur", left, out group, out this.fieldSample);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Sample, left, out group, out this.fieldSample);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 0);
 			this.fieldSample.TextChanged += new EventHandler(this.HandleTextFieldChanged);
@@ -126,39 +126,33 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Retourne le texte du résumé.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			this.PutSummaryInitialise();
 
 			AbstractNumericType type = this.AbstractType as AbstractNumericType;
 
 			if (!type.Range.IsEmpty)
 			{
-				builder.Append("Min = ");
-				builder.Append(type.Range.Minimum.ToString());
-				builder.Append(", Max = ");
-				builder.Append(type.Range.Maximum.ToString());
-				builder.Append(", Res = ");
-				builder.Append(type.Range.Resolution.ToString());
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Min, type.Range.Minimum.ToString());
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Max, type.Range.Maximum.ToString());
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Resolution, type.Range.Resolution.ToString());
 			}
 
 			if (!type.PreferredRange.IsEmpty)
 			{
-				builder.Append("   —   Min = ");
-				builder.Append(type.PreferredRange.Minimum.ToString());
-				builder.Append(", Max = ");
-				builder.Append(type.PreferredRange.Maximum.ToString());
-				builder.Append(", Res = ");
-				builder.Append(type.PreferredRange.Resolution.ToString());
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Min, type.PreferredRange.Minimum.ToString());
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Max, type.PreferredRange.Maximum.ToString());
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Resolution, type.PreferredRange.Resolution.ToString());
 			}
 
-			builder.Append("   —   Petit pas = ");
-			builder.Append(type.SmallStep.ToString());
-			builder.Append(", Grand pas = ");
-			builder.Append(type.LargeStep.ToString());
+			this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.SmallStep, type.SmallStep.ToString());
+			this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.BigStep, type.LargeStep.ToString());
 
 			this.PutSummaryDefaultAndSample(builder, type);
 
 			if (type.UseCompactStorage)
 			{
-				builder.Append("   —   Compact");
+				this.PutSummarySeparator(builder, 2);
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Compact);
 			}
 
 			return builder.ToString();

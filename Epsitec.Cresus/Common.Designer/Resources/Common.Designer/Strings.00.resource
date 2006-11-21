@@ -75,12 +75,24 @@
   <data name="Viewers.Types.Numeric.PreferredResol" id="007" mod="1">Résolution préférentielle</data>
   <data name="Viewers.Types.Numeric.SmallStep" id="017" mod="1">Petit pas</data>
   <data name="Viewers.Types.Numeric.LargeStep" id="027" mod="1">Grand pas</data>
+  <data name="Viewers.Types.Numeric.Default" id="059">Valeur par défaut</data>
+  <data name="Viewers.Types.Numeric.Sample" id="069">Exemple de valeur</data>
   <data name="Viewers.Types.Numeric.CompactStorage" id="088">Stockage compact</data>
   <data name="Viewers.Types.String.Min" id="037" mod="1">Longueur minimale</data>
   <data name="Viewers.Types.String.Max" id="047" mod="1">Longueur maximale</data>
+  <data name="Viewers.Types.String.Default" id="0A8">Chaîne par défaut</data>
+  <data name="Viewers.Types.String.Sample" id="0B8">Exemple de chaîne</data>
   <data name="Viewers.Types.String.FixedLength" id="018">Longueur fixe dans la base de données</data>
   <data name="Viewers.Types.String.Multilingual" id="028">Le texte existe en plusieurs langues</data>
-  <data name="Viewers.Types.Controller.Title" id="0H7">Contrôleur</data>
+  <data name="Viewers.Types.DateTime.Resolution" id="079">Résolution</data>
+  <data name="Viewers.Types.DateTime.DateMin" id="0T8">Date minimale</data>
+  <data name="Viewers.Types.DateTime.DateMax" id="0U8">Date maximale</data>
+  <data name="Viewers.Types.DateTime.DateStep" id="0V8">Pas pour la date</data>
+  <data name="Viewers.Types.DateTime.TimeMin" id="009">Heure minimale</data>
+  <data name="Viewers.Types.DateTime.TimeMax" id="019">Haure maximale</data>
+  <data name="Viewers.Types.DateTime.TimeStep" id="029">Pas pour l&amp;apos;heure</data>
+  <data name="Viewers.Types.DateTime.Default" id="039">Valeur par défaut</data>
+  <data name="Viewers.Types.DateTime.Sample" id="049">Exemple de valeur</data>
   <data name="Viewers.Types.Nullable.Title" id="0F7">Etats</data>
   <data name="Viewers.Types.Nullable.CheckButton" id="0G7">Accepte d&amp;apos;être nul</data>
   <data name="Viewers.Types.Enum.RowName" id="0Q7">Nom</data>
@@ -90,6 +102,25 @@
   <data name="Viewers.Types.Structured.Type" id="0T7">Type</data>
   <data name="Viewers.Types.Structured.Caption" id="0V7">Légende</data>
   <data name="Viewers.Types.Structured.NewName" id="008">Rubrique{0}</data>
+  <data name="Viewers.Types.Controller.Title" id="0H7">Contrôleur</data>
+  <data name="Viewers.Types.Binary.Mime" id="089">Mine</data>
+  <data name="Viewers.Types.Summary.Min" id="0C8">Min</data>
+  <data name="Viewers.Types.Summary.Max" id="0D8">Max</data>
+  <data name="Viewers.Types.Summary.Resolution" id="0G8">Résolution</data>
+  <data name="Viewers.Types.Summary.SmallStep" id="0H8">Petit pas</data>
+  <data name="Viewers.Types.Summary.BigStep" id="0I8">Grand pas</data>
+  <data name="Viewers.Types.Summary.Default" id="0E8">Défaut</data>
+  <data name="Viewers.Types.Summary.Sample" id="0F8">Exemple</data>
+  <data name="Viewers.Types.Summary.Compact" id="0J8">Compact</data>
+  <data name="Viewers.Types.Summary.Fix" id="0K8">Fixe</data>
+  <data name="Viewers.Types.Summary.Multi" id="0L8">Multi</data>
+  <data name="Viewers.Types.Summary.DateMin" id="0M8">Date min</data>
+  <data name="Viewers.Types.Summary.DateMax" id="0N8">Date max</data>
+  <data name="Viewers.Types.Summary.DateStep" id="0R8">Pas date</data>
+  <data name="Viewers.Types.Summary.TimeMin" id="0O8">Heure min</data>
+  <data name="Viewers.Types.Summary.TimeMax" id="0P8">Heure max</data>
+  <data name="Viewers.Types.Summary.TimeStep" id="0Q8">Pas heure</data>
+  <data name="Viewers.Types.Summary.Mime" id="0S8">Mime</data>
   <data name="Action.New" id="0U">Nouveau</data>
   <data name="Action.Open" id="0V">Ouvrir...</data>
   <data name="Action.Close" id="001">Fermer</data>

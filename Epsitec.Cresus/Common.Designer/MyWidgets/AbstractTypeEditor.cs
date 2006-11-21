@@ -111,30 +111,70 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return "";
 		}
 
+		protected void PutSummaryInitialise()
+		{
+			this.summaryEmpty = true;
+			this.summarySeparator = false;
+		}
+
 		protected void PutSummaryDefaultAndSample(System.Text.StringBuilder builder, AbstractType type)
 		{
 			//	Met les informations DefaultValue et SampleValue dans le résumé, si elles existent.
 			if (type.DefaultValue != null || type.SampleValue != null)
 			{
-				builder.Append("   —   ");
+				this.PutSummarySeparator(builder, 2);
 
 				if (type.DefaultValue != null)
 				{
-					builder.Append("Défaut = ");
-					builder.Append(this.TypeToString(type.DefaultValue));
+					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Default, this.TypeToString(type.DefaultValue));
 				}
 
 				if (type.SampleValue != null)
 				{
-					if (type.DefaultValue != null)
-					{
-						builder.Append(", ");
-					}
-
-					builder.Append("Exemple = ");
-					builder.Append(this.TypeToString(type.SampleValue));
+					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Sample, this.TypeToString(type.SampleValue));
 				}
 			}
+		}
+
+		protected void PutSummaryValue(System.Text.StringBuilder builder, string value)
+		{
+			this.PutSummarySeparator(builder, 1);
+			builder.Append(value);
+
+			this.summaryEmpty = false;
+			this.summarySeparator = false;
+		}
+
+		protected void PutSummaryValue(System.Text.StringBuilder builder, string label, string value)
+		{
+			this.PutSummarySeparator(builder, 1);
+			builder.Append(label);
+			builder.Append(" = ");
+			builder.Append(value);
+
+			this.summaryEmpty = false;
+			this.summarySeparator = false;
+		}
+
+		protected void PutSummarySeparator(System.Text.StringBuilder builder, int level)
+		{
+			if (this.summaryEmpty || this.summarySeparator)
+			{
+				return;
+			}
+
+			if (level == 1)
+			{
+				builder.Append(", ");
+			}
+
+			if (level == 2)
+			{
+				builder.Append("   —   ");
+			}
+
+			this.summaryEmpty = false;
+			this.summarySeparator = true;
 		}
 
 		protected virtual string TypeToString(object value)
@@ -342,5 +382,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected MainWindow					mainWindow;
 		protected int							tabIndex = 0;
 		protected bool							ignoreChange = false;
+		protected bool							summaryEmpty;
+		protected bool							summarySeparator;
 	}
 }

@@ -24,13 +24,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			group.Margins = new Margins(0, 0, 0, 10);
 			this.fieldMax.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateStringLabeled("Chaîne par défaut", this, out group, out this.fieldDefault);
+			this.CreateStringLabeled(Res.Strings.Viewers.Types.String.Default, this, out group, out this.fieldDefault);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 2);
 			this.fieldDefault.PreferredWidth = 400;
 			this.fieldDefault.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateStringLabeled("Exemple de chaîne", this, out group, out this.fieldSample);
+			this.CreateStringLabeled(Res.Strings.Viewers.Types.String.Sample, this, out group, out this.fieldSample);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 10);
 			this.fieldSample.PreferredWidth = 400;
@@ -75,25 +75,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Retourne le texte du résumé.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			this.PutSummaryInitialise();
 
 			StringType type = this.AbstractType as StringType;
 
-			builder.Append("Min = ");
-			builder.Append(type.MinimumLength.ToString());
-			builder.Append(", Max = ");
-			builder.Append(type.MaximumLength.ToString());
-
-			if (type.UseFixedLengthStorage)
-			{
-				builder.Append(", Fix");
-			}
-
-			if (type.UseMultilingualStorage)
-			{
-				builder.Append(", Multi");
-			}
+			this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Min, type.MinimumLength.ToString());
+			this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Max, type.MaximumLength.ToString());
 
 			this.PutSummaryDefaultAndSample(builder, type);
+
+			if (type.UseFixedLengthStorage || type.UseMultilingualStorage)
+			{
+				this.PutSummarySeparator(builder, 2);
+
+				if (type.UseFixedLengthStorage)
+				{
+					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Fix);
+				}
+
+				if (type.UseMultilingualStorage)
+				{
+					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Multi);
+				}
+			}
 
 			return builder.ToString();
 		}

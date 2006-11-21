@@ -14,7 +14,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			Widget group;
 
-			this.CreateStringLabeled("Mime", this, out group, out this.fieldMime);
+			this.CreateStringLabeled(Res.Strings.Viewers.Types.Binary.Mime, this, out group, out this.fieldMime);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 0);
 			this.fieldMime.PreferredWidth = 400;
@@ -42,11 +42,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Retourne le texte du résumé.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			this.PutSummaryInitialise();
 
 			BinaryType type = this.AbstractType as BinaryType;
-
-			builder.Append("Mime = ");
-			builder.Append(type.MimeType);
+			this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Mime, type.MimeType);
 
 			return builder.ToString();
 		}
