@@ -109,6 +109,7 @@ namespace Epsitec.Common.Designer
 				public static Epsitec.Common.Types.Caption Default { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 403)); } }
 				public static Epsitec.Common.Types.Caption Edition { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 404)); } }
 				public static Epsitec.Common.Types.Caption Search { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 405)); } }
+				public static Epsitec.Common.Types.Caption Type { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 406)); } }
 			}
 			
 			public static class Types

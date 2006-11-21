@@ -1383,6 +1383,18 @@ namespace Epsitec.Common.Designer
 			return Command.GetGroup(caption);
 		}
 
+		public AbstractType DirectGetAbstractType(Druid druid)
+		{
+			//	Retourne le type abstrait d'un caption de type StructuredType (ou autre).
+			Caption caption = this.resourceManager.GetCaption(druid);
+			if (caption == null)
+			{
+				return null;
+			}
+
+			return ResourceAccess.GetAbstractType(caption);
+		}
+
 		public Druid DirectGetDruid(int index)
 		{
 			//	Retourne le Druid correspondant à un index.
@@ -1737,21 +1749,27 @@ namespace Epsitec.Common.Designer
 			//	Retourne le AbstractType correspondant au Caption dans le cache.
 			get
 			{
-				AbstractType type = AbstractType.GetCachedType(this.accessCaption);
+				return ResourceAccess.GetAbstractType(this.accessCaption);
+			}
+		}
 
+		protected static AbstractType GetAbstractType(Caption caption)
+		{
+			//	Retourne le AbstractType correspondant à un caption.
+			AbstractType type = AbstractType.GetCachedType(caption);
+
+			if (type == null)
+			{
+				type = TypeRosetta.CreateTypeObject(caption);
 				if (type == null)
 				{
-					type = TypeRosetta.CreateTypeObject(this.accessCaption);
-					if (type == null)
-					{
-						return null;
-					}
-
-					AbstractType.SetCachedType(this.accessCaption, type);
+					return null;
 				}
 
-				return type;
+				AbstractType.SetCachedType(caption, type);
 			}
+
+			return type;
 		}
 
 
