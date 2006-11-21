@@ -53,7 +53,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.slider.Value = (decimal) TypeEditorStructured.arrayLineHeight;
 			this.slider.Dock = DockStyle.Right;
 
-#if true
+#if false
 			//	Crée le pied pour éditer la ligne sélectionnée.
 			this.footer = new Widget(this);
 			this.footer.Dock = DockStyle.StackBegin;
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 			this.array.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
 
-#if false
+#if true
 			//	Crée le pied pour éditer la ligne sélectionnée.
 			this.footer = new Widget(this);
 			this.footer.Dock = DockStyle.StackBegin;
