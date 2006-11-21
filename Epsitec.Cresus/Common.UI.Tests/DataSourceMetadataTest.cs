@@ -18,6 +18,29 @@ namespace Epsitec.Common.UI
 		}
 		
 		[Test]
+		public void CheckDefaultDataType()
+		{
+			Panel panel = new Panel ();
+			DataSourceMetadata metadata = panel.DataSourceMetadata;
+
+			StructuredType type = new StructuredType ();
+			
+			type.Fields.Add ("A", StringType.Default);
+			type.Fields.Add ("B", IntegerType.Default);
+
+			metadata.DefaultDataType = type;
+
+			Assert.AreEqual (1, metadata.Fields.Count);
+			Assert.AreEqual ("*", Collection.Extract<string> (metadata.GetFieldIds (), 0));
+			Assert.AreEqual (type, metadata.GetField ("*").Type);
+
+			panel.SetupSampleDataSource ();
+
+			Assert.AreEqual (null, StructuredTree.GetValue (panel.DataSource, "*.A"));
+			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (panel.DataSource, "*.X"));
+		}
+		
+		[Test]
 		public void CheckPanelMetadata()
 		{
 			Support.ResourceManager manager = Support.Resources.DefaultManager;
