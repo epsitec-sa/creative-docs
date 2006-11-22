@@ -55,6 +55,18 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
+		public string Structured
+		{
+			get
+			{
+				return (string) this.GetValue(Content.StructuredProperty);
+			}
+			set
+			{
+				this.SetValue(Content.StructuredProperty, value);
+			}
+		}
+
 
 		protected override void InitializePropertyValues()
 		{
@@ -74,6 +86,11 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					this.DruidCaption = ObjectModifier.GetDruid(this.DefaultWidget);
 				}
+			}
+
+			if (ObjectModifier.HasBinding(this.DefaultWidget))
+			{
+				this.Structured = ObjectModifier.GetBinding(this.DefaultWidget);
 			}
 		}
 
@@ -99,11 +116,34 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
+		private void NotifyStructuredChanged(string field)
+		{
+			//	Cette méthode est appelée à la suite de la modification d'une de
+			//	nos propriétés de définition pour permettre de mettre à jour les widgets connectés :
+			if (this.IsNotSuspended)
+			{
+				this.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in this.Widgets)
+					{
+						ObjectModifier.SetBinding(obj, field);
+					}
+				}
+				finally
+				{
+					this.ResumeChanges();
+				}
+			}
+		}
+
 
 		static Content()
 		{
 			Content.DruidCaptionProperty.DefaultMetadata.DefineNamedType(ProxyManager.DruidCaptionStringType);
 			Content.DruidPanelProperty.DefaultMetadata.DefineNamedType(ProxyManager.DruidPanelStringType);
+			Content.StructuredProperty.DefaultMetadata.DefineNamedType(ProxyManager.StructuredStringType);
 		}
 
 
@@ -114,8 +154,16 @@ namespace Epsitec.Common.Designer.Proxies
 			that.NotifyDruidChanged(value);
 		}
 
+		private static void NotifyStructuredChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			string value = (string) newValue;
+			Content that = (Content) o;
+			that.NotifyStructuredChanged(value);
+		}
+
 
 		public static readonly DependencyProperty DruidCaptionProperty = DependencyProperty.Register("DruidCaption", typeof(string), typeof(Content), new DependencyPropertyMetadata(0.0, Content.NotifyDruidChanged));
 		public static readonly DependencyProperty DruidPanelProperty   = DependencyProperty.Register("DruidPanel",   typeof(string), typeof(Content), new DependencyPropertyMetadata(0.0, Content.NotifyDruidChanged));
+		public static readonly DependencyProperty StructuredProperty   = DependencyProperty.Register("Structured",   typeof(string), typeof(Content), new DependencyPropertyMetadata(0.0, Content.NotifyStructuredChanged));
 	}
 }

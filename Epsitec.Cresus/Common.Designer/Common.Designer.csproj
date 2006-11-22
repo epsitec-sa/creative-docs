@@ -40,6 +40,7 @@
     <Compile Include="Comparers\WidgetDisposition.cs" />
     <Compile Include="Constrain.cs" />
     <Compile Include="ConstrainsList.cs" />
+    <Compile Include="Controllers\StructuredController.cs" />
     <Compile Include="Controllers\DruidController.cs" />
     <Compile Include="Dialogs\StructuredSelector.cs" />
     <Compile Include="Dialogs\ResourceTypeType.cs" />

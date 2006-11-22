@@ -178,6 +178,11 @@ namespace Epsitec.Common.Designer.Controllers
 				druid = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Panels, ResourceAccess.TypeType.None, druid, exclude);
 			}
 
+			if (druid.IsEmpty)  // annuler ?
+			{
+				return;
+			}
+
 			this.druid = druid.ToString();
 
 			this.OnActualValueChanged();
