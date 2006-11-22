@@ -405,6 +405,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_5A73E72B528F4B46AB05996343C5D3F7"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_5ABE1C6781A027783780B6B9B67DD7BB"
         "OwnerKey" = "8:_A45C6BE2ACB67061DDF26CECF8F4AE4A"
         "MsmSig" = "8:_UNDEFINED"
@@ -1531,7 +1537,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common.Document, Version=2.0.6.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common.Document, Version=2.0.7.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_A45C6BE2ACB67061DDF26CECF8F4AE4A"
@@ -1593,7 +1599,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:App.DocumentEditor, Version=2.0.6.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:App.DocumentEditor, Version=2.0.7.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C0C14BD26AA6D4032CD0E9445F430518"
@@ -2021,14 +2027,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Crésus Documents"
-        "ProductCode" = "8:{C323AE95-2D7A-4BF4-9F28-C3BF56FBAB65}"
-        "PackageCode" = "8:{5112DE9F-6030-4452-8A7D-C1D8BAC77C42}"
+        "ProductCode" = "8:{048157A8-AD7E-4284-93B6-171AD6E27B6D}"
+        "PackageCode" = "8:{1DF9C850-9547-4415-A5ED-2B7C935DFBC4}"
         "UpgradeCode" = "8:{028E66AB-AF47-419F-A2DE-8EDC1BC9C240}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.0.7"
+        "ProductVersion" = "8:2.0.8"
         "Manufacturer" = "8:Epsitec"
         "ARPHELPTELEPHONE" = "8:0848 27 37 87"
         "ARPHELPLINK" = "8:"
@@ -2658,6 +2664,34 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:ContentFiles"
             "OutputProjectGuid" = "8:{8960D1EA-3B82-49A1-9D44-F92F467209FF}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_5A73E72B528F4B46AB05996343C5D3F7"
+            {
+            "SourcePath" = "8:..\\Common.Text.Exchange\\Clipboard.Win32\\Debug\\Clipboard.Win32.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_5D83516733F54CA3B84141DBD2883687"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{B4E1087F-2644-430B-A6D4-95B75D62398B}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

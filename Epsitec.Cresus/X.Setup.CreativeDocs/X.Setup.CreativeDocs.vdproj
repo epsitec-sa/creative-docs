@@ -561,6 +561,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_BE573DBE2D764BA88497789CC5D57F10"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_C0B06497927AB8EC2ED5E741645BE3A5"
         "OwnerKey" = "8:_423CD1AEF3194218A19BC26F8A4DC484"
         "MsmSig" = "8:_UNDEFINED"
@@ -1500,7 +1506,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common.Document, Version=2.0.7.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common.Document, Version=2.0.8.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_7CEC4EDCD3F90000BDBF6C5812DE8F87"
@@ -1715,7 +1721,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:App.DocumentEditor, Version=2.0.7.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:App.DocumentEditor, Version=2.0.8.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C0B06497927AB8EC2ED5E741645BE3A5"
@@ -2021,14 +2027,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Creative Docs .NET"
-        "ProductCode" = "8:{71160331-3CD2-4529-9DE1-FB8D260B75C1}"
-        "PackageCode" = "8:{1B7730E0-2DEC-4E8A-B117-CBC2140FEA8B}"
+        "ProductCode" = "8:{588E0AAD-4A4E-4ECB-AAED-06C342F1A089}"
+        "PackageCode" = "8:{1C134873-C54D-4B3F-BD89-54A26746536F}"
         "UpgradeCode" = "8:{925CE84A-106F-439D-B0AA-6222B871FB71}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.0.7"
+        "ProductVersion" = "8:2.0.8"
         "Manufacturer" = "8:OPaC bright ideas"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.creativedocs.net/"
@@ -2044,7 +2050,7 @@
         "UseSystemSearchPath" = "11:TRUE"
         "TargetPlatform" = "3:0"
         "PreBuildEvent" = "8:"
-        "PostBuildEvent" = "8:$(ProjectDir)..\\External\\CodeSigning\\sign.bat \"$(BuiltOuputPath)\""
+        "PostBuildEvent" = "8:$(ProjectDir)..\\External\\CodeSigning\\sign-opac.bat \"$(BuiltOuputPath)\""
         "RunPostBuildEvent" = "3:0"
         }
         "Registry"
@@ -2658,6 +2664,34 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:ContentFiles"
             "OutputProjectGuid" = "8:{1D0BD1B8-DF78-45E2-A3B7-D1AE3FB31E46}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_BE573DBE2D764BA88497789CC5D57F10"
+            {
+            "SourcePath" = "8:..\\Common.Text.Exchange\\Clipboard.Win32\\Debug\\Clipboard.Win32.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_6A3C056324D64E9B88C565E2602F90A4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{B4E1087F-2644-430B-A6D4-95B75D62398B}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

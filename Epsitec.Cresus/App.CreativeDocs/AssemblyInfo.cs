@@ -1,13 +1,13 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-[assembly: AssemblyTitle("Epsitec Creative Docs .NET")]
+[assembly: AssemblyTitle("Creative Docs .NET")]
 [assembly: AssemblyDescription("BETA Version")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Epsitec")]
+[assembly: AssemblyCompany("OPaC bright ideas")]
 [assembly: AssemblyProduct("Creative Docs .NET")]
-[assembly: AssemblyCopyright("Copyright © 2002-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
+[assembly: AssemblyCopyright("Copyright © 2002-2006, OPaC bright ideas, CH-1400 Yverdon-les-Bains, Switzerland")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
-[assembly: AssemblyVersion("2.0.7.0")]
+[assembly: AssemblyVersion("2.0.8.0")]

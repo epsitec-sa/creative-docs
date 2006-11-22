@@ -151,7 +151,6 @@ xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /E
 xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)App.DocumentEditor\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>$(ProjectDir)..\External\CodeSigning\sign-opac.bat "$(BuiltOuputPath)"</PostBuildEvent>
   </PropertyGroup>
 </Project>
