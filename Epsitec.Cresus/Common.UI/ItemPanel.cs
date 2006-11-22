@@ -71,41 +71,56 @@ namespace Epsitec.Common.UI
 			ICollectionView items = this.Items;
 
 			Dictionary<object, ItemView> currentViews = new Dictionary<object, ItemView> ();
-			
-			foreach (ItemView view in this.views)
-			{
-				currentViews.Add (view.Item, view);
-			}
-			
-			this.views.Clear ();
 
-			if ((items == null) ||
-				(items.Items.Count == 0))
+			lock (new LockManager (this))
 			{
-				return;
+				foreach (ItemView view in this.views)
+				{
+					currentViews.Add (view.Item, view);
+				}
 			}
 
-			if (items.Groups.Count == 0)
+			List<ItemView> views = new List<ItemView> ();
+			
+			this.hotItemViewIndex = -1;
+
+			if ((items != null) &&
+				(items.Items.Count > 0))
 			{
-				this.CreateItemViews (items.Items, currentViews);
+				if (items.Groups.Count == 0)
+				{
+					this.CreateItemViews (views, items.Items, currentViews);
+				}
+				else
+				{
+					this.CreateItemViews (views, items.Groups, currentViews);
+				}
 			}
-			else
+
+			lock (new LockManager (this))
 			{
-				this.CreateItemViews (items.Groups, currentViews);
+				this.views = views;
 			}
 		}
 
 		private void RefreshLayout()
 		{
+			IEnumerable<ItemView> views;
+
+			lock (new LockManager (this))
+			{
+				views = this.views;
+			}
+			
 			switch (this.ItemViewLayout)
 			{
 				case ItemViewLayout.VerticalList:
-					this.PreferredSize = this.LayoutVerticalList (this.views);
+					this.PreferredSize = this.LayoutVerticalList (views);
 					break;
 			}
 		}
 
-		private void CreateItemViews(System.Collections.IList list, Dictionary<object, ItemView> currentViews)
+		private void CreateItemViews(IList<ItemView> views, System.Collections.IList list, Dictionary<object, ItemView> currentViews)
 		{
 			foreach (object item in list)
 			{
@@ -114,11 +129,11 @@ namespace Epsitec.Common.UI
 				if (currentViews.TryGetValue (item, out view))
 				{
 					currentViews.Remove (item);
-					this.views.Add (view);
+					views.Add (view);
 				}
 				else
 				{
-					this.views.Add (this.CreateItemView (item));
+					views.Add (this.CreateItemView (item));
 				}
 			}
 		}
@@ -153,7 +168,110 @@ namespace Epsitec.Common.UI
 			return new Drawing.Size (dx, dy);
 		}
 
+		private ItemView Detect(IList<ItemView> views, Drawing.Point pos)
+		{
+			if (this.hotItemViewIndex != -1)
+			{
+				foreach (ItemView view in ItemPanel.GetNearbyItemViews (views, this.hotItemViewIndex, 5))
+				{
+					if (view.Bounds.Contains (pos))
+					{
+						return view;
+					}
+				}
+			}
+
+			return null;
+		}
+
+		private static IEnumerable<ItemView> GetNearbyItemViews(IList<ItemView> views, int index, int count)
+		{
+			int min = index;
+			int max = index+1;
+
+			bool ok = true;
+
+			while (ok)
+			{
+				ok = false;
+				
+				if (min >= 0)
+				{
+					if (count-- < 1)
+					{
+						yield break;
+					}
+
+					ok = true;
+					yield return ItemPanel.TryGetItemView (views, min--);
+				}
+				
+				if (max < views.Count)
+				{
+					if (count-- < 1)
+					{
+						yield break;
+					}
+
+					ok = true;
+					yield return ItemPanel.TryGetItemView (views, max++);
+				}
+			}
+		}
 		
+		private static ItemView TryGetItemView(IList<ItemView> views, int index)
+		{
+			if ((index >= 0) &&
+				(index < views.Count))
+			{
+				return views[index];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		private void AssertLockOwned()
+		{
+			System.Diagnostics.Debug.Assert (this.lockAcquired > 0);
+			System.Diagnostics.Debug.Assert (this.lockOwnerPid == System.Threading.Thread.CurrentThread.ManagedThreadId);
+		}
+
+		#region LockManager Class
+
+		private class LockManager : System.IDisposable
+		{
+			public LockManager(ItemPanel panel)
+			{
+				this.panel = panel;
+				System.Threading.Monitor.Enter (this.panel.exclusion);
+				this.panel.lockAcquired++;
+				this.panel.lockOwnerPid = System.Threading.Thread.CurrentThread.ManagedThreadId;
+			}
+
+			~LockManager()
+			{
+				throw new System.InvalidOperationException ("Lock not properly released");
+			}
+			
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				this.panel.lockAcquired--;
+				System.Threading.Monitor.Exit (this.panel.exclusion);
+				this.panel = null;
+				System.GC.SuppressFinalize (this);
+			}
+
+			#endregion
+
+			ItemPanel panel;
+		}
+
+		#endregion
+
 		private static void NotifyItemsChanged(DependencyObject obj, object oldValue, object newValue)
 		{
 			ItemPanel panel = (ItemPanel) obj;
@@ -169,8 +287,25 @@ namespace Epsitec.Common.UI
 		public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register ("Items", typeof (ICollectionView), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanel.NotifyItemsChanged));
 		public static readonly DependencyProperty ItemViewLayoutProperty = DependencyProperty.Register ("ItemViewLayout", typeof (ItemViewLayout), typeof (ItemPanel), new DependencyPropertyMetadata (ItemViewLayout.None, ItemPanel.NotifyItemViewLayoutChanged));
 
-		List<ItemView> views = new List<ItemView> ();
+		List<ItemView> views
+		{
+			get
+			{
+				this.AssertLockOwned ();
+				return this.lockedViews;
+			}
+			set
+			{
+				this.AssertLockOwned ();
+				this.lockedViews = value;
+			}
+		}
+		
+		List<ItemView> lockedViews = new List<ItemView> ();
 		object exclusion = new object ();
+		int lockAcquired;
+		int lockOwnerPid;
 		Drawing.Size itemViewDefaultSize = new Drawing.Size (80, 20);
+		int hotItemViewIndex = -1;
 	}
 }
