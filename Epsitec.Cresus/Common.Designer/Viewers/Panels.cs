@@ -544,6 +544,7 @@ namespace Epsitec.Common.Designer.Viewers
 					System.Diagnostics.Debug.Assert(at is StructuredType);
 					type = at as StructuredType;
 					this.panelContainer.DataSourceMetadata.DefaultDataType = type;
+					this.panelContainer.SetupSampleDataSource();
 				}
 
 				return;

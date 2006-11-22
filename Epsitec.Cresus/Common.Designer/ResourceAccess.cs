@@ -566,10 +566,11 @@ namespace Epsitec.Common.Designer
 					newBundle.DefineName(newDruid.ToBundleId());
 					newBundle.DefineCaption(newName);
 
-					UI.Panel actualPanel = UI.Panel.GetPanel (actualBundle);
+					UI.Panel actualPanel = UI.Panel.GetPanel(actualBundle);
 					UI.Panel newPanel = UserInterface.Duplicate(actualPanel, this.resourceManager) as UI.Panel;
 
-					UI.Panel.SetPanel (newBundle, newPanel);
+					UI.Panel.SetPanel(newBundle, newPanel);
+					newPanel.SetupSampleDataSource();
 				}
 				else
 				{
@@ -2728,7 +2729,8 @@ namespace Epsitec.Common.Designer
 					{
 						UI.Panel panel = UserInterface.DeserializePanel(field.AsString, this.resourceManager);
 						panel.DrawDesignerFrame = true;
-						UI.Panel.SetPanel (bundle, panel);
+						UI.Panel.SetPanel(bundle, panel);
+						panel.SetupSampleDataSource();
 					}
 				}
 
@@ -2791,7 +2793,8 @@ namespace Epsitec.Common.Designer
 			if (newPanel == null)
 			{
 				newPanel = this.CreateEmptyPanel();
-				UI.Panel.SetPanel (bundle, newPanel);
+				UI.Panel.SetPanel(bundle, newPanel);
+				newPanel.SetupSampleDataSource();
 			}
 
 			return newPanel;

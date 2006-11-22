@@ -72,7 +72,7 @@ namespace Epsitec.Common.Designer.Controllers
 			IEnumerable<Widget> sourceWidgets = sourceProxy.Widgets;  // liste des objets sélectionnés
 			Widget sourceWidget = Collection.Extract<Widget>(sourceWidgets, 0);
 			System.Diagnostics.Debug.Assert(sourceWidget != null);
-			IStructuredType dataSource = DataObject.GetDataContext(sourceWidget) as IStructuredType;
+			IStructuredType dataSource = DataObject.GetDataContext(sourceWidget).Source as IStructuredType;
 			StructuredType type = dataSource.GetField("*").Type as StructuredType;
 			string field = this.field;
 

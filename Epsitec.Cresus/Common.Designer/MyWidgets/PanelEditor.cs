@@ -1622,6 +1622,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					System.Diagnostics.Debug.Assert(at is StructuredType);
 					type = at as StructuredType;
 					this.panel.DataSourceMetadata.DefaultDataType = type;
+					this.panel.SetupSampleDataSource();
 				}
 
 				//	Choix de la rubrique.
