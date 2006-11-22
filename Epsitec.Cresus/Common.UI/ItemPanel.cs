@@ -170,20 +170,25 @@ namespace Epsitec.Common.UI
 				if (currentViews.TryGetValue (item, out view))
 				{
 					currentViews.Remove (item);
+					view.Index = views.Count;
 					views.Add (view);
 				}
 				else
 				{
-					views.Add (this.CreateItemView (item));
+					views.Add (this.CreateItemView (item, views.Count));
 				}
 			}
 		}
 
-		private ItemView CreateItemView(object item)
+		private ItemView CreateItemView(object item, int index)
 		{
 			//	TODO: create the proper item view for this item
 			
-			return new ItemView (item, this.ItemViewDefaultSize);
+			ItemView view = new ItemView (item, this.ItemViewDefaultSize);
+			
+			view.Index = index;
+			
+			return view;
 		}
 
 		private Drawing.Size LayoutVerticalList(IEnumerable<ItemView> views)
@@ -217,11 +222,23 @@ namespace Epsitec.Common.UI
 				{
 					if (view.Bounds.Contains (pos))
 					{
+						this.hotItemViewIndex = view.Index;
 						return view;
 					}
 				}
 			}
+			
+			foreach (ItemView view in views)
+			{
+				if (view.Bounds.Contains (pos))
+				{
+					this.hotItemViewIndex = view.Index;
+					return view;
+				}
+			}
 
+			this.hotItemViewIndex = -1;
+			
 			return null;
 		}
 
@@ -327,7 +344,7 @@ namespace Epsitec.Common.UI
 		
 		public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register ("Items", typeof (ICollectionView), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanel.NotifyItemsChanged));
 		public static readonly DependencyProperty ItemViewLayoutProperty = DependencyProperty.Register ("ItemViewLayout", typeof (ItemViewLayout), typeof (ItemPanel), new DependencyPropertyMetadata (ItemViewLayout.None, ItemPanel.NotifyItemViewLayoutChanged));
-		public static readonly DependencyProperty ItemViewDefaultSizeProperty = DependencyProperty.Register ("ItemViewDefaultSize", typeof (Drawing.Size), typeof (ItemPanel), new DependencyPropertyMetadata (new Drawing.Size (20, 80)));
+		public static readonly DependencyProperty ItemViewDefaultSizeProperty = DependencyProperty.Register ("ItemViewDefaultSize", typeof (Drawing.Size), typeof (ItemPanel), new DependencyPropertyMetadata (new Drawing.Size (80, 20)));
 
 		List<ItemView> views
 		{

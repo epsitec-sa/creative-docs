@@ -12,8 +12,9 @@ namespace Epsitec.Common.UI
 	{
 		public ItemView(object item, Drawing.Size defaultSize)
 		{
-			this.item = item;
-			this.size = defaultSize;
+			this.item  = item;
+			this.size  = defaultSize;
+			this.index = -1;
 		}
 
 		public object Item
@@ -21,6 +22,18 @@ namespace Epsitec.Common.UI
 			get
 			{
 				return this.item;
+			}
+		}
+
+		public int Index
+		{
+			get
+			{
+				return this.index;
+			}
+			internal set
+			{
+				this.index = value;
 			}
 		}
 
@@ -46,6 +59,7 @@ namespace Epsitec.Common.UI
 
 
 		private object item;
+		private int index;
 		private Widgets.Widget widget;
 		private Drawing.Size size;
 		private Drawing.Rectangle bounds;
