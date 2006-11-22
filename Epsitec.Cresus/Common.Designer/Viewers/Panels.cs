@@ -538,14 +538,12 @@ namespace Epsitec.Common.Designer.Viewers
 
 				//	Choix d'une ressource type de type 'Types', mais uniquement parmi les TypeType.Structured.
 				druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Types, ResourceAccess.TypeType.Structured, druid, null);
-				if (!druid.IsEmpty)  // annuler ?
+				if (!druid.IsEmpty)  // d'accord ?
 				{
 					AbstractType at = this.module.AccessCaptions.DirectGetAbstractType(druid);
-					if (at is StructuredType)
-					{
-						type = at as StructuredType;
-						this.panelContainer.DataSourceMetadata.DefaultDataType = type;
-					}
+					System.Diagnostics.Debug.Assert(at is StructuredType);
+					type = at as StructuredType;
+					this.panelContainer.DataSourceMetadata.DefaultDataType = type;
 				}
 
 				return;
