@@ -672,7 +672,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected void HandleFieldModuleComboClosed(object sender)
+		private void HandleFieldModuleComboClosed(object sender)
 		{
 			//	Choix d'un module dans le menu-combo.
 			string text = Misc.RemoveTags(this.fieldModule.Text);  // nom sans les tags <b> ou <i>
@@ -697,27 +697,27 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		protected void HandleWindowCloseClicked(object sender)
+		private void HandleWindowCloseClicked(object sender)
 		{
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
 		}
 
-		protected void HandleButtonCloseClicked(object sender, MessageEventArgs e)
+		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
 		{
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
 		}
 
-		protected void HandleButtonClearClicked(object sender, MessageEventArgs e)
+		private void HandleButtonClearClicked(object sender, MessageEventArgs e)
 		{
 			this.filterLabel.Text = "";
 			this.filterText.Text = "";
 		}
 
-		protected void HandleButtonUseClicked(object sender, MessageEventArgs e)
+		private void HandleButtonUseClicked(object sender, MessageEventArgs e)
 		{
 			this.parentWindow.MakeActive();
 			this.window.Hide();
@@ -747,7 +747,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		protected void HandleButtonCreateClicked(object sender, MessageEventArgs e)
+		private void HandleButtonCreateClicked(object sender, MessageEventArgs e)
 		{
 			this.parentWindow.MakeActive();
 			this.window.Hide();
@@ -769,7 +769,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected void HandleFilterTextChanged(object sender)
+		private void HandleFilterTextChanged(object sender)
 		{
 			//	Le texte d'un filtre a changé.
 			if (this.ignoreChanged)  return;
@@ -782,7 +782,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.array.ShowSelectedRow();
 		}
 
-		protected void HandleFilterKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		private void HandleFilterKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			//	Appelé lorsqu'une ligne éditable voit son focus changer.
 			bool focused = (bool) e.NewValue;
@@ -794,31 +794,31 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected void HandleArrayColumnsWidthChanged(object sender)
+		private void HandleArrayColumnsWidthChanged(object sender)
 		{
 			//	La largeur des colonnes a changé.
 			this.UpdateColumnsWidth();
 		}
 
-		protected void HandleArrayCellCountChanged(object sender)
+		private void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
 			this.UpdateArray();
 		}
 
-		protected void HandleArrayCellsContentChanged(object sender)
+		private void HandleArrayCellsContentChanged(object sender)
 		{
 			//	Le contenu des cellules a changé.
 			this.UpdateArray();
 		}
 
-		protected void HandleArraySelectedRowChanged(object sender)
+		private void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
 			this.UpdateButtons();
 		}
 
-		protected void HandleArraySelectedRowDoubleClicked(object sender)
+		private void HandleArraySelectedRowDoubleClicked(object sender)
 		{
 			//	La ligne sélectionnée a été double cliquée.
 			if (this.array.AllowMultipleSelection)

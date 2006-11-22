@@ -3,6 +3,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Layouts;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Designer.MyWidgets
 {
@@ -1601,6 +1602,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					Rectangle bounds = new Rectangle(center-size/2, size);
 					this.objectModifier.SetPreferredBounds(obj, bounds);
+				}
+			}
+
+			if (ObjectModifier.HasBinding(obj))
+			{
+				StructuredType type = this.panel.DataSourceMetadata.DefaultDataType as StructuredType;
+				if (type != null)
+				{
+					string field = ObjectModifier.GetBinding(obj);
+
+					field = this.module.MainWindow.DlgStructuredSelector(this.module, this.module.AccessCaptions, type, field);
+					if (field != null)
+					{
+						ObjectModifier.SetBinding(obj, field);
+					}
 				}
 			}
 

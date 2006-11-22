@@ -63,14 +63,15 @@ namespace Epsitec.Common.Designer
 				CommandDispatcher.SetDispatcher(this.window, this.commandDispatcher);
 				CommandContext.SetContext(this.window, this.commandContext);
 
-				this.dlgOpen             = new Dialogs.Open(this);
-				this.dlgGlyphs           = new Dialogs.Glyphs(this);
-				this.dlgIcon             = new Dialogs.Icon(this);
-				this.dlgFilter           = new Dialogs.Filter(this);
-				this.dlgSearch           = new Dialogs.Search(this);
-				this.dlgNewCulture       = new Dialogs.NewCulture(this);
-				this.dlgResourceTypeType = new Dialogs.ResourceTypeType(this);
-				this.dlgResourceSelector = new Dialogs.ResourceSelector(this);
+				this.dlgOpen               = new Dialogs.Open(this);
+				this.dlgGlyphs             = new Dialogs.Glyphs(this);
+				this.dlgIcon               = new Dialogs.Icon(this);
+				this.dlgFilter             = new Dialogs.Filter(this);
+				this.dlgSearch             = new Dialogs.Search(this);
+				this.dlgNewCulture         = new Dialogs.NewCulture(this);
+				this.dlgResourceTypeType   = new Dialogs.ResourceTypeType(this);
+				this.dlgResourceSelector   = new Dialogs.ResourceSelector(this);
+				this.dlgStructuredSelector = new Dialogs.StructuredSelector(this);
 
 				this.dlgGlyphs.Closed += new EventHandler(this.HandleDlgClosed);
 				this.dlgFilter.Closed += new EventHandler(this.HandleDlgClosed);
@@ -1095,6 +1096,14 @@ namespace Epsitec.Common.Designer
 
 
 		#region Dialogs
+		public string DlgStructuredSelector(Module baseModule, ResourceAccess access, StructuredType type, string field)
+		{
+			//	Ouvre le dialogue pour choisir une rubrique dans une structure de données.
+			this.dlgStructuredSelector.Initialise(access, baseModule, type, field);
+			this.dlgStructuredSelector.Show();  // choix dans le dialogue...
+			return this.dlgStructuredSelector.SelectedField;
+		}
+
 		public Druid DlgResourceSelector(Module baseModule, ResourceAccess.Type type, ResourceAccess.TypeType typeType, Druid ressource, List<Druid> exclude)
 		{
 			//	Ouvre le dialogue pour choisir une ressource (sous forme d'un Druid)
@@ -1315,6 +1324,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.NewCulture			dlgNewCulture;
 		protected Dialogs.ResourceTypeType		dlgResourceTypeType;
 		protected Dialogs.ResourceSelector		dlgResourceSelector;
+		protected Dialogs.StructuredSelector	dlgStructuredSelector;
 		protected PanelsContext					context;
 
 		protected string						resourcePrefix;

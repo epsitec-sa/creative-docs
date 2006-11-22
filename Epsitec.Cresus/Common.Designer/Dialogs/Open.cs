@@ -224,25 +224,25 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected void HandleArrayCellCountChanged(object sender)
+		private void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
 			this.UpdateArray();
 		}
 
-		protected void HandleArrayCellsContentChanged(object sender)
+		private void HandleArrayCellsContentChanged(object sender)
 		{
 			//	Le contenu des cellules a changé.
 			this.UpdateArray();
 		}
 
-		protected void HandleArraySelectedRowChanged(object sender)
+		private void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
 			this.UpdateButtons();
 		}
 
-		protected void HandleArraySelectedRowDoubleClicked(object sender)
+		private void HandleArraySelectedRowDoubleClicked(object sender)
 		{
 			//	La ligne sélectionnée a été double cliquée.
 			this.indexToOpen = this.array.SelectedRow;
@@ -252,21 +252,21 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 		}
 
-		protected void HandleWindowCloseClicked(object sender)
+		private void HandleWindowCloseClicked(object sender)
 		{
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
 		}
 
-		protected void HandleButtonCloseClicked(object sender, MessageEventArgs e)
+		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
 		{
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
 		}
 
-		protected void HandleButtonOpenClicked(object sender, MessageEventArgs e)
+		private void HandleButtonOpenClicked(object sender, MessageEventArgs e)
 		{
 			this.indexToOpen = this.array.SelectedRow;
 

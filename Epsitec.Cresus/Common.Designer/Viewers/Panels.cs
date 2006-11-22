@@ -531,14 +531,14 @@ namespace Epsitec.Common.Designer.Viewers
 				Druid druid = Druid.Empty;
 
 				StructuredType type = this.panelContainer.DataSourceMetadata.DefaultDataType as StructuredType;
-				if (type != null)  // annuler ?
+				if (type != null)
 				{
 					druid = type.CaptionId;
 				}
 
-				//	TODO: ajouter un paramètre pour restreindre le choix dans le dialogue aux StructuredType !
+				//	Choix d'une ressource type de type 'Types', mais uniquement parmi les TypeType.Structured.
 				druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Types, ResourceAccess.TypeType.Structured, druid, null);
-				if (!druid.IsEmpty)
+				if (!druid.IsEmpty)  // annuler ?
 				{
 					AbstractType at = this.module.AccessCaptions.DirectGetAbstractType(druid);
 					if (at is StructuredType)
