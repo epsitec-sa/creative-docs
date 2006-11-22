@@ -16,6 +16,7 @@ namespace Epsitec.Common.UI
 		{
 			Epsitec.Common.Widgets.Widget.Initialize ();
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
+			Epsitec.Common.UI.ItemViewFactories.Factory.Setup ();
 
 			this.manager = new Support.ResourceManager ();
 		}
@@ -44,6 +45,17 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual ("Saturday", panel.Detect (new Drawing.Point (40, 20*1+10)).Item);
 
 			System.GC.Collect ();
+
+			Assert.IsNull (panel.GetItemView (0).Widget);
+
+			panel.Aperture = new Drawing.Rectangle (0, 100, 80, 40);
+
+			Assert.IsNotNull (panel.GetItemView (0).Widget);
+			Assert.IsNotNull (panel.GetItemView (1).Widget);
+			Assert.IsNull (panel.GetItemView (2).Widget);
+
+			Assert.AreEqual ("Monday", panel.GetItemView (0).Widget.Text);
+			Assert.AreEqual ("Tuesday", panel.GetItemView (1).Widget.Text);
 		}
 
 		private static CollectionView GetStringItems()

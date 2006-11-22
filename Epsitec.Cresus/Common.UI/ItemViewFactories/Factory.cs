@@ -14,7 +14,7 @@ namespace Epsitec.Common.UI.ItemViewFactories
 	/// The <c>Factory</c> class provides access to the <see cref="IItemViewFactory"/>
 	/// instances, based on the item types which must be represented.
 	/// </summary>
-	internal static class Factory
+	public static class Factory
 	{
 		/// <summary>
 		/// Gets the item view factory for the specified item view.
