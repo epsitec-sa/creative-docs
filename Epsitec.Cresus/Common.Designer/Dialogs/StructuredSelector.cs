@@ -114,6 +114,21 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				this.buttonCancel.TabIndex = tabIndex++;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+				this.slider = new HSlider(footer);
+				this.slider.PreferredWidth = 80;
+				this.slider.Dock = DockStyle.Right;
+				this.slider.Margins = new Margins(0, 0, 4, 4);
+				this.slider.TabIndex = tabIndex++;
+				this.slider.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				this.slider.MinValue = 20.0M;
+				this.slider.MaxValue = 50.0M;
+				this.slider.SmallChange = 5.0M;
+				this.slider.LargeChange = 10.0M;
+				this.slider.Resolution = 1.0M;
+				this.slider.Value = (decimal) StructuredSelector.arrayLineHeight;
+				this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+				//?ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Icon.Tooltip.Size);
 			}
 
 			this.UpdateTitle();
@@ -324,6 +339,18 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+		private void HandleSliderChanged(object sender)
+		{
+			//	Appelé lorsque le slider a été déplacé.
+			if (this.array == null)
+			{
+				return;
+			}
+
+			HSlider slider = sender as HSlider;
+			StructuredSelector.arrayLineHeight = (double) slider.Value;
+			this.array.LineHeight = StructuredSelector.arrayLineHeight;
+		}
 
 		private void HandleArrayColumnsWidthChanged(object sender)
 		{
@@ -378,5 +405,6 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected Button						buttonUse;
 		protected Button						buttonCancel;
+		protected HSlider						slider;
 	}
 }

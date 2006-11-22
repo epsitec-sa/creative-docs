@@ -1608,7 +1608,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (ObjectModifier.HasBinding(obj))
 			{
 				StructuredType type = this.panel.DataSourceMetadata.DefaultDataType as StructuredType;
-				if (type == null)
+				if (type == null)  // pas encore de StructuredType associé au panneau de base ?
 				{
 					//	Choix d'une ressource type de type 'Types', mais uniquement parmi les TypeType.Structured.
 					Druid druid = Druid.Empty;
@@ -1624,8 +1624,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.panel.DataSourceMetadata.DefaultDataType = type;
 				}
 
+				//	Choix de la rubrique.
 				string field = ObjectModifier.GetBinding(obj);
-
 				field = this.module.MainWindow.DlgStructuredSelector(this.module, this.module.AccessCaptions, type, field);
 				if (field == null)  // annuler ?
 				{
