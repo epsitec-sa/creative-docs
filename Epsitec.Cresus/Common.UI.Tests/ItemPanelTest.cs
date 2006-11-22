@@ -20,6 +20,37 @@ namespace Epsitec.Common.UI
 			this.manager = new Support.ResourceManager ();
 		}
 
+		[Test]
+		public void CheckVerticalLayout()
+		{
+			ItemPanel panel = new ItemPanel ();
+
+			panel.Items = ItemPanelTest.GetStringItems ();
+
+			Assert.AreEqual (7, panel.GetItemViewCount ());
+			Assert.AreEqual ("Monday", panel.GetItemView (0).Item);
+			Assert.AreEqual ("Sunday", panel.GetItemView (6).Item);
+
+			System.GC.Collect ();
+		}
+
+		private static CollectionView GetStringItems()
+		{
+			List<string> items = new List<string> ();
+			
+			items.Add ("Monday");
+			items.Add ("Tuesday");
+			items.Add ("Wednesday");
+			items.Add ("Thursday");
+			items.Add ("Friday");
+			items.Add ("Saturday");
+			items.Add ("Sunday");
+
+			CollectionView view = new CollectionView (items);
+			
+			return view;
+		}
+
 		private Support.ResourceManager manager;
 	}
 }

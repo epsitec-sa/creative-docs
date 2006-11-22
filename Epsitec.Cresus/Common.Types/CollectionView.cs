@@ -870,9 +870,9 @@ namespace Epsitec.Common.Types
 				{
 					this.OnPropertyChanged ("CurrentItem");
 				}
-			}
 
-			this.OnCollectionChanged ();
+				this.OnCollectionChanged ();
+			}
 		}
 
 		private void OnCollectionChanged()

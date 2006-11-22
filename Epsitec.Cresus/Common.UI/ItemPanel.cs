@@ -44,6 +44,46 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public Drawing.Size ItemViewDefaultSize
+		{
+			get
+			{
+				return (Drawing.Size) this.GetValue (ItemPanel.ItemViewDefaultSizeProperty);
+			}
+			set
+			{
+				this.SetValue (ItemPanel.ItemViewDefaultSizeProperty, value);
+			}
+		}
+
+		public ItemView Detect(Drawing.Point pos)
+		{
+			IList<ItemView> views;
+
+			using (new LockManager (this))
+			{
+				views = this.views;
+			}
+
+			return this.Detect (views, pos);
+		}
+
+		public int GetItemViewCount()
+		{
+			using (new LockManager (this))
+			{
+				return this.views.Count;
+			}
+		}
+
+		public ItemView GetItemView(int index)
+		{
+			using (new LockManager (this))
+			{
+				return ItemPanel.TryGetItemView (this.views, index);
+			}
+		}
+		
 		protected virtual void HandleItemsChanged(ICollectionView oldValue, ICollectionView newValue)
 		{
 			if (oldValue != null)
@@ -53,6 +93,7 @@ namespace Epsitec.Common.UI
 			if (newValue != null)
 			{
 				newValue.CollectionChanged += this.HandleItemCollectionChanged;
+				this.HandleItemCollectionChanged (this, new CollectionChangedEventArgs (CollectionChangedAction.Reset));
 			}
 		}
 
@@ -72,7 +113,7 @@ namespace Epsitec.Common.UI
 
 			Dictionary<object, ItemView> currentViews = new Dictionary<object, ItemView> ();
 
-			lock (new LockManager (this))
+			using (new LockManager (this))
 			{
 				foreach (ItemView view in this.views)
 				{
@@ -97,7 +138,7 @@ namespace Epsitec.Common.UI
 				}
 			}
 
-			lock (new LockManager (this))
+			using (new LockManager (this))
 			{
 				this.views = views;
 			}
@@ -107,7 +148,7 @@ namespace Epsitec.Common.UI
 		{
 			IEnumerable<ItemView> views;
 
-			lock (new LockManager (this))
+			using (new LockManager (this))
 			{
 				views = this.views;
 			}
@@ -142,7 +183,7 @@ namespace Epsitec.Common.UI
 		{
 			//	TODO: create the proper item view for this item
 			
-			return new ItemView (item, this.itemViewDefaultSize);
+			return new ItemView (item, this.ItemViewDefaultSize);
 		}
 
 		private Drawing.Size LayoutVerticalList(IEnumerable<ItemView> views)
@@ -286,6 +327,7 @@ namespace Epsitec.Common.UI
 		
 		public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register ("Items", typeof (ICollectionView), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanel.NotifyItemsChanged));
 		public static readonly DependencyProperty ItemViewLayoutProperty = DependencyProperty.Register ("ItemViewLayout", typeof (ItemViewLayout), typeof (ItemPanel), new DependencyPropertyMetadata (ItemViewLayout.None, ItemPanel.NotifyItemViewLayoutChanged));
+		public static readonly DependencyProperty ItemViewDefaultSizeProperty = DependencyProperty.Register ("ItemViewDefaultSize", typeof (Drawing.Size), typeof (ItemPanel), new DependencyPropertyMetadata (new Drawing.Size (20, 80)));
 
 		List<ItemView> views
 		{
@@ -305,7 +347,6 @@ namespace Epsitec.Common.UI
 		object exclusion = new object ();
 		int lockAcquired;
 		int lockOwnerPid;
-		Drawing.Size itemViewDefaultSize = new Drawing.Size (80, 20);
 		int hotItemViewIndex = -1;
 	}
 }
