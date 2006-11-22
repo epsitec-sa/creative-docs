@@ -238,7 +238,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						}
 						else
 						{
-							captionType = caption.Name;
+							captionType = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
 						}
 
 						iconType = this.resourceAccess.DirectGetIcon(caption.Id);
@@ -254,9 +254,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 					if (druid.IsValid)
 					{
 						Caption caption = this.module.ResourceManager.GetCaption(druid);
-						//?ResourceBundle bundle = ResourceManager.GetSourceBundle(caption);
-						//?ResourceBundle.Field rf = bundle[druid];
-						//?string dn = ResourceAccess.SubAllFilter(rf.Name);
 
 						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
 						{
@@ -265,7 +262,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						}
 						else
 						{
-							captionText = caption.Name;
+							captionText = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
 						}
 
 						if (!string.IsNullOrEmpty(caption.Icon))

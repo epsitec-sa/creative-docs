@@ -230,7 +230,7 @@ namespace Epsitec.Common.Designer.Dialogs
 						}
 						else
 						{
-							captionType = caption.Name;
+							captionType = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
 						}
 
 						iconType = this.resourceAccess.DirectGetIcon(caption.Id);
@@ -254,7 +254,7 @@ namespace Epsitec.Common.Designer.Dialogs
 						}
 						else
 						{
-							captionText = caption.Name;
+							captionText = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
 						}
 
 						if (!string.IsNullOrEmpty(caption.Icon))
