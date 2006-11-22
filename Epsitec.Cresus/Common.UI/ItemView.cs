@@ -73,7 +73,15 @@ namespace Epsitec.Common.UI
 			}
 			set
 			{
-				this.bounds = value;
+				if (this.bounds != value)
+				{
+					this.bounds = value;
+					
+					if (this.widget != null)
+					{
+						this.widget.SetManualBounds (this.bounds);
+					}
+				}
 			}
 		}
 
@@ -110,6 +118,11 @@ namespace Epsitec.Common.UI
 				{
 					this.widget = this.factory.CreateUserInterface (panel, this);
 				}
+			}
+			if (this.widget != null)
+			{
+				this.widget.SetParent (panel);
+				this.widget.SetManualBounds (this.bounds);
 			}
 		}
 

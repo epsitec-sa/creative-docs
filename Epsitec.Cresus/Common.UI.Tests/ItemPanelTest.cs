@@ -63,6 +63,11 @@ namespace Epsitec.Common.UI
 			Assert.IsNull (panel.GetItemView (1).Widget);
 			Assert.IsNotNull (panel.GetItemView (5).Widget);
 			Assert.IsNotNull (panel.GetItemView (6).Widget);
+
+			Assert.AreEqual (panel, panel.GetItemView (5).Widget.Parent);
+			Assert.AreEqual (panel, panel.GetItemView (6).Widget.Parent);
+			Assert.AreEqual (new Drawing.Rectangle (0, 20, 80, 20), panel.GetItemView (5).Widget.ActualBounds);
+			Assert.AreEqual (new Drawing.Rectangle (0,  0, 80, 20), panel.GetItemView (6).Widget.ActualBounds);
 		}
 
 		private static CollectionView GetStringItems()
