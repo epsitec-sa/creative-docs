@@ -25,7 +25,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("StructuredSelector", 500, 300, true);
-				this.window.Text = "Choix d'une rubrique";  // Res.Strings.Dialog.StructuredSelector.Title;
+				this.window.Text = Res.Strings.Dialog.StructuredSelector.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonUse = new Button(footer);
 				this.buttonUse.PreferredWidth = 75;
-				this.buttonUse.Text = "Utiliser";  // Res.Strings.Dialog.Button.OK;
+				this.buttonUse.Text = Res.Strings.Dialog.StructuredSelector.Button.Use;
 				this.buttonUse.Dock = DockStyle.Left;
 				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
 				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);

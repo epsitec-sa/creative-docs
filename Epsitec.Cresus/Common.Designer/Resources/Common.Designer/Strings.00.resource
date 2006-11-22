@@ -273,6 +273,8 @@
   <data name="Dialog.ResourceSelector.Button.Clear" id="0Q4">R</data>
   <data name="Dialog.ResourceSelector.Button.Use" id="0R4">Utiliser</data>
   <data name="Dialog.ResourceSelector.Button.Create" id="0S4">Créer</data>
+  <data name="Dialog.StructuredSelector.Title" id="099">Choix d&amp;apos;une rubrique dans une structure de données</data>
+  <data name="Dialog.StructuredSelector.Button.Use" id="0A9">Utiliser</data>
   <data name="Dialog.TypeType.Title" id="067" mod="1">Choix du type à créer</data>
   <data name="Dialog.TypeType.EnumNative" id="097">Enumération .NET (&lt;b&gt;enum&lt;/b&gt;) native</data>
   <data name="Dialog.TypeType.Tooltip.Options" id="0A7">Montre ou cache les options des énumérations</data>
