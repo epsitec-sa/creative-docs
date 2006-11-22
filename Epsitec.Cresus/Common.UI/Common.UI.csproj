@@ -121,6 +121,7 @@
     <Compile Include="IController.cs" />
     <Compile Include="ItemPanel.cs" />
     <Compile Include="ItemView.cs" />
+    <Compile Include="ItemViewLayout.cs" />
     <Compile Include="MiniPanel.cs" />
     <Compile Include="PanelMode.cs" />
     <Compile Include="PanelMask.cs" />
@@ -138,6 +139,9 @@
     <Compile Include="Panels\EditPanel.cs" />
     <Compile Include="Placeholder.cs" />
     <Compile Include="Validators\ControllerBasedValidator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ItemViewFactories\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -24,9 +24,31 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public Drawing.Size Size
+		{
+			get
+			{
+				return this.size;
+			}
+		}
+
+		public Drawing.Rectangle Bounds
+		{
+			get
+			{
+				return this.bounds;
+			}
+			set
+			{
+				this.bounds = value;
+			}
+		}
+
+
 		private object item;
 		private Widgets.Widget widget;
 		private Drawing.Size size;
+		private Drawing.Rectangle bounds;
 		private bool isSelected;
 		private bool isDisabled;
 		private bool isExpanded;

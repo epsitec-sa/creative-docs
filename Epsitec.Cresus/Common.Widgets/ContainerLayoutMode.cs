@@ -7,21 +7,21 @@ namespace Epsitec.Common.Widgets
 	/// The <c>ContainerLayoutMode</c> enumeration defines in what direction
 	/// widgets get laid out.
 	/// </summary>
-	public enum ContainerLayoutMode
+	public enum ContainerLayoutMode : byte
 	{
 		/// <summary>
 		/// No layout direction preference.
 		/// </summary>
-		None=0,							//	pas de préférence					
+		None=0,
 		
 		/// <summary>
 		/// Horizontal direction (side by side).
 		/// </summary>
-		HorizontalFlow=1,				//	remplit horizontalement
+		HorizontalFlow=1,
 		
 		/// <summary>
 		/// Vertical direction (one above the other).
 		/// </summary>
-		VerticalFlow=2					//	remplit verticalement
+		VerticalFlow=2,
 	}
 }
