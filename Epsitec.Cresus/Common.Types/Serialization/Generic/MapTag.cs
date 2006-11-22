@@ -62,25 +62,28 @@ namespace Epsitec.Common.Types.Serialization.Generic
 
 		public void Record(string tag, T value)
 		{
-			if (value == null)
-			{
-				return;
-			}
-			
 			if (this.tagToValueLookup.ContainsKey (tag))
 			{
 				throw new System.ArgumentException (string.Format ("Duplicate tag '{0}' in MapTag", tag));
 			}
 			
 			//	TODO: consider allowing a single value to have multiple tags
-			
-			if (this.valueToTagLookup.ContainsKey (value))
+
+			if (value != null)
 			{
-				throw new System.ArgumentException (string.Format ("Same value for tag '{0}' and '{1}'", tag, this.valueToTagLookup[value]));
+				if (this.valueToTagLookup.ContainsKey (value))
+				{
+					throw new System.ArgumentException (string.Format ("Same value for tag '{0}' and '{1}'", tag, this.valueToTagLookup[value]));
+				}
 			}
 			
 			this.tagToValueLookup[tag] = value;
-			this.valueToTagLookup[value] = tag;
+			
+			if (value != null)
+			{
+				this.valueToTagLookup[value] = tag;
+			}
+			
 			this.sortedTagCache = null;
 		}
 

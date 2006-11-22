@@ -108,6 +108,8 @@ namespace Epsitec.Common.Designer
 
 			stack.Dock = Widgets.DockStyle.Fill;
 			clone.Dock = Widgets.DockStyle.Fill;
+			
+			clone.SetupSampleDataSource ();
 
 			stack.Children.Add (clone);
 
