@@ -1607,35 +1607,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (ObjectModifier.HasBinding(obj))
 			{
-				StructuredType type = this.panel.DataSourceMetadata.DefaultDataType as StructuredType;
-				if (type == null)  // pas encore de StructuredType associé au panneau de base ?
-				{
-					//	Choix d'une ressource type de type 'Types', mais uniquement parmi les TypeType.Structured.
-					Druid druid = Druid.Empty;
-					druid = this.module.MainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Types, ResourceAccess.TypeType.Structured, druid, null);
-					if (druid.IsEmpty)  // annuler ?
-					{
-						return false;
-					}
-
-					AbstractType at = this.module.AccessCaptions.DirectGetAbstractType(druid);
-					System.Diagnostics.Debug.Assert(at is StructuredType);
-					type = at as StructuredType;
-					this.panel.DataSourceMetadata.DefaultDataType = type;
-					this.panel.SetupSampleDataSource();
-				}
-
 				//	Choix de la rubrique.
+				StructuredType type = this.panel.DataSourceMetadata.DefaultDataType as StructuredType;
+				System.Diagnostics.Debug.Assert(type != null);
+
 				Binding binding = ObjectModifier.GetBinding(obj);
 				string path = binding == null ? null : binding.Path;
 				BindingMode mode = binding == null ? BindingMode.TwoWay : binding.Mode;
-				path = this.module.MainWindow.DlgStructuredSelector (this.module, this.module.AccessCaptions, type, path);
+				path = this.module.MainWindow.DlgStructuredSelector(this.module, type, path);
 				if (path == null)  // annuler ?
 				{
 					return false;
 				}
 
-				ObjectModifier.SetBinding (obj, new Binding (mode, path));
+				ObjectModifier.SetBinding(obj, new Binding(mode, path));
 			}
 
 			return true;

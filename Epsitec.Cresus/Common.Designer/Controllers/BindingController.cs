@@ -62,7 +62,7 @@ namespace Epsitec.Common.Designer.Controllers
 				this.binding = newValue as Binding;
 
 				string path = this.binding == null ? "" : this.binding.Path;
-				string field = path.StartsWith ("*.") ? path.Substring (2) : path;
+				string field = path.StartsWith("*.") ? path.Substring(2) : path;
 				
 				this.button.Text = field;
 			}
@@ -81,13 +81,13 @@ namespace Epsitec.Common.Designer.Controllers
 			string path = this.binding == null ? null : this.binding.Path;
 			BindingMode mode = this.binding == null ? BindingMode.TwoWay : this.binding.Mode;
 
-			path = mainWindow.DlgStructuredSelector(mainWindow.CurrentModule, mainWindow.CurrentModule.AccessCaptions, type, path);
+			path = mainWindow.DlgStructuredSelector(mainWindow.CurrentModule, type, path);
 			if (path == null)  // annuler ?
 			{
 				return;
 			}
 
-			this.binding = new Binding (mode, path);
+			this.binding = new Binding(mode, path);
 
 			this.OnActualValueChanged();
 		}

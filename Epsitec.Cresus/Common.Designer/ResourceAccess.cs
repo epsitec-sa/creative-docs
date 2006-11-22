@@ -446,6 +446,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Duplique la ressource courante.
 			EnumType et = null;
+			StructuredType st = null;
 
 			if (this.type == Type.Types && !duplicateContent)
 			{
@@ -462,6 +463,19 @@ namespace Epsitec.Common.Designer
 					et = this.CreateEnumValues(this.lastTypeTypeSystem);
 					newName = this.GetEnumBaseName(this.lastTypeTypeSystem);
 				}
+			}
+
+			if (this.type == Type.Panels && !duplicateContent)
+			{
+				//	Choix d'une ressource type de type 'Types', mais uniquement parmi les TypeType.Structured.
+				Module module = this.mainWindow.CurrentModule;
+				Druid druid = this.mainWindow.DlgResourceSelector(module, ResourceAccess.Type.Types, ResourceAccess.TypeType.Structured, Druid.Empty, null);
+				if (druid.IsEmpty)  // annuler ?
+				{
+					return;
+				}
+				st = module.AccessCaptions.DirectGetAbstractType(druid) as StructuredType;
+				System.Diagnostics.Debug.Assert(st != null);
 			}
 
 			Druid newDruid = Druid.Empty;
@@ -585,7 +599,14 @@ namespace Epsitec.Common.Designer
 				this.panelsList.Insert(this.accessIndex, newBundle);
 				this.panelsToCreate.Add(newBundle);
 				
-				this.resourceManager.SetBundle (newBundle, ResourceSetMode.None);
+				this.resourceManager.SetBundle(newBundle, ResourceSetMode.None);
+
+				if (st != null)
+				{
+					UI.Panel newPanel = this.GetPanel(newBundle);
+					newPanel.DataSourceMetadata.DefaultDataType = st;
+					newPanel.SetupSampleDataSource();
+				}
 			}
 
 			this.druidsIndex.Insert(this.accessIndex+1, newDruid);
@@ -2749,7 +2770,7 @@ namespace Epsitec.Common.Designer
 			{
 				ResourceBundle bundle = this.panelsList[i];
 				bundle.DefineRank(i);
-				UI.Panel panel = UI.Panel.GetPanel (bundle);
+				UI.Panel panel = UI.Panel.GetPanel(bundle);
 
 				if (panel != null)
 				{
@@ -2786,9 +2807,14 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne le UI.Panel associé à une ressource.
 			//	Si nécessaire, il est créé la première fois.
-			ResourceBundle bundle = this.PanelBundle(index);
+			return this.GetPanel(this.PanelBundle(index));
+		}
 
-			UI.Panel newPanel = UI.Panel.GetPanel (bundle);
+		public UI.Panel GetPanel(ResourceBundle bundle)
+		{
+			//	Retourne le UI.Panel associé à un bundle.
+			//	Si nécessaire, il est créé la première fois.
+			UI.Panel newPanel = UI.Panel.GetPanel(bundle);
 
 			if (newPanel == null)
 			{

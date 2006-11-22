@@ -1096,10 +1096,10 @@ namespace Epsitec.Common.Designer
 
 
 		#region Dialogs
-		public string DlgStructuredSelector(Module baseModule, ResourceAccess access, StructuredType type, string path)
+		public string DlgStructuredSelector(Module baseModule, StructuredType type, string path)
 		{
 			//	Ouvre le dialogue pour choisir une rubrique dans une structure de données.
-			this.dlgStructuredSelector.Initialise(access, baseModule, type, path);
+			this.dlgStructuredSelector.Initialise(baseModule, type, path);
 			this.dlgStructuredSelector.Show();  // choix dans le dialogue...
 			return this.dlgStructuredSelector.SelectedField;
 		}

@@ -111,8 +111,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.hButtonDefault = this.HToolBarAdd(Res.Captions.PanelMode.Default.Id);
 			this.hButtonEdition = this.HToolBarAdd(Res.Captions.PanelMode.Edition.Id);
 			this.hButtonSearch  = this.HToolBarAdd(Res.Captions.PanelMode.Search.Id);
-			this.hToolBar.Items.Add(new IconSeparator());
-			this.hButtonType    = this.HToolBarAdd(Res.Captions.PanelMode.Type.Id);
 
 			//	Crée le tabbook pour les onglets.
 			this.tabBook = new TabBook(this.right);
@@ -526,30 +524,6 @@ namespace Epsitec.Common.Designer.Viewers
 				this.panelMode = UI.PanelMode.Search;
 			}
 
-			if (sender == this.hButtonType)
-			{
-				Druid druid = Druid.Empty;
-
-				StructuredType type = this.panelContainer.DataSourceMetadata.DefaultDataType as StructuredType;
-				if (type != null)
-				{
-					druid = type.CaptionId;
-				}
-
-				//	Choix d'une ressource type de type 'Types', mais uniquement parmi les TypeType.Structured.
-				druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Types, ResourceAccess.TypeType.Structured, druid, null);
-				if (!druid.IsEmpty)  // d'accord ?
-				{
-					AbstractType at = this.module.AccessCaptions.DirectGetAbstractType(druid);
-					System.Diagnostics.Debug.Assert(at is StructuredType);
-					type = at as StructuredType;
-					this.panelContainer.DataSourceMetadata.DefaultDataType = type;
-					this.panelContainer.SetupSampleDataSource();
-				}
-
-				return;
-			}
-
 			this.panelEditor.DeselectAll();
 			this.UpdateButtons();
 			this.UpdateEdit();
@@ -570,7 +544,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected IconButton					hButtonDefault;
 		protected IconButton					hButtonEdition;
 		protected IconButton					hButtonSearch;
-		protected IconButton					hButtonType;
 		protected TabBook						tabBook;
 
 		protected TabPage						tabPageProperties;

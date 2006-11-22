@@ -227,9 +227,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 					if (type != null)
 					{
 						Caption caption = this.module.ResourceManager.GetCaption(type.Caption.Id);
-						//?ResourceBundle bundle = ResourceManager.GetSourceBundle(caption);
-						//?ResourceBundle.Field rf = bundle[caption.Druid];
-						//?string dn = ResourceAccess.SubAllFilter(rf.Name);
 
 						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
 						{
