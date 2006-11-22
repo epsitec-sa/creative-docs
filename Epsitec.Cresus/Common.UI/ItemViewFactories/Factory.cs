@@ -14,7 +14,7 @@ namespace Epsitec.Common.UI.ItemViewFactories
 	/// The <c>Factory</c> class provides access to the <see cref="IItemViewFactory"/>
 	/// instances, based on the item types which must be represented.
 	/// </summary>
-	public static class Factory
+	internal static class Factory
 	{
 		/// <summary>
 		/// Gets the item view factory for the specified item view.
@@ -88,13 +88,13 @@ namespace Epsitec.Common.UI.ItemViewFactories
 
 		private static void Analyse(Assembly assembly)
 		{
-			foreach (System.Type type in ItemViewFactoryAttribute.GetRegisteredTypes (assembly))
+			foreach (KeyValuePair<System.Type, System.Type> pair in ItemViewFactoryAttribute.GetRegisteredTypes (assembly))
 			{
-				IItemViewFactory factory = System.Activator.CreateInstance (type) as IItemViewFactory;
+				IItemViewFactory factory = System.Activator.CreateInstance (pair.Key) as IItemViewFactory;
 				
 				lock (Factory.exclusion)
 				{
-					Factory.cache[type] = factory;
+					Factory.cache[pair.Value] = factory;
 				}
 			}
 		}

@@ -10,5 +10,6 @@ namespace Epsitec.Common.UI
 	public interface IItemViewFactory
 	{
 		Widgets.Widget CreateUserInterface(ItemPanel panel, ItemView itemView);
+		Drawing.Size GetPreferredSize(ItemPanel panel, ItemView itemView);
 	}
 }

@@ -102,6 +102,10 @@ namespace Epsitec.Common.UI
 				return ItemPanel.TryGetItemView (this.views, index);
 			}
 		}
+
+		internal void NotifyItemViewSizeChanged(ItemView view, Drawing.Size oldSize, Drawing.Size newSize)
+		{
+		}
 		
 		protected virtual void HandleItemsChanged(ICollectionView oldValue, ICollectionView newValue)
 		{
@@ -266,11 +270,13 @@ namespace Epsitec.Common.UI
 
 		private ItemView CreateItemView(object item, int index)
 		{
-			//	TODO: create the proper item view for this item
-			
 			ItemView view = new ItemView (item, this.ItemViewDefaultSize);
 			
 			view.Index = index;
+
+			//	TODO: make this code asynchronous
+
+			view.UpdatePreferredSize (this);
 			
 			return view;
 		}

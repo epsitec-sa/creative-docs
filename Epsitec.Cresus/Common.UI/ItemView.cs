@@ -77,6 +77,26 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		internal void UpdatePreferredSize(ItemPanel panel)
+		{
+			if (this.factory == null)
+			{
+				this.factory = ItemViewFactories.Factory.GetItemViewFactory (this);
+			}
+
+			if (this.factory != null)
+			{
+				Drawing.Size oldSize = this.size;
+				Drawing.Size newSize = this.factory.GetPreferredSize (panel, this);
+
+				if (oldSize != newSize)
+				{
+					this.size = newSize;
+					panel.NotifyItemViewSizeChanged (this, oldSize, newSize);
+				}
+			}
+		}
+		
 		internal void CreateUserInterface(ItemPanel panel)
 		{
 			if (this.widget == null)

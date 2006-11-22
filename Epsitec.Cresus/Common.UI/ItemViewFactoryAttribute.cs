@@ -18,10 +18,22 @@ namespace Epsitec.Common.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ItemViewFactoryAttribute"/> class.
 		/// </summary>
-		/// <param name="type">The type of the class.</param>
-		public ItemViewFactoryAttribute(System.Type type)
+		/// <param name="factoryType">The type of the factory class.</param>
+		public ItemViewFactoryAttribute(System.Type factoryType)
 		{
-			this.type = type;
+			this.factoryType = factoryType;
+			this.itemType = itemType;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ItemViewFactoryAttribute"/> class.
+		/// </summary>
+		/// <param name="factoryType">The type of the factory class.</param>
+		/// <param name="itemType">Type of the item represented by the factory class.</param>
+		public ItemViewFactoryAttribute(System.Type factoryType, System.Type itemType)
+		{
+			this.factoryType = factoryType;
+			this.itemType = itemType;
 		}
 
 		/// <summary>
@@ -29,25 +41,40 @@ namespace Epsitec.Common.UI
 		/// <see cref="ItemPanel"/> and <see cref="IItemViewFactory"/> pattern.
 		/// </summary>
 		/// <value>The type.</value>
-		public System.Type						Type
+		public System.Type						FactoryType
 		{
 			get
 			{
-				return this.type;
+				return this.factoryType;
 			}
 			set
 			{
-				this.type = value;
+				this.factoryType = value;
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the item type for which the factory works.
+		/// </summary>
+		/// <value>The item type for which this factory works.</value>
+		public System.Type						ItemType
+		{
+			get
+			{
+				return this.itemType;
+			}
+			set
+			{
+				this.itemType = value;
+			}
+		}
 
 		/// <summary>
 		/// Gets the registered types for a specified assembly.
 		/// </summary>
 		/// <param name="assembly">The assembly.</param>
 		/// <returns>The registered types.</returns>
-		public static IEnumerable<System.Type> GetRegisteredTypes(System.Reflection.Assembly assembly)
+		public static IEnumerable<KeyValuePair<System.Type, System.Type>> GetRegisteredTypes(System.Reflection.Assembly assembly)
 		{
 			System.Type factoryType = typeof (IItemViewFactory);
 
@@ -56,17 +83,18 @@ namespace Epsitec.Common.UI
 				//	Return only types which describe classes that implement the
 				//	IItemViewFactory interface :
 
-				foreach (System.Type interfaceType in attribute.Type.GetInterfaces ())
+				foreach (System.Type interfaceType in attribute.FactoryType.GetInterfaces ())
 				{
 					if (interfaceType == factoryType)
 					{
-						yield return attribute.Type;
+						yield return new KeyValuePair<System.Type, System.Type> (attribute.FactoryType, attribute.ItemType);
 						break;
 					}
 				}
 			}
 		}
 
-		private System.Type						type;
+		private System.Type						factoryType;
+		private System.Type						itemType;
 	}
 }
