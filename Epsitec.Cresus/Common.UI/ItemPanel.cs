@@ -173,7 +173,7 @@ namespace Epsitec.Common.UI
 				}
 			}
 
-			//	TODO: make this asynchronous ?
+			//	TODO: make this code asynchronous
 
 			dispose.ForEach (
 				delegate (ItemView view)
@@ -185,7 +185,7 @@ namespace Epsitec.Common.UI
 				delegate (ItemView view)
 				{
 					view.CreateUserInterface (this);
-				});
+				} );
 		}
 
 		private void RefreshItemViews()

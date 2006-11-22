@@ -118,10 +118,12 @@
     <Compile Include="Controllers\NumericController.cs" />
     <Compile Include="Controllers\StringController.cs" />
     <Compile Include="AbstractPlaceholder.cs" />
+    <Compile Include="ItemViewFactoryAttribute.cs" />
     <Compile Include="IItemViewFactory.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="ItemPanel.cs" />
     <Compile Include="ItemView.cs" />
+    <Compile Include="ItemViewFactories\Factory.cs" />
     <Compile Include="ItemViewLayout.cs" />
     <Compile Include="MiniPanel.cs" />
     <Compile Include="PanelMode.cs" />
@@ -140,9 +142,6 @@
     <Compile Include="Panels\EditPanel.cs" />
     <Compile Include="Placeholder.cs" />
     <Compile Include="Validators\ControllerBasedValidator.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ItemViewFactories\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

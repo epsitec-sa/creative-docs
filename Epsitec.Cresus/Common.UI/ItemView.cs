@@ -81,6 +81,11 @@ namespace Epsitec.Common.UI
 		{
 			if (this.widget == null)
 			{
+				if (this.factory == null)
+				{
+					this.factory = ItemViewFactories.Factory.GetItemViewFactory (this);
+				}
+				
 				if (this.factory != null)
 				{
 					this.widget = this.factory.CreateUserInterface (panel, this);
