@@ -118,6 +118,7 @@
     <Compile Include="Controllers\NumericController.cs" />
     <Compile Include="Controllers\StringController.cs" />
     <Compile Include="AbstractPlaceholder.cs" />
+    <Compile Include="IItemViewFactory.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="ItemPanel.cs" />
     <Compile Include="ItemView.cs" />

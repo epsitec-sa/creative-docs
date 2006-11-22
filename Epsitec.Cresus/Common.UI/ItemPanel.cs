@@ -56,6 +56,25 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public Drawing.Rectangle Aperture
+		{
+			get
+			{
+				return this.aperture;
+			}
+			set
+			{
+				Drawing.Rectangle oldValue = this.aperture;
+				Drawing.Rectangle newValue = value;
+				
+				if (oldValue != newValue)
+				{
+					this.aperture = newValue;
+					this.HandleApertureChanged (oldValue, newValue);
+				}
+			}
+		}
+
 		public ItemView Detect(Drawing.Point pos)
 		{
 			IList<ItemView> views;
@@ -107,6 +126,68 @@ namespace Epsitec.Common.UI
 			this.RefreshItemViews ();
 		}
 
+		protected virtual void HandleApertureChanged(Drawing.Rectangle oldValue, Drawing.Rectangle newValue)
+		{
+			IEnumerable<ItemView> views;
+
+			using (new LockManager (this))
+			{
+				views = this.views;
+			}
+
+			this.RecreateUserInterface (views, newValue);
+		}
+
+		private void RecreateUserInterface(IEnumerable<ItemView> views, Drawing.Rectangle aperture)
+		{
+			List<ItemView> dispose = new List<ItemView> ();
+			List<ItemView> create  = new List<ItemView> ();
+			
+			foreach (ItemView view in views)
+			{
+				if (view.Widget != null)
+				{
+					if (view.Bounds.IntersectsWith (aperture))
+					{
+						//	Nothing to do : the item has a user interface and it will
+						//	still be visible in the aperture.
+					}
+					else
+					{
+						//	The view is no longer visible; remember to dispose the
+						//	user interface.
+
+						dispose.Add (view);
+					}
+				}
+				else
+				{
+					if (view.Bounds.IntersectsWith (aperture))
+					{
+						//	The view has no user interface, but it has just become
+						//	visible in the aperture; remember to create the user
+						//	interface.
+
+						create.Add (view);
+					}
+				}
+			}
+
+			//	TODO: make this asynchronous ?
+
+			dispose.ForEach (
+				delegate (ItemView view)
+				{
+					view.DisposeUserInterface ();
+				} );
+
+			create.ForEach (
+				delegate (ItemView view)
+				{
+					view.CreateUserInterface (this);
+				});
+		}
+
 		private void RefreshItemViews()
 		{
 			ICollectionView items = this.Items;
@@ -122,9 +203,9 @@ namespace Epsitec.Common.UI
 			}
 
 			List<ItemView> views = new List<ItemView> ();
-			
-			this.hotItemViewIndex = -1;
 
+			//	TODO: make this code asynchronous
+			
 			if ((items != null) &&
 				(items.Items.Count > 0))
 			{
@@ -138,9 +219,12 @@ namespace Epsitec.Common.UI
 				}
 			}
 
+			this.RecreateUserInterface (views, this.aperture);
+
 			using (new LockManager (this))
 			{
 				this.views = views;
+				this.hotItemViewIndex = -1;
 			}
 		}
 
@@ -359,11 +443,11 @@ namespace Epsitec.Common.UI
 				this.lockedViews = value;
 			}
 		}
-		
 		List<ItemView> lockedViews = new List<ItemView> ();
 		object exclusion = new object ();
 		int lockAcquired;
 		int lockOwnerPid;
 		int hotItemViewIndex = -1;
+		Drawing.Rectangle aperture;
 	}
 }

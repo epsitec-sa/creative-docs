@@ -37,6 +37,26 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public IItemViewFactory Factory
+		{
+			get
+			{
+				return this.factory;
+			}
+			internal set
+			{
+				this.factory = value;
+			}
+		}
+
+		public Widgets.Widget Widget
+		{
+			get
+			{
+				return this.widget;
+			}
+		}
+
 		public Drawing.Size Size
 		{
 			get
@@ -57,9 +77,29 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		internal void CreateUserInterface(ItemPanel panel)
+		{
+			if (this.widget == null)
+			{
+				if (this.factory != null)
+				{
+					this.widget = this.factory.CreateUserInterface (panel, this);
+				}
+			}
+		}
+
+		internal void DisposeUserInterface()
+		{
+			if (this.widget != null)
+			{
+				this.widget.Dispose ();
+				this.widget = null;
+			}
+		}
 
 		private object item;
 		private int index;
+		private IItemViewFactory factory;
 		private Widgets.Widget widget;
 		private Drawing.Size size;
 		private Drawing.Rectangle bounds;
