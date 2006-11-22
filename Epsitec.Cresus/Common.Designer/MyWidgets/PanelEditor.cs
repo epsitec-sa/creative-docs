@@ -1568,7 +1568,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				druid = this.module.MainWindow.DlgResourceSelector(this.module, type, ResourceAccess.TypeType.None, druid, exclude);
 				ObjectModifier.SetDruid(obj, druid.ToString());
 
-				if (druid.IsEmpty)
+				if (druid.IsEmpty)  // annuler ?
 				{
 					return false;
 				}
@@ -1613,10 +1613,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 					string field = ObjectModifier.GetBinding(obj);
 
 					field = this.module.MainWindow.DlgStructuredSelector(this.module, this.module.AccessCaptions, type, field);
-					if (field != null)
+					if (field == null)  // annuler ?
 					{
-						ObjectModifier.SetBinding(obj, field);
+						return false;
 					}
+
+					ObjectModifier.SetBinding(obj, field);
 				}
 			}
 

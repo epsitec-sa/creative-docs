@@ -36,7 +36,12 @@ namespace Epsitec.Common.Designer.Dialogs
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
 				int tabIndex = 0;
-				Widget header;
+
+				//	Titre.
+				this.title = new StaticText(this.window.Root);
+				this.title.PreferredHeight = 30;
+				this.title.Dock = DockStyle.Top;
+				this.title.Margins = new Margins(0, 0, 0, 5);
 
 				//	Crée l'en-tête du tableau.
 				this.header = new Widget(this.window.Root);
@@ -94,7 +99,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonUse = new Button(footer);
 				this.buttonUse.PreferredWidth = 75;
-				this.buttonUse.Text = Res.Strings.Dialog.Button.OK;
+				this.buttonUse.Text = "Utiliser";  // Res.Strings.Dialog.Button.OK;
 				this.buttonUse.Dock = DockStyle.Left;
 				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
 				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
@@ -111,6 +116,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
+			this.UpdateTitle();
 			this.UpdateButtons();
 			this.UpdateArray();
 			this.SelectArray();
@@ -166,6 +172,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.array.SelectedRow = -1;
 		}
 
+
+		protected void UpdateTitle()
+		{
+			//	Met à jour le titre qui donne le nom de la ressource StructuredType.
+			string text = string.Concat("<font size=\"200%\"><b>", this.structuredType.Caption.Name, "</b></font>");
+			this.title.Text = text;
+		}
 
 		protected void UpdateButtons()
 		{
@@ -356,6 +369,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected string						initialField;
 		protected string						selectedField;
 
+		protected StaticText					title;
 		protected Widget						header;
 		protected HeaderButton					headerName;
 		protected HeaderButton					headerType;
