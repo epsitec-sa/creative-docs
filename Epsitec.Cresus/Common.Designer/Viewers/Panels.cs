@@ -114,6 +114,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.hToolBar.Items.Add(new IconSeparator());
 			this.hButtonType    = this.HToolBarAdd(Res.Captions.PanelMode.Type.Id);
 
+			this.staticType = new StaticText();
+			this.staticType.Dock = DockStyle.Fill;
+			this.staticType.Margins = new Margins(8, 0, 0, 0);
+			this.hToolBar.Items.Add(this.staticType);
+
 			//	Crée le tabbook pour les onglets.
 			this.tabBook = new TabBook(this.right);
 			this.tabBook.Arrows = TabBookArrows.Stretch;
@@ -157,6 +162,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.splitter2.Dock = DockStyle.Right;
 
 			this.UpdateEdit();
+			this.UpdateType();
 			this.UpdateButtons();
 		}
 
@@ -292,6 +298,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour le contenu du Viewer.
 			this.UpdateArray();
 			this.UpdateEdit();
+			this.UpdateType();
 			this.UpdateCommands();
 		}
 
@@ -301,6 +308,23 @@ namespace Epsitec.Common.Designer.Viewers
 			this.hButtonDefault.ActiveState = (this.panelMode == UI.PanelMode.Default) ? ActiveState.Yes : ActiveState.No;
 			this.hButtonEdition.ActiveState = (this.panelMode == UI.PanelMode.Edition) ? ActiveState.Yes : ActiveState.No;
 			this.hButtonSearch.ActiveState = (this.panelMode == UI.PanelMode.Search) ? ActiveState.Yes : ActiveState.No;
+		}
+
+		protected void UpdateType()
+		{
+			//	Met à jour le nom de la structure de données à droite du bouton 'link'.
+			string text = "";
+
+			if (this.panelContainer != null)
+			{
+				StructuredType type = this.panelContainer.DataSourceMetadata.DefaultDataType as StructuredType;
+				if (type != null)
+				{
+					text = type.Caption.Name;
+				}
+			}
+
+			this.staticType.Text = text;
 		}
 
 
@@ -463,6 +487,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	La ligne sélectionnée a changé.
 			this.access.AccessIndex = this.array.SelectedRow;
 			this.UpdateEdit();
+			this.UpdateType();
 			this.UpdateCommands();
 			this.panelEditor.IsEditEnabled = (this.access.AccessIndex != -1);
 			this.DefineProxies(this.panelEditor.SelectedObjects);
@@ -545,6 +570,8 @@ namespace Epsitec.Common.Designer.Viewers
 					type = at as StructuredType;
 					this.panelContainer.DataSourceMetadata.DefaultDataType = type;
 					this.panelContainer.SetupSampleDataSource();
+
+					this.UpdateType();
 				}
 
 				return;
@@ -571,6 +598,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected IconButton					hButtonEdition;
 		protected IconButton					hButtonSearch;
 		protected IconButton					hButtonType;
+		protected StaticText					staticType;
 		protected TabBook						tabBook;
 
 		protected TabPage						tabPageProperties;

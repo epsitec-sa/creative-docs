@@ -306,7 +306,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void UpdateEdit()
 		{
 			int sel = this.array.SelectedRow;
-			if (sel == -1)
+			if (sel == -1 || sel >= this.fields.Count)
 			{
 				this.fieldName.Text = "";
 			}
