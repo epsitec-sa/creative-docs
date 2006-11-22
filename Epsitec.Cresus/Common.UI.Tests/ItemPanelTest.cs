@@ -56,6 +56,13 @@ namespace Epsitec.Common.UI
 
 			Assert.AreEqual ("Monday", panel.GetItemView (0).Widget.Text);
 			Assert.AreEqual ("Tuesday", panel.GetItemView (1).Widget.Text);
+
+			panel.Aperture = new Drawing.Rectangle (0, 10, 80, 20);
+
+			Assert.IsNull (panel.GetItemView (0).Widget);
+			Assert.IsNull (panel.GetItemView (1).Widget);
+			Assert.IsNotNull (panel.GetItemView (5).Widget);
+			Assert.IsNotNull (panel.GetItemView (6).Widget);
 		}
 
 		private static CollectionView GetStringItems()
