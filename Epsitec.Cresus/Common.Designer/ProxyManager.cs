@@ -266,9 +266,9 @@ namespace Epsitec.Common.Designer
 			druidPanelStringType.DefineDefaultController("Druid", "Panel");  // utilise DruidController
 			ProxyManager.DruidPanelStringType = druidPanelStringType;
 
-			StringType structuredStringType = new StringType();
-			structuredStringType.DefineDefaultController("Structured", "");  // utilise StructuredController
-			ProxyManager.StructuredStringType = structuredStringType;
+			InternalBindingType bindingType = new InternalBindingType ();
+			bindingType.DefineDefaultController("Binding", "");  // utilise BindingController
+			ProxyManager.BindingType = bindingType;
 
 			DoubleType locationNumericType = new DoubleType(-9999, 9999, 1.0M);
 			locationNumericType.DefinePreferredRange(new DecimalRange(0, 1000, 2));
@@ -287,9 +287,32 @@ namespace Epsitec.Common.Designer
 			ProxyManager.GridNumericType = gridNumericType;
 		}
 
+		private class InternalBindingType : AbstractType
+		{
+			public override System.Type SystemType
+			{
+				get
+				{
+					return typeof (Binding);
+				}
+			}
+
+			public override bool IsValidValue(object value)
+			{
+				if (value == null)
+				{
+					return true;
+				}
+				else
+				{
+					return value is Binding;
+				}
+			}
+		}
+
 		public static readonly IStringType  DruidCaptionStringType;
 		public static readonly IStringType  DruidPanelStringType;
-		public static readonly IStringType  StructuredStringType;
+		public static readonly INamedType	BindingType;
 		public static readonly INumericType LocationNumericType;
 		public static readonly INumericType SizeNumericType;
 		public static readonly INumericType MarginNumericType;

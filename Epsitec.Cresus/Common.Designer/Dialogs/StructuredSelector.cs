@@ -139,8 +139,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.ShowDialog();
 		}
 
-		public void Initialise(ResourceAccess access, Module module, StructuredType type, string field)
+		public void Initialise(ResourceAccess access, Module module, StructuredType type, string path)
 		{
+			//	TODO: il faudra faire mieux à l'avenir, puisqu'il pourra y avoir autre
+			//	chose que "*." comme préfixe...
+
+			string field = ((path != null) && path.StartsWith ("*.")) ? path.Substring (2) : path;
+
 			this.resourceAccess = access;
 			this.module = module;
 			this.structuredType = type;
@@ -154,7 +159,10 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			get
 			{
-				return this.selectedField;
+				//	TODO: il faudra faire mieux à l'avenir, puisqu'il pourra y avoir autre
+				//	chose que "*." comme préfixe...
+				
+				return this.selectedField == null ? null : string.Concat ("*.", this.selectedField);
 			}
 		}
 

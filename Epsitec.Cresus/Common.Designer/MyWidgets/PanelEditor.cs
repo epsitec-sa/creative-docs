@@ -1626,14 +1626,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 
 				//	Choix de la rubrique.
-				string field = ObjectModifier.GetBinding(obj);
-				field = this.module.MainWindow.DlgStructuredSelector(this.module, this.module.AccessCaptions, type, field);
-				if (field == null)  // annuler ?
+				Binding binding = ObjectModifier.GetBinding(obj);
+				string path = binding == null ? null : binding.Path;
+				BindingMode mode = binding == null ? BindingMode.TwoWay : binding.Mode;
+				path = this.module.MainWindow.DlgStructuredSelector (this.module, this.module.AccessCaptions, type, path);
+				if (path == null)  // annuler ?
 				{
 					return false;
 				}
 
-				ObjectModifier.SetBinding(obj, field);
+				ObjectModifier.SetBinding (obj, new Binding (mode, path));
 			}
 
 			return true;

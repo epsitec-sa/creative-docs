@@ -55,15 +55,15 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		public string Structured
+		public Binding Binding
 		{
 			get
 			{
-				return (string) this.GetValue(Content.StructuredProperty);
+				return (Binding) this.GetValue(Content.BindingProperty);
 			}
 			set
 			{
-				this.SetValue(Content.StructuredProperty, value);
+				this.SetValue(Content.BindingProperty, value);
 			}
 		}
 
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Designer.Proxies
 
 			if (ObjectModifier.HasBinding(this.DefaultWidget))
 			{
-				this.Structured = ObjectModifier.GetBinding(this.DefaultWidget);
+				this.Binding = ObjectModifier.GetBinding(this.DefaultWidget);
 			}
 		}
 
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		private void NotifyStructuredChanged(string field)
+		private void NotifyBindingChanged(Binding binding)
 		{
 			//	Cette méthode est appelée à la suite de la modification d'une de
 			//	nos propriétés de définition pour permettre de mettre à jour les widgets connectés :
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in this.Widgets)
 					{
-						ObjectModifier.SetBinding(obj, field);
+						ObjectModifier.SetBinding(obj, binding);
 					}
 				}
 				finally
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			Content.DruidCaptionProperty.DefaultMetadata.DefineNamedType(ProxyManager.DruidCaptionStringType);
 			Content.DruidPanelProperty.DefaultMetadata.DefineNamedType(ProxyManager.DruidPanelStringType);
-			Content.StructuredProperty.DefaultMetadata.DefineNamedType(ProxyManager.StructuredStringType);
+			Content.BindingProperty.DefaultMetadata.DefineNamedType(ProxyManager.BindingType);
 		}
 
 
@@ -154,16 +154,16 @@ namespace Epsitec.Common.Designer.Proxies
 			that.NotifyDruidChanged(value);
 		}
 
-		private static void NotifyStructuredChanged(DependencyObject o, object oldValue, object newValue)
+		private static void NotifyBindingChanged(DependencyObject o, object oldValue, object newValue)
 		{
-			string value = (string) newValue;
+			Binding value = (Binding) newValue;
 			Content that = (Content) o;
-			that.NotifyStructuredChanged(value);
+			that.NotifyBindingChanged(value);
 		}
 
 
-		public static readonly DependencyProperty DruidCaptionProperty = DependencyProperty.Register("DruidCaption", typeof(string), typeof(Content), new DependencyPropertyMetadata(0.0, Content.NotifyDruidChanged));
-		public static readonly DependencyProperty DruidPanelProperty   = DependencyProperty.Register("DruidPanel",   typeof(string), typeof(Content), new DependencyPropertyMetadata(0.0, Content.NotifyDruidChanged));
-		public static readonly DependencyProperty StructuredProperty   = DependencyProperty.Register("Structured",   typeof(string), typeof(Content), new DependencyPropertyMetadata(0.0, Content.NotifyStructuredChanged));
+		public static readonly DependencyProperty DruidCaptionProperty = DependencyProperty.Register("DruidCaption", typeof(string),  typeof(Content), new DependencyPropertyMetadata(Content.NotifyDruidChanged));
+		public static readonly DependencyProperty DruidPanelProperty   = DependencyProperty.Register("DruidPanel",   typeof(string),  typeof(Content), new DependencyPropertyMetadata(Content.NotifyDruidChanged));
+		public static readonly DependencyProperty BindingProperty      = DependencyProperty.Register("Binding",      typeof(Binding), typeof(Content), new DependencyPropertyMetadata(Content.NotifyBindingChanged));
 	}
 }

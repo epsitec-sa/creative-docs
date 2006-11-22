@@ -3,25 +3,26 @@
 
 using System.Collections.Generic;
 
+using Epsitec.Common.Designer.Controllers;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.UI.Controllers;
 using Epsitec.Common.Widgets;
 
-[assembly: Controller(typeof(Epsitec.Common.Designer.Controllers.StructuredController))]
+[assembly: Controller(typeof(BindingController))]
 
 namespace Epsitec.Common.Designer.Controllers
 {
-	public class StructuredController : AbstractController, Widgets.Layouts.IGridPermeable
+	public class BindingController : AbstractController, Widgets.Layouts.IGridPermeable
 	{
-		public StructuredController(string parameter)
+		public BindingController(string parameter)
 		{
 		}
 
 		public override object GetActualValue()
 		{
-			return this.field;
+			return this.binding;
 		}
 
 		protected override Widgets.Layouts.IGridPermeable GetGridPermeableLayoutHelper()
@@ -58,9 +59,12 @@ namespace Epsitec.Common.Designer.Controllers
 				!PendingValue.IsPendingValue(newValue) &&
 				newValue != null)
 			{
-				this.field = newValue as string;
+				this.binding = newValue as Binding;
 
-				this.button.Text = this.field;
+				string path = this.binding == null ? "" : this.binding.Path;
+				string field = path.StartsWith ("*.") ? path.Substring (2) : path;
+				
+				this.button.Text = field;
 			}
 		}
 
@@ -74,15 +78,16 @@ namespace Epsitec.Common.Designer.Controllers
 			System.Diagnostics.Debug.Assert(sourceWidget != null);
 			IStructuredType dataSource = DataObject.GetDataContext(sourceWidget).Source as IStructuredType;
 			StructuredType type = dataSource.GetField("*").Type as StructuredType;
-			string field = this.field;
+			string path = this.binding == null ? null : this.binding.Path;
+			BindingMode mode = this.binding == null ? BindingMode.TwoWay : this.binding.Mode;
 
-			field = mainWindow.DlgStructuredSelector(mainWindow.CurrentModule, mainWindow.CurrentModule.AccessCaptions, type, field);
-			if (field == null)  // annuler ?
+			path = mainWindow.DlgStructuredSelector(mainWindow.CurrentModule, mainWindow.CurrentModule.AccessCaptions, type, path);
+			if (path == null)  // annuler ?
 			{
 				return;
 			}
 
-			this.field = field;
+			this.binding = new Binding (mode, path);
 
 			this.OnActualValueChanged();
 		}
@@ -114,7 +119,7 @@ namespace Epsitec.Common.Designer.Controllers
 		#endregion
 
 
-		private string					field;
+		private Binding					binding;
 		private Button					button;
 	}
 }

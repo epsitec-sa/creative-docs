@@ -3,6 +3,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Layouts;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Designer
 {
@@ -249,39 +250,26 @@ namespace Epsitec.Common.Designer
 			return type == ObjectType.Placeholder;
 		}
 
-		public static void SetBinding(Widget obj, string source)
+		public static void SetBinding(Widget obj, Binding binding)
 		{
 			//	Modifie le binding de l'objet.
 			ObjectType type = ObjectModifier.GetObjectType(obj);
 			if (type == ObjectType.Placeholder)
 			{
-				if (!source.StartsWith("*."))
-				{
-					source = string.Concat("*.", source);  // ajoute "*."
-				}
 				UI.Placeholder ph = obj as UI.Placeholder;
-				ph.SetBinding(UI.Placeholder.ValueProperty, new Types.Binding(Types.BindingMode.TwoWay, source)); 
+				ph.SetBinding(UI.Placeholder.ValueProperty, binding); 
 			}
 		}
 
-		public static string GetBinding(Widget obj)
+		public static Binding GetBinding(Widget obj)
 		{
 			//	Retourne le binding de l'objet.
-			//	Si l'objet est lié au champ "Toto" d'un StructuredType, retourne "*.Toto".
 			ObjectType type = ObjectModifier.GetObjectType(obj);
 			if (type == ObjectType.Placeholder)
 			{
 				UI.Placeholder ph = obj as UI.Placeholder;
 				Types.Binding binding = ph.GetBinding(UI.Placeholder.ValueProperty);
-				if (binding != null)
-				{
-					string source = binding.Path;
-					if (source.StartsWith("*."))
-					{
-						source = source.Substring(2);  // enlève "*."
-					}
-					return source;
-				}
+				return binding;
 			}
 
 			return null;
