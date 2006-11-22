@@ -252,10 +252,13 @@ namespace Epsitec.Common.Designer
 		public static void SetBinding(Widget obj, string source)
 		{
 			//	Modifie le binding de l'objet.
-			//	Si l'objet est lié au champ "Toto" d'un StructuredType, source doit contenir "*.Toto".
 			ObjectType type = ObjectModifier.GetObjectType(obj);
 			if (type == ObjectType.Placeholder)
 			{
+				if (!source.StartsWith("*."))
+				{
+					source = string.Concat("*.", source);  // ajoute "*."
+				}
 				UI.Placeholder ph = obj as UI.Placeholder;
 				ph.SetBinding(UI.Placeholder.ValueProperty, new Types.Binding(Types.BindingMode.TwoWay, source)); 
 			}
@@ -272,7 +275,12 @@ namespace Epsitec.Common.Designer
 				Types.Binding binding = ph.GetBinding(UI.Placeholder.ValueProperty);
 				if (binding != null)
 				{
-					return binding.Path;
+					string source = binding.Path;
+					if (source.StartsWith("*."))
+					{
+						source = source.Substring(2);  // enlève "*."
+					}
+					return source;
 				}
 			}
 
