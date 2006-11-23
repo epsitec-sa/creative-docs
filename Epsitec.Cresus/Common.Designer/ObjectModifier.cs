@@ -130,7 +130,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne true si l'objet est un conteneur (invisible ou avec cadre).
 			ObjectType type = ObjectModifier.GetObjectType(obj);
-			return (type == ObjectType.Group || type == ObjectType.GroupBox);
+			return (type == ObjectType.Group || type == ObjectType.GroupBox || type == ObjectType.MainPanel);
 		}
 
 		public static ObjectType GetObjectType(Widget obj)
@@ -1642,7 +1642,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Indique si l'objet a des marges internes.
 			ObjectType type = ObjectModifier.GetObjectType(obj);
-			return (type == ObjectType.Group || type == ObjectType.GroupBox);
+			return (type == ObjectType.Group || type == ObjectType.GroupBox || type == ObjectType.MainPanel);
 		}
 
 		public Margins GetPadding(Widget obj)
