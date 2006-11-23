@@ -31,6 +31,18 @@ namespace Epsitec.Common.UI.Panels
 			}
 		}
 
+		public override DataSource DataSource
+		{
+			get
+			{
+				return this.owner.DataSource;
+			}
+			set
+			{
+				this.owner.DataSource = value;
+			}
+		}
+
 		public override DataSourceMetadata DataSourceMetadata
 		{
 			get

@@ -38,7 +38,7 @@ namespace Epsitec.Common.UI
 		/// Gets or sets the <see cref="DataSource"/> used as the root data context.
 		/// </summary>
 		/// <value>The data source.</value>
-		public DataSource						DataSource
+		public virtual DataSource				DataSource
 		{
 			get
 			{
@@ -244,6 +244,7 @@ namespace Epsitec.Common.UI
 			}
 
 			this.DataSource = source;
+			this.SyncDataContext ();
 		}
 
 		public virtual Drawing.Path CreateAperturePath(bool parentRelative)
@@ -495,6 +496,8 @@ namespace Epsitec.Common.UI
 
 		private void SetupDataContextChangeHandler()
 		{
+			System.Diagnostics.Debug.Assert (this.PanelMode == PanelMode.Default);
+			
 			if (this.isDataContextChangeHandlerRegistered == false)
 			{
 				this.AddEventHandler (DataObject.DataContextProperty, this.HandleDataContextChanged);
@@ -552,6 +555,13 @@ namespace Epsitec.Common.UI
 		{
 			Panel panel = (Panel) obj;
 			panel.editionPanel = (Panels.EditPanel) value;
+
+			if ((panel.editionPanel != null) &&
+				(panel.PanelMode == PanelMode.Default))
+			{
+				panel.SetupDataContextChangeHandler ();
+				panel.SyncDataContext (panel.editionPanel);
+			}
 		}
 
 		private static object GetSearchPanelValue(DependencyObject obj)
