@@ -85,6 +85,26 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public bool IsSelected
+		{
+			get
+			{
+				return this.isSelected;
+			}
+			internal set
+			{
+				this.isSelected = value;
+			}
+		}
+
+		public bool IsVisible
+		{
+			get
+			{
+				return this.widget != null;
+			}
+		}
+
 		internal void UpdatePreferredSize(ItemPanel panel)
 		{
 			if (this.factory == null)
@@ -144,6 +164,5 @@ namespace Epsitec.Common.UI
 		private bool isSelected;
 		private bool isDisabled;
 		private bool isExpanded;
-		private bool isVisible;
 	}
 }

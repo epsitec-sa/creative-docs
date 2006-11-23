@@ -27,7 +27,7 @@ namespace Epsitec.Common.UI
 			ItemPanel panel = new ItemPanel ();
 
 			panel.Items = ItemPanelTest.GetStringItems ();
-			panel.ItemViewLayout = ItemViewLayout.VerticalList;
+			panel.Layout = ItemViewLayout.VerticalList;
 
 			Assert.AreEqual (7, panel.GetItemViewCount ());
 			Assert.AreEqual ("Monday", panel.GetItemView (0).Item);

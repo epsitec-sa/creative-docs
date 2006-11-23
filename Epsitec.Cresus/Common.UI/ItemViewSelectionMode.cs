@@ -7,7 +7,7 @@ namespace Epsitec.Common.UI
 	/// The <c>ItemViewSelection</c> enumeration lists all supported selection
 	/// modes for the <see cref="ItemView"/> instances in an <see cref="ItemPanel"/>.
 	/// </summary>
-	public enum ItemViewSelection : byte
+	public enum ItemViewSelectionMode : byte
 	{
 		None,
 

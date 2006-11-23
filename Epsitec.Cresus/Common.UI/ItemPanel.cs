@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
 using Epsitec.Common.UI;
 
 using System.Collections.Generic;
@@ -32,27 +33,27 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public ItemViewLayout ItemViewLayout
+		public ItemViewLayout Layout
 		{
 			get
 			{
-				return (ItemViewLayout) this.GetValue (ItemPanel.ItemViewLayoutProperty);
+				return (ItemViewLayout) this.GetValue (ItemPanel.LayoutProperty);
 			}
 			set
 			{
-				this.SetValue (ItemPanel.ItemViewLayoutProperty, value);
+				this.SetValue (ItemPanel.LayoutProperty, value);
 			}
 		}
 
-		public ItemViewSelection ItemViewSelection
+		public ItemViewSelectionMode SelectionMode
 		{
 			get
 			{
-				return (ItemViewSelection) this.GetValue (ItemPanel.ItemViewSelectionProperty);
+				return (ItemViewSelectionMode) this.GetValue (ItemPanel.SelectionModeProperty);
 			}
 			set
 			{
-				this.SetValue (ItemPanel.ItemViewSelectionProperty, value);
+				this.SetValue (ItemPanel.SelectionModeProperty, value);
 			}
 		}
 
@@ -89,50 +90,94 @@ namespace Epsitec.Common.UI
 
 		public ItemView Detect(Drawing.Point pos)
 		{
-			IList<ItemView> views;
-
-			using (new LockManager (this))
-			{
-				views = this.views;
-			}
-
-			return this.Detect (views, pos);
+			return this.Detect (this.SafeGetViews (), pos);
 		}
 
 		public int GetItemViewCount()
 		{
-			using (new LockManager (this))
-			{
-				return this.views.Count;
-			}
+			return this.SafeGetViews ().Count;
 		}
 
 		public ItemView GetItemView(int index)
 		{
-			using (new LockManager (this))
-			{
-				return ItemPanel.TryGetItemView (this.views, index);
-			}
+			return ItemPanel.TryGetItemView (this.SafeGetViews (), index);
 		}
 
 
 		public void SelectItemView(ItemView view)
 		{
-			ItemViewSelection selection = this.ItemViewSelection;
-
-			switch (selection)
+			if (view.IsSelected)
 			{
-				case ItemViewSelection.None:
-				case ItemViewSelection.ExactlyOne:
-				case ItemViewSelection.ZeroOrOne:
-				case ItemViewSelection.Multiple:
+				return;
+			}
+			
+			IList<ItemView> selectedViews = this.GetSelectedItemViews ();
+
+			System.Diagnostics.Debug.Assert (selectedViews.Contains (view) == false);
+
+			switch (this.SelectionMode)
+			{
+				case ItemViewSelectionMode.None:
+					this.DeselectItemViews (selectedViews);
+					break;
+				
+				case ItemViewSelectionMode.ExactlyOne:
+				case ItemViewSelectionMode.ZeroOrOne:
+					this.DeselectItemViews (selectedViews);
+					this.SetItemViewSelection (view, true);
+					break;
+					
+				case ItemViewSelectionMode.Multiple:
+					this.SetItemViewSelection (view, true);
 					break;
 			}
 		}
 
-		public Types.Collections.ReadOnlyList<ItemView> GetSelectedItemViews()
+		public void DeselectItemView(ItemView view)
 		{
-			return new Types.Collections.ReadOnlyList<ItemView> ();
+			if (! view.IsSelected)
+			{
+				return;
+			}
+
+			IList<ItemView> selectedViews = this.GetSelectedItemViews ();
+
+			System.Diagnostics.Debug.Assert (selectedViews.Contains (view));
+
+			switch (this.SelectionMode)
+			{
+				case ItemViewSelectionMode.None:
+					this.DeselectItemViews (selectedViews);
+					break;
+
+				case ItemViewSelectionMode.ExactlyOne:
+					if (selectedViews.Count > 1)
+					{
+						this.SetItemViewSelection (view, false);
+					}
+					break;
+				
+				case ItemViewSelectionMode.ZeroOrOne:
+				case ItemViewSelectionMode.Multiple:
+					this.SetItemViewSelection (view, false);
+					break;
+			}
+		}
+
+		public IList<ItemView> GetSelectedItemViews()
+		{
+			List<ItemView> list = new List<ItemView> ();
+			IEnumerable<ItemView> views = this.SafeGetViews ();
+
+			foreach (ItemView view in views)
+			{
+				if (view.IsSelected)
+				{
+					list.Add (view);
+				}
+			}
+			
+			return list;
 		}
 
 		internal void NotifyItemViewSizeChanged(ItemView view, Drawing.Size oldSize, Drawing.Size newSize)
@@ -152,12 +197,12 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected virtual void HandleItemViewLayoutChanged(ItemViewLayout oldValue, ItemViewLayout newValue)
+		protected virtual void HandleLayoutChanged(ItemViewLayout oldValue, ItemViewLayout newValue)
 		{
 			this.RefreshLayout ();
 		}
 
-		protected virtual void HandleItemViewSelectionChanged(ItemViewSelection oldValue, ItemViewSelection newValue)
+		protected virtual void HandleSelectionModeChanged(ItemViewSelectionMode oldValue, ItemViewSelectionMode newValue)
 		{
 			this.RefreshLayout ();
 		}
@@ -169,14 +214,36 @@ namespace Epsitec.Common.UI
 
 		protected virtual void HandleApertureChanged(Drawing.Rectangle oldValue, Drawing.Rectangle newValue)
 		{
-			IEnumerable<ItemView> views;
+			this.RecreateUserInterface (this.SafeGetViews (), newValue);
+		}
 
+		private IList<ItemView> SafeGetViews()
+		{
 			using (new LockManager (this))
 			{
-				views = this.views;
+				return this.views;
 			}
+		}
 
-			this.RecreateUserInterface (views, newValue);
+		private void DeselectItemViews(IEnumerable<ItemView> views)
+		{
+			foreach (ItemView view in views)
+			{
+				this.SetItemViewSelection (view, false);
+			}
+		}
+
+		private void SetItemViewSelection(ItemView view, bool selection)
+		{
+			if (view.IsSelected != selection)
+			{
+				view.IsSelected = selection;
+				
+				if (view.IsVisible)
+				{
+					this.Invalidate (Drawing.Rectangle.Intersection (this.Aperture, view.Bounds));
+				}
+			}
 		}
 
 		private void RecreateUserInterface(IEnumerable<ItemView> views, Drawing.Rectangle aperture)
@@ -271,17 +338,10 @@ namespace Epsitec.Common.UI
 
 		private void RefreshLayout()
 		{
-			IEnumerable<ItemView> views;
-
-			using (new LockManager (this))
-			{
-				views = this.views;
-			}
-			
-			switch (this.ItemViewLayout)
+			switch (this.Layout)
 			{
 				case ItemViewLayout.VerticalList:
-					this.PreferredSize = this.LayoutVerticalList (views);
+					this.PreferredSize = this.LayoutVerticalList (this.SafeGetViews ());
 					break;
 			}
 		}
@@ -463,21 +523,21 @@ namespace Epsitec.Common.UI
 			panel.HandleItemsChanged ((ICollectionView) oldValue, (ICollectionView) newValue);
 		}
 
-		private static void NotifyItemViewLayoutChanged(DependencyObject obj, object oldValue, object newValue)
+		private static void NotifyLayoutChanged(DependencyObject obj, object oldValue, object newValue)
 		{
 			ItemPanel panel = (ItemPanel) obj;
-			panel.HandleItemViewLayoutChanged ((ItemViewLayout) oldValue, (ItemViewLayout) newValue);
+			panel.HandleLayoutChanged ((ItemViewLayout) oldValue, (ItemViewLayout) newValue);
 		}
 
-		private static void NotifyItemViewSelectionChanged(DependencyObject obj, object oldValue, object newValue)
+		private static void NotifySelectionModeChanged(DependencyObject obj, object oldValue, object newValue)
 		{
 			ItemPanel panel = (ItemPanel) obj;
-			panel.HandleItemViewSelectionChanged ((ItemViewSelection) oldValue, (ItemViewSelection) newValue);
+			panel.HandleSelectionModeChanged ((ItemViewSelectionMode) oldValue, (ItemViewSelectionMode) newValue);
 		}
 		
 		public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register ("Items", typeof (ICollectionView), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanel.NotifyItemsChanged));
-		public static readonly DependencyProperty ItemViewLayoutProperty = DependencyProperty.Register ("ItemViewLayout", typeof (ItemViewLayout), typeof (ItemPanel), new DependencyPropertyMetadata (ItemViewLayout.None, ItemPanel.NotifyItemViewLayoutChanged));
-		public static readonly DependencyProperty ItemViewSelectionProperty = DependencyProperty.Register ("ItemViewSelection", typeof (ItemViewSelection), typeof (ItemPanel), new DependencyPropertyMetadata (ItemViewSelection.None, ItemPanel.NotifyItemViewSelectionChanged));
+		public static readonly DependencyProperty LayoutProperty = DependencyProperty.Register ("Layout", typeof (ItemViewLayout), typeof (ItemPanel), new DependencyPropertyMetadata (ItemViewLayout.None, ItemPanel.NotifyLayoutChanged));
+		public static readonly DependencyProperty SelectionModeProperty = DependencyProperty.Register ("SelectionMode", typeof (ItemViewSelectionMode), typeof (ItemPanel), new DependencyPropertyMetadata (ItemViewSelectionMode.None, ItemPanel.NotifySelectionModeChanged));
 		public static readonly DependencyProperty ItemViewDefaultSizeProperty = DependencyProperty.Register ("ItemViewDefaultSize", typeof (Drawing.Size), typeof (ItemPanel), new DependencyPropertyMetadata (new Drawing.Size (80, 20)));
 
 		List<ItemView> views

@@ -309,7 +309,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DependencyPropertyPath.cs" />
-    <Compile Include="Collections\ReadOnlyArray.cs" />
     <Compile Include="Resources.cs">
       <SubType>Code</SubType>
     </Compile>
