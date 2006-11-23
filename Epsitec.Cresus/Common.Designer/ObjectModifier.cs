@@ -253,17 +253,18 @@ namespace Epsitec.Common.Designer
 		{
 			//	Indique si l'objet a du binding.
 			ObjectType type = ObjectModifier.GetObjectType(obj);
-			return type == ObjectType.Placeholder;
+			return (type == ObjectType.Placeholder || type == ObjectType.SubPanel);
 		}
 
 		public static void SetBinding(Widget obj, Binding binding)
 		{
 			//	Modifie le binding de l'objet.
 			ObjectType type = ObjectModifier.GetObjectType(obj);
-			if (type == ObjectType.Placeholder)
+
+			if (type == ObjectType.Placeholder || type == ObjectType.SubPanel)
 			{
-				UI.Placeholder ph = obj as UI.Placeholder;
-				ph.SetBinding(UI.Placeholder.ValueProperty, binding); 
+				UI.AbstractPlaceholder ph = obj as UI.AbstractPlaceholder;
+				ph.SetBinding(UI.Placeholder.ValueProperty, binding);
 			}
 		}
 
@@ -271,9 +272,10 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne le binding de l'objet.
 			ObjectType type = ObjectModifier.GetObjectType(obj);
-			if (type == ObjectType.Placeholder)
+
+			if (type == ObjectType.Placeholder || type == ObjectType.SubPanel)
 			{
-				UI.Placeholder ph = obj as UI.Placeholder;
+				UI.AbstractPlaceholder ph = obj as UI.AbstractPlaceholder;
 				Types.Binding binding = ph.GetBinding(UI.Placeholder.ValueProperty);
 				return binding;
 			}
