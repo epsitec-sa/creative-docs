@@ -103,6 +103,8 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		
+
 		internal void NotifyItemViewSizeChanged(ItemView view, Drawing.Size oldSize, Drawing.Size newSize)
 		{
 		}
