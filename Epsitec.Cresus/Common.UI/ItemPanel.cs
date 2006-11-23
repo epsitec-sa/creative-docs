@@ -21,6 +21,7 @@ namespace Epsitec.Common.UI
 		{
 		}
 		
+		
 		public ICollectionView Items
 		{
 			get
@@ -100,6 +101,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		
 		public ItemView Detect(Drawing.Point pos)
 		{
 			return this.Detect (this.SafeGetViews (), pos);
@@ -124,11 +126,27 @@ namespace Epsitec.Common.UI
 			}
 			else
 			{
-				IList<ItemView> selectedViews = this.GetSelectedItemViews (ItemPanel.FilterItems);
+				IList<ItemView>        selectedViews;
+				ItemPanelSelectionMode selectionMode;
+				
+				if (ItemPanel.ContainsItem (view))
+				{
+					//	The view specifies a plain item.
+					
+					selectedViews = this.GetSelectedItemViews (ItemPanel.ContainsItem);
+					selectionMode = this.ItemSelection;
+				}
+				else
+				{
+					//	The view specifies a group.
+
+					selectedViews = this.GetSelectedItemViews (ItemPanel.ContainsGroup);
+					selectionMode = this.GroupSelection;
+				}
 
 				System.Diagnostics.Debug.Assert (selectedViews.Contains (view) == false);
-
-				switch (this.ItemSelection)
+				
+				switch (selectionMode)
 				{
 					case ItemPanelSelectionMode.None:
 						this.DeselectItemViews (selectedViews);
@@ -151,11 +169,27 @@ namespace Epsitec.Common.UI
 		{
 			if (view.IsSelected)
 			{
-				IList<ItemView> selectedViews = this.GetSelectedItemViews (ItemPanel.FilterItems);
+				IList<ItemView> selectedViews;
+				ItemPanelSelectionMode selectionMode;
+
+				if (ItemPanel.ContainsItem (view))
+				{
+					//	The view specifies a plain item.
+
+					selectedViews = this.GetSelectedItemViews (ItemPanel.ContainsItem);
+					selectionMode = this.ItemSelection;
+				}
+				else
+				{
+					//	The view specifies a group.
+
+					selectedViews = this.GetSelectedItemViews (ItemPanel.ContainsGroup);
+					selectionMode = this.GroupSelection;
+				}
 
 				System.Diagnostics.Debug.Assert (selectedViews.Contains (view));
 
-				switch (this.ItemSelection)
+				switch (selectionMode)
 				{
 					case ItemPanelSelectionMode.None:
 						this.DeselectItemViews (selectedViews);
@@ -205,6 +239,71 @@ namespace Epsitec.Common.UI
 			return list;
 		}
 
+		public void Show(ItemView view)
+		{
+			if (this.Aperture.IsSurfaceZero)
+			{
+				//	Nothing to do : there is no visible aperture, so don't bother
+				//	moving it around !
+			}
+			else
+			{
+				Drawing.Rectangle aperture = this.Aperture;
+				Drawing.Rectangle bounds   = view.Bounds;
+
+				if (aperture.Contains (bounds))
+				{
+					//	Nothing to do : the view is already completely visible in
+					//	the current aperture.
+				}
+				else
+				{
+					double ox = 0;
+					double oy = 0;
+					
+					if ((aperture.Right < bounds.Right) &&
+						(aperture.Left < bounds.Left))
+					{
+						ox = System.Math.Max (aperture.Right - bounds.Right, aperture.Left - bounds.Left);
+					}
+					else if ((aperture.Right > bounds.Right) &&
+						/**/ (aperture.Left > bounds.Left))
+					{
+						ox = System.Math.Min (aperture.Right - bounds.Right, aperture.Left - bounds.Left);
+					}
+
+					if ((aperture.Top < bounds.Top) &&
+						(aperture.Bottom < bounds.Bottom))
+					{
+						oy = System.Math.Max (aperture.Top - bounds.Top, aperture.Bottom - bounds.Bottom);
+					}
+					else if ((aperture.Top > bounds.Top) &&
+						/**/ (aperture.Bottom > bounds.Bottom))
+					{
+						oy = System.Math.Min (aperture.Top - bounds.Top, aperture.Bottom - bounds.Bottom);
+					}
+
+					aperture.Offset (-ox, -oy);
+
+					this.Aperture = aperture;
+				}
+			}
+		}
+
+		#region Filter Methods
+
+		public static bool ContainsItem(ItemView view)
+		{
+			return (view.Item is CollectionViewGroup) ? false : true;
+		}
+
+		public static bool ContainsGroup(ItemView view)
+		{
+			return (view.Item is CollectionViewGroup) ? true : false;
+		}
+
+		#endregion
+		
 		internal void NotifyItemViewSizeChanged(ItemView view, Drawing.Size oldSize, Drawing.Size newSize)
 		{
 		}
@@ -277,7 +376,7 @@ namespace Epsitec.Common.UI
 
 			if (selection)
 			{
-				if (view.Item is CollectionViewGroup)
+				if (ItemPanel.ContainsGroup (view))
 				{
 					//	A group was selected. This will not change the current item in
 					//	the collection view.
@@ -472,16 +571,6 @@ namespace Epsitec.Common.UI
 			return null;
 		}
 
-		private static bool FilterItems(ItemView view)
-		{
-			return (view.Item is CollectionViewGroup) ? false : true;
-		}
-
-		private static bool FilterGroups(ItemView view)
-		{
-			return (view.Item is CollectionViewGroup) ? true : false;
-		}
-		
 		private static IEnumerable<ItemView> GetNearbyItemViews(IList<ItemView> views, int index, int count)
 		{
 			int min = index;
