@@ -10,9 +10,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// Dialogue permettant de choisir une rubrique (string) d'une ressource de type
 	/// 'structure de données' (StructuredType).
 	/// </summary>
-	public class StructuredSelector : Abstract
+	public class BindingSelector : Abstract
 	{
-		public StructuredSelector(MainWindow mainWindow) : base(mainWindow)
+		public BindingSelector(MainWindow mainWindow) : base(mainWindow)
 		{
 		}
 
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.SetDynamicToolTips(2, false);
 				this.array.SetDynamicToolTips(3, false);
 				this.array.SetDynamicToolTips(4, false);
-				this.array.LineHeight = StructuredSelector.arrayLineHeight;
+				this.array.LineHeight = BindingSelector.arrayLineHeight;
 				this.array.Dock = DockStyle.Fill;
 				this.array.ColumnsWidthChanged += new EventHandler(this.HandleArrayColumnsWidthChanged);
 				this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.slider.SmallChange = 5.0M;
 				this.slider.LargeChange = 10.0M;
 				this.slider.Resolution = 1.0M;
-				this.slider.Value = (decimal) StructuredSelector.arrayLineHeight;
+				this.slider.Value = (decimal) BindingSelector.arrayLineHeight;
 				this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
 				//?ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Icon.Tooltip.Size);
 			}
@@ -139,30 +139,75 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.ShowDialog();
 		}
 
-		public void Initialise(Module module, StructuredType type, string path)
+		public void Initialise(Module module, StructuredType type, Binding binding)
 		{
-			//	TODO: il faudra faire mieux à l'avenir, puisqu'il pourra y avoir autre
-			//	chose que "*." comme préfixe...
-
-			string field = ((path != null) && path.StartsWith("*.")) ? path.Substring(2) : path;
-
+			//	Initialise le dialogue avec le binding actuel.
 			this.module = module;
 			this.resourceAccess = module.AccessCaptions;
 			this.structuredType = type;
-			this.initialField = field;
-			this.selectedField = null;
+			this.initialBinding = binding;
+			this.selectedBinding = null;
 
 			this.FieldsInput();
 		}
 
-		public string SelectedField
+		public Binding SelectedBinding
+		{
+			//	Retourne le binding sélectionné par l'utilisateur, ou null si 'annuler'
+			//	a été actionné.
+			get
+			{
+				return this.selectedBinding;
+			}
+		}
+
+		protected string Field
 		{
 			get
 			{
-				//	TODO: il faudra faire mieux à l'avenir, puisqu'il pourra y avoir autre
-				//	chose que "*." comme préfixe...
-				
-				return this.selectedField == null ? null : string.Concat("*.", this.selectedField);
+				string field = null;
+
+				if (this.initialBinding != null)
+				{
+					field = this.initialBinding.Path;
+					if (field.StartsWith("*."))
+					{
+						field = field.Substring(2);  // enlève "*."
+					}
+				}
+
+				return field;
+			}
+			set
+			{
+				string field = string.Concat("*.", value);
+				this.initialBinding = new Binding(this.Mode, field);
+			}
+		}
+
+		protected BindingMode Mode
+		{
+			get
+			{
+				BindingMode mode = BindingMode.TwoWay;
+
+				if (this.initialBinding != null)
+				{
+					mode = this.initialBinding.Mode;
+				}
+
+				return mode;
+			}
+			set
+			{
+				string field = "";
+
+				if (this.initialBinding != null)
+				{
+					field = this.initialBinding.Path;
+				}
+
+				this.initialBinding = new Binding(value, field);
 			}
 		}
 
@@ -183,9 +228,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void SelectArray()
 		{
 			//	Sélectionne la bonne ligne dans le tableau.
+			string field = this.Field;
+
 			for (int i=0; i<this.fields.Count; i++)
 			{
-				if (this.fields[i].Id == this.initialField)
+				if (this.fields[i].Id == field)
 				{
 					this.array.SelectedRow = i;
 					return;
@@ -340,11 +387,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.Hide();
 			this.OnClosed();
 
-			int sel = this.array.SelectedRow;
-			if (sel != -1)
-			{
-				this.selectedField = this.fields[sel].Id;
-			}
+			this.selectedBinding = this.initialBinding;
 		}
 
 		private void HandleSliderChanged(object sender)
@@ -356,8 +399,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			HSlider slider = sender as HSlider;
-			StructuredSelector.arrayLineHeight = (double) slider.Value;
-			this.array.LineHeight = StructuredSelector.arrayLineHeight;
+			BindingSelector.arrayLineHeight = (double) slider.Value;
+			this.array.LineHeight = BindingSelector.arrayLineHeight;
 		}
 
 		private void HandleArrayColumnsWidthChanged(object sender)
@@ -375,6 +418,12 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
+			int sel = this.array.SelectedRow;
+			if (sel != -1)
+			{
+				this.Field = this.fields[sel].Id;
+			}
+
 			this.UpdateButtons();
 		}
 
@@ -387,11 +436,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.Hide();
 			this.OnClosed();
 
-			int sel = this.array.SelectedRow;
-			if (sel != -1)
-			{
-				this.selectedField = this.fields[sel].Id;
-			}
+			this.selectedBinding = this.initialBinding;
 		}
 
 
@@ -401,8 +446,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected Module						module;
 		protected StructuredType				structuredType;
 		protected List<StructuredTypeField>		fields;
-		protected string						initialField;
-		protected string						selectedField;
+		protected Binding						initialBinding;
+		protected Binding						selectedBinding;
 
 		protected StaticText					title;
 		protected Widget						header;

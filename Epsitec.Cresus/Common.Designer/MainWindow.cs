@@ -63,15 +63,15 @@ namespace Epsitec.Common.Designer
 				CommandDispatcher.SetDispatcher(this.window, this.commandDispatcher);
 				CommandContext.SetContext(this.window, this.commandContext);
 
-				this.dlgOpen               = new Dialogs.Open(this);
-				this.dlgGlyphs             = new Dialogs.Glyphs(this);
-				this.dlgIcon               = new Dialogs.Icon(this);
-				this.dlgFilter             = new Dialogs.Filter(this);
-				this.dlgSearch             = new Dialogs.Search(this);
-				this.dlgNewCulture         = new Dialogs.NewCulture(this);
-				this.dlgResourceTypeType   = new Dialogs.ResourceTypeType(this);
-				this.dlgResourceSelector   = new Dialogs.ResourceSelector(this);
-				this.dlgStructuredSelector = new Dialogs.StructuredSelector(this);
+				this.dlgOpen             = new Dialogs.Open(this);
+				this.dlgGlyphs           = new Dialogs.Glyphs(this);
+				this.dlgIcon             = new Dialogs.Icon(this);
+				this.dlgFilter           = new Dialogs.Filter(this);
+				this.dlgSearch           = new Dialogs.Search(this);
+				this.dlgNewCulture       = new Dialogs.NewCulture(this);
+				this.dlgResourceTypeType = new Dialogs.ResourceTypeType(this);
+				this.dlgResourceSelector = new Dialogs.ResourceSelector(this);
+				this.dlgBindingSelector  = new Dialogs.BindingSelector(this);
 
 				this.dlgGlyphs.Closed += new EventHandler(this.HandleDlgClosed);
 				this.dlgFilter.Closed += new EventHandler(this.HandleDlgClosed);
@@ -1096,12 +1096,12 @@ namespace Epsitec.Common.Designer
 
 
 		#region Dialogs
-		public string DlgStructuredSelector(Module baseModule, StructuredType type, string path)
+		public Binding DlgBindingSelector(Module baseModule, StructuredType type, Binding binding)
 		{
 			//	Ouvre le dialogue pour choisir une rubrique dans une structure de données.
-			this.dlgStructuredSelector.Initialise(baseModule, type, path);
-			this.dlgStructuredSelector.Show();  // choix dans le dialogue...
-			return this.dlgStructuredSelector.SelectedField;
+			this.dlgBindingSelector.Initialise(baseModule, type, binding);
+			this.dlgBindingSelector.Show();  // choix dans le dialogue...
+			return this.dlgBindingSelector.SelectedBinding;
 		}
 
 		public Druid DlgResourceSelector(Module baseModule, ResourceAccess.Type type, ResourceAccess.TypeType typeType, Druid ressource, List<Druid> exclude)
@@ -1324,7 +1324,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.NewCulture			dlgNewCulture;
 		protected Dialogs.ResourceTypeType		dlgResourceTypeType;
 		protected Dialogs.ResourceSelector		dlgResourceSelector;
-		protected Dialogs.StructuredSelector	dlgStructuredSelector;
+		protected Dialogs.BindingSelector		dlgBindingSelector;
 		protected PanelsContext					context;
 
 		protected string						resourcePrefix;

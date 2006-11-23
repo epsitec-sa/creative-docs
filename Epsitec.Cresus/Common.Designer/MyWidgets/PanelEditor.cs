@@ -1612,15 +1612,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				System.Diagnostics.Debug.Assert(type != null);
 
 				Binding binding = ObjectModifier.GetBinding(obj);
-				string path = binding == null ? null : binding.Path;
-				BindingMode mode = binding == null ? BindingMode.TwoWay : binding.Mode;
-				path = this.module.MainWindow.DlgStructuredSelector(this.module, type, path);
-				if (path == null)  // annuler ?
+				binding = this.module.MainWindow.DlgBindingSelector(this.module, type, binding);
+				if (binding == null)  // annuler ?
 				{
 					return false;
 				}
 
-				ObjectModifier.SetBinding(obj, new Binding(mode, path));
+				ObjectModifier.SetBinding(obj, binding);
 			}
 
 			return true;

@@ -78,16 +78,15 @@ namespace Epsitec.Common.Designer.Controllers
 			System.Diagnostics.Debug.Assert(sourceWidget != null);
 			IStructuredType dataSource = DataObject.GetDataContext(sourceWidget).Source as IStructuredType;
 			StructuredType type = dataSource.GetField("*").Type as StructuredType;
-			string path = this.binding == null ? null : this.binding.Path;
-			BindingMode mode = this.binding == null ? BindingMode.TwoWay : this.binding.Mode;
+			Binding binding = this.binding;
 
-			path = mainWindow.DlgStructuredSelector(mainWindow.CurrentModule, type, path);
-			if (path == null)  // annuler ?
+			binding = mainWindow.DlgBindingSelector(mainWindow.CurrentModule, type, binding);
+			if (binding == null)  // annuler ?
 			{
 				return;
 			}
 
-			this.binding = new Binding(mode, path);
+			this.binding = binding;
 
 			this.OnActualValueChanged();
 		}
