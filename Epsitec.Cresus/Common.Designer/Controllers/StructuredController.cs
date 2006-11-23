@@ -11,19 +11,19 @@ using Epsitec.Common.UI.Controllers;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 
-[assembly: Controller(typeof(BindingController))]
+[assembly: Controller(typeof(StructuredController))]
 
 namespace Epsitec.Common.Designer.Controllers
 {
-	public class BindingController : AbstractController, Widgets.Layouts.IGridPermeable
+	public class StructuredController : AbstractController, Widgets.Layouts.IGridPermeable
 	{
-		public BindingController(string parameter)
+		public StructuredController(string parameter)
 		{
 		}
 
 		public override object GetActualValue()
 		{
-			return this.binding;
+			return this.structuredType;
 		}
 
 		protected override Widgets.Layouts.IGridPermeable GetGridPermeableLayoutHelper()
@@ -35,14 +35,6 @@ namespace Epsitec.Common.Designer.Controllers
 		{
 			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 
-			this.title = new StaticText();
-			this.title.HorizontalAlignment = HorizontalAlignment.Stretch;
-			this.title.VerticalAlignment = VerticalAlignment.Top;
-			this.title.ContentAlignment = ContentAlignment.TopCenter;
-			this.title.Dock = DockStyle.Stacked;
-			this.title.Margins = new Margins(0, 0, 10, 0);
-			this.title.PreferredHeight = 24;
-
 			this.button = new Button();
 			this.button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.button.TabIndex = 1;
@@ -51,7 +43,6 @@ namespace Epsitec.Common.Designer.Controllers
 			this.button.VerticalAlignment = VerticalAlignment.Stretch;
 			this.button.Dock = DockStyle.Stacked;
 
-			this.AddWidget(this.title);
 			this.AddWidget(this.button);
 		}
 
@@ -68,28 +59,14 @@ namespace Epsitec.Common.Designer.Controllers
 				!InvalidValue.IsInvalidValue(newValue) &&
 				!PendingValue.IsPendingValue(newValue))
 			{
-				StructuredType type = this.StructuredType;
-				if (type == null)
-				{
-					this.title.Text = "";
-				}
-				else
-				{
-					string text = type.Caption.Name;
-					this.title.Text = string.Concat("<font size=\"150%\"><b>", text, "</b></font>");
-				}
-
 				if (newValue == null)
 				{
 					this.button.Text = "";
 				}
 				else
 				{
-					this.binding = newValue as Binding;
-
-					string path = this.binding == null ? "" : this.binding.Path;
-					string field = path.StartsWith("*.") ? path.Substring(2) : path;
-					this.button.Text = field;
+					this.structuredType = newValue as StructuredType;
+					this.button.Text = this.structuredType.Caption.Name;
 				}
 			}
 		}
@@ -97,16 +74,24 @@ namespace Epsitec.Common.Designer.Controllers
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
 			MainWindow mainWindow = this.MainWindow;
-			StructuredType type = this.StructuredType;
-			Binding binding = this.binding;
+			Module module = mainWindow.CurrentModule;
 
-			binding = mainWindow.DlgBindingSelector(mainWindow.CurrentModule, type, binding);
-			if (binding == null)  // annuler ?
+			Druid druid = Druid.Empty;
+
+			if (this.structuredType != null)
+			{
+				druid = this.structuredType.CaptionId;
+			}
+
+			druid = mainWindow.DlgResourceSelector(module, ResourceAccess.Type.Types, ResourceAccess.TypeType.Structured, druid, null);
+			if (druid.IsEmpty)  // annuler ?
 			{
 				return;
 			}
 
-			this.binding = binding;
+			AbstractType at = module.AccessCaptions.DirectGetAbstractType(druid);
+			System.Diagnostics.Debug.Assert(at is StructuredType);
+			this.structuredType = at as StructuredType;
 
 			this.OnActualValueChanged();
 		}
@@ -138,22 +123,20 @@ namespace Epsitec.Common.Designer.Controllers
 		#region IGridPermeable Members
 		IEnumerable<Widgets.Layouts.PermeableCell> Widgets.Layouts.IGridPermeable.GetChildren(int column, int row, int columnSpan, int rowSpan)
 		{
-			yield return new Widgets.Layouts.PermeableCell(this.title, column+0, row+0, columnSpan, 1);
-			yield return new Widgets.Layouts.PermeableCell(this.button, column+0, row+1, columnSpan, rowSpan-1);
+			yield return new Widgets.Layouts.PermeableCell(this.button, column+0, row+0, columnSpan, 1);
 		}
 
 		bool Widgets.Layouts.IGridPermeable.UpdateGridSpan(ref int columnSpan, ref int rowSpan)
 		{
 			columnSpan = System.Math.Max(columnSpan, 2);
-			rowSpan    = System.Math.Max(rowSpan, 2);
+			rowSpan    = System.Math.Max(rowSpan, 1);
 			
 			return true;
 		}
 		#endregion
 
 
-		private Binding					binding;
+		private StructuredType			structuredType;
 		private Button					button;
-		private StaticText				title;
 	}
 }

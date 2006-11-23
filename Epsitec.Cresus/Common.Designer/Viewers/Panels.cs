@@ -111,10 +111,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.hButtonDefault = this.HToolBarAdd(Res.Captions.PanelMode.Default.Id);
 			this.hButtonEdition = this.HToolBarAdd(Res.Captions.PanelMode.Edition.Id);
 			this.hButtonSearch  = this.HToolBarAdd(Res.Captions.PanelMode.Search.Id);
-			this.hToolBar.Items.Add(new IconSeparator());
-			this.hButtonType    = this.HToolBarAdd(Res.Captions.PanelMode.Type.Id);
+			//?this.hToolBar.Items.Add(new IconSeparator());
+			//?this.hButtonType    = this.HToolBarAdd(Res.Captions.PanelMode.Type.Id);
 
 			this.staticType = new StaticText();
+			this.staticType.ContentAlignment = ContentAlignment.MiddleCenter;
 			this.staticType.Dock = DockStyle.Fill;
 			this.staticType.Margins = new Margins(8, 0, 0, 0);
 			this.hToolBar.Items.Add(this.staticType);
@@ -320,7 +321,7 @@ namespace Epsitec.Common.Designer.Viewers
 				StructuredType type = ObjectModifier.GetStructuredType(this.panelContainer);
 				if (type != null)
 				{
-					text = type.Caption.Name;
+					text = string.Concat("<font size=\"120%\"><b>", type.Caption.Name, "</b></font>");
 				}
 			}
 

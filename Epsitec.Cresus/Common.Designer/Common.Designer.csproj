@@ -41,6 +41,7 @@
     <Compile Include="Constrain.cs" />
     <Compile Include="ConstrainsList.cs" />
     <Compile Include="Controllers\BindingController.cs" />
+    <Compile Include="Controllers\StructuredController.cs" />
     <Compile Include="Controllers\DruidController.cs" />
     <Compile Include="Dialogs\BindingSelector.cs" />
     <Compile Include="Dialogs\ResourceTypeType.cs" />

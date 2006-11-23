@@ -8,6 +8,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.UI.Controllers;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 
 [assembly: Controller(typeof(Epsitec.Common.Designer.Controllers.DruidController))]
 
@@ -38,7 +39,7 @@ namespace Epsitec.Common.Designer.Controllers
 			this.title = new StaticText();
 			this.title.HorizontalAlignment = HorizontalAlignment.Stretch;
 			this.title.VerticalAlignment = VerticalAlignment.Top;
-			this.title.ContentAlignment = Drawing.ContentAlignment.TopCenter;
+			this.title.ContentAlignment = ContentAlignment.TopCenter;
 			this.title.Dock = DockStyle.Stacked;
 			this.title.PreferredHeight = 24;
 
