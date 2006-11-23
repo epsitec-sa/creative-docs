@@ -13,6 +13,14 @@ namespace Epsitec.Common.Types.Collections
 	public class ReadOnlyList<T> : IList<T>, System.Collections.ICollection, System.Collections.IList
 	{
 		/// <summary>
+		/// Initializes a new instance of the <see cref="ReadOnlyList&lt;T&gt;"/> class
+		/// with a null list.
+		/// </summary>
+		public ReadOnlyList()
+		{
+		}
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="ReadOnlyList&lt;T&gt;"/> class.
 		/// </summary>
 		/// <param name="list">The list which will be wrapped into a read only shell.</param>
@@ -21,6 +29,27 @@ namespace Epsitec.Common.Types.Collections
 			this.list = list;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ReadOnlyList&lt;T&gt;"/> class.
+		/// </summary>
+		/// <param name="array">The array which will be wrapped into a read only shell.</param>
+		public ReadOnlyList(T[] array)
+		{
+			this.list = array;
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether the list is null.
+		/// </summary>
+		/// <value><c>true</c> if the list is null; otherwise, <c>false</c>.</value>
+		public bool IsNull
+		{
+			get
+			{
+				return this.list == null;
+			}
+		}
+		
 		/// <summary>
 		/// Converts the list to an array.
 		/// </summary>

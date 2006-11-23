@@ -378,7 +378,7 @@ namespace Epsitec.Common.Types
 
 		#endregion
 		
-		public static Collections.ReadOnlyArray<DependencyProperty> GetAllAttachedProperties()
+		public static Collections.ReadOnlyList<DependencyProperty> GetAllAttachedProperties()
 		{
 			if (DependencyProperty.attachedPropertiesArray == null)
 			{
@@ -391,7 +391,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			return new Collections.ReadOnlyArray<DependencyProperty> (DependencyProperty.attachedPropertiesArray);
+			return new Collections.ReadOnlyList<DependencyProperty> (DependencyProperty.attachedPropertiesArray);
 		}
 		
 		internal static DependencyProperty GetInheritedPropertyFromCacheMask(int mask)

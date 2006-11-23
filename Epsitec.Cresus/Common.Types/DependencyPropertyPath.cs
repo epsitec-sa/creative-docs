@@ -31,11 +31,11 @@ namespace Epsitec.Common.Types
 				this.path = value;
 			}
 		}
-		public Collections.ReadOnlyArray<DependencyProperty> Elements
+		public Collections.ReadOnlyList<DependencyProperty> Elements
 		{
 			get
 			{
-				return new Collections.ReadOnlyArray<DependencyProperty> (this.elements);
+				return new Collections.ReadOnlyList<DependencyProperty> (this.elements);
 			}
 			set
 			{

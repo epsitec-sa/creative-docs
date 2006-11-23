@@ -44,6 +44,18 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public ItemViewSelection ItemViewSelection
+		{
+			get
+			{
+				return (ItemViewSelection) this.GetValue (ItemPanel.ItemViewSelectionProperty);
+			}
+			set
+			{
+				this.SetValue (ItemPanel.ItemViewSelectionProperty, value);
+			}
+		}
+
 		public Drawing.Size ItemViewDefaultSize
 		{
 			get
@@ -103,7 +115,25 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		
+
+		public void SelectItemView(ItemView view)
+		{
+			ItemViewSelection selection = this.ItemViewSelection;
+
+			switch (selection)
+			{
+				case ItemViewSelection.None:
+				case ItemViewSelection.ExactlyOne:
+				case ItemViewSelection.ZeroOrOne:
+				case ItemViewSelection.Multiple:
+					break;
+			}
+		}
+
+		public Types.Collections.ReadOnlyList<ItemView> GetSelectedItemViews()
+		{
+			return new Types.Collections.ReadOnlyList<ItemView> ();
+		}
 
 		internal void NotifyItemViewSizeChanged(ItemView view, Drawing.Size oldSize, Drawing.Size newSize)
 		{
@@ -123,6 +153,11 @@ namespace Epsitec.Common.UI
 		}
 
 		protected virtual void HandleItemViewLayoutChanged(ItemViewLayout oldValue, ItemViewLayout newValue)
+		{
+			this.RefreshLayout ();
+		}
+
+		protected virtual void HandleItemViewSelectionChanged(ItemViewSelection oldValue, ItemViewSelection newValue)
 		{
 			this.RefreshLayout ();
 		}
@@ -433,9 +468,16 @@ namespace Epsitec.Common.UI
 			ItemPanel panel = (ItemPanel) obj;
 			panel.HandleItemViewLayoutChanged ((ItemViewLayout) oldValue, (ItemViewLayout) newValue);
 		}
+
+		private static void NotifyItemViewSelectionChanged(DependencyObject obj, object oldValue, object newValue)
+		{
+			ItemPanel panel = (ItemPanel) obj;
+			panel.HandleItemViewSelectionChanged ((ItemViewSelection) oldValue, (ItemViewSelection) newValue);
+		}
 		
 		public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register ("Items", typeof (ICollectionView), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanel.NotifyItemsChanged));
 		public static readonly DependencyProperty ItemViewLayoutProperty = DependencyProperty.Register ("ItemViewLayout", typeof (ItemViewLayout), typeof (ItemPanel), new DependencyPropertyMetadata (ItemViewLayout.None, ItemPanel.NotifyItemViewLayoutChanged));
+		public static readonly DependencyProperty ItemViewSelectionProperty = DependencyProperty.Register ("ItemViewSelection", typeof (ItemViewSelection), typeof (ItemPanel), new DependencyPropertyMetadata (ItemViewSelection.None, ItemPanel.NotifyItemViewSelectionChanged));
 		public static readonly DependencyProperty ItemViewDefaultSizeProperty = DependencyProperty.Register ("ItemViewDefaultSize", typeof (Drawing.Size), typeof (ItemPanel), new DependencyPropertyMetadata (new Drawing.Size (80, 20)));
 
 		List<ItemView> views

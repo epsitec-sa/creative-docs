@@ -833,7 +833,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Bar.Xyz", pp4.GetFullPath ());
 			Assert.AreEqual ("Foo.Name", pp5.GetFullPath ());
 			Assert.IsTrue (pp2.Elements.IsNull);
-			Assert.AreEqual (0, pp2.Elements.Length);
+			Assert.AreEqual (0, pp2.Elements.Count);
 			Assert.AreEqual ("Foo.Name.Bar.Xyz", DependencyPropertyPath.Combine (pp3, pp4).GetFullPath ());
 			Assert.AreEqual ("Bar.Xyz", DependencyPropertyPath.Combine (pp1, pp4).GetFullPath ());
 			Assert.AreEqual ("abc", DependencyPropertyPath.Combine (pp2, pp1).GetFullPath ());

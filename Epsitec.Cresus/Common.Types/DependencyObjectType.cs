@@ -139,23 +139,23 @@ namespace Epsitec.Common.Types
 			return this.allocator ();
 		}
 
-		public Collections.ReadOnlyArray<DependencyProperty> GetProperties()
+		public Collections.ReadOnlyList<DependencyProperty> GetProperties()
 		{
 			if (this.standardPropertiesArray == null)
 			{
 				this.BuildPropertyList ();
 			}
 
-			return new Collections.ReadOnlyArray<DependencyProperty> (this.standardPropertiesArray);
+			return new Collections.ReadOnlyList<DependencyProperty> (this.standardPropertiesArray);
 		}
-		public Collections.ReadOnlyArray<DependencyProperty> GetAttachedProperties()
+		public Collections.ReadOnlyList<DependencyProperty> GetAttachedProperties()
 		{
 			if (this.attachedPropertiesArray == null)
 			{
 				this.BuildPropertyList ();
 			}
 
-			return new Collections.ReadOnlyArray<DependencyProperty> (this.attachedPropertiesArray);
+			return new Collections.ReadOnlyList<DependencyProperty> (this.attachedPropertiesArray);
 		}
 
 		public DependencyProperty GetProperty(string name)
@@ -215,7 +215,7 @@ namespace Epsitec.Common.Types
 		
 		IEnumerable<string> IStructuredType.GetFieldIds()
 		{
-			Collections.ReadOnlyArray<DependencyProperty> properties = this.GetProperties ();
+			Collections.ReadOnlyList<DependencyProperty> properties = this.GetProperties ();
 			string[] names = new string[properties.Count];
 
 			for (int i = 0; i < properties.Count; i++)

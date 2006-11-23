@@ -10,5 +10,10 @@ namespace Epsitec.Common.UI
 	public enum ItemViewSelection : byte
 	{
 		None,
+
+		ZeroOrOne,
+		ExactlyOne,
+
+		Multiple,
 	}
 }
