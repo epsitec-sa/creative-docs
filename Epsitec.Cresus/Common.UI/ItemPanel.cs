@@ -307,6 +307,16 @@ namespace Epsitec.Common.UI
 		internal void NotifyItemViewSizeChanged(ItemView view, Drawing.Size oldSize, Drawing.Size newSize)
 		{
 		}
+
+		internal void AddPanelGroup(ItemPanelGroup group)
+		{
+			this.groups.Add (group);
+		}
+
+		internal void RemovePanelGroup(ItemPanelGroup group)
+		{
+			this.groups.Remove (group);
+		}
 		
 		protected virtual void HandleItemsChanged(ICollectionView oldValue, ICollectionView newValue)
 		{
@@ -708,5 +718,6 @@ namespace Epsitec.Common.UI
 		int lockOwnerPid;
 		int hotItemViewIndex = -1;
 		Drawing.Rectangle aperture;
+		List<ItemPanelGroup> groups = new List<ItemPanelGroup> ();
 	}
 }

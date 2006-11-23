@@ -141,7 +141,7 @@ namespace Epsitec.Common.UI
 			}
 			if (this.widget != null)
 			{
-				this.widget.SetParent (panel);
+				this.widget.SetEmbedder (panel);
 				this.widget.SetManualBounds (this.bounds);
 			}
 		}
