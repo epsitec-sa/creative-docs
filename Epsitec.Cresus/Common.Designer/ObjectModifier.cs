@@ -106,7 +106,8 @@ namespace Epsitec.Common.Designer
 			StaticText,			// texte fixe
 			Group,				// conteneur invisible
 			GroupBox,			// conteneur avec cadre et titre
-			Panel,				// sous-panneau
+			MainPanel,			// panneau principal
+			SubPanel,			// sous-panneau
 		}
 
 
@@ -164,9 +165,14 @@ namespace Epsitec.Common.Designer
 
 			//	Ce test doit s'exécuter avant FrameBox, car un PanelPlaceholder est
 			//	aussi un FrameBox !
-			if (obj is UI.PanelPlaceholder || obj is UI.Panel)
+			if (obj is UI.PanelPlaceholder)
 			{
-				return ObjectType.Panel;
+				return ObjectType.SubPanel;
+			}
+
+			if (obj is UI.Panel)
+			{
+				return ObjectType.MainPanel;
 			}
 
 			if (obj is FrameBox)
@@ -188,7 +194,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Indique si l'objet a un druid.
 			ObjectType type = ObjectModifier.GetObjectType(obj);
-			return (type == ObjectType.Button || type == ObjectType.StaticText || type == ObjectType.GroupBox || type == ObjectType.Panel);
+			return (type == ObjectType.Button || type == ObjectType.StaticText || type == ObjectType.GroupBox || type == ObjectType.SubPanel);
 		}
 
 		public static void SetDruid(Widget obj, string druid)
@@ -209,7 +215,7 @@ namespace Epsitec.Common.Designer
 			{
 				obj.CaptionId = d;
 			}
-			else if (type == ObjectType.Panel)
+			else if (type == ObjectType.SubPanel)
 			{
 				UI.PanelPlaceholder panel = obj as UI.PanelPlaceholder;
 				System.Diagnostics.Debug.Assert(panel.ResourceManager != null);
@@ -231,7 +237,7 @@ namespace Epsitec.Common.Designer
 			{
 				druid = obj.CaptionId;
 			}
-			else if (type == ObjectType.Panel)
+			else if (type == ObjectType.SubPanel)
 			{
 				UI.PanelPlaceholder panel = obj as UI.PanelPlaceholder;
 				druid = panel.PanelId;
@@ -279,14 +285,14 @@ namespace Epsitec.Common.Designer
 		{
 			//	Indique si l'objet a une structure de données associée.
 			ObjectType type = ObjectModifier.GetObjectType(obj);
-			return type == ObjectType.Panel;
+			return type == ObjectType.MainPanel;
 		}
 
 		public static void SetStructuredType(Widget obj, StructuredType st)
 		{
 			//	Modifie la structure de données associée à l'objet.
 			ObjectType type = ObjectModifier.GetObjectType(obj);
-			if (type == ObjectType.Panel)
+			if (type == ObjectType.MainPanel)
 			{
 				UI.Panel panel = obj as UI.Panel;
 				panel.DataSourceMetadata.DefaultDataType = st;
@@ -298,7 +304,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne la structure de données associée de l'objet.
 			ObjectType type = ObjectModifier.GetObjectType(obj);
-			if (type == ObjectType.Panel)
+			if (type == ObjectType.MainPanel)
 			{
 				UI.Panel panel = obj as UI.Panel;
 				return panel.DataSourceMetadata.DefaultDataType as StructuredType;

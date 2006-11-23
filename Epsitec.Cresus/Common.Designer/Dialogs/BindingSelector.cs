@@ -427,6 +427,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleCheckReadonlyActiveStateChanged(object sender)
 		{
+			//	Bouton "Lecture seule" actionné.
 			if (this.ignoreChanged)
 			{
 				return;

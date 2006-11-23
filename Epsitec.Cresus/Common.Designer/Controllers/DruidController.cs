@@ -132,7 +132,7 @@ namespace Epsitec.Common.Designer.Controllers
 				foreach (Widget obj in sourceWidgets)
 				{
 					ObjectModifier.ObjectType type = ObjectModifier.GetObjectType(obj);
-					if (type == ObjectModifier.ObjectType.Panel)
+					if (type == ObjectModifier.ObjectType.SubPanel)
 					{
 						Widget parent = obj;
 						while (true)
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Designer.Controllers
 								break;
 							}
 
-							if (type == ObjectModifier.ObjectType.Panel)
+							if (type == ObjectModifier.ObjectType.SubPanel)
 							{
 								Druid d = Druid.Parse(ObjectModifier.GetDruid(parent));
 								exclude.Add(d);

@@ -1552,7 +1552,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					type = ResourceAccess.Type.Commands;
 				}
-				else if (oType == ObjectModifier.ObjectType.Panel)
+				else if (oType == ObjectModifier.ObjectType.SubPanel)
 				{
 					type = ResourceAccess.Type.Panels;
 
