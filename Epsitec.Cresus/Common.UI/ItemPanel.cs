@@ -308,14 +308,25 @@ namespace Epsitec.Common.UI
 		{
 		}
 
+		internal void SetParentGroup(ItemPanelGroup parentGroup)
+		{
+			this.parentGroup = parentGroup;
+		}
+
 		internal void AddPanelGroup(ItemPanelGroup group)
 		{
-			this.groups.Add (group);
+			using (new LockManager (this))
+			{
+				this.groups.Add (group);
+			}
 		}
 
 		internal void RemovePanelGroup(ItemPanelGroup group)
 		{
-			this.groups.Remove (group);
+			using (new LockManager (this))
+			{
+				this.groups.Remove (group);
+			}
 		}
 		
 		protected virtual void HandleItemsChanged(ICollectionView oldValue, ICollectionView newValue)
@@ -354,6 +365,18 @@ namespace Epsitec.Common.UI
 		protected virtual void HandleApertureChanged(Drawing.Rectangle oldValue, Drawing.Rectangle newValue)
 		{
 			this.RecreateUserInterface (this.SafeGetViews (), newValue);
+
+			ItemPanelGroup[] groups;
+
+			using (new LockManager (this))
+			{
+				groups = this.groups.ToArray ();
+			}
+
+			for (int i = 0; i < groups.Length; i++)
+			{
+				groups[i].RefreshAperture (this.Aperture);
+			}
 		}
 
 		private IList<ItemView> SafeGetViews()
@@ -719,5 +742,6 @@ namespace Epsitec.Common.UI
 		int hotItemViewIndex = -1;
 		Drawing.Rectangle aperture;
 		List<ItemPanelGroup> groups = new List<ItemPanelGroup> ();
+		ItemPanelGroup parentGroup;
 	}
 }

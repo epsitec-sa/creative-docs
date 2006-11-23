@@ -23,6 +23,7 @@ namespace Epsitec.Common.UI
 			
 			this.panel.Dock = Widgets.DockStyle.Fill;
 			this.panel.SetEmbedder (this);
+			this.panel.SetParentGroup (this);
 		}
 
 		public ItemPanel ParentPanel
@@ -52,7 +53,7 @@ namespace Epsitec.Common.UI
 						this.panel.ItemViewDefaultSize = this.parentPanel.ItemViewDefaultSize;
 						
 						this.parentPanel.AddPanelGroup (this);
-						this.RefreshAperture ();
+						this.RefreshAperture (this.parentPanel.Aperture);
 					}
 				}
 			}
@@ -73,7 +74,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		internal void RefreshAperture()
+		internal void RefreshAperture(Drawing.Rectangle aperture)
 		{
 			Drawing.Rectangle bounds = this.parentView.Bounds;
 
@@ -81,7 +82,7 @@ namespace Epsitec.Common.UI
 			bounds.Deflate (this.GetInternalPadding ());
 			bounds.Deflate (this.panel.Margins);
 			
-			Drawing.Rectangle aperture = Drawing.Rectangle.Intersection (this.parentPanel.Aperture, bounds);
+			aperture = Drawing.Rectangle.Intersection (aperture, bounds);
 
 			if (aperture.IsSurfaceZero)
 			{
@@ -93,6 +94,11 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
+		{
+			base.SetBoundsOverride (oldRect, newRect);
+			this.RefreshAperture (this.parentPanel.Aperture);
+		}
 
 		private ItemPanel panel;
 		private ItemPanel parentPanel;
