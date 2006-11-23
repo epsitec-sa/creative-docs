@@ -604,8 +604,7 @@ namespace Epsitec.Common.Designer
 				if (st != null)
 				{
 					UI.Panel newPanel = this.GetPanel(newBundle);
-					newPanel.DataSourceMetadata.DefaultDataType = st;
-					newPanel.SetupSampleDataSource();
+					ObjectModifier.SetStructuredType(newPanel, st);
 				}
 			}
 

@@ -317,7 +317,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (this.panelContainer != null)
 			{
-				StructuredType type = this.panelContainer.DataSourceMetadata.DefaultDataType as StructuredType;
+				StructuredType type = ObjectModifier.GetStructuredType(this.panelContainer);
 				if (type != null)
 				{
 					text = type.Caption.Name;
@@ -555,7 +555,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				Druid druid = Druid.Empty;
 
-				StructuredType type = this.panelContainer.DataSourceMetadata.DefaultDataType as StructuredType;
+				StructuredType type = ObjectModifier.GetStructuredType(this.panelContainer);
 				if (type != null)
 				{
 					druid = type.CaptionId;
@@ -568,8 +568,7 @@ namespace Epsitec.Common.Designer.Viewers
 					AbstractType at = this.module.AccessCaptions.DirectGetAbstractType(druid);
 					System.Diagnostics.Debug.Assert(at is StructuredType);
 					type = at as StructuredType;
-					this.panelContainer.DataSourceMetadata.DefaultDataType = type;
-					this.panelContainer.SetupSampleDataSource();
+					ObjectModifier.SetStructuredType(this.panelContainer, type);
 
 					this.UpdateType();
 				}

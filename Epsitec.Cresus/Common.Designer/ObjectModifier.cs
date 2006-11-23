@@ -164,7 +164,7 @@ namespace Epsitec.Common.Designer
 
 			//	Ce test doit s'exécuter avant FrameBox, car un PanelPlaceholder est
 			//	aussi un FrameBox !
-			if (obj is UI.PanelPlaceholder)
+			if (obj is UI.PanelPlaceholder || obj is UI.Panel)
 			{
 				return ObjectType.Panel;
 			}
@@ -270,6 +270,38 @@ namespace Epsitec.Common.Designer
 				UI.Placeholder ph = obj as UI.Placeholder;
 				Types.Binding binding = ph.GetBinding(UI.Placeholder.ValueProperty);
 				return binding;
+			}
+
+			return null;
+		}
+
+		public static bool HasStructuredType(Widget obj)
+		{
+			//	Indique si l'objet a une structure de données associée.
+			ObjectType type = ObjectModifier.GetObjectType(obj);
+			return type == ObjectType.Panel;
+		}
+
+		public static void SetStructuredType(Widget obj, StructuredType st)
+		{
+			//	Modifie la structure de données associée à l'objet.
+			ObjectType type = ObjectModifier.GetObjectType(obj);
+			if (type == ObjectType.Panel)
+			{
+				UI.Panel panel = obj as UI.Panel;
+				panel.DataSourceMetadata.DefaultDataType = st;
+				panel.SetupSampleDataSource();
+			}
+		}
+
+		public static StructuredType GetStructuredType(Widget obj)
+		{
+			//	Retourne la structure de données associée de l'objet.
+			ObjectType type = ObjectModifier.GetObjectType(obj);
+			if (type == ObjectType.Panel)
+			{
+				UI.Panel panel = obj as UI.Panel;
+				return panel.DataSourceMetadata.DefaultDataType as StructuredType;
 			}
 
 			return null;

@@ -1608,7 +1608,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (ObjectModifier.HasBinding(obj))
 			{
 				//	Choix de la rubrique.
-				StructuredType type = this.panel.DataSourceMetadata.DefaultDataType as StructuredType;
+				StructuredType type = ObjectModifier.GetStructuredType(this.panel);
 				System.Diagnostics.Debug.Assert(type != null);
 
 				Binding binding = ObjectModifier.GetBinding(obj);

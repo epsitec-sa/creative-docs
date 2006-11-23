@@ -32,14 +32,14 @@ namespace Epsitec.Common.Designer
 
 		public static string SerializePanel(UI.Panel panel, ResourceManager manager)
 		{
-			System.Diagnostics.Debug.Assert (manager == panel.ResourceManager);
-			return UI.Panel.SerializePanel (panel);
+			System.Diagnostics.Debug.Assert(manager == panel.ResourceManager);
+			return UI.Panel.SerializePanel(panel);
 		}
 
 		public static UI.Panel DeserializePanel(string xml, ResourceManager manager)
 		{
-			UI.Panel panel = UI.Panel.DeserializePanel (xml, null, manager);
-			System.Diagnostics.Debug.Assert (manager == panel.ResourceManager);
+			UI.Panel panel = UI.Panel.DeserializePanel(xml, null, manager);
+			System.Diagnostics.Debug.Assert(manager == panel.ResourceManager);
 			return panel;
 		}
 
@@ -55,73 +55,73 @@ namespace Epsitec.Common.Designer
 			string xml;
 
 			{
-				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-				System.IO.StringWriter stringWriter = new System.IO.StringWriter (buffer);
-				System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (stringWriter);
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+				System.IO.StringWriter stringWriter = new System.IO.StringWriter(buffer);
+				System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter(stringWriter);
 
-				using (Types.Serialization.Context context = new Types.Serialization.SerializerContext (new Types.Serialization.IO.XmlWriter (xmlWriter)))
+				using (Types.Serialization.Context context = new Types.Serialization.SerializerContext(new Types.Serialization.IO.XmlWriter(xmlWriter)))
 				{
-					UI.Panel.FillSerializationContext (context, null, manager);
+					UI.Panel.FillSerializationContext(context, null, manager);
 
 					xmlWriter.Formatting = System.Xml.Formatting.None;
-					xmlWriter.WriteStartElement ("elem");
+					xmlWriter.WriteStartElement("elem");
 
-					context.ActiveWriter.WriteAttributeStrings ();
+					context.ActiveWriter.WriteAttributeStrings();
 
-					Types.Storage.Serialize (visual, context);
+					Types.Storage.Serialize(visual, context);
 
-					xmlWriter.WriteEndElement ();
-					xmlWriter.Flush ();
-					xmlWriter.Close ();
+					xmlWriter.WriteEndElement();
+					xmlWriter.Flush();
+					xmlWriter.Close();
 
-					xml = buffer.ToString ();
+					xml = buffer.ToString();
 				}
 			}
 			
 			{
-				System.IO.StringReader stringReader = new System.IO.StringReader (xml);
-				System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (stringReader);
+				System.IO.StringReader stringReader = new System.IO.StringReader(xml);
+				System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader(stringReader);
 
-				xmlReader.Read ();
+				xmlReader.Read();
 
-				System.Diagnostics.Debug.Assert (xmlReader.NodeType == System.Xml.XmlNodeType.Element);
-				System.Diagnostics.Debug.Assert (xmlReader.LocalName == "elem");
+				System.Diagnostics.Debug.Assert(xmlReader.NodeType == System.Xml.XmlNodeType.Element);
+				System.Diagnostics.Debug.Assert(xmlReader.LocalName == "elem");
 
-				Types.Serialization.Context context = new Types.Serialization.DeserializerContext (new Types.Serialization.IO.XmlReader (xmlReader));
+				Types.Serialization.Context context = new Types.Serialization.DeserializerContext(new Types.Serialization.IO.XmlReader(xmlReader));
 
-				UI.Panel.FillSerializationContext (context, null, manager);
+				UI.Panel.FillSerializationContext(context, null, manager);
 
-				return Types.Storage.Deserialize (context) as Widgets.Visual;
+				return Types.Storage.Deserialize(context) as Widgets.Visual;
 			}
 		}
 		
 		public static void RunPanel(UI.Panel panel, ResourceManager manager, Widgets.Window mainWindow, string name)
 		{
-			string xml = UserInterface.SerializePanel (panel, manager);
-			UI.Panel clone = UserInterface.DeserializePanel (xml, manager);
-			UI.PanelStack stack = new UI.PanelStack ();
-			Widgets.Window window = new Widgets.Window ();
+			string xml = UserInterface.SerializePanel(panel, manager);
+			UI.Panel clone = UserInterface.DeserializePanel(xml, manager);
+			UI.PanelStack stack = new UI.PanelStack();
+			Widgets.Window window = new Widgets.Window();
 
-			window.MakeSecondaryWindow ();
+			window.MakeSecondaryWindow();
 			window.ShowWindowIcon = false;
-			window.Root.Children.Add (stack);
+			window.Root.Children.Add(stack);
 
 			stack.Dock = Widgets.DockStyle.Fill;
 			clone.Dock = Widgets.DockStyle.Fill;
-			
-			clone.SetupSampleDataSource ();
 
-			stack.Children.Add (clone);
+			clone.SetupSampleDataSource();
+
+			stack.Children.Add(clone);
 
 			window.Owner = mainWindow;
 			window.Text = name;
 
-			window.ForceLayout ();
+			window.ForceLayout();
 
-			double width  = Widgets.Layouts.LayoutMeasure.GetWidth (clone).Desired;
-			double height = Widgets.Layouts.LayoutMeasure.GetHeight (clone).Desired;
+			double width  = Widgets.Layouts.LayoutMeasure.GetWidth(clone).Desired;
+			double height = Widgets.Layouts.LayoutMeasure.GetHeight(clone).Desired;
 
-			window.ClientSize = new Size (width, height);
+			window.ClientSize = new Size(width, height);
 
 			double dx = window.WindowSize.Width;
 			double dy = window.WindowSize.Height;  // taille avec le cadre
@@ -131,10 +131,10 @@ namespace Epsitec.Common.Designer
 			{
 				center = mainWindow.WindowBounds.Center;
 			}
-			Rectangle rect = new Rectangle (center.X-dx/2, center.Y-dy/2, dx, dy);
+			Rectangle rect = new Rectangle(center.X-dx/2, center.Y-dy/2, dx, dy);
 			window.WindowBounds = rect;
 
-			window.ShowDialog ();  // affiche le dialogue modal...
+			window.ShowDialog();  // affiche le dialogue modal...
 			
 			UserInterface.runPanelCenter = window.WindowPlacementNormalBounds.Center;
 		}
