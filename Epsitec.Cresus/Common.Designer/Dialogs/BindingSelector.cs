@@ -24,7 +24,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("StructuredSelector", 500, 300, true);
+				this.WindowInit("StructuredSelector", 500, 400, true);
 				this.window.Text = Res.Strings.Dialog.StructuredSelector.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
@@ -129,12 +129,20 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.slider.Value = (decimal) BindingSelector.arrayLineHeight;
 				this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
 				//?ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Icon.Tooltip.Size);
+
+				//	Crée le bouton pour le mode.
+				this.checkReadonly = new CheckButton(this.window.Root);
+				this.checkReadonly.Text = "Lecture seule";
+				this.checkReadonly.Dock = DockStyle.Bottom;
+				this.checkReadonly.Margins = new Margins(0, 0, 8, 4);
+				this.checkReadonly.ActiveStateChanged += new EventHandler(this.HandleCheckReadonlyActiveStateChanged);
 			}
 
 			this.UpdateTitle();
 			this.UpdateButtons();
 			this.UpdateArray();
 			this.SelectArray();
+			this.UpdateMode();
 
 			this.window.ShowDialog();
 		}
@@ -145,7 +153,16 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.module = module;
 			this.resourceAccess = module.AccessCaptions;
 			this.structuredType = type;
-			this.initialBinding = binding;
+
+			if (binding == null)
+			{
+				this.initialBinding = new Binding(BindingMode.TwoWay, "");
+			}
+			else
+			{
+				this.initialBinding = binding;
+			}
+
 			this.selectedBinding = null;
 
 			this.FieldsInput();
@@ -163,51 +180,35 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected string Field
 		{
+			//	Rubrique sélectionnée.
+			//	TODO: il faudra améliorer la gestion du préfixe "*." !
 			get
 			{
-				string field = null;
-
-				if (this.initialBinding != null)
+				string field = this.initialBinding.Path;
+				if (field.StartsWith("*."))
 				{
-					field = this.initialBinding.Path;
-					if (field.StartsWith("*."))
-					{
-						field = field.Substring(2);  // enlève "*."
-					}
+					field = field.Substring(2);  // enlève "*."
 				}
 
 				return field;
 			}
 			set
 			{
-				string field = string.Concat("*.", value);
-				this.initialBinding = new Binding(this.Mode, field);
+				string field = string.Concat("*.", value);  // ajoute "*."
+				this.initialBinding = new Binding(this.initialBinding.Mode, field);
 			}
 		}
 
 		protected BindingMode Mode
 		{
+			//	Mode sélectionné.
 			get
 			{
-				BindingMode mode = BindingMode.TwoWay;
-
-				if (this.initialBinding != null)
-				{
-					mode = this.initialBinding.Mode;
-				}
-
-				return mode;
+				return this.initialBinding.Mode;
 			}
 			set
 			{
-				string field = "";
-
-				if (this.initialBinding != null)
-				{
-					field = this.initialBinding.Path;
-				}
-
-				this.initialBinding = new Binding(value, field);
+				this.initialBinding = new Binding(value, this.initialBinding.Path);
 			}
 		}
 
@@ -366,29 +367,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.headerCaption.PreferredWidth = w3+1;
 		}
 
-
-		private void HandleWindowCloseClicked(object sender)
+		protected void UpdateMode()
 		{
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
+			//	Met à jour le bouton pour le mode.
+			this.ignoreChanged = true;
+			this.checkReadonly.ActiveState = (this.Mode == BindingMode.OneWay) ? ActiveState.Yes : ActiveState.No;
+			this.ignoreChanged = false;
 		}
 
-		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
-		{
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
-		}
-
-		private void HandleButtonUseClicked(object sender, MessageEventArgs e)
-		{
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
-
-			this.selectedBinding = this.initialBinding;
-		}
 
 		private void HandleSliderChanged(object sender)
 		{
@@ -439,6 +425,48 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.selectedBinding = this.initialBinding;
 		}
 
+		private void HandleCheckReadonlyActiveStateChanged(object sender)
+		{
+			if (this.ignoreChanged)
+			{
+				return;
+			}
+
+			if (this.Mode == BindingMode.TwoWay)
+			{
+				this.Mode = BindingMode.OneWay;
+			}
+			else
+			{
+				this.Mode = BindingMode.TwoWay;
+			}
+
+			this.UpdateMode();
+		}
+
+		private void HandleWindowCloseClicked(object sender)
+		{
+			this.parentWindow.MakeActive();
+			this.window.Hide();
+			this.OnClosed();
+		}
+
+		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
+		{
+			this.parentWindow.MakeActive();
+			this.window.Hide();
+			this.OnClosed();
+		}
+
+		private void HandleButtonUseClicked(object sender, MessageEventArgs e)
+		{
+			this.parentWindow.MakeActive();
+			this.window.Hide();
+			this.OnClosed();
+
+			this.selectedBinding = this.initialBinding;
+		}
+
 
 		protected static double					arrayLineHeight = 20;
 
@@ -455,6 +483,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected HeaderButton					headerType;
 		protected HeaderButton					headerCaption;
 		protected MyWidgets.StringArray			array;
+		protected CheckButton					checkReadonly;
 
 		protected Button						buttonUse;
 		protected Button						buttonCancel;
