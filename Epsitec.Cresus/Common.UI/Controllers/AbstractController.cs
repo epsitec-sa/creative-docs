@@ -162,6 +162,15 @@ namespace Epsitec.Common.UI.Controllers
 			if (this.placeholder != null)
 			{
 				widget.SetEmbedder (this.placeholder);
+
+				if (this.placeholder.Parent != null)
+				{
+					//	Force arrange of parent: since the placeholder is IGridPermeable,
+					//	it will require that the parent updates its own layout in order
+					//	to update the contents of the placeholder.
+
+					Widgets.Layouts.LayoutContext.AddToArrangeQueue (this.placeholder.Parent);
+				}
 			}
 		}
 
