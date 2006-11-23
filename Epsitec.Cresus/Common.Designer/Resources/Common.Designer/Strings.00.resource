@@ -212,6 +212,9 @@
   <data name="StringCollection.Remove" id="0G5" mod="1">Supprimer le texte</data>
   <data name="StringCollection.Prev" id="0H5" mod="1">Monter le texte</data>
   <data name="StringCollection.Next" id="0I5" mod="1">Descendre le texte</data>
+  <data name="Panel.Content.Tooltip.ChangeDruid" id="0B9">Choix de la ressource associée</data>
+  <data name="Panel.Content.Tooltip.ChangeBinding" id="0C9">Choix de la rubrique à éditer</data>
+  <data name="Panel.Content.Tooltip.ChangeStructured" id="0D9">Choix de la structure de données liée</data>
   <data name="Dialog.Button.Close" id="0E3">Fermer</data>
   <data name="Dialog.Button.OK" id="0F3">D&amp;apos;accord</data>
   <data name="Dialog.Button.Cancel" id="0G3">Annuler</data>
