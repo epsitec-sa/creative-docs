@@ -27,15 +27,15 @@ namespace Epsitec.Common.UI
 			ItemPanel panel = new ItemPanel ();
 
 			panel.Items = ItemPanelTest.GetStringItems ();
-			panel.Layout = ItemViewLayout.VerticalList;
+			panel.Layout = ItemPanelLayout.VerticalList;
 
-			panel.SelectionMode = ItemViewSelectionMode.None;
+			panel.ItemSelection = ItemPanelSelectionMode.None;
 
 			panel.SelectItemView (panel.GetItemView (0));
 			Assert.AreEqual (0, panel.GetSelectedItemViews ().Count);
 			Assert.IsFalse (panel.GetItemView (0).IsSelected);
 
-			panel.SelectionMode = ItemViewSelectionMode.ZeroOrOne;
+			panel.ItemSelection = ItemPanelSelectionMode.ZeroOrOne;
 			
 			panel.SelectItemView (panel.GetItemView (0));
 			Assert.AreEqual (1, panel.GetSelectedItemViews ().Count);
@@ -52,7 +52,7 @@ namespace Epsitec.Common.UI
 			Assert.IsFalse (panel.GetItemView (0).IsSelected);
 			Assert.IsFalse (panel.GetItemView (1).IsSelected);
 
-			panel.SelectionMode = ItemViewSelectionMode.ExactlyOne;
+			panel.ItemSelection = ItemPanelSelectionMode.ExactlyOne;
 
 			panel.SelectItemView (panel.GetItemView (0));
 			Assert.AreEqual (1, panel.GetSelectedItemViews ().Count);
@@ -69,7 +69,7 @@ namespace Epsitec.Common.UI
 			Assert.IsFalse (panel.GetItemView (0).IsSelected);
 			Assert.IsTrue (panel.GetItemView (1).IsSelected);
 
-			panel.SelectionMode = ItemViewSelectionMode.Multiple;
+			panel.ItemSelection = ItemPanelSelectionMode.Multiple;
 
 			panel.SelectItemView (panel.GetItemView (0));
 			Assert.AreEqual (2, panel.GetSelectedItemViews ().Count);
@@ -98,7 +98,7 @@ namespace Epsitec.Common.UI
 			ItemPanel panel = new ItemPanel ();
 
 			panel.Items = ItemPanelTest.GetStringItems ();
-			panel.Layout = ItemViewLayout.VerticalList;
+			panel.Layout = ItemPanelLayout.VerticalList;
 
 			Assert.AreEqual (7, panel.GetItemViewCount ());
 			Assert.AreEqual ("Monday", panel.GetItemView (0).Item);

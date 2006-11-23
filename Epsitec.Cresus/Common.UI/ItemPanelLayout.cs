@@ -4,10 +4,10 @@
 namespace Epsitec.Common.UI
 {
 	/// <summary>
-	/// The <c>ItemViewLayout</c> enumeration lists all supported layout modes
-	/// for the <see cref="ItemView"/> instances in an <see cref="ItemPanel"/>.
+	/// The <c>ItemPanelLayout</c> enumeration lists all supported layout modes
+	/// for the items represented by an <see cref="ItemPanel"/>.
 	/// </summary>
-	public enum ItemViewLayout : byte
+	public enum ItemPanelLayout : byte
 	{
 		None,
 
