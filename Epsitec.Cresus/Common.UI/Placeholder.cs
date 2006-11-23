@@ -65,7 +65,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		private Widgets.Layouts.IGridPermeable	ControllerIGridPermeable
+		public Widgets.Layouts.IGridPermeable	ControllerIGridPermeable
 		{
 			get
 			{
@@ -94,6 +94,19 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public Verbosity						Verbosity
+		{
+			get
+			{
+				return (Verbosity) this.GetValue (Placeholder.VerbosityProperty);
+			}
+			set
+			{
+				this.SetValue (Placeholder.VerbosityProperty, value);
+			}
+		}
+
+		
 		protected override void LayoutArrange(Widgets.Layouts.ILayoutEngine engine)
 		{
 			Widget parent = this.Parent;
@@ -174,6 +187,14 @@ namespace Epsitec.Common.UI
 				{
 					Application.QueueAsyncCallback (this.RecreateUserInterface);
 				}
+			}
+		}
+
+		private void UpdateVerbosity()
+		{
+			if (this.controller != null)
+			{
+				Application.QueueAsyncCallback (this.RecreateUserInterface);
 			}
 		}
 
@@ -292,12 +313,20 @@ namespace Epsitec.Common.UI
 		private static void NotifyControllerChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			Placeholder that = (Placeholder) o;
-			
+
 			that.UpdateController ();
 		}
-		
+
+		private static void NotifyVerbosityChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			Placeholder that = (Placeholder) o;
+
+			that.UpdateVerbosity ();
+		}
+
 		public static readonly DependencyProperty ControllerProperty = DependencyProperty.Register ("Controller", typeof (string), typeof (Placeholder), new DependencyPropertyMetadata ("*", Placeholder.NotifyControllerChanged));
 		public static readonly DependencyProperty ControllerParameterProperty = DependencyProperty.Register ("ControllerParameter", typeof (string), typeof (Placeholder), new DependencyPropertyMetadata (Placeholder.NotifyControllerChanged));
+		public static readonly DependencyProperty VerbosityProperty = DependencyProperty.Register ("Verbosity", typeof (Verbosity), typeof (Placeholder), new DependencyPropertyMetadata (Verbosity.Default, Placeholder.NotifyVerbosityChanged));
 
 		static readonly NoOpGridPermeableHelper	noOpGridPermeableHelper = new NoOpGridPermeableHelper ();
 		

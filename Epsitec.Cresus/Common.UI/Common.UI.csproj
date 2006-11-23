@@ -146,6 +146,7 @@
     <Compile Include="Panels\EditPanel.cs" />
     <Compile Include="Placeholder.cs" />
     <Compile Include="Validators\ControllerBasedValidator.cs" />
+    <Compile Include="Verbosity.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
