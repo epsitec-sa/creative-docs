@@ -34,6 +34,14 @@ namespace Epsitec.Common.Designer.Controllers
 		{
 			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 
+			this.title = new StaticText();
+			this.title.HorizontalAlignment = HorizontalAlignment.Stretch;
+			this.title.VerticalAlignment = VerticalAlignment.Top;
+			this.title.ContentAlignment = Drawing.ContentAlignment.TopCenter;
+			this.title.Dock = DockStyle.Stacked;
+			this.title.Margins = new Epsitec.Common.Drawing.Margins(0, 0, 10, 0);
+			this.title.PreferredHeight = 24;
+
 			this.button = new Button();
 			this.button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.button.TabIndex = 1;
@@ -42,6 +50,7 @@ namespace Epsitec.Common.Designer.Controllers
 			this.button.VerticalAlignment = VerticalAlignment.Stretch;
 			this.button.Dock = DockStyle.Stacked;
 
+			this.AddWidget(this.title);
 			this.AddWidget(this.button);
 		}
 
@@ -56,28 +65,38 @@ namespace Epsitec.Common.Designer.Controllers
 		{
 			if (!UndefinedValue.IsUndefinedValue(newValue) &&
 				!InvalidValue.IsInvalidValue(newValue) &&
-				!PendingValue.IsPendingValue(newValue) &&
-				newValue != null)
+				!PendingValue.IsPendingValue(newValue))
 			{
-				this.binding = newValue as Binding;
+				StructuredType type = this.StructuredType;
+				if (type == null)
+				{
+					this.title.Text = "";
+				}
+				else
+				{
+					string text = type.Caption.Name;
+					this.title.Text = string.Concat("<font size=\"150%\"><b>", text, "</b></font>");
+				}
 
-				string path = this.binding == null ? "" : this.binding.Path;
-				string field = path.StartsWith("*.") ? path.Substring(2) : path;
-				
-				this.button.Text = field;
+				if (newValue == null)
+				{
+					this.button.Text = "";
+				}
+				else
+				{
+					this.binding = newValue as Binding;
+
+					string path = this.binding == null ? "" : this.binding.Path;
+					string field = path.StartsWith("*.") ? path.Substring(2) : path;
+					this.button.Text = field;
+				}
 			}
 		}
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
 			MainWindow mainWindow = this.MainWindow;
-
-			IProxy sourceProxy = this.Placeholder.ValueBinding.Source as IProxy;
-			IEnumerable<Widget> sourceWidgets = sourceProxy.Widgets;  // liste des objets sélectionnés
-			Widget sourceWidget = Collection.Extract<Widget>(sourceWidgets, 0);
-			System.Diagnostics.Debug.Assert(sourceWidget != null);
-			IStructuredType dataSource = DataObject.GetDataContext(sourceWidget).Source as IStructuredType;
-			StructuredType type = dataSource.GetField("*").Type as StructuredType;
+			StructuredType type = this.StructuredType;
 			Binding binding = this.binding;
 
 			binding = mainWindow.DlgBindingSelector(mainWindow.CurrentModule, type, binding);
@@ -89,6 +108,19 @@ namespace Epsitec.Common.Designer.Controllers
 			this.binding = binding;
 
 			this.OnActualValueChanged();
+		}
+
+		private StructuredType StructuredType
+		{
+			get
+			{
+				IProxy sourceProxy = this.Placeholder.ValueBinding.Source as IProxy;
+				IEnumerable<Widget> sourceWidgets = sourceProxy.Widgets;  // liste des objets sélectionnés
+				Widget sourceWidget = Collection.Extract<Widget>(sourceWidgets, 0);
+				System.Diagnostics.Debug.Assert(sourceWidget != null);
+				IStructuredType dataSource = DataObject.GetDataContext(sourceWidget).Source as IStructuredType;
+				return dataSource.GetField("*").Type as StructuredType;
+			}
 		}
 
 		private MainWindow MainWindow
@@ -105,13 +137,14 @@ namespace Epsitec.Common.Designer.Controllers
 		#region IGridPermeable Members
 		IEnumerable<Widgets.Layouts.PermeableCell> Widgets.Layouts.IGridPermeable.GetChildren(int column, int row, int columnSpan, int rowSpan)
 		{
-			yield return new Widgets.Layouts.PermeableCell(this.button, column+0, row+0, columnSpan, 1);
+			yield return new Widgets.Layouts.PermeableCell(this.title, column+0, row+0, columnSpan, 1);
+			yield return new Widgets.Layouts.PermeableCell(this.button, column+0, row+1, columnSpan, rowSpan-1);
 		}
 
 		bool Widgets.Layouts.IGridPermeable.UpdateGridSpan(ref int columnSpan, ref int rowSpan)
 		{
 			columnSpan = System.Math.Max(columnSpan, 2);
-			rowSpan    = System.Math.Max(rowSpan, 1);
+			rowSpan    = System.Math.Max(rowSpan, 2);
 			
 			return true;
 		}
@@ -120,5 +153,6 @@ namespace Epsitec.Common.Designer.Controllers
 
 		private Binding					binding;
 		private Button					button;
+		private StaticText				title;
 	}
 }
