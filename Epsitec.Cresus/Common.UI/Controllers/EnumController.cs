@@ -48,13 +48,13 @@ namespace Epsitec.Common.UI.Controllers
 			return this.helper;
 		}
 
-		protected override void CreateUserInterface(INamedType namedType, string valueName, Caption caption)
+		protected override void CreateUserInterface(INamedType namedType, Caption caption)
 		{
 			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
 			IEnumType enumType = namedType as IEnumType;
 
-			this.helper.CreateUserInterface (enumType, valueName, caption);
+			this.helper.CreateUserInterface (enumType, caption);
 		}
 
 		protected override void PrepareUserInterfaceDisposal()
@@ -97,7 +97,7 @@ namespace Epsitec.Common.UI.Controllers
 				this.host = host;
 			}
 			
-			public abstract void CreateUserInterface(IEnumType enumType, string valueName, Caption caption);
+			public abstract void CreateUserInterface(IEnumType enumType, Caption caption);
 			public abstract string GetSelectedName();
 			
 			protected EnumController host;
@@ -140,7 +140,7 @@ namespace Epsitec.Common.UI.Controllers
 				this.combo.TextChanged -= this.host.HandleComboTextChanged;				
 			}
 
-			public override void CreateUserInterface(IEnumType enumType, string valueName, Caption caption)
+			public override void CreateUserInterface(IEnumType enumType, Caption caption)
 			{
 				this.label = new StaticText ();
 				this.combo = new TextFieldCombo ();
@@ -150,9 +150,9 @@ namespace Epsitec.Common.UI.Controllers
 				this.label.ContentAlignment = Drawing.ContentAlignment.MiddleRight;
 				this.label.Dock = DockStyle.Stacked;
 
-				if (!string.IsNullOrEmpty (valueName))
+				if (caption.HasLabels)
 				{
-					this.label.Text = string.Format ("{0} ", valueName);
+					this.label.CaptionId = caption.Id;
 					this.label.PreferredWidth = this.label.GetBestFitSize ().Width;
 					this.label.Margins = new Drawing.Margins (4, 4, 0, 0);
 				}
@@ -252,7 +252,7 @@ namespace Epsitec.Common.UI.Controllers
 				this.combo.SelectionChanged -= this.host.HandleComboTextChanged;
 			}
 
-			public override void CreateUserInterface(IEnumType enumType, string valueName, Caption caption)
+			public override void CreateUserInterface(IEnumType enumType, Caption caption)
 			{
 				this.enumType = enumType;
 				
@@ -264,9 +264,9 @@ namespace Epsitec.Common.UI.Controllers
 				this.label.ContentAlignment = Drawing.ContentAlignment.MiddleRight;
 				this.label.Dock = DockStyle.Stacked;
 
-				if (!string.IsNullOrEmpty (valueName))
+				if (caption.HasLabels)
 				{
-					this.label.Text = string.Format ("{0} ", valueName);
+					this.label.CaptionId = caption.Id;
 					this.label.PreferredWidth = this.label.GetBestFitSize ().Width;
 					this.label.Margins = new Drawing.Margins (4, 4, 0, 0);
 				}

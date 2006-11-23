@@ -27,7 +27,7 @@ namespace Epsitec.Common.UI.Controllers
 			return this;
 		}
 
-		protected override void CreateUserInterface(INamedType namedType, string valueName, Caption caption)
+		protected override void CreateUserInterface(INamedType namedType, Caption caption)
 		{
 			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
@@ -38,10 +38,10 @@ namespace Epsitec.Common.UI.Controllers
 			this.label.VerticalAlignment = VerticalAlignment.BaseLine;
 			this.label.ContentAlignment = Drawing.ContentAlignment.MiddleRight;
 			this.label.Dock = DockStyle.Stacked;
-			
-			if (! string.IsNullOrEmpty (valueName))
+
+			if (caption.HasLabels)
 			{
-				this.label.Text = string.Format ("{0} ", valueName);
+				this.label.CaptionId = caption.Id;
 				this.label.PreferredWidth = this.label.GetBestFitSize ().Width;
 				this.label.Margins = new Drawing.Margins (4, 4, 0, 0);
 			}

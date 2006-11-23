@@ -517,7 +517,7 @@ namespace Epsitec.Common.UI
 				}
 			}
 
-			protected override void CreateUserInterface(INamedType valueType, string valueName, Caption caption)
+			protected override void CreateUserInterface(INamedType valueType, Caption caption)
 			{
 				throw new System.Exception ("The method or operation is not implemented.");
 			}

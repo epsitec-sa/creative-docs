@@ -30,7 +30,7 @@ namespace Epsitec.Common.Designer.Controllers
 			return this;
 		}
 
-		protected override void CreateUserInterface(INamedType namedType, string valueName, Caption caption)
+		protected override void CreateUserInterface(INamedType namedType, Caption caption)
 		{
 			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 

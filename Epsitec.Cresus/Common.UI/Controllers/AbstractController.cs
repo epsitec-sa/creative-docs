@@ -69,24 +69,7 @@ namespace Epsitec.Common.UI.Controllers
 				
 				if (type != null)
 				{
-					string name;
-
-					if ((caption != null) &&
-						(caption.Labels.Count > 0))
-					{
-						//	TODO: ne plus transformer le nom ici, mais attacher le caption au
-						//	widget qui représente le label!
-
-						name = Collection.Extract (caption.Labels, 0);
-
-						ToolTip.Default.SetToolTip (this.placeholder, caption.Description);
-					}
-					else
-					{
-						name = this.placeholder.ValueName;
-					}
-
-					this.CreateUserInterface (type, name, caption);
+					this.CreateUserInterface (type, caption);
 				}
 				else
 				{
@@ -145,7 +128,7 @@ namespace Epsitec.Common.UI.Controllers
 			return null;
 		}
 
-		protected abstract void CreateUserInterface(INamedType namedType, string valueName, Caption caption);
+		protected abstract void CreateUserInterface(INamedType namedType, Caption caption);
 		
 		protected abstract void RefreshUserInterface(object oldValue, object newValue);
 
