@@ -474,12 +474,12 @@ namespace Epsitec.Common.UI
 
 		private static bool FilterItems(ItemView view)
 		{
-			return (view is CollectionViewGroup) ? false : true;
+			return (view.Item is CollectionViewGroup) ? false : true;
 		}
 
 		private static bool FilterGroups(ItemView view)
 		{
-			return (view is CollectionViewGroup) ? true : false;
+			return (view.Item is CollectionViewGroup) ? true : false;
 		}
 		
 		private static IEnumerable<ItemView> GetNearbyItemViews(IList<ItemView> views, int index, int count)
