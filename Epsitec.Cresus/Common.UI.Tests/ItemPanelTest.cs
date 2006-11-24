@@ -22,6 +22,25 @@ namespace Epsitec.Common.UI
 		}
 
 		[Test]
+		public void CheckGroups()
+		{
+			ItemPanel panel = new ItemPanel ();
+
+			panel.Items = ItemPanelTest.GetGroupedItems ();
+			panel.Layout = ItemPanelLayout.VerticalList;
+			panel.ItemSelection = ItemPanelSelectionMode.ExactlyOne;
+			panel.GroupSelection = ItemPanelSelectionMode.ExactlyOne;
+			panel.Aperture = new Drawing.Rectangle (0, 0, 80, 60);
+
+			Assert.AreEqual (2, panel.GetItemViewCount ());
+			Assert.AreEqual (new Drawing.Size (80, 20*2), panel.PreferredSize);
+			Assert.IsNotNull (panel.GetItemView (0).Widget);
+			Assert.IsNotNull (panel.GetItemView (1).Widget);
+			Assert.AreEqual (typeof (ItemPanelGroup), panel.GetItemView (0).Widget.GetType ());
+			Assert.AreEqual (typeof (ItemPanelGroup), panel.GetItemView (1).Widget.GetType ());
+		}
+
+		[Test]
 		public void CheckSelection()
 		{
 			ItemPanel panel = new ItemPanel ();
@@ -156,6 +175,102 @@ namespace Epsitec.Common.UI
 			CollectionView view = new CollectionView (items);
 			
 			return view;
+		}
+
+		private static CollectionView GetGroupedItems()
+		{
+			List<Record> source = new List<Record> ();
+			CollectionView view = new CollectionView (source);
+
+			ItemPanelTest.AddRecords (source);
+
+			view.SortDescriptions.Add (new SortDescription ("Article"));
+			view.SortDescriptions.Add (new SortDescription ("Price"));
+			view.GroupDescriptions.Add (new PropertyGroupDescription ("Category"));
+
+			return view;
+		}
+
+		private static void AddRecords(IList<Record> source)
+		{
+			source.Add (new Record ("Vis M3", 10, 0.15M, Category.Part));
+			source.Add (new Record ("Ecrou M3", 19, 0.10M, Category.Part));
+			source.Add (new Record ("Rondelle", 41, 0.05M, Category.Part));
+			source.Add (new Record ("Clé M3", 7, 15.00M, Category.Tool));
+			source.Add (new Record ("Tournevis", 2, 8.45M, Category.Tool));
+			source.Add (new Record ("Tournevis", 7, 25.70M, Category.Tool));
+		}
+
+		private enum Category
+		{
+			Unknown,
+			Part,
+			Tool,
+			ElectronicEquipment
+		}
+
+		private class Record
+		{
+			public Record(string article, int stock, decimal price, Category category)
+			{
+				this.article = article;
+				this.stock = stock;
+				this.price = price;
+				this.category = category;
+			}
+
+			public string Article
+			{
+				get
+				{
+					return this.article;
+				}
+				set
+				{
+					this.article = value;
+				}
+			}
+
+			public int Stock
+			{
+				get
+				{
+					return this.stock;
+				}
+				set
+				{
+					this.stock = value;
+				}
+			}
+
+			public decimal Price
+			{
+				get
+				{
+					return this.price;
+				}
+				set
+				{
+					this.price = value;
+				}
+			}
+
+			public Category Category
+			{
+				get
+				{
+					return this.category;
+				}
+				set
+				{
+					this.category = value;
+				}
+			}
+
+			private string article;
+			private int stock;
+			private decimal price;
+			private Category category;
 		}
 
 		private Support.ResourceManager manager;

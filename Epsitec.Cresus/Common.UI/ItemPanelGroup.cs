@@ -53,9 +53,21 @@ namespace Epsitec.Common.UI
 						this.panel.ItemViewDefaultSize = this.parentPanel.ItemViewDefaultSize;
 						
 						this.parentPanel.AddPanelGroup (this);
-						this.RefreshAperture (this.parentPanel.Aperture);
+
+						if (this.parentView != null)
+						{
+							this.RefreshAperture (this.parentPanel.Aperture);
+						}
 					}
 				}
+			}
+		}
+
+		public ItemPanel ChildPanel
+		{
+			get
+			{
+				return this.panel;
 			}
 		}
 
@@ -70,12 +82,28 @@ namespace Epsitec.Common.UI
 				if (this.parentView != value)
 				{
 					this.parentView = value;
+
+					if (this.parentPanel != null)
+					{
+						this.RefreshAperture (this.parentPanel.Aperture);
+					}
 				}
+			}
+		}
+
+		public CollectionViewGroup CollectionViewGroup
+		{
+			get
+			{
+				return this.parentView.Item as CollectionViewGroup;
 			}
 		}
 
 		internal void RefreshAperture(Drawing.Rectangle aperture)
 		{
+			System.Diagnostics.Debug.Assert (this.parentView != null);
+			System.Diagnostics.Debug.Assert (this.parentPanel != null);
+			
 			Drawing.Rectangle bounds = this.parentView.Bounds;
 
 			bounds.Deflate (this.Padding);
