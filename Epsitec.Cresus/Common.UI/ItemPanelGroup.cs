@@ -135,6 +135,11 @@ namespace Epsitec.Common.UI
 			this.UpdateItemViewSize ();
 		}
 
+		public override Drawing.Margins GetInternalPadding()
+		{
+			return new Drawing.Margins (0, 0, 20, 0);
+		}
+
 		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
 			base.SetBoundsOverride (oldRect, newRect);

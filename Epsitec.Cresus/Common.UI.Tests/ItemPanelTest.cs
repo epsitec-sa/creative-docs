@@ -44,8 +44,18 @@ namespace Epsitec.Common.UI
 			panel.ExpandItemView (panel.GetItemView (0), true);
 
 			Assert.IsTrue (panel.GetItemView (0).IsExpanded);
-			Assert.AreEqual (new Drawing.Size (80, 60), panel.GetItemView (0).Size);
+			Assert.AreEqual (new Drawing.Size (80, 20+20*3), panel.GetItemView (0).Size);
 			Assert.AreEqual (3, (panel.GetItemView (0).Widget as ItemPanelGroup).ChildPanel.GetItemViewCount ());
+
+			Widgets.Application.ExecuteAsyncCallbacks ();
+
+			Assert.AreEqual (new Drawing.Size (80, 20+20*3+20), panel.PreferredSize);
+
+			panel.ExpandItemView (panel.GetItemView (0), false);
+
+			Assert.IsFalse (panel.GetItemView (0).IsExpanded);
+			Assert.AreEqual (new Drawing.Size (80, 20), panel.GetItemView (0).Size);
+			Assert.AreEqual (0, (panel.GetItemView (0).Widget as ItemPanelGroup).ChildPanel.GetItemViewCount ());
 		}
 
 		[Test]
