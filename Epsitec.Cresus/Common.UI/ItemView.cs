@@ -63,6 +63,10 @@ namespace Epsitec.Common.UI
 			{
 				return this.size;
 			}
+			internal set
+			{
+				this.size = value;
+			}
 		}
 
 		public Drawing.Rectangle Bounds
@@ -105,6 +109,29 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public bool IsExpanded
+		{
+			get
+			{
+				return this.isExpanded;
+			}
+			internal set
+			{
+				if (this.isExpanded != value)
+				{
+					this.isExpanded = value;
+
+					ItemPanelGroup group = this.widget as ItemPanelGroup;
+					
+					if (group != null)
+					{
+						group.NotifyItemViewChanged (this);
+					}
+				}
+			}
+		}
+		
+		
 		internal void UpdatePreferredSize(ItemPanel panel)
 		{
 			if (this.factory == null)

@@ -38,6 +38,14 @@ namespace Epsitec.Common.UI
 			Assert.IsNotNull (panel.GetItemView (1).Widget);
 			Assert.AreEqual (typeof (ItemPanelGroup), panel.GetItemView (0).Widget.GetType ());
 			Assert.AreEqual (typeof (ItemPanelGroup), panel.GetItemView (1).Widget.GetType ());
+			Assert.AreEqual (3, (panel.GetItemView (0).Item as CollectionViewGroup).ItemCount);
+			Assert.AreEqual (3, (panel.GetItemView (1).Item as CollectionViewGroup).ItemCount);
+
+			panel.ExpandItemView (panel.GetItemView (0), true);
+
+			Assert.IsTrue (panel.GetItemView (0).IsExpanded);
+			Assert.AreEqual (new Drawing.Size (80, 60), panel.GetItemView (0).Size);
+			Assert.AreEqual (3, (panel.GetItemView (0).Widget as ItemPanelGroup).ChildPanel.GetItemViewCount ());
 		}
 
 		[Test]

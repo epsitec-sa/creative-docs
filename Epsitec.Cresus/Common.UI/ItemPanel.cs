@@ -214,6 +214,14 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public void ExpandItemView(ItemView view, bool expand)
+		{
+			if (ItemPanel.ContainsGroup (view))
+			{
+				view.IsExpanded = expand;
+			}
+		}
+
 		public IList<ItemView> GetSelectedItemViews()
 		{
 			return this.GetSelectedItemViews (null);
@@ -306,11 +314,25 @@ namespace Epsitec.Common.UI
 		
 		internal void NotifyItemViewSizeChanged(ItemView view, Drawing.Size oldSize, Drawing.Size newSize)
 		{
+			this.InvalidateLayout ();
+		}
+
+		private void InvalidateLayout()
+		{
+			if (this.hasDirtyLayout == false)
+			{
+				this.hasDirtyLayout = true;
+				Widgets.Application.QueueAsyncCallback (this.RefreshLayout);
+			}
 		}
 
 		internal void SetParentGroup(ItemPanelGroup parentGroup)
 		{
-			this.parentGroup = parentGroup;
+			if (this.parentGroup != parentGroup)
+			{
+				this.parentGroup = parentGroup;
+				this.RefreshItemViews ();
+			}
 		}
 
 		internal void AddPanelGroup(ItemPanelGroup group)
@@ -501,7 +523,21 @@ namespace Epsitec.Common.UI
 					this.CreateItemViews (views, items.Groups, currentViews);
 				}
 			}
+			else if (this.parentGroup != null)
+			{
+				CollectionViewGroup group = this.parentGroup.CollectionViewGroup;
 
+				if (group.HasSubgroups)
+				{
+					this.CreateItemViews (views, group.Subgroups, currentViews);
+				}
+				else
+				{
+					this.CreateItemViews (views, group.Items as System.Collections.IList, currentViews);
+				}
+			}
+
+			this.RefreshLayout (views);
 			this.RecreateUserInterface (views, this.aperture);
 
 			using (new LockManager (this))
@@ -510,13 +546,20 @@ namespace Epsitec.Common.UI
 				this.hotItemViewIndex = -1;
 			}
 		}
-
+		
 		private void RefreshLayout()
 		{
+			this.RefreshLayout (this.SafeGetViews ());
+		}
+		
+		private void RefreshLayout(IEnumerable<ItemView> views)
+		{
+			this.hasDirtyLayout = false;
+			
 			switch (this.Layout)
 			{
 				case ItemPanelLayout.VerticalList:
-					this.PreferredSize = this.LayoutVerticalList (this.SafeGetViews ());
+					this.PreferredSize = this.LayoutVerticalList (views);
 					break;
 			}
 		}
@@ -743,5 +786,6 @@ namespace Epsitec.Common.UI
 		Drawing.Rectangle aperture;
 		List<ItemPanelGroup> groups = new List<ItemPanelGroup> ();
 		ItemPanelGroup parentGroup;
+		bool hasDirtyLayout;
 	}
 }

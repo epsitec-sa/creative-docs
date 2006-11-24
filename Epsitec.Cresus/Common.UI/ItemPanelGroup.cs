@@ -23,7 +23,6 @@ namespace Epsitec.Common.UI
 			
 			this.panel.Dock = Widgets.DockStyle.Fill;
 			this.panel.SetEmbedder (this);
-			this.panel.SetParentGroup (this);
 		}
 
 		public ItemPanel ParentPanel
@@ -83,9 +82,15 @@ namespace Epsitec.Common.UI
 				{
 					this.parentView = value;
 
-					if (this.parentPanel != null)
+					if (this.parentView != null)
 					{
-						this.RefreshAperture (this.parentPanel.Aperture);
+						this.defaultCompactSize = this.parentView.Size;
+						this.UpdateItemViewSize ();
+						
+						if (this.parentPanel != null)
+						{
+							this.RefreshAperture (this.parentPanel.Aperture);
+						}
 					}
 				}
 			}
@@ -122,14 +127,57 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		internal void NotifyItemViewChanged(ItemView view)
+		{
+			System.Diagnostics.Debug.Assert (this.parentView == view);
+			System.Diagnostics.Debug.Assert (this.parentPanel != null);
+
+			this.UpdateItemViewSize ();
+		}
+
 		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
 			base.SetBoundsOverride (oldRect, newRect);
 			this.RefreshAperture (this.parentPanel.Aperture);
 		}
 
+		private void UpdateItemViewSize()
+		{
+			System.Diagnostics.Debug.Assert (this.parentView != null);
+
+			Drawing.Size oldSize = this.parentView.Size;
+			Drawing.Size newSize;
+
+			if (this.parentView.IsExpanded)
+			{
+				this.panel.SetParentGroup (this);
+				
+				newSize  = this.panel.PreferredSize;
+				newSize += this.Padding.Size;
+				newSize += this.GetInternalPadding ().Size;
+				newSize += this.panel.Margins.Size;
+			}
+			else
+			{
+				newSize = this.defaultCompactSize;
+				
+				this.panel.SetParentGroup (null);
+			}
+
+			if (oldSize != newSize)
+			{
+				this.parentView.Size = newSize;
+				
+				if (this.parentPanel != null)
+				{
+					this.parentPanel.NotifyItemViewSizeChanged (this.parentView, oldSize, newSize);
+				}
+			}
+		}
+
 		private ItemPanel panel;
 		private ItemPanel parentPanel;
 		private ItemView parentView;
+		private Drawing.Size defaultCompactSize;
 	}
 }

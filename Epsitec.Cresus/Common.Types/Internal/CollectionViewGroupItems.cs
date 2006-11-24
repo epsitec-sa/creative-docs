@@ -11,7 +11,7 @@ namespace Epsitec.Common.Types.Internal
 	/// that all items are flat, even when they are stored within multiple
 	/// subgroups.
 	/// </summary>
-	internal class CollectionViewGroupItems : IList<object>
+	internal class CollectionViewGroupItems : IList<object>, System.Collections.IList
 	{
 		public CollectionViewGroupItems(CollectionViewGroup host)
 		{
@@ -140,6 +140,106 @@ namespace Epsitec.Common.Types.Internal
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
 			return this.EnumerateItems ().GetEnumerator ();
+		}
+
+		#endregion
+
+		#region IList Members
+
+		int System.Collections.IList.Add(object value)
+		{
+			throw new System.InvalidOperationException ();
+		}
+
+		void System.Collections.IList.Clear()
+		{
+			throw new System.InvalidOperationException ();
+		}
+
+		bool System.Collections.IList.Contains(object value)
+		{
+			return this.Contains (value);
+		}
+
+		int System.Collections.IList.IndexOf(object value)
+		{
+			return this.IndexOf (value);
+		}
+
+		void System.Collections.IList.Insert(int index, object value)
+		{
+			throw new System.InvalidOperationException ();
+		}
+
+		bool System.Collections.IList.IsFixedSize
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		bool System.Collections.IList.IsReadOnly
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		void System.Collections.IList.Remove(object value)
+		{
+			throw new System.InvalidOperationException ();
+		}
+
+		void System.Collections.IList.RemoveAt(int index)
+		{
+			throw new System.InvalidOperationException ();
+		}
+
+		object System.Collections.IList.this[int index]
+		{
+			get
+			{
+				return this[index];
+			}
+			set
+			{
+				throw new System.InvalidOperationException ();
+			}
+		}
+
+		#endregion
+
+		#region ICollection Members
+
+		void System.Collections.ICollection.CopyTo(System.Array array, int index)
+		{
+			throw new System.InvalidOperationException ();
+		}
+
+		int System.Collections.ICollection.Count
+		{
+			get
+			{
+				return this.Count;
+			}
+		}
+
+		bool System.Collections.ICollection.IsSynchronized
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		object System.Collections.ICollection.SyncRoot
+		{
+			get
+			{
+				return null;
+			}
 		}
 
 		#endregion
