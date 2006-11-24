@@ -602,7 +602,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (type != DimensionType.None)
 				{
 					this.draggingDimensionType = type;
-					this.draggingDimensionInitial = this.GetDimensionValue();
+					this.draggingDimensionInitial = this.GetDimensionValue(this.draggingDimensionType);
 					return;
 				}
 			}
@@ -702,7 +702,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else if (this.draggingDimensionType != DimensionType.None)
 			{
-				this.DraggingDimension(pos);
+				this.DraggingDimension(pos, isControlPressed, isShiftPressed);
 			}
 			else
 			{
@@ -4333,25 +4333,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void DrawDimensionsObject(Graphics graphics, Widget obj)
 		{
-			//	Dessine les dimensions de l'objet.
+			//	Dessine toutes les cotes de l'objet.
 			Rectangle bounds = this.objectModifier.GetActualBounds(obj);
 			Margins margins = this.objectModifier.GetMargins(obj);
 			Rectangle ext = bounds;
 			ext.Inflate(this.objectModifier.GetMargins(obj));
 
-			double d = 26;
-			double h = 12;
-			double e = 10;
-			double pw = 20;
-			double ph = 12;
-
 			Color red    = Color.FromAlphaRgb(0.6, 255.0/255.0, 180.0/255.0, 130.0/255.0);
-			Color orange = Color.FromAlphaRgb(0.6, 255.0/255.0, 210.0/255.0, 130.0/255.0);
-			Color yellow = Color.FromAlphaRgb(0.6, 255.0/255.0, 240.0/255.0, 130.0/255.0);
-			Color yelpad = Color.FromAlphaRgb(0.6, 255.0/255.0, 255.0/255.0, 130.0/255.0);
-			Color border = Color.FromBrightness(0.5);
+			Color orange = Color.FromAlphaRgb(0.6, 255.0/255.0, 220.0/255.0, 130.0/255.0);
+			Color yellow = Color.FromAlphaRgb(0.6, 255.0/255.0, 255.0/255.0, 130.0/255.0);
+			Color border = Color.FromBrightness(0.5);  // gris
 
 			Rectangle r, box;
+			Path path;
 
 			if (this.objectModifier.HasPreferredWidth(obj))
 			{
@@ -4365,9 +4359,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.RenderSolid(red);
 				graphics.AddRectangle(r);
 				graphics.RenderSolid(border);
-
-				this.DrawDimensionLine(graphics, new Point(bounds.Right, ext.Top), new Point(bounds.Left, ext.Top));
-				this.DrawDimensionText(graphics, box, bounds.Width, red, false);
+				this.DrawDimensionLine(graphics, new Point(box.Right, ext.Top), new Point(box.Left, ext.Top));
+				this.DrawDimensionText(graphics, box, bounds.Width, false);
 			}
 
 			if (this.objectModifier.HasPreferredHeight(obj))
@@ -4382,16 +4375,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.RenderSolid(red);
 				graphics.AddRectangle(r);
 				graphics.RenderSolid(border);
-
-				this.DrawDimensionLine(graphics, new Point(ext.Right, bounds.Top), new Point(ext.Right, bounds.Bottom));
-				this.DrawDimensionText(graphics, box, bounds.Height, red, true);
+				this.DrawDimensionLine(graphics, new Point(ext.Right, box.Top), new Point(ext.Right, box.Bottom));
+				this.DrawDimensionText(graphics, box, bounds.Height, true);
 			}
 
 			if (this.objectModifier.HasMargins(obj))
 			{
-				Path path;
 				Point p, pl1, pl2, pr1, pr2, pb1, pb2, pt1, pt2;
-				double l;
 
 				//	Marge gauche.
 				box = this.GetRectangleDimension(obj, DimensionType.MarginLeft);
@@ -4399,18 +4389,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				box.Offset(0.5, 0.5);
 
 				path = new Path();
-				l = System.Math.Max(e, margins.Left);
 				p = new Point(box.Right, ext.Top);
 				pl2 = p;
 				path.MoveTo(p);
-				p.Y += d;
+				p.Y = box.Top;
 				path.LineTo(p);
-				p.X -= l;
+				p.X -= box.Width;
 				path.LineTo(p);
-				p.Y -= h;
+				p.Y -= box.Height;
 				path.LineTo(p);
 				p.Y = ext.Top;
-				p.X = ext.Left;
+				p.X = box.Right-margins.Left;
 				pl1 = p;
 				path.LineTo(p);
 				path.Close();
@@ -4418,8 +4407,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.RenderSolid(orange);
 				graphics.Rasterizer.AddOutline(path);
 				graphics.RenderSolid(border);
-
-				this.DrawDimensionText(graphics, box, margins.Left, orange, false);
+				this.DrawDimensionText(graphics, box, margins.Left, false);
 
 				//	Marge droite.
 				box = this.GetRectangleDimension(obj, DimensionType.MarginRight);
@@ -4427,27 +4415,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 				box.Offset(0.5, 0.5);
 
 				path = new Path();
-				l = System.Math.Max(e, margins.Right);
 				p = new Point(box.Left, ext.Top);
 				pr1 = p;
 				path.MoveTo(p);
-				p.Y += d;
+				p.Y = box.Top;
 				path.LineTo(p);
-				p.X += l;
+				p.X += box.Width;
 				path.LineTo(p);
-				p.Y -= h;
+				p.Y -= box.Height;
 				path.LineTo(p);
 				p.Y = ext.Top;
-				p.X = ext.Right;
+				p.X = box.Left+margins.Right;
 				pr2 = p;
 				path.LineTo(p);
 				path.Close();
 				graphics.Rasterizer.AddSurface(path);
-				graphics.RenderSolid(yellow);
+				graphics.RenderSolid(orange);
 				graphics.Rasterizer.AddOutline(path);
 				graphics.RenderSolid(border);
-
-				this.DrawDimensionText(graphics, box, margins.Right, yellow, false);
+				this.DrawDimensionText(graphics, box, margins.Right, false);
 
 				//	Marge supérieure.
 				box = this.GetRectangleDimension(obj, DimensionType.MarginTop);
@@ -4455,18 +4441,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				box.Offset(0.5, 0.5);
 
 				path = new Path();
-				l = System.Math.Max(e, margins.Top);
 				p = new Point(ext.Right, box.Bottom);
 				pt1 = p;
 				path.MoveTo(p);
-				p.X += d;
+				p.X = box.Right;
 				path.LineTo(p);
-				p.Y += l;
+				p.Y += box.Height;
 				path.LineTo(p);
-				p.X -= h;
+				p.X -= box.Width;
 				path.LineTo(p);
 				p.X = ext.Right;
-				p.Y = ext.Top;
+				p.Y = box.Bottom+margins.Top;
 				pt2 = p;
 				path.LineTo(p);
 				path.Close();
@@ -4474,8 +4459,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.RenderSolid(orange);
 				graphics.Rasterizer.AddOutline(path);
 				graphics.RenderSolid(border);
-
-				this.DrawDimensionText(graphics, box, margins.Top, orange, true);
+				this.DrawDimensionText(graphics, box, margins.Top, true);
 
 				//	Marge inférieure.
 				box = this.GetRectangleDimension(obj, DimensionType.MarginBottom);
@@ -4483,27 +4467,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 				box.Offset(0.5, 0.5);
 
 				path = new Path();
-				l = System.Math.Max(e, margins.Bottom);
 				p = new Point(ext.Right, box.Top);
 				pb2 = p;
 				path.MoveTo(p);
-				p.X += d;
+				p.X = box.Right;
 				path.LineTo(p);
-				p.Y -= l;
+				p.Y -= box.Height;
 				path.LineTo(p);
-				p.X -= h;
+				p.X -= box.Width;
 				path.LineTo(p);
 				p.X = ext.Right;
-				p.Y = ext.Bottom;
+				p.Y = box.Top-margins.Bottom;
 				pb1 = p;
 				path.LineTo(p);
 				path.Close();
 				graphics.Rasterizer.AddSurface(path);
-				graphics.RenderSolid(yellow);
+				graphics.RenderSolid(orange);
 				graphics.Rasterizer.AddOutline(path);
 				graphics.RenderSolid(border);
-
-				this.DrawDimensionText(graphics, box, margins.Bottom, yellow, true);
+				this.DrawDimensionText(graphics, box, margins.Bottom, true);
 
 				this.DrawDimensionLine(graphics, pl1, pl2);
 				this.DrawDimensionLine(graphics, pr1, pr2);
@@ -4515,8 +4497,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				Margins padding = this.objectModifier.GetPadding(obj);
 				Rectangle inside = this.objectModifier.GetFinalPadding(obj);
-
-				Path path;
 
 				//	Padding gauche.
 				box = this.GetRectangleDimension(obj, DimensionType.PaddingLeft);
@@ -4531,11 +4511,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				path.LineTo(box.TopRight);
 				path.Close();
 				graphics.Rasterizer.AddSurface(path);
-				graphics.RenderSolid(yelpad);
+				graphics.RenderSolid(yellow);
 				graphics.Rasterizer.AddOutline(path);
 				graphics.RenderSolid(border);
-
-				this.DrawDimensionText(graphics, box, padding.Left, yelpad, true);
+				this.DrawDimensionText(graphics, box, padding.Left, true);
 
 				//	Padding droite.
 				box = this.GetRectangleDimension(obj, DimensionType.PaddingRight);
@@ -4550,11 +4529,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				path.LineTo(box.TopLeft);
 				path.Close();
 				graphics.Rasterizer.AddSurface(path);
-				graphics.RenderSolid(yelpad);
+				graphics.RenderSolid(yellow);
 				graphics.Rasterizer.AddOutline(path);
 				graphics.RenderSolid(border);
-
-				this.DrawDimensionText(graphics, box, padding.Right, yelpad, true);
+				this.DrawDimensionText(graphics, box, padding.Right, true);
 
 				//	Padding supérieur.
 				box = this.GetRectangleDimension(obj, DimensionType.PaddingTop);
@@ -4569,11 +4547,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				path.LineTo(box.BottomRight);
 				path.Close();
 				graphics.Rasterizer.AddSurface(path);
-				graphics.RenderSolid(yelpad);
+				graphics.RenderSolid(yellow);
 				graphics.Rasterizer.AddOutline(path);
 				graphics.RenderSolid(border);
-
-				this.DrawDimensionText(graphics, box, padding.Top, yelpad, false);
+				this.DrawDimensionText(graphics, box, padding.Top, false);
 
 				//	Padding inférieur.
 				box = this.GetRectangleDimension(obj, DimensionType.PaddingBottom);
@@ -4588,35 +4565,82 @@ namespace Epsitec.Common.Designer.MyWidgets
 				path.LineTo(box.TopRight);
 				path.Close();
 				graphics.Rasterizer.AddSurface(path);
-				graphics.RenderSolid(yelpad);
+				graphics.RenderSolid(yellow);
 				graphics.Rasterizer.AddOutline(path);
 				graphics.RenderSolid(border);
-
-				this.DrawDimensionText(graphics, box, padding.Bottom, yelpad, false);
+				this.DrawDimensionText(graphics, box, padding.Bottom, false);
 			}
 
 			if (this.hilitedDimension != DimensionType.None)
 			{
-				box = this.GetRectangleDimension(obj, this.hilitedDimension);
-				graphics.Align(ref box);
-				box.Offset(0.5, 0.5);
-				graphics.AddRectangle(box);
-				graphics.RenderSolid(Color.FromRgb(1, 0, 0));  // rouge
+				this.DrawDimensionHilite(graphics, obj);
 			}
+		}
+
+		protected void DrawDimensionHilite(Graphics graphics, Widget obj)
+		{
+			//	Dessine un cadre rouge.
+			double alpha = (this.draggingDimensionType == DimensionType.None) ? 1.0 : 0.3;
+			Color hilite = Color.FromAlphaRgb(alpha, 255.0/255.0, 124.0/255.0, 37.0/255.0);
+			double t = 20;
+
+			Rectangle box = this.GetRectangleDimension(obj, this.hilitedDimension);
+			graphics.Align(ref box);
+			box.Offset(0.5, 0.5);
+
+			//	Dessine des triangles rouges up/down.
+			Path path = new Path();
+			path.MoveTo(box.TopLeft);
+			path.LineTo(box.Center.X-t/2, box.Top);
+			path.LineTo(box.Center.X, box.Top+t/2);
+			path.LineTo(box.Center.X+t/2, box.Top);
+			path.LineTo(box.TopRight);
+			path.LineTo(box.BottomRight);
+			path.LineTo(box.Center.X+t/2, box.Bottom);
+			path.LineTo(box.Center.X, box.Bottom-t/2);
+			path.LineTo(box.Center.X-t/2, box.Bottom);
+			path.LineTo(box.BottomLeft);
+			path.Close();
+			graphics.Rasterizer.AddSurface(path);
+			graphics.RenderSolid(hilite);
+			graphics.Rasterizer.AddOutline(path);
+			graphics.RenderSolid(Color.FromBrightness(0));
+
+			//	Redessine la valeur par dessus.
+			double value = GetDimensionValue(this.hilitedDimension);
+			bool vertical = this.hilitedDimension == DimensionType.Height ||
+							this.hilitedDimension == DimensionType.MarginBottom ||
+							this.hilitedDimension == DimensionType.MarginTop ||
+							this.hilitedDimension == DimensionType.PaddingLeft ||
+							this.hilitedDimension == DimensionType.PaddingRight;
+			this.DrawDimensionText(graphics, box, value, vertical);
+
+			//	Dessine les signes +/-.
+			Point p = new Point(box.Center.X-1, box.Top+t/4-2);
+			graphics.Align(ref p);
+			p.X += 0.5;
+			p.Y += 0.5;
+			graphics.AddLine(p.X-2, p.Y, p.X+2, p.Y);
+			graphics.AddLine(p.X, p.Y-2, p.X, p.Y+2);
+
+			p = new Point(box.Center.X-1, box.Bottom-t/4+1);
+			graphics.Align(ref p);
+			p.X += 0.5;
+			p.Y += 0.5;
+			graphics.AddLine(p.X-2, p.Y, p.X+2, p.Y);
+
+			graphics.RenderSolid(Color.FromBrightness(0));
 		}
 
 		protected void DrawDimensionLine(Graphics graphics, Point p1, Point p2)
 		{
-			//	Dessine le trait d'une 'cote' simplifiée.
-			if (p1 == p2)
+			//	Dessine le trait d'une cote.
+			double d = Point.Distance(p1, p2);
+
+			if (d < 1)
 			{
 				graphics.AddFilledCircle(p1, 2);
 				graphics.RenderSolid(Color.FromBrightness(0));
-				return;
-			}
-
-			if (Point.Distance(p1, p2) < 3)
-			{
 				return;
 			}
 
@@ -4628,15 +4652,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Size se = new Size(0, e);
 				Size si = new Size(0, i);
 
-				p1.X += 0.5;
-				p1.Y -= 0.5;
-
-				p2.X -= 0.5;
-				p2.Y -= 0.5;
+				p1.Y += 0.5;
+				p2.Y += 0.5;
 
 				graphics.AddLine(p1, p2);
-				graphics.AddLine(p1-si, p1+se);
-				graphics.AddLine(p2-si, p2+se);
+				if (d > 1)
+				{
+					graphics.AddLine(p1-si, p1+se);
+					graphics.AddLine(p2-si, p2+se);
+				}
 				graphics.RenderSolid(Color.FromBrightness(0));
 			}
 
@@ -4645,25 +4669,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Size se = new Size(e, 0);
 				Size si = new Size(i, 0);
 
-				p1.X -= 0.5;
-				p1.Y += 0.5;
-
-				p2.X -= 0.5;
-				p2.Y -= 0.5;
+				p1.X += 0.5;
+				p2.X += 0.5;
 
 				graphics.AddLine(p1, p2);
-				graphics.AddLine(p1-si, p1+se);
-				graphics.AddLine(p2-si, p2+se);
+				if (d > 1)
+				{
+					graphics.AddLine(p1-si, p1+se);
+					graphics.AddLine(p2-si, p2+se);
+				}
 				graphics.RenderSolid(Color.FromBrightness(0));
 			}
 		}
 
-		protected void DrawDimensionText(Graphics graphics, Rectangle box, double dimension, Color background, bool vertical)
+		protected void DrawDimensionText(Graphics graphics, Rectangle box, double dimension, bool vertical)
 		{
-			//	Dessine la valeur d'une 'cote' simplifiée.
-			graphics.AddFilledRectangle(box);
-			graphics.RenderSolid(background);
-
+			//	Dessine la valeur d'une cote avec des petits caractères.
 			int i = (int) System.Math.Floor(dimension+0.5);
 			string text = i.ToString();
 
@@ -4683,69 +4704,106 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.RenderSolid(Color.FromRgb(0, 0, 0));
 		}
 
-		protected void DraggingDimension(Point mouse)
+		protected void DraggingDimension(Point mouse, bool isControlPressed, bool isShiftPressed)
 		{
+			//	Modifie la valeur d'une cote.
 			double value = mouse.Y - this.startingPos.Y;
-			this.SetDimensionValue(this.draggingDimensionInitial+value);
+
+#if false
+			double x = mouse.X - this.startingPos.X;
+			if (x < 0)
+			{
+				double ix = System.Math.Floor(-x/20);
+				if (ix > 1)
+				{
+					value /= ix;
+				}
+			}
+			if (x > 0)
+			{
+				double ix = System.Math.Floor(x/20);
+				if (ix > 1)
+				{
+					value = System.Math.Floor((value+ix/2)/ix) * ix;
+				}
+			}
+#endif
+#if true
+			if (isControlPressed)
+			{
+				value /= 2;
+			}
+
+			if (isShiftPressed)
+			{
+				double step = 5;
+				value += this.draggingDimensionInitial;
+				value = System.Math.Floor((value+step/2)/step) * step;
+				value -= this.draggingDimensionInitial;
+			}
+#endif
+
+			this.SetDimensionValue(this.draggingDimensionType, this.draggingDimensionInitial+value);
 		}
 
-		protected double GetDimensionValue()
+		protected double GetDimensionValue(DimensionType type)
 		{
+			//	Retourne la valeur d'une cote.
 			Widget obj = this.selectedObjects[0];
 
-			if (this.draggingDimensionType == DimensionType.Width)
+			if (type == DimensionType.Width)
 			{
 				return this.objectModifier.GetPreferredWidth(obj);
 			}
 
-			if (this.draggingDimensionType == DimensionType.Height)
+			if (type == DimensionType.Height)
 			{
 				return this.objectModifier.GetPreferredHeight(obj);
 			}
 
-			if (this.draggingDimensionType == DimensionType.MarginLeft)
+			if (type == DimensionType.MarginLeft)
 			{
 				Margins margins = this.objectModifier.GetMargins(obj);
 				return margins.Left;
 			}
 
-			if (this.draggingDimensionType == DimensionType.MarginRight)
+			if (type == DimensionType.MarginRight)
 			{
 				Margins margins = this.objectModifier.GetMargins(obj);
 				return margins.Right;
 			}
 
-			if (this.draggingDimensionType == DimensionType.MarginBottom)
+			if (type == DimensionType.MarginBottom)
 			{
 				Margins margins = this.objectModifier.GetMargins(obj);
 				return margins.Bottom;
 			}
 
-			if (this.draggingDimensionType == DimensionType.MarginTop)
+			if (type == DimensionType.MarginTop)
 			{
 				Margins margins = this.objectModifier.GetMargins(obj);
 				return margins.Top;
 			}
 
-			if (this.draggingDimensionType == DimensionType.PaddingLeft)
+			if (type == DimensionType.PaddingLeft)
 			{
 				Margins padding = this.objectModifier.GetPadding(obj);
 				return padding.Left;
 			}
 
-			if (this.draggingDimensionType == DimensionType.PaddingRight)
+			if (type == DimensionType.PaddingRight)
 			{
 				Margins padding = this.objectModifier.GetPadding(obj);
 				return padding.Right;
 			}
 
-			if (this.draggingDimensionType == DimensionType.PaddingBottom)
+			if (type == DimensionType.PaddingBottom)
 			{
 				Margins padding = this.objectModifier.GetPadding(obj);
 				return padding.Bottom;
 			}
 
-			if (this.draggingDimensionType == DimensionType.PaddingTop)
+			if (type == DimensionType.PaddingTop)
 			{
 				Margins padding = this.objectModifier.GetPadding(obj);
 				return padding.Top;
@@ -4754,71 +4812,72 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return 0;
 		}
 
-		protected void SetDimensionValue(double value)
+		protected void SetDimensionValue(DimensionType type, double value)
 		{
+			//	Modifie la valeur d'une cote.
 			Widget obj = this.selectedObjects[0];
 			value = System.Math.Max(value, 0);
 
-			if (this.draggingDimensionType == DimensionType.Width)
+			if (type == DimensionType.Width)
 			{
 				this.objectModifier.SetPreferredWidth(obj, value);
 			}
 
-			if (this.draggingDimensionType == DimensionType.Height)
+			if (type == DimensionType.Height)
 			{
 				this.objectModifier.SetPreferredHeight(obj, value);
 			}
 
-			if (this.draggingDimensionType == DimensionType.MarginLeft)
+			if (type == DimensionType.MarginLeft)
 			{
 				Margins margins = this.objectModifier.GetMargins(obj);
 				margins.Left = value;
 				this.objectModifier.SetMargins(obj, margins);
 			}
 
-			if (this.draggingDimensionType == DimensionType.MarginRight)
+			if (type == DimensionType.MarginRight)
 			{
 				Margins margins = this.objectModifier.GetMargins(obj);
 				margins.Right = value;
 				this.objectModifier.SetMargins(obj, margins);
 			}
 
-			if (this.draggingDimensionType == DimensionType.MarginBottom)
+			if (type == DimensionType.MarginBottom)
 			{
 				Margins margins = this.objectModifier.GetMargins(obj);
 				margins.Bottom = value;
 				this.objectModifier.SetMargins(obj, margins);
 			}
 
-			if (this.draggingDimensionType == DimensionType.MarginTop)
+			if (type == DimensionType.MarginTop)
 			{
 				Margins margins = this.objectModifier.GetMargins(obj);
 				margins.Top = value;
 				this.objectModifier.SetMargins(obj, margins);
 			}
 
-			if (this.draggingDimensionType == DimensionType.PaddingLeft)
+			if (type == DimensionType.PaddingLeft)
 			{
 				Margins padding = this.objectModifier.GetPadding(obj);
 				padding.Left = value;
 				this.objectModifier.SetPadding(obj, padding);
 			}
 
-			if (this.draggingDimensionType == DimensionType.PaddingRight)
+			if (type == DimensionType.PaddingRight)
 			{
 				Margins padding = this.objectModifier.GetPadding(obj);
 				padding.Right = value;
 				this.objectModifier.SetPadding(obj, padding);
 			}
 
-			if (this.draggingDimensionType == DimensionType.PaddingBottom)
+			if (type == DimensionType.PaddingBottom)
 			{
 				Margins padding = this.objectModifier.GetPadding(obj);
 				padding.Bottom = value;
 				this.objectModifier.SetPadding(obj, padding);
 			}
 
-			if (this.draggingDimensionType == DimensionType.PaddingTop)
+			if (type == DimensionType.PaddingTop)
 			{
 				Margins padding = this.objectModifier.GetPadding(obj);
 				padding.Top = value;
@@ -4845,7 +4904,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected Rectangle GetRectangleDimension(Widget obj, DimensionType type)
 		{
-			//	Retourne le rectangle d'une cote.
+			//	Retourne le rectangle pour le texte d'une cote.
 			Rectangle bounds = this.objectModifier.GetActualBounds(obj);
 			Margins margins = this.objectModifier.GetMargins(obj);
 			Rectangle ext = bounds;
