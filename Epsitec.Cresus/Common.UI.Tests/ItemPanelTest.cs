@@ -41,21 +41,39 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (3, (panel.GetItemView (0).Item as CollectionViewGroup).ItemCount);
 			Assert.AreEqual (3, (panel.GetItemView (1).Item as CollectionViewGroup).ItemCount);
 
+			//	Expanded subpanel
+			
 			panel.ExpandItemView (panel.GetItemView (0), true);
 
 			Assert.IsTrue (panel.GetItemView (0).IsExpanded);
 			Assert.AreEqual (new Drawing.Size (80, 20+20*3), panel.GetItemView (0).Size);
 			Assert.AreEqual (3, (panel.GetItemView (0).Widget as ItemPanelGroup).ChildPanel.GetItemViewCount ());
-
+			
+			Assert.AreEqual (new Drawing.Size (80, 20*2), panel.PreferredSize);
 			Widgets.Application.ExecuteAsyncCallbacks ();
-
 			Assert.AreEqual (new Drawing.Size (80, 20+20*3+20), panel.PreferredSize);
+			Assert.AreEqual (new Drawing.Rectangle (0, 20, 80, 20+20*3), panel.GetItemView (0).Bounds);
+			Assert.AreEqual (new Drawing.Rectangle (0, 0, 80, 20), panel.GetItemView (1).Bounds);
 
+			//	Compact subpanel
+			
 			panel.ExpandItemView (panel.GetItemView (0), false);
 
 			Assert.IsFalse (panel.GetItemView (0).IsExpanded);
 			Assert.AreEqual (new Drawing.Size (80, 20), panel.GetItemView (0).Size);
 			Assert.AreEqual (0, (panel.GetItemView (0).Widget as ItemPanelGroup).ChildPanel.GetItemViewCount ());
+
+			Assert.AreEqual (new Drawing.Size (80, 20+20*3+20), panel.PreferredSize);
+			Widgets.Application.ExecuteAsyncCallbacks ();
+			Assert.AreEqual (new Drawing.Size (80, 20*2), panel.PreferredSize);
+
+			//	Expanded subpanel
+
+			panel.ExpandItemView (panel.GetItemView (0), true);
+			panel.Show (panel.GetItemView (0));
+
+			Assert.AreEqual (new Drawing.Rectangle (0, 20, 80, 20+20*3), panel.GetItemView (0).Bounds);
+			Assert.AreEqual (new Drawing.Rectangle (0, 40, 80, 60), panel.Aperture);
 		}
 
 		[Test]

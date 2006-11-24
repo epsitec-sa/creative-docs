@@ -86,16 +86,20 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				return this.aperture;
+				return new Drawing.Rectangle (this.apertureX, this.PreferredHeight-this.apertureY-this.apertureHeight, this.apertureWidth, this.apertureHeight);
 			}
 			set
 			{
-				Drawing.Rectangle oldValue = this.aperture;
+				Drawing.Rectangle oldValue = this.Aperture;
 				Drawing.Rectangle newValue = value;
 				
 				if (oldValue != newValue)
 				{
-					this.aperture = newValue;
+					this.apertureWidth = value.Width;
+					this.apertureHeight = value.Height;
+					this.apertureX = value.Left;
+					this.apertureY = this.PreferredHeight - value.Top;
+					
 					this.HandleApertureChanged (oldValue, newValue);
 				}
 			}
@@ -256,6 +260,11 @@ namespace Epsitec.Common.UI
 			}
 			else
 			{
+				if (this.hasDirtyLayout)
+				{
+					this.RefreshLayout ();
+				}
+
 				Drawing.Rectangle aperture = this.Aperture;
 				Drawing.Rectangle bounds   = view.Bounds;
 
@@ -538,7 +547,7 @@ namespace Epsitec.Common.UI
 			}
 
 			this.RefreshLayout (views);
-			this.RecreateUserInterface (views, this.aperture);
+			this.RecreateUserInterface (views, this.Aperture);
 
 			using (new LockManager (this))
 			{
@@ -783,7 +792,7 @@ namespace Epsitec.Common.UI
 		int lockAcquired;
 		int lockOwnerPid;
 		int hotItemViewIndex = -1;
-		Drawing.Rectangle aperture;
+		double apertureX, apertureY, apertureWidth, apertureHeight;
 		List<ItemPanelGroup> groups = new List<ItemPanelGroup> ();
 		ItemPanelGroup parentGroup;
 		bool hasDirtyLayout;
