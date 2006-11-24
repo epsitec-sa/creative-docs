@@ -73,7 +73,19 @@ namespace Epsitec.Common.UI
 			panel.Show (panel.GetItemView (0));
 
 			Assert.AreEqual (new Drawing.Rectangle (0, 20, 80, 20+20*3), panel.GetItemView (0).Bounds);
+			Assert.AreEqual (new Drawing.Rectangle (0, 0, 80, 20), panel.GetItemView (1).Bounds);
 			Assert.AreEqual (new Drawing.Rectangle (0, 40, 80, 60), panel.Aperture);
+			
+			panel.ExpandItemView (panel.GetItemView (1), true);
+			Widgets.Application.ExecuteAsyncCallbacks ();
+
+			Assert.AreEqual (new Drawing.Rectangle (0, 0, 80, 20+20*3), panel.GetItemView (1).Bounds);
+			Assert.AreEqual (new Drawing.Rectangle (0, 20+20*3, 80, 20+20*3), panel.GetItemView (0).Bounds);
+			Assert.AreEqual (new Drawing.Rectangle (0, 40+20*3, 80, 60), panel.Aperture);
+			
+			panel.Show (panel.GetItemView (1));
+			
+			Assert.AreEqual (new Drawing.Rectangle (0, 20, 80, 60), panel.Aperture);
 		}
 
 		[Test]

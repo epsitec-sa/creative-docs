@@ -222,6 +222,7 @@ namespace Epsitec.Common.UI
 		{
 			if (ItemPanel.ContainsGroup (view))
 			{
+				view.CreateUserInterface (this);
 				view.IsExpanded = expand;
 			}
 		}
