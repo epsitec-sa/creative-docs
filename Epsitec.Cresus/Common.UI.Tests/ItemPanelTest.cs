@@ -194,6 +194,21 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (panel, panel.GetItemView (6).Widget.Parent);
 			Assert.AreEqual (new Drawing.Rectangle (0, 20, 80, 20), panel.GetItemView (5).Widget.ActualBounds);
 			Assert.AreEqual (new Drawing.Rectangle (0, 0, 80, 20), panel.GetItemView (6).Widget.ActualBounds);
+
+			Assert.AreEqual (new Drawing.Rectangle (0, 10, 80, 20), panel.Aperture);
+			
+			List<string> items = panel.Items.SourceCollection as List<string>;
+			items.Add ("--any--");
+
+			panel.Items.Refresh ();
+			
+			Assert.AreEqual (8, panel.GetItemViewCount ());
+			Assert.AreEqual (new Drawing.Size (80, 20*8), panel.PreferredSize);
+			
+			Assert.AreEqual (new Drawing.Rectangle (0, 20*7, 80, 20), panel.GetItemView (0).Bounds);
+			Assert.AreEqual (new Drawing.Rectangle (0, 20*1, 80, 20), panel.GetItemView (6).Bounds);
+
+			Assert.AreEqual (new Drawing.Rectangle (0, 30, 80, 20), panel.Aperture);
 		}
 
 		private static CollectionView GetStringItems()
