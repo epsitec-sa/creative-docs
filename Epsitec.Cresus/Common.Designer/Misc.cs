@@ -196,6 +196,11 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		static public Color AlphaColor(Color c, double a)
+		{
+			return Color.FromAlphaRgb(a, c.R, c.G, c.B);
+		}
+
 		static public Color WarningColor
 		{
 			//	Retourne la couleur à utiliser pour un texte d'avertissement dans une fenêtre.

@@ -593,18 +593,32 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.startingPos = pos;
 			this.isDragging = false;
 			this.isRectangling = false;
+			Widget obj;
 
+			if (this.selectedObjects.Count == 1 && !this.isDragging && !this.handlesList.IsDragging)
+			{
+				obj = this.selectedObjects[0];
+				DimensionType type = this.DetectDimension(obj, pos);
+				if (type != DimensionType.None)
+				{
+					this.draggingDimensionType = type;
+					this.draggingDimensionInitial = this.GetDimensionValue();
+					return;
+				}
+			}
+
+#if false
 			if (this.HandlingStart(pos))
 			{
 				return;
 			}
+#endif
 
 			if (this.SizeMarkDraggingStart(pos))
 			{
 				return;
 			}
 
-			Widget obj;
 			Attachment attachment;
 			if (this.AttachmentDetect(pos, out obj, out attachment))
 			{
@@ -658,7 +672,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris déplacée.
-			if (this.handlesList.IsFinger || this.isSizeMarkHorizontal || this.isSizeMarkVertical)
+			if (this.handlesList.IsFinger || this.isSizeMarkHorizontal || this.isSizeMarkVertical || this.draggingDimensionType != DimensionType.None)
 			{
 				this.ChangeMouseCursor(MouseCursorType.Finger);
 			}
@@ -686,20 +700,38 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else if (this.SizeMarkDraggingMove(pos))
 			{
 			}
+			else if (this.draggingDimensionType != DimensionType.None)
+			{
+				this.DraggingDimension(pos);
+			}
 			else
 			{
-				Widget obj = this.Detect(pos, isShiftPressed, false);
-				this.SetHilitedObject(obj, null);  // met en évidence l'objet survolé par la souris
-
-				Rectangle rect = Rectangle.Empty;
-				Attachment attachment;
-				if (this.AttachmentDetect(pos, out obj, out attachment))
+				if (this.selectedObjects.Count == 1 && !this.isDragging && !this.handlesList.IsDragging)
 				{
-					rect = this.GetAttachmentBounds(obj, attachment);
-					rect.Offset(0.5, 0.5);
-					rect.Inflate(3);
+					Widget obj = this.selectedObjects[0];
+					DimensionType type = this.DetectDimension(obj, pos);
+					if (this.hilitedDimension != type)
+					{
+						this.hilitedDimension = type;
+						this.Invalidate();
+					}
 				}
-				this.SetHilitedAttachmentRectangle(rect);  // met en évidence l'attachement survolé par la souris
+
+				if (this.draggingDimensionType == DimensionType.None)
+				{
+					Widget obj = this.Detect(pos, isShiftPressed, false);
+					this.SetHilitedObject(obj, null);  // met en évidence l'objet survolé par la souris
+
+					Rectangle rect = Rectangle.Empty;
+					Attachment attachment;
+					if (this.AttachmentDetect(pos, out obj, out attachment))
+					{
+						rect = this.GetAttachmentBounds(obj, attachment);
+						rect.Offset(0.5, 0.5);
+						rect.Inflate(3);
+					}
+					this.SetHilitedAttachmentRectangle(rect);  // met en évidence l'attachement survolé par la souris
+				}
 			}
 		}
 
@@ -721,6 +753,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.handlesList.IsDragging)
 			{
 				this.HandlingEnd(pos);
+			}
+
+			if (this.draggingDimensionType != DimensionType.None)
+			{
+				this.draggingDimensionType = DimensionType.None;
 			}
 
 			this.SizeMarkDraggingStop(pos);
@@ -3597,10 +3634,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
+			//	Dessine les dimensions de l'objet sélectionné.
+			if (this.selectedObjects.Count == 1 && !this.isDragging && !this.handlesList.IsDragging)
+			{
+				Widget obj = this.selectedObjects[0];
+				this.DrawDimensionsObject(graphics, obj);
+			}
+
 			//	Dessine les poignées.
 			if (this.selectedObjects.Count == 1 && !this.isDragging)
 			{
-				this.handlesList.Draw(graphics);
+				//?this.handlesList.Draw(graphics);
 			}
 		}
 
@@ -4271,6 +4315,623 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
+		#region Dimension
+		protected enum DimensionType
+		{
+			None,
+			Width,
+			Height,
+			MarginLeft,
+			MarginRight,
+			MarginBottom,
+			MarginTop,
+			PaddingLeft,
+			PaddingRight,
+			PaddingBottom,
+			PaddingTop,
+		}
+
+		protected void DrawDimensionsObject(Graphics graphics, Widget obj)
+		{
+			//	Dessine les dimensions de l'objet.
+			Rectangle bounds = this.objectModifier.GetActualBounds(obj);
+			Margins margins = this.objectModifier.GetMargins(obj);
+			Rectangle ext = bounds;
+			ext.Inflate(this.objectModifier.GetMargins(obj));
+
+			double d = 26;
+			double h = 12;
+			double e = 10;
+			double pw = 20;
+			double ph = 12;
+
+			Color red    = Color.FromAlphaRgb(0.6, 255.0/255.0, 180.0/255.0, 130.0/255.0);
+			Color orange = Color.FromAlphaRgb(0.6, 255.0/255.0, 210.0/255.0, 130.0/255.0);
+			Color yellow = Color.FromAlphaRgb(0.6, 255.0/255.0, 240.0/255.0, 130.0/255.0);
+			Color yelpad = Color.FromAlphaRgb(0.6, 255.0/255.0, 255.0/255.0, 130.0/255.0);
+			Color border = Color.FromBrightness(0.5);
+
+			Rectangle r, box;
+
+			if (this.objectModifier.HasPreferredWidth(obj))
+			{
+				box = this.GetRectangleDimension(obj, DimensionType.Width);
+				graphics.Align(ref box);
+				box.Offset(0.5, 0.5);
+
+				r = box;
+				r.Bottom = ext.Top;
+				graphics.AddFilledRectangle(r);
+				graphics.RenderSolid(red);
+				graphics.AddRectangle(r);
+				graphics.RenderSolid(border);
+
+				this.DrawDimensionLine(graphics, new Point(bounds.Right, ext.Top), new Point(bounds.Left, ext.Top));
+				this.DrawDimensionText(graphics, box, bounds.Width, red, false);
+			}
+
+			if (this.objectModifier.HasPreferredHeight(obj))
+			{
+				box = this.GetRectangleDimension(obj, DimensionType.Height);
+				graphics.Align(ref box);
+				box.Offset(0.5, 0.5);
+
+				r = box;
+				r.Left = ext.Right;
+				graphics.AddFilledRectangle(r);
+				graphics.RenderSolid(red);
+				graphics.AddRectangle(r);
+				graphics.RenderSolid(border);
+
+				this.DrawDimensionLine(graphics, new Point(ext.Right, bounds.Top), new Point(ext.Right, bounds.Bottom));
+				this.DrawDimensionText(graphics, box, bounds.Height, red, true);
+			}
+
+			if (this.objectModifier.HasMargins(obj))
+			{
+				Path path;
+				Point p, pl1, pl2, pr1, pr2, pb1, pb2, pt1, pt2;
+				double l;
+
+				//	Marge gauche.
+				box = this.GetRectangleDimension(obj, DimensionType.MarginLeft);
+				graphics.Align(ref box);
+				box.Offset(0.5, 0.5);
+
+				path = new Path();
+				l = System.Math.Max(e, margins.Left);
+				p = new Point(box.Right, ext.Top);
+				pl2 = p;
+				path.MoveTo(p);
+				p.Y += d;
+				path.LineTo(p);
+				p.X -= l;
+				path.LineTo(p);
+				p.Y -= h;
+				path.LineTo(p);
+				p.Y = ext.Top;
+				p.X = ext.Left;
+				pl1 = p;
+				path.LineTo(p);
+				path.Close();
+				graphics.Rasterizer.AddSurface(path);
+				graphics.RenderSolid(orange);
+				graphics.Rasterizer.AddOutline(path);
+				graphics.RenderSolid(border);
+
+				this.DrawDimensionText(graphics, box, margins.Left, orange, false);
+
+				//	Marge droite.
+				box = this.GetRectangleDimension(obj, DimensionType.MarginRight);
+				graphics.Align(ref box);
+				box.Offset(0.5, 0.5);
+
+				path = new Path();
+				l = System.Math.Max(e, margins.Right);
+				p = new Point(box.Left, ext.Top);
+				pr1 = p;
+				path.MoveTo(p);
+				p.Y += d;
+				path.LineTo(p);
+				p.X += l;
+				path.LineTo(p);
+				p.Y -= h;
+				path.LineTo(p);
+				p.Y = ext.Top;
+				p.X = ext.Right;
+				pr2 = p;
+				path.LineTo(p);
+				path.Close();
+				graphics.Rasterizer.AddSurface(path);
+				graphics.RenderSolid(yellow);
+				graphics.Rasterizer.AddOutline(path);
+				graphics.RenderSolid(border);
+
+				this.DrawDimensionText(graphics, box, margins.Right, yellow, false);
+
+				//	Marge supérieure.
+				box = this.GetRectangleDimension(obj, DimensionType.MarginTop);
+				graphics.Align(ref box);
+				box.Offset(0.5, 0.5);
+
+				path = new Path();
+				l = System.Math.Max(e, margins.Top);
+				p = new Point(ext.Right, box.Bottom);
+				pt1 = p;
+				path.MoveTo(p);
+				p.X += d;
+				path.LineTo(p);
+				p.Y += l;
+				path.LineTo(p);
+				p.X -= h;
+				path.LineTo(p);
+				p.X = ext.Right;
+				p.Y = ext.Top;
+				pt2 = p;
+				path.LineTo(p);
+				path.Close();
+				graphics.Rasterizer.AddSurface(path);
+				graphics.RenderSolid(orange);
+				graphics.Rasterizer.AddOutline(path);
+				graphics.RenderSolid(border);
+
+				this.DrawDimensionText(graphics, box, margins.Top, orange, true);
+
+				//	Marge inférieure.
+				box = this.GetRectangleDimension(obj, DimensionType.MarginBottom);
+				graphics.Align(ref box);
+				box.Offset(0.5, 0.5);
+
+				path = new Path();
+				l = System.Math.Max(e, margins.Bottom);
+				p = new Point(ext.Right, box.Top);
+				pb2 = p;
+				path.MoveTo(p);
+				p.X += d;
+				path.LineTo(p);
+				p.Y -= l;
+				path.LineTo(p);
+				p.X -= h;
+				path.LineTo(p);
+				p.X = ext.Right;
+				p.Y = ext.Bottom;
+				pb1 = p;
+				path.LineTo(p);
+				path.Close();
+				graphics.Rasterizer.AddSurface(path);
+				graphics.RenderSolid(yellow);
+				graphics.Rasterizer.AddOutline(path);
+				graphics.RenderSolid(border);
+
+				this.DrawDimensionText(graphics, box, margins.Bottom, yellow, true);
+
+				this.DrawDimensionLine(graphics, pl1, pl2);
+				this.DrawDimensionLine(graphics, pr1, pr2);
+				this.DrawDimensionLine(graphics, pt1, pt2);
+				this.DrawDimensionLine(graphics, pb1, pb2);
+			}
+
+			if (this.objectModifier.HasPadding(obj))
+			{
+				Margins padding = this.objectModifier.GetPadding(obj);
+				Rectangle inside = this.objectModifier.GetFinalPadding(obj);
+
+				Path path;
+
+				//	Padding gauche.
+				box = this.GetRectangleDimension(obj, DimensionType.PaddingLeft);
+				graphics.Align(ref box);
+				box.Offset(0.5, 0.5);
+
+				path = new Path();
+				path.MoveTo(inside.Left, inside.Center.Y);
+				path.LineTo(box.BottomRight);
+				path.LineTo(box.BottomLeft);
+				path.LineTo(box.TopLeft);
+				path.LineTo(box.TopRight);
+				path.Close();
+				graphics.Rasterizer.AddSurface(path);
+				graphics.RenderSolid(yelpad);
+				graphics.Rasterizer.AddOutline(path);
+				graphics.RenderSolid(border);
+
+				this.DrawDimensionText(graphics, box, padding.Left, yelpad, true);
+
+				//	Padding droite.
+				box = this.GetRectangleDimension(obj, DimensionType.PaddingRight);
+				graphics.Align(ref box);
+				box.Offset(0.5, 0.5);
+
+				path = new Path();
+				path.MoveTo(inside.Right, inside.Center.Y);
+				path.LineTo(box.BottomLeft);
+				path.LineTo(box.BottomRight);
+				path.LineTo(box.TopRight);
+				path.LineTo(box.TopLeft);
+				path.Close();
+				graphics.Rasterizer.AddSurface(path);
+				graphics.RenderSolid(yelpad);
+				graphics.Rasterizer.AddOutline(path);
+				graphics.RenderSolid(border);
+
+				this.DrawDimensionText(graphics, box, padding.Right, yelpad, true);
+
+				//	Padding supérieur.
+				box = this.GetRectangleDimension(obj, DimensionType.PaddingTop);
+				graphics.Align(ref box);
+				box.Offset(0.5, 0.5);
+
+				path = new Path();
+				path.MoveTo(inside.Center.X, inside.Top);
+				path.LineTo(box.BottomLeft);
+				path.LineTo(box.TopLeft);
+				path.LineTo(box.TopRight);
+				path.LineTo(box.BottomRight);
+				path.Close();
+				graphics.Rasterizer.AddSurface(path);
+				graphics.RenderSolid(yelpad);
+				graphics.Rasterizer.AddOutline(path);
+				graphics.RenderSolid(border);
+
+				this.DrawDimensionText(graphics, box, padding.Top, yelpad, false);
+
+				//	Padding inférieur.
+				box = this.GetRectangleDimension(obj, DimensionType.PaddingBottom);
+				graphics.Align(ref box);
+				box.Offset(0.5, 0.5);
+
+				path = new Path();
+				path.MoveTo(inside.Center.X, inside.Bottom);
+				path.LineTo(box.TopLeft);
+				path.LineTo(box.BottomLeft);
+				path.LineTo(box.BottomRight);
+				path.LineTo(box.TopRight);
+				path.Close();
+				graphics.Rasterizer.AddSurface(path);
+				graphics.RenderSolid(yelpad);
+				graphics.Rasterizer.AddOutline(path);
+				graphics.RenderSolid(border);
+
+				this.DrawDimensionText(graphics, box, padding.Bottom, yelpad, false);
+			}
+
+			if (this.hilitedDimension != DimensionType.None)
+			{
+				box = this.GetRectangleDimension(obj, this.hilitedDimension);
+				graphics.Align(ref box);
+				box.Offset(0.5, 0.5);
+				graphics.AddRectangle(box);
+				graphics.RenderSolid(Color.FromRgb(1, 0, 0));  // rouge
+			}
+		}
+
+		protected void DrawDimensionLine(Graphics graphics, Point p1, Point p2)
+		{
+			//	Dessine le trait d'une 'cote' simplifiée.
+			if (p1 == p2)
+			{
+				graphics.AddFilledCircle(p1, 2);
+				graphics.RenderSolid(Color.FromBrightness(0));
+				return;
+			}
+
+			if (Point.Distance(p1, p2) < 3)
+			{
+				return;
+			}
+
+			double e = 3;
+			double i = 1;
+
+			if (p1.Y == p2.Y)  // horizontal ?
+			{
+				Size se = new Size(0, e);
+				Size si = new Size(0, i);
+
+				p1.X += 0.5;
+				p1.Y -= 0.5;
+
+				p2.X -= 0.5;
+				p2.Y -= 0.5;
+
+				graphics.AddLine(p1, p2);
+				graphics.AddLine(p1-si, p1+se);
+				graphics.AddLine(p2-si, p2+se);
+				graphics.RenderSolid(Color.FromBrightness(0));
+			}
+
+			if (p1.X == p2.X)  // vertical ?
+			{
+				Size se = new Size(e, 0);
+				Size si = new Size(i, 0);
+
+				p1.X -= 0.5;
+				p1.Y += 0.5;
+
+				p2.X -= 0.5;
+				p2.Y -= 0.5;
+
+				graphics.AddLine(p1, p2);
+				graphics.AddLine(p1-si, p1+se);
+				graphics.AddLine(p2-si, p2+se);
+				graphics.RenderSolid(Color.FromBrightness(0));
+			}
+		}
+
+		protected void DrawDimensionText(Graphics graphics, Rectangle box, double dimension, Color background, bool vertical)
+		{
+			//	Dessine la valeur d'une 'cote' simplifiée.
+			graphics.AddFilledRectangle(box);
+			graphics.RenderSolid(background);
+
+			int i = (int) System.Math.Floor(dimension+0.5);
+			string text = i.ToString();
+
+			if (vertical)
+			{
+				Point center = box.Center;
+				Transform it = graphics.Transform;
+				graphics.RotateTransformDeg(-90, center.X, center.Y);
+				graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
+				graphics.Transform = it;
+			}
+			else
+			{
+				graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
+			}
+
+			graphics.RenderSolid(Color.FromRgb(0, 0, 0));
+		}
+
+		protected void DraggingDimension(Point mouse)
+		{
+			double value = mouse.Y - this.startingPos.Y;
+			this.SetDimensionValue(this.draggingDimensionInitial+value);
+		}
+
+		protected double GetDimensionValue()
+		{
+			Widget obj = this.selectedObjects[0];
+
+			if (this.draggingDimensionType == DimensionType.Width)
+			{
+				return this.objectModifier.GetPreferredWidth(obj);
+			}
+
+			if (this.draggingDimensionType == DimensionType.Height)
+			{
+				return this.objectModifier.GetPreferredHeight(obj);
+			}
+
+			if (this.draggingDimensionType == DimensionType.MarginLeft)
+			{
+				Margins margins = this.objectModifier.GetMargins(obj);
+				return margins.Left;
+			}
+
+			if (this.draggingDimensionType == DimensionType.MarginRight)
+			{
+				Margins margins = this.objectModifier.GetMargins(obj);
+				return margins.Right;
+			}
+
+			if (this.draggingDimensionType == DimensionType.MarginBottom)
+			{
+				Margins margins = this.objectModifier.GetMargins(obj);
+				return margins.Bottom;
+			}
+
+			if (this.draggingDimensionType == DimensionType.MarginTop)
+			{
+				Margins margins = this.objectModifier.GetMargins(obj);
+				return margins.Top;
+			}
+
+			if (this.draggingDimensionType == DimensionType.PaddingLeft)
+			{
+				Margins padding = this.objectModifier.GetPadding(obj);
+				return padding.Left;
+			}
+
+			if (this.draggingDimensionType == DimensionType.PaddingRight)
+			{
+				Margins padding = this.objectModifier.GetPadding(obj);
+				return padding.Right;
+			}
+
+			if (this.draggingDimensionType == DimensionType.PaddingBottom)
+			{
+				Margins padding = this.objectModifier.GetPadding(obj);
+				return padding.Bottom;
+			}
+
+			if (this.draggingDimensionType == DimensionType.PaddingTop)
+			{
+				Margins padding = this.objectModifier.GetPadding(obj);
+				return padding.Top;
+			}
+
+			return 0;
+		}
+
+		protected void SetDimensionValue(double value)
+		{
+			Widget obj = this.selectedObjects[0];
+			value = System.Math.Max(value, 0);
+
+			if (this.draggingDimensionType == DimensionType.Width)
+			{
+				this.objectModifier.SetPreferredWidth(obj, value);
+			}
+
+			if (this.draggingDimensionType == DimensionType.Height)
+			{
+				this.objectModifier.SetPreferredHeight(obj, value);
+			}
+
+			if (this.draggingDimensionType == DimensionType.MarginLeft)
+			{
+				Margins margins = this.objectModifier.GetMargins(obj);
+				margins.Left = value;
+				this.objectModifier.SetMargins(obj, margins);
+			}
+
+			if (this.draggingDimensionType == DimensionType.MarginRight)
+			{
+				Margins margins = this.objectModifier.GetMargins(obj);
+				margins.Right = value;
+				this.objectModifier.SetMargins(obj, margins);
+			}
+
+			if (this.draggingDimensionType == DimensionType.MarginBottom)
+			{
+				Margins margins = this.objectModifier.GetMargins(obj);
+				margins.Bottom = value;
+				this.objectModifier.SetMargins(obj, margins);
+			}
+
+			if (this.draggingDimensionType == DimensionType.MarginTop)
+			{
+				Margins margins = this.objectModifier.GetMargins(obj);
+				margins.Top = value;
+				this.objectModifier.SetMargins(obj, margins);
+			}
+
+			if (this.draggingDimensionType == DimensionType.PaddingLeft)
+			{
+				Margins padding = this.objectModifier.GetPadding(obj);
+				padding.Left = value;
+				this.objectModifier.SetPadding(obj, padding);
+			}
+
+			if (this.draggingDimensionType == DimensionType.PaddingRight)
+			{
+				Margins padding = this.objectModifier.GetPadding(obj);
+				padding.Right = value;
+				this.objectModifier.SetPadding(obj, padding);
+			}
+
+			if (this.draggingDimensionType == DimensionType.PaddingBottom)
+			{
+				Margins padding = this.objectModifier.GetPadding(obj);
+				padding.Bottom = value;
+				this.objectModifier.SetPadding(obj, padding);
+			}
+
+			if (this.draggingDimensionType == DimensionType.PaddingTop)
+			{
+				Margins padding = this.objectModifier.GetPadding(obj);
+				padding.Top = value;
+				this.objectModifier.SetPadding(obj, padding);
+			}
+
+			this.Invalidate();
+		}
+
+		protected DimensionType DetectDimension(Widget obj, Point mouse)
+		{
+			//	Détecte la cote visée par la souris.
+			foreach (DimensionType type in System.Enum.GetValues(typeof(DimensionType)))
+			{
+				Rectangle rect = this.GetRectangleDimension(obj, type);
+				if (rect.Contains(mouse))
+				{
+					return type;
+				}
+			}
+
+			return DimensionType.None;
+		}
+
+		protected Rectangle GetRectangleDimension(Widget obj, DimensionType type)
+		{
+			//	Retourne le rectangle d'une cote.
+			Rectangle bounds = this.objectModifier.GetActualBounds(obj);
+			Margins margins = this.objectModifier.GetMargins(obj);
+			Rectangle ext = bounds;
+			ext.Inflate(this.objectModifier.GetMargins(obj));
+
+			double d = 26;
+			double h = 12;
+			double e = 10;
+			double pw = 20;
+			double ph = 12;
+
+			Rectangle box;
+
+			if (type == DimensionType.Width && this.objectModifier.HasPreferredWidth(obj))
+			{
+				box = bounds;
+				box.Bottom = ext.Top+d-h;
+				box.Top = ext.Top+d;
+				return box;
+			}
+
+			if (type == DimensionType.Height && this.objectModifier.HasPreferredHeight(obj))
+			{
+				box = bounds;
+				box.Left = ext.Right+d-h;
+				box.Right = ext.Right+d;
+				return box;
+			}
+
+			if (type == DimensionType.MarginLeft && this.objectModifier.HasMargins(obj))
+			{
+				double l = System.Math.Max(e, margins.Left);
+				return new Rectangle(bounds.Left-l, ext.Top+d-h, l, h);
+			}
+
+			if (type == DimensionType.MarginRight && this.objectModifier.HasMargins(obj))
+			{
+				double l = System.Math.Max(e, margins.Right);
+				return new Rectangle(bounds.Right, ext.Top+d-h, l, h);
+			}
+
+			if (type == DimensionType.MarginTop && this.objectModifier.HasMargins(obj))
+			{
+				double l = System.Math.Max(e, margins.Top);
+				return new Rectangle(ext.Right+d-h, bounds.Top, h, l);
+			}
+
+			if (type == DimensionType.MarginBottom && this.objectModifier.HasMargins(obj))
+			{
+				double l = System.Math.Max(e, margins.Bottom);
+				return new Rectangle(ext.Right+d-h, bounds.Bottom-l, h, l);
+			}
+
+			if (type == DimensionType.PaddingLeft && this.objectModifier.HasPadding(obj))
+			{
+				Margins padding = this.objectModifier.GetPadding(obj);
+				Rectangle inside = this.objectModifier.GetFinalPadding(obj);
+				return new Rectangle(bounds.Left-ph, inside.Center.Y-pw/2, ph, pw);
+			}
+
+			if (type == DimensionType.PaddingRight && this.objectModifier.HasPadding(obj))
+			{
+				Margins padding = this.objectModifier.GetPadding(obj);
+				Rectangle inside = this.objectModifier.GetFinalPadding(obj);
+				return new Rectangle(bounds.Right, inside.Center.Y-pw/2, ph, pw);
+			}
+
+			if (type == DimensionType.PaddingTop && this.objectModifier.HasPadding(obj))
+			{
+				Margins padding = this.objectModifier.GetPadding(obj);
+				Rectangle inside = this.objectModifier.GetFinalPadding(obj);
+				return new Rectangle(inside.Center.X-pw/2, bounds.Top, pw, ph);
+			}
+
+			if (type == DimensionType.PaddingBottom && this.objectModifier.HasPadding(obj))
+			{
+				Margins padding = this.objectModifier.GetPadding(obj);
+				Rectangle inside = this.objectModifier.GetFinalPadding(obj);
+				return new Rectangle(inside.Center.X-pw/2, bounds.Bottom-ph, pw, ph);
+			}
+
+			return Rectangle.Empty;
+		}
+		#endregion
+
+
 		#region Misc
 		public void AdaptAfterToolChanged()
 		{
@@ -4666,6 +5327,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected int						hilitedParentRow = GridSelection.Invalid;
 		protected int						hilitedParentColumnCount = 0;
 		protected int						hilitedParentRowCount = 0;
+		protected DimensionType				hilitedDimension = DimensionType.None;
 		protected bool						isRectangling;  // j'invente des mots si je veux !
 		protected bool						isDragging;
 		protected DragWindow				draggingWindow;
@@ -4678,6 +5340,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected int						draggingSpanRowOffset;
 		protected int						draggingSpanColumnCount;
 		protected int						draggingSpanRowCount;
+		protected DimensionType				draggingDimensionType = DimensionType.None;
+		protected double					draggingDimensionInitial;
 		protected bool						isHandling;
 		protected Handle.Type				handlingType;
 		protected DragWindow				handlingWindow;
