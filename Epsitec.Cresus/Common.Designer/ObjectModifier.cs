@@ -207,7 +207,7 @@ namespace Epsitec.Common.Designer
 				case ObjectType.StaticText:   return "ObjectStatic";
 				case ObjectType.Group:        return "ObjectGroup";
 				case ObjectType.GroupBox:     return "ObjectGroupBox";
-				case ObjectType.MainPanel:    return "ObjectPanel";
+				case ObjectType.MainPanel:    return "ObjectMainPanel";
 				case ObjectType.SubPanel:     return "ObjectPanel";
 			}
 

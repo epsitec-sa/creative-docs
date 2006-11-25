@@ -174,6 +174,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateEdit();
 			this.UpdateType();
 			this.UpdateButtons();
+			this.UpdateStatusViewer();
 		}
 
 		protected override void Dispose(bool disposing)
@@ -426,14 +427,22 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Met à jour le statut du visualisateur en cours, en fonction de la sélection.
 			this.DisposeStatusBar();
-			this.statusBar.Children.Clear();
+			this.statusBar.Children.Clear();  // supprime tous les boutons
 
 			List<Widget> selection = this.panelEditor.SelectedObjects;
 			Widget obj;
 
-			if (selection.Count > 0)
+			if (selection.Count == 0)
+			{
+				this.StatusBarButton(this.panelEditor.Panel, "Root", 0, "Sélectionner le panneau de base");
+				this.statusBar.Items.Add(new IconSeparator());
+			}
+			else
 			{
 				//	Crée une liste de tous les parents.
+				this.StatusBarButton(null, "DeselectAll", 0, "Tout désélectionner");
+				this.statusBar.Items.Add(new IconSeparator());
+
 				List<Widget> parents = new List<Widget>();
 				obj = selection[0].Parent;  // parent du premier objet sélectionné
 				while (obj != null)
@@ -451,14 +460,14 @@ namespace Epsitec.Common.Designer.Viewers
 				//	Crée la chaîne de widgets pour les parents.
 				for (int i=parents.Count-1; i>=0; i--)
 				{
-					this.StatusBarButton(parents[i], "Parent", i+1);
+					this.StatusBarButton(parents[i], "Parent", i+1, (i==parents.Count-1) ? "Sélectionner le panneau de base" : "Sélectionner ce parent");
 					this.StatusBarArrow("Next", i);
 				}
 
 				//	Crée la série des widgets sélectionnés.
 				for (int i=0; i<selection.Count; i++)
 				{
-					this.StatusBarButton(selection[i], "Selected", i);
+					this.StatusBarButton(selection[i], "Selected", i, "Sélectionner cet objet");
 				}
 
 				//	Crée la série des enfants.
@@ -476,19 +485,27 @@ namespace Epsitec.Common.Designer.Viewers
 							break;
 						}
 
-						this.StatusBarButton(children, "Children", rank++);
+						this.StatusBarButton(children, "Children", rank++, "Sélectionner cet enfant");
 					}
 				}
 			}
 		}
 
-		protected void StatusBarButton(Widget obj, string type, int rank)
+		protected void StatusBarButton(Widget obj, string type, int rank, string tooltip)
 		{
 			//	Ajoute un bouton représentant un objet.
 			string name = string.Concat(type, ".Level", rank.ToString(System.Globalization.CultureInfo.InvariantCulture));
+			string icon;
 
-			string icon = ObjectModifier.GetObjectIcon(obj);
-			System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(icon));
+			if (obj == null)
+			{
+				icon = "PanelDeselectAll";
+			}
+			else
+			{
+				icon = ObjectModifier.GetObjectIcon(obj);
+				System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(icon));
+			}
 
 			IconButton button = new IconButton(this.statusBar);
 			button.IconName = Misc.Icon(icon);
@@ -512,6 +529,7 @@ namespace Epsitec.Common.Designer.Viewers
 			button.Clicked += new MessageEventHandler(this.HandleStatusBarButtonClicked);
 			button.Entered += new MessageEventHandler(this.HandleStatusBarButtonEntered);
 			button.Exited += new MessageEventHandler(this.HandleStatusBarButtonExited);
+			ToolTip.Default.SetToolTip(button, tooltip);
 		}
 
 		protected void StatusBarArrow(string type, int rank)
@@ -524,10 +542,12 @@ namespace Epsitec.Common.Designer.Viewers
 			arrow.GlyphShape = (type == "None") ? GlyphShape.Plus : GlyphShape.ArrowRight;
 			arrow.ButtonStyle = ButtonStyle.ToolItem;
 			arrow.Dock = DockStyle.Left;
-			arrow.Margins = new Margins((type == "None") ? 5:0, 0, 0, 0);
+			arrow.Margins = new Margins((type == "None") ? 10:0, 0, 0, 0);
+			arrow.Enable = (type != "None");
 			arrow.Clicked += new MessageEventHandler(this.HandleStatusBarButtonClicked);
 			arrow.Entered += new MessageEventHandler(this.HandleStatusBarButtonEntered);
 			arrow.Exited += new MessageEventHandler(this.HandleStatusBarButtonExited);
+			ToolTip.Default.SetToolTip(arrow, "Sélectionner l'objet suivant");
 		}
 
 		protected void StatusBarOverflow()
@@ -574,7 +594,6 @@ namespace Epsitec.Common.Designer.Viewers
 			if (obj == null)
 			{
 				this.panelEditor.DeselectAll();
-				;
 			}
 			else
 			{
@@ -625,6 +644,11 @@ namespace Epsitec.Common.Designer.Viewers
 					next = 0;
 				}
 				return obj.Parent.Children[next] as Widget;
+			}
+
+			if (type == "Root")
+			{
+				return this.panelEditor.Panel;
 			}
 
 			return null;
