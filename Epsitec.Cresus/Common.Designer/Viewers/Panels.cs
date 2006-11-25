@@ -434,13 +434,13 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (selection.Count == 0)
 			{
-				this.StatusBarButton(this.panelEditor.Panel, "Root", 0, "Sélectionner le panneau de base");
+				this.StatusBarButton(this.panelEditor.Panel, "Root", 0, Res.Strings.Viewers.Panels.StatusBar.Root);
 				this.statusBar.Items.Add(new IconSeparator());
 			}
 			else
 			{
 				//	Crée une liste de tous les parents.
-				this.StatusBarButton(null, "DeselectAll", 0, "Tout désélectionner");
+				this.StatusBarButton(null, "DeselectAll", 0, Res.Strings.Viewers.Panels.StatusBar.DeselectAll);
 				this.statusBar.Items.Add(new IconSeparator());
 
 				List<Widget> parents = new List<Widget>();
@@ -460,14 +460,14 @@ namespace Epsitec.Common.Designer.Viewers
 				//	Crée la chaîne de widgets pour les parents.
 				for (int i=parents.Count-1; i>=0; i--)
 				{
-					this.StatusBarButton(parents[i], "Parent", i+1, (i==parents.Count-1) ? "Sélectionner le panneau de base" : "Sélectionner ce parent");
+					this.StatusBarButton(parents[i], "Parent", i+1, (i==parents.Count-1) ? Res.Strings.Viewers.Panels.StatusBar.Root : Res.Strings.Viewers.Panels.StatusBar.Parent);
 					this.StatusBarArrow("Next", i);
 				}
 
 				//	Crée la série des widgets sélectionnés.
 				for (int i=0; i<selection.Count; i++)
 				{
-					this.StatusBarButton(selection[i], "Selected", i, "Sélectionner cet objet");
+					this.StatusBarButton(selection[i], "Selected", i, Res.Strings.Viewers.Panels.StatusBar.This);
 				}
 
 				//	Crée la série des enfants.
@@ -485,7 +485,7 @@ namespace Epsitec.Common.Designer.Viewers
 							break;
 						}
 
-						this.StatusBarButton(children, "Children", rank++, "Sélectionner cet enfant");
+						this.StatusBarButton(children, "Children", rank++, Res.Strings.Viewers.Panels.StatusBar.Children);
 					}
 				}
 			}
@@ -547,7 +547,7 @@ namespace Epsitec.Common.Designer.Viewers
 			arrow.Clicked += new MessageEventHandler(this.HandleStatusBarButtonClicked);
 			arrow.Entered += new MessageEventHandler(this.HandleStatusBarButtonEntered);
 			arrow.Exited += new MessageEventHandler(this.HandleStatusBarButtonExited);
-			ToolTip.Default.SetToolTip(arrow, "Sélectionner l'objet suivant");
+			ToolTip.Default.SetToolTip(arrow, Res.Strings.Viewers.Panels.StatusBar.Next);
 		}
 
 		protected void StatusBarOverflow()
