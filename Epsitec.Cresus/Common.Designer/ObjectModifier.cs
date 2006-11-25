@@ -1692,6 +1692,12 @@ namespace Epsitec.Common.Designer
 			//	Indique s'il est possible de modifier la largeur d'un objet.
 			//	A ne pas confondre avec SetPreferredBounds pour le mode ancré. Un objet ancré
 			//	pour lequel on peut faire un SetPreferredBounds n'accepte pas le SetPreferredWidth !
+			ObjectType type = ObjectModifier.GetObjectType(obj);
+			if (type == ObjectType.MainPanel)
+			{
+				return true;
+			}
+
 			if (!HandlesList.HasWidthHandles(obj))
 			{
 				return false;
@@ -1745,6 +1751,12 @@ namespace Epsitec.Common.Designer
 			//	Indique s'il est possible de modifier la hauteur d'un objet.
 			//	A ne pas confondre avec SetPreferredBounds pour le mode ancré. Un objet ancré
 			//	pour lequel on peut faire un SetPreferredBounds n'accepte pas le HasPreferredHeight !
+			ObjectType type = ObjectModifier.GetObjectType(obj);
+			if (type == ObjectType.MainPanel)
+			{
+				return true;
+			}
+
 			if (!HandlesList.HasHeightHandles(obj))
 			{
 				return false;

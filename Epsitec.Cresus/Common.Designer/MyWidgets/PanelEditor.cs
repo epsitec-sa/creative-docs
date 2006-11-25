@@ -614,10 +614,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 #endif
 
+#if false
 			if (this.SizeMarkDraggingStart(pos))
 			{
 				return;
 			}
+#endif
 
 			Attachment attachment;
 			if (this.AttachmentDetect(pos, out obj, out attachment))
@@ -3553,7 +3555,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessine les marques pour la taille préférentielle.
 			if (this.context.Tool == "ToolSelect" || this.context.Tool == "ToolGlobal")
 			{
-				this.DrawSizeMark(graphics);
+				//?this.DrawSizeMark(graphics);
 			}
 
 			//	Dessine les objets sélectionnés.
@@ -4655,11 +4657,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			int i = (int) System.Math.Floor(this.GetDimensionValue(type)+0.5);
 			string text = i.ToString();
 
-			if (type == DimensionType.Height ||
+			if (type == DimensionType.Height       ||
 				type == DimensionType.MarginBottom ||
-				type == DimensionType.MarginTop ||
-				type == DimensionType.PaddingLeft ||
-				type == DimensionType.PaddingRight)
+				type == DimensionType.MarginTop    ||
+				type == DimensionType.PaddingLeft  ||
+				type == DimensionType.PaddingRight )  // text vertical ?
 			{
 				Point center = box.Center;
 				Transform it = graphics.Transform;
@@ -4667,7 +4669,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
 				graphics.Transform = it;
 			}
-			else
+			else  // texte horizontal ?
 			{
 				graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
 			}
@@ -4721,7 +4723,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Retourne la valeur d'une cote.
 			Widget obj = this.selectedObjects[0];
-			Margins m;
 
 			switch (type)
 			{
@@ -4732,36 +4733,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 					return this.objectModifier.GetPreferredHeight(obj);
 
 				case DimensionType.MarginLeft:
-					m = this.objectModifier.GetMargins(obj);
-					return m.Left;
+					return this.objectModifier.GetMargins(obj).Left;
 
 				case DimensionType.MarginRight:
-					m = this.objectModifier.GetMargins(obj);
-					return m.Right;
+					return this.objectModifier.GetMargins(obj).Right;
 
 				case DimensionType.MarginBottom:
-					m = this.objectModifier.GetMargins(obj);
-					return m.Bottom;
+					return this.objectModifier.GetMargins(obj).Bottom;
 
 				case DimensionType.MarginTop:
-					m = this.objectModifier.GetMargins(obj);
-					return m.Top;
+					return this.objectModifier.GetMargins(obj).Top;
 
 				case DimensionType.PaddingLeft:
-					m = this.objectModifier.GetPadding(obj);
-					return m.Left;
+					return this.objectModifier.GetPadding(obj).Left;
 
 				case DimensionType.PaddingRight:
-					m = this.objectModifier.GetPadding(obj);
-					return m.Right;
+					return this.objectModifier.GetPadding(obj).Right;
 
 				case DimensionType.PaddingBottom:
-					m = this.objectModifier.GetPadding(obj);
-					return m.Bottom;
+					return this.objectModifier.GetPadding(obj).Bottom;
 
 				case DimensionType.PaddingTop:
-					m = this.objectModifier.GetPadding(obj);
-					return m.Top;
+					return this.objectModifier.GetPadding(obj).Top;
 
 				default:
 					return 0;
