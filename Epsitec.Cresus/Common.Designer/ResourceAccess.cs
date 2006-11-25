@@ -2835,7 +2835,7 @@ namespace Epsitec.Common.Designer
 
 		internal void InitializePanel(UI.Panel panel)
 		{
-			panel.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
+			panel.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Stacked;
 			panel.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 			panel.PreferredSize = new Size(200, 200);
 			panel.Anchor = AnchorStyles.BottomLeft;

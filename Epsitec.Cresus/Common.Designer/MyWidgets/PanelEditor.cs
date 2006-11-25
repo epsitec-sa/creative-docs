@@ -403,6 +403,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					break;
 
 				case MessageType.MouseLeave:
+					this.SetEnteredObject(null);
 					this.SetHilitedObject(null, null);
 					this.SetHilitedParent(null, GridSelection.Invalid, GridSelection.Invalid, 0, 0);
 					break;
@@ -1511,8 +1512,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.context.Tool == "ObjectGroup")
 			{
 				FrameBox group = new FrameBox();
-				group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
-				group.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+				group.ChildrenLayoutMode = LayoutMode.Stacked;
+				group.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 				group.PreferredSize = new Size(200, 100);
 				group.MinWidth = 50;
 				group.MinHeight = 50;
@@ -1525,8 +1526,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.context.Tool == "ObjectGroupBox")
 			{
 				GroupBox group = new GroupBox();
-				group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
-				group.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+				group.ChildrenLayoutMode = LayoutMode.Stacked;
+				group.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 				group.Text = Misc.Italic("GroupBox");
 				group.PreferredSize = new Size(200, 100);
 				group.MinWidth = 50;
@@ -1538,8 +1539,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.context.Tool == "ObjectPanel")
 			{
 				UI.PanelPlaceholder panel = new UI.PanelPlaceholder();
-				panel.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
-				panel.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+				panel.ChildrenLayoutMode = LayoutMode.Stacked;
+				panel.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 				panel.Text = Misc.Italic("Panel");
 				panel.PreferredSize = new Size(200, 100);
 				panel.MinWidth = 50;
@@ -1740,6 +1741,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.handlingWindow.FocusedWidget = clone;
 				this.handlingWindow.Show();
 
+				this.SetEnteredObject(null);
 				this.SetHilitedObject(null, null);
 				this.SetHilitedAttachmentRectangle(Rectangle.Empty);
 				this.Invalidate();
@@ -1853,6 +1855,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingWindow.FocusedWidget = container;
 			this.draggingWindow.Show();
 
+			this.SetEnteredObject(null);
 			this.SetHilitedObject(null, null);
 			this.SetHilitedAttachmentRectangle(Rectangle.Empty);
 			this.isDragging = true;
@@ -2213,7 +2216,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Invalidate();
 		}
 
-		protected void SelectOneObject(Widget obj)
+		public void SelectOneObject(Widget obj)
 		{
 			//	Sélectionne un objet.
 			this.selectedObjects.Clear();
@@ -2267,8 +2270,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void UpdateAfterSelectionChanged()
 		{
 			//	Mise à jour après un changement de sélection.
+			this.module.MainWindow.UpdateStatusViewer();
 			this.handlesList.UpdateSelection();
 			GeometryCache.Clear(this.panel);
+		}
+
+		public void SetEnteredObject(Widget obj)
+		{
+			//	Détermine l'objet survolé depuis la barre de statut.
+			if (this.enteredObject != obj)
+			{
+				this.enteredObject = obj;
+				this.Invalidate();
+			}
 		}
 
 		protected void SetHilitedObject(Widget obj, GridSelection grid)
@@ -3600,6 +3614,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.DrawHilitedParent(graphics, this.hilitedParent, this.hilitedParentColumn, this.hilitedParentRow, this.hilitedParentColumnCount, this.hilitedParentRowCount);
 			}
 
+			//	Dessine l'objet survolé depuis la barre de statut.
+			if (this.enteredObject != null)
+			{
+				this.DrawEnteredObject(graphics, this.enteredObject);
+			}
+
 			//	Dessine le rectangle de sélection.
 			if (!this.selectedRectangle.IsEmpty)
 			{
@@ -3776,6 +3796,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 			}
+		}
+
+		protected void DrawEnteredObject(Graphics graphics, Widget obj)
+		{
+			//	Dessine l'objet survolé depuis la barre de statut.
+			Rectangle rect = this.objectModifier.GetActualBounds(obj);
+			rect.Deflate(1.5);
+			Color red = Color.FromAlphaRgb(0.7, 255.0/255.0, 80.0/255.0, 60.0/255.0);
+
+			graphics.LineWidth = 3;
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(red);
+			graphics.LineWidth = 1;
 		}
 
 		protected void DrawHilitedObject(Graphics graphics, Widget obj, GridSelection gs)
@@ -4702,12 +4735,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 #endif
 #if true
-			if (isControlPressed)
+			if (isControlPressed)  // moins sensible ?
 			{
-				value /= 2;
+				value = System.Math.Floor((value+0.5)*0.5);
 			}
 
-			if (isShiftPressed)
+			if (isShiftPressed)  // grille magnétique ?
 			{
 				double step = 5;
 				value += this.draggingDimensionInitial;
@@ -5408,6 +5441,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool						isSizeMarkVertical;
 		protected Point						sizeMarkOffset;
 		protected bool						isInside;
+		protected Widget					enteredObject;
 
 		protected Image						mouseCursorArrow = null;
 		protected Image						mouseCursorArrowPlus = null;

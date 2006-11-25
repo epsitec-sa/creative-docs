@@ -435,6 +435,16 @@ namespace Epsitec.Common.Designer
 				field.Invalidate();
 			}
 		}
+
+		public void UpdateStatusViewer()
+		{
+			//	Met à jour le statut du visualisateur en cours.
+			Module module = this.CurrentModule;
+			if (module != null && module.Modifier.ActiveViewer!= null)
+			{
+				module.Modifier.ActiveViewer.UpdateStatusViewer();
+			}
+		}
 		#endregion
 
 

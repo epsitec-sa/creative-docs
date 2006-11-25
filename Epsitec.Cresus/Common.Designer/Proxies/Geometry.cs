@@ -139,18 +139,6 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		public double MaxWidth
-		{
-			get
-			{
-				return (double) this.GetValue(Geometry.MaxWidthProperty);
-			}
-			set
-			{
-				this.SetValue(Geometry.MaxWidthProperty, value);
-			}
-		}
-
 		public double MinHeight
 		{
 			get
@@ -160,18 +148,6 @@ namespace Epsitec.Common.Designer.Proxies
 			set
 			{
 				this.SetValue(Geometry.MinHeightProperty, value);
-			}
-		}
-
-		public double MaxHeight
-		{
-			get
-			{
-				return (double) this.GetValue(Geometry.MaxHeightProperty);
-			}
-			set
-			{
-				this.SetValue(Geometry.MaxHeightProperty, value);
 			}
 		}
 
@@ -233,9 +209,7 @@ namespace Epsitec.Common.Designer.Proxies
 			if (true)
 			{
 				this.MinWidth = this.ObjectModifier.GetMinWidth(this.DefaultWidget);
-				this.MaxWidth = this.ObjectModifier.GetMaxWidth(this.DefaultWidget);
 				this.MinHeight = this.ObjectModifier.GetMinHeight(this.DefaultWidget);
-				this.MaxHeight = this.ObjectModifier.GetMaxHeight(this.DefaultWidget);
 			}
 		}
 
@@ -316,9 +290,7 @@ namespace Epsitec.Common.Designer.Proxies
 			Geometry.HeightProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 
 			Geometry.MinWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
-			Geometry.MaxWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 			Geometry.MinHeightProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
-			Geometry.MaxHeightProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 
 			Geometry.LeftMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.LeftMargin.Id);
 			Geometry.RightMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.RightMargin.Id);
@@ -331,9 +303,7 @@ namespace Epsitec.Common.Designer.Proxies
 			Geometry.HeightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.Height.Id);
 
 			Geometry.MinWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.MinWidth.Id);
-			Geometry.MaxWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.MaxWidth.Id);
 			Geometry.MinHeightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.MinHeight.Id);
-			Geometry.MaxHeightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.MaxHeight.Id);
 		}
 
 
@@ -424,29 +394,6 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		private static void NotifyMaxWidthChanged(DependencyObject o, object oldValue, object newValue)
-		{
-			double value = (double) newValue;
-			Geometry that = (Geometry) o;
-
-			if (that.IsNotSuspended)
-			{
-				that.SuspendChanges();
-
-				try
-				{
-					foreach (Widget obj in that.Widgets)
-					{
-						that.ObjectModifier.SetMaxWidth(obj, value);
-					}
-				}
-				finally
-				{
-					that.ResumeChanges();
-				}
-			}
-		}
-
 		private static void NotifyMinHeightChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			double value = (double) newValue;
@@ -470,29 +417,6 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		private static void NotifyMaxHeightChanged(DependencyObject o, object oldValue, object newValue)
-		{
-			double value = (double) newValue;
-			Geometry that = (Geometry) o;
-
-			if (that.IsNotSuspended)
-			{
-				that.SuspendChanges();
-
-				try
-				{
-					foreach (Widget obj in that.Widgets)
-					{
-						that.ObjectModifier.SetMaxHeight(obj, value);
-					}
-				}
-				finally
-				{
-					that.ResumeChanges();
-				}
-			}
-		}
-
 
 		public static readonly DependencyProperty LeftMarginProperty	= DependencyProperty.Register("LeftMargin",   typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyLeftMarginChanged));
 		public static readonly DependencyProperty RightMarginProperty	= DependencyProperty.Register("RightMargin",  typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyRightMarginChanged));
@@ -505,8 +429,6 @@ namespace Epsitec.Common.Designer.Proxies
 		public static readonly DependencyProperty HeightProperty		= DependencyProperty.Register("Height",       typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyHeightChanged));
 
 		public static readonly DependencyProperty MinWidthProperty		= DependencyProperty.Register("MinWidth",     typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMinWidthChanged));
-		public static readonly DependencyProperty MaxWidthProperty		= DependencyProperty.Register("MaxWidth",     typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMaxWidthChanged));
 		public static readonly DependencyProperty MinHeightProperty		= DependencyProperty.Register("MinHeight",    typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMinHeightChanged));
-		public static readonly DependencyProperty MaxHeightProperty		= DependencyProperty.Register("MaxHeight",    typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMaxHeightChanged));
 	}
 }

@@ -48,8 +48,17 @@ namespace Epsitec.Common.Designer.Viewers
 			this.splitter1.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
 			VSplitter.SetAutoCollapseEnable(this.left, true);
 
-			this.vToolBar = new VToolBar(this);
-			this.vToolBar.Margins = new Margins(0, 0, 0, 0);
+			//	Crée le groupe central.
+			this.middle = new Widget(this);
+			this.middle.Dock = DockStyle.Fill;
+
+			this.statusBar = new HToolBar(this.middle);
+			this.statusBar.Dock = DockStyle.Top;
+
+			Widget drawing = new Widget(this.middle);  // conteneur pour vToolBar et scrollable
+			drawing.Dock = DockStyle.Fill;
+
+			this.vToolBar = new VToolBar(drawing);
 			this.vToolBar.Dock = DockStyle.Left;
 			this.VToolBarAdd(Widgets.Command.Get("ToolSelect"));
 			this.VToolBarAdd(Widgets.Command.Get("ToolGlobal"));
@@ -68,7 +77,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.VToolBarAdd(Widgets.Command.Get("ObjectGroupBox"));
 			this.VToolBarAdd(Widgets.Command.Get("ObjectPanel"));
 
-			this.scrollable = new Scrollable(this);
+			this.scrollable = new Scrollable(drawing);
 			this.scrollable.MinWidth = 100;
 			this.scrollable.MinHeight = 100;
 			this.scrollable.Margins = new Margins(1, 1, 1, 1);
@@ -182,6 +191,8 @@ namespace Epsitec.Common.Designer.Viewers
 				this.hButtonDefault.Clicked -= new MessageEventHandler(HandleHbuttonClicked);
 				this.hButtonEdition.Clicked -= new MessageEventHandler(HandleHbuttonClicked);
 				this.hButtonSearch.Clicked -= new MessageEventHandler(HandleHbuttonClicked);
+
+				this.DisposeStatusBar();
 			}
 
 			base.Dispose(disposing);
@@ -410,6 +421,217 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		#region StatusBar
+		public override void UpdateStatusViewer()
+		{
+			//	Met à jour le statut du visualisateur en cours, en fonction de la sélection.
+			this.DisposeStatusBar();
+			this.statusBar.Children.Clear();
+
+			List<Widget> selection = this.panelEditor.SelectedObjects;
+			Widget obj;
+
+			if (selection.Count > 0)
+			{
+				//	Crée une liste de tous les parents.
+				List<Widget> parents = new List<Widget>();
+				obj = selection[0].Parent;  // parent du premier objet sélectionné
+				while (obj != null)
+				{
+					ObjectModifier.ObjectType type = ObjectModifier.GetObjectType(obj);
+					if (type == ObjectModifier.ObjectType.Unknow)
+					{
+						break;
+					}
+
+					parents.Add(obj);
+					obj = obj.Parent;
+				}
+
+				//	Crée la chaîne de widgets pour les parents.
+				for (int i=parents.Count-1; i>=0; i--)
+				{
+					this.StatusBarButton(parents[i], "Parent", i+1);
+					this.StatusBarArrow("Next", i);
+				}
+
+				//	Crée la série des widgets sélectionnés.
+				for (int i=0; i<selection.Count; i++)
+				{
+					this.StatusBarButton(selection[i], "Selected", i);
+				}
+
+				//	Crée la série des enfants.
+				obj = selection[0];  // premier objet sélectionné
+				if (selection.Count == 1 && obj.Children.Count > 0 && ObjectModifier.IsAbstractGroup(obj))
+				{
+					this.StatusBarArrow("None", 0);
+
+					int rank = 0;
+					foreach (Widget children in obj.Children)
+					{
+						if (rank >= 10)
+						{
+							this.StatusBarOverflow();
+							break;
+						}
+
+						this.StatusBarButton(children, "Children", rank++);
+					}
+				}
+			}
+		}
+
+		protected void StatusBarButton(Widget obj, string type, int rank)
+		{
+			//	Ajoute un bouton représentant un objet.
+			string name = string.Concat(type, ".Level", rank.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+			string icon = ObjectModifier.GetObjectIcon(obj);
+			System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(icon));
+
+			IconButton button = new IconButton(this.statusBar);
+			button.IconName = Misc.Icon(icon);
+			button.Name = name;
+
+			if (type == "Selected")
+			{
+				button.ButtonStyle = ButtonStyle.ActivableIcon;
+				button.ActiveState = ActiveState.Yes;
+			}
+			else if (type == "Children")
+			{
+				button.ButtonStyle = ButtonStyle.ActivableIcon;
+			}
+			else
+			{
+				button.ButtonStyle = ButtonStyle.ToolItem;
+			}
+
+			button.Dock = DockStyle.Left;
+			button.Clicked += new MessageEventHandler(this.HandleStatusBarButtonClicked);
+			button.Entered += new MessageEventHandler(this.HandleStatusBarButtonEntered);
+			button.Exited += new MessageEventHandler(this.HandleStatusBarButtonExited);
+		}
+
+		protected void StatusBarArrow(string type, int rank)
+		{
+			//	Ajoute une flèche de séparation ">".
+			string name = string.Concat(type, ".Level", rank.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+			GlyphButton arrow = new GlyphButton(this.statusBar);
+			arrow.Name = name;
+			arrow.GlyphShape = (type == "None") ? GlyphShape.Plus : GlyphShape.ArrowRight;
+			arrow.ButtonStyle = ButtonStyle.ToolItem;
+			arrow.Dock = DockStyle.Left;
+			arrow.Margins = new Margins((type == "None") ? 5:0, 0, 0, 0);
+			arrow.Clicked += new MessageEventHandler(this.HandleStatusBarButtonClicked);
+			arrow.Entered += new MessageEventHandler(this.HandleStatusBarButtonEntered);
+			arrow.Exited += new MessageEventHandler(this.HandleStatusBarButtonExited);
+		}
+
+		protected void StatusBarOverflow()
+		{
+			//	Ajoute un marqueur de débordement "...".
+			StaticText overflow = new StaticText(this.statusBar);
+			overflow.Text = "...";
+			overflow.PreferredWidth = 20;
+			overflow.Dock = DockStyle.Left;
+		}
+
+		protected void DisposeStatusBar()
+		{
+			//	Supprime tous les widgets existants dans la barre de statut.
+			foreach (Widget children in this.statusBar.Children)
+			{
+				if (children is IconButton)
+				{
+					AbstractButton button = children as AbstractButton;
+					button.Clicked -= new MessageEventHandler(this.HandleStatusBarButtonClicked);
+					button.Entered -= new MessageEventHandler(this.HandleStatusBarButtonEntered);
+					button.Exited -= new MessageEventHandler(this.HandleStatusBarButtonExited);
+				}
+			}
+		}
+
+		protected void StatusBarEntered(string type, int rank, bool entered)
+		{
+			if (entered)
+			{
+				Widget obj = this.StatusBarSearch(type, rank);
+				this.panelEditor.SetEnteredObject(obj);
+			}
+			else
+			{
+				this.panelEditor.SetEnteredObject(null);
+			}
+		}
+
+		protected void StatusBarSelect(string type, int rank)
+		{
+			//	Effectue une opération de sélection.
+			Widget obj = this.StatusBarSearch(type, rank);
+			if (obj == null)
+			{
+				this.panelEditor.DeselectAll();
+				;
+			}
+			else
+			{
+				this.panelEditor.SelectOneObject(obj);
+			}
+		}
+
+		protected Widget StatusBarSearch(string type, int rank)
+		{
+			//	Cherche le widget correspondant à une opération de sélection.
+			if (type == "Parent")
+			{
+				List<Widget> selection = this.panelEditor.SelectedObjects;
+				Widget obj = selection[0];
+				for (int i=0; i<rank; i++)
+				{
+					obj = obj.Parent;
+				}
+				return obj;
+			}
+
+			if (type == "Selected")
+			{
+				List<Widget> selection = this.panelEditor.SelectedObjects;
+				return selection[rank];
+			}
+
+			if (type == "Children")
+			{
+				List<Widget> selection = this.panelEditor.SelectedObjects;
+				Widget obj = selection[0];
+				return obj.Children[rank] as Widget;
+			}
+
+			if (type == "Next")
+			{
+				List<Widget> selection = this.panelEditor.SelectedObjects;
+				Widget obj = selection[0];
+				for (int i=0; i<rank; i++)
+				{
+					obj = obj.Parent;
+				}
+
+				int next = obj.Parent.Children.IndexOf(obj);
+				next++;
+				if (next >= obj.Parent.Children.Count)
+				{
+					next = 0;
+				}
+				return obj.Parent.Children[next] as Widget;
+			}
+
+			return null;
+		}
+		#endregion
+
+
 		#region Proxies
 		protected void DefineProxies(IEnumerable<Widget> widgets)
 		{
@@ -535,6 +757,33 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
+		private void HandleStatusBarButtonClicked(object sender, MessageEventArgs e)
+		{
+			AbstractButton button = sender as AbstractButton;
+			int p = button.Name.IndexOf(".Level");
+			int i = System.Int32.Parse(button.Name.Substring(p+6));
+			string type = button.Name.Substring(0, p);
+			this.StatusBarSelect(type, i);
+		}
+
+		private void HandleStatusBarButtonEntered(object sender, MessageEventArgs e)
+		{
+			AbstractButton button = sender as AbstractButton;
+			int p = button.Name.IndexOf(".Level");
+			int i = System.Int32.Parse(button.Name.Substring(p+6));
+			string type = button.Name.Substring(0, p);
+			this.StatusBarEntered(type, i, true);
+		}
+
+		private void HandleStatusBarButtonExited(object sender, MessageEventArgs e)
+		{
+			AbstractButton button = sender as AbstractButton;
+			int p = button.Name.IndexOf(".Level");
+			int i = System.Int32.Parse(button.Name.Substring(p+6));
+			string type = button.Name.Substring(0, p);
+			this.StatusBarEntered(type, i, false);
+		}
+
 		private void HandleHbuttonClicked(object sender, MessageEventArgs e)
 		{
 			if (sender == this.hButtonDefault)
@@ -588,7 +837,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected VSplitter						splitter1;
 		protected VSplitter						splitter2;
 		protected MyWidgets.TextFieldExName		labelEdit;
+		protected Widget						middle;
 		protected VToolBar						vToolBar;
+		protected HToolBar						statusBar;
 		protected Scrollable					scrollable;
 		protected UI.Panel						panelContainer;
 		protected MyWidgets.PanelEditor			panelEditor;

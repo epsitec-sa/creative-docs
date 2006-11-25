@@ -188,6 +188,32 @@ namespace Epsitec.Common.Designer
 			return ObjectType.Unknow;
 		}
 
+		public static string GetObjectIcon(Widget obj)
+		{
+			//	Retourne l'icône d'un objet.
+			ObjectModifier.ObjectType type = ObjectModifier.GetObjectType(obj);
+			return ObjectModifier.GetObjectIcon(type);
+		}
+
+		public static string GetObjectIcon(ObjectType type)
+		{
+			//	Retourne l'icône d'un objet.
+			switch (type)
+			{
+				case ObjectType.HSeparator:   return "ObjectHLine";
+				case ObjectType.VSeparator:   return "ObjectVLine";
+				case ObjectType.Button:	      return "ObjectRectButton";
+				case ObjectType.Placeholder:  return "ObjectText";
+				case ObjectType.StaticText:   return "ObjectStatic";
+				case ObjectType.Group:        return "ObjectGroup";
+				case ObjectType.GroupBox:     return "ObjectGroupBox";
+				case ObjectType.MainPanel:    return "ObjectPanel";
+				case ObjectType.SubPanel:     return "ObjectPanel";
+			}
+
+			return null;
+		}
+
 
 		#region Druid
 		public static bool HasDruid(Widget obj)
@@ -376,12 +402,12 @@ namespace Epsitec.Common.Designer
 			AbstractGroup group = obj as AbstractGroup;
 			if (group != null)
 			{
-				if (group.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Anchored)
+				if (group.ChildrenLayoutMode == LayoutMode.Anchored)
 				{
 					return ChildrenPlacement.Anchored;
 				}
 
-				if (group.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Stacked)
+				if (group.ChildrenLayoutMode == LayoutMode.Stacked)
 				{
 					if (group.ContainerLayoutMode == ContainerLayoutMode.HorizontalFlow)
 					{
@@ -393,7 +419,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				if (group.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Grid)
+				if (group.ChildrenLayoutMode == LayoutMode.Grid)
 				{
 					return ChildrenPlacement.Grid;
 				}
@@ -412,24 +438,24 @@ namespace Epsitec.Common.Designer
 			switch (mode)
 			{
 				case ChildrenPlacement.Anchored:
-					group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
+					group.ChildrenLayoutMode = LayoutMode.Anchored;
 					LayoutEngine.SetLayoutEngine(group, null);
 					break;
 
 				case ChildrenPlacement.HorizontalStacked:
-					group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Stacked;
+					group.ChildrenLayoutMode = LayoutMode.Stacked;
 					group.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 					LayoutEngine.SetLayoutEngine(group, null);
 					break;
 
 				case ChildrenPlacement.VerticalStacked:
-					group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Stacked;
+					group.ChildrenLayoutMode = LayoutMode.Stacked;
 					group.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 					LayoutEngine.SetLayoutEngine(group, null);
 					break;
 
 				case ChildrenPlacement.Grid:
-					group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Grid;
+					group.ChildrenLayoutMode = LayoutMode.Grid;
 					this.SetGridColumnsCount(obj, 2);
 					this.SetGridRowsCount(obj, 2);
 					break;

@@ -543,6 +543,11 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		public virtual void UpdateStatusViewer()
+		{
+			//	Met à jour le statut du visualisateur en cours.
+		}
+
 		public virtual string InfoViewerText
 		{
 			//	Donne le texte d'information sur le visualisateur en cours.
