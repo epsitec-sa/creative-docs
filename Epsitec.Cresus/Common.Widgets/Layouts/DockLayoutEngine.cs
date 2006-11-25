@@ -369,15 +369,15 @@ namespace Epsitec.Common.Widgets.Layouts
 				case VerticalAlignment.Stretch:
 					break;
 				case VerticalAlignment.Top:
-					bounds.Bottom = bounds.Top - dy;
+					bounds.Bottom = System.Math.Max (bounds.Bottom, bounds.Top - dy);
 					break;
 				case VerticalAlignment.Center:
 					h = bounds.Height;
-					bounds.Top = bounds.Top - (h - dy) / 2;
-					bounds.Bottom = bounds.Bottom + (h - dy) / 2;
+					bounds.Top    = System.Math.Min (bounds.Top, bounds.Top - (h - dy) / 2);
+					bounds.Bottom = System.Math.Max (bounds.Bottom, bounds.Bottom + (h - dy) / 2);
 					break;
 				case VerticalAlignment.Bottom:
-					bounds.Top = bounds.Bottom + dy;
+					bounds.Top = System.Math.Min (bounds.Top, bounds.Bottom + dy);
 					break;
 				case VerticalAlignment.BaseLine:
 					Layouts.LayoutContext.GetMeasuredBaseLine (child, out h1, out h2);
@@ -391,15 +391,15 @@ namespace Epsitec.Common.Widgets.Layouts
 				case HorizontalAlignment.Stretch:
 					break;
 				case HorizontalAlignment.Left:
-					bounds.Right = bounds.Left + dx;
+					bounds.Right = System.Math.Min (bounds.Right, bounds.Left + dx);
 					break;
 				case HorizontalAlignment.Center:
 					double w = bounds.Width;
-					bounds.Left = bounds.Left + (w - dx) / 2;
-					bounds.Right = bounds.Right - (w - dx) / 2;
+					bounds.Left  = System.Math.Max (bounds.Left, bounds.Left + (w - dx) / 2);
+					bounds.Right = System.Math.Min (bounds.Right, bounds.Right - (w - dx) / 2);
 					break;
 				case HorizontalAlignment.Right:
-					bounds.Left = bounds.Right - dx;
+					bounds.Left = System.Math.Max (bounds.Left, bounds.Right - dx);
 					break;
 			}
 
