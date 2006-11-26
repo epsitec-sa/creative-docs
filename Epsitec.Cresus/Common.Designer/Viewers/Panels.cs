@@ -474,7 +474,7 @@ namespace Epsitec.Common.Designer.Viewers
 				obj = selection[0];  // premier objet sélectionné
 				if (selection.Count == 1 && obj.Children.Count > 0 && ObjectModifier.IsAbstractGroup(obj))
 				{
-					this.StatusBarArrow("All", 0, "Sélectionne tous les enfants");
+					this.StatusBarArrow("All", 0, Res.Strings.Viewers.Panels.StatusBar.All);
 
 					int rank = 0;
 					foreach (Widget children in obj.Children)
