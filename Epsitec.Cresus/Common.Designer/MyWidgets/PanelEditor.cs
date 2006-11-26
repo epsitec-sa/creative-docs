@@ -760,7 +760,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.draggingDimensionType != DimensionType.None)
 			{
-				this.draggingDimensionType = DimensionType.None;
+				this.EndingDimension();
 			}
 
 			this.SizeMarkDraggingStop(pos);
@@ -4750,6 +4750,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 #endif
 
 			this.SetDimensionValue(this.draggingDimensionType, this.draggingDimensionInitial+value);
+		}
+
+		protected void EndingDimension()
+		{
+			//	Fin de la modification d'une cote.
+			this.draggingDimensionType = DimensionType.None;
+			this.OnChildrenGeometryChanged();
+			this.module.MainWindow.UpdateInfoViewer();
 		}
 
 		protected double GetDimensionValue(DimensionType type)
