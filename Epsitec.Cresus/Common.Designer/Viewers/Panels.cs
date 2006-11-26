@@ -461,7 +461,7 @@ namespace Epsitec.Common.Designer.Viewers
 				for (int i=parents.Count-1; i>=0; i--)
 				{
 					this.StatusBarButton(parents[i], "Parent", i+1, (i==parents.Count-1) ? Res.Strings.Viewers.Panels.StatusBar.Root : Res.Strings.Viewers.Panels.StatusBar.Parent);
-					this.StatusBarArrow("Next", i);
+					this.StatusBarArrow("Next", i, Res.Strings.Viewers.Panels.StatusBar.Next);
 				}
 
 				//	Crée la série des widgets sélectionnés.
@@ -474,7 +474,7 @@ namespace Epsitec.Common.Designer.Viewers
 				obj = selection[0];  // premier objet sélectionné
 				if (selection.Count == 1 && obj.Children.Count > 0 && ObjectModifier.IsAbstractGroup(obj))
 				{
-					this.StatusBarArrow("None", 0);
+					this.StatusBarArrow("All", 0, "Sélectionne tous les enfants");
 
 					int rank = 0;
 					foreach (Widget children in obj.Children)
@@ -532,22 +532,21 @@ namespace Epsitec.Common.Designer.Viewers
 			ToolTip.Default.SetToolTip(button, tooltip);
 		}
 
-		protected void StatusBarArrow(string type, int rank)
+		protected void StatusBarArrow(string type, int rank, string tooltip)
 		{
 			//	Ajoute une flèche de séparation ">".
 			string name = string.Concat(type, ".Level", rank.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
 			GlyphButton arrow = new GlyphButton(this.statusBar);
 			arrow.Name = name;
-			arrow.GlyphShape = (type == "None") ? GlyphShape.Plus : GlyphShape.ArrowRight;
+			arrow.GlyphShape = (type == "All") ? GlyphShape.Plus : GlyphShape.ArrowRight;
 			arrow.ButtonStyle = ButtonStyle.ToolItem;
 			arrow.Dock = DockStyle.Left;
-			arrow.Margins = new Margins((type == "None") ? 10:0, 0, 0, 0);
-			arrow.Enable = (type != "None");
+			arrow.Margins = new Margins((type == "All") ? 10:0, 0, 0, 0);
 			arrow.Clicked += new MessageEventHandler(this.HandleStatusBarButtonClicked);
 			arrow.Entered += new MessageEventHandler(this.HandleStatusBarButtonEntered);
 			arrow.Exited += new MessageEventHandler(this.HandleStatusBarButtonExited);
-			ToolTip.Default.SetToolTip(arrow, Res.Strings.Viewers.Panels.StatusBar.Next);
+			ToolTip.Default.SetToolTip(arrow, tooltip);
 		}
 
 		protected void StatusBarOverflow()
@@ -578,32 +577,34 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (entered)
 			{
-				Widget obj = this.StatusBarSearch(type, rank);
-				this.panelEditor.SetEnteredObject(obj);
+				List<Widget> list = this.StatusBarSearch(type, rank);
+				this.panelEditor.SetEnteredObjects(list);
 			}
 			else
 			{
-				this.panelEditor.SetEnteredObject(null);
+				this.panelEditor.SetEnteredObjects(null);
 			}
 		}
 
 		protected void StatusBarSelect(string type, int rank)
 		{
 			//	Effectue une opération de sélection.
-			Widget obj = this.StatusBarSearch(type, rank);
-			if (obj == null)
+			List<Widget> list = this.StatusBarSearch(type, rank);
+			if (list.Count == 0)
 			{
 				this.panelEditor.DeselectAll();
 			}
 			else
 			{
-				this.panelEditor.SelectOneObject(obj);
+				this.panelEditor.SelectListObject(list);
 			}
 		}
 
-		protected Widget StatusBarSearch(string type, int rank)
+		protected List<Widget> StatusBarSearch(string type, int rank)
 		{
 			//	Cherche le widget correspondant à une opération de sélection.
+			List<Widget> list = new List<Widget>();
+
 			if (type == "Parent")
 			{
 				List<Widget> selection = this.panelEditor.SelectedObjects;
@@ -612,20 +613,20 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					obj = obj.Parent;
 				}
-				return obj;
+				list.Add(obj);
 			}
 
 			if (type == "Selected")
 			{
 				List<Widget> selection = this.panelEditor.SelectedObjects;
-				return selection[rank];
+				list.Add(selection[rank]);
 			}
 
 			if (type == "Children")
 			{
 				List<Widget> selection = this.panelEditor.SelectedObjects;
 				Widget obj = selection[0];
-				return obj.Children[rank] as Widget;
+				list.Add(obj.Children[rank] as Widget);
 			}
 
 			if (type == "Next")
@@ -643,15 +644,25 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					next = 0;
 				}
-				return obj.Parent.Children[next] as Widget;
+				list.Add(obj.Parent.Children[next] as Widget);
 			}
 
 			if (type == "Root")
 			{
-				return this.panelEditor.Panel;
+				list.Add(this.panelEditor.Panel);
 			}
 
-			return null;
+			if (type == "All")
+			{
+				List<Widget> selection = this.panelEditor.SelectedObjects;
+				Widget obj = selection[0];
+				foreach (Widget children in obj.Children)
+				{
+					list.Add(children);
+				}
+			}
+
+			return list;
 		}
 		#endregion
 

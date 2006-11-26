@@ -403,7 +403,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					break;
 
 				case MessageType.MouseLeave:
-					this.SetEnteredObject(null);
+					this.SetEnteredObjects(null);
 					this.SetHilitedObject(null, null);
 					this.SetHilitedParent(null, GridSelection.Invalid, GridSelection.Invalid, 0, 0);
 					break;
@@ -1741,7 +1741,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.handlingWindow.FocusedWidget = clone;
 				this.handlingWindow.Show();
 
-				this.SetEnteredObject(null);
+				this.SetEnteredObjects(null);
 				this.SetHilitedObject(null, null);
 				this.SetHilitedAttachmentRectangle(Rectangle.Empty);
 				this.Invalidate();
@@ -1855,7 +1855,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingWindow.FocusedWidget = container;
 			this.draggingWindow.Show();
 
-			this.SetEnteredObject(null);
+			this.SetEnteredObjects(null);
 			this.SetHilitedObject(null, null);
 			this.SetHilitedAttachmentRectangle(Rectangle.Empty);
 			this.isDragging = true;
@@ -2216,11 +2216,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Invalidate();
 		}
 
-		public void SelectOneObject(Widget obj)
+		protected void SelectOneObject(Widget obj)
 		{
 			//	Sélectionne un objet.
 			this.selectedObjects.Clear();
 			this.selectedObjects.Add(obj);
+			this.GridClearSelection();
+			this.UpdateAfterSelectionChanged();
+			this.OnChildrenSelected();
+			this.Invalidate();
+		}
+
+		public void SelectListObject(List<Widget> list)
+		{
+			//	Sélectionne une liste d'objets.
+			this.selectedObjects = list;
 			this.GridClearSelection();
 			this.UpdateAfterSelectionChanged();
 			this.OnChildrenSelected();
@@ -2275,14 +2285,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			GeometryCache.Clear(this.panel);
 		}
 
-		public void SetEnteredObject(Widget obj)
+		public void SetEnteredObjects(List<Widget> list)
 		{
 			//	Détermine l'objet survolé depuis la barre de statut.
-			if (this.enteredObject != obj)
-			{
-				this.enteredObject = obj;
-				this.Invalidate();
-			}
+			this.enteredObjects = list;
+			this.Invalidate();
 		}
 
 		protected void SetHilitedObject(Widget obj, GridSelection grid)
@@ -3615,9 +3622,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine l'objet survolé depuis la barre de statut.
-			if (this.enteredObject != null)
+			if (this.enteredObjects != null)
 			{
-				this.DrawEnteredObject(graphics, this.enteredObject);
+				this.DrawEnteredObjects(graphics, this.enteredObjects);
 			}
 
 			//	Dessine le rectangle de sélection.
@@ -3798,17 +3805,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void DrawEnteredObject(Graphics graphics, Widget obj)
+		protected void DrawEnteredObjects(Graphics graphics, List<Widget> list)
 		{
 			//	Dessine l'objet survolé depuis la barre de statut.
-			Rectangle rect = this.objectModifier.GetActualBounds(obj);
-			rect.Deflate(1.5);
 			Color red = Color.FromAlphaRgb(0.7, 255.0/255.0, 80.0/255.0, 60.0/255.0);
 
-			graphics.LineWidth = 3;
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(red);
-			graphics.LineWidth = 1;
+			foreach (Widget obj in list)
+			{
+				Rectangle rect = this.objectModifier.GetActualBounds(obj);
+				rect.Deflate(1.5);
+
+				graphics.LineWidth = 3;
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(red);
+				graphics.LineWidth = 1;
+			}
 		}
 
 		protected void DrawHilitedObject(Graphics graphics, Widget obj, GridSelection gs)
@@ -5449,7 +5460,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool						isSizeMarkVertical;
 		protected Point						sizeMarkOffset;
 		protected bool						isInside;
-		protected Widget					enteredObject;
+		protected List<Widget>				enteredObjects;
 
 		protected Image						mouseCursorArrow = null;
 		protected Image						mouseCursorArrowPlus = null;
