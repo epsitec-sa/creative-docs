@@ -4816,67 +4816,69 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SetDimensionValue(DimensionType type, double value)
 		{
 			//	Modifie la valeur d'une cote.
-			Widget obj = this.selectedObjects[0];
 			value = System.Math.Max(value, 0);
 			Margins m;
 
-			switch (type)
+			foreach (Widget obj in this.selectedObjects)
 			{
-				case DimensionType.Width:
-					this.objectModifier.SetPreferredWidth(obj, value);
-					break;
+				switch (type)
+				{
+					case DimensionType.Width:
+						this.objectModifier.SetPreferredWidth(obj, value);
+						break;
 
-				case DimensionType.Height:
-					this.objectModifier.SetPreferredHeight(obj, value);
-					break;
+					case DimensionType.Height:
+						this.objectModifier.SetPreferredHeight(obj, value);
+						break;
 
-				case DimensionType.MarginLeft:
-					m = this.objectModifier.GetMargins(obj);
-					m.Left = value;
-					this.objectModifier.SetMargins(obj, m);
-					break;
+					case DimensionType.MarginLeft:
+						m = this.objectModifier.GetMargins(obj);
+						m.Left = value;
+						this.objectModifier.SetMargins(obj, m);
+						break;
 
-				case DimensionType.MarginRight:
-					m = this.objectModifier.GetMargins(obj);
-					m.Right = value;
-					this.objectModifier.SetMargins(obj, m);
-					break;
+					case DimensionType.MarginRight:
+						m = this.objectModifier.GetMargins(obj);
+						m.Right = value;
+						this.objectModifier.SetMargins(obj, m);
+						break;
 
-				case DimensionType.MarginBottom:
-					m = this.objectModifier.GetMargins(obj);
-					m.Bottom = value;
-					this.objectModifier.SetMargins(obj, m);
-					break;
+					case DimensionType.MarginBottom:
+						m = this.objectModifier.GetMargins(obj);
+						m.Bottom = value;
+						this.objectModifier.SetMargins(obj, m);
+						break;
 
-				case DimensionType.MarginTop:
-					m = this.objectModifier.GetMargins(obj);
-					m.Top = value;
-					this.objectModifier.SetMargins(obj, m);
-					break;
+					case DimensionType.MarginTop:
+						m = this.objectModifier.GetMargins(obj);
+						m.Top = value;
+						this.objectModifier.SetMargins(obj, m);
+						break;
 
-				case DimensionType.PaddingLeft:
-					m = this.objectModifier.GetPadding(obj);
-					m.Left = value;
-					this.objectModifier.SetPadding(obj, m);
-					break;
+					case DimensionType.PaddingLeft:
+						m = this.objectModifier.GetPadding(obj);
+						m.Left = value;
+						this.objectModifier.SetPadding(obj, m);
+						break;
 
-				case DimensionType.PaddingRight:
-					m = this.objectModifier.GetPadding(obj);
-					m.Right = value;
-					this.objectModifier.SetPadding(obj, m);
-					break;
+					case DimensionType.PaddingRight:
+						m = this.objectModifier.GetPadding(obj);
+						m.Right = value;
+						this.objectModifier.SetPadding(obj, m);
+						break;
 
-				case DimensionType.PaddingBottom:
-					m = this.objectModifier.GetPadding(obj);
-					m.Bottom = value;
-					this.objectModifier.SetPadding(obj, m);
-					break;
+					case DimensionType.PaddingBottom:
+						m = this.objectModifier.GetPadding(obj);
+						m.Bottom = value;
+						this.objectModifier.SetPadding(obj, m);
+						break;
 
-				case DimensionType.PaddingTop:
-					m = this.objectModifier.GetPadding(obj);
-					m.Top = value;
-					this.objectModifier.SetPadding(obj, m);
-					break;
+					case DimensionType.PaddingTop:
+						m = this.objectModifier.GetPadding(obj);
+						m.Top = value;
+						this.objectModifier.SetPadding(obj, m);
+						break;
+				}
 			}
 
 			this.Invalidate();
