@@ -201,6 +201,11 @@ namespace Epsitec.Common.Designer
 			return Color.FromAlphaRgb(a, c.R, c.G, c.B);
 		}
 
+		static public Color FactorColor(Color c, double factor)
+		{
+			return Color.FromAlphaRgb(c.A*factor, c.R, c.G, c.B);
+		}
+
 		static public Color WarningColor
 		{
 			//	Retourne la couleur à utiliser pour un texte d'avertissement dans une fenêtre.

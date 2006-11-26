@@ -596,7 +596,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.isRectangling = false;
 			Widget obj;
 
-			if (this.selectedObjects.Count == 1 && !this.isDragging && !this.handlesList.IsDragging)
+			if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				obj = this.selectedObjects[0];
 				DimensionType type = this.DetectDimension(obj, pos);
@@ -709,7 +709,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
-				if (this.selectedObjects.Count == 1 && !this.isDragging && !this.handlesList.IsDragging)
+				if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging)
 				{
 					Widget obj = this.selectedObjects[0];
 					DimensionType type = this.DetectDimension(obj, pos);
@@ -3615,7 +3615,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.DrawHilitedObject(graphics, this.hilitedObject, this.hilitedGrid);
 			}
 
-			//	Dessine l'objet parentsurvolé.
+			//	Dessine l'objet parent survolé.
 			if (this.hilitedParent != null)
 			{
 				this.DrawHilitedParent(graphics, this.hilitedParent, this.hilitedParentColumn, this.hilitedParentRow, this.hilitedParentColumnCount, this.hilitedParentRowCount);
@@ -3664,7 +3664,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les dimensions de l'objet sélectionné.
-			if (this.selectedObjects.Count == 1 && !this.isDragging && !this.handlesList.IsDragging)
+			if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				Widget obj = this.selectedObjects[0];
 				this.DrawDimensionsObject(graphics, obj);
@@ -3711,7 +3711,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			foreach (Widget obj in this.selectedObjects)
 			{
 				this.DrawSelectedObject(graphics, obj);
-				this.DrawPadding(graphics, obj);
+				this.DrawPadding(graphics, obj, 1.0);
 			}
 
 			if (this.selectedObjects.Count > 0)
@@ -3719,11 +3719,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Widget obj = this.selectedObjects[0];
 				if (obj != this.panel)
 				{
-					this.DrawPadding(graphics, obj.Parent);
+					this.DrawPadding(graphics, obj.Parent, 0.4);
 
 					if (this.objectModifier.AreChildrenGrid(obj.Parent))
 					{
-						this.DrawGrid(graphics, obj.Parent, PanelsContext.ColorHiliteOutline);
+						this.DrawGrid(graphics, obj.Parent, PanelsContext.ColorHiliteOutline, 0.4);
 					}
 				}
 			}
@@ -3765,7 +3765,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.objectModifier.AreChildrenGrid(obj))
 			{
-				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteOutline);
+				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteOutline, 1.0);
 			}
 
 			GridSelection gs = GridSelection.Get(obj);
@@ -3775,7 +3775,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void DrawPadding(Graphics graphics, Widget obj)
+		protected void DrawPadding(Graphics graphics, Widget obj, double factor)
 		{
 			//	Dessine les marges de padding d'un objet, sous forme de hachures.
 			if (ObjectModifier.IsAbstractGroup(obj))
@@ -3801,7 +3801,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddRectangle(bounds);
 				graphics.AddRectangle(inside);
 
-				graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
+				graphics.RenderSolid(Misc.FactorColor(PanelsContext.ColorHiliteOutline, factor));
 			}
 		}
 
@@ -3834,7 +3834,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (ObjectModifier.IsAbstractGroup(obj))
 			{
-				this.DrawPadding(graphics, obj);
+				this.DrawPadding(graphics, obj, 1.0);
 
 				Rectangle outline = this.objectModifier.GetActualBounds(obj);
 				outline.Deflate(this.context.GroupOutline/2);
@@ -3868,7 +3868,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.objectModifier.AreChildrenGrid(obj))
 			{
-				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteOutline);
+				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteOutline, 1.0);
 			}
 
 			if (gs != null)
@@ -3903,7 +3903,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.objectModifier.AreChildrenGrid(obj))
 			{
-				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteOutline);
+				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteOutline, 1.0);
 			}
 
 			if (column != GridSelection.Invalid && row != GridSelection.Invalid)
@@ -3913,7 +3913,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void DrawGrid(Graphics graphics, Widget obj, Color color)
+		protected void DrawGrid(Graphics graphics, Widget obj, Color color, double factor)
 		{
 			if (!this.objectModifier.AreChildrenGrid(obj))  return;
 
@@ -3963,7 +3963,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(color);
+			graphics.RenderSolid(Misc.FactorColor(color, factor));
 		}
 
 		protected void DrawGridSelected(Graphics graphics, Widget obj, GridSelection gs, Color color, bool selection)
