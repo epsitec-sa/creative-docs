@@ -587,7 +587,9 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			CollectionView.GenerateSubgroups (root, this.rootGroup);
+			Dictionary<string, CollectionViewGroup> groupRecycler = new Dictionary<string, CollectionViewGroup> ();
+
+			CollectionView.GenerateSubgroups (root, this.rootGroup, "", groupRecycler);
 		}
 
 		private static void ClassifyItemIntoGroups(object item, System.Globalization.CultureInfo culture, GroupDescription[] rules, int level, GroupNode node)
@@ -615,8 +617,24 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private static void GenerateSubgroups(GroupNode node, CollectionViewGroup parentGroup)
+		private static void GenerateSubgroups(GroupNode node, CollectionViewGroup parentGroup, string path, Dictionary<string, CollectionViewGroup> groupRecycler)
 		{
+			//	If the parent already had some subgroups, we cache them into a
+			//	dictionary in order to reuse them instead of creating them from
+			//	scratch if we happen to need the exact same groups.
+			
+			//	The group identity is, in this case, determined by the path leading
+			//	to the group, starting at the root of the tree.
+			
+			if (parentGroup.HasSubgroups)
+			{
+				foreach (CollectionViewGroup subgroup in parentGroup.Subgroups)
+				{
+					string subpath = string.Concat (path, "/", subgroup.Name);
+					groupRecycler[subpath] = subgroup;
+				}
+			}
+			
 			//	Generate the subgroup collections based on the group node tree.
 
 			parentGroup.ClearSubgroups ();
@@ -628,8 +646,25 @@ namespace Epsitec.Common.Types
 				
 				foreach (GroupNode subnode in node.Subnodes)
 				{
-					CollectionViewGroup group = new CollectionViewGroup (subnode.Name, parentGroup);
-					CollectionView.GenerateSubgroups (subnode, group);
+					string subpath = string.Concat (path, "/", subnode.Name);
+					CollectionViewGroup group;
+					
+					if (groupRecycler.TryGetValue (subpath, out group))
+					{
+						//	The group was already known from a previous grouping
+						//	operation; reuse the same CollectionViewGroup object
+						//	in order to improve efficiency.
+
+						//	Note: UI.ItemPanel can benefit from this optimization
+						//	since it will be able to reuse user interface elements
+						//	and keep the expanded/selected state alive.
+					}
+					else
+					{
+						group = new CollectionViewGroup (subnode.Name, parentGroup);
+					}
+					
+					CollectionView.GenerateSubgroups (subnode, group, subpath, groupRecycler);
 					groups.Add (group);
 				}
 
