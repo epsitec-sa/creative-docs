@@ -407,6 +407,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				case MessageType.MouseWheel:
 					this.DimensionWheel(message.Wheel);
+					message.Consumer = this;
 					break;
 
 				case MessageType.MouseLeave:
