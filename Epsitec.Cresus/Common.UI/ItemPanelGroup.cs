@@ -135,6 +135,22 @@ namespace Epsitec.Common.UI
 			this.UpdateItemViewSize ();
 		}
 
+		internal void ClearUserInterface()
+		{
+			if (this.panel != null)
+			{
+				this.panel.ClearUserInterface ();
+			}
+		}
+
+		internal void RefreshUserInterface()
+		{
+			if (this.panel != null)
+			{
+				this.panel.RefreshUserInterface ();
+			}
+		}
+
 		public override Drawing.Margins GetInternalPadding()
 		{
 			return new Drawing.Margins (0, 0, 20, 0);

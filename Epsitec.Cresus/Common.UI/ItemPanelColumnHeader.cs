@@ -106,7 +106,7 @@ namespace Epsitec.Common.UI
 			{
 				get
 				{
-					return this.Widget;
+					return this.widget;
 				}
 			}
 
@@ -138,7 +138,7 @@ namespace Epsitec.Common.UI
 			return (ItemPanelColumnHeader) obj.GetValue (ItemPanelColumnHeader.ColumnHeaderProperty);
 		}
 		
-		public static readonly DependencyProperty ColumnHeaderProperty = DependencyProperty.RegisterAttached ("ColumnHeader", typeof (ItemPanelColumnHeader), typeof (ItemPanelColumnHeader));
+		public static readonly DependencyProperty ColumnHeaderProperty = DependencyProperty.RegisterAttached ("ColumnHeader", typeof (ItemPanelColumnHeader), typeof (ItemPanelColumnHeader), new DependencyPropertyMetadataWithInheritance ());
 
 		private List<Column> columns;
 		private GridLayoutEngine gridLayout;

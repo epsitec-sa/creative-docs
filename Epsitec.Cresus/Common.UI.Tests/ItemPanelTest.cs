@@ -117,6 +117,33 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (typeof (ItemPanelGroup), panel.GetItemView (1).Widget.GetType ());
 			Assert.AreEqual (3, (panel.GetItemView (0).Item as CollectionViewGroup).ItemCount);
 			Assert.AreEqual (3, (panel.GetItemView (1).Item as CollectionViewGroup).ItemCount);
+
+			panel.ExpandItemView (panel.GetItemView (0), true);
+			Widgets.Application.ExecuteAsyncCallbacks ();
+			panel.Show (panel.GetItemView (0));
+			
+			ItemPanelGroup group = panel.GetItemView (0).Widget as ItemPanelGroup;
+
+			Assert.IsNotNull (group.ChildPanel);
+			Assert.AreEqual (panel, group.Parent);
+			Assert.AreEqual (panel, group.ParentPanel);
+			Assert.AreEqual (panel.GetItemView (0), group.ParentView);
+			Assert.AreEqual ("Epsitec.Common.Types.StructuredData", group.ChildPanel.GetItemView (2).Widget.Text);
+
+			ItemPanelColumnHeader header = new ItemPanelColumnHeader ();
+
+			header.AddColumn ("Stock");
+			header.AddColumn ("Article");
+			header.AddColumn ("Price");
+			
+			ItemPanelColumnHeader.SetColumnHeader (panel, header);
+			
+			panel.Refresh ();
+
+			Assert.AreEqual (3, group.ChildPanel.GetItemView (2).Widget.Children.Count);
+			Assert.AreEqual ("7", ((Widgets.Widget)group.ChildPanel.GetItemView (2).Widget.Children[0]).Text);
+			Assert.AreEqual ("Tournevis", ((Widgets.Widget) group.ChildPanel.GetItemView (2).Widget.Children[1]).Text);
+			Assert.AreEqual ("25.70", ((Widgets.Widget) group.ChildPanel.GetItemView (2).Widget.Children[2]).Text);
 		}
 
 		[Test]

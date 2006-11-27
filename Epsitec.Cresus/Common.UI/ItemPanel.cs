@@ -255,6 +255,28 @@ namespace Epsitec.Common.UI
 			return list;
 		}
 
+		public void Refresh()
+		{
+			this.ClearUserInterface ();
+			this.RefreshItemViews ();
+		}
+
+		internal void ClearUserInterface()
+		{
+			using (new LockManager (this))
+			{
+				foreach (ItemView view in this.views)
+				{
+					view.ClearUserInterface ();
+				}
+			}
+		}
+
+		internal void RefreshUserInterface()
+		{
+			this.RefreshItemViews ();
+		}
+		
 		public void Show(ItemView view)
 		{
 			if (this.Aperture.IsSurfaceZero)
@@ -464,7 +486,8 @@ namespace Epsitec.Common.UI
 			
 			foreach (ItemView view in views)
 			{
-				if (view.Widget != null)
+				if ((view.Widget != null) &&
+					(view.IsCleared == false))
 				{
 					if (view.Bounds.IntersectsWith (aperture))
 					{

@@ -130,7 +130,14 @@ namespace Epsitec.Common.UI
 				}
 			}
 		}
-		
+
+		internal bool IsCleared
+		{
+			get
+			{
+				return this.isCleared;
+			}
+		}
 		
 		internal void UpdatePreferredSize(ItemPanel panel)
 		{
@@ -168,8 +175,39 @@ namespace Epsitec.Common.UI
 			}
 			if (this.widget != null)
 			{
+				if (this.isCleared)
+				{
+					this.isCleared = false;
+					
+					ItemPanelGroup group = this.widget as ItemPanelGroup;
+
+					if (group != null)
+					{
+						group.RefreshUserInterface ();
+					}
+				}
+				
 				this.widget.SetEmbedder (panel);
 				this.widget.SetManualBounds (this.bounds);
+			}
+		}
+
+		internal void ClearUserInterface()
+		{
+			if (this.widget != null)
+			{
+				ItemPanelGroup group = this.widget as ItemPanelGroup;
+
+				if (group == null)
+				{
+					this.widget.Dispose ();
+					this.widget = null;
+				}
+				else
+				{
+					group.ClearUserInterface ();
+					this.isCleared = true;
+				}
 			}
 		}
 
@@ -179,6 +217,7 @@ namespace Epsitec.Common.UI
 			{
 				this.widget.Dispose ();
 				this.widget = null;
+				this.isCleared = false;
 			}
 		}
 
@@ -191,5 +230,6 @@ namespace Epsitec.Common.UI
 		private bool isSelected;
 		private bool isDisabled;
 		private bool isExpanded;
+		private bool isCleared;
 	}
 }
