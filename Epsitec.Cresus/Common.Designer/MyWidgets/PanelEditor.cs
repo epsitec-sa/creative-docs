@@ -1654,10 +1654,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					UI.PanelPlaceholder panel = obj as UI.PanelPlaceholder;
 					Size size = panel.PanelPreferredSize;
-					Point center = this.objectModifier.GetPreferredBounds(obj).Center;
+					Point center = this.objectModifier.GetBounds(obj).Center;
 
 					Rectangle bounds = new Rectangle(center-size/2, size);
-					this.objectModifier.SetPreferredBounds(obj, bounds);
+					this.objectModifier.SetBounds(obj, bounds);
 				}
 			}
 
@@ -2396,7 +2396,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Déplace et change de parent pour tous les objets sélectionnés.
 			foreach (Widget obj in this.selectedObjects)
 			{
-				Rectangle bounds = this.objectModifier.GetPreferredBounds(obj);
+				Rectangle bounds = this.objectModifier.GetBounds(obj);
 				bounds.Offset(move);
 
 				if (parent != null)
@@ -2677,7 +2677,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Modifie le système d'attachement d'un objet.
 			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
 			{
-				Rectangle bounds = this.objectModifier.GetPreferredBounds(obj);
+				Rectangle bounds = this.objectModifier.GetBounds(obj);
 
 				ObjectModifier.AnchoredHorizontalAttachment ha = this.objectModifier.GetAnchoredHorizontalAttachment(obj);
 				ObjectModifier.AnchoredVerticalAttachment   va = this.objectModifier.GetAnchoredVerticalAttachment(obj);
@@ -2732,7 +2732,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.objectModifier.SetAnchoredHorizontalAttachment(obj, ha);
 				this.objectModifier.SetAnchoredVerticalAttachment(obj, va);
-				this.objectModifier.SetPreferredBounds(obj, bounds);
+				this.objectModifier.SetBounds(obj, bounds);
 
 				this.handlesList.UpdateGeometry();
 				this.OnChildrenGeometryChanged();
@@ -2743,9 +2743,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
 			{
-				Rectangle bounds = this.objectModifier.GetPreferredBounds(obj);
+				Rectangle bounds = this.objectModifier.GetBounds(obj);
 				bounds.Offset(x-bounds.Left, 0);
-				this.objectModifier.SetPreferredBounds(obj, bounds);
+				this.objectModifier.SetBounds(obj, bounds);
 			}
 		}
 
@@ -2753,9 +2753,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
 			{
-				Rectangle bounds = this.objectModifier.GetPreferredBounds(obj);
+				Rectangle bounds = this.objectModifier.GetBounds(obj);
 				bounds.Offset(0, y-bounds.Bottom);
-				this.objectModifier.SetPreferredBounds(obj, bounds);
+				this.objectModifier.SetBounds(obj, bounds);
 			}
 		}
 
@@ -2763,40 +2763,40 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
 			{
-				Rectangle bounds = this.objectModifier.GetPreferredBounds(obj);
+				Rectangle bounds = this.objectModifier.GetBounds(obj);
 				bounds.Offset(pos-bounds.BottomLeft);
-				this.objectModifier.SetPreferredBounds(obj, bounds);
+				this.objectModifier.SetBounds(obj, bounds);
 			}
 		}
 
 		public Rectangle GetObjectPreferredBounds(Widget obj)
 		{
-			return this.objectModifier.GetPreferredBounds(obj);
+			return this.objectModifier.GetBounds(obj);
 		}
 
 		public void SetObjectPreferredBounds(Widget obj, Rectangle bounds)
 		{
 			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
 			{
-				this.objectModifier.SetPreferredBounds(obj, bounds);
+				this.objectModifier.SetBounds(obj, bounds);
 			}
 
 			if (this.objectModifier.AreChildrenStacked(obj.Parent))
 			{
-				if (this.objectModifier.HasPreferredWidth(obj))
+				if (this.objectModifier.HasWidth(obj))
 				{
-					this.objectModifier.SetPreferredWidth(obj, bounds.Width);
+					this.objectModifier.SetWidth(obj, bounds.Width);
 				}
 
-				if (this.objectModifier.HasPreferredHeight(obj))
+				if (this.objectModifier.HasHeight(obj))
 				{
-					this.objectModifier.SetPreferredHeight(obj, bounds.Height);
+					this.objectModifier.SetHeight(obj, bounds.Height);
 				}
 			}
 
 			if (this.objectModifier.AreChildrenGrid(obj.Parent))
 			{
-				this.objectModifier.SetPreferredBounds(obj, bounds);
+				this.objectModifier.SetBounds(obj, bounds);
 			}
 		}
 
@@ -2814,7 +2814,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			return true;
 #else
-			return this.objectModifier.HasPreferredBounds(obj) || this.objectModifier.HasPreferredWidth(obj);
+			return this.objectModifier.HasBounds(obj) || this.objectModifier.HasWidth(obj);
 #endif
 		}
 
@@ -2832,7 +2832,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			return true;
 #else
-			return this.objectModifier.HasPreferredBounds(obj) || this.objectModifier.HasPreferredHeight(obj);
+			return this.objectModifier.HasBounds(obj) || this.objectModifier.HasHeight(obj);
 #endif
 		}
 
@@ -3774,9 +3774,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Rectangle bounds = this.objectModifier.GetActualBounds(obj);
 			bounds.Deflate(0.5);
 
-			if (this.objectModifier.HasPreferredBounds(obj))
+			if (this.objectModifier.HasBounds(obj))
 			{
-				Rectangle pref = this.objectModifier.GetPreferredBounds(obj);
+				Rectangle pref = this.objectModifier.GetBounds(obj);
 				pref.Deflate(0.5);
 
 				if (pref != bounds)
@@ -4837,10 +4837,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			switch (type)
 			{
 				case DimensionType.Width:
-					return this.objectModifier.GetPreferredWidth(obj);
+					return this.objectModifier.GetWidth(obj);
 
 				case DimensionType.Height:
-					return this.objectModifier.GetPreferredHeight(obj);
+					return this.objectModifier.GetHeight(obj);
 
 				case DimensionType.MarginLeft:
 					return this.objectModifier.GetMargins(obj).Left;
@@ -4888,12 +4888,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					case DimensionType.Width:
 						value = System.Math.Max(value, 0);
-						this.objectModifier.SetPreferredWidth(obj, value);
+						this.objectModifier.SetWidth(obj, value);
 						break;
 
 					case DimensionType.Height:
 						value = System.Math.Max(value, 0);
-						this.objectModifier.SetPreferredHeight(obj, value);
+						this.objectModifier.SetHeight(obj, value);
 						break;
 
 					case DimensionType.MarginLeft:
@@ -5001,7 +5001,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			switch (type)
 			{
 				case DimensionType.Width:
-					if (this.objectModifier.HasPreferredWidth(obj))
+					if (this.objectModifier.HasWidth(obj))
 					{
 						box = bounds;
 						box.Bottom = ext.Bottom-d;
@@ -5010,7 +5010,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					return box;
 
 				case DimensionType.Height:
-					if (this.objectModifier.HasPreferredHeight(obj))
+					if (this.objectModifier.HasHeight(obj))
 					{
 						box = bounds;
 						box.Left = ext.Right+d-h;

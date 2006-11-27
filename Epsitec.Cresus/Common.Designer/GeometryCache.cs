@@ -41,7 +41,7 @@ namespace Epsitec.Common.Designer
 				this.objectModifier.AdaptFromParent(obj, ObjectModifier.StackedHorizontalAttachment.None, ObjectModifier.StackedVerticalAttachment.None);
 				this.objectModifier.SetAnchoredHorizontalAttachment(obj, this.aha);
 				this.objectModifier.SetAnchoredVerticalAttachment(obj, this.ava);
-				this.objectModifier.SetPreferredBounds(this.obj, this.bounds);
+				this.objectModifier.SetBounds(this.obj, this.bounds);
 			}
 
 			if (cp == ObjectModifier.ChildrenPlacement.HorizontalStacked)

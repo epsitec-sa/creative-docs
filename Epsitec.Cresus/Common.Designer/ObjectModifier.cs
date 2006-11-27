@@ -1487,14 +1487,14 @@ namespace Epsitec.Common.Designer
 			return bounds;
 		}
 
-		public bool HasPreferredBounds(Widget obj)
+		public bool HasBounds(Widget obj)
 		{
 			//	Indique si l'objet a une position et des dimensions modifiables.
 			ChildrenPlacement cp = this.GetParentPlacement(obj);
 			return (cp == ChildrenPlacement.Anchored || cp == ChildrenPlacement.Grid);
 		}
 
-		public bool HasPreferredBounds(Widget obj, BoundsMode mode)
+		public bool HasBounds(Widget obj, BoundsMode mode)
 		{
 			//	Indique si l'objet a une position ou des dimensions modifiables.
 			ChildrenPlacement cp = this.GetParentPlacement(obj);
@@ -1525,7 +1525,7 @@ namespace Epsitec.Common.Designer
 			return false;
 		}
 
-		public Rectangle GetPreferredBounds(Widget obj)
+		public Rectangle GetBounds(Widget obj)
 		{
 			//	Retourne la position et les dimensions de l'objet.
 			//	Le rectangle rendu est toujours valide, quel que soit le mode d'attachement.
@@ -1556,11 +1556,11 @@ namespace Epsitec.Common.Designer
 			return bounds;
 		}
 
-		public void SetPreferredBounds(Widget obj, Rectangle bounds)
+		public void SetBounds(Widget obj, Rectangle bounds)
 		{
 			//	Choix de la position et des dimensions de l'objet.
 			//	Uniquement pour les objets Anchored ou Grid.
-			System.Diagnostics.Debug.Assert(this.HasPreferredBounds(obj));
+			System.Diagnostics.Debug.Assert(this.HasBounds(obj));
 
 			bounds.Normalise();
 
@@ -1713,11 +1713,11 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public bool HasPreferredWidth(Widget obj)
+		public bool HasWidth(Widget obj)
 		{
 			//	Indique s'il est possible de modifier la largeur d'un objet.
-			//	A ne pas confondre avec SetPreferredBounds pour le mode ancré. Un objet ancré
-			//	pour lequel on peut faire un SetPreferredBounds n'accepte pas le SetPreferredWidth !
+			//	A ne pas confondre avec SetBounds pour le mode ancré. Un objet ancré
+			//	pour lequel on peut faire un SetBounds n'accepte pas le SetWidth !
 			ObjectType type = ObjectModifier.GetObjectType(obj);
 			if (type == ObjectType.MainPanel)
 			{
@@ -1751,11 +1751,11 @@ namespace Epsitec.Common.Designer
 			return false;
 		}
 
-		public double GetPreferredWidth(Widget obj)
+		public double GetWidth(Widget obj)
 		{
 			//	Retourne la largeur de l'objet.
 			//	Uniquement pour les objets HorizontalStacked.
-			if (this.HasPreferredWidth(obj))
+			if (this.HasWidth(obj))
 			{
 				return obj.PreferredWidth;
 			}
@@ -1763,11 +1763,11 @@ namespace Epsitec.Common.Designer
 			return 0;
 		}
 
-		public void SetPreferredWidth(Widget obj, double width)
+		public void SetWidth(Widget obj, double width)
 		{
 			//	Choix de la largeur de l'objet.
 			//	Uniquement pour les objets VerticalStacked.
-			System.Diagnostics.Debug.Assert(this.HasPreferredWidth(obj));
+			System.Diagnostics.Debug.Assert(this.HasWidth(obj));
 
 			if (obj.PreferredWidth != width)
 			{
@@ -1777,11 +1777,11 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public bool HasPreferredHeight(Widget obj)
+		public bool HasHeight(Widget obj)
 		{
 			//	Indique s'il est possible de modifier la hauteur d'un objet.
-			//	A ne pas confondre avec SetPreferredBounds pour le mode ancré. Un objet ancré
-			//	pour lequel on peut faire un SetPreferredBounds n'accepte pas le HasPreferredHeight !
+			//	A ne pas confondre avec SetBounds pour le mode ancré. Un objet ancré
+			//	pour lequel on peut faire un SetBounds n'accepte pas le HasHeight !
 			ObjectType type = ObjectModifier.GetObjectType(obj);
 			if (type == ObjectType.MainPanel)
 			{
@@ -1815,11 +1815,11 @@ namespace Epsitec.Common.Designer
 			return false;
 		}
 
-		public double GetPreferredHeight(Widget obj)
+		public double GetHeight(Widget obj)
 		{
 			//	Retourne la hauteur de l'objet.
 			//	Uniquement pour les objets VerticalStacked.
-			if (this.HasPreferredHeight(obj))
+			if (this.HasHeight(obj))
 			{
 				return obj.PreferredHeight;
 			}
@@ -1827,11 +1827,11 @@ namespace Epsitec.Common.Designer
 			return 0;
 		}
 
-		public void SetPreferredHeight(Widget obj, double height)
+		public void SetHeight(Widget obj, double height)
 		{
 			//	Choix de la hauteur de l'objet.
 			//	Uniquement pour les objets HorizontalStacked.
-			System.Diagnostics.Debug.Assert(this.HasPreferredHeight(obj));
+			System.Diagnostics.Debug.Assert(this.HasHeight(obj));
 
 			if (obj.PreferredHeight != height)
 			{
@@ -2268,67 +2268,6 @@ namespace Epsitec.Common.Designer
 			if (obj.VerticalAlignment != va)
 			{
 				obj.VerticalAlignment = va;
-				this.Invalidate();
-			}
-		}
-		#endregion
-
-
-		#region Min & max size
-		public double GetMinWidth(Widget obj)
-		{
-			return obj.MinWidth;
-		}
-
-		public void SetMinWidth(Widget obj, double width)
-		{
-			if (obj.MinWidth != width)
-			{
-				obj.MinWidth = width;
-				this.Invalidate();
-			}
-		}
-
-		public double GetMaxWidth(Widget obj)
-		{
-			if (System.Double.IsInfinity(obj.MaxWidth))  return 9999;  // TODO: à supprimer !
-			return obj.MaxWidth;
-		}
-
-		public void SetMaxWidth(Widget obj, double width)
-		{
-			if (obj.MaxWidth != width)
-			{
-				obj.MaxWidth = width;
-				this.Invalidate();
-			}
-		}
-
-		public double GetMinHeight(Widget obj)
-		{
-			return obj.MinHeight;
-		}
-
-		public void SetMinHeight(Widget obj, double height)
-		{
-			if (obj.MinHeight != height)
-			{
-				obj.MinHeight = height;
-				this.Invalidate();
-			}
-		}
-
-		public double GetMaxHeight(Widget obj)
-		{
-			if (System.Double.IsInfinity(obj.MaxHeight))  return 9999;  // TODO: à supprimer !
-			return obj.MaxHeight;
-		}
-
-		public void SetMaxHeight(Widget obj, double height)
-		{
-			if (obj.MaxHeight != height)
-			{
-				obj.MaxHeight = height;
 				this.Invalidate();
 			}
 		}

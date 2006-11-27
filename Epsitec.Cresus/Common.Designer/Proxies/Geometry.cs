@@ -127,30 +127,6 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		public double MinWidth
-		{
-			get
-			{
-				return (double) this.GetValue(Geometry.MinWidthProperty);
-			}
-			set
-			{
-				this.SetValue(Geometry.MinWidthProperty, value);
-			}
-		}
-
-		public double MinHeight
-		{
-			get
-			{
-				return (double) this.GetValue(Geometry.MinHeightProperty);
-			}
-			set
-			{
-				this.SetValue(Geometry.MinHeightProperty, value);
-			}
-		}
-
 
 		protected override void InitializePropertyValues()
 		{
@@ -169,47 +145,41 @@ namespace Epsitec.Common.Designer.Proxies
 				this.BottomMargin = margins.Bottom;
 			}
 
-			if (this.ObjectModifier.HasPreferredBounds(this.DefaultWidget))
+			if (this.ObjectModifier.HasBounds(this.DefaultWidget))
 			{
-				Rectangle bounds = this.ObjectModifier.GetPreferredBounds(this.DefaultWidget);
+				Rectangle bounds = this.ObjectModifier.GetBounds(this.DefaultWidget);
 
-				if (this.ObjectModifier.HasPreferredBounds(this.DefaultWidget, ObjectModifier.BoundsMode.OriginX))
+				if (this.ObjectModifier.HasBounds(this.DefaultWidget, ObjectModifier.BoundsMode.OriginX))
 				{
 					this.OriginX = bounds.Left;
 				}
 
-				if (this.ObjectModifier.HasPreferredBounds(this.DefaultWidget, ObjectModifier.BoundsMode.OriginY))
+				if (this.ObjectModifier.HasBounds(this.DefaultWidget, ObjectModifier.BoundsMode.OriginY))
 				{
 					this.OriginY = bounds.Bottom;
 				}
 
-				if (this.ObjectModifier.HasPreferredBounds(this.DefaultWidget, ObjectModifier.BoundsMode.Width))
+				if (this.ObjectModifier.HasBounds(this.DefaultWidget, ObjectModifier.BoundsMode.Width))
 				{
 					this.Width = bounds.Width;
 				}
 
-				if (this.ObjectModifier.HasPreferredBounds(this.DefaultWidget, ObjectModifier.BoundsMode.Height))
+				if (this.ObjectModifier.HasBounds(this.DefaultWidget, ObjectModifier.BoundsMode.Height))
 				{
 					this.Height = bounds.Height;
 				}
 			}
 			else
 			{
-				if (this.ObjectModifier.HasPreferredWidth(this.DefaultWidget))
+				if (this.ObjectModifier.HasWidth(this.DefaultWidget))
 				{
-					this.Width = this.ObjectModifier.GetPreferredWidth(this.DefaultWidget);
+					this.Width = this.ObjectModifier.GetWidth(this.DefaultWidget);
 				}
 
-				if (this.ObjectModifier.HasPreferredHeight(this.DefaultWidget))
+				if (this.ObjectModifier.HasHeight(this.DefaultWidget))
 				{
-					this.Height = this.ObjectModifier.GetPreferredHeight(this.DefaultWidget);
+					this.Height = this.ObjectModifier.GetHeight(this.DefaultWidget);
 				}
-			}
-
-			if (true)
-			{
-				this.MinWidth = this.ObjectModifier.GetMinWidth(this.DefaultWidget);
-				this.MinHeight = this.ObjectModifier.GetMinHeight(this.DefaultWidget);
 			}
 		}
 
@@ -251,20 +221,20 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in this.Widgets)
 					{
-						if (this.ObjectModifier.HasPreferredBounds(obj))
+						if (this.ObjectModifier.HasBounds(obj))
 						{
-							this.ObjectModifier.SetPreferredBounds(obj, bounds);
+							this.ObjectModifier.SetBounds(obj, bounds);
 						}
 						else
 						{
-							if (this.ObjectModifier.HasPreferredWidth(obj))
+							if (this.ObjectModifier.HasWidth(obj))
 							{
-								this.ObjectModifier.SetPreferredWidth(obj, bounds.Width);
+								this.ObjectModifier.SetWidth(obj, bounds.Width);
 							}
 
-							if (this.ObjectModifier.HasPreferredHeight(obj))
+							if (this.ObjectModifier.HasHeight(obj))
 							{
-								this.ObjectModifier.SetPreferredHeight(obj, bounds.Height);
+								this.ObjectModifier.SetHeight(obj, bounds.Height);
 							}
 						}
 					}
@@ -289,9 +259,6 @@ namespace Epsitec.Common.Designer.Proxies
 			Geometry.WidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 			Geometry.HeightProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 
-			Geometry.MinWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
-			Geometry.MinHeightProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
-
 			Geometry.LeftMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.LeftMargin.Id);
 			Geometry.RightMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.RightMargin.Id);
 			Geometry.TopMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.TopMargin.Id);
@@ -301,9 +268,6 @@ namespace Epsitec.Common.Designer.Proxies
 			Geometry.OriginYProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.OriginY.Id);
 			Geometry.WidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.Width.Id);
 			Geometry.HeightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.Height.Id);
-
-			Geometry.MinWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.MinWidth.Id);
-			Geometry.MinHeightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.MinHeight.Id);
 		}
 
 
@@ -371,52 +335,6 @@ namespace Epsitec.Common.Designer.Proxies
 			that.NotifyBoundsChanged(bounds);
 		}
 
-		private static void NotifyMinWidthChanged(DependencyObject o, object oldValue, object newValue)
-		{
-			double value = (double) newValue;
-			Geometry that = (Geometry) o;
-
-			if (that.IsNotSuspended)
-			{
-				that.SuspendChanges();
-
-				try
-				{
-					foreach (Widget obj in that.Widgets)
-					{
-						that.ObjectModifier.SetMinWidth(obj, value);
-					}
-				}
-				finally
-				{
-					that.ResumeChanges();
-				}
-			}
-		}
-
-		private static void NotifyMinHeightChanged(DependencyObject o, object oldValue, object newValue)
-		{
-			double value = (double) newValue;
-			Geometry that = (Geometry) o;
-
-			if (that.IsNotSuspended)
-			{
-				that.SuspendChanges();
-
-				try
-				{
-					foreach (Widget obj in that.Widgets)
-					{
-						that.ObjectModifier.SetMinHeight(obj, value);
-					}
-				}
-				finally
-				{
-					that.ResumeChanges();
-				}
-			}
-		}
-
 
 		public static readonly DependencyProperty LeftMarginProperty	= DependencyProperty.Register("LeftMargin",   typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyLeftMarginChanged));
 		public static readonly DependencyProperty RightMarginProperty	= DependencyProperty.Register("RightMargin",  typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyRightMarginChanged));
@@ -427,8 +345,5 @@ namespace Epsitec.Common.Designer.Proxies
 		public static readonly DependencyProperty OriginYProperty		= DependencyProperty.Register("OriginY",      typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyOriginYChanged));
 		public static readonly DependencyProperty WidthProperty			= DependencyProperty.Register("Width",        typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyWidthChanged));
 		public static readonly DependencyProperty HeightProperty		= DependencyProperty.Register("Height",       typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyHeightChanged));
-
-		public static readonly DependencyProperty MinWidthProperty		= DependencyProperty.Register("MinWidth",     typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMinWidthChanged));
-		public static readonly DependencyProperty MinHeightProperty		= DependencyProperty.Register("MinHeight",    typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMinHeightChanged));
 	}
 }
