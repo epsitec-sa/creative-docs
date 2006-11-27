@@ -4,7 +4,8 @@
 using Epsitec.Common.UI;
 using Epsitec.Common.UI.ItemViewFactories;
 
-[assembly:ItemViewFactory (typeof (StringItemViewFactory), ItemType=typeof (string))]
+[assembly: ItemViewFactory (typeof (StringItemViewFactory), ItemType=typeof (string))]
+[assembly: ItemViewFactory (typeof (StringItemViewFactory), ItemType=typeof (object))]
 
 namespace Epsitec.Common.UI.ItemViewFactories
 {

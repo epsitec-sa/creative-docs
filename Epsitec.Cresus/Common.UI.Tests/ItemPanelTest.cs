@@ -75,6 +75,7 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (new Drawing.Rectangle (0, 20, 80, 20+20*3), panel.GetItemView (0).Bounds);
 			Assert.AreEqual (new Drawing.Rectangle (0, 0, 80, 20), panel.GetItemView (1).Bounds);
 			Assert.AreEqual (new Drawing.Rectangle (0, 40, 80, 60), panel.Aperture);
+			Assert.AreEqual (new Drawing.Size (80, 20+80), panel.PreferredSize);
 			
 			panel.ExpandItemView (panel.GetItemView (1), true);
 			Widgets.Application.ExecuteAsyncCallbacks ();
@@ -82,10 +83,19 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (new Drawing.Rectangle (0, 0, 80, 20+20*3), panel.GetItemView (1).Bounds);
 			Assert.AreEqual (new Drawing.Rectangle (0, 20+20*3, 80, 20+20*3), panel.GetItemView (0).Bounds);
 			Assert.AreEqual (new Drawing.Rectangle (0, 40+20*3, 80, 60), panel.Aperture);
+			Assert.AreEqual (new Drawing.Size (80, 80+80), panel.PreferredSize);
 			
 			panel.Show (panel.GetItemView (1));
 			
 			Assert.AreEqual (new Drawing.Rectangle (0, 20, 80, 60), panel.Aperture);
+
+			ItemPanelGroup group = panel.GetItemView (1).Widget as ItemPanelGroup;
+			
+			Assert.IsNotNull (group.ChildPanel);
+			Assert.AreEqual (panel, group.Parent);
+			Assert.AreEqual (panel, group.ParentPanel);
+			Assert.AreEqual (panel.GetItemView (1), group.ParentView);
+			Assert.AreEqual ("Part: 19 x Ecrou M3 @ 0.10", group.ChildPanel.GetItemView (0).Widget.Text);
 		}
 
 		[Test]
@@ -328,6 +338,11 @@ namespace Epsitec.Common.UI
 				{
 					this.category = value;
 				}
+			}
+
+			public override string ToString()
+			{
+				return string.Format ("{0}: {1} x {2} @ {3}", this.category, this.stock, this.article, this.price);
 			}
 
 			private string article;
