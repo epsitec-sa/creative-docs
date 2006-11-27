@@ -4419,12 +4419,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					case DimensionType.Width:
 						r = box;
-						r.Bottom = ext.Top;
+						r.Top = ext.Bottom;
 						graphics.AddFilledRectangle(r);
 						graphics.RenderSolid(red);
 						graphics.AddRectangle(r);
 						graphics.RenderSolid(border);
-						this.DimensionDrawLine(graphics, new Point(box.Right, ext.Top), new Point(box.Left, ext.Top));
+						this.DimensionDrawLine(graphics, new Point(box.Right, ext.Bottom), new Point(box.Left, ext.Bottom));
 						break;
 
 					case DimensionType.Height:
@@ -4439,16 +4439,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					case DimensionType.MarginLeft:
 						path = new Path();
-						p = new Point(box.Right, ext.Top);
+						p = new Point(box.Right, ext.Bottom);
 						pl2 = p;
 						path.MoveTo(p);
-						p.Y = box.Top;
+						p.Y = box.Bottom;
 						path.LineTo(p);
 						p.X -= box.Width;
 						path.LineTo(p);
-						p.Y -= box.Height;
+						p.Y += box.Height;
 						path.LineTo(p);
-						p.Y = ext.Top;
+						p.Y = ext.Bottom;
 						p.X = box.Right-margins.Left;
 						pl1 = p;
 						path.LineTo(p);
@@ -4461,16 +4461,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					case DimensionType.MarginRight:
 						path = new Path();
-						p = new Point(box.Left, ext.Top);
+						p = new Point(box.Left, ext.Bottom);
 						pr1 = p;
 						path.MoveTo(p);
-						p.Y = box.Top;
+						p.Y = box.Bottom;
 						path.LineTo(p);
 						p.X += box.Width;
 						path.LineTo(p);
-						p.Y -= box.Height;
+						p.Y += box.Height;
 						path.LineTo(p);
-						p.Y = ext.Top;
+						p.Y = ext.Bottom;
 						p.X = box.Left+margins.Right;
 						pr2 = p;
 						path.LineTo(p);
@@ -4921,8 +4921,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 					if (this.objectModifier.HasPreferredWidth(obj))
 					{
 						box = bounds;
-						box.Bottom = ext.Top+d-h;
-						box.Top = ext.Top+d;
+						box.Bottom = ext.Bottom-d;
+						box.Height = h;
 					}
 					return box;
 
@@ -4939,7 +4939,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					if (this.objectModifier.HasMargins(obj))
 					{
 						double l = System.Math.Max(e, margins.Left);
-						return new Rectangle(bounds.Left-l, ext.Top+d-h, l, h);
+						return new Rectangle(bounds.Left-l, ext.Bottom-d, l, h);
 					}
 					else
 					{
@@ -4950,7 +4950,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					if (this.objectModifier.HasMargins(obj))
 					{
 						double l = System.Math.Max(e, margins.Right);
-						return new Rectangle(bounds.Right, ext.Top+d-h, l, h);
+						return new Rectangle(bounds.Right, ext.Bottom-d, l, h);
 					}
 					else
 					{
