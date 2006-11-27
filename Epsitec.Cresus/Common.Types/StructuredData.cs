@@ -277,6 +277,20 @@ namespace Epsitec.Common.Types
 			};
 		}
 
+		public static Support.PropertyComparer CreatePropertyComparer(string propertyName)
+		{
+			return delegate (object objA, object objB)
+			{
+				IStructuredData dataA = objA as IStructuredData;
+				IStructuredData dataB = objB as IStructuredData;
+
+				object a = dataA.GetValue (propertyName);
+				object b = dataB.GetValue (propertyName);
+
+				return System.Collections.Comparer.Default.Compare (a, b);
+			};
+		}
+		
 		protected virtual object GetUndefinedValue(INamedType namedType, string id)
 		{
 			AbstractType type = namedType as AbstractType;

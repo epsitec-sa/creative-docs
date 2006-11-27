@@ -301,7 +301,23 @@ namespace Epsitec.Common.Support
 		/// </returns>
 		public static PropertyComparer CreatePropertyComparer(System.Type type, string propertyName)
 		{
-			return DynamicCodeFactory.CreatePropertyComparer (type.GetProperty (propertyName));
+			System.Reflection.PropertyInfo info = type.GetProperty (propertyName);
+
+			if (info == null)
+			{
+				if (Types.TypeRosetta.DoesTypeImplementInterface (type, typeof (Types.IStructuredData)))
+				{
+					return Types.StructuredData.CreatePropertyComparer (propertyName);
+				}
+				else
+				{
+					return null;
+				}
+			}
+			else
+			{
+				return DynamicCodeFactory.CreatePropertyComparer (info);
+			}
 		}
 
 		/// <summary>
