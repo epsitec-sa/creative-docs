@@ -432,7 +432,7 @@ namespace Epsitec.Common.UI
 
 		protected virtual void HandleItemCollectionChanged(object sender, CollectionChangedEventArgs e)
 		{
-			this.RefreshItemViews ();
+			this.AsyncRefresh ();
 		}
 
 		protected virtual void HandleItemViewDefaultSizeChanged(Drawing.Size oldValue, Drawing.Size newValue)
@@ -599,11 +599,30 @@ namespace Epsitec.Common.UI
 			this.RefreshLayout (views);
 			this.RecreateUserInterface (views, this.Aperture);
 
+			List<ItemView> dispose = new List<ItemView> ();
+			
 			using (new LockManager (this))
 			{
+				foreach (ItemView view in this.views)
+				{
+					if (view.Widget != null)
+					{
+						if (!views.Contains (view))
+						{
+							dispose.Add (view);
+						}
+					}
+				}
+				
 				this.views = views;
 				this.hotItemViewIndex = -1;
 			}
+
+			dispose.ForEach (
+				delegate (ItemView view)
+				{
+					view.DisposeUserInterface ();
+				});
 		}
 		
 		private void RefreshLayout()
