@@ -379,7 +379,8 @@ namespace Epsitec.Common.UI
 
 		protected virtual void HandleLayoutChanged(ItemPanelLayout oldValue, ItemPanelLayout newValue)
 		{
-			this.RefreshLayout ();
+			//	TODO: decide whether to call RefreshItemViews or RefreshLayout
+			this.RefreshItemViews ();
 		}
 
 		protected virtual void HandleItemSelectionChanged(ItemPanelSelectionMode oldValue, ItemPanelSelectionMode newValue)

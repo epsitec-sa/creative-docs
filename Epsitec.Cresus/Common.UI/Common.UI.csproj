@@ -118,8 +118,10 @@
     <Compile Include="Controllers\NumericController.cs" />
     <Compile Include="Controllers\StringController.cs" />
     <Compile Include="AbstractPlaceholder.cs" />
+    <Compile Include="ItemPanelColumnHeader.cs" />
     <Compile Include="ItemPanelGroup.cs" />
     <Compile Include="ItemPanelSelectionMode.cs" />
+    <Compile Include="ItemViewFactories\StructuredItemViewFactory.cs" />
     <Compile Include="ItemViewFactories\GroupItemViewFactory.cs" />
     <Compile Include="ItemViewFactories\StringItemViewFactory.cs" />
     <Compile Include="ItemViewFactoryAttribute.cs" />

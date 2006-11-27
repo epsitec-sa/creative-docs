@@ -99,6 +99,27 @@ namespace Epsitec.Common.UI
 		}
 
 		[Test]
+		public void CheckGroupsStructured()
+		{
+			ItemPanel panel = new ItemPanel ();
+
+			panel.Items = ItemPanelTest.GetStructuredItems ();
+			panel.Layout = ItemPanelLayout.VerticalList;
+			panel.ItemSelection = ItemPanelSelectionMode.ExactlyOne;
+			panel.GroupSelection = ItemPanelSelectionMode.ExactlyOne;
+			panel.Aperture = new Drawing.Rectangle (0, 0, 80, 60);
+
+			Assert.AreEqual (2, panel.GetItemViewCount ());
+			Assert.AreEqual (new Drawing.Size (80, 20*2), panel.PreferredSize);
+			Assert.IsNotNull (panel.GetItemView (0).Widget);
+			Assert.IsNotNull (panel.GetItemView (1).Widget);
+			Assert.AreEqual (typeof (ItemPanelGroup), panel.GetItemView (0).Widget.GetType ());
+			Assert.AreEqual (typeof (ItemPanelGroup), panel.GetItemView (1).Widget.GetType ());
+			Assert.AreEqual (3, (panel.GetItemView (0).Item as CollectionViewGroup).ItemCount);
+			Assert.AreEqual (3, (panel.GetItemView (1).Item as CollectionViewGroup).ItemCount);
+		}
+
+		[Test]
 		public void CheckSelection()
 		{
 			ItemPanel panel = new ItemPanel ();
@@ -264,6 +285,20 @@ namespace Epsitec.Common.UI
 			return view;
 		}
 
+		private static CollectionView GetStructuredItems()
+		{
+			List<StructuredData> source = new List<StructuredData> ();
+			CollectionView view = new CollectionView (source);
+
+			ItemPanelTest.AddStructuredRecords (source);
+
+			view.SortDescriptions.Add (new SortDescription ("Article"));
+			view.SortDescriptions.Add (new SortDescription ("Price"));
+			view.GroupDescriptions.Add (new PropertyGroupDescription ("Category"));
+
+			return view;
+		}
+
 		private static void AddRecords(IList<Record> source)
 		{
 			source.Add (new Record ("Vis M3", 10, 0.15M, Category.Part));
@@ -272,6 +307,28 @@ namespace Epsitec.Common.UI
 			source.Add (new Record ("Clé M3", 7, 15.00M, Category.Tool));
 			source.Add (new Record ("Tournevis", 2, 8.45M, Category.Tool));
 			source.Add (new Record ("Tournevis", 7, 25.70M, Category.Tool));
+		}
+
+		private static void AddStructuredRecords(IList<StructuredData> source)
+		{
+			source.Add (ItemPanelTest.NewStructuredData ("Vis M3", 10, 0.15M, Category.Part));
+			source.Add (ItemPanelTest.NewStructuredData ("Ecrou M3", 19, 0.10M, Category.Part));
+			source.Add (ItemPanelTest.NewStructuredData ("Rondelle", 41, 0.05M, Category.Part));
+			source.Add (ItemPanelTest.NewStructuredData ("Clé M3", 7, 15.00M, Category.Tool));
+			source.Add (ItemPanelTest.NewStructuredData ("Tournevis", 2, 8.45M, Category.Tool));
+			source.Add (ItemPanelTest.NewStructuredData ("Tournevis", 7, 25.70M, Category.Tool));
+		}
+
+		private static StructuredData NewStructuredData(string article, int stock, decimal price, Category category)
+		{
+			StructuredData data = new StructuredData ();
+			
+			data.SetValue ("Article", article);
+			data.SetValue ("Stock", stock);
+			data.SetValue ("Price", price);
+			data.SetValue ("Category", category);
+
+			return data;
 		}
 
 		private enum Category
