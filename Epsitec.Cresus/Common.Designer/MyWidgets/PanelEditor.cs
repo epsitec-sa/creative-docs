@@ -379,10 +379,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			if (!this.isEditEnabled)  return;
+			if (!this.isEditEnabled)
+			{
+				return;
+			}
 
-			pos.X -= PanelEditor.dimensionMargin;
-			pos.Y -= PanelEditor.dimensionMargin;
+			pos = this.ConvEditorToPanel(pos);
 
 			switch (message.MessageType)
 			{
@@ -1275,7 +1277,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.creatingObject = this.CreateObjectItem();
 			this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
 
-			this.creatingOrigin = this.MapClientToScreen(new Point(PanelEditor.dimensionMargin, PanelEditor.dimensionMargin));
+			this.creatingOrigin = this.MapClientToScreen(this.ConvPanelToEditor(Point.Zero));
 			this.creatingWindow = new DragWindow();
 			this.creatingWindow.DefineWidget(this.creatingObject, this.creatingObject.PreferredSize, Margins.Zero);
 			this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
@@ -1742,12 +1744,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				CloneView clone = new CloneView();
 				clone.Model = this.selectedObjects[0];
 
-				Rectangle bounds = this.handlingRectangle;
-				bounds.Offset(PanelEditor.dimensionMargin, PanelEditor.dimensionMargin);
-
 				this.handlingWindow = new DragWindow();
 				this.handlingWindow.DefineWidget(clone, this.handlingRectangle.Size, Margins.Zero);
-				this.handlingWindow.WindowBounds = this.MapClientToScreen(bounds);
+				this.handlingWindow.WindowBounds = this.MapClientToScreen(this.ConvPanelToEditor(this.handlingRectangle));
 				this.handlingWindow.Owner = this.Window;
 				this.handlingWindow.FocusedWidget = clone;
 				this.handlingWindow.Show();
@@ -1766,10 +1765,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.isHandling)
 			{
 				this.handlingRectangle = this.handlesList.DraggingMove(pos);
-
-				Rectangle bounds = this.handlingRectangle;
-				bounds.Offset(PanelEditor.dimensionMargin, PanelEditor.dimensionMargin);
-				this.handlingWindow.WindowBounds = this.MapClientToScreen(bounds);
+				this.handlingWindow.WindowBounds = this.MapClientToScreen(this.ConvPanelToEditor(this.handlingRectangle));
 				this.module.MainWindow.UpdateInfoViewer();
 			}
 		}
@@ -1860,7 +1856,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				sep.Alpha = 0;
 			}
 
-			this.draggingOrigin = this.MapClientToScreen(this.draggingOffset+new Point(PanelEditor.dimensionMargin, PanelEditor.dimensionMargin));
+			this.draggingOrigin = this.MapClientToScreen(this.ConvPanelToEditor(this.draggingOffset));
 			//?this.draggingOrigin.Y -= 1;  // TODO: cette correction devrait être inutile !
 			this.draggingWindow = new DragWindow();
 			this.draggingWindow.DefineWidget(container, container.PreferredSize, Margins.Zero);
@@ -2336,9 +2332,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Détermine la zone du rectangle de sélection.
 			if (this.selectedRectangle != rect)
 			{
-				this.InvalidateRect(this.selectedRectangle);  // invalide l'ancienne zone
+				this.Invalidate(this.ConvPanelToEditor(this.selectedRectangle));  // invalide l'ancienne zone
 				this.selectedRectangle = rect;
-				this.InvalidateRect(this.selectedRectangle);  // invalide la nouvelle zone
+				this.Invalidate(this.ConvPanelToEditor(this.selectedRectangle));  // invalide la nouvelle zone
 			}
 		}
 
@@ -2347,9 +2343,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Détermine la zone du rectangle d'attachement.
 			if (this.hilitedAttachmentRectangle != rect)
 			{
-				this.InvalidateRect(this.hilitedAttachmentRectangle);  // invalide l'ancienne zone
+				this.Invalidate(this.ConvPanelToEditor(this.hilitedAttachmentRectangle));  // invalide l'ancienne zone
 				this.hilitedAttachmentRectangle = rect;
-				this.InvalidateRect(this.hilitedAttachmentRectangle);  // invalide la nouvelle zone
+				this.Invalidate(this.ConvPanelToEditor(this.hilitedAttachmentRectangle));  // invalide la nouvelle zone
 			}
 		}
 		#endregion
@@ -3303,9 +3299,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Détermine la zone du rectangle d'insertion ZOrder.
 			if (this.hilitedZOrderRectangle != rect)
 			{
-				this.InvalidateRect(this.hilitedZOrderRectangle);  // invalide l'ancienne zone
+				this.Invalidate(this.ConvPanelToEditor(this.hilitedZOrderRectangle));  // invalide l'ancienne zone
 				this.hilitedZOrderRectangle = rect;
-				this.InvalidateRect(this.hilitedZOrderRectangle);  // invalide la nouvelle zone
+				this.Invalidate(this.ConvPanelToEditor(this.hilitedZOrderRectangle));  // invalide la nouvelle zone
 			}
 		}
 
@@ -3556,8 +3552,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			//	Dessine les surfaces inutilisées.
 			Rectangle box = this.Client.Bounds;
-			Rectangle bounds = this.RealBounds;
-			bounds.Offset(PanelEditor.dimensionMargin, PanelEditor.dimensionMargin);
+			Rectangle bounds = this.ConvPanelToEditor(this.RealBounds);
 
 			if (bounds.Top < box.Top)  // bande supérieure ?
 			{
@@ -5318,10 +5313,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.module.AccessPanels.IsDirty = true;
 		}
 
-		protected void InvalidateRect(Rectangle rect)
+		protected Point ConvPanelToEditor(Point pos)
+		{
+			pos.X += PanelEditor.dimensionMargin;
+			pos.Y += PanelEditor.dimensionMargin;
+			return pos;
+		}
+
+		protected Point ConvEditorToPanel(Point pos)
+		{
+			pos.X -= PanelEditor.dimensionMargin;
+			pos.Y -= PanelEditor.dimensionMargin;
+			return pos;
+		}
+
+		protected Rectangle ConvPanelToEditor(Rectangle rect)
 		{
 			rect.Offset(PanelEditor.dimensionMargin, PanelEditor.dimensionMargin);
-			this.Invalidate(rect);
+			return rect;
+		}
+
+		protected Rectangle ConvEditorToPanel(Rectangle rect)
+		{
+			rect.Offset(-PanelEditor.dimensionMargin, -PanelEditor.dimensionMargin);
+			return rect;
 		}
 		#endregion
 
