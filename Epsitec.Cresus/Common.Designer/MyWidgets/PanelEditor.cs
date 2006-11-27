@@ -377,9 +377,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		protected override void ProcessMessage(Message message, Drawing.Point pos)
+		protected override void ProcessMessage(Message message, Point pos)
 		{
 			if (!this.isEditEnabled)  return;
+
+			pos.X -= PanelEditor.dimensionMargin;
+			pos.Y -= PanelEditor.dimensionMargin;
 
 			switch (message.MessageType)
 			{
@@ -1271,9 +1274,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.creatingObject = this.CreateObjectItem();
 			this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
 
-			this.creatingOrigin = this.MapClientToScreen(Point.Zero);
+			this.creatingOrigin = this.MapClientToScreen(new Point(PanelEditor.dimensionMargin, PanelEditor.dimensionMargin));
 			this.creatingWindow = new DragWindow();
-			this.creatingWindow.DefineWidget(this.creatingObject, this.creatingObject.PreferredSize, Drawing.Margins.Zero);
+			this.creatingWindow.DefineWidget(this.creatingObject, this.creatingObject.PreferredSize, Margins.Zero);
 			this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
 			this.creatingWindow.Owner = this.Window;
 			this.creatingWindow.FocusedWidget = this.creatingObject;
@@ -1738,9 +1741,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				CloneView clone = new CloneView();
 				clone.Model = this.selectedObjects[0];
 
+				Rectangle bounds = this.handlingRectangle;
+				bounds.Offset(PanelEditor.dimensionMargin, PanelEditor.dimensionMargin);
+
 				this.handlingWindow = new DragWindow();
-				this.handlingWindow.DefineWidget(clone, this.handlingRectangle.Size, Drawing.Margins.Zero);
-				this.handlingWindow.WindowBounds = this.MapClientToScreen(this.handlingRectangle);
+				this.handlingWindow.DefineWidget(clone, this.handlingRectangle.Size, Margins.Zero);
+				this.handlingWindow.WindowBounds = this.MapClientToScreen(bounds);
 				this.handlingWindow.Owner = this.Window;
 				this.handlingWindow.FocusedWidget = clone;
 				this.handlingWindow.Show();
@@ -1759,7 +1765,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.isHandling)
 			{
 				this.handlingRectangle = this.handlesList.DraggingMove(pos);
-				this.handlingWindow.WindowBounds = this.MapClientToScreen(this.handlingRectangle);
+
+				Rectangle bounds = this.handlingRectangle;
+				bounds.Offset(PanelEditor.dimensionMargin, PanelEditor.dimensionMargin);
+				this.handlingWindow.WindowBounds = this.MapClientToScreen(bounds);
 				this.module.MainWindow.UpdateInfoViewer();
 			}
 		}
@@ -1850,10 +1859,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				sep.Alpha = 0;
 			}
 
-			this.draggingOrigin = this.MapClientToScreen(this.draggingOffset);
-			this.draggingOrigin.Y -= 1;  // TODO: cette correction devrait être inutile !
+			this.draggingOrigin = this.MapClientToScreen(this.draggingOffset+new Point(PanelEditor.dimensionMargin, PanelEditor.dimensionMargin));
+			//?this.draggingOrigin.Y -= 1;  // TODO: cette correction devrait être inutile !
 			this.draggingWindow = new DragWindow();
-			this.draggingWindow.DefineWidget(container, container.PreferredSize, Drawing.Margins.Zero);
+			this.draggingWindow.DefineWidget(container, container.PreferredSize, Margins.Zero);
 			this.draggingWindow.WindowLocation = this.draggingOrigin + pos;
 			this.draggingWindow.Owner = this.Window;
 			this.draggingWindow.FocusedWidget = container;
@@ -2326,9 +2335,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Détermine la zone du rectangle de sélection.
 			if (this.selectedRectangle != rect)
 			{
-				this.Invalidate(this.selectedRectangle);  // invalide l'ancienne zone
+				this.InvalidateRect(this.selectedRectangle);  // invalide l'ancienne zone
 				this.selectedRectangle = rect;
-				this.Invalidate(this.selectedRectangle);  // invalide la nouvelle zone
+				this.InvalidateRect(this.selectedRectangle);  // invalide la nouvelle zone
 			}
 		}
 
@@ -2337,9 +2346,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Détermine la zone du rectangle d'attachement.
 			if (this.hilitedAttachmentRectangle != rect)
 			{
-				this.Invalidate(this.hilitedAttachmentRectangle);  // invalide l'ancienne zone
+				this.InvalidateRect(this.hilitedAttachmentRectangle);  // invalide l'ancienne zone
 				this.hilitedAttachmentRectangle = rect;
-				this.Invalidate(this.hilitedAttachmentRectangle);  // invalide la nouvelle zone
+				this.InvalidateRect(this.hilitedAttachmentRectangle);  // invalide la nouvelle zone
 			}
 		}
 		#endregion
@@ -3293,9 +3302,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Détermine la zone du rectangle d'insertion ZOrder.
 			if (this.hilitedZOrderRectangle != rect)
 			{
-				this.Invalidate(this.hilitedZOrderRectangle);  // invalide l'ancienne zone
+				this.InvalidateRect(this.hilitedZOrderRectangle);  // invalide l'ancienne zone
 				this.hilitedZOrderRectangle = rect;
-				this.Invalidate(this.hilitedZOrderRectangle);  // invalide la nouvelle zone
+				this.InvalidateRect(this.hilitedZOrderRectangle);  // invalide la nouvelle zone
 			}
 		}
 
@@ -3537,27 +3546,50 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			//	Dessine le panneau.
-			if (!this.isEditEnabled)  return;
+			if (!this.isEditEnabled)
+			{
+				return;
+			}
 
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			//	Dessine les surfaces inutilisées.
-			Rectangle bounds = this.RealBounds;
 			Rectangle box = this.Client.Bounds;
+			Rectangle bounds = this.RealBounds;
+			bounds.Offset(PanelEditor.dimensionMargin, PanelEditor.dimensionMargin);
 
-			if (bounds.Top < box.Top)
+			if (bounds.Top < box.Top)  // bande supérieure ?
 			{
 				Rectangle part = new Rectangle(box.Left, bounds.Top, box.Width, box.Top-bounds.Top);
 				graphics.AddFilledRectangle(part);
 				graphics.RenderSolid(PanelsContext.ColorOutsurface);
 			}
 
-			if (bounds.Right < box.Right)
+			if (box.Bottom < bounds.Bottom)  // bande inférieure ?
 			{
-				Rectangle part = new Rectangle(bounds.Right, box.Bottom, box.Right-bounds.Right, bounds.Height);
+				Rectangle part = new Rectangle(box.Left, box.Bottom, box.Width, bounds.Bottom-box.Bottom);
 				graphics.AddFilledRectangle(part);
 				graphics.RenderSolid(PanelsContext.ColorOutsurface);
 			}
+
+			if (bounds.Right < box.Right)  // bande droite ?
+			{
+				Rectangle part = new Rectangle(bounds.Right, bounds.Bottom, box.Right-bounds.Right, bounds.Height);
+				graphics.AddFilledRectangle(part);
+				graphics.RenderSolid(PanelsContext.ColorOutsurface);
+			}
+
+			if (box.Left < bounds.Left)  // bande gauche ?
+			{
+				Rectangle part = new Rectangle(box.Left, bounds.Bottom, bounds.Left-box.Left, bounds.Height);
+				graphics.AddFilledRectangle(part);
+				graphics.RenderSolid(PanelsContext.ColorOutsurface);
+			}
+
+			Transform it = graphics.Transform;
+			graphics.TranslateTransform(PanelEditor.dimensionMargin, PanelEditor.dimensionMargin);
+
+			bounds = this.RealBounds;
 
 			//	Dessine la grille magnétique
 			if (this.context.ShowGrid)
@@ -3679,6 +3711,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				//?this.handlesList.Draw(graphics);
 			}
+
+			graphics.Transform = it;
 		}
 
 		protected void DrawSizeMark(Graphics graphics)
@@ -4921,7 +4955,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Rectangle ext = bounds;
 			ext.Inflate(this.objectModifier.GetMargins(obj));
 
-			double d = 26;
+			double d = PanelEditor.dimensionMargin;
 			double h = 12;
 			double e = 10;
 			double pw = 20;
@@ -5231,6 +5265,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			this.module.AccessPanels.IsDirty = true;
 		}
+
+		protected void InvalidateRect(Rectangle rect)
+		{
+			rect.Offset(PanelEditor.dimensionMargin, PanelEditor.dimensionMargin);
+			this.Invalidate(rect);
+		}
 		#endregion
 
 
@@ -5415,6 +5455,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
+		public static readonly double		dimensionMargin = 26;
 		protected static readonly double	attachmentThickness = 3.0;
 		protected static readonly double	attachmentScale = 0.4;
 

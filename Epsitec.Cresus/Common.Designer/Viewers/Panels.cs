@@ -92,10 +92,18 @@ namespace Epsitec.Common.Designer.Viewers
 			container.MinWidth = 100;
 			container.Dock = DockStyle.Fill;
 
-			this.panelContainer = this.access.CreateEmptyPanel();
-			this.panelContainer.SetParent(container);
+			//	Sous-conteneur qui a des marges.
+			this.panelContainerParent = new Widget(container);
+			this.panelContainerParent.Margins = new Margins(MyWidgets.PanelEditor.dimensionMargin, MyWidgets.PanelEditor.dimensionMargin, MyWidgets.PanelEditor.dimensionMargin, MyWidgets.PanelEditor.dimensionMargin);
+			this.panelContainerParent.Dock = DockStyle.Fill;
 
-			//	Le PanelEditor est par-dessus le UI.Panel.
+			//	Le UI.Panel est dans le sous-contenur qui a des marges.
+			this.panelContainer = this.access.CreateEmptyPanel();
+			this.panelContainer.SetParent(this.panelContainerParent);
+
+			//	Le PanelEditor est par-dessus le UI.Panel. Il occupe toute la surface (il déborde
+			//	donc des marges) et tient compte lui-même du décalage. C'est le seul moyen pour
+			//	pouvoir dessiner dans les marges ET y détecter les événements souris.
 			this.panelEditor = new MyWidgets.PanelEditor(container);
 			this.panelEditor.Initialize(this.module, this.context, this.panelContainer);
 			this.panelEditor.MinWidth = 100;
@@ -288,7 +296,7 @@ namespace Epsitec.Common.Designer.Viewers
 			else
 			{
 				this.panelContainer = this.access.GetPanel(sel).GetPanel(this.panelMode);
-				this.panelContainer.SetParent(this.panelEditor.Parent);
+				this.panelContainer.SetParent(this.panelContainerParent);
 				this.panelContainer.ZOrder = this.panelEditor.ZOrder+1;
 				this.panelContainer.DrawDesignerFrame = true;
 				this.panelEditor.Panel = this.panelContainer;
@@ -876,6 +884,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected VToolBar						vToolBar;
 		protected HToolBar						statusBar;
 		protected Scrollable					scrollable;
+		protected Widget						panelContainerParent;
 		protected UI.Panel						panelContainer;
 		protected MyWidgets.PanelEditor			panelEditor;
 		protected Widget						right;
