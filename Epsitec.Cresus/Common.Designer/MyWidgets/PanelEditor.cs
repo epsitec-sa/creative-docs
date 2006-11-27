@@ -728,9 +728,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.hilitedDimension = type;
 						this.Invalidate();
 					}
+
+					if (this.hilitedDimension != DimensionType.None)
+					{
+						this.SetHilitedObject(null, null);
+						this.SetHilitedAttachmentRectangle(Rectangle.Empty);
+					}
 				}
 
-				if (this.draggingDimensionType == DimensionType.None)
+				if (this.hilitedDimension == DimensionType.None && this.draggingDimensionType == DimensionType.None)
 				{
 					Widget obj = this.Detect(pos, isShiftPressed, false);
 					this.SetHilitedObject(obj, null);  // met en évidence l'objet survolé par la souris
