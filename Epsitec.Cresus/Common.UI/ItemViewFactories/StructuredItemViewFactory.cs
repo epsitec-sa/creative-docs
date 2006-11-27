@@ -36,7 +36,8 @@ namespace Epsitec.Common.UI.ItemViewFactories
 
 					text.Text = header.GetColumnText (i, itemView.Item);
 					text.Dock = Widgets.DockStyle.Stacked;
-					text.PreferredWidth = header.GetColumnWidth (i);
+					text.PreferredWidth = header.GetColumnWidth (i) - 6;
+					text.Margins = new Drawing.Margins (3, 3, 0, 0);
 				}
 
 				return container;

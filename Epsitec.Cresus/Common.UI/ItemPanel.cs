@@ -255,8 +255,18 @@ namespace Epsitec.Common.UI
 			return list;
 		}
 
+		public void AsyncRefresh()
+		{
+			if (this.isRefreshPending == false)
+			{
+				this.isRefreshPending = true;
+				Widgets.Application.QueueAsyncCallback (this.Refresh);
+			}
+		}
+
 		public void Refresh()
 		{
+			this.isRefreshPending = false;
 			this.ClearUserInterface ();
 			this.RefreshItemViews ();
 		}
@@ -402,7 +412,7 @@ namespace Epsitec.Common.UI
 		protected virtual void HandleLayoutChanged(ItemPanelLayout oldValue, ItemPanelLayout newValue)
 		{
 			//	TODO: decide whether to call RefreshItemViews or RefreshLayout
-			this.RefreshItemViews ();
+			this.AsyncRefresh ();
 		}
 
 		protected virtual void HandleItemSelectionChanged(ItemPanelSelectionMode oldValue, ItemPanelSelectionMode newValue)
@@ -419,6 +429,13 @@ namespace Epsitec.Common.UI
 		{
 			this.RefreshItemViews ();
 		}
+
+		protected virtual void HandleItemViewDefaultSizeChanged(Drawing.Size oldValue, Drawing.Size newValue)
+		{
+			this.AsyncRefresh ();
+		}
+		
+
 
 		protected virtual void HandleApertureChanged(Drawing.Rectangle oldValue, Drawing.Rectangle newValue)
 		{
@@ -591,6 +608,11 @@ namespace Epsitec.Common.UI
 		
 		private void RefreshLayout(IEnumerable<ItemView> views)
 		{
+			foreach (ItemView view in views)
+			{
+				view.UpdatePreferredSize (this);
+			}
+			
 			this.hasDirtyLayout = false;
 			
 			switch (this.Layout)
@@ -626,10 +648,6 @@ namespace Epsitec.Common.UI
 			
 			view.Index = index;
 
-			//	TODO: make this code asynchronous
-
-			view.UpdatePreferredSize (this);
-			
 			return view;
 		}
 
@@ -795,12 +813,18 @@ namespace Epsitec.Common.UI
 			ItemPanel panel = (ItemPanel) obj;
 			panel.HandleGroupSelectionChanged ((ItemPanelSelectionMode) oldValue, (ItemPanelSelectionMode) newValue);
 		}
-		
+
+		private static void NotifyItemViewDefaultSizeChanged(DependencyObject obj, object oldValue, object newValue)
+		{
+			ItemPanel panel = (ItemPanel) obj;
+			panel.HandleItemViewDefaultSizeChanged ((Drawing.Size) oldValue, (Drawing.Size) newValue);
+		}
+
 		public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register ("Items", typeof (ICollectionView), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanel.NotifyItemsChanged));
 		public static readonly DependencyProperty LayoutProperty = DependencyProperty.Register ("Layout", typeof (ItemPanelLayout), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelLayout.None, ItemPanel.NotifyLayoutChanged));
 		public static readonly DependencyProperty ItemSelectionProperty = DependencyProperty.Register ("ItemSelection", typeof (ItemPanelSelectionMode), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelSelectionMode.None, ItemPanel.NotifyItemSelectionChanged));
 		public static readonly DependencyProperty GroupSelectionProperty = DependencyProperty.Register ("GroupSelection", typeof (ItemPanelSelectionMode), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelSelectionMode.None, ItemPanel.NotifyGroupSelectionChanged));
-		public static readonly DependencyProperty ItemViewDefaultSizeProperty = DependencyProperty.Register ("ItemViewDefaultSize", typeof (Drawing.Size), typeof (ItemPanel), new DependencyPropertyMetadata (new Drawing.Size (80, 20)));
+		public static readonly DependencyProperty ItemViewDefaultSizeProperty = DependencyProperty.Register ("ItemViewDefaultSize", typeof (Drawing.Size), typeof (ItemPanel), new DependencyPropertyMetadata (new Drawing.Size (80, 20), ItemPanel.NotifyItemViewDefaultSizeChanged));
 
 		List<ItemView> views
 		{
@@ -824,5 +848,6 @@ namespace Epsitec.Common.UI
 		List<ItemPanelGroup> groups = new List<ItemPanelGroup> ();
 		ItemPanelGroup parentGroup;
 		bool hasDirtyLayout;
+		bool isRefreshPending;
 	}
 }

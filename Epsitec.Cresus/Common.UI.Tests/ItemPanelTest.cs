@@ -22,6 +22,12 @@ namespace Epsitec.Common.UI
 		}
 
 		[Test]
+		public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
+
+		[Test]
 		public void CheckGroups()
 		{
 			ItemPanel panel = new ItemPanel ();
@@ -103,7 +109,7 @@ namespace Epsitec.Common.UI
 		{
 			ItemPanel panel = new ItemPanel ();
 
-			panel.Items = ItemPanelTest.GetStructuredItems ();
+			panel.Items = ItemPanelTest.GetStructuredItems (true);
 			panel.Layout = ItemPanelLayout.VerticalList;
 			panel.ItemSelection = ItemPanelSelectionMode.ExactlyOne;
 			panel.GroupSelection = ItemPanelSelectionMode.ExactlyOne;
@@ -144,6 +150,50 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual ("7", ((Widgets.Widget)group.ChildPanel.GetItemView (2).Widget.Children[0]).Text);
 			Assert.AreEqual ("Tournevis", ((Widgets.Widget) group.ChildPanel.GetItemView (2).Widget.Children[1]).Text);
 			Assert.AreEqual ("25.70", ((Widgets.Widget) group.ChildPanel.GetItemView (2).Widget.Children[2]).Text);
+		}
+
+		[Test]
+		public void CheckInteractiveStructured()
+		{
+			Widgets.Window window = new Widgets.Window ();
+
+			double dx = 400;
+			double dy = 420;
+			
+			window.Text = "CheckInteractiveStructured";
+			window.ClientSize = new Drawing.Size (dx, dy);
+			window.Root.Padding = new Drawing.Margins (4, 4, 4, 4);
+
+			dx -= 8;
+			dy -= 8;
+			
+			ItemPanel panel = new ItemPanel ();
+
+			panel.Dock = Widgets.DockStyle.Fill;
+			panel.Items = ItemPanelTest.GetStructuredItems (false);
+			panel.Layout = ItemPanelLayout.VerticalList;
+			panel.ItemSelection = ItemPanelSelectionMode.ExactlyOne;
+			panel.GroupSelection = ItemPanelSelectionMode.ExactlyOne;
+			panel.Aperture = new Drawing.Rectangle (0, 0, dx, dy);
+			panel.ItemViewDefaultSize = new Drawing.Size (dx, 20);
+
+			ItemPanelColumnHeader header = new ItemPanelColumnHeader ();
+
+			header.AddColumn ("Stock");
+			header.AddColumn ("Article");
+			header.AddColumn ("Price");
+
+			header.ItemPanel = panel;
+			header.Dock = Widgets.DockStyle.Top;
+
+			window.Root.Children.Add (header);
+			window.Root.Children.Add (panel);
+			
+			panel.Show (panel.GetItemView (0));
+
+			window.Show ();
+
+			Widgets.Window.RunInTestEnvironment (window);
 		}
 
 		[Test]
@@ -312,7 +362,7 @@ namespace Epsitec.Common.UI
 			return view;
 		}
 
-		private static CollectionView GetStructuredItems()
+		private static CollectionView GetStructuredItems(bool group)
 		{
 			List<StructuredData> source = new List<StructuredData> ();
 			CollectionView view = new CollectionView (source);
@@ -321,7 +371,11 @@ namespace Epsitec.Common.UI
 
 			view.SortDescriptions.Add (new SortDescription ("Article"));
 			view.SortDescriptions.Add (new SortDescription ("Price"));
-			view.GroupDescriptions.Add (new PropertyGroupDescription ("Category"));
+
+			if (group)
+			{
+				view.GroupDescriptions.Add (new PropertyGroupDescription ("Category"));
+			}
 
 			return view;
 		}

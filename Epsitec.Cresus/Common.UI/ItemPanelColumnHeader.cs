@@ -28,6 +28,17 @@ namespace Epsitec.Common.UI
 			LayoutEngine.SetLayoutEngine (this, this.gridLayout);
 		}
 
+		public ItemPanel ItemPanel
+		{
+			get
+			{
+				return (ItemPanel) this.GetValue (ItemPanelColumnHeader.ItemPanelProperty);
+			}
+			set
+			{
+				this.SetValue (ItemPanelColumnHeader.ItemPanelProperty, value);
+			}
+		}
 
 		public int ColumnCount
 		{
@@ -42,10 +53,22 @@ namespace Epsitec.Common.UI
 			this.gridLayout.ColumnDefinitions.Add (new ColumnDefinition ());
 
 			Column column = new Column (this, propertyName);
+
+			column.Widget.SizeChanged += this.HandleColumnWidthChanged;
 			
 			this.columns.Add (column);
 		}
 
+		public void RemoveColumn(int index)
+		{
+			Column column = this.columns[index];
+			
+			this.columns.RemoveAt (index);
+
+			column.Widget.SizeChanged -= this.HandleColumnWidthChanged;
+			column.Widget.Dispose ();
+		}
+		
 		public string GetColumn(int index)
 		{
 			return this.columns[index].PropertyName;
@@ -83,6 +106,24 @@ namespace Epsitec.Common.UI
 			return width;
 		}
 
+		private void HandleItemPanelChanged(ItemPanel oldValue, ItemPanel newValue)
+		{
+			if (oldValue != null)
+			{
+				ItemPanelColumnHeader.SetColumnHeader (oldValue, null);
+			}
+			
+			if (newValue != null)
+			{
+				ItemPanelColumnHeader.SetColumnHeader (newValue, this);
+			}
+		}
+
+		private void HandleColumnWidthChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			this.ItemPanel.AsyncRefresh ();
+		}
+
 		private struct Column
 		{
 			public Column(ItemPanelColumnHeader header, string propertyName)
@@ -90,8 +131,10 @@ namespace Epsitec.Common.UI
 				this.property = new PropertyGroupDescription (propertyName);
 				this.widget   = new HeaderButton (header);
 				
-				GridLayoutEngine.SetColumn (header, header.columns.Count);
-				GridLayoutEngine.SetRow (header, 0);
+				this.widget.Text = propertyName;
+				
+				GridLayoutEngine.SetColumn (this.widget, header.columns.Count);
+				GridLayoutEngine.SetRow (this.widget, 0);
 			}
 
 			public string PropertyName
@@ -120,6 +163,11 @@ namespace Epsitec.Common.UI
 			private HeaderButton widget;
 		}
 
+		private static void NotifyItemPanelChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			ItemPanelColumnHeader header = (ItemPanelColumnHeader) o;
+			header.HandleItemPanelChanged ((ItemPanel) oldValue, (ItemPanel) newValue);
+		}
 
 		public static void SetColumnHeader(DependencyObject obj, ItemPanelColumnHeader header)
 		{
@@ -139,6 +187,7 @@ namespace Epsitec.Common.UI
 		}
 		
 		public static readonly DependencyProperty ColumnHeaderProperty = DependencyProperty.RegisterAttached ("ColumnHeader", typeof (ItemPanelColumnHeader), typeof (ItemPanelColumnHeader), new DependencyPropertyMetadataWithInheritance ());
+		public static readonly DependencyProperty ItemPanelProperty = DependencyProperty.Register ("ItemPanel", typeof (ItemPanel), typeof (ItemPanelColumnHeader), new DependencyPropertyMetadata (ItemPanelColumnHeader.NotifyItemPanelChanged));
 
 		private List<Column> columns;
 		private GridLayoutEngine gridLayout;

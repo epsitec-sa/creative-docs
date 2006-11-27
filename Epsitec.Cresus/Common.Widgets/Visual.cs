@@ -990,7 +990,7 @@ namespace Epsitec.Common.Widgets
 
 				if (oldValue.Size != newValue.Size)
 				{
-					//	TODO: on pourrait générer un événement ici
+					this.OnSizeChanged (oldValue.Size, newValue.Size);
 				}
 
 				this.OnBoundsChanged (oldValue, newValue);
@@ -1485,6 +1485,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected virtual void OnSizeChanged(Drawing.Size oldValue, Drawing.Size newValue)
+		{
+			PropertyChangedEventHandler handler = (PropertyChangedEventHandler) this.GetUserEventHandler ("SizeChanged");
+
+			if (handler != null)
+			{
+				handler (this, new DependencyPropertyChangedEventArgs ("Size", oldValue, newValue));
+			}
+		}
+
 		protected virtual void OnBoundsChanged(Drawing.Rectangle oldValue, Drawing.Rectangle newValue)
 		{
 			PropertyChangedEventHandler handler = (PropertyChangedEventHandler) this.GetUserEventHandler ("BoundsChanged");
@@ -1886,6 +1896,18 @@ namespace Epsitec.Common.Widgets
 			remove
 			{
 				this.RemoveUserEventHandler ("BoundsChanged", value);
+			}
+		}
+
+		public event PropertyChangedEventHandler	SizeChanged
+		{
+			add
+			{
+				this.AddUserEventHandler ("SizeChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("SizeChanged", value);
 			}
 		}
 
