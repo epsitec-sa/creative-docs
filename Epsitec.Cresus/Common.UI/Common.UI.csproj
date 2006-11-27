@@ -121,6 +121,7 @@
     <Compile Include="ItemPanelColumnHeader.cs" />
     <Compile Include="ItemPanelGroup.cs" />
     <Compile Include="ItemPanelSelectionMode.cs" />
+    <Compile Include="ItemTable.cs" />
     <Compile Include="ItemViewFactories\StructuredItemViewFactory.cs" />
     <Compile Include="ItemViewFactories\GroupItemViewFactory.cs" />
     <Compile Include="ItemViewFactories\StringItemViewFactory.cs" />

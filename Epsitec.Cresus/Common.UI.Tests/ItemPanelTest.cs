@@ -166,10 +166,12 @@ namespace Epsitec.Common.UI
 
 			dx -= 8;
 			dy -= 8;
-			
-			ItemPanel panel = new ItemPanel ();
 
-			panel.Dock = Widgets.DockStyle.Fill;
+			ItemTable table = new ItemTable ();
+			table.Dock = Widgets.DockStyle.Fill;
+			
+			ItemPanel panel = table.ItemPanel;
+
 			panel.Items = ItemPanelTest.GetStructuredItems (false);
 			panel.Layout = ItemPanelLayout.VerticalList;
 			panel.ItemSelection = ItemPanelSelectionMode.ExactlyOne;
@@ -177,7 +179,7 @@ namespace Epsitec.Common.UI
 			panel.Aperture = new Drawing.Rectangle (0, 0, dx, dy);
 			panel.ItemViewDefaultSize = new Drawing.Size (dx, 20);
 
-			ItemPanelColumnHeader header = new ItemPanelColumnHeader ();
+			ItemPanelColumnHeader header = table.ColumnHeader;
 
 			header.AddColumn ("Stock");
 			header.AddColumn ("Article");
@@ -186,8 +188,7 @@ namespace Epsitec.Common.UI
 			header.ItemPanel = panel;
 			header.Dock = Widgets.DockStyle.Top;
 
-			window.Root.Children.Add (header);
-			window.Root.Children.Add (panel);
+			window.Root.Children.Add (table);
 			
 			panel.Show (panel.GetItemView (0));
 

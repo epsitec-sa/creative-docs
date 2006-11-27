@@ -20,7 +20,12 @@ namespace Epsitec.Common.UI
 		public ItemPanel()
 		{
 		}
-		
+
+		public ItemPanel(Widgets.Widget embedder)
+			: this ()
+		{
+			this.SetEmbedder (embedder);
+		}
 		
 		public ICollectionView Items
 		{

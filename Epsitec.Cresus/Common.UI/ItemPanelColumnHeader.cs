@@ -28,6 +28,12 @@ namespace Epsitec.Common.UI
 			LayoutEngine.SetLayoutEngine (this, this.gridLayout);
 		}
 
+		public ItemPanelColumnHeader(Widget embedder)
+			: this ()
+		{
+			this.SetEmbedder (embedder);
+		}
+
 		public ItemPanel ItemPanel
 		{
 			get
