@@ -599,11 +599,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				obj = this.selectedObjects[0];
-				DimensionType type = this.DetectDimension(obj, pos);
+				DimensionType type = this.DimensionDetect(obj, pos);
 				if (type != DimensionType.None)
 				{
 					this.draggingDimensionType = type;
-					this.draggingDimensionInitial = this.GetDimensionValue(this.draggingDimensionType);
+					this.draggingDimensionInitial = this.DimensionGetValue(this.draggingDimensionType);
 					return;
 				}
 			}
@@ -705,14 +705,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else if (this.draggingDimensionType != DimensionType.None)
 			{
-				this.DraggingDimension(pos, isControlPressed, isShiftPressed);
+				this.DimensionDragging(pos, isControlPressed, isShiftPressed);
 			}
 			else
 			{
 				if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging)
 				{
 					Widget obj = this.selectedObjects[0];
-					DimensionType type = this.DetectDimension(obj, pos);
+					DimensionType type = this.DimensionDetect(obj, pos);
 					if (this.hilitedDimension != type)
 					{
 						this.hilitedDimension = type;
@@ -760,7 +760,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.draggingDimensionType != DimensionType.None)
 			{
-				this.EndingDimension();
+				this.DimensionEnding();
 			}
 
 			this.SizeMarkDraggingStop(pos);
@@ -3667,7 +3667,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				Widget obj = this.selectedObjects[0];
-				this.DrawDimensionsObject(graphics, obj);
+				this.DimensionDrawObject(graphics, obj);
 			}
 
 			//	Dessine les poignées.
@@ -4377,7 +4377,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			PaddingTop,
 		}
 
-		protected void DrawDimensionsObject(Graphics graphics, Widget obj)
+		protected void DimensionDrawObject(Graphics graphics, Widget obj)
 		{
 			//	Dessine toutes les cotes de l'objet.
 			Rectangle bounds = this.objectModifier.GetActualBounds(obj);
@@ -4406,7 +4406,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			foreach (DimensionType type in System.Enum.GetValues(typeof(DimensionType)))
 			{
-				box = this.GetRectangleDimension(obj, type);
+				box = this.DimensionGetRectangle(obj, type);
 				if (box.IsEmpty)
 				{
 					continue;
@@ -4424,7 +4424,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						graphics.RenderSolid(red);
 						graphics.AddRectangle(r);
 						graphics.RenderSolid(border);
-						this.DrawDimensionLine(graphics, new Point(box.Right, ext.Top), new Point(box.Left, ext.Top));
+						this.DimensionDrawLine(graphics, new Point(box.Right, ext.Top), new Point(box.Left, ext.Top));
 						break;
 
 					case DimensionType.Height:
@@ -4434,7 +4434,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						graphics.RenderSolid(red);
 						graphics.AddRectangle(r);
 						graphics.RenderSolid(border);
-						this.DrawDimensionLine(graphics, new Point(ext.Right, box.Top), new Point(ext.Right, box.Bottom));
+						this.DimensionDrawLine(graphics, new Point(ext.Right, box.Top), new Point(ext.Right, box.Bottom));
 						break;
 
 					case DimensionType.MarginLeft:
@@ -4582,28 +4582,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 						break;
 				}
 
-				this.DrawDimensionText(graphics, box, type);
+				this.DimensionDrawText(graphics, box, type);
 			}
 
-			this.DrawDimensionLine(graphics, pl1, pl2);
-			this.DrawDimensionLine(graphics, pr1, pr2);
-			this.DrawDimensionLine(graphics, pt1, pt2);
-			this.DrawDimensionLine(graphics, pb1, pb2);
+			this.DimensionDrawLine(graphics, pl1, pl2);
+			this.DimensionDrawLine(graphics, pr1, pr2);
+			this.DimensionDrawLine(graphics, pt1, pt2);
+			this.DimensionDrawLine(graphics, pb1, pb2);
 
 			if (this.hilitedDimension != DimensionType.None)
 			{
-				this.DrawDimensionHilite(graphics, obj);
+				this.DimensionDrawHilite(graphics, obj);
 			}
 		}
 
-		protected void DrawDimensionHilite(Graphics graphics, Widget obj)
+		protected void DimensionDrawHilite(Graphics graphics, Widget obj)
 		{
 			//	Dessine un cadre rouge.
 			double alpha = (this.draggingDimensionType == DimensionType.None) ? 1.0 : 0.5;
 			Color hilite = Color.FromAlphaRgb(alpha, 255.0/255.0, 124.0/255.0, 37.0/255.0);
 			double t = 20;
 
-			Rectangle box = this.GetRectangleDimension(obj, this.hilitedDimension);
+			Rectangle box = this.DimensionGetRectangle(obj, this.hilitedDimension);
 			graphics.Align(ref box);
 			box.Offset(0.5, 0.5);
 
@@ -4626,7 +4626,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.RenderSolid(Color.FromBrightness(0));
 
 			//	Redessine la valeur par dessus.
-			this.DrawDimensionText(graphics, box, this.hilitedDimension);
+			this.DimensionDrawText(graphics, box, this.hilitedDimension);
 
 			//	Dessine les signes +/-.
 			Point p = new Point(box.Center.X-1, box.Top+t/4-2);
@@ -4645,7 +4645,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.RenderSolid(Color.FromBrightness(0));
 		}
 
-		protected void DrawDimensionLine(Graphics graphics, Point p1, Point p2)
+		protected void DimensionDrawLine(Graphics graphics, Point p1, Point p2)
 		{
 			//	Dessine le trait d'une cote.
 			double d = Point.Distance(p1, p2);
@@ -4695,10 +4695,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void DrawDimensionText(Graphics graphics, Rectangle box, DimensionType type)
+		protected void DimensionDrawText(Graphics graphics, Rectangle box, DimensionType type)
 		{
 			//	Dessine la valeur d'une cote avec des petits caractères.
-			int i = (int) System.Math.Floor(this.GetDimensionValue(type)+0.5);
+			int i = (int) System.Math.Floor(this.DimensionGetValue(type)+0.5);
 			string text = i.ToString();
 
 			if (type == DimensionType.Height       ||
@@ -4721,7 +4721,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.RenderSolid(Color.FromRgb(0, 0, 0));
 		}
 
-		protected void DraggingDimension(Point mouse, bool isControlPressed, bool isShiftPressed)
+		protected void DimensionDragging(Point mouse, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Modifie la valeur d'une cote.
 			double value = mouse.Y - this.startingPos.Y;
@@ -4760,10 +4760,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 #endif
 
-			this.SetDimensionValue(this.draggingDimensionType, this.draggingDimensionInitial+value);
+			this.DimensionSetValue(this.draggingDimensionType, this.draggingDimensionInitial+value);
 		}
 
-		protected void EndingDimension()
+		protected void DimensionEnding()
 		{
 			//	Fin de la modification d'une cote.
 			this.draggingDimensionType = DimensionType.None;
@@ -4771,7 +4771,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.module.MainWindow.UpdateInfoViewer();
 		}
 
-		protected double GetDimensionValue(DimensionType type)
+		protected double DimensionGetValue(DimensionType type)
 		{
 			//	Retourne la valeur d'une cote.
 			Widget obj = this.selectedObjects[0];
@@ -4813,7 +4813,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void SetDimensionValue(DimensionType type, double value)
+		protected void DimensionSetValue(DimensionType type, double value)
 		{
 			//	Modifie la valeur d'une cote.
 			value = System.Math.Max(value, 0);
@@ -4884,12 +4884,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Invalidate();
 		}
 
-		protected DimensionType DetectDimension(Widget obj, Point mouse)
+		protected DimensionType DimensionDetect(Widget obj, Point mouse)
 		{
 			//	Détecte la cote visée par la souris.
 			foreach (DimensionType type in System.Enum.GetValues(typeof(DimensionType)))
 			{
-				Rectangle rect = this.GetRectangleDimension(obj, type);
+				Rectangle rect = this.DimensionGetRectangle(obj, type);
 				if (rect.Contains(mouse))
 				{
 					return type;
@@ -4899,7 +4899,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return DimensionType.None;
 		}
 
-		protected Rectangle GetRectangleDimension(Widget obj, DimensionType type)
+		protected Rectangle DimensionGetRectangle(Widget obj, DimensionType type)
 		{
 			//	Retourne le rectangle pour le texte d'une cote.
 			Rectangle bounds = this.objectModifier.GetActualBounds(obj);

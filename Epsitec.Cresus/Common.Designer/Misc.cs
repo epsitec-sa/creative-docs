@@ -198,11 +198,13 @@ namespace Epsitec.Common.Designer
 
 		static public Color AlphaColor(Color c, double a)
 		{
+			//	Retourne la même couleur avec la valeur alpha spécifiée.
 			return Color.FromAlphaRgb(a, c.R, c.G, c.B);
 		}
 
 		static public Color FactorColor(Color c, double factor)
 		{
+			//	Retroune le même couleur en multipliant son canal alpha par le facteur.
 			return Color.FromAlphaRgb(c.A*factor, c.R, c.G, c.B);
 		}
 

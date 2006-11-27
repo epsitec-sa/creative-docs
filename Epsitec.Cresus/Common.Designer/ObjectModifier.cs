@@ -195,7 +195,7 @@ namespace Epsitec.Common.Designer
 			return ObjectModifier.GetObjectIcon(type);
 		}
 
-		public static string GetObjectIcon(ObjectType type)
+		protected static string GetObjectIcon(ObjectType type)
 		{
 			//	Retourne l'icône d'un objet.
 			switch (type)
