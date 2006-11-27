@@ -140,6 +140,13 @@ namespace Epsitec.Common.UI
 		{
 			if (this.panel != null)
 			{
+				this.selectedItems.Clear ();
+				
+				foreach (ItemView view in this.panel.GetSelectedItemViews ())
+				{
+					this.selectedItems.Add (view.Item);
+				}
+				
 				this.panel.ClearUserInterface ();
 			}
 		}
@@ -149,6 +156,52 @@ namespace Epsitec.Common.UI
 			if (this.panel != null)
 			{
 				this.panel.RefreshUserInterface ();
+
+				foreach (object item in this.selectedItems)
+				{
+					ItemView view = this.panel.GetItemView (item);
+					
+					if (view != null)
+					{
+						view.IsSelected = true;
+					}
+				}
+				
+				this.selectedItems.Clear ();
+			}
+		}
+
+		internal void GetSelectedItemViews(System.Predicate<ItemView> filter, List<ItemView> list)
+		{
+			Drawing.Size size;
+
+			if (this.panel != null)
+			{
+				this.panel.GetSelectedItemViews (filter, list);
+				
+				size = this.panel.ItemViewDefaultSize;
+			}
+			else if (this.parentPanel != null)
+			{
+				size = this.parentPanel.ItemViewDefaultSize;
+			}
+			else
+			{
+				return;
+			}
+
+			if (this.selectedItems != null)
+			{
+				foreach (object item in this.selectedItems)
+				{
+					ItemView view = new ItemView (item, size);
+					
+					if ((filter == null) ||
+						(filter (view)))
+					{
+						list.Add (view);
+					}
+				}
 			}
 		}
 
@@ -218,9 +271,13 @@ namespace Epsitec.Common.UI
 				newSize += this.Padding.Size;
 				newSize += this.GetInternalPadding ().Size;
 				newSize += this.panel.Margins.Size;
+
+				this.RefreshUserInterface ();
 			}
 			else
 			{
+				this.ClearUserInterface ();
+				
 				newSize = this.defaultCompactSize;
 				
 				this.panel.SetParentGroup (null);
@@ -241,5 +298,6 @@ namespace Epsitec.Common.UI
 		private ItemPanel parentPanel;
 		private ItemView parentView;
 		private Drawing.Size defaultCompactSize;
+		private List<object> selectedItems = new List<object> ();
 	}
 }

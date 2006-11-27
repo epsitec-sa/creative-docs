@@ -145,6 +145,21 @@ namespace Epsitec.Common.UI
 			return ItemPanel.TryGetItemView (this.SafeGetViews (), index);
 		}
 
+		public ItemView GetItemView(object item)
+		{
+			IEnumerable<ItemView> views = this.SafeGetViews ();
+
+			foreach (ItemView view in views)
+			{
+				if (view.Item == item)
+				{
+					return view;
+				}
+			}
+
+			return null;
+		}
+		
 		public void SelectItemView(ItemView view)
 		{
 			if (view.IsSelected)
@@ -160,14 +175,14 @@ namespace Epsitec.Common.UI
 				{
 					//	The view specifies a plain item.
 					
-					selectedViews = this.GetSelectedItemViews (ItemPanel.ContainsItem);
+					selectedViews = this.RootPanel.GetSelectedItemViews (ItemPanel.ContainsItem);
 					selectionMode = this.ItemSelection;
 				}
 				else
 				{
 					//	The view specifies a group.
 
-					selectedViews = this.GetSelectedItemViews (ItemPanel.ContainsGroup);
+					selectedViews = this.RootPanel.GetSelectedItemViews (ItemPanel.ContainsGroup);
 					selectionMode = this.GroupSelection;
 				}
 
@@ -203,14 +218,14 @@ namespace Epsitec.Common.UI
 				{
 					//	The view specifies a plain item.
 
-					selectedViews = this.GetSelectedItemViews (ItemPanel.ContainsItem);
+					selectedViews = this.RootPanel.GetSelectedItemViews (ItemPanel.ContainsItem);
 					selectionMode = this.ItemSelection;
 				}
 				else
 				{
 					//	The view specifies a group.
 
-					selectedViews = this.GetSelectedItemViews (ItemPanel.ContainsGroup);
+					selectedViews = this.RootPanel.GetSelectedItemViews (ItemPanel.ContainsGroup);
 					selectionMode = this.GroupSelection;
 				}
 
@@ -257,18 +272,11 @@ namespace Epsitec.Common.UI
 		
 		public IList<ItemView> GetSelectedItemViews(System.Predicate<ItemView> filter)
 		{
-			if (this.parentGroup != null)
-			{
-				return this.parentGroup.ParentPanel.GetSelectedItemViews (filter);
-			}
-			else
-			{
-				List<ItemView> list = new List<ItemView> ();
-				
-				this.GetSelectedItemViews (filter, list);
+			List<ItemView> list = new List<ItemView> ();
+			
+			this.GetSelectedItemViews (filter, list);
 
-				return list;
-			}
+			return list;
 		}
 
 		public void AsyncRefresh()
@@ -411,7 +419,31 @@ namespace Epsitec.Common.UI
 				this.groups.Remove (group);
 			}
 		}
-		
+
+		internal void GetSelectedItemViews(System.Predicate<ItemView> filter, List<ItemView> list)
+		{
+			IEnumerable<ItemView> views = this.SafeGetViews ();
+
+			foreach (ItemView view in views)
+			{
+				if (view.IsSelected)
+				{
+					if ((filter == null) ||
+						(filter (view)))
+					{
+						list.Add (view);
+					}
+				}
+
+				ItemPanelGroup childPanelGroup = view.Widget as ItemPanelGroup;
+
+				if (childPanelGroup != null)
+				{
+					childPanelGroup.GetSelectedItemViews (filter, list);
+				}
+			}
+		}
+
 		protected virtual void HandleItemsChanged(ICollectionView oldValue, ICollectionView newValue)
 		{
 			if (oldValue != null)
@@ -530,30 +562,6 @@ namespace Epsitec.Common.UI
 			using (new LockManager (this))
 			{
 				return this.views;
-			}
-		}
-
-		private void GetSelectedItemViews(System.Predicate<ItemView> filter, List<ItemView> list)
-		{
-			IEnumerable<ItemView> views = this.SafeGetViews ();
-
-			foreach (ItemView view in views)
-			{
-				if (view.IsSelected)
-				{
-					if ((filter == null) ||
-							(filter (view)))
-					{
-						list.Add (view);
-					}
-				}
-
-				ItemPanelGroup childPanelGroup = view.Widget as ItemPanelGroup;
-
-				if (childPanelGroup != null)
-				{
-					childPanelGroup.ChildPanel.GetSelectedItemViews (filter, list);
-				}
 			}
 		}
 
