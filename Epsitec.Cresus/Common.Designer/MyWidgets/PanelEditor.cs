@@ -402,6 +402,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 					message.Consumer = this;
 					break;
 
+				case MessageType.MouseWheel:
+					this.DimensionWheel(message.Wheel);
+					break;
+
 				case MessageType.MouseLeave:
 					this.SetEnteredObjects(null);
 					this.SetHilitedObject(null, null);
@@ -4719,6 +4723,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			graphics.RenderSolid(Color.FromRgb(0, 0, 0));
+		}
+
+		protected void DimensionWheel(int direction)
+		{
+			if (this.hilitedDimension != DimensionType.None)
+			{
+				double value = this.DimensionGetValue(this.hilitedDimension);
+				value += (direction < 0) ? -1 : 1;
+				this.DimensionSetValue(this.hilitedDimension, value);
+			}
 		}
 
 		protected void DimensionDragging(Point mouse, bool isControlPressed, bool isShiftPressed)
