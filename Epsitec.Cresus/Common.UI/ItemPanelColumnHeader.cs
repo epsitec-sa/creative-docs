@@ -61,6 +61,7 @@ namespace Epsitec.Common.UI
 			Column column = new Column (this, propertyName);
 
 			column.Widget.SizeChanged += this.HandleColumnWidthChanged;
+			column.Widget.Clicked += this.HandleColumnClicked;
 			
 			this.columns.Add (column);
 		}
@@ -72,6 +73,7 @@ namespace Epsitec.Common.UI
 			this.columns.RemoveAt (index);
 
 			column.Widget.SizeChanged -= this.HandleColumnWidthChanged;
+			column.Widget.Clicked -= this.HandleColumnClicked;
 			column.Widget.Dispose ();
 		}
 		
@@ -130,14 +132,50 @@ namespace Epsitec.Common.UI
 			this.ItemPanel.AsyncRefresh ();
 		}
 
+		private void HandleColumnClicked(object sender, MessageEventArgs e)
+		{
+			Widget widget = sender as Widget;
+			Column column = this.columns[widget.Index];
+
+			List<SortDescription> sorts = new List<SortDescription> ();
+			SortDescription newSort = new SortDescription (column.Widget.SortMode == SortMode.Down ? ListSortDirection.Descending : ListSortDirection.Ascending, column.PropertyName);
+			
+			foreach (SortDescription sort in this.ItemPanel.Items.SortDescriptions)
+			{
+				if (sort.PropertyName != newSort.PropertyName)
+				{
+					sorts.Add (sort);
+				}
+			}
+
+			foreach (Column item in this.columns)
+			{
+				if (item.Widget == column.Widget)
+				{
+					item.Widget.SortMode = newSort.Direction == ListSortDirection.Ascending ? SortMode.Down : SortMode.Up;
+				}
+				else
+				{
+					item.Widget.SortMode = SortMode.None;
+				}
+			}
+
+			this.ItemPanel.Items.SortDescriptions.Clear ();
+			this.ItemPanel.Items.SortDescriptions.Add (newSort);
+			this.ItemPanel.Items.SortDescriptions.AddRange (sorts);
+		}
+		
 		private struct Column
 		{
 			public Column(ItemPanelColumnHeader header, string propertyName)
 			{
 				this.property = new PropertyGroupDescription (propertyName);
 				this.widget   = new HeaderButton (header);
-				
-				this.widget.Text = propertyName;
+
+				this.widget.Style     = HeaderButtonStyle.Top;
+				this.widget.IsDynamic = true;
+				this.widget.Text      = propertyName;
+				this.widget.Index     = header.columns.Count;
 				
 				GridLayoutEngine.SetColumn (this.widget, header.columns.Count);
 				GridLayoutEngine.SetRow (this.widget, 0);
