@@ -1743,6 +1743,11 @@ namespace Epsitec.Common.Designer
 				return (ha != StackedHorizontalAlignment.Stretch && ha != StackedHorizontalAlignment.None);
 			}
 
+			if (placement == ChildrenPlacement.Grid)
+			{
+				return true;
+			}
+
 			return false;
 		}
 
@@ -1800,6 +1805,11 @@ namespace Epsitec.Common.Designer
 			{
 				StackedVerticalAlignment ha = this.GetStackedVerticalAlignment(obj);
 				return (ha != StackedVerticalAlignment.Stretch && ha != StackedVerticalAlignment.None);
+			}
+
+			if (placement == ChildrenPlacement.Grid)
+			{
+				return true;
 			}
 
 			return false;
