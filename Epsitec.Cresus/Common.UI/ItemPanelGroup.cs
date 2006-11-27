@@ -199,6 +199,7 @@ namespace Epsitec.Common.UI
 				(this.parentPanel != null))
 			{
 				this.parentPanel.ExpandItemView (this.parentView, !this.parentView.IsExpanded);
+				e.Message.Consumer = this;
 			}
 		}
 

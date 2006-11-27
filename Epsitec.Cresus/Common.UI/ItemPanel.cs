@@ -39,6 +39,22 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		internal ItemPanel RootPanel
+		{
+			get
+			{
+				if ((this.parentGroup != null) &&
+					(this.parentGroup.ParentPanel != null))
+				{
+					return this.parentGroup.ParentPanel.RootPanel;
+				}
+				else
+				{
+					return this;
+				}
+			}
+		}
+
 		public ItemPanelLayout Layout
 		{
 			get
@@ -128,7 +144,6 @@ namespace Epsitec.Common.UI
 		{
 			return ItemPanel.TryGetItemView (this.SafeGetViews (), index);
 		}
-
 
 		public void SelectItemView(ItemView view)
 		{
@@ -242,22 +257,18 @@ namespace Epsitec.Common.UI
 		
 		public IList<ItemView> GetSelectedItemViews(System.Predicate<ItemView> filter)
 		{
-			List<ItemView> list = new List<ItemView> ();
-			IEnumerable<ItemView> views = this.SafeGetViews ();
-
-			foreach (ItemView view in views)
+			if (this.parentGroup != null)
 			{
-				if (view.IsSelected)
-				{
-					if ((filter == null) ||
-						(filter (view)))
-					{
-						list.Add (view);
-					}
-				}
+				return this.parentGroup.ParentPanel.GetSelectedItemViews (filter);
 			}
-			
-			return list;
+			else
+			{
+				List<ItemView> list = new List<ItemView> ();
+				
+				this.GetSelectedItemViews (filter, list);
+
+				return list;
+			}
 		}
 
 		public void AsyncRefresh()
@@ -440,8 +451,6 @@ namespace Epsitec.Common.UI
 			this.AsyncRefresh ();
 		}
 		
-
-
 		protected virtual void HandleApertureChanged(Drawing.Rectangle oldValue, Drawing.Rectangle newValue)
 		{
 			this.RecreateUserInterface (this.SafeGetViews (), newValue);
@@ -459,11 +468,92 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		protected override void OnClicked(Epsitec.Common.Widgets.MessageEventArgs e)
+		{
+			base.OnClicked (e);
+
+			if (!e.Suppress)
+			{
+				if (e.Message.Button == Widgets.MouseButtons.Left)
+				{
+					ItemView view = this.Detect (e.Point);
+					
+					if (view != null)
+					{
+						if (view.IsSelected)
+						{
+							this.DeselectItemView (view);
+						}
+						else
+						{
+							this.SelectItemView (view);
+						}
+						
+						e.Message.Consumer = this;
+					}
+				}
+			}
+		}
+
+		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clipRect)
+		{
+			IEnumerable<ItemView> views = this.SafeGetViews ();
+			Widgets.IAdorner adorner = Widgets.Adorners.Factory.Active;
+
+			Drawing.Rectangle rect = Drawing.Rectangle.Intersection (clipRect, this.Aperture);
+			ICollectionView items = this.RootPanel.Items;
+
+			object focusedItem = items == null ? null : items.CurrentItem;
+
+			foreach (ItemView view in views)
+			{
+				if (view.Bounds.IntersectsWith (rect))
+				{
+					Widgets.WidgetPaintState state = Widgets.WidgetPaintState.Enabled;
+
+					if (view.IsSelected)
+					{
+						state |= Widgets.WidgetPaintState.Selected;
+					}
+					if (view.Item == focusedItem)
+					{
+						state |= Widgets.WidgetPaintState.Focused;
+					}
+
+					adorner.PaintCellBackground (graphics, view.Bounds, state);
+				}
+			}
+		}
+		
 		private IList<ItemView> SafeGetViews()
 		{
 			using (new LockManager (this))
 			{
 				return this.views;
+			}
+		}
+
+		private void GetSelectedItemViews(System.Predicate<ItemView> filter, List<ItemView> list)
+		{
+			IEnumerable<ItemView> views = this.SafeGetViews ();
+
+			foreach (ItemView view in views)
+			{
+				if (view.IsSelected)
+				{
+					if ((filter == null) ||
+							(filter (view)))
+					{
+						list.Add (view);
+					}
+				}
+
+				ItemPanelGroup childPanelGroup = view.Widget as ItemPanelGroup;
+
+				if (childPanelGroup != null)
+				{
+					childPanelGroup.ChildPanel.GetSelectedItemViews (filter, list);
+				}
 			}
 		}
 
@@ -496,7 +586,15 @@ namespace Epsitec.Common.UI
 				}
 				else
 				{
-					this.Items.MoveCurrentTo (view.Item);
+					ItemPanel rootPanel = this.RootPanel;
+					ICollectionView items = rootPanel.Items;
+					
+					if (items != null)
+					{
+						items.MoveCurrentTo (view.Item);
+						
+						rootPanel.Invalidate ();
+					}
 				}
 			}
 		}
@@ -653,6 +751,11 @@ namespace Epsitec.Common.UI
 			{
 				ItemView view;
 
+				//	Try to find and recycle the view for the specified item; this
+				//	not only speeds up recreation of the item views, it also allows
+				//	to keep track of the state associated with an item (selected or
+				//	expanded, for instance).
+				
 				if (currentViews.TryGetValue (item, out view))
 				{
 					currentViews.Remove (item);

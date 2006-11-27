@@ -97,7 +97,15 @@ namespace Epsitec.Common.UI
 			}
 			internal set
 			{
-				this.isSelected = value;
+				if (this.isSelected != value)
+				{
+					this.isSelected = value;
+
+					if (this.widget != null)
+					{
+						this.widget.Invalidate ();
+					}
+				}
 			}
 		}
 
