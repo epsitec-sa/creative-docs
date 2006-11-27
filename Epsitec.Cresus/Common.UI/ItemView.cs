@@ -89,7 +89,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public bool IsSelected
+		public virtual bool IsSelected
 		{
 			get
 			{

@@ -136,15 +136,29 @@ namespace Epsitec.Common.UI
 			this.Invalidate ();
 		}
 
+		/// <summary>
+		/// Clears information related to the user interface. This is a softer
+		/// version of a dispose where the object can be turned alive again by
+		/// calling <see cref="RefreshUserInterface"/>. This takes a snapshot
+		/// of the <c>ItemView</c> states before they get lost.
+		/// </summary>
 		internal void ClearUserInterface()
 		{
 			if (this.panel != null)
 			{
-				this.selectedItems.Clear ();
+				//	Remember all items which were selected, so we can reselect
+				//	them when the ViewItem objects get recreated...
+
+				List<System.WeakReference> selectedGhostItems = new List<System.WeakReference> ();
 				
 				foreach (ItemView view in this.panel.GetSelectedItemViews ())
 				{
-					this.selectedItems.Add (view.Item);
+					selectedGhostItems.Add (new System.WeakReference (view.Item));
+				}
+
+				lock (this.exclusion)
+				{
+					this.selectedGhostItems = selectedGhostItems;
 				}
 				
 				this.panel.ClearUserInterface ();
@@ -157,22 +171,38 @@ namespace Epsitec.Common.UI
 			{
 				this.panel.RefreshUserInterface ();
 
-				foreach (object item in this.selectedItems)
+				lock (this.exclusion)
 				{
-					ItemView view = this.panel.GetItemView (item);
-					
-					if (view != null)
+					foreach (System.WeakReference ghostItem in this.selectedGhostItems)
 					{
-						view.IsSelected = true;
+						object item = ghostItem.Target;
+
+						if (item != null)
+						{
+							ItemView view = this.panel.GetItemView (item);
+
+							if (view != null)
+							{
+								view.IsSelected = true;
+							}
+						}
 					}
+					
+					this.selectedGhostItems.Clear ();
 				}
-				
-				this.selectedItems.Clear ();
 			}
 		}
 
+		/// <summary>
+		/// Gets the selected item views, including the ghost item views which do
+		/// not really exist when a group is in compact mode.
+		/// </summary>
+		/// <param name="filter">The item view filter.</param>
+		/// <param name="list">The item view list which gets filled.</param>
 		internal void GetSelectedItemViews(System.Predicate<ItemView> filter, List<ItemView> list)
 		{
+			System.Diagnostics.Debug.Assert (this.parentPanel != null);
+
 			Drawing.Size size;
 
 			if (this.panel != null)
@@ -181,21 +211,30 @@ namespace Epsitec.Common.UI
 				
 				size = this.panel.ItemViewDefaultSize;
 			}
-			else if (this.parentPanel != null)
+			else
 			{
 				size = this.parentPanel.ItemViewDefaultSize;
 			}
-			else
+
+			//	If we have selected ghost items for this group, we will provide
+			//	dummy (ghost) item view instances so that the root panel can
+			//	enforce the selection mode (e.g. only one selected item).
+
+			System.WeakReference[] ghostItems;
+			
+			lock (this.exclusion)
 			{
-				return;
+				ghostItems = this.selectedGhostItems.ToArray ();
 			}
 
-			if (this.selectedItems != null)
+			foreach (System.WeakReference ghostItem in ghostItems)
 			{
-				foreach (object item in this.selectedItems)
+				object item = ghostItem.Target;
+				
+				if (item != null)
 				{
-					ItemView view = new ItemView (item, size);
-					
+					ItemViewGhost view = new ItemViewGhost (this, item, size);
+
 					if ((filter == null) ||
 						(filter (view)))
 					{
@@ -294,10 +333,71 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		#region ItemViewGhost Class
+
+		/// <summary>
+		/// The <c>ItemViewGhost</c> class is used to monitor the change from
+		/// <c>IsSelected=true</c> to <c>IsSelected=false</c>, which is used
+		/// to remove the corresponding item from the selected item list.
+		/// </summary>
+		private class ItemViewGhost : ItemView
+		{
+			public ItemViewGhost(ItemPanelGroup group, object item, Drawing.Size defaultSize)
+				: base (item, defaultSize)
+			{
+				this.group = group;
+				base.IsSelected = true;
+			}
+
+			public override bool IsSelected
+			{
+				get
+				{
+					return base.IsSelected;
+				}
+				internal set
+				{
+					if (this.IsSelected != value)
+					{
+						System.Diagnostics.Debug.Assert (value == false);
+
+						base.IsSelected = value;
+
+						//	Rebuild the list of selected items: remove dead object
+						//	references and also remove this item view's item.
+						
+						List<System.WeakReference> list = new List<System.WeakReference> ();
+
+						lock (this.group.exclusion)
+						{
+							foreach (System.WeakReference ghostItem in this.group.selectedGhostItems)
+							{
+								object item = ghostItem.Target;
+
+								if ((item != null) &&
+									(item != this.Item))
+								{
+									list.Add (new System.WeakReference (item));
+								}
+							}
+
+							this.group.selectedGhostItems = list;
+						}
+					}
+				}
+			}
+
+			private ItemPanelGroup group;
+		}
+
+		#endregion
+
 		private ItemPanel panel;
 		private ItemPanel parentPanel;
 		private ItemView parentView;
 		private Drawing.Size defaultCompactSize;
-		private List<object> selectedItems = new List<object> ();
+		
+		private List<System.WeakReference> selectedGhostItems = new List<System.WeakReference> ();
+		private object exclusion = new object ();
 	}
 }
