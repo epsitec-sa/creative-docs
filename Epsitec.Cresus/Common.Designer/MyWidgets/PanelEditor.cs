@@ -4413,6 +4413,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			PaddingRight,
 			PaddingBottom,
 			PaddingTop,
+			GridColumns,
+			GridRows,
 		}
 
 		protected void DimensionDrawObject(Graphics graphics, Widget obj)
@@ -4618,6 +4620,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 						graphics.Rasterizer.AddOutline(path);
 						graphics.RenderSolid(border);
 						break;
+
+					case DimensionType.GridColumns:
+						r = box;
+						r.Bottom = ext.Top;
+						graphics.AddFilledRectangle(r);
+						graphics.RenderSolid(red);
+						graphics.AddRectangle(r);
+						graphics.RenderSolid(border);
+						break;
+
+					case DimensionType.GridRows:
+						r = box;
+						r.Right = ext.Left;
+						graphics.AddFilledRectangle(r);
+						graphics.RenderSolid(red);
+						graphics.AddRectangle(r);
+						graphics.RenderSolid(border);
+						break;
 				}
 
 				this.DimensionDrawText(graphics, box, type);
@@ -4743,7 +4763,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				type == DimensionType.MarginBottom ||
 				type == DimensionType.MarginTop    ||
 				type == DimensionType.PaddingLeft  ||
-				type == DimensionType.PaddingRight )  // text vertical ?
+				type == DimensionType.PaddingRight ||
+				type == DimensionType.GridRows     )  // text vertical ?
 			{
 				Point center = box.Center;
 				Transform it = graphics.Transform;
@@ -4774,39 +4795,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Modifie la valeur d'une cote.
 			double value = mouse.Y - this.startingPos.Y;
 
-#if false
-			double x = mouse.X - this.startingPos.X;
-			if (x < 0)
+			if (this.draggingDimensionType == DimensionType.GridColumns ||
+				this.draggingDimensionType == DimensionType.GridRows    )
 			{
-				double ix = System.Math.Floor(-x/20);
-				if (ix > 1)
+				value = System.Math.Floor((value+0.1)*0.1);
+			}
+			else
+			{
+				if (isControlPressed)  // moins sensible ?
 				{
-					value /= ix;
+					value = System.Math.Floor((value+0.5)*0.5);
 				}
-			}
-			if (x > 0)
-			{
-				double ix = System.Math.Floor(x/20);
-				if (ix > 1)
-				{
-					value = System.Math.Floor((value+ix/2)/ix) * ix;
-				}
-			}
-#endif
-#if true
-			if (isControlPressed)  // moins sensible ?
-			{
-				value = System.Math.Floor((value+0.5)*0.5);
-			}
 
-			if (isShiftPressed)  // grille magnétique ?
-			{
-				double step = 5;
-				value += this.draggingDimensionInitial;
-				value = System.Math.Floor((value+step/2)/step) * step;
-				value -= this.draggingDimensionInitial;
+				if (isShiftPressed)  // grille magnétique ?
+				{
+					double step = 5;
+					value += this.draggingDimensionInitial;
+					value = System.Math.Floor((value+step/2)/step) * step;
+					value -= this.draggingDimensionInitial;
+				}
 			}
-#endif
 
 			this.DimensionSetValue(this.draggingDimensionType, this.draggingDimensionInitial+value);
 		}
@@ -4856,6 +4864,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				case DimensionType.PaddingTop:
 					return this.objectModifier.GetPadding(obj).Top;
 
+				case DimensionType.GridColumns:
+					return (double) this.objectModifier.GetGridColumnsCount(obj);
+
+				case DimensionType.GridRows:
+					return (double) this.objectModifier.GetGridRowsCount(obj);
+
 				default:
 					return 0;
 			}
@@ -4864,7 +4878,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DimensionSetValue(DimensionType type, double value)
 		{
 			//	Modifie la valeur d'une cote.
-			value = System.Math.Max(value, 0);
 			Margins m;
 
 			foreach (Widget obj in this.selectedObjects)
@@ -4872,59 +4885,79 @@ namespace Epsitec.Common.Designer.MyWidgets
 				switch (type)
 				{
 					case DimensionType.Width:
+						value = System.Math.Max(value, 0);
 						this.objectModifier.SetPreferredWidth(obj, value);
 						break;
 
 					case DimensionType.Height:
+						value = System.Math.Max(value, 0);
 						this.objectModifier.SetPreferredHeight(obj, value);
 						break;
 
 					case DimensionType.MarginLeft:
+						value = System.Math.Max(value, 0);
 						m = this.objectModifier.GetMargins(obj);
 						m.Left = value;
 						this.objectModifier.SetMargins(obj, m);
 						break;
 
 					case DimensionType.MarginRight:
+						value = System.Math.Max(value, 0);
 						m = this.objectModifier.GetMargins(obj);
 						m.Right = value;
 						this.objectModifier.SetMargins(obj, m);
 						break;
 
 					case DimensionType.MarginBottom:
+						value = System.Math.Max(value, 0);
 						m = this.objectModifier.GetMargins(obj);
 						m.Bottom = value;
 						this.objectModifier.SetMargins(obj, m);
 						break;
 
 					case DimensionType.MarginTop:
+						value = System.Math.Max(value, 0);
 						m = this.objectModifier.GetMargins(obj);
 						m.Top = value;
 						this.objectModifier.SetMargins(obj, m);
 						break;
 
 					case DimensionType.PaddingLeft:
+						value = System.Math.Max(value, 0);
 						m = this.objectModifier.GetPadding(obj);
 						m.Left = value;
 						this.objectModifier.SetPadding(obj, m);
 						break;
 
 					case DimensionType.PaddingRight:
+						value = System.Math.Max(value, 0);
 						m = this.objectModifier.GetPadding(obj);
 						m.Right = value;
 						this.objectModifier.SetPadding(obj, m);
 						break;
 
 					case DimensionType.PaddingBottom:
+						value = System.Math.Max(value, 0);
 						m = this.objectModifier.GetPadding(obj);
 						m.Bottom = value;
 						this.objectModifier.SetPadding(obj, m);
 						break;
 
 					case DimensionType.PaddingTop:
+						value = System.Math.Max(value, 0);
 						m = this.objectModifier.GetPadding(obj);
 						m.Top = value;
 						this.objectModifier.SetPadding(obj, m);
+						break;
+
+					case DimensionType.GridColumns:
+						value = System.Math.Max(value, 1);
+						this.objectModifier.SetGridColumnsCount(obj, (int) value);
+						break;
+
+					case DimensionType.GridRows:
+						value = System.Math.Max(value, 1);
+						this.objectModifier.SetGridRowsCount(obj, (int) value);
 						break;
 				}
 			}
@@ -4979,7 +5012,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						box = bounds;
 						box.Left = ext.Right+d-h;
-						box.Right = ext.Right+d;
+						box.Width = h;
 					}
 					return box;
 
@@ -5074,6 +5107,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						return box;
 					}
+
+				case DimensionType.GridColumns:
+					if (this.objectModifier.GetChildrenPlacement(obj) == ObjectModifier.ChildrenPlacement.Grid)
+					{
+						box = bounds;
+						box.Bottom = ext.Top+d-h;
+						box.Height = h;
+					}
+					return box;
+
+				case DimensionType.GridRows:
+					if (this.objectModifier.GetChildrenPlacement(obj) == ObjectModifier.ChildrenPlacement.Grid)
+					{
+						box = bounds;
+						box.Left = ext.Left-d;
+						box.Width = h;
+					}
+					return box;
 
 				default:
 					return box;

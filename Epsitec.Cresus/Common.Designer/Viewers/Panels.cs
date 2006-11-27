@@ -92,7 +92,8 @@ namespace Epsitec.Common.Designer.Viewers
 			container.MinWidth = 100;
 			container.Dock = DockStyle.Fill;
 
-			//	Sous-conteneur qui a des marges.
+			//	Sous-conteneur qui a des marges, pour permettre de voir les cotes (Dimension*)
+			//	du PanelEditor qui s'affiche par-dessus.
 			this.panelContainerParent = new Widget(container);
 			this.panelContainerParent.Margins = new Margins(MyWidgets.PanelEditor.dimensionMargin, MyWidgets.PanelEditor.dimensionMargin, MyWidgets.PanelEditor.dimensionMargin, MyWidgets.PanelEditor.dimensionMargin);
 			this.panelContainerParent.Dock = DockStyle.Fill;
@@ -402,8 +403,10 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Ajoute une icône dans la toolbar verticale.
 			if (command == null)
 			{
-				IconSeparator sep = new IconSeparator();
-				sep.IsHorizontal = false;
+				//	N'utilise pas un IconSeparator, afin d'éviter les confusions
+				//	avec les objets HSeparator et VSeparator !
+				Widget sep = new Widget();
+				sep.PreferredHeight = 20;
 				this.vToolBar.Items.Add(sep);
 				return sep;
 			}
