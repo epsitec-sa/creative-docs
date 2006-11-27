@@ -19,10 +19,8 @@ namespace Epsitec.Common.UI
 	{
 		public ItemPanelGroup()
 		{
-			this.panel = new ItemPanel ();
-			
+			this.panel = new ItemPanel (this);
 			this.panel.Dock = Widgets.DockStyle.Fill;
-			this.panel.SetEmbedder (this);
 		}
 
 		public ItemPanel ParentPanel
@@ -92,6 +90,8 @@ namespace Epsitec.Common.UI
 							this.RefreshAperture (this.parentPanel.Aperture);
 						}
 					}
+
+					this.Invalidate ();
 				}
 			}
 		}
@@ -133,6 +133,7 @@ namespace Epsitec.Common.UI
 			System.Diagnostics.Debug.Assert (this.parentPanel != null);
 
 			this.UpdateItemViewSize ();
+			this.Invalidate ();
 		}
 
 		internal void ClearUserInterface()
@@ -160,6 +161,45 @@ namespace Epsitec.Common.UI
 		{
 			base.SetBoundsOverride (oldRect, newRect);
 			this.RefreshAperture (this.parentPanel.Aperture);
+		}
+
+		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clipRect)
+		{
+			base.PaintBackgroundImplementation (graphics, clipRect);
+
+			CollectionViewGroup group = this.CollectionViewGroup;
+
+			double dx = this.ActualWidth;
+			double dy = 20;
+			double y  = this.ActualHeight - dy;
+
+			if (group != null)
+			{
+				graphics.AddText (dy, y, dx-dy, dy, group.Name, this.DefaultFont, this.DefaultFontSize, Epsitec.Common.Drawing.ContentAlignment.MiddleLeft);
+				graphics.RenderSolid (Drawing.Color.FromBrightness (0));
+			}
+
+			string text = this.parentView.IsExpanded ? "-" : "+";
+
+			double r = 9;
+
+			graphics.AddFilledRectangle ((dy-r)/2, y+(dy-r)/2-1, r, r);
+			graphics.RenderSolid (Drawing.Color.FromBrightness (1));
+			graphics.AddRectangle ((dy-r)/2, y+(dy-r)/2-1, r, r);
+			graphics.AddText (0, y, dy, dy, text, this.DefaultFont, this.DefaultFontSize, Epsitec.Common.Drawing.ContentAlignment.MiddleCenter);
+			graphics.RenderSolid (Drawing.Color.FromBrightness (0));
+		}
+
+		protected override void OnClicked(Epsitec.Common.Widgets.MessageEventArgs e)
+		{
+			base.OnClicked (e);
+
+			if ((e.Message.Button == Widgets.MouseButtons.Left) &&
+				(this.parentView != null) &&
+				(this.parentPanel != null))
+			{
+				this.parentPanel.ExpandItemView (this.parentView, !this.parentView.IsExpanded);
+			}
 		}
 
 		private void UpdateItemViewSize()

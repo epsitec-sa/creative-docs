@@ -572,9 +572,19 @@ namespace Epsitec.Common.Types
 
 			GroupNode root = new GroupNode (null);
 
-			foreach (object item in this.sortedList)
+			if (this.sortedList != null)
 			{
-				CollectionView.ClassifyItemIntoGroups (item, culture, rules, 0, root);
+				foreach (object item in this.sortedList)
+				{
+					CollectionView.ClassifyItemIntoGroups (item, culture, rules, 0, root);
+				}
+			}
+			else if (this.sourceList != null)
+			{
+				foreach (object item in this.sourceList)
+				{
+					CollectionView.ClassifyItemIntoGroups (item, culture, rules, 0, root);
+				}
 			}
 
 			CollectionView.GenerateSubgroups (root, this.rootGroup);

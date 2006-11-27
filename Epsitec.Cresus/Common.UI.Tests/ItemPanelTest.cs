@@ -153,7 +153,7 @@ namespace Epsitec.Common.UI
 		}
 
 		[Test]
-		public void CheckInteractiveStructured()
+		public void CheckInteractiveTable()
 		{
 			Widgets.Window window = new Widgets.Window ();
 
@@ -190,6 +190,51 @@ namespace Epsitec.Common.UI
 
 			window.Root.Children.Add (table);
 			
+			panel.Show (panel.GetItemView (0));
+
+			window.Show ();
+
+			Widgets.Window.RunInTestEnvironment (window);
+		}
+
+		[Test]
+		public void CheckInteractiveTableWithGroups()
+		{
+			Widgets.Window window = new Widgets.Window ();
+
+			double dx = 400;
+			double dy = 420;
+
+			window.Text = "CheckInteractiveStructured";
+			window.ClientSize = new Drawing.Size (dx, dy);
+			window.Root.Padding = new Drawing.Margins (4, 4, 4, 4);
+
+			dx -= 8;
+			dy -= 8;
+
+			ItemTable table = new ItemTable ();
+			table.Dock = Widgets.DockStyle.Fill;
+
+			ItemPanel panel = table.ItemPanel;
+
+			panel.Items = ItemPanelTest.GetStructuredItems (true);
+			panel.Layout = ItemPanelLayout.VerticalList;
+			panel.ItemSelection = ItemPanelSelectionMode.ExactlyOne;
+			panel.GroupSelection = ItemPanelSelectionMode.ExactlyOne;
+			panel.Aperture = new Drawing.Rectangle (0, 0, dx, dy);
+			panel.ItemViewDefaultSize = new Drawing.Size (dx, 20);
+
+			ItemPanelColumnHeader header = table.ColumnHeader;
+
+			header.AddColumn ("Stock");
+			header.AddColumn ("Article");
+			header.AddColumn ("Price");
+
+			header.ItemPanel = panel;
+			header.Dock = Widgets.DockStyle.Top;
+
+			window.Root.Children.Add (table);
+
 			panel.Show (panel.GetItemView (0));
 
 			window.Show ();

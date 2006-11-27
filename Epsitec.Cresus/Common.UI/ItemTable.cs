@@ -12,8 +12,15 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.UI
 {
+	/// <summary>
+	/// The <c>ItemTable</c> class is used to represent items in a table, with
+	/// column headers and scroll bars.
+	/// </summary>
 	public class ItemTable : Widgets.FrameBox
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ItemTable"/> class.
+		/// </summary>
 		public ItemTable()
 		{
 			this.vScroller = new VScroller (this);
@@ -43,8 +50,13 @@ namespace Epsitec.Common.UI
 			this.itemPanel.AddEventHandler (Visual.PreferredWidthProperty, this.HandleItemPanelSizeChanged);
 		}
 
+		public ItemTable(Widget embedder)
+			: this ()
+		{
+			this.SetEmbedder (embedder);
+		}
 
-		public ItemPanel ItemPanel
+		public ItemPanel						ItemPanel
 		{
 			get
 			{
@@ -52,7 +64,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public ItemPanelColumnHeader ColumnHeader
+		public ItemPanelColumnHeader			ColumnHeader
 		{
 			get
 			{
