@@ -151,27 +151,11 @@ namespace Epsitec.Common.Designer.Controllers
 								break;
 							}
 
-							if (type == ObjectModifier.ObjectType.SubPanel)
+							if (type == ObjectModifier.ObjectType.SubPanel ||
+								type == ObjectModifier.ObjectType.MainPanel)
 							{
 								Druid d = Druid.Parse(ObjectModifier.GetDruid(parent));
 								exclude.Add(d);
-							}
-							else
-							{
-								// Si nous venons de tomber sur le UI.Panel racine, celui-ci n'est pas
-								// contenu dans un PanelPlaceholder: on ne peut pas obtenir son DRUID
-								// de la même manière que pour les autres panels et il faut recourir à
-								// une aide externe.
-								// Quand ResourceAccess définit le lien entre bundle et panel au moyen
-								// de UI.Panel.SetPanel(bundle, panel), UI.Panel prend aussi note du
-								// lien inverse, à savoir panel-->bundle en conservant le DRUID du
-								// bundle. Ce DRUID est accessible via la méthode UI.Panel.GetBundleId.
-								Druid d = UI.Panel.GetBundleId(parent);
-								
-								if (d.IsValid)
-								{
-									exclude.Add(d);
-								}
 							}
 						}
 					}

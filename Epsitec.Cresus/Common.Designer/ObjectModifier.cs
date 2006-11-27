@@ -252,6 +252,8 @@ namespace Epsitec.Common.Designer
 		public static string GetDruid(Widget obj)
 		{
 			//	Retourne le druid de l'objet.
+			//	On peut obtenir le druid du panneau de base (MainPanel), bien que la
+			//	méthode HasDruid retourne false !
 			Druid druid = Druid.Empty;
 
 			ObjectType type = ObjectModifier.GetObjectType(obj);
@@ -267,6 +269,18 @@ namespace Epsitec.Common.Designer
 			{
 				UI.PanelPlaceholder panel = obj as UI.PanelPlaceholder;
 				druid = panel.PanelId;
+			}
+			else if (type == ObjectType.MainPanel)
+			{
+				// Si nous venons de tomber sur le UI.Panel racine, celui-ci n'est pas
+				// contenu dans un PanelPlaceholder: on ne peut pas obtenir son DRUID
+				// de la même manière que pour les autres panels et il faut recourir à
+				// une aide externe.
+				// Quand ResourceAccess définit le lien entre bundle et panel au moyen
+				// de UI.Panel.SetPanel(bundle, panel), UI.Panel prend aussi note du
+				// lien inverse, à savoir panel-->bundle en conservant le DRUID du
+				// bundle. Ce DRUID est accessible via la méthode UI.Panel.GetBundleId.
+				druid = UI.Panel.GetBundleId(obj);
 			}
 
 			return druid.ToString();
