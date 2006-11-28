@@ -218,10 +218,13 @@ namespace Epsitec.Common.Widgets.Layouts
 		private void AddToArrangeQueue(Visual visual, int depth)
 		{
 			System.Diagnostics.Debug.Assert (visual != null);
-			
-			VisualNode node = new VisualNode (visual, ++this.nodeRank, SortMode.Arrange, depth);
+
+			this.AddToArrangeQueue (visual, new VisualNode (visual, ++this.nodeRank, SortMode.Arrange, depth));
+		}
+		private void AddToArrangeQueue(Visual visual, VisualNode node)
+		{
 			VisualNode oldNode;
-			
+
 			if (this.arrangeMap.TryGetValue (visual, out oldNode))
 			{
 				this.arrangeQueue.Remove (oldNode);
@@ -230,7 +233,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			{
 				this.arrangeChanges++;
 			}
-			
+
 			this.arrangeQueue[node] = visual;
 			this.arrangeMap[visual] = node;
 		}
@@ -419,8 +422,7 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				if (this.measureQueue.Count > 0)
 				{
-					this.arrangeQueue[node] = visual;
-					this.arrangeMap[visual] = node;
+					this.AddToArrangeQueue (visual, node);
 					break;
 				}
 			}
