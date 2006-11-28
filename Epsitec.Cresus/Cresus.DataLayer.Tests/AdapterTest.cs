@@ -57,8 +57,8 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
 			{
-				DbTypeDef typeDef1 = Adapter.CreateTypeDefinition (transaction, this.infrastructure, DecimalType.Default);
-				DbTypeDef typeDef2 = Adapter.CreateTypeDefinition (transaction, this.infrastructure, StringType.Default);
+				DbTypeDef typeDef1 = Adapter.CreateTypeDefinition (transaction, DecimalType.Default);
+				DbTypeDef typeDef2 = Adapter.CreateTypeDefinition (transaction, StringType.Default);
 
 				transaction.Commit ();
 			}
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.DataLayer
 			System.Diagnostics.Debug.WriteLine ("Create Table Definition 1");
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
 			{
-				DbTable table = Adapter.CreateTableDefinition (transaction, this.infrastructure, Epsitec.Common.UI.Res.Types.Record.Address);
+				DbTable table = Adapter.CreateTableDefinition (transaction, Epsitec.Common.UI.Res.Types.Record.Address);
 				
 				System.Diagnostics.Debug.WriteLine ("Create Table Definition 1 before commit");
 
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
 			{
-				DbTable table = Adapter.CreateTableDefinition (transaction, this.infrastructure, Epsitec.Common.UI.Res.Types.Record.Invoice);
+				DbTable table = Adapter.CreateTableDefinition (transaction, Epsitec.Common.UI.Res.Types.Record.Invoice);
 
 				System.Diagnostics.Debug.WriteLine ("Create Table Definition 2 before commit");
 				
@@ -94,6 +94,41 @@ namespace Epsitec.Cresus.DataLayer
 			}
 
 			System.Diagnostics.Debug.WriteLine ("Create Table Definition 2 done");
+		}
+
+		[Test]
+		public void Check04FindTableDefinition()
+		{
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbTable table1 = Adapter.FindTableDefinition (transaction, Epsitec.Common.UI.Res.Types.Record.Address);
+				DbTable table2 = Adapter.FindTableDefinition (transaction, Epsitec.Common.UI.Res.Types.Record.Invoice);
+
+				Assert.IsNotNull (table1);
+				Assert.IsNotNull (table2);
+
+				Assert.AreEqual ("Record.Address", table1.Name);
+				Assert.AreEqual ("Record.Invoice", table2.Name);
+			}
+		}
+
+		[Test]
+		public void Check05FindTypeDefinition()
+		{
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbTypeDef type1 = Adapter.FindTypeDefinition (transaction, Epsitec.Common.UI.Res.Types.Text.Name);
+				DbTypeDef type2 = Adapter.FindTypeDefinition (transaction, Epsitec.Common.UI.Res.Types.Num.ZipCode);
+				DbTypeDef type3 = Adapter.FindTypeDefinition (transaction, Epsitec.Common.UI.Res.Types.Num.MonetaryAmount);
+
+				Assert.IsNotNull (type1);
+				Assert.IsNotNull (type2);
+				Assert.IsNotNull (type3);
+
+				Assert.AreEqual ("Text.Name", type1.Name);
+				Assert.AreEqual ("Num.ZipCode", type2.Name);
+				Assert.AreEqual ("Num.MonetaryAmount", type3.Name);
+			}
 		}
 
 		private DbInfrastructure infrastructure;

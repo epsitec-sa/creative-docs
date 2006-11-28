@@ -20,12 +20,18 @@ namespace Epsitec.Cresus.DataLayer
 		/// Creates and registers a table definition based on a structured type.
 		/// </summary>
 		/// <param name="transaction">The database transaction.</param>
-		/// <param name="infrastructure">The database infrastructure.</param>
 		/// <param name="type">The structured type used as model.</param>
 		/// <returns>The table definition.</returns>
-		public static DbTable CreateTableDefinition(DbTransaction transaction, DbInfrastructure infrastructure, StructuredType type)
+		public static DbTable CreateTableDefinition(DbTransaction transaction, StructuredType type)
 		{
+			if (type == null)
+			{
+				throw new System.ArgumentNullException ("type");
+			}
+
 			List<DbTable> tables = new List<DbTable> ();
+			
+			DbInfrastructure infrastructure = transaction.Infrastructure;
 
 			Adapter.CreateTableDefinition (transaction, infrastructure, type, tables);
 
@@ -41,27 +47,27 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 		/// <summary>
-		/// Creates a type definition based on a named type. The named type may
-		/// not be a structured type (<c>IStructuredType</c>); for these, use the
-		/// <see cref="CreateTableDefinition"/> method instead.
+		/// Creates and registers a type definition based on a named type. The named
+		/// type may not be a structured type (<c>IStructuredType</c>); for these,
+		/// use the <see cref="CreateTableDefinition"/> method instead.
 		/// </summary>
 		/// <param name="transaction">The database transaction.</param>
-		/// <param name="infrastructure">The database infrastructure.</param>
 		/// <param name="type">The named type used as model.</param>
 		/// <returns>The type definition.</returns>
-		/// <exception cref="InvalidOperationException">Thrown if the specified type is derived from <see cref="IStructuredType"/>.</exception>
-		public static DbTypeDef CreateTypeDefinition(DbTransaction transaction, DbInfrastructure infrastructure, INamedType type)
+		/// <exception cref="System.InvalidOperationException">Thrown if the specified type is derived from <see cref="IStructuredType"/>.</exception>
+		/// <exception cref="System.ArgumentNullException">Thrown if the specified type is <c>null</c>.</exception>
+		public static DbTypeDef CreateTypeDefinition(DbTransaction transaction, INamedType type)
 		{
 			if (type == null)
 			{
-				return null;
+				throw new System.ArgumentNullException ("type");
 			}
-
 			if (type is IStructuredType)
 			{
 				throw new System.InvalidOperationException ("Cannot create type definition for structure");
 			}
 
+			DbInfrastructure infrastructure = transaction.Infrastructure;
 			DbTypeDef typeDef = new DbTypeDef (type);
 
 			infrastructure.RegisterNewDbType (transaction, typeDef);
@@ -71,10 +77,55 @@ namespace Epsitec.Cresus.DataLayer
 			return typeDef;
 		}
 
+		/// <summary>
+		/// Finds a table definition based on a structured type.
+		/// </summary>
+		/// <param name="transaction">The database transaction.</param>
+		/// <param name="type">The structured type to find.</param>
+		/// <returns>The table definition or <c>null</c>.</returns>
+		public static DbTable FindTableDefinition(DbTransaction transaction, StructuredType type)
+		{
+			DbInfrastructure infrastructure = transaction.Infrastructure;
+			
+			DbContext context   = infrastructure.DefaultContext;
+			string    tableName = context.ResourceManager.GetCaption (type.CaptionId).Name;
+
+			return infrastructure.ResolveDbTable (transaction, tableName);
+		}
+
+		/// <summary>
+		/// Finds a type definition based on a named type. The named type may
+		/// not be a structured type (<c>IStructuredType</c>); for these, use the
+		/// <see cref="FindTableDefinition"/> method instead.
+		/// </summary>
+		/// <param name="transaction">The database transaction.</param>
+		/// <param name="type">The named type to find.</param>
+		/// <returns>The type definition or <c>null</c>.</returns>
+		/// <exception cref="System.InvalidOperationException">Thrown if the specified type is derived from <see cref="IStructuredType"/>.</exception>
+		/// <exception cref="System.ArgumentNullException">Thrown if the specified type is <c>null</c>.</exception>
+		public static DbTypeDef FindTypeDefinition(DbTransaction transaction, INamedType type)
+		{
+			if (type == null)
+			{
+				throw new System.ArgumentNullException ("type");
+			}
+			if (type is IStructuredType)
+			{
+				throw new System.InvalidOperationException ("Cannot find definition for a structure");
+			}
+			
+			DbInfrastructure infrastructure = transaction.Infrastructure;
+
+			DbContext context  = infrastructure.DefaultContext;
+			string    typeName = context.ResourceManager.GetCaption (type.CaptionId).Name;
+
+			return infrastructure.ResolveDbType (transaction, typeName);
+		}
+
 		private static void CreateTableDefinition(DbTransaction transaction, DbInfrastructure infrastructure, StructuredType type, List<DbTable> tables)
 		{
 			DbContext context   = infrastructure.DefaultContext;
-			string tableName = context.ResourceManager.GetCaption (type.CaptionId).Name;
+			string    tableName = context.ResourceManager.GetCaption (type.CaptionId).Name;
 
 			foreach (DbTable iter in tables)
 			{
@@ -132,7 +183,7 @@ namespace Epsitec.Cresus.DataLayer
 
 					if (columnType == null)
 					{
-						columnType = Adapter.CreateTypeDefinition (transaction, infrastructure, field.Type);
+						columnType = Adapter.CreateTypeDefinition (transaction, field.Type);
 					}
 
 					column = DbTable.CreateUserDataColumn (columnName, columnType);
