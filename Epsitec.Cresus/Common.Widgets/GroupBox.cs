@@ -26,12 +26,30 @@ namespace Epsitec.Common.Widgets
 
 			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (GroupBox), metadata);
 		}
+
+		private Drawing.Rectangle GetClientBounds()
+		{
+			if (this.IsActualGeometryValid)
+			{
+				return this.Client.Bounds;
+			}
+			else
+			{
+				Layouts.LayoutMeasure width  = Layouts.LayoutMeasure.GetWidth (this);
+				Layouts.LayoutMeasure height = Layouts.LayoutMeasure.GetHeight (this);
+
+				double dx = width == null ? this.PreferredWidth : width.Desired;
+				double dy = height == null ? this.PreferredHeight : height.Desired;
+
+				return new Drawing.Rectangle (0, 0, dx, dy);
+			}
+		}
 		
 		public override Drawing.Margins GetInternalPadding()
 		{
 			Drawing.Rectangle frame  = this.FrameRectangle;
 			Drawing.Rectangle title  = this.TitleRectangle;
-			Drawing.Rectangle client = this.IsActualGeometryValid ? this.Client.Bounds : new Drawing.Rectangle (0, 0, this.PreferredWidth, this.PreferredHeight);
+			Drawing.Rectangle client = this.GetClientBounds ();
 
 			if (title.IsValid)
 			{
@@ -71,7 +89,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				Drawing.Rectangle rect  = this.IsActualGeometryValid ? this.Client.Bounds : new Drawing.Rectangle (0, 0, this.PreferredWidth, this.PreferredHeight);
+				Drawing.Rectangle rect  = this.GetClientBounds ();
 				Drawing.Rectangle title = this.TitleRectangle;
 				
 				if (title.IsValid)
