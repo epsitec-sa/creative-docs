@@ -169,7 +169,9 @@ namespace Epsitec.Common.Widgets
 				Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight (this);
 				
 				if ((measureDx != null) &&
-					(measureDy != null))
+					(measureDy != null) &&
+					(double.IsNaN (measureDx.Min) == false) &&
+					(double.IsNaN (measureDy.Min) == false))
 				{
 					this.SurfaceSize = new Drawing.Size (measureDx.Min, measureDy.Min);
 				}
