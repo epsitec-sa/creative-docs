@@ -96,6 +96,14 @@
       <Project>{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
+    <ProjectReference Include="..\Common.Types\Common.Types.csproj">
+      <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
+      <Name>Common.Types</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
+      <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>
+      <Name>Cresus.Database.Implementation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
       <Name>Cresus.Database</Name>
       <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
@@ -113,6 +121,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdapterTest.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -122,8 +131,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Cresus.Database\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+</PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>

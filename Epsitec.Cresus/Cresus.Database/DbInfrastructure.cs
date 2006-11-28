@@ -72,6 +72,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public DbContext						DefaultContext
+		{
+			get
+			{
+				return DbContext.Current;
+			}
+		}
+
 		public ITypeConverter					Converter
 		{
 			get
@@ -865,7 +873,7 @@ namespace Epsitec.Cresus.Database
 		/// Resolves a type definition from its name.
 		/// </summary>
 		/// <param name="typeName">Name of the type.</param>
-		/// <returns>The type definition.</returns>
+		/// <returns>The type definition or <c>null</c>.</returns>
 		public DbTypeDef ResolveDbType(string typeName)
 		{
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
@@ -881,7 +889,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="typeName">Name of the type.</param>
-		/// <returns>The type definition.</returns>
+		/// <returns>The type definition or <c>null</c>.</returns>
 		public DbTypeDef ResolveDbType(DbTransaction transaction, string typeName)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
@@ -895,7 +903,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="key">The metadata key for the type.</param>
-		/// <returns>The type definition.</returns>
+		/// <returns>The type definition or <c>null</c>.</returns>
 		private DbTypeDef ResolveDbType(DbTransaction transaction, DbKey key)
 		{
 			if (key.IsEmpty)
