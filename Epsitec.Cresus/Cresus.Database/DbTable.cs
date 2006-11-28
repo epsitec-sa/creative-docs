@@ -719,12 +719,12 @@ namespace Epsitec.Cresus.Database
 		/// <param name="targetTableName">Name of the target table.</param>
 		/// <param name="nullability">The column nullability.</param>
 		/// <returns>The column.</returns>
-		public static DbColumn CreateRefColumn(DbInfrastructure infrastructure, string columnName, string targetTableName, DbNullability nullability)
+		public static DbColumn CreateRefColumn(DbTransaction transaction, DbInfrastructure infrastructure, string columnName, string targetTableName, DbNullability nullability)
 		{
 			System.Diagnostics.Debug.Assert (nullability != DbNullability.Undefined);
 			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (targetTableName));
 
-			DbTypeDef  type = infrastructure.ResolveDbType (nullability == DbNullability.Yes ? Tags.TypeNullableKeyId : Tags.TypeKeyId);
+			DbTypeDef  type = infrastructure.ResolveDbType (transaction, nullability == DbNullability.Yes ? Tags.TypeNullableKeyId : Tags.TypeKeyId);
 			DbColumn column = new DbColumn (columnName, type, DbColumnClass.RefId, DbElementCat.ManagedUserData);
 
 			column.DefineTargetTableName (targetTableName);

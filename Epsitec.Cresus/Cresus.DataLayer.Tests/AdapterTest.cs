@@ -69,8 +69,20 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
 			{
-				DbTable table = Adapter.CreateTableDefinition (transaction, this.infrastructure, Epsitec.Common.UI.Res.Types.Record.Person);
-				
+				DbTable table = Adapter.CreateTableDefinition (transaction, this.infrastructure, Epsitec.Common.UI.Res.Types.Record.Address);
+
+				transaction.Commit ();
+			}
+		}
+
+
+		[Test]
+		public void Check03CreateTableDefinitionWithRelations()
+		{
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
+			{
+				DbTable table = Adapter.CreateTableDefinition (transaction, this.infrastructure, Epsitec.Common.UI.Res.Types.Record.Invoice);
+
 				transaction.Commit ();
 			}
 		}
