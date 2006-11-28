@@ -357,10 +357,11 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			DockLayoutEngine.SetChildBounds (child, bounds, 0);
 		}
+		
 		internal static void SetChildBounds(Visual child, Drawing.Rectangle bounds, double baseOffset)
 		{
-			double dx = child.PreferredWidth;
-			double dy = child.PreferredHeight;
+			double dx = Layouts.LayoutMeasure.GetWidth (child).Desired;
+			double dy = Layouts.LayoutMeasure.GetHeight (child).Desired;
 			
 			double h, h1, h2;
 			

@@ -185,8 +185,8 @@ namespace Epsitec.Common.Widgets.Layouts
 				Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth (child);
 				Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight (child);
 
-				Drawing.Size clientMin = new Drawing.Size (measureDx.Min + margins.Width, measureDy.Min + margins.Height);
-				Drawing.Size clientMax = new Drawing.Size (measureDx.Max + margins.Width, measureDy.Max + margins.Width);
+				Drawing.Size clientMin = new Drawing.Size (measureDx.Desired + margins.Width, measureDy.Desired + margins.Height);
+				Drawing.Size clientMax = new Drawing.Size (measureDx.Max     + margins.Width, measureDy.Max     + margins.Width);
 
 				double clientDx = measureDx.Desired + margins.Width;
 				double clientDy = measureDy.Desired + margins.Height;
