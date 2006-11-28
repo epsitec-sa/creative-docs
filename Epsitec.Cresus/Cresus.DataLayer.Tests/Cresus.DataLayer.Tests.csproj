@@ -128,13 +128,14 @@
     <Compile Include="RequestFactoryTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Res.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+    <PreBuildEvent>xcopy "$(SolutionDir)Common.UI.Tests\Res.cs"  "$(ProjectDir)" /Y</PreBuildEvent>
+    <PostBuildEvent>xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Cresus.Database\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-</PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+xcopy "$(SolutionDir)App.CresusDocuments\Resources\Cresus.X1\*" "$(ProjectDir)Resources\Cresus.X1\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

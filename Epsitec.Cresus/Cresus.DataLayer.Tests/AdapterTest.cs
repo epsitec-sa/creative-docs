@@ -53,13 +53,24 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 		[Test]
-		public void CheckCreateTypeDefinition()
+		public void Check01CreateTypeDefinition()
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
 			{
 				DbTypeDef typeDef1 = Adapter.CreateTypeDefinition (transaction, this.infrastructure, DecimalType.Default);
 				DbTypeDef typeDef2 = Adapter.CreateTypeDefinition (transaction, this.infrastructure, StringType.Default);
 
+				transaction.Commit ();
+			}
+		}
+
+		[Test]
+		public void Check02CreateTableDefinition()
+		{
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
+			{
+				DbTable table = Adapter.CreateTableDefinition (transaction, this.infrastructure, Epsitec.Common.UI.Res.Types.Record.Person);
+				
 				transaction.Commit ();
 			}
 		}

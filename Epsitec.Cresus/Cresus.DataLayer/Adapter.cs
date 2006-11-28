@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.DataLayer
 		public static DbTable CreateTableDefinition(DbTransaction transaction, DbInfrastructure infrastructure, StructuredType type)
 		{
 			DbContext context   = infrastructure.DefaultContext;
-			string    tableName = type.Name;
+			string    tableName = context.ResourceManager.GetCaption (type.CaptionId).Name;
 			DbTable   table     = infrastructure.CreateDbTable (tableName, DbElementCat.ManagedUserData, DbRevisionMode.Enabled);
 			
 			foreach (string id in type.GetFieldIds ())
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.DataLayer
 						columnType = Adapter.CreateTypeDefinition (transaction, infrastructure, field.Type);
 					}
 
-					DbColumn column = new DbColumn (field.CaptionId, columnType);
+					DbColumn column = new DbColumn (field.CaptionId, columnType, DbElementCat.ManagedUserData);
 
 					System.Diagnostics.Debug.Assert (! column.Type.Key.IsEmpty);
 					

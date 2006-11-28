@@ -47,6 +47,18 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DbColumn"/> class.
 		/// </summary>
+		/// <param name="captionId">The caption DRUID.</param>
+		/// <param name="type">The type.</param>
+		/// <param name="category">The category.</param>
+		public DbColumn(Druid captionId, DbTypeDef type, DbElementCat category)
+			: this (captionId, type)
+		{
+			this.DefineCategory (category);
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbColumn"/> class.
+		/// </summary>
 		/// <param name="field">The structured type field definition.</param>
 		public DbColumn(StructuredTypeField field)
 			: this (field.CaptionId, new DbTypeDef (field.Type))
