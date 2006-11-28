@@ -38,6 +38,8 @@ namespace Epsitec.Common.UI
 			panel.GroupSelection = ItemPanelSelectionMode.ExactlyOne;
 			panel.Aperture = new Drawing.Rectangle (0, 0, 80, 60);
 
+			Widgets.Application.ExecuteAsyncCallbacks ();
+
 			Assert.AreEqual (2, panel.GetItemViewCount ());
 			Assert.AreEqual (new Drawing.Size (80, 20*2), panel.PreferredSize);
 			Assert.IsNotNull (panel.GetItemView (0).Widget);
@@ -115,6 +117,8 @@ namespace Epsitec.Common.UI
 			panel.GroupSelection = ItemPanelSelectionMode.ExactlyOne;
 			panel.Aperture = new Drawing.Rectangle (0, 0, 80, 60);
 
+			Widgets.Application.ExecuteAsyncCallbacks ();
+			
 			Assert.AreEqual (2, panel.GetItemViewCount ());
 			Assert.AreEqual (new Drawing.Size (80, 20*2), panel.PreferredSize);
 			Assert.IsNotNull (panel.GetItemView (0).Widget);
@@ -286,8 +290,9 @@ namespace Epsitec.Common.UI
 
 			panel.Items = ItemPanelTest.GetStringItems ();
 			panel.Layout = ItemPanelLayout.VerticalList;
-
 			panel.ItemSelection = ItemPanelSelectionMode.None;
+
+			Widgets.Application.ExecuteAsyncCallbacks ();
 
 			panel.SelectItemView (panel.GetItemView (0));
 			Assert.AreEqual (0, panel.GetSelectedItemViews ().Count);
@@ -358,6 +363,8 @@ namespace Epsitec.Common.UI
 			panel.Items = ItemPanelTest.GetStringItems ();
 			panel.Layout = ItemPanelLayout.VerticalList;
 
+			Widgets.Application.ExecuteAsyncCallbacks ();
+
 			Assert.AreEqual (7, panel.GetItemViewCount ());
 			Assert.AreEqual ("Monday", panel.GetItemView (0).Item);
 			Assert.AreEqual ("Sunday", panel.GetItemView (6).Item);
@@ -404,7 +411,8 @@ namespace Epsitec.Common.UI
 			items.Add ("--any--");
 
 			panel.Items.Refresh ();
-			
+			Widgets.Application.ExecuteAsyncCallbacks ();
+
 			Assert.AreEqual (8, panel.GetItemViewCount ());
 			Assert.AreEqual (new Drawing.Size (80, 20*8), panel.PreferredSize);
 			

@@ -260,7 +260,7 @@ namespace Epsitec.Common.UI
 			
 			DataSourceMetadata metadata = panel.DataSourceMetadata;
 
-			metadata.Fields.Add (new StructuredTypeField ("Person", Res.Types.Record.Person));
+			metadata.Fields.Add (new StructuredTypeField ("Person", Res.Types.Record.Address));
 
 			Placeholder placeholder1 = new Placeholder ();
 			Placeholder placeholder2 = new Placeholder ();

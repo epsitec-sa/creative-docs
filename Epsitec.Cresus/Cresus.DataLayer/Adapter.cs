@@ -122,6 +122,9 @@ namespace Epsitec.Cresus.DataLayer
 			return infrastructure.ResolveDbType (transaction, typeName);
 		}
 
+		
+		
+		
 		private static void CreateTableDefinition(DbTransaction transaction, DbInfrastructure infrastructure, StructuredType type, List<DbTable> tables)
 		{
 			DbContext context   = infrastructure.DefaultContext;

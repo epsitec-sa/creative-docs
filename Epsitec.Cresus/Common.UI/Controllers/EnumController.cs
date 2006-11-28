@@ -152,7 +152,14 @@ namespace Epsitec.Common.UI.Controllers
 
 				if (caption.HasLabels)
 				{
-					this.label.CaptionId = caption.Id;
+					if (caption.Id.IsValid)
+					{
+						this.label.CaptionId = caption.Id;
+					}
+					else
+					{
+						this.label.Text = Collection.Extract<string> (caption.Labels, 0);
+					}
 					this.label.PreferredWidth = this.label.GetBestFitSize ().Width;
 					this.label.Margins = new Drawing.Margins (4, 4, 0, 0);
 				}
@@ -266,7 +273,14 @@ namespace Epsitec.Common.UI.Controllers
 
 				if (caption.HasLabels)
 				{
-					this.label.CaptionId = caption.Id;
+					if (caption.Id.IsValid)
+					{
+						this.label.CaptionId = caption.Id;
+					}
+					else
+					{
+						this.label.Text = Collection.Extract<string> (caption.Labels, 0);
+					}
 					this.label.PreferredWidth = this.label.GetBestFitSize ().Width;
 					this.label.Margins = new Drawing.Margins (4, 4, 0, 0);
 				}

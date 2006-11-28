@@ -66,6 +66,14 @@ namespace Epsitec.Common.UI.Controllers
 				{
 					type = this.placeholder.InternalUpdateValueType ();
 				}
+				if (caption == null)
+				{
+					string name = this.placeholder.ValueName;
+					
+					caption = new Caption ();
+					caption.Name = name;
+					caption.Labels.Add (name);
+				}
 				
 				if (type != null)
 				{
