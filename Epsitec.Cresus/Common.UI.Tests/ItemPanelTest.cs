@@ -159,8 +159,8 @@ namespace Epsitec.Common.UI
 
 			double dx = 400;
 			double dy = 420;
-			
-			window.Text = "CheckInteractiveStructured";
+
+			window.Text = "CheckInteractiveTable";
 			window.ClientSize = new Drawing.Size (dx, dy);
 			window.Root.Padding = new Drawing.Margins (4, 4, 4, 4);
 
@@ -198,14 +198,14 @@ namespace Epsitec.Common.UI
 		}
 
 		[Test]
-		public void CheckInteractiveTableWithGroups()
+		public void CheckInteractiveTableWithGroups_1_Level()
 		{
 			Widgets.Window window = new Widgets.Window ();
 
 			double dx = 400;
 			double dy = 420;
 
-			window.Text = "CheckInteractiveStructured";
+			window.Text = "CheckInteractiveTableWithGroups_1_Level";
 			window.ClientSize = new Drawing.Size (dx, dy);
 			window.Root.Padding = new Drawing.Margins (4, 4, 4, 4);
 
@@ -222,6 +222,53 @@ namespace Epsitec.Common.UI
 			panel.ItemSelection = ItemPanelSelectionMode.ZeroOrOne;
 			panel.Aperture = new Drawing.Rectangle (0, 0, dx, dy);
 			panel.ItemViewDefaultSize = new Drawing.Size (320, 20);
+
+			ItemPanelColumnHeader header = table.ColumnHeader;
+
+			header.AddColumn ("Stock");
+			header.AddColumn ("Article");
+			header.AddColumn ("Price");
+
+			header.ItemPanel = panel;
+			header.Dock = Widgets.DockStyle.Top;
+
+			window.Root.Children.Add (table);
+
+			panel.Show (panel.GetItemView (0));
+
+			window.Show ();
+
+			Widgets.Window.RunInTestEnvironment (window);
+		}
+
+		[Test]
+		public void CheckInteractiveTableWithGroups_2_Levels()
+		{
+			Widgets.Window window = new Widgets.Window ();
+
+			double dx = 400;
+			double dy = 420;
+
+			window.Text = "CheckInteractiveTableWithGroups_2_Levels";
+			window.ClientSize = new Drawing.Size (dx, dy);
+			window.Root.Padding = new Drawing.Margins (4, 4, 4, 4);
+
+			dx -= 8;
+			dy -= 8;
+
+			ItemTable table = new ItemTable ();
+			table.Dock = Widgets.DockStyle.Fill;
+
+			ItemPanel panel = table.ItemPanel;
+
+			panel.Items = ItemPanelTest.GetStructuredItems (true);
+			panel.Layout = ItemPanelLayout.VerticalList;
+			panel.ItemSelection = ItemPanelSelectionMode.ZeroOrOne;
+			panel.Aperture = new Drawing.Rectangle (0, 0, dx, dy);
+			panel.ItemViewDefaultSize = new Drawing.Size (320, 20);
+
+			panel.Items.GroupDescriptions.Add (new PropertyGroupDescription ("Article"));
+
 
 			ItemPanelColumnHeader header = table.ColumnHeader;
 
