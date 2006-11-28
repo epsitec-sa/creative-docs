@@ -67,24 +67,33 @@ namespace Epsitec.Cresus.DataLayer
 		[Test]
 		public void Check02CreateTableDefinition()
 		{
+			System.Diagnostics.Debug.WriteLine ("Create Table Definition 1");
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
 			{
 				DbTable table = Adapter.CreateTableDefinition (transaction, this.infrastructure, Epsitec.Common.UI.Res.Types.Record.Address);
+				
+				System.Diagnostics.Debug.WriteLine ("Create Table Definition 1 before commit");
 
 				transaction.Commit ();
 			}
+			System.Diagnostics.Debug.WriteLine ("Create Table Definition 1 done");
 		}
-
 
 		[Test]
 		public void Check03CreateTableDefinitionWithRelations()
 		{
+			System.Diagnostics.Debug.WriteLine ("Create Table Definition 2");
+
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
 			{
 				DbTable table = Adapter.CreateTableDefinition (transaction, this.infrastructure, Epsitec.Common.UI.Res.Types.Record.Invoice);
 
+				System.Diagnostics.Debug.WriteLine ("Create Table Definition 2 before commit");
+				
 				transaction.Commit ();
 			}
+
+			System.Diagnostics.Debug.WriteLine ("Create Table Definition 2 done");
 		}
 
 		private DbInfrastructure infrastructure;
