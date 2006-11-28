@@ -302,82 +302,93 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			//	Measure all widgets which have been queued to be measured. Start
 			//	with the children farthest down the tree, finish with the root.
-			
-			while (this.measureQueue.Count > 0)
+
+			System.Diagnostics.Debug.Assert (this.measuring == false);
+
+			try
 			{
-				VisualNode node = this.measureQueue.Keys[0];
-				this.measureQueue.RemoveAt (0);
-				this.measureMap.Remove (node.Visual);
-
-				System.Diagnostics.Debug.Assert (this.cacheVisual == null);
+				this.measuring = true;
 				
-				this.cacheVisual = node.Visual;
-				this.cacheWidthMeasure = this.GetOrCreateCleanMeasure (node.Visual, LayoutMeasure.WidthProperty);
-				this.cacheHeightMeasure = this.GetOrCreateCleanMeasure (node.Visual, LayoutMeasure.HeightProperty);
-
-				node.Visual.ClearLocalValue (BaseLineMeasure.BaseLineProperty);
-
-				node.Visual.Measure (this);
-				
-				this.totalMeasureCount++;
-
-				this.cacheWidthMeasure.UpdatePassId (this.passId);
-				this.cacheHeightMeasure.UpdatePassId (this.passId);
-				
-				//	Did the visual update in any way the measures ?
-
-				if ((this.cacheWidthMeasure.HasChanged) ||
-					(this.cacheHeightMeasure.HasChanged))
+				while (this.measureQueue.Count > 0)
 				{
-					//	The visual has specified other measures. Its contents
-					//	will have to be arranged.
+					VisualNode node = this.measureQueue.Keys[0];
+					this.measureQueue.RemoveAt (0);
+					this.measureMap.Remove (node.Visual);
 
-					int depth  = node.Depth;
-					Visual visual = node.Visual;
+					System.Diagnostics.Debug.Assert (this.cacheVisual == null);
 
-					this.AddToArrangeQueue (visual, depth);
+					this.cacheVisual = node.Visual;
+					this.cacheWidthMeasure = this.GetOrCreateCleanMeasure (node.Visual, LayoutMeasure.WidthProperty);
+					this.cacheHeightMeasure = this.GetOrCreateCleanMeasure (node.Visual, LayoutMeasure.HeightProperty);
 
-					//	If the visual is either docked or anchored, then the
-					//	contents of the parent needs to be re-arranged too.
-					
-					//	This will also be the case if a special layout engine
-					//	is attached to the container.
+					node.Visual.ClearLocalValue (BaseLineMeasure.BaseLineProperty);
 
-					if (depth > 1)
+					node.Visual.Measure (this);
+
+					this.totalMeasureCount++;
+
+					this.cacheWidthMeasure.UpdatePassId (this.passId);
+					this.cacheHeightMeasure.UpdatePassId (this.passId);
+
+					//	Did the visual update in any way the measures ?
+
+					if ((this.cacheWidthMeasure.HasChanged) ||
+						(this.cacheHeightMeasure.HasChanged))
 					{
-						LayoutMode mode = LayoutEngine.GetLayoutMode (visual);
+						//	The visual has specified other measures. Its contents
+						//	will have to be arranged.
 
-						if (mode != LayoutMode.None)
+						int depth  = node.Depth;
+						Visual visual = node.Visual;
+
+						this.AddToArrangeQueue (visual, depth);
+
+						//	If the visual is either docked or anchored, then the
+						//	contents of the parent needs to be re-arranged too.
+
+						//	This will also be the case if a special layout engine
+						//	is attached to the container.
+
+						if (depth > 1)
 						{
-							Visual parent = visual.Parent;
+							LayoutMode mode = LayoutEngine.GetLayoutMode (visual);
 
-							if (Helpers.VisualTree.FindLayoutContext (visual) == null)
+							if (mode != LayoutMode.None)
 							{
-								System.Diagnostics.Debug.WriteLine ("No context for visual " + visual.ToString ());
-							}
-							if (parent == null)
-							{
-								System.Diagnostics.Debug.WriteLine ("No parent for visual " + visual.ToString ());
-							}
+								Visual parent = visual.Parent;
 
-							System.Diagnostics.Debug.Assert (Helpers.VisualTree.FindLayoutContext (visual) == this);
-							System.Diagnostics.Debug.Assert (parent != null);
+								if (Helpers.VisualTree.FindLayoutContext (visual) == null)
+								{
+									System.Diagnostics.Debug.WriteLine ("No context for visual " + visual.ToString ());
+								}
+								if (parent == null)
+								{
+									System.Diagnostics.Debug.WriteLine ("No parent for visual " + visual.ToString ());
+								}
 
-							this.AddToMeasureQueue (parent, depth-1);
-							this.AddToArrangeQueue (parent, depth-1);
+								System.Diagnostics.Debug.Assert (Helpers.VisualTree.FindLayoutContext (visual) == this);
+								System.Diagnostics.Debug.Assert (parent != null);
+
+								this.AddToMeasureQueue (parent, depth-1);
+								this.AddToArrangeQueue (parent, depth-1);
+							}
 						}
 					}
-				}
-				else
-				{
-					node.Visual.ClearDirtyLayoutFlag ();
-				}
+					else
+					{
+						node.Visual.ClearDirtyLayoutFlag ();
+					}
 
-				System.Diagnostics.Debug.Assert (this.cacheVisual == node.Visual);
+					System.Diagnostics.Debug.Assert (this.cacheVisual == node.Visual);
 
-				this.cacheVisual = null;
-				this.cacheWidthMeasure = null;
-				this.cacheHeightMeasure = null;
+					this.cacheVisual = null;
+					this.cacheWidthMeasure = null;
+					this.cacheHeightMeasure = null;
+				}
+			}
+			finally
+			{
+				this.measuring = false;
 			}
 		}
 		
@@ -675,6 +686,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		private Visual cacheVisual;
 		private LayoutMeasure cacheWidthMeasure;
 		private LayoutMeasure cacheHeightMeasure;
+		private bool measuring;
 
 		internal static Drawing.Size GetResultingMeasuredSize(Visual visual)
 		{

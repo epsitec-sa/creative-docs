@@ -185,9 +185,6 @@ namespace Epsitec.Common.UI
 			header.AddColumn ("Article");
 			header.AddColumn ("Price");
 
-			header.ItemPanel = panel;
-			header.Dock = Widgets.DockStyle.Top;
-
 			window.Root.Children.Add (table);
 			
 			panel.Show (panel.GetItemView (0));
@@ -228,9 +225,6 @@ namespace Epsitec.Common.UI
 			header.AddColumn ("Stock");
 			header.AddColumn ("Article");
 			header.AddColumn ("Price");
-
-			header.ItemPanel = panel;
-			header.Dock = Widgets.DockStyle.Top;
 
 			window.Root.Children.Add (table);
 
@@ -275,9 +269,6 @@ namespace Epsitec.Common.UI
 			header.AddColumn ("Stock");
 			header.AddColumn ("Article");
 			header.AddColumn ("Price");
-
-			header.ItemPanel = panel;
-			header.Dock = Widgets.DockStyle.Top;
 
 			window.Root.Children.Add (table);
 

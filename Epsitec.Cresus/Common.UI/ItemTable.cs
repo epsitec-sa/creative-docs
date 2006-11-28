@@ -25,8 +25,9 @@ namespace Epsitec.Common.UI
 		{
 			this.vScroller = new VScroller (this);
 			this.hScroller = new HScroller (this);
-			this.columnHeader = new ItemPanelColumnHeader (this);
 			this.surface = new Widget (this);
+			this.headerStripe = new Widget (this);
+			this.columnHeader = new ItemPanelColumnHeader (this.headerStripe);
 			this.itemPanel = new ItemPanel (this.surface);
 
 			this.vScroller.IsInverted = false;
@@ -34,13 +35,14 @@ namespace Epsitec.Common.UI
 			
 			this.vScroller.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Right;
 			this.hScroller.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
-			this.columnHeader.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			this.headerStripe.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.surface.Anchor = AnchorStyles.All;
 			
 			this.vScroller.Margins = new Drawing.Margins (0, 0, 0, this.hScroller.PreferredHeight);
 			this.hScroller.Margins = new Drawing.Margins (0, this.vScroller.PreferredWidth, 0, 0);
-			this.columnHeader.Margins = new Drawing.Margins (0, this.vScroller.PreferredWidth, 0, 0);
-			this.surface.Margins = new Drawing.Margins (0, this.vScroller.PreferredWidth, this.columnHeader.PreferredHeight, this.hScroller.PreferredHeight);
+			this.headerStripe.Margins = new Drawing.Margins (0, this.vScroller.PreferredWidth, 0, 0);
+			this.headerStripe.PreferredHeight = this.columnHeader.PreferredHeight;
+			this.surface.Margins = new Drawing.Margins (0, this.vScroller.PreferredWidth, this.headerStripe.PreferredHeight, this.hScroller.PreferredHeight);
 
 			this.hScroller.ValueChanged += this.HandleScrollerValueChanged;
 			this.vScroller.ValueChanged += this.HandleScrollerValueChanged;
@@ -48,6 +50,8 @@ namespace Epsitec.Common.UI
 			
 			this.itemPanel.AddEventHandler (Visual.PreferredHeightProperty, this.HandleItemPanelSizeChanged);
 			this.itemPanel.AddEventHandler (Visual.PreferredWidthProperty, this.HandleItemPanelSizeChanged);
+
+			this.columnHeader.ItemPanel = this.itemPanel;
 		}
 
 		public ItemTable(Widget embedder)
@@ -92,6 +96,7 @@ namespace Epsitec.Common.UI
 			}
 			
 			this.itemPanel.SetManualBounds (new Drawing.Rectangle (-ox, -oy, this.itemPanel.PreferredWidth, this.itemPanel.PreferredHeight));
+			this.columnHeader.SetManualBounds (new Drawing.Rectangle (-ox, 0, this.columnHeader.PreferredWidth, this.columnHeader.PreferredHeight));
 		}
 
 		private void HandleSurfaceSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -119,6 +124,7 @@ namespace Epsitec.Common.UI
 		private HScroller hScroller;
 		private ItemPanelColumnHeader columnHeader;
 		private Widget surface;
+		private Widget headerStripe;
 		private ItemPanel itemPanel;
 	}
 }
