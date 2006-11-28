@@ -1744,56 +1744,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			ChildrenPlacement pp = this.GetParentPlacement(obj);
-
-			if (pp == ChildrenPlacement.HorizontalStacked)
-			{
-				return true;
-			}
-
-			if (pp == ChildrenPlacement.VerticalStacked)
-			{
-				StackedHorizontalAlignment hal = this.GetStackedHorizontalAlignment(obj);
-				return (hal != StackedHorizontalAlignment.Stretch && hal != StackedHorizontalAlignment.None);
-			}
-
-			if (pp == ChildrenPlacement.Grid)
-			{
-				return true;
-			}
-
-			return false;
-		}
-
-		protected bool UseMinWidth(Widget obj)
-		{
-			//	Indique s'il faut utiliser MinWidth plutôt que PreferredWidth.
-			ChildrenPlacement pp = this.GetParentPlacement(obj);
-
-			if (pp == ChildrenPlacement.HorizontalStacked)
-			{
-				StackedHorizontalAttachment hat = this.GetStackedHorizontalAttachment(obj);
-				if (hat == StackedHorizontalAttachment.Fill)
-				{
-					StackedHorizontalAlignment hal = this.GetStackedHorizontalAlignment(obj);
-					return (hal == StackedHorizontalAlignment.Stretch);
-				}
-				else
-				{
-					return false;
-				}
-			}
-
-			if (pp == ChildrenPlacement.VerticalStacked)
-			{
-				return false;
-			}
-
-			if (pp == ChildrenPlacement.Grid)
-			{
-				return false;
-			}
-
-			return false;
+			return (pp != ChildrenPlacement.Anchored);
 		}
 
 		public double GetWidth(Widget obj)
@@ -1801,14 +1752,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne la largeur de l'objet.
 			if (this.HasWidth(obj))
 			{
-				if (this.UseMinWidth(obj))
-				{
-					return obj.MinWidth;
-				}
-				else
-				{
-					return obj.PreferredWidth;
-				}
+				return obj.PreferredWidth;
 			}
 
 			return 0;
@@ -1821,15 +1765,7 @@ namespace Epsitec.Common.Designer
 
 			if (this.GetWidth(obj) != width)
 			{
-				if (this.UseMinWidth(obj))
-				{
-					obj.MinWidth = width;
-				}
-				else
-				{
-					obj.PreferredWidth = width;
-				}
-
+				obj.PreferredWidth = width;
 				this.Invalidate();
 			}
 		}
@@ -1852,56 +1788,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			ChildrenPlacement pp = this.GetParentPlacement(obj);
-
-			if (pp == ChildrenPlacement.VerticalStacked)
-			{
-				return true;
-			}
-
-			if (pp == ChildrenPlacement.HorizontalStacked)
-			{
-				StackedVerticalAlignment val = this.GetStackedVerticalAlignment(obj);
-				return (val != StackedVerticalAlignment.Stretch && val != StackedVerticalAlignment.None);
-			}
-
-			if (pp == ChildrenPlacement.Grid)
-			{
-				return true;
-			}
-
-			return false;
-		}
-
-		protected bool UseMinHeight(Widget obj)
-		{
-			//	Indique s'il faut utiliser MinHeight plutôt que PreferredHeight.
-			ChildrenPlacement pp = this.GetParentPlacement(obj);
-
-			if (pp == ChildrenPlacement.VerticalStacked)
-			{
-				StackedVerticalAttachment vat = this.GetStackedVerticalAttachment(obj);
-				if (vat == StackedVerticalAttachment.Fill)
-				{
-					StackedVerticalAlignment val = this.GetStackedVerticalAlignment(obj);
-					return (val == StackedVerticalAlignment.Stretch);
-				}
-				else
-				{
-					return false;
-				}
-			}
-
-			if (pp == ChildrenPlacement.HorizontalStacked)
-			{
-				return false;
-			}
-
-			if (pp == ChildrenPlacement.Grid)
-			{
-				return false;
-			}
-
-			return false;
+			return (pp != ChildrenPlacement.Anchored);
 		}
 
 		public double GetHeight(Widget obj)
@@ -1909,14 +1796,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne la hauteur de l'objet.
 			if (this.HasHeight(obj))
 			{
-				if (this.UseMinHeight(obj))
-				{
-					return obj.MinHeight;
-				}
-				else
-				{
-					return obj.PreferredHeight;
-				}
+				return obj.PreferredHeight;
 			}
 
 			return 0;
@@ -1929,15 +1809,7 @@ namespace Epsitec.Common.Designer
 
 			if (this.GetHeight(obj) != height)
 			{
-				if (this.UseMinHeight(obj))
-				{
-					obj.MinHeight = height;
-				}
-				else
-				{
-					obj.PreferredHeight = height;
-				}
-
+				obj.PreferredHeight = height;
 				this.Invalidate();
 			}
 		}
