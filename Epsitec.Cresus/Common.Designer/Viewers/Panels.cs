@@ -452,6 +452,12 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				//	Crée une liste de tous les parents.
 				this.StatusBarButton(null, "DeselectAll", 0, Res.Strings.Viewers.Panels.StatusBar.DeselectAll);
+
+				if (ObjectModifier.GetObjectType(selection[0]) != ObjectModifier.ObjectType.MainPanel)
+				{
+					this.StatusBarButton(null, "SelectParent", 0, Res.Strings.Action.PanelSelectParent);
+				}
+
 				this.statusBar.Items.Add(new IconSeparator());
 
 				List<Widget> parents = new List<Widget>();
@@ -508,12 +514,21 @@ namespace Epsitec.Common.Designer.Viewers
 			string name = string.Concat(type, ".Level", rank.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			string icon;
 
-			if (obj == null)
+			if (type == "Root")
+			{
+				icon = "PanelSelectRoot";
+			}
+			else if (type == "SelectParent")
+			{
+				icon = "PanelSelectParent";
+			}
+			else if (type == "DeselectAll")
 			{
 				icon = "PanelDeselectAll";
 			}
 			else
 			{
+				System.Diagnostics.Debug.Assert(obj != null);
 				icon = ObjectModifier.GetObjectIcon(obj);
 				System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(icon));
 			}
@@ -671,6 +686,13 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					list.Add(children);
 				}
+			}
+
+			if (type == "SelectParent")
+			{
+				List<Widget> selection = this.panelEditor.SelectedObjects;
+				Widget obj = selection[0];
+				list.Add(obj.Parent);
 			}
 
 			return list;

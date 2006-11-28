@@ -674,6 +674,8 @@ namespace Epsitec.Common.Designer
 		[Command("PanelDeselectAll")]
 		[Command("PanelSelectAll")]
 		[Command("PanelSelectInvert")]
+		[Command("PanelSelectRoot")]
+		[Command("PanelSelectParent")]
 		[Command("PanelShowGrid")]
 		[Command("PanelShowZOrder")]
 		[Command("PanelShowTabIndex")]
@@ -771,9 +773,11 @@ namespace Epsitec.Common.Designer
 			
 			this.panelDeleteState = this.CreateCommandState("PanelDelete");
 			this.panelDuplicateState = this.CreateCommandState("PanelDuplicate");
-			this.panelDeselectAllState = this.CreateCommandState("PanelDeselectAll");
+			this.panelDeselectAllState = this.CreateCommandState("PanelDeselectAll", KeyCode.Escape);
 			this.panelSelectAllState = this.CreateCommandState("PanelSelectAll");
 			this.panelSelectInvertState = this.CreateCommandState("PanelSelectInvert");
+			this.panelSelectRootState = this.CreateCommandState("PanelSelectRoot");
+			this.panelSelectParentState = this.CreateCommandState("PanelSelectParent", KeyCode.AlphaP);
 
 			this.panelShowGridState = this.CreateCommandState("PanelShowGrid");
 			this.panelShowZOrderState = this.CreateCommandState("PanelShowZOrder");
@@ -1398,6 +1402,8 @@ namespace Epsitec.Common.Designer
 		protected CommandState					panelDeselectAllState;
 		protected CommandState					panelSelectAllState;
 		protected CommandState					panelSelectInvertState;
+		protected CommandState					panelSelectRootState;
+		protected CommandState					panelSelectParentState;
 		protected CommandState					panelShowGridState;
 		protected CommandState					panelShowZOrderState;
 		protected CommandState					panelShowTabIndexState;

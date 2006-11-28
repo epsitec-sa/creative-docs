@@ -849,14 +849,17 @@ namespace Epsitec.Common.Designer.Viewers
 			if (this is Panels)
 			{
 				int objSelected, objCount;
+				bool isRoot;
 				Panels panels = this as Panels;
-				panels.PanelEditor.GetSelectionInfo(out objSelected, out objCount);
+				panels.PanelEditor.GetSelectionInfo(out objSelected, out objCount, out isRoot);
 
 				this.GetCommandState("PanelDelete").Enable = (objSelected != 0);
 				this.GetCommandState("PanelDuplicate").Enable = (objSelected != 0);
 				this.GetCommandState("PanelDeselectAll").Enable = (objSelected != 0);
 				this.GetCommandState("PanelSelectAll").Enable = (objSelected < objCount);
 				this.GetCommandState("PanelSelectInvert").Enable = (objCount > 0);
+				this.GetCommandState("PanelSelectRoot").Enable = !isRoot;
+				this.GetCommandState("PanelSelectParent").Enable = (objCount > 0 && !isRoot);
 
 				this.GetCommandState("PanelShowGrid").Enable = true;
 				this.GetCommandState("PanelShowConstrain").Enable = true;
@@ -907,6 +910,8 @@ namespace Epsitec.Common.Designer.Viewers
 				this.GetCommandState("PanelDeselectAll").Enable = false;
 				this.GetCommandState("PanelSelectAll").Enable = false;
 				this.GetCommandState("PanelSelectInvert").Enable = false;
+				this.GetCommandState("PanelSelectRoot").Enable = false;
+				this.GetCommandState("PanelSelectParent").Enable = false;
 
 				this.GetCommandState("PanelShowGrid").Enable = false;
 				this.GetCommandState("PanelShowConstrain").Enable = false;

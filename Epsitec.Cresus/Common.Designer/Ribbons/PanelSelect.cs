@@ -19,6 +19,8 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.buttonDeselectAll  = this.CreateIconButton("PanelDeselectAll");
 			this.buttonSelectAll    = this.CreateIconButton("PanelSelectAll");
 			this.buttonSelectInvert = this.CreateIconButton("PanelSelectInvert");
+			this.buttonSelectRoot   = this.CreateIconButton("PanelSelectRoot");
+			this.buttonSelectParent = this.CreateIconButton("PanelSelectParent");
 
 			this.UpdateClientGeometry();
 		}
@@ -60,6 +62,14 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.buttonSelectAll.SetManualBounds(rect);
 			rect.Offset(dx, 0);
 			this.buttonSelectInvert.SetManualBounds(rect);
+
+			rect = this.UsefulZone;
+			rect.Width  = dx;
+			rect.Height = dy;
+			rect.Offset(dx*1.5*2+4, 0);
+			this.buttonSelectRoot.SetManualBounds(rect);
+			rect.Offset(dx, 0);
+			this.buttonSelectParent.SetManualBounds(rect);
 		}
 
 
@@ -68,5 +78,7 @@ namespace Epsitec.Common.Designer.Ribbons
 		protected IconButton				buttonDeselectAll;
 		protected IconButton				buttonSelectAll;
 		protected IconButton				buttonSelectInvert;
+		protected IconButton				buttonSelectRoot;
+		protected IconButton				buttonSelectParent;
 	}
 }

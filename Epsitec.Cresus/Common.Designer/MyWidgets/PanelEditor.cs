@@ -196,6 +196,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.SelectInvert();
 					break;
 
+				case "PanelSelectRoot":
+					this.SelectRoot();
+					break;
+
+				case "PanelSelectParent":
+					this.SelectParent();
+					break;
+
 				case "PanelShowGrid":
 					this.context.ShowGrid = !this.context.ShowGrid;
 					this.Invalidate();
@@ -331,11 +339,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		public void GetSelectionInfo(out int selected, out int count)
+		public void GetSelectionInfo(out int selected, out int count, out bool isRoot)
 		{
 			//	Donne des informations sur la sélection en cours.
 			selected = this.selectedObjects.Count;
 			count = this.panel.Children.Count;
+			isRoot = false;
+
+			if (selected == 1)
+			{
+				ObjectModifier.ObjectType type = ObjectModifier.GetObjectType(this.selectedObjects[0]);
+				isRoot = (type == ObjectModifier.ObjectType.MainPanel);
+			}
 		}
 
 		public string SelectionInfo
@@ -369,7 +384,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 
 				int objSelected, objCount;
-				this.GetSelectionInfo(out objSelected, out objCount);
+				bool isRoot;
+				this.GetSelectionInfo(out objSelected, out objCount, out isRoot);
 				string text = string.Format(Res.Strings.Viewers.Panels.Info, objSelected.ToString(), objCount.ToString(), sel);
 
 				return text;
@@ -2225,6 +2241,32 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.selectedObjects = list;
+
+			this.GridClearSelection();
+			this.UpdateAfterSelectionChanged();
+			this.OnChildrenSelected();
+			this.Invalidate();
+		}
+
+		protected void SelectRoot()
+		{
+			//	Sélectionne le panneau de base.
+			this.selectedObjects.Clear();
+			this.selectedObjects.Add(this.panel);
+
+			this.GridClearSelection();
+			this.UpdateAfterSelectionChanged();
+			this.OnChildrenSelected();
+			this.Invalidate();
+		}
+
+		protected void SelectParent()
+		{
+			//	Sélectionne l'objet parent de l'actuelle sélection.
+			System.Diagnostics.Debug.Assert(this.selectedObjects.Count != 0);
+			Widget parent = this.selectedObjects[0].Parent;
+			this.selectedObjects.Clear();
+			this.selectedObjects.Add(parent);
 
 			this.GridClearSelection();
 			this.UpdateAfterSelectionChanged();

@@ -168,6 +168,8 @@
   <data name="Action.PanelDeselectAll" id="022">Désélectionner tous les objets</data>
   <data name="Action.PanelSelectAll" id="032">Sélectionner tous les objets</data>
   <data name="Action.PanelSelectInvert" id="042">Inverser les objets sélectionnés</data>
+  <data name="Action.PanelSelectParent" id="0L9">Sélectionner l&amp;apos;objet parent</data>
+  <data name="Action.PanelSelectRoot" id="0M9">Sélectionner le panneau de base</data>
   <data name="Action.PanelShowGrid" id="052">Activer la grille magnétique</data>
   <data name="Action.PanelShowZOrder" id="062">Afficher l&amp;apos;ordre des objets</data>
   <data name="Action.PanelShowTabIndex" id="072">Afficher l&amp;apos;ordre pour la touche Tab</data>
