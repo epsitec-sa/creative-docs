@@ -141,58 +141,33 @@ namespace Epsitec.Common.Designer.Proxies
 			//	pour pouvoir ensuite travailler dessus :
 			if (this.ObjectModifier.HasChildrenPlacement(this.DefaultWidget))
 			{
-				ObjectModifier.ChildrenPlacement cp = this.ObjectModifier.GetChildrenPlacement(this.DefaultWidget);
-
-				this.ChildrenPlacement = cp;
+				this.ChildrenPlacement = this.ObjectModifier.GetChildrenPlacement(this.DefaultWidget);
 			}
 
 			if (this.ObjectModifier.AreChildrenAnchored(this.DefaultWidget.Parent))
 			{
-				ObjectModifier.AnchoredHorizontalAttachment ha = this.ObjectModifier.GetAnchoredHorizontalAttachment(this.DefaultWidget);
-				ObjectModifier.AnchoredVerticalAttachment va = this.ObjectModifier.GetAnchoredVerticalAttachment(this.DefaultWidget);
-
-				this.AnchoredHorizontalAttachment = ha;
-				this.AnchoredVerticalAttachment = va;
+				this.AnchoredHorizontalAttachment = this.ObjectModifier.GetAnchoredHorizontalAttachment(this.DefaultWidget);
+				this.AnchoredVerticalAttachment = this.ObjectModifier.GetAnchoredVerticalAttachment(this.DefaultWidget);
 			}
 
 			if (this.ObjectModifier.HasStackedHorizontalAttachment(this.DefaultWidget))
 			{
-				ObjectModifier.StackedHorizontalAttachment ha = this.ObjectModifier.GetStackedHorizontalAttachment(this.DefaultWidget);
-
-				this.StackedHorizontalAttachment = ha;
+				this.StackedHorizontalAttachment = this.ObjectModifier.GetStackedHorizontalAttachment(this.DefaultWidget);
 			}
 
 			if (this.ObjectModifier.HasStackedVerticalAttachment(this.DefaultWidget))
 			{
-				ObjectModifier.StackedVerticalAttachment va = this.ObjectModifier.GetStackedVerticalAttachment(this.DefaultWidget);
-
-				this.StackedVerticalAttachment = va;
+				this.StackedVerticalAttachment = this.ObjectModifier.GetStackedVerticalAttachment(this.DefaultWidget);
 			}
 
 			if (this.ObjectModifier.HasStackedHorizontalAlignment(this.DefaultWidget))
 			{
-				ObjectModifier.StackedHorizontalAlignment ha = this.ObjectModifier.GetStackedHorizontalAlignment(this.DefaultWidget);
-
-				this.StackedHorizontalAlignment = ha;
+				this.StackedHorizontalAlignment = this.ObjectModifier.GetStackedHorizontalAlignment(this.DefaultWidget);
 			}
 
 			if (this.ObjectModifier.HasStackedVerticalAlignment(this.DefaultWidget))
 			{
-				ObjectModifier.StackedVerticalAlignment va = this.ObjectModifier.GetStackedVerticalAlignment(this.DefaultWidget);
-				ObjectModifier.ChildrenPlacement cp = this.ObjectModifier.GetChildrenPlacement(this.DefaultWidget.Parent);
-
-#if false
-				if (cp == ObjectModifier.ChildrenPlacement.HorizontalStacked || cp == ObjectModifier.ChildrenPlacement.Grid)
-				{
-					this.StackedVerticalBaseLineAlignment = va;
-				}
-				else
-				{
-					this.StackedVerticalAlignment = va;
-				}
-#else
-				this.StackedVerticalAlignment = va;
-#endif
+				this.StackedVerticalAlignment = this.ObjectModifier.GetStackedVerticalAlignment(this.DefaultWidget);
 			}
 		}
 

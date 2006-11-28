@@ -1504,21 +1504,21 @@ namespace Epsitec.Common.Designer
 		public bool HasBounds(Widget obj)
 		{
 			//	Indique si l'objet a une position et des dimensions modifiables.
-			ChildrenPlacement cp = this.GetParentPlacement(obj);
-			return (cp == ChildrenPlacement.Anchored || cp == ChildrenPlacement.Grid);
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
+			return (pp == ChildrenPlacement.Anchored || pp == ChildrenPlacement.Grid);
 		}
 
 		public bool HasBounds(Widget obj, BoundsMode mode)
 		{
 			//	Indique si l'objet a une position ou des dimensions modifiables.
-			ChildrenPlacement cp = this.GetParentPlacement(obj);
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
 
-			if (cp == ChildrenPlacement.Anchored)
+			if (pp == ChildrenPlacement.Anchored)
 			{
 				return true;
 			}
 
-			if (cp == ChildrenPlacement.Grid)
+			if (pp == ChildrenPlacement.Grid)
 			{
 				if (mode == BoundsMode.OriginX || mode == BoundsMode.OriginY)
 				{
@@ -1547,8 +1547,8 @@ namespace Epsitec.Common.Designer
 			Size size = obj.PreferredSize;
 			Rectangle bounds = new Rectangle(center.X-size.Width/2, center.Y-size.Height/2, size.Width, size.Height);
 
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			if (placement == ChildrenPlacement.Anchored)
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
+			if (pp == ChildrenPlacement.Anchored)
 			{
 				AnchoredHorizontalAttachment ha = this.GetAnchoredHorizontalAttachment(obj);
 				if (ha == AnchoredHorizontalAttachment.Fill)
@@ -1645,8 +1645,8 @@ namespace Epsitec.Common.Designer
 		public bool HasMargins(Widget obj)
 		{
 			//	Indique si l'objet a des marges.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			if (placement == ChildrenPlacement.HorizontalStacked || placement == ChildrenPlacement.VerticalStacked || placement == ChildrenPlacement.Grid)
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
+			if (pp == ChildrenPlacement.HorizontalStacked || pp == ChildrenPlacement.VerticalStacked || pp == ChildrenPlacement.Grid)
 			{
 				return true;
 			}
@@ -1743,23 +1743,54 @@ namespace Epsitec.Common.Designer
 				return false;
 			}
 
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
 
-			if (placement == ChildrenPlacement.HorizontalStacked)
-			{
-				StackedHorizontalAttachment ha = this.GetStackedHorizontalAttachment(obj);
-				return (ha != StackedHorizontalAttachment.Fill);
-			}
-
-			if (placement == ChildrenPlacement.VerticalStacked)
-			{
-				StackedHorizontalAlignment ha = this.GetStackedHorizontalAlignment(obj);
-				return (ha != StackedHorizontalAlignment.Stretch && ha != StackedHorizontalAlignment.None);
-			}
-
-			if (placement == ChildrenPlacement.Grid)
+			if (pp == ChildrenPlacement.HorizontalStacked)
 			{
 				return true;
+			}
+
+			if (pp == ChildrenPlacement.VerticalStacked)
+			{
+				StackedHorizontalAlignment hal = this.GetStackedHorizontalAlignment(obj);
+				return (hal != StackedHorizontalAlignment.Stretch && hal != StackedHorizontalAlignment.None);
+			}
+
+			if (pp == ChildrenPlacement.Grid)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		protected bool UseMinWidth(Widget obj)
+		{
+			//	Indique s'il faut utiliser MinWidth plutôt que PreferredWidth.
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
+
+			if (pp == ChildrenPlacement.HorizontalStacked)
+			{
+				StackedHorizontalAttachment hat = this.GetStackedHorizontalAttachment(obj);
+				if (hat == StackedHorizontalAttachment.Fill)
+				{
+					StackedHorizontalAlignment hal = this.GetStackedHorizontalAlignment(obj);
+					return (hal == StackedHorizontalAlignment.Stretch);
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			if (pp == ChildrenPlacement.VerticalStacked)
+			{
+				return false;
+			}
+
+			if (pp == ChildrenPlacement.Grid)
+			{
+				return false;
 			}
 
 			return false;
@@ -1768,10 +1799,16 @@ namespace Epsitec.Common.Designer
 		public double GetWidth(Widget obj)
 		{
 			//	Retourne la largeur de l'objet.
-			//	Uniquement pour les objets HorizontalStacked.
 			if (this.HasWidth(obj))
 			{
-				return obj.PreferredWidth;
+				if (this.UseMinWidth(obj))
+				{
+					return obj.MinWidth;
+				}
+				else
+				{
+					return obj.PreferredWidth;
+				}
 			}
 
 			return 0;
@@ -1780,12 +1817,19 @@ namespace Epsitec.Common.Designer
 		public void SetWidth(Widget obj, double width)
 		{
 			//	Choix de la largeur de l'objet.
-			//	Uniquement pour les objets VerticalStacked.
 			System.Diagnostics.Debug.Assert(this.HasWidth(obj));
 
-			if (obj.PreferredWidth != width)
+			if (this.GetWidth(obj) != width)
 			{
-				obj.PreferredWidth = width;
+				if (this.UseMinWidth(obj))
+				{
+					obj.MinWidth = width;
+				}
+				else
+				{
+					obj.PreferredWidth = width;
+				}
+
 				this.Invalidate();
 			}
 		}
@@ -1807,23 +1851,54 @@ namespace Epsitec.Common.Designer
 				return false;
 			}
 
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
 
-			if (placement == ChildrenPlacement.VerticalStacked)
-			{
-				StackedVerticalAttachment va = this.GetStackedVerticalAttachment(obj);
-				return (va != StackedVerticalAttachment.Fill);
-			}
-
-			if (placement == ChildrenPlacement.HorizontalStacked)
-			{
-				StackedVerticalAlignment ha = this.GetStackedVerticalAlignment(obj);
-				return (ha != StackedVerticalAlignment.Stretch && ha != StackedVerticalAlignment.None);
-			}
-
-			if (placement == ChildrenPlacement.Grid)
+			if (pp == ChildrenPlacement.VerticalStacked)
 			{
 				return true;
+			}
+
+			if (pp == ChildrenPlacement.HorizontalStacked)
+			{
+				StackedVerticalAlignment val = this.GetStackedVerticalAlignment(obj);
+				return (val != StackedVerticalAlignment.Stretch && val != StackedVerticalAlignment.None);
+			}
+
+			if (pp == ChildrenPlacement.Grid)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		protected bool UseMinHeight(Widget obj)
+		{
+			//	Indique s'il faut utiliser MinHeight plutôt que PreferredHeight.
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
+
+			if (pp == ChildrenPlacement.VerticalStacked)
+			{
+				StackedVerticalAttachment vat = this.GetStackedVerticalAttachment(obj);
+				if (vat == StackedVerticalAttachment.Fill)
+				{
+					StackedVerticalAlignment val = this.GetStackedVerticalAlignment(obj);
+					return (val == StackedVerticalAlignment.Stretch);
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			if (pp == ChildrenPlacement.HorizontalStacked)
+			{
+				return false;
+			}
+
+			if (pp == ChildrenPlacement.Grid)
+			{
+				return false;
 			}
 
 			return false;
@@ -1832,10 +1907,16 @@ namespace Epsitec.Common.Designer
 		public double GetHeight(Widget obj)
 		{
 			//	Retourne la hauteur de l'objet.
-			//	Uniquement pour les objets VerticalStacked.
 			if (this.HasHeight(obj))
 			{
-				return obj.PreferredHeight;
+				if (this.UseMinHeight(obj))
+				{
+					return obj.MinHeight;
+				}
+				else
+				{
+					return obj.PreferredHeight;
+				}
 			}
 
 			return 0;
@@ -1844,12 +1925,19 @@ namespace Epsitec.Common.Designer
 		public void SetHeight(Widget obj, double height)
 		{
 			//	Choix de la hauteur de l'objet.
-			//	Uniquement pour les objets HorizontalStacked.
 			System.Diagnostics.Debug.Assert(this.HasHeight(obj));
 
-			if (obj.PreferredHeight != height)
+			if (this.GetHeight(obj) != height)
 			{
-				obj.PreferredHeight = height;
+				if (this.UseMinHeight(obj))
+				{
+					obj.MinHeight = height;
+				}
+				else
+				{
+					obj.PreferredHeight = height;
+				}
+
 				this.Invalidate();
 			}
 		}
@@ -1874,15 +1962,15 @@ namespace Epsitec.Common.Designer
 
 		public bool HasAttachmentLeft(Widget obj)
 		{
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
 
-			if (placement == ChildrenPlacement.Anchored)
+			if (pp == ChildrenPlacement.Anchored)
 			{
 				AnchoredHorizontalAttachment ha = this.GetAnchoredHorizontalAttachment(obj);
 				return (ha != AnchoredHorizontalAttachment.Right);
 			}
 
-			if (placement == ChildrenPlacement.HorizontalStacked)
+			if (pp == ChildrenPlacement.HorizontalStacked)
 			{
 				StackedHorizontalAttachment ha = this.GetStackedHorizontalAttachment(obj);
 				return (ha == StackedHorizontalAttachment.Left);
@@ -1893,15 +1981,15 @@ namespace Epsitec.Common.Designer
 
 		public bool HasAttachmentRight(Widget obj)
 		{
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
 
-			if (placement == ChildrenPlacement.Anchored)
+			if (pp == ChildrenPlacement.Anchored)
 			{
 				AnchoredHorizontalAttachment ha = this.GetAnchoredHorizontalAttachment(obj);
 				return (ha != AnchoredHorizontalAttachment.Left);
 			}
 
-			if (placement == ChildrenPlacement.HorizontalStacked)
+			if (pp == ChildrenPlacement.HorizontalStacked)
 			{
 				StackedHorizontalAttachment ha = this.GetStackedHorizontalAttachment(obj);
 				return (ha == StackedHorizontalAttachment.Right);
@@ -1912,15 +2000,15 @@ namespace Epsitec.Common.Designer
 
 		public bool HasAttachmentBottom(Widget obj)
 		{
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
 
-			if (placement == ChildrenPlacement.Anchored)
+			if (pp == ChildrenPlacement.Anchored)
 			{
 				AnchoredVerticalAttachment va = this.GetAnchoredVerticalAttachment(obj);
 				return (va != AnchoredVerticalAttachment.Top);
 			}
 
-			if (placement == ChildrenPlacement.VerticalStacked)
+			if (pp == ChildrenPlacement.VerticalStacked)
 			{
 				StackedVerticalAttachment va = this.GetStackedVerticalAttachment(obj);
 				return (va == StackedVerticalAttachment.Bottom);
@@ -1931,15 +2019,15 @@ namespace Epsitec.Common.Designer
 
 		public bool HasAttachmentTop(Widget obj)
 		{
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
 
-			if (placement == ChildrenPlacement.Anchored)
+			if (pp == ChildrenPlacement.Anchored)
 			{
 				AnchoredVerticalAttachment va = this.GetAnchoredVerticalAttachment(obj);
 				return (va != AnchoredVerticalAttachment.Bottom);
 			}
 
-			if (placement == ChildrenPlacement.VerticalStacked)
+			if (pp == ChildrenPlacement.VerticalStacked)
 			{
 				StackedVerticalAttachment va = this.GetStackedVerticalAttachment(obj);
 				return (va == StackedVerticalAttachment.Top);
@@ -1954,8 +2042,8 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne l'attachement vertical de l'objet.
 			//	Uniquement pour les objets Anchored.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			if (placement == ChildrenPlacement.Anchored)
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
+			if (pp == ChildrenPlacement.Anchored)
 			{
 				AnchorStyles style = obj.Anchor;
 				bool bottom = ((style & AnchorStyles.Bottom) != 0);
@@ -1973,8 +2061,8 @@ namespace Epsitec.Common.Designer
 		{
 			//	Choix de l'attachement vertical de l'objet.
 			//	Uniquement pour les objets Anchored.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.Anchored);
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
+			System.Diagnostics.Debug.Assert(pp == ChildrenPlacement.Anchored);
 
 			AnchorStyles style = obj.Anchor;
 
@@ -2009,8 +2097,8 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne l'attachement horizontal de l'objet.
 			//	Uniquement pour les objets Anchored.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			if (placement == ChildrenPlacement.Anchored)
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
+			if (pp == ChildrenPlacement.Anchored)
 			{
 				AnchorStyles style = obj.Anchor;
 				bool left  = ((style & AnchorStyles.Left ) != 0);
@@ -2028,8 +2116,8 @@ namespace Epsitec.Common.Designer
 		{
 			//	Choix de l'attachement horizontal de l'objet.
 			//	Uniquement pour les objets Anchored.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.Anchored);
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
+			System.Diagnostics.Debug.Assert(pp == ChildrenPlacement.Anchored);
 
 			AnchorStyles style = obj.Anchor;
 
@@ -2065,8 +2153,8 @@ namespace Epsitec.Common.Designer
 		public bool HasStackedVerticalAttachment(Widget obj)
 		{
 			//	Retourne l'attachement vertical de l'objet.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			return (placement == ChildrenPlacement.VerticalStacked);
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
+			return (pp == ChildrenPlacement.VerticalStacked);
 		}
 
 		public StackedVerticalAttachment GetStackedVerticalAttachment(Widget obj)
@@ -2119,8 +2207,8 @@ namespace Epsitec.Common.Designer
 		public bool HasStackedHorizontalAttachment(Widget obj)
 		{
 			//	Retourne l'attachement horizontal de l'objet.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			return (placement == ChildrenPlacement.HorizontalStacked);
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
+			return (pp == ChildrenPlacement.HorizontalStacked);
 		}
 
 		public StackedHorizontalAttachment GetStackedHorizontalAttachment(Widget obj)
@@ -2173,8 +2261,25 @@ namespace Epsitec.Common.Designer
 		public bool HasStackedHorizontalAlignment(Widget obj)
 		{
 			//	Retourne l'alignement horizontal de l'objet.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			return (placement == ChildrenPlacement.HorizontalStacked || placement == ChildrenPlacement.VerticalStacked || placement == ChildrenPlacement.Grid);
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
+
+			if (pp == ChildrenPlacement.HorizontalStacked)
+			{
+				StackedHorizontalAttachment ha = this.GetStackedHorizontalAttachment(obj);
+				return (ha == StackedHorizontalAttachment.Fill);
+			}
+
+			if (pp == ChildrenPlacement.VerticalStacked)
+			{
+				return true;
+			}
+
+			if (pp == ChildrenPlacement.Grid)
+			{
+				return true;
+			}
+
+			return false;
 		}
 
 		public StackedHorizontalAlignment GetStackedHorizontalAlignment(Widget obj)
@@ -2229,8 +2334,25 @@ namespace Epsitec.Common.Designer
 		public bool HasStackedVerticalAlignment(Widget obj)
 		{
 			//	Retourne l'alignement vertical de l'objet.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			return (placement == ChildrenPlacement.HorizontalStacked || placement == ChildrenPlacement.VerticalStacked || placement == ChildrenPlacement.Grid);
+			ChildrenPlacement pp = this.GetParentPlacement(obj);
+
+			if (pp == ChildrenPlacement.HorizontalStacked)
+			{
+				return true;
+			}
+
+			if (pp == ChildrenPlacement.VerticalStacked)
+			{
+				StackedVerticalAttachment va = this.GetStackedVerticalAttachment(obj);
+				return (va == StackedVerticalAttachment.Fill);
+			}
+
+			if (pp == ChildrenPlacement.Grid)
+			{
+				return true;
+			}
+
+			return false;
 		}
 
 		public StackedVerticalAlignment GetStackedVerticalAlignment(Widget obj)
