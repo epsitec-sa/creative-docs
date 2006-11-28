@@ -96,7 +96,7 @@ namespace Epsitec.Common.UI
 			}
 			
 			this.itemPanel.SetManualBounds (new Drawing.Rectangle (-ox, -oy, this.itemPanel.PreferredWidth, this.itemPanel.PreferredHeight));
-			this.columnHeader.SetManualBounds (new Drawing.Rectangle (-ox, 0, this.columnHeader.PreferredWidth, this.columnHeader.PreferredHeight));
+			this.columnHeader.SetManualBounds (new Drawing.Rectangle (-ox, 0, this.itemPanel.PreferredWidth, this.columnHeader.PreferredHeight));
 		}
 
 		private void HandleSurfaceSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
