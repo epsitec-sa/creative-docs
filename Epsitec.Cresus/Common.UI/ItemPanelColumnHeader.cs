@@ -60,10 +60,35 @@ namespace Epsitec.Common.UI
 
 			Column column = new Column (this, propertyName);
 
-			column.Widget.SizeChanged += this.HandleColumnWidthChanged;
-			column.Widget.Clicked += this.HandleColumnClicked;
+			column.Button.SizeChanged += this.HandleColumnWidthChanged;
+			column.Button.Clicked     += this.HandleColumnClicked;
+			column.Slider.DragStarted += this.HandleDragStarted;
+			column.Slider.DragMoved   += this.HandleDragMoved;
+			column.Slider.DragEnded   += this.HandleDragEnded;
 			
 			this.columns.Add (column);
+
+			this.UpdateSliderZOrder ();
+			this.UpdateSliderPositions ();
+		}
+
+		private void UpdateSliderZOrder()
+		{
+			foreach (Column column in this.columns)
+			{
+				column.Slider.ZOrder = 0;
+			}
+		}
+
+		private void UpdateSliderPositions()
+		{
+			double offset = 0;
+
+			foreach (Column column in this.columns)
+			{
+				offset += column.Button.PreferredWidth;
+				column.Slider.Margins = new Drawing.Margins (offset-1, 0, 0, 0);
+			}
 		}
 
 		public void RemoveColumn(int index)
@@ -72,9 +97,12 @@ namespace Epsitec.Common.UI
 			
 			this.columns.RemoveAt (index);
 
-			column.Widget.SizeChanged -= this.HandleColumnWidthChanged;
-			column.Widget.Clicked -= this.HandleColumnClicked;
-			column.Widget.Dispose ();
+			column.Button.SizeChanged -= this.HandleColumnWidthChanged;
+			column.Button.Clicked     -= this.HandleColumnClicked;
+			column.Slider.DragStarted -= this.HandleDragStarted;
+			column.Slider.DragMoved   -= this.HandleDragMoved;
+			column.Slider.DragEnded   -= this.HandleDragEnded;
+			column.Button.Dispose ();
 		}
 		
 		public string GetColumn(int index)
@@ -99,7 +127,12 @@ namespace Epsitec.Common.UI
 
 		public double GetColumnWidth(int index)
 		{
-			return this.columns[index].Widget.ActualWidth;
+			return this.columns[index].Button.PreferredWidth;
+		}
+
+		public void SetColumnWidth(int index, double width)
+		{
+			this.columns[index].Button.PreferredWidth = width;
 		}
 
 		public double GetTotalWidth()
@@ -108,7 +141,7 @@ namespace Epsitec.Common.UI
 			
 			foreach (Column column in this.columns)
 			{
-				width += column.Widget.ActualWidth;
+				width += column.Button.PreferredWidth;
 			}
 			
 			return width;
@@ -129,6 +162,7 @@ namespace Epsitec.Common.UI
 
 		private void HandleColumnWidthChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
+			this.UpdateSliderPositions ();
 			this.ItemPanel.AsyncRefresh ();
 		}
 
@@ -138,7 +172,7 @@ namespace Epsitec.Common.UI
 			Column column = this.columns[widget.Index];
 
 			List<SortDescription> sorts = new List<SortDescription> ();
-			SortDescription newSort = new SortDescription (column.Widget.SortMode == SortMode.Down ? ListSortDirection.Descending : ListSortDirection.Ascending, column.PropertyName);
+			SortDescription newSort = new SortDescription (column.Button.SortMode == SortMode.Down ? ListSortDirection.Descending : ListSortDirection.Ascending, column.PropertyName);
 			
 			foreach (SortDescription sort in this.ItemPanel.Items.SortDescriptions)
 			{
@@ -150,13 +184,13 @@ namespace Epsitec.Common.UI
 
 			foreach (Column item in this.columns)
 			{
-				if (item.Widget == column.Widget)
+				if (item.Button == column.Button)
 				{
-					item.Widget.SortMode = newSort.Direction == ListSortDirection.Ascending ? SortMode.Down : SortMode.Up;
+					item.Button.SortMode = newSort.Direction == ListSortDirection.Ascending ? SortMode.Down : SortMode.Up;
 				}
 				else
 				{
-					item.Widget.SortMode = SortMode.None;
+					item.Button.SortMode = SortMode.None;
 				}
 			}
 
@@ -164,21 +198,51 @@ namespace Epsitec.Common.UI
 			this.ItemPanel.Items.SortDescriptions.Add (newSort);
 			this.ItemPanel.Items.SortDescriptions.AddRange (sorts);
 		}
-		
+
+		private void HandleDragStarted(object sender, MessageEventArgs e)
+		{
+			HeaderSlider slider = sender as HeaderSlider;
+
+			this.isDragging = true;
+			this.dragPos = e.Message.Cursor.X;
+			this.dragDim = this.GetColumnWidth (slider.Index);
+		}
+
+		private void HandleDragMoved(object sender, MessageEventArgs e)
+		{
+			HeaderSlider slider = sender as HeaderSlider;
+
+			this.SetColumnWidth (slider.Index, this.dragDim + e.Message.Cursor.X - this.dragPos);
+		}
+
+		private void HandleDragEnded(object sender, MessageEventArgs e)
+		{
+			HeaderSlider slider = sender as HeaderSlider;
+			
+			this.isDragging = false;
+			this.DispatchDummyMouseMoveEvent ();
+		}
+
 		private struct Column
 		{
 			public Column(ItemPanelColumnHeader header, string propertyName)
 			{
 				this.property = new PropertyGroupDescription (propertyName);
-				this.widget   = new HeaderButton (header);
+				this.button   = new HeaderButton (header);
+				this.slider   = new HeaderSlider (header);
 
-				this.widget.Style     = HeaderButtonStyle.Top;
-				this.widget.IsDynamic = true;
-				this.widget.Text      = propertyName;
-				this.widget.Index     = header.columns.Count;
+				this.button.Style     = HeaderButtonStyle.Top;
+				this.button.IsDynamic = true;
+				this.button.Text      = propertyName;
+				this.button.Index     = header.columns.Count;
+
+				this.slider.Style          = HeaderSliderStyle.Top;
+				this.slider.Index          = header.columns.Count;
+				this.slider.Anchor         = AnchorStyles.Left | AnchorStyles.TopAndBottom;
+				this.slider.PreferredWidth = 3;
 				
-				GridLayoutEngine.SetColumn (this.widget, header.columns.Count);
-				GridLayoutEngine.SetRow (this.widget, 0);
+				GridLayoutEngine.SetColumn (this.button, header.columns.Count);
+				GridLayoutEngine.SetRow (this.button, 0);
 			}
 
 			public string PropertyName
@@ -189,11 +253,19 @@ namespace Epsitec.Common.UI
 				}
 			}
 
-			public HeaderButton Widget
+			public HeaderButton Button
 			{
 				get
 				{
-					return this.widget;
+					return this.button;
+				}
+			}
+
+			public HeaderSlider Slider
+			{
+				get
+				{
+					return this.slider;
 				}
 			}
 
@@ -204,7 +276,8 @@ namespace Epsitec.Common.UI
 			}
 
 			private PropertyGroupDescription property;
-			private HeaderButton widget;
+			private HeaderButton button;
+			private HeaderSlider slider;
 		}
 
 		private static void NotifyItemPanelChanged(DependencyObject o, object oldValue, object newValue)
@@ -235,5 +308,9 @@ namespace Epsitec.Common.UI
 
 		private List<Column> columns;
 		private GridLayoutEngine gridLayout;
+
+		private bool isDragging;
+		private double dragPos;
+		private double dragDim;
 	}
 }
