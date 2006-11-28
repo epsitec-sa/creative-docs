@@ -38,8 +38,8 @@ namespace Epsitec.Common.Widgets
 				Layouts.LayoutMeasure width  = Layouts.LayoutMeasure.GetWidth (this);
 				Layouts.LayoutMeasure height = Layouts.LayoutMeasure.GetHeight (this);
 
-				double dx = width == null ? this.PreferredWidth : width.Desired;
-				double dy = height == null ? this.PreferredHeight : height.Desired;
+				double dx = ((width == null)  || double.IsNaN (width.Desired))  ? this.PreferredWidth : width.Desired;
+				double dy = ((height == null) || double.IsNaN (height.Desired)) ? this.PreferredHeight : height.Desired;
 
 				return new Drawing.Rectangle (0, 0, dx, dy);
 			}
