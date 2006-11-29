@@ -54,6 +54,11 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public void AddColumn(StructuredTypeField field)
+		{
+			this.AddColumn (field.Id, field.CaptionId);
+		}
+		
 		public void AddColumn(string propertyName, Support.Druid captionId)
 		{
 			this.gridLayout.ColumnDefinitions.Add (new ColumnDefinition ());

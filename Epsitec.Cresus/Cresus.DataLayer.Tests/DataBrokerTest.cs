@@ -190,12 +190,12 @@ namespace Epsitec.Cresus.DataLayer
 
 			panel.Items = view;
 
-			header.AddColumn ("FirstName");
-			header.AddColumn ("LastName");
-			header.AddColumn ("Company");
-			header.AddColumn ("Address1");
-			header.AddColumn ("Zip");
-			header.AddColumn ("City");
+			header.AddColumn (type.GetField ("FirstName"));
+			header.AddColumn (type.GetField ("LastName"));
+			header.AddColumn (type.GetField ("Company"));
+			header.AddColumn (type.GetField ("Address1"));
+			header.AddColumn (type.GetField ("Zip"));
+			header.AddColumn (type.GetField ("City"));
 
 			window.Root.Children.Add (itemTable);
 
