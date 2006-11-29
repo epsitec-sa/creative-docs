@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				DbTable table = Adapter.FindTableDefinition (transaction, type);
 				DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
-				condition.AddCondition (table.Columns["Company"], DbCompare.Equal, "Epsitec SA");
+				condition.AddCondition (table.Columns["Company"], DbCompare.Like, "Epsitec%");
 				command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, table, condition);
 				transaction.Commit ();
 			}
@@ -105,6 +105,48 @@ namespace Epsitec.Cresus.DataLayer
 			System.Console.Out.WriteLine ("Total: {0} records", total);
 			System.Console.Out.WriteLine ("-----------------------------------------------");
 			System.Diagnostics.Debug.WriteLine ("Broker-2 done");
+		}
+
+
+		[Test]
+		public void Check03DataTableBroker()
+		{
+			System.Diagnostics.Debug.WriteLine ("Broker-3");
+			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
+			DbRichCommand command;
+
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbTable table = Adapter.FindTableDefinition (transaction, type);
+				DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
+				condition.AddCondition (table.Columns["Zip"], DbCompare.LessThan, 1200);
+				condition.AddCondition (table.Columns["Address1"], DbCompare.Like, "Case%");
+				condition.Combiner = DbCompareCombiner.Or;
+				command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, table, condition);
+				transaction.Commit ();
+			}
+
+			Assert.IsNotNull (command);
+
+			System.Data.DataTable dataTable = command.DataSet.Tables["Record.Address"];
+
+			Assert.IsNotNull (dataTable);
+
+			DataTableBroker broker = new DataTableBroker (type, dataTable);
+			int total = 0;
+
+			foreach (DataBrokerRecord record in broker.Records)
+			{
+				System.Console.Out.WriteLine ("{0} {1}, {2}, {3} {4}",
+					/**/					  record.GetValue ("FirstName"), record.GetValue ("LastName"),
+					/**/					  record.GetValue ("Address1"),
+					/**/					  record.GetValue ("Zip"), record.GetValue ("City"));
+				total++;
+			}
+
+			System.Console.Out.WriteLine ("Total: {0} records", total);
+			System.Console.Out.WriteLine ("-----------------------------------------------");
+			System.Diagnostics.Debug.WriteLine ("Broker-3 done");
 		}
 
 		private DbInfrastructure infrastructure;
