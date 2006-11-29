@@ -24,10 +24,15 @@ namespace Epsitec.Cresus.Database
 
 			db_table_a.Columns.Add (DbTable.CreateUserDataColumn ("Nom", db_type_name));
 			db_table_a.Columns.Add (DbTable.CreateUserDataColumn ("Prenom", db_type_name));
-			
-			db_table_b.Columns.Add (DbTable.CreateRefColumn (infrastructure, "Personne", "Personnes", DbNullability.Yes));
-			db_table_b.Columns.Add (DbTable.CreateUserDataColumn ("Ville", db_type_name));
-			db_table_b.Columns.Add (DbTable.CreateUserDataColumn ("NPA", db_type_npa));
+
+			using (DbTransaction transaction = infrastructure.BeginTransaction ())
+			{
+				db_table_b.Columns.Add (DbTable.CreateRefColumn (transaction, infrastructure, "Personne", "Personnes", DbNullability.Yes));
+				db_table_b.Columns.Add (DbTable.CreateUserDataColumn ("Ville", db_type_name));
+				db_table_b.Columns.Add (DbTable.CreateUserDataColumn ("NPA", db_type_npa));
+				
+				transaction.Commit ();
+			}
 			
 			Assert.AreEqual ("Personnes", db_table_b.Columns[3].TargetTableName);
 			

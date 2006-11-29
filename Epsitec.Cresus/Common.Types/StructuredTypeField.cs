@@ -23,6 +23,7 @@ namespace Epsitec.Common.Types
 			this.type = type;
 			this.captionId = Support.Druid.Empty;
 			this.rank = -1;
+			this.relation = Relation.None;
 		}
 
 		/// <summary>
@@ -37,6 +38,7 @@ namespace Epsitec.Common.Types
 			this.type = type;
 			this.captionId = captionId;
 			this.rank = -1;
+			this.relation = Relation.None;
 		}
 
 		/// <summary>
@@ -52,6 +54,41 @@ namespace Epsitec.Common.Types
 			this.type = type;
 			this.captionId = captionId;
 			this.rank = rank;
+			this.relation = Relation.None;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StructuredTypeField"/> class.
+		/// </summary>
+		/// <param name="id">The field id.</param>
+		/// <param name="type">The field type.</param>
+		/// <param name="captionId">The field caption DRUID.</param>
+		/// <param name="rank">The field rank when listed in a user interface.</param>
+		/// <param name="relation">The relation.</param>
+		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, Relation relation)
+		{
+			this.id = id;
+			this.type = type;
+			this.captionId = captionId;
+			this.rank = rank;
+			this.relation = relation;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StructuredTypeField"/> class.
+		/// </summary>
+		/// <param name="id">The field id.</param>
+		/// <param name="type">The field type.</param>
+		/// <param name="captionId">The field caption DRUID.</param>
+		/// <param name="rank">The field rank when listed in a user interface.</param>
+		/// <param name="flags">The flags.</param>
+		private StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, int flags)
+		{
+			this.id = id;
+			this.type = type;
+			this.captionId = captionId;
+			this.rank = rank;
+			this.relation = (Relation) (flags & 0x0f);
 		}
 
 		/// <summary>
@@ -115,6 +152,36 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the relation defined by this field. This is useful when the
+		/// field is a reference.
+		/// </summary>
+		/// <value>The relation.</value>
+		public Relation							Relation
+		{
+			get
+			{
+				return this.relation;
+			}
+		}
+
+
+		/// <summary>
+		/// Gets a bitwise representation of the relation property.
+		/// </summary>
+		/// <value>The flags.</value>
+		private int Flags
+		{
+			get
+			{
+				int flags = 0;
+				
+				flags |= (0x0f & (int) this.relation) << 0;
+
+				return flags;
+			}
+		}
+
 		public static readonly StructuredTypeField Empty = new StructuredTypeField ();
 
 		
@@ -130,9 +197,14 @@ namespace Epsitec.Common.Types
 				StructuredTypeField field = (StructuredTypeField) value;
 
 				string captionId = field.type == null ? Support.Druid.Empty.ToString () : field.type.CaptionId.ToString ();
-				string rank = field.rank == -1 ? "" : field.rank.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				string rank  = field.rank == -1 ? "" : field.rank.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				string flags = field.Flags == 0 ? "" : field.Flags.ToString (System.Globalization.CultureInfo.InvariantCulture);
 
-				if (field.captionId.IsValid)
+				if (string.IsNullOrEmpty (flags) == false)
+				{
+					return string.Concat (field.id, ";", captionId, ";", rank, ";", field.captionId.ToString (), ";", flags);
+				}
+				else if (field.captionId.IsValid)
 				{
 					return string.Concat (field.id, ";", captionId, ";", rank, ";", field.captionId.ToString ());
 				}
@@ -157,8 +229,9 @@ namespace Epsitec.Common.Types
 				INamedType    type      = druid.IsEmpty ? null : (manager == null ? TypeRosetta.GetTypeObject (druid) : TypeRosetta.GetTypeObject (manager.GetCaption (druid)));
 				string        rank      = args.Length < 3 ? "-1" : string.IsNullOrEmpty (args[2]) ? "-1" : args[2];
 				Support.Druid captionId = args.Length < 4 ? Support.Druid.Empty : Support.Druid.Parse (args[3]);
+				string        flags     = args.Length < 5 ? "0" : args[4];
 				
-				return new StructuredTypeField (name, type, captionId, System.Int32.Parse (rank, System.Globalization.CultureInfo.InvariantCulture));
+				return new StructuredTypeField (name, type, captionId, System.Int32.Parse (rank, System.Globalization.CultureInfo.InvariantCulture), System.Int32.Parse (flags, System.Globalization.CultureInfo.InvariantCulture));
 			}
 
 			#endregion
@@ -170,5 +243,6 @@ namespace Epsitec.Common.Types
 		private INamedType						type;
 		private Support.Druid					captionId;
 		private int								rank;
+		private Relation						relation;
 	}
 }
