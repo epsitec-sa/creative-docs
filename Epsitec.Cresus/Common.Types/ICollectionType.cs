@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// The <c>ICollectionType</c> interface describes a collection type.
 	/// </summary>
-	public interface ICollectionType : INamedType
+	public interface ICollectionType
 	{
 		/// <summary>
 		/// Gets the type used by the items in the collection.

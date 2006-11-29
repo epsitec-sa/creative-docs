@@ -123,6 +123,8 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataBrokerRecord.cs" />
+    <Compile Include="DataTableBroker.cs" />
     <Compile Include="DataBrokerItem.cs" />
     <Compile Include="RequestFactory.cs">
       <SubType>Code</SubType>

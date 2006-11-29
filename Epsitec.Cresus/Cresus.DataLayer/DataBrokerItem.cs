@@ -4,6 +4,7 @@
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
 
@@ -17,15 +18,15 @@ namespace Epsitec.Cresus.DataLayer
 	/// </summary>
 	public struct DataBrokerItem
 	{
-		public DbId								KeyId
+		public long								Id
 		{
 			get
 			{
-				return this.keyId;
+				return this.id;
 			}
 		}
 
-		public StructuredData					Data
+		public DataBrokerRecord			Data
 		{
 			get
 			{
@@ -80,30 +81,31 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 		}
-		
-		public static DataBrokerItem CreateReadOnlyItem(DbId keyId, StructuredData data)
+
+		public static DataBrokerItem CreateReadOnlyItem(DataBrokerRecord data)
 		{
 			DataBrokerItem item = new DataBrokerItem ();
 
-			item.keyId = keyId;
-			item.data = new Weak<StructuredData> (data);
+			item.id   = data.Id;
+			item.data = new Weak<DataBrokerRecord> (data);
 
 			return item;
 		}
 
-		public static DataBrokerItem CreateWritableItem(DbId keyId, StructuredData data)
+		public static DataBrokerItem CreateWritableItem(DataBrokerRecord data)
 		{
 			DataBrokerItem item = new DataBrokerItem ();
 
-			item.keyId = keyId;
+			item.id   = data.Id;
 			item.data = null;
+			
 			item.writableData = data;
 
 			return item;
 		}
 
-		private DbId keyId;
-		private Weak<StructuredData> data;
-		private StructuredData writableData;
+		private long id;
+		private Weak<DataBrokerRecord> data;
+		private DataBrokerRecord writableData;
 	}
 }
