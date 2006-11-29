@@ -171,6 +171,8 @@ namespace Epsitec.Cresus.Database
 		/// <param name="fields">The collection to which the conditions will be added.</param>
 		internal void CreateConditions(DbTable mainTable, Collections.SqlFields fields)
 		{
+			SqlField revisionCondition = null;
+			
 			switch (this.revision)
 			{
 				case DbSelectRevision.LiveAll:
@@ -181,7 +183,9 @@ namespace Epsitec.Cresus.Database
 					this.AddCondition (mainTable.Columns[Tags.ColumnStatus],
 						/**/		   DbCompare.LessThan,
 						/**/		   DbKey.ConvertToIntStatus (DbRowStatus.Deleted));
-					
+
+					revisionCondition = this.sqlFields[this.sqlFields.Count-1];
+					this.sqlFields.Remove (revisionCondition);
 					break;
 				
 				case DbSelectRevision.LiveActive:
@@ -192,7 +196,9 @@ namespace Epsitec.Cresus.Database
 					this.AddCondition (mainTable.Columns[Tags.ColumnStatus],
 						/**/		   DbCompare.LessThan,
 						/**/		   DbKey.ConvertToIntStatus (DbRowStatus.ArchiveCopy));
-					
+
+					revisionCondition = this.sqlFields[this.sqlFields.Count-1];
+					this.sqlFields.Remove (revisionCondition);
 					break;
 				
 				case DbSelectRevision.All:
@@ -209,10 +215,18 @@ namespace Epsitec.Cresus.Database
 			switch (this.combiner)
 			{
 				case DbCompareCombiner.And:
+					if (revisionCondition != null)
+					{
+						fields.Add (revisionCondition);
+					}
 					fields.AddRange (this.sqlFields);
 					break;
 				
 				case DbCompareCombiner.Or:
+					if (revisionCondition != null)
+					{
+						fields.Add (revisionCondition);
+					}
 					if (this.sqlFields.Count > 0)
 					{
 						SqlField or = this.sqlFields.Merge (SqlFunctionCode.LogicOr);
