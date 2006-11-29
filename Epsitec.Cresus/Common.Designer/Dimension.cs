@@ -193,7 +193,7 @@ namespace Epsitec.Common.Designer
 					graphics.RenderSolid(border);
 
 					value = this.Value;
-					if (value == bounds.Width || this.IsPercent)  // forme rectangulaire simple ?
+					if (value == box.Width || this.IsPercent)  // forme rectangulaire simple ?
 					{
 						p1 = new Point(box.Right, inside.Top);
 						p2 = new Point(box.Left, inside.Top);
@@ -233,7 +233,7 @@ namespace Epsitec.Common.Designer
 					graphics.RenderSolid(border);
 
 					value = this.Value;
-					if (value == bounds.Height || this.IsPercent)  // forme rectangulaire simple ?
+					if (value == box.Height || this.IsPercent)  // forme rectangulaire simple ?
 					{
 						p1 = new Point(inside.Left, box.Top);
 						p2 = new Point(inside.Left, box.Bottom);
@@ -568,7 +568,7 @@ namespace Epsitec.Common.Designer
 						r.Bottom = inside.Top;
 
 						value = this.Value;
-						if (value == bounds.Width)  // forme rectangulaire simple ?
+						if (value == box.Width)  // forme rectangulaire simple ?
 						{
 							p1 = new Point(box.Right, inside.Top);
 							p2 = new Point(box.Left, inside.Top);
