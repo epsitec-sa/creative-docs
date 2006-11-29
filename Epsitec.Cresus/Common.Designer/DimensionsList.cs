@@ -43,10 +43,9 @@ namespace Epsitec.Common.Designer
 				dim.DrawMark(graphics);
 			}
 
-			if (this.hilited != Dimension.Type.None)
+			if (this.hilited != null)
 			{
-				Dimension dim = this.GetDimension(this.hilited);
-				dim.DrawHilite(graphics, (this.dragging == Dimension.Type.None));
+				this.hilited.DrawHilite(graphics, (this.dragging == null));
 			}
 		}
 
@@ -54,43 +53,71 @@ namespace Epsitec.Common.Designer
 		{
 			//	Met en évidence la cote survolée par la souris.
 			Dimension dim = this.Detect(mouse);
-			Dimension.Type type = (dim == null) ? Dimension.Type.None : dim.DimensionType;
 
-			if (this.hilited != type)
+			if (this.hilited != dim)
 			{
-				this.hilited = type;
+				this.hilited = dim;
 				this.editor.Invalidate();
 			}
 
-			return (this.hilited != Dimension.Type.None);
+			return (this.hilited != null);
 		}
 
 		public void Wheel(int direction)
 		{
 			//	Modifie la cote survolée selon la molette de la souris.
-			if (this.hilited != Dimension.Type.None)
+			if (this.hilited != null)
 			{
-				Dimension dim = this.GetDimension(this.hilited);
-				double value = dim.Value;
+				double value = this.hilited.Value;
 				value += (direction < 0) ? -1 : 1;
-				dim.Value = value;
+				this.hilited.Value = value;
 			}
 		}
 
 		public bool DraggingStart(Point mouse)
 		{
 			//	Début de la modification interactive d'une cote.
-			Dimension dim = this.Detect(mouse);
-			if (dim == null)
+			this.dragging = this.Detect(mouse);
+			if (this.dragging == null)
 			{
-				this.dragging = Dimension.Type.None;
 				return false;
 			}
 			else
 			{
-				this.dragging = dim.DimensionType;
-				this.startingPos = mouse;
-				this.initialValue = dim.Value;
+				if (this.dragging.DimensionType == Dimension.Type.GridColumn ||
+					this.dragging.DimensionType == Dimension.Type.GridRow    )
+				{
+					List<Widget> sel = this.editor.SelectedObjects;
+					Widget obj = sel[0];  // premier objet sélectionné (celui qui a les cotes)
+
+					GridSelection gs = GridSelection.Get(obj);
+					if (gs == null)
+					{
+						gs = new GridSelection(obj);
+						GridSelection.Attach(obj, gs);
+					}
+
+					GridSelection.Unit unit = (this.dragging.DimensionType == Dimension.Type.GridColumn) ? GridSelection.Unit.Column : GridSelection.Unit.Row;
+					int index = this.dragging.ColumnOrRow;
+
+					int search = gs.Search(unit, index);
+					if (search == -1)
+					{
+						gs.Add(unit, index);
+					}
+					else
+					{
+						gs.RemoveAt(search);
+					}
+
+					this.editor.UpdateProxies();
+					this.editor.Invalidate();
+				}
+				else
+				{
+					this.startingPos = mouse;
+					this.initialValue = this.dragging.Value;
+				}
 				return true;
 			}
 		}
@@ -98,31 +125,32 @@ namespace Epsitec.Common.Designer
 		public void DraggingMove(Point mouse, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Modification interactive d'une cote.
-			Dimension dim = this.GetDimension(this.dragging);
-			System.Diagnostics.Debug.Assert(dim != null);
-
-			double value = mouse.Y - this.startingPos.Y;
-
-			if (isControlPressed)  // moins sensible ?
+			if (this.dragging.DimensionType != Dimension.Type.GridColumn &&
+				this.dragging.DimensionType != Dimension.Type.GridRow    )
 			{
-				value = System.Math.Floor((value+0.5)*0.5);
-			}
+				double value = mouse.Y - this.startingPos.Y;
 
-			if (isShiftPressed)  // grille magnétique ?
-			{
-				double step = 5;
-				value += this.initialValue;
-				value = System.Math.Floor((value+step/2)/step) * step;
-				value -= this.initialValue;
-			}
+				if (isControlPressed)  // moins sensible ?
+				{
+					value = System.Math.Floor((value+0.5)*0.5);
+				}
 
-			dim.Value = this.initialValue+value;
+				if (isShiftPressed)  // grille magnétique ?
+				{
+					double step = 5;
+					value += this.initialValue;
+					value = System.Math.Floor((value+step/2)/step) * step;
+					value -= this.initialValue;
+				}
+
+				this.dragging.Value = this.initialValue+value;
+			}
 		}
 
 		public void DraggingEnd()
 		{
 			//	Fin de la modification interactive d'une cote.
-			this.dragging = Dimension.Type.None;
+			this.dragging = null;
 		}
 
 
@@ -130,6 +158,25 @@ namespace Epsitec.Common.Designer
 		{
 			//	Crée toutes les cotes pour un objet donné.
 			Dimension dim;
+
+			//	Crée les cotes de ligne/colonne en premier, pour qu'elles viennent par dessous
+			//	toutes les autres.
+			if (this.objectModifier.GetChildrenPlacement(obj) == ObjectModifier.ChildrenPlacement.Grid)
+			{
+				int columns = this.objectModifier.GetGridColumnsCount(obj);
+				for (int i=0; i<columns; i++)
+				{
+					dim = new Dimension(this.editor, obj, Dimension.Type.GridColumn, i, -1);
+					this.list.Add(dim);
+				}
+
+				int rows = this.objectModifier.GetGridRowsCount(obj);
+				for (int i=0; i<rows; i++)
+				{
+					dim = new Dimension(this.editor, obj, Dimension.Type.GridRow, -1, i);
+					this.list.Add(dim);
+				}
+			}
 
 			if (this.objectModifier.HasWidth(obj))
 			{
@@ -158,6 +205,8 @@ namespace Epsitec.Common.Designer
 				this.list.Add(dim);
 			}
 
+			//	Crée les cotes de padding en dernier, pour qu'elles viennent par dessus
+			//	toutes les autres.
 			if (this.objectModifier.HasPadding(obj))
 			{
 				dim = new Dimension(this.editor, obj, Dimension.Type.PaddingLeft);
@@ -188,27 +237,13 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
-		protected Dimension GetDimension(Dimension.Type type)
-		{
-			//	Retourne une cote d'après son type.
-			foreach (Dimension dim in this.list)
-			{
-				if (dim.DimensionType == type)
-				{
-					return dim;
-				}
-			}
-
-			return null;
-		}
-		
 		
 		protected MyWidgets.PanelEditor		editor;
 		protected ObjectModifier			objectModifier;
 		protected PanelsContext				context;
 		protected List<Dimension>			list = new List<Dimension>();
-		protected Dimension.Type			hilited = Dimension.Type.None;
-		protected Dimension.Type			dragging = Dimension.Type.None;
+		protected Dimension					hilited;
+		protected Dimension					dragging;
 		protected Point						startingPos;
 		protected double					initialValue;
 	}

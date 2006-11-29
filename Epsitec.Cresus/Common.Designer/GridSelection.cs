@@ -45,7 +45,14 @@ namespace Epsitec.Common.Designer
 		{
 			get
 			{
-				return this.list[index];
+				if (index == -1)
+				{
+					return null;
+				}
+				else
+				{
+					return this.list[index];
+				}
 			}
 		}
 

@@ -19,6 +19,10 @@ namespace Epsitec.Common.Designer
 			MarginRight,
 			MarginBottom,
 			MarginTop,
+			PaddingLeft,
+			PaddingRight,
+			PaddingBottom,
+			PaddingTop,
 			GridColumn,
 			GridRow,
 			GridWidth,
@@ -27,10 +31,6 @@ namespace Epsitec.Common.Designer
 			GridMarginRight,
 			GridMarginBottom,
 			GridMarginTop,
-			PaddingLeft,
-			PaddingRight,
-			PaddingBottom,
-			PaddingTop,
 		}
 
 
@@ -39,9 +39,27 @@ namespace Epsitec.Common.Designer
 			//	Crée une cote.
 			this.editor = editor;
 			this.objectModifier = editor.ObjectModifier;
+			this.context = editor.Context;
+
 			this.obj = obj;
 			this.type = type;
+			this.column = -1;
+			this.row = -1;
 		}
+
+		public Dimension(MyWidgets.PanelEditor editor, Widget obj, Type type, int column, int row)
+		{
+			//	Crée une cote.
+			this.editor = editor;
+			this.objectModifier = editor.ObjectModifier;
+			this.context = editor.Context;
+
+			this.obj = obj;
+			this.type = type;
+			this.column = column;
+			this.row = row;
+		}
+
 
 		public Type DimensionType
 		{
@@ -49,6 +67,26 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				return this.type;
+			}
+		}
+
+		public int ColumnOrRow
+		{
+			//	Retourne le rang de la ligne ou de la colonne (selon le type).
+			get
+			{
+				if (this.type == Type.GridColumn)
+				{
+					return this.column;
+				}
+				else if (this.type == Type.GridRow)
+				{
+					return this.row;
+				}
+				else
+				{
+					return -1;
+				}
 			}
 		}
 
@@ -74,11 +112,6 @@ namespace Epsitec.Common.Designer
 			double value;
 
 			box = this.TextBox;
-			if (box.IsEmpty)
-			{
-				return;
-			}
-
 			graphics.Align(ref box);
 			box.Offset(0.5, 0.5);
 
@@ -299,6 +332,24 @@ namespace Epsitec.Common.Designer
 					graphics.Rasterizer.AddOutline(path);
 					graphics.RenderSolid(border);
 					break;
+
+				case Type.GridColumn:
+					r = box;
+					r.Bottom = ext.Top;
+					graphics.AddFilledRectangle(r);
+					graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
+					graphics.AddRectangle(r);
+					graphics.RenderSolid(border);
+					break;
+
+				case Type.GridRow:
+					r = box;
+					r.Right = ext.Left;
+					graphics.AddFilledRectangle(r);
+					graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
+					graphics.AddRectangle(r);
+					graphics.RenderSolid(border);
+					break;
 			}
 
 			this.DrawText(graphics, box);
@@ -317,11 +368,6 @@ namespace Epsitec.Common.Designer
 			double value;
 
 			box = this.TextBox;
-			if (box.IsEmpty)
-			{
-				return;
-			}
-
 			graphics.Align(ref box);
 			box.Offset(0.5, 0.5);
 
@@ -408,17 +454,24 @@ namespace Epsitec.Common.Designer
 
 			//	Dessine des triangles rouges up/down.
 			Path path = new Path();
-			path.MoveTo(box.TopLeft);
-			path.LineTo(box.Center.X-t/2, box.Top);
-			path.LineTo(box.Center.X, box.Top+t/2);
-			path.LineTo(box.Center.X+t/2, box.Top);
-			path.LineTo(box.TopRight);
-			path.LineTo(box.BottomRight);
-			path.LineTo(box.Center.X+t/2, box.Bottom);
-			path.LineTo(box.Center.X, box.Bottom-t/2);
-			path.LineTo(box.Center.X-t/2, box.Bottom);
-			path.LineTo(box.BottomLeft);
-			path.Close();
+			if (this.type == Type.GridColumn || this.type == Type.GridRow)
+			{
+				path.AppendRectangle(box);
+			}
+			else
+			{
+				path.MoveTo(box.TopLeft);
+				path.LineTo(box.Center.X-t/2, box.Top);
+				path.LineTo(box.Center.X, box.Top+t/2);
+				path.LineTo(box.Center.X+t/2, box.Top);
+				path.LineTo(box.TopRight);
+				path.LineTo(box.BottomRight);
+				path.LineTo(box.Center.X+t/2, box.Bottom);
+				path.LineTo(box.Center.X, box.Bottom-t/2);
+				path.LineTo(box.Center.X-t/2, box.Bottom);
+				path.LineTo(box.BottomLeft);
+				path.Close();
+			}
 			graphics.Rasterizer.AddSurface(path);
 			graphics.RenderSolid(hilite);
 			graphics.Rasterizer.AddOutline(path);
@@ -460,20 +513,23 @@ namespace Epsitec.Common.Designer
 			this.DrawText(graphics, box);
 
 			//	Dessine les signes +/-.
-			Point p = new Point(box.Center.X-1, box.Top+t/4-2);
-			graphics.Align(ref p);
-			p.X += 0.5;
-			p.Y += 0.5;
-			graphics.AddLine(p.X-2, p.Y, p.X+2, p.Y);
-			graphics.AddLine(p.X, p.Y-2, p.X, p.Y+2);
+			if (this.type != Type.GridColumn && this.type != Type.GridRow)
+			{
+				Point p = new Point(box.Center.X-1, box.Top+t/4-2);
+				graphics.Align(ref p);
+				p.X += 0.5;
+				p.Y += 0.5;
+				graphics.AddLine(p.X-2, p.Y, p.X+2, p.Y);
+				graphics.AddLine(p.X, p.Y-2, p.X, p.Y+2);
 
-			p = new Point(box.Center.X-1, box.Bottom-t/4+1);
-			graphics.Align(ref p);
-			p.X += 0.5;
-			p.Y += 0.5;
-			graphics.AddLine(p.X-2, p.Y, p.X+2, p.Y);
+				p = new Point(box.Center.X-1, box.Bottom-t/4+1);
+				graphics.Align(ref p);
+				p.X += 0.5;
+				p.Y += 0.5;
+				graphics.AddLine(p.X-2, p.Y, p.X+2, p.Y);
 
-			graphics.RenderSolid(border);
+				graphics.RenderSolid(border);
+			}
 		}
 
 
@@ -685,27 +741,70 @@ namespace Epsitec.Common.Designer
 		protected void DrawText(Graphics graphics, Rectangle box)
 		{
 			//	Dessine la valeur d'une cote avec des petits caractères.
-			int i = (int) System.Math.Floor(this.Value+0.5);
-			string text = i.ToString();
-
 			if (this.type == Type.Height       ||
 				this.type == Type.MarginBottom ||
 				this.type == Type.MarginTop    ||
 				this.type == Type.PaddingLeft  ||
-				this.type == Type.PaddingRight )  // text vertical ?
+				this.type == Type.PaddingRight )  // texte vertical ?
 			{
 				Point center = box.Center;
 				Transform it = graphics.Transform;
 				graphics.RotateTransformDeg(-90, center.X, center.Y);
-				graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
+				graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, this.StringValue, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
+				graphics.Transform = it;
+			}
+			else if (this.type == Type.GridRow)
+			{
+				Point center = box.Center;
+				Transform it = graphics.Transform;
+				graphics.RotateTransformDeg(90, center.X, center.Y);
+				graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, this.StringValue, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
 				graphics.Transform = it;
 			}
 			else  // texte horizontal ?
 			{
-				graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
+				graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, this.StringValue, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
 			}
 
 			graphics.RenderSolid(Color.FromRgb(0, 0, 0));
+		}
+
+		protected string StringValue
+		{
+			//	Retourne la chaîne à afficher comme valeur de la cote.
+			get
+			{
+				switch (this.type)
+				{
+					case Type.GridColumn:
+						return Dimension.ToAlpha(this.column);  // A..ZZ
+
+					case Type.GridRow:
+						return (this.row+1).ToString(System.Globalization.CultureInfo.InvariantCulture);  // 1..n
+
+					default:
+						int i = (int) System.Math.Floor(this.Value+0.5);
+						return i.ToString();
+				}
+			}
+		}
+
+		protected static string ToAlpha(int n)
+		{
+			//	Retourne un nombre en une chaîne en base 26 (donc A..Z, AA..AZ, BA..BZ, etc.).
+			string text = "";
+
+			do
+			{
+				int digit = n%26;
+				char c = (char) ('A'+digit);
+				text = text.Insert(0, c.ToString());
+
+				n /= 26;
+			}
+			while (n != 0);
+
+			return text;
 		}
 
 		protected Rectangle TextBox
@@ -718,7 +817,7 @@ namespace Epsitec.Common.Designer
 				Rectangle ext = bounds;
 				ext.Inflate(this.objectModifier.GetMargins(this.obj));
 
-				double d = Dimension.margin;
+				double d = 26;
 				double h = 12;
 				double e = 10;
 				double pw = 20;
@@ -773,6 +872,18 @@ namespace Epsitec.Common.Designer
 						box = this.objectModifier.GetFinalPadding(this.obj);
 						return new Rectangle(box.Center.X-pw/2, bounds.Bottom-ph, pw, ph);
 
+					case Type.GridColumn:
+						box = this.objectModifier.GetGridCellArea(this.obj, this.column, 0, 1, 1);
+						box.Bottom = ext.Top+d;
+						box.Height = h;
+						return box;
+
+					case Type.GridRow:
+						box = this.objectModifier.GetGridCellArea(this.obj, 0, this.row, 1, 1);
+						box.Left = ext.Left-d-h;
+						box.Width = h;
+						return box;
+
 					default:
 						return Rectangle.Empty;
 				}
@@ -780,13 +891,16 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public static readonly double		margin = 26;
+		public static readonly double		margin = 38;
 		protected static readonly double	attachmentThickness = 2.0;
 		protected static readonly double	attachmentScale = 0.3;
 
 		protected MyWidgets.PanelEditor		editor;
 		protected ObjectModifier			objectModifier;
+		protected PanelsContext				context;
 		protected Widget					obj;
 		protected Type						type;
+		protected int						column;
+		protected int						row;
 	}
 }

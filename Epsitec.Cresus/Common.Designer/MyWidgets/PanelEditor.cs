@@ -171,6 +171,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.handlesList.UpdateGeometry();
 		}
 
+		public void UpdateProxies()
+		{
+			//	Met à jour les panneaux des proxies à droite.
+			this.OnChildrenSelected();
+		}
+
 
 		public void DoCommand(string name)
 		{
