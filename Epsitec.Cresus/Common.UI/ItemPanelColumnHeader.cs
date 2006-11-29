@@ -54,11 +54,11 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public void AddColumn(string propertyName)
+		public void AddColumn(string propertyName, Support.Druid captionId)
 		{
 			this.gridLayout.ColumnDefinitions.Add (new ColumnDefinition ());
 
-			Column column = new Column (this, propertyName);
+			Column column = new Column (this, propertyName, captionId);
 
 			column.Button.SizeChanged += this.HandleColumnWidthChanged;
 			column.Button.Clicked     += this.HandleColumnClicked;
@@ -87,7 +87,7 @@ namespace Epsitec.Common.UI
 			foreach (Column column in this.columns)
 			{
 				offset += column.Button.PreferredWidth;
-				column.Slider.Margins = new Drawing.Margins (offset-1, 0, 0, 0);
+				column.Slider.Margins = new Drawing.Margins (offset-(column.Slider.PreferredWidth-1)/2, 0, 0, 0);
 			}
 		}
 
@@ -142,6 +142,11 @@ namespace Epsitec.Common.UI
 			foreach (Column column in this.columns)
 			{
 				width += column.Button.PreferredWidth;
+			}
+
+			if (this.columns.Count > 0)
+			{
+				width += (this.columns[0].Slider.PreferredWidth + 1) / 2;
 			}
 			
 			return width;
@@ -225,7 +230,7 @@ namespace Epsitec.Common.UI
 
 		private struct Column
 		{
-			public Column(ItemPanelColumnHeader header, string propertyName)
+			public Column(ItemPanelColumnHeader header, string propertyName, Support.Druid captionId)
 			{
 				this.property = new PropertyGroupDescription (propertyName);
 				this.button   = new HeaderButton (header);
@@ -233,13 +238,19 @@ namespace Epsitec.Common.UI
 
 				this.button.Style     = HeaderButtonStyle.Top;
 				this.button.IsDynamic = true;
-				this.button.Text      = propertyName;
+				this.button.CaptionId = captionId;
 				this.button.Index     = header.columns.Count;
+
+				if (captionId.IsEmpty)
+				{
+					this.button.Text = propertyName;
+					this.button.Name = propertyName;
+				}
 
 				this.slider.Style          = HeaderSliderStyle.Top;
 				this.slider.Index          = header.columns.Count;
 				this.slider.Anchor         = AnchorStyles.Left | AnchorStyles.TopAndBottom;
-				this.slider.PreferredWidth = 3;
+				this.slider.PreferredWidth = 5;
 				
 				GridLayoutEngine.SetColumn (this.button, header.columns.Count);
 				GridLayoutEngine.SetRow (this.button, 0);

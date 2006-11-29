@@ -18,6 +18,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.InternalState &= ~InternalState.Engageable;
 			this.headerSliderStyle = HeaderSliderStyle.Top;
+			this.MouseCursor = MouseCursor.AsVSplit;
 		}
 		
 		public HeaderSlider(Widget embedder) : this()
@@ -38,6 +39,17 @@ namespace Epsitec.Common.Widgets
 				if ( this.headerSliderStyle != value )
 				{
 					this.headerSliderStyle = value;
+
+					switch (this.headerSliderStyle)
+					{
+						case HeaderSliderStyle.Left:
+							this.MouseCursor = MouseCursor.AsHSplit;
+							break;
+
+						case HeaderSliderStyle.Top:
+							this.MouseCursor = MouseCursor.AsVSplit;
+							break;
+					}
 					this.Invalidate();
 				}
 			}

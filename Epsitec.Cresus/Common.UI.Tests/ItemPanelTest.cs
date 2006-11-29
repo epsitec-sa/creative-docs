@@ -142,9 +142,9 @@ namespace Epsitec.Common.UI
 
 			ItemPanelColumnHeader header = new ItemPanelColumnHeader ();
 
-			header.AddColumn ("Stock");
-			header.AddColumn ("Article");
-			header.AddColumn ("Price");
+			header.AddColumn ("Stock", Support.Druid.Empty);
+			header.AddColumn ("Article", Support.Druid.Empty);
+			header.AddColumn ("Price", Support.Druid.Empty);
 			
 			ItemPanelColumnHeader.SetColumnHeader (panel, header);
 			
@@ -185,9 +185,9 @@ namespace Epsitec.Common.UI
 
 			ItemPanelColumnHeader header = table.ColumnHeader;
 
-			header.AddColumn ("Stock");
-			header.AddColumn ("Article");
-			header.AddColumn ("Price");
+			header.AddColumn ("Stock", Support.Druid.Empty);
+			header.AddColumn ("Article", Support.Druid.Empty);
+			header.AddColumn ("Price", Support.Druid.Empty);
 
 			window.Root.Children.Add (table);
 			
@@ -226,9 +226,9 @@ namespace Epsitec.Common.UI
 
 			ItemPanelColumnHeader header = table.ColumnHeader;
 
-			header.AddColumn ("Stock");
-			header.AddColumn ("Article");
-			header.AddColumn ("Price");
+			header.AddColumn ("Stock", Support.Druid.Empty);
+			header.AddColumn ("Article", Support.Druid.Empty);
+			header.AddColumn ("Price", Support.Druid.Empty);
 
 			window.Root.Children.Add (table);
 
@@ -270,9 +270,9 @@ namespace Epsitec.Common.UI
 
 			ItemPanelColumnHeader header = table.ColumnHeader;
 
-			header.AddColumn ("Stock");
-			header.AddColumn ("Article");
-			header.AddColumn ("Price");
+			header.AddColumn ("Stock", Support.Druid.Empty);
+			header.AddColumn ("Article", Support.Druid.Empty);
+			header.AddColumn ("Price", Support.Druid.Empty);
 
 			window.Root.Children.Add (table);
 
