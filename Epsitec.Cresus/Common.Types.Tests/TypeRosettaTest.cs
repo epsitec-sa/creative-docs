@@ -216,6 +216,28 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (TypeRosetta.IsValidValue (new B (), typeof (A)));
 			Assert.IsFalse (TypeRosetta.IsValidValue (new A (), typeof (B)));
 			Assert.IsTrue (TypeRosetta.IsValidValue (new B (), typeof (B)));
+
+			Assert.IsTrue (TypeRosetta.IsValidValue (10, new StructuredTypeField ("X", IntegerType.Default)));
+		}
+
+		[Test]
+		public void CheckVerifyValueValidityForCollectionTypes()
+		{
+			Assert.IsTrue (TypeRosetta.IsValidValueForCollectionOfType (new List<int> (), IntegerType.Default));
+			Assert.IsTrue (TypeRosetta.IsValidValueForCollectionOfType (new List<int> (), typeof (int)));
+			Assert.IsFalse (TypeRosetta.IsValidValueForCollectionOfType (new List<int> (), StringType.Default));
+			Assert.IsFalse (TypeRosetta.IsValidValueForCollectionOfType (new List<int> (), typeof (string)));
+			Assert.IsTrue (TypeRosetta.IsValidValueForCollectionOfType (new List<string> (), StringType.Default));
+			Assert.IsFalse (TypeRosetta.IsValidValueForCollectionOfType (new List<string> (), IntegerType.Default));
+
+			Assert.IsTrue (TypeRosetta.IsValidValueForCollectionOfType (new List<A> (), typeof (A)));
+			Assert.IsTrue (TypeRosetta.IsValidValueForCollectionOfType (new List<B> (), typeof (A)));
+			Assert.IsFalse (TypeRosetta.IsValidValueForCollectionOfType (new List<A> (), typeof (B)));
+			Assert.IsTrue (TypeRosetta.IsValidValueForCollectionOfType (new List<B> (), typeof (B)));
+
+			Assert.IsTrue (TypeRosetta.IsValidValue (10, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, Relation.None)));
+			Assert.IsFalse (TypeRosetta.IsValidValue (new List<int> (), new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, Relation.None)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (new List<int> (), new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, Relation.Collection)));
 		}
 
 		#region A Class

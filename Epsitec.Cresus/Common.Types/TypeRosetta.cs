@@ -229,6 +229,12 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public static bool IsValidValue(object value, object typeObject)
 		{
+			if (typeObject is StructuredTypeField)
+			{
+				StructuredTypeField field = (StructuredTypeField) typeObject;
+				return TypeRosetta.IsValidValue (value, field.Type);
+			}
+			
 			if (UnknownValue.IsUnknownValue (value))
 			{
 				return false;
@@ -298,16 +304,93 @@ namespace Epsitec.Common.Types
 
 			if (value == null)
 			{
-				//	Only reference types can be set to null.
+				INullableType nullable = targetType as INullableType;
 
-				//	TODO: check for nullable types too ?
-
-				return targetSysType.IsClass;
+				if (nullable != null)
+				{
+					//	If the type implements INullable, it specifies support
+					//	for null values explicitely :
+					
+					return nullable.IsNullable;
+				}
+				else
+				{
+					//	Only reference types can be set to null.
+					
+					return targetSysType.IsClass;
+				}
 			}
 			else
 			{
 				return targetSysType.IsAssignableFrom (value.GetType ());
 			}
+		}
+
+		public static bool IsValidValue(object value, StructuredTypeField field)
+		{
+			if (UnknownValue.IsUnknownValue (value))
+			{
+				return false;
+			}
+			if (field.IsEmpty)
+			{
+				throw new System.ArgumentNullException ("Empty field specified");
+			}
+
+			switch (field.Relation)
+			{
+				case Relation.None:
+				case Relation.Reference:
+				case Relation.Bijective:
+					return TypeRosetta.IsValidValue (value, field.Type);
+
+				case Relation.Collection:
+					return TypeRosetta.IsValidValueForCollectionOfType (value, field.Type);
+
+				default:
+					throw new System.NotImplementedException (string.Format ("Support for Relation.{0} not implemented", field.Relation));
+			}
+		}
+
+		public static bool IsValidValueForCollectionOfType(object value, INamedType namedType)
+		{
+			System.Type typeOfItems = namedType.SystemType;
+
+			if (typeOfItems == null)
+			{
+				IStructuredType structuredType = namedType as IStructuredType;
+
+				if (structuredType == null)
+				{
+					throw new System.NotSupportedException (string.Format ("Unsupported null system type in collection validation for {0}", namedType.Name));
+				}
+
+				typeOfItems = typeof (StructuredData);
+			}
+
+			return TypeRosetta.IsValidValueForCollectionOfType (value, typeOfItems);
+		}
+		
+		public static bool IsValidValueForCollectionOfType(object value, System.Type typeOfItems)
+		{
+			if (value == null)
+			{
+				return false;
+			}
+
+			System.Type typeOfValue = value.GetType ();
+			System.Type interfaceType;
+
+			if ((TypeRosetta.DoesTypeImplementGenericInterface (typeOfValue, typeof (IList<>), out interfaceType)) ||
+				(TypeRosetta.DoesTypeImplementGenericInterface (typeOfValue, typeof (ICollection<>), out interfaceType)))
+			{
+				System.Type[] genericArguments = interfaceType.GetGenericArguments ();
+				System.Diagnostics.Debug.Assert (genericArguments.Length == 1);
+
+				return typeOfItems.IsAssignableFrom (genericArguments[0]);
+			}
+			
+			return false;
 		}
 
 
