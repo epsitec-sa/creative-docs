@@ -384,8 +384,6 @@ namespace Epsitec.Common.Types
 
 		protected virtual void InvalidateValue(string id, object oldValue, object newValue, PropertyChangedEventHandler handler)
 		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("{0}: {1} --> {2}", id, oldValue, newValue));
-			
 			if (handler != null)
 			{
 				DependencyPropertyChangedEventArgs e = new DependencyPropertyChangedEventArgs (id, oldValue, newValue);

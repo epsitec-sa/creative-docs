@@ -164,9 +164,9 @@ namespace Epsitec.Cresus.DataLayer
 				if (field.Type is IStructuredType)
 				{
 					StructuredType structuredType = field.Type as StructuredType;
-					INullableType nullableType   = field.Type as INullableType;
+					INullableType  nullableType   = field.Type as INullableType;
 
-					string columnName = context.ResourceManager.GetCaption (field.CaptionId).Name;
+					string columnName = field.Id;
 					string targetName = context.ResourceManager.GetCaption (field.Type.CaptionId).Name;
 
 					if (structuredType == null)
@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.DataLayer
 				else
 				{
 					DbTypeDef columnType = infrastructure.ResolveDbType (transaction, typeName);
-					string columnName = context.ResourceManager.GetCaption (field.CaptionId).Name;
+					string    columnName = field.Id;
 
 					if (columnType == null)
 					{
