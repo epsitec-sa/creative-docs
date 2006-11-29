@@ -63,7 +63,7 @@ namespace Epsitec.Common.Designer
 			return (this.hilited != null);
 		}
 
-		public void Wheel(int direction)
+		public bool Wheel(int direction)
 		{
 			//	Modifie la cote survolée selon la molette de la souris.
 			if (this.hilited != null)
@@ -71,7 +71,10 @@ namespace Epsitec.Common.Designer
 				double value = this.hilited.Value;
 				value += (direction < 0) ? -1 : 1;
 				this.hilited.Value = value;
+				return true;
 			}
+
+			return false;
 		}
 
 		public bool DraggingStart(Point mouse, bool isControlPressed, bool isShiftPressed)

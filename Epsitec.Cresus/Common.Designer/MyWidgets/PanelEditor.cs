@@ -425,7 +425,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 					break;
 
 				case MessageType.MouseWheel:
-					this.dimensionsList.Wheel(message.Wheel);
+					if (this.dimensionsList.Wheel(message.Wheel))
+					{
+						this.OnChildrenGeometryChanged();
+						this.module.MainWindow.UpdateInfoViewer();
+					}
 					message.Consumer = this;
 					break;
 
