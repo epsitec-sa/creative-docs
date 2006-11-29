@@ -479,8 +479,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			StructuredTypeField newField = new StructuredTypeField(actualField.Id, actualField.Type, actualField.CaptionId, actualField.Rank, relation);
 			this.fields[sel] = newField;
 
-			this.UpdateButtons();
+			this.FieldsOutput();
 			this.UpdateArray();
+			this.UpdateButtons();
+			this.OnContentChanged();
 		}
 
 		protected void ChangeType()
@@ -504,7 +506,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			type = TypeRosetta.GetTypeObject(this.module.ResourceManager.GetCaption(druid));
 			System.Diagnostics.Debug.Assert(type != null);
-			StructuredTypeField newField = new StructuredTypeField(actualField.Id, type, actualField.CaptionId, actualField.Rank);
+			StructuredTypeField newField = new StructuredTypeField(actualField.Id, type, actualField.CaptionId, actualField.Rank, actualField.Relation);
 			this.fields[sel] = newField;
 
 			this.FieldsOutput();
@@ -530,7 +532,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			StructuredTypeField newField = new StructuredTypeField(actualField.Id, actualField.Type, druid, actualField.Rank);
+			StructuredTypeField newField = new StructuredTypeField(actualField.Id, actualField.Type, druid, actualField.Rank, actualField.Relation);
 			this.fields[sel] = newField;
 
 			this.FieldsOutput();
@@ -599,7 +601,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			for (int i=0; i<this.fields.Count; i++)
 			{
 				StructuredTypeField actualField = this.fields[i];
-				StructuredTypeField newField = new StructuredTypeField(actualField.Id, actualField.Type, actualField.CaptionId, i);
+				StructuredTypeField newField = new StructuredTypeField(actualField.Id, actualField.Type, actualField.CaptionId, i, actualField.Relation);
 
 				type.Fields.Add(newField);
 			}
@@ -768,7 +770,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			StructuredTypeField newField = new StructuredTypeField(name, actualfield.Type, actualfield.CaptionId, actualfield.Rank);
+			StructuredTypeField newField = new StructuredTypeField(name, actualfield.Type, actualfield.CaptionId, actualfield.Rank, actualfield.Relation);
 			this.fields[sel] = newField;
 
 			this.FieldsOutput();
