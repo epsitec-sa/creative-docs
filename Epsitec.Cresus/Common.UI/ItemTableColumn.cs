@@ -20,13 +20,19 @@ namespace Epsitec.Common.UI
 		}
 
 		public ItemTableColumn(string fieldId)
+			: this ()
 		{
 			this.FieldId = fieldId;
 		}
 
-		public ItemTableColumn(string fieldId, GridLength width)
+		public ItemTableColumn(string fieldId, double width)
+			: this (fieldId, new GridLength (width))
 		{
-			this.FieldId = fieldId;
+		}
+
+		public ItemTableColumn(string fieldId, GridLength width)
+			: this (fieldId)
+		{
 			this.Width = width;
 		}
 

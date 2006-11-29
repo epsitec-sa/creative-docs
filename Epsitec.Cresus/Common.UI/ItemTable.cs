@@ -108,6 +108,27 @@ namespace Epsitec.Common.UI
 				return this.columns;
 			}
 		}
+
+		public void DefineDefaultColumns(StructuredType sourceType, double width)
+		{
+			try
+			{
+				this.suspendColumnUpdates++;
+				this.SourceType = sourceType;
+				this.Columns.Clear ();
+				
+				foreach (string fieldId in sourceType.GetFieldIds ())
+				{
+					this.Columns.Add (new ItemTableColumn (fieldId, width));
+				}
+			}
+			finally
+			{
+				this.suspendColumnUpdates--;
+			}
+
+			this.UpdateColumnHeader ();
+		}
 		
 		private void UpdateAperture(Drawing.Size aperture)
 		{
@@ -133,7 +154,8 @@ namespace Epsitec.Common.UI
 
 		private void UpdateColumnHeader()
 		{
-			if ((this.columns != null) &&
+			if ((this.suspendColumnUpdates == 0) &&
+				(this.columns != null) &&
 				(this.columns.Count > 0) &&
 				(this.sourceType != null))
 			{
@@ -198,5 +220,6 @@ namespace Epsitec.Common.UI
 		private Widget headerStripe;
 		private ItemPanel itemPanel;
 		private StructuredType sourceType;
+		private int suspendColumnUpdates;
 	}
 }

@@ -183,25 +183,12 @@ namespace Epsitec.Cresus.DataLayer
 			ItemTable itemTable = new ItemTable ();
 			
 			itemTable.Dock = DockStyle.Fill;
-			itemTable.SourceType = type;
-
-			ItemPanel panel = itemTable.ItemPanel;
-			ItemPanelColumnHeader header = itemTable.ColumnHeader;
-			
-			CollectionView view = new CollectionView (broker);
-
-			panel.Items = view;
-
-			itemTable.Columns.Add (new ItemTableColumn ("FirstName"));
-			itemTable.Columns.Add (new ItemTableColumn ("LastName"));
-			itemTable.Columns.Add (new ItemTableColumn ("Company"));
-			itemTable.Columns.Add (new ItemTableColumn ("Address1"));
-			itemTable.Columns.Add (new ItemTableColumn ("Zip"));
-			itemTable.Columns.Add (new ItemTableColumn ("City"));
+			itemTable.DefineDefaultColumns (type, 80.0);
+			itemTable.ItemPanel.Items = new CollectionView (broker);
 
 			window.Root.Children.Add (itemTable);
 
-			panel.Show (panel.GetItemView (0));
+			itemTable.ItemPanel.Show (itemTable.ItemPanel.GetItemView (0));
 
 			window.Show ();
 
