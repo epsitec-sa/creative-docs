@@ -41,6 +41,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonRemove.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonRemove);
 
+			Widget sep = new Widget();
+			sep.PreferredWidth = 50;
+			this.toolbar.Items.Add(sep);
+
+			this.buttonRelationRef = new IconButton();
+			this.buttonRelationRef.CaptionId = Res.Captions.Editor.Structured.Relation.Reference.Id;
+			this.buttonRelationRef.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonRelationRef.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.toolbar.Items.Add(this.buttonRelationRef);
+
+			this.buttonRelationBij = new IconButton();
+			this.buttonRelationBij.CaptionId = Res.Captions.Editor.Structured.Relation.Bijective.Id;
+			this.buttonRelationBij.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonRelationBij.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.toolbar.Items.Add(this.buttonRelationBij);
+
+			this.buttonRelationCol = new IconButton();
+			this.buttonRelationCol.CaptionId = Res.Captions.Editor.Structured.Relation.Collection.Id;
+			this.buttonRelationCol.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonRelationCol.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.toolbar.Items.Add(this.buttonRelationCol);
+
 			this.slider = new HSlider(toolbar);
 			this.slider.PreferredWidth = 80;
 			this.slider.Margins = new Margins(2, 2, 4, 4);
@@ -142,6 +164,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.buttonPrev.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonNext.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonRemove.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonRelationRef.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonRelationBij.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonRelationCol.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 				this.slider.ValueChanged -= new EventHandler(this.HandleSliderChanged);
 
@@ -202,6 +227,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonPrev.Enable = (sel != -1 && sel > 0);
 			this.buttonNext.Enable = (sel != -1 && sel < this.fields.Count-1);
 			this.buttonRemove.Enable = (sel != -1);
+
+			StructuredTypeField field = StructuredTypeField.Empty;
+			bool st = false;
+			if (sel != -1)
+			{
+				field = this.fields[sel];
+				st = (field.Type is StructuredType);
+			}
+
+			this.buttonRelationRef.Enable = st;
+			this.buttonRelationBij.Enable = st;
+			this.buttonRelationCol.Enable = st;
+
+			if (st)
+			{
+				this.buttonRelationRef.ActiveState = (field.Relation == Relation.Reference ) ? ActiveState.Yes : ActiveState.No;
+				this.buttonRelationBij.ActiveState = (field.Relation == Relation.Bijective ) ? ActiveState.Yes : ActiveState.No;
+				this.buttonRelationCol.ActiveState = (field.Relation == Relation.Collection) ? ActiveState.Yes : ActiveState.No;
+			}
+			else
+			{
+				this.buttonRelationRef.ActiveState = ActiveState.No;
+				this.buttonRelationBij.ActiveState = ActiveState.No;
+				this.buttonRelationCol.ActiveState = ActiveState.No;
+			}
 
 			this.fieldName.Enable = (sel != -1);
 			this.buttonType.Enable = (sel != -1);
@@ -400,6 +450,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.OnContentChanged();
 		}
 
+		protected void ArrayRelation(Relation relation)
+		{
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			StructuredTypeField actualField = this.fields[sel];
+			StructuredTypeField newField = new StructuredTypeField(actualField.Id, actualField.Type, actualField.CaptionId, actualField.Rank, relation);
+			this.fields[sel] = newField;
+
+			this.UpdateButtons();
+		}
+
 		protected void ChangeType()
 		{
 			//	Choix du type.
@@ -563,6 +628,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ArrayRemove();
 			}
 
+			if (sender == this.buttonRelationRef)
+			{
+				this.ArrayRelation(Relation.Reference);
+			}
+
+			if (sender == this.buttonRelationBij)
+			{
+				this.ArrayRelation(Relation.Bijective);
+			}
+
+			if (sender == this.buttonRelationCol)
+			{
+				this.ArrayRelation(Relation.Collection);
+			}
+
 			if (sender == this.buttonType)
 			{
 				this.ChangeType();
@@ -698,6 +778,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButton					buttonPrev;
 		protected IconButton					buttonNext;
 		protected IconButton					buttonRemove;
+		protected IconButton					buttonRelationRef;
+		protected IconButton					buttonRelationBij;
+		protected IconButton					buttonRelationCol;
 		protected HSlider						slider;
 
 		protected Widget						header;
