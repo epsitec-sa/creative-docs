@@ -152,6 +152,20 @@ namespace Epsitec.Common.Designer.Proxies
 			//	par panneau.
 			Application.QueueAsyncCallback(this.manager.Panel.RegenerateProxies);
 		}
+
+		protected void RegenerateDimensions()
+		{
+			//	Régénère les cotes s'il y a eu un changement.
+			Application.QueueAsyncCallback(this.manager.Panel.RegenerateDimensions);
+		}
+
+		protected void RegenerateProxiesAndDimensions()
+		{
+			//	Régénère les proxies et les cotes.
+			//	Il n'est pas possible d'effectuer RegenerateProxies puis RegenerateDimensions
+			//	à cause du mécanisme QueueAsyncCallback !
+			Application.QueueAsyncCallback(this.manager.Panel.RegenerateProxiesAndDimensions);
+		}
 		
 
 #if false

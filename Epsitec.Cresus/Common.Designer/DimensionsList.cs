@@ -74,7 +74,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public bool DraggingStart(Point mouse)
+		public bool DraggingStart(Point mouse, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Début de la modification interactive d'une cote.
 			this.dragging = this.Detect(mouse);
@@ -101,16 +101,21 @@ namespace Epsitec.Common.Designer
 					int index = this.dragging.ColumnOrRow;
 
 					int search = gs.Search(unit, index);
-					if (search == -1)
+					if (search == -1)  // pas encore sélectionné ?
 					{
-						gs.Add(unit, index);
+						if (!isControlPressed && !isShiftPressed)
+						{
+							gs.Clear();
+						}
+
+						gs.Add(unit, index);  // sélectionne
 					}
 					else
 					{
-						gs.RemoveAt(search);
+						gs.RemoveAt(search);  // désélectionne
 					}
 
-					this.editor.UpdateProxies();
+					this.editor.UpdateAfterSelectionGridChanged();
 					this.editor.Invalidate();
 				}
 				else
@@ -175,6 +180,29 @@ namespace Epsitec.Common.Designer
 				{
 					dim = new Dimension(this.editor, obj, Dimension.Type.GridRow, -1, i);
 					this.list.Add(dim);
+				}
+
+				GridSelection gs = GridSelection.Get(obj);
+				if (gs != null)
+				{
+					for (int i=0; i<gs.Count; i++)
+					{
+						GridSelection.OneItem item = gs[i];
+
+						if (item.Unit == GridSelection.Unit.Column &&
+							this.objectModifier.GetGridColumnMode(obj, item.Index) != ObjectModifier.GridMode.Auto)
+						{
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridWidth, item.Index, -1);
+							this.list.Add(dim);
+						}
+
+						if (item.Unit == GridSelection.Unit.Row &&
+							this.objectModifier.GetGridRowMode(obj, item.Index) != ObjectModifier.GridMode.Auto)
+						{
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridHeight, -1, item.Index);
+							this.list.Add(dim);
+						}
+					}
 				}
 			}
 

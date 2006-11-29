@@ -733,6 +733,24 @@ namespace Epsitec.Common.Designer.Viewers
 				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
 			}
 		}
+
+		public void RegenerateDimensions()
+		{
+			//	Régénère les cotes s'il y a eu un changement.
+			this.panelEditor.RegenerateDimensions();
+		}
+
+		public void RegenerateProxiesAndDimensions()
+		{
+			//	Régénère les proxies et les cotes.
+			if (this.proxyManager.RegenerateProxies())
+			{
+				this.ClearProxies();
+				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
+			}
+
+			this.panelEditor.RegenerateDimensions();
+		}
 		#endregion
 
 

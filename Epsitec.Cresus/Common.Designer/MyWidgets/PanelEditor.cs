@@ -171,12 +171,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.handlesList.UpdateGeometry();
 		}
 
-		public void UpdateProxies()
-		{
-			//	Met à jour les panneaux des proxies à droite.
-			this.OnChildrenSelected();
-		}
-
 
 		public void DoCommand(string name)
 		{
@@ -631,7 +625,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging)
 			{
-				this.draggingDimension = this.dimensionsList.DraggingStart(pos);
+				this.draggingDimension = this.dimensionsList.DraggingStart(pos, isControlPressed, isShiftPressed);
 				if (this.draggingDimension)
 				{
 					return;
@@ -2330,6 +2324,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 					}
 				}
 			}
+		}
+
+		public void RegenerateDimensions()
+		{
+			//	Régénère les cotes s'il y a eu un changement.
+			this.dimensionsList.UpdateSelection();
+		}
+
+		public void UpdateAfterSelectionGridChanged()
+		{
+			//	Mise à jour après un changement de sélection dans un tableau.
+			this.dimensionsList.UpdateSelection();
+			this.OnChildrenSelected();  // met à jour les panneaux des proxies à droite
 		}
 
 		protected void UpdateAfterSelectionChanged()

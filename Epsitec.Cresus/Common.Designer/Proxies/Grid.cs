@@ -308,7 +308,7 @@ namespace Epsitec.Common.Designer.Proxies
 				finally
 				{
 					that.ResumeChanges();
-					that.RegenerateProxies();
+					that.RegenerateProxiesAndDimensions();
 				}
 			}
 		}
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Designer.Proxies
 				finally
 				{
 					that.ResumeChanges();
-					that.RegenerateProxies();
+					that.RegenerateProxiesAndDimensions();
 				}
 			}
 		}
@@ -360,6 +360,7 @@ namespace Epsitec.Common.Designer.Proxies
 				finally
 				{
 					that.ResumeChanges();
+					that.RegenerateDimensions();
 				}
 			}
 		}
@@ -385,6 +386,7 @@ namespace Epsitec.Common.Designer.Proxies
 				finally
 				{
 					that.ResumeChanges();
+					that.RegenerateDimensions();
 				}
 			}
 		}
@@ -420,7 +422,7 @@ namespace Epsitec.Common.Designer.Proxies
 				finally
 				{
 					that.ResumeChanges();
-					that.RegenerateProxies();
+					that.RegenerateProxiesAndDimensions();
 				}
 			}
 		}
@@ -456,7 +458,7 @@ namespace Epsitec.Common.Designer.Proxies
 				finally
 				{
 					that.ResumeChanges();
-					that.RegenerateProxies();
+					that.RegenerateProxiesAndDimensions();
 				}
 			}
 		}

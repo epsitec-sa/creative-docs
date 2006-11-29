@@ -197,6 +197,86 @@ namespace Epsitec.Common.Designer
 					}
 					break;
 
+				case Type.GridWidth:
+					r = box;
+					r.Bottom = inside.Top;
+					graphics.AddFilledRectangle(r);
+					graphics.RenderSolid(red);
+					graphics.AddRectangle(r);
+					graphics.RenderSolid(border);
+
+					value = this.Value;
+					if (value == bounds.Width || this.IsPercent)  // forme rectangulaire simple ?
+					{
+						p1 = new Point(box.Right, inside.Top);
+						p2 = new Point(box.Left, inside.Top);
+					}
+					else
+					{
+						r = box;
+						double half = System.Math.Max(System.Math.Floor(value/2), 5);
+						double middle = System.Math.Floor(r.Center.X)+0.5;
+						r.Left = middle-half;
+						r.Width = half*2;
+						half = System.Math.Floor(value/2);
+						p1 = new Point(middle-half, inside.Top);
+						p2 = new Point(p1.X+half*2, inside.Top);
+						path = new Path();
+						path.MoveTo(p1);
+						path.LineTo(r.BottomLeft);
+						path.LineTo(r.TopLeft);
+						path.LineTo(r.TopRight);
+						path.LineTo(r.BottomRight);
+						path.LineTo(p2);
+						path.Close();
+						graphics.Rasterizer.AddOutline(path);
+						graphics.RenderSolid(border);
+
+						this.DrawSpring(graphics, new Point(box.Left, box.Center.Y), new Point(r.Left, box.Center.Y), border);
+						this.DrawSpring(graphics, new Point(box.Right, box.Center.Y), new Point(r.Right, box.Center.Y), border);
+					}
+					break;
+
+				case Type.GridHeight:
+					r = box;
+					r.Right = inside.Left;
+					graphics.AddFilledRectangle(r);
+					graphics.RenderSolid(red);
+					graphics.AddRectangle(r);
+					graphics.RenderSolid(border);
+
+					value = this.Value;
+					if (value == bounds.Height || this.IsPercent)  // forme rectangulaire simple ?
+					{
+						p1 = new Point(inside.Left, box.Top);
+						p2 = new Point(inside.Left, box.Bottom);
+					}
+					else
+					{
+						r = box;
+						double half = System.Math.Max(System.Math.Floor(value/2), 5);
+						double middle = System.Math.Floor(r.Center.Y)+0.5;
+						r.Bottom = middle-half;
+						r.Height = half*2;
+						half = System.Math.Floor(value/2);
+						p1 = new Point(inside.Left, middle-half);
+						p2 = new Point(inside.Left, p1.Y+half*2);
+						path = new Path();
+						path.MoveTo(p1);
+						path.LineTo(r.BottomRight);
+						path.LineTo(r.BottomLeft);
+						path.LineTo(r.TopLeft);
+						path.LineTo(r.TopRight);
+						path.LineTo(p2);
+						path.Close();
+						graphics.Rasterizer.AddOutline(path);
+						graphics.RenderSolid(border);
+
+						this.DrawSpring(graphics, new Point(box.Center.X, box.Bottom), new Point(box.Center.X, r.Bottom), border);
+						this.DrawSpring(graphics, new Point(box.Center.X, box.Top), new Point(box.Center.X, r.Top), border);
+					}
+					break;
+
 				case Type.MarginLeft:
 					path = new Path();
 					p = new Point(box.Right, ext.Bottom);
@@ -279,11 +359,11 @@ namespace Epsitec.Common.Designer
 
 				case Type.PaddingLeft:
 					path = new Path();
-					path.MoveTo(inside.Left, inside.Center.Y);
-					path.LineTo(box.BottomRight);
+					path.MoveTo(bounds.Left, inside.Center.Y);
 					path.LineTo(box.BottomLeft);
-					path.LineTo(box.TopLeft);
+					path.LineTo(box.BottomRight);
 					path.LineTo(box.TopRight);
+					path.LineTo(box.TopLeft);
 					path.Close();
 					graphics.Rasterizer.AddSurface(path);
 					graphics.RenderSolid(yellow);
@@ -293,11 +373,11 @@ namespace Epsitec.Common.Designer
 
 				case Type.PaddingRight:
 					path = new Path();
-					path.MoveTo(inside.Right, inside.Center.Y);
-					path.LineTo(box.BottomLeft);
+					path.MoveTo(bounds.Right, inside.Center.Y);
 					path.LineTo(box.BottomRight);
-					path.LineTo(box.TopRight);
+					path.LineTo(box.BottomLeft);
 					path.LineTo(box.TopLeft);
+					path.LineTo(box.TopRight);
 					path.Close();
 					graphics.Rasterizer.AddSurface(path);
 					graphics.RenderSolid(yellow);
@@ -307,11 +387,11 @@ namespace Epsitec.Common.Designer
 
 				case Type.PaddingBottom:
 					path = new Path();
-					path.MoveTo(inside.Center.X, inside.Bottom);
-					path.LineTo(box.TopLeft);
+					path.MoveTo(inside.Center.X, bounds.Bottom);
 					path.LineTo(box.BottomLeft);
-					path.LineTo(box.BottomRight);
+					path.LineTo(box.TopLeft);
 					path.LineTo(box.TopRight);
+					path.LineTo(box.BottomRight);
 					path.Close();
 					graphics.Rasterizer.AddSurface(path);
 					graphics.RenderSolid(yellow);
@@ -321,11 +401,11 @@ namespace Epsitec.Common.Designer
 
 				case Type.PaddingTop:
 					path = new Path();
-					path.MoveTo(inside.Center.X, inside.Top);
-					path.LineTo(box.BottomLeft);
+					path.MoveTo(inside.Center.X, bounds.Top);
 					path.LineTo(box.TopLeft);
-					path.LineTo(box.TopRight);
+					path.LineTo(box.BottomLeft);
 					path.LineTo(box.BottomRight);
+					path.LineTo(box.TopRight);
 					path.Close();
 					graphics.Rasterizer.AddSurface(path);
 					graphics.RenderSolid(yellow);
@@ -335,7 +415,7 @@ namespace Epsitec.Common.Designer
 
 				case Type.GridColumn:
 					r = box;
-					r.Bottom = ext.Top;
+					r.Bottom = inside.Top;
 					graphics.AddFilledRectangle(r);
 					graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
 					graphics.AddRectangle(r);
@@ -344,7 +424,7 @@ namespace Epsitec.Common.Designer
 
 				case Type.GridRow:
 					r = box;
-					r.Right = ext.Left;
+					r.Right = inside.Left;
 					graphics.AddFilledRectangle(r);
 					graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
 					graphics.AddRectangle(r);
@@ -362,6 +442,7 @@ namespace Epsitec.Common.Designer
 			Margins margins = this.objectModifier.GetMargins(this.obj);
 			Rectangle ext = bounds;
 			ext.Inflate(this.objectModifier.GetMargins(this.obj));
+			Rectangle inside = this.objectModifier.GetFinalPadding(this.obj);
 
 			Rectangle r, box;
 			Point p1, p2;
@@ -411,6 +492,52 @@ namespace Epsitec.Common.Designer
 						p2 = new Point(ext.Right, p1.Y+half*2);
 					}
 					this.DrawLine(graphics, p1, p2);
+					break;
+
+				case Type.GridWidth:
+					if (!this.IsPercent)
+					{
+						r = box;
+						r.Bottom = inside.Top;
+
+						value = this.Value;
+						if (value == bounds.Width)  // forme rectangulaire simple ?
+						{
+							p1 = new Point(box.Right, inside.Top);
+							p2 = new Point(box.Left, inside.Top);
+						}
+						else
+						{
+							double half = System.Math.Floor(value/2);
+							double middle = System.Math.Floor(r.Center.X)+0.5;
+							p1 = new Point(middle-half, inside.Top);
+							p2 = new Point(p1.X+half*2, inside.Top);
+						}
+						this.DrawLine(graphics, p1, p2);
+					}
+					break;
+
+				case Type.GridHeight:
+					if (!this.IsPercent)
+					{
+						r = box;
+						r.Right = inside.Left;
+
+						value = this.Value;
+						if (value == bounds.Height)  // forme rectangulaire simple ?
+						{
+							p1 = new Point(inside.Left, box.Top);
+							p2 = new Point(inside.Left, box.Bottom);
+						}
+						else
+						{
+							double half = System.Math.Floor(value/2);
+							double middle = System.Math.Floor(r.Center.Y)+0.5;
+							p1 = new Point(inside.Left, middle-half);
+							p2 = new Point(inside.Left, p1.Y+half*2);
+						}
+						this.DrawLine(graphics, p1, p2);
+					}
 					break;
 
 				case Type.MarginLeft:
@@ -570,6 +697,12 @@ namespace Epsitec.Common.Designer
 					case Type.PaddingTop:
 						return this.objectModifier.GetPadding(this.obj).Top;
 
+					case Type.GridWidth:
+						return this.objectModifier.GetGridColumnWidth(this.obj, this.column);
+
+					case Type.GridHeight:
+						return this.objectModifier.GetGridRowHeight(this.obj, this.row);
+
 					default:
 						return 0;
 				}
@@ -645,6 +778,16 @@ namespace Epsitec.Common.Designer
 						m = this.objectModifier.GetPadding(this.obj);
 						m.Top = value;
 						this.objectModifier.SetPadding(this.obj, m);
+						break;
+
+					case Type.GridWidth:
+						value = System.Math.Max(value, 0);
+						this.objectModifier.SetGridColumnWidth(this.obj, this.column, value);
+						break;
+
+					case Type.GridHeight:
+						value = System.Math.Max(value, 0);
+						this.objectModifier.SetGridRowHeight(this.obj, this.row, value);
 						break;
 				}
 
@@ -744,7 +887,6 @@ namespace Epsitec.Common.Designer
 			if (this.type == Type.Height       ||
 				this.type == Type.MarginBottom ||
 				this.type == Type.MarginTop    ||
-				this.type == Type.PaddingLeft  ||
 				this.type == Type.PaddingRight )  // texte vertical ?
 			{
 				Point center = box.Center;
@@ -753,7 +895,11 @@ namespace Epsitec.Common.Designer
 				graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, this.StringValue, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
 				graphics.Transform = it;
 			}
-			else if (this.type == Type.GridRow)
+			else if (this.type == Type.PaddingLeft      ||
+					 this.type == Type.GridRow          ||
+					 this.type == Type.GridHeight       ||
+					 this.type == Type.GridMarginBottom ||
+					 this.type == Type.GridMarginTop    )
 			{
 				Point center = box.Center;
 				Transform it = graphics.Transform;
@@ -774,10 +920,15 @@ namespace Epsitec.Common.Designer
 			//	Retourne la chaîne à afficher comme valeur de la cote.
 			get
 			{
+				if (this.IsPercent)
+				{
+					return string.Concat(this.Value.ToString(System.Globalization.CultureInfo.InvariantCulture), "%");
+				}
+
 				switch (this.type)
 				{
 					case Type.GridColumn:
-						return Dimension.ToAlpha(this.column);  // A..ZZ
+						return Dimension.ToAlpha(this.column);  // A..ZZZ
 
 					case Type.GridRow:
 						return (this.row+1).ToString(System.Globalization.CultureInfo.InvariantCulture);  // 1..n
@@ -807,6 +958,27 @@ namespace Epsitec.Common.Designer
 			return text;
 		}
 
+		protected bool IsPercent
+		{
+			//	Indique si la cote représente une valeur en pourcents.
+			get
+			{
+				if (this.type == Type.GridWidth &&
+					this.objectModifier.GetGridColumnMode(this.obj, this.column) == ObjectModifier.GridMode.Proportional)
+				{
+					return true;
+				}
+
+				if (this.type == Type.GridHeight &&
+					this.objectModifier.GetGridRowMode(this.obj, this.row) == ObjectModifier.GridMode.Proportional)
+				{
+					return true;
+				}
+
+				return false;
+			}
+		}
+
 		protected Rectangle TextBox
 		{
 			//	Retourne le rectangle pour le texte d'une cote.
@@ -816,6 +988,7 @@ namespace Epsitec.Common.Designer
 				Margins margins = this.objectModifier.GetMargins(this.obj);
 				Rectangle ext = bounds;
 				ext.Inflate(this.objectModifier.GetMargins(this.obj));
+				Rectangle inside = this.objectModifier.GetFinalPadding(this.obj);
 
 				double d = 26;
 				double h = 12;
@@ -858,29 +1031,41 @@ namespace Epsitec.Common.Designer
 
 					case Type.PaddingLeft:
 						box = this.objectModifier.GetFinalPadding(this.obj);
-						return new Rectangle(bounds.Left-ph, box.Center.Y-pw/2, ph, pw);
+						return new Rectangle(inside.Left, inside.Center.Y-pw/2, ph, pw);
 
 					case Type.PaddingRight:
 						box = this.objectModifier.GetFinalPadding(this.obj);
-						return new Rectangle(bounds.Right, box.Center.Y-pw/2, ph, pw);
+						return new Rectangle(inside.Right-ph, inside.Center.Y-pw/2, ph, pw);
 
 					case Type.PaddingTop:
 						box = this.objectModifier.GetFinalPadding(this.obj);
-						return new Rectangle(box.Center.X-pw/2, bounds.Top, pw, ph);
+						return new Rectangle(inside.Center.X-pw/2, inside.Top-ph, pw, ph);
 
 					case Type.PaddingBottom:
 						box = this.objectModifier.GetFinalPadding(this.obj);
-						return new Rectangle(box.Center.X-pw/2, bounds.Bottom-ph, pw, ph);
+						return new Rectangle(inside.Center.X-pw/2, inside.Bottom, pw, ph);
 
 					case Type.GridColumn:
 						box = this.objectModifier.GetGridCellArea(this.obj, this.column, 0, 1, 1);
-						box.Bottom = ext.Top+d;
+						box.Bottom = inside.Top+d;
 						box.Height = h;
 						return box;
 
 					case Type.GridRow:
 						box = this.objectModifier.GetGridCellArea(this.obj, 0, this.row, 1, 1);
-						box.Left = ext.Left-d-h;
+						box.Left = inside.Left-d-h;
+						box.Width = h;
+						return box;
+
+					case Type.GridWidth:
+						box = this.objectModifier.GetGridCellArea(this.obj, this.column, 0, 1, 1);
+						box.Bottom = inside.Top+d-h;
+						box.Height = h;
+						return box;
+
+					case Type.GridHeight:
+						box = this.objectModifier.GetGridCellArea(this.obj, 0, this.row, 1, 1);
+						box.Left = inside.Left-d;
 						box.Width = h;
 						return box;
 
