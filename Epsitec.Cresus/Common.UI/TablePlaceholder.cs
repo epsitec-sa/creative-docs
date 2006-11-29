@@ -97,6 +97,20 @@ namespace Epsitec.Common.UI
 			this.DisposeUserInterface ();
 			this.CreateUserInterface ();
 		}
+		
+		private void HandleVisibleColumnIdsChanged(string oldValue, string newValue)
+		{
+			//	TODO: ...
+		}
+
+
+		private static void NotifyVisibleColumnIdsChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			TablePlaceholder placeholder = (TablePlaceholder) o;
+			placeholder.HandleVisibleColumnIdsChanged ((string) oldValue, (string) newValue);
+		}
+
+		public static readonly DependencyProperty ColumnDefinitionsProperty = DependencyProperty.Register ("ColumnDefinitions", typeof (string), typeof (TablePlaceholder), new DependencyPropertyMetadata (TablePlaceholder.NotifyVisibleColumnIdsChanged));
 
 		private ItemTable table;
 		private int suspendUserInterfaceCreation;

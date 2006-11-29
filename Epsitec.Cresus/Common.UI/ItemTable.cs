@@ -16,7 +16,7 @@ namespace Epsitec.Common.UI
 	/// The <c>ItemTable</c> class is used to represent items in a table, with
 	/// column headers and scroll bars.
 	/// </summary>
-	public class ItemTable : Widgets.FrameBox
+	public class ItemTable : Widgets.FrameBox, IListHost<ItemTableColumn>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ItemTable"/> class.
@@ -80,6 +80,34 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public StructuredType					SourceType
+		{
+			get
+			{
+				return this.sourceType;
+			}
+			set
+			{
+				if (this.sourceType != value)
+				{
+					this.sourceType = value;
+					this.UpdateColumnHeader ();
+				}
+			}
+		}
+
+		public Collections.ItemTableColumnCollection Columns
+		{
+			get
+			{
+				if (this.columns == null)
+				{
+					this.columns = new Collections.ItemTableColumnCollection (this);
+				}
+				
+				return this.columns;
+			}
+		}
 		
 		private void UpdateAperture(Drawing.Size aperture)
 		{
@@ -103,6 +131,22 @@ namespace Epsitec.Common.UI
 			this.columnHeader.SetManualBounds (new Drawing.Rectangle (-ox, 0, this.columnHeader.GetTotalWidth (), this.columnHeader.PreferredHeight));
 		}
 
+		private void UpdateColumnHeader()
+		{
+			if ((this.columns != null) &&
+				(this.columns.Count > 0) &&
+				(this.sourceType != null))
+			{
+				this.columnHeader.ClearColumns ();
+
+				foreach (ItemTableColumn column in this.columns)
+				{
+					StructuredTypeField field = this.sourceType.GetField (column.FieldId);
+					this.columnHeader.AddColumn (field);
+				}
+			}
+		}
+
 		private void HandleSurfaceSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			this.UpdateAperture ((Drawing.Size) e.NewValue);
@@ -123,12 +167,36 @@ namespace Epsitec.Common.UI
 				this.UpdateAperture (this.surface.ActualSize);
 			}
 		}
-		
+
+		#region IListHost<ItemTableColumn> Members
+
+		HostedList<ItemTableColumn> IListHost<ItemTableColumn>.Items
+		{
+			get
+			{
+				return this.Columns;
+			}
+		}
+
+		void IListHost<ItemTableColumn>.NotifyListInsertion(ItemTableColumn item)
+		{
+			this.UpdateColumnHeader ();
+		}
+
+		void IListHost<ItemTableColumn>.NotifyListRemoval(ItemTableColumn item)
+		{
+			this.UpdateColumnHeader ();
+		}
+
+		#endregion
+
 		private VScroller vScroller;
 		private HScroller hScroller;
 		private ItemPanelColumnHeader columnHeader;
+		private Collections.ItemTableColumnCollection columns;
 		private Widget surface;
 		private Widget headerStripe;
 		private ItemPanel itemPanel;
+		private StructuredType sourceType;
 	}
 }

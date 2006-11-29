@@ -77,30 +77,12 @@ namespace Epsitec.Common.UI
 			this.UpdateSliderPositions ();
 		}
 
-		private void UpdateSliderZOrder()
-		{
-			foreach (Column column in this.columns)
-			{
-				column.Slider.ZOrder = 0;
-			}
-		}
-
-		private void UpdateSliderPositions()
-		{
-			double offset = 0;
-
-			foreach (Column column in this.columns)
-			{
-				offset += column.Button.PreferredWidth;
-				column.Slider.Margins = new Drawing.Margins (offset-(column.Slider.PreferredWidth-1)/2, 0, 0, 0);
-			}
-		}
-
 		public void RemoveColumn(int index)
 		{
 			Column column = this.columns[index];
-			
+
 			this.columns.RemoveAt (index);
+			this.gridLayout.ColumnDefinitions.RemoveAt (index);
 
 			column.Button.SizeChanged -= this.HandleColumnWidthChanged;
 			column.Button.Clicked     -= this.HandleColumnClicked;
@@ -109,7 +91,15 @@ namespace Epsitec.Common.UI
 			column.Slider.DragEnded   -= this.HandleDragEnded;
 			column.Button.Dispose ();
 		}
-		
+
+		public void ClearColumns()
+		{
+			while (this.columns.Count > 0)
+			{
+				this.RemoveColumn (this.columns.Count-1);
+			}
+		}
+
 		public string GetColumn(int index)
 		{
 			return this.columns[index].PropertyName;
@@ -155,6 +145,25 @@ namespace Epsitec.Common.UI
 			}
 			
 			return width;
+		}
+
+		private void UpdateSliderZOrder()
+		{
+			foreach (Column column in this.columns)
+			{
+				column.Slider.ZOrder = 0;
+			}
+		}
+
+		private void UpdateSliderPositions()
+		{
+			double offset = 0;
+
+			foreach (Column column in this.columns)
+			{
+				offset += column.Button.PreferredWidth;
+				column.Slider.Margins = new Drawing.Margins (offset-(column.Slider.PreferredWidth-1)/2, 0, 0, 0);
+			}
 		}
 
 		private void HandleItemPanelChanged(ItemPanel oldValue, ItemPanel newValue)

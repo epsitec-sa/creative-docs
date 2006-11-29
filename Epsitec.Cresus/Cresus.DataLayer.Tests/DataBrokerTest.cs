@@ -181,7 +181,9 @@ namespace Epsitec.Cresus.DataLayer
 			window.Root.Padding = new Margins (4, 4, 4, 4);
 
 			ItemTable itemTable = new ItemTable ();
+			
 			itemTable.Dock = DockStyle.Fill;
+			itemTable.SourceType = type;
 
 			ItemPanel panel = itemTable.ItemPanel;
 			ItemPanelColumnHeader header = itemTable.ColumnHeader;
@@ -190,12 +192,12 @@ namespace Epsitec.Cresus.DataLayer
 
 			panel.Items = view;
 
-			header.AddColumn (type.GetField ("FirstName"));
-			header.AddColumn (type.GetField ("LastName"));
-			header.AddColumn (type.GetField ("Company"));
-			header.AddColumn (type.GetField ("Address1"));
-			header.AddColumn (type.GetField ("Zip"));
-			header.AddColumn (type.GetField ("City"));
+			itemTable.Columns.Add (new ItemTableColumn ("FirstName"));
+			itemTable.Columns.Add (new ItemTableColumn ("LastName"));
+			itemTable.Columns.Add (new ItemTableColumn ("Company"));
+			itemTable.Columns.Add (new ItemTableColumn ("Address1"));
+			itemTable.Columns.Add (new ItemTableColumn ("Zip"));
+			itemTable.Columns.Add (new ItemTableColumn ("City"));
 
 			window.Root.Children.Add (itemTable);
 

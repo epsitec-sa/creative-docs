@@ -22,7 +22,6 @@ namespace Epsitec.Common.UI
 		public ItemViewFactoryAttribute(System.Type factoryType)
 		{
 			this.factoryType = factoryType;
-			this.itemType = itemType;
 		}
 
 		/// <summary>
