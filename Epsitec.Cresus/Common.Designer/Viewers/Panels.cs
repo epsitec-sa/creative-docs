@@ -95,7 +95,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Sous-conteneur qui a des marges, pour permettre de voir les cotes (Dimension*)
 			//	du PanelEditor qui s'affiche par-dessus.
 			this.panelContainerParent = new Widget(container);
-			this.panelContainerParent.Margins = new Margins(MyWidgets.PanelEditor.dimensionMargin, MyWidgets.PanelEditor.dimensionMargin, MyWidgets.PanelEditor.dimensionMargin, MyWidgets.PanelEditor.dimensionMargin);
+			this.panelContainerParent.Margins = new Margins(Dimension.margin, Dimension.margin, Dimension.margin, Dimension.margin);
 			this.panelContainerParent.Dock = DockStyle.Fill;
 
 			//	Le UI.Panel est dans le sous-contenur qui a des marges.

@@ -43,6 +43,8 @@
     <Compile Include="Controllers\BindingController.cs" />
     <Compile Include="Controllers\StructuredController.cs" />
     <Compile Include="Controllers\DruidController.cs" />
+    <Compile Include="DimensionsList.cs" />
+    <Compile Include="Dimension.cs" />
     <Compile Include="Dialogs\BindingSelector.cs" />
     <Compile Include="Dialogs\ResourceTypeType.cs" />
     <Compile Include="Dialogs\Open.cs" />
