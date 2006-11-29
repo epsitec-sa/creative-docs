@@ -85,6 +85,52 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (0, data.InternalGetValueCount ());
 		}
 
+		[Test]
+		public void CheckStructuredDataWithTypeAndRelation()
+		{
+			StructuredType type1 = new StructuredType ();
+			StructuredType type2 = new StructuredType ();
+			
+			StructuredData data1 = new StructuredData (type1);
+			StructuredData data2 = new StructuredData (type2);
+
+			data1.UndefinedValueMode = UndefinedValueMode.Undefined;
+			data2.UndefinedValueMode = UndefinedValueMode.Undefined;
+
+			type1.Fields.Add (new StructuredTypeField ("A", type2, Support.Druid.Empty, 0, Relation.Reference));
+			type1.Fields.Add (new StructuredTypeField ("B", type2, Support.Druid.Empty, 1, Relation.Collection));
+			
+			type2.Fields.Add ("X", new IntegerType (0, 100));
+			type2.DefineIsNullable (true);
+
+			List<StructuredData> list = new List<StructuredData> ();
+			
+			Assert.AreEqual (UndefinedValue.Instance, data1.GetValue ("A"));
+			Assert.AreEqual (UndefinedValue.Instance, data1.GetValue ("B"));
+			Assert.AreEqual (UnknownValue.Instance,   data1.GetValue ("C"));
+			Assert.AreEqual (UndefinedValue.Instance, data2.GetValue ("X"));
+			Assert.AreEqual (UnknownValue.Instance,   data2.GetValue ("Y"));
+
+			data1.SetValue ("A", data2);
+			data1.SetValue ("B", list);
+
+			data2.SetValue ("X", 10);
+
+			//	We can use an empty list of StructuredData (there is no possible
+			//	verification) or a list which contains a first item of the proper
+			//	structured type :
+			
+			Assert.IsTrue (TypeRosetta.IsValidValue (list, type1.GetField ("B")));
+			list.Add (data2);
+			Assert.IsTrue (TypeRosetta.IsValidValue (list, type1.GetField ("B")));
+			
+			//	...but we cannot use a list of StructuredData of the wrong type.
+			
+			list.Clear ();
+			list.Add (data1);
+			Assert.IsFalse (TypeRosetta.IsValidValue (list, type1.GetField ("B")));
+		}
+
 		private System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
 		private void HandleDataPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)

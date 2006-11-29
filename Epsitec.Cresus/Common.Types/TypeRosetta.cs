@@ -354,21 +354,55 @@ namespace Epsitec.Common.Types
 
 		public static bool IsValidValueForCollectionOfType(object value, INamedType namedType)
 		{
-			System.Type typeOfItems = namedType.SystemType;
+			System.Type     typeOfItems    = namedType.SystemType;
+			IStructuredType structuredType = namedType as IStructuredType;
 
-			if (typeOfItems == null)
+			if (structuredType != null)
 			{
-				IStructuredType structuredType = namedType as IStructuredType;
-
-				if (structuredType == null)
-				{
-					throw new System.NotSupportedException (string.Format ("Unsupported null system type in collection validation for {0}", namedType.Name));
-				}
-
 				typeOfItems = typeof (StructuredData);
 			}
+			
+			if (typeOfItems == null)
+			{
+				throw new System.NotSupportedException (string.Format ("Unsupported null system type in collection validation for {0}", namedType.Name));
+			}
 
-			return TypeRosetta.IsValidValueForCollectionOfType (value, typeOfItems);
+			if (! TypeRosetta.IsValidValueForCollectionOfType (value, typeOfItems))
+			{
+				return false;
+			}
+			else if (structuredType == null)
+			{
+				return true;
+			}
+			else
+			{
+				//	The value is of the right collection type, but maybe its
+				//	content is not valid ? Just check one item to probe for
+				//	this hypothesis :
+
+				System.Collections.IEnumerable enumerable = value as System.Collections.IEnumerable;
+
+				if (enumerable != null)
+				{
+					System.Collections.IEnumerator enumerator = enumerable.GetEnumerator ();
+					
+					if (enumerator.MoveNext ())
+					{
+						StructuredData item = enumerator.Current as StructuredData;
+
+						if (item != null)
+						{
+							if (item.StructuredType != namedType)
+							{
+								return false;
+							}
+						}
+					}
+				}
+				
+				return true;
+			}
 		}
 		
 		public static bool IsValidValueForCollectionOfType(object value, System.Type typeOfItems)

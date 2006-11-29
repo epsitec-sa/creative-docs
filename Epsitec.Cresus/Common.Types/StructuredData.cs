@@ -63,7 +63,7 @@ namespace Epsitec.Common.Types
 
 		public void AttachListener(string id, PropertyChangedEventHandler handler)
 		{
-			INamedType type;
+			StructuredTypeField type;
 
 			if (!this.CheckFieldIdValidity (id, out type))
 			{
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Types
 
 		public object GetValue(string id)
 		{
-			INamedType type;
+			StructuredTypeField type;
 			
 			if (!this.CheckFieldIdValidity (id, out type))
 			{
@@ -176,7 +176,7 @@ namespace Epsitec.Common.Types
 
 		public void SetValue(string id, object value)
 		{
-			INamedType type;
+			StructuredTypeField type;
 			
 			if (!this.CheckFieldIdValidity (id, out type))
 			{
@@ -291,9 +291,9 @@ namespace Epsitec.Common.Types
 			};
 		}
 		
-		protected virtual object GetUndefinedValue(INamedType namedType, string id)
+		protected virtual object GetUndefinedValue(StructuredTypeField fieldType, string id)
 		{
-			AbstractType type = namedType as AbstractType;
+			AbstractType type = fieldType.Type as AbstractType;
 
 			if (type != null)
 			{
@@ -320,15 +320,18 @@ namespace Epsitec.Common.Types
 				if ((value == null) ||
 					(value == UndefinedValue.Instance))
 				{
-					IStructuredType structuredType = type as IStructuredType;
-
-					if (structuredType != null)
+					if (this.undefinedValueMode != UndefinedValueMode.Undefined)
 					{
-						StructuredData data = new StructuredData (structuredType);
+						IStructuredType structuredType = type as IStructuredType;
 
-						data.UndefinedValueMode = this.UndefinedValueMode;
+						if (structuredType != null)
+						{
+							StructuredData data = new StructuredData (structuredType);
 
-						value = data;
+							data.UndefinedValueMode = this.UndefinedValueMode;
+
+							value = data;
+						}
 					}
 				}
 				
@@ -338,19 +341,19 @@ namespace Epsitec.Common.Types
 			return UndefinedValue.Instance;
 		}
 
-		protected virtual bool CheckFieldIdValidity(string id, out INamedType type)
+		protected virtual bool CheckFieldIdValidity(string id, out StructuredTypeField type)
 		{
 			if (this.type == null)
 			{
 				//	No checking done, as there is no schema.
 
-				type = null;
+				type = StructuredTypeField.Empty;
 			}
 			else
 			{
-				type = this.type.GetField (id).Type;
+				type = this.type.GetField (id);
 
-				if (type == null)
+				if (type.IsEmpty)
 				{
 					return false;
 				}
@@ -359,9 +362,9 @@ namespace Epsitec.Common.Types
 			return true;
 		}
 
-		protected virtual bool CheckValueValidity(object type, object value)
+		protected virtual bool CheckValueValidity(StructuredTypeField type, object value)
 		{
-			if (type == null)
+			if (type.IsEmpty)
 			{
 				return true;
 			}
