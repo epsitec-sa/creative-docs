@@ -64,7 +64,7 @@ namespace Epsitec.Common.UI
 					this.sourceTypeId = value;
 
 					this.UpdateSourceType ();
-					this.InvalidateProperty (TablePlaceholder.SourceTypeIdProperty, oldValue, newValue);
+					this.InvalidateProperty (TablePlaceholder.SourceTypeProperty, oldValue, newValue);
 				}
 			}
 		}
@@ -75,6 +75,11 @@ namespace Epsitec.Common.UI
 
 			this.DisposeCollectionView ();
 			this.CreateCollectionView ();
+		}
+
+		protected override void UpdateValueType(object oldValueType, object newValueType)
+		{
+			base.UpdateValueType (oldValueType, newValueType);
 		}
 
 		private void DisposeCollectionView()
@@ -111,11 +116,6 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected override void UpdateValueType(object oldValueType, object newValueType)
-		{
-			base.UpdateValueType (oldValueType, newValueType);
-		}
-
 		#region IDeserialization Members
 
 		void Epsitec.Common.Types.Serialization.IDeserialization.NotifyDeserializationStarted(Epsitec.Common.Types.Serialization.Context context)
@@ -137,20 +137,20 @@ namespace Epsitec.Common.UI
 			return placeholder.Columns;
 		}
 
-		private static object GetSourceTypeIdValue(DependencyObject o)
+		private static object GetSourceTypeValue(DependencyObject o)
 		{
 			TablePlaceholder placeholder = (TablePlaceholder) o;
 			return placeholder.SourceTypeId;
 		}
 
-		private static void SetSourceTypeIdValue(DependencyObject o, object value)
+		private static void SetSourceTypeValue(DependencyObject o, object value)
 		{
 			TablePlaceholder placeholder = (TablePlaceholder) o;
 			placeholder.SourceTypeId = (Support.Druid) value;
 		}
 
 		public static readonly DependencyProperty ColumnsProperty = DependencyProperty.RegisterReadOnly ("Columns", typeof (Collections.ItemTableColumnCollection), typeof (TablePlaceholder), new DependencyPropertyMetadata (TablePlaceholder.GetColumnsValue).MakeReadOnlySerializable ());
-		public static readonly DependencyProperty SourceTypeIdProperty = DependencyProperty.Register ("SourceTypeId", typeof (Support.Druid), typeof (TablePlaceholder), new DependencyPropertyMetadata (TablePlaceholder.GetSourceTypeIdValue, TablePlaceholder.SetSourceTypeIdValue));
+		public static readonly DependencyProperty SourceTypeProperty = DependencyProperty.Register ("SourceType", typeof (Support.Druid), typeof (TablePlaceholder), new DependencyPropertyMetadata (TablePlaceholder.GetSourceTypeValue, TablePlaceholder.SetSourceTypeValue));
 
 		private ItemTable table;
 		private CollectionView collectionView;
