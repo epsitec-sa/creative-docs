@@ -53,7 +53,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public void Draw(Graphics graphics)
+		public void DrawBackground(Graphics graphics)
 		{
 			//	Dessine une cote.
 			Rectangle bounds = this.objectModifier.GetActualBounds(this.obj);
@@ -395,7 +395,7 @@ namespace Epsitec.Common.Designer
 
 		public void DrawHilite(Graphics graphics, bool dark)
 		{
-			//	Dessine un cadre rouge.
+			//	Dessine la cote survolée par la souris.
 			Rectangle bounds = this.objectModifier.GetActualBounds(this.obj);
 			double alpha = dark ? 1.0 : 0.5;
 			Color hilite = Color.FromAlphaRgb(alpha, 255.0/255.0, 124.0/255.0, 37.0/255.0);
@@ -781,8 +781,8 @@ namespace Epsitec.Common.Designer
 
 
 		public static readonly double		margin = 26;
-		protected static readonly double	attachmentThickness = 3.0;
-		protected static readonly double	attachmentScale = 0.2;
+		protected static readonly double	attachmentThickness = 2.0;
+		protected static readonly double	attachmentScale = 0.3;
 
 		protected MyWidgets.PanelEditor		editor;
 		protected ObjectModifier			objectModifier;

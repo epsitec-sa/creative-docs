@@ -35,7 +35,7 @@ namespace Epsitec.Common.Designer
 			//	Dessine toutes les cotes.
 			foreach (Dimension dim in this.list)
 			{
-				dim.Draw(graphics);
+				dim.DrawBackground(graphics);
 			}
 
 			foreach (Dimension dim in this.list)
