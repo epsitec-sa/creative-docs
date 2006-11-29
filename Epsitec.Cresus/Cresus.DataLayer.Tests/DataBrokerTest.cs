@@ -1,7 +1,10 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
+using Epsitec.Common.UI;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
@@ -27,6 +30,12 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			this.infrastructure.Dispose ();
 			this.infrastructure = null;
+		}
+
+		[Test]
+		public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
 		}
 
 		[Test]
@@ -147,6 +156,54 @@ namespace Epsitec.Cresus.DataLayer
 			System.Console.Out.WriteLine ("Total: {0} records", total);
 			System.Console.Out.WriteLine ("-----------------------------------------------");
 			System.Diagnostics.Debug.WriteLine ("Broker-3 done");
+		}
+
+		[Test]
+		public void CheckInteractiveTable()
+		{
+			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
+			DbRichCommand command;
+
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbTable table = Adapter.FindTableDefinition (transaction, type);
+				DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
+				command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, table, condition);
+				transaction.Commit ();
+			}
+
+			DataTableBroker broker = new DataTableBroker (type, command.DataSet.Tables["Record.Address"]);
+			
+			Window window = new Window ();
+
+			window.Text = "CheckInteractiveTable";
+			window.ClientSize = new Size (480, 400);
+			window.Root.Padding = new Margins (4, 4, 4, 4);
+
+			ItemTable itemTable = new ItemTable ();
+			itemTable.Dock = DockStyle.Fill;
+
+			ItemPanel panel = itemTable.ItemPanel;
+			ItemPanelColumnHeader header = itemTable.ColumnHeader;
+			
+			CollectionView view = new CollectionView (broker);
+
+			panel.Items = view;
+
+			header.AddColumn ("FirstName");
+			header.AddColumn ("LastName");
+			header.AddColumn ("Company");
+			header.AddColumn ("Address1");
+			header.AddColumn ("Zip");
+			header.AddColumn ("City");
+
+			window.Root.Children.Add (itemTable);
+
+			panel.Show (panel.GetItemView (0));
+
+			window.Show ();
+
+			Window.RunInTestEnvironment (window);
 		}
 
 		private DbInfrastructure infrastructure;

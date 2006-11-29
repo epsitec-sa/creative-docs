@@ -122,6 +122,50 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		public DataBrokerRecord GetRowFromIndex(int index)
+		{
+			System.Data.DataRow row;
+
+			lock (this.dataTable)
+			{
+				if ((index >= 0) &&
+					(index < this.dataTable.Rows.Count))
+				{
+					row = this.dataTable.Rows[index];
+				}
+				else
+				{
+					return null;
+				}
+			}
+
+			DataBrokerRecord data = null;
+
+			long id = (long) row[0];
+
+			lock (this.exclusion)
+			{
+				DataBrokerItem item;
+
+				if (this.items.TryGetValue (id, out item))
+				{
+					data = item.Data;
+				}
+
+				if (data == null)
+				{
+					data = this.CreateRecordFromRow (id);
+
+					if (data != null)
+					{
+						this.items[id] = DataBrokerItem.CreateReadOnlyItem (data);
+					}
+				}
+			}
+
+			return data;
+		}
+
 		public bool Contains(DataBrokerRecord data)
 		{
 			if (data == null)
@@ -300,7 +344,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			get
 			{
-				throw new System.Exception ("The method or operation is not implemented.");
+				return this.GetRowFromIndex (index);
 			}
 			set
 			{

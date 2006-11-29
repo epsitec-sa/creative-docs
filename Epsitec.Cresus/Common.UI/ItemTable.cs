@@ -51,6 +51,10 @@ namespace Epsitec.Common.UI
 			this.itemPanel.AddEventHandler (Visual.PreferredHeightProperty, this.HandleItemPanelSizeChanged);
 			this.itemPanel.AddEventHandler (Visual.PreferredWidthProperty, this.HandleItemPanelSizeChanged);
 
+			this.itemPanel.Layout = ItemPanelLayout.VerticalList;
+			this.itemPanel.ItemSelection = ItemPanelSelectionMode.ExactlyOne;
+			this.itemPanel.GroupSelection = ItemPanelSelectionMode.None;
+
 			this.columnHeader.ItemPanel = this.itemPanel;
 		}
 
