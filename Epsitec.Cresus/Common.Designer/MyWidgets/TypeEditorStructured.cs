@@ -97,25 +97,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			//	Crée le tableau principal.
 			this.array = new StringArray(this);
-			this.array.Columns = 5;
+			this.array.Columns = 6;
 			this.array.SetColumnsRelativeWidth(0, 0.30);
-			this.array.SetColumnsRelativeWidth(1, 0.30);
-			this.array.SetColumnsRelativeWidth(2, 0.05);
-			this.array.SetColumnsRelativeWidth(3, 0.30);
-			this.array.SetColumnsRelativeWidth(4, 0.05);
+			this.array.SetColumnsRelativeWidth(1, 0.05);
+			this.array.SetColumnsRelativeWidth(2, 0.30);
+			this.array.SetColumnsRelativeWidth(3, 0.05);
+			this.array.SetColumnsRelativeWidth(4, 0.30);
+			this.array.SetColumnsRelativeWidth(5, 0.05);
 			this.array.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
-			this.array.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
-			this.array.SetColumnAlignment(2, ContentAlignment.MiddleCenter);
-			this.array.SetColumnAlignment(3, ContentAlignment.MiddleLeft);
-			this.array.SetColumnAlignment(4, ContentAlignment.MiddleCenter);
+			this.array.SetColumnAlignment(1, ContentAlignment.MiddleCenter);
+			this.array.SetColumnAlignment(2, ContentAlignment.MiddleLeft);
+			this.array.SetColumnAlignment(3, ContentAlignment.MiddleCenter);
+			this.array.SetColumnAlignment(4, ContentAlignment.MiddleLeft);
+			this.array.SetColumnAlignment(5, ContentAlignment.MiddleCenter);
 			this.array.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
-			this.array.SetColumnBreakMode(1, TextBreakMode.Ellipsis | TextBreakMode.Split);
-			this.array.SetColumnBreakMode(3, TextBreakMode.Ellipsis | TextBreakMode.Split);
+			this.array.SetColumnBreakMode(2, TextBreakMode.Ellipsis | TextBreakMode.Split);
+			this.array.SetColumnBreakMode(4, TextBreakMode.Ellipsis | TextBreakMode.Split);
 			this.array.SetDynamicToolTips(0, true);
 			this.array.SetDynamicToolTips(1, false);
 			this.array.SetDynamicToolTips(2, false);
 			this.array.SetDynamicToolTips(3, false);
 			this.array.SetDynamicToolTips(4, false);
+			this.array.SetDynamicToolTips(5, false);
 			this.array.LineHeight = TypeEditorStructured.arrayLineHeight;
 			this.array.Dock = DockStyle.StackBegin;
 			this.array.PreferredHeight = 200;
@@ -270,12 +273,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					StructuredTypeField field = this.fields[first+i];
 					string name = field.Id;
+					string iconRelation = "";
 
 					string captionType = "";
 					string iconType = "";
 					AbstractType type = field.Type as AbstractType;
 					if (type != null)
 					{
+						if (type is StructuredType)
+						{
+							if (field.Relation == Relation.Reference )  iconRelation = Misc.Image("RelationReference");
+							if (field.Relation == Relation.Bijective )  iconRelation = Misc.Image("RelationBijective");
+							if (field.Relation == Relation.Collection)  iconRelation = Misc.Image("RelationCollection");
+						}
+
 						Caption caption = this.module.ResourceManager.GetCaption(type.Caption.Id);
 
 						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
@@ -321,17 +332,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.array.SetLineString(0, first+i, name);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(1, first+i, captionText);
+					this.array.SetLineString(1, first+i, iconRelation);
 					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(2, first+i, iconText);
+					this.array.SetLineString(2, first+i, captionText);
 					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(3, first+i, captionType);
+					this.array.SetLineString(3, first+i, iconText);
 					this.array.SetLineState(3, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(4, first+i, iconType);
+					this.array.SetLineString(4, first+i, captionType);
 					this.array.SetLineState(4, first+i, MyWidgets.StringList.CellState.Normal);
+
+					this.array.SetLineString(5, first+i, iconType);
+					this.array.SetLineState(5, first+i, MyWidgets.StringList.CellState.Normal);
 				}
 				else
 				{
@@ -349,6 +363,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					this.array.SetLineString(4, first+i, "");
 					this.array.SetLineState(4, first+i, MyWidgets.StringList.CellState.Disabled);
+
+					this.array.SetLineString(5, first+i, "");
+					this.array.SetLineState(5, first+i, MyWidgets.StringList.CellState.Disabled);
 				}
 			}
 		}
@@ -463,6 +480,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fields[sel] = newField;
 
 			this.UpdateButtons();
+			this.UpdateArray();
 		}
 
 		protected void ChangeType()
@@ -592,9 +610,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Place les widgets en dessus et en dessous du tableau en fonction des
 			//	largeurs des colonnes.
-			double w1 = this.array.GetColumnsAbsoluteWidth(0);
-			double w2 = this.array.GetColumnsAbsoluteWidth(1) + this.array.GetColumnsAbsoluteWidth(2);
-			double w3 = this.array.GetColumnsAbsoluteWidth(3) + this.array.GetColumnsAbsoluteWidth(4);
+			double w1 = this.array.GetColumnsAbsoluteWidth(0) + this.array.GetColumnsAbsoluteWidth(1);
+			double w2 = this.array.GetColumnsAbsoluteWidth(2) + this.array.GetColumnsAbsoluteWidth(3);
+			double w3 = this.array.GetColumnsAbsoluteWidth(4) + this.array.GetColumnsAbsoluteWidth(5);
 
 			this.headerName.PreferredWidth = w1;
 			this.headerCaption.PreferredWidth = w2;
