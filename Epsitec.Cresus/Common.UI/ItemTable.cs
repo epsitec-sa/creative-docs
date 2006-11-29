@@ -64,6 +64,18 @@ namespace Epsitec.Common.UI
 			this.SetEmbedder (embedder);
 		}
 
+		public ICollectionView					Items
+		{
+			get
+			{
+				return this.ItemPanel.Items;
+			}
+			set
+			{
+				this.ItemPanel.Items = value;
+			}
+		}
+
 		public ItemPanel						ItemPanel
 		{
 			get

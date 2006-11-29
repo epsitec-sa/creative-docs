@@ -142,7 +142,7 @@ namespace Epsitec.Common.UI
 			this.UpdateValueType ();
 		}
 
-		protected virtual void UpdateValueType()
+		private void UpdateValueType()
 		{
 			INamedType oldValueType = this.valueType;
 			INamedType newValueType = null;

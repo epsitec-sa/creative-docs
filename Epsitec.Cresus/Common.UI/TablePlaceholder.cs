@@ -14,6 +14,8 @@ namespace Epsitec.Common.UI
 	{
 		public TablePlaceholder()
 		{
+			this.table = new ItemTable (this);
+			this.table.Dock = Widgets.DockStyle.Fill;
 		}
 
 		public TablePlaceholder(Widgets.Widget embedder)
@@ -22,97 +24,137 @@ namespace Epsitec.Common.UI
 			this.SetEmbedder (embedder);
 		}
 
+		public Collections.ItemTableColumnCollection Columns
+		{
+			get
+			{
+				return this.table.Columns;
+			}
+		}
+
+		public CollectionView CollectionView
+		{
+			get
+			{
+				return this.collectionView;
+			}
+		}
+
+		public System.Collections.IList Source
+		{
+			get
+			{
+				return this.Value as System.Collections.IList;
+			}
+		}
+
+		public Support.Druid SourceTypeId
+		{
+			get
+			{
+				return this.sourceTypeId;
+			}
+			set
+			{
+				if (this.sourceTypeId != value)
+				{
+					object oldValue = this.SourceTypeId;
+					object newValue = value;
+					
+					this.sourceTypeId = value;
+
+					this.UpdateSourceType ();
+					this.InvalidateProperty (TablePlaceholder.SourceTypeIdProperty, oldValue, newValue);
+				}
+			}
+		}
+
+		protected override void UpdateValue(object oldValue, object newValue)
+		{
+			base.UpdateValue (oldValue, newValue);
+
+			this.DisposeCollectionView ();
+			this.CreateCollectionView ();
+		}
+
+		private void DisposeCollectionView()
+		{
+			if (this.collectionView != null)
+			{
+				this.collectionView.Dispose ();
+				this.collectionView = null;
+			}
+		}
+
+		private void CreateCollectionView()
+		{
+			System.Diagnostics.Debug.Assert (this.collectionView == null);
+
+			System.Collections.IList source = this.Source;
+
+			if (source != null)
+			{
+				this.collectionView = new CollectionView (source);
+				this.table.Items = this.collectionView;
+			}
+		}
+
+		private void UpdateSourceType()
+		{
+			if ((this.suspendUpdates == 0) &&
+				(this.sourceTypeId.IsValid))
+			{
+				Support.ResourceManager manager = Widgets.Helpers.VisualTree.GetResourceManager (this);
+				Caption caption = manager.GetCaption (this.sourceTypeId);
+				AbstractType type = TypeRosetta.GetTypeObject (caption);
+				this.table.SourceType = type as StructuredType;
+			}
+		}
+
+		protected override void UpdateValueType(object oldValueType, object newValueType)
+		{
+			base.UpdateValueType (oldValueType, newValueType);
+		}
+
 		#region IDeserialization Members
 
 		void Epsitec.Common.Types.Serialization.IDeserialization.NotifyDeserializationStarted(Epsitec.Common.Types.Serialization.Context context)
 		{
-			this.suspendUserInterfaceCreation++;
+			this.suspendUpdates++;
 		}
 
 		void Epsitec.Common.Types.Serialization.IDeserialization.NotifyDeserializationCompleted(Epsitec.Common.Types.Serialization.Context context)
 		{
-			this.suspendUserInterfaceCreation--;
-
-			this.RecreateUserInterface ();
+			this.suspendUpdates--;
+			this.UpdateSourceType ();
 		}
 
 		#endregion
 
-		private void DisposeUserInterface()
-		{
-			if (this.table != null)
-			{
-				this.table.SetParent (null);
-				this.table.Dispose ();
-				this.table = null;
-			}
-		}
-
-		private void CreateUserInterface()
-		{
-			if ((this.suspendUserInterfaceCreation == 0) &&
-				(this.ValueType is ICollectionType))
-			{
-				Support.ResourceManager manager = Widgets.Helpers.VisualTree.FindResourceManager (this);
-
-				if (manager == null)
-				{
-					throw new System.InvalidOperationException ("Cannot create user interface: ResourceManager is undefined (add the PanelPlaceholder into a valid Panel)");
-				}
-
-#if false
-				Support.ResourceBundle bundle = manager.GetBundle (this.PanelId);
-
-				if (bundle == null)
-				{
-					throw new System.InvalidOperationException (string.Format ("Cannot create user interface: bundle {0} not found", this.PanelId));
-				}
-
-				Support.ResourceBundle.Field field = bundle["Panel"];
-				string xml;
-
-				if (field.IsEmpty)
-				{
-					Panel cachedPanel = Panel.GetPanel (bundle);
-
-					if (cachedPanel == null)
-					{
-						throw new System.InvalidOperationException (string.Format ("Cannot create user interface: panel field for bundle {0} not found", this.PanelId));
-					}
-
-					xml = Panel.SerializePanel (cachedPanel);
-				}
-				else
-				{
-					xml = field.AsString;
-				}
-
-				this.DefinePanel (Panel.DeserializePanel (xml, null, manager));
-#endif
-			}
-		}
-
-		private void RecreateUserInterface()
-		{
-			this.DisposeUserInterface ();
-			this.CreateUserInterface ();
-		}
-		
-		private void HandleVisibleColumnIdsChanged(string oldValue, string newValue)
-		{
-			//	TODO: ...
-		}
-
-
-		private static void NotifyVisibleColumnIdsChanged(DependencyObject o, object oldValue, object newValue)
+		private static object GetColumnsValue(DependencyObject o)
 		{
 			TablePlaceholder placeholder = (TablePlaceholder) o;
-			placeholder.HandleVisibleColumnIdsChanged ((string) oldValue, (string) newValue);
+			return placeholder.Columns;
 		}
 
-		public static readonly DependencyProperty ColumnDefinitionsProperty = DependencyProperty.Register ("ColumnDefinitions", typeof (string), typeof (TablePlaceholder), new DependencyPropertyMetadata (TablePlaceholder.NotifyVisibleColumnIdsChanged));
+		private static object GetSourceTypeIdValue(DependencyObject o)
+		{
+			TablePlaceholder placeholder = (TablePlaceholder) o;
+			return placeholder.SourceTypeId;
+		}
+
+		private static void SetSourceTypeIdValue(DependencyObject o, object value)
+		{
+			TablePlaceholder placeholder = (TablePlaceholder) o;
+			placeholder.SourceTypeId = (Support.Druid) value;
+		}
+
+		public static readonly DependencyProperty ColumnsProperty = DependencyProperty.RegisterReadOnly ("Columns", typeof (Collections.ItemTableColumnCollection), typeof (TablePlaceholder), new DependencyPropertyMetadata (TablePlaceholder.GetColumnsValue).MakeReadOnlySerializable ());
+		public static readonly DependencyProperty SourceTypeIdProperty = DependencyProperty.Register ("SourceTypeId", typeof (Support.Druid), typeof (TablePlaceholder), new DependencyPropertyMetadata (TablePlaceholder.GetSourceTypeIdValue, TablePlaceholder.SetSourceTypeIdValue));
 
 		private ItemTable table;
-		private int suspendUserInterfaceCreation;
+		private CollectionView collectionView;
+		private Support.Druid sourceTypeId;
+		private int suspendUpdates;
 	}
 }

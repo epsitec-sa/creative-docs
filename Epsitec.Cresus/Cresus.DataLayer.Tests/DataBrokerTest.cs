@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.DataLayer
 			
 			itemTable.Dock = DockStyle.Fill;
 			itemTable.DefineDefaultColumns (type, 80.0);
-			itemTable.ItemPanel.Items = new CollectionView (broker);
+			itemTable.Items = new CollectionView (broker);
 
 			window.Root.Children.Add (itemTable);
 
