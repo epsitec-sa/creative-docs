@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
+using Epsitec.Common.UI.Collections;
 
 using System.Collections.Generic;
 
@@ -24,7 +25,7 @@ namespace Epsitec.Common.UI
 			this.SetEmbedder (embedder);
 		}
 
-		public Collections.ItemTableColumnCollection Columns
+		public ItemTableColumnCollection		Columns
 		{
 			get
 			{
@@ -32,7 +33,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public CollectionView CollectionView
+		public CollectionView					CollectionView
 		{
 			get
 			{
@@ -40,7 +41,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public System.Collections.IList Source
+		public System.Collections.IList			Source
 		{
 			get
 			{
@@ -48,7 +49,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public Support.Druid SourceTypeId
+		public Support.Druid					SourceTypeId
 		{
 			get
 			{
@@ -69,6 +70,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		
 		protected override void UpdateValue(object oldValue, object newValue)
 		{
 			base.UpdateValue (oldValue, newValue);
@@ -149,7 +151,7 @@ namespace Epsitec.Common.UI
 			placeholder.SourceTypeId = (Support.Druid) value;
 		}
 
-		public static readonly DependencyProperty ColumnsProperty = DependencyProperty.RegisterReadOnly ("Columns", typeof (Collections.ItemTableColumnCollection), typeof (TablePlaceholder), new DependencyPropertyMetadata (TablePlaceholder.GetColumnsValue).MakeReadOnlySerializable ());
+		public static readonly DependencyProperty ColumnsProperty = DependencyProperty.RegisterReadOnly ("Columns", typeof (ItemTableColumnCollection), typeof (TablePlaceholder), new DependencyPropertyMetadata (TablePlaceholder.GetColumnsValue).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty SourceTypeProperty = DependencyProperty.Register ("SourceType", typeof (Support.Druid), typeof (TablePlaceholder), new DependencyPropertyMetadata (TablePlaceholder.GetSourceTypeValue, TablePlaceholder.SetSourceTypeValue));
 
 		private ItemTable table;
