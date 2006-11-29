@@ -171,14 +171,14 @@ namespace Epsitec.Common.Designer
 				int columns = this.objectModifier.GetGridColumnsCount(obj);
 				for (int i=0; i<columns; i++)
 				{
-					dim = new Dimension(this.editor, obj, Dimension.Type.GridColumn, i, -1);
+					dim = new Dimension(this.editor, obj, Dimension.Type.GridColumn, i);
 					this.list.Add(dim);
 				}
 
 				int rows = this.objectModifier.GetGridRowsCount(obj);
 				for (int i=0; i<rows; i++)
 				{
-					dim = new Dimension(this.editor, obj, Dimension.Type.GridRow, -1, i);
+					dim = new Dimension(this.editor, obj, Dimension.Type.GridRow, i);
 					this.list.Add(dim);
 				}
 
@@ -192,14 +192,37 @@ namespace Epsitec.Common.Designer
 						if (item.Unit == GridSelection.Unit.Column &&
 							this.objectModifier.GetGridColumnMode(obj, item.Index) != ObjectModifier.GridMode.Auto)
 						{
-							dim = new Dimension(this.editor, obj, Dimension.Type.GridWidth, item.Index, -1);
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridWidth, item.Index);
 							this.list.Add(dim);
 						}
 
 						if (item.Unit == GridSelection.Unit.Row &&
 							this.objectModifier.GetGridRowMode(obj, item.Index) != ObjectModifier.GridMode.Auto)
 						{
-							dim = new Dimension(this.editor, obj, Dimension.Type.GridHeight, -1, item.Index);
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridHeight, item.Index);
+							this.list.Add(dim);
+						}
+					}
+
+					if (gs.Count == 1)
+					{
+						GridSelection.OneItem item = gs[0];
+
+						if (item.Unit == GridSelection.Unit.Column)
+						{
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridMarginLeft, item.Index);
+							this.list.Add(dim);
+
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridMarginRight, item.Index);
+							this.list.Add(dim);
+						}
+
+						if (item.Unit == GridSelection.Unit.Row)
+						{
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridMarginBottom, item.Index);
+							this.list.Add(dim);
+
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridMarginTop, item.Index);
 							this.list.Add(dim);
 						}
 					}

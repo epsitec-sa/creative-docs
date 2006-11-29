@@ -43,11 +43,10 @@ namespace Epsitec.Common.Designer
 
 			this.obj = obj;
 			this.type = type;
-			this.column = -1;
-			this.row = -1;
+			this.columnOrRow = -1;
 		}
 
-		public Dimension(MyWidgets.PanelEditor editor, Widget obj, Type type, int column, int row)
+		public Dimension(MyWidgets.PanelEditor editor, Widget obj, Type type, int columnOrRow)
 		{
 			//	Crée une cote.
 			this.editor = editor;
@@ -56,8 +55,7 @@ namespace Epsitec.Common.Designer
 
 			this.obj = obj;
 			this.type = type;
-			this.column = column;
-			this.row = row;
+			this.columnOrRow = columnOrRow;
 		}
 
 
@@ -75,18 +73,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne le rang de la ligne ou de la colonne (selon le type).
 			get
 			{
-				if (this.type == Type.GridColumn)
-				{
-					return this.column;
-				}
-				else if (this.type == Type.GridRow)
-				{
-					return this.row;
-				}
-				else
-				{
-					return -1;
-				}
+				return this.columnOrRow;
 			}
 		}
 
@@ -357,6 +344,86 @@ namespace Epsitec.Common.Designer
 					graphics.RenderSolid(border);
 					break;
 
+				case Type.GridMarginLeft:
+					path = new Path();
+					p = new Point(box.Right, inside.Top);
+					path.MoveTo(p);
+					p.Y = box.Top;
+					path.LineTo(p);
+					p.X -= box.Width;
+					path.LineTo(p);
+					p.Y -= box.Height;
+					path.LineTo(p);
+					p.Y = inside.Top;
+					p.X = box.Right-this.Value;
+					path.LineTo(p);
+					path.Close();
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(orange);
+					graphics.Rasterizer.AddOutline(path);
+					graphics.RenderSolid(border);
+					break;
+
+				case Type.GridMarginRight:
+					path = new Path();
+					p = new Point(box.Left, inside.Top);
+					path.MoveTo(p);
+					p.Y = box.Top;
+					path.LineTo(p);
+					p.X += box.Width;
+					path.LineTo(p);
+					p.Y -= box.Height;
+					path.LineTo(p);
+					p.Y = inside.Top;
+					p.X = box.Left+this.Value;
+					path.LineTo(p);
+					path.Close();
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(orange);
+					graphics.Rasterizer.AddOutline(path);
+					graphics.RenderSolid(border);
+					break;
+
+				case Type.GridMarginBottom:
+					path = new Path();
+					p = new Point(inside.Left, box.Top);
+					path.MoveTo(p);
+					p.X = box.Left;
+					path.LineTo(p);
+					p.Y -= box.Height;
+					path.LineTo(p);
+					p.X += box.Width;
+					path.LineTo(p);
+					p.X = inside.Left;
+					p.Y = box.Top-this.Value;
+					path.LineTo(p);
+					path.Close();
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(orange);
+					graphics.Rasterizer.AddOutline(path);
+					graphics.RenderSolid(border);
+					break;
+
+				case Type.GridMarginTop:
+					path = new Path();
+					p = new Point(inside.Left, box.Bottom);
+					path.MoveTo(p);
+					p.X = box.Left;
+					path.LineTo(p);
+					p.Y += box.Height;
+					path.LineTo(p);
+					p.X += box.Width;
+					path.LineTo(p);
+					p.X = inside.Left;
+					p.Y = box.Bottom+this.Value;
+					path.LineTo(p);
+					path.Close();
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(orange);
+					graphics.Rasterizer.AddOutline(path);
+					graphics.RenderSolid(border);
+					break;
+
 				case Type.PaddingLeft:
 					path = new Path();
 					path.MoveTo(bounds.Left, inside.Center.Y);
@@ -563,6 +630,30 @@ namespace Epsitec.Common.Designer
 					p2 = new Point(ext.Right, box.Bottom+margins.Top);
 					this.DrawLine(graphics, p1, p2);
 					break;
+
+				case Type.GridMarginLeft:
+					p2 = new Point(box.Right, inside.Top);
+					p1 = new Point(box.Right-this.Value, inside.Top);
+					this.DrawLine(graphics, p1, p2);
+					break;
+
+				case Type.GridMarginRight:
+					p1 = new Point(box.Left, inside.Top);
+					p2 = new Point(box.Left+this.Value, inside.Top);
+					this.DrawLine(graphics, p1, p2);
+					break;
+
+				case Type.GridMarginBottom:
+					p2 = new Point(inside.Left, box.Top);
+					p1 = new Point(inside.Left, box.Top-this.Value);
+					this.DrawLine(graphics, p1, p2);
+					break;
+
+				case Type.GridMarginTop:
+					p1 = new Point(inside.Left, box.Bottom);
+					p2 = new Point(inside.Left, box.Bottom+this.Value);
+					this.DrawLine(graphics, p1, p2);
+					break;
 			}
 		}
 
@@ -698,10 +789,22 @@ namespace Epsitec.Common.Designer
 						return this.objectModifier.GetPadding(this.obj).Top;
 
 					case Type.GridWidth:
-						return this.objectModifier.GetGridColumnWidth(this.obj, this.column);
+						return this.objectModifier.GetGridColumnWidth(this.obj, this.columnOrRow);
 
 					case Type.GridHeight:
-						return this.objectModifier.GetGridRowHeight(this.obj, this.row);
+						return this.objectModifier.GetGridRowHeight(this.obj, this.columnOrRow);
+
+					case Type.GridMarginLeft:
+						return this.objectModifier.GetGridColumnLeftBorder(this.obj, this.columnOrRow);
+
+					case Type.GridMarginRight:
+						return this.objectModifier.GetGridColumnRightBorder(this.obj, this.columnOrRow);
+
+					case Type.GridMarginBottom:
+						return this.objectModifier.GetGridRowBottomBorder(this.obj, this.columnOrRow);
+
+					case Type.GridMarginTop:
+						return this.objectModifier.GetGridRowTopBorder(this.obj, this.columnOrRow);
 
 					default:
 						return 0;
@@ -782,12 +885,32 @@ namespace Epsitec.Common.Designer
 
 					case Type.GridWidth:
 						value = System.Math.Max(value, 0);
-						this.objectModifier.SetGridColumnWidth(this.obj, this.column, value);
+						this.objectModifier.SetGridColumnWidth(this.obj, this.columnOrRow, value);
 						break;
 
 					case Type.GridHeight:
 						value = System.Math.Max(value, 0);
-						this.objectModifier.SetGridRowHeight(this.obj, this.row, value);
+						this.objectModifier.SetGridRowHeight(this.obj, this.columnOrRow, value);
+						break;
+
+					case Type.GridMarginLeft:
+						value = System.Math.Max(value, 0);
+						this.objectModifier.SetGridColumnLeftBorder(this.obj, this.columnOrRow, value);
+						break;
+
+					case Type.GridMarginRight:
+						value = System.Math.Max(value, 0);
+						this.objectModifier.SetGridColumnRightBorder(this.obj, this.columnOrRow, value);
+						break;
+
+					case Type.GridMarginBottom:
+						value = System.Math.Max(value, 0);
+						this.objectModifier.SetGridRowBottomBorder(this.obj, this.columnOrRow, value);
+						break;
+
+					case Type.GridMarginTop:
+						value = System.Math.Max(value, 0);
+						this.objectModifier.SetGridRowTopBorder(this.obj, this.columnOrRow, value);
 						break;
 				}
 
@@ -928,10 +1051,10 @@ namespace Epsitec.Common.Designer
 				switch (this.type)
 				{
 					case Type.GridColumn:
-						return Dimension.ToAlpha(this.column);  // A..ZZZ
+						return Dimension.ToAlpha(this.columnOrRow);  // A..ZZZ
 
 					case Type.GridRow:
-						return (this.row+1).ToString(System.Globalization.CultureInfo.InvariantCulture);  // 1..n
+						return (this.columnOrRow+1).ToString(System.Globalization.CultureInfo.InvariantCulture);  // 1..n
 
 					default:
 						int i = (int) System.Math.Floor(this.Value+0.5);
@@ -964,13 +1087,13 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				if (this.type == Type.GridWidth &&
-					this.objectModifier.GetGridColumnMode(this.obj, this.column) == ObjectModifier.GridMode.Proportional)
+					this.objectModifier.GetGridColumnMode(this.obj, this.columnOrRow) == ObjectModifier.GridMode.Proportional)
 				{
 					return true;
 				}
 
 				if (this.type == Type.GridHeight &&
-					this.objectModifier.GetGridRowMode(this.obj, this.row) == ObjectModifier.GridMode.Proportional)
+					this.objectModifier.GetGridRowMode(this.obj, this.columnOrRow) == ObjectModifier.GridMode.Proportional)
 				{
 					return true;
 				}
@@ -1046,27 +1169,71 @@ namespace Epsitec.Common.Designer
 						return new Rectangle(inside.Center.X-pw/2, inside.Bottom, pw, ph);
 
 					case Type.GridColumn:
-						box = this.objectModifier.GetGridCellArea(this.obj, this.column, 0, 1, 1);
+						box = this.objectModifier.GetGridCellArea(this.obj, this.columnOrRow, 0, 1, 1);
 						box.Bottom = inside.Top+d;
 						box.Height = h;
 						return box;
 
 					case Type.GridRow:
-						box = this.objectModifier.GetGridCellArea(this.obj, 0, this.row, 1, 1);
+						box = this.objectModifier.GetGridCellArea(this.obj, 0, this.columnOrRow, 1, 1);
 						box.Left = inside.Left-d-h;
 						box.Width = h;
 						return box;
 
 					case Type.GridWidth:
-						box = this.objectModifier.GetGridCellArea(this.obj, this.column, 0, 1, 1);
+						box = this.objectModifier.GetGridCellArea(this.obj, this.columnOrRow, 0, 1, 1);
+						box.Left  += this.objectModifier.GetGridColumnLeftBorder(this.obj, this.columnOrRow);
+						box.Right -= this.objectModifier.GetGridColumnRightBorder(this.obj, this.columnOrRow);
 						box.Bottom = inside.Top+d-h;
 						box.Height = h;
 						return box;
 
 					case Type.GridHeight:
-						box = this.objectModifier.GetGridCellArea(this.obj, 0, this.row, 1, 1);
+						box = this.objectModifier.GetGridCellArea(this.obj, 0, this.columnOrRow, 1, 1);
+						box.Bottom += this.objectModifier.GetGridRowBottomBorder(this.obj, this.columnOrRow);
+						box.Top    -= this.objectModifier.GetGridRowTopBorder(this.obj, this.columnOrRow);
 						box.Left = inside.Left-d;
 						box.Width = h;
+						return box;
+
+					case Type.GridMarginLeft:
+						box = this.objectModifier.GetGridCellArea(this.obj, this.columnOrRow, 0, 1, 1);
+						box.Bottom = inside.Top+d-h;
+						box.Height = h;
+						l = System.Math.Max(e, this.Value);
+						box.Left += this.objectModifier.GetGridColumnLeftBorder(this.obj, this.columnOrRow);
+						box.Left -= l;
+						box.Width = l;
+						return box;
+
+					case Type.GridMarginRight:
+						box = this.objectModifier.GetGridCellArea(this.obj, this.columnOrRow, 0, 1, 1);
+						box.Bottom = inside.Top+d-h;
+						box.Height = h;
+						l = System.Math.Max(e, this.Value);
+						box.Right -= this.objectModifier.GetGridColumnRightBorder(this.obj, this.columnOrRow);
+						box.Left = box.Right;
+						box.Width = l;
+						return box;
+
+					case Type.GridMarginTop:
+						box = this.objectModifier.GetGridCellArea(this.obj, 0, this.columnOrRow, 1, 1);
+						box.Left = inside.Left-d;
+						box.Width = h;
+						l = System.Math.Max(e, this.Value);
+						box.Top -= this.objectModifier.GetGridRowTopBorder(this.obj, this.columnOrRow);
+						box.Bottom = box.Top;
+						box.Height = l;
+						return box;
+
+					case Type.GridMarginBottom:
+						box = this.objectModifier.GetGridCellArea(this.obj, 0, this.columnOrRow, 1, 1);
+						box.Left = inside.Left-d;
+						box.Width = h;
+						l = System.Math.Max(e, this.Value);
+						box.Bottom += this.objectModifier.GetGridRowBottomBorder(this.obj, this.columnOrRow);
+						box.Bottom -= l;
+						box.Height = l;
 						return box;
 
 					default:
@@ -1085,7 +1252,6 @@ namespace Epsitec.Common.Designer
 		protected PanelsContext				context;
 		protected Widget					obj;
 		protected Type						type;
-		protected int						column;
-		protected int						row;
+		protected int						columnOrRow;
 	}
 }
