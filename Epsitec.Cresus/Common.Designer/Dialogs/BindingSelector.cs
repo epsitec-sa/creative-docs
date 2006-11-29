@@ -53,15 +53,15 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.headerName.Style = HeaderButtonStyle.Top;
 				this.headerName.Dock = DockStyle.Left;
 
-				this.headerType = new HeaderButton(this.header);
-				this.headerType.Text = Res.Strings.Viewers.Types.Structured.Type;
-				this.headerType.Style = HeaderButtonStyle.Top;
-				this.headerType.Dock = DockStyle.Left;
-
 				this.headerCaption = new HeaderButton(this.header);
 				this.headerCaption.Text = Res.Strings.Viewers.Types.Structured.Caption;
 				this.headerCaption.Style = HeaderButtonStyle.Top;
 				this.headerCaption.Dock = DockStyle.Left;
+
+				this.headerType = new HeaderButton(this.header);
+				this.headerType.Text = Res.Strings.Viewers.Types.Structured.Type;
+				this.headerType.Style = HeaderButtonStyle.Top;
+				this.headerType.Dock = DockStyle.Left;
 
 				//	Crée le tableau principal.
 				this.array = new MyWidgets.StringArray(this.window.Root);
@@ -322,16 +322,16 @@ namespace Epsitec.Common.Designer.Dialogs
 					this.array.SetLineString(0, first+i, name);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(1, first+i, captionType);
+					this.array.SetLineString(1, first+i, captionText);
 					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(2, first+i, iconType);
+					this.array.SetLineString(2, first+i, iconText);
 					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(3, first+i, captionText);
+					this.array.SetLineString(3, first+i, captionType);
 					this.array.SetLineState(3, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(4, first+i, iconText);
+					this.array.SetLineString(4, first+i, iconType);
 					this.array.SetLineState(4, first+i, MyWidgets.StringList.CellState.Normal);
 				}
 				else
@@ -363,8 +363,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			double w3 = this.array.GetColumnsAbsoluteWidth(3) + this.array.GetColumnsAbsoluteWidth(4);
 
 			this.headerName.PreferredWidth = w1;
-			this.headerType.PreferredWidth = w2;
-			this.headerCaption.PreferredWidth = w3+1;
+			this.headerCaption.PreferredWidth = w2;
+			this.headerType.PreferredWidth = w3+1;
 		}
 
 		protected void UpdateMode()
@@ -481,8 +481,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected StaticText					title;
 		protected Widget						header;
 		protected HeaderButton					headerName;
-		protected HeaderButton					headerType;
 		protected HeaderButton					headerCaption;
+		protected HeaderButton					headerType;
 		protected MyWidgets.StringArray			array;
 		protected CheckButton					checkReadonly;
 

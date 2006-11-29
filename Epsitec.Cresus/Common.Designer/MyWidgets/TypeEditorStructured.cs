@@ -85,15 +85,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.headerName.Style = HeaderButtonStyle.Top;
 			this.headerName.Dock = DockStyle.Left;
 
-			this.headerType = new HeaderButton(this.header);
-			this.headerType.Text = Res.Strings.Viewers.Types.Structured.Type;
-			this.headerType.Style = HeaderButtonStyle.Top;
-			this.headerType.Dock = DockStyle.Left;
-
 			this.headerCaption = new HeaderButton(this.header);
 			this.headerCaption.Text = Res.Strings.Viewers.Types.Structured.Caption;
 			this.headerCaption.Style = HeaderButtonStyle.Top;
 			this.headerCaption.Dock = DockStyle.Left;
+
+			this.headerType = new HeaderButton(this.header);
+			this.headerType.Text = Res.Strings.Viewers.Types.Structured.Type;
+			this.headerType.Style = HeaderButtonStyle.Top;
+			this.headerType.Dock = DockStyle.Left;
 
 			//	Crée le tableau principal.
 			this.array = new StringArray(this);
@@ -137,17 +137,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldName.EditionAccepted += new EventHandler(this.HandleTextChanged);
 			this.fieldName.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 
-			this.buttonType = new Button(this.footer);
-			this.buttonType.CaptionId = Res.Captions.Editor.Structured.ChangeType.Id;
-			this.buttonType.Margins = new Margins(1, 0, 0, 0);
-			this.buttonType.Dock = DockStyle.Left;
-			this.buttonType.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-
 			this.buttonCaption = new Button(this.footer);
 			this.buttonCaption.CaptionId = Res.Captions.Editor.Structured.ChangeCaption.Id;
 			this.buttonCaption.Margins = new Margins(1, 0, 0, 0);
 			this.buttonCaption.Dock = DockStyle.Left;
 			this.buttonCaption.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
+			this.buttonType = new Button(this.footer);
+			this.buttonType.CaptionId = Res.Captions.Editor.Structured.ChangeType.Id;
+			this.buttonType.Margins = new Margins(1, 0, 0, 0);
+			this.buttonType.Dock = DockStyle.Left;
+			this.buttonType.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 		}
 
 		public TypeEditorStructured(Widget embedder) : this()
@@ -177,8 +177,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.fieldName.EditionAccepted -= new EventHandler(this.HandleTextChanged);
 				this.fieldName.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
-				this.buttonType.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonCaption.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonType.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 			}
 			
 			base.Dispose(disposing);
@@ -254,8 +254,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.fieldName.Enable = (sel != -1);
-			this.buttonType.Enable = (sel != -1);
 			this.buttonCaption.Enable = (sel != -1);
+			this.buttonType.Enable = (sel != -1);
 		}
 
 		protected void UpdateArray()
@@ -321,16 +321,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.array.SetLineString(0, first+i, name);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(1, first+i, captionType);
+					this.array.SetLineString(1, first+i, captionText);
 					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(2, first+i, iconType);
+					this.array.SetLineString(2, first+i, iconText);
 					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(3, first+i, captionText);
+					this.array.SetLineString(3, first+i, captionType);
 					this.array.SetLineState(3, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(4, first+i, iconText);
+					this.array.SetLineString(4, first+i, iconType);
 					this.array.SetLineState(4, first+i, MyWidgets.StringList.CellState.Normal);
 				}
 				else
@@ -597,12 +597,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			double w3 = this.array.GetColumnsAbsoluteWidth(3) + this.array.GetColumnsAbsoluteWidth(4);
 
 			this.headerName.PreferredWidth = w1;
-			this.headerType.PreferredWidth = w2;
-			this.headerCaption.PreferredWidth = w3+1;
+			this.headerCaption.PreferredWidth = w2;
+			this.headerType.PreferredWidth = w3+1;
 
 			this.fieldName.PreferredWidth = w1-1;
-			this.buttonType.PreferredWidth = w2-1;
-			this.buttonCaption.PreferredWidth = w3+1;
+			this.buttonCaption.PreferredWidth = w2-1;
+			this.buttonType.PreferredWidth = w3+1;
 		}
 
 
@@ -643,14 +643,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ArrayRelation(Relation.Collection);
 			}
 
-			if (sender == this.buttonType)
-			{
-				this.ChangeType();
-			}
-
 			if (sender == this.buttonCaption)
 			{
 				this.ChangeCaption();
+			}
+
+			if (sender == this.buttonType)
+			{
+				this.ChangeType();
 			}
 		}
 
@@ -785,14 +785,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected Widget						header;
 		protected HeaderButton					headerName;
-		protected HeaderButton					headerType;
 		protected HeaderButton					headerCaption;
+		protected HeaderButton					headerType;
 		protected MyWidgets.StringArray			array;
 
 		protected Widget						footer;
 		protected TextFieldEx					fieldName;
-		protected Button						buttonType;
 		protected Button						buttonCaption;
+		protected Button						buttonType;
 
 		protected int							lastIndex = -1;
 		protected List<StructuredTypeField>		fields;
