@@ -269,7 +269,7 @@ namespace Epsitec.Common.Designer.Proxies
 							}
 
 							this.GridMinWidth = this.ObjectModifier.GetGridColumnMinWidth(this.DefaultWidget, item.Index);
-							//?this.GridMaxWidth = this.ObjectModifier.GetGridColumnMaxWidth(this.DefaultWidget, item.Index);
+							this.GridMaxWidth = this.ObjectModifier.GetGridColumnMaxWidth(this.DefaultWidget, item.Index);
 
 							this.GridLeftBorder = this.ObjectModifier.GetGridColumnLeftBorder(this.DefaultWidget, item.Index);
 							this.GridRightBorder = this.ObjectModifier.GetGridColumnRightBorder(this.DefaultWidget, item.Index);
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Designer.Proxies
 							}
 
 							this.GridMinHeight = this.ObjectModifier.GetGridRowMinHeight(this.DefaultWidget, item.Index);
-							//?this.GridMaxHeight = this.ObjectModifier.GetGridRowMaxHeight(this.DefaultWidget, item.Index);
+							this.GridMaxHeight = this.ObjectModifier.GetGridRowMaxHeight(this.DefaultWidget, item.Index);
 
 							this.GridTopBorder = this.ObjectModifier.GetGridRowTopBorder(this.DefaultWidget, item.Index);
 							this.GridBottomBorder = this.ObjectModifier.GetGridRowBottomBorder(this.DefaultWidget, item.Index);

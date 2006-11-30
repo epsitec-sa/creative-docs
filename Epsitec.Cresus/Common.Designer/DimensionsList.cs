@@ -237,11 +237,8 @@ namespace Epsitec.Common.Designer
 
 						if (item.Unit == GridSelection.Unit.Column)
 						{
-							if (this.objectModifier.GetGridColumnMode(obj, item.Index) != ObjectModifier.GridMode.Auto)
-							{
-								dim = new Dimension(this.editor, obj, Dimension.Type.GridWidth, item.Index);
-								this.list.Add(dim);
-							}
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridWidth, item.Index);
+							this.list.Add(dim);
 
 							dim = new Dimension(this.editor, obj, Dimension.Type.GridWidthMode, item.Index);
 							this.list.Add(dim);
@@ -249,11 +246,8 @@ namespace Epsitec.Common.Designer
 
 						if (item.Unit == GridSelection.Unit.Row)
 						{
-							if (this.objectModifier.GetGridRowMode(obj, item.Index) != ObjectModifier.GridMode.Auto)
-							{
-								dim = new Dimension(this.editor, obj, Dimension.Type.GridHeight, item.Index);
-								this.list.Add(dim);
-							}
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridHeight, item.Index);
+							this.list.Add(dim);
 
 							dim = new Dimension(this.editor, obj, Dimension.Type.GridHeightMode, item.Index);
 							this.list.Add(dim);
