@@ -298,7 +298,8 @@ namespace Epsitec.Common.Designer
 							dim = new Dimension(this.editor, obj, Dimension.Type.GridColumnAddAfter, item.Index);
 							this.list.Add(dim);
 
-							if (this.objectModifier.IsGridColumnEmpty(obj, item.Index))
+							if (this.objectModifier.GetGridColumnsCount(obj) > 1 &&
+								this.objectModifier.IsGridColumnEmpty(obj, item.Index))
 							{
 								dim = new Dimension(this.editor, obj, Dimension.Type.GridColumnRemove, item.Index);
 								this.list.Add(dim);
@@ -319,7 +320,8 @@ namespace Epsitec.Common.Designer
 							dim = new Dimension(this.editor, obj, Dimension.Type.GridRowAddAfter, item.Index);
 							this.list.Add(dim);
 
-							if (this.objectModifier.IsGridRowEmpty(obj, item.Index))
+							if (this.objectModifier.GetGridRowsCount(obj) > 1 &&
+								this.objectModifier.IsGridRowEmpty(obj, item.Index))
 							{
 								dim = new Dimension(this.editor, obj, Dimension.Type.GridRowRemove, item.Index);
 								this.list.Add(dim);
