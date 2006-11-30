@@ -153,39 +153,16 @@ namespace Epsitec.Common.UI
 				(this.PanelId.IsValid))
 			{
 				Support.ResourceManager manager = Widgets.Helpers.VisualTree.FindResourceManager (this);
+				Support.Druid panelId = this.PanelId;
 
-				if (manager == null)
+				Panel panel = Panel.CreatePanel (panelId, manager);
+
+				if (panel == null)
 				{
-					throw new System.InvalidOperationException ("Cannot create user interface: ResourceManager is undefined (add the PanelPlaceholder into a valid Panel)");
+					throw new System.InvalidOperationException (string.Format ("Cannot create user interface: bundle {0} not found", panelId));
 				}
 
-				Support.ResourceBundle bundle = manager.GetBundle (this.PanelId);
-				
-				if (bundle == null)
-				{
-					throw new System.InvalidOperationException (string.Format ("Cannot create user interface: bundle {0} not found", this.PanelId));
-				}
-
-				Support.ResourceBundle.Field field = bundle["Panel"];
-				string xml;
-
-				if (field.IsEmpty)
-				{
-					Panel cachedPanel = Panel.GetPanel (bundle);
-					
-					if (cachedPanel == null)
-					{
-						throw new System.InvalidOperationException (string.Format ("Cannot create user interface: panel field for bundle {0} not found", this.PanelId));
-					}
-
-					xml = Panel.SerializePanel (cachedPanel);
-				}
-				else
-				{
-					xml = field.AsString;
-				}
-
-				this.DefinePanel (Panel.DeserializePanel (xml, null, manager));
+				this.DefinePanel (panel);
 			}
 		}
 

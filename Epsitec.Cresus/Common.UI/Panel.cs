@@ -326,6 +326,63 @@ namespace Epsitec.Common.UI
 			return panel;
 		}
 
+
+		/// <summary>
+		/// Creates a panel based on its DRUID.
+		/// </summary>
+		/// <param name="panelId">The panel id.</param>
+		/// <param name="manager">The resource manager.</param>
+		/// <returns>The <c>Panel</c> or <c>null</c>.</returns>
+		public static Panel CreatePanel(Support.Druid panelId, Support.ResourceManager manager)
+		{
+			if (manager == null)
+			{
+				throw new System.InvalidOperationException ("Cannot create user interface: ResourceManager is undefined (add the PanelPlaceholder into a valid Panel)");
+			}
+
+			Support.ResourceBundle bundle = manager.GetBundle (panelId);
+
+			if (bundle == null)
+			{
+				return null;
+			}
+
+			Support.ResourceBundle.Field field = bundle["Panel"];
+
+			if (field.IsEmpty)
+			{
+				return null;
+			}
+
+			string xml;
+			Panel panel;
+
+			if (field.IsEmpty)
+			{
+				Panel cachedPanel = Panel.GetPanel (bundle);
+
+				if (cachedPanel == null)
+				{
+					throw new System.InvalidOperationException (string.Format ("Cannot create user interface: panel field for bundle {0} not found", panelId));
+				}
+
+				xml = Panel.SerializePanel (cachedPanel);
+			}
+			else
+			{
+				xml = field.AsString;
+			}
+
+			if (string.IsNullOrEmpty (xml))
+			{
+				return null;
+			}
+
+			panel = Panel.DeserializePanel (xml, null, manager);
+			return panel;
+		}
+
+		
 		protected override bool PreProcessMessage(Widgets.Message message, Drawing.Point pos)
 		{
 			if (this.HasValidEditionPanel)

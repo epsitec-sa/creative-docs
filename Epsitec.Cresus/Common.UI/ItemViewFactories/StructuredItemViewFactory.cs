@@ -16,9 +16,13 @@ namespace Epsitec.Common.UI.ItemViewFactories
 		public Widgets.Widget CreateUserInterface(ItemPanel panel, ItemView itemView)
 		{
 			ItemPanelColumnHeader header = ItemPanelColumnHeader.GetColumnHeader (panel);
+			ItemTable             table  = ItemTable.GetItemTable (panel);
 
 			if (header == null)
 			{
+				//	There is no header, just fall back to the simplest form of
+				//	data representation :
+				
 				Widgets.StaticText text = new Widgets.StaticText ();
 				text.Text = itemView.Item.ToString ();
 				return text;
@@ -32,16 +36,33 @@ namespace Epsitec.Common.UI.ItemViewFactories
 
 				for (int i = 0; i < count; i++)
 				{
-					Widgets.StaticText text = new Widgets.StaticText (container);
+					int columnId = header.GetColumnId (i);
+					double width = header.GetColumnWidth (i);
 
-					text.Text = header.GetColumnText (i, itemView.Item);
-					text.Dock = Widgets.DockStyle.Stacked;
-					text.PreferredWidth = header.GetColumnWidth (i) - 6;
-					text.Margins = new Drawing.Margins (3, 3, 0, 0);
+					if ((columnId >= 0) &&
+						(table != null) &&
+						(columnId < table.Columns.Count))
+					{
+						Support.Druid templateId = table.Columns[columnId].TemplateId;
+					}
+					else
+					{
+						StructuredItemViewFactory.CreateTextColumn (container, itemView, header, i, width);
+					}
 				}
 
 				return container;
 			}
+		}
+
+		private static void CreateTextColumn(Widgets.Widget container, ItemView itemView, ItemPanelColumnHeader header, int index, double width)
+		{
+			Widgets.StaticText text = new Widgets.StaticText (container);
+
+			text.Text           = header.GetColumnText (index, itemView.Item);
+			text.Dock           = Widgets.DockStyle.Stacked;
+			text.Margins        = new Drawing.Margins (3, 3, 0, 0);
+			text.PreferredWidth = width - text.Margins.Width;
 		}
 
 		public Drawing.Size GetPreferredSize(ItemPanel panel, ItemView itemView)
