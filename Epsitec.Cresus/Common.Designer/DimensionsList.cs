@@ -40,7 +40,7 @@ namespace Epsitec.Common.Designer
 
 			foreach (Dimension dim in this.list)
 			{
-				dim.DrawMark(graphics);
+				dim.DrawDimension(graphics);
 			}
 
 			if (this.hilited != null)
@@ -202,6 +202,18 @@ namespace Epsitec.Common.Designer
 			//	toutes les autres.
 			if (this.objectModifier.GetChildrenPlacement(obj) == ObjectModifier.ChildrenPlacement.Grid)
 			{
+#if false
+				dim = new Dimension(this.editor, obj, Dimension.Type.GridColumnInc);
+				this.list.Add(dim);
+				dim = new Dimension(this.editor, obj, Dimension.Type.GridColumnDec);
+				this.list.Add(dim);
+
+				dim = new Dimension(this.editor, obj, Dimension.Type.GridRowInc);
+				this.list.Add(dim);
+				dim = new Dimension(this.editor, obj, Dimension.Type.GridRowDec);
+				this.list.Add(dim);
+#endif
+
 				int columns = this.objectModifier.GetGridColumnsCount(obj);
 				for (int i=0; i<columns; i++)
 				{
