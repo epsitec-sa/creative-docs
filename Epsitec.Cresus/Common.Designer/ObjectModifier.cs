@@ -485,25 +485,90 @@ namespace Epsitec.Common.Designer
 		{
 			//	Insère une colonne en poussant les suivantes.
 			this.SetGridColumnsCount(obj, this.GetGridColumnsCount(obj)+1);
+			this.GridColumnShift(obj, after ? column+1 : column, 1);
 		}
 
 		public void GridColumnRemove(Widget obj, int column)
 		{
 			//	Supprime une colonne en décalant les suivantes.
-			this.SetGridColumnsCount(obj, this.GetGridColumnsCount(obj)-1);
+			//	Pour cela, la colonne ne doit contenir aucun objet.
+			if (this.IsGridColumnEmpty(obj, column))
+			{
+				this.GridColumnShift(obj, column+1, -1);
+				this.SetGridColumnsCount(obj, this.GetGridColumnsCount(obj)-1);
+			}
 		}
 
-		public void GridRowAdd(Widget obj, int column, bool after)
+		public void GridRowAdd(Widget obj, int row, bool after)
 		{
 			//	Insère une ligne en poussant les suivantes.
 			this.SetGridRowsCount(obj, this.GetGridRowsCount(obj)+1);
+			this.GridRowShift(obj, after ? row+1 : row, 1);
 		}
 
-		public void GridRowRemove(Widget obj, int column)
+		public void GridRowRemove(Widget obj, int row)
 		{
 			//	Supprime une ligne en décalant les suivantes.
-			this.SetGridRowsCount(obj, this.GetGridRowsCount(obj)-1);
+			//	Pour cela, la colonne ne doit contenir aucun objet.
+			if (this.IsGridRowEmpty(obj, row))
+			{
+				this.GridRowShift(obj, row+1, -1);
+				this.SetGridRowsCount(obj, this.GetGridRowsCount(obj)-1);
+			}
 		}
+
+		public bool IsGridColumnEmpty(Widget obj, int column)
+		{
+			//	Vérifie si une colonne est entièrement vide.
+			foreach (Widget children in obj.Children)
+			{
+				if (this.GetGridColumn(children) == column)
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		public bool IsGridRowEmpty(Widget obj, int row)
+		{
+			//	Vérifie si une ligne est entièrement vide.
+			foreach (Widget children in obj.Children)
+			{
+				if (this.GetGridRow(children) == row)
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		protected void GridColumnShift(Widget obj, int column, int direction)
+		{
+			//	Décale les colonnes.
+			foreach (Widget children in obj.Children)
+			{
+				int c = this.GetGridColumn(children);
+				if (c >= column)
+				{
+					this.SetGridColumn(children, c+direction);
+				}
+			}
+		}
+
+		protected void GridRowShift(Widget obj, int row, int direction)
+		{
+			//	Décale les lignes.
+			foreach (Widget children in obj.Children)
+			{
+				int r = this.GetGridRow(children);
+				if (r >= row)
+				{
+					this.SetGridRow(children, r+direction);
+				}
+			}
+		}
+
 
 		public int GetGridColumnsCount(Widget obj)
 		{
@@ -1188,6 +1253,15 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public void SetGridColumn(Widget obj, int column)
+		{
+			//	Modifie la colonne à laquelle appartient l'objet.
+			if (this.AreChildrenGrid(obj.Parent))
+			{
+				GridLayoutEngine.SetColumn(obj, column);
+			}
+		}
+
 		public int GetGridColumn(Widget obj)
 		{
 			//	Retourne la colonne à laquelle appartient l'objet.
@@ -1199,9 +1273,18 @@ namespace Epsitec.Common.Designer
 			return 0;
 		}
 
+		public void SetGridRow(Widget obj, int row)
+		{
+			//	Modifie la ligne à laquelle appartient l'objet.
+			if (this.AreChildrenGrid(obj.Parent))
+			{
+				GridLayoutEngine.SetRow(obj, row);
+			}
+		}
+
 		public int GetGridRow(Widget obj)
 		{
-			//	Retourne la colonne à laquelle appartient l'objet.
+			//	Retourne la ligne à laquelle appartient l'objet.
 			if (this.AreChildrenGrid(obj.Parent))
 			{
 				return GridLayoutEngine.GetRow(obj);
