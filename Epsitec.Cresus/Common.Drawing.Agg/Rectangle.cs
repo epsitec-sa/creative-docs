@@ -827,7 +827,7 @@ namespace Epsitec.Common.Drawing
 		
 		public override string ToString()
 		{
-			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "[{0};{1};{2};{3}]",
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1};{2};{3}",
 				this.X, this.Y, this.Width, this.Height);
 		}
 

@@ -347,7 +347,7 @@ namespace Epsitec.Common.UI
 				return null;
 			}
 
-			Support.ResourceBundle.Field field = bundle["Panel"];
+			Support.ResourceBundle.Field field = bundle[Panel.PanelBundleField];
 
 			string xml;
 			Panel panel = Panel.GetPanel (bundle);
@@ -395,11 +395,11 @@ namespace Epsitec.Common.UI
 
 			if (panel == null)
 			{
-				Support.ResourceBundle.Field field = bundle["PreferredSize"];
+				Support.ResourceBundle.Field field = bundle[Panel.DefaultSizeBundleField];
 
 				if (field.IsEmpty)
 				{
-					field = bundle["Panel"];
+					field = bundle[Panel.PanelBundleField];
 
 					if (field.IsEmpty)
 					{

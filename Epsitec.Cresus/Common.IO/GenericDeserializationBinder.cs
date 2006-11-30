@@ -72,16 +72,65 @@ namespace Epsitec.Common.IO
 		protected virtual System.Type FindReplacementType(string assemblyName, string typeName)
 		{
 			string prefix = assemblyName.Substring (0, assemblyName.IndexOf (' '));
+
+			if (typeName.Contains ("`"))
+			{
+				//	Ouch, this is a generic type name and it will have more than
+				//	one embedded assembly reference. Cut the type specification
+				//	into manageable "[...]" chunks and replace the assembly versions
+				//	with the loaded ones.
+
+				int end;
+				int pos = typeName.IndexOf ('[');
+
+				System.Text.StringBuilder name = new System.Text.StringBuilder ();
+				name.Append (typeName.Substring (0, pos));
+
+				while (pos < typeName.Length)
+				{
+					while (typeName[pos] == '[')
+					{
+						name.Append ('[');
+						pos++;
+					}
+
+					end = typeName.IndexOf (']', pos);
+
+					string part = typeName.Substring (pos, end-pos);
+					string partType = part.Substring (0, part.IndexOf (','));
+					string partAssembly = part.Substring (part.IndexOf (',')+2);
+					string partPrefix = partAssembly.Substring (0, partAssembly.IndexOf (' '));
+					string replacement = GenericDeserializationBinder.FindReplacementTypeName (partPrefix, partType);
+
+					name.Append (replacement);
+
+					pos = end;
 					
+					while ((pos < typeName.Length)
+						&& (typeName[pos] != '['))
+					{
+						name.Append (typeName[pos]);
+						pos++;
+					}
+				}
+
+				typeName = name.ToString ();
+			}
+			
+			string fullName = GenericDeserializationBinder.FindReplacementTypeName (prefix, typeName);
+			return fullName == null ? null : GenericDeserializationBinder.SafeGetType (fullName);
+		}
+
+		private static string FindReplacementTypeName(string prefix, string typeName)
+		{
 			foreach (System.Reflection.Assembly assembly in GenericDeserializationBinder.assemblies)
 			{
 				if (assembly.FullName.StartsWith (prefix))
 				{
-					string fullName = string.Concat (typeName, ", ", assembly.FullName);
-					return GenericDeserializationBinder.SafeGetType (fullName);
+					return string.Concat (typeName, ", ", assembly.FullName);
 				}
 			}
-			
+
 			return null;
 		}
 		

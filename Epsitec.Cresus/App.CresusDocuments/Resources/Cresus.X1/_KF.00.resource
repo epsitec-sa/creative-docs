@@ -67,5 +67,5 @@
 </panel>
     </xml>
   </data>
-  <data name="DefaultSize">[150;56]</data>
+  <data name="DefaultSize">150;56</data>
 </bundle>

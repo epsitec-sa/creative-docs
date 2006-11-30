@@ -77,7 +77,7 @@ namespace Epsitec.Common.Drawing
 		
 		public override string ToString()
 		{
-			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "[{0};{1}]", this.width, this.height);
+			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1}", this.width, this.height);
 		}
 		
 		
@@ -187,7 +187,7 @@ namespace Epsitec.Common.Drawing
 			public override string ToString(object value)
 			{
 				Size size = (Size) value;
-				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1}", size.Width, size.Height);
+				return size.ToString ();
 			}
 			
 			public static string ToString(object value, bool suppress_width, bool suppress_height)

@@ -83,7 +83,7 @@ namespace Epsitec.Common.Drawing
 		
 		public override string ToString()
 		{
-			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "[{0};{1}]", this.x, this.y);
+			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1}", this.x, this.y);
 		}
 		
 		
@@ -441,7 +441,7 @@ namespace Epsitec.Common.Drawing
 			public override string ToString(object value)
 			{
 				Point point = (Point) value;
-				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1}", point.X, point.Y);
+				return point.ToString ();
 			}
 			
 			public static string ToString(object value, bool suppress_x, bool suppress_y)
