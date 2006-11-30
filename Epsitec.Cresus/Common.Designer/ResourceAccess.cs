@@ -2743,7 +2743,7 @@ namespace Epsitec.Common.Designer
 					ResourceBundle bundle = this.resourceManager.GetBundle(name, ResourceLevel.Default);
 					this.panelsList.Add(bundle);
 
-					ResourceBundle.Field field = bundle[this.BundleName(false)];
+					ResourceBundle.Field field = bundle[UI.Panel.PanelBundleField];
 
 					if (field.IsValid)
 					{
@@ -2773,14 +2773,21 @@ namespace Epsitec.Common.Designer
 
 				if (panel != null)
 				{
-					if (!bundle.Contains(this.BundleName(false)))
+					if (!bundle.Contains (UI.Panel.PanelBundleField))
 					{
-						ResourceBundle.Field field = bundle.CreateField(ResourceFieldType.Data);
-						field.SetName(this.BundleName(false));
-						bundle.Add(field);
+						ResourceBundle.Field field = bundle.CreateField (ResourceFieldType.Data);
+						field.SetName (UI.Panel.PanelBundleField);
+						bundle.Add (field);
+					}
+					if (!bundle.Contains (UI.Panel.DefaultSizeBundleField))
+					{
+						ResourceBundle.Field field = bundle.CreateField (ResourceFieldType.Data);
+						field.SetName (UI.Panel.DefaultSizeBundleField);
+						bundle.Add (field);
 					}
 
-					bundle[this.BundleName(false)].SetXmlValue(UserInterface.SerializePanel(panel, this.resourceManager));
+					bundle[UI.Panel.PanelBundleField].SetXmlValue (UserInterface.SerializePanel (panel, this.resourceManager));
+					bundle[UI.Panel.DefaultSizeBundleField].SetStringValue (panel.PreferredSize.ToString ());
 				}
 
 				if (this.panelsToCreate.Contains(bundle))

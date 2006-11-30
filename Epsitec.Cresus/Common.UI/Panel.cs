@@ -711,6 +711,9 @@ namespace Epsitec.Common.UI
 			return (Support.Druid) obj.GetValue (Panel.BundleIdProperty);
 		}
 
+		public static readonly string PanelBundleField = "Panel";
+		public static readonly string DefaultSizeBundleField = "DefaultSize";
+
 		public static readonly DependencyProperty PanelProperty = DependencyProperty.RegisterAttached ("Panel", typeof (Panel), typeof (Panel));
 		public static readonly DependencyProperty BundleIdProperty = DependencyProperty.RegisterAttached ("BundleId", typeof (Support.Druid), typeof (Panel), new DependencyPropertyMetadata (Support.Druid.Empty));
 		public static readonly DependencyProperty DataSourceMetadataProperty = DependencyProperty.RegisterReadOnly ("DataSourceMetadata", typeof (DataSourceMetadata), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDataSourceMetadataValue, Panel.SetDataSourceMetadataValue).MakeReadOnlySerializable ());
