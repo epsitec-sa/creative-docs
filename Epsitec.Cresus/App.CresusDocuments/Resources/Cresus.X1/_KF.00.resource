@@ -40,7 +40,7 @@
     <s:object id="_21" s:type="_11" />
     <s:object id="_22" s:type="_11" />
     <s:object id="_23" s:type="_11" />
-    <s:data id="_1" f:TabNavigationMode="ForwardTabPassive" f:ChildrenLayoutMode="Stacked" f:ContainerLayoutMode="VerticalFlow" f:PreferredWidth="148" f:PreferredHeight="58" f:Anchor="BottomLeft" f:Padding="10;10;10;10" f:_2.ResourceManager="{ExtRef _ResourceManager}" f:_1.BundleId="[KF]" f:_3.DataContext="\[Binding Mode=TwoWay\]" f:Children="{Collection {ObjRef _2}, {ObjRef _3}, {ObjRef _4}}" f:DataSource="{ExtRef _DataSource}" f:DataSourceMetadata="{ObjRef _5}" f:EditionPanel="{ObjRef _6}" f:SearchPanel="{Null}" f:Text="" />
+    <s:data id="_1" f:TabNavigationMode="ForwardTabPassive" f:ChildrenLayoutMode="Stacked" f:ContainerLayoutMode="VerticalFlow" f:PreferredWidth="150" f:PreferredHeight="56" f:Anchor="BottomLeft" f:Padding="10;10;10;10" f:_2.ResourceManager="{ExtRef _ResourceManager}" f:_1.BundleId="[KF]" f:_3.DataContext="\[Binding Mode=TwoWay\]" f:Children="{Collection {ObjRef _2}, {ObjRef _3}, {ObjRef _4}}" f:DataSource="{ExtRef _DataSource}" f:DataSourceMetadata="{ObjRef _5}" f:EditionPanel="{ObjRef _6}" f:SearchPanel="{Null}" f:Text="" />
     <s:data id="_2" f:MinWidth="10" f:Margins="0;0;0;0" f:MinHeight="12" f:Dock="StackBegin" f:Anchor="None" f:PreferredHeight="12" f:CaptionId="[KF09]" />
     <s:data id="_3" f:MinWidth="10" f:Margins="0;0;0;0" f:MinHeight="12" f:Dock="StackBegin" f:Anchor="None" f:PreferredHeight="12" f:CaptionId="[KF0A]" />
     <s:data id="_4" f:MinWidth="10" f:Margins="0;0;0;0" f:MinHeight="12" f:Dock="StackBegin" f:Anchor="None" f:PreferredHeight="12" f:CaptionId="[KF0B]" />
@@ -67,4 +67,5 @@
 </panel>
     </xml>
   </data>
+  <data name="DefaultSize">[150;56]</data>
 </bundle>

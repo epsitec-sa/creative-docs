@@ -280,7 +280,15 @@ namespace Epsitec.Common.Support
 
 				Druid druid = Druid.Parse (localId);
 
-				prefix  = string.Format (CultureInfo.InvariantCulture, "{0}/{1}", prefix, druid.Module);
+				if (prefix.Contains ("/"))
+				{
+					//	OK, prefix already contains module id.
+				}
+				else
+				{
+					prefix  = string.Format (CultureInfo.InvariantCulture, "{0}/{1}", prefix, druid.Module);
+				}
+				
 				localId = Resources.JoinFieldId (Resources.StringsBundleName, druid.ToFieldName ());
 			}
 		}
@@ -294,7 +302,15 @@ namespace Epsitec.Common.Support
 
 				Druid druid = Druid.Parse (localId);
 
-				prefix  = string.Format (CultureInfo.InvariantCulture, "{0}/{1}", prefix, druid.Module);
+				if (prefix.Contains ("/"))
+				{
+					//	OK, prefix already contains module id.
+				}
+				else
+				{
+					prefix  = string.Format (CultureInfo.InvariantCulture, "{0}/{1}", prefix, druid.Module);
+				}
+				
 				localId = druid.ToBundleId ();
 			}
 		}
