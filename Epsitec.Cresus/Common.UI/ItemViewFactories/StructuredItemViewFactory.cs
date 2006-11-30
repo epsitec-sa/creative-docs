@@ -44,6 +44,15 @@ namespace Epsitec.Common.UI.ItemViewFactories
 						(columnId < table.Columns.Count))
 					{
 						Support.Druid templateId = table.Columns[columnId].TemplateId;
+
+						if (templateId.IsEmpty)
+						{
+							StructuredItemViewFactory.CreateTextColumn (container, itemView, header, i, width);
+						}
+						else
+						{
+							StructuredItemViewFactory.CreateTemplateBasedColumn (container, itemView, templateId, header, i, width);
+						}
 					}
 					else
 					{
@@ -53,6 +62,22 @@ namespace Epsitec.Common.UI.ItemViewFactories
 
 				return container;
 			}
+		}
+
+		private static void CreateTemplateBasedColumn(Widgets.Widget container, ItemView itemView, Support.Druid templateId, ItemPanelColumnHeader header, int index, double width)
+		{
+			Support.ResourceManager manager = Widgets.Helpers.VisualTree.FindResourceManager (container);
+			Panel panel = Panel.CreatePanel (templateId, manager);
+			
+			panel.SetEmbedder (container);
+			
+			panel.Dock           = Widgets.DockStyle.Stacked;
+			panel.PreferredWidth = width - panel.Margins.Width;
+
+			object source = itemView.Item;
+			string path   = header.GetColumnPropertyName (index);
+			
+			DataObject.SetDataContext (panel, new Binding (source, path));
 		}
 
 		private static void CreateTextColumn(Widgets.Widget container, ItemView itemView, ItemPanelColumnHeader header, int index, double width)

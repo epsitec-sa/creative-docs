@@ -337,9 +337,9 @@ namespace Epsitec.Common.UI
 		{
 			if (manager == null)
 			{
-				throw new System.InvalidOperationException ("Cannot create user interface: ResourceManager is undefined (add the PanelPlaceholder into a valid Panel)");
+				manager = Support.Resources.DefaultManager;
 			}
-
+			
 			Support.ResourceBundle bundle = manager.GetBundle (panelId);
 
 			if (bundle == null)
@@ -350,18 +350,19 @@ namespace Epsitec.Common.UI
 			Support.ResourceBundle.Field field = bundle["Panel"];
 
 			string xml;
-			Panel panel;
+			Panel panel = Panel.GetPanel (bundle);
 
-			if (field.IsEmpty)
+			if (panel != null)
 			{
-				Panel cachedPanel = Panel.GetPanel (bundle);
+				//	We have found a panel attached to the resource bundle; use it instead
+				//	of the serialized version stored in the bundle, as it will be more up
+				//	to date; this happens when working in the Designer.
 
-				if (cachedPanel == null)
-				{
-					return null;
-				}
-
-				xml = Panel.SerializePanel (cachedPanel);
+				xml = Panel.SerializePanel (panel);
+			}
+			else if (field.IsEmpty)
+			{
+				return null;
 			}
 			else
 			{
@@ -373,8 +374,7 @@ namespace Epsitec.Common.UI
 				return null;
 			}
 
-			panel = Panel.DeserializePanel (xml, null, manager);
-			return panel;
+			return Panel.DeserializePanel (xml, null, manager);
 		}
 
 		

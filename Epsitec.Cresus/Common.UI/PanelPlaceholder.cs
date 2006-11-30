@@ -155,6 +155,11 @@ namespace Epsitec.Common.UI
 				Support.ResourceManager manager = Widgets.Helpers.VisualTree.FindResourceManager (this);
 				Support.Druid panelId = this.PanelId;
 
+				if (manager == null)
+				{
+					throw new System.InvalidOperationException ("Cannot create user interface: ResourceManager is undefined (add the PanelPlaceholder into a valid Panel)");
+				}
+
 				Panel panel = Panel.CreatePanel (panelId, manager);
 
 				if (panel == null)
