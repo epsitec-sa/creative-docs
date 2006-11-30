@@ -127,7 +127,7 @@ namespace Epsitec.Common.IO
 			{
 				if (assembly.FullName.StartsWith (prefix))
 				{
-					string fullName = string.Concat (typeName, ", ", assembly.FullName);
+					return string.Concat (typeName, ", ", assembly.FullName);
 				}
 			}
 
