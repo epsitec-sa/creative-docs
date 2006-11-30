@@ -3839,7 +3839,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			GridSelection gs = GridSelection.Get(obj);
 			if (gs != null)
 			{
-				this.DrawGridSelected(graphics, obj, gs, PanelsContext.ColorGridCell, true);
+				this.DrawGridSelected(graphics, obj, gs, PanelsContext.ColorGridCellOutline, true);
 			}
 		}
 
@@ -3911,7 +3911,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 				graphics.LineWidth = 1;
 
-				color.A *= 0.25;
+				color = Misc.FactorColor(color, 0.25);
 			}
 
 			//	Si le rectangle est trop petit (par exemple objet Separator), il est engraissé.
@@ -3941,7 +3941,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (gs != null)
 			{
-				this.DrawGridSelected(graphics, obj, gs, PanelsContext.ColorGridCell, false);
+				this.DrawGridSelected(graphics, obj, gs, PanelsContext.ColorGridCellOutline, false);
 			}
 		}
 
@@ -3977,7 +3977,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (column != GridSelection.Invalid && row != GridSelection.Invalid)
 			{
 				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row, columnCount, rowCount);
-				this.DrawGridHilited(graphics, area, PanelsContext.ColorGridCell);
+				this.DrawGridHilited(graphics, area, PanelsContext.ColorGridCellOutline);
 			}
 		}
 
@@ -4143,11 +4143,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (selection)  // sélection ?
 			{
-				Color cs = color;
-				cs.A *= 0.2;
 				graphics.AddFilledRectangle(area1);
 				graphics.AddFilledRectangle(area2);
-				graphics.RenderSolid(cs);
+				graphics.RenderSolid(PanelsContext.ColorGridCellSurface);
 
 				path = Misc.GetCrossPath(area1, area2);
 				graphics.Rasterizer.AddOutline(path);
@@ -4173,10 +4171,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (selection)  // sélection ?
 			{
-				Color cs = color;
-				cs.A *= 0.2;
 				graphics.AddFilledRectangle(area);
-				graphics.RenderSolid(cs);
+				graphics.RenderSolid(PanelsContext.ColorGridCellSurface);
 
 				graphics.AddRectangle(area);
 				area.Deflate(2.0);

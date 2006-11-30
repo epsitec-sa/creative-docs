@@ -326,12 +326,21 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		static public Color ColorGridCell
+		static public Color ColorGridCellOutline
 		{
 			//	Couleur pour représenter une mise en évidence de cellule.
 			get
 			{
-				return Color.FromRgb(0, 0, 1);
+				return Color.FromRgb(0.0/255.0, 0.0/255.0, 0.0/255.0);
+			}
+		}
+
+		static public Color ColorGridCellSurface
+		{
+			//	Couleur pour représenter une mise en évidence de cellule.
+			get
+			{
+				return Color.FromAlphaRgb(0.2, 255.0/255.0, 255.0/255.0, 0.0/255.0);
 			}
 		}
 

@@ -202,18 +202,6 @@ namespace Epsitec.Common.Designer
 			//	toutes les autres.
 			if (this.objectModifier.GetChildrenPlacement(obj) == ObjectModifier.ChildrenPlacement.Grid)
 			{
-#if false
-				dim = new Dimension(this.editor, obj, Dimension.Type.GridColumnInc);
-				this.list.Add(dim);
-				dim = new Dimension(this.editor, obj, Dimension.Type.GridColumnDec);
-				this.list.Add(dim);
-
-				dim = new Dimension(this.editor, obj, Dimension.Type.GridRowInc);
-				this.list.Add(dim);
-				dim = new Dimension(this.editor, obj, Dimension.Type.GridRowDec);
-				this.list.Add(dim);
-#endif
-
 				int columns = this.objectModifier.GetGridColumnsCount(obj);
 				for (int i=0; i<columns; i++)
 				{
@@ -265,6 +253,15 @@ namespace Epsitec.Common.Designer
 
 							dim = new Dimension(this.editor, obj, Dimension.Type.GridMarginRight, item.Index);
 							this.list.Add(dim);
+
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridColumnAddBefore, item.Index);
+							this.list.Add(dim);
+
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridColumnAddAfter, item.Index);
+							this.list.Add(dim);
+
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridColumnRemove, item.Index);
+							this.list.Add(dim);
 						}
 
 						if (item.Unit == GridSelection.Unit.Row)
@@ -273,6 +270,15 @@ namespace Epsitec.Common.Designer
 							this.list.Add(dim);
 
 							dim = new Dimension(this.editor, obj, Dimension.Type.GridMarginTop, item.Index);
+							this.list.Add(dim);
+
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridRowAddBefore, item.Index);
+							this.list.Add(dim);
+
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridRowAddAfter, item.Index);
+							this.list.Add(dim);
+
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridRowRemove, item.Index);
 							this.list.Add(dim);
 						}
 					}

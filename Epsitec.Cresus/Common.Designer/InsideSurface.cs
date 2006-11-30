@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class InsideSurface
 	{
-		public static bool IsInside(Path path, Point pos)
+		public static bool Contains(Path path, Point pos)
 		{
 			//	Détecte si la souris est dans un chemin.
 			PathElement[] elements;
