@@ -261,11 +261,15 @@ namespace Epsitec.Common.Designer.Proxies
 					{
 						if (item.Unit == GridSelection.Unit.Column)
 						{
-							this.GridColumnMode  = this.ObjectModifier.GetGridColumnMode(this.DefaultWidget, item.Index);
-							this.GridColumnValue = this.ObjectModifier.GetGridColumnWidth(this.DefaultWidget, item.Index);
+							this.GridColumnMode = this.ObjectModifier.GetGridColumnMode(this.DefaultWidget, item.Index);
+
+							if (this.GridColumnMode != ObjectModifier.GridMode.Auto)
+							{
+								this.GridColumnValue = this.ObjectModifier.GetGridColumnWidth(this.DefaultWidget, item.Index);
+							}
 
 							this.GridMinWidth = this.ObjectModifier.GetGridColumnMinWidth(this.DefaultWidget, item.Index);
-							this.GridMaxWidth = this.ObjectModifier.GetGridColumnMaxWidth(this.DefaultWidget, item.Index);
+							//?this.GridMaxWidth = this.ObjectModifier.GetGridColumnMaxWidth(this.DefaultWidget, item.Index);
 
 							this.GridLeftBorder = this.ObjectModifier.GetGridColumnLeftBorder(this.DefaultWidget, item.Index);
 							this.GridRightBorder = this.ObjectModifier.GetGridColumnRightBorder(this.DefaultWidget, item.Index);
@@ -273,11 +277,15 @@ namespace Epsitec.Common.Designer.Proxies
 
 						if (item.Unit == GridSelection.Unit.Row)
 						{
-							this.GridRowMode  = this.ObjectModifier.GetGridRowMode(this.DefaultWidget, item.Index);
-							this.GridRowValue = this.ObjectModifier.GetGridRowHeight(this.DefaultWidget, item.Index);
+							this.GridRowMode = this.ObjectModifier.GetGridRowMode(this.DefaultWidget, item.Index);
+
+							if (this.GridRowMode != ObjectModifier.GridMode.Auto)
+							{
+								this.GridRowValue = this.ObjectModifier.GetGridRowHeight(this.DefaultWidget, item.Index);
+							}
 
 							this.GridMinHeight = this.ObjectModifier.GetGridRowMinHeight(this.DefaultWidget, item.Index);
-							this.GridMaxHeight = this.ObjectModifier.GetGridRowMaxHeight(this.DefaultWidget, item.Index);
+							//?this.GridMaxHeight = this.ObjectModifier.GetGridRowMaxHeight(this.DefaultWidget, item.Index);
 
 							this.GridTopBorder = this.ObjectModifier.GetGridRowTopBorder(this.DefaultWidget, item.Index);
 							this.GridBottomBorder = this.ObjectModifier.GetGridRowBottomBorder(this.DefaultWidget, item.Index);
