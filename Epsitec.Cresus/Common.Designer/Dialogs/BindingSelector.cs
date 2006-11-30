@@ -68,10 +68,10 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.Columns = 6;
 				this.array.SetColumnsRelativeWidth(0, 0.28);
 				this.array.SetColumnsRelativeWidth(1, 0.07);
-				this.array.SetColumnsRelativeWidth(2, 0.30);
-				this.array.SetColumnsRelativeWidth(3, 0.05);
-				this.array.SetColumnsRelativeWidth(4, 0.30);
-				this.array.SetColumnsRelativeWidth(5, 0.05);
+				this.array.SetColumnsRelativeWidth(2, 0.28);
+				this.array.SetColumnsRelativeWidth(3, 0.07);
+				this.array.SetColumnsRelativeWidth(4, 0.28);
+				this.array.SetColumnsRelativeWidth(5, 0.07);
 				this.array.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
 				this.array.SetColumnAlignment(1, ContentAlignment.MiddleCenter);
 				this.array.SetColumnAlignment(2, ContentAlignment.MiddleLeft);

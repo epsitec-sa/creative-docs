@@ -427,7 +427,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				case MessageType.MouseWheel:
 					if (this.dimensionsList.Wheel(message.Wheel))
 					{
-						this.OnChildrenGeometryChanged();
+						this.OnChildrenGeometryChanged();  // met à jour les proxies
 						this.module.MainWindow.UpdateInfoViewer();
 					}
 					message.Consumer = this;
@@ -786,7 +786,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.dimensionsList.DraggingEnd();
 				this.draggingDimension = false;
-				this.OnChildrenGeometryChanged();
+				this.OnChildrenGeometryChanged();  // met à jour les proxies
 				this.module.MainWindow.UpdateInfoViewer();
 			}
 
@@ -1798,7 +1798,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.handlesList.DraggingStop(pos);
 				this.isHandling = false;
-				this.OnChildrenGeometryChanged();
+				this.OnChildrenGeometryChanged();  // met à jour les proxies
 				this.module.MainWindow.UpdateInfoViewer();
 			}
 		}
@@ -1961,7 +1961,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					Rectangle initial = this.SelectBounds;
 					this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft, parent);
-					this.OnChildrenGeometryChanged();
+					this.OnChildrenGeometryChanged();  // met à jour les proxies
 				}
 
 				if (this.objectModifier.AreChildrenStacked(parent))
@@ -1973,7 +1973,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					Rectangle hilite;
 					this.ZOrderDetect(pos, parent, out group, out order, out ha, out va, out hilite);
 					this.ZOrderChangeSelection(group, order, ha, va);
-					this.OnChildrenGeometryChanged();
+					this.OnChildrenGeometryChanged();  // met à jour les proxies
 				}
 
 				if (this.objectModifier.AreChildrenGrid(parent))
@@ -2005,7 +2005,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 							}
 						}
 
-						this.OnChildrenGeometryChanged();
+						this.OnChildrenGeometryChanged();  // met à jour les proxies
 					}
 					else
 					{
@@ -2786,7 +2786,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.objectModifier.SetBounds(obj, bounds);
 
 				this.handlesList.UpdateGeometry();
-				this.OnChildrenGeometryChanged();
+				this.OnChildrenGeometryChanged();  // met à jour les proxies
 			}
 		}
 

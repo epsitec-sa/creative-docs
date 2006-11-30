@@ -87,11 +87,10 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				if (this.dragging.DimensionType == Dimension.Type.GridColumn ||
-					this.dragging.DimensionType == Dimension.Type.GridRow    )
+				if (this.dragging.DimensionType == Dimension.Type.GridColumn||
+					this.dragging.DimensionType == Dimension.Type.GridRow   )
 				{
-					List<Widget> sel = this.editor.SelectedObjects;
-					Widget obj = sel[0];  // premier objet sélectionné (celui qui a les cotes)
+					Widget obj = this.dragging.Object;
 
 					GridSelection gs = GridSelection.Get(obj);
 					if (gs == null)
@@ -121,11 +120,32 @@ namespace Epsitec.Common.Designer
 					this.editor.UpdateAfterSelectionGridChanged();
 					this.editor.Invalidate();
 				}
+				else if (this.dragging.DimensionType == Dimension.Type.GridWidthMode)
+				{
+					Widget obj = this.dragging.Object;
+
+					ObjectModifier.GridMode mode = this.objectModifier.GetGridColumnMode(obj, this.dragging.ColumnOrRow);
+					this.objectModifier.SetGridColumnMode(obj, this.dragging.ColumnOrRow, DimensionsList.NextGridMode(mode));
+
+					this.editor.UpdateAfterSelectionGridChanged();
+					this.editor.Invalidate();
+				}
+				else if (this.dragging.DimensionType == Dimension.Type.GridHeightMode)
+				{
+					Widget obj = this.dragging.Object;
+
+					ObjectModifier.GridMode mode = this.objectModifier.GetGridRowMode(obj, this.dragging.ColumnOrRow);
+					this.objectModifier.SetGridRowMode(obj, this.dragging.ColumnOrRow, DimensionsList.NextGridMode(mode));
+
+					this.editor.UpdateAfterSelectionGridChanged();
+					this.editor.Invalidate();
+				}
 				else
 				{
 					this.startingPos = mouse;
 					this.initialValue = this.dragging.Value;
 				}
+
 				return true;
 			}
 		}
@@ -161,6 +181,17 @@ namespace Epsitec.Common.Designer
 			this.dragging = null;
 		}
 
+		protected static ObjectModifier.GridMode NextGridMode(ObjectModifier.GridMode mode)
+		{
+			switch (mode)
+			{
+				case ObjectModifier.GridMode.Auto:          return ObjectModifier.GridMode.Absolute;
+				case ObjectModifier.GridMode.Absolute:      return ObjectModifier.GridMode.Proportional;
+				case ObjectModifier.GridMode.Proportional:  return ObjectModifier.GridMode.Auto;
+				default:                                    return ObjectModifier.GridMode.Auto;
+			}
+		}
+
 
 		protected void CreateDimensions(Widget obj)
 		{
@@ -192,17 +223,27 @@ namespace Epsitec.Common.Designer
 					{
 						GridSelection.OneItem item = gs[i];
 
-						if (item.Unit == GridSelection.Unit.Column &&
-							this.objectModifier.GetGridColumnMode(obj, item.Index) != ObjectModifier.GridMode.Auto)
+						if (item.Unit == GridSelection.Unit.Column)
 						{
-							dim = new Dimension(this.editor, obj, Dimension.Type.GridWidth, item.Index);
+							if (this.objectModifier.GetGridColumnMode(obj, item.Index) != ObjectModifier.GridMode.Auto)
+							{
+								dim = new Dimension(this.editor, obj, Dimension.Type.GridWidth, item.Index);
+								this.list.Add(dim);
+							}
+
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridWidthMode, item.Index);
 							this.list.Add(dim);
 						}
 
-						if (item.Unit == GridSelection.Unit.Row &&
-							this.objectModifier.GetGridRowMode(obj, item.Index) != ObjectModifier.GridMode.Auto)
+						if (item.Unit == GridSelection.Unit.Row)
 						{
-							dim = new Dimension(this.editor, obj, Dimension.Type.GridHeight, item.Index);
+							if (this.objectModifier.GetGridRowMode(obj, item.Index) != ObjectModifier.GridMode.Auto)
+							{
+								dim = new Dimension(this.editor, obj, Dimension.Type.GridHeight, item.Index);
+								this.list.Add(dim);
+							}
+
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridHeightMode, item.Index);
 							this.list.Add(dim);
 						}
 					}
