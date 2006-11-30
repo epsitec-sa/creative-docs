@@ -147,6 +147,11 @@ namespace Epsitec.Common.UI
 
 			this.UpdateColumnHeader ();
 		}
+
+		public Drawing.Size GetDefaultItemSize(ItemView itemView)
+		{
+			return this.defaultItemSize;
+		}
 		
 		private void UpdateAperture(Drawing.Size aperture)
 		{
@@ -177,7 +182,12 @@ namespace Epsitec.Common.UI
 				(this.columns.Count > 0) &&
 				(this.sourceType != null))
 			{
+				Support.ResourceManager manager = Widgets.Helpers.VisualTree.FindResourceManager (this);
+				
 				this.columnHeader.ClearColumns ();
+
+				double minWidth  = 0;
+				double minHeight = 0;
 
 				for (int i = 0; i < this.columns.Count; i++)
 				{
@@ -195,6 +205,10 @@ namespace Epsitec.Common.UI
 						{
 							this.columnHeader.AddColumn (i, null, captionId);
 						}
+						else
+						{
+							continue;
+						}
 					}
 					else
 					{
@@ -202,7 +216,7 @@ namespace Epsitec.Common.UI
 						
 						if (field.IsEmpty)
 						{
-							//	Ignore unknown columns...
+							continue;
 						}
 						else
 						{
@@ -218,7 +232,19 @@ namespace Epsitec.Common.UI
 							}
 						}
 					}
+
+					Drawing.Size size = this.itemPanel.ItemViewDefaultSize;
+
+					if (column.TemplateId.IsValid)
+					{
+						size = Panel.GetPanelDefaultSize (column.TemplateId, manager);
+					}
+
+					minWidth += column.Width.IsAbsolute ? column.Width.Value : size.Width;
+					minHeight = System.Math.Max (minHeight, size.Height);
 				}
+
+				this.defaultItemSize = new Drawing.Size (minWidth, minHeight);
 			}
 		}
 
@@ -294,5 +320,6 @@ namespace Epsitec.Common.UI
 		private ItemPanel itemPanel;
 		private StructuredType sourceType;
 		private int suspendColumnUpdates;
+		private Drawing.Size defaultItemSize;
 	}
 }

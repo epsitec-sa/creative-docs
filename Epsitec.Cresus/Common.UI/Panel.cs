@@ -377,6 +377,48 @@ namespace Epsitec.Common.UI
 			return Panel.DeserializePanel (xml, null, manager);
 		}
 
+		public static Drawing.Size GetPanelDefaultSize(Support.Druid panelId, Support.ResourceManager manager)
+		{
+			if (manager == null)
+			{
+				manager = Support.Resources.DefaultManager;
+			}
+
+			Support.ResourceBundle bundle = manager.GetBundle (panelId);
+
+			if (bundle == null)
+			{
+				return Drawing.Size.Empty;
+			}
+
+			Panel panel = Panel.GetPanel (bundle);
+
+			if (panel == null)
+			{
+				Support.ResourceBundle.Field field = bundle["PreferredSize"];
+
+				if (field.IsEmpty)
+				{
+					field = bundle["Panel"];
+
+					if (field.IsEmpty)
+					{
+						return Drawing.Size.Empty;
+					}
+					else
+					{
+						panel = Panel.DeserializePanel (field.AsString, null, manager);
+					}
+				}
+				else
+				{
+					return Drawing.Size.Parse (field.AsString);
+				}
+			}
+			
+			return panel.PreferredSize;
+		}
+
 		
 		protected override bool PreProcessMessage(Widgets.Message message, Drawing.Point pos)
 		{
