@@ -15,5 +15,20 @@ namespace Epsitec.Common.UI.Collections
 			: base (host)
 		{
 		}
+
+		public void Add(string fieldId)
+		{
+			this.Add (new ItemTableColumn (fieldId));
+		}
+
+		public void Add(string fieldId, double width)
+		{
+			this.Add (new ItemTableColumn (fieldId, width));
+		}
+
+		public void Add(string fieldId, Epsitec.Common.Widgets.Layouts.GridLength width)
+		{
+			this.Add (new ItemTableColumn (fieldId, width));
+		}
 	}
 }

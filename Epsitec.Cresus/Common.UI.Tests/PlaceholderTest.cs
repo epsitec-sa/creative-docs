@@ -360,6 +360,35 @@ namespace Epsitec.Common.UI
 			Window.RunInTestEnvironment (window);
 		}
 
+		[Test]
+		public void CheckTablePlaceholderSerialization()
+		{
+			TablePlaceholder placeholder = new TablePlaceholder ();
+
+			placeholder.SourceTypeId = Res.Types.Record.Address.CaptionId;
+			
+			placeholder.Columns.Add ("FirstName");
+			placeholder.Columns.Add ("LastName");
+			placeholder.Columns.Add ("Company");
+
+			Panel panel = new Panel ();
+
+			panel.ResourceManager = Support.Resources.DefaultManager;
+			panel.Children.Add (placeholder);
+
+			string xml = Panel.SerializePanel (panel);
+
+			System.Console.Out.WriteLine (xml);
+
+			panel = Panel.DeserializePanel (xml, null, Support.Resources.DefaultManager);
+			placeholder = panel.Children[0] as TablePlaceholder;
+
+			Assert.AreEqual (3, placeholder.Columns.Count);
+			Assert.AreEqual ("FirstName", placeholder.Columns[0].FieldId);
+			Assert.AreEqual ("LastName", placeholder.Columns[1].FieldId);
+			Assert.AreEqual ("Company", placeholder.Columns[2].FieldId);
+		}
+
 
 		private class SlowIntValue : DependencyObject
 		{
