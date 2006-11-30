@@ -202,8 +202,20 @@ namespace Epsitec.Common.UI
 
 		private void HandleColumnClicked(object sender, MessageEventArgs e)
 		{
+			if (e.Message.Button != MouseButtons.Left)
+			{
+				return;
+			}
+
 			Widget widget = sender as Widget;
 			Column column = this.columns[widget.Index];
+
+			e.Message.Consumer = this;
+			
+			if (string.IsNullOrEmpty (column.PropertyName))
+			{
+				return;
+			}
 
 			List<SortDescription> sorts = new List<SortDescription> ();
 			SortDescription newSort = new SortDescription (column.Button.SortMode == SortMode.Down ? ListSortDirection.Descending : ListSortDirection.Ascending, column.PropertyName);

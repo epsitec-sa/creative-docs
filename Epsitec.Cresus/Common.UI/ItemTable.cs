@@ -56,6 +56,12 @@ namespace Epsitec.Common.UI
 			this.itemPanel.GroupSelection = ItemPanelSelectionMode.None;
 
 			this.columnHeader.ItemPanel = this.itemPanel;
+
+			//	Link the item panel with its table, so that an ItemViewFactory
+			//	can find the table and the column templates, if it needs to do
+			//	so :
+			
+			ItemTable.SetItemTable (this.itemPanel, this);
 		}
 
 		public ItemTable(Widget embedder)
@@ -258,6 +264,26 @@ namespace Epsitec.Common.UI
 		}
 
 		#endregion
+
+
+		public static void SetItemTable(DependencyObject obj, ItemTable value)
+		{
+			if (value == null)
+			{
+				obj.ClearValue (ItemTable.ItemTableProperty);
+			}
+			else
+			{
+				obj.SetValue (ItemTable.ItemTableProperty, value);
+			}
+		}
+
+		public static ItemTable GetItemTable(DependencyObject obj)
+		{
+			return (ItemTable) obj.GetValue (ItemTable.ItemTableProperty);
+		}
+		
+		public static readonly DependencyProperty ItemTableProperty = DependencyProperty.RegisterAttached ("ItemTable", typeof (ItemTable), typeof (ItemTable));
 
 		private VScroller vScroller;
 		private HScroller hScroller;
