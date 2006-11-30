@@ -378,8 +378,6 @@ namespace Epsitec.Common.UI
 
 			string xml = Panel.SerializePanel (panel);
 
-			System.Console.Out.WriteLine (xml);
-
 			panel = Panel.DeserializePanel (xml, null, Support.Resources.DefaultManager);
 			placeholder = panel.Children[0] as TablePlaceholder;
 
@@ -387,6 +385,7 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual ("FirstName", placeholder.Columns[0].FieldId);
 			Assert.AreEqual ("LastName", placeholder.Columns[1].FieldId);
 			Assert.AreEqual ("Company", placeholder.Columns[2].FieldId);
+			Assert.AreEqual (Res.Types.Record.Address.CaptionId, placeholder.SourceTypeId);
 		}
 
 

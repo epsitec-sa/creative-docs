@@ -56,14 +56,24 @@ namespace Epsitec.Common.UI
 
 		public void AddColumn(StructuredTypeField field)
 		{
-			this.AddColumn (field.Id, field.CaptionId);
+			this.AddColumn (-1, field.Id, field.CaptionId);
 		}
-		
+
+		public void AddColumn(int id, StructuredTypeField field)
+		{
+			this.AddColumn (id, field.Id, field.CaptionId);
+		}
+
 		public void AddColumn(string propertyName, Support.Druid captionId)
+		{
+			this.AddColumn (-1, propertyName, captionId);
+		}
+
+		public void AddColumn(int id, string propertyName, Support.Druid captionId)
 		{
 			this.gridLayout.ColumnDefinitions.Add (new ColumnDefinition ());
 
-			Column column = new Column (this, propertyName, captionId);
+			Column column = new Column (this, propertyName, captionId, id);
 
 			column.Button.SizeChanged += this.HandleColumnWidthChanged;
 			column.Button.Clicked     += this.HandleColumnClicked;
@@ -100,9 +110,14 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public string GetColumn(int index)
+		public string GetColumnPropertyName(int index)
 		{
 			return this.columns[index].PropertyName;
+		}
+
+		public int GetColumnId(int index)
+		{
+			return this.columns[index].Id;
 		}
 
 		public ColumnDefinition GetColumnDefinition(int index)
@@ -244,11 +259,12 @@ namespace Epsitec.Common.UI
 
 		private struct Column
 		{
-			public Column(ItemPanelColumnHeader header, string propertyName, Support.Druid captionId)
+			public Column(ItemPanelColumnHeader header, string propertyName, Support.Druid captionId, int id)
 			{
 				this.property = new PropertyGroupDescription (propertyName);
 				this.button   = new HeaderButton (header);
 				this.slider   = new HeaderSlider (header);
+				this.id       = id;
 
 				this.button.Style     = HeaderButtonStyle.Top;
 				this.button.IsDynamic = true;
@@ -294,6 +310,14 @@ namespace Epsitec.Common.UI
 				}
 			}
 
+			public int Id
+			{
+				get
+				{
+					return this.id;
+				}
+			}
+
 			public string GetColumnText(object item)
 			{
 				string[] names = this.property.GetGroupNamesForItem (item, System.Globalization.CultureInfo.CurrentCulture);
@@ -303,6 +327,7 @@ namespace Epsitec.Common.UI
 			private PropertyGroupDescription property;
 			private HeaderButton button;
 			private HeaderSlider slider;
+			private int id;
 		}
 
 		private static void NotifyItemPanelChanged(DependencyObject o, object oldValue, object newValue)

@@ -173,10 +173,45 @@ namespace Epsitec.Common.UI
 			{
 				this.columnHeader.ClearColumns ();
 
-				foreach (ItemTableColumn column in this.columns)
+				for (int i = 0; i < this.columns.Count; i++)
 				{
-					StructuredTypeField field = this.sourceType.GetField (column.FieldId);
-					this.columnHeader.AddColumn (field);
+					ItemTableColumn column = this.columns[i];
+					
+					if (string.IsNullOrEmpty (column.FieldId))
+					{
+						//	There is no field defined for this column. This means
+						//	that the contents of the column will default to the
+						//	full item itself.
+						
+						Support.Druid captionId = column.CaptionId;
+
+						if (captionId.IsValid)
+						{
+							this.columnHeader.AddColumn (i, null, captionId);
+						}
+					}
+					else
+					{
+						StructuredTypeField field = this.sourceType.GetField (column.FieldId);
+						
+						if (field.IsEmpty)
+						{
+							//	Ignore unknown columns...
+						}
+						else
+						{
+							Support.Druid captionId = column.CaptionId;
+
+							if (captionId.IsEmpty)
+							{
+								this.columnHeader.AddColumn (i, field);
+							}
+							else
+							{
+								this.columnHeader.AddColumn (i, field.Id, captionId);
+							}
+						}
+					}
 				}
 			}
 		}

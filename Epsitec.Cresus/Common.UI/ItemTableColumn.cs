@@ -36,6 +36,7 @@ namespace Epsitec.Common.UI
 			this.Width = width;
 		}
 
+		
 		public string FieldId
 		{
 			get
@@ -44,7 +45,14 @@ namespace Epsitec.Common.UI
 			}
 			set
 			{
-				this.SetValue (ItemTableColumn.FieldIdProperty, value);
+				if (string.IsNullOrEmpty (value))
+				{
+					this.ClearValue (ItemTableColumn.FieldIdProperty);
+				}
+				else
+				{
+					this.SetValue (ItemTableColumn.FieldIdProperty, value);
+				}
 			}
 		}
 
@@ -56,11 +64,59 @@ namespace Epsitec.Common.UI
 			}
 			set
 			{
-				this.SetValue (ItemTableColumn.WidthProperty, value);
+				if (value.IsAuto)
+				{
+					this.ClearValue (ItemTableColumn.WidthProperty);
+				}
+				else
+				{
+					this.SetValue (ItemTableColumn.WidthProperty, value);
+				}
 			}
 		}
 
-		public static readonly DependencyProperty FieldIdProperty	= DependencyProperty.Register ("FieldId", typeof (string), typeof (ItemTableColumn));
-		public static readonly DependencyProperty WidthProperty		= DependencyProperty.Register ("Width", typeof (GridLength), typeof (ItemTableColumn));
+		public Support.Druid CaptionId
+		{
+			get
+			{
+				return (Support.Druid) this.GetValue (ItemTableColumn.CaptionIdProperty);
+			}
+			set
+			{
+				if (value.IsEmpty)
+				{
+					this.ClearValue (ItemTableColumn.CaptionIdProperty);
+				}
+				else
+				{
+					this.SetValue (ItemTableColumn.CaptionIdProperty, value);
+				}
+			}
+		}
+
+		public Support.Druid TemplateId
+		{
+			get
+			{
+				return (Support.Druid) this.GetValue (ItemTableColumn.TemplateIdProperty);
+			}
+			set
+			{
+				if (value.IsEmpty)
+				{
+					this.ClearValue (ItemTableColumn.TemplateIdProperty);
+				}
+				else
+				{
+					this.SetValue (ItemTableColumn.TemplateIdProperty, value);
+				}
+			}
+		}
+
+
+		public static readonly DependencyProperty FieldIdProperty	 = DependencyProperty.Register ("FieldId", typeof (string), typeof (ItemTableColumn));
+		public static readonly DependencyProperty WidthProperty		 = DependencyProperty.Register ("Width", typeof (GridLength), typeof (ItemTableColumn), new DependencyPropertyMetadata (GridLength.Auto));
+		public static readonly DependencyProperty CaptionIdProperty	 = DependencyProperty.Register ("CaptionId", typeof (Support.Druid), typeof (ItemTableColumn), new DependencyPropertyMetadata (Support.Druid.Empty));
+		public static readonly DependencyProperty TemplateIdProperty = DependencyProperty.Register ("TemplateId", typeof (Support.Druid), typeof (ItemTableColumn), new DependencyPropertyMetadata (Support.Druid.Empty));
 	}
 }
