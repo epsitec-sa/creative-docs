@@ -327,8 +327,9 @@ namespace Epsitec.Common.Designer
 		protected Dimension Detect(Point pos)
 		{
 			//	Retourne la cote contenant une position donnée.
-			foreach (Dimension dim in this.list)
+			for (int i=this.list.Count-1; i>=0; i--)  // du dernier (dessus) au premier (dessous)
 			{
+				Dimension dim = this.list[i];
 				if (dim.Detect(pos))
 				{
 					return dim;

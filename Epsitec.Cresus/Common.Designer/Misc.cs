@@ -179,16 +179,22 @@ namespace Epsitec.Common.Designer
 		static public void AlignForLine(Graphics graphics, ref Rectangle r)
 		{
 			//	Aligne un rectangle pour permettre un joli Graphics.AddLine.
-			graphics.Align(ref r);
-			r.Offset(0.5, 0.5);
+			if (graphics != null)
+			{
+				graphics.Align(ref r);
+				r.Offset(0.5, 0.5);
+			}
 		}
 
 		static public void AlignForLine(Graphics graphics, ref Point p)
 		{
 			//	Aligne un point pour permettre un joli Graphics.AddLine.
-			graphics.Align(ref p);
-			p.X += 0.5;
-			p.Y += 0.5;
+			if (graphics != null)
+			{
+				graphics.Align(ref p);
+				p.X += 0.5;
+				p.Y += 0.5;
+			}
 		}
 
 
