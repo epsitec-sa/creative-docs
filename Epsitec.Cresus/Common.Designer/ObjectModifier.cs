@@ -481,6 +481,30 @@ namespace Epsitec.Common.Designer
 
 
 		#region Grid
+		public void GridColumnAdd(Widget obj, int column, bool after)
+		{
+			//	Insère une colonne en poussant les suivantes.
+			this.SetGridColumnsCount(obj, this.GetGridColumnsCount(obj)+1);
+		}
+
+		public void GridColumnRemove(Widget obj, int column)
+		{
+			//	Supprime une colonne en décalant les suivantes.
+			this.SetGridColumnsCount(obj, this.GetGridColumnsCount(obj)-1);
+		}
+
+		public void GridRowAdd(Widget obj, int column, bool after)
+		{
+			//	Insère une ligne en poussant les suivantes.
+			this.SetGridRowsCount(obj, this.GetGridRowsCount(obj)+1);
+		}
+
+		public void GridRowRemove(Widget obj, int column)
+		{
+			//	Supprime une ligne en décalant les suivantes.
+			this.SetGridRowsCount(obj, this.GetGridRowsCount(obj)-1);
+		}
+
 		public int GetGridColumnsCount(Widget obj)
 		{
 			//	Retourne le nombre total de colonnes de l'objet group.
