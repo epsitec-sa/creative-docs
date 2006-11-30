@@ -522,7 +522,10 @@ namespace Epsitec.Common.Designer
 			//	Vérifie si une colonne est entièrement vide.
 			foreach (Widget children in obj.Children)
 			{
-				if (this.GetGridColumn(children) == column)
+				int c1 = this.GetGridColumn(children);
+				int c2 = c1+this.GetGridColumnSpan(children)-1;
+
+				if (column >= c1 && column <= c2)
 				{
 					return false;
 				}
@@ -535,7 +538,10 @@ namespace Epsitec.Common.Designer
 			//	Vérifie si une ligne est entièrement vide.
 			foreach (Widget children in obj.Children)
 			{
-				if (this.GetGridRow(children) == row)
+				int r1 = this.GetGridRow(children);
+				int r2 = r1+this.GetGridRowSpan(children)-1;
+
+				if (row >= r1 && row <= r2)
 				{
 					return false;
 				}
