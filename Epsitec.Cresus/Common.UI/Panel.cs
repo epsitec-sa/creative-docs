@@ -349,11 +349,6 @@ namespace Epsitec.Common.UI
 
 			Support.ResourceBundle.Field field = bundle["Panel"];
 
-			if (field.IsEmpty)
-			{
-				return null;
-			}
-
 			string xml;
 			Panel panel;
 
@@ -363,7 +358,7 @@ namespace Epsitec.Common.UI
 
 				if (cachedPanel == null)
 				{
-					throw new System.InvalidOperationException (string.Format ("Cannot create user interface: panel field for bundle {0} not found", panelId));
+					return null;
 				}
 
 				xml = Panel.SerializePanel (cachedPanel);
