@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
@@ -21,6 +22,9 @@ namespace Epsitec.Cresus.DataLayer
 		[TestFixtureSetUp]
 		public void Setup()
 		{
+			Epsitec.Common.Widgets.Widget.Initialize ();
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
+			
 			this.infrastructure = new DbInfrastructure ();
 			this.infrastructure.AttachToDatabase (DbInfrastructure.CreateDatabaseAccess ("FICHE"));
 		}
@@ -189,6 +193,50 @@ namespace Epsitec.Cresus.DataLayer
 			window.Root.Children.Add (itemTable);
 
 			itemTable.ItemPanel.Show (itemTable.ItemPanel.GetItemView (0));
+
+			window.Show ();
+
+			Window.RunInTestEnvironment (window);
+		}
+
+		[Test]
+		public void CheckInteractiveTable2()
+		{
+			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
+			DbRichCommand command;
+
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbTable table = Adapter.FindTableDefinition (transaction, type);
+				DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
+				command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, table, condition);
+				transaction.Commit ();
+			}
+
+			DataTableBroker broker = new DataTableBroker (type, command.DataSet.Tables["Record.Address"]);
+
+			Window window = new Window ();
+
+			window.Text = "CheckInteractiveTable2";
+			window.ClientSize = new Size (480, 400);
+			window.Root.Padding = new Margins (4, 4, 4, 4);
+
+			TablePlaceholder placeholder = new TablePlaceholder ();
+			ItemTableColumn column = new ItemTableColumn (null, 400);
+
+			column.CaptionId  = Epsitec.Common.UI.Res.Captions.Address1.Id;
+			column.TemplateId = Druid.Parse ("[KF]");
+
+			placeholder.Columns.Add (column);
+			
+			placeholder.Dock         = DockStyle.Fill;
+			placeholder.Value        = broker;
+			placeholder.SourceTypeId = type.CaptionId;
+
+			Assert.IsNotNull (placeholder.Source);
+			Assert.IsNotNull (placeholder.CollectionView);
+
+			window.Root.Children.Add (placeholder);
 
 			window.Show ();
 

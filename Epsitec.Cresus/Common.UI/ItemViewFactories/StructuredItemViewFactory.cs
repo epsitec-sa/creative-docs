@@ -15,7 +15,7 @@ namespace Epsitec.Common.UI.ItemViewFactories
 
 		public Widgets.Widget CreateUserInterface(ItemPanel panel, ItemView itemView)
 		{
-			ItemPanelColumnHeader header = ItemPanelColumnHeader.GetColumnHeader (panel);
+			ItemPanelColumnHeader header = ItemPanelColumnHeader.GetColumnHeader (panel.RootPanel);
 			ItemTable             table  = ItemTable.GetItemTable (panel);
 
 			if (header == null)
@@ -92,7 +92,7 @@ namespace Epsitec.Common.UI.ItemViewFactories
 
 		public Drawing.Size GetPreferredSize(ItemPanel panel, ItemView itemView)
 		{
-			ItemPanelColumnHeader header = ItemPanelColumnHeader.GetColumnHeader (panel);
+			ItemPanelColumnHeader header = ItemPanelColumnHeader.GetColumnHeader (panel.RootPanel);
 
 			if (header == null)
 			{

@@ -239,7 +239,7 @@ namespace Epsitec.Common.Support
 		}
 
 
-		public void AnalyseStringsFullId(string id, out string prefix, out string localId, out ResourceModuleInfo module)
+		public void AnalyseFullId(string id, out string prefix, out string localId, out ResourceModuleInfo module)
 		{
 			if (!string.IsNullOrEmpty (id))
 			{
@@ -247,6 +247,7 @@ namespace Epsitec.Common.Support
 
 				Resources.SplitFullId (id, out prefix, out localId);
 				Resources.ResolveStringsDruidReference (ref prefix, ref localId);
+				Resources.ResolveBundleDruidReference (ref prefix, ref localId);
 				Resources.SplitFullPrefix (prefix, out prefix, out moduleName);
 
 				if (string.IsNullOrEmpty (prefix))
@@ -270,18 +271,19 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public string NormalizeStringsFullId(string id)
+		public string NormalizeFullId(string id)
 		{
 			string prefix;
 			string localId;
 
 			Resources.SplitFullId (id, out prefix, out localId);
 			Resources.ResolveStringsDruidReference (ref prefix, ref localId);
+			Resources.ResolveBundleDruidReference (ref prefix, ref localId);
 
-			return this.NormalizeStringsFullId (prefix, localId);
+			return this.NormalizeFullId (prefix, localId);
 		}
 		
-		public string NormalizeStringsFullId(string prefix, string localId)
+		public string NormalizeFullId(string prefix, string localId)
 		{
 			if (string.IsNullOrEmpty (localId))
 			{
@@ -623,7 +625,7 @@ namespace Epsitec.Common.Support
 		
 		public ResourceBundle.Field GetStringsBundleField(Druid druid, ResourceLevel level, CultureInfo culture)
 		{
-			string id = this.NormalizeStringsFullId (druid.ToResourceId ());
+			string id = this.NormalizeFullId (druid.ToResourceId ());
 			
 			string bundleName;
 			string fieldName;
@@ -746,7 +748,7 @@ namespace Epsitec.Common.Support
 			string bundleName;
 			string fieldName;
 			
-			resource = this.NormalizeStringsFullId (resource);
+			resource = this.NormalizeFullId (resource);
 
 			Caption caption = null;
 			
@@ -1117,7 +1119,7 @@ namespace Epsitec.Common.Support
 
 		internal bool SetResourceBinding(ResourceBinding binding)
 		{
-			string resourceId = this.NormalizeStringsFullId (binding.ResourceId);
+			string resourceId = this.NormalizeFullId (binding.ResourceId);
 
 			string bundleName;
 			string fieldName;
@@ -1195,7 +1197,7 @@ namespace Epsitec.Common.Support
 				string localId;
 				ResourceModuleInfo module;
 
-				this.AnalyseStringsFullId (name, out prefix, out localId, out module);
+				this.AnalyseFullId (name, out prefix, out localId, out module);
 
 				string key = Resources.CreateBundleKey (prefix, module.Id, localId, level, culture);
 
@@ -1226,7 +1228,7 @@ namespace Epsitec.Common.Support
 			string localId;
 			ResourceModuleInfo module;
 
-			this.AnalyseStringsFullId (bundleName, out prefix, out localId, out module);
+			this.AnalyseFullId (bundleName, out prefix, out localId, out module);
 
 			string key = Resources.CreateBundleKey (prefix, module.Id, localId, level, culture);
 
@@ -1273,7 +1275,7 @@ namespace Epsitec.Common.Support
 		{
 			string prefix;
 
-			this.AnalyseStringsFullId (fullId, out prefix, out localId, out module);
+			this.AnalyseFullId (fullId, out prefix, out localId, out module);
 
 			if (string.IsNullOrEmpty (localId))
 			{

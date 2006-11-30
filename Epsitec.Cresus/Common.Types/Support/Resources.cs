@@ -285,6 +285,20 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		public static void ResolveBundleDruidReference(ref string prefix, ref string localId)
+		{
+			if (Druid.IsValidBundleId (localId))
+			{
+				//	The local ID is not a standard resource bundle identifier; it
+				//	looks like a DRUID : "_mmDLLDLLDmLDm"
+
+				Druid druid = Druid.Parse (localId);
+
+				prefix  = string.Format (CultureInfo.InvariantCulture, "{0}/{1}", prefix, druid.Module);
+				localId = druid.ToBundleId ();
+			}
+		}
+
 		public static bool IsFieldId(string id)
 		{
 			return id.IndexOf (Resources.FieldSeparator) >= 0;
