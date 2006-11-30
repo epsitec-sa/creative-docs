@@ -69,7 +69,7 @@ namespace Epsitec.Common.IO
 			return null;
 		}
 		
-		protected virtual System.Type FindReplacementType(string assemblyName, string typeName)
+		private System.Type FindReplacementType(string assemblyName, string typeName)
 		{
 			string prefix = assemblyName.Substring (0, assemblyName.IndexOf (' '));
 
@@ -127,7 +127,7 @@ namespace Epsitec.Common.IO
 			{
 				if (assembly.FullName.StartsWith (prefix))
 				{
-					return string.Concat (typeName, ", ", assembly.FullName);
+					string fullName = string.Concat (typeName, ", ", assembly.FullName);
 				}
 			}
 
