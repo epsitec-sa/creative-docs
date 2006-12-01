@@ -272,6 +272,13 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected override void PrepareForDelete()
+		{
+			//	Préparation en vue de la suppression de l'interface.
+			this.panelEditor.PrepareForDelete();
+		}
+
+
 		protected override void UpdateEdit()
 		{
 			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.

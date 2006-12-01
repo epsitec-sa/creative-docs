@@ -2202,6 +2202,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public void PrepareForDelete()
+		{
+			//	Préparation en vue de la suppression de l'interface.
+			this.creatingObject = null;
+			this.lastCreatedObject = null;
+			this.hilitedObject = null;
+			this.hilitedParent = null;
+			this.DeselectAll();
+		}
+
 		public void DeselectAll()
 		{
 			//	Désélectionne tous les objets.

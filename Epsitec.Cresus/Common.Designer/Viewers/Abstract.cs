@@ -407,6 +407,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public void DoDelete()
 		{
 			//	Supprime la ressource sélectionnée.
+			this.PrepareForDelete();
 			this.access.Delete();
 
 			this.UpdateArray();
@@ -594,6 +595,11 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+
+		protected virtual void PrepareForDelete()
+		{
+			//	Préparation en vue d'une suppression.
+		}
 
 		public void UpdateWhenModuleUsed()
 		{
