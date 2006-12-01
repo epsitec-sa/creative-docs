@@ -740,7 +740,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				//	Met en évidence la cote survolée par la souris.
 				if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging && this.dimensionsList.Hilite(pos))
 				{
-					this.ChangeMouseCursor(MouseCursorType.Finger);
+					//?this.ChangeMouseCursor(MouseCursorType.Finger);
 					this.SetHilitedObject(null, null);
 					this.SetHilitedAttachmentRectangle(Rectangle.Empty);
 				}

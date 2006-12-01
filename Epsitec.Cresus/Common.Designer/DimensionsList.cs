@@ -56,8 +56,9 @@ namespace Epsitec.Common.Designer
 
 			if (this.hilited != dim)
 			{
+				this.Invalidate(this.hilited);
 				this.hilited = dim;
-				this.editor.Invalidate();
+				this.Invalidate(this.hilited);
 			}
 
 			return (this.hilited != null);
@@ -389,6 +390,17 @@ namespace Epsitec.Common.Designer
 			}
 
 			return null;
+		}
+
+		protected void Invalidate(Dimension dim)
+		{
+			//	Invalide la zone occupée par une cote.
+			if (dim != null)
+			{
+				Rectangle bounds = dim.GetBounds(true);
+				bounds = dim.Object.MapParentToClient(bounds);
+				dim.Object.Invalidate(bounds);
+			}
 		}
 
 		
