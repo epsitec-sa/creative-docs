@@ -161,8 +161,8 @@ namespace Epsitec.Common.UI
 			this.hScroller.VisibleRangeRatio = (decimal) hRatio;
 			this.vScroller.VisibleRangeRatio = (decimal) vRatio;
 
-			double ox = (double) this.hScroller.Value * System.Math.Max (0, this.itemPanel.PreferredWidth - aperture.Width);
-			double oy = (double) this.vScroller.Value * System.Math.Max (0, this.itemPanel.PreferredHeight - aperture.Height);
+			double ox = System.Math.Floor ((double) this.hScroller.Value * System.Math.Max (0, this.itemPanel.PreferredWidth - aperture.Width));
+			double oy = System.Math.Floor ((double) this.vScroller.Value * System.Math.Max (0, this.itemPanel.PreferredHeight - aperture.Height));
 			
 			this.itemPanel.Aperture = new Drawing.Rectangle (ox, oy, aperture.Width, aperture.Height);
 

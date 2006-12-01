@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 		[Test]
-		public void CheckInteractiveTable2()
+		public void CheckInteractiveTableCompact()
 		{
 			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
 			DbRichCommand command;
@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			Window window = new Window ();
 
-			window.Text = "CheckInteractiveTable2";
+			window.Text = "CheckInteractiveTableCompact";
 			window.ClientSize = new Size (480, 400);
 			window.Root.Padding = new Margins (4, 4, 4, 4);
 
