@@ -257,6 +257,32 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Finds the <c>ICollectionView</c> for a given object; the object must
+		/// be a collection for this to work.
+		/// </summary>
+		/// <param name="collection">The probable collection object.</param>
+		/// <param name="dataContext">The data context.</param>
+		/// <returns>An <c>ICollectionView</c> which represents the collection.</returns>
+		public static ICollectionView FindCollectionView(object collection, Binding dataContext)
+		{
+			if (dataContext == null)
+			{
+				return null;
+			}
+
+			if (Internal.CollectionViewResolver.IsCollectionViewCompatible (collection))
+			{
+				//	OK, there is a data context which is used as the source binding
+				//	and the collection implements IList (the collection views are
+				//	associated with the data context).
+
+				return Internal.CollectionViewResolver.Default.GetCollectionView (dataContext, collection);
+			}
+
+			return null;
+		}
+		
+		/// <summary>
 		/// Updates the targets on which this binding has been attached.
 		/// </summary>
 		/// <param name="mode">The binding update mode.</param>

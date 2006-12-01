@@ -602,21 +602,7 @@ namespace Epsitec.Common.Types
 		/// <returns>An <c>ICollectionView</c> which represents the collection.</returns>
 		private ICollectionView FindCollectionView(object collection)
 		{
-			if (this.dataContext == null)
-			{
-				return null;
-			}
-
-			if (Internal.CollectionViewResolver.IsCollectionViewCompatible (collection))
-			{
-				//	OK, there is a data context which is used as the source binding
-				//	and the collection implements IList (the collection views are
-				//	associated with the data context).
-
-				return Internal.CollectionViewResolver.Default.GetCollectionView (this.dataContext, collection);
-			}
-
-			return null;
+			return Binding.FindCollectionView (collection, this.dataContext);
 		}
 
 		/// <summary>

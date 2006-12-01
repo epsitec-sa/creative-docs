@@ -387,13 +387,20 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckBinding2()
 		{
+			Widget      container   = new Widget ();
 			Placeholder placeholder = new Placeholder ();
 
-			StructuredType type = Res.Types.Record.Address;
-			StructuredData data = new StructuredData (type);
+			container.Children.Add (placeholder);
 
-			data.SetValue ("FirstName", "Pierre");
-			data.SetValue ("LastName", "Arnaud");
+			StructuredType type = Res.Types.Record.Address;
+			StructuredData data1 = new StructuredData (type);
+			StructuredData data2 = new StructuredData (type);
+
+			data1.SetValue ("FirstName", "Cathi");
+			data1.SetValue ("LastName", "Nicoud");
+
+			data2.SetValue ("FirstName", "Pierre");
+			data2.SetValue ("LastName", "Arnaud");
 
 			StructuredType staffType = new StructuredType ();
 			StructuredData staff = new StructuredData (staffType);
@@ -402,35 +409,50 @@ namespace Epsitec.Common.UI
 			staffType.Fields.Add (new StructuredTypeField ("Employees", type, Support.Druid.Empty, 0, Relation.Collection));
 
 			List<StructuredData> list = new List<StructuredData> ();
-			list.Add (data);
+			list.Add (data1);
+			list.Add (data2);
 
-			staff.SetValue ("Boss", data);
+			staff.SetValue ("Boss", data1);
 			staff.SetValue ("Employees", list);
 
-			Binding binding = new Binding (BindingMode.TwoWay, staff, "Boss.FirstName");
-
+			DataObject.SetDataContext (container, new Binding (staff));
+			
+			Binding binding;
+			
+			binding = new Binding (BindingMode.TwoWay, "Boss.FirstName");
 			placeholder.SetBinding (AbstractPlaceholder.ValueProperty, binding);
 
 			Application.ExecuteAsyncCallbacks ();
 
-			Assert.AreEqual ("Pierre", placeholder.Value);
+			Assert.AreEqual ("Cathi", placeholder.Value);
 			Assert.AreEqual (2, placeholder.Children.Count);
 			Assert.AreEqual ("Prénom", ((Widget) placeholder.Children[0]).Text);
-			Assert.AreEqual ("Pierre", ((Widget) placeholder.Children[1]).Text);
+			Assert.AreEqual ("Cathi", ((Widget) placeholder.Children[1]).Text);
 
 			//	And now, bind to the collection... which will need to magically instanciate
 			//	a collection view !
 
-			binding = new Binding (BindingMode.TwoWay, staff, "Employees.LastName");
-			
+			binding = new Binding (BindingMode.TwoWay, "Employees.LastName");
 			placeholder.SetBinding (AbstractPlaceholder.ValueProperty, binding);
 
 			Application.ExecuteAsyncCallbacks ();
 
-			Assert.AreEqual ("Arnaud", placeholder.Value);
+			Assert.AreEqual ("Nicoud", placeholder.Value);
 			Assert.AreEqual (2, placeholder.Children.Count);
 			Assert.AreEqual ("Nom", ((Widget) placeholder.Children[0]).Text);
-			Assert.AreEqual ("Arnaud", ((Widget) placeholder.Children[1]).Text);
+			Assert.AreEqual ("Nicoud", ((Widget) placeholder.Children[1]).Text);
+
+			TablePlaceholder table = new TablePlaceholder ();
+
+			container.Children.Add (table);
+
+			binding = new Binding (BindingMode.TwoWay, "Employees");
+			table.SetBinding (AbstractPlaceholder.ValueProperty, binding);
+
+			Assert.AreEqual (list, table.Value);
+
+			table.CollectionView.MoveCurrentToNext ();
+			Assert.AreEqual ("Arnaud", placeholder.Value);
 		}
 
 		[Test]

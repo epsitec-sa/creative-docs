@@ -33,7 +33,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public CollectionView					CollectionView
+		public ICollectionView					CollectionView
 		{
 			get
 			{
@@ -88,8 +88,17 @@ namespace Epsitec.Common.UI
 		{
 			if (this.collectionView != null)
 			{
-				this.collectionView.Dispose ();
+				System.IDisposable disposable = this.collectionView as System.IDisposable;
 				this.collectionView = null;
+				
+				if (this.isAutomaticCollectionView)
+				{
+					//	Nothing to do...
+				}
+				else if (disposable != null)
+				{
+					disposable.Dispose ();
+				}
 			}
 		}
 
@@ -101,7 +110,19 @@ namespace Epsitec.Common.UI
 
 			if (source != null)
 			{
-				this.collectionView = new CollectionView (source);
+				ICollectionView view = Binding.FindCollectionView (source, DataObject.GetDataContext (this));
+
+				if (view == null)
+				{
+					this.isAutomaticCollectionView = false;
+					this.collectionView            = new CollectionView (source);
+				}
+				else
+				{
+					this.isAutomaticCollectionView = true;
+					this.collectionView            = view;
+				}
+
 				this.table.Items = this.collectionView;
 			}
 		}
@@ -155,7 +176,8 @@ namespace Epsitec.Common.UI
 		public static readonly DependencyProperty SourceTypeProperty = DependencyProperty.Register ("SourceType", typeof (Support.Druid), typeof (TablePlaceholder), new DependencyPropertyMetadata (TablePlaceholder.GetSourceTypeValue, TablePlaceholder.SetSourceTypeValue));
 
 		private ItemTable table;
-		private CollectionView collectionView;
+		private ICollectionView collectionView;
+		private bool isAutomaticCollectionView;
 		private Support.Druid sourceTypeId;
 		private int suspendUpdates;
 	}
