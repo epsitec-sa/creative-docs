@@ -71,7 +71,7 @@ namespace Epsitec.Common.Designer
 			{
 				double value = this.hilited.Value;
 				value += (direction < 0) ? -1 : 1;
-				this.hilited.Value = value;
+				this.ChangeValue(this.hilited, value);
 				return true;
 			}
 
@@ -121,25 +121,10 @@ namespace Epsitec.Common.Designer
 					this.editor.UpdateAfterSelectionGridChanged();
 					this.editor.Invalidate();
 				}
-				else if (this.dragging.DimensionType == Dimension.Type.GridWidthMode)
+				else if (this.dragging.DimensionType == Dimension.Type.GridWidthMode||
+						 this.dragging.DimensionType == Dimension.Type.GridHeightMode)
 				{
-					Widget obj = this.dragging.Object;
-
-					ObjectModifier.GridMode mode = this.objectModifier.GetGridColumnMode(obj, this.dragging.ColumnOrRow);
-					this.objectModifier.SetGridColumnMode(obj, this.dragging.ColumnOrRow, DimensionsList.NextGridMode(mode));
-
-					this.editor.UpdateAfterSelectionGridChanged();
-					this.editor.Invalidate();
-				}
-				else if (this.dragging.DimensionType == Dimension.Type.GridHeightMode)
-				{
-					Widget obj = this.dragging.Object;
-
-					ObjectModifier.GridMode mode = this.objectModifier.GetGridRowMode(obj, this.dragging.ColumnOrRow);
-					this.objectModifier.SetGridRowMode(obj, this.dragging.ColumnOrRow, DimensionsList.NextGridMode(mode));
-
-					this.editor.UpdateAfterSelectionGridChanged();
-					this.editor.Invalidate();
+					this.ChangeMode(this.dragging);
 				}
 				else if (this.dragging.DimensionType == Dimension.Type.GridColumnAddBefore||
 						 this.dragging.DimensionType == Dimension.Type.GridColumnAddAfter)
@@ -210,7 +195,7 @@ namespace Epsitec.Common.Designer
 					value -= this.initialValue;
 				}
 
-				this.dragging.Value = this.initialValue+value;
+				this.ChangeValue(this.dragging, this.initialValue+value);
 			}
 		}
 
@@ -218,6 +203,44 @@ namespace Epsitec.Common.Designer
 		{
 			//	Fin de la modification interactive d'une cote.
 			this.dragging = null;
+		}
+
+		protected void ChangeValue(Dimension dim, double value)
+		{
+			//	Change la valeur d'une cote.
+			foreach (Dimension d in this.list)
+			{
+				if (d.DimensionType == dim.DimensionType)
+				{
+					d.Value = value;
+				}
+			}
+		}
+
+		protected void ChangeMode(Dimension dim)
+		{
+			//	Change le mode d'une ligne/colonne.
+			foreach (Dimension d in this.list)
+			{
+				if (d.DimensionType == dim.DimensionType)
+				{
+					Widget obj = d.Object;
+
+					if (dim.DimensionType == Dimension.Type.GridWidthMode)
+					{
+						ObjectModifier.GridMode mode = this.objectModifier.GetGridColumnMode(obj, d.ColumnOrRow);
+						this.objectModifier.SetGridColumnMode(obj, d.ColumnOrRow, DimensionsList.NextGridMode(mode));
+					}
+					else
+					{
+						ObjectModifier.GridMode mode = this.objectModifier.GetGridRowMode(obj, d.ColumnOrRow);
+						this.objectModifier.SetGridRowMode(obj, d.ColumnOrRow, DimensionsList.NextGridMode(mode));
+					}
+				}
+			}
+
+			this.editor.UpdateAfterSelectionGridChanged();
+			this.editor.Invalidate();
 		}
 
 		protected static ObjectModifier.GridMode NextGridMode(ObjectModifier.GridMode mode)
@@ -258,6 +281,9 @@ namespace Epsitec.Common.Designer
 				GridSelection gs = GridSelection.Get(obj);
 				if (gs != null)
 				{
+					int indexColumn = -1;
+					int indexRow = -1;
+
 					for (int i=0; i<gs.Count; i++)
 					{
 						GridSelection.OneItem item = gs[i];
@@ -265,68 +291,85 @@ namespace Epsitec.Common.Designer
 						if (item.Unit == GridSelection.Unit.Column)
 						{
 							dim = new Dimension(this.editor, obj, Dimension.Type.GridWidth, item.Index);
+							dim.Slave = (indexColumn != -1);
 							this.list.Add(dim);
 
 							dim = new Dimension(this.editor, obj, Dimension.Type.GridWidthMode, item.Index);
+							dim.Slave = (indexColumn != -1);
 							this.list.Add(dim);
+
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridMarginLeft, item.Index);
+							dim.Slave = (indexColumn != -1);
+							this.list.Add(dim);
+
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridMarginRight, item.Index);
+							dim.Slave = (indexColumn != -1);
+							this.list.Add(dim);
+
+							if (indexColumn == -1)
+							{
+								indexColumn = i;
+							}
 						}
 
 						if (item.Unit == GridSelection.Unit.Row)
 						{
 							dim = new Dimension(this.editor, obj, Dimension.Type.GridHeight, item.Index);
+							dim.Slave = (indexRow != -1);
 							this.list.Add(dim);
 
 							dim = new Dimension(this.editor, obj, Dimension.Type.GridHeightMode, item.Index);
+							dim.Slave = (indexRow != -1);
+							this.list.Add(dim);
+
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridMarginBottom, item.Index);
+							dim.Slave = (indexRow != -1);
+							this.list.Add(dim);
+
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridMarginTop, item.Index);
+							dim.Slave = (indexRow != -1);
+							this.list.Add(dim);
+
+							if (indexRow == -1)
+							{
+								indexRow = i;
+							}
+						}
+					}
+
+					if (indexColumn != -1)
+					{
+						GridSelection.OneItem item = gs[indexColumn];
+
+						dim = new Dimension(this.editor, obj, Dimension.Type.GridColumnAddBefore, item.Index);
+						this.list.Add(dim);
+
+						dim = new Dimension(this.editor, obj, Dimension.Type.GridColumnAddAfter, item.Index);
+						this.list.Add(dim);
+
+						if (this.objectModifier.GetGridColumnsCount(obj) > 1 &&
+							this.objectModifier.IsGridColumnEmpty(obj, item.Index))
+						{
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridColumnRemove, item.Index);
 							this.list.Add(dim);
 						}
 					}
 
-					if (gs.Count == 1)
+					if (indexRow != -1)
 					{
-						GridSelection.OneItem item = gs[0];
+						GridSelection.OneItem item = gs[indexRow];
 
-						if (item.Unit == GridSelection.Unit.Column)
+						dim = new Dimension(this.editor, obj, Dimension.Type.GridRowAddBefore, item.Index);
+						this.list.Add(dim);
+
+						dim = new Dimension(this.editor, obj, Dimension.Type.GridRowAddAfter, item.Index);
+						this.list.Add(dim);
+
+						if (this.objectModifier.GetGridRowsCount(obj) > 1 &&
+							this.objectModifier.IsGridRowEmpty(obj, item.Index))
 						{
-							dim = new Dimension(this.editor, obj, Dimension.Type.GridMarginLeft, item.Index);
+							dim = new Dimension(this.editor, obj, Dimension.Type.GridRowRemove, item.Index);
 							this.list.Add(dim);
-
-							dim = new Dimension(this.editor, obj, Dimension.Type.GridMarginRight, item.Index);
-							this.list.Add(dim);
-
-							dim = new Dimension(this.editor, obj, Dimension.Type.GridColumnAddBefore, item.Index);
-							this.list.Add(dim);
-
-							dim = new Dimension(this.editor, obj, Dimension.Type.GridColumnAddAfter, item.Index);
-							this.list.Add(dim);
-
-							if (this.objectModifier.GetGridColumnsCount(obj) > 1 &&
-								this.objectModifier.IsGridColumnEmpty(obj, item.Index))
-							{
-								dim = new Dimension(this.editor, obj, Dimension.Type.GridColumnRemove, item.Index);
-								this.list.Add(dim);
-							}
-						}
-
-						if (item.Unit == GridSelection.Unit.Row)
-						{
-							dim = new Dimension(this.editor, obj, Dimension.Type.GridMarginBottom, item.Index);
-							this.list.Add(dim);
-
-							dim = new Dimension(this.editor, obj, Dimension.Type.GridMarginTop, item.Index);
-							this.list.Add(dim);
-
-							dim = new Dimension(this.editor, obj, Dimension.Type.GridRowAddBefore, item.Index);
-							this.list.Add(dim);
-
-							dim = new Dimension(this.editor, obj, Dimension.Type.GridRowAddAfter, item.Index);
-							this.list.Add(dim);
-
-							if (this.objectModifier.GetGridRowsCount(obj) > 1 &&
-								this.objectModifier.IsGridRowEmpty(obj, item.Index))
-							{
-								dim = new Dimension(this.editor, obj, Dimension.Type.GridRowRemove, item.Index);
-								this.list.Add(dim);
-							}
 						}
 					}
 				}
