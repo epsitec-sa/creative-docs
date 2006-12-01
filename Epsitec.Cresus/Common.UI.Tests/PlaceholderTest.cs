@@ -7,6 +7,8 @@ using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
+using System.Collections.Generic;
+
 [assembly: Controller (typeof (PlaceholderTest.Test1Controller))]
 
 namespace Epsitec.Common.UI
@@ -358,6 +360,62 @@ namespace Epsitec.Common.UI
 			window.Show ();
 
 			Window.RunInTestEnvironment (window);
+		}
+
+		[Test]
+		public void CheckBinding1()
+		{
+			Placeholder placeholder = new Placeholder ();
+
+			StructuredType type = Res.Types.Record.Address;
+			StructuredData data = new StructuredData (type);
+
+			data.SetValue ("FirstName", "Pierre");
+
+			Binding binding = new Binding (BindingMode.TwoWay, data, "FirstName");
+
+			placeholder.SetBinding (AbstractPlaceholder.ValueProperty, binding);
+
+			Application.ExecuteAsyncCallbacks ();
+
+			Assert.AreEqual ("Pierre", placeholder.Value);
+			Assert.AreEqual (2, placeholder.Children.Count);
+			Assert.AreEqual ("Prénom", ((Widget) placeholder.Children[0]).Text);
+			Assert.AreEqual ("Pierre", ((Widget) placeholder.Children[1]).Text);
+		}
+
+		[Test]
+		public void CheckBinding2()
+		{
+			Placeholder placeholder = new Placeholder ();
+
+			StructuredType type = Res.Types.Record.Address;
+			StructuredData data = new StructuredData (type);
+			
+			data.SetValue ("FirstName", "Pierre");
+
+			StructuredType staffType = new StructuredType ();
+			StructuredData staff = new StructuredData (staffType);
+
+			staffType.Fields.Add (new StructuredTypeField ("Boss", type, Support.Druid.Empty, 0, Relation.Reference));
+			staffType.Fields.Add (new StructuredTypeField ("Employees", type, Support.Druid.Empty, 0, Relation.Collection));
+
+			List<StructuredData> list = new List<StructuredData> ();
+			list.Add (data);
+
+			staff.SetValue ("Boss", data);
+			staff.SetValue ("Employees", list);
+			
+			Binding binding = new Binding (BindingMode.TwoWay, staff, "Boss.FirstName");
+
+			placeholder.SetBinding (AbstractPlaceholder.ValueProperty, binding);
+
+			Application.ExecuteAsyncCallbacks ();
+
+			Assert.AreEqual ("Pierre", placeholder.Value);
+			Assert.AreEqual (2, placeholder.Children.Count);
+			Assert.AreEqual ("Prénom", ((Widget) placeholder.Children[0]).Text);
+			Assert.AreEqual ("Pierre", ((Widget) placeholder.Children[1]).Text);
 		}
 
 		[Test]
