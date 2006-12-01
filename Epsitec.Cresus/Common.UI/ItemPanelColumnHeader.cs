@@ -249,7 +249,6 @@ namespace Epsitec.Common.UI
 		{
 			HeaderSlider slider = sender as HeaderSlider;
 
-			this.isDragging = true;
 			this.dragPos = e.Message.Cursor.X;
 			this.dragDim = this.GetColumnWidth (slider.Index);
 		}
@@ -258,14 +257,13 @@ namespace Epsitec.Common.UI
 		{
 			HeaderSlider slider = sender as HeaderSlider;
 
-			this.SetColumnWidth (slider.Index, this.dragDim + e.Message.Cursor.X - this.dragPos);
+			this.SetColumnWidth (slider.Index, System.Math.Max (0, this.dragDim + e.Message.Cursor.X - this.dragPos));
 		}
 
 		private void HandleDragEnded(object sender, MessageEventArgs e)
 		{
 			HeaderSlider slider = sender as HeaderSlider;
 			
-			this.isDragging = false;
 			this.DispatchDummyMouseMoveEvent ();
 		}
 
@@ -371,7 +369,6 @@ namespace Epsitec.Common.UI
 		private List<Column> columns;
 		private GridLayoutEngine gridLayout;
 
-		private bool isDragging;
 		private double dragPos;
 		private double dragDim;
 	}

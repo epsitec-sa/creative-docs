@@ -107,7 +107,7 @@ namespace Epsitec.Common.UI.ItemViewFactories
 			}
 			else
 			{
-				return table.GetDefaultItemSize (itemView);
+				return new Drawing.Size (header.GetTotalWidth (), table.GetDefaultItemSize (itemView).Height);
 			}
 		}
 
