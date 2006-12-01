@@ -607,23 +607,27 @@ namespace Epsitec.Common.Designer
 
 		protected void GridColumnShiftGeometry(Widget obj, int src, int dst)
 		{
+			//	Copie les informations de géométrie d'une colonne.
+			this.SetGridColumnMode(obj, dst, this.GetGridColumnMode(obj, src));  // (*)
 			this.SetGridColumnWidth(obj, dst, this.GetGridColumnWidth(obj, src));
 			this.SetGridColumnMinWidth(obj, dst, this.GetGridColumnMinWidth(obj, src));
 			this.SetGridColumnMaxWidth(obj, dst, this.GetGridColumnMaxWidth(obj, src));
 			this.SetGridColumnLeftBorder(obj, dst, this.GetGridColumnLeftBorder(obj, src));
 			this.SetGridColumnRightBorder(obj, dst, this.GetGridColumnRightBorder(obj, src));
-			this.SetGridColumnMode(obj, dst, this.GetGridColumnMode(obj, src));
 		}
 
 		protected void GridRowShiftGeometry(Widget obj, int src, int dst)
 		{
+			//	Copie les informations de géométrie d'une ligne.
+			this.SetGridRowMode(obj, dst, this.GetGridRowMode(obj, src));  // (*)
 			this.SetGridRowHeight(obj, dst, this.GetGridRowHeight(obj, src));
 			this.SetGridRowMinHeight(obj, dst, this.GetGridRowMinHeight(obj, src));
 			this.SetGridRowMaxHeight(obj, dst, this.GetGridRowMaxHeight(obj, src));
 			this.SetGridRowTopBorder(obj, dst, this.GetGridRowTopBorder(obj, src));
 			this.SetGridRowBottomBorder(obj, dst, this.GetGridRowBottomBorder(obj, src));
-			this.SetGridRowMode(obj, dst, this.GetGridRowMode(obj, src));
 		}
+
+		// (*)	Il faut copier le mode en premier, car cela modifie la largeur/hauteur !
 
 
 		public int GetGridColumnsCount(Widget obj)
