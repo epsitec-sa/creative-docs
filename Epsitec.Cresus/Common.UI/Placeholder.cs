@@ -166,6 +166,16 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.DisposeUserInterface ();
+			}
+
+			base.Dispose (disposing);
+		}
+
 		private void UpdateController()
 		{
 			string oldControllerName = this.controllerName;

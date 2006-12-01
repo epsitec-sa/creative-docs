@@ -31,6 +31,33 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
+			if (this.Placeholder.IsReadOnlyValueBinding)
+			{
+				this.CreateReadOnlyUserInterface (caption);
+			}
+			else
+			{
+				this.CreateReadWriteUserInterface (caption, namedType);
+			}
+		}
+
+		private void CreateReadOnlyUserInterface(Caption caption)
+		{
+			this.label = new StaticText ();
+			this.field = null;
+
+			this.label.HorizontalAlignment = HorizontalAlignment.Stretch;
+			this.label.VerticalAlignment = VerticalAlignment.BaseLine;
+			this.label.ContentAlignment = Drawing.ContentAlignment.MiddleLeft;
+			this.label.Dock = DockStyle.Stacked;
+
+			ToolTip.Default.SetToolTip (this.label, caption.Description);
+
+			this.AddWidget (this.label);
+		}
+
+		private void CreateReadWriteUserInterface(Caption caption, INamedType namedType)
+		{
 			this.label = new StaticText ();
 			this.field = new TextFieldSlider ();
 
@@ -88,8 +115,11 @@ namespace Epsitec.Common.UI.Controllers
 		protected override void PrepareUserInterfaceDisposal()
 		{
 			base.PrepareUserInterfaceDisposal ();
-			
-			this.field.TextChanged -= this.HandleFieldTextChanged;
+
+			if (this.field != null)
+			{
+				this.field.TextChanged -= this.HandleFieldTextChanged;
+			}
 		}
 
 		protected override void RefreshUserInterface(object oldValue, object newValue)
@@ -98,7 +128,15 @@ namespace Epsitec.Common.UI.Controllers
 				(newValue != InvalidValue.Instance) &&
 				(newValue != null))
 			{
-				this.field.Text = this.ConvertFromValue (newValue);
+				if (this.field != null)
+				{
+					this.field.Text = this.ConvertFromValue (newValue);
+				}
+				else
+				{
+					this.label.Text = this.ConvertFromValue (newValue);
+					this.label.PreferredWidth = this.label.GetBestFitSize ().Width;
+				}
 			}
 		}
 		

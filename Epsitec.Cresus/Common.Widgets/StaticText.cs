@@ -61,12 +61,21 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Size GetBestFitSize()
 		{
-			Drawing.Size size = this.TextLayout.SingleLineSize;
-			
-			size.Width  = System.Math.Ceiling (size.Width);
-			size.Height = System.Math.Ceiling (size.Height);
-			
-			return size;
+			TextLayout textLayout = this.TextLayout;
+
+			if (textLayout != null)
+			{
+				Drawing.Size size = textLayout.SingleLineSize;
+
+				size.Width  = System.Math.Ceiling (size.Width);
+				size.Height = System.Math.Ceiling (size.Height);
+
+				return size;
+			}
+			else
+			{
+				return new Drawing.Size (0, this.DefaultFont.LineHeight * this.DefaultFontSize);
+			}
 		}
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
