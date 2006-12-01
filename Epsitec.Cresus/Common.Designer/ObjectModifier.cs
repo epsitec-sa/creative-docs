@@ -311,7 +311,7 @@ namespace Epsitec.Common.Designer
 			if (type == ObjectType.Placeholder || type == ObjectType.SubPanel || type == ObjectType.Table)
 			{
 				UI.AbstractPlaceholder ph = obj as UI.AbstractPlaceholder;
-				ph.SetBinding(UI.Placeholder.ValueProperty, binding);
+				ph.SetBinding(ph.GetValueProperty(), binding);
 
 				if (type == ObjectType.Table)
 				{
@@ -341,7 +341,7 @@ namespace Epsitec.Common.Designer
 			if (type == ObjectType.Placeholder || type == ObjectType.SubPanel || type == ObjectType.Table)
 			{
 				UI.AbstractPlaceholder ph = obj as UI.AbstractPlaceholder;
-				Types.Binding binding = ph.GetBinding(UI.Placeholder.ValueProperty);
+				Types.Binding binding = ph.GetBinding(ph.GetValueProperty());
 				return binding;
 			}
 
