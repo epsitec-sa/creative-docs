@@ -629,8 +629,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging)
 			{
-				this.draggingDimension = this.dimensionsList.DraggingStart(pos, isControlPressed, isShiftPressed);
-				if (this.draggingDimension)
+				this.isDraggingDimension = this.dimensionsList.DraggingStart(pos, isControlPressed, isShiftPressed);
+				if (this.isDraggingDimension)
 				{
 					return;
 				}
@@ -703,7 +703,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris déplacée.
-			if (this.handlesList.IsFinger || this.isSizeMarkHorizontal || this.isSizeMarkVertical || this.draggingDimension)
+			if (this.handlesList.IsFinger || this.isSizeMarkHorizontal || this.isSizeMarkVertical || this.isHilitedDimension || this.isDraggingDimension)
 			{
 				this.ChangeMouseCursor(MouseCursorType.Finger);
 			}
@@ -731,34 +731,36 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else if (this.SizeMarkDraggingMove(pos))
 			{
 			}
-			else if (this.draggingDimension)
+			else if (this.isDraggingDimension)
 			{
 				this.dimensionsList.DraggingMove(pos, isControlPressed, isShiftPressed);
 			}
 			else
 			{
 				//	Met en évidence la cote survolée par la souris.
-				if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging && this.dimensionsList.Hilite(pos))
+				if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging)
 				{
-					//?this.ChangeMouseCursor(MouseCursorType.Finger);
-					this.SetHilitedObject(null, null);
-					this.SetHilitedAttachmentRectangle(Rectangle.Empty);
-				}
-				else
-				{
-					Widget obj = this.Detect(pos, isShiftPressed, false);
-					this.SetHilitedObject(obj, null);  // met en évidence l'objet survolé par la souris
-
-					Rectangle rect = Rectangle.Empty;
-					Attachment attachment;
-					if (this.AttachmentDetect(pos, out obj, out attachment))
+					this.isHilitedDimension = this.dimensionsList.Hilite(pos);
+					if (this.isHilitedDimension)
 					{
-						rect = this.GetAttachmentBounds(obj, attachment);
-						rect.Offset(0.5, 0.5);
-						rect.Inflate(3);
+						this.SetHilitedObject(null, null);
+						this.SetHilitedAttachmentRectangle(Rectangle.Empty);
+						return;
 					}
-					this.SetHilitedAttachmentRectangle(rect);  // met en évidence l'attachement survolé par la souris
 				}
+
+				Widget obj = this.Detect(pos, isShiftPressed, false);
+				this.SetHilitedObject(obj, null);  // met en évidence l'objet survolé par la souris
+
+				Rectangle rect = Rectangle.Empty;
+				Attachment attachment;
+				if (this.AttachmentDetect(pos, out obj, out attachment))
+				{
+					rect = this.GetAttachmentBounds(obj, attachment);
+					rect.Offset(0.5, 0.5);
+					rect.Inflate(3);
+				}
+				this.SetHilitedAttachmentRectangle(rect);  // met en évidence l'attachement survolé par la souris
 			}
 		}
 
@@ -782,10 +784,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.HandlingEnd(pos);
 			}
 
-			if (this.draggingDimension)
+			if (this.isDraggingDimension)
 			{
 				this.dimensionsList.DraggingEnd();
-				this.draggingDimension = false;
+				this.isDraggingDimension = false;
 				this.OnChildrenGeometryChanged();  // met à jour les proxies
 				this.module.MainWindow.UpdateInfoViewer();
 			}
@@ -4848,6 +4850,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected int						hilitedParentRow = GridSelection.Invalid;
 		protected int						hilitedParentColumnCount = 0;
 		protected int						hilitedParentRowCount = 0;
+		protected bool						isHilitedDimension;
 		protected bool						isRectangling;  // j'invente des mots si je veux !
 		protected bool						isDragging;
 		protected DragWindow				draggingWindow;
@@ -4860,7 +4863,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected int						draggingSpanRowOffset;
 		protected int						draggingSpanColumnCount;
 		protected int						draggingSpanRowCount;
-		protected bool						draggingDimension;
+		protected bool						isDraggingDimension;
 		protected bool						isHandling;
 		protected Handle.Type				handlingType;
 		protected DragWindow				handlingWindow;
