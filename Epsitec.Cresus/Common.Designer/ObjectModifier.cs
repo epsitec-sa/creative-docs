@@ -312,6 +312,12 @@ namespace Epsitec.Common.Designer
 			{
 				UI.AbstractPlaceholder ph = obj as UI.AbstractPlaceholder;
 				ph.SetBinding(UI.Placeholder.ValueProperty, binding);
+
+				if (type == ObjectType.Table)
+				{
+					UI.TablePlaceholder table = obj as UI.TablePlaceholder;
+					table.SourceTypeId = ...;  // TODO: je ne sais pas comment obtenir xx.StructuredType.CaptionId
+				}
 			}
 		}
 
