@@ -195,7 +195,7 @@ namespace Epsitec.Common.Designer.Proxies
 				finally
 				{
 					that.ResumeChanges();
-					that.RegenerateProxies();  // (*)
+					that.RegenerateProxiesAndDimensions();  // (*)
 				}
 			}
 		}
