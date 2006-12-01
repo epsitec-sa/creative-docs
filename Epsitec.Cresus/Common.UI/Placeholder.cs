@@ -106,6 +106,24 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public bool								IsReadOnlyValueBinding
+		{
+			get
+			{
+				Binding binding = this.ValueBinding;
+				BindingMode mode = binding == null ? BindingMode.None : binding.Mode;
+
+				if ((mode == BindingMode.OneTime) ||
+					(mode == BindingMode.OneWay))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
 		
 		protected override void LayoutArrange(Widgets.Layouts.ILayoutEngine engine)
 		{
@@ -262,10 +280,11 @@ namespace Epsitec.Common.UI
 		protected override void UpdateValue(object oldValue, object newValue)
 		{
 			base.UpdateValue (oldValue, newValue);
+
+			Application.ExecuteAsyncCallbacks ();
 			
 			if (this.controller != null)
 			{
-				Application.ExecuteAsyncCallbacks ();
 				this.controller.RefreshUserInterface (oldValue, newValue);
 			}
 		}

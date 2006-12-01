@@ -31,6 +31,33 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
+			if (this.Placeholder.IsReadOnlyValueBinding)
+			{
+				this.CreateReadOnlyUserInterface (caption);
+			}
+			else
+			{
+				this.CreateReadWriteUserInterface (caption);
+			}
+		}
+
+		private void CreateReadOnlyUserInterface(Caption caption)
+		{
+			this.label = new StaticText ();
+			this.field = null;
+
+			this.label.HorizontalAlignment = HorizontalAlignment.Stretch;
+			this.label.VerticalAlignment = VerticalAlignment.BaseLine;
+			this.label.ContentAlignment = Drawing.ContentAlignment.MiddleLeft;
+			this.label.Dock = DockStyle.Stacked;
+
+			ToolTip.Default.SetToolTip (this.label, caption.Description);
+
+			this.AddWidget (this.label);
+		}
+
+		private void CreateReadWriteUserInterface(Caption caption)
+		{
 			this.label = new StaticText ();
 			this.field = new TextField ();
 
@@ -71,8 +98,11 @@ namespace Epsitec.Common.UI.Controllers
 		protected override void PrepareUserInterfaceDisposal()
 		{
 			base.PrepareUserInterfaceDisposal ();
-			
-			this.field.TextChanged -= this.HandleFieldTextChanged;
+
+			if (this.field != null)
+			{
+				this.field.TextChanged -= this.HandleFieldTextChanged;
+			}
 		}
 
 		protected override void RefreshUserInterface(object oldValue, object newValue)
@@ -81,7 +111,15 @@ namespace Epsitec.Common.UI.Controllers
 				(newValue != InvalidValue.Instance) &&
 				(newValue != null))
 			{
-				this.field.Text = this.ConvertFromValue (newValue);
+				if (this.field != null)
+				{
+					this.field.Text = this.ConvertFromValue (newValue);
+				}
+				else
+				{
+					this.label.Text = this.ConvertFromValue (newValue);
+					this.label.PreferredWidth = this.label.GetBestFitSize ().Width;
+				}
 			}
 		}
 		
@@ -103,14 +141,28 @@ namespace Epsitec.Common.UI.Controllers
 
 		IEnumerable<Widgets.Layouts.PermeableCell> Widgets.Layouts.IGridPermeable.GetChildren(int column, int row, int columnSpan, int rowSpan)
 		{
-			yield return new Widgets.Layouts.PermeableCell (this.label, column+0, row+0, 1, 1);
-			yield return new Widgets.Layouts.PermeableCell (this.field, column+1, row+0, columnSpan-1, 1);
+			if (this.field == null)
+			{
+				yield return new Widgets.Layouts.PermeableCell (this.label, column+0, row+0, columnSpan, 1);
+			}
+			else
+			{
+				yield return new Widgets.Layouts.PermeableCell (this.label, column+0, row+0, 1, 1);
+				yield return new Widgets.Layouts.PermeableCell (this.field, column+1, row+0, columnSpan-1, 1);
+			}
 		}
 
 		bool Widgets.Layouts.IGridPermeable.UpdateGridSpan(ref int columnSpan, ref int rowSpan)
 		{
-			columnSpan = System.Math.Max (columnSpan, 2);
-			rowSpan    = System.Math.Max (rowSpan, 1);
+			if (this.field == null)
+			{
+				//	OK as is, since we have just one single element.
+			}
+			else
+			{
+				columnSpan = System.Math.Max (columnSpan, 2);
+				rowSpan    = System.Math.Max (rowSpan, 1);
+			}
 			
 			return true;
 		}
