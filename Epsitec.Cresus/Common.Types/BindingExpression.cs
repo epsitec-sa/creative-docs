@@ -203,7 +203,9 @@ namespace Epsitec.Common.Types
 			System.Diagnostics.Debug.Assert (this.binding != null);
 
 			if ((this.binding.Mode == BindingMode.OneTime) ||
-				(this.binding.Mode == BindingMode.OneWay))
+				(this.binding.Mode == BindingMode.OneWay) ||
+				(this.binding.Mode == BindingMode.OneWayToSource) ||
+				(this.binding.Mode == BindingMode.TwoWay))
 			{
 				ICollectionView cv = this.FindCollectionView (value);
 
