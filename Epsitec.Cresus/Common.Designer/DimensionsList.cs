@@ -21,6 +21,9 @@ namespace Epsitec.Common.Designer
 		public void UpdateSelection()
 		{
 			//	Met à jour les cotes après un changement de sélection.
+			this.hilited = null;
+			this.dragging = null;
+
 			this.list.Clear();
 
 			List<Widget> sel = this.editor.SelectedObjects;
