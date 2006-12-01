@@ -35,7 +35,7 @@
     <s:object id="_17" s:type="_8" />
     <s:object id="_18" s:type="_9" />
     <s:object id="_19" s:type="_10" />
-    <s:data id="_1" f:TabNavigationMode="ForwardTabPassive" f:ChildrenLayoutMode="Grid" f:ContainerLayoutMode="VerticalFlow" f:PreferredWidth="260" f:PreferredHeight="160" f:Anchor="BottomLeft" f:Padding="10;10;10;10" f:_2.ResourceManager="{ExtRef _ResourceManager}" f:_1.BundleId="[KF03]" f:_3.DataContext="\[Binding Mode=TwoWay\]" f:_4.LayoutEngine="{ObjRef _2}" f:Children="{Collection {ObjRef _12}, {ObjRef _13}, {ObjRef _14}, {ObjRef _15}, {ObjRef _16}, {ObjRef _17}}" f:DataSource="{ExtRef _DataSource}" f:DataSourceMetadata="{ObjRef _18}" f:EditionPanel="{ObjRef _19}" f:SearchPanel="{Null}" f:Text="" />
+    <s:data id="_1" f:TabNavigationMode="ForwardTabPassive" f:ChildrenLayoutMode="Grid" f:ContainerLayoutMode="VerticalFlow" f:PreferredWidth="260" f:PreferredHeight="160" f:Anchor="BottomLeft" f:Padding="0;0;10;10" f:_2.ResourceManager="{ExtRef _ResourceManager}" f:_1.BundleId="[KF03]" f:_3.DataContext="\[Binding Mode=TwoWay\]" f:_4.LayoutEngine="{ObjRef _2}" f:Children="{Collection {ObjRef _12}, {ObjRef _13}, {ObjRef _14}, {ObjRef _15}, {ObjRef _16}, {ObjRef _17}}" f:DataSource="{ExtRef _DataSource}" f:DataSourceMetadata="{ObjRef _18}" f:EditionPanel="{ObjRef _19}" f:SearchPanel="{Null}" f:Text="" />
     <s:data id="_2" f:ColumnDefinitions="{Collection {ObjRef _3}, {ObjRef _4}, {ObjRef _5}, {ObjRef _6}, {ObjRef _7}, {ObjRef _8}}" f:RowDefinitions="{Collection {ObjRef _9}, {ObjRef _10}, {ObjRef _11}}" />
     <s:data id="_3" f:Height="Auto" f:MinHeight="20" f:BottomBorder="4" />
     <s:data id="_4" f:Height="Auto" f:MinHeight="20" f:MaxHeight="9999" f:BottomBorder="4" />
