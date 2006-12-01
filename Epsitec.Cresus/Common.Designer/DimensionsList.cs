@@ -219,7 +219,7 @@ namespace Epsitec.Common.Designer
 
 		protected void ChangeMode(Dimension dim)
 		{
-			//	Change le mode d'une ligne/colonne.
+			//	Change le mode d'une ligne/colonne (passe au mode suivant).
 			foreach (Dimension d in this.list)
 			{
 				if (d.DimensionType == dim.DimensionType)
@@ -283,6 +283,8 @@ namespace Epsitec.Common.Designer
 				{
 					int indexColumn = -1;
 					int indexRow = -1;
+					int columnsCount = 0;
+					int rowsCount = 0;
 
 					for (int i=0; i<gs.Count; i++)
 					{
@@ -310,6 +312,8 @@ namespace Epsitec.Common.Designer
 							{
 								indexColumn = i;
 							}
+
+							columnsCount++;
 						}
 
 						if (item.Unit == GridSelection.Unit.Row)
@@ -334,10 +338,12 @@ namespace Epsitec.Common.Designer
 							{
 								indexRow = i;
 							}
+
+							rowsCount++;
 						}
 					}
 
-					if (indexColumn != -1)
+					if (columnsCount == 1)
 					{
 						GridSelection.OneItem item = gs[indexColumn];
 
@@ -355,7 +361,7 @@ namespace Epsitec.Common.Designer
 						}
 					}
 
-					if (indexRow != -1)
+					if (rowsCount == 1)
 					{
 						GridSelection.OneItem item = gs[indexRow];
 
