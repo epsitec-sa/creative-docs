@@ -267,6 +267,46 @@ namespace Epsitec.Cresus.DataLayer
 			Window.RunInTestEnvironment (window);
 		}
 
+		[Test]
+		public void CheckInteractiveTablePanel()
+		{
+			ResourceManager manager = new ResourceManager ();
+			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
+			DbRichCommand command;
+
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbTable table = Adapter.FindTableDefinition (transaction, type);
+				DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
+				command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, table, condition);
+				transaction.Commit ();
+			}
+
+			DataTableBroker broker = new DataTableBroker (type, command.DataSet.Tables["Record.Address"]);
+
+			Window window = new Window ();
+
+			window.Text = "CheckInteractiveTablePanel";
+			window.ClientSize = new Size (480, 400);
+			window.Root.Padding = new Margins (4, 4, 4, 4);
+
+			StructuredData source = new StructuredData (Epsitec.Common.UI.Res.Types.Record.Staff);
+			source.SetValue ("Employees", broker);
+			
+			Epsitec.Common.UI.Panel panel = Epsitec.Common.UI.Panel.CreatePanel (Druid.Parse ("[KF04]"), manager);
+
+			DataSource dataSource = new DataSource ();
+			
+			dataSource.AddDataSource ("*", source);
+			panel.DataSource = dataSource;
+			
+			window.Root.Children.Add (panel);
+
+			window.Show ();
+
+			Window.RunInTestEnvironment (window);
+		}
+
 		private DbInfrastructure infrastructure;
 	}
 }

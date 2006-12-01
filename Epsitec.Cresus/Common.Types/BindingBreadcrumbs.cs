@@ -180,7 +180,7 @@ namespace Epsitec.Common.Types
 
 				System.Diagnostics.Debug.Assert (this.handlerRelay != null);
 
-				source.CurrentChanged += this.handlerRelay;
+				source.CurrentChanged -= this.handlerRelay;
 				this.handlerRelay = null;
 			}
 
