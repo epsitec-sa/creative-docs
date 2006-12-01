@@ -391,8 +391,9 @@ namespace Epsitec.Common.UI
 
 			StructuredType type = Res.Types.Record.Address;
 			StructuredData data = new StructuredData (type);
-			
+
 			data.SetValue ("FirstName", "Pierre");
+			data.SetValue ("LastName", "Arnaud");
 
 			StructuredType staffType = new StructuredType ();
 			StructuredData staff = new StructuredData (staffType);
@@ -405,7 +406,7 @@ namespace Epsitec.Common.UI
 
 			staff.SetValue ("Boss", data);
 			staff.SetValue ("Employees", list);
-			
+
 			Binding binding = new Binding (BindingMode.TwoWay, staff, "Boss.FirstName");
 
 			placeholder.SetBinding (AbstractPlaceholder.ValueProperty, binding);
@@ -416,6 +417,20 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (2, placeholder.Children.Count);
 			Assert.AreEqual ("Prénom", ((Widget) placeholder.Children[0]).Text);
 			Assert.AreEqual ("Pierre", ((Widget) placeholder.Children[1]).Text);
+
+			//	And now, bind to the collection... which will need to magically instanciate
+			//	a collection view !
+
+			binding = new Binding (BindingMode.TwoWay, staff, "Employees.LastName");
+			
+			placeholder.SetBinding (AbstractPlaceholder.ValueProperty, binding);
+
+			Application.ExecuteAsyncCallbacks ();
+
+			Assert.AreEqual ("Arnaud", placeholder.Value);
+			Assert.AreEqual (2, placeholder.Children.Count);
+			Assert.AreEqual ("Nom", ((Widget) placeholder.Children[0]).Text);
+			Assert.AreEqual ("Arnaud", ((Widget) placeholder.Children[1]).Text);
 		}
 
 		[Test]
