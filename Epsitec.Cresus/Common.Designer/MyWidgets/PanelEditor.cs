@@ -1538,6 +1538,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				item.DrawDesignerFrame = true;  // nécessaire pour voir le cadre pendant la création
 			}
 
+			if (this.context.Tool == "ObjectTable")
+			{
+				item = new UI.TablePlaceholder();
+				item.Text = Misc.Italic("Table");
+				item.DrawDesignerFrame = true;  // nécessaire pour voir le cadre pendant la création
+			}
+
 			if (this.context.Tool == "ObjectGroup")
 			{
 				FrameBox group = new FrameBox();

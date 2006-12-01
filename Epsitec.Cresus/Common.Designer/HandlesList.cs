@@ -323,6 +323,7 @@ namespace Epsitec.Common.Designer
 				case ObjectModifier.ObjectType.Button:
 				case ObjectModifier.ObjectType.HSeparator:
 				case ObjectModifier.ObjectType.Placeholder:
+				case ObjectModifier.ObjectType.Table:
 				case ObjectModifier.ObjectType.StaticText:
 				case ObjectModifier.ObjectType.Group:
 				case ObjectModifier.ObjectType.GroupBox:
@@ -341,6 +342,7 @@ namespace Epsitec.Common.Designer
 			switch (ObjectModifier.GetObjectType(obj))
 			{
 				case ObjectModifier.ObjectType.VSeparator:
+				case ObjectModifier.ObjectType.Table:
 				case ObjectModifier.ObjectType.Group:
 				case ObjectModifier.ObjectType.GroupBox:
 				case ObjectModifier.ObjectType.MainPanel:

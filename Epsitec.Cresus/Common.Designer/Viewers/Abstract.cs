@@ -769,6 +769,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommandTool("ObjectSquareButton");
 			this.UpdateCommandTool("ObjectRectButton");
 			this.UpdateCommandTool("ObjectText");
+			this.UpdateCommandTool("ObjectTable");
 			this.UpdateCommandTool("ObjectStatic");
 			this.UpdateCommandTool("ObjectGroup");
 			this.UpdateCommandTool("ObjectGroupBox");

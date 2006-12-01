@@ -103,6 +103,7 @@ namespace Epsitec.Common.Designer
 			VSeparator,			// séparateur vertical
 			Button,				// bouton associé à une commande
 			Placeholder,		// texte éditable lié à la base de données
+			Table,				// table lié à la base de données
 			StaticText,			// texte fixe
 			Group,				// conteneur invisible
 			GroupBox,			// conteneur avec cadre et titre
@@ -158,6 +159,11 @@ namespace Epsitec.Common.Designer
 				return ObjectType.Placeholder;
 			}
 
+			if (obj is UI.TablePlaceholder)
+			{
+				return ObjectType.Table;
+			}
+
 			if (obj is StaticText)
 			{
 				return ObjectType.StaticText;
@@ -203,6 +209,7 @@ namespace Epsitec.Common.Designer
 				case ObjectType.HSeparator:   return "ObjectHLine";
 				case ObjectType.VSeparator:   return "ObjectVLine";
 				case ObjectType.Button:	      return "ObjectRectButton";
+				case ObjectType.Table:        return "ObjectTable";
 				case ObjectType.Placeholder:  return "ObjectText";
 				case ObjectType.StaticText:   return "ObjectStatic";
 				case ObjectType.Group:        return "ObjectGroup";

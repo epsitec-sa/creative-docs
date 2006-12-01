@@ -73,6 +73,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.VToolBarAdd(Widgets.Command.Get("ObjectSquareButton"));
 			this.VToolBarAdd(Widgets.Command.Get("ObjectRectButton"));
 			this.VToolBarAdd(Widgets.Command.Get("ObjectText"));
+			this.VToolBarAdd(Widgets.Command.Get("ObjectTable"));
 			this.VToolBarAdd(Widgets.Command.Get("ObjectGroup"));
 			this.VToolBarAdd(Widgets.Command.Get("ObjectGroupBox"));
 			this.VToolBarAdd(Widgets.Command.Get("ObjectPanel"));

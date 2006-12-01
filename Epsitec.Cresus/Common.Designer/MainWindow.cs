@@ -658,6 +658,7 @@ namespace Epsitec.Common.Designer
 		[Command("ObjectVLine")]
 		[Command("ObjectSquareButton")]
 		[Command("ObjectRectButton")]
+		[Command("ObjectTable")]
 		[Command("ObjectText")]
 		[Command("ObjectStatic")]
 		[Command("ObjectGroup")]
@@ -765,6 +766,7 @@ namespace Epsitec.Common.Designer
 			this.objectVLineState = this.CreateCommandState("ObjectVLine");
 			this.objectSquareButtonState = this.CreateCommandState("ObjectSquareButton");
 			this.objectRectButtonState = this.CreateCommandState("ObjectRectButton", KeyCode.AlphaB);
+			this.objectTableState = this.CreateCommandState("ObjectTable");
 			this.objectTextState = this.CreateCommandState("ObjectText", KeyCode.AlphaT);
 			this.objectStaticState = this.CreateCommandState("ObjectStatic");
 			this.objectGroupState = this.CreateCommandState("ObjectGroup");
@@ -1392,6 +1394,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					objectVLineState;
 		protected CommandState					objectSquareButtonState;
 		protected CommandState					objectRectButtonState;
+		protected CommandState					objectTableState;
 		protected CommandState					objectTextState;
 		protected CommandState					objectStaticState;
 		protected CommandState					objectGroupState;
