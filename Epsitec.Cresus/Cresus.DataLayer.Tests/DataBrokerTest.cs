@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.DataLayer
 			
 			ResourceManager.SetResourceManager (window.Root, manager);
 			
-			ItemTableColumn column = new ItemTableColumn (null, 400);
+			ItemTableColumn column = new ItemTableColumn (null, Epsitec.Common.Widgets.Layouts.GridLength.Auto);
 
 			column.CaptionId  = Epsitec.Common.UI.Res.Captions.Address1.Id;
 			column.TemplateId = Druid.Parse ("[KF]");
@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			panel.Dock = DockStyle.Fill;
 			panel.SetBinding (panel.GetValueProperty (), new Binding (BindingMode.TwoWay, "Friends"));
-			panel.PanelId = Druid.Parse ("[KF]");
+			panel.PanelId = Druid.Parse ("[KF03]");
 
 			Assert.IsNull (placeholder.Value);
 			
