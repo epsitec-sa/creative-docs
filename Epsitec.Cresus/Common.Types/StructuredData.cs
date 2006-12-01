@@ -294,6 +294,7 @@ namespace Epsitec.Common.Types
 		protected virtual object GetUndefinedValue(StructuredTypeField fieldType, string id)
 		{
 			AbstractType type = fieldType.Type as AbstractType;
+			Relation relation = fieldType.Relation;
 
 			if (type != null)
 			{
@@ -326,11 +327,23 @@ namespace Epsitec.Common.Types
 
 						if (structuredType != null)
 						{
-							StructuredData data = new StructuredData (structuredType);
-
-							data.UndefinedValueMode = this.UndefinedValueMode;
-
-							value = data;
+							if (relation == Relation.Collection)
+							{
+								List<StructuredData> list = new List<StructuredData> ();
+								for (int i = 0; i < 3; i++)
+								{
+									StructuredData data = new StructuredData (structuredType);
+									data.UndefinedValueMode = this.UndefinedValueMode;
+									list.Add (data);
+								}
+								value = list;
+							}
+							else
+							{
+								StructuredData data = new StructuredData (structuredType);
+								data.UndefinedValueMode = this.UndefinedValueMode;
+								value = data;
+							}
 						}
 					}
 				}
