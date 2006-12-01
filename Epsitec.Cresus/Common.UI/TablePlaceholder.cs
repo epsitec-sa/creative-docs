@@ -70,7 +70,12 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		
+
+		public override DependencyProperty GetValueProperty()
+		{
+			return TablePlaceholder.ItemsProperty;
+		}
+
 		protected override void UpdateValue(object oldValue, object newValue)
 		{
 			base.UpdateValue (oldValue, newValue);
@@ -107,22 +112,23 @@ namespace Epsitec.Common.UI
 			System.Diagnostics.Debug.Assert (this.collectionView == null);
 
 			System.Collections.IList source = this.Source;
+			ICollectionView          view   = this.Value as ICollectionView;
 
 			if (source != null)
 			{
-				ICollectionView view = Binding.FindCollectionView (source, DataObject.GetDataContext (this));
+				view = Binding.FindCollectionView (source, DataObject.GetDataContext (this));
+			}
 
-				if (view == null)
-				{
-					this.isAutomaticCollectionView = false;
-					this.collectionView            = new CollectionView (source);
-				}
-				else
-				{
-					this.isAutomaticCollectionView = true;
-					this.collectionView            = view;
-				}
-
+			if (view != null)
+			{
+				this.isAutomaticCollectionView = true;
+				this.collectionView            = view;
+				this.table.Items = this.collectionView;
+			}
+			else if (source != null)
+			{
+				this.isAutomaticCollectionView = false;
+				this.collectionView            = new CollectionView (source);
 				this.table.Items = this.collectionView;
 			}
 		}
@@ -172,6 +178,13 @@ namespace Epsitec.Common.UI
 			placeholder.SourceTypeId = (Support.Druid) value;
 		}
 
+		private static void NotifyItemsChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			TablePlaceholder placeholder = (TablePlaceholder) o;
+			placeholder.Value = newValue;
+		}
+
+		public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register ("Items", typeof (ICollectionView), typeof (TablePlaceholder), new DependencyPropertyMetadata (TablePlaceholder.NotifyItemsChanged).MakeNotSerializable ());
 		public static readonly DependencyProperty ColumnsProperty = DependencyProperty.RegisterReadOnly ("Columns", typeof (ItemTableColumnCollection), typeof (TablePlaceholder), new DependencyPropertyMetadata (TablePlaceholder.GetColumnsValue).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty SourceTypeProperty = DependencyProperty.Register ("SourceType", typeof (Support.Druid), typeof (TablePlaceholder), new DependencyPropertyMetadata (TablePlaceholder.GetSourceTypeValue, TablePlaceholder.SetSourceTypeValue));
 

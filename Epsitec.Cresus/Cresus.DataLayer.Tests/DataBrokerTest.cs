@@ -202,6 +202,7 @@ namespace Epsitec.Cresus.DataLayer
 		[Test]
 		public void CheckInteractiveTableCompact()
 		{
+			ResourceManager manager = new ResourceManager ();
 			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
 			DbRichCommand command;
 
@@ -221,7 +222,21 @@ namespace Epsitec.Cresus.DataLayer
 			window.ClientSize = new Size (480, 400);
 			window.Root.Padding = new Margins (4, 4, 4, 4);
 
+			StructuredType record = new StructuredType ();
+			StructuredData source = new StructuredData (record);
+
+			record.Fields.Add (new StructuredTypeField ("Friends", type, Druid.Empty, -1, Relation.Collection));
+
+			source.SetValue ("Friends", broker);
+
 			TablePlaceholder placeholder = new TablePlaceholder ();
+			PanelPlaceholder panel = new PanelPlaceholder ();
+
+			window.Root.Children.Add (placeholder);
+			window.Root.Children.Add (panel);
+			
+			ResourceManager.SetResourceManager (window.Root, manager);
+			
 			ItemTableColumn column = new ItemTableColumn (null, 400);
 
 			column.CaptionId  = Epsitec.Common.UI.Res.Captions.Address1.Id;
@@ -229,14 +244,23 @@ namespace Epsitec.Cresus.DataLayer
 
 			placeholder.Columns.Add (column);
 			
-			placeholder.Dock         = DockStyle.Fill;
-			placeholder.Value        = broker;
+			placeholder.Dock = DockStyle.Left;
+			placeholder.PreferredWidth = 200;
 			placeholder.SourceTypeId = type.CaptionId;
+			placeholder.SetBinding (placeholder.GetValueProperty (), new Binding (BindingMode.OneWay, "Friends"));
 
-			Assert.IsNotNull (placeholder.Source);
-			Assert.IsNotNull (placeholder.CollectionView);
+			panel.Dock = DockStyle.Fill;
+			panel.SetBinding (panel.GetValueProperty (), new Binding (BindingMode.TwoWay, "Friends"));
+			panel.PanelId = Druid.Parse ("[KF]");
 
-			window.Root.Children.Add (placeholder);
+			Assert.IsNull (placeholder.Value);
+			
+			DataObject.SetDataContext (window.Root, new Binding (source));
+			
+			Assert.AreEqual (broker, ((ICollectionView) placeholder.Value).SourceCollection);
+
+//-			Assert.IsNotNull (placeholder.Source);
+//-			Assert.IsNotNull (placeholder.CollectionView);
 
 			window.Show ();
 

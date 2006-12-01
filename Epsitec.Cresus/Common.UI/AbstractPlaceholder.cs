@@ -31,7 +31,8 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				return this.GetBinding (AbstractPlaceholder.ValueProperty);
+				BindingExpression expression = this.ValueBindingExpression;
+				return expression == null ? null : expression.ParentBinding;
 			}
 		}
 
@@ -43,7 +44,7 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				return this.GetBindingExpression (AbstractPlaceholder.ValueProperty);
+				return this.GetBindingExpression (this.GetValueProperty ());
 			}
 		}
 
@@ -116,6 +117,11 @@ namespace Epsitec.Common.UI
 		}
 
 
+		public virtual DependencyProperty GetValueProperty()
+		{
+			return AbstractPlaceholder.ValueProperty;
+		}
+
 		/// <summary>
 		/// Gets the type of the value after executing <c>UpdateValueType</c>.
 		/// This method is reserved for internal use.
@@ -149,7 +155,7 @@ namespace Epsitec.Common.UI
 			string oldValueName = this.valueName;
 			string newValueName = null;
 
-			BindingExpression expression = this.GetBindingExpression (AbstractPlaceholder.ValueProperty);
+			BindingExpression expression = this.ValueBindingExpression;
 
 			if (expression != null)
 			{

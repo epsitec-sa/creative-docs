@@ -156,6 +156,36 @@ namespace Epsitec.Common.Types
 		
 		#endregion
 
+		public static bool HaveCompatibleFields(IStructuredType source, IStructuredType target)
+		{
+			if (source == target)
+			{
+				return true;
+			}
+
+			if ((source == null) ||
+				(target == null))
+			{
+				return false;
+			}
+
+			foreach (string fieldId in source.GetFieldIds ())
+			{
+				StructuredTypeField sourceField = source.GetField (fieldId);
+				StructuredTypeField targetField = target.GetField (fieldId);
+				
+				if ((sourceField.Relation != targetField.Relation) ||
+					(targetField.IsEmpty))
+				{
+					return false;
+				}
+
+				//	TODO: compare field types...
+			}
+
+			return true;
+		}
+
 		/// <summary>
 		/// Determines whether the specified value is valid according to the
 		/// constraint.

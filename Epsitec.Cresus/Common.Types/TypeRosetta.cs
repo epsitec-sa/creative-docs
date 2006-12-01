@@ -390,13 +390,10 @@ namespace Epsitec.Common.Types
 					if (enumerator.MoveNext ())
 					{
 						StructuredData item = enumerator.Current as StructuredData;
-
+						
 						if (item != null)
 						{
-							if (item.StructuredType != namedType)
-							{
-								return false;
-							}
+							return StructuredType.HaveCompatibleFields (item.StructuredType, structuredType);
 						}
 					}
 				}
@@ -422,6 +419,11 @@ namespace Epsitec.Common.Types
 				System.Diagnostics.Debug.Assert (genericArguments.Length == 1);
 
 				return typeOfItems.IsAssignableFrom (genericArguments[0]);
+			}
+
+			if (TypeRosetta.DoesTypeImplementInterface (typeOfValue, typeof (System.Collections.IList)))
+			{
+				return true;
 			}
 			
 			return false;
