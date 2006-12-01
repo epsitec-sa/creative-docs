@@ -226,7 +226,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			foreach (string id in type.GetFieldIds())
 			{
 				StructuredTypeField field = type.Fields[id];
-				this.fields.Add(field);
+
+				if (!this.onlyCollections || field.Relation == Relation.Collection)
+				{
+					this.fields.Add(field);
+				}
 			}
 		}
 
