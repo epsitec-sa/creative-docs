@@ -1676,8 +1676,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 					Size size = panel.PanelPreferredSize;
 					Point center = this.objectModifier.GetBounds(obj).Center;
 
-					Rectangle bounds = new Rectangle(center-size/2, size);
-					this.objectModifier.SetBounds(obj, bounds);
+					if (this.objectModifier.HasBounds(obj))
+					{
+						Rectangle bounds = new Rectangle(center-size/2, size);
+						this.objectModifier.SetBounds(obj, bounds);
+					}
 				}
 			}
 
