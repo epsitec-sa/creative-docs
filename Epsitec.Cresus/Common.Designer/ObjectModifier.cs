@@ -303,7 +303,7 @@ namespace Epsitec.Common.Designer
 			return (type == ObjectType.Placeholder || type == ObjectType.SubPanel || type == ObjectType.Table);
 		}
 
-		public static void SetBinding(Widget obj, Binding binding)
+		public static void SetBinding(Widget obj, Binding binding, StructuredType structuredType)
 		{
 			//	Modifie le binding de l'objet.
 			ObjectType type = ObjectModifier.GetObjectType(obj);
@@ -315,8 +315,20 @@ namespace Epsitec.Common.Designer
 
 				if (type == ObjectType.Table)
 				{
+					System.Diagnostics.Debug.Assert (binding != null);
+					System.Diagnostics.Debug.Assert (structuredType != null);
+
+					string path = binding.Path;
+					
+					path = path.StartsWith ("*.") ? path.Substring (2) : path;
+					
+					StructuredTypeField field = StructuredTree.GetField (structuredType, path);
 					UI.TablePlaceholder table = obj as UI.TablePlaceholder;
-					table.SourceTypeId = ...;  // TODO: je ne sais pas comment obtenir xx.StructuredType.CaptionId
+
+					System.Diagnostics.Debug.Assert (field.IsEmpty == false);
+					System.Diagnostics.Debug.Assert (field.Relation == Relation.Collection);
+
+					table.SourceTypeId = field.Type.CaptionId;
 				}
 			}
 		}

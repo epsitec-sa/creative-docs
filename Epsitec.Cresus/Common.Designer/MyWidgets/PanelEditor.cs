@@ -1694,7 +1694,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					return false;
 				}
 
-				ObjectModifier.SetBinding(obj, binding);
+				ObjectModifier.SetBinding(obj, binding, type);
 			}
 
 			return true;

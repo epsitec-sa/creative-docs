@@ -143,9 +143,11 @@ namespace Epsitec.Common.Designer.Proxies
 
 				try
 				{
+					StructuredType type = this.StructuredType;
+					
 					foreach (Widget obj in this.Widgets)
 					{
-						ObjectModifier.SetBinding(obj, binding);
+						ObjectModifier.SetBinding(obj, binding, type);
 					}
 				}
 				finally
