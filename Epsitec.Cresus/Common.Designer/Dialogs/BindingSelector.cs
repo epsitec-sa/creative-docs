@@ -150,12 +150,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.ShowDialog();
 		}
 
-		public void Initialise(Module module, StructuredType type, Binding binding)
+		public void Initialise(Module module, StructuredType type, Binding binding, bool onlyCollections)
 		{
 			//	Initialise le dialogue avec le binding actuel.
 			this.module = module;
 			this.resourceAccess = module.AccessCaptions;
 			this.structuredType = type;
+			this.onlyCollections = onlyCollections;
 
 			if (binding == null)
 			{
@@ -494,6 +495,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected List<StructuredTypeField>		fields;
 		protected Binding						initialBinding;
 		protected Binding						selectedBinding;
+		protected bool							onlyCollections;
 
 		protected StaticText					title;
 		protected Widget						header;

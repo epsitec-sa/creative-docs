@@ -101,7 +101,7 @@ namespace Epsitec.Common.Designer.Controllers
 			StructuredType type = this.StructuredType;
 			Binding binding = this.binding;
 
-			binding = mainWindow.DlgBindingSelector(mainWindow.CurrentModule, type, binding);
+			binding = mainWindow.DlgBindingSelector(mainWindow.CurrentModule, type, binding, false);
 			if (binding == null)  // annuler ?
 			{
 				return;

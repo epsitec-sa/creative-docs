@@ -1112,10 +1112,10 @@ namespace Epsitec.Common.Designer
 
 
 		#region Dialogs
-		public Binding DlgBindingSelector(Module baseModule, StructuredType type, Binding binding)
+		public Binding DlgBindingSelector(Module baseModule, StructuredType type, Binding binding, bool onlyCollections)
 		{
 			//	Ouvre le dialogue pour choisir une rubrique dans une structure de données.
-			this.dlgBindingSelector.Initialise(baseModule, type, binding);
+			this.dlgBindingSelector.Initialise(baseModule, type, binding, onlyCollections);
 			this.dlgBindingSelector.Show();  // choix dans le dialogue...
 			return this.dlgBindingSelector.SelectedBinding;
 		}

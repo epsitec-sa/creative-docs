@@ -1691,32 +1691,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				System.Diagnostics.Debug.Assert(type != null);
 
 				Binding binding = ObjectModifier.GetBinding(obj);
-				binding = this.module.MainWindow.DlgBindingSelector(this.module, type, binding);
+				binding = this.module.MainWindow.DlgBindingSelector(this.module, type, binding, false);
 				if (binding == null)  // annuler ?
 				{
 					return false;
 				}
 
 				ObjectModifier.SetBinding(obj, binding, type);
-
-				//	Ajoute les colonnes avec des réglages par défaut si l'objet
-				//	en cours d'édition est une table qui n'a aucune colonne (donc
-				//	qui a été fraîchement créée).
-
-				UI.TablePlaceholder table = obj as UI.TablePlaceholder;
-				
-				if ((table != null) &&
-					(table.Columns.Count == 0))
-				{
-					Druid sourceTypeId = table.SourceTypeId;
-					Caption sourceTypeCaption = this.module.ResourceManager.GetCaption (sourceTypeId);
-					StructuredType sourceType = TypeRosetta.GetTypeObject (sourceTypeCaption) as StructuredType;
-					
-					foreach (string fieldId in sourceType.GetFieldIds ())
-					{
-						table.Columns.Add (new UI.ItemTableColumn (fieldId));
-					}
-				}
+				ObjectModifier.SetDefaultBinding(obj, this.module.ResourceManager);
 			}
 
 			return true;

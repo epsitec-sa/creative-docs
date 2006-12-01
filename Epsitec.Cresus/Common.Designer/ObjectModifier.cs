@@ -303,6 +303,26 @@ namespace Epsitec.Common.Designer
 			return (type == ObjectType.Placeholder || type == ObjectType.SubPanel || type == ObjectType.Table);
 		}
 
+		public static void SetDefaultBinding(Widget obj, ResourceManager resourceManager)
+		{
+			//	Ajoute les colonnes avec des réglages par défaut si l'objet
+			//	en cours d'édition est une table qui n'a aucune colonne (donc
+			//	qui a été fraîchement créée).
+			UI.TablePlaceholder table = obj as UI.TablePlaceholder;
+
+			if (table != null && table.Columns.Count == 0)
+			{
+				Druid sourceTypeId = table.SourceTypeId;
+				Caption sourceTypeCaption = resourceManager.GetCaption(sourceTypeId);
+				StructuredType sourceType = TypeRosetta.GetTypeObject(sourceTypeCaption) as StructuredType;
+
+				foreach (string fieldId in sourceType.GetFieldIds())
+				{
+					table.Columns.Add(new UI.ItemTableColumn(fieldId));
+				}
+			}
+		}
+
 		public static void SetBinding(Widget obj, Binding binding, StructuredType structuredType)
 		{
 			//	Modifie le binding de l'objet.
