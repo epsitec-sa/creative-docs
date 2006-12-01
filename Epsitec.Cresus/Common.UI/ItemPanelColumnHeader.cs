@@ -249,7 +249,9 @@ namespace Epsitec.Common.UI
 		{
 			HeaderSlider slider = sender as HeaderSlider;
 
-			this.dragPos = e.Message.Cursor.X;
+			double x = Widgets.Helpers.VisualTree.MapParentToScreen (this, e.Message.Cursor).X;
+
+			this.dragPos = x;
 			this.dragDim = this.GetColumnWidth (slider.Index);
 		}
 
@@ -257,7 +259,9 @@ namespace Epsitec.Common.UI
 		{
 			HeaderSlider slider = sender as HeaderSlider;
 
-			this.SetColumnWidth (slider.Index, System.Math.Max (0, this.dragDim + e.Message.Cursor.X - this.dragPos));
+			double x = Widgets.Helpers.VisualTree.MapParentToScreen (this, e.Message.Cursor).X;
+
+			this.SetColumnWidth (slider.Index, System.Math.Max (0, this.dragDim + x - this.dragPos));
 		}
 
 		private void HandleDragEnded(object sender, MessageEventArgs e)
