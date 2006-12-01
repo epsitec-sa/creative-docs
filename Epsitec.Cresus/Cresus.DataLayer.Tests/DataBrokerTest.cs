@@ -287,9 +287,8 @@ namespace Epsitec.Cresus.DataLayer
 			Window window = new Window ();
 
 			window.Text = "CheckInteractiveTablePanel";
-			window.ClientSize = new Size (480, 400);
-			window.Root.Padding = new Margins (4, 4, 4, 4);
-
+			window.ClientSize = new Size (475, 300);
+			
 			StructuredData source = new StructuredData (Epsitec.Common.UI.Res.Types.Record.Staff);
 			source.SetValue ("Employees", broker);
 			
@@ -299,6 +298,7 @@ namespace Epsitec.Cresus.DataLayer
 			
 			dataSource.AddDataSource ("*", source);
 			panel.DataSource = dataSource;
+			panel.Dock = DockStyle.Fill;
 			
 			window.Root.Children.Add (panel);
 
