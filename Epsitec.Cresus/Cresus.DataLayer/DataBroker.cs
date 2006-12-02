@@ -84,6 +84,10 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		/// <summary>
+		/// Saves the data back to the database. This will allocate real row ids.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		public void Save(DbTransaction transaction)
 		{
 			List<DataTableBroker> brokers = new List<DataTableBroker> ();
