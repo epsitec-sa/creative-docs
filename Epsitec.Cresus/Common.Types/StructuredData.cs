@@ -50,6 +50,25 @@ namespace Epsitec.Common.Types
 			return this.values == null ? -1 : this.values.Count;
 		}
 
+		public void FillWithDefaultValues()
+		{
+			IStructuredType type = this.StructuredType;
+
+			if (type != null)
+			{
+				foreach (string fieldId in type.GetFieldIds ())
+				{
+					StructuredTypeField field = type.GetField (fieldId);
+					AbstractType fieldType = field.Type as AbstractType;
+
+					if (fieldType != null)
+					{
+						this.SetValue (fieldId, fieldType.DefaultValue);
+					}
+				}
+			}
+		}
+
 		#region IStructuredTypeProvider Members
 
 		IStructuredType IStructuredTypeProvider.GetStructuredType()

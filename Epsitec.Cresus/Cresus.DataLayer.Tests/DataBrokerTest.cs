@@ -296,7 +296,7 @@ namespace Epsitec.Cresus.DataLayer
 					{
 						using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
 						{
-							broker.RichCommand.SaveTables (transaction);
+							broker.Save (transaction);
 							transaction.Commit ();
 						}
 					}
@@ -320,6 +320,8 @@ namespace Epsitec.Cresus.DataLayer
 			panel.Dock = DockStyle.Fill;
 			
 			window.Root.Children.Add (panel);
+
+			broker.GetTableBroker ("Record.Address").AddRow ();
 
 			window.Show ();
 

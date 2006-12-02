@@ -57,6 +57,18 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		public DataBroker ParentBroker
+		{
+			get
+			{
+				return this.parentBroker;
+			}
+			internal set
+			{
+				this.parentBroker = value;
+			}
+		}
+
 		public IEnumerable<DataBrokerRecord> Records
 		{
 			get
@@ -120,32 +132,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public DataBrokerRecord GetRow(DbId rowId)
 		{
-			long id = rowId;
-
-			lock (this.exclusion)
-			{
-				DataBrokerItem item;
-				DataBrokerRecord data;
-				
-				if (this.items.TryGetValue (id, out item))
-				{
-					data = item.Data;
-
-					if (data != null)
-					{
-						return data;
-					}
-				}
-
-				data = this.CreateRecordFromRow (id);
-
-				if (data != null)
-				{
-					this.items[id] = DataBrokerItem.CreateReadOnlyItem (data);
-				}
-
-				return data;
-			}
+			return this.GetRecordFromRowId (rowId);
 		}
 
 		public DataBrokerRecord GetRowFromIndex(int index)
@@ -165,10 +152,13 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 
+			return this.GetRecordFromRowId ((long) row[0]);
+		}
+
+		private DataBrokerRecord GetRecordFromRowId(long id)
+		{
 			DataBrokerRecord data = null;
-
-			long id = (long) row[0];
-
+			
 			lock (this.exclusion)
 			{
 				DataBrokerItem item;
@@ -188,7 +178,7 @@ namespace Epsitec.Cresus.DataLayer
 					}
 				}
 			}
-
+			
 			return data;
 		}
 
@@ -271,28 +261,10 @@ namespace Epsitec.Cresus.DataLayer
 					}
 					else
 					{
-						bool modified = false;
-						dataRow.BeginEdit ();
-
-						foreach (string fieldId in this.structuredType.GetFieldIds ())
+						if (this.CopyDataToRow (item.Data, dataRow))
 						{
-							object fieldData = item.Data.GetValue (fieldId);
-
-							if (UndefinedValue.IsUndefinedValue (fieldData))
-							{
-								fieldData = System.DBNull.Value;
-							}
-
-							if (dataRow[fieldId] != fieldData)
-							{
-								dataRow[fieldId] = fieldData;
-								modified = true;
-							}
+							changes++;
 						}
-
-						dataRow.EndEdit ();
-						
-						changes += modified ? 1 : 0;
 					}
 				}
 			}
@@ -312,6 +284,70 @@ namespace Epsitec.Cresus.DataLayer
 			return changes;
 		}
 
+		private bool CopyDataToRow(StructuredData data, System.Data.DataRow dataRow)
+		{
+			bool modified = false;
+
+			dataRow.BeginEdit ();
+
+			foreach (string fieldId in this.structuredType.GetFieldIds ())
+			{
+				object fieldData = data.GetValue (fieldId);
+
+				if ((UndefinedValue.IsUndefinedValue (fieldData)) ||
+					(fieldData == null))
+				{
+					fieldData = System.DBNull.Value;
+				}
+
+				if (dataRow[fieldId] != fieldData)
+				{
+					dataRow[fieldId] = fieldData;
+					modified = true;
+				}
+			}
+
+			dataRow.EndEdit ();
+			
+			return modified;
+		}
+
+		public DataBrokerRecord AddRow()
+		{
+			if (this.parentBroker == null)
+			{
+				throw new System.InvalidOperationException ("Cannot add row, there is no parent broker");
+			}
+
+			System.Data.DataRow row;
+			int rowIndex;
+
+			lock (this.dataTable)
+			{
+				row = this.parentBroker.RichCommand.CreateRow (this.dataTable.TableName);
+				rowIndex = this.dataTable.Rows.Count-1;
+			}
+
+			DataBrokerRecord record = this.GetRecordFromRowId ((long) row[0]);
+			record.FillWithDefaultValues ();
+
+			this.CopyDataToRow (record, row);
+			this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, rowIndex, new object[] { record }));
+
+			return record;
+		}
+
+		internal void Refresh()
+		{
+			lock (this.exclusion)
+			{
+				this.items.Clear ();
+			}
+			
+			this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Reset));
+		}
+		
+		
 		private DataBrokerRecord CreateRecordFromRow(long id)
 		{
 			System.Data.DataRow dataRow;
@@ -519,5 +555,6 @@ namespace Epsitec.Cresus.DataLayer
 		private System.Data.DataTable dataTable;
 		private IStructuredType structuredType;
 		private Dictionary<long, DataBrokerItem> items;
+		private DataBroker parentBroker;
 	}
 }

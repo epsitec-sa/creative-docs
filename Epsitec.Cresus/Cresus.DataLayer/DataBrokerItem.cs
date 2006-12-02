@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
-		public DataBrokerRecord			Data
+		public DataBrokerRecord					Data
 		{
 			get
 			{

@@ -65,7 +65,10 @@ namespace Epsitec.Cresus.DataLayer
 				
 				lock (this.exclusion)
 				{
-					if (this.richCommand.DataSet.Tables.Contains (tableName))
+					System.Data.DataSet dataSet = this.richCommand.DataSet;
+
+					if ((dataSet != null) &&
+						(dataSet.Tables.Contains (tableName)))
 					{
 						//	TODO: handle reloading
 
@@ -78,6 +81,26 @@ namespace Epsitec.Cresus.DataLayer
 				}
 
 				transaction.Commit ();
+			}
+		}
+
+		public void Save(DbTransaction transaction)
+		{
+			List<DataTableBroker> brokers = new List<DataTableBroker> ();
+			
+			lock (this.exclusion)
+			{
+				this.richCommand.SaveTables (transaction);
+
+				foreach (DataTableBroker broker in this.tableBrokers.Values)
+				{
+					brokers.Add (broker);
+				}
+			}
+
+			foreach (DataTableBroker broker in brokers)
+			{
+				broker.Refresh ();
 			}
 		}
 
@@ -107,6 +130,7 @@ namespace Epsitec.Cresus.DataLayer
 					System.Data.DataTable dataTable = this.richCommand.DataSet.Tables[tableName];
 					
 					broker = new DataTableBroker (structuredType, tableDefinition, dataTable);
+					broker.ParentBroker = this;
 					
 					this.tableBrokers[tableName] = broker;
 				}
