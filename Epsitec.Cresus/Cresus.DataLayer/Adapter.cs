@@ -152,6 +152,8 @@ namespace Epsitec.Cresus.DataLayer
 
 			DbTable table = infrastructure.CreateDbTable (tableName, DbElementCat.ManagedUserData, DbRevisionMode.Enabled);
 
+			table.DefineCaptionId (type.CaptionId);
+
 			tables.Add (table);
 
 			foreach (string id in type.GetFieldIds ())

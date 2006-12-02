@@ -673,6 +673,7 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "rev", DbTools.RevisionModeToString (this.RevisionMode));
 			DbTools.WriteAttribute (xmlWriter, "rep", DbTools.ReplicationModeToString (this.replicationMode));
 			DbTools.WriteAttribute (xmlWriter, "l10n", DbTools.StringToString (this.localizations));
+			DbTools.WriteAttribute (xmlWriter, "typ", DbTools.DruidToString (this.captionId));
 
 			xmlWriter.WriteEndElement ();
 		}
@@ -692,10 +693,11 @@ namespace Epsitec.Cresus.Database
 				DbTable table = new DbTable ();
 				bool isEmptyElement = xmlReader.IsEmptyElement;
 
-				table.category         = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
+				table.category        = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
 				table.revisionMode    = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
 				table.replicationMode = DbTools.ParseReplicationMode (xmlReader.GetAttribute ("rep"));
-				table.localizations    = DbTools.ParseString (xmlReader.GetAttribute ("l10n"));
+				table.localizations   = DbTools.ParseString (xmlReader.GetAttribute ("l10n"));
+				table.captionId       = DbTools.ParseDruid (xmlReader.GetAttribute ("typ"));
 
 				if (!isEmptyElement)
 				{

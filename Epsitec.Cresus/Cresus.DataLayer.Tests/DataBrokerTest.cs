@@ -279,7 +279,8 @@ namespace Epsitec.Cresus.DataLayer
 			ResourceManager   manager           = new ResourceManager ();
 			CommandDispatcher commandDispatcher = new CommandDispatcher ("Application", CommandDispatcherLevel.Primary);
 			CommandContext    commandContext    = new CommandContext ();
-
+			
+			DataBroker broker;
 			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
 			DbRichCommand command;
 			DbTable tableDefinition;
@@ -289,10 +290,9 @@ namespace Epsitec.Cresus.DataLayer
 				tableDefinition = Adapter.FindTableDefinition (transaction, type);
 				DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
 				command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, tableDefinition, condition);
+				broker  = new DataBroker (this.infrastructure, command);
 				transaction.Commit ();
 			}
-
-			DataTableBroker broker = new DataTableBroker (type, tableDefinition, command.DataSet.Tables["Record.Address"]);
 
 			Window window = new Window ();
 
@@ -303,7 +303,7 @@ namespace Epsitec.Cresus.DataLayer
 			commandDispatcher.Register (ApplicationCommands.Save,
 				delegate ()
 				{
-					if (broker.CopyChangesToDataTable () > 0)
+					if (broker.GetTableBroker ("Record.Address").CopyChangesToDataTable () > 0)
 					{
 						using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
 						{
@@ -316,7 +316,7 @@ namespace Epsitec.Cresus.DataLayer
 			window.Text = "CheckInteractiveTablePanel";
 			
 			StructuredData source = new StructuredData (Epsitec.Common.UI.Res.Types.Record.Staff);
-			source.SetValue ("Employees", broker);
+			source.SetValue ("Employees", broker.GetTableBroker ("Record.Address"));
 
 			Druid panelId = Druid.Parse ("[KF04]");
 			
