@@ -533,6 +533,25 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Creates the select condition for active rows.
+		/// </summary>
+		/// <returns>The select condition.</returns>
+		public DbSelectCondition CreateSelectCondition()
+		{
+			return this.CreateSelectCondition (DbSelectRevision.LiveActive);
+		}
+
+		/// <summary>
+		/// Creates the select condition for the specified revision.
+		/// </summary>
+		/// <param name="revision">The revision.</param>
+		/// <returns>The select condition.</returns>
+		public DbSelectCondition CreateSelectCondition(DbSelectRevision revision)
+		{
+			return new DbSelectCondition (this.Converter, revision);
+		}
+
+		/// <summary>
 		/// Creates a minimal database table definition. This will only contain
 		/// the basic id and status columns required by <c>DbInfrastructure</c>.
 		/// </summary>

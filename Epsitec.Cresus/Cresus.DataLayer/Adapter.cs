@@ -81,15 +81,33 @@ namespace Epsitec.Cresus.DataLayer
 		/// <summary>
 		/// Finds a table definition based on a structured type.
 		/// </summary>
+		/// <param name="infrastructure">The database infrastructure.</param>
+		/// <param name="type">The structured type to find.</param>
+		/// <returns>The table definition or <c>null</c>.</returns>
+		public static DbTable FindTableDefinition(DbInfrastructure infrastructure, StructuredType type)
+		{
+			using (DbTransaction transaction = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbTable table = Adapter.FindTableDefinition (transaction, type);
+				
+				transaction.Commit ();
+				
+				return table;
+			}
+		}
+		
+		/// <summary>
+		/// Finds a table definition based on a structured type.
+		/// </summary>
 		/// <param name="transaction">The database transaction.</param>
 		/// <param name="type">The structured type to find.</param>
 		/// <returns>The table definition or <c>null</c>.</returns>
 		public static DbTable FindTableDefinition(DbTransaction transaction, StructuredType type)
 		{
 			DbInfrastructure infrastructure = transaction.Infrastructure;
-			
+
 			DbContext context   = infrastructure.DefaultContext;
-			string    tableName = context.ResourceManager.GetCaption (type.CaptionId).Name;
+			string tableName = context.ResourceManager.GetCaption (type.CaptionId).Name;
 
 			return infrastructure.ResolveDbTable (transaction, tableName);
 		}

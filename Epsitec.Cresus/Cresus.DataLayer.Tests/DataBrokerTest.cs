@@ -287,8 +287,8 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				tableDefinition = Adapter.FindTableDefinition (transaction, type);
-				DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
+				tableDefinition = Adapter.FindTableDefinition (this.infrastructure, type);
+				DbSelectCondition condition = this.infrastructure.CreateSelectCondition ();
 				command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, tableDefinition, condition);
 				broker  = new DataBroker (this.infrastructure, command);
 				transaction.Commit ();
