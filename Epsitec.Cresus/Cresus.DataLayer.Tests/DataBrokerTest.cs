@@ -280,20 +280,9 @@ namespace Epsitec.Cresus.DataLayer
 			CommandDispatcher commandDispatcher = new CommandDispatcher ("Application", CommandDispatcherLevel.Primary);
 			CommandContext    commandContext    = new CommandContext ();
 
-			Adapter adapter = new Adapter (this.infrastructure);
-			DataBroker broker;
-			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
-			DbRichCommand command;
-			DbTable tableDefinition = adapter.FindTableDefinition (type);
-
-			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				DbSelectCondition condition = this.infrastructure.CreateSelectCondition ();
-				command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, tableDefinition, condition);
-				broker  = new DataBroker (this.infrastructure, command);
-				transaction.Commit ();
-			}
-
+			DataBroker broker = new DataBroker (this.infrastructure);
+			broker.LoadTable (Epsitec.Common.UI.Res.Types.Record.Address);
+			
 			Window window = new Window ();
 
 			ResourceManager.SetResourceManager (window, manager);
@@ -307,7 +296,7 @@ namespace Epsitec.Cresus.DataLayer
 					{
 						using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
 						{
-							command.SaveTables (transaction);
+							broker.RichCommand.SaveTables (transaction);
 							transaction.Commit ();
 						}
 					}

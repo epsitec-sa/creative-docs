@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Database
 			
 			this.commands = new Collections.DbCommands ();
 			this.tables   = new Collections.DbTables ();
+			this.adapters = new List<System.Data.IDataAdapter> ();
 		}
 
 		/// <summary>
@@ -284,6 +285,58 @@ namespace Epsitec.Cresus.Database
 			return command;
 		}
 
+		public void ImportTable(DbTransaction transaction, DbTable table, DbSelectCondition condition)
+		{
+			SqlSelect   select  = new SqlSelect ();
+			ISqlBuilder builder = transaction.SqlBuilder;
+
+			select.Fields.Add (SqlField.CreateAll ());
+			select.Tables.Add (table.Name, SqlField.CreateName (table.GetSqlName ()));
+
+			//	If there is no condition, this means we don't want to get any data
+			//	for the specific table; just fetch the empty table by using an always
+			//	false WHERE clause.
+
+			if (condition == null)
+			{
+				select.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareFalse));
+			}
+			else
+			{
+				condition.CreateConditions (table, select.Conditions);
+			}
+
+			this.infrastructure.DefaultSqlBuilder.SelectData (select);
+
+			Collections.DbCommands oldCommands = this.commands;
+			Collections.DbCommands newCommands = new Collections.DbCommands ();
+			
+			Collections.DbTables oldTables = this.tables;
+			Collections.DbTables newTables = new Collections.DbTables ();
+			
+			List<System.Data.IDataAdapter> oldAdapters = this.adapters;
+			List<System.Data.IDataAdapter> newAdapters = new List<System.Data.IDataAdapter> ();
+
+			this.commands = newCommands;
+			this.tables   = newTables;
+			this.adapters = newAdapters;
+			
+			this.commands.Add (builder.Command);
+			this.tables.Add (table);
+
+			this.infrastructure.Execute (transaction, this);
+
+			oldCommands.AddRange (newCommands);
+			oldTables.AddRange (newTables);
+			oldAdapters.AddRange (newAdapters);
+
+			this.commands = oldCommands;
+			this.tables   = oldTables;
+			this.adapters = oldAdapters;
+			
+			DbRichCommand.RelaxConstraints (this.dataSet.Tables[this.dataSet.Tables.Count-1]);
+		}
+
 		/// <summary>
 		/// Relaxes the data table constraints set up by ADO.NET so that we can
 		/// fill the rows with partial data.
@@ -358,9 +411,9 @@ namespace Epsitec.Cresus.Database
 			
 			try
 			{
-				for (int i = 0; i < this.adapters.Length; i++)
+				foreach (System.Data.IDataAdapter adapter in this.adapters)
 				{
-					this.adapters[i].Update (this.dataSet);
+					adapter.Update (this.dataSet);
 				}
 			}
 			finally
@@ -481,7 +534,7 @@ namespace Epsitec.Cresus.Database
 			//	Don't touch the contents of the tables; writes them as is to the
 			//	database, by using either UPDATE or INSERT.
 			
-			for (int i = 0; i < this.adapters.Length; i++)
+			for (int i = 0; i < this.adapters.Count; i++)
 			{
 				System.Data.DataTable table = this.dataSet.Tables[i];
 				
@@ -703,17 +756,16 @@ namespace Epsitec.Cresus.Database
 				throw new Exceptions.MissingTransactionException (access);
 			}
 			
-			if (this.dataSet != null)
+			if (this.dataSet == null)
 			{
-				throw new Exceptions.GenericException (access, "DataSet already exists.");
+				this.dataSet = new System.Data.DataSet ();
+				this.access  = access;
 			}
 			
 			//	Fill the data set based on the adapter objects provided by
 			//	the caller :
 
-			this.access   = access;
-			this.dataSet  = new System.Data.DataSet ();
-			this.adapters = adapters;
+			this.adapters.AddRange (adapters);
 			
 			this.SetCommandTransaction (transaction);
 			
@@ -1320,7 +1372,7 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			if ((this.adapters == null) ||
-				(this.adapters.Length == 0))
+				(this.adapters.Count == 0))
 			{
 				throw new Exceptions.GenericException (this.access, "No adapters defined.");
 			}
@@ -1551,7 +1603,7 @@ namespace Epsitec.Cresus.Database
 		private Collections.DbTables			tables;
 		private System.Data.DataSet				dataSet;
 		private DbAccess						access;
-		private System.Data.IDataAdapter[]		adapters;
+		private List<System.Data.IDataAdapter>	adapters;
 
 		private Stack<DbTransaction>			activeTransactions = new Stack<DbTransaction> ();
 		

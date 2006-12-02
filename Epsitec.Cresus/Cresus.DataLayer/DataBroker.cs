@@ -13,13 +13,37 @@ namespace Epsitec.Cresus.DataLayer
 {
 	public class DataBroker
 	{
-		public DataBroker(DbInfrastructure infrastructure, DbRichCommand richCommand)
+		public DataBroker(DbInfrastructure infrastructure)
 		{
 			this.infrastructure = infrastructure;
-			this.richCommand = richCommand;
 			this.tableBrokers = new Dictionary<string, DataTableBroker> ();
+			this.adapter = new Adapter (this.infrastructure);
+			this.richCommand = new DbRichCommand (this.infrastructure);
 		}
 
+
+		public DbRichCommand RichCommand
+		{
+			get
+			{
+				return this.richCommand;
+			}
+		}
+
+		public void LoadTable(StructuredType type)
+		{
+			this.LoadTable (type, this.infrastructure.CreateSelectCondition ());
+		}
+
+		public void LoadTable(StructuredType type, DbSelectCondition condition)
+		{
+			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbTable tableDef = Adapter.FindTableDefinition (transaction, type);
+				this.richCommand.ImportTable (transaction, tableDef, condition);
+				transaction.Commit ();
+			}
+		}
 
 		public DataTableBroker GetTableBroker(string tableName)
 		{
@@ -52,6 +76,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		private object exclusion = new object ();
 		private DbInfrastructure infrastructure;
+		private Adapter adapter;
 		private DbRichCommand richCommand;
 		private Dictionary<string, DataTableBroker> tableBrokers;
 	}
