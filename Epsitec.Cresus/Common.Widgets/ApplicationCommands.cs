@@ -14,6 +14,8 @@ namespace Epsitec.Common.Widgets
 		public static readonly Command Paste		= Res.Commands.Paste;
 		public static readonly Command Delete		= Res.Commands.Delete;
 		public static readonly Command SelectAll	= Res.Commands.SelectAll;
+		public static readonly Command Save			= Res.Commands.Save;
+		public static readonly Command SaveAs		= Res.Commands.SaveAs;
 		
 		//	Référence: http://winfx.msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/T_System_Windows_Input_ApplicationCommands_Members.asp
 
@@ -30,8 +32,6 @@ namespace Epsitec.Common.Widgets
 		public static readonly string	Properties		= "Properties";
 		public static readonly string	Redo			= "Redo";
 		public static readonly string	Replace			= "Replace";
-		public static readonly string	Save			= "Save";
-		public static readonly string	SaveAs			= "SaveAs";
 		public static readonly string	Stop			= "Stop";
 		public static readonly string	Undo			= "Undo";
 	}

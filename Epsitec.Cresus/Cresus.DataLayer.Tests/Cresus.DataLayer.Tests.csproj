@@ -99,6 +99,10 @@
       <Project>{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}</Project>
       <Name>Common.Drawing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.Support.Events\Common.Support.Events.csproj">
+      <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>
+      <Name>Common.Support.Events</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
       <Name>Common.Support.Implementation</Name>
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>

@@ -55,7 +55,7 @@ namespace Epsitec.Common.Widgets
 			this.OnCursorChanged (true);
 
 			CommandDispatcher dispatcher = new CommandDispatcher ("TextField", CommandDispatcherLevel.Secondary);
-			CommandContext context    = new CommandContext ();
+			CommandContext    context    = new CommandContext ();
 
 			dispatcher.AutoForwardCommands = true;
 			dispatcher.RegisterController (new Dispatcher (this));

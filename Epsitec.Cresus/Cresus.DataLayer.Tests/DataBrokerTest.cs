@@ -271,7 +271,10 @@ namespace Epsitec.Cresus.DataLayer
 		[Test]
 		public void CheckInteractiveTablePanel()
 		{
-			ResourceManager manager = new ResourceManager ();
+			ResourceManager   manager = new ResourceManager ();
+			CommandDispatcher commandDispatcher = new CommandDispatcher ("Application", CommandDispatcherLevel.Primary);
+			CommandContext    commandContext    = new CommandContext ();
+
 			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
 			DbRichCommand command;
 
@@ -287,6 +290,23 @@ namespace Epsitec.Cresus.DataLayer
 
 			Window window = new Window ();
 
+			ResourceManager.SetResourceManager (window, manager);
+			CommandDispatcher.SetDispatcher (window, commandDispatcher);
+			CommandContext.SetContext (window, commandContext);
+
+			commandDispatcher.Register (ApplicationCommands.Save,
+				delegate ()
+				{
+					if (broker.CopyChangesToDataTable () > 0)
+					{
+						using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
+						{
+							command.SaveTables (transaction);
+							transaction.Commit ();
+						}
+					}
+				});
+			
 			window.Text = "CheckInteractiveTablePanel";
 			
 			StructuredData source = new StructuredData (Epsitec.Common.UI.Res.Types.Record.Staff);

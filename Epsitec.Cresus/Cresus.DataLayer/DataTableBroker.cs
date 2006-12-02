@@ -213,8 +213,10 @@ namespace Epsitec.Cresus.DataLayer
 			return -1;
 		}
 
-		public void CopyChangesToDataTable()
+		public int CopyChangesToDataTable()
 		{
+			int changes = 0;
+			
 			List<DataBrokerItem> modifiedList = new List<DataBrokerItem> ();
 			List<DataBrokerItem> deadList = new List<DataBrokerItem> ();
 			
@@ -243,6 +245,7 @@ namespace Epsitec.Cresus.DataLayer
 					}
 					else
 					{
+						bool modified = false;
 						dataRow.BeginEdit ();
 
 						foreach (string fieldId in this.structuredType.GetFieldIds ())
@@ -253,11 +256,17 @@ namespace Epsitec.Cresus.DataLayer
 							{
 								fieldData = System.DBNull.Value;
 							}
-							
-							dataRow[fieldId] = fieldData;
+
+							if (dataRow[fieldId] != fieldData)
+							{
+								dataRow[fieldId] = fieldData;
+								modified = true;
+							}
 						}
 
 						dataRow.EndEdit ();
+						
+						changes += modified ? 1 : 0;
 					}
 				}
 			}
@@ -273,6 +282,8 @@ namespace Epsitec.Cresus.DataLayer
 					this.items.Remove (item.Id);
 				}
 			}
+			
+			return changes;
 		}
 
 		private DataBrokerRecord CreateRecordFromRow(long id)
