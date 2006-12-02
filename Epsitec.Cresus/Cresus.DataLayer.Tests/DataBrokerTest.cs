@@ -287,12 +287,15 @@ namespace Epsitec.Cresus.DataLayer
 			Window window = new Window ();
 
 			window.Text = "CheckInteractiveTablePanel";
-			window.ClientSize = new Size (475, 300);
 			
 			StructuredData source = new StructuredData (Epsitec.Common.UI.Res.Types.Record.Staff);
 			source.SetValue ("Employees", broker);
+
+			Druid panelId = Druid.Parse ("[KF04]");
 			
-			Epsitec.Common.UI.Panel panel = Epsitec.Common.UI.Panel.CreatePanel (Druid.Parse ("[KF04]"), manager);
+			window.ClientSize = Epsitec.Common.UI.Panel.GetPanelDefaultSize (panelId, manager);
+			
+			Epsitec.Common.UI.Panel panel = Epsitec.Common.UI.Panel.CreatePanel (panelId, manager);
 
 			DataSource dataSource = new DataSource ();
 			

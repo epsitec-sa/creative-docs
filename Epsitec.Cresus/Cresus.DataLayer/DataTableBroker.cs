@@ -213,6 +213,29 @@ namespace Epsitec.Cresus.DataLayer
 			return -1;
 		}
 
+		public void CopyChangesToDataTable()
+		{
+			lock (this.exclusion)
+			{
+				List<DataBrokerItem> modifiedList = new List<DataBrokerItem> ();
+				
+				foreach (DataBrokerItem item in this.items.Values)
+				{
+					if (item.IsWritable)
+					{
+						modifiedList.Add (item);
+					}
+				}
+
+				//	TODO: update rows based on modifiedList
+
+				foreach (DataBrokerItem item in modifiedList)
+				{
+					this.items[item.Id] = DataBrokerItem.CreateReadOnlyItem (item.Data);
+				}
+			}
+		}
+
 		private DataBrokerRecord CreateRecordFromRow(long id)
 		{
 			System.Data.DataRow dataRow;
@@ -252,6 +275,16 @@ namespace Epsitec.Cresus.DataLayer
 			
 			lock (this.exclusion)
 			{
+				DataBrokerItem item;
+
+				if (this.items.TryGetValue (id, out item))
+				{
+					if (item.IsWritable)
+					{
+						return;
+					}
+				}
+
 				this.items[id] = DataBrokerItem.CreateWritableItem (data);
 			}
 		}
@@ -281,11 +314,6 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 		#endregion
-
-		private object exclusion;
-		private System.Data.DataTable dataTable;
-		private IStructuredType structuredType;
-		private Dictionary<long, DataBrokerItem> items;
 
 		#region IList Members
 
@@ -395,5 +423,10 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 		#endregion
+
+		private object exclusion;
+		private System.Data.DataTable dataTable;
+		private IStructuredType structuredType;
+		private Dictionary<long, DataBrokerItem> items;
 	}
 }
