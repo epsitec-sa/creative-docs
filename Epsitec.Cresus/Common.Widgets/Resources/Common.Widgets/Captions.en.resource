@@ -7,4 +7,6 @@
   <data id="05">&lt;s:data id="_0" f:Description="Select all" f:Labels="{Collection {Text 'Select all'}, {Text 'Sel. all'}}" /&gt;</data>
   <data id="06">&lt;s:data id="_0" /&gt;</data>
   <data id="07">&lt;s:data id="_0" /&gt;</data>
+  <data id="09">&lt;s:data id="_0" f:Labels="{Collection {Text 'Save'}}" /&gt;</data>
+  <data id="0A">&lt;s:data id="_0" f:Labels="{Collection {Text 'Save As...'}}" /&gt;</data>
 </bundle>

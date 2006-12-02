@@ -759,6 +759,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Images\Cmd.Paste.icon" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\Cmd.Save.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\Cmd.SaveAs.icon" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

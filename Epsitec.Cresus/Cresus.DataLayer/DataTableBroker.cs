@@ -215,10 +215,11 @@ namespace Epsitec.Cresus.DataLayer
 
 		public void CopyChangesToDataTable()
 		{
+			List<DataBrokerItem> modifiedList = new List<DataBrokerItem> ();
+			List<DataBrokerItem> deadList = new List<DataBrokerItem> ();
+			
 			lock (this.exclusion)
 			{
-				List<DataBrokerItem> modifiedList = new List<DataBrokerItem> ();
-				
 				foreach (DataBrokerItem item in this.items.Values)
 				{
 					if (item.IsWritable)
@@ -226,12 +227,50 @@ namespace Epsitec.Cresus.DataLayer
 						modifiedList.Add (item);
 					}
 				}
+			}
 
-				//	TODO: update rows based on modifiedList
+			lock (this.dataTable)
+			{
+				System.Data.DataRow dataRow;
+				
+				foreach (DataBrokerItem item in modifiedList)
+				{
+					dataRow = this.dataTable.Rows.Find (item.Id);
 
+					if (dataRow == null)
+					{
+						deadList.Add (item);
+					}
+					else
+					{
+						dataRow.BeginEdit ();
+
+						foreach (string fieldId in this.structuredType.GetFieldIds ())
+						{
+							object fieldData = item.Data.GetValue (fieldId);
+
+							if (UndefinedValue.IsUndefinedValue (fieldData))
+							{
+								fieldData = System.DBNull.Value;
+							}
+							
+							dataRow[fieldId] = fieldData;
+						}
+
+						dataRow.EndEdit ();
+					}
+				}
+			}
+
+			lock (this.exclusion)
+			{
 				foreach (DataBrokerItem item in modifiedList)
 				{
 					this.items[item.Id] = DataBrokerItem.CreateReadOnlyItem (item.Data);
+				}
+				foreach (DataBrokerItem item in deadList)
+				{
+					this.items.Remove (item.Id);
 				}
 			}
 		}
