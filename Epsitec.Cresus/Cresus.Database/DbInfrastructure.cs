@@ -80,6 +80,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public DbTransaction					DefaultLiveTransaction
+		{
+			get
+			{
+				return this.FindLiveTransaction (this.abstraction);
+			}
+		}
+
 		public ITypeConverter					Converter
 		{
 			get
@@ -498,6 +506,31 @@ namespace Epsitec.Cresus.Database
 			return transaction;
 		}
 
+		/// <summary>
+		/// Inherits the live transaction or begins a transaction. When inheriting,
+		/// the transaction modes must be compatible.
+		/// </summary>
+		/// <param name="mode">The transaction mode.</param>
+		/// <returns>The transaction.</returns>
+		public DbTransaction InheritOrBeginTransaction(DbTransactionMode mode)
+		{
+			DbTransaction live = this.DefaultLiveTransaction;
+
+			if (live == null)
+			{
+				return this.BeginTransaction (mode);
+			}
+			else
+			{
+				if ((mode == DbTransactionMode.ReadWrite) &&
+					(live.IsReadOnly))
+				{
+					throw new System.InvalidOperationException ("Cannot begin read/write transaction from inherited read-only transaction");
+				}
+				
+				return new DbTransaction (live);
+			}
+		}
 
 		/// <summary>
 		/// Creates a minimal database table definition. This will only contain
@@ -529,7 +562,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="table">The table.</param>
 		public void RegisterNewDbTable(DbTable table)
 		{
-			using (DbTransaction transaction = this.BeginTransaction ())
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				this.RegisterNewDbTable (transaction, table);
 				transaction.Commit ();
@@ -566,7 +599,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="table">The table.</param>
 		public void UnregisterDbTable(DbTable table)
 		{
-			using (DbTransaction transaction = this.BeginTransaction ())
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				this.UnregisterDbTable (transaction, table);
 				transaction.Commit ();
@@ -600,7 +633,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The table definition.</returns>
 		public DbTable ResolveDbTable(string tableName)
 		{
-			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				DbTable value = this.ResolveDbTable (transaction, tableName);
 				transaction.Commit ();
@@ -617,7 +650,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The table definition.</returns>
 		public DbTable ResolveDbTable(DbKey key)
 		{
-			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				DbTable value = this.ResolveDbTable (transaction, key);
 				transaction.Commit ();
@@ -688,7 +721,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The table definitions or an empty array.</returns>
 		public DbTable[] FindDbTables(DbElementCat category)
 		{
-			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				DbTable[] value = this.FindDbTables (transaction, category);
 				transaction.Commit ();
@@ -813,7 +846,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="typeDef">The type definition.</param>
 		public void RegisterNewDbType(DbTypeDef typeDef)
 		{
-			using (DbTransaction transaction = this.BeginTransaction ())
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				this.RegisterNewDbType (transaction, typeDef);
 				transaction.Commit ();
@@ -846,7 +879,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="typeDef">The type definition.</param>
 		public void UnregisterDbType(DbTypeDef typeDef)
 		{
-			using (DbTransaction transaction = this.BeginTransaction ())
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				this.UnregisterDbType (transaction, typeDef);
 				transaction.Commit ();
@@ -876,7 +909,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The type definition or <c>null</c>.</returns>
 		public DbTypeDef ResolveDbType(string typeName)
 		{
-			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				DbTypeDef value = this.ResolveDbType (transaction, typeName);
 				transaction.Commit ();
@@ -939,7 +972,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The type definitions.</returns>
 		public DbTypeDef[] FindDbTypes()
 		{
-			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				DbTypeDef[] value = this.FindDbTypes (transaction);
 				transaction.Commit ();
@@ -1306,6 +1339,27 @@ namespace Epsitec.Cresus.Database
 			{
 				this.ReleaseConnection (abstraction);
 			}
+		}
+
+		/// <summary>
+		/// Finds the live transaction for the specified database abstraction.
+		/// </summary>
+		/// <param name="abstraction">The database abstraction.</param>
+		/// <returns>The live transaction or <c>null</c>.</returns>
+		internal DbTransaction FindLiveTransaction(IDbAbstraction abstraction)
+		{
+			lock (this.liveTransactions)
+			{
+				foreach (DbTransaction item in this.liveTransactions)
+				{
+					if (item.Database == abstraction)
+					{
+						return item;
+					}
+				}
+			}
+
+			return null;
 		}
 
 		/// <summary>

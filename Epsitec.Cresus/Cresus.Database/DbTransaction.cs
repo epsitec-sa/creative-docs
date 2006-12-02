@@ -27,6 +27,21 @@ namespace Epsitec.Cresus.Database
 			this.infrastructure.NotifyBeginTransaction (this);
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbTransaction"/> class.
+		/// </summary>
+		/// <param name="liveTransaction">The live transaction from which to inherit.</param>
+		internal DbTransaction(DbTransaction liveTransaction)
+		{
+			this.transaction    = liveTransaction.transaction;
+			this.database       = liveTransaction.database;
+			this.infrastructure = liveTransaction.infrastructure;
+			this.mode           = liveTransaction.mode;
+			
+			this.inheritFromTransaction = liveTransaction;
+
+			System.Threading.Interlocked.Increment (ref this.inheritFromTransaction.inheritanceCount);
+		}
 
 		/// <summary>
 		/// Gets the ADO.NET transaction.
@@ -103,7 +118,20 @@ namespace Epsitec.Cresus.Database
 				return this.mode == DbTransactionMode.ReadWrite;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets a value indicating whether this transaction is inherited.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this transaction is inherited; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsInherited
+		{
+			get
+			{
+				return this.inheritFromTransaction != null;
+			}
+		}
 		
 		#region IDbTransaction Members
 		
@@ -112,6 +140,15 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		public void Rollback()
 		{
+			if (this.IsInherited)
+			{
+				throw new System.InvalidOperationException ("Inherited transaction may not be rolled back");
+			}
+			else if (this.inheritanceCount > 0)
+			{
+				throw new System.InvalidOperationException ("Rollback of inherited transaction prohibited");
+			}
+
 			this.transaction.Rollback ();
 			this.infrastructure.NotifyEndTransaction (this);
 			this.infrastructure = null;
@@ -122,9 +159,24 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		public void Commit()
 		{
-			this.transaction.Commit ();
-			this.infrastructure.NotifyEndTransaction (this);
-			this.infrastructure = null;
+			if (this.IsInherited)
+			{
+				System.Threading.Interlocked.Decrement (ref this.inheritFromTransaction.inheritanceCount);
+
+				this.inheritFromTransaction = null;
+				this.infrastructure         = null;
+				this.transaction            = null;
+			}
+			else if (this.inheritanceCount > 0)
+			{
+				throw new System.InvalidOperationException ("Commit of inherited transaction prohibited");
+			}
+			else
+			{
+				this.transaction.Commit ();
+				this.infrastructure.NotifyEndTransaction (this);
+				this.infrastructure = null;
+			}
 		}
 
 
@@ -161,6 +213,16 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		public void Dispose()
 		{
+			if (this.inheritanceCount > 0)
+			{
+				throw new System.InvalidOperationException ("Disposing inherited transaction");
+			}
+
+			if (this.IsInherited)
+			{
+				throw new System.InvalidOperationException ("Inherited transaction may not be rolled back by Dispose");
+			}
+
 			if (this.infrastructure != null)
 			{
 				this.infrastructure.NotifyEndTransaction (this);
@@ -181,5 +243,7 @@ namespace Epsitec.Cresus.Database
 		private IDbAbstraction					database;
 		private DbInfrastructure				infrastructure;
 		private readonly DbTransactionMode		mode;
+		private DbTransaction					inheritFromTransaction;
+		private int								inheritanceCount;
 	}
 }

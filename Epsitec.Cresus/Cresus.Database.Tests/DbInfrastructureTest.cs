@@ -471,6 +471,13 @@ namespace Epsitec.Cresus.Database
 
 				Assert.AreEqual (3, infrastructure.LiveTransactions.Length);
 
+				DbTransaction trX = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly);
+
+				Assert.AreEqual (3, infrastructure.LiveTransactions.Length);
+
+				trX.Commit ();
+				trX.Dispose ();
+
 				tr2.Commit ();
 
 				Assert.AreEqual (2, infrastructure.LiveTransactions.Length);
@@ -485,6 +492,76 @@ namespace Epsitec.Cresus.Database
 
 				dba1.Dispose ();
 				dba2.Dispose ();
+			}
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.InvalidOperationException))]
+		public void Check14MultipleTransactionsEx1()
+		{
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", true))
+			{
+				DbTransaction tr0 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
+				DbTransaction trX = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite);
+
+				trX.Commit ();
+				trX.Dispose ();
+				tr0.Commit ();
+			}
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.InvalidOperationException))]
+		public void Check14MultipleTransactionsEx2()
+		{
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", true))
+			{
+				DbTransaction tr0 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
+				DbTransaction trX = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly);
+
+				trX.Dispose ();
+				tr0.Commit ();
+			}
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.InvalidOperationException))]
+		public void Check14MultipleTransactionsEx3()
+		{
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", true))
+			{
+				DbTransaction tr0 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
+				DbTransaction trX = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly);
+
+				tr0.Commit ();
+			}
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.InvalidOperationException))]
+		public void Check14MultipleTransactionsEx4()
+		{
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", true))
+			{
+				DbTransaction tr0 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
+				DbTransaction trX = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly);
+
+				tr0.Rollback ();
+			}
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.InvalidOperationException))]
+		public void Check14MultipleTransactionsEx5()
+		{
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", true))
+			{
+				DbTransaction tr0 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
+				DbTransaction trX = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly);
+
+				trX.Rollback ();
+				trX.Dispose ();
+				tr0.Commit ();
 			}
 		}
 
