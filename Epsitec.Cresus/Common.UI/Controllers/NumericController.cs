@@ -124,19 +124,23 @@ namespace Epsitec.Common.UI.Controllers
 
 		protected override void RefreshUserInterface(object oldValue, object newValue)
 		{
+			string text = "";
+			
 			if ((newValue != UndefinedValue.Instance) &&
 				(newValue != InvalidValue.Instance) &&
 				(newValue != null))
 			{
-				if (this.field != null)
-				{
-					this.field.Text = this.ConvertFromValue (newValue);
-				}
-				else
-				{
-					this.label.Text = this.ConvertFromValue (newValue);
-					this.label.PreferredWidth = this.label.GetBestFitSize ().Width;
-				}
+				text = this.ConvertFromValue (newValue);
+			}
+			
+			if (this.field != null)
+			{
+				this.field.Text = text;
+			}
+			else
+			{
+				this.label.Text = text;
+				this.label.PreferredWidth = this.label.GetBestFitSize ().Width;
 			}
 		}
 		
