@@ -49,10 +49,11 @@ namespace Epsitec.Cresus.DataLayer
 			System.Diagnostics.Debug.WriteLine ("Broker-1");
 			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
 			DbRichCommand command;
+			DbTable table;
 
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				DbTable table = Adapter.FindTableDefinition (transaction, type);
+				table = Adapter.FindTableDefinition (transaction, type);
 				DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
 				command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, table, condition);
 				transaction.Commit ();
@@ -64,7 +65,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			Assert.IsNotNull (dataTable);
 
-			DataTableBroker broker = new DataTableBroker (type, dataTable);
+			DataTableBroker broker = new DataTableBroker (type, table, dataTable);
 			int total = 0;
 
 			foreach (DataBrokerRecord record in broker.Records)
@@ -88,10 +89,11 @@ namespace Epsitec.Cresus.DataLayer
 			System.Diagnostics.Debug.WriteLine ("Broker-2");
 			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
 			DbRichCommand command;
+			DbTable table;
 
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				DbTable table = Adapter.FindTableDefinition (transaction, type);
+				table = Adapter.FindTableDefinition (transaction, type);
 				DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
 				condition.AddCondition (table.Columns["Company"], DbCompare.Like, "Epsitec%");
 				command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, table, condition);
@@ -104,7 +106,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			Assert.IsNotNull (dataTable);
 
-			DataTableBroker broker = new DataTableBroker (type, dataTable);
+			DataTableBroker broker = new DataTableBroker (type, table, dataTable);
 			int total = 0;
 
 			foreach (DataBrokerRecord record in broker.Records)
@@ -128,10 +130,11 @@ namespace Epsitec.Cresus.DataLayer
 			System.Diagnostics.Debug.WriteLine ("Broker-3");
 			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
 			DbRichCommand command;
+			DbTable table;
 
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				DbTable table = Adapter.FindTableDefinition (transaction, type);
+				table = Adapter.FindTableDefinition (transaction, type);
 				DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
 				condition.AddCondition (table.Columns["Zip"], DbCompare.LessThan, 1200);
 				condition.AddCondition (table.Columns["Address1"], DbCompare.Like, "Case%");
@@ -146,7 +149,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			Assert.IsNotNull (dataTable);
 
-			DataTableBroker broker = new DataTableBroker (type, dataTable);
+			DataTableBroker broker = new DataTableBroker (type, table, dataTable);
 			int total = 0;
 
 			foreach (DataBrokerRecord record in broker.Records)
@@ -168,16 +171,17 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
 			DbRichCommand command;
+			DbTable table;
 
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				DbTable table = Adapter.FindTableDefinition (transaction, type);
+				table = Adapter.FindTableDefinition (transaction, type);
 				DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
 				command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, table, condition);
 				transaction.Commit ();
 			}
 
-			DataTableBroker broker = new DataTableBroker (type, command.DataSet.Tables["Record.Address"]);
+			DataTableBroker broker = new DataTableBroker (type, table, command.DataSet.Tables["Record.Address"]);
 			
 			Window window = new Window ();
 
@@ -206,16 +210,17 @@ namespace Epsitec.Cresus.DataLayer
 			ResourceManager manager = new ResourceManager ();
 			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
 			DbRichCommand command;
+			DbTable table;
 
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				DbTable table = Adapter.FindTableDefinition (transaction, type);
+				table = Adapter.FindTableDefinition (transaction, type);
 				DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
 				command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, table, condition);
 				transaction.Commit ();
 			}
 
-			DataTableBroker broker = new DataTableBroker (type, command.DataSet.Tables["Record.Address"]);
+			DataTableBroker broker = new DataTableBroker (type, table, command.DataSet.Tables["Record.Address"]);
 
 			Window window = new Window ();
 
@@ -271,22 +276,23 @@ namespace Epsitec.Cresus.DataLayer
 		[Test]
 		public void CheckInteractiveTablePanel()
 		{
-			ResourceManager   manager = new ResourceManager ();
+			ResourceManager   manager           = new ResourceManager ();
 			CommandDispatcher commandDispatcher = new CommandDispatcher ("Application", CommandDispatcherLevel.Primary);
 			CommandContext    commandContext    = new CommandContext ();
 
 			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
 			DbRichCommand command;
+			DbTable tableDefinition;
 
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				DbTable table = Adapter.FindTableDefinition (transaction, type);
+				tableDefinition = Adapter.FindTableDefinition (transaction, type);
 				DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
-				command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, table, condition);
+				command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, tableDefinition, condition);
 				transaction.Commit ();
 			}
 
-			DataTableBroker broker = new DataTableBroker (type, command.DataSet.Tables["Record.Address"]);
+			DataTableBroker broker = new DataTableBroker (type, tableDefinition, command.DataSet.Tables["Record.Address"]);
 
 			Window window = new Window ();
 

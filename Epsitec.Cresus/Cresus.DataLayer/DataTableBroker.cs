@@ -1,6 +1,7 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
@@ -10,12 +11,13 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer
 {
-	public class DataTableBroker : IStructuredType, ICollectionType, System.Collections.IList
+	public class DataTableBroker : IStructuredType, ICollectionType, System.Collections.IList, INotifyCollectionChanged
 	{
-		public DataTableBroker(IStructuredType structuredType, System.Data.DataTable dataTable)
+		public DataTableBroker(IStructuredType structuredType, DbTable tableDefinition, System.Data.DataTable dataTable)
 		{
 			this.exclusion = new object ();
 			this.structuredType = structuredType;
+			this.tableDefinition = tableDefinition;
 			this.dataTable = dataTable;
 			this.items = new Dictionary<long, DataBrokerItem> ();
 		}
@@ -28,6 +30,30 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					return this.dataTable.Rows.Count;
 				}
+			}
+		}
+
+		public System.Data.DataTable DataTable
+		{
+			get
+			{
+				return this.dataTable;
+			}
+		}
+
+		public DbTable TableDefinition
+		{
+			get
+			{
+				return this.tableDefinition;
+			}
+		}
+
+		public IStructuredType StructuredType
+		{
+			get
+			{
+				return this.structuredType;
 			}
 		}
 
@@ -339,6 +365,14 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		private void OnCollectionChanged(CollectionChangedEventArgs e)
+		{
+			if (this.CollectionChanged != null)
+			{
+				this.CollectionChanged (this, e);
+			}
+		}
+
 		#region IStructuredType Members
 
 		IEnumerable<string> IStructuredType.GetFieldIds()
@@ -474,7 +508,14 @@ namespace Epsitec.Cresus.DataLayer
 
 		#endregion
 
+		#region INotifyCollectionChanged Members
+
+		public event EventHandler<CollectionChangedEventArgs> CollectionChanged;
+
+		#endregion
+
 		private object exclusion;
+		private DbTable tableDefinition;
 		private System.Data.DataTable dataTable;
 		private IStructuredType structuredType;
 		private Dictionary<long, DataBrokerItem> items;
