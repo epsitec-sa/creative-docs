@@ -15,8 +15,90 @@ namespace Epsitec.Cresus.DataLayer
 	/// The <c>Adapter</c> class is used to merge the gap between the database
 	/// layers and the data binding aware code.
 	/// </summary>
-	public static class Adapter
+	public class Adapter
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Adapter"/> class.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		public Adapter(DbInfrastructure infrastructure)
+		{
+			this.infrastructure = infrastructure;
+		}
+
+		/// <summary>
+		/// Finds a table definition based on a structured type.
+		/// </summary>
+		/// <param name="type">The structured type to find.</param>
+		/// <returns>The table definition or <c>null</c>.</returns>
+		public DbTable FindTableDefinition(StructuredType type)
+		{
+			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbTable tableDef = Adapter.FindTableDefinition (transaction, type);
+
+				transaction.Commit ();
+
+				return tableDef;
+			}
+		}
+
+		/// <summary>
+		/// Finds a type definition based on a named type. The named type may
+		/// not be a structured type (<c>IStructuredType</c>); for these, use the
+		/// <see cref="FindTableDefinition"/> method instead.
+		/// </summary>
+		/// <param name="type">The named type to find.</param>
+		/// <returns>The type definition or <c>null</c>.</returns>
+		public DbTypeDef FindTypeDefinition(INamedType type)
+		{
+			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbTypeDef typeDef = Adapter.FindTypeDefinition (transaction, type);
+
+				transaction.Commit ();
+
+				return typeDef;
+			}
+		}
+
+		/// <summary>
+		/// Creates and registers a table definition based on a structured type.
+		/// </summary>
+		/// <param name="type">The structured type to find.</param>
+		/// <returns>The table definition or <c>null</c>.</returns>
+		public DbTable CreateTableDefinition(StructuredType type)
+		{
+			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				DbTable tableDef = Adapter.CreateTableDefinition (transaction, type);
+
+				transaction.Commit ();
+
+				return tableDef;
+			}
+		}
+
+		/// <summary>
+		/// Creates and registers a type definition based on a named type. The named
+		/// type may not be a structured type (<c>IStructuredType</c>); for these,
+		/// use the <see cref="CreateTableDefinition"/> method instead.
+		/// </summary>
+		/// <param name="type">The named type to find.</param>
+		/// <returns>The type definition or <c>null</c>.</returns>
+		public DbTypeDef CreateTypeDefinition(INamedType type)
+		{
+			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				DbTypeDef typeDef = Adapter.CreateTypeDefinition (transaction, type);
+
+				transaction.Commit ();
+
+				return typeDef;
+			}
+		}
+
+		
 		/// <summary>
 		/// Creates and registers a table definition based on a structured type.
 		/// </summary>
@@ -81,24 +163,6 @@ namespace Epsitec.Cresus.DataLayer
 		/// <summary>
 		/// Finds a table definition based on a structured type.
 		/// </summary>
-		/// <param name="infrastructure">The database infrastructure.</param>
-		/// <param name="type">The structured type to find.</param>
-		/// <returns>The table definition or <c>null</c>.</returns>
-		public static DbTable FindTableDefinition(DbInfrastructure infrastructure, StructuredType type)
-		{
-			using (DbTransaction transaction = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				DbTable table = Adapter.FindTableDefinition (transaction, type);
-				
-				transaction.Commit ();
-				
-				return table;
-			}
-		}
-		
-		/// <summary>
-		/// Finds a table definition based on a structured type.
-		/// </summary>
 		/// <param name="transaction">The database transaction.</param>
 		/// <param name="type">The structured type to find.</param>
 		/// <returns>The table definition or <c>null</c>.</returns>
@@ -141,8 +205,6 @@ namespace Epsitec.Cresus.DataLayer
 			return infrastructure.ResolveDbType (transaction, typeName);
 		}
 
-		
-		
 		
 		private static void CreateTableDefinition(DbTransaction transaction, DbInfrastructure infrastructure, StructuredType type, List<DbTable> tables)
 		{
@@ -221,5 +283,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			infrastructure.RegisterNewDbTable (transaction, table);
 		}
+
+		private DbInfrastructure infrastructure;
 	}
 }
