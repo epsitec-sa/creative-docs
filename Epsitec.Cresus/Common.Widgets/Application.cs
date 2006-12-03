@@ -15,8 +15,6 @@ namespace Epsitec.Common.Widgets
 			this.commandDispatcher = CommandDispatcher.DefaultDispatcher;
 			this.commandContext = new CommandContext ();
 			this.resourceManager = Support.Resources.DefaultManager;
-
-			this.commandDispatcher.RegisterController (this);
 		}
 
 		/// <summary>
@@ -35,6 +33,8 @@ namespace Epsitec.Common.Widgets
 				
 				this.window = value;
 
+				this.CommandDispatcher.RegisterController (this);
+				
 				this.SetupApplicationWindow (this.window);
 			}
 		}
@@ -99,9 +99,12 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
-		[Support.Command (ApplicationCommands.QuitId)]
-		protected virtual void ExecuteQuit()
+		[Support.Command (ApplicationCommands.Id.Quit)]
+		protected virtual void ExecuteQuit(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			System.Diagnostics.Debug.WriteLine ("Application: Quit executed");
+			e.Executed = true;
+			Window.Quit ();
 		}
 
 		private void SetupApplicationWindow(Window window)

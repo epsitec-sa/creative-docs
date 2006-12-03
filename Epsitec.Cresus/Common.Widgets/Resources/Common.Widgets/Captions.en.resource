@@ -8,5 +8,18 @@
   <data id="06">&lt;s:data id="_0" /&gt;</data>
   <data id="07">&lt;s:data id="_0" /&gt;</data>
   <data id="09">&lt;s:data id="_0" f:Labels="{Collection {Text 'Save'}}" /&gt;</data>
-  <data id="0A">&lt;s:data id="_0" f:Labels="{Collection {Text 'Save As...'}}" /&gt;</data>
+  <data id="0A">&lt;s:data id="_0" f:Labels="{Collection {Text 'Save As'}}" /&gt;</data>
+  <data id="0B">&lt;s:data id="_0" f:Labels="{Collection {Text 'Quit'}}" /&gt;</data>
+  <data id="0C">&lt;s:data id="_0" f:Labels="{Collection {Text 'Close'}}" /&gt;</data>
+  <data id="0F">&lt;s:data id="_0" f:Labels="{Collection {Text 'Find'}}" /&gt;</data>
+  <data id="0G">&lt;s:data id="_0" f:Labels="{Collection {Text 'Help'}}" /&gt;</data>
+  <data id="0H">&lt;s:data id="_0" f:Labels="{Collection {Text 'New'}}" /&gt;</data>
+  <data id="0I">&lt;s:data id="_0" f:Labels="{Collection {Text 'Open'}}" /&gt;</data>
+  <data id="0J">&lt;s:data id="_0" f:Labels="{Collection {Text 'Print'}}" /&gt;</data>
+  <data id="0K">&lt;s:data id="_0" f:Labels="{Collection {Text 'Print preview'}}" /&gt;</data>
+  <data id="0L">&lt;s:data id="_0" f:Labels="{Collection {Text 'Properties'}}" /&gt;</data>
+  <data id="0M">&lt;s:data id="_0" f:Labels="{Collection {Text 'Undo'}}" /&gt;</data>
+  <data id="0N">&lt;s:data id="_0" f:Labels="{Collection {Text 'Redo'}}" /&gt;</data>
+  <data id="0O">&lt;s:data id="_0" f:Labels="{Collection {Text 'Stop'}}" /&gt;</data>
+  <data id="0P">&lt;s:data id="_0" f:Labels="{Collection {Text 'Refresh'}}" /&gt;</data>
 </bundle>

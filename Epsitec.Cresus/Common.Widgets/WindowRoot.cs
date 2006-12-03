@@ -241,9 +241,14 @@ namespace Epsitec.Common.Widgets
 						(shortcut.IsControlDefined == false) &&
 						(shortcut.IsShiftDefined == false))
 					{
-						if (string.IsNullOrEmpty (this.Window.Name) == false)
+						if (string.IsNullOrEmpty (window.Name) == false)
 						{
 							window.QueueCommand (this, "Quit" + this.Window.Name);
+
+							if (window.Name == "Application")
+							{
+								window.QueueCommand (this, ApplicationCommands.Quit);
+							}
 						}
 						return true;
 					}
