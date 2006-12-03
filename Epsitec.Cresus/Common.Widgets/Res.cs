@@ -10,45 +10,25 @@ namespace Epsitec.Common.Widgets
 		public static class Commands
 		{
 			public static readonly Epsitec.Common.Widgets.Command Close = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 12));
-			public const long Close_Id = 12L;
 			public static readonly Epsitec.Common.Widgets.Command Copy = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 2));
-			public const long Copy_Id = 2L;
 			public static readonly Epsitec.Common.Widgets.Command Cut = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 1));
-			public const long Cut_Id = 1L;
 			public static readonly Epsitec.Common.Widgets.Command Delete = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 4));
-			public const long Delete_Id = 4L;
 			public static readonly Epsitec.Common.Widgets.Command Find = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 15));
-			public const long Find_Id = 15L;
 			public static readonly Epsitec.Common.Widgets.Command Help = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 16));
-			public const long Help_Id = 16L;
 			public static readonly Epsitec.Common.Widgets.Command New = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 17));
-			public const long New_Id = 17L;
 			public static readonly Epsitec.Common.Widgets.Command Open = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 18));
-			public const long Open_Id = 18L;
 			public static readonly Epsitec.Common.Widgets.Command Paste = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 3));
-			public const long Paste_Id = 3L;
 			public static readonly Epsitec.Common.Widgets.Command Print = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 19));
-			public const long Print_Id = 19L;
 			public static readonly Epsitec.Common.Widgets.Command PrintPreview = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 20));
-			public const long PrintPreview_Id = 20L;
 			public static readonly Epsitec.Common.Widgets.Command Properties = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 21));
-			public const long Properties_Id = 21L;
 			public static readonly Epsitec.Common.Widgets.Command Quit = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 11));
-			public const long Quit_Id = 11L;
 			public static readonly Epsitec.Common.Widgets.Command Redo = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 23));
-			public const long Redo_Id = 23L;
 			public static readonly Epsitec.Common.Widgets.Command Refresh = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 25));
-			public const long Refresh_Id = 25L;
 			public static readonly Epsitec.Common.Widgets.Command Save = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 9));
-			public const long Save_Id = 9L;
 			public static readonly Epsitec.Common.Widgets.Command SaveAs = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 10));
-			public const long SaveAs_Id = 10L;
 			public static readonly Epsitec.Common.Widgets.Command SelectAll = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 5));
-			public const long SelectAll_Id = 5L;
 			public static readonly Epsitec.Common.Widgets.Command Stop = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 24));
-			public const long Stop_Id = 24L;
 			public static readonly Epsitec.Common.Widgets.Command Undo = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 22));
-			public const long Undo_Id = 22L;
 			
 			internal static void _Initialize()
 			{

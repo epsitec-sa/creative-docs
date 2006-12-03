@@ -206,6 +206,6 @@ xcopy "$(SolutionDir)App.CresusDocuments\Resources\Cresus.X1\*" "$(ProjectDir)Re
     <PostBuildEvent>xcopy "$(TargetDir)*.dll" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(TargetDir)*.pdb" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(ProjectDir)Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-</PostBuildEvent>
+xcopy "$(SolutionDir)Common.UI.Tests\Res.cs"  "$(SolutionDir)Export\Sources\" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>

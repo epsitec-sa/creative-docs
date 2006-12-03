@@ -34,28 +34,28 @@ namespace Epsitec.Common.Widgets
 
 		public static class Id
 		{
-			public const long Cut			= Res.Commands.Cut_Id;
-			public const long Copy			= Res.Commands.Copy_Id;
-			public const long Paste			= Res.Commands.Paste_Id;
-			public const long Delete		= Res.Commands.Delete_Id;
-			public const long SelectAll		= Res.Commands.SelectAll_Id;
-			public const long Undo			= Res.Commands.Undo_Id;
-			public const long Redo			= Res.Commands.Redo_Id;
-			public const long Find			= Res.Commands.Find_Id;
+			public const long Cut			= Res.CommandIds.Cut;
+			public const long Copy			= Res.CommandIds.Copy;
+			public const long Paste			= Res.CommandIds.Paste;
+			public const long Delete		= Res.CommandIds.Delete;
+			public const long SelectAll		= Res.CommandIds.SelectAll;
+			public const long Undo			= Res.CommandIds.Undo;
+			public const long Redo			= Res.CommandIds.Redo;
+			public const long Find			= Res.CommandIds.Find;
 
-			public const long Help			= Res.Commands.Help_Id;
-			public const long Quit			= Res.Commands.Quit_Id;
+			public const long Help			= Res.CommandIds.Help;
+			public const long Quit			= Res.CommandIds.Quit;
 
-			public const long New			= Res.Commands.New_Id;
-			public const long Open			= Res.Commands.Open_Id;
-			public const long Save			= Res.Commands.Save_Id;
-			public const long SaveAs		= Res.Commands.SaveAs_Id;
-			public const long Close			= Res.Commands.Close_Id;
-			public const long Print			= Res.Commands.Print_Id;
-			public const long PrintPreview	= Res.Commands.PrintPreview_Id;
-			public const long Properties	= Res.Commands.Properties_Id;
-			public const long Stop			= Res.Commands.Stop_Id;
-			public const long Refresh		= Res.Commands.Refresh_Id;
+			public const long New			= Res.CommandIds.New;
+			public const long Open			= Res.CommandIds.Open;
+			public const long Save			= Res.CommandIds.Save;
+			public const long SaveAs		= Res.CommandIds.SaveAs;
+			public const long Close			= Res.CommandIds.Close;
+			public const long Print			= Res.CommandIds.Print;
+			public const long PrintPreview	= Res.CommandIds.PrintPreview;
+			public const long Properties	= Res.CommandIds.Properties;
+			public const long Stop			= Res.CommandIds.Stop;
+			public const long Refresh		= Res.CommandIds.Refresh;
 		}
 		
 		//	Référence: http://winfx.msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/T_System_Windows_Input_ApplicationCommands_Members.asp

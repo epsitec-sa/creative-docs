@@ -352,7 +352,25 @@ namespace Epsitec.Common.Tool.ResGenerator
 					string elem = args[0];
 
 					generator.BeginBlock ("public static class", elem);
-					classes.Add (elem);
+
+					System.Text.StringBuilder fullClass = new System.Text.StringBuilder ();
+					args = field.Split ('.');
+
+					for (int j = 0; j < args.Length-1; j++)
+					{
+						if (j > 0)
+						{
+							fullClass.Append (".");
+						}
+						
+						fullClass.Append (args[j]);
+					}
+
+					if (!classes.Contains (fullClass.ToString ()))
+					{
+						classes.Add (fullClass.ToString ());
+						System.Diagnostics.Debug.WriteLine (fullClass.ToString ());
+					}
 
 					buffer.Append (generator.Tabs);
 					buffer.Append ("internal static void _Initialize() { }\n");
@@ -381,13 +399,6 @@ namespace Epsitec.Common.Tool.ResGenerator
 				buffer.Append (@" = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, ");
 				buffer.Append (druid.ToFieldId ());
 				buffer.Append ("));\n");
-
-				druid = new Druid (druid, manager.DefaultModuleId);
-
-				buffer.Append (generator.Tabs);
-				buffer.Append ("public const long ");
-				buffer.Append (delta);
-				buffer.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "_Id = {0}L;\n", druid.ToLong ());
 			}
 
 			//	Referme les classes ouvertes :
@@ -407,13 +418,8 @@ namespace Epsitec.Common.Tool.ResGenerator
 			for (int i = 0; i < classes.Count; i++)
 			{
 				buffer.Append (generator.Tabs);
-
-				for (int j=0; j<=i; j++)
-				{
-					buffer.Append (classes[j]);
-					buffer.Append (".");
-				}
-
+				buffer.Append (classes[i]);
+				buffer.Append (".");
 				buffer.Append ("_Initialize ();\n");
 			}
 			generator.EndBlock ();
@@ -504,10 +510,12 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 				Support.Druid druid = bundle[fields[i]].Id;
 
+				druid = new Support.Druid (druid, manager.DefaultModuleId);
+
 				buffer.Append ("public const long ");
 				buffer.Append (delta);
 				buffer.Append (@" = 0x");
-				buffer.Append (Support.Druid.FromIds (manager.DefaultModuleId, druid.Local).ToString ("X"));
+				buffer.Append (druid.ToLong ().ToString ("X"));
 				buffer.Append ("L;\n");
 			}
 

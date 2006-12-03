@@ -18,38 +18,26 @@ namespace Epsitec.App.DocumentEditor
 					internal static void _Initialize() { }
 					
 					public static readonly Epsitec.Common.Widgets.Command Delete = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 5));
-					public const long Delete_Id = 1759218604441605L;
 					public static readonly Epsitec.Common.Widgets.Command NavigateNext = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 7));
-					public const long NavigateNext_Id = 1759218604441607L;
 					public static readonly Epsitec.Common.Widgets.Command NavigatePrev = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 6));
-					public const long NavigatePrev_Id = 1759218604441606L;
 					public static readonly Epsitec.Common.Widgets.Command NewDirectory = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 3));
-					public const long NewDirectory_Id = 1759218604441603L;
 					public static readonly Epsitec.Common.Widgets.Command ParentDirectory = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 1));
-					public const long ParentDirectory_Id = 1759218604441601L;
 					public static readonly Epsitec.Common.Widgets.Command Rename = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 4));
-					public const long Rename_Id = 1759218604441604L;
 					public static class Favorites
 					{
 						internal static void _Initialize() { }
 						
 						public static readonly Epsitec.Common.Widgets.Command Add = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 8));
-						public const long Add_Id = 1759218604441608L;
 						public static readonly Epsitec.Common.Widgets.Command Big = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 12));
-						public const long Big_Id = 1759218604441612L;
 						public static readonly Epsitec.Common.Widgets.Command Down = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 11));
-						public const long Down_Id = 1759218604441611L;
 						public static readonly Epsitec.Common.Widgets.Command Remove = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 9));
-						public const long Remove_Id = 1759218604441609L;
 						public static readonly Epsitec.Common.Widgets.Command Up = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 10));
-						public const long Up_Id = 1759218604441610L;
 					}
 				}
 			}
 			
 			internal static void _Initialize()
 			{
-				Dialog._Initialize ();
 				Dialog.File._Initialize ();
 				Dialog.File.Favorites._Initialize ();
 			}
@@ -63,20 +51,20 @@ namespace Epsitec.App.DocumentEditor
 				public static class File
 				{
 					
-					public const long Delete = 0x64000005L;
-					public const long NavigateNext = 0x64000007L;
-					public const long NavigatePrev = 0x64000006L;
-					public const long NewDirectory = 0x64000003L;
-					public const long ParentDirectory = 0x64000001L;
-					public const long Rename = 0x64000004L;
+					public const long Delete = 0x6400000000005L;
+					public const long NavigateNext = 0x6400000000007L;
+					public const long NavigatePrev = 0x6400000000006L;
+					public const long NewDirectory = 0x6400000000003L;
+					public const long ParentDirectory = 0x6400000000001L;
+					public const long Rename = 0x6400000000004L;
 					public static class Favorites
 					{
 						
-						public const long Add = 0x64000008L;
-						public const long Big = 0x6400000CL;
-						public const long Down = 0x6400000BL;
-						public const long Remove = 0x64000009L;
-						public const long Up = 0x6400000AL;
+						public const long Add = 0x6400000000008L;
+						public const long Big = 0x640000000000CL;
+						public const long Down = 0x640000000000BL;
+						public const long Remove = 0x6400000000009L;
+						public const long Up = 0x640000000000AL;
 					}
 				}
 			}

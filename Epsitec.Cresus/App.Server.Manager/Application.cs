@@ -70,9 +70,10 @@ namespace Epsitec.Cresus.ServerManager
 			Application.application.MainWindow.Run ();
 		}
 		#endregion
-		
-		
+
+
 		[Command ("QuitApplication")]
+		[Command (ApplicationCommands.Id.Quit)]
 		void CommandQuitApplication()
 		{
 			this.main_window.Quit ();

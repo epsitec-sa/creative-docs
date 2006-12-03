@@ -1858,6 +1858,7 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		[Command("QuitApplication")]
+		[Command(ApplicationCommands.Id.Quit)]
 		void CommandQuitApplication(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if ( !this.AutoSaveAll() )  return;
