@@ -12,6 +12,11 @@ namespace Epsitec.Common.Widgets
 	{
 		protected Application()
 		{
+			this.commandDispatcher = CommandDispatcher.DefaultDispatcher;
+			this.commandContext = new CommandContext ();
+			this.resourceManager = Support.Resources.DefaultManager;
+
+			this.commandDispatcher.RegisterController (this);
 		}
 
 		/// <summary>
@@ -29,6 +34,44 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.Assert (this.window == null);
 				
 				this.window = value;
+
+				this.SetupApplicationWindow (this.window);
+			}
+		}
+
+		/// <summary>
+		/// Gets the application command dispatcher.
+		/// </summary>
+		/// <value>The application command dispatcher.</value>
+		public CommandDispatcher				CommandDispatcher
+		{
+			get
+			{
+				return this.commandDispatcher;
+			}
+		}
+
+		/// <summary>
+		/// Gets the application command context.
+		/// </summary>
+		/// <value>The application command context.</value>
+		public CommandContext					CommandContext
+		{
+			get
+			{
+				return this.commandContext;
+			}
+		}
+
+		/// <summary>
+		/// Gets the application resource manager.
+		/// </summary>
+		/// <value>The application resource manager.</value>
+		public Support.ResourceManager			ResourceManager
+		{
+			get
+			{
+				return this.resourceManager;
 			}
 		}
 		
@@ -54,6 +97,24 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void Dispose(bool disposing)
 		{
+		}
+
+		[Support.Command (ApplicationCommands.QuitId)]
+		protected virtual void ExecuteQuit()
+		{
+		}
+
+		private void SetupApplicationWindow(Window window)
+		{
+			CommandDispatcher.SetDispatcher (window, this.CommandDispatcher);
+			CommandContext.SetContext (window, this.CommandContext);
+			Support.ResourceManager.SetResourceManager (window, this.ResourceManager);
+
+			window.Root.WindowType = WindowType.Document;
+			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;
+			window.Name = "Application";
+			window.PreventAutoClose = true;
+			window.PreventAutoQuit = false;
 		}
 		
 		static Application()
@@ -107,5 +168,8 @@ namespace Epsitec.Common.Widgets
 		private static Queue<Support.SimpleCallback> runningCallbacks = new Queue<Support.SimpleCallback> ();
 
 		private Window window;
+		private CommandDispatcher commandDispatcher;
+		private CommandContext commandContext;
+		private Support.ResourceManager resourceManager;
 	}
 }

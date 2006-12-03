@@ -16,6 +16,8 @@ namespace Epsitec.Common.Widgets
 		public static readonly Command SelectAll	= Res.Commands.SelectAll;
 		public static readonly Command Save			= Res.Commands.Save;
 		public static readonly Command SaveAs		= Res.Commands.SaveAs;
+
+		public const long QuitId = 0;
 		
 		//	Référence: http://winfx.msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/T_System_Windows_Input_ApplicationCommands_Members.asp
 

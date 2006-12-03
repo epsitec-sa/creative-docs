@@ -553,6 +553,14 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		public static readonly DependencyProperty DispatcherProperty = DependencyProperty.RegisterAttached ("Dispatcher", typeof (CommandDispatcher), typeof (CommandDispatcher), new DependencyPropertyMetadata ().MakeNotSerializable ());
+
+		public static CommandDispatcher			DefaultDispatcher
+		{
+			get
+			{
+				return CommandDispatcher.defaultDispatcher;
+			}
+		}
 		
 		public event Support.EventHandler		OpletQueueBindingChanged;
 		public event Support.EventHandler		CommandDispatched;

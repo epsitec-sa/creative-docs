@@ -211,7 +211,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 			buffer.Append ("private static Epsitec.Common.Support.ResourceManager _manager = Epsitec.Common.Support.Resources.DefaultManager;");
 			buffer.Append ("\n");
 			buffer.Append (generator.Tabs);
-			buffer.Append ("private static int _moduleId = ");
+			buffer.Append ("private const int _moduleId = ");
 			buffer.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "{0};", manager.DefaultModuleId);
 			buffer.Append ("\n");
 
@@ -372,15 +372,22 @@ namespace Epsitec.Common.Tool.ResGenerator
 				}
 
 				//	Crée l'accesseur pour le champ actuel :
-				buffer.Append (generator.Tabs);
 
 				Support.Druid druid = bundle[fields[i]].Id;
-
+				
+				buffer.Append (generator.Tabs);
 				buffer.Append ("public static readonly Epsitec.Common.Widgets.Command ");
 				buffer.Append (delta);
 				buffer.Append (@" = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, ");
 				buffer.Append (druid.ToFieldId ());
 				buffer.Append ("));\n");
+
+				druid = new Druid (druid, manager.DefaultModuleId);
+
+				buffer.Append (generator.Tabs);
+				buffer.Append ("public const long ");
+				buffer.Append (delta);
+				buffer.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "_Id = {0}L;\n", druid.ToLong ());
 			}
 
 			//	Referme les classes ouvertes :
