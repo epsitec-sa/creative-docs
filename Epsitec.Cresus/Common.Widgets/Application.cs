@@ -1,12 +1,61 @@
-//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
-	public static class Application
+	/// <summary>
+	/// The <c>Application</c> class offers basic, application related, services.
+	/// </summary>
+	public class Application : System.IDisposable
 	{
+		protected Application()
+		{
+		}
+
+		/// <summary>
+		/// Gets the application window.
+		/// </summary>
+		/// <value>The application window.</value>
+		public Window							Window
+		{
+			get
+			{
+				return this.window;
+			}
+			protected set
+			{
+				System.Diagnostics.Debug.Assert (this.window == null);
+				
+				this.window = value;
+			}
+		}
+		
+		public void RunMessageLoop()
+		{
+			System.Windows.Forms.Application.Run (this.Window.PlatformWindow);
+		}
+
+		public void PumpMessageLoop()
+		{
+			System.Windows.Forms.Application.DoEvents ();
+		}
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+
+		#endregion
+
+		protected virtual void Dispose(bool disposing)
+		{
+		}
+		
 		static Application()
 		{
 			Application.thread = System.Threading.Thread.CurrentThread;
@@ -56,5 +105,7 @@ namespace Epsitec.Common.Widgets
 		private static object queueExclusion = new object ();
 		private static Queue<Support.SimpleCallback> pendingCallbacks = new Queue<Support.SimpleCallback> ();
 		private static Queue<Support.SimpleCallback> runningCallbacks = new Queue<Support.SimpleCallback> ();
+
+		private Window window;
 	}
 }
