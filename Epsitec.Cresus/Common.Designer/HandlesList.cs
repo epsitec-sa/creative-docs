@@ -326,6 +326,7 @@ namespace Epsitec.Common.Designer
 				case ObjectModifier.ObjectType.Table:
 				case ObjectModifier.ObjectType.StaticText:
 				case ObjectModifier.ObjectType.Group:
+				case ObjectModifier.ObjectType.GroupFrame:
 				case ObjectModifier.ObjectType.GroupBox:
 				case ObjectModifier.ObjectType.MainPanel:
 				case ObjectModifier.ObjectType.SubPanel:
@@ -344,6 +345,7 @@ namespace Epsitec.Common.Designer
 				case ObjectModifier.ObjectType.VSeparator:
 				case ObjectModifier.ObjectType.Table:
 				case ObjectModifier.ObjectType.Group:
+				case ObjectModifier.ObjectType.GroupFrame:
 				case ObjectModifier.ObjectType.GroupBox:
 				case ObjectModifier.ObjectType.MainPanel:
 				case ObjectModifier.ObjectType.SubPanel:

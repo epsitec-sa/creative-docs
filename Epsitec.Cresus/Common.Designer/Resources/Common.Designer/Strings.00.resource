@@ -214,6 +214,7 @@
   <data name="Action.ObjectText" id="0B3">Texte éditable</data>
   <data name="Action.ObjectStatic" id="0C3">Texte fixe</data>
   <data name="Action.ObjectGroup" id="0D3">Groupe invisible</data>
+  <data name="Action.ObjectGroupFrame" id="0O9">Groupe avec cadre</data>
   <data name="Action.ObjectGroupBox" id="055" mod="1">Groupe avec cadre et étiquette</data>
   <data name="Action.ObjectPanel" id="098">Interface imbriquée</data>
   <data name="Action.ObjectTable" id="0N9">Table de données</data>

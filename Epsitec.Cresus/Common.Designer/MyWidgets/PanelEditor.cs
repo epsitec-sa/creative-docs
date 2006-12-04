@@ -1533,8 +1533,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				item = new UI.Placeholder();
 				item.Text = Misc.Italic("TextField");
-//-				item.MinWidth = 20;
-//-				item.MinHeight = item.PreferredHeight;
 				item.DrawDesignerFrame = true;  // nécessaire pour voir le cadre pendant la création
 			}
 
@@ -1551,10 +1549,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 				group.ChildrenLayoutMode = LayoutMode.Stacked;
 				group.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 				group.PreferredSize = new Size(200, 100);
-//-				group.MinWidth = 50;
-//-				group.MinHeight = 50;
 				group.Padding = new Margins(10, 10, 10, 10);
+				group.DrawFullFrame = false;
 				group.DrawDesignerFrame = true;  // nécessaire pour voir le cadre pendant la création
+
+				item = group;
+			}
+
+			if (this.context.Tool == "ObjectGroupFrame")
+			{
+				FrameBox group = new FrameBox();
+				group.ChildrenLayoutMode = LayoutMode.Stacked;
+				group.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
+				group.PreferredSize = new Size(200, 100);
+				group.Padding = new Margins(10, 10, 10, 10);
+				group.DrawFullFrame = true;
 
 				item = group;
 			}
@@ -1566,8 +1575,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				group.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 				group.Text = Misc.Italic("GroupBox");
 				group.PreferredSize = new Size(200, 100);
-//-				group.MinWidth = 50;
-//-				group.MinHeight = 50;
 
 				item = group;
 			}
@@ -1579,8 +1586,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				panel.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 				panel.Text = Misc.Italic("Panel");
 				panel.PreferredSize = new Size(200, 100);
-//-				panel.MinWidth = 50;
-//-				panel.MinHeight = 50;
 				panel.DrawDesignerFrame = true;  // nécessaire pour voir le cadre pendant la création
 				panel.ResourceManager = this.module.ResourceManager;
 

@@ -283,6 +283,7 @@ namespace Epsitec.Common.Designer
 				public static string NewCulture { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (46)); } }
 				public static string ObjectGroup { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (109)); } }
 				public static string ObjectGroupBox { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (165)); } }
+				public static string ObjectGroupFrame { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (312)); } }
 				public static string ObjectHLine { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (104)); } }
 				public static string ObjectPanel { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (265)); } }
 				public static string ObjectRectButton { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (238)); } }

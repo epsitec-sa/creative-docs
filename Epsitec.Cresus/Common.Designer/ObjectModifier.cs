@@ -106,6 +106,7 @@ namespace Epsitec.Common.Designer
 			Table,				// table lié à la base de données
 			StaticText,			// texte fixe
 			Group,				// conteneur invisible
+			GroupFrame,			// conteneur avec cadre
 			GroupBox,			// conteneur avec cadre et titre
 			MainPanel,			// panneau principal
 			SubPanel,			// sous-panneau
@@ -131,7 +132,10 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne true si l'objet est un conteneur (invisible ou avec cadre).
 			ObjectType type = ObjectModifier.GetObjectType(obj);
-			return (type == ObjectType.Group || type == ObjectType.GroupBox || type == ObjectType.MainPanel);
+			return (type == ObjectType.Group      ||
+					type == ObjectType.GroupFrame ||
+					type == ObjectType.GroupBox   ||
+					type == ObjectType.MainPanel  );
 		}
 
 		public static ObjectType GetObjectType(Widget obj)
@@ -183,7 +187,15 @@ namespace Epsitec.Common.Designer
 
 			if (obj is FrameBox)
 			{
-				return ObjectType.Group;
+				FrameBox frame = obj as FrameBox;
+				if (frame.DrawFullFrame)
+				{
+					return ObjectType.GroupFrame;
+				}
+				else
+				{
+					return ObjectType.Group;
+				}
 			}
 				
 			if (obj is GroupBox)
@@ -213,6 +225,7 @@ namespace Epsitec.Common.Designer
 				case ObjectType.Placeholder:  return "ObjectText";
 				case ObjectType.StaticText:   return "ObjectStatic";
 				case ObjectType.Group:        return "ObjectGroup";
+				case ObjectType.GroupFrame:   return "ObjectGroupFrame";
 				case ObjectType.GroupBox:     return "ObjectGroupBox";
 				case ObjectType.MainPanel:    return "ObjectMainPanel";
 				case ObjectType.SubPanel:     return "ObjectPanel";
@@ -227,7 +240,10 @@ namespace Epsitec.Common.Designer
 		{
 			//	Indique si l'objet a un druid.
 			ObjectType type = ObjectModifier.GetObjectType(obj);
-			return (type == ObjectType.Button || type == ObjectType.StaticText || type == ObjectType.GroupBox || type == ObjectType.SubPanel);
+			return (type == ObjectType.Button     ||
+					type == ObjectType.StaticText ||
+					type == ObjectType.GroupBox   ||
+					type == ObjectType.SubPanel   );
 		}
 
 		public static void SetDruid(Widget obj, string druid)
@@ -1891,7 +1907,10 @@ namespace Epsitec.Common.Designer
 		{
 			//	Indique si l'objet a des marges internes.
 			ObjectType type = ObjectModifier.GetObjectType(obj);
-			return (type == ObjectType.Group || type == ObjectType.GroupBox || type == ObjectType.MainPanel);
+			return (type == ObjectType.Group      ||
+					type == ObjectType.GroupFrame ||
+					type == ObjectType.GroupBox   ||
+					type == ObjectType.MainPanel  );
 		}
 
 		public Margins GetPadding(Widget obj)
