@@ -34,6 +34,14 @@ namespace Epsitec.Common.UI
 			this.SetEmbedder (embedder);
 		}
 
+		public PanelMask Mask
+		{
+			get
+			{
+				return this.mask;
+			}
+		}
+		
 		public void StartEdition(Panel panel, string focusWidgetName)
 		{
 			this.StartEdition (panel);
@@ -190,6 +198,7 @@ namespace Epsitec.Common.UI
 			Drawing.Rectangle panelBounds = new Drawing.Rectangle (0, 0, System.Math.Max (panel.PreferredWidth, panel.MinWidth), System.Math.Max (panel.PreferredHeight, panel.MinHeight));
 			Drawing.Rectangle ownerBounds = Widgets.Helpers.VisualTree.MapVisualToAncestor (owner, this, owner.Client.Bounds);
 
+			stackBounds.Deflate (this.Padding);
 			panelBounds.Offset (ownerBounds.Center-panelBounds.Center);
 
 			panel.Dock   = Widgets.DockStyle.None;

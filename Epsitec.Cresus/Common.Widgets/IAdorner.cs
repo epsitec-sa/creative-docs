@@ -152,9 +152,4 @@ namespace Epsitec.Common.Widgets
 		double GeometrySliderRightMargin { get; }
 		double GeometrySliderBottomMargin { get; }
 	}
-	
-	public enum Direction
-	{
-		None, Left, Right, Up, Down
-	}
 }
