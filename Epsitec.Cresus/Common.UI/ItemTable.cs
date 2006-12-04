@@ -42,7 +42,7 @@ namespace Epsitec.Common.UI
 			this.hScroller.Margins = new Drawing.Margins (0, this.vScroller.PreferredWidth, 0, 0);
 			this.headerStripe.Margins = new Drawing.Margins (0, this.vScroller.PreferredWidth, 0, 0);
 			this.headerStripe.PreferredHeight = this.columnHeader.PreferredHeight;
-			this.surface.Margins = new Drawing.Margins (0, this.vScroller.PreferredWidth, this.headerStripe.PreferredHeight, this.hScroller.PreferredHeight);
+			this.surface.Margins = new Drawing.Margins (1, this.vScroller.PreferredWidth, this.headerStripe.PreferredHeight+1, this.hScroller.PreferredHeight);
 
 			this.hScroller.ValueChanged += this.HandleScrollerValueChanged;
 			this.vScroller.ValueChanged += this.HandleScrollerValueChanged;
@@ -177,8 +177,8 @@ namespace Epsitec.Common.UI
 			this.hScroller.VisibleRangeRatio = (decimal) hRatio;
 			this.vScroller.VisibleRangeRatio = (decimal) vRatio;
 
-			double aW = aperture.Width-1;
-			double aH = aperture.Height-1;
+			double aW = aperture.Width;
+			double aH = aperture.Height;
 
 			double ox = System.Math.Floor ((double) this.hScroller.Value * System.Math.Max (0, this.itemPanel.PreferredWidth - aW));
 			double oy = System.Math.Floor ((double) this.vScroller.Value * System.Math.Max (0, this.itemPanel.PreferredHeight - aH));
@@ -189,8 +189,11 @@ namespace Epsitec.Common.UI
 			{
 				oy = this.itemPanel.PreferredHeight - aH;
 			}
+
+			double dx = System.Math.Max (this.itemPanel.PreferredWidth, aW);
+			double dy = System.Math.Max (this.itemPanel.PreferredHeight, aH);
 			
-			this.itemPanel.SetManualBounds (new Drawing.Rectangle (-ox, -oy, this.itemPanel.PreferredWidth, this.itemPanel.PreferredHeight));
+			this.itemPanel.SetManualBounds (new Drawing.Rectangle (-ox, -oy, dx, dy));
 			this.columnHeader.SetManualBounds (new Drawing.Rectangle (-ox, 0, this.columnHeader.GetTotalWidth (), this.columnHeader.PreferredHeight));
 		}
 
