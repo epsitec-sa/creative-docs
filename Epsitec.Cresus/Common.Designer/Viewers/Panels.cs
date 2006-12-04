@@ -62,7 +62,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.vToolBar.Dock = DockStyle.Left;
 			this.VToolBarAdd(Widgets.Command.Get("ToolSelect"));
 			this.VToolBarAdd(Widgets.Command.Get("ToolGlobal"));
-			this.VToolBarAdd(Widgets.Command.Get("ToolGrid"));
+			//?this.VToolBarAdd(Widgets.Command.Get("ToolGrid"));
 			//?this.ToolBarAdd(Widgets.Command.Get("ToolEdit"));
 			//?this.ToolBarAdd(Widgets.Command.Get("ToolZoom"));
 			//?this.ToolBarAdd(Widgets.Command.Get("ToolHand"));
