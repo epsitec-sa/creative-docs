@@ -404,8 +404,7 @@ namespace Epsitec.Common.Designer
 		#region ChildrenPlacement
 		public bool AreChildrenAnchored(Widget obj)
 		{
-			AbstractGroup group = obj as AbstractGroup;
-			if (group != null)
+			if (ObjectModifier.IsAbstractGroup(obj))
 			{
 				ChildrenPlacement p = this.GetChildrenPlacement(obj);
 				return (p == ChildrenPlacement.Anchored);
@@ -415,8 +414,7 @@ namespace Epsitec.Common.Designer
 
 		public bool AreChildrenStacked(Widget obj)
 		{
-			AbstractGroup group = obj as AbstractGroup;
-			if (group != null)
+			if (ObjectModifier.IsAbstractGroup(obj))
 			{
 				ChildrenPlacement p = this.GetChildrenPlacement(obj);
 				return (p == ChildrenPlacement.HorizontalStacked || p == ChildrenPlacement.VerticalStacked);
@@ -426,8 +424,7 @@ namespace Epsitec.Common.Designer
 
 		public bool AreChildrenGrid(Widget obj)
 		{
-			AbstractGroup group = obj as AbstractGroup;
-			if (group != null)
+			if (ObjectModifier.IsAbstractGroup(obj))
 			{
 				ChildrenPlacement p = this.GetChildrenPlacement(obj);
 				return (p == ChildrenPlacement.Grid);
@@ -437,8 +434,7 @@ namespace Epsitec.Common.Designer
 
 		public bool AreChildrenHorizontal(Widget obj)
 		{
-			AbstractGroup group = obj as AbstractGroup;
-			if (group != null)
+			if (ObjectModifier.IsAbstractGroup(obj))
 			{
 				ChildrenPlacement p = this.GetChildrenPlacement(obj);
 				return (p == ChildrenPlacement.HorizontalStacked);
@@ -449,17 +445,17 @@ namespace Epsitec.Common.Designer
 		public bool HasChildrenPlacement(Widget obj)
 		{
 			//	Indique s'il existe un mode de placement des enfants de l'objet.
-			AbstractGroup group = obj as AbstractGroup;
-			return (group != null);
+			return ObjectModifier.IsAbstractGroup(obj);
 		}
 
 		public ChildrenPlacement GetChildrenPlacement(Widget obj)
 		{
 			//	Retourne le mode de placement des enfants de l'objet.
 			//	Uniquement pour les objects AbstractGroup.
-			AbstractGroup group = obj as AbstractGroup;
-			if (group != null)
+			if (ObjectModifier.IsAbstractGroup(obj))
 			{
+				AbstractGroup group = obj as AbstractGroup;
+
 				if (group.ChildrenLayoutMode == LayoutMode.Anchored)
 				{
 					return ChildrenPlacement.Anchored;
