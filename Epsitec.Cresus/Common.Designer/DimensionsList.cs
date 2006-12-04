@@ -450,8 +450,8 @@ namespace Epsitec.Common.Designer
 			if (dim != null)
 			{
 				Rectangle bounds = dim.GetBounds(true);
-				bounds = dim.Object.MapParentToClient(bounds);
-				dim.Object.Invalidate(bounds);
+				bounds.Offset(Dimension.margin, Dimension.margin);
+				this.editor.Invalidate(bounds);
 			}
 		}
 
