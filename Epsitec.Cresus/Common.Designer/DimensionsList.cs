@@ -27,9 +27,14 @@ namespace Epsitec.Common.Designer
 			this.list.Clear();
 
 			List<Widget> sel = this.editor.SelectedObjects;
+			bool slave = false;
 			if (sel.Count != 0)  // un ou plusieurs objets sélectionnés ?
 			{
-				this.CreateDimensions(sel[0]);
+				foreach (Widget obj in sel)
+				{
+					this.CreateDimensions(obj, slave);
+					slave = true;
+				}
 			}
 		}
 
@@ -258,14 +263,14 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		protected void CreateDimensions(Widget obj)
+		protected void CreateDimensions(Widget obj, bool slave)
 		{
 			//	Crée toutes les cotes pour un objet donné.
 			Dimension dim;
 
 			//	Crée les cotes de ligne/colonne en premier, pour qu'elles viennent par dessous
 			//	toutes les autres.
-			if (this.objectModifier.GetChildrenPlacement(obj) == ObjectModifier.ChildrenPlacement.Grid)
+			if (this.objectModifier.GetChildrenPlacement(obj) == ObjectModifier.ChildrenPlacement.Grid && !slave)
 			{
 				int columns = this.objectModifier.GetGridColumnsCount(obj);
 				for (int i=0; i<columns; i++)
@@ -387,27 +392,33 @@ namespace Epsitec.Common.Designer
 			if (this.objectModifier.HasWidth(obj))
 			{
 				dim = new Dimension(this.editor, obj, Dimension.Type.Width);
+				dim.Slave = slave;
 				this.list.Add(dim);
 			}
 
 			if (this.objectModifier.HasHeight(obj))
 			{
 				dim = new Dimension(this.editor, obj, Dimension.Type.Height);
+				dim.Slave = slave;
 				this.list.Add(dim);
 			}
 
 			if (this.objectModifier.HasMargins(obj))
 			{
 				dim = new Dimension(this.editor, obj, Dimension.Type.MarginLeft);
+				dim.Slave = slave;
 				this.list.Add(dim);
 
 				dim = new Dimension(this.editor, obj, Dimension.Type.MarginRight);
+				dim.Slave = slave;
 				this.list.Add(dim);
 
 				dim = new Dimension(this.editor, obj, Dimension.Type.MarginBottom);
+				dim.Slave = slave;
 				this.list.Add(dim);
 
 				dim = new Dimension(this.editor, obj, Dimension.Type.MarginTop);
+				dim.Slave = slave;
 				this.list.Add(dim);
 			}
 
@@ -416,15 +427,19 @@ namespace Epsitec.Common.Designer
 			if (this.objectModifier.HasPadding(obj))
 			{
 				dim = new Dimension(this.editor, obj, Dimension.Type.PaddingLeft);
+				dim.Slave = slave;
 				this.list.Add(dim);
 
 				dim = new Dimension(this.editor, obj, Dimension.Type.PaddingRight);
+				dim.Slave = slave;
 				this.list.Add(dim);
 
 				dim = new Dimension(this.editor, obj, Dimension.Type.PaddingBottom);
+				dim.Slave = slave;
 				this.list.Add(dim);
 
 				dim = new Dimension(this.editor, obj, Dimension.Type.PaddingTop);
+				dim.Slave = slave;
 				this.list.Add(dim);
 			}
 		}
