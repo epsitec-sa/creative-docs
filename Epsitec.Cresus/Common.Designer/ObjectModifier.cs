@@ -325,6 +325,7 @@ namespace Epsitec.Common.Designer
 			//	en cours d'édition est une table qui n'a aucune colonne (donc
 			//	qui a été fraîchement créée).
 			UI.TablePlaceholder table = obj as UI.TablePlaceholder;
+			System.Diagnostics.Debug.Assert(table != null);
 
 			if (table != null && table.Columns.Count == 0)
 			{

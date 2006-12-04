@@ -7,12 +7,11 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant de choisir une rubrique (string) d'une ressource de type
-	/// 'structure de données' (StructuredType).
+	/// Dialogue permettant de configurer les rubriques d'une table.
 	/// </summary>
-	public class BindingSelector : Abstract
+	public class TableConfiguration : Abstract
 	{
-		public BindingSelector(MainWindow mainWindow) : base(mainWindow)
+		public TableConfiguration(MainWindow mainWindow) : base(mainWindow)
 		{
 		}
 
@@ -24,8 +23,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("BindingSelector", 500, 400, true);
-				this.window.Text = Res.Strings.Dialog.StructuredSelector.Title;
+				this.WindowInit("TableConfiguration", 500, 400, true);
+				this.window.Text = "Choix des rubriques";  // Res.Strings.Dialog.StructuredSelector.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
@@ -36,12 +35,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
 				int tabIndex = 0;
-
-				//	Titre.
-				this.title = new StaticText(this.window.Root);
-				this.title.PreferredHeight = 30;
-				this.title.Dock = DockStyle.Top;
-				this.title.Margins = new Margins(0, 0, 0, 5);
 
 				//	Crée l'en-tête du tableau.
 				this.header = new Widget(this.window.Root);
@@ -87,7 +80,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.SetDynamicToolTips(3, false);
 				this.array.SetDynamicToolTips(4, false);
 				this.array.SetDynamicToolTips(5, false);
-				this.array.LineHeight = BindingSelector.arrayLineHeight;
+				this.array.LineHeight = TableConfiguration.arrayLineHeight;
 				this.array.Dock = DockStyle.Fill;
 				this.array.ColumnsWidthChanged += new EventHandler(this.HandleArrayColumnsWidthChanged);
 				this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
@@ -100,14 +93,14 @@ namespace Epsitec.Common.Designer.Dialogs
 				footer.Margins = new Margins(0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
 
-				this.buttonUse = new Button(footer);
-				this.buttonUse.PreferredWidth = 75;
-				this.buttonUse.Text = Res.Strings.Dialog.StructuredSelector.Button.Use;
-				this.buttonUse.Dock = DockStyle.Left;
-				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
-				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
-				this.buttonUse.TabIndex = tabIndex++;
-				this.buttonUse.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				this.buttonOk = new Button(footer);
+				this.buttonOk.PreferredWidth = 75;
+				this.buttonOk.Text = Res.Strings.Dialog.Button.OK;
+				this.buttonOk.Dock = DockStyle.Left;
+				this.buttonOk.Margins = new Margins(0, 6, 0, 0);
+				this.buttonOk.Clicked += new MessageEventHandler(this.HandleButtonOkClicked);
+				this.buttonOk.TabIndex = tabIndex++;
+				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonCancel = new Button(footer);
 				this.buttonCancel.PreferredWidth = 75;
@@ -129,228 +122,76 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.slider.SmallChange = 5.0M;
 				this.slider.LargeChange = 10.0M;
 				this.slider.Resolution = 1.0M;
-				this.slider.Value = (decimal) BindingSelector.arrayLineHeight;
+				this.slider.Value = (decimal) TableConfiguration.arrayLineHeight;
 				this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
 				//?ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Icon.Tooltip.Size);
-
-				//	Crée le bouton pour le mode.
-				this.checkReadonly = new CheckButton(this.window.Root);
-				this.checkReadonly.Text = "Lecture seule";
-				this.checkReadonly.Dock = DockStyle.Bottom;
-				this.checkReadonly.Margins = new Margins(0, 0, 8, 4);
-				this.checkReadonly.ActiveStateChanged += new EventHandler(this.HandleCheckReadonlyActiveStateChanged);
 			}
 
-			this.UpdateTitle();
 			this.UpdateButtons();
 			this.UpdateArray();
-			this.SelectArray();
-			this.UpdateMode();
 
 			this.window.ShowDialog();
 		}
 
-		public void Initialise(Module module, StructuredType type, Binding binding, bool onlyCollections)
+		public void Initialise(Module module, UI.Collections.ItemTableColumnCollection columns)
 		{
-			//	Initialise le dialogue avec le binding actuel.
+			//	Initialise le dialogue avec l'objet table.
 			this.module = module;
 			this.resourceAccess = module.AccessCaptions;
-			this.structuredType = type;
-			this.onlyCollections = onlyCollections;
 
-			if (binding == null)
+			this.columns = new Epsitec.Common.UI.Collections.ItemTableColumnCollection();
+			foreach (UI.ItemTableColumn column in columns)
 			{
-				this.initialBinding = new Binding(BindingMode.TwoWay, "");
-			}
-			else
-			{
-				this.initialBinding = binding;
+				this.columns.Add(column);
 			}
 
-			this.selectedBinding = null;
-
-			this.FieldsInput();
+			this.columnsReturned = null;
 		}
 
-		public Binding SelectedBinding
+		public UI.Collections.ItemTableColumnCollection Columns
 		{
-			//	Retourne le binding sélectionné par l'utilisateur, ou null si 'annuler'
-			//	a été actionné.
 			get
 			{
-				return this.selectedBinding;
+				return this.columnsReturned;
 			}
 		}
 
-		protected string Field
-		{
-			//	Rubrique sélectionnée.
-			//	TODO: il faudra améliorer la gestion du préfixe "*." !
-			get
-			{
-				string field = this.initialBinding.Path;
-				if (field.StartsWith("*."))
-				{
-					field = field.Substring(2);  // enlève "*."
-				}
-
-				return field;
-			}
-			set
-			{
-				string field = string.Concat("*.", value);  // ajoute "*."
-				this.initialBinding = new Binding(this.initialBinding.Mode, field);
-			}
-		}
-
-		protected BindingMode Mode
-		{
-			//	Mode sélectionné.
-			get
-			{
-				return this.initialBinding.Mode;
-			}
-			set
-			{
-				this.initialBinding = new Binding(value, this.initialBinding.Path);
-			}
-		}
-
-		protected void FieldsInput()
-		{
-			//	Lit le dictionnaire des rubriques (StructuredTypeField) dans la liste
-			//	interne (this.fields).
-			StructuredType type = this.structuredType;
-			this.fields = new List<StructuredTypeField>();
-
-			foreach (string id in type.GetFieldIds())
-			{
-				StructuredTypeField field = type.Fields[id];
-
-				if (!this.onlyCollections || field.Relation == Relation.Collection)
-				{
-					this.fields.Add(field);
-				}
-			}
-		}
-
-		protected void SelectArray()
-		{
-			//	Sélectionne la bonne ligne dans le tableau.
-			string field = this.Field;
-
-			for (int i=0; i<this.fields.Count; i++)
-			{
-				if (this.fields[i].Id == field)
-				{
-					this.array.SelectedRow = i;
-					return;
-				}
-			}
-
-			this.array.SelectedRow = -1;
-		}
-
-
-		protected void UpdateTitle()
-		{
-			//	Met à jour le titre qui donne le nom de la ressource StructuredType.
-			string text = string.Concat("<font size=\"200%\"><b>", this.structuredType.Caption.Name, "</b></font>");
-			this.title.Text = text;
-		}
 
 		protected void UpdateButtons()
 		{
 			//	Met à jour tous les boutons en fonction de la ligne sélectionnée dans le tableau.
 			int sel = this.array.SelectedRow;
-
-			this.buttonUse.Enable = (sel != -1);
 		}
 
 		protected void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			this.array.TotalRows = this.fields.Count;
+			this.array.TotalRows = this.columns.Count;
 
 			int first = this.array.FirstVisibleRow;
 			for (int i=0; i<this.array.LineCount; i++)
 			{
-				if (first+i < this.fields.Count)
+				if (first+i < this.columns.Count)
 				{
-					StructuredTypeField field = this.fields[first+i];
-					string name = field.Id;
-					string iconRelation = "";
-
-					string captionType = "";
-					string iconType = "";
-					AbstractType type = field.Type as AbstractType;
-					if (type != null)
-					{
-						if (type is StructuredType)
-						{
-							if (field.Relation == Relation.Reference )  iconRelation = Misc.Image("RelationReference");
-							if (field.Relation == Relation.Bijective )  iconRelation = Misc.Image("RelationBijective");
-							if (field.Relation == Relation.Collection)  iconRelation = Misc.Image("RelationCollection");
-						}
-
-						Caption caption = this.module.ResourceManager.GetCaption(type.Caption.Id);
-
-						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
-						{
-							string nd = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
-							captionType = string.Concat(caption.Name, ":<br/>", nd);
-						}
-						else
-						{
-							captionType = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
-						}
-
-						iconType = this.resourceAccess.DirectGetIcon(caption.Id);
-						if (!string.IsNullOrEmpty(iconType))
-						{
-							iconType = Misc.ImageFull(iconType);
-						}
-					}
-
-					string captionText = "";
-					string iconText = "";
-					Druid druid = field.CaptionId;
-					if (druid.IsValid)
-					{
-						Caption caption = this.module.ResourceManager.GetCaption(druid);
-
-						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
-						{
-							string nd = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
-							captionText = string.Concat(caption.Name, ":<br/>", nd);
-						}
-						else
-						{
-							captionText = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
-						}
-
-						if (!string.IsNullOrEmpty(caption.Icon))
-						{
-							iconText = Misc.ImageFull(caption.Icon);
-						}
-					}
+					UI.ItemTableColumn column = this.columns[first+i];
+					string name = column.FieldId;
 
 					this.array.SetLineString(0, first+i, name);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(1, first+i, iconRelation);
+					this.array.SetLineString(1, first+i, "");
 					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(2, first+i, captionText);
+					this.array.SetLineString(2, first+i, "");
 					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(3, first+i, iconText);
+					this.array.SetLineString(3, first+i, "");
 					this.array.SetLineState(3, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(4, first+i, captionType);
+					this.array.SetLineString(4, first+i, "");
 					this.array.SetLineState(4, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(5, first+i, iconType);
+					this.array.SetLineString(5, first+i, "");
 					this.array.SetLineState(5, first+i, MyWidgets.StringList.CellState.Normal);
 				}
 				else
@@ -389,14 +230,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.headerType.PreferredWidth = w3+1;
 		}
 
-		protected void UpdateMode()
-		{
-			//	Met à jour le bouton pour le mode.
-			this.ignoreChanged = true;
-			this.checkReadonly.ActiveState = (this.Mode == BindingMode.OneWay) ? ActiveState.Yes : ActiveState.No;
-			this.ignoreChanged = false;
-		}
-
 
 		private void HandleSliderChanged(object sender)
 		{
@@ -407,8 +240,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			HSlider slider = sender as HSlider;
-			BindingSelector.arrayLineHeight = (double) slider.Value;
-			this.array.LineHeight = BindingSelector.arrayLineHeight;
+			TableConfiguration.arrayLineHeight = (double) slider.Value;
+			this.array.LineHeight = TableConfiguration.arrayLineHeight;
 		}
 
 		private void HandleArrayColumnsWidthChanged(object sender)
@@ -429,7 +262,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			int sel = this.array.SelectedRow;
 			if (sel != -1)
 			{
-				this.Field = this.fields[sel].Id;
 			}
 
 			this.UpdateButtons();
@@ -444,27 +276,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.Hide();
 			this.OnClosed();
 
-			this.selectedBinding = this.initialBinding;
-		}
-
-		private void HandleCheckReadonlyActiveStateChanged(object sender)
-		{
-			//	Bouton "Lecture seule" actionné.
-			if (this.ignoreChanged)
-			{
-				return;
-			}
-
-			if (this.Mode == BindingMode.TwoWay)
-			{
-				this.Mode = BindingMode.OneWay;
-			}
-			else
-			{
-				this.Mode = BindingMode.TwoWay;
-			}
-
-			this.UpdateMode();
+			this.columnsReturned = this.columns;
 		}
 
 		private void HandleWindowCloseClicked(object sender)
@@ -481,35 +293,30 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 		}
 
-		private void HandleButtonUseClicked(object sender, MessageEventArgs e)
+		private void HandleButtonOkClicked(object sender, MessageEventArgs e)
 		{
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
 
-			this.selectedBinding = this.initialBinding;
+			this.columnsReturned = this.columns;
 		}
 
 
 		protected static double					arrayLineHeight = 20;
 
-		protected ResourceAccess				resourceAccess;
 		protected Module						module;
-		protected StructuredType				structuredType;
-		protected List<StructuredTypeField>		fields;
-		protected Binding						initialBinding;
-		protected Binding						selectedBinding;
-		protected bool							onlyCollections;
+		protected ResourceAccess				resourceAccess;
+		protected UI.Collections.ItemTableColumnCollection columns;
+		protected UI.Collections.ItemTableColumnCollection columnsReturned;
 
-		protected StaticText					title;
 		protected Widget						header;
 		protected HeaderButton					headerName;
 		protected HeaderButton					headerCaption;
 		protected HeaderButton					headerType;
 		protected MyWidgets.StringArray			array;
-		protected CheckButton					checkReadonly;
 
-		protected Button						buttonUse;
+		protected Button						buttonOk;
 		protected Button						buttonCancel;
 		protected HSlider						slider;
 	}

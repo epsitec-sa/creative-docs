@@ -67,6 +67,18 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
+		public UI.Collections.ItemTableColumnCollection TableColumns
+		{
+			get
+			{
+				return (UI.Collections.ItemTableColumnCollection) this.GetValue(Content.TableProperty);
+			}
+			set
+			{
+				this.SetValue(Content.TableProperty, value);
+			}
+		}
+
 		public StructuredType StructuredType
 		{
 			get
@@ -103,6 +115,12 @@ namespace Epsitec.Common.Designer.Proxies
 			if (ObjectModifier.HasBinding(this.DefaultWidget))
 			{
 				this.Binding = ObjectModifier.GetBinding(this.DefaultWidget);
+			}
+
+			if (ObjectModifier.GetObjectType(this.DefaultWidget) == ObjectModifier.ObjectType.Table)
+			{
+				UI.TablePlaceholder table = this.DefaultWidget as UI.TablePlaceholder;
+				this.TableColumns = table.Columns;
 			}
 
 			if (ObjectModifier.HasStructuredType(this.DefaultWidget))
@@ -157,6 +175,34 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
+		private void NotifyTableChanged(UI.Collections.ItemTableColumnCollection columns)
+		{
+			//	Cette méthode est appelée à la suite de la modification d'une de
+			//	nos propriétés de définition pour permettre de mettre à jour les widgets connectés :
+			if (this.IsNotSuspended)
+			{
+				this.SuspendChanges();
+
+				try
+				{
+					StructuredType type = this.StructuredType;
+
+					foreach (Widget obj in this.Widgets)
+					{
+						UI.TablePlaceholder table = obj as UI.TablePlaceholder;
+						if (table != null)
+						{
+							table.Columns = columns;  // il n'y a pas non plus de DefineColumns ???
+						}
+					}
+				}
+				finally
+				{
+					this.ResumeChanges();
+				}
+			}
+		}
+
 		private void NotifyStructuredTypeChanged(StructuredType type)
 		{
 			//	Cette méthode est appelée à la suite de la modification d'une de
@@ -185,6 +231,7 @@ namespace Epsitec.Common.Designer.Proxies
 			Content.DruidCaptionProperty.DefaultMetadata.DefineNamedType(ProxyManager.DruidCaptionStringType);
 			Content.DruidPanelProperty.DefaultMetadata.DefineNamedType(ProxyManager.DruidPanelStringType);
 			Content.BindingProperty.DefaultMetadata.DefineNamedType(ProxyManager.BindingType);
+			Content.TableProperty.DefaultMetadata.DefineNamedType(ProxyManager.TableType);
 			Content.StructuredTypeProperty.DefaultMetadata.DefineNamedType(ProxyManager.StructuredType);
 		}
 
@@ -203,6 +250,13 @@ namespace Epsitec.Common.Designer.Proxies
 			that.NotifyBindingChanged(value);
 		}
 
+		private static void NotifyTableChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			UI.Collections.ItemTableColumnCollection value = (UI.Collections.ItemTableColumnCollection) newValue;
+			Content that = (Content) o;
+			that.NotifyTableChanged(value);
+		}
+
 		private static void NotifyStructuredTypeChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			StructuredType value = (StructuredType) newValue;
@@ -214,6 +268,7 @@ namespace Epsitec.Common.Designer.Proxies
 		public static readonly DependencyProperty DruidCaptionProperty   = DependencyProperty.Register("DruidCaption",   typeof(string),         typeof(Content), new DependencyPropertyMetadata(Content.NotifyDruidChanged));
 		public static readonly DependencyProperty DruidPanelProperty     = DependencyProperty.Register("DruidPanel",     typeof(string),         typeof(Content), new DependencyPropertyMetadata(Content.NotifyDruidChanged));
 		public static readonly DependencyProperty BindingProperty        = DependencyProperty.Register("Binding",        typeof(Binding),        typeof(Content), new DependencyPropertyMetadata(Content.NotifyBindingChanged));
+		public static readonly DependencyProperty TableProperty          = DependencyProperty.Register("Table", typeof(UI.Collections.ItemTableColumnCollection), typeof(Content), new DependencyPropertyMetadata(Content.NotifyTableChanged));
 		public static readonly DependencyProperty StructuredTypeProperty = DependencyProperty.Register("StructuredType", typeof(StructuredType), typeof(Content), new DependencyPropertyMetadata(Content.NotifyStructuredTypeChanged));
 	}
 }

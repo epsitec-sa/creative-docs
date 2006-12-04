@@ -269,6 +269,10 @@ namespace Epsitec.Common.Designer
 			bindingType.DefineDefaultController("Binding", "");  // utilise BindingController
 			ProxyManager.BindingType = bindingType;
 
+			InternalTableType tableType = new InternalTableType();
+			tableType.DefineDefaultController("Table", "");  // utilise TableController
+			ProxyManager.TableType = tableType;
+
 			InternalStructuredType structuredType = new InternalStructuredType();
 			structuredType.DefineDefaultController("Structured", "");  // utilise StructuredController
 			ProxyManager.StructuredType = structuredType;
@@ -313,6 +317,30 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		--- erreur // UI.Collections.ItemTableColumnCollection n'est pas un AbstractType; comment faire ???
+		private class InternalTableType : AbstractType
+		{
+			public override System.Type SystemType
+			{
+				get
+				{
+					return typeof(UI.Collections.ItemTableColumnCollection);
+				}
+			}
+
+			public override bool IsValidValue(object value)
+			{
+				if (value == null)
+				{
+					return true;
+				}
+				else
+				{
+					return value is UI.Collections.ItemTableColumnCollection;
+				}
+			}
+		}
+
 		private class InternalStructuredType : AbstractType
 		{
 			public override System.Type SystemType
@@ -336,9 +364,10 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public static readonly IStringType DruidCaptionStringType;
+		public static readonly IStringType  DruidCaptionStringType;
 		public static readonly IStringType  DruidPanelStringType;
 		public static readonly INamedType	BindingType;
+		public static readonly INamedType	TableType;
 		public static readonly INamedType	StructuredType;
 		public static readonly INumericType LocationNumericType;
 		public static readonly INumericType SizeNumericType;

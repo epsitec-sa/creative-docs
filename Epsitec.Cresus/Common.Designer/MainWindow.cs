@@ -63,15 +63,16 @@ namespace Epsitec.Common.Designer
 				CommandDispatcher.SetDispatcher(this.window, this.commandDispatcher);
 				CommandContext.SetContext(this.window, this.commandContext);
 
-				this.dlgOpen             = new Dialogs.Open(this);
-				this.dlgGlyphs           = new Dialogs.Glyphs(this);
-				this.dlgIcon             = new Dialogs.Icon(this);
-				this.dlgFilter           = new Dialogs.Filter(this);
-				this.dlgSearch           = new Dialogs.Search(this);
-				this.dlgNewCulture       = new Dialogs.NewCulture(this);
-				this.dlgResourceTypeType = new Dialogs.ResourceTypeType(this);
-				this.dlgResourceSelector = new Dialogs.ResourceSelector(this);
-				this.dlgBindingSelector  = new Dialogs.BindingSelector(this);
+				this.dlgOpen               = new Dialogs.Open(this);
+				this.dlgGlyphs             = new Dialogs.Glyphs(this);
+				this.dlgIcon               = new Dialogs.Icon(this);
+				this.dlgFilter             = new Dialogs.Filter(this);
+				this.dlgSearch             = new Dialogs.Search(this);
+				this.dlgNewCulture         = new Dialogs.NewCulture(this);
+				this.dlgResourceTypeType   = new Dialogs.ResourceTypeType(this);
+				this.dlgResourceSelector   = new Dialogs.ResourceSelector(this);
+				this.dlgBindingSelector    = new Dialogs.BindingSelector(this);
+				this.dlgTableConfiguration = new Dialogs.TableConfiguration(this);
 
 				this.dlgGlyphs.Closed += new EventHandler(this.HandleDlgClosed);
 				this.dlgFilter.Closed += new EventHandler(this.HandleDlgClosed);
@@ -1127,6 +1128,14 @@ namespace Epsitec.Common.Designer
 
 
 		#region Dialogs
+		public UI.Collections.ItemTableColumnCollection DlgTableConfiguration(Module baseModule, UI.Collections.ItemTableColumnCollection columns)
+		{
+			//	Ouvre le dialogue pour choisir les rubriques d'une table.
+			this.dlgTableConfiguration.Initialise(baseModule, columns);
+			this.dlgTableConfiguration.Show();  // choix dans le dialogue...
+			return this.dlgTableConfiguration.Columns;
+		}
+
 		public Binding DlgBindingSelector(Module baseModule, StructuredType type, Binding binding, bool onlyCollections)
 		{
 			//	Ouvre le dialogue pour choisir une rubrique dans une structure de données.
@@ -1356,6 +1365,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.ResourceTypeType		dlgResourceTypeType;
 		protected Dialogs.ResourceSelector		dlgResourceSelector;
 		protected Dialogs.BindingSelector		dlgBindingSelector;
+		protected Dialogs.TableConfiguration	dlgTableConfiguration;
 		protected PanelsContext					context;
 
 		protected Support.ResourceManagerPool	resourceManagerPool;
