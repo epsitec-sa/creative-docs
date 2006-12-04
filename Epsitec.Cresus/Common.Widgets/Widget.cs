@@ -2787,8 +2787,12 @@ namespace Epsitec.Common.Widgets
 					else
 					{
 						CommandContextChain chain = CommandContextChain.BuildChain (this);
-						CommandState state = chain.GetCommandState (commandObject);
-						this.QueueCommandForExecution (window, commandObject, state);
+
+						if (chain != null)
+						{
+							CommandState state = chain.GetCommandState (commandObject);
+							this.QueueCommandForExecution (window, commandObject, state);
+						}
 					}
 				}
 			}

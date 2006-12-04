@@ -18,6 +18,10 @@ namespace Epsitec.Common.Widgets
 		public static readonly Command Redo			= Res.Commands.Redo;
 		public static readonly Command Find			= Res.Commands.Find;
 
+		public static readonly Command Clear		= Res.Commands.Clear;
+		public static readonly Command Accept		= Res.Commands.Accept;
+		public static readonly Command Reject		= Res.Commands.Reject;
+
 		public static readonly Command Help			= Res.Commands.Help;
 		public static readonly Command Quit			= Res.Commands.Quit;
 		
@@ -43,6 +47,10 @@ namespace Epsitec.Common.Widgets
 			public const long Redo			= Res.CommandIds.Redo;
 			public const long Find			= Res.CommandIds.Find;
 
+			public const long Clear			= Res.CommandIds.Clear;
+			public const long Accept		= Res.CommandIds.Accept;
+			public const long Reject		= Res.CommandIds.Reject;
+			
 			public const long Help			= Res.CommandIds.Help;
 			public const long Quit			= Res.CommandIds.Quit;
 

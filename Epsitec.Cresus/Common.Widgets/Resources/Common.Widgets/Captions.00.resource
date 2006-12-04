@@ -20,6 +20,9 @@
   <data name="Cmd.Properties" id="0L">&lt;s:data id="_0" f:Name="Properties" f:Labels="{Collection {Text 'Propriétés'}}" /&gt;</data>
   <data name="Cmd.Stop" id="0O">&lt;s:data id="_0" f:Name="Stop" f:Labels="{Collection {Text 'Interrompre'}}" /&gt;</data>
   <data name="Cmd.Refresh" id="0P">&lt;s:data id="_0" f:Name="Refresh" f:Labels="{Collection {Text 'Rafraîchir'}}" /&gt;</data>
+  <data name="Cmd.Clear" id="0Q">&lt;s:data id="_0" f:Name="Clear" f:Icon="manifest:Epsitec.Common.Widgets.Images.Edition.Clear.icon" f:Description="Vider les champs" f:Labels="{Collection {Text 'Vider'}}" /&gt;</data>
+  <data name="Cmd.Accept" id="0R">&lt;s:data id="_0" f:Name="Accept" f:Icon="manifest:Epsitec.Common.Widgets.Images.Edition.Accept.icon" f:Description="Accepter les modifications" f:Labels="{Collection {Text 'Accepter'}}" /&gt;</data>
+  <data name="Cmd.Reject" id="0S">&lt;s:data id="_0" f:Name="Reject" f:Icon="manifest:Epsitec.Common.Widgets.Images.Edition.Reject.icon" f:Description="Rejeter les modifications" f:Labels="{Collection {Text 'Rejeter'}}" /&gt;</data>
   <data name="Cap.New" id="06">&lt;s:data id="_0" f:Name="New" /&gt;</data>
   <data name="Typ.New" id="07">&lt;s:data id="_0" f:Name="New" /&gt;</data>
   <data name="Val.New" id="08">&lt;s:data id="_0" f:Name="New" /&gt;</data>

@@ -20,12 +20,36 @@ namespace Epsitec.Common.UI
 		{
 			this.editPanels = new Stack<Panel> ();
 			this.miniPanels = new List<MiniPanel> ();
+			
 			this.mask = new PanelMask (this);
 			this.mask.Hide ();
 			this.mask.MaskPressed += delegate (object sender)
 			{
 				this.EndEdition ();
 			};
+
+			this.toolbar = new Widgets.FrameBox (this);
+			this.toolbar.Hide ();
+			this.toolbar.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
+
+			this.AddButton (Widgets.ApplicationCommands.Clear, 10);
+			this.AddButton (Widgets.ApplicationCommands.Accept, 0);
+			this.AddButton (Widgets.ApplicationCommands.Reject, 0);
+		}
+
+		private void AddButton(Widgets.Command command, double spaceAfter)
+		{
+			Widgets.Widget button = new Widgets.IconButton (command);
+
+			//	TODO: DR/rendre plus joli et plus petits les boutons
+			
+			button.Dock    = Widgets.DockStyle.Stacked;
+			button.Margins = new Drawing.Margins (0, spaceAfter, 0, 0);
+			button.AutoFocus = false;
+			button.SetValue (Widgets.MetaButton.ButtonStyleProperty, Widgets.ButtonStyle.Normal);
+			button.PreferredSize = new Drawing.Size (28, 28);
+			
+			this.toolbar.Children.Add (button);
 		}
 
 		public PanelStack(Widgets.Widget embedder)
@@ -231,12 +255,13 @@ namespace Epsitec.Common.UI
 			if (this.editPanels.Count > 0)
 			{
 				Panel topPanel = this.editPanels.Peek ();
+				Drawing.Rectangle bounds = topPanel.ActualBounds;
 
 				Drawing.Path path = topPanel.CreateAperturePath (true);
 
 				if (path == null)
 				{
-					this.mask.Aperture = topPanel.ActualBounds;
+					this.mask.Aperture = bounds;
 				}
 				else
 				{
@@ -244,12 +269,19 @@ namespace Epsitec.Common.UI
 				}
 				
 				this.mask.ZOrder = 0;
-				this.mask.ZOrder = topPanel.ZOrder;
+				topPanel.ZOrder = 0;
+				this.toolbar.ZOrder = 0;
+
+				this.toolbar.Margins = new Drawing.Margins (0, this.ActualWidth - bounds.Right, 0, bounds.Bottom - this.toolbar.PreferredHeight * 2.0/3.0);
+				this.toolbar.Anchor = Widgets.AnchorStyles.BottomRight;
+				
 				this.mask.Show ();
+				this.toolbar.Show ();
 			}
 			else
 			{
 				this.mask.Hide ();
+				this.toolbar.Hide ();
 			}
 		}
 
@@ -273,5 +305,6 @@ namespace Epsitec.Common.UI
 		private Stack<Panel> editPanels;
 		private List<MiniPanel> miniPanels;
 		private PanelMask mask;
+		private Widgets.FrameBox toolbar;
 	}
 }

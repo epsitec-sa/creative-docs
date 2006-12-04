@@ -2214,8 +2214,13 @@ namespace Epsitec.Common.Widgets.Platform
 			System.Windows.Forms.Application.DoEvents ();
 
 			ToolTip.HideAllToolTips ();
+
+			bool preventQuit = this.prevent_quit;
+			this.prevent_quit = true;
 			
 			this.ShowDialog (this.Owner);
+
+			this.prevent_quit = preventQuit;
 		}
 
 		#region IApplicationThreadInvoker Members

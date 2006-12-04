@@ -766,6 +766,11 @@
   <ItemGroup>
     <EmbeddedResource Include="Images\Cmd.SaveAs.icon" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\Edition.Accept.icon" />
+    <EmbeddedResource Include="Images\Edition.Clear.icon" />
+    <EmbeddedResource Include="Images\Edition.Reject.icon" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

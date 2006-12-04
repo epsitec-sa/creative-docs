@@ -14,6 +14,7 @@ namespace Epsitec.Common.UI
 		[SetUp]
 		public void Initialize()
 		{
+			Epsitec.Common.Document.Engine.Initialize ();
 			Epsitec.Common.Widgets.Widget.Initialize ();
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 		}

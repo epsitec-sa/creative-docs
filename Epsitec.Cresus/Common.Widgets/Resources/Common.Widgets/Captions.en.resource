@@ -22,4 +22,7 @@
   <data id="0N">&lt;s:data id="_0" f:Labels="{Collection {Text 'Redo'}}" /&gt;</data>
   <data id="0O">&lt;s:data id="_0" f:Labels="{Collection {Text 'Stop'}}" /&gt;</data>
   <data id="0P">&lt;s:data id="_0" f:Labels="{Collection {Text 'Refresh'}}" /&gt;</data>
+  <data id="0Q">&lt;s:data id="_0" f:Description="Clear fields" f:Labels="{Collection {Text 'Clear'}}" /&gt;</data>
+  <data id="0R">&lt;s:data id="_0" f:Description="Accept changes" f:Labels="{Collection {Text 'Accept'}}" /&gt;</data>
+  <data id="0S">&lt;s:data id="_0" f:Description="Rejects changes" f:Labels="{Collection {Text 'Reject'}}" /&gt;</data>
 </bundle>

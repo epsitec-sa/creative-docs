@@ -9,6 +9,8 @@ namespace Epsitec.Common.Widgets
 		
 		public static class Commands
 		{
+			public static readonly Epsitec.Common.Widgets.Command Accept = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 27));
+			public static readonly Epsitec.Common.Widgets.Command Clear = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 26));
 			public static readonly Epsitec.Common.Widgets.Command Close = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 12));
 			public static readonly Epsitec.Common.Widgets.Command Copy = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 2));
 			public static readonly Epsitec.Common.Widgets.Command Cut = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 1));
@@ -24,6 +26,7 @@ namespace Epsitec.Common.Widgets
 			public static readonly Epsitec.Common.Widgets.Command Quit = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 11));
 			public static readonly Epsitec.Common.Widgets.Command Redo = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 23));
 			public static readonly Epsitec.Common.Widgets.Command Refresh = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 25));
+			public static readonly Epsitec.Common.Widgets.Command Reject = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 28));
 			public static readonly Epsitec.Common.Widgets.Command Save = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 9));
 			public static readonly Epsitec.Common.Widgets.Command SaveAs = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 10));
 			public static readonly Epsitec.Common.Widgets.Command SelectAll = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 5));
@@ -37,6 +40,8 @@ namespace Epsitec.Common.Widgets
 		
 		public static class CommandIds
 		{
+			public const long Accept = 0x1BL;
+			public const long Clear = 0x1AL;
 			public const long Close = 0xCL;
 			public const long Copy = 0x2L;
 			public const long Cut = 0x1L;
@@ -52,6 +57,7 @@ namespace Epsitec.Common.Widgets
 			public const long Quit = 0xBL;
 			public const long Redo = 0x17L;
 			public const long Refresh = 0x19L;
+			public const long Reject = 0x1CL;
 			public const long Save = 0x9L;
 			public const long SaveAs = 0xAL;
 			public const long SelectAll = 0x5L;

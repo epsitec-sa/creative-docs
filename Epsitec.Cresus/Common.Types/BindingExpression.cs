@@ -604,7 +604,14 @@ namespace Epsitec.Common.Types
 		/// <returns>An <c>ICollectionView</c> which represents the collection.</returns>
 		private ICollectionView FindCollectionView(object collection)
 		{
-			return Binding.FindCollectionView (collection, this.dataContext);
+			Binding context = this.dataContext;
+
+			if (context == null)
+			{
+				context = DataObject.GetDataContext (this.targetObject);
+			}
+
+			return Binding.FindCollectionView (collection, context);
 		}
 
 		/// <summary>
