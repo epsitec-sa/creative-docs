@@ -510,7 +510,8 @@ namespace Epsitec.Common.Widgets
 
 			//	Dessine le texte.
 			rect = this.TextBounds;
-			if (!rect.IsSurfaceZero)
+			if ((!rect.IsSurfaceZero) &&
+				(this.TextLayout != null))
 			{
 				if (this.innerZoom != 1.0)
 				{

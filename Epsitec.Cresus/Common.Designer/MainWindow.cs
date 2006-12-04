@@ -488,6 +488,7 @@ namespace Epsitec.Common.Designer
 			this.CloseModule();
 		}
 
+		[Command(ApplicationCommands.Id.Quit)]
 		[Command("QuitApplication")]
 		void CommandQuitApplication(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
