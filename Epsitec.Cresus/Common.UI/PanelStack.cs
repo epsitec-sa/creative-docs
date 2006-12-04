@@ -51,6 +51,8 @@ namespace Epsitec.Common.UI
 
 		public void StartEdition(Panel panel)
 		{
+			Panel oldValue = this.editPanels.Count == 0 ? null : this.editPanels.Peek ();
+			
 			this.editPanels.Push (panel);
 
 			panel.Owner.BoundsChanged += this.HandlePanelOwnerBoundsChanged;
@@ -61,6 +63,10 @@ namespace Epsitec.Common.UI
 			
 			panel.Show ();
 			panel.SetFocusOnTabWidget ();
+
+			Panel newValue = this.editPanels.Count == 0 ? null : this.editPanels.Peek ();
+
+			this.OnEditPanelChanged (oldValue, newValue);
 		}
 
 		public void EndEdition()
@@ -72,6 +78,7 @@ namespace Epsitec.Common.UI
 		{
 			if (this.editPanels.Contains (panel))
 			{
+				Panel oldValue = this.editPanels.Count == 0 ? null : this.editPanels.Peek ();
 				Panel item;
 				
 				do
@@ -86,7 +93,10 @@ namespace Epsitec.Common.UI
 
 				this.UpdateMask ();
 				panel.Owner.SetFocusOnTabWidget ();
-				
+
+				Panel newValue = this.editPanels.Count == 0 ? null : this.editPanels.Peek ();
+
+				this.OnEditPanelChanged (oldValue, newValue);
 				return true;
 			}
 			else
@@ -130,7 +140,9 @@ namespace Epsitec.Common.UI
 					return stack;
 				}
 
-				widget = widget.Parent;
+				Widgets.ILogicalTree logicalTree = widget as Widgets.ILogicalTree;
+
+				widget = logicalTree == null ? widget.Parent : logicalTree.Parent;
 			}
 			
 			return null;
@@ -231,6 +243,23 @@ namespace Epsitec.Common.UI
 				this.mask.Hide ();
 			}
 		}
+
+		private void OnEditPanelChanged(Panel oldValue, Panel newValue)
+		{
+			if (oldValue != newValue)
+			{
+				this.InvalidateProperty (PanelStack.EditPanelProperty, oldValue, newValue);
+			}
+		}
+
+
+		private static object GetEditPanelValue(DependencyObject obj)
+		{
+			PanelStack stack = (PanelStack) obj;
+			return stack.editPanels.Count == 0 ? null : stack.editPanels.Peek ();
+		}
+		
+		public static readonly DependencyProperty EditPanelProperty = DependencyProperty.RegisterReadOnly ("EditPanel", typeof (Panel), typeof (PanelStack), new DependencyPropertyMetadata (PanelStack.GetEditPanelValue));
 
 		private Stack<Panel> editPanels;
 		private List<MiniPanel> miniPanels;

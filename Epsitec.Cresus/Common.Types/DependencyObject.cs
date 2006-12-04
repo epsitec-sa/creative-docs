@@ -1066,6 +1066,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		protected Support.EventHandler<TEventArgs> GetUserEventHandler<TEventArgs>(string name)
+		{
+			return this.GetUserEventHandler (name) as Support.EventHandler<TEventArgs>;
+		}
+
 		protected virtual void Dispose(bool disposing)
 		{
 		}
