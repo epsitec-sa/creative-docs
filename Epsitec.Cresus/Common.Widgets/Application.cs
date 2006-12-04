@@ -140,6 +140,55 @@ namespace Epsitec.Common.Widgets
 		
 		private static System.Threading.Thread thread;
 
+		public static bool HasQueuedAsyncCallback(Support.SimpleCallback callback)
+		{
+			lock (Application.queueExclusion)
+			{
+				if ((Application.pendingCallbacks.Contains (callback)) ||
+					(Application.runningCallbacks.Contains (callback)))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public static void RemoveQueuedAsyncCallback(Support.SimpleCallback callback)
+		{
+			lock (Application.queueExclusion)
+			{
+				if (Application.pendingCallbacks.Contains (callback))
+				{
+					int n = Application.pendingCallbacks.Count;
+
+					for (int i = 0; i < n; i++)
+					{
+						Support.SimpleCallback item = Application.pendingCallbacks.Dequeue ();
+						
+						if (item != callback)
+						{
+							Application.pendingCallbacks.Enqueue (item);
+						}
+					}
+				}
+				if (Application.runningCallbacks.Contains (callback))
+				{
+					int n = Application.runningCallbacks.Count;
+
+					for (int i = 0; i < n; i++)
+					{
+						Support.SimpleCallback item = Application.runningCallbacks.Dequeue ();
+
+						if (item != callback)
+						{
+							Application.runningCallbacks.Enqueue (item);
+						}
+					}
+				}
+			}
+		}
+
 		public static void QueueAsyncCallback(Support.SimpleCallback callback)
 		{
 			lock (Application.queueExclusion)
@@ -160,21 +209,35 @@ namespace Epsitec.Common.Widgets
 
 		public static void ExecuteAsyncCallbacks()
 		{
+			if (Application.executingAsyncCallbacks)
+			{
+				return;
+			}
+
 			System.Diagnostics.Debug.Assert (Application.thread == System.Threading.Thread.CurrentThread);
 			System.Diagnostics.Debug.Assert (Application.runningCallbacks.Count == 0);
 
 			if (Application.pendingCallbacks.Count > 0)
 			{
-				lock (Application.queueExclusion)
+				try
 				{
-					Application.runningCallbacks = Application.pendingCallbacks;
-					Application.pendingCallbacks = new Queue<Support.SimpleCallback> ();
-				}
+					Application.executingAsyncCallbacks = true;
+					
+					lock (Application.queueExclusion)
+					{
+						Application.runningCallbacks = Application.pendingCallbacks;
+						Application.pendingCallbacks = new Queue<Support.SimpleCallback> ();
+					}
 
-				while (Application.runningCallbacks.Count > 0)
+					while (Application.runningCallbacks.Count > 0)
+					{
+						Support.SimpleCallback callback = Application.runningCallbacks.Dequeue ();
+						callback ();
+					}
+				}
+				finally
 				{
-					Support.SimpleCallback callback = Application.runningCallbacks.Dequeue ();
-					callback ();
+					Application.executingAsyncCallbacks = false;
 				}
 			}
 		}
@@ -182,6 +245,7 @@ namespace Epsitec.Common.Widgets
 		private static object queueExclusion = new object ();
 		private static Queue<Support.SimpleCallback> pendingCallbacks = new Queue<Support.SimpleCallback> ();
 		private static Queue<Support.SimpleCallback> runningCallbacks = new Queue<Support.SimpleCallback> ();
+		private static bool executingAsyncCallbacks;
 
 		private Window window;
 		private CommandDispatcher commandDispatcher;

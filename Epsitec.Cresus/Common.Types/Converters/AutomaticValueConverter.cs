@@ -122,6 +122,21 @@ namespace Epsitec.Common.Types.Converters
 					return value;
 				}
 
+				string text = value as string;
+
+				if ((text != null) &&
+					(text.Length == 0))
+				{
+					if ((expectedType == typeof (int)) ||
+						(expectedType == typeof (long)) ||
+						(expectedType == typeof (short)) ||
+						(expectedType == typeof (decimal)) ||
+						(expectedType == typeof (double)))
+					{
+						return InvalidValue.Instance;
+					}
+				}
+
 				return System.Convert.ChangeType (value, expectedType, culture);
 			}
 			catch (System.InvalidCastException)

@@ -291,8 +291,18 @@ namespace Epsitec.Common.UI
 		{
 			base.UpdateValue (oldValue, newValue);
 
-			Application.ExecuteAsyncCallbacks ();
-			
+			if (Application.HasQueuedAsyncCallback (this.CreateUserInterface))
+			{
+				Application.RemoveQueuedAsyncCallback (this.CreateUserInterface);
+				this.CreateUserInterface ();
+			}
+
+			if (Application.HasQueuedAsyncCallback (this.RecreateUserInterface))
+			{
+				Application.RemoveQueuedAsyncCallback (this.RecreateUserInterface);
+				this.RecreateUserInterface ();
+			}
+
 			if (this.controller != null)
 			{
 				this.controller.RefreshUserInterface (oldValue, newValue);
@@ -365,3 +375,4 @@ namespace Epsitec.Common.UI
 		private MiniPanel						editPanel;
 	}
 }
+     

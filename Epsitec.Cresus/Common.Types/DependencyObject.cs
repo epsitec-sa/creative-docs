@@ -654,6 +654,11 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		public void ClearAllBindings()
 		{
+			if (this.bindings == null)
+			{
+				return;
+			}
+			
 			DependencyProperty[] properties = Copier.CopyArray (this.bindings.Keys);
 
 			for (int i = 0; i < properties.Length; i++)
