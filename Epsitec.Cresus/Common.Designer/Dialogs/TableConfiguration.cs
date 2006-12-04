@@ -133,13 +133,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.ShowDialog();
 		}
 
-		public void Initialise(Module module, UI.Collections.ItemTableColumnCollection columns)
+		public void Initialise(Module module, List<UI.ItemTableColumn> columns)
 		{
 			//	Initialise le dialogue avec l'objet table.
 			this.module = module;
 			this.resourceAccess = module.AccessCaptions;
 
-			this.columns = new Epsitec.Common.UI.Collections.ItemTableColumnCollection();
+			this.columns = new List<UI.ItemTableColumn> ();
 			foreach (UI.ItemTableColumn column in columns)
 			{
 				this.columns.Add(column);
@@ -148,7 +148,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.columnsReturned = null;
 		}
 
-		public UI.Collections.ItemTableColumnCollection Columns
+		public List<UI.ItemTableColumn> Columns
 		{
 			get
 			{
@@ -307,8 +307,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected Module						module;
 		protected ResourceAccess				resourceAccess;
-		protected UI.Collections.ItemTableColumnCollection columns;
-		protected UI.Collections.ItemTableColumnCollection columnsReturned;
+		protected List<UI.ItemTableColumn>		columns;
+		protected List<UI.ItemTableColumn>		columnsReturned;
 
 		protected Widget						header;
 		protected HeaderButton					headerName;

@@ -67,11 +67,11 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		public UI.Collections.ItemTableColumnCollection TableColumns
+		public List<UI.ItemTableColumn> TableColumns
 		{
 			get
 			{
-				return (UI.Collections.ItemTableColumnCollection) this.GetValue(Content.TableProperty);
+				return (List<UI.ItemTableColumn>) this.GetValue (Content.TableProperty);
 			}
 			set
 			{
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Designer.Proxies
 			if (ObjectModifier.GetObjectType(this.DefaultWidget) == ObjectModifier.ObjectType.Table)
 			{
 				UI.TablePlaceholder table = this.DefaultWidget as UI.TablePlaceholder;
-				this.TableColumns = table.Columns;
+				this.TableColumns = new List<UI.ItemTableColumn> (table.Columns);
 			}
 
 			if (ObjectModifier.HasStructuredType(this.DefaultWidget))
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		private void NotifyTableChanged(UI.Collections.ItemTableColumnCollection columns)
+		private void NotifyTableChanged(List<UI.ItemTableColumn> columns)
 		{
 			//	Cette méthode est appelée à la suite de la modification d'une de
 			//	nos propriétés de définition pour permettre de mettre à jour les widgets connectés :
@@ -192,7 +192,8 @@ namespace Epsitec.Common.Designer.Proxies
 						UI.TablePlaceholder table = obj as UI.TablePlaceholder;
 						if (table != null)
 						{
-							table.Columns = columns;  // il n'y a pas non plus de DefineColumns ???
+							table.Columns.Clear ();
+							table.Columns.AddRange (columns);
 						}
 					}
 				}
@@ -252,7 +253,7 @@ namespace Epsitec.Common.Designer.Proxies
 
 		private static void NotifyTableChanged(DependencyObject o, object oldValue, object newValue)
 		{
-			UI.Collections.ItemTableColumnCollection value = (UI.Collections.ItemTableColumnCollection) newValue;
+			List<UI.ItemTableColumn> value = (List<UI.ItemTableColumn>) newValue;
 			Content that = (Content) o;
 			that.NotifyTableChanged(value);
 		}
@@ -268,7 +269,7 @@ namespace Epsitec.Common.Designer.Proxies
 		public static readonly DependencyProperty DruidCaptionProperty   = DependencyProperty.Register("DruidCaption",   typeof(string),         typeof(Content), new DependencyPropertyMetadata(Content.NotifyDruidChanged));
 		public static readonly DependencyProperty DruidPanelProperty     = DependencyProperty.Register("DruidPanel",     typeof(string),         typeof(Content), new DependencyPropertyMetadata(Content.NotifyDruidChanged));
 		public static readonly DependencyProperty BindingProperty        = DependencyProperty.Register("Binding",        typeof(Binding),        typeof(Content), new DependencyPropertyMetadata(Content.NotifyBindingChanged));
-		public static readonly DependencyProperty TableProperty          = DependencyProperty.Register("Table", typeof(UI.Collections.ItemTableColumnCollection), typeof(Content), new DependencyPropertyMetadata(Content.NotifyTableChanged));
+		public static readonly DependencyProperty TableProperty          = DependencyProperty.Register("Table", typeof(List<UI.ItemTableColumn>), typeof(Content), new DependencyPropertyMetadata(Content.NotifyTableChanged));
 		public static readonly DependencyProperty StructuredTypeProperty = DependencyProperty.Register("StructuredType", typeof(StructuredType), typeof(Content), new DependencyPropertyMetadata(Content.NotifyStructuredTypeChanged));
 	}
 }

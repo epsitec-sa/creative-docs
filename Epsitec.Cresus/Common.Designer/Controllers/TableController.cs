@@ -61,7 +61,9 @@ namespace Epsitec.Common.Designer.Controllers
 				!InvalidValue.IsInvalidValue(newValue) &&
 				!PendingValue.IsPendingValue(newValue))
 			{
-				this.columns = newValue as UI.Collections.ItemTableColumnCollection;
+				IEnumerable<UI.ItemTableColumn> source = newValue as IEnumerable<UI.ItemTableColumn>;
+				List<UI.ItemTableColumn> list = new List<ItemTableColumn> (source);
+				this.columns = list;
 			}
 		}
 
@@ -76,7 +78,7 @@ namespace Epsitec.Common.Designer.Controllers
 				ObjectModifier.ObjectType type = ObjectModifier.GetObjectType(obj);
 				if (type == ObjectModifier.ObjectType.Table)
 				{
-					UI.Collections.ItemTableColumnCollection columns = mainWindow.DlgTableConfiguration(mainWindow.CurrentModule, this.columns);
+					List<UI.ItemTableColumn> columns = mainWindow.DlgTableConfiguration (mainWindow.CurrentModule, this.columns);
 					if (columns != null)
 					{
 						this.columns = columns;
@@ -114,7 +116,7 @@ namespace Epsitec.Common.Designer.Controllers
 		#endregion
 
 
-		private UI.Collections.ItemTableColumnCollection columns;
+		private List<UI.ItemTableColumn> columns;
 		private Button					button;
 	}
 }

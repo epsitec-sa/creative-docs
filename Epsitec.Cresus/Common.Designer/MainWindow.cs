@@ -1128,7 +1128,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region Dialogs
-		public UI.Collections.ItemTableColumnCollection DlgTableConfiguration(Module baseModule, UI.Collections.ItemTableColumnCollection columns)
+		public List<UI.ItemTableColumn> DlgTableConfiguration(Module baseModule, List<UI.ItemTableColumn> columns)
 		{
 			//	Ouvre le dialogue pour choisir les rubriques d'une table.
 			this.dlgTableConfiguration.Initialise(baseModule, columns);
