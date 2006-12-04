@@ -311,15 +311,7 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		#region Binding
-		public static bool HasBinding(Widget obj)
-		{
-			//	Indique si l'objet a du binding.
-			ObjectType type = ObjectModifier.GetObjectType(obj);
-			return (type == ObjectType.Placeholder || type == ObjectType.SubPanel || type == ObjectType.Table);
-		}
-
-		public static void SetDefaultBinding(Widget obj, ResourceManager resourceManager)
+		public static void DefineAllColumns(Widget obj)
 		{
 			//	Ajoute les colonnes avec des réglages par défaut si l'objet
 			//	en cours d'édition est une table qui n'a aucune colonne (donc
@@ -330,6 +322,7 @@ namespace Epsitec.Common.Designer
 			if (table != null && table.Columns.Count == 0)
 			{
 				Druid sourceTypeId = table.SourceTypeId;
+				ResourceManager resourceManager = Widgets.Helpers.VisualTree.GetResourceManager(obj);
 				Caption sourceTypeCaption = resourceManager.GetCaption(sourceTypeId);
 				StructuredType sourceType = TypeRosetta.GetTypeObject(sourceTypeCaption) as StructuredType;
 
@@ -338,6 +331,15 @@ namespace Epsitec.Common.Designer
 					table.Columns.Add(new UI.ItemTableColumn(fieldId));
 				}
 			}
+		}
+
+
+		#region Binding
+		public static bool HasBinding(Widget obj)
+		{
+			//	Indique si l'objet a du binding.
+			ObjectType type = ObjectModifier.GetObjectType(obj);
+			return (type == ObjectType.Placeholder || type == ObjectType.SubPanel || type == ObjectType.Table);
 		}
 
 		public static void SetBinding(Widget obj, Binding binding, StructuredType structuredType)

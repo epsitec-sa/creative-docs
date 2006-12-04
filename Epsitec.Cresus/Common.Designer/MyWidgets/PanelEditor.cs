@@ -1704,7 +1704,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 
 				ObjectModifier.SetBinding(obj, binding, type);
-				ObjectModifier.SetDefaultBinding(obj, this.module.ResourceManager);
+				ObjectModifier.DefineAllColumns(obj);
 			}
 
 			return true;
