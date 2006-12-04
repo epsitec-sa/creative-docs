@@ -152,6 +152,22 @@ namespace Epsitec.Common.UI
 		{
 			return this.defaultItemSize;
 		}
+
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		{
+			base.PaintBackgroundImplementation (graphics, clipRect);
+
+			Widgets.IAdorner adorner = Widgets.Adorners.Factory.Active;
+
+			double x1 = 0;
+			double x2 = this.vScroller.ActualBounds.Left-1;
+			double y1 = this.hScroller.ActualBounds.Top;
+			double y2 = this.headerStripe.ActualBounds.Bottom-1;
+
+			graphics.AddLine (x1+0.5, y1+0.5, x1+0.5, y2+0.5);
+			graphics.AddLine (x1+0.5, y2+0.5, x2+0.5, y2+0.5);
+			graphics.RenderSolid (adorner.ColorBorder);
+		}
 		
 		private void UpdateAperture(Drawing.Size aperture)
 		{
@@ -161,14 +177,17 @@ namespace Epsitec.Common.UI
 			this.hScroller.VisibleRangeRatio = (decimal) hRatio;
 			this.vScroller.VisibleRangeRatio = (decimal) vRatio;
 
-			double ox = System.Math.Floor ((double) this.hScroller.Value * System.Math.Max (0, this.itemPanel.PreferredWidth - aperture.Width));
-			double oy = System.Math.Floor ((double) this.vScroller.Value * System.Math.Max (0, this.itemPanel.PreferredHeight - aperture.Height));
-			
-			this.itemPanel.Aperture = new Drawing.Rectangle (ox, oy, aperture.Width, aperture.Height);
+			double aW = aperture.Width-1;
+			double aH = aperture.Height-1;
 
-			if (this.itemPanel.PreferredHeight < aperture.Height)
+			double ox = System.Math.Floor ((double) this.hScroller.Value * System.Math.Max (0, this.itemPanel.PreferredWidth - aW));
+			double oy = System.Math.Floor ((double) this.vScroller.Value * System.Math.Max (0, this.itemPanel.PreferredHeight - aH));
+
+			this.itemPanel.Aperture = new Drawing.Rectangle (ox+1, oy, aW, aH);
+
+			if (this.itemPanel.PreferredHeight < aH)
 			{
-				oy = this.itemPanel.PreferredHeight - aperture.Height;
+				oy = this.itemPanel.PreferredHeight - aH;
 			}
 			
 			this.itemPanel.SetManualBounds (new Drawing.Rectangle (-ox, -oy, this.itemPanel.PreferredWidth, this.itemPanel.PreferredHeight));

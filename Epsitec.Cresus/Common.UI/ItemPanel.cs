@@ -535,6 +535,9 @@ namespace Epsitec.Common.UI
 			Drawing.Rectangle rect = Drawing.Rectangle.Intersection (clipRect, this.Aperture);
 			ICollectionView items = this.RootPanel.Items;
 
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (Drawing.Color.FromRgb (1, 1, 1));
+
 			object focusedItem = items == null ? null : items.CurrentItem;
 
 			foreach (ItemView view in views)
@@ -542,6 +545,7 @@ namespace Epsitec.Common.UI
 				if (view.Bounds.IntersectsWith (rect))
 				{
 					Widgets.WidgetPaintState state = Widgets.WidgetPaintState.Enabled;
+					Drawing.Rectangle viewBounds = Drawing.Rectangle.Intersection (rect, view.Bounds);
 
 					if (view.IsSelected)
 					{
@@ -552,7 +556,7 @@ namespace Epsitec.Common.UI
 						state |= Widgets.WidgetPaintState.Focused;
 					}
 
-					adorner.PaintCellBackground (graphics, view.Bounds, state);
+					adorner.PaintCellBackground (graphics, viewBounds, state);
 				}
 			}
 		}
