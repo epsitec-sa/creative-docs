@@ -34,7 +34,7 @@ namespace Epsitec.Common.UI
 
 			this.AddButton (Widgets.ApplicationCommands.Clear, 10);
 			this.AddButton (Widgets.ApplicationCommands.Accept, 0);
-			this.AddButton (Widgets.ApplicationCommands.Reject, 0);
+			this.AddButton (Widgets.ApplicationCommands.Reject, 5);
 		}
 
 		private void AddButton(Widgets.Command command, double spaceAfter)
@@ -63,6 +63,14 @@ namespace Epsitec.Common.UI
 			get
 			{
 				return this.mask;
+			}
+		}
+
+		public Panel EditPanel
+		{
+			get
+			{
+				return this.editPanels.Count == 0 ? null : this.editPanels.Peek ();
 			}
 		}
 		
@@ -272,7 +280,7 @@ namespace Epsitec.Common.UI
 				topPanel.ZOrder = 0;
 				this.toolbar.ZOrder = 0;
 
-				this.toolbar.Margins = new Drawing.Margins (0, this.ActualWidth - bounds.Right, 0, bounds.Bottom - this.toolbar.PreferredHeight * 2.0/3.0);
+				this.toolbar.Margins = new Drawing.Margins (0, this.ActualWidth - bounds.Right, 0, bounds.Bottom - this.toolbar.PreferredHeight);
 				this.toolbar.Anchor = Widgets.AnchorStyles.BottomRight;
 				
 				this.mask.Show ();
@@ -297,7 +305,7 @@ namespace Epsitec.Common.UI
 		private static object GetEditPanelValue(DependencyObject obj)
 		{
 			PanelStack stack = (PanelStack) obj;
-			return stack.editPanels.Count == 0 ? null : stack.editPanels.Peek ();
+			return stack.EditPanel;
 		}
 		
 		public static readonly DependencyProperty EditPanelProperty = DependencyProperty.RegisterReadOnly ("EditPanel", typeof (Panel), typeof (PanelStack), new DependencyPropertyMetadata (PanelStack.GetEditPanelValue));
