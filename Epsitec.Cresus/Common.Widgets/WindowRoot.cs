@@ -236,6 +236,7 @@ namespace Epsitec.Common.Widgets
 						return true;
 					}
 					
+#if false
 					if ((shortcut.KeyCodeOnly == KeyCode.FuncF4) &&
 						(shortcut.IsAltDefined) &&
 						(shortcut.IsControlDefined == false) &&
@@ -252,6 +253,7 @@ namespace Epsitec.Common.Widgets
 						}
 						return true;
 					}
+#endif
 				}
 				
 				if (focused == null)

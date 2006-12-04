@@ -1025,7 +1025,18 @@ namespace Epsitec.Common.Widgets.Platform
 				{
 					return;
 				}
+
+				CommandDispatcher dispatcher = CommandDispatcher.GetDispatcher (this.widget_window);
+
+				//	Don't generate an Alt-F4 event if there is no dispatcher attached with this
+				//	window, as it would probably bubble up to the owner window and cause the
+				//	application to quit...
 				
+				if (dispatcher == null)
+				{
+					return;
+				}
+
 				//	Empêche la fermeture de la fenêtre lorsque l'utilisateur clique sur le bouton de
 				//	fermeture, et synthétise un événement clavier ALT + F4 à la place...
 				
