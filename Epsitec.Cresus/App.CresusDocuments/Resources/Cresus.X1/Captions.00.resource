@@ -24,4 +24,5 @@
   <data name="Cap.ShippingAddress" id="0J" mod="1">&lt;s:data id="_0" f:Name="ShippingAddress" f:Labels="{Collection {Text 'Adresse de livraison'}}" /&gt;</data>
   <data name="Cap.TotalAmount" id="0K" mod="1">&lt;s:data id="_0" f:Name="TotalAmount" f:Labels="{Collection {Text 'Total'}}" /&gt;</data>
   <data name="Cap.Company" id="0L" mod="1">&lt;s:data id="_0" f:Name="Company" f:Labels="{Collection {Text 'Société'}}" /&gt;</data>
+  <data name="Cap.Suggest.ColumnHeader" id="0P">&lt;s:data id="_0" f:Name="Suggest.ColumnHeader" f:Labels="{Collection {Text 'Suggestions'}}" /&gt;</data>
 </bundle>

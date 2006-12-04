@@ -293,6 +293,37 @@ namespace Epsitec.Common.Types
 				item.UpdateTarget (mode);
 			}
 		}
+
+		/// <summary>
+		/// Evaluates the binding and returns the value of the source object.
+		/// </summary>
+		/// <param name="binding">The binding to evaluate.</param>
+		/// <returns>The source object or an instance of <c>UndefinedValue</c>.</returns>
+		public static object Evaluate(Binding binding)
+		{
+			if (binding == null)
+			{
+				return UndefinedValue.Instance;
+			}
+			
+			switch (binding.Mode)
+			{
+				case BindingMode.OneTime:
+				case BindingMode.OneWay:
+				case BindingMode.TwoWay:
+					break;
+				
+				default:
+					return UndefinedValue.Instance;
+			}
+
+			Internal.BindingHelper helper = new Internal.BindingHelper ();
+
+			helper.SetBinding (Internal.BindingHelper.ValueProperty, binding);
+			helper.ClearBinding (Internal.BindingHelper.ValueProperty);
+
+			return helper.GetValue (Internal.BindingHelper.ValueProperty);
+		}
 		
 		internal object ConvertValue(object value, System.Type type)
 		{

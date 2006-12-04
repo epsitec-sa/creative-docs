@@ -51,6 +51,18 @@ namespace Epsitec.Common.Types.Collections
 		{
 			this.list.Sort (comparer);
 		}
+
+		/// <summary>
+		/// Replaces the list with the contents of the specified collection.
+		/// </summary>
+		/// <param name="collection">The collection.</param>
+		public void ReplaceWithRange(IEnumerable<T> collection)
+		{
+			this.list.Clear ();
+			this.list.AddRange (collection);
+
+			this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Reset));
+		}
 		
 		#region IList<T> Members
 
