@@ -3358,7 +3358,8 @@ namespace Epsitec.App.DocumentEditor
 		{
 			this.dlgSplash.Hide();
 			this.resDesignerMainWindow = new Epsitec.Common.Designer.MainWindow();
-			this.resDesignerMainWindow.Show(this.Window, Epsitec.Common.Designer.DesignerMode.Build);
+			this.resDesignerMainWindow.Mode = Epsitec.Common.Designer.DesignerMode.Build;
+			this.resDesignerMainWindow.Show(this.Window);
 		}
 
 		[Command ("ResDesignerTranslate")]
@@ -3366,7 +3367,8 @@ namespace Epsitec.App.DocumentEditor
 		{
 			this.dlgSplash.Hide();
 			this.resDesignerMainWindow = new Epsitec.Common.Designer.MainWindow();
-			this.resDesignerMainWindow.Show(this.Window, Epsitec.Common.Designer.DesignerMode.Translate);
+			this.resDesignerMainWindow.Mode = Epsitec.Common.Designer.DesignerMode.Translate;
+			this.resDesignerMainWindow.Show(this.Window);
 		}
 
 		[Command ("DebugBboxThin")]

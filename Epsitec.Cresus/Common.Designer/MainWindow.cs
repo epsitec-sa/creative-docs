@@ -26,26 +26,26 @@ namespace Epsitec.Common.Designer
 		}
 
 		public MainWindow()
+			: this (new ResourceManagerPool("Common.Designer"))
 		{
-			this.resourcePrefix = "file";
-			this.resourceManagerPool = new ResourceManagerPool("Common.Designer");
-			this.moduleInfoList = new List<ModuleInfo>();
-			this.context = new PanelsContext();
+			this.resourceManagerPool.DefaultPrefix = "file";
 		}
 
-		public void Show(Window parent, DesignerMode mode)
+		internal MainWindow(ResourceManagerPool pool)
+		{
+			this.resourceManagerPool = pool;
+			this.moduleInfoList = new List<ModuleInfo> ();
+			this.context = new PanelsContext ();
+		}
+
+		public void Show(Window parent)
 		{
 			//	Crée et montre la fenêtre de l'éditeur.
-			this.mode = mode;
-
 			if ( this.window == null )
 			{
 				this.window = new Window();
 
-				this.window.Root.WindowStyles = WindowStyles.CanResize |
-												WindowStyles.CanMinimize |
-												WindowStyles.CanMaximize |
-												WindowStyles.HasCloseButton;
+				this.window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;
 
 				Point parentCenter = parent.WindowBounds.Center;
 				this.window.WindowBounds = new Rectangle(parentCenter.X-1000/2, parentCenter.Y-700/2, 1000, 700);
@@ -81,18 +81,21 @@ namespace Epsitec.Common.Designer
 				this.CreateLayout();
 			}
 
-			//	Refait la liste des modules, puis ouvre tous ceux qui ont été trouvés.
-			Resources.DefaultManager.RefreshModuleInfos(this.resourcePrefix);
-			foreach (ResourceModuleInfo item in Resources.DefaultManager.GetModuleInfos(this.resourcePrefix))
+			//	Liste les modules, puis ouvre tous ceux qui ont été trouvés.
+			Resources.DefaultManager.RefreshModuleInfos(this.resourceManagerPool.DefaultPrefix);
+			if (this.moduleInfoList.Count == 0)
 			{
-				Module module = new Module(this, this.mode, this.resourcePrefix, item);
+				foreach (ResourceModuleInfo item in Resources.DefaultManager.GetModuleInfos (this.resourceManagerPool.DefaultPrefix))
+				{
+					Module module = new Module (this, this.mode, this.resourceManagerPool.DefaultPrefix, item);
 
-				ModuleInfo mi = new ModuleInfo();
-				mi.Module = module;
-				this.moduleInfoList.Insert(++this.currentModule, mi);
-				this.CreateModuleLayout();
+					ModuleInfo mi = new ModuleInfo ();
+					mi.Module = module;
+					this.moduleInfoList.Insert (++this.currentModule, mi);
+					this.CreateModuleLayout ();
 
-				this.bookModules.ActivePage = mi.TabPage;
+					this.bookModules.ActivePage = mi.TabPage;
+				}
 			}
 			
 			this.window.Show();
@@ -105,7 +108,7 @@ namespace Epsitec.Common.Designer
 				ResourceManager resourceManager = new ResourceManager ();
 
 				resourceManager.SetupApplication (modules[i]);
-				resourceManager.ActivePrefix = this.resourcePrefix;
+				resourceManager.ActivePrefix = this.resourceManagerPool.DefaultPrefix;
 
 				string[] ids = resourceManager.GetBundleIds ("*", ResourceLevel.Default);
 
@@ -150,7 +153,7 @@ namespace Epsitec.Common.Designer
 #if false
 			ResourceManager resourceManager = new ResourceManager();
 			resourceManager.SetupApplication(modules[0]);
-			resourceManager.ActivePrefix = this.resourcePrefix;
+			resourceManager.ActivePrefix = this.resourceManagerPool.DefaultPrefix;
 			string[] ids = resourceManager.GetBundleIds("*", ResourceLevel.Default);
 
 			ResourceBundleCollection bundles = new ResourceBundleCollection(resourceManager);
@@ -162,6 +165,11 @@ namespace Epsitec.Common.Designer
 			this.window.ShowDialog();
 			this.UpdateFields();
 #endif
+		}
+
+		internal void Hide()
+		{
+			this.window.Hide ();
 		}
 
 		public Window Window
@@ -179,6 +187,10 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				return this.mode;
+			}
+			set
+			{
+				this.mode = value;
 			}
 		}
 
@@ -452,13 +464,13 @@ namespace Epsitec.Common.Designer
 		[Command("Open")]
 		void CommandOpen(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.dlgOpen.SetResourcePrefix(this.resourcePrefix);
+			this.dlgOpen.SetResourcePrefix (this.resourceManagerPool.DefaultPrefix);
 			this.dlgOpen.Show();
 
 			ResourceModuleInfo item = this.dlgOpen.SelectedModule;
 			if (item.Name != null)
 			{
-				Module module = new Module(this, this.mode, this.resourcePrefix, item);
+				Module module = new Module (this, this.mode, this.resourceManagerPool.DefaultPrefix, item);
 
 				ModuleInfo mi = new ModuleInfo();
 				mi.Module = module;
@@ -1344,7 +1356,6 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.BindingSelector		dlgBindingSelector;
 		protected PanelsContext					context;
 
-		protected string						resourcePrefix;
 		protected Support.ResourceManagerPool	resourceManagerPool;
 		protected List<ModuleInfo>				moduleInfoList;
 		protected int							currentModule = -1;

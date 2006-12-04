@@ -15,6 +15,7 @@ namespace Epsitec.Common.Widgets
 			this.commandDispatcher = CommandDispatcher.DefaultDispatcher;
 			this.commandContext = new CommandContext ();
 			this.resourceManager = Support.Resources.DefaultManager;
+			this.resourceManagerPool = this.resourceManager.Pool;
 		}
 
 		/// <summary>
@@ -72,6 +73,18 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.resourceManager;
+			}
+		}
+
+		/// <summary>
+		/// Gets the application resource manager pool.
+		/// </summary>
+		/// <value>The application resource manager pool.</value>
+		public Support.ResourceManagerPool		ResourceManagerPool
+		{
+			get
+			{
+				return this.resourceManagerPool;
 			}
 		}
 		
@@ -174,5 +187,6 @@ namespace Epsitec.Common.Widgets
 		private CommandDispatcher commandDispatcher;
 		private CommandContext commandContext;
 		private Support.ResourceManager resourceManager;
+		private Support.ResourceManagerPool resourceManagerPool;
 	}
 }

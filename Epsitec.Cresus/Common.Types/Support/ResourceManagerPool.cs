@@ -17,13 +17,26 @@ namespace Epsitec.Common.Support
 		public ResourceManagerPool(string name)
 		{
 			this.name = name;
+			this.defaultPrefix = "file";
 		}
 
-		public string Name
+		public string							Name
 		{
 			get
 			{
 				return this.name;
+			}
+		}
+
+		public string							DefaultPrefix
+		{
+			get
+			{
+				return this.defaultPrefix;
+			}
+			set
+			{
+				this.defaultPrefix = value;
 			}
 		}
 
@@ -158,6 +171,7 @@ namespace Epsitec.Common.Support
 		}
 
 		private string								name;
+		private string								defaultPrefix;
 		private Dictionary<string, ResourceBundle>	bundles = new Dictionary<string, ResourceBundle> ();
 		private List<Weak<ResourceManager>>			managers = new List<Weak<ResourceManager>> ();
 		private int									mergedBundlesCount;

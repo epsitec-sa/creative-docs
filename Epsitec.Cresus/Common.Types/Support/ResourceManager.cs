@@ -173,6 +173,14 @@ namespace Epsitec.Common.Support
 				return (this.defaultModuleName != null) && (this.defaultModuleId >= 0);
 			}
 		}
+
+		public ResourceManagerPool				Pool
+		{
+			get
+			{
+				return this.pool;
+			}
+		}
 		
 		
 		public void DefineDefaultModuleName(string defaultModuleName)
