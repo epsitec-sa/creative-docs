@@ -7,6 +7,46 @@ namespace Epsitec.Common.UI
 	{
 		//	Code mapping for 'Caption' resources
 		
+		public static class Commands
+		{
+			public static class Data
+			{
+				internal static void _Initialize() { }
+				
+				public static readonly Epsitec.Common.Widgets.Command Persist = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 24));
+				public static readonly Epsitec.Common.Widgets.Command Reload = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 23));
+			}
+			
+			public static class Tools
+			{
+				internal static void _Initialize() { }
+				
+				public static readonly Epsitec.Common.Widgets.Command StartDesigner = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 1));
+			}
+			
+			internal static void _Initialize()
+			{
+				Data._Initialize ();
+				Tools._Initialize ();
+			}
+		}
+		
+		public static class CommandIds
+		{
+			public static class Data
+			{
+				
+				public const long Persist = 0x1F400000000018L;
+				public const long Reload = 0x1F400000000017L;
+			}
+			
+			public static class Tools
+			{
+				
+				public const long StartDesigner = 0x1F400000000001L;
+			}
+		}
+		
 		public static class Captions
 		{
 			public static Epsitec.Common.Types.Caption Address1 { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 5)); } }
@@ -46,6 +86,7 @@ namespace Epsitec.Common.UI
 			{
 				public static readonly Epsitec.Common.Types.StructuredType Address = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 14));
 				public static readonly Epsitec.Common.Types.StructuredType Invoice = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 16));
+				public static readonly Epsitec.Common.Types.StructuredType Staff = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 22));
 			}
 			
 			public static class Text
@@ -58,7 +99,9 @@ namespace Epsitec.Common.UI
 		
 		public static class Strings
 		{
-			public static string New { get { return Epsitec.Common.UI.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (0)); } }
+			public static string ApplicationAuthor { get { return Epsitec.Common.UI.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (2)); } }
+			public static string ApplicationCopyright { get { return Epsitec.Common.UI.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1)); } }
+			public static string ApplicationName { get { return Epsitec.Common.UI.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (0)); } }
 			
 			public static string GetString(params string[] path)
 			{
@@ -86,10 +129,15 @@ namespace Epsitec.Common.UI
 		
 		//	Code mapping for 'Panel' resources
 		
+		//	Code mapping for 'Panel' resources
+		
+		//	Code mapping for 'Panel' resources
+		
 		public static void Initialize(System.Type type, string name)
 		{
 			_manager = new Epsitec.Common.Support.ResourceManager (type);
 			_manager.DefineDefaultModuleName (name);
+			Commands._Initialize ();
 		}
 		
 		public static Epsitec.Common.Support.ResourceManager Manager
