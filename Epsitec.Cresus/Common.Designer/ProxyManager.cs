@@ -317,14 +317,13 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-//		--- erreur // UI.Collections.ItemTableColumnCollection n'est pas un AbstractType; comment faire ???
 		private class InternalTableType : AbstractType
 		{
 			public override System.Type SystemType
 			{
 				get
 				{
-					return typeof (List<UI.ItemTableColumn>);
+					return typeof(List<UI.ItemTableColumn>);
 				}
 			}
 

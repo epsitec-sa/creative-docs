@@ -192,8 +192,8 @@ namespace Epsitec.Common.Designer.Proxies
 						UI.TablePlaceholder table = obj as UI.TablePlaceholder;
 						if (table != null)
 						{
-							table.Columns.Clear ();
-							table.Columns.AddRange (columns);
+							table.Columns.Clear();
+							table.Columns.AddRange(columns);
 						}
 					}
 				}

@@ -43,6 +43,7 @@ namespace Epsitec.Common.Designer.Controllers
 			this.button.HorizontalAlignment = HorizontalAlignment.Stretch;
 			this.button.VerticalAlignment = VerticalAlignment.Stretch;
 			this.button.Dock = DockStyle.Stacked;
+			this.button.Margins = new Margins(0, 0, 3, 0);
 			//?ToolTip.Default.SetToolTip(this.button, Res.Strings.Panel.Content.Tooltip.ChangeBinding);
 
 			this.AddWidget(this.button);
