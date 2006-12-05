@@ -523,15 +523,22 @@ namespace Epsitec.Common.UI
 
 			PanelActivationEventArgs e = new PanelActivationEventArgs (this, panelStack, focusWidgetName);
 
-			this.OnPanelActivation (e);
+			bool notified = this.OnPanelActivation (e);
 
 			if ((!e.Cancel) &&
 				(panelStack != null))
 			{
-				panelStack.NotifyPanelActivation (e);
+				if (panelStack.NotifyPanelActivation (e))
+				{
+					notified = true;
+				}
 			}
 
-			if (!e.Cancel)
+			//	Don't swallow the event if we did not notify anybody about the
+			//	desired panel activation :
+
+			if ((notified) &&
+				(!e.Cancel))
 			{
 				if (message != null)
 				{
@@ -541,13 +548,18 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected virtual void OnPanelActivation(PanelActivationEventArgs e)
+		protected virtual bool OnPanelActivation(PanelActivationEventArgs e)
 		{
 			Support.EventHandler<PanelActivationEventArgs> handler = this.GetUserEventHandler<PanelActivationEventArgs> (Panel.PanelActivationEventName);
 
 			if (handler != null)
 			{
 				handler (this, e);
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 

@@ -184,18 +184,23 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		internal void NotifyPanelActivation(PanelActivationEventArgs e)
+		internal bool NotifyPanelActivation(PanelActivationEventArgs e)
 		{
-			this.OnPanelActivation (e);
+			return this.OnPanelActivation (e);
 		}
 
-		protected virtual void OnPanelActivation(PanelActivationEventArgs e)
+		protected virtual bool OnPanelActivation(PanelActivationEventArgs e)
 		{
 			Support.EventHandler<PanelActivationEventArgs> handler = this.GetUserEventHandler<PanelActivationEventArgs> (PanelStack.PanelActivationEventName);
 
 			if (handler != null)
 			{
 				handler (this, e);
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 
