@@ -112,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\ItemTableColumnCollection.cs" />
+    <Compile Include="PanelActivationEventArgs.cs" />
     <Compile Include="ItemTableColumn.cs" />
     <Compile Include="ControllerAttribute.cs" />
     <Compile Include="Controllers\AbstractController.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Controllers\NumericController.cs" />
     <Compile Include="Controllers\StringController.cs" />
     <Compile Include="AbstractPlaceholder.cs" />
+    <Compile Include="Panels\SearchPanel.cs" />
     <Compile Include="TablePlaceholder.cs" />
     <Compile Include="ItemPanelColumnHeader.cs" />
     <Compile Include="ItemPanelGroup.cs" />

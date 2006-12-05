@@ -141,6 +141,25 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public static PanelStack GetPanelStack(Widgets.Visual widget)
+		{
+			while (widget != null)
+			{
+				PanelStack stack = widget as PanelStack;
+
+				if (stack != null)
+				{
+					return stack;
+				}
+
+				Widgets.ILogicalTree logicalTree = widget as Widgets.ILogicalTree;
+
+				widget = logicalTree == null ? widget.Parent : logicalTree.Parent;
+			}
+
+			return null;
+		}
+
 		internal void Add(MiniPanel panel)
 		{
 			this.miniPanels.Add (panel);
@@ -165,23 +184,19 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public static PanelStack GetPanelStack(Widgets.Visual widget)
+		internal void NotifyPanelActivation(PanelActivationEventArgs e)
 		{
-			while (widget != null)
+			this.OnPanelActivation (e);
+		}
+
+		protected virtual void OnPanelActivation(PanelActivationEventArgs e)
+		{
+			Support.EventHandler<PanelActivationEventArgs> handler = this.GetUserEventHandler<PanelActivationEventArgs> (PanelStack.PanelActivationEventName);
+
+			if (handler != null)
 			{
-				PanelStack stack = widget as PanelStack;
-				
-				if (stack != null)
-				{
-					return stack;
-				}
-
-				Widgets.ILogicalTree logicalTree = widget as Widgets.ILogicalTree;
-
-				widget = logicalTree == null ? widget.Parent : logicalTree.Parent;
+				handler (this, e);
 			}
-			
-			return null;
 		}
 
 		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
@@ -303,8 +318,22 @@ namespace Epsitec.Common.UI
 			PanelStack stack = (PanelStack) obj;
 			return stack.EditPanel;
 		}
+
+		public event Support.EventHandler<PanelActivationEventArgs> PanelActivation
+		{
+			add
+			{
+				this.AddUserEventHandler (PanelStack.PanelActivationEventName, value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler (PanelStack.PanelActivationEventName, value);
+			}
+		}
 		
 		public static readonly DependencyProperty EditPanelProperty = DependencyProperty.RegisterReadOnly ("EditPanel", typeof (Panel), typeof (PanelStack), new DependencyPropertyMetadata (PanelStack.GetEditPanelValue));
+
+		private const string PanelActivationEventName = "PanelActivation";
 
 		private Stack<Panel> editPanels;
 		private List<MiniPanel> miniPanels;

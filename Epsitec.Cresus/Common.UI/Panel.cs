@@ -207,7 +207,24 @@ namespace Epsitec.Common.UI
 					return this.editionPanel;
 
 				case PanelMode.Search:
-					return null;
+					if (this.searchPanel == null)
+					{
+						this.SetupDataContextChangeHandler ();
+
+						this.searchPanel = new Panels.SearchPanel (this);
+
+						this.searchPanel.ChildrenLayoutMode = this.ChildrenLayoutMode;
+						this.searchPanel.ContainerLayoutMode = this.ContainerLayoutMode;
+						this.searchPanel.PreferredSize = this.PreferredSize;
+						this.searchPanel.Anchor = this.Anchor;
+						this.searchPanel.Dock = this.Dock;
+						this.searchPanel.Margins = this.Margins;
+						this.searchPanel.Padding = this.Padding;
+
+						this.SyncDataContext (this.searchPanel);
+					}
+
+					return this.searchPanel;
 
 				case PanelMode.Default:
 					return this;
@@ -504,12 +521,33 @@ namespace Epsitec.Common.UI
 				focusWidgetName = focusWidget.Name;
 			}
 
-			panelStack.StartEdition (this.EditionPanel, focusWidgetName);
+			PanelActivationEventArgs e = new PanelActivationEventArgs (this, panelStack, focusWidgetName);
 
-			if (message != null)
+			this.OnPanelActivation (e);
+
+			if ((!e.Cancel) &&
+				(panelStack != null))
 			{
-				message.Swallowed = true;
-				message.Consumer  = this;
+				panelStack.NotifyPanelActivation (e);
+			}
+
+			if (!e.Cancel)
+			{
+				if (message != null)
+				{
+					message.Swallowed = true;
+					message.Consumer  = this;
+				}
+			}
+		}
+
+		protected virtual void OnPanelActivation(PanelActivationEventArgs e)
+		{
+			Support.EventHandler<PanelActivationEventArgs> handler = this.GetUserEventHandler<PanelActivationEventArgs> (Panel.PanelActivationEventName);
+
+			if (handler != null)
+			{
+				handler (this, e);
 			}
 		}
 
@@ -544,9 +582,14 @@ namespace Epsitec.Common.UI
 					{
 						this.editionPanel.Dispose ();
 					}
+					if (this.searchPanel != null)
+					{
+						this.searchPanel.Dispose ();
+					}
 				}
 
 				this.editionPanel = null;
+				this.searchPanel = null;
 			}
 
 			base.Dispose (disposing);
@@ -570,6 +613,7 @@ namespace Epsitec.Common.UI
 		private void SyncDataContext()
 		{
 			this.SyncDataContext (this.editionPanel);
+			this.SyncDataContext (this.searchPanel);
 			//	...
 		}
 
@@ -667,7 +711,14 @@ namespace Epsitec.Common.UI
 		private static void SetSearchPanelValue(DependencyObject obj, object value)
 		{
 			Panel panel = (Panel) obj;
-			//	TODO: searchPanel = ...
+			panel.searchPanel = (Panels.SearchPanel) value;
+
+			if ((panel.searchPanel != null) &&
+				(panel.PanelMode == PanelMode.Default))
+			{
+				panel.SetupDataContextChangeHandler ();
+				panel.SyncDataContext (panel.searchPanel);
+			}
 		}
 
 		public static void SetPanel(DependencyObject obj, Panel panel)
@@ -711,6 +762,18 @@ namespace Epsitec.Common.UI
 			return (Support.Druid) obj.GetValue (Panel.BundleIdProperty);
 		}
 
+		public event Support.EventHandler<PanelActivationEventArgs> PanelActivation
+		{
+			add
+			{
+				this.AddUserEventHandler (Panel.PanelActivationEventName, value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler (Panel.PanelActivationEventName, value);
+			}
+		}
+		
 		public static readonly string PanelBundleField = "Panel";
 		public static readonly string DefaultSizeBundleField = "DefaultSize";
 
@@ -719,12 +782,15 @@ namespace Epsitec.Common.UI
 		public static readonly DependencyProperty DataSourceMetadataProperty = DependencyProperty.RegisterReadOnly ("DataSourceMetadata", typeof (DataSourceMetadata), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDataSourceMetadataValue, Panel.SetDataSourceMetadataValue).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty DataSourceProperty = DependencyProperty.Register ("DataSource", typeof (DataSource), typeof (Panel), new DependencyPropertyMetadata (Panel.GetDataSourceValue, Panel.SetDataSourceValue));
 		public static readonly DependencyProperty EditionPanelProperty = DependencyProperty.Register ("EditionPanel", typeof (Panels.EditPanel), typeof (Panel), new DependencyPropertyMetadata (Panel.GetEditionPanelValue, Panel.SetEditionPanelValue));
-		public static readonly DependencyProperty SearchPanelProperty  = DependencyProperty.Register ("SearchPanel", typeof (Panels.EditPanel), typeof (Panel), new DependencyPropertyMetadata (Panel.GetSearchPanelValue, Panel.SetSearchPanelValue));
-		
+		public static readonly DependencyProperty SearchPanelProperty  = DependencyProperty.Register ("SearchPanel", typeof (Panels.SearchPanel), typeof (Panel), new DependencyPropertyMetadata (Panel.GetSearchPanelValue, Panel.SetSearchPanelValue));
+
+		private const string PanelActivationEventName = "PanelActivation";
+
 		private DataSource dataSource;
 		private Binding dataSourceBinding;
 		private DataSourceMetadata dataSourceMetadata;
 		private Panels.EditPanel editionPanel;
+		private Panels.SearchPanel searchPanel;
 		private bool isDataContextChangeHandlerRegistered;
 		private bool isMouseDown;
 	}

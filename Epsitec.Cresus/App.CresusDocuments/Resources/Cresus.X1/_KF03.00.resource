@@ -3,7 +3,7 @@
   <data name="Panel">
     <xml>
       <panel xmlns:s="http://www.epsitec.ch/XNS/storage-structure-1" xmlns:f="http://www.epsitec.ch/XNS/storage-fields-1">
-  <s:storage s:root="_1" s:n_ext="2" s:n_typ="10" s:n_obj="19">
+  <s:storage s:root="_1" s:n_ext="2" s:n_typ="11" s:n_obj="20">
     <s:external s:name="_DataSource" />
     <s:external s:name="_ResourceManager" />
     <s:type id="_1" s:name="Epsitec.Common.UI.Panel" />
@@ -16,6 +16,7 @@
     <s:type id="_8" s:name="Epsitec.Common.UI.Placeholder" />
     <s:type id="_9" s:name="Epsitec.Common.UI.DataSourceMetadata" />
     <s:type id="_10" s:name="Epsitec.Common.UI.Panels.EditPanel" />
+    <s:type id="_11" s:name="Epsitec.Common.UI.Panels.SearchPanel" />
     <s:object id="_1" s:type="_1" />
     <s:object id="_2" s:type="_5" />
     <s:object id="_3" s:type="_6" />
@@ -35,7 +36,8 @@
     <s:object id="_17" s:type="_8" />
     <s:object id="_18" s:type="_9" />
     <s:object id="_19" s:type="_10" />
-    <s:data id="_1" f:TabNavigationMode="ForwardTabPassive" f:ChildrenLayoutMode="Grid" f:ContainerLayoutMode="VerticalFlow" f:PreferredWidth="260" f:PreferredHeight="160" f:Anchor="BottomLeft" f:Padding="0;0;10;10" f:_2.ResourceManager="{ExtRef _ResourceManager}" f:_1.BundleId="[KF03]" f:_3.DataContext="\[Binding Mode=TwoWay\]" f:_4.LayoutEngine="{ObjRef _2}" f:Children="{Collection {ObjRef _12}, {ObjRef _13}, {ObjRef _14}, {ObjRef _15}, {ObjRef _16}, {ObjRef _17}}" f:DataSource="{ExtRef _DataSource}" f:DataSourceMetadata="{ObjRef _18}" f:EditionPanel="{ObjRef _19}" f:SearchPanel="{Null}" f:Text="" />
+    <s:object id="_20" s:type="_11" />
+    <s:data id="_1" f:TabNavigationMode="ForwardTabPassive" f:ChildrenLayoutMode="Grid" f:ContainerLayoutMode="VerticalFlow" f:PreferredWidth="260" f:PreferredHeight="160" f:Anchor="BottomLeft" f:Padding="0;0;10;10" f:_2.ResourceManager="{ExtRef _ResourceManager}" f:_1.BundleId="[KF03]" f:_3.DataContext="\[Binding Mode=TwoWay\]" f:_4.LayoutEngine="{ObjRef _2}" f:Children="{Collection {ObjRef _12}, {ObjRef _13}, {ObjRef _14}, {ObjRef _15}, {ObjRef _16}, {ObjRef _17}}" f:DataSource="{ExtRef _DataSource}" f:DataSourceMetadata="{ObjRef _18}" f:EditionPanel="{ObjRef _19}" f:SearchPanel="{ObjRef _20}" f:Text="" />
     <s:data id="_2" f:ColumnDefinitions="{Collection {ObjRef _3}, {ObjRef _4}, {ObjRef _5}, {ObjRef _6}, {ObjRef _7}, {ObjRef _8}}" f:RowDefinitions="{Collection {ObjRef _9}, {ObjRef _10}, {ObjRef _11}}" />
     <s:data id="_3" f:Height="Auto" f:MinHeight="20" f:BottomBorder="4" />
     <s:data id="_4" f:Height="Auto" f:MinHeight="20" f:MaxHeight="9999" f:BottomBorder="4" />
@@ -53,7 +55,8 @@
     <s:data id="_16" f:Value="{Binding Path=*.Zip, Mode=TwoWay}" f:TabNavigationMode="ForwardTabPassive" f:Text="&lt;i&gt;TextField&lt;/i&gt;" f:Anchor="None" f:Dock="None" f:_5.Column="0" f:_5.Row="4" f:ContainerLayoutMode="HorizontalFlow" f:TabIndex="4" />
     <s:data id="_17" f:Value="{Binding Path=*.City, Mode=TwoWay}" f:TabNavigationMode="ForwardTabPassive" f:Text="&lt;i&gt;TextField&lt;/i&gt;" f:Anchor="None" f:Dock="None" f:_5.Column="0" f:_5.Row="5" f:ContainerLayoutMode="HorizontalFlow" f:_5.ColumnSpan="3" f:TabIndex="5" />
     <s:data id="_18" f:Fields="{Collection {Text '*;[KF0E]'}}" />
-    <s:data id="_19" f:TabNavigationMode="ForwardTabPassive" f:ChildrenLayoutMode="Grid" f:ContainerLayoutMode="VerticalFlow" f:PreferredWidth="260" f:PreferredHeight="186" f:Anchor="BottomLeft" f:Dock="None" f:Margins="0;0;0;0" f:Padding="10;10;10;10" f:_3.DataContext="\[Binding Mode=TwoWay\]" f:DataSource="{ExtRef _DataSource}" f:DataSourceMetadata="{ObjRef _18}" f:EditionPanel="{ObjRef _19}" f:Owner="{ObjRef _1}" f:SearchPanel="{Null}" f:Text="" />
+    <s:data id="_19" f:TabNavigationMode="ForwardTabPassive" f:ChildrenLayoutMode="Grid" f:ContainerLayoutMode="VerticalFlow" f:PreferredWidth="260" f:PreferredHeight="186" f:Anchor="BottomLeft" f:Dock="None" f:Margins="0;0;0;0" f:Padding="10;10;10;10" f:_3.DataContext="\[Binding Mode=TwoWay\]" f:DataSource="{ExtRef _DataSource}" f:DataSourceMetadata="{ObjRef _18}" f:EditionPanel="{ObjRef _19}" f:Owner="{ObjRef _1}" f:SearchPanel="{ObjRef _20}" f:Text="" />
+    <s:data id="_20" f:TabNavigationMode="ForwardTabPassive" f:ChildrenLayoutMode="Grid" f:ContainerLayoutMode="VerticalFlow" f:PreferredWidth="260" f:PreferredHeight="160" f:Anchor="BottomLeft" f:Dock="None" f:Margins="0;0;0;0" f:Padding="0;0;10;10" f:_3.DataContext="\[Binding Mode=TwoWay\]" f:DataSource="{ExtRef _DataSource}" f:DataSourceMetadata="{ObjRef _18}" f:EditionPanel="{ObjRef _19}" f:Owner="{ObjRef _1}" f:SearchPanel="{ObjRef _20}" f:Text="" />
   </s:storage>
 </panel>
     </xml>
