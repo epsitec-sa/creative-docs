@@ -69,6 +69,29 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public void FillWithModelValues(StructuredData model)
+		{
+			IStructuredType type = this.StructuredType;
+
+			if (type != null)
+			{
+				foreach (string fieldId in type.GetFieldIds ())
+				{
+					object value = model.GetValue (fieldId);
+
+					if ((UndefinedValue.IsUndefinedValue (value)) ||
+						(UnknownValue.IsUnknownValue (value)))
+					{
+						//	Skip...
+					}
+					else
+					{
+						this.SetValue (fieldId, value);
+					}
+				}
+			}
+		}
+
 		#region IStructuredTypeProvider Members
 
 		IStructuredType IStructuredTypeProvider.GetStructuredType()
