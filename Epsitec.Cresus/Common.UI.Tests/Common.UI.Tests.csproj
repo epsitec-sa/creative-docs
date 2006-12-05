@@ -141,20 +141,21 @@
     <Compile Include="Res.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Cresus.X1\Captions.00.resource" />
-    <None Include="Resources\Cresus.X1\module.info" />
-    <None Include="Resources\Cresus.X1\Strings.00.resource" />
-    <None Include="Resources\Cresus.X1\_KF.00.resource" />
-    <None Include="Resources\Cresus.X1\_KF01.00.resource" />
+    <None Include="Resources\Cresus.Tests\Captions.00.resource" />
+    <None Include="Resources\Cresus.Tests\module.info" />
+    <None Include="Resources\Cresus.Tests\Strings.00.resource" />
+    <None Include="Resources\Cresus.Tests\_KF.00.resource" />
+    <None Include="Resources\Cresus.Tests\_KF01.00.resource" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)App.CresusDocuments\Resources\Cresus.X1\*" "$(ProjectDir)Resources\Cresus.X1\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-</PostBuildEvent>
+    <PostBuildEvent>
+      xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+      xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+      xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+      xcopy "$(SolutionDir)App.CresusDocuments\Resources\Cresus.Tests\*" "$(ProjectDir)Resources\Cresus.Tests\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

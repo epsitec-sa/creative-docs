@@ -1,92 +1,58 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectType>Local</ProjectType>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D2ADDD9E-56DE-4285-B209-013A19D9DCDC}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>
-    </ApplicationIcon>
-    <AssemblyKeyContainerName>
-    </AssemblyKeyContainerName>
-    <AssemblyName>Cresus.DataLayer.Tests</AssemblyName>
-    <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
-    <DefaultClientScript>JScript</DefaultClientScript>
-    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
-    <DefaultTargetSchema>IE50</DefaultTargetSchema>
-    <DelaySign>false</DelaySign>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Epsitec.Cresus.DataLayer</RootNamespace>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>
-    </StartupObject>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F3A53056-6C28-470B-A79F-9AA9C2235BBF}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>X.Export</RootNamespace>
+    <AssemblyName>X.Export</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>bin\Debug\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
-    <FileAlignment>4096</FileAlignment>
-    <NoStdLib>false</NoStdLib>
-    <NoWarn>
-    </NoWarn>
-    <Optimize>false</Optimize>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
     <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>bin\Release\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
-    <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
-    <DebugSymbols>false</DebugSymbols>
-    <FileAlignment>4096</FileAlignment>
-    <NoStdLib>false</NoStdLib>
-    <NoWarn>
-    </NoWarn>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
-    <DebugType>none</DebugType>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetDir)*.dll" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(TargetDir)*.pdb" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(TargetDir)*.xml" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(TargetDir)*.exe" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+
+xcopy "$(SolutionDir)External\*.dll" "$(SolutionDir)Export" /Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)External\*.pdb" "$(SolutionDir)Export" /Y /EXCLUDE:..\..\..\excludesvn.ini
+
+xcopy "$(SolutionDir)Common.Designer\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.Document\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.Types\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Cresus.Database\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+</PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <Name>nunit.framework</Name>
-      <HintPath>..\External\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="System">
-      <Name>System</Name>
-    </Reference>
-    <Reference Include="System.Data">
-      <Name>System.Data</Name>
-    </Reference>
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml">
-      <Name>System.XML</Name>
-    </Reference>
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
       <Project>{AF58270B-4B5C-49F7-81D8-723CFF122F2C}</Project>
       <Name>Common.Debug</Name>
@@ -111,6 +77,14 @@
       <Project>{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}</Project>
       <Name>Common.Drawing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.IO\Common.IO.csproj">
+      <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>
+      <Name>Common.IO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.OpenType\Common.OpenType.csproj">
+      <Project>{7703436A-1D8D-46AA-BB44-699AE5EAAA2F}</Project>
+      <Name>Common.OpenType</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Printing\Common.Printing.csproj">
       <Project>{21655556-2BC3-46A4-931A-1295AD971737}</Project>
       <Name>Common.Printing</Name>
@@ -120,14 +94,20 @@
       <Name>Common.Support.Events</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
-      <Name>Common.Support.Implementation</Name>
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+      <Name>Common.Support.Implementation</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.Support\Common.Support.csproj">
-      <Name>Common.Support</Name>
       <Project>{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+      <Name>Common.Support</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Text.Exchange\Common.Text.Exchange.csproj">
+      <Project>{CAE8D21F-CADA-4401-949F-186BB1D4F5D6}</Project>
+      <Name>Common.Text.Exchange</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Text\Common.Text.csproj">
+      <Project>{62F59974-6D79-4919-AAA0-10717A8D8514}</Project>
+      <Name>Common.Text</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.Types\Common.Types.csproj">
       <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
@@ -146,14 +126,12 @@
       <Name>Cresus.Database.Implementation</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
-      <Name>Cresus.Database</Name>
       <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+      <Name>Cresus.Database</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
-      <Name>Cresus.DataLayer</Name>
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+      <Name>Cresus.DataLayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Remoting.Interfaces\Cresus.Remoting.Interfaces.csproj">
       <Project>{5C2BEC8F-849C-41EB-993A-2536E466B538}</Project>
@@ -168,9 +146,8 @@
       <Name>Cresus.Replication</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Requests\Cresus.Requests.csproj">
-      <Name>Cresus.Requests</Name>
       <Project>{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+      <Name>Cresus.Requests</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Services.Implementation\Cresus.Services.Implementation.csproj">
       <Project>{E076F23E-635F-42D1-8B3F-59AF3D3DCDFB}</Project>
@@ -180,28 +157,17 @@
       <Project>{76A75F71-6965-458C-B0D1-C2741241EDEB}</Project>
       <Name>Cresus.Services</Name>
     </ProjectReference>
+    <ProjectReference Include="..\X.Tool.ResGenerator\X.Tool.ResGenerator.csproj">
+      <Project>{3E741450-319E-49CF-BFEC-35BE01CE0AFD}</Project>
+      <Name>X.Tool.ResGenerator</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdapterTest.cs" />
-    <Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DataBrokerTest.cs" />
-    <Compile Include="RequestFactoryTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Res.cs" />
+    <Compile Include="Program.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>xcopy "$(SolutionDir)Common.Designer\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Cresus.Database\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)App.CresusDocuments\Resources\Cresus.Tests\*" "$(ProjectDir)Resources\Cresus.Tests\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-</PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
 </Project>

@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.DataLayer
 		public void Check01DataTableBroker()
 		{
 			System.Diagnostics.Debug.WriteLine ("Broker-1");
-			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
+			StructuredType type = Res.Types.Record.Address;
 			DbRichCommand command;
 			DbTable table;
 
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.DataLayer
 		public void Check02DataTableBroker()
 		{
 			System.Diagnostics.Debug.WriteLine ("Broker-2");
-			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
+			StructuredType type = Res.Types.Record.Address;
 			DbRichCommand command;
 			DbTable table;
 
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.DataLayer
 		public void Check03DataTableBroker()
 		{
 			System.Diagnostics.Debug.WriteLine ("Broker-3");
-			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
+			StructuredType type = Res.Types.Record.Address;
 			DbRichCommand command;
 			DbTable table;
 
@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.DataLayer
 		public void Check04DataTableBroker()
 		{
 			System.Diagnostics.Debug.WriteLine ("Broker-4");
-			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Invoice;
+			StructuredType type = Res.Types.Record.Invoice;
 			DbRichCommand command;
 			DbTable table;
 
@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.DataLayer
 		[Test]
 		public void CheckInteractiveTable()
 		{
-			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
+			StructuredType type = Res.Types.Record.Address;
 			DbRichCommand command;
 			DbTable table;
 
@@ -242,7 +242,7 @@ namespace Epsitec.Cresus.DataLayer
 		public void CheckInteractiveTableCompact()
 		{
 			ResourceManager manager = new ResourceManager ();
-			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Address;
+			StructuredType type = Res.Types.Record.Address;
 			DbRichCommand command;
 			DbTable table;
 
@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.DataLayer
 			
 			ItemTableColumn column = new ItemTableColumn (null, Epsitec.Common.Widgets.Layouts.GridLength.Auto);
 
-			column.CaptionId  = Epsitec.Common.UI.Res.Captions.Address1.Id;
+			column.CaptionId  = Res.Captions.Address1.Id;
 			column.TemplateId = Druid.Parse ("[KF]");
 
 			placeholder.Columns.Add (column);
@@ -315,7 +315,7 @@ namespace Epsitec.Cresus.DataLayer
 			CommandContext    commandContext    = new CommandContext ();
 
 			DataBroker broker = new DataBroker (this.infrastructure);
-			broker.LoadTable (Epsitec.Common.UI.Res.Types.Record.Address);
+			broker.LoadTable (Res.Types.Record.Address);
 			
 			Window window = new Window ();
 
@@ -338,7 +338,7 @@ namespace Epsitec.Cresus.DataLayer
 			
 			window.Text = "CheckInteractiveTablePanel";
 			
-			StructuredData source = new StructuredData (Epsitec.Common.UI.Res.Types.Record.Staff);
+			StructuredData source = new StructuredData (Res.Types.Record.Staff);
 			source.SetValue ("Employees", broker.GetTableBroker ("Record.Address"));
 
 			Druid panelId = Druid.Parse ("[KF04]");

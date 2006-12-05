@@ -133,6 +133,12 @@ namespace Epsitec.Common.UI
 		
 		//	Code mapping for 'Panel' resources
 		
+		//	Code mapping for 'Panel' resources
+		
+		//	Code mapping for 'Panel' resources
+		
+		//	Code mapping for 'Panel' resources
+		
 		public static void Initialize(System.Type type, string name)
 		{
 			_manager = new Epsitec.Common.Support.ResourceManager (type);
