@@ -265,10 +265,19 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				StructuredTypeField field = type.Fields[id];
 
-				if (this.objectType != ObjectModifier.ObjectType.Table || field.Relation == Relation.Collection)
+				if (this.objectType == ObjectModifier.ObjectType.SubPanel &&
+					!(field.Type is StructuredType))
 				{
-					this.fields.Add(field);
+						continue;
 				}
+
+				if (this.objectType == ObjectModifier.ObjectType.Table &&
+					field.Relation != Relation.Collection)
+				{
+						continue;
+				}
+
+				this.fields.Add(field);
 			}
 		}
 
