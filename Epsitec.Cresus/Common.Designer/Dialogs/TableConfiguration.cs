@@ -36,56 +36,93 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				int tabIndex = 0;
 
+				//	Crée la barre d'outils.
+				this.toolbar = new HToolBar(this.window.Root);
+				this.toolbar.Dock = DockStyle.Top;
+
+				this.buttonAdd = new IconButton();
+				this.buttonAdd.CaptionId = Res.Captions.Dialog.TableConfiguration.Add.Id;
+				this.buttonAdd.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				this.toolbar.Items.Add(this.buttonAdd);
+
+				this.buttonRemove = new IconButton();
+				this.buttonRemove.CaptionId = Res.Captions.Dialog.TableConfiguration.Remove.Id;
+				this.buttonRemove.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				this.toolbar.Items.Add(this.buttonRemove);
+
+				this.buttonTemplate = new IconButton();
+				this.buttonTemplate.CaptionId = Res.Captions.Dialog.TableConfiguration.Template.Id;
+				this.buttonTemplate.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				this.toolbar.Items.Add(this.buttonTemplate);
+
+				this.toolbar.Items.Add(new IconSeparator());
+
+				this.buttonPrev = new IconButton();
+				this.buttonPrev.CaptionId = Res.Captions.Dialog.TableConfiguration.Prev.Id;
+				this.buttonPrev.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				this.toolbar.Items.Add(this.buttonPrev);
+
+				this.buttonNext = new IconButton();
+				this.buttonNext.CaptionId = Res.Captions.Dialog.TableConfiguration.Next.Id;
+				this.buttonNext.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				this.toolbar.Items.Add(this.buttonNext);
+
+				this.toolbar.Items.Add(new IconSeparator());
+
+				this.buttonSort = new IconButton();
+				this.buttonSort.CaptionId = Res.Captions.Dialog.TableConfiguration.Sort.Id;
+				this.buttonSort.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				this.toolbar.Items.Add(this.buttonSort);
+
+				this.slider = new HSlider(toolbar);
+				this.slider.PreferredWidth = 80;
+				this.slider.Margins = new Margins(2, 2, 4, 4);
+				this.slider.MinValue = 20.0M;
+				this.slider.MaxValue = 50.0M;
+				this.slider.SmallChange = 5.0M;
+				this.slider.LargeChange = 10.0M;
+				this.slider.Resolution = 1.0M;
+				this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+				this.slider.Value = (decimal) TableConfiguration.arrayLineHeight;
+				this.slider.Dock = DockStyle.Right;
+
 				//	Crée l'en-tête du tableau.
 				this.header = new Widget(this.window.Root);
 				this.header.Dock = DockStyle.Top;
 				this.header.Margins = new Margins(0, 0, 4, 0);
 
+				this.headerUse = new HeaderButton(this.header);
+				this.headerUse.Text = "";
+				this.headerUse.Style = HeaderButtonStyle.Top;
+				this.headerUse.Dock = DockStyle.Left;
+
 				this.headerName = new HeaderButton(this.header);
-				this.headerName.Text = Res.Strings.Viewers.Types.Structured.Name;
+				this.headerName.Text = Res.Strings.Dialog.TableDescription.Name;
 				this.headerName.Style = HeaderButtonStyle.Top;
 				this.headerName.Dock = DockStyle.Left;
 
 				this.headerCaption = new HeaderButton(this.header);
-				this.headerCaption.Text = Res.Strings.Viewers.Types.Structured.Caption;
+				this.headerCaption.Text = Res.Strings.Dialog.TableDescription.Caption;
 				this.headerCaption.Style = HeaderButtonStyle.Top;
 				this.headerCaption.Dock = DockStyle.Left;
 
-				this.headerType = new HeaderButton(this.header);
-				this.headerType.Text = Res.Strings.Viewers.Types.Structured.Type;
-				this.headerType.Style = HeaderButtonStyle.Top;
-				this.headerType.Dock = DockStyle.Left;
-
 				//	Crée le tableau principal.
 				this.array = new MyWidgets.StringArray(this.window.Root);
-				this.array.Columns = 6;
-				this.array.SetColumnsRelativeWidth(0, 0.28);
-				this.array.SetColumnsRelativeWidth(1, 0.07);
-				this.array.SetColumnsRelativeWidth(2, 0.28);
-				this.array.SetColumnsRelativeWidth(3, 0.07);
-				this.array.SetColumnsRelativeWidth(4, 0.28);
-				this.array.SetColumnsRelativeWidth(5, 0.07);
-				this.array.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
-				this.array.SetColumnAlignment(1, ContentAlignment.MiddleCenter);
+				this.array.Columns = 3;
+				this.array.SetColumnsRelativeWidth(0, 0.07);
+				this.array.SetColumnsRelativeWidth(1, 0.50);
+				this.array.SetColumnsRelativeWidth(2, 0.50);
+				this.array.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
+				this.array.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
 				this.array.SetColumnAlignment(2, ContentAlignment.MiddleLeft);
-				this.array.SetColumnAlignment(3, ContentAlignment.MiddleCenter);
-				this.array.SetColumnAlignment(4, ContentAlignment.MiddleLeft);
-				this.array.SetColumnAlignment(5, ContentAlignment.MiddleCenter);
-				this.array.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
-				this.array.SetColumnBreakMode(2, TextBreakMode.Ellipsis | TextBreakMode.Split);
-				this.array.SetColumnBreakMode(4, TextBreakMode.Ellipsis | TextBreakMode.Split);
-				this.array.SetDynamicToolTips(0, true);
-				this.array.SetDynamicToolTips(1, false);
-				this.array.SetDynamicToolTips(2, false);
-				this.array.SetDynamicToolTips(3, false);
-				this.array.SetDynamicToolTips(4, false);
-				this.array.SetDynamicToolTips(5, false);
+				this.array.SetColumnBreakMode(1, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
+				this.array.SetColumnBreakMode(2, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 				this.array.LineHeight = TableConfiguration.arrayLineHeight;
 				this.array.Dock = DockStyle.Fill;
 				this.array.ColumnsWidthChanged += new EventHandler(this.HandleArrayColumnsWidthChanged);
 				this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
+				this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
-				this.array.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -110,21 +147,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				this.buttonCancel.TabIndex = tabIndex++;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-
-				this.slider = new HSlider(footer);
-				this.slider.PreferredWidth = 80;
-				this.slider.Dock = DockStyle.Right;
-				this.slider.Margins = new Margins(0, 0, 4, 4);
-				this.slider.TabIndex = tabIndex++;
-				this.slider.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.slider.MinValue = 20.0M;
-				this.slider.MaxValue = 50.0M;
-				this.slider.SmallChange = 5.0M;
-				this.slider.LargeChange = 10.0M;
-				this.slider.Resolution = 1.0M;
-				this.slider.Value = (decimal) TableConfiguration.arrayLineHeight;
-				this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
-				//?ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Icon.Tooltip.Size);
 			}
 
 			this.UpdateButtons();
@@ -176,23 +198,18 @@ namespace Epsitec.Common.Designer.Dialogs
 					UI.ItemTableColumn column = this.columns[first+i];
 					string name = column.FieldId;
 
-					this.array.SetLineString(0, first+i, name);
-					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
+					bool active = true;
+					string icon = active ? Misc.Image("TypeEnumYes") : "";
+					MyWidgets.StringList.CellState cs = active ? MyWidgets.StringList.CellState.Normal : MyWidgets.StringList.CellState.Unused;
 
-					this.array.SetLineString(1, first+i, "");
+					this.array.SetLineString(0, first+i, icon);
+					this.array.SetLineState(0, first+i, cs);
+
+					this.array.SetLineString(1, first+i, name);
 					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
 
 					this.array.SetLineString(2, first+i, "");
 					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
-
-					this.array.SetLineString(3, first+i, "");
-					this.array.SetLineState(3, first+i, MyWidgets.StringList.CellState.Normal);
-
-					this.array.SetLineString(4, first+i, "");
-					this.array.SetLineState(4, first+i, MyWidgets.StringList.CellState.Normal);
-
-					this.array.SetLineString(5, first+i, "");
-					this.array.SetLineState(5, first+i, MyWidgets.StringList.CellState.Normal);
 				}
 				else
 				{
@@ -204,15 +221,6 @@ namespace Epsitec.Common.Designer.Dialogs
 
 					this.array.SetLineString(2, first+i, "");
 					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Disabled);
-
-					this.array.SetLineString(3, first+i, "");
-					this.array.SetLineState(3, first+i, MyWidgets.StringList.CellState.Disabled);
-
-					this.array.SetLineString(4, first+i, "");
-					this.array.SetLineState(4, first+i, MyWidgets.StringList.CellState.Disabled);
-
-					this.array.SetLineString(5, first+i, "");
-					this.array.SetLineState(5, first+i, MyWidgets.StringList.CellState.Disabled);
 				}
 			}
 		}
@@ -221,15 +229,89 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Place les widgets en dessus et en dessous du tableau en fonction des
 			//	largeurs des colonnes.
-			double w1 = this.array.GetColumnsAbsoluteWidth(0) + this.array.GetColumnsAbsoluteWidth(1);
-			double w2 = this.array.GetColumnsAbsoluteWidth(2) + this.array.GetColumnsAbsoluteWidth(3);
-			double w3 = this.array.GetColumnsAbsoluteWidth(4) + this.array.GetColumnsAbsoluteWidth(5);
+			double w1 = this.array.GetColumnsAbsoluteWidth(0);
+			double w2 = this.array.GetColumnsAbsoluteWidth(1);
+			double w3 = this.array.GetColumnsAbsoluteWidth(2);
 
-			this.headerName.PreferredWidth = w1;
-			this.headerCaption.PreferredWidth = w2;
-			this.headerType.PreferredWidth = w3+1;
+			this.headerUse.PreferredWidth = w1;
+			this.headerName.PreferredWidth = w2;
+			this.headerCaption.PreferredWidth = w3+1;
 		}
 
+
+		protected void ArrayAdd()
+		{
+			//	Ajoute une nouvelle rubrique dans la table.
+		}
+
+		protected void ArrayRemove()
+		{
+			//	Supprime une rubrique de la table.
+		}
+
+		protected void ArrayTemplate()
+		{
+			//	Ajoute un template dans la table.
+		}
+
+		protected void ArrayMove(int direction)
+		{
+			//	Déplace une rubrique dans la table.
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			UI.ItemTableColumn column = this.columns[sel];
+			this.columns.RemoveAt(sel);
+			this.columns.Insert(sel+direction, column);
+
+			this.array.SelectedRow = sel+direction;
+			this.array.ShowSelectedRow();
+
+			this.UpdateButtons();
+			this.UpdateArray();
+		}
+
+		protected void ArraySort()
+		{
+			//	Met les rubrique de la table en tête de liste.
+		}
+
+
+		private void HandleButtonClicked(object sender, MessageEventArgs e)
+		{
+			if (sender == this.buttonAdd)
+			{
+				this.ArrayAdd();
+			}
+
+			if (sender == this.buttonRemove)
+			{
+				this.ArrayRemove();
+			}
+
+			if (sender == this.buttonTemplate)
+			{
+				this.ArrayTemplate();
+			}
+
+			if (sender == this.buttonPrev)
+			{
+				this.ArrayMove(-1);
+			}
+
+			if (sender == this.buttonNext)
+			{
+				this.ArrayMove(1);
+			}
+
+			if (sender == this.buttonSort)
+			{
+				this.ArraySort();
+			}
+		}
 
 		private void HandleSliderChanged(object sender)
 		{
@@ -256,27 +338,28 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateArray();
 		}
 
+		private void HandleArrayCellsContentChanged(object sender)
+		{
+			//	Le contenu des cellules a changé.
+			this.UpdateArray();
+		}
+
 		private void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
-			int sel = this.array.SelectedRow;
-			if (sel != -1)
+			this.UpdateButtons();
+
+			if (this.array.SelectedColumn == 0)
 			{
+				if (this.buttonAdd.Enable)
+				{
+					this.ArrayAdd();
+				}
+				else
+				{
+					this.ArrayRemove();
+				}
 			}
-
-			this.UpdateButtons();
-		}
-
-		private void HandleArraySelectedRowDoubleClicked(object sender)
-		{
-			//	La ligne sélectionnée a été double cliquée.
-			this.UpdateButtons();
-
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
-
-			this.columnsReturned = this.columns;
 		}
 
 		private void HandleWindowCloseClicked(object sender)
@@ -310,14 +393,22 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected List<UI.ItemTableColumn>		columns;
 		protected List<UI.ItemTableColumn>		columnsReturned;
 
+		protected HToolBar						toolbar;
+		protected IconButton					buttonAdd;
+		protected IconButton					buttonRemove;
+		protected IconButton					buttonTemplate;
+		protected IconButton					buttonPrev;
+		protected IconButton					buttonNext;
+		protected IconButton					buttonSort;
+		protected HSlider						slider;
+
 		protected Widget						header;
+		protected HeaderButton					headerUse;
 		protected HeaderButton					headerName;
 		protected HeaderButton					headerCaption;
-		protected HeaderButton					headerType;
 		protected MyWidgets.StringArray			array;
 
 		protected Button						buttonOk;
 		protected Button						buttonCancel;
-		protected HSlider						slider;
 	}
 }

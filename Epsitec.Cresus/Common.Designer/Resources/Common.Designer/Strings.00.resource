@@ -294,6 +294,8 @@
   <data name="Dialog.TypeType.Tooltip.Options" id="0A7">Montre ou cache les options des énumérations</data>
   <data name="Dialog.TypeType.EnumAll" id="0B7">Tout montrer</data>
   <data name="Dialog.TypeType.EnumOne" id="0C7">Seulement {0}</data>
+  <data name="Dialog.TableDescription.Name" id="0P9">Nom</data>
+  <data name="Dialog.TableDescription.Caption" id="0Q9">Légende</data>
   <data name="Dialog.Open.Title" id="0D6" mod="1">Ouvrir des ressources</data>
   <data name="Dialog.Open.Label" id="0E6" mod="1">Choix des ressources à ouvrir</data>
   <data name="Dialog.Open.Button.Open" id="0F6" mod="1">Ouvrir</data>

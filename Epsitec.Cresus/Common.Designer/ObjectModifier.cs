@@ -311,6 +311,7 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		#region TableColumns
 		public static void DefineAllColumns(Widget obj)
 		{
 			//	Ajoute les colonnes avec des réglages par défaut si l'objet
@@ -332,6 +333,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 		}
+		#endregion
 
 
 		#region Binding

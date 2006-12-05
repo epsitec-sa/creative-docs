@@ -1704,7 +1704,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 
 				ObjectModifier.SetBinding(obj, binding, type);
-				ObjectModifier.DefineAllColumns(obj);
+
+				if (oType == ObjectModifier.ObjectType.Table)
+				{
+					ObjectModifier.DefineAllColumns(obj);
+				}
 			}
 
 			return true;
