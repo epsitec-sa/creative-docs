@@ -65,30 +65,9 @@ namespace Epsitec.Common.UI.ItemViewFactories
 			}
 		}
 
-		private static void CreateTemplateBasedColumn(Widgets.Widget container, ItemView itemView, Support.Druid templateId, ItemPanelColumnHeader header, int index, double width)
+		public void DisposeUserInterface(ItemView itemView, Widgets.Widget widget)
 		{
-			Support.ResourceManager manager = Widgets.Helpers.VisualTree.FindResourceManager (container);
-			Panel panel = Panel.CreatePanel (templateId, manager);
-			
-			panel.SetEmbedder (container);
-			
-			panel.Dock           = Widgets.DockStyle.Stacked;
-			panel.PreferredWidth = width - panel.Margins.Width;
-
-			object source = itemView.Item;
-			string path   = header.GetColumnPropertyName (index);
-			
-			DataObject.SetDataContext (panel, new Binding (source, path));
-		}
-
-		private static void CreateTextColumn(Widgets.Widget container, ItemView itemView, ItemPanelColumnHeader header, int index, double width)
-		{
-			Widgets.StaticText text = new Widgets.StaticText (container);
-
-			text.Text           = header.GetColumnText (index, itemView.Item);
-			text.Dock           = Widgets.DockStyle.Stacked;
-			text.Margins        = new Drawing.Margins (3, 3, 0, 0);
-			text.PreferredWidth = width - text.Margins.Width;
+			widget.Dispose ();
 		}
 
 		public Drawing.Size GetPreferredSize(ItemPanel panel, ItemView itemView)
@@ -112,5 +91,31 @@ namespace Epsitec.Common.UI.ItemViewFactories
 		}
 
 		#endregion
+		
+		private static void CreateTemplateBasedColumn(Widgets.Widget container, ItemView itemView, Support.Druid templateId, ItemPanelColumnHeader header, int index, double width)
+		{
+			Support.ResourceManager manager = Widgets.Helpers.VisualTree.FindResourceManager (container);
+			Panel panel = Panel.CreatePanel (templateId, manager);
+
+			panel.SetEmbedder (container);
+
+			panel.Dock           = Widgets.DockStyle.Stacked;
+			panel.PreferredWidth = width - panel.Margins.Width;
+
+			object source = itemView.Item;
+			string path   = header.GetColumnPropertyName (index);
+
+			DataObject.SetDataContext (panel, new Binding (source, path));
+		}
+
+		private static void CreateTextColumn(Widgets.Widget container, ItemView itemView, ItemPanelColumnHeader header, int index, double width)
+		{
+			Widgets.StaticText text = new Widgets.StaticText (container);
+
+			text.Text           = header.GetColumnText (index, itemView.Item);
+			text.Dock           = Widgets.DockStyle.Stacked;
+			text.Margins        = new Drawing.Margins (3, 3, 0, 0);
+			text.PreferredWidth = width - text.Margins.Width;
+		}
 	}
 }

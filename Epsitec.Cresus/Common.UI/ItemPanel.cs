@@ -613,6 +613,7 @@ namespace Epsitec.Common.UI
 
 		private void RecreateUserInterface(IEnumerable<ItemView> views, Drawing.Rectangle aperture)
 		{
+			System.Diagnostics.Debug.WriteLine ("Recreate user interface");
 			List<ItemView> dispose = new List<ItemView> ();
 			List<ItemView> create  = new List<ItemView> ();
 			
@@ -649,17 +650,23 @@ namespace Epsitec.Common.UI
 
 			//	TODO: make this code asynchronous
 
+			System.Diagnostics.Debug.WriteLine ("Recreate user interface: disposing");
+			
 			dispose.ForEach (
 				delegate (ItemView view)
 				{
 					view.DisposeUserInterface ();
 				} );
+			
+			System.Diagnostics.Debug.WriteLine ("Recreate user interface: creating");
 
 			create.ForEach (
 				delegate (ItemView view)
 				{
 					view.CreateUserInterface (this);
 				} );
+
+			System.Diagnostics.Debug.WriteLine ("Recreate user interface: done");
 		}
 
 		private void RefreshItemViews()

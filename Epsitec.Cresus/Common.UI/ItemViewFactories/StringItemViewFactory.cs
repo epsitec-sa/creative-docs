@@ -22,6 +22,11 @@ namespace Epsitec.Common.UI.ItemViewFactories
 			return text;
 		}
 
+		public void DisposeUserInterface(ItemView itemView, Widgets.Widget widget)
+		{
+			widget.Dispose ();
+		}
+
 		public Drawing.Size GetPreferredSize(ItemPanel panel, ItemView itemView)
 		{
 			return itemView.Size;

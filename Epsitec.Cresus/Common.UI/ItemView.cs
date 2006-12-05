@@ -208,8 +208,10 @@ namespace Epsitec.Common.UI
 
 				if (group == null)
 				{
-					this.widget.Dispose ();
-					this.widget = null;
+					this.factory.DisposeUserInterface (this, this.widget);
+					
+					this.widget    = null;
+					this.isCleared = false;
 				}
 				else
 				{
@@ -223,8 +225,9 @@ namespace Epsitec.Common.UI
 		{
 			if (this.widget != null)
 			{
-				this.widget.Dispose ();
-				this.widget = null;
+				this.factory.DisposeUserInterface (this, this.widget);
+
+				this.widget    = null;
 				this.isCleared = false;
 			}
 		}
