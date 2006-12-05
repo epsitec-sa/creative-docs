@@ -82,7 +82,7 @@ namespace Epsitec.Common.Designer.Controllers
 
 				if (newValue == null)
 				{
-					this.button.Text = Misc.Italic("Hérité");
+					this.button.Text = Misc.Italic(Res.Strings.Dialog.BindingSelector.Button.Inherit);
 				}
 				else
 				{

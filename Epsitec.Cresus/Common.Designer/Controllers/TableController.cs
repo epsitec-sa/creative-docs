@@ -36,7 +36,7 @@ namespace Epsitec.Common.Designer.Controllers
 			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 
 			this.button = new Button();
-			this.button.Text = "Choix des rubriques";
+			this.button.Text = Res.Strings.Dialog.TableDescription.Title;
 			this.button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.button.TabIndex = 1;
 			this.button.TabNavigationMode = TabNavigationMode.ActivateOnTab;

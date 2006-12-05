@@ -372,6 +372,17 @@ namespace Epsitec.Common.Designer
 			
 			public static class Dialog
 			{
+				public static class BindingSelector
+				{
+					public static string Title { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (297)); } }
+					public static class Button
+					{
+						public static string Inherit { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (317)); } }
+						public static string Readonly { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (316)); } }
+						public static string Use { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (298)); } }
+					}
+				}
+				
 				public static class Button
 				{
 					public static string Cancel { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (112)); } }
@@ -534,19 +545,11 @@ namespace Epsitec.Common.Designer
 					}
 				}
 				
-				public static class StructuredSelector
-				{
-					public static string Title { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (297)); } }
-					public static class Button
-					{
-						public static string Use { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (298)); } }
-					}
-				}
-				
 				public static class TableDescription
 				{
 					public static string Caption { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (314)); } }
 					public static string Name { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (313)); } }
+					public static string Title { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (315)); } }
 				}
 				
 				public static class Tooltip

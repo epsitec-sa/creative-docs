@@ -24,7 +24,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("TableConfiguration", 500, 400, true);
-				this.window.Text = "Choix des rubriques";  // Res.Strings.Dialog.StructuredSelector.Title;
+				this.window.Text = Res.Strings.Dialog.TableDescription.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);

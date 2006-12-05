@@ -25,7 +25,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("BindingSelector", 500, 400, true);
-				this.window.Text = Res.Strings.Dialog.StructuredSelector.Title;
+				this.window.Text = Res.Strings.Dialog.BindingSelector.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonUse = new Button(footer);
 				this.buttonUse.PreferredWidth = 75;
-				this.buttonUse.Text = Res.Strings.Dialog.StructuredSelector.Button.Use;
+				this.buttonUse.Text = Res.Strings.Dialog.BindingSelector.Button.Use;
 				this.buttonUse.Dock = DockStyle.Left;
 				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
 				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
@@ -136,14 +136,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				//	Crée le bouton pour le mode.
 				this.checkReadonly = new CheckButton(this.window.Root);
-				this.checkReadonly.Text = "Lecture seule";
+				this.checkReadonly.Text = Res.Strings.Dialog.BindingSelector.Button.Readonly;
 				this.checkReadonly.Dock = DockStyle.Bottom;
 				this.checkReadonly.Margins = new Margins(0, 0, 2, 4);
 				this.checkReadonly.ActiveStateChanged += new EventHandler(this.HandleCheckReadonlyActiveStateChanged);
 
 				//	Crée le bouton pour l'héritage.
 				this.checkInherit = new CheckButton(this.window.Root);
-				this.checkInherit.Text = "Hérité";
+				this.checkInherit.Text = Res.Strings.Dialog.BindingSelector.Button.Inherit;
 				this.checkInherit.Dock = DockStyle.Bottom;
 				this.checkInherit.Margins = new Margins(0, 0, 2, 4);
 				this.checkInherit.ActiveStateChanged += new EventHandler(this.HandleCheckInheritActiveStateChanged);
