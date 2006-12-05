@@ -233,6 +233,26 @@ namespace Epsitec.Common.UI
 			return null;
 		}
 
+		/// <summary>
+		/// Synchronizes the data context of the edition and search panels with
+		/// the data context of their owner panel.
+		/// </summary>
+		public void SyncDataContext()
+		{
+			Panel owner = this.Owner;
+
+			if (owner == null)
+			{
+				this.SyncDataContext (this.editionPanel);
+				this.SyncDataContext (this.searchPanel);
+				//	...
+			}
+			else
+			{
+				owner.SyncDataContext ();
+			}
+		}
+
 		public void SetupSampleDataSource()
 		{
 			DataSourceMetadata metadata = this.DataSourceMetadata;
@@ -622,13 +642,6 @@ namespace Epsitec.Common.UI
 			this.InvalidateProperty (Panel.DataSourceMetadataProperty, oldValue, newValue);
 		}
 		
-		private void SyncDataContext()
-		{
-			this.SyncDataContext (this.editionPanel);
-			this.SyncDataContext (this.searchPanel);
-			//	...
-		}
-
 		private void SyncDataContext(Panel panel)
 		{
 			if (panel != null)

@@ -124,6 +124,20 @@ namespace Epsitec.Common.UI
 				}
 			}
 		}
+
+		public void SimulateEdition()
+		{
+			object value = this.Value;
+			this.InvalidateProperty (Placeholder.ValueProperty, value, value);
+		}
+
+		public static void SimulateEdition(Widget root)
+		{
+			foreach (Placeholder placeholder in root.FindAllChildren (delegate (Widget widget) { return widget is Placeholder; }))
+			{
+				placeholder.SimulateEdition ();
+			}
+		}
 		
 		protected override void LayoutArrange(Widgets.Layouts.ILayoutEngine engine)
 		{

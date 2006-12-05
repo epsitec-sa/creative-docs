@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<bundle name="_KF" caption="Part.ContactAddress" type="Panel" culture="fr" rank="4">
+<bundle name="_KF" caption="Part.ContactAddress" type="Panel" culture="fr" rank="5">
   <data name="Panel">
     <xml>
       <panel xmlns:s="http://www.epsitec.ch/XNS/storage-structure-1" xmlns:f="http://www.epsitec.ch/XNS/storage-fields-1">
@@ -90,9 +90,9 @@
     <s:data id="_26" f:Value="{Binding Path=*.Address1, Mode=TwoWay}" f:TabNavigationMode="ForwardTabPassive" f:Text="&lt;i&gt;TextField&lt;/i&gt;" f:MinWidth="20" f:MinHeight="20" f:Anchor="None" f:Dock="None" f:_9.Column="0" f:_9.Row="2" f:ContainerLayoutMode="HorizontalFlow" f:_9.ColumnSpan="6" f:TabIndex="3" />
     <s:data id="_27" f:Value="{Binding Path=*.Zip, Mode=TwoWay}" f:TabNavigationMode="ForwardTabPassive" f:Text="&lt;i&gt;TextField&lt;/i&gt;" f:MinWidth="20" f:MinHeight="20" f:Anchor="None" f:Dock="None" f:_9.Column="0" f:_9.Row="3" f:ContainerLayoutMode="HorizontalFlow" f:TabIndex="4" />
     <s:data id="_28" f:Value="{Binding Path=*.City, Mode=TwoWay}" f:TabNavigationMode="ForwardTabPassive" f:Text="&lt;i&gt;TextField&lt;/i&gt;" f:MinWidth="20" f:MinHeight="20" f:Anchor="None" f:Dock="None" f:_9.Column="2" f:_9.Row="3" f:ContainerLayoutMode="HorizontalFlow" f:_9.ColumnSpan="4" f:TabIndex="5" />
-    <s:data id="_29" f:TabNavigationMode="ForwardTabPassive" f:ChildrenLayoutMode="Stacked" f:ContainerLayoutMode="VerticalFlow" f:PreferredWidth="200" f:PreferredHeight="150" f:Anchor="BottomLeft" f:Dock="None" f:Margins="0;0;0;0" f:Padding="4;4;2;2" f:_3.DataContext="\[Binding Mode=TwoWay\]" f:Children="{Collection {ObjRef _30}, {ObjRef _31}}" f:DataSource="{ExtRef _DataSource}" f:DataSourceMetadata="{ObjRef _10}" f:EditionPanel="{ObjRef _11}" f:Owner="{ObjRef _1}" f:SearchPanel="{ObjRef _29}" f:Text="" />
+    <s:data id="_29" f:TabNavigationMode="ForwardTabPassive" f:ChildrenLayoutMode="Stacked" f:ContainerLayoutMode="VerticalFlow" f:PreferredWidth="200" f:PreferredHeight="116" f:Anchor="BottomLeft" f:Dock="None" f:Margins="0;0;0;0" f:Padding="4;4;2;2" f:_3.DataContext="\[Binding Mode=TwoWay\]" f:Children="{Collection {ObjRef _30}, {ObjRef _31}}" f:DataSource="{ExtRef _DataSource}" f:DataSourceMetadata="{ObjRef _10}" f:EditionPanel="{ObjRef _11}" f:Owner="{ObjRef _1}" f:SearchPanel="{ObjRef _29}" f:Text="" />
     <s:data id="_30" f:MinWidth="10" f:TabNavigationMode="None" f:MinHeight="12" f:Margins="0;0;5;5" f:Dock="StackBegin" f:Anchor="None" f:PreferredHeight="12" f:CaptionId="[300LC]" />
-    <s:data id="_31" f:TabNavigationMode="ForwardToChildren, ForwardOnly" f:ChildrenLayoutMode="Grid" f:ContainerLayoutMode="VerticalFlow" f:PreferredWidth="200" f:Margins="0;0;5;5" f:PreferredHeight="100" f:Padding="0;0;0;0" f:DrawFullFrame="False" f:Dock="StackBegin" f:Anchor="None" f:_8.LayoutEngine="{ObjRef _32}" f:Children="{Collection {ObjRef _40}, {ObjRef _41}, {ObjRef _42}, {ObjRef _43}}" f:Text="" />
+    <s:data id="_31" f:TabNavigationMode="ForwardToChildren, ForwardOnly" f:ChildrenLayoutMode="Grid" f:ContainerLayoutMode="VerticalFlow" f:PreferredWidth="200" f:Margins="0;0;5;5" f:PreferredHeight="80" f:Padding="0;0;0;0" f:DrawFullFrame="False" f:Dock="StackBegin" f:Anchor="None" f:_8.LayoutEngine="{ObjRef _32}" f:Children="{Collection {ObjRef _40}, {ObjRef _41}, {ObjRef _42}, {ObjRef _43}}" f:Text="" />
     <s:data id="_32" f:ColumnDefinitions="{Collection {ObjRef _33}, {ObjRef _34}, {ObjRef _35}, {ObjRef _36}}" f:RowDefinitions="{Collection {ObjRef _37}, {ObjRef _38}, {ObjRef _39}}" />
     <s:data id="_33" f:Height="Auto" f:MinHeight="20" />
     <s:data id="_34" f:Height="Auto" f:MinHeight="20" />
