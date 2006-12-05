@@ -180,7 +180,7 @@ namespace Epsitec.Common.Types
 		/// Defines the ID associated with the caption. The ID can be defined
 		/// only once; redefining it throws an <see cref="T:InvalidOperationException"/>.
 		/// </summary>
-		/// <param name="id">The caption DRUID.</param>
+		/// <param name="druid">The caption DRUID.</param>
 		public void DefineDruid(Support.Druid druid)
 		{
 			if (this.druid == druid)

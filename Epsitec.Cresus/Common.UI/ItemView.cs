@@ -239,7 +239,7 @@ namespace Epsitec.Common.UI
 		private Drawing.Size size;
 		private Drawing.Rectangle bounds;
 		private bool isSelected;
-		private bool isDisabled;
+//-		private bool isDisabled;
 		private bool isExpanded;
 		private bool isCleared;
 	}

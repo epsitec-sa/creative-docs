@@ -438,7 +438,7 @@ namespace Epsitec.Common.Types
 								root = doSource.GetValue (property);
 							}
 							else if ((sdSource != null) &&
-								/**/ (!string.IsNullOrEmpty (name)))
+								     (!string.IsNullOrEmpty (name)))
 							{
 								this.AddBreadcrumb (ref breadcrumbs, sdSource, name);
 								root = sdSource.GetValue (name);
@@ -507,7 +507,7 @@ namespace Epsitec.Common.Types
 						root = doSource.GetValue (property);
 					}
 					else if ((sdSource != null) &&
-						/**/ (!string.IsNullOrEmpty (name)))
+						     (!string.IsNullOrEmpty (name)))
 					{
 						type = DataSourceType.StructuredData;
 						

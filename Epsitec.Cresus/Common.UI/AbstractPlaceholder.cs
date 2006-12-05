@@ -171,7 +171,7 @@ namespace Epsitec.Common.UI
 				//	OK, do nothing...
 			}
 			else if ((oldValueType == null) ||
-				/**/ (oldValueType.Equals (newValueType) == false))
+				     (oldValueType.Equals (newValueType) == false))
 			{
 				this.UpdateValueType (oldValueType, newValueType);
 			}

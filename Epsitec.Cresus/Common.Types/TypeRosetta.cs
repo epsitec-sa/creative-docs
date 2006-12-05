@@ -481,7 +481,7 @@ namespace Epsitec.Common.Types
 		/// Gets the type object described by the specified caption. This
 		/// relies on an internal cache to speed up accesses.
 		/// </summary>
-		/// <param name="typeId">The caption defining a type object.</param>
+		/// <param name="caption">The caption defining a type object.</param>
 		/// <returns>The type object or <c>null</c> if no matching type object can be found.</returns>
 		public static AbstractType GetTypeObject(Caption caption)
 		{
@@ -933,7 +933,7 @@ namespace Epsitec.Common.Types
 		/// Verifies if the type implements the specified generic interface.
 		/// </summary>
 		/// <param name="type">Type to check.</param>
-		/// <param name="genericType">Type of the generic interface.</param>
+		/// <param name="genericInterfaceType">Type of the generic interface.</param>
 		/// <returns>
 		/// 	<c>true</c> if the interface is found; otherwise, <c>false</c>.
 		/// </returns>

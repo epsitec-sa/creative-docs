@@ -158,10 +158,10 @@ namespace Epsitec.Common.Types.Serialization
 					if (metadata.HasSerializationFilter)
 					{
 						markup = MarkupExtension.CollectionToString (Collection.Filter<string> (stringCollection,
-							/**/																delegate (string item)
-							/**/																{
-							/**/																	return metadata.FilterSerializableItem (item);
-							/**/																}), this);
+							/* */																delegate (string item)
+							/* */																{
+							/* */																	return metadata.FilterSerializableItem (item);
+							/* */																}), this);
 					}
 					else
 					{
@@ -207,10 +207,10 @@ namespace Epsitec.Common.Types.Serialization
 					if (metadata.HasSerializationFilter)
 					{
 						markup = MarkupExtension.EnumerableToString (Collection.Filter<object> (enumerable,
-							/**/																delegate (object item)
-							/**/																{
-							/**/																	return metadata.FilterSerializableItem (item);
-							/**/																}), this, converter);
+							/* */																delegate (object item)
+							/* */																{
+							/* */																	return metadata.FilterSerializableItem (item);
+							/* */																}), this, converter);
 					}
 					else
 					{

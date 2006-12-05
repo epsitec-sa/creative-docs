@@ -32,8 +32,8 @@ namespace Epsitec.Common.Support
 					if (AssemblyLoader.load_path_differences++ == 0)
 					{
 						System.Diagnostics.Debug.WriteLine (string.Format ("Assembly load path different from executable path\n" +
-							/**/										   "  DLL load path: '{0}'\n" +
-							/**/										   "  EXE load path: '{1}'", load_name, path_name));
+							/* */										   "  DLL load path: '{0}'\n" +
+							/* */										   "  EXE load path: '{1}'", load_name, path_name));
 					}
 					
 					path_name = load_name;

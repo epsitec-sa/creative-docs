@@ -7,7 +7,7 @@ namespace Epsitec.Common.Types.Collections
 {
 	/// <summary>
 	/// The <c>ReadOnlyList</c> represents a read-only wrapper around an instance
-	/// implementing <see cref="System.Collections.Generic.IList"/>.
+	/// implementing <see cref="T:System.Collections.Generic.IList"/>.
 	/// </summary>
 	/// <typeparam name="T">The manipulated data type.</typeparam>
 	public class ReadOnlyList<T> : IList<T>, System.Collections.ICollection, System.Collections.IList

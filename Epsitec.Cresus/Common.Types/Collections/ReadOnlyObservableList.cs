@@ -7,7 +7,7 @@ namespace Epsitec.Common.Types.Collections
 {
 	/// <summary>
 	/// The <c>ReadOnlyObservableList</c> represents a read-only wrapper around
-	/// an <see cref="ObservableList"/>.
+	/// an <see cref="T:ObservableList"/>.
 	/// </summary>
 	/// <typeparam name="T">The manipulated data type.</typeparam>
 	public class ReadOnlyObservableList<T> : IList<T>, INotifyCollectionChanged, System.Collections.ICollection, System.Collections.IList

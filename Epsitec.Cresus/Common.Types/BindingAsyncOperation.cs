@@ -14,7 +14,7 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Initializes a new instance of the <see cref="BindingAsyncOperation"/> class.
 		/// </summary>
-		/// <param name="binding">The binding that is using this instance.</param>
+		/// <param name="bindingExpression">The binding that is using this instance.</param>
 		public BindingAsyncOperation(BindingExpression bindingExpression)
 		{
 			this.bindingExpression = bindingExpression;

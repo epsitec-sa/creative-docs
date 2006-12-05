@@ -85,7 +85,7 @@ namespace Epsitec.Common.Types
 		public int GetMaximumDigitCount()
 		{
 			return System.Math.Max (this.GetIntegerDigitCount (this.Maximum * this.digitsMul),
-				/**/				this.GetIntegerDigitCount (this.Minimum * this.digitsMul));
+				/* */				this.GetIntegerDigitCount (this.Minimum * this.digitsMul));
 		}
 
 		private int GetIntegerDigitCount(decimal value)
@@ -372,10 +372,10 @@ namespace Epsitec.Common.Types
 				DecimalRange range = (DecimalRange) value;
 
 				return string.Join (" ",
-					/**/			new string[] {
-					/**/						   range.minimum.ToString (System.Globalization.CultureInfo.InvariantCulture),
-					/**/						   range.maximum.ToString (System.Globalization.CultureInfo.InvariantCulture),
-					/**/						   range.resolution.ToString (System.Globalization.CultureInfo.InvariantCulture) });
+					/* */			new string[] {
+					/* */						   range.minimum.ToString (System.Globalization.CultureInfo.InvariantCulture),
+					/* */						   range.maximum.ToString (System.Globalization.CultureInfo.InvariantCulture),
+					/* */						   range.resolution.ToString (System.Globalization.CultureInfo.InvariantCulture) });
 			}
 
 			public object ConvertFromString(string value, IContextResolver context)

@@ -147,7 +147,7 @@ namespace Epsitec.Common.Types
 				path = p2.GetFullPath ();
 			}
 			else if ((p2.path == null) ||
-				/**/ (p2.path.Length == 0))
+				     (p2.path.Length == 0))
 			{
 				path = p1.GetFullPath ();
 			}

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Types
 {
 	[System.AttributeUsage (System.AttributeTargets.Assembly,
-		/**/				AllowMultiple=true)]
+		/* */				AllowMultiple=true)]
 	
 	public class DependencyClassAttribute : System.Attribute
 	{

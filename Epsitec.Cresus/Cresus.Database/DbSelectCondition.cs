@@ -181,8 +181,8 @@ namespace Epsitec.Cresus.Database
 					//	and archive copy (2) are all < deleted (3).
 					
 					this.AddCondition (mainTable.Columns[Tags.ColumnStatus],
-						/**/		   DbCompare.LessThan,
-						/**/		   DbKey.ConvertToIntStatus (DbRowStatus.Deleted));
+						/* */		   DbCompare.LessThan,
+						/* */		   DbKey.ConvertToIntStatus (DbRowStatus.Deleted));
 
 					revisionCondition = this.sqlFields[this.sqlFields.Count-1];
 					this.sqlFields.Remove (revisionCondition);
@@ -194,8 +194,8 @@ namespace Epsitec.Cresus.Database
 					//	copied (1) both describe active rows and are < archive copy (2).
 					
 					this.AddCondition (mainTable.Columns[Tags.ColumnStatus],
-						/**/		   DbCompare.LessThan,
-						/**/		   DbKey.ConvertToIntStatus (DbRowStatus.ArchiveCopy));
+						/* */		   DbCompare.LessThan,
+						/* */		   DbKey.ConvertToIntStatus (DbRowStatus.ArchiveCopy));
 
 					revisionCondition = this.sqlFields[this.sqlFields.Count-1];
 					this.sqlFields.Remove (revisionCondition);

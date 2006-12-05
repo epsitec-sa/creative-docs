@@ -238,6 +238,7 @@ namespace Epsitec.Common.UI
 			/// </summary>
 			/// <param name="id">The field identifier of the item.</param>
 			/// <param name="data">The data of the item.</param>
+			/// <param name="captionId">The caption id.</param>
 			public ItemRecord(string id, IStructuredData data, Druid captionId)
 			{
 				this.data = data;

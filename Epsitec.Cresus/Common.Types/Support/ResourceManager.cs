@@ -865,7 +865,7 @@ namespace Epsitec.Common.Support
 		/// is always the "Strings" bundle and the DRUID is used to find the
 		/// matching field inside that bundle.
 		/// </summary>
-		/// <param name="id">The druid of the field.</param>
+		/// <param name="druid">The druid of the field.</param>
 		/// <returns>The text found in that field; otherwise, <c>null</c>.</returns>
 		public string GetText(Druid druid)
 		{

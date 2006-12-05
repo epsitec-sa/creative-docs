@@ -90,7 +90,7 @@ namespace Epsitec.Common.Support
 		/// Parses the specified string, which can be either the module name or a
 		/// module id.
 		/// </summary>
-		/// <param name="moduleName">Name or id of the module.</param>
+		/// <param name="module">Name or id of the module.</param>
 		/// <returns>The module information structure.</returns>
 		public static ResourceModuleInfo Parse(string module)
 		{

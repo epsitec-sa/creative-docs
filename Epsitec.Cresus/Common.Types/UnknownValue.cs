@@ -17,7 +17,7 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Determines whether the object maps to an unknown item.
 		/// </summary>
-		/// <param name="item">The object which should be tested.</param>
+		/// <param name="value">The object which should be tested.</param>
 		/// <returns><c>true</c> if the object is an unknown item; otherwise,
 		/// <c>false</c>.</returns>
 		public static bool IsUnknownValue(object value)

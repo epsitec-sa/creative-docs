@@ -19,7 +19,8 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Resolves the object from its corresponding markup.
 		/// </summary>
-		/// <param name="id">The markup string to convert to an object.</param>
+		/// <param name="markup">The markup string to convert to an object.</param>
+		/// <param name="type">The expected type.</param>
 		/// <returns>The object.</returns>
 		object ResolveFromMarkup(string markup, System.Type type);
 

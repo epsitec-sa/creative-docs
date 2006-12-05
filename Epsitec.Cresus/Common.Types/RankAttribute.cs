@@ -10,13 +10,13 @@ namespace Epsitec.Common.Types
 
 	[System.Serializable]
 	[System.AttributeUsage (System.AttributeTargets.Assembly |
-		/**/				System.AttributeTargets.Class |
-		/**/				System.AttributeTargets.Enum |
-		/**/				System.AttributeTargets.Event |
-		/**/				System.AttributeTargets.Field |
-		/**/				System.AttributeTargets.Property |
-		/**/				System.AttributeTargets.Struct,
-		/**/				AllowMultiple = false)]
+		/* */				System.AttributeTargets.Class |
+		/* */				System.AttributeTargets.Enum |
+		/* */				System.AttributeTargets.Event |
+		/* */				System.AttributeTargets.Field |
+		/* */				System.AttributeTargets.Property |
+		/* */				System.AttributeTargets.Struct,
+		/* */				AllowMultiple = false)]
 
 	public sealed class RankAttribute : System.Attribute
 	{

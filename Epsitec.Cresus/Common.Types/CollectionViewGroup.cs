@@ -16,6 +16,7 @@ namespace Epsitec.Common.Types
 		/// Initializes a new instance of the <see cref="CollectionViewGroup"/> class.
 		/// </summary>
 		/// <param name="name">The name of the group.</param>
+		/// <param name="parentGroup">The parent group.</param>
 		internal CollectionViewGroup(string name, CollectionViewGroup parentGroup)
 		{
 			this.name = name;

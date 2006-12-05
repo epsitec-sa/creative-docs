@@ -58,14 +58,14 @@ namespace Epsitec.Common.Support
 			//	TODO: regénérer loc_decimal_num à chaque changement de culture
 			
 			RegexFactory.loc_decimal_num = new Regex (@"^(\-|\+)?((\d{1,12}(\" + decimal_separator +
-				/**/								 @"\d{0,12})?0*)|(\d{0,12}\" + decimal_separator +
-				/**/								 @"(\d{0,12})?0*))$", options);
+				/* */								  @"\d{0,12})?0*)|(\d{0,12}\" + decimal_separator +
+				/* */								  @"(\d{0,12})?0*))$", options);
 			
 			decimal_separator = System.Globalization.CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator[0];
 			
 			RegexFactory.inv_decimal_num = new Regex (@"^(\-|\+)?((\d{1,12}(\" + decimal_separator +
-				/**/								 @"\d{0,12})?0*)|(\d{0,12}\" + decimal_separator +
-				/**/								 @"(\d{0,12})?0*))$", options);
+				/* */								  @"\d{0,12})?0*)|(\d{0,12}\" + decimal_separator +
+				/* */								  @"(\d{0,12})?0*))$", options);
 		}
 		
 		

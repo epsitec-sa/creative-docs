@@ -969,7 +969,7 @@ namespace Epsitec.Common.Support
 				value |= digit-'0';
 			}
 			else if ((digit >= 'A') &&
-				/**/ (digit <= 'A'-10+31))
+				     (digit <= 'A'-10+31))
 			{
 				value <<= 5;
 				value |= digit-'A'+10;

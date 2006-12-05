@@ -346,7 +346,7 @@ namespace Epsitec.Cresus.Database
 		#region ICollection<KeyValuePair<string,string>> Members
 
 		/// <summary>
-		/// Adds an item to the collection.</see>.
+		/// Adds an item to the collection.
 		/// </summary>
 		/// <param name="item">The item to add.</param>
 		public void Add(KeyValuePair<string, string> item)

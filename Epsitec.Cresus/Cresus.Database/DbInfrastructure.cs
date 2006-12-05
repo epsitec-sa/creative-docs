@@ -1184,7 +1184,7 @@ namespace Epsitec.Cresus.Database
 				if (typeDef.Key.IsEmpty)
 				{
 					string message = string.Format ("Unregistered type '{0}' used in table '{1}', column '{2}'.",
-						/**/						typeDef.Name, table.Name, column.Name);
+						/* */						typeDef.Name, table.Name, column.Name);
 					
 					throw new Exceptions.GenericException (this.access, message);
 				}
@@ -1901,7 +1901,7 @@ namespace Epsitec.Cresus.Database
 		/// specified search mode.
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
-		/// <param name="key">The type key or <c>DbKey.Empty</c> to load all type definitions based on the search mode.</param>
+		/// <param name="typeKey">The type key or <c>DbKey.Empty</c> to load all type definitions based on the search mode.</param>
 		/// <param name="rowSearchMode">The search mode (live, deleted, etc.) if the key is set to <c>DbKey.Empty</c>, ignored otherwise.</param>
 		/// <returns>The type definitions.</returns>
 		public List<DbTypeDef> LoadDbType(DbTransaction transaction, DbKey typeKey, DbRowSearchMode rowSearchMode)

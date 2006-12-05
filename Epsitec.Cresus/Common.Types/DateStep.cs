@@ -119,11 +119,11 @@ namespace Epsitec.Common.Types
 					return new DateStep (int.Parse (args[0], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture));
 				case 2:
 					return new DateStep (int.Parse (args[0], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture),
-						/**/			 int.Parse (args[1], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture), 0);
+						/* */			 int.Parse (args[1], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture), 0);
 				case 3:
 					return new DateStep (int.Parse (args[0], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture),
-						/**/			 int.Parse (args[1], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture),
-						/**/			 int.Parse (args[2], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture));
+						/* */			 int.Parse (args[1], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture),
+						/* */			 int.Parse (args[2], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture));
 			}
 
 			throw new System.FormatException (string.Format ("Invalid date step: '{0}'", value));

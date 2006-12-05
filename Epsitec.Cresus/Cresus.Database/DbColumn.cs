@@ -416,7 +416,7 @@ namespace Epsitec.Cresus.Database
 			else
 			{
 				string message = string.Format ("Column '{0}' cannot change its target table name from '{1}' to '{2}'.",
-					/**/						this.Name, this.TargetTableName, targetTableName);
+					/* */						this.Name, this.TargetTableName, targetTableName);
 				throw new System.InvalidOperationException (message);
 			}
 		}

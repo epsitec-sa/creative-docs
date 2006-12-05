@@ -716,6 +716,7 @@ namespace Epsitec.Cresus.Database
 		/// Creates a foreign key reference column pointing to the specified target
 		/// table.
 		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		/// <param name="infrastructure">The database infrastructure.</param>
 		/// <param name="columnName">Name of the column.</param>
 		/// <param name="targetTableName">Name of the target table.</param>

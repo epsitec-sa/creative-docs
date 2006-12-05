@@ -80,12 +80,12 @@ namespace Epsitec.Cresus.Database
 					this.rawType = DbRawType.Int16;
 				}
 				else if ((this.minValue == System.Int32.MinValue) &&
-					/**/ (this.maxValue == System.Int32.MaxValue))
+					     (this.maxValue == System.Int32.MaxValue))
 				{
 					this.rawType = DbRawType.Int32;
 				}
 				else if ((this.minValue == System.Int64.MinValue) &&
-					/**/ (this.maxValue == System.Int64.MaxValue))
+					     (this.maxValue == System.Int64.MaxValue))
 				{
 					this.rawType = DbRawType.Int64;
 				}

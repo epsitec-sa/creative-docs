@@ -398,7 +398,7 @@ namespace Epsitec.Common.Types
 		/// Sets the value of the <c>SystemTypeProperty</c> dependency property.
 		/// </summary>
 		/// <param name="caption">The caption to modify.</param>
-		/// <param name="value">The system type name as returned by <c>GetSystemTypeNameFromSystemType</c>.</param>
+		/// <param name="typeName">The system type name as returned by <c>GetSystemTypeNameFromSystemType</c>.</param>
 		public static void SetSystemType(Caption caption, string typeName)
 		{
 			if (string.IsNullOrEmpty (typeName))

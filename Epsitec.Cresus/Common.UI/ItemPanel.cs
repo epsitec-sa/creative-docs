@@ -344,7 +344,7 @@ namespace Epsitec.Common.UI
 						ox = System.Math.Max (aperture.Right - bounds.Right, aperture.Left - bounds.Left);
 					}
 					else if ((aperture.Right > bounds.Right) &&
-						/**/ (aperture.Left > bounds.Left))
+						     (aperture.Left > bounds.Left))
 					{
 						ox = System.Math.Min (aperture.Right - bounds.Right, aperture.Left - bounds.Left);
 					}
@@ -355,7 +355,7 @@ namespace Epsitec.Common.UI
 						oy = System.Math.Max (aperture.Top - bounds.Top, aperture.Bottom - bounds.Bottom);
 					}
 					else if ((aperture.Top > bounds.Top) &&
-						/**/ (aperture.Bottom > bounds.Bottom))
+						     (aperture.Bottom > bounds.Bottom))
 					{
 						oy = System.Math.Min (aperture.Top - bounds.Top, aperture.Bottom - bounds.Bottom);
 					}

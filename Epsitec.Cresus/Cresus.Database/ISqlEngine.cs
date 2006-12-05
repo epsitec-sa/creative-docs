@@ -24,7 +24,6 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="command">The command.</param>
 		/// <param name="type">The command type.</param>
-		/// <param name="commandCount">The command count.</param>
 		/// <param name="commandCount">The number of commands.</param>
 		/// <param name="simpleData">The execution result.</param>
 		void Execute(System.Data.IDbCommand command, DbCommandType type, int commandCount, out object simpleData);
