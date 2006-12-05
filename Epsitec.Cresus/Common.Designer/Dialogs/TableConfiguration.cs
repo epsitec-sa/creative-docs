@@ -50,10 +50,17 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonRemove.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 				this.toolbar.Items.Add(this.buttonRemove);
 
-				this.buttonTemplate = new IconButton();
-				this.buttonTemplate.CaptionId = Res.Captions.Dialog.TableConfiguration.Template.Id;
-				this.buttonTemplate.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-				this.toolbar.Items.Add(this.buttonTemplate);
+				this.toolbar.Items.Add(new IconSeparator());
+
+				this.buttonTemplateAdd = new IconButton();
+				this.buttonTemplateAdd.CaptionId = Res.Captions.Dialog.TableConfiguration.TemplateAdd.Id;
+				this.buttonTemplateAdd.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				this.toolbar.Items.Add(this.buttonTemplateAdd);
+
+				this.buttonTemplateRemove = new IconButton();
+				this.buttonTemplateRemove.CaptionId = Res.Captions.Dialog.TableConfiguration.TemplateRemove.Id;
+				this.buttonTemplateRemove.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				this.toolbar.Items.Add(this.buttonTemplateRemove);
 
 				this.toolbar.Items.Add(new IconSeparator());
 
@@ -234,8 +241,9 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.buttonAdd.Enable = (sel != -1 && !this.items[sel].Used);
 			this.buttonRemove.Enable = (sel != -1 && this.items[sel].Used);
-			this.buttonPrev.Enable = (sel > 0);
-			this.buttonNext.Enable = (sel < this.items.Count-1);
+
+			this.buttonPrev.Enable = (sel != -1 && sel > 0);
+			this.buttonNext.Enable = (sel != -1 && sel < this.items.Count-1);
 		}
 
 		protected void UpdateArray()
@@ -319,9 +327,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateButtons();
 		}
 
-		protected void ArrayTemplate()
+		protected void ArrayTemplateAdd()
 		{
 			//	Ajoute un template dans la table.
+		}
+
+		protected void ArrayTemplateRemove()
+		{
+			//	Supprime un template dans la table.
 		}
 
 		protected void ArrayMove(int direction)
@@ -362,9 +375,14 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.ArrayRemove();
 			}
 
-			if (sender == this.buttonTemplate)
+			if (sender == this.buttonTemplateAdd)
 			{
-				this.ArrayTemplate();
+				this.ArrayTemplateAdd();
+			}
+
+			if (sender == this.buttonTemplateRemove)
+			{
+				this.ArrayTemplateRemove();
 			}
 
 			if (sender == this.buttonPrev)
@@ -499,7 +517,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected HToolBar						toolbar;
 		protected IconButton					buttonAdd;
 		protected IconButton					buttonRemove;
-		protected IconButton					buttonTemplate;
+		protected IconButton					buttonTemplateAdd;
+		protected IconButton					buttonTemplateRemove;
 		protected IconButton					buttonPrev;
 		protected IconButton					buttonNext;
 		protected IconButton					buttonSort;

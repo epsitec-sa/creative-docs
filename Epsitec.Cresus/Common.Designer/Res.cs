@@ -28,7 +28,8 @@ namespace Epsitec.Common.Designer
 					public static Epsitec.Common.Types.Caption Prev { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 413)); } }
 					public static Epsitec.Common.Types.Caption Remove { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 411)); } }
 					public static Epsitec.Common.Types.Caption Sort { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 415)); } }
-					public static Epsitec.Common.Types.Caption Template { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 412)); } }
+					public static Epsitec.Common.Types.Caption TemplateAdd { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 412)); } }
+					public static Epsitec.Common.Types.Caption TemplateRemove { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 416)); } }
 				}
 			}
 			
