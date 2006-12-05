@@ -160,12 +160,28 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Initialise le dialogue avec l'objet table.
 			this.module = module;
 			this.resourceAccess = module.AccessCaptions;
-			this.structuredType = structuredType;
 
-			this.columns = new List<UI.ItemTableColumn> ();
+			//	Construit la liste de toutes les rubriques existantes.
+			List<UI.ItemTableColumn> fullList = new List<UI.ItemTableColumn>();
+			foreach (string fieldId in structuredType.GetFieldIds())
+			{
+				fullList.Add(new UI.ItemTableColumn(fieldId));
+			}
+
+			//	Met toutes les rubriques utilisées.
+			this.items = new List<Item>();
 			foreach (UI.ItemTableColumn column in columns)
 			{
-				this.columns.Add(column);
+				this.items.Add(new Item(true, column));
+			}
+
+			//	Ajoute toutes les rubriques existantes mais pas utilisées.
+			foreach (UI.ItemTableColumn column in fullList)
+			{
+				if (!TableConfiguration.Contains(columns, column))
+				{
+					this.items.Add(new Item(false, column));
+				}
 			}
 
 			this.columnsReturned = null;
@@ -180,37 +196,72 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		protected static bool Contains(List<UI.ItemTableColumn> columns, UI.ItemTableColumn column)
+		{
+			foreach (UI.ItemTableColumn c in columns)
+			{
+				if (c.FieldId == column.FieldId)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		protected List<UI.ItemTableColumn> SelectedList
+		{
+			get
+			{
+				List<UI.ItemTableColumn> list = new List<Epsitec.Common.UI.ItemTableColumn>();
+
+				foreach (Item item in this.items)
+				{
+					if (item.Used)
+					{
+						list.Add(item.Column);
+					}
+				}
+
+				return list;
+			}
+		}
+
+
 		protected void UpdateButtons()
 		{
 			//	Met à jour tous les boutons en fonction de la ligne sélectionnée dans le tableau.
 			int sel = this.array.SelectedRow;
+
+			this.buttonAdd.Enable = (sel != -1 && !this.items[sel].Used);
+			this.buttonRemove.Enable = (sel != -1 && this.items[sel].Used);
+			this.buttonPrev.Enable = (sel > 0);
+			this.buttonNext.Enable = (sel < this.items.Count-1);
 		}
 
 		protected void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			this.array.TotalRows = this.columns.Count;
+			this.array.TotalRows = this.items.Count;
 
 			int first = this.array.FirstVisibleRow;
 			for (int i=0; i<this.array.LineCount; i++)
 			{
-				if (first+i < this.columns.Count)
+				if (first+i < this.items.Count)
 				{
-					UI.ItemTableColumn column = this.columns[first+i];
-					string name = column.FieldId;
+					Item item = this.items[first+i];
+					string name = item.Column.FieldId;
 
-					bool active = true;
-					string icon = active ? Misc.Image("TypeEnumYes") : "";
-					MyWidgets.StringList.CellState cs = active ? MyWidgets.StringList.CellState.Normal : MyWidgets.StringList.CellState.Unused;
+					string icon = item.Used ? Misc.Image("TypeEnumYes") : "";
+					MyWidgets.StringList.CellState cs = item.Used ? MyWidgets.StringList.CellState.Normal : MyWidgets.StringList.CellState.Unused;
 
 					this.array.SetLineString(0, first+i, icon);
 					this.array.SetLineState(0, first+i, cs);
 
 					this.array.SetLineString(1, first+i, name);
-					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
+					this.array.SetLineState(1, first+i, cs);
 
 					this.array.SetLineString(2, first+i, "");
-					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
+					this.array.SetLineState(2, first+i, cs);
 				}
 				else
 				{
@@ -243,11 +294,29 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void ArrayAdd()
 		{
 			//	Ajoute une nouvelle rubrique dans la table.
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			this.items[sel].Used = true;
+			this.UpdateArray();
+			this.UpdateButtons();
 		}
 
 		protected void ArrayRemove()
 		{
 			//	Supprime une rubrique de la table.
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			this.items[sel].Used = false;
+			this.UpdateArray();
+			this.UpdateButtons();
 		}
 
 		protected void ArrayTemplate()
@@ -264,9 +333,9 @@ namespace Epsitec.Common.Designer.Dialogs
 				return;
 			}
 
-			UI.ItemTableColumn column = this.columns[sel];
-			this.columns.RemoveAt(sel);
-			this.columns.Insert(sel+direction, column);
+			Item item = this.items[sel];
+			this.items.RemoveAt(sel);
+			this.items.Insert(sel+direction, item);
 
 			this.array.SelectedRow = sel+direction;
 			this.array.ShowSelectedRow();
@@ -383,7 +452,40 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.Hide();
 			this.OnClosed();
 
-			this.columnsReturned = this.columns;
+			this.columnsReturned = this.SelectedList;
+		}
+
+
+		protected class Item
+		{
+			public Item(bool used, UI.ItemTableColumn column)
+			{
+				this.used = used;
+				this.column = column;
+			}
+
+			public bool Used
+			{
+				get
+				{
+					return this.used;
+				}
+				set
+				{
+					this.used = value;
+				}
+			}
+
+			public UI.ItemTableColumn Column
+			{
+				get
+				{
+					return this.column;
+				}
+			}
+
+			protected bool						used;
+			protected UI.ItemTableColumn		column;
 		}
 
 
@@ -391,8 +493,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected Module						module;
 		protected ResourceAccess				resourceAccess;
-		protected StructuredType				structuredType;
-		protected List<UI.ItemTableColumn>		columns;
+		protected List<Item>					items;
 		protected List<UI.ItemTableColumn>		columnsReturned;
 
 		protected HToolBar						toolbar;
