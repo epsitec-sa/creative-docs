@@ -195,8 +195,6 @@ namespace Epsitec.Common.Types
 
 		public static readonly StructuredTypeField Empty = new StructuredTypeField ();
 
-		
-
 		#region SerializationConverter Class
 
 		public class SerializationConverter : ISerializationConverter
@@ -249,6 +247,10 @@ namespace Epsitec.Common.Types
 
 					if (type == null)
 					{
+						//	If the type is not yet known to TypeRosetta, queue a request for
+						//	a later fix-up instead of trying to resolve it here and now, as
+						//	this could lead to endless loops :
+						
 						TypeRosetta.QueueFixUp (
 							delegate ()
 							{

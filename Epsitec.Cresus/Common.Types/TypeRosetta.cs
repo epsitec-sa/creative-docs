@@ -536,12 +536,22 @@ namespace Epsitec.Common.Types
 		public static AbstractType CreateTypeObject(Caption caption)
 		{
 			TypeRosetta.InitializeKnownTypes ();
-			
+
 			if (caption == null)
 			{
 				throw new System.ArgumentNullException ("caption");
 			}
 
+			lock (TypeRosetta.knownTypes)
+			{
+				return TypeRosetta.LockedCreateTypeObject (caption);
+			}
+		}
+
+		#region Low level type management code
+
+		private static AbstractType LockedCreateTypeObject(Caption caption)
+		{
 			Support.Druid typeId = caption.Id;
 			AbstractType  type   = null;
 			
@@ -627,15 +637,12 @@ namespace Epsitec.Common.Types
 			if ((type != null) &&
 				(typeId.IsValid))
 			{
-				lock (TypeRosetta.knownTypes)
-				{
-					//	Check if the type is already known. If not, record a reference to
-					//	it so that we can then access it by its DRUID or by its name :
+				//	Check if the type is already known. If not, record a reference to
+				//	it so that we can then access it by its DRUID or by its name :
 
-					if (TypeRosetta.knownTypes.ContainsKey (typeId) == false)
-					{
-						TypeRosetta.knownTypes[typeId] = type;
-					}
+				if (TypeRosetta.knownTypes.ContainsKey (typeId) == false)
+				{
+					TypeRosetta.knownTypes[typeId] = type;
 				}
 			}
 
@@ -712,6 +719,8 @@ namespace Epsitec.Common.Types
 		{
 			type.Lock ();
 		}
+
+		#endregion
 
 		#region AutomaticNamedType Class
 
@@ -926,11 +935,19 @@ namespace Epsitec.Common.Types
 			return TypeRosetta.DoesTypeImplementGenericInterface (type, genericInterfaceType, out interfaceType);
 		}
 
+		/// <summary>
+		/// Queues a fix-up callback which must be called immediately after type
+		/// creation.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
 		internal static void QueueFixUp(Support.SimpleCallback callback)
 		{
 			TypeRosetta.fixUpQueue.Enqueue (callback);
 		}
 
+		/// <summary>
+		/// Executes the fix-ups queued by <c>QueueFixUp</c>.
+		/// </summary>
 		private static void ExecuteFixUps()
 		{
 			while (TypeRosetta.fixUpQueue.Count > 0)
