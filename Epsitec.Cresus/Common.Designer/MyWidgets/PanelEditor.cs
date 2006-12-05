@@ -431,7 +431,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					break;
 
 				case MessageType.MouseWheel:
-					if (this.dimensionsList.Wheel(message.Wheel))
+					if (!this.isShiftPressed && this.dimensionsList.Wheel(message.Wheel))
 					{
 						this.OnChildrenGeometryChanged();  // met à jour les proxies
 						this.module.MainWindow.UpdateInfoViewer();
@@ -633,7 +633,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.isRectangling = false;
 			Widget obj;
 
-			if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging)
+			if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging && !this.isShiftPressed)
 			{
 				this.isDraggingDimension = this.dimensionsList.DraggingStart(pos, isControlPressed, isShiftPressed);
 				if (this.isDraggingDimension)
