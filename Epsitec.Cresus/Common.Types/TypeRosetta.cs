@@ -956,7 +956,16 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				callback ();
+				try
+				{
+					TypeRosetta.creatingTypeObject++;
+					
+					callback ();
+				}
+				finally
+				{
+					TypeRosetta.creatingTypeObject--;
+				}
 			}
 		}
 

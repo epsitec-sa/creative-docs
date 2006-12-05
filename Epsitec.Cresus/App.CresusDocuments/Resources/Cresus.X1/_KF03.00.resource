@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<bundle name="_KF03" caption="Part.ContactAddressEdit" type="Panel" culture="fr" rank="3">
+<bundle name="_KF03" caption="Part.ContactAddressEdit" type="Panel" culture="fr" rank="2">
   <data name="Panel">
     <xml>
       <panel xmlns:s="http://www.epsitec.ch/XNS/storage-structure-1" xmlns:f="http://www.epsitec.ch/XNS/storage-fields-1">
