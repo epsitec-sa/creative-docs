@@ -1136,10 +1136,10 @@ namespace Epsitec.Common.Designer
 			return this.dlgTableConfiguration.Columns;
 		}
 
-		public bool DlgBindingSelector(Module baseModule, StructuredType type, ref Binding binding, bool onlyCollections)
+		public bool DlgBindingSelector(Module baseModule, StructuredType type, ObjectModifier.ObjectType objectType, ref Binding binding)
 		{
 			//	Ouvre le dialogue pour choisir une rubrique dans une structure de données.
-			this.dlgBindingSelector.Initialise(baseModule, type, binding, onlyCollections);
+			this.dlgBindingSelector.Initialise(baseModule, type, objectType, binding);
 			this.dlgBindingSelector.Show();  // choix dans le dialogue...
 			binding = this.dlgBindingSelector.SelectedBinding;
 			return this.dlgBindingSelector.IsOk;

@@ -89,6 +89,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.SetDynamicToolTips(5, false);
 				this.array.LineHeight = BindingSelector.arrayLineHeight;
 				this.array.Dock = DockStyle.Fill;
+				this.array.Margins = new Margins(0, 0, 0, 4);
 				this.array.ColumnsWidthChanged += new EventHandler(this.HandleArrayColumnsWidthChanged);
 				this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
 				this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
@@ -144,7 +145,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkInherit = new CheckButton(this.window.Root);
 				this.checkInherit.Text = "Hérité";
 				this.checkInherit.Dock = DockStyle.Bottom;
-				this.checkInherit.Margins = new Margins(0, 0, 8, 4);
+				this.checkInherit.Margins = new Margins(0, 0, 2, 4);
 				this.checkInherit.ActiveStateChanged += new EventHandler(this.HandleCheckInheritActiveStateChanged);
 			}
 
@@ -157,14 +158,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.ShowDialog();
 		}
 
-		public void Initialise(Module module, StructuredType type, Binding binding, bool onlyCollections)
+		public void Initialise(Module module, StructuredType type, ObjectModifier.ObjectType objectType, Binding binding)
 		{
 			//	Initialise le dialogue avec le binding actuel.
 			this.module = module;
 			this.resourceAccess = module.AccessCaptions;
 			this.structuredType = type;
+			this.objectType = objectType;
 			this.initialBinding = binding;
-			this.onlyCollections = onlyCollections;
 
 			this.selectedBinding = null;
 			this.isOk = false;
@@ -264,7 +265,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				StructuredTypeField field = type.Fields[id];
 
-				if (!this.onlyCollections || field.Relation == Relation.Collection)
+				if (this.objectType != ObjectModifier.ObjectType.Table || field.Relation == Relation.Collection)
 				{
 					this.fields.Add(field);
 				}
@@ -431,7 +432,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour le bouton pour le mode.
 			this.ignoreChanged = true;
 
+			this.checkInherit.Visibility = (this.objectType == ObjectModifier.ObjectType.SubPanel);
 			this.checkInherit.ActiveState = (this.initialBinding == null) ? ActiveState.Yes : ActiveState.No;
+
 			this.checkReadonly.ActiveState = (this.initialBinding != null && this.Mode == BindingMode.OneWay) ? ActiveState.Yes : ActiveState.No;
 			this.checkReadonly.Enable = (this.initialBinding != null);
 
@@ -518,6 +521,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			this.UpdateMode();
+			this.UpdateButtons();
 		}
 
 		private void HandleCheckReadonlyActiveStateChanged(object sender)
@@ -570,10 +574,10 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected ResourceAccess				resourceAccess;
 		protected Module						module;
 		protected StructuredType				structuredType;
+		protected ObjectModifier.ObjectType		objectType;
 		protected List<StructuredTypeField>		fields;
 		protected Binding						initialBinding;
 		protected Binding						selectedBinding;
-		protected bool							onlyCollections;
 		protected bool							isOk;
 
 		protected StaticText					title;

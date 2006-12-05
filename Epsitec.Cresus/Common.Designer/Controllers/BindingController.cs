@@ -100,20 +100,16 @@ namespace Epsitec.Common.Designer.Controllers
 			MainWindow mainWindow = this.MainWindow;
 			StructuredType type = this.StructuredType;
 			Binding binding = this.binding;
-			bool onlyCollection = false;
+			ObjectModifier.ObjectType oType = ObjectModifier.ObjectType.Unknow;
 
 			IProxy sourceProxy = this.Placeholder.ValueBinding.Source as IProxy;
 			IEnumerable<Widget> sourceWidgets = sourceProxy.Widgets;  // liste des objets sélectionnés
 			foreach (Widget obj in sourceWidgets)
 			{
-				ObjectModifier.ObjectType oType = ObjectModifier.GetObjectType(obj);
-				if (oType == ObjectModifier.ObjectType.Table)
-				{
-					onlyCollection = true;
-				}
+				oType = ObjectModifier.GetObjectType(obj);
 			}
 
-			if (!mainWindow.DlgBindingSelector(mainWindow.CurrentModule, type, ref binding, onlyCollection))
+			if (!mainWindow.DlgBindingSelector(mainWindow.CurrentModule, type, oType, ref binding))
 			{
 				return;
 			}
