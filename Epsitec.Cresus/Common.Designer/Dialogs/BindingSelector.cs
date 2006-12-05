@@ -268,13 +268,19 @@ namespace Epsitec.Common.Designer.Dialogs
 				if (this.objectType == ObjectModifier.ObjectType.SubPanel &&
 					!(field.Type is StructuredType))
 				{
-						continue;
+					continue;
+				}
+
+				if (this.objectType == ObjectModifier.ObjectType.Placeholder &&
+					(field.Type is StructuredType))
+				{
+					continue;
 				}
 
 				if (this.objectType == ObjectModifier.ObjectType.Table &&
 					field.Relation != Relation.Collection)
 				{
-						continue;
+					continue;
 				}
 
 				this.fields.Add(field);

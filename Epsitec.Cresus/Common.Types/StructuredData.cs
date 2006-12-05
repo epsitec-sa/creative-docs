@@ -69,7 +69,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public void FillWithModelValues(StructuredData model)
+		public virtual void CopyContentsFrom(StructuredData data)
 		{
 			IStructuredType type = this.StructuredType;
 
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Types
 			{
 				foreach (string fieldId in type.GetFieldIds ())
 				{
-					object value = model.GetValue (fieldId);
+					object value = data.GetValue (fieldId);
 
 					if ((UndefinedValue.IsUndefinedValue (value)) ||
 						(UnknownValue.IsUnknownValue (value)))
@@ -90,6 +90,20 @@ namespace Epsitec.Common.Types
 					}
 				}
 			}
+		}
+
+		public virtual StructuredData CreateEmptyCopy()
+		{
+			return new StructuredData (this.StructuredType);
+		}
+
+		public StructuredData GetShallowCopy()
+		{
+			StructuredData data = this.CreateEmptyCopy ();
+
+			data.CopyContentsFrom (this);
+
+			return data;
 		}
 
 		#region IStructuredTypeProvider Members
@@ -300,7 +314,6 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
-
 		public static Support.PropertyGetter CreatePropertyGetter(string propertyName)
 		{
 			return delegate (object obj)
@@ -332,7 +345,7 @@ namespace Epsitec.Common.Types
 				return System.Collections.Comparer.Default.Compare (a, b);
 			};
 		}
-		
+
 		protected virtual object GetUndefinedValue(StructuredTypeField fieldType, string id)
 		{
 			AbstractType type = fieldType.Type as AbstractType;
