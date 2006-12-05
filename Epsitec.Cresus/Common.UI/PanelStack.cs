@@ -335,6 +335,18 @@ namespace Epsitec.Common.UI
 				this.RemoveUserEventHandler (PanelStack.PanelActivationEventName, value);
 			}
 		}
+
+		public event Support.EventHandler<DependencyPropertyChangedEventArgs> EditPanelChanged
+		{
+			add
+			{
+				this.AddEventHandler (PanelStack.EditPanelProperty, value);
+			}
+			remove
+			{
+				this.RemoveEventHandler (PanelStack.EditPanelProperty, value);
+			}
+		}
 		
 		public static readonly DependencyProperty EditPanelProperty = DependencyProperty.RegisterReadOnly ("EditPanel", typeof (Panel), typeof (PanelStack), new DependencyPropertyMetadata (PanelStack.GetEditPanelValue));
 

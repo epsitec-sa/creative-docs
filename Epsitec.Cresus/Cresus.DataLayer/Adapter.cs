@@ -206,7 +206,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 		
-		private static void CreateTableDefinition(DbTransaction transaction, DbInfrastructure infrastructure, StructuredType type, List<DbTable> tables)
+		private static DbTable CreateTableDefinition(DbTransaction transaction, DbInfrastructure infrastructure, StructuredType type, List<DbTable> tables)
 		{
 			DbContext context   = infrastructure.DefaultContext;
 			string    tableName = context.ResourceManager.GetCaption (type.CaptionId).Name;
@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				if (iter.Name == tableName)
 				{
-					return;
+					return iter;
 				}
 			}
 
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.DataLayer
 				if (find != null)
 				{
 					tables.Add (find);
-					return;
+					return find;
 				}
 			}
 
@@ -245,22 +245,32 @@ namespace Epsitec.Cresus.DataLayer
 
 				if (field.Type is IStructuredType)
 				{
-					StructuredType structuredType = field.Type as StructuredType;
-					INullableType  nullableType   = field.Type as INullableType;
+					StructuredType targetType   = field.Type as StructuredType;
+					INullableType  nullableType = field.Type as INullableType;
 
 					string columnName = field.Id;
 					string targetName = context.ResourceManager.GetCaption (field.Type.CaptionId).Name;
 
-					if (structuredType == null)
+					if (targetType == null)
 					{
 						throw new System.ArgumentException (string.Format ("Field {0} (type {1}) of structure {2} is invalid", columnName, typeName, tableName));
 					}
 
 					bool isNullable = nullableType == null ? false : nullableType.IsNullable;
 
-					column = DbTable.CreateRefColumn (transaction, infrastructure, columnName, targetName, isNullable ? DbNullability.Yes : DbNullability.No);
+					switch (field.Relation)
+					{
+						case Relation.Reference:
+							column = Adapter.CreateReferenceColumn (transaction, infrastructure, targetType, tables, columnName, targetName, isNullable);
+							break;
 
-					Adapter.CreateTableDefinition (transaction, infrastructure, structuredType, tables);
+						case Relation.Collection:
+							column = Adapter.CreateCollectionColumn (transaction, infrastructure, type, targetType, tables, tableName, columnName, targetName, isNullable);
+							break;
+
+						default:
+							throw new System.NotSupportedException (string.Format ("Relation {0} not supported", field.Relation));
+					}
 				}
 				else
 				{
@@ -275,13 +285,52 @@ namespace Epsitec.Cresus.DataLayer
 					column = DbTable.CreateUserDataColumn (columnName, columnType);
 				}
 
-				System.Diagnostics.Debug.Assert (column != null);
-				System.Diagnostics.Debug.Assert (!column.Type.Key.IsEmpty);
-
-				table.Columns.Add (column);
+				if (column != null)
+				{
+					System.Diagnostics.Debug.Assert (!column.Type.Key.IsEmpty);
+					table.Columns.Add (column);
+				}
 			}
 
 			infrastructure.RegisterNewDbTable (transaction, table);
+			
+			return table;
+		}
+
+		private static DbColumn CreateReferenceColumn(DbTransaction transaction, DbInfrastructure infrastructure, StructuredType targetType, List<DbTable> tables, string columnName, string targetName, bool isNullable)
+		{
+			Adapter.CreateTableDefinition (transaction, infrastructure, targetType, tables);
+			
+			return DbTable.CreateRefColumn (transaction, infrastructure, columnName, targetName, isNullable ? DbNullability.Yes : DbNullability.No);
+		}
+
+		private static DbColumn CreateCollectionColumn(DbTransaction transaction, DbInfrastructure infrastructure, StructuredType sourceType, StructuredType targetType, List<DbTable> tables, string tableName, string columnName, string targetName, bool isNullable)
+		{
+			bool ok = false;
+			
+			foreach (string id in targetType.GetFieldIds ())
+			{
+				StructuredTypeField field = targetType.GetField (id);
+
+				if (field.Type == sourceType)
+				{
+					switch (field.Relation)
+					{
+						case Relation.Reference:
+							ok = true;
+							break;
+					}
+				}
+			}
+
+			if (!ok)
+			{
+				throw new System.NotSupportedException ("Collection relation not supported");
+			}
+
+			Adapter.CreateTableDefinition (transaction, infrastructure, targetType, tables);
+
+			return null;
 		}
 
 		private DbInfrastructure infrastructure;

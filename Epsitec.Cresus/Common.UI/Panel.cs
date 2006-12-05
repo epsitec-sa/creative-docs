@@ -284,6 +284,35 @@ namespace Epsitec.Common.UI
 			this.SyncDataContext ();
 		}
 
+		public void SetupEmptyDataSource()
+		{
+			DataSourceMetadata metadata = this.DataSourceMetadata;
+
+			if (metadata == null)
+			{
+				throw new System.InvalidOperationException ("No metadata defined for the panel");
+			}
+
+			DataSource source = new DataSource ();
+
+			foreach (StructuredTypeField field in metadata.Fields)
+			{
+				IStructuredType structuredType = field.Type as IStructuredType;
+
+				if (structuredType != null)
+				{
+					source.AddDataSource (field.Id, new StructuredData (structuredType));
+				}
+				else
+				{
+					//	TODO: handle other types here ...
+				}
+			}
+
+			this.DataSource = source;
+			this.SyncDataContext ();
+		}
+
 		public virtual Drawing.Path CreateAperturePath(bool parentRelative)
 		{
 			return null;

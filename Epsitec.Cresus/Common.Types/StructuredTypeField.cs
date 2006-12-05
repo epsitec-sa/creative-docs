@@ -10,8 +10,19 @@ namespace Epsitec.Common.Types
 	/// pair, when serializing a <see cref="StructuredType"/>.
 	/// </summary>
 	[SerializationConverter (typeof (StructuredTypeField.SerializationConverter))]
-	public struct StructuredTypeField
+	public class StructuredTypeField
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StructuredTypeField"/> class.
+		/// </summary>
+		public StructuredTypeField()
+		{
+			this.id = null;
+			this.type = null;
+			this.captionId = Support.Druid.Empty;
+			this.rank = 0;
+			this.relation = Relation.None;
+		}
 		/// <summary>
 		/// Initializes a new instance of the <see cref="StructuredTypeField"/> class.
 		/// </summary>
@@ -226,12 +237,32 @@ namespace Epsitec.Common.Types
 				
 				string        name      = args[0];
 				Support.Druid druid     = Support.Druid.Parse (args[1]);
-				INamedType    type      = druid.IsEmpty ? null : (manager == null ? TypeRosetta.GetTypeObject (druid) : TypeRosetta.GetTypeObject (manager.GetCaption (druid)));
 				string        rank      = args.Length < 3 ? "-1" : string.IsNullOrEmpty (args[2]) ? "-1" : args[2];
 				Support.Druid captionId = args.Length < 4 ? Support.Druid.Empty : Support.Druid.Parse (args[3]);
 				string        flags     = args.Length < 5 ? "0" : args[4];
 				
-				return new StructuredTypeField (name, type, captionId, System.Int32.Parse (rank, System.Globalization.CultureInfo.InvariantCulture), System.Int32.Parse (flags, System.Globalization.CultureInfo.InvariantCulture));
+				StructuredTypeField field = new StructuredTypeField (name, null, captionId, System.Int32.Parse (rank, System.Globalization.CultureInfo.InvariantCulture), System.Int32.Parse (flags, System.Globalization.CultureInfo.InvariantCulture));
+
+				if (druid.IsValid)
+				{
+					INamedType type = TypeRosetta.GetTypeObject (druid);
+
+					if (type == null)
+					{
+						TypeRosetta.QueueFixUp (
+							delegate ()
+							{
+								Caption caption = (manager ?? Support.Resources.DefaultManager).GetCaption (druid);
+								field.type = TypeRosetta.GetTypeObject (caption);
+							});
+					}
+					else
+					{
+						field.type = type;
+					}
+				}
+				
+				return field;
 			}
 
 			#endregion

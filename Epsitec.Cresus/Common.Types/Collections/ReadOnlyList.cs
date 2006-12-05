@@ -116,7 +116,7 @@ namespace Epsitec.Common.Types.Collections
 		{
 			get
 			{
-				return this.list.Count;
+				return this.list == null ? 0 : this.list.Count;
 			}
 		}
 

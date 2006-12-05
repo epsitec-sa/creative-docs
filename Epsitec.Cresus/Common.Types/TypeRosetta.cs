@@ -638,6 +638,8 @@ namespace Epsitec.Common.Types
 					}
 				}
 			}
+
+			TypeRosetta.ExecuteFixUps ();
 			
 			return type;
 		}
@@ -923,11 +925,26 @@ namespace Epsitec.Common.Types
 			System.Type interfaceType;
 			return TypeRosetta.DoesTypeImplementGenericInterface (type, genericInterfaceType, out interfaceType);
 		}
-		
+
+		internal static void QueueFixUp(Support.SimpleCallback callback)
+		{
+			TypeRosetta.fixUpQueue.Enqueue (callback);
+		}
+
+		private static void ExecuteFixUps()
+		{
+			while (TypeRosetta.fixUpQueue.Count > 0)
+			{
+				Support.SimpleCallback callback = TypeRosetta.fixUpQueue.Dequeue ();
+				callback ();
+			}
+		}
+
 		public static readonly DependencyProperty TypeObjectProperty = DependencyProperty.RegisterAttached ("TypeObject", typeof (object), typeof (TypeRosetta.Properties));
 
 		private static object globalExclusion = new object ();
 
 		private static Dictionary<Support.Druid, AbstractType> knownTypes;
+		private static Queue<Support.SimpleCallback> fixUpQueue = new Queue<Epsitec.Common.Support.SimpleCallback> ();
 	}
 }
