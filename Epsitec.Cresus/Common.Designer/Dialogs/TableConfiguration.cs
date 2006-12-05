@@ -177,6 +177,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.footerCaption.Clicked += new MessageEventHandler(this.HandleFooterCaptionClicked);
 			}
 
+			this.array.SelectedRow = -1;
+
 			this.UpdateButtons();
 			this.UpdateArray();
 
@@ -260,8 +262,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour tous les boutons en fonction de la ligne sélectionnée dans le tableau.
 			int sel = this.array.SelectedRow;
 
-			this.buttonAdd.Enable = (sel != -1 && !this.items[sel].Used);
-			this.buttonRemove.Enable = (sel != -1 && this.items[sel].Used);
+			this.buttonAdd.Enable = (sel != -1 && !this.items[sel].Used && !this.items[sel].IsTemplate);
+			this.buttonRemove.Enable = (sel != -1 && this.items[sel].Used && !this.items[sel].IsTemplate);
 
 			this.buttonTemplateAdd.Enable = (sel != -1);
 			this.buttonTemplateRemove.Enable = (sel != -1 && this.items[sel].IsTemplate);
@@ -288,6 +290,22 @@ namespace Epsitec.Common.Designer.Dialogs
 
 					string icon = item.Used ? Misc.Image("TypeEnumYes") : "";
 					MyWidgets.StringList.CellState cs = item.Used ? MyWidgets.StringList.CellState.Normal : MyWidgets.StringList.CellState.Unused;
+
+					if (item.IsTemplate)
+					{
+						//	TODO: pourquoi le caption n'est pas trouvé ?
+						Caption caption = this.module.ResourceManager.GetCaption(item.Column.TemplateId);
+						if (caption == null)
+						{
+							name = Misc.Italic("Interface");
+						}
+						else
+						{
+							name = caption.Name;
+						}
+
+						icon = Misc.Image("ObjectPanel");
+					}
 
 					string description = "";
 					if (!item.Column.CaptionId.IsEmpty)
@@ -371,11 +389,48 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void ArrayTemplateAdd()
 		{
 			//	Ajoute un template dans la table.
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			Druid druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Panels, ResourceAccess.TypeType.None, Druid.Empty, null);
+			if (druid.IsEmpty)  // annuler ?
+			{
+				return;
+			}
+
+			Item item = new Item(druid);
+			this.items.Insert(sel+1, item);
+			this.array.SelectedRow = sel+1;
+
+			this.UpdateArray();
+			this.UpdateButtons();
 		}
 
 		protected void ArrayTemplateRemove()
 		{
 			//	Supprime un template dans la table.
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			if (this.items[sel].IsTemplate)
+			{
+				this.items.RemoveAt(sel);
+
+				if (sel > this.items.Count-1)
+				{
+					sel = this.items.Count-1;
+				}
+				this.array.SelectedRow = sel;
+
+				this.UpdateArray();
+				this.UpdateButtons();
+			}
 		}
 
 		protected void ArrayMove(int direction)
@@ -504,13 +559,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	La ligne sélectionnée a changé.
 			this.UpdateButtons();
 
-			if (this.array.SelectedColumn == 0)
+			if (this.array.SelectedColumn == 0)  // clic dans la colonne de gauche ?
 			{
 				if (this.buttonAdd.Enable)
 				{
 					this.ArrayAdd();
 				}
-				else
+				else if (this.buttonRemove.Enable)
 				{
 					this.ArrayRemove();
 				}
@@ -519,6 +574,21 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleFooterNameClicked(object sender, MessageEventArgs e)
 		{
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			Druid druid = this.items[sel].Column.TemplateId;
+			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Panels, ResourceAccess.TypeType.None, druid, null);
+			if (druid.IsEmpty)  // annuler ?
+			{
+				return;
+			}
+
+			this.items[sel].Column.TemplateId = druid;
+			this.UpdateArray();
 		}
 
 		private void HandleFooterCaptionClicked(object sender, MessageEventArgs e)
@@ -570,6 +640,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				this.used = used;
 				this.column = column;
+			}
+
+			public Item(Druid druid)
+			{
+				this.used = true;
+				this.column = new UI.ItemTableColumn();
+				this.column.TemplateId = druid;
 			}
 
 			public bool Used
