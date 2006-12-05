@@ -23,10 +23,6 @@ namespace Epsitec.Common.UI
 			
 			this.mask = new PanelMask (this);
 			this.mask.Hide ();
-			this.mask.MaskPressed += delegate (object sender)
-			{
-				this.EndEdition ();
-			};
 
 			this.toolbar = new Widgets.FrameBox (this);
 			this.toolbar.Hide ();

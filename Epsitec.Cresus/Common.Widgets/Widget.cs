@@ -2774,24 +2774,31 @@ namespace Epsitec.Common.Widgets
 			if ((this.HasCommand) &&
 				(this.IsEnabled))
 			{
-				Window window = this.Window;
-				
-				if (window != null)
-				{
-					Command commandObject = this.CommandObject;
-					
-					if (commandObject == null)
-					{
-						//	Command cannot be queued !
-					}
-					else
-					{
-						CommandContextChain chain = CommandContextChain.BuildChain (this);
+				this.ExecuteCommand (this.CommandObject);
+			}
+		}
 
-						if (chain != null)
+		public void ExecuteCommand(Command command)
+		{
+			Window window = this.Window;
+
+			if (window != null)
+			{
+				if (command == null)
+				{
+					//	Command cannot be queued !
+				}
+				else
+				{
+					CommandContextChain chain = CommandContextChain.BuildChain (this);
+
+					if (chain != null)
+					{
+						CommandState state = chain.GetCommandState (command);
+
+						if (chain.GetLocalEnable (command))
 						{
-							CommandState state = chain.GetCommandState (commandObject);
-							this.QueueCommandForExecution (window, commandObject, state);
+							this.QueueCommandForExecution (window, command, state);
 						}
 					}
 				}
@@ -2802,7 +2809,7 @@ namespace Epsitec.Common.Widgets
 		{
 			window.QueueCommand (this, command);
 		}
-		
+
 		internal void ExecuteCommand(string command)
 		{
 			Window window = this.Window;
