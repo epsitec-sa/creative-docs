@@ -43,6 +43,23 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
+		public override StructuredData CreateEmptyCopy()
+		{
+			return new DataBrokerRecord (this.Broker);
+		}
+
+		public override void CopyContentsFrom(StructuredData data)
+		{
+			DataBrokerRecord record = data as DataBrokerRecord;
+
+			if (record != null)
+			{
+				this.id = record.id;
+			}
+			
+			base.CopyContentsFrom (data);
+		}
+
 		protected override void OnValueChanged(string id, object oldValue, object newValue)
 		{
 			//	Notify the broker that the record was edited and that the current
