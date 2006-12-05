@@ -11,10 +11,22 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.UI.ItemViewFactories
 {
+	/// <summary>
+	/// The <c>StructuredItemViewFactory</c> class is used to generate widgets
+	/// for item views which represent structured data.
+	/// </summary>
 	internal sealed class StructuredItemViewFactory : IItemViewFactory
 	{
 		#region IItemViewFactory Members
 
+		/// <summary>
+		/// Creates the user interface for the specified item view.
+		/// </summary>
+		/// <param name="panel">The panel.</param>
+		/// <param name="itemView">The item view.</param>
+		/// <returns>
+		/// The widget which represents the data stored in the item view.
+		/// </returns>
 		public Widgets.Widget CreateUserInterface(ItemPanel panel, ItemView itemView)
 		{
 			ItemPanel rootPanel = panel.RootPanel;
@@ -46,20 +58,30 @@ namespace Epsitec.Common.UI.ItemViewFactories
 						(table != null) &&
 						(columnId < table.Columns.Count))
 					{
+						//	The table has a column definition for the specified
+						//	column :
+						
 						Support.Druid templateId = table.Columns[columnId].TemplateId;
 
 						if (templateId.IsEmpty)
 						{
-							StructuredItemViewFactory.CreateTextColumn (container, itemView, header, i, width);
+							//	The column has no template ID associated; simply use
+							//	a text representation for the item view data.
+
+							this.CreateTextColumn (container, itemView, header, i, width);
 						}
 						else
 						{
-							this.CreateTemplateBasedColumn (container, itemView, templateId, header, i, width);
+							//	The column has a template ID associated with it; create
+							//	the panel defined by the template ID and bind it to the
+							//	item view data.
+							
+							this.CreateTemplateBasedColumn (container, itemView, header, i, templateId, width);
 						}
 					}
 					else
 					{
-						StructuredItemViewFactory.CreateTextColumn (container, itemView, header, i, width);
+						throw new System.InvalidOperationException ("No column definition found");
 					}
 				}
 
@@ -67,10 +89,19 @@ namespace Epsitec.Common.UI.ItemViewFactories
 			}
 		}
 
+		/// <summary>
+		/// Disposes the user interface created by <c>CreateUserInterface</c>.
+		/// </summary>
+		/// <param name="itemView">The item view.</param>
+		/// <param name="widget">The widget to dispose.</param>
 		public void DisposeUserInterface(ItemView itemView, Widgets.Widget widget)
 		{
 			if (widget.Children.Count == 1)
 			{
+				//	If the user interface is based on a template (panel created
+				//	based on the column's template ID), then we will recycle the
+				//	panel rather than simply discard it.
+				
 				Panel panel = widget.Children[0] as Panel;
 				
 				if (panel != null)
@@ -81,7 +112,7 @@ namespace Epsitec.Common.UI.ItemViewFactories
 					
 					lock (this.exclusion)
 					{
-						this.cache[panelId].Release (panel);
+						this.cache[panelId].RecyclePanel (panel);
 					}
 				}
 			}
@@ -89,6 +120,13 @@ namespace Epsitec.Common.UI.ItemViewFactories
 			widget.Dispose ();
 		}
 
+		/// <summary>
+		/// Gets the preferred size of the user interface associated with the
+		/// specified item view.
+		/// </summary>
+		/// <param name="panel">The panel.</param>
+		/// <param name="itemView">The item view.</param>
+		/// <returns>The preferred size.</returns>
 		public Drawing.Size GetPreferredSize(ItemPanel panel, ItemView itemView)
 		{
 			ItemPanel rootPanel = panel.RootPanel;
@@ -105,17 +143,25 @@ namespace Epsitec.Common.UI.ItemViewFactories
 			}
 			else
 			{
-				return new Drawing.Size (header.GetTotalWidth (), table.GetDefaultItemSize (itemView).Height);
+				//	TODO: better handling here... this only works for vertical layout!
+
+				double dx = header.GetTotalWidth ();
+				double dy = table.GetDefaultItemSize (itemView).Height;
+				
+				return new Drawing.Size (dx, dy);
 			}
 		}
 
 		#endregion
 		
-		private void CreateTemplateBasedColumn(Widgets.Widget container, ItemView itemView, Support.Druid templateId, ItemPanelColumnHeader header, int index, double width)
+		private void CreateTemplateBasedColumn(Widgets.Widget container, ItemView itemView, ItemPanelColumnHeader header, int index, Support.Druid templateId, double width)
 		{
 			Support.ResourceManager manager = Widgets.Helpers.VisualTree.FindResourceManager (container);
 			Panel panel;
 
+			//	Gets a recycled panel from the cache (or create a new panel if
+			//	none can be found).
+			
 			lock (this.exclusion)
 			{
 				Cache templateCache;
@@ -129,18 +175,25 @@ namespace Epsitec.Common.UI.ItemViewFactories
 				panel = templateCache.GetPanel (manager);
 			}
 
-			panel.Dock           = Widgets.DockStyle.Stacked;
+			panel.Dock = Widgets.DockStyle.Stacked;
 			panel.PreferredWidth = width - panel.Margins.Width;
 
+			//	Bind the panel contents with the item view data.
+			
 			object source = itemView.Item;
 			string path   = header.GetColumnPropertyName (index);
 
 			DataObject.SetDataContext (panel, new Binding (source, path));
 
+			//	Finally, insert the panel into the container. We may not do this
+			//	before, since the panel might inherit from the container's own
+			//	data context, which might be incompatible with what the panel
+			//	expects.
+			
 			panel.SetEmbedder (container);
 		}
 
-		private static void CreateTextColumn(Widgets.Widget container, ItemView itemView, ItemPanelColumnHeader header, int index, double width)
+		private void CreateTextColumn(Widgets.Widget container, ItemView itemView, ItemPanelColumnHeader header, int index, double width)
 		{
 			Widgets.StaticText text = new Widgets.StaticText (container);
 
@@ -150,6 +203,8 @@ namespace Epsitec.Common.UI.ItemViewFactories
 			text.PreferredWidth = width - text.Margins.Width;
 		}
 
+		#region Cache Structure
+
 		private struct Cache
 		{
 			public Cache(Support.Druid panelId)
@@ -158,15 +213,23 @@ namespace Epsitec.Common.UI.ItemViewFactories
 				this.panels = new List<Panel> ();
 			}
 
-			public void Release(Panel panel)
+			public void RecyclePanel(Panel panel)
 			{
+				//	Remember the panel for some future use. We detach it from 
+				//	its parent and from its data context in order to avoid that
+				//	it refreshes itself while sitting unused in the cache.
+
 				panel.SetParent (null);
 				DataObject.ClearDataContext (panel);
+				
 				this.panels.Add (panel);
 			}
 
 			public Panel GetPanel(Support.ResourceManager manager)
 			{
+				//	Find the panel with our panel ID for the specified resource
+				//	manager.
+				
 				foreach (Panel panel in this.panels)
 				{
 					if (panel.ResourceManager == manager)
@@ -176,10 +239,17 @@ namespace Epsitec.Common.UI.ItemViewFactories
 					}
 				}
 
+				//	We could not find the panel in the cache. Create it based
+				//	on the template ID.
+				
 				Panel newPanel = Panel.CreatePanel (this.panelId, manager);
-				newPanel.ResourceManager = manager;
 
 				System.Diagnostics.Debug.Assert (Panel.GetBundleId (newPanel) == this.panelId);
+				
+				//	Force the resource manager association; we will use it when
+				//	the panel gets put back into the cache (recycled).
+				
+				newPanel.ResourceManager = manager;
 				
 				return newPanel;
 			}
@@ -187,6 +257,8 @@ namespace Epsitec.Common.UI.ItemViewFactories
 			private Support.Druid panelId;
 			private List<Panel> panels;
 		}
+
+		#endregion
 
 		private object exclusion = new object ();
 		private Dictionary<Support.Druid, Cache> cache = new Dictionary<Support.Druid, Cache> ();
