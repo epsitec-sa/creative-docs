@@ -289,7 +289,15 @@ namespace Epsitec.Common.Designer.Dialogs
 					string icon = item.Used ? Misc.Image("TypeEnumYes") : "";
 					MyWidgets.StringList.CellState cs = item.Used ? MyWidgets.StringList.CellState.Normal : MyWidgets.StringList.CellState.Unused;
 
-					string caption = this.module.AccessCaptions.DirectGetDisplayName(item.Column.CaptionId);
+					string description = "";
+					if (!item.Column.CaptionId.IsEmpty)
+					{
+						Caption caption = this.module.ResourceManager.GetCaption(item.Column.CaptionId);
+						if (caption != null)
+						{
+							description = ResourceAccess.GetCaptionNiceDescription(caption, TableConfiguration.arrayLineHeight);
+						}
+					}
 
 					this.array.SetLineString(0, first+i, icon);
 					this.array.SetLineState(0, first+i, cs);
@@ -297,7 +305,7 @@ namespace Epsitec.Common.Designer.Dialogs
 					this.array.SetLineString(1, first+i, name);
 					this.array.SetLineState(1, first+i, cs);
 
-					this.array.SetLineString(2, first+i, caption);
+					this.array.SetLineString(2, first+i, description);
 					this.array.SetLineState(2, first+i, cs);
 				}
 				else
