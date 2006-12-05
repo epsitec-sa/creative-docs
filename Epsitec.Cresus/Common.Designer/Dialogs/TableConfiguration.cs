@@ -168,11 +168,13 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.footerName.Text = "Choix de l'interface";  // Res.Strings.Dialog.TableDescription.Name;
 				this.footerName.Dock = DockStyle.Left;
 				this.footerName.Margins = new Margins(1, 0, 0, 0);
+				this.footerName.Clicked += new MessageEventHandler(this.HandleFooterNameClicked);
 
 				this.footerCaption = new Button(this.footer);
 				this.footerCaption.Text = "Choix de la légende";  // Res.Strings.Dialog.TableDescription.Caption;
 				this.footerCaption.Dock = DockStyle.Left;
 				this.footerCaption.Margins = new Margins(1, 0, 0, 0);
+				this.footerCaption.Clicked += new MessageEventHandler(this.HandleFooterCaptionClicked);
 			}
 
 			this.UpdateButtons();
@@ -287,13 +289,15 @@ namespace Epsitec.Common.Designer.Dialogs
 					string icon = item.Used ? Misc.Image("TypeEnumYes") : "";
 					MyWidgets.StringList.CellState cs = item.Used ? MyWidgets.StringList.CellState.Normal : MyWidgets.StringList.CellState.Unused;
 
+					string caption = this.module.AccessCaptions.DirectGetDisplayName(item.Column.CaptionId);
+
 					this.array.SetLineString(0, first+i, icon);
 					this.array.SetLineState(0, first+i, cs);
 
 					this.array.SetLineString(1, first+i, name);
 					this.array.SetLineState(1, first+i, cs);
 
-					this.array.SetLineString(2, first+i, "");
+					this.array.SetLineString(2, first+i, caption);
 					this.array.SetLineState(2, first+i, cs);
 				}
 				else
@@ -503,6 +507,29 @@ namespace Epsitec.Common.Designer.Dialogs
 					this.ArrayRemove();
 				}
 			}
+		}
+
+		private void HandleFooterNameClicked(object sender, MessageEventArgs e)
+		{
+		}
+
+		private void HandleFooterCaptionClicked(object sender, MessageEventArgs e)
+		{
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			Druid druid = this.items[sel].Column.CaptionId;
+			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Captions, ResourceAccess.TypeType.None, druid, null);
+			if (druid.IsEmpty)  // annuler ?
+			{
+				return;
+			}
+
+			this.items[sel].Column.CaptionId = druid;
+			this.UpdateArray();
 		}
 
 		private void HandleWindowCloseClicked(object sender)
