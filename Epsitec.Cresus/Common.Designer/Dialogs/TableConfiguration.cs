@@ -293,15 +293,17 @@ namespace Epsitec.Common.Designer.Dialogs
 
 					if (item.IsTemplate)
 					{
-						//	TODO: pourquoi le caption n'est pas trouvé ?
-						Caption caption = this.module.ResourceManager.GetCaption(item.Column.TemplateId);
-						if (caption == null)
+						name = Misc.Italic("Interface");
+
+						ResourceBundle bundle = this.module.ResourceManager.GetBundle(item.Column.TemplateId);
+						if (bundle != null)
 						{
-							name = Misc.Italic("Interface");
-						}
-						else
-						{
-							name = caption.Name;
+							Druid druid = Druid.Parse(bundle.Name);
+							Caption caption = this.module.ResourceManager.GetCaption(druid);
+							if (caption != null)
+							{
+								name = caption.Name;
+							}
 						}
 
 						icon = Misc.Image("ObjectPanel");
