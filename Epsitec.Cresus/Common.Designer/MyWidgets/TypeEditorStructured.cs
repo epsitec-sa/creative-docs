@@ -588,6 +588,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 					StructuredTypeField field = type.Fields[id];
 					this.fields.Add(field);
 				}
+
+				this.array.SelectedRow = -1;
 			}
 		}
 
