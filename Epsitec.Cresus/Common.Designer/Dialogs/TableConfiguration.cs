@@ -36,6 +36,11 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				int tabIndex = 0;
 
+				this.title = new StaticText(this.window.Root);
+				this.title.PreferredHeight = 26;
+				this.title.Dock = DockStyle.Top;
+				this.title.Margins = new Margins(0, 0, 0, 5);
+
 				//	Crée la barre d'outils.
 				this.toolbar = new HToolBar(this.window.Root);
 				this.toolbar.Dock = DockStyle.Top;
@@ -155,6 +160,11 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.TabIndex = tabIndex++;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
+				//	Trait horizontal de séparation.
+				Separator sep = new Separator(this.window.Root);
+				sep.PreferredHeight = 1;
+				sep.Dock = DockStyle.Bottom;
+
 				//	Crée les boutons du bas.
 				this.footer = new Widget(this.window.Root);
 				this.footer.Dock = DockStyle.Bottom;
@@ -179,6 +189,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.array.SelectedRow = -1;
 
+			this.UpdateTitle();
 			this.UpdateButtons();
 			this.UpdateArray();
 
@@ -190,6 +201,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Initialise le dialogue avec l'objet table.
 			this.module = module;
 			this.resourceAccess = module.AccessCaptions;
+			this.structuredType = structuredType;
 
 			//	Construit la liste de toutes les rubriques existantes.
 			List<UI.ItemTableColumn> fullList = new List<UI.ItemTableColumn>();
@@ -257,6 +269,16 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		protected void UpdateTitle()
+		{
+			//	Met à jour le titre qui dépend du type des ressources éditées.
+			Caption caption = this.structuredType.Caption;
+			string name = caption.Name;
+
+			string text = string.Concat("<font size=\"200%\"><b>", name, "</b></font>");
+			this.title.Text = text;
+		}
+
 		protected void UpdateButtons()
 		{
 			//	Met à jour tous les boutons en fonction de la ligne sélectionnée dans le tableau.
@@ -293,14 +315,9 @@ namespace Epsitec.Common.Designer.Dialogs
 
 					if (item.IsTemplate)
 					{
-						name = Misc.Italic("Interface");
-
 						ResourceBundle bundle = this.module.ResourceManager.GetBundle(item.Column.TemplateId);
-						if (bundle != null)
-						{
-							name = bundle.Caption;
-						}
-
+						System.Diagnostics.Debug.Assert(bundle != null);
+						name = bundle.Caption;
 						icon = Misc.Image("ObjectPanel");
 					}
 
@@ -683,8 +700,11 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected Module						module;
 		protected ResourceAccess				resourceAccess;
+		protected StructuredType				structuredType;
 		protected List<Item>					items;
 		protected List<UI.ItemTableColumn>		columnsReturned;
+
+		protected StaticText					title;
 
 		protected HToolBar						toolbar;
 		protected IconButton					buttonAdd;
