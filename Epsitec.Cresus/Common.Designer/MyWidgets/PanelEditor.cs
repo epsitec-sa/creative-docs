@@ -403,6 +403,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			pos = this.ConvEditorToPanel(pos);
 
+			if (this.isShiftPressed != message.IsShiftPressed)
+			{
+				this.isShiftPressed = message.IsShiftPressed;
+				this.Invalidate();
+			}
+
 			switch (message.MessageType)
 			{
 				case MessageType.MouseDown:
@@ -3763,7 +3769,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les cotes de l'objet sélectionné.
-			if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging)
+			if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging && !this.isShiftPressed)
 			{
 				this.dimensionsList.Draw(graphics);
 			}
@@ -4915,6 +4921,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Point						sizeMarkOffset;
 		protected bool						isInside;
 		protected List<Widget>				enteredObjects;
+		protected bool						isShiftPressed;
 
 		protected Image						mouseCursorArrow = null;
 		protected Image						mouseCursorArrowPlus = null;
