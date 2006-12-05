@@ -267,6 +267,8 @@ namespace Epsitec.Common.UI
 				}
 
 				this.defaultItemSize = new Drawing.Size (minWidth, minHeight);
+
+				this.itemPanel.AsyncRefresh ();
 			}
 		}
 
