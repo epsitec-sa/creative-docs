@@ -3831,6 +3831,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Rectangle bounds = this.objectModifier.GetActualBounds(obj);
 			bounds.Deflate(0.5);
 
+#if false
 			if (this.objectModifier.HasBounds(obj))
 			{
 				Rectangle pref = this.objectModifier.GetBounds(obj);
@@ -3843,6 +3844,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					Misc.DrawPathDash(graphics, path, 1, 8, 3, PanelsContext.ColorHiliteOutline);
 				}
 			}
+#endif
 
 			graphics.LineWidth = 3;
 			graphics.AddRectangle(bounds);
