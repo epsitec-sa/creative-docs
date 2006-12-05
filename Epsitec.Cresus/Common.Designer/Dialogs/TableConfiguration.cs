@@ -298,8 +298,7 @@ namespace Epsitec.Common.Designer.Dialogs
 						ResourceBundle bundle = this.module.ResourceManager.GetBundle(item.Column.TemplateId);
 						if (bundle != null)
 						{
-							Druid druid = Druid.Parse(bundle.Name);
-							Caption caption = this.module.ResourceManager.GetCaption(druid);
+							Caption caption = this.module.ResourceManager.GetCaption(bundle.Id);
 							if (caption != null)
 							{
 								name = caption.Name;
