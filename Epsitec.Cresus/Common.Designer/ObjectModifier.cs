@@ -312,7 +312,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region TableColumns
-		public static void DefineAllColumns(Widget obj)
+		public static void TableDefineAllColumns(Widget obj)
 		{
 			//	Ajoute les colonnes avec des réglages par défaut si l'objet
 			//	en cours d'édition est une table qui n'a aucune colonne (donc
@@ -322,16 +322,24 @@ namespace Epsitec.Common.Designer
 
 			if (table != null && table.Columns.Count == 0)
 			{
-				Druid sourceTypeId = table.SourceTypeId;
-				ResourceManager resourceManager = Widgets.Helpers.VisualTree.GetResourceManager(obj);
-				Caption sourceTypeCaption = resourceManager.GetCaption(sourceTypeId);
-				StructuredType sourceType = TypeRosetta.GetTypeObject(sourceTypeCaption) as StructuredType;
-
+				StructuredType sourceType = ObjectModifier.GetTableStructuredType(obj);
 				foreach (string fieldId in sourceType.GetFieldIds())
 				{
 					table.Columns.Add(new UI.ItemTableColumn(fieldId));
 				}
 			}
+		}
+
+		public static StructuredType GetTableStructuredType(Widget obj)
+		{
+			//	Retourne la structure de données d'un objet 'Table'.
+			UI.TablePlaceholder table = obj as UI.TablePlaceholder;
+			System.Diagnostics.Debug.Assert(table != null);
+
+			Druid sourceTypeId = table.SourceTypeId;
+			ResourceManager resourceManager = Widgets.Helpers.VisualTree.GetResourceManager(obj);
+			Caption sourceTypeCaption = resourceManager.GetCaption(sourceTypeId);
+			return TypeRosetta.GetTypeObject(sourceTypeCaption) as StructuredType;
 		}
 		#endregion
 

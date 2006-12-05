@@ -155,11 +155,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.ShowDialog();
 		}
 
-		public void Initialise(Module module, List<UI.ItemTableColumn> columns)
+		public void Initialise(Module module, StructuredType structuredType, List<UI.ItemTableColumn> columns)
 		{
 			//	Initialise le dialogue avec l'objet table.
 			this.module = module;
 			this.resourceAccess = module.AccessCaptions;
+			this.structuredType = structuredType;
 
 			this.columns = new List<UI.ItemTableColumn> ();
 			foreach (UI.ItemTableColumn column in columns)
@@ -390,6 +391,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected Module						module;
 		protected ResourceAccess				resourceAccess;
+		protected StructuredType				structuredType;
 		protected List<UI.ItemTableColumn>		columns;
 		protected List<UI.ItemTableColumn>		columnsReturned;
 

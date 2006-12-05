@@ -1707,7 +1707,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (oType == ObjectModifier.ObjectType.Table)
 				{
-					ObjectModifier.DefineAllColumns(obj);
+					ObjectModifier.TableDefineAllColumns(obj);
 				}
 			}
 

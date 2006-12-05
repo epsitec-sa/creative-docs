@@ -79,7 +79,8 @@ namespace Epsitec.Common.Designer.Controllers
 				ObjectModifier.ObjectType type = ObjectModifier.GetObjectType(obj);
 				if (type == ObjectModifier.ObjectType.Table)
 				{
-					List<UI.ItemTableColumn> columns = mainWindow.DlgTableConfiguration (mainWindow.CurrentModule, this.columns);
+					StructuredType structuredType = ObjectModifier.GetTableStructuredType(obj);
+					List<UI.ItemTableColumn> columns = mainWindow.DlgTableConfiguration(mainWindow.CurrentModule, structuredType, this.columns);
 					if (columns != null)
 					{
 						this.columns = columns;
