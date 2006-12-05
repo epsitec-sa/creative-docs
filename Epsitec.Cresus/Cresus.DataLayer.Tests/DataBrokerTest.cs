@@ -123,7 +123,6 @@ namespace Epsitec.Cresus.DataLayer
 			System.Diagnostics.Debug.WriteLine ("Broker-2 done");
 		}
 
-
 		[Test]
 		public void Check03DataTableBroker()
 		{
@@ -164,6 +163,41 @@ namespace Epsitec.Cresus.DataLayer
 			System.Console.Out.WriteLine ("Total: {0} records", total);
 			System.Console.Out.WriteLine ("-----------------------------------------------");
 			System.Diagnostics.Debug.WriteLine ("Broker-3 done");
+		}
+
+		[Test]
+		public void Check04DataTableBroker()
+		{
+			System.Diagnostics.Debug.WriteLine ("Broker-4");
+			StructuredType type = Epsitec.Common.UI.Res.Types.Record.Invoice;
+			DbRichCommand command;
+			DbTable table;
+
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				table = Adapter.FindTableDefinition (transaction, type);
+				DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
+				command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, table, condition);
+				transaction.Commit ();
+			}
+
+			Assert.IsNotNull (command);
+
+			System.Data.DataTable dataTable = command.DataSet.Tables["Record.Invoice"];
+
+			Assert.IsNotNull (dataTable);
+
+			DataTableBroker broker = new DataTableBroker (type, table, dataTable);
+			int total = 0;
+
+			foreach (DataBrokerRecord record in broker.Records)
+			{
+				total++;
+			}
+
+			System.Console.Out.WriteLine ("Total: {0} records", total);
+			System.Console.Out.WriteLine ("-----------------------------------------------");
+			System.Diagnostics.Debug.WriteLine ("Broker-4 done");
 		}
 
 		[Test]

@@ -366,6 +366,42 @@ namespace Epsitec.Cresus.DataLayer
 
 			foreach (string fieldId in this.structuredType.GetFieldIds ())
 			{
+				StructuredTypeField field = this.structuredType.GetField (fieldId);
+
+				switch (field.Relation)
+				{
+					case Relation.Reference:
+						break;
+
+					case Relation.Collection:
+						this.SetValueFromRowCollection (dataRow, data, id, field, fieldId);
+						break;
+					
+					case Relation.None:
+						this.SetValueFromRowValue (dataRow, data, fieldId);
+						break;
+
+					default:
+						throw new System.NotSupportedException (string.Format ("Unsupported relation {0} for field {1} in table {2}", field.Relation, fieldId, this.dataTable.TableName));
+				}
+			}
+
+			data.Id = id;
+
+			return data;
+		}
+
+		private void SetValueFromRowCollection(System.Data.DataRow dataRow, DataBrokerRecord data, long id, StructuredTypeField field, string fieldId)
+		{
+			//	TODO: handle collection
+
+			throw new System.NotImplementedException ();
+		}
+
+		private void SetValueFromRowValue(System.Data.DataRow dataRow, DataBrokerRecord data, string fieldId)
+		{
+			if (this.dataTable.Columns.Contains (fieldId))
+			{
 				object fieldData = dataRow[fieldId];
 
 				if (fieldData == System.DBNull.Value)
@@ -375,10 +411,12 @@ namespace Epsitec.Cresus.DataLayer
 
 				data.SetValue (fieldId, fieldData);
 			}
+			else
+			{
+				//	Could not find the specified column in the table.
 
-			data.Id = id;
-
-			return data;
+				throw new System.ArgumentException (string.Format ("Cannot map field {0} in table {1}", fieldId, this.dataTable.TableName));
+			}
 		}
 
 		internal void NotifyRecordChanged(DataBrokerRecord data)

@@ -544,7 +544,15 @@ namespace Epsitec.Common.Types
 
 			lock (TypeRosetta.knownTypes)
 			{
-				return TypeRosetta.LockedCreateTypeObject (caption);
+				try
+				{
+					TypeRosetta.creatingTypeObject++;
+					return TypeRosetta.LockedCreateTypeObject (caption);
+				}
+				finally
+				{
+					TypeRosetta.creatingTypeObject--;
+				}
 			}
 		}
 
@@ -942,7 +950,14 @@ namespace Epsitec.Common.Types
 		/// <param name="callback">The callback.</param>
 		internal static void QueueFixUp(Support.SimpleCallback callback)
 		{
-			TypeRosetta.fixUpQueue.Enqueue (callback);
+			if (TypeRosetta.creatingTypeObject > 0)
+			{
+				TypeRosetta.fixUpQueue.Enqueue (callback);
+			}
+			else
+			{
+				callback ();
+			}
 		}
 
 		/// <summary>
@@ -963,5 +978,6 @@ namespace Epsitec.Common.Types
 
 		private static Dictionary<Support.Druid, AbstractType> knownTypes;
 		private static Queue<Support.SimpleCallback> fixUpQueue = new Queue<Epsitec.Common.Support.SimpleCallback> ();
+		private static int creatingTypeObject;
 	}
 }
