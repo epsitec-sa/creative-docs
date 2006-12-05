@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.DataLayer
 		/// <summary>
 		/// Finds a type definition based on a named type. The named type may
 		/// not be a structured type (<c>IStructuredType</c>); for these, use the
-		/// <see cref="FindTableDefinition"/> method instead.
+		/// <see cref="T:FindTableDefinition"/> method instead.
 		/// </summary>
 		/// <param name="type">The named type to find.</param>
 		/// <returns>The type definition or <c>null</c>.</returns>
@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.DataLayer
 		/// <summary>
 		/// Creates and registers a type definition based on a named type. The named
 		/// type may not be a structured type (<c>IStructuredType</c>); for these,
-		/// use the <see cref="CreateTableDefinition"/> method instead.
+		/// use the <see cref="T:CreateTableDefinition"/> method instead.
 		/// </summary>
 		/// <param name="type">The named type to find.</param>
 		/// <returns>The type definition or <c>null</c>.</returns>
@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.DataLayer
 		/// <summary>
 		/// Creates and registers a type definition based on a named type. The named
 		/// type may not be a structured type (<c>IStructuredType</c>); for these,
-		/// use the <see cref="CreateTableDefinition"/> method instead.
+		/// use the <see cref="T:CreateTableDefinition"/> method instead.
 		/// </summary>
 		/// <param name="transaction">The database transaction.</param>
 		/// <param name="type">The named type used as model.</param>
@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.DataLayer
 		/// <summary>
 		/// Finds a type definition based on a named type. The named type may
 		/// not be a structured type (<c>IStructuredType</c>); for these, use the
-		/// <see cref="FindTableDefinition"/> method instead.
+		/// <see cref="T:FindTableDefinition"/> method instead.
 		/// </summary>
 		/// <param name="transaction">The database transaction.</param>
 		/// <param name="type">The named type to find.</param>
