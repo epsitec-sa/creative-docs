@@ -1136,12 +1136,13 @@ namespace Epsitec.Common.Designer
 			return this.dlgTableConfiguration.Columns;
 		}
 
-		public Binding DlgBindingSelector(Module baseModule, StructuredType type, Binding binding, bool onlyCollections)
+		public bool DlgBindingSelector(Module baseModule, StructuredType type, ref Binding binding, bool onlyCollections)
 		{
 			//	Ouvre le dialogue pour choisir une rubrique dans une structure de données.
 			this.dlgBindingSelector.Initialise(baseModule, type, binding, onlyCollections);
 			this.dlgBindingSelector.Show();  // choix dans le dialogue...
-			return this.dlgBindingSelector.SelectedBinding;
+			binding = this.dlgBindingSelector.SelectedBinding;
+			return this.dlgBindingSelector.IsOk;
 		}
 
 		public Druid DlgResourceSelector(Module baseModule, ResourceAccess.Type type, ResourceAccess.TypeType typeType, Druid ressource, List<Druid> exclude)

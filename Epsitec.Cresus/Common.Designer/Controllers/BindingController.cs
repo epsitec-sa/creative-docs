@@ -82,7 +82,7 @@ namespace Epsitec.Common.Designer.Controllers
 
 				if (newValue == null)
 				{
-					this.button.Text = "";
+					this.button.Text = Misc.Italic("Hérité");
 				}
 				else
 				{
@@ -113,8 +113,7 @@ namespace Epsitec.Common.Designer.Controllers
 				}
 			}
 
-			binding = mainWindow.DlgBindingSelector(mainWindow.CurrentModule, type, binding, onlyCollection);
-			if (binding == null)  // annuler ?
+			if (!mainWindow.DlgBindingSelector(mainWindow.CurrentModule, type, ref binding, onlyCollection))
 			{
 				return;
 			}

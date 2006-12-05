@@ -1697,8 +1697,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				Binding binding = ObjectModifier.GetBinding(obj);
 				ObjectModifier.ObjectType oType = ObjectModifier.GetObjectType(obj);
-				binding = this.module.MainWindow.DlgBindingSelector(this.module, type, binding, (oType == ObjectModifier.ObjectType.Table));
-				if (binding == null)  // annuler ?
+				if (!this.module.MainWindow.DlgBindingSelector(this.module, type, ref binding, (oType == ObjectModifier.ObjectType.Table)))
 				{
 					return false;
 				}

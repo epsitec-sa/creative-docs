@@ -137,8 +137,15 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkReadonly = new CheckButton(this.window.Root);
 				this.checkReadonly.Text = "Lecture seule";
 				this.checkReadonly.Dock = DockStyle.Bottom;
-				this.checkReadonly.Margins = new Margins(0, 0, 8, 4);
+				this.checkReadonly.Margins = new Margins(0, 0, 2, 4);
 				this.checkReadonly.ActiveStateChanged += new EventHandler(this.HandleCheckReadonlyActiveStateChanged);
+
+				//	Crée le bouton pour l'héritage.
+				this.checkInherit = new CheckButton(this.window.Root);
+				this.checkInherit.Text = "Hérité";
+				this.checkInherit.Dock = DockStyle.Bottom;
+				this.checkInherit.Margins = new Margins(0, 0, 8, 4);
+				this.checkInherit.ActiveStateChanged += new EventHandler(this.HandleCheckInheritActiveStateChanged);
 			}
 
 			this.UpdateTitle();
@@ -156,29 +163,30 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.module = module;
 			this.resourceAccess = module.AccessCaptions;
 			this.structuredType = type;
+			this.initialBinding = binding;
 			this.onlyCollections = onlyCollections;
 
-			if (binding == null)
-			{
-				this.initialBinding = new Binding(BindingMode.TwoWay, "");
-			}
-			else
-			{
-				this.initialBinding = binding;
-			}
-
 			this.selectedBinding = null;
+			this.isOk = false;
 
 			this.FieldsInput();
 		}
 
 		public Binding SelectedBinding
 		{
-			//	Retourne le binding sélectionné par l'utilisateur, ou null si 'annuler'
-			//	a été actionné.
+			//	Retourne le binding sélectionné par l'utilisateur, ou null si le bouton
+			//	'hérité' a été coché.
 			get
 			{
 				return this.selectedBinding;
+			}
+		}
+
+		public bool IsOk
+		{
+			get
+			{
+				return this.isOk;
 			}
 		}
 
@@ -188,18 +196,33 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	TODO: il faudra améliorer la gestion du préfixe "*." !
 			get
 			{
-				string field = this.initialBinding.Path;
-				if (field.StartsWith("*."))
+				if (this.initialBinding == null)
 				{
-					field = field.Substring(2);  // enlève "*."
+					return null;
 				}
+				else
+				{
+					string field = this.initialBinding.Path;
+					if (field.StartsWith("*."))
+					{
+						field = field.Substring(2);  // enlève "*."
+					}
 
-				return field;
+					return field;
+				}
 			}
 			set
 			{
 				string field = string.Concat("*.", value);  // ajoute "*."
-				this.initialBinding = new Binding(this.initialBinding.Mode, field);
+
+				if (this.initialBinding == null)
+				{
+					this.initialBinding = new Binding(BindingMode.TwoWay, field);
+				}
+				else
+				{
+					this.initialBinding = new Binding(this.initialBinding.Mode, field);
+				}
 			}
 		}
 
@@ -208,11 +231,25 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Mode sélectionné.
 			get
 			{
-				return this.initialBinding.Mode;
+				if (this.initialBinding == null)
+				{
+					return BindingMode.None;
+				}
+				else
+				{
+					return this.initialBinding.Mode;
+				}
 			}
 			set
 			{
-				this.initialBinding = new Binding(value, this.initialBinding.Path);
+				if (this.initialBinding == null)
+				{
+					this.initialBinding = new Binding(value, "");
+				}
+				else
+				{
+					this.initialBinding = new Binding(value, this.initialBinding.Path);
+				}
 			}
 		}
 
@@ -264,7 +301,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour tous les boutons en fonction de la ligne sélectionnée dans le tableau.
 			int sel = this.array.SelectedRow;
 
-			this.buttonUse.Enable = (sel != -1);
+			this.buttonUse.Enable = (sel != -1 || this.initialBinding == null);
 		}
 
 		protected void UpdateArray()
@@ -393,7 +430,16 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Met à jour le bouton pour le mode.
 			this.ignoreChanged = true;
-			this.checkReadonly.ActiveState = (this.Mode == BindingMode.OneWay) ? ActiveState.Yes : ActiveState.No;
+
+			this.checkInherit.ActiveState = (this.initialBinding == null) ? ActiveState.Yes : ActiveState.No;
+			this.checkReadonly.ActiveState = (this.initialBinding != null && this.Mode == BindingMode.OneWay) ? ActiveState.Yes : ActiveState.No;
+			this.checkReadonly.Enable = (this.initialBinding != null);
+
+			if (this.initialBinding == null)
+			{
+				this.array.SelectedRow = -1;
+			}
+			
 			this.ignoreChanged = false;
 		}
 
@@ -426,6 +472,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
+			if (this.ignoreChanged)
+			{
+				return;
+			}
+
 			int sel = this.array.SelectedRow;
 			if (sel != -1)
 			{
@@ -433,18 +484,40 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			this.UpdateButtons();
+			this.UpdateMode();
 		}
 
 		private void HandleArraySelectedRowDoubleClicked(object sender)
 		{
 			//	La ligne sélectionnée a été double cliquée.
 			this.UpdateButtons();
+			this.UpdateMode();
 
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
 
 			this.selectedBinding = this.initialBinding;
+			this.isOk = true;
+		}
+
+		private void HandleCheckInheritActiveStateChanged(object sender)
+		{
+			if (this.ignoreChanged)
+			{
+				return;
+			}
+
+			if (this.initialBinding == null)
+			{
+				this.initialBinding = new Binding(BindingMode.TwoWay, "");
+			}
+			else
+			{
+				this.initialBinding = null;
+			}
+
+			this.UpdateMode();
 		}
 
 		private void HandleCheckReadonlyActiveStateChanged(object sender)
@@ -488,6 +561,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 
 			this.selectedBinding = this.initialBinding;
+			this.isOk = true;
 		}
 
 
@@ -500,6 +574,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected Binding						initialBinding;
 		protected Binding						selectedBinding;
 		protected bool							onlyCollections;
+		protected bool							isOk;
 
 		protected StaticText					title;
 		protected Widget						header;
@@ -507,6 +582,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected HeaderButton					headerCaption;
 		protected HeaderButton					headerType;
 		protected MyWidgets.StringArray			array;
+		protected CheckButton					checkInherit;
 		protected CheckButton					checkReadonly;
 
 		protected Button						buttonUse;

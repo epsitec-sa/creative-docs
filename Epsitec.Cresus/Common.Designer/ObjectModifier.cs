@@ -360,23 +360,31 @@ namespace Epsitec.Common.Designer
 			if (type == ObjectType.Placeholder || type == ObjectType.SubPanel || type == ObjectType.Table)
 			{
 				UI.AbstractPlaceholder ph = obj as UI.AbstractPlaceholder;
-				ph.SetBinding(ph.GetValueProperty(), binding);
 
-				if (type == ObjectType.Table)
+				if (binding == null)
 				{
-					System.Diagnostics.Debug.Assert(binding != null);
-					System.Diagnostics.Debug.Assert(structuredType != null);
+					ph.ClearBinding(ph.GetValueProperty());
+				}
+				else
+				{
+					ph.SetBinding(ph.GetValueProperty(), binding);
 
-					string path = binding.Path;
-					path = path.StartsWith("*.") ? path.Substring(2) : path;
-					
-					StructuredTypeField field = StructuredTree.GetField(structuredType, path);
-					UI.TablePlaceholder table = obj as UI.TablePlaceholder;
+					if (type == ObjectType.Table)
+					{
+						System.Diagnostics.Debug.Assert(binding != null);
+						System.Diagnostics.Debug.Assert(structuredType != null);
 
-					System.Diagnostics.Debug.Assert(field.IsEmpty == false);
-					System.Diagnostics.Debug.Assert(field.Relation == Relation.Collection);
+						string path = binding.Path;
+						path = path.StartsWith("*.") ? path.Substring(2) : path;
 
-					table.SourceTypeId = field.Type.CaptionId;
+						StructuredTypeField field = StructuredTree.GetField(structuredType, path);
+						UI.TablePlaceholder table = obj as UI.TablePlaceholder;
+
+						System.Diagnostics.Debug.Assert(field.IsEmpty == false);
+						System.Diagnostics.Debug.Assert(field.Relation == Relation.Collection);
+
+						table.SourceTypeId = field.Type.CaptionId;
+					}
 				}
 			}
 		}
