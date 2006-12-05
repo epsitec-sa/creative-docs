@@ -154,6 +154,25 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				this.buttonCancel.TabIndex = tabIndex++;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+				//	Crée les boutons du bas.
+				this.footer = new Widget(this.window.Root);
+				this.footer.Dock = DockStyle.Bottom;
+				this.footer.Margins = new Margins(0, 0, 4, 8);
+
+				this.footerUse = new Widget(this.footer);  // widget invisible
+				this.footerUse.Dock = DockStyle.Left;
+				this.footerUse.Margins = new Margins(1, 0, 0, 0);
+
+				this.footerName = new Button(this.footer);
+				this.footerName.Text = "Choix de l'interface";  // Res.Strings.Dialog.TableDescription.Name;
+				this.footerName.Dock = DockStyle.Left;
+				this.footerName.Margins = new Margins(1, 0, 0, 0);
+
+				this.footerCaption = new Button(this.footer);
+				this.footerCaption.Text = "Choix de la légende";  // Res.Strings.Dialog.TableDescription.Caption;
+				this.footerCaption.Dock = DockStyle.Left;
+				this.footerCaption.Margins = new Margins(1, 0, 0, 0);
 			}
 
 			this.UpdateButtons();
@@ -242,8 +261,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.buttonAdd.Enable = (sel != -1 && !this.items[sel].Used);
 			this.buttonRemove.Enable = (sel != -1 && this.items[sel].Used);
 
+			this.buttonTemplateAdd.Enable = (sel != -1);
+			this.buttonTemplateRemove.Enable = (sel != -1 && this.items[sel].IsTemplate);
+
 			this.buttonPrev.Enable = (sel != -1 && sel > 0);
 			this.buttonNext.Enable = (sel != -1 && sel < this.items.Count-1);
+
+			this.footerName.Enable = (sel != -1 && this.items[sel].IsTemplate);
+			this.footerCaption.Enable = (sel != -1);
 		}
 
 		protected void UpdateArray()
@@ -296,6 +321,10 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.headerUse.PreferredWidth = w1;
 			this.headerName.PreferredWidth = w2;
 			this.headerCaption.PreferredWidth = w3+1;
+
+			this.footerUse.PreferredWidth = w1-1;
+			this.footerName.PreferredWidth = w2-1;
+			this.footerCaption.PreferredWidth = w3+1;
 		}
 
 
@@ -528,6 +557,14 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 			}
 
+			public bool IsTemplate
+			{
+				get
+				{
+					return !this.column.TemplateId.IsEmpty;
+				}
+			}
+
 			protected bool						used;
 			protected UI.ItemTableColumn		column;
 		}
@@ -554,7 +591,13 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected HeaderButton					headerUse;
 		protected HeaderButton					headerName;
 		protected HeaderButton					headerCaption;
+
 		protected MyWidgets.StringArray			array;
+
+		protected Widget						footer;
+		protected Widget						footerUse;
+		protected Button						footerName;
+		protected Button						footerCaption;
 
 		protected Button						buttonOk;
 		protected Button						buttonCancel;
