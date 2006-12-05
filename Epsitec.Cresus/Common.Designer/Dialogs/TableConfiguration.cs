@@ -360,6 +360,32 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void ArraySort()
 		{
 			//	Met les rubrique de la table en tête de liste.
+			List<Item> unused = new List<Item>();
+
+			int i=0;
+			while (i<this.items.Count)
+			{
+				Item item = this.items[i];
+
+				if (item.Used)
+				{
+					i++;
+				}
+				else
+				{
+					unused.Add(item);
+					this.items.RemoveAt(i);
+				}
+			}
+
+			foreach (Item item in unused)
+			{
+				this.items.Add(item);
+			}
+
+			this.array.SelectedRow = -1;
+			this.UpdateButtons();
+			this.UpdateArray();
 		}
 
 
