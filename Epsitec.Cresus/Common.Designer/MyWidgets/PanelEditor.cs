@@ -403,11 +403,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			pos = this.ConvEditorToPanel(pos);
 
-			if (this.isShiftPressed != message.IsShiftPressed)
-			{
-				this.isShiftPressed = message.IsShiftPressed;
-				this.dimensionsList.IsShiftPressed = this.isShiftPressed;
-			}
+			//	Informe l'ensemble des cotes de l'état de la touche Shift.
+			this.dimensionsList.IsShiftPressed = message.IsShiftPressed;
 
 			switch (message.MessageType)
 			{
@@ -4925,7 +4922,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Point						sizeMarkOffset;
 		protected bool						isInside;
 		protected List<Widget>				enteredObjects;
-		protected bool						isShiftPressed;
 
 		protected Image						mouseCursorArrow = null;
 		protected Image						mouseCursorArrowPlus = null;

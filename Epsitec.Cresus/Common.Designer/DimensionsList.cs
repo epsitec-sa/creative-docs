@@ -47,9 +47,12 @@ namespace Epsitec.Common.Designer
 			}
 			set
 			{
-				this.isShiftPressed = value;
-				this.hilited = null;
-				this.editor.Invalidate();
+				if (this.isShiftPressed != value)
+				{
+					this.isShiftPressed = value;
+					this.hilited = null;
+					this.editor.Invalidate();  // il faut tout redessiner
+				}
 			}
 		}
 
@@ -482,6 +485,8 @@ namespace Epsitec.Common.Designer
 
 		protected bool IsSkipping(Dimension dim)
 		{
+			//	Indique si une cote doit être ignorée. C'est le cas des cotes autres
+			//	que celles pour les lignes/colonnes lorsque la touche Shift est pressée.
 			if (this.isShiftPressed)
 			{
 				if (dim.DimensionType != Dimension.Type.GridColumn &&
