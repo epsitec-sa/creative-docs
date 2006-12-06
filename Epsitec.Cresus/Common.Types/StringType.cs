@@ -107,6 +107,22 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		public override object DefaultValue
+		{
+			get
+			{
+				object value = base.DefaultValue;
+				
+				if ((value == null) &&
+					(this.IsNullable == false))
+				{
+					return "";
+				}
+
+				return value;
+			}
+		}
+
 		public void DefineMinimumLength(int value)
 		{
 			if (value > 0)

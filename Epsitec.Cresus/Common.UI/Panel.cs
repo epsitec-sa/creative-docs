@@ -160,13 +160,36 @@ namespace Epsitec.Common.UI
 		/// <value>
 		/// 	<c>true</c> if this panel has a valid edition panel; otherwise, <c>false</c>.
 		/// </value>
-		public bool								HasValidEditionPanel
+		public bool HasValidEditionPanel
 		{
 			get
 			{
 				if ((this.PanelMode == PanelMode.Default) &&
 					(this.editionPanel != null) &&
 					(this.editionPanel.HasChildren))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this panel has a valid search panel.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this panel has a valid search panel; otherwise, <c>false</c>.
+		/// </value>
+		public bool HasValidSearchPanel
+		{
+			get
+			{
+				if ((this.PanelMode == PanelMode.Default) &&
+					(this.searchPanel != null) &&
+					(this.searchPanel.HasChildren))
 				{
 					return true;
 				}
@@ -488,7 +511,8 @@ namespace Epsitec.Common.UI
 		
 		protected override bool PreProcessMessage(Widgets.Message message, Drawing.Point pos)
 		{
-			if (this.HasValidEditionPanel)
+			if ((this.HasValidEditionPanel) ||
+				(this.HasValidSearchPanel))
 			{
 				Widgets.Window window = this.Window;
 				PanelStack panelStack = PanelStack.GetPanelStack (this);

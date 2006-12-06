@@ -126,7 +126,7 @@ namespace Epsitec.Common.Types
 		/// Gets the default value for this type.
 		/// </summary>
 		/// <value>The default value or <c>null</c>.</value>
-		public object DefaultValue
+		public virtual object DefaultValue
 		{
 			get
 			{
