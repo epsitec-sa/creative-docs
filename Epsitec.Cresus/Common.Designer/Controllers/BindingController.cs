@@ -119,6 +119,7 @@ namespace Epsitec.Common.Designer.Controllers
 			this.OnActualValueChanged();
 		}
 
+
 		private StructuredType StructuredType
 		{
 			get

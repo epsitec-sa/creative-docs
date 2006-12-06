@@ -37,12 +37,12 @@ namespace Epsitec.Common.UI
 			this.hScroller.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
 			this.headerStripe.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.surface.Anchor = AnchorStyles.All;
-			
-			this.vScroller.Margins = new Drawing.Margins (0, 0, 0, this.hScroller.PreferredHeight);
-			this.hScroller.Margins = new Drawing.Margins (0, this.vScroller.PreferredWidth, 0, 0);
-			this.headerStripe.Margins = new Drawing.Margins (0, this.vScroller.PreferredWidth, 0, 0);
+
+			this.headerStripe.Margins = new Drawing.Margins(0, this.vScroller.PreferredWidth, 0, 0);
 			this.headerStripe.PreferredHeight = this.columnHeader.PreferredHeight;
-			this.surface.Margins = new Drawing.Margins (1, this.vScroller.PreferredWidth, this.headerStripe.PreferredHeight+1, this.hScroller.PreferredHeight);
+			this.vScroller.Margins = new Drawing.Margins(0, 0, this.headerStripe.PreferredHeight, this.hScroller.PreferredHeight);
+			this.hScroller.Margins = new Drawing.Margins (0, this.vScroller.PreferredWidth, 0, 0);
+			this.surface.Margins = new Drawing.Margins (1, this.vScroller.PreferredWidth+1, this.headerStripe.PreferredHeight+1, this.hScroller.PreferredHeight+1);
 
 			this.hScroller.ValueChanged += this.HandleScrollerValueChanged;
 			this.vScroller.ValueChanged += this.HandleScrollerValueChanged;
@@ -164,8 +164,10 @@ namespace Epsitec.Common.UI
 			double y1 = this.hScroller.ActualBounds.Top;
 			double y2 = this.headerStripe.ActualBounds.Bottom-1;
 
-			graphics.AddLine (x1+0.5, y1+0.5, x1+0.5, y2+0.5);
-			graphics.AddLine (x1+0.5, y2+0.5, x2+0.5, y2+0.5);
+			graphics.AddLine (x1+0.5, y1+0.5, x1+0.5, y2+0.5);  // trait vertical gauche
+			graphics.AddLine (x2+0.5, y1+0.5, x2+0.5, y2+0.5);  // trait vertical droite
+			graphics.AddLine (x1+0.5, y2+0.5, x2+0.5, y2+0.5);  // trait horizontal supérieur
+			graphics.AddLine (x1+0.5, y1+0.5, x2+0.5, y1+0.5);  // trait horizontal inférieur
 			graphics.RenderSolid (adorner.ColorBorder);
 		}
 		

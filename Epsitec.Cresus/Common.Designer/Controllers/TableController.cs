@@ -63,7 +63,7 @@ namespace Epsitec.Common.Designer.Controllers
 				!PendingValue.IsPendingValue(newValue))
 			{
 				IEnumerable<UI.ItemTableColumn> source = newValue as IEnumerable<UI.ItemTableColumn>;
-				List<UI.ItemTableColumn> list = new List<ItemTableColumn> (source);
+				List<UI.ItemTableColumn> list = new List<ItemTableColumn>(source);
 				this.columns = list;
 			}
 		}
@@ -118,7 +118,7 @@ namespace Epsitec.Common.Designer.Controllers
 		#endregion
 
 
-		private List<UI.ItemTableColumn> columns;
-		private Button					button;
+		private List<UI.ItemTableColumn>	columns;
+		private Button						button;
 	}
 }
