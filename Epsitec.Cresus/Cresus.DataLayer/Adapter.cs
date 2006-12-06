@@ -33,6 +33,11 @@ namespace Epsitec.Cresus.DataLayer
 		/// <returns>The table definition or <c>null</c>.</returns>
 		public DbTable FindTableDefinition(StructuredType type)
 		{
+			if (type == null)
+			{
+				return null;
+			}
+			
 			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				DbTable tableDef = Adapter.FindTableDefinition (transaction, type);
@@ -52,6 +57,11 @@ namespace Epsitec.Cresus.DataLayer
 		/// <returns>The type definition or <c>null</c>.</returns>
 		public DbTypeDef FindTypeDefinition(INamedType type)
 		{
+			if (type == null)
+			{
+				return null;
+			}
+			
 			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				DbTypeDef typeDef = Adapter.FindTypeDefinition (transaction, type);
@@ -69,6 +79,11 @@ namespace Epsitec.Cresus.DataLayer
 		/// <returns>The table definition or <c>null</c>.</returns>
 		public DbTable CreateTableDefinition(StructuredType type)
 		{
+			if (type == null)
+			{
+				throw new System.ArgumentException ("type");
+			}
+
 			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				DbTable tableDef = Adapter.CreateTableDefinition (transaction, type);
@@ -88,6 +103,11 @@ namespace Epsitec.Cresus.DataLayer
 		/// <returns>The type definition or <c>null</c>.</returns>
 		public DbTypeDef CreateTypeDefinition(INamedType type)
 		{
+			if (type == null)
+			{
+				throw new System.ArgumentException ("type");
+			}
+
 			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				DbTypeDef typeDef = Adapter.CreateTypeDefinition (transaction, type);
@@ -171,7 +191,7 @@ namespace Epsitec.Cresus.DataLayer
 			DbInfrastructure infrastructure = transaction.Infrastructure;
 
 			DbContext context   = infrastructure.DefaultContext;
-			string tableName = context.ResourceManager.GetCaption (type.CaptionId).Name;
+			string    tableName = context.ResourceManager.GetCaption (type.CaptionId).Name;
 
 			return infrastructure.ResolveDbTable (transaction, tableName);
 		}
