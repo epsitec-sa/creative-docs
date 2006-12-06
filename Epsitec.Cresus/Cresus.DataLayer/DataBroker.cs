@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.DataLayer
 					{
 						//	TODO: handle reloading
 
-						throw new System.NotImplementedException ();
+//-						throw new System.NotImplementedException ();
 					}
 					else
 					{
@@ -106,6 +106,20 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				broker.Refresh ();
 			}
+		}
+
+		/// <summary>
+		/// Gets the table broker for the table storing the specified
+		/// structured type.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns>
+		/// The table broker or <c>null</c> if the specified table is not
+		/// loaded.
+		/// </returns>
+		public DataTableBroker GetTableBroker(StructuredType type)
+		{
+			return this.GetTableBroker (type.Caption.Name);
 		}
 
 		/// <summary>
