@@ -54,6 +54,7 @@
     <Compile Include="Dialogs\Icon.cs" />
     <Compile Include="InsideSurface.cs" />
     <Compile Include="MyWidgets\AbstractTypeEditor.cs" />
+    <Compile Include="MyWidgets\TreeBranches.cs" />
     <Compile Include="MyWidgets\TypeEditorBinary.cs" />
     <Compile Include="MyWidgets\TypeEditorDateTime.cs" />
     <Compile Include="MyWidgets\TextFieldExName.cs" />

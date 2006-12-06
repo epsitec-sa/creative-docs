@@ -145,6 +145,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabBook.Arrows = TabBookArrows.Stretch;
 			this.tabBook.Dock = DockStyle.Fill;
 			this.tabBook.Padding = new Margins(1, 1, 1, 1);
+			this.tabBook.ActivePageChanged += new EventHandler(this.HandleTabBookActivePageChanged);
 
 			//	Crée l'onglet 'propriétés'.
 			this.tabPageProperties = new TabPage();
@@ -166,8 +167,24 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Crée l'onglet 'objets'.
 			this.tabPageObjects = new TabPage();
 			this.tabPageObjects.TabTitle = Res.Strings.Viewers.Panels.TabObjects;
-			this.tabPageObjects.Padding = new Margins(10, 10, 10, 10);
+			this.tabPageObjects.Padding = new Margins(4, 4, 4, 4);
 			this.tabBook.Items.Add(this.tabPageObjects);
+
+#if false
+			this.objectsUpdate = new Button(this.tabPageObjects);
+			this.objectsUpdate.Text = "Met à jour";
+			this.objectsUpdate.Dock = DockStyle.Top;
+			this.objectsUpdate.Margins = new Margins(0, 0, 0, 5);
+			this.objectsUpdate.Clicked += new MessageEventHandler(this.HandleObjectsUpdateClicked);
+#endif
+
+			this.objectsScrollable = new Scrollable(this.tabPageObjects);
+			this.objectsScrollable.Dock = DockStyle.Fill;
+			this.objectsScrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
+			this.objectsScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
+			this.objectsScrollable.Panel.IsAutoFitting = true;
+			this.objectsScrollable.Panel.Padding = new Margins(6, 6, 6, 6);
+			this.objectsScrollable.IsForegroundFrame = true;
 
 			//	Crée l'onglet 'cultures'.
 			this.tabPageCultures = new TabPage();
@@ -204,7 +221,11 @@ namespace Epsitec.Common.Designer.Viewers
 				this.hButtonEdition.Clicked -= new MessageEventHandler(HandleHbuttonClicked);
 				this.hButtonSearch.Clicked -= new MessageEventHandler(HandleHbuttonClicked);
 
-				this.DisposeStatusBar();
+				this.tabBook.ActivePageChanged -= new EventHandler(this.HandleTabBookActivePageChanged);
+				this.objectsUpdate.Clicked -= new MessageEventHandler(this.HandleObjectsUpdateClicked);
+
+				this.StatusBarDispose();
+				this.TreeDispose();
 			}
 
 			base.Dispose(disposing);
@@ -446,7 +467,8 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void UpdateStatusViewer()
 		{
 			//	Met à jour le statut du visualisateur en cours, en fonction de la sélection.
-			this.DisposeStatusBar();
+			//	Met également à jour l'arbre des objets, s'il est visible.
+			this.StatusBarDispose();
 			this.statusBar.Children.Clear();  // supprime tous les boutons
 
 			List<Widget> selection = this.panelEditor.SelectedObjects;
@@ -514,6 +536,11 @@ namespace Epsitec.Common.Designer.Viewers
 						this.StatusBarButton(children, "Children", rank++, Res.Strings.Viewers.Panels.StatusBar.Children);
 					}
 				}
+			}
+
+			if (this.tabPageObjects.Visibility)  // onglet 'Objets' visible ?
+			{
+				this.TreeUpdate();
 			}
 		}
 
@@ -593,7 +620,7 @@ namespace Epsitec.Common.Designer.Viewers
 			overflow.Dock = DockStyle.Left;
 		}
 
-		protected void DisposeStatusBar()
+		protected void StatusBarDispose()
 		{
 			//	Supprime tous les widgets existants dans la barre de statut.
 			foreach (Widget children in this.statusBar.Children)
@@ -706,6 +733,155 @@ namespace Epsitec.Common.Designer.Viewers
 
 			return list;
 		}
+		#endregion
+
+
+		#region Tree
+		protected void TreeUpdate()
+		{
+			//	Construit l'arbre des objets.
+			this.TreeClear();
+
+			List<Widget> bands = new List<Widget>();
+			List<MyWidgets.TreeBranches> branches = new List<MyWidgets.TreeBranches>();
+			List<double> positions = new List<double>();
+			this.TreeCreateChildren(bands, branches, positions, 0, this.panelContainer);
+		}
+
+		protected void TreeClear()
+		{
+			//	Supprime et libère l'arbre des objets.
+			this.TreeDispose();
+			this.objectsScrollable.Panel.Children.Clear();  // supprime tous les boutons
+		}
+
+		protected void TreeCreateChildren(List<Widget> bands, List<MyWidgets.TreeBranches> branches, List<double> positions, int deep, Widget obj)
+		{
+			//	Crée le bouton d'un objet, puis appelle de nouveau cette méthode récursivement
+			//	pour les boutons des enfants.
+			if (deep >= bands.Count)
+			{
+				//	Crée le conteneur horizonal pour les boutons.
+				Widget band = new Widget(this.objectsScrollable.Panel);
+				band.Dock = DockStyle.Top;
+				bands.Add(band);
+
+				//	Crée le conteneur horizontal pour les liaisons.
+				MyWidgets.TreeBranches tb = new MyWidgets.TreeBranches(this.objectsScrollable.Panel);
+				tb.PreferredHeight = 30;
+				tb.Dock = DockStyle.Top;
+				branches.Add(tb);
+
+				//	Crée le remplissage en X du contenur horizontal.
+				positions.Add(0);
+			}
+
+			if (deep > 0)
+			{
+				double shift = positions[deep-1] - positions[deep] - Panels.treeButtonWidth;
+				if (shift > 0)  // parent en retrait à gauche ?
+				{
+					//	Crée un séparateur pour aligner le premier enfant sur le parent.
+					Widget sep = new Widget(bands[deep]);
+					sep.PreferredWidth = shift;
+					sep.Dock = DockStyle.Left;
+					positions[deep] += shift;
+				}
+			}
+
+			//	Crée le bouton pour l'objet.
+			this.TreeCreateButton(obj, bands[deep]);
+			positions[deep] += Panels.treeButtonWidth;
+
+			if (ObjectModifier.IsAbstractGroup(obj))  // conteneur d'autres objets ?
+			{
+				for (int i=0; i<obj.Children.Count; i++)
+				{
+					Widget children = obj.Children[i] as Widget;
+					this.TreeCreateChildren(bands, branches, positions, deep+1, children);
+
+					branches[deep].AddBranche(positions[deep]-Panels.treeButtonWidth/2, positions[deep+1]-Panels.treeButtonWidth/2);
+				}
+
+				if (obj.Children.Count > 0)
+				{
+					//	Crée le séparateur entre des enfants de parents différents.
+					Widget sep = new Widget(bands[deep+1]);
+					sep.PreferredWidth = 8;
+					sep.Dock = DockStyle.Left;
+					positions[deep+1] += sep.PreferredWidth;
+				}
+			}
+		}
+
+		protected void TreeCreateButton(Widget obj, Widget parent)
+		{
+			//	Ajoute un bouton représentant un objet.
+			string icon = ObjectModifier.GetObjectIcon(obj);
+			System.Diagnostics.Debug.Assert(icon != null);
+
+			bool sel = this.panelEditor.SelectedObjects.Contains(obj);
+
+			IconButton button = new IconButton(parent);
+			button.IconName = Misc.Icon(icon);
+			button.ButtonStyle = ButtonStyle.ActivableIcon;
+			button.ActiveState = sel ? ActiveState.Yes : ActiveState.No;
+			button.PreferredWidth = Panels.treeButtonWidth;
+			button.Dock = DockStyle.Left;
+			button.Clicked += new MessageEventHandler(this.HandleTreeButtonClicked);
+			button.Entered += new MessageEventHandler(this.HandleTreeButtonEntered);
+			button.Exited += new MessageEventHandler(this.HandleTreeButtonExited);
+			button.SetValue(Panels.TreeObjectProperty, obj);
+		}
+
+		private void HandleTreeButtonClicked(object sender, MessageEventArgs e)
+		{
+			//	Le bouton d'un objet dans l'arbre a été cliqué.
+			IconButton button = sender as IconButton;
+			Widget obj = button.GetValue(Panels.TreeObjectProperty) as Widget;
+			this.panelEditor.SelectOneObject(obj);
+		}
+
+		private void HandleTreeButtonEntered(object sender, MessageEventArgs e)
+		{
+			//	La souris est entrée (survol) dans un bouton d'un objet de l'arbre.
+			IconButton button = sender as IconButton;
+			Widget obj = button.GetValue(Panels.TreeObjectProperty) as Widget;
+			List<Widget> list = new List<Widget>();
+			list.Add(obj);
+			this.panelEditor.SetEnteredObjects(list);
+		}
+
+		private void HandleTreeButtonExited(object sender, MessageEventArgs e)
+		{
+			//	La souris est sortie (survol) d'un bouton d'un objet de l'arbre.
+			this.panelEditor.SetEnteredObjects(null);
+		}
+
+		protected void TreeDispose()
+		{
+			//	Libère tout l'arbre des objets.
+			this.TreeDispose(this.objectsScrollable.Panel.Children);
+		}
+
+		protected void TreeDispose(Widgets.Collections.FlatChildrenCollection childrens)
+		{
+			foreach (Widget children in childrens)
+			{
+				if (children is IconButton)
+				{
+					AbstractButton button = children as AbstractButton;
+					button.Clicked -= new MessageEventHandler(this.HandleTreeButtonClicked);
+					button.Entered -= new MessageEventHandler(this.HandleTreeButtonEntered);
+					button.Exited -= new MessageEventHandler(this.HandleTreeButtonExited);
+					button.ClearValue(Panels.TreeObjectProperty);
+				}
+
+				this.TreeDispose(children.Children);
+			}
+		}
+
+		protected static readonly DependencyProperty TreeObjectProperty = DependencyProperty.RegisterAttached("TreeObject", typeof(Widget), typeof(Panels), new DependencyPropertyMetadata().MakeNotSerializable());
 		#endregion
 
 
@@ -926,6 +1102,26 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateEdit();
 		}
 
+		private void HandleTabBookActivePageChanged(object sender)
+		{
+			//	Changement de l'onglet visible.
+			if (this.tabPageObjects.Visibility)  // arbre des objets visible ?
+			{
+				this.TreeUpdate();  // met à jour l'arbre
+			}
+			else
+			{
+				this.TreeClear();  // supprime l'arbre
+			}
+		}
+
+		private void HandleObjectsUpdateClicked(object sender, MessageEventArgs e)
+		{
+			this.TreeUpdate();
+		}
+
+
+		protected static readonly double		treeButtonWidth = 22;
 
 		protected ProxyManager					proxyManager;
 		protected Widget						left;
@@ -952,6 +1148,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Scrollable					propertiesScrollable;
 
 		protected TabPage						tabPageObjects;
+		protected Button						objectsUpdate;
+		protected Scrollable					objectsScrollable;
 
 		protected TabPage						tabPageCultures;
 		protected List<IconButton>				cultureButtonList;

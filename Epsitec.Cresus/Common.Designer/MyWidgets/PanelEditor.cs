@@ -1477,6 +1477,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 
 				this.module.MainWindow.UpdateInfoViewer();
+				this.UpdateAfterSelectionChanged();
 				this.OnUpdateCommands();
 			}
 		}
@@ -2062,6 +2063,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingArraySelected = null;
 			this.constrainsList.Ending();
 			this.handlesList.UpdateGeometry();
+			this.UpdateAfterSelectionChanged();
 			this.Invalidate();
 		}
 
@@ -2307,7 +2309,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Invalidate();
 		}
 
-		protected void SelectOneObject(Widget obj)
+		public void SelectOneObject(Widget obj)
 		{
 			//	Sélectionne un objet.
 			this.selectedObjects.Clear();
@@ -2383,7 +2385,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateAfterSelectionChanged()
 		{
-			//	Mise à jour après un changement de sélection.
+			//	Mise à jour après un changement de sélection, ou après un changement dans
+			//	l'arbre des objets (création, changement de parenté, etc.).
 			this.module.MainWindow.UpdateStatusViewer();
 			this.handlesList.UpdateSelection();
 			this.dimensionsList.UpdateSelection();
@@ -2651,6 +2654,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.Invalidate();
 			this.context.ShowZOrder = true;
+			this.UpdateAfterSelectionChanged();
 			this.OnUpdateCommands();
 			this.SetDirty();
 		}
