@@ -219,6 +219,10 @@ namespace Epsitec.Common.UI.Controllers
 			{
 				return false;
 			}
+			if (value == Binding.DoNothing)
+			{
+				return true;
+			}
 
 			return TypeRosetta.IsValidValue (value, this.Placeholder.ValueType);
 		}
@@ -244,10 +248,13 @@ namespace Epsitec.Common.UI.Controllers
 			
 			expression = this.GetPlaceholderBindingExpression ();
 
-			if ((expression == null) ||
-				(expression.DataSourceType == DataSourceType.None))
+			if (expression == null)
 			{
 				return InvalidValue.Instance;
+			}
+			else if (expression.DataSourceType == DataSourceType.None)
+			{
+				return Binding.DoNothing;
 			}
 			else
 			{
