@@ -405,7 +405,8 @@ namespace Epsitec.Common.Types
 						
 						if (elements[i] == "*")
 						{
-							if (doSource != null)
+							if ((doSource != null) ||
+								(cvSource != null))
 							{
 								//	Skip "*" elements. We cannot - ever - have a DependencyObject
 								//	source with such a property name.
