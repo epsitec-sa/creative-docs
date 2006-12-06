@@ -406,7 +406,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.isShiftPressed != message.IsShiftPressed)
 			{
 				this.isShiftPressed = message.IsShiftPressed;
-				this.Invalidate();
+				this.dimensionsList.IsShiftPressed = this.isShiftPressed;
 			}
 
 			switch (message.MessageType)
@@ -431,7 +431,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					break;
 
 				case MessageType.MouseWheel:
-					if (!this.isShiftPressed && this.dimensionsList.Wheel(message.Wheel))
+					if (this.dimensionsList.Wheel(message.Wheel))
 					{
 						this.OnChildrenGeometryChanged();  // met à jour les proxies
 						this.module.MainWindow.UpdateInfoViewer();
@@ -633,7 +633,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.isRectangling = false;
 			Widget obj;
 
-			if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging && !this.isShiftPressed)
+			if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				this.isDraggingDimension = this.dimensionsList.DraggingStart(pos, isControlPressed, isShiftPressed);
 				if (this.isDraggingDimension)
@@ -3773,7 +3773,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les cotes de l'objet sélectionné.
-			if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging && !this.isShiftPressed)
+			if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				this.dimensionsList.Draw(graphics);
 			}

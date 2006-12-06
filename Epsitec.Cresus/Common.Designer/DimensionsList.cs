@@ -38,17 +38,38 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public bool IsShiftPressed
+		{
+			//	Etat de la touche shift.
+			get
+			{
+				return this.isShiftPressed;
+			}
+			set
+			{
+				this.isShiftPressed = value;
+				this.hilited = null;
+				this.editor.Invalidate();
+			}
+		}
+
 		public void Draw(Graphics graphics)
 		{
 			//	Dessine toutes les cotes.
 			foreach (Dimension dim in this.list)
 			{
-				dim.DrawBackground(graphics);
+				if (!this.IsSkipping(dim))
+				{
+					dim.DrawBackground(graphics);
+				}
 			}
 
 			foreach (Dimension dim in this.list)
 			{
-				dim.DrawDimension(graphics);
+				if (!this.IsSkipping(dim))
+				{
+					dim.DrawDimension(graphics);
+				}
 			}
 
 			if (this.hilited != null)
@@ -450,13 +471,27 @@ namespace Epsitec.Common.Designer
 			for (int i=this.list.Count-1; i>=0; i--)  // du dernier (dessus) au premier (dessous)
 			{
 				Dimension dim = this.list[i];
-				if (dim.Detect(pos))
+				if (!this.IsSkipping(dim) && dim.Detect(pos))
 				{
 					return dim;
 				}
 			}
 
 			return null;
+		}
+
+		protected bool IsSkipping(Dimension dim)
+		{
+			if (this.isShiftPressed)
+			{
+				if (dim.DimensionType != Dimension.Type.GridColumn &&
+					dim.DimensionType != Dimension.Type.GridRow)
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		protected void Invalidate(Dimension dim)
@@ -479,5 +514,6 @@ namespace Epsitec.Common.Designer
 		protected Dimension					dragging;
 		protected Point						startingPos;
 		protected double					initialValue;
+		protected bool						isShiftPressed;
 	}
 }
