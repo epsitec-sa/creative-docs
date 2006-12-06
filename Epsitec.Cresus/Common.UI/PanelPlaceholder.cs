@@ -116,8 +116,18 @@ namespace Epsitec.Common.UI
 			{
 				this.panel.SetEmbedder (this);
 				this.panel.Dock = Widgets.DockStyle.Fill;
-				
-				DataObject.SetDataContext (this.panel, new Binding (this, "Value"));
+
+				Binding binding = this.GetBinding (PanelPlaceholder.ValueProperty);
+
+				if ((binding == null) ||
+					((binding.Source == null) && (binding.Path == null)))
+				{
+					DataObject.ClearDataContext (this.panel);
+				}
+				else
+				{
+					DataObject.SetDataContext (this.panel, new Binding (this, "Value"));
+				}
 			}
 		}
 
