@@ -577,7 +577,8 @@ namespace Epsitec.Common.Types
 				//	serialization of the complex object type does not keep track
 				//	of the associated caption) :
 
-				if (type.IsCaptionDefined == false)
+				if ((type != null) &&
+					(type.IsCaptionDefined == false))
 				{
 					type.DefineCaption (caption);
 				}

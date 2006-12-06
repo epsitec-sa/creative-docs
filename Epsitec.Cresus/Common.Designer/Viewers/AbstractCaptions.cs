@@ -405,7 +405,7 @@ namespace Epsitec.Common.Designer.Viewers
 				else
 				{
 					ResourceAccess.Field field = this.access.GetField(sel, null, ResourceAccess.FieldType.Name);
-					return field.String;
+					return field == null ? "" : field.String;
 				}
 			}
 		}
