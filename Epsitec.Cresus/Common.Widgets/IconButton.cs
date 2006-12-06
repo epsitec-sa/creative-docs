@@ -26,6 +26,14 @@ namespace Epsitec.Common.Widgets
 			this.CommandObject = command;
 		}
 
+		public IconButton(Command command, Drawing.Size size, DockStyle dock)
+			: this (command)
+		{
+			this.PreferredSize = size;
+			this.PreferredIconSize = size;
+			this.Dock = dock;
+		}
+
 		public IconButton(string icon)
 			: this ()
 		{

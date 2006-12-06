@@ -41,6 +41,13 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+#if false
+		public override Margins GetInternalPadding()
+		{
+			return new Margins (4, 4, 4, 4);
+		}
+#endif
+
 		protected Rectangle UsefulZone
 		{
 			//	Retourne la zone rectangulaire utile pour les widgets.

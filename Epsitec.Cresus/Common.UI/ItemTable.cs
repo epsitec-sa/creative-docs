@@ -264,7 +264,11 @@ namespace Epsitec.Common.UI
 						size = Panel.GetPanelDefaultSize (column.TemplateId, manager);
 					}
 
-					minWidth += column.Width.IsAbsolute ? column.Width.Value : size.Width;
+					double width = column.Width.IsAbsolute ? column.Width.Value : size.Width;
+
+					this.columnHeader.SetColumnWidth (i, width);
+
+					minWidth += width;
 					minHeight = System.Math.Max (minHeight, size.Height);
 				}
 
