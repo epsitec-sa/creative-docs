@@ -12,15 +12,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public enum TreeBrancheStyle
 		{
-			Simple,		// droites simples
-			Rich,		// droites avec cercles aux points d'attache
-			Curve,		// courbes simples
+			SimpleLine,		// droites simples
+			RichLine,		// droites avec cercles aux points d'attache
+			SimpleCurve,	// courbes simples
+			RichCurve,		// courbes avec cercles aux points d'attache
 		}
 
 
 		public TreeBranches() : base()
 		{
-			this.style = TreeBrancheStyle.Curve;
+			this.style = TreeBrancheStyle.RichCurve;
 			this.branches = new List<TreeBranche>();
 		}
 
@@ -61,7 +62,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Rectangle rect = this.Client.Bounds;
 
 			//	Dessine toutes les liaisons.
-			if (this.style == TreeBrancheStyle.Simple)
+			if (this.style == TreeBrancheStyle.SimpleLine)
 			{
 				this.UpdateShift();
 
@@ -79,7 +80,33 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.RenderSolid(adorner.ColorBorder);
 			}
 
-			if (this.style == TreeBrancheStyle.Curve)
+			if (this.style == TreeBrancheStyle.RichLine)
+			{
+				double r1 = 3;
+				double r2 = 3;
+
+				foreach (TreeBranche branche in this.branches)
+				{
+					Point p1 = new Point(branche.P1, rect.Top);
+					Point p2 = new Point(branche.P2, rect.Bottom);
+					p2.Y--;
+
+					Misc.AlignForLine(graphics, ref p1);
+					Misc.AlignForLine(graphics, ref p2);
+
+					Point pp1 = Point.Move(p1, p2, r1);
+					Point pp2 = Point.Move(p2, p1, r2);
+
+					graphics.AddLine(pp1, pp2);
+					graphics.RenderSolid(adorner.ColorBorder);
+
+					graphics.AddCircle(p1, r1);
+					graphics.AddCircle(p2, r2);
+					graphics.RenderSolid(adorner.ColorBorder);
+				}
+			}
+
+			if (this.style == TreeBrancheStyle.SimpleCurve)
 			{
 				this.UpdateShift();
 
@@ -105,30 +132,37 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.RenderSolid(adorner.ColorBorder);
 			}
 
-			if (this.style == TreeBrancheStyle.Rich)
+			if (this.style == TreeBrancheStyle.RichCurve)
 			{
-				double r1 = 3;
-				double r2 = 3;
+				this.UpdateShift();
+
+				Path path = new Path();
+				double h = rect.Height*0.6;
+				double r = 3;
 
 				foreach (TreeBranche branche in this.branches)
 				{
-					Point p1 = new Point(branche.P1, rect.Top);
+					Point p1 = new Point(branche.P1+branche.Shift, rect.Top);
 					Point p2 = new Point(branche.P2, rect.Bottom);
 					p2.Y--;
 
 					Misc.AlignForLine(graphics, ref p1);
 					Misc.AlignForLine(graphics, ref p2);
 
-					Point pp1 = Point.Move(p1, p2, r1);
-					Point pp2 = Point.Move(p2, p1, r2);
-
-					graphics.AddLine(pp1, pp2);
+					graphics.AddFilledCircle(p1, r);
 					graphics.RenderSolid(adorner.ColorBorder);
 
-					graphics.AddCircle(p1, r1);
-					graphics.AddCircle(p2, r2);
-					graphics.RenderSolid(adorner.ColorBorder);
+					path.AppendCircle(p2, r);
+
+					p1.Y -= r-0.5;
+					p2.Y += r;
+
+					path.MoveTo(p1);
+					path.CurveTo(new Point(p1.X, p1.Y-h), new Point(p2.X, p2.Y+h), p2);
 				}
+
+				graphics.Rasterizer.AddOutline(path);
+				graphics.RenderSolid(adorner.ColorBorder);
 			}
 		}
 
