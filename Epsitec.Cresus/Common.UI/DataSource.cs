@@ -143,9 +143,8 @@ namespace Epsitec.Common.UI
 		public void AttachListener(string id, EventHandler<DependencyPropertyChangedEventArgs> handler)
 		{
 			ItemRecord record = this.GetItemRecord (id);
-			IStructuredData data = record.Data;
-
-			if (data == null)
+			
+			if (record.IsEmpty)
 			{
 				throw new System.ArgumentException (string.Format ("Identifier '{0}' cannot be resolved", id));
 			}
@@ -156,9 +155,8 @@ namespace Epsitec.Common.UI
 		public void DetachListener(string id, EventHandler<DependencyPropertyChangedEventArgs> handler)
 		{
 			ItemRecord record = this.GetItemRecord (id);
-			IStructuredData data = record.Data;
-
-			if (data == null)
+			
+			if (record.IsEmpty)
 			{
 				throw new System.ArgumentException (string.Format ("Identifier '{0}' cannot be resolved", id));
 			}
@@ -175,7 +173,7 @@ namespace Epsitec.Common.UI
 		{
 			ItemRecord record = this.GetItemRecord (id);
 			
-			if (record.Data == null)
+			if (record.IsEmpty)
 			{
 				return UnknownValue.Instance;
 			}
@@ -290,7 +288,7 @@ namespace Epsitec.Common.UI
 			{
 				get
 				{
-					return this.data == null;
+					return (this.data == null) && (this.fieldId == null);
 				}
 			}
 			
