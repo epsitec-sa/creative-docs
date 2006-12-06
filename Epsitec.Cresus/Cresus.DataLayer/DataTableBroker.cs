@@ -402,11 +402,20 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			if (this.dataTable.Columns.Contains (fieldId))
 			{
+				StructuredTypeField field = data.StructuredType.GetField (fieldId);
+				AbstractType fieldType = field.Type as AbstractType;
+
 				object fieldData = dataRow[fieldId];
 
 				if (fieldData == System.DBNull.Value)
 				{
 					fieldData = null;
+				}
+
+				if ((fieldType != null) &&
+					(fieldType.IsValidValue (fieldData) == false))
+				{
+					fieldData = fieldType.DefaultValue;
 				}
 
 				data.SetValue (fieldId, fieldData);
