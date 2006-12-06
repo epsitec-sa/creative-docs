@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<bundle name="_KF05" caption="TestAvecTable" type="Panel" culture="fr" rank="4">
+<bundle name="_KF05" caption="TestAvecTable" type="Panel" culture="fr" rank="5">
   <data name="Panel">
     <xml>
       <panel xmlns:s="http://www.epsitec.ch/XNS/storage-structure-1" xmlns:f="http://www.epsitec.ch/XNS/storage-fields-1">
