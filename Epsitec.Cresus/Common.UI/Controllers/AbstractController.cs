@@ -244,7 +244,8 @@ namespace Epsitec.Common.UI.Controllers
 			
 			expression = this.GetPlaceholderBindingExpression ();
 
-			if (expression == null)
+			if ((expression == null) ||
+				(expression.DataSourceType == DataSourceType.None))
 			{
 				return InvalidValue.Instance;
 			}
