@@ -2363,12 +2363,12 @@ namespace Epsitec.Common.Widgets
 			
 			//	Cherche parmi les frères...
 			
-			Widget[] siblings = this.FindTabWidgets (mode);
-			bool     search_z = true;
+			Widget[] tabSiblings = this.FindTabWidgets (mode);
+			bool     search_z    = true;
 			
-			for (int i = 0; i < siblings.Length; i++)
+			for (int i = 0; i < tabSiblings.Length; i++)
 			{
-				if (siblings[i] == this)
+				if (tabSiblings[i] == this)
 				{
 					//	On vient de trouver notre position dans la liste des widgets activables
 					//	par la touche TAB.
@@ -2379,7 +2379,7 @@ namespace Epsitec.Common.Widgets
 					{
 						case TabNavigationDir.Backwards:
 							
-							find = this.GetTabFromSiblings (i, dir, siblings);
+							find = this.GetTabFromSiblings (i, dir, tabSiblings);
 							
 							if (find != null)
 							{
@@ -2405,7 +2405,7 @@ namespace Epsitec.Common.Widgets
 						
 						case TabNavigationDir.Forwards:
 							
-							find = this.GetTabFromSiblings (i, dir, siblings);
+							find = this.GetTabFromSiblings (i, dir, tabSiblings);
 							
 							if (find != null)
 							{
@@ -2532,18 +2532,18 @@ namespace Epsitec.Common.Widgets
 			{
 				//	On ne peut plus avancer, donc on tente de boucler.
 				
-				if (siblings.Length > 1)
+				if (tabSiblings.Length > 1)
 				{
 					switch (dir)
 					{
 						case TabNavigationDir.Forwards:
-							find = siblings[0].FindTabWidget (dir, mode, false, true, ref iterations);
+							find = tabSiblings[0].FindTabWidget (dir, mode, false, true, ref iterations);
 							break;
 						
 						case TabNavigationDir.Backwards:
 //?							if (accept_focus)
 							{
-								find = siblings[siblings.Length-1].FindTabWidget (dir, mode, false, true, ref iterations);
+								find = tabSiblings[tabSiblings.Length-1].FindTabWidget (dir, mode, false, true, ref iterations);
 							}
 							break;
 					}

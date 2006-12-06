@@ -50,6 +50,7 @@ namespace Epsitec.Common.UI.Controllers
 			this.label.VerticalAlignment = VerticalAlignment.BaseLine;
 			this.label.ContentAlignment = Drawing.ContentAlignment.MiddleLeft;
 			this.label.Dock = DockStyle.Stacked;
+			this.label.Name = caption.Name;
 
 			ToolTip.Default.SetToolTip (this.label, caption.Description);
 
@@ -88,6 +89,9 @@ namespace Epsitec.Common.UI.Controllers
 			this.field.TabIndex = 1;
 			this.field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.field.Dock = DockStyle.Stacked;
+
+			this.label.Name = null;
+			this.field.Name = caption.Name;
 			
 			this.AddWidget (this.label);
 			this.AddWidget (this.field);
