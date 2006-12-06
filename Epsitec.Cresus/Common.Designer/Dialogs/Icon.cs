@@ -264,7 +264,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				return;
 			}
 
-			this.arrayDetail.TotalRows = this.icons.Count;
+			this.arrayDetail.TotalRows = this.icons.Count+1;
 
 			int first = this.arrayDetail.FirstVisibleRow;
 			for (int i=0; i<this.arrayDetail.LineCount; i++)
