@@ -199,7 +199,11 @@ namespace Epsitec.Common.Designer
 				else if (this.dragging.DimensionType == Dimension.Type.ChildrenPlacement)
 				{
 					Widget obj = this.dragging.Object;
-					this.objectModifier.SetChildrenPlacement(obj, DimensionsList.NextChildrenPlacement(this.objectModifier.GetChildrenPlacement(obj)));
+					ObjectModifier.ChildrenPlacement cp = DimensionsList.NextChildrenPlacement(this.objectModifier.GetChildrenPlacement(obj));
+
+					GeometryCache.FixBounds(obj, this.objectModifier);
+					this.objectModifier.SetChildrenPlacement(obj, cp);
+					GeometryCache.AdaptBounds(obj, this.objectModifier, cp);
 				}
 				else
 				{
@@ -298,7 +302,7 @@ namespace Epsitec.Common.Designer
 				case ObjectModifier.ChildrenPlacement.VerticalStacked:    return ObjectModifier.ChildrenPlacement.HorizontalStacked;
 				case ObjectModifier.ChildrenPlacement.HorizontalStacked:  return ObjectModifier.ChildrenPlacement.Grid;
 				case ObjectModifier.ChildrenPlacement.Grid:               return ObjectModifier.ChildrenPlacement.VerticalStacked;
-				default:                                                  return ObjectModifier.ChildrenPlacement.HorizontalStacked;
+				default:                                                  return ObjectModifier.ChildrenPlacement.VerticalStacked;
 			}
 		}
 
