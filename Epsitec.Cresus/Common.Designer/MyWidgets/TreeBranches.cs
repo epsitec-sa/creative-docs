@@ -53,6 +53,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	p1 est la position supérieure en X.
 			//	p2 est la position inférieure en X.
 			this.branches.Add(new TreeBranche(p1, p2));
+			this.isDirtyShift = true;
 		}
 
 
@@ -171,29 +172,34 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Met à jour le décalage, pour que les points de départ d'un même
 			//	parent soient répartis.
-			double last = -999;
-			int first = -1;
-
-			for (int i=0; i<=this.branches.Count; i++)
+			if (this.isDirtyShift)
 			{
-				if (i == this.branches.Count || last != this.branches[i].P1)
+				this.isDirtyShift = false;
+
+				double last = -999;
+				int first = -1;
+
+				for (int i=0; i<=this.branches.Count; i++)
 				{
-					if (first != -1 && i-first > 1)
+					if (i == this.branches.Count || last != this.branches[i].P1)
 					{
-						double width = 10;
-						double delta = width/(i-first-1);
-						delta = System.Math.Min(3, delta);
-
-						for (int j=first; j<i; j++)
+						if (first != -1 && i-first > 1)
 						{
-							this.branches[j].Shift = delta*((j-first)-(i-first-1)/2.0);
-						}
-					}
+							double width = 10;
+							double delta = width/(i-first-1);
+							delta = System.Math.Min(3, delta);
 
-					if (i < this.branches.Count)
-					{
-						last = this.branches[i].P1;
-						first = i;
+							for (int j=first; j<i; j++)
+							{
+								this.branches[j].Shift = delta*((j-first)-(i-first-1)/2.0);
+							}
+						}
+
+						if (i < this.branches.Count)
+						{
+							last = this.branches[i].P1;
+							first = i;
+						}
 					}
 				}
 			}
@@ -246,5 +252,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected TreeBrancheStyle				style;
 		protected List<TreeBranche>				branches;
+		protected bool							isDirtyShift;
 	}
 }
