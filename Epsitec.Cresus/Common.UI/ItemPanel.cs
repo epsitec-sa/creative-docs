@@ -162,6 +162,11 @@ namespace Epsitec.Common.UI
 		
 		public void SelectItemView(ItemView view)
 		{
+			if (view == null)
+			{
+				return;
+			}
+
 			if (view.IsSelected)
 			{
 				this.SetItemViewSelection (view, true);
@@ -293,6 +298,25 @@ namespace Epsitec.Common.UI
 			this.isRefreshPending = false;
 			this.ClearUserInterface ();
 			this.RefreshItemViews ();
+
+			if (this.isCurrentShowPending)
+			{
+				ICollectionView view = this.RootPanel.Items;
+
+				if (view != null)
+				{
+					this.isCurrentShowPending = false;
+					ItemView item = this.GetItemView (view.CurrentPosition);
+
+					if ((this.ItemSelection == ItemPanelSelectionMode.ExactlyOne) ||
+						(this.ItemSelection == ItemPanelSelectionMode.ZeroOrOne))
+					{
+						this.SelectItemView (item);
+					}
+
+					this.Show (item);
+				}
+			}
 		}
 
 		internal void ClearUserInterface()
@@ -313,6 +337,11 @@ namespace Epsitec.Common.UI
 		
 		public void Show(ItemView view)
 		{
+			if (view == null)
+			{
+				return;
+			}
+
 			if (this.Aperture.IsSurfaceZero)
 			{
 				//	Nothing to do : there is no visible aperture, so don't bother
@@ -476,6 +505,8 @@ namespace Epsitec.Common.UI
 		protected virtual void HandleItemCollectionChanged(object sender, CollectionChangedEventArgs e)
 		{
 			this.AsyncRefresh ();
+			this.isCurrentShowPending = true;
+
 		}
 
 		protected virtual void HandleItemViewDefaultSizeChanged(Drawing.Size oldValue, Drawing.Size newValue)
@@ -995,5 +1026,6 @@ namespace Epsitec.Common.UI
 		ItemPanelGroup parentGroup;
 		bool hasDirtyLayout;
 		bool isRefreshPending;
+		bool isCurrentShowPending;
 	}
 }
