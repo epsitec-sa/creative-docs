@@ -196,6 +196,11 @@ namespace Epsitec.Common.Designer
 					this.editor.UpdateAfterSelectionGridChanged();
 					this.editor.Invalidate();
 				}
+				else if (this.dragging.DimensionType == Dimension.Type.ChildrenPlacement)
+				{
+					Widget obj = this.dragging.Object;
+					this.objectModifier.SetChildrenPlacement(obj, DimensionsList.NextChildrenPlacement(this.objectModifier.GetChildrenPlacement(obj)));
+				}
 				else
 				{
 					this.startingPos = mouse;
@@ -283,6 +288,17 @@ namespace Epsitec.Common.Designer
 				case ObjectModifier.GridMode.Absolute:      return ObjectModifier.GridMode.Proportional;
 				case ObjectModifier.GridMode.Proportional:  return ObjectModifier.GridMode.Auto;
 				default:                                    return ObjectModifier.GridMode.Auto;
+			}
+		}
+
+		protected static ObjectModifier.ChildrenPlacement NextChildrenPlacement(ObjectModifier.ChildrenPlacement cp)
+		{
+			switch (cp)
+			{
+				case ObjectModifier.ChildrenPlacement.VerticalStacked:    return ObjectModifier.ChildrenPlacement.HorizontalStacked;
+				case ObjectModifier.ChildrenPlacement.HorizontalStacked:  return ObjectModifier.ChildrenPlacement.Grid;
+				case ObjectModifier.ChildrenPlacement.Grid:               return ObjectModifier.ChildrenPlacement.VerticalStacked;
+				default:                                                  return ObjectModifier.ChildrenPlacement.HorizontalStacked;
 			}
 		}
 
@@ -411,6 +427,13 @@ namespace Epsitec.Common.Designer
 						}
 					}
 				}
+			}
+
+			if (this.objectModifier.HasChildrenPlacement(obj))
+			{
+				dim = new Dimension(this.editor, obj, Dimension.Type.ChildrenPlacement);
+				dim.Slave = slave;
+				this.list.Add(dim);
 			}
 
 			if (this.objectModifier.HasWidth(obj))
