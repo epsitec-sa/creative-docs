@@ -435,13 +435,6 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (this.objectModifier.HasChildrenPlacement(obj))
-			{
-				dim = new Dimension(this.editor, obj, Dimension.Type.ChildrenPlacement);
-				dim.Slave = slave;
-				this.list.Add(dim);
-			}
-
 			if (this.objectModifier.HasWidth(obj))
 			{
 				dim = new Dimension(this.editor, obj, Dimension.Type.Width);
@@ -471,6 +464,13 @@ namespace Epsitec.Common.Designer
 				this.list.Add(dim);
 
 				dim = new Dimension(this.editor, obj, Dimension.Type.MarginTop);
+				dim.Slave = slave;
+				this.list.Add(dim);
+			}
+
+			if (this.objectModifier.HasChildrenPlacement(obj))
+			{
+				dim = new Dimension(this.editor, obj, Dimension.Type.ChildrenPlacement);
 				dim.Slave = slave;
 				this.list.Add(dim);
 			}
