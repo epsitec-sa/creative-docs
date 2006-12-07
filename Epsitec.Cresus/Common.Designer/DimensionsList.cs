@@ -204,6 +204,8 @@ namespace Epsitec.Common.Designer
 					GeometryCache.FixBounds(obj, this.objectModifier);
 					this.objectModifier.SetChildrenPlacement(obj, cp);
 					GeometryCache.AdaptBounds(obj, this.objectModifier, cp);
+
+					this.UpdateSelection();
 				}
 				else
 				{
