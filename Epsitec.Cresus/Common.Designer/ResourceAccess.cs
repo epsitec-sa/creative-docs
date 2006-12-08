@@ -2579,6 +2579,7 @@ namespace Epsitec.Common.Designer
 
 		public int Sort(int index)
 		{
+			//	Trie toutes les ressources et retourne le nouvel index du Druid.
 			Druid druid = this.druidsIndex[index];
 			this.Sort();
 			return this.druidsIndex.IndexOf(druid);

@@ -139,13 +139,12 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.lastActionIsReplace = true;
 
-				this.access.AccessIndex = searcher.Row;
-				this.array.SelectedRow = this.access.AccessIndex;
-				this.array.ShowSelectedRow();
-
 				string text = this.ReplaceDo(searcher, replace);
 				if (text == null)
 				{
+					this.access.AccessIndex = searcher.Row;
+					this.array.SelectedRow = this.access.AccessIndex;
+					this.array.ShowSelectedRow();
 					return;
 				}
 
@@ -167,7 +166,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 				if (searcher.Field == 0)  // remplacement de 'Name' ?
 				{
+					this.access.AccessIndex = this.access.Sort(searcher.Row);
 					this.UpdateArray();
+					this.array.ShowSelectedRow();
 				}
 			}
 			else
@@ -207,7 +208,10 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
+				this.access.AccessIndex = this.access.Sort(this.access.AccessIndex);
 				this.UpdateArray();
+				this.array.ShowSelectedRow();
+				
 				this.UpdateEdit();
 				this.UpdateCommands();
 
