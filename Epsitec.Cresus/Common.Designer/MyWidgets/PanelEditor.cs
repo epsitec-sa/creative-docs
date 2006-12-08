@@ -1535,9 +1535,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.context.Tool == "ObjectText")
 			{
+#if true
 				item = new UI.Placeholder();
 				item.Text = Misc.Italic("TextField");
 				item.DrawDesignerFrame = true;  // nécessaire pour voir le cadre pendant la création
+#else
+				UI.Placeholder placeholder = new UI.Placeholder();
+				placeholder.Text = Misc.Italic("TextField");
+				placeholder.DrawDesignerFrame = true;  // nécessaire pour voir le cadre pendant la création
+
+				IGridPermeable grid = placeholder.GetGridPermeableLayoutHelper();
+				int column = 1;
+				int row = 1;
+				grid.UpdateGridSpan(ref column, ref row);
+
+				this.objectModifier.SetGridColumnSpan(placeholder, column);
+				this.objectModifier.SetGridRowSpan(placeholder, row);
+
+				item = placeholder;
+#endif
 			}
 
 			if (this.context.Tool == "ObjectTable")
