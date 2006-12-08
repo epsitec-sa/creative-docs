@@ -438,7 +438,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 				else
 				{
-					//	rien d'intelligent à faire pour l'instant !
+					//	Rien d'intelligent à faire pour l'instant !
 				}
 			}
 			else
@@ -844,12 +844,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("AccessLast").Enable = (sel != -1 && sel < count-1);
 			this.GetCommandState("AccessNext").Enable = (sel != -1 && sel < count-1);
 
-			this.GetCommandState("Delete").Enable = (sel != -1 && count > 1 && build);
-			this.GetCommandState("Create").Enable = (sel != -1 && build);
-			this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
-
-			this.GetCommandState("Up").Enable = (sel != -1 && sel > 0 && build);
-			this.GetCommandState("Down").Enable = (sel != -1 && sel < count-1 && build);
+			if (!this.IsDeleteOrDuplicateForViewer)
+			{
+				this.GetCommandState("Delete").Enable = (sel != -1 && count > 1 && build);
+				this.GetCommandState("Create").Enable = (sel != -1 && build);
+				this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
+			}
 
 			if (this is Panels)
 			{
@@ -897,8 +897,13 @@ namespace Epsitec.Common.Designer.Viewers
 				Panels panels = this as Panels;
 				panels.PanelEditor.GetSelectionInfo(out objSelected, out objCount, out isRoot);
 
-				this.GetCommandState("PanelDelete").Enable = (objSelected != 0);
-				this.GetCommandState("PanelDuplicate").Enable = (objSelected != 0);
+				if (this.IsDeleteOrDuplicateForViewer)
+				{
+					this.GetCommandState("Delete").Enable = (objSelected != 0);
+					this.GetCommandState("Create").Enable = false;
+					this.GetCommandState("Duplicate").Enable = false;
+				}
+
 				this.GetCommandState("PanelDeselectAll").Enable = (objSelected != 0);
 				this.GetCommandState("PanelSelectAll").Enable = (objSelected < objCount);
 				this.GetCommandState("PanelSelectInvert").Enable = (objCount > 0);
@@ -949,8 +954,6 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				this.GetCommandState("PanelDelete").Enable = false;
-				this.GetCommandState("PanelDuplicate").Enable = false;
 				this.GetCommandState("PanelDeselectAll").Enable = false;
 				this.GetCommandState("PanelSelectAll").Enable = false;
 				this.GetCommandState("PanelSelectInvert").Enable = false;

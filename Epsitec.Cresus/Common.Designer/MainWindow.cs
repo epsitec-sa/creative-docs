@@ -671,8 +671,6 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoTool(e.Command.CommandId);
 		}
 
-		[Command("PanelDelete")]
-		[Command("PanelDuplicate")]
 		[Command("PanelDeselectAll")]
 		[Command("PanelSelectAll")]
 		[Command("PanelSelectInvert")]
@@ -773,8 +771,6 @@ namespace Epsitec.Common.Designer
 			this.objectGroupBoxState = this.CreateCommandState("ObjectGroupBox");
 			this.objectPanelState = this.CreateCommandState("ObjectPanel");
 			
-			this.panelDeleteState = this.CreateCommandState("PanelDelete");
-			this.panelDuplicateState = this.CreateCommandState("PanelDuplicate");
 			this.panelDeselectAllState = this.CreateCommandState("PanelDeselectAll", KeyCode.Escape);
 			this.panelSelectAllState = this.CreateCommandState("PanelSelectAll");
 			this.panelSelectInvertState = this.CreateCommandState("PanelSelectInvert");
@@ -1406,8 +1402,6 @@ namespace Epsitec.Common.Designer
 		protected CommandState					objectGroupFrameState;
 		protected CommandState					objectGroupBoxState;
 		protected CommandState					objectPanelState;
-		protected CommandState					panelDeleteState;
-		protected CommandState					panelDuplicateState;
 		protected CommandState					panelDeselectAllState;
 		protected CommandState					panelSelectAllState;
 		protected CommandState					panelSelectInvertState;
