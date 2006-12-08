@@ -12,13 +12,11 @@ namespace Epsitec.Common.Designer.Ribbons
 		public Select(MainWindow mainWindow) : base(mainWindow)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Select;
-			this.PreferredWidth = 8 + 22*1.5*2 + 4 + 22*2;
+			this.PreferredWidth = 8 + 22*1.5*3;
 
+			this.buttonDelete    = this.CreateIconButton("Delete", "Large");
 			this.buttonCreate    = this.CreateIconButton("Create", "Large");
 			this.buttonDuplicate = this.CreateIconButton("Duplicate", "Large");
-			this.buttonDelete    = this.CreateIconButton("Delete");
-			this.buttonUp        = this.CreateIconButton("Up");
-			this.buttonDown      = this.CreateIconButton("Down");
 
 			this.UpdateClientGeometry();
 		}
@@ -47,30 +45,16 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(0, dy*0.5);
+			this.buttonDelete.SetManualBounds(rect);
+			rect.Offset(dx*1.5, 0);
 			this.buttonCreate.SetManualBounds(rect);
 			rect.Offset(dx*1.5, 0);
 			this.buttonDuplicate.SetManualBounds(rect);
-
-			rect = this.UsefulZone;
-			rect.Width  = dx;
-			rect.Height = dy;
-			rect.Offset(dx*1.5*2+4, dy+5);
-			this.buttonDelete.SetManualBounds(rect);
-			rect.Offset(dx, 0);
-			this.buttonUp.SetManualBounds(rect);
-
-			rect = this.UsefulZone;
-			rect.Width  = dx;
-			rect.Height = dy;
-			rect.Offset(dx*1.5*2+4+dx, 0);
-			this.buttonDown.SetManualBounds(rect);
 		}
 
 
+		protected IconButton				buttonDelete;
 		protected IconButton				buttonCreate;
 		protected IconButton				buttonDuplicate;
-		protected IconButton				buttonDelete;
-		protected IconButton				buttonUp;
-		protected IconButton				buttonDown;
 	}
 }

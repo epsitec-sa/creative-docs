@@ -438,6 +438,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+#if false
 		public void DoMove(int direction)
 		{
 			//	Déplace la ressource sélectionnée.
@@ -448,6 +449,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.ShowSelectedRow();
 			this.UpdateCommands();
 		}
+#endif
 
 		public void DoNewCulture()
 		{

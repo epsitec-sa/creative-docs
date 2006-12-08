@@ -262,8 +262,8 @@ namespace Epsitec.Common.Designer
 			this.ribbonBook.Items.Add(this.ribbonMain);
 
 			this.ribbonMain.Items.Add(new Ribbons.File(this));
-			this.ribbonMain.Items.Add(new Ribbons.Clipboard(this));
 			this.ribbonMain.Items.Add(new Ribbons.Culture(this));
+			this.ribbonMain.Items.Add(new Ribbons.Clipboard(this));
 			if (this.mode == DesignerMode.Build)
 			{
 				this.ribbonMain.Items.Add(new Ribbons.Select(this));
@@ -630,20 +630,6 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoDuplicate(true);
 		}
 
-		[Command("Up")]
-		void CommandUp(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			if ( !this.IsCurrentModule )  return;
-			this.CurrentModule.Modifier.ActiveViewer.DoMove(-1);
-		}
-
-		[Command("Down")]
-		void CommandDown(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			if ( !this.IsCurrentModule )  return;
-			this.CurrentModule.Modifier.ActiveViewer.DoMove(1);
-		}
-
 		[Command("Cut")]
 		[Command("Copy")]
 		[Command("Paste")]
@@ -743,8 +729,6 @@ namespace Epsitec.Common.Designer
 			this.deleteState = this.CreateCommandState("Delete");
 			this.createState = this.CreateCommandState("Create");
 			this.duplicateState = this.CreateCommandState("Duplicate");
-			this.upState = this.CreateCommandState("Up");
-			this.downState = this.CreateCommandState("Down");
 
 			this.fontBoldState = this.CreateCommandState("FontBold", KeyCode.ModifierControl|KeyCode.AlphaB);
 			this.fontItalicState = this.CreateCommandState("FontItalic", KeyCode.ModifierControl|KeyCode.AlphaI);
@@ -1034,8 +1018,6 @@ namespace Epsitec.Common.Designer
 				this.deleteState.Enable = false;
 				this.createState.Enable = false;
 				this.duplicateState.Enable = false;
-				this.upState.Enable = false;
-				this.downState.Enable = false;
 				this.fontBoldState.Enable = false;
 				this.fontItalicState.Enable = false;
 				this.fontUnderlinedState.Enable = false;
@@ -1389,8 +1371,6 @@ namespace Epsitec.Common.Designer
 		protected CommandState					deleteState;
 		protected CommandState					createState;
 		protected CommandState					duplicateState;
-		protected CommandState					upState;
-		protected CommandState					downState;
 		protected CommandState					fontBoldState;
 		protected CommandState					fontItalicState;
 		protected CommandState					fontUnderlinedState;

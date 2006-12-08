@@ -731,6 +731,7 @@ namespace Epsitec.Common.Designer
 			this.IsDirty = true;
 		}
 
+#if false
 		public void Move(int direction)
 		{
 			//	Déplace la ressource courante.
@@ -760,6 +761,7 @@ namespace Epsitec.Common.Designer
 
 			this.IsDirty = true;
 		}
+#endif
 
 
 		public void SetFilter(string filter, Searcher.SearchingMode mode)
