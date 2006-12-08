@@ -170,14 +170,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabPageObjects.Padding = new Margins(4, 4, 4, 4);
 			this.tabBook.Items.Add(this.tabPageObjects);
 
-#if false
-			this.objectsUpdate = new Button(this.tabPageObjects);
-			this.objectsUpdate.Text = "Met à jour";
-			this.objectsUpdate.Dock = DockStyle.Top;
-			this.objectsUpdate.Margins = new Margins(0, 0, 0, 5);
-			this.objectsUpdate.Clicked += new MessageEventHandler(this.HandleObjectsUpdateClicked);
-#endif
-
 			this.objectsScrollable = new Scrollable(this.tabPageObjects);
 			this.objectsScrollable.Dock = DockStyle.Fill;
 			this.objectsScrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
@@ -202,7 +194,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateEdit();
 			this.UpdateType();
 			this.UpdateButtons();
-			this.UpdateStatusViewer();
+			this.UpdateViewer(MyWidgets.PanelEditor.Changing.Show);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -222,7 +214,6 @@ namespace Epsitec.Common.Designer.Viewers
 				this.hButtonSearch.Clicked -= new MessageEventHandler(HandleHbuttonClicked);
 
 				this.tabBook.ActivePageChanged -= new EventHandler(this.HandleTabBookActivePageChanged);
-				this.objectsUpdate.Clicked -= new MessageEventHandler(this.HandleObjectsUpdateClicked);
 
 				this.StatusBarDispose();
 				this.TreeDispose();
@@ -463,11 +454,22 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		#region StatusBar
-		public override void UpdateStatusViewer()
+		public override void UpdateViewer(MyWidgets.PanelEditor.Changing oper)
 		{
 			//	Met à jour le statut du visualisateur en cours, en fonction de la sélection.
 			//	Met également à jour l'arbre des objets, s'il est visible.
+			this.UpdateStatusViewer();
+
+			if (this.tabPageObjects.Visibility)  // onglet 'Objets' visible ?
+			{
+				this.TreeUpdate(oper);
+			}
+		}
+
+		#region StatusBar
+		protected void UpdateStatusViewer()
+		{
+			//	Met à jour le statut du visualisateur en cours, en fonction de la sélection.
 			this.StatusBarDispose();
 			this.statusBar.Children.Clear();  // supprime tous les boutons
 
@@ -536,11 +538,6 @@ namespace Epsitec.Common.Designer.Viewers
 						this.StatusBarButton(children, "Children", rank++, Res.Strings.Viewers.Panels.StatusBar.Children);
 					}
 				}
-			}
-
-			if (this.tabPageObjects.Visibility)  // onglet 'Objets' visible ?
-			{
-				this.TreeUpdate();
 			}
 		}
 
@@ -737,15 +734,22 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		#region Tree
-		protected void TreeUpdate()
+		protected void TreeUpdate(MyWidgets.PanelEditor.Changing oper)
 		{
 			//	Construit l'arbre des objets.
-			this.TreeClear();
+			if (oper == MyWidgets.PanelEditor.Changing.Selection)
+			{
+				this.TreeUpdateSelection(this.objectsScrollable.Panel.Children);
+			}
+			else
+			{
+				this.TreeClear();
 
-			List<Widget> bands = new List<Widget>();
-			List<MyWidgets.TreeBranches> branches = new List<MyWidgets.TreeBranches>();
-			List<double> positions = new List<double>();
-			this.TreeCreateChildren(bands, branches, positions, 0, this.panelContainer);
+				List<Widget> bands = new List<Widget>();
+				List<MyWidgets.TreeBranches> branches = new List<MyWidgets.TreeBranches>();
+				List<double> positions = new List<double>();
+				this.TreeCreateChildren(bands, branches, positions, 0, this.panelContainer);
+			}
 		}
 
 		protected void TreeClear()
@@ -753,6 +757,23 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Supprime et libère l'arbre des objets.
 			this.TreeDispose();
 			this.objectsScrollable.Panel.Children.Clear();  // supprime tous les boutons
+		}
+
+		protected void TreeUpdateSelection(Widgets.Collections.FlatChildrenCollection childrens)
+		{
+			//	Met à jour les objets sélectionnés dans l'arbre.
+			foreach (Widget children in childrens)
+			{
+				if (children is IconButton)
+				{
+					AbstractButton button = children as AbstractButton;
+					Widget obj = button.GetValue(Panels.TreeObjectProperty) as Widget;
+					bool sel = this.panelEditor.SelectedObjects.Contains(obj);
+					button.ActiveState = sel ? ActiveState.Yes : ActiveState.No;
+				}
+
+				this.TreeUpdateSelection(children.Children);
+			}
 		}
 
 		protected void TreeCreateChildren(List<Widget> bands, List<MyWidgets.TreeBranches> branches, List<double> positions, int deep, Widget obj)
@@ -1107,17 +1128,12 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Changement de l'onglet visible.
 			if (this.tabPageObjects.Visibility)  // arbre des objets visible ?
 			{
-				this.TreeUpdate();  // met à jour l'arbre
+				this.TreeUpdate(MyWidgets.PanelEditor.Changing.Show);  // met à jour l'arbre
 			}
 			else
 			{
 				this.TreeClear();  // supprime l'arbre
 			}
-		}
-
-		private void HandleObjectsUpdateClicked(object sender, MessageEventArgs e)
-		{
-			this.TreeUpdate();
 		}
 
 

@@ -544,9 +544,9 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public virtual void UpdateStatusViewer()
+		public virtual void UpdateViewer(MyWidgets.PanelEditor.Changing oper)
 		{
-			//	Met à jour le statut du visualisateur en cours.
+			//	Met à jour le visualisateur en cours.
 		}
 
 		public virtual string InfoViewerText

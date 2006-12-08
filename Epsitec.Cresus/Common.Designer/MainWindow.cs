@@ -449,13 +449,13 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void UpdateStatusViewer()
+		public void UpdateViewer(MyWidgets.PanelEditor.Changing oper)
 		{
-			//	Met à jour le statut du visualisateur en cours.
+			//	Met à jour le visualisateur en cours.
 			Module module = this.CurrentModule;
 			if (module != null && module.Modifier.ActiveViewer!= null)
 			{
-				module.Modifier.ActiveViewer.UpdateStatusViewer();
+				module.Modifier.ActiveViewer.UpdateViewer(oper);
 			}
 		}
 		#endregion
