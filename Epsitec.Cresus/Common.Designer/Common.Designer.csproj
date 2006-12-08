@@ -111,7 +111,7 @@
     <Compile Include="Ribbons\PanelSelect.cs" />
     <Compile Include="Ribbons\Culture.cs" />
     <Compile Include="Ribbons\File.cs" />
-    <Compile Include="Ribbons\Select.cs" />
+    <Compile Include="Ribbons\Edit.cs" />
     <Compile Include="Searcher.cs" />
     <Compile Include="ProxyManager.cs" />
     <Compile Include="UserInterface.cs" />

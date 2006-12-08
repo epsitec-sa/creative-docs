@@ -6,11 +6,11 @@
   <data name="Ribbon.Text" id="03">Texte</data>
   <data name="Ribbon.Section.File" id="04">Fichier</data>
   <data name="Ribbon.Section.Clipboard" id="05">Presse-papiers</data>
-  <data name="Ribbon.Section.Select" id="06">Sélection</data>
+  <data name="Ribbon.Section.Edit" id="06">Edition</data>
   <data name="Ribbon.Section.Character" id="07">Caractère</data>
   <data name="Ribbon.Section.Access" id="08">Accès</data>
   <data name="Ribbon.Section.Culture" id="09">Culture</data>
-  <data name="Ribbon.Section.PanelSelect" id="0A">Sélection objets</data>
+  <data name="Ribbon.Section.PanelSelect" id="0A">Sélection</data>
   <data name="Ribbon.Section.PanelShow" id="0B">Affichage</data>
   <data name="Ribbon.Section.Order" id="0C">Ordre</data>
   <data name="Ribbon.Section.TabIndex" id="0D">Touche Tab</data>

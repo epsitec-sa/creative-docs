@@ -7,11 +7,11 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Select permet de gérer la sélection.
 	/// </summary>
-	public class Select : Abstract
+	public class Edit : Abstract
 	{
-		public Select(MainWindow mainWindow) : base(mainWindow)
+		public Edit(MainWindow mainWindow) : base(mainWindow)
 		{
-			this.Title = Res.Strings.Ribbon.Section.Select;
+			this.Title = Res.Strings.Ribbon.Section.Edit;
 			this.PreferredWidth = 8 + 22*1.5*3;
 
 			this.buttonDelete    = this.CreateIconButton("Delete", "Large");

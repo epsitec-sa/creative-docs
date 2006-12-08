@@ -266,7 +266,7 @@ namespace Epsitec.Common.Designer
 			this.ribbonMain.Items.Add(new Ribbons.Clipboard(this));
 			if (this.mode == DesignerMode.Build)
 			{
-				this.ribbonMain.Items.Add(new Ribbons.Select(this));
+				this.ribbonMain.Items.Add(new Ribbons.Edit(this));
 			}
 			this.ribbonMain.Items.Add(new Ribbons.Access(this));
 			this.ribbonMain.Items.Add(new Ribbons.Character(this));
