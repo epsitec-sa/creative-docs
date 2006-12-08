@@ -170,6 +170,20 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabPageObjects.Padding = new Margins(4, 4, 4, 4);
 			this.tabBook.Items.Add(this.tabPageObjects);
 
+			this.objectsSlider = new HSlider(this.tabPageObjects);
+			this.objectsSlider.PreferredHeight = 14;
+			this.objectsSlider.Dock = DockStyle.Top;
+			this.objectsSlider.Margins = new Margins(0, 18, 4, 8);
+			this.objectsSlider.TabIndex = tabIndex++;
+			this.objectsSlider.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			this.objectsSlider.MinValue = 15.0M;
+			this.objectsSlider.MaxValue = 60.0M;
+			this.objectsSlider.SmallChange = 5.0M;
+			this.objectsSlider.LargeChange = 10.0M;
+			this.objectsSlider.Resolution = 1.0M;
+			this.objectsSlider.Value = (decimal) Panels.treeBranchesHeight;
+			this.objectsSlider.ValueChanged += new EventHandler(this.HandleObjectsSliderChanged);
+
 			this.objectsScrollable = new Scrollable(this.tabPageObjects);
 			this.objectsScrollable.Dock = DockStyle.Fill;
 			this.objectsScrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
@@ -212,6 +226,8 @@ namespace Epsitec.Common.Designer.Viewers
 				this.hButtonDefault.Clicked -= new MessageEventHandler(HandleHbuttonClicked);
 				this.hButtonEdition.Clicked -= new MessageEventHandler(HandleHbuttonClicked);
 				this.hButtonSearch.Clicked -= new MessageEventHandler(HandleHbuttonClicked);
+
+				this.objectsSlider.ValueChanged -= new EventHandler(this.HandleObjectsSliderChanged);
 
 				this.tabBook.ActivePageChanged -= new EventHandler(this.HandleTabBookActivePageChanged);
 
@@ -789,7 +805,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				//	Crée le conteneur horizontal pour les liaisons.
 				MyWidgets.TreeBranches tb = new MyWidgets.TreeBranches(this.objectsScrollable.Panel);
-				tb.PreferredHeight = 30;
+				tb.PreferredHeight = Panels.treeBranchesHeight;
 				tb.Dock = DockStyle.Top;
 				branches.Add(tb);
 
@@ -877,6 +893,20 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	La souris est sortie (survol) d'un bouton d'un objet de l'arbre.
 			this.panelEditor.SetEnteredObjects(null);
+		}
+
+		private void HandleObjectsSliderChanged(object sender)
+		{
+			HSlider slider = sender as HSlider;
+			Panels.treeBranchesHeight = (double) slider.Value;
+
+			foreach (Widget widget in this.objectsScrollable.Panel.Children)
+			{
+				if (widget is MyWidgets.TreeBranches)
+				{
+					widget.PreferredHeight = Panels.treeBranchesHeight;
+				}
+			}
 		}
 
 		protected void TreeDispose()
@@ -1138,6 +1168,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		protected static readonly double		treeButtonWidth = 22;
+		protected static double					treeBranchesHeight = 30;
 
 		protected ProxyManager					proxyManager;
 		protected Widget						left;
@@ -1164,7 +1195,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Scrollable					propertiesScrollable;
 
 		protected TabPage						tabPageObjects;
-		protected Button						objectsUpdate;
+		protected HSlider						objectsSlider;
 		protected Scrollable					objectsScrollable;
 
 		protected TabPage						tabPageCultures;
