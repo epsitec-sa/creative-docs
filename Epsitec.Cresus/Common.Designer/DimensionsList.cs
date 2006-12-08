@@ -209,7 +209,7 @@ namespace Epsitec.Common.Designer
 				}
 				else
 				{
-					this.startingPos = mouse;
+					this.startingPos = this.editor.MapClientToScreen(mouse);
 					this.initialValue = this.dragging.Value;
 				}
 
@@ -223,6 +223,7 @@ namespace Epsitec.Common.Designer
 			if (this.dragging.DimensionType != Dimension.Type.GridColumn &&
 				this.dragging.DimensionType != Dimension.Type.GridRow    )
 			{
+				mouse = this.editor.MapClientToScreen(mouse);
 				double value = mouse.Y - this.startingPos.Y;
 
 				if (isControlPressed)  // moins sensible ?
