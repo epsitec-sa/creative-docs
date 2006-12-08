@@ -16,7 +16,7 @@ namespace Epsitec.Common.Designer
 		public enum ChildrenPlacement
 		{
 			[Types.Hidden] None,
-			Anchored,
+			[Types.Hidden] Anchored,
 			VerticalStacked,
 			HorizontalStacked,
 			Grid,
