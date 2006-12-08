@@ -301,6 +301,15 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected override bool IsDeleteOrDuplicateForViewer
+		{
+			//	Indique s'il faut aiguiller ici une opération delete ou duplicate.
+			get
+			{
+				return (this.panelEditor.SelectedObjects.Count != 0);
+			}
+		}
+
 		protected override void PrepareForDelete()
 		{
 			//	Préparation en vue de la suppression de l'interface.

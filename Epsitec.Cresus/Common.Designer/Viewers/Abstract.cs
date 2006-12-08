@@ -411,30 +411,51 @@ namespace Epsitec.Common.Designer.Viewers
 		public void DoDelete()
 		{
 			//	Supprime la ressource sélectionnée.
-			this.PrepareForDelete();
-			this.access.Delete();
+			if (this.IsDeleteOrDuplicateForViewer)
+			{
+				this.DoCommand("PanelDelete");
+			}
+			else
+			{
+				this.PrepareForDelete();
+				this.access.Delete();
 
-			this.UpdateArray();
-			this.array.SelectedRow = this.access.AccessIndex;
-			this.array.ShowSelectedRow();
-			this.UpdateCommands();
+				this.UpdateArray();
+				this.array.SelectedRow = this.access.AccessIndex;
+				this.array.ShowSelectedRow();
+				this.UpdateCommands();
+			}
 		}
 
 		public void DoDuplicate(bool duplicate)
 		{
 			//	Duplique la ressource sélectionnée.
-			ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Name);
-			string newName = this.access.GetDuplicateName(field.String);
-			this.access.Duplicate(newName, duplicate);
-
-			this.UpdateArray();
-			this.array.SelectedRow = this.access.AccessIndex;
-			this.array.ShowSelectedRow();
-			this.UpdateCommands();
-
-			if (this.currentTextField != null)
+			if (this.IsDeleteOrDuplicateForViewer)
 			{
-				this.currentTextField.SelectAll();
+				if (duplicate)
+				{
+					this.DoCommand("PanelDuplicate");
+				}
+				else
+				{
+					//	rien d'intelligent à faire pour l'instant !
+				}
+			}
+			else
+			{
+				ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Name);
+				string newName = this.access.GetDuplicateName(field.String);
+				this.access.Duplicate(newName, duplicate);
+
+				this.UpdateArray();
+				this.array.SelectedRow = this.access.AccessIndex;
+				this.array.ShowSelectedRow();
+				this.UpdateCommands();
+
+				if (this.currentTextField != null)
+				{
+					this.currentTextField.SelectAll();
+				}
 			}
 		}
 
@@ -601,6 +622,15 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+
+		protected virtual bool IsDeleteOrDuplicateForViewer
+		{
+			//	Indique s'il faut aiguiller ici une opération delete ou duplicate.
+			get
+			{
+				return false;
+			}
+		}
 
 		protected virtual void PrepareForDelete()
 		{
