@@ -196,6 +196,34 @@ namespace Epsitec.Common.Designer
 					this.editor.UpdateAfterSelectionGridChanged();
 					this.editor.Invalidate();
 				}
+				else if (this.dragging.DimensionType == Dimension.Type.GridColumnSpanInc)
+				{
+					Widget obj = this.dragging.Object;
+					this.objectModifier.SetGridColumnSpan(obj, this.objectModifier.GetGridColumnSpan(obj)+1);
+					this.editor.Invalidate();
+					this.UpdateSelection();
+				}
+				else if (this.dragging.DimensionType == Dimension.Type.GridColumnSpanDec)
+				{
+					Widget obj = this.dragging.Object;
+					this.objectModifier.SetGridColumnSpan(obj, this.objectModifier.GetGridColumnSpan(obj)-1);
+					this.editor.Invalidate();
+					this.UpdateSelection();
+				}
+				else if (this.dragging.DimensionType == Dimension.Type.GridRowSpanInc)
+				{
+					Widget obj = this.dragging.Object;
+					this.objectModifier.SetGridRowSpan(obj, this.objectModifier.GetGridRowSpan(obj)+1);
+					this.editor.Invalidate();
+					this.UpdateSelection();
+				}
+				else if (this.dragging.DimensionType == Dimension.Type.GridRowSpanDec)
+				{
+					Widget obj = this.dragging.Object;
+					this.objectModifier.SetGridRowSpan(obj, this.objectModifier.GetGridRowSpan(obj)-1);
+					this.editor.Invalidate();
+					this.UpdateSelection();
+				}
 				else if (this.dragging.DimensionType == Dimension.Type.ChildrenPlacement)
 				{
 					Widget obj = this.dragging.Object;
@@ -474,6 +502,47 @@ namespace Epsitec.Common.Designer
 				dim = new Dimension(this.editor, obj, Dimension.Type.ChildrenPlacement);
 				dim.Slave = slave;
 				this.list.Add(dim);
+			}
+
+			if (this.objectModifier.AreChildrenGrid(obj.Parent))
+			{
+				int index, span, count;
+
+				index = this.objectModifier.GetGridColumn(obj);
+				span = this.objectModifier.GetGridColumnSpan(obj);
+				count = this.objectModifier.GetGridColumnsCount(obj.Parent);
+
+				if (index+span < count)
+				{
+					dim = new Dimension(this.editor, obj, Dimension.Type.GridColumnSpanInc);
+					dim.Slave = slave;
+					this.list.Add(dim);
+				}
+
+				if (span > 1)
+				{
+					dim = new Dimension(this.editor, obj, Dimension.Type.GridColumnSpanDec);
+					dim.Slave = slave;
+					this.list.Add(dim);
+				}
+
+				index = this.objectModifier.GetGridRow(obj);
+				span = this.objectModifier.GetGridRowSpan(obj);
+				count = this.objectModifier.GetGridRowsCount(obj.Parent);
+
+				if (index+span < count)
+				{
+					dim = new Dimension(this.editor, obj, Dimension.Type.GridRowSpanInc);
+					dim.Slave = slave;
+					this.list.Add(dim);
+				}
+
+				if (span > 1)
+				{
+					dim = new Dimension(this.editor, obj, Dimension.Type.GridRowSpanDec);
+					dim.Slave = slave;
+					this.list.Add(dim);
+				}
 			}
 
 			//	Crée les cotes de padding en dernier, pour qu'elles viennent par dessus
