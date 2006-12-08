@@ -608,9 +608,16 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
+#if false
 			this.druidsIndex.Insert(this.accessIndex+1, newDruid);
 			this.accessIndex ++;
 			this.CacheClear();
+#else
+			this.druidsIndex.Add(newDruid);
+			this.Sort();
+			this.accessIndex = this.druidsIndex.IndexOf(newDruid);
+			this.CacheClear();
+#endif
 
 			this.IsDirty = true;
 		}
@@ -774,6 +781,9 @@ namespace Epsitec.Common.Designer
 			{
 				this.SetFilterPanels(filter, mode);
 			}
+
+			//	Trie druidsIndex.
+			this.Sort();
 
 			//	Mémorise le filtre utilisé.
 			if (this.filterStrings.ContainsKey(this.type))
@@ -2565,6 +2575,97 @@ namespace Epsitec.Common.Designer
 				this.druidsIndex.Add(bundle.Id);
 			}
 		}
+
+
+		public int Sort(int index)
+		{
+			Druid druid = this.druidsIndex[index];
+			this.Sort();
+			return this.druidsIndex.IndexOf(druid);
+		}
+
+		protected void Sort()
+		{
+			//	Trie druidsIndex.
+			if (this.IsBundlesType)
+			{
+				ResourceAccess.sortThis = this;  // beurk !
+				this.druidsIndex.Sort(new FieldDruidSort());
+			}
+
+			if (this.type == Type.Panels)
+			{
+				ResourceAccess.sortThis = this;  // beurk !
+				this.druidsIndex.Sort(new PanelDruidSort());
+			}
+		}
+
+		protected class FieldDruidSort : IComparer<Druid>
+		{
+			public int Compare(Druid obj1, Druid obj2)
+			{
+				ResourceBundle.Field field1 = ResourceAccess.sortThis.primaryBundle[obj1];
+				ResourceBundle.Field field2 = ResourceAccess.sortThis.primaryBundle[obj2];
+
+				if (field1 == null && field2 == null)
+				{
+					return 0;
+				}
+
+				if (field1 == null)
+				{
+					return 1;
+				}
+
+				if (field2 == null)
+				{
+					return -1;
+				}
+
+				return field1.Name.CompareTo(field2.Name);
+			}
+		}
+
+		protected class PanelDruidSort : IComparer<Druid>
+		{
+			public int Compare(Druid obj1, Druid obj2)
+			{
+				ResourceBundle bundle1 = null;
+				ResourceBundle bundle2 = null;
+
+				int i = ResourceAccess.sortThis.GetAbsoluteIndex(obj1);
+				if (i != -1)
+				{
+					bundle1 = ResourceAccess.sortThis.panelsList[i];
+				}
+
+				i = ResourceAccess.sortThis.GetAbsoluteIndex(obj2);
+				if (i != -1)
+				{
+					bundle2 = ResourceAccess.sortThis.panelsList[i];
+				}
+
+				if (bundle1 == null && bundle2 == null)
+				{
+					return 0;
+				}
+
+				if (bundle1 == null)
+				{
+					return 1;
+				}
+
+				if (bundle2 == null)
+				{
+					return -1;
+				}
+
+				return bundle1.Caption.CompareTo(bundle2.Caption);
+			}
+		}
+
+		protected static ResourceAccess sortThis;
+
 
 		protected int GetAbsoluteIndex(Druid druid)
 		{
