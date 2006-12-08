@@ -248,26 +248,29 @@ namespace Epsitec.Common.Designer
 		public void DraggingMove(Point mouse, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Modification interactive d'une cote.
-			if (this.dragging.DimensionType != Dimension.Type.GridColumn &&
-				this.dragging.DimensionType != Dimension.Type.GridRow    )
+			if (this.dragging != null)
 			{
-				mouse = this.editor.MapClientToScreen(mouse);
-				double value = mouse.Y - this.startingPos.Y;
-
-				if (isControlPressed)  // moins sensible ?
+				if (this.dragging.DimensionType != Dimension.Type.GridColumn &&
+					this.dragging.DimensionType != Dimension.Type.GridRow)
 				{
-					value = System.Math.Floor((value+0.5)*0.5);
-				}
+					mouse = this.editor.MapClientToScreen(mouse);
+					double value = mouse.Y - this.startingPos.Y;
 
-				if (isShiftPressed)  // grille magnétique ?
-				{
-					double step = 5;
-					value += this.initialValue;
-					value = System.Math.Floor((value+step/2)/step) * step;
-					value -= this.initialValue;
-				}
+					if (isControlPressed)  // moins sensible ?
+					{
+						value = System.Math.Floor((value+0.5)*0.5);
+					}
 
-				this.ChangeValue(this.dragging, this.initialValue+value);
+					if (isShiftPressed)  // grille magnétique ?
+					{
+						double step = 5;
+						value += this.initialValue;
+						value = System.Math.Floor((value+step/2)/step) * step;
+						value -= this.initialValue;
+					}
+
+					this.ChangeValue(this.dragging, this.initialValue+value);
+				}
 			}
 		}
 
