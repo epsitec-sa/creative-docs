@@ -170,10 +170,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabPageObjects.Padding = new Margins(4, 4, 4, 4);
 			this.tabBook.Items.Add(this.tabPageObjects);
 
-			this.objectsSlider = new HSlider(this.tabPageObjects);
-			this.objectsSlider.PreferredHeight = 14;
-			this.objectsSlider.Dock = DockStyle.Top;
-			this.objectsSlider.Margins = new Margins(0, 18, 4, 8);
+			Widget header = new Widget(this.tabPageObjects);
+			header.PreferredHeight = 14;
+			header.Dock = DockStyle.Top;
+			header.Margins = new Margins(0, 0, 4, 8);
+
+			this.objectsSlider = new HSlider(header);
+			this.objectsSlider.PreferredWidth = 100;
+			this.objectsSlider.Dock = DockStyle.Left;
 			this.objectsSlider.TabIndex = tabIndex++;
 			this.objectsSlider.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.objectsSlider.MinValue = 15.0M;
