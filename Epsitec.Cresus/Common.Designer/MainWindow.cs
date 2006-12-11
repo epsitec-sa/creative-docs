@@ -697,10 +697,10 @@ namespace Epsitec.Common.Designer
 		[Command("MoveRight")]
 		[Command("MoveDown")]
 		[Command("MoveUp")]
-		[Command("OrderUpAll")]
-		[Command("OrderDownAll")]
-		[Command("OrderUpOne")]
-		[Command("OrderDownOne")]
+		[Command("PanelOrderUpAll")]
+		[Command("PanelOrderDownAll")]
+		[Command("PanelOrderUpOne")]
+		[Command("PanelOrderDownOne")]
 		[Command("TabIndexClear")]
 		[Command("TabIndexFirst")]
 		[Command("TabIndexPrev")]
@@ -801,10 +801,10 @@ namespace Epsitec.Common.Designer
 			this.moveDownState = this.CreateCommandState("MoveDown");
 			this.moveUpState = this.CreateCommandState("MoveUp");
 
-			this.orderUpAllState = this.CreateCommandState("OrderUpAll");
-			this.orderDownAllState = this.CreateCommandState("OrderDownAll");
-			this.orderUpOneState = this.CreateCommandState("OrderUpOne");
-			this.orderDownOneState = this.CreateCommandState("OrderDownOne");
+			this.panelOrderUpAllState = this.CreateCommandState("PanelOrderUpAll");
+			this.panelOrderDownAllState = this.CreateCommandState("PanelOrderDownAll");
+			this.panelOrderUpOneState = this.CreateCommandState("PanelOrderUpOne");
+			this.panelOrderDownOneState = this.CreateCommandState("PanelOrderDownOne");
 
 			this.tabIndexClearState = this.CreateCommandState("TabIndexClear");
 			this.tabIndexFirstState = this.CreateCommandState("TabIndexFirst");
@@ -1428,10 +1428,10 @@ namespace Epsitec.Common.Designer
 		protected CommandState					moveRightState;
 		protected CommandState					moveDownState;
 		protected CommandState					moveUpState;
-		protected CommandState					orderUpAllState;
-		protected CommandState					orderDownAllState;
-		protected CommandState					orderUpOneState;
-		protected CommandState					orderDownOneState;
+		protected CommandState					panelOrderUpAllState;
+		protected CommandState					panelOrderDownAllState;
+		protected CommandState					panelOrderUpOneState;
+		protected CommandState					panelOrderDownOneState;
 		protected CommandState					tabIndexClearState;
 		protected CommandState					tabIndexFirstState;
 		protected CommandState					tabIndexPrevState;

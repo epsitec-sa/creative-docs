@@ -12,12 +12,12 @@ namespace Epsitec.Common.Designer.Ribbons
 		public Order(MainWindow mainWindow) : base(mainWindow)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Order;
-			this.PreferredWidth = 8 + 22*1.5*2 + 4 + 22*1;
+			this.PreferredWidth = 8 + 22*2;
 
-			this.buttonUpAll   = this.CreateIconButton("OrderUpAll", "Large");
-			this.buttonDownAll = this.CreateIconButton("OrderDownAll", "Large");
-			this.buttonUpOne   = this.CreateIconButton("OrderUpOne");
-			this.buttonDownOne = this.CreateIconButton("OrderDownOne");
+			this.buttonDownAll = this.CreateIconButton("PanelOrderDownAll");
+			this.buttonDownOne = this.CreateIconButton("PanelOrderDownOne");
+			this.buttonUpOne   = this.CreateIconButton("PanelOrderUpOne");
+			this.buttonUpAll   = this.CreateIconButton("PanelOrderUpAll");
 			
 			this.UpdateClientGeometry();
 		}
@@ -43,20 +43,19 @@ namespace Epsitec.Common.Designer.Ribbons
 			double dy = this.buttonDownAll.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
-			rect.Width  = dx*1.5;
-			rect.Height = dy*1.5;
-			rect.Offset(0, dy*0.5+5);
-			this.buttonUpAll.SetManualBounds(rect);
-			rect.Offset(dx*1.5, -dy*0.5-5);
+			rect.Width  = dx;
+			rect.Height = dy;
+			rect.Offset(0, dy+5);
 			this.buttonDownAll.SetManualBounds(rect);
+			rect.Offset(dx, 0);
+			this.buttonUpAll.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			rect.Offset(dx*1.5*2+4, dy+5);
-			this.buttonUpOne.SetManualBounds(rect);
-			rect.Offset(0, -dy-5);
 			this.buttonDownOne.SetManualBounds(rect);
+			rect.Offset(dx, 0);
+			this.buttonUpOne.SetManualBounds(rect);
 		}
 
 

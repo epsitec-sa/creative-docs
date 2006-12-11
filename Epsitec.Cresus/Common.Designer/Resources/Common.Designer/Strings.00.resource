@@ -163,7 +163,6 @@
   <data name="Action.ModificationNext" id="0T1">Ressource modifiée suivante</data>
   <data name="Action.ModificationAll" id="0U1">Toutes les ressources secondaires devront être modifiées</data>
   <data name="Action.ModificationClear" id="0V1">Modification de la ressource secondaire terminée</data>
-  <data name="Action.PanelDelete" id="002">Supprimer les objets sélectionnés</data>
   <data name="Action.PanelDuplicate" id="012">Dupliquer les objets sélectionnés</data>
   <data name="Action.PanelDeselectAll" id="022">Désélectionner tous les objets</data>
   <data name="Action.PanelSelectAll" id="032">Sélectionner tous les objets</data>
@@ -191,10 +190,10 @@
   <data name="Action.AlignBaseLine" id="0M2">Alignement vertical sur la ligne de base</data>
   <data name="Action.AdjustWidth" id="0N2">Largeurs identiques</data>
   <data name="Action.AdjustHeight" id="0O2">Hauteurs identiques</data>
-  <data name="Action.OrderUpAll" id="0P2">Premier plan</data>
-  <data name="Action.OrderUpOne" id="0Q2">En avant</data>
-  <data name="Action.OrderDownOne" id="0R2">En arrière</data>
-  <data name="Action.OrderDownAll" id="0S2">Arrière-plan</data>
+  <data name="Action.PanelOrderUpAll" id="0P2">En dernier</data>
+  <data name="Action.PanelOrderUpOne" id="0Q2">En avant</data>
+  <data name="Action.PanelOrderDownOne" id="0R2">En arrière</data>
+  <data name="Action.PanelOrderDownAll" id="0S2">En premier</data>
   <data name="Action.TabIndexClear" id="0T2">Aucun numéro</data>
   <data name="Action.TabIndexFirst" id="0U2">En premier</data>
   <data name="Action.TabIndexPrev" id="0V2">Rang précédent</data>

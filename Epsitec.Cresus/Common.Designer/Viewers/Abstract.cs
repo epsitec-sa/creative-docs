@@ -940,10 +940,10 @@ namespace Epsitec.Common.Designer.Viewers
 				this.GetCommandState("AdjustHeight").Enable = (objSelected >= 2);
 				this.GetCommandState("AlignGrid").Enable = (objSelected != 0);
 
-				this.GetCommandState("OrderUpAll").Enable = (objSelected != 0 && objCount >= 2);
-				this.GetCommandState("OrderDownAll").Enable = (objSelected != 0 && objCount >= 2);
-				this.GetCommandState("OrderUpOne").Enable = (objSelected != 0 && objCount >= 2);
-				this.GetCommandState("OrderDownOne").Enable = (objSelected != 0 && objCount >= 2);
+				this.GetCommandState("PanelOrderUpAll").Enable = (objSelected != 0 && objCount >= 2);
+				this.GetCommandState("PanelOrderDownAll").Enable = (objSelected != 0 && objCount >= 2);
+				this.GetCommandState("PanelOrderUpOne").Enable = (objSelected != 0 && objCount >= 2);
+				this.GetCommandState("PanelOrderDownOne").Enable = (objSelected != 0 && objCount >= 2);
 
 				this.GetCommandState("TabIndexClear").Enable = (objSelected != 0);
 				this.GetCommandState("TabIndexRenum").Enable = (objCount != 0);
@@ -984,10 +984,10 @@ namespace Epsitec.Common.Designer.Viewers
 				this.GetCommandState("AdjustHeight").Enable = false;
 				this.GetCommandState("AlignGrid").Enable = false;
 
-				this.GetCommandState("OrderUpAll").Enable = false;
-				this.GetCommandState("OrderDownAll").Enable = false;
-				this.GetCommandState("OrderUpOne").Enable = false;
-				this.GetCommandState("OrderDownOne").Enable = false;
+				this.GetCommandState("PanelOrderUpAll").Enable = false;
+				this.GetCommandState("PanelOrderDownAll").Enable = false;
+				this.GetCommandState("PanelOrderUpOne").Enable = false;
+				this.GetCommandState("PanelOrderDownOne").Enable = false;
 
 				this.GetCommandState("TabIndexClear").Enable = false;
 				this.GetCommandState("TabIndexRenum").Enable = false;

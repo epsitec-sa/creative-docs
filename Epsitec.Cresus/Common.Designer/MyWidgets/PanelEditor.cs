@@ -302,19 +302,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.SelectAlignGrid();
 					break;
 
-				case "OrderUpAll":
+				case "PanelOrderUpAll":
 					this.SelectOrder(-10000);
 					break;
 
-				case "OrderDownAll":
+				case "PanelOrderDownAll":
 					this.SelectOrder(10000);
 					break;
 
-				case "OrderUpOne":
+				case "PanelOrderUpOne":
 					this.SelectOrder(-1);
 					break;
 
-				case "OrderDownOne":
+				case "PanelOrderDownOne":
 					this.SelectOrder(1);
 					break;
 

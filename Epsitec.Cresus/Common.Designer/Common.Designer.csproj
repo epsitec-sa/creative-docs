@@ -230,10 +230,10 @@
     <EmbeddedResource Include="Images\PanelDeselectAll.icon" />
     <EmbeddedResource Include="Images\PanelDuplicate.icon" />
     <EmbeddedResource Include="Images\PanelDelete.icon" />
-    <EmbeddedResource Include="Images\OrderDownAll.icon" />
-    <EmbeddedResource Include="Images\OrderUpOne.icon" />
-    <EmbeddedResource Include="Images\OrderDownOne.icon" />
-    <EmbeddedResource Include="Images\OrderUpAll.icon" />
+    <EmbeddedResource Include="Images\PanelOrderDownAll.icon" />
+    <EmbeddedResource Include="Images\PanelOrderUpOne.icon" />
+    <EmbeddedResource Include="Images\PanelOrderDownOne.icon" />
+    <EmbeddedResource Include="Images\PanelOrderUpAll.icon" />
     <EmbeddedResource Include="Images\AlignBottom.icon" />
     <EmbeddedResource Include="Images\AlignCenterX.icon" />
     <EmbeddedResource Include="Images\AlignCenterY.icon" />
