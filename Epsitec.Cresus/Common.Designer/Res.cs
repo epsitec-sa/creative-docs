@@ -390,6 +390,11 @@ namespace Epsitec.Common.Designer
 					public static string OK { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (111)); } }
 				}
 				
+				public static class Delete
+				{
+					public static string Question { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (318)); } }
+				}
+				
 				public static class DeleteCulture
 				{
 					public static string Question { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (150)); } }

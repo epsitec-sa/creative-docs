@@ -417,13 +417,18 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				this.PrepareForDelete();
-				this.access.Delete();
+				ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Name);
+				string question = string.Format(Res.Strings.Dialog.Delete.Question, field.String);
+				if (this.mainWindow.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
+				{
+					this.PrepareForDelete();
+					this.access.Delete();
 
-				this.UpdateArray();
-				this.array.SelectedRow = this.access.AccessIndex;
-				this.array.ShowSelectedRow();
-				this.UpdateCommands();
+					this.UpdateArray();
+					this.array.SelectedRow = this.access.AccessIndex;
+					this.array.ShowSelectedRow();
+					this.UpdateCommands();
+				}
 			}
 		}
 

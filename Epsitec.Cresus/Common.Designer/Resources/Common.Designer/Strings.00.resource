@@ -270,6 +270,7 @@
   <data name="Dialog.NewCulture.Label" id="0K4">Choix de la culture à créer</data>
   <data name="Dialog.NewCulture.Button.Create" id="0L4">Créer</data>
   <data name="Dialog.DeleteCulture.Question" id="0M4">Voulez-vous supprimer la culture {0} ?</data>
+  <data name="Dialog.Delete.Question" id="0U9">Voulez-vous supprimer la ressource {0} ?</data>
   <data name="Dialog.Icon.Title" id="016" mod="1">Choix d&amp;apos;une icône</data>
   <data name="Dialog.Icon.Label.Search" id="096" mod="1">Rechercher</data>
   <data name="Dialog.Icon.Label.Filter" id="0A6" mod="1">Filtrer</data>
