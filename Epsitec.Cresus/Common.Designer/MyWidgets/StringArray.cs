@@ -802,12 +802,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Events caller
-		void HandleCellCountChanged(object sender)
+		private void HandleCellCountChanged(object sender)
 		{
 			this.OnCellCountChanged();
 		}
 
-		void HandleDraggingCellSelectionChanged(object sender)
+		private void HandleDraggingCellSelectionChanged(object sender)
 		{
 			MyWidgets.StringList array = sender as MyWidgets.StringList;
 			int sel = array.SelectedCell;
@@ -818,7 +818,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		void HandleFinalCellSelectionChanged(object sender)
+		private void HandleFinalCellSelectionChanged(object sender)
 		{
 			MyWidgets.StringList array = sender as MyWidgets.StringList;
 
@@ -858,12 +858,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		void HandleDoubleClicked(object sender, MessageEventArgs e)
+		private void HandleDoubleClicked(object sender, MessageEventArgs e)
 		{
 			this.OnSelectedRowDoubleClicked();
 		}
 
-		void HandleScrollerValueChanged(object sender)
+		private void HandleScrollerValueChanged(object sender)
 		{
 			this.FirstVisibleRow = (int) System.Math.Floor(this.scroller.Value+0.5M);
 		}

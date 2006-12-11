@@ -105,18 +105,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			set
 			{
-				if (this.panel != value)
-				{
-					this.selectedObjects.Clear();
-					this.GridClearSelection();
-					this.UpdateAfterChanging(Changing.Show);
-					this.lastCreatedObject = null;
-					
-					this.panel = value;
-					this.sizeMark = this.panel.PreferredSize;
-					
-					//	TODO: @PA invalider ce qui doit l'être... vider les listes des contraintes, poignées, etc.
-				}
+				this.selectedObjects.Clear();
+				this.GridClearSelection();
+				this.UpdateAfterChanging(Changing.Show);
+				this.lastCreatedObject = null;
+				
+				this.panel = value;
+				this.sizeMark = this.panel.PreferredSize;
+				this.Invalidate();
 			}
 		}
 
