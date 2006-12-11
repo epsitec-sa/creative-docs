@@ -131,6 +131,47 @@ namespace Epsitec.Common.UI
 			this.InvalidateProperty (Placeholder.ValueProperty, value, value);
 		}
 
+		public bool GetMinSpan(Widget parent, int column, int row, out int minColumnSpan, out int minRowSpan)
+		{
+			minColumnSpan = 0;
+			minRowSpan = 0;
+			
+			if (parent == null)
+			{
+				return false;
+			}
+			if (this.ValueBinding == null)
+			{
+				return false;
+			}
+			if (this.Controller == null)
+			{
+				return false;
+			}
+
+			Widget savedParent = this.Parent;
+			object savedValue = this.Value;
+
+			this.SetParent (parent);
+			this.SyncQueuedCalls ();
+
+			if ((this.Value != UndefinedValue.Instance) &&
+				(this.Value != UnknownValue.Instance) &&
+				(this.Value != null))
+			{
+				minColumnSpan = 1;
+				minRowSpan = 1;
+
+				this.ControllerIGridPermeable.UpdateGridSpan (ref minColumnSpan, ref minRowSpan);
+			}
+
+			this.SetParent (null);
+			this.Value = savedValue;
+			this.SetParent (savedParent);
+			
+			return (minColumnSpan > 0) && (minRowSpan > 0);
+		}
+
 		public static void SimulateEdition(Widget root)
 		{
 			foreach (Placeholder placeholder in root.FindAllChildren (delegate (Widget widget) { return widget is Placeholder; }))
@@ -305,6 +346,16 @@ namespace Epsitec.Common.UI
 		{
 			base.UpdateValue (oldValue, newValue);
 
+			this.SyncQueuedCalls ();
+
+			if (this.controller != null)
+			{
+				this.controller.RefreshUserInterface (oldValue, newValue);
+			}
+		}
+
+		private void SyncQueuedCalls()
+		{
 			if (Application.HasQueuedAsyncCallback (this.CreateUserInterface))
 			{
 				Application.RemoveQueuedAsyncCallback (this.CreateUserInterface);
@@ -315,11 +366,6 @@ namespace Epsitec.Common.UI
 			{
 				Application.RemoveQueuedAsyncCallback (this.RecreateUserInterface);
 				this.RecreateUserInterface ();
-			}
-
-			if (this.controller != null)
-			{
-				this.controller.RefreshUserInterface (oldValue, newValue);
 			}
 		}
 

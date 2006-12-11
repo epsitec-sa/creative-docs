@@ -49,6 +49,36 @@ namespace Epsitec.Common.UI
 		}
 
 		[Test]
+		public void CheckGetMinSpan()
+		{
+			Widget root = new Widget ();
+			Widget empty = new Widget ();
+
+			StructuredType type = new StructuredType ();
+			StructuredData data = new StructuredData (type);
+
+			type.Fields.Add ("x", StringType.Default);
+			data.SetValue ("x", "abc");
+
+			DataObject.SetDataContext (root, new Binding (data));
+			
+			Placeholder placeholder = new Placeholder ();
+			placeholder.SetBinding (Placeholder.ValueProperty, new Binding (BindingMode.TwoWay, "x"));
+
+			int minColumnSpan;
+			int minRowSpan;
+
+			Assert.AreEqual ("*", placeholder.Controller);
+			Assert.IsFalse (placeholder.GetMinSpan (null, 0, 0, out minColumnSpan, out minRowSpan));
+			Assert.IsNull (placeholder.Value);
+			Assert.IsFalse (placeholder.GetMinSpan (empty, 0, 0, out minColumnSpan, out minRowSpan));
+			Assert.IsTrue (placeholder.GetMinSpan (root, 0, 0, out minColumnSpan, out minRowSpan));
+			Assert.AreEqual (2, minColumnSpan);
+			Assert.AreEqual (1, minRowSpan);
+			Assert.IsNull (placeholder.Value);
+		}
+
+		[Test]
 		public void CheckInteractiveControllers()
 		{
 			Window window = new Window ();
