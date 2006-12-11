@@ -1435,46 +1435,39 @@ namespace Epsitec.Common.Designer
 		{
 			//	Détermine le nombre de colonnes occupées.
 			//	Empêche le chevauchement de deux objets.
-			if (obj.Parent == null)
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj.Parent));
+
+			int ic = GridLayoutEngine.GetColumn(obj);
+			int ir = GridLayoutEngine.GetRow(obj);
+			int irs = GridLayoutEngine.GetRowSpan(obj);
+			GridLayoutEngine.SetColumnSpan(obj, 1);
+			GridLayoutEngine.SetRowSpan(obj, 1);
+
+			span = System.Math.Min(span, this.GetGridColumnsCount(obj.Parent)-ic);
+
+			int maxSpan = span;
+			for (int c=0; c<span; c++)
 			{
-				GridLayoutEngine.SetColumnSpan(obj, span);
-			}
-			else
-			{
-				System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj.Parent));
-
-				int ic = GridLayoutEngine.GetColumn(obj);
-				int ir = GridLayoutEngine.GetRow(obj);
-				int irs = GridLayoutEngine.GetRowSpan(obj);
-				GridLayoutEngine.SetColumnSpan(obj, 1);
-				GridLayoutEngine.SetRowSpan(obj, 1);
-
-				span = System.Math.Min(span, this.GetGridColumnsCount(obj.Parent)-ic);
-
-				int maxSpan = span;
-				for (int c=0; c<span; c++)
+				for (int r=0; r<irs; r++)
 				{
-					for (int r=0; r<irs; r++)
+					if (!this.IsGridCellEmpty(obj.Parent, obj, ic+c, ir+r))
 					{
-						if (!this.IsGridCellEmpty(obj.Parent, obj, ic+c, ir+r))
-						{
-							maxSpan = System.Math.Min(maxSpan, c);
-							break;
-						}
+						maxSpan = System.Math.Min(maxSpan, c);
+						break;
 					}
 				}
-
-				span = System.Math.Min(span, maxSpan);
-				GridLayoutEngine.SetColumnSpan(obj, span);
-				GridLayoutEngine.SetRowSpan(obj, irs);
-				this.Invalidate();
 			}
+
+			span = System.Math.Min(span, maxSpan);
+			GridLayoutEngine.SetColumnSpan(obj, span);
+			GridLayoutEngine.SetRowSpan(obj, irs);
+			this.Invalidate();
 		}
 
 		public int GetGridColumnSpan(Widget obj)
 		{
 			//	Retourne le nombre de colonnes occupées.
-			if (obj.Parent == null || this.AreChildrenGrid(obj.Parent))
+			if (this.AreChildrenGrid(obj.Parent))
 			{
 				return GridLayoutEngine.GetColumnSpan(obj);
 			}
@@ -1486,46 +1479,39 @@ namespace Epsitec.Common.Designer
 		{
 			//	Détermine le nombre de lignes occupées.
 			//	Empêche le chevauchement de deux objets.
-			if (obj.Parent == null)
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj.Parent));
+
+			int ic = GridLayoutEngine.GetColumn(obj);
+			int ir = GridLayoutEngine.GetRow(obj);
+			int ics = GridLayoutEngine.GetColumnSpan(obj);
+			GridLayoutEngine.SetColumnSpan(obj, 1);
+			GridLayoutEngine.SetRowSpan(obj, 1);
+
+			span = System.Math.Min(span, this.GetGridRowsCount(obj.Parent)-ir);
+
+			int maxSpan = span;
+			for (int r=0; r<span; r++)
 			{
-				GridLayoutEngine.SetRowSpan(obj, span);
-			}
-			else
-			{
-				System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj.Parent));
-
-				int ic = GridLayoutEngine.GetColumn(obj);
-				int ir = GridLayoutEngine.GetRow(obj);
-				int ics = GridLayoutEngine.GetColumnSpan(obj);
-				GridLayoutEngine.SetColumnSpan(obj, 1);
-				GridLayoutEngine.SetRowSpan(obj, 1);
-
-				span = System.Math.Min(span, this.GetGridRowsCount(obj.Parent)-ir);
-
-				int maxSpan = span;
-				for (int r=0; r<span; r++)
+				for (int c=0; c<ics; c++)
 				{
-					for (int c=0; c<ics; c++)
+					if (!this.IsGridCellEmpty(obj.Parent, obj, ic+c, ir+r))
 					{
-						if (!this.IsGridCellEmpty(obj.Parent, obj, ic+c, ir+r))
-						{
-							maxSpan = System.Math.Min(maxSpan, r);
-							break;
-						}
+						maxSpan = System.Math.Min(maxSpan, r);
+						break;
 					}
 				}
-
-				span = System.Math.Min(span, maxSpan);
-				GridLayoutEngine.SetRowSpan(obj, span);
-				GridLayoutEngine.SetColumnSpan(obj, ics);
-				this.Invalidate();
 			}
+
+			span = System.Math.Min(span, maxSpan);
+			GridLayoutEngine.SetRowSpan(obj, span);
+			GridLayoutEngine.SetColumnSpan(obj, ics);
+			this.Invalidate();
 		}
 
 		public int GetGridRowSpan(Widget obj)
 		{
 			//	Retourne le nombre de lignes occupées.
-			if (obj.Parent == null || this.AreChildrenGrid(obj.Parent))
+			if (this.AreChildrenGrid(obj.Parent))
 			{
 				return GridLayoutEngine.GetRowSpan(obj);
 			}

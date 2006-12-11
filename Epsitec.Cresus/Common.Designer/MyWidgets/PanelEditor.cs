@@ -1303,8 +1303,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.creatingObject = this.CreateObjectItem();
 			this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
-			this.draggingSpanColumnCount = this.objectModifier.GetGridColumnSpan(this.creatingObject);
-			this.draggingSpanRowCount = this.objectModifier.GetGridRowSpan(this.creatingObject);
 
 			this.creatingOrigin = this.MapClientToScreen(this.ConvPanelToEditor(Point.Zero));
 			this.creatingWindow = new DragWindow();
@@ -1329,7 +1327,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			int column, row;
 			this.GridDetect(initialPos, parent, out column, out row);
-			this.SetHilitedParent(parent, column, row, this.draggingSpanColumnCount, this.draggingSpanRowCount);  // met en évidence le futur parent survolé par la souris
+			this.SetHilitedParent(parent, column, row, 1, 1);  // met en évidence le futur parent survolé par la souris
 
 			this.module.MainWindow.UpdateInfoViewer();
 		}
@@ -1371,7 +1369,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				else if (this.objectModifier.AreChildrenGrid(parent))
 				{
 					this.GridDetect(initialPos, parent, out column, out row);
-					if (!this.objectModifier.IsGridCellEmpty(parent, null, column, row, this.draggingSpanColumnCount, this.draggingSpanRowCount))
+					if (!this.objectModifier.IsGridCellEmpty(parent, null, column, row, 1, 1))
 					{
 						this.isInside = false;
 					}
@@ -1391,7 +1389,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (this.isInside)
 				{
-					this.SetHilitedParent(parent, column, row, this.draggingSpanColumnCount, this.draggingSpanRowCount);  // met en évidence le futur parent survolé par la souris
+					this.SetHilitedParent(parent, column, row, 1, 1);  // met en évidence le futur parent survolé par la souris
 				}
 				else
 				{
@@ -1445,7 +1443,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						int column, row;
 						this.GridDetect(initialPos, parent, out column, out row);
 
-						if (this.objectModifier.IsGridCellEmpty(parent, null, column, row, this.draggingSpanColumnCount, this.draggingSpanRowCount))
+						if (this.objectModifier.IsGridCellEmpty(parent, null, column, row, 1, 1))
 						{
 							this.creatingObject = this.CreateObjectItem();
 							this.objectModifier.SetGridParentColumnRow(this.creatingObject, parent, column, row);
@@ -1549,25 +1547,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.context.Tool == "ObjectText")
 			{
-#if false
 				item = new UI.Placeholder();
 				item.Text = Misc.Italic("TextField");
 				item.DrawDesignerFrame = true;  // nécessaire pour voir le cadre pendant la création
-#else
-				UI.Placeholder placeholder = new UI.Placeholder();
-				placeholder.Text = Misc.Italic("TextField");
-				placeholder.DrawDesignerFrame = true;  // nécessaire pour voir le cadre pendant la création
-
-				IGridPermeable grid = placeholder.ControllerIGridPermeable;
-				int column = 1;
-				int row = 1;
-				grid.UpdateGridSpan(ref column, ref row);
-				column = 2;  // TODO: devrait être inutile !!!
-				this.objectModifier.SetGridColumnSpan(placeholder, column);
-				this.objectModifier.SetGridRowSpan(placeholder, row);
-
-				item = placeholder;
-#endif
 			}
 
 			if (this.context.Tool == "ObjectTable")
