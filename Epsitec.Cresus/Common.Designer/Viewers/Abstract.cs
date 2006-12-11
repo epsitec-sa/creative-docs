@@ -166,7 +166,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				if (searcher.Field == 0)  // remplacement de 'Name' ?
 				{
-					this.access.AccessIndex = this.access.Sort(searcher.Row);
+					this.access.AccessIndex = this.access.Sort(searcher.Row, false);
 					this.UpdateArray();
 					this.array.ShowSelectedRow();
 				}
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				this.access.AccessIndex = this.access.Sort(this.access.AccessIndex);
+				this.access.AccessIndex = this.access.Sort(this.access.AccessIndex, true);
 				this.UpdateArray();
 				this.array.ShowSelectedRow();
 				
@@ -1101,7 +1101,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ignoreChange = false;
 
 			this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field(editedName));
-			this.access.AccessIndex = this.access.Sort(sel);
+			this.access.AccessIndex = this.access.Sort(sel, false);
 			this.UpdateArray();
 			this.array.ShowSelectedRow();
 		}

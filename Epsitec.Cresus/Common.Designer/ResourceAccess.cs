@@ -2580,12 +2580,40 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public int Sort(int index)
+		public int Sort(int index, bool resortAll)
 		{
-			//	Trie toutes les ressources et retourne le nouvel index du Druid.
-			Druid druid = this.druidsIndex[index];
-			this.Sort();
-			return this.druidsIndex.IndexOf(druid);
+			//	A partir d'une liste déjà triée, déplace un seul élément modifié pour qu'il
+			//	soit de nouveau trié. Si resortAll = true, trie toutes les ressources et retourne
+			//	le nouvel index du Druid.
+			if (resortAll)
+			{
+				Druid druid = this.druidsIndex[index];
+				this.Sort();
+				return this.druidsIndex.IndexOf(druid);
+			}
+			else
+			{
+				Druid druid = this.druidsIndex[index];
+				this.druidsIndex.RemoveAt(index);
+
+				int i=0;
+				if (this.IsBundlesType)
+				{
+					i = this.druidsIndex.BinarySearch(druid, new FieldDruidSort(this));
+				}
+				if (this.type == Type.Panels)
+				{
+					i = this.druidsIndex.BinarySearch(druid, new PanelDruidSort(this));
+				}
+
+				if (i < 0)
+				{
+					i = -1-i;  // 0..n
+				}
+
+				this.druidsIndex.Insert(i, druid);
+				return i;
+			}
 		}
 
 		protected void Sort()
