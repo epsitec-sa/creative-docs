@@ -135,6 +135,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+
 		public static string TypeDisplayName(Type type)
 		{
 			//	Retourne le nom au pluriel correspondant à un type.
@@ -2592,23 +2593,26 @@ namespace Epsitec.Common.Designer
 			//	Trie druidsIndex.
 			if (this.IsBundlesType)
 			{
-				ResourceAccess.sortThis = this;  // beurk !
-				this.druidsIndex.Sort(new FieldDruidSort());
+				this.druidsIndex.Sort(new FieldDruidSort(this));
 			}
 
 			if (this.type == Type.Panels)
 			{
-				ResourceAccess.sortThis = this;  // beurk !
-				this.druidsIndex.Sort(new PanelDruidSort());
+				this.druidsIndex.Sort(new PanelDruidSort(this));
 			}
 		}
 
 		protected class FieldDruidSort : IComparer<Druid>
 		{
+			public FieldDruidSort(ResourceAccess resourceAccess)
+			{
+				this.resourceAccess = resourceAccess;
+			}
+
 			public int Compare(Druid obj1, Druid obj2)
 			{
-				ResourceBundle.Field field1 = ResourceAccess.sortThis.primaryBundle[obj1];
-				ResourceBundle.Field field2 = ResourceAccess.sortThis.primaryBundle[obj2];
+				ResourceBundle.Field field1 = this.resourceAccess.primaryBundle[obj1];
+				ResourceBundle.Field field2 = this.resourceAccess.primaryBundle[obj2];
 
 				if (field1 == null && field2 == null)
 				{
@@ -2627,25 +2631,32 @@ namespace Epsitec.Common.Designer
 
 				return field1.Name.CompareTo(field2.Name);
 			}
+
+			protected ResourceAccess resourceAccess;
 		}
 
 		protected class PanelDruidSort : IComparer<Druid>
 		{
+			public PanelDruidSort(ResourceAccess resourceAccess)
+			{
+				this.resourceAccess = resourceAccess;
+			}
+
 			public int Compare(Druid obj1, Druid obj2)
 			{
 				ResourceBundle bundle1 = null;
 				ResourceBundle bundle2 = null;
 
-				int i = ResourceAccess.sortThis.GetAbsoluteIndex(obj1);
+				int i = this.resourceAccess.GetAbsoluteIndex(obj1);
 				if (i != -1)
 				{
-					bundle1 = ResourceAccess.sortThis.panelsList[i];
+					bundle1 = this.resourceAccess.panelsList[i];
 				}
 
-				i = ResourceAccess.sortThis.GetAbsoluteIndex(obj2);
+				i = this.resourceAccess.GetAbsoluteIndex(obj2);
 				if (i != -1)
 				{
-					bundle2 = ResourceAccess.sortThis.panelsList[i];
+					bundle2 = this.resourceAccess.panelsList[i];
 				}
 
 				if (bundle1 == null && bundle2 == null)
@@ -2665,9 +2676,9 @@ namespace Epsitec.Common.Designer
 
 				return bundle1.Caption.CompareTo(bundle2.Caption);
 			}
-		}
 
-		protected static ResourceAccess sortThis;
+			protected ResourceAccess resourceAccess;
+		}
 
 
 		protected int GetAbsoluteIndex(Druid druid)
