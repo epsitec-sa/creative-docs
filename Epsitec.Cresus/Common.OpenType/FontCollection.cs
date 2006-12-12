@@ -499,26 +499,35 @@ namespace Epsitec.Common.OpenType
 							(FontCollection.LoadTrueTypeCollections))
 						{
 							FontIdentity fid  = new FontIdentity (record, 0);
-							Table_ttcf   ttcf = fid.FontData.TrueTypeCollectionTable;
-							
-							int    num  = ttcf.NumFonts;
-							byte[] data = ttcf.BaseData;
-							
-							for (int i = 0; i < num; i++)
+							FontData fontData = fid.FontData;
+
+							if (fontData != null)
 							{
-								FontData  fontData = new FontData (data, i);
-								FontIdentity fid_n = new FontIdentity (fontData, record, i);
-								int  name_t_offset = fid_n.FontData["name"].Offset;
-								int  name_t_length = fid_n.FontData["name"].Length;
-								
-								name_t    = new Table_name (data, name_t_offset);
-								fullName = name_t.GetFullFontName ();
-								fuidName = name_t.GetUniqueFontIdentifier ();
-								
-								fid_n.DefineTableName (name_t, name_t_length);
-								fid_n.DefineSystemFontFamilyAndStyle (family, style);
-								
-								this.Add (fullName, fuidName, fid_n);
+								Table_ttcf ttcf = fontData.TrueTypeCollectionTable;
+
+								int num  = ttcf.NumFonts;
+								byte[] data = ttcf.BaseData;
+
+								for (int i = 0; i < num; i++)
+								{
+									fontData = new FontData (data, i);
+									FontIdentity fid_n = new FontIdentity (fontData, record, i);
+									int name_t_offset = fid_n.FontData["name"].Offset;
+									int name_t_length = fid_n.FontData["name"].Length;
+
+									name_t    = new Table_name (data, name_t_offset);
+									fullName = name_t.GetFullFontName ();
+									fuidName = name_t.GetUniqueFontIdentifier ();
+
+									fid_n.DefineTableName (name_t, name_t_length);
+									fid_n.DefineSystemFontFamilyAndStyle (family, style);
+
+									this.Add (fullName, fuidName, fid_n);
+								}
+							}
+							else
+							{
+								System.Diagnostics.Debug.WriteLine (string.Format ("Font {0} {1} has no font data", family, style));
 							}
 						}
 					}
