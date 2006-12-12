@@ -165,12 +165,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_251B8DB753194ABE823B135B16429F0D"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_2D836EDC2C31CF10FE522285C025183F"
         "OwnerKey" = "8:_AE6D8730604F026447515F7596706B98"
         "MsmSig" = "8:_UNDEFINED"
@@ -245,6 +239,12 @@
         {
         "MsmKey" = "8:_437D280E093AAD52DA0FAE6026CFCDAE"
         "OwnerKey" = "8:_E076B1B1AC87A64F38211A48BDCD8338"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_4FAD635A9C3C4651A627DCFBC7A35712"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -441,13 +441,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_87635326ED274CDBA1053BF2AB1A9A3F"
+        "MsmKey" = "8:_87654856EE9D4EDA8EED000375055661"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_87654856EE9D4EDA8EED000375055661"
+        "MsmKey" = "8:_911F6C21C04041F6B5BFDF26D1C59C7D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -567,6 +567,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_CF31AAB9FD504D77B555ADA9777C7069"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_CF6B2DC39B7018A6EE8AD5DAC1989DD0"
         "OwnerKey" = "8:_423CD1AEF3194218A19BC26F8A4DC484"
         "MsmSig" = "8:_UNDEFINED"
@@ -574,13 +580,13 @@
         "Entry"
         {
         "MsmKey" = "8:_CF6B2DC39B7018A6EE8AD5DAC1989DD0"
-        "OwnerKey" = "8:_D9D0D46588413623C17B267C0A292358"
+        "OwnerKey" = "8:_701F9A11050BEA8E98C246C5BF7BC257"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_CF6B2DC39B7018A6EE8AD5DAC1989DD0"
-        "OwnerKey" = "8:_701F9A11050BEA8E98C246C5BF7BC257"
+        "OwnerKey" = "8:_D9D0D46588413623C17B267C0A292358"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -653,12 +659,6 @@
         {
         "MsmKey" = "8:_D9D0D46588413623C17B267C0A292358"
         "OwnerKey" = "8:_701F9A11050BEA8E98C246C5BF7BC257"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_D9DA98BFB4224E5897EC95A13874C7F6"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1225,26 +1225,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_251B8DB753194ABE823B135B16429F0D"
-            {
-            "SourcePath" = "8:..\\External\\Magick.Win32.dll"
-            "TargetName" = "8:Magick.Win32.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_6A3C056324D64E9B88C565E2602F90A4"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2D836EDC2C31CF10FE522285C025183F"
             {
             "AssemblyRegister" = "3:1"
@@ -1305,6 +1285,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4FAD635A9C3C4651A627DCFBC7A35712"
+            {
+            "SourcePath" = "8:SignedDlls\\Magick.Win32.dll"
+            "TargetName" = "8:Magick.Win32.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_6A3C056324D64E9B88C565E2602F90A4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_55A6EC90B66DEF1243A19EFBD654411C"
@@ -1564,10 +1564,10 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_87635326ED274CDBA1053BF2AB1A9A3F"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_87654856EE9D4EDA8EED000375055661"
             {
-            "SourcePath" = "8:..\\External\\AntiGrain.Win32.dll"
-            "TargetName" = "8:AntiGrain.Win32.dll"
+            "SourcePath" = "8:crcolors.ico"
+            "TargetName" = "8:crcolors.ico"
             "Tag" = "8:"
             "Folder" = "8:_6A3C056324D64E9B88C565E2602F90A4"
             "Condition" = "8:"
@@ -1584,10 +1584,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_87654856EE9D4EDA8EED000375055661"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_911F6C21C04041F6B5BFDF26D1C59C7D"
             {
-            "SourcePath" = "8:crcolors.ico"
-            "TargetName" = "8:crcolors.ico"
+            "SourcePath" = "8:SignedDlls\\Clipboard.Win32.dll"
+            "TargetName" = "8:Clipboard.Win32.dll"
             "Tag" = "8:"
             "Folder" = "8:_6A3C056324D64E9B88C565E2602F90A4"
             "Condition" = "8:"
@@ -1748,6 +1748,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CF31AAB9FD504D77B555ADA9777C7069"
+            {
+            "SourcePath" = "8:SignedDlls\\AntiGrain.Win32.dll"
+            "TargetName" = "8:AntiGrain.Win32.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_6A3C056324D64E9B88C565E2602F90A4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CF6B2DC39B7018A6EE8AD5DAC1989DD0"
             {
             "AssemblyRegister" = "3:1"
@@ -1808,26 +1828,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D9DA98BFB4224E5897EC95A13874C7F6"
-            {
-            "SourcePath" = "8:..\\External\\Clipboard.Win32.dll"
-            "TargetName" = "8:Clipboard.Win32.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_6A3C056324D64E9B88C565E2602F90A4"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E076B1B1AC87A64F38211A48BDCD8338"
@@ -2048,7 +2048,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Creative Docs .NET"
         "ProductCode" = "8:{588E0AAD-4A4E-4ECB-AAED-06C342F1A089}"
-        "PackageCode" = "8:{A1711BDD-A849-45BA-9871-43705D77828A}"
+        "PackageCode" = "8:{1B45C0C6-22BD-4A4C-826B-56D9663B2443}"
         "UpgradeCode" = "8:{925CE84A-106F-439D-B0AA-6222B871FB71}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -2069,7 +2069,7 @@
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
         "TargetPlatform" = "3:0"
-        "PreBuildEvent" = "8:$(ProjectDir)..\\External\\CodeSigning\\sign-opac.bat \"$(ProjectDir)..\\External\\*.Win32.dll\""
+        "PreBuildEvent" = "8:xcopy \"$(ProjectDir)..\\External\\*.Win32.dll\" \"$(ProjectDir)SignedDlls\\\" /y\r\ncall \"$(ProjectDir)..\\External\\CodeSigning\\sign-opac.bat\" \"$(ProjectDir)SignedDlls\\*.dll\""
         "PostBuildEvent" = "8:$(ProjectDir)..\\External\\CodeSigning\\sign-opac.bat \"$(BuiltOuputPath)\""
         "RunPostBuildEvent" = "3:0"
         }
