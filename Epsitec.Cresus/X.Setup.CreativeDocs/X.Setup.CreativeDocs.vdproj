@@ -1752,7 +1752,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:AntiGrain.NET, Version=2.4.645.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:AntiGrain.NET, Version=2.4.650.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_CF6B2DC39B7018A6EE8AD5DAC1989DD0"
@@ -1910,7 +1910,7 @@
             {
             "Name" = "8:CreativeDocs Color Palette"
             "Description" = "8:Creative Docs .NET Color Palette"
-            "Extensions" = "8:.crcolors"
+            "Extensions" = "8:crcolors"
             "MIME" = "8:application/crcolors"
             "Icon" = "8:_87654856EE9D4EDA8EED000375055661"
             "IconIndex" = "3:0"
@@ -1933,7 +1933,7 @@
             {
             "Name" = "8:CreativeDocs Templates"
             "Description" = "8:Creative Docs .NET Template"
-            "Extensions" = "8:.crmod"
+            "Extensions" = "8:crmod"
             "MIME" = "8:application/crmod"
             "Icon" = "8:_79B103D77D034374963E88A1AC189697"
             "IconIndex" = "3:0"
@@ -1956,7 +1956,7 @@
             {
             "Name" = "8:CreativeDocs Document"
             "Description" = "8:Creative Docs .NET Document"
-            "Extensions" = "8:.crdoc"
+            "Extensions" = "8:crdoc"
             "MIME" = "8:application/crdoc"
             "Icon" = "8:_099FB49C26D445FEB3CCF755D3FD0EB1"
             "IconIndex" = "3:0"

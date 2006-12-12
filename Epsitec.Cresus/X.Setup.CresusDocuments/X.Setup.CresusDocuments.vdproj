@@ -1207,7 +1207,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:AntiGrain.NET, Version=2.4.645.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:AntiGrain.NET, Version=2.4.650.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_363160459BCCB9C2260AD3D844379BFB"
@@ -1537,7 +1537,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common.Document, Version=2.0.7.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common.Document, Version=2.0.8.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_A45C6BE2ACB67061DDF26CECF8F4AE4A"
@@ -1599,7 +1599,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:App.DocumentEditor, Version=2.0.7.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:App.DocumentEditor, Version=2.0.8.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C0C14BD26AA6D4032CD0E9445F430518"
@@ -1910,7 +1910,7 @@
             {
             "Name" = "8:Crésus Documents Modèles"
             "Description" = "8:Document modèle Crésus"
-            "Extensions" = "8:.crmod"
+            "Extensions" = "8:crmod"
             "MIME" = "8:application/crmod"
             "Icon" = "8:_4E261EC37D5943319CD345A65C5A3E91"
             "IconIndex" = "3:0"
@@ -1933,7 +1933,7 @@
             {
             "Name" = "8:Crésus Palette de couleurs"
             "Description" = "8:Palette de couleurs Crésus"
-            "Extensions" = "8:.crcolors"
+            "Extensions" = "8:crcolors"
             "MIME" = "8:application/crcolors"
             "Icon" = "8:_3593E67C231B4B1AA0E07F9D94F35529"
             "IconIndex" = "3:0"
@@ -1956,7 +1956,7 @@
             {
             "Name" = "8:Crésus Documents"
             "Description" = "8:Document Crésus"
-            "Extensions" = "8:.crdoc"
+            "Extensions" = "8:crdoc"
             "MIME" = "8:application/crdoc"
             "Icon" = "8:_245A2AACD15647C68865B1C9942ABA06"
             "IconIndex" = "3:0"
