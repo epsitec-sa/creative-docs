@@ -158,7 +158,14 @@ xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /E
 xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)App.DocumentEditor\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 </PreBuildEvent>
-    <PostBuildEvent>call $(ProjectDir)..\External\CodeSigning\sign-opac.bat "$(TargetDir)\*.exe"
-call $(ProjectDir)..\External\CodeSigning\sign-opac.bat "$(TargetDir)\*.dll"</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(TargetDir)App.CreativeDocs.exe" "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\" /y
+xcopy "$(TargetDir)*.dll" "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\" /y
+xcopy "$(SolutionDir)External\*.Win32.dll" "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\" /y
+
+del "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\Creative Docs .NET.exe"
+ren "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\App.CreativeDocs.exe" "Creative Docs .NET.exe"
+
+call "$(SolutionDir)External\CodeSigning\sign-opac.bat" "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\*"
+</PostBuildEvent>
   </PropertyGroup>
 </Project>
