@@ -536,6 +536,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						case 2:  text = Res.Strings.Dialog.Glyphs.Substitute.Text.English;  break;
 					}
 
+					text = TextLayout.ConvertToSimpleText(text);  // conversion des &quot; en "
 					this.editor.CurrentDocument.Modifier.EditInsertText(text, "", "");
 					this.editor.CurrentDocument.Modifier.EditInsertText(Unicode.Code.ParagraphSeparator);
 				}
