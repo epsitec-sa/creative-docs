@@ -320,10 +320,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			string replace = null;
 			if ( sender == this.buttonReplace )
 			{
-				replace = this.replaceText;
+				replace = TextLayout.ConvertToSimpleText(this.replaceText);  // conversion des &quot; en "
 			}
 
-			if ( this.Find(this.findText, replace, this.mode) )
+			string find = TextLayout.ConvertToSimpleText(this.findText);  // conversion des &quot; en "
+			if (this.Find(find, replace, this.mode))
 			{
 				this.editor.Window.MakeFocused();
 				this.editor.Window.RestoreLogicalFocus();
