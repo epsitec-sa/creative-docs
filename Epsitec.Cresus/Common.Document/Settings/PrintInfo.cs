@@ -328,7 +328,9 @@ namespace Epsitec.Common.Document.Settings
 				this.printArea = (PrintArea) info.GetValue("PrintArea", typeof(PrintArea));
 				this.printFrom = info.GetInt32("PrintFrom");
 				this.printTo = info.GetInt32("PrintTo");
-				this.copies = info.GetInt32("Copies");
+				//	On ne veut pas mémoriser le nombre de copies, mais toujours remettre 1 par défaut !
+				//this.copies = info.GetInt32("Copies");
+				this.copies = 1;
 				this.collate = info.GetBoolean("Collate");
 				this.reverse = info.GetBoolean("Reverse");
 			}
