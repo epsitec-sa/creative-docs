@@ -41,6 +41,11 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		/// <summary>
+		/// Gets the font face name for the current locale, using
+		/// <c>CultureInfo.CurrentCulture</c>.
+		/// </summary>
+		/// <value>The font face name.</value>
 		public string							LocaleFaceName
 		{
 			get
@@ -65,6 +70,11 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
+		/// <summary>
+		/// Gets the font style name for the current locale, using
+		/// <c>CultureInfo.CurrentCulture</c>.
+		/// </summary>
+		/// <value>The font style name.</value>
 		public string							LocaleStyleName
 		{
 			get
@@ -82,8 +92,13 @@ namespace Epsitec.Common.OpenType
 				}
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Gets the invariant font face name. This name is independent
+		/// of the current culture.
+		/// </summary>
+		/// <value>The font face name.</value>
 		public string							InvariantFaceName
 		{
 			get
@@ -107,7 +122,12 @@ namespace Epsitec.Common.OpenType
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the invariant font style name. This name is independent
+		/// of the current culture.
+		/// </summary>
+		/// <value>The font style name.</value>
 		public string							InvariantStyleName
 		{
 			get
@@ -125,7 +145,12 @@ namespace Epsitec.Common.OpenType
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets a simplified version of the invariant font style name. The
+		/// names <c>"Regular"</c> and <c>"Normal"</c> are mapped to <c>""</c>.
+		/// </summary>
+		/// <value>The simplified font style name.</value>
 		public string							InvariantStyleHash
 		{
 			get
@@ -143,6 +168,11 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		/// <summary>
+		/// Gets the number of font styles available for the font face
+		/// described by this <c>FontIdentity</c> object.
+		/// </summary>
+		/// <value>The number of font styles.</value>
 		public int								FontStyleCount
 		{
 			get
@@ -151,6 +181,9 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
+		/// <summary>
+		/// Gets the full name of the font. This is the OpenType
+		/// </summary>
 		public string							FullName
 		{
 			get
@@ -572,7 +605,7 @@ namespace Epsitec.Common.OpenType
 
 
 		private const int InvariantLocale = 1033;
-		
+						
 		private object							exclusion = new object ();
 		
 		private Table_name						otName;
