@@ -561,12 +561,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_BE573DBE2D764BA88497789CC5D57F10"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_C0B06497927AB8EC2ED5E741645BE3A5"
         "OwnerKey" = "8:_423CD1AEF3194218A19BC26F8A4DC484"
         "MsmSig" = "8:_UNDEFINED"
@@ -580,13 +574,13 @@
         "Entry"
         {
         "MsmKey" = "8:_CF6B2DC39B7018A6EE8AD5DAC1989DD0"
-        "OwnerKey" = "8:_701F9A11050BEA8E98C246C5BF7BC257"
+        "OwnerKey" = "8:_D9D0D46588413623C17B267C0A292358"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_CF6B2DC39B7018A6EE8AD5DAC1989DD0"
-        "OwnerKey" = "8:_D9D0D46588413623C17B267C0A292358"
+        "OwnerKey" = "8:_701F9A11050BEA8E98C246C5BF7BC257"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -659,6 +653,12 @@
         {
         "MsmKey" = "8:_D9D0D46588413623C17B267C0A292358"
         "OwnerKey" = "8:_701F9A11050BEA8E98C246C5BF7BC257"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D9DA98BFB4224E5897EC95A13874C7F6"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1810,6 +1810,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D9DA98BFB4224E5897EC95A13874C7F6"
+            {
+            "SourcePath" = "8:..\\External\\Clipboard.Win32.dll"
+            "TargetName" = "8:Clipboard.Win32.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_6A3C056324D64E9B88C565E2602F90A4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E076B1B1AC87A64F38211A48BDCD8338"
             {
             "AssemblyRegister" = "3:1"
@@ -2028,7 +2048,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Creative Docs .NET"
         "ProductCode" = "8:{588E0AAD-4A4E-4ECB-AAED-06C342F1A089}"
-        "PackageCode" = "8:{1C134873-C54D-4B3F-BD89-54A26746536F}"
+        "PackageCode" = "8:{A1711BDD-A849-45BA-9871-43705D77828A}"
         "UpgradeCode" = "8:{925CE84A-106F-439D-B0AA-6222B871FB71}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -2049,7 +2069,7 @@
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
         "TargetPlatform" = "3:0"
-        "PreBuildEvent" = "8:"
+        "PreBuildEvent" = "8:$(ProjectDir)..\\External\\CodeSigning\\sign-opac.bat \"$(ProjectDir)..\\External\\*.Win32.dll\""
         "PostBuildEvent" = "8:$(ProjectDir)..\\External\\CodeSigning\\sign-opac.bat \"$(BuiltOuputPath)\""
         "RunPostBuildEvent" = "3:0"
         }
@@ -2664,34 +2684,6 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:ContentFiles"
             "OutputProjectGuid" = "8:{1D0BD1B8-DF78-45E2-A3B7-D1AE3FB31E46}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_BE573DBE2D764BA88497789CC5D57F10"
-            {
-            "SourcePath" = "8:..\\Common.Text.Exchange\\Clipboard.Win32\\Debug\\Clipboard.Win32.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_6A3C056324D64E9B88C565E2602F90A4"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:Built"
-            "OutputProjectGuid" = "8:{B4E1087F-2644-430B-A6D4-95B75D62398B}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

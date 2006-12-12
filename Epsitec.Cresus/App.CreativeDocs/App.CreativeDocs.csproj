@@ -6,7 +6,8 @@
     <ProjectGuid>{1D0BD1B8-DF78-45E2-A3B7-D1AE3FB31E46}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>App.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>App.CreativeDocs</AssemblyName>
@@ -23,6 +24,7 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
+    <Win32Resource>app.res</Win32Resource>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -92,6 +94,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <None Include="App.res" />
+    <None Include="App.rc" />
     <Content Include="Resources\App.DocumentEditor\Captions.00.resource" />
     <Content Include="Resources\App.DocumentEditor\Captions.en.resource" />
     <Content Include="Resources\App.DocumentEditor\module.info" />
@@ -144,6 +148,9 @@
     <Content Include="Original Samples\transparency.crdoc" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="BeforeBuild" Inputs="App.rc" Outputs="App.res">
+    <Exec Command="compile-rc.bat App" />
+  </Target>
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(SolutionDir)Common.Designer\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
@@ -151,6 +158,7 @@ xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /E
 xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)App.DocumentEditor\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 </PreBuildEvent>
-    <PostBuildEvent>$(ProjectDir)..\External\CodeSigning\sign-opac.bat "$(TargetPath)"</PostBuildEvent>
+    <PostBuildEvent>call $(ProjectDir)..\External\CodeSigning\sign-opac.bat "$(TargetDir)\*.exe"
+call $(ProjectDir)..\External\CodeSigning\sign-opac.bat "$(TargetDir)\*.dll"</PostBuildEvent>
   </PropertyGroup>
 </Project>
