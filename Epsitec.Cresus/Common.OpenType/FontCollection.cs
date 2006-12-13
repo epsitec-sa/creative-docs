@@ -520,7 +520,7 @@ namespace Epsitec.Common.OpenType
 									fuidName = name_t.GetUniqueFontIdentifier ();
 
 									fid_n.DefineTableName (name_t, name_t_length);
-									fid_n.DefineSystemFontFamilyAndStyle (family, style);
+									fid_n.DefineSystemFontFamilyAndStyle (fid_n.InvariantFaceName, fid_n.InvariantStyleName);
 
 									this.Add (fullName, fuidName, fid_n);
 								}
