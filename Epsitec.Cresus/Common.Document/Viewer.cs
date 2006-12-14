@@ -391,6 +391,11 @@ namespace Epsitec.Common.Document
 						}
 					}
 
+					if ( message.KeyCode == KeyCode.ControlKey )
+					{
+						this.drawingContext.ConstrainCtrlPressed();
+					}
+
 					if ( message.KeyCode == KeyCode.Space )
 					{
 						if ( !this.NextHotSpot() )
@@ -1189,11 +1194,7 @@ namespace Epsitec.Common.Document
 			//	Change le point chaud.
 			if ( this.moveObject == null )  return false;
 
-			if ( this.drawingContext.IsCtrl )
-			{
-				this.drawingContext.ConstrainSpacePressed();
-			}
-			else if ( !this.document.Modifier.IsToolShaper )
+			if ( !this.document.Modifier.IsToolShaper )
 			{
 				Point move = this.moveObject.HotSpotPosition;
 				this.moveObject.ChangeHotSpot(1);

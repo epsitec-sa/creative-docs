@@ -1480,11 +1480,7 @@ namespace Epsitec.Common.Document
 			
 			set
 			{
-				if ( this.isCtrl != value )
-				{
-					this.isCtrl = value;
-					this.ConstrainUpdateCtrl();
-				}
+				this.isCtrl = value;
 			}
 		}
 
@@ -1867,7 +1863,7 @@ namespace Epsitec.Common.Document
 				if ( line.Compare(exist) )  return;
 			}
 
-			line.IsVisible = this.isCtrl;
+			line.IsVisible = this.isConstrainActive;
 			this.constrainList.Add(line);
 		}
 
@@ -1879,7 +1875,7 @@ namespace Epsitec.Common.Document
 			MagnetLine line = new MagnetLine(this.document, this, MagnetLine.Type.Circle);
 			line.Initialize(center, ext, true, false);
 
-			line.IsVisible = this.isCtrl;
+			line.IsVisible = this.isConstrainActive;
 			this.constrainList.Add(line);
 		}
 
@@ -1895,7 +1891,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Retourne une position éventuellement contrainte, en fonction du nombre
 			//	quelconque de contraintes existantes.
-			if ( !this.isCtrl )
+			if (!this.isConstrainActive)
 			{
 				return this.MagnetSnapPos(ref pos);
 			}
@@ -1999,37 +1995,50 @@ namespace Epsitec.Common.Document
 			return snap;
 		}
 
-		public void ConstrainSpacePressed()
+		public void ConstrainCtrlPressed()
 		{
-			//	Modifie les contraintes suite à la pression de la touche espace.
-			int visible = 0;
-			foreach ( MagnetLine line in this.constrainList )
-			{
-				if ( line.IsVisible )  visible ++;
-			}
+			//	Modifie les contraintes suite à la pression de la touche Ctrl.
+			int count = this.ConstrainVisibleCount;
 
-			if ( visible == this.constrainList.Count )  // toutes les lignes visibles ?
+			if (count == this.constrainList.Count)  // toutes les lignes visibles ?
 			{
-				foreach ( MagnetLine line in this.constrainList )
+				foreach (MagnetLine line in this.constrainList)
 				{
 					line.IsVisible = line.FlyOver;  // ne garde que les lignes actives
 				}
 			}
-			else	// pas toutes les lignes visibles ?
+			else if (count == 0)  // aucune ligne visible ?
 			{
-				foreach ( MagnetLine line in this.constrainList )
+				foreach (MagnetLine line in this.constrainList)
 				{
 					line.IsVisible = true;  // remontre toutes les lignes
 				}
 			}
+			else	// pas toutes les lignes visibles ?
+			{
+				foreach (MagnetLine line in this.constrainList)
+				{
+					line.IsVisible = false;  // cache toutes les lignes
+				}
+			}
+
+			this.isConstrainActive = (this.ConstrainVisibleCount != 0);
 		}
 
-		protected void ConstrainUpdateCtrl()
+		protected int ConstrainVisibleCount
 		{
-			//	Met à jour les contraintes en fonction de la touche Ctrl.
-			foreach ( MagnetLine line in this.constrainList )
+			//	Retourne le nombre de contraintes visibles.
+			get
 			{
-				line.IsVisible = this.isCtrl;
+				int count = 0;
+				foreach (MagnetLine line in this.constrainList)
+				{
+					if (line.IsVisible)
+					{
+						count++;
+					}
+				}
+				return count;
 			}
 		}
 
@@ -2045,7 +2054,10 @@ namespace Epsitec.Common.Document
 		public void DrawConstrain(Graphics graphics, Size size)
 		{
 			//	Dessine les contraintes.
-			if ( !this.isCtrl )  return;
+			if (!this.isConstrainActive)
+			{
+				return;
+			}
 
 			double max = System.Math.Max(size.Width, size.Height);
 			foreach ( MagnetLine line in this.constrainList )
@@ -2529,6 +2541,7 @@ namespace Epsitec.Common.Document
 		protected bool							isCtrl = false;
 		protected bool							isAlt = false;
 		protected System.Collections.ArrayList	constrainList = new System.Collections.ArrayList();
+		protected bool							isConstrainActive = false;
 		protected bool							isMagnetStarting = false;
 		protected Point							magnetStarting;
 		protected MagnetLine					magnetLineMain;
