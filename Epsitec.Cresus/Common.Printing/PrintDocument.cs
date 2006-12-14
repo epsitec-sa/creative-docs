@@ -1,4 +1,4 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Printing
@@ -103,6 +103,10 @@ namespace Epsitec.Common.Printing
 				this.pd.Print ();
 			
 				ok = (this.status == PrintEngineStatus.FinishJob);
+			}
+			catch (System.ComponentModel.Win32Exception)
+			{
+				ok = false;
 			}
 			finally
 			{
