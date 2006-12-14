@@ -363,6 +363,8 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.buttonMain == null )  return;
 
+			this.UpdateButtons();
+
 			Drawing.Rectangle box = this.Client.Bounds;
 			Drawing.Rectangle rect;
 
