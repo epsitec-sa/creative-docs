@@ -262,6 +262,16 @@ namespace Epsitec.Common.OpenType
 			}
 			
 			this.ot_indexMapping = this.ot_cmap.FindFormatSubTable ();
+
+			this.glyph_f = this.ot_indexMapping.GetGlyphIndex ('f');
+			this.glyph_i = this.ot_indexMapping.GetGlyphIndex ('i');
+			this.glyph_l = this.ot_indexMapping.GetGlyphIndex ('l');
+			
+			this.glyph_lig_ff  = this.ot_indexMapping.GetGlyphIndex (0xfb00);
+			this.glyph_lig_fi  = this.ot_indexMapping.GetGlyphIndex (0xfb01);
+			this.glyph_lig_fl  = this.ot_indexMapping.GetGlyphIndex (0xfb02);
+			this.glyph_lig_ffi = this.ot_indexMapping.GetGlyphIndex (0xfb03);
+			this.glyph_lig_ffl = this.ot_indexMapping.GetGlyphIndex (0xfb04);
 			
 			this.glyphCache   = new ushort[Font.GlyphCacheSize];
 			this.advanceCache = new ushort[Font.AdvanceCacheSize];
@@ -1714,12 +1724,26 @@ namespace Epsitec.Common.OpenType
 				{
 					return glyph;
 				}
+
+				if ((this.glyphCacheOthers != null) &&
+					(this.glyphCacheOthers.TryGetValue (code, out glyph)))
+				{
+					return glyph;
+				}
 			}
 			
 			if ((code == 0) ||
 				(this.ot_indexMapping == null))
 			{
 				return 0xffff;
+			}
+			
+			if (code <= 0x0003)
+			{
+				//	Start of text and end of text have no graphic representation.
+				//	Avoid walking through the font, looking for glyphs :
+				
+				return 0x0000;
 			}
 			
 			glyph = this.ot_indexMapping.GetGlyphIndex (code);
@@ -1764,10 +1788,19 @@ namespace Epsitec.Common.OpenType
 						break;
 				}
 			}
-			
+
 			if (code < Font.GlyphCacheSize)
 			{
 				this.glyphCache[code] = glyph;
+			}
+			else
+			{
+				if (this.glyphCacheOthers == null)
+				{
+					this.glyphCacheOthers = new Dictionary<int, ushort> ();
+				}
+
+				this.glyphCacheOthers[code] = glyph;
 			}
 			
 			return glyph;
@@ -1938,18 +1971,33 @@ namespace Epsitec.Common.OpenType
 		
 		private void ApplySubstitutions(ref ushort[] glyphs, ref int[] gl_map)
 		{
+			if ((this.substitutionLookups == null) ||
+				(this.substitutionLookups.Length == 0))
+			{
+				if (this.mapDefaultLigatures == false)
+				{
+					return;
+				}
+			}
+
 			int count = glyphs.Length;
 			
 			//	Exécute les substitutions de glyphes en fonction des 'features'
 			//	sélectionnées :
 			
-			int        max_size = count + 16;
-			ushort[][] temp     = new ushort[2][];
+			int max_size = count + 16;
 			
 		try_again:
 			
-			temp[0] = new ushort[max_size];
-			temp[1] = new ushort[max_size];
+			if (Font.tempGlyphMaxSize < max_size)
+			{
+				Font.tempGlyphs = new ushort[2][];
+				Font.tempGlyphs[0] = new ushort[max_size];
+				Font.tempGlyphs[1] = new ushort[max_size];
+				Font.tempGlyphMaxSize = max_size;
+			}
+
+			ushort[][] temp = Font.tempGlyphs;
 			
 			try
 			{
@@ -1980,8 +2028,11 @@ namespace Epsitec.Common.OpenType
 				{
 					output = input;
 				}
-				
-				glyphs = new ushort[length];
+
+				if (glyphs.Length != length)
+				{
+					glyphs = new ushort[length];
+				}
 				
 				for (int i = 0; i < length; i++)
 				{
@@ -2012,27 +2063,18 @@ namespace Epsitec.Common.OpenType
 			int input_offset  = 0;
 			int output_offset = 0;
 			
-			ushort glyph_f = this.ot_indexMapping.GetGlyphIndex ('f');
-			ushort glyph_i = this.ot_indexMapping.GetGlyphIndex ('i');
-			ushort glyph_l = this.ot_indexMapping.GetGlyphIndex ('l');
-			ushort lig_ff  = this.ot_indexMapping.GetGlyphIndex (0xfb00);
-			ushort lig_fi  = this.ot_indexMapping.GetGlyphIndex (0xfb01);
-			ushort lig_fl  = this.ot_indexMapping.GetGlyphIndex (0xfb02);
-			ushort lig_ffi = this.ot_indexMapping.GetGlyphIndex (0xfb03);
-			ushort lig_ffl = this.ot_indexMapping.GetGlyphIndex (0xfb04);
-			
 			while (input_offset < input_length)
 			{
 				int length = input_length - input_offset;
 				
 				if (length > 2)
 				{
-					if ((lig_ffi > 0) &&
-						(input_glyphs[input_offset+0] == glyph_f) &&
-						(input_glyphs[input_offset+1] == glyph_f) &&
-						(input_glyphs[input_offset+2] == glyph_i))
+					if ((this.glyph_lig_ffi > 0) &&
+						(input_glyphs[input_offset+0] == this.glyph_f) &&
+						(input_glyphs[input_offset+1] == this.glyph_f) &&
+						(input_glyphs[input_offset+2] == this.glyph_i))
 					{
-						output_glyphs[output_offset] = lig_ffi;
+						output_glyphs[output_offset] = this.glyph_lig_ffi;
 						
 						if (gl_map != null)
 						{
@@ -2044,13 +2086,13 @@ namespace Epsitec.Common.OpenType
 						
 						continue;
 					}
-					
-					if ((lig_ffl > 0) &&
-						(input_glyphs[input_offset+0] == glyph_f) &&
-						(input_glyphs[input_offset+1] == glyph_f) &&
-						(input_glyphs[input_offset+2] == glyph_l))
+
+					if ((this.glyph_lig_ffl > 0) &&
+						(input_glyphs[input_offset+0] == this.glyph_f) &&
+						(input_glyphs[input_offset+1] == this.glyph_f) &&
+						(input_glyphs[input_offset+2] == this.glyph_l))
 					{
-						output_glyphs[output_offset] = lig_ffl;
+						output_glyphs[output_offset] = this.glyph_lig_ffl;
 						
 						if (gl_map != null)
 						{
@@ -2066,11 +2108,11 @@ namespace Epsitec.Common.OpenType
 				
 				if (length > 1)
 				{
-					if ((lig_ff > 0) &&
-						(input_glyphs[input_offset+0] == glyph_f) &&
-						(input_glyphs[input_offset+1] == glyph_f))
+					if ((this.glyph_lig_ff > 0) &&
+						(input_glyphs[input_offset+0] == this.glyph_f) &&
+						(input_glyphs[input_offset+1] == this.glyph_f))
 					{
-						output_glyphs[output_offset] = lig_ff;
+						output_glyphs[output_offset] = this.glyph_lig_ff;
 						
 						if (gl_map != null)
 						{
@@ -2082,12 +2124,12 @@ namespace Epsitec.Common.OpenType
 						
 						continue;
 					}
-					
-					if ((lig_fi > 0) &&
-						(input_glyphs[input_offset+0] == glyph_f) &&
-						(input_glyphs[input_offset+1] == glyph_i))
+
+					if ((this.glyph_lig_fi > 0) &&
+						(input_glyphs[input_offset+0] == this.glyph_f) &&
+						(input_glyphs[input_offset+1] == this.glyph_i))
 					{
-						output_glyphs[output_offset] = lig_fi;
+						output_glyphs[output_offset] = this.glyph_lig_fi;
 						
 						if (gl_map != null)
 						{
@@ -2099,12 +2141,12 @@ namespace Epsitec.Common.OpenType
 						
 						continue;
 					}
-					
-					if ((lig_fl > 0) &&
-						(input_glyphs[input_offset+0] == glyph_f) &&
-						(input_glyphs[input_offset+1] == glyph_l))
+
+					if ((this.glyph_lig_fl > 0) &&
+						(input_glyphs[input_offset+0] == this.glyph_f) &&
+						(input_glyphs[input_offset+1] == this.glyph_l))
 					{
-						output_glyphs[output_offset] = lig_fl;
+						output_glyphs[output_offset] = this.glyph_lig_fl;
 						
 						if (gl_map != null)
 						{
@@ -2193,6 +2235,7 @@ namespace Epsitec.Common.OpenType
 		
 		private bool ApplyKerningInformation(ushort glyph, ref ushort prev_glyph, int num_glyph, out int delta)
 		{
+#if false
 			if ((this.useKerning) &&
 				(glyph < num_glyph) &&
 				(prev_glyph < num_glyph) &&
@@ -2203,6 +2246,7 @@ namespace Epsitec.Common.OpenType
 				return true;
 			}
 			else
+#endif
 			{
 				delta      = 0;
 				prev_glyph = glyph;
@@ -2479,6 +2523,15 @@ namespace Epsitec.Common.OpenType
 		private IndexMappingTable				ot_indexMapping;
 		private FontType						fontType;
 		
+		private ushort glyph_f;
+		private ushort glyph_i;
+		private ushort glyph_l;
+		private ushort glyph_lig_ff;
+		private ushort glyph_lig_fi;
+		private ushort glyph_lig_fl;
+		private ushort glyph_lig_ffi;
+		private ushort glyph_lig_ffl;
+		
 		private string							activeScript;
 		private string							activeLanguage;
 		private string							activeFeatures = "";
@@ -2498,9 +2551,16 @@ namespace Epsitec.Common.OpenType
 		private ushort							ellipsisGlyph;
 		private ushort							periodGlyph;
 		private ushort[]						glyphCache;
+		private Dictionary<int, ushort>			glyphCacheOthers;
 		private ushort[]						advanceCache;
 		
 		private const int						GlyphCacheSize = 256;
 		private const int						AdvanceCacheSize = 256;
+
+		[System.ThreadStatic]
+		private static ushort[][]				tempGlyphs;
+		
+		[System.ThreadStatic]
+		private static int						tempGlyphMaxSize;
 	}
 }
