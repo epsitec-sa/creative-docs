@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Debug
@@ -8,17 +8,20 @@ namespace Epsitec.Common.Debug
 	/// </summary>
 	public sealed class Assert
 	{
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void Fail()
 		{
 			throw new AssertFailedException ("Exceptional condition found.");
 		}
-		
+
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void Fail(string format, params object[] args)
 		{
 			throw new AssertFailedException (string.Format (format, args));
 		}
-		
-		
+
+
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void IsInBounds(int value, int min, int max)
 		{
 			if ((value < min) || (value > max))
@@ -26,7 +29,8 @@ namespace Epsitec.Common.Debug
 				throw new AssertFailedException (string.Format ("Value {0} out of bounds [{1}..{2}].", value, min, max));
 			}
 		}
-		
+
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void IsInBounds(uint value, uint min, uint max)
 		{
 			if ((value < min) || (value > max))
@@ -34,7 +38,8 @@ namespace Epsitec.Common.Debug
 				throw new AssertFailedException (string.Format ("Value {0} out of bounds [{1}..{2}].", value, min, max));
 			}
 		}
-		
+
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void IsInBounds(ulong value, ulong min, ulong max)
 		{
 			if ((value < min) || (value > max))
@@ -42,7 +47,8 @@ namespace Epsitec.Common.Debug
 				throw new AssertFailedException (string.Format ("Value {0} out of bounds [{1}..{2}].", value, min, max));
 			}
 		}
-		
+
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void IsInBounds(double value, double min, double max)
 		{
 			if ((value < min) || (value > max))
@@ -50,8 +56,9 @@ namespace Epsitec.Common.Debug
 				throw new AssertFailedException (string.Format ("Value {0} out of bounds [{1}..{2}].", value, min, max));
 			}
 		}
-		
-		
+
+
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void IsTrue(bool condition)
 		{
 			if (condition != true)
@@ -59,7 +66,8 @@ namespace Epsitec.Common.Debug
 				throw new AssertFailedException ("Condition not true.");
 			}
 		}
-		
+
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void IsTrue(bool condition, string format, params object[] args)
 		{
 			if (condition != true)
@@ -67,7 +75,8 @@ namespace Epsitec.Common.Debug
 				throw new AssertFailedException (string.Format (format, args));
 			}
 		}
-		
+
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void IsFalse(bool condition)
 		{
 			if (condition != false)
@@ -75,7 +84,8 @@ namespace Epsitec.Common.Debug
 				throw new AssertFailedException ("Condition not false.");
 			}
 		}
-		
+
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void IsFalse(bool condition, string format, params object[] args)
 		{
 			if (condition != false)
@@ -83,8 +93,9 @@ namespace Epsitec.Common.Debug
 				throw new AssertFailedException (string.Format (format, args));
 			}
 		}
-		
-		
+
+
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void IsNull(object value)
 		{
 			if (value != null)
@@ -92,7 +103,8 @@ namespace Epsitec.Common.Debug
 				throw new AssertFailedException ("Value is not null.");
 			}
 		}
-		
+
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void IsNull(object value, string format, params object[] args)
 		{
 			if (value != null)
@@ -100,7 +112,8 @@ namespace Epsitec.Common.Debug
 				throw new AssertFailedException (string.Format (format, args));
 			}
 		}
-		
+
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void IsNotNull(object value)
 		{
 			if (value == null)
@@ -108,7 +121,8 @@ namespace Epsitec.Common.Debug
 				throw new AssertFailedException ("Value is null.");
 			}
 		}
-		
+
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void IsNotNull(object value, string format, params object[] args)
 		{
 			if (value == null)
