@@ -2613,11 +2613,17 @@ namespace Epsitec.Common.Document
 			this.CloseMiniBar(false);
 
 			System.Collections.ArrayList cmds = this.MiniBarCommands(noSelected);
-			if ( cmds == null || cmds.Count == 0 )  return;
+			if (cmds == null || cmds.Count == 0)
+			{
+				return;
+			}
 
 			Balloon frame = new Balloon();
 			this.miniBarDistance = (distance == 0) ? frame.Distance : distance;
-			if ( !hot && distance == 0 )  this.miniBarDistance = 0;
+			if (!hot && distance == 0)
+			{
+				this.miniBarDistance = 0;
+			}
 
 			this.miniBarClickPos = mouse;
 			mouse = this.InternalToScreen(mouse);
@@ -2895,6 +2901,10 @@ namespace Epsitec.Common.Document
 					this.MiniBarAdd(list, "DeselectAll");
 					this.MiniBarAdd(list, "SelectAll");
 					this.MiniBarAdd(list, "SelectInvert");
+					this.MiniBarAdd(list, "");
+					this.MiniBarAdd(list, "Cut");
+					this.MiniBarAdd(list, "Copy");
+					this.MiniBarAdd(list, "Paste");
 					this.MiniBarAdd(list, "");
 					this.MiniBarAdd(list, "HideSel");
 					this.MiniBarAdd(list, "HideRest");
@@ -3279,6 +3289,11 @@ namespace Epsitec.Common.Document
 				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, list, "SelectInvert");
 				if ( exist )  Menus.ContextMenuItem.MenuAddSep(list);
 
+				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, list, "Cut");
+				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, list, "Copy");
+				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, list, "Paste");
+				if ( exist )  Menus.ContextMenuItem.MenuAddSep(list);
+
 				exist = false;
 				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, list, "HideSel");
 				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, list, "HideRest");
@@ -3321,6 +3336,8 @@ namespace Epsitec.Common.Document
 				exist = false;
 				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, list, "Delete");
 				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, list, "Duplicate");
+				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, list, "Cut");
+				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, list, "Copy");
 				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, list, "Group");
 				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, list, "Merge");
 				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, list, "Extract");
