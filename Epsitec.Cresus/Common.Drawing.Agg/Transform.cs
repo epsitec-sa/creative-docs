@@ -46,8 +46,26 @@ namespace Epsitec.Common.Drawing
 				{
 					return true;
 				}
-				
-				return false;
+				else
+				{
+					return false;
+				}
+			}
+		}
+
+		public bool								OnlyScaleOrTranslate
+		{
+			get
+			{
+				if ((Transform.IsZero (this.xy)) &&
+					(Transform.IsZero (this.yx)))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 		
@@ -172,8 +190,28 @@ namespace Epsitec.Common.Drawing
 			
 			return pt;
 		}
-		
-		public void  TransformDirect(ref double px, ref double py)
+
+		public Rectangle ScaleOrTranslateDirect(Rectangle rect)
+		{
+			System.Diagnostics.Debug.Assert (this.OnlyScaleOrTranslate);
+
+			if ((rect.IsEmpty) ||
+				(rect.IsInfinite))
+			{
+				return rect;
+			}
+			else
+			{
+				rect.Left   = this.xx * rect.Left   + this.tx;
+				rect.Right  = this.xx * rect.Right  + this.tx;
+				rect.Bottom = this.yy * rect.Bottom + this.ty;
+				rect.Top    = this.yy * rect.Top    + this.ty;
+
+				return rect;
+			}
+		}
+
+		public void TransformDirect(ref double px, ref double py)
 		{
 			double x = px;
 			double y = py;

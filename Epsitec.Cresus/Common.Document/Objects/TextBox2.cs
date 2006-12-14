@@ -886,6 +886,8 @@ namespace Epsitec.Common.Document.Objects
 			Drawing.Font drawingFont = Drawing.Font.GetFont (font);
 			if (drawingFont != null)
 			{
+				Drawing.Rectangle mergedBounds = Drawing.Rectangle.Empty;
+
 				for (int i=0; i<glyphs.Length; i++)
 				{
 					Drawing.Rectangle bounds;
@@ -900,17 +902,37 @@ namespace Epsitec.Common.Document.Objects
 						bounds.Scale (size);
 					}
 
-					if (sx != null)
-						bounds.Scale (sx[i], 1.0);
-					if (sy != null)
-						bounds.Scale (1.0, sy[i]);
+					if ((sx != null) ||
+						(sy != null))
+					{
+						bounds.Scale (sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+					}
 
 					bounds.Offset (x[i], y[i]);
 
-					this.mergingBoundingBox.MergeWith (this.transform.TransformDirect (bounds.BottomLeft));
-					this.mergingBoundingBox.MergeWith (this.transform.TransformDirect (bounds.BottomRight));
-					this.mergingBoundingBox.MergeWith (this.transform.TransformDirect (bounds.TopLeft));
-					this.mergingBoundingBox.MergeWith (this.transform.TransformDirect (bounds.TopRight));
+					if (i == 0)
+					{
+						mergedBounds = bounds;
+					}
+					else
+					{
+						mergedBounds = Drawing.Rectangle.Union (mergedBounds, bounds);
+					}
+				}
+
+				if (!mergedBounds.IsSurfaceZero)
+				{
+					if (this.transform.OnlyScaleOrTranslate)
+					{
+						this.mergingBoundingBox.MergeWith (this.transform.ScaleOrTranslateDirect (mergedBounds));
+					}
+					else
+					{
+						this.mergingBoundingBox.MergeWith (this.transform.TransformDirect (mergedBounds.BottomLeft));
+						this.mergingBoundingBox.MergeWith (this.transform.TransformDirect (mergedBounds.BottomRight));
+						this.mergingBoundingBox.MergeWith (this.transform.TransformDirect (mergedBounds.TopLeft));
+						this.mergingBoundingBox.MergeWith (this.transform.TransformDirect (mergedBounds.TopRight));
+					}
 				}
 			}
 		}
