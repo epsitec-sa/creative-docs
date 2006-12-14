@@ -285,6 +285,15 @@ namespace Epsitec.Common.Text.Internal
 		private int FindElement(Internal.CursorId id)
 		{
 			Debug.Assert.IsTrue (id.IsValid);
+
+			if (this.cachedCursorId == id)
+			{
+				if ((this.cachedIndex < this.length) &&
+					(this.elements[this.cachedIndex].id == id))
+				{
+					return this.cachedIndex;
+				}
+			}
 			
 			//	Trouve l'élément qui décrit le curseur spécifié et retourne
 			//	son index.
@@ -293,6 +302,9 @@ namespace Epsitec.Common.Text.Internal
 			{
 				if (this.elements[i].id == id)
 				{
+					this.cachedCursorId = id;
+					this.cachedIndex = i;
+					
 					return i;
 				}
 			}
@@ -390,30 +402,56 @@ namespace Epsitec.Common.Text.Internal
 			
 			Debug.Assert.IsInBounds (this.length, 0, this.elements.Length);
 			Debug.Assert.IsInBounds (index, 0, this.length);
-			
-			Element[] old_elements = this.elements;
-			Element[] new_elements = new Element[this.length+1];
-			
-			//	Si l'élément n'est pas ajouté à la fin du tableau, il
-			//	faut encore ajuster l'offset de l'élément qui va se
-			//	retrouver juste après l'élément inséré :
-			
-			if (index < this.length)
+
+			if (this.elements.Length == this.length)
 			{
-				Debug.Assert.IsTrue (old_elements[index].offset > element.offset);
-				old_elements[index].offset -= element.offset;
+				Element[] old_elements = this.elements;
+				Element[] new_elements = new Element[this.length+1];
+
+				//	Si l'élément n'est pas ajouté à la fin du tableau, il
+				//	faut encore ajuster l'offset de l'élément qui va se
+				//	retrouver juste après l'élément inséré :
+
+				if (index < this.length)
+				{
+					Debug.Assert.IsTrue (old_elements[index].offset > element.offset);
+					old_elements[index].offset -= element.offset;
+				}
+
+				int n1 = index;
+				int n2 = this.length - index;
+
+				System.Array.Copy (old_elements, 0, new_elements, 0, n1);
+				System.Array.Copy (old_elements, n1, new_elements, n1+1, n2);
+
+				new_elements[index] = element;
+
+				this.elements = new_elements;
+				this.length   = new_elements.Length;
 			}
-			
-			int n1 = index;
-			int n2 = this.length - index;
-			
-			System.Array.Copy (old_elements, 0, new_elements, 0, n1);
-			System.Array.Copy (old_elements, n1, new_elements, n1+1, n2);
-			
-			new_elements[index] = element;
-			
-			this.elements = new_elements;
-			this.length   = new_elements.Length;
+			else
+			{
+				//	Si l'élément n'est pas ajouté à la fin du tableau, il
+				//	faut encore ajuster l'offset de l'élément qui va se
+				//	retrouver juste après l'élément inséré :
+
+				if (index < this.length)
+				{
+					Debug.Assert.IsTrue (this.elements[index].offset > element.offset);
+					this.elements[index].offset -= element.offset;
+				}
+
+				int n1 = index;
+				int n2 = this.length - index;
+
+				if (n2 > 0)
+				{
+					System.Array.Copy (this.elements, n1, this.elements, n1+1, n2);
+				}
+
+				this.elements[index] = element;
+				this.length++;
+			}
 		}
 		
 		private void RemoveElement(int index)
@@ -565,5 +603,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		private Element[]						elements;
 		private int								length;
+		private int								cachedIndex;
+		private int								cachedCursorId;
 	}
 }
