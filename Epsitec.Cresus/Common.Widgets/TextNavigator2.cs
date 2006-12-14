@@ -603,7 +603,12 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				this.DeleteSelection ();
+
+				System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+				watch.Start ();
 				this.text_navigator.Insert (code);
+				watch.Stop ();
+				System.Diagnostics.Trace.WriteLine (string.Format ("{0} ms", watch.ElapsedMilliseconds));
 				
 				return true;
 			}
