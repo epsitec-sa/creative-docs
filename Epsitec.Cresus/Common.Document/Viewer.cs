@@ -1192,9 +1192,12 @@ namespace Epsitec.Common.Document
 		protected bool NextHotSpot()
 		{
 			//	Change le point chaud.
-			if ( this.moveObject == null )  return false;
+			if (this.moveObject == null)
+			{
+				return false;
+			}
 
-			if ( !this.document.Modifier.IsToolShaper )
+			if (this.moveHandle == -1 && !this.document.Modifier.IsToolShaper)
 			{
 				Point move = this.moveObject.HotSpotPosition;
 				this.moveObject.ChangeHotSpot(1);
@@ -2040,13 +2043,13 @@ namespace Epsitec.Common.Document
 			double min = 1000000.0;
 			Objects.Abstract best = null;
 			int found = -1;
-			foreach ( Objects.Abstract obj in this.document.FlatReverse(layer, true) )
+			foreach (Objects.Abstract obj in this.document.FlatReverse(layer, true))
 			{
 				rank = obj.DetectHandle(mouse);
-				if ( rank != -1 )
+				if (rank != -1)
 				{
 					double distance = Point.Distance(obj.Handle(rank).Position, mouse);
-					if ( distance < min )
+					if (distance < min)
 					{
 						min = distance;
 						best = obj;
@@ -2057,7 +2060,7 @@ namespace Epsitec.Common.Document
 
 			detect = best;
 			rank = found;
-			return ( detect != null );
+			return (detect != null);
 		}
 
 		protected bool DetectSelectedSegmentHandle(Point mouse, out Objects.Abstract detect, out int rank)
