@@ -237,7 +237,18 @@ namespace Epsitec.Common.OpenType
 				this.blob2 = value;
 			}
 		}
-		
+
+		public object							DrawingFont
+		{
+			get
+			{
+				return this.drawingFont;
+			}
+			set
+			{
+				this.drawingFont = value;
+			}
+		}
 		
 		public FontWeight						FontWeight
 		{
@@ -624,5 +635,6 @@ namespace Epsitec.Common.OpenType
 		private bool							isDynamicFont;
 		private byte[]							blob1;
 		private byte[]							blob2;
+		private object							drawingFont;
 	}
 }

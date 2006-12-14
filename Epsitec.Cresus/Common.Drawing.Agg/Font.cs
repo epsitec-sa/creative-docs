@@ -821,7 +821,15 @@ namespace Epsitec.Common.Drawing
 		
 		public static Font GetFont(OpenType.FontIdentity id)
 		{
-			return Font.GetFont (id.InvariantFaceName, id.InvariantStyleName);
+			Font font = id.DrawingFont as Font;
+
+			if (font == null)
+			{
+				font = Font.GetFont (id.InvariantFaceName, id.InvariantStyleName);
+				id.DrawingFont = font;
+			}
+
+			return font;
 		}
 		
 		public static FontFaceInfo GetFaceInfo(string face)
