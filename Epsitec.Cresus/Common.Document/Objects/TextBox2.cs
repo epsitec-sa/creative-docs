@@ -650,197 +650,207 @@ namespace Epsitec.Common.Document.Objects
 		
 		public void Render(Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool isLastRun)
 		{
-			if ( this.internalOperation == InternalOperation.Painting )
+			switch (this.internalOperation)
 			{
-				System.Diagnostics.Debug.Assert(mapping != null);
-				Text.ITextFrame frame = layout.Frame;
+				case InternalOperation.Painting:
+					this.RenderPainting (layout, font, size, color, mapping, glyphs, x, y, sx, sy);
+					break;
+			
+				case InternalOperation.GetPath:
+					this.graphics.PaintGlyphs (Drawing.Font.GetFont (font), size, glyphs, x, y, sx, sy);
+					break;
+					
+				case InternalOperation.CharactersTable:
+					this.RenderCharactersTable (font, mapping);
+					break;
+					
+				case InternalOperation.RealBoundingBox:
+					this.RenderTextBoundingBox (font, size, glyphs, x, y, sx, sy);
+					break;
+			}
+		}
 
-				//	Vérifions d'abord que le mapping du texte vers les glyphes est
-				//	correct et correspond à quelque chose de valide :
-				int  offset = 0;
-				bool isInSelection = false;
-				double selX = 0;
+		private void RenderCharactersTable(Epsitec.Common.OpenType.Font font, Text.Layout.TextToGlyphMapping mapping)
+		{
+			int[] cArray;
+			ushort[] gArray;
+			ulong[] tArray;
+			while (mapping.GetNextMapping (out cArray, out gArray, out tArray))
+			{
+				int numChars  = cArray.Length;
+				int numGlyphs = gArray.Length;
+				System.Diagnostics.Debug.Assert (numChars == 1 || numGlyphs == 1);
 
-				System.Collections.ArrayList selRectList = null;
-
-				double x1 = 0;
-				double x2 = 0;
-
-				int[]    cArray;  // unicodes
-				ushort[] gArray;  // glyphes
-				ulong[]  tArray;  // textes
-
-				SpaceType[] iArray = new SpaceType[glyphs.Length];
-				int ii = 0;
-				bool isSpace = false;
-
-				while ( mapping.GetNextMapping(out cArray, out gArray, out tArray) )
+				for (int i=0; i<numGlyphs; i++)
 				{
-					int numChars  = cArray.Length;
-					int numGlyphs = gArray.Length;
-					System.Diagnostics.Debug.Assert(numChars == 1 || numGlyphs == 1);
+					if (gArray[i] >= 0xffff)
+						continue;
 
-					x1 = x[offset+0];
-					x2 = x[offset+numGlyphs];
-
-					if ( numChars == 1 && numGlyphs == 1 )
+					PDF.CharacterList cl;
+					if (numChars == 1)
 					{
-						int code = cArray[0];
-						if ( code == 0x20 || code == 0xA0 || code == 0x202F || (code >= 0x2000 && code <= 0x200F) )  // espace ?
+						if (i == 1)  // TODO: césure gérée de façon catastrophique !
 						{
-							isSpace = true;  // contient au moins un espace
-							if ( code == 0xA0 || code == 0x2007 || code == 0x200D || code == 0x202F || code == 0x2060 )
-							{
-								iArray[ii++] = SpaceType.NoBreakSpace;  // espace insécable
-							}
-							else
-							{
-								iArray[ii++] = SpaceType.BreakSpace;  // espace sécable
-							}
-						}
-						else if ( code == 0x0C )  // saut ?
-						{
-							isSpace = true;  // contient au moins un espace
-
-							Text.Properties.BreakProperty prop;
-							this.document.TextContext.GetBreak(tArray[0], out prop);
-							if ( prop.ParagraphStartMode == Text.Properties.ParagraphStartMode.NewFrame )
-							{
-								iArray[ii++] = SpaceType.NewFrame;
-							}
-							else
-							{
-								iArray[ii++] = SpaceType.NewPage;
-							}
+							cl = new PDF.CharacterList (gArray[i], (int) '-', font);
 						}
 						else
 						{
-							iArray[ii++] = SpaceType.None;  // pas un espace
+							cl = new PDF.CharacterList (gArray[i], cArray[0], font);
 						}
 					}
 					else
 					{
-						for ( int i=0 ; i<numGlyphs ; i++ )
-						{
-							iArray[ii++] = SpaceType.None;  // pas un espace
-						}
+						cl = new PDF.CharacterList (gArray[i], cArray, font);
 					}
 
-					for ( int i=0 ; i<numChars ; i++ )
+					if (!this.charactersTable.ContainsKey (cl))
 					{
-						if ( (tArray[i] & this.markerSelected) != 0 )
-						{
-							//	Le caractère considéré est sélectionné.
-							if ( isInSelection == false )
-							{
-								//	C'est le premier caractère d'une tranche. Il faut mémoriser son début :
-								double xx = x1 + ((x2 - x1) * i) / numChars;
-								isInSelection = true;
-								selX = xx;
-							}
-						}
-						else
-						{
-							if ( isInSelection )
-							{
-								//	Nous avons quitté une tranche sélectionnée. Il faut mémoriser sa fin :
-								double xx = x1 + ((x2 - x1) * i) / numChars;
-								isInSelection = false;
-
-								if ( xx > selX )
-								{
-									this.MarkSel(layout, ref selRectList, xx, selX);
-								}
-							}
-						}
-					}
-
-					offset += numGlyphs;
-				}
-
-				if ( isInSelection )
-				{
-					//	Nous avons quitté une tranche sélectionnée. Il faut mémoriser sa fin :
-					double xx = x2;
-					isInSelection = false;
-
-					if ( xx > selX )
-					{
-						this.MarkSel(layout, ref selRectList, xx, selX);
+						this.charactersTable.Add (cl, null);
 					}
 				}
-
-				if ( this.textFlow.HasActiveTextBox && selRectList != null && this.graphics != null )
-				{
-					//	Dessine les rectangles correspondant à la sélection.
-					foreach ( Drawing.Rectangle rect in selRectList )
-					{
-						this.graphics.AddFilledRectangle(rect);
-
-						Point c1 = this.transform.TransformDirect(rect.BottomLeft);
-						Point c2 = this.transform.TransformDirect(rect.TopRight);
-						this.selectBox.MergeWith(c1);
-						this.selectBox.MergeWith(c2);
-					}
-					this.graphics.RenderSolid(DrawingContext.ColorSelectEdit(this.isActive));
-				}
-
-				//	Dessine le texte.
-				this.RenderText(font, size, glyphs, iArray, x, y, sx, sy, RichColor.Parse(color), isSpace);
-			}
-			
-			if ( this.internalOperation == InternalOperation.GetPath )
-			{
-				this.RenderText(font, size, glyphs, null, x, y, sx, sy, RichColor.Empty, false);
-			}
-
-			if ( this.internalOperation == InternalOperation.CharactersTable )
-			{
-				int[]    cArray;
-				ushort[] gArray;
-				ulong[]  tArray;
-				while ( mapping.GetNextMapping(out cArray, out gArray, out tArray) )
-				{
-					int numChars  = cArray.Length;
-					int numGlyphs = gArray.Length;
-					System.Diagnostics.Debug.Assert(numChars == 1 || numGlyphs == 1);
-
-					for ( int i=0 ; i<numGlyphs ; i++ )
-					{
-						if ( gArray[i] >= 0xffff )  continue;
-
-						PDF.CharacterList cl;
-						if ( numChars == 1 )
-						{
-							if ( i == 1 )  // TODO: césure gérée de façon catastrophique !
-							{
-								cl = new PDF.CharacterList(gArray[i], (int)'-', font);
-							}
-							else
-							{
-								cl = new PDF.CharacterList(gArray[i], cArray[0], font);
-							}
-						}
-						else
-						{
-							cl = new PDF.CharacterList(gArray[i], cArray, font);
-						}
-
-						if ( !this.charactersTable.ContainsKey(cl) )
-						{
-							this.charactersTable.Add(cl, null);
-						}
-					}
-				}
-			}
-
-			if ( this.internalOperation == InternalOperation.RealBoundingBox )
-			{
-				this.RenderText(font, size, glyphs, null, x, y, sx, sy, RichColor.Empty, false);
 			}
 		}
 
-		protected void MarkSel(Text.Layout.Context layout, ref System.Collections.ArrayList selRectList, double x, double selX)
+		private void RenderPainting(Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
+		{
+			System.Diagnostics.Debug.Assert (mapping != null);
+			Text.ITextFrame frame = layout.Frame;
+
+			//	Vérifions d'abord que le mapping du texte vers les glyphes est
+			//	correct et correspond à quelque chose de valide :
+			int offset = 0;
+			bool isInSelection = false;
+			double selX = 0;
+
+			System.Collections.ArrayList selRectList = null;
+
+			double x1 = 0;
+			double x2 = 0;
+
+			int[] cArray;  // unicodes
+			ushort[] gArray;  // glyphes
+			ulong[] tArray;  // textes
+
+			SpaceType[] iArray = new SpaceType[glyphs.Length];
+			int ii = 0;
+			bool isSpace = false;
+
+			while (mapping.GetNextMapping (out cArray, out gArray, out tArray))
+			{
+				int numChars  = cArray.Length;
+				int numGlyphs = gArray.Length;
+				System.Diagnostics.Debug.Assert (numChars == 1 || numGlyphs == 1);
+
+				x1 = x[offset+0];
+				x2 = x[offset+numGlyphs];
+
+				if (numChars == 1 && numGlyphs == 1)
+				{
+					int code = cArray[0];
+					if (code == 0x20 || code == 0xA0 || code == 0x202F || (code >= 0x2000 && code <= 0x200F))  // espace ?
+					{
+						isSpace = true;  // contient au moins un espace
+						if (code == 0xA0 || code == 0x2007 || code == 0x200D || code == 0x202F || code == 0x2060)
+						{
+							iArray[ii++] = SpaceType.NoBreakSpace;  // espace insécable
+						}
+						else
+						{
+							iArray[ii++] = SpaceType.BreakSpace;  // espace sécable
+						}
+					}
+					else if (code == 0x0C)  // saut ?
+					{
+						isSpace = true;  // contient au moins un espace
+
+						Text.Properties.BreakProperty prop;
+						this.document.TextContext.GetBreak (tArray[0], out prop);
+						if (prop.ParagraphStartMode == Text.Properties.ParagraphStartMode.NewFrame)
+						{
+							iArray[ii++] = SpaceType.NewFrame;
+						}
+						else
+						{
+							iArray[ii++] = SpaceType.NewPage;
+						}
+					}
+					else
+					{
+						iArray[ii++] = SpaceType.None;  // pas un espace
+					}
+				}
+				else
+				{
+					for (int i=0; i<numGlyphs; i++)
+					{
+						iArray[ii++] = SpaceType.None;  // pas un espace
+					}
+				}
+
+				for (int i=0; i<numChars; i++)
+				{
+					if ((tArray[i] & this.markerSelected) != 0)
+					{
+						//	Le caractère considéré est sélectionné.
+						if (isInSelection == false)
+						{
+							//	C'est le premier caractère d'une tranche. Il faut mémoriser son début :
+							double xx = x1 + ((x2 - x1) * i) / numChars;
+							isInSelection = true;
+							selX = xx;
+						}
+					}
+					else
+					{
+						if (isInSelection)
+						{
+							//	Nous avons quitté une tranche sélectionnée. Il faut mémoriser sa fin :
+							double xx = x1 + ((x2 - x1) * i) / numChars;
+							isInSelection = false;
+
+							if (xx > selX)
+							{
+								this.MarkSel (layout, ref selRectList, xx, selX);
+							}
+						}
+					}
+				}
+
+				offset += numGlyphs;
+			}
+
+			if (isInSelection)
+			{
+				//	Nous avons quitté une tranche sélectionnée. Il faut mémoriser sa fin :
+				double xx = x2;
+				isInSelection = false;
+
+				if (xx > selX)
+				{
+					this.MarkSel (layout, ref selRectList, xx, selX);
+				}
+			}
+
+			if (this.textFlow.HasActiveTextBox && selRectList != null && this.graphics != null)
+			{
+				//	Dessine les rectangles correspondant à la sélection.
+				foreach (Drawing.Rectangle rect in selRectList)
+				{
+					this.graphics.AddFilledRectangle (rect);
+
+					Point c1 = this.transform.TransformDirect (rect.BottomLeft);
+					Point c2 = this.transform.TransformDirect (rect.TopRight);
+					this.selectBox.MergeWith (c1);
+					this.selectBox.MergeWith (c2);
+				}
+				this.graphics.RenderSolid (DrawingContext.ColorSelectEdit (this.isActive));
+			}
+
+			//	Dessine le texte.
+			this.RenderText (font, size, glyphs, iArray, x, y, sx, sy, RichColor.Parse (color), isSpace);
+		}
+
+		private void MarkSel(Text.Layout.Context layout, ref System.Collections.ArrayList selRectList, double x, double selX)
 		{
 			//	Marque une tranche sélectionnée.
 			if ( this.graphics == null )  return;
@@ -858,120 +868,125 @@ namespace Epsitec.Common.Document.Objects
 			selRectList.Add(rect);
 		}
 
-		protected void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, SpaceType[] insecs, double[] x, double[] y, double[] sx, double[] sy, RichColor color, bool isSpace)
+		private void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, SpaceType[] insecs, double[] x, double[] y, double[] sx, double[] sy, RichColor color, bool isSpace)
 		{
 			//	Effectue le rendu des caractères.
-			if ( this.internalOperation == InternalOperation.Painting )
+			if (this.internalOperation == InternalOperation.Painting)
 			{
-				if ( this.graphics != null )  // affichage sur écran ?
+				this.RenderTextPainting (font, size, glyphs, insecs, x, y, sx, sy, color, isSpace);
+			}
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("InternalOperation.{0} not handled", this.internalOperation));
+			}
+		}
+
+		private void RenderTextBoundingBox(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
+		{
+			Drawing.Font drawingFont = Drawing.Font.GetFont (font);
+			if (drawingFont != null)
+			{
+				for (int i=0; i<glyphs.Length; i++)
 				{
-					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
-					if ( drawingFont != null )
+					Drawing.Rectangle bounds;
+
+					if (glyphs[i] < 0xffff)
 					{
-						if ( sy == null )
+						bounds = drawingFont.GetGlyphBounds (glyphs[i], size);
+					}
+					else
+					{
+						bounds = drawingFont.GetCharBounds ((int) Unicode.Code.EndOfText);
+						bounds.Scale (size);
+					}
+
+					if (sx != null)
+						bounds.Scale (sx[i], 1.0);
+					if (sy != null)
+						bounds.Scale (1.0, sy[i]);
+
+					bounds.Offset (x[i], y[i]);
+
+					this.mergingBoundingBox.MergeWith (this.transform.TransformDirect (bounds.BottomLeft));
+					this.mergingBoundingBox.MergeWith (this.transform.TransformDirect (bounds.BottomRight));
+					this.mergingBoundingBox.MergeWith (this.transform.TransformDirect (bounds.TopLeft));
+					this.mergingBoundingBox.MergeWith (this.transform.TransformDirect (bounds.TopRight));
+				}
+			}
+		}
+
+		private void RenderTextPainting(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, SpaceType[] insecs, double[] x, double[] y, double[] sx, double[] sy, RichColor color, bool isSpace)
+		{
+			if (this.graphics != null)  // affichage sur écran ?
+			{
+				Drawing.Font drawingFont = Drawing.Font.GetFont (font);
+				if (drawingFont != null)
+				{
+					if (sy == null)
+					{
+						this.graphics.Rasterizer.AddGlyphs (drawingFont, size, glyphs, x, y, sx);
+					}
+					else
+					{
+						for (int i=0; i<glyphs.Length; i++)
 						{
-							this.graphics.Rasterizer.AddGlyphs(drawingFont, size, glyphs, x, y, sx);
-						}
-						else
-						{
-							for ( int i=0 ; i<glyphs.Length ; i++ )
+							if (glyphs[i] < 0xffff)
 							{
-								if ( glyphs[i] < 0xffff )
-								{
-									this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, (sx == null) ? 1.0 : sx[i], (sy == null) ? 1.0 : sy[i]);
-								}
-							}
-						}
-
-						if ( this.textFlow.HasActiveTextBox && isSpace && insecs != null &&
-							 this.drawingContext != null && this.drawingContext.TextShowControlCharacters )
-						{
-							for ( int i=0 ; i<glyphs.Length ; i++ )
-							{
-								double width = font.GetGlyphWidth(glyphs[i], size);
-								double oy = font.GetAscender(size)*0.3;
-
-								if ( insecs[i] == SpaceType.BreakSpace )  // espace sécable ?
-								{
-									this.graphics.AddFilledCircle(x[i]+width/2, y[i]+oy, size*0.05);
-								}
-
-								if ( insecs[i] == SpaceType.NoBreakSpace )  // espace insécable ?
-								{
-									this.graphics.AddCircle(x[i]+width/2, y[i]+oy, size*0.08);
-								}
-
-								if ( insecs[i] == SpaceType.NewFrame ||
-									 insecs[i] == SpaceType.NewPage  )  // saut ?
-								{
-									Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
-									Point p1 = new Point(x[i],        y[i]+oy);
-									Point p2 = new Point(frame.Width, y[i]+oy);
-									Path path = Path.FromLine(p1, p2);
-
-									double w    = (insecs[i] == SpaceType.NewFrame) ? 0.8 : 0.5;
-									double dash = (insecs[i] == SpaceType.NewFrame) ? 0.0 : 8.0;
-									double gap  = (insecs[i] == SpaceType.NewFrame) ? 3.0 : 2.0;
-									Drawer.DrawPathDash(this.graphics, this.drawingContext, path, w, dash, gap, color.Basic);
-								}
+								this.graphics.Rasterizer.AddGlyph (drawingFont, glyphs[i], x[i], y[i], size, (sx == null) ? 1.0 : sx[i], (sy == null) ? 1.0 : sy[i]);
 							}
 						}
 					}
-			
-					this.graphics.RenderSolid(color.Basic);
-				}
-				else if ( this.port is Printing.PrintPort )  // impression ?
-				{
-					Printing.PrintPort printPort = port as Printing.PrintPort;
-					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
-					printPort.RichColor = color;
-					printPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
-				}
-				else if ( this.port is PDF.Port )  // exportation PDF ?
-				{
-					PDF.Port pdfPort = port as PDF.Port;
-					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
-					pdfPort.RichColor = color;
-					pdfPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
-				}
-			}
 
-			if ( this.internalOperation == InternalOperation.GetPath )
-			{
-				Drawing.Font drawingFont = Drawing.Font.GetFont(font);
-				this.graphics.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
-			}
-
-			if ( this.internalOperation == InternalOperation.RealBoundingBox )
-			{
-				Drawing.Font drawingFont = Drawing.Font.GetFont(font);
-				if ( drawingFont != null )
-				{
-					for ( int i=0 ; i<glyphs.Length ; i++ )
+					if (this.textFlow.HasActiveTextBox && isSpace && insecs != null &&
+							 this.drawingContext != null && this.drawingContext.TextShowControlCharacters)
 					{
-						Drawing.Rectangle bounds;
-
-						if ( glyphs[i] < 0xffff )
+						for (int i=0; i<glyphs.Length; i++)
 						{
-							bounds = drawingFont.GetGlyphBounds(glyphs[i], size);
+							double width = font.GetGlyphWidth (glyphs[i], size);
+							double oy = font.GetAscender (size)*0.3;
+
+							if (insecs[i] == SpaceType.BreakSpace)  // espace sécable ?
+							{
+								this.graphics.AddFilledCircle (x[i]+width/2, y[i]+oy, size*0.05);
+							}
+
+							if (insecs[i] == SpaceType.NoBreakSpace)  // espace insécable ?
+							{
+								this.graphics.AddCircle (x[i]+width/2, y[i]+oy, size*0.08);
+							}
+
+							if (insecs[i] == SpaceType.NewFrame ||
+									 insecs[i] == SpaceType.NewPage)  // saut ?
+							{
+								Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
+								Point p1 = new Point (x[i], y[i]+oy);
+								Point p2 = new Point (frame.Width, y[i]+oy);
+								Path path = Path.FromLine (p1, p2);
+
+								double w    = (insecs[i] == SpaceType.NewFrame) ? 0.8 : 0.5;
+								double dash = (insecs[i] == SpaceType.NewFrame) ? 0.0 : 8.0;
+								double gap  = (insecs[i] == SpaceType.NewFrame) ? 3.0 : 2.0;
+								Drawer.DrawPathDash (this.graphics, this.drawingContext, path, w, dash, gap, color.Basic);
+							}
 						}
-						else
-						{
-							bounds = drawingFont.GetCharBounds((int)Unicode.Code.EndOfText);
-							bounds.Scale(size);
-						}
-
-						if ( sx != null )  bounds.Scale(sx[i], 1.0);
-						if ( sy != null )  bounds.Scale(1.0, sy[i]);
-
-						bounds.Offset(x[i], y[i]);
-
-						this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.BottomLeft));
-						this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.BottomRight));
-						this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.TopLeft));
-						this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.TopRight));
 					}
 				}
+
+				this.graphics.RenderSolid (color.Basic);
+			}
+			else if (this.port is Printing.PrintPort)  // impression ?
+			{
+				Printing.PrintPort printPort = port as Printing.PrintPort;
+				Drawing.Font drawingFont = Drawing.Font.GetFont (font);
+				printPort.RichColor = color;
+				printPort.PaintGlyphs (drawingFont, size, glyphs, x, y, sx, sy);
+			}
+			else if (this.port is PDF.Port)  // exportation PDF ?
+			{
+				PDF.Port pdfPort = port as PDF.Port;
+				Drawing.Font drawingFont = Drawing.Font.GetFont (font);
+				pdfPort.RichColor = color;
+				pdfPort.PaintGlyphs (drawingFont, size, glyphs, x, y, sx, sy);
 			}
 		}
 

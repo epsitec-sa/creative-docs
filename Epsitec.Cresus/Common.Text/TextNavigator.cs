@@ -242,7 +242,6 @@ namespace Epsitec.Common.Text
 			}
 			
 			this.InsertText (new string ((char) code, 1));
-			this.NotifyTextChanged ();
 		}
 		
 		public void Insert(Unicode.Code code, Property property)
@@ -273,8 +272,6 @@ namespace Epsitec.Common.Text
 			{
 				this.current_properties = old_properties;
 			}
-			
-			this.NotifyTextChanged ();
 		}
 
 		public void InsertWithTabs(string text)
@@ -319,7 +316,6 @@ namespace Epsitec.Common.Text
 			}
 			
 			this.InsertText (text);
-			this.NotifyTextChanged ();
 		}
 		
 		public void Delete()
@@ -387,8 +383,6 @@ namespace Epsitec.Common.Text
 				
 				this.story.ResumeTextChanged ();
 			}
-			
-			this.NotifyTextChanged ();
 		}
 		
 		public void Delete(Direction direction)
@@ -479,7 +473,6 @@ namespace Epsitec.Common.Text
 				}
 				
 				this.story.ResumeTextChanged ();
-				this.NotifyTextChanged ();
 			}
 			
 			this.story.RecycleCursor (temp);
