@@ -1863,7 +1863,7 @@ namespace Epsitec.Common.Document
 				if ( line.Compare(exist) )  return;
 			}
 
-			line.IsVisible = this.isConstrainActive;
+			line.IsVisible = false;
 			this.constrainList.Add(line);
 		}
 
@@ -1875,7 +1875,7 @@ namespace Epsitec.Common.Document
 			MagnetLine line = new MagnetLine(this.document, this, MagnetLine.Type.Circle);
 			line.Initialize(center, ext, true, false);
 
-			line.IsVisible = this.isConstrainActive;
+			line.IsVisible = false;
 			this.constrainList.Add(line);
 		}
 
@@ -1891,7 +1891,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Retourne une position éventuellement contrainte, en fonction du nombre
 			//	quelconque de contraintes existantes.
-			if (!this.isConstrainActive)
+			if (this.ConstrainVisibleCount == 0)
 			{
 				return this.MagnetSnapPos(ref pos);
 			}
@@ -1995,9 +1995,10 @@ namespace Epsitec.Common.Document
 			return snap;
 		}
 
-		public void ConstrainCtrlPressed()
+		public bool ConstrainSpacePressed()
 		{
-			//	Modifie les contraintes suite à la pression de la touche Ctrl.
+			//	Modifie les contraintes suite à la pression de la touche Space.
+			//	Retourne true s'il existe au moins une contrainte.
 			int count = this.ConstrainVisibleCount;
 
 			if (count == this.constrainList.Count)  // toutes les lignes visibles ?
@@ -2022,7 +2023,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			this.isConstrainActive = (this.ConstrainVisibleCount != 0);
+			return (this.ConstrainVisibleCount != 0);
 		}
 
 		protected int ConstrainVisibleCount
@@ -2054,11 +2055,6 @@ namespace Epsitec.Common.Document
 		public void DrawConstrain(Graphics graphics, Size size)
 		{
 			//	Dessine les contraintes.
-			if (!this.isConstrainActive)
-			{
-				return;
-			}
-
 			double max = System.Math.Max(size.Width, size.Height);
 			foreach ( MagnetLine line in this.constrainList )
 			{
@@ -2541,7 +2537,6 @@ namespace Epsitec.Common.Document
 		protected bool							isCtrl = false;
 		protected bool							isAlt = false;
 		protected System.Collections.ArrayList	constrainList = new System.Collections.ArrayList();
-		protected bool							isConstrainActive = false;
 		protected bool							isMagnetStarting = false;
 		protected Point							magnetStarting;
 		protected MagnetLine					magnetLineMain;

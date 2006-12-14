@@ -391,16 +391,18 @@ namespace Epsitec.Common.Document
 						}
 					}
 
-					if ( message.KeyCode == KeyCode.ControlKey )
-					{
-						this.drawingContext.ConstrainCtrlPressed();
-					}
-
 					if ( message.KeyCode == KeyCode.Space )
 					{
-						if ( !this.NextHotSpot() )
+						if (this.moveObject != null || this.moveGlobal != -1 || this.createRank != -1)
 						{
-							if ( this.miniBar == null )
+							if (this.drawingContext.ConstrainSpacePressed())
+							{
+								this.drawingContext.MagnetDelStarting();
+							}
+						}
+						else
+						{
+							if (this.miniBar == null)
 							{
 								this.OpenMiniBar(pos, MiniBarDelayed.Immediately, true, false, 0);
 							}
@@ -409,6 +411,12 @@ namespace Epsitec.Common.Document
 								this.CloseMiniBar(false);
 							}
 						}
+						break;
+					}
+
+					if ( message.KeyCode == KeyCode.Tab )
+					{
+						this.NextHotSpot();
 						break;
 					}
 
