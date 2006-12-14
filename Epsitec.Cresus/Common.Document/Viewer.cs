@@ -827,8 +827,8 @@ namespace Epsitec.Common.Document
 			this.ClearHilite();
 			this.selector.HiliteHandle(-1);
 			this.HiliteHandle(null, -1);
-			this.moveGlobal = -1;
 			this.moveObject = null;
+			this.moveGlobal = -1;
 			this.guideInteractive = -1;
 			this.guideCreate = false;
 			this.ctrlDown = this.drawingContext.IsCtrl;
@@ -1179,6 +1179,7 @@ namespace Epsitec.Common.Document
 			}
 
 			this.moveObject = null;
+			this.moveGlobal = -1;
 			this.drawingContext.ConstrainDelStarting();
 			this.drawingContext.MagnetDelStarting();
 			this.document.Modifier.OpletQueueValidateAction();
@@ -1496,6 +1497,7 @@ namespace Epsitec.Common.Document
 			}
 
 			this.moveObject = null;
+			this.moveHandle = -1;
 			this.drawingContext.ConstrainDelStarting();
 			this.drawingContext.MagnetDelStarting();
 			this.document.Modifier.OpletQueueValidateAction();
@@ -2736,6 +2738,8 @@ namespace Epsitec.Common.Document
 			this.miniBarBalloon.CloseNeeded += new EventHandler(this.HandleMiniBarCloseNeeded);
 			this.miniBarBalloon.Attach();
 
+			this.miniBar.Show();  // nécessaire pour que IsAway fonctionne !
+
 			mouse = this.InternalToScreen(mouse);
 			mouse = this.MapClientToScreen(mouse);
 			if ( this.miniBarBalloon.IsAway(mouse) )  // souris déjà trop loin ?
@@ -2898,16 +2902,10 @@ namespace Epsitec.Common.Document
 			{
 				if ( noSelected )
 				{
-					this.MiniBarAdd(list, "DeselectAll");
 					this.MiniBarAdd(list, "SelectAll");
-					this.MiniBarAdd(list, "SelectInvert");
 					this.MiniBarAdd(list, "");
-					this.MiniBarAdd(list, "Cut");
-					this.MiniBarAdd(list, "Copy");
 					this.MiniBarAdd(list, "Paste");
 					this.MiniBarAdd(list, "");
-					this.MiniBarAdd(list, "HideSel");
-					this.MiniBarAdd(list, "HideRest");
 					this.MiniBarAdd(list, "HideCancel");
 					this.MiniBarAdd(list, "");
 					this.MiniBarAdd(list, "ZoomPage");
