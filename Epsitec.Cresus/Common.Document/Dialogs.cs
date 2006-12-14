@@ -1148,7 +1148,7 @@ namespace Epsitec.Common.Document
 			Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
 			dialog.FileName = this.document.Settings.PrintInfo.PrintFilename;
 			dialog.Title = Res.Strings.Dialog.Print.ToFile.Title;
-			dialog.Filters.Add("prn", Res.Strings.Dialog.Print.ToFile.Type, "*.prn");
+			dialog.Filters.Add("prn", TextLayout.ConvertToSimpleText(Res.Strings.Dialog.Print.ToFile.Type), "*.prn");
 			dialog.PromptForOverwriting = true;
 			dialog.Owner = this.windowPrint;
 			dialog.OpenDialog();
