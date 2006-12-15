@@ -661,7 +661,6 @@ namespace Epsitec.Common.Document.Settings
 			list.Add("11:Print");
 			list.Add("00:Export");
 			list.Add("00:CloseAll");
-			list.Add("00:OpenModel");
 			list.Add("00:SaveModel");
 
 			list.Add("10:Undo");
@@ -722,6 +721,7 @@ namespace Epsitec.Common.Document.Settings
 
 			list.Add("00:Combine");
 			list.Add("00:Uncombine");
+			list.Add("00:Reset");
 			list.Add("00:ToBezier");
 			list.Add("00:ToPoly");
 			list.Add("00:Fragment");
@@ -751,10 +751,10 @@ namespace Epsitec.Common.Document.Settings
 			list.Add("00:FontSizeMinus");
 			list.Add("00:FontClear");
 			list.Add("00:TextShowControlCharacters");
+			list.Add("00:Replace");
 			list.Add("00:TextInsertNewFrame");
 			list.Add("00:TextInsertNewPage");
 			list.Add("00:TextInsertQuad");
-			list.Add("00:Replace");
 			list.Add("00:Glyphs");
 			
 			list.Add("00:ZoomMin");
