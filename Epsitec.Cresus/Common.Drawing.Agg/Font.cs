@@ -552,6 +552,11 @@ namespace Epsitec.Common.Drawing
 			return AntiGrain.Font.PixelCache.Paint (pixmap.Handle, this.Handle, glyphs, size, ox, oy, color.R, color.G, color.B, color.A);
 		}
 
+		public void PaintPixelGlyphs(Pixmap pixmap, double scale, ushort[] glyphs, double[] x, double[] y, double[] sx, Color color, double xx, double yy, double tx, double ty)
+		{
+			AntiGrain.Font.PixelCache.Paint (pixmap.Handle, this.Handle, scale, glyphs, x, y, sx, color.R, color.G, color.B, color.A, xx, yy, tx, ty);
+		}
+
 
 		public static void RegisterDynamicFont(byte[] data)
 		{

@@ -847,7 +847,14 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			//	Dessine le texte.
-			this.RenderText (font, size, glyphs, iArray, x, y, sx, sy, RichColor.Parse (color), isSpace);
+
+			if (color != this.cachedColorString)
+			{
+				this.cachedColor = RichColor.Parse (color);
+				this.cachedColorString = color;
+			}
+			
+			this.RenderText (font, size, glyphs, iArray, x, y, sx, sy, isSpace);
 		}
 
 		private void MarkSel(Text.Layout.Context layout, ref System.Collections.ArrayList selRectList, double x, double selX)
@@ -868,12 +875,12 @@ namespace Epsitec.Common.Document.Objects
 			selRectList.Add(rect);
 		}
 
-		private void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, SpaceType[] insecs, double[] x, double[] y, double[] sx, double[] sy, RichColor color, bool isSpace)
+		private void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, SpaceType[] spaces, double[] x, double[] y, double[] sx, double[] sy, bool isSpace)
 		{
 			//	Effectue le rendu des caractères.
 			if (this.internalOperation == InternalOperation.Painting)
 			{
-				this.RenderTextPainting (font, size, glyphs, insecs, x, y, sx, sy, color, isSpace);
+				this.RenderTextPainting (font, size, glyphs, spaces, x, y, sx, sy, isSpace);
 			}
 			else
 			{
@@ -937,7 +944,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		private void RenderTextPainting(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, SpaceType[] insecs, double[] x, double[] y, double[] sx, double[] sy, RichColor color, bool isSpace)
+		private void RenderTextPainting(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, SpaceType[] spaces, double[] x, double[] y, double[] sx, double[] sy, bool isSpace)
 		{
 			if (this.graphics != null)  // affichage sur écran ?
 			{
@@ -946,7 +953,14 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if (sy == null)
 					{
-						this.graphics.Rasterizer.AddGlyphs (drawingFont, size, glyphs, x, y, sx);
+						if (this.graphics.PaintCachedGlyphs (drawingFont, size, glyphs, x, y, sx, this.cachedColor.Basic))
+						{
+							//	OK, pixels provenant du cache bitmap de la fonte.
+						}
+						else
+						{
+							this.graphics.Rasterizer.AddGlyphs (drawingFont, size, glyphs, x, y, sx);
+						}
 					}
 					else
 					{
@@ -959,56 +973,61 @@ namespace Epsitec.Common.Document.Objects
 						}
 					}
 
-					if (this.textFlow.HasActiveTextBox && isSpace && insecs != null &&
+					if (this.textFlow.HasActiveTextBox && isSpace && spaces != null &&
 							 this.drawingContext != null && this.drawingContext.TextShowControlCharacters)
 					{
-						for (int i=0; i<glyphs.Length; i++)
-						{
-							double width = font.GetGlyphWidth (glyphs[i], size);
-							double oy = font.GetAscender (size)*0.3;
-
-							if (insecs[i] == SpaceType.BreakSpace)  // espace sécable ?
-							{
-								this.graphics.AddFilledCircle (x[i]+width/2, y[i]+oy, size*0.05);
-							}
-
-							if (insecs[i] == SpaceType.NoBreakSpace)  // espace insécable ?
-							{
-								this.graphics.AddCircle (x[i]+width/2, y[i]+oy, size*0.08);
-							}
-
-							if (insecs[i] == SpaceType.NewFrame ||
-									 insecs[i] == SpaceType.NewPage)  // saut ?
-							{
-								Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
-								Point p1 = new Point (x[i], y[i]+oy);
-								Point p2 = new Point (frame.Width, y[i]+oy);
-								Path path = Path.FromLine (p1, p2);
-
-								double w    = (insecs[i] == SpaceType.NewFrame) ? 0.8 : 0.5;
-								double dash = (insecs[i] == SpaceType.NewFrame) ? 0.0 : 8.0;
-								double gap  = (insecs[i] == SpaceType.NewFrame) ? 3.0 : 2.0;
-								Drawer.DrawPathDash (this.graphics, this.drawingContext, path, w, dash, gap, color.Basic);
-							}
-						}
+						this.RenderTextPaintSpecialCharacters (font, size, glyphs, spaces, x, y);
 					}
 				}
 
-				this.graphics.RenderSolid (color.Basic);
+				this.graphics.RenderSolid (this.cachedColor.Basic);
 			}
 			else if (this.port is Printing.PrintPort)  // impression ?
 			{
 				Printing.PrintPort printPort = port as Printing.PrintPort;
 				Drawing.Font drawingFont = Drawing.Font.GetFont (font);
-				printPort.RichColor = color;
+				printPort.RichColor = this.cachedColor;
 				printPort.PaintGlyphs (drawingFont, size, glyphs, x, y, sx, sy);
 			}
 			else if (this.port is PDF.Port)  // exportation PDF ?
 			{
 				PDF.Port pdfPort = port as PDF.Port;
 				Drawing.Font drawingFont = Drawing.Font.GetFont (font);
-				pdfPort.RichColor = color;
+				pdfPort.RichColor = this.cachedColor;
 				pdfPort.PaintGlyphs (drawingFont, size, glyphs, x, y, sx, sy);
+			}
+		}
+
+		private void RenderTextPaintSpecialCharacters(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, SpaceType[] spaces, double[] x, double[] y)
+		{
+			for (int i=0; i<glyphs.Length; i++)
+			{
+				double width = font.GetGlyphWidth (glyphs[i], size);
+				double oy = font.GetAscender (size)*0.3;
+
+				if (spaces[i] == SpaceType.BreakSpace)  // espace sécable ?
+				{
+					this.graphics.AddFilledCircle (x[i]+width/2, y[i]+oy, size*0.05);
+				}
+
+				if (spaces[i] == SpaceType.NoBreakSpace)  // espace insécable ?
+				{
+					this.graphics.AddCircle (x[i]+width/2, y[i]+oy, size*0.08);
+				}
+
+				if (spaces[i] == SpaceType.NewFrame ||
+									 spaces[i] == SpaceType.NewPage)  // saut ?
+				{
+					Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
+					Point p1 = new Point (x[i], y[i]+oy);
+					Point p2 = new Point (frame.Width, y[i]+oy);
+					Path path = Path.FromLine (p1, p2);
+
+					double w    = (spaces[i] == SpaceType.NewFrame) ? 0.8 : 0.5;
+					double dash = (spaces[i] == SpaceType.NewFrame) ? 0.0 : 8.0;
+					double gap  = (spaces[i] == SpaceType.NewFrame) ? 3.0 : 2.0;
+					Drawer.DrawPathDash (this.graphics, this.drawingContext, path, w, dash, gap, this.cachedColor.Basic);
+				}
 			}
 		}
 
@@ -1207,6 +1226,8 @@ namespace Epsitec.Common.Document.Objects
 			//	Constructeur qui désérialise l'objet.
 		}
 		#endregion
-		
+
+		private RichColor						cachedColor;
+		private string							cachedColorString;
 	}
 }

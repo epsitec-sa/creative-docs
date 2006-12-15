@@ -351,6 +351,35 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public bool PaintCachedGlyphs(Font font, double scale, ushort[] glyphs, double[] x, double[] y, double[] sx, Color color)
+		{
+			if (this.transform.OnlyScaleOrTranslate)
+			{
+				double xx = this.transform.XX;
+				double yy = this.transform.YY;
+				double tx = this.transform.TX;
+				double ty = this.transform.TY;
+
+				double scaleX = scale * xx;
+				double scaleY = scale * yy;
+
+				if ((scaleX < 2) || (scaleX > 25) ||
+					(scaleY < 2) || (scaleY > 25))
+				{
+					return false;
+				}
+
+				font.PaintPixelGlyphs (this.pixmap, scale, glyphs, x, y, sx, color, xx, yy, tx, ty);
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
+		
 		
 		public void   PaintText(double x, double y, double width, double height, string text, Font font, double size, ContentAlignment align)
 		{
@@ -446,8 +475,7 @@ namespace Epsitec.Common.Drawing
 			
 			return this.PaintText (x, y, text, font, size);
 		}
-		
-		
+
 		public void PaintImage(Image bitmap, Rectangle fill)
 		{
 			this.PaintImage (bitmap, fill.Left, fill.Bottom, fill.Width, fill.Height, 0, 0, bitmap.Width, bitmap.Height);
