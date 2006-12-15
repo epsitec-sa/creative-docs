@@ -93,7 +93,7 @@ namespace Epsitec.Common.Document.Widgets
 				Shape[] shapes = obj.ShapesBuild(graphics, null, false);
 
 				Drawer drawer = new Drawer(document);
-				drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.All, shapes);
+				drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.OnlyText, shapes);
 			}
 
 			if ( this.textStyle.TextStyleClass == Common.Text.TextStyleClass.Text )

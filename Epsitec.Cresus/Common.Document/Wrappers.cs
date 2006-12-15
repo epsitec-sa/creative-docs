@@ -1776,7 +1776,7 @@ namespace Epsitec.Common.Document
 				Shape[] shapes = obj.ShapesBuild(graphics, null, false);
 
 				Drawer drawer = new Drawer(document);
-				drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.All, shapes);
+				drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.OnlyText, shapes);
 			}
 
 			if ( textStyle.TextStyleClass == Common.Text.TextStyleClass.Text )
