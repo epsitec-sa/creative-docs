@@ -393,22 +393,25 @@ namespace Epsitec.Common.Document
 
 					if ( message.KeyCode == KeyCode.Space )
 					{
-						if (this.moveObject != null || this.moveGlobal != -1 || this.createRank != -1)
+						if (modifier.Tool != "ToolEdit")
 						{
-							if (this.drawingContext.ConstrainSpacePressed())
+							if (this.moveObject != null || this.moveGlobal != -1 || this.createRank != -1)
 							{
-								this.drawingContext.MagnetDelStarting();
-							}
-						}
-						else
-						{
-							if (this.miniBar == null)
-							{
-								this.OpenMiniBar(pos, MiniBarDelayed.Immediately, true, false, 0);
+								if (this.drawingContext.ConstrainSpacePressed())
+								{
+									this.drawingContext.MagnetDelStarting();
+								}
 							}
 							else
 							{
-								this.CloseMiniBar(false);
+								if (this.miniBar == null)
+								{
+									this.OpenMiniBar(pos, MiniBarDelayed.Immediately, true, false, 0);
+								}
+								else
+								{
+									this.CloseMiniBar(false);
+								}
 							}
 						}
 						break;
