@@ -1085,7 +1085,7 @@
   <data name="Action.TextInsertNewFrame" id="0H001">Insérer un saut d&amp;apos;objet</data>
   <data name="Action.TextInsertNewPage" id="0I001">Insérer un saut de page</data>
   <data name="Action.Preview" id="0J001">Comme imprimé</data>
-  <data name="Action.Magnet" id="0K001">Objets magnétiques</data>
+  <data name="Action.Magnet" id="0K001" mod="1">Objets magnétiques (la touche Tab change le point&lt;br/&gt;d&amp;apos;accroche lors d&amp;apos;un déplacement global)</data>
   <data name="Action.MagnetLayer" id="0L001">Les objets du calque sont magnétiques</data>
   <data name="Action.Rulers" id="0M001">Règles graduées</data>
   <data name="Action.Labels" id="0N001">Affiche les noms des objets</data>
