@@ -2692,7 +2692,14 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.EditInsertText(Common.Text.Properties.BreakProperty.NewPage);
 		}
 
-		[Command ("Magnet")]
+		[Command("Constrain")]
+		void CommandConstrain(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			context.ConstrainActive = !context.ConstrainActive;
+		}
+
+		[Command("Magnet")]
 		void CommandMagnet(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
@@ -3628,6 +3635,7 @@ namespace Epsitec.App.DocumentEditor
 			this.textInsertQuadState = this.CreateCommandState("TextInsertQuad", "TextInsertQuad");
 			this.textInsertNewFrameState = this.CreateCommandState("TextInsertNewFrame", "TextInsertNewFrame");
 			this.textInsertNewPageState = this.CreateCommandState("TextInsertNewPage", "TextInsertNewPage");
+			this.constrainState = this.CreateCommandState("Constrain", "Constrain", true);
 			this.magnetState = this.CreateCommandState("Magnet", "Magnet", true);
 			this.magnetLayerState = this.CreateCommandState("MagnetLayer", "MagnetLayer", true);
 			this.rulersState = this.CreateCommandState("Rulers", "Rulers", true);
@@ -3766,6 +3774,7 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.UndoRedoChanged        += new SimpleEventHandler(this.HandleUndoRedoChanged);
 			this.CurrentDocument.Notifier.GridChanged            += new SimpleEventHandler(this.HandleGridChanged);
 			this.CurrentDocument.Notifier.LabelPropertiesChanged += new SimpleEventHandler(this.HandleLabelPropertiesChanged);
+			this.CurrentDocument.Notifier.ConstrainChanged       += new SimpleEventHandler(this.HandleConstrainChanged);
 			this.CurrentDocument.Notifier.MagnetChanged          += new SimpleEventHandler(this.HandleMagnetChanged);
 			this.CurrentDocument.Notifier.PreviewChanged         += new SimpleEventHandler(this.HandlePreviewChanged);
 			this.CurrentDocument.Notifier.SettingsChanged        += new SimpleEventHandler(this.HandleSettingsChanged);
@@ -4530,6 +4539,22 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
+		private void HandleConstrainChanged()
+		{
+			//	Appelé par le document lorsque l'état des constructions a changé.
+			if (this.IsCurrentDocument)
+			{
+				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+				this.constrainState.Enable = true;
+				this.constrainState.ActiveState = context.ConstrainActive ? ActiveState.Yes : ActiveState.No;
+			}
+			else
+			{
+				this.constrainState.Enable = false;
+				this.constrainState.ActiveState = ActiveState.No;
+			}
+		}
+
 		private void HandleMagnetChanged()
 		{
 			//	Appelé par le document lorsque l'état des lignes magnétiques a changé.
@@ -5184,6 +5209,7 @@ namespace Epsitec.App.DocumentEditor
 				this.HandleUndoRedoChanged();
 				this.HandleGridChanged();
 				this.HandleLabelPropertiesChanged();
+				this.HandleConstrainChanged();
 				this.HandleMagnetChanged();
 				this.HandlePreviewChanged();
 				this.HandleSettingsChanged();
@@ -5695,6 +5721,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					textInsertQuadState;
 		protected CommandState					textInsertNewFrameState;
 		protected CommandState					textInsertNewPageState;
+		protected CommandState					constrainState;
 		protected CommandState					magnetState;
 		protected CommandState					magnetLayerState;
 		protected CommandState					rulersState;

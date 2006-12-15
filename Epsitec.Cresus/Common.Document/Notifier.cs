@@ -67,6 +67,7 @@ namespace Epsitec.Common.Document
 			this.undoRedoChanged = true;
 			this.gridChanged = true;
 			this.labelPropertiesChanged = true;
+			this.constrainChanged = true;
 			this.magnetChanged = true;
 			this.previewChanged = true;
 			this.settingsChanged = true;
@@ -263,10 +264,18 @@ namespace Epsitec.Common.Document
 			this.NotifyAsync();
 		}
 
+		public void NotifyConstrainChanged()
+		{
+			//	Indique que les commandes pour les lignes magnétiques ont changé.
+			if (!this.enable)  return;
+			this.constrainChanged = true;
+			this.NotifyAsync();
+		}
+
 		public void NotifyMagnetChanged()
 		{
 			//	Indique que les commandes pour les lignes magnétiques ont changé.
-			if ( !this.enable )  return;
+			if (!this.enable)  return;
 			this.magnetChanged = true;
 			this.NotifyAsync();
 		}
@@ -560,13 +569,19 @@ namespace Epsitec.Common.Document
 				this.labelPropertiesChanged = false;
 			}
 
-			if ( this.magnetChanged )
+			if (this.constrainChanged)
+			{
+				this.OnConstrainChanged();
+				this.constrainChanged = false;
+			}
+
+			if (this.magnetChanged)
 			{
 				this.OnMagnetChanged();
 				this.magnetChanged = false;
 			}
 
-			if ( this.previewChanged )
+			if (this.previewChanged)
 			{
 				this.OnPreviewChanged();
 				this.previewChanged = false;
@@ -803,9 +818,17 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		protected void OnConstrainChanged()
+		{
+			if (this.ConstrainChanged != null)  // qq'un écoute ?
+			{
+				this.ConstrainChanged();
+			}
+		}
+
 		protected void OnMagnetChanged()
 		{
-			if ( this.MagnetChanged != null )  // qq'un écoute ?
+			if (this.MagnetChanged != null)  // qq'un écoute ?
 			{
 				this.MagnetChanged();
 			}
@@ -952,6 +975,7 @@ namespace Epsitec.Common.Document
 		public event SimpleEventHandler			UndoRedoChanged;
 		public event SimpleEventHandler			GridChanged;
 		public event SimpleEventHandler			LabelPropertiesChanged;
+		public event SimpleEventHandler			ConstrainChanged;
 		public event SimpleEventHandler			MagnetChanged;
 		public event SimpleEventHandler			PreviewChanged;
 		public event SimpleEventHandler			SettingsChanged;
@@ -992,6 +1016,7 @@ namespace Epsitec.Common.Document
 		protected bool							undoRedoChanged;
 		protected bool							gridChanged;
 		protected bool							labelPropertiesChanged;
+		protected bool							constrainChanged;
 		protected bool							magnetChanged;
 		protected bool							previewChanged;
 		protected bool							settingsChanged;

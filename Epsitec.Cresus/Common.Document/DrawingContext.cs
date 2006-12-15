@@ -1790,6 +1790,30 @@ namespace Epsitec.Common.Document
 
 
 		#region Constrain
+		public bool ConstrainActive
+		{
+			//	Action des lignes contraintes.
+			get
+			{
+				return this.constrainActive;
+			}
+
+			set
+			{
+				if (this.constrainActive != value)
+				{
+					this.constrainActive = value;
+
+					if (this.document.Notifier != null)
+					{
+						this.document.Notifier.NotifyConstrainChanged();
+						this.document.Notifier.NotifySettingsChanged();
+						this.document.IsDirtySerialize = true;
+					}
+				}
+			}
+		}
+
 		public void ConstrainFlush()
 		{
 			//	Efface toutes les contraintes.
@@ -1863,7 +1887,7 @@ namespace Epsitec.Common.Document
 				if ( line.Compare(exist) )  return;
 			}
 
-			line.IsVisible = false;
+			line.IsVisible = this.constrainActive;
 			this.constrainList.Add(line);
 		}
 
@@ -1875,7 +1899,7 @@ namespace Epsitec.Common.Document
 			MagnetLine line = new MagnetLine(this.document, this, MagnetLine.Type.Circle);
 			line.Initialize(center, ext, true, false);
 
-			line.IsVisible = false;
+			line.IsVisible = this.constrainActive;
 			this.constrainList.Add(line);
 		}
 
@@ -2536,6 +2560,7 @@ namespace Epsitec.Common.Document
 		protected bool							isShift = false;
 		protected bool							isCtrl = false;
 		protected bool							isAlt = false;
+		protected bool							constrainActive = false;
 		protected System.Collections.ArrayList	constrainList = new System.Collections.ArrayList();
 		protected bool							isMagnetStarting = false;
 		protected Point							magnetStarting;

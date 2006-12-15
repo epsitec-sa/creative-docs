@@ -22,6 +22,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonRulers      = this.CreateIconButton("Rulers");
 			this.buttonLabels      = this.CreateIconButton("Labels");
 			this.buttonAggregates  = this.CreateIconButton("Aggregates");
+			this.buttonConstrain   = this.CreateIconButton("Constrain");
 			
 //			this.UpdateClientGeometry();
 		}
@@ -68,6 +69,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonLabels.SetManualBounds(rect);
 			rect.Offset(dx, 0);
 			this.buttonAggregates.SetManualBounds(rect);
+			rect.Offset(dx+5+dx, 0);
+			this.buttonConstrain.SetManualBounds(rect);
 		}
 
 
@@ -79,5 +82,6 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton				buttonRulers;
 		protected IconButton				buttonLabels;
 		protected IconButton				buttonAggregates;
+		protected IconButton				buttonConstrain;
 	}
 }

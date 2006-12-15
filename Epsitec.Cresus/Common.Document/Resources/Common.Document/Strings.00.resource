@@ -849,6 +849,7 @@
   <data name="Action.Clipboard" id="07P">Presse-papiers</data>
   <data name="Action.Cut" id="08P">Couper</data>
   <data name="Action.Copy" id="09P">Copier</data>
+  <data name="Action.Constrain" id="0JA01">Contraintes géométriques (on peut les modifier à la volée&lt;br/&gt;pendant un déplacement avec la touche Espace)</data>
   <data name="Action.Paste" id="0AP">Coller</data>
   <data name="Action.Delete" id="0BP">Supprimer</data>
   <data name="Action.Duplicate" id="0CP">Dupliquer</data>
