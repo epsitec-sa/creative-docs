@@ -1660,13 +1660,16 @@ namespace Epsitec.Common.Widgets
 
 				graphics.RichColor = color;
 
-				if (block.Infos == null)
+				if (!string.IsNullOrEmpty(block.Text))
 				{
-					graphics.PaintText (x, y, block.Text, block.Font, block.FontSize);
-				}
-				else
-				{
-					graphics.PaintText (x, y, block.Text, block.Font, block.FontSize, block.Infos);
+					if (block.Infos == null)
+					{
+						graphics.PaintText(x, y, block.Text, block.Font, block.FontSize);
+					}
+					else
+					{
+						graphics.PaintText(x, y, block.Text, block.Font, block.FontSize, block.Infos);
+					}
 				}
 
 				if (block.Underlined)
