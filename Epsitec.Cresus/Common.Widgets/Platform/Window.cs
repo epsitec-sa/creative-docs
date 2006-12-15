@@ -12,6 +12,8 @@ namespace Epsitec.Common.Widgets.Platform
 	{
 		static Window()
 		{
+			RestartManager.Setup ();
+			
 			Microsoft.Win32.SystemEvents.UserPreferenceChanged += new Microsoft.Win32.UserPreferenceChangedEventHandler (Window.HandleSystemEventsUserPreferenceChanged);
 			
 			Window.dispatch_window = new Window ();
@@ -52,6 +54,7 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		
 		internal Window(Epsitec.Common.Widgets.Window window)
+			: this ()
 		{
 			this.widget_window = window;
 			
@@ -1542,7 +1545,14 @@ namespace Epsitec.Common.Widgets.Platform
 					}
 					catch (System.Exception ex)
 					{
-						Window.ProcessException (ex, "WndProc/A");
+						if (RestartManager.UseWindowsErrorReporting)
+						{
+							throw;
+						}
+						else
+						{
+							Window.ProcessException (ex, "WndProc/A");
+						}
 					}
 				}
 				else
@@ -1633,7 +1643,14 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 			catch (System.Exception ex)
 			{
-				Window.ProcessException (ex, "WndProc/B");
+				if (RestartManager.UseWindowsErrorReporting)
+				{
+					throw;
+				}
+				else
+				{
+					Window.ProcessException (ex, "WndProc/B");
+				}
 			}
 			finally
 			{

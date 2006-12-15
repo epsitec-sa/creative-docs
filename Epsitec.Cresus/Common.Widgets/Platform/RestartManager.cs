@@ -10,18 +10,45 @@ namespace Epsitec.Common.Widgets.Platform
 	/// </summary>
 	internal static class RestartManager
 	{
-		internal static void Setup(string commandLine)
+		internal static void Setup()
 		{
+			if (RestartManager.initialized)
+			{
+				return;
+			}
+
+			RestartManager.initialized = true;
+
 			if (System.Environment.OSVersion.Version.Major > 5)
 			{
-				System.Windows.Forms.Application.SetUnhandledExceptionMode (System.Windows.Forms.UnhandledExceptionMode.ThrowException);
-
-				//	See http://www.danielmoth.com/Blog/2006/08/vista-registerapplicationrecoverycallb.html
-				//	See http://www.danielmoth.com/Blog/2006/08/vista-application-recovery.html
-
-				Win32Api.RegisterApplicationRestart (commandLine, 0);
-				Win32Api.RegisterApplicationRecoveryCallback (RestartManager.RecoveryCallback, System.IntPtr.Zero, 5*1000*1000*10, 0);
+				string commandLine = System.Environment.CommandLine;
+				RestartManager.SetupVistaRestartManager (commandLine);
 			}
+			else
+			{
+				System.Windows.Forms.Application.SetUnhandledExceptionMode (System.Windows.Forms.UnhandledExceptionMode.ThrowException);
+			}
+		}
+
+		internal static bool UseWindowsErrorReporting
+		{
+			get
+			{
+				return RestartManager.useWindowsErrorReporting;
+			}
+		}
+
+		private static void SetupVistaRestartManager(string commandLine)
+		{
+			System.Windows.Forms.Application.SetUnhandledExceptionMode (System.Windows.Forms.UnhandledExceptionMode.ThrowException);
+
+			//	See http://www.danielmoth.com/Blog/2006/08/vista-registerapplicationrecoverycallb.html
+			//	See http://www.danielmoth.com/Blog/2006/08/vista-application-recovery.html
+
+			Win32Api.RegisterApplicationRestart (commandLine, 0);
+			Win32Api.RegisterApplicationRecoveryCallback (RestartManager.RecoveryCallback, System.IntPtr.Zero, 5*1000*1000*10, 0);
+
+			RestartManager.useWindowsErrorReporting = true;
 		}
 
 		private static int RecoveryCallback(System.IntPtr parameter)
@@ -105,5 +132,9 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			//	TODO: ...
 		}
+
+
+		private static bool initialized;
+		private static bool useWindowsErrorReporting;
 	}
 }
