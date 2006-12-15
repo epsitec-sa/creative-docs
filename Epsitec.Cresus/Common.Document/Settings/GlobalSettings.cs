@@ -774,6 +774,7 @@ namespace Epsitec.Common.Document.Settings
 			list.Add("00:Rulers");
 			list.Add("00:Labels");
 			list.Add("00:Aggregates");
+			list.Add("00:Constrain");
 
 			list.Add("00:Settings");
 			list.Add("00:Infos");
