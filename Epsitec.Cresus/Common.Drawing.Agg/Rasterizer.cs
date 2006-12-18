@@ -92,11 +92,12 @@ namespace Epsitec.Common.Drawing
 
 		protected override void AddPlainGlyphs(Font font, ushort[] glyphs, double[] x, double xx, double xy, double yx, double yy, double tx, double ty)
 		{
-			if (glyphs.Length == 0)
-			{
-				return;
-			}
-
+            if ((glyphs == null) ||
+                (glyphs.Length == 0))
+            {
+                return;
+            }
+            
 			Transform transform = new Transform (xx, xy, yx, yy, tx, ty);
 
 			transform.MultiplyBy (this.transform);

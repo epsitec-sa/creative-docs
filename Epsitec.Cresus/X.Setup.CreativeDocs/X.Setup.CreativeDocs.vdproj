@@ -1947,7 +1947,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Creative Docs .NET"
         "ProductCode" = "8:{588E0AAD-4A4E-4ECB-AAED-06C342F1A089}"
-        "PackageCode" = "8:{1AA6737F-CDEA-4DD9-8F23-61447D108CC3}"
+        "PackageCode" = "8:{F5686B12-A9E4-4661-9CC4-140AAC4013AF}"
         "UpgradeCode" = "8:{925CE84A-106F-439D-B0AA-6222B871FB71}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -1969,7 +1969,7 @@
         "UseSystemSearchPath" = "11:TRUE"
         "TargetPlatform" = "3:0"
         "PreBuildEvent" = "8:"
-        "PostBuildEvent" = "8:$(ProjectDir)..\\External\\CodeSigning\\sign-opac.bat \"$(BuiltOuputPath)\""
+        "PostBuildEvent" = "8:$(ProjectDir)..\\External\\opac-msi-patch.bat \"$(BuiltOuputPath)\" \"$(ProjectDir)..\\External\""
         "RunPostBuildEvent" = "3:0"
         }
         "Registry"
