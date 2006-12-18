@@ -130,7 +130,7 @@ namespace Epsitec.Common.Widgets.Platform
 
 		private static void NotifySessionEnding()
 		{
-			//	TODO: ...
+			System.Windows.Forms.Application.Exit ();
 		}
 
 
