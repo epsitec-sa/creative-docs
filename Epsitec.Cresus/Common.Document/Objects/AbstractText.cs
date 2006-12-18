@@ -1,3 +1,6 @@
+
+#define SIMPLECOPYPASTE		// copier/coller tout simple
+
 using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
@@ -360,7 +363,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public virtual bool EditCopy()
 		{
-#if false
+#if SIMPLECOPYPASTE
 			string[] texts = this.textFlow.TextNavigator.GetSelectedTexts();
 			if ( texts == null || texts.Length == 0 )  return false;
 
@@ -389,7 +392,7 @@ namespace Epsitec.Common.Document.Objects
 		
 		public virtual bool EditPaste()
 		{
-#if false
+#if SIMPLECOPYPASTE
 			Support.Clipboard.ReadData data = Support.Clipboard.GetData();
 			string text = data.ReadTextLayout();
 			if ( text == null )
@@ -461,6 +464,11 @@ namespace Epsitec.Common.Document.Objects
 				this.document.Modifier.OpletQueueValidateAction ();
 				textInserted = true;
 			}
+#if false
+// les conversions depuis le format html foirent trop
+// donc pour l'instant tout ce qu'on colle depuis d'autres logiciels
+// que CrésusDocuments est collé en texte pur.
+
 			else if (ido.GetDataPresent (System.Windows.Forms.DataFormats.Html, false))
 			{
 				// colle du texte Html
@@ -475,6 +483,7 @@ namespace Epsitec.Common.Document.Objects
 				this.document.Modifier.OpletQueueValidateAction ();
 				textInserted = true;
 			}
+#endif
 			else if (ido.GetDataPresent(System.Windows.Forms.DataFormats.Text, false))
 			{
 				string text = ido.GetData (System.Windows.Forms.DataFormats.Text, false) as string;
