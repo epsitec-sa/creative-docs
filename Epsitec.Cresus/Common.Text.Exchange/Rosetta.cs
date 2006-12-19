@@ -2,6 +2,7 @@
 //	Responsable: Michael WALZ
 
 #define USE_SPAN
+#define SIMPLECOPYPASTE
 
 using System.Text;
 using System.Collections.Generic;
@@ -79,17 +80,19 @@ namespace Epsitec.Common.Text.Exchange
 
 			using (CopyPasteContext cpContext = new CopyPasteContext (story))
 			{
+#if !SIMPLECOPYPASTE
 				Rosetta.CopyHtmlText (story, usernavigator, htmlText, cpContext);
 				Rosetta.CopyNativeText (story, usernavigator, nativeText, cpContext);
+#endif
 				rawText = Rosetta.CopyRawText (story, usernavigator);
 
 				System.Windows.Forms.IDataObject od = new System.Windows.Forms.DataObject ();
 				od.SetData (System.Windows.Forms.DataFormats.Text, true, rawText);
+#if !SIMPLECOPYPASTE
 				od.SetData (System.Windows.Forms.DataFormats.Html, true, htmlText.HtmlStream);
-
 				EpsitecFormat efmt = new EpsitecFormat (nativeText.ToString ());
 				od.SetData (EpsitecFormat.Format.Name, true, efmt);
-
+#endif
 				System.Windows.Forms.Clipboard.SetDataObject (od, true);
 			}
 		}

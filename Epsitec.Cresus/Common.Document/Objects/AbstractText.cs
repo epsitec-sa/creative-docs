@@ -363,7 +363,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public virtual bool EditCopy()
 		{
-#if SIMPLECOPYPASTE
+#if false
 			string[] texts = this.textFlow.TextNavigator.GetSelectedTexts();
 			if ( texts == null || texts.Length == 0 )  return false;
 
