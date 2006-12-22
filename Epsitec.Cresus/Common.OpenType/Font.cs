@@ -2235,7 +2235,6 @@ namespace Epsitec.Common.OpenType
 		
 		private bool ApplyKerningInformation(ushort glyph, ref ushort prev_glyph, int num_glyph, out int delta)
 		{
-#if false
 			if ((this.useKerning) &&
 				(glyph < num_glyph) &&
 				(prev_glyph < num_glyph) &&
@@ -2246,7 +2245,6 @@ namespace Epsitec.Common.OpenType
 				return true;
 			}
 			else
-#endif
 			{
 				delta      = 0;
 				prev_glyph = glyph;
