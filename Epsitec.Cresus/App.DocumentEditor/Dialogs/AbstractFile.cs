@@ -321,11 +321,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.favorites = new Scrollable(group);
 			this.favorites.PreferredWidth = 140;
 			this.favorites.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
-			this.favorites.VerticalScrollerMode = ScrollableScrollerMode.Auto;
+			this.favorites.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;  // (*)
 			this.favorites.Panel.IsAutoFitting = true;
 			this.favorites.IsForegroundFrame = true;
 			this.favorites.Margins = new Margins(0, -1, 0, 0);
 			this.favorites.Dock = DockStyle.Left;
+
+			//	TODO: (*) En mode Auto, l'ascenseur est caché lors de la première apparition
+			//	du dialogue !
 
 			CellArrayStyles sh = CellArrayStyles.Stretch | CellArrayStyles.Separator | CellArrayStyles.Header | CellArrayStyles.Mobile;
 			CellArrayStyles sv = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine;
