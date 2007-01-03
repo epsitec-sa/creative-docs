@@ -76,7 +76,8 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.WriteLine ("Initializing Widget infrastructure.");
 			
 			Helpers.FontPreviewer.Initialize ();
-			
+
+			Platform.Window.Initialize ();
 			Res.Initialize (typeof (Widget), "Common.Widgets");
 			
 			Support.ImageProvider.Initialize ();

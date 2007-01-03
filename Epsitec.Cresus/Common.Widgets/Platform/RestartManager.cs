@@ -26,7 +26,7 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 			else
 			{
-				System.Windows.Forms.Application.SetUnhandledExceptionMode (System.Windows.Forms.UnhandledExceptionMode.ThrowException);
+				RestartManager.SetExceptionMode ();
 			}
 		}
 
@@ -38,9 +38,22 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 
+		private static void SetExceptionMode()
+		{
+			try
+			{
+				System.Windows.Forms.Application.SetUnhandledExceptionMode (System.Windows.Forms.UnhandledExceptionMode.ThrowException);
+			}
+			catch (System.InvalidOperationException)
+			{
+				//	Never mind, if we cannot set the exception mode, assume the caller
+				//	did it before creating the first Form instances...
+			}
+		}
+
 		private static void SetupVistaRestartManager(string commandLine)
 		{
-			System.Windows.Forms.Application.SetUnhandledExceptionMode (System.Windows.Forms.UnhandledExceptionMode.ThrowException);
+			RestartManager.SetExceptionMode ();
 
 			//	See http://www.danielmoth.com/Blog/2006/08/vista-registerapplicationrecoverycallb.html
 			//	See http://www.danielmoth.com/Blog/2006/08/vista-application-recovery.html

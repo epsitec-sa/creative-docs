@@ -25,7 +25,12 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			Types.BindingAsyncOperation.DefineApplicationThreadInvoker (Window.dispatch_window);
 		}
-		
+
+
+		public static void Initialize()
+		{
+			//	This invokes the static constructor...
+		}
 		
 		private static void HandleSystemEventsUserPreferenceChanged(object sender, Microsoft.Win32.UserPreferenceChangedEventArgs e)
 		{
