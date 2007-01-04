@@ -47,12 +47,72 @@ namespace Epsitec.Common.Drawing
 		public void CheckAllocatePixmapFromFreeImage()
 		{
 			string path = @"..\..\images\picture.png";
-			
-			Pixmap pixmap = new Pixmap ();
-			OPaC.FreeImage.Image image = OPaC.FreeImage.Image.Load (path);
 
-			pixmap.AllocatePixmap (image);
+			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+			Pixmap pixmap1;
+			Pixmap pixmap2;
+			
+			watch.Start ();
+			pixmap1 = PixmapTest.CreatePixmapUsingFreeImage (path, -1);
+			pixmap1.Dispose ();
+			watch.Stop ();
+			watch.Reset ();
+
+			watch.Start ();
+			pixmap1 = PixmapTest.CreatePixmapUsingFreeImage (path, 200);
+			watch.Stop ();
+			System.Console.Out.WriteLine ("Loading of '{0}' took {1} ms", path, watch.ElapsedMilliseconds);
+			watch.Reset ();
+
+			path = @"..\..\images\photo.jpg";
+
+			watch.Start ();
+			pixmap2 = PixmapTest.CreatePixmapUsingFreeImage (path, 200);
+			watch.Stop ();
+			System.Console.Out.WriteLine ("Loading of '{0}' took {1} ms", path, watch.ElapsedMilliseconds);
+			watch.Reset ();
+
+			Window window = new Window ();
+			window.ClientSize = new Size (960, 720);
+			window.Text = "CheckAllocatePixmapFromFreeImage";
+			window.Root.PaintForeground += delegate (object sender, PaintEventArgs e)
+			{
+				WindowRoot root = sender as WindowRoot;
+
+				//	L'image fait 200 x 200 pixels
+
+				Bitmap bitmap_1 = Bitmap.FromPixmap (pixmap1).BitmapImage;
+				Bitmap bitmap_2 = Bitmap.FromPixmap (pixmap2).BitmapImage;
+				
+				e.Graphics.PaintImage (bitmap_1, new Rectangle (0, 0, 200, 200), new Rectangle (0, 0, 200, 200));
+				e.Graphics.PaintImage (bitmap_2, new Rectangle (200, 0, 200, 200), new Rectangle (0, 0, 200, 200));
+			};
+			window.Root.Invalidate ();
+			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
+
+		private static Pixmap CreatePixmapUsingFreeImage(string path, int size)
+		{
+			Pixmap pixmap = new Pixmap ();
+			
+			OPaC.FreeImage.Image image;
+			
+			if (size > 0)
+			{
+				image = OPaC.FreeImage.Image.LoadThumbnail (path, size);
+			}
+			else
+			{
+				image = OPaC.FreeImage.Image.Load (path);
+			}
+			
+			pixmap.AllocatePixmap (image);
+			image.Dispose ();
+			return pixmap;
+		}
+
+
 	
 		[Test] public void CheckAllocatePixmap()
 		{
