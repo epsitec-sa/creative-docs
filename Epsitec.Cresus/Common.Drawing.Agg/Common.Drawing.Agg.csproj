@@ -78,6 +78,10 @@
       <Name>AntiGrain.NET</Name>
       <HintPath>..\External\AntiGrain.NET.dll</HintPath>
     </Reference>
+    <Reference Include="OPaC.FreeImage, Version=3.9.2.0, Culture=neutral, PublicKeyToken=d4b3a36d594a1874, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\OPaC.FreeImage.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>

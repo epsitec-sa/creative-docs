@@ -1,5 +1,5 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
 {
@@ -71,6 +71,40 @@ namespace Epsitec.Common.Drawing
 			}
 			
 			throw new System.InvalidOperationException ("Cannot re-allocate pixmap.");
+		}
+
+		public void AllocatePixmap(OPaC.FreeImage.Image image)
+		{
+			if ((this.size.IsEmpty) &&
+				(this.agg_buffer == System.IntPtr.Zero))
+			{
+				OPaC.FreeImage.Image temp = null;
+				
+				if (image.GetBitsPerPixel () < 32)
+				{
+					temp  = image.ConvertTo32Bits ();
+					image = temp;
+				}
+				
+				int width  = image.GetWidth ();
+				int height = image.GetHeight ();
+				int stride = image.GetPitch ();
+				System.IntPtr bits = image.GetBits ();
+				
+				this.agg_buffer   = AntiGrain.Buffer.NewFrom (width, height, 32, stride, bits);
+				this.size         = new System.Drawing.Size (width, height);
+				this.is_os_bitmap = true;
+
+				if (temp != null)
+				{
+					temp.Dispose ();
+				}
+				
+				return;
+			}
+
+			throw new System.InvalidOperationException ("Cannot re-allocate pixmap.");
+
 		}
 		
 		public void Clear()

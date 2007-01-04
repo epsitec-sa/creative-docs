@@ -1,4 +1,4 @@
-//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Runtime.InteropServices;
@@ -690,6 +690,11 @@ namespace Epsitec.Common.Drawing
 		{
 			using (System.IO.Stream stream = assembly.GetManifestResourceStream (resource_name))
 			{
+				if (stream == null)
+				{
+					return null;
+				}
+
 				long   length = stream.Length;
 				byte[] buffer = new byte[length];
 				stream.Read (buffer, 0, (int) length);

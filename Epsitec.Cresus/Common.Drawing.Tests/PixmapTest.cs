@@ -42,7 +42,18 @@ namespace Epsitec.Common.Drawing
 			
 			pixmap.Dispose ();
 		}
-		
+
+		[Test]
+		public void CheckAllocatePixmapFromFreeImage()
+		{
+			string path = @"..\..\images\picture.png";
+			
+			Pixmap pixmap = new Pixmap ();
+			OPaC.FreeImage.Image image = OPaC.FreeImage.Image.Load (path);
+
+			pixmap.AllocatePixmap (image);
+		}
+	
 		[Test] public void CheckAllocatePixmap()
 		{
 			Pixmap pixmap = new Pixmap ();
