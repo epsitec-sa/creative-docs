@@ -1280,7 +1280,15 @@ namespace Epsitec.Common.Drawing
 			double size = 50;
 			
 			e.Graphics.FillMode = FillMode.NonZero;
-			Bitmap bitmap = Support.ImageProvider.Default.GetImage (@"file:images/test.png", Support.Resources.DefaultManager).BitmapImage;
+			
+			Image bitmapImage = Support.ImageProvider.Default.GetImage (@"file:images/test.png", Support.Resources.DefaultManager);
+
+			Assert.IsNotNull (bitmapImage);
+
+			Bitmap bitmap = bitmapImage.BitmapImage;
+
+			Assert.IsNotNull (bitmap);
+
 			string text = "TOMATE";
 			
 			double max_width = 0;
@@ -1300,7 +1308,7 @@ namespace Epsitec.Common.Drawing
 			{
 				e.Graphics.AddText (x, y, width, height, new string (c, 1), font, size,  ContentAlignment.MiddleCenter);
 				e.Graphics.ImageRenderer.BitmapImage = bitmap;
-				
+
 				Transform t = new Transform ();
 				t.Scale (width / bitmap.Width, height / bitmap.Height);
 				t.Translate (x, y);

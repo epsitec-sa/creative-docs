@@ -73,19 +73,15 @@ namespace Epsitec.Common.Drawing
 			watch.Reset ();
 
 			Window window = new Window ();
-			window.ClientSize = new Size (960, 720);
+			window.ClientSize = new Size (430, 220);
 			window.Text = "CheckAllocatePixmapFromFreeImage";
 			window.Root.PaintForeground += delegate (object sender, PaintEventArgs e)
 			{
-				WindowRoot root = sender as WindowRoot;
-
-				//	L'image fait 200 x 200 pixels
-
-				Bitmap bitmap_1 = Bitmap.FromPixmap (pixmap1).BitmapImage;
-				Bitmap bitmap_2 = Bitmap.FromPixmap (pixmap2).BitmapImage;
+				Bitmap bitmap1 = Bitmap.FromPixmap (pixmap1).BitmapImage;
+				Bitmap bitmap2 = Bitmap.FromPixmap (pixmap2).BitmapImage;
 				
-				e.Graphics.PaintImage (bitmap_1, new Rectangle (0, 0, 200, 200), new Rectangle (0, 0, 200, 200));
-				e.Graphics.PaintImage (bitmap_2, new Rectangle (200, 0, 200, 200), new Rectangle (0, 0, 200, 200));
+				e.Graphics.PaintImage (bitmap1, new Rectangle (10, 10, 200, 200), new Rectangle (0, 0, 200, 200));
+				e.Graphics.PaintImage (bitmap2, new Rectangle (220, 10, 200, 200), new Rectangle (0, 0, 200, 200));
 			};
 			window.Root.Invalidate ();
 			window.Show ();

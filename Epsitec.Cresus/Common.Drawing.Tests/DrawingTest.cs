@@ -29,7 +29,7 @@ namespace Epsitec.Common.Drawing
 			Assert.AreEqual (pt1, pt2);
 			Assert.AreEqual (new Point (10, 30), pt3);
 			Assert.AreEqual (new Point (40, 20), pt4);
-			Assert.AreEqual ("[10;20]", pt1.ToString ());
+			Assert.AreEqual ("10;20", pt1.ToString ());
 		}
 		
 		[Test] public void CheckSizeToStringParse()
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Drawing
 			Assert.AreEqual (sz1, sz2);
 			Assert.AreEqual (new Size (10, 30), sz3);
 			Assert.AreEqual (new Size (40, 20), sz4);
-			Assert.AreEqual ("[10;20]", sz1.ToString ());
+			Assert.AreEqual ("10;20", sz1.ToString ());
 		}
 		
 		[Test] [ExpectedException (typeof (System.NullReferenceException))]
