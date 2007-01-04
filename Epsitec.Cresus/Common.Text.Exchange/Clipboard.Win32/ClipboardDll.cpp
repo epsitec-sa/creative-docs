@@ -1,4 +1,4 @@
-//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Michael WALZ
 //  DLL pour lire le contenu du presse-papier en format "HTML format".
 //  Depuis .net il semble impossible d'obtenir le texte html sans que certains
