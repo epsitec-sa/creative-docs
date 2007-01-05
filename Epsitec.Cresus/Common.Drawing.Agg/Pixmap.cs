@@ -57,8 +57,15 @@ namespace Epsitec.Common.Drawing
 				return this.is_os_bitmap;
 			}
 		}
-		
-		
+
+		public OPaC.FreeImage.Image				AssociatedImage
+		{
+			get
+			{
+				return this.associatedImage;
+			}
+		}
+
 		public void AllocatePixmap(System.Drawing.Size size)
 		{
 			if ((this.size.IsEmpty) &&
@@ -73,25 +80,33 @@ namespace Epsitec.Common.Drawing
 			throw new System.InvalidOperationException ("Cannot re-allocate pixmap.");
 		}
 
-		public void AllocatePixmap(OPaC.FreeImage.Image image)
+		/// <summary>
+		/// Allocates a pixmap based on a FreeImage image instance.
+		/// </summary>
+		/// <param name="image">The FreeImage image instance.</param>
+		/// <param name="copyImageBits">Specifies if the image bits must be copied.</param>
+		/// <returns><c>true</c> if the image bits were inherited directly, without any copy (the
+		/// image must stay alive as long as the pixmap in that case).</returns>
+		public bool AllocatePixmap(OPaC.FreeImage.Image image, bool copyImageBits)
 		{
 			if ((this.size.IsEmpty) &&
 				(this.agg_buffer == System.IntPtr.Zero))
 			{
 				OPaC.FreeImage.Image temp = null;
-				
+
 				if (image.GetBitsPerPixel () < 32)
 				{
+					copyImageBits = true;
 					temp  = image.ConvertTo32Bits ();
 					image = temp;
 				}
-				
+
 				int width  = image.GetWidth ();
 				int height = image.GetHeight ();
 				int stride = image.GetPitch ();
 				System.IntPtr bits = image.GetBits ();
-				
-				this.agg_buffer   = AntiGrain.Buffer.NewFrom (width, height, 32, stride, bits);
+
+				this.agg_buffer   = AntiGrain.Buffer.NewFrom (width, height, 32, stride, bits, copyImageBits);
 				this.size         = new System.Drawing.Size (width, height);
 				this.is_os_bitmap = true;
 
@@ -99,12 +114,21 @@ namespace Epsitec.Common.Drawing
 				{
 					temp.Dispose ();
 				}
-				
-				return;
+
+				if (copyImageBits)
+				{
+					return false;
+				}
+				else
+				{
+					this.associatedImage = image;
+					return true;
+				}
 			}
-
-			throw new System.InvalidOperationException ("Cannot re-allocate pixmap.");
-
+			else
+			{
+				throw new System.InvalidOperationException ("Cannot re-allocate pixmap.");
+			}
 		}
 		
 		public void Clear()
@@ -480,5 +504,6 @@ namespace Epsitec.Common.Drawing
 		protected System.IntPtr					agg_buffer;
 		protected System.Drawing.Size			size;
 		protected bool							is_os_bitmap;
+		protected OPaC.FreeImage.Image			associatedImage;
 	}
 }

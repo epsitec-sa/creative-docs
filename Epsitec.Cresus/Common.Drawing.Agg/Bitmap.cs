@@ -82,7 +82,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public byte[] GetRawBitmapBytes()
+		public byte[]							GetRawBitmapBytes()
 		{
 			this.LockBits ();
 

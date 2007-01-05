@@ -9,7 +9,7 @@ namespace Epsitec.Common.Document
 	/// <summary>
 	/// Cache statique global des images de l'application.
 	/// </summary>
-	public class GlobalImageCache
+	public static class GlobalImageCache
 	{
 		public static Item Get(string filename)
 		{
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Document
 			GlobalImageCache.FreeOldest(ref total, ImagePart.Data);
 		}
 
-		protected static void FreeOldest(ref long total, ImagePart part)
+		private static void FreeOldest(ref long total, ImagePart part)
 		{
 			//	Libère une partie des images les plus vieilles, pour que le total
 			//	du cache ne dépasse pas 0.5 GB.
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Document
 			Data,			// données de base
 		}
 
-		protected static Item SearchOlder(ImagePart part)
+		private static Item SearchOlder(ImagePart part)
 		{
 			//	Cherche la partie d'image libérable la plus vieille du cache.
 			long min = long.MaxValue;
@@ -602,7 +602,7 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
-		protected static System.DateTime FilenameDate(string filename)
+		private static System.DateTime FilenameDate(string filename)
 		{
 			//	Retourne la date de dernière modification d'un fichier.
 			System.IO.FileInfo info = new System.IO.FileInfo(filename);
@@ -616,7 +616,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected static Drawing.Image ResizeImage(Drawing.Image image, int dx, int dy)
+		private static Drawing.Image ResizeImage(Drawing.Image image, int dx, int dy)
 		{
 			//	Retourne une image redimensionnée.
 			Graphics gfx = new Graphics();
@@ -631,11 +631,11 @@ namespace Epsitec.Common.Document
 		}
 
 
-		protected static readonly long				globalLimit = 500000;  // limite globale de 0.5 GB
-		//?protected static readonly long				globalLimit = 50000;  // limite globale de 50 MB
-		protected static readonly long				imageLimit  =   1000;  // limite par image de 1 MB
+		private static readonly long globalLimit = 500000;  // limite globale de 0.5 GB
+		//?private static readonly long				globalLimit = 50000;  // limite globale de 50 MB
+		private static readonly long imageLimit  =   1000;  // limite par image de 1 MB
 
-		protected static Dictionary<string, Item>	dico = new Dictionary<string, Item>();
-		protected static long						timeStamp = 0;
+		private static Dictionary<string, Item> dico = new Dictionary<string, Item> ();
+		private static long timeStamp = 0;
 	}
 }

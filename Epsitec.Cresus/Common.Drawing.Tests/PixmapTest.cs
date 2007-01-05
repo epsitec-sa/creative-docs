@@ -53,13 +53,14 @@ namespace Epsitec.Common.Drawing
 			Pixmap pixmap2;
 			
 			watch.Start ();
-			pixmap1 = PixmapTest.CreatePixmapUsingFreeImage (path, -1);
+			pixmap1 = PixmapTest.CreatePixmapUsingFreeImage (path, -1, false);
+			pixmap1.AssociatedImage.Dispose ();
 			pixmap1.Dispose ();
 			watch.Stop ();
 			watch.Reset ();
 
 			watch.Start ();
-			pixmap1 = PixmapTest.CreatePixmapUsingFreeImage (path, 200);
+			pixmap1 = PixmapTest.CreatePixmapUsingFreeImage (path, -1, false);
 			watch.Stop ();
 			System.Console.Out.WriteLine ("Loading of '{0}' took {1} ms", path, watch.ElapsedMilliseconds);
 			watch.Reset ();
@@ -67,10 +68,13 @@ namespace Epsitec.Common.Drawing
 			path = @"..\..\images\photo.jpg";
 
 			watch.Start ();
-			pixmap2 = PixmapTest.CreatePixmapUsingFreeImage (path, 200);
+			pixmap2 = PixmapTest.CreatePixmapUsingFreeImage (path, 200, false);
 			watch.Stop ();
 			System.Console.Out.WriteLine ("Loading of '{0}' took {1} ms", path, watch.ElapsedMilliseconds);
 			watch.Reset ();
+
+			Assert.IsNotNull (pixmap1.AssociatedImage);
+			Assert.IsNull (pixmap2.AssociatedImage);
 
 			Window window = new Window ();
 			window.ClientSize = new Size (430, 220);
@@ -88,7 +92,7 @@ namespace Epsitec.Common.Drawing
 			Window.RunInTestEnvironment (window);
 		}
 
-		private static Pixmap CreatePixmapUsingFreeImage(string path, int size)
+		private static Pixmap CreatePixmapUsingFreeImage(string path, int size, bool copyBits)
 		{
 			Pixmap pixmap = new Pixmap ();
 			
@@ -102,9 +106,12 @@ namespace Epsitec.Common.Drawing
 			{
 				image = OPaC.FreeImage.Image.Load (path);
 			}
+
+			if (pixmap.AllocatePixmap (image, copyBits) == false)
+			{
+				image.Dispose ();
+			}
 			
-			pixmap.AllocatePixmap (image);
-			image.Dispose ();
 			return pixmap;
 		}
 
