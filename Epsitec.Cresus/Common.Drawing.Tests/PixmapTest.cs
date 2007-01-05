@@ -49,16 +49,15 @@ namespace Epsitec.Common.Drawing
 			string path = @"..\..\images\picture.png";
 
 			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+			Pixmap pixmap0;
 			Pixmap pixmap1;
 			Pixmap pixmap2;
-			
+
 			watch.Start ();
-			pixmap1 = PixmapTest.CreatePixmapUsingFreeImage (path, -1, false);
-			pixmap1.AssociatedImage.Dispose ();
-			pixmap1.Dispose ();
+			pixmap0 = PixmapTest.CreatePixmapUsingFreeImage (path, -1, true);
 			watch.Stop ();
 			watch.Reset ();
-
+			
 			watch.Start ();
 			pixmap1 = PixmapTest.CreatePixmapUsingFreeImage (path, -1, false);
 			watch.Stop ();
@@ -73,23 +72,33 @@ namespace Epsitec.Common.Drawing
 			System.Console.Out.WriteLine ("Loading of '{0}' took {1} ms", path, watch.ElapsedMilliseconds);
 			watch.Reset ();
 
+			Assert.IsNull (pixmap0.AssociatedImage);
 			Assert.IsNotNull (pixmap1.AssociatedImage);
 			Assert.IsNull (pixmap2.AssociatedImage);
 
 			Window window = new Window ();
-			window.ClientSize = new Size (430, 220);
+			window.ClientSize = new Size (640, 220);
 			window.Text = "CheckAllocatePixmapFromFreeImage";
 			window.Root.PaintForeground += delegate (object sender, PaintEventArgs e)
 			{
+				Bitmap bitmap0 = Bitmap.FromPixmap (pixmap0).BitmapImage;
 				Bitmap bitmap1 = Bitmap.FromPixmap (pixmap1).BitmapImage;
 				Bitmap bitmap2 = Bitmap.FromPixmap (pixmap2).BitmapImage;
-				
-				e.Graphics.PaintImage (bitmap1, new Rectangle (10, 10, 200, 200), new Rectangle (0, 0, 200, 200));
-				e.Graphics.PaintImage (bitmap2, new Rectangle (220, 10, 200, 200), new Rectangle (0, 0, 200, 200));
+
+				e.Graphics.PaintImage (bitmap0, new Rectangle (10, 10, 200, 200), new Rectangle (0, 0, 200, 200));
+				e.Graphics.PaintImage (bitmap1, new Rectangle (220, 10, 200, 200), new Rectangle (0, 0, 200, 200));
+				e.Graphics.PaintImage (bitmap2, new Rectangle (430, 10, 200, 200), new Rectangle (0, 0, 200, 200));
 			};
+			
 			window.Root.Invalidate ();
 			window.Show ();
 			Window.RunInTestEnvironment (window);
+
+			pixmap1.AssociatedImage.Dispose ();
+
+			pixmap0.Dispose ();
+			pixmap1.Dispose ();
+			pixmap2.Dispose ();
 		}
 
 		private static Pixmap CreatePixmapUsingFreeImage(string path, int size, bool copyBits)
