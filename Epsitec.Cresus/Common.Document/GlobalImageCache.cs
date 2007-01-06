@@ -631,11 +631,11 @@ namespace Epsitec.Common.Document
 		}
 
 
-		private static readonly long globalLimit = 500000;  // limite globale de 0.5 GB
-		//?private static readonly long				globalLimit = 50000;  // limite globale de 50 MB
-		private static readonly long imageLimit  =   1000;  // limite par image de 1 MB
+		private static readonly long				globalLimit = 500000;  // limite globale de 0.5 GB
+		//?private static readonly long				globalLimit =  50000;  // limite globale de 50 MB
+		private static readonly long				imageLimit  =   1000;  // limite par image de 1 MB
 
-		private static Dictionary<string, Item> dico = new Dictionary<string, Item> ();
-		private static long timeStamp = 0;
+		private static Dictionary<string, Item>		dico = new Dictionary<string, Item> ();
+		private static long							timeStamp = 0;
 	}
 }
