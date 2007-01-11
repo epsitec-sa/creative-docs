@@ -2028,7 +2028,7 @@ namespace Epsitec.Common.Document
 			if ( drawingContext.RootStackIsEmpty )  return;
 
 			//?this.imageCache.IsLowres = !drawingContext.PreviewActive;
-			this.imageCache.IsLowres = true;
+			this.imageCache.PreferLowresImages = true;
 
 			if ( !clipRect.IsInfinite )
 			{
@@ -2168,7 +2168,7 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
-			this.imageCache.IsLowres = false;
+			this.imageCache.PreferLowresImages = false;
 			this.printer.Print(dp);
 		}
 
@@ -2178,7 +2178,7 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
-			this.imageCache.IsLowres = false;
+			this.imageCache.PreferLowresImages = false;
 			return this.printer.Export(filename);
 		}
 
@@ -2188,7 +2188,7 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
-			this.imageCache.IsLowres = false;
+			this.imageCache.PreferLowresImages = false;
 			return this.exportPDF.FileExport(filename);
 		}
 

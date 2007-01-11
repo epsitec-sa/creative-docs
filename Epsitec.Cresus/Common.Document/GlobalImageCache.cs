@@ -79,12 +79,14 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public static void Lock(IList<string> filenames)
+		public static void Lock(string filename)
 		{
-			//	Bloque toutes les images utilisées dans la page.
-			foreach (Item item in GlobalImageCache.dico.Values)
+			//	Bloque l'image car elle est utilisée dans la page.
+			Item item;
+			
+			if (GlobalImageCache.dico.TryGetValue (filename, out item))
 			{
-				item.Locked = filenames.Contains(item.Filename);
+				item.Locked = true;
 			}
 		}
 

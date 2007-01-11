@@ -7,35 +7,35 @@ using Epsitec.Common.IO;
 namespace Epsitec.Common.Document
 {
 	/// <summary>
-	/// Summary description for ImageCache.
+	/// La classe <c>ImageCache</c> gère un cache par document des images.
 	/// </summary>
 	public class ImageCache
 	{
 		public ImageCache()
 		{
-			this.dico = new Dictionary<string, Item>();
-			this.isLowres = true;
+			this.items = new Dictionary<string, Item>();
+			this.preferLowres = true;
 		}
 
 
-		public bool IsLowres
+		public bool PreferLowresImages
 		{
 			//	Indique le type des images auxquelles on s'intéresse.
 			get
 			{
-				return this.isLowres;
+				return this.preferLowres;
 			}
 
 			set
 			{
-				if (this.isLowres != value)
+				if (this.preferLowres != value)
 				{
-					this.isLowres = value;
+					this.preferLowres = value;
 
 					//	Informe tout le cache.
-					foreach (Item item in this.dico.Values)
+					foreach (Item item in this.items.Values)
 					{
-						item.IsLowres = this.isLowres;
+						item.IsLowres = this.preferLowres;
 					}
 				}
 			}
@@ -45,22 +45,28 @@ namespace Epsitec.Common.Document
 		{
 			//	Essaie de charger une image dans le cache.
 			//	Celle méthode est appelée chaque fois que le nom édité de l'image est changé.
-			if (!string.IsNullOrEmpty(filename))
+			if (string.IsNullOrEmpty (filename))
+			{
+				return System.DateTime.MinValue;
+			}
+			else
 			{
 				Item item = this.Get(filename);
 
 				if (item == null)
 				{
-					item = this.Add(filename, null, null, null, System.DateTime.MinValue);
+					item = this.Add(filename);
 				}
 
 				if (item != null)
 				{
 					return item.GlobalItem.Date;
 				}
+				else
+				{
+					return System.DateTime.MinValue;
+				}
 			}
-
-			return System.DateTime.MinValue;
 		}
 
 		public Item Get(string filename)
@@ -72,18 +78,20 @@ namespace Epsitec.Common.Document
 			}
 
 			Item item = null;
+			
+			filename = filename.ToLowerInvariant ();
 
-			if (this.dico.ContainsKey(filename))  // image déjà dans le cache ?
+			if (this.items.TryGetValue(filename, out item))
 			{
-				item = this.dico[filename];
+				//	Image déjà dans le cache !
 			}
 			else
 			{
 				GlobalImageCache.Item gItem = GlobalImageCache.Get(filename);
 				if (gItem != null)  // image dans le cache global ?
 				{
-					item = new Item(gItem, this.isLowres);
-					this.dico.Add(filename, item);  // ajoute l'image dans le cache local
+					item = new Item(gItem, this.preferLowres);
+					this.items.Add(filename, item);  // ajoute l'image dans le cache local
 				}
 			}
 
@@ -99,7 +107,12 @@ namespace Epsitec.Common.Document
 		public bool Contains(string filename)
 		{
 			//	Vérifie si une image est en cache.
-			return this.dico.ContainsKey(filename);
+			return this.items.ContainsKey(filename.ToLowerInvariant ());
+		}
+
+		protected Item Add(string filename)
+		{
+			return this.Add (filename, null, null, null, System.DateTime.MinValue);
 		}
 
 		protected Item Add(string filename, string zipFilename, string zipShortName, byte[] data, System.DateTime date)
@@ -107,6 +120,10 @@ namespace Epsitec.Common.Document
 			//	Ajoute une nouvelle image dans le cache.
 			//	Si les données 'data' n'existent pas, l'image est lue sur disque.
 			//	Si les données existent, l'image est lue à partir des données en mémoire.
+			
+			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (filename) == false);
+			filename = filename.ToLowerInvariant ();
+
 			if (data == null)
 			{
 				System.Diagnostics.Debug.Assert(date == System.DateTime.MinValue);
@@ -116,56 +133,71 @@ namespace Epsitec.Common.Document
 				System.Diagnostics.Debug.Assert(date != System.DateTime.MinValue);
 			}
 
-			if (this.dico.ContainsKey(filename))
+			Item item;
+
+			if (this.items.TryGetValue (filename, out item))
 			{
-				return this.dico[filename];
+				//	OK, l'élément est déjà dans notre cache local.
 			}
 			else
 			{
 				GlobalImageCache.Item gItem = GlobalImageCache.Add(filename, zipFilename, zipShortName, data, date);
 				if (gItem == null || !gItem.IsData)
 				{
-					return null;
+					item = null;
 				}
 				else
 				{
-					Item item = new Item(gItem, this.isLowres);
-					this.dico.Add(filename, item);
-					return item;
+					item = new Item(gItem, this.preferLowres);
+					this.items.Add(filename, item);
 				}
 			}
+			
+			return item;
 		}
 
 		public void Clear()
 		{
 			//	Supprime toutes les images du cache.
-			foreach (KeyValuePair<string, Item> pair in this.dico)
+
+			Item[] items = new Item[this.items.Count];
+			this.items.Values.CopyTo (items, 0);
+
+			foreach (Item item in items)
 			{
-				GlobalImageCache.Remove(pair.Value.GlobalItem.Filename);
-				pair.Value.Dispose();
+				GlobalImageCache.Remove(item.GlobalItem.Filename);
+				item.Dispose();
 			}
 
-			this.dico.Clear();
+			this.items.Clear();
 		}
 
 
-		public void FlushUnused(List<string> filenames)
+		public void FlushUnused(IList<string> usedFilenames)
 		{
 			//	Supprime toutes les images inutilisées du cache des images, c'est-à-dire
-			//	dont le nom de fichier n'est pas dans la liste filenames.
+			//	dont le nom de fichier n'est pas dans la liste usedFilenames.
 			List<string> keysToDelete = new List<string>();
-			foreach (string key in this.dico.Keys)
+			List<string> filenames = new List<string> ();
+
+			foreach (string filename in usedFilenames)
+			{
+				filenames.Add (filename.ToLowerInvariant ());
+			}
+
+			foreach (string key in this.items.Keys)
 			{
 				if (!filenames.Contains(key))
 				{
 					keysToDelete.Add(key);
+					filenames.Remove (key);		//	pour éviter de chercher deux fois le même nom
 				}
 			}
 
 			foreach (string key in keysToDelete)
 			{
-				Item item = this.dico[key];
-				this.dico.Remove(key);
+				Item item = this.items[key];
+				this.items.Remove(key);
 				item.Dispose();
 			}
 		}
@@ -173,7 +205,7 @@ namespace Epsitec.Common.Document
 		public void ClearInsideDoc()
 		{
 			//	Enlève tous les modes InsideDoc.
-			foreach (Item item in this.dico.Values)
+			foreach (Item item in this.items.Values)
 			{
 				item.InsideDoc = false;
 			}
@@ -182,12 +214,12 @@ namespace Epsitec.Common.Document
 		public void GenerateShortNames()
 		{
 			//	Génère les noms courts pour toutes les images du document.
-			foreach (Item item in this.dico.Values)
+			foreach (Item item in this.items.Values)
 			{
 				item.ShortName = null;
 			}
 
-			foreach (Item item in this.dico.Values)
+			foreach (Item item in this.items.Values)
 			{
 				string shortName = System.IO.Path.GetFileName(item.Filename);
 
@@ -214,7 +246,7 @@ namespace Epsitec.Common.Document
 		protected bool IsExistingShortName(string shortName)
 		{
 			//	Vérifie si un nom court existe.
-			foreach (Item item in this.dico.Values)
+			foreach (Item item in this.items.Values)
 			{
 				if (item.ShortName == shortName)
 				{
@@ -234,7 +266,7 @@ namespace Epsitec.Common.Document
 				return;
 			}
 
-			foreach (Item item in this.dico.Values)
+			foreach (Item item in this.items.Values)
 			{
 				if (item.InsideDoc || imageIncludeMode == Document.ImageIncludeMode.All)
 				{
@@ -273,7 +305,7 @@ namespace Epsitec.Common.Document
 					}
 				}
 
-				Item item = this.Add(propImage.Filename, null, null, null, System.DateTime.MinValue);  // lit le fichier image sur disque
+				Item item = this.Add(propImage.Filename);  // lit le fichier image sur disque
 				if (item != null)
 				{
 					propImage.Date = item.GlobalItem.Date;
@@ -284,7 +316,12 @@ namespace Epsitec.Common.Document
 
 		public static void Lock(IList<string> list)
 		{
-			GlobalImageCache.Lock (list);
+			GlobalImageCache.UnlockAll ();
+
+			foreach (string name in list)
+			{
+				GlobalImageCache.Lock (name.ToLowerInvariant ());
+			}
 		}
 
 		public static void UnlockAll()
@@ -295,7 +332,7 @@ namespace Epsitec.Common.Document
 		#region Class Item
 		public class Item : System.IDisposable
 		{
-			public Item(GlobalImageCache.Item gItem, bool isLowres)
+			internal Item(GlobalImageCache.Item gItem, bool isLowres)
 			{
 				this.gItem = gItem;
 				this.isLowres = isLowres;
@@ -414,7 +451,7 @@ namespace Epsitec.Common.Document
 		}
 
 
-		protected Dictionary<string, Item>		dico;
-		protected bool							isLowres;
+		protected Dictionary<string, Item>		items;
+		protected bool							preferLowres;
 	}
 }
