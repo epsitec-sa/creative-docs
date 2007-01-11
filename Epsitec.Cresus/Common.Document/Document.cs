@@ -1990,7 +1990,7 @@ namespace Epsitec.Common.Document
 				Properties.Image propImage = obj.PropertyImage;
 				if (propImage != null)
 				{
-					ImageCache.Item item = this.imageCache.Get(propImage.Filename);
+					ImageCache.Item item = this.imageCache.Find(propImage.Filename);
 
 					if (item != null)
 					{

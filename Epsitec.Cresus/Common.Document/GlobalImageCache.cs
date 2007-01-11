@@ -11,7 +11,7 @@ namespace Epsitec.Common.Document
 	/// </summary>
 	public static class GlobalImageCache
 	{
-		public static Item Get(string filename)
+		public static Item Find(string filename)
 		{
 			//	Retourne les données d'une image.
 			if (string.IsNullOrEmpty(filename))
@@ -19,9 +19,9 @@ namespace Epsitec.Common.Document
 				return null;
 			}
 
-			if (GlobalImageCache.dico.ContainsKey(filename))
+			if (GlobalImageCache.items.ContainsKey(filename))
 			{
-				return GlobalImageCache.dico[filename];
+				return GlobalImageCache.items[filename];
 			}
 			else
 			{
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Document
 		public static bool Contains(string filename)
 		{
 			//	Vérifie si une image est en cache.
-			return GlobalImageCache.dico.ContainsKey(filename);
+			return GlobalImageCache.items.ContainsKey(filename);
 		}
 
 		public static Item Add(string filename, string zipFilename, string zipShortName, byte[] data, System.DateTime date)
@@ -40,16 +40,16 @@ namespace Epsitec.Common.Document
 			//	Ajoute une nouvelle image dans le cache.
 			//	Si les données 'data' n'existent pas, l'image est lue sur disque.
 			//	Si les données existent, l'image est lue à partir des données en mémoire.
-			if (GlobalImageCache.dico.ContainsKey(filename))
+			if (GlobalImageCache.items.ContainsKey(filename))
 			{
-				return GlobalImageCache.dico[filename];
+				return GlobalImageCache.items[filename];
 			}
 			else
 			{
 				Item item = new Item(filename, zipFilename, zipShortName, data, date);
 				if (item.IsData)
 				{
-					GlobalImageCache.dico.Add(filename, item);
+					GlobalImageCache.items.Add(filename, item);
 					return item;
 				}
 				else
@@ -62,10 +62,10 @@ namespace Epsitec.Common.Document
 		public static void Remove(string filename)
 		{
 			//	Supprime une image dans le cache.
-			if (GlobalImageCache.dico.ContainsKey(filename))
+			if (GlobalImageCache.items.ContainsKey(filename))
 			{
-				Item item = GlobalImageCache.dico[filename];
-				GlobalImageCache.dico.Remove(filename);
+				Item item = GlobalImageCache.items[filename];
+				GlobalImageCache.items.Remove(filename);
 				item.Dispose();
 			}
 		}
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Document
 		public static void UnlockAll()
 		{
 			//	Débloque toutes les images utilisées.
-			foreach (Item item in GlobalImageCache.dico.Values)
+			foreach (Item item in GlobalImageCache.items.Values)
 			{
 				item.Locked = false;
 			}
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Document
 			//	Bloque l'image car elle est utilisée dans la page.
 			Item item;
 			
-			if (GlobalImageCache.dico.TryGetValue (filename, out item))
+			if (GlobalImageCache.items.TryGetValue (filename, out item))
 			{
 				item.Locked = true;
 			}
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Document
 			//	Libère les images les plus vieilles, pour que le total du cache
 			//	ne dépasse pas 0.5 GB.
 			long total = 0;
-			foreach (Item item in GlobalImageCache.dico.Values)
+			foreach (Item item in GlobalImageCache.items.Values)
 			{
 				total += item.KBUsed();  // total <- taille totale utilisée par le cache
 			}
@@ -139,7 +139,7 @@ namespace Epsitec.Common.Document
 			long min = long.MaxValue;
 			Item older = null;
 
-			foreach (Item item in GlobalImageCache.dico.Values)
+			foreach (Item item in GlobalImageCache.items.Values)
 			{
 				if (!item.Locked && item.IsFreeable(part) && min > item.TimeStamp)
 				{
@@ -635,11 +635,11 @@ namespace Epsitec.Common.Document
 		}
 
 
-		private static readonly long				globalLimit = 500000;  // limite globale de 0.5 GB
-		//?private static readonly long				globalLimit =  50000;  // limite globale de 50 MB
+		//?private static readonly long				globalLimit = 500000;  // limite globale de 0.5 GB
+		private static readonly long				globalLimit =  20000;  // limite globale de 20 MB
 		private static readonly long				imageLimit  =   1000;  // limite par image de 1 MB
 
-		private static Dictionary<string, Item>		dico = new Dictionary<string, Item> ();
+		private static Dictionary<string, Item>		items = new Dictionary<string, Item> ();
 		private static long							timeStamp = 0;
 	}
 }

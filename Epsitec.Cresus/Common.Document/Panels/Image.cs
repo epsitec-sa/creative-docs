@@ -379,7 +379,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			//	Le bouton 'Màj' pour relire l'image a été cliqué.
 			Properties.Image p = this.property as Properties.Image;
-			ImageCache.Item item = this.document.ImageCache.Get(p.Filename);
+			ImageCache.Item item = this.document.ImageCache.Find(p.Filename);
 
 			if (item != null)
 			{
@@ -397,7 +397,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			//	Le bouton 'Exporter' pour choisir l'image a été cliqué.
 			Properties.Image p = this.property as Properties.Image;
-			ImageCache.Item item = this.document.ImageCache.Get(p.Filename);
+			ImageCache.Item item = this.document.ImageCache.Find(p.Filename);
 			if (item == null)
 			{
 				return;

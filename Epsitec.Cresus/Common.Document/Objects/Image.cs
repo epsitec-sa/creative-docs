@@ -378,7 +378,7 @@ namespace Epsitec.Common.Document.Objects
 			get
 			{
 				Properties.Image pi = this.PropertyImage;
-				return this.document.ImageCache.Get(pi.Filename);
+				return this.document.ImageCache.Find(pi.Filename);
 			}
 		}
 

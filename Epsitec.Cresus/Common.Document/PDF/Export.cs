@@ -561,7 +561,7 @@ namespace Epsitec.Common.Document.PDF
 							ImageSurface image = ImageSurface.Search(this.imageSurfaces, filename, size, crop, filter);
 							if ( image == null )
 							{
-								ImageCache.Item item = this.document.ImageCache.Get(filename);
+								ImageCache.Item item = this.document.ImageCache.Find(filename);
 								System.Diagnostics.Debug.Assert(item != null);
 								image = new ImageSurface(item, size, crop, filter, id++);
 								this.imageSurfaces.Add(image);

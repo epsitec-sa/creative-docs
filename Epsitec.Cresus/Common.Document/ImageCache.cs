@@ -51,7 +51,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				Item item = this.Get(filename);
+				Item item = this.Find(filename);
 
 				if (item == null)
 				{
@@ -69,9 +69,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public Item Get(string filename)
+		public Item Find(string filename)
 		{
-			//	Retourne les données d'une image.
+			//	Retourne les données d'une image, pour autant que celle-ci soit déjà connue.
 			if (string.IsNullOrEmpty(filename))
 			{
 				return null;
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				GlobalImageCache.Item gItem = GlobalImageCache.Get(filename);
+				GlobalImageCache.Item gItem = GlobalImageCache.Find(filename);
 				if (gItem != null)  // image dans le cache global ?
 				{
 					item = new Item(gItem, this.preferLowres);
