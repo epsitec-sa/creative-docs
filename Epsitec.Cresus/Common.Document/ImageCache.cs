@@ -282,6 +282,16 @@ namespace Epsitec.Common.Document
 		}
 
 
+		public static void Lock(IList<string> list)
+		{
+			GlobalImageCache.Lock (list);
+		}
+
+		public static void UnlockAll()
+		{
+			GlobalImageCache.UnlockAll ();
+		}
+
 		#region Class Item
 		public class Item : System.IDisposable
 		{

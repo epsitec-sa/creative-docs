@@ -70,19 +70,21 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public static void Lock(List<string> filenames)
+		public static void UnlockAll()
+		{
+			//	Débloque toutes les images utilisées.
+			foreach (Item item in GlobalImageCache.dico.Values)
+			{
+				item.Locked = false;
+			}
+		}
+
+		public static void Lock(IList<string> filenames)
 		{
 			//	Bloque toutes les images utilisées dans la page.
 			foreach (Item item in GlobalImageCache.dico.Values)
 			{
-				if (filenames == null)
-				{
-					item.Locked = false;
-				}
-				else
-				{
-					item.Locked = filenames.Contains(item.Filename);
-				}
+				item.Locked = filenames.Contains(item.Filename);
 			}
 		}
 

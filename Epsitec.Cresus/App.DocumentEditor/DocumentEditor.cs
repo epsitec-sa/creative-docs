@@ -4369,8 +4369,7 @@ namespace Epsitec.App.DocumentEditor
 				Objects.Page page = this.CurrentDocument.GetObjects[cp] as Objects.Page;
 				this.CurrentDocumentInfo.quickPageMenu.Text = page.ShortName;
 
-				List<string> list = this.CurrentDocument.ImageSearchFilenamesInPage(cp);
-				GlobalImageCache.Lock(list);  // libère toutes les images
+				ImageCache.Lock(this.CurrentDocument.ImageSearchFilenamesInPage(cp));
 
 				this.dlgPageStack.Update();
 				this.dlgPrint.UpdatePages();
@@ -5160,7 +5159,7 @@ namespace Epsitec.App.DocumentEditor
 			this.currentDocument = rank;
 			this.PrepareOpenDocument();
 
-			GlobalImageCache.Lock(null);  // libère toutes les images
+			ImageCache.UnlockAll();  // libère toutes les images
 
 			if (rank >= 0)
 			{

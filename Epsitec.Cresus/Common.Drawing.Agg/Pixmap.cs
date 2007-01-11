@@ -58,7 +58,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public OPaC.FreeImage.Image				AssociatedImage
+		public Opac.FreeImage.Image				AssociatedImage
 		{
 			get
 			{
@@ -87,12 +87,12 @@ namespace Epsitec.Common.Drawing
 		/// <param name="copyImageBits">Specifies if the image bits must be copied.</param>
 		/// <returns><c>true</c> if the image bits were inherited directly, without any copy (the
 		/// image must stay alive as long as the pixmap in that case).</returns>
-		public bool AllocatePixmap(OPaC.FreeImage.Image image, bool copyImageBits)
+		public bool AllocatePixmap(Opac.FreeImage.Image image, bool copyImageBits)
 		{
 			if ((this.size.IsEmpty) &&
 				(this.agg_buffer == System.IntPtr.Zero))
 			{
-				OPaC.FreeImage.Image temp = null;
+				Opac.FreeImage.Image temp = null;
 
 				if (image.GetBitsPerPixel () < 32)
 				{
@@ -504,6 +504,6 @@ namespace Epsitec.Common.Drawing
 		protected System.IntPtr					agg_buffer;
 		protected System.Drawing.Size			size;
 		protected bool							is_os_bitmap;
-		protected OPaC.FreeImage.Image			associatedImage;
+		protected Opac.FreeImage.Image			associatedImage;
 	}
 }
