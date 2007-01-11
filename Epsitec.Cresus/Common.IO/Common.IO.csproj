@@ -112,12 +112,14 @@
     <Compile Include="DeflateCompressor.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DocumentManager.cs" />
     <Compile Include="GenericDeserializationBinder.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IChecksum.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Internal\DocumentManagerStream.cs" />
     <Compile Include="Reader.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -130,6 +132,7 @@
     <Compile Include="Tools.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="WaitCondition.cs" />
     <Compile Include="ZipFile.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

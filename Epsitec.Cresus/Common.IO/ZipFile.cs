@@ -196,7 +196,8 @@ namespace Epsitec.Common.IO
 				{
 					if (loadPredicate (entry.Name))
 					{
-						byte[] data   = new byte[entry.Size];
+						byte[] data = new byte[entry.Size];
+						
 						int size   = data.Length;
 						int offset = 0;
 
@@ -220,7 +221,7 @@ namespace Epsitec.Common.IO
 				}
 				else
 				{
-					this.entries.Add (new Entry (entry.Name, entry.DateTime));
+					this.entries.Add (new Entry (entry.Name, entry.DateTime, entry.Size));
 				}
 			}
 			
@@ -318,7 +319,7 @@ namespace Epsitec.Common.IO
 			}
 			else
 			{
-				this.entries.Add (new Entry (name, System.DateTime.Now));
+				this.entries.Add (new Entry (name, System.DateTime.Now, 0));
 			}
 		}
 
@@ -372,13 +373,15 @@ namespace Epsitec.Common.IO
 				this.name = fileName;
 				this.data = data;
 				this.date = date;
+				this.size = data == null ? 0 : data.Length;
 			}
 
-			internal Entry(string directoryName, System.DateTime date)
+			internal Entry(string directoryName, System.DateTime date, long size)
 			{
 				this.name = directoryName;
 				this.data = null;
 				this.date = date;
+				this.size = size;
 			}
 
 			/// <summary>
@@ -406,6 +409,19 @@ namespace Epsitec.Common.IO
 				set
 				{
 					this.data = value;
+					this.size = value == null ? 0 : value.Length;
+				}
+			}
+
+			/// <summary>
+			/// Gets the size of the uncompressed data.
+			/// </summary>
+			/// <value>The size of the uncompressed data.</value>
+			public long Size
+			{
+				get
+				{
+					return this.size;
 				}
 			}
 
@@ -454,6 +470,7 @@ namespace Epsitec.Common.IO
 
 			private string name;
 			private byte[] data;
+			private long size;
 			private System.DateTime date;
 		}
 

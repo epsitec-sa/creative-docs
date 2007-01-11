@@ -280,6 +280,41 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		[Test]
+		public void CheckDocumentManager()
+		{
+			string path = "bigfile.bin";
+
+			System.IO.File.WriteAllBytes (path, new byte[1*1024*1024]);
+
+			long pos = 0;
+			int n = 0;
+			IO.DocumentManager manager = new IO.DocumentManager ();
+			manager.Open (path);
+			System.IO.Stream stream = manager.GetLocalFileStream (System.IO.FileAccess.Read);
+
+			do
+			{
+				byte[] data = new byte[10000];
+				int length = stream.Read (data, 0, data.Length);
+				
+				System.Console.Out.WriteLine ("Local copy length: {0}/{1}, stream pos: {2}, read {3} bytes", manager.LocalCopyLength, manager.SourceLength, pos, length);
+				System.Console.Out.Flush ();
+				
+				pos += length;
+				n++;
+
+				if (n > 10)
+				{
+					System.Threading.Thread.Sleep (50);
+					n = 0;
+				}
+			}
+			while (manager.IsLocalCopyReady == false);
+
+			System.Console.Out.WriteLine ("Local copy length: {0}/{1}", manager.LocalCopyLength, manager.SourceLength);
+		}
+
 		private static string SampleText
 		{
 			get
