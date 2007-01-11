@@ -1,12 +1,20 @@
 //	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Responsable: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
 namespace Epsitec.Common.IO
 {
+	/// <summary>
+	/// The <c>DocumentManager</c> class copies documents from their source
+	/// location to a local temporary storage on <c>Open</c> and copies them
+	/// back to the source location on <c>Save</c>.
+	/// </summary>
 	public class DocumentManager : System.IDisposable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DocumentManager"/> class.
+		/// </summary>
 		public DocumentManager()
 		{
 		}
@@ -17,6 +25,12 @@ namespace Epsitec.Common.IO
 		}
 
 
+		/// <summary>
+		/// Gets a value indicating whether the local copy of the document is ready.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the local copy of the document is ready; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsLocalCopyReady
 		{
 			get
@@ -25,6 +39,11 @@ namespace Epsitec.Common.IO
 			}
 		}
 
+		/// <summary>
+		/// Gets the length of the local copy. This value can change while the
+		/// file gets copied.
+		/// </summary>
+		/// <value>The length of the local copy.</value>
 		public long LocalCopyLength
 		{
 			get
@@ -33,6 +52,10 @@ namespace Epsitec.Common.IO
 			}
 		}
 
+		/// <summary>
+		/// Gets the length of the source file.
+		/// </summary>
+		/// <value>The length of the source.</value>
 		public long SourceLength
 		{
 			get
@@ -41,7 +64,11 @@ namespace Epsitec.Common.IO
 			}
 		}
 
-		
+
+		/// <summary>
+		/// Opens the specified file and creates a local copy to work on.
+		/// </summary>
+		/// <param name="path">The path to the file.</param>
 		public void Open(string path)
 		{
 			this.sourceStream = new System.IO.FileStream (path, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read);
@@ -52,6 +79,14 @@ namespace Epsitec.Common.IO
 			this.copyThread.Start ();
 		}
 
+		/// <summary>
+		/// Gets a stream for the local copy of the open file. If read access
+		/// is requested, then the call returns immediately, even if the copy
+		/// is not finished yet. The stream itself will ensure that the reader
+		/// does not see that the file is still being written to.
+		/// </summary>
+		/// <param name="access">The access.</param>
+		/// <returns>The stream.</returns>
 		public System.IO.Stream GetLocalFileStream(System.IO.FileAccess access)
 		{
 			switch (access)
@@ -68,6 +103,11 @@ namespace Epsitec.Common.IO
 			return null;
 		}
 
+		/// <summary>
+		/// Waits for the local copy to become ready.
+		/// </summary>
+		/// <param name="timeout">The timeout.</param>
+		/// <returns><c>true</c> if the local copy is ready; <c>false</c> otherwise.</returns>
 		public bool WaitForLocalCopyReady(int timeout)
 		{
 			return this.localCopyWait.Wait (
@@ -78,6 +118,12 @@ namespace Epsitec.Common.IO
 				timeout);
 		}
 
+		/// <summary>
+		/// Waits for the local copy to reach the specified length.
+		/// </summary>
+		/// <param name="minimumLength">The minimum length.</param>
+		/// <param name="timeout">The timeout.</param>
+		/// <returns><c>true</c> if the local copy has reached the expected length; <c>false</c> otherwise.</returns>
 		public bool WaitForLocalCopyLength(long minimumLength, int timeout)
 		{
 			this.localCopyWait.Wait (
