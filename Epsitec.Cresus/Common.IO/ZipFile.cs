@@ -103,6 +103,17 @@ namespace Epsitec.Common.IO
 			}
 		}
 
+		/// <summary>
+		/// Gets the name of the ZIP file at load time.
+		/// </summary>
+		/// <value>The name of the ZIP file at load time.</value>
+		public string LoadFileName
+		{
+			get
+			{
+				return this.loadFileName;
+			}
+		}
 
 		/// <summary>
 		/// Tries to load the specified ZIP file.
@@ -140,6 +151,7 @@ namespace Epsitec.Common.IO
 						(b3 == 3) &&
 						(b4 == 4))
 					{
+						this.loadFileName = name;
 						this.LoadFile (stream, loadPredicate);
 
 						return true;
@@ -162,6 +174,7 @@ namespace Epsitec.Common.IO
 		{
 			using (System.IO.Stream stream = System.IO.File.OpenRead (name))
 			{
+				this.loadFileName = name;
 				this.LoadFile (stream, delegate (string entryName) { return true; });
 			}
 		}
@@ -446,5 +459,6 @@ namespace Epsitec.Common.IO
 
 		private int level = 5;
 		private List<Entry> entries;
+		private string loadFileName;
 	}
 }

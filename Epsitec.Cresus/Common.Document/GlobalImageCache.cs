@@ -32,12 +32,10 @@ namespace Epsitec.Common.Document
 			return null;
 		}
 
-		public static Item Add(string key, string filename, string zipFilename, string zipShortName, byte[] data, System.DateTime date)
+		public static Item Add(string key, string filename, string zipPath, System.DateTime date)
 		{
 			//	Ajoute une nouvelle image dans le cache.
-			//	Si les données 'data' n'existent pas, l'image est lue sur disque.
-			//	Si les données existent, l'image est lue à partir des données en mémoire.
-
+			
 			System.Diagnostics.Debug.Assert (date != System.DateTime.MinValue);
 
 			Item item;
@@ -48,9 +46,9 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				item = new Item(filename, zipFilename, zipShortName, data, date);
-				
-				if (!string.IsNullOrEmpty (zipFilename) ||
+				item = new Item (filename, zipPath, date);
+
+				if (!string.IsNullOrEmpty (zipPath) ||
 					System.IO.File.Exists (filename))
 				{
 					GlobalImageCache.items.Add(key, item);
@@ -161,18 +159,22 @@ namespace Epsitec.Common.Document
 		#region Class Item
 		public class Item : System.IDisposable
 		{
-			public Item(string filename, string zipFilename, string zipShortName, byte[] data, System.DateTime date)
+			public Item(string filename, string zipPath, System.DateTime date)
 			{
 				//	Constructeur qui met en cache les données de l'image.
-				//	Si les données 'data' n'existent pas, l'image est lue sur disque.
-				//	Si les données existent, l'image est lue à partir des données en mémoire.
 				
 				System.Diagnostics.Debug.Assert(date != System.DateTime.MinValue);
 
 				this.filename = filename;
-				this.zipFilename= zipFilename;
-				this.zipShortName = zipShortName;
-				this.data = data;
+
+				if (string.IsNullOrEmpty (zipPath))
+				{
+				}
+				else
+				{
+					ImageCache.ExtractZipPathNames (zipPath, out this.zipFilename, out this.zipEntryName);
+				}
+
 				this.date = date;
 				this.SetRecentTimeStamp();
 			}
@@ -288,8 +290,8 @@ namespace Epsitec.Common.Document
 				{
 					if (this.lowresImage != null)
 					{
-						double w = this.originalSize.Width  / this.lowresScale;
-						double h = this.originalSize.Height / this.lowresScale;
+						double w = this.originalSize.Width  / this.lowResScale;
+						double h = this.originalSize.Height / this.lowResScale;
 						total += ((long) w * (long) h) / (1024/4);
 					}
 				}
@@ -365,12 +367,12 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			public double LowresScale
+			public double LowResScale
 			{
 				//	Retourne l'échelle de l'image pour l'affichage (>= 1).
 				get
 				{
-					return this.lowresScale;
+					return this.lowResScale;
 				}
 			}
 
@@ -378,11 +380,11 @@ namespace Epsitec.Common.Document
 			{
 				get
 				{
-					return ImageCache.GetImageKeyName (this.filename, this.date);
+					return ImageCache.CreateKeyName (this.filename, this.date);
 				}
 			}
 
-			public string Filename
+			public string FileName
 			{
 				//	Retourne le nom de fichier avec le chemin complet.
 				get
@@ -400,16 +402,16 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			public string ZipShortName
+			public string ZipEntryName
 			{
-				//	Nom court de l'image dans le fichier zip.
+				//	Nom de l'image dans le fichier zip.
 				get
 				{
-					return this.zipShortName;
+					return this.zipEntryName;
 				}
 			}
 
-			public System.DateTime Date
+			public System.DateTime FileDate
 			{
 				//	Retourne la date de dernière modification.
 				get
@@ -478,7 +480,7 @@ namespace Epsitec.Common.Document
 				}
 
 				//	Cherche d'abord l'image dans le cache persistant.
-				string key = PersistentImageCache.Key(this.filename, this.zipFilename, this.zipShortName);
+				string key = PersistentImageCache.Key(this.filename, this.zipFilename, this.zipEntryName);
 				Size size;
 				PersistentImageCache.Get(key, this.date, out this.lowresImage, out size);
 				if (this.lowresImage == null)  // rien dans le cache persistant ?
@@ -490,9 +492,9 @@ namespace Epsitec.Common.Document
 						//	Génère une image pour l'affichage (this.lowresImage) qui pèse
 						//	environ la limite fixée.
 						System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: ReadLowresImage {0}", this.filename));
-						this.lowresScale = System.Math.Sqrt(this.KBOriginalWeight/GlobalImageCache.imageLimit);
-						int dx = (int) (this.originalSize.Width/this.lowresScale);
-						int dy = (int) (this.originalSize.Height/this.lowresScale);
+						this.lowResScale = System.Math.Sqrt(this.KBOriginalWeight/GlobalImageCache.imageLimit);
+						int dx = (int) (this.originalSize.Width/this.lowResScale);
+						int dy = (int) (this.originalSize.Height/this.lowResScale);
 						this.lowresImage = GlobalImageCache.ResizeImage(this.originalImage, dx, dy);
 
 						PersistentImageCache.Add(key, this.date, this.lowresImage, this.originalSize);
@@ -502,13 +504,13 @@ namespace Epsitec.Common.Document
 					}
 					else
 					{
-						this.lowresScale = 1.0;
+						this.lowResScale = 1.0;
 					}
 				}
 				else  // trouvé dans le cache persistant ?
 				{
 					this.originalSize = size;
-					this.lowresScale = System.Math.Sqrt(this.KBOriginalWeight/GlobalImageCache.imageLimit);
+					this.lowResScale = System.Math.Sqrt(this.KBOriginalWeight/GlobalImageCache.imageLimit);
 				}
 			}
 
@@ -547,19 +549,18 @@ namespace Epsitec.Common.Document
 				{
 					ZipFile zip = new ZipFile();
 
-					this.filenameToRead = string.Format("images/{0}", this.zipShortName);
-					if (zip.TryLoadFile(this.zipFilename, this.IsZipLoading))
+					if (zip.TryLoadFile (this.zipFilename, this.LoadCondition))
 					{
-						this.data = zip[this.filenameToRead].Data;  // lit les données dans le fichier zip
+						this.data = zip[this.zipEntryName].Data;  // lit les données dans le fichier zip
 					}
 				}
 
 				this.SetRecentTimeStamp();
 			}
 
-			protected bool IsZipLoading(string entryName)
+			protected bool LoadCondition(string entryName)
 			{
-				return (entryName == this.filenameToRead);
+				return (entryName == this.zipEntryName);
 			}
 
 			#region IDisposable Members
@@ -583,14 +584,13 @@ namespace Epsitec.Common.Document
 						
 			protected string				filename;
 			protected string				zipFilename;
-			protected string				zipShortName;
-			protected string				filenameToRead;
+			protected string				zipEntryName;
 			protected System.DateTime		date;
 			protected byte[]				data;
 			protected Drawing.Image			originalImage;
 			protected Drawing.Image			lowresImage;
 			protected Size					originalSize;
-			protected double				lowresScale;
+			protected double				lowResScale;
 			protected long					timeStamp;
 			protected bool					locked;
 		}

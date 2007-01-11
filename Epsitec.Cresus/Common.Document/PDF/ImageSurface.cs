@@ -66,7 +66,7 @@ namespace Epsitec.Common.Document.PDF
 			//	Cherche une image d'après son nom dans une liste.
 			foreach ( ImageSurface image in list )
 			{
-				if ( image.cache.Filename == filename &&
+				if ( image.cache.FileName == filename &&
 					 image.size           == size     &&
 					 image.crop           == crop     &&
 					 image.filter         == filter   )

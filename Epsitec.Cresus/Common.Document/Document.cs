@@ -750,7 +750,7 @@ namespace Epsitec.Common.Document
 					// Fichier CrDoc au format ZIP, chargé avec succès.
 					using (MemoryStream stream = new MemoryStream(zip["document.data"].Data))
 					{
-						err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), filename, zip);
+						err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), zip);
 					}
 				}
 				else
@@ -758,7 +758,7 @@ namespace Epsitec.Common.Document
 					// Désérialisation standard; c'est un ancien fichier CrDoc.
 					using (Stream stream = File.OpenRead(filename))
 					{
-						err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), null, null);
+						err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), null);
 					}
 				}
 
@@ -793,10 +793,10 @@ namespace Epsitec.Common.Document
 		{
 			//	Ouvre un document sérialisé, soit parce que l'utilisateur veut ouvrir
 			//	explicitement un fichier, soit par Engine.
-			return this.Read(stream, directory, null, null);
+			return this.Read(stream, directory, null);
 		}
 
-		protected string Read(Stream stream, string directory, string zipFilename, ZipFile zip)
+		protected string Read(Stream stream, string directory, ZipFile zip)
 		{
 			//	Ouvre un document sérialisé, zippé ou non.
 			this.ioDirectory = directory;
@@ -839,7 +839,7 @@ namespace Epsitec.Common.Document
 					{
 						doc = (Document) formatter.Deserialize(stream);
 						doc.FontReadAll(zip);
-						doc.ImageCacheAll(zipFilename, zip, doc.imageIncludeMode);
+						doc.ImageCacheReadAll(zip, doc.imageIncludeMode);
 					}
 				}
 				catch ( System.Exception e )
@@ -1995,22 +1995,12 @@ namespace Epsitec.Common.Document
 				Properties.Image propImage = obj.PropertyImage;
 				if (propImage != null)
 				{
-					ImageCache.Item item = this.imageCache.Find(propImage.FileName, propImage.FileDate);
-
-					if (item != null)
-					{
-						propImage.ShortName = item.ShortName;
-
-						if (propImage.InsideDoc)
-						{
-							item.InsideDoc = true;
-						}
-					}
+					this.imageCache.SyncImageProperty(propImage);
 				}
 			}
 		}
 
-		protected void ImageCacheAll(string zipFilename, ZipFile zip, ImageIncludeMode imageIncludeMode)
+		protected void ImageCacheReadAll(ZipFile zip, ImageIncludeMode imageIncludeMode)
 		{
 			//	Cache toutes les données pour les objets Images du document.
 			this.imageCache = new ImageCache();
@@ -2020,7 +2010,7 @@ namespace Epsitec.Common.Document
 				Properties.Image propImage = obj.PropertyImage;
 				if (propImage != null)
 				{
-					this.imageCache.ReadData(zipFilename, zip, imageIncludeMode, propImage);
+					this.imageCache.ReadData(zip, imageIncludeMode, propImage);
 				}
 			}
 		}
@@ -2033,7 +2023,7 @@ namespace Epsitec.Common.Document
 			if ( drawingContext.RootStackIsEmpty )  return;
 
 			//?this.imageCache.IsLowres = !drawingContext.PreviewActive;
-			this.imageCache.PreferLowresImages = true;
+			this.imageCache.PreferLowResImages = true;
 
 			if ( !clipRect.IsInfinite )
 			{
@@ -2173,7 +2163,7 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
-			this.imageCache.PreferLowresImages = false;
+			this.imageCache.PreferLowResImages = false;
 			this.printer.Print(dp);
 		}
 
@@ -2183,7 +2173,7 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
-			this.imageCache.PreferLowresImages = false;
+			this.imageCache.PreferLowResImages = false;
 			return this.printer.Export(filename);
 		}
 
@@ -2193,7 +2183,7 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
-			this.imageCache.PreferLowresImages = false;
+			this.imageCache.PreferLowResImages = false;
 			return this.exportPDF.FileExport(filename);
 		}
 
