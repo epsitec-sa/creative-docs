@@ -27,6 +27,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialize()
 		{
+			base.Initialize ();
 			this.volumeType = VolumeType.BoxClose;
 			this.rapport = 0.40;
 			this.angleLeft = 30.0;

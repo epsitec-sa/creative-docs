@@ -1125,9 +1125,9 @@ namespace Epsitec.Common.Document
 				Properties.Image image = obj.PropertyImage;
 				if ( image != null )
 				{
-					if ( !list.Contains(image.Filename) )
+					if ( !list.Contains(image.FileName) )
 					{
-						list.Add(image.Filename);
+						list.Add(image.FileName);
 					}
 				}
 			}

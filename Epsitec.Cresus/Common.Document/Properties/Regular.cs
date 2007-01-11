@@ -16,6 +16,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialize()
 		{
+			base.Initialize ();
 			this.nbFaces = 6;
 			this.star    = false;
 			this.deep    = 0.5;

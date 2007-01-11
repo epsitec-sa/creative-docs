@@ -16,6 +16,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialize()
 		{
+			base.Initialize ();
 			this.fontName = "Arial";
 
 			if ( this.document.Type == DocumentType.Pictogram )

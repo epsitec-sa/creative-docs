@@ -26,6 +26,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialize()
 		{
+			base.Initialize ();
 			this.arcType       = ArcType.Full;
 			this.startingAngle =  90.0;
 			this.endingAngle   = 360.0;

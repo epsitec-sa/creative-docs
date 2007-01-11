@@ -188,8 +188,8 @@ namespace Epsitec.Common.Document.Panels
 
 			this.ignoreChanged = true;
 
-			this.fieldFilename.Text = TextLayout.ConvertToTaggedText(p.Filename);
-			this.fieldFilename.Cursor = p.Filename.Length;
+			this.fieldFilename.Text = TextLayout.ConvertToTaggedText(p.FileName);
+			this.fieldFilename.Cursor = p.FileName.Length;
 
 			this.buttonRotation90.ActiveState  = p.RotationMode == Properties.Image.Rotation.Angle90  ? ActiveState.Yes : ActiveState.No;
 			this.buttonRotation180.ActiveState = p.RotationMode == Properties.Image.Rotation.Angle180 ? ActiveState.Yes : ActiveState.No;
@@ -213,7 +213,7 @@ namespace Epsitec.Common.Document.Panels
 			Properties.Image p = this.property as Properties.Image;
 			if ( p == null )  return;
 
-			p.Filename  = TextLayout.ConvertToSimpleText(this.fieldFilename.Text);
+			p.FileName  = TextLayout.ConvertToSimpleText(this.fieldFilename.Text);
 
 			     if (this.buttonRotation90.ActiveState  == ActiveState.Yes)  p.RotationMode = Properties.Image.Rotation.Angle90;
 			else if (this.buttonRotation180.ActiveState == ActiveState.Yes)  p.RotationMode = Properties.Image.Rotation.Angle180;
@@ -312,7 +312,7 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 
 			Properties.Image p = this.property as Properties.Image;
-			p.Date = this.document.ImageCache.Load(p.Filename);
+			p.FileDate = this.document.ImageCache.Load(p.FileName);
 		}
 
 		private void HandleButtonPressed(object sender, MessageEventArgs e)
@@ -379,12 +379,13 @@ namespace Epsitec.Common.Document.Panels
 		{
 			//	Le bouton 'Màj' pour relire l'image a été cliqué.
 			Properties.Image p = this.property as Properties.Image;
-			ImageCache.Item item = this.document.ImageCache.Find(p.Filename);
+			ImageCache.Item item = this.document.ImageCache.Find(p.FileName, p.FileDate);
 
 			if (item != null)
 			{
 				if (item.GlobalItem.Reload())  // relit l'image sur disque
 				{
+					p.FileDate = this.document.ImageCache.Load (p.FileName);
 					return;  // tout c'est bien passé
 				}
 			}
@@ -397,7 +398,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			//	Le bouton 'Exporter' pour choisir l'image a été cliqué.
 			Properties.Image p = this.property as Properties.Image;
-			ImageCache.Item item = this.document.ImageCache.Find(p.Filename);
+			ImageCache.Item item = this.document.ImageCache.Find(p.FileName, p.FileDate);
 			if (item == null)
 			{
 				return;

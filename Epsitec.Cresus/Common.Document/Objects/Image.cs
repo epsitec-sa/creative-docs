@@ -378,7 +378,7 @@ namespace Epsitec.Common.Document.Objects
 			get
 			{
 				Properties.Image pi = this.PropertyImage;
-				return this.document.ImageCache.Find(pi.Filename);
+				return this.document.ImageCache.Find(pi.FileName, pi.FileDate);
 			}
 		}
 
@@ -398,11 +398,11 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if (string.IsNullOrEmpty(name))
 					{
-						name = Misc.ExtractName(pi.Filename);
+						name = Misc.ExtractName(pi.FileName);
 					}
 					else
 					{
-						name = string.Concat(name, " ", Misc.ExtractName(pi.Filename));
+						name = string.Concat(name, " ", Misc.ExtractName(pi.FileName));
 					}
 
 					ImageCache.Item item = this.Item;
@@ -531,7 +531,7 @@ namespace Epsitec.Common.Document.Objects
 				if (port is PDF.Port)  // exportation PDF ?
 				{
 					PDF.Port pdfPort = port as PDF.Port;
-					PDF.ImageSurface surface = pdfPort.SearchImageSurface(pi.Filename, size, crop, filter);
+					PDF.ImageSurface surface = pdfPort.SearchImageSurface(pi.FileName, size, crop, filter);
 					System.Diagnostics.Debug.Assert(surface != null);
 					image = (surface == null) ? null : surface.DrawingImage;
 
@@ -648,9 +648,9 @@ namespace Epsitec.Common.Document.Objects
 				return;  // oui -> forcément OK
 			}
 
-			if ( !System.IO.File.Exists(pi.Filename) )
+			if ( !System.IO.File.Exists(pi.FileName) )
 			{
-				string message = string.Format(Res.Strings.Object.Image.Error, pi.Filename);
+				string message = string.Format(Res.Strings.Object.Image.Error, pi.FileName);
 				if ( !warnings.Contains(message) )
 				{
 					warnings.Add(message);

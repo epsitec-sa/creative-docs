@@ -4368,9 +4368,8 @@ namespace Epsitec.App.DocumentEditor
 
 				Objects.Page page = this.CurrentDocument.GetObjects[cp] as Objects.Page;
 				this.CurrentDocumentInfo.quickPageMenu.Text = page.ShortName;
-
-				ImageCache.Lock(this.CurrentDocument.ImageSearchFilenamesInPage(cp));
-
+				this.CurrentDocument.ImageLockInPage (cp);
+				
 				this.dlgPageStack.Update();
 				this.dlgPrint.UpdatePages();
 				this.dlgExportPDF.UpdatePages();

@@ -16,6 +16,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialize()
 		{
+			base.Initialize ();
 			this.color  = Drawing.RichColor.FromAlphaRgb(0.0, 0.5, 0.5, 0.5);
 			this.radius =  2.0;
 			this.ox     =  1.0;

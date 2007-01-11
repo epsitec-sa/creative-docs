@@ -16,6 +16,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialize()
 		{
+			base.Initialize ();
 			this.h = 0.0;
 			this.s = 0.0;
 			this.v = 0.0;

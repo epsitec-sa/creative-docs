@@ -15,6 +15,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialize()
 		{
+			base.Initialize ();
 			this.horizontal = JustifHorizontal.Left;
 			this.offset     = 0.0;
 			this.add        = 0.0;

@@ -31,6 +31,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialize()
 		{
+			base.Initialize ();
 			this.dimensionJustif = DimensionJustif.CenterOrRight;
 			this.dimensionForm = DimensionForm.Auto;
 

@@ -46,6 +46,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialize()
 		{
+			base.Initialize ();
 			this.horizontal  = JustifHorizontal.Left;
 			this.vertical    = JustifVertical.Top;
 			this.orientation = JustifOrientation.LeftToRight;

@@ -33,6 +33,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialize()
 		{
+			base.Initialize ();
 			this.arrowType = new ArrowType[2];
 			this.length    = new double[2];
 			this.effect1   = new double[2];

@@ -26,6 +26,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialize()
 		{
+			base.Initialize ();
 			this.filename       = "";
 			this.date           = System.DateTime.MinValue;
 			this.shortName      = "";
@@ -38,7 +39,7 @@ namespace Epsitec.Common.Document.Properties
 			this.cropMargins    = Margins.Zero;
 		}
 
-		public string Filename
+		public string FileName
 		{
 			//	Nom du fichier original avec le chemin d'accès complet.
 			get
@@ -57,7 +58,7 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		public System.DateTime Date
+		public System.DateTime FileDate
 		{
 			//	Date de dernière modification de l'image.
 			get

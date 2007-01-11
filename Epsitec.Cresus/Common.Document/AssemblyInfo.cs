@@ -10,9 +10,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("EPSITEC SA & OPaC bright ideas")]
 [assembly: AssemblyProduct ("Framework")]
-[assembly: AssemblyCopyright ("Copyright © 2003-2006, Daniel Roux, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2003-2007, Daniel Roux, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 
-[assembly: AssemblyVersion ("2.0.8.0")]
+[assembly: AssemblyVersion ("2.0.9.0")]
 [assembly: ComVisibleAttribute (false)]

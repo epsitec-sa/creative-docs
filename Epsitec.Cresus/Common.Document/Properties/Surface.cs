@@ -40,6 +40,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialize()
 		{
+			base.Initialize ();
 			this.surfaceType = SurfaceType.ParallelR;
 
 			this.factors = new double[4];

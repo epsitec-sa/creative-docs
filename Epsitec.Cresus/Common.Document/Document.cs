@@ -1942,40 +1942,45 @@ namespace Epsitec.Common.Document
 		#endregion
 
 		#region Images
-		public List<string> ImageSearchFilenamesInPage(int pageRank)
+		public IEnumerable<Properties.Image> ImageSearchInPage(int pageRank)
 		{
 			//	Cherche tous les noms de fichier des images de la page.
-			List<string> list = new List<string>();
 			Objects.Page page = this.objects[pageRank] as Objects.Page;
 			foreach (Objects.Abstract obj in this.Deep(page))
 			{
 				if (obj is Objects.Image)
 				{
-					Properties.Image pi = obj.PropertyImage;
-					list.Add(pi.Filename);
+					yield return obj.PropertyImage;
 				}
 			}
+		}
 
-			return list;
+		public void ImageLockInPage(int pageRank)
+		{
+			//	Verrouille les images de la page en cours, en déverrouillant
+			//	toutes les autres.
+			ImageCache.UnlockAll ();
+			foreach (Properties.Image image in this.ImageSearchInPage (pageRank))
+			{
+				ImageCache.Lock (image.FileName, image.FileDate);
+			}
 		}
 
 		protected void ImageFlushUnused()
 		{
 			//	Supprime toutes les images inutilisées du cache des images.
-			List<string> filenames = new List<string>();
+			this.imageCache.ResetUsedFlags ();
+			
 			foreach (Objects.Abstract obj in this.Deep(null))
 			{
 				Properties.Image propImage = obj.PropertyImage;
 				if (propImage != null)
 				{
-					if (!filenames.Contains(propImage.Filename))
-					{
-						filenames.Add(propImage.Filename);
-					}
+					this.imageCache.SetUsedFlag (propImage.FileName, propImage.FileDate);
 				}
 			}
 
-			this.imageCache.FlushUnused(filenames);
+			this.imageCache.FlushUnused();
 		}
 
 		protected void ImageUpdate()
@@ -1990,7 +1995,7 @@ namespace Epsitec.Common.Document
 				Properties.Image propImage = obj.PropertyImage;
 				if (propImage != null)
 				{
-					ImageCache.Item item = this.imageCache.Find(propImage.Filename);
+					ImageCache.Item item = this.imageCache.Find(propImage.FileName, propImage.FileDate);
 
 					if (item != null)
 					{

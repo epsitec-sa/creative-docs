@@ -30,6 +30,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialize()
 		{
+			base.Initialize ();
 			this.fillType = GradientFillType.None;
 
 			if ( this.type == Type.LineColor )

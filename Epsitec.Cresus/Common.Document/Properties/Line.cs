@@ -28,6 +28,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialize()
 		{
+			base.Initialize ();
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
 				this.width = 1.0;
