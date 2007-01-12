@@ -1642,7 +1642,7 @@ namespace Epsitec.Common.Document
 			byte[] data;
 			if (this.printer.Miniature(new Size(100, 100), isModel, out filename, out data))
 			{
-				zip.AddEntry(filename, data);
+				zip.AddEntry(filename, data, false);
 			}
 		}
 		#endregion
@@ -1894,7 +1894,7 @@ namespace Epsitec.Common.Document
 
 				string name = Document.GetFontFilename(fontName, i);
 				
-				zip.AddEntry(name, font.FontData.Data.Array);
+				zip.AddEntry(name, font.FontData.Data.Array, true);
 			}
 		}
 

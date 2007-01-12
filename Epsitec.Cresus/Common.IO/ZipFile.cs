@@ -220,12 +220,12 @@ namespace Epsitec.Common.IO
 
 						System.Diagnostics.Debug.Assert (size == 0);
 
-						this.entries.Add (new Entry (entry.Name, data, entry.DateTime));
+						this.entries.Add (new Entry (entry.Name, data, entry.DateTime, entry.CompressionMethod == ICSharpCode.SharpZipLib.Zip.CompressionMethod.Deflated));
 					}
 				}
 				else
 				{
-					this.entries.Add (new Entry (entry.Name, entry.DateTime, entry.Size));
+					this.entries.Add (new Entry (entry.Name, entry.DateTime, entry.Size, entry.CompressionMethod == ICSharpCode.SharpZipLib.Zip.CompressionMethod.Deflated));
 				}
 			}
 			
@@ -274,7 +274,19 @@ namespace Epsitec.Common.IO
 		/// <param name="data">The data.</param>
 		public void AddEntry(string name, byte[] data)
 		{
-			this.AddEntry (name, data, System.DateTime.Now);
+			this.AddEntry (name, data, System.DateTime.Now, true);
+		}
+
+		/// <summary>
+		/// Adds a file entry to the ZIP file.
+		/// </summary>
+		/// <param name="name">The file entry name. It can include a relative path using
+		/// exclusively forward slashes as separators.</param>
+		/// <param name="data">The data.</param>
+		/// <param name="compress">If set to <c>true</c>, the data will be compressed.</param>
+		public void AddEntry(string name, byte[] data, bool compress)
+		{
+			this.AddEntry (name, data, System.DateTime.Now, compress);
 		}
 
 		/// <summary>
@@ -284,7 +296,8 @@ namespace Epsitec.Common.IO
 		/// exclusively forward slashes as separators.</param>
 		/// <param name="data">The data.</param>
 		/// <param name="dateTime">The creation date time.</param>
-		public void AddEntry(string name, byte[] data, System.DateTime dateTime)
+		/// <param name="compress">If set to <c>true</c>, the data will be compressed.</param>
+		public void AddEntry(string name, byte[] data, System.DateTime dateTime, bool compress)
 		{
 			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (name) == false);
 			System.Diagnostics.Debug.Assert (name.Contains ("\\") == false);
@@ -294,7 +307,7 @@ namespace Epsitec.Common.IO
 			this.AddDirectory (System.IO.Path.GetDirectoryName (name));
 			
 			this.entries.RemoveAll (delegate (Entry entry) { return (entry.Name == name); });
-			this.entries.Add (new Entry (name, data, dateTime));
+			this.entries.Add (new Entry (name, data, dateTime, compress));
 		}
 
 		/// <summary>
@@ -323,7 +336,7 @@ namespace Epsitec.Common.IO
 			}
 			else
 			{
-				this.entries.Add (new Entry (name, System.DateTime.Now, 0));
+				this.entries.Add (new Entry (name, System.DateTime.Now, 0, true));
 			}
 		}
 
@@ -359,6 +372,7 @@ namespace Epsitec.Common.IO
 				e.Crc = crc.Value;
 				e.DateTime = entry.DateTime;
 				e.Size = entry.Data.Length;
+				e.CompressionMethod = entry.IsCompressed ? ICSharpCode.SharpZipLib.Zip.CompressionMethod.Deflated : ICSharpCode.SharpZipLib.Zip.CompressionMethod.Stored;
 
 				zip.PutNextEntry (e);
 				zip.Write (entry.Data, 0, entry.Data.Length);
@@ -372,20 +386,22 @@ namespace Epsitec.Common.IO
 		/// </summary>
 		public struct Entry
 		{
-			internal Entry(string fileName, byte[] data, System.DateTime date)
+			internal Entry(string fileName, byte[] data, System.DateTime date, bool isCompressed)
 			{
 				this.name = fileName;
 				this.data = data;
 				this.date = date;
 				this.size = data == null ? 0 : data.Length;
+				this.isCompressed = isCompressed;
 			}
 
-			internal Entry(string directoryName, System.DateTime date, long size)
+			internal Entry(string directoryName, System.DateTime date, long size, bool isCompressed)
 			{
 				this.name = directoryName;
 				this.data = null;
 				this.date = date;
 				this.size = size;
+				this.isCompressed = isCompressed;
 			}
 
 			/// <summary>
@@ -468,6 +484,24 @@ namespace Epsitec.Common.IO
 			}
 
 			/// <summary>
+			/// Gets or sets a value indicating whether this entry contains compressed data.
+			/// </summary>
+			/// <value>
+			/// 	<c>true</c> if this entry contains compressed data; otherwise, <c>false</c>.
+			/// </value>
+			public bool IsCompressed
+			{
+				get
+				{
+					return this.isCompressed;
+				}
+				set
+				{
+					this.isCompressed = value;
+				}
+			}
+
+			/// <summary>
 			/// The default empty entry.
 			/// </summary>
 			public static Entry Empty = new Entry ();
@@ -476,6 +510,7 @@ namespace Epsitec.Common.IO
 			private byte[] data;
 			private long size;
 			private System.DateTime date;
+			private bool isCompressed;
 		}
 
 		private int level = 5;

@@ -217,7 +217,7 @@ namespace Epsitec.Common.Document
 				if (item.InsideDoc || imageIncludeMode == Document.ImageIncludeMode.All)
 				{
 					string name = string.Format ("images/{0}", item.ShortName);
-					zip.AddEntry (name, item.GlobalItem.Data);
+					zip.AddEntry (name, item.GlobalItem.Data, false);
 				}
 			}
 		}
