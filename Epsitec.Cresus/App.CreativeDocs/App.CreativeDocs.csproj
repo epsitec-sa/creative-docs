@@ -49,6 +49,7 @@
     <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -165,7 +166,7 @@ xcopy "$(SolutionDir)External\*.Win32.dll" "$(SolutionDir)X.Setup.CreativeDocs\S
 del "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\Creative Docs .NET.exe"
 ren "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\App.CreativeDocs.exe" "Creative Docs .NET.exe"
 
-rem call "$(SolutionDir)External\CodeSigning\sign-opac.bat" "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\*"
+call "$(SolutionDir)External\CodeSigning\sign-opac.bat" "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\*"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
