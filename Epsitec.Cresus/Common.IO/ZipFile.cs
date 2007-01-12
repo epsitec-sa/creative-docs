@@ -220,12 +220,12 @@ namespace Epsitec.Common.IO
 
 						System.Diagnostics.Debug.Assert (size == 0);
 
-						this.entries.Add (new Entry (entry.Name, data, entry.DateTime, entry.CompressionMethod == ICSharpCode.SharpZipLib.Zip.CompressionMethod.Deflated));
+						this.entries.Add (new Entry (entry.Name, data, entry.DateTime, (int) entry.ZipFileIndex, entry.CompressionMethod == ICSharpCode.SharpZipLib.Zip.CompressionMethod.Deflated));
 					}
 				}
 				else
 				{
-					this.entries.Add (new Entry (entry.Name, entry.DateTime, entry.Size, entry.CompressionMethod == ICSharpCode.SharpZipLib.Zip.CompressionMethod.Deflated));
+					this.entries.Add (new Entry (entry.Name, entry.DateTime, entry.Size, (int) entry.ZipFileIndex, entry.CompressionMethod == ICSharpCode.SharpZipLib.Zip.CompressionMethod.Deflated));
 				}
 			}
 			
@@ -250,7 +250,25 @@ namespace Epsitec.Common.IO
 		/// <param name="stream">The stream.</param>
 		public void SaveFile(System.IO.Stream stream)
 		{
-			this.entries.Sort (delegate (Entry a, Entry b) { return string.Compare (a.Name, b.Name); });
+			this.entries.Sort
+				(
+					delegate (Entry a, Entry b)
+					{
+						if (a.Priority == b.Priority)
+						{
+							return string.Compare (a.Name, b.Name);
+						}
+						else if (a.Priority < b.Priority)
+						{
+							return -1;
+						}
+						else
+						{
+							return 1;
+						}
+					}
+				);
+			
 			ICSharpCode.SharpZipLib.Checksums.Crc32 crc = new ICSharpCode.SharpZipLib.Checksums.Crc32 ();
 			ICSharpCode.SharpZipLib.Zip.ZipOutputStream zip = new ICSharpCode.SharpZipLib.Zip.ZipOutputStream (stream);
 
@@ -295,9 +313,35 @@ namespace Epsitec.Common.IO
 		/// <param name="name">The file entry name. It can include a relative path using
 		/// exclusively forward slashes as separators.</param>
 		/// <param name="data">The data.</param>
+		/// <param name="priority">The file entry priority.</param>
+		public void AddEntry(string name, byte[] data, int priority)
+		{
+			this.AddEntry (name, data, System.DateTime.Now, priority, true);
+		}
+
+		/// <summary>
+		/// Adds a file entry to the ZIP file.
+		/// </summary>
+		/// <param name="name">The file entry name. It can include a relative path using
+		/// exclusively forward slashes as separators.</param>
+		/// <param name="data">The data.</param>
 		/// <param name="dateTime">The creation date time.</param>
 		/// <param name="compress">If set to <c>true</c>, the data will be compressed.</param>
 		public void AddEntry(string name, byte[] data, System.DateTime dateTime, bool compress)
+		{
+			this.AddEntry (name, data, dateTime, 1000000, compress);
+		}
+
+		/// <summary>
+		/// Adds a file entry to the ZIP file.
+		/// </summary>
+		/// <param name="name">The file entry name. It can include a relative path using
+		/// exclusively forward slashes as separators.</param>
+		/// <param name="data">The data.</param>
+		/// <param name="dateTime">The creation date time.</param>
+		/// <param name="priority">The file entry priority.</param>
+		/// <param name="compress">If set to <c>true</c>, the data will be compressed.</param>
+		public void AddEntry(string name, byte[] data, System.DateTime dateTime, int priority, bool compress)
 		{
 			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (name) == false);
 			System.Diagnostics.Debug.Assert (name.Contains ("\\") == false);
@@ -307,7 +351,7 @@ namespace Epsitec.Common.IO
 			this.AddDirectory (System.IO.Path.GetDirectoryName (name));
 			
 			this.entries.RemoveAll (delegate (Entry entry) { return (entry.Name == name); });
-			this.entries.Add (new Entry (name, data, dateTime, compress));
+			this.entries.Add (new Entry (name, data, dateTime, priority, compress));
 		}
 
 		/// <summary>
@@ -336,7 +380,7 @@ namespace Epsitec.Common.IO
 			}
 			else
 			{
-				this.entries.Add (new Entry (name, System.DateTime.Now, 0, true));
+				this.entries.Add (new Entry (name, System.DateTime.Now, 0, 0, true));
 			}
 		}
 
@@ -386,22 +430,24 @@ namespace Epsitec.Common.IO
 		/// </summary>
 		public struct Entry
 		{
-			internal Entry(string fileName, byte[] data, System.DateTime date, bool isCompressed)
+			internal Entry(string fileName, byte[] data, System.DateTime date, int priority, bool isCompressed)
 			{
 				this.name = fileName;
 				this.data = data;
 				this.date = date;
 				this.size = data == null ? 0 : data.Length;
 				this.isCompressed = isCompressed;
+				this.priority = priority;
 			}
 
-			internal Entry(string directoryName, System.DateTime date, long size, bool isCompressed)
+			internal Entry(string directoryName, System.DateTime date, long size, int priority, bool isCompressed)
 			{
 				this.name = directoryName;
 				this.data = null;
 				this.date = date;
 				this.size = size;
 				this.isCompressed = isCompressed;
+				this.priority = priority;
 			}
 
 			/// <summary>
@@ -502,6 +548,19 @@ namespace Epsitec.Common.IO
 			}
 
 			/// <summary>
+			/// Gets or sets the priority for this entry. A small value represents a
+			/// higher priority (it usually maps to the ZIP entry index).
+			/// </summary>
+			/// <value>The priority.</value>
+			public int Priority
+			{
+				get
+				{
+					return this.priority;
+				}
+			}
+
+			/// <summary>
 			/// The default empty entry.
 			/// </summary>
 			public static Entry Empty = new Entry ();
@@ -511,6 +570,7 @@ namespace Epsitec.Common.IO
 			private long size;
 			private System.DateTime date;
 			private bool isCompressed;
+			private int priority;
 		}
 
 		private int level = 5;

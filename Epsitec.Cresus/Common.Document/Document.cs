@@ -1301,9 +1301,9 @@ namespace Epsitec.Common.Document
 					}
 
 					ZipFile zip = new ZipFile();
-					zip.AddEntry("document.data", data);
-					this.WriteMiniature(zip, Misc.IsExtension(filename, ".crmod"));
-					this.WriteStatistics(zip);
+					zip.AddEntry("document.data", data, 0);
+					this.WriteMiniature(zip, 1, Misc.IsExtension(filename, ".crmod"));
+					this.WriteStatistics(zip, 2);
 					this.imageCache.WriteData(zip, this.imageIncludeMode);
 					this.FontWriteAll(zip);
 					zip.CompressionLevel = 6;
@@ -1635,14 +1635,14 @@ namespace Epsitec.Common.Document
 
 
 		#region Miniature
-		protected void WriteMiniature(ZipFile zip, bool isModel)
+		protected void WriteMiniature(ZipFile zip, int priority, bool isModel)
 		{
 			//	Ecrit la miniature de la première page dans le fichier zip.
 			string filename;
 			byte[] data;
 			if (this.printer.Miniature(new Size(100, 100), isModel, out filename, out data))
 			{
-				zip.AddEntry(filename, data, false);
+				zip.AddEntry (filename, data, System.DateTime.Now, priority, false);
 			}
 		}
 		#endregion
@@ -1805,7 +1805,7 @@ namespace Epsitec.Common.Document
 			protected int					imagesCount;
 		}
 
-		protected void WriteStatistics(ZipFile zip)
+		protected void WriteStatistics(ZipFile zip, int priority)
 		{
 			//	Ecrit la description du document dans le fichier zip.
 			Statistics stat = new Statistics();
@@ -1835,7 +1835,7 @@ namespace Epsitec.Common.Document
 			stat.ImagesCount = imageList.Count;
 
 			byte[] data = Serialization.SerializeToMemory(stat);
-			zip.AddEntry("statistics.data", data);
+			zip.AddEntry ("statistics.data", data, priority);
 		}
 		#endregion
 
