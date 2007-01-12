@@ -71,12 +71,25 @@ namespace Epsitec.Common.IO
 		/// <param name="path">The path to the file.</param>
 		public void Open(string path)
 		{
+			this.sourcePath = path;
 			this.sourceStream = new System.IO.FileStream (path, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read);
 			this.sourceLength = this.sourceStream.Length;
 			this.localCopyPath = System.IO.Path.GetTempFileName ();
 			this.localCopyStream = new System.IO.FileStream (this.localCopyPath, System.IO.FileMode.Create, System.IO.FileAccess.ReadWrite, System.IO.FileShare.Read);
 			this.copyThread = new System.Threading.Thread (this.CopyThread);
 			this.copyThread.Start ();
+		}
+
+		public void Close()
+		{
+			if (this.copyThread != null)
+			{
+				this.copyThreadAbortRequest = true;
+				this.copyThread.Join ();
+				this.copyThread = null;
+			}
+
+			this.DeleteLocalCopy ();
 		}
 
 		/// <summary>
@@ -101,6 +114,15 @@ namespace Epsitec.Common.IO
 			}
 
 			return null;
+		}
+
+		/// <summary>
+		/// Gets the path to the local file.
+		/// </summary>
+		/// <returns>The path to the local file.</returns>
+		public string GetLocalFilePath()
+		{
+			return this.localCopyPath;
 		}
 
 		/// <summary>
@@ -141,30 +163,37 @@ namespace Epsitec.Common.IO
 
 		private void CopyThread()
 		{
-			byte[] buffer = new byte[1*1024];
+			System.Diagnostics.Debug.WriteLine ("Copying from '" + this.sourcePath + "' to '" + this.localCopyPath + "'");
+			byte[] buffer = new byte[64*1024];
 
 			while (true)
 			{
 				int count = this.sourceStream.Read (buffer, 0, buffer.Length);
 
-				if (count == 0)
+				if ((count == 0) ||
+					(this.copyThreadAbortRequest))
 				{
 					break;
 				}
 
 				this.localCopyStream.Write (buffer, 0, count);
+				this.localCopyStream.Flush ();
 				
 				System.Threading.Interlocked.Add (ref this.localCopyWritten, count);
-				System.Threading.Thread.Sleep (1);
 
 				this.localCopyWait.Signal ();
 			}
 
-			this.sourceStream.Close ();
-			this.localCopyStream.Close ();
+			lock (this.exclusion)
+			{
+				this.CloseSourceStream ();
+				this.CloseLocalCopyStream ();
+			}
 
 			this.localCopyReady = true;
 			this.localCopyWait.Signal ();
+
+			System.Diagnostics.Debug.WriteLine ("Copy done : " + this.localCopyWritten.ToString ());
 		}
 
 		#region IDisposable Members
@@ -179,9 +208,17 @@ namespace Epsitec.Common.IO
 
 		protected virtual void Dispose(bool disposing)
 		{
-			this.CloseSourceStream ();
-			this.CloseLocalCopyStream ();
-			this.DeleteLocalCopy ();
+			if (disposing)
+			{
+				this.Close ();
+			}
+
+			lock (this.exclusion)
+			{
+				this.CloseSourceStream ();
+				this.CloseLocalCopyStream ();
+				this.DeleteLocalCopy ();
+			}
 		}
 
 		private void CloseSourceStream()
@@ -218,8 +255,10 @@ namespace Epsitec.Common.IO
 		}
 
 		private object exclusion = new object ();
+		private string sourcePath;
 		private string localCopyPath;
 		private System.Threading.Thread copyThread;
+		private bool copyThreadAbortRequest;
 		private System.IO.FileStream sourceStream;
 		private System.IO.FileStream localCopyStream;
 		private long sourceLength;

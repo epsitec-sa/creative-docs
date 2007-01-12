@@ -113,6 +113,10 @@ namespace Epsitec.Common.IO
 			{
 				return this.loadFileName;
 			}
+			set
+			{
+				this.loadFileName = value;
+			}
 		}
 
 		/// <summary>
