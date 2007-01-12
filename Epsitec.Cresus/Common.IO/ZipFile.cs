@@ -128,7 +128,6 @@ namespace Epsitec.Common.IO
 		{
 			return this.TryLoadFile (name, delegate (string entryName) { return true; });
 		}
-
 		/// <summary>
 		/// Tries to load the specified ZIP file. Only the entries for which the predicate
 		/// returns true will be effectively loaded.
@@ -143,25 +142,50 @@ namespace Epsitec.Common.IO
 			{
 				using (System.IO.Stream stream = System.IO.File.OpenRead (name))
 				{
-					int b1 = stream.ReadByte ();
-					int b2 = stream.ReadByte ();
-					int b3 = stream.ReadByte ();
-					int b4 = stream.ReadByte ();
-					
-					stream.Position = 0;
-
-					if ((b1 == 'P') &&
-						(b2 == 'K') &&
-						(b3 == 3) &&
-						(b4 == 4))
-					{
-						this.loadFileName = name;
-						this.LoadFile (stream, loadPredicate);
-
-						return true;
-					}
+					this.loadFileName = name;
+					return this.TryLoadFile (stream, loadPredicate);
 				}
+			}
+			catch (System.IO.IOException)
+			{
+			}
 
+			return false;
+		}
+
+
+		/// <summary>
+		/// Tries to load the specified ZIP file. Only the entries for which the predicate
+		/// returns true will be effectively loaded.
+		/// </summary>
+		/// <param name="stream">The file stream.</param>
+		/// <param name="loadPredicate">The load predicate which must return true if an
+		/// entry is to be loaded.</param>
+		/// <returns>
+		/// 	<c>true</c> on success; otherwise, <c>false</c>.
+		/// </returns>
+		public bool TryLoadFile(System.IO.Stream stream, LoadPredicate loadPredicate)
+		{
+			try
+			{
+				long position = stream.Position;
+
+				int b1 = stream.ReadByte ();
+				int b2 = stream.ReadByte ();
+				int b3 = stream.ReadByte ();
+				int b4 = stream.ReadByte ();
+				
+				stream.Position = position;
+
+				if ((b1 == 'P') &&
+					(b2 == 'K') &&
+					(b3 == 3) &&
+					(b4 == 4))
+				{
+					this.LoadFile (stream, loadPredicate);
+
+					return true;
+				}
 			}
 			catch (System.IO.IOException)
 			{

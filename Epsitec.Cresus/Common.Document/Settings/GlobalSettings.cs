@@ -386,10 +386,13 @@ namespace Epsitec.Common.Document.Settings
 
 		protected int LastFilenameSearch(string filename)
 		{
-			for ( int i=0 ; i<this.lastFilename.Count ; i++ )
+			for (int i=0; i<this.lastFilename.Count; i++)
 			{
 				string s = this.lastFilename[i] as string;
-				if ( s == filename )  return i;
+				if (string.Equals (s, filename, System.StringComparison.OrdinalIgnoreCase))
+				{
+					return i;
+				}
 			}
 			return -1;
 		}

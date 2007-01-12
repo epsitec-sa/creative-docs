@@ -26,6 +26,18 @@ namespace Epsitec.Common.IO
 
 
 		/// <summary>
+		/// Gets a value indicating whether this document is open or not.
+		/// </summary>
+		/// <value><c>true</c> if this document is open; otherwise, <c>false</c>.</value>
+		public bool IsOpen
+		{
+			get
+			{
+				return string.IsNullOrEmpty (this.sourcePath) ? false : true;
+			}
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether the local copy of the document is ready.
 		/// </summary>
 		/// <value>
@@ -90,6 +102,55 @@ namespace Epsitec.Common.IO
 			}
 
 			this.DeleteLocalCopy ();
+
+			this.sourcePath = null;
+		}
+
+		public bool Save(string path, SaveCallback callback)
+		{
+			if (this.IsOpen)
+			{
+				this.WaitForLocalCopyReady (-1);
+			}
+
+			string tempPath = string.Concat (path, ".tmp");
+
+			if (System.IO.File.Exists (tempPath))
+			{
+				System.IO.File.Delete (tempPath);
+			}
+			
+			try
+			{
+				using (System.IO.Stream stream = System.IO.File.Open (tempPath, System.IO.FileMode.CreateNew, System.IO.FileAccess.ReadWrite, System.IO.FileShare.None))
+				{
+					if (callback (stream) == false)
+					{
+						return false;
+					}
+				}
+
+				//	TODO: re-encrypt output file if the original was encrypted ?
+
+				System.IO.File.Delete (path);
+				System.IO.File.Move (tempPath, path);
+				
+			}
+			finally
+			{
+				try
+				{
+					if (System.IO.File.Exists (tempPath))
+					{
+						System.IO.File.Delete (tempPath);
+					}
+				}
+				catch
+				{
+				}
+			}
+
+			return true;
 		}
 
 		/// <summary>
@@ -253,6 +314,8 @@ namespace Epsitec.Common.IO
 				}
 			}
 		}
+
+		public delegate bool SaveCallback(System.IO.Stream stream);
 
 		private object exclusion = new object ();
 		private string sourcePath;

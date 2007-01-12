@@ -64,7 +64,7 @@ namespace Epsitec.Common.Document
 	{
 		public enum IOType
 		{
-			Unknow,				// format inconnu
+			Unknown,			// format inconnu
 			BinaryCompress,		// format standard
 			SoapUncompress,		// format de debug
 		}
@@ -89,6 +89,13 @@ namespace Epsitec.Common.Document
 			All		= 2,	// inclut toutes les images définies
 		}
 
+		public enum DocumentFileExtension
+		{
+			Unknown,		// extension inconnue
+			CrDoc,			// extension *.crdoc
+			CrMod,			// extension *.crmod
+			Icon			// extension *.icon
+		}
 
 		public Document(DocumentType type, DocumentMode mode, InstallType installType, DebugMode debugMode, Settings.GlobalSettings globalSettings, CommandDispatcher commandDispatcher, CommandContext commandContext)
 		{
@@ -181,6 +188,12 @@ namespace Epsitec.Common.Document
 
 		public void Dispose()
 		{
+			if (this.ioDocumentManager != null)
+			{
+				this.ioDocumentManager.Dispose ();
+				this.ioDocumentManager = null;
+			}
+
 			if (this.imageCache != null)
 			{
 				this.imageCache.Clear();
@@ -742,10 +755,18 @@ namespace Epsitec.Common.Document
 
 			try
 			{
-				ZipFile zip = new ZipFile();
-				string err = "";
+				this.ioDocumentManager = new DocumentManager ();
+				this.ioDocumentManager.Open (filename);
 
-				if (!Misc.IsExtension(filename, ".icon") && zip.TryLoadFile(filename))
+				Stream sourceStream = this.ioDocumentManager.GetLocalFileStream (FileAccess.Read);
+
+				string err = "";
+				ZipFile zip = new ZipFile ();
+				zip.LoadFileName = this.ioDocumentManager.GetLocalFilePath ();
+				DocumentFileExtension ext = Document.GetDocumentFileExtension (filename);
+
+				if (ext != DocumentFileExtension.Icon &&
+					zip.TryLoadFile(sourceStream, delegate(string entryName) { return entryName == "document.data" || entryName.StartsWith("fonts/"); }))
 				{
 					// Fichier CrDoc au format ZIP, chargé avec succès.
 					using (MemoryStream stream = new MemoryStream(zip["document.data"].Data))
@@ -756,22 +777,21 @@ namespace Epsitec.Common.Document
 				else
 				{
 					// Désérialisation standard; c'est un ancien fichier CrDoc.
-					using (Stream stream = File.OpenRead(filename))
-					{
-						err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), null);
-					}
+					err = this.Read(sourceStream, System.IO.Path.GetDirectoryName(filename), null);
 				}
+
+				sourceStream.Close ();
 
 				if (err == "")
 				{
-					if (Misc.IsExtension(filename, ".crdoc")||
-						Misc.IsExtension(filename, ".icon"))
+					if (ext == DocumentFileExtension.CrDoc ||
+						ext == DocumentFileExtension.Icon)
 					{
 						this.Filename = filename;
 						this.globalSettings.LastFilenameAdd(filename);
 						this.IsDirtySerialize = false;
 					}
-					if (Misc.IsExtension(filename, ".crmod"))
+					if (ext == DocumentFileExtension.CrMod)
 					{
 						this.globalSettings.LastModelAdd(filename);
 					}
@@ -784,6 +804,7 @@ namespace Epsitec.Common.Document
 			}
 			catch ( System.Exception e )
 			{
+				this.ioDocumentManager.Close ();
 				this.IsDirtySerialize = false;
 				return e.Message;
 			}
@@ -803,7 +824,7 @@ namespace Epsitec.Common.Document
 			this.readWarnings = new System.Collections.ArrayList();
 
 			IOType type = Document.ReadIdentifier(stream);
-			if ( type == IOType.Unknow )
+			if ( type == IOType.Unknown )
 			{
 				return Res.Strings.Error.BadFile;
 			}
@@ -1250,6 +1271,7 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			
 			int undoCount = this.modifier.OpletQueue.UndoActionCount;
+			DocumentFileExtension ext = Document.GetDocumentFileExtension (filename);
 			
 			try
 			{
@@ -1257,31 +1279,38 @@ namespace Epsitec.Common.Document
 
 				this.ioDirectory = System.IO.Path.GetDirectoryName(filename);
 
-				if ( File.Exists(filename) )
+				if (this.ioDocumentManager == null)
 				{
-					File.Delete(filename);
+					this.ioDocumentManager = new DocumentManager ();
 				}
 
 				if (this.type == DocumentType.Pictogram)
 				{
-					using (Stream stream = File.OpenWrite(filename))
-					{
-						Document.WriteIdentifier(stream, this.ioType);
+					this.ioDocumentManager.Save (filename,
+						delegate (System.IO.Stream stream)
+						{
+							Document.WriteIdentifier(stream, this.ioType);
 
-						if (this.ioType == IOType.BinaryCompress)
-						{
-							//?Stream compressor = IO.Compression.CreateBZip2Stream(stream);
-							Stream compressor = IO.Compression.CreateDeflateStream(stream, 1);
-							BinaryFormatter formatter = new BinaryFormatter();
-							formatter.Serialize(compressor, this);
-							compressor.Close();
-						}
-						else if (this.ioType == IOType.SoapUncompress)
-						{
-							SoapFormatter formatter = new SoapFormatter();
-							formatter.Serialize(stream, this);
-						}
-					}
+							if (this.ioType == IOType.BinaryCompress)
+							{
+								//?Stream compressor = IO.Compression.CreateBZip2Stream(stream);
+								Stream compressor = IO.Compression.CreateDeflateStream(stream, 1);
+								BinaryFormatter formatter = new BinaryFormatter();
+								formatter.Serialize(compressor, this);
+								compressor.Close();
+								return true;
+							}
+							else if (this.ioType == IOType.SoapUncompress)
+							{
+								SoapFormatter formatter = new SoapFormatter();
+								formatter.Serialize(stream, this);
+								return true;
+							}
+							else
+							{
+								return false;
+							}
+						});
 				}
 				else
 				{
@@ -1307,7 +1336,13 @@ namespace Epsitec.Common.Document
 					this.imageCache.WriteData(zip, this.imageIncludeMode);
 					this.FontWriteAll(zip);
 					zip.CompressionLevel = 6;
-					zip.SaveFile(filename);
+
+					this.ioDocumentManager.Save (filename,
+						delegate (System.IO.Stream stream)
+						{
+							zip.SaveFile (stream);
+							return true;
+						});
 				}
 			}
 			catch ( System.Exception e )
@@ -1324,8 +1359,8 @@ namespace Epsitec.Common.Document
 				this.modifier.OpletQueue.PurgeRedo();
 			}
 
-			if ( Misc.IsExtension(filename, ".crdoc") ||
-				 Misc.IsExtension(filename, ".icon")  )
+			if ( ext == DocumentFileExtension.CrDoc ||
+				 ext == DocumentFileExtension.Icon )
 			{
 				this.Filename = filename;
 				this.IsDirtySerialize = false;
@@ -1339,17 +1374,17 @@ namespace Epsitec.Common.Document
 			//	Lit les 8 bytes d'en-tête et vérifie qu'ils contiennent bien "<?icon?>".
 			byte[] buffer = new byte[8];
 			Common.IO.Reader.Read(stream, buffer, 0, 8);
-			if ( buffer[0] != (byte) '<' )  return IOType.Unknow;
-			if ( buffer[1] != (byte) '?' )  return IOType.Unknow;
-			if ( buffer[2] != (byte) 'i' )  return IOType.Unknow;
-			if ( buffer[3] != (byte) 'c' )  return IOType.Unknow;
-			if ( buffer[4] != (byte) 'o' )  return IOType.Unknow;
-			if ( buffer[6] != (byte) '?' )  return IOType.Unknow;
-			if ( buffer[7] != (byte) '>' )  return IOType.Unknow;
+			if ( buffer[0] != (byte) '<' )  return IOType.Unknown;
+			if ( buffer[1] != (byte) '?' )  return IOType.Unknown;
+			if ( buffer[2] != (byte) 'i' )  return IOType.Unknown;
+			if ( buffer[3] != (byte) 'c' )  return IOType.Unknown;
+			if ( buffer[4] != (byte) 'o' )  return IOType.Unknown;
+			if ( buffer[6] != (byte) '?' )  return IOType.Unknown;
+			if ( buffer[7] != (byte) '>' )  return IOType.Unknown;
 
 			if ( buffer[5] == (byte) 'n' )  return IOType.BinaryCompress;
 			if ( buffer[5] == (byte) 'x' )  return IOType.SoapUncompress;
-			return IOType.Unknow;
+			return IOType.Unknown;
 		}
 
 		protected static void WriteIdentifier(Stream stream, IOType type)
@@ -1369,6 +1404,14 @@ namespace Epsitec.Common.Document
 			stream.Write(buffer, 0, 8);
 		}
 
+		public static DocumentFileExtension GetDocumentFileExtension(string path)
+		{
+			if ( Misc.IsExtension(path, ".crdoc") )  return DocumentFileExtension.CrDoc;
+			if ( Misc.IsExtension(path, ".crmod") )  return DocumentFileExtension.CrMod;
+			if ( Misc.IsExtension(path, ".icon" ) )  return DocumentFileExtension.Icon;
+
+			return DocumentFileExtension.Unknown;
+		}
 
 		public static string DisplayOriginalSamples
 		{
@@ -3015,6 +3058,7 @@ namespace Epsitec.Common.Document
 		protected System.Collections.ArrayList	readWarnings;
 		protected List<OpenType.FontName>		fontList;
 		protected IOType						ioType;
+		protected DocumentManager				ioDocumentManager;
 		protected Objects.Memory				readObjectMemory;
 		protected Objects.Memory				readObjectMemoryText;
 		protected System.Collections.ArrayList	readRootStack;

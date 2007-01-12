@@ -57,7 +57,7 @@ namespace Epsitec.Common.IO.Internal
 			}
 			set
 			{
-				throw new System.NotImplementedException ("The method or operation is not implemented.");
+				this.Seek (value, System.IO.SeekOrigin.Begin);
 			}
 		}
 
