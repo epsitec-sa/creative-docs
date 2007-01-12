@@ -1,5 +1,5 @@
 //	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -92,6 +92,10 @@ namespace Epsitec.Common.IO
 			this.copyThread.Start ();
 		}
 
+		/// <summary>
+		/// Closes this document. This deletes the local copy of the document file
+		/// created by the <see cref="Open"/> method.
+		/// </summary>
 		public void Close()
 		{
 			if (this.copyThread != null)
@@ -106,6 +110,13 @@ namespace Epsitec.Common.IO
 			this.sourcePath = null;
 		}
 
+		/// <summary>
+		/// Saves the document to the specified path. The caller must provide a
+		/// callback which is responsible for writing data into the output stream.
+		/// </summary>
+		/// <param name="path">The path.</param>
+		/// <param name="callback">The save callback.</param>
+		/// <returns><c>true</c> if the save callback returned <c>true</c>; otherwise, <c>false</c>.</returns>
 		public bool Save(string path, SaveCallback callback)
 		{
 			if (this.IsOpen)
@@ -218,8 +229,6 @@ namespace Epsitec.Common.IO
 
 			return (this.localCopyWritten >= minimumLength);
 		}
-
-
 
 
 		private void CopyThread()

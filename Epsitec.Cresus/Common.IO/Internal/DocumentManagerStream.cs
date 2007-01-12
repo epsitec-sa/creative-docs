@@ -1,8 +1,16 @@
+//	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using System.Collections.Generic;
 using System.Text;
 
 namespace Epsitec.Common.IO.Internal
 {
+	/// <summary>
+	/// The <c>DocumentManagerStream</c> implements a stream which can be used
+	/// to seamlessly read a document while it is still being copied from its
+	/// source location to the temporary folder.
+	/// </summary>
 	internal class DocumentManagerStream : System.IO.Stream
 	{
 		public DocumentManagerStream(DocumentManager manager, string path)
@@ -108,7 +116,6 @@ namespace Epsitec.Common.IO.Internal
 		{
 			throw new System.NotImplementedException ("The method or operation is not implemented.");
 		}
-
 
 		private System.IO.Stream stream;
 		private DocumentManager manager;

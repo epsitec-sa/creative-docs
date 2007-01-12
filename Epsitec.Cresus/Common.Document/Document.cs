@@ -1331,7 +1331,7 @@ namespace Epsitec.Common.Document
 
 					ZipFile zip = new ZipFile();
 					zip.AddEntry("document.data", data, 0);
-					this.WriteMiniature(zip, 1, Misc.IsExtension(filename, ".crmod"));
+					this.WriteMiniature(zip, 1, ext == DocumentFileExtension.CrMod);
 					this.WriteStatistics(zip, 2);
 					this.imageCache.WriteData(zip, this.imageIncludeMode);
 					this.FontWriteAll(zip);
