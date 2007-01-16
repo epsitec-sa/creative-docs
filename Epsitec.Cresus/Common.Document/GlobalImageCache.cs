@@ -30,7 +30,7 @@ namespace Epsitec.Common.Document
 			//	a un certain nombre de nettoyages à faire.
 
 			GlobalImageCache.localCache.Remove (imageCache);
-			<
+
 			if (GlobalImageCache.localCache.Count == 0)
 			{
 				GlobalImageCache.ShutDown ();
