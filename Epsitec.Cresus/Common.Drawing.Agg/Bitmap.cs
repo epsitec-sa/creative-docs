@@ -398,7 +398,19 @@ namespace Epsitec.Common.Drawing
 			
 			return null;
 		}
-		
+
+		public static Image FromImage(Opac.FreeImage.Image image)
+		{
+			if (image == null)
+			{
+				return null;
+			}
+
+			Pixmap pixmap = new Pixmap ();
+			pixmap.AllocatePixmap (image, true);
+			
+			return Bitmap.FromPixmap (pixmap);
+		}
 		
 		public static Image FromPixmap(Pixmap pixmap)
 		{

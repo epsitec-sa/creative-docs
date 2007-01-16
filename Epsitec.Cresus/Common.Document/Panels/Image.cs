@@ -312,7 +312,7 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 
 			Properties.Image p = this.property as Properties.Image;
-			p.FileDate = this.document.ImageCache.Load(p.FileName);
+			p.FileDate = this.document.ImageCache.LoadFromFile(p.FileName);
 		}
 
 		private void HandleButtonPressed(object sender, MessageEventArgs e)
@@ -383,9 +383,9 @@ namespace Epsitec.Common.Document.Panels
 
 			if (item != null)
 			{
-				if (item.GlobalItem.Reload())  // relit l'image sur disque
+				if (item.ReloadImage())  // relit l'image sur disque
 				{
-					p.FileDate = this.document.ImageCache.Load (p.FileName);
+					p.FileDate = this.document.ImageCache.LoadFromFile (p.FileName);
 					return;  // tout c'est bien passé
 				}
 			}
@@ -421,7 +421,7 @@ namespace Epsitec.Common.Document.Panels
 				return;
 			}
 
-			item.GlobalItem.Write(dialog.FileName);  // écrit le fichier sur disque
+			item.ExportImage(dialog.FileName);  // écrit le fichier sur disque
 		}
 
 		void HandleCropChanged(object sender)

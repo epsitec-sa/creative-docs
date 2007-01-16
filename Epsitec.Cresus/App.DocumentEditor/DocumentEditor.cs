@@ -126,7 +126,7 @@ namespace Epsitec.App.DocumentEditor
 			this.clipboard = new Document(this.documentType, DocumentMode.Clipboard, this.installType, this.debugMode, this.globalSettings, this.CommandDispatcher, this.CommandContext);
 			this.clipboard.Name = "Clipboard";
 
-			this.documents = new System.Collections.ArrayList();
+			this.documents = new List<DocumentInfo> ();
 			this.currentDocument = -1;
 
 			string[] args = System.Environment.GetCommandLineArgs();
@@ -238,7 +238,7 @@ namespace Epsitec.App.DocumentEditor
 				int total = this.documents.Count;
 				for ( int i=0 ; i<total ; i++ )
 				{
-					DocumentInfo di = this.documents[i] as DocumentInfo;
+					DocumentInfo di = this.documents[i];
 					di.document.InstallType = this.installType;
 				}
 			}
@@ -258,7 +258,7 @@ namespace Epsitec.App.DocumentEditor
 				int total = this.documents.Count;
 				for ( int i=0 ; i<total ; i++ )
 				{
-					DocumentInfo di = this.documents[i] as DocumentInfo;
+					DocumentInfo di = this.documents[i];
 					di.document.DebugMode = this.debugMode;
 				}
 			}
@@ -318,7 +318,7 @@ namespace Epsitec.App.DocumentEditor
 				int total = this.documents.Count;
 				for (int i=0; i<total; i++)
 				{
-					DocumentInfo di = this.documents[i] as DocumentInfo;
+					DocumentInfo di = this.documents[i];
 					if (di.document.InitializationInProgress)
 					{
 						di.document.InitializationInProgress = false;
@@ -1428,7 +1428,7 @@ namespace Epsitec.App.DocumentEditor
 				int total = this.bookDocuments.PageCount;
 				for ( int i=0 ; i<total ; i++ )
 				{
-					DocumentInfo di = this.documents[i] as DocumentInfo;
+					DocumentInfo di = this.documents[i];
 					if ( di.document.Filename == filename )
 					{
 						if (Misc.IsExtension(filename, ".crmod"))
@@ -3410,6 +3410,15 @@ namespace Epsitec.App.DocumentEditor
 		{
 			//	Quitte l'application.
 			this.WritedGlobalSettings();
+			
+			foreach (DocumentInfo di in this.documents)
+			{
+				di.Dispose ();
+			}
+
+			this.documents.Clear ();
+			this.currentDocument = -1;
+			
 			Window.Quit();
 		}
 
@@ -5076,7 +5085,7 @@ namespace Epsitec.App.DocumentEditor
 			int total = this.bookDocuments.PageCount;
 			for ( int i=0 ; i<total ; i++ )
 			{
-				DocumentInfo di = this.documents[i] as DocumentInfo;
+				DocumentInfo di = this.documents[i];
 				if ( di.tabPage == this.bookDocuments.ActivePage )
 				{
 					this.UseDocument(i);
@@ -5100,7 +5109,7 @@ namespace Epsitec.App.DocumentEditor
 			get
 			{
 				if ( this.currentDocument < 0 )  return null;
-				return this.documents[this.currentDocument] as DocumentInfo;
+				return this.documents[this.currentDocument];
 			}
 		}
 
@@ -5170,7 +5179,7 @@ namespace Epsitec.App.DocumentEditor
 				int total = this.bookDocuments.PageCount;
 				for ( int i=0 ; i<total ; i++ )
 				{
-					di = this.documents[i] as DocumentInfo;
+					di = this.documents[i];
 					di.bookPanels.Visibility = (i == this.currentDocument);
 				}
 
@@ -5231,7 +5240,6 @@ namespace Epsitec.App.DocumentEditor
 			this.ignoreChange = true;
 			this.bookDocuments.Items.RemoveAt(rank);
 			this.ignoreChange = false;
-			di.document.Dispose();
 			di.Dispose();
 
 			if ( rank >= this.bookDocuments.PageCount )
@@ -5495,7 +5503,7 @@ namespace Epsitec.App.DocumentEditor
 		protected bool							initializationInProgress;
 		protected Document						clipboard;
 		protected int							currentDocument;
-		protected System.Collections.ArrayList	documents;
+		protected List<DocumentInfo>			documents;
 		protected GlobalSettings				globalSettings;
 		protected bool							askKey = false;
 		protected MouseCursor					lastMouseCursor = MouseCursor.AsArrow;
@@ -5803,6 +5811,7 @@ namespace Epsitec.App.DocumentEditor
 
 			public void Dispose()
 			{
+				this.document.Dispose ();
 				if ( this.tabPage != null )  this.tabPage.Dispose();
 				if ( this.hRuler != null )  this.hRuler.Dispose();
 				if ( this.vRuler != null )  this.vRuler.Dispose();

@@ -196,7 +196,7 @@ namespace Epsitec.Common.Document
 
 			if (this.imageCache != null)
 			{
-				this.imageCache.Clear();
+				this.imageCache.Dispose();
 				this.imageCache = null;
 			}
 
@@ -216,11 +216,6 @@ namespace Epsitec.Common.Document
 			{
 				this.notifier.Dispose();
 				this.notifier = null;
-			}
-
-			if (this.imageCache != null)
-			{
-				this.imageCache = null;
 			}
 
 			if (this.dialogs != null)
@@ -853,7 +848,7 @@ namespace Epsitec.Common.Document
 						using (Stream compressor = IO.Decompression.CreateStream(stream, out compressorName))
 						{
 							doc = (Document) formatter.Deserialize(compressor);
-							doc.imageCache = new ImageCache();
+							//-doc.imageCache = new ImageCache();
 						}
 					}
 					else
@@ -915,6 +910,13 @@ namespace Epsitec.Common.Document
 			this.uniqueAggregateId = doc.uniqueAggregateId;
 			this.uniqueParagraphStyleId = doc.uniqueParagraphStyleId;
 			this.uniqueCharacterStyleId = doc.uniqueCharacterStyleId;
+
+			if (this.imageCache != null)
+			{
+				this.imageCache.Dispose ();
+				this.imageCache = null;
+			}
+
 			this.imageCache = doc.imageCache;
 			this.fontIncludeMode = doc.fontIncludeMode;
 			this.imageIncludeMode = doc.imageIncludeMode;
@@ -2031,7 +2033,7 @@ namespace Epsitec.Common.Document
 			//	Met à jour les informations ShortName et InsideDoc.
 			//	ShortName est mis à jour dans les propriétés des objets Image du document.
 			//	InsideDoc est mis à jour dans le cache des images.
-			this.imageCache.ClearInsideDoc();
+			this.imageCache.ClearEmbeddedInDocument();
 
 			foreach (Objects.Abstract obj in this.Deep(null))
 			{
@@ -2065,8 +2067,10 @@ namespace Epsitec.Common.Document
 			//	Dessine le document.
 			if ( drawingContext.RootStackIsEmpty )  return;
 
-			//?this.imageCache.IsLowres = !drawingContext.PreviewActive;
-			this.imageCache.PreferLowResImages = true;
+			if (this.imageCache != null)
+			{
+				this.imageCache.SetResolution (ImageCacheResolution.Low);
+			}
 
 			if ( !clipRect.IsInfinite )
 			{
@@ -2206,7 +2210,7 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
-			this.imageCache.PreferLowResImages = false;
+			this.imageCache.SetResolution (ImageCacheResolution.High);
 			this.printer.Print(dp);
 		}
 
@@ -2216,7 +2220,7 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
-			this.imageCache.PreferLowResImages = false;
+			this.imageCache.SetResolution (ImageCacheResolution.High);
 			return this.printer.Export(filename);
 		}
 
@@ -2226,7 +2230,7 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
-			this.imageCache.PreferLowResImages = false;
+			this.imageCache.SetResolution (ImageCacheResolution.High);
 			return this.exportPDF.FileExport(filename);
 		}
 

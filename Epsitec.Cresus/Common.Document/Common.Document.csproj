@@ -76,6 +76,14 @@
       <Name>Magick.Wrapper</Name>
       <HintPath>..\External\Magick.Wrapper.dll</HintPath>
     </Reference>
+    <Reference Include="OPaC.FreeImage, Version=3.9.2.0, Culture=neutral, PublicKeyToken=d4b3a36d594a1874, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\OPaC.FreeImage.dll</HintPath>
+    </Reference>
+    <Reference Include="OPaC.ImageManager, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8e72c60aefd48c10, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\OPaC.ImageManager.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -183,7 +191,6 @@
     <Compile Include="Containers\Styles.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PersistentImageCache.cs" />
     <Compile Include="GlobalImageCache.cs" />
     <Compile Include="DocumentCache.cs" />
     <Compile Include="ImageCache.cs" />
