@@ -30,7 +30,8 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckGroups()
 		{
-			ItemPanel panel = new ItemPanel ();
+			ItemTable table = new ItemTable ();
+			ItemPanel panel = table.ItemPanel;
 
 			panel.Items = ItemPanelTest.GetGroupedItems ();
 			panel.Layout = ItemPanelLayout.VerticalList;
@@ -109,7 +110,14 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckGroupsStructured()
 		{
-			ItemPanel panel = new ItemPanel ();
+			ItemTable table = new ItemTable ();
+			ItemPanel panel = table.ItemPanel;
+
+			table.SourceType = ItemPanelTest.GetStructuredType ();
+
+			table.Columns.Add ("Stock", 40);
+			table.Columns.Add ("Article", 200);
+			table.Columns.Add ("Price", 60);
 
 			panel.Items = ItemPanelTest.GetStructuredItems (true);
 			panel.Layout = ItemPanelLayout.VerticalList;
@@ -133,20 +141,15 @@ namespace Epsitec.Common.UI
 			panel.Show (panel.GetItemView (0));
 			
 			ItemPanelGroup group = panel.GetItemView (0).Widget as ItemPanelGroup;
+			ItemPanelColumnHeader header = table.ColumnHeader;
 
 			Assert.IsNotNull (group.ChildPanel);
 			Assert.AreEqual (panel, group.Parent);
 			Assert.AreEqual (panel, group.ParentPanel);
 			Assert.AreEqual (panel.GetItemView (0), group.ParentView);
-			Assert.AreEqual ("Epsitec.Common.Types.StructuredData", group.ChildPanel.GetItemView (2).Widget.Text);
 
-			ItemPanelColumnHeader header = new ItemPanelColumnHeader ();
-
-			header.AddColumn ("Stock", Support.Druid.Empty);
-			header.AddColumn ("Article", Support.Druid.Empty);
-			header.AddColumn ("Price", Support.Druid.Empty);
-			
-			ItemPanelColumnHeader.SetColumnHeader (panel, header);
+			Assert.AreEqual (3, header.ColumnCount);
+			Assert.AreEqual (panel, header.ItemPanel);
 			
 			panel.Refresh ();
 
@@ -173,6 +176,12 @@ namespace Epsitec.Common.UI
 
 			ItemTable table = new ItemTable ();
 			table.Dock = Widgets.DockStyle.Fill;
+
+			table.SourceType = ItemPanelTest.GetStructuredType ();
+
+			table.Columns.Add ("Stock", 40);
+			table.Columns.Add ("Article", 200);
+			table.Columns.Add ("Price", 60);
 			
 			ItemPanel panel = table.ItemPanel;
 
@@ -182,12 +191,6 @@ namespace Epsitec.Common.UI
 			panel.GroupSelection = ItemPanelSelectionMode.ExactlyOne;
 			panel.Aperture = new Drawing.Rectangle (0, 0, dx, dy);
 			panel.ItemViewDefaultSize = new Drawing.Size (dx, 20);
-
-			ItemPanelColumnHeader header = table.ColumnHeader;
-
-			header.AddColumn ("Stock", Support.Druid.Empty);
-			header.AddColumn ("Article", Support.Druid.Empty);
-			header.AddColumn ("Price", Support.Druid.Empty);
 
 			window.Root.Children.Add (table);
 			
@@ -419,7 +422,7 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (new Drawing.Rectangle (0, 20*7, 80, 20), panel.GetItemView (0).Bounds);
 			Assert.AreEqual (new Drawing.Rectangle (0, 20*1, 80, 20), panel.GetItemView (6).Bounds);
 
-			Assert.AreEqual (new Drawing.Rectangle (0, 30, 80, 20), panel.Aperture);
+			Assert.AreEqual (panel.GetItemView (0).Bounds, panel.Aperture);
 		}
 
 		private static CollectionView GetStringItems()
@@ -491,9 +494,26 @@ namespace Epsitec.Common.UI
 			source.Add (ItemPanelTest.NewStructuredData ("Tournevis", 7, 25.70M, Category.Tool));
 		}
 
+		private static StructuredType GetStructuredType()
+		{
+			if (ItemPanelTest.structuredType == null)
+			{
+				ItemPanelTest.structuredType = new StructuredType ();
+
+				EnumType categoryType = new EnumType (typeof (Category));
+
+				ItemPanelTest.structuredType.Fields.Add ("Article", StringType.Default);
+				ItemPanelTest.structuredType.Fields.Add ("Stock", IntegerType.Default);
+				ItemPanelTest.structuredType.Fields.Add ("Price", new DecimalType (0.00M, 999999.95M, 0.05M));
+				ItemPanelTest.structuredType.Fields.Add ("Category", categoryType);
+			}
+
+			return ItemPanelTest.structuredType;
+		}
+
 		private static StructuredData NewStructuredData(string article, int stock, decimal price, Category category)
 		{
-			StructuredData data = new StructuredData ();
+			StructuredData data = new StructuredData (ItemPanelTest.GetStructuredType ());
 			
 			data.SetValue ("Article", article);
 			data.SetValue ("Stock", stock);
@@ -502,6 +522,8 @@ namespace Epsitec.Common.UI
 
 			return data;
 		}
+
+		private static StructuredType structuredType;
 
 		private enum Category
 		{
