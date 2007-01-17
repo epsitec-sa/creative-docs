@@ -171,7 +171,7 @@ namespace Epsitec.Common.Document
 			//	juste pour une icône !
 			if ( this.mode == DocumentMode.Modify )
 			{
-				this.imageCache = new ImageCache();
+				this.imageCache = new ImageCache(this);
 			}
 
 			if ( this.mode == DocumentMode.Clipboard )
@@ -188,16 +188,16 @@ namespace Epsitec.Common.Document
 
 		public void Dispose()
 		{
+			if (this.imageCache != null)
+			{
+				this.imageCache.Dispose ();
+				this.imageCache = null;
+			}
+
 			if (this.ioDocumentManager != null)
 			{
 				this.ioDocumentManager.Dispose ();
 				this.ioDocumentManager = null;
-			}
-
-			if (this.imageCache != null)
-			{
-				this.imageCache.Dispose();
-				this.imageCache = null;
 			}
 
 			if (this.modifier != null)
@@ -461,6 +461,14 @@ namespace Epsitec.Common.Document
 		{
 			//	Cache des images de ce document.
 			get { return this.imageCache; }
+		}
+
+		public IO.DocumentManager DocumentManager
+		{
+			get
+			{
+				return this.ioDocumentManager;
+			}
 		}
 
 		public Wrappers Wrappers
@@ -913,11 +921,18 @@ namespace Epsitec.Common.Document
 
 			if (this.imageCache != null)
 			{
+				this.imageCache.Document = null;	//	évite de vider le cache global qui vient d'être rempli
 				this.imageCache.Dispose ();
 				this.imageCache = null;
 			}
 
 			this.imageCache = doc.imageCache;
+
+			if (this.imageCache != null)
+			{
+				this.imageCache.Document = this;
+			}
+
 			this.fontIncludeMode = doc.fontIncludeMode;
 			this.imageIncludeMode = doc.imageIncludeMode;
 			
@@ -2004,10 +2019,10 @@ namespace Epsitec.Common.Document
 		{
 			//	Verrouille les images de la page en cours, en déverrouillant
 			//	toutes les autres.
-			ImageCache.UnlockAll ();
+			this.imageCache.UnlockAll ();
 			foreach (Properties.Image image in this.ImageSearchInPage (pageRank))
 			{
-				ImageCache.Lock (image.FileName, image.FileDate);
+				this.imageCache.Lock (image.FileName, image.FileDate);
 			}
 		}
 
@@ -2048,7 +2063,7 @@ namespace Epsitec.Common.Document
 		protected void ImageCacheReadAll(ZipFile zip, ImageIncludeMode imageIncludeMode)
 		{
 			//	Cache toutes les données pour les objets Images du document.
-			this.imageCache = new ImageCache();
+			this.imageCache = new ImageCache(this);
 
 			foreach (Objects.Abstract obj in this.Deep(null))
 			{

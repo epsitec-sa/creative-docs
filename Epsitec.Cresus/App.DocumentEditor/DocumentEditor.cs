@@ -5167,7 +5167,7 @@ namespace Epsitec.App.DocumentEditor
 			this.currentDocument = rank;
 			this.PrepareOpenDocument();
 
-			ImageCache.UnlockAll();  // libère toutes les images
+			GlobalImageCache.UnlockAll();  // libère toutes les images
 
 			if (rank >= 0)
 			{

@@ -9,7 +9,7 @@ namespace Epsitec.Common.Document
 	/// <summary>
 	/// Cache statique global des images de l'application.
 	/// </summary>
-	internal static class GlobalImageCache
+	public static class GlobalImageCache
 	{
 		internal static void Register(ImageCache imageCache)
 		{
@@ -49,10 +49,11 @@ namespace Epsitec.Common.Document
 			GlobalImageCache.cache = null;
 		}
 		
-		public static Item Find(string key)
+		public static Item Find(string key, string zipFileName)
 		{
 			//	Retourne les données d'une image.
 			Item item;
+			key = GlobalImageCache.GetGlobalKeyName (key, zipFileName);
 			GlobalImageCache.items.TryGetValue (key, out item);
 			return item;
 		}
@@ -60,28 +61,56 @@ namespace Epsitec.Common.Document
 		public static Opac.ImageManager.Cache GetImageManagerCache()
 		{
 			//	Retourne le cache du gestionnaire d'images (cache sur disque).
-
 			return GlobalImageCache.cache;
 		}
 
 		private static byte[] ZippedDocumentReader(string zipPath)
 		{
+			//	Lit les données depuis un document ZIP.
 			string zipFileName;
 			string zipEntryName;
 
 			if (GlobalImageCache.ExtractZipPathNames (string.Concat (GlobalImageCache.zipPrefix, zipPath), out zipFileName, out zipEntryName))
 			{
-				IO.ZipFile zip = new IO.ZipFile ();
+				IO.DocumentManager manager = GlobalImageCache.FindDocumentManager (zipFileName);
 
-				bool ok = zip.TryLoadFile (zipFileName,
-					delegate (string name)
-					{
-						return (name == zipEntryName);
-					});
-
-				if (ok)
+				using (System.IO.Stream stream = manager.GetLocalFileStream (System.IO.FileAccess.Read))
 				{
-					return zip[zipEntryName].Data;  // lit les données dans le fichier zip
+					if (stream != null)
+					{
+						IO.ZipFile zip = new IO.ZipFile ();
+
+						bool ok = zip.TryLoadFile (stream,
+							delegate (string name)
+							{
+								return (name == zipEntryName);
+							});
+
+						if (ok)
+						{
+							return zip[zipEntryName].Data;  // lit les données dans le fichier zip
+						}
+					}
+				}
+			}
+
+			return null;
+		}
+
+		private static IO.DocumentManager FindDocumentManager(string zipFileName)
+		{
+			string zipPath = zipFileName.ToLowerInvariant ();
+
+			foreach (ImageCache cache in GlobalImageCache.localCache)
+			{
+				Document document = cache.Document;
+				IO.DocumentManager manager = document.DocumentManager;
+
+				string path = manager.GetLocalFilePath ().ToLowerInvariant ();
+
+				if (path == zipPath)
+				{
+					return manager;
 				}
 			}
 
@@ -96,7 +125,8 @@ namespace Epsitec.Common.Document
 
 		public static bool ExtractZipPathNames(string zipPath, out string zipFileName, out string zipEntryName)
 		{
-			if (zipPath.StartsWith (GlobalImageCache.zipPrefix))
+			if (!string.IsNullOrEmpty (zipPath) &&
+				zipPath.StartsWith (GlobalImageCache.zipPrefix))
 			{
 				zipPath = zipPath.Substring (GlobalImageCache.zipPrefix.Length);
 				int pos = zipPath.LastIndexOf (':');
@@ -118,39 +148,68 @@ namespace Epsitec.Common.Document
 
 
 
-		public static Item FindStartingWith(string prefix)
+		public static Item FindStartingWith(string prefix, string zipFileName)
 		{
 			foreach (KeyValuePair<string, Item> pair in GlobalImageCache.items)
 			{
 				if (pair.Key.StartsWith (prefix))
 				{
-					return pair.Value;
+					if (string.IsNullOrEmpty (zipFileName) ||
+						pair.Value.ZipFileName == zipFileName)
+					{
+						return pair.Value;
+					}
 				}
 			}
 			
 			return null;
 		}
 
-		public static Item Add(string key, string filename, string zipPath, System.DateTime date)
+		public static void RemoveReferenceToZip(string zipFileName)
+		{
+			List<Item> list = new List<Item> ();
+			
+			foreach (KeyValuePair<string, Item> pair in GlobalImageCache.items)
+			{
+				if (pair.Value.ZipFileName == zipFileName)
+				{
+					list.Add (pair.Value);
+				}
+			}
+
+			foreach (Item item in list)
+			{
+				GlobalImageCache.Remove (item);
+			}
+		}
+
+		public static Item Add(string key, string fileName, string zipPath, System.DateTime date)
 		{
 			//	Ajoute une nouvelle image dans le cache.
-			
+
 			System.Diagnostics.Debug.Assert (date != System.DateTime.MinValue);
 
 			Item item;
-			
+
+			string zipFileName;
+			string zipEntryName;
+
+			GlobalImageCache.ExtractZipPathNames (zipPath, out zipFileName, out zipEntryName);
+
+			key = GlobalImageCache.GetGlobalKeyName (key, zipFileName);
+
 			if (GlobalImageCache.items.TryGetValue (key, out item))
 			{
 				return item;
 			}
 			else
 			{
-				item = new Item (filename, zipPath, date);
+				item = new Item (fileName, zipPath, date);
 
 				if (!string.IsNullOrEmpty (zipPath) ||
-					System.IO.File.Exists (filename))
+					System.IO.File.Exists (fileName))
 				{
-					GlobalImageCache.items.Add(key, item);
+					GlobalImageCache.items.Add (key, item);
 					return item;
 				}
 				else
@@ -164,12 +223,12 @@ namespace Epsitec.Common.Document
 		{
 			//	Supprime une image dans le cache.
 
-			string key = item.KeyName;
+			string key = item.GlobalKeyName;
 
-			if (GlobalImageCache.items.ContainsKey(key))
+			if (GlobalImageCache.items.ContainsKey (key))
 			{
-				GlobalImageCache.items.Remove(key);
-				item.Dispose();
+				GlobalImageCache.items.Remove (key);
+				item.Dispose ();
 			}
 		}
 
@@ -182,10 +241,12 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public static void Lock(string key)
+		public static void Lock(string key, string zipFileName)
 		{
 			//	Bloque l'image car elle est utilisée dans la page.
 			Item item;
+
+			key = GlobalImageCache.GetGlobalKeyName (key, zipFileName);
 			
 			if (GlobalImageCache.items.TryGetValue (key, out item))
 			{
@@ -469,11 +530,19 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			public string KeyName
+			public string LocalKeyName
 			{
 				get
 				{
 					return Opac.ImageManager.Cache.GetKey (this.filename, this.date);
+				}
+			}
+
+			public string GlobalKeyName
+			{
+				get
+				{
+					return GlobalImageCache.GetGlobalKeyName (this.LocalKeyName, this.zipFilename);
 				}
 			}
 
@@ -486,7 +555,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 			
-			public string ZipFilename
+			public string ZipFileName
 			{
 				//	Nom du fichier zip contenant l'image.
 				get
@@ -605,15 +674,16 @@ namespace Epsitec.Common.Document
 					return;
 				}
 
-				System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: ReadImageData {0}", this.filename));
 				if (this.zipFilename == null)
 				{
-					this.data = System.IO.File.ReadAllBytes(this.filename);
+					System.Diagnostics.Debug.WriteLine (string.Format ("GlobalImageCache: ReadImageData from file {0}", this.filename));
+					this.data = System.IO.File.ReadAllBytes (this.filename);
 					this.date = GlobalImageCache.GetFileDate(this.filename);
 				}
 				else
 				{
-					ZipFile zip = new ZipFile();
+					System.Diagnostics.Debug.WriteLine (string.Format ("GlobalImageCache: ReadImageData from zip {0} {1}", this.zipFilename, this.zipEntryName));
+					ZipFile zip = new ZipFile ();
 
 					bool ok = zip.TryLoadFile (this.zipFilename,
 						delegate (string entryName)
@@ -707,5 +777,18 @@ namespace Epsitec.Common.Document
 		private static long							timeStamp = 0;
 		private static Opac.ImageManager.Cache		cache;
 		private static List<ImageCache>				localCache = new List<ImageCache> ();
+
+		private static string GetGlobalKeyName(string localKeyName, string zipFileName)
+		{
+			if (string.IsNullOrEmpty (zipFileName))
+			{
+				return localKeyName;
+			}
+			else
+			{
+				return string.Concat (localKeyName, "|", zipFileName);
+			}
+
+		}
 	}
 }

@@ -21,13 +21,27 @@ namespace Epsitec.Common.Document
 	/// </summary>
 	public sealed class ImageCache
 	{
-		public ImageCache()
+		public ImageCache(Document document)
 		{
+			this.document = document;
 			this.items = new Dictionary<string, Item> ();
 			this.resolution = ImageCacheResolution.Low;
 			GlobalImageCache.Register (this);
 		}
 
+		public Document Document
+		{
+			get
+			{
+				return this.document;
+			}
+
+			set
+			{
+				this.document = value;
+			}
+		}
+		
 		public void SetResolution(ImageCacheResolution resolution)
 		{
 			//	Indique à quelle résolution d'images on s'intéresse.
@@ -112,6 +126,14 @@ namespace Epsitec.Common.Document
 		public void Dispose()
 		{
 			//	Supprime toutes les images du cache.
+			IO.DocumentManager manager = this.Document == null ? null : this.Document.DocumentManager;
+			string zipFilePath = manager == null ? null : manager.GetLocalFilePath ();
+
+			if (!string.IsNullOrEmpty (zipFilePath))
+			{
+				GlobalImageCache.RemoveReferenceToZip (zipFilePath);
+			}
+
 			GlobalImageCache.Unregister (this);
 			this.items.Clear ();
 		}
@@ -278,7 +300,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public static void Lock(string fileName, System.DateTime fileDate)
+		public void Lock(string fileName, System.DateTime fileDate)
 		{
 			//	Verrouille l'image - elle est en cours d'utilisation dans la
 			//	page courante.
@@ -288,10 +310,11 @@ namespace Epsitec.Common.Document
 				return;
 			}
 
-			GlobalImageCache.Lock (Opac.ImageManager.Cache.GetKey (fileName, fileDate));
+			GlobalImageCache.Lock (Opac.ImageManager.Cache.GetKey (fileName, fileDate), null);
+			GlobalImageCache.Lock (Opac.ImageManager.Cache.GetKey (fileName, fileDate), this.GetWorkingDocumentFileName ());
 		}
 
-		public static void UnlockAll()
+		public void UnlockAll()
 		{
 			//	Déverouille toutes les images. Elles peuvent être recyclées
 			//	s'il n'y a plus assez de mémoire.
@@ -442,6 +465,19 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
+		private string GetWorkingDocumentFileName()
+		{
+			if ((this.document == null) ||
+				(this.document.DocumentManager == null))
+			{
+				return null;
+			}
+			else
+			{
+				return this.document.DocumentManager.GetLocalFilePath ();
+			}
+		}
+
 		private Item Find(string fileName)
 		{
 			//	Retourne les données d'une image en se basant uniquement sur le
@@ -449,6 +485,7 @@ namespace Epsitec.Common.Document
 			//	dans le cache global).
 
 			string key = Opac.ImageManager.Cache.GetKeyPrefix (fileName);
+			string doc = this.GetWorkingDocumentFileName ();
 
 			foreach (KeyValuePair<string, Item> pair in this.items)
 			{
@@ -458,11 +495,11 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			GlobalImageCache.Item global = GlobalImageCache.FindStartingWith (key);
+			GlobalImageCache.Item global = GlobalImageCache.FindStartingWith (key, doc);
 
 			if (global != null)
 			{
-				key = global.KeyName;
+				key = global.LocalKeyName;
 				Item item = new Item (this, global);
 				this.items.Add (key, item);
 				return item;
@@ -486,7 +523,12 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				GlobalImageCache.Item global = GlobalImageCache.Find (key);
+				GlobalImageCache.Item global = GlobalImageCache.Find (key, this.GetWorkingDocumentFileName ());
+
+				if (global == null)
+				{
+					global = GlobalImageCache.Find (key, null);
+				}
 
 				if (global != null)  // image dans le cache global ?
 				{
@@ -580,7 +622,8 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		
+
+		private Document						document;
 		private Dictionary<string, Item>		items;
 		private ImageCacheResolution			resolution;
 	}

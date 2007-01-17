@@ -2606,7 +2606,15 @@ namespace Epsitec.Common.Document
 			//	Indique si on est dans le viewer actif.
 			get
 			{
-				return ( this == this.document.Modifier.ActiveViewer );
+				if ((this.document != null) &&
+					(this.document.Modifier != null))
+				{
+					return (this == this.document.Modifier.ActiveViewer);
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 
