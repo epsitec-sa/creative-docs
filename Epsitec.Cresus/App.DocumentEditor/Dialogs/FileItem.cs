@@ -202,34 +202,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Date de modification du fichier.
 			get
 			{
-				if (this.cachedDateTime.Ticks == 0)
-				{
-					if (this.isNewEmptyDocument)
-					{
-						//	rien à faire
-					}
-					else if (!string.IsNullOrEmpty (this.folderItem.FullPath))
-					{
-						if (this.IsDirectoryOrShortcut)
-						{
-							System.IO.DirectoryInfo info = new System.IO.DirectoryInfo (this.folderItem.FullPath);
-
-							if (info.Exists)
-							{
-								this.cachedDateTime = info.LastWriteTime;
-							}
-						}
-						else
-						{
-							System.IO.FileInfo info = new System.IO.FileInfo (this.folderItem.FullPath);
-
-							if (info.Exists)
-							{
-								this.cachedDateTime = info.LastWriteTime;
-							}
-						}
-					}
-				}
+				this.InitializeCachedFileDate ();
 				
 				if (this.cachedDateTime.Ticks == 0)
 				{
@@ -242,30 +215,44 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		private void InitializeCachedFileDate()
+		{
+			if (this.cachedDateTime.Ticks == 0)
+			{
+				if (this.isNewEmptyDocument)
+				{
+					//	rien à faire
+				}
+				else if (!string.IsNullOrEmpty (this.folderItem.FullPath))
+				{
+					if (this.IsDirectoryOrShortcut)
+					{
+						System.IO.DirectoryInfo info = new System.IO.DirectoryInfo (this.folderItem.FullPath);
+
+						if (info.Exists)
+						{
+							this.cachedDateTime = info.LastWriteTime;
+						}
+					}
+					else
+					{
+						System.IO.FileInfo info = new System.IO.FileInfo (this.folderItem.FullPath);
+
+						if (info.Exists)
+						{
+							this.cachedDateTime = info.LastWriteTime;
+						}
+					}
+				}
+			}
+		}
+
 		public string FileSize
 		{
 			//	Taille du fichier en kilo-bytes.
 			get
 			{
-				if (this.cachedFileSize == -2)
-				{
-					if (this.isNewEmptyDocument || this.IsDirectoryOrShortcut)
-					{
-						this.cachedFileSize = -1;
-					}
-					else
-					{
-						System.IO.FileInfo info = new System.IO.FileInfo (this.folderItem.FullPath);
-						if (!info.Exists)
-						{
-							this.cachedFileSize = -1;
-						}
-						else
-						{
-							this.cachedFileSize = info.Length;
-						}
-					}
-				}
+				this.InitializeCachedFileSize ();
 
 				if (this.cachedFileSize < 0)
 				{
@@ -300,6 +287,29 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 
 					return "?";
+				}
+			}
+		}
+
+		private void InitializeCachedFileSize()
+		{
+			if (this.cachedFileSize == -2)
+			{
+				if (this.isNewEmptyDocument || this.IsDirectoryOrShortcut)
+				{
+					this.cachedFileSize = -1;
+				}
+				else
+				{
+					System.IO.FileInfo info = new System.IO.FileInfo (this.folderItem.FullPath);
+					if (!info.Exists)
+					{
+						this.cachedFileSize = -1;
+					}
+					else
+					{
+						this.cachedFileSize = info.Length;
+					}
 				}
 			}
 		}
@@ -486,8 +496,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				FileItem.type.Fields.Add ("icon", Epsitec.Common.Types.StringType.Default);
 				FileItem.type.Fields.Add ("name", Epsitec.Common.Types.StringType.Default);
 				FileItem.type.Fields.Add ("info", Epsitec.Common.Types.StringType.Default);
-				FileItem.type.Fields.Add ("date", Epsitec.Common.Types.StringType.Default);
-				FileItem.type.Fields.Add ("size", Epsitec.Common.Types.StringType.Default);
+				FileItem.type.Fields.Add ("date", Epsitec.Common.Types.DateTimeType.Default);
+				FileItem.type.Fields.Add ("size", Epsitec.Common.Types.LongIntegerType.Default);
 			}
 
 			return FileItem.type;
@@ -616,9 +626,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				case "info":
 					return this.Description;
 				case "date":
-					return this.FileDate;
+					this.InitializeCachedFileDate ();
+					return this.cachedDateTime;
 				case "size":
-					return this.FileSize;
+					this.InitializeCachedFileSize ();
+					return this.cachedFileSize;
 				default:
 					throw new System.InvalidOperationException ();
 			}
