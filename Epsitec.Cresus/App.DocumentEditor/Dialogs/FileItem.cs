@@ -65,22 +65,27 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Nom du fichier avec le chemin d'accès complet.
 			get
 			{
-				if (this.isNewEmptyDocument)  // nouveau document vide ?
+				if (this.cachedFileName == null)
 				{
-					return Common.Document.Settings.GlobalSettings.NewEmptyDocument;
-				}
-				else
-				{
-					if (this.IsShortcut)
+					if (this.isNewEmptyDocument)  // nouveau document vide ?
 					{
-						FolderItem item = FileManager.ResolveShortcut (this.folderItem, FolderQueryMode.NoIcons);
-						return item.FullPath;
+						this.cachedFileName = Common.Document.Settings.GlobalSettings.NewEmptyDocument;
 					}
 					else
 					{
-						return this.folderItem.FullPath;
+						if (this.IsShortcut)
+						{
+							FolderItem item = FileManager.ResolveShortcut (this.folderItem, FolderQueryMode.NoIcons);
+							this.cachedFileName = item.FullPath;
+						}
+						else
+						{
+							this.cachedFileName = this.folderItem.FullPath;
+						}
 					}
 				}
+				
+				return this.cachedFileName;
 			}
 		}
 
@@ -89,26 +94,31 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Nom du fichier court, sans le chemin d'accès ni l'extension.
 			get
 			{
-				if (this.isNewEmptyDocument)  // nouveau document vide ?
+				if (this.cachedShortFileName == null)
 				{
-					return "—";
-				}
-				else
-				{
-					if (this.IsDirectory)
+					if (this.isNewEmptyDocument)  // nouveau document vide ?
 					{
-						return TextLayout.ConvertToTaggedText (this.folderItem.DisplayName);
-					}
-					else if (this.IsShortcut)
-					{
-						FolderItem item = FileManager.ResolveShortcut (this.folderItem, FolderQueryMode.NoIcons);
-						return TextLayout.ConvertToTaggedText (System.IO.Path.GetFileNameWithoutExtension (item.FullPath));
+						this.cachedShortFileName = "—";
 					}
 					else
 					{
-						return TextLayout.ConvertToTaggedText (System.IO.Path.GetFileNameWithoutExtension (this.folderItem.FullPath));
+						if (this.IsDirectory)
+						{
+							this.cachedShortFileName = TextLayout.ConvertToTaggedText (this.folderItem.DisplayName);
+						}
+						else if (this.IsShortcut)
+						{
+							FolderItem item = FileManager.ResolveShortcut (this.folderItem, FolderQueryMode.NoIcons);
+							this.cachedShortFileName = TextLayout.ConvertToTaggedText (System.IO.Path.GetFileNameWithoutExtension (item.FullPath));
+						}
+						else
+						{
+							this.cachedShortFileName = TextLayout.ConvertToTaggedText (System.IO.Path.GetFileNameWithoutExtension (this.folderItem.FullPath));
+						}
 					}
 				}
+
+				return this.cachedShortFileName;
 			}
 		}
 
@@ -120,8 +130,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					return false;
 				}
-
-				return this.folderItem.IsFolder;
+				else
+				{
+					return this.folderItem.IsFolder;
+				}
 			}
 		}
 
@@ -133,8 +145,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					return false;
 				}
-
-				return this.folderItem.IsFolder || this.folderItem.IsShortcut;
+				else
+				{
+					return this.folderItem.IsFolder || this.folderItem.IsShortcut;
+				}
 			}
 		}
 
@@ -146,8 +160,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					return false;
 				}
-
-				return this.folderItem.IsShortcut;
+				else
+				{
+					return this.folderItem.IsShortcut;
+				}
 			}
 		}
 
@@ -159,8 +175,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					return false;
 				}
-
-				return this.folderItem.IsDrive;
+				else
+				{
+					return this.folderItem.IsDrive;
+				}
 			}
 		}
 
@@ -172,8 +190,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					return false;
 				}
-
-				return this.folderItem.IsVirtual;
+				else
+				{
+					return this.folderItem.IsVirtual;
+				}
 			}
 		}
 
@@ -182,37 +202,42 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Date de modification du fichier.
 			get
 			{
-				if (this.isNewEmptyDocument)
+				if (this.cachedDateTime.Ticks == 0)
+				{
+					if (this.isNewEmptyDocument)
+					{
+						//	rien à faire
+					}
+					else if (!string.IsNullOrEmpty (this.folderItem.FullPath))
+					{
+						if (this.IsDirectoryOrShortcut)
+						{
+							System.IO.DirectoryInfo info = new System.IO.DirectoryInfo (this.folderItem.FullPath);
+
+							if (info.Exists)
+							{
+								this.cachedDateTime = info.LastWriteTime;
+							}
+						}
+						else
+						{
+							System.IO.FileInfo info = new System.IO.FileInfo (this.folderItem.FullPath);
+
+							if (info.Exists)
+							{
+								this.cachedDateTime = info.LastWriteTime;
+							}
+						}
+					}
+				}
+				
+				if (this.cachedDateTime.Ticks == 0)
 				{
 					return "";
 				}
 				else
 				{
-					if (this.IsDirectoryOrShortcut)
-					{
-						if (string.IsNullOrEmpty (this.folderItem.FullPath))
-						{
-							return "";
-						}
-
-						System.IO.DirectoryInfo info = new System.IO.DirectoryInfo (this.folderItem.FullPath);
-						if (!info.Exists)
-						{
-							return "";
-						}
-
-						return string.Concat (info.LastWriteTime.ToShortDateString (), " ", info.LastWriteTime.ToShortTimeString ());
-					}
-					else
-					{
-						System.IO.FileInfo info = new System.IO.FileInfo (this.folderItem.FullPath);
-						if (!info.Exists)
-						{
-							return "";
-						}
-
-						return string.Concat (info.LastWriteTime.ToShortDateString (), " ", info.LastWriteTime.ToShortTimeString ());
-					}
+					return string.Concat (this.cachedDateTime.ToShortDateString (), " ", this.cachedDateTime.ToShortTimeString ());
 				}
 			}
 		}
@@ -222,20 +247,34 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Taille du fichier en kilo-bytes.
 			get
 			{
-				if (this.isNewEmptyDocument || this.IsDirectoryOrShortcut)
+				if (this.cachedFileSize == -2)
+				{
+					if (this.isNewEmptyDocument || this.IsDirectoryOrShortcut)
+					{
+						this.cachedFileSize = -1;
+					}
+					else
+					{
+						System.IO.FileInfo info = new System.IO.FileInfo (this.folderItem.FullPath);
+						if (!info.Exists)
+						{
+							this.cachedFileSize = -1;
+						}
+						else
+						{
+							this.cachedFileSize = info.Length;
+						}
+					}
+				}
+
+				if (this.cachedFileSize < 0)
 				{
 					return "";
 				}
 				else
 				{
-					System.IO.FileInfo info = new System.IO.FileInfo (this.folderItem.FullPath);
-					if (!info.Exists)
-					{
-						return "";
-					}
-
-					long size = info.Length;
-
+					long size = this.cachedFileSize;
+					
 					size = (size+512)/1024;
 					if (size < 1024)
 					{
@@ -400,11 +439,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Le niveau 0 correspond au bureau.
 			//	Le niveau Deep correspond à l'objet lui-même.
 			//	Un niveau supérieur retourne null.
-			int deep = this.Deep;
-			if (level <= deep)
+			int depth = this.Depth;
+			if (level <= depth)
 			{
 				FileItem current = this;
-				for (int i=0; i<deep-level; i++)
+				for (int i=0; i<depth-level; i++)
 				{
 					current = current.parent;
 				}
@@ -416,21 +455,26 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		public int Deep
+		public int Depth
 		{
 			//	Retourne la profondeur d'imbrication du dossier.
 			//	Pour un dossier du bureau, la profondeur est 0.
 			//	Pour un dossier du poste de travail, la profondeur est 1.
 			get
 			{
-				int deep = 0;
-				FileItem current = this;
-				while (current.parent != null)
+				if (this.cachedDepth < 0)
 				{
-					current = current.parent;
-					deep++;
+					int depth = 0;
+					FileItem current = this;
+					while (current.parent != null)
+					{
+						current = current.parent;
+						depth++;
+					}
+					this.cachedDepth = depth;
 				}
-				return deep;
+				
+				return this.cachedDepth;
 			}
 		}
 
@@ -536,8 +580,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 			}
 
-			string f1 = this.ShortFileName.ToLower ();
-			string f2 = that.ShortFileName.ToLower ();
+			string f1 = this.ShortFileName.ToLowerInvariant ();
+			string f2 = that.ShortFileName.ToLowerInvariant ();
 			return f1.CompareTo (f2);
 		}
 		#endregion
@@ -598,6 +642,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private static Epsitec.Common.Types.StructuredType type;
 
+		private string cachedFileName;
+		private string cachedShortFileName;
+		private System.DateTime cachedDateTime;
+		private long cachedFileSize = -2;
+		private int cachedDepth = -1;
+		
 		protected FolderItem folderItem;
 		protected FolderItemIcon smallIcon;
 		protected FileItem parent;

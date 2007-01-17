@@ -364,8 +364,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.files = new List<FileItem> ();
 			this.table2.Items = new Epsitec.Common.Types.CollectionView (this.files);
-			this.table2.Visibility = false;
-			//this.table2.Visibility = true;
+			//-this.table2.Visibility = false;
+			this.table2.Visibility = true;
 			
 			this.slider.Value = (decimal) this.table.DefHeight;
 		}
@@ -1848,7 +1848,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					cell.SmallIcon = FileManager.GetFolderItemIcon(cell.FolderItem, FolderQueryMode.SmallIcons);
 				}
 				string text = string.Format("<img src=\"{0}\"/> {1}", cell.SmallIcon.ImageName, cell.ShortFileName);
-				text = AbstractFile.AddStringIndent(text, cell.Deep);
+				text = AbstractFile.AddStringIndent(text, cell.Depth);
 
 				this.fieldPath.Items.Add(text);
 				this.comboTexts.Add(text);
