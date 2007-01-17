@@ -136,6 +136,10 @@ namespace Epsitec.Common.Types
 						return UndefinedValue.Instance;
 					}
 				}
+				else if (UndefinedValue.IsUndefinedValue (value))
+				{
+					return UndefinedValue.Instance;
+				}
 
 				if (name == path)
 				{

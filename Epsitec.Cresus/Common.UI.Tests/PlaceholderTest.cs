@@ -477,9 +477,9 @@ namespace Epsitec.Common.UI
 			container.Children.Add (table);
 
 			binding = new Binding (BindingMode.TwoWay, "Employees");
-			table.SetBinding (AbstractPlaceholder.ValueProperty, binding);
+			table.SetBinding (TablePlaceholder.ItemsProperty, binding);
 
-			Assert.AreEqual (list, table.Value);
+			Assert.AreEqual (list, table.CollectionView.SourceCollection);
 
 			table.CollectionView.MoveCurrentToNext ();
 			Assert.AreEqual ("Arnaud", placeholder.Value);

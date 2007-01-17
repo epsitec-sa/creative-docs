@@ -117,17 +117,29 @@ namespace Epsitec.Common.UI
 				this.panel.SetEmbedder (this);
 				this.panel.Dock = Widgets.DockStyle.Fill;
 
-				Binding binding = this.GetBinding (PanelPlaceholder.ValueProperty);
+				this.UpdatePanelDataContext ();
+			}
+		}
 
-				if ((binding == null) ||
+		protected override void OnBindingChanged(DependencyProperty property)
+		{
+			base.OnBindingChanged (property);
+
+			this.UpdatePanelDataContext ();
+		}
+
+		private void UpdatePanelDataContext()
+		{
+			Binding binding = this.GetBinding (PanelPlaceholder.ValueProperty);
+
+			if ((binding == null) ||
 					((binding.Source == null) && (binding.Path == null)))
-				{
-					DataObject.ClearDataContext (this.panel);
-				}
-				else
-				{
-					DataObject.SetDataContext (this.panel, new Binding (this, "Value"));
-				}
+			{
+				DataObject.ClearDataContext (this.panel);
+			}
+			else
+			{
+				DataObject.SetDataContext (this.panel, new Binding (this, "Value"));
 			}
 		}
 
