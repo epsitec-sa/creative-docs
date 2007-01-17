@@ -11,7 +11,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 {
 	//	Cette classe représente une 'ligne' dans la liste, qui peut représenter
 	//	un fichier, un dossier ou la commande 'nouveau document vide'.
-	public class FileItem : System.IComparable
+	public class FileItem : System.IComparable<FileItem>, Epsitec.Common.Types.IStructuredData, Epsitec.Common.Types.IStructuredTypeProvider
 	{
 		public FileItem()
 		{
@@ -434,9 +434,23 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		public static Epsitec.Common.Types.StructuredType GetStructuredType()
+		{
+			if (FileItem.type == null)
+			{
+				FileItem.type = new Epsitec.Common.Types.StructuredType ();
+				FileItem.type.Fields.Add ("icon", Epsitec.Common.Types.StringType.Default);
+				FileItem.type.Fields.Add ("name", Epsitec.Common.Types.StringType.Default);
+				FileItem.type.Fields.Add ("info", Epsitec.Common.Types.StringType.Default);
+				FileItem.type.Fields.Add ("date", Epsitec.Common.Types.StringType.Default);
+				FileItem.type.Fields.Add ("size", Epsitec.Common.Types.StringType.Default);
+			}
 
-		#region IComparable Members
-		public int CompareTo(object obj)
+			return FileItem.type;
+		}
+
+		#region IComparable<FileItem> Members
+		public int CompareTo(FileItem that)
 		{
 			//	Comparaison simple ou complexe, selon SortAccordingToLevel.
 			//	En mode complexe (SortAccordingToLevel = true), on cherche
@@ -450,8 +464,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//		C		(deep = 0)
 			if (this.sortAccordingToLevel)
 			{
-				FileItem that = obj as FileItem;
-
 				for (int level=0; level<100; level++)
 				{
 					FileItem p1 = this.GetParent (level);
@@ -459,7 +471,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 					if (p1 == null && p2 == null)
 					{
-						return this.BaseCompareTo (obj);
+						return this.BaseCompareTo (that);
 					}
 
 					if (p1 == null && p2 != null)
@@ -480,13 +492,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 			}
 
-			return this.BaseCompareTo (obj);
+			return this.BaseCompareTo (that);
 		}
 
-		protected int BaseCompareTo(object obj)
+		protected int BaseCompareTo(FileItem that)
 		{
 			//	Comparaison simple, sans tenir compte du niveau.
-			FileItem that = obj as FileItem;
 
 			if (this.isNewEmptyDocument != that.isNewEmptyDocument)
 			{
@@ -530,6 +541,62 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			return f1.CompareTo (f2);
 		}
 		#endregion
+
+		#region IStructuredData Members
+
+		void Epsitec.Common.Types.IStructuredData.AttachListener(string id, EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs> handler)
+		{
+		}
+
+		void Epsitec.Common.Types.IStructuredData.DetachListener(string id, EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs> handler)
+		{
+		}
+
+		IEnumerable<string> Epsitec.Common.Types.IStructuredData.GetValueIds()
+		{
+			yield return "icon";
+			yield return "name";
+			yield return "info";
+			yield return "date";
+			yield return "size";
+		}
+
+		object Epsitec.Common.Types.IStructuredData.GetValue(string id)
+		{
+			switch (id)
+			{
+				case "icon":
+					return this.FixIcon;
+				case "name":
+					return this.ShortFileName;
+				case "info":
+					return this.Description;
+				case "date":
+					return this.FileDate;
+				case "size":
+					return this.FileSize;
+				default:
+					throw new System.InvalidOperationException ();
+			}
+		}
+
+		void Epsitec.Common.Types.IStructuredData.SetValue(string id, object value)
+		{
+			throw new System.InvalidOperationException ();
+		}
+
+		#endregion
+
+		#region IStructuredTypeProvider Members
+
+		Epsitec.Common.Types.IStructuredType Epsitec.Common.Types.IStructuredTypeProvider.GetStructuredType()
+		{
+			return FileItem.GetStructuredType ();
+		}
+
+		#endregion
+
+		private static Epsitec.Common.Types.StructuredType type;
 
 		protected FolderItem folderItem;
 		protected FolderItemIcon smallIcon;

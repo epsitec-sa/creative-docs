@@ -352,6 +352,21 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.DoubleClicked += new MessageEventHandler(this.HandleTableDoubleClicked);
 			this.table.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
 
+			this.table2 = new Epsitec.Common.UI.ItemTable (group);
+			this.table2.Dock = DockStyle.Fill;
+			this.table2.SourceType = FileItem.GetStructuredType ();
+			this.table2.ItemPanel.ItemViewDefaultSize = new Size (this.table2.Parent.PreferredWidth, cellHeight);
+			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 50));
+			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 85));
+			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("info", 95));
+			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("date", 80));
+			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("size", 40));
+
+			this.files = new List<FileItem> ();
+			this.table2.Items = new Epsitec.Common.Types.CollectionView (this.files);
+			this.table2.Visibility = false;
+			//this.table2.Visibility = true;
+			
 			this.slider.Value = (decimal) this.table.DefHeight;
 		}
 
@@ -943,8 +958,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void ListFilenames()
 		{
-			//	Effectue la liste des fichiers contenus dans le dossier adhoc.
-			this.files = new List<FileItem>();
+			//	Effectue la liste des fichiers contenus dans le dossier ad hoc.
+			this.files.Clear ();
 
 			if (this.isNewEmtpyDocument)
 			{
@@ -1017,6 +1032,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			this.files.Sort();  // trie toute la liste
+			this.table2.Items.Refresh ();
 		}
 
 		protected void UpdateButtons()
@@ -1919,6 +1935,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.DefHeight = (double) this.slider.Value;
 			this.table.HeaderHeight = 20;
 
+			this.table2.ItemPanel.ItemViewDefaultSize = new Size (this.table2.Parent.PreferredWidth, (double) this.slider.Value);
+
 			for (int i=0; i<this.table.Rows; i++)
 			{
 				this.table.SetHeightRow(i, this.table.DefHeight);
@@ -1985,6 +2003,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected GlyphButton				navigateCombo;
 		protected Scrollable				favorites;
 		protected CellTable					table;
+		protected Epsitec.Common.UI.ItemTable table2;
 		protected HSlider					slider;
 		protected TextFieldCombo			fieldPath;
 		protected TextField					fieldFilename;
@@ -2012,7 +2031,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected string					initialFilename;
 		protected Document.FontIncludeMode	fontIncludeMode;
 		protected Document.ImageIncludeMode	imageIncludeMode;
-		protected List<FileItem>				files;
+		protected List<FileItem>			files;
 		protected string					selectedFilename;
 		protected string[]					selectedFilenames;
 		protected int						renameSelected = -1;
@@ -2024,7 +2043,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected int						favoritesSelected;
 		protected List<FolderItem>			directoriesVisited;
 		protected int						directoriesVisitedIndex;
-		protected List<FileItem>				comboFolders;
+		protected List<FileItem>			comboFolders;
 		protected List<string>				comboTexts;
 		protected int						comboSelected;
 		protected CommandDispatcher			dispatcher;

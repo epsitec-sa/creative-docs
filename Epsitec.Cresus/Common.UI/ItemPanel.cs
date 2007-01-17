@@ -39,7 +39,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		internal ItemPanel RootPanel
+		public ItemPanel RootPanel
 		{
 			get
 			{
