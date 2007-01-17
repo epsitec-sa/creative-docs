@@ -674,8 +674,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Sélectionne et montre un fichier dans la table.
 			for (int i=0; i<this.files.Count; i++)
 			{
-				Item item = this.files[i];
-				this.table.SelectRow(i, item.Filename == filenameToSelect);
+				FileItem item = this.files[i];
+				this.table.SelectRow(i, item.FileName == filenameToSelect);
 			}
 
 			if (filenameToSelect != null)
@@ -903,7 +903,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 
 				st = this.table[1, row].Children[0] as StaticText;
-				st.Text = this.files[row].ShortFilename;
+				st.Text = this.files[row].ShortFileName;
 
 				st = this.table[2, row].Children[0] as StaticText;
 				st.Text = this.files[row].Description;
@@ -944,11 +944,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void ListFilenames()
 		{
 			//	Effectue la liste des fichiers contenus dans le dossier adhoc.
-			this.files = new List<Item>();
+			this.files = new List<FileItem>();
 
 			if (this.isNewEmtpyDocument)
 			{
-				this.files.Add(new Item());  // première ligne avec 'nouveau document vide'
+				this.files.Add(new FileItem());  // première ligne avec 'nouveau document vide'
 			}
 
 			FolderQueryMode mode = this.UseLargeIcons ? FolderQueryMode.LargeIcons : FolderQueryMode.SmallIcons;
@@ -1013,7 +1013,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 				}
 
-				this.files.Add(new Item(item, this.isModel));  // ajoute une ligne à la liste
+				this.files.Add(new FileItem(item, this.isModel));  // ajoute une ligne à la liste
 			}
 
 			this.files.Sort();  // trie toute la liste
@@ -1042,7 +1042,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.favoritesDownState.Enable = (sel >= 0 && sel < list.Count-1);
 
 			sel = this.table.SelectedRow;
-			bool enable = (sel != -1 && this.files[sel].Filename != Common.Document.Settings.GlobalSettings.NewEmptyDocument && !this.files[sel].IsShortcut);
+			bool enable = (sel != -1 && this.files[sel].FileName != Common.Document.Settings.GlobalSettings.NewEmptyDocument && !this.files[sel].IsShortcut);
 
 			if (string.Equals(this.initialFolder.FullPath, Document.DirectoryOriginalSamples, System.StringComparison.OrdinalIgnoreCase))
 			{
@@ -1190,9 +1190,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 
 					bool exist = false;
-					foreach (Item item in this.files)
+					foreach (FileItem item in this.files)
 					{
-						if (item.IsDirectory && item.Filename == newDir)
+						if (item.IsDirectory && item.FileName == newDir)
 						{
 							exist = true;
 							break;
@@ -1213,7 +1213,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Supprime un fichier ou un dossier.
 			int sel = this.table.SelectedRow;
-			if (sel == -1 || this.files[sel].Filename == Common.Document.Settings.GlobalSettings.NewEmptyDocument)
+			if (sel == -1 || this.files[sel].FileName == Common.Document.Settings.GlobalSettings.NewEmptyDocument)
 			{
 				return;
 			}
@@ -1224,7 +1224,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				if (this.table.IsCellSelected(i, 0))
 				{
-					filenamesToDelete.Add(this.files[i].Filename);
+					filenamesToDelete.Add(this.files[i].FileName);
 				}
 			}
 
@@ -1233,13 +1233,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			if (sel < this.files.Count-1)
 			{
-				filenameToSelect = this.files[sel+1].Filename;
+				filenameToSelect = this.files[sel+1].FileName;
 			}
 			else
 			{
 				if (sel > 0)
 				{
-					filenameToSelect = this.files[sel-1].Filename;
+					filenameToSelect = this.files[sel-1].FileName;
 				}
 			}
 
@@ -1260,7 +1260,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	rendu visible.
 			System.Diagnostics.Debug.Assert(this.fieldRename != null);
 			int sel = this.table.SelectedRow;
-			if (sel == -1 || this.files[sel].Filename == Common.Document.Settings.GlobalSettings.NewEmptyDocument)
+			if (sel == -1 || this.files[sel].FileName == Common.Document.Settings.GlobalSettings.NewEmptyDocument)
 			{
 				return;
 			}
@@ -1283,7 +1283,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.focusedWidgetBeforeRename = this.window.FocusedWidget;
 
 			this.fieldRename.SetManualBounds(rect);
-			this.fieldRename.Text = this.files[sel].ShortFilename;
+			this.fieldRename.Text = this.files[sel].ShortFileName;
 			this.fieldRename.SelectAll();
 			this.fieldRename.Visibility = true;
 			this.fieldRename.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
@@ -1315,7 +1315,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				if (this.files[sel].IsDirectory)
 				{
-					srcFilename = this.files[sel].Filename;
+					srcFilename = this.files[sel].FileName;
 					dstFilename = string.Concat(System.IO.Path.GetDirectoryName(srcFilename), "\\", newText);
 
 					FileOperationMode mode = new FileOperationMode(this.window);
@@ -1328,7 +1328,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 				else
 				{
-					srcFilename = this.files[sel].Filename;
+					srcFilename = this.files[sel].FileName;
 					dstFilename = string.Concat(System.IO.Path.GetDirectoryName(srcFilename), "\\", newText, System.IO.Path.GetExtension(srcFilename));
 
 					FileOperationMode mode = new FileOperationMode(this.window);
@@ -1344,7 +1344,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.files[sel].FolderItem = item;
 
 				StaticText st = this.table[1, sel].Children[0] as StaticText;
-				st.Text = this.files[sel].ShortFilename;
+				st.Text = this.files[sel].ShortFileName;
 			}
 		}
 
@@ -1499,10 +1499,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						{
 							if (rank == 0)
 							{
-								this.selectedFilename = this.files[i].Filename;  // premier fichier sélectionné
+								this.selectedFilename = this.files[i].FileName;  // premier fichier sélectionné
 							}
 
-							this.selectedFilenames[rank++] = this.files[i].Filename;
+							this.selectedFilenames[rank++] = this.files[i].FileName;
 						}
 					}
 
@@ -1727,7 +1727,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleFieldPathComboOpening(object sender, CancelEventArgs e)
 		{
 			//	Le menu pour le chemin d'accès va être ouvert.
-			this.comboFolders = new List<Item>();
+			this.comboFolders = new List<FileItem>();
 
 #if true
 			//	Ajoute toutes les unités du bureau et du poste de travail.
@@ -1736,7 +1736,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			bool showHidden = FolderItem.ShowHiddenFiles;
 
 			this.ComboAdd(desktop, null);
-			Item root = this.comboFolders[this.comboFolders.Count-1];
+			FileItem root = this.comboFolders[this.comboFolders.Count-1];
 
 			foreach (FolderItem item in FileManager.GetFolderItems(desktop, FolderQueryMode.SmallIcons))
 			{
@@ -1756,7 +1756,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 
 				this.ComboAdd(item, root);
-				Item parent = this.comboFolders[this.comboFolders.Count-1];
+				FileItem parent = this.comboFolders[this.comboFolders.Count-1];
 
 				if (item.DisplayName == computer.DisplayName)
 				{
@@ -1808,8 +1808,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			int index=0;
 			while (index < this.comboFolders.Count-1)
 			{
-				Item i1 = this.comboFolders[index];
-				Item i2 = this.comboFolders[index+1];
+				FileItem i1 = this.comboFolders[index];
+				FileItem i2 = this.comboFolders[index+1];
 				if (i1.CompareTo(i2) == 0)
 				{
 					this.comboFolders.RemoveAt(index+1);
@@ -1824,14 +1824,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fieldPath.Items.Clear();
 			this.comboTexts = new List<string>();
 
-			foreach (Item cell in this.comboFolders)
+			foreach (FileItem cell in this.comboFolders)
 			{
 				FolderItemIcon icon = cell.FolderItem.Icon;
 				if (cell.SmallIcon == null)
 				{
 					cell.SmallIcon = FileManager.GetFolderItemIcon(cell.FolderItem, FolderQueryMode.SmallIcons);
 				}
-				string text = string.Format("<img src=\"{0}\"/> {1}", cell.SmallIcon.ImageName, cell.ShortFilename);
+				string text = string.Format("<img src=\"{0}\"/> {1}", cell.SmallIcon.ImageName, cell.ShortFileName);
 				text = AbstractFile.AddStringIndent(text, cell.Deep);
 
 				this.fieldPath.Items.Add(text);
@@ -1841,9 +1841,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.comboSelected = -1;
 		}
 
-		protected void ComboAdd(FolderItem folderItem, Item parent)
+		protected void ComboAdd(FolderItem folderItem, FileItem parent)
 		{
-			Item item = new Item(folderItem, this.isModel);
+			FileItem item = new FileItem(folderItem, this.isModel);
 			item.Parent = parent;
 			item.SortAccordingToLevel = true;
 			this.comboFolders.Add(item);
@@ -1979,538 +1979,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-		#region Class Item
-		//	Cette classe représente une 'ligne' dans la liste, qui peut représenter
-		//	un fichier, un dossier ou la commande 'nouveau document vide'.
-		protected class Item : System.IComparable
-		{
-			public Item()
-			{
-				//	Crée un item pour 'Nouveau document vide'.
-				this.isNewEmptyDocument = true;
-			}
-
-			public Item(FolderItem folderItem, bool isModel)
-			{
-				//	Crée un item pour un fichier ou un dossier.
-				this.folderItem = folderItem;
-				this.isModel = isModel;
-				this.isNewEmptyDocument = false;
-			}
-
-			public FolderItem FolderItem
-			{
-				get
-				{
-					return this.folderItem;
-				}
-				set
-				{
-					this.folderItem = value;
-
-					if (this.folderItem.QueryMode.IconSize == FileInfoIconSize.Small)
-					{
-						this.smallIcon = this.folderItem.Icon;
-					}
-					else
-					{
-						this.smallIcon = null;
-					}
-				}
-			}
-
-			public FolderItemIcon SmallIcon
-			{
-				get
-				{
-					return this.smallIcon;
-				}
-				set
-				{
-					this.smallIcon = value;
-				}
-			}
-
-			public string Filename
-			{
-				//	Nom du fichier avec le chemin d'accès complet.
-				get
-				{
-					if (this.isNewEmptyDocument)  // nouveau document vide ?
-					{
-						return Common.Document.Settings.GlobalSettings.NewEmptyDocument;
-					}
-					else
-					{
-						if (this.IsShortcut)
-						{
-							FolderItem item = FileManager.ResolveShortcut(this.folderItem, FolderQueryMode.NoIcons);
-							return item.FullPath;
-						}
-						else
-						{
-							return this.folderItem.FullPath;
-						}
-					}
-				}
-			}
-
-			public string ShortFilename
-			{
-				//	Nom du fichier court, sans le chemin d'accès ni l'extension.
-				get
-				{
-					if (this.isNewEmptyDocument)  // nouveau document vide ?
-					{
-						return "—";
-					}
-					else
-					{
-						if (this.IsDirectory)
-						{
-							return TextLayout.ConvertToTaggedText(this.folderItem.DisplayName);
-						}
-						else if (this.IsShortcut)
-						{
-							FolderItem item = FileManager.ResolveShortcut(this.folderItem, FolderQueryMode.NoIcons);
-							return TextLayout.ConvertToTaggedText(System.IO.Path.GetFileNameWithoutExtension(item.FullPath));
-						}
-						else
-						{
-							return TextLayout.ConvertToTaggedText(System.IO.Path.GetFileNameWithoutExtension(this.folderItem.FullPath));
-						}
-					}
-				}
-			}
-
-			public bool IsDirectory
-			{
-				get
-				{
-					if (this.isNewEmptyDocument)
-					{
-						return false;
-					}
-
-					return this.folderItem.IsFolder;
-				}
-			}
-
-			public bool IsDirectoryOrShortcut
-			{
-				get
-				{
-					if (this.isNewEmptyDocument)
-					{
-						return false;
-					}
-
-					return this.folderItem.IsFolder || this.folderItem.IsShortcut;
-				}
-			}
-
-			public bool IsShortcut
-			{
-				get
-				{
-					if (this.isNewEmptyDocument)
-					{
-						return false;
-					}
-
-					return this.folderItem.IsShortcut;
-				}
-			}
-
-			public bool IsDrive
-			{
-				get
-				{
-					if (this.isNewEmptyDocument)
-					{
-						return false;
-					}
-
-					return this.folderItem.IsDrive;
-				}
-			}
-
-			public bool IsVirtual
-			{
-				get
-				{
-					if (this.isNewEmptyDocument)
-					{
-						return false;
-					}
-
-					return this.folderItem.IsVirtual;
-				}
-			}
-
-			public string FileDate
-			{
-				//	Date de modification du fichier.
-				get
-				{
-					if (this.isNewEmptyDocument)
-					{
-						return "";
-					}
-					else
-					{
-						if (this.IsDirectoryOrShortcut)
-						{
-							if (string.IsNullOrEmpty(this.folderItem.FullPath))
-							{
-								return "";
-							}
-
-							System.IO.DirectoryInfo info = new System.IO.DirectoryInfo(this.folderItem.FullPath);
-							if (!info.Exists)
-							{
-								return "";
-							}
-
-							return string.Concat(info.LastWriteTime.ToShortDateString(), " ", info.LastWriteTime.ToShortTimeString());
-						}
-						else
-						{
-							System.IO.FileInfo info = new System.IO.FileInfo(this.folderItem.FullPath);
-							if (!info.Exists)
-							{
-								return "";
-							}
-
-							return string.Concat(info.LastWriteTime.ToShortDateString(), " ", info.LastWriteTime.ToShortTimeString());
-						}
-					}
-				}
-			}
-
-			public string FileSize
-			{
-				//	Taille du fichier en kilo-bytes.
-				get
-				{
-					if (this.isNewEmptyDocument || this.IsDirectoryOrShortcut)
-					{
-						return "";
-					}
-					else
-					{
-						System.IO.FileInfo info = new System.IO.FileInfo(this.folderItem.FullPath);
-						if (!info.Exists)
-						{
-							return "";
-						}
-
-						long size = info.Length;
-
-						size = (size+512)/1024;
-						if (size < 1024)
-						{
-							double s = (double) size;
-							s = System.Math.Floor(s*1000/1024);  // 0..999 KB
-							return string.Format(Res.Strings.Dialog.File.Size.Kilo, s.ToString());
-						}
-
-						size = (size+512)/1024;
-						if (size < 1024)
-						{
-							double s = (double) size;
-							s = System.Math.Floor(s*1000/1024);  // 0..999 MB
-							return string.Format(Res.Strings.Dialog.File.Size.Mega, s.ToString());
-						}
-
-						size = (size+512)/1024;
-						if (size < 1024)
-						{
-							double s = (double) size;
-							s = System.Math.Floor(s*1000/1024);  // 0..999 GB
-							return string.Format(Res.Strings.Dialog.File.Size.Giga, s.ToString());
-						}
-
-						return "?";
-					}
-				}
-			}
-
-			public string Description
-			{
-				//	Retourne la description du fichier, basée sur les statistiques si elles existent.
-				get
-				{
-					if (this.isNewEmptyDocument)  // nouveau document vide ?
-					{
-						return Res.Strings.Dialog.New.EmptyDocument;
-					}
-					else
-					{
-						if (this.IsDirectoryOrShortcut)
-						{
-							return this.folderItem.TypeName;
-						}
-						else
-						{
-							Document.Statistics stat = this.Statistics;
-							if (stat == null)
-							{
-								return this.isModel ? Res.Strings.Dialog.File.Model : Res.Strings.Dialog.File.Document;
-							}
-							else
-							{
-								return string.Format(Res.Strings.Dialog.File.Statistics, stat.PageFormat, stat.PagesCount.ToString(), stat.LayersCount.ToString(), stat.ObjectsCount.ToString(), stat.ComplexesCount.ToString(), stat.FontsCount.ToString(), stat.ImagesCount.ToString());
-							}
-						}
-					}
-				}
-			}
-
-			public string FixIcon
-			{
-				//	Retourne l'éventuelle icône fixe qui remplace l'image miniature.
-				get
-				{
-					if (this.isNewEmptyDocument)  // nouveau document vide ?
-					{
-						return "New";
-					}
-					else
-					{
-						return null;
-					}
-				}
-			}
-
-			public void GetImage(out Image image, out bool icon)
-			{
-				//	Donne l'image miniature associée au fichier.
-				if (this.isNewEmptyDocument)  // nouveau document vide ?
-				{
-					image = null;
-					icon = false;
-				}
-				else
-				{
-					if (this.IsDirectoryOrShortcut)
-					{
-						image = this.folderItem.Icon.Image;
-						icon = true;
-					}
-					else
-					{
-						DocumentCache.Add(this.folderItem.FullPath);
-						image = DocumentCache.Image(this.folderItem.FullPath);
-						if (image == null)
-						{
-							image = this.folderItem.Icon.Image;
-							icon = true;
-						}
-						else
-						{
-							icon = false;
-						}
-					}
-				}
-			}
-
-			protected Document.Statistics Statistics
-			{
-				//	Retourne les statistiques associées au fichier.
-				get
-				{
-					if (this.isNewEmptyDocument)  // nouveau document vide ?
-					{
-						return null;
-					}
-					else
-					{
-						if (this.IsDirectoryOrShortcut)
-						{
-							return null;
-						}
-						else
-						{
-							DocumentCache.Add(this.folderItem.FullPath);
-							return DocumentCache.Statistics(this.folderItem.FullPath);
-						}
-					}
-				}
-			}
-
-
-			public bool SortAccordingToLevel
-			{
-				//	Indique si le tri doit tenir compte du niveau (lent).
-				get
-				{
-					return this.sortAccordingToLevel;
-				}
-				set
-				{
-					this.sortAccordingToLevel = value;
-				}
-			}
-
-			public Item Parent
-			{
-				get
-				{
-					return this.parent;
-				}
-				set
-				{
-					this.parent = value;
-				}
-			}
-
-			protected Item GetParent(int level)
-			{
-				//	Retourne un parent.
-				//	Le niveau 0 correspond au bureau.
-				//	Le niveau Deep correspond à l'objet lui-même.
-				//	Un niveau supérieur retourne null.
-				int deep = this.Deep;
-				if (level <= deep)
-				{
-					Item current = this;
-					for (int i=0; i<deep-level; i++)
-					{
-						current = current.parent;
-					}
-					return current;
-				}
-				else
-				{
-					return null;
-				}
-			}
-
-			public int Deep
-			{
-				//	Retourne la profondeur d'imbrication du dossier.
-				//	Pour un dossier du bureau, la profondeur est 0.
-				//	Pour un dossier du poste de travail, la profondeur est 1.
-				get
-				{
-					int deep = 0;
-					Item current = this;
-					while (current.parent != null)
-					{
-						current = current.parent;
-						deep++;
-					}
-					return deep;
-				}
-			}
-
-
-			#region IComparable Members
-			public int CompareTo(object obj)
-			{
-				//	Comparaison simple ou complexe, selon SortAccordingToLevel.
-				//	En mode complexe (SortAccordingToLevel = true), on cherche
-				//	à obtenir cet ordre:
-				//		A		(deep = 0)
-				//		B		(deep = 0)
-				//		B/1		(deep = 1)
-				//		B/1/a	(deep = 2)
-				//		B/1/b	(deep = 2)
-				//		B/2		(deep = 1)
-				//		C		(deep = 0)
-				if (this.sortAccordingToLevel)
-				{
-					Item that = obj as Item;
-
-					for (int level=0; level<100; level++)
-					{
-						Item p1 = this.GetParent(level);
-						Item p2 = that.GetParent(level);
-
-						if (p1 == null && p2 == null)
-						{
-							return this.BaseCompareTo(obj);
-						}
-
-						if (p1 == null && p2 != null)
-						{
-							return -1;
-						}
-
-						if (p1 != null && p2 == null)
-						{
-							return 1;
-						}
-
-						int c = p1.BaseCompareTo(p2);
-						if (c != 0)
-						{
-							return c;
-						}
-					}
-				}
-
-				return this.BaseCompareTo(obj);
-			}
-
-			protected int BaseCompareTo(object obj)
-			{
-				//	Comparaison simple, sans tenir compte du niveau.
-				Item that = obj as Item;
-
-				if (this.isNewEmptyDocument != that.isNewEmptyDocument)
-				{
-					return this.isNewEmptyDocument ? -1 : 1;  // 'nouveau document vide' au début
-				}
-
-				if (this.IsDrive != that.IsDrive)
-				{
-					return this.IsDrive ? -1 : 1;  // unités avant les fichiers
-				}
-
-				if (this.IsVirtual != that.IsVirtual)
-				{
-					return this.IsVirtual ? -1 : 1;  // unités virtuelles avant les dossiers
-				}
-
-				if (this.IsDirectoryOrShortcut != that.IsDirectoryOrShortcut)
-				{
-					return this.IsDirectoryOrShortcut ? -1 : 1;  // dossiers avant les fichiers
-				}
-
-				if (this.IsDrive)
-				{
-					int ct = this.folderItem.DriveInfo.Name.CompareTo(that.folderItem.DriveInfo.Name);
-					if (ct != 0)
-					{
-						return ct;
-					}
-				}
-				else
-				{
-					int ct = this.folderItem.TypeName.CompareTo(that.folderItem.TypeName);
-					if (ct != 0)
-					{
-						return ct;
-					}
-				}
-
-				string f1 = this.ShortFilename.ToLower();
-				string f2 = that.ShortFilename.ToLower();
-				return f1.CompareTo(f2);
-			}
-			#endregion
-
-			protected FolderItem				folderItem;
-			protected FolderItemIcon			smallIcon;
-			protected Item						parent;
-			protected bool						isModel;
-			protected bool						isNewEmptyDocument;
-			protected bool						sortAccordingToLevel = false;
-		}
-		#endregion
-
 
 		protected GlyphButton				toolbarExtend;
 		protected HToolBar					toolbar;
@@ -2544,7 +2012,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected string					initialFilename;
 		protected Document.FontIncludeMode	fontIncludeMode;
 		protected Document.ImageIncludeMode	imageIncludeMode;
-		protected List<Item>				files;
+		protected List<FileItem>				files;
 		protected string					selectedFilename;
 		protected string[]					selectedFilenames;
 		protected int						renameSelected = -1;
@@ -2556,7 +2024,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected int						favoritesSelected;
 		protected List<FolderItem>			directoriesVisited;
 		protected int						directoriesVisitedIndex;
-		protected List<Item>				comboFolders;
+		protected List<FileItem>				comboFolders;
 		protected List<string>				comboTexts;
 		protected int						comboSelected;
 		protected CommandDispatcher			dispatcher;
