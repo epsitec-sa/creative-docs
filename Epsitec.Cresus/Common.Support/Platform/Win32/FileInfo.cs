@@ -175,12 +175,20 @@ namespace Epsitec.Common.Support.Platform.Win32
 				while (list.Next (1, out pidlElement, out count) == 0)
 				{
 					System.Diagnostics.Debug.Assert (count == 1);
-
+					
 					System.IntPtr pidlTemp = ShellApi.ILCombine (pidlPath, pidlElement);
 
 					if (pidlTemp != System.IntPtr.Zero)
 					{
-						FolderItem item = FileInfo.CreateFolderItemAndInheritPidl (mode, pidlTemp);
+						//-System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+						//-watch.Start ();
+						uint attr = 0;
+						folder.GetAttributesOf (1, new System.IntPtr[] { pidlElement }, ref attr);
+						//-long t1=watch.ElapsedMilliseconds;
+						FolderItem item = FileInfo.CreateFolderItemAndInheritPidl (mode, pidlTemp, attr);
+						//-long t2=watch.ElapsedMilliseconds-t1;
+						//-watch.Stop ();
+						//-System.Diagnostics.Debug.WriteLine (string.Format ("{0}ms+{1}ms : {2}", t1, t2, item.DisplayName));
 
 						yield return item;
 					}
@@ -204,6 +212,11 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 		private static FolderItem CreateFolderItemAndInheritPidl(FolderQueryMode mode, System.IntPtr pidl)
 		{
+			return FileInfo.CreateFolderItemAndInheritPidl (mode, pidl, 0);
+		}
+		
+		private static FolderItem CreateFolderItemAndInheritPidl(FolderQueryMode mode, System.IntPtr pidl, uint attr)
+		{
 			//	Do not free pidl, as it is transmitted to the PidlHandle. This
 			//	avoids a useless copy operation.
 			
@@ -219,7 +232,8 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 			fullPath = buffer.ToString ();
 
-			FileInfo.GetIconAndDescription (pidl, fullPath, mode, out icon, out displayName, out typeName, out attributes);
+			FileInfo.GetIconAndDescription (pidl, fullPath, mode, attr, out icon, out displayName, out typeName, out attributes);
+
 			Drawing.Image image = null;
 
 			if (icon != null)
@@ -240,7 +254,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 		}
 
 
-		private static bool GetIconAndDescription(System.IntPtr pidl, string fullPath, FolderQueryMode mode, out System.Drawing.Icon icon, out string displayName, out string typeName, out FolderItemAttributes attributes)
+		private static bool GetIconAndDescription(System.IntPtr pidl, string fullPath, FolderQueryMode mode, uint attr, out System.Drawing.Icon icon, out string displayName, out string typeName, out FolderItemAttributes attributes)
 		{
 			if (pidl == System.IntPtr.Zero)
 			{
@@ -272,7 +286,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 				requestAttributes = true;
 			}
 
-			FileInfo.GetShellFileInfo (pidl, mode, requestAttributes, ref info);
+			FileInfo.GetShellFileInfo (pidl, fullPath, mode, requestAttributes, attr, ref info);
 			
 			if (info.hIcon == System.IntPtr.Zero)
 			{
@@ -371,15 +385,24 @@ namespace Epsitec.Common.Support.Platform.Win32
 			return true;
 		}
 
-		private static void GetShellFileInfo(System.IntPtr pidl, FolderQueryMode mode, bool requestAttributes, ref ShellApi.SHFILEINFO info)
+		private static void GetShellFileInfo(System.IntPtr pidl, string fullPath, FolderQueryMode mode, bool requestAttributes, uint attr, ref ShellApi.SHFILEINFO info)
 		{
-			ShellApi.SHGFI flags = ShellApi.SHGFI.SHGFI_DISPLAYNAME |
-				/**/			   ShellApi.SHGFI.SHGFI_TYPENAME |
-				/**/			   ShellApi.SHGFI.SHGFI_PIDL;
+			ShellApi.SHGFI flags = ShellApi.SHGFI.SHGFI_DISPLAYNAME | ShellApi.SHGFI.SHGFI_TYPENAME;
 
-			if (requestAttributes)
+//?			attr = 0;
+
+			if (attr == 0)
 			{
-				flags |= ShellApi.SHGFI.SHGFI_ATTRIBUTES;
+				flags |= ShellApi.SHGFI.SHGFI_PIDL;
+
+				if (requestAttributes)
+				{
+					flags |= ShellApi.SHGFI.SHGFI_ATTRIBUTES;
+				}
+			}
+			else
+			{
+				flags |= ShellApi.SHGFI.SHGFI_USEFILEATTRIBUTES;
 			}
 
 			if (mode.AsOpenFolder)
@@ -400,13 +423,21 @@ namespace Epsitec.Common.Support.Platform.Win32
 					flags |= ShellApi.SHGFI.SHGFI_SMALLICON;
 					flags |= ShellApi.SHGFI.SHGFI_ICON;
 					break;
+				
 				case FileInfoIconSize.Large:
 					flags |= ShellApi.SHGFI.SHGFI_LARGEICON;
 					flags |= ShellApi.SHGFI.SHGFI_ICON;
 					break;
 			}
 
-			ShellApi.SHGetFileInfo (pidl, 0, out info, System.Runtime.InteropServices.Marshal.SizeOf (info), flags);
+			if (attr == 0)
+			{
+				ShellApi.SHGetFileInfo (pidl, 0, out info, System.Runtime.InteropServices.Marshal.SizeOf (info), flags);
+			}
+			else
+			{
+				ShellApi.SHGetFileInfo (fullPath, attr, out info, System.Runtime.InteropServices.Marshal.SizeOf (info), flags);
+			}
 		}
 
 		private static ShellApi.CSIDL GetCsidl(FolderId id)
