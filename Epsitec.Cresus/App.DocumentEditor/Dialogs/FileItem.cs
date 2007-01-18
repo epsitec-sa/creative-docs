@@ -482,14 +482,24 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		public static Epsitec.Common.Types.StructuredType GetStructuredType()
 		{
+			//	Retourne un descripteur de type structuré pour permettre d'accéder
+			//	à FileItem comme si c'était une structure de type StructuredData.
+			//	Chaque champ qui doit être accessible doit être nommé et décrit
+			//	ici; voir aussi l'implémentation de IStructuredData plus loin.
 			if (FileItem.type == null)
 			{
 				FileItem.type = new Epsitec.Common.Types.StructuredType ();
-				FileItem.type.Fields.Add ("icon", Epsitec.Common.Types.StringType.Default);
-				FileItem.type.Fields.Add ("name", Epsitec.Common.Types.StringType.Default);
-				FileItem.type.Fields.Add ("info", Epsitec.Common.Types.StringType.Default);
-				FileItem.type.Fields.Add ("date", Epsitec.Common.Types.DateTimeType.Default);
-				FileItem.type.Fields.Add ("size", Epsitec.Common.Types.LongIntegerType.Default);
+
+				//	TODO: remplacer les Druid.Empty par des caption ID décrivant
+				//	les diverses colonnes; cela implique qu'il faudra commencer
+				//	par rajouter des captions, puis utiliser Res.Captions.Xyz.Id
+				//	à la place des Druid.Empty ci-après :
+
+				FileItem.type.Fields.Add ("icon", Epsitec.Common.Types.StringType.Default, Druid.Empty);
+				FileItem.type.Fields.Add ("name", Epsitec.Common.Types.StringType.Default, Druid.Empty);
+				FileItem.type.Fields.Add ("info", Epsitec.Common.Types.StringType.Default, Druid.Empty);
+				FileItem.type.Fields.Add ("date", Epsitec.Common.Types.DateTimeType.Default, Druid.Empty);
+				FileItem.type.Fields.Add ("size", Epsitec.Common.Types.LongIntegerType.Default, Druid.Empty);
 			}
 
 			return FileItem.type;
@@ -513,20 +523,21 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				List<FileItem> path1 = this.GetAncestorList ();
 				List<FileItem> path2 = that.GetAncestorList ();
 
-				while ((path1.Count > 0) || (path2.Count > 0))
+				int index1 = path1.Count;
+				int index2 = path2.Count;
+
+				while ((index1 > 0) || (index2 > 0))
 				{
 					FileItem p1 = null;
 					FileItem p2 = null;
 					
-					if (path1.Count > 0)
+					if (index1-- > 0)
 					{
-						p1 = path1[path1.Count-1];
-						path1.RemoveAt (path1.Count-1);
+						p1 = path1[index1];
 					}
-					if (path2.Count > 0)
+					if (index2-- > 0)
 					{
-						p2 = path2[path2.Count-1];
-						path2.RemoveAt (path2.Count-1);
+						p2 = path2[index2];
 					}
 					
 					if (p1 == null && p2 == null)
@@ -614,6 +625,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		IEnumerable<string> Epsitec.Common.Types.IStructuredData.GetValueIds()
 		{
+			//	Retourne la liste des champs définis pour cette structure; voir
+			//	aussi la méthode GetStructuredType.
+
 			yield return "icon";
 			yield return "name";
 			yield return "info";
@@ -623,22 +637,28 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		object Epsitec.Common.Types.IStructuredData.GetValue(string id)
 		{
+			//	Retourne la valeur du champ spécifié.
 			switch (id)
 			{
 				case "icon":
 					return this.FixIcon;
+				
 				case "name":
 					return this.ShortFileName;
+				
 				case "info":
 					return this.Description;
+				
 				case "date":
 					this.InitializeCachedFileDate ();
 					return this.cachedDateTime;
+				
 				case "size":
 					this.InitializeCachedFileSize ();
 					return this.cachedFileSize;
+				
 				default:
-					throw new System.InvalidOperationException ();
+					return Epsitec.Common.Types.UnknownValue.Instance;
 			}
 		}
 
