@@ -26,6 +26,17 @@ namespace Epsitec.Common.Types
 		/// <param name="direction">The sort direction.</param>
 		/// <param name="propertyName">Name of the property used for sorting.</param>
 		public SortDescription(ListSortDirection direction, string propertyName)
+			: this (direction, propertyName, null)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SortDescription"/> class.
+		/// </summary>
+		/// <param name="direction">The sort direction.</param>
+		/// <param name="propertyName">Name of the property used for sorting.</param>
+		/// <param name="propertyComparer">The property comparer used for sorting.</param>
+		public SortDescription(ListSortDirection direction, string propertyName, Support.PropertyComparer propertyComparer)
 		{
 			if ((direction != ListSortDirection.Ascending) &&
 				(direction != ListSortDirection.Descending))
@@ -44,6 +55,7 @@ namespace Epsitec.Common.Types
 
 			this.direction = direction;
 			this.propertyName = propertyName;
+			this.propertyComparer = propertyComparer;
 		}
 
 		/// <summary>
@@ -70,6 +82,20 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this instance is empty.
+		/// </summary>
+		/// <value><c>true</c> if this instance is empty; otherwise, <c>false</c>.</value>
+		public bool								IsEmpty
+		{
+			get
+			{
+				return this.propertyName == null;
+			}
+		}
+
+		public static readonly SortDescription	Empty = new SortDescription ();
+
 		#region IEquatable<SortDescription> Members
 
 		public bool Equals(SortDescription other)
@@ -90,7 +116,12 @@ namespace Epsitec.Common.Types
 		{
 			string propertyName = this.PropertyName;
 
-			Support.PropertyComparer comparer = Support.DynamicCodeFactory.CreatePropertyComparer (type, propertyName);
+			Support.PropertyComparer comparer = this.propertyComparer;
+
+			if (comparer == null)
+			{
+				comparer = Support.DynamicCodeFactory.CreatePropertyComparer (type, propertyName);
+			}
 
 			switch (this.Direction)
 			{
@@ -182,5 +213,6 @@ namespace Epsitec.Common.Types
 
 		private string							propertyName;
 		private ListSortDirection				direction;
+		private Support.PropertyComparer		propertyComparer;
 	}
 }

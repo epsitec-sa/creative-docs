@@ -352,18 +352,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.DoubleClicked += new MessageEventHandler(this.HandleTableDoubleClicked);
 			this.table.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
 
+			this.files = new List<FileItem> ();
 			this.table2 = new Epsitec.Common.UI.ItemTable (group);
 			this.table2.Dock = DockStyle.Fill;
 			this.table2.SourceType = FileItem.GetStructuredType ();
+			this.table2.Items = new Epsitec.Common.Types.CollectionView (this.files);
 			this.table2.ItemPanel.ItemViewDefaultSize = new Size (this.table2.Parent.PreferredWidth, cellHeight);
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 50));
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 85));
-			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("info", 95));
+			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("type", 95, FileItem.GetDescriptionPropertyComparer ()));
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("date", 80));
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("size", 40));
+			this.table2.ColumnHeader.SetColumnSortable (0, false);
+			this.table2.ColumnHeader.SetColumnSort (1, Epsitec.Common.Types.ListSortDirection.Ascending);
 
-			this.files = new List<FileItem> ();
-			this.table2.Items = new Epsitec.Common.Types.CollectionView (this.files);
 			//-this.table2.Visibility = false;
 			this.table2.Visibility = true;
 			

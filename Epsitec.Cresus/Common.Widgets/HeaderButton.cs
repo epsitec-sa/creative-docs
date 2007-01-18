@@ -66,6 +66,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool							IsSortable
+		{
+			get
+			{
+				return this.isSortable;
+			}
+			set
+			{
+				this.isSortable = value;
+			}
+		}
+
 		public SortMode						SortMode
 		{
 			//	Choix pour le triangle du bouton.
@@ -173,6 +185,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected HeaderButtonStyle			headerButtonStyle;
 		protected bool						isDynamic = false;
+		protected bool						isSortable = true;
 		protected SortMode					sortMode = SortMode.None;
 		
 		protected const double				Margin = 2;

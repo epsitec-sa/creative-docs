@@ -497,7 +497,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				FileItem.type.Fields.Add ("icon", Epsitec.Common.Types.StringType.Default, Druid.Empty);
 				FileItem.type.Fields.Add ("name", Epsitec.Common.Types.StringType.Default, Druid.Empty);
-				FileItem.type.Fields.Add ("info", Epsitec.Common.Types.StringType.Default, Druid.Empty);
+				FileItem.type.Fields.Add ("type", Epsitec.Common.Types.IntegerType.Default, Druid.Empty);
 				FileItem.type.Fields.Add ("date", Epsitec.Common.Types.DateTimeType.Default, Druid.Empty);
 				FileItem.type.Fields.Add ("size", Epsitec.Common.Types.LongIntegerType.Default, Druid.Empty);
 			}
@@ -613,6 +613,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 		#endregion
 
+		private static int PropertyComparer(object a, object b)
+		{
+			FileItem item1 = a as FileItem;
+			FileItem item2 = b as FileItem;
+			return item1.BaseCompareTo (item2);
+		}
+
+		public static PropertyComparer GetDescriptionPropertyComparer()
+		{
+			return FileItem.PropertyComparer;
+		}
+
 		#region IStructuredData Members
 
 		void Epsitec.Common.Types.IStructuredData.AttachListener(string id, EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs> handler)
@@ -630,7 +642,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			yield return "icon";
 			yield return "name";
-			yield return "info";
+			yield return "type";
 			yield return "date";
 			yield return "size";
 		}
@@ -646,8 +658,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				case "name":
 					return this.ShortFileName;
 				
-				case "info":
-					return this.Description;
+				case "type":
+					return 0;
 				
 				case "date":
 					this.InitializeCachedFileDate ();

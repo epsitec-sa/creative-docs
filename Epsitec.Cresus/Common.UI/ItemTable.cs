@@ -267,6 +267,7 @@ namespace Epsitec.Common.UI
 					double width = column.Width.IsAbsolute ? column.Width.Value : size.Width;
 
 					this.columnHeader.SetColumnWidth (i, width);
+					this.columnHeader.SetColumnComparer (i, column.Comparer);
 
 					minWidth += width;
 					minHeight = System.Math.Max (minHeight, size.Height);

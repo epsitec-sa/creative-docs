@@ -36,6 +36,12 @@ namespace Epsitec.Common.UI
 			this.Width = width;
 		}
 
+		public ItemTableColumn(string fieldId, double width, Support.PropertyComparer comparer)
+			: this (fieldId, new GridLength (width))
+		{
+			this.comparer = comparer;
+		}
+
 		
 		public string FieldId
 		{
@@ -94,6 +100,18 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public Support.PropertyComparer Comparer
+		{
+			get
+			{
+				return this.comparer;
+			}
+			set
+			{
+				this.comparer = value;
+			}
+		}
+
 		public Support.Druid TemplateId
 		{
 			get
@@ -114,9 +132,24 @@ namespace Epsitec.Common.UI
 		}
 
 
+		public static void SetComparer(DependencyObject obj, Support.PropertyComparer comparer)
+		{
+			obj.SetValue (ItemTableColumn.ComparerProperty, comparer);
+		}
+
+		public static Support.PropertyComparer GetComparer(DependencyObject obj)
+		{
+			return (Support.PropertyComparer) obj.GetValue (ItemTableColumn.ComparerProperty);
+		}
+
+
 		public static readonly DependencyProperty FieldIdProperty	 = DependencyProperty.Register ("FieldId", typeof (string), typeof (ItemTableColumn));
 		public static readonly DependencyProperty WidthProperty		 = DependencyProperty.Register ("Width", typeof (GridLength), typeof (ItemTableColumn), new DependencyPropertyMetadata (GridLength.Auto));
 		public static readonly DependencyProperty CaptionIdProperty	 = DependencyProperty.Register ("CaptionId", typeof (Support.Druid), typeof (ItemTableColumn), new DependencyPropertyMetadata (Support.Druid.Empty));
 		public static readonly DependencyProperty TemplateIdProperty = DependencyProperty.Register ("TemplateId", typeof (Support.Druid), typeof (ItemTableColumn), new DependencyPropertyMetadata (Support.Druid.Empty));
+
+		public static readonly DependencyProperty ComparerProperty	= DependencyProperty.RegisterAttached ("Comparer", typeof (Support.PropertyComparer), typeof (ItemTableColumn));
+
+		private Support.PropertyComparer comparer;
 	}
 }

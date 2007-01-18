@@ -120,6 +120,86 @@ namespace Epsitec.Common.UI
 			return this.columns[index].Id;
 		}
 
+		public void SetColumnComparer(int index, Support.PropertyComparer propertyComparer)
+		{
+			ItemTableColumn.SetComparer (this.columns[index].Button, propertyComparer);
+		}
+
+		public Support.PropertyComparer GetColumnComparer(int index)
+		{
+			return ItemTableColumn.GetComparer (this.columns[index].Button);
+		}
+
+		public bool IsColumnSortable(int index)
+		{
+			return this.columns[index].Button.IsSortable;
+		}
+
+		public void SetColumnSortable(int index, bool sortable)
+		{
+			this.columns[index].Button.IsSortable = sortable;
+		}
+
+		public SortDescription GetColumnSortDescription(int index)
+		{
+			string propertyName = this.columns[index].PropertyName;
+
+			foreach (SortDescription sort in this.ItemPanel.Items.SortDescriptions)
+			{
+				if (sort.PropertyName == propertyName)
+				{
+					return sort;
+				}
+			}
+
+			return SortDescription.Empty;
+		}
+
+		public void SetColumnSort(int index, ListSortDirection sortDirection)
+		{
+			this.SetColumnSort (index, new SortDescription (sortDirection, this.columns[index].PropertyName));
+		}
+
+		public void SetColumnSort(int index, SortDescription sortDescription)
+		{
+			Column column = this.columns[index];
+			string propertyName = column.PropertyName;
+			Support.PropertyComparer comparer = this.GetColumnComparer (index);
+
+			List<SortDescription> sorts = new List<SortDescription> ();
+
+			foreach (SortDescription sort in this.ItemPanel.Items.SortDescriptions)
+			{
+				if (sort.PropertyName != propertyName)
+				{
+					sorts.Add (sort);
+				}
+			}
+			
+			foreach (Column item in this.columns)
+			{
+				if ((item.Button == column.Button) &&
+					(!sortDescription.IsEmpty) &&
+					(column.Button.IsSortable))
+				{
+					item.Button.SortMode = sortDescription.Direction == ListSortDirection.Ascending ? SortMode.Down : SortMode.Up;
+				}
+				else
+				{
+					item.Button.SortMode = SortMode.None;
+				}
+			}
+
+			this.ItemPanel.Items.SortDescriptions.Clear ();
+			
+			if (!sortDescription.IsEmpty)
+			{
+				this.ItemPanel.Items.SortDescriptions.Add (new SortDescription (sortDescription.Direction, propertyName, comparer));
+			}
+			
+			this.ItemPanel.Items.SortDescriptions.AddRange (sorts);
+		}
+
 		public ColumnDefinition GetColumnDefinition(int index)
 		{
 			return this.gridLayout.ColumnDefinitions[index];
@@ -208,7 +288,13 @@ namespace Epsitec.Common.UI
 			}
 
 			Widget widget = sender as Widget;
-			Column column = this.columns[widget.Index];
+			int    index  = widget.Index;
+			Column column = this.columns[index];
+
+			if (!column.Button.IsSortable)
+			{
+				return;
+			}
 
 			e.Message.Consumer = this;
 			
@@ -217,32 +303,7 @@ namespace Epsitec.Common.UI
 				return;
 			}
 
-			List<SortDescription> sorts = new List<SortDescription> ();
-			SortDescription newSort = new SortDescription (column.Button.SortMode == SortMode.Down ? ListSortDirection.Descending : ListSortDirection.Ascending, column.PropertyName);
-			
-			foreach (SortDescription sort in this.ItemPanel.Items.SortDescriptions)
-			{
-				if (sort.PropertyName != newSort.PropertyName)
-				{
-					sorts.Add (sort);
-				}
-			}
-
-			foreach (Column item in this.columns)
-			{
-				if (item.Button == column.Button)
-				{
-					item.Button.SortMode = newSort.Direction == ListSortDirection.Ascending ? SortMode.Down : SortMode.Up;
-				}
-				else
-				{
-					item.Button.SortMode = SortMode.None;
-				}
-			}
-
-			this.ItemPanel.Items.SortDescriptions.Clear ();
-			this.ItemPanel.Items.SortDescriptions.Add (newSort);
-			this.ItemPanel.Items.SortDescriptions.AddRange (sorts);
+			this.SetColumnSort (index, column.Button.SortMode == SortMode.Down ? ListSortDirection.Descending : ListSortDirection.Ascending);
 		}
 
 		private void HandleDragStarted(object sender, MessageEventArgs e)

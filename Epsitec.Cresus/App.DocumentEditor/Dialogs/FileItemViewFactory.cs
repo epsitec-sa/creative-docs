@@ -1,5 +1,5 @@
-//	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.App.DocumentEditor.Dialogs;
 using Epsitec.Common.Document;
@@ -13,6 +13,10 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.App.DocumentEditor.Dialogs
 {
+	/// <summary>
+	/// The <c>FileItemViewFactory</c> class populates the ItemView with the
+	/// visual representation of a <c>FileItem</c> instance.
+	/// </summary>
 	class FileItemViewFactory : IItemViewFactory
 	{
 		#region IItemViewFactory Members
@@ -114,7 +118,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	TODO: better handling here... this only works for vertical layout!
 
 				double dx = header.GetTotalWidth ();
-				double dy = rootPanel.ItemViewDefaultSize.Height; // table.GetDefaultItemSize (itemView).Height;
+				double dy = rootPanel.ItemViewDefaultSize.Height;
 
 				return new Size (dx, dy);
 			}
