@@ -20,7 +20,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 				{
 					pf = (IPersistFile) this.link;
 					pf.Load (this.path, 0);
-					this.link.Resolve (System.IntPtr.Zero, (ShellApi.SLR_FLAGS) (0x00010000*100) | ShellApi.SLR_FLAGS.SLR_NO_UI | ShellApi.SLR_FLAGS.SLR_NOSEARCH | ShellApi.SLR_FLAGS.SLR_NOUPDATE);
+					//this.link.Resolve (System.IntPtr.Zero, (ShellApi.SLR_FLAGS) (0x00010000*100) | ShellApi.SLR_FLAGS.SLR_NO_UI | ShellApi.SLR_FLAGS.SLR_NOSEARCH | ShellApi.SLR_FLAGS.SLR_NOUPDATE);
 				}
 				catch
 				{
