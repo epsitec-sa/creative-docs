@@ -443,26 +443,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		protected FileItem GetParent(int level)
+		private List<FileItem> GetAncestorList()
 		{
-			//	Retourne un parent.
-			//	Le niveau 0 correspond au bureau.
-			//	Le niveau Deep correspond à l'objet lui-même.
-			//	Un niveau supérieur retourne null.
-			int depth = this.Depth;
-			if (level <= depth)
+			//	Retourne la liste des ancêtres dans l'ordre feuille->racine
+			//	(en dernier dans la liste, on trouve toujours le bureau).
+			List<FileItem> list = new List<FileItem> ();
+			FileItem current = this;
+			while ((current != null) && (list.Count < 100))
 			{
-				FileItem current = this;
-				for (int i=0; i<depth-level; i++)
-				{
-					current = current.parent;
-				}
-				return current;
+				list.Add (current);
+				current = current.parent;
 			}
-			else
-			{
-				return null;
-			}
+			return list;
 		}
 
 		public int Depth
@@ -518,11 +510,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//		C		(deep = 0)
 			if (this.sortAccordingToLevel)
 			{
-				for (int level=0; level<100; level++)
-				{
-					FileItem p1 = this.GetParent (level);
-					FileItem p2 = that.GetParent (level);
+				List<FileItem> path1 = this.GetAncestorList ();
+				List<FileItem> path2 = that.GetAncestorList ();
 
+				while ((path1.Count > 0) || (path2.Count > 0))
+				{
+					FileItem p1 = null;
+					FileItem p2 = null;
+					
+					if (path1.Count > 0)
+					{
+						p1 = path1[path1.Count-1];
+						path1.RemoveAt (path1.Count-1);
+					}
+					if (path2.Count > 0)
+					{
+						p2 = path2[path2.Count-1];
+						path2.RemoveAt (path2.Count-1);
+					}
+					
 					if (p1 == null && p2 == null)
 					{
 						return this.BaseCompareTo (that);
