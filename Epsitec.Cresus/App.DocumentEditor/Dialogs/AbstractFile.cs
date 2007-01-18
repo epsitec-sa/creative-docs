@@ -769,7 +769,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			Filename f = new Filename();
 			f.FilenameValue = item.DisplayName;
-			f.ImageValue = item.Icon.Image;
+			f.ImageValue = item.Icon == null ? null : item.Icon.Image;
 
 			this.FavoritesAdd(item, f);
 		}

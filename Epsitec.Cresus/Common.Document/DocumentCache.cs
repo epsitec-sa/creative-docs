@@ -49,7 +49,7 @@ namespace Epsitec.Common.Document
 			DocumentCache.cache.Remove(filename);
 		}
 
-		public static Image Image(string filename)
+		public static Image FindImage(string filename)
 		{
 			//	Retourne une miniature contenue dans le cache.
 			//	Retourne null si la miniature n'est pas dans le cache.
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public static Document.Statistics Statistics(string filename)
+		public static Document.Statistics FindStatistics(string filename)
 		{
 			//	Retourne une statistique contenue dans le cache.
 			//	Retourne null si la statistique n'est pas dans le cache.
@@ -95,7 +95,14 @@ namespace Epsitec.Common.Document
 			dataImage = null;
 			dataStatistics = null;
 
-			if (zip.TryLoadFile(filename, DocumentCache.IsLoading))
+			bool ok = zip.TryLoadFile (filename,
+				delegate (string entryName)
+				{
+					return (entryName == "preview.png")
+						|| (entryName == "statistics.data");
+				});
+
+			if (ok)
 			{
 				try
 				{
@@ -116,12 +123,6 @@ namespace Epsitec.Common.Document
 				}
 			}
 		}
-
-		protected static bool IsLoading(string entryName)
-		{
-			return (entryName == "preview.png" || entryName == "statistics.data");
-		}
-
 
 		protected struct Item
 		{

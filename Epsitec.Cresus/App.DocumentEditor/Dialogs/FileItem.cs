@@ -379,7 +379,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				else
 				{
 					DocumentCache.Add (this.folderItem.FullPath);
-					image = DocumentCache.Image (this.folderItem.FullPath);
+					image = DocumentCache.FindImage (this.folderItem.FullPath);
 					if (image == null)
 					{
 						image = this.folderItem.Icon.Image;
@@ -411,7 +411,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					else
 					{
 						DocumentCache.Add (this.folderItem.FullPath);
-						return DocumentCache.Statistics (this.folderItem.FullPath);
+						return DocumentCache.FindStatistics (this.folderItem.FullPath);
 					}
 				}
 			}
