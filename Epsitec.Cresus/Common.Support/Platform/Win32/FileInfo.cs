@@ -357,7 +357,10 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 			else
 			{
-				fileAttr = 0;
+				if (!FileInfo.wellKnownFoldersReady)
+				{
+					fileAttr = 0;
+				}
 			}
 			
 			FileInfo.GetIconAndDescription (pidl, fullPath, mode, fileAttr, out icon, out displayName, out typeName, out attributes);
