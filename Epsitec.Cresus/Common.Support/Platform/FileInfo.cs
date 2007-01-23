@@ -22,9 +22,9 @@ namespace Epsitec.Common.Support.Platform
 			return Win32.FileInfo.CreateFolderItem (handle, mode);
 		}
 
-		public static IEnumerable<FolderItem> GetFolderItems(FolderItem path, FolderQueryMode mode)
+		public static IEnumerable<FolderItem> GetFolderItems(FolderItem path, FolderQueryMode mode, System.Predicate<FileFilterInfo> filter)
 		{
-			return Win32.FileInfo.GetFolderItems (path, mode);
+			return Win32.FileInfo.GetFolderItems (path, mode, filter);
 		}
 
 		public static FolderItem GetParentFolderItem(FolderItem path, FolderQueryMode mode)

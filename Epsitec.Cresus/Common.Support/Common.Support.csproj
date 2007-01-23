@@ -123,6 +123,7 @@
     <Compile Include="CommandAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FileFilterInfo.cs" />
     <Compile Include="FileOperationMode.cs" />
     <Compile Include="FolderQueryMode.cs" />
     <Compile Include="Data\ComponentCollection.cs">

@@ -186,7 +186,24 @@ namespace Epsitec.Common.Support
 				throw new System.ArgumentException ("Empty FolderItem provided");
 			}
 
-			return Platform.FileInfo.GetFolderItems (path, mode);
+			return Platform.FileInfo.GetFolderItems (path, mode, null);
+		}
+
+		/// <summary>
+		/// Enumerates the items found in the specified folder, applying the
+		/// specified filter before returing possible folder items.
+		/// </summary>
+		/// <param name="path">The folder.</param>
+		/// <param name="mode">The details retrieval mode.</param>
+		/// <returns>An enumeration of folder items.</returns>
+		public static IEnumerable<FolderItem> GetFolderItems(FolderItem path, FolderQueryMode mode, System.Predicate<FileFilterInfo> filter)
+		{
+			if (path.IsEmpty)
+			{
+				throw new System.ArgumentException ("Empty FolderItem provided");
+			}
+
+			return Platform.FileInfo.GetFolderItems (path, mode, filter);
 		}
 
 		/// <summary>
@@ -199,7 +216,7 @@ namespace Epsitec.Common.Support
 		{
 			try
 			{
-				return Platform.FileInfo.GetFolderItems (Platform.FileInfo.CreateFolderItem (path, mode), mode);
+				return FileManager.GetFolderItems (Platform.FileInfo.CreateFolderItem (path, mode), mode);
 			}
 			catch (System.IO.FileNotFoundException)
 			{

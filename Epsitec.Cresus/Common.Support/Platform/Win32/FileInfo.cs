@@ -123,13 +123,13 @@ namespace Epsitec.Common.Support.Platform.Win32
 			
 			return FolderItem.Empty;
 		}
-		
-		public static IEnumerable<FolderItem> GetFolderItems(FolderItem path, FolderQueryMode mode)
+
+		public static IEnumerable<FolderItem> GetFolderItems(FolderItem path, FolderQueryMode mode, System.Predicate<FileFilterInfo> filter)
 		{
-			return FileInfo.GetFolderItems (path.Handle as PidlHandle, mode, false);
+			return FileInfo.GetFolderItems (path.Handle as PidlHandle, mode, false, filter);
 		}
 
-		private static IEnumerable<FolderItem> GetFolderItems(PidlHandle handle, FolderQueryMode mode, bool disposeHandleWhenFinished)
+		private static IEnumerable<FolderItem> GetFolderItems(PidlHandle handle, FolderQueryMode mode, bool disposeHandleWhenFinished, System.Predicate<FileFilterInfo> filter)
 		{
 			if (handle == null)
 			{
@@ -180,17 +180,22 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 					if (pidlTemp != System.IntPtr.Zero)
 					{
-						//-System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
-						//-watch.Start ();
-						uint attr = 0;
-						folder.GetAttributesOf (1, new System.IntPtr[] { pidlElement }, ref attr);
-						//-long t1=watch.ElapsedMilliseconds;
-						FolderItem item = FileInfo.CreateFolderItemAndInheritPidl (mode, pidlTemp, attr);
-						//-long t2=watch.ElapsedMilliseconds-t1;
-						//-watch.Stop ();
-						//-System.Diagnostics.Debug.WriteLine (string.Format ("{0}ms+{1}ms : {2}", t1, t2, item.DisplayName));
+						string fullPath = FileInfo.GetFullPathFromPidl (pidlTemp);
+						System.IO.FileAttributes fileAttributes = FileInfo.GetAttributes (fullPath);
 
-						yield return item;
+						if (filter == null)
+						{
+							yield return FileInfo.CreateFolderItemAndInheritPidl (mode, pidlTemp, fullPath, fileAttributes);
+						}
+						else
+						{
+							FileFilterInfo filterInfo = new FileFilterInfo (fullPath, fileAttributes);
+
+							if (filter (filterInfo))
+							{
+								yield return FileInfo.CreateFolderItemAndInheritPidl (mode, pidlTemp, fullPath, fileAttributes);
+							}
+						}
 					}
 
 					PidlHandle.FreePidl (pidlElement);
@@ -210,29 +215,68 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 		}
 
+		private static System.IO.FileAttributes GetAttributes(string fullPath)
+		{
+			try
+			{
+				if (!string.IsNullOrEmpty (fullPath))
+				{
+					return System.IO.File.GetAttributes (fullPath);
+				}
+			}
+			catch
+			{
+			}
+
+			return (System.IO.FileAttributes) 0;
+		}
+
+		private static string GetFullPathFromPidl(System.IntPtr pidl)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder (Win32Const.MAX_PATH);
+			ShellApi.SHGetPathFromIDList (pidl, buffer);
+			return buffer.ToString ();
+		}
+
 		private static FolderItem CreateFolderItemAndInheritPidl(FolderQueryMode mode, System.IntPtr pidl)
 		{
-			return FileInfo.CreateFolderItemAndInheritPidl (mode, pidl, 0);
+			return FileInfo.CreateFolderItemAndInheritPidl (mode, pidl, FileInfo.GetFullPathFromPidl (pidl));
 		}
-		
-		private static FolderItem CreateFolderItemAndInheritPidl(FolderQueryMode mode, System.IntPtr pidl, uint attr)
+
+		private static FolderItem CreateFolderItemAndInheritPidl(FolderQueryMode mode, System.IntPtr pidl, string fullPath)
+		{
+			return FileInfo.CreateFolderItemAndInheritPidl (mode, pidl, fullPath, FileInfo.GetAttributes (fullPath));
+		}
+
+		private static FolderItem CreateFolderItemAndInheritPidl(FolderQueryMode mode, System.IntPtr pidl, string fullPath, System.IO.FileAttributes fileAttributes)
 		{
 			//	Do not free pidl, as it is transmitted to the PidlHandle. This
 			//	avoids a useless copy operation.
 			
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder (Win32Const.MAX_PATH);
 			System.Drawing.Icon icon;
 
-			string fullPath;
 			string displayName;
 			string typeName;
 			FolderItemAttributes attributes;
+			uint fileAttr = (uint) fileAttributes;
 
-			ShellApi.SHGetPathFromIDList (pidl, buffer);
-
-			fullPath = buffer.ToString ();
-
-			FileInfo.GetIconAndDescription (pidl, fullPath, mode, attr, out icon, out displayName, out typeName, out attributes);
+			if (string.IsNullOrEmpty (fullPath))
+			{
+				fileAttr = 0;
+			}
+			else
+			{
+				try
+				{
+					fileAttr = (uint) System.IO.File.GetAttributes (fullPath);
+				}
+				catch
+				{
+					fileAttr = 0;
+				}
+			}
+			
+			FileInfo.GetIconAndDescription (pidl, fullPath, mode, fileAttr, out icon, out displayName, out typeName, out attributes);
 
 			Drawing.Image image = null;
 
@@ -249,7 +293,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 				handle.Dispose ();
 				handle = PidlHandle.VirtualDesktopHandle;
 			}
-
+			
 			return new FolderItem (image, mode, displayName, typeName, fullPath, handle, attributes);
 		}
 
@@ -385,13 +429,11 @@ namespace Epsitec.Common.Support.Platform.Win32
 			return true;
 		}
 
-		private static void GetShellFileInfo(System.IntPtr pidl, string fullPath, FolderQueryMode mode, bool requestAttributes, uint attr, ref ShellApi.SHFILEINFO info)
+		private static void GetShellFileInfo(System.IntPtr pidl, string fullPath, FolderQueryMode mode, bool requestAttributes, uint fileAttr, ref ShellApi.SHFILEINFO info)
 		{
 			ShellApi.SHGFI flags = ShellApi.SHGFI.SHGFI_DISPLAYNAME | ShellApi.SHGFI.SHGFI_TYPENAME;
 
-//?			attr = 0;
-
-			if (attr == 0)
+			if (fileAttr == 0)
 			{
 				flags |= ShellApi.SHGFI.SHGFI_PIDL;
 
@@ -430,13 +472,13 @@ namespace Epsitec.Common.Support.Platform.Win32
 					break;
 			}
 
-			if (attr == 0)
+			if (fileAttr == 0)
 			{
 				ShellApi.SHGetFileInfo (pidl, 0, out info, System.Runtime.InteropServices.Marshal.SizeOf (info), flags);
 			}
 			else
 			{
-				ShellApi.SHGetFileInfo (fullPath, attr, out info, System.Runtime.InteropServices.Marshal.SizeOf (info), flags);
+				ShellApi.SHGetFileInfo (fullPath, fileAttr, out info, System.Runtime.InteropServices.Marshal.SizeOf (info), flags);
 			}
 		}
 

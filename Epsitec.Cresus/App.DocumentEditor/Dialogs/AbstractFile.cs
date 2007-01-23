@@ -968,10 +968,58 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.files.Add(new FileItem());  // première ligne avec 'nouveau document vide'
 			}
 
+			//	Ne montre pas les raccourcis si le chemin est distant, car cela n'apporte
+			//	rien du tout: on ne sait pas suivre un raccourci distant, car il pointe
+			//	sur une ressource locale de la machine distante!
+
 			FolderQueryMode mode = this.UseLargeIcons ? FolderQueryMode.LargeIcons : FolderQueryMode.SmallIcons;
 			bool showHidden = FolderItem.ShowHiddenFiles;
 			bool skipFolders = this.initialFolder.Equals(FileManager.GetFolderItem(FolderId.Recent, FolderQueryMode.NoIcons));
-			foreach (FolderItem item in FileManager.GetFolderItems(this.initialFolder, mode))
+			bool skipShortcuts = this.initialFolder.FullPath.StartsWith (@"\\");
+
+			System.Predicate<FileFilterInfo> filter =
+				delegate (FileFilterInfo file)
+				{
+					if ((file.Attributes & FileAttributes.Hidden) != 0)
+					{
+						if (!showHidden)
+						{
+							return false;
+						}
+					}
+					if ((file.Attributes & FileAttributes.Directory) != 0)
+					{
+						if (skipFolders)
+						{
+							return false;
+						}
+						else
+						{
+							return true;
+						}
+					}
+					else if (file.LowerCaseExtension == ".lnk")
+					{
+						if (skipShortcuts)
+						{
+							return false;
+						}
+						else
+						{
+							return true;
+						}
+					}
+					else if (file.LowerCaseExtension == this.fileExtension)
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				};
+			
+			foreach (FolderItem item in FileManager.GetFolderItems(this.initialFolder, mode, filter))
 			{
 				if (!item.IsFileSystemNode)
 				{
@@ -985,12 +1033,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				if (item.IsShortcut)
 				{
+					string itemPath = item.FullPath.ToLowerInvariant ();
+					
 					if (skipFolders)
 					{
 						//	Filtre tout de suite les fichiers que l'on ne sait pas nous intéresser.
 						//	En effet, le nom du raccourci se termine par .crdoc.lnk s'il s'agit d'un
 						//	document .crdoc.
-						string name = item.FullPath.Substring(0, item.FullPath.Length-4);  // nom sans .lnk
+						string name = itemPath.Substring(0, itemPath.Length-4);  // nom sans .lnk
 
 						if (!Misc.IsExtension(name, this.fileExtension))  // autre extension ?
 						{
