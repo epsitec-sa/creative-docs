@@ -601,6 +601,19 @@ namespace Epsitec.Common.Types
 			this.FinishCreation ();
 		}
 
+		public static IEnumerable<T> GetAllEnumValues<T>()
+		{
+			System.Type enumType = typeof (T);
+
+			FieldInfo[] fields = enumType.GetFields (BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
+
+			for (int i = 0; i < fields.Length; i++)
+			{
+				string name = fields[i].Name;
+				yield return (T) System.Enum.Parse (enumType, name);
+			}
+		}
+
 		private void CreateEnumValues()
 		{
 			Caption caption = this.Caption;

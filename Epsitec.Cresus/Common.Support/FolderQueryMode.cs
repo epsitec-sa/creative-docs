@@ -79,6 +79,12 @@ namespace Epsitec.Common.Support
 				return mode;
 			}
 		}
+
+		public FolderQueryMode Open()
+		{
+			this.asOpenFolder = true;
+			return this;
+		}
 		
 		private FileInfoIconSize iconSize;
 		private bool asOpenFolder;

@@ -27,6 +27,89 @@ namespace Epsitec.Common.Support.Platform.Win32
 			this.root      = null;
 		}
 
+		public static void InitializeWellKnownFolderItems()
+		{
+			lock (FileInfo.wellKnownFolders)
+			{
+				if (FileInfo.wellKnownFoldersReady == false)
+				{
+					FileInfo.InitializeWellKnownFolderItemsLocked ();
+				}
+			}
+		}
+
+		private static void InitializeWellKnownFolderItemsLocked()
+		{
+			if (FileInfo.wellKnownFolders.Count == 0)
+			{
+				System.Diagnostics.Debug.WriteLine ("Filling folder item cache.");
+				FileInfo.InitializeWellKnownFolderItems (FolderQueryMode.LargeIcons, "Large-Closed ");
+				FileInfo.InitializeWellKnownFolderItems (FolderQueryMode.SmallIcons, "Small-Closed ");
+				FileInfo.InitializeWellKnownFolderItems (FolderQueryMode.LargeIcons.Open (), "Large-Open ");
+				FileInfo.InitializeWellKnownFolderItems (FolderQueryMode.SmallIcons.Open (), "Small-Open ");
+				System.Diagnostics.Debug.WriteLine ("Done.");
+
+				FileInfo.wellKnownFoldersReady = true;
+			}
+		}
+
+		private static bool FindWellKnownFolderItem(string fullPath, FolderQueryMode mode, out FolderItem item)
+		{
+			if (FileInfo.wellKnownFoldersReady)
+			{
+				string prefix;
+
+				if (mode.IconSize == FolderQueryMode.LargeIcons.IconSize)
+				{
+					prefix = "Large-";
+				}
+				else
+				{
+					prefix = "Small-";
+				}
+
+				string key;
+
+				if (mode.AsOpenFolder)
+				{
+					key = string.Concat (prefix, "Open ", fullPath);
+				}
+				else
+				{
+					key = string.Concat (prefix, "Closed ", fullPath);
+				}
+
+				lock (FileInfo.wellKnownFolders)
+				{
+					FileInfo.InitializeWellKnownFolderItemsLocked ();
+					return FileInfo.wellKnownFolders.TryGetValue (key, out item);
+				}
+			}
+			else
+			{
+				item = FolderItem.Empty;
+				return false;
+			}
+		}
+
+		private static FolderQueryMode InitializeWellKnownFolderItems(FolderQueryMode mode, string prefix)
+		{
+			foreach (FolderId id in Types.EnumType.GetAllEnumValues<FolderId> ())
+			{
+				FolderItem item = FileInfo.CreateFolderItem (id, mode);
+
+				if (string.IsNullOrEmpty (item.FullPath))
+				{
+					continue;
+				}
+
+				string key = string.Concat (prefix, item.FullPath);
+
+				FileInfo.wellKnownFolders[key] = item;
+			}
+			return mode;
+		}
+
 		public static FolderItem CreateFolderItem(FolderId file, FolderQueryMode mode)
 		{
 			ShellApi.CSIDL csidl = FileInfo.GetCsidl (file);
@@ -135,7 +218,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			{
 				throw new System.IO.FileNotFoundException ();
 			}
-			
+
 			System.IntPtr pidlPath = handle.Pidl;
 			System.IntPtr pidlElement;
 
@@ -219,7 +302,8 @@ namespace Epsitec.Common.Support.Platform.Win32
 		{
 			try
 			{
-				if (!string.IsNullOrEmpty (fullPath))
+				if ((!string.IsNullOrEmpty (fullPath)) &&
+					(!((fullPath.Length == 3) && (fullPath[1] == ':'))))
 				{
 					return System.IO.File.GetAttributes (fullPath);
 				}
@@ -245,13 +329,20 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 		private static FolderItem CreateFolderItemAndInheritPidl(FolderQueryMode mode, System.IntPtr pidl, string fullPath)
 		{
-			return FileInfo.CreateFolderItemAndInheritPidl (mode, pidl, fullPath, FileInfo.GetAttributes (fullPath));
+			return FileInfo.CreateFolderItemAndInheritPidl (mode, pidl, fullPath, (System.IO.FileAttributes) 0);
 		}
 
 		private static FolderItem CreateFolderItemAndInheritPidl(FolderQueryMode mode, System.IntPtr pidl, string fullPath, System.IO.FileAttributes fileAttributes)
 		{
 			//	Do not free pidl, as it is transmitted to the PidlHandle. This
 			//	avoids a useless copy operation.
+
+			FolderItem item;
+			
+			if (FileInfo.FindWellKnownFolderItem (fullPath, mode, out item))
+			{
+				return item;
+			}
 			
 			System.Drawing.Icon icon;
 
@@ -266,14 +357,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 			else
 			{
-				try
-				{
-					fileAttr = (uint) System.IO.File.GetAttributes (fullPath);
-				}
-				catch
-				{
-					fileAttr = 0;
-				}
+				fileAttr = 0;
 			}
 			
 			FileInfo.GetIconAndDescription (pidl, fullPath, mode, fileAttr, out icon, out displayName, out typeName, out attributes);
@@ -592,6 +676,8 @@ namespace Epsitec.Common.Support.Platform.Win32
 		}
 
 
+		private static Dictionary<string, FolderItem> wellKnownFolders = new Dictionary<string, FolderItem> ();
+		private static bool wellKnownFoldersReady;
 		private static FileInfo instance = new FileInfo ();
 		
 		private IShellFolder root;

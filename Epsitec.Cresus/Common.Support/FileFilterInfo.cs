@@ -10,6 +10,12 @@ namespace Epsitec.Common.Support
 			this.path = path;
 			this.extension = string.IsNullOrEmpty (path) ? null : System.IO.Path.GetExtension (path).ToLowerInvariant ();
 			this.attributes = attributes;
+
+			if ((path.Length == 3) &&
+				(path[1] == ':'))
+			{
+				this.attributes |= System.IO.FileAttributes.Directory;
+			}
 		}
 
 		public string Path

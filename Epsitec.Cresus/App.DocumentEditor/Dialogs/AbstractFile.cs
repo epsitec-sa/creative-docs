@@ -4,6 +4,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Document;
 using Epsitec.Common.IO;
+using Epsitec.Common.Types.Collections;
 using System.IO;
 
 namespace Epsitec.App.DocumentEditor.Dialogs
@@ -13,9 +14,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 	/// </summary>
 	public abstract class AbstractFile : Abstract
 	{
+		static AbstractFile()
+		{
+			FileManager.Initialize ();
+		}
+
 		public AbstractFile(DocumentEditor editor) : base(editor)
 		{
-			this.directoriesVisited = new List<FolderItem>();
+			this.directoriesVisited = new List<FolderItem> ();
 			this.directoriesVisitedIndex = -1;
 
 			this.focusedWidget = null;
@@ -352,7 +358,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.DoubleClicked += new MessageEventHandler(this.HandleTableDoubleClicked);
 			this.table.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
 
-			this.files = new List<FileItem> ();
+			this.files = new ObservableList<FileItem> ();
 			this.table2 = new Epsitec.Common.UI.ItemTable (group);
 			this.table2.Dock = DockStyle.Fill;
 			this.table2.SourceType = FileItem.GetStructuredType ();
@@ -1083,8 +1089,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.files.Add(new FileItem(item, this.isModel));  // ajoute une ligne à la liste
 			}
 
-			this.files.Sort();  // trie toute la liste
-			this.table2.Items.Refresh ();
+//			this.files.Sort();  // trie toute la liste
+//			this.table2.Items.Refresh ();
 		}
 
 		protected void UpdateButtons()
@@ -2083,7 +2089,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected string					initialFilename;
 		protected Document.FontIncludeMode	fontIncludeMode;
 		protected Document.ImageIncludeMode	imageIncludeMode;
-		protected List<FileItem>			files;
+		protected ObservableList<FileItem>	files;
 		protected string					selectedFilename;
 		protected string[]					selectedFilenames;
 		protected int						renameSelected = -1;

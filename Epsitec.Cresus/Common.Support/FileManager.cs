@@ -12,6 +12,18 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public static class FileManager
 	{
+		static FileManager()
+		{
+			Platform.Win32.FileInfo.InitializeWellKnownFolderItems ();
+		}
+
+		/// <summary>
+		/// Initializes the file manager.
+		/// </summary>
+		public static void Initialize()
+		{
+		}
+
 		/// <summary>
 		/// Deletes the file. This sends the file to the recycle bin.
 		/// </summary>
