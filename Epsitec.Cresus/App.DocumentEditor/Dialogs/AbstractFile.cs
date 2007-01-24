@@ -716,9 +716,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			foreach (Widget widget in this.favorites.Panel.Children.Widgets)
 			{
-				if (widget is Filename)
+				if (widget is FileButton)
 				{
-					Filename f = widget as Filename;
+					FileButton f = widget as FileButton;
 					f.Clicked -= new MessageEventHandler(this.HandleFavoriteClicked);
 				}
 
@@ -761,8 +761,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				item = FileManager.GetFolderItem(path, FolderQueryMode.LargeIcons);
 			}
 
-			Filename f = new Filename();
-			f.FilenameValue = text;
+			FileButton f = new FileButton();
+			f.DisplayName = text;
 			f.IconValue = Misc.Icon(icon);
 
 			this.FavoritesAdd(item, f);
@@ -773,28 +773,28 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Ajoute un favoris dans le panneau de gauche.
 			FolderItem item = FileManager.GetFolderItem(id, FolderQueryMode.LargeIcons);
 
-			Filename f = new Filename();
-			f.FilenameValue = item.DisplayName;
-			f.ImageValue = item.Icon == null ? null : item.Icon.Image;
+			FileButton f = new FileButton();
+			f.DisplayName = item.DisplayName;
+			f.IconValue = item.Icon == null ? null : item.Icon.ImageName;
 
 			this.FavoritesAdd(item, f);
 		}
 
-		protected void FavoritesAdd(FolderItem item, Filename f)
+		protected void FavoritesAdd(FolderItem item, FileButton f)
 		{
 			//	Ajoute un favoris dans le panneau de gauche.
-			f.PreferredHeight = (this.favoritesBigState.ActiveState == ActiveState.Yes) ? Common.Widgets.Filename.ExtendedHeight : Common.Widgets.Filename.CompactedHeight;
+			f.PreferredHeight = (this.favoritesBigState.ActiveState == ActiveState.Yes) ? Common.Widgets.FileButton.ExtendedHeight : Common.Widgets.FileButton.CompactHeight;
 			f.Name = this.favoritesList.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
 			f.Dock = DockStyle.Top;
 			f.Clicked += new MessageEventHandler(this.HandleFavoriteClicked);
 
 			if (string.IsNullOrEmpty(item.FullPath))
 			{
-				ToolTip.Default.SetToolTip(f, TextLayout.ConvertToTaggedText(f.FilenameValue));
+				ToolTip.Default.SetToolTip(f, TextLayout.ConvertToTaggedText(f.DisplayName));
 			}
 			else
 			{
-				string tooltip = string.Concat(TextLayout.ConvertToTaggedText(f.FilenameValue), "<br/><i>", TextLayout.ConvertToTaggedText(item.FullPath), "</i>");
+				string tooltip = string.Concat(TextLayout.ConvertToTaggedText(f.DisplayName), "<br/><i>", TextLayout.ConvertToTaggedText(item.FullPath), "</i>");
 				ToolTip.Default.SetToolTip(f, tooltip);
 			}
 
@@ -809,9 +809,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			foreach (Widget widget in this.favorites.Panel.Children.Widgets)
 			{
-				if (widget is Filename)
+				if (widget is FileButton)
 				{
-					Filename f = widget as Filename;
+					FileButton f = widget as FileButton;
 
 					int i = System.Int32.Parse(f.Name, System.Globalization.CultureInfo.InvariantCulture);
 					bool active = (this.favoritesList[i] == this.initialFolder);
@@ -1521,10 +1521,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			foreach (Widget widget in this.favorites.Panel.Children.Widgets)
 			{
-				if (widget is Filename)
+				if (widget is FileButton)
 				{
-					Filename f = widget as Filename;
-					f.PreferredHeight = (this.favoritesBigState.ActiveState == ActiveState.Yes) ? Common.Widgets.Filename.ExtendedHeight : Common.Widgets.Filename.CompactedHeight;
+					FileButton f = widget as FileButton;
+					f.PreferredHeight = (this.favoritesBigState.ActiveState == ActiveState.Yes) ? Common.Widgets.FileButton.ExtendedHeight : Common.Widgets.FileButton.CompactHeight;
 				}
 			}
 		}
@@ -1756,7 +1756,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleFavoriteClicked(object sender, MessageEventArgs e)
 		{
 			//	Favoris cliqué dans le panneau de gauche.
-			Filename f = sender as Filename;
+			FileButton f = sender as FileButton;
 			int i = System.Int32.Parse(f.Name, System.Globalization.CultureInfo.InvariantCulture);
 			this.SetInitialFolder(this.favoritesList[i], true);
 		}

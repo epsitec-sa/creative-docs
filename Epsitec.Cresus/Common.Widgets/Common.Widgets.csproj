@@ -139,7 +139,7 @@
     <Compile Include="TabNavigationMode.cs" />
     <Compile Include="FormTextField.cs" />
     <Compile Include="MetaButton.cs" />
-    <Compile Include="Filename.cs" />
+    <Compile Include="FileName.cs" />
     <Compile Include="ImageShower.cs" />
     <Compile Include="ShortcutEditor.cs" />
     <Compile Include="Layouts\Collections\ColumnDefinitionCollection.cs" />

@@ -8,14 +8,14 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe Filename permet d'afficher un nom de fichier surmonté d'une icône.
 	/// </summary>
-	public class Filename : Button
+	public class FileButton : Button
 	{
-		public Filename()
+		public FileButton()
 		{
 			this.ButtonStyle = ButtonStyle.ToolItem;
 		}
 
-		public Filename(Widget embedder) : this()
+		public FileButton(Widget embedder) : this()
 		{
 			this.SetEmbedder (embedder);
 		}
@@ -25,11 +25,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return Filename.textHeight + Filename.iconHeight + Filename.topMargin;
+				return FileButton.textHeight + FileButton.iconHeight + FileButton.topMargin;
 			}
 		}
 
-		public static double CompactedHeight
+		public static double CompactHeight
 		{
 			get
 			{
@@ -37,27 +37,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		static Filename()
-		{
-			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
-
-			metadataDy.DefineDefaultValue (Filename.ExtendedHeight);
-			
-			Visual.PreferredHeightProperty.OverrideMetadata (typeof (Filename), metadataDy);
-		}
-
-		
-		public string FilenameValue
+		public string DisplayName
 		{
 			get
 			{
-				return this.filename;
+				return this.displayName;
 			}
 			set
 			{
-				if (this.filename != value)
+				if (this.displayName != value)
 				{
-					this.filename = value;
+					this.displayName = value;
 					this.Invalidate();
 				}
 			}
@@ -79,23 +69,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public Image ImageValue
-		{
-			get
-			{
-				return this.image;
-			}
-			set
-			{
-				if (this.image != value)
-				{
-					this.image = value;
-					this.Invalidate();
-				}
-			}
-		}
-
-
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			//	Dessine le widget.
@@ -108,7 +81,7 @@ namespace Epsitec.Common.Widgets
 
 			bool compact;
 			string dim;
-			if (textRect.Height <= Filename.CompactedHeight)
+			if (textRect.Height <= FileButton.CompactHeight)
 			{
 				compact = true;
 				dim = "dx=\"16\" dy=\"16\"";
@@ -122,9 +95,9 @@ namespace Epsitec.Common.Widgets
 				compact = false;
 				dim = "dx=\"32\" dy=\"32\"";
 
-				iconRect.Top -= Filename.topMargin;
-				iconRect.Bottom += Filename.textHeight;
-				textRect.Top = textRect.Bottom+Filename.textHeight;
+				iconRect.Top -= FileButton.topMargin;
+				iconRect.Bottom += FileButton.textHeight;
+				textRect.Top = textRect.Bottom+FileButton.textHeight;
 			}
 
 			//	Affiche le texte.
@@ -136,11 +109,11 @@ namespace Epsitec.Common.Widgets
 			this.textLayout.Alignment = compact ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleCenter;
 			this.textLayout.LayoutSize = textRect.Size;
 			this.textLayout.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-			this.textLayout.Text = TextLayout.ConvertToTaggedText(this.filename);
+			this.textLayout.Text = TextLayout.ConvertToTaggedText(this.displayName);
 			this.textLayout.Paint(textRect.BottomLeft, graphics);
 
 			//	Affiche l'icône.
-			if (this.icon != null)
+			if (!string.IsNullOrEmpty (this.icon))
 			{
 				if (this.iconLayout == null)
 				{
@@ -152,26 +125,25 @@ namespace Epsitec.Common.Widgets
 				this.iconLayout.Text = string.Format(@"<img src=""{0}"" {1}/>", this.icon, dim);
 				this.iconLayout.Paint(iconRect.BottomLeft, graphics);
 			}
-
-			if (this.image != null)
-			{
-				double m = (iconRect.Width-iconRect.Height)/2;
-				iconRect.Left += m;
-				iconRect.Right -= m;
-				graphics.Align(ref iconRect);
-				graphics.PaintImage(this.image, iconRect);
-			}
 		}
 
+		static FileButton()
+		{
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
 
+			metadataDy.DefineDefaultValue (FileButton.ExtendedHeight);
+
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (FileButton), metadataDy);
+		}
+
+		
 		protected static readonly double	topMargin = 5;
 		protected static readonly double	iconHeight = 32;
 		protected static readonly double	textHeight = 16;
 
-		protected string					filename;
-		protected string					icon;
-		protected Image						image;
-		protected TextLayout				textLayout;
-		protected TextLayout				iconLayout;
+		private string						displayName;
+		private string						icon;
+		private TextLayout					textLayout;
+		private TextLayout					iconLayout;
 	}
 }

@@ -532,6 +532,23 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets all enum values for a given enumeration type.
+		/// </summary>
+		/// <returns>The enumeration of all enumeration values.</returns>
+		public static IEnumerable<T> GetAllEnumValues<T>()
+		{
+			System.Type enumType = typeof (T);
+
+			FieldInfo[] fields = enumType.GetFields (BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
+
+			for (int i = 0; i < fields.Length; i++)
+			{
+				string name = fields[i].Name;
+				yield return (T) System.Enum.Parse (enumType, name);
+			}
+		}
+
 		public static bool GetIsNative(DependencyObject obj)
 		{
 			return (bool) obj.GetValue (EnumType.IsNativeProperty);
@@ -599,19 +616,6 @@ namespace Epsitec.Common.Types
 			}
 			
 			this.FinishCreation ();
-		}
-
-		public static IEnumerable<T> GetAllEnumValues<T>()
-		{
-			System.Type enumType = typeof (T);
-
-			FieldInfo[] fields = enumType.GetFields (BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
-
-			for (int i = 0; i < fields.Length; i++)
-			{
-				string name = fields[i].Name;
-				yield return (T) System.Enum.Parse (enumType, name);
-			}
 		}
 
 		private void CreateEnumValues()
