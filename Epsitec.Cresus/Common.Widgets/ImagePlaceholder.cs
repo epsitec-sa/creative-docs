@@ -37,34 +37,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public string FixIcon
-		{
-			//	Icône fixe éventuelle, à la place d'une image.
-			get
-			{
-				return this.fixIcon;
-			}
-
-			set
-			{
-				if (this.fixIcon != value)
-				{
-					this.fixIcon = value;
-
-					if (this.fixIcon == null)
-					{
-						this.textLayout = null;
-					}
-					else
-					{
-						this.textLayout = new TextLayout();
-						this.textLayout.Alignment = ContentAlignment.MiddleCenter;
-						this.textLayout.Text = string.Format(@"<img src=""{0}""/>", this.fixIcon);
-					}
-				}
-			}
-		}
-
 		public bool StretchImage
 		{
 			//	Stretch les images en fonction de la place disponible.
@@ -93,6 +65,34 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected override void OnIconNameChanged(string oldIconName, string newIconName)
+		{
+			base.OnIconNameChanged (oldIconName, newIconName);
+
+			if (string.IsNullOrEmpty (oldIconName) &&
+				string.IsNullOrEmpty (newIconName))
+			{
+				//	Nothing to do. Change is not significant : the text remains
+				//	empty if we swap "" for null.
+			}
+			else
+			{
+				this.UpdateText (newIconName);
+			}
+		}
+
+		private void UpdateText(string newIconName)
+		{
+			if (string.IsNullOrEmpty (newIconName))
+			{
+				this.Text = null;
+			}
+			else
+			{
+				this.Text = string.Format (@"<img src=""{0}""/>", newIconName);
+				this.ContentAlignment = ContentAlignment.MiddleCenter;
+			}
+		}
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
@@ -102,10 +102,10 @@ namespace Epsitec.Common.Widgets
 
 			if (this.image == null)  // icône fixe ?
 			{
-				if (this.textLayout != null)
+				if (!string.IsNullOrEmpty (this.Text))
 				{
-					this.textLayout.LayoutSize = rect.Size;
-					this.textLayout.Paint(rect.BottomLeft, graphics);
+//					this.textLayout.LayoutSize = rect.Size;
+					this.TextLayout.Paint(rect.BottomLeft, graphics);
 				}
 			}
 			else  // image ?
@@ -146,8 +146,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 		protected Drawing.Image						image;
-		protected string							fixIcon;
-		protected TextLayout						textLayout;
 		protected bool								paintFrame = false;
 		protected bool								stretchImage = false;
 	}

@@ -916,11 +916,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					im.DrawingImage = image;
 					im.PaintFrame = !icon;
 					im.StretchImage = !icon;
-					im.FixIcon = null;
+					im.IconName = null;
 				}
 				else
 				{
-					im.FixIcon = Misc.Icon(fixIcon);
+					im.IconName = Misc.Icon (fixIcon);
 					im.DrawingImage = null;
 					im.PaintFrame = false;
 				}

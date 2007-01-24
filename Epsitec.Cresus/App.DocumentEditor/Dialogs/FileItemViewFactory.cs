@@ -52,11 +52,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				fileIcon.DrawingImage = bitmap;
 				fileIcon.PaintFrame = !icon;
 				fileIcon.StretchImage = !icon;
-				fileIcon.FixIcon = null;
+				fileIcon.IconName = null;
 			}
 			else
 			{
-				fileIcon.FixIcon = Misc.Icon (item.FixIcon);
+				fileIcon.IconName = Misc.Icon (item.FixIcon);
 				fileIcon.DrawingImage = null;
 				fileIcon.PaintFrame = false;
 			}
