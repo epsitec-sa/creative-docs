@@ -42,12 +42,12 @@ namespace Epsitec.Common.Support.Platform.Win32
 		{
 			if (FileInfo.wellKnownFolders.Count == 0)
 			{
-				System.Diagnostics.Debug.WriteLine ("Filling folder item cache.");
+				System.Diagnostics.Debug.WriteLine ("Filling folder item cache: started");
 				FileInfo.InitializeWellKnownFolderItems (FolderQueryMode.LargeIcons, "Large-Closed");
 				FileInfo.InitializeWellKnownFolderItems (FolderQueryMode.SmallIcons, "Small-Closed");
 				FileInfo.InitializeWellKnownFolderItems (FolderQueryMode.LargeIcons.Open (), "Large-Open");
 				FileInfo.InitializeWellKnownFolderItems (FolderQueryMode.SmallIcons.Open (), "Small-Open");
-				System.Diagnostics.Debug.WriteLine ("Done.");
+				System.Diagnostics.Debug.WriteLine ("Filling folder item cache: done");
 
 				FileInfo.wellKnownFoldersReady = true;
 			}
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 				}
 				else
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("Cannot map {0}, error code {1}", csidl, result.ToString ("X")));
+					//System.Diagnostics.Debug.WriteLine (string.Format ("Cannot map {0}, error code {1}", csidl, result.ToString ("X")));
 				}
 			}
 			

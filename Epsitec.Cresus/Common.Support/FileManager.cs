@@ -14,7 +14,11 @@ namespace Epsitec.Common.Support
 	{
 		static FileManager()
 		{
-			Platform.Win32.FileInfo.InitializeWellKnownFolderItems ();
+			System.Threading.ThreadPool.QueueUserWorkItem (
+				delegate (object arg)
+				{
+					Platform.Win32.FileInfo.InitializeWellKnownFolderItems ();
+				});
 		}
 
 		/// <summary>
