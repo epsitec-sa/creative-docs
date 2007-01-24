@@ -1354,4 +1354,5 @@
   <data id="0EA01" mod="1">Sharp (Sinc)</data>
   <data id="06A01" mod="1">Filter {0}</data>
   <data id="0IA01"> # in </data>
+  <data id="0KA01">Format: {0}&lt;br/&gt;Pages/layers: {1}/{2}&lt;br/&gt;Fonts/images: {5}/{6}&lt;br/&gt;Objects: {3}/{4}</data>
 </bundle>

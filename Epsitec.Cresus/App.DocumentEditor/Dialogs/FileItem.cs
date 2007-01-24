@@ -317,14 +317,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 					else
 					{
-						Document.Statistics stat = this.Statistics;
+						DocumentInfo stat = this.Statistics;
 						if (stat == null)
 						{
 							this.cachedDescription = this.isModel ? Res.Strings.Dialog.File.Model : Res.Strings.Dialog.File.Document;
 						}
 						else
 						{
-							this.cachedDescription = string.Format (Res.Strings.Dialog.File.Statistics, stat.PageFormat, stat.PagesCount.ToString (), stat.LayersCount.ToString (), stat.ObjectsCount.ToString (), stat.ComplexesCount.ToString (), stat.FontsCount.ToString (), stat.ImagesCount.ToString ());
+							this.cachedDescription = stat.ToString ();
+//-							string.Format (Res.Strings.Dialog.File.Statistics, stat.PageFormat, stat.PageCount.ToString (), stat.LayerCount.ToString (), stat.ObjectCount.ToString (), stat.ComplexObjectCount.ToString (), stat.FontCount.ToString (), stat.ImageCount.ToString ());
 						}
 					}
 				}
@@ -397,7 +398,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		protected Document.Statistics Statistics
+		protected DocumentInfo Statistics
 		{
 			//	Retourne les statistiques associées au fichier.
 			get
@@ -415,7 +416,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					else
 					{
 						DocumentCache.Add (this.folderItem.FullPath);
-						return DocumentCache.FindStatistics (this.folderItem.FullPath);
+						return DocumentCache.FindDocumentInfo (this.folderItem.FullPath);
 					}
 				}
 			}

@@ -842,6 +842,7 @@
   <data name="Action.Key" id="00P">Clé...</data>
   <data name="Action.Update" id="01P">Mise à jour...</data>
   <data name="Action.About" id="02P">A propos de...</data>
+  <data name="Dialog.File.Statistics" id="0KA01">Format: {0}&lt;br/&gt;Pages/calques: {1}/{2}&lt;br/&gt;Polices/images: {5}/{6}&lt;br/&gt;Objets: {3}/{4}</data>
   <data name="Action.UndoMain" id="03P">Annuler</data>
   <data name="Action.Undo" id="04P">Annuler</data>
   <data name="Action.UndoRedoList" id="05P">Annuler ou refaire plusieurs actions</data>

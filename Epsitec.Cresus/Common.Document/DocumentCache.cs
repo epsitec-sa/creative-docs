@@ -27,10 +27,10 @@ namespace Epsitec.Common.Document
 			//	le charger, extraire l'image et les statistiques, puis mettre à jour le cache.
 			
 			byte[] dataImage;
-			byte[] dataStatistics;
-			DocumentCache.ReadData (filename, out dataImage, out dataStatistics);
+			byte[] dataDocInfo;
+			DocumentCache.ReadData (filename, out dataImage, out dataDocInfo);
 
-			if (dataImage != null || dataStatistics != null)
+			if (dataImage != null || dataDocInfo != null)
 			{
 				Item item = new Item ();
 
@@ -39,10 +39,9 @@ namespace Epsitec.Common.Document
 					item.Image = Bitmap.FromData (dataImage);
 				}
 
-				if (dataStatistics != null)
+				if (dataDocInfo != null)
 				{
-					Document.Statistics stat = new Document.Statistics ();
-					item.Statistics = Serialization.DeserializeFromMemory (dataStatistics) as Document.Statistics;
+					item.DocumentInfo = Serialization.DeserializeFromMemory (dataDocInfo) as DocumentInfo;
 				}
 
 				lock (DocumentCache.cache)
@@ -78,12 +77,12 @@ namespace Epsitec.Common.Document
 			return DocumentCache.FindItem (filename).Image;
 		}
 
-		public static Document.Statistics FindStatistics(string filename)
+		public static DocumentInfo FindDocumentInfo(string filename)
 		{
 			//	Retourne une statistique contenue dans le cache.
 			//	Retourne null si la statistique n'est pas dans le cache.
 			
-			return DocumentCache.FindItem (filename).Statistics;
+			return DocumentCache.FindItem (filename).DocumentInfo;
 		}
 
 		// (*)	Il faut considérer 'Abc' = 'abc' à cause de certaines anomalies.
@@ -103,7 +102,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		private static void ReadData(string filename, out byte[] dataImage, out byte[] dataStatistics)
+		private static void ReadData(string filename, out byte[] dataImage, out byte[] dataDocInfo)
 		{
 			string extension = System.IO.Path.GetExtension (filename).ToLower ();
 
@@ -111,23 +110,23 @@ namespace Epsitec.Common.Document
 			{
 				case ".crdoc":
 				case ".crmod":
-					DocumentCache.ReadDocData (filename, out dataImage, out dataStatistics);
+					DocumentCache.ReadDocData (filename, out dataImage, out dataDocInfo);
 					break;
 
 				default:
 					dataImage = null;
-					dataStatistics = null;
+					dataDocInfo = null;
 					break;
 			}
 		}
 
-		private static void ReadDocData(string filename, out byte[] dataImage, out byte[] dataStatistics)
+		private static void ReadDocData(string filename, out byte[] dataImage, out byte[] dataDocInfo)
 		{
 			//	Lit les données (miniature et statistique) associées au fichier.
 			ZipFile zip = new ZipFile();
 
 			dataImage = null;
-			dataStatistics = null;
+			dataDocInfo = null;
 
 			bool ok = zip.TryLoadFile (filename,
 				delegate (string entryName)
@@ -149,11 +148,11 @@ namespace Epsitec.Common.Document
 
 				try
 				{
-					dataStatistics = zip["statistics.data"].Data;  // lit les données dans le fichier zip
+					dataDocInfo = zip["statistics.data"].Data;  // lit les données dans le fichier zip
 				}
 				catch
 				{
-					dataStatistics = null;
+					dataDocInfo = null;
 				}
 			}
 		}
@@ -161,7 +160,7 @@ namespace Epsitec.Common.Document
 		private struct Item
 		{
 			public Image Image;
-			public Document.Statistics Statistics;
+			public DocumentInfo DocumentInfo;
 		}
 
 

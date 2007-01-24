@@ -1737,6 +1737,16 @@ namespace Epsitec.Common.Document
 			protected Statistics(SerializationInfo info, StreamingContext context)
 				: base (info, context)
 			{
+				if (this.Version < 3)
+				{
+					this.PageSize = (Size) info.GetValue ("PageSize", typeof (Size));
+				}
+			}
+
+			public override string ToString()
+			{
+				string format = Res.Strings.Dialog.File.Statistics;
+				return string.Format (format, this.PageFormat, this.PageCount, this.LayerCount, this.ObjectCount, this.ComplexObjectCount, this.FontCount, this.ImageCount);
 			}
 		}
 
@@ -1756,18 +1766,18 @@ namespace Epsitec.Common.Document
 				stat.PageFormat = format;
 			}
 
-			stat.PagesCount = this.modifier.StatisticTotalPages();
-			stat.LayersCount = this.modifier.StatisticTotalLayers();
-			stat.ObjectsCount = this.modifier.StatisticTotalObjects();
-			stat.ComplexesCount = this.modifier.StatisticTotalComplex();
+			stat.PageCount = this.modifier.StatisticTotalPages();
+			stat.LayerCount = this.modifier.StatisticTotalLayers();
+			stat.ObjectCount = this.modifier.StatisticTotalObjects();
+			stat.ComplexObjectCount = this.modifier.StatisticTotalComplex();
 
 			List<OpenType.FontName> fontList = new List<OpenType.FontName>();
 			TextFlow.StatisticFonts(fontList, this.TextFlows);
 			this.modifier.StatisticFonts(fontList);
-			stat.FontsCount = fontList.Count;
+			stat.FontCount = fontList.Count;
 
 			System.Collections.ArrayList imageList = this.modifier.StatisticImages();
-			stat.ImagesCount = imageList.Count;
+			stat.ImageCount = imageList.Count;
 
 			byte[] data = Serialization.SerializeToMemory(stat);
 			zip.AddEntry ("statistics.data", data, priority);

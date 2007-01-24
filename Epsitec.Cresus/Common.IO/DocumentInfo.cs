@@ -53,7 +53,7 @@ namespace Epsitec.Common.IO
 			}
 		}
 
-		public int PagesCount
+		public int PageCount
 		{
 			//	Nombre total de pages.
 			get
@@ -66,7 +66,7 @@ namespace Epsitec.Common.IO
 			}
 		}
 
-		public int LayersCount
+		public int LayerCount
 		{
 			//	Nombre total de calques.
 			get
@@ -79,7 +79,7 @@ namespace Epsitec.Common.IO
 			}
 		}
 
-		public int ObjectsCount
+		public int ObjectCount
 		{
 			//	Nombre total d'objets.
 			get
@@ -92,7 +92,7 @@ namespace Epsitec.Common.IO
 			}
 		}
 
-		public int ComplexesCount
+		public int ComplexObjectCount
 		{
 			//	Nombre total d'objets dégradés ou transparents.
 			get
@@ -105,7 +105,7 @@ namespace Epsitec.Common.IO
 			}
 		}
 
-		public int FontsCount
+		public int FontCount
 		{
 			//	Nombre total de polices.
 			get
@@ -118,7 +118,7 @@ namespace Epsitec.Common.IO
 			}
 		}
 
-		public int ImagesCount
+		public int ImageCount
 		{
 			//	Nombre total d'images bitmap.
 			get
@@ -131,6 +131,13 @@ namespace Epsitec.Common.IO
 			}
 		}
 
+		protected int Version
+		{
+			get
+			{
+				return this.version;
+			}
+		}
 
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
@@ -150,9 +157,9 @@ namespace Epsitec.Common.IO
 		protected DocumentInfo(SerializationInfo info, StreamingContext context)
 		{
 			//	Constructeur qui désérialise l'objet.
-			int version = info.GetInt32 ("Version");
+			this.version = info.GetInt32 ("Version");
 
-			if (version >= 3)
+			if (this.version >= 3)
 			{
 				this.pageWidth = info.GetDouble ("PageWidth");
 				this.pageHeight = info.GetDouble ("PageHeight");
@@ -164,7 +171,7 @@ namespace Epsitec.Common.IO
 			this.objectsCount = info.GetInt32 ("ObjectsCount");
 			this.complexesCount = info.GetInt32 ("ComplexesCount");
 
-			if (version >= 2)
+			if (this.version >= 2)
 			{
 				this.fontsCount = info.GetInt32 ("FontsCount");
 				this.imagesCount = info.GetInt32 ("ImagesCount");
@@ -172,14 +179,15 @@ namespace Epsitec.Common.IO
 		}
 
 
-		protected double pageWidth;
-		protected double pageHeight;
-		protected string pageFormat;
-		protected int pagesCount;
-		protected int layersCount;
-		protected int objectsCount;
-		protected int complexesCount;
-		protected int fontsCount;
-		protected int imagesCount;
+		private int version;
+		private double pageWidth;
+		private double pageHeight;
+		private string pageFormat;
+		private int pagesCount;
+		private int layersCount;
+		private int objectsCount;
+		private int complexesCount;
+		private int fontsCount;
+		private int imagesCount;
 	}
 }
