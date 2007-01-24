@@ -763,7 +763,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			FileButton f = new FileButton();
 			f.DisplayName = text;
-			f.IconValue = Misc.Icon(icon);
+			f.IconName = Misc.Icon (icon);
 
 			this.FavoritesAdd(item, f);
 		}
@@ -775,7 +775,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			FileButton f = new FileButton();
 			f.DisplayName = item.DisplayName;
-			f.IconValue = item.Icon == null ? null : item.Icon.ImageName;
+			f.IconName = item.Icon == null ? null : item.Icon.ImageName;
 
 			this.FavoritesAdd(item, f);
 		}

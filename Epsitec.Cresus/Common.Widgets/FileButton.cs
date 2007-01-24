@@ -53,22 +53,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public string IconValue
-		{
-			get
-			{
-				return this.icon;
-			}
-			set
-			{
-				if (this.icon != value)
-				{
-					this.icon = value;
-					this.Invalidate();
-				}
-			}
-		}
-
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			//	Dessine le widget.
@@ -113,7 +97,7 @@ namespace Epsitec.Common.Widgets
 			this.textLayout.Paint(textRect.BottomLeft, graphics);
 
 			//	Affiche l'icône.
-			if (!string.IsNullOrEmpty (this.icon))
+			if (!string.IsNullOrEmpty (this.IconName))
 			{
 				if (this.iconLayout == null)
 				{
@@ -122,7 +106,7 @@ namespace Epsitec.Common.Widgets
 
 				this.iconLayout.Alignment = compact ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleCenter;
 				this.iconLayout.LayoutSize = iconRect.Size;
-				this.iconLayout.Text = string.Format(@"<img src=""{0}"" {1}/>", this.icon, dim);
+				this.iconLayout.Text = string.Format (@"<img src=""{0}"" {1}/>", this.IconName, dim);
 				this.iconLayout.Paint(iconRect.BottomLeft, graphics);
 			}
 		}
@@ -142,7 +126,6 @@ namespace Epsitec.Common.Widgets
 		protected static readonly double	textHeight = 16;
 
 		private string						displayName;
-		private string						icon;
 		private TextLayout					textLayout;
 		private TextLayout					iconLayout;
 	}
