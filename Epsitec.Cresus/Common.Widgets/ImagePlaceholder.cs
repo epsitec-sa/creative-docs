@@ -23,7 +23,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public Drawing.Image DrawingImage
+		public Drawing.Image Image
 		{
 			//	Image bitmap à afficher.
 			get
@@ -37,17 +37,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool StretchImage
+		public ImageDisplayMode DisplayMode
 		{
 			//	Stretch les images en fonction de la place disponible.
 			get
 			{
-				return this.stretchImage;
+				return this.displayMode;
 			}
 
 			set
 			{
-				this.stretchImage = value;
+				this.displayMode = value;
 			}
 		}
 
@@ -104,7 +104,6 @@ namespace Epsitec.Common.Widgets
 			{
 				if (!string.IsNullOrEmpty (this.Text))
 				{
-//					this.textLayout.LayoutSize = rect.Size;
 					this.TextLayout.Paint(rect.BottomLeft, graphics);
 				}
 			}
@@ -113,7 +112,9 @@ namespace Epsitec.Common.Widgets
 				double w = this.image.Width;
 				double h = this.image.Height;
 
-				if (this.stretchImage)
+				ImageFilter oldFilter = graphics.ImageFilter;
+
+				if (this.displayMode == ImageDisplayMode.Stretch)
 				{
 					if (rect.Width/rect.Height < w/h)
 					{
@@ -127,14 +128,18 @@ namespace Epsitec.Common.Widgets
 						rect.Left  += ww/2;
 						rect.Right -= ww/2;
 					}
+					
+					graphics.ImageFilter = new ImageFilter (ImageFilteringMode.ResamplingBicubic);
 				}
 				else
 				{
 					rect = new Rectangle(rect.Center.X-w/2, rect.Center.Y-h/2, w, h);
+					graphics.ImageFilter = new ImageFilter (ImageFilteringMode.None);
 				}
 
 				graphics.Align(ref rect);
 				graphics.PaintImage(this.image, rect);
+				graphics.ImageFilter = oldFilter;
 			}
 
 			if (this.paintFrame)
@@ -145,9 +150,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected Drawing.Image						image;
-		protected bool								paintFrame = false;
-		protected bool								stretchImage = false;
+		private Drawing.Image						image;
+		private bool								paintFrame;
+		private ImageDisplayMode					displayMode;
 	}
 }
 

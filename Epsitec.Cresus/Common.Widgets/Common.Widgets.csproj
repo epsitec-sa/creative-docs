@@ -132,6 +132,7 @@
     <Compile Include="CommandState.cs" />
     <Compile Include="CloneView.cs" />
     <Compile Include="CommandType.cs" />
+    <Compile Include="ImageDisplayMode.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="ILogicalTree.cs" />
     <Compile Include="Platform\RestartManager.cs" />

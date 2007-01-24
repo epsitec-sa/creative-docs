@@ -49,15 +49,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				Image bitmap;
 				bool icon;
 				item.GetImage (out bitmap, out icon);
-				fileIcon.DrawingImage = bitmap;
-				fileIcon.PaintFrame = !icon;
-				fileIcon.StretchImage = !icon;
+				fileIcon.Image = bitmap;
+				fileIcon.PaintFrame = icon ? false : true;
+				fileIcon.DisplayMode = icon ? ImageDisplayMode.Center : ImageDisplayMode.Stretch;
 				fileIcon.IconName = null;
 			}
 			else
 			{
 				fileIcon.IconName = Misc.Icon (item.FixIcon);
-				fileIcon.DrawingImage = null;
+				fileIcon.Image = null;
 				fileIcon.PaintFrame = false;
 			}
 			

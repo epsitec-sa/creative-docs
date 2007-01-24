@@ -913,15 +913,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					Image image;
 					bool icon;
 					this.files[row].GetImage(out image, out icon);
-					im.DrawingImage = image;
-					im.PaintFrame = !icon;
-					im.StretchImage = !icon;
+					im.Image = image;
+					im.PaintFrame = icon ? false : true;
+					im.DisplayMode = icon ? ImageDisplayMode.Center : ImageDisplayMode.Stretch;
 					im.IconName = null;
 				}
 				else
 				{
 					im.IconName = Misc.Icon (fixIcon);
-					im.DrawingImage = null;
+					im.Image = null;
 					im.PaintFrame = false;
 				}
 
