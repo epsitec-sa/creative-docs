@@ -7,7 +7,7 @@ namespace Epsitec.Common.Document
 	/// <summary>
 	/// La classe DocumentCache gère le cache statique des miniatures et des statistiques.
 	/// </summary>
-	public class DocumentCache
+	public static class DocumentCache
 	{
 		public static void Add(string filename)
 		{
@@ -15,28 +15,46 @@ namespace Epsitec.Common.Document
 			//	Si la miniature ou la statistique ont changé, il faut au préalable exécuter Remove.
 			filename = filename.ToLower();  // voir (*)
 
-			if (!DocumentCache.cache.ContainsKey(filename))
+			lock (DocumentCache.cache)
 			{
-				byte[] dataImage;
-				byte[] dataStatistics;
-				DocumentCache.ReadData(filename, out dataImage, out dataStatistics);
-
-				if (dataImage != null || dataStatistics != null)
+				if (DocumentCache.cache.ContainsKey (filename))
 				{
-					Item item = new Item();
+					return;
+				}
+			}
 
-					if (dataImage != null)
+			//	Pour l'instant, le cache ne contient aucune information pour ce document; on va
+			//	le charger, extraire l'image et les statistiques, puis mettre à jour le cache.
+			
+			byte[] dataImage;
+			byte[] dataStatistics;
+			DocumentCache.ReadData (filename, out dataImage, out dataStatistics);
+
+			if (dataImage != null || dataStatistics != null)
+			{
+				Item item = new Item ();
+
+				if (dataImage != null)
+				{
+					item.Image = Bitmap.FromData (dataImage);
+				}
+
+				if (dataStatistics != null)
+				{
+					Document.Statistics stat = new Document.Statistics ();
+					item.Statistics = Serialization.DeserializeFromMemory (dataStatistics) as Document.Statistics;
+				}
+
+				lock (DocumentCache.cache)
+				{
+					//	Il faut encore s'assurer que le cache n'a pas été mis à jour entre temps
+					//	par quelqu'un d'autre, auquel cas on peut simplement mettre à la poubelle
+					//	les informations (item) :
+
+					if (!DocumentCache.cache.ContainsKey (filename))
 					{
-						item.Image = Bitmap.FromData(dataImage);
+						DocumentCache.cache.Add (filename, item);
 					}
-
-					if (dataStatistics != null)
-					{
-						Document.Statistics stat = new Document.Statistics();
-						item.Statistics = Serialization.DeserializeFromMemory(dataStatistics) as Document.Statistics;
-					}
-
-					DocumentCache.cache.Add(filename, item);
 				}
 			}
 		}
@@ -46,39 +64,26 @@ namespace Epsitec.Common.Document
 			//	Supprime une miniature et une statistique du cache.
 			filename = filename.ToLower();  // voir (*)
 
-			DocumentCache.cache.Remove(filename);
+			lock (DocumentCache.cache)
+			{
+				DocumentCache.cache.Remove (filename);
+			}
 		}
 
 		public static Image FindImage(string filename)
 		{
 			//	Retourne une miniature contenue dans le cache.
 			//	Retourne null si la miniature n'est pas dans le cache.
-			filename = filename.ToLower();  // voir (*)
 
-			if (DocumentCache.cache.ContainsKey(filename))
-			{
-				return DocumentCache.cache[filename].Image;
-			}
-			else
-			{
-				return null;
-			}
+			return DocumentCache.FindItem (filename).Image;
 		}
 
 		public static Document.Statistics FindStatistics(string filename)
 		{
 			//	Retourne une statistique contenue dans le cache.
 			//	Retourne null si la statistique n'est pas dans le cache.
-			filename = filename.ToLower();  // voir (*)
-
-			if (DocumentCache.cache.ContainsKey(filename))
-			{
-				return DocumentCache.cache[filename].Statistics;
-			}
-			else
-			{
-				return null;
-			}
+			
+			return DocumentCache.FindItem (filename).Statistics;
 		}
 
 		// (*)	Il faut considérer 'Abc' = 'abc' à cause de certaines anomalies.
@@ -86,8 +91,37 @@ namespace Epsitec.Common.Document
 		//		C:\Documents and Settings\Daniel Roux\Application Data\Epsitec\Crésus Documents\Mes exemples
 		//		'Crésus Documents' au lieu de 'Crésus documents' qui est le vrai nom !
 
+		private static Item FindItem(string filename)
+		{
+			filename = filename.ToLower ();  // voir (*)
 
-		protected static void ReadData(string filename, out byte[] dataImage, out byte[] dataStatistics)
+			lock (DocumentCache.cache)
+			{
+				Item item;
+				DocumentCache.cache.TryGetValue (filename, out item);
+				return item;
+			}
+		}
+
+		private static void ReadData(string filename, out byte[] dataImage, out byte[] dataStatistics)
+		{
+			string extension = System.IO.Path.GetExtension (filename).ToLower ();
+
+			switch (extension)
+			{
+				case ".crdoc":
+				case ".crmod":
+					DocumentCache.ReadDocData (filename, out dataImage, out dataStatistics);
+					break;
+
+				default:
+					dataImage = null;
+					dataStatistics = null;
+					break;
+			}
+		}
+
+		private static void ReadDocData(string filename, out byte[] dataImage, out byte[] dataStatistics)
 		{
 			//	Lit les données (miniature et statistique) associées au fichier.
 			ZipFile zip = new ZipFile();
@@ -124,13 +158,13 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected struct Item
+		private struct Item
 		{
 			public Image Image;
 			public Document.Statistics Statistics;
 		}
 
 
-		protected static Dictionary<string, Item> cache = new Dictionary<string, Item>();
+		private static Dictionary<string, Item> cache = new Dictionary<string, Item>();
 	}
 }
