@@ -21,6 +21,17 @@ namespace Epsitec.Common.Support
 			this.handle = handle;
 			this.attributes = attributes;
 		}
+		
+		internal FolderItem(Platform.FolderItemHandle handle)
+		{
+			this.icon = null;
+			this.queryMode = new FolderQueryMode ();
+			this.displayName = null;
+			this.typeName = null;
+			this.fullPath = null;
+			this.handle = handle;
+			this.attributes = Platform.FolderItemAttributes.None;
+		}
 
 		/// <summary>
 		/// Gets the icon for this item.

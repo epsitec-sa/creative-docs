@@ -43,17 +43,17 @@ namespace Epsitec.Common.Support.Platform.Win32
 			if (FileInfo.wellKnownFolders.Count == 0)
 			{
 				System.Diagnostics.Debug.WriteLine ("Filling folder item cache.");
-				FileInfo.InitializeWellKnownFolderItems (FolderQueryMode.LargeIcons, "Large-Closed ");
-				FileInfo.InitializeWellKnownFolderItems (FolderQueryMode.SmallIcons, "Small-Closed ");
-				FileInfo.InitializeWellKnownFolderItems (FolderQueryMode.LargeIcons.Open (), "Large-Open ");
-				FileInfo.InitializeWellKnownFolderItems (FolderQueryMode.SmallIcons.Open (), "Small-Open ");
+				FileInfo.InitializeWellKnownFolderItems (FolderQueryMode.LargeIcons, "Large-Closed");
+				FileInfo.InitializeWellKnownFolderItems (FolderQueryMode.SmallIcons, "Small-Closed");
+				FileInfo.InitializeWellKnownFolderItems (FolderQueryMode.LargeIcons.Open (), "Large-Open");
+				FileInfo.InitializeWellKnownFolderItems (FolderQueryMode.SmallIcons.Open (), "Small-Open");
 				System.Diagnostics.Debug.WriteLine ("Done.");
 
 				FileInfo.wellKnownFoldersReady = true;
 			}
 		}
 
-		private static bool FindWellKnownFolderItem(string fullPath, FolderQueryMode mode, out FolderItem item)
+		private static bool FindWellKnownFolderItem(FolderItemHandle handle, string fullPath, FolderQueryMode mode, out FolderItem item)
 		{
 			if (FileInfo.wellKnownFoldersReady)
 			{
@@ -68,15 +68,16 @@ namespace Epsitec.Common.Support.Platform.Win32
 					prefix = "Small-";
 				}
 
-				string key;
+				FolderItem test = new FolderItem (handle);
+				FolderKey key;
 
 				if (mode.AsOpenFolder)
 				{
-					key = string.Concat (prefix, "Open ", fullPath);
+					key = new FolderKey (test, fullPath, string.Concat (prefix, "Open"));
 				}
 				else
 				{
-					key = string.Concat (prefix, "Closed ", fullPath);
+					key = new FolderKey (test, fullPath, string.Concat (prefix, "Closed"));
 				}
 
 				lock (FileInfo.wellKnownFolders)
@@ -97,15 +98,12 @@ namespace Epsitec.Common.Support.Platform.Win32
 			foreach (FolderId id in Types.EnumType.GetAllEnumValues<FolderId> ())
 			{
 				FolderItem item = FileInfo.CreateFolderItem (id, mode);
-
-				if (string.IsNullOrEmpty (item.FullPath))
+				
+				if (item.Handle != null)
 				{
-					continue;
+					FolderKey key = new FolderKey (item, item.FullPath, prefix);
+					FileInfo.wellKnownFolders[key] = item;
 				}
-
-				string key = string.Concat (prefix, item.FullPath);
-
-				FileInfo.wellKnownFolders[key] = item;
 			}
 			return mode;
 		}
@@ -338,10 +336,13 @@ namespace Epsitec.Common.Support.Platform.Win32
 			//	avoids a useless copy operation.
 
 			FolderItem item;
-			
-			if (FileInfo.FindWellKnownFolderItem (fullPath, mode, out item))
+
+			if (FileInfo.wellKnownFoldersReady)
 			{
-				return item;
+				if (FileInfo.FindWellKnownFolderItem (new PidlHandle (pidl), fullPath, mode, out item))
+				{
+					return item;
+				}
 			}
 			
 			System.Drawing.Icon icon;
@@ -678,8 +679,40 @@ namespace Epsitec.Common.Support.Platform.Win32
 			throw new System.ArgumentException (string.Format ("{0} cannot be mapped to a CSIDL", id));
 		}
 
+		private struct FolderKey : System.IEquatable<FolderKey>
+		{
+			public FolderKey(FolderItem item, string path, string mode)
+			{
+				this.item = item;
+				this.path = path ?? "";
+				this.mode = mode;
+			}
 
-		private static Dictionary<string, FolderItem> wellKnownFolders = new Dictionary<string, FolderItem> ();
+			#region IEquatable<FolderKey> Members
+
+			public bool Equals(FolderKey other)
+			{
+				return (this.mode == other.mode) && this.item.Handle.Equals (other.item.Handle);
+			}
+
+			#endregion
+
+			public override bool  Equals(object obj)
+			{
+				return this.Equals ((FolderKey) obj);
+			}
+
+			public override int  GetHashCode()
+			{
+ 				return this.path.GetHashCode () ^ this.mode.GetHashCode ();
+			}
+
+			FolderItem item;
+			string mode;
+			string path;
+		}
+
+		private static Dictionary<FolderKey, FolderItem> wellKnownFolders = new Dictionary<FolderKey, FolderItem> ();
 		private static bool wellKnownFoldersReady;
 		private static FileInfo instance = new FileInfo ();
 		

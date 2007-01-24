@@ -570,7 +570,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Comparaison simple, sans tenir compte du niveau.
 
-			if (this.isNewEmptyDocument != that.isNewEmptyDocument)
+			if (this.isNewEmptyDocument || that.isNewEmptyDocument)
 			{
 				return this.isNewEmptyDocument ? -1 : 1;  // 'nouveau document vide' au début
 			}
