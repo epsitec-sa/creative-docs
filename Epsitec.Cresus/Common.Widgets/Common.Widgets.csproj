@@ -140,7 +140,7 @@
     <Compile Include="FormTextField.cs" />
     <Compile Include="MetaButton.cs" />
     <Compile Include="FileButton.cs" />
-    <Compile Include="ImageShower.cs" />
+    <Compile Include="ImagePlaceholder.cs" />
     <Compile Include="ShortcutEditor.cs" />
     <Compile Include="Layouts\Collections\ColumnDefinitionCollection.cs" />
     <Compile Include="Layouts\Collections\RowDefinitionCollection.cs" />

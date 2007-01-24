@@ -8,15 +8,16 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe ImageShower permet d'afficher une image bitmap.
+	/// The <c>ImagePlaceholder</c> class displays a bitmap image as a plain
+	/// widget.
 	/// </summary>
-	public class ImageShower : Widget
+	public class ImagePlaceholder : Widget
 	{
-		public ImageShower()
+		public ImagePlaceholder()
 		{
 		}
 		
-		public ImageShower(Widget embedder) : this()
+		public ImagePlaceholder(Widget embedder) : this()
 		{
 			this.SetEmbedder(embedder);
 		}

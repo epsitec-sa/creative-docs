@@ -853,7 +853,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.SelectRow(-1, true);
 
 			StaticText st;
-			ImageShower im;
+			ImagePlaceholder im;
 			for (int row=0; row<rows; row++)
 			{
 				for (int column=0; column<this.table.Columns; column++)
@@ -862,7 +862,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					{
 						if (column == 0)  // miniature ?
 						{
-							im = new ImageShower();
+							im = new ImagePlaceholder();
 							im.Dock = DockStyle.Fill;
 							im.Margins = new Margins(1, 1, 1, 1);
 							this.table[column, row].Insert(im);
@@ -906,7 +906,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 				}
 
-				im = this.table[0, row].Children[0] as ImageShower;
+				im = this.table[0, row].Children[0] as ImagePlaceholder;
 				string fixIcon = this.files[row].FixIcon;
 				if (fixIcon == null)
 				{

@@ -9,6 +9,13 @@ namespace Epsitec.Common.Support.Platform
 	/// </summary>
 	internal static class Shortcut
 	{
+		/// <summary>
+		/// Resolves the shortcut defined by the specified path and returns its
+		/// target <see cref="FolderItem"/>.
+		/// </summary>
+		/// <param name="path">The path to the shortcut file.</param>
+		/// <param name="mode">The query mode.</param>
+		/// <returns>The <c>FolderItem</c> if the shortcut could be resolved; otherwise, <c>null</c>.</returns>
 		public static FolderItem Resolve(string path, FolderQueryMode mode)
 		{
 			using (Win32.ShellShortcut shortcut = new Win32.ShellShortcut (path))

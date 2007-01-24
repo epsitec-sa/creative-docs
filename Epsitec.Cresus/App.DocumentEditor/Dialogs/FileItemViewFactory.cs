@@ -35,7 +35,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			container.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
-			ImageShower fileIcon = new ImageShower (container);
+			ImagePlaceholder fileIcon = new ImagePlaceholder (container);
 			StaticText fileName = new StaticText (container);
 			StaticText fileInfo = new StaticText (container);
 			StaticText fileDate = new StaticText (container);
