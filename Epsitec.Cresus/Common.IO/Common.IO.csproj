@@ -106,6 +106,7 @@
     <Compile Include="Compressor.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DocumentInfo.cs" />
     <Compile Include="Decompression.cs">
       <SubType>Code</SubType>
     </Compile>
