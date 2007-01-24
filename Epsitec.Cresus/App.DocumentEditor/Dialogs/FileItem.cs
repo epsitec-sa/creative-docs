@@ -13,10 +13,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 	//	un fichier, un dossier ou la commande 'nouveau document vide'.
 	public class FileItem : System.IComparable<FileItem>, Epsitec.Common.Types.IStructuredData, Epsitec.Common.Types.IStructuredTypeProvider
 	{
-		public FileItem()
+		public FileItem(string iconName, string fileName, string shortFileName, string description)
 		{
 			//	Crée un item pour 'Nouveau document vide'.
 			this.isNewEmptyDocument = true;
+			this.iconName = iconName;
+			this.cachedFileName = fileName;
+			this.cachedShortFileName = shortFileName;
+			this.cachedDescription = description;
 		}
 
 		public FileItem(FolderItem folderItem, bool isModel)
@@ -67,21 +71,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				if (this.cachedFileName == null)
 				{
-					if (this.isNewEmptyDocument)  // nouveau document vide ?
+					if (this.IsShortcut)
 					{
-						this.cachedFileName = Common.Document.Settings.GlobalSettings.NewEmptyDocument;
+						FolderItem item = FileManager.ResolveShortcut (this.folderItem, FolderQueryMode.NoIcons);
+						this.cachedFileName = item.FullPath;
 					}
 					else
 					{
-						if (this.IsShortcut)
-						{
-							FolderItem item = FileManager.ResolveShortcut (this.folderItem, FolderQueryMode.NoIcons);
-							this.cachedFileName = item.FullPath;
-						}
-						else
-						{
-							this.cachedFileName = this.folderItem.FullPath;
-						}
+						this.cachedFileName = this.folderItem.FullPath;
 					}
 				}
 				
@@ -96,25 +93,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				if (this.cachedShortFileName == null)
 				{
-					if (this.isNewEmptyDocument)  // nouveau document vide ?
+					if (this.IsDirectory)
 					{
-						this.cachedShortFileName = "—";
+						this.cachedShortFileName = TextLayout.ConvertToTaggedText (this.folderItem.DisplayName);
+					}
+					else if (this.IsShortcut)
+					{
+						FolderItem item = FileManager.ResolveShortcut (this.folderItem, FolderQueryMode.NoIcons);
+						this.cachedShortFileName = TextLayout.ConvertToTaggedText (System.IO.Path.GetFileNameWithoutExtension (item.FullPath));
 					}
 					else
 					{
-						if (this.IsDirectory)
-						{
-							this.cachedShortFileName = TextLayout.ConvertToTaggedText (this.folderItem.DisplayName);
-						}
-						else if (this.IsShortcut)
-						{
-							FolderItem item = FileManager.ResolveShortcut (this.folderItem, FolderQueryMode.NoIcons);
-							this.cachedShortFileName = TextLayout.ConvertToTaggedText (System.IO.Path.GetFileNameWithoutExtension (item.FullPath));
-						}
-						else
-						{
-							this.cachedShortFileName = TextLayout.ConvertToTaggedText (System.IO.Path.GetFileNameWithoutExtension (this.folderItem.FullPath));
-						}
+						this.cachedShortFileName = TextLayout.ConvertToTaggedText (System.IO.Path.GetFileNameWithoutExtension (this.folderItem.FullPath));
 					}
 				}
 
@@ -319,45 +309,60 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Retourne la description du fichier, basée sur les statistiques si elles existent.
 			get
 			{
-				if (this.isNewEmptyDocument)  // nouveau document vide ?
-				{
-					return Res.Strings.Dialog.New.EmptyDocument;
-				}
-				else
+				if (this.cachedDescription == null)
 				{
 					if (this.IsDirectoryOrShortcut)
 					{
-						return this.folderItem.TypeName;
+						this.cachedDescription = this.folderItem.TypeName;
 					}
 					else
 					{
 						Document.Statistics stat = this.Statistics;
 						if (stat == null)
 						{
-							return this.isModel ? Res.Strings.Dialog.File.Model : Res.Strings.Dialog.File.Document;
+							this.cachedDescription = this.isModel ? Res.Strings.Dialog.File.Model : Res.Strings.Dialog.File.Document;
 						}
 						else
 						{
-							return string.Format (Res.Strings.Dialog.File.Statistics, stat.PageFormat, stat.PagesCount.ToString (), stat.LayersCount.ToString (), stat.ObjectsCount.ToString (), stat.ComplexesCount.ToString (), stat.FontsCount.ToString (), stat.ImagesCount.ToString ());
+							this.cachedDescription = string.Format (Res.Strings.Dialog.File.Statistics, stat.PageFormat, stat.PagesCount.ToString (), stat.LayersCount.ToString (), stat.ObjectsCount.ToString (), stat.ComplexesCount.ToString (), stat.FontsCount.ToString (), stat.ImagesCount.ToString ());
 						}
 					}
 				}
+
+				return this.cachedDescription;
 			}
 		}
 
-		public string FixIcon
+		public string IconName
 		{
 			//	Retourne l'éventuelle icône fixe qui remplace l'image miniature.
 			get
 			{
-				if (this.isNewEmptyDocument)  // nouveau document vide ?
+				if (this.iconName == null)
 				{
-					return "New";
+					FolderItemIcon icon = this.folderItem.Icon;
+					
+					this.iconName = "";
+
+					if (icon != null)
+					{
+						if (this.IsDirectoryOrShortcut)
+						{
+							this.iconName = icon.ImageName;
+						}
+						else
+						{
+							DocumentCache.Add (this.folderItem.FullPath);
+							
+							if (DocumentCache.FindImage (this.folderItem.FullPath) == null)
+							{
+								this.iconName = icon.ImageName;
+							}
+						}
+					}
 				}
-				else
-				{
-					return null;
-				}
+				
+				return this.iconName.Length == 0 ? null : this.iconName;
 			}
 		}
 
@@ -373,7 +378,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				if (this.IsDirectoryOrShortcut)
 				{
-					image = this.folderItem.Icon.Image;
+					image = null;
 					icon = true;
 				}
 				else
@@ -382,7 +387,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					image = DocumentCache.FindImage (this.folderItem.FullPath);
 					if (image == null)
 					{
-						image = this.folderItem.Icon.Image;
 						icon = true;
 					}
 					else
@@ -653,7 +657,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			switch (id)
 			{
 				case "icon":
-					return this.FixIcon;
+					return this.IconName;
 				
 				case "name":
 					return this.ShortFileName;
@@ -694,9 +698,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private string cachedFileName;
 		private string cachedShortFileName;
+		private string cachedDescription;
 		private System.DateTime cachedDateTime;
 		private long cachedFileSize = -2;
 		private int cachedDepth = -1;
+		private string iconName;
 		
 		protected FolderItem folderItem;
 		protected FolderItemIcon smallIcon;

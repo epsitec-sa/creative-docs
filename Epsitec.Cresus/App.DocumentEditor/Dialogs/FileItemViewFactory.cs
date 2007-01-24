@@ -44,7 +44,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			fileIcon.Dock = DockStyle.Stacked;
 			fileIcon.Margins = new Margins (1, 1, 1, 1);
 
-			if (string.IsNullOrEmpty (item.FixIcon))
+			if (string.IsNullOrEmpty (item.IconName))
 			{
 				Image bitmap;
 				bool icon;
@@ -56,7 +56,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			else
 			{
-				fileIcon.IconName = Misc.Icon (item.FixIcon);
+				fileIcon.IconName = item.IconName;
 				fileIcon.Image = null;
 				fileIcon.PaintFrame = false;
 			}

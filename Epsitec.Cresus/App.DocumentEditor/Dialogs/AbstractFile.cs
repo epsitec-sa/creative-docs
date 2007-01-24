@@ -907,7 +907,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 
 				im = this.table[0, row].Children[0] as ImagePlaceholder;
-				string fixIcon = this.files[row].FixIcon;
+				string fixIcon = this.files[row].IconName;
 				if (fixIcon == null)
 				{
 					Image image;
@@ -920,7 +920,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 				else
 				{
-					im.IconName = Misc.Icon (fixIcon);
+					im.IconName = fixIcon;
 					im.Image = null;
 					im.PaintFrame = false;
 				}
@@ -971,7 +971,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			if (this.isNewEmtpyDocument)
 			{
-				this.files.Add(new FileItem());  // première ligne avec 'nouveau document vide'
+				this.files.Add (new FileItem (Misc.Icon ("New"), Common.Document.Settings.GlobalSettings.NewEmptyDocument, "-", Res.Strings.Dialog.New.EmptyDocument));  // première ligne avec 'nouveau document vide'
 			}
 
 			//	Ne montre pas les raccourcis si le chemin est distant, car cela n'apporte

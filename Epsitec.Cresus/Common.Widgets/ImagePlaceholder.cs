@@ -81,19 +81,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void UpdateText(string newIconName)
-		{
-			if (string.IsNullOrEmpty (newIconName))
-			{
-				this.Text = null;
-			}
-			else
-			{
-				this.Text = string.Format (@"<img src=""{0}""/>", newIconName);
-				this.ContentAlignment = ContentAlignment.MiddleCenter;
-			}
-		}
-
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			//	Dessine l'image.
@@ -147,6 +134,19 @@ namespace Epsitec.Common.Widgets
 				rect.Deflate(0.5);
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(adorner.ColorBorder);
+			}
+		}
+
+		private void UpdateText(string newIconName)
+		{
+			if (string.IsNullOrEmpty (newIconName))
+			{
+				this.Text = null;
+			}
+			else
+			{
+				this.Text = string.Format (@"<img src=""{0}""/>", newIconName);
+				this.ContentAlignment = ContentAlignment.MiddleCenter;
 			}
 		}
 
