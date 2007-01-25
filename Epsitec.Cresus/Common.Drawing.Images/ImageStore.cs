@@ -129,21 +129,19 @@ namespace Epsitec.Common.Drawing
 			string extension = null;
 			byte[] memory = null;
 
-			if (image.GetBitsPerPixel () == 32)
+			memory = image.SaveToMemory (Opac.FreeImage.FileFormat.Jpeg, Opac.FreeImage.LoadSaveMode.JpegQualitySuperb);
+			extension = ".jpg";
+			
+			if ((memory == null) &&
+				(image.GetBitsPerPixel () == 32))
 			{
 				memory = image.SaveToMemory (Opac.FreeImage.FileFormat.Png, Opac.FreeImage.LoadSaveMode.PngDefault);
 				extension = ".png";
 			}
-			else
-			{
-				memory = image.SaveToMemory (Opac.FreeImage.FileFormat.Jpeg, Opac.FreeImage.LoadSaveMode.JpegQualityNormal);
-				extension = ".jpg";
-			}
-
 			if (memory == null)
 			{
 				temp = image.ConvertTo24Bits ();
-				memory = image.SaveToMemory (Opac.FreeImage.FileFormat.Jpeg, Opac.FreeImage.LoadSaveMode.JpegQualityNormal);
+				memory = image.SaveToMemory (Opac.FreeImage.FileFormat.Jpeg, Opac.FreeImage.LoadSaveMode.JpegQualitySuperb);
 				extension = ".jpg";
 			}
 
