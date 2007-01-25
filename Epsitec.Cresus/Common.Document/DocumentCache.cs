@@ -1,6 +1,8 @@
-using System.Collections.Generic;
-using Epsitec.Common.IO;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.IO;
+using Epsitec.Common.Support;
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Document
 {

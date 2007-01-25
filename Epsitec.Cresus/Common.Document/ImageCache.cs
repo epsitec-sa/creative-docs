@@ -126,7 +126,7 @@ namespace Epsitec.Common.Document
 		public void Dispose()
 		{
 			//	Supprime toutes les images du cache.
-			IO.DocumentManager manager = this.Document == null ? null : this.Document.DocumentManager;
+			DocumentManager manager = this.Document == null ? null : this.Document.DocumentManager;
 			string zipFilePath = manager == null ? null : manager.GetLocalFilePath ();
 
 			if (!string.IsNullOrEmpty (zipFilePath))

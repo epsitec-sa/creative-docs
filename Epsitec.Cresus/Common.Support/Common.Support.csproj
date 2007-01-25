@@ -123,6 +123,8 @@
     <Compile Include="CommandAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DocumentInfo.cs" />
+    <Compile Include="DocumentManager.cs" />
     <Compile Include="FileFilterInfo.cs" />
     <Compile Include="FileOperationMode.cs" />
     <Compile Include="FolderQueryMode.cs" />
@@ -166,6 +168,7 @@
     <Compile Include="ImageProvider.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Internal\DocumentManagerStream.cs" />
     <Compile Include="IOplet.cs">
       <SubType>Code</SubType>
     </Compile>

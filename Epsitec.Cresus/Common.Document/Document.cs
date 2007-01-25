@@ -463,7 +463,7 @@ namespace Epsitec.Common.Document
 			get { return this.imageCache; }
 		}
 
-		public IO.DocumentManager DocumentManager
+		public DocumentManager DocumentManager
 		{
 			get
 			{
@@ -1711,7 +1711,7 @@ namespace Epsitec.Common.Document
 		#region Statistics
 
 		[System.Serializable]
-		public class Statistics : IO.DocumentInfo
+		public class Statistics : DocumentInfo
 		{
 			public Statistics()
 			{

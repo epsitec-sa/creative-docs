@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Epsitec.Common.IO.Internal
+namespace Epsitec.Common.Support.Internal
 {
 	/// <summary>
 	/// The <c>DocumentManagerStream</c> implements a stream which can be used

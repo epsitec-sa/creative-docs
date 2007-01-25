@@ -1,11 +1,13 @@
 //	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.IO;
+
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Epsitec.Common.IO
+namespace Epsitec.Common.Support
 {
 	[System.Serializable]
 	public class DocumentInfo : ISerializable

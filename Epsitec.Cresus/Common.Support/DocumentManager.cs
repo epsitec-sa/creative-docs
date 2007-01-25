@@ -1,10 +1,11 @@
-
 //	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.IO;
+
 using System.Collections.Generic;
 
-namespace Epsitec.Common.IO
+namespace Epsitec.Common.Support
 {
 	/// <summary>
 	/// The <c>DocumentManager</c> class copies documents from their source

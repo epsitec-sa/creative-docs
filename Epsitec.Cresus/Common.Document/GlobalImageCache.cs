@@ -72,7 +72,7 @@ namespace Epsitec.Common.Document
 
 			if (GlobalImageCache.ExtractZipPathNames (string.Concat (GlobalImageCache.zipPrefix, zipPath), out zipFileName, out zipEntryName))
 			{
-				IO.DocumentManager manager = GlobalImageCache.FindDocumentManager (zipFileName);
+				DocumentManager manager = GlobalImageCache.FindDocumentManager (zipFileName);
 
 				using (System.IO.Stream stream = manager.GetLocalFileStream (System.IO.FileAccess.Read))
 				{
@@ -97,14 +97,14 @@ namespace Epsitec.Common.Document
 			return null;
 		}
 
-		private static IO.DocumentManager FindDocumentManager(string zipFileName)
+		private static DocumentManager FindDocumentManager(string zipFileName)
 		{
 			string zipPath = zipFileName.ToLowerInvariant ();
 
 			foreach (ImageCache cache in GlobalImageCache.localCache)
 			{
 				Document document = cache.Document;
-				IO.DocumentManager manager = document.DocumentManager;
+				DocumentManager manager = document.DocumentManager;
 
 				string path = manager.GetLocalFilePath ().ToLowerInvariant ();
 
