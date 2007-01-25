@@ -17,7 +17,10 @@ namespace Epsitec.Common.Widgets.Platform
 			Microsoft.Win32.SystemEvents.UserPreferenceChanged += new Microsoft.Win32.UserPreferenceChangedEventHandler (Window.HandleSystemEventsUserPreferenceChanged);
 			
 			Window.dispatch_window = new Window ();
+			Window.dispatch_window.CreateControl ();
 			Window.DummyHandleEater (Window.dispatch_window.Handle);
+
+			Epsitec.Common.Drawing.Platform.Dispatcher.Initialize ();
 			
 			//	The asynchronous binding mechanisms need to be able to execute
 			//	code on the main application thread. Thus, we have to register

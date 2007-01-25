@@ -39,7 +39,7 @@ namespace Epsitec.Common.Document
 
 		private static void Initialize()
 		{
-			GlobalImageCache.cache = new Opac.ImageManager.Cache ();
+			GlobalImageCache.cache = new ImageManager ();
 			GlobalImageCache.cache.RegisterProtocol (GlobalImageCache.zipPrefix, GlobalImageCache.ZippedDocumentReader);
 		}
 
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Document
 			return item;
 		}
 
-		public static Opac.ImageManager.Cache GetImageManagerCache()
+		public static ImageManager GetImageManagerCache()
 		{
 			//	Retourne le cache du gestionnaire d'images (cache sur disque).
 			return GlobalImageCache.cache;
@@ -534,7 +534,7 @@ namespace Epsitec.Common.Document
 			{
 				get
 				{
-					return Opac.ImageManager.Cache.GetKey (this.filename, this.date);
+					return ImageManager.GetKey (this.filename, this.date);
 				}
 			}
 
@@ -633,7 +633,7 @@ namespace Epsitec.Common.Document
 
 				//	Cherche d'abord l'image dans le cache persistant.
 				string path = this.zipFilename == null ? string.Concat ("file:", this.filename) : GlobalImageCache.CreateZipPath (this.zipFilename, this.zipEntryName);
-				Opac.ImageManager.ImageData imageData = GlobalImageCache.GetImageManagerCache ().GetImage (path, this.filename, this.date);
+				ImageData imageData = GlobalImageCache.GetImageManagerCache ().GetImage (path, this.filename, this.date);
 				Opac.FreeImage.Image sampleImage = imageData.GetSampleImage ();
 
 				if (sampleImage == null)
@@ -775,7 +775,7 @@ namespace Epsitec.Common.Document
 
 		private static Dictionary<string, Item>		items = new Dictionary<string, Item> ();
 		private static long							timeStamp = 0;
-		private static Opac.ImageManager.Cache		cache;
+		private static ImageManager					cache;
 		private static List<ImageCache>				localCache = new List<ImageCache> ();
 
 		private static string GetGlobalKeyName(string localKeyName, string zipFileName)

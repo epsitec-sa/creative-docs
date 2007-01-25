@@ -1,0 +1,75 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FD37B74B-455D-4706-9ED3-BD210EB91975}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Epsitec.Common.Drawing</RootNamespace>
+    <AssemblyName>Common.Drawing.Images</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="OPaC.FreeImage, Version=3.9.2.0, Culture=neutral, PublicKeyToken=d4b3a36d594a1874, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\OPaC.FreeImage.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CacheClearing.cs" />
+    <Compile Include="Callbacks.cs" />
+    <Compile Include="CustomThreadPool.cs" />
+    <Compile Include="ImageManager.cs" />
+    <Compile Include="ImageData.cs" />
+    <Compile Include="ImageDataEventArgs.cs" />
+    <Compile Include="ImageStore.cs" />
+    <Compile Include="IQueueable.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="CallbackQueue.cs" />
+    <Compile Include="Protocols\FtpProtocol.cs" />
+    <Compile Include="Protocols\HttpProtocol.cs" />
+    <Compile Include="Protocols\FileProtocol.cs" />
+    <Compile Include="QueueStatus.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Drawing.Platform\Common.Drawing.Platform.csproj">
+      <Project>{0202C35E-E79E-43BE-9E35-1ACECB0BBE9B}</Project>
+      <Name>Common.Drawing.Platform</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

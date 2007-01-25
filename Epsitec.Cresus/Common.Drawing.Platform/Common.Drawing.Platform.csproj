@@ -92,6 +92,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Dispatcher.cs" />
     <Compile Include="FontHelper.cs" />
     <Compile Include="ImageDisabler.cs">
       <SubType>Code</SubType>

@@ -120,7 +120,7 @@ namespace Epsitec.Common.Document
 				return null;
 			}
 
-			return this.FindItem (Opac.ImageManager.Cache.GetKey (fileName, fileDate));
+			return this.FindItem (ImageManager.GetKey (fileName, fileDate));
 		}
 
 		public void Dispose()
@@ -157,7 +157,7 @@ namespace Epsitec.Common.Document
 				return;
 			}
 
-			string key = Opac.ImageManager.Cache.GetKey (fileName, fileDate);
+			string key = ImageManager.GetKey (fileName, fileDate);
 			this.items[key].UsedInDocument = true;
 		}
 
@@ -310,8 +310,8 @@ namespace Epsitec.Common.Document
 				return;
 			}
 
-			GlobalImageCache.Lock (Opac.ImageManager.Cache.GetKey (fileName, fileDate), null);
-			GlobalImageCache.Lock (Opac.ImageManager.Cache.GetKey (fileName, fileDate), this.GetWorkingDocumentFileName ());
+			GlobalImageCache.Lock (ImageManager.GetKey (fileName, fileDate), null);
+			GlobalImageCache.Lock (ImageManager.GetKey (fileName, fileDate), this.GetWorkingDocumentFileName ());
 		}
 
 		public void UnlockAll()
@@ -484,7 +484,7 @@ namespace Epsitec.Common.Document
 			//	nom. On prend le premier qui correspond (dans le cache local ou
 			//	dans le cache global).
 
-			string key = Opac.ImageManager.Cache.GetKeyPrefix (fileName);
+			string key = ImageManager.GetKeyPrefix (fileName);
 			string doc = this.GetWorkingDocumentFileName ();
 
 			foreach (KeyValuePair<string, Item> pair in this.items)
@@ -556,7 +556,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				return this.items.ContainsKey (Opac.ImageManager.Cache.GetKey (fileName, fileDate));
+				return this.items.ContainsKey (ImageManager.GetKey (fileName, fileDate));
 			}
 		}
 
@@ -587,7 +587,7 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (filename) == false);
 			System.Diagnostics.Debug.Assert (date != System.DateTime.MinValue);
 			
-			string key = Opac.ImageManager.Cache.GetKey (filename, date);
+			string key = ImageManager.GetKey (filename, date);
 			Item item;
 
 			if (this.items.TryGetValue (key, out item))
