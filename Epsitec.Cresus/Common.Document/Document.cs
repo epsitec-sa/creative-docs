@@ -820,7 +820,7 @@ namespace Epsitec.Common.Document
 			return this.Read(stream, directory, null);
 		}
 
-		protected string Read(Stream stream, string directory, ZipFile zip)
+		private string Read(Stream stream, string directory, ZipFile zip)
 		{
 			//	Ouvre un document sérialisé, zippé ou non.
 			this.ioDirectory = directory;
@@ -1043,7 +1043,7 @@ namespace Epsitec.Common.Document
 		public static Document ReadDocument = null;
 		public static long ReadRevision = 0;
 
-		protected void ReadFinalize()
+		private void ReadFinalize()
 		{
 			//	Adapte tous les objets après une désérialisation.
 			if ( this.Modifier != null )
@@ -1386,7 +1386,7 @@ namespace Epsitec.Common.Document
 			return "";
 		}
 
-		protected static IOType ReadIdentifier(Stream stream)
+		private static IOType ReadIdentifier(Stream stream)
 		{
 			//	Lit les 8 bytes d'en-tête et vérifie qu'ils contiennent bien "<?icon?>".
 			byte[] buffer = new byte[8];
@@ -1404,7 +1404,7 @@ namespace Epsitec.Common.Document
 			return IOType.Unknown;
 		}
 
-		protected static void WriteIdentifier(Stream stream, IOType type)
+		private static void WriteIdentifier(Stream stream, IOType type)
 		{
 			//	Ecrit les 8 bytes d'en-tête "<?icon?>".
 			byte[] buffer = new byte[8];
@@ -1693,7 +1693,6 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
-
 		#region Miniature
 		protected void WriteMiniature(ZipFile zip, int priority, bool isModel)
 		{
@@ -1708,6 +1707,81 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
+		#region DocumentInfo
+
+		public static IDocumentInfo GetDocumentInfo(string path)
+		{
+			//	Extrait des informations pour le document spécifié.
+
+			byte[] dataImage;
+			byte[] dataDocInfo;
+
+			Document.ReadDocumentData (path, out dataImage, out dataDocInfo);
+
+			if (dataImage != null || dataDocInfo != null)
+			{
+				Image image = null;
+				Statistics stat = new Statistics ();
+
+				if (dataImage != null)
+				{
+					image = Bitmap.FromData (dataImage);
+				}
+
+				if (dataDocInfo != null)
+				{
+					stat = Serialization.DeserializeFromMemory (dataDocInfo) as Document.Statistics;
+				}
+
+				stat.SetThumbnail (image);
+
+				return stat;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		private static void ReadDocumentData(string path, out byte[] dataImage, out byte[] dataDocInfo)
+		{
+			//	Lit les données (miniature et statistique) associées au fichier.
+			ZipFile zip = new ZipFile ();
+
+			dataImage = null;
+			dataDocInfo = null;
+
+			bool ok = zip.TryLoadFile (path,
+				delegate (string entryName)
+				{
+					return (entryName == "preview.png")
+						|| (entryName == "statistics.data");
+				});
+
+			if (ok)
+			{
+				try
+				{
+					dataImage = zip["preview.png"].Data;  // lit les données dans le fichier zip
+				}
+				catch
+				{
+					dataImage = null;
+				}
+
+				try
+				{
+					dataDocInfo = zip["statistics.data"].Data;  // lit les données dans le fichier zip
+				}
+				catch
+				{
+					dataDocInfo = null;
+				}
+			}
+		}
+
+		#endregion
+
 		#region Statistics
 
 		[System.Serializable]
@@ -1716,31 +1790,25 @@ namespace Epsitec.Common.Document
 			public Statistics()
 			{
 			}
-			public override void GetObjectData(SerializationInfo info, StreamingContext context)
-			{
-				base.GetObjectData (info, context);
-			}
 
-			public Size PageSize
+			public void SetThumbnail(Image thumbnail)
 			{
-				get
-				{
-					return new Size (this.PageWidth, this.PageHeight);
-				}
-				set
-				{
-					this.PageWidth = value.Width;
-					this.PageHeight = value.Height;
-				}
+				this.thumbnail = thumbnail;
 			}
 
 			protected Statistics(SerializationInfo info, StreamingContext context)
 				: base (info, context)
 			{
-				if (this.Version < 3)
-				{
-					this.PageSize = (Size) info.GetValue ("PageSize", typeof (Size));
-				}
+			}
+
+			public override string GetDescription()
+			{
+				return this.ToString ();
+			}
+
+			public override Image GetThumbnail()
+			{
+				return this.thumbnail;
 			}
 
 			public override string ToString()
@@ -1748,6 +1816,8 @@ namespace Epsitec.Common.Document
 				string format = Res.Strings.Dialog.File.Statistics;
 				return string.Format (format, this.PageFormat, this.PageCount, this.LayerCount, this.ObjectCount, this.ComplexObjectCount, this.FontCount, this.ImageCount);
 			}
+
+			private Image thumbnail;
 		}
 
 		protected void WriteStatistics(ZipFile zip, int priority)

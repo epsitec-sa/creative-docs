@@ -90,6 +90,10 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.dlgSplash.Show();
 			}
+
+			this.defaultDocumentManager = new DocumentManager ();
+			this.defaultDocumentManager.Associate (".crdoc", Document.GetDocumentInfo);
+			this.defaultDocumentManager.Associate (".crmod", Document.GetDocumentInfo);
 			
 			this.dlgAbout         = new Dialogs.About(this);
 			this.dlgDownload      = new Dialogs.Download(this);
@@ -5502,6 +5506,7 @@ namespace Epsitec.App.DocumentEditor
 		protected bool							useArray;
 		protected bool							initializationInProgress;
 		protected Document						clipboard;
+		protected DocumentManager				defaultDocumentManager;
 		protected int							currentDocument;
 		protected List<DocumentInfo>			documents;
 		protected GlobalSettings				globalSettings;

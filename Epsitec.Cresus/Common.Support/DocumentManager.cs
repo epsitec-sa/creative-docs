@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.IO;
+using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
 
@@ -19,6 +20,10 @@ namespace Epsitec.Common.Support
 		/// </summary>
 		public DocumentManager()
 		{
+			lock (DocumentManager.managers)
+			{
+				managers.Add (this);
+			}
 		}
 
 		~DocumentManager()
@@ -26,6 +31,31 @@ namespace Epsitec.Common.Support
 			this.Dispose (false);
 		}
 
+		public void Associate(string extension, GetDocumentInfoCallback callback)
+		{
+			extension = DocumentManager.GetCleanExtension (extension);
+			
+			lock (this.associations)
+			{
+				this.associations[extension] = callback;
+			}
+		}
+
+		private static string GetCleanExtension(string extension)
+		{
+			if (extension == null)
+			{
+				return null;
+			}
+
+			if (extension.StartsWith ("."))
+			{
+				extension = extension.Substring (1);
+			}
+
+			extension = extension.ToLowerInvariant ();
+			return extension;
+		}
 
 		/// <summary>
 		/// Gets a value indicating whether this document is open or not.
@@ -233,6 +263,68 @@ namespace Epsitec.Common.Support
 		}
 
 
+		/// <summary>
+		/// Finds the <c>GetDocumentInfoCallback</c> associated with the specified
+		/// file extension.
+		/// </summary>
+		/// <param name="extension">The extension.</param>
+		/// <returns>The <c>GetDocumentInfoCallback</c> if the extension is known; otherwise, <c>null</c>.</returns>
+		public static GetDocumentInfoCallback FindAssociation(string extension)
+		{
+			extension = DocumentManager.GetCleanExtension (extension);
+
+			if (string.IsNullOrEmpty (extension))
+			{
+				return null;
+			}
+
+			lock (DocumentManager.managers)
+			{
+				foreach (DocumentManager manager in DocumentManager.managers)
+				{
+					GetDocumentInfoCallback callback = manager.FindLocalAssociation (extension);
+					
+					if (callback != null)
+					{
+						return callback;
+					}
+				}
+			}
+			
+			return null;
+		}
+
+		/// <summary>
+		/// Gets the document information for the specified file.
+		/// </summary>
+		/// <param name="path">The path to the file.</param>
+		/// <returns>The document information or null.</returns>
+		public static IDocumentInfo GetDocumentInfo(string path)
+		{
+			string extension = System.IO.Path.GetExtension (path);
+			GetDocumentInfoCallback callback = DocumentManager.FindAssociation (extension);
+			
+			if (callback == null)
+			{
+				return null;
+			}
+			else
+			{
+				return callback (path);
+			}
+		}
+
+		private GetDocumentInfoCallback FindLocalAssociation(string cleanExtension)
+		{
+			lock (this.associations)
+			{
+				GetDocumentInfoCallback callback;
+				this.associations.TryGetValue (cleanExtension, out callback);
+				return callback;
+			}
+		}
+
+
 		private void CopyThread()
 		{
 			System.Diagnostics.Debug.WriteLine ("Copying from '" + this.sourcePath + "' to '" + this.localCopyPath + "'");
@@ -283,6 +375,11 @@ namespace Epsitec.Common.Support
 			if (disposing)
 			{
 				this.Close ();
+				
+				lock (DocumentManager.managers)
+				{
+					managers.Remove (this);
+				}
 			}
 
 			lock (this.exclusion)
@@ -327,6 +424,9 @@ namespace Epsitec.Common.Support
 		}
 
 		public delegate bool SaveCallback(System.IO.Stream stream);
+		public delegate IDocumentInfo GetDocumentInfoCallback(string path);
+
+		private static WeakList<DocumentManager> managers = new WeakList<DocumentManager> ();
 
 		private object exclusion = new object ();
 		private string sourcePath;
@@ -339,5 +439,6 @@ namespace Epsitec.Common.Support
 		private int localCopyWritten;
 		private bool localCopyReady;
 		private WaitCondition localCopyWait = new WaitCondition ();
+		private Dictionary<string, GetDocumentInfoCallback> associations = new Dictionary<string, GetDocumentInfoCallback> ();
 	}
 }

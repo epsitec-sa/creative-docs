@@ -1,19 +1,35 @@
 //	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Drawing;
 using Epsitec.Common.IO;
+using Epsitec.Common.Support;
 
 using System.Collections.Generic;
+
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Epsitec.Common.Support
+namespace Epsitec.Common.Document
 {
 	[System.Serializable]
-	public class DocumentInfo : ISerializable
+	public abstract class DocumentInfo : ISerializable, IDocumentInfo
 	{
 		public DocumentInfo()
 		{
+		}
+
+		public Size PageSize
+		{
+			get
+			{
+				return new Size (this.PageWidth, this.PageHeight);
+			}
+			set
+			{
+				this.PageWidth = value.Width;
+				this.PageHeight = value.Height;
+			}
 		}
 
 		public double PageWidth
@@ -141,10 +157,20 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+
+		#region IDocumentInfo Members
+
+		public abstract string GetDescription();
+
+		public abstract Image GetThumbnail();
+
+		#endregion
+		
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			//	Sérialise l'objet.
 			info.AddValue ("Version", 3);
+			info.AddValue ("PageSize", this.PageSize);
 			info.AddValue ("PageWidth", this.pageWidth);
 			info.AddValue ("PageHeight", this.pageHeight);
 			info.AddValue ("PageFormat", this.pageFormat);
@@ -165,6 +191,10 @@ namespace Epsitec.Common.Support
 			{
 				this.pageWidth = info.GetDouble ("PageWidth");
 				this.pageHeight = info.GetDouble ("PageHeight");
+			}
+			else
+			{
+				this.PageSize = (Size) info.GetValue ("PageSize", typeof (Size));
 			}
 			
 			this.pageFormat = info.GetString ("PageFormat");
