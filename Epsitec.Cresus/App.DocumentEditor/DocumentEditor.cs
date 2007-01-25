@@ -91,6 +91,9 @@ namespace Epsitec.App.DocumentEditor
 				this.dlgSplash.Show();
 			}
 
+			//	Crée les associations internes pour la lecture des miniatures des fichiers
+			//	*.crdoc et *.crmod (pour le cache des documents).
+			
 			this.defaultDocumentManager = new DocumentManager ();
 			this.defaultDocumentManager.Associate (".crdoc", Document.GetDocumentInfo);
 			this.defaultDocumentManager.Associate (".crmod", Document.GetDocumentInfo);
