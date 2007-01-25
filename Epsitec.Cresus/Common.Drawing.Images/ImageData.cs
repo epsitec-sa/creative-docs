@@ -452,10 +452,8 @@ namespace Epsitec.Common.Drawing
 
 						if (sampleImage != null)
 						{
-							byte[] memory = sampleImage.SaveToMemory (Opac.FreeImage.FileFormat.Jpeg, Opac.FreeImage.LoadSaveMode.JpegQualityNormal);
-							ImageManager.ImageStore.SaveImageData (this.imageId, this.imageFileDate, this.engine.SampleImageSize, this.width, this.height, memory);
-							this.compressedSampleImage = memory;
-
+							this.compressedSampleImage = ImageManager.ImageStore.SaveImageData (this.imageId, this.imageFileDate, this.engine.SampleImageSize, this.width, this.height, sampleImage);
+							
 							if (this.compressedSampleImage != null)
 							{
 								this.engine.AddMemoryPressure (this.compressedSampleImage.Length);
@@ -499,10 +497,7 @@ namespace Epsitec.Common.Drawing
 
 						if (thumbnail != null)
 						{
-							byte[] memory = thumbnail.SaveToMemory (Opac.FreeImage.FileFormat.Jpeg, Opac.FreeImage.LoadSaveMode.JpegQualityNormal);
-							ImageManager.ImageStore.SaveImageData (this.imageId, this.imageFileDate, this.engine.ThumbnailSize, this.width, this.height, memory);
-
-							this.compressedThumbnail = memory;
+							this.compressedThumbnail = ImageManager.ImageStore.SaveImageData (this.imageId, this.imageFileDate, this.engine.ThumbnailSize, this.width, this.height, thumbnail);
 							
 							if (this.compressedThumbnail != null)
 							{

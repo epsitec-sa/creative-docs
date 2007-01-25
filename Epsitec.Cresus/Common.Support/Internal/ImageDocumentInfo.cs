@@ -16,6 +16,14 @@ namespace Epsitec.Common.Support.Internal
 
 		public string GetDescription()
 		{
+			if (this.image != null)
+			{
+				string format = this.image.GetFileFormat ().ToString ();
+				string size = string.Format ("{0} x {1}", this.image.SourceWidth, this.image.SourceHeight);
+
+				return string.Concat (format, "<br/>", size);
+			}
+
 			return "";
 		}
 

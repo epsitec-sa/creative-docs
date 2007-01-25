@@ -61,7 +61,7 @@ namespace Epsitec.Common.Drawing
 			
 			return null;
 		}
-
+		
 		/// <summary>
 		/// Saves the image data to the cache.
 		/// </summary>
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Drawing
 		/// <param name="sourceWidth">Width of the original source image.</param>
 		/// <param name="sourceHeight">Height of the original source image.</param>
 		/// <param name="data">The image data (JPEG encoded).</param>
-		public void SaveImageData(string path, System.DateTime date, int pixels, int sourceWidth, int sourceHeight, byte[] data)
+		public void SaveImageData(string path, System.DateTime date, int pixels, int sourceWidth, int sourceHeight, byte[] data, string extension)
 		{
 			string hash = ImageStore.GetPathHash (path);
 
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Drawing
 
 						do
 						{
-							cacheFileName = System.IO.Path.GetFileNameWithoutExtension (System.IO.Path.GetRandomFileName ()) + ".jpg";
+							cacheFileName = System.IO.Path.GetFileNameWithoutExtension (System.IO.Path.GetRandomFileName ()) + extension;
 							cacheFilePath = System.IO.Path.Combine (this.cacheDir, cacheFileName);
 						}
 						while (System.IO.File.Exists (cacheFilePath));
@@ -121,6 +121,40 @@ namespace Epsitec.Common.Drawing
 						return true;
 					});
 			}
+		}
+
+		public byte[] SaveImageData(string path, System.DateTime date, int pixels, int sourceWidth, int sourceHeight, Opac.FreeImage.Image image)
+		{
+			Opac.FreeImage.Image temp = null;
+			string extension = null;
+			byte[] memory = null;
+
+			if (image.GetBitsPerPixel () == 32)
+			{
+				memory = image.SaveToMemory (Opac.FreeImage.FileFormat.Png, Opac.FreeImage.LoadSaveMode.PngDefault);
+				extension = ".png";
+			}
+			else
+			{
+				memory = image.SaveToMemory (Opac.FreeImage.FileFormat.Jpeg, Opac.FreeImage.LoadSaveMode.JpegQualityNormal);
+				extension = ".jpg";
+			}
+
+			if (memory == null)
+			{
+				temp = image.ConvertTo24Bits ();
+				memory = image.SaveToMemory (Opac.FreeImage.FileFormat.Jpeg, Opac.FreeImage.LoadSaveMode.JpegQualityNormal);
+				extension = ".jpg";
+			}
+
+			this.SaveImageData (path, date, pixels, sourceWidth, sourceHeight, memory, extension);
+
+			if (temp != null)
+			{
+				temp.Dispose ();
+			}
+
+			return memory;
 		}
 
 		/// <summary>
