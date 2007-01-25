@@ -91,12 +91,15 @@ namespace Epsitec.App.DocumentEditor
 				this.dlgSplash.Show();
 			}
 
+			ImageManager.InitializeDefaultCache ();
+
 			//	Crée les associations internes pour la lecture des miniatures des fichiers
 			//	*.crdoc et *.crmod (pour le cache des documents).
 			
 			this.defaultDocumentManager = new DocumentManager ();
 			this.defaultDocumentManager.Associate (".crdoc", Document.GetDocumentInfo);
 			this.defaultDocumentManager.Associate (".crmod", Document.GetDocumentInfo);
+			//this.defaultDocumentManager.Associate
 			
 			this.dlgAbout         = new Dialogs.About(this);
 			this.dlgDownload      = new Dialogs.Download(this);
@@ -224,6 +227,8 @@ namespace Epsitec.App.DocumentEditor
 		protected override void Dispose(bool disposing)
 		{
 			base.Dispose(disposing);
+
+			ImageManager.ShutDownDefaultCache ();
 		}
 
 		public DocumentType DocumentType

@@ -157,6 +157,22 @@ namespace Epsitec.Common.Drawing
 			return this.FindImage (imageFilePath, imageFileDate);
 		}
 
+		public ImageData GetImageFromFile(string path)
+		{
+			try
+			{
+				if (System.IO.File.Exists (path))
+				{
+					return this.GetImage (string.Concat ("file:", path), path, System.IO.File.GetLastWriteTimeUtc (path));
+				}
+			}
+			catch (System.IO.IOException)
+			{
+			}
+
+			return null;
+		}
+
 		public void Clear()
 		{
 			lock (this.localExclusion)
@@ -221,7 +237,7 @@ namespace Epsitec.Common.Drawing
 
 			lock (this.localExclusion)
 			{
-				this.protocols.Add (protocol, callback);
+				this.protocols[protocol] = callback;
 			}
 		}
 
@@ -383,6 +399,41 @@ namespace Epsitec.Common.Drawing
 						}
 					}
 				}
+			}
+		}
+
+		public static ImageManager GetDefaultCache()
+		{
+			return ImageManager.defaultCache;
+		}
+
+		public static void InitializeDefaultCache()
+		{
+			lock (ImageManager.globalExclusion)
+			{
+				if (ImageManager.defaultCache == null)
+				{
+					ImageManager.defaultCache = new ImageManager ();
+				}
+			}
+		}
+
+		public static void ShutDownDefaultCache()
+		{
+			ImageManager cache = null;
+
+			lock (ImageManager.globalExclusion)
+			{
+				if (ImageManager.defaultCache != null)
+				{
+					cache = ImageManager.defaultCache;
+					ImageManager.defaultCache = null;
+				}
+			}
+
+			if (cache != null)
+			{
+				cache.Dispose ();
 			}
 		}
 
@@ -586,6 +637,7 @@ namespace Epsitec.Common.Drawing
 		}
 
 
+		private static ImageManager defaultCache;
 		private static object globalExclusion = new object ();
 		private static List<ImageManager> runningEngines = new List<ImageManager> ();
 		private static CallbackQueue callbackQueue;

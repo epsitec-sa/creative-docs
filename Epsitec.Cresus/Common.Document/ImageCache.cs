@@ -69,7 +69,7 @@ namespace Epsitec.Common.Document
 			else
 			{
 				Item item;
-				System.DateTime fileDate = ImageCache.GetFileDate (fileName);
+				System.DateTime fileDate = GlobalImageCache.GetFileDate (fileName);
 
 				if (fileDate == System.DateTime.MinValue)
 				{
@@ -289,7 +289,7 @@ namespace Epsitec.Common.Document
 				else
 				{
 					string fileName = propImage.FileName;
-					System.DateTime fileDate = ImageCache.GetFileDate (propImage.FileName);
+					System.DateTime fileDate = GlobalImageCache.GetFileDate (propImage.FileName);
 					Item item = this.Add (fileName, fileDate);  // lit le fichier image sur disque
 
 					if (item != null)
@@ -607,21 +607,6 @@ namespace Epsitec.Common.Document
 
 			return item;
 		}
-
-		private static System.DateTime GetFileDate(string path)
-		{
-			//	Retourne la date de dernière modification d'un fichier.
-			System.IO.FileInfo info = new System.IO.FileInfo (path);
-			if (info.Exists)
-			{
-				return info.LastWriteTime;
-			}
-			else
-			{
-				return System.DateTime.MinValue;
-			}
-		}
-
 
 		private Document						document;
 		private Dictionary<string, Item>		items;

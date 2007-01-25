@@ -39,13 +39,13 @@ namespace Epsitec.Common.Document
 
 		private static void Initialize()
 		{
-			GlobalImageCache.cache = new ImageManager ();
+			GlobalImageCache.cache = ImageManager.GetDefaultCache ();
 			GlobalImageCache.cache.RegisterProtocol (GlobalImageCache.zipPrefix, GlobalImageCache.ZippedDocumentReader);
 		}
 
 		private static void ShutDown()
 		{
-			GlobalImageCache.cache.Dispose ();
+			GlobalImageCache.cache.UnregisterProtocol (GlobalImageCache.zipPrefix);
 			GlobalImageCache.cache = null;
 		}
 		
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Document
 			return item;
 		}
 
-		public static ImageManager GetImageManagerCache()
+		public static ImageManager GetImageManager()
 		{
 			//	Retourne le cache du gestionnaire d'images (cache sur disque).
 			return GlobalImageCache.cache;
@@ -633,7 +633,7 @@ namespace Epsitec.Common.Document
 
 				//	Cherche d'abord l'image dans le cache persistant.
 				string path = this.zipFilename == null ? string.Concat ("file:", this.filename) : GlobalImageCache.CreateZipPath (this.zipFilename, this.zipEntryName);
-				ImageData imageData = GlobalImageCache.GetImageManagerCache ().GetImage (path, this.filename, this.date);
+				ImageData imageData = GlobalImageCache.GetImageManager ().GetImage (path, this.filename, this.date);
 				Opac.FreeImage.Image sampleImage = imageData.GetSampleImage ();
 
 				if (sampleImage == null)
@@ -745,7 +745,7 @@ namespace Epsitec.Common.Document
 			System.IO.FileInfo info = new System.IO.FileInfo(path);
 			if (info.Exists)
 			{
-				return info.LastWriteTime;
+				return info.LastWriteTimeUtc;
 			}
 			else
 			{
