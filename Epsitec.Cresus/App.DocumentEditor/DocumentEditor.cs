@@ -99,7 +99,8 @@ namespace Epsitec.App.DocumentEditor
 			this.defaultDocumentManager = new DocumentManager ();
 			this.defaultDocumentManager.Associate (".crdoc", Document.GetDocumentInfo);
 			this.defaultDocumentManager.Associate (".crmod", Document.GetDocumentInfo);
-			//this.defaultDocumentManager.Associate
+
+			DocumentCache.CreateDefaultImageAssociations (this.defaultDocumentManager);
 			
 			this.dlgAbout         = new Dialogs.About(this);
 			this.dlgDownload      = new Dialogs.Download(this);

@@ -99,5 +99,37 @@ namespace Epsitec.Common.Support
 		}
 		
 		private static Dictionary<string, IDocumentInfo> cache = new Dictionary<string, IDocumentInfo> ();
+
+		public static void CreateDefaultImageAssociations(DocumentManager documentManager)
+		{
+			documentManager.Associate (".bmp", DocumentCache.GetImageDocumentInfo);
+			documentManager.Associate (".jpg", DocumentCache.GetImageDocumentInfo);
+			documentManager.Associate (".png", DocumentCache.GetImageDocumentInfo);
+			documentManager.Associate (".gif", DocumentCache.GetImageDocumentInfo);
+			documentManager.Associate (".tif", DocumentCache.GetImageDocumentInfo);
+			documentManager.Associate (".jpeg", DocumentCache.GetImageDocumentInfo);
+			documentManager.Associate (".tiff", DocumentCache.GetImageDocumentInfo);
+		}
+
+		private static IDocumentInfo GetImageDocumentInfo(string path)
+		{
+			ImageManager imageManager = ImageManager.GetDefaultCache ();
+
+			if (imageManager == null)
+			{
+				return null;
+			}
+
+			ImageData data = imageManager.GetImageFromFile (path);
+
+			if (data == null)
+			{
+				return null;
+			}
+			else
+			{
+				return new Internal.ImageDocumentInfo (data);
+			}
+		}
 	}
 }
