@@ -1021,6 +1021,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.cancelRequested = true;
 			}
 
+			public bool Running
+			{
+				get
+				{
+					return this.running;
+				}
+			}
+
+			public bool Interrupted
+			{
+				get
+				{
+					return this.interrupted;
+				}
+			}
+
 			private void ProcessJob()
 			{
 				this.interrupted = this.dialog.CreateFileList (
@@ -1178,7 +1194,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						}
 					}
 
-					this.files.Add (new FileItem (item, this.isModel));  // ajoute une ligne à la liste
+					FileItem fileItem = new FileItem (item, this.isModel);
+					fileItem.FillCache ();
+					this.files.Add (fileItem);  // ajoute une ligne à la liste
 				}
 			}
 			catch (System.Threading.ThreadInterruptedException)

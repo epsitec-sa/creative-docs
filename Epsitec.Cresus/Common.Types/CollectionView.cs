@@ -573,7 +573,10 @@ namespace Epsitec.Common.Types
 			}
 			else if (this.sourceList != null)
 			{
-				this.GroupItemsInList (this.sourceList);
+				lock (this.sourceList)
+				{
+					this.GroupItemsInList (this.sourceList);
+				}
 			}
 		}
 		
@@ -692,27 +695,30 @@ namespace Epsitec.Common.Types
 			
 			this.itemType = null;
 
-			foreach (object item in this.sourceList)
+			lock (this.sourceList)
 			{
-				if (item == null)
+				foreach (object item in this.sourceList)
 				{
-					throw new System.InvalidOperationException ("Source collection contains null items");
-				}
-				else if (this.PassesFilter (item))
-				{
-					list.Add (item);
-
-					System.Type itemType = item.GetType ();
-
-					if (this.itemType == null)
+					if (item == null)
 					{
-						this.itemType = itemType;
+						throw new System.InvalidOperationException ("Source collection contains null items");
 					}
-					else
+					else if (this.PassesFilter (item))
 					{
-						if (this.itemType != itemType)
+						list.Add (item);
+
+						System.Type itemType = item.GetType ();
+
+						if (this.itemType == null)
 						{
-							throw new System.InvalidOperationException (string.Format ("Source collection not orthogonal; found type {0} and {1}", this.itemType.Name, itemType.Name));
+							this.itemType = itemType;
+						}
+						else
+						{
+							if (this.itemType != itemType)
+							{
+								throw new System.InvalidOperationException (string.Format ("Source collection not orthogonal; found type {0} and {1}", this.itemType.Name, itemType.Name));
+							}
 						}
 					}
 				}

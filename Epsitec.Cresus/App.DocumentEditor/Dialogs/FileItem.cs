@@ -367,6 +367,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		public void FillCache()
+		{
+			string text;
+			
+			text = this.FileName;
+			text = this.ShortFileName;
+			text = this.FileDate;
+			text = this.FileSize;
+			text = this.Description;
+			text = this.IconName;
+			
+			System.Diagnostics.Debug.WriteLine ("Cached : " + this.ShortFileName);
+		}
+
 		public void GetImage(out Image image, out bool icon)
 		{
 			//	Donne l'image miniature associée au fichier.
