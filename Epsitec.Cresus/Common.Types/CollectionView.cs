@@ -125,17 +125,20 @@ namespace Epsitec.Common.Types
 			{
 				this.RefreshWhenInvalidated ();
 
-				if (this.sortedList != null)
+				lock (this)
 				{
-					return this.sortedList;
-				}
-				else if (this.sourceList != null)
-				{
-					return this.sourceList;
-				}
-				else
-				{
-					return Collections.EmptyList<object>.Instance;
+					if (this.sortedList != null)
+					{
+						return this.sortedList;
+					}
+					else if (this.sourceList != null)
+					{
+						return this.sourceList;
+					}
+					else
+					{
+						return Collections.EmptyList<object>.Instance;
+					}
 				}
 			}
 		}
@@ -564,6 +567,18 @@ namespace Epsitec.Common.Types
 
 		private void GroupItemsInList()
 		{
+			if (this.sortedList != null)
+			{
+				this.GroupItemsInList (this.sortedList);
+			}
+			else if (this.sourceList != null)
+			{
+				this.GroupItemsInList (this.sourceList);
+			}
+		}
+		
+		private void GroupItemsInList(System.Collections.IList list)
+		{
 			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.CurrentCulture;
 
 			GroupDescription[] rules = this.groupDescriptions.ToArray ();
@@ -572,19 +587,9 @@ namespace Epsitec.Common.Types
 
 			GroupNode root = new GroupNode (null);
 
-			if (this.sortedList != null)
+			foreach (object item in list)
 			{
-				foreach (object item in this.sortedList)
-				{
-					CollectionView.ClassifyItemIntoGroups (item, culture, rules, 0, root);
-				}
-			}
-			else if (this.sourceList != null)
-			{
-				foreach (object item in this.sourceList)
-				{
-					CollectionView.ClassifyItemIntoGroups (item, culture, rules, 0, root);
-				}
+				CollectionView.ClassifyItemIntoGroups (item, culture, rules, 0, root);
 			}
 
 			Dictionary<string, CollectionViewGroup> groupRecycler = new Dictionary<string, CollectionViewGroup> ();
@@ -680,7 +685,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private void FilterItemsList()
+		private void FilterItemsList(List<object> list)
 		{
 			//	Create the filtered items list and check that all items have
 			//	the same type.
@@ -695,7 +700,7 @@ namespace Epsitec.Common.Types
 				}
 				else if (this.PassesFilter (item))
 				{
-					this.sortedList.Add (item);
+					list.Add (item);
 
 					System.Type itemType = item.GetType ();
 
@@ -714,7 +719,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private void SortItemsList()
+		private void SortItemsList(List<object> list)
 		{
 			//	Sort the items list (it must have been filtered previously).
 			
@@ -730,11 +735,11 @@ namespace Epsitec.Common.Types
 
 				if (comparisons.Length == 1)
 				{
-					this.sortedList.Sort (comparisons[0]);
+					list.Sort (comparisons[0]);
 				}
 				else if (comparisons.Length > 1)
 				{
-					this.sortedList.Sort
+					list.Sort
 						(
 							delegate (object x, object y)
 							{
@@ -835,24 +840,38 @@ namespace Epsitec.Common.Types
 					if ((this.HasFilter) ||
 						(this.HasSortDescriptions))
 					{
-						if (this.sortedList == null)
+						List<object> list = new List<object> ();
+
+						this.FilterItemsList (list);
+						this.SortItemsList (list);
+
+						lock (this)
 						{
-							this.sortedList = new List<object> ();
+							this.sortedList = list;
+							this.itemCount = list.Count;
 						}
-						else
-						{
-							this.sortedList.Clear ();
-						}
-						
-						this.FilterItemsList ();
-						this.SortItemsList ();
-						
-						this.itemCount = this.sortedList.Count;
 					}
 					else
 					{
-						this.sortedList = null;
-						this.itemCount  = this.sourceList == null ? 0 : this.sourceList.Count;
+						int count;
+
+						if (this.sourceList == null)
+						{
+							count = 0;
+						}
+						else
+						{
+							lock (this.sourceList)
+							{
+								count = this.sourceList.Count;
+							}
+						}
+						
+						lock (this)
+						{
+							this.sortedList = null;
+							this.itemCount  = count;
+						}
 					}
 
 					this.dirtySortedList = false;

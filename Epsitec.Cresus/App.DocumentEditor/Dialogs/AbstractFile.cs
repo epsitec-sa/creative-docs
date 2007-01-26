@@ -274,7 +274,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			else
 			{
-				this.table.Focus();  // focus dans la liste des modèles
+				this.table2.Focus();  // focus dans la liste des modèles
 			}
 		}
 
@@ -344,6 +344,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				sv |= CellArrayStyles.SelectMulti;
 			}
 
+#if false
 			this.table = new CellTable(group);
 			this.table.DefHeight = cellHeight;
 			this.table.HeaderHeight = 20;
@@ -357,6 +358,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.table.DoubleClicked += new MessageEventHandler(this.HandleTableDoubleClicked);
 			this.table.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
+#endif
 
 			this.files = new ObservableList<FileItem> ();
 			this.table2 = new Epsitec.Common.UI.ItemTable (group);
@@ -372,10 +374,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table2.ColumnHeader.SetColumnSortable (0, false);
 			this.table2.ColumnHeader.SetColumnSort (1, Epsitec.Common.Types.ListSortDirection.Ascending);
 
-			//-this.table2.Visibility = false;
-			this.table2.Visibility = true;
-			
-			this.slider.Value = (decimal) this.table.DefHeight;
+			this.slider.Value = (decimal) Widget.DefaultFontHeight+4;
 		}
 
 		protected void CreateRename()
@@ -698,12 +697,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			for (int i=0; i<this.files.Count; i++)
 			{
 				FileItem item = this.files[i];
-				this.table.SelectRow(i, item.FileName == filenameToSelect);
+//#				this.table.SelectRow(i, item.FileName == filenameToSelect);
 			}
 
 			if (filenameToSelect != null)
 			{
-				this.table.ShowSelect();
+//#				this.table.ShowSelect();
 			}
 
 			this.UpdateButtons();
@@ -828,12 +827,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void UpdateTable(int sel)
 		{
 			//	Met à jour la table des fichiers.
-			if (this.table == null)
+			if (this.table2 == null)
 			{
 				return;
 			}
 
 			this.ListFilenames();
+
+#if false
 			int rows = this.files.Count;
 
 			this.table.SetArraySize(5, rows);
@@ -951,6 +952,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				this.table.ShowSelect();  // montre la ligne sélectionnée
 			}
+#endif
 
 			this.UpdateButtons();
 		}
@@ -960,11 +962,93 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Indique si la hauteur des lignes permet l'usage des grandes icônes.
 			get
 			{
-				return (this.table.DefHeight >= 32);
+				return (this.slider.Value >= 32);
 			}
 		}
 
 		protected void ListFilenames()
+		{
+			FileListJob.Start (this);
+		}
+
+		private void AddJob(FileListJob job)
+		{
+			lock (this.fileListJobs)
+			{
+				this.fileListJobs.Add (job);
+			}
+		}
+
+		private void RemoveJob(FileListJob job)
+		{
+			lock (this.fileListJobs)
+			{
+				this.fileListJobs.Remove (job);
+			}
+		}
+
+		private void CancelPendingJobs()
+		{
+			lock (this.fileListJobs)
+			{
+				foreach (FileListJob job in this.fileListJobs)
+				{
+					job.Cancel ();
+				}
+			}
+		}
+
+		private class FileListJob
+		{
+			public static void Start(AbstractFile dialog)
+			{
+				new FileListJob (dialog);
+			}
+			
+			public FileListJob(AbstractFile dialog)
+			{
+				this.dialog = dialog;
+				this.running = true;
+				this.callback = new JobCallback (this.ProcessJob);
+				
+				this.dialog.AddJob (this);
+				
+				this.callback.BeginInvoke (this.ProcessResult, null);
+			}
+
+			public void Cancel()
+			{
+				this.cancelRequested = true;
+			}
+
+			private void ProcessJob()
+			{
+				this.interrupted = this.dialog.CreateFileList (
+					delegate ()
+					{
+						return this.cancelRequested;
+					});
+			}
+
+			private void ProcessResult(System.IAsyncResult result)
+			{
+				this.running = false;
+				this.dialog.RemoveJob (this);
+				this.callback.EndInvoke (result);
+			}
+
+			delegate void JobCallback();
+
+			AbstractFile dialog;
+			JobCallback callback;
+			bool running;
+			bool interrupted;
+			bool cancelRequested;
+		}
+
+		private delegate bool CancelCallback();
+
+		private bool CreateFileList(CancelCallback cancelCallback)
 		{
 			//	Effectue la liste des fichiers contenus dans le dossier ad hoc.
 			this.files.Clear ();
@@ -986,6 +1070,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			System.Predicate<FileFilterInfo> filter =
 				delegate (FileFilterInfo file)
 				{
+					if (cancelCallback ())
+					{
+						throw new System.Threading.ThreadInterruptedException ();
+					}
+
 					if ((file.Attributes & FileAttributes.Hidden) != 0)
 					{
 						if (!showHidden)
@@ -1021,76 +1110,83 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 					else
 					{
-						return false;
+						return true;
+						//#return false;
 					}
 				};
-			
-			foreach (FolderItem item in FileManager.GetFolderItems(this.initialFolder, mode, filter))
+
+			try
 			{
-				if (!item.IsFileSystemNode)
+				foreach (FolderItem item in FileManager.GetFolderItems (this.initialFolder, mode, filter))
 				{
-					continue;  // ignore les items qui ne stockent pas des fichiers
-				}
-
-				if (item.IsHidden && !showHidden)
-				{
-					continue;  // ignore les items cachés si l'utilisateur ne veut pas les voir
-				}
-
-				if (item.IsShortcut)
-				{
-					string itemPath = item.FullPath.ToLowerInvariant ();
-					
-					if (skipFolders)
+					if (!item.IsFileSystemNode)
 					{
-						//	Filtre tout de suite les fichiers que l'on ne sait pas nous intéresser.
-						//	En effet, le nom du raccourci se termine par .crdoc.lnk s'il s'agit d'un
-						//	document .crdoc.
-						string name = itemPath.Substring(0, itemPath.Length-4);  // nom sans .lnk
-
-						if (!Misc.IsExtension(name, this.fileExtension))  // autre extension ?
-						{
-							continue;
-						}
+						continue;  // ignore les items qui ne stockent pas des fichiers
 					}
 
-					//	Vérifie que le fichier existe plutôt que de montrer des raccourcis cassés
-					//	qui ne mènent nulle part:
-					FolderItem target = FileManager.ResolveShortcut(item, FolderQueryMode.NoIcons);
-
-					if (target.IsFolder)
+					if (item.IsHidden && !showHidden)
 					{
-						//	On liste le dossier.
+						continue;  // ignore les items cachés si l'utilisateur ne veut pas les voir
+					}
+
+					if (item.IsShortcut)
+					{
+						string itemPath = item.FullPath.ToLowerInvariant ();
+
 						if (skipFolders)
 						{
+							//	Filtre tout de suite les fichiers que l'on ne sait pas nous intéresser.
+							//	En effet, le nom du raccourci se termine par .crdoc.lnk s'il s'agit d'un
+							//	document .crdoc.
+							string name = itemPath.Substring (0, itemPath.Length-4);  // nom sans .lnk
+
+							if (!Misc.IsExtension (name, this.fileExtension))  // autre extension ?
+							{
+								continue;
+							}
+						}
+
+						//	Vérifie que le fichier existe plutôt que de montrer des raccourcis cassés
+						//	qui ne mènent nulle part:
+						FolderItem target = FileManager.ResolveShortcut (item, FolderQueryMode.NoIcons);
+
+						if (target.IsFolder)
+						{
+							//	On liste le dossier.
+							if (skipFolders)
+							{
+								continue;
+							}
+						}
+						else if (target.IsEmpty)
+						{
 							continue;
 						}
-					}
-					else if (target.IsEmpty)
-					{
-						continue;
-					}
-					else
-					{
-						if (!Misc.IsExtension(target.FullPath, this.fileExtension))  // autre extension ?
+						else
 						{
-							continue;  // oui -> ignore ce fichier
+							if (!Misc.IsExtension (target.FullPath, this.fileExtension))  // autre extension ?
+							{
+								continue;  // oui -> ignore ce fichier
+							}
 						}
 					}
-				}
-				else if (!item.IsFolder)  // fichier ?
-				{
-					if (!Misc.IsExtension(item.FullPath, this.fileExtension))  // autre extension ?
+					else if (!item.IsFolder)  // fichier ?
 					{
-						continue;  // oui -> ignore ce fichier
+						if (!Misc.IsExtension (item.FullPath, this.fileExtension))  // autre extension ?
+						{
+							//#continue;  // oui -> ignore ce fichier
+						}
 					}
-				}
 
-				this.files.Add(new FileItem(item, this.isModel));  // ajoute une ligne à la liste
+					this.files.Add (new FileItem (item, this.isModel));  // ajoute une ligne à la liste
+				}
+			}
+			catch (System.Threading.ThreadInterruptedException)
+			{
+				return true;
 			}
 
-//			this.files.Sort();  // trie toute la liste
-//			this.table2.Items.Refresh ();
+			return false;
 		}
 
 		protected void UpdateButtons()
@@ -1115,7 +1211,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.favoritesUpState.Enable = (sel >= 1);
 			this.favoritesDownState.Enable = (sel >= 0 && sel < list.Count-1);
 
-			sel = this.table.SelectedRow;
+			sel = -1;//#this.table.SelectedRow;
 			bool enable = (sel != -1 && this.files[sel].FileName != Common.Document.Settings.GlobalSettings.NewEmptyDocument && !this.files[sel].IsShortcut);
 
 			if (string.Equals(this.initialFolder.FullPath, Document.DirectoryOriginalSamples, System.StringComparison.OrdinalIgnoreCase))
@@ -1286,7 +1382,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void FileDelete()
 		{
 			//	Supprime un fichier ou un dossier.
-			int sel = this.table.SelectedRow;
+			int sel = -1;//#this.table.SelectedRow;
 			if (sel == -1 || this.files[sel].FileName == Common.Document.Settings.GlobalSettings.NewEmptyDocument)
 			{
 				return;
@@ -1333,7 +1429,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Début d'un renommer. Le widget pour éditer le nom est positionné et
 			//	rendu visible.
 			System.Diagnostics.Debug.Assert(this.fieldRename != null);
-			int sel = this.table.SelectedRow;
+			int sel = -1;//#this.table.SelectedRow;
 			if (sel == -1 || this.files[sel].FileName == Common.Document.Settings.GlobalSettings.NewEmptyDocument)
 			{
 				return;
@@ -1533,7 +1629,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Effectue l'action lorsque le bouton 'Ouvrir/Enregistrer' est actionné.
 			//	Retourne true s'il faut fermer le dialogue.
-			int sel = this.table.SelectedRow;
+			int sel = -1;//#this.table.SelectedRow;
 			if (sel != -1)
 			{
 				if (this.files[sel].IsDirectory)  // ouvre un dossier ?
@@ -1990,11 +2086,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Slider pour la taille des miniatures changé.
 			bool initialMode = this.UseLargeIcons;
 
-			this.table.DefHeight = (double) this.slider.Value;
-			this.table.HeaderHeight = 20;
+			//#this.table.DefHeight = (double) this.slider.Value;
+			//#this.table.HeaderHeight = 20;
 
 			this.table2.ItemPanel.ItemViewDefaultSize = new Size (this.table2.Parent.PreferredWidth, (double) this.slider.Value);
 
+#if false
 			for (int i=0; i<this.table.Rows; i++)
 			{
 				this.table.SetHeightRow(i, this.table.DefHeight);
@@ -2008,6 +2105,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				this.UpdateTable(this.table.SelectedRow);
 			}
+#endif
 		}
 
 		protected void HandleWindowCloseClicked(object sender)
@@ -2117,5 +2215,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected CommandState				favoritesUpState;
 		protected CommandState				favoritesDownState;
 		protected CommandState				favoritesBigState;
+
+		private List<FileListJob>			fileListJobs = new List<FileListJob> ();
 	}
 }

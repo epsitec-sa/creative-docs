@@ -193,8 +193,6 @@ namespace Epsitec.Common.Widgets
 		{
 			lock (Application.queueExclusion)
 			{
-				System.Diagnostics.Debug.Assert (Application.thread == System.Threading.Thread.CurrentThread);
-				
 				if ((Application.pendingCallbacks.Contains (callback)) ||
 					(Application.runningCallbacks.Contains (callback)))
 				{
@@ -203,6 +201,11 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					Application.pendingCallbacks.Enqueue (callback);
+					
+					if (Application.thread != System.Threading.Thread.CurrentThread)
+					{
+						System.Diagnostics.Debug.WriteLine ("Called from foreign thread");
+					}
 				}
 			}
 		}

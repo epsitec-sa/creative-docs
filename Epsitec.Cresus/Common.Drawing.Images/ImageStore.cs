@@ -129,8 +129,16 @@ namespace Epsitec.Common.Drawing
 			string extension = null;
 			byte[] memory = null;
 
-			memory = image.SaveToMemory (Opac.FreeImage.FileFormat.Jpeg, Opac.FreeImage.LoadSaveMode.JpegQualitySuperb);
-			extension = ".jpg";
+			if (image.GetBitsPerPixel () > 8)
+			{
+				memory = image.SaveToMemory (Opac.FreeImage.FileFormat.Jpeg, Opac.FreeImage.LoadSaveMode.JpegQualitySuperb);
+				extension = ".jpg";
+			}
+			else
+			{
+				memory = image.SaveToMemory (Opac.FreeImage.FileFormat.Gif, Opac.FreeImage.LoadSaveMode.GifDefault);
+				extension = ".gif";
+			}
 			
 			if ((memory == null) &&
 				(image.GetBitsPerPixel () == 32))
