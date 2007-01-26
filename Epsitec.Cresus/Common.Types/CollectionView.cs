@@ -434,6 +434,24 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Gets or sets the invalidation handler which is called when the contents
+		/// of this instance should be refreshed. Specify <c>null</c> to use the
+		/// default immediate call to <c>Refresh</c>.
+		/// </summary>
+		/// <value>The invalidation handler.</value>
+		public InvalidationCallback				InvalidationHandler
+		{
+			get
+			{
+				return this.invalidationCallback;
+			}
+			set
+			{
+				this.invalidationCallback = value;
+			}
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether the <c>CurrentItem</c> belongs to this view.
 		/// </summary>
 		/// <value>
@@ -805,13 +823,38 @@ namespace Epsitec.Common.Types
 			this.dirtySortedList = true;
 			this.dirtyGroups = true;
 
-			this.RefreshWhenInvalidated ();
+			this.Invalidate ();
 		}
 
 		private void InvalidateGroups()
 		{
 			this.dirtyGroups = true;
-			this.RefreshWhenInvalidated ();
+
+			this.Invalidate ();
+		}
+
+		/// <summary>
+		/// Invalidates the contents of the collection view and refreshes it
+		/// unless the user provides an <c>InvalidationHandler</c> which is
+		/// then responsible for calling <c>Refresh</c> itself.
+		/// </summary>
+		private void Invalidate()
+		{
+			InvalidationCallback callback;
+
+			lock (this)
+			{
+				callback = this.invalidationCallback;
+			}
+
+			if (callback == null)
+			{
+				this.RefreshWhenInvalidated ();
+			}
+			else
+			{
+				callback (this);
+			}
 		}
 
 		private void RefreshWhenInvalidated()
@@ -1109,6 +1152,7 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		public delegate void InvalidationCallback(CollectionView collectionView);
 		
 		private System.Collections.IList		sourceList;
 		private List<object>					sortedList;
@@ -1125,5 +1169,6 @@ namespace Epsitec.Common.Types
 		private Collections.ObservableList<GroupDescription> groupDescriptions;
 		private Collections.ObservableList<SortDescription> sortDescriptions;
 		private System.Predicate<object>		filter;
+		private InvalidationCallback			invalidationCallback;
 	}
 }

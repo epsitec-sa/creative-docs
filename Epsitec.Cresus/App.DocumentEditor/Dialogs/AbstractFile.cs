@@ -359,12 +359,24 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.DoubleClicked += new MessageEventHandler(this.HandleTableDoubleClicked);
 			this.table.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
 #endif
-
 			this.files = new ObservableList<FileItem> ();
+			
+			Epsitec.Common.Types.CollectionView collectionView = new Epsitec.Common.Types.CollectionView (this.files);
+
+			collectionView.InvalidationHandler =
+				delegate (Epsitec.Common.Types.CollectionView cv)
+				{
+					Epsitec.Common.Widgets.Application.QueueAsyncCallback (
+						delegate ()
+						{
+							cv.Refresh ();
+						});
+				};
+			
 			this.table2 = new Epsitec.Common.UI.ItemTable (group);
 			this.table2.Dock = DockStyle.Fill;
 			this.table2.SourceType = FileItem.GetStructuredType ();
-			this.table2.Items = new Epsitec.Common.Types.CollectionView (this.files);
+			this.table2.Items = collectionView;
 			this.table2.ItemPanel.ItemViewDefaultSize = new Size (this.table2.Parent.PreferredWidth, cellHeight);
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 50));
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 85));
@@ -1196,7 +1208,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 					FileItem fileItem = new FileItem (item, this.isModel);
 					fileItem.FillCache ();
-					this.files.Add (fileItem);  // ajoute une ligne à la liste
+					
+					lock (this.files)
+					{
+						this.files.Add (fileItem);  // ajoute une ligne à la liste
+					}
 				}
 			}
 			catch (System.Threading.ThreadInterruptedException)
