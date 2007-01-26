@@ -204,7 +204,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (Application.thread != System.Threading.Thread.CurrentThread)
 					{
-						System.Diagnostics.Debug.WriteLine ("Called from foreign thread");
+						Platform.Window.SendAwakeEvent ();
 					}
 				}
 			}

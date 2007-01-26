@@ -1460,20 +1460,56 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 
+		internal static void SendAwakeEvent()
+		{
+			lock (Window.dispatch_window)
+			{
+				if (Window.is_awake_requested == false)
+				{
+					Window.is_awake_requested = true;
+				}
+			}
+
+			try
+			{
+				Win32Api.PostMessage (Window.dispatch_window.Handle, Win32Const.WM_APP_AWAKE, System.IntPtr.Zero, System.IntPtr.Zero);
+			}
+			catch (System.Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine ("Exception thrown in Platform.Window.SendAwakeEvent:");
+				System.Diagnostics.Debug.WriteLine (ex.Message);
+			}
+		}
+
 		
 		protected override void WndProc(ref System.Windows.Forms.Message msg)
 		{
 //			System.Diagnostics.Debug.WriteLine (msg.ToString ());
+
+			bool syncCommandCache = false;
+
+			lock (Window.dispatch_window)
+			{
+				if (Window.is_sync_requested)
+				{
+					Window.is_sync_requested = false;
+					syncCommandCache = true;
+				}
+				if (Window.is_awake_requested)
+				{
+					Window.is_awake_requested = false;
+				}
+			}
+			
 			Application.ExecuteAsyncCallbacks ();
 
 			if (RestartManager.HandleWndProc (ref msg))
 			{
 				return;
 			}
-			
-			if (Window.is_sync_requested)
+
+			if (syncCommandCache)
 			{
-				Window.is_sync_requested = false;
 				CommandCache.Instance.Synchronize ();
 			}
 			
@@ -2388,6 +2424,7 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		private static bool						is_app_active;
 		private static bool						is_sync_requested;
+		private static bool						is_awake_requested;
 		private static Window					dispatch_window;
 	}
 }

@@ -24,6 +24,13 @@ namespace Epsitec.Common.Drawing.Platform
 		{
 			Dispatcher.form = new System.Windows.Forms.Form ();
 			Dispatcher.form.CreateControl ();
+			Dispatcher.DummyHandleEater (Dispatcher.form.Handle);
+			
+			System.Diagnostics.Debug.Assert (Dispatcher.form.IsHandleCreated);
+		}
+
+		static void DummyHandleEater(System.IntPtr handle)
+		{
 		}
 
 		/// <summary>
