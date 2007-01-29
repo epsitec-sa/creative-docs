@@ -716,21 +716,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-		protected void SelectFilenameTable(string filenameToSelect)
+		private void SelectFileNameInTable(string filenameToSelect)
 		{
 			//	Sélectionne et montre un fichier dans la table.
-			for (int i=0; i<this.files.Count; i++)
+			foreach (FileListItem item in this.files)
 			{
-				FileListItem item = this.files[i];
-				if (item.FileName == filenameToSelect)
+				if (item.FullPath == filenameToSelect)
 				{
 					this.filesCollectionView.MoveCurrentTo (item);
+					break;
 				}
-			}
-
-			if (filenameToSelect != null)
-			{
-//#				this.table.ShowSelect();
 			}
 
 			this.UpdateButtons();
@@ -1262,12 +1257,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.favoritesDownState.Enable = (sel >= 0 && sel < list.Count-1);
 
 			FileListItem item = this.filesCollectionView.CurrentItem as FileListItem;
-			bool enable = (item != null && item.FileName != Common.Document.Settings.GlobalSettings.NewEmptyDocument && !item.IsShortcut);
+			bool enable = (item != null && item.FullPath != Common.Document.Settings.GlobalSettings.NewEmptyDocument);
 
 			if (string.Equals(this.initialFolder.FullPath, Document.DirectoryOriginalSamples, System.StringComparison.OrdinalIgnoreCase))
 			{
 				enable = false;
 			}
+
+			System.Diagnostics.Debug.WriteLine ("Rename enable="+enable);
 			
 			this.renameState.Enable = enable;
 			this.deleteState.Enable = enable;
@@ -1392,7 +1389,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			this.UpdateTable(-1);
-			this.SelectFilenameTable(newDir);
+			this.SelectFileNameInTable(newDir);
 			this.RenameStarting();
 		}
 
@@ -1413,7 +1410,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					bool exist = false;
 					foreach (FileListItem item in this.files)
 					{
-						if (item.IsDirectory && item.FileName == newDir)
+						if (item.IsDirectory && item.FullPath == newDir)
 						{
 							exist = true;
 							break;
@@ -1434,7 +1431,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Supprime un fichier ou un dossier.
 			FileListItem item = this.filesCollectionView.CurrentItem as FileListItem;
-			if (item == null || item.FileName == Common.Document.Settings.GlobalSettings.NewEmptyDocument)
+			if (item == null || item.IsSynthetic)
 			{
 				return;
 			}
@@ -1488,7 +1485,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			itemPanel.Show (view);
 			Widget nameWidget = FileListItemViewFactory.GetFileNameWidget (view);
 			
-			if (item == null || view == null || nameWidget == null || item.FileName == Common.Document.Settings.GlobalSettings.NewEmptyDocument)
+			if (item == null || view == null || nameWidget == null || item.IsSynthetic)
 			{
 				return;
 			}
@@ -1539,7 +1536,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				if (item.IsDirectory)
 				{
-					srcFilename = item.FileName;
+					srcFilename = item.FullPath;
 					dstFilename = string.Concat(System.IO.Path.GetDirectoryName(srcFilename), "\\", newText);
 
 					FileOperationMode mode = new FileOperationMode(this.window);
@@ -1552,7 +1549,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 				else
 				{
-					srcFilename = item.FileName;
+					srcFilename = item.FullPath;
 					dstFilename = string.Concat(System.IO.Path.GetDirectoryName(srcFilename), "\\", newText, System.IO.Path.GetExtension(srcFilename));
 
 					FileOperationMode mode = new FileOperationMode(this.window);
@@ -1736,7 +1733,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 #else
 					this.selectedFilenames = new string[1];
-					this.selectedFilenames[0] = item.FileName;
+					this.selectedFilenames[0] = item.GetResolvedFileName ();
 #endif
 
 					return this.PromptForOverwriting();

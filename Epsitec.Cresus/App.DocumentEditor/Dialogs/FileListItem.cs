@@ -16,7 +16,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		public FileListItem(string iconName, string fileName, string shortFileName, string description)
 		{
 			//	Crée un item pour 'Nouveau document vide'.
-			this.isNewEmptyDocument = true;
+			this.isSynthetic = true;
 			this.iconName = iconName;
 			this.cachedFileName = fileName;
 			this.cachedShortFileName = shortFileName;
@@ -28,7 +28,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Crée un item pour un fichier ou un dossier.
 			this.folderItem = folderItem;
 			this.isModel = isModel;
-			this.isNewEmptyDocument = false;
+			this.isSynthetic = false;
 		}
 
 		public FolderItem FolderItem
@@ -39,6 +39,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			set
 			{
+				System.Diagnostics.Debug.Assert (this.isSynthetic == false);
+				
 				this.folderItem = value;
 
 				if (this.folderItem.QueryMode.IconSize == FileInfoIconSize.Small)
@@ -49,6 +51,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					this.smallIcon = null;
 				}
+
+				this.cachedDateTime = new System.DateTime (0L);
+				this.cachedDepth = -1;
+				this.cachedFileSize = -2;
+				this.cachedFileName = null;
+				this.cachedShortFileName = null;
+				this.cachedDescription = null;
 			}
 		}
 
@@ -64,26 +73,39 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		public string FileName
+		public string FullPath
 		{
-			//	Nom du fichier avec le chemin d'accès complet.
 			get
 			{
-				if (this.cachedFileName == null)
+				if (this.folderItem == null)
 				{
-					if (this.IsShortcut)
-					{
-						FolderItem item = FileManager.ResolveShortcut (this.folderItem, FolderQueryMode.NoIcons);
-						this.cachedFileName = item.FullPath;
-					}
-					else
-					{
-						this.cachedFileName = this.folderItem.FullPath;
-					}
+					return this.GetResolvedFileName ();
 				}
-				
-				return this.cachedFileName;
+				else
+				{
+					return this.folderItem.FullPath;
+				}
 			}
+		}
+
+		public string GetResolvedFileName()
+		{
+			//	Nom du fichier avec le chemin d'accès complet. Dans le cas d'un raccourci,
+			//	retourne le chemin complet de la cible.
+			if (this.cachedFileName == null)
+			{
+				if (this.IsShortcut)
+				{
+					FolderItem item = FileManager.ResolveShortcut (this.folderItem, FolderQueryMode.NoIcons);
+					this.cachedFileName = item.FullPath;
+				}
+				else
+				{
+					this.cachedFileName = this.folderItem.FullPath;
+				}
+			}
+			
+			return this.cachedFileName;
 		}
 
 		public string ShortFileName
@@ -99,8 +121,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 					else if (this.IsShortcut)
 					{
-						FolderItem item = FileManager.ResolveShortcut (this.folderItem, FolderQueryMode.NoIcons);
-						this.cachedShortFileName = TextLayout.ConvertToTaggedText (System.IO.Path.GetFileNameWithoutExtension (item.FullPath));
+						this.cachedShortFileName = TextLayout.ConvertToTaggedText (this.folderItem.DisplayName);
+//						FolderItem item = FileManager.ResolveShortcut (this.folderItem, FolderQueryMode.NoIcons);
+//						this.cachedShortFileName = TextLayout.ConvertToTaggedText (System.IO.Path.GetFileNameWithoutExtension (item.FullPath));
 					}
 					else
 					{
@@ -112,11 +135,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		public bool IsSynthetic
+		{
+			//	Retourne true si c'est un 'Nouveau document vide'
+			get
+			{
+				return this.isSynthetic;
+			}
+		}
+
 		public bool IsDirectory
 		{
 			get
 			{
-				if (this.isNewEmptyDocument)
+				if (this.isSynthetic)
 				{
 					return false;
 				}
@@ -131,7 +163,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			get
 			{
-				if (this.isNewEmptyDocument)
+				if (this.isSynthetic)
 				{
 					return false;
 				}
@@ -146,7 +178,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			get
 			{
-				if (this.isNewEmptyDocument)
+				if (this.isSynthetic)
 				{
 					return false;
 				}
@@ -161,7 +193,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			get
 			{
-				if (this.isNewEmptyDocument)
+				if (this.isSynthetic)
 				{
 					return false;
 				}
@@ -176,7 +208,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			get
 			{
-				if (this.isNewEmptyDocument)
+				if (this.isSynthetic)
 				{
 					return false;
 				}
@@ -209,7 +241,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			if (this.cachedDateTime.Ticks == 0)
 			{
-				if (this.isNewEmptyDocument)
+				if (this.isSynthetic)
 				{
 					//	rien à faire
 				}
@@ -285,7 +317,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			if (this.cachedFileSize == -2)
 			{
-				if (this.isNewEmptyDocument || this.IsDirectoryOrShortcut)
+				if (this.isSynthetic || this.IsDirectoryOrShortcut)
 				{
 					this.cachedFileSize = -1;
 				}
@@ -371,7 +403,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			string text;
 			
-			text = this.FileName;
 			text = this.ShortFileName;
 			text = this.FileDate;
 			text = this.FileSize;
@@ -382,7 +413,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		public void GetImage(out Image image, out bool icon)
 		{
 			//	Donne l'image miniature associée au fichier.
-			if (this.isNewEmptyDocument)  // nouveau document vide ?
+			if (this.isSynthetic)  // nouveau document vide ?
 			{
 				image = null;
 				icon = false;
@@ -415,7 +446,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Retourne les statistiques associées au fichier.
 			get
 			{
-				if (this.isNewEmptyDocument)  // nouveau document vide ?
+				if (this.isSynthetic)  // nouveau document vide ?
 				{
 					return null;
 				}
@@ -587,9 +618,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Comparaison simple, sans tenir compte du niveau.
 
-			if (this.isNewEmptyDocument || that.isNewEmptyDocument)
+			if (this.isSynthetic || that.isSynthetic)
 			{
-				return this.isNewEmptyDocument ? -1 : 1;  // 'nouveau document vide' au début
+				return this.isSynthetic ? -1 : 1;  // 'nouveau document vide' au début
 			}
 
 			if (this.IsDrive != that.IsDrive)
@@ -715,13 +746,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private System.DateTime cachedDateTime;
 		private long cachedFileSize = -2;
 		private int cachedDepth = -1;
+		
 		private string iconName;
 		
 		protected FolderItem folderItem;
 		protected FolderItemIcon smallIcon;
 		protected FileListItem parent;
 		protected bool isModel;
-		protected bool isNewEmptyDocument;
+		protected bool isSynthetic;
 		protected bool sortAccordingToLevel = false;
 	}
 }
