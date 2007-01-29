@@ -1483,22 +1483,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	rendu visible.
 			System.Diagnostics.Debug.Assert(this.fieldRename != null);
 			FileListItem item = this.filesCollectionView.CurrentItem as FileListItem;
-			ItemView view = this.table2.ItemPanel.GetItemView (item);
-			if (item == null || view == null || item.FileName == Common.Document.Settings.GlobalSettings.NewEmptyDocument)
+			ItemPanel itemPanel = this.table2.ItemPanel;
+			ItemView view = itemPanel.GetItemView (item);
+			itemPanel.Show (view);
+			Widget nameWidget = FileListItemViewFactory.GetFileNameWidget (view);
+			
+			if (item == null || view == null || nameWidget == null || item.FileName == Common.Document.Settings.GlobalSettings.NewEmptyDocument)
 			{
 				return;
 			}
-
-			Widget lineWidget = view.Widget;
-			Widget nameWidget = lineWidget.FindChild ("FileName");
-			ItemPanel itemPanel = this.table2.ItemPanel;
 
 			Rectangle rect = nameWidget.MapClientToRoot(nameWidget.Client.Bounds);
 			rect.Deflate(0, System.Math.Floor((rect.Height-20)/2));		// force une hauteur de 20
 			rect.Left -= 3;												// aligne par rapport au contenu de la ligne éditable
 			rect.Width += 32;											// place pour les boutons "v" et "x"
 
-			Rectangle box = itemPanel.MapClientToRoot(itemPanel.Aperture);
+			Rectangle box = this.table2.MapClientToRoot(this.table2.PanelActualBounds);
 			if (!box.Contains(rect))
 			{
 				return;
@@ -1567,12 +1567,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				FolderItem folderItem = FileManager.GetFolderItem(dstFilename, FolderQueryMode.NoIcons);
 				item.FolderItem = folderItem;
 
-				ItemView view = this.table2.ItemPanel.GetItemView (item);
-				
-				if (view != null)
+				Widget nameWidget = FileListItemViewFactory.GetFileNameWidget (this.table2.ItemPanel.GetItemView (item));
+
+				if (nameWidget != null)
 				{
-					Widget lineWidget = view.Widget;
-					Widget nameWidget = lineWidget.FindChild ("FileName");
 					nameWidget.Text = item.ShortFileName;
 				}
 			}

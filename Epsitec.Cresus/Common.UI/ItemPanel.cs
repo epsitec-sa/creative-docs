@@ -529,6 +529,11 @@ namespace Epsitec.Common.UI
 			{
 				groups[i].RefreshAperture (this.Aperture);
 			}
+
+			if (this.ApertureChanged != null)
+			{
+				this.ApertureChanged (this, new DependencyPropertyChangedEventArgs ("Aperture", oldValue, newValue));
+			}
 		}
 
 		protected override void OnClicked(Epsitec.Common.Widgets.MessageEventArgs e)
@@ -999,6 +1004,8 @@ namespace Epsitec.Common.UI
 			ItemPanel panel = (ItemPanel) obj;
 			panel.HandleItemViewDefaultSizeChanged ((Drawing.Size) oldValue, (Drawing.Size) newValue);
 		}
+
+		public event Support.EventHandler<DependencyPropertyChangedEventArgs> ApertureChanged;
 
 		public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register ("Items", typeof (ICollectionView), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanel.NotifyItemsChanged));
 		public static readonly DependencyProperty LayoutProperty = DependencyProperty.Register ("Layout", typeof (ItemPanelLayout), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelLayout.None, ItemPanel.NotifyLayoutChanged));

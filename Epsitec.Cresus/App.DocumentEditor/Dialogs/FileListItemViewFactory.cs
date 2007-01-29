@@ -126,5 +126,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 		#endregion
+
+		public static Widget GetFileNameWidget(ItemView itemView)
+		{
+			Widget itemLine = itemView == null ? null : itemView.Widget;
+			Widget itemName = itemLine == null ? null : itemLine.FindChild ("FileName");
+
+			return itemName;
+		}
 	}
 }

@@ -47,6 +47,7 @@ namespace Epsitec.Common.UI
 			this.hScroller.ValueChanged += this.HandleScrollerValueChanged;
 			this.vScroller.ValueChanged += this.HandleScrollerValueChanged;
 			this.surface.SizeChanged += this.HandleSurfaceSizeChanged;
+			this.itemPanel.ApertureChanged += this.HandleItemPanelApertureChanged;
 			
 			this.itemPanel.AddEventHandler (Visual.PreferredHeightProperty, this.HandleItemPanelSizeChanged);
 			this.itemPanel.AddEventHandler (Visual.PreferredWidthProperty, this.HandleItemPanelSizeChanged);
@@ -114,6 +115,14 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public Drawing.Rectangle				PanelActualBounds
+		{
+			get
+			{
+				return this.surface.ActualBounds;
+			}
+		}
+
 		public Collections.ItemTableColumnCollection Columns
 		{
 			get
@@ -129,9 +138,10 @@ namespace Epsitec.Common.UI
 
 		public void DefineDefaultColumns(StructuredType sourceType, double width)
 		{
+			System.Threading.Interlocked.Increment (ref this.suspendColumnUpdates);
+			
 			try
 			{
-				this.suspendColumnUpdates++;
 				this.SourceType = sourceType;
 				this.Columns.Clear ();
 				
@@ -142,7 +152,7 @@ namespace Epsitec.Common.UI
 			}
 			finally
 			{
-				this.suspendColumnUpdates--;
+				System.Threading.Interlocked.Decrement (ref this.suspendColumnUpdates);
 			}
 
 			this.UpdateColumnHeader ();
@@ -173,30 +183,42 @@ namespace Epsitec.Common.UI
 		
 		private void UpdateAperture(Drawing.Size aperture)
 		{
-			double hRatio = System.Math.Max (0, System.Math.Min (1, (aperture.Width+1) / (this.itemPanel.PreferredWidth+1)));
-			double vRatio = System.Math.Max (0, System.Math.Min (1, (aperture.Height+1) / (this.itemPanel.PreferredHeight+1)));
-
-			this.hScroller.VisibleRangeRatio = (decimal) hRatio;
-			this.vScroller.VisibleRangeRatio = (decimal) vRatio;
-
-			double aW = aperture.Width;
-			double aH = aperture.Height;
-
-			double ox = System.Math.Floor ((double) this.hScroller.Value * System.Math.Max (0, this.itemPanel.PreferredWidth - aW));
-			double oy = System.Math.Floor ((double) this.vScroller.Value * System.Math.Max (0, this.itemPanel.PreferredHeight - aH));
-
-			this.itemPanel.Aperture = new Drawing.Rectangle (ox+1, oy, aW, aH);
-
-			if (this.itemPanel.PreferredHeight < aH)
+			if (this.suspendApertureUpdates == 0)
 			{
-				oy = this.itemPanel.PreferredHeight - aH;
-			}
+				System.Threading.Interlocked.Increment (ref this.suspendApertureUpdates);
 
-			double dx = System.Math.Max (this.itemPanel.PreferredWidth, aW);
-			double dy = System.Math.Max (this.itemPanel.PreferredHeight, aH);
-			
-			this.itemPanel.SetManualBounds (new Drawing.Rectangle (-ox, -oy, dx, dy));
-			this.columnHeader.SetManualBounds (new Drawing.Rectangle (-ox, 0, this.columnHeader.GetTotalWidth (), this.columnHeader.PreferredHeight));
+				try
+				{
+					double hRatio = System.Math.Max (0, System.Math.Min (1, (aperture.Width+1) / (this.itemPanel.PreferredWidth+1)));
+					double vRatio = System.Math.Max (0, System.Math.Min (1, (aperture.Height+1) / (this.itemPanel.PreferredHeight+1)));
+
+					this.hScroller.VisibleRangeRatio = (decimal) hRatio;
+					this.vScroller.VisibleRangeRatio = (decimal) vRatio;
+
+					double aW = aperture.Width;
+					double aH = aperture.Height;
+
+					double ox = System.Math.Floor ((double) this.hScroller.Value * System.Math.Max (0, this.itemPanel.PreferredWidth - aW));
+					double oy = System.Math.Floor ((double) this.vScroller.Value * System.Math.Max (0, this.itemPanel.PreferredHeight - aH));
+
+					this.itemPanel.Aperture = new Drawing.Rectangle (ox+1, oy, aW, aH);
+
+					if (this.itemPanel.PreferredHeight < aH)
+					{
+						oy = this.itemPanel.PreferredHeight - aH;
+					}
+
+					double dx = System.Math.Max (this.itemPanel.PreferredWidth, aW);
+					double dy = System.Math.Max (this.itemPanel.PreferredHeight, aH);
+
+					this.itemPanel.SetManualBounds (new Drawing.Rectangle (-ox, -oy, dx, dy));
+					this.columnHeader.SetManualBounds (new Drawing.Rectangle (-ox, 0, this.columnHeader.GetTotalWidth (), this.columnHeader.PreferredHeight));
+				}
+				finally
+				{
+					System.Threading.Interlocked.Decrement (ref this.suspendApertureUpdates);
+				}
+			}
 		}
 
 		private void UpdateColumnHeader()
@@ -300,6 +322,38 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		private void HandleItemPanelApertureChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			if (this.suspendApertureUpdates == 0)
+			{
+				Drawing.Rectangle aperture = (Drawing.Rectangle) e.NewValue;
+
+				System.Threading.Interlocked.Increment (ref this.suspendApertureUpdates);
+
+				try
+				{
+					double sx = System.Math.Max (0, this.itemPanel.PreferredWidth - aperture.Width);
+					double sy = System.Math.Max (0, this.itemPanel.PreferredHeight - aperture.Height);
+					double ox = aperture.X - 1;
+					double oy = aperture.Y;
+
+					if (sx > 0)
+					{
+						this.hScroller.Value = (decimal) (ox / sx);
+					}
+					if (sy > 0)
+					{
+						this.vScroller.Value = (decimal) (oy / sy);
+					}
+				}
+				finally
+				{
+					System.Threading.Interlocked.Decrement (ref this.suspendApertureUpdates);
+					this.UpdateAperture (aperture.Size);
+				}
+			}
+		}
+
 		#region IListHost<ItemTableColumn> Members
 
 		HostedList<ItemTableColumn> IListHost<ItemTableColumn>.Items
@@ -351,6 +405,7 @@ namespace Epsitec.Common.UI
 		private ItemPanel itemPanel;
 		private StructuredType sourceType;
 		private int suspendColumnUpdates;
+		private int suspendApertureUpdates;
 		private Drawing.Size defaultItemSize;
 	}
 }
