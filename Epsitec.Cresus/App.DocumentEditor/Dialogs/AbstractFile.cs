@@ -84,7 +84,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Nom de fichier initial.
 			get
 			{
-				return this.initialFilename;
+				return this.initialFileName;
 			}
 			set
 			{
@@ -93,9 +93,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					Document.RedirectionFilename(ref value);
 				}
 
-				if (this.initialFilename != value)
+				if (this.initialFileName != value)
 				{
-					this.initialFilename = value;
+					this.initialFileName = value;
 					this.UpdateInitialFilename();
 				}
 			}
@@ -387,6 +387,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table2.ColumnHeader.SetColumnSort (1, Epsitec.Common.Types.ListSortDirection.Ascending);
 
 			this.slider.Value = (decimal) Widget.DefaultFontHeight+4;
+			this.useLargeIcons = false;
 		}
 
 		protected void CreateRename()
@@ -844,7 +845,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return;
 			}
 
-			this.ListFilenames();
+			this.UpdateFileList();
 
 #if false
 			int rows = this.files.Count;
@@ -974,11 +975,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Indique si la hauteur des lignes permet l'usage des grandes icônes.
 			get
 			{
-				return (this.slider.Value >= 32);
+				return this.useLargeIcons;
 			}
 		}
 
-		protected void ListFilenames()
+		protected void UpdateFileList()
 		{
 			FileListJob.Start (this);
 		}
@@ -1290,13 +1291,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				this.ignoreChanged = true;
 
-				if (string.IsNullOrEmpty(this.initialFilename))
+				if (string.IsNullOrEmpty(this.initialFileName))
 				{
 					this.fieldFilename.Text = "";
 				}
 				else
 				{
-					this.fieldFilename.Text = TextLayout.ConvertToTaggedText(System.IO.Path.GetFileNameWithoutExtension(this.initialFilename));
+					this.fieldFilename.Text = TextLayout.ConvertToTaggedText(System.IO.Path.GetFileNameWithoutExtension(this.initialFileName));
 				}
 
 				this.ignoreChanged = false;
@@ -2120,10 +2121,24 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Slider pour la taille des miniatures changé.
 			bool initialMode = this.UseLargeIcons;
 
+			if (this.slider.Value >= 32)
+			{
+				this.useLargeIcons = true;
+			}
+			else
+			{
+				this.useLargeIcons = false;
+			}
+
 			//#this.table.DefHeight = (double) this.slider.Value;
 			//#this.table.HeaderHeight = 20;
 
 			this.table2.ItemPanel.ItemViewDefaultSize = new Size (this.table2.Parent.PreferredWidth, (double) this.slider.Value);
+
+			if (initialMode != this.UseLargeIcons)
+			{
+				this.UpdateFileList ();
+			}
 
 #if false
 			for (int i=0; i<this.table.Rows; i++)
@@ -2218,7 +2233,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected bool						isRedirection = false;
 		protected FolderItem				initialFolder;
 		protected FolderItemIcon			initialSmallIcon;
-		protected string					initialFilename;
+		protected string					initialFileName;
 		protected Document.FontIncludeMode	fontIncludeMode;
 		protected Document.ImageIncludeMode	imageIncludeMode;
 		protected ObservableList<FileItem>	files;
@@ -2251,5 +2266,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected CommandState				favoritesBigState;
 
 		private List<FileListJob>			fileListJobs = new List<FileListJob> ();
+		private bool						useLargeIcons;
 	}
 }
