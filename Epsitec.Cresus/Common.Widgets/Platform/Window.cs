@@ -18,8 +18,8 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			Window.dispatch_window = new Window ();
 			Window.dispatch_window.CreateControl ();
-			Window.DummyHandleEater (Window.dispatch_window.Handle);
-
+			Window.dispatch_window_handle = Window.dispatch_window.Handle;
+			
 			Epsitec.Common.Drawing.Platform.Dispatcher.Initialize ();
 			
 			//	The asynchronous binding mechanisms need to be able to execute
@@ -1451,7 +1451,7 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			try
 			{
-				Win32Api.PostMessage (Window.dispatch_window.Handle, Win32Const.WM_APP_SYNCMDCACHE, System.IntPtr.Zero, System.IntPtr.Zero);
+				Win32Api.PostMessage (Window.dispatch_window_handle, Win32Const.WM_APP_SYNCMDCACHE, System.IntPtr.Zero, System.IntPtr.Zero);
 			}
 			catch (System.Exception ex)
 			{
@@ -1472,7 +1472,7 @@ namespace Epsitec.Common.Widgets.Platform
 
 			try
 			{
-				Win32Api.PostMessage (Window.dispatch_window.Handle, Win32Const.WM_APP_AWAKE, System.IntPtr.Zero, System.IntPtr.Zero);
+				Win32Api.PostMessage (Window.dispatch_window_handle, Win32Const.WM_APP_AWAKE, System.IntPtr.Zero, System.IntPtr.Zero);
 			}
 			catch (System.Exception ex)
 			{
@@ -2426,5 +2426,6 @@ namespace Epsitec.Common.Widgets.Platform
 		private static bool						is_sync_requested;
 		private static bool						is_awake_requested;
 		private static Window					dispatch_window;
+		private static System.IntPtr			dispatch_window_handle;
 	}
 }

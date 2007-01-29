@@ -9,7 +9,7 @@ using Epsitec.Common.UI;
 using Epsitec.Common.UI.ItemViewFactories;
 using Epsitec.Common.Widgets;
 
-[assembly: ItemViewFactory (typeof (FileItemViewFactory), ItemType=typeof (FileItem))]
+[assembly: ItemViewFactory (typeof (FileListItemViewFactory), ItemType=typeof (FileListItem))]
 
 namespace Epsitec.App.DocumentEditor.Dialogs
 {
@@ -17,13 +17,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 	/// The <c>FileItemViewFactory</c> class populates the ItemView with the
 	/// visual representation of a <c>FileItem</c> instance.
 	/// </summary>
-	class FileItemViewFactory : IItemViewFactory
+	class FileListItemViewFactory : IItemViewFactory
 	{
 		#region IItemViewFactory Members
 
 		public Epsitec.Common.Widgets.Widget CreateUserInterface(ItemPanel panel, ItemView itemView)
 		{
-			FileItem item = itemView.Item as FileItem;
+			FileListItem item = itemView.Item as FileListItem;
 			ItemPanel rootPanel = panel.RootPanel;
 			ItemPanelColumnHeader header = ItemPanelColumnHeader.GetColumnHeader (rootPanel);
 
@@ -63,6 +63,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			
 			fileIcon.PreferredWidth = header.GetColumnWidth (0) - fileIcon.Margins.Width;
 
+			fileName.Name = "FileName";
 			fileName.Dock = DockStyle.Stacked;
 			fileName.Margins = new Margins (6, 0, 0, 0);
 			fileName.ContentAlignment = ContentAlignment.MiddleLeft;

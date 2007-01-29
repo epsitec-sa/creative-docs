@@ -4,8 +4,10 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Document;
 using Epsitec.Common.IO;
+using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 using System.IO;
+using Epsitec.Common.UI;
 
 namespace Epsitec.App.DocumentEditor.Dialogs
 {
@@ -359,11 +361,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.DoubleClicked += new MessageEventHandler(this.HandleTableDoubleClicked);
 			this.table.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
 #endif
-			this.files = new ObservableList<FileItem> ();
-			
-			Epsitec.Common.Types.CollectionView collectionView = new Epsitec.Common.Types.CollectionView (this.files);
+			this.files = new ObservableList<FileListItem> ();
+			this.filesCollectionView = new CollectionView (this.files);
 
-			collectionView.InvalidationHandler =
+			this.filesCollectionView.InvalidationHandler =
 				delegate (Epsitec.Common.Types.CollectionView cv)
 				{
 					Epsitec.Common.Widgets.Application.QueueAsyncCallback (
@@ -375,19 +376,29 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			
 			this.table2 = new Epsitec.Common.UI.ItemTable (group);
 			this.table2.Dock = DockStyle.Fill;
-			this.table2.SourceType = FileItem.GetStructuredType ();
-			this.table2.Items = collectionView;
+			this.table2.TabIndex = 2;
+			this.table2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			this.table2.SourceType = FileListItem.GetStructuredType ();
+			this.table2.Items = this.filesCollectionView;
 			this.table2.ItemPanel.ItemViewDefaultSize = new Size (this.table2.Parent.PreferredWidth, cellHeight);
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 50));
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 85));
-			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("type", 95, FileItem.GetDescriptionPropertyComparer ()));
+			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("type", 95, FileListItem.GetDescriptionPropertyComparer ()));
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("date", 80));
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("size", 40));
 			this.table2.ColumnHeader.SetColumnSortable (0, false);
 			this.table2.ColumnHeader.SetColumnSort (1, Epsitec.Common.Types.ListSortDirection.Ascending);
 
+			this.filesCollectionView.CurrentChanged += this.HandleFilesCollectionViewCurrentChanged;
+			this.table2.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
+
 			this.slider.Value = (decimal) Widget.DefaultFontHeight+4;
 			this.useLargeIcons = false;
+		}
+
+		private void HandleFilesCollectionViewCurrentChanged(object sender)
+		{
+			this.UpdateButtons ();
 		}
 
 		protected void CreateRename()
@@ -701,6 +712,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.buttonOK.Clicked += new MessageEventHandler(this.HandleButtonOKClicked);
 			this.buttonOK.TabIndex = 1;
 			this.buttonOK.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			this.buttonOK.Enable = false;
 		}
 
 
@@ -709,8 +721,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Sélectionne et montre un fichier dans la table.
 			for (int i=0; i<this.files.Count; i++)
 			{
-				FileItem item = this.files[i];
-//#				this.table.SelectRow(i, item.FileName == filenameToSelect);
+				FileListItem item = this.files[i];
+				if (item.FileName == filenameToSelect)
+				{
+					this.filesCollectionView.MoveCurrentTo (item);
+				}
 			}
 
 			if (filenameToSelect != null)
@@ -1084,7 +1099,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			if (this.isNewEmtpyDocument)
 			{
-				this.files.Add (new FileItem (Misc.Icon ("New"), Common.Document.Settings.GlobalSettings.NewEmptyDocument, "-", Res.Strings.Dialog.New.EmptyDocument));  // première ligne avec 'nouveau document vide'
+				this.files.Add (new FileListItem (Misc.Icon ("New"), Common.Document.Settings.GlobalSettings.NewEmptyDocument, "-", Res.Strings.Dialog.New.EmptyDocument));  // première ligne avec 'nouveau document vide'
 			}
 
 			//	Ne montre pas les raccourcis si le chemin est distant, car cela n'apporte
@@ -1207,7 +1222,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						}
 					}
 
-					FileItem fileItem = new FileItem (item, this.isModel);
+					FileListItem fileItem = new FileListItem (item, this.isModel);
 					fileItem.FillCache ();
 					
 					lock (this.files)
@@ -1246,8 +1261,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.favoritesUpState.Enable = (sel >= 1);
 			this.favoritesDownState.Enable = (sel >= 0 && sel < list.Count-1);
 
-			sel = -1;//#this.table.SelectedRow;
-			bool enable = (sel != -1 && this.files[sel].FileName != Common.Document.Settings.GlobalSettings.NewEmptyDocument && !this.files[sel].IsShortcut);
+			FileListItem item = this.filesCollectionView.CurrentItem as FileListItem;
+			bool enable = (item != null && item.FileName != Common.Document.Settings.GlobalSettings.NewEmptyDocument && !item.IsShortcut);
 
 			if (string.Equals(this.initialFolder.FullPath, Document.DirectoryOriginalSamples, System.StringComparison.OrdinalIgnoreCase))
 			{
@@ -1262,6 +1277,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.prevState.Enable = (this.directoriesVisitedIndex > 0);
 			this.nextState.Enable = (this.directoriesVisitedIndex < this.directoriesVisited.Count-1);
+			this.buttonOK.Enable = enable;
 		}
 
 		protected void UpdateInitialDirectory()
@@ -1395,7 +1411,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 
 					bool exist = false;
-					foreach (FileItem item in this.files)
+					foreach (FileListItem item in this.files)
 					{
 						if (item.IsDirectory && item.FileName == newDir)
 						{
@@ -1417,14 +1433,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void FileDelete()
 		{
 			//	Supprime un fichier ou un dossier.
-			int sel = -1;//#this.table.SelectedRow;
-			if (sel == -1 || this.files[sel].FileName == Common.Document.Settings.GlobalSettings.NewEmptyDocument)
+			FileListItem item = this.filesCollectionView.CurrentItem as FileListItem;
+			if (item == null || item.FileName == Common.Document.Settings.GlobalSettings.NewEmptyDocument)
 			{
 				return;
 			}
 
 			//	Construit la liste des fichiers à supprimer.
 			List<string> filenamesToDelete = new List<string>();
+#if false
 			for (int i=0; i<this.table.Rows; i++)
 			{
 				if (this.table.IsCellSelected(i, 0))
@@ -1457,6 +1474,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.UpdateTable(-1);
 				this.SelectFilenameTable(filenameToSelect);
 			}
+#endif
 		}
 
 		protected void RenameStarting()
@@ -1464,22 +1482,23 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Début d'un renommer. Le widget pour éditer le nom est positionné et
 			//	rendu visible.
 			System.Diagnostics.Debug.Assert(this.fieldRename != null);
-			int sel = -1;//#this.table.SelectedRow;
-			if (sel == -1 || this.files[sel].FileName == Common.Document.Settings.GlobalSettings.NewEmptyDocument)
+			FileListItem item = this.filesCollectionView.CurrentItem as FileListItem;
+			ItemView view = this.table2.ItemPanel.GetItemView (item);
+			if (item == null || view == null || item.FileName == Common.Document.Settings.GlobalSettings.NewEmptyDocument)
 			{
 				return;
 			}
 
-			StaticText st = this.table[1, sel].Children[0] as StaticText;
-			Rectangle rect = st.MapClientToRoot(st.Client.Bounds);
+			Widget lineWidget = view.Widget;
+			Widget nameWidget = lineWidget.FindChild ("FileName");
+			ItemPanel itemPanel = this.table2.ItemPanel;
+
+			Rectangle rect = nameWidget.MapClientToRoot(nameWidget.Client.Bounds);
 			rect.Deflate(0, System.Math.Floor((rect.Height-20)/2));		// force une hauteur de 20
-			rect.Inflate(st.Margins);									// tient compte de la marge
-			rect.Left -= 1;												// déborde d'un pixel hors du tableau
+			rect.Left -= 3;												// aligne par rapport au contenu de la ligne éditable
 			rect.Width += 32;											// place pour les boutons "v" et "x"
 
-			Rectangle box = this.table.MapClientToRoot(this.table.Client.Bounds);
-			box.Deflate(2);
-			box.Top -= this.table.HeaderHeight;
+			Rectangle box = itemPanel.MapClientToRoot(itemPanel.Aperture);
 			if (!box.Contains(rect))
 			{
 				return;
@@ -1488,14 +1507,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.focusedWidgetBeforeRename = this.window.FocusedWidget;
 
 			this.fieldRename.SetManualBounds(rect);
-			this.fieldRename.Text = this.files[sel].ShortFileName;
+			this.fieldRename.Text = item.ShortFileName;
 			this.fieldRename.SelectAll();
 			this.fieldRename.Visibility = true;
 			this.fieldRename.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.fieldRename.StartEdition();
 			this.fieldRename.Focus();
 
-			this.renameSelected = sel;
+			this.renameSelected = item;
 		}
 
 		protected void RenameEnding(bool accepted)
@@ -1511,16 +1530,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.focusedWidgetBeforeRename = null;
 			this.fieldRename.Visibility = false;
 
-			if (accepted && this.renameSelected != -1)
+			if (accepted && this.renameSelected != null)
 			{
-				int sel = this.renameSelected;
-				this.renameSelected = -1;
+				FileListItem item = this.renameSelected;
+				this.renameSelected = null;
 				string srcFilename, dstFilename;
 				string newText = TextLayout.ConvertToSimpleText(this.fieldRename.Text);
 
-				if (this.files[sel].IsDirectory)
+				if (item.IsDirectory)
 				{
-					srcFilename = this.files[sel].FileName;
+					srcFilename = item.FileName;
 					dstFilename = string.Concat(System.IO.Path.GetDirectoryName(srcFilename), "\\", newText);
 
 					FileOperationMode mode = new FileOperationMode(this.window);
@@ -1533,7 +1552,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 				else
 				{
-					srcFilename = this.files[sel].FileName;
+					srcFilename = item.FileName;
 					dstFilename = string.Concat(System.IO.Path.GetDirectoryName(srcFilename), "\\", newText, System.IO.Path.GetExtension(srcFilename));
 
 					FileOperationMode mode = new FileOperationMode(this.window);
@@ -1544,12 +1563,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						return;
 					}
 				}
-				
-				FolderItem item = FileManager.GetFolderItem(dstFilename, FolderQueryMode.NoIcons);
-				this.files[sel].FolderItem = item;
 
-				StaticText st = this.table[1, sel].Children[0] as StaticText;
-				st.Text = this.files[sel].ShortFileName;
+				FolderItem folderItem = FileManager.GetFolderItem(dstFilename, FolderQueryMode.NoIcons);
+				item.FolderItem = folderItem;
+
+				ItemView view = this.table2.ItemPanel.GetItemView (item);
+				
+				if (view != null)
+				{
+					Widget lineWidget = view.Widget;
+					Widget nameWidget = lineWidget.FindChild ("FileName");
+					nameWidget.Text = item.ShortFileName;
+				}
 			}
 		}
 
@@ -1664,24 +1689,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Effectue l'action lorsque le bouton 'Ouvrir/Enregistrer' est actionné.
 			//	Retourne true s'il faut fermer le dialogue.
-			int sel = -1;//#this.table.SelectedRow;
-			if (sel != -1)
+			FileListItem item = this.filesCollectionView.CurrentItem as FileListItem;
+			if (item != null)
 			{
-				if (this.files[sel].IsDirectory)  // ouvre un dossier ?
+				if (item.IsDirectory)  // ouvre un dossier ?
 				{
-					if (this.files[sel].FolderItem.IsShortcut)
+					if (item.FolderItem.IsShortcut)
 					{
-						this.SetInitialFolder(FileManager.ResolveShortcut(this.files[sel].FolderItem, FolderQueryMode.NoIcons), true);
+						this.SetInitialFolder(FileManager.ResolveShortcut(item.FolderItem, FolderQueryMode.NoIcons), true);
 					}
 					else
 					{
-						this.SetInitialFolder(this.files[sel].FolderItem, true);
+						this.SetInitialFolder(item.FolderItem, true);
 					}
 
 					return false;  // ne pas fermer le dialogue
 				}
 				else
 				{
+#if false
 					int selCount = 0;
 					for (int i=0; i<this.table.Rows; i++)
 					{
@@ -1710,6 +1736,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							this.selectedFilenames[rank++] = this.files[i].FileName;
 						}
 					}
+#else
+					this.selectedFilenames = new string[1];
+					this.selectedFilenames[0] = item.FileName;
+#endif
 
 					return this.PromptForOverwriting();
 				}
@@ -1932,7 +1962,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleFieldPathComboOpening(object sender, CancelEventArgs e)
 		{
 			//	Le menu pour le chemin d'accès va être ouvert.
-			this.comboFolders = new List<FileItem>();
+			this.comboFolders = new List<FileListItem>();
 
 #if true
 			//	Ajoute toutes les unités du bureau et du poste de travail.
@@ -1941,7 +1971,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			bool showHidden = FolderItem.ShowHiddenFiles;
 
 			this.ComboAdd(desktop, null);
-			FileItem root = this.comboFolders[this.comboFolders.Count-1];
+			FileListItem root = this.comboFolders[this.comboFolders.Count-1];
 
 			foreach (FolderItem item in FileManager.GetFolderItems(desktop, FolderQueryMode.SmallIcons))
 			{
@@ -1961,7 +1991,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 
 				this.ComboAdd(item, root);
-				FileItem parent = this.comboFolders[this.comboFolders.Count-1];
+				FileListItem parent = this.comboFolders[this.comboFolders.Count-1];
 
 				if (item.DisplayName == computer.DisplayName)
 				{
@@ -2013,8 +2043,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			int index=0;
 			while (index < this.comboFolders.Count-1)
 			{
-				FileItem i1 = this.comboFolders[index];
-				FileItem i2 = this.comboFolders[index+1];
+				FileListItem i1 = this.comboFolders[index];
+				FileListItem i2 = this.comboFolders[index+1];
 				if (i1.CompareTo(i2) == 0)
 				{
 					this.comboFolders.RemoveAt(index+1);
@@ -2029,7 +2059,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fieldPath.Items.Clear();
 			this.comboTexts = new List<string>();
 
-			foreach (FileItem cell in this.comboFolders)
+			foreach (FileListItem cell in this.comboFolders)
 			{
 				FolderItemIcon icon = cell.FolderItem.Icon;
 				if (cell.SmallIcon == null)
@@ -2046,9 +2076,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.comboSelected = -1;
 		}
 
-		protected void ComboAdd(FolderItem folderItem, FileItem parent)
+		protected void ComboAdd(FolderItem folderItem, FileListItem parent)
 		{
-			FileItem item = new FileItem(folderItem, this.isModel);
+			FileListItem item = new FileListItem(folderItem, this.isModel);
 			item.Parent = parent;
 			item.SortAccordingToLevel = true;
 			this.comboFolders.Add(item);
@@ -2236,10 +2266,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected string					initialFileName;
 		protected Document.FontIncludeMode	fontIncludeMode;
 		protected Document.ImageIncludeMode	imageIncludeMode;
-		protected ObservableList<FileItem>	files;
 		protected string					selectedFilename;
 		protected string[]					selectedFilenames;
-		protected int						renameSelected = -1;
+		protected FileListItem				renameSelected;
 		protected Widget					focusedWidget;
 		protected Widget					focusedWidgetBeforeRename;
 		protected bool						ignoreChanged = false;
@@ -2248,7 +2277,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected int						favoritesSelected;
 		protected List<FolderItem>			directoriesVisited;
 		protected int						directoriesVisitedIndex;
-		protected List<FileItem>			comboFolders;
+		protected List<FileListItem>			comboFolders;
 		protected List<string>				comboTexts;
 		protected int						comboSelected;
 		protected CommandDispatcher			dispatcher;
@@ -2265,6 +2294,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected CommandState				favoritesDownState;
 		protected CommandState				favoritesBigState;
 
+		private ObservableList<FileListItem> files;
+		private CollectionView				filesCollectionView;
 		private List<FileListJob>			fileListJobs = new List<FileListJob> ();
 		private bool						useLargeIcons;
 	}

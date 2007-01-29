@@ -11,9 +11,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 {
 	//	Cette classe représente une 'ligne' dans la liste, qui peut représenter
 	//	un fichier, un dossier ou la commande 'nouveau document vide'.
-	public class FileItem : System.IComparable<FileItem>, Epsitec.Common.Types.IStructuredData, Epsitec.Common.Types.IStructuredTypeProvider
+	public class FileListItem : System.IComparable<FileListItem>, Epsitec.Common.Types.IStructuredData, Epsitec.Common.Types.IStructuredTypeProvider
 	{
-		public FileItem(string iconName, string fileName, string shortFileName, string description)
+		public FileListItem(string iconName, string fileName, string shortFileName, string description)
 		{
 			//	Crée un item pour 'Nouveau document vide'.
 			this.isNewEmptyDocument = true;
@@ -23,7 +23,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.cachedDescription = description;
 		}
 
-		public FileItem(FolderItem folderItem, bool isModel)
+		public FileListItem(FolderItem folderItem, bool isModel)
 		{
 			//	Crée un item pour un fichier ou un dossier.
 			this.folderItem = folderItem;
@@ -377,8 +377,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			text = this.FileSize;
 			text = this.Description;
 			text = this.IconName;
-			
-			System.Diagnostics.Debug.WriteLine ("Cached : " + this.ShortFileName);
 		}
 
 		public void GetImage(out Image image, out bool icon)
@@ -450,7 +448,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		public FileItem Parent
+		public FileListItem Parent
 		{
 			get
 			{
@@ -462,12 +460,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		private List<FileItem> GetAncestorList()
+		private List<FileListItem> GetAncestorList()
 		{
 			//	Retourne la liste des ancêtres dans l'ordre feuille->racine
 			//	(en dernier dans la liste, on trouve toujours le bureau).
-			List<FileItem> list = new List<FileItem> ();
-			FileItem current = this;
+			List<FileListItem> list = new List<FileListItem> ();
+			FileListItem current = this;
 			while ((current != null) && (list.Count < 100))
 			{
 				list.Add (current);
@@ -486,7 +484,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				if (this.cachedDepth < 0)
 				{
 					int depth = 0;
-					FileItem current = this;
+					FileListItem current = this;
 					while (current.parent != null)
 					{
 						current = current.parent;
@@ -505,27 +503,27 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	à FileItem comme si c'était une structure de type StructuredData.
 			//	Chaque champ qui doit être accessible doit être nommé et décrit
 			//	ici; voir aussi l'implémentation de IStructuredData plus loin.
-			if (FileItem.type == null)
+			if (FileListItem.type == null)
 			{
-				FileItem.type = new Epsitec.Common.Types.StructuredType ();
+				FileListItem.type = new Epsitec.Common.Types.StructuredType ();
 
 				//	TODO: remplacer les Druid.Empty par des caption ID décrivant
 				//	les diverses colonnes; cela implique qu'il faudra commencer
 				//	par rajouter des captions, puis utiliser Res.Captions.Xyz.Id
 				//	à la place des Druid.Empty ci-après :
 
-				FileItem.type.Fields.Add ("icon", Epsitec.Common.Types.StringType.Default, Druid.Empty);
-				FileItem.type.Fields.Add ("name", Epsitec.Common.Types.StringType.Default, Druid.Empty);
-				FileItem.type.Fields.Add ("type", Epsitec.Common.Types.IntegerType.Default, Druid.Empty);
-				FileItem.type.Fields.Add ("date", Epsitec.Common.Types.DateTimeType.Default, Druid.Empty);
-				FileItem.type.Fields.Add ("size", Epsitec.Common.Types.LongIntegerType.Default, Druid.Empty);
+				FileListItem.type.Fields.Add ("icon", Epsitec.Common.Types.StringType.Default, Druid.Empty);
+				FileListItem.type.Fields.Add ("name", Epsitec.Common.Types.StringType.Default, Druid.Empty);
+				FileListItem.type.Fields.Add ("type", Epsitec.Common.Types.IntegerType.Default, Druid.Empty);
+				FileListItem.type.Fields.Add ("date", Epsitec.Common.Types.DateTimeType.Default, Druid.Empty);
+				FileListItem.type.Fields.Add ("size", Epsitec.Common.Types.LongIntegerType.Default, Druid.Empty);
 			}
 
-			return FileItem.type;
+			return FileListItem.type;
 		}
 
 		#region IComparable<FileItem> Members
-		public int CompareTo(FileItem that)
+		public int CompareTo(FileListItem that)
 		{
 			//	Comparaison simple ou complexe, selon SortAccordingToLevel.
 			//	En mode complexe (SortAccordingToLevel = true), on cherche
@@ -539,16 +537,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//		C		(deep = 0)
 			if (this.sortAccordingToLevel)
 			{
-				List<FileItem> path1 = this.GetAncestorList ();
-				List<FileItem> path2 = that.GetAncestorList ();
+				List<FileListItem> path1 = this.GetAncestorList ();
+				List<FileListItem> path2 = that.GetAncestorList ();
 
 				int index1 = path1.Count;
 				int index2 = path2.Count;
 
 				while ((index1 > 0) || (index2 > 0))
 				{
-					FileItem p1 = null;
-					FileItem p2 = null;
+					FileListItem p1 = null;
+					FileListItem p2 = null;
 					
 					if (index1-- > 0)
 					{
@@ -585,7 +583,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			return this.BaseCompareTo (that);
 		}
 
-		protected int BaseCompareTo(FileItem that)
+		protected int BaseCompareTo(FileListItem that)
 		{
 			//	Comparaison simple, sans tenir compte du niveau.
 
@@ -634,14 +632,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private static int PropertyComparer(object a, object b)
 		{
-			FileItem item1 = a as FileItem;
-			FileItem item2 = b as FileItem;
+			FileListItem item1 = a as FileListItem;
+			FileListItem item2 = b as FileListItem;
 			return item1.BaseCompareTo (item2);
 		}
 
 		public static PropertyComparer GetDescriptionPropertyComparer()
 		{
-			return FileItem.PropertyComparer;
+			return FileListItem.PropertyComparer;
 		}
 
 		#region IStructuredData Members
@@ -704,7 +702,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		Epsitec.Common.Types.IStructuredType Epsitec.Common.Types.IStructuredTypeProvider.GetStructuredType()
 		{
-			return FileItem.GetStructuredType ();
+			return FileListItem.GetStructuredType ();
 		}
 
 		#endregion
@@ -721,7 +719,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		
 		protected FolderItem folderItem;
 		protected FolderItemIcon smallIcon;
-		protected FileItem parent;
+		protected FileListItem parent;
 		protected bool isModel;
 		protected bool isNewEmptyDocument;
 		protected bool sortAccordingToLevel = false;
