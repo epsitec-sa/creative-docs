@@ -33,8 +33,11 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (this.subgroups != null)
-					&& (this.subgroups.Count > 0);
+				lock (this.exclusion)
+				{
+					return (this.subgroups != null)
+						&& (this.subgroups.Count > 0);
+				}
 			}
 		}
 
@@ -47,12 +50,14 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				if (this.itemCount == -1)
+				int count = this.itemCount;
+
+				if (count == -1)
 				{
-					this.RefreshItemCount ();
+					count = this.RefreshItemCount ();
 				}
 
-				return this.itemCount;
+				return count;
 			}
 		}
 
@@ -100,9 +105,17 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				if (this.HasSubgroups)
+				IList<CollectionViewGroup> subgroups;
+
+				lock (this.exclusion)
 				{
-					return new Collections.ReadOnlyList<CollectionViewGroup> (this.subgroups);
+					subgroups = this.subgroups;
+				}
+
+				if ((subgroups != null) &&
+					(subgroups.Count > 0))
+				{
+					return new Collections.ReadOnlyList<CollectionViewGroup> (subgroups);
 				}
 				else
 				{
@@ -137,36 +150,51 @@ namespace Epsitec.Common.Types
 
 		protected virtual void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
 		{
-			if (this.PropertyChanged != null)
+			Support.EventHandler<DependencyPropertyChangedEventArgs> handler;
+
+			lock (this.exclusion)
 			{
-				this.PropertyChanged (this, e);
+				handler = this.propertyChangedEvent;
+			}
+
+			if (handler != null)
+			{
+				handler (this, e);
 			}
 		}
 
-		protected void RefreshItemCount()
+		protected int RefreshItemCount()
 		{
 			int count = 0;
 
-			if (this.HasSubgroups)
+			lock (this.exclusion)
 			{
-				foreach (CollectionViewGroup group in this.subgroups)
+				if (this.HasSubgroups)
 				{
-					count += group.ItemCount;
+					foreach (CollectionViewGroup group in this.subgroups)
+					{
+						count += group.ItemCount;
+					}
 				}
-			}
-			else if (this.items != null)
-			{
-				count = this.items.Count;
-			}
+				else if (this.items != null)
+				{
+					count = this.items.Count;
+				}
 
-			this.itemCount = count;
+				this.itemCount = count;
+			}
+			
+			return count;
 		}
 		
 		protected void InvalidateItemCount()
 		{
 			if (this.itemCount != -1)
 			{
-				this.itemCount = -1;
+				lock (this.exclusion)
+				{
+					this.itemCount = -1;
+				}
 				
 				if (this.parentGroup != null)
 				{
@@ -183,8 +211,14 @@ namespace Epsitec.Common.Types
 		{
 			if (this.items == null)
 			{
-				this.items = new Collections.ObservableList<object> ();
-				this.items.CollectionChanged += this.HandleItemsCollectionChanged;
+				lock (this.exclusion)
+				{
+					if (this.items == null)
+					{
+						this.items = new Collections.ObservableList<object> ();
+						this.items.CollectionChanged += this.HandleItemsCollectionChanged;
+					}
+				}
 			}
 			
 			return this.items;
@@ -198,8 +232,14 @@ namespace Epsitec.Common.Types
 		{
 			if (this.subgroups == null)
 			{
-				this.subgroups = new Collections.ObservableList<CollectionViewGroup> ();
-				this.subgroups.CollectionChanged += this.HandleSubgroupsCollectionChanged;
+				lock (this.exclusion)
+				{
+					if (this.subgroups == null)
+					{
+						this.subgroups = new Collections.ObservableList<CollectionViewGroup> ();
+						this.subgroups.CollectionChanged += this.HandleSubgroupsCollectionChanged;
+					}
+				}
 			}
 
 			return this.subgroups;
@@ -210,9 +250,12 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		internal void ClearSubgroups()
 		{
-			if (this.subgroups != null)
+			lock (this.exclusion)
 			{
-				this.subgroups.Clear ();
+				if (this.subgroups != null)
+				{
+					this.subgroups.Clear ();
+				}
 			}
 		}
 
@@ -221,24 +264,45 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		internal void ClearItems()
 		{
-			if (this.items != null)
+			lock (this.exclusion)
 			{
-				this.items.Clear ();
+				if (this.items != null)
+				{
+					this.items.Clear ();
+				}
 			}
 		}
 		
 		#region INotifyPropertyChanged Members
 
-		public event Support.EventHandler<DependencyPropertyChangedEventArgs> PropertyChanged;
+		public event Support.EventHandler<DependencyPropertyChangedEventArgs> PropertyChanged
+		{
+			add
+			{
+				lock (this.exclusion)
+				{
+					this.propertyChangedEvent += value;
+				}
+			}
+			remove
+			{
+				lock (this.exclusion)
+				{
+					this.propertyChangedEvent -= value;
+				}
+			}
+		}
 
 		#endregion
 
 
-		private string							name;
+		private readonly object					exclusion = new object();
+		private readonly string					name;
+		private readonly CollectionViewGroup	parentGroup;
 		private int								itemCount;
-		private CollectionViewGroup				parentGroup;
 		
 		private Collections.ObservableList<object> items;
 		private Collections.ObservableList<CollectionViewGroup> subgroups;
+		private Support.EventHandler<DependencyPropertyChangedEventArgs> propertyChangedEvent;
 	}
 }
