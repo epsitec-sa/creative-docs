@@ -722,7 +722,7 @@ namespace Epsitec.Common.Drawing
 
 		public event System.EventHandler<ImageDataEventArgs> Changed;
 
-		private object exclusion = new object ();
+		private readonly object exclusion = new object ();
 		private string imageFilePath;
 		private string imageId;
 		private System.DateTime imageFileDate;

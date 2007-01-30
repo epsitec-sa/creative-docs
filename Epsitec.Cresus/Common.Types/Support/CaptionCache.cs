@@ -256,6 +256,6 @@ namespace Epsitec.Common.Support
 		public static readonly CaptionCache Instance = new CaptionCache ();
 
 		private Dictionary<BigKey, Weak<Caption>> cache = new Dictionary<BigKey, Weak<Caption>> ();
-		private object exclusion = new object ();
+		private readonly object exclusion = new object ();
 	}
 }

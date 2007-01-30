@@ -130,8 +130,8 @@ namespace Epsitec.Common.UI.Controllers
 
 				return this.allocator (parameter);
 			}
-			
-			private object exclusion;
+
+			private readonly object exclusion;
 			private Support.Allocator<IController, string> allocator;
 			private System.Type type;
 		}

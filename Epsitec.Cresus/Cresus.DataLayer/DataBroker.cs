@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private object exclusion = new object ();
+		private readonly object exclusion = new object ();
 		private DbInfrastructure infrastructure;
 		private DbRichCommand richCommand;
 		private Dictionary<string, DataTableBroker> tableBrokers;

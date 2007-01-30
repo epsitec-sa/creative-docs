@@ -218,7 +218,7 @@ namespace Epsitec.Common.Drawing
 		private int lifeTimeout = 20*1000;
 		private int busyThreadCount;
 		private bool exitRequested;
-		private object exclusion = new object ();
+		private readonly object exclusion = new object ();
 		private Queue<Callback> workItems = new Queue<Callback> ();
 		private List<System.Threading.Thread> threads = new List<System.Threading.Thread> ();
 		private System.Threading.Semaphore semaphore = new System.Threading.Semaphore (0, 0x7fffffff);

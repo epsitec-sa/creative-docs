@@ -75,7 +75,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		private object exclusion = new object ();
+		private readonly object exclusion = new object ();
 		private LinkedList<Callback> callbacks;
 		private System.Threading.Thread thread;
 		private System.Threading.AutoResetEvent waitHandle;

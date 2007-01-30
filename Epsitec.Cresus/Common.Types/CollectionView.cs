@@ -1272,7 +1272,7 @@ namespace Epsitec.Common.Types
 		private System.Predicate<object> filter;
 		private InvalidationCallback invalidationCallback;
 
-		private object exclusion = new object ();
+		private readonly object exclusion = new object ();
 		private event Support.EventHandler<CollectionChangedEventArgs> collectionChangedEvent;
 		private event Support.EventHandler<DependencyPropertyChangedEventArgs> propertyChangedEvent;
 		private event Support.EventHandler currentChangedEvent;

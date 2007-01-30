@@ -15,7 +15,6 @@ namespace Epsitec.Cresus.DataLayer
 	{
 		public DataTableBroker(IStructuredType structuredType, DbTable tableDefinition, System.Data.DataTable dataTable)
 		{
-			this.exclusion = new object ();
 			this.structuredType = structuredType;
 			this.tableDefinition = tableDefinition;
 			this.dataTable = dataTable;
@@ -621,7 +620,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		#endregion
 
-		private object exclusion;
+		private readonly object exclusion = new object ();
 		private event EventHandler<CollectionChangedEventArgs> collectionChangedEvent;
 		private DbTable tableDefinition;
 		private System.Data.DataTable dataTable;

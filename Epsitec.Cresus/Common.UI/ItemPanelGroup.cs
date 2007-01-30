@@ -398,6 +398,6 @@ namespace Epsitec.Common.UI
 		private Drawing.Size defaultCompactSize;
 		
 		private List<System.WeakReference> selectedGhostItems = new List<System.WeakReference> ();
-		private object exclusion = new object ();
+		private readonly object exclusion = new object ();
 	}
 }

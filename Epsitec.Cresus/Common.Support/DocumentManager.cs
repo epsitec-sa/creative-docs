@@ -428,7 +428,7 @@ namespace Epsitec.Common.Support
 
 		private static WeakList<DocumentManager> managers = new WeakList<DocumentManager> ();
 
-		private object exclusion = new object ();
+		private readonly object exclusion = new object ();
 		private string sourcePath;
 		private string localCopyPath;
 		private System.Threading.Thread copyThread;

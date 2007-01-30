@@ -260,7 +260,7 @@ namespace Epsitec.Common.UI.ItemViewFactories
 
 		#endregion
 
-		private object exclusion = new object ();
+		private readonly object exclusion = new object ();
 		private Dictionary<Support.Druid, Cache> cache = new Dictionary<Support.Druid, Cache> ();
 	}
 }
