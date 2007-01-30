@@ -1,5 +1,5 @@
 //	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
@@ -10,6 +10,9 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public interface INotifyCollectionChanged
 	{
+		/// <summary>
+		/// Occurs when the collection changes, either by adding or removing items.
+		/// </summary>
 		event CollectionChangedEventHandler CollectionChanged;
 	}
 }

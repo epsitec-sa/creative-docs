@@ -367,6 +367,10 @@ namespace Epsitec.Common.Types
 			return this.IsCurrentBeforeFirst ? false : this.MoveCurrentToPosition (System.Math.Min (this.Count, this.currentPosition)-1);
 		}
 
+		/// <summary>
+		/// Occurs when the current item changes.
+		/// <remarks>Subscribing to this event is thread safe.</remarks>
+		/// </summary>
 		public event Support.EventHandler CurrentChanged
 		{
 			add
@@ -385,6 +389,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Occurs when the current item is about to change.
+		/// <remarks>Subscribing to this event is thread safe.</remarks>
+		/// </summary>
 		public event Support.EventHandler<CurrentChangingEventArgs> CurrentChanging
 		{
 			add
@@ -509,6 +517,11 @@ namespace Epsitec.Common.Types
 
 		#region INotifyCollectionChanged Members
 
+		/// <summary>
+		/// Occurs when the collection changes, either because items were added
+		/// or removed.
+		/// <remarks>Subscribing to this event is thread safe.</remarks>
+		/// </summary>
 		public event Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> CollectionChanged
 		{
 			add
@@ -531,6 +544,10 @@ namespace Epsitec.Common.Types
 
 		#region INotifyPropertyChanged Members
 
+		/// <summary>
+		/// Occurs when one of the observable properties changes.
+		/// <remarks>Subscribing to this event is thread safe.</remarks>
+		/// </summary>
 		public event Support.EventHandler<DependencyPropertyChangedEventArgs> PropertyChanged
 		{
 			add
@@ -1273,9 +1290,9 @@ namespace Epsitec.Common.Types
 		private InvalidationCallback invalidationCallback;
 
 		private readonly object exclusion = new object ();
-		private event Support.EventHandler<CollectionChangedEventArgs> collectionChangedEvent;
-		private event Support.EventHandler<DependencyPropertyChangedEventArgs> propertyChangedEvent;
-		private event Support.EventHandler currentChangedEvent;
-		private event Support.EventHandler<CurrentChangingEventArgs> currentChangingEvent;
+		private Support.EventHandler<CollectionChangedEventArgs> collectionChangedEvent;
+		private Support.EventHandler<DependencyPropertyChangedEventArgs> propertyChangedEvent;
+		private Support.EventHandler currentChangedEvent;
+		private Support.EventHandler<CurrentChangingEventArgs> currentChangingEvent;
 	}
 }

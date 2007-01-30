@@ -181,7 +181,16 @@ namespace Epsitec.Common.Types
 		/// refresh mode.</returns>
 		System.IDisposable DeferRefresh();
 
+		/// <summary>
+		/// Occurs when the current item changes.
+		/// <remarks>Subscribing to this event is thread safe.</remarks>
+		/// </summary>
 		event Support.EventHandler CurrentChanged;
+		
+		/// <summary>
+		/// Occurs when the current item is about to change.
+		/// <remarks>Subscribing to this event is thread safe.</remarks>
+		/// </summary>
 		event Support.EventHandler<CurrentChangingEventArgs> CurrentChanging;
 	}
 }

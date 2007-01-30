@@ -314,6 +314,10 @@ namespace Epsitec.Common.Types.Collections
 
 		#region INotifyCollectionChanged Members
 
+		/// <summary>
+		/// Occurs when the list changes, either by adding or removing items.
+		/// <remarks>Subscribing to this event is thread safe.</remarks>
+		/// </summary>
 		public event Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> CollectionChanged
 		{
 			add
