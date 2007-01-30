@@ -450,9 +450,16 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void OnCollectionChanged(CollectionChangedEventArgs e)
 		{
-			if (this.CollectionChanged != null)
+			EventHandler<CollectionChangedEventArgs> handler;
+
+			lock (this.exclusion)
 			{
-				this.CollectionChanged (this, e);
+				handler = this.collectionChangedEvent;
+			}
+			
+			if (handler != null)
+			{
+				handler (this, e);
 			}
 		}
 
@@ -593,11 +600,29 @@ namespace Epsitec.Cresus.DataLayer
 
 		#region INotifyCollectionChanged Members
 
-		public event EventHandler<CollectionChangedEventArgs> CollectionChanged;
+		public event EventHandler<CollectionChangedEventArgs> CollectionChanged
+		{
+			add
+			{
+				lock (this.exclusion)
+				{
+					this.collectionChangedEvent += value;
+				}
+			}
+			remove
+			{
+				lock (this.exclusion)
+				{
+					this.collectionChangedEvent -= value;
+				}
+			}
+		}
+
 
 		#endregion
 
 		private object exclusion;
+		private event EventHandler<CollectionChangedEventArgs> collectionChangedEvent;
 		private DbTable tableDefinition;
 		private System.Data.DataTable dataTable;
 		private IStructuredType structuredType;

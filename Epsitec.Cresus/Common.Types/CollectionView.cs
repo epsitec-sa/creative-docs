@@ -17,19 +17,28 @@ namespace Epsitec.Common.Types
 		/// <param name="sourceList">The source list.</param>
 		public CollectionView(System.Collections.IList sourceList)
 		{
+			if (sourceList == null)
+			{
+				throw new System.ArgumentNullException ("sourceList");
+			}
+
 			this.sourceList = sourceList;
 			this.rootGroup = new CollectionViewGroup (null, null);
-			this.itemCount = this.sourceList == null ? 0 : this.sourceList.Count;
 
 			INotifyCollectionChanged changed = this.sourceList as INotifyCollectionChanged;
-			
+
 			if (changed != null)
 			{
 				//	TODO: use a weak delegate in order to avoid trouble if nobody disposes the view
-				
+
 				changed.CollectionChanged += this.HandleCollectionChanged;
 				this.hasDynamicSource = true;
 			}
+
+			//	Force initial refresh of the collection view. This will create
+			//	the sorted list and group the items.
+
+			this.Refresh ();
 
 			this.SetCurrentToPosition (0);
 		}
@@ -40,7 +49,7 @@ namespace Epsitec.Common.Types
 		/// Gets the underlying (unfiltered and unsorted) source collection.
 		/// </summary>
 		/// <value>The source collection.</value>
-		public System.Collections.IEnumerable	SourceCollection
+		public System.Collections.IEnumerable SourceCollection
 		{
 			get
 			{
@@ -48,7 +57,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public object							CurrentItem
+		public object CurrentItem
 		{
 			get
 			{
@@ -56,7 +65,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public int								CurrentPosition
+		public int CurrentPosition
 		{
 			get
 			{
@@ -67,7 +76,7 @@ namespace Epsitec.Common.Types
 				{
 					position = count;
 				}
-				
+
 				return position;
 			}
 		}
@@ -79,7 +88,7 @@ namespace Epsitec.Common.Types
 		/// <value>
 		/// 	<c>true</c> if the <c>CurrentItem</c> is before the first item; otherwise, <c>false</c>.
 		/// </value>
-		public bool								IsCurrentBeforeFirst
+		public bool IsCurrentBeforeFirst
 		{
 			get
 			{
@@ -94,7 +103,7 @@ namespace Epsitec.Common.Types
 		/// <value>
 		/// 	<c>true</c> if the <c>CurrentItem</c> is after the last item; otherwise, <c>false</c>.
 		/// </value>
-		public bool								IsCurrentAfterLast
+		public bool IsCurrentAfterLast
 		{
 			get
 			{
@@ -106,7 +115,7 @@ namespace Epsitec.Common.Types
 		/// Gets a value indicating whether this (filtered) view is empty.
 		/// </summary>
 		/// <value><c>true</c> if this view is empty; otherwise, <c>false</c>.</value>
-		public bool								IsEmpty
+		public bool IsEmpty
 		{
 			get
 			{
@@ -119,7 +128,7 @@ namespace Epsitec.Common.Types
 		/// depending on the settings.
 		/// </summary>
 		/// <value>A read-only collection of the items.</value>
-		public System.Collections.IList			Items
+		public System.Collections.IList Items
 		{
 			get
 			{
@@ -155,7 +164,7 @@ namespace Epsitec.Common.Types
 			get
 			{
 				System.Diagnostics.Debug.Assert (this.dirtyGroups == false, "Dirty groups");
-				
+
 				if (this.readOnlyGroups == null)
 				{
 					this.readOnlyGroups = new Collections.ReadOnlyObservableList<CollectionViewGroup> (this.rootGroup.GetSubgroups ());
@@ -179,7 +188,7 @@ namespace Epsitec.Common.Types
 					this.groupDescriptions = new Collections.ObservableList<GroupDescription> ();
 					this.groupDescriptions.CollectionChanged += this.HandleGroupDescriptionsCollectionChanged;
 				}
-				
+
 				return this.groupDescriptions;
 			}
 		}
@@ -210,7 +219,7 @@ namespace Epsitec.Common.Types
 		/// <value>
 		/// A method used to determine if an item is suitable for inclusion in the view.
 		/// </value>
-		public System.Predicate<object>			Filter
+		public System.Predicate<object> Filter
 		{
 			get
 			{
@@ -221,7 +230,7 @@ namespace Epsitec.Common.Types
 				if (this.filter != value)
 				{
 					this.filter = value;
-					
+
 					this.InvalidateSortedList ();
 				}
 			}
@@ -235,7 +244,7 @@ namespace Epsitec.Common.Types
 		{
 			this.dirtyGroups = true;
 			this.dirtySortedList = true;
-			
+
 			this.RefreshContents ();
 		}
 
@@ -271,7 +280,7 @@ namespace Epsitec.Common.Types
 			}
 
 			int position = -1;
-			
+
 			if (this.PassesFilter (item))
 			{
 				position = this.Items.IndexOf (item);
@@ -357,10 +366,42 @@ namespace Epsitec.Common.Types
 			this.VerifyRefreshNotDeferred ();
 			return this.IsCurrentBeforeFirst ? false : this.MoveCurrentToPosition (System.Math.Min (this.Count, this.currentPosition)-1);
 		}
-		
-		public event Support.EventHandler CurrentChanged;
 
-		public event Support.EventHandler<CurrentChangingEventArgs> CurrentChanging;
+		public event Support.EventHandler CurrentChanged
+		{
+			add
+			{
+				lock (this.exclusion)
+				{
+					this.currentChangedEvent += value;
+				}
+			}
+			remove
+			{
+				lock (this.exclusion)
+				{
+					this.currentChangedEvent -= value;
+				}
+			}
+		}
+
+		public event Support.EventHandler<CurrentChangingEventArgs> CurrentChanging
+		{
+			add
+			{
+				lock (this.exclusion)
+				{
+					this.currentChangingEvent += value;
+				}
+			}
+			remove
+			{
+				lock (this.exclusion)
+				{
+					this.currentChangingEvent -= value;
+				}
+			}
+		}
 
 		#endregion
 
@@ -369,7 +410,7 @@ namespace Epsitec.Common.Types
 		/// might be incorrect when changes are deferred.
 		/// </summary>
 		/// <value>The number of items.</value>
-		public int								Count
+		public int Count
 		{
 			get
 			{
@@ -383,7 +424,7 @@ namespace Epsitec.Common.Types
 		/// <value>
 		/// 	<c>true</c> if this view has sort descriptions; otherwise, <c>false</c>.
 		/// </value>
-		public bool								HasSortDescriptions
+		public bool HasSortDescriptions
 		{
 			get
 			{
@@ -398,7 +439,7 @@ namespace Epsitec.Common.Types
 		/// <value>
 		/// 	<c>true</c> if this view has group descriptions; otherwise, <c>false</c>.
 		/// </value>
-		public bool								HasGroupDescriptions
+		public bool HasGroupDescriptions
 		{
 			get
 			{
@@ -413,7 +454,7 @@ namespace Epsitec.Common.Types
 		/// <value>
 		/// 	<c>true</c> if this view has a filter; otherwise, <c>false</c>.
 		/// </value>
-		public bool								HasFilter
+		public bool HasFilter
 		{
 			get
 			{
@@ -425,7 +466,7 @@ namespace Epsitec.Common.Types
 		/// Gets a value indicating whether the refresh operations of this view are deferred.
 		/// </summary>
 		/// <value><c>true</c> if the refresh operations are deferred; otherwise, <c>false</c>.</value>
-		public bool								IsRefreshDeferred
+		public bool IsRefreshDeferred
 		{
 			get
 			{
@@ -439,7 +480,7 @@ namespace Epsitec.Common.Types
 		/// default immediate call to <c>Refresh</c>.
 		/// </summary>
 		/// <value>The invalidation handler.</value>
-		public InvalidationCallback				InvalidationHandler
+		public InvalidationCallback InvalidationHandler
 		{
 			get
 			{
@@ -457,7 +498,7 @@ namespace Epsitec.Common.Types
 		/// <value>
 		/// 	<c>true</c> if the <c>CurrentItem</c> belongs to this view; otherwise, <c>false</c>.
 		/// </value>
-		protected bool							IsCurrentInView
+		protected bool IsCurrentInView
 		{
 			get
 			{
@@ -468,13 +509,45 @@ namespace Epsitec.Common.Types
 
 		#region INotifyCollectionChanged Members
 
-		public event Support.EventHandler<CollectionChangedEventArgs> CollectionChanged;
+		public event Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> CollectionChanged
+		{
+			add
+			{
+				lock (this.exclusion)
+				{
+					this.collectionChangedEvent += value;
+				}
+			}
+			remove
+			{
+				lock (this.exclusion)
+				{
+					this.collectionChangedEvent -= value;
+				}
+			}
+		}
 
 		#endregion
 
 		#region INotifyPropertyChanged Members
 
-		public event Support.EventHandler<DependencyPropertyChangedEventArgs> PropertyChanged;
+		public event Support.EventHandler<DependencyPropertyChangedEventArgs> PropertyChanged
+		{
+			add
+			{
+				lock (this.exclusion)
+				{
+					this.propertyChangedEvent += value;
+				}
+			}
+			remove
+			{
+				lock (this.exclusion)
+				{
+					this.propertyChangedEvent -= value;
+				}
+			}
+		}
 
 		#endregion
 
@@ -499,7 +572,7 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
-		
+
 		/// <summary>
 		/// Returns a value indicating whether the specified item is valid
 		/// with respect to the filter.
@@ -543,28 +616,49 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		
+
 		protected virtual void OnCurrentChanged()
 		{
-			if (this.CurrentChanged != null)
+			Support.EventHandler handler;
+
+			lock (this.exclusion)
 			{
-				this.CurrentChanged (this);
+				handler = this.currentChangedEvent;
+			}
+
+			if (handler != null)
+			{
+				handler (this);
 			}
 		}
 
 		protected virtual void OnCurrentChanging(CurrentChangingEventArgs e)
 		{
-			if (this.CurrentChanging != null)
+			Support.EventHandler<CurrentChangingEventArgs> handler;
+
+			lock (this.exclusion)
 			{
-				this.CurrentChanging (this, e);
+				handler = this.currentChangingEvent;
+			}
+
+			if (handler != null)
+			{
+				handler (this, e);
 			}
 		}
 
 		protected virtual void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
 		{
-			if (this.PropertyChanged != null)
+			Support.EventHandler<DependencyPropertyChangedEventArgs> handler;
+
+			lock (this.exclusion)
 			{
-				this.PropertyChanged (this, e);
+				handler = this.propertyChangedEvent;
+			}
+
+			if (handler != null)
+			{
+				handler (this, e);
 			}
 		}
 
@@ -572,7 +666,7 @@ namespace Epsitec.Common.Types
 		{
 			this.InvalidateSortedList ();
 		}
-		
+
 		private void HandleGroupDescriptionsCollectionChanged(object sender, CollectionChangedEventArgs e)
 		{
 			this.InvalidateGroups ();
@@ -597,7 +691,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		
+
 		private void GroupItemsInList(System.Collections.IList list)
 		{
 			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.CurrentCulture;
@@ -624,10 +718,10 @@ namespace Epsitec.Common.Types
 			//	we reach the last rule, we record the item in the group nodes tree.
 
 			int nextLevel = level+1;
-			
+
 			//	An item may have one or more grouping names. If an item has more than
 			//	one grouping name, then it will appear within different groups.
-			
+
 			foreach (string name in rules[level].GetGroupNamesForItem (item, culture))
 			{
 				GroupNode subnode = node.GetSubnode (name);
@@ -648,10 +742,10 @@ namespace Epsitec.Common.Types
 			//	If the parent already had some subgroups, we cache them into a
 			//	dictionary in order to reuse them instead of creating them from
 			//	scratch if we happen to need the exact same groups.
-			
+
 			//	The group identity is, in this case, determined by the path leading
 			//	to the group, starting at the root of the tree.
-			
+
 			if (parentGroup.HasSubgroups)
 			{
 				foreach (CollectionViewGroup subgroup in parentGroup.Subgroups)
@@ -660,21 +754,21 @@ namespace Epsitec.Common.Types
 					groupRecycler[subpath] = subgroup;
 				}
 			}
-			
+
 			//	Generate the subgroup collections based on the group node tree.
 
 			parentGroup.ClearSubgroups ();
 			parentGroup.ClearItems ();
-			
+
 			if (node.HasSubnodes)
 			{
 				List<CollectionViewGroup> groups = new List<CollectionViewGroup> ();
-				
+
 				foreach (GroupNode subnode in node.Subnodes)
 				{
 					string subpath = string.Concat (path, "/", subnode.Name);
 					CollectionViewGroup group;
-					
+
 					if (groupRecycler.TryGetValue (subpath, out group))
 					{
 						//	The group was already known from a previous grouping
@@ -689,14 +783,14 @@ namespace Epsitec.Common.Types
 					{
 						group = new CollectionViewGroup (subnode.Name, parentGroup);
 					}
-					
+
 					CollectionView.GenerateSubgroups (subnode, group, subpath, groupRecycler);
 					groups.Add (group);
 				}
 
 				//	Add all subgroups in one single insertion in order to avoid
 				//	multiple change events in the parent group.
-				
+
 				parentGroup.GetSubgroups ().AddRange (groups);
 			}
 
@@ -710,7 +804,7 @@ namespace Epsitec.Common.Types
 		{
 			//	Create the filtered items list and check that all items have
 			//	the same type.
-			
+
 			this.itemType = null;
 
 			lock (this.sourceList)
@@ -746,7 +840,7 @@ namespace Epsitec.Common.Types
 		private void SortItemsList(List<object> list)
 		{
 			//	Sort the items list (it must have been filtered previously).
-			
+
 			if ((this.sortDescriptions != null) &&
 				(this.itemType != null))
 			{
@@ -875,15 +969,15 @@ namespace Epsitec.Common.Types
 			else
 			{
 				object currentItem     = this.currentItem;
-				int    currentPosition = this.currentPosition;
-				
+				int currentPosition = this.currentPosition;
+
 				bool isCurrentBeforeFirst = this.IsCurrentBeforeFirst;
 				bool isCurrentAfterLast   = this.IsCurrentAfterLast;
 
 				this.OnCurrentChanging (new CurrentChangingEventArgs ());
-				
+
 				//	Rebuild the filtered/sorted list :
-				
+
 				if (this.dirtySortedList)
 				{
 					if ((this.HasFilter) ||
@@ -915,7 +1009,7 @@ namespace Epsitec.Common.Types
 								count = this.sourceList.Count;
 							}
 						}
-						
+
 						lock (this)
 						{
 							this.sortedList = null;
@@ -938,7 +1032,7 @@ namespace Epsitec.Common.Types
 					{
 						this.rootGroup.ClearSubgroups ();
 					}
-					
+
 					this.dirtyGroups = false;
 				}
 
@@ -956,7 +1050,7 @@ namespace Epsitec.Common.Types
 				else if (currentItem != null)
 				{
 					int position = this.Items.IndexOf (currentItem);
-					
+
 					if (position < 0)
 					{
 						position = System.Math.Min (this.Count-1, currentPosition);
@@ -990,9 +1084,16 @@ namespace Epsitec.Common.Types
 
 		private void OnCollectionChanged()
 		{
-			if (this.CollectionChanged != null)
+			Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> handler;
+
+			lock (this.exclusion)
 			{
-				this.CollectionChanged (this, new CollectionChangedEventArgs (CollectionChangedAction.Reset));
+				handler = this.collectionChangedEvent;
+			}
+
+			if (handler != null)
+			{
+				handler (this, new CollectionChangedEventArgs (CollectionChangedAction.Reset));
 			}
 		}
 
@@ -1153,22 +1254,28 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		public delegate void InvalidationCallback(CollectionView collectionView);
-		
-		private System.Collections.IList		sourceList;
-		private List<object>					sortedList;
-		private System.Type						itemType;
-		private int								itemCount;
-		private bool							dirtyGroups;
-		private bool							dirtySortedList;
-		private bool							hasDynamicSource;
-		private int								deferCounter;
-		private int								currentPosition;
-		private object							currentItem;
-		private CollectionViewGroup				rootGroup;
+
+		private readonly System.Collections.IList sourceList;
+		private List<object> sortedList;
+		private System.Type itemType;
+		private int itemCount;
+		private bool dirtyGroups;
+		private bool dirtySortedList;
+		private bool hasDynamicSource;
+		private int deferCounter;
+		private int currentPosition;
+		private object currentItem;
+		private CollectionViewGroup rootGroup;
 		private Collections.ReadOnlyObservableList<CollectionViewGroup> readOnlyGroups;
 		private Collections.ObservableList<GroupDescription> groupDescriptions;
 		private Collections.ObservableList<SortDescription> sortDescriptions;
-		private System.Predicate<object>		filter;
-		private InvalidationCallback			invalidationCallback;
+		private System.Predicate<object> filter;
+		private InvalidationCallback invalidationCallback;
+
+		private object exclusion = new object ();
+		private event Support.EventHandler<CollectionChangedEventArgs> collectionChangedEvent;
+		private event Support.EventHandler<DependencyPropertyChangedEventArgs> propertyChangedEvent;
+		private event Support.EventHandler currentChangedEvent;
+		private event Support.EventHandler<CurrentChangingEventArgs> currentChangingEvent;
 	}
 }

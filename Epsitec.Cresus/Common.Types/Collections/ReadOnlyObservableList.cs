@@ -230,9 +230,16 @@ namespace Epsitec.Common.Types.Collections
 		
 		protected virtual void OnCollectionChanged(CollectionChangedEventArgs e)
 		{
-			if (this.CollectionChanged != null)
+			Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> handler;
+
+			lock (this.list)
 			{
-				this.CollectionChanged (this, e);
+				handler = this.collectionChangedEvent;
+			}
+
+			if (handler != null)
+			{
+				handler (this, e);
 			}
 		}
 
@@ -265,10 +272,27 @@ namespace Epsitec.Common.Types.Collections
 
 		#region INotifyCollectionChanged Members
 
-		public event Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> CollectionChanged;
+		public event Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> CollectionChanged
+		{
+			add
+			{
+				lock (this.list)
+				{
+					this.collectionChangedEvent += value;
+				}
+			}
+			remove
+			{
+				lock (this.list)
+				{
+					this.collectionChangedEvent -= value;
+				}
+			}
+		}
 
 		#endregion
 
+		private event Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> collectionChangedEvent;
 		private ObservableList<T> list;
 	}
 }
