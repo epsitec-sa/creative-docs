@@ -40,6 +40,8 @@ namespace Epsitec.Common.Types
 
 			this.Refresh ();
 
+			System.Diagnostics.Debug.Assert (this.sortedList != null);
+
 			this.SetCurrentToPosition (0);
 		}
 
@@ -69,15 +71,18 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				int position = this.currentPosition;
-				int count    = this.Count;
-
-				if (position > count)
+				lock (this.exclusion)
 				{
-					position = count;
-				}
+					int position = this.currentPosition;
+					int count    = this.Count;
 
-				return position;
+					if (position > count)
+					{
+						position = count;
+					}
+					
+					return position;
+				}
 			}
 		}
 
@@ -124,7 +129,7 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Gets the items. The collection might be sorted and filtered,
+		/// Gets the items. The collection will be sorted and filtered,
 		/// depending on the settings.
 		/// </summary>
 		/// <value>A read-only collection of the items.</value>
@@ -132,22 +137,11 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				this.RefreshWhenInvalidated ();
+				this.RefreshInvalidated ();
 
 				lock (this)
 				{
-					if (this.sortedList != null)
-					{
-						return this.sortedList;
-					}
-					else if (this.sourceList != null)
-					{
-						return this.sourceList;
-					}
-					else
-					{
-						return Collections.EmptyList<object>.Instance;
-					}
+					return this.sortedList;
 				}
 			}
 		}
@@ -163,13 +157,17 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				System.Diagnostics.Debug.Assert (this.dirtyGroups == false, "Dirty groups");
-
 				if (this.readOnlyGroups == null)
 				{
-					this.readOnlyGroups = new Collections.ReadOnlyObservableList<CollectionViewGroup> (this.rootGroup.GetSubgroups ());
+					lock (this.exclusion)
+					{
+						if (this.readOnlyGroups == null)
+						{
+							this.readOnlyGroups = new Collections.ReadOnlyObservableList<CollectionViewGroup> (this.rootGroup.GetSubgroups ());
+						}
+					}
 				}
-
+				
 				return this.readOnlyGroups;
 			}
 		}
@@ -185,10 +183,16 @@ namespace Epsitec.Common.Types
 			{
 				if (this.groupDescriptions == null)
 				{
-					this.groupDescriptions = new Collections.ObservableList<GroupDescription> ();
-					this.groupDescriptions.CollectionChanged += this.HandleGroupDescriptionsCollectionChanged;
+					lock (this.exclusion)
+					{
+						if (this.groupDescriptions == null)
+						{
+							this.groupDescriptions = new Collections.ObservableList<GroupDescription> ();
+							this.groupDescriptions.CollectionChanged += this.HandleGroupDescriptionsCollectionChanged;
+						}
+					}
 				}
-
+				
 				return this.groupDescriptions;
 			}
 		}
@@ -204,10 +208,16 @@ namespace Epsitec.Common.Types
 			{
 				if (this.sortDescriptions == null)
 				{
-					this.sortDescriptions = new Collections.ObservableList<SortDescription> ();
-					this.sortDescriptions.CollectionChanged += this.HandleSortDescriptionsCollectionChanged;
+					lock (this.exclusion)
+					{
+						if (this.sortDescriptions == null)
+						{
+							this.sortDescriptions = new Collections.ObservableList<SortDescription> ();
+							this.sortDescriptions.CollectionChanged += this.HandleSortDescriptionsCollectionChanged;
+						}
+					}
 				}
-
+				
 				return this.sortDescriptions;
 			}
 		}
@@ -223,14 +233,20 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.filter;
+				lock (this.exclusion)
+				{
+					return this.filter;
+				}
 			}
 			set
 			{
 				if (this.filter != value)
 				{
-					this.filter = value;
-
+					lock (this.exclusion)
+					{
+						this.filter = value;
+					}
+					
 					this.InvalidateSortedList ();
 				}
 			}
@@ -272,22 +288,87 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public bool MoveCurrentTo(object item)
 		{
-			this.VerifyRefreshNotDeferred ();
+			if (this.AcceptsChangingCurrentPosition ())
+			{
+				MoveResult result;
 
-			if (object.Equals (this.CurrentItem, item))
+				lock (this.itemExclusion)
+				{
+					if (object.Equals (this.CurrentItem, item))
+					{
+						return this.IsCurrentInView;
+					}
+
+					int position = -1;
+
+					if (this.PassesFilter (item))
+					{
+						position = this.sortedList.IndexOf (item);
+					}
+
+					result = MoveResult.MoveCurrentToPosition (this, position);
+				}
+
+				return result.RaiseEvents (this);
+			}
+			else
 			{
 				return this.IsCurrentInView;
 			}
+		}
 
-			int position = -1;
+		#region MoveResult Structure
 
-			if (this.PassesFilter (item))
+		private struct MoveResult
+		{
+			private MoveResult(bool currentChanged, bool isCurrentInView)
 			{
-				position = this.Items.IndexOf (item);
+				this.currentChanged = currentChanged;
+				this.isCurrentInView = isCurrentInView;
 			}
 
-			return this.MoveCurrentToPosition (position);
+			public bool RaiseEvents(CollectionView collectionView)
+			{
+				if (this.currentChanged)
+				{
+					collectionView.OnCurrentChanged ();
+				}
+				
+				return this.isCurrentInView;
+			}
+
+			public static MoveResult NoMove(CollectionView view)
+			{
+				return new MoveResult (false, view.IsCurrentInView);
+			}
+
+
+			public static MoveResult MoveCurrentToPosition(CollectionView view, int position)
+			{
+				view.VerifyRefreshNotDeferred ();
+
+				if ((position < -1) ||
+				(position > view.Count))
+				{
+					throw new System.ArgumentOutOfRangeException ("position");
+				}
+
+				if (view.CurrentPosition != position)
+				{
+					return new MoveResult (true, view.SetCurrentToPosition (position));
+				}
+				else
+				{
+					return new MoveResult (false, view.IsCurrentInView);
+				}
+			}
+
+			
+			private bool currentChanged;
+			private bool isCurrentInView;
 		}
+
+		#endregion
 
 		/// <summary>
 		/// Sets the item at the specified position to be the <see cref="CurrentItem"/> in the view.
@@ -298,27 +379,23 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public bool MoveCurrentToPosition(int position)
 		{
-			this.VerifyRefreshNotDeferred ();
-
-			if ((position < -1) ||
-				(position > this.Count))
+			if (this.AcceptsChangingCurrentPosition ())
 			{
-				throw new System.ArgumentOutOfRangeException ("position");
-			}
+				MoveResult result;
 
-			if ((this.CurrentPosition != position) &&
-				(this.AcceptsChangingCurrentPosition ()))
-			{
-				bool ok = this.SetCurrentToPosition (position);
-				this.OnCurrentChanged ();
-				return ok;
+				lock (this.itemExclusion)
+				{
+					result = MoveResult.MoveCurrentToPosition (this, position);
+				}
+
+				return result.RaiseEvents (this);
 			}
 			else
 			{
 				return this.IsCurrentInView;
 			}
 		}
-
+		
 		/// <summary>
 		/// Sets the first item in the view as the <see cref="CurrentItem"/>.
 		/// </summary>
@@ -327,8 +404,21 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public bool MoveCurrentToFirst()
 		{
-			this.VerifyRefreshNotDeferred ();
-			return this.MoveCurrentToPosition (0);
+			if (this.AcceptsChangingCurrentPosition ())
+			{
+				MoveResult result;
+
+				lock (this.itemExclusion)
+				{
+					result = MoveResult.MoveCurrentToPosition (this, 0);
+				}
+
+				return result.RaiseEvents (this);
+			}
+			else
+			{
+				return this.IsCurrentInView;
+			}
 		}
 
 		/// <summary>
@@ -339,8 +429,21 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public bool MoveCurrentToLast()
 		{
-			this.VerifyRefreshNotDeferred ();
-			return this.MoveCurrentToPosition (this.Count-1);
+			if (this.AcceptsChangingCurrentPosition ())
+			{
+				MoveResult result;
+
+				lock (this.itemExclusion)
+				{
+					result = MoveResult.MoveCurrentToPosition (this, this.Count-1);
+				}
+
+				return result.RaiseEvents (this);
+			}
+			else
+			{
+				return this.IsCurrentInView;
+			}
 		}
 
 		/// <summary>
@@ -351,8 +454,28 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public bool MoveCurrentToNext()
 		{
-			this.VerifyRefreshNotDeferred ();
-			return this.IsCurrentAfterLast ? false : this.MoveCurrentToPosition (this.currentPosition+1);
+			if (this.AcceptsChangingCurrentPosition ())
+			{
+				MoveResult result;
+
+				lock (this.itemExclusion)
+				{
+					if (this.IsCurrentAfterLast)
+					{
+						result = MoveResult.NoMove (this);
+					}
+					else
+					{
+						result = MoveResult.MoveCurrentToPosition (this, this.currentPosition+1);
+					}
+				}
+
+				return result.RaiseEvents (this);
+			}
+			else
+			{
+				return this.IsCurrentInView;
+			}
 		}
 
 		/// <summary>
@@ -363,8 +486,29 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public bool MoveCurrentToPrevious()
 		{
-			this.VerifyRefreshNotDeferred ();
-			return this.IsCurrentBeforeFirst ? false : this.MoveCurrentToPosition (System.Math.Min (this.Count, this.currentPosition)-1);
+			if (this.AcceptsChangingCurrentPosition ())
+			{
+				MoveResult result;
+
+				lock (this.itemExclusion)
+				{
+					if (this.IsCurrentBeforeFirst)
+					{
+						result = MoveResult.NoMove (this);
+					}
+					else
+					{
+						int pos = System.Math.Min (this.Count, this.currentPosition);
+						result = MoveResult.MoveCurrentToPosition (this, pos-1);
+					}
+				}
+
+				return result.RaiseEvents (this);
+			}
+			else
+			{
+				return this.IsCurrentInView;
+			}
 		}
 
 		/// <summary>
@@ -422,7 +566,10 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.itemCount;
+				lock (this.exclusion)
+				{
+					return this.itemCount;
+				}
 			}
 		}
 
@@ -436,8 +583,11 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (this.sortDescriptions != null)
-					&& (this.sortDescriptions.Count > 0);
+				lock (this.exclusion)
+				{
+					return (this.sortDescriptions != null)
+						&& (this.sortDescriptions.Count > 0);
+				}
 			}
 		}
 
@@ -451,8 +601,11 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (this.groupDescriptions != null)
-				    && (this.groupDescriptions.Count > 0);
+				lock (this.exclusion)
+				{
+					return (this.groupDescriptions != null)
+						&& (this.groupDescriptions.Count > 0);
+				}
 			}
 		}
 
@@ -466,7 +619,10 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.filter != null;
+				lock (this.exclusion)
+				{
+					return this.filter != null;
+				}
 			}
 		}
 
@@ -478,7 +634,10 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.deferCounter > 0;
+				lock (this.exclusion)
+				{
+					return this.deferCounter > 0;
+				}
 			}
 		}
 
@@ -492,11 +651,17 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.invalidationCallback;
+				lock (this.exclusion)
+				{
+					return this.invalidationCallback;
+				}
 			}
 			set
 			{
-				this.invalidationCallback = value;
+				lock (this.exclusion)
+				{
+					this.invalidationCallback = value;
+				}
 			}
 		}
 
@@ -510,8 +675,11 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (this.currentPosition >= 0)
-				    && (this.currentPosition < this.Count);
+				lock (this.exclusion)
+				{
+					return (this.currentPosition >= 0)
+						&& (this.currentPosition < this.Count);
+				}
 			}
 		}
 
@@ -600,9 +768,16 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public virtual bool PassesFilter(object item)
 		{
-			if (this.filter != null)
+			System.Predicate<object> filter;
+			
+			lock (this.exclusion)
 			{
-				return this.filter (item);
+				filter = this.filter;
+			}
+			
+			if (filter != null)
+			{
+				return filter (item);
 			}
 			else
 			{
@@ -692,21 +867,6 @@ namespace Epsitec.Common.Types
 		private void HandleSortDescriptionsCollectionChanged(object sender, CollectionChangedEventArgs e)
 		{
 			this.InvalidateSortedList ();
-		}
-
-		private void GroupItemsInList()
-		{
-			if (this.sortedList != null)
-			{
-				this.GroupItemsInList (this.sortedList);
-			}
-			else if (this.sourceList != null)
-			{
-				lock (this.sourceList)
-				{
-					this.GroupItemsInList (this.sourceList);
-				}
-			}
 		}
 
 		private void GroupItemsInList(System.Collections.IList list)
@@ -817,81 +977,79 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private void FilterItemsList(List<object> list)
+		private static System.Type FillFilteredList(System.Collections.IEnumerable source, List<object> list, System.Predicate<object> filter)
 		{
-			//	Create the filtered items list and check that all items have
+			//	Create the filtered items list and check that all items are of
 			//	the same type.
 
-			this.itemType = null;
-
-			lock (this.sourceList)
+			System.Type listItemType = null;
+			
+			foreach (object item in source)
 			{
-				foreach (object item in this.sourceList)
+				if (item == null)
 				{
-					if (item == null)
+					throw new System.InvalidOperationException ("Source collection contains null items");
+				}
+				else if ((filter == null) || (filter (item)))
+				{
+					list.Add (item);
+
+					System.Type itemType = item.GetType ();
+
+					if (listItemType == null)
 					{
-						throw new System.InvalidOperationException ("Source collection contains null items");
+						listItemType = itemType;
 					}
-					else if (this.PassesFilter (item))
+					else
 					{
-						list.Add (item);
-
-						System.Type itemType = item.GetType ();
-
-						if (this.itemType == null)
+						if (listItemType != itemType)
 						{
-							this.itemType = itemType;
-						}
-						else
-						{
-							if (this.itemType != itemType)
-							{
-								throw new System.InvalidOperationException (string.Format ("Source collection not orthogonal; found type {0} and {1}", this.itemType.Name, itemType.Name));
-							}
+							throw new System.InvalidOperationException (string.Format ("Source collection not orthogonal; found type {0} and {1}", listItemType.Name, itemType.Name));
 						}
 					}
 				}
 			}
+			
+			return listItemType;
 		}
 
-		private void SortItemsList(List<object> list)
+		private static void SortList(List<object> list, System.Type itemType, IList<SortDescription> sortDescriptions)
 		{
 			//	Sort the items list (it must have been filtered previously).
 
-			if ((this.sortDescriptions != null) &&
-				(this.itemType != null))
+			System.Diagnostics.Debug.Assert (itemType != null);
+			System.Diagnostics.Debug.Assert (sortDescriptions != null);
+			
+			System.Comparison<object>[] comparisons = new System.Comparison<object>[sortDescriptions.Count];
+
+			for (int i = 0; i < sortDescriptions.Count; i++)
 			{
-				System.Comparison<object>[] comparisons = new System.Comparison<object>[this.sortDescriptions.Count];
+				comparisons[i] = sortDescriptions[i].CreateComparison (itemType);
+			}
 
-				for (int i = 0; i < this.sortDescriptions.Count; i++)
-				{
-					comparisons[i] = this.sortDescriptions[i].CreateComparison (this.itemType);
-				}
-
-				if (comparisons.Length == 1)
-				{
-					list.Sort (comparisons[0]);
-				}
-				else if (comparisons.Length > 1)
-				{
-					list.Sort
-						(
-							delegate (object x, object y)
+			if (comparisons.Length == 1)
+			{
+				list.Sort (comparisons[0]);
+			}
+			else if (comparisons.Length > 1)
+			{
+				list.Sort
+					(
+						delegate (object x, object y)
+						{
+							for (int i = 0; i < comparisons.Length; i++)
 							{
-								for (int i = 0; i < comparisons.Length; i++)
+								int result = comparisons[i] (x, y);
+
+								if (result != 0)
 								{
-									int result = comparisons[i] (x, y);
-
-									if (result != 0)
-									{
-										return result;
-									}
+									return result;
 								}
-
-								return 0;
 							}
-						);
-				}
+
+							return 0;
+						}
+					);
 			}
 		}
 
@@ -960,7 +1118,7 @@ namespace Epsitec.Common.Types
 
 			if (callback == null)
 			{
-				this.RefreshWhenInvalidated ();
+				this.RefreshInvalidated ();
 			}
 			else
 			{
@@ -968,7 +1126,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private void RefreshWhenInvalidated()
+		private void RefreshInvalidated()
 		{
 			if (this.deferCounter == 0)
 			{
@@ -985,95 +1143,96 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				object currentItem     = this.currentItem;
-				int currentPosition = this.currentPosition;
-
-				bool isCurrentBeforeFirst = this.IsCurrentBeforeFirst;
-				bool isCurrentAfterLast   = this.IsCurrentAfterLast;
-
 				this.OnCurrentChanging (new CurrentChangingEventArgs ());
+				
+				object currentItem;
+				int    currentPosition;
+				bool   isCurrentBeforeFirst;
+				bool   isCurrentAfterLast;
 
-				//	Rebuild the filtered/sorted list :
+				//	From now on, the current item may not be modified by any other
+				//	thread until we are done with the sorting/grouping operation.
 
-				if (this.dirtySortedList)
+				lock (this.itemExclusion)
 				{
-					if ((this.HasFilter) ||
-						(this.HasSortDescriptions))
+					currentItem          = this.currentItem;
+					currentPosition      = this.currentPosition;
+					isCurrentBeforeFirst = this.IsCurrentBeforeFirst;
+					isCurrentAfterLast   = this.IsCurrentAfterLast;
+
+					//	Rebuild the filtered/sorted list :
+
+					if (this.dirtySortedList)
 					{
 						List<object> list = new List<object> ();
 
-						this.FilterItemsList (list);
-						this.SortItemsList (list);
+						System.Type itemType;
+						System.Predicate<object> filter;
+						SortDescription[] sortDescriptions;
+
+						lock (this.exclusion)
+						{
+							filter = this.filter;
+							sortDescriptions = this.sortDescriptions == null ? null : this.sortDescriptions.ToArray ();
+						}
+
+						lock (this.sourceList.SyncRoot)
+						{
+							itemType = CollectionView.FillFilteredList (this.sourceList, list, filter);
+						}
+
+						if ((sortDescriptions != null) &&
+							(sortDescriptions.Length > 0))
+						{
+							CollectionView.SortList (list, itemType, sortDescriptions);
+						}
 
 						lock (this)
 						{
-							this.sortedList = list;
-							this.itemCount = list.Count;
+							this.sortedList      = list;
+							this.itemCount       = list.Count;
+							this.dirtySortedList = false;
 						}
 					}
-					else
-					{
-						int count;
 
-						if (this.sourceList == null)
+					//	Rebuild the groups :
+
+					if (this.dirtyGroups)
+					{
+						if (this.HasGroupDescriptions)
 						{
-							count = 0;
+							this.GroupItemsInList (this.sortedList);
 						}
 						else
 						{
-							lock (this.sourceList)
-							{
-								count = this.sourceList.Count;
-							}
+							this.rootGroup.ClearSubgroups ();
 						}
 
-						lock (this)
+						this.dirtyGroups = false;
+					}
+
+					//	Update the current item since the contents might have moved :
+
+					if ((this.IsEmpty) ||
+						(isCurrentBeforeFirst))
+					{
+						this.SetCurrentToPosition (-1);
+					}
+					else if (isCurrentAfterLast)
+					{
+						this.SetCurrentToPosition (System.Int32.MaxValue);
+					}
+					else if (currentItem != null)
+					{
+						int position = this.Items.IndexOf (currentItem);
+
+						if (position < 0)
 						{
-							this.sortedList = null;
-							this.itemCount  = count;
+							position = System.Math.Min (this.Count-1, currentPosition);
 						}
+
+						this.SetCurrentToPosition (position);
 					}
-
-					this.dirtySortedList = false;
-				}
-
-				//	Rebuild the groups :
-
-				if (this.dirtyGroups)
-				{
-					if (this.HasGroupDescriptions)
-					{
-						this.GroupItemsInList ();
-					}
-					else
-					{
-						this.rootGroup.ClearSubgroups ();
-					}
-
-					this.dirtyGroups = false;
-				}
-
-				//	Update the current item since the contents might have moved :
-
-				if ((this.IsEmpty) ||
-					(isCurrentBeforeFirst))
-				{
-					this.SetCurrentToPosition (-1);
-				}
-				else if (isCurrentAfterLast)
-				{
-					this.SetCurrentToPosition (System.Int32.MaxValue);
-				}
-				else if (currentItem != null)
-				{
-					int position = this.Items.IndexOf (currentItem);
-
-					if (position < 0)
-					{
-						position = System.Math.Min (this.Count-1, currentPosition);
-					}
-
-					this.SetCurrentToPosition (position);
 				}
 
 				this.OnCurrentChanged ();
@@ -1121,24 +1280,27 @@ namespace Epsitec.Common.Types
 
 		private bool SetCurrentToPosition(int position)
 		{
-			if ((position < 0) ||
+			lock (this.exclusion)
+			{
+				if ((position < 0) ||
 				(this.IsEmpty))
-			{
-				this.currentPosition = -1;
-				this.currentItem     = null;
-				return false;
-			}
-			else if (position >= this.Count)
-			{
-				this.currentPosition = System.Int32.MaxValue;
-				this.currentItem     = null;
-				return false;
-			}
-			else
-			{
-				this.currentPosition = position;
-				this.currentItem     = this.Items[position];
-				return true;
+				{
+					this.currentPosition = -1;
+					this.currentItem     = null;
+					return false;
+				}
+				else if (position >= this.Count)
+				{
+					this.currentPosition = System.Int32.MaxValue;
+					this.currentItem     = null;
+					return false;
+				}
+				else
+				{
+					this.currentPosition = position;
+					this.currentItem     = this.Items[position];
+					return true;
+				}
 			}
 		}
 
@@ -1274,7 +1436,6 @@ namespace Epsitec.Common.Types
 
 		private readonly System.Collections.IList sourceList;
 		private List<object> sortedList;
-		private System.Type itemType;
 		private int itemCount;
 		private bool dirtyGroups;
 		private bool dirtySortedList;
@@ -1290,6 +1451,8 @@ namespace Epsitec.Common.Types
 		private InvalidationCallback invalidationCallback;
 
 		private readonly object exclusion = new object ();
+		private readonly object itemExclusion = new object ();
+		
 		private Support.EventHandler<CollectionChangedEventArgs> collectionChangedEvent;
 		private Support.EventHandler<DependencyPropertyChangedEventArgs> propertyChangedEvent;
 		private Support.EventHandler currentChangedEvent;

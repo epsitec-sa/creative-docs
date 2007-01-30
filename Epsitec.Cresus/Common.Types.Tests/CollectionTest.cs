@@ -21,16 +21,23 @@ namespace Epsitec.Common.Types
 			view    = new CollectionView (source1);
 
 			Assert.AreEqual (0, view.Count);
+			Assert.AreEqual (0, view.Items.Count);
 
 			CollectionTest.AddRecords (source1);
 
 			Assert.AreEqual (0, view.Count);
+			Assert.AreEqual (0, view.Items.Count);
+
+			view.Refresh ();
+
+			Assert.AreEqual (6, view.Count);
 			Assert.AreEqual (6, view.Items.Count);
 
 			source2 = new Collections.ObservableList<Record> ();
 			view    = new CollectionView (source2);
 
 			Assert.AreEqual (0, view.Count);
+			Assert.AreEqual (0, view.Items.Count);
 
 			CollectionTest.AddRecords (source2);
 
@@ -41,16 +48,18 @@ namespace Epsitec.Common.Types
 			view    = new CollectionView (source2);
 			
 			Assert.AreEqual (0, view.Count);
+			Assert.AreEqual (0, view.Items.Count);
 
 			using (view.DeferRefresh ())
 			{
 				CollectionTest.AddRecords (source2);
 
 				Assert.AreEqual (0, view.Count);
-				Assert.AreEqual (6, view.Items.Count);
+				Assert.AreEqual (0, view.Items.Count);
 			}
 			
 			Assert.AreEqual (6, view.Count);
+			Assert.AreEqual (6, view.Items.Count);
 		}
 
 		[Test]
@@ -275,6 +284,7 @@ namespace Epsitec.Common.Types
 			CollectionView view = new CollectionView (source);
 
 			CollectionTest.AddRecords (source);
+			view.Refresh ();
 
 			records = Collection.ToArray<Record> (view.Items);
 

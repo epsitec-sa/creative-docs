@@ -74,7 +74,7 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Gets the items. The collection might be sorted and filtered,
+		/// Gets the items. The collection will be sorted and filtered,
 		/// depending on the settings.
 		/// </summary>
 		/// <value>A read-only collection of the items.</value>
