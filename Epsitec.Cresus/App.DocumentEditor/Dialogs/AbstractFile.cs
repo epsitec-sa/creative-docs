@@ -1220,7 +1220,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					FileListItem fileItem = new FileListItem (item, this.isModel);
 					fileItem.FillCache ();
 					
-					lock (this.files)
+					lock (this.files.SyncRoot)
 					{
 						this.files.Add (fileItem);  // ajoute une ligne à la liste
 					}

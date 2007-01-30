@@ -159,7 +159,7 @@ namespace Epsitec.Common.Types
 			{
 				if (this.readOnlyGroups == null)
 				{
-					lock (this.exclusion)
+					lock (this.groupExclusion)
 					{
 						if (this.readOnlyGroups == null)
 						{
@@ -869,11 +869,9 @@ namespace Epsitec.Common.Types
 			this.InvalidateSortedList ();
 		}
 
-		private void GroupItemsInList(System.Collections.IList list)
+		private static void GroupItemsInList(System.Collections.IList list, GroupDescription[] rules, CollectionViewGroup rootGroup)
 		{
 			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.CurrentCulture;
-
-			GroupDescription[] rules = this.groupDescriptions.ToArray ();
 
 			System.Diagnostics.Debug.Assert (rules.Length > 0);
 
@@ -886,7 +884,7 @@ namespace Epsitec.Common.Types
 
 			Dictionary<string, CollectionViewGroup> groupRecycler = new Dictionary<string, CollectionViewGroup> ();
 
-			CollectionView.GenerateSubgroups (root, this.rootGroup, "", groupRecycler);
+			CollectionView.GenerateSubgroups (root, rootGroup, "", groupRecycler);
 		}
 
 		private static void ClassifyItemIntoGroups(object item, System.Globalization.CultureInfo culture, GroupDescription[] rules, int level, GroupNode node)
@@ -1182,7 +1180,8 @@ namespace Epsitec.Common.Types
 						}
 
 						if ((sortDescriptions != null) &&
-							(sortDescriptions.Length > 0))
+							(sortDescriptions.Length > 0) &&
+							(list.Count > 0))
 						{
 							CollectionView.SortList (list, itemType, sortDescriptions);
 						}
@@ -1199,16 +1198,27 @@ namespace Epsitec.Common.Types
 
 					if (this.dirtyGroups)
 					{
-						if (this.HasGroupDescriptions)
+						GroupDescription[] groupDescriptions;
+
+						lock (this.exclusion)
 						{
-							this.GroupItemsInList (this.sortedList);
-						}
-						else
-						{
-							this.rootGroup.ClearSubgroups ();
+							groupDescriptions = this.groupDescriptions == null ? null : this.groupDescriptions.ToArray ();
 						}
 
-						this.dirtyGroups = false;
+						lock (this.groupExclusion)
+						{
+							if ((groupDescriptions != null) &&
+							(groupDescriptions.Length > 0))
+							{
+								CollectionView.GroupItemsInList (this.sortedList, groupDescriptions, this.rootGroup);
+							}
+							else
+							{
+								this.rootGroup.ClearSubgroups ();
+							}
+							
+							this.dirtyGroups = false;
+						}
 					}
 
 					//	Update the current item since the contents might have moved :
@@ -1452,6 +1462,7 @@ namespace Epsitec.Common.Types
 
 		private readonly object exclusion = new object ();
 		private readonly object itemExclusion = new object ();
+		private readonly object groupExclusion = new object ();
 		
 		private Support.EventHandler<CollectionChangedEventArgs> collectionChangedEvent;
 		private Support.EventHandler<DependencyPropertyChangedEventArgs> propertyChangedEvent;

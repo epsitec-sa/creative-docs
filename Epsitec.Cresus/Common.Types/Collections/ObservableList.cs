@@ -214,7 +214,7 @@ namespace Epsitec.Common.Types.Collections
 			}
 		}
 
-		object System.Collections.ICollection.SyncRoot
+		public object SyncRoot
 		{
 			get
 			{
