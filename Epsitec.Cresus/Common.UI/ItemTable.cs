@@ -38,11 +38,9 @@ namespace Epsitec.Common.UI
 			this.headerStripe.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.surface.Anchor = AnchorStyles.All;
 
-			this.headerStripe.Margins = new Drawing.Margins(0, this.vScroller.PreferredWidth, 0, 0);
 			this.headerStripe.PreferredHeight = this.columnHeader.PreferredHeight;
-			this.vScroller.Margins = new Drawing.Margins(0, 0, this.headerStripe.PreferredHeight, this.hScroller.PreferredHeight);
-			this.hScroller.Margins = new Drawing.Margins (0, this.vScroller.PreferredWidth, 0, 0);
-			this.surface.Margins = new Drawing.Margins (1, this.vScroller.PreferredWidth+1, this.headerStripe.PreferredHeight+1, this.hScroller.PreferredHeight+1);
+
+			this.UpdateGeometry ();
 
 			this.hScroller.ValueChanged += this.HandleScrollerValueChanged;
 			this.vScroller.ValueChanged += this.HandleScrollerValueChanged;
@@ -63,6 +61,19 @@ namespace Epsitec.Common.UI
 			//	so :
 			
 			ItemTable.SetItemTable (this.itemPanel, this);
+		}
+
+		private void UpdateGeometry()
+		{
+			double topMargin    = this.headerStripe.Visibility ? this.headerStripe.PreferredHeight : 0;
+			double bottomMargin = this.hScroller.Visibility ? this.hScroller.PreferredHeight : 0;
+			double rightMargin  = this.vScroller.Visibility ? this.vScroller.PreferredWidth : 0;
+			double frameMargin  = this.FrameVisibility ? 1 : 0;
+
+			this.headerStripe.Margins = new Drawing.Margins (0, rightMargin, 0, 0);
+			this.vScroller.Margins = new Drawing.Margins (0, 0, topMargin, bottomMargin);
+			this.hScroller.Margins = new Drawing.Margins (0, rightMargin, 0, 0);
+			this.surface.Margins = new Drawing.Margins (frameMargin, rightMargin+frameMargin, topMargin+frameMargin, bottomMargin+frameMargin);
 		}
 
 		public ItemTable(Widget embedder)
@@ -96,6 +107,66 @@ namespace Epsitec.Common.UI
 			get
 			{
 				return this.columnHeader;
+			}
+		}
+
+		public bool								HeaderVisibility
+		{
+			get
+			{
+				return this.headerStripe.Visibility;
+			}
+			set
+			{
+				if (this.headerStripe.Visibility != value)
+				{
+					this.headerStripe.Visibility = value;
+					this.UpdateGeometry ();
+				}
+			}
+		}
+
+		public bool								HScrollerVisibility
+		{
+			get
+			{
+				return this.hScroller.Visibility;
+			}
+			set
+			{
+				if (this.hScroller.Visibility != value)
+				{
+					this.hScroller.Visibility = value;
+					this.UpdateGeometry ();
+				}
+			}
+		}
+
+		public bool								VScrollerVisibility
+		{
+			get
+			{
+				return this.vScroller.Visibility;
+			}
+			set
+			{
+				if (this.vScroller.Visibility != value)
+				{
+					this.vScroller.Visibility = value;
+					this.UpdateGeometry ();
+				}
+			}
+		}
+
+		public bool								FrameVisibility
+		{
+			get
+			{
+				return (bool) this.GetValue (ItemTable.FrameVisibilityProperty);
+			}
+			set
+			{
+				this.SetValue (ItemTable.FrameVisibilityProperty, value);
 			}
 		}
 
@@ -169,16 +240,19 @@ namespace Epsitec.Common.UI
 
 			Widgets.IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			double x1 = 0;
-			double x2 = this.vScroller.ActualBounds.Left-1;
-			double y1 = this.hScroller.ActualBounds.Top;
-			double y2 = this.headerStripe.ActualBounds.Bottom-1;
+			if (this.FrameVisibility)
+			{
+				double x1 = 0;
+				double x2 = this.vScroller.Visibility ? this.vScroller.ActualBounds.Left-1 : this.Client.Bounds.Right-1;
+				double y1 = this.hScroller.Visibility ? this.hScroller.ActualBounds.Top : this.Client.Bounds.Bottom;
+				double y2 = this.headerStripe.Visibility ? this.headerStripe.ActualBounds.Bottom-1 : this.Client.Bounds.Top-1;
 
-			graphics.AddLine (x1+0.5, y1+0.5, x1+0.5, y2+0.5);  // trait vertical gauche
-			graphics.AddLine (x2+0.5, y1+0.5, x2+0.5, y2+0.5);  // trait vertical droite
-			graphics.AddLine (x1+0.5, y2+0.5, x2+0.5, y2+0.5);  // trait horizontal supérieur
-			graphics.AddLine (x1+0.5, y1+0.5, x2+0.5, y1+0.5);  // trait horizontal inférieur
-			graphics.RenderSolid (adorner.ColorBorder);
+				graphics.AddLine (x1+0.5, y1+0.5, x1+0.5, y2+0.5);  // trait vertical gauche
+				graphics.AddLine (x2+0.5, y1+0.5, x2+0.5, y2+0.5);  // trait vertical droite
+				graphics.AddLine (x1+0.5, y2+0.5, x2+0.5, y2+0.5);  // trait horizontal supérieur
+				graphics.AddLine (x1+0.5, y1+0.5, x2+0.5, y1+0.5);  // trait horizontal inférieur
+				graphics.RenderSolid (adorner.ColorBorder);
+			}
 		}
 		
 		private void UpdateAperture(Drawing.Size aperture)
@@ -354,6 +428,11 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		private void OnFrameVisibilityChanged(DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+		{
+ 			this.UpdateGeometry ();
+		}
+		
 		#region IListHost<ItemTableColumn> Members
 
 		HostedList<ItemTableColumn> IListHost<ItemTableColumn>.Items
@@ -393,8 +472,15 @@ namespace Epsitec.Common.UI
 		{
 			return (ItemTable) obj.GetValue (ItemTable.ItemTableProperty);
 		}
+
+		private static void NotifyFrameVisibilityChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			ItemTable that = o as ItemTable;
+			that.OnFrameVisibilityChanged (new DependencyPropertyChangedEventArgs (ItemTable.FrameVisibilityProperty, oldValue, newValue));
+		}
 		
 		public static readonly DependencyProperty ItemTableProperty = DependencyProperty.RegisterAttached ("ItemTable", typeof (ItemTable), typeof (ItemTable));
+		public static readonly DependencyProperty FrameVisibilityProperty = DependencyProperty.Register ("FrameVisibility", typeof (bool), typeof (ItemTable), new DependencyPropertyMetadata (true, ItemTable.NotifyFrameVisibilityChanged));
 
 		private VScroller vScroller;
 		private HScroller hScroller;
