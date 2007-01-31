@@ -176,7 +176,7 @@ namespace Epsitec.Common.Drawing
 			return sampleImage;
 		}
 
-		internal Opac.FreeImage.Image Thumbnail
+		public Opac.FreeImage.Image Thumbnail
 		{
 			get
 			{
@@ -192,7 +192,7 @@ namespace Epsitec.Common.Drawing
 					return this.thumbnail;
 				}
 			}
-			set
+			internal set
 			{
 				lock (this.exclusion)
 				{
@@ -218,7 +218,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		internal Opac.FreeImage.Image SampleImage
+		public Opac.FreeImage.Image SampleImage
 		{
 			get
 			{
@@ -234,7 +234,7 @@ namespace Epsitec.Common.Drawing
 					return this.sampleImage;
 				}
 			}
-			set
+			internal set
 			{
 				lock (this.exclusion)
 				{

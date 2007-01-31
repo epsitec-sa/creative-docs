@@ -240,6 +240,13 @@ namespace Epsitec.Common.UI
 
 			Widgets.IAdorner adorner = Widgets.Adorners.Factory.Active;
 
+			if (!this.BackColor.IsEmpty)
+			{
+				Drawing.Rectangle rect = Drawing.Rectangle.Intersection (clipRect, this.Client.Bounds);
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (this.BackColor);
+			}
+
 			if (this.FrameVisibility)
 			{
 				double x1 = 0;
@@ -309,6 +316,8 @@ namespace Epsitec.Common.UI
 				double minWidth  = 0;
 				double minHeight = 0;
 
+				int headerIndex = 0;
+
 				for (int i = 0; i < this.columns.Count; i++)
 				{
 					ItemTableColumn column = this.columns[i];
@@ -362,11 +371,12 @@ namespace Epsitec.Common.UI
 
 					double width = column.Width.IsAbsolute ? column.Width.Value : size.Width;
 
-					this.columnHeader.SetColumnWidth (i, width);
-					this.columnHeader.SetColumnComparer (i, column.Comparer);
+					this.columnHeader.SetColumnWidth (headerIndex, width);
+					this.columnHeader.SetColumnComparer (headerIndex, column.Comparer);
 
 					minWidth += width;
 					minHeight = System.Math.Max (minHeight, size.Height);
+					headerIndex += 1;
 				}
 
 				this.defaultItemSize = new Drawing.Size (minWidth, minHeight);

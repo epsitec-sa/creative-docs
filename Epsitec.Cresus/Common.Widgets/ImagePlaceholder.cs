@@ -34,6 +34,7 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.image = value;
+				this.Invalidate ();
 			}
 		}
 
@@ -47,7 +48,11 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				this.displayMode = value;
+				if (this.displayMode != value)
+				{
+					this.displayMode = value;
+					this.Invalidate ();
+				}
 			}
 		}
 
@@ -61,7 +66,11 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				this.paintFrame = value;
+				if (this.paintFrame != value)
+				{
+					this.paintFrame = value;
+					this.Invalidate ();
+				}
 			}
 		}
 

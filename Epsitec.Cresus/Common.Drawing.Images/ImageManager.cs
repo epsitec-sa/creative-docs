@@ -550,11 +550,14 @@ namespace Epsitec.Common.Drawing
 		{
 			if (Platform.Dispatcher.InvokeRequired)
 			{
-				ImageManager.callbackQueue.Queue (
-					delegate ()
-					{
-						Platform.Dispatcher.Invoke (callback);
-					});
+				if (ImageManager.callbackQueue != null)
+				{
+					ImageManager.callbackQueue.Queue (
+						delegate ()
+						{
+							Platform.Dispatcher.Invoke (callback);
+						});
+				}
 			}
 			else
 			{

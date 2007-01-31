@@ -42,7 +42,10 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			try
 			{
-				System.Windows.Forms.Application.SetUnhandledExceptionMode (System.Windows.Forms.UnhandledExceptionMode.ThrowException);
+				if (System.AppDomain.CurrentDomain.GetData ("System.Windows.Forms.Application.UnhandledExceptionMode") == null)
+				{
+					System.Windows.Forms.Application.SetUnhandledExceptionMode (System.Windows.Forms.UnhandledExceptionMode.ThrowException);
+				}
 			}
 			catch (System.InvalidOperationException)
 			{
