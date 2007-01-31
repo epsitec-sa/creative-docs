@@ -348,7 +348,7 @@ namespace Epsitec.Common.Types
 				view.VerifyRefreshNotDeferred ();
 
 				if ((position < -1) ||
-				(position > view.Count))
+					(position > view.Count))
 				{
 					throw new System.ArgumentOutOfRangeException ("position");
 				}
@@ -1148,6 +1148,8 @@ namespace Epsitec.Common.Types
 				bool   isCurrentBeforeFirst;
 				bool   isCurrentAfterLast;
 
+				MoveResult result = new MoveResult ();
+
 				//	From now on, the current item may not be modified by any other
 				//	thread until we are done with the sorting/grouping operation.
 
@@ -1226,11 +1228,11 @@ namespace Epsitec.Common.Types
 					if ((this.IsEmpty) ||
 						(isCurrentBeforeFirst))
 					{
-						this.SetCurrentToPosition (-1);
+						result = MoveResult.MoveCurrentToPosition (this, -1);
 					}
 					else if (isCurrentAfterLast)
 					{
-						this.SetCurrentToPosition (System.Int32.MaxValue);
+						result = MoveResult.MoveCurrentToPosition (this, System.Int32.MaxValue);
 					}
 					else if (currentItem != null)
 					{
@@ -1241,11 +1243,11 @@ namespace Epsitec.Common.Types
 							position = System.Math.Min (this.Count-1, currentPosition);
 						}
 
-						this.SetCurrentToPosition (position);
+						result = MoveResult.MoveCurrentToPosition (this, position);
 					}
 				}
 
-				this.OnCurrentChanged ();
+				result.RaiseEvents (this);
 
 				if (this.IsCurrentAfterLast != isCurrentAfterLast)
 				{
@@ -1293,7 +1295,7 @@ namespace Epsitec.Common.Types
 			lock (this.exclusion)
 			{
 				if ((position < 0) ||
-				(this.IsEmpty))
+					(this.IsEmpty))
 				{
 					this.currentPosition = -1;
 					this.currentItem     = null;
