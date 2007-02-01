@@ -90,7 +90,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetPath) $(SolutionDir)External"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)External&quot;"
 			/>
 		</Configuration>
 		<Configuration
