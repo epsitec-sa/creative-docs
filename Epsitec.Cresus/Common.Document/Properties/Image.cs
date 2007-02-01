@@ -469,7 +469,8 @@ namespace Epsitec.Common.Document.Properties
 			{
 				this.date = (System.DateTime) info.GetValue("Date", typeof(System.DateTime));
 			}
-			else
+			
+			if (this.date.Ticks == 0)
 			{
 				//	Met une date spéciale différente de System.DateTime.MinValue pour les anciens fichiers.
 				this.date = System.DateTime.MinValue.AddSeconds(1);
