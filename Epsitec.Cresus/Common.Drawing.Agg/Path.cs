@@ -430,6 +430,26 @@ namespace Epsitec.Common.Drawing
 			
 			return path;
 		}
+
+		public static Path CreateRoundedRectangle(Rectangle rect, double rx, double ry)
+		{
+			Drawing.Path path = new Drawing.Path();
+
+			double kx = rx * Path.Kappa;
+			double ky = ry * Path.Kappa;
+			
+			path.MoveTo (rect.Right-rx, rect.Bottom);
+			path.CurveTo (rect.Right-rx+kx, rect.Bottom, rect.Right, rect.Bottom+ry-ky, rect.Right, rect.Bottom+ry);
+			path.LineTo (rect.Right, rect.Top-ry);
+			path.CurveTo (rect.Right, rect.Top-ry+ky, rect.Right-rx+kx, rect.Top, rect.Right-rx, rect.Top);
+			path.LineTo (rect.Left+rx, rect.Top);
+			path.CurveTo (rect.Left+rx-kx, rect.Top, rect.Left, rect.Top-ry+ky, rect.Left, rect.Top-ry);
+			path.LineTo (rect.Left, rect.Bottom+ry);
+			path.CurveTo (rect.Left, rect.Bottom+ry-ky, rect.Left+ry-ky, rect.Bottom, rect.Left+ry, rect.Bottom);
+			path.Close ();
+			
+			return path;
+		}
 		
 		
 		public void ComputeBounds(out double x1, out double y1, out double x2, out double y2)
@@ -849,7 +869,7 @@ namespace Epsitec.Common.Drawing
 		{
 			return Path.FromRectangle (p.X, p.Y, s.Width, s.Height);
 		}
-		
+
 		public static Path FromCircle(double x, double y, double r)
 		{
 			Path path = new Path ();

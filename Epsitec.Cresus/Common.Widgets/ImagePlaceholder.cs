@@ -74,6 +74,39 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public Drawing.Rectangle GetImageClientBounds()
+		{
+			Drawing.Rectangle rect = this.Client.Bounds;
+
+			if (this.image != null)
+			{
+				double w = this.image.Width;
+				double h = this.image.Height;
+
+				if (this.displayMode == ImageDisplayMode.Stretch)
+				{
+					if (rect.Width/rect.Height < w/h)
+					{
+						double hh = rect.Height - rect.Width*h/w;
+						rect.Bottom += hh/2;
+						rect.Top    -= hh/2;
+					}
+					else
+					{
+						double ww = rect.Width - rect.Height*w/h;
+						rect.Left  += ww/2;
+						rect.Right -= ww/2;
+					}
+				}
+				else
+				{
+					rect = new Rectangle (rect.Center.X-w/2, rect.Center.Y-h/2, w, h);
+				}
+			}
+
+			return rect;
+		}
+
 		protected override void OnIconNameChanged(string oldIconName, string newIconName)
 		{
 			base.OnIconNameChanged (oldIconName, newIconName);

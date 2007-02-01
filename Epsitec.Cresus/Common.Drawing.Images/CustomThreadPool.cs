@@ -72,6 +72,7 @@ namespace Epsitec.Common.Drawing
 
 				thread = new System.Threading.Thread (this.ProcessingLoop);
 				thread.Priority = System.Threading.ThreadPriority.BelowNormal;
+				thread.Name = string.Format ("CustomThreadPool Thread #{0}", this.threads.Count);
 				this.threads.Add (thread);
 			}
 

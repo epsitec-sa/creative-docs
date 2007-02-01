@@ -19,6 +19,14 @@ namespace Epsitec.Common.Drawing
 			this.top    = top;
 			this.bottom = bottom;
 		}
+
+		public Margins(double margin)
+		{
+			this.left   = margin;
+			this.right  = margin;
+			this.top    = margin;
+			this.bottom = margin;
+		}
 		
 		
 		[XmlAttribute] public double			Left
