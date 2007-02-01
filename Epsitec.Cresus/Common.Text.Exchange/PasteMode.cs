@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Michael Walz
 
 namespace Epsitec.Common.Text.Exchange
