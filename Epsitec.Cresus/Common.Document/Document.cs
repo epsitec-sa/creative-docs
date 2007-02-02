@@ -1333,7 +1333,10 @@ namespace Epsitec.Common.Document
 				{
 					this.FontUpdate();
 					this.ImageFlushUnused();
-					this.imageCache.GenerateShortNames();
+					if (this.imageCache != null)
+					{
+						this.imageCache.GenerateShortNames ();
+					}
 					this.ImageUpdate();
 
 					byte[] data;
@@ -1350,7 +1353,10 @@ namespace Epsitec.Common.Document
 					zip.AddEntry("document.data", data, 0);
 					this.WriteMiniature(zip, 1, ext == DocumentFileExtension.CrMod);
 					this.WriteStatistics(zip, 2);
-					this.imageCache.WriteData(zip, this.imageIncludeMode);
+					if (this.imageCache != null)
+					{
+						this.imageCache.WriteData (zip, this.imageIncludeMode);
+					}
 					this.FontWriteAll(zip);
 					zip.CompressionLevel = 6;
 
@@ -1974,28 +1980,34 @@ namespace Epsitec.Common.Document
 		{
 			//	Verrouille les images de la page en cours, en déverrouillant
 			//	toutes les autres.
-			this.imageCache.UnlockAll ();
-			foreach (Properties.Image image in this.ImageSearchInPage (pageRank))
+			if (this.imageCache != null)
 			{
-				this.imageCache.Lock (image.FileName, image.FileDate);
+				this.imageCache.UnlockAll ();
+				foreach (Properties.Image image in this.ImageSearchInPage (pageRank))
+				{
+					this.imageCache.Lock (image.FileName, image.FileDate);
+				}
 			}
 		}
 
 		protected void ImageFlushUnused()
 		{
 			//	Supprime toutes les images inutilisées du cache des images.
-			this.imageCache.ResetUsedFlags ();
-			
-			foreach (Objects.Abstract obj in this.Deep(null))
+			if (this.imageCache != null)
 			{
-				Properties.Image propImage = obj.PropertyImage;
-				if (propImage != null)
-				{
-					this.imageCache.SetUsedFlag (propImage.FileName, propImage.FileDate);
-				}
-			}
+				this.imageCache.ResetUsedFlags ();
 
-			this.imageCache.FlushUnused();
+				foreach (Objects.Abstract obj in this.Deep (null))
+				{
+					Properties.Image propImage = obj.PropertyImage;
+					if (propImage != null)
+					{
+						this.imageCache.SetUsedFlag (propImage.FileName, propImage.FileDate);
+					}
+				}
+
+				this.imageCache.FlushUnused ();
+			}
 		}
 
 		protected void ImageUpdate()
@@ -2003,14 +2015,17 @@ namespace Epsitec.Common.Document
 			//	Met à jour les informations ShortName et InsideDoc.
 			//	ShortName est mis à jour dans les propriétés des objets Image du document.
 			//	InsideDoc est mis à jour dans le cache des images.
-			this.imageCache.ClearEmbeddedInDocument();
-
-			foreach (Objects.Abstract obj in this.Deep(null))
+			if (this.imageCache != null)
 			{
-				Properties.Image propImage = obj.PropertyImage;
-				if (propImage != null)
+				this.imageCache.ClearEmbeddedInDocument ();
+
+				foreach (Objects.Abstract obj in this.Deep (null))
 				{
-					this.imageCache.SyncImageProperty(propImage);
+					Properties.Image propImage = obj.PropertyImage;
+					if (propImage != null)
+					{
+						this.imageCache.SyncImageProperty (propImage);
+					}
 				}
 			}
 		}
@@ -2180,7 +2195,10 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
-			this.imageCache.SetResolution (ImageCacheResolution.High);
+			if (this.imageCache != null)
+			{
+				this.imageCache.SetResolution (ImageCacheResolution.High);
+			}
 			this.printer.Print(dp);
 		}
 
@@ -2190,7 +2208,10 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
-			this.imageCache.SetResolution (ImageCacheResolution.High);
+			if (this.imageCache != null)
+			{
+				this.imageCache.SetResolution (ImageCacheResolution.High);
+			}
 			return this.printer.Export(filename);
 		}
 
@@ -2200,7 +2221,10 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
-			this.imageCache.SetResolution (ImageCacheResolution.High);
+			if (this.imageCache != null)
+			{
+				this.imageCache.SetResolution (ImageCacheResolution.High);
+			}
 			return this.exportPDF.FileExport(filename);
 		}
 
