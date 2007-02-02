@@ -10,13 +10,15 @@ namespace Epsitec.Common.Drawing
 		#region Private constructors
 		Font(OpenType.FontIdentity fontIdentity)
 		{
-			this.open_type_font = Font.font_collection.CreateFont (fontIdentity);
+			this.open_type_FontIdentity = fontIdentity;
 		}
 		
 		Font(Font baseFont, string synthetic_style, SyntheticFontMode synthetic_mode)
 		{
-			this.open_type_font  = baseFont.open_type_font;
-		    this.synthetic_style = synthetic_style;
+			this.open_type_FontIdentity = baseFont.open_type_FontIdentity;
+			this.open_type_font = baseFont.OpenTypeFont;
+		    
+			this.synthetic_style = synthetic_style;
 		    this.synthetic_mode  = synthetic_mode;
 		}
 
@@ -75,7 +77,7 @@ namespace Epsitec.Common.Drawing
 					int    size   = data.Length;
 					int    offset = segment.Offset;
 
-					System.IntPtr osHandle = this.OpenTypeFont.FontIdentity.IsDynamicFont ? System.IntPtr.Zero : this.OpenTypeFont.GetFontHandleAtEmSize ();
+					System.IntPtr osHandle = this.open_type_FontIdentity.IsDynamicFont ? System.IntPtr.Zero : this.OpenTypeFont.GetFontHandleAtEmSize ();
 					
 					this.handle = AntiGrain.Font.CreateFaceHandle (data, size, offset, osHandle);
 				}
@@ -88,7 +90,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.OpenTypeFont.FontIdentity.InvariantFaceName;
+				return this.open_type_FontIdentity.InvariantFaceName;
 			}
 		}
 
@@ -104,7 +106,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.synthetic_style ?? this.OpenTypeFont.FontIdentity.InvariantStyleName;
+				return this.synthetic_style ?? this.open_type_FontIdentity.InvariantStyleName;
 			}
 		}
 		
@@ -146,7 +148,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.OpenTypeFont.FontIdentity.LocaleStyleName;
+				return this.open_type_FontIdentity.LocaleStyleName;
 			}
 		}
 		
@@ -156,7 +158,7 @@ namespace Epsitec.Common.Drawing
 			{
 				return "";
 				//	TODO: handle optical name
-//				return this.OpenTypeFont.FontIdentity.InvariantOpticalName;
+//				return this.open_type_FontIdentity.InvariantOpticalName;
 			}
 		}
 		
@@ -164,7 +166,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.OpenTypeFont.FontIdentity.UniqueFontId;
+				return this.open_type_FontIdentity.UniqueFontId;
 			}
 		}
 		
@@ -271,6 +273,18 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
+				if ((this.open_type_font == null) &&
+					(this.open_type_FontIdentity != null))
+				{
+					lock (this)
+					{
+						if (this.open_type_font == null)
+						{
+							this.open_type_font = Font.font_collection.CreateFont (this.open_type_FontIdentity);
+						}
+					}
+				}
+				
 				return this.open_type_font;
 			}
 		}
@@ -620,19 +634,12 @@ namespace Epsitec.Common.Drawing
 				{
 					Font font = new Font (fontIdentity);
 
-					if (font.OpenTypeFont != null)
-					{
-						string name = font.FullName;
+					string name = font.FullName;
 
-						System.Diagnostics.Debug.Assert (Font.font_hash.ContainsKey (name) == false);
+					System.Diagnostics.Debug.Assert (Font.font_hash.ContainsKey (name) == false);
 
-						Font.font_array.Add (font);
-						Font.font_hash[name] = font;
-					}
-					else
-					{
-						System.Diagnostics.Debug.WriteLine (string.Format ("{0} has no data", fontIdentity.FullName));
-					}
+					Font.font_array.Add (font);
+					Font.font_hash[name] = font;
 				}
 				
 				System.Diagnostics.Debug.WriteLine ("SetupFonts done");
@@ -885,6 +892,7 @@ namespace Epsitec.Common.Drawing
 		System.Collections.Hashtable			os_font_cache;
 #endif
 		FontFaceInfo							face_info;
+		OpenType.FontIdentity					open_type_FontIdentity;
 		OpenType.Font							open_type_font;
 		
 		static OpenType.FontCollection			font_collection;
