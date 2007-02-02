@@ -68,7 +68,7 @@
   <data id="022">© 2002-2007 OPaC &lt;i&gt;bright ideas&lt;/i&gt;, EPSITEC SA, P.Arnaud &amp;amp; D.Roux</data>
   <data id="032">Demo</data>
   <data id="042">Expired</data>
-  <data id="052" about="Evaluation">Be Creative!</data>
+  <data id="052" about="Evaluation"></data>
   <data id="062">Check for Updates</data>
   <data id="072">Your application is up-to-date.</data>
   <data id="082">A new version is currently available:</data>
