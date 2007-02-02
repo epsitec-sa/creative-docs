@@ -159,7 +159,10 @@ namespace Epsitec.Common.Document.PDF
 			foreach ( System.Collections.DictionaryEntry dict in fonts )
 			{
 				FontList fl = dict.Key as FontList;
-				if ( fl.drawingFont == drawingFont )  return fl;
+				if (fl.drawingFont.OpenTypeFont == drawingFont.OpenTypeFont)
+				{
+					return fl;
+				}
 			}
 			return null;
 		}

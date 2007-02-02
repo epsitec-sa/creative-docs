@@ -919,14 +919,18 @@ namespace Epsitec.Common.Document
 			this.uniqueParagraphStyleId = doc.uniqueParagraphStyleId;
 			this.uniqueCharacterStyleId = doc.uniqueCharacterStyleId;
 
-			if (this.imageCache != null)
+			if ((this.imageCache != null) &&
+				(doc.imageCache != null))
 			{
 				this.imageCache.Document = null;	//	évite de vider le cache global qui vient d'être rempli
 				this.imageCache.Dispose ();
 				this.imageCache = null;
 			}
 
-			this.imageCache = doc.imageCache;
+			if (doc.imageCache != null)
+			{
+				this.imageCache = doc.imageCache;
+			}
 
 			if (this.imageCache != null)
 			{

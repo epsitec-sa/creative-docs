@@ -9,6 +9,9 @@ namespace Epsitec.Common.Document.PDF
 	/// </summary>
 	public class CharacterList
 	{
+		//	TODO: résoudre le cas où Drawing.Font est synthétique (IsSynthetic = true) -- pour réaliser des
+		//	obliques par exemple ("Tahoma Oblique" n'existe pas et est construit artificiellement).
+		
 		public CharacterList(TextLayout.OneCharStructure oneChar)
 		{
 			this.unicode      = oneChar.Character;
