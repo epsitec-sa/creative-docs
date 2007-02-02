@@ -11,6 +11,11 @@ namespace Epsitec.Common.Drawing
 		{
 		}
 
+		public void DefineMemoryLimit(long limit)
+		{
+			this.memoryLimit = limit;
+		}
+
 		public void QueueWorkItem(Callback callback)
 		{
 			int countThreads = 0;
@@ -206,7 +211,7 @@ namespace Epsitec.Common.Drawing
 
 		private bool UsesToMuchMemory()
 		{
-			if (System.Diagnostics.Process.GetCurrentProcess ().VirtualMemorySize64 > 1000*1024*1024L)
+			if (System.Diagnostics.Process.GetCurrentProcess ().VirtualMemorySize64 > this.memoryLimit)
 			{
 				return true;
 			}
@@ -216,6 +221,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+		private long memoryLimit = 200*1024*1024L;
 		private int lifeTimeout = 20*1000;
 		private int busyThreadCount;
 		private bool exitRequested;

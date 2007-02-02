@@ -26,6 +26,8 @@ namespace Epsitec.Common.Drawing
 			this.RegisterProtocol ("file", Protocols.FileProtocol.ReadBytes);
 			this.RegisterProtocol ("http", Protocols.HttpProtocol.ReadBytes);
 			this.RegisterProtocol ("ftp", Protocols.FtpProtocol.ReadBytes);
+
+			this.MemoryLimit = 100 * 1024*1024L;
 		}
 
 		public bool HasPendingWork
@@ -72,6 +74,22 @@ namespace Epsitec.Common.Drawing
 				System.Diagnostics.Debug.Assert (this.imageList.Count == this.images.Count);
 
 				return this.imageList.Count;
+			}
+		}
+
+		public long MemoryLimit
+		{
+			get
+			{
+				return this.memoryPressureThreshold;
+			}
+			set
+			{
+				value = System.Math.Min (value, 500 * 1024*1024L);
+				value = System.Math.Max (value,  10 * 1024*1024L);
+
+				this.memoryPressureThreshold = (int) value;
+				this.threadPool.DefineMemoryLimit (value * 2);
 			}
 		}
 
@@ -652,7 +670,7 @@ namespace Epsitec.Common.Drawing
 		private long totalMemoryPressure;
 		private int localMemoryPressure;
 
-		private int memoryPressureThreshold = 100 * 1024 * 1024;
+		private int memoryPressureThreshold;
 		private int thumbnailSize = 128;
 		private int sampleImageSize = 512;
 
