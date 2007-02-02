@@ -19,8 +19,7 @@ namespace Epsitec.Common.OpenType
 		{
 			this.Initialize (identity);
 		}
-		
-		
+
 		public FontManagerType					FontManagerType
 		{
 			get

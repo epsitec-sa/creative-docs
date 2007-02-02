@@ -348,12 +348,22 @@ namespace Epsitec.Common.Text
 			
 			return null;
 		}
-		
+
+
+		public static void PostponeFullFontCollectionInitialization()
+		{
+			OpenType.FontCollection.FontListFilter =
+				delegate (string family)
+				{
+					return family == Drawing.Font.DefaultFontFamily;
+				};
+		}
 		
 		public static void InitializeFontCollection(OpenType.FontIdentityCallback callback)
 		{
 			if (TextContext.font_collection == null)
 			{
+				OpenType.FontCollection.FontListFilter = null;
 				TextContext.font_collection = OpenType.FontCollection.Default;
 				TextContext.font_collection.RefreshCache (callback);
 				TextContext.font_cache = new Dictionary<string, OpenType.Font> ();

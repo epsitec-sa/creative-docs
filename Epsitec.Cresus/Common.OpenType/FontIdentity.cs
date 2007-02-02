@@ -295,7 +295,7 @@ namespace Epsitec.Common.OpenType
 						{
 							Table_cmap cmap = this.InternalGetTable_cmap ();
 
-							this.isSymbolFont         = cmap.FindFormatSubTable (3, 0, 4) != null;
+							this.isSymbolFont        = cmap.FindFormatSubTable (3, 0, 4) != null;
 							this.isSymbolFontDefined = true;
 						}
 					}
@@ -402,6 +402,11 @@ namespace Epsitec.Common.OpenType
 			return new Table_cmap (this.FontData["cmap"]);
 		}
 
+		public void InternalClearFontData()
+		{
+			this.fontData = null;
+		}
+
 		public Platform.IFontHandle GetPlatformFontHandle(int size)
 		{
 			FontSizeInfo info = this.GetSizeInfo (size);
@@ -424,7 +429,7 @@ namespace Epsitec.Common.OpenType
 			buffer.Append ('\0');
 			buffer.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "{0}", fid.ttcIndex);
 			buffer.Append ('\0');
-			buffer.Append (fid.isSymbolFont ? "S" : "s");
+			buffer.Append (fid.IsSymbolFont ? "S" : "s");
 
 			byte[] data_0 = new byte[10];
 			byte[] data_1 = System.Text.Encoding.UTF8.GetBytes (buffer.ToString ());
@@ -516,7 +521,7 @@ namespace Epsitec.Common.OpenType
 			fid.blob1            = data_3;
 			fid.blob2            = data_4;
 
-			fid.isSymbolFont         = flags.IndexOf ("S") != -1;
+			fid.isSymbolFont        = flags.IndexOf ("S") != -1;
 			fid.isSymbolFontDefined = flags.IndexOfAny (new char[] { 's', 'S' }) != -1;
 
 			return fid;

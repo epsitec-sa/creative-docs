@@ -121,6 +121,20 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the filter used when listing the system fonts.
+		/// </summary>
+		public static System.Predicate<string>	FontListFilter
+		{
+			get
+			{
+				return FontCollection.fontListFilter;
+			}
+			set
+			{
+				FontCollection.fontListFilter = value;
+			}
+		}
 
 		/// <summary>
 		/// Initializes this font collection object. If font identities have
@@ -131,7 +145,7 @@ namespace Epsitec.Common.OpenType
 		{
 			lock (this.localExclusion)
 			{
-				return this.LockedInitialize ();
+				return this.LockedInitialize (null);
 			}
 		}
 
@@ -155,7 +169,7 @@ namespace Epsitec.Common.OpenType
 			{
 				this.LockedLoadFromCache ();
 
-				if (this.LockedInitialize ())
+				if (this.LockedInitialize (callback))
 				{
 					return this.LockedSaveToCache (callback);
 				}
@@ -449,21 +463,30 @@ namespace Epsitec.Common.OpenType
 
 		#endregion
 
-		private bool LockedInitialize()
+		private bool LockedInitialize(FontIdentityCallback callback)
 		{
 			this.changes = 0;
 
 			Dictionary<string, FontIdentity> delete = new Dictionary<string, FontIdentity> ();
-			
-			foreach (FontIdentity fid in this.fullList)
+
+			if (FontCollection.fontListFilter == null)
 			{
-				delete[fid.InternalFontName] = fid;
+				foreach (FontIdentity fid in this.fullList)
+				{
+					delete[fid.InternalFontName] = fid;
+				}
 			}
 			
 			this.families = Platform.Neutral.GetFontFamilies ();
 			
 			foreach (string family in this.families)
 			{
+				if ((FontCollection.fontListFilter != null) &&
+					(FontCollection.fontListFilter (family) == false))
+				{
+					continue;
+				}
+				
 				string[] styles = Platform.Neutral.GetFontStyles (family);
 
 				if (styles.Length == 0)
@@ -522,7 +545,7 @@ namespace Epsitec.Common.OpenType
 									fid_n.DefineTableName (name_t, name_t_length);
 									fid_n.DefineSystemFontFamilyAndStyle (fid_n.InvariantFaceName, fid_n.InvariantStyleName);
 
-									this.Add (fullName, fuidName, fid_n);
+									this.Add (fullName, fuidName, fid_n, callback);
 								}
 							}
 							else
@@ -546,8 +569,8 @@ namespace Epsitec.Common.OpenType
 							FontIdentity fid = new FontIdentity (name_t, dataName.Length, record);
 							
 							fid.DefineSystemFontFamilyAndStyle (family, style);
-							
-							this.Add (fullName, fuidName, fid);
+
+							this.Add (fullName, fuidName, fid, callback);
 						}
 					}
 				}
@@ -692,9 +715,24 @@ namespace Epsitec.Common.OpenType
 				this.fullDict[fullName] = fid;
 				this.fuidDict[fuidName] = fid;
 				this.changes++;
+
+				if (this.FontIdentityDefined != null)
+				{
+					this.FontIdentityDefined (fid);
+				}
 			}
 		}
-		
+
+		private void Add(string fullName, string fuidName, FontIdentity fid, FontIdentityCallback callback)
+		{
+			this.Add (fullName, fuidName, fid);
+
+			if (callback != null)
+			{
+				callback (fid);
+			}
+		}
+
 		private void Remove(FontIdentity fid)
 		{
 			this.fontDict.Remove (fid.InternalFontName);
@@ -744,11 +782,14 @@ namespace Epsitec.Common.OpenType
 		{
 			return string.Concat (family, "/", style);
 		}
+
+		public event FontIdentityCallback		FontIdentityDefined;
 		
 		
 		private static object					globalExclusion = new object ();
 		private static bool						loadTtc = true;
 		private static FontCollection			defaultCollection;
+		private static System.Predicate<string>	fontListFilter;
 		
 		private static string CacheFolderName	= "Epsitec Cache";
 		private static string CacheFileName		= "OpenType.FontCollection.2.0.data";

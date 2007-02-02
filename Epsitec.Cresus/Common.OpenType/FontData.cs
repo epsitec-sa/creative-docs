@@ -38,8 +38,7 @@ namespace Epsitec.Common.OpenType
 				this.Initialize (new TableDirectory (data, 0));
 			}
 		}
-		
-		
+
 		public TableEntry						this[string name]
 		{
 			get

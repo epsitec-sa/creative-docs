@@ -288,7 +288,14 @@ namespace Epsitec.Common.Drawing
 				return this.open_type_font;
 			}
 		}
-		
+
+		public bool								IsOpenTypeFontLoaded
+		{
+			get
+			{
+				return this.open_type_font != null;
+			}
+		}
 		
 		public ushort GetGlyphIndex(int unicode)
 		{
@@ -540,9 +547,17 @@ namespace Epsitec.Common.Drawing
 				glyphCharCount[i] = (byte) (glyphMap[i] + 1);
 			}
 		}
-		
-		
-		
+
+
+		public void ClearOpenTypeFont()
+		{
+			if (this.open_type_FontIdentity != null)
+			{
+				this.open_type_FontIdentity.InternalClearFontData ();
+				this.open_type_font = null;
+				this.DisposeFaceHandle ();
+			}
+		}
 		
 		public void FillPixelCache(string text, double size, double ox, double oy)
 		{
@@ -574,30 +589,7 @@ namespace Epsitec.Common.Drawing
 
 		public static void RegisterDynamicFont(byte[] data)
 		{
-			OpenType.FontIdentity fid = Font.font_collection.RegisterDynamicFont (data);
-			
-			if (fid != null)
-			{
-				Font font = new Font (fid);
-				string name = font.FullName;
-				string face = font.FaceName;
-
-				System.Diagnostics.Debug.Assert (Font.font_hash.ContainsKey (name) == false);
-				
-				Font.font_array.Add (font);
-				Font.font_hash[name] = font;
-				
-				FontFaceInfo info;
-
-				if (Font.face_hash.TryGetValue (face, out info) == false)
-				{
-					info = new FontFaceInfo (face);
-					Font.face_hash[face] = info;
-					Font.face_array.Add (info);
-				}
-
-				info.Add (font);
-			}
+			Font.font_collection.RegisterDynamicFont (data);
 		}
 		
 		private void Dispose(bool disposing)
@@ -605,7 +597,12 @@ namespace Epsitec.Common.Drawing
 			if (disposing)
 			{
 			}
-			
+
+			this.DisposeFaceHandle ();
+		}
+
+		private void DisposeFaceHandle()
+		{
 			if (this.handle != System.IntPtr.Zero)
 			{
 				AntiGrain.Font.DisposeFaceHandle (this.handle);
@@ -632,14 +629,7 @@ namespace Epsitec.Common.Drawing
 				
 				foreach (OpenType.FontIdentity fontIdentity in Font.font_collection)
 				{
-					Font font = new Font (fontIdentity);
-
-					string name = font.FullName;
-
-					System.Diagnostics.Debug.Assert (Font.font_hash.ContainsKey (name) == false);
-
-					Font.font_array.Add (font);
-					Font.font_hash[name] = font;
+					Font.AddFont (fontIdentity);
 				}
 				
 				System.Diagnostics.Debug.WriteLine ("SetupFonts done");
@@ -652,18 +642,7 @@ namespace Epsitec.Common.Drawing
 				
 				foreach (Font font in Font.font_array)
 				{
-					string face = font.FaceName;
-
-					FontFaceInfo info;
-
-					if (Font.face_hash.TryGetValue (face, out info) == false)
-					{
-						info = new FontFaceInfo (face);
-						Font.face_hash[face] = info;
-						Font.face_array.Add (info);
-					}
-
-					info.Add (font);
+					Font.AddFontFace (font);
 				}
 			}
 
@@ -671,9 +650,45 @@ namespace Epsitec.Common.Drawing
 			{
 				Font.font_collection.SaveToCache ();
 			}
+
+			Font.font_collection.FontIdentityDefined += Font.HandleFontCollectionFontIdentityDefined;
 		}
-		
-		
+
+		private static void HandleFontCollectionFontIdentityDefined(OpenType.FontIdentity fontIdentity)
+		{
+			Font.AddFontFace (Font.AddFont (fontIdentity));
+		}
+
+		private static Font AddFont(OpenType.FontIdentity fontIdentity)
+		{
+			Font font = new Font (fontIdentity);
+
+			string name = font.FullName;
+
+			System.Diagnostics.Debug.Assert (Font.font_hash.ContainsKey (name) == false);
+
+			Font.font_array.Add (font);
+			Font.font_hash[name] = font;
+
+			return font;
+		}
+
+		private static void AddFontFace(Font font)
+		{
+			string face = font.FaceName;
+
+			FontFaceInfo info;
+
+			if (Font.face_hash.TryGetValue (face, out info) == false)
+			{
+				info = new FontFaceInfo (face);
+				Font.face_hash[face] = info;
+				Font.face_array.Add (info);
+			}
+
+			info.Add (font);
+		}
+
 		public static int						Count
 		{
 			get
@@ -688,10 +703,18 @@ namespace Epsitec.Common.Drawing
 			{
 				if (Font.default_font == null)
 				{
-					Font.default_font = Font.GetFont ("Tahoma", "Regular");
+					Font.default_font = Font.GetFont (Font.DefaultFontFamily, "Regular");
 				}
 				
 				return Font.default_font;
+			}
+		}
+
+		public static string					DefaultFontFamily
+		{
+			get
+			{
+				return "Tahoma";
 			}
 		}
 		

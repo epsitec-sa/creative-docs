@@ -74,13 +74,25 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		private static void HandleFontIdentitySerializing(OpenType.FontIdentity fid)
 		{
-			if (fid.AssociatedBlob1.Length == 0)
+			Drawing.Font font = Drawing.Font.GetFont (fid);
+
+			if (font != null)
 			{
-				FontPreviewer.RefreshBlob1 (fid);
-			}
-			if (fid.AssociatedBlob2.Length == 0)
-			{
-				FontPreviewer.RefreshBlob2 (fid);
+				bool loaded = font.IsOpenTypeFontLoaded;
+
+				if (fid.AssociatedBlob1.Length == 0)
+				{
+					FontPreviewer.RefreshBlob1 (fid);
+				}
+				if (fid.AssociatedBlob2.Length == 0)
+				{
+					FontPreviewer.RefreshBlob2 (fid);
+				}
+
+				if (!loaded)
+				{
+					font.ClearOpenTypeFont ();
+				}
 			}
 		}
 		
