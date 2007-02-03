@@ -8,6 +8,6 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyProduct("Creative Docs .NET")]
 [assembly: AssemblyCopyright("Copyright © 2002-2006, OPaC bright ideas, CH-1400 Yverdon-les-Bains, Switzerland")]
 [assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]		
+[assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("2.0.9.0")]
+[assembly: AssemblyVersion ("2.0.10.0")]

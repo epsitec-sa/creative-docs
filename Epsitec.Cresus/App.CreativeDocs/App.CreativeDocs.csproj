@@ -97,6 +97,7 @@
     <None Include="App.ico" />
     <None Include="App.res" />
     <None Include="App.rc" />
+    <Content Include="Original Samples\objects.crdoc" />
     <Content Include="Resources\App.DocumentEditor\Captions.00.resource" />
     <Content Include="Resources\App.DocumentEditor\Captions.en.resource" />
     <Content Include="Resources\App.DocumentEditor\module.info" />
@@ -141,7 +142,6 @@
     <Content Include="Original Samples\illusion2.crdoc" />
     <Content Include="Original Samples\meca1.crdoc" />
     <Content Include="Original Samples\motor.crdoc" />
-    <Content Include="Original Samples\objets.crdoc" />
     <Content Include="Original Samples\perpective1.crdoc" />
     <Content Include="Original Samples\perpective2.crdoc" />
     <Content Include="Original Samples\smilies.crdoc" />

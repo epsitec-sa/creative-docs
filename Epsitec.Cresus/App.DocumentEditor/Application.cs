@@ -12,6 +12,10 @@ namespace Epsitec.App.DocumentEditor
 	{
 		public static void Start(string mode)
 		{
+			//	Evite de créer la liste des fontes complète maintenant si elle n'existe
+			//	pas, puisque l'on veut tout d'abord être capable d'afficher le splash:
+			Epsitec.Common.Text.TextContext.PostponeFullFontCollectionInitialization ();
+
 			Widget.Initialize ();
 			Application.mode = mode.Substring (0, 1);
 			

@@ -8,6 +8,6 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyProduct("Crésus Documents")]
 [assembly: AssemblyCopyright("Copyright © 2002-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
 [assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]		
+[assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("2.0.9.0")]
+[assembly: AssemblyVersion ("2.0.10.0")]
