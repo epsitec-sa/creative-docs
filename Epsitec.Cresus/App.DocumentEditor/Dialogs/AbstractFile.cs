@@ -1495,7 +1495,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			rect.Left -= 3;												// aligne par rapport au contenu de la ligne éditable
 			rect.Width += 32;											// place pour les boutons "v" et "x"
 
-			Rectangle box = this.table2.MapClientToRoot(this.table2.PanelActualBounds);
+			Rectangle box = this.table2.Client.Bounds;
+			box.Deflate (this.table2.GetPanelPadding ());
+			box = this.table2.MapClientToRoot (box);
 			if (!box.Contains(rect))
 			{
 				return;

@@ -566,6 +566,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//		B/1/b	(deep = 2)
 			//		B/2		(deep = 1)
 			//		C		(deep = 0)
+
+			if (this == that)
+			{
+				return 0;
+			}
+
 			if (this.sortAccordingToLevel)
 			{
 				List<FileListItem> path1 = this.GetAncestorList ();
@@ -617,10 +623,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected int BaseCompareTo(FileListItem that)
 		{
 			//	Comparaison simple, sans tenir compte du niveau.
+			
+			if (this == that)
+			{
+				return 0;
+			}
 
 			if (this.isSynthetic || that.isSynthetic)
 			{
-				return this.isSynthetic ? -1 : 1;  // 'nouveau document vide' au début
+				if (this.isSynthetic == that.isSynthetic)
+				{
+					return string.Compare (this.ShortFileName, that.ShortFileName);
+				}
+				else
+				{
+					return this.isSynthetic ? -1 : 1;  // 'nouveau document vide' au début
+				}
 			}
 
 			if (this.IsDrive != that.IsDrive)

@@ -186,14 +186,6 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public Drawing.Rectangle				PanelActualBounds
-		{
-			get
-			{
-				return this.surface.ActualBounds;
-			}
-		}
-
 		public Collections.ItemTableColumnCollection Columns
 		{
 			get
@@ -260,6 +252,11 @@ namespace Epsitec.Common.UI
 				graphics.AddLine (x1+0.5, y1+0.5, x2+0.5, y1+0.5);  // trait horizontal inférieur
 				graphics.RenderSolid (adorner.ColorBorder);
 			}
+		}
+
+		public Drawing.Margins GetPanelPadding()
+		{
+			return this.surface.Margins;
 		}
 		
 		private void UpdateAperture(Drawing.Size aperture)
