@@ -15,12 +15,28 @@ namespace Epsitec.Common.Drawing
 		
 		internal void Add(Font font)
 		{
-			System.Diagnostics.Debug.Assert (this.fonts.Contains (font) == false);
 			System.Diagnostics.Debug.Assert (font.FaceName == this.name);
-			System.Diagnostics.Debug.Assert (font.FaceInfo == null);
 
-			this.fonts.Add (font);
-			font.DefineFaceInfo (this);
+			if (this.fonts.Contains (font))
+			{
+				System.Diagnostics.Debug.Assert (font.FaceInfo == this);
+			}
+			else
+			{
+				System.Diagnostics.Debug.Assert (font.FaceInfo == null);
+
+				foreach (Font item in this.fonts)
+				{
+					if (item.StyleName == font.StyleName)
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("Duplicate font, FaceName={0}, StyleName={1}", font.FaceName, font.StyleName), "Epsitec.Common.Drawing.FontFaceInfo");
+						break;
+					}
+				}
+
+				this.fonts.Add (font);
+				font.DefineFaceInfo (this);
+			}
 		}
 
 

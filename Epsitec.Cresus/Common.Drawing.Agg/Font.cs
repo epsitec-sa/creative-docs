@@ -40,7 +40,7 @@ namespace Epsitec.Common.Drawing
 			System.IntPtr result = Font.LoadLibrary ("AntiGrain.Win32.dll");
 			System.Diagnostics.Debug.Assert (result != System.IntPtr.Zero);
 			
-			System.Diagnostics.Debug.WriteLine ("AntiGrain.Win32.dll loaded successfully");
+			System.Diagnostics.Debug.WriteLine ("AntiGrain.Win32.dll loaded successfully", "Epsitec.Common.Drawing.Font");
 
 			Agg.Library.Initialize ();
 
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Drawing
 
 					if (segment.Offset > 0)
 					{
-						System.Diagnostics.Debug.WriteLine ("Requested Font.Handle for TTC font " + this.FullName);
+						System.Diagnostics.Debug.WriteLine ("Requested Font.Handle for TTC font " + this.FullName, "Epsitec.Common.Drawing.Font");
 					}
 					
 					byte[] data   = segment.Array;
@@ -617,7 +617,7 @@ namespace Epsitec.Common.Drawing
 			
 			if (Font.font_array == null)
 			{
-				System.Diagnostics.Debug.WriteLine ("SetupFonts called");
+				System.Diagnostics.Debug.WriteLine ("SetupFonts called", "Epsitec.Common.Drawing.Font");
 
 				Font.font_collection = OpenType.FontCollection.Default;
 				Font.font_collection.LoadFromCache ();
@@ -631,8 +631,8 @@ namespace Epsitec.Common.Drawing
 				{
 					Font.AddFont (fontIdentity);
 				}
-				
-				System.Diagnostics.Debug.WriteLine ("SetupFonts done");
+
+				System.Diagnostics.Debug.WriteLine ("SetupFonts done", "Epsitec.Common.Drawing.Font");
 			}
 			
 			if (Font.face_array == null)
@@ -665,28 +665,37 @@ namespace Epsitec.Common.Drawing
 
 			string name = font.FullName;
 
-			System.Diagnostics.Debug.Assert (Font.font_hash.ContainsKey (name) == false);
+			if (Font.font_hash.ContainsKey (name))
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("AddFont, font already known, name={0}", name), "Epsitec.Common.Drawing.Font");
+				return Font.font_hash[name];
+			}
+			else
+			{
+				Font.font_array.Add (font);
+				Font.font_hash[name] = font;
 
-			Font.font_array.Add (font);
-			Font.font_hash[name] = font;
-
-			return font;
+				return font;
+			}
 		}
 
 		private static void AddFontFace(Font font)
 		{
-			string face = font.FaceName;
-
-			FontFaceInfo info;
-
-			if (Font.face_hash.TryGetValue (face, out info) == false)
+			if (font != null)
 			{
-				info = new FontFaceInfo (face);
-				Font.face_hash[face] = info;
-				Font.face_array.Add (info);
-			}
+				string face = font.FaceName;
 
-			info.Add (font);
+				FontFaceInfo info;
+
+				if (Font.face_hash.TryGetValue (face, out info) == false)
+				{
+					info = new FontFaceInfo (face);
+					Font.face_hash[face] = info;
+					Font.face_array.Add (info);
+				}
+
+				info.Add (font);
+			}
 		}
 
 		public static int						Count

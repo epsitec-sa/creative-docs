@@ -4724,6 +4724,18 @@ noText:
 				}
 			}
 
+			if (index < array.Length)
+			{
+				OneCharStructure[] temp = new OneCharStructure[index];
+				
+				for (int i=0; i<index; i++)
+				{
+					temp[i] = array[i];
+				}
+				
+				array = temp;
+			}
+
 			return array;
 		}
 
