@@ -54,7 +54,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
 			{
-				drawingContext.ConstrainFlush();
+				drawingContext.ConstrainClear();
 				Handle handle = this.Handle(rank);
 
 				if ( this.TotalMainHandle == 2 )
@@ -139,7 +139,7 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(r).InitialPosition = this.Handle(r).Position;
 			this.Handle(n).InitialPosition = this.Handle(n).Position;
 
-			drawingContext.ConstrainFlush();
+			drawingContext.ConstrainClear();
 			drawingContext.ConstrainAddHV(ss.Position);
 			Point p1 = this.Handle(r).Position;
 			Point p2 = this.Handle(n).Position;
@@ -430,7 +430,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.TotalHandle == 0 )
 			{
-				drawingContext.ConstrainFlush();
+				drawingContext.ConstrainClear();
 				drawingContext.ConstrainAddHV(pos);
 				this.ChangePropertyPolyClose(false);
 				this.HandleAdd(pos, HandleType.Starting);
@@ -502,7 +502,7 @@ namespace Epsitec.Common.Document.Objects
 			int rank = this.TotalHandle-1;
 			this.Handle(rank).Position = pos;
 			drawingContext.ConstrainDelStarting();
-			drawingContext.ConstrainFlush();
+			drawingContext.ConstrainClear();
 			drawingContext.ConstrainAddHV(pos);
 			drawingContext.MagnetClearStarting();
 			this.mouseDown = false;

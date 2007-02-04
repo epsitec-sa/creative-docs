@@ -278,7 +278,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		public override void Rebuild()
 		{
 			//	Reconstruit le dialogue.
-			if ( !this.editor.IsCurrentDocument )  return;
+			if ( !this.editor.HasCurrentDocument )  return;
 			if ( this.window == null )  return;
 			this.editor.CurrentDocument.Dialogs.BuildGlyphs(this.window);
 		}
@@ -519,7 +519,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void EditInsert()
 		{
 			//	Insère le glyphe selon l'onglet actif dans le texte en édition.
-			if ( !this.editor.IsCurrentDocument )  return;
+			if ( !this.editor.HasCurrentDocument )  return;
 
 			if ( this.book.ActivePage.Name == "List" )
 			{
@@ -664,7 +664,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			System.Collections.ArrayList quickFonts = new System.Collections.ArrayList();
 			double height = 30;
 			bool abc = false;
-			if ( this.editor.IsCurrentDocument )
+			if ( this.editor.HasCurrentDocument )
 			{
 				quickOnly  = this.editor.CurrentDocument.Modifier.ActiveViewer.DrawingContext.TextFontFilter;
 				quickFonts = this.editor.CurrentDocument.Settings.QuickFonts;
@@ -690,7 +690,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleCurrentFontClicked(object sender, MessageEventArgs e)
 		{
 			//	Bouton "<-" cliqué.
-			if ( !this.editor.IsCurrentDocument )  return;
+			if ( !this.editor.HasCurrentDocument )  return;
 
 			string fontFace, fontStyle;
 			this.editor.CurrentDocument.Modifier.EditGetFont(out fontFace, out fontStyle);

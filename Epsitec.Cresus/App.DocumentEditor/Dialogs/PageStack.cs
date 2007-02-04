@@ -3,6 +3,8 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Document;
 
+using System.Collections.Generic;
+
 namespace Epsitec.App.DocumentEditor.Dialogs
 {
 	using GlobalSettings = Common.Document.Settings.GlobalSettings;
@@ -165,7 +167,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		public override void Rebuild()
 		{
 			//	Reconstruit le dialogue.
-			if ( !this.editor.IsCurrentDocument )  return;
+			if ( !this.editor.HasCurrentDocument )  return;
 			if ( this.window == null )  return;
 			this.UpdateTable();
 		}
@@ -182,8 +184,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void UpdateTable()
 		{
 			//	Met à jour le contenu de la table.
-			System.Collections.ArrayList infos;
-			if ( this.editor.IsCurrentDocument )
+			List<Modifier.PageStackInfos> infos;
+			if ( this.editor.HasCurrentDocument )
 			{
 				Document doc = this.editor.CurrentDocument;
 				DrawingContext context = doc.Modifier.ActiveViewer.DrawingContext;
@@ -193,7 +195,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			else
 			{
-				infos = new System.Collections.ArrayList();
+				infos = new List<Modifier.PageStackInfos> ();
 			}
 
 			int rows = infos.Count;
@@ -240,7 +242,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.table.SelectRow(i, !info.Master);
 			}
 
-			if ( this.editor.IsCurrentDocument )
+			if ( this.editor.HasCurrentDocument )
 			{
 				Document doc = this.editor.CurrentDocument;
 				DrawingContext context = doc.Modifier.ActiveViewer.DrawingContext;

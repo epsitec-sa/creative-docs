@@ -392,7 +392,7 @@ namespace Epsitec.Common.Document
 			//	Les unités pour le rectangle sont internes.
 			if ( !this.enable )  return;
 			if ( rect.IsEmpty )  return;
-			foreach ( Viewer viewer in this.document.Modifier.AttachViewers )
+			foreach ( Viewer viewer in this.document.Modifier.Viewers )
 			{
 				this.NotifyArea(viewer, rect);
 			}
@@ -647,7 +647,7 @@ namespace Epsitec.Common.Document
 				this.selNamesChanged = false;
 			}
 
-			foreach ( Viewer viewer in this.document.Modifier.AttachViewers )
+			foreach ( Viewer viewer in this.document.Modifier.Viewers )
 			{
 				if ( !viewer.RedrawArea.IsEmpty )
 				{

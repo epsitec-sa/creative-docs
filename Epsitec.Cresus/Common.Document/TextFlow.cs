@@ -322,10 +322,9 @@ namespace Epsitec.Common.Document
 		public void NotifyAreaFlow()
 		{
 			//	Notifie "à repeindre" toute la chaîne des pavés.
-			System.Collections.ArrayList viewers = this.document.Modifier.AttachViewers;
 			UndoableList chain = this.Chain;
 
-			foreach ( Viewer viewer in viewers )
+			foreach ( Viewer viewer in this.document.Modifier.Viewers )
 			{
 				int currentPage = viewer.DrawingContext.CurrentPage;
 				foreach ( Objects.AbstractText obj in chain )

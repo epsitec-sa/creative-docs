@@ -2367,7 +2367,7 @@ namespace Epsitec.Common.Document.Objects
 		public virtual void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
 			//	Début de la création d'un objet.
-			drawingContext.ConstrainFlush();
+			drawingContext.ConstrainClear();
 			drawingContext.ConstrainAddHV(pos);
 			drawingContext.MagnetFixStarting(pos);
 		}

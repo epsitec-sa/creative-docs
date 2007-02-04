@@ -972,7 +972,7 @@ namespace Epsitec.Common.Document
 
 				if ( this.Modifier != null && doc.readRootStack != null )
 				{
-					this.Modifier.ActiveViewer.DrawingContext.RootStack = doc.readRootStack;
+					this.Modifier.ActiveViewer.DrawingContext.SetRootStack (doc.readRootStack);
 				}
 			}
 
@@ -1553,7 +1553,7 @@ namespace Epsitec.Common.Document
 				info.AddValue("ObjectMemory", this.modifier.ObjectMemory);
 				info.AddValue("ObjectMemoryText", this.modifier.ObjectMemoryText);
 
-				info.AddValue("RootStack", this.modifier.ActiveViewer.DrawingContext.RootStack);
+				info.AddValue("RootStack", this.modifier.ActiveViewer.DrawingContext.GetRootStack ());
 
 				byte[] textContextData = this.textContext == null ? null : this.textContext.Serialize();
 				info.AddValue("TextContextData", textContextData);
@@ -3066,12 +3066,12 @@ namespace Epsitec.Common.Document
 		protected System.Collections.ArrayList	readRootStack;
 		protected bool							isSurfaceRotation;
 		protected double						surfaceRotationAngle;
-		protected int							uniqueObjectId = 0;
-		protected int							uniqueAggregateId = 0;
-		protected int							uniqueParagraphStyleId = 0;
-		protected int							uniqueCharacterStyleId = 0;
-		protected int							selectedParagraphStyle = 0;
-		protected int							selectedCharacterStyle = 0;
+		protected int							uniqueObjectId;
+		protected int							uniqueAggregateId;
+		protected int							uniqueParagraphStyleId;
+		protected int							uniqueCharacterStyleId;
+		protected int							selectedParagraphStyle;
+		protected int							selectedCharacterStyle;
 		protected Text.TextContext				textContext;
 		protected Widgets.HRuler				hRuler;
 		protected Widgets.VRuler				vRuler;

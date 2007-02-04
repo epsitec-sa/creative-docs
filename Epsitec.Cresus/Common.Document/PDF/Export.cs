@@ -1,5 +1,7 @@
 using Epsitec.Common.Drawing;
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Document.PDF
 {
 	public enum TypeComplexSurface
@@ -2088,8 +2090,7 @@ namespace Epsitec.Common.Document.PDF
 			//	Calcule la liste des calques, y compris ceux des pages maîtres.
 			//	Les calques cachés à l'impression ne sont pas mis dans la liste.
 			System.Collections.ArrayList layers = new System.Collections.ArrayList();
-			System.Collections.ArrayList masterList = new System.Collections.ArrayList();
-			this.document.Modifier.ComputeMasterPageList(masterList, pageNumber);
+			List<Objects.Page> masterList = this.document.Modifier.ComputeMasterPageList(pageNumber);
 
 			//	Mets d'abord les premiers calques de toutes les pages maîtres.
 			foreach ( Objects.Page master in masterList )

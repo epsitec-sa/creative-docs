@@ -2,6 +2,8 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Document
 {
 	/// <summary>
@@ -11,7 +13,7 @@ namespace Epsitec.Common.Document
 	{
 		protected enum MouseCursorType
 		{
-			Unknow,
+			Unknown,
 			Arrow,
 			ArrowPlus,
 			ArrowDup,
@@ -74,9 +76,6 @@ namespace Epsitec.Common.Document
 			this.drawingContext.SetImageNameFilter(1, "Bilinear");
 			this.selector = new Selector(this.document);
 			this.zoomer = new Selector(this.document);
-			this.mousePos = new Point(0,0);
-			this.mousePosValid = false;
-			this.mouseDragging = false;
 			this.RedrawAreaFlush();
 
 			this.hotSpotHandle = new Objects.Handle(this.document);
@@ -825,7 +824,7 @@ namespace Epsitec.Common.Document
 			this.moveStart = mouse;
 			this.moveAccept = false;
 			this.moveInitialSel = false;
-			this.drawingContext.ConstrainFlush();
+			this.drawingContext.ConstrainClear();
 			this.drawingContext.ConstrainAddHV(mouse);
 			this.ClearHilite();
 			this.selector.HiliteHandle(-1);
@@ -935,7 +934,7 @@ namespace Epsitec.Common.Document
 						this.moveCenter = this.moveObject.HotSpotPosition;
 						this.moveLast = this.moveCenter;
 						this.moveOffset = mouse-this.moveLast;
-						this.drawingContext.ConstrainFlush();
+						this.drawingContext.ConstrainClear();
 						this.drawingContext.ConstrainAddHV(this.moveLast);
 						this.MoveAllStarting();
 						this.hotSpotHandle.Position = this.moveCenter;
@@ -1222,7 +1221,7 @@ namespace Epsitec.Common.Document
 
 				this.drawingContext.MagnetDelStarting();
 				this.drawingContext.ConstrainDelStarting();
-				this.drawingContext.ConstrainFlush();
+				this.drawingContext.ConstrainClear();
 				this.drawingContext.ConstrainAddHV(this.moveLast);
 			}
 			return true;
@@ -1246,7 +1245,7 @@ namespace Epsitec.Common.Document
 			this.moveStart = mouse;
 			this.moveAccept = false;
 			this.moveInitialSel = false;
-			this.drawingContext.ConstrainFlush();
+			this.drawingContext.ConstrainClear();
 			this.drawingContext.ConstrainAddHV(mouse);
 			this.ShaperHilite(null, Point.Zero);
 			this.selector.HiliteHandle(-1);
@@ -1967,16 +1966,16 @@ namespace Epsitec.Common.Document
 		protected Objects.Abstract Detect(Point mouse, bool selectFirst)
 		{
 			//	Détecte l'objet pointé par la souris.
-			System.Collections.ArrayList list = this.Detects(mouse, selectFirst);
+			IList<Objects.Abstract> list = this.DetectMultiple(mouse, selectFirst);
 			if ( list.Count == 0 )  return null;
-			return list[0] as Objects.Abstract;
+			return list[0];
 		}
 
-		protected System.Collections.ArrayList Detects(Point mouse, bool selectFirst)
+		protected IList<Objects.Abstract> DetectMultiple(Point mouse, bool selectFirst)
 		{
 			//	Détecte les objets pointés par la souris.
 			//	Avec le mode selectFirst, on détecte en priorité les objets sélectionnés.
-			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			List<Objects.Abstract> list = new List<Objects.Abstract> ();
 			Objects.Abstract layer = this.drawingContext.RootObject();
 
 
@@ -2360,7 +2359,7 @@ namespace Epsitec.Common.Document
 		protected void SelectOther(Point mouse, Objects.Abstract actual)
 		{
 			//	Sélectionne l'objet directement dessous l'objet déjà sélectionné.
-			System.Collections.ArrayList list = this.Detects(mouse, false);
+			IList<Objects.Abstract> list = this.DetectMultiple(mouse, false);
 			if ( list.Count == 0 )  return;
 
 			int i = list.IndexOf(actual);
@@ -4470,7 +4469,7 @@ namespace Epsitec.Common.Document
 		public void DirtyAllViews()
 		{
 			//	Salit tous les visualisateurs.
-			foreach ( Viewer viewer in this.document.Modifier.AttachViewers )
+			foreach ( Viewer viewer in this.document.Modifier.Viewers )
 			{
 				viewer.debugDirty = true;
 				this.document.Notifier.NotifyArea();
@@ -4737,14 +4736,14 @@ namespace Epsitec.Common.Document
 		protected DrawingContext				drawingContext;
 		protected Selector						selector;
 		protected Selector						zoomer;
-		protected bool							partialSelect = false;
+		protected bool							partialSelect;
 		protected bool							selectorAdaptLine = true;
 		protected bool							selectorAdaptText = true;
 		protected Rectangle						redrawArea;
 		protected MessageType					lastMessageType;
 		protected Point							mousePosWidget;
 		protected Point							mousePos;
-		protected bool							mousePosValid = false;
+		protected bool							mousePosValid;
 		protected bool							mouseDragging;
 		protected Point							handMouseStart;
 		protected Point							moveStart;
@@ -4757,7 +4756,7 @@ namespace Epsitec.Common.Document
 		protected bool							moveAutoSel;
 		protected int							moveHandle = -1;
 		protected int							moveSelectedSegment = -1;
-		protected bool							moveSelectedHandle = false;
+		protected bool							moveSelectedHandle;
 		protected int							moveGlobal = -1;
 		protected Objects.Abstract				moveObject;
 		protected Objects.Abstract				hiliteHandleObject;
@@ -4766,35 +4765,35 @@ namespace Epsitec.Common.Document
 		protected bool							debugDirty;
 		protected Timer							autoScrollTimer;
 		protected int							guideInteractive = -1;
-		protected bool							guideCreate = false;
-		protected bool							ctrlDown = false;
-		protected bool							ctrlDuplicate = false;
-		protected bool							zoomShift = false;
-		protected bool							zoomCtrl = false;
+		protected bool							guideCreate;
+		protected bool							ctrlDown;
+		protected bool							ctrlDuplicate;
+		protected bool							zoomShift;
+		protected bool							zoomCtrl;
 		protected Point							zoomOrigin;
 		protected Point							zoomOffset;
 		protected double						zoomStart;
-		protected Size							lastSize = new Size(0, 0);
+		protected Size							lastSize;
 		protected ZoomType						zoomType = ZoomType.None;
 		protected Objects.Handle				hotSpotHandle;
 		protected double						markerVertical = double.NaN;
 		protected double						markerHorizontal = double.NaN;
 		protected Objects.DetectEditType		editFlowPress = Objects.DetectEditType.Out;
 		protected Objects.DetectEditType		editFlowSelect = Objects.DetectEditType.Out;
-		protected Objects.Abstract				editFlowSrc = null;
-		protected Objects.AbstractText			editFlowAfterCreate = null;
-		protected Point							editPosPress = Point.Zero;
+		protected Objects.Abstract				editFlowSrc;
+		protected Objects.AbstractText			editFlowAfterCreate;
+		protected Point							editPosPress;
 		protected Drawing.Rectangle				editCreateRect = Drawing.Rectangle.Empty;
 
 		protected Point							miniBarClickPos;
 		protected Timer							miniBarTimer;
-		protected System.Collections.ArrayList	miniBarCmds = null;
+		protected System.Collections.ArrayList	miniBarCmds;
 		protected int							miniBarLines;
 		protected Drawing.Rectangle				miniBarRect;
 		protected double						miniBarHot;
 		protected double						miniBarDistance;
-		protected Window						miniBar = null;
-		protected Balloon						miniBarBalloon = null;
+		protected Window						miniBar;
+		protected Balloon						miniBarBalloon;
 		protected VMenu							contextMenu;
 		protected VMenu							contextMenuOrder;
 		protected VMenu							contextMenuOper;
@@ -4804,34 +4803,34 @@ namespace Epsitec.Common.Document
 		protected Point							contextMenuPos;
 		protected int							contextMenuRank;
 
-		protected MouseCursorType				mouseCursorType = MouseCursorType.Unknow;
-		protected MouseCursorType				mouseCursorTypeUse = MouseCursorType.Unknow;
-		protected Image							mouseCursorArrow = null;
-		protected Image							mouseCursorArrowPlus = null;
-		protected Image							mouseCursorArrowDup = null;
-		protected Image							mouseCursorArrowGlobal = null;
-		protected Image							mouseCursorShaperNorm = null;
-		protected Image							mouseCursorShaperPlus = null;
-		protected Image							mouseCursorShaperMove = null;
-		protected Image							mouseCursorShaperMulti = null;
-		protected Image							mouseCursorFinger = null;
-		protected Image							mouseCursorFingerPlus = null;
-		protected Image							mouseCursorFingerDup = null;
-		protected Image							mouseCursorPen = null;
-		protected Image							mouseCursorZoom = null;
-		protected Image							mouseCursorZoomMinus = null;
-		protected Image							mouseCursorZoomShift = null;
-		protected Image							mouseCursorZoomShiftCtrl = null;
-		protected Image							mouseCursorHand = null;
-		protected Image							mouseCursorPicker = null;
-		protected Image							mouseCursorPickerEmpty = null;
-		protected Image							mouseCursorIBeam = null;
-		protected Image							mouseCursorIBeamCreate = null;
-		protected Image							mouseCursorTextFlow = null;
-		protected Image							mouseCursorTextFlowCreateBox = null;
-		protected Image							mouseCursorTextFlowCreateLine = null;
-		protected Image							mouseCursorTextFlowAdd = null;
-		protected Image							mouseCursorTextFlowRemove = null;
-		protected Image							mouseCursorFine = null;
+		protected MouseCursorType				mouseCursorType = MouseCursorType.Unknown;
+		protected MouseCursorType				mouseCursorTypeUse = MouseCursorType.Unknown;
+		protected Image							mouseCursorArrow;
+		protected Image							mouseCursorArrowPlus;
+		protected Image							mouseCursorArrowDup;
+		protected Image							mouseCursorArrowGlobal;
+		protected Image							mouseCursorShaperNorm;
+		protected Image							mouseCursorShaperPlus;
+		protected Image							mouseCursorShaperMove;
+		protected Image							mouseCursorShaperMulti;
+		protected Image							mouseCursorFinger;
+		protected Image							mouseCursorFingerPlus;
+		protected Image							mouseCursorFingerDup;
+		protected Image							mouseCursorPen;
+		protected Image							mouseCursorZoom;
+		protected Image							mouseCursorZoomMinus;
+		protected Image							mouseCursorZoomShift;
+		protected Image							mouseCursorZoomShiftCtrl;
+		protected Image							mouseCursorHand;
+		protected Image							mouseCursorPicker;
+		protected Image							mouseCursorPickerEmpty;
+		protected Image							mouseCursorIBeam;
+		protected Image							mouseCursorIBeamCreate;
+		protected Image							mouseCursorTextFlow;
+		protected Image							mouseCursorTextFlowCreateBox;
+		protected Image							mouseCursorTextFlowCreateLine;
+		protected Image							mouseCursorTextFlowAdd;
+		protected Image							mouseCursorTextFlowRemove;
+		protected Image							mouseCursorFine;
 	}
 }

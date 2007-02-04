@@ -284,7 +284,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.ActiveBook("BookDocument");
 			}
 
-			if ( this.editor.IsCurrentDocument )
+			if ( this.editor.HasCurrentDocument )
 			{
 				this.editor.CurrentDocument.Dialogs.BuildSettings(this.window);
 			}
@@ -301,7 +301,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		public override void Rebuild()
 		{
 			//	Reconstruit le dialogue.
-			if ( !this.editor.IsCurrentDocument )  return;
+			if ( !this.editor.HasCurrentDocument )  return;
 			if ( this.window == null )  return;
 			this.editor.CurrentDocument.Dialogs.BuildSettings(this.window);
 		}
@@ -457,7 +457,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if ( field.Name == "ScreenDpi" )
 			{
 				this.globalSettings.ScreenDpi = (double) field.Value;
-				if ( this.editor.IsCurrentDocument )
+				if ( this.editor.HasCurrentDocument )
 				{
 					this.editor.CurrentDocument.Notifier.NotifyAllChanged();
 				}
@@ -492,7 +492,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				this.globalSettings.LabelProperties = !this.globalSettings.LabelProperties;
 
-				if ( this.editor.IsCurrentDocument )
+				if ( this.editor.HasCurrentDocument )
 				{
 					this.editor.CurrentDocument.Notifier.NotifyLabelPropertiesChanged();
 				}

@@ -349,7 +349,7 @@ namespace Epsitec.Common.Document
 			//	Une poignée du modificateur sera déplacée.
 			this.OpletQueueInsert();
 
-			drawingContext.ConstrainFlush();
+			drawingContext.ConstrainClear();
 			if ( rank == 0 )  // global ?
 			{
 				drawingContext.ConstrainAddHV(pos);

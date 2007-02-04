@@ -85,7 +85,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				ToolTip.Default.SetToolTip(buttonCancel, Res.Strings.Dialog.Print.Tooltip.Cancel);
 			}
 
-			if ( this.editor.IsCurrentDocument )
+			if ( this.editor.HasCurrentDocument )
 			{
 				this.editor.CurrentDocument.Dialogs.BuildPrint(this.window);
 			}
@@ -102,7 +102,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		public override void Rebuild()
 		{
 			//	Reconstruit le dialogue.
-			if ( !this.editor.IsCurrentDocument )  return;
+			if ( !this.editor.HasCurrentDocument )  return;
 			if ( this.window == null )  return;
 			this.editor.CurrentDocument.Dialogs.BuildPrint(this.window);
 		}

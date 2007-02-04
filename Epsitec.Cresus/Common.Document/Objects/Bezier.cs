@@ -846,7 +846,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
 			{
-				drawingContext.ConstrainFlush();
+				drawingContext.ConstrainClear();
 
 				Handle handle = this.Handle(rank);
 				if ( handle.PropertyType == Properties.Type.None )
@@ -960,7 +960,7 @@ namespace Epsitec.Common.Document.Objects
 				this.Handle(rp1).InitialPosition = this.Handle(rp1).Position;
 				this.Handle(rp2).InitialPosition = this.Handle(rp2).Position;
 
-				drawingContext.ConstrainFlush();
+				drawingContext.ConstrainClear();
 				drawingContext.ConstrainAddHV(ss.Position);
 				Point p1 = this.Handle(rp1).Position;
 				Point p2 = this.Handle(rp2).Position;
@@ -973,7 +973,7 @@ namespace Epsitec.Common.Document.Objects
 				this.Handle(rs1).InitialPosition = this.Handle(rs1).Position;
 				this.Handle(rs2).InitialPosition = this.Handle(rs2).Position;
 
-				drawingContext.ConstrainFlush();
+				drawingContext.ConstrainClear();
 				drawingContext.ConstrainAddHV(ss.Position);
 				double a1 = Point.ComputeAngleDeg(this.Handle(rp1).Position, this.Handle(rs1).Position);
 				double a2 = Point.ComputeAngleDeg(this.Handle(rp2).Position, this.Handle(rs2).Position);
@@ -1119,7 +1119,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
 			//	Début de la création d'un objet.
-			drawingContext.ConstrainFlush();
+			drawingContext.ConstrainClear();
 			drawingContext.ConstrainAddHV(pos);
 
 			this.isCreating = true;

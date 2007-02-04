@@ -59,7 +59,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
 			{
-				drawingContext.ConstrainFlush();
+				drawingContext.ConstrainClear();
 
 				Handle handle = this.Handle(rank);
 				if ( handle.PropertyType == Properties.Type.None )
@@ -273,7 +273,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Début de la création d'un objet.
 			if ( this.creatingPhase == 0 )
 			{
-				drawingContext.ConstrainFlush();
+				drawingContext.ConstrainClear();
 				drawingContext.ConstrainAddHV(pos);
 				this.HandleAdd(pos, HandleType.Primary);  // poignée 0
 				this.HandleAdd(pos, HandleType.Primary);  // poignée 1
@@ -333,7 +333,7 @@ namespace Epsitec.Common.Document.Objects
 				this.Handle(4).Position = Point.Scale(this.Handle(0).Position, this.Handle(1).Position, 0.5);
 
 				drawingContext.ConstrainDelStarting();
-				drawingContext.ConstrainFlush();
+				drawingContext.ConstrainClear();
 			}
 			else if ( this.creatingPhase == 1 )
 			{

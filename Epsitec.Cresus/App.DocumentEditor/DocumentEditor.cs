@@ -198,7 +198,7 @@ namespace Epsitec.App.DocumentEditor
 				}
 			}
 
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				this.initializationInProgress = true;
 				this.CurrentDocument.InitializationInProgress = true;
@@ -305,7 +305,7 @@ namespace Epsitec.App.DocumentEditor
 				this.dlgKey.Show();
 			}
 
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				this.CurrentDocument.Notifier.NotifyOriginChanged();
 			}
@@ -340,7 +340,7 @@ namespace Epsitec.App.DocumentEditor
 					}
 				}
 
-				if (this.IsCurrentDocument)
+				if (this.HasCurrentDocument)
 				{
 					//?DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 					//?context.ZoomPageAndCenter();
@@ -1149,7 +1149,7 @@ namespace Epsitec.App.DocumentEditor
 
 		private void HandleStatusZoomClicked(object sender, MessageEventArgs e)
 		{
-			if ( !this.IsCurrentDocument )  return;
+			if ( !this.HasCurrentDocument )  return;
 			StatusField sf = sender as StatusField;
 			if ( sf == null )  return;
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
@@ -1161,7 +1161,7 @@ namespace Epsitec.App.DocumentEditor
 
 		private void HandleSliderZoomChanged(object sender)
 		{
-			if ( !this.IsCurrentDocument )  return;
+			if ( !this.HasCurrentDocument )  return;
 			AbstractSlider slider = sender as AbstractSlider;
 			if ( slider == null )  return;
 			this.CurrentDocument.Modifier.ZoomValue((double) slider.Value, slider.IsInitialChange);
@@ -1429,7 +1429,7 @@ namespace Epsitec.App.DocumentEditor
 			string err = "";
 			if ( Misc.IsExtension(filename, ".crcolors") )
 			{
-				if ( !this.IsCurrentDocument )
+				if ( !this.HasCurrentDocument )
 				{
 					this.CreateDocument();
 				}
@@ -1766,7 +1766,7 @@ namespace Epsitec.App.DocumentEditor
 		void CommandOpen(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.Open();
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				this.CurrentDocument.Modifier.ActiveViewer.Focus();
 			}
@@ -1776,7 +1776,7 @@ namespace Epsitec.App.DocumentEditor
 		void CommandOpenModel(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.OpenModel();
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				this.CurrentDocument.Modifier.ActiveViewer.Focus();
 			}
@@ -1811,7 +1811,7 @@ namespace Epsitec.App.DocumentEditor
 		void CommandCloseAll(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if ( !this.AutoSaveAll() )  return;
-			while ( this.IsCurrentDocument )
+			while ( this.HasCurrentDocument )
 			{
 				this.CloseDocument();
 			}
@@ -1984,7 +1984,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("FindDefPrev")]
 		void CommandFind(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( !this.IsCurrentDocument )  return;
+			if ( !this.HasCurrentDocument )  return;
 			
 			string commandName = e.Command.CommandId;
 
@@ -2687,21 +2687,21 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("TextInsertQuad")]
 		void CommandTextInsertQuad(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( !this.IsCurrentDocument )  return;
+			if ( !this.HasCurrentDocument )  return;
 			this.CurrentDocument.Modifier.EditInsertText(Common.Text.Unicode.Code.NoBreakSpace);
 		}
 
 		[Command ("TextInsertNewFrame")]
 		void CommandTextInsertNewFrame(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( !this.IsCurrentDocument )  return;
+			if ( !this.HasCurrentDocument )  return;
 			this.CurrentDocument.Modifier.EditInsertText(Common.Text.Properties.BreakProperty.NewFrame);
 		}
 
 		[Command ("TextInsertNewPage")]
 		void CommandTextInsertNewPage(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( !this.IsCurrentDocument )  return;
+			if ( !this.HasCurrentDocument )  return;
 			this.CurrentDocument.Modifier.EditInsertText(Common.Text.Properties.BreakProperty.NewPage);
 		}
 
@@ -3818,7 +3818,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleDocumentChanged()
 		{
 			//	Appelé par le document lorsque les informations sur le document ont changé.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				this.printState.Enable = true;
 				this.exportState.Enable = true;
@@ -3855,7 +3855,7 @@ namespace Epsitec.App.DocumentEditor
 			field.Text = this.TextInfoMouse;
 			field.Invalidate();
 
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
 				if ( di.hRuler != null && di.hRuler.IsVisible )
@@ -3894,7 +3894,7 @@ namespace Epsitec.App.DocumentEditor
 			//	Appelé par le document lorsque l'origine a changé.
 			this.UpdateScroller();
 
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 				this.zoomPageState.Enable = true;
@@ -3917,7 +3917,7 @@ namespace Epsitec.App.DocumentEditor
 			//	Appelé par le document lorsque le zoom a changé.
 			this.UpdateScroller();
 
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 				this.zoomMinState.Enable = true;
@@ -3953,7 +3953,7 @@ namespace Epsitec.App.DocumentEditor
 
 			AbstractSlider slider = this.info.Items["StatusZoomSlider"] as AbstractSlider;
 			slider.Value = (decimal) this.ValueInfoZoom;
-			slider.Enable = this.IsCurrentDocument;
+			slider.Enable = this.HasCurrentDocument;
 		}
 
 		protected void UpdateTool(CommandState cs, string currentTool, bool isCreating, bool enabled)
@@ -3981,7 +3981,7 @@ namespace Epsitec.App.DocumentEditor
 			bool isCreating = false;
 			bool enabled = false;
 
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				tool = this.CurrentDocument.Modifier.Tool;
 				isCreating = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
@@ -4017,7 +4017,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleSaveChanged()
 		{
 			//	Appelé par le document lorsque l'état "enregistrer" a changé.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				bool isCreating = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
 				this.saveState.Enable = !isCreating && this.CurrentDocument.IsDirtySerialize;
@@ -4036,7 +4036,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleSelectionChanged()
 		{
 			//	Appelé par le document lorsque la sélection a changé.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
 
@@ -4315,7 +4315,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleGeometryChanged()
 		{
 			//	Appelé par le document lorsque la géométrie d'un objet a changé.
-			if (this.IsCurrentDocument)
+			if (this.HasCurrentDocument)
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
 
@@ -4326,7 +4326,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleShaperChanged()
 		{
 			//	Appelé par le document lorsque le modeleur a changé.
-			if ( this.IsCurrentDocument &&
+			if ( this.HasCurrentDocument &&
 				 this.CurrentDocument.Modifier.IsToolShaper &&
 				 this.CurrentDocument.Modifier.TotalSelected != 0 )
 			{
@@ -4360,7 +4360,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleStyleChanged()
 		{
 			//	Appelé par le document lorsqu'un style a changé.
-			if ( !this.IsCurrentDocument )  return;
+			if ( !this.HasCurrentDocument )  return;
 			DocumentInfo di = this.CurrentDocumentInfo;
 			di.containerStyles.SetDirtyContent();
 		}
@@ -4368,7 +4368,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandlePagesChanged()
 		{
 			//	Appelé par le document lorsque les pages ont changé.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
 				di.containerPages.SetDirtyContent();
@@ -4415,7 +4415,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleLayersChanged()
 		{
 			//	Appelé par le document lorsque les calques ont changé.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
 				di.containerLayers.SetDirtyContent();
@@ -4466,7 +4466,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandlePageChanged(Objects.Abstract page)
 		{
 			//	Appelé par le document lorsqu'un nom de page a changé.
-			if ( !this.IsCurrentDocument )  return;
+			if ( !this.HasCurrentDocument )  return;
 			DocumentInfo di = this.CurrentDocumentInfo;
 			di.containerPages.SetDirtyObject(page);
 			this.HandleModifChanged();
@@ -4475,7 +4475,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleLayerChanged(Objects.Abstract layer)
 		{
 			//	Appelé par le document lorsqu'un nom de calque a changé.
-			if ( !this.IsCurrentDocument )  return;
+			if ( !this.HasCurrentDocument )  return;
 			DocumentInfo di = this.CurrentDocumentInfo;
 			di.containerLayers.SetDirtyObject(layer);
 			this.HandleModifChanged();
@@ -4484,7 +4484,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleUndoRedoChanged()
 		{
 			//	Appelé par le document lorsque l'état des commande undo/redo a changé.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				bool isCreating = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
 				this.undoState.Enable = ( this.CurrentDocument.Modifier.OpletQueue.CanUndo && !isCreating );
@@ -4502,7 +4502,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleGridChanged()
 		{
 			//	Appelé par le document lorsque l'état de la grille a changé.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 				
@@ -4549,7 +4549,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleLabelPropertiesChanged()
 		{
 			//	Appelé par le document lorsque l'état des noms d'attributs a changé.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
 				di.containerPrincipal.SetDirtyContent();
@@ -4562,7 +4562,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleConstrainChanged()
 		{
 			//	Appelé par le document lorsque l'état des constructions a changé.
-			if (this.IsCurrentDocument)
+			if (this.HasCurrentDocument)
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 				this.constrainState.Enable = true;
@@ -4578,10 +4578,10 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleMagnetChanged()
 		{
 			//	Appelé par le document lorsque l'état des lignes magnétiques a changé.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-				System.Collections.ArrayList layers = context.MagnetLayerList;
+				IList<Objects.Layer> layers = context.MagnetLayerList;
 				if ( layers.Count == 0 )
 				{
 					this.magnetState.Enable = false;
@@ -4603,7 +4603,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandlePreviewChanged()
 		{
 			//	Appelé par le document lorsque l'état de l'aperçu a changé.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 				this.previewState.Enable = true;
@@ -4619,7 +4619,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleSettingsChanged()
 		{
 			//	Appelé par le document lorsque les réglages ont changé.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				this.CurrentDocument.Dialogs.UpdateAllSettings();
 			}
@@ -4628,7 +4628,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleFontsSettingsChanged()
 		{
 			//	Appelé par le document lorsque les réglages de police ont changés.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 				
@@ -4655,7 +4655,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleGuidesChanged()
 		{
 			//	Appelé par le document lorsque les repères ont changé.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				this.CurrentDocument.Dialogs.UpdateGuides();
 			}
@@ -4664,7 +4664,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleHideHalfChanged()
 		{
 			//	Appelé par le document lorsque l'état de la commande "hide half" a changé.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 				this.hideHalfState.Enable = true;
@@ -4680,7 +4680,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleDebugChanged()
 		{
 			//	Appelé par le document lorsque l'état des commande de debug a changé.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 				this.debugBboxThinState.Enable = true;
@@ -4706,7 +4706,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandlePropertyChanged(System.Collections.ArrayList propertyList)
 		{
 			//	Appelé lorsqu'une propriété a changé.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
 				di.containerPrincipal.SetDirtyProperties(propertyList);
@@ -4717,7 +4717,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleAggregateChanged(System.Collections.ArrayList aggregateList)
 		{
 			//	Appelé lorsqu'un agrégat a changé.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
 				di.containerPrincipal.SetDirtyAggregates(aggregateList);
@@ -4728,7 +4728,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleTextStyleChanged(System.Collections.ArrayList textStyleList)
 		{
 			//	Appelé lorsqu'un agrégat a changé.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
 				di.containerStyles.SetDirtyTextStyles(textStyleList);
@@ -4740,7 +4740,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleTextStyleListChanged()
 		{
 			//	Appelé lorsqu'un style de texte a été ajouté ou supprimé.
-			if (this.IsCurrentDocument)
+			if (this.HasCurrentDocument)
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
 				di.containerStyles.SetDirtyContent();
@@ -4752,7 +4752,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleSelNamesChanged()
 		{
 			//	Appelé lorsque la sélection par noms a changé.
-			if ( this.IsCurrentDocument )
+			if ( this.HasCurrentDocument )
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
 				di.containerPrincipal.SetDirtySelNames();
@@ -4846,7 +4846,7 @@ namespace Epsitec.App.DocumentEditor
 		protected void UpdateScroller()
 		{
 			//	Met à jour les ascenseurs.
-			if ( !this.IsCurrentDocument )  return;
+			if ( !this.HasCurrentDocument )  return;
 
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			Size area = this.CurrentDocument.Modifier.SizeArea;
@@ -4899,7 +4899,7 @@ namespace Epsitec.App.DocumentEditor
 		protected void UpdateRulers()
 		{
 			//	Met à jour les règles, après les avoir montrées ou cachées.
-			if ( !this.IsCurrentDocument )  return;
+			if ( !this.HasCurrentDocument )  return;
 
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
@@ -4925,7 +4925,7 @@ namespace Epsitec.App.DocumentEditor
 		protected void UpdateAfterRead()
 		{
 			//	Effectue une mise à jour après avoir ouvert un fichier.
-			if (this.IsCurrentDocument)
+			if (this.HasCurrentDocument)
 			{
 				//	Il faudra refaire la liste des polices connues, ce qui est
 				//	nécessaire si le document ouvert contenait des polices non
@@ -5107,7 +5107,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		public bool IsCurrentDocument
+		public bool HasCurrentDocument
 		{
 			//	Indique s'il existe un document courant.
 			get
@@ -5140,7 +5140,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			//	Indique si le document en cours est un document vide "sans titre"
 			//	pouvant servir de conteneur pour ouvrir un nouveau document.
-			if ( !this.IsCurrentDocument )  return false;
+			if ( !this.HasCurrentDocument )  return false;
 			if ( this.CurrentDocument.IsDirtySerialize )  return false;
 			if ( this.CurrentDocument.Modifier.StatisticTotalObjects() != 0 )  return false;
 			return true;
@@ -5293,7 +5293,7 @@ namespace Epsitec.App.DocumentEditor
 		protected void UpdateBookDocuments()
 		{
 			//	Met à jour le nom de l'onglet des documents.
-			if ( !this.IsCurrentDocument )  return;
+			if ( !this.HasCurrentDocument )  return;
 			TabPage tab = this.bookDocuments.Items[this.currentDocument] as TabPage;
 			tab.TabTitle = Misc.ExtractName(this.CurrentDocument.Filename, this.CurrentDocument.IsDirtySerialize);
 			this.bookDocuments.UpdateAfterChanges();
@@ -5302,7 +5302,7 @@ namespace Epsitec.App.DocumentEditor
 		protected void PrepareCloseDocument()
 		{
 			//	Préparation avant la fermeture d'un document.
-			if ( !this.IsCurrentDocument )  return;
+			if ( !this.HasCurrentDocument )  return;
 			this.CurrentDocument.Dialogs.FlushAll();
 		}
 

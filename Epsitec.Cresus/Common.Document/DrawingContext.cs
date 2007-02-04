@@ -2,6 +2,8 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Document
 {
 	public enum LayerDrawingMode
@@ -22,9 +24,10 @@ namespace Epsitec.Common.Document
 			this.document = document;
 			this.viewer = viewer;
 			this.drawer = new Drawer(this.document);
-			this.rootStack = new System.Collections.ArrayList();
-			this.masterPageList = new System.Collections.ArrayList();
-			this.magnetLayerList = new System.Collections.ArrayList();
+			this.rootStack = new List<int> ();
+			this.constrainList = new List<MagnetLine> ();
+			this.masterPageList = new List<Objects.Page> ();
+			this.magnetLayerList = new List<Objects.Layer> ();
 
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
@@ -1814,7 +1817,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void ConstrainFlush()
+		public void ConstrainClear()
 		{
 			//	Efface toutes les contraintes.
 			this.constrainList.Clear();
@@ -2213,11 +2216,31 @@ namespace Epsitec.Common.Document
 
 
 		#region RootStack
-		public System.Collections.ArrayList RootStack
+		internal System.Collections.ArrayList GetRootStack()
+		{
+			//	Document doit pouvoir sérialiser la pile comme un ArrayList.
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			foreach (int item in this.rootStack)
+			{
+				list.Add (item);
+			}
+			return list;
+		}
+
+		internal void SetRootStack(System.Collections.ArrayList list)
+		{
+			//	Document a sérialisé la pile comme un ArrayList.
+			this.rootStack.Clear ();
+			foreach (int item in list)
+			{
+				this.rootStack.Add (item);
+			}
+		}
+		
+		public List<int> RootStack
 		{
 			//	Donne toute la pile.
 			get { return this.rootStack; }
-			set { this.rootStack = value; }
 		}
 
 		public void RootStackClear()
@@ -2408,13 +2431,13 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public System.Collections.ArrayList MasterPageList
+		public IList<Objects.Page> MasterPageList
 		{
 			//	Donne la liste des pages maître à utiliser.
 			get { return this.masterPageList; }
 		}
 
-		public System.Collections.ArrayList MagnetLayerList
+		public IList<Objects.Layer> MagnetLayerList
 		{
 			//	Donne la liste des calques magnétiques à utiliser.
 			get { return this.magnetLayerList; }
@@ -2423,14 +2446,14 @@ namespace Epsitec.Common.Document
 		public void UpdateAfterPageChanged()
 		{
 			//	Met à jour masterPageList et magnetLayerList après un changement de page.
-			this.document.Modifier.ComputeMasterPageList(this.masterPageList, this.CurrentPage);
-			this.document.Modifier.ComputeMagnetLayerList(this.magnetLayerList, this.CurrentPage);
+			this.masterPageList = this.document.Modifier.ComputeMasterPageList (this.CurrentPage);
+			this.magnetLayerList = this.document.Modifier.ComputeMagnetLayerList (this.CurrentPage);
 		}
 
 		public void UpdateAfterLayerChanged()
 		{
 			//	Met à jour magnetLayerList après un changement de page.
-			this.document.Modifier.ComputeMagnetLayerList(this.magnetLayerList, this.CurrentPage);
+			this.magnetLayerList = this.document.Modifier.ComputeMagnetLayerList (this.CurrentPage);
 		}
 		#endregion
 
@@ -2451,7 +2474,7 @@ namespace Epsitec.Common.Document
 			{
 				this.host = host;
 
-				this.rootStack = new System.Collections.ArrayList();
+				this.rootStack = new List<int>();
 				int total = this.host.rootStack.Count;
 				for ( int i=0 ; i<total ; i++ )
 				{
@@ -2462,7 +2485,7 @@ namespace Epsitec.Common.Document
 
 			protected void Swap()
 			{
-				System.Collections.ArrayList temp = new System.Collections.ArrayList();
+				List<int> temp = new List<int> ();
 
 				//	this.host.rootStack -> temp
 				int total = this.host.rootStack.Count;
@@ -2510,7 +2533,7 @@ namespace Epsitec.Common.Document
 			}
 
 			protected DrawingContext				host;
-			protected System.Collections.ArrayList	rootStack;
+			protected List<int>						rootStack;
 		}
 		#endregion
 
@@ -2520,19 +2543,19 @@ namespace Epsitec.Common.Document
 		protected Drawer						drawer;
 		protected Size							containerSize;
 		protected double						zoom = 1;
-		protected double						originX = 0;
-		protected double						originY = 0;
+		protected double						originX;
+		protected double						originY;
 		protected LayerDrawingMode				layerDrawingMode = LayerDrawingMode.DimmedInactive;
-		protected bool							previewActive = false;
-		protected bool							gridActive = false;
-		protected bool							gridShow = false;
+		protected bool							previewActive;
+		protected bool							gridActive;
+		protected bool							gridShow;
 		protected Point							gridStep = new Point(1, 1);
 		protected Point							gridSubdiv = new Point(1, 1);
-		protected Point							gridOffset = new Point(0, 0);
-		protected bool							textGridShow = false;
+		protected Point							gridOffset;
+		protected bool							textGridShow;
 		protected bool							textShowControlCharacters = true;
 		protected bool							textFontFilter = true;
-		protected bool							textFontSampleAbc = false;
+		protected bool							textFontSampleAbc;
 		protected double						textFontSampleHeight = 30;
 		protected double						textGridStep;
 		protected double						textGridSubdiv;
@@ -2542,14 +2565,14 @@ namespace Epsitec.Common.Document
 		protected bool							guidesMouse = true;
 		protected bool							magnetActive = true;
 		protected bool							rulersShow = true;
-		protected bool							labelsShow = false;
-		protected bool							aggregatesShow = false;
+		protected bool							labelsShow;
+		protected bool							aggregatesShow;
 		protected bool							hideHalfActive = true;
-		protected bool							isDimmed = false;
-		protected bool							isBitmap = false;
-		protected bool							isDrawBoxThin = false;
-		protected bool							isDrawBoxGeom = false;
-		protected bool							isDrawBoxFull = false;
+		protected bool							isDimmed;
+		protected bool							isBitmap;
+		protected bool							isDrawBoxThin;
+		protected bool							isDrawBoxGeom;
+		protected bool							isDrawBoxFull;
 		protected double						minimalSize = 3;
 		protected double						minimalWidth = 5;
 		protected double						closeMargin = 10;
@@ -2557,12 +2580,12 @@ namespace Epsitec.Common.Document
 		protected double						magnetMargin = 6;
 		protected double						hiliteSize = 4;
 		protected double						handleSize = 8;
-		protected bool							isShift = false;
-		protected bool							isCtrl = false;
-		protected bool							isAlt = false;
-		protected bool							constrainActive = false;
-		protected System.Collections.ArrayList	constrainList = new System.Collections.ArrayList();
-		protected bool							isMagnetStarting = false;
+		protected bool							isShift;
+		protected bool							isCtrl;
+		protected bool							isAlt;
+		protected bool							constrainActive;
+		protected List<MagnetLine>				constrainList;
+		protected bool							isMagnetStarting;
 		protected Point							magnetStarting;
 		protected MagnetLine					magnetLineMain;
 		protected MagnetLine					magnetLineBegin;
@@ -2571,9 +2594,9 @@ namespace Epsitec.Common.Document
 		protected MagnetLine					magnetLinePerp;
 		protected MagnetLine					magnetLineInter;
 		protected MagnetLine					magnetLineProj;
-		protected System.Collections.ArrayList	rootStack;
-		protected System.Collections.ArrayList	masterPageList;
-		protected System.Collections.ArrayList	magnetLayerList;
+		protected List<int>						rootStack;
+		protected List<Objects.Page>			masterPageList;
+		protected List<Objects.Layer>			magnetLayerList;
 		protected string[]						imageNameFilters;
 	}
 }

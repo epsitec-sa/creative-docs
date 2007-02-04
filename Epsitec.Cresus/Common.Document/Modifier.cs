@@ -14,8 +14,8 @@ namespace Epsitec.Common.Document
 		public Modifier(Document document)
 		{
 			this.document = document;
-			this.attachViewers = new System.Collections.ArrayList();
-			this.attachContainers = new System.Collections.ArrayList();
+			this.viewers = new List<Viewer> ();
+			this.containers = new List<Containers.Abstract> ();
 			this.tool = "ToolSelect";
 			this.zoomHistory = new ZoomHistory();
 			this.opletQueue = new OpletQueue();
@@ -747,19 +747,19 @@ namespace Epsitec.Common.Document
 		public void AttachViewer(Viewer viewer)
 		{
 			//	Attache un nouveau visualisateur à ce document.
-			this.attachViewers.Add(viewer);
+			this.viewers.Add(viewer);
 		}
 
 		public void DetachViewer(Viewer viewer)
 		{
 			//	Détache un visualisateur de ce document.
-			this.attachViewers.Remove(viewer);
+			this.viewers.Remove(viewer);
 		}
 
-		public System.Collections.ArrayList	AttachViewers
+		public IEnumerable<Viewer>	Viewers
 		{
 			//	Liste des visualisateurs attachés au document.
-			get { return this.attachViewers; }
+			get { return this.viewers; }
 		}
 		#endregion
 
@@ -768,19 +768,19 @@ namespace Epsitec.Common.Document
 		public void AttachContainer(Containers.Abstract container)
 		{
 			//	Attache un nouveau conteneur à ce document.
-			this.attachContainers.Add(container);
+			this.containers.Add(container);
 		}
 
 		public void DetachContainer(Containers.Abstract container)
 		{
 			//	Détache un conteneur de ce document.
-			this.attachContainers.Remove(container);
+			this.containers.Remove(container);
 		}
 
 		public void ContainerHilite(Objects.Abstract obj)
 		{
 			//	Met en évidence l'objet survolé par la souris.
-			foreach ( Containers.Abstract container in this.attachContainers )
+			foreach ( Containers.Abstract container in this.containers )
 			{
 				container.Hilite(obj);
 			}
@@ -816,7 +816,7 @@ namespace Epsitec.Common.Document
 			Objects.Layer layer = new Objects.Layer(this.document, null);  // crée le calque initial
 			page.Objects.Add(layer);
 
-			foreach ( Viewer viewer in this.attachViewers )
+			foreach ( Viewer viewer in this.viewers )
 			{
 				DrawingContext context = viewer.DrawingContext;
 				context.InternalPageLayer(0, 0);
@@ -4614,10 +4614,10 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void ComputeMasterPageList(System.Collections.ArrayList masterPageList, int pageNumber)
+		public List<Objects.Page> ComputeMasterPageList(int pageNumber)
 		{
 			//	Génère la liste des pages maîtres à utiliser pour une page donnée.
-			masterPageList.Clear();
+			List<Objects.Page> masterPageList = new List<Objects.Page> ();
 			Objects.Page currentPage = this.document.GetObjects[pageNumber] as Objects.Page;
 			Size currentSize = this.document.GetPageSize(pageNumber);
 
@@ -4680,9 +4680,10 @@ namespace Epsitec.Common.Document
 			}
 
 			masterPageList.Reverse();
+			return masterPageList;
 		}
 
-		protected void ComputeMasterPageList(System.Collections.ArrayList masterPageList, Objects.Page master, Size currentSize)
+		protected void ComputeMasterPageList(List<Objects.Page> masterPageList, Objects.Page master, Size currentSize)
 		{
 			if ( masterPageList.Contains(master) )  return;
 			if ( this.document.GetPageSize(master) != currentSize )  return;  // pas la même taille ?
@@ -4730,13 +4731,12 @@ namespace Epsitec.Common.Document
 			public bool				Master;
 		}
 
-		public System.Collections.ArrayList GetPageStackInfos(int pageNumber)
+		public List<PageStackInfos> GetPageStackInfos(int pageNumber)
 		{
 			//	Retourne les informations qui résument la structure d'une page.
-			System.Collections.ArrayList infos = new System.Collections.ArrayList();
+			List<PageStackInfos> infos = new List<PageStackInfos> ();
 
-			System.Collections.ArrayList masterList = new System.Collections.ArrayList();
-			this.ComputeMasterPageList(masterList, pageNumber);
+			List<Objects.Page> masterList = this.ComputeMasterPageList(pageNumber);
 
 			//	Mets d'abord les premiers calques de toutes les pages maîtres.
 			foreach ( Objects.Page master in masterList )
@@ -5113,7 +5113,7 @@ namespace Epsitec.Common.Document
 			p1 = new Point(0,0);
 			p2 = new Point(0,0);
 
-			System.Collections.ArrayList layers = this.ActiveViewer.DrawingContext.MagnetLayerList;
+			IList<Objects.Layer> layers = this.ActiveViewer.DrawingContext.MagnetLayerList;
 			int total = layers.Count;
 			for ( int i=total-1 ; i>=0 ; i-- )
 			{
@@ -5151,10 +5151,10 @@ namespace Epsitec.Common.Document
 			return ( min < 1000000.0 );
 		}
 
-		public void ComputeMagnetLayerList(System.Collections.ArrayList magnetLayerList, int pageNumber)
+		public List<Objects.Layer> ComputeMagnetLayerList(int pageNumber)
 		{
 			//	Génère la liste des calques magnétiques à utiliser pour une page donnée.
-			magnetLayerList.Clear();
+			List<Objects.Layer> magnetLayerList = new List<Objects.Layer> ();
 			Objects.Page page = this.document.GetObjects[pageNumber] as Objects.Page;
 			int rank = 0;
 			int cl = this.ActiveViewer.DrawingContext.CurrentLayer;
@@ -5166,6 +5166,7 @@ namespace Epsitec.Common.Document
 				}
 				rank ++;
 			}
+			return magnetLayerList;
 		}
 		#endregion
 
@@ -6514,8 +6515,8 @@ namespace Epsitec.Common.Document
 
 		protected Document						document;
 		protected Viewer						activeViewer;
-		protected System.Collections.ArrayList	attachViewers;
-		protected System.Collections.ArrayList	attachContainers;
+		protected List<Viewer>					viewers;
+		protected List<Containers.Abstract>		containers;
 		protected string						tool;
 		protected bool							propertiesDetail;
 		protected bool							dirtyCounters;

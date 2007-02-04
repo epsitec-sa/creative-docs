@@ -52,7 +52,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
 			{
-				drawingContext.ConstrainFlush();
+				drawingContext.ConstrainClear();
 
 				Handle handle = this.Handle(rank);
 				if ( handle.PropertyType == Properties.Type.None )
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
 			//	Début de la création d'un objet.
-			drawingContext.ConstrainFlush();
+			drawingContext.ConstrainClear();
 			drawingContext.ConstrainAddHomo(pos);
 			this.HandleAdd(pos, HandleType.Primary);
 			this.HandleAdd(pos, HandleType.Primary);
