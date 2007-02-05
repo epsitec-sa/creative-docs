@@ -526,31 +526,38 @@ namespace Epsitec.Common.OpenType
 
 							if (fontData != null)
 							{
-								Table_ttcf ttcf = fontData.TrueTypeCollectionTable;
-
-								int num  = ttcf.NumFonts;
-								byte[] data = ttcf.BaseData;
-
-								for (int i = 0; i < num; i++)
+								if (fontData.Directory.Version == 0x00010000)
 								{
-									fontData = new FontData (data, i);
-									FontIdentity fid_n = new FontIdentity (fontData, record, i);
-									int name_t_offset = fid_n.FontData["name"].Offset;
-									int name_t_length = fid_n.FontData["name"].Length;
+									Table_ttcf ttcf = fontData.TrueTypeCollectionTable;
 
-									name_t    = new Table_name (data, name_t_offset);
-									fullName = name_t.GetFullFontName ();
-									fuidName = name_t.GetUniqueFontIdentifier ();
+									int num  = ttcf.NumFonts;
+									byte[] data = ttcf.BaseData;
 
-									fid_n.DefineTableName (name_t, name_t_length);
-									fid_n.DefineSystemFontFamilyAndStyle (fid_n.InvariantFaceName, fid_n.InvariantStyleName);
+									for (int i = 0; i < num; i++)
+									{
+										fontData = new FontData (data, i);
+										FontIdentity fid_n = new FontIdentity (fontData, record, i);
+										int name_t_offset = fid_n.FontData["name"].Offset;
+										int name_t_length = fid_n.FontData["name"].Length;
 
-									this.Add (fullName, fuidName, fid_n, callback);
+										name_t    = new Table_name (data, name_t_offset);
+										fullName = name_t.GetFullFontName ();
+										fuidName = name_t.GetUniqueFontIdentifier ();
+
+										fid_n.DefineTableName (name_t, name_t_length);
+										fid_n.DefineSystemFontFamilyAndStyle (fid_n.InvariantFaceName, fid_n.InvariantStyleName);
+
+										this.Add (fullName, fuidName, fid_n, callback);
+									}
+								}
+								else
+								{
+									System.Diagnostics.Trace.WriteLine (string.Format ("Font {0} {1} has unsupported font version {2:X}", family, style, fontData.Directory.Version));
 								}
 							}
 							else
 							{
-								System.Diagnostics.Debug.WriteLine (string.Format ("Font {0} {1} has no font data", family, style));
+								System.Diagnostics.Trace.WriteLine (string.Format ("Font {0} {1} has no font data", family, style));
 							}
 						}
 					}
@@ -654,17 +661,20 @@ namespace Epsitec.Common.OpenType
 			
 			try
 			{
-				using (System.IO.FileStream file = new System.IO.FileStream (path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+				if (System.IO.File.Exists (path))
 				{
-					string name;
-					using (System.IO.Stream decompressor = Epsitec.Common.IO.Decompression.CreateStream (file, out name))
+					using (System.IO.FileStream file = new System.IO.FileStream (path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
 					{
-						FontIdentity fid = FontIdentity.Deserialize (decompressor);
-						
-						while (fid != null)
+						string name;
+						using (System.IO.Stream decompressor = Epsitec.Common.IO.Decompression.CreateStream (file, out name))
 						{
-							this.Add (fid.FullName, fid.UniqueFontId, fid);
-							fid = FontIdentity.Deserialize (decompressor);
+							FontIdentity fid = FontIdentity.Deserialize (decompressor);
+
+							while (fid != null)
+							{
+								this.Add (fid.FullName, fid.UniqueFontId, fid);
+								fid = FontIdentity.Deserialize (decompressor);
+							}
 						}
 					}
 				}
