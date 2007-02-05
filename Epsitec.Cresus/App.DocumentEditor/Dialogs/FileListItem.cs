@@ -159,6 +159,35 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		public bool IsDataFile
+		{
+			get
+			{
+				if (this.IsDirectory)
+				{
+					return false;
+				}
+				if (this.IsShortcut)
+				{
+					return false;
+				}
+				if (this.IsDrive)
+				{
+					return false;
+				}
+				if (this.IsSynthetic)
+				{
+					return false;
+				}
+				if (this.IsVirtual)
+				{
+					return false;
+				}
+
+				return true;
+			}
+		}
+
 		public bool IsDirectoryOrShortcut
 		{
 			get

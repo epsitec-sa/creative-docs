@@ -15,7 +15,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 	{
 		public FileNew(DocumentEditor editor) : base(editor)
 		{
-			this.fileExtension = ".crmod";
+			this.FileExtension = ".crmod";
 			this.isModel = true;
 			this.isNavigationEnabled = true;
 			this.isMultipleSelection = false;

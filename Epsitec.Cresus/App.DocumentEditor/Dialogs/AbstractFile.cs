@@ -276,7 +276,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			else
 			{
-				this.table2.Focus();  // focus dans la liste des modèles
+				this.table2.Focus();  // focus dans la liste des fichiers
 			}
 		}
 
@@ -380,6 +380,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.table2.SourceType = FileListItem.GetStructuredType ();
 			this.table2.Items = this.filesCollectionView;
+			this.table2.AutoFocus = true;
 			this.table2.ItemPanel.ItemViewDefaultSize = new Size (this.table2.Parent.PreferredWidth, cellHeight);
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 50));
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 85));
@@ -398,6 +399,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private void HandleFilesCollectionViewCurrentChanged(object sender)
 		{
+			FileListItem item = this.filesCollectionView.CurrentItem as FileListItem;
+
+			if ((item != null) &&
+				(item.IsDataFile))
+			{
+				this.fieldFilename.Text = TextLayout.ConvertToTaggedText (item.ShortFileName);
+				this.fieldFilename.SelectAll ();
+			}
+
 			this.UpdateButtons ();
 		}
 
@@ -586,6 +596,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fieldFilename = new TextField(group);
 			this.fieldFilename.Dock = DockStyle.Fill;
 			this.fieldFilename.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
+			this.fieldFilename.TextEdited += this.HandleFileNameTextEdited;
 			this.fieldFilename.TabIndex = 1;
 			this.fieldFilename.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -1258,6 +1269,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			FileListItem item = this.filesCollectionView.CurrentItem as FileListItem;
 			bool enable = (item != null && item.FullPath != Common.Document.Settings.GlobalSettings.NewEmptyDocument);
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("UpdateButtons: {0} {1} {2}", this.fieldFilename.Text, this.IsTextFieldFocused, item));
 
 			if (string.Equals(this.initialFolder.FullPath, Document.DirectoryOriginalSamples, System.StringComparison.OrdinalIgnoreCase))
 			{
@@ -1274,6 +1287,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.prevState.Enable = (this.directoriesVisitedIndex > 0);
 			this.nextState.Enable = (this.directoriesVisitedIndex < this.directoriesVisited.Count-1);
+
+			if (item == null)
+			{
+				enable = this.fieldFilename.Text.Trim ().Length > 0;
+			}
+			
 			this.buttonOK.Enable = enable;
 		}
 
@@ -1686,25 +1705,49 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Effectue l'action lorsque le bouton 'Ouvrir/Enregistrer' est actionné.
 			//	Retourne true s'il faut fermer le dialogue.
+			
 			FileListItem item = this.filesCollectionView.CurrentItem as FileListItem;
+			string name = TextLayout.ConvertToSimpleText (this.fieldFilename.Text).Trim ();
+			
 			if (item != null)
 			{
-				if (item.IsDirectory)  // ouvre un dossier ?
+				name = item.GetResolvedFileName ();
+			}
+			if (name.Length > 0)
+			{
+				if (!System.IO.Path.IsPathRooted (name))
 				{
-					if (item.FolderItem.IsShortcut)
-					{
-						this.SetInitialFolder(FileManager.ResolveShortcut(item.FolderItem, FolderQueryMode.NoIcons), true);
-					}
-					else
-					{
-						this.SetInitialFolder(item.FolderItem, true);
-					}
-
-					return false;  // ne pas fermer le dialogue
+					name = System.IO.Path.Combine (this.initialFolder.FullPath, name);
 				}
-				else
+
+				if (System.IO.Directory.Exists (name))
 				{
+					FolderItem folderItem = FileManager.GetFolderItem (name, FolderQueryMode.NoIcons);
+
+					if (folderItem.IsFolder)
+					{
+						this.SetInitialFolder (folderItem, true);
+						return false;
+					}
+				}
+
+				if ((!name.ToLowerInvariant ().EndsWith (this.fileExtension)) &&
+					(!System.IO.File.Exists (name)))
+				{
+					name = string.Concat (name, this.fileExtension);
+				}
+
+				this.selectedFilename = name;
+				this.selectedFilenames = null;
+
+				return this.PromptForOverwriting ();
+			}
+			else
+			{
+				return false;
+			}
 #if false
+				{
 					int selCount = 0;
 					for (int i=0; i<this.table.Rows; i++)
 					{
@@ -1733,16 +1776,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							this.selectedFilenames[rank++] = this.files[i].FileName;
 						}
 					}
-#else
 					this.selectedFilenames = new string[1];
 					this.selectedFilenames[0] = item.GetResolvedFileName ();
-#endif
 
 					return this.PromptForOverwriting();
 				}
 			}
 
 			return false;  // ne pas fermer le dialogue
+#endif
 		}
 
 		protected bool PromptForOverwriting()
@@ -1935,10 +1977,24 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Un widget (table ou filename) à pris/perdu le focus.
 			bool focused = (bool) e.NewValue;
+			Widget widget = sender as Widget;
+
 			if (focused)  // focus pris ?
 			{
-				this.focusedWidget = sender as Widget;
+				if (this.focusedWidget != widget)
+				{
+					this.focusedWidget = widget;
+					this.UpdateButtons ();
+				}
 			}
+		}
+
+		private void HandleFileNameTextEdited(object sender)
+		{
+			this.filesCollectionView.MoveCurrentToPosition (-1);
+			this.table2.ItemPanel.DeselectAllItemViews ();
+
+			this.UpdateButtons ();
 		}
 
 		private void HandleTableFinalSelectionChanged(object sender)
@@ -2196,38 +2252,42 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.CloseWindow();
 		}
 
+		private bool IsTextFieldFocused
+		{
+			//	Focus dans un texte éditable ?
+			get
+			{
+				return this.focusedWidget is AbstractTextField;
+			}
+		}
+
 		private void HandleButtonOKClicked(object sender, MessageEventArgs e)
 		{
 			//	Bouton 'Ouvrir/Enregistrer' cliqué.
-			if (this.focusedWidget is AbstractTextField)  // focus dans un texte éditable ?
-			{
-				AbstractTextField field = this.focusedWidget as AbstractTextField;
-				if (!string.IsNullOrEmpty(field.Text))
-				{
-					string filename = string.Concat(TextLayout.ConvertToSimpleText(field.Text), this.fileExtension);
-
-					if (!System.IO.Path.IsPathRooted(filename))
-					{
-						filename = string.Concat(this.initialFolder.FullPath, "\\", filename);
-					}
-
-					this.selectedFilename = filename;
-					this.selectedFilenames = null;
-
-					if (this.PromptForOverwriting())
-					{
-						this.CloseWindow();
-					}
-					return;
-				}
-			}
-
-			if (this.ActionOK())
+			if (this.ActionOK ())
 			{
 				this.CloseWindow();
 			}
 		}
 
+		public string FileExtension
+		{
+			get
+			{
+				return this.fileExtension;
+			}
+			set
+			{
+				if (value.StartsWith ("."))
+				{
+					this.fileExtension = value.ToLowerInvariant ();
+				}
+				else
+				{
+					throw new System.FormatException ("Incorrect file extension: " + value);
+				}
+			}
+		}
 
 
 		protected GlyphButton				toolbarExtend;
@@ -2251,7 +2311,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected RadioButton				optionsImageDefined;
 		protected RadioButton				optionsImageAll;
 
-		protected string					fileExtension;
+		private string						fileExtension;
 		protected bool						isModel = false;
 		protected bool						isNavigationEnabled = false;
 		protected bool						isMultipleSelection = false;

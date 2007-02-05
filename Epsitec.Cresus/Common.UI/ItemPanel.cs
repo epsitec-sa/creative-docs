@@ -159,6 +159,16 @@ namespace Epsitec.Common.UI
 
 			return null;
 		}
+
+		public void DeselectAllItemViews()
+		{
+			IList<ItemView> selectedViews = this.RootPanel.GetSelectedItemViews ();
+			
+			if (selectedViews.Count > 0)
+			{
+				this.DeselectItemViews (selectedViews);
+			}
+		}
 		
 		public void SelectItemView(ItemView view)
 		{
