@@ -258,6 +258,14 @@ namespace Epsitec.Common.UI
 		{
 			return this.surface.Margins;
 		}
+
+		private void UpdateAperture()
+		{
+			if (this.surface.IsActualGeometryValid)
+			{
+				this.UpdateAperture (this.surface.ActualSize);
+			}
+		}
 		
 		private void UpdateAperture(Drawing.Size aperture)
 		{
@@ -267,12 +275,26 @@ namespace Epsitec.Common.UI
 
 				try
 				{
+					Drawing.Size scrollSize = this.GetScrollSize (aperture);
+
 					double hRatio = System.Math.Max (0, System.Math.Min (1, (aperture.Width+1) / (this.itemPanel.PreferredWidth+1)));
 					double vRatio = System.Math.Max (0, System.Math.Min (1, (aperture.Height+1) / (this.itemPanel.PreferredHeight+1)));
 
 					this.hScroller.VisibleRangeRatio = (decimal) hRatio;
 					this.vScroller.VisibleRangeRatio = (decimal) vRatio;
 
+					if (scrollSize.Height > 0)
+					{
+						this.vScroller.SmallChange = (decimal) (this.itemPanel.ItemViewDefaultSize.Height * 2 / scrollSize.Height);
+						this.vScroller.LargeChange = (decimal) (aperture.Height / scrollSize.Height);
+					}
+
+					if (scrollSize.Width > 0)
+					{
+						this.hScroller.SmallChange = (decimal) (aperture.Width * 0.2 / scrollSize.Width);
+						this.hScroller.LargeChange = (decimal) (aperture.Width / scrollSize.Width);
+					}
+					
 					double aW = aperture.Width;
 					double aH = aperture.Height;
 
@@ -297,6 +319,14 @@ namespace Epsitec.Common.UI
 					System.Threading.Interlocked.Decrement (ref this.suspendApertureUpdates);
 				}
 			}
+		}
+
+		private Drawing.Size GetScrollSize(Drawing.Size aperture)
+		{
+			double dx = System.Math.Max (0, this.itemPanel.PreferredWidth  - aperture.Width);
+			double dy = System.Math.Max (0, this.itemPanel.PreferredHeight - aperture.Height);
+
+			return new Drawing.Size (dx, dy);
 		}
 
 		private void UpdateColumnHeader()
@@ -384,23 +414,17 @@ namespace Epsitec.Common.UI
 
 		private void HandleSurfaceSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			this.UpdateAperture ((Drawing.Size) e.NewValue);
+			this.UpdateAperture ();
 		}
 
 		private void HandleScrollerValueChanged(object sender)
 		{
-			if (this.surface.IsActualGeometryValid)
-			{
-				this.UpdateAperture (this.surface.ActualSize);
-			}
+			this.UpdateAperture ();
 		}
 
 		private void HandleItemPanelSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			if (this.surface.IsActualGeometryValid)
-			{
-				this.UpdateAperture (this.surface.ActualSize);
-			}
+			this.UpdateAperture ();
 		}
 
 		private void HandleItemPanelApertureChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -413,8 +437,10 @@ namespace Epsitec.Common.UI
 
 				try
 				{
-					double sx = System.Math.Max (0, this.itemPanel.PreferredWidth - aperture.Width);
-					double sy = System.Math.Max (0, this.itemPanel.PreferredHeight - aperture.Height);
+					Drawing.Size scrollSize = this.GetScrollSize (aperture.Size);
+					
+					double sx = scrollSize.Width;
+					double sy = scrollSize.Height;
 					double ox = aperture.X - 1;
 					double oy = aperture.Y;
 
@@ -430,8 +456,9 @@ namespace Epsitec.Common.UI
 				finally
 				{
 					System.Threading.Interlocked.Decrement (ref this.suspendApertureUpdates);
-					this.UpdateAperture (aperture.Size);
 				}
+				
+				this.UpdateAperture (aperture.Size);
 			}
 		}
 
