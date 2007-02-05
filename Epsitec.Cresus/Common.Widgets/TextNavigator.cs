@@ -914,11 +914,10 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.TextInserted != null )  // qq'un écoute ?
 			{
-				this.TextInserted(this);
+				this.textLayout.NotifyTextChangeEvent (this.TextInserted, this);
 			}
 		}
 
-		public event EventHandler TextInserted;
 
 		//	Génère un événement pour dire que des caractères ont été détruits.
 		protected void OnTextDeleted(bool always)
@@ -927,7 +926,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.TextDeleted != null )  // qq'un écoute ?
 			{
-				this.TextDeleted(this);
+				this.textLayout.NotifyTextChangeEvent (this.TextDeleted, this);
 			}
 		}
 
@@ -942,7 +941,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.CursorChanged != null )  // qq'un écoute ?
 			{
-				this.CursorChanged(this);
+				this.textLayout.NotifyTextChangeEvent (this.CursorChanged, this);
 			}
 		}
 
@@ -952,7 +951,7 @@ namespace Epsitec.Common.Widgets
 			//	Génère un événement pour dire que le curseur a scrollé.
 			if ( this.CursorScrolled != null )  // qq'un écoute ?
 			{
-				this.CursorScrolled(this);
+				this.textLayout.NotifyTextChangeEvent (this.CursorScrolled, this);
 			}
 		}
 
@@ -962,7 +961,7 @@ namespace Epsitec.Common.Widgets
 			//	Génère un événement pour dire que le style a changé.
 			if ( this.StyleChanged != null )  // qq'un écoute ?
 			{
-				this.StyleChanged(this);
+				this.textLayout.NotifyTextChangeEvent (this.StyleChanged, this);
 			}
 		}
 
@@ -976,6 +975,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		public event EventHandler				AboutToChange;
+		public event EventHandler				TextInserted;
 		public event EventHandler				TextDeleted;
 		public event EventHandler				CursorChanged;
 		public event EventHandler				CursorScrolled;

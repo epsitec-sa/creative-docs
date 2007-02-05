@@ -3160,16 +3160,51 @@ namespace Epsitec.Common.Widgets
 
 		public void NotifyTextChanges()
 		{
-			if ((this.textChangeNotificationSuspendCounter == 0) &&
-				(this.embedder != null))
+			if (this.textChangeNotificationSuspendCounter == 0)
 			{
-				string oldSimplifiedText = this.simplifiedText;
-				string newSimplifiedText = this.GetSimplifiedText ();
-
-				if (oldSimplifiedText != newSimplifiedText)
+				if (this.embedder != null)
 				{
-					this.simplifiedText = newSimplifiedText;
-					this.embedder.InternalNotifyTextLayoutTextChanged (oldSimplifiedText, newSimplifiedText);
+					string oldSimplifiedText = this.simplifiedText;
+					string newSimplifiedText = this.GetSimplifiedText ();
+
+					if (oldSimplifiedText != newSimplifiedText)
+					{
+						this.simplifiedText = newSimplifiedText;
+						this.embedder.InternalNotifyTextLayoutTextChanged (oldSimplifiedText, newSimplifiedText);
+					}
+				}
+
+				if (this.textChangeEventQueue != null)
+				{
+					while (this.textChangeEventQueue.Count > 0)
+					{
+						Support.SimpleCallback callback = this.textChangeEventQueue.Dequeue ();
+						callback ();
+					}
+				}
+			}
+		}
+
+		internal void NotifyTextChangeEvent(Support.EventHandler textChangeEvent, object sender)
+		{
+			if (textChangeEvent != null)
+			{
+				if (this.textChangeNotificationSuspendCounter == 0)
+				{
+					textChangeEvent (sender);
+				}
+				else
+				{
+					if (this.textChangeEventQueue == null)
+					{
+						this.textChangeEventQueue = new Queue<Epsitec.Common.Support.SimpleCallback> ();
+					}
+					
+					this.textChangeEventQueue.Enqueue (
+						delegate ()
+						{
+							textChangeEvent (sender);
+						});
 				}
 			}
 		}
@@ -5215,6 +5250,7 @@ noText:
 		private System.Collections.ArrayList	tabs   = new System.Collections.ArrayList ();
 		private System.Collections.ArrayList	blocks = new System.Collections.ArrayList ();
 		private System.Collections.ArrayList	lines  = new System.Collections.ArrayList ();
+		private Queue<Support.SimpleCallback>	textChangeEventQueue;
 		
 		public const double						Infinite		= 1000000;
 
