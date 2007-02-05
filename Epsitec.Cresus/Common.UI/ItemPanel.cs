@@ -103,6 +103,30 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public bool AdjustWidth
+		{
+			get
+			{
+				return (bool) this.GetValue (ItemPanel.AdjustWidthProperty);
+			}
+			set
+			{
+				this.SetValue (ItemPanel.AdjustWidthProperty, value);
+			}
+		}
+
+		public bool AdjustHeight
+		{
+			get
+			{
+				return (bool) this.GetValue (ItemPanel.AdjustHeightProperty);
+			}
+			set
+			{
+				this.SetValue (ItemPanel.AdjustHeightProperty, value);
+			}
+		}
+
 		public Drawing.Rectangle Aperture
 		{
 			get
@@ -308,6 +332,11 @@ namespace Epsitec.Common.UI
 			this.GetSelectedItemViews (filter, list);
 
 			return list;
+		}
+
+		public Drawing.Size GetContentsSize()
+		{
+			return this.PreferredSize;
 		}
 
 		public void AsyncRefresh()
@@ -560,6 +589,14 @@ namespace Epsitec.Common.UI
 			if (this.ApertureChanged != null)
 			{
 				this.ApertureChanged (this, new DependencyPropertyChangedEventArgs ("Aperture", oldValue, newValue));
+			}
+		}
+
+		protected virtual void OnContentsSizeChanged(DependencyPropertyChangedEventArgs e)
+		{
+			if (this.ContentsSizeChanged != null)
+			{
+				this.ContentsSizeChanged (this, e);
 			}
 		}
 
@@ -922,21 +959,36 @@ namespace Epsitec.Common.UI
 			double dx = this.totalItemWidth;
 			double dy = this.totalItemHeight;
 
-			if ((this.allViewsSameWidth) &&
+			if (this.AdjustWidth)
+			{
+				if ((this.allViewsSameWidth) &&
 				(this.minItemWidth > 0))
-			{
-				int n = (int) (this.apertureWidth / this.minItemWidth);
-				dx += this.apertureWidth - n*this.minItemWidth;
+				{
+					int n = (int) (this.apertureWidth / this.minItemWidth);
+					dx += this.apertureWidth - n*this.minItemWidth;
+				}
 			}
-			if ((this.AllViewsSameHeight) &&
+			if (this.AdjustHeight)
+			{
+				if ((this.AllViewsSameHeight) &&
 				(this.minItemHeight > 0))
-			{
-				int n = (int) (this.apertureHeight / this.minItemHeight);
-				dy += this.apertureHeight - n*this.minItemHeight;
+				{
+					int n = (int) (this.apertureHeight / this.minItemHeight);
+					dy += this.apertureHeight - n*this.minItemHeight;
+				}
 			}
+
+			Drawing.Size oldValue = this.PreferredSize;
 
 			this.PreferredWidth = dx;
 			this.PreferredHeight = dy;
+
+			Drawing.Size newValue = this.PreferredSize;
+
+			if (oldValue != newValue)
+			{
+				this.OnContentsSizeChanged (new DependencyPropertyChangedEventArgs ("ContentsSize", oldValue, newValue));
+			}
 		}
 
 		private ItemView Detect(IList<ItemView> views, Drawing.Point pos)
@@ -1085,13 +1137,29 @@ namespace Epsitec.Common.UI
 			panel.HandleItemViewDefaultSizeChanged ((Drawing.Size) oldValue, (Drawing.Size) newValue);
 		}
 
+		private static void NotifyAdjustWidthChanged(DependencyObject obj, object oldValue, object newValue)
+		{
+			ItemPanel panel = (ItemPanel) obj;
+			panel.UpdatePreferredSize ();
+		}
+
+		private static void NotifyAdjustHeightChanged(DependencyObject obj, object oldValue, object newValue)
+		{
+			ItemPanel panel = (ItemPanel) obj;
+			panel.UpdatePreferredSize ();
+		}
+
 		public event Support.EventHandler<DependencyPropertyChangedEventArgs> ApertureChanged;
+
+		public event Support.EventHandler<DependencyPropertyChangedEventArgs> ContentsSizeChanged;
 
 		public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register ("Items", typeof (ICollectionView), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanel.NotifyItemsChanged));
 		public static readonly DependencyProperty LayoutProperty = DependencyProperty.Register ("Layout", typeof (ItemPanelLayout), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelLayout.None, ItemPanel.NotifyLayoutChanged));
 		public static readonly DependencyProperty ItemSelectionProperty = DependencyProperty.Register ("ItemSelection", typeof (ItemPanelSelectionMode), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelSelectionMode.None, ItemPanel.NotifyItemSelectionChanged));
 		public static readonly DependencyProperty GroupSelectionProperty = DependencyProperty.Register ("GroupSelection", typeof (ItemPanelSelectionMode), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelSelectionMode.None, ItemPanel.NotifyGroupSelectionChanged));
 		public static readonly DependencyProperty ItemViewDefaultSizeProperty = DependencyProperty.Register ("ItemViewDefaultSize", typeof (Drawing.Size), typeof (ItemPanel), new DependencyPropertyMetadata (new Drawing.Size (80, 20), ItemPanel.NotifyItemViewDefaultSizeChanged));
+		public static readonly DependencyProperty AdjustWidthProperty = DependencyProperty.Register ("AdjustWidth", typeof (bool), typeof (ItemPanel), new DependencyPropertyMetadata (false, ItemPanel.NotifyAdjustWidthChanged));
+		public static readonly DependencyProperty AdjustHeightProperty = DependencyProperty.Register ("AdjustHeight", typeof (bool), typeof (ItemPanel), new DependencyPropertyMetadata (false, ItemPanel.NotifyAdjustHeightChanged));
 
 		List<ItemView> views
 		{
@@ -1125,10 +1193,5 @@ namespace Epsitec.Common.UI
 		double maxItemWidth;
 		double minItemHeight;
 		double maxItemHeight;
-
-		public Drawing.Size GetContentsSize()
-		{
-			return this.PreferredSize;
-		}
 	}
 }

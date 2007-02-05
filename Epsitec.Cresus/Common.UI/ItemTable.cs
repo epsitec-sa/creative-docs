@@ -46,6 +46,7 @@ namespace Epsitec.Common.UI
 			this.vScroller.ValueChanged += this.HandleScrollerValueChanged;
 			this.surface.SizeChanged += this.HandleSurfaceSizeChanged;
 			this.itemPanel.ApertureChanged += this.HandleItemPanelApertureChanged;
+			this.itemPanel.ContentsSizeChanged += this.HandleContentsSizeChanged;
 			
 			this.itemPanel.AddEventHandler (Visual.PreferredHeightProperty, this.HandleItemPanelSizeChanged);
 			this.itemPanel.AddEventHandler (Visual.PreferredWidthProperty, this.HandleItemPanelSizeChanged);
@@ -425,6 +426,11 @@ namespace Epsitec.Common.UI
 		}
 
 		private void HandleItemPanelSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			this.UpdateAperture ();
+		}
+		
+		private void HandleContentsSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			this.UpdateAperture ();
 		}

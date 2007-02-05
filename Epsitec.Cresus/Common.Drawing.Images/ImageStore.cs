@@ -50,7 +50,10 @@ namespace Epsitec.Common.Drawing
 				{
 					try
 					{
-						return System.IO.File.ReadAllBytes (cacheFilePath);
+						if (System.IO.File.Exists (cacheFilePath))
+						{
+							return System.IO.File.ReadAllBytes (cacheFilePath);
+						}
 					}
 					catch (System.IO.IOException)
 					{

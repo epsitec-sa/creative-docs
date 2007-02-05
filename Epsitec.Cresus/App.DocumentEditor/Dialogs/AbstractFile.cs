@@ -382,6 +382,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table2.Items = this.filesCollectionView;
 			this.table2.AutoFocus = true;
 			this.table2.ItemPanel.ItemViewDefaultSize = new Size (this.table2.Parent.PreferredWidth, cellHeight);
+			this.table2.ItemPanel.AdjustHeight = true;
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 50));
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 85));
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("type", 95, FileListItem.GetDescriptionPropertyComparer ()));
