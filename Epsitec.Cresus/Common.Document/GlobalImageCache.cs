@@ -742,10 +742,10 @@ namespace Epsitec.Common.Document
 		internal static System.DateTime GetFileDate(string path)
 		{
 			//	Retourne la date de dernière modification d'un fichier.
-			System.IO.FileInfo info = new System.IO.FileInfo(path);
-			if (info.Exists)
+			if ((!string.IsNullOrEmpty (path)) &&
+				(System.IO.File.Exists (path)))
 			{
-				return info.LastWriteTimeUtc;
+				return System.IO.File.GetLastWriteTimeUtc ();
 			}
 			else
 			{
