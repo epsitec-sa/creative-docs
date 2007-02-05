@@ -129,6 +129,22 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public bool	AllViewsSameWidth
+		{
+			get
+			{
+				return this.allViewsSameWidth;
+			}
+		}
+
+		public bool AllViewsSameHeight
+		{
+			get
+			{
+				return this.allViewsSameHeight;
+			}
+		}
+
 		
 		public ItemView Detect(Drawing.Point pos)
 		{
@@ -526,6 +542,7 @@ namespace Epsitec.Common.UI
 		
 		protected virtual void HandleApertureChanged(Drawing.Rectangle oldValue, Drawing.Rectangle newValue)
 		{
+			this.UpdatePreferredSize ();
 			this.RecreateUserInterface (this.SafeGetViews (), newValue);
 
 			ItemPanelGroup[] groups;
@@ -805,7 +822,7 @@ namespace Epsitec.Common.UI
 			switch (this.Layout)
 			{
 				case ItemPanelLayout.VerticalList:
-					this.PreferredSize = this.LayoutVerticalList (views);
+					this.LayoutVerticalList (views);
 					break;
 			}
 		}
@@ -846,27 +863,80 @@ namespace Epsitec.Common.UI
 			return view;
 		}
 
-		private Drawing.Size LayoutVerticalList(IEnumerable<ItemView> views)
+		private void LayoutVerticalList(IEnumerable<ItemView> views)
 		{
+			double minDy = 0;
+			double minDx = 0;
+			double maxDy = 0;
+			double maxDx = 0;
+
 			double dy = 0;
-			double dx = 0;
 			
 			foreach (ItemView view in views)
 			{
-				dy += view.Size.Height;
-				dx  = System.Math.Max (dx, view.Size.Width);
+				Drawing.Size size = view.Size;
+
+				if (dy == 0)
+				{
+					minDx = size.Width;
+					minDy = size.Height;
+					maxDx = size.Width;
+					maxDy = size.Height;
+				}
+				else
+				{
+					minDx = System.Math.Min (minDx, size.Width);
+					minDy = System.Math.Min (minDy, size.Height);
+					maxDx = System.Math.Min (maxDx, size.Width);
+					maxDy = System.Math.Min (maxDy, size.Height);
+				}
+
+				dy += size.Height;
 			}
 
-			double y = dy;
+			this.allViewsSameWidth  = (minDx == maxDx);
+			this.allViewsSameHeight = (minDy == maxDy);
+
+			this.minItemWidth = minDx;
+			this.maxItemWidth = maxDx;
+			this.minItemHeight = minDy;
+			this.maxItemHeight = maxDy;
+
+			this.totalItemWidth = maxDx;
+			this.totalItemHeight = dy;
+
+			this.UpdatePreferredSize ();
+
+			double y = this.PreferredHeight;
 			
 			foreach (ItemView view in views)
 			{
 				double h = view.Size.Height;
 				y -= h;
-				view.Bounds = new Drawing.Rectangle (0, y, dx, h);
+				view.Bounds = new Drawing.Rectangle (0, y, maxDx, h);
+			}
+		}
+
+		private void UpdatePreferredSize()
+		{
+			double dx = this.totalItemWidth;
+			double dy = this.totalItemHeight;
+
+			if ((this.allViewsSameWidth) &&
+				(this.minItemWidth > 0))
+			{
+				int n = (int) (this.apertureWidth / this.minItemWidth);
+				dx += this.apertureWidth - n*this.minItemWidth;
+			}
+			if ((this.AllViewsSameHeight) &&
+				(this.minItemHeight > 0))
+			{
+				int n = (int) (this.apertureHeight / this.minItemHeight);
+				dy += this.apertureHeight - n*this.minItemHeight;
 			}
 
-			return new Drawing.Size (dx, dy);
+			this.PreferredWidth = dx;
+			this.PreferredHeight = dy;
 		}
 
 		private ItemView Detect(IList<ItemView> views, Drawing.Point pos)
@@ -1047,5 +1117,18 @@ namespace Epsitec.Common.UI
 		bool hasDirtyLayout;
 		bool isRefreshPending;
 		bool isCurrentShowPending;
+		bool allViewsSameHeight;
+		bool allViewsSameWidth;
+		double totalItemWidth;
+		double totalItemHeight;
+		double minItemWidth;
+		double maxItemWidth;
+		double minItemHeight;
+		double maxItemHeight;
+
+		public Drawing.Size GetContentsSize()
+		{
+			return this.PreferredSize;
+		}
 	}
 }

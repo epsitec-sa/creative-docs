@@ -285,7 +285,7 @@ namespace Epsitec.Common.UI
 
 					if (scrollSize.Height > 0)
 					{
-						this.vScroller.SmallChange = (decimal) (this.itemPanel.ItemViewDefaultSize.Height * 2 / scrollSize.Height);
+						this.vScroller.SmallChange = (decimal) (this.itemPanel.ItemViewDefaultSize.Height / scrollSize.Height);
 						this.vScroller.LargeChange = (decimal) (aperture.Height / scrollSize.Height);
 					}
 
@@ -298,8 +298,8 @@ namespace Epsitec.Common.UI
 					double aW = aperture.Width;
 					double aH = aperture.Height;
 
-					double ox = System.Math.Floor ((double) this.hScroller.Value * System.Math.Max (0, this.itemPanel.PreferredWidth - aW));
-					double oy = System.Math.Floor ((double) this.vScroller.Value * System.Math.Max (0, this.itemPanel.PreferredHeight - aH));
+					double ox = System.Math.Floor ((double) this.hScroller.Value * scrollSize.Width);
+					double oy = System.Math.Floor ((double) this.vScroller.Value * scrollSize.Height);
 
 					this.itemPanel.Aperture = new Drawing.Rectangle (ox+1, oy, aW, aH);
 
@@ -323,8 +323,10 @@ namespace Epsitec.Common.UI
 
 		private Drawing.Size GetScrollSize(Drawing.Size aperture)
 		{
-			double dx = System.Math.Max (0, this.itemPanel.PreferredWidth  - aperture.Width);
-			double dy = System.Math.Max (0, this.itemPanel.PreferredHeight - aperture.Height);
+			Drawing.Size panelSize = this.itemPanel.GetContentsSize ();
+
+			double dx = System.Math.Max (0, panelSize.Width  - aperture.Width);
+			double dy = System.Math.Max (0, panelSize.Height - aperture.Height);
 
 			return new Drawing.Size (dx, dy);
 		}
