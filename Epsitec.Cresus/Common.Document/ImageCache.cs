@@ -71,7 +71,7 @@ namespace Epsitec.Common.Document
 				Item item;
 				System.DateTime fileDate = GlobalImageCache.GetFileDate (fileName);
 
-				if (fileDate == System.DateTime.MinValue)
+				if (fileDate.Ticks == 0)
 				{
 					//	Aucun fichier n'existe sur le disque, mais peut-être que le nom de
 					//	ce fichier est connu quand-même par le cache, parce que le fichier
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Document
 			{
 				return null;
 			}
-			if (fileDate == System.DateTime.MinValue)
+			if (fileDate.Ticks == 0)
 			{
 				return null;
 			}
@@ -266,6 +266,11 @@ namespace Epsitec.Common.Document
 			//	dans le cache mais ne lit aucune donnée, ni depuis le disque, ni
 			//	depuis le document ZIP.
 
+			if (string.IsNullOrEmpty (propImage.FileName))
+			{
+				return;
+			}
+
 			if (!this.Contains (propImage.FileName, propImage.FileDate))  // pas encore dans le cache ?
 			{
 				bool isZip = false;
@@ -290,11 +295,15 @@ namespace Epsitec.Common.Document
 				{
 					string fileName = propImage.FileName;
 					System.DateTime fileDate = GlobalImageCache.GetFileDate (propImage.FileName);
-					Item item = this.Add (fileName, fileDate);  // lit le fichier image sur disque
-
-					if (item != null)
+					
+					if (fileDate.Ticks > 0)
 					{
-						propImage.FileDate = fileDate;
+						Item item = this.Add (fileName, fileDate);  // lit le fichier image sur disque
+
+						if (item != null)
+						{
+							propImage.FileDate = fileDate;
+						}
 					}
 				}
 			}
@@ -585,7 +594,7 @@ namespace Epsitec.Common.Document
 			//	Ajoute une nouvelle image dans le cache.
 
 			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (filename) == false);
-			System.Diagnostics.Debug.Assert (date != System.DateTime.MinValue);
+			System.Diagnostics.Debug.Assert (date.Ticks > 0);
 			
 			string key = ImageManager.GetKey (filename, date);
 			Item item;
