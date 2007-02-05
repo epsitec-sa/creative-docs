@@ -647,6 +647,11 @@ namespace Epsitec.Common.Document.Objects
 			{
 				return;  // oui -> forcément OK
 			}
+			if ((pi.FileName == null) ||			//  pas de nom d'image ?
+				(pi.FileName.Trim ().Length == 0))
+			{
+				return;
+			}
 
 			if ( !System.IO.File.Exists(pi.FileName) )
 			{
