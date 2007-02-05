@@ -745,7 +745,7 @@ namespace Epsitec.Common.Document
 			if ((!string.IsNullOrEmpty (path)) &&
 				(System.IO.File.Exists (path)))
 			{
-				return System.IO.File.GetLastWriteTimeUtc ();
+				return System.IO.File.GetLastWriteTimeUtc (path);
 			}
 			else
 			{
