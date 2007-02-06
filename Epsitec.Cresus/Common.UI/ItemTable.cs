@@ -312,6 +312,8 @@ namespace Epsitec.Common.UI
 					double dx = System.Math.Max (this.itemPanel.PreferredWidth, aW);
 					double dy = System.Math.Max (this.itemPanel.PreferredHeight, aH);
 
+					System.Diagnostics.Debug.WriteLine (string.Format ("ItemPanel offset = {0}:{1}, aperture = {2}x{3}", ox, oy, aperture.Width, aperture.Height));
+
 					this.itemPanel.SetManualBounds (new Drawing.Rectangle (-ox, -oy, dx, dy));
 					this.columnHeader.SetManualBounds (new Drawing.Rectangle (-ox, 0, this.columnHeader.GetTotalWidth (), this.columnHeader.PreferredHeight));
 				}

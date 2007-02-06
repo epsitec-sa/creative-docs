@@ -382,7 +382,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table2.Items = this.filesCollectionView;
 			this.table2.AutoFocus = true;
 			this.table2.ItemPanel.ItemViewDefaultSize = new Size (this.table2.Parent.PreferredWidth, cellHeight);
-			this.table2.ItemPanel.AdjustHeight = true;
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 50));
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 85));
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("type", 95, FileListItem.GetDescriptionPropertyComparer ()));
@@ -1003,7 +1002,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void UpdateFileList()
 		{
+			this.CancelPendingJobs ();
 			FileListJob.Start (this);
+		}
+
+		protected void UpdateFileListIcons()
+		{
 		}
 
 		private void AddJob(FileListJob job)
@@ -2115,12 +2119,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			foreach (FileListItem cell in this.comboFolders)
 			{
-				FolderItemIcon icon = cell.FolderItem.Icon;
-				if (cell.SmallIcon == null)
-				{
-					cell.SmallIcon = FileManager.GetFolderItemIcon(cell.FolderItem, FolderQueryMode.SmallIcons);
-				}
-				string text = string.Format("<img src=\"{0}\"/> {1}", cell.SmallIcon.ImageName, cell.ShortFileName);
+				string text = string.Format("<img src=\"{0}\"/> {1}", cell.GetSmallIcon ().ImageName, cell.ShortFileName);
 				text = AbstractFile.AddStringIndent(text, cell.Depth);
 
 				this.fieldPath.Items.Add(text);
@@ -2221,30 +2220,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			if (initialMode != this.UseLargeIcons)
 			{
-				this.UpdateFileList ();
+				this.UpdateFileListIcons ();
 			}
-
-#if false
-			for (int i=0; i<this.table.Rows; i++)
-			{
-				this.table.SetHeightRow(i, this.table.DefHeight);
-			}
-
-			if (initialMode == this.UseLargeIcons)
-			{
-				this.table.ShowSelect();
-			}
-			else
-			{
-				this.UpdateTable(this.table.SelectedRow);
-			}
-#endif
 		}
 
 		protected void HandleWindowCloseClicked(object sender)
 		{
 			//	Fenêtre fermée.
 			this.CloseWindow();
+		}
+
+		protected override void CloseWindow()
+		{
+			this.CancelPendingJobs ();
+			base.CloseWindow ();
 		}
 
 		private void HandleButtonCancelClicked(object sender, MessageEventArgs e)

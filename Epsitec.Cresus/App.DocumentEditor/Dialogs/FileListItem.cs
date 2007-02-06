@@ -17,7 +17,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Crée un item pour 'Nouveau document vide'.
 			this.isSynthetic = true;
-			this.iconName = iconName;
+			this.smallIconName = iconName;
+			this.largeIconName = iconName;
 			this.cachedFileName = fileName;
 			this.cachedShortFileName = shortFileName;
 			this.cachedDescription = description;
@@ -26,9 +27,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		public FileListItem(FolderItem folderItem, bool isModel)
 		{
 			//	Crée un item pour un fichier ou un dossier.
-			this.folderItem = folderItem;
+			this.FolderItem = folderItem;
 			this.isModel = isModel;
-			this.isSynthetic = false;
 		}
 
 		public FolderItem FolderItem
@@ -43,13 +43,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				
 				this.folderItem = value;
 
-				if (this.folderItem.QueryMode.IconSize == FileInfoIconSize.Small)
+				switch (this.folderItem.QueryMode.IconSize)
 				{
-					this.smallIcon = this.folderItem.Icon;
-				}
-				else
-				{
-					this.smallIcon = null;
+					case FileInfoIconSize.Small:
+						this.smallIcon = this.folderItem.Icon;
+						this.largeIcon = null;
+						break;
+					
+					case FileInfoIconSize.Large:
+						this.smallIcon = null;
+						this.largeIcon = this.folderItem.Icon;
+						break;
+					
+					default:
+						this.smallIcon = null;
+						this.largeIcon = null;
+						break;
 				}
 
 				this.cachedDateTime = new System.DateTime (0L);
@@ -61,6 +70,26 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		public FolderItemIcon GetSmallIcon()
+		{
+			if (this.SmallIcon == null)
+			{
+				this.SmallIcon = FileManager.GetFolderItemIcon (this.FolderItem, FolderQueryMode.SmallIcons);
+			}
+
+			return this.SmallIcon;
+		}
+
+		public FolderItemIcon GetLargeIcon()
+		{
+			if (this.LargeIcon == null)
+			{
+				this.LargeIcon = FileManager.GetFolderItemIcon (this.FolderItem, FolderQueryMode.LargeIcons);
+			}
+
+			return this.LargeIcon;
+		}
+
 		public FolderItemIcon SmallIcon
 		{
 			get
@@ -70,6 +99,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			set
 			{
 				this.smallIcon = value;
+			}
+		}
+
+		public FolderItemIcon LargeIcon
+		{
+			get
+			{
+				return this.largeIcon;
+			}
+			set
+			{
+				this.largeIcon = value;
 			}
 		}
 
@@ -395,37 +436,68 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		public string IconName
+		public string GetIconName(FileInfoIconSize size)
 		{
-			//	Retourne l'éventuelle icône fixe qui remplace l'image miniature.
-			get
+			if (size == FileInfoIconSize.Small)
 			{
-				if (this.iconName == null)
+				if (this.smallIconName == null)
 				{
-					FolderItemIcon icon = this.folderItem.Icon;
+					FolderItemIcon icon = this.GetSmallIcon ();
 					
-					this.iconName = "";
+					this.smallIconName = "";
 
 					if (icon != null)
 					{
-						if (this.IsDirectoryOrShortcut)
+						if ((this.IsDirectoryOrShortcut) ||
+							(!this.GetAsyncImage ()))
 						{
-							this.iconName = icon.ImageName;
-						}
-						else
-						{
-							DocumentCache.Add (this.folderItem.FullPath);
-							
-							if (DocumentCache.FindImage (this.folderItem.FullPath) == null)
-							{
-								this.iconName = icon.ImageName;
-							}
+							this.smallIconName = icon.ImageName;
 						}
 					}
 				}
 				
-				return this.iconName.Length == 0 ? null : this.iconName;
+				return this.smallIconName.Length == 0 ? null : this.smallIconName;
 			}
+
+			if (size == FileInfoIconSize.Large)
+			{
+				if (this.largeIconName == null)
+				{
+					FolderItemIcon icon = this.GetLargeIcon ();
+
+					this.largeIconName = "";
+
+					if (icon != null)
+					{
+						if ((this.IsDirectoryOrShortcut) ||
+							(!this.GetAsyncImage ()))
+						{
+							this.largeIconName = icon.ImageName;
+						}
+					}
+				}
+
+				return this.largeIconName.Length == 0 ? null : this.largeIconName;
+			}
+			
+			return null;
+		}
+
+		private bool GetAsyncImage()
+		{
+			if (this.documentInfo == null)
+			{
+				DocumentCache.Add (this.folderItem.FullPath);
+				this.documentInfo = DocumentCache.FindDocumentInfo (this.folderItem.FullPath);
+
+				this.documentInfo.GetAsyncThumbnail (
+					delegate (Image image)
+					{
+						this.cachedImage = image;
+					});
+			}
+			
+			return this.documentInfo != null;
 		}
 
 		public void FillCache()
@@ -436,7 +508,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			text = this.FileDate;
 			text = this.FileSize;
 			text = this.Description;
-			text = this.IconName;
+//-			text = this.GetIconName (FileInfoIconSize.Small);
+//-			text = this.GetIconName (FileInfoIconSize.Large);
 		}
 
 		public void GetImage(out Image image, out bool icon)
@@ -449,15 +522,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			else
 			{
-				if (this.IsDirectoryOrShortcut)
+				if ((this.IsDirectoryOrShortcut) ||
+					(!this.GetAsyncImage ()))
 				{
 					image = null;
 					icon = true;
 				}
 				else
 				{
-					DocumentCache.Add (this.folderItem.FullPath);
-					image = DocumentCache.FindImage (this.folderItem.FullPath);
+					image = this.cachedImage;
+					
 					if (image == null)
 					{
 						icon = true;
@@ -748,7 +822,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			switch (id)
 			{
 				case "icon":
-					return this.IconName;
+					return "x";
 				
 				case "name":
 					return this.ShortFileName;
@@ -793,11 +867,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private System.DateTime cachedDateTime;
 		private long cachedFileSize = -2;
 		private int cachedDepth = -1;
+		private IDocumentInfo documentInfo;
+		private Image cachedImage;
 		
-		private string iconName;
+		private string smallIconName;
+		private string largeIconName;
 		
 		protected FolderItem folderItem;
 		protected FolderItemIcon smallIcon;
+		protected FolderItemIcon largeIcon;
 		protected FileListItem parent;
 		protected bool isModel;
 		protected bool isSynthetic;

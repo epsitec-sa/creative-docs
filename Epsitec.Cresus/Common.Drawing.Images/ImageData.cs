@@ -410,6 +410,11 @@ namespace Epsitec.Common.Drawing
 			{
 				return;
 			}
+			
+			if (ImageManager.ImageStore == null)
+			{
+				return;
+			}
 
 			try
 			{

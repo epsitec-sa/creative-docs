@@ -8,5 +8,6 @@ namespace Epsitec.Common.Support
 	{
 		string GetDescription();
 		Drawing.Image GetThumbnail();
+		void GetAsyncThumbnail(SimpleCallback<Drawing.Image> callback);
 	}
 }

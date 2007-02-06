@@ -164,6 +164,11 @@ namespace Epsitec.Common.Document
 
 		public abstract Image GetThumbnail();
 
+		public virtual void GetAsyncThumbnail(Support.SimpleCallback<Image> callback)
+		{
+			callback (this.GetThumbnail ());
+		}
+
 		#endregion
 		
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)

@@ -4,6 +4,7 @@
 using Epsitec.App.DocumentEditor.Dialogs;
 using Epsitec.Common.Document;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.UI.ItemViewFactories;
@@ -44,7 +45,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			fileIcon.Dock = DockStyle.Stacked;
 			fileIcon.Margins = new Margins (1, 1, 1, 1);
 
-			if (string.IsNullOrEmpty (item.IconName))
+			string iconName = item.GetIconName (itemView.Size.Height < 32 ? FileInfoIconSize.Small : FileInfoIconSize.Large);
+
+			if (string.IsNullOrEmpty (iconName))
 			{
 				Image bitmap;
 				bool icon;
@@ -56,7 +59,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			else
 			{
-				fileIcon.IconName = item.IconName;
+				fileIcon.IconName = iconName;
 				fileIcon.Image = null;
 				fileIcon.PaintFrame = false;
 			}

@@ -46,6 +46,23 @@ namespace Epsitec.Common.Drawing.Platform
 			}
 		}
 
+		public static void Join(System.Threading.Thread thread)
+		{
+			int counter = Dispatcher.invokeCounter;
+			int timeout = 0;
+
+			while (thread.Join (timeout) == false)
+			{
+				if (Dispatcher.invokeCounter != counter)
+				{
+					counter = Dispatcher.invokeCounter;
+					System.Windows.Forms.Application.DoEvents ();
+				}
+
+				timeout = System.Math.Min (10, timeout + 1);
+			}			
+		}
+
 		/// <summary>
 		/// Invokes the specified callback on the main user interface thread.
 		/// </summary>
@@ -54,7 +71,19 @@ namespace Epsitec.Common.Drawing.Platform
 		{
 			if (Dispatcher.InvokeRequired)
 			{
-				Dispatcher.form.Invoke (callback);
+				lock (Dispatcher.exclusion)
+				{
+					try
+					{
+						Dispatcher.isInvoking = true;
+						Dispatcher.invokeCounter++;
+						Dispatcher.form.Invoke (callback);
+					}
+					finally
+					{
+						Dispatcher.isInvoking = false;
+					}
+				}
 			}
 			else
 			{
@@ -63,5 +92,8 @@ namespace Epsitec.Common.Drawing.Platform
 		}
 
 		private static System.Windows.Forms.Form form;
+		private static object exclusion = new object ();
+		private static bool isInvoking;
+		private static int invokeCounter;
 	}
 }
