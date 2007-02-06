@@ -39,6 +39,15 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		static AbstractScroller()
+		{
+			Types.DependencyPropertyMetadata metadata = Widget.AutoCaptureProperty.DefaultMetadata.Clone ();
+			
+			metadata.DefineDefaultValue (true);
+			
+			Widget.AutoCaptureProperty.OverrideMetadata (typeof (AbstractScroller), metadata);
+		}
+
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
@@ -106,12 +115,12 @@ namespace Epsitec.Common.Widgets
 			//	Valeur avancée par les boutons.
 			get
 			{
-				return this.buttonStep;
+				return this.smallChange;
 			}
 
 			set
 			{
-				this.buttonStep = value;
+				this.smallChange = value;
 			}
 		}
 		
@@ -120,12 +129,12 @@ namespace Epsitec.Common.Widgets
 			//	Valeur avancée en cliquant hors de la cabine.
 			get
 			{
-				return this.pageStep;
+				return this.largeChange;
 			}
 
 			set
 			{
-				this.pageStep = value;
+				this.largeChange = value;
 			}
 		}
 		
@@ -436,10 +445,10 @@ namespace Epsitec.Common.Widgets
 			switch (this.HiliteZone)
 			{
 				case Zone.PageUp:
-					this.Value += (this.is_inverted) ? -this.pageStep : this.pageStep;
+					this.Value += (this.is_inverted) ? -this.largeChange : this.largeChange;
 					break;
 				case Zone.PageDown:
-					this.Value += (this.is_inverted) ? this.pageStep : -this.pageStep;
+					this.Value += (this.is_inverted) ? this.largeChange : -this.largeChange;
 					break;
 			}
 		}
@@ -451,14 +460,14 @@ namespace Epsitec.Common.Widgets
 
 			if ( button == this.arrowUp )
 			{
-				if ( this.is_inverted )  this.Value -= this.buttonStep;
-				else                     this.Value += this.buttonStep;
+				if ( this.is_inverted )  this.Value -= this.smallChange;
+				else                     this.Value += this.smallChange;
 				this.Invalidate();
 			}
 			else if ( button == this.arrowDown )
 			{
-				if ( this.is_inverted )  this.Value += this.buttonStep;
-				else                     this.Value -= this.buttonStep;
+				if ( this.is_inverted )  this.Value += this.smallChange;
+				else                     this.Value -= this.smallChange;
 				this.Invalidate();
 			}
 		}
@@ -690,8 +699,8 @@ namespace Epsitec.Common.Widgets
 		private bool						is_inverted;
 		private decimal						display    = 0.5M;
 		private decimal						position   = 0.0M;
-		private decimal						buttonStep = 0.1M;
-		private decimal						pageStep   = 0.2M;
+		private decimal						smallChange = 0.1M;
+		private decimal						largeChange   = 0.2M;
 		private GlyphButton					arrowUp;
 		private GlyphButton					arrowDown;
 		private bool						is_scrolling;
