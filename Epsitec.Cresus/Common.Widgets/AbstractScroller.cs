@@ -250,16 +250,17 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle slider_rect = this.sliderRect;
 			Drawing.Rectangle tab_rect    = Drawing.Rectangle.Empty;
 			Drawing.Rectangle thumb_rect  = Drawing.Rectangle.Empty;
+
+			decimal value = System.Math.Max (0, System.Math.Min (this.Range, this.position));
 			
 			if ((this.Range > 0) && (this.VisibleRangeRatio > 0))
 			{
-				double pos   = (double) (this.is_inverted ? this.Range - this.position : this.position);
+				double pos   = (double) (this.is_inverted ? this.Range - value : value);
 				double range = (double) (this.Range);
 				double ratio = (double) (this.VisibleRangeRatio);
 				
 				if (this.is_vertical)
 				{
-					
 					double h = slider_rect.Height * ratio;
 					h = System.Math.Max (h, AbstractScroller.minimalThumb);
 					h = System.Math.Min (h, slider_rect.Height);
