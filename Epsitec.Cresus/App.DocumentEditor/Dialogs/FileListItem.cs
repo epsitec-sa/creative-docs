@@ -496,6 +496,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						delegate (Image image)
 						{
 							this.cachedImage = image;
+
+							if (this.attachedImagePlaceholder != null)
+							{
+								this.attachedImagePlaceholder.Image = image;
+								this.attachedImagePlaceholder.PaintFrame = true;
+								this.attachedImagePlaceholder.DisplayMode = ImageDisplayMode.Stretch;
+							}
 						});
 				}
 			}
@@ -513,6 +520,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			text = this.Description;
 //-			text = this.GetIconName (FileInfoIconSize.Small);
 //-			text = this.GetIconName (FileInfoIconSize.Large);
+		}
+
+		public ImagePlaceholder AttachedImagePlaceholder
+		{
+			get
+			{
+				return this.attachedImagePlaceholder;
+			}
+			set
+			{
+				this.attachedImagePlaceholder = value;
+			}
 		}
 
 		public void GetImage(out Image image, out bool icon)
@@ -875,6 +894,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		
 		private string smallIconName;
 		private string largeIconName;
+
+		private ImagePlaceholder attachedImagePlaceholder;
 		
 		protected FolderItem folderItem;
 		protected FolderItemIcon smallIcon;

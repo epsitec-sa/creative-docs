@@ -51,6 +51,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				Image bitmap;
 				bool icon;
+				item.AttachedImagePlaceholder = fileIcon;
 				item.GetImage (out bitmap, out icon);
 				fileIcon.Image = bitmap;
 				fileIcon.PaintFrame = icon ? false : true;
