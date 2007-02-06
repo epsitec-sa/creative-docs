@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\ItemTableColumnCollection.cs" />
+    <Compile Include="ItemTableScrollMode.cs" />
     <Compile Include="PanelActivationEventArgs.cs" />
     <Compile Include="ItemTableColumn.cs" />
     <Compile Include="ControllerAttribute.cs" />

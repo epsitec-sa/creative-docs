@@ -30,8 +30,8 @@ namespace Epsitec.Common.UI
 			this.columnHeader = new ItemPanelColumnHeader (this.headerStripe);
 			this.itemPanel = new ItemPanel (this.surface);
 
-			this.vScroller.IsInverted = false;
-			this.vScroller.Value = 1;
+			this.vScroller.IsInverted = true;
+			this.vScroller.Value = 0;
 			
 			this.vScroller.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Right;
 			this.hScroller.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
@@ -47,6 +47,7 @@ namespace Epsitec.Common.UI
 			this.surface.SizeChanged += this.HandleSurfaceSizeChanged;
 			this.itemPanel.ApertureChanged += this.HandleItemPanelApertureChanged;
 			this.itemPanel.ContentsSizeChanged += this.HandleContentsSizeChanged;
+			this.itemPanel.CurrentChanged += this.HandleItemPanelCurrentChanged;
 			
 			this.itemPanel.AddEventHandler (Visual.PreferredHeightProperty, this.HandleItemPanelSizeChanged);
 			this.itemPanel.AddEventHandler (Visual.PreferredWidthProperty, this.HandleItemPanelSizeChanged);
@@ -127,35 +128,27 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public bool								HScrollerVisibility
+		public ItemTableScrollMode				HorizontalScrollMode
 		{
 			get
 			{
-				return this.hScroller.Visibility;
+				return (ItemTableScrollMode) this.GetValue (ItemTable.HorizontalScrollModeProperty);
 			}
 			set
 			{
-				if (this.hScroller.Visibility != value)
-				{
-					this.hScroller.Visibility = value;
-					this.UpdateGeometry ();
-				}
+				this.SetValue (ItemTable.HorizontalScrollModeProperty, value);
 			}
 		}
 
-		public bool								VScrollerVisibility
+		public ItemTableScrollMode				VerticalScrollMode
 		{
 			get
 			{
-				return this.vScroller.Visibility;
+				return (ItemTableScrollMode) this.GetValue (ItemTable.VerticalScrollModeProperty);
 			}
 			set
 			{
-				if (this.vScroller.Visibility != value)
-				{
-					this.vScroller.Visibility = value;
-					this.UpdateGeometry ();
-				}
+				this.SetValue (ItemTable.VerticalScrollModeProperty, value);
 			}
 		}
 
@@ -260,68 +253,170 @@ namespace Epsitec.Common.UI
 			return this.surface.Margins;
 		}
 
-		private void UpdateAperture()
+		private void UpdateApertureProtected()
 		{
-			if (this.surface.IsActualGeometryValid)
+			if (this.suspendScroll == 0)
 			{
-				this.UpdateAperture (this.surface.ActualSize);
-			}
-		}
-		
-		private void UpdateAperture(Drawing.Size aperture)
-		{
-			if (this.suspendApertureUpdates == 0)
-			{
-				System.Threading.Interlocked.Increment (ref this.suspendApertureUpdates);
+				System.Threading.Interlocked.Increment (ref this.suspendScroll);
 
 				try
 				{
-					Drawing.Size scrollSize = this.GetScrollSize (aperture);
+					this.UpdateAperture ();
+				}
+				finally
+				{
+					System.Threading.Interlocked.Decrement (ref this.suspendScroll);
+				}
+			}
+		}
 
-					double hRatio = System.Math.Max (0, System.Math.Min (1, (aperture.Width+1) / (this.itemPanel.PreferredWidth+1)));
-					double vRatio = System.Math.Max (0, System.Math.Min (1, (aperture.Height+1) / (this.itemPanel.PreferredHeight+1)));
+		private void UpdateAperture()
+		{
+			Drawing.Margins padding = Drawing.Margins.Zero;
 
-					this.hScroller.VisibleRangeRatio = (decimal) hRatio;
-					this.vScroller.VisibleRangeRatio = (decimal) vRatio;
+			this.aperture = Drawing.Rectangle.Deflate (this.Client.Bounds, this.GetPanelPadding ()).Size;
 
+			Drawing.Size scrollSize = this.GetScrollSize (this.aperture);
+
+			this.UpdateScrollRatios ();
+
+			switch (this.VerticalScrollMode)
+			{
+				case ItemTableScrollMode.Linear:
 					if (scrollSize.Height > 0)
 					{
 						this.vScroller.SmallChange = (decimal) (this.itemPanel.ItemViewDefaultSize.Height / scrollSize.Height);
 						this.vScroller.LargeChange = (decimal) (aperture.Height / scrollSize.Height);
 					}
+					break;
 
-					if (scrollSize.Width > 0)
-					{
-						this.hScroller.SmallChange = (decimal) (aperture.Width * 0.2 / scrollSize.Width);
-						this.hScroller.LargeChange = (decimal) (aperture.Width / scrollSize.Width);
-					}
-					
-					double aW = aperture.Width;
-					double aH = aperture.Height;
-
-					double ox = System.Math.Floor ((double) this.hScroller.Value * scrollSize.Width);
-					double oy = System.Math.Floor ((double) this.vScroller.Value * scrollSize.Height);
-
-					this.itemPanel.Aperture = new Drawing.Rectangle (ox+1, oy, aW, aH);
-
-					if (this.itemPanel.PreferredHeight < aH)
-					{
-						oy = this.itemPanel.PreferredHeight - aH;
-					}
-
-					double dx = System.Math.Max (this.itemPanel.PreferredWidth, aW);
-					double dy = System.Math.Max (this.itemPanel.PreferredHeight, aH);
-
-					System.Diagnostics.Debug.WriteLine (string.Format ("ItemPanel offset = {0}:{1}, aperture = {2}x{3}", ox, oy, aperture.Width, aperture.Height));
-
-					this.itemPanel.SetManualBounds (new Drawing.Rectangle (-ox, -oy, dx, dy));
-					this.columnHeader.SetManualBounds (new Drawing.Rectangle (-ox, 0, this.columnHeader.GetTotalWidth (), this.columnHeader.PreferredHeight));
-				}
-				finally
-				{
-					System.Threading.Interlocked.Decrement (ref this.suspendApertureUpdates);
-				}
+				case ItemTableScrollMode.ItemBased:
+					this.vScroller.SmallChange = 1;
+					this.vScroller.LargeChange = this.itemPanel.GetVisibleLineCount (this.aperture.Height);
+					this.vScroller.MinValue = 0;
+					this.vScroller.MaxValue = System.Math.Max (0, this.itemPanel.GetTotalLineCount () - this.vScroller.LargeChange);
+					padding.Bottom = this.aperture.Height - this.itemPanel.GetLineHeight () * (double) (this.vScroller.LargeChange);
+					break;
 			}
+
+			if (scrollSize.Width > 0)
+			{
+				this.hScroller.SmallChange = (decimal) (aperture.Width * 0.2 / scrollSize.Width);
+				this.hScroller.LargeChange = (decimal) (aperture.Width / scrollSize.Width);
+			}
+			
+			double aW = aperture.Width;
+			double aH = aperture.Height;
+
+			double ox = System.Math.Floor ((double) this.hScroller.Value * scrollSize.Width);
+			double oy = this.GetVerticalScrollOffset ();
+
+			this.itemPanel.Aperture = new Drawing.Rectangle (ox+1, oy, aW, aH);
+			this.itemPanel.AperturePadding = padding;
+
+			if (this.itemPanel.PreferredHeight < aH)
+			{
+				oy = this.itemPanel.PreferredHeight - aH;
+			}
+
+			double dx = System.Math.Max (this.itemPanel.PreferredWidth, aW);
+			double dy = System.Math.Max (this.itemPanel.PreferredHeight, aH);
+
+			this.itemPanel.SetManualBounds (new Drawing.Rectangle (-ox, -oy, dx, dy));
+			this.columnHeader.SetManualBounds (new Drawing.Rectangle (-ox, 0, this.columnHeader.GetTotalWidth (), this.columnHeader.PreferredHeight));
+		}
+
+		private void UpdateScrollRatios()
+		{
+			double hRatio = System.Math.Max (0, System.Math.Min (1, (aperture.Width+1) / (this.itemPanel.PreferredWidth+1)));
+			double vRatio = System.Math.Max (0, System.Math.Min (1, (aperture.Height+1) / (this.itemPanel.PreferredHeight+1)));
+
+			this.hScroller.VisibleRangeRatio = (decimal) hRatio;
+			this.vScroller.VisibleRangeRatio = (decimal) vRatio;
+		}
+
+		private double GetVerticalScrollOffset()
+		{
+			switch (this.VerticalScrollMode)
+			{
+				case ItemTableScrollMode.Linear:
+					return this.GetVerticalScrollOffsetLinear ();
+
+				case ItemTableScrollMode.ItemBased:
+					return this.GetVerticalScrollOffsetItemBased ();
+			}
+
+			return 0;
+		}
+
+		private double GetVerticalScrollOffsetLinear()
+		{
+			double dist = (double) (this.vScroller.Value) * this.GetScrollHeight ();
+			double pos = this.itemPanel.GetContentsSize ().Height - dist;
+
+			return pos - this.aperture.Height;
+		}
+
+		private void SetVerticalScrollValueLinear(double offset)
+		{
+			double height = this.GetScrollHeight ();
+			
+			if (height > 0)
+			{
+				double pos = offset + this.aperture.Height;
+				double dist = this.itemPanel.GetContentsSize ().Height - pos;
+				this.vScroller.Value = (decimal) (dist / height);
+			}
+		}
+
+		private double GetVerticalScrollOffsetItemBased()
+		{
+			int index = (int) this.vScroller.Value;
+			int total = this.itemPanel.GetTotalLineCount ();
+
+			index = System.Math.Min (total-1, index);
+			index = System.Math.Max (0, index);
+			
+			ItemView view = this.itemPanel.GetItemView (index);
+			double   pos  = (view == null) ? this.itemPanel.GetContentsSize ().Height : view.Bounds.Top;
+			
+			return pos - this.aperture.Height;
+		}
+
+		private void SetVerticalScrollValueItemBased(double offset)
+		{
+			double pos = offset + this.aperture.Height - 0.5;
+			
+			ItemView view = this.itemPanel.FindItemView (
+				delegate (ItemView item)
+				{
+					Drawing.Rectangle bounds = item.Bounds;
+					
+					if ((bounds.Bottom < pos) &&
+						(bounds.Top > pos))
+					{
+						return true;
+					}
+
+					return false;
+				});
+
+			if (view != null)
+			{
+				this.vScroller.Value = view.Index;
+			}
+		}
+
+		private double GetScrollWidth()
+		{
+			Drawing.Size size = this.itemPanel.GetContentsSize ();
+			return System.Math.Max (0, size.Width - this.aperture.Width);
+		}
+
+		private double GetScrollHeight()
+		{
+			Drawing.Size size = this.itemPanel.GetContentsSize ();
+			return System.Math.Max (0, size.Height - this.aperture.Height);
 		}
 
 		private Drawing.Size GetScrollSize(Drawing.Size aperture)
@@ -419,63 +514,88 @@ namespace Epsitec.Common.UI
 
 		private void HandleSurfaceSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			this.UpdateAperture ();
+			this.UpdateApertureProtected ();
 		}
 
 		private void HandleScrollerValueChanged(object sender)
 		{
-			this.UpdateAperture ();
+			this.UpdateApertureProtected ();
 		}
 
 		private void HandleItemPanelSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			this.UpdateAperture ();
+			this.UpdateApertureProtected ();
 		}
 		
 		private void HandleContentsSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			this.UpdateAperture ();
+			this.UpdateApertureProtected ();
 		}
 
 		private void HandleItemPanelApertureChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			if (this.suspendApertureUpdates == 0)
-			{
-				Drawing.Rectangle aperture = (Drawing.Rectangle) e.NewValue;
+			this.SynchronizeScrollers ((Drawing.Rectangle) e.NewValue);
+		}
 
-				System.Threading.Interlocked.Increment (ref this.suspendApertureUpdates);
+		private void HandleItemPanelCurrentChanged(object sender)
+		{
+		}
+
+		private void SynchronizeScrollers(Drawing.Rectangle value)
+		{
+			if (this.suspendScroll == 0)
+			{
+				Drawing.Size scrollSize = this.GetScrollSize (this.aperture);
+
+				double sx = scrollSize.Width;
+				double sy = scrollSize.Height;
+				double ox = value.Left - 1;
+				double oy = value.Top;
+
+				System.Threading.Interlocked.Increment (ref this.suspendScroll);
 
 				try
 				{
-					Drawing.Size scrollSize = this.GetScrollSize (aperture.Size);
-					
-					double sx = scrollSize.Width;
-					double sy = scrollSize.Height;
-					double ox = aperture.X - 1;
-					double oy = aperture.Y;
-
 					if (sx > 0)
 					{
-						this.hScroller.Value = (decimal) (ox / sx);
+						//this.hScroller.Value = (decimal) (ox / sx);
 					}
 					if (sy > 0)
 					{
-						this.vScroller.Value = (decimal) (oy / sy);
+						switch (this.VerticalScrollMode)
+						{
+							case ItemTableScrollMode.Linear:
+								this.SetVerticalScrollValueLinear (value.Bottom);
+								break;
+							case ItemTableScrollMode.ItemBased:
+								this.SetVerticalScrollValueItemBased (value.Bottom);
+								break;
+						}
 					}
+
+					this.UpdateAperture ();
 				}
 				finally
 				{
-					System.Threading.Interlocked.Decrement (ref this.suspendApertureUpdates);
+					System.Threading.Interlocked.Decrement (ref this.suspendScroll);
 				}
-				
-				this.UpdateAperture (aperture.Size);
 			}
 		}
 
-		private void OnFrameVisibilityChanged(DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+		private void OnFrameVisibilityChanged(DependencyPropertyChangedEventArgs e)
 		{
  			this.UpdateGeometry ();
 		}
+
+		private void OnScrollModeChanged(DependencyPropertyChangedEventArgs e)
+		{
+			this.hScroller.Visibility = this.HorizontalScrollMode != ItemTableScrollMode.None;
+			this.vScroller.Visibility = this.VerticalScrollMode != ItemTableScrollMode.None;
+			
+			this.UpdateGeometry ();
+		}
+
+
 		
 		#region IListHost<ItemTableColumn> Members
 
@@ -522,9 +642,24 @@ namespace Epsitec.Common.UI
 			ItemTable that = o as ItemTable;
 			that.OnFrameVisibilityChanged (new DependencyPropertyChangedEventArgs (ItemTable.FrameVisibilityProperty, oldValue, newValue));
 		}
-		
+
+		private static void NotifyHorizontalScrollModeChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			ItemTable that = o as ItemTable;
+			that.OnScrollModeChanged (new DependencyPropertyChangedEventArgs (ItemTable.HorizontalScrollModeProperty, oldValue, newValue));
+		}
+
+		private static void NotifyVerticalScrollModeChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			ItemTable that = o as ItemTable;
+			that.OnScrollModeChanged (new DependencyPropertyChangedEventArgs (ItemTable.VerticalScrollModeProperty, oldValue, newValue));
+		}
+
 		public static readonly DependencyProperty ItemTableProperty = DependencyProperty.RegisterAttached ("ItemTable", typeof (ItemTable), typeof (ItemTable));
+		
 		public static readonly DependencyProperty FrameVisibilityProperty = DependencyProperty.Register ("FrameVisibility", typeof (bool), typeof (ItemTable), new DependencyPropertyMetadata (true, ItemTable.NotifyFrameVisibilityChanged));
+		public static readonly DependencyProperty VerticalScrollModeProperty = DependencyProperty.Register ("VerticalScrollMode", typeof (ItemTableScrollMode), typeof (ItemTable), new DependencyPropertyMetadata (ItemTableScrollMode.Linear, ItemTable.NotifyVerticalScrollModeChanged));
+		public static readonly DependencyProperty HorizontalScrollModeProperty = DependencyProperty.Register ("HorizontalScrollMode", typeof (ItemTableScrollMode), typeof (ItemTable), new DependencyPropertyMetadata (ItemTableScrollMode.Linear, ItemTable.NotifyHorizontalScrollModeChanged));
 
 		private VScroller vScroller;
 		private HScroller hScroller;
@@ -535,7 +670,8 @@ namespace Epsitec.Common.UI
 		private ItemPanel itemPanel;
 		private StructuredType sourceType;
 		private int suspendColumnUpdates;
-		private int suspendApertureUpdates;
 		private Drawing.Size defaultItemSize;
+		private Drawing.Size aperture;
+		private int suspendScroll;
 	}
 }

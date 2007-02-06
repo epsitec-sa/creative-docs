@@ -198,9 +198,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.AddToVisitedDirectories(this.initialFolder);
 			}
 
-			this.UpdateInitialDirectory();
-			this.UpdateTable(-1);
-			this.UpdateButtons();
+			this.UpdateInitialDirectory ();
+			this.UpdateTable (-1);
+			this.UpdateFileList ();
 		}
 
 		protected void AddToVisitedDirectories(FolderItem folder)
@@ -381,6 +381,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table2.SourceType = FileListItem.GetStructuredType ();
 			this.table2.Items = this.filesCollectionView;
 			this.table2.AutoFocus = true;
+			this.table2.VerticalScrollMode = ItemTableScrollMode.ItemBased;
 			this.table2.ItemPanel.ItemViewDefaultSize = new Size (this.table2.Parent.PreferredWidth, cellHeight);
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 50));
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 85));
@@ -395,6 +396,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.slider.Value = (decimal) Widget.DefaultFontHeight+4;
 			this.useLargeIcons = false;
+
+			this.UpdateFileList ();
 		}
 
 		private void HandleFilesCollectionViewCurrentChanged(object sender)
@@ -866,8 +869,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return;
 			}
 
-			this.UpdateFileList();
-
 #if false
 			int rows = this.files.Count;
 
@@ -1002,8 +1003,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void UpdateFileList()
 		{
-			this.CancelPendingJobs ();
-			FileListJob.Start (this);
+			if (this.files != null)
+			{
+				this.CancelPendingJobs ();
+				FileListJob.Start (this);
+			}
 		}
 
 		protected void UpdateFileListIcons()
@@ -1412,6 +1416,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return;
 			}
 
+			//	TODO: modification "sur place" de la liste des fichiers
+
 			this.UpdateTable(-1);
 			this.SelectFileNameInTable(newDir);
 			this.RenameStarting();
@@ -1493,6 +1499,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if (!System.IO.File.Exists(filenamesToDelete[0]))  // fichier n'existe plus (donc bien supprimé) ?
 			{
 				this.UpdateTable(-1);
+				//	TODO: mettre à jour la liste des fichiers en live
 				this.SelectFilenameTable(filenameToSelect);
 			}
 #endif
@@ -2143,7 +2150,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if (this.comboSelected != -1)
 			{
 				this.SetInitialFolder(this.comboFolders[this.comboSelected].FolderItem, true);
-				this.UpdateTable(-1);
 			}
 		}
 

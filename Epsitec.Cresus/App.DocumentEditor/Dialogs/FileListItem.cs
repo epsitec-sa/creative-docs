@@ -490,11 +490,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				DocumentCache.Add (this.folderItem.FullPath);
 				this.documentInfo = DocumentCache.FindDocumentInfo (this.folderItem.FullPath);
 
-				this.documentInfo.GetAsyncThumbnail (
-					delegate (Image image)
-					{
-						this.cachedImage = image;
-					});
+				if (this.documentInfo != null)
+				{
+					this.documentInfo.GetAsyncThumbnail (
+						delegate (Image image)
+						{
+							this.cachedImage = image;
+						});
+				}
 			}
 			
 			return this.documentInfo != null;
