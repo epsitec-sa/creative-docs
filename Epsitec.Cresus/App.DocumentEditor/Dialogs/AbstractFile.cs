@@ -1545,6 +1545,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fieldRename.Focus();
 
 			this.renameSelected = item;
+
+			this.fieldRename.Window.WindowResizeBeginning += this.HandleWindowResizeBeginning;
 		}
 
 		protected void RenameEnding(bool accepted)
@@ -1555,6 +1557,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				return;
 			}
+
+			this.fieldRename.Window.WindowResizeBeginning -= this.HandleWindowResizeBeginning;
 
 			this.focusedWidgetBeforeRename.Focus();
 			this.focusedWidgetBeforeRename = null;
@@ -1930,6 +1934,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				return item;
 			}
+		}
+
+		void HandleWindowResizeBeginning(object sender)
+		{
+			this.fieldFilename.Focus ();
 		}
 
 		void HandleVisitedMenuPressed(object sender, MessageEventArgs e)
@@ -2330,7 +2339,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected int						favoritesSelected;
 		protected List<FolderItem>			directoriesVisited;
 		protected int						directoriesVisitedIndex;
-		protected List<FileListItem>			comboFolders;
+		protected List<FileListItem>		comboFolders;
 		protected List<string>				comboTexts;
 		protected int						comboSelected;
 		protected CommandDispatcher			dispatcher;

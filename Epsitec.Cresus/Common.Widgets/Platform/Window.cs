@@ -1166,6 +1166,18 @@ namespace Epsitec.Common.Widgets.Platform
 			base.OnResize (e);
 		}
 
+		protected override void OnResizeBegin(System.EventArgs e)
+		{
+			base.OnResizeBegin (e);
+			this.widget_window.OnWindowResizeBeginning ();
+		}
+
+		protected override void OnResizeEnd(System.EventArgs e)
+		{
+			base.OnResizeEnd (e);
+			this.widget_window.OnWindowResizeEnded ();
+		}
+
 		protected override void OnSizeChanged(System.EventArgs e)
 		{
 //			System.Diagnostics.Debug.WriteLine ("OnSizeChanged");

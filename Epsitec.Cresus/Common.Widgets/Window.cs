@@ -1546,6 +1546,22 @@ namespace Epsitec.Common.Widgets
 				this.WindowSizeMoveStatusChanged (this);
 			}
 		}
+
+		internal void OnWindowResizeBeginning()
+		{
+			if (this.WindowResizeBeginning != null)
+			{
+				this.WindowResizeBeginning (this);
+			}
+		}
+
+		internal void OnWindowResizeEnded()
+		{
+			if (this.WindowResizeEnded != null)
+			{
+				this.WindowResizeEnded (this);
+			}
+		}
 		
 		
 		internal bool FilterMessage(Message message)
@@ -2391,6 +2407,8 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler				WindowDisposed;
 		public event EventHandler				WindowDisposing;
 		public event EventHandler				WindowSizeMoveStatusChanged;
+		public event EventHandler				WindowResizeBeginning;
+		public event EventHandler				WindowResizeEnded;
 		
 		public event EventHandler				FocusedWidgetChanged;
 		
