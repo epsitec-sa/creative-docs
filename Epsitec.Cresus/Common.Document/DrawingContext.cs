@@ -189,13 +189,13 @@ namespace Epsitec.Common.Document
 		}
 
 
-		public void Origin(Point origin)
+		public void SetOrigin(Point origin)
 		{
 			//	Spécifie l'origine de la zone visible.
-			this.Origin(origin.X, origin.Y);
+			this.SetOrigin(origin.X, origin.Y);
 		}
 
-		public void Origin(double originX, double originY)
+		public void SetOrigin(double originX, double originY)
 		{
 			if ( this.originX != originX ||
 				 this.originY != originY )
@@ -297,7 +297,7 @@ namespace Epsitec.Common.Document
 					double zx = cs.Width/size.Width;
 					double zy = cs.Height/size.Height;
 					double dpi = this.document.GlobalSettings.ScreenDpi;
-					return System.Math.Min(zx, zy)*2.54*(96.0/dpi);
+					return System.Math.Min (zx, zy)*2.54*100/dpi*this.fitScale;
 				}
 			}
 		}
@@ -318,7 +318,7 @@ namespace Epsitec.Common.Document
 					Size size = this.PageSize;
 					double zx = cs.Width/size.Width;
 					double dpi = this.document.GlobalSettings.ScreenDpi;
-					return zx*2.54*(96.0/dpi);
+					return zx*2.54*100/dpi*this.fitScale;
 				}
 			}
 		}
@@ -450,6 +450,20 @@ namespace Epsitec.Common.Document
 				}
 			}
 		}
+
+		public double FitScale
+		{
+			//	Ajustement pour laisser de l'espace en cas de zoom pleine page ou
+			//	pleine largeur; 1.0 = pas d'espace autour de la page.
+			get
+			{
+				return this.fitScale;
+			}
+			set
+			{
+				this.fitScale = value;
+			}
+		}
 		#endregion
 
 		public Size ContainerSize
@@ -490,7 +504,7 @@ namespace Epsitec.Common.Document
 			else
 			{
 				double dpi = this.document.GlobalSettings.ScreenDpi;
-				double scale = (dpi*zoom) / (25.4*10.0);
+				double scale = (dpi*zoom) / (2.54*100);
 				return new Point(scale, scale);
 			}
 		}
@@ -1355,50 +1369,77 @@ namespace Epsitec.Common.Document
 		public double MinimalSize
 		{
 			//	Taille minimale que doit avoir un objet à sa création.
-			get { return this.minimalSize/this.ScaleX; }
+			get
+			{
+				return DrawingContext.minimalSize/this.ScaleX;
+			}
 		}
 
 		public double MinimalWidth
 		{
 			//	Epaisseur minimale d'un objet pour la détection du coutour.
-			get { return this.minimalWidth/this.ScaleX; }
+			get
+			{
+				return DrawingContext.minimalWidth/this.ScaleX;
+			}
 		}
 
 		public double CloseMargin
 		{
 			//	Marge pour fermer un polygone.
-			get { return this.closeMargin/this.ScaleX; }
+			get
+			{
+				return DrawingContext.closeMargin/this.ScaleX;
+			}
 		}
 
 		public double GuideMargin
 		{
 			//	Marge magnétique d'un repère.
-			get { return this.guideMargin/this.ScaleX; }
+			get
+			{
+				return DrawingContext.guideMargin/this.ScaleX;
+			}
 		}
 
 		public double MagnetMargin
 		{
 			//	Marge magnétique des constructions.
-			get { return this.magnetMargin/this.ScaleX; }
+			get
+			{
+				return DrawingContext.magnetMargin/this.ScaleX;
+			}
 		}
 
 		public double HiliteSize
 		{
 			//	Taille supplémentaire lorsqu'un objet est survolé par la souris.
-			get { return this.hiliteSize/this.ScaleX; }
-			set { this.hiliteSize = value*this.ScaleX; }
+			get
+			{
+				return this.hiliteSize/this.ScaleX;
+			}
+			set
+			{
+				this.hiliteSize = value*this.ScaleX;
+			}
 		}
 
 		public double HandleSize
 		{
 			//	Taille d'une poignée.
-			get { return this.handleSize/this.ScaleX; }
+			get
+			{
+				return DrawingContext.handleSize/this.ScaleX;
+			}
 		}
 
 		public double HandleRedrawSize
 		{
 			//	Taille de la zone à redessiner d'une poignée.
-			get { return (this.handleSize+1.0)/this.ScaleX; }
+			get
+			{
+				return (DrawingContext.handleSize+1.0)/this.ScaleX;
+			}
 		}
 
 		public double SelectMarginSize
@@ -1406,7 +1447,10 @@ namespace Epsitec.Common.Document
 			//	Marge à ajouter à la bbox lors du dessin, pour résoudre le cas des poignées
 			//	qui débordent d'un objet avec un trait mince, et du mode Hilite qui augmente
 			//	l'épaisseur lors du survol de la souris.
-			get { return System.Math.Max(this.handleSize+4, this.hiliteSize)/this.ScaleX/2; }
+			get
+			{
+				return System.Math.Max (DrawingContext.handleSize+4, this.hiliteSize)/this.ScaleX/2;
+			}
 		}
 
 
@@ -2543,6 +2587,7 @@ namespace Epsitec.Common.Document
 		protected Drawer						drawer;
 		protected Size							containerSize;
 		protected double						zoom = 1;
+		protected double						fitScale = 0.96;
 		protected double						originX;
 		protected double						originY;
 		protected LayerDrawingMode				layerDrawingMode = LayerDrawingMode.DimmedInactive;
@@ -2573,13 +2618,13 @@ namespace Epsitec.Common.Document
 		protected bool							isDrawBoxThin;
 		protected bool							isDrawBoxGeom;
 		protected bool							isDrawBoxFull;
-		protected double						minimalSize = 3;
-		protected double						minimalWidth = 5;
-		protected double						closeMargin = 10;
-		protected double						guideMargin = 8;
-		protected double						magnetMargin = 6;
+		protected const double					minimalSize = 3;
+		protected const double					minimalWidth = 5;
+		protected const double					closeMargin = 10;
+		protected const double					guideMargin = 8;
+		protected const double					magnetMargin = 6;
 		protected double						hiliteSize = 4;
-		protected double						handleSize = 8;
+		protected const double					handleSize = 8;
 		protected bool							isShift;
 		protected bool							isCtrl;
 		protected bool							isAlt;

@@ -279,7 +279,7 @@ namespace Epsitec.Common.Document
 			origin.X = -System.Math.Min(-origin.X, this.drawingContext.MaxOriginX);
 			origin.Y = -System.Math.Max(-origin.Y, this.drawingContext.MinOriginY);
 			origin.Y = -System.Math.Min(-origin.Y, this.drawingContext.MaxOriginY);
-			this.drawingContext.Origin(origin);
+			this.drawingContext.SetOrigin(origin);
 		}
 		#endregion
 
@@ -625,7 +625,7 @@ namespace Epsitec.Common.Document
 				origin.Y = -System.Math.Max(-origin.Y, this.drawingContext.MinOriginY);
 				origin.Y = -System.Math.Min(-origin.Y, this.drawingContext.MaxOriginY);
 				
-				this.drawingContext.Origin(origin);
+				this.drawingContext.SetOrigin(origin);
 			}
 		}
 
@@ -1885,7 +1885,7 @@ namespace Epsitec.Common.Document
 				origin.Y = -System.Math.Max(-origin.Y, this.drawingContext.MinOriginY);
 				origin.Y = -System.Math.Min(-origin.Y, this.drawingContext.MaxOriginY);
 				
-				this.drawingContext.Origin(origin);
+				this.drawingContext.SetOrigin(origin);
 			}
 		}
 
@@ -3958,35 +3958,42 @@ namespace Epsitec.Common.Document
 
 			if ( this.IsActiveViewer )
 			{
-				if ( this.document.Type == DocumentType.Graphic )
+				if (this.paintPageFrame)
 				{
-					//	Dessine la "page".
-					Rectangle rect = this.document.Modifier.PageArea;
-					graphics.Align(ref rect);
-					rect.Offset(ix, iy);
+					if (this.document.Type == DocumentType.Graphic)
+					{
+						//	Dessine la "page".
+						Rectangle rect = this.document.Modifier.PageArea;
+						graphics.Align (ref rect);
+						rect.Offset (ix, iy);
 
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(Color.FromAlphaRgb(0.4, 0.5,0.5,0.5));
+						graphics.AddRectangle (rect);
+						graphics.RenderSolid (Color.FromAlphaRgb (0.4, 0.5, 0.5, 0.5));
+					}
+
+					Rectangle area = this.document.Modifier.RectangleArea;
+					graphics.Align (ref area);
+					area.Offset (ix, iy);
+					graphics.AddRectangle (area);
+					graphics.RenderSolid (Color.FromAlphaRgb (0.4, 0.5, 0.5, 0.5));
 				}
-
-				Rectangle area = this.document.Modifier.RectangleArea;
-				graphics.Align(ref area);
-				area.Offset(ix, iy);
-				graphics.AddRectangle(area);
-				graphics.RenderSolid(Color.FromAlphaRgb(0.4, 0.5,0.5,0.5));
 			}
 
 			if ( this.drawingContext.PreviewActive )
 			{
 				if ( this.document.Type == DocumentType.Graphic )
 				{
-					//	Dessine la "page".
-					Rectangle rect = this.document.Modifier.PageArea;
-					graphics.Align(ref rect);
-					rect.Offset(ix, iy);
+					if (this.paintPageFrame)
+					{
 
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(Color.FromBrightness(0));
+						//	Dessine la "page".
+						Rectangle rect = this.document.Modifier.PageArea;
+						graphics.Align (ref rect);
+						rect.Offset (ix, iy);
+
+						graphics.AddRectangle (rect);
+						graphics.RenderSolid (Color.FromBrightness (0));
+					}
 
 					if ( this.document.Settings.PrintInfo.Target   &&
 						!this.document.Settings.PrintInfo.AutoZoom )
@@ -4266,13 +4273,18 @@ namespace Epsitec.Common.Document
 			graphics.LineWidth = initialWidth;
 		}
 
+		
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			//	Dessine le document.
-			if ( this.Window.IsSizeMoveInProgress )
+			if (!this.redrawWhenResizing)
 			{
-				//	N'affiche pas le document pendant le redimensionnement de la fenêtre.
-				return;
+				if (this.Window.IsSizeMoveInProgress)
+				{
+					//	N'affiche pas le document pendant le redimensionnement de la fenêtre.
+					return;
+				}
 			}
 
 			if (this.document.InitializationInProgress)
@@ -4319,23 +4331,27 @@ namespace Epsitec.Common.Document
 			//?System.Diagnostics.Debug.WriteLine("PaintBackgroundImplementation "+clipRect.ToString());
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
-			if ( this.document.Type == DocumentType.Pictogram )
+			if (this.paintWorkSurface)
 			{
-				if ( !this.BackColor.IsTransparent && this.drawingContext.PreviewActive )
+				//	Peint le fond de la surface de travail.
+				if (this.document.Type == DocumentType.Pictogram)
 				{
-					graphics.AddFilledRectangle(clipRect);
-					graphics.RenderSolid(this.BackColor);
+					if (!this.BackColor.IsTransparent && this.drawingContext.PreviewActive)
+					{
+						graphics.AddFilledRectangle (clipRect);
+						graphics.RenderSolid (this.BackColor);
+					}
+					else
+					{
+						graphics.AddFilledRectangle (clipRect);
+						graphics.RenderSolid (Color.FromBrightness (0.95));
+					}
 				}
 				else
 				{
-					graphics.AddFilledRectangle(clipRect);
-					graphics.RenderSolid(Color.FromBrightness(0.95));
+					graphics.AddFilledRectangle (clipRect);
+					graphics.RenderSolid (Color.FromBrightness (0.95));
 				}
-			}
-			else
-			{
-				graphics.AddFilledRectangle(clipRect);
-				graphics.RenderSolid(Color.FromBrightness(0.95));
 			}
 
 			double initialWidth = graphics.LineWidth;
@@ -4394,11 +4410,14 @@ namespace Epsitec.Common.Document
 			graphics.Transform = save;
 			graphics.LineWidth = initialWidth;
 
-			//	Dessine le cadre.
-			Rectangle rect = new Rectangle(0, 0, this.Client.Size.Width, this.Client.Size.Height);
-			rect.Deflate(0.5);
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(adorner.ColorBorder);
+			if (this.paintWorkSurface)
+			{
+				//	Dessine le cadre.
+				Rectangle rect = new Rectangle (0, 0, this.Client.Size.Width, this.Client.Size.Height);
+				rect.Deflate (0.5);
+				graphics.AddRectangle (rect);
+				graphics.RenderSolid (adorner.ColorBorder);
+			}
 
 			if ( this.debugDirty )
 			{
@@ -4729,8 +4748,51 @@ namespace Epsitec.Common.Document
 			//	Retourne la zone de redessin.
 			get { return this.redrawArea; }
 		}
+
+		public bool RedrawWhenResizing
+		{
+			//	Peint le contenu de la page même pendant un redimensionnement du widget.
+			get
+			{
+				return this.redrawWhenResizing;
+			}
+			set
+			{
+				this.redrawWhenResizing = value;
+			}
+		}
 		#endregion
 
+
+		#region Paint Settings
+
+		public bool PaintPageFrame
+		{
+			//	Peint le cadre de la page.
+			get
+			{
+				return this.paintPageFrame;
+			}
+			set
+			{
+				this.paintPageFrame = value;
+			}
+		}
+
+		public bool PaintWorkSurface
+		{
+			//	Peint le cadre de la page et la surface de travail.
+			get
+			{
+				return this.paintWorkSurface;
+			}
+			set
+			{
+				this.paintWorkSurface = value;
+			}
+		}
+
+		#endregion
 
 		protected Document						document;
 		protected DrawingContext				drawingContext;
@@ -4739,6 +4801,9 @@ namespace Epsitec.Common.Document
 		protected bool							partialSelect;
 		protected bool							selectorAdaptLine = true;
 		protected bool							selectorAdaptText = true;
+		protected bool							redrawWhenResizing;
+		protected bool							paintPageFrame = true;
+		protected bool							paintWorkSurface = true;
 		protected Rectangle						redrawArea;
 		protected MessageType					lastMessageType;
 		protected Point							mousePosWidget;

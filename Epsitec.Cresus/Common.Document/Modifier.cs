@@ -4614,6 +4614,22 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public IList<Objects.Page> GetSlavePageList()
+		{
+			List<Objects.Page> pageList = new List<Objects.Page> ();
+			UndoableList pages = this.document.GetObjects;
+
+			foreach (Objects.Page page in pages)
+			{
+				if (page.MasterType == Objects.MasterType.Slave)
+				{
+					pageList.Add (page);
+				}
+			}
+			
+			return pageList;
+		}
+
 		public List<Objects.Page> ComputeMasterPageList(int pageNumber)
 		{
 			//	Génère la liste des pages maîtres à utiliser pour une page donnée.

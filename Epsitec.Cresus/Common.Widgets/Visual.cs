@@ -1294,7 +1294,8 @@ namespace Epsitec.Common.Widgets
 			Command commandObject  = this.CommandObject;
 			Caption commandCaption = commandObject == null ? null : commandObject.Caption;
 
-			if (commandCaption != null)
+			if ((commandCaption != null) &&
+				(commandCaption.Id.IsValid))
 			{
 				Support.ResourceManager manager = Visual.cachedResourceManager ?? Helpers.VisualTree.FindResourceManager (this);
 
