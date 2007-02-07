@@ -153,6 +153,48 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public long DocumentVersion
+		{
+			get
+			{
+				return this.documentVersion;
+			}
+			set
+			{
+				this.documentVersion = value;
+			}
+		}
+
+		public string DocumentVersionString
+		{
+			get
+			{
+				if (this.documentVersion == 0)
+				{
+					return "?";
+				}
+				else
+				{
+					int revision   = (int) (this.documentVersion >> 32) & 0xffff;
+					int version    = (int) (this.documentVersion >> 16) & 0xffff;
+					int subversion = (int) (this.documentVersion >>  0) & 0xffff;
+
+					return string.Format ("{0}.{1}.{2}", revision, version, subversion);
+				}
+			}
+		}
+
+		public void DefineDocumentVersion(System.Reflection.Assembly assembly)
+		{
+			string[] args = assembly.FullName.Split (',')[1].Split ('=')[1].Split ('.');
+
+			int revision   = int.Parse (args[0], System.Globalization.CultureInfo.InvariantCulture);
+			int version    = int.Parse (args[1], System.Globalization.CultureInfo.InvariantCulture);
+			int subversion = int.Parse (args[2], System.Globalization.CultureInfo.InvariantCulture);
+
+			this.documentVersion = ((long)(revision) << 32) + ((long)(version) << 16) + (long)(subversion);
+		}
+
 		protected int							Version
 		{
 			get
@@ -178,17 +220,18 @@ namespace Epsitec.Common.Document
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			//	Sérialise l'objet.
-			info.AddValue ("Version", 3);
+			info.AddValue ("Version", 4);
 			info.AddValue ("PageSize", this.PageSize);
 			info.AddValue ("PageWidth", this.pageWidth);
 			info.AddValue ("PageHeight", this.pageHeight);
 			info.AddValue ("PageFormat", this.pageFormat);
-			info.AddValue ("PagesCount", this.pageCount);
-			info.AddValue ("LayersCount", this.layerCount);
-			info.AddValue ("ObjectsCount", this.objectCount);
-			info.AddValue ("ComplexesCount", this.complexCount);
-			info.AddValue ("FontsCount", this.fontCount);
-			info.AddValue ("ImagesCount", this.imageCount);
+			info.AddValue ("PageCount", this.pageCount);
+			info.AddValue ("LayerCount", this.layerCount);
+			info.AddValue ("ObjectCount", this.objectCount);
+			info.AddValue ("ComplexCount", this.complexCount);
+			info.AddValue ("FontCount", this.fontCount);
+			info.AddValue ("ImageCount", this.imageCount);
+			info.AddValue ("DocumentVersion", this.documentVersion);
 		}
 
 		protected DocumentInfo(SerializationInfo info, StreamingContext context)
@@ -200,22 +243,36 @@ namespace Epsitec.Common.Document
 			{
 				this.pageWidth = info.GetDouble ("PageWidth");
 				this.pageHeight = info.GetDouble ("PageHeight");
+				this.pageFormat = info.GetString ("PageFormat");
 			}
 			else
 			{
 				this.PageSize = (Size) info.GetValue ("PageSize", typeof (Size));
+				this.pageFormat = info.GetString ("PageFormat");
 			}
-			
-			this.pageFormat = info.GetString ("PageFormat");
-			this.pageCount = info.GetInt32 ("PagesCount");
-			this.layerCount = info.GetInt32 ("LayersCount");
-			this.objectCount = info.GetInt32 ("ObjectsCount");
-			this.complexCount = info.GetInt32 ("ComplexesCount");
 
-			if (this.version >= 2)
+			if (this.version >= 4)
 			{
-				this.fontCount = info.GetInt32 ("FontsCount");
-				this.imageCount = info.GetInt32 ("ImagesCount");
+				this.pageCount = info.GetInt32 ("PageCount");
+				this.layerCount = info.GetInt32 ("LayerCount");
+				this.objectCount = info.GetInt32 ("ObjectCount");
+				this.complexCount = info.GetInt32 ("ComplexCount");
+				this.fontCount = info.GetInt32 ("FontCount");
+				this.imageCount = info.GetInt32 ("ImageCount");
+				this.documentVersion = info.GetInt64 ("DocumentVersion");
+			}
+			else
+			{
+				this.pageCount = info.GetInt32 ("PagesCount");
+				this.layerCount = info.GetInt32 ("LayersCount");
+				this.objectCount = info.GetInt32 ("ObjectsCount");
+				this.complexCount = info.GetInt32 ("ComplexesCount");
+
+				if (this.version >= 2)
+				{
+					this.fontCount = info.GetInt32 ("FontsCount");
+					this.imageCount = info.GetInt32 ("ImagesCount");
+				}
 			}
 		}
 
@@ -230,5 +287,6 @@ namespace Epsitec.Common.Document
 		private int complexCount;
 		private int fontCount;
 		private int imageCount;
+		private long documentVersion;
 	}
 }

@@ -386,8 +386,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 50));
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 85));
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("type", 95, FileListItem.GetDescriptionPropertyComparer ()));
-			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("date", 80));
-			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("size", 40));
+			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("date", 96));
+			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("size", 50));
 			this.table2.ColumnHeader.SetColumnSortable (0, false);
 			this.table2.ColumnHeader.SetColumnSort (1, Epsitec.Common.Types.ListSortDirection.Ascending);
 
@@ -1169,8 +1169,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 					else
 					{
-						return true;
-						//#return false;
+						return false;
 					}
 				};
 

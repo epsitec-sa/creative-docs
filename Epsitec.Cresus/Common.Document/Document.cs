@@ -1532,10 +1532,6 @@ namespace Epsitec.Common.Document
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			//	Sérialise le document.
-			int revision = 1;
-			int version  = 2;
-			info.AddValue("Revision", revision);
-			info.AddValue("Version", version);
 			info.AddValue("Type", this.type);
 			info.AddValue("Name", this.name);
 
@@ -1735,12 +1731,26 @@ namespace Epsitec.Common.Document
 
 				if (dataImage != null)
 				{
-					image = Bitmap.FromData (dataImage);
+					try
+					{
+						Image loaded = Bitmap.FromData (dataImage);
+						image = loaded;
+					}
+					catch
+					{
+					}
 				}
 
 				if (dataDocInfo != null)
 				{
-					stat = Serialization.DeserializeFromMemory (dataDocInfo) as Document.Statistics;
+					try
+					{
+						Statistics loaded = Serialization.DeserializeFromMemory (dataDocInfo) as Document.Statistics;
+						stat = loaded;
+					}
+					catch
+					{
+					}
 				}
 
 				stat.SetThumbnail (image);
@@ -1850,6 +1860,7 @@ namespace Epsitec.Common.Document
 			stat.LayerCount = this.modifier.StatisticTotalLayers();
 			stat.ObjectCount = this.modifier.StatisticTotalObjects();
 			stat.ComplexObjectCount = this.modifier.StatisticTotalComplex();
+			stat.DefineDocumentVersion (typeof (Document).Assembly);
 
 			List<OpenType.FontName> fontList = new List<OpenType.FontName>();
 			TextFlow.StatisticFonts(fontList, this.TextFlows);
