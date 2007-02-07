@@ -304,7 +304,21 @@ namespace Epsitec.Common.Support
 				return value == 1;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets a value indicating whether the user expects not to see file extensions.
+		/// </summary>
+		/// <value><c>true</c> if file extensions should be hidden; otherwise, <c>false</c>.</value>
+		public static bool HideFileExtensions
+		{
+			get
+			{
+				int value = (int) Microsoft.Win32.Registry.GetValue (@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "HideFileExt", 2);
+
+				return value == 1;
+			}
+		}
+
 		#region IEquatable<FolderItem> Members
 
 		public bool Equals(FolderItem other)
