@@ -5,28 +5,46 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.Internal
 {
+	/// <summary>
+	/// The <c>ImageDocumentInfo</c> class provides information for images.
+	/// </summary>
 	internal class ImageDocumentInfo : IDocumentInfo
 	{
-		public ImageDocumentInfo(Drawing.ImageData image)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ImageDocumentInfo"/> class
+		/// for a specified image.
+		/// </summary>
+		/// <param name="imageData">The image data.</param>
+		public ImageDocumentInfo(Drawing.ImageData imageData)
 		{
-			this.image = image;
+			this.imageData = imageData;
 		}
 
 		#region IDocumentInfo Members
 
+		/// <summary>
+		/// Gets the description of the document as a formatted string.
+		/// </summary>
+		/// <returns>The description of the document.</returns>
 		public string GetDescription()
 		{
-			if (this.image != null)
+			if (this.imageData != null)
 			{
-				string format = this.image.GetFileFormat ().ToString ();
-				string size = string.Format ("{0} x {1}", this.image.SourceWidth, this.image.SourceHeight);
+				//	TODO: use resource to format the information
 
-				return string.Concat (format, "<br/>", size);
+				string format = this.imageData.GetFileFormat ().ToString ();
+				string size = string.Format ("{0} x {1}", this.imageData.SourceWidth, this.imageData.SourceHeight);
+
+				return string.Concat (size, "<br/>", format);
 			}
 
 			return "";
 		}
 
+		/// <summary>
+		/// Gets the thumbnail image of the document.
+		/// </summary>
+		/// <returns>The thumbnail image or <c>null</c>.</returns>
 		public Drawing.Image GetThumbnail()
 		{
 			Drawing.Image image;
@@ -38,7 +56,7 @@ namespace Epsitec.Common.Support.Internal
 
 			if (image == null)
 			{
-				image = Drawing.Bitmap.FromImage (this.image.GetThumbnail ());
+				image = Drawing.Bitmap.FromImage (this.imageData.GetThumbnail ());
 			}
 
 			lock (this.exclusion)
@@ -56,6 +74,12 @@ namespace Epsitec.Common.Support.Internal
 			return image;
 		}
 
+		/// <summary>
+		/// Asynchronously gets the image thumbnail of the document.
+		/// </summary>
+		/// <param name="callback">The callback which will be invoked with the
+		/// thumbnail image, as soon as it will be available; this may happen
+		/// synchronously when calling <c>GetAsyncThumbnail</c>, or later.</param>
 		public void GetAsyncThumbnail(SimpleCallback<Drawing.Image> callback)
 		{
 			Drawing.Image image;
@@ -69,9 +93,9 @@ namespace Epsitec.Common.Support.Internal
 					if (this.callbackQueue == null)
 					{
 						this.callbackQueue = new Queue<SimpleCallback<Drawing.Image>> ();
-						this.image.Changed += this.HandleImageChanged;
+						this.imageData.Changed += this.HandleImageChanged;
 
-						image = Drawing.Bitmap.FromImage (this.image.GetAsyncThumbnail ());
+						image = Drawing.Bitmap.FromImage (this.imageData.GetAsyncThumbnail ());
 
 						if (image != null)
 						{
@@ -96,9 +120,18 @@ namespace Epsitec.Common.Support.Internal
 
 		#endregion
 
+		/// <summary>
+		/// Handles the <c>Changed</c> event of the image data source. This
+		/// may happen when the requested thumbnail becomes ready.
+		/// </summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="Epsitec.Common.Drawing.ImageDataEventArgs"/> instance containing the event data.</param>
 		private void HandleImageChanged(object sender, Drawing.ImageDataEventArgs e)
 		{
-			Drawing.Image image = Drawing.Bitmap.FromImage (this.image.GetAsyncThumbnail ());
+			Drawing.Image image = Drawing.Bitmap.FromImage (this.imageData.GetAsyncThumbnail ());
+			
+			//	The thumbnail image might still not be ready; but if it is, we no longer
+			//	need to listen to any events :
 			
 			if (image != null)
 			{
@@ -109,7 +142,7 @@ namespace Epsitec.Common.Support.Internal
 					this.thumbnail = new Types.Weak<Drawing.Image> (image);
 					callbacks = this.callbackQueue.ToArray ();
 					this.callbackQueue = null;
-					this.image.Changed -= this.HandleImageChanged;
+					this.imageData.Changed -= this.HandleImageChanged;
 				}
 
 				foreach (SimpleCallback<Drawing.Image> callback in callbacks)
@@ -119,6 +152,10 @@ namespace Epsitec.Common.Support.Internal
 			}
 		}
 
+		/// <summary>
+		/// Gets the cached thumbnail image.
+		/// </summary>
+		/// <returns>The image or <c>null</c>.</returns>
 		private Drawing.Image GetCachedThumbnail()
 		{
 			Drawing.Image image = null;
@@ -131,9 +168,9 @@ namespace Epsitec.Common.Support.Internal
 			return image;
 		}
 
-		private object exclusion = new object ();
-		Queue<SimpleCallback<Drawing.Image>> callbackQueue;
-		Drawing.ImageData image;
-		Types.Weak<Drawing.Image> thumbnail;
+		private object							exclusion = new object ();
+		Queue<SimpleCallback<Drawing.Image>>	callbackQueue;
+		Drawing.ImageData						imageData;
+		Types.Weak<Drawing.Image>				thumbnail;
 	}
 }
