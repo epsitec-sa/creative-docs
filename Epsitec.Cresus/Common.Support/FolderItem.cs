@@ -299,9 +299,22 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				int value = (int) Microsoft.Win32.Registry.GetValue (@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "Hidden", 2);
+				int ticks = System.Environment.TickCount;
+				int delta = System.Math.Abs (FolderItem.showHiddenFilesCacheTicks - ticks);
 
-				return value == 1;
+				if (delta > FolderItem.cacheTickLifeTime)
+				{
+					//	Refresh the cached value only if it is older than 10 seconds;
+					//	we do this to avoid re-reading repeatedly the registry value
+					//	when ShowHiddenFiles gets called in a tight loop.
+
+					int value = (int) Microsoft.Win32.Registry.GetValue (@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "Hidden", 2);
+
+					FolderItem.showHiddenFilesCacheValue = (value == 1);
+					FolderItem.showHiddenFilesCacheTicks = ticks;
+				}
+
+				return FolderItem.showHiddenFilesCacheValue;
 			}
 		}
 
@@ -313,9 +326,18 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				int value = (int) Microsoft.Win32.Registry.GetValue (@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "HideFileExt", 2);
+				int ticks = System.Environment.TickCount;
+				int delta = System.Math.Abs (FolderItem.hideFileExtensionsCacheTicks - ticks);
 
-				return value == 1;
+				if (delta > FolderItem.cacheTickLifeTime)
+				{
+					int value = (int) Microsoft.Win32.Registry.GetValue (@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "HideFileExt", 2);
+
+					FolderItem.hideFileExtensionsCacheValue = (value == 1);
+					FolderItem.hideFileExtensionsCacheTicks = ticks;
+				}
+				
+				return FolderItem.hideFileExtensionsCacheValue;
 			}
 		}
 
@@ -429,5 +451,13 @@ namespace Epsitec.Common.Support
 		private Platform.FolderItemHandle		handle;
 		private Platform.FolderItemAttributes	attributes;
 		private FolderQueryMode					queryMode;
+
+		private static bool hideFileExtensionsCacheValue;
+		private static bool showHiddenFilesCacheValue;
+		
+		private static int hideFileExtensionsCacheTicks;
+		private static int showHiddenFilesCacheTicks;
+
+		private const int cacheTickLifeTime = 10*1000;
 	}
 }

@@ -1166,7 +1166,7 @@ namespace Epsitec.Common.Types
 					{
 						List<object> list = new List<object> ();
 
-						System.Type itemType;
+						System.Type itemType = null;
 						System.Predicate<object> filter;
 						SortDescription[] sortDescriptions;
 
@@ -1178,7 +1178,24 @@ namespace Epsitec.Common.Types
 
 						lock (this.sourceList.SyncRoot)
 						{
-							itemType = CollectionView.FillFilteredList (this.sourceList, list, filter);
+							for (int i = 0; i < 3; i++)
+							{
+								try
+								{
+									itemType = CollectionView.FillFilteredList (this.sourceList, list, filter);
+									break;
+								}
+								catch (System.InvalidOperationException ex)
+								{
+									//	For some mysterious reason, I sometimes, but very seldom, get
+									//	a modification to the sourceList collection while we hold the
+									//	lock ! Prevent a crash by catching and looping again.
+									
+									System.Diagnostics.Debug.WriteLine ("Should never happen: " + ex.Message);
+									
+									list.Clear ();
+								}
+							}
 						}
 
 						if ((sortDescriptions != null) &&

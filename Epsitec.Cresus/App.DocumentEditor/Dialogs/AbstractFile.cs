@@ -371,29 +371,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	TODO: (*) En mode Auto, l'ascenseur est caché lors de la première apparition
 			//	du dialogue !
 
-			CellArrayStyles sh = CellArrayStyles.Stretch | CellArrayStyles.Separator | CellArrayStyles.Header | CellArrayStyles.Mobile;
-			CellArrayStyles sv = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine;
-
-			if (this.isMultipleSelection)
-			{
-				sv |= CellArrayStyles.SelectMulti;
-			}
-
-#if false
-			this.table = new CellTable(group);
-			this.table.DefHeight = cellHeight;
-			this.table.HeaderHeight = 20;
-			this.table.StyleH = sh;
-			this.table.StyleV = sv;
-			this.table.AlphaSeparator = 0.3;
-			this.table.Margins = new Margins(0, 0, 0, 0);
-			this.table.Dock = DockStyle.Fill;
-			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableFinalSelectionChanged);
-			this.table.TabIndex = 2;
-			this.table.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.table.DoubleClicked += new MessageEventHandler(this.HandleTableDoubleClicked);
-			this.table.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
-#endif
 			this.files = new ObservableList<FileListItem> ();
 			this.filesCollectionView = new CollectionView (this.files);
 
@@ -416,11 +393,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table2.AutoFocus = true;
 			this.table2.VerticalScrollMode = ItemTableScrollMode.ItemBased;
 			this.table2.ItemPanel.ItemViewDefaultSize = new Size (this.table2.Parent.PreferredWidth, cellHeight);
-			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 50));
-			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 85));
-			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("type", 95, FileListItem.GetDescriptionPropertyComparer ()));
+			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 72));
+			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 200));
+			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("type", 120, FileListItem.GetDescriptionPropertyComparer ()));
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("date", 96));
-			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("size", 50));
+			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("size", 54));
 			this.table2.ColumnHeader.SetColumnSortable (0, false);
 			this.table2.ColumnHeader.SetColumnSort (1, Epsitec.Common.Types.ListSortDirection.Ascending);
 			this.table2.ColumnHeader.SetColumnSort (2, Epsitec.Common.Types.ListSortDirection.Ascending);
@@ -1476,7 +1453,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.focusedWidgetBeforeRename = this.window.FocusedWidget;
 
 			this.fieldRename.SetManualBounds(rect);
-			this.fieldRename.Text = item.ShortFileName;
+			this.fieldRename.Text = TextLayout.ConvertToTaggedText (item.ShortFileName);
 			this.fieldRename.SelectAll();
 			this.fieldRename.Visibility = true;
 			this.fieldRename.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
@@ -1544,7 +1521,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				if (nameWidget != null)
 				{
-					nameWidget.Text = item.ShortFileName;
+					nameWidget.Text = TextLayout.ConvertToTaggedText (item.ShortFileName);
 				}
 			}
 		}
@@ -2074,7 +2051,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			foreach (FileListItem cell in this.comboFolders)
 			{
-				string text = string.Format("<img src=\"{0}\"/> {1}", cell.GetSmallIcon ().ImageName, cell.ShortFileName);
+				string text = string.Format("<img src=\"{0}\"/> {1}", cell.GetSmallIcon ().ImageName, TextLayout.ConvertToTaggedText (cell.ShortFileName));
 				text = AbstractFile.AddStringIndent(text, cell.Depth);
 
 				this.fieldPath.Items.Add(text);

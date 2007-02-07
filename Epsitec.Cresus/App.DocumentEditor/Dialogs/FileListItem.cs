@@ -169,24 +169,30 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		public string ShortFileName
 		{
-			//	Nom du fichier court, sans le chemin d'accès ni l'extension.
+			//	Nom du fichier court, sans le chemin d'accès (et ni l'extension, si c'est
+			//	défini comme tel par l'utilisateur)
 			get
 			{
 				if (this.cachedShortFileName == null)
 				{
 					if (this.IsDirectory)
 					{
-						this.cachedShortFileName = TextLayout.ConvertToTaggedText (this.folderItem.DisplayName);
+						this.cachedShortFileName = this.folderItem.DisplayName;
 					}
 					else if (this.IsShortcut)
 					{
-						this.cachedShortFileName = TextLayout.ConvertToTaggedText (this.folderItem.DisplayName);
-//						FolderItem item = FileManager.ResolveShortcut (this.folderItem, FolderQueryMode.NoIcons);
-//						this.cachedShortFileName = TextLayout.ConvertToTaggedText (System.IO.Path.GetFileNameWithoutExtension (item.FullPath));
+						this.cachedShortFileName = this.folderItem.DisplayName;
 					}
 					else
 					{
-						this.cachedShortFileName = TextLayout.ConvertToTaggedText (System.IO.Path.GetFileNameWithoutExtension (this.folderItem.FullPath));
+						if (FolderItem.HideFileExtensions)
+						{
+							this.cachedShortFileName = System.IO.Path.GetFileNameWithoutExtension (this.folderItem.FullPath);
+						}
+						else
+						{
+							this.cachedShortFileName = System.IO.Path.GetFileName (this.folderItem.FullPath);
+						}
 					}
 				}
 
