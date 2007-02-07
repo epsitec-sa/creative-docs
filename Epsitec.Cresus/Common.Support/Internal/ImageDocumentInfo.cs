@@ -168,7 +168,7 @@ namespace Epsitec.Common.Support.Internal
 			return image;
 		}
 
-		private object							exclusion = new object ();
+		private readonly object					exclusion = new object ();
 		Queue<SimpleCallback<Drawing.Image>>	callbackQueue;
 		Drawing.ImageData						imageData;
 		Types.Weak<Drawing.Image>				thumbnail;

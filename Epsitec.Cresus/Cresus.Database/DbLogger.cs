@@ -348,7 +348,7 @@ namespace Epsitec.Cresus.Database
 		private DbTable							table;
 		private string							tableSqlName;
 
-		private object							exclusion = new object ();
+		private readonly object					exclusion = new object ();
 		
 		private int								clientId  = -1;
 		private long							nextId    = -1;

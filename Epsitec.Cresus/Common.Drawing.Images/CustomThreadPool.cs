@@ -5,17 +5,33 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Drawing
 {
+	/// <summary>
+	/// The <c>CustomThreadPool</c> class implements a specialized thread pool
+	/// which is used by the image manager to execute asynchronous threads.
+	/// </summary>
 	internal sealed class CustomThreadPool : System.IDisposable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CustomThreadPool"/> class.
+		/// </summary>
 		public CustomThreadPool()
 		{
 		}
 
+		/// <summary>
+		/// Defines the memory limit which specified when to much memory is used.
+		/// </summary>
+		/// <param name="limit">The limit.</param>
 		public void DefineMemoryLimit(long limit)
 		{
 			this.memoryLimit = limit;
 		}
 
+		/// <summary>
+		/// Queues a work item; it will be executed by one of the thread pool
+		/// threads.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
 		public void QueueWorkItem(Callback callback)
 		{
 			int countThreads = 0;
@@ -104,9 +120,12 @@ namespace Epsitec.Common.Drawing
 				
 				while (true)
 				{
-					if (this.exitRequested)
+					lock (this.threads)
 					{
-						break;
+						if (this.exitRequested)
+						{
+							break;
+						}
 					}
 
 					if (this.semaphore.WaitOne (this.lifeTimeout, false))
@@ -221,13 +240,13 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		private long memoryLimit = 200*1024*1024L;
-		private int lifeTimeout = 20*1000;
-		private int busyThreadCount;
-		private bool exitRequested;
-		private readonly object exclusion = new object ();
-		private Queue<Callback> workItems = new Queue<Callback> ();
-		private List<System.Threading.Thread> threads = new List<System.Threading.Thread> ();
-		private System.Threading.Semaphore semaphore = new System.Threading.Semaphore (0, 0x7fffffff);
+		private readonly object					exclusion	= new object ();
+		private long							memoryLimit = 200*1024*1024L;
+		private int								lifeTimeout = 20*1000;
+		private int								busyThreadCount;
+		private bool							exitRequested;
+		readonly Queue<Callback>				workItems	= new Queue<Callback> ();
+		readonly List<System.Threading.Thread>	threads		= new List<System.Threading.Thread> ();
+		readonly System.Threading.Semaphore		semaphore	= new System.Threading.Semaphore (0, 0x7fffffff);
 	}
 }
