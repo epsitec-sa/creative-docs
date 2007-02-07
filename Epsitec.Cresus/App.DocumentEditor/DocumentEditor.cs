@@ -1374,7 +1374,7 @@ namespace Epsitec.App.DocumentEditor
 			else
 			{
 				this.dlgFileOpen.InitialDirectory = this.globalSettings.InitialDirectory;
-				this.dlgFileOpen.InitialFilename = "";
+				this.dlgFileOpen.InitialFileName = "";
 
 				this.dlgFileOpen.Show();  // choix d'un fichier...
 				if (this.dlgFileOpen.Result != Common.Dialogs.DialogResult.Accept)
@@ -1384,7 +1384,7 @@ namespace Epsitec.App.DocumentEditor
 
 				this.globalSettings.InitialDirectory = this.dlgFileOpen.InitialDirectory;
 
-				string[] names = this.dlgFileOpen.Filenames;
+				string[] names = this.dlgFileOpen.FileNames;
 				for (int i=0; i<names.Length; i++)
 				{
 					this.Open(names[i]);
@@ -1401,7 +1401,7 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgSplash.Hide();
 
 			this.dlgFileOpenModel.InitialDirectory = this.globalSettings.NewDocument;
-			this.dlgFileOpenModel.InitialFilename = "";
+			this.dlgFileOpenModel.InitialFileName = "";
 
 			this.dlgFileOpenModel.Show();  // choix d'un fichier...
 			if (this.dlgFileOpenModel.Result != Common.Dialogs.DialogResult.Accept)
@@ -1411,7 +1411,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.globalSettings.NewDocument = this.dlgFileOpenModel.InitialDirectory;
 
-			string[] names = this.dlgFileOpenModel.Filenames;
+			string[] names = this.dlgFileOpenModel.FileNames;
 			for (int i=0; i<names.Length; i++)
 			{
 				this.Open(names[i]);
@@ -1488,7 +1488,7 @@ namespace Epsitec.App.DocumentEditor
 			//	Affiche l'erreur éventuelle.
 			//	Retourne false si le fichier n'a pas été enregistré.
 			string filename = this.CurrentDocument.Filename;
-			if (Document.RedirectionFilename(ref filename))
+			if (Document.RedirectFileName(ref filename))
 			{
 				this.DialogWarningRedirection();
 				ask = true;
@@ -1522,18 +1522,18 @@ namespace Epsitec.App.DocumentEditor
 					if (filename == "")
 					{
 						this.dlgFileSave.InitialDirectory = this.globalSettings.InitialDirectory;
-						this.dlgFileSave.InitialFilename = "";
+						this.dlgFileSave.InitialFileName = "";
 					}
 					else
 					{
 						this.dlgFileSave.InitialDirectory = System.IO.Path.GetDirectoryName(filename);
-						this.dlgFileSave.InitialFilename = filename;
+						this.dlgFileSave.InitialFileName = filename;
 					}
 
 					this.dlgFileSave.FontIncludeMode = this.CurrentDocument.FontIncludeModeValue;
 					this.dlgFileSave.ImageIncludeMode = this.CurrentDocument.ImageIncludeModeValue;
 
-					if (this.dlgFileSave.IsRedirection && this.dlgFileSave.InitialFilename != "")
+					if (this.dlgFileSave.IsRedirection && this.dlgFileSave.InitialFileName != "")
 					{
 						this.DialogWarningRedirection();
 					}
@@ -1544,7 +1544,7 @@ namespace Epsitec.App.DocumentEditor
 						return false;
 					}
 
-					filename = this.dlgFileSave.Filename;
+					filename = this.dlgFileSave.FileName;
 					filename = DocumentEditor.AdjustFilename(filename);
 
 					this.CurrentDocument.FontIncludeModeValue = this.dlgFileSave.FontIncludeMode;
@@ -1552,7 +1552,7 @@ namespace Epsitec.App.DocumentEditor
 				}
 			}
 
-			if (Document.RedirectionFilename(ref filename))
+			if (Document.RedirectFileName(ref filename))
 			{
 				this.DialogWarningRedirection();
 			}
@@ -1585,7 +1585,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 
 			this.dlgFileSaveModel.InitialDirectory = newDocument;
-			this.dlgFileSaveModel.InitialFilename = "";
+			this.dlgFileSaveModel.InitialFileName = "";
 			this.dlgFileSaveModel.FontIncludeMode = this.CurrentDocument.FontIncludeModeValue;
 			this.dlgFileSaveModel.ImageIncludeMode = this.CurrentDocument.ImageIncludeModeValue;
 
@@ -1595,13 +1595,13 @@ namespace Epsitec.App.DocumentEditor
 				return false;
 			}
 
-			filename = this.dlgFileSaveModel.Filename;
+			filename = this.dlgFileSaveModel.FileName;
 			filename = DocumentEditor.AdjustFilename(filename);
 
 			this.CurrentDocument.FontIncludeModeValue = this.dlgFileSaveModel.FontIncludeMode;
 			this.CurrentDocument.ImageIncludeModeValue = this.dlgFileSaveModel.ImageIncludeMode;
 
-			if (Document.RedirectionFilename(ref filename))
+			if (Document.RedirectFileName(ref filename))
 			{
 				this.DialogWarningRedirection();
 			}
@@ -1738,7 +1738,7 @@ namespace Epsitec.App.DocumentEditor
 
 				this.globalSettings.NewDocument = this.dlgFileNew.InitialDirectory;
 
-				string filename = this.dlgFileNew.Filename;
+				string filename = this.dlgFileNew.FileName;
 				if (filename == GlobalSettings.NewEmptyDocument)  // nouveau document vide ?
 				{
 					this.CreateDocument();

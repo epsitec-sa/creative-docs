@@ -53,7 +53,7 @@
   <data name="Dialog.New.Title" id="0L6" mod="1">Nouveau document</data>
   <data name="Dialog.New.EmptyDocument" id="0T6" mod="1">Document vide</data>
   <data name="Dialog.File.Header.Preview" id="0N6" mod="1">Aperçu</data>
-  <data name="Dialog.File.Header.Filename" id="0P6" mod="1">Nom</data>
+  <data name="Dialog.File.Header.FileName" id="0P6" mod="1">Nom</data>
   <data name="Dialog.File.Header.Description" id="0O6" mod="1">Type</data>
   <data name="Dialog.File.Header.Date" id="0V7" mod="1">Date</data>
   <data name="Dialog.File.Header.Size" id="0Q6" mod="1">Taille</data>

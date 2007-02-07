@@ -1491,7 +1491,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public static bool RedirectionFilename(ref string filename)
+		public static bool RedirectFileName(ref string filename)
 		{
 			//	Redirige un nom de fichier de 'Exemples originaux' vers 'Mes exemples', si nécessaire.
 			if (string.IsNullOrEmpty(filename))
@@ -1510,7 +1510,7 @@ namespace Epsitec.Common.Document
 			return false;
 		}
 
-		public static bool RedirectionDirectory(ref string directory)
+		public static bool RedirectDirectory(ref string directory)
 		{
 			//	Redirige un nom de dossier de 'Exemples originaux' vers 'Mes exemples', si nécessaire.
 			if (string.IsNullOrEmpty(directory))

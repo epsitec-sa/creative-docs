@@ -1,13 +1,6 @@
 //	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
-using Epsitec.Common.Types.Collections;
-using Epsitec.Common.UI;
-using Epsitec.Common.Widgets;
-
-using System.Collections.Generic;
-
 namespace Epsitec.Common.UI
 {
 	/// <summary>
@@ -16,8 +9,21 @@ namespace Epsitec.Common.UI
 	/// </summary>
 	public enum ItemTableScrollMode
 	{
+		/// <summary>
+		/// Don't display a scroller and don't scroll.
+		/// </summary>
 		None,
+		
+		/// <summary>
+		/// Scroll in a linear way; the scroller defines the position in the
+		/// surface displayed by the <see cref="ItemTable"/>.
+		/// </summary>
 		Linear,
+		
+		/// <summary>
+		/// Scroll item by item; the scroller defines the first visible item
+		/// in the <see cref="ItemTable"/>.
+		/// </summary>
 		ItemBased
 	}
 }
