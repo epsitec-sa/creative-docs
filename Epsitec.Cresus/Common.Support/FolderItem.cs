@@ -309,13 +309,38 @@ namespace Epsitec.Common.Support
 		/// Gets a value indicating whether the user expects not to see file extensions.
 		/// </summary>
 		/// <value><c>true</c> if file extensions should be hidden; otherwise, <c>false</c>.</value>
-		public static bool HideFileExtensions
+		public static bool						HideFileExtensions
 		{
 			get
 			{
 				int value = (int) Microsoft.Win32.Registry.GetValue (@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "HideFileExt", 2);
 
 				return value == 1;
+			}
+		}
+
+		
+		/// <summary>
+		/// Determines whether the specified path is a network path.
+		/// </summary>
+		/// <param name="path">The path.</param>
+		/// <returns>
+		/// 	<c>true</c> if specified path is a network path; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool IsNetworkPath(string path)
+		{
+			if (string.IsNullOrEmpty (path))
+			{
+				return false;
+			}
+
+			if (path.StartsWith (@"\\"))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 

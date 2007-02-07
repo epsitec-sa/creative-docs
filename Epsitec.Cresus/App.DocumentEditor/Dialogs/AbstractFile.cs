@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
@@ -6,8 +5,10 @@ using Epsitec.Common.Document;
 using Epsitec.Common.IO;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
-using System.IO;
 using Epsitec.Common.UI;
+
+using System.IO;
+using System.Collections.Generic;
 
 namespace Epsitec.App.DocumentEditor.Dialogs
 {
@@ -100,6 +101,38 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					this.initialFileName = value;
 					this.UpdateInitialFileName();
 				}
+			}
+		}
+
+		public string FileExtension
+		{
+			get
+			{
+				return this.fileExtension;
+			}
+			set
+			{
+				if (value.StartsWith ("."))
+				{
+					this.fileExtension = value.ToLowerInvariant ();
+					this.fileFilterPattern = string.Concat ("*", value);
+				}
+				else
+				{
+					throw new System.FormatException ("Incorrect file extension: " + value);
+				}
+			}
+		}
+
+		public string FileFilterPattern
+		{
+			get
+			{
+				return this.fileFilterPattern;
+			}
+			set
+			{
+				this.fileFilterPattern = value;
 			}
 		}
 
@@ -390,6 +423,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("size", 50));
 			this.table2.ColumnHeader.SetColumnSortable (0, false);
 			this.table2.ColumnHeader.SetColumnSort (1, Epsitec.Common.Types.ListSortDirection.Ascending);
+			this.table2.ColumnHeader.SetColumnSort (2, Epsitec.Common.Types.ListSortDirection.Ascending);
 
 			this.filesCollectionView.CurrentChanged += this.HandleFilesCollectionViewCurrentChanged;
 			this.table2.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
@@ -1122,10 +1156,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	rien du tout: on ne sait pas suivre un raccourci distant, car il pointe
 			//	sur une ressource locale de la machine distante!
 
-			FolderQueryMode mode = this.UseLargeIcons ? FolderQueryMode.LargeIcons : FolderQueryMode.SmallIcons;
-			bool showHidden = FolderItem.ShowHiddenFiles;
-			bool skipFolders = this.initialFolder.Equals(FileManager.GetFolderItem(FolderId.Recent, FolderQueryMode.NoIcons));
-			bool skipShortcuts = this.initialFolder.FullPath.StartsWith (@"\\");
+			FileListSettings settings = new FileListSettings ();
+
+			settings.FolderQueryMode = this.UseLargeIcons ? FolderQueryMode.LargeIcons : FolderQueryMode.SmallIcons;
+			settings.HideFolders     = this.initialFolder.Equals (FileManager.GetFolderItem (FolderId.Recent, FolderQueryMode.NoIcons));
+			settings.HideShortcuts   = FolderItem.IsNetworkPath (this.initialFolder.FullPath);
+
+			settings.DefineFilterPattern (this.fileFilterPattern);
 
 			System.Predicate<FileFilterInfo> filter =
 				delegate (FileFilterInfo file)
@@ -1135,115 +1172,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						throw new System.Threading.ThreadInterruptedException ();
 					}
 
-					if ((file.Attributes & FileAttributes.Hidden) != 0)
-					{
-						if (!showHidden)
-						{
-							return false;
-						}
-					}
-					if ((file.Attributes & FileAttributes.Directory) != 0)
-					{
-						if (skipFolders)
-						{
-							return false;
-						}
-						else
-						{
-							return true;
-						}
-					}
-					else if (file.LowerCaseExtension == ".lnk")
-					{
-						if (skipShortcuts)
-						{
-							return false;
-						}
-						else
-						{
-							return true;
-						}
-					}
-					else if (file.LowerCaseExtension == this.fileExtension)
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
+					return settings.Filter (file);
 				};
 
 			try
 			{
-				foreach (FolderItem item in FileManager.GetFolderItems (this.initialFolder, mode, filter))
+				foreach (FolderItem item in FileManager.GetFolderItems (this.initialFolder, settings.FolderQueryMode, filter))
 				{
-					if (!item.IsFileSystemNode)
-					{
-						continue;  // ignore les items qui ne stockent pas des fichiers
-					}
-
-					if (item.IsHidden && !showHidden)
-					{
-						continue;  // ignore les items cachés si l'utilisateur ne veut pas les voir
-					}
-
-					if (item.IsShortcut)
-					{
-						string itemPath = item.FullPath.ToLowerInvariant ();
-
-						if (skipFolders)
-						{
-							//	Filtre tout de suite les fichiers que l'on ne sait pas nous intéresser.
-							//	En effet, le nom du raccourci se termine par .crdoc.lnk s'il s'agit d'un
-							//	document .crdoc.
-							string name = itemPath.Substring (0, itemPath.Length-4);  // nom sans .lnk
-
-							if (!Misc.IsExtension (name, this.fileExtension))  // autre extension ?
-							{
-								continue;
-							}
-						}
-
-						//	Vérifie que le fichier existe plutôt que de montrer des raccourcis cassés
-						//	qui ne mènent nulle part:
-						FolderItem target = FileManager.ResolveShortcut (item, FolderQueryMode.NoIcons);
-
-						if (target.IsFolder)
-						{
-							//	On liste le dossier.
-							if (skipFolders)
-							{
-								continue;
-							}
-						}
-						else if (target.IsEmpty)
-						{
-							continue;
-						}
-						else
-						{
-							if (!Misc.IsExtension (target.FullPath, this.fileExtension))  // autre extension ?
-							{
-								continue;  // oui -> ignore ce fichier
-							}
-						}
-					}
-					else if (!item.IsFolder)  // fichier ?
-					{
-						if (!Misc.IsExtension (item.FullPath, this.fileExtension))  // autre extension ?
-						{
-							//#continue;  // oui -> ignore ce fichier
-						}
-					}
-
-					FileListItem fileItem = new FileListItem (item, this.isModel);
-					fileItem.FillCache ();
-					
-					lock (this.files.SyncRoot)
-					{
-						this.files.Add (fileItem);  // ajoute une ligne à la liste
-					}
+					settings.Process (this.files, item);
 				}
 			}
 			catch (System.Threading.ThreadInterruptedException)
@@ -2275,25 +2211,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		public string FileExtension
-		{
-			get
-			{
-				return this.fileExtension;
-			}
-			set
-			{
-				if (value.StartsWith ("."))
-				{
-					this.fileExtension = value.ToLowerInvariant ();
-				}
-				else
-				{
-					throw new System.FormatException ("Incorrect file extension: " + value);
-				}
-			}
-		}
-
 
 		protected GlyphButton				toolbarExtend;
 		protected HToolBar					toolbar;
@@ -2317,6 +2234,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected RadioButton				optionsImageAll;
 
 		private string						fileExtension;
+		private string						fileFilterPattern;
 		protected bool						isModel = false;
 		protected bool						isNavigationEnabled = false;
 		protected bool						isMultipleSelection = false;

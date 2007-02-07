@@ -76,6 +76,13 @@ namespace Epsitec.Common.Support
 		
 		public static Regex FromSimpleJoker(string pattern, Options options)
 		{
+			pattern = (pattern ?? "").Trim ();
+
+			if (pattern.Length == 0)
+			{
+				throw new System.ArgumentException ("Empty pattern specified");
+			}
+
 			RegexOptions              regex_options = RegexOptions.ExplicitCapture;
 			System.Text.StringBuilder regex_pattern = new System.Text.StringBuilder ();
 			
@@ -86,8 +93,8 @@ namespace Epsitec.Common.Support
 			if ((options & Options.IgnoreCase) != 0)	regex_options |= RegexOptions.IgnoreCase;
 			if ((options & Options.Compiled) != 0)		regex_options |= RegexOptions.Compiled;
 			
-			regex_pattern.Append (@"\A");						//	force ancrage au début
-			
+			regex_pattern.Append (@"\A((");						//	force ancrage au début
+
 			for (int i = 0; i < pattern.Length; i++)
 			{
 				char c = pattern[i];
@@ -127,13 +134,19 @@ namespace Epsitec.Common.Support
 						regex_pattern.Append (@"(.){1}");		//	exactement un caractère
 					}
 				}
+				else if (c == '|')
+				{
+					regex_pattern.Append (")|(");
+				}
 				else
 				{
 					regex_pattern.Append (Regex.Escape (pattern.Substring (i, 1)));
 				}
 			}
-			
-			regex_pattern.Append (@"\z");						//	force ancrage à la fin
+
+			regex_pattern.Append (@"))\z");						//	force ancrage à la fin
+
+			System.Diagnostics.Debug.WriteLine (string.Format ("{0} --> {1}", pattern, regex_pattern.ToString ()));
 			
 			return new Regex (regex_pattern.ToString (), regex_options);
 		}

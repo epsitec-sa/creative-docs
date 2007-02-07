@@ -118,7 +118,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			get
 			{
-				if (this.folderItem == null)
+				if (this.folderItem.IsEmpty)
 				{
 					return this.GetResolvedFileName ();
 				}
@@ -139,6 +139,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					FolderItem item = FileManager.ResolveShortcut (this.folderItem, FolderQueryMode.NoIcons);
 					this.cachedFileName = item.FullPath;
+					this.cachedTarget   = item;
 				}
 				else
 				{
@@ -147,6 +148,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			
 			return this.cachedFileName;
+		}
+
+		public FolderItem GetResolvedTarget()
+		{
+			this.GetResolvedFileName ();  //  pour mettre à jour cachedTarget
+			return this.cachedTarget;
 		}
 
 		public string ShortFileName
@@ -891,6 +898,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private int cachedDepth = -1;
 		private IDocumentInfo documentInfo;
 		private Image cachedImage;
+		private FolderItem cachedTarget;
 		
 		private string smallIconName;
 		private string largeIconName;
