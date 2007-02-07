@@ -714,7 +714,7 @@ namespace Epsitec.Common.UI
 		{
 			if (view.IsSelected != selection)
 			{
-				view.IsSelected = selection;
+				view.Select (selection);
 				
 				if (view.IsVisible)
 				{
@@ -753,7 +753,7 @@ namespace Epsitec.Common.UI
 			foreach (ItemView view in views)
 			{
 				if ((view.Widget != null) &&
-					(view.IsCleared == false))
+					(view.IsUserInterfaceDirty == false))
 				{
 					if (view.Bounds.IntersectsWith (aperture))
 					{
@@ -884,7 +884,7 @@ namespace Epsitec.Common.UI
 		{
 			foreach (ItemView view in views)
 			{
-				view.UpdatePreferredSize (this);
+				view.UpdateSize (this);
 			}
 			
 			this.hasDirtyLayout = false;
@@ -913,7 +913,7 @@ namespace Epsitec.Common.UI
 					if (currentViews.TryGetValue (item, out view))
 					{
 						currentViews.Remove (item);
-						view.Index = views.Count;
+						view.DefineIndex (views.Count);
 						views.Add (view);
 					}
 					else
@@ -928,7 +928,7 @@ namespace Epsitec.Common.UI
 		{
 			ItemView view = new ItemView (item, this.ItemViewDefaultSize);
 			
-			view.Index = index;
+			view.DefineIndex (index);
 
 			return view;
 		}

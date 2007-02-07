@@ -183,7 +183,7 @@ namespace Epsitec.Common.UI
 
 							if (view != null)
 							{
-								view.IsSelected = true;
+								view.Select (true);
 							}
 						}
 					}
@@ -324,12 +324,7 @@ namespace Epsitec.Common.UI
 
 			if (oldSize != newSize)
 			{
-				this.parentView.Size = newSize;
-				
-				if (this.parentPanel != null)
-				{
-					this.parentPanel.NotifyItemViewSizeChanged (this.parentView, oldSize, newSize);
-				}
+				this.parentView.DefineSize (newSize, this.parentPanel);
 			}
 		}
 
@@ -346,46 +341,40 @@ namespace Epsitec.Common.UI
 				: base (item, defaultSize)
 			{
 				this.group = group;
-				base.IsSelected = true;
+				base.Select (true);
 			}
 
-			public override bool IsSelected
+			internal override void Select(bool value)
 			{
-				get
+				if (this.IsSelected != value)
 				{
-					return base.IsSelected;
-				}
-				internal set
-				{
-					if (this.IsSelected != value)
+					System.Diagnostics.Debug.Assert (value == false);
+
+					base.Select (value);
+
+					//	Rebuild the list of selected items: remove dead object
+					//	references and also remove this item view's item.
+					
+					List<System.WeakReference> list = new List<System.WeakReference> ();
+
+					lock (this.group.exclusion)
 					{
-						System.Diagnostics.Debug.Assert (value == false);
-
-						base.IsSelected = value;
-
-						//	Rebuild the list of selected items: remove dead object
-						//	references and also remove this item view's item.
-						
-						List<System.WeakReference> list = new List<System.WeakReference> ();
-
-						lock (this.group.exclusion)
+						foreach (System.WeakReference ghostItem in this.group.selectedGhostItems)
 						{
-							foreach (System.WeakReference ghostItem in this.group.selectedGhostItems)
+							object item = ghostItem.Target;
+
+							if ((item != null) &&
+								(item != this.Item))
 							{
-								object item = ghostItem.Target;
-
-								if ((item != null) &&
-									(item != this.Item))
-								{
-									list.Add (new System.WeakReference (item));
-								}
+								list.Add (new System.WeakReference (item));
 							}
-
-							this.group.selectedGhostItems = list;
 						}
+
+						this.group.selectedGhostItems = list;
 					}
 				}
 			}
+			
 
 			private ItemPanelGroup group;
 		}
