@@ -12,6 +12,10 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Epsitec.Common.Document
 {
+	/// <summary>
+	/// La classe <c>DocumentInfo</c> donne accès aux informations (statistiques)
+	/// sur un document.
+	/// </summary>
 	[System.Serializable]
 	public abstract class DocumentInfo : ISerializable, IDocumentInfo
 	{
@@ -19,7 +23,7 @@ namespace Epsitec.Common.Document
 		{
 		}
 
-		public Size PageSize
+		public Size								PageSize
 		{
 			get
 			{
@@ -32,7 +36,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public double PageWidth
+		public double							PageWidth
 		{
 			//	Dimensions d'une page en unités internes.
 			get
@@ -45,7 +49,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public double PageHeight
+		public double							PageHeight
 		{
 			//	Dimensions d'une page en unités internes.
 			get
@@ -58,7 +62,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public string PageFormat
+		public string							PageFormat
 		{
 			//	Format d'une page en clair ("A4" ou "123 x 456").
 			get
@@ -71,85 +75,85 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public int PageCount
+		public int								PageCount
 		{
 			//	Nombre total de pages.
 			get
 			{
-				return this.pagesCount;
+				return this.pageCount;
 			}
 			set
 			{
-				this.pagesCount = value;
+				this.pageCount = value;
 			}
 		}
 
-		public int LayerCount
+		public int								LayerCount
 		{
 			//	Nombre total de calques.
 			get
 			{
-				return this.layersCount;
+				return this.layerCount;
 			}
 			set
 			{
-				this.layersCount = value;
+				this.layerCount = value;
 			}
 		}
 
-		public int ObjectCount
+		public int								ObjectCount
 		{
 			//	Nombre total d'objets.
 			get
 			{
-				return this.objectsCount;
+				return this.objectCount;
 			}
 			set
 			{
-				this.objectsCount = value;
+				this.objectCount = value;
 			}
 		}
 
-		public int ComplexObjectCount
+		public int								ComplexObjectCount
 		{
 			//	Nombre total d'objets dégradés ou transparents.
 			get
 			{
-				return this.complexesCount;
+				return this.complexCount;
 			}
 			set
 			{
-				this.complexesCount = value;
+				this.complexCount = value;
 			}
 		}
 
-		public int FontCount
+		public int								FontCount
 		{
 			//	Nombre total de polices.
 			get
 			{
-				return this.fontsCount;
+				return this.fontCount;
 			}
 			set
 			{
-				this.fontsCount = value;
+				this.fontCount = value;
 			}
 		}
 
-		public int ImageCount
+		public int								ImageCount
 		{
 			//	Nombre total d'images bitmap.
 			get
 			{
-				return this.imagesCount;
+				return this.imageCount;
 			}
 			set
 			{
-				this.imagesCount = value;
+				this.imageCount = value;
 			}
 		}
 
-		protected int Version
+		protected int							Version
 		{
 			get
 			{
@@ -179,12 +183,12 @@ namespace Epsitec.Common.Document
 			info.AddValue ("PageWidth", this.pageWidth);
 			info.AddValue ("PageHeight", this.pageHeight);
 			info.AddValue ("PageFormat", this.pageFormat);
-			info.AddValue ("PagesCount", this.pagesCount);
-			info.AddValue ("LayersCount", this.layersCount);
-			info.AddValue ("ObjectsCount", this.objectsCount);
-			info.AddValue ("ComplexesCount", this.complexesCount);
-			info.AddValue ("FontsCount", this.fontsCount);
-			info.AddValue ("ImagesCount", this.imagesCount);
+			info.AddValue ("PagesCount", this.pageCount);
+			info.AddValue ("LayersCount", this.layerCount);
+			info.AddValue ("ObjectsCount", this.objectCount);
+			info.AddValue ("ComplexesCount", this.complexCount);
+			info.AddValue ("FontsCount", this.fontCount);
+			info.AddValue ("ImagesCount", this.imageCount);
 		}
 
 		protected DocumentInfo(SerializationInfo info, StreamingContext context)
@@ -203,15 +207,15 @@ namespace Epsitec.Common.Document
 			}
 			
 			this.pageFormat = info.GetString ("PageFormat");
-			this.pagesCount = info.GetInt32 ("PagesCount");
-			this.layersCount = info.GetInt32 ("LayersCount");
-			this.objectsCount = info.GetInt32 ("ObjectsCount");
-			this.complexesCount = info.GetInt32 ("ComplexesCount");
+			this.pageCount = info.GetInt32 ("PagesCount");
+			this.layerCount = info.GetInt32 ("LayersCount");
+			this.objectCount = info.GetInt32 ("ObjectsCount");
+			this.complexCount = info.GetInt32 ("ComplexesCount");
 
 			if (this.version >= 2)
 			{
-				this.fontsCount = info.GetInt32 ("FontsCount");
-				this.imagesCount = info.GetInt32 ("ImagesCount");
+				this.fontCount = info.GetInt32 ("FontsCount");
+				this.imageCount = info.GetInt32 ("ImagesCount");
 			}
 		}
 
@@ -220,11 +224,11 @@ namespace Epsitec.Common.Document
 		private double pageWidth;
 		private double pageHeight;
 		private string pageFormat;
-		private int pagesCount;
-		private int layersCount;
-		private int objectsCount;
-		private int complexesCount;
-		private int fontsCount;
-		private int imagesCount;
+		private int pageCount;
+		private int layerCount;
+		private int objectCount;
+		private int complexCount;
+		private int fontCount;
+		private int imageCount;
 	}
 }
