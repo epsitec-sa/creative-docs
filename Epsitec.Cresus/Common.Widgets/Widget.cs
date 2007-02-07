@@ -3261,11 +3261,6 @@ namespace Epsitec.Common.Widgets
 							return;
 						}
 						
-						if (! this.AutoDoubleClick)
-						{
-							Message.ResetButtonDownCounter ();
-						}
-						
 						//	Le bouton a été relâché. Ceci génère l'événement 'Released' pour signaler
 						//	ce relâchement, mais aussi un événement 'Clicked' ou 'DoubleClicked' en
 						//	fonction du nombre de clics.
@@ -3278,6 +3273,14 @@ namespace Epsitec.Common.Widgets
 							{
 								case 1:	this.OnClicked (new MessageEventArgs (message, pos));		break;
 								case 2:	this.OnDoubleClicked (new MessageEventArgs (message, pos));	break;
+							}
+						}
+
+						if (message.Handled)
+						{
+							if (!this.AutoDoubleClick)
+							{
+								Message.ResetButtonDownCounter ();
 							}
 						}
 						break;

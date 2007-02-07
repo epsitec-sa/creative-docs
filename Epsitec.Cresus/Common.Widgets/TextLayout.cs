@@ -124,12 +124,7 @@ namespace Epsitec.Common.Widgets
 			//	Texte associé, contenant des commandes HTML, y compris les commandes <put>.
 			get
 			{
-				if ( this.text == null )
-				{
-					return "";
-				}
-				
-				return this.text;
+				return this.text ?? "";
 			}
 		}
 		
@@ -138,7 +133,7 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				this.UpdateLayout();
-				return this.simpleText;
+				return this.simpleText ?? "";
 			}
 		}
 		

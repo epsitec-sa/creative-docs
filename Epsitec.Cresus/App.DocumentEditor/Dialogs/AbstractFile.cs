@@ -393,6 +393,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.filesCollectionView.CurrentChanged += this.HandleFilesCollectionViewCurrentChanged;
 			this.table2.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
+			this.table2.ItemPanel.DoubleClicked += this.HandleTableDoubleClicked;
 
 			this.slider.Value = (decimal) Widget.DefaultFontHeight+4;
 			this.useLargeIcons = false;

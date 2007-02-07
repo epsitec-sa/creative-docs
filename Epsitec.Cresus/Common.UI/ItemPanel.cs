@@ -26,6 +26,15 @@ namespace Epsitec.Common.UI
 		{
 			this.SetEmbedder (embedder);
 		}
+
+		static ItemPanel()
+		{
+			DependencyPropertyMetadata metadata = Widgets.Widget.AutoDoubleClickProperty.DefaultMetadata.Clone ();
+
+			metadata.DefineDefaultValue (true);
+
+			Widgets.Widget.AutoDoubleClickProperty.OverrideMetadata (typeof (ItemPanel), metadata);
+		}
 		
 		public ICollectionView Items
 		{
