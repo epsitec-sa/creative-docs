@@ -1164,6 +1164,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			settings.DefineFilterPattern (this.fileFilterPattern);
 
+			settings.AddDefaultDescription (".crdoc", Res.Strings.Dialog.File.Document);
+			settings.AddDefaultDescription (".crmod", Res.Strings.Dialog.File.Model); 
+
 			System.Predicate<FileFilterInfo> filter =
 				delegate (FileFilterInfo file)
 				{
@@ -2083,7 +2086,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void ComboAdd(FolderItem folderItem, FileListItem parent)
 		{
-			FileListItem item = new FileListItem(folderItem, this.isModel);
+			FileListItem item = new FileListItem(folderItem);
+			item.DefaultDescription = this.isModel ? Res.Strings.Dialog.File.Model : Res.Strings.Dialog.File.Document;
 			item.Parent = parent;
 			item.SortAccordingToLevel = true;
 			this.comboFolders.Add(item);

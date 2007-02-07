@@ -24,11 +24,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.cachedDescription = description;
 		}
 
-		public FileListItem(FolderItem folderItem, bool isModel)
+		public FileListItem(FolderItem folderItem)
 		{
 			//	Crée un item pour un fichier ou un dossier.
 			this.FolderItem = folderItem;
-			this.isModel = isModel;
+		}
+
+		public string DefaultDescription
+		{
+			get
+			{
+				return this.defaultDescription;
+			}
+			set
+			{
+				this.defaultDescription = value;
+			}
 		}
 
 		public FolderItem FolderItem
@@ -429,7 +440,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						IDocumentInfo stat = this.Statistics;
 						if (stat == null)
 						{
-							this.cachedDescription = this.isModel ? Res.Strings.Dialog.File.Model : Res.Strings.Dialog.File.Document;
+							this.cachedDescription = this.defaultDescription;
 						}
 						else
 						{
@@ -902,6 +913,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		
 		private string smallIconName;
 		private string largeIconName;
+		private string defaultDescription;
 
 		private ImagePlaceholder attachedImagePlaceholder;
 		
@@ -909,7 +921,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected FolderItemIcon smallIcon;
 		protected FolderItemIcon largeIcon;
 		protected FileListItem parent;
-		protected bool isModel;
 		protected bool isSynthetic;
 		protected bool sortAccordingToLevel = false;
 	}

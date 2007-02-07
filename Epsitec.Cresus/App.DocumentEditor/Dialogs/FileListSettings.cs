@@ -90,6 +90,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		public void AddDefaultDescription(string extension, string description)
+		{
+			if (extension.StartsWith ("."))
+			{
+				this.defaultDescriptions[extension.ToLowerInvariant ()] = description;
+			}
+			else
+			{
+				throw new System.FormatException ("Incorrect file extension: " + extension);
+			}
+		}
 
 		public bool Filter(FileFilterInfo file)
 		{
@@ -154,12 +165,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		public void Process(System.Collections.IList list, FolderItem item)
 		{
 			string path = item.FullPath.ToLowerInvariant ();
-
+			
 			if (item.IsFileSystemNode)
 			{
 				//	TODO: ...gérer isModel...
 
-				FileListItem fileItem = new FileListItem (item, false);
+				FileListItem fileItem = new FileListItem (item);
 
 				if (item.IsShortcut)
 				{
@@ -186,10 +197,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						{
 							//	OK: le fichier cible passe le critère de l'extension...
 						}
+						else
+						{
+							return;
+						}
 					}
 				}
 
 				fileItem.FillCache ();
+
+				string extension = System.IO.Path.GetExtension (path);
+				string description;
+
+				if (this.defaultDescriptions.TryGetValue (extension, out description))
+				{
+					fileItem.DefaultDescription = description;
+				}
 
 				lock (list.SyncRoot)
 				{
@@ -204,5 +227,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private bool hideShortcuts;
 		private FolderQueryMode folderQueryMode;
 		private Regex filterRegex;
+		private readonly Dictionary<string, string> defaultDescriptions = new Dictionary<string, string> ();
 	}
 }
