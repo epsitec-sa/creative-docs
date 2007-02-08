@@ -591,7 +591,8 @@ namespace Epsitec.Common.Support
 			while (i-- > this.action.Depth)
 			{
 				IOplet oplet = this.temp_queue[i] as IOplet;
-				
+
+				oplet.Undo ();
 				oplet.Dispose ();
 				
 				this.temp_queue.RemoveAt (i);
