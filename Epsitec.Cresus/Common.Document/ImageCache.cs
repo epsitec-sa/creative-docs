@@ -354,7 +354,15 @@ namespace Epsitec.Common.Document
 			{
 				get
 				{
-					return this.globalItem.Size;
+					Drawing.Size size = this.globalItem.Size;
+
+					if (size == Drawing.Size.Zero)
+					{
+						this.globalItem.GetImage (this.resolution);
+						size = this.globalItem.Size;
+					}
+
+					return size;
 				}
 			}
 

@@ -6522,7 +6522,12 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
+				this.isUndoRedoInProgress = true;
+				this.AccumulateStarting ();
 				this.opletQueue.CancelAction();
+				this.AccumulateEnding ();
+				this.isUndoRedoInProgress = false;
+				
 				this.document.Notifier.NotifyUndoRedoChanged();
 			}
 		}
