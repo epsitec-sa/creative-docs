@@ -565,9 +565,11 @@ namespace Epsitec.Common.Document.PDF
 							if ( image == null )
 							{
 								ImageCache.Item item = this.document.ImageCache.Find(filename, filedate);
-								System.Diagnostics.Debug.Assert(item != null);
-								image = new ImageSurface(item, size, crop, filter, id++);
-								this.imageSurfaces.Add(image);
+								if (item != null)
+								{
+									image = new ImageSurface (item, size, crop, filter, id++);
+									this.imageSurfaces.Add (image);
+								}
 							}
 						}
 

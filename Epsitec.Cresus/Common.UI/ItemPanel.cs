@@ -213,6 +213,23 @@ namespace Epsitec.Common.UI
 			return null;
 		}
 
+		public ItemView DetectItemView(Drawing.Point pos)
+		{
+			return this.FindItemView (
+				delegate (ItemView item)
+				{
+					if ((item.IsVisible) &&
+						(item.Bounds.Contains (pos)))
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				});
+		}
+
 		public ItemView FindItemView(System.Predicate<ItemView> match)
 		{
 			IEnumerable<ItemView> views = this.SafeGetViews ();

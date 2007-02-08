@@ -2053,7 +2053,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		internal void ReleaseCapture()
+		public void ReleaseCapture()
 		{
 			this.ReleaseCapturingWidget ();
 		}

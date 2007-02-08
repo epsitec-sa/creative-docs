@@ -546,10 +546,13 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( image == null )
 			{
-				Path path = this.PathBuildOutline();
-				port.Color = Color.FromBrightness(0.5);
-				port.LineWidth = 1.0/drawingContext.ScaleX;
-				port.PaintOutline(path);  // dessine un rectangle avec une croix
+				if (!drawingContext.PreviewActive)
+				{
+					Path path = this.PathBuildOutline ();
+					port.Color = Color.FromBrightness (0.5);
+					port.LineWidth = 1.0/drawingContext.ScaleX;
+					port.PaintOutline (path);  // dessine un rectangle avec une croix
+				}
 			}
 			else
 			{
