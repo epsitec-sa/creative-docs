@@ -217,11 +217,23 @@ namespace Epsitec.Common.Drawing
 				this.y2 = value.Y;
 			}
 		}
-		
-		
-		public Point							Center
+
+
+		public Point Center
 		{
-			get { return new Point ((this.x1 + this.x2) / 2, (this.y1 + this.y2) / 2); }
+			get
+			{
+				return new Point ((this.x1 + this.x2) / 2, (this.y1 + this.y2) / 2);
+			}
+			set
+			{
+				Point center = this.Center;
+
+				if (center != value)
+				{
+					this.Offset (value - center);
+				}
+			}
 		}
 		
 		public double							Surface
