@@ -407,6 +407,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.filesCollectionView.CurrentChanged += this.HandleFilesCollectionViewCurrentChanged;
 			this.table2.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
 			this.table2.ItemPanel.DoubleClicked += this.HandleTableDoubleClicked;
+			this.table2.ItemPanel.SelectionChanged += this.HandleFilesItemTableSelectionChanged;
 
 			this.slider.Value = (decimal) Widget.DefaultFontHeight+4;
 			this.useLargeIcons = false;
@@ -414,9 +415,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.UpdateFileList ();
 		}
 
+		private void HandleFilesItemTableSelectionChanged(object sender)
+		{
+			this.UpdateAfterSelectionChanged ();
+		}
+
 		private void HandleFilesCollectionViewCurrentChanged(object sender)
 		{
-			FileListItem item = this.filesCollectionView.CurrentItem as FileListItem;
+			this.UpdateAfterSelectionChanged ();
+		}
+
+		private void UpdateAfterSelectionChanged()
+		{
+			FileListItem item = this.GetCurrentFileListItem ();
 
 			if ((item != null) &&
 				(item.IsDataFile))
@@ -426,6 +437,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				if (name.EndsWith (this.fileExtension))
 				{
 					name = name.Substring (0, name.Length - this.fileExtension.Length);
+				}
+
+				IList<ItemView> selectedItemViews = this.table2.ItemPanel.GetSelectedItemViews ();
+
+				if (selectedItemViews.Count > 1)
+				{
+					name = "";
 				}
 
 				this.fieldFileName.Text = TextLayout.ConvertToTaggedText (name);
@@ -1201,7 +1219,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.favoritesUpState.Enable = (sel >= 1);
 			this.favoritesDownState.Enable = (sel >= 0 && sel < list.Count-1);
 
-			FileListItem item = this.filesCollectionView.CurrentItem as FileListItem;
+			FileListItem item = this.GetCurrentFileListItem ();
 			bool enable = (item != null && item.FullPath != Common.Document.Settings.GlobalSettings.NewEmptyDocument);
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("UpdateButtons: {0} {1} {2}", this.fieldFileName.Text, this.IsTextFieldFocused, item));
@@ -1225,6 +1243,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if (item == null)
 			{
 				enable = this.fieldFileName.Text.Trim ().Length > 0;
+			}
+			if (enable)
+			{
+				enable = this.MultipleSelectionContainsOnlyDataFiles ();
 			}
 			
 			this.buttonOK.Enable = enable;
@@ -1385,7 +1407,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void FileDelete()
 		{
 			//	Supprime un fichier ou un dossier.
-			FileListItem item = this.filesCollectionView.CurrentItem as FileListItem;
+			FileListItem item = this.GetCurrentFileListItem ();
 			if (item == null || item.IsSynthetic)
 			{
 				return;
@@ -1435,7 +1457,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Début d'un renommer. Le widget pour éditer le nom est positionné et
 			//	rendu visible.
 			System.Diagnostics.Debug.Assert(this.fieldRename != null);
-			FileListItem item = this.filesCollectionView.CurrentItem as FileListItem;
+			FileListItem item = this.GetCurrentFileListItem ();
 			ItemPanel itemPanel = this.table2.ItemPanel;
 			ItemView view = itemPanel.GetItemView (item);
 			itemPanel.Show (view);
@@ -1647,13 +1669,33 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Effectue l'action lorsque le bouton 'Ouvrir/Enregistrer' est actionné.
 			//	Retourne true s'il faut fermer le dialogue.
 			
-			FileListItem item = this.filesCollectionView.CurrentItem as FileListItem;
+			FileListItem item = this.GetCurrentFileListItem ();
 			string name = TextLayout.ConvertToSimpleText (this.fieldFileName.Text).Trim ();
 			
 			if (item != null)
 			{
 				name = item.GetResolvedFileName ();
 			}
+
+			IList<ItemView> selectedItemViews = this.table2.ItemPanel.GetSelectedItemViews ();
+
+			if (selectedItemViews.Count > 1)
+			{
+				List<string> selectedNames = new List<string> ();
+
+				foreach (ItemView selectedItemView in selectedItemViews)
+				{
+					FileListItem selectedItem = selectedItemView.Item as FileListItem;
+					selectedNames.Add (selectedItem.GetResolvedFileName ());
+				}
+
+				this.selectedFileNames = selectedNames.ToArray ();
+			}
+			else
+			{
+				this.selectedFileNames = null;
+			}
+
 			if (name.Length > 0)
 			{
 				if (!System.IO.Path.IsPathRooted (name))
@@ -1679,7 +1721,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 
 				this.selectedFileName = name;
-				this.selectedFileNames = null;
 
 				return this.PromptForOverwriting ();
 			}
@@ -1687,45 +1728,49 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				return false;
 			}
-#if false
+		}
+
+		private FileListItem GetCurrentFileListItem()
+		{
+			FileListItem item = this.filesCollectionView.CurrentItem as FileListItem;
+			IList<ItemView> views = this.table2.ItemPanel.GetSelectedItemViews (
+				delegate (ItemView view)
 				{
-					int selCount = 0;
-					for (int i=0; i<this.table.Rows; i++)
+					if (view.Item == item)
 					{
-						if (this.table.IsCellSelected(i, 0) && !this.files[i].IsDirectory)
-						{
-							selCount++;
-						}
+						return true;
 					}
-
-					if (selCount == 0)
+					else
 					{
-						return false;  // ne pas fermer le dialogue
+						return false;
 					}
+				});
 
-					this.selectedFileNames = new string[selCount];
-					int rank = 0;
-					for (int i=0; i<this.table.Rows; i++)
+			return views.Count > 0 ? item : null;
+		}
+
+		private bool MultipleSelectionContainsOnlyDataFiles()
+		{
+			//	Détermine si, dans le cas d'une sélection mutliple, tous les éléments sont
+			//	de véritables fichiers; retourne false si cela n'est pas le cas (évite que
+			//	l'on ne puisse sélectionner un dossier et un fichier et cliquer ensuite sur
+			//	le bouton "OK").
+
+			IList<ItemView> views = this.table2.ItemPanel.GetSelectedItemViews ();
+
+			if (views.Count > 1)
+			{
+				foreach (ItemView view in views)
+				{
+					FileListItem item = view.Item as FileListItem;
+					if (!item.IsDataFile)
 					{
-						if (this.table.IsCellSelected(i, 0) && !this.files[i].IsDirectory)
-						{
-							if (rank == 0)
-							{
-								this.selectedFileName = this.files[i].FileName;  // premier fichier sélectionné
-							}
-
-							this.selectedFileNames[rank++] = this.files[i].FileName;
-						}
+						return false;
 					}
-					this.selectedFileNames = new string[1];
-					this.selectedFileNames[0] = item.GetResolvedFileName ();
-
-					return this.PromptForOverwriting();
 				}
 			}
 
-			return false;  // ne pas fermer le dialogue
-#endif
+			return true;
 		}
 
 		protected bool PromptForOverwriting()

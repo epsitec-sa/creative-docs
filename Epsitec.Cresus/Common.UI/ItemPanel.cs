@@ -259,12 +259,16 @@ namespace Epsitec.Common.UI
 		
 		public void DeselectAllItemViews()
 		{
+			SelectionState state = new SelectionState (this);
+
 			IList<ItemView> selectedViews = this.RootPanel.GetSelectedItemViews ();
-			
+
 			if (selectedViews.Count > 0)
 			{
 				this.DeselectItemViews (selectedViews);
 			}
+
+			state.GenerateEvents ();
 		}
 		
 		public void SelectItemView(ItemView view)
@@ -273,6 +277,8 @@ namespace Epsitec.Common.UI
 			{
 				return;
 			}
+
+			SelectionState state = new SelectionState (this);
 
 			if (view.IsSelected)
 			{
@@ -318,10 +324,60 @@ namespace Epsitec.Common.UI
 						break;
 				}
 			}
+
+			state.GenerateEvents ();
 		}
+
+		#region SelectionState Class
+
+		class SelectionState
+		{
+			public SelectionState(ItemPanel panel)
+			{
+				this.panel = panel;
+				this.views = new List<ItemView> (this.panel.GetSelectedItemViews ());
+			}
+
+			public void GenerateEvents()
+			{
+				foreach (ItemView itemView in this.panel.GetSelectedItemViews ())
+				{
+					object item = itemView.Item;
+					bool found = false;
+
+					for (int i = 0; i < this.views.Count; i++)
+					{
+						if (this.views[i].Item == item)
+						{
+							this.views.RemoveAt (i);
+							found = true;
+							break;
+						}
+					}
+
+					if (!found)
+					{
+						this.panel.OnSelectionChanged ();
+						return;
+					}
+				}
+
+				if (this.views.Count > 0)
+				{
+					this.panel.OnSelectionChanged ();
+				}
+			}
+
+			ItemPanel panel;
+			List<ItemView> views;
+		}
+
+		#endregion
 
 		public void DeselectItemView(ItemView view)
 		{
+			SelectionState state = new SelectionState (this);
+			
 			if (view.IsSelected)
 			{
 				IList<ItemView> selectedViews;
@@ -368,6 +424,8 @@ namespace Epsitec.Common.UI
 			{
 				this.SetItemViewSelection (view, false);
 			}
+
+			state.GenerateEvents ();
 		}
 
 		public void ExpandItemView(ItemView view, bool expand)
@@ -667,6 +725,14 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		protected virtual void OnSelectionChanged()
+		{
+			if (this.SelectionChanged != null)
+			{
+				this.SelectionChanged (this);
+			}
+		}
+		
 		protected virtual void OnContentsSizeChanged(DependencyPropertyChangedEventArgs e)
 		{
 			if (this.ContentsSizeChanged != null)
@@ -1245,6 +1311,8 @@ namespace Epsitec.Common.UI
 		public event Support.EventHandler<DependencyPropertyChangedEventArgs> ApertureChanged;
 
 		public event Support.EventHandler<DependencyPropertyChangedEventArgs> ContentsSizeChanged;
+
+		public event Support.EventHandler SelectionChanged;
 
 		public event Support.EventHandler CurrentChanged;
 
