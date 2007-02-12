@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.ServerManager
 			
 			this.timer.AutoRepeat = 0.5;
 			this.timer.Delay = 0.5;
-			this.timer.HighAccuracy = false;
+			this.timer.HigherAccuracy = false;
 			this.timer.TimeElapsed += new EventHandler (this.HandleTimerTimeElapsed);
 			
 			this.timer.Start ();

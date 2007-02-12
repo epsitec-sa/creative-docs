@@ -1,5 +1,5 @@
 //	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
@@ -7,22 +7,22 @@ namespace Epsitec.Common.Widgets
 	/// La classe Timer implémente les services nécessaires à la réalisation
 	/// d'un timer compatible avec l'interface graphique.
 	/// </summary>
-	public class Timer : System.IDisposable
+	public sealed class Timer : System.IDisposable
 	{
 		public Timer()
 		{
 		}
 		
 		
-		public bool								HighAccuracy
+		public bool								HigherAccuracy
 		{
 			get
 			{
-				return this.high_accuracy;
+				return this.higherAccuracy;
 			}
 			set
 			{
-				this.high_accuracy = value;
+				this.higherAccuracy = value;
 			}
 		}
 		
@@ -30,7 +30,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.delay_seconds;
+				return this.delaySeconds;
 			}
 			set
 			{
@@ -38,9 +38,9 @@ namespace Epsitec.Common.Widgets
 				//	timer est démarré pour la première fois, soit maintenant si le
 				//	timer est déjà démarré.
 				
-				this.delay_seconds   = value;
-				this.expiration_date = System.DateTime.Now.AddSeconds (value);
-				this.remaining_time  = this.expiration_date.Subtract (System.DateTime.Now);
+				this.delaySeconds   = value;
+				this.expirationDate = System.DateTime.Now.AddSeconds (value);
+				this.remainingTime  = this.expirationDate.Subtract (System.DateTime.Now);
 				
 				this.UpdateTimerSettings ();
 			}
@@ -50,14 +50,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.expiration_date;
+				return this.expirationDate;
 			}
 			set
 			{
-				if (this.expiration_date != value)
+				if (this.expirationDate != value)
 				{
-					this.expiration_date = value;
-					this.delay_seconds   = 0;
+					this.expirationDate = value;
+					this.delaySeconds   = 0;
 					this.UpdateTimerSettings ();
 				}
 			}
@@ -70,12 +70,12 @@ namespace Epsitec.Common.Widgets
 		
 		public double							AutoRepeat
 		{
-			get { return this.auto_repeat; }
+			get { return this.delaySecondsAutoRepeat; }
 			set
 			{
-				if (this.auto_repeat != value)
+				if (this.delaySecondsAutoRepeat != value)
 				{
-					this.auto_repeat = value;
+					this.delaySecondsAutoRepeat = value;
 					this.Delay = value;
 				}
 			}
@@ -89,19 +89,19 @@ namespace Epsitec.Common.Widgets
 			System.GC.SuppressFinalize (this);
 		}
 		#endregion
-		
-		protected virtual void Dispose(bool disposing)
+
+		private void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
 				this.CleanupTimerIfNeeded ();
 				this.state = TimerState.Disposed;
-				this.auto_repeat = 0;
+				this.delaySecondsAutoRepeat = 0;
 			}
 		}
-		
-		
-		protected virtual void SetupTimerIfNeeded()
+
+
+		private void SetupTimerIfNeeded()
 		{
 			if (this.timer == null)
 			{
@@ -109,8 +109,8 @@ namespace Epsitec.Common.Widgets
 				this.timer.Tick += new System.EventHandler (this.HandleTimerTick);
 			}
 		}
-		
-		protected virtual void CleanupTimerIfNeeded()
+
+		private void CleanupTimerIfNeeded()
 		{
 			System.Windows.Forms.Timer timer = this.timer;
 			
@@ -126,8 +126,8 @@ namespace Epsitec.Common.Widgets
 				timer.Dispose ();
 			}
 		}
-		
-		protected virtual void UpdateTimerSettings()
+
+		private void UpdateTimerSettings()
 		{
 			switch (this.state)
 			{
@@ -136,11 +136,11 @@ namespace Epsitec.Common.Widgets
 					this.timer.Stop ();
 					
 					System.DateTime now  = System.DateTime.Now;
-					System.TimeSpan wait = this.expiration_date.Subtract (now);
+					System.TimeSpan wait = this.expirationDate.Subtract (now);
 					
 					int delta = (int) wait.TotalMilliseconds;
 					
-					if ((this.high_accuracy == false) &&
+					if ((this.higherAccuracy == false) &&
 						(delta <= 0))
 					{
 						//	Si l'exactitude temporelle des événements n'importe pas trop, il
@@ -167,7 +167,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual void Start()
+		public void Start()
 		{
 			//	Démarre le timer s'il était arrêté. Un timer suspendu reprend là où
 			//	il en était.
@@ -200,7 +200,7 @@ namespace Epsitec.Common.Widgets
 					//	Le timer est actuellement arrêté. Il suffit de mettre à jour la
 					//	date de fin et de le relancer.
 					
-					this.expiration_date = System.DateTime.Now.Add (this.remaining_time);
+					this.expirationDate = System.DateTime.Now.Add (this.remainingTime);
 					break;
 			}
 			
@@ -212,9 +212,9 @@ namespace Epsitec.Common.Widgets
 				//	la date d'expiration. Utile si on a utilisé la propriété Delay pour définir
 				//	le délai, puis fait un Start plus tard.
 				
-				if (this.delay_seconds > 0)
+				if (this.delaySeconds > 0)
 				{
-					this.expiration_date = System.DateTime.Now.AddSeconds (this.delay_seconds);
+					this.expirationDate = System.DateTime.Now.AddSeconds (this.delaySeconds);
 				}
 			}
 			
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Widgets
 			this.UpdateTimerSettings ();
 		}
 		
-		public virtual void Suspend()
+		public void Suspend()
 		{
 			//	Suspend le timer (le temps restant est conservé jusqu'au prochain démarrage
 			//	du timer).
@@ -236,12 +236,12 @@ namespace Epsitec.Common.Widgets
 			if (this.state == TimerState.Running)
 			{
 				this.timer.Stop ();
-				this.remaining_time = this.expiration_date.Subtract (System.DateTime.Now);
+				this.remainingTime = this.expirationDate.Subtract (System.DateTime.Now);
 				this.state = TimerState.Suspended;
 			}
 		}
 		
-		public virtual void Stop()
+		public void Stop()
 		{
 			//	Arrête le timer. Ceci va aussi libérer les ressources associées
 			//	au timer interne.
@@ -255,15 +255,15 @@ namespace Epsitec.Common.Widgets
 			
 			this.state = TimerState.Stopped;
 		}
-		
-		
-		protected virtual void HandleTimerTick(object sender, System.EventArgs e)
+
+
+		private void HandleTimerTick(object sender, System.EventArgs e)
 		{
 			this.timer.Stop ();
 			this.OnTimeElapsed ();
 		}
-		
-		protected virtual void OnTimeElapsed()
+
+		private void OnTimeElapsed()
 		{
 			switch (this.state)
 			{
@@ -288,10 +288,10 @@ namespace Epsitec.Common.Widgets
 				this.TimeElapsed (this);
 			}
 			
-			if ((this.auto_repeat > 0) &&
+			if ((this.delaySecondsAutoRepeat > 0) &&
 				(this.state == TimerState.Elapsed))
 			{
-				this.ExpirationDate = this.ExpirationDate.AddSeconds (this.auto_repeat);
+				this.ExpirationDate = this.ExpirationDate.AddSeconds (this.delaySecondsAutoRepeat);
 				this.Start ();
 			}
 		}
@@ -299,24 +299,14 @@ namespace Epsitec.Common.Widgets
 		
 		
 		public event Support.EventHandler		TimeElapsed;
-		
-		
-		protected System.Windows.Forms.Timer	timer;
-		protected TimerState					state;
-		protected System.DateTime				expiration_date;
-		protected double						delay_seconds;
-		protected double						auto_repeat;
-		protected System.TimeSpan				remaining_time;
-		protected bool							high_accuracy;
-	}
-	
-	public enum TimerState
-	{
-		Invalid,
-		Disposed,
-		Stopped,
-		Running,
-		Suspended,
-		Elapsed
+
+
+		private System.Windows.Forms.Timer		timer;
+		private TimerState						state;
+		private System.DateTime					expirationDate;
+		private System.TimeSpan					remainingTime;
+		private double							delaySeconds;
+		private double							delaySecondsAutoRepeat;
+		private bool							higherAccuracy;
 	}
 }
