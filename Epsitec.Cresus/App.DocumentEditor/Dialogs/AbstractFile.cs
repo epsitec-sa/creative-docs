@@ -777,6 +777,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				if (item.FullPath == fileNameToSelect)
 				{
 					this.filesCollectionView.MoveCurrentTo (item);
+					ItemView view = this.table2.ItemPanel.GetItemView (item);
+					this.table2.ItemPanel.SelectItemView (view);
 					break;
 				}
 			}
@@ -1045,12 +1047,85 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if (this.files != null)
 			{
 				this.CancelPendingJobs ();
-				FileListJob.Start (this);
+				FileListJob.Start (this, this.UpdateFileList);
 			}
 		}
 
-		protected void UpdateFileListIcons()
+		protected void RefreshFileList()
 		{
+			if (this.files != null)
+			{
+				FileListJob.Start (this, this.RefreshFileList);
+			}
+		}
+
+		private bool RefreshFileList(CancelCallback cancelCallback)
+		{
+			if (this.initialFolder.IsFolder)
+			{
+				FileListSettings settings = this.GetFileListSettings ();
+
+				string path = this.initialFolder.FullPath;
+
+				List<string> added = new List<string> ();
+				List<string> deleted = new List<string> ();
+
+				added.AddRange (System.IO.Directory.GetDirectories (path));
+				added.AddRange (System.IO.Directory.GetFiles (path));
+
+				Dictionary<string, FileListItem> items = new Dictionary<string, FileListItem> ();
+
+				lock (this.files.SyncRoot)
+				{
+					foreach (FileListItem item in this.files)
+					{
+						string name = item.FullPath;
+						items[name] = item;
+
+						if (added.Contains (name))
+						{
+							added.Remove (name);
+						}
+						else
+						{
+							deleted.Add (name);
+						}
+					}
+				}
+
+				//	Traite les nouveaux fichiers, ainsi que ceux qui pourraient avoir été
+				//	supprimés...
+
+				foreach (string name in added)
+				{
+					settings.Process (this.files, name);
+					
+					if ((cancelCallback != null) &&
+						(cancelCallback ()))
+					{
+						return true;
+					}
+				}
+
+				foreach (string name in deleted)
+				{
+					if (settings.Process (name) == null)
+					{
+						lock (this.files.SyncRoot)
+						{
+							this.files.Remove (items[name]);
+						}
+					}
+					
+					if ((cancelCallback != null) &&
+						(cancelCallback ()))
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
 		}
 
 		private void AddJob(FileListJob job)
@@ -1080,16 +1155,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		private delegate bool CancelCallback();
+		private delegate bool CancellableProcessCallback(CancelCallback callback);
+
 		private class FileListJob
 		{
-			public static void Start(AbstractFile dialog)
+			public static void Start(AbstractFile dialog, CancellableProcessCallback process)
 			{
-				new FileListJob (dialog);
+				new FileListJob (dialog, process);
 			}
-			
-			public FileListJob(AbstractFile dialog)
+
+			public FileListJob(AbstractFile dialog, CancellableProcessCallback process)
 			{
 				this.dialog = dialog;
+				this.process = process;
 				this.running = true;
 				this.callback = new JobCallback (this.ProcessJob);
 				
@@ -1121,7 +1200,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			private void ProcessJob()
 			{
-				this.interrupted = this.dialog.CreateFileList (
+				this.interrupted = this.process (
 					delegate ()
 					{
 						return this.cancelRequested;
@@ -1138,15 +1217,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			delegate void JobCallback();
 
 			AbstractFile dialog;
+			CancellableProcessCallback process;
 			JobCallback callback;
 			bool running;
 			bool interrupted;
 			bool cancelRequested;
 		}
 
-		private delegate bool CancelCallback();
 
-		private bool CreateFileList(CancelCallback cancelCallback)
+		private bool UpdateFileList(CancelCallback cancelCallback)
 		{
 			//	Effectue la liste des fichiers contenus dans le dossier ad hoc.
 			this.files.Clear ();
@@ -1160,16 +1239,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	rien du tout: on ne sait pas suivre un raccourci distant, car il pointe
 			//	sur une ressource locale de la machine distante!
 
-			FileListSettings settings = new FileListSettings ();
-
-			settings.FolderQueryMode = this.UseLargeIcons ? FolderQueryMode.LargeIcons : FolderQueryMode.SmallIcons;
-			settings.HideFolders     = this.initialFolder.Equals (FileManager.GetFolderItem (FolderId.Recent, FolderQueryMode.NoIcons));
-			settings.HideShortcuts   = FolderItem.IsNetworkPath (this.initialFolder.FullPath);
-
-			settings.DefineFilterPattern (this.fileFilterPattern);
-
-			settings.AddDefaultDescription (".crdoc", Res.Strings.Dialog.File.Document);
-			settings.AddDefaultDescription (".crmod", Res.Strings.Dialog.File.Model); 
+			FileListSettings settings = this.GetFileListSettings ();
 
 			System.Predicate<FileFilterInfo> filter =
 				delegate (FileFilterInfo file)
@@ -1195,6 +1265,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			return false;
+		}
+
+		private FileListSettings GetFileListSettings()
+		{
+			FileListSettings settings;
+			settings = new FileListSettings ();
+
+			settings.FolderQueryMode = this.UseLargeIcons ? FolderQueryMode.LargeIcons : FolderQueryMode.SmallIcons;
+			settings.HideFolders     = this.initialFolder.Equals (FileManager.GetFolderItem (FolderId.Recent, FolderQueryMode.NoIcons));
+			settings.HideShortcuts   = FolderItem.IsNetworkPath (this.initialFolder.FullPath);
+
+			settings.DefineFilterPattern (this.fileFilterPattern);
+
+			settings.AddDefaultDescription (".crdoc", Res.Strings.Dialog.File.Document);
+			settings.AddDefaultDescription (".crmod", Res.Strings.Dialog.File.Model);
+			return settings;
 		}
 
 		protected void UpdateButtons()
@@ -1363,9 +1449,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return;
 			}
 
-			//	TODO: modification "sur place" de la liste des fichiers
-
-			this.UpdateTable(-1);
+			this.RefreshFileList (null);
+			this.table2.ItemPanel.Refresh ();
 			this.SelectFileNameInTable(newDir);
 			this.RenameStarting();
 		}
@@ -1414,42 +1499,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			//	Construit la liste des fichiers à supprimer.
-			List<string> fileNamesToDelete = new List<string> ();
-#if false
-			for (int i=0; i<this.table.Rows; i++)
+			string[] selectedNames = this.GetSelectedFileNames ();
+
+			if (selectedNames.Length > 0)
 			{
-				if (this.table.IsCellSelected(i, 0))
+				//	Supprime le ou les fichiers.
+				FileOperationMode mode = new FileOperationMode (this.window);
+				FileManager.DeleteFiles (mode, selectedNames);
+
+				if (!System.IO.File.Exists (selectedNames[0]))  // fichier n'existe plus (donc bien supprimé) ?
 				{
-					fileNamesToDelete.Add(this.files[i].FileName);
+					this.RefreshFileList (null);
 				}
 			}
-
-			//	Cherche le nom du fichier qu'il faudra sélectionner après la suppression.
-			string fileNameToSelect = null;
-
-			if (sel < this.files.Count-1)
-			{
-				fileNameToSelect = this.files[sel+1].FileName;
-			}
-			else
-			{
-				if (sel > 0)
-				{
-					fileNameToSelect = this.files[sel-1].FileName;
-				}
-			}
-
-			//	Supprime le ou les fichiers.
-			FileOperationMode mode = new FileOperationMode(this.window);
-			FileManager.DeleteFiles(mode, fileNamesToDelete);
-
-			if (!System.IO.File.Exists(fileNamesToDelete[0]))  // fichier n'existe plus (donc bien supprimé) ?
-			{
-				this.UpdateTable(-1);
-				//	TODO: mettre à jour la liste des fichiers en live
-				this.SelectFileNameTable(fileNameToSelect);
-			}
-#endif
 		}
 
 		protected void RenameStarting()
@@ -1545,15 +1607,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 				}
 
-				FolderItem folderItem = FileManager.GetFolderItem (dstFileName, FolderQueryMode.NoIcons);
-				item.FolderItem = folderItem;
-
-				Widget nameWidget = FileListItemViewFactory.GetFileNameWidget (this.table2.ItemPanel.GetItemView (item));
-
-				if (nameWidget != null)
-				{
-					nameWidget.Text = TextLayout.ConvertToTaggedText (item.ShortFileName);
-				}
+				this.RefreshFileList (null);
 			}
 		}
 
@@ -1677,19 +1731,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				name = item.GetResolvedFileName ();
 			}
 
-			IList<ItemView> selectedItemViews = this.table2.ItemPanel.GetSelectedItemViews ();
+			string[] selectedNames = this.GetSelectedFileNames ();
 
-			if (selectedItemViews.Count > 1)
+			if (selectedNames.Length > 1)
 			{
-				List<string> selectedNames = new List<string> ();
-
-				foreach (ItemView selectedItemView in selectedItemViews)
-				{
-					FileListItem selectedItem = selectedItemView.Item as FileListItem;
-					selectedNames.Add (selectedItem.GetResolvedFileName ());
-				}
-
-				this.selectedFileNames = selectedNames.ToArray ();
+				this.selectedFileNames = selectedNames;
 			}
 			else
 			{
@@ -1727,6 +1773,42 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			else
 			{
 				return false;
+			}
+		}
+
+		private string[] GetSelectedFileNames()
+		{
+			IList<ItemView> selectedItemViews = this.table2.ItemPanel.GetSelectedItemViews ();
+
+			if (selectedItemViews.Count > 0)
+			{
+				List<string> selectedNames = new List<string> ();
+
+				foreach (ItemView selectedItemView in selectedItemViews)
+				{
+					FileListItem selectedItem = selectedItemView.Item as FileListItem;
+					selectedNames.Add (selectedItem.GetResolvedFileName ());
+				}
+
+				return selectedNames.ToArray ();
+			}
+			else
+			{
+				return new string[0];
+			}
+		}
+
+		private string GetCurrentFileName()
+		{
+			FileListItem item = this.GetCurrentFileListItem ();
+
+			if (item == null)
+			{
+				return null;
+			}
+			else
+			{
+				return item.FullPath;
 			}
 		}
 
@@ -2203,11 +2285,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//#this.table.HeaderHeight = 20;
 
 			this.table2.ItemPanel.ItemViewDefaultSize = new Size (this.table2.Parent.PreferredWidth, (double) this.slider.Value);
-
-			if (initialMode != this.UseLargeIcons)
-			{
-				this.UpdateFileListIcons ();
-			}
 		}
 
 		protected void HandleWindowCloseClicked(object sender)

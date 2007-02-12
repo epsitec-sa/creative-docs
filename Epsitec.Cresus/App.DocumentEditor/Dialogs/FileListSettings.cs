@@ -162,10 +162,40 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			return false;
 		}
 
+		public void Process(System.Collections.IList list, string path)
+		{
+			FolderItem item = FileManager.GetFolderItem (path, this.FolderQueryMode);
+			this.Process (list, item);
+		}
+
 		public void Process(System.Collections.IList list, FolderItem item)
 		{
-			string path = item.FullPath.ToLowerInvariant ();
+			FileListItem fileItem = this.Process (item);
 			
+			if (fileItem != null)
+			{
+				lock (list.SyncRoot)
+				{
+					list.Add (fileItem);
+				}
+			}
+		}
+
+		public FileListItem Process(string path)
+		{
+			FolderItem item = FileManager.GetFolderItem (path, this.FolderQueryMode);
+			return this.Process (item);
+		}
+
+		public FileListItem Process(FolderItem item)
+		{
+			if (item.IsEmpty)
+			{
+				return null;
+			}
+
+			string path = item.FullPath.ToLowerInvariant ();
+
 			if (item.IsFileSystemNode)
 			{
 				//	TODO: ...gérer isModel...
@@ -183,12 +213,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					{
 						if (this.hideFolders)
 						{
-							return;
+							return null;
 						}
 					}
 					else if (target.IsEmpty)
 					{
-						return;
+						return null;
 					}
 					else
 					{
@@ -199,8 +229,26 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						}
 						else
 						{
-							return;
+							return null;
 						}
+					}
+				}
+				else
+				{
+					if (item.IsFolder)
+					{
+						if (this.hideFolders)
+						{
+							return null;
+						}
+					}
+					else if ((this.filterRegex == null) || (this.filterRegex.IsMatch (path)))
+					{
+						//	OK: ...
+					}
+					else
+					{
+						return null;
 					}
 				}
 
@@ -214,10 +262,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					fileItem.DefaultDescription = description;
 				}
 
-				lock (list.SyncRoot)
-				{
-					list.Add (fileItem);
-				}
+				return fileItem;
+			}
+			else
+			{
+				return null;
 			}
 		}
 

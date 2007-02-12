@@ -465,6 +465,14 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public void SyncRefreshIfNeeded()
+		{
+			if (this.isRefreshPending)
+			{
+				this.Refresh ();
+			}
+		}
+
 		public void Refresh()
 		{
 			this.isRefreshPending = false;

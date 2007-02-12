@@ -341,23 +341,34 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 				else if (!string.IsNullOrEmpty (this.folderItem.FullPath))
 				{
-					if (this.IsDirectoryOrShortcut)
+					try
 					{
-						System.IO.DirectoryInfo info = new System.IO.DirectoryInfo (this.folderItem.FullPath);
-
-						if (info.Exists)
+						if (this.IsDirectoryOrShortcut)
 						{
-							this.cachedDateTime = info.LastWriteTime;
+							System.IO.DirectoryInfo info = new System.IO.DirectoryInfo (this.folderItem.FullPath);
+
+							if (info.Exists)
+							{
+								this.cachedDateTime = info.LastWriteTime;
+							}
+						}
+						else
+						{
+							System.IO.FileInfo info = new System.IO.FileInfo (this.folderItem.FullPath);
+
+							if (info.Exists)
+							{
+								this.cachedDateTime = info.LastWriteTime;
+							}
 						}
 					}
-					else
+					catch (System.ArgumentOutOfRangeException)
 					{
-						System.IO.FileInfo info = new System.IO.FileInfo (this.folderItem.FullPath);
-
-						if (info.Exists)
-						{
-							this.cachedDateTime = info.LastWriteTime;
-						}
+						this.cachedDateTime = System.DateTime.MinValue;
+					}
+					catch (System.IO.IOException)
+					{
+						this.cachedDateTime = System.DateTime.MinValue;
 					}
 				}
 			}
