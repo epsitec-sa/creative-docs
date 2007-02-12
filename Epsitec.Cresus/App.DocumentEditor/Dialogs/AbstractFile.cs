@@ -421,7 +421,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if ((item != null) &&
 				(item.IsDataFile))
 			{
-				this.fieldFileName.Text = TextLayout.ConvertToTaggedText (item.ShortFileName);
+				string name = item.ShortFileName;
+
+				if (name.EndsWith (this.fileExtension))
+				{
+					name = name.Substring (0, name.Length - this.fileExtension.Length);
+				}
+
+				this.fieldFileName.Text = TextLayout.ConvertToTaggedText (name);
 				this.fieldFileName.SelectAll ();
 			}
 
