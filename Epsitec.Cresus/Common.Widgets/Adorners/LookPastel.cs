@@ -13,7 +13,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected override void RefreshColors()
 		{
 			//	Initialise les couleurs en fonction des réglages de Windows.
-			this.colorBlack             = Drawing.Color.FromName("WindowFrame");
+			this.colorBlack             = Drawing.Color.FromBrightness(0);
 			this.colorControl           = Drawing.Color.FromName("Control");
 			this.colorControlLight      = Drawing.Color.FromName("ControlLight");
 			this.colorControlLightLight = Drawing.Color.FromName("ControlLightLight");

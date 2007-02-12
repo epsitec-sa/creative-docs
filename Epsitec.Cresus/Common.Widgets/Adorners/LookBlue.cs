@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Initialise les couleurs en fonction des réglages de Windows.
 			double r,g,b;
 
-			this.colorBlack             = Drawing.Color.FromName("WindowFrame");
+			this.colorBlack             = Drawing.Color.FromBrightness(0);
 			this.colorWindow            = Drawing.Color.FromRgb(107.0/255.0, 144.0/255.0, 189.0/255.0);
 			this.colorControl           = Drawing.Color.FromRgb(107.0/255.0, 144.0/255.0, 189.0/255.0);
 			this.colorButton            = Drawing.Color.FromRgb(107.0/255.0, 144.0/255.0, 189.0/255.0);

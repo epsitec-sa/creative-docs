@@ -172,6 +172,7 @@
     </Compile>
     <EmbeddedResource Include="CustomInstaller.resx">
       <DependentUpon>CustomInstaller.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <Content Include="Resources\Common.Types\module.info" />
     <Content Include="Resources\Common.Types\Captions.00.resource" />
