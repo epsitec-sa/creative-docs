@@ -3806,7 +3806,7 @@ process_ranges:
 		{
 			System.Diagnostics.Debug.Assert (this.story == sender);
 			
-			this.UpdateCurrentStylesAndProperties ();
+			this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 			this.NotifyTextChanged ();
 		}
 		
