@@ -14,20 +14,36 @@ namespace Epsitec.Common.Widgets
 		{
 			this.isVertical   = vertical;
 			this.dragBehavior = this.CreateDragBehavior();
+
+			this.ContainerLayoutMode = isVertical ? ContainerLayoutMode.VerticalFlow : ContainerLayoutMode.HorizontalFlow;
 			
 			this.AutoEngage = true;
 			this.AutoRepeat = true;
+			
+			this.showScrollButtons = hasButtons;
+			this.showMinMaxButtons = false;
 			
 			this.InternalState |= InternalState.Engageable;
 
 			if (hasButtons)
 			{
-				this.arrowUp = new GlyphButton(this);
+				this.arrowMax = new GlyphButton (this);
+				this.arrowMax.ButtonStyle = ButtonStyle.Icon;
+				this.arrowMax.Clicked += new MessageEventHandler (this.HandleButtonClicked);
+				this.arrowMax.Dock = isVertical ? DockStyle.Top : DockStyle.Right;
+
+				this.arrowMin = new GlyphButton (this);
+				this.arrowMin.ButtonStyle = ButtonStyle.Icon;
+				this.arrowMin.Clicked += new MessageEventHandler (this.HandleButtonClicked);
+				this.arrowMin.Dock = isVertical ? DockStyle.Bottom : DockStyle.Left;
+				
+				this.arrowUp = new GlyphButton (this);
 				this.arrowUp.GlyphShape = GlyphShape.Plus;
 				this.arrowUp.ButtonStyle = ButtonStyle.Slider;
 				this.arrowUp.Engaged += new EventHandler(this.HandleButton);
 				this.arrowUp.StillEngaged += new EventHandler(this.HandleButton);
 				this.arrowUp.AutoRepeat = true;
+				this.arrowUp.Dock = isVertical ? DockStyle.Top : DockStyle.Right;
 
 				this.arrowDown = new GlyphButton(this);
 				this.arrowDown.GlyphShape = GlyphShape.Minus;
@@ -35,14 +51,7 @@ namespace Epsitec.Common.Widgets
 				this.arrowDown.Engaged += new EventHandler(this.HandleButton);
 				this.arrowDown.StillEngaged += new EventHandler(this.HandleButton);
 				this.arrowDown.AutoRepeat = true;
-
-				this.arrowMax = new GlyphButton(this);
-				this.arrowMax.ButtonStyle = ButtonStyle.Icon;
-				this.arrowMax.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-
-				this.arrowMin = new GlyphButton(this);
-				this.arrowMin.ButtonStyle = ButtonStyle.Icon;
-				this.arrowMin.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				this.arrowDown.Dock = isVertical ? DockStyle.Bottom : DockStyle.Left;
 			}
 		}
 
@@ -112,19 +121,36 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool							IsMinMaxButtons
+		public bool ShowMinMaxButtons
 		{
 			//	Boutons min/max aux extrémités du slider.
 			get
 			{
-				return this.isMinMaxButtons;
+				return this.showMinMaxButtons;
 			}
 			set
 			{
-				if (this.isMinMaxButtons != value)
+				if (this.showMinMaxButtons != value)
 				{
-					this.isMinMaxButtons = value;
-					this.Invalidate();
+					this.showMinMaxButtons = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
+		public bool ShowScrollButtons
+		{
+			//	Boutons pour incrémenter/décrémenter
+			get
+			{
+				return this.showScrollButtons;
+			}
+			set
+			{
+				if (this.showScrollButtons != value)
+				{
+					this.showScrollButtons = value;
+					this.Invalidate ();
 				}
 			}
 		}
@@ -220,87 +246,71 @@ namespace Epsitec.Common.Widgets
 			if (this.arrowDown == null)
 			{
 				this.sliderRect = rect;
-//				this.UpdateInternalGeometry();
-				return;
-			}
-
-			double totalLength = this.isVertical ? rect.Height : rect.Width;
-			double arrowLength = this.isVertical ? rect.Width : rect.Height;
-
-			if (arrowLength*2 > totalLength-AbstractSlider.minimalThumb)
-			{
-				//	Les boutons occupent trop de place. Il faut donc les comprimer.
-				arrowLength = System.Math.Floor((totalLength-AbstractSlider.minimalThumb)/2);
-
-				if (arrowLength < AbstractSlider.minimalArrow)
-				{
-					//	S'il n'y a plus assez de place pour afficher un bouton visible,
-					//	autant les cacher complètement !
-					arrowLength = 0;
-				}
-			}
-
-			double arrowLength1 = this.isMinMaxButtons ? arrowLength : 0;
-			double arrowLength2 = this.isMinMaxButtons ? arrowLength*2 : arrowLength;
-
-			this.arrowMax.Visibility = this.isMinMaxButtons;
-			this.arrowMin.Visibility = this.isMinMaxButtons;
-
-			if (this.isVertical)
-			{
-				Rectangle bounds;
-
-				if (this.isMinMaxButtons)
-				{
-					bounds = new Rectangle(0, rect.Height-arrowLength+2, rect.Width, arrowLength-2);
-					this.arrowMax.Visibility = (arrowLength > 0);
-					this.arrowMax.SetManualBounds(bounds);
-
-					bounds = new Rectangle(0, 0, rect.Width, arrowLength-2);
-					this.arrowMin.Visibility = (arrowLength > 0);
-					this.arrowMin.SetManualBounds(bounds);
-				}
-
-				bounds = new Rectangle(0, rect.Height-arrowLength2, rect.Width, arrowLength);
-				this.arrowUp.Visibility = (arrowLength > 0);
-				this.arrowUp.SetManualBounds(bounds);
-
-				bounds = new Rectangle(0, arrowLength1, rect.Width, arrowLength);
-				this.arrowDown.Visibility = (arrowLength > 0);
-				this.arrowDown.SetManualBounds(bounds);
-
-				rect.Bottom += arrowLength;
-				rect.Top    -= arrowLength;
 			}
 			else
 			{
-				Rectangle bounds;
+				double totalLength = this.isVertical ? rect.Height : rect.Width;
+				double arrowLength = this.isVertical ? rect.Width : rect.Height;
 
-				if (this.isMinMaxButtons)
+				int buttonCount = 0;
+
+				if (this.showScrollButtons)
 				{
-					bounds = new Rectangle(rect.Width-arrowLength+2, 0, arrowLength-2, rect.Height);
-					this.arrowMax.Visibility = (arrowLength > 0);
-					this.arrowMax.SetManualBounds(bounds);
-
-					bounds = new Rectangle(0, 0, arrowLength-2, rect.Height);
-					this.arrowMin.Visibility = (arrowLength > 0);
-					this.arrowMin.SetManualBounds(bounds);
+					buttonCount += 2;
+				}
+				if (this.showMinMaxButtons)
+				{
+					buttonCount += 2;
 				}
 
-				bounds = new Rectangle(rect.Width-arrowLength2, 0, arrowLength, rect.Height);
-				this.arrowUp.Visibility = (arrowLength > 0);
-				this.arrowUp.SetManualBounds(bounds);
+				if ((buttonCount > 0) &&
+					((arrowLength * buttonCount) > (totalLength - AbstractSlider.minimalThumb)))
+				{
+					//	Les boutons occupent trop de place. Il faut donc les comprimer.
+					arrowLength = System.Math.Floor ((totalLength-AbstractSlider.minimalThumb)/buttonCount);
 
-				bounds = new Rectangle(arrowLength1, 0, arrowLength, rect.Height);
-				this.arrowDown.Visibility = (arrowLength > 0);
-				this.arrowDown.SetManualBounds(bounds);
+					if (arrowLength < AbstractSlider.minimalArrow)
+					{
+						//	S'il n'y a plus assez de place pour afficher un bouton visible,
+						//	autant les cacher complètement !
+						arrowLength = 0;
+					}
+				}
 
-				rect.Left  += arrowLength2;
-				rect.Right -= arrowLength2;
+				double arrowLength1 = this.showMinMaxButtons ? arrowLength : 0;
+				double arrowLength2 = this.showScrollButtons ? arrowLength : 0;
+				
+				Drawing.Size buttonSize = new Size (arrowLength, arrowLength);
+
+				this.arrowMax.Visibility  = arrowLength1 > 0;
+				this.arrowMin.Visibility  = arrowLength1 > 0;
+				this.arrowUp.Visibility   = arrowLength2 > 0;
+				this.arrowDown.Visibility = arrowLength2 > 0;
+
+				this.arrowMax.PreferredSize  = buttonSize;
+				this.arrowMin.PreferredSize  = buttonSize;
+				this.arrowUp.PreferredSize   = buttonSize;
+				this.arrowDown.PreferredSize = buttonSize;
+
+				if (this.isVertical)
+				{
+					rect.Top    -= arrowLength1;
+					rect.Top    -= arrowLength2;
+					rect.Bottom += arrowLength1;
+					rect.Bottom += arrowLength2;
+				}
+				else
+				{
+					rect.Right -= arrowLength1;
+					rect.Right -= arrowLength2;
+					rect.Left  += arrowLength1;
+					rect.Left  += arrowLength2;
+				}
+
+				this.sliderRect = rect;
 			}
 			
-			this.sliderRect = rect;
-			this.UpdateInternalGeometry();
+			this.UpdateInternalGeometry ();
 		}
 		
 		protected virtual void UpdateInternalGeometry()
@@ -317,7 +327,6 @@ namespace Epsitec.Common.Widgets
 
 				if (this.isVertical)
 				{
-					
 					double h = AbstractSlider.handleBreadth;
 					double p = (pos/range) * (sliderRect.Height-h);
 
@@ -605,7 +614,7 @@ namespace Epsitec.Common.Widgets
 			WidgetPaintState state = this.PaintState;
 			
 			//	Dessine le fond.
-			adorner.PaintSliderBackground(graphics, this.Client.Bounds, this.thumbRect, this.tabRect, state & ~WidgetPaintState.Entered, dir);
+			adorner.PaintSliderBackground(graphics, this.Client.Bounds, this.sliderRect, this.thumbRect, this.tabRect, state & ~WidgetPaintState.Entered, dir);
 			
 			//	Dessine la cabine.
 			if (this.thumbRect.IsValid && this.IsEnabled)
@@ -865,7 +874,8 @@ namespace Epsitec.Common.Widgets
 		
 		private bool						isVertical;
 		private bool						isInverted;
-		private bool						isMinMaxButtons = false;
+		private bool						showMinMaxButtons;
+		private bool						showScrollButtons;
 		private decimal						buttonStep = 0.1M;
 		private decimal						pageStep   = 0.2M;
 		private GlyphButton					arrowMax;

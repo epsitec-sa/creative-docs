@@ -930,7 +930,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		}
 
 		public override void PaintSliderBackground(Drawing.Graphics graphics,
-										  Drawing.Rectangle frameRect,
+										  Drawing.Rectangle frameRect, Drawing.Rectangle sliderRect,
 										  Drawing.Rectangle thumbRect,
 										  Drawing.Rectangle tabRect,
 										  Widgets.WidgetPaintState state,
@@ -939,8 +939,9 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine le fond d'un potentiomètre linéaire.
 			if ( dir == Widgets.Direction.Left )
 			{
-				double m = frameRect.Height*1.2;
+				double m = frameRect.Height*0.2;
 				double p = frameRect.Center.Y;
+				frameRect = sliderRect;
 				frameRect.Left   += m;
 				frameRect.Right  -= m;
 				frameRect.Bottom = p-2;
@@ -956,8 +957,9 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else
 			{
-				double m = frameRect.Width*1.2;
+				double m = frameRect.Width*0.2;
 				double p = frameRect.Center.X;
+				frameRect = sliderRect;
 				frameRect.Bottom += m;
 				frameRect.Top    -= m;
 				frameRect.Left   = p-2;

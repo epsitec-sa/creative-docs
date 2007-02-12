@@ -534,7 +534,8 @@ namespace Epsitec.Common.Widgets
 			slidev.LargeChange = 2;
 			slidev.Anchor = AnchorStyles.Right | AnchorStyles.TopAndBottom;
 			slidev.Margins = new Margins(0, 50, 100, 140);
-			window.Root.Children.Add(slidev);
+			slidev.ShowMinMaxButtons = true;
+			window.Root.Children.Add (slidev);
 			tip.SetToolTip(slidev, "Slider vertical");
 
 			HSlider slideh = new HSlider();
@@ -545,7 +546,8 @@ namespace Epsitec.Common.Widgets
 			slideh.LargeChange = 2;
 			slideh.Anchor = AnchorStyles.BottomRight;
 			slideh.Margins = new Margins(0, 10, 0, 100);
-			window.Root.Children.Add(slideh);
+			slideh.ShowMinMaxButtons = true;
+			window.Root.Children.Add (slideh);
 			tip.SetToolTip(slideh, "Slider horizontal");
 
 			TextFieldExList combo = new TextFieldExList();

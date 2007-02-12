@@ -919,7 +919,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		}
 
 		public override void PaintSliderBackground(Drawing.Graphics graphics,
-										  Drawing.Rectangle frameRect,
+										  Drawing.Rectangle frameRect, Drawing.Rectangle sliderRect,
 										  Drawing.Rectangle thumbRect,
 										  Drawing.Rectangle tabRect,
 										  Widgets.WidgetPaintState state,
@@ -930,9 +930,9 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			if ( dir == Widgets.Direction.Left )
 			{
-				Drawing.Point p1 = new Drawing.Point(frameRect.Left +frameRect.Height*1.2, frameRect.Center.Y);
-				Drawing.Point p2 = new Drawing.Point(frameRect.Right-frameRect.Height*1.2, frameRect.Center.Y);
-				graphics.Align(ref p1);
+				Drawing.Point p1 = new Drawing.Point (sliderRect.Left +frameRect.Height*0.2, frameRect.Center.Y);
+				Drawing.Point p2 = new Drawing.Point (sliderRect.Right-frameRect.Height*0.2, frameRect.Center.Y);
+				graphics.Align (ref p1);
 				graphics.Align(ref p2);
 
 				graphics.AddLine(p1.X+0.5, p1.Y+0.5, p2.X-0.5, p2.Y+0.5);
@@ -949,9 +949,9 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else
 			{
-				Drawing.Point p1 = new Drawing.Point(frameRect.Center.X, frameRect.Bottom+frameRect.Width*1.2);
-				Drawing.Point p2 = new Drawing.Point(frameRect.Center.X, frameRect.Top   -frameRect.Width*1.2);
-				graphics.Align(ref p1);
+				Drawing.Point p1 = new Drawing.Point (frameRect.Center.X, sliderRect.Bottom+frameRect.Width*0.2);
+				Drawing.Point p2 = new Drawing.Point (frameRect.Center.X, sliderRect.Top   -frameRect.Width*0.2);
+				graphics.Align (ref p1);
 				graphics.Align(ref p2);
 
 				graphics.AddLine(p1.X-0.5, p1.Y+0.5, p2.X-0.5, p2.Y-0.5);

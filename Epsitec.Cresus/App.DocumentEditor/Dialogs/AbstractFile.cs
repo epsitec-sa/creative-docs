@@ -556,7 +556,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.slider.AutoFocus = false;
 			this.slider.TabNavigationMode = TabNavigationMode.None;
 			this.slider.PreferredWidth = 110;
-			this.slider.IsMinMaxButtons = true;
+			this.slider.ShowMinMaxButtons = true;
 			this.slider.Dock = DockStyle.Left;
 			this.slider.Margins = new Margins(50, 0, 4, 4);
 			this.slider.MinValue = 20.0M;

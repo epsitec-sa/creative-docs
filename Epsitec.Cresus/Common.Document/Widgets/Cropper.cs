@@ -918,6 +918,11 @@ namespace Epsitec.Common.Document.Widgets
 
 			double zoom = (double) this.sliderZoom.Value;  // zoom souhaité
 
+			this.CropZoom (zoom);
+		}
+
+		protected void CropZoom(double zoom)
+		{
 			Size size = this.ImageSize;  // taille de l'image sélectionnée
 			Margins crop = this.cropBeforeZoom;  // crop avant de commencer à zoomer
 
