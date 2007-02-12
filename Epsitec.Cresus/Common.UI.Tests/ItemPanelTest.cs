@@ -35,8 +35,8 @@ namespace Epsitec.Common.UI
 
 			panel.Items = ItemPanelTest.GetGroupedItems ();
 			panel.Layout = ItemPanelLayout.VerticalList;
-			panel.ItemSelection = ItemPanelSelectionMode.ExactlyOne;
-			panel.GroupSelection = ItemPanelSelectionMode.ExactlyOne;
+			panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne;
+			panel.GroupSelectionMode = ItemPanelSelectionMode.ExactlyOne;
 			panel.Aperture = new Drawing.Rectangle (0, 0, 80, 60);
 
 			Widgets.Application.ExecuteAsyncCallbacks ();
@@ -121,8 +121,8 @@ namespace Epsitec.Common.UI
 
 			panel.Items = ItemPanelTest.GetStructuredItems (true);
 			panel.Layout = ItemPanelLayout.VerticalList;
-			panel.ItemSelection = ItemPanelSelectionMode.ExactlyOne;
-			panel.GroupSelection = ItemPanelSelectionMode.ExactlyOne;
+			panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne;
+			panel.GroupSelectionMode = ItemPanelSelectionMode.ExactlyOne;
 			panel.Aperture = new Drawing.Rectangle (0, 0, 80, 60);
 
 			Widgets.Application.ExecuteAsyncCallbacks ();
@@ -187,8 +187,8 @@ namespace Epsitec.Common.UI
 
 			panel.Items = ItemPanelTest.GetStructuredItems (false);
 			panel.Layout = ItemPanelLayout.VerticalList;
-			panel.ItemSelection = ItemPanelSelectionMode.ExactlyOne;
-			panel.GroupSelection = ItemPanelSelectionMode.ExactlyOne;
+			panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne;
+			panel.GroupSelectionMode = ItemPanelSelectionMode.ExactlyOne;
 			panel.Aperture = new Drawing.Rectangle (0, 0, dx, dy);
 			panel.ItemViewDefaultSize = new Drawing.Size (dx, 20);
 
@@ -223,7 +223,7 @@ namespace Epsitec.Common.UI
 
 			panel.Items = ItemPanelTest.GetStructuredItems (true);
 			panel.Layout = ItemPanelLayout.VerticalList;
-			panel.ItemSelection = ItemPanelSelectionMode.ZeroOrOne;
+			panel.ItemSelectionMode = ItemPanelSelectionMode.ZeroOrOne;
 			panel.Aperture = new Drawing.Rectangle (0, 0, dx, dy);
 			panel.ItemViewDefaultSize = new Drawing.Size (320, 20);
 
@@ -264,7 +264,7 @@ namespace Epsitec.Common.UI
 
 			panel.Items = ItemPanelTest.GetStructuredItems (true);
 			panel.Layout = ItemPanelLayout.VerticalList;
-			panel.ItemSelection = ItemPanelSelectionMode.ZeroOrOne;
+			panel.ItemSelectionMode = ItemPanelSelectionMode.ZeroOrOne;
 			panel.Aperture = new Drawing.Rectangle (0, 0, dx, dy);
 			panel.ItemViewDefaultSize = new Drawing.Size (320, 20);
 
@@ -293,7 +293,7 @@ namespace Epsitec.Common.UI
 
 			panel.Items = ItemPanelTest.GetStringItems ();
 			panel.Layout = ItemPanelLayout.VerticalList;
-			panel.ItemSelection = ItemPanelSelectionMode.None;
+			panel.ItemSelectionMode = ItemPanelSelectionMode.None;
 
 			Widgets.Application.ExecuteAsyncCallbacks ();
 
@@ -301,7 +301,7 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (0, panel.GetSelectedItemViews ().Count);
 			Assert.IsFalse (panel.GetItemView (0).IsSelected);
 
-			panel.ItemSelection = ItemPanelSelectionMode.ZeroOrOne;
+			panel.ItemSelectionMode = ItemPanelSelectionMode.ZeroOrOne;
 			
 			panel.SelectItemView (panel.GetItemView (0));
 			Assert.AreEqual (1, panel.GetSelectedItemViews ().Count);
@@ -318,7 +318,7 @@ namespace Epsitec.Common.UI
 			Assert.IsFalse (panel.GetItemView (0).IsSelected);
 			Assert.IsFalse (panel.GetItemView (1).IsSelected);
 
-			panel.ItemSelection = ItemPanelSelectionMode.ExactlyOne;
+			panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne;
 
 			panel.SelectItemView (panel.GetItemView (0));
 			Assert.AreEqual (1, panel.GetSelectedItemViews ().Count);
@@ -335,7 +335,7 @@ namespace Epsitec.Common.UI
 			Assert.IsFalse (panel.GetItemView (0).IsSelected);
 			Assert.IsTrue (panel.GetItemView (1).IsSelected);
 
-			panel.ItemSelection = ItemPanelSelectionMode.Multiple;
+			panel.ItemSelectionMode = ItemPanelSelectionMode.Multiple;
 
 			panel.SelectItemView (panel.GetItemView (0));
 			Assert.AreEqual (2, panel.GetSelectedItemViews ().Count);

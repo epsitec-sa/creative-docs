@@ -76,27 +76,39 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public ItemPanelSelectionMode ItemSelection
+		public ItemPanelSelectionBehavior SelectionBehavior
 		{
 			get
 			{
-				return (ItemPanelSelectionMode) this.GetValue (ItemPanel.ItemSelectionProperty);
+				return (ItemPanelSelectionBehavior) this.GetValue (ItemPanel.SelectionBehaviorProperty);
 			}
 			set
 			{
-				this.SetValue (ItemPanel.ItemSelectionProperty, value);
+				this.SetValue (ItemPanel.SelectionBehaviorProperty, value);
 			}
 		}
 
-		public ItemPanelSelectionMode GroupSelection
+		public ItemPanelSelectionMode ItemSelectionMode
 		{
 			get
 			{
-				return (ItemPanelSelectionMode) this.GetValue (ItemPanel.GroupSelectionProperty);
+				return (ItemPanelSelectionMode) this.GetValue (ItemPanel.ItemSelectionModeProperty);
 			}
 			set
 			{
-				this.SetValue (ItemPanel.GroupSelectionProperty, value);
+				this.SetValue (ItemPanel.ItemSelectionModeProperty, value);
+			}
+		}
+
+		public ItemPanelSelectionMode GroupSelectionMode
+		{
+			get
+			{
+				return (ItemPanelSelectionMode) this.GetValue (ItemPanel.GroupSelectionModeProperty);
+			}
+			set
+			{
+				this.SetValue (ItemPanel.GroupSelectionModeProperty, value);
 			}
 		}
 
@@ -276,14 +288,14 @@ namespace Epsitec.Common.UI
 					//	The view specifies a plain item.
 					
 					selectedViews = this.RootPanel.GetSelectedItemViews (ItemPanel.ContainsItem);
-					selectionMode = this.ItemSelection;
+					selectionMode = this.ItemSelectionMode;
 				}
 				else
 				{
 					//	The view specifies a group.
 
 					selectedViews = this.RootPanel.GetSelectedItemViews (ItemPanel.ContainsGroup);
-					selectionMode = this.GroupSelection;
+					selectionMode = this.GroupSelectionMode;
 				}
 
 				System.Diagnostics.Debug.Assert (selectedViews.Contains (view) == false);
@@ -301,6 +313,7 @@ namespace Epsitec.Common.UI
 						break;
 
 					case ItemPanelSelectionMode.Multiple:
+					case ItemPanelSelectionMode.OneOrMore:
 						this.SetItemViewSelection (view, true);
 						break;
 				}
@@ -319,14 +332,14 @@ namespace Epsitec.Common.UI
 					//	The view specifies a plain item.
 
 					selectedViews = this.RootPanel.GetSelectedItemViews (ItemPanel.ContainsItem);
-					selectionMode = this.ItemSelection;
+					selectionMode = this.ItemSelectionMode;
 				}
 				else
 				{
 					//	The view specifies a group.
 
 					selectedViews = this.RootPanel.GetSelectedItemViews (ItemPanel.ContainsGroup);
-					selectionMode = this.GroupSelection;
+					selectionMode = this.GroupSelectionMode;
 				}
 
 				System.Diagnostics.Debug.Assert (selectedViews.Contains (view));
@@ -338,6 +351,7 @@ namespace Epsitec.Common.UI
 						break;
 
 					case ItemPanelSelectionMode.ExactlyOne:
+					case ItemPanelSelectionMode.OneOrMore:
 						if (selectedViews.Count > 1)
 						{
 							this.SetItemViewSelection (view, false);
@@ -408,8 +422,8 @@ namespace Epsitec.Common.UI
 					this.isCurrentShowPending = false;
 					ItemView item = this.GetItemView (view.CurrentPosition);
 
-					if ((this.ItemSelection == ItemPanelSelectionMode.ExactlyOne) ||
-						(this.ItemSelection == ItemPanelSelectionMode.ZeroOrOne))
+					if ((this.ItemSelectionMode == ItemPanelSelectionMode.ExactlyOne) ||
+						(this.ItemSelectionMode == ItemPanelSelectionMode.ZeroOrOne))
 					{
 						this.SelectItemView (item);
 					}
@@ -600,14 +614,16 @@ namespace Epsitec.Common.UI
 			this.AsyncRefresh ();
 		}
 
-		protected virtual void HandleItemSelectionChanged(ItemPanelSelectionMode oldValue, ItemPanelSelectionMode newValue)
+		protected virtual void HandleItemSelectionModeChanged(ItemPanelSelectionMode oldValue, ItemPanelSelectionMode newValue)
 		{
-			this.RefreshLayout ();
 		}
 
-		protected virtual void HandleGroupSelectionChanged(ItemPanelSelectionMode oldValue, ItemPanelSelectionMode newValue)
+		protected virtual void HandleGroupSelectionModeChanged(ItemPanelSelectionMode oldValue, ItemPanelSelectionMode newValue)
 		{
-			this.RefreshLayout ();
+		}
+
+		protected virtual void HandleSelectionBehaviorChanged(ItemPanelSelectionBehavior oldValue, ItemPanelSelectionBehavior newValue)
+		{
 		}
 
 		protected virtual void HandleItemCollectionChanged(object sender, CollectionChangedEventArgs e)
@@ -668,16 +684,37 @@ namespace Epsitec.Common.UI
 				if (e.Message.Button == Widgets.MouseButtons.Left)
 				{
 					ItemView view = this.Detect (e.Point);
-					
+
 					if (view != null)
 					{
-						if (view.IsSelected)
+						bool select = view.IsSelected;
+						bool action = false;
+
+						switch (this.SelectionBehavior)
 						{
-							this.DeselectItemView (view);
+							case ItemPanelSelectionBehavior.Automatic:
+								action = true;
+								break;
+
+							case ItemPanelSelectionBehavior.Manual:
+								action = true;
+								if (!e.Message.IsControlPressed)
+								{
+									this.DeselectAllItemViews ();
+								}
+								break;
 						}
-						else
+
+						if (action)
 						{
-							this.SelectItemView (view);
+							if (select)
+							{
+								this.DeselectItemView (view);
+							}
+							else
+							{
+								this.SelectItemView (view);
+							}
 						}
 						
 						e.Message.Consumer = this;
@@ -1180,16 +1217,22 @@ namespace Epsitec.Common.UI
 			panel.HandleLayoutChanged ((ItemPanelLayout) oldValue, (ItemPanelLayout) newValue);
 		}
 
-		private static void NotifyItemSelectionChanged(DependencyObject obj, object oldValue, object newValue)
+		private static void NotifyItemSelectionModeChanged(DependencyObject obj, object oldValue, object newValue)
 		{
 			ItemPanel panel = (ItemPanel) obj;
-			panel.HandleItemSelectionChanged ((ItemPanelSelectionMode) oldValue, (ItemPanelSelectionMode) newValue);
+			panel.HandleItemSelectionModeChanged ((ItemPanelSelectionMode) oldValue, (ItemPanelSelectionMode) newValue);
 		}
 
-		private static void NotifyGroupSelectionChanged(DependencyObject obj, object oldValue, object newValue)
+		private static void NotifyGroupSelectionModeChanged(DependencyObject obj, object oldValue, object newValue)
 		{
 			ItemPanel panel = (ItemPanel) obj;
-			panel.HandleGroupSelectionChanged ((ItemPanelSelectionMode) oldValue, (ItemPanelSelectionMode) newValue);
+			panel.HandleGroupSelectionModeChanged ((ItemPanelSelectionMode) oldValue, (ItemPanelSelectionMode) newValue);
+		}
+
+		private static void NotifySelectionBehaviorChanged(DependencyObject obj, object oldValue, object newValue)
+		{
+			ItemPanel panel = (ItemPanel) obj;
+			panel.HandleSelectionBehaviorChanged ((ItemPanelSelectionBehavior) oldValue, (ItemPanelSelectionBehavior) newValue);
 		}
 
 		private static void NotifyItemViewDefaultSizeChanged(DependencyObject obj, object oldValue, object newValue)
@@ -1207,8 +1250,9 @@ namespace Epsitec.Common.UI
 
 		public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register ("Items", typeof (ICollectionView), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanel.NotifyItemsChanged));
 		public static readonly DependencyProperty LayoutProperty = DependencyProperty.Register ("Layout", typeof (ItemPanelLayout), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelLayout.None, ItemPanel.NotifyLayoutChanged));
-		public static readonly DependencyProperty ItemSelectionProperty = DependencyProperty.Register ("ItemSelection", typeof (ItemPanelSelectionMode), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelSelectionMode.None, ItemPanel.NotifyItemSelectionChanged));
-		public static readonly DependencyProperty GroupSelectionProperty = DependencyProperty.Register ("GroupSelection", typeof (ItemPanelSelectionMode), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelSelectionMode.None, ItemPanel.NotifyGroupSelectionChanged));
+		public static readonly DependencyProperty ItemSelectionModeProperty = DependencyProperty.Register ("ItemSelectionMode", typeof (ItemPanelSelectionMode), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelSelectionMode.None, ItemPanel.NotifyItemSelectionModeChanged));
+		public static readonly DependencyProperty GroupSelectionModeProperty = DependencyProperty.Register ("GroupSelectionMode", typeof (ItemPanelSelectionMode), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelSelectionMode.None, ItemPanel.NotifyGroupSelectionModeChanged));
+		public static readonly DependencyProperty SelectionBehaviorProperty = DependencyProperty.Register ("SelectionBehavior", typeof (ItemPanelSelectionBehavior), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelSelectionBehavior.Automatic, ItemPanel.NotifySelectionBehaviorChanged));
 		public static readonly DependencyProperty ItemViewDefaultSizeProperty = DependencyProperty.Register ("ItemViewDefaultSize", typeof (Drawing.Size), typeof (ItemPanel), new DependencyPropertyMetadata (new Drawing.Size (80, 20), ItemPanel.NotifyItemViewDefaultSizeChanged));
 		public static readonly DependencyProperty AperturePaddingProperty = DependencyProperty.Register ("AperturePadding", typeof (Drawing.Margins), typeof (ItemPanel), new DependencyPropertyMetadata (Drawing.Margins.Zero));
 

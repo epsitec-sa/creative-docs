@@ -44,8 +44,8 @@ namespace Epsitec.Common.UI
 					{
 						this.panel.Layout = this.parentPanel.Layout;
 						
-						this.panel.ItemSelection  = this.parentPanel.ItemSelection;
-						this.panel.GroupSelection = this.parentPanel.GroupSelection;
+						this.panel.ItemSelectionMode  = this.parentPanel.ItemSelectionMode;
+						this.panel.GroupSelectionMode = this.parentPanel.GroupSelectionMode;
 
 						this.panel.ItemViewDefaultSize = this.parentPanel.ItemViewDefaultSize;
 						

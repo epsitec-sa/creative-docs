@@ -17,8 +17,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			this.FileExtension = ".crmod";
 			this.isModel = true;
-			this.isNavigationEnabled = true;
-			this.isMultipleSelection = false;
+			this.enableNavigation = true;
+			this.enableMultipleSelection = false;
 			this.isNewEmtpyDocument = true;
 			this.isSave = false;
 		}

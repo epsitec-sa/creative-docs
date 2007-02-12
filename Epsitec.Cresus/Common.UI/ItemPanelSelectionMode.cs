@@ -15,5 +15,6 @@ namespace Epsitec.Common.UI
 		ExactlyOne,
 
 		Multiple,
+		OneOrMore,
 	}
 }

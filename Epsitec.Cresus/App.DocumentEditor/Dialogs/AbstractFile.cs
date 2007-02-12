@@ -401,6 +401,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table2.ColumnHeader.SetColumnSortable (0, false);
 			this.table2.ColumnHeader.SetColumnSort (1, Epsitec.Common.Types.ListSortDirection.Ascending);
 			this.table2.ColumnHeader.SetColumnSort (2, Epsitec.Common.Types.ListSortDirection.Ascending);
+			this.table2.ItemPanel.ItemSelectionMode = this.enableMultipleSelection ? ItemPanelSelectionMode.Multiple : ItemPanelSelectionMode.ZeroOrOne;
+			this.table2.ItemPanel.SelectionBehavior = ItemPanelSelectionBehavior.Manual;
 
 			this.filesCollectionView.CurrentChanged += this.HandleFilesCollectionViewCurrentChanged;
 			this.table2.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
@@ -2216,12 +2218,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private string						fileExtension;
 		private string						fileFilterPattern;
-		protected bool						isModel = false;
-		protected bool						isNavigationEnabled = false;
-		protected bool						isMultipleSelection = false;
-		protected bool						isNewEmtpyDocument = false;
-		protected bool						isSave = false;
-		protected bool						isRedirection = false;
+		protected bool						isModel;
+		protected bool						enableNavigation;
+		protected bool						enableMultipleSelection;
+		protected bool						isNewEmtpyDocument;
+		protected bool						isSave;
+		protected bool						isRedirection;
 		protected FolderItem				initialFolder;
 		protected FolderItemIcon			initialSmallIcon;
 		protected string					initialFileName;
@@ -2232,7 +2234,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected FileListItem				renameSelected;
 		protected Widget					focusedWidget;
 		protected Widget					focusedWidgetBeforeRename;
-		protected bool						ignoreChanged = false;
+		protected bool						ignoreChanged;
 		protected List<FolderItem>			favoritesList;
 		protected int						favoritesFixes;
 		protected int						favoritesSelected;

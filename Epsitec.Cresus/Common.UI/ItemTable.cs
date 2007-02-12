@@ -50,8 +50,8 @@ namespace Epsitec.Common.UI
 			this.itemPanel.CurrentChanged += this.HandleItemPanelCurrentChanged;
 			
 			this.itemPanel.Layout = ItemPanelLayout.VerticalList;
-			this.itemPanel.ItemSelection = ItemPanelSelectionMode.ExactlyOne;
-			this.itemPanel.GroupSelection = ItemPanelSelectionMode.None;
+			this.itemPanel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne;
+			this.itemPanel.GroupSelectionMode = ItemPanelSelectionMode.None;
 
 			this.columnHeader.ItemPanel = this.itemPanel;
 
