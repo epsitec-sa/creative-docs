@@ -1608,6 +1608,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 
 				this.RefreshFileList (null);
+				this.table2.ItemPanel.Refresh ();
+				this.SelectFileNameInTable (dstFileName);
 			}
 		}
 

@@ -353,13 +353,18 @@ namespace Epsitec.Common.Types
 					throw new System.ArgumentOutOfRangeException ("position");
 				}
 
-				if (view.CurrentPosition != position)
+				object item = view.CurrentItem;
+				bool inView = view.SetCurrentToPosition (position);
+				
+				if ((view.CurrentPosition != position) ||
+					(view.CurrentItem != item))
 				{
-					return new MoveResult (true, view.SetCurrentToPosition (position));
+					return new MoveResult (true, inView);
 				}
 				else
 				{
-					return new MoveResult (false, view.IsCurrentInView);
+					
+					return new MoveResult (false, inView);
 				}
 			}
 
