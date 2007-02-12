@@ -2238,7 +2238,7 @@ namespace Epsitec.Common.Designer
 			if (this.IsBundlesType)
 			{
 				string prefix = this.resourceManager.ActivePrefix;
-				System.Globalization.CultureInfo culture = Resources.FindSpecificCultureInfo(cultureName);
+				System.Globalization.CultureInfo culture = Resources.FindCultureInfo(cultureName);
 				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, this.bundles.Name, ResourceLevel.Localized, culture);
 
 				bundle.DefineType(this.BundleName(false));
