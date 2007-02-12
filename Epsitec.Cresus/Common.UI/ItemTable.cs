@@ -49,9 +49,6 @@ namespace Epsitec.Common.UI
 			this.itemPanel.ContentsSizeChanged += this.HandleContentsSizeChanged;
 			this.itemPanel.CurrentChanged += this.HandleItemPanelCurrentChanged;
 			
-			this.itemPanel.AddEventHandler (Visual.PreferredHeightProperty, this.HandleItemPanelSizeChanged);
-			this.itemPanel.AddEventHandler (Visual.PreferredWidthProperty, this.HandleItemPanelSizeChanged);
-
 			this.itemPanel.Layout = ItemPanelLayout.VerticalList;
 			this.itemPanel.ItemSelection = ItemPanelSelectionMode.ExactlyOne;
 			this.itemPanel.GroupSelection = ItemPanelSelectionMode.None;
@@ -522,11 +519,6 @@ namespace Epsitec.Common.UI
 			this.UpdateApertureProtected ();
 		}
 
-		private void HandleItemPanelSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			this.UpdateApertureProtected ();
-		}
-		
 		private void HandleContentsSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			this.UpdateApertureProtected ();

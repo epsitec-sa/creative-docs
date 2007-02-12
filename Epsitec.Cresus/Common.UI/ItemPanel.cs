@@ -830,6 +830,7 @@ namespace Epsitec.Common.UI
 
 		private void RefreshItemViews()
 		{
+			RefreshState    state = new RefreshState (this);
 			ICollectionView items = this.Items;
 
 			Dictionary<object, ItemView> currentViews = new Dictionary<object, ItemView> ();
@@ -899,13 +900,20 @@ namespace Epsitec.Common.UI
 				{
 					view.DisposeUserInterface ();
 				});
+
+
+			state.GenerateEvents ();
 		}
 		
 		private void RefreshLayout()
 		{
+			RefreshState state = new RefreshState (this);
+
 			this.RefreshLayout (this.SafeGetViews ());
+
+			state.GenerateEvents ();
 		}
-		
+
 		private void RefreshLayout(IEnumerable<ItemView> views)
 		{
 			foreach (ItemView view in views)
@@ -1014,13 +1022,6 @@ namespace Epsitec.Common.UI
 
 			this.PreferredWidth  = width;
 			this.PreferredHeight = height;
-
-			Drawing.Size newValue = this.PreferredSize;
-
-			if (oldValue != newValue)
-			{
-				this.OnContentsSizeChanged (new DependencyPropertyChangedEventArgs ("ContentsSize", oldValue, newValue));
-			}
 		}
 
 		private ItemView Detect(IList<ItemView> views, Drawing.Point pos)
@@ -1135,6 +1136,34 @@ namespace Epsitec.Common.UI
 			#endregion
 
 			ItemPanel panel;
+		}
+
+		#endregion
+
+		#region RefreshState Class
+
+		class RefreshState
+		{
+			public RefreshState(ItemPanel panel)
+			{
+				this.panel = panel;
+				this.contentsSize = this.panel.PreferredSize;
+			}
+
+
+			public void GenerateEvents()
+			{
+				Drawing.Size oldContentsSize = this.contentsSize;
+				Drawing.Size newContentsSize = this.panel.PreferredSize;
+
+				if (oldContentsSize != newContentsSize)
+				{
+					this.panel.OnContentsSizeChanged (new DependencyPropertyChangedEventArgs ("ContentsSize", oldContentsSize, newContentsSize));
+				}
+			}
+
+			private ItemPanel panel;
+			private Drawing.Size contentsSize;
 		}
 
 		#endregion
