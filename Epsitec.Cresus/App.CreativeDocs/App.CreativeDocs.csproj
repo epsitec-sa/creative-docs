@@ -164,7 +164,7 @@ xcopy "$(TargetDir)*.dll" "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\" /y
 xcopy "$(SolutionDir)External\*.Win32.dll" "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\" /y
 xcopy "$(SolutionDir)External\FreeImage.dll" "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\" /y
 
-del "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\Creative Docs .NET.exe"
+del "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\Creative Docs.exe"
 ren "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\App.CreativeDocs.exe" "Creative Docs.exe"
 
 call "$(SolutionDir)External\CodeSigning\sign-opac.bat" "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\*"

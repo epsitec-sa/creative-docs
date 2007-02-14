@@ -9,7 +9,6 @@ namespace Epsitec.App.CreativeDocs
 		public static void Main() 
 		{
 			Epsitec.Common.Support.Resources.SetTwoLetterISOLanguageNameOverride ("en");
-			
 			Epsitec.App.DocumentEditor.Application.Start ("F");
 		}
 	}
