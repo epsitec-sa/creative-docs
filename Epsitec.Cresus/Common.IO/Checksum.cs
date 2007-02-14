@@ -1,5 +1,5 @@
 //	Copyright © 2004-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.IO
 {
@@ -9,12 +9,8 @@ namespace Epsitec.Common.IO
 	/// La classe Checksum permet d'accéder aux divers algorithmes de calcul
 	/// de ... checksums sur des données binaires. Voir IChecksum.
 	/// </summary>
-	public class Checksum
+	public static class Checksum
 	{
-		private Checksum()
-		{
-		}
-
 		public static long ComputeCrc32(ChecksumCallback callback)
 		{
 			if (Checksum.sharedCrc32 == null)
@@ -49,9 +45,9 @@ namespace Epsitec.Common.IO
 		{
 			return new Adler32Wrapper ();
 		}
-		
-		
-		protected class ChecksumWrapper : IChecksum
+
+
+		private abstract class ChecksumWrapper : IChecksum
 		{
 			protected ChecksumWrapper(ICSharpCode.SharpZipLib.Checksums.IChecksum checksum)
 			{
@@ -86,18 +82,25 @@ namespace Epsitec.Common.IO
 			
 			public void Update(byte[] buffer)
 			{
-				this.checksum.Update (buffer);
+				if ((buffer != null) &&
+					(buffer.Length > 0))
+				{
+					this.checksum.Update (buffer);
+				}
 			}
 
 			public void Update(byte[] buffer, int offset, int length)
 			{
-				this.checksum.Update (buffer, offset, length);
+				if (length > 0)
+				{
+					this.checksum.Update (buffer, offset, length);
+				}
 			}
 			
 			
 			public void UpdateValue(string value)
 			{
-				if (value != null)
+				if (!string.IsNullOrEmpty (value))
 				{
 					this.Update (System.Text.Encoding.UTF8.GetBytes (value));
 				}
@@ -156,14 +159,14 @@ namespace Epsitec.Common.IO
 		}
 		
 		
-		protected class Crc32Wrapper : ChecksumWrapper
+		private class Crc32Wrapper : ChecksumWrapper
 		{
 			public Crc32Wrapper() : base (new ICSharpCode.SharpZipLib.Checksums.Crc32 ())
 			{
 			}
 		}
-		
-		protected class Adler32Wrapper : ChecksumWrapper
+
+		private class Adler32Wrapper : ChecksumWrapper
 		{
 			public Adler32Wrapper() : base (new ICSharpCode.SharpZipLib.Checksums.Adler32 ())
 			{

@@ -155,7 +155,7 @@ namespace Epsitec.Common.Widgets
 			this.palette.TabIndex = 10;
 			this.palette.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
-			this.picker = new Tools.Magnifier.DragSource(this);
+			this.picker = new Tools.MagnifierDragSource(this);
 			this.picker.HotColorChanged += new EventHandler(this.HandlePickerHotColorChanged);
 			ToolTip.Default.SetToolTip(this.picker, Res.Strings.ColorSelector.Picker);
 
@@ -1019,6 +1019,6 @@ namespace Epsitec.Common.Widgets
 		protected IconButton					buttonRgb;
 		protected IconButton					buttonCmyk;
 		protected IconButton					buttonGray;
-		private Tools.Magnifier.DragSource		picker;
+		private Tools.MagnifierDragSource		picker;
 	}
 }

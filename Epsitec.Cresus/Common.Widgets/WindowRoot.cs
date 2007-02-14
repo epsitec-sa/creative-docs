@@ -231,9 +231,13 @@ namespace Epsitec.Common.Widgets
 					if (commands.Count > 0)
 					{
 						CommandDispatcherChain dispatcherChain = CommandDispatcherChain.BuildChain (focused ?? this);
-						Command                bestCommand     = dispatcherChain.SelectBestCommand (commands);
-						window.QueueCommand (widget, bestCommand);
-						return true;
+						
+						if (dispatcherChain != null)
+						{
+							Command bestCommand = dispatcherChain.SelectBestCommand (commands);
+							window.QueueCommand (widget, bestCommand);
+							return true;
+						}
 					}
 					
 #if false

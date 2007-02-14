@@ -399,7 +399,16 @@ namespace Epsitec.Common.Support
 		
 		public static string GetTwoLetterISOLanguageName(CultureInfo culture)
 		{
-			return Resources.twoLetterISOLanguageNameOverride ?? culture.TwoLetterISOLanguageName;
+			string iso = culture.TwoLetterISOLanguageName;
+
+			if (iso == "fr")
+			{
+				return Resources.twoLetterISOLanguageNameOverride ?? iso;
+			}
+			else
+			{
+				return iso;
+			}
 		}
 		
 		public static bool EqualCultures(ResourceLevel levelA, CultureInfo cultureA, ResourceLevel levelB, CultureInfo cultureB)
