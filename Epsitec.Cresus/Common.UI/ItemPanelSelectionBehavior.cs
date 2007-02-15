@@ -13,7 +13,8 @@ namespace Epsitec.Common.UI
 		None,
 
 		Automatic,
-		Manual
+		Manual,
+		ManualOne
 		
 	}
 }

@@ -271,8 +271,11 @@ namespace Epsitec.Common.Document.Widgets
 				crop = this.crop;
 				isFillEnabled = this.IsFillEnabled;
 
-				double zoomx = size.Width/(size.Width-crop.Left-crop.Right);
-				double zoomy = size.Height/(size.Height-crop.Bottom-crop.Top);
+				double dx = size.Width-crop.Width;
+				double dy = size.Height-crop.Height;
+
+				double zoomx = dx > 0 ? size.Width/dx : 1;
+				double zoomy = dy > 0 ? size.Height/dy : 1;
 				zoom = System.Math.Min(zoomx, zoomy);
 			}
 

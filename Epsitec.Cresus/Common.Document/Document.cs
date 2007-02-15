@@ -465,6 +465,8 @@ namespace Epsitec.Common.Document
 
 		public DocumentManager DocumentManager
 		{
+			//	Retourne le gestionnaire de document associé; il est créé s'il n'existait
+			//	pas avant.
 			get
 			{
 				return this.ioDocumentManager;
@@ -856,12 +858,14 @@ namespace Epsitec.Common.Document
 						using (Stream compressor = IO.Decompression.CreateStream(stream, out compressorName))
 						{
 							doc = (Document) formatter.Deserialize(compressor);
+							doc.ioDocumentManager = this.ioDocumentManager;
 							//-doc.imageCache = new ImageCache();
 						}
 					}
 					else
 					{
 						doc = (Document) formatter.Deserialize(stream);
+						doc.ioDocumentManager = this.ioDocumentManager;
 						doc.FontReadAll(zip);
 						doc.ImageCacheReadAll(zip, doc.imageIncludeMode);
 					}
@@ -937,6 +941,11 @@ namespace Epsitec.Common.Document
 				this.imageCache.Document = this;
 			}
 
+			if (this.ioDocumentManager == doc.ioDocumentManager)
+			{
+				doc.ioDocumentManager = null;
+			}
+			
 			this.fontIncludeMode = doc.fontIncludeMode;
 			this.imageIncludeMode = doc.imageIncludeMode;
 			

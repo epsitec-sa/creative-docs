@@ -761,7 +761,7 @@ namespace Epsitec.Common.UI
 
 					if (view != null)
 					{
-						bool select = view.IsSelected;
+						bool select = !view.IsSelected;
 						bool action = false;
 
 						switch (this.SelectionBehavior)
@@ -777,17 +777,26 @@ namespace Epsitec.Common.UI
 									this.DeselectAllItemViews ();
 								}
 								break;
+							
+							case ItemPanelSelectionBehavior.ManualOne:
+								action = true;
+								if (!e.Message.IsControlPressed)
+								{
+									this.DeselectAllItemViews ();
+									select = true;
+								}
+								break;
 						}
 
 						if (action)
 						{
 							if (select)
 							{
-								this.DeselectItemView (view);
+								this.SelectItemView (view);
 							}
 							else
 							{
-								this.SelectItemView (view);
+								this.DeselectItemView (view);
 							}
 						}
 						

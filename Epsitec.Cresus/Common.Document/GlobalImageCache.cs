@@ -106,11 +106,14 @@ namespace Epsitec.Common.Document
 				Document document = cache.Document;
 				DocumentManager manager = document.DocumentManager;
 
-				string path = manager.GetLocalFilePath ().ToLowerInvariant ();
-
-				if (path == zipPath)
+				if (manager != null)
 				{
-					return manager;
+					string path = manager.GetLocalFilePath ().ToLowerInvariant ();
+
+					if (path == zipPath)
+					{
+						return manager;
+					}
 				}
 			}
 

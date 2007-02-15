@@ -233,7 +233,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.UpdateInitialDirectory ();
 			this.UpdateTable (-1);
-			this.UpdateFileList ();
+
+			if (this.table2 != null)
+			{
+				this.UpdateFileList ();
+			}
 		}
 
 		protected void AddToVisitedDirectories(FolderItem folder)
@@ -371,19 +375,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	TODO: (*) En mode Auto, l'ascenseur est caché lors de la première apparition
 			//	du dialogue !
 
-			this.files = new ObservableList<FileListItem> ();
-			this.filesCollectionView = new CollectionView (this.files);
+			this.CreateCollectionView ();
 
-			this.filesCollectionView.InvalidationHandler =
-				delegate (Epsitec.Common.Types.CollectionView cv)
-				{
-					Epsitec.Common.Widgets.Application.QueueAsyncCallback (
-						delegate ()
-						{
-							cv.Refresh ();
-						});
-				};
-			
 			this.table2 = new Epsitec.Common.UI.ItemTable (group);
 			this.table2.Dock = DockStyle.Fill;
 			this.table2.TabIndex = 2;
@@ -402,9 +395,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table2.ColumnHeader.SetColumnSort (1, Epsitec.Common.Types.ListSortDirection.Ascending);
 			this.table2.ColumnHeader.SetColumnSort (2, Epsitec.Common.Types.ListSortDirection.Ascending);
 			this.table2.ItemPanel.ItemSelectionMode = this.enableMultipleSelection ? ItemPanelSelectionMode.Multiple : ItemPanelSelectionMode.ZeroOrOne;
-			this.table2.ItemPanel.SelectionBehavior = ItemPanelSelectionBehavior.Manual;
+			this.table2.ItemPanel.SelectionBehavior = ItemPanelSelectionBehavior.ManualOne;
 
-			this.filesCollectionView.CurrentChanged += this.HandleFilesCollectionViewCurrentChanged;
 			this.table2.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
 			this.table2.ItemPanel.DoubleClicked += this.HandleTableDoubleClicked;
 			this.table2.ItemPanel.SelectionChanged += this.HandleFilesItemTableSelectionChanged;
@@ -413,6 +405,27 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.useLargeIcons = false;
 
 			this.UpdateFileList ();
+		}
+
+		private void CreateCollectionView()
+		{
+			if (this.filesCollectionView == null)
+			{
+				this.files = new ObservableList<FileListItem> ();
+				this.ClearFileList ();
+				this.filesCollectionView = new CollectionView (this.files);
+				this.filesCollectionView.CurrentChanged += this.HandleFilesCollectionViewCurrentChanged;
+
+				this.filesCollectionView.InvalidationHandler =
+				delegate (Epsitec.Common.Types.CollectionView cv)
+					{
+						Epsitec.Common.Widgets.Application.QueueAsyncCallback (
+							delegate ()
+							{
+								cv.Refresh ();
+							});
+					};
+			}
 		}
 
 		private void HandleFilesItemTableSelectionChanged(object sender)
@@ -427,6 +440,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private void UpdateAfterSelectionChanged()
 		{
+			if (this.table2 == null)
+			{
+				return;
+			}
+
 			FileListItem item = this.GetCurrentFileListItem ();
 
 			if ((item != null) &&
@@ -772,7 +790,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void SelectFileNameInTable(string fileNameToSelect)
 		{
 			//	Sélectionne et montre un fichier dans la table.
-			foreach (FileListItem item in this.files)
+
+			FileListItem[] items;
+
+			lock (this.files.SyncRoot)
+			{
+				items = this.files.ToArray ();
+			}
+
+			foreach (FileListItem item in items)
 			{
 				if (item.FullPath == fileNameToSelect)
 				{
@@ -905,131 +931,31 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void UpdateTable(int sel)
 		{
 			//	Met à jour la table des fichiers.
-			if (this.table2 == null)
+			this.CreateCollectionView ();
+			
+			this.filesCollectionView.MoveCurrentToPosition (sel);
+
+			if (this.table2 != null)
 			{
-				return;
-			}
-
-#if false
-			int rows = this.files.Count;
-
-			this.table.SetArraySize(5, rows);
-
-			this.table.SetWidthColumn(0, 50);
-			this.table.SetWidthColumn(1, 85);
-			this.table.SetWidthColumn(2, 95);
-			this.table.SetWidthColumn(3, 80);
-			this.table.SetWidthColumn(4, 40);
-
-			this.table.SetHeaderTextH(0, Res.Strings.Dialog.File.Header.Preview);
-			this.table.SetHeaderTextH(1, Res.Strings.Dialog.File.Header.FileName);
-			this.table.SetHeaderTextH(2, Res.Strings.Dialog.File.Header.Description);
-			this.table.SetHeaderTextH(3, Res.Strings.Dialog.File.Header.Date);
-			this.table.SetHeaderTextH(4, Res.Strings.Dialog.File.Header.Size);
-
-			this.table.SelectRow(-1, true);
-
-			StaticText st;
-			ImagePlaceholder im;
-			for (int row=0; row<rows; row++)
-			{
-				for (int column=0; column<this.table.Columns; column++)
+				object select = this.filesCollectionView.CurrentItem;
+				
+				if (sel < 0)
 				{
-					if (this.table[column, row].IsEmpty)
-					{
-						if (column == 0)  // miniature ?
-						{
-							im = new ImagePlaceholder();
-							im.Dock = DockStyle.Fill;
-							im.Margins = new Margins(1, 1, 1, 1);
-							this.table[column, row].Insert(im);
-						}
-						else if (column == 1)  // filename ?
-						{
-							st = new StaticText();
-							st.ContentAlignment = ContentAlignment.MiddleLeft;
-							st.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-							st.Dock = DockStyle.Fill;
-							st.Margins = new Margins(6, 0, 0, 0);
-							this.table[column, row].Insert(st);
-						}
-						else if (column == 2)  // résumé ?
-						{
-							st = new StaticText();
-							st.ContentAlignment = ContentAlignment.MiddleLeft;
-							st.TextBreakMode = TextBreakMode.Hyphenate;
-							st.Dock = DockStyle.Fill;
-							st.Margins = new Margins(6, 6, 0, 0);
-							this.table[column, row].Insert(st);
-						}
-						else if (column == 3)  // date ?
-						{
-							st = new StaticText();
-							st.ContentAlignment = ContentAlignment.MiddleLeft;
-							st.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-							st.Dock = DockStyle.Fill;
-							st.Margins = new Margins(6, 0, 0, 0);
-							this.table[column, row].Insert(st);
-						}
-						else if (column == 4)  // taille ?
-						{
-							st = new StaticText();
-							st.ContentAlignment = ContentAlignment.MiddleRight;
-							st.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-							st.Dock = DockStyle.Fill;
-							st.Margins = new Margins(0, 6, 0, 0);
-							this.table[column, row].Insert(st);
-						}
-					}
-				}
-
-				im = this.table[0, row].Children[0] as ImagePlaceholder;
-				string fixIcon = this.files[row].IconName;
-				if (fixIcon == null)
-				{
-					Image image;
-					bool icon;
-					this.files[row].GetImage(out image, out icon);
-					im.Image = image;
-					im.PaintFrame = icon ? false : true;
-					im.DisplayMode = icon ? ImageDisplayMode.Center : ImageDisplayMode.Stretch;
-					im.IconName = null;
+					this.table2.ItemPanel.DeselectAllItemViews ();
 				}
 				else
 				{
-					im.IconName = fixIcon;
-					im.Image = null;
-					im.PaintFrame = false;
-				}
+					ItemView view = this.table2.ItemPanel.FindItemView (
+						delegate (ItemView candidate)
+						{
+							return candidate.Item == select;
+						});
 
-				st = this.table[1, row].Children[0] as StaticText;
-				st.Text = this.files[row].ShortFileName;
-
-				st = this.table[2, row].Children[0] as StaticText;
-				st.Text = this.files[row].Description;
-
-				st = this.table[3, row].Children[0] as StaticText;
-				st.Text = this.files[row].FileDate;
-
-				st = this.table[4, row].Children[0] as StaticText;
-				st.Text = this.files[row].FileSize;
-
-				this.table.SelectRow(row, row==sel);
-			}
-
-			if (sel == -1)
-			{
-				if (this.table.Rows > 0)
-				{
-					this.table.ShowCell(0, 0);  // montre le début de la table
+					this.table2.ItemPanel.DeselectAllItemViews ();
+					this.table2.ItemPanel.SelectItemView (view);
 				}
 			}
-			else
-			{
-				this.table.ShowSelect();  // montre la ligne sélectionnée
-			}
-#endif
-
+			
 			this.UpdateButtons();
 		}
 
@@ -1228,12 +1154,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private bool UpdateFileList(CancelCallback cancelCallback)
 		{
 			//	Effectue la liste des fichiers contenus dans le dossier ad hoc.
-			this.files.Clear ();
-
-			if (this.isNewEmtpyDocument)
-			{
-				this.files.Add (new FileListItem (Misc.Icon ("New"), Common.Document.Settings.GlobalSettings.NewEmptyDocument, "-", Res.Strings.Dialog.New.EmptyDocument));  // première ligne avec 'nouveau document vide'
-			}
+			this.ClearFileList ();
 
 			//	Ne montre pas les raccourcis si le chemin est distant, car cela n'apporte
 			//	rien du tout: on ne sait pas suivre un raccourci distant, car il pointe
@@ -1267,6 +1188,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			return false;
 		}
 
+		private void ClearFileList()
+		{
+			//	Crée une liste de fichiers vide (ou presque).
+			lock (this.files.SyncRoot)
+			{
+				this.files.Clear ();
+
+				if (this.isNewEmtpyDocument)
+				{
+					this.files.Add (new FileListItem (Misc.Icon ("New"), Common.Document.Settings.GlobalSettings.NewEmptyDocument, "-", Res.Strings.Dialog.New.EmptyDocument));  // première ligne avec 'nouveau document vide'
+				}
+			}
+		}
+
 		private FileListSettings GetFileListSettings()
 		{
 			FileListSettings settings;
@@ -1290,6 +1225,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				return;
 			}
+			if (this.table2 == null)
+			{
+				return;
+			}
 
 			this.toolbarExtend.GlyphShape = this.toolbar.Visibility ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 
@@ -1307,6 +1246,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			FileListItem item = this.GetCurrentFileListItem ();
 			bool enable = (item != null && item.FullPath != Common.Document.Settings.GlobalSettings.NewEmptyDocument);
+			bool okEnable = enable;
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("UpdateButtons: {0} {1} {2}", this.fieldFileName.Text, this.IsTextFieldFocused, item));
 
@@ -1328,14 +1268,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			if (item == null)
 			{
-				enable = this.fieldFileName.Text.Trim ().Length > 0;
+				okEnable = this.fieldFileName.Text.Trim ().Length > 0;
 			}
-			if (enable)
+			if (okEnable)
 			{
-				enable = this.MultipleSelectionContainsOnlyDataFiles ();
+				okEnable = this.MultipleSelectionContainsOnlyDataFiles ();
 			}
 			
-			this.buttonOK.Enable = enable;
+			this.buttonOK.Enable = okEnable || ((item != null) && (item.IsSynthetic));
 		}
 
 		protected void UpdateInitialDirectory()
@@ -1727,10 +1667,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			
 			FileListItem item = this.GetCurrentFileListItem ();
 			string name = TextLayout.ConvertToSimpleText (this.fieldFileName.Text).Trim ();
+			bool synthetic = false;
 			
 			if (item != null)
 			{
 				name = item.GetResolvedFileName ();
+				synthetic = item.IsSynthetic;
 			}
 
 			string[] selectedNames = this.GetSelectedFileNames ();
@@ -1742,6 +1684,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			else
 			{
 				this.selectedFileNames = null;
+			}
+
+			if (synthetic)
+			{
+				this.selectedFileName = name;
+				return true;
 			}
 
 			if (name.Length > 0)
@@ -2081,9 +2029,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleTableDoubleClicked(object sender, MessageEventArgs e)
 		{
 			//	Double-clic dans la liste.
-			if (this.ActionOK())
+			if (this.buttonOK.Enable)
 			{
-				this.CloseWindow();
+				if (this.ActionOK ())
+				{
+					this.CloseWindow ();
+				}
 			}
 		}
 
