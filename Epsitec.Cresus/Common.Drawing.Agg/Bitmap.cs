@@ -353,16 +353,21 @@ namespace Epsitec.Common.Drawing
 				
 				list.Add (parameter);
 			}
-			
+
 			if (format == ImageFormat.WindowsIcon)
 			{
-				System.IO.MemoryStream stream = new System.IO.MemoryStream ();
-				System.Drawing.Icon icon = System.Drawing.Icon.FromHandle (this.NativeBitmap.GetHicon ());
-				icon.Save (stream);
-				stream.Close ();
-				icon.Dispose ();
-				
-				return stream.ToArray ();
+				using (Opac.FreeImage.Image image = Opac.FreeImage.NativeBitmap.ConvertToImage (this.NativeBitmap))
+				{
+					return Opac.FreeImage.NativeIcon.CreateIcon (image);
+				}
+			}
+			
+			if (format == ImageFormat.WindowsVistaIcon)
+			{
+				using (Opac.FreeImage.Image image = Opac.FreeImage.NativeBitmap.ConvertToImage (this.NativeBitmap))
+				{
+					return Opac.FreeImage.NativeIcon.CreateHighResolutionIcon (image);
+				}
 			}
 			
 			System.Drawing.Imaging.ImageCodecInfo    encoder_info    = Bitmap.GetCodecInfo (format);
