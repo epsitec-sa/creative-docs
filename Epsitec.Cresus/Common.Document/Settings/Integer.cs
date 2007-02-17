@@ -79,7 +79,11 @@ namespace Epsitec.Common.Document.Settings
 				case "ExportPDFImageFilterB":
 					this.text = Res.Strings.Dialog.Integer.ImageFilterB.Text;
 					break;
-			}
+
+                case "ExportICOFormat":
+                    this.text = "Format";  // Res.Strings.Dialog.Integer.ExportICOFormat.Text;
+                    break;
+            }
 		}
 
 		public int Value
@@ -126,7 +130,10 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ExportPDFImageFilterB":
 						return Properties.Image.FilterNameToIndex(this.document.Settings.ExportPDFInfo.GetImageNameFilter(1));
-				}
+
+                    case "ExportICOFormat":
+                        return (int)this.document.Settings.ExportICOInfo.Format;
+                }
 
 				return 0;
 			}
@@ -186,7 +193,11 @@ namespace Epsitec.Common.Document.Settings
 					case "ExportPDFImageFilterB":
 						this.document.Settings.ExportPDFInfo.SetImageNameFilter(1, Properties.Image.FilterIndexToName(value));
 						break;
-				}
+
+                    case "ExportICOFormat":
+                        this.document.Settings.ExportICOInfo.Format = (ICOFormat) value;
+                        break;
+                }
 			}
 		}
 
@@ -314,6 +325,12 @@ namespace Epsitec.Common.Document.Settings
 				case "ExportPDFImageFilterA":
 				case "ExportPDFImageFilterB":
 					return Properties.Image.FilterNameToText(Properties.Image.FilterIndexToName(type));
+
+				case "ExportICOFormat":
+					ICOFormat icf = (ICOFormat) type;
+                    if ( icf == ICOFormat.XP    ) return "Windows XP";  // Res.Strings.Dialog.Integer.ICOFormat.XP;
+                    if ( icf == ICOFormat.Vista ) return "Windows Vista";  // Res.Strings.Dialog.Integer.ICOFormat.Vista;
+				    break;
 			}
 			return "";
 		}
@@ -381,6 +398,11 @@ namespace Epsitec.Common.Document.Settings
 				case "ExportPDFImageFilterA":
 				case "ExportPDFImageFilterB":
 					return Properties.Image.FilterIndexToName(rank) == null ? -1 : rank;
+
+				case "ExportICOFormat":
+					if ( rank == 0 )  return (int) ICOFormat.XP;
+					if ( rank == 1 )  return (int) ICOFormat.Vista;
+					return -1;
 			}
 			return -1;
 		}

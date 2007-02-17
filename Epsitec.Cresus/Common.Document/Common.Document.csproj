@@ -530,6 +530,7 @@
     <Compile Include="Settings\Bool.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Settings\ExportICOInfo.cs" />
     <Compile Include="Settings\Double.cs">
       <SubType>Code</SubType>
     </Compile>

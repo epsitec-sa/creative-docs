@@ -1148,13 +1148,24 @@ namespace Epsitec.Common.Document
         {
             //	Exporte la géométrie complexe de tous les objets, en utilisant
             //	un bitmap intermédiaire.
+            Settings.ExportICOInfo info = this.document.Settings.ExportICOInfo;
             Size pageSize = this.document.GetPageSize(pageNumber);
-            ImageFormat format = ImageFormat.WindowsVistaIcon;
-            double dpi = 256 * 254 / pageSize.Height;
-            int depth = 32;
+            ImageFormat format;
+            double dpi;
+
+            if (info.Format == Settings.ICOFormat.Vista)
+            {
+                format = ImageFormat.WindowsVistaIcon;
+                dpi = 256 * 254 / pageSize.Height;
+            }
+            else
+            {
+                format = ImageFormat.WindowsIcon;
+                dpi = 48 * 254 / pageSize.Height;
+            }
 
             byte[] data;
-            string err = this.ExportGeometry(drawingContext, pageNumber, format, dpi, ImageCompression.None, depth, 1.0, 1.0, true, out data);
+            string err = this.ExportGeometry(drawingContext, pageNumber, format, dpi, ImageCompression.None, 32, 1.0, 1.0, true, out data);
             if (err != "")
             {
                 return err;

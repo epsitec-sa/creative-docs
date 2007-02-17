@@ -24,7 +24,8 @@ namespace Epsitec.Common.Document.Settings
 			Settings.DefaultQuickFonts(this.quickFonts);
 
 			this.printInfo = new PrintInfo(document);
-			this.exportPDFInfo = new ExportPDFInfo(document);
+            this.exportPDFInfo = new ExportPDFInfo(document);
+            this.exportICOInfo = new ExportICOInfo(document);
 		}
 
 		public void Dispose()
@@ -116,7 +117,9 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultDouble("ExportPDF", "ExportPDFImageMaxDpi");
 			this.CreateDefaultInteger("ExportPDF", "ExportPDFImageFilterA");
 			this.CreateDefaultInteger("ExportPDF", "ExportPDFImageFilterB");
-		}
+
+            this.CreateDefaultInteger("ExportICO", "ExportICOFormat");
+        }
 
 		protected void CreateDefaultBool(string dialog, string name)
 		{
@@ -206,13 +209,19 @@ namespace Epsitec.Common.Document.Settings
 			get { return this.printInfo; }
 		}
 
-		public ExportPDFInfo ExportPDFInfo
-		{
-			//	Donne les réglages de la publication PDF.
-			get { return this.exportPDFInfo; }
-		}
+        public ExportPDFInfo ExportPDFInfo
+        {
+            //	Donne les réglages de la publication PDF.
+            get { return this.exportPDFInfo; }
+        }
 
-		public void Reset()
+        public ExportICOInfo ExportICOInfo
+        {
+            //	Donne les réglages de la publication ICO.
+            get { return this.exportICOInfo; }
+        }
+
+        public void Reset()
 		{
 			//	Remets tous les réglages par défaut.
 			this.GuidesReset();
@@ -425,7 +434,8 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("GuidesList", this.guides);
 			info.AddValue("QuickFonts", this.quickFonts);
 			info.AddValue("PrintInfo", this.printInfo);
-			info.AddValue("ExportPDFInfo", this.exportPDFInfo);
+            info.AddValue("ExportPDFInfo", this.exportPDFInfo);
+            info.AddValue("ExportICOInfo", this.exportICOInfo);
 		}
 
 		protected Settings(SerializationInfo info, StreamingContext context)
@@ -455,15 +465,24 @@ namespace Epsitec.Common.Document.Settings
 				Settings.DefaultQuickFonts(this.quickFonts);
 			}
 
-			if ( this.document.IsRevisionGreaterOrEqual(1,0,21) )
-			{
-				this.exportPDFInfo = (ExportPDFInfo) info.GetValue("ExportPDFInfo", typeof(ExportPDFInfo));
-			}
-			else
-			{
-				this.exportPDFInfo = new ExportPDFInfo(this.document);
-			}
-		}
+            if (this.document.IsRevisionGreaterOrEqual(1, 0, 21))
+            {
+                this.exportPDFInfo = (ExportPDFInfo)info.GetValue("ExportPDFInfo", typeof(ExportPDFInfo));
+            }
+            else
+            {
+                this.exportPDFInfo = new ExportPDFInfo(this.document);
+            }
+
+            if (this.document.IsRevisionGreaterOrEqual(2, 0, 13))
+            {
+                this.exportICOInfo = (ExportICOInfo)info.GetValue("ExportICOInfo", typeof(ExportICOInfo));
+            }
+            else
+            {
+                this.exportICOInfo = new ExportICOInfo(this.document);
+            }
+        }
 
 		public void ReadFinalize()
 		{
@@ -481,5 +500,6 @@ namespace Epsitec.Common.Document.Settings
 		protected System.Collections.ArrayList	quickFonts;
 		protected PrintInfo						printInfo;
 		protected ExportPDFInfo					exportPDFInfo;
+		protected ExportICOInfo					exportICOInfo;
 	}
 }

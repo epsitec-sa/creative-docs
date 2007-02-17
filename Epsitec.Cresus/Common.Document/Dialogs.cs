@@ -499,7 +499,9 @@ namespace Epsitec.Common.Document
                 container.Dock = DockStyle.Fill;
 
                 this.tabIndex = 0;
-
+                Dialogs.CreateSeparator(container);
+                this.CreateCombo(container, "ExportICOFormat");
+                Dialogs.CreateSeparator(container);
             }
 
             this.UpdateExportICO(true);
@@ -514,6 +516,7 @@ namespace Epsitec.Common.Document
             }
 
             this.UpdateDialogSettings("ExportICO");
+            this.UpdateCombo("ExportICOFormat");
         }
 
         public void UpdateExportICOPages()

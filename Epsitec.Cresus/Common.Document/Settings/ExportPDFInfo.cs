@@ -4,7 +4,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Settings
 {
 	/// <summary>
-	/// La classe ExportPDFInfo comtient tous les réglages secondaires pour l'impression.
+	/// La classe ExportPDFInfo contient tous les réglages pour l'exportation PDF.
 	/// </summary>
 	[System.Serializable()]
 	public class ExportPDFInfo : ISerializable
