@@ -56,7 +56,22 @@ namespace Epsitec.Common.Document
 			return this.ExportGeometry(drawingContext, filename, this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage);
 		}
 
-		public bool Miniature(Size sizeHope, bool isModel, out string filename, out byte[] data)
+        public string ExportICO(string filename)
+        {
+            //	Exporte le document dans une icône windows.
+            //	Crée le DrawingContext utilisé pour l'exportation.
+            DrawingContext drawingContext = new DrawingContext(this.document, null);
+            drawingContext.ContainerSize = this.document.PageSize;
+            drawingContext.PreviewActive = true;
+            drawingContext.IsBitmap = true;
+            drawingContext.GridShow = false;
+            drawingContext.SetImageNameFilter(0, this.document.Printer.GetImageNameFilter(0));  // filtre A
+            drawingContext.SetImageNameFilter(1, this.document.Printer.GetImageNameFilter(1));  // filtre B
+
+            return this.ExportGeometryICO(drawingContext, filename, this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage);
+        }
+
+        public bool Miniature(Size sizeHope, bool isModel, out string filename, out byte[] data)
 		{
 			//	Retourne les données pour l'image bitmap miniature de la première page.
 			DrawingContext drawingContext = new DrawingContext(this.document, null);
@@ -1129,7 +1144,35 @@ namespace Epsitec.Common.Document
 			return "";  // ok
 		}
 
-		protected string ExportGeometry(DrawingContext drawingContext, int pageNumber, ImageFormat format, double dpi, ImageCompression compression, int depth, double quality, double AA, bool paintMark, out byte[] data)
+        protected string ExportGeometryICO(DrawingContext drawingContext, string filename, int pageNumber)
+        {
+            //	Exporte la géométrie complexe de tous les objets, en utilisant
+            //	un bitmap intermédiaire.
+            Size pageSize = this.document.GetPageSize(pageNumber);
+            ImageFormat format = ImageFormat.WindowsVistaIcon;
+            double dpi = 256 * 254 / pageSize.Height;
+            int depth = 32;
+
+            byte[] data;
+            string err = this.ExportGeometry(drawingContext, pageNumber, format, dpi, ImageCompression.None, depth, 1.0, 1.0, true, out data);
+            if (err != "")
+            {
+                return err;
+            }
+
+            try
+            {
+                System.IO.File.WriteAllBytes(filename, data);
+            }
+            catch (System.Exception e)
+            {
+                return e.Message;
+            }
+
+            return "";  // ok
+        }
+
+        protected string ExportGeometry(DrawingContext drawingContext, int pageNumber, ImageFormat format, double dpi, ImageCompression compression, int depth, double quality, double AA, bool paintMark, out byte[] data)
 		{
 			//	Exporte la géométrie complexe de tous les objets, en utilisant
 			//	un bitmap intermédiaire. Retourne un éventuel message d'erreur ainsi

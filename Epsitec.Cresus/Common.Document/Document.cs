@@ -2262,7 +2262,7 @@ namespace Epsitec.Common.Document
             {
                 this.imageCache.SetResolution(ImageCacheResolution.High);
             }
-            return "";
+            return this.printer.ExportICO(filename);
         }
 
 
