@@ -489,18 +489,15 @@ namespace Epsitec.Common.Document
             {
                 this.windowExportICO = window;
 
-                Widget parent, container;
-                Widget book = this.windowExportICO.Root.FindChild("Book");
-
-                //	Onglet Général:
-                parent = book.FindChild("Generic");
-                container = new Widget(parent);
-                container.Name = "Container";
-                container.Dock = DockStyle.Fill;
+				Widget parent = this.windowExportICO.Root.FindChild("Panel");
+				Panel container = new Panel(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
 
                 this.tabIndex = 0;
-                Dialogs.CreateSeparator(container);
-                this.CreateCombo(container, "ExportICOFormat");
+
+				Dialogs.CreateTitle(container, "Choix pour l'exportation de l'icône");  // Res.Strings.Dialog.ExportICO.Param);
+				this.CreateCombo(container, "ExportICOFormat");
                 Dialogs.CreateSeparator(container);
             }
 

@@ -24,29 +24,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window = new Window();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
-                this.WindowInit("ExportICO", 300, 274);
+                this.WindowInit("ExportICO", 300, 150);
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowExportCloseClicked);
 
-				//	Crée les onglets.
-				TabBook bookDoc = new TabBook(this.window.Root);
-				bookDoc.Name = "Book";
-				bookDoc.Arrows = TabBookArrows.Stretch;
-				bookDoc.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
-				bookDoc.Margins = new Margins(6, 6, 6, 34);
-
-				TabPage bookGeneric = new TabPage();
-				bookGeneric.Name = "Generic";
-                bookGeneric.TabTitle = "Generic";  // Res.Strings.Dialog.ExportICO.TabPage.Generic;
-				bookDoc.Items.Add(bookGeneric);
-
-				TabPage bookImage = new TabPage();
-				bookImage.Name = "Image";
-                bookImage.TabTitle = "Image";  // Res.Strings.Dialog.ExportICO.TabPage.Image;
-				bookDoc.Items.Add(bookImage);
-
-				bookDoc.ActivePage = bookGeneric;
+				Panel panel = new Panel(this.window.Root);
+				panel.Name = "Panel";
+				panel.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+				panel.Margins = new Margins(10, 10, 10, 40);
 
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
