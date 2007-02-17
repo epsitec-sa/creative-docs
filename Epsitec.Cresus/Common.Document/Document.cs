@@ -2252,6 +2252,19 @@ namespace Epsitec.Common.Document
 			return this.exportPDF.FileExport(filename);
 		}
 
+        public string ExportICO(string filename)
+        {
+            //	Exporte le document.
+            System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
+            this.Modifier.DeselectAll();
+
+            if (this.imageCache != null)
+            {
+                this.imageCache.SetResolution(ImageCacheResolution.High);
+            }
+            return "";
+        }
+
 
 		#region TextContext
 		protected void CreateDefaultTextContext()

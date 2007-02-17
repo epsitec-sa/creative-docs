@@ -26,7 +26,8 @@ namespace Epsitec.Common.Document
 			this.UpdateSettings(false);
 			this.UpdatePrint(false);
 			this.UpdateExport(false);
-			this.UpdateExportPDF(false);
+            this.UpdateExportPDF(false);
+            this.UpdateExportICO(false);
 		}
 
 
@@ -480,7 +481,49 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
-		#region Glyphs
+        #region ExportICO
+        public void BuildExportICO(Window window)
+        {
+            //	Peuple le dialogue des exportations en ICO.
+            if (this.windowExportICO == null)
+            {
+                this.windowExportICO = window;
+
+                Widget parent, container;
+                Widget book = this.windowExportICO.Root.FindChild("Book");
+
+                //	Onglet Général:
+                parent = book.FindChild("Generic");
+                container = new Widget(parent);
+                container.Name = "Container";
+                container.Dock = DockStyle.Fill;
+
+                this.tabIndex = 0;
+
+            }
+
+            this.UpdateExportICO(true);
+        }
+
+        protected void UpdateExportICO(bool force)
+        {
+            //	Appelé lorsque les réglages ont changé.
+            if (!force)
+            {
+                if (this.windowExportICO == null || !this.windowExportICO.IsVisible)  return;
+            }
+
+            this.UpdateDialogSettings("ExportICO");
+        }
+
+        public void UpdateExportICOPages()
+        {
+            //	Appelé lorsque les pages ont changé.
+            if (this.windowExportICO == null || !this.windowExportICO.IsVisible)  return;
+        }
+        #endregion
+
+        #region Glyphs
 		public void BuildGlyphs(Window window)
 		{
 			//	Peuple le dialogue des informations.
@@ -1783,6 +1826,14 @@ namespace Epsitec.Common.Document
 				this.windowExportPDF = null;
 			}
 
+			if ( this.windowExportICO != null )
+			{
+				Widget parent = this.windowExportICO.Root.FindChild("Book");
+				this.DeletePage(parent, "Generic");
+				this.DeletePage(parent, "Image");
+				this.windowExportICO = null;
+			}
+
 			this.widgetsTable.Clear();
 		}
 
@@ -1945,6 +1996,7 @@ namespace Epsitec.Common.Document
 		protected Window						windowPrint;
 		protected Window						windowExport;
 		protected Window						windowExportPDF;
+		protected Window						windowExportICO;
 		protected Window						windowGlyphs;
 		protected Containers.Guides				containerGuides;
 		protected Containers.Fonts				containerFonts;

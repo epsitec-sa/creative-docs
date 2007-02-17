@@ -69,8 +69,8 @@ namespace Epsitec.App.DocumentEditor
 			}
 
 #if DEBUG
-			//?this.debugMode = DebugMode.DebugCommands;
-			this.debugMode = DebugMode.Release;
+			this.debugMode = DebugMode.DebugCommands;
+            //?this.debugMode = DebugMode.Release;
 #else
 			this.debugMode = DebugMode.Release;
 #endif
@@ -106,6 +106,7 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgDownload      = new Dialogs.Download(this);
 			this.dlgExport        = new Dialogs.Export(this);
 			this.dlgExportPDF     = new Dialogs.ExportPDF(this);
+			this.dlgExportICO     = new Dialogs.ExportICO(this);
 			this.dlgGlyphs        = new Dialogs.Glyphs(this);
 			this.dlgInfos         = new Dialogs.Infos(this);
 			this.dlgKey           = new Dialogs.Key(this);
@@ -1917,11 +1918,15 @@ namespace Epsitec.App.DocumentEditor
 			dialog.FileName = this.CurrentDocument.ExportFilename;
 			dialog.Title = Res.Strings.Dialog.Export.Title1;
 			dialog.Filters.Add("pdf", DocumentEditor.GetRes("File.Vector.PDF"), "*.pdf");
-			dialog.Filters.Add("bmp", DocumentEditor.GetRes("File.Bitmap.BMP"), "*.bmp");
+            if (this.documentType == DocumentType.Pictogram)
+            {
+                dialog.Filters.Add("ico", "Icône Windows ICO", "*.ico");
+            }
+            dialog.Filters.Add("bmp", DocumentEditor.GetRes("File.Bitmap.BMP"), "*.bmp");
 			dialog.Filters.Add("tif", DocumentEditor.GetRes("File.Bitmap.TIF"), "*.tif; *.tiff");
 			dialog.Filters.Add("jpg", DocumentEditor.GetRes("File.Bitmap.JPG"), "*.jpg; *.jpeg");
 			dialog.Filters.Add("png", DocumentEditor.GetRes("File.Bitmap.PNG"), "*.png");
-			dialog.Filters.Add("gif", DocumentEditor.GetRes("File.Bitmap.GIF"), "*.gif");
+            dialog.Filters.Add("gif", DocumentEditor.GetRes("File.Bitmap.GIF"), "*.gif");
 			dialog.FilterIndex = this.CurrentDocument.ExportFilter;
 			dialog.PromptForOverwriting = true;
 			dialog.Owner = this.Window;
@@ -1939,11 +1944,16 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.ExportFilename = string.Format("{0}\\{1}.{2}", dir, name, ext);
 #endif
 
-			if ( this.CurrentDocument.ExportFilter == 0 )  // PDF ?
-			{
-				this.dlgExportPDF.Show(this.CurrentDocument.ExportFilename);
-			}
-			else
+            if (this.CurrentDocument.ExportFilter == 0)  // PDF ?
+            {
+                this.dlgExportPDF.Show(this.CurrentDocument.ExportFilename);
+            }
+            else if (this.documentType == DocumentType.Pictogram &&
+                     this.CurrentDocument.ExportFilter == 1)  // ICO ?
+            {
+                this.dlgExportICO.Show(this.CurrentDocument.ExportFilename);
+            }
+            else
 			{
 				string ext = dialog.Filters[this.CurrentDocument.ExportFilter].Name;
 				this.CurrentDocument.Printer.ImageFormat = Printer.GetImageFormat(ext);
@@ -4394,7 +4404,8 @@ namespace Epsitec.App.DocumentEditor
 				
 				this.dlgPageStack.Update();
 				this.dlgPrint.UpdatePages();
-				this.dlgExportPDF.UpdatePages();
+                this.dlgExportPDF.UpdatePages();
+                this.dlgExportICO.UpdatePages();
 				this.HandleModifChanged();
 			}
 			else
@@ -5310,7 +5321,8 @@ namespace Epsitec.App.DocumentEditor
 		{
 			//	Préparation après l'ouverture d'un document.
 			this.dlgExport.Rebuild();
-			this.dlgExportPDF.Rebuild();
+            this.dlgExportPDF.Rebuild();
+            this.dlgExportICO.Rebuild();
 			this.dlgGlyphs.Rebuild();
 			this.dlgInfos.Rebuild();
 			this.dlgPrint.Rebuild();
@@ -5371,7 +5383,8 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgAbout.Save();
 			this.dlgDownload.Save();
 			this.dlgExport.Save();
-			this.dlgExportPDF.Save();
+            this.dlgExportPDF.Save();
+            this.dlgExportICO.Save();
 			this.dlgGlyphs.Save();
 			this.dlgInfos.Save();
 			this.dlgKey.Save();
@@ -5548,6 +5561,7 @@ namespace Epsitec.App.DocumentEditor
 		protected Dialogs.Download				dlgDownload;
 		protected Dialogs.Export				dlgExport;
 		protected Dialogs.ExportPDF				dlgExportPDF;
+		protected Dialogs.ExportICO				dlgExportICO;
 		protected Dialogs.Glyphs				dlgGlyphs;
 		protected Dialogs.Infos					dlgInfos;
 		protected Dialogs.Key					dlgKey;

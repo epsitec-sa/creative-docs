@@ -235,6 +235,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Dialogs\AbstractFile.cs" />
+    <Compile Include="Dialogs\ExportICO.cs" />
     <Compile Include="Dialogs\FileListSettings.cs" />
     <Compile Include="Dialogs\FileListItem.cs" />
     <Compile Include="Dialogs\FileListItemViewFactory.cs" />

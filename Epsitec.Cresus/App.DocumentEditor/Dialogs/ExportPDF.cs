@@ -8,7 +8,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 	using GlobalSettings = Common.Document.Settings.GlobalSettings;
 
 	/// <summary>
-	/// Dialogue des informations sur le document.
+    /// Dialogue d'exportation d'un fichier PDF.
 	/// </summary>
 	public class ExportPDF : Abstract
 	{

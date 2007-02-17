@@ -8,11 +8,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 	using GlobalSettings = Common.Document.Settings.GlobalSettings;
 
 	/// <summary>
-	/// Dialogue général d'exportation.
+    /// Dialogue d'exportation d'un fichier ICO.
 	/// </summary>
-	public class Export : Abstract
+	public class ExportICO : Abstract
 	{
-		public Export(DocumentEditor editor) : base(editor)
+		public ExportICO(DocumentEditor editor) : base(editor)
 		{
 		}
 
@@ -24,53 +24,68 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window = new Window();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
-				this.WindowInit("Export", 300, 340);
+                this.WindowInit("ExportICO", 300, 274);
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowExportCloseClicked);
 
-				Panel panel = new Panel(this.window.Root);
-				panel.Name = "Panel";
-				panel.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
-				panel.Margins = new Margins(10, 10, 10, 40);
+				//	Crée les onglets.
+				TabBook bookDoc = new TabBook(this.window.Root);
+				bookDoc.Name = "Book";
+				bookDoc.Arrows = TabBookArrows.Stretch;
+				bookDoc.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+				bookDoc.Margins = new Margins(6, 6, 6, 34);
+
+				TabPage bookGeneric = new TabPage();
+				bookGeneric.Name = "Generic";
+                bookGeneric.TabTitle = "Generic";  // Res.Strings.Dialog.ExportICO.TabPage.Generic;
+				bookDoc.Items.Add(bookGeneric);
+
+				TabPage bookImage = new TabPage();
+				bookImage.Name = "Image";
+                bookImage.TabTitle = "Image";  // Res.Strings.Dialog.ExportICO.TabPage.Image;
+				bookDoc.Items.Add(bookImage);
+
+				bookDoc.ActivePage = bookGeneric;
 
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
 				buttonOk.PreferredWidth = 75;
-				buttonOk.Text = Res.Strings.Dialog.Export.Button.OK;
+                buttonOk.Text = "Exporter";  // Res.Strings.Dialog.ExportICO.Button.OK;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomLeft;
-				buttonOk.Margins = new Margins(10, 0, 0, 10);
+				buttonOk.Margins = new Margins(6, 0, 0, 6);
 				buttonOk.Clicked += new MessageEventHandler(this.HandleExportButtonOkClicked);
 				buttonOk.TabIndex = 10;
 				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonOk, Res.Strings.Dialog.Export.Tooltip.OK);
+                ToolTip.Default.SetToolTip(buttonOk, "Exporter l'icône");  // Res.Strings.Dialog.ExportICO.Tooltip.OK);
 
 				Button buttonCancel = new Button(this.window.Root);
 				buttonCancel.PreferredWidth = 75;
-				buttonCancel.Text = Res.Strings.Dialog.Export.Button.Cancel;
+                buttonCancel.Text = "Annuler";  // Res.Strings.Dialog.ExportICO.Button.Cancel;
 				buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				buttonCancel.Anchor = AnchorStyles.BottomLeft;
-				buttonCancel.Margins = new Margins(10+75+10, 0, 0, 10);
+				buttonCancel.Margins = new Margins(6+75+10, 0, 0, 6);
 				buttonCancel.Clicked += new MessageEventHandler(this.HandleExportButtonCancelClicked);
 				buttonCancel.TabIndex = 11;
 				buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonCancel, Res.Strings.Dialog.Export.Tooltip.Cancel);
+                ToolTip.Default.SetToolTip(buttonCancel, "Annuler l'exportation");  // Res.Strings.Dialog.ExportICO.Tooltip.Cancel);
 			}
 
 			if ( this.editor.HasCurrentDocument )
 			{
-				this.editor.CurrentDocument.Dialogs.BuildExport(this.window);
+                this.editor.CurrentDocument.Dialogs.BuildExportICO(this.window);
 			}
 
-			this.window.Text = string.Format(Res.Strings.Dialog.Export.Title2, System.IO.Path.GetFileName(filename));
+            //?this.window.Text = string.Format(Res.Strings.Dialog.ExportICO.Title2, System.IO.Path.GetFileName(filename));
+            this.window.Text = string.Format("Exporter {0}", System.IO.Path.GetFileName(filename));
 			this.window.ShowDialog();
 		}
 
 		public override void Save()
 		{
 			//	Enregistre la position de la fenêtre du dialogue.
-			this.WindowSave("Export");
+            this.WindowSave("ExportICO");
 		}
 
 		public override void Rebuild()
@@ -78,7 +93,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Reconstruit le dialogue.
 			if ( !this.editor.HasCurrentDocument )  return;
 			if ( this.window == null )  return;
-			this.editor.CurrentDocument.Dialogs.BuildExport(this.window);
+            this.editor.CurrentDocument.Dialogs.BuildExportICO(this.window);
+		}
+
+		public void UpdatePages()
+		{
+			//	Met à jour le dialogue lorsque les pages ont changé.
+            this.editor.CurrentDocument.Dialogs.UpdateExportICOPages();
 		}
 
 
@@ -97,7 +118,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.CloseWindow();
 
 			string filename = string.Format("{0}\\{1}", this.editor.CurrentDocument.ExportDirectory, this.editor.CurrentDocument.ExportFilename);
-			string err = this.editor.CurrentDocument.Export(filename);
+            string err = this.editor.CurrentDocument.ExportICO(filename);
 			this.editor.DialogError(err);
 		}
 
