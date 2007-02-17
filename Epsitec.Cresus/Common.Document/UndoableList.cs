@@ -1,6 +1,7 @@
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using System.Runtime.Serialization;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Document
 {
@@ -173,6 +174,58 @@ namespace Epsitec.Common.Document
 					this.selected = value;
 				}
 			}
+		}
+
+		public object Find(System.Predicate<object> predicate)
+		{
+			for (int i = 0; i < this.Count; i++)
+			{
+				if (predicate (this.arrayList[i]))
+				{
+					return this.arrayList[i];
+				}
+			}
+
+			return null;
+		}
+
+		public object FindLast(System.Predicate<object> predicate)
+		{
+			for (int i = this.Count-1; i >= 0; i--)
+			{
+				if (predicate (this.arrayList[i]))
+				{
+					return this.arrayList[i];
+				}
+			}
+
+			return null;
+		}
+
+		public int FindIndex(System.Predicate<object> predicate)
+		{
+			for (int i = 0; i < this.Count; i++)
+			{
+				if (predicate (this.arrayList[i]))
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+		public int FindLastIndex(System.Predicate<object> predicate)
+		{
+			for (int i = this.Count-1; i >= 0; i--)
+			{
+				if (predicate (this.arrayList[i]))
+				{
+					return i;
+				}
+			}
+
+			return -1;
 		}
 
 		public void UndoableCopyTo(UndoableList dst)

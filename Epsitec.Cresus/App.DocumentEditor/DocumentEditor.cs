@@ -3450,7 +3450,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			//	Construit le menu pour choisir une page.
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-			UndoableList pages = this.CurrentDocument.GetObjects;  // liste des pages
+			UndoableList pages = this.CurrentDocument.DocumentObjects;  // liste des pages
 			return Objects.Page.CreateMenu(pages, context.CurrentPage, null);
 		}
 
@@ -4398,7 +4398,7 @@ namespace Epsitec.App.DocumentEditor
 				this.pageDownState.Enable = (cp < tp-1 && !isCreating );
 				this.pageDeleteState.Enable = (tp > 1 && !isCreating );
 
-				Objects.Page page = this.CurrentDocument.GetObjects[cp] as Objects.Page;
+				Objects.Page page = this.CurrentDocument.DocumentObjects[cp] as Objects.Page;
 				this.CurrentDocumentInfo.quickPageMenu.Text = page.ShortName;
 				this.CurrentDocument.ImageLockInPage (cp);
 				
@@ -5024,7 +5024,7 @@ namespace Epsitec.App.DocumentEditor
 						DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 						int cp = context.CurrentPage;
 						int cl = context.CurrentLayer;
-						Objects.Page page = this.CurrentDocument.GetObjects[cp] as Objects.Page;
+						Objects.Page page = this.CurrentDocument.DocumentObjects[cp] as Objects.Page;
 						Objects.Layer layer = page.Objects[cl] as Objects.Layer;
 
 						string sp = page.InfoName;

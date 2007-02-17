@@ -379,7 +379,7 @@ namespace Epsitec.Common.Document
 			return state;
 		}
 		
-		public UndoableList GetObjects
+		public UndoableList DocumentObjects
 		{
 			//	Liste des objets de ce document.
 			get { return this.objects; }
@@ -610,7 +610,7 @@ namespace Epsitec.Common.Document
 
 			if ( pageNumber != -1 )
 			{
-				page = this.GetObjects[pageNumber] as Objects.Page;
+				page = this.DocumentObjects[pageNumber] as Objects.Page;
 			}
 
 			return this.GetPageSize(page);
@@ -2514,7 +2514,7 @@ namespace Epsitec.Common.Document
 
 				if ( root == null )
 				{
-					this.list = this.document.GetObjects;
+					this.list = this.document.DocumentObjects;
 				}
 				else
 				{
@@ -2600,7 +2600,7 @@ namespace Epsitec.Common.Document
 
 				if ( root == null )
 				{
-					this.list = this.document.GetObjects;
+					this.list = this.document.DocumentObjects;
 				}
 				else
 				{
@@ -2702,7 +2702,7 @@ namespace Epsitec.Common.Document
 				//	Implémentation de IEnumerator:
 				this.stack = new System.Collections.Stack();
 
-				UndoableList list = this.document.GetObjects;
+				UndoableList list = this.document.DocumentObjects;
 				if ( this.root != null )
 				{
 					list = this.root.Objects;
@@ -2835,7 +2835,7 @@ namespace Epsitec.Common.Document
 				//	Implémentation de IEnumerator:
 				this.stack = new System.Collections.Stack();
 
-				UndoableList list = this.document.GetObjects;
+				UndoableList list = this.document.DocumentObjects;
 				if ( this.root != null )
 				{
 					list = this.root.Objects;

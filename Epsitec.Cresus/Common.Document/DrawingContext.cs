@@ -99,7 +99,7 @@ namespace Epsitec.Common.Document
 				if ( !this.RootStackIsEmpty )
 				{
 					int pageNumber = this.CurrentPage;
-					Objects.Page page = this.document.GetObjects[pageNumber] as Objects.Page;
+					Objects.Page page = this.document.DocumentObjects[pageNumber] as Objects.Page;
 
 					if ( page != null )
 					{
@@ -1132,7 +1132,7 @@ namespace Epsitec.Common.Document
 			snapY = false;
 			if ( !this.guidesActive ^ this.isAlt )  return;
 
-			Objects.Page page = this.document.GetObjects[this.CurrentPage] as Objects.Page;
+			Objects.Page page = this.document.DocumentObjects[this.CurrentPage] as Objects.Page;
 
 			if ( page.MasterGuides && this.MasterPageList.Count > 0 )
 			{
@@ -2338,7 +2338,7 @@ namespace Epsitec.Common.Document
 		public Objects.Abstract RootObject(int deepMax)
 		{
 			//	Retourne l'objet racine à une profondeur donnée.
-			UndoableList list = this.document.GetObjects;
+			UndoableList list = this.document.DocumentObjects;
 			Objects.Abstract obj = null;
 			int deep = System.Math.Min(this.rootStack.Count, deepMax);
 			for ( int i=0 ; i<deep ; i++ )
@@ -2376,7 +2376,7 @@ namespace Epsitec.Common.Document
 		public int TotalPages()
 		{
 			//	Retourne le nombre total de pages.
-			return this.document.GetObjects.Count;
+			return this.document.DocumentObjects.Count;
 		}
 
 		public int TotalLayers()

@@ -804,14 +804,14 @@ namespace Epsitec.Common.Document
 			this.TotalSelected = 0;
 			this.totalHide = 0;
 			this.totalPageHide = 0;
-			this.document.GetObjects.Clear();
+			this.document.DocumentObjects.Clear();
 
 			this.document.PropertiesAuto.Clear();
 			this.document.PropertiesSel.Clear();
 			this.CreateObjectMemory();
 
 			Objects.Page page = new Objects.Page(this.document, null);  // crée la page initiale
-			this.document.GetObjects.Add(page);
+			this.document.DocumentObjects.Add(page);
 
 			Objects.Layer layer = new Objects.Layer(this.document, null);  // crée le calque initial
 			page.Objects.Add(layer);
@@ -4321,9 +4321,9 @@ namespace Epsitec.Common.Document
 		{
 			//	Commence un changement de page.
 			int rank = this.ActiveViewer.DrawingContext.CurrentPage;
-			if ( rank < this.document.GetObjects.Count )
+			if ( rank < this.document.DocumentObjects.Count )
 			{
-				Objects.Page page = this.document.GetObjects[rank] as Objects.Page;
+				Objects.Page page = this.document.DocumentObjects[rank] as Objects.Page;
 				page.CurrentLayer = this.ActiveViewer.DrawingContext.CurrentLayer;
 			}
 
@@ -4335,7 +4335,7 @@ namespace Epsitec.Common.Document
 		public void TerminateChangingPage(int rank)
 		{
 			//	Termine un changement de page.
-			Objects.Page page = this.document.GetObjects[rank] as Objects.Page;
+			Objects.Page page = this.document.DocumentObjects[rank] as Objects.Page;
 			int layer = page.CurrentLayer;
 			this.ActiveViewer.DrawingContext.PageLayer(rank, layer);
 			this.DirtyCounters();
@@ -4351,7 +4351,7 @@ namespace Epsitec.Common.Document
 			{
 				this.InitiateChangingPage();
 
-				UndoableList list = this.document.GetObjects;  // liste des pages
+				UndoableList list = this.document.DocumentObjects;  // liste des pages
 				rank = System.Math.Max(rank, 0);
 				rank = System.Math.Min(rank, list.Count);
 
@@ -4383,7 +4383,7 @@ namespace Epsitec.Common.Document
 			{
 				this.InitiateChangingPage();
 
-				UndoableList list = this.document.GetObjects;  // liste des pages
+				UndoableList list = this.document.DocumentObjects;  // liste des pages
 				rank = System.Math.Max(rank, 0);
 				rank = System.Math.Min(rank, list.Count-1);
 
@@ -4426,12 +4426,12 @@ namespace Epsitec.Common.Document
 			{
 				this.InitiateChangingPage();
 
-				UndoableList list = this.document.GetObjects;  // liste des pages
+				UndoableList list = this.document.DocumentObjects;  // liste des pages
 				if ( list.Count <= 1 )  return;  // il doit rester une page
 				rank = System.Math.Max(rank, 0);
 				rank = System.Math.Min(rank, list.Count-1);
 
-				UndoableList pages = this.document.GetObjects;
+				UndoableList pages = this.document.DocumentObjects;
 				Objects.Page page = pages[rank] as Objects.Page;
 				this.UpdatePageDelete(page);
 				this.DeleteGroup(page);
@@ -4460,13 +4460,13 @@ namespace Epsitec.Common.Document
 			{
 				this.InitiateChangingPage();
 
-				UndoableList list = this.document.GetObjects;  // liste des pages
+				UndoableList list = this.document.DocumentObjects;  // liste des pages
 				rank1 = System.Math.Max(rank1, 0);
 				rank1 = System.Math.Min(rank1, list.Count-1);
 				rank2 = System.Math.Max(rank2, 0);
 				rank2 = System.Math.Min(rank2, list.Count-1);
 
-				UndoableList pages = this.document.GetObjects;
+				UndoableList pages = this.document.DocumentObjects;
 				Objects.Page temp = pages[rank1] as Objects.Page;
 				pages.RemoveAt(rank1);
 				pages.Insert(rank2, temp);
@@ -4483,7 +4483,7 @@ namespace Epsitec.Common.Document
 		public string PageShortName(int rank)
 		{
 			//	Retourne le nom court d'une page ("n" ou "Mn").
-			UndoableList pages = this.document.GetObjects;
+			UndoableList pages = this.document.DocumentObjects;
 			Objects.Page page = pages[rank] as Objects.Page;
 			return page.ShortName;
 		}
@@ -4491,7 +4491,7 @@ namespace Epsitec.Common.Document
 		public string PageName(int rank)
 		{
 			//	Retourne le nom d'une page.
-			UndoableList pages = this.document.GetObjects;
+			UndoableList pages = this.document.DocumentObjects;
 			Objects.Page page = pages[rank] as Objects.Page;
 			return page.Name;
 		}
@@ -4502,7 +4502,7 @@ namespace Epsitec.Common.Document
 			this.document.IsDirtySerialize = true;
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.PageName, "ChangePageName") )
 			{
-				UndoableList pages = this.document.GetObjects;
+				UndoableList pages = this.document.DocumentObjects;
 				Objects.Page page = pages[rank] as Objects.Page;
 				page.Name = name;
 
@@ -4515,7 +4515,7 @@ namespace Epsitec.Common.Document
 		public int PrintableTotalPages()
 		{
 			//	Retourne le nombre total de pages imprimables.
-			UndoableList pages = this.document.GetObjects;
+			UndoableList pages = this.document.DocumentObjects;
 			int total = pages.Count;
 			int printable = 0;
 			for ( int i=0 ; i<total ; i++ )
@@ -4533,7 +4533,7 @@ namespace Epsitec.Common.Document
 		public int PrintablePageRank(int index)
 		{
 			//	Retourne le rang d'une page imprimable.
-			UndoableList pages = this.document.GetObjects;
+			UndoableList pages = this.document.DocumentObjects;
 			int total = pages.Count;
 			int rank = 0;
 			for ( int i=0 ; i<total ; i++ )
@@ -4552,7 +4552,7 @@ namespace Epsitec.Common.Document
 		protected void UpdatePageDelete(Objects.Page deletedPage)
 		{
 			//	Met à jour après une suppression de page.
-			UndoableList pages = this.document.GetObjects;
+			UndoableList pages = this.document.DocumentObjects;
 			int total = pages.Count;
 			for ( int i=0 ; i<total ; i++ )
 			{
@@ -4577,7 +4577,7 @@ namespace Epsitec.Common.Document
 		public void UpdatePageShortNames()
 		{
 			//	Met à jour tous les noms courts des pages ("n" ou "Mn").
-			UndoableList pages = this.document.GetObjects;
+			UndoableList pages = this.document.DocumentObjects;
 			int total = pages.Count;
 			int slaveNumber = 0;
 			int masterNumber = 0;
@@ -4603,10 +4603,10 @@ namespace Epsitec.Common.Document
 		public void UpdatePageNumbers()
 		{
 			//	Met à jour les numéros de page de tous les objets du document.
-			int total = this.document.GetObjects.Count;
+			int total = this.document.DocumentObjects.Count;
 			for ( int i=0 ; i<total ; i++ )
 			{
-				Objects.Page page = this.document.GetObjects[i] as Objects.Page;
+				Objects.Page page = this.document.DocumentObjects[i] as Objects.Page;
 				foreach ( Objects.Abstract obj in this.document.Deep(page) )
 				{
 					obj.PageNumber = i;
@@ -4617,7 +4617,7 @@ namespace Epsitec.Common.Document
 		public IList<Objects.Page> GetSlavePageList()
 		{
 			List<Objects.Page> pageList = new List<Objects.Page> ();
-			UndoableList pages = this.document.GetObjects;
+			UndoableList pages = this.document.DocumentObjects;
 
 			foreach (Objects.Page page in pages)
 			{
@@ -4630,11 +4630,27 @@ namespace Epsitec.Common.Document
 			return pageList;
 		}
 
+		public IList<Objects.Page> GetMasterPageList()
+		{
+			List<Objects.Page> pageList = new List<Objects.Page> ();
+			UndoableList pages = this.document.DocumentObjects;
+
+			foreach (Objects.Page page in pages)
+			{
+				if (page.MasterType != Objects.MasterType.Slave)
+				{
+					pageList.Add (page);
+				}
+			}
+
+			return pageList;
+		}
+
 		public List<Objects.Page> ComputeMasterPageList(int pageNumber)
 		{
 			//	Génère la liste des pages maîtres à utiliser pour une page donnée.
 			List<Objects.Page> masterPageList = new List<Objects.Page> ();
-			Objects.Page currentPage = this.document.GetObjects[pageNumber] as Objects.Page;
+			Objects.Page currentPage = this.document.DocumentObjects[pageNumber] as Objects.Page;
 			Size currentSize = this.document.GetPageSize(pageNumber);
 
 			if ( currentPage.MasterType == Objects.MasterType.Slave )
@@ -4650,10 +4666,10 @@ namespace Epsitec.Common.Document
 
 				if ( currentPage.MasterUse == Objects.MasterUse.Default )
 				{
-					int total = this.document.GetObjects.Count;
+					int total = this.document.DocumentObjects.Count;
 					for ( int i=0 ; i<total ; i++ )
 					{
-						Objects.Page page = this.document.GetObjects[i] as Objects.Page;
+						Objects.Page page = this.document.DocumentObjects[i] as Objects.Page;
 
 						if ( page.MasterAutoStop )
 						{
@@ -4722,14 +4738,14 @@ namespace Epsitec.Common.Document
 
 			while ( rankMaster < pageNumber )
 			{
-				Objects.Page page = this.document.GetObjects[rankMaster] as Objects.Page;
+				Objects.Page page = this.document.DocumentObjects[rankMaster] as Objects.Page;
 				if ( page.MasterType == Objects.MasterType.Slave )  break;
 				rankMaster ++;
 			}
 
 			for ( int i=rankMaster ; i<pageNumber ; i++ )
 			{
-				Objects.Page page = this.document.GetObjects[i] as Objects.Page;
+				Objects.Page page = this.document.DocumentObjects[i] as Objects.Page;
 				if ( page.MasterType != Objects.MasterType.Slave )  return true;
 			}
 
@@ -4774,7 +4790,7 @@ namespace Epsitec.Common.Document
 			}
 
 			//	Mets ensuite tous les calques de la page.
-			Objects.Page page = this.document.GetObjects[pageNumber] as Objects.Page;
+			Objects.Page page = this.document.DocumentObjects[pageNumber] as Objects.Page;
 			int rl = -1;
 			foreach ( Objects.Layer layer in this.document.Flat(page) )
 			{
@@ -5171,7 +5187,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Génère la liste des calques magnétiques à utiliser pour une page donnée.
 			List<Objects.Layer> magnetLayerList = new List<Objects.Layer> ();
-			Objects.Page page = this.document.GetObjects[pageNumber] as Objects.Page;
+			Objects.Page page = this.document.DocumentObjects[pageNumber] as Objects.Page;
 			int rank = 0;
 			int cl = this.ActiveViewer.DrawingContext.CurrentLayer;
 			foreach ( Objects.Layer layer in this.document.Flat(page) )

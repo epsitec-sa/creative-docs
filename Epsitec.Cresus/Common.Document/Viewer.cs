@@ -4145,7 +4145,7 @@ namespace Epsitec.Common.Document
 			//	Dessine tous les repères.
 			if (this.drawingContext.GuidesShow)
 			{
-				Objects.Page page = this.document.GetObjects[this.drawingContext.CurrentPage] as Objects.Page;
+				Objects.Page page = this.document.DocumentObjects[this.drawingContext.CurrentPage] as Objects.Page;
 
 				if (page.MasterGuides && this.drawingContext.MasterPageList.Count > 0)
 				{
@@ -4563,7 +4563,7 @@ namespace Epsitec.Common.Document
 			//	Cherche la boîte délimitée par des repères, autour d'une position.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
-			Objects.Page page = this.document.GetObjects[this.drawingContext.CurrentPage] as Objects.Page;
+			Objects.Page page = this.document.DocumentObjects[this.drawingContext.CurrentPage] as Objects.Page;
 			if ( page.MasterGuides && this.drawingContext.MasterPageList.Count > 0 )
 			{
 				foreach ( Objects.Page masterPage in this.drawingContext.MasterPageList )

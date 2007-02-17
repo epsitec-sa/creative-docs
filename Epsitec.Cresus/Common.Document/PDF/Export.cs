@@ -110,7 +110,7 @@ namespace Epsitec.Common.Document.PDF
 			else if ( range == Settings.PrintRange.Current )
 			{
 				int cp = this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage;
-				Objects.Page page = this.document.GetObjects[cp] as Objects.Page;
+				Objects.Page page = this.document.DocumentObjects[cp] as Objects.Page;
 				if ( page.MasterType == Objects.MasterType.Slave )
 				{
 					from = page.Rank+1;
@@ -2107,7 +2107,7 @@ namespace Epsitec.Common.Document.PDF
 			}
 
 			//	Mets ensuite tous les calques de la page.
-			Objects.Abstract page = this.document.GetObjects[pageNumber] as Objects.Abstract;
+			Objects.Abstract page = this.document.DocumentObjects[pageNumber] as Objects.Abstract;
 			foreach ( Objects.Layer layer in this.document.Flat(page) )
 			{
 				if ( layer.Print == Objects.LayerPrint.Hide )  continue;

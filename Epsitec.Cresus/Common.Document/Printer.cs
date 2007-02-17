@@ -214,7 +214,7 @@ namespace Epsitec.Common.Document
 				else if ( range == Settings.PrintRange.Current )
 				{
 					int cp = this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage;
-					Objects.Page page = this.document.GetObjects[cp] as Objects.Page;
+					Objects.Page page = this.document.DocumentObjects[cp] as Objects.Page;
 					if ( page.MasterType == Objects.MasterType.Slave )
 					{
 						fromPage = page.Rank+1;
@@ -386,7 +386,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Imprime la géométrie de tous les objets.
 			System.Diagnostics.Debug.Assert(pageNumber >= 0);
-			System.Diagnostics.Debug.Assert(pageNumber < this.document.GetObjects.Count);
+			System.Diagnostics.Debug.Assert(pageNumber < this.document.DocumentObjects.Count);
 
 			printEngine.Landscape = port.PageSettings.Landscape;
 			Size pageSize = this.document.GetPageSize(pageNumber);
@@ -499,7 +499,7 @@ namespace Epsitec.Common.Document
 			}
 
 			//	Mets ensuite tous les calques de la page.
-			Objects.Abstract page = this.document.GetObjects[pageNumber] as Objects.Abstract;
+			Objects.Abstract page = this.document.DocumentObjects[pageNumber] as Objects.Abstract;
 			foreach ( Objects.Layer layer in this.document.Flat(page) )
 			{
 				if ( layer.Print == Objects.LayerPrint.Hide )  continue;

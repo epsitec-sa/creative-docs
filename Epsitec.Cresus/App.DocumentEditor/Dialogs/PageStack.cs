@@ -252,7 +252,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.pageNext.Enable = (this.showedPage < context.TotalPages()-1);
 				this.buttonCurrent.Enable = (this.showedPage != context.CurrentPage);
 
-				Objects.Page page = doc.GetObjects[this.showedPage] as Objects.Page;
+				Objects.Page page = doc.DocumentObjects[this.showedPage] as Objects.Page;
 				this.pageMenu.Text = page.ShortName;
 			}
 			else
@@ -305,7 +305,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		public VMenu CreatePagesMenu()
 		{
 			//	Construit le menu pour choisir une page.
-			UndoableList pages = this.editor.CurrentDocument.GetObjects;  // liste des pages
+			UndoableList pages = this.editor.CurrentDocument.DocumentObjects;  // liste des pages
 			MessageEventHandler message = new MessageEventHandler(this.HandleMenuPressed);
 			return Objects.Page.CreateMenu(pages, this.showedPage, message);
 		}

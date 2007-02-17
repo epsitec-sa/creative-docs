@@ -362,7 +362,7 @@ namespace Epsitec.Common.Document.Settings
 				else
 				{
 					int cp = this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage;
-					Objects.Page page = this.document.GetObjects[cp] as Objects.Page;
+					Objects.Page page = this.document.DocumentObjects[cp] as Objects.Page;
 					return page.Guides;
 				}
 			}
@@ -380,7 +380,7 @@ namespace Epsitec.Common.Document.Settings
 				else
 				{
 					int cp = this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage;
-					Objects.Page page = this.document.GetObjects[cp] as Objects.Page;
+					Objects.Page page = this.document.DocumentObjects[cp] as Objects.Page;
 					return page.Guides;
 				}
 			}
