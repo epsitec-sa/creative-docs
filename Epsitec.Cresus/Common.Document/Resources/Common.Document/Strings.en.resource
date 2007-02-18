@@ -1356,4 +1356,7 @@
   <data id="0IA01"> # in </data>
   <data id="0JA01">Geometric constraints (hint: toggle the constraints on the fly&lt;br/&gt;while dragging an object handle by pressing the &lt;b&gt;Space&lt;/b&gt; bar)</data>
   <data id="0KA01">Format: {0}&lt;br/&gt;Pages/layers: {1}/{2}&lt;br/&gt;Fonts/images: {5}/{6}&lt;br/&gt;Objects: {3}/{4}</data>
+  <data id="0NA01">Windows XP</data>
+  <data id="0OA01">Windows Vista</data>
+  <data id="0LA01">ICO export settings</data>
 </bundle>

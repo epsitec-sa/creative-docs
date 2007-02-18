@@ -121,10 +121,15 @@
   <data name="Dialog.Export.Tooltip.Cancel" id="0H2">Annuler l&amp;apos;exportation</data>
   <data name="Dialog.ExportPDF.Title1" id="0I2">Exporter au format PDF</data>
   <data name="Dialog.ExportPDF.Title2" id="0J2">Exporter {0}</data>
+  <data name="Dialog.ExportICO.Title2" id="058">Exporter {0}</data>
   <data name="Dialog.ExportPDF.Button.OK" id="0K2">Exporter</data>
+  <data name="Dialog.ExportICO.Button.OK" id="018">Exporter</data>
   <data name="Dialog.ExportPDF.Button.Cancel" id="0L2">Annuler</data>
+  <data name="Dialog.ExportICO.Button.Cancel" id="038">Annuler</data>
   <data name="Dialog.ExportPDF.Tooltip.OK" id="0M2">Exporter au format PDF</data>
+  <data name="Dialog.ExportICO.Tooltip.OK" id="028">Exporter au format ICO</data>
   <data name="Dialog.ExportPDF.Tooltip.Cancel" id="0N2">Annuler l&amp;apos;exporation</data>
+  <data name="Dialog.ExportICO.Tooltip.Cancel" id="048">Annuler l&amp;apos;exporation</data>
   <data name="Dialog.ExportPDF.TabPage.Generic" id="0O2">Général</data>
   <data name="Dialog.ExportPDF.TabPage.Color" id="0P2">Couleurs</data>
   <data name="Dialog.ExportPDF.TabPage.Image" id="0Q2">Images</data>

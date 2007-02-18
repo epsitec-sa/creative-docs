@@ -49,6 +49,7 @@
   <data name="Dialog.Print.Format.User" id="081">Personnalisé</data>
   <data name="Dialog.Export.Param" id="091">Choix pour l&amp;apos;exportation de la page en cours</data>
   <data name="Dialog.ExportPDF.Param" id="0A1">Paramètres pour le document à exporter en PDF</data>
+  <data name="Dialog.ExportICO.Param" id="0LA01">Choix pour l&amp;apos;exportation de l&amp;apos;icône</data>
   <data name="Dialog.ExportPDF.Publisher" id="0B1">Réglages pré-presse</data>
   <data name="Dialog.Bool.GridActive" id="0C1">Grille active</data>
   <data name="Dialog.Bool.GridShow" id="0D1">Grille visible</data>
@@ -138,6 +139,9 @@
   <data name="Dialog.Integer.ImageFilterB.Text" id="08A01" mod="1">Filtrage du groupe B</data>
   <data name="Dialog.Integer.ExportPDFColorConversion.Text" id="004">Conversion</data>
   <data name="Dialog.Integer.ExportPDFColorConversion.None" id="014">Aucune</data>
+  <data name="Dialog.Integer.ExportICOFormat.Text" id="0MA01">Format</data>
+  <data name="Dialog.Integer.ExportICOFormat.XP" id="0NA01">Windows XP</data>
+  <data name="Dialog.Integer.ExportICOFormat.Vista" id="0OA01">Windows Vista</data>
   <data name="Dialog.Integer.ExportPDFColorConversion.ToRgb" id="024">Couleurs en RVB</data>
   <data name="Dialog.Integer.ExportPDFColorConversion.ToCmyk" id="034">Couleurs en CMJN</data>
   <data name="Dialog.Integer.ExportPDFColorConversion.ToGray" id="044">Couleurs en niveaux de gris</data>

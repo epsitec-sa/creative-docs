@@ -81,7 +81,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
                 case "ExportICOFormat":
-                    this.text = "Format";  // Res.Strings.Dialog.Integer.ExportICOFormat.Text;
+                    this.text = Res.Strings.Dialog.Integer.ExportICOFormat.Text;
                     break;
             }
 		}
@@ -328,8 +328,8 @@ namespace Epsitec.Common.Document.Settings
 
 				case "ExportICOFormat":
 					ICOFormat icf = (ICOFormat) type;
-                    if ( icf == ICOFormat.XP    ) return "Windows XP";  // Res.Strings.Dialog.Integer.ICOFormat.XP;
-                    if ( icf == ICOFormat.Vista ) return "Windows Vista";  // Res.Strings.Dialog.Integer.ICOFormat.Vista;
+                    if ( icf == ICOFormat.XP    )  return Res.Strings.Dialog.Integer.ExportICOFormat.XP;
+                    if ( icf == ICOFormat.Vista )  return Res.Strings.Dialog.Integer.ExportICOFormat.Vista;
 				    break;
 			}
 			return "";

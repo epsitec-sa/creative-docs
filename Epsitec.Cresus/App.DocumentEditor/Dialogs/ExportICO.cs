@@ -37,25 +37,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
 				buttonOk.PreferredWidth = 75;
-                buttonOk.Text = "Exporter";  // Res.Strings.Dialog.ExportICO.Button.OK;
+                buttonOk.Text = Res.Strings.Dialog.ExportICO.Button.OK;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomLeft;
 				buttonOk.Margins = new Margins(6, 0, 0, 6);
 				buttonOk.Clicked += new MessageEventHandler(this.HandleExportButtonOkClicked);
 				buttonOk.TabIndex = 10;
 				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-                ToolTip.Default.SetToolTip(buttonOk, "Exporter l'icône");  // Res.Strings.Dialog.ExportICO.Tooltip.OK);
+                ToolTip.Default.SetToolTip(buttonOk, Res.Strings.Dialog.ExportICO.Tooltip.OK);
 
 				Button buttonCancel = new Button(this.window.Root);
 				buttonCancel.PreferredWidth = 75;
-                buttonCancel.Text = "Annuler";  // Res.Strings.Dialog.ExportICO.Button.Cancel;
+                buttonCancel.Text = Res.Strings.Dialog.ExportICO.Button.Cancel;
 				buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				buttonCancel.Anchor = AnchorStyles.BottomLeft;
 				buttonCancel.Margins = new Margins(6+75+10, 0, 0, 6);
 				buttonCancel.Clicked += new MessageEventHandler(this.HandleExportButtonCancelClicked);
 				buttonCancel.TabIndex = 11;
 				buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-                ToolTip.Default.SetToolTip(buttonCancel, "Annuler l'exportation");  // Res.Strings.Dialog.ExportICO.Tooltip.Cancel);
+                ToolTip.Default.SetToolTip(buttonCancel, Res.Strings.Dialog.ExportICO.Tooltip.Cancel);
 			}
 
 			if ( this.editor.HasCurrentDocument )
@@ -63,8 +63,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
                 this.editor.CurrentDocument.Dialogs.BuildExportICO(this.window);
 			}
 
-            //?this.window.Text = string.Format(Res.Strings.Dialog.ExportICO.Title2, System.IO.Path.GetFileName(filename));
-            this.window.Text = string.Format("Exporter {0}", System.IO.Path.GetFileName(filename));
+            this.window.Text = string.Format(Res.Strings.Dialog.ExportICO.Title2, System.IO.Path.GetFileName(filename));
 			this.window.ShowDialog();
 		}
 

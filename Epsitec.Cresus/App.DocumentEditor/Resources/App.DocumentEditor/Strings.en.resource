@@ -68,7 +68,6 @@
   <data id="022">© 2002-2007 OPaC &lt;i&gt;bright ideas&lt;/i&gt;, EPSITEC SA, P.Arnaud &amp;amp; D.Roux</data>
   <data id="032">Demo</data>
   <data id="042">Expired</data>
-  <data id="052" about="Evaluation"></data>
   <data id="062">Check for Updates</data>
   <data id="072">Your application is up-to-date.</data>
   <data id="082">A new version is currently available:</data>
@@ -252,4 +251,9 @@
   <data id="0R7" mod="1">As defined by image object</data>
   <data id="0S7" mod="1">All images</data>
   <data id="008" mod="1">Images</data>
+  <data id="028">Export to ICO</data>
+  <data id="038">Cancel</data>
+  <data id="048">Cancel export</data>
+  <data id="058">Export {0}</data>
+  <data id="018">Export</data>
 </bundle>

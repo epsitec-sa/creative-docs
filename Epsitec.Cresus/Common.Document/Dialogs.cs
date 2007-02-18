@@ -496,7 +496,7 @@ namespace Epsitec.Common.Document
 
                 this.tabIndex = 0;
 
-				Dialogs.CreateTitle(container, "Choix pour l'exportation de l'icône");  // Res.Strings.Dialog.ExportICO.Param);
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.ExportICO.Param);
 				this.CreateCombo(container, "ExportICOFormat");
                 Dialogs.CreateSeparator(container);
             }
