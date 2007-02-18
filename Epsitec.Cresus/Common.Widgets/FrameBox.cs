@@ -39,6 +39,25 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public Drawing.Size BestFitSize
+		{
+			get
+			{
+				return (Drawing.Size) this.GetValue (FrameBox.BestFitSizeProperty);
+			}
+			set
+			{
+				if (value == Drawing.Size.Empty)
+				{
+					this.ClearValue (FrameBox.BestFitSizeProperty);
+				}
+				else
+				{
+					this.SetValue (FrameBox.BestFitSizeProperty, value);
+				}
+			}
+		}
+
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -63,6 +82,18 @@ namespace Epsitec.Common.Widgets
 				{
 					FrameBox.DrawPathDash (graphics, path, 1, 4, 4, adorner.ColorBorder);
 				}
+			}
+		}
+
+		public override Size GetBestFitSize()
+		{
+			if (this.ContainsValue (FrameBox.BestFitSizeProperty))
+			{
+				return this.BestFitSize;
+			}
+			else
+			{
+				return base.GetBestFitSize ();
 			}
 		}
 
@@ -96,5 +127,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		public static readonly DependencyProperty DrawFullFrameProperty = DependencyProperty.Register ("DrawFullFrame", typeof (bool), typeof (FrameBox), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty BestFitSizeProperty = DependencyProperty.Register ("BestFitSize", typeof (Drawing.Size), typeof (FrameBox), new VisualPropertyMetadata (Drawing.Size.Empty));
 	}
 }

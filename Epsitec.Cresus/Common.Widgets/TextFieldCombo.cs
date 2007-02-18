@@ -139,6 +139,22 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
+		public void AcceptCombo()
+		{
+			if (this.IsComboOpen)
+			{
+				this.CloseCombo (CloseMode.Accept);
+			}
+		}
+
+		public void RejectCombo()
+		{
+			if (this.IsComboOpen)
+			{
+				this.CloseCombo (CloseMode.Reject);
+			}
+		}
+
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -436,7 +452,8 @@ namespace Epsitec.Common.Widgets
 			{
 				return;
 			}
-			
+
+			this.menu.AutoDispose = true;
 			this.menu.ShowAsComboList (this, this.MapClientToScreen (new Point(0, 0)), this.Button);
 			
 			if (this.scroll_list != null)
@@ -469,7 +486,7 @@ namespace Epsitec.Common.Widgets
 				{
 					case CloseMode.Reject:
 						this.menu.Behavior.Reject ();
-							return;
+						return;
 					case CloseMode.Accept:
 						this.menu.Behavior.Accept ();
 						return;
@@ -488,7 +505,7 @@ namespace Epsitec.Common.Widgets
 				this.scroll_list = null;
 			}
 			
-			this.menu.Dispose ();
+//-			this.menu.Dispose ();
 			this.menu = null;
 			
 			this.SelectAll ();
