@@ -239,40 +239,47 @@ namespace Epsitec.Common.Document
 			//	Constructeur qui désérialise l'objet.
 			this.version = info.GetInt32 ("Version");
 
-			if (this.version >= 3)
+			try
 			{
-				this.pageWidth = info.GetDouble ("PageWidth");
-				this.pageHeight = info.GetDouble ("PageHeight");
-				this.pageFormat = info.GetString ("PageFormat");
-			}
-			else
-			{
-				this.PageSize = (Size) info.GetValue ("PageSize", typeof (Size));
-				this.pageFormat = info.GetString ("PageFormat");
-			}
-
-			if (this.version >= 4)
-			{
-				this.pageCount = info.GetInt32 ("PageCount");
-				this.layerCount = info.GetInt32 ("LayerCount");
-				this.objectCount = info.GetInt32 ("ObjectCount");
-				this.complexCount = info.GetInt32 ("ComplexCount");
-				this.fontCount = info.GetInt32 ("FontCount");
-				this.imageCount = info.GetInt32 ("ImageCount");
-				this.documentVersion = info.GetInt64 ("DocumentVersion");
-			}
-			else
-			{
-				this.pageCount = info.GetInt32 ("PagesCount");
-				this.layerCount = info.GetInt32 ("LayersCount");
-				this.objectCount = info.GetInt32 ("ObjectsCount");
-				this.complexCount = info.GetInt32 ("ComplexesCount");
-
-				if (this.version >= 2)
+				if (this.version >= 3)
 				{
-					this.fontCount = info.GetInt32 ("FontsCount");
-					this.imageCount = info.GetInt32 ("ImagesCount");
+					this.pageWidth = info.GetDouble ("PageWidth");
+					this.pageHeight = info.GetDouble ("PageHeight");
+					this.pageFormat = info.GetString ("PageFormat");
 				}
+				else
+				{
+					this.PageSize = (Size) info.GetValue ("PageSize", typeof (Size));
+					this.pageFormat = info.GetString ("PageFormat");
+				}
+
+				if (this.version >= 4)
+				{
+					this.pageCount = info.GetInt32 ("PageCount");
+					this.layerCount = info.GetInt32 ("LayerCount");
+					this.objectCount = info.GetInt32 ("ObjectCount");
+					this.complexCount = info.GetInt32 ("ComplexCount");
+					this.fontCount = info.GetInt32 ("FontCount");
+					this.imageCount = info.GetInt32 ("ImageCount");
+					this.documentVersion = info.GetInt64 ("DocumentVersion");
+				}
+				else
+				{
+					this.pageCount = info.GetInt32 ("PagesCount");
+					this.layerCount = info.GetInt32 ("LayersCount");
+					this.objectCount = info.GetInt32 ("ObjectsCount");
+					this.complexCount = info.GetInt32 ("ComplexesCount");
+
+					if (this.version >= 2)
+					{
+						this.fontCount = info.GetInt32 ("FontsCount");
+						this.imageCount = info.GetInt32 ("ImagesCount");
+					}
+				}
+			}
+			catch (System.Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine ("Statistics: " + ex.Message);
 			}
 		}
 
