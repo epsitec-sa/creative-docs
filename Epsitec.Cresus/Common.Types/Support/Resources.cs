@@ -384,7 +384,7 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 
-		public static void SetTwoLetterISOLanguageNameOverride(string value)
+		public static void OverrideDefaultTwoLetterISOLanguageName(string value)
 		{
 			if ((value == null) ||
 				(value.Length == 2))
@@ -394,6 +394,18 @@ namespace Epsitec.Common.Support
 			else
 			{
 				throw new System.ArgumentException ();
+			}
+		}
+
+		public static string GetDefaultTwoLetterISOLanguageName()
+		{
+			if (string.IsNullOrEmpty (Resources.twoLetterISOLanguageNameOverride))
+			{
+				return "00";
+			}
+			else
+			{
+				return Resources.twoLetterISOLanguageNameOverride;
 			}
 		}
 		

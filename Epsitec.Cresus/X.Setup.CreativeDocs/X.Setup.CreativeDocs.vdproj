@@ -22,7 +22,7 @@
         "Entry"
         {
         "MsmKey" = "8:_003EFD0986BC6010DFAFE303D29D00F2"
-        "OwnerKey" = "8:_D92255BAB7921E856C4751B4F5AB1A62"
+        "OwnerKey" = "8:_7DF6642BDB6A3A6AD26C8835061677EE"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -34,7 +34,7 @@
         "Entry"
         {
         "MsmKey" = "8:_003EFD0986BC6010DFAFE303D29D00F2"
-        "OwnerKey" = "8:_7DF6642BDB6A3A6AD26C8835061677EE"
+        "OwnerKey" = "8:_D92255BAB7921E856C4751B4F5AB1A62"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -460,6 +460,12 @@
         "Entry"
         {
         "MsmKey" = "8:_A0E1DEF038CECE0AD28057C157AD1E52"
+        "OwnerKey" = "8:_B34B4DB7CB984EAC904F1AEA750F03FA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A0E1DEF038CECE0AD28057C157AD1E52"
         "OwnerKey" = "8:_8B0013582ACE18A167B14ED9C34BE733"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -515,12 +521,6 @@
         {
         "MsmKey" = "8:_A0E1DEF038CECE0AD28057C157AD1E52"
         "OwnerKey" = "8:_42BC534E4B9B9525779037475F77B461"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A0E1DEF038CECE0AD28057C157AD1E52"
-        "OwnerKey" = "8:_B34B4DB7CB984EAC904F1AEA750F03FA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -700,7 +700,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8263744E1AA74349B0D155BD34927969"
+        "OwnerKey" = "8:_C0665E924B943DE0D6D217160235DA36"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -850,13 +850,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C0665E924B943DE0D6D217160235DA36"
+        "OwnerKey" = "8:_A0E1DEF038CECE0AD28057C157AD1E52"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A0E1DEF038CECE0AD28057C157AD1E52"
+        "OwnerKey" = "8:_8263744E1AA74349B0D155BD34927969"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -867,7 +867,7 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Debug\\Creative-Docs-2.0.12.msi"
+        "OutputFilename" = "8:Debug\\Creative-Docs-2-x-x.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -969,7 +969,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:OPaC.FreeImage, Version=3.9.2.0, Culture=neutral, PublicKeyToken=d4b3a36d594a1874, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:OPaC.FreeImage, Version=3.9.2.1, Culture=neutral, PublicKeyToken=d4b3a36d594a1874, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_003EFD0986BC6010DFAFE303D29D00F2"
@@ -1636,7 +1636,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:App.DocumentEditor, Version=2.0.12.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:App.DocumentEditor, Version=2.0.13.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_8B0013582ACE18A167B14ED9C34BE733"
@@ -1831,7 +1831,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:App.CreativeDocs, Version=2.0.12.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:App.CreativeDocs, Version=2.0.13.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_B34B4DB7CB984EAC904F1AEA750F03FA"
@@ -1893,7 +1893,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common.Document, Version=2.0.12.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common.Document, Version=2.0.13.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_D92255BAB7921E856C4751B4F5AB1A62"
@@ -2106,14 +2106,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Creative Docs .NET"
-        "ProductCode" = "8:{467957C1-6049-4E59-9BFA-6539FE2F762B}"
-        "PackageCode" = "8:{6F9E6AD4-6B28-47A4-A71D-FB9F3B5D3CEF}"
+        "ProductCode" = "8:{2EB84613-6747-4387-B138-D3D9BFE8DBC5}"
+        "PackageCode" = "8:{92B2C9E6-76E2-444F-82FA-6A335C14C86F}"
         "UpgradeCode" = "8:{925CE84A-106F-439D-B0AA-6222B871FB71}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:2.0.12"
+        "ProductVersion" = "8:2.0.13"
         "Manufacturer" = "8:OPaC bright ideas"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.creativedocs.net/"
@@ -2129,7 +2129,7 @@
         "UseSystemSearchPath" = "11:TRUE"
         "TargetPlatform" = "3:0"
         "PreBuildEvent" = "8:"
-        "PostBuildEvent" = "8:$(ProjectDir)..\\External\\opac-msi-patch.bat \"$(BuiltOuputPath)\" \"$(ProjectDir)..\\External\""
+        "PostBuildEvent" = "8:$(ProjectDir)..\\External\\opac-msi-patch.bat $(BuiltOuputPath) $(ProjectDir)..\\External"
         "RunPostBuildEvent" = "3:0"
         }
         "Registry"

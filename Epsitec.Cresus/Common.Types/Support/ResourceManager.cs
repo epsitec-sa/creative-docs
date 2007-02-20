@@ -336,7 +336,7 @@ namespace Epsitec.Common.Support
 			
 			switch (level)
 			{
-				case ResourceLevel.Default:		return "00";
+				case ResourceLevel.Default:		return Resources.GetDefaultTwoLetterISOLanguageName ();
 				case ResourceLevel.Localized:	return Resources.GetTwoLetterISOLanguageName (culture);
 				case ResourceLevel.Customized:	return string.Concat ("X", culture.TwoLetterISOLanguageName);
 			}
