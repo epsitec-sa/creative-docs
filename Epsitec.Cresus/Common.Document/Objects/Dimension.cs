@@ -417,7 +417,7 @@ namespace Epsitec.Common.Document.Objects
 			Properties.Font propFont = this.PropertyTextFont;
 			Drawing.Font font = propFont.GetFont();
 			double fontSize = propFont.FontSize;
-			string text = this.GetText;
+			string text = this.GetText();
 
 			if ( font == null )
 			{
@@ -442,7 +442,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
-		protected string ToString(double value)
+		protected string ConvertDoubleToString(double value)
 		{
 			//	Conversion d'une longueur en chaîne.
 			value *= this.document.Modifier.DimensionScale;
@@ -452,30 +452,27 @@ namespace Epsitec.Common.Document.Objects
 			value /= precision;
 			value = System.Math.Floor(value+0.5);
 			value *= precision;
-			return value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+			return value.ToString(System.Globalization.CultureInfo.CurrentCulture);
 		}
 
-		protected string GetText
+		protected string GetText()
 		{
 			//	Retourne le texte à mettre sur la cote.
-			get
+			Properties.Dimension dimension = this.PropertyDimension;
+			double length = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
+			if (!System.Globalization.RegionInfo.CurrentRegion.IsMetric)
+			//?if (this.document.Modifier.RealUnitDimension == RealUnitType.DimensionInch)
 			{
-				Properties.Dimension dimension = this.PropertyDimension;
-				double length = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
-				if (!System.Globalization.RegionInfo.CurrentRegion.IsMetric)
-				//?if (this.document.Modifier.RealUnitDimension == RealUnitType.DimensionInch)
-				{
-					length /= 25.4;  // en pouces
-				}
-				string num = this.ToString(length);
-
-				string text = dimension.DimensionText;
-				text = text.Replace("##", "\x0001");  // "##" -> "#"
-				text = text.Replace("#", num);        // "#" -> valeur numérique
-				text = text.Replace("\x0001", "#");
-
-				return text;
+				length /= 25.4;  // en pouces
 			}
+			string num = this.ConvertDoubleToString(length);
+
+			string text = dimension.DimensionText;
+			text = text.Replace("##", "\x0001");  // "##" -> "#"
+			text = text.Replace("#", num);        // "#" -> valeur numérique
+			text = text.Replace("\x0001", "#");
+
+			return text;
 		}
 
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
@@ -576,7 +573,7 @@ namespace Epsitec.Common.Document.Objects
 			Properties.Font propFont = this.PropertyTextFont;
 			Drawing.Font font = propFont.GetFont();
 			double fontSize = propFont.FontSize;
-			string text = this.GetText;
+			string text = this.GetText();
 
 			if ( font == null )
 			{
@@ -870,7 +867,7 @@ namespace Epsitec.Common.Document.Objects
 			Properties.Font propFont = this.PropertyTextFont;
 			Drawing.Font font = propFont.GetFont();
 			double fontSize = propFont.FontSize;
-			string text = this.GetText;
+			string text = this.GetText();
 
 			if ( font == null )
 			{

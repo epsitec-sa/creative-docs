@@ -123,7 +123,12 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			p.FontName = this.fontFace.Text;
-			p.FontSize = (double) this.fontSize.TextFieldReal.InternalValue;
+
+			if (this.fontSize.TextFieldReal.IsValid)
+			{
+				p.FontSize = (double) this.fontSize.TextFieldReal.InternalValue;
+			}
+
 			p.FontColor = this.fontColor.Color;
 		}
 
