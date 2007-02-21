@@ -1812,6 +1812,8 @@ namespace Epsitec.Common.Document
 			Rectangle iClip = graphics.SaveClippingRectangle();
 			graphics.SetClippingRectangle(rect);
 
+			text = TextLayout.ConvertToSimpleText(text);
+
 			if ( fontSize == 0 )
 			{
 				fontSize = Font.DefaultFontSize;
