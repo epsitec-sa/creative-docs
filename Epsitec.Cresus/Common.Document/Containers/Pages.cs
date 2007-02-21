@@ -769,6 +769,8 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleRadioChanged(object sender)
 		{
 			//	Un bouton radio a été cliqué.
+			if ( this.ignoreChanged )  return;
+
 			RadioButton radio = sender as RadioButton;
 			if ( radio == null )  return;
 			if ( radio.ActiveState != ActiveState.Yes )  return;
