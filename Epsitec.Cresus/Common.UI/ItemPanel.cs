@@ -839,6 +839,16 @@ namespace Epsitec.Common.UI
 				}
 			}
 		}
+
+		protected override void DispatchMessage(Epsitec.Common.Widgets.Message message, Epsitec.Common.Drawing.Point pos)
+		{
+			base.DispatchMessage (message, pos);
+
+			if (message.Consumer == null)
+			{
+				message.Consumer = this;
+			}
+		}
 		
 		private IList<ItemView> SafeGetViews()
 		{
