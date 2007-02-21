@@ -322,6 +322,11 @@ namespace Epsitec.Common.Support
 		
 		public static CultureInfo FindCultureInfo(string twoLetterCode)
 		{
+			if (string.IsNullOrEmpty (twoLetterCode))
+			{
+				return null;
+			}
+
 			twoLetterCode = twoLetterCode.ToLowerInvariant ();
 			CultureInfo[] cultures = CultureInfo.GetCultures (System.Globalization.CultureTypes.NeutralCultures);
 			
@@ -341,6 +346,11 @@ namespace Epsitec.Common.Support
 			//	FindSpecificCultureInfo retourne une culture propre à un pays, avec
 			//	une préférence pour la Suisse ou les USA.
 			
+			if (string.IsNullOrEmpty (twoLetterCode))
+			{
+				return null;
+			}
+
 			CultureInfo[] cultures = CultureInfo.GetCultures (System.Globalization.CultureTypes.SpecificCultures);
 			twoLetterCode = twoLetterCode.ToLowerInvariant ();
 			
@@ -401,7 +411,7 @@ namespace Epsitec.Common.Support
 		{
 			if (string.IsNullOrEmpty (Resources.twoLetterISOLanguageNameOverride))
 			{
-				return "00";
+				return null;
 			}
 			else
 			{

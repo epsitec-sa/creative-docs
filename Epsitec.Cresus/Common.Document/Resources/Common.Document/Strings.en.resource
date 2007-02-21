@@ -1043,7 +1043,7 @@
   <data id="0H001">Insert a Frame Break</data>
   <data id="0I001">Insert a Page Break</data>
   <data id="0J001">Preview as printed</data>
-  <data id="0K001">Magnetize Objects for use as Smart Guides</data>
+  <data id="0K001" mod="1">Magnetize Objects for use as Smart Guides (the Tab key&lt;br/&gt;changes the magnetic reference while moving an object)</data>
   <data id="0L001">Magnetize Objects in this Layer</data>
   <data id="0M001">Rulers</data>
   <data id="0N001">Display object labels</data>

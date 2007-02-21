@@ -336,7 +336,7 @@ namespace Epsitec.Common.Support
 			
 			switch (level)
 			{
-				case ResourceLevel.Default:		return Resources.GetDefaultTwoLetterISOLanguageName ();
+				case ResourceLevel.Default:		return "00";
 				case ResourceLevel.Localized:	return Resources.GetTwoLetterISOLanguageName (culture);
 				case ResourceLevel.Customized:	return string.Concat ("X", culture.TwoLetterISOLanguageName);
 			}
@@ -545,6 +545,7 @@ namespace Epsitec.Common.Support
 			{
 				string prefix = provider.Prefix;
 				string key = Resources.CreateBundleKey (prefix, module.Id, resourceId, level, culture);
+				CultureInfo defaultCulture = Resources.FindCultureInfo (Resources.GetDefaultTwoLetterISOLanguageName ());
 
 				bundle = this.pool.FindBundle (key);
 
@@ -560,8 +561,19 @@ namespace Epsitec.Common.Support
 					{
 						case ResourceLevel.Merged:
 							bundle = ResourceBundle.Create (this, prefix, module, resourceId, level, culture, recursion);
+							
 							this.CompileBundle (bundle, provider, resourceId, ResourceLevel.Default, culture);
-							this.CompileBundle (bundle, provider, resourceId, ResourceLevel.Localized, culture);
+							
+							if (defaultCulture != null)
+							{
+								this.CompileBundle (bundle, provider, resourceId, ResourceLevel.Localized, defaultCulture);
+							}
+
+							if (defaultCulture != culture)
+							{
+								this.CompileBundle (bundle, provider, resourceId, ResourceLevel.Localized, culture);
+							}
+							
 							this.CompileBundle (bundle, provider, resourceId, ResourceLevel.Customized, culture);
 							break;
 
@@ -702,14 +714,37 @@ namespace Epsitec.Common.Support
 			byte[] data = null;
 			
 			IResourceProvider provider = this.FindProvider (id, out resource_id);
+			CultureInfo defaultCulture = Resources.FindCultureInfo (Resources.GetDefaultTwoLetterISOLanguageName ());
 			
 			if (provider != null)
 			{
 				switch (level)
 				{
 					case ResourceLevel.Merged:
-						data = provider.GetData (resource_id, ResourceLevel.Customized, culture);	if (data != null) break;
-						data = provider.GetData (resource_id, ResourceLevel.Localized, culture);	if (data != null) break;
+						data = provider.GetData (resource_id, ResourceLevel.Customized, culture);
+						
+						if (data != null)
+						{
+							break;
+						}
+
+						data = provider.GetData (resource_id, ResourceLevel.Localized, culture);
+						
+						if (data != null)
+						{
+							break;
+						}
+
+						if (defaultCulture != null)
+						{
+							data = provider.GetData (resource_id, ResourceLevel.Localized, defaultCulture);
+							
+							if (data != null)
+							{
+								break;
+							}
+						}
+
 						data = provider.GetData (resource_id, ResourceLevel.Default, culture);
 						break;
 					
@@ -773,11 +808,23 @@ namespace Epsitec.Common.Support
 				
 				if (caption == null)
 				{
+					CultureInfo defaultCulture = Resources.FindCultureInfo (Resources.GetDefaultTwoLetterISOLanguageName ());
+
 					switch (level)
 					{
 						case ResourceLevel.Merged:
 							this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Default, culture), druid, ref caption);
-							this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Localized, culture), druid, ref caption);
+
+							if (defaultCulture != null)
+							{
+								this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Localized, defaultCulture), druid, ref caption);
+							}
+
+							if (defaultCulture != culture)
+							{
+								this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Localized, culture), druid, ref caption);
+							}
+							
 							this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Customized, culture), druid, ref caption);
 
 							if (caption != null)
