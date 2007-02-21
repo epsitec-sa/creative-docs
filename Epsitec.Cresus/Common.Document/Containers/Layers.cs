@@ -503,6 +503,8 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleRadioPrintChanged(object sender)
 		{
 			//	Un bouton radio a changé.
+			if ( this.ignoreChanged )  return;
+
 			RadioButton radio = sender as RadioButton;
 			if ( radio == null )  return;
 			if ( radio.ActiveState != ActiveState.Yes )  return;
@@ -522,6 +524,7 @@ namespace Epsitec.Common.Document.Containers
 
 				this.document.Notifier.NotifyPagesChanged();
 				this.document.Notifier.NotifyMagnetChanged();
+				this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 				this.document.Modifier.OpletQueueValidateAction();
 			}
 		}
