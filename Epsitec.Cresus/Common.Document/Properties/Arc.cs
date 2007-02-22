@@ -341,29 +341,15 @@ namespace Epsitec.Common.Document.Properties
 			//	Effectue le déplacement global de la propriété.
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptLine )  return;
 
+			//	Ce traitement ne fonctionne pas avec l'objet ellipse. Dans ce cas, il
+			//	faut simplement ne rien faire !
 			if (selector.IsMirrorH || selector.IsMirrorV)
 			{
-				this.startingAngle = Arc.NormAngle(360-this.initialEndingAngle);
-				this.endingAngle = Arc.NormAngle(360-this.initialStartingAngle);
+				this.startingAngle = Math.ClipAngleDeg(360-this.initialEndingAngle);
+				this.endingAngle   = Math.ClipAngleDeg(360-this.initialStartingAngle);
 			}
 
 			this.document.Notifier.NotifyPropertyChanged(this);
-		}
-
-		protected static double NormAngle(double angle)
-		{
-			//	Retourne un angle "normalisé", c'est-à-dire compris entre 0 et 360 degrés.
-			while (angle < 0)
-			{
-				angle += 360;
-			}
-
-			while (angle > 360)
-			{
-				angle -= 360;
-			}
-
-			return angle;
 		}
 
 

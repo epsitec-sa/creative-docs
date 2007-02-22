@@ -177,9 +177,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Calcule l'angle d'après la position de la souris.
 			Stretcher stretcher = this.GetStretcher();
 			pos = stretcher.Reverse(pos);
-			double angle = Point.ComputeAngleDeg(new Point(0.0, 0.0), pos);
-			if ( angle < 0.0 )  angle += 360.0;  // 0..360
-			return angle;
+			return Math.ClipAngleDeg(Point.ComputeAngleDeg(new Point(0.0, 0.0), pos));
 		}
 
 		protected Stretcher GetStretcher()
