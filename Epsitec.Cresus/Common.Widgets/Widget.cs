@@ -2770,16 +2770,20 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 		
-		public virtual void ExecuteCommand()
+		public virtual bool ExecuteCommand()
 		{
 			if ((this.HasCommand) &&
 				(this.IsEnabled))
 			{
-				this.ExecuteCommand (this.CommandObject);
+				return this.ExecuteCommand (this.CommandObject);
+			}
+			else
+			{
+				return false;
 			}
 		}
 
-		public void ExecuteCommand(Command command)
+		public bool ExecuteCommand(Command command)
 		{
 			Window window = this.Window;
 
@@ -2800,10 +2804,13 @@ namespace Epsitec.Common.Widgets
 						if (chain.GetLocalEnable (command))
 						{
 							this.QueueCommandForExecution (window, command, state);
+							return true;
 						}
 					}
 				}
 			}
+
+			return false;
 		}
 
 		protected virtual void QueueCommandForExecution(Window window, Command command, CommandState state)
@@ -3715,7 +3722,13 @@ namespace Epsitec.Common.Widgets
 			
 			if ((this.InternalState & InternalState.ExecCmdOnPressed) != 0)
 			{
-				this.ExecuteCommand ();
+				if (this.ExecuteCommand ())
+				{
+					if (e != null)
+					{
+						e.Message.Consumer = this;
+					}
+				}
 			}
 		}
 		
@@ -3759,7 +3772,13 @@ namespace Epsitec.Common.Widgets
 
 			if ((this.InternalState & InternalState.ExecCmdOnPressed) == 0)
 			{
-				this.ExecuteCommand ();
+				if (this.ExecuteCommand ())
+				{
+					if (e != null)
+					{
+						e.Message.Consumer = this;
+					}
+				}
 			}
 		}
 		
