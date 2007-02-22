@@ -723,7 +723,14 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return "Tahoma";
+				if (System.Environment.OSVersion.Version.Major > 5)
+				{
+					return "Segoe UI";
+				}
+				else
+				{
+					return "Tahoma";
+				}
 			}
 		}
 		
@@ -731,7 +738,14 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return 10.8;
+				if (System.Environment.OSVersion.Version.Major > 5)
+				{
+					return 11.5;
+				}
+				else
+				{
+					return 10.8;
+				}
 			}
 		}
 		
