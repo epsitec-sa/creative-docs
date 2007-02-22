@@ -429,6 +429,8 @@ namespace Epsitec.Common.Document
 				drawingContext.ConstrainSnapPos(ref pos);
 				this.isTranslate = false;  // ce n'est plus une translation
 			}
+			this.isMirrorH = false;
+			this.isMirrorV = false;
 
 			if ( rank == 0 )  // tout ?
 			{
@@ -621,12 +623,14 @@ namespace Epsitec.Common.Document
 				this.finalData.P1 = new Point(center.X*2-p1.X, p1.Y);
 				this.finalData.P2 = new Point(center.X*2-p2.X, p2.Y);
 				this.isMirrorH = true;
+				this.isMirrorV = false;
 			}
 			else
 			{
 				this.finalData.P1 = new Point(p1.X, center.Y*2-p1.Y);
 				this.finalData.P2 = new Point(p2.X, center.Y*2-p2.Y);
 				this.isMirrorV = true;
+				this.isMirrorH = false;
 			}
 			this.isTranslate = false;
 
@@ -658,6 +662,8 @@ namespace Epsitec.Common.Document
 			this.finalData.P1 = Point.Scale(center, this.finalData.P1, scale);
 			this.finalData.P2 = Point.Scale(center, this.finalData.P2, scale);
 			this.isTranslate = false;
+			this.isMirrorH = false;
+			this.isMirrorV = false;
 			this.document.Modifier.ActiveViewer.MoveGlobalProcess(this);
 			this.UpdateHandlePos();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
@@ -671,6 +677,8 @@ namespace Epsitec.Common.Document
 			this.document.Modifier.ActiveViewer.MoveGlobalStarting();
 			this.finalData.Angle += angle;
 			this.isTranslate = false;
+			this.isMirrorH = false;
+			this.isMirrorV = false;
 			this.document.Modifier.ActiveViewer.MoveGlobalProcess(this);
 			this.UpdateHandlePos();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);

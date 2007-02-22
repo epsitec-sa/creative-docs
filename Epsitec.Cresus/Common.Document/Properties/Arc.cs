@@ -341,13 +341,7 @@ namespace Epsitec.Common.Document.Properties
 			//	Effectue le déplacement global de la propriété.
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptLine )  return;
 
-			if (selector.IsMirrorH)
-			{
-				this.startingAngle = Arc.NormAngle(180-this.initialEndingAngle);
-				this.endingAngle = Arc.NormAngle(180-this.initialStartingAngle);
-			}
-
-			if (selector.IsMirrorV)
+			if (selector.IsMirrorH || selector.IsMirrorV)
 			{
 				this.startingAngle = Arc.NormAngle(360-this.initialEndingAngle);
 				this.endingAngle = Arc.NormAngle(360-this.initialStartingAngle);
