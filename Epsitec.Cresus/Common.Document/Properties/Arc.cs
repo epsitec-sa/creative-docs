@@ -325,6 +325,54 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
+		public override void MoveGlobalStarting()
+		{
+			//	Début du déplacement global de la propriété.
+			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptLine )  return;
+
+			this.InsertOpletProperty();
+
+			this.initialStartingAngle = this.startingAngle;
+			this.initialEndingAngle = this.endingAngle;
+		}
+		
+		public override void MoveGlobalProcess(Selector selector)
+		{
+			//	Effectue le déplacement global de la propriété.
+			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptLine )  return;
+
+			if (selector.IsMirrorH)
+			{
+				this.startingAngle = Arc.NormAngle(180-this.initialEndingAngle);
+				this.endingAngle = Arc.NormAngle(180-this.initialStartingAngle);
+			}
+
+			if (selector.IsMirrorV)
+			{
+				this.startingAngle = Arc.NormAngle(360-this.initialEndingAngle);
+				this.endingAngle = Arc.NormAngle(360-this.initialStartingAngle);
+			}
+
+			this.document.Notifier.NotifyPropertyChanged(this);
+		}
+
+		protected static double NormAngle(double angle)
+		{
+			//	Retourne un angle "normalisé", c'est-à-dire compris entre 0 et 360 degrés.
+			while (angle < 0)
+			{
+				angle += 360;
+			}
+
+			while (angle > 360)
+			{
+				angle -= 360;
+			}
+
+			return angle;
+		}
+
+
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
@@ -355,5 +403,7 @@ namespace Epsitec.Common.Document.Properties
 		protected ArcType				arcType;
 		protected double				startingAngle;
 		protected double				endingAngle;
+		protected double				initialStartingAngle;
+		protected double				initialEndingAngle;
 	}
 }

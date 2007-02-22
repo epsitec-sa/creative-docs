@@ -50,6 +50,8 @@ namespace Epsitec.Common.Document
 			this.rotate.Type = Objects.HandleType.Rotate;
 
 			this.isTranslate = true;  // jusqu'à demande contraire, c'est une translation
+			this.isMirrorH = false;
+			this.isMirrorV = false;
 		}
 
 		public SelectorType TypeChoice
@@ -112,6 +114,24 @@ namespace Epsitec.Common.Document
 			get
 			{
 				return this.isTranslate;
+			}
+		}
+
+		public bool IsMirrorH
+		{
+			//	Indique si la transformation définie est un miroir horizontal.
+			get
+			{
+				return this.isMirrorH;
+			}
+		}
+
+		public bool IsMirrorV
+		{
+			//	Indique si la transformation définie est un miroir vertical.
+			get
+			{
+				return this.isMirrorV;
 			}
 		}
 
@@ -600,11 +620,13 @@ namespace Epsitec.Common.Document
 			{
 				this.finalData.P1 = new Point(center.X*2-p1.X, p1.Y);
 				this.finalData.P2 = new Point(center.X*2-p2.X, p2.Y);
+				this.isMirrorH = true;
 			}
 			else
 			{
 				this.finalData.P1 = new Point(p1.X, center.Y*2-p1.Y);
 				this.finalData.P2 = new Point(p2.X, center.Y*2-p2.Y);
+				this.isMirrorV = true;
 			}
 			this.isTranslate = false;
 
@@ -1301,5 +1323,7 @@ namespace Epsitec.Common.Document
 		protected Point				moveOffset;
 		protected Rectangle			initialBBoxThin;
 		protected bool				isTranslate;
+		protected bool				isMirrorH;
+		protected bool				isMirrorV;
 	}
 }
