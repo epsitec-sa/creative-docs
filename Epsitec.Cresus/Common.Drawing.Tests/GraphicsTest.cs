@@ -265,6 +265,19 @@ namespace Epsitec.Common.Drawing
 			Window.RunInTestEnvironment (window);
 		}
 
+		[Test]
+		public void CheckImageAlpha()
+		{
+			Window window = new Window ();
+
+			window.ClientSize = new Size (300, 300);
+			window.Text = "CheckImageAlpha";
+			window.Root.PaintForeground += new PaintEventHandler (ImageAlpha_PaintForeground);
+			window.Root.Invalidate ();
+			window.Show ();
+			Window.RunInTestEnvironment (window);
+		}
+
 		[Test] public void CheckImageRectTIFF()
 		{
 			Window window = new Window ();
@@ -1379,6 +1392,45 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.PaintImage (bitmap,  10, 126, 200, 20, 0, 10, 200, 80);	//	clip + stretch
 			e.Graphics.PaintImage (bitmap,  10, 148, 200, 20, 100, 10, 200, 80);//	clip + stretch (déborde de l'image, 185 pixels en dehors à droite)
 			e.Graphics.PaintImage (bitmap,  10, 148, 200, 20, 120, 10, 200, 80);//	clip + stretch (plus rien)
+		}
+		
+		private void ImageAlpha_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			double cx = 100;
+			double cy = 100;
+
+			e.Graphics.ScaleTransform (1.5, 1.5, 0, 0);
+			e.Graphics.RotateTransformDeg (0, cx, cy);
+			
+			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
+			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
+			e.Graphics.RenderSolid (Color.FromBrightness (0));
+
+			for (int y = 0; y < 200; y += 8)
+			{
+				e.Graphics.AddFilledRectangle (0, y, 200, 4);
+				e.Graphics.RenderSolid (Color.FromBrightness (1));
+				e.Graphics.AddFilledRectangle (0, y+4, 200, 4);
+				e.Graphics.RenderSolid (Color.FromBrightness (0.5));
+			}
+
+			Bitmap bitmap = Support.ImageProvider.Default.GetImage (@"file:images/4x4-alpha.png", Support.Resources.DefaultManager).BitmapImage;
+			
+			//	L'image fait 2 x 2 pixels
+
+			e.Graphics.ImageFilter = new ImageFilter (ImageFilteringMode.None);
+			e.Graphics.PaintImage (bitmap,  10,  10, 64, 64);
+
+			e.Graphics.ImageFilter = new ImageFilter (ImageFilteringMode.Bilinear);
+			e.Graphics.PaintImage (bitmap, 110,  10, 64, 64);
+
+			e.Graphics.ImageFilter = new ImageFilter (ImageFilteringMode.Bicubic);
+			e.Graphics.PaintImage (bitmap,  10, 110, 64, 64);
+			
+			e.Graphics.ImageFilter = new ImageFilter (ImageFilteringMode.ResamplingBilinear);
+			e.Graphics.PaintImage (bitmap, 110, 110, 64, 64);
 		}
 		
 		private void ImageRectTIFF_PaintForeground(object sender, PaintEventArgs e)
