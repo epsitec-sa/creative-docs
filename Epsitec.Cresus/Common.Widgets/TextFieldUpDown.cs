@@ -304,6 +304,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public override Drawing.Margins GetInternalPadding()
+		{
+			return base.GetInternalPadding ();
+		}
+
 		protected override void UpdateGeometry()
 		{
 			base.UpdateGeometry ();
@@ -316,7 +321,7 @@ namespace Epsitec.Common.Widgets
 			double width = this.margins.Right + AbstractTextField.FrameMargin;
 
 			if (this.arrowUp   != null &&
-				 this.arrowDown != null)
+				this.arrowDown != null)
 			{
 				Drawing.Rectangle aRect = new Drawing.Rectangle ();
 

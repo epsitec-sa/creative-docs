@@ -562,11 +562,11 @@ namespace Epsitec.Common.Widgets
 			combo.Items.Add("Mai");
 			combo.Items.Add("Juin");
 			combo.Items.Add("Juillet");
-			combo.Items.Add("Aout");
+			combo.Items.Add("Août");
 			combo.Items.Add("Septembre");
 			combo.Items.Add("Octobre");
 			combo.Items.Add("Novembre");
-			combo.Items.Add("Decembre");
+			combo.Items.Add("Décembre");
 			combo.Items.Add("Lundi");
 			combo.Items.Add("Mardi");
 			combo.Items.Add("Mercredi");

@@ -44,6 +44,7 @@ namespace Epsitec.Common.Drawing
 
 			Agg.Library.Initialize ();
 
+			Font.useSegoe = System.Environment.OSVersion.Version.Major > 5;
 			Font.SetupFonts ();
 		}
 		#endregion
@@ -723,7 +724,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				if (System.Environment.OSVersion.Version.Major > 5)
+				if (Font.useSegoe)
 				{
 					return "Segoe UI";
 				}
@@ -738,9 +739,9 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				if (System.Environment.OSVersion.Version.Major > 5)
+				if (Font.useSegoe)
 				{
-					return 11.5;
+					return 10.8;
 				}
 				else
 				{
@@ -947,6 +948,7 @@ namespace Epsitec.Common.Drawing
 		static Dictionary<string, Font>			font_hash;
 		static Dictionary<string, FontFaceInfo>	face_hash;
 		static Font								default_font;
+		static bool								useSegoe;
 		
 		enum NameId
 		{
