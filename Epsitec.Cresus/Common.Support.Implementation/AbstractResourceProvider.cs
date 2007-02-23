@@ -33,7 +33,7 @@ namespace Epsitec.Common.Support.Implementation
 		public abstract bool Contains(string id);
 		
 		public abstract byte[] GetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture);
-		public abstract string[] GetIds(string name_filter, string type_filter, ResourceLevel level, System.Globalization.CultureInfo culture);
+		public abstract string[] GetIds(string nameFilter, string typeFilter, ResourceLevel level, System.Globalization.CultureInfo culture);
 		public abstract ResourceModuleInfo[] GetModules();
 
 		public abstract bool SetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data, Epsitec.Common.Support.ResourceSetMode mode);
@@ -44,17 +44,17 @@ namespace Epsitec.Common.Support.Implementation
 		{
 			this.culture = culture;
 
-			this.default_suffix = this.manager.MapToSuffix (ResourceLevel.Default, culture);
-			this.local_suffix   = this.manager.MapToSuffix (ResourceLevel.Localized, culture);
-			this.custom_suffix  = this.manager.MapToSuffix (ResourceLevel.Customized, culture);
+			this.defaultSuffix = this.manager.MapToSuffix (ResourceLevel.Default, culture);
+			this.localSuffix   = this.manager.MapToSuffix (ResourceLevel.Localized, culture);
+			this.customSuffix  = this.manager.MapToSuffix (ResourceLevel.Customized, culture);
 		}
 		
 		
 		protected CultureInfo				culture;
 		protected ResourceManager			manager;
 		
-		protected string					default_suffix;
-		protected string					local_suffix;
-		protected string					custom_suffix;
+		protected string					defaultSuffix;
+		protected string					localSuffix;
+		protected string					customSuffix;
 	}
 }

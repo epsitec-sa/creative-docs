@@ -26,91 +26,13 @@ namespace Epsitec.Common.Support.Implementation
 				throw new System.IO.FileNotFoundException ("Cannot find resources directory.");
 			}
 			
-			this.id_regex = RegexFactory.FileName;
+			this.idRegex = RegexFactory.FileName;
 			this.SelectLocale (CultureInfo.CurrentCulture);
 		}
-		
-		
-		protected string GetPathFromId(string id, ResourceLevel level)
-		{
-			if (this.ValidateId (id))
-			{
-				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-				
-				buffer.Append (this.path_prefix);
-				buffer.Append (id);
-				buffer.Append (this.GetLevelSuffix (level));
-				
-				switch (level)
-				{
-					case ResourceLevel.Default:
-					case ResourceLevel.Localized:
-					case ResourceLevel.Customized:
-						break;
-					
-					default:
-						throw new ResourceException (string.Format ("Invalid resource level {0} for resource '{1}'.", level, id));
-				}
-				
-				return buffer.ToString ();
-			}
-			
-			return null;
-		}
-		
-		protected string GetLevelSuffix(ResourceLevel level)
-		{
-			System.Diagnostics.Debug.Assert (level != ResourceLevel.Merged);
-			
-			switch (level)
-			{
-				case ResourceLevel.Default:		return this.file_default;
-				case ResourceLevel.Localized:	return this.file_local;
-				case ResourceLevel.Customized:	return this.file_custom;
-				case ResourceLevel.All:			return this.file_all;
-			}
-			
-			return null;
-		}
-		
 		
 		public override string			Prefix
 		{
 			get { return "file"; }
-		}
-		
-		
-		private bool SelectPath(string path)
-		{
-			if (! path.EndsWith (System.IO.Path.DirectorySeparatorChar.ToString ()))
-			{
-				path = path + System.IO.Path.DirectorySeparatorChar;
-			}
-			
-			//	Pas très propre, mais ça suffit maintenant: on supprime le chemin \bin\... pour remonter au niveau
-			//	plus intéressant (celui des sources).
-			
-			if (path.ToLower ().EndsWith (@"\bin\debug\"))
-			{
-				path = path.Substring (0, path.Length - 10);
-			}
-			else if (path.ToLower ().EndsWith (@"\bin\release\"))
-			{
-				path = path.Substring (0, path.Length - 12);
-			}
-			
-			path = path + "resources" + System.IO.Path.DirectorySeparatorChar;
-			
-			if (System.IO.Directory.Exists (path))
-			{
-//-				System.Diagnostics.Debug.WriteLine ("Path prefix for resource files: " + path);
-				
-				this.path_prefix = path;
-				this.path_prefix_base = path;
-				return true;
-			}
-			
-			return false;
 		}
 		
 		public override bool SelectModule(ref ResourceModuleInfo module)
@@ -171,7 +93,7 @@ namespace Epsitec.Common.Support.Implementation
 					{
 						module = new ResourceModuleInfo (moduleName, modulePath, moduleId);
 
-						this.path_prefix = string.Concat (modulePath, System.IO.Path.DirectorySeparatorChar);
+						this.pathPrefix = string.Concat (modulePath, System.IO.Path.DirectorySeparatorChar);
 						this.module = module;
 
 						return true;
@@ -185,16 +107,17 @@ namespace Epsitec.Common.Support.Implementation
 		protected override void SelectLocale(System.Globalization.CultureInfo culture)
 		{
 			base.SelectLocale (culture);
+
+			this.genericFileSuffix = ".resource";
 			
-			this.file_default = string.Concat (".", this.default_suffix, ".resource");
-			this.file_local   = string.Concat (".", this.local_suffix,   ".resource");
-			this.file_custom  = string.Concat (".", this.custom_suffix,  ".resource");
-			this.file_all     = ".resource";
+			this.defaultFileSuffix = string.Concat (".", this.defaultSuffix, this.genericFileSuffix);
+			this.localFileSuffix   = string.Concat (".", this.localSuffix,   this.genericFileSuffix);
+			this.customFileSuffix  = string.Concat (".", this.customSuffix,  this.genericFileSuffix);
 		}
 		
 		public override bool ValidateId(string id)
 		{
-			return base.ValidateId (id) && this.id_regex.IsMatch (id);
+			return base.ValidateId (id) && this.idRegex.IsMatch (id);
 		}
 		
 		public override bool Contains(string id)
@@ -274,20 +197,275 @@ namespace Epsitec.Common.Support.Implementation
 			return modules.ToArray ();
 		}
 
+		public override string[] GetIds(string nameFilter, string typeFilter, ResourceLevel level, System.Globalization.CultureInfo culture)
+		{
+			if (this.culture != culture)
+			{
+				this.SelectLocale (culture);
+			}
+			
+			string fileFilter = nameFilter;
+			
+			string path   = this.pathPrefix;
+			string suffix = this.GetLevelSuffix (level);
+			string search;
+			
+			if (level == ResourceLevel.All)
+			{
+				search = string.Concat (fileFilter, ".*", suffix);
+			}
+			else
+			{
+				search = string.Concat (fileFilter, suffix);
+			}
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			string[] files = System.IO.Directory.GetFiles (path, search);
+			
+			int start = path.Length;
+			int strip = suffix.Length + start;
+			
+			for (int i = 0; i < files.Length; i++)
+			{
+				string fullName   = files[i];
+				string bundleName = fullName.Substring (start, fullName.Length - strip);
+				
+				if (! RegexFactory.ResourceBundleName.IsMatch (bundleName))
+				{
+					continue;
+				}
+				
+				if ((typeFilter != null) &&
+					(typeFilter != "*"))
+				{
+					System.Text.RegularExpressions.Regex typeRegex = Support.RegexFactory.FromSimpleJoker (typeFilter);
+					ResourceBundle bundle = ResourceBundle.Create (this.manager, bundleName);
+					
+					bundle.RefInclusionEnabled = false;
+					bundle.AutoMergeEnabled    = false;
+					
+					byte[] data = this.GetData (bundleName, ResourceLevel.Default, culture);
+					
+					if (ResourceBundle.CheckBundleHeader (data) == false)
+					{
+						continue;
+					}
+					
+					try
+					{
+						bundle.Compile (data);
+					}
+					catch (System.Xml.XmlException)
+					{
+						//	Ce n'est pas un bundle compilable, probablement parce qu'il contient des
+						//	données binaires. Sautons-le.
+						
+						continue;
+					}
+					
+					if (! typeRegex.IsMatch (bundle.Type))
+					{
+						//	Saute ce bundle, car il n'est pas du type adéquat :
+						
+						continue;
+					}
+				}
+				
+				list.Add (bundleName);
+			}
+			
+			files = new string[list.Count];
+			list.CopyTo (files);
+			
+			return files;
+		}
+
+		/// <summary>
+		/// Defines the global probing path which is searched before the local
+		/// resources folder.
+		/// </summary>
+		/// <param name="path">The global probing path (several paths can be specified;
+		/// they must be separated by <code>";"</code>).</param>
+		public static void DefineGlobalProbingPath(string path)
+		{
+			FileProvider.globalProbingPath = path;
+		}
+		
+		public override bool SetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data, ResourceSetMode mode)
+		{
+			if (this.culture != culture)
+			{
+				this.SelectLocale (culture);
+			}
+			
+			string path = this.GetPathFromId (id, level);
+			
+			if (path != null)
+			{
+				System.IO.FileMode fileMode = System.IO.FileMode.Open;
+				
+				switch (mode)
+				{
+					case ResourceSetMode.CreateOnly:
+						fileMode = System.IO.FileMode.CreateNew;
+						break;
+					case ResourceSetMode.UpdateOnly:
+						fileMode = System.IO.FileMode.Open;
+						break;
+					case ResourceSetMode.Write:
+						fileMode = System.IO.FileMode.OpenOrCreate;
+						break;
+					default:
+						throw new System.ArgumentException (string.Format ("Mode {0} not supported.", mode), "mode");
+				}
+				
+				using (System.IO.FileStream stream = new System.IO.FileStream (path, fileMode, System.IO.FileAccess.Write))
+				{
+					stream.Write (data, 0, data.Length);
+					stream.SetLength (data.Length);
+					stream.Flush ();
+					
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		public override bool Remove(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture)
+		{
+			if (this.culture != culture)
+			{
+				this.SelectLocale (culture);
+			}
+
+			string path = this.GetPathFromId (id, level);
+
+			if (path != null)
+			{
+				if (System.IO.File.Exists (path))
+				{
+					System.IO.File.Delete (path);
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		private string GetPathFromId(string id, ResourceLevel level)
+		{
+			if (this.ValidateId (id))
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+				buffer.Append (this.pathPrefix);
+				buffer.Append (id);
+				buffer.Append (this.GetLevelSuffix (level));
+
+				switch (level)
+				{
+					case ResourceLevel.Default:
+					case ResourceLevel.Localized:
+					case ResourceLevel.Customized:
+						break;
+
+					default:
+						throw new ResourceException (string.Format ("Invalid resource level {0} for resource '{1}'.", level, id));
+				}
+
+				return buffer.ToString ();
+			}
+
+			return null;
+		}
+
+		private string GetLevelSuffix(ResourceLevel level)
+		{
+			System.Diagnostics.Debug.Assert (level != ResourceLevel.Merged);
+
+			switch (level)
+			{
+				case ResourceLevel.Default:
+					return this.defaultFileSuffix;
+				case ResourceLevel.Localized:
+					return this.localFileSuffix;
+				case ResourceLevel.Customized:
+					return this.customFileSuffix;
+				case ResourceLevel.All:
+					return this.genericFileSuffix;
+			}
+
+			return null;
+		}
+
+		private bool SelectPath(string path)
+		{
+			if (!path.EndsWith (System.IO.Path.DirectorySeparatorChar.ToString ()))
+			{
+				path = path + System.IO.Path.DirectorySeparatorChar;
+			}
+
+			//	Pas très propre, mais ça suffit maintenant: on supprime le chemin \bin\... pour remonter au niveau
+			//	plus intéressant (celui des sources).
+
+			if (path.ToLower ().EndsWith (@"\bin\debug\"))
+			{
+				path = path.Substring (0, path.Length - 10);
+			}
+			else if (path.ToLower ().EndsWith (@"\bin\release\"))
+			{
+				path = path.Substring (0, path.Length - 12);
+			}
+
+			path = System.IO.Path.Combine (path, "resources");
+
+			if (System.IO.Directory.Exists (path))
+			{
+				this.pathPrefixRoot = path;
+				this.pathPrefix     = path + System.IO.Path.DirectorySeparatorChar;
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 		private IEnumerable<string> GetModuleProbingDirectories()
 		{
-			return System.IO.Directory.GetDirectories (this.path_prefix_base);
+			List<string> paths = new List<string> ();
+
+			if (!string.IsNullOrEmpty (FileProvider.globalProbingPath))
+			{
+				paths.AddRange (FileProvider.globalProbingPath.Split (';'));
+			}
+			
+			paths.Add (this.pathPrefixRoot);
+
+			foreach (string path in paths)
+			{
+				if (System.IO.Directory.Exists (path))
+				{
+					foreach (string file in System.IO.Directory.GetDirectories (path))
+					{
+						yield return file;
+					}
+				}
+			}
 		}
 
 		private static int GetModuleId(string path)
 		{
 			string fileName = System.IO.Path.Combine (path, "module.info");
-			
+
 			if (!System.IO.File.Exists (fileName))
 			{
 				return -1;
 			}
-			
+
 			int moduleId = -1;
 			try
 			{
@@ -324,166 +502,22 @@ namespace Epsitec.Common.Support.Implementation
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("Path to module.info file for '{0}' is too long", path));
 			}
-			
+
 			return moduleId;
 		}
-		
-		public override string[] GetIds(string name_filter, string type_filter, ResourceLevel level, System.Globalization.CultureInfo culture)
-		{
-			if (this.culture != culture)
-			{
-				this.SelectLocale (culture);
-			}
-			
-			string file_filter = name_filter;
-			
-			string path   = this.path_prefix;
-			string suffix = this.GetLevelSuffix (level);
-			string search;
-			
-			if (level == ResourceLevel.All)
-			{
-				search = string.Concat (file_filter, ".*", suffix);
-			}
-			else
-			{
-				search = string.Concat (file_filter, suffix);
-			}
-			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			string[] files = System.IO.Directory.GetFiles (path, search);
-			
-			int start = path.Length;
-			int strip = suffix.Length + start;
-			
-			for (int i = 0; i < files.Length; i++)
-			{
-				string full_name   = files[i];
-				string bundle_name = full_name.Substring (start, full_name.Length - strip);
-				
-				if (! RegexFactory.ResourceBundleName.IsMatch (bundle_name))
-				{
-					continue;
-				}
-				
-				if ((type_filter != null) &&
-					(type_filter != "*"))
-				{
-					System.Text.RegularExpressions.Regex type_regex = Support.RegexFactory.FromSimpleJoker (type_filter);
-					ResourceBundle bundle = ResourceBundle.Create (this.manager, bundle_name);
-					
-					bundle.RefInclusionEnabled = false;
-					bundle.AutoMergeEnabled    = false;
-					
-					byte[] data = this.GetData (bundle_name, ResourceLevel.Default, culture);
-					
-					if (ResourceBundle.CheckBundleHeader (data) == false)
-					{
-						continue;
-					}
-					
-					try
-					{
-						bundle.Compile (data);
-					}
-					catch (System.Xml.XmlException)
-					{
-						//	Ce n'est pas un bundle compilable, probablement parce qu'il contient des
-						//	données binaires. Sautons-le.
-						
-						continue;
-					}
-					
-					if (! type_regex.IsMatch (bundle.Type))
-					{
-						//	Saute ce bundle, car il n'est pas du type adéquat :
-						
-						continue;
-					}
-				}
-				
-				list.Add (bundle_name);
-			}
-			
-			files = new string[list.Count];
-			list.CopyTo (files);
-			
-			return files;
-		}
 
-		
-		public override bool SetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data, ResourceSetMode mode)
-		{
-			if (this.culture != culture)
-			{
-				this.SelectLocale (culture);
-			}
-			
-			string path = this.GetPathFromId (id, level);
-			
-			if (path != null)
-			{
-				System.IO.FileMode file_mode = System.IO.FileMode.Open;
-				
-				switch (mode)
-				{
-					case ResourceSetMode.CreateOnly:
-						file_mode = System.IO.FileMode.CreateNew;
-						break;
-					case ResourceSetMode.UpdateOnly:
-						file_mode = System.IO.FileMode.Open;
-						break;
-					case ResourceSetMode.Write:
-						file_mode = System.IO.FileMode.OpenOrCreate;
-						break;
-					default:
-						throw new System.ArgumentException (string.Format ("Mode {0} not supported.", mode), "mode");
-				}
-				
-				using (System.IO.FileStream stream = new System.IO.FileStream (path, file_mode, System.IO.FileAccess.Write))
-				{
-					stream.Write (data, 0, data.Length);
-					stream.SetLength (data.Length);
-					stream.Flush ();
-					
-					return true;
-				}
-			}
-			
-			return false;
-		}
-		
-		public override bool Remove(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture)
-		{
-			if (this.culture != culture)
-			{
-				this.SelectLocale (culture);
-			}
+		private static string				globalProbingPath;
 
-			string path = this.GetPathFromId (id, level);
+		private string						pathPrefix;
+		private string						pathPrefixRoot;
+		
+		private Regex						idRegex;
 
-			if (path != null)
-			{
-				if (System.IO.File.Exists (path))
-				{
-					System.IO.File.Delete (path);
-					return true;
-				}
-			}
+		private string						defaultFileSuffix;
+		private string						localFileSuffix;
+		private string						customFileSuffix;
+		private string						genericFileSuffix;
 
-			return false;
-		}
-		
-		
-		protected string					path_prefix;
-		protected string					path_prefix_base;
-		protected Regex						id_regex;
-		
-		protected string					file_default;
-		protected string					file_local;
-		protected string					file_custom;
-		protected string					file_all;
-		
-		protected ResourceModuleInfo		module;
+		private ResourceModuleInfo			module;
 	}
 }
