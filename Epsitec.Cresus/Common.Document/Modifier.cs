@@ -1892,9 +1892,9 @@ namespace Epsitec.Common.Document
 			Modifier.Duplicate(srcDoc, dstDoc, srcList, dstList, false, move, onlySelected);
 		}
 
-		protected static void Duplicate(Document srcDoc, Document dstDoc,
-										UndoableList srcList, UndoableList dstList,
-										bool deselect, Point move, bool onlySelected)
+		public static void Duplicate(Document srcDoc, Document dstDoc,
+									 UndoableList srcList, UndoableList dstList,
+									 bool deselect, Point move, bool onlySelected)
 		{
 			//	Copie tous les objets d'une liste source dans une liste destination.
 			srcDoc.Modifier.UpdateCounters();
