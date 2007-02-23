@@ -116,6 +116,7 @@ namespace Epsitec.Common.Support.Implementation
 		public override bool SelectModule(ref ResourceModuleInfo module)
 		{
 			string moduleName = null;
+			string modulePath = null;
 			int    moduleId   = -1;
 
 			if (string.IsNullOrEmpty (module.Name))
@@ -131,6 +132,7 @@ namespace Epsitec.Common.Support.Implementation
 						if (item.Id == module.Id)
 						{
 							moduleName = item.Name;
+							modulePath = item.Path;
 							break;
 						}
 					}
@@ -139,26 +141,30 @@ namespace Epsitec.Common.Support.Implementation
 			else
 			{
 				moduleName = module.Name;
+				modulePath = module.Path;
 			}
 			
 			if (moduleName != null)
 			{
 				//	Search the module based on its module name. 
-				
-				string path = System.IO.Path.Combine (this.path_prefix_base, moduleName);
-				
-				if (System.IO.Directory.Exists (path))
+
+				if (string.IsNullOrEmpty (modulePath))
 				{
-					moduleId = FileProvider.GetModuleId (path);
+					modulePath = System.IO.Path.Combine (this.path_prefix_base, moduleName);
+				}
+				
+				if (System.IO.Directory.Exists (modulePath))
+				{
+					moduleId = FileProvider.GetModuleId (modulePath);
 
 					if ((moduleId >= 0) &&
 						((module.Id < 0) || (module.Id == moduleId)))
 					{
-						this.path_prefix = string.Concat (path, System.IO.Path.DirectorySeparatorChar);
+						module = new ResourceModuleInfo (moduleName, modulePath, moduleId);
+
+						this.path_prefix = string.Concat (modulePath, System.IO.Path.DirectorySeparatorChar);
 						this.module = module;
 
-						module = new ResourceModuleInfo (moduleName, moduleId);
-						
 						return true;
 					}
 				}
@@ -253,7 +259,7 @@ namespace Epsitec.Common.Support.Implementation
 					
 					if (moduleId >= 0)
 					{
-						modules.Add (new ResourceModuleInfo (moduleName, moduleId));
+						modules.Add (new ResourceModuleInfo (moduleName, file, moduleId));
 					}
 				}
 			}

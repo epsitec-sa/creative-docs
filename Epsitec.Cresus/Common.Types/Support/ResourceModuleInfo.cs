@@ -19,6 +19,20 @@ namespace Epsitec.Common.Support
 		public ResourceModuleInfo(string name, int id)
 		{
 			this.name = string.IsNullOrEmpty (name) ? null : name;
+			this.path = null;
+			this.id = id+1;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:ResourceModuleInfo"/> structure.
+		/// </summary>
+		/// <param name="name">The name of the module.</param>
+		/// <param name="path">The path to the module.</param>
+		/// <param name="id">The id of the module.</param>
+		public ResourceModuleInfo(string name, string path, int id)
+		{
+			this.name = string.IsNullOrEmpty (name) ? null : name;
+			this.path = string.IsNullOrEmpty (path) ? null : path;
 			this.id = id+1;
 		}
 
@@ -29,6 +43,7 @@ namespace Epsitec.Common.Support
 		public ResourceModuleInfo(string name)
 		{
 			this.name = string.IsNullOrEmpty (name) ? null : name;
+			this.path = null;
 			this.id = 0;
 		}
 
@@ -39,6 +54,7 @@ namespace Epsitec.Common.Support
 		public ResourceModuleInfo(int id)
 		{
 			this.name = null;
+			this.path = null;
 			this.id = id+1;
 		}
 
@@ -51,6 +67,18 @@ namespace Epsitec.Common.Support
 			get
 			{
 				return this.name;
+			}
+		}
+
+		/// <summary>
+		/// Gets the path of the module.
+		/// </summary>
+		/// <value>The path of the module.</value>
+		public string Path
+		{
+			get
+			{
+				return this.path;
 			}
 		}
 
@@ -117,7 +145,7 @@ namespace Epsitec.Common.Support
 		/// </returns>
 		public bool Equals(ResourceModuleInfo other)
 		{
-			return (this.id == other.id) && (this.name == other.name);
+			return (this.id == other.id) && (this.name == other.name) && (this.path == other.path);
 		}
 
 		#endregion
@@ -166,6 +194,7 @@ namespace Epsitec.Common.Support
 		#region Private Fields
 		
 		private string							name;			//	null or name
+		private string							path;			//	module path or null
 		private int								id;				//	0 or module id+1
 		
 		#endregion
