@@ -580,7 +580,7 @@
   <data id="02I">Space before</data>
   <data id="03I">Space after</data>
   <data id="04I">Additional space before paragraph</data>
-  <data id="05I">Additional space before paragraph</data>
+  <data id="05I">Additional space after paragraph</data>
   <data id="06I">Tab Marks</data>
   <data id="07I">Tab position</data>
   <data id="08I">Tab type</data>
