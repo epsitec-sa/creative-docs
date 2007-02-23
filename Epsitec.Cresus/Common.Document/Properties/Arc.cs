@@ -341,8 +341,9 @@ namespace Epsitec.Common.Document.Properties
 			//	Effectue le déplacement global de la propriété.
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptLine )  return;
 
-			//	Ce traitement ne fonctionne pas avec l'objet ellipse. Dans ce cas, il
-			//	faut simplement ne rien faire !
+			//	Ce traitement ne fonctionne pas avec l'objet ellipse. Avec cet objet, il
+			//	faut simplement ne rien faire. Mais comme cette propriété est partagée par
+			//	l'objet cercle et l'objet ellipse, ce n'est pas possible !
 			if (selector.IsMirrorH || selector.IsMirrorV)
 			{
 				this.startingAngle = Math.ClipAngleDeg(360-this.initialEndingAngle);

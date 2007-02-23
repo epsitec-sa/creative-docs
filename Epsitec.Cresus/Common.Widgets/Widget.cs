@@ -323,7 +323,7 @@ namespace Epsitec.Common.Widgets
 		
 		public static double						DefaultFontHeight
 		{
-			get { return 12.0; }
+			get { return 14.0; }
 		}
 		
 		public virtual bool							IsFrozen
