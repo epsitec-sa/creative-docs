@@ -150,10 +150,19 @@ namespace Epsitec.Common.Support.Implementation
 
 				if (string.IsNullOrEmpty (modulePath))
 				{
-					modulePath = System.IO.Path.Combine (this.path_prefix_base, moduleName);
+					foreach (ResourceModuleInfo item in this.GetModules ())
+					{
+						if (item.Name == module.Name)
+						{
+							moduleName = item.Name;
+							modulePath = item.Path;
+							break;
+						}
+					}
 				}
 				
-				if (System.IO.Directory.Exists (modulePath))
+				if ((!string.IsNullOrEmpty (modulePath)) &&
+					(System.IO.Directory.Exists (modulePath)))
 				{
 					moduleId = FileProvider.GetModuleId (modulePath);
 
@@ -239,19 +248,14 @@ namespace Epsitec.Common.Support.Implementation
 
 		public override ResourceModuleInfo[] GetModules()
 		{
-			string path  = this.path_prefix_base;
-			int    start = path.Length;
-			
-			string[] files = System.IO.Directory.GetDirectories (path);
-
 			List<ResourceModuleInfo> modules = new List<ResourceModuleInfo> ();
 
-			foreach (string file in files)
+			foreach (string file in this.GetModuleProbingDirectories ())
 			{
 				//	Extract the module name from the full file name by stripping
 				//	the directory path prefix.
-				
-				string moduleName = file.Substring (start);
+
+				string moduleName = System.IO.Path.GetFileName (file);
 
 				if (this.ValidateId (moduleName))
 				{
@@ -259,12 +263,20 @@ namespace Epsitec.Common.Support.Implementation
 					
 					if (moduleId >= 0)
 					{
-						modules.Add (new ResourceModuleInfo (moduleName, file, moduleId));
+						if (modules.FindIndex (delegate (ResourceModuleInfo info) { return info.Id == moduleId; }) == -1)
+						{
+							modules.Add (new ResourceModuleInfo (moduleName, file, moduleId));
+						}
 					}
 				}
 			}
 			
 			return modules.ToArray ();
+		}
+
+		private IEnumerable<string> GetModuleProbingDirectories()
+		{
+			return System.IO.Directory.GetDirectories (this.path_prefix_base);
 		}
 
 		private static int GetModuleId(string path)
