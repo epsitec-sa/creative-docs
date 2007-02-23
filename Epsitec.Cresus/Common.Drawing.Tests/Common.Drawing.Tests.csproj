@@ -84,7 +84,7 @@
       <Name>nunit.framework</Name>
       <HintPath>..\External\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="OPaC.FreeImage, Version=3.9.2.1, Culture=neutral, PublicKeyToken=d4b3a36d594a1874, processorArchitecture=MSIL" />
+    <Reference Include="OPaC.FreeImage, Version=3.9.2.2, Culture=neutral, PublicKeyToken=d4b3a36d594a1874, processorArchitecture=MSIL" />
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -179,6 +179,7 @@
     <Compile Include="FontTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FreeImageTest.cs" />
     <Compile Include="GraphicsTest.cs">
       <SubType>Code</SubType>
     </Compile>
