@@ -182,7 +182,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 			else
 			{
-				this.frontier = 160;
+				this.frontier = System.Math.Floor(this.ActualWidth*0.65);
 				this.textLayout.LayoutSize = new Size(this.frontier-5-16, 20);
 			}
 		}

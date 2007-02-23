@@ -24,13 +24,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
-				this.window.MakeFixedSizeWindow();
-				this.window.MakeToolWindow();
-				this.WindowInit("Settings", 320, 435);
-				this.window.Text = Res.Strings.Dialog.Settings.Title;
 				this.window.PreventAutoClose = true;
+				this.WindowInit("Settings", 300, 435);
+				this.window.Text = Res.Strings.Dialog.Settings.Title;
 				this.window.Owner = this.editor.Window;
+				this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Settings.icon", this.GetType().Assembly);
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowSettingsCloseClicked);
+				this.window.Root.MinSize = new Size(300, 435);
+
+				ResizeKnob resize = new ResizeKnob(this.window.Root);
+				resize.Anchor = AnchorStyles.BottomRight;
+				resize.Margins = new Margins(0, 0, 0, 0);
+				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
 				Panel topPart = new Panel(this.window.Root);
 				topPart.PreferredHeight = 20;
@@ -219,9 +224,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				toolBar.Items.Add(new IconSeparator());
 
 				this.quickList = new CellTable(bookQuick);
-				this.quickList.PreferredHeight = 259;
 				this.quickList.DefHeight = 21;
-				this.quickList.Dock = DockStyle.Top;
+				this.quickList.Dock = DockStyle.Fill;
 				this.quickList.StyleH = CellArrayStyles.Stretch | CellArrayStyles.Separator;
 				this.quickList.StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine;
 				this.quickList.Margins = new Margins (10, 10, 0, 0);
