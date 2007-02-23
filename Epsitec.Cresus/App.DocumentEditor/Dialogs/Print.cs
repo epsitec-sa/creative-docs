@@ -24,7 +24,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window = new Window();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
-				this.WindowInit("Print", 300, 350);
+				this.WindowInit("Print", 300, 370);
 				this.window.Text = Res.Strings.Dialog.Print.Title;
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
