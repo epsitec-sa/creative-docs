@@ -68,12 +68,14 @@ namespace Epsitec.App.DocumentEditor
 				}
 			}
 
-#if DEBUG
-			this.debugMode = DebugMode.DebugCommands;
-            //?this.debugMode = DebugMode.Release;
-#else
-			this.debugMode = DebugMode.Release;
-#endif
+			if (this.GetType ().Assembly.Location.Contains ("Debug"))
+			{
+				this.debugMode = DebugMode.DebugCommands;
+			}
+			else
+			{
+				this.debugMode = DebugMode.Release;
+			}
 
 			if ( !this.ReadGlobalSettings() )
 			{
