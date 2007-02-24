@@ -1359,4 +1359,5 @@
   <data id="0NA01">Windows XP</data>
   <data id="0OA01">Windows Vista</data>
   <data id="0LA01">ICO export settings</data>
+  <data id="0MA01">Format</data>
 </bundle>
