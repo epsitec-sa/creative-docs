@@ -126,7 +126,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			this.CloseWindow();
 
-			string filename = string.Format("{0}\\{1}", this.editor.CurrentDocument.ExportDirectory, this.editor.CurrentDocument.ExportFilename);
+			string filename = System.IO.Path.Combine (this.editor.CurrentDocument.ExportDirectory, this.editor.CurrentDocument.ExportFilename);
 			string err = this.editor.CurrentDocument.ExportPDF(filename);
 			this.editor.DialogError(err);
 		}

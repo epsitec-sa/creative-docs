@@ -51,6 +51,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_09C4C752CB1C49B9BBA7D78F4A4618E9"
+        "OwnerKey" = "8:_303C7042A09F44598761ED7F92BB9BD2"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_0D96E900761C40CAA67643AF8E1EE981"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -119,6 +125,12 @@
         {
         "MsmKey" = "8:_2D5238F610A36C6326A4F5A07E4FC451"
         "OwnerKey" = "8:_42BC534E4B9B9525779037475F77B461"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_303C7042A09F44598761ED7F92BB9BD2"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -304,13 +316,13 @@
         "Entry"
         {
         "MsmKey" = "8:_7DF6642BDB6A3A6AD26C8835061677EE"
-        "OwnerKey" = "8:_8B0013582ACE18A167B14ED9C34BE733"
+        "OwnerKey" = "8:_D92255BAB7921E856C4751B4F5AB1A62"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_7DF6642BDB6A3A6AD26C8835061677EE"
-        "OwnerKey" = "8:_D92255BAB7921E856C4751B4F5AB1A62"
+        "OwnerKey" = "8:_8B0013582ACE18A167B14ED9C34BE733"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1503,7 +1515,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common.Drawing.Images, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common.Drawing.Images, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_7DF6642BDB6A3A6AD26C8835061677EE"
@@ -2107,7 +2119,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Creative Docs .NET"
         "ProductCode" = "8:{2EB84613-6747-4387-B138-D3D9BFE8DBC5}"
-        "PackageCode" = "8:{92B2C9E6-76E2-444F-82FA-6A335C14C86F}"
+        "PackageCode" = "8:{6129E78D-2D96-4034-AD89-AEA6495351D2}"
         "UpgradeCode" = "8:{925CE84A-106F-439D-B0AA-6222B871FB71}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -2688,6 +2700,34 @@
         }
         "MergeModule"
         {
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_09C4C752CB1C49B9BBA7D78F4A4618E9"
+            {
+            "UseDynamicProperties" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "SourcePath" = "8:policy_8_0_microsoft_vc80_crt_x86.msm"
+                "Properties"
+                {
+                }
+            "LanguageId" = "3:0"
+            "Exclude" = "11:FALSE"
+            "Folder" = "8:"
+            "Feature" = "8:"
+            "IsolateTo" = "8:"
+            }
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_303C7042A09F44598761ED7F92BB9BD2"
+            {
+            "UseDynamicProperties" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
+            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
+                "Properties"
+                {
+                }
+            "LanguageId" = "3:0"
+            "Exclude" = "11:FALSE"
+            "Folder" = "8:"
+            "Feature" = "8:"
+            "IsolateTo" = "8:"
+            }
         }
         "ProjectOutput"
         {

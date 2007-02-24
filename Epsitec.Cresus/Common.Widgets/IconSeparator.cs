@@ -14,10 +14,15 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
-		
+
 		public IconSeparator(double breadth)
 		{
 			this.Breadth = breadth;
+		}
+
+		public IconSeparator(DockStyle dock)
+		{
+			this.Dock = dock;
 		}
 		
 		
