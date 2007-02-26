@@ -175,6 +175,12 @@ namespace Epsitec.Common.Document
 				//	avec le texte de bas niveau (format 64-bit) :
 				
 				ulong[] text = src.textNavigator.GetSelectedLowLevelText(0);
+				ulong marker = ~src.textNavigator.TextContext.Markers.Selected;
+
+				for (int i = 0; i < text.Length; i++)
+				{
+					text[i] &= marker;
+				}
 				
 				this.metaNavigator.MoveTo(Text.TextNavigator.Target.TextEnd, 1, 1, false);
 				this.metaNavigator.DeleteSelection();
