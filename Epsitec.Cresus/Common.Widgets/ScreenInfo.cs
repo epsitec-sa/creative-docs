@@ -147,7 +147,43 @@ namespace Epsitec.Common.Widgets
 			System.Windows.Forms.Screen screen = System.Windows.Forms.Screen.FromRectangle (new System.Drawing.Rectangle (ox, oy, dx, dy));
 			return screen == null ? null : new ScreenInfo (screen);
 		}
-		
+
+		/// <summary>
+		/// Fits the specified rectangle into the working area. This can be used
+		/// to make a window fully visible.
+		/// </summary>
+		/// <param name="rect">The rectangle to fit.</param>
+		/// <returns>The adjusted rectangle.</returns>
+		public static Drawing.Rectangle FitIntoWorkingArea(Drawing.Rectangle rect)
+		{
+			ScreenInfo si = ScreenInfo.Find (rect.Center);
+			Drawing.Rectangle area = si.WorkingArea;
+
+			rect.Width  = System.Math.Min (rect.Width, area.Width);
+			rect.Height = System.Math.Min (rect.Height, area.Height);
+
+			if (rect.Left < area.Left)		// dépasse à gauche ?
+			{
+				rect.Offset (area.Left-rect.Left, 0);
+			}
+
+			if (rect.Right > area.Right)	// dépasse à droite ?
+			{
+				rect.Offset (area.Right-rect.Right, 0);
+			}
+
+			if (rect.Bottom < area.Bottom)	// dépasse en bas ?
+			{
+				rect.Offset (0, area.Bottom-rect.Bottom);
+			}
+
+			if (rect.Top > area.Top)		// dépasse en haut ?
+			{
+				rect.Offset (0, area.Top-rect.Top);
+			}
+
+			return rect;
+		}
 		
 		
 		protected ScreenInfo(System.Windows.Forms.Screen screen)

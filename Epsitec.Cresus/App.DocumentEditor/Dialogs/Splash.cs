@@ -24,7 +24,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				double dx = 400;
 				double dy = 200;
-				Rectangle mw = this.globalSettings.MainWindow;
+				Rectangle mw = this.globalSettings.MainWindowBounds;
 				Rectangle wrect = new Rectangle(mw.Center.X-dx/2, mw.Center.Y-dy/2, dx, dy);
 
 				this.window = new Window();

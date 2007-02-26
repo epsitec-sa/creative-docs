@@ -11,7 +11,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 	/// <summary>
 	/// Dialogue pour ouvrir un document existant.
 	/// </summary>
-	public class FileSaveModel : AbstractFile
+	public class FileSaveModel : AbstractFileSave
 	{
 		public FileSaveModel(DocumentEditor editor) : base(editor)
 		{

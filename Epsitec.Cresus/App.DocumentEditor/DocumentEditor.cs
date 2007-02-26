@@ -1742,7 +1742,7 @@ namespace Epsitec.App.DocumentEditor
 				this.globalSettings.NewDocument = this.dlgFileNew.InitialDirectory;
 
 				string filename = this.dlgFileNew.FileName;
-				if (filename == GlobalSettings.NewEmptyDocument)  // nouveau document vide ?
+				if (filename == Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument)  // nouveau document vide ?
 				{
 					this.CreateDocument();
 					this.CurrentDocument.Modifier.New();
@@ -1859,7 +1859,7 @@ namespace Epsitec.App.DocumentEditor
 		void CommandLastModel(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			string filename = StructuredCommand.GetFieldValue (e.CommandState, "Name") as string;
-			if (filename == GlobalSettings.NewEmptyDocument)  // nouveau document vide ?
+			if (filename == Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument)  // nouveau document vide ?
 			{
 				this.CreateDocument();
 				this.CurrentDocument.Modifier.New();
@@ -5380,7 +5380,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			//	Ecrit le fichier des réglages de l'application.
 			this.globalSettings.IsFullScreen = this.Window.IsFullScreen;
-			this.globalSettings.MainWindow = this.Window.WindowPlacementNormalBounds;
+			this.globalSettings.MainWindowBounds = this.Window.WindowPlacementNormalBounds;
 
 			this.dlgAbout.Save();
 			this.dlgDownload.Save();

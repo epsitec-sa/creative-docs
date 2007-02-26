@@ -131,7 +131,7 @@ namespace Epsitec.Common.Document.Ribbons
 				MenuItem item = new MenuItem(cmd, "", filename, "", name);
 
 				string tooltip = this.globalSettings.LastModelGet(i);
-				if (tooltip != Settings.GlobalSettings.NewEmptyDocument)
+				if (tooltip != Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument)
 				{
 					ToolTip.Default.SetToolTip(item, tooltip);
 				}

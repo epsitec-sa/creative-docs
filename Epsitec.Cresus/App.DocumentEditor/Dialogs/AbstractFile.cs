@@ -1,29 +1,37 @@
-using Epsitec.Common.Widgets;
-using Epsitec.Common.Support;
-using Epsitec.Common.Drawing;
+using Epsitec.Common.Dialogs;
 using Epsitec.Common.Document;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.IO;
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 using Epsitec.Common.UI;
+using Epsitec.Common.Widgets;
 
 using System.IO;
 using System.Collections.Generic;
 
-namespace Epsitec.App.DocumentEditor.Dialogs
+namespace Epsitec.Common.Dialogs
 {
+	using FileListSettings=Epsitec.App.DocumentEditor.Dialogs.FileListSettings;
+	using FileListItem=Epsitec.App.DocumentEditor.Dialogs.FileListItem;
+	using FileListItemViewFactory=Epsitec.App.DocumentEditor.Dialogs.FileListItemViewFactory;
+	using Document=Epsitec.Common.Document.Document;
+	using Res=Epsitec.App.DocumentEditor.Res;
+
 	/// <summary>
 	/// Classe abstraite pour les dialogues FileNew, FileOpen et FileOpenModel.
 	/// </summary>
-	public abstract class AbstractFile : Abstract
+	public abstract class AbstractFile
 	{
 		static AbstractFile()
 		{
 			FileManager.Initialize ();
 		}
 
-		public AbstractFile(DocumentEditor editor) : base(editor)
+		public AbstractFile(IFavoritesSettings favoritesSettings)
 		{
+			this.favoritesSettings = favoritesSettings;
 			this.directoriesVisited = new List<FolderItem> ();
 			this.directoriesVisitedIndex = -1;
 
@@ -136,40 +144,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		public Document.FontIncludeMode FontIncludeMode
-		{
-			//	Mode d'inclusion des polices.
-			get
-			{
-				return this.fontIncludeMode;
-			}
-			set
-			{
-				if (this.fontIncludeMode != value)
-				{
-					this.fontIncludeMode = value;
-					this.UpdateFontIncludeMode();
-				}
-			}
-		}
-
-		public Document.ImageIncludeMode ImageIncludeMode
-		{
-			//	Mode d'inclusion des images.
-			get
-			{
-				return this.imageIncludeMode;
-			}
-			set
-			{
-				if (this.imageIncludeMode != value)
-				{
-					this.imageIncludeMode = value;
-					this.UpdateImageIncludeMode();
-				}
-			}
-		}
-
 		public bool IsRedirection
 		{
 			//	Indique si le dossier passé avec InitialDirectory a dû être
@@ -210,6 +184,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return this.selectedFileNames;
 			}
 		}
+
+		public abstract void Show();
+
+		public void Hide()
+		{
+			if (this.window != null)
+			{
+				this.window.Hide ();
+			}
+		}
+
+		public abstract void Save();
 
 
 		protected void SetInitialFolder(FolderItem folder, bool updateVisited)
@@ -274,7 +260,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.window.PreventAutoClose = true;
 			this.WindowInit(name, windowSize.Width, windowSize.Height, true);
 			this.window.Text = title;
-			this.window.Owner = this.editor.Window;
+			this.window.Owner = this.GetWindowOwner ();
 			this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
 			this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 			this.window.Root.MinSize = new Size(400, 200);
@@ -293,6 +279,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.CreateFileName();
 		}
 
+		protected virtual void CreateOptions()
+		{
+		}
+
 		protected void UpdateAll(int initialSelection, bool focusInFileName)
 		{
 			//	Mise à jour lorsque les widgets sont déjà créés, avant de montrer le dialogue.
@@ -303,8 +293,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.UpdateInitialDirectory();
 			this.UpdateInitialFileName();
 			this.UpdateButtons();
-			this.UpdateFontIncludeMode();
-			this.UpdateImageIncludeMode();
+			this.UpdateOptions ();
 
 			if (focusInFileName)
 			{
@@ -317,6 +306,44 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		protected virtual void UpdateOptions()
+		{
+		}
+
+		protected void WindowInit(string name, double dx, double dy, bool resizable)
+		{
+			this.window.ClientSize = new Size (dx, dy);
+			dx = this.window.WindowSize.Width;
+			dy = this.window.WindowSize.Height;  // taille avec le cadre
+
+			Point location = new Point ();
+			Size size = new Size ();
+			if (this.UpdateWindowBounds (name, ref location, ref size))
+			{
+				if (resizable)
+				{
+					this.window.ClientSize = size;
+					dx = this.window.WindowSize.Width;
+					dy = this.window.WindowSize.Height;  // taille avec le cadre
+				}
+
+				Rectangle rect = new Rectangle (location, new Size (dx, dy));
+				rect = ScreenInfo.FitIntoWorkingArea (rect);
+				this.window.WindowBounds = rect;
+			}
+			else
+			{
+				Rectangle cb = this.GetCurrentBounds ();
+				Rectangle rect = new Rectangle (cb.Center.X-dx/2, cb.Center.Y-dy/2, dx, dy);
+				this.window.WindowBounds = rect;
+			}
+		}
+
+		protected abstract bool UpdateWindowBounds(string name, ref Point location, ref Size size);
+
+		protected abstract Window GetWindowOwner();
+
+		protected abstract Rectangle GetCurrentBounds();
 
 		protected void CreateCommandDispatcher()
 		{
@@ -670,62 +697,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			ext.Dock = DockStyle.Right;
 		}
 
-		protected void CreateOptions()
-		{
-			//	Crée le panneau facultatif pour les options d'enregistrement.
-			this.optionsToolbar = new Widget(this.window.Root);
-			this.optionsToolbar.Margins = new Margins(0, 0, 8, 0);
-			this.optionsToolbar.Dock = DockStyle.Bottom;
-			this.optionsToolbar.TabNavigationMode = TabNavigationMode.None;
-			this.optionsToolbar.Visibility = false;
-
-			//	Options pour les polices.
-			GroupBox groupFont = new GroupBox(this.optionsToolbar);
-			groupFont.Text = Res.Strings.Dialog.Save.Include.Font.Title;
-			groupFont.PreferredWidth = 180;
-			groupFont.Padding = new Margins(4, 0, 0, 3);
-			groupFont.Dock = DockStyle.Left;
-			groupFont.Margins = new Margins(0, 8, 0, 0);
-
-			this.optionsFontNone = new RadioButton(groupFont);
-			this.optionsFontNone.Text = Res.Strings.Dialog.Save.Include.Font.None;
-			this.optionsFontNone.Dock = DockStyle.Top;
-			this.optionsFontNone.Clicked += new MessageEventHandler(this.HandleOptionsFontClicked);
-
-			this.optionsFontUsed = new RadioButton(groupFont);
-			this.optionsFontUsed.Text = Res.Strings.Dialog.Save.Include.Font.Used;
-			this.optionsFontUsed.Dock = DockStyle.Top;
-			this.optionsFontUsed.Clicked += new MessageEventHandler(this.HandleOptionsFontClicked);
-
-			this.optionsFontAll = new RadioButton(groupFont);
-			this.optionsFontAll.Text = Res.Strings.Dialog.Save.Include.Font.All;
-			this.optionsFontAll.Dock = DockStyle.Top;
-			this.optionsFontAll.Clicked += new MessageEventHandler(this.HandleOptionsFontClicked);
-
-			//	Options pour les images.
-			GroupBox groupImage = new GroupBox(this.optionsToolbar);
-			groupImage.Text = Res.Strings.Dialog.Save.Include.Image.Title;
-			groupImage.PreferredWidth = 180;
-			groupImage.Padding = new Margins(4, 0, 0, 3);
-			groupImage.Dock = DockStyle.Left;
-			groupImage.Margins = new Margins(0, 8, 0, 0);
-
-			this.optionsImageNone = new RadioButton(groupImage);
-			this.optionsImageNone.Text = Res.Strings.Dialog.Save.Include.Image.None;
-			this.optionsImageNone.Dock = DockStyle.Top;
-			this.optionsImageNone.Clicked += new MessageEventHandler(this.HandleOptionsImageClicked);
-
-			this.optionsImageDefined = new RadioButton(groupImage);
-			this.optionsImageDefined.Text = Res.Strings.Dialog.Save.Include.Image.Defined;
-			this.optionsImageDefined.Dock = DockStyle.Top;
-			this.optionsImageDefined.Clicked += new MessageEventHandler(this.HandleOptionsImageClicked);
-
-			this.optionsImageAll = new RadioButton(groupImage);
-			this.optionsImageAll.Text = Res.Strings.Dialog.Save.Include.Image.All;
-			this.optionsImageAll.Dock = DockStyle.Top;
-			this.optionsImageAll.Clicked += new MessageEventHandler(this.HandleOptionsImageClicked);
-		}
-
 		protected void CreateFooter()
 		{
 			//	Crée le pied du dialogue, avec les boutons 'ouvrir/enregistrer' et 'annuler'.
@@ -736,18 +707,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			footer.TabIndex = 6;
 			footer.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
-			if (this.isSave)
-			{
-				this.optionsExtend = new GlyphButton(footer);
-				this.optionsExtend.PreferredWidth = 16;
-				this.optionsExtend.ButtonStyle = ButtonStyle.Slider;
-				this.optionsExtend.AutoFocus = false;
-				this.optionsExtend.TabNavigationMode = TabNavigationMode.None;
-				this.optionsExtend.Dock = DockStyle.Left;
-				this.optionsExtend.Margins = new Margins(0, 0, 3, 3);
-				this.optionsExtend.Clicked += new MessageEventHandler(this.HandleOptionsExtendClicked);
-				ToolTip.Default.SetToolTip(this.optionsExtend, Res.Strings.Dialog.File.Tooltip.ExtendInclude);
-			}
+			this.CreateFooterOptions(footer);
 
 			//	Dans l'ordre de droite à gauche:
 			this.buttonCancel = new Button(footer);
@@ -786,6 +746,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.buttonOK.Enable = false;
 		}
 
+		protected virtual void CreateFooterOptions(Widget footer)
+		{
+		}
+
 
 		private void SelectFileNameInTable(string fileNameToSelect)
 		{
@@ -815,7 +779,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void UpdateFavorites()
 		{
 			//	Met à jour le panneau de gauche des favoris.
-			this.favoritesBigState.ActiveState = this.globalSettings.FavoritesBig ? ActiveState.Yes : ActiveState.No;
+			this.favoritesBigState.ActiveState = this.favoritesSettings.FavoritesBig ? ActiveState.Yes : ActiveState.No;
 
 			foreach (Widget widget in this.favorites.Panel.Children.Widgets)
 			{
@@ -845,7 +809,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.favoritesFixes = this.favoritesList.Count;
 
-			System.Collections.ArrayList list = this.globalSettings.FavoritesList;
+			System.Collections.ArrayList list = this.favoritesSettings.FavoritesList;
 			foreach (string dir in list)
 			{
 				FolderItem item = FileManager.GetFolderItem(dir, FolderQueryMode.NoIcons);
@@ -1197,7 +1161,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				if (this.isNewEmtpyDocument)
 				{
-					this.files.Add (new FileListItem (Misc.Icon ("New"), Common.Document.Settings.GlobalSettings.NewEmptyDocument, "-", Res.Strings.Dialog.New.EmptyDocument));  // première ligne avec 'nouveau document vide'
+					this.files.Add (new FileListItem (Misc.Icon ("New"), Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument, "-", Res.Strings.Dialog.New.EmptyDocument));  // première ligne avec 'nouveau document vide'
 				}
 			}
 		}
@@ -1232,12 +1196,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.toolbarExtend.GlyphShape = this.toolbar.Visibility ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 
-			if (this.optionsExtend != null)
-			{
-				this.optionsExtend.GlyphShape = this.optionsToolbar.Visibility ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
-			}
-
-			System.Collections.ArrayList list = this.globalSettings.FavoritesList;
+			System.Collections.ArrayList list = this.favoritesSettings.FavoritesList;
 			int sel = this.favoritesSelected-this.favoritesFixes;
 			this.favoritesAddState.Enable = this.IsFavoriteAddPossible;
 			this.favoritesRemoveState.Enable = (sel >= 0);
@@ -1245,7 +1204,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.favoritesDownState.Enable = (sel >= 0 && sel < list.Count-1);
 
 			FileListItem item = this.GetCurrentFileListItem ();
-			bool enable = (item != null && item.FullPath != Common.Document.Settings.GlobalSettings.NewEmptyDocument);
+			bool enable = (item != null && item.FullPath != Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument);
 			bool okEnable = enable;
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("UpdateButtons: {0} {1} {2}", this.fieldFileName.Text, this.IsTextFieldFocused, item));
@@ -1315,28 +1274,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 
 				this.ignoreChanged = false;
-			}
-		}
-
-		protected void UpdateFontIncludeMode()
-		{
-			//	Met à jour le mode d'inclusion des polices.
-			if (this.optionsFontNone != null)
-			{
-				this.optionsFontNone.ActiveState = (this.fontIncludeMode == Document.FontIncludeMode.None) ? ActiveState.Yes : ActiveState.No;
-				this.optionsFontUsed.ActiveState = (this.fontIncludeMode == Document.FontIncludeMode.Used) ? ActiveState.Yes : ActiveState.No;
-				this.optionsFontAll .ActiveState = (this.fontIncludeMode == Document.FontIncludeMode.All ) ? ActiveState.Yes : ActiveState.No;
-			}
-		}
-
-		protected void UpdateImageIncludeMode()
-		{
-			//	Met à jour le mode d'inclusion des images.
-			if (this.optionsFontNone != null)
-			{
-				this.optionsImageNone   .ActiveState = (this.imageIncludeMode == Document.ImageIncludeMode.None   ) ? ActiveState.Yes : ActiveState.No;
-				this.optionsImageDefined.ActiveState = (this.imageIncludeMode == Document.ImageIncludeMode.Defined) ? ActiveState.Yes : ActiveState.No;
-				this.optionsImageAll    .ActiveState = (this.imageIncludeMode == Document.ImageIncludeMode.All    ) ? ActiveState.Yes : ActiveState.No;
 			}
 		}
 
@@ -1575,7 +1512,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Ajoute un favoris.
 			if (this.IsFavoriteAddPossible)
 			{
-				System.Collections.ArrayList list = this.globalSettings.FavoritesList;
+				System.Collections.ArrayList list = this.favoritesSettings.FavoritesList;
 				list.Add(this.InitialDirectory);
 
 				this.UpdateFavorites();
@@ -1587,7 +1524,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void FavoriteRemove()
 		{
 			//	Supprime un favoris.
-			System.Collections.ArrayList list = this.globalSettings.FavoritesList;
+			System.Collections.ArrayList list = this.favoritesSettings.FavoritesList;
 			int sel = this.favoritesSelected-this.favoritesFixes;
 
 			if (sel >= 0)
@@ -1603,7 +1540,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void FavoriteUp()
 		{
 			//	Monte un favoris dans la liste.
-			System.Collections.ArrayList list = this.globalSettings.FavoritesList;
+			System.Collections.ArrayList list = this.favoritesSettings.FavoritesList;
 			int sel = this.favoritesSelected-this.favoritesFixes;
 
 			if (sel >= 1)
@@ -1621,7 +1558,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void FavoriteDown()
 		{
 			//	Descend un favoris dans la liste.
-			System.Collections.ArrayList list = this.globalSettings.FavoritesList;
+			System.Collections.ArrayList list = this.favoritesSettings.FavoritesList;
 			int sel = this.favoritesSelected-this.favoritesFixes;
 
 			if (sel >= 0 && sel < list.Count-1)
@@ -1642,12 +1579,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if (this.favoritesBigState.ActiveState == ActiveState.No)
 			{
 				this.favoritesBigState.ActiveState = ActiveState.Yes;
-				this.globalSettings.FavoritesBig = true;
+				this.favoritesSettings.FavoritesBig = true;
 			}
 			else
 			{
 				this.favoritesBigState.ActiveState = ActiveState.No;
-				this.globalSettings.FavoritesBig = false;
+				this.favoritesSettings.FavoritesBig = false;
 			}
 
 			foreach (Widget widget in this.favorites.Panel.Children.Widgets)
@@ -1808,17 +1745,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected bool PromptForOverwriting()
 		{
 			//	Si requis, demande s'il faut écraser le fichier ?
-			if (!this.isSave && this.selectedFileName != Common.Document.Settings.GlobalSettings.NewEmptyDocument && !System.IO.File.Exists(this.selectedFileName))  // fichier n'existe pas ?
+			if (!this.isSave && this.selectedFileName != Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument && !System.IO.File.Exists (this.selectedFileName))  // fichier n'existe pas ?
 			{
+#if false //#fix
 				string message = string.Format(Res.Strings.Dialog.Question.Open.File, Misc.ExtractName(this.selectedFileName), this.selectedFileName);
 				Common.Dialogs.DialogResult result = this.editor.DialogError(message);
 				this.selectedFileName = null;
 				this.selectedFileNames = null;
 				return false;  // ne pas fermer le dialogue
+#endif
 			}
 
 			if (this.isSave && System.IO.File.Exists(this.selectedFileName))  // fichier existe déjà ?
 			{
+#if false //#fix
 				string message = string.Format(Res.Strings.Dialog.Question.Save.File, Misc.ExtractName(this.selectedFileName), this.selectedFileName);
 				Common.Dialogs.DialogResult result = this.editor.DialogQuestion(message);
 				if (result != Common.Dialogs.DialogResult.Yes)
@@ -1827,6 +1767,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					this.selectedFileNames = null;
 					return false;  // ne pas fermer le dialogue
 				}
+#endif
 			}
 
 			return true;  // il faudra fermer le dialogue
@@ -1967,12 +1908,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleToolbarExtendClicked(object sender, MessageEventArgs e)
 		{
 			this.toolbar.Visibility = !this.toolbar.Visibility;
-			this.UpdateButtons();
-		}
-
-		private void HandleOptionsExtendClicked(object sender, MessageEventArgs e)
-		{
-			this.optionsToolbar.Visibility = !this.optionsToolbar.Visibility;
 			this.UpdateButtons();
 		}
 
@@ -2182,44 +2117,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.ignoreChanged = false;
 		}
 
-		private void HandleOptionsFontClicked(object sender, MessageEventArgs e)
-		{
-			//	Un bouton radio pour le mode d'inclusion des polices a été cliqué.
-			if (sender == this.optionsFontNone)
-			{
-				this.FontIncludeMode = Document.FontIncludeMode.None;
-			}
-			
-			if (sender == this.optionsFontUsed)
-			{
-				this.FontIncludeMode = Document.FontIncludeMode.Used;
-			}
-			
-			if (sender == this.optionsFontAll)
-			{
-				this.FontIncludeMode = Document.FontIncludeMode.All;
-			}
-		}
-
-		private void HandleOptionsImageClicked(object sender, MessageEventArgs e)
-		{
-			//	Un bouton radio pour le mode d'inclusion des images a été cliqué.
-			if (sender == this.optionsImageNone)
-			{
-				this.ImageIncludeMode = Document.ImageIncludeMode.None;
-			}
-
-			if (sender == this.optionsImageDefined)
-			{
-				this.ImageIncludeMode = Document.ImageIncludeMode.Defined;
-			}
-
-			if (sender == this.optionsImageAll)
-			{
-				this.ImageIncludeMode = Document.ImageIncludeMode.All;
-			}
-		}
-
 		private void HandleSliderChanged(object sender)
 		{
 			//	Slider pour la taille des miniatures changé.
@@ -2246,11 +2143,23 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.CloseWindow();
 		}
 
-		protected override void CloseWindow()
+		protected void CloseWindow()
 		{
 			this.CancelPendingJobs ();
-			base.CloseWindow ();
+			this.window.Owner.MakeActive ();
+			this.window.Hide ();
+			this.OnClosed ();
 		}
+		
+		protected virtual void OnClosed()
+		{
+			if (this.Closed != null)
+			{
+				this.Closed (this);
+			}
+		}
+
+		public event Epsitec.Common.Support.EventHandler Closed;
 
 		private void HandleButtonCancelClicked(object sender, MessageEventArgs e)
 		{
@@ -2276,8 +2185,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-
-		protected GlyphButton				toolbarExtend;
+		protected Window window;
+		protected IFavoritesSettings favoritesSettings;
+		protected GlyphButton toolbarExtend;
 		protected HToolBar					toolbar;
 		protected GlyphButton				navigateCombo;
 		protected Scrollable				favorites;
@@ -2289,14 +2199,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected TextFieldEx				fieldRename;
 		protected Button					buttonOK;
 		protected Button					buttonCancel;
-		protected GlyphButton				optionsExtend;
-		protected Widget					optionsToolbar;
-		protected RadioButton				optionsFontNone;
-		protected RadioButton				optionsFontUsed;
-		protected RadioButton				optionsFontAll;
-		protected RadioButton				optionsImageNone;
-		protected RadioButton				optionsImageDefined;
-		protected RadioButton				optionsImageAll;
 
 		private string						fileExtension;
 		private string						fileFilterPattern;
@@ -2309,8 +2211,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected FolderItem				initialFolder;
 		protected FolderItemIcon			initialSmallIcon;
 		protected string					initialFileName;
-		protected Document.FontIncludeMode	fontIncludeMode;
-		protected Document.ImageIncludeMode	imageIncludeMode;
 		protected string					selectedFileName;
 		protected string[]					selectedFileNames;
 		protected FileListItem				renameSelected;

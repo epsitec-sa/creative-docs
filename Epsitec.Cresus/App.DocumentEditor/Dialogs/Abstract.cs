@@ -69,7 +69,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 
 				Rectangle rect = new Rectangle(location, new Size(dx, dy));
-				rect = GlobalSettings.WindowClip(rect);
+				rect = ScreenInfo.FitIntoWorkingArea (rect);
 				this.window.WindowBounds = rect;
 			}
 			else
@@ -94,7 +94,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				if ( this.editor.Window == null )
 				{
-					return this.globalSettings.MainWindow;
+					return this.globalSettings.MainWindowBounds;
 				}
 				else
 				{

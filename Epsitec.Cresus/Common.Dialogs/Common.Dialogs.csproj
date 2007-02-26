@@ -142,6 +142,7 @@
     <Compile Include="AbstractDialog.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AbstractFileDialog.cs" />
     <Compile Include="AbstractMessageDialog.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -190,6 +191,7 @@
     <Compile Include="IDialogDesignerFactory.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IFavoritesSettings.cs" />
     <Compile Include="Message.cs">
       <SubType>Code</SubType>
     </Compile>

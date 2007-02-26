@@ -26,7 +26,7 @@ namespace Epsitec.Common.Document.Settings
 	/// La classe GlobalSettings mémorise les paramètres de l'application.
 	/// </summary>
 	[System.Serializable()]
-	public class GlobalSettings : ISerializable
+	public class GlobalSettings : ISerializable, Epsitec.Common.Dialogs.IFavoritesSettings
 	{
 		public GlobalSettings()
 		{
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Document.Settings
 				try
 				{
 					string[] list = System.IO.Directory.GetFiles(this.initialDirectory, "*.crmod");
-					this.LastModelAdd(GlobalSettings.NewEmptyDocument);
+					this.LastModelAdd(Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument);
 					for (int i=0; i<this.lastModelMax-1; i++)
 					{
 						if (i >= list.Length)  break;
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
-		public Drawing.Rectangle MainWindow
+		public Drawing.Rectangle MainWindowBounds
 		{
 			//	Fenêtre principale de l'application.
 			get
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Document.Settings
 					Rectangle area = si.WorkingArea;
 					rect = new Rectangle(area.Center-rect.Size/2, area.Center+rect.Size/2);
 				}
-				return GlobalSettings.WindowClip(rect);
+				return ScreenInfo.FitIntoWorkingArea(rect);
 			}
 
 			set
@@ -307,7 +307,7 @@ namespace Epsitec.Common.Document.Settings
 		public string LastModelGetShort(int index)
 		{
 			string last = this.LastModelGet(index);
-			if (last == GlobalSettings.NewEmptyDocument)  // nouveau document vide ?
+			if (last == Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument)  // nouveau document vide ?
 			{
 				return Res.Strings.File.Model.Empty;
 			}
@@ -517,40 +517,6 @@ namespace Epsitec.Common.Document.Settings
 			{
 				this.dateChecker = value;
 			}
-		}
-
-
-		public static Drawing.Rectangle WindowClip(Drawing.Rectangle rect)
-		{
-			//	Adapte un rectangle pour qu'il entre dans l'écran, si possible
-			//	sans modifier ses dimensions. Utilisé pour les dialogues.
-			ScreenInfo si = ScreenInfo.Find(rect.Center);
-			Rectangle area = si.WorkingArea;
-
-			rect.Width  = System.Math.Min(rect.Width,  area.Width );
-			rect.Height = System.Math.Min(rect.Height, area.Height);
-
-			if ( rect.Left < area.Left )  // dépasse à gauche ?
-			{
-				rect.Offset(area.Left-rect.Left, 0);
-			}
-
-			if ( rect.Right > area.Right )  // dépasse à droite ?
-			{
-				rect.Offset(area.Right-rect.Right, 0);
-			}
-
-			if ( rect.Bottom < area.Bottom )  // dépasse en bas ?
-			{
-				rect.Offset(0, area.Bottom-rect.Bottom);
-			}
-
-			if ( rect.Top > area.Top )  // dépasse en haut ?
-			{
-				rect.Offset(0, area.Top-rect.Top);
-			}
-
-			return rect;
 		}
 
 
@@ -984,11 +950,6 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 		#endregion
-
-
-		//	Chaîne utilisée à la place du nom de fichier modèle (*.crmod) lorsque la
-		//	commande 'Nouveau document vide' est actionnée.
-		public static readonly string NewEmptyDocument = "#NewEmptyDocument#";
 
 
 		protected Drawing.Point					windowLocation;
