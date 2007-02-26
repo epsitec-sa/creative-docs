@@ -297,17 +297,17 @@ namespace Epsitec.Common.Document.Properties
 
 		public static Opac.FreeImage.LoadSaveMode FilterQualityToMode(double quality)
 		{
-		         if (quality >= 0.90)  return Opac.FreeImage.LoadSaveMode.JpegQualitySuperb;   // 100
-			else if (quality >= 0.60)  return Opac.FreeImage.LoadSaveMode.JpegQualityGood;     // 75
-			else if (quality >= 0.40)  return Opac.FreeImage.LoadSaveMode.JpegQualityNormal;   // 50
-			else if (quality >= 0.20)  return Opac.FreeImage.LoadSaveMode.JpegQualityAverage;  // 25
-			else                       return Opac.FreeImage.LoadSaveMode.JpegQualityBad;      // 10
+			//	Conversion de la qualité en mode pour FreeImage.SaveToMemory.
+		         if (quality >= 0.87)  return Opac.FreeImage.LoadSaveMode.JpegQualitySuperb;   // nominal = 1.00
+			else if (quality >= 0.62)  return Opac.FreeImage.LoadSaveMode.JpegQualityGood;     // nominal = 0.75
+			else if (quality >= 0.37)  return Opac.FreeImage.LoadSaveMode.JpegQualityNormal;   // nominal = 0.50
+			else if (quality >= 0.17)  return Opac.FreeImage.LoadSaveMode.JpegQualityAverage;  // nominal = 0.25
+			else                       return Opac.FreeImage.LoadSaveMode.JpegQualityBad;      // nominal = 0.10
 		}
 
 		public static Magick.FilterType FilterToMagick(ImageFilter filter)
 		{
 			//	Conversion du type de filtre pour la librairie Magick.
-			//	TODO: à vérifier !!!
 			switch (filter.Mode)
 			{
 				case ImageFilteringMode.None:      return Magick.FilterType.Point;
