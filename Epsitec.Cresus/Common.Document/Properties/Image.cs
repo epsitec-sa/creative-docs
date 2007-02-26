@@ -295,28 +295,6 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-#if false
-		public static Magick.FilterType FilterToMagick(ImageFilter filter)
-		{
-			//	Conversion du type de filtre pour la librairie Magick.
-			switch (filter.Mode)
-			{
-				case ImageFilteringMode.None:      return Magick.FilterType.Point;
-				case ImageFilteringMode.Bilinear:  return Magick.FilterType.Box;
-				case ImageFilteringMode.Bicubic:   return Magick.FilterType.Cubic;
-				case ImageFilteringMode.Quadric:   return Magick.FilterType.Quadratic;
-				case ImageFilteringMode.Blackman:  return Magick.FilterType.Blackman;
-				case ImageFilteringMode.Gaussian:  return Magick.FilterType.Gaussian;
-				case ImageFilteringMode.Catrom:    return Magick.FilterType.Catrom;
-				case ImageFilteringMode.Mitchell:  return Magick.FilterType.Mitchell;
-				case ImageFilteringMode.Lanczos:   return Magick.FilterType.Lanczos;
-				case ImageFilteringMode.Bessel:    return Magick.FilterType.Bessel;
-				case ImageFilteringMode.Sinc:      return Magick.FilterType.Sinc;
-				default:                           return Magick.FilterType.Cubic;
-			}
-		}
-#endif
-
 		public static Opac.FreeImage.LoadSaveMode FilterQualityToMode(double quality)
 		{
 			//	Conversion de la qualité en mode pour FreeImage.SaveToMemory.
