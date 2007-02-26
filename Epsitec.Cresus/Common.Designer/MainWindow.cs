@@ -38,7 +38,7 @@ namespace Epsitec.Common.Designer
 			this.context = new PanelsContext ();
 		}
 
-		public void Show(Window parent)
+		public void Show(Window parentWindow)
 		{
 			//	Crée et montre la fenêtre de l'éditeur.
 			if ( this.window == null )
@@ -47,8 +47,23 @@ namespace Epsitec.Common.Designer
 
 				this.window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;
 
-				Point parentCenter = parent.WindowBounds.Center;
-				this.window.WindowBounds = new Rectangle(parentCenter.X-1000/2, parentCenter.Y-700/2, 1000, 700);
+				Point parentCenter;
+				Rectangle windowBounds;
+
+				if (parentWindow == null)
+				{
+					Rectangle area = ScreenInfo.GlobalArea;
+					parentCenter = area.Center;
+				}
+				else
+				{
+					parentCenter = parentWindow.WindowBounds.Center;
+				}
+
+				windowBounds = new Rectangle (parentCenter.X-1000/2, parentCenter.Y-700/2, 1000, 700);
+				windowBounds = ScreenInfo.FitIntoWorkingArea (windowBounds);
+
+				this.window.WindowBounds = windowBounds;
 				this.window.Root.MinSize = new Size(500, 400);
 				this.window.Text = Res.Strings.Application.Title;
 				this.window.Name = "Application";  // utilisé pour générer "QuitApplication" !

@@ -129,7 +129,7 @@ namespace Epsitec.Common.Document.Settings
 				{
 					//	Lors de la première exécution, met l'application au centre
 					//	de la fenêtre.
-					ScreenInfo si = ScreenInfo.Find(new Drawing.Point(0,0));
+					ScreenInfo si = ScreenInfo.Find(Message.CurrentState.LastScreenPosition);
 					Rectangle area = si.WorkingArea;
 					rect = new Rectangle(area.Center-rect.Size/2, area.Center+rect.Size/2);
 				}

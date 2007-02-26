@@ -24,11 +24,6 @@ namespace Epsitec.Common.Dialogs
 	/// </summary>
 	public abstract class AbstractFile
 	{
-		static AbstractFile()
-		{
-			FileManager.Initialize ();
-		}
-
 		public AbstractFile(IFavoritesSettings favoritesSettings)
 		{
 			this.favoritesSettings = favoritesSettings;
@@ -2185,7 +2180,13 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected Window					window;
+		static AbstractFile()
+		{
+			FileManager.Initialize ();
+		}
+
+		
+		protected Window window;
 		private IFavoritesSettings			favoritesSettings;
 		private GlyphButton					toolbarExtend;
 		private HToolBar					toolbar;
