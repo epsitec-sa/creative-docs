@@ -19,6 +19,7 @@ namespace App.Designer
 				@"S:\Epsitec.Cresus\Common.Widgets\Resources",
 				@"S:\Epsitec.Cresus\Common.Types\Resources",
 				@"S:\Epsitec.Cresus\Common.Document\Resources",
+				@"S:\Epsitec.Cresus\Common.Dialogs\Resources",
 				@"S:\Epsitec.Cresus\Common.Designer\Resources",
 				@"S:\Epsitec.Cresus\App.DocumentEditor\Resources",
 			};

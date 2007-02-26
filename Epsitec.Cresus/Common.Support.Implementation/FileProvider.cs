@@ -193,6 +193,19 @@ namespace Epsitec.Common.Support.Implementation
 					}
 				}
 			}
+
+			modules.Sort (
+				delegate (ResourceModuleInfo a, ResourceModuleInfo b)
+				{
+					if (a.Name == b.Name)
+					{
+						return a.Id.CompareTo (b.Id);
+					}
+					else
+					{
+						return string.CompareOrdinal (a.Name, b.Name);
+					}
+				});
 			
 			return modules.ToArray ();
 		}

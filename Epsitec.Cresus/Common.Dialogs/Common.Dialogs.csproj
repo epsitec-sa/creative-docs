@@ -204,6 +204,7 @@
     <Compile Include="PrinterDocumentProperties.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Res.cs" />
     <Compile Include="SelectFromList.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -213,6 +214,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\Information.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Common.Dialogs\Captions.00.resource" />
+    <Content Include="Resources\Common.Dialogs\module.info" />
+    <Content Include="Resources\Common.Dialogs\Strings.00.resource" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
