@@ -17,8 +17,7 @@ namespace Epsitec.Common.Dialogs
 	using FileListItem=Epsitec.App.DocumentEditor.Dialogs.FileListItem;
 	using FileListItemViewFactory=Epsitec.App.DocumentEditor.Dialogs.FileListItemViewFactory;
 	using Document=Epsitec.Common.Document.Document;
-	using Res=Epsitec.App.DocumentEditor.Res;
-
+	
 	/// <summary>
 	/// Classe abstraite pour les dialogues FileNew, FileOpen et FileOpenModel.
 	/// </summary>
@@ -345,17 +344,17 @@ namespace Epsitec.Common.Dialogs
 			this.dispatcher = new CommandDispatcher();
 			this.context = new CommandContext();
 
-			this.prevState            = this.CreateCommandState(Res.Commands.Dialog.File.NavigatePrev, this.NavigatePrev);
-			this.nextState            = this.CreateCommandState(Res.Commands.Dialog.File.NavigateNext, this.NavigateNext);
-			this.parentState          = this.CreateCommandState(Res.Commands.Dialog.File.ParentDirectory, this.ParentDirectory);
-			this.newState             = this.CreateCommandState(Res.Commands.Dialog.File.NewDirectory, this.NewDirectory);
-			this.renameState          = this.CreateCommandState(Res.Commands.Dialog.File.Rename, this.RenameStarting);
-			this.deleteState          = this.CreateCommandState(Res.Commands.Dialog.File.Delete, this.FileDelete);
-			this.favoritesAddState    = this.CreateCommandState(Res.Commands.Dialog.File.Favorites.Add, this.FavoriteAdd);
-			this.favoritesRemoveState = this.CreateCommandState(Res.Commands.Dialog.File.Favorites.Remove, this.FavoriteRemove);
-			this.favoritesUpState     = this.CreateCommandState(Res.Commands.Dialog.File.Favorites.Up, this.FavoriteUp);
-			this.favoritesDownState   = this.CreateCommandState(Res.Commands.Dialog.File.Favorites.Down, this.FavoriteDown);
-			this.favoritesBigState    = this.CreateCommandState(Res.Commands.Dialog.File.Favorites.Big, this.FavoriteBig);
+			this.prevState            = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.NavigatePrev, this.NavigatePrev);
+			this.nextState            = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.NavigateNext, this.NavigateNext);
+			this.parentState          = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.ParentDirectory, this.ParentDirectory);
+			this.newState             = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.NewDirectory, this.NewDirectory);
+			this.renameState          = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.Rename, this.RenameStarting);
+			this.deleteState          = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.Delete, this.FileDelete);
+			this.favoritesAddState    = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.Favorites.Add, this.FavoriteAdd);
+			this.favoritesRemoveState = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.Favorites.Remove, this.FavoriteRemove);
+			this.favoritesUpState     = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.Favorites.Up, this.FavoriteUp);
+			this.favoritesDownState   = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.Favorites.Down, this.FavoriteDown);
+			this.favoritesBigState    = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.Favorites.Big, this.FavoriteBig);
 
 			CommandDispatcher.SetDispatcher(this.window, this.dispatcher);
 			CommandContext.SetContext(this.window, this.context);
@@ -374,7 +373,7 @@ namespace Epsitec.Common.Dialogs
 			ResizeKnob resize = new ResizeKnob(this.window.Root);
 			resize.Anchor = AnchorStyles.BottomRight;
 			resize.Margins = new Margins(0, -8, 0, -8);
-			ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
+			ToolTip.Default.SetToolTip (resize, Epsitec.App.DocumentEditor.Res.Strings.Dialog.Tooltip.Resize);
 		}
 
 		protected void CreateTable(double cellHeight)
@@ -525,10 +524,10 @@ namespace Epsitec.Common.Dialogs
 			this.toolbarExtend.Dock = DockStyle.Left;
 			this.toolbarExtend.Margins = new Margins(0, 0, 2, 2);
 			this.toolbarExtend.Clicked += new MessageEventHandler(this.HandleToolbarExtendClicked);
-			ToolTip.Default.SetToolTip(this.toolbarExtend, Res.Strings.Dialog.File.Tooltip.ExtendToolbar);
+			ToolTip.Default.SetToolTip (this.toolbarExtend, Epsitec.App.DocumentEditor.Res.Strings.Dialog.File.Tooltip.ExtendToolbar);
 
 			StaticText label = new StaticText(group);
-			label.Text = this.isSave ? Res.Strings.Dialog.File.LabelPath.Save : Res.Strings.Dialog.File.LabelPath.Open;
+			label.Text = this.isSave ? Epsitec.App.DocumentEditor.Res.Strings.Dialog.File.LabelPath.Save : Epsitec.App.DocumentEditor.Res.Strings.Dialog.File.LabelPath.Open;
 			label.PreferredWidth = 140-16-10-1;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Dock = DockStyle.Left;
@@ -560,7 +559,7 @@ namespace Epsitec.Common.Dialogs
 			this.navigateCombo.Dock = DockStyle.Right;
 			this.navigateCombo.Margins = new Margins(0, 10, 0, 0);
 			this.navigateCombo.Clicked += new MessageEventHandler(this.HandleNavigateComboClicked);
-			ToolTip.Default.SetToolTip(this.navigateCombo, Res.Strings.Dialog.File.Tooltip.VisitedMenu);
+			ToolTip.Default.SetToolTip (this.navigateCombo, Epsitec.App.DocumentEditor.Res.Strings.Dialog.File.Tooltip.VisitedMenu);
 
 			IconButton buttonNext = new IconButton(group);
 			buttonNext.AutoFocus = false;
@@ -632,7 +631,7 @@ namespace Epsitec.Common.Dialogs
 			this.slider.LargeChange = 10.0M;
 			this.slider.Resolution = 1.0M;
 			this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
-			ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.File.Tooltip.PreviewSize);
+			ToolTip.Default.SetToolTip (this.slider, Epsitec.App.DocumentEditor.Res.Strings.Dialog.File.Tooltip.PreviewSize);
 			this.toolbar.Items.Add(this.slider);
 
 			//	Dans l'ordre de droite à gauche:
@@ -669,7 +668,7 @@ namespace Epsitec.Common.Dialogs
 			group.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			StaticText label = new StaticText(group);
-			label.Text = this.isModel ? Res.Strings.Dialog.File.LabelMod : Res.Strings.Dialog.File.LabelDoc;
+			label.Text = this.isModel ? Epsitec.App.DocumentEditor.Res.Strings.Dialog.File.LabelMod : Epsitec.App.DocumentEditor.Res.Strings.Dialog.File.LabelDoc;
 			label.PreferredWidth = 140-10-1;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Dock = DockStyle.Left;
@@ -707,7 +706,7 @@ namespace Epsitec.Common.Dialogs
 			//	Dans l'ordre de droite à gauche:
 			this.buttonCancel = new Button(footer);
 			this.buttonCancel.PreferredWidth = 75;
-			this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
+			this.buttonCancel.Text = Epsitec.App.DocumentEditor.Res.Strings.Dialog.Button.Cancel;
 			this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 			this.buttonCancel.Dock = DockStyle.Right;
 			this.buttonCancel.Margins = new Margins(6, 0, 0, 0);
@@ -718,15 +717,15 @@ namespace Epsitec.Common.Dialogs
 			string ok;
 			if (this.displayNewEmtpyDocument)
 			{
-				ok = Res.Strings.Dialog.File.Button.New;
+				ok = Epsitec.App.DocumentEditor.Res.Strings.Dialog.File.Button.New;
 			}
 			else if (this.isSave)
 			{
-				ok = Res.Strings.Dialog.File.Button.Save;
+				ok = Epsitec.App.DocumentEditor.Res.Strings.Dialog.File.Button.Save;
 			}
 			else
 			{
-				ok = Res.Strings.Dialog.File.Button.Open;
+				ok = Epsitec.App.DocumentEditor.Res.Strings.Dialog.File.Button.Open;
 			}
 
 			this.buttonOK = new Button(footer);
@@ -1156,7 +1155,7 @@ namespace Epsitec.Common.Dialogs
 
 				if (this.displayNewEmtpyDocument)
 				{
-					this.files.Add (new FileListItem (Misc.Icon ("New"), Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument, "-", Res.Strings.Dialog.New.EmptyDocument));  // première ligne avec 'nouveau document vide'
+					this.files.Add (new FileListItem (Misc.Icon ("New"), Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument, "-", Epsitec.App.DocumentEditor.Res.Strings.Dialog.New.EmptyDocument));  // première ligne avec 'nouveau document vide'
 				}
 			}
 		}
@@ -1172,8 +1171,8 @@ namespace Epsitec.Common.Dialogs
 
 			settings.DefineFilterPattern (this.fileFilterPattern);
 
-			settings.AddDefaultDescription (".crdoc", Res.Strings.Dialog.File.Document);
-			settings.AddDefaultDescription (".crmod", Res.Strings.Dialog.File.Model);
+			settings.AddDefaultDescription (".crdoc", Epsitec.App.DocumentEditor.Res.Strings.Dialog.File.Document);
+			settings.AddDefaultDescription (".crmod", Epsitec.App.DocumentEditor.Res.Strings.Dialog.File.Model);
 			return settings;
 		}
 
@@ -1335,7 +1334,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				for (int i=1; i<100; i++)
 				{
-					string newDir = string.Concat(this.initialFolder.FullPath, "\\", Res.Strings.Dialog.File.NewDirectoryName);
+					string newDir = string.Concat (this.initialFolder.FullPath, "\\", Epsitec.App.DocumentEditor.Res.Strings.Dialog.File.NewDirectoryName);
 					if (i > 1)
 					{
 						newDir = string.Concat(newDir, " (", i.ToString(), ")");
@@ -1743,7 +1742,7 @@ namespace Epsitec.Common.Dialogs
 			if (!this.isSave && this.selectedFileName != Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument && !System.IO.File.Exists (this.selectedFileName))  // fichier n'existe pas ?
 			{
 #if false //#fix
-				string message = string.Format(Res.Strings.Dialog.Question.Open.File, Misc.ExtractName(this.selectedFileName), this.selectedFileName);
+				string message = string.Format(Epsitec.App.DocumentEditor.Res.Strings.Dialog.Question.Open.File, Misc.ExtractName(this.selectedFileName), this.selectedFileName);
 				Common.Dialogs.DialogResult result = this.editor.DialogError(message);
 				this.selectedFileName = null;
 				this.selectedFileNames = null;
@@ -1754,7 +1753,7 @@ namespace Epsitec.Common.Dialogs
 			if (this.isSave && System.IO.File.Exists(this.selectedFileName))  // fichier existe déjà ?
 			{
 #if false //#fix
-				string message = string.Format(Res.Strings.Dialog.Question.Save.File, Misc.ExtractName(this.selectedFileName), this.selectedFileName);
+				string message = string.Format(Epsitec.App.DocumentEditor.Res.Strings.Dialog.Question.Save.File, Misc.ExtractName(this.selectedFileName), this.selectedFileName);
 				Common.Dialogs.DialogResult result = this.editor.DialogQuestion(message);
 				if (result != Common.Dialogs.DialogResult.Yes)
 				{
@@ -2083,7 +2082,7 @@ namespace Epsitec.Common.Dialogs
 		protected void ComboAdd(FolderItem folderItem, FileListItem parent)
 		{
 			FileListItem item = new FileListItem(folderItem);
-			item.DefaultDescription = this.isModel ? Res.Strings.Dialog.File.Model : Res.Strings.Dialog.File.Document;
+			item.DefaultDescription = this.isModel ? Epsitec.App.DocumentEditor.Res.Strings.Dialog.File.Model : Epsitec.App.DocumentEditor.Res.Strings.Dialog.File.Document;
 			item.Parent = parent;
 			item.SortAccordingToLevel = true;
 			this.comboFolders.Add(item);
