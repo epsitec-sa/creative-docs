@@ -283,6 +283,27 @@ namespace Epsitec.Common.Document.Properties
 
 
 		#region ImageFilter
+		public static Opac.FreeImage.Filter FilterToFreeImage(ImageFilter filter)
+		{
+			//	Conversion du type de filtre pour la librairie Magick.
+			switch (filter.Mode)
+			{
+				case ImageFilteringMode.None:      return Opac.FreeImage.Filter.Box;
+				case ImageFilteringMode.Bilinear:  return Opac.FreeImage.Filter.Bilinear;
+				case ImageFilteringMode.Bicubic:   return Opac.FreeImage.Filter.Bicubic;
+				default:                           return Opac.FreeImage.Filter.Bilinear;
+			}
+		}
+
+		public static Opac.FreeImage.LoadSaveMode FilterQualityToMode(double quality)
+		{
+		         if (quality >= 0.90)  return Opac.FreeImage.LoadSaveMode.JpegQualitySuperb;   // 100
+			else if (quality >= 0.60)  return Opac.FreeImage.LoadSaveMode.JpegQualityGood;     // 75
+			else if (quality >= 0.40)  return Opac.FreeImage.LoadSaveMode.JpegQualityNormal;   // 50
+			else if (quality >= 0.20)  return Opac.FreeImage.LoadSaveMode.JpegQualityAverage;  // 25
+			else                       return Opac.FreeImage.LoadSaveMode.JpegQualityBad;      // 10
+		}
+
 		public static Magick.FilterType FilterToMagick(ImageFilter filter)
 		{
 			//	Conversion du type de filtre pour la librairie Magick.

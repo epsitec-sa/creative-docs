@@ -1517,6 +1517,7 @@ namespace Epsitec.Common.Document.PDF
 		{
 			//	Crée une image.
 			//	Création d'une instance de Magick.Image à partir du nom de fichier.
+#if false
 			byte[] imageData = image.Cache.GetImageData ();
 			
 			Magick.Blob blob = new Magick.Blob();
@@ -1849,8 +1850,290 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteLine("endstream endobj");
 
 			return useMask;
+#else
+			byte[] imageData = image.Cache.GetImageData();
+			Opac.FreeImage.Image fi = Opac.FreeImage.Image.Load(imageData);
+
+			Margins crop = image.Crop;
+			if (crop != Margins.Zero)  // recadrage nécessaire ?
+			{
+				fi.Crop((int)crop.Left, (int)crop.Top, (int)crop.Right, (int)crop.Bottom);
+			}
+
+			bool useMask = false;
+			int dx = fi.GetWidth();
+			int dy = fi.GetHeight();
+
+			//	Mise à l'échelle éventuelle de l'image selon les choix de l'utilisateur.
+			//	Une image sans filtrage n'est jamais mise à l'échelle !
+			double currentDpiX = dx*254.0/image.Size.Width;
+			double currentDpiY = dy*254.0/image.Size.Height;
+
+			double finalDpiX = currentDpiX;
+			double finalDpiY = currentDpiY;
+
+			if ( this.imageMinDpi != 0.0 )
+			{
+				finalDpiX = System.Math.Max(finalDpiX, this.imageMinDpi);
+				finalDpiY = System.Math.Max(finalDpiY, this.imageMinDpi);
+			}
+
+			if ( this.imageMaxDpi != 0.0 )
+			{
+				finalDpiX = System.Math.Min(finalDpiX, this.imageMaxDpi);
+				finalDpiY = System.Math.Min(finalDpiY, this.imageMaxDpi);
+			}
+
+			bool resizeRequired = false;
+
+			if ( currentDpiX != finalDpiX || currentDpiY != finalDpiY )
+			{
+				dx = (int) ((dx+0.5)*finalDpiX/currentDpiX);
+				dy = (int) ((dy+0.5)*finalDpiY/currentDpiY);
+				resizeRequired = true;
+			}
+
+			if ( resizeRequired )
+			{
+				fi.Rescale(dx, dy, Properties.Image.FilterToFreeImage(image.Filter));
+			}
+
+			//	Choix du mode de compression possible.
+			ImageCompression compression = this.imageCompression;
+
+			if ( baseType == TypeComplexSurface.XObject &&
+				 this.colorConversion == PDF.ColorConversion.ToCmyk &&
+				 compression == ImageCompression.JPEG )  // cmyk impossible en jpg !
+			{
+				compression = ImageCompression.ZIP;  // utilise la compression sans pertes
+			}
+
+			//	Génération de l'en-tête.
+			writer.WriteObjectDef(Export.NameComplexSurface(image.Id, baseType));
+			writer.WriteString("<< /Subtype /Image ");
+
+			if ( baseType == TypeComplexSurface.XObject )
+			{
+				if ( this.colorConversion == PDF.ColorConversion.ToGray )
+				{
+					writer.WriteString("/ColorSpace /DeviceGray ");
+				}
+				else if ( this.colorConversion == PDF.ColorConversion.ToCmyk )
+				{
+					writer.WriteString("/ColorSpace /DeviceCMYK ");
+				}
+				else
+				{
+					switch (fi.GetColorType())
+					{
+						case Opac.FreeImage.ColorType.MinIsBlack:
+						case Opac.FreeImage.ColorType.MinIsWhite:
+							writer.WriteString("/ColorSpace /DeviceGray ");
+							break;
+						
+						case Opac.FreeImage.ColorType.Rgb:
+						case Opac.FreeImage.ColorType.RgbAlpha:
+						case Opac.FreeImage.ColorType.Palette:
+							writer.WriteString("/ColorSpace /DeviceRGB ");
+							break;
+						
+						case Opac.FreeImage.ColorType.Cmyk:
+							if (compression == ImageCompression.JPEG)
+							{
+								writer.WriteString("/ColorSpace /DeviceRGB ");
+							}
+							else
+							{
+								writer.WriteString("/ColorSpace /DeviceCMYK ");
+							}
+							break;
+						
+						default:
+							throw new System.InvalidOperationException();
+					}
+				}
+			}
+			if ( baseType == TypeComplexSurface.XObjectMask )
+			{
+				writer.WriteString("/ColorSpace /DeviceGray ");
+			}
+
+			writer.WriteString("/BitsPerComponent 8 /Width ");  // voir [*] page 310
+			writer.WriteString(Port.StringValue(dx, 0));
+			writer.WriteString(" /Height ");
+			writer.WriteString(Port.StringValue(dy, 0));
+			writer.WriteString(" ");
+
+			if ( image.Filter.Active )
+			{
+				writer.WriteString("/Interpolate true ");
+			}
+
+			if (fi.IsTransparent())
+			{
+				useMask = true;
+			}
+			
+			if ( compression == ImageCompression.JPEG )  // compression JPEG ?
+			{
+				writer.WriteString("/Filter [/ASCII85Decode /DCTDecode] ");  // voir [*] page 43
+
+				bool isGray = false;
+				if ( this.colorConversion == PDF.ColorConversion.ToGray )        isGray = true;
+				if ( baseType == TypeComplexSurface.XObjectMask )                isGray = true;
+				if ( fi.GetColorType() == Opac.FreeImage.ColorType.MinIsBlack )  isGray = true;
+				if ( fi.GetColorType() == Opac.FreeImage.ColorType.MinIsWhite )  isGray = true;
+
+				byte[] jpeg;
+
+				if ( baseType == TypeComplexSurface.XObjectMask )
+				{
+					Opac.FreeImage.Image mask = fi.GetChannel(Opac.FreeImage.ColorChannel.Alpha);
+					jpeg = mask.SaveToMemory(Opac.FreeImage.FileFormat.Jpeg, Properties.Image.FilterQualityToMode(this.jpegQuality));
+				}
+				else if (isGray)
+				{
+					Opac.FreeImage.Image gray = fi.ConvertToGrayscale();
+					jpeg = gray.SaveToMemory(Opac.FreeImage.FileFormat.Jpeg, Properties.Image.FilterQualityToMode(this.jpegQuality));
+				}
+				else
+				{
+					Opac.FreeImage.Image rgb = fi.ConvertToRgb();
+					jpeg = rgb.SaveToMemory(Opac.FreeImage.FileFormat.Jpeg, Properties.Image.FilterQualityToMode(this.jpegQuality));
+				}
+
+				port.Reset();
+				port.PutASCII85(jpeg);
+				port.PutEOL();
+			}
+			else	// compression ZIP ou aucune ?
+			{
+				if ( compression == ImageCompression.ZIP )  // compression ZIP ?
+				{
+					writer.WriteString("/Filter [/ASCII85Decode /FlateDecode] ");  // voir [*] page 43
+				}
+				else
+				{
+					writer.WriteString("/Filter /ASCII85Decode ");  // voir [*] page 43
+				}
+
+				int bpp = 3;
+				if ( baseType == TypeComplexSurface.XObject )
+				{
+					if ( this.colorConversion == PDF.ColorConversion.ToGray )
+					{
+						bpp = 1;
+					}
+					else if ( this.colorConversion == PDF.ColorConversion.ToRgb )
+					{
+						bpp = 3;
+					}
+					else if ( this.colorConversion == PDF.ColorConversion.ToCmyk )
+					{
+						bpp = 4;
+					}
+					else
+					{
+						switch (fi.GetColorType())
+						{
+							case Opac.FreeImage.ColorType.MinIsBlack:
+							case Opac.FreeImage.ColorType.MinIsWhite:
+								bpp = 1;
+								break;
+							
+							case Opac.FreeImage.ColorType.Rgb:
+							case Opac.FreeImage.ColorType.RgbAlpha:
+							case Opac.FreeImage.ColorType.Palette:
+								bpp = 3;
+								break;
+							
+							case Opac.FreeImage.ColorType.Cmyk:
+								bpp = 4;
+								break;
+							
+							default:
+								throw new System.InvalidOperationException();
+						}
+					}
+				}
+				else
+				{
+					bpp = -1;
+				}
+
+				byte[] data = null;
+
+				if ( bpp == -1 )  // alpha ?
+				{
+					data = this.CreateImageSurfaceChannel(fi, Opac.FreeImage.ColorChannel.Alpha, image.Filter);
+				}
+
+				if ( bpp == 1 )
+				{
+					data = this.CreateImageSurfaceChannel(fi, Opac.FreeImage.ColorChannel.Grayscale, image.Filter);
+				}
+
+				if ( bpp == 3 )
+				{
+					byte[] bufferRed   = this.CreateImageSurfaceChannel(fi, Opac.FreeImage.ColorChannel.Red, image.Filter);
+					byte[] bufferGreen = this.CreateImageSurfaceChannel(fi, Opac.FreeImage.ColorChannel.Green, image.Filter);
+					byte[] bufferBlue  = this.CreateImageSurfaceChannel(fi, Opac.FreeImage.ColorChannel.Blue, image.Filter);
+
+					data = new byte[dx*dy*3];
+					for ( int i=0 ; i<dx*dy ; i++ )
+					{
+						data[i*3+0] = bufferRed[i];
+						data[i*3+1] = bufferGreen[i];
+						data[i*3+2] = bufferBlue[i];
+					}
+				}
+
+				if ( bpp == 4 )
+				{
+					byte[] bufferCyan    = this.CreateImageSurfaceChannel(fi, Opac.FreeImage.ColorChannel.Cyan, image.Filter);
+					byte[] bufferMagenta = this.CreateImageSurfaceChannel(fi, Opac.FreeImage.ColorChannel.Magenta, image.Filter);
+					byte[] bufferYellow  = this.CreateImageSurfaceChannel(fi, Opac.FreeImage.ColorChannel.Yellow, image.Filter);
+					byte[] bufferBlack   = this.CreateImageSurfaceChannel(fi, Opac.FreeImage.ColorChannel.Black, image.Filter);
+
+					data = new byte[dx*dy*4];
+					for ( int i=0 ; i<dx*dy ; i++ )
+					{
+						data[i*4+0] = bufferCyan[i];
+						data[i*4+1] = bufferMagenta[i];
+						data[i*4+2] = bufferYellow[i];
+						data[i*4+3] = bufferBlack[i];
+					}
+				}
+
+				if ( compression == ImageCompression.ZIP )  // compression ZIP ?
+				{
+					byte[] zip = Common.IO.DeflateCompressor.Compress(data, 9);  // 9 = compression forte mais lente
+					data = zip;
+					zip = null;
+				}
+
+				port.Reset();
+				port.PutASCII85(data);
+				port.PutEOL();
+			}
+
+			if ( maskType == TypeComplexSurface.XObjectMask && useMask )
+			{
+				writer.WriteString("/SMask ");
+				writer.WriteObjectRef(Export.NameComplexSurface(image.Id, maskType));
+			}
+
+			string pdf = port.GetPDF();
+			writer.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, " {0} >>", Port.StringLength(pdf.Length)));
+			writer.WriteLine("stream");
+			writer.WriteString(pdf);
+			writer.WriteLine("endstream endobj");
+
+			return useMask;
+#endif
 		}
 
+#if false
 		protected byte[] CreateImageSurfaceChannel(Magick.Image magick, int dx, int dy, Magick.Channel channel, ImageFilter filter)
 		{
 			Magick.Image copy = new Magick.Image(magick);
@@ -1872,6 +2155,13 @@ namespace Epsitec.Common.Document.PDF
 			copy.ModifyEnd();
 
 			return buffer;
+		}
+#endif
+
+		protected byte[] CreateImageSurfaceChannel(Opac.FreeImage.Image fi, Opac.FreeImage.ColorChannel channel, ImageFilter filter)
+		{
+			Opac.FreeImage.Image plan = fi.GetChannel(channel);
+			return plan.GetRawImageSource8Bits(false);
 		}
 
 		protected void FlushImageSurface()
