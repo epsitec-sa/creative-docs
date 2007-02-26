@@ -285,7 +285,7 @@ namespace Epsitec.Common.Document.Properties
 		#region ImageFilter
 		public static Opac.FreeImage.Filter FilterToFreeImage(ImageFilter filter)
 		{
-			//	Conversion du type de filtre pour la librairie Magick.
+			//	Conversion du type de filtre pour la librairie FreeImage.
 			switch (filter.Mode)
 			{
 				case ImageFilteringMode.None:      return Opac.FreeImage.Filter.Box;
@@ -295,16 +295,7 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		public static Opac.FreeImage.LoadSaveMode FilterQualityToMode(double quality)
-		{
-			//	Conversion de la qualité en mode pour FreeImage.SaveToMemory.
-		         if (quality >= 0.87)  return Opac.FreeImage.LoadSaveMode.JpegQualitySuperb;   // nominal = 1.00
-			else if (quality >= 0.62)  return Opac.FreeImage.LoadSaveMode.JpegQualityGood;     // nominal = 0.75
-			else if (quality >= 0.37)  return Opac.FreeImage.LoadSaveMode.JpegQualityNormal;   // nominal = 0.50
-			else if (quality >= 0.17)  return Opac.FreeImage.LoadSaveMode.JpegQualityAverage;  // nominal = 0.25
-			else                       return Opac.FreeImage.LoadSaveMode.JpegQualityBad;      // nominal = 0.10
-		}
-
+#if false
 		public static Magick.FilterType FilterToMagick(ImageFilter filter)
 		{
 			//	Conversion du type de filtre pour la librairie Magick.
@@ -323,6 +314,17 @@ namespace Epsitec.Common.Document.Properties
 				case ImageFilteringMode.Sinc:      return Magick.FilterType.Sinc;
 				default:                           return Magick.FilterType.Cubic;
 			}
+		}
+#endif
+
+		public static Opac.FreeImage.LoadSaveMode FilterQualityToMode(double quality)
+		{
+			//	Conversion de la qualité en mode pour FreeImage.SaveToMemory.
+		         if (quality >= 0.87)  return Opac.FreeImage.LoadSaveMode.JpegQualitySuperb;   // nominal = 1.00
+			else if (quality >= 0.62)  return Opac.FreeImage.LoadSaveMode.JpegQualityGood;     // nominal = 0.75
+			else if (quality >= 0.37)  return Opac.FreeImage.LoadSaveMode.JpegQualityNormal;   // nominal = 0.50
+			else if (quality >= 0.17)  return Opac.FreeImage.LoadSaveMode.JpegQualityAverage;  // nominal = 0.25
+			else                       return Opac.FreeImage.LoadSaveMode.JpegQualityBad;      // nominal = 0.10
 		}
 
 		public static int FilterNameToIndex(string name)
