@@ -19,7 +19,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.isModel = true;
 			this.enableNavigation = true;
 			this.enableMultipleSelection = false;
-			this.isNewEmtpyDocument = true;
+			this.displayNewEmtpyDocument = true;
 			this.isSave = false;
 		}
 

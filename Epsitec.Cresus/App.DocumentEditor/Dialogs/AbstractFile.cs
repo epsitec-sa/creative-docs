@@ -220,7 +220,7 @@ namespace Epsitec.Common.Dialogs
 			this.UpdateInitialDirectory ();
 			this.UpdateTable (-1);
 
-			if (this.table2 != null)
+			if (this.table != null)
 			{
 				this.UpdateFileList ();
 			}
@@ -302,7 +302,7 @@ namespace Epsitec.Common.Dialogs
 			}
 			else
 			{
-				this.table2.Focus();  // focus dans la liste des fichiers
+				this.table.Focus();  // focus dans la liste des fichiers
 			}
 		}
 
@@ -404,29 +404,29 @@ namespace Epsitec.Common.Dialogs
 
 			this.CreateCollectionView ();
 
-			this.table2 = new Epsitec.Common.UI.ItemTable (group);
-			this.table2.Dock = DockStyle.Fill;
-			this.table2.TabIndex = 2;
-			this.table2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.table2.SourceType = FileListItem.GetStructuredType ();
-			this.table2.Items = this.filesCollectionView;
-			this.table2.AutoFocus = true;
-			this.table2.VerticalScrollMode = ItemTableScrollMode.ItemBased;
-			this.table2.ItemPanel.ItemViewDefaultSize = new Size (this.table2.Parent.PreferredWidth, cellHeight);
-			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 72));
-			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 200));
-			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("type", 120, FileListItem.GetDescriptionPropertyComparer ()));
-			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("date", 96));
-			this.table2.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("size", 54));
-			this.table2.ColumnHeader.SetColumnSortable (0, false);
-			this.table2.ColumnHeader.SetColumnSort (1, Epsitec.Common.Types.ListSortDirection.Ascending);
-			this.table2.ColumnHeader.SetColumnSort (2, Epsitec.Common.Types.ListSortDirection.Ascending);
-			this.table2.ItemPanel.ItemSelectionMode = this.enableMultipleSelection ? ItemPanelSelectionMode.Multiple : ItemPanelSelectionMode.ZeroOrOne;
-			this.table2.ItemPanel.SelectionBehavior = ItemPanelSelectionBehavior.ManualOne;
+			this.table = new Epsitec.Common.UI.ItemTable (group);
+			this.table.Dock = DockStyle.Fill;
+			this.table.TabIndex = 2;
+			this.table.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			this.table.SourceType = FileListItem.GetStructuredType ();
+			this.table.Items = this.filesCollectionView;
+			this.table.AutoFocus = true;
+			this.table.VerticalScrollMode = ItemTableScrollMode.ItemBased;
+			this.table.ItemPanel.ItemViewDefaultSize = new Size (this.table.Parent.PreferredWidth, cellHeight);
+			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 72));
+			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 200));
+			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("type", 120, FileListItem.GetDescriptionPropertyComparer ()));
+			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("date", 96));
+			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("size", 54));
+			this.table.ColumnHeader.SetColumnSortable (0, false);
+			this.table.ColumnHeader.SetColumnSort (1, Epsitec.Common.Types.ListSortDirection.Ascending);
+			this.table.ColumnHeader.SetColumnSort (2, Epsitec.Common.Types.ListSortDirection.Ascending);
+			this.table.ItemPanel.ItemSelectionMode = this.enableMultipleSelection ? ItemPanelSelectionMode.Multiple : ItemPanelSelectionMode.ZeroOrOne;
+			this.table.ItemPanel.SelectionBehavior = ItemPanelSelectionBehavior.ManualOne;
 
-			this.table2.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
-			this.table2.ItemPanel.DoubleClicked += this.HandleTableDoubleClicked;
-			this.table2.ItemPanel.SelectionChanged += this.HandleFilesItemTableSelectionChanged;
+			this.table.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
+			this.table.ItemPanel.DoubleClicked += this.HandleTableDoubleClicked;
+			this.table.ItemPanel.SelectionChanged += this.HandleFilesItemTableSelectionChanged;
 
 			this.slider.Value = (decimal) Widget.DefaultFontHeight+4;
 			this.useLargeIcons = false;
@@ -467,7 +467,7 @@ namespace Epsitec.Common.Dialogs
 
 		private void UpdateAfterSelectionChanged()
 		{
-			if (this.table2 == null)
+			if (this.table == null)
 			{
 				return;
 			}
@@ -484,7 +484,7 @@ namespace Epsitec.Common.Dialogs
 					name = name.Substring (0, name.Length - this.fileExtension.Length);
 				}
 
-				IList<ItemView> selectedItemViews = this.table2.ItemPanel.GetSelectedItemViews ();
+				IList<ItemView> selectedItemViews = this.table.ItemPanel.GetSelectedItemViews ();
 
 				if (selectedItemViews.Count > 1)
 				{
@@ -721,7 +721,7 @@ namespace Epsitec.Common.Dialogs
 			this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			string ok;
-			if (this.isNewEmtpyDocument)
+			if (this.displayNewEmtpyDocument)
 			{
 				ok = Res.Strings.Dialog.File.Button.New;
 			}
@@ -767,8 +767,8 @@ namespace Epsitec.Common.Dialogs
 				if (item.FullPath == fileNameToSelect)
 				{
 					this.filesCollectionView.MoveCurrentTo (item);
-					ItemView view = this.table2.ItemPanel.GetItemView (item);
-					this.table2.ItemPanel.SelectItemView (view);
+					ItemView view = this.table.ItemPanel.GetItemView (item);
+					this.table.ItemPanel.SelectItemView (view);
 					break;
 				}
 			}
@@ -899,24 +899,24 @@ namespace Epsitec.Common.Dialogs
 			
 			this.filesCollectionView.MoveCurrentToPosition (sel);
 
-			if (this.table2 != null)
+			if (this.table != null)
 			{
 				object select = this.filesCollectionView.CurrentItem;
 				
 				if (sel < 0)
 				{
-					this.table2.ItemPanel.DeselectAllItemViews ();
+					this.table.ItemPanel.DeselectAllItemViews ();
 				}
 				else
 				{
-					ItemView view = this.table2.ItemPanel.FindItemView (
+					ItemView view = this.table.ItemPanel.FindItemView (
 						delegate (ItemView candidate)
 						{
 							return candidate.Item == select;
 						});
 
-					this.table2.ItemPanel.DeselectAllItemViews ();
-					this.table2.ItemPanel.SelectItemView (view);
+					this.table.ItemPanel.DeselectAllItemViews ();
+					this.table.ItemPanel.SelectItemView (view);
 				}
 			}
 			
@@ -1159,7 +1159,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				this.files.Clear ();
 
-				if (this.isNewEmtpyDocument)
+				if (this.displayNewEmtpyDocument)
 				{
 					this.files.Add (new FileListItem (Misc.Icon ("New"), Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument, "-", Res.Strings.Dialog.New.EmptyDocument));  // première ligne avec 'nouveau document vide'
 				}
@@ -1189,7 +1189,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				return;
 			}
-			if (this.table2 == null)
+			if (this.table == null)
 			{
 				return;
 			}
@@ -1327,7 +1327,7 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			this.RefreshFileList (null);
-			this.table2.ItemPanel.Refresh ();
+			this.table.ItemPanel.Refresh ();
 			this.SelectFileNameInTable(newDir);
 			this.RenameStarting();
 		}
@@ -1397,7 +1397,7 @@ namespace Epsitec.Common.Dialogs
 			//	rendu visible.
 			System.Diagnostics.Debug.Assert(this.fieldRename != null);
 			FileListItem item = this.GetCurrentFileListItem ();
-			ItemPanel itemPanel = this.table2.ItemPanel;
+			ItemPanel itemPanel = this.table.ItemPanel;
 			ItemView view = itemPanel.GetItemView (item);
 			itemPanel.Show (view);
 			Widget nameWidget = FileListItemViewFactory.GetFileNameWidget (view);
@@ -1412,9 +1412,9 @@ namespace Epsitec.Common.Dialogs
 			rect.Left -= 3;												// aligne par rapport au contenu de la ligne éditable
 			rect.Width += 32;											// place pour les boutons "v" et "x"
 
-			Rectangle box = this.table2.Client.Bounds;
-			box.Deflate (this.table2.GetPanelPadding ());
-			box = this.table2.MapClientToRoot (box);
+			Rectangle box = this.table.Client.Bounds;
+			box.Deflate (this.table.GetPanelPadding ());
+			box = this.table.MapClientToRoot (box);
 			if (!box.Contains(rect))
 			{
 				return;
@@ -1485,7 +1485,7 @@ namespace Epsitec.Common.Dialogs
 				}
 
 				this.RefreshFileList (null);
-				this.table2.ItemPanel.Refresh ();
+				this.table.ItemPanel.Refresh ();
 				this.SelectFileNameInTable (dstFileName);
 			}
 		}
@@ -1665,7 +1665,7 @@ namespace Epsitec.Common.Dialogs
 
 		private string[] GetSelectedFileNames()
 		{
-			IList<ItemView> selectedItemViews = this.table2.ItemPanel.GetSelectedItemViews ();
+			IList<ItemView> selectedItemViews = this.table.ItemPanel.GetSelectedItemViews ();
 
 			if (selectedItemViews.Count > 0)
 			{
@@ -1702,7 +1702,7 @@ namespace Epsitec.Common.Dialogs
 		private FileListItem GetCurrentFileListItem()
 		{
 			FileListItem item = this.filesCollectionView.CurrentItem as FileListItem;
-			IList<ItemView> views = this.table2.ItemPanel.GetSelectedItemViews (
+			IList<ItemView> views = this.table.ItemPanel.GetSelectedItemViews (
 				delegate (ItemView view)
 				{
 					if (view.Item == item)
@@ -1725,7 +1725,7 @@ namespace Epsitec.Common.Dialogs
 			//	l'on ne puisse sélectionner un dossier et un fichier et cliquer ensuite sur
 			//	le bouton "OK").
 
-			IList<ItemView> views = this.table2.ItemPanel.GetSelectedItemViews ();
+			IList<ItemView> views = this.table.ItemPanel.GetSelectedItemViews ();
 
 			if (views.Count > 1)
 			{
@@ -1950,7 +1950,7 @@ namespace Epsitec.Common.Dialogs
 		private void HandleFileNameTextEdited(object sender)
 		{
 			this.filesCollectionView.MoveCurrentToPosition (-1);
-			this.table2.ItemPanel.DeselectAllItemViews ();
+			this.table.ItemPanel.DeselectAllItemViews ();
 
 			this.UpdateButtons ();
 		}
@@ -2134,7 +2134,7 @@ namespace Epsitec.Common.Dialogs
 			//#this.table.DefHeight = (double) this.slider.Value;
 			//#this.table.HeaderHeight = 20;
 
-			this.table2.ItemPanel.ItemViewDefaultSize = new Size (this.table2.Parent.PreferredWidth, (double) this.slider.Value);
+			this.table.ItemPanel.ItemViewDefaultSize = new Size (this.table.Parent.PreferredWidth, (double) this.slider.Value);
 		}
 
 		protected void HandleWindowCloseClicked(object sender)
@@ -2185,59 +2185,64 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected Window window;
-		protected IFavoritesSettings favoritesSettings;
-		protected GlyphButton toolbarExtend;
-		protected HToolBar					toolbar;
-		protected GlyphButton				navigateCombo;
-		protected Scrollable				favorites;
-		protected CellTable					table;
-		protected Epsitec.Common.UI.ItemTable table2;
-		protected HSlider					slider;
-		protected TextFieldCombo			fieldPath;
-		protected TextField					fieldFileName;
-		protected TextFieldEx				fieldRename;
-		protected Button					buttonOK;
-		protected Button					buttonCancel;
+		protected Window					window;
+		private IFavoritesSettings			favoritesSettings;
+		private GlyphButton					toolbarExtend;
+		private HToolBar					toolbar;
+		private GlyphButton					navigateCombo;
+		private Scrollable					favorites;
+		private Epsitec.Common.UI.ItemTable table;
+		private HSlider						slider;
+		private TextFieldCombo				fieldPath;
+		private TextField					fieldFileName;
+		private TextFieldEx					fieldRename;
+		private Button						buttonOK;
+		private Button						buttonCancel;
 
 		private string						fileExtension;
 		private string						fileFilterPattern;
+		
 		protected bool						isModel;
+		protected bool						isSave;
+		
 		protected bool						enableNavigation;
 		protected bool						enableMultipleSelection;
-		protected bool						isNewEmtpyDocument;
-		protected bool						isSave;
-		protected bool						isRedirection;
-		protected FolderItem				initialFolder;
-		protected FolderItemIcon			initialSmallIcon;
-		protected string					initialFileName;
-		protected string					selectedFileName;
-		protected string[]					selectedFileNames;
-		protected FileListItem				renameSelected;
-		protected Widget					focusedWidget;
-		protected Widget					focusedWidgetBeforeRename;
-		protected bool						ignoreChanged;
-		protected List<FolderItem>			favoritesList;
-		protected int						favoritesFixes;
-		protected int						favoritesSelected;
-		protected List<FolderItem>			directoriesVisited;
-		protected int						directoriesVisitedIndex;
-		protected List<FileListItem>		comboFolders;
-		protected List<string>				comboTexts;
-		protected int						comboSelected;
-		protected CommandDispatcher			dispatcher;
-		protected CommandContext			context;
-		protected CommandState				prevState;
-		protected CommandState				nextState;
-		protected CommandState				parentState;
-		protected CommandState				newState;
-		protected CommandState				renameState;
-		protected CommandState				deleteState;
-		protected CommandState				favoritesAddState;
-		protected CommandState				favoritesRemoveState;
-		protected CommandState				favoritesUpState;
-		protected CommandState				favoritesDownState;
-		protected CommandState				favoritesBigState;
+		protected bool						displayNewEmtpyDocument;
+		
+		private bool						isRedirection;
+		private FolderItem					initialFolder;
+		private FolderItemIcon				initialSmallIcon;
+		private string						initialFileName;
+		private string						selectedFileName;
+		private string[]					selectedFileNames;
+		private FileListItem				renameSelected;
+		private Widget						focusedWidget;
+		private Widget						focusedWidgetBeforeRename;
+		private bool						ignoreChanged;
+
+		private List<FolderItem>			favoritesList;
+		private int							favoritesFixes;
+		private int							favoritesSelected;
+		
+		private List<FolderItem>			directoriesVisited;
+		private int							directoriesVisitedIndex;
+		private List<FileListItem>			comboFolders;
+		private List<string>				comboTexts;
+		private int							comboSelected;
+		
+		private CommandDispatcher			dispatcher;
+		private CommandContext				context;
+		private CommandState				prevState;
+		private CommandState				nextState;
+		private CommandState				parentState;
+		private CommandState				newState;
+		private CommandState				renameState;
+		private CommandState				deleteState;
+		private CommandState				favoritesAddState;
+		private CommandState				favoritesRemoveState;
+		private CommandState				favoritesUpState;
+		private CommandState				favoritesDownState;
+		private CommandState				favoritesBigState;
 
 		private ObservableList<FileListItem> files;
 		private CollectionView				filesCollectionView;
