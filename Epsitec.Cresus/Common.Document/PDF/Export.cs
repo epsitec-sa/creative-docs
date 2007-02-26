@@ -1523,7 +1523,9 @@ namespace Epsitec.Common.Document.PDF
 			Margins crop = image.Crop;
 			if (crop != Margins.Zero)  // recadrage nécessaire ?
 			{
-				fi.Crop((int)crop.Left, (int)crop.Top, (int)crop.Right, (int)crop.Bottom);
+				Opac.FreeImage.Image cropped = fi.Crop((int)crop.Left, (int)crop.Top, (int)crop.Right, (int)crop.Bottom);
+				fi.Dispose();
+				fi = cropped;
 			}
 
 			bool useMask = false;
