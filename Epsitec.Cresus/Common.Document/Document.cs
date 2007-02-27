@@ -981,7 +981,8 @@ namespace Epsitec.Common.Document
 
 				if ( this.Modifier != null && doc.readRootStack != null )
 				{
-					this.Modifier.ActiveViewer.DrawingContext.SetRootStack (doc.readRootStack);
+					int pageNumber = this.Modifier.PrintablePageRank(0);  // numéro de la première page non modèle du document
+					this.Modifier.ActiveViewer.DrawingContext.InternalPageLayer(pageNumber, 0);
 				}
 			}
 

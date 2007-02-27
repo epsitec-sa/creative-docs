@@ -80,7 +80,7 @@ namespace Epsitec.Common.Document
 			drawingContext.IsBitmap = true;
 			drawingContext.GridShow = isModel;
 
-			int pageNumber = this.document.Modifier.PrintablePageRank(0);
+			int pageNumber = this.document.Modifier.PrintablePageRank(0);  // numéro de la première page non modèle du document
 
 			Size pageSize = this.document.GetPageSize(pageNumber);
 			double dpix = sizeHope.Width*254/pageSize.Width;
