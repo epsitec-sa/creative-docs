@@ -4,7 +4,6 @@ using System.IO;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Document;
 using Epsitec.Common.IO;
 
 namespace Epsitec.Common.Dialogs

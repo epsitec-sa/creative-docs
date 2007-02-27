@@ -97,6 +97,10 @@
       <Project>{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
+    <ProjectReference Include="..\Common.IO\Common.IO.csproj">
+      <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>
+      <Name>Common.IO</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Printing\Common.Printing.csproj">
       <Name>Common.Printing</Name>
       <Project>{21655556-2BC3-46A4-931A-1295AD971737}</Project>
@@ -142,6 +146,7 @@
     <Compile Include="AbstractDialog.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AbstractFile.cs" />
     <Compile Include="AbstractFileDialog.cs" />
     <Compile Include="AbstractMessageDialog.cs">
       <SubType>Code</SubType>
@@ -161,6 +166,9 @@
     <Compile Include="DialogResult.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FileListItem.cs" />
+    <Compile Include="FileListItemViewFactory.cs" />
+    <Compile Include="FileListSettings.cs" />
     <Compile Include="FileOpen.cs">
       <SubType>Code</SubType>
     </Compile>

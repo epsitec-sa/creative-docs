@@ -1,5 +1,4 @@
 using Epsitec.Common.Dialogs;
-using Epsitec.Common.Document;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.IO;
 using Epsitec.Common.Support;
@@ -13,8 +12,6 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Dialogs
 {
-	using Document=Epsitec.Common.Document.Document;
-	
 	/// <summary>
 	/// Classe abstraite pour les dialogues FileNew, FileOpen et FileOpenModel.
 	/// </summary>
@@ -66,7 +63,10 @@ namespace Epsitec.Common.Dialogs
 				{
 					if (this.isSave)
 					{
-						this.isRedirected = Document.RedirectPath(ref value);
+						string oldPath = value;
+						string newPath = this.RedirectPath (oldPath);
+						this.isRedirected = oldPath != newPath;
+						value = newPath;
 					}
 
 					folder = FileManager.GetFolderItem(value, FolderQueryMode.NoIcons);
@@ -81,6 +81,11 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		protected virtual string RedirectPath(string path)
+		{
+			return path;
+		}
+
 		public string InitialFileName
 		{
 			//	Nom de fichier initial.
@@ -92,7 +97,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				if (this.isSave)
 				{
-					Document.RedirectPath(ref value);
+					value = this.RedirectPath(value);
 				}
 
 				if (this.initialFileName != value)
@@ -785,12 +790,7 @@ namespace Epsitec.Common.Dialogs
 
 			this.favoritesList = new List<FolderItem>();
 
-			if (!this.isSave)
-			{
-				this.FavoritesAdd(Document.OriginalSamplesDisplayName, "FileTypeEpsitecSamples", Document.OriginalSamplesPath);
-			}
-
-			this.FavoritesAdd(Document.MySamplesDisplayName, "FileTypeMySamples", Document.MySamplesPath);
+			this.FavoritesAddApplicationFolders ();
 
 			this.FavoritesAdd(FolderId.Recent);              // Mes documents récents
 			this.FavoritesAdd(FolderId.VirtualDesktop);      // Bureau
@@ -808,6 +808,8 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		protected abstract void FavoritesAddApplicationFolders();
+
 		protected void FavoritesAdd(string text, string icon, string path)
 		{
 			//	Ajoute un favoris dans le panneau de gauche.
@@ -821,7 +823,7 @@ namespace Epsitec.Common.Dialogs
 
 			FileButton f = new FileButton();
 			f.DisplayName = text;
-			f.IconName = Misc.Icon (icon);
+			f.IconName = string.IsNullOrEmpty (icon) ? null : string.Concat ("manifest:Epsitec.Common.Dialogs.Images.", icon, ".icon");
 
 			this.FavoritesAdd(item, f);
 		}
@@ -1152,7 +1154,7 @@ namespace Epsitec.Common.Dialogs
 
 				if (this.displayNewEmtpyDocument)
 				{
-					this.files.Add (new FileListItem (Misc.Icon ("New"), Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument, "-", Epsitec.Common.Dialogs.Res.Strings.Dialog.File.NewEmptyDocument));  // première ligne avec 'nouveau document vide'
+					this.files.Add (new FileListItem ("manifest:Epsitec.Common.Dialogs.Images.New.icon", Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument, "-", Epsitec.Common.Dialogs.Res.Strings.Dialog.File.NewEmptyDocument));  // première ligne avec 'nouveau document vide'
 				}
 			}
 		}
@@ -1200,8 +1202,13 @@ namespace Epsitec.Common.Dialogs
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("UpdateButtons: {0} {1} {2}", this.fieldFileName.Text, this.IsTextFieldFocused, item));
 
-			if (string.Equals(this.initialFolder.FullPath, Document.OriginalSamplesPath, System.StringComparison.OrdinalIgnoreCase))
+			string oldPath = this.initialFolder.FullPath;
+			string newPath = this.RedirectPath (oldPath);
+
+			if (oldPath != newPath)
 			{
+				//	This is a special folder where we may not rename the files.
+				
 				enable = false;
 			}
 
@@ -1848,13 +1855,13 @@ namespace Epsitec.Common.Dialogs
 				string icon = "";
 				if (!isNext)
 				{
-					icon = isCurrent ? Misc.Icon("ActiveCurrent") : Misc.Icon("ActiveNo");
+					icon = isCurrent ? "manifest:Epsitec.Common.Dialogs.Images.ActiveCurrent.icon" : "manifest:Epsitec.Common.Dialogs.Images.ActiveNo.icon";
 				}
 
 				string text = TextLayout.ConvertToTaggedText(folder.DisplayName);
 				if (isNext)
 				{
-					text = Misc.Italic(text);
+					text = string.Concat ("<i>", text, "</i>");
 				}
 				text = string.Format("{0}: {1}", (index+1).ToString(), text);
 

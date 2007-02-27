@@ -26,6 +26,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			return this.editor.Window;
 		}
 
+		protected override void FavoritesAddApplicationFolders()
+		{
+			if (!this.isSave)
+			{
+				this.FavoritesAdd (Document.OriginalSamplesDisplayName, "FileTypeEpsitecSamples", Document.OriginalSamplesPath);
+			}
+
+			this.FavoritesAdd (Document.MySamplesDisplayName, "FileTypeMySamples", Document.MySamplesPath);
+		}
+
+		protected override string RedirectPath(string path)
+		{
+			Document.RedirectPath (ref path);
+			return path;
+		}
+
 		protected override Rectangle GetCurrentBounds()
 		{
 			//	Donne les frontières de l'application.
