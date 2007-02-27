@@ -1491,7 +1491,7 @@ namespace Epsitec.App.DocumentEditor
 			//	Affiche l'erreur éventuelle.
 			//	Retourne false si le fichier n'a pas été enregistré.
 			string filename = this.CurrentDocument.Filename;
-			if (Document.RedirectFileName(ref filename))
+			if (Document.RedirectPath (ref filename))
 			{
 				this.DialogWarningRedirection();
 				ask = true;
@@ -1555,7 +1555,7 @@ namespace Epsitec.App.DocumentEditor
 				}
 			}
 
-			if (Document.RedirectFileName(ref filename))
+			if (Document.RedirectPath (ref filename))
 			{
 				this.DialogWarningRedirection();
 			}
@@ -1604,7 +1604,7 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.FontIncludeModeValue = this.dlgFileSaveModel.FontIncludeMode;
 			this.CurrentDocument.ImageIncludeModeValue = this.dlgFileSaveModel.ImageIncludeMode;
 
-			if (Document.RedirectFileName(ref filename))
+			if (Document.RedirectPath (ref filename))
 			{
 				this.DialogWarningRedirection();
 			}

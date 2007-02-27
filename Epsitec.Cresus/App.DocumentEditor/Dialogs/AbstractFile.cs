@@ -18,7 +18,7 @@ namespace Epsitec.Common.Dialogs
 	/// <summary>
 	/// Classe abstraite pour les dialogues FileNew, FileOpen et FileOpenModel.
 	/// </summary>
-	public abstract class AbstractFile
+	public abstract class AbstractFile : AbstractFileDialog
 	{
 		public AbstractFile(IFavoritesSettings favoritesSettings)
 		{
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Dialogs
 			}
 			set
 			{
-				this.isRedirection = false;
+				this.isRedirected = false;
 				FolderItem folder;
 
 				if (value == "")  // poste de travail ?
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Dialogs
 				{
 					if (this.isSave)
 					{
-						this.isRedirection = Document.RedirectDirectory(ref value);
+						this.isRedirected = Document.RedirectPath(ref value);
 					}
 
 					folder = FileManager.GetFolderItem(value, FolderQueryMode.NoIcons);
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				if (this.isSave)
 				{
-					Document.RedirectFileName(ref value);
+					Document.RedirectPath(ref value);
 				}
 
 				if (this.initialFileName != value)
@@ -141,7 +141,7 @@ namespace Epsitec.Common.Dialogs
 			//	redirigé de 'Exemples originaux' vers 'Mes exemples'.
 			get
 			{
-				return this.isRedirection;
+				return this.isRedirected;
 			}
 		}
 
@@ -2206,7 +2206,7 @@ namespace Epsitec.Common.Dialogs
 		protected bool						enableMultipleSelection;
 		protected bool						displayNewEmtpyDocument;
 		
-		private bool						isRedirection;
+		private bool						isRedirected;
 		private FolderItem					initialFolder;
 		private FolderItemIcon				initialSmallIcon;
 		private string						initialFileName;

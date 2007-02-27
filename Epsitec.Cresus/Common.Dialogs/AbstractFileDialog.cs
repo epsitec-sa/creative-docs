@@ -6,6 +6,11 @@ namespace Epsitec.Common.Dialogs
 {
 	public class AbstractFileDialog
 	{
+		static AbstractFileDialog()
+		{
+			Res.Initialize (typeof (AbstractFileDialog), "Common.Dialogs");
+		}
+
 		public static readonly string NewEmptyDocument = "#NewEmptyDocument#";
 	}
 }

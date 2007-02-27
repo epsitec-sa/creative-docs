@@ -1500,40 +1500,39 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public static bool RedirectFileName(ref string filename)
-		{
-			//	Redirige un nom de fichier de 'Exemples originaux' vers 'Mes exemples', si nécessaire.
-			if (string.IsNullOrEmpty(filename))
-			{
-				return false;
-			}
-
-			string dir = System.IO.Path.GetDirectoryName(filename);
-			if (string.Equals(dir, Document.OriginalSamplesPath, System.StringComparison.OrdinalIgnoreCase))
-			{
-				string file = System.IO.Path.GetFileName(filename);
-				filename = string.Concat(Document.MySamplesPath, "\\", file);
-				return true;
-			}
-
-			return false;
-		}
-
-		public static bool RedirectDirectory(ref string directory)
+		public static bool RedirectPath(ref string path)
 		{
 			//	Redirige un nom de dossier de 'Exemples originaux' vers 'Mes exemples', si nécessaire.
-			if (string.IsNullOrEmpty(directory))
+			if (string.IsNullOrEmpty(path))
 			{
 				return false;
 			}
 
-			if (string.Equals(directory, Document.OriginalSamplesPath, System.StringComparison.OrdinalIgnoreCase))
+			string directory;
+			string file;
+			
+			if (System.IO.Directory.Exists (path))
 			{
-				directory = Document.MySamplesPath;
-				return true;
+				directory = path;
+				file      = "";
+			}
+			else
+			{
+				directory = System.IO.Path.GetDirectoryName (path);
+				file      = System.IO.Path.GetFileName (path);
 			}
 
-			return false;
+			if (string.Equals (directory, Document.OriginalSamplesPath, System.StringComparison.OrdinalIgnoreCase))
+			{
+				directory = Document.MySamplesPath;
+				path      = System.IO.Path.Combine (directory, file);
+				
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		
