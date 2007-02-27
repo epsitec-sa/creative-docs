@@ -16,7 +16,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		public FileSave(DocumentEditor editor) : base(editor)
 		{
 			this.FileExtension = ".crdoc";
-			this.isModel = false;
 			this.enableNavigation = true;
 			this.enableMultipleSelection = false;
 		}

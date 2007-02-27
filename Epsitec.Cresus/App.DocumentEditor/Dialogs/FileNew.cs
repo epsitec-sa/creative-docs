@@ -16,7 +16,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		public FileNew(DocumentEditor editor) : base(editor)
 		{
 			this.FileExtension = ".crmod";
-			this.isModel = true;
 			this.enableNavigation = true;
 			this.enableMultipleSelection = false;
 		}
@@ -26,6 +25,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			get
 			{
 				return Epsitec.Common.Dialogs.FileDialogType.New;
+			}
+		}
+
+		protected override string FileTypeLabel
+		{
+			get
+			{
+				return Res.Strings.Dialog.File.LabelMod;
 			}
 		}
 

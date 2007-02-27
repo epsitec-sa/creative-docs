@@ -210,6 +210,14 @@ namespace Epsitec.Common.Dialogs
 			get;
 		}
 
+		protected virtual string FileTypeLabel
+		{
+			get
+			{
+				return Epsitec.Common.Dialogs.Res.Strings.Dialog.File.LabelDoc;
+			}
+		}
+
 		protected abstract void CreateWindow();
 
 
@@ -687,28 +695,28 @@ namespace Epsitec.Common.Dialogs
 		private void CreateFileName()
 		{
 			//	Crée la partie permettant d'éditer le nom de fichier.
-			Widget group = new Widget (this.window.Root);
-			group.PreferredHeight = 20;
-			group.Margins = new Margins (0, 0, 8, 0);
-			group.Dock = DockStyle.Bottom;
-			group.TabIndex = 4;
-			group.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
+			Widget container = new Widget (this.window.Root);
+			container.PreferredHeight = 20;
+			container.Margins = new Margins (0, 0, 8, 0);
+			container.Dock = DockStyle.Bottom;
+			container.TabIndex = 4;
+			container.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
-			StaticText label = new StaticText (group);
-			label.Text = this.isModel ? Epsitec.Common.Dialogs.Res.Strings.Dialog.File.LabelMod : Epsitec.Common.Dialogs.Res.Strings.Dialog.File.LabelDoc;
+			StaticText label = new StaticText (container);
+			label.Text = this.FileTypeLabel;
 			label.PreferredWidth = 140-10-1;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Dock = DockStyle.Left;
 			label.Margins = new Margins (0, 10, 0, 0);
 
-			this.fieldFileName = new TextField (group);
+			this.fieldFileName = new TextField (container);
 			this.fieldFileName.Dock = DockStyle.Fill;
 			this.fieldFileName.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
 			this.fieldFileName.TextEdited += this.HandleFileNameTextEdited;
 			this.fieldFileName.TabIndex = 1;
 			this.fieldFileName.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-			TextField ext = new TextField (group);
+			TextField ext = new TextField (container);
 			ext.AutoFocus = false;
 			ext.TabNavigationMode = TabNavigationMode.None;
 			ext.IsReadOnly = true;
@@ -2104,7 +2112,7 @@ namespace Epsitec.Common.Dialogs
 		private void ComboAdd(FolderItem folderItem, FileListItem parent)
 		{
 			FileListItem item = new FileListItem (folderItem);
-			item.DefaultDescription = this.isModel ? Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Model : Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Document;
+
 			item.Parent = parent;
 			item.SortAccordingToLevel = true;
 			this.comboFolders.Add (item);
@@ -2238,8 +2246,6 @@ namespace Epsitec.Common.Dialogs
 
 		private string fileExtension;
 		private string fileFilterPattern;
-
-		protected bool isModel;
 
 		protected bool enableNavigation;
 		protected bool enableMultipleSelection;
