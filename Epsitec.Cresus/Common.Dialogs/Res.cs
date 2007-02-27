@@ -84,6 +84,7 @@ namespace Epsitec.Common.Dialogs
 					public static string LabelMod { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (18)); } }
 					public static string Model { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (21)); } }
 					public static string NewDirectoryName { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (22)); } }
+					public static string NewEmptyDocument { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (35)); } }
 					public static string Statistics { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (26)); } }
 					public static class Button
 					{
@@ -120,6 +121,17 @@ namespace Epsitec.Common.Dialogs
 						public static string ExtendToolbar { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (3)); } }
 						public static string PreviewSize { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (5)); } }
 						public static string VisitedMenu { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (6)); } }
+					}
+				}
+				
+				public static class Generic
+				{
+					public static class Button
+					{
+						public static string Cancel { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (31)); } }
+						public static string Close { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (32)); } }
+						public static string Help { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (33)); } }
+						public static string OK { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (34)); } }
 					}
 				}
 				

@@ -57,6 +57,16 @@
   </data>
   <data name="Dialog.Question.Save.Part2" id="0U">
   </data>
+  <data name="Dialog.Generic.Button.Cancel" id="0V">
+  </data>
+  <data name="Dialog.Generic.Button.Close" id="001">
+  </data>
+  <data name="Dialog.Generic.Button.Help" id="011">
+  </data>
+  <data name="Dialog.Generic.Button.OK" id="021">
+  </data>
+  <data name="Dialog.File.NewEmptyDocument" id="031">
+  </data>
   <data name="Dialog.Tooltip.Help" id="01">Texte explicatif</data>
   <data name="Dialog.Tooltip.Resize" id="02">Redimensionner la fenêtre</data>
 </bundle>

@@ -706,7 +706,7 @@ namespace Epsitec.Common.Dialogs
 			//	Dans l'ordre de droite à gauche:
 			this.buttonCancel = new Button(footer);
 			this.buttonCancel.PreferredWidth = 75;
-			this.buttonCancel.Text = Epsitec.Common.Dialogs.Res.Strings.Dialog.Button.Cancel;
+			this.buttonCancel.Text = Epsitec.Common.Dialogs.Res.Strings.Dialog.Generic.Button.Cancel;
 			this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 			this.buttonCancel.Dock = DockStyle.Right;
 			this.buttonCancel.Margins = new Margins(6, 0, 0, 0);
@@ -1155,7 +1155,7 @@ namespace Epsitec.Common.Dialogs
 
 				if (this.displayNewEmtpyDocument)
 				{
-					this.files.Add (new FileListItem (Misc.Icon ("New"), Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument, "-", Epsitec.Common.Dialogs.Res.Strings.Dialog.New.EmptyDocument));  // première ligne avec 'nouveau document vide'
+					this.files.Add (new FileListItem (Misc.Icon ("New"), Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument, "-", Epsitec.Common.Dialogs.Res.Strings.Dialog.File.NewEmptyDocument));  // première ligne avec 'nouveau document vide'
 				}
 			}
 		}
