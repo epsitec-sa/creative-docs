@@ -1,3 +1,6 @@
+//	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
@@ -8,7 +11,7 @@ using System.Text.RegularExpressions;
 
 namespace Epsitec.Common.Dialogs
 {
-	internal class FileListSettings
+	internal class FileListSettings : IFileExtensionDescription
 	{
 		public FileListSettings()
 		{
@@ -16,7 +19,7 @@ namespace Epsitec.Common.Dialogs
 			this.hideFileExtensions = FolderItem.HideFileExtensions;
 		}
 
-		public FolderQueryMode FolderQueryMode
+		public FolderQueryMode					FolderQueryMode
 		{
 			get
 			{
@@ -28,7 +31,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		public bool ShowHiddenFiles
+		public bool								ShowHiddenFiles
 		{
 			get
 			{
@@ -40,7 +43,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		public bool HideFileExtensions
+		public bool								HideFileExtensions
 		{
 			get
 			{
@@ -52,7 +55,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		public bool HideFolders
+		public bool								HideFolders
 		{
 			get
 			{
@@ -64,7 +67,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		public bool HideShortcuts
+		public bool								HideShortcuts
 		{
 			get
 			{
@@ -76,6 +79,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		
 		public void DefineFilterPattern(string pattern)
 		{
 			if ((pattern == null) ||
@@ -269,12 +273,30 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		private bool showHiddenFiles;
-		private bool hideFileExtensions;
-		private bool hideFolders;
-		private bool hideShortcuts;
-		private FolderQueryMode folderQueryMode;
-		private Regex filterRegex;
+		#region IFileExtensionDescription Members
+
+		void IFileExtensionDescription.Add(string extension, string description)
+		{
+			this.AddDefaultDescription (extension, description);
+		}
+
+		string IFileExtensionDescription.FindDescription(string extension)
+		{
+			string description;
+			this.defaultDescriptions.TryGetValue (extension.ToLowerInvariant (), out description);
+			return description;
+		}
+
+		#endregion
+
+		
+		private bool							showHiddenFiles;
+		private bool							hideFileExtensions;
+		private bool							hideFolders;
+		private bool							hideShortcuts;
+		private FolderQueryMode					folderQueryMode;
+		private Regex							filterRegex;
+		
 		private readonly Dictionary<string, string> defaultDescriptions = new Dictionary<string, string> ();
 	}
 }

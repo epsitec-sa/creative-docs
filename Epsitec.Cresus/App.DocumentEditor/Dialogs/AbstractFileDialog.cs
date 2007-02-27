@@ -26,6 +26,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			return this.editor.Window;
 		}
 
+		protected override void CreateFileExtensionDescriptions(Epsitec.Common.Dialogs.IFileExtensionDescription settings)
+		{
+			settings.Add (".crdoc", Res.Strings.Dialog.File.Document);
+			settings.Add (".crmod", Res.Strings.Dialog.File.Model);
+		}
+
 		protected override void FavoritesAddApplicationFolders()
 		{
 			if (!this.isSave)

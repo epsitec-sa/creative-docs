@@ -160,6 +160,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IFileExtensionDescription.cs" />
     <Compile Include="Dialog.cs">
       <SubType>Code</SubType>
     </Compile>

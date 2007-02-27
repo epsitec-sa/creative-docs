@@ -1,3 +1,6 @@
+//	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
+
 using System.Collections.Generic;
 using System.IO;
 

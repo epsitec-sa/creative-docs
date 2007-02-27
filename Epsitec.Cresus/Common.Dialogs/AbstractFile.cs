@@ -1170,10 +1170,13 @@ namespace Epsitec.Common.Dialogs
 
 			settings.DefineFilterPattern (this.fileFilterPattern);
 
-			settings.AddDefaultDescription (".crdoc", Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Document);
-			settings.AddDefaultDescription (".crmod", Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Model);
+			this.CreateFileExtensionDescriptions (settings);
+
 			return settings;
 		}
+
+
+		protected abstract void CreateFileExtensionDescriptions(IFileExtensionDescription settings);
 
 		protected void UpdateButtons()
 		{
