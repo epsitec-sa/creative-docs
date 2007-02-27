@@ -80,12 +80,14 @@ namespace Epsitec.Common.Document
 			drawingContext.IsBitmap = true;
 			drawingContext.GridShow = isModel;
 
-			Size pageSize = this.document.GetPageSize(0);
+			int pageNumber = this.document.Modifier.PrintablePageRank(0);
+
+			Size pageSize = this.document.GetPageSize(pageNumber);
 			double dpix = sizeHope.Width*254/pageSize.Width;
 			double dpiy = sizeHope.Height*254/pageSize.Height;
 			double dpi = System.Math.Min(dpix, dpiy);
 			
-			string err = this.ExportGeometry(drawingContext, 0, ImageFormat.Png, dpi, ImageCompression.None, 24, 85, 1, false, out data);
+			string err = this.ExportGeometry(drawingContext, pageNumber, ImageFormat.Png, dpi, ImageCompression.None, 24, 85, 1, false, out data);
 			if (err == "")
 			{
 				filename = "preview.png";
@@ -1210,8 +1212,7 @@ namespace Epsitec.Common.Document
 			gfx.TranslateTransform(0, dy);
 			gfx.ScaleTransform(zoom, -zoom, 0, 0);
 
-			DrawingContext cView = this.document.Modifier.ActiveViewer.DrawingContext;
-			System.Collections.ArrayList layers = this.ComputeLayers(cView.CurrentPage);
+			System.Collections.ArrayList layers = this.ComputeLayers(pageNumber);
 			foreach (Objects.Layer layer in layers)
 			{
 				Properties.ModColor modColor = layer.PropertyModColor;
