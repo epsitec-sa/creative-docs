@@ -4,6 +4,8 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using System.Runtime.Serialization;
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Document.Settings
 {
 	public enum FirstAction
@@ -46,7 +48,7 @@ namespace Epsitec.Common.Document.Settings
 			this.lastModelMax = 10;
 			this.lastFilename = new System.Collections.ArrayList();
 			this.lastFilenameMax = 10;
-			this.favoritesList = new System.Collections.ArrayList();
+			this.favoritesList = new Epsitec.Common.Types.Collections.ObservableList<string> ();
 			this.favoritesBig = true;
 			this.labelProperties = true;
 			this.fineCursor = false;
@@ -404,7 +406,7 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
-		public System.Collections.ArrayList FavoritesList
+		Epsitec.Common.Types.Collections.ObservableList<string> Epsitec.Common.Dialogs.IFavoritesSettings.Items
 		{
 			get
 			{
@@ -412,7 +414,7 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-		public bool FavoritesBig
+		bool Epsitec.Common.Dialogs.IFavoritesSettings.UseLargeIcons
 		{
 			get
 			{
@@ -850,6 +852,8 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("IsFullScreen", this.isFullScreen);
 			info.AddValue("WindowBounds", this.windowBounds);
 
+			System.Collections.ArrayList serializableFavoritesList = new System.Collections.ArrayList (this.favoritesList);
+
 			info.AddValue("ScreenDpi", this.screenDpi);
 			info.AddValue("Adorner", this.adorner);
 			info.AddValue("DefaultZoom", this.defaultZoom);
@@ -861,7 +865,7 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("LastModel", this.lastModel);
 			info.AddValue("LastFilename", this.lastFilename);
 			info.AddValue("InitialDirectory", this.initialDirectory);
-			info.AddValue("FavoritesList", this.favoritesList);
+			info.AddValue("FavoritesList", serializableFavoritesList);
 			info.AddValue("FavoritesBig", this.favoritesBig);
 			info.AddValue("LabelProperties", this.labelProperties);
 
@@ -940,12 +944,19 @@ namespace Epsitec.Common.Document.Settings
 
 			if ( version >= 8 )
 			{
-				this.favoritesList = (System.Collections.ArrayList) info.GetValue("FavoritesList", typeof(System.Collections.ArrayList));
+				System.Collections.ArrayList serializableFavoritesList = (System.Collections.ArrayList) info.GetValue("FavoritesList", typeof(System.Collections.ArrayList));
+
+				this.favoritesList = new Epsitec.Common.Types.Collections.ObservableList<string> ();
 				this.favoritesBig = info.GetBoolean("FavoritesBig");
+
+				foreach (string item in serializableFavoritesList)
+				{
+					this.favoritesList.Add (item);
+				}
 			}
 			else
 			{
-				this.favoritesList = new System.Collections.ArrayList();
+				this.favoritesList = new Epsitec.Common.Types.Collections.ObservableList<string> ();
 				this.favoritesBig = true;
 			}
 		}
@@ -969,7 +980,7 @@ namespace Epsitec.Common.Document.Settings
 		protected System.Collections.ArrayList	lastFilename;
 		protected int							lastFilenameMax;
 		protected string						initialDirectory;
-		protected System.Collections.ArrayList	favoritesList;
+		protected Epsitec.Common.Types.Collections.ObservableList<string> favoritesList;
 		protected bool							favoritesBig;
 		protected bool							labelProperties;
 		protected Drawing.ColorCollection		colorCollection;

@@ -146,7 +146,6 @@
     <Compile Include="AbstractDialog.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AbstractFile.cs" />
     <Compile Include="AbstractFileDialog.cs" />
     <Compile Include="AbstractMessageDialog.cs">
       <SubType>Code</SubType>

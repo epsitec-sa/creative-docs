@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.App.DocumentEditor.Dialogs
 {
-	public abstract class AbstractFileSave : AbstractFileDialog
+	public abstract class AbstractFileSave : AbstractFile
 	{
 		public AbstractFileSave(DocumentEditor editor)
 			: base (editor)

@@ -11,7 +11,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 	/// <summary>
 	/// Dialogue pour créer un nouveau document.
 	/// </summary>
-	public class FileNew : AbstractFileDialog
+	public class FileNew : AbstractFile
 	{
 		public FileNew(DocumentEditor editor) : base(editor)
 		{

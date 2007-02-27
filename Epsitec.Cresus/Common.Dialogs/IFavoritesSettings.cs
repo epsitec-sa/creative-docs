@@ -1,14 +1,19 @@
+//	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Dialogs
 {
 	public interface IFavoritesSettings
 	{
-		bool FavoritesBig
+		bool UseLargeIcons
 		{
 			get;
 			set;
 		}
 
-		System.Collections.ArrayList FavoritesList
+		Epsitec.Common.Types.Collections.ObservableList<string> Items
 		{
 			get;
 		}

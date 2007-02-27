@@ -7,13 +7,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 {
 	using GlobalSettings=Common.Document.Settings.GlobalSettings;
 
-	public abstract class AbstractFileDialog : Epsitec.Common.Dialogs.AbstractFile
+	public abstract class AbstractFile : Epsitec.Common.Dialogs.AbstractFileDialog
 	{
-		public AbstractFileDialog(DocumentEditor editor)
-			: base (editor.GlobalSettings)
+		public AbstractFile(DocumentEditor editor)
 		{
 			this.editor = editor;
 			this.globalSettings = editor.GlobalSettings;
+		}
+
+		protected override Epsitec.Common.Dialogs.IFavoritesSettings FavoritesSettings
+		{
+			get
+			{
+				return this.globalSettings;
+			}
 		}
 
 		protected override bool UpdateWindowBounds(string name, ref Epsitec.Common.Drawing.Point location, ref Epsitec.Common.Drawing.Size size)
@@ -36,7 +43,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			if (!this.isSave)
 			{
-				this.FavoritesAdd (Document.OriginalSamplesDisplayName, Misc.Icon ("FileTypeEpsitecSamples"), Document.OriginalSamplesPath);
+				this.FavoritesAdd (Document.OriginalSamplesDisplayName, Misc.Icon ("FileTypeOriginalSamples"), Document.OriginalSamplesPath);
 			}
 
 			this.FavoritesAdd (Document.MySamplesDisplayName, Misc.Icon ("FileTypeMySamples"), Document.MySamplesPath);

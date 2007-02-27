@@ -188,7 +188,7 @@
     <EmbeddedResource Include="Images\FileTypeFavorite.icon" />
     <EmbeddedResource Include="Images\NavigateNext.icon" />
     <EmbeddedResource Include="Images\NavigatePrev.icon" />
-    <EmbeddedResource Include="Images\FileTypeEpsitecSamples.icon" />
+    <EmbeddedResource Include="Images\FileTypeOriginalSamples.icon" />
     <EmbeddedResource Include="Images\FileTypeMySamples.icon" />
     <Content Include="Resources\App.DocumentEditor\Captions.00.resource" />
     <Content Include="Resources\App.DocumentEditor\Captions.en.resource" />
@@ -234,7 +234,7 @@
     <Compile Include="Dialogs\Abstract.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Dialogs\AbstractFileDialog.cs" />
+    <Compile Include="Dialogs\AbstractFile.cs" />
     <Compile Include="Dialogs\AbstractFileSave.cs" />
     <Compile Include="Dialogs\ExportICO.cs" />
     <Compile Include="Dialogs\FileSave.cs" />
