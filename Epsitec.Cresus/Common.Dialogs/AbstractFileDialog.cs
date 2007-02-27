@@ -81,22 +81,6 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected virtual string RedirectPath(string path)
-		{
-			return path;
-		}
-
-		protected abstract IFavoritesSettings FavoritesSettings
-		{
-			get;
-		}
-
-		protected abstract FileDialogType FileDialogType
-		{
-			get;
-		}
-
-
 		public string InitialFileName
 		{
 			//	Nom de fichier initial.
@@ -203,10 +187,6 @@ namespace Epsitec.Common.Dialogs
 			this.window.ShowDialog ();  // montre le dialogue modal...
 		}
 
-
-		protected abstract void CreateWindow();
-
-
 		public void Hide()
 		{
 			if (this.window != null)
@@ -215,7 +195,24 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		public abstract void Save();
+		public abstract void PersistWindowBounds();
+
+		protected virtual string RedirectPath(string path)
+		{
+			return path;
+		}
+
+		protected abstract IFavoritesSettings FavoritesSettings
+		{
+			get;
+		}
+
+		protected abstract FileDialogType FileDialogType
+		{
+			get;
+		}
+
+		protected abstract void CreateWindow();
 
 
 		protected void SetInitialFolder(FolderItem folder, bool updateVisited)
@@ -565,7 +562,7 @@ namespace Epsitec.Common.Dialogs
 			this.fieldPath.Margins = new Margins (0, 5, 0, 0);
 			this.fieldPath.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleFieldPathComboOpening);
 			this.fieldPath.ComboClosed += new EventHandler (this.HandleFieldPathComboClosed);
-			this.fieldPath.TextChanged += new EventHandler (this.HandleFieldPathTextChanged);
+			this.fieldPath.AddEventHandler (Widget.TextProperty, this.HandleFieldPathTextChanged);
 			this.fieldPath.TabIndex = 1;
 			this.fieldPath.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -1228,8 +1225,6 @@ namespace Epsitec.Common.Dialogs
 			bool enable = (item != null && item.FullPath != AbstractFileDialog.NewEmptyDocument);
 			bool okEnable = enable;
 
-			System.Diagnostics.Debug.WriteLine (string.Format ("UpdateButtons: {0} {1} {2}", this.fieldFileName.Text, this.IsTextFieldFocused, item));
-
 			string oldPath = this.initialDirectory.FullPath;
 			string newPath = this.RedirectPath (oldPath);
 
@@ -1268,8 +1263,6 @@ namespace Epsitec.Common.Dialogs
 			//	Met à jour le chemin d'accès.
 			if (this.fieldPath != null)
 			{
-				this.ignoreChanged = true;
-
 				string text = TextLayout.ConvertToTaggedText (this.initialDirectory.DisplayName);
 				if (this.initialSmallIcon != null)
 				{
@@ -1278,8 +1271,6 @@ namespace Epsitec.Common.Dialogs
 
 				this.fieldPath.Text = text;
 				this.UpdateSelectedFavorites ();
-
-				this.ignoreChanged = false;
 			}
 		}
 
@@ -1288,8 +1279,6 @@ namespace Epsitec.Common.Dialogs
 			//	Met à jour le nom du fichier.
 			if (this.fieldFileName != null)
 			{
-				this.ignoreChanged = true;
-
 				if (string.IsNullOrEmpty (this.initialFileName))
 				{
 					this.fieldFileName.Text = "";
@@ -1298,8 +1287,6 @@ namespace Epsitec.Common.Dialogs
 				{
 					this.fieldFileName.Text = TextLayout.ConvertToTaggedText (System.IO.Path.GetFileNameWithoutExtension (this.initialFileName));
 				}
-
-				this.ignoreChanged = false;
 			}
 		}
 
@@ -2128,18 +2115,40 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		private void HandleFieldPathTextChanged(object sender)
+		private void HandleFieldPathTextChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			//	Le texte pour le chemin d'accès a changé.
-			if (this.ignoreChanged)
+			if ((this.comboTexts == null) ||
+				(this.fieldPath == null))
 			{
 				return;
 			}
 
-			this.ignoreChanged = true;
-			this.comboSelected = this.comboTexts.IndexOf (this.fieldPath.Text);
+			string oldValue = (e.OldValue as string) ?? "";
+			string newValue = (e.NewValue as string) ?? "";
+
+			oldValue = oldValue.Trim ();
+			newValue = newValue.Trim ();
+
+			if (oldValue == newValue)
+			{
+				return;
+			}
+
+			this.comboSelected = this.comboTexts.FindIndex (
+				delegate (string path)
+				{
+					if (path.Trim () == newValue)
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				});
+			
 			this.fieldPath.Text = AbstractFileDialog.RemoveStartingIndent (this.fieldPath.Text);
-			this.ignoreChanged = false;
 		}
 
 		private void HandleSliderChanged(object sender)
@@ -2192,15 +2201,6 @@ namespace Epsitec.Common.Dialogs
 			this.CloseWindow ();
 		}
 
-		private bool IsTextFieldFocused
-		{
-			//	Focus dans un texte éditable ?
-			get
-			{
-				return this.focusedWidget is AbstractTextField;
-			}
-		}
-
 		private void HandleButtonOkClicked(object sender, MessageEventArgs e)
 		{
 			//	Bouton 'Ouvrir/Enregistrer' cliqué.
@@ -2248,7 +2248,6 @@ namespace Epsitec.Common.Dialogs
 		private FileListItem renameSelected;
 		private Widget focusedWidget;
 		private Widget focusedWidgetBeforeRename;
-		private bool ignoreChanged;
 
 		private List<FolderItem> favoritesList;
 		private int favoritesFixes;

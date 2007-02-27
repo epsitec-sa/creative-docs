@@ -5390,11 +5390,11 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgGlyphs.Save();
 			this.dlgInfos.Save();
 			this.dlgKey.Save();
-			this.dlgFileNew.Save();
-			this.dlgFileOpen.Save();
-			this.dlgFileOpenModel.Save();
-			this.dlgFileSave.Save();
-			this.dlgFileSaveModel.Save();
+			this.dlgFileNew.PersistWindowBounds();
+			this.dlgFileOpen.PersistWindowBounds();
+			this.dlgFileOpenModel.PersistWindowBounds();
+			this.dlgFileSave.PersistWindowBounds();
+			this.dlgFileSaveModel.PersistWindowBounds();
 			this.dlgPageStack.Save();
 			this.dlgPrint.Save();
 			this.dlgReplace.Save();

@@ -36,7 +36,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.CreateAll ("FileOpen", new Size (720, 480), Res.Strings.Dialog.Open.TitleDoc, 20);
 		}
 
-		public override void Save()
+		public override void PersistWindowBounds()
 		{
 			//	Enregistre la position de la fenêtre du dialogue.
 			this.WindowSave("FileOpen");
