@@ -7,7 +7,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Document;
 using Epsitec.Common.IO;
 
-namespace Epsitec.App.DocumentEditor.Dialogs
+namespace Epsitec.Common.Dialogs
 {
 	//	Cette classe représente une 'ligne' dans la liste, qui peut représenter
 	//	un fichier, un dossier ou la commande 'nouveau document vide'.

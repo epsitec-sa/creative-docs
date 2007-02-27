@@ -55,8 +55,8 @@ namespace Epsitec.Common.Document.Settings
 
 			//	Suppose que le dossier des exemples est dans le même dossier
 			//	que l'application.
-			this.initialDirectory = Document.DirectoryOriginalSamples;
-			this.newDocument      = Document.DirectoryOriginalSamples;
+			this.initialDirectory = Document.OriginalSamplesPath;
+			this.newDocument      = Document.OriginalSamplesPath;
 
 			this.colorCollection = new ColorCollection();
 			this.colorCollectionDirectory = "";

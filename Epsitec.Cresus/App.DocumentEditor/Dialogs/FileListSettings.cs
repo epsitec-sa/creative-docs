@@ -7,7 +7,7 @@ using Epsitec.Common.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Epsitec.App.DocumentEditor.Dialogs
+namespace Epsitec.Common.Dialogs
 {
 	internal class FileListSettings
 	{

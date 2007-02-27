@@ -13,9 +13,6 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Dialogs
 {
-	using FileListSettings=Epsitec.App.DocumentEditor.Dialogs.FileListSettings;
-	using FileListItem=Epsitec.App.DocumentEditor.Dialogs.FileListItem;
-	using FileListItemViewFactory=Epsitec.App.DocumentEditor.Dialogs.FileListItemViewFactory;
 	using Document=Epsitec.Common.Document.Document;
 	
 	/// <summary>
@@ -790,10 +787,10 @@ namespace Epsitec.Common.Dialogs
 
 			if (!this.isSave)
 			{
-				this.FavoritesAdd(Document.DisplayOriginalSamples, "FileTypeEpsitecSamples", Document.DirectoryOriginalSamples);
+				this.FavoritesAdd(Document.OriginalSamplesDisplayName, "FileTypeEpsitecSamples", Document.OriginalSamplesPath);
 			}
 
-			this.FavoritesAdd(Document.DisplayMySamples, "FileTypeMySamples", Document.DirectoryMySamples);
+			this.FavoritesAdd(Document.MySamplesDisplayName, "FileTypeMySamples", Document.MySamplesPath);
 
 			this.FavoritesAdd(FolderId.Recent);              // Mes documents récents
 			this.FavoritesAdd(FolderId.VirtualDesktop);      // Bureau
@@ -1203,7 +1200,7 @@ namespace Epsitec.Common.Dialogs
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("UpdateButtons: {0} {1} {2}", this.fieldFileName.Text, this.IsTextFieldFocused, item));
 
-			if (string.Equals(this.initialFolder.FullPath, Document.DirectoryOriginalSamples, System.StringComparison.OrdinalIgnoreCase))
+			if (string.Equals(this.initialFolder.FullPath, Document.OriginalSamplesPath, System.StringComparison.OrdinalIgnoreCase))
 			{
 				enable = false;
 			}

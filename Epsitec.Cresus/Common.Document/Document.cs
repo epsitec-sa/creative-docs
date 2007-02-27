@@ -1449,7 +1449,7 @@ namespace Epsitec.Common.Document
 			return DocumentFileExtension.Unknown;
 		}
 
-		public static string DisplayOriginalSamples
+		public static string OriginalSamplesDisplayName
 		{
 			//	Retourne le nom à afficher pour le dossier contenant les exemples originaux.
 			get
@@ -1458,7 +1458,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public static string DisplayMySamples
+		public static string MySamplesDisplayName
 		{
 			//	Retourne le nom à afficher pour le dossier contenant les exemples personnels.
 			get
@@ -1467,16 +1467,16 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public static string DirectoryOriginalSamples
+		public static string OriginalSamplesPath
 		{
 			//	Retourne le nom du dossier contenant les exemples originaux.
 			get
 			{
-				return string.Concat(Common.Support.Globals.Directories.Executable, "\\", Document.DisplayOriginalSamples);
+				return string.Concat(Common.Support.Globals.Directories.Executable, "\\", Document.OriginalSamplesDisplayName);
 			}
 		}
 
-		public static string DirectoryMySamples
+		public static string MySamplesPath
 		{
 			//	Retourne le nom du dossier contenant les exemples personnels.
 			get
@@ -1495,7 +1495,7 @@ namespace Epsitec.Common.Document
 #else
 				FolderItem item = FileManager.GetFolderItem(FolderId.VirtualMyDocuments, FolderQueryMode.NoIcons);
 				string path = item.FullPath;
-				return string.Concat(path, "\\", Res.Strings.Directory.MyDocumentsRoot, "\\", Document.DisplayMySamples);
+				return string.Concat(path, "\\", Res.Strings.Directory.MyDocumentsRoot, "\\", Document.MySamplesDisplayName);
 #endif
 			}
 		}
@@ -1509,10 +1509,10 @@ namespace Epsitec.Common.Document
 			}
 
 			string dir = System.IO.Path.GetDirectoryName(filename);
-			if (string.Equals(dir, Document.DirectoryOriginalSamples, System.StringComparison.OrdinalIgnoreCase))
+			if (string.Equals(dir, Document.OriginalSamplesPath, System.StringComparison.OrdinalIgnoreCase))
 			{
 				string file = System.IO.Path.GetFileName(filename);
-				filename = string.Concat(Document.DirectoryMySamples, "\\", file);
+				filename = string.Concat(Document.MySamplesPath, "\\", file);
 				return true;
 			}
 
@@ -1527,9 +1527,9 @@ namespace Epsitec.Common.Document
 				return false;
 			}
 
-			if (string.Equals(directory, Document.DirectoryOriginalSamples, System.StringComparison.OrdinalIgnoreCase))
+			if (string.Equals(directory, Document.OriginalSamplesPath, System.StringComparison.OrdinalIgnoreCase))
 			{
-				directory = Document.DirectoryMySamples;
+				directory = Document.MySamplesPath;
 				return true;
 			}
 
