@@ -1379,7 +1379,7 @@ namespace Epsitec.App.DocumentEditor
 				this.dlgFileOpen.InitialDirectory = this.globalSettings.InitialDirectory;
 				this.dlgFileOpen.InitialFileName = "";
 
-				this.dlgFileOpen.Show();  // choix d'un fichier...
+				this.dlgFileOpen.ShowDialog();  // choix d'un fichier...
 				if (this.dlgFileOpen.Result != Common.Dialogs.DialogResult.Accept)
 				{
 					return false;
@@ -1406,7 +1406,7 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgFileOpenModel.InitialDirectory = this.globalSettings.NewDocument;
 			this.dlgFileOpenModel.InitialFileName = "";
 
-			this.dlgFileOpenModel.Show();  // choix d'un fichier...
+			this.dlgFileOpenModel.ShowDialog();  // choix d'un fichier...
 			if (this.dlgFileOpenModel.Result != Common.Dialogs.DialogResult.Accept)
 			{
 				return false;
@@ -1541,7 +1541,7 @@ namespace Epsitec.App.DocumentEditor
 						this.DialogWarningRedirection();
 					}
 
-					this.dlgFileSave.Show();  // choix d'un fichier...
+					this.dlgFileSave.ShowDialog();  // choix d'un fichier...
 					if (this.dlgFileSave.Result != Common.Dialogs.DialogResult.Accept)
 					{
 						return false;
@@ -1592,7 +1592,7 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgFileSaveModel.FontIncludeMode = this.CurrentDocument.FontIncludeModeValue;
 			this.dlgFileSaveModel.ImageIncludeMode = this.CurrentDocument.ImageIncludeModeValue;
 
-			this.dlgFileSaveModel.Show();  // choix d'un fichier...
+			this.dlgFileSaveModel.ShowDialog();  // choix d'un fichier...
 			if (this.dlgFileSaveModel.Result != Common.Dialogs.DialogResult.Accept)
 			{
 				return false;
@@ -1733,7 +1733,7 @@ namespace Epsitec.App.DocumentEditor
 
 				this.dlgFileNew.InitialDirectory = newDocument;
 
-				this.dlgFileNew.Show();  // choix d'un fichier...
+				this.dlgFileNew.ShowDialog();  // choix d'un fichier...
 				if (this.dlgFileNew.Result != Common.Dialogs.DialogResult.Accept)
 				{
 					return;

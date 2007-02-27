@@ -32,7 +32,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected override void CreateWindow()
 		{
 			//	Crée la fenêtre du dialogue.
-			this.CreateAll ("FileSave", new Size (720, 480), Res.Strings.Dialog.Save.TitleDoc, 20);
+			this.CreateUserInterface ("FileSave", new Size (720, 480), Res.Strings.Dialog.Save.TitleDoc, 20, this.editor.Window);
 		}
 
 		public override void PersistWindowBounds()

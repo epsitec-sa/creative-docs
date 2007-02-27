@@ -23,14 +23,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		protected override bool UpdateWindowBounds(string name, ref Epsitec.Common.Drawing.Point location, ref Epsitec.Common.Drawing.Size size)
+		protected override Rectangle GetPersistedWindowBounds(string name)
 		{
-			return this.globalSettings.GetWindowBounds (name, ref location, ref size);
-		}
+			Point location;
+			Size  size;
 
-		protected override Window GetWindowOwner()
-		{
-			return this.editor.Window;
+			if (this.globalSettings.GetWindowBounds (name, out location, out size))
+			{
+				return new Rectangle (location, size);
+			}
+			else
+			{
+				return Rectangle.Empty;
+			}
 		}
 
 		protected override void CreateFileExtensionDescriptions(Epsitec.Common.Dialogs.IFileExtensionDescription settings)
@@ -55,10 +60,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			return path;
 		}
 
-		protected override Rectangle GetCurrentBounds()
+		protected override Rectangle GetOwnerBounds()
 		{
 			//	Donne les frontières de l'application.
-			Window window = this.GetWindowOwner ();
+			Window window = this.editor.Window;
 
 			if ( window == null )
 			{

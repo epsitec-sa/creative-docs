@@ -175,14 +175,22 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-		public bool GetWindowBounds(string name, ref Drawing.Point location, ref Drawing.Size size)
+		public bool GetWindowBounds(string name, out Drawing.Point location, out Drawing.Size size)
 		{
 			//	Cherche une définition de fenêtre.
 			WindowBounds wb = this.windowBounds[name] as WindowBounds;
-			if ( wb == null )  return false;
-			location = wb.Location;
-			size = wb.Size;
-			return true;
+			if (wb == null)
+			{
+				location = Drawing.Point.Zero;
+				size = Drawing.Size.Zero;
+				return false;
+			}
+			else
+			{
+				location = wb.Location;
+				size = wb.Size;
+				return true;
+			}
 		}
 
 

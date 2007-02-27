@@ -57,9 +57,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			dx = this.window.WindowSize.Width;
 			dy = this.window.WindowSize.Height;  // taille avec le cadre
 
-			Point location = new Point();
-			Size size = new Size();
-			if ( this.globalSettings.GetWindowBounds(name, ref location, ref size) )
+			Point location;
+			Size size;
+			if ( this.globalSettings.GetWindowBounds(name, out location, out size) )
 			{
 				if ( resizable )
 				{

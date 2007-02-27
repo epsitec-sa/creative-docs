@@ -176,7 +176,8 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		public void Show()
+		
+		public DialogResult ShowDialog()
 		{
 			if (this.window == null)
 			{
@@ -184,17 +185,12 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			this.UpdateAll (this.FileDialogType == FileDialogType.New ? 0 : -1, true);
-			this.window.ShowDialog ();  // montre le dialogue modal...
+			this.window.ShowDialog ();
+
+			return this.Result;
 		}
 
-		public void Hide()
-		{
-			if (this.window != null)
-			{
-				this.window.Hide ();
-			}
-		}
-
+		
 		public abstract void PersistWindowBounds();
 
 		protected virtual string RedirectPath(string path)
@@ -215,7 +211,7 @@ namespace Epsitec.Common.Dialogs
 		protected abstract void CreateWindow();
 
 
-		protected void SetInitialFolder(FolderItem folder, bool updateVisited)
+		private void SetInitialFolder(FolderItem folder, bool updateVisited)
 		{
 			//	Change le dossier courant.
 			if (folder.IsEmpty)
@@ -243,7 +239,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void AddToVisitedDirectories(FolderItem folder)
+		private void AddToVisitedDirectories(FolderItem folder)
 		{
 			if (folder.IsEmpty)
 			{
@@ -269,7 +265,7 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
-		protected void CreateAll(string name, Size windowSize, string title, double cellHeight)
+		protected void CreateUserInterface(string name, Size windowSize, string title, double cellHeight, Window owner)
 		{
 			//	Crée la fenêtre et tous les widgets pour peupler le dialogue.
 			this.window = new Window ();
@@ -277,8 +273,8 @@ namespace Epsitec.Common.Dialogs
 			this.window.PreventAutoClose = true;
 			this.WindowInit (name, windowSize.Width, windowSize.Height, true);
 			this.window.Text = title;
-			this.window.Owner = this.GetWindowOwner ();
-			this.window.Icon = this.window.Owner == null ? null : this.window.Owner.Icon;
+			this.window.Owner = owner;
+			this.window.Icon = owner == null ? null : this.window.Owner.Icon;
 			this.window.WindowCloseClicked += new EventHandler (this.HandleWindowCloseClicked);
 			this.window.Root.MinSize = new Size (400, 200);
 			this.window.Root.Padding = new Margins (8, 8, 8, 8);
@@ -330,37 +326,36 @@ namespace Epsitec.Common.Dialogs
 		protected void WindowInit(string name, double dx, double dy, bool resizable)
 		{
 			this.window.ClientSize = new Size (dx, dy);
+			this.window.Name       = name;
+
 			dx = this.window.WindowSize.Width;
 			dy = this.window.WindowSize.Height;  // taille avec le cadre
 
-			Point location = new Point ();
-			Size size = new Size ();
-			if (this.UpdateWindowBounds (name, ref location, ref size))
+			Rectangle bounds = this.GetPersistedWindowBounds (name);
+			
+			if (bounds.IsValid)
 			{
 				if (resizable)
 				{
-					this.window.ClientSize = size;
+					this.window.ClientSize = bounds.Size;
 					dx = this.window.WindowSize.Width;
 					dy = this.window.WindowSize.Height;  // taille avec le cadre
 				}
 
-				Rectangle rect = new Rectangle (location, new Size (dx, dy));
-				rect = ScreenInfo.FitIntoWorkingArea (rect);
-				this.window.WindowBounds = rect;
+				bounds.Size = new Size (dx, dy);
+				bounds = ScreenInfo.FitIntoWorkingArea (bounds);
+				this.window.WindowBounds = bounds;
 			}
 			else
 			{
-				Rectangle cb = this.GetCurrentBounds ();
-				Rectangle rect = new Rectangle (cb.Center.X-dx/2, cb.Center.Y-dy/2, dx, dy);
-				this.window.WindowBounds = rect;
+				Rectangle cb = this.GetOwnerBounds ();
+				this.window.WindowBounds = new Rectangle (cb.Center.X-dx/2, cb.Center.Y-dy/2, dx, dy);
 			}
 		}
 
-		protected abstract bool UpdateWindowBounds(string name, ref Point location, ref Size size);
+		protected abstract Rectangle GetPersistedWindowBounds(string name);
 
-		protected abstract Window GetWindowOwner();
-
-		protected abstract Rectangle GetCurrentBounds();
+		protected abstract Rectangle GetOwnerBounds();
 
 		protected void CreateCommandDispatcher()
 		{
