@@ -163,7 +163,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleOptionsExtendClicked(object sender, MessageEventArgs e)
 		{
 			this.optionsToolbar.Visibility = !this.optionsToolbar.Visibility;
-			this.UpdateButtons ();
+//-			this.UpdateButtons ();
 		}
 
 		private void HandleOptionsFontClicked(object sender, MessageEventArgs e)

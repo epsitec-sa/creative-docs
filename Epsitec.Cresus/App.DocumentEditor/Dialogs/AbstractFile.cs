@@ -48,10 +48,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			if (this.FileDialogType != Epsitec.Common.Dialogs.FileDialogType.Save)
 			{
-				this.FavoritesAdd (Document.OriginalSamplesDisplayName, Misc.Icon ("FileTypeOriginalSamples"), Document.OriginalSamplesPath);
+				this.AddFavorite (Document.OriginalSamplesDisplayName, Misc.Icon ("FileTypeOriginalSamples"), Document.OriginalSamplesPath);
 			}
 
-			this.FavoritesAdd (Document.MySamplesDisplayName, Misc.Icon ("FileTypeMySamples"), Document.MySamplesPath);
+			this.AddFavorite (Document.MySamplesDisplayName, Misc.Icon ("FileTypeMySamples"), Document.MySamplesPath);
 		}
 
 		protected override string RedirectPath(string path)

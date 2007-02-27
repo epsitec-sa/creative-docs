@@ -271,14 +271,15 @@ namespace Epsitec.Common.Dialogs
 			this.window = new Window ();
 			this.window.MakeSecondaryWindow ();
 			this.window.PreventAutoClose = true;
-			this.WindowInit (name, windowSize.Width, windowSize.Height, true);
+			this.window.Name = name;
 			this.window.Text = title;
 			this.window.Owner = owner;
 			this.window.Icon = owner == null ? null : this.window.Owner.Icon;
+			
+			this.SetWindowGeometry (windowSize.Width, windowSize.Height, true);
+			
 			this.window.WindowCloseClicked += new EventHandler (this.HandleWindowCloseClicked);
-			this.window.Root.MinSize = new Size (400, 200);
-			this.window.Root.Padding = new Margins (8, 8, 8, 8);
-
+			
 			this.CreateCommandDispatcher ();
 			this.CreateResizer ();
 			this.CreateAccess ();
@@ -286,7 +287,7 @@ namespace Epsitec.Common.Dialogs
 			this.CreateTable (cellHeight);
 			this.CreateRename ();
 
-			//	Danss l'ordre de bas en haut:
+			//	Dans l'ordre de bas en haut :
 			this.CreateFooter ();
 			this.CreateOptions ();
 			this.CreateFileName ();
@@ -296,7 +297,15 @@ namespace Epsitec.Common.Dialogs
 		{
 		}
 
-		protected void UpdateAll(int initialSelection, bool focusInFileName)
+		protected virtual void UpdateOptions()
+		{
+		}
+
+		protected abstract Rectangle GetPersistedWindowBounds(string name);
+
+		protected abstract Rectangle GetOwnerBounds();
+
+		private void UpdateAll(int initialSelection, bool focusInFileName)
 		{
 			//	Mise à jour lorsque les widgets sont déjà créés, avant de montrer le dialogue.
 			this.selectedFileName = null;
@@ -319,20 +328,15 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected virtual void UpdateOptions()
-		{
-		}
-
-		protected void WindowInit(string name, double dx, double dy, bool resizable)
+		private void SetWindowGeometry(double dx, double dy, bool resizable)
 		{
 			this.window.ClientSize = new Size (dx, dy);
-			this.window.Name       = name;
 
 			dx = this.window.WindowSize.Width;
 			dy = this.window.WindowSize.Height;  // taille avec le cadre
 
-			Rectangle bounds = this.GetPersistedWindowBounds (name);
-			
+			Rectangle bounds = this.GetPersistedWindowBounds (this.window.Name);
+
 			if (bounds.IsValid)
 			{
 				if (resizable)
@@ -351,41 +355,40 @@ namespace Epsitec.Common.Dialogs
 				Rectangle cb = this.GetOwnerBounds ();
 				this.window.WindowBounds = new Rectangle (cb.Center.X-dx/2, cb.Center.Y-dy/2, dx, dy);
 			}
+
+			this.window.Root.MinSize = new Size (400, 200);
+			this.window.Root.Padding = new Margins (8, 8, 8, 8);
 		}
 
-		protected abstract Rectangle GetPersistedWindowBounds(string name);
-
-		protected abstract Rectangle GetOwnerBounds();
-
-		protected void CreateCommandDispatcher()
+		private void CreateCommandDispatcher()
 		{
 			this.dispatcher = new CommandDispatcher ();
 			this.context = new CommandContext ();
 
-			this.prevState            = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NavigatePrev, this.NavigatePrev);
-			this.nextState            = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NavigateNext, this.NavigateNext);
-			this.parentState          = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.ParentFolder, this.ParentDirectory);
-			this.newState             = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NewFolder, this.NewDirectory);
-			this.renameState          = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Rename, this.RenameStarting);
-			this.deleteState          = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Delete, this.FileDelete);
-			this.favoritesAddState    = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Add, this.FavoritesAdd);
-			this.favoritesRemoveState = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Remove, this.FavoritesRemove);
-			this.favoritesUpState     = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Up, this.FavoritesMoveUp);
-			this.favoritesDownState   = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Down, this.FavoritesMoveDown);
-			this.favoritesBigState    = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.ToggleSize, this.FavoritesToggleSize);
+			this.prevState            = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NavigatePrev, this.NavigatePrev);
+			this.nextState            = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NavigateNext, this.NavigateNext);
+			this.parentState          = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.ParentFolder, this.ParentDirectory);
+			this.newState             = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NewFolder, this.NewDirectory);
+			this.renameState          = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Rename, this.RenameStarting);
+			this.deleteState          = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Delete, this.FileDelete);
+			this.favoritesAddState    = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Add, this.AddFavorite);
+			this.favoritesRemoveState = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Remove, this.FavoritesRemove);
+			this.favoritesUpState     = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Up, this.FavoritesMoveUp);
+			this.favoritesDownState   = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Down, this.FavoritesMoveDown);
+			this.favoritesBigState    = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.ToggleSize, this.FavoritesToggleSize);
 
 			CommandDispatcher.SetDispatcher (this.window, this.dispatcher);
 			CommandContext.SetContext (this.window, this.context);
 		}
 
-		protected CommandState CreateCommandState(Command command, SimpleCallback handler)
+		private CommandState RegisterCommand(Command command, SimpleCallback handler)
 		{
 			this.dispatcher.Register (command, handler);
 			return this.context.GetCommandState (command);
 		}
 
 
-		protected void CreateResizer()
+		private void CreateResizer()
 		{
 			//	Crée l'icône en bas à droite pour signaler que la fenêtre est redimensionnable.
 			ResizeKnob resize = new ResizeKnob (this.window.Root);
@@ -394,7 +397,7 @@ namespace Epsitec.Common.Dialogs
 			ToolTip.Default.SetToolTip (resize, Epsitec.Common.Dialogs.Res.Strings.Dialog.Tooltip.Resize);
 		}
 
-		protected void CreateTable(double cellHeight)
+		private void CreateTable(double cellHeight)
 		{
 			//	Crée la table principale contenant la liste des fichiers et dossiers.
 			Widget group = new Widget (this.window.Root);
@@ -510,7 +513,7 @@ namespace Epsitec.Common.Dialogs
 			this.UpdateButtons ();
 		}
 
-		protected void CreateRename()
+		private void CreateRename()
 		{
 			//	Crée le widget permettant de renommer un fichier/dossier.
 			//	Normalement, ce widget est caché.
@@ -524,7 +527,7 @@ namespace Epsitec.Common.Dialogs
 			this.fieldRename.IsModal = true;
 		}
 
-		protected void CreateAccess()
+		private void CreateAccess()
 		{
 			//	Crée la partie controlant le chemin d'accès.
 			Widget group = new Widget (this.window.Root);
@@ -592,7 +595,7 @@ namespace Epsitec.Common.Dialogs
 			buttonPrev.Dock = DockStyle.Right;
 		}
 
-		protected void CreateToolbar()
+		private void CreateToolbar()
 		{
 			//	Crée la grande toolbar.
 			this.toolbar = new HToolBar (this.window.Root);
@@ -675,7 +678,7 @@ namespace Epsitec.Common.Dialogs
 			this.toolbar.Items.Add (buttonNew);
 		}
 
-		protected void CreateFileName()
+		private void CreateFileName()
 		{
 			//	Crée la partie permettant d'éditer le nom de fichier.
 			Widget group = new Widget (this.window.Root);
@@ -709,7 +712,7 @@ namespace Epsitec.Common.Dialogs
 			ext.Dock = DockStyle.Right;
 		}
 
-		protected void CreateFooter()
+		private void CreateFooter()
 		{
 			//	Crée le pied du dialogue, avec les boutons 'ouvrir/enregistrer' et 'annuler'.
 			Widget footer = new Widget (this.window.Root);
@@ -790,7 +793,7 @@ namespace Epsitec.Common.Dialogs
 			this.UpdateButtons ();
 		}
 
-		protected void UpdateFavorites()
+		private void UpdateFavorites()
 		{
 			//	Met à jour le panneau de gauche des favoris.
 			this.favoritesBigState.ActiveState = this.FavoritesSettings.UseLargeIcons ? ActiveState.Yes : ActiveState.No;
@@ -810,24 +813,24 @@ namespace Epsitec.Common.Dialogs
 
 			this.FavoritesAddApplicationFolders ();
 
-			this.FavoritesAdd (FolderId.Recent);              // Mes documents récents
-			this.FavoritesAdd (FolderId.VirtualDesktop);      // Bureau
-			this.FavoritesAdd (FolderId.VirtualMyDocuments);  // Mes documents
-			this.FavoritesAdd (FolderId.VirtualMyComputer);   // Poste de travail
-			this.FavoritesAdd (FolderId.VirtualNetwork);      // Favoris réseau
+			this.AddFavorite (FolderId.Recent);              // Mes documents récents
+			this.AddFavorite (FolderId.VirtualDesktop);      // Bureau
+			this.AddFavorite (FolderId.VirtualMyDocuments);  // Mes documents
+			this.AddFavorite (FolderId.VirtualMyComputer);   // Poste de travail
+			this.AddFavorite (FolderId.VirtualNetwork);      // Favoris réseau
 
 			this.favoritesFixes = this.favoritesList.Count;
 
 			foreach (string dir in this.FavoritesSettings.Items)
 			{
 				FolderItem item = FileManager.GetFolderItem (dir, FolderQueryMode.NoIcons);
-				this.FavoritesAdd (item.DisplayName, "FileTypeFavorite", dir);
+				this.AddFavorite (item.DisplayName, "FileTypeFavorite", dir);
 			}
 		}
 
 		protected abstract void FavoritesAddApplicationFolders();
 
-		protected void FavoritesAdd(string text, string icon, string path)
+		protected void AddFavorite(string text, string icon, string path)
 		{
 			//	Ajoute un favoris dans le panneau de gauche.
 			FolderItem item = FileManager.GetFolderItem (path, FolderQueryMode.LargeIcons);
@@ -842,10 +845,10 @@ namespace Epsitec.Common.Dialogs
 			f.DisplayName = text;
 			f.IconName = icon;
 
-			this.FavoritesAdd (item, f);
+			this.AddFavorite (item, f);
 		}
 
-		protected void FavoritesAdd(FolderId id)
+		protected void AddFavorite(FolderId id)
 		{
 			//	Ajoute un favoris dans le panneau de gauche.
 			FolderItem item = FileManager.GetFolderItem (id, FolderQueryMode.LargeIcons);
@@ -854,10 +857,10 @@ namespace Epsitec.Common.Dialogs
 			f.DisplayName = item.DisplayName;
 			f.IconName = item.Icon == null ? null : item.Icon.ImageName;
 
-			this.FavoritesAdd (item, f);
+			this.AddFavorite (item, f);
 		}
 
-		protected void FavoritesAdd(FolderItem item, FileButton f)
+		private void AddFavorite(FolderItem item, FileButton f)
 		{
 			//	Ajoute un favoris dans le panneau de gauche.
 			f.PreferredHeight = (this.favoritesBigState.ActiveState == ActiveState.Yes) ? Common.Widgets.FileButton.ExtendedHeight : Common.Widgets.FileButton.CompactHeight;
@@ -879,7 +882,7 @@ namespace Epsitec.Common.Dialogs
 			this.favoritesList.Add (item);
 		}
 
-		protected void UpdateSelectedFavorites()
+		private void UpdateSelectedFavorites()
 		{
 			//	Met à jour le favoris sélectionné selon le chemin d'accès en cours.
 			this.favoritesSelected = -1;
@@ -902,7 +905,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void UpdateTable(int sel)
+		private void UpdateTable(int sel)
 		{
 			//	Met à jour la table des fichiers.
 			this.CreateCollectionView ();
@@ -933,7 +936,7 @@ namespace Epsitec.Common.Dialogs
 			this.UpdateButtons ();
 		}
 
-		protected bool UseLargeIcons
+		private bool UseLargeIcons
 		{
 			//	Indique si la hauteur des lignes permet l'usage des grandes icônes.
 			get
@@ -942,7 +945,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void UpdateFileList()
+		private void UpdateFileList()
 		{
 			if (this.files != null)
 			{
@@ -951,7 +954,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void RefreshFileList()
+		private void RefreshFileList()
 		{
 			if (this.files != null)
 			{
@@ -1195,7 +1198,7 @@ namespace Epsitec.Common.Dialogs
 
 		protected abstract void CreateFileExtensionDescriptions(IFileExtensionDescription settings);
 
-		protected void UpdateButtons()
+		private void UpdateButtons()
 		{
 			//	Met à jour les boutons en fonction du fichier sélectionné dans la liste.
 			if (this.renameState == null)
@@ -1253,7 +1256,7 @@ namespace Epsitec.Common.Dialogs
 			this.buttonOk.Enable = okEnable || ((item != null) && (item.IsSynthetic));
 		}
 
-		protected void UpdateInitialDirectory()
+		private void UpdateInitialDirectory()
 		{
 			//	Met à jour le chemin d'accès.
 			if (this.fieldPath != null)
@@ -1269,7 +1272,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void UpdateInitialFileName()
+		private void UpdateInitialFileName()
 		{
 			//	Met à jour le nom du fichier.
 			if (this.fieldFileName != null)
@@ -1286,7 +1289,7 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
-		protected void NavigatePrev()
+		private void NavigatePrev()
 		{
 			if (this.directoriesVisitedIndex > 0)
 			{
@@ -1295,7 +1298,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void NavigateNext()
+		private void NavigateNext()
 		{
 			if (this.directoriesVisitedIndex < this.directoriesVisited.Count-1)
 			{
@@ -1304,7 +1307,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void ParentDirectory()
+		private void ParentDirectory()
 		{
 			//	Remonte dans le dossier parent.
 			FolderItem parent = FileManager.GetParentFolderItem (this.initialDirectory, FolderQueryMode.NoIcons);
@@ -1316,7 +1319,7 @@ namespace Epsitec.Common.Dialogs
 			this.SetInitialFolder (parent, true);
 		}
 
-		protected void NewDirectory()
+		private void NewDirectory()
 		{
 			//	Crée un nouveau dossier vide.
 			string newDir = this.NewDirectoryName;
@@ -1340,7 +1343,7 @@ namespace Epsitec.Common.Dialogs
 			this.RenameStarting ();
 		}
 
-		protected string NewDirectoryName
+		private string NewDirectoryName
 		{
 			//	Retourne le nom à utiliser pour le nouveau dossier à créer.
 			//	On est assuré que le nom retourné n'existe pas déjà.
@@ -1374,7 +1377,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void FileDelete()
+		private void FileDelete()
 		{
 			//	Supprime un fichier ou un dossier.
 			FileListItem item = this.GetCurrentFileListItem ();
@@ -1399,7 +1402,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void RenameStarting()
+		private void RenameStarting()
 		{
 			//	Début d'un renommer. Le widget pour éditer le nom est positionné et
 			//	rendu visible.
@@ -1443,7 +1446,7 @@ namespace Epsitec.Common.Dialogs
 			this.fieldRename.Window.WindowResizeBeginning += this.HandleWindowResizeBeginning;
 		}
 
-		protected void RenameEnding(bool accepted)
+		private void RenameEnding(bool accepted)
 		{
 			//	Fin d'un renommer. Le fichier ou le dossier est renommé (si accepted = true)
 			//	et le widget pour éditer le nom est caché.
@@ -1498,7 +1501,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected bool IsFavoriteAddPossible
+		private bool IsFavoriteAddPossible
 		{
 			//	Indique si le dossier en cours peut être ajouté aux favoris.
 			get
@@ -1515,7 +1518,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void FavoritesAdd()
+		private void AddFavorite()
 		{
 			//	Ajoute un favoris.
 			if (this.IsFavoriteAddPossible)
@@ -1528,7 +1531,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void FavoritesRemove()
+		private void FavoritesRemove()
 		{
 			//	Supprime un favoris.
 			int sel = this.favoritesSelected-this.favoritesFixes;
@@ -1543,7 +1546,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void FavoritesMoveUp()
+		private void FavoritesMoveUp()
 		{
 			//	Monte un favoris dans la liste.
 			int sel = this.favoritesSelected-this.favoritesFixes;
@@ -1561,7 +1564,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void FavoritesMoveDown()
+		private void FavoritesMoveDown()
 		{
 			//	Descend un favoris dans la liste.
 			IList<string> list = this.FavoritesSettings.Items;
@@ -1579,7 +1582,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void FavoritesToggleSize()
+		private void FavoritesToggleSize()
 		{
 			//	Modifie la hauteur des favoris.
 			if (this.favoritesBigState.ActiveState == ActiveState.No)
@@ -1603,7 +1606,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected bool ActionOk()
+		private bool ActionOk()
 		{
 			//	Effectue l'action lorsque le bouton 'Ouvrir/Enregistrer' est actionné.
 			//	Retourne true s'il faut fermer le dialogue.
@@ -1748,7 +1751,7 @@ namespace Epsitec.Common.Dialogs
 			return true;
 		}
 
-		protected bool PromptForOverwriting()
+		private bool PromptForOverwriting()
 		{
 			//	Si requis, demande s'il faut écraser le fichier ?
 			if (this.FileDialogType != FileDialogType.Save && this.selectedFileName != AbstractFileDialog.NewEmptyDocument && !System.IO.File.Exists (this.selectedFileName))  // fichier n'existe pas ?
@@ -1780,7 +1783,7 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
-		protected static string AddStringIndent(string text, int level)
+		private static string AddStringIndent(string text, int level)
 		{
 			//	Ajoute des niveaux d'indentation au début d'un texte.
 			while (level > 0)
@@ -1791,7 +1794,7 @@ namespace Epsitec.Common.Dialogs
 			return text;
 		}
 
-		protected static string RemoveStartingIndent(string text)
+		private static string RemoveStartingIndent(string text)
 		{
 			//	Supprime tous les niveaux d'indentation au début d'un texte.
 			while (text.StartsWith ("   "))
@@ -1803,7 +1806,7 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
-		protected VMenu CreateVisitedMenu()
+		private VMenu CreateVisitedMenu()
 		{
 			//	Crée le menu pour choisir un dossier visité.
 			VMenu menu = new VMenu ();
@@ -1846,7 +1849,7 @@ namespace Epsitec.Common.Dialogs
 			return menu;
 		}
 
-		protected MenuItem CreateVisitedMenuItem(int index)
+		private MenuItem CreateVisitedMenuItem(int index)
 		{
 			//	Crée une case du menu pour choisir un dossier visité.
 			if (index == -1)
@@ -1885,12 +1888,12 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		void HandleWindowResizeBeginning(object sender)
+		private void HandleWindowResizeBeginning(object sender)
 		{
 			this.fieldFileName.Focus ();
 		}
 
-		void HandleVisitedMenuPressed(object sender, MessageEventArgs e)
+		private void HandleVisitedMenuPressed(object sender, MessageEventArgs e)
 		{
 			//	Une case du menu pour choisir un dossier visité a été actionnée.
 			MenuItem item = sender as MenuItem;
@@ -1938,7 +1941,7 @@ namespace Epsitec.Common.Dialogs
 			this.RenameEnding (false);
 		}
 
-		protected void HandleKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		private void HandleKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			//	Un widget (table ou filename) a pris/perdu le focus.
 			bool focused = (bool) e.NewValue;
@@ -2092,7 +2095,7 @@ namespace Epsitec.Common.Dialogs
 			this.comboSelected = -1;
 		}
 
-		protected void ComboAdd(FolderItem folderItem, FileListItem parent)
+		private void ComboAdd(FolderItem folderItem, FileListItem parent)
 		{
 			FileListItem item = new FileListItem (folderItem);
 			item.DefaultDescription = this.isModel ? Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Model : Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Document;
@@ -2166,7 +2169,7 @@ namespace Epsitec.Common.Dialogs
 			this.table.ItemPanel.ItemViewDefaultSize = new Size (this.table.Parent.PreferredWidth, (double) this.slider.Value);
 		}
 
-		protected void HandleWindowCloseClicked(object sender)
+		private void HandleWindowCloseClicked(object sender)
 		{
 			//	Fenêtre fermée.
 			this.CloseWindow ();
@@ -2214,6 +2217,7 @@ namespace Epsitec.Common.Dialogs
 		public static readonly string NewEmptyDocument = "#NewEmptyDocument#";
 
 		protected Window window;
+		
 		private GlyphButton toolbarExtend;
 		private HToolBar toolbar;
 		private GlyphButton navigateCombo;
