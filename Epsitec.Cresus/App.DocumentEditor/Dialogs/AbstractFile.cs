@@ -344,17 +344,17 @@ namespace Epsitec.Common.Dialogs
 			this.dispatcher = new CommandDispatcher();
 			this.context = new CommandContext();
 
-			this.prevState            = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.NavigatePrev, this.NavigatePrev);
-			this.nextState            = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.NavigateNext, this.NavigateNext);
-			this.parentState          = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.ParentDirectory, this.ParentDirectory);
-			this.newState             = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.NewDirectory, this.NewDirectory);
-			this.renameState          = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.Rename, this.RenameStarting);
-			this.deleteState          = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.Delete, this.FileDelete);
-			this.favoritesAddState    = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.Favorites.Add, this.FavoriteAdd);
-			this.favoritesRemoveState = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.Favorites.Remove, this.FavoriteRemove);
-			this.favoritesUpState     = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.Favorites.Up, this.FavoriteUp);
-			this.favoritesDownState   = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.Favorites.Down, this.FavoriteDown);
-			this.favoritesBigState    = this.CreateCommandState (Epsitec.App.DocumentEditor.Res.Commands.Dialog.File.Favorites.Big, this.FavoriteBig);
+			this.prevState            = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NavigatePrev, this.NavigatePrev);
+			this.nextState            = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NavigateNext, this.NavigateNext);
+			this.parentState          = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.ParentFolder, this.ParentDirectory);
+			this.newState             = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NewFolder, this.NewDirectory);
+			this.renameState          = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Rename, this.RenameStarting);
+			this.deleteState          = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Delete, this.FileDelete);
+			this.favoritesAddState    = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Add, this.FavoritesAdd);
+			this.favoritesRemoveState = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Remove, this.FavoritesRemove);
+			this.favoritesUpState     = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Up, this.FavoritesMoveUp);
+			this.favoritesDownState   = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Down, this.FavoritesMoveDown);
+			this.favoritesBigState    = this.CreateCommandState (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.ToggleSize, this.FavoritesToggleSize);
 
 			CommandDispatcher.SetDispatcher(this.window, this.dispatcher);
 			CommandContext.SetContext(this.window, this.context);
@@ -1501,7 +1501,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void FavoriteAdd()
+		protected void FavoritesAdd()
 		{
 			//	Ajoute un favoris.
 			if (this.IsFavoriteAddPossible)
@@ -1515,7 +1515,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void FavoriteRemove()
+		protected void FavoritesRemove()
 		{
 			//	Supprime un favoris.
 			System.Collections.ArrayList list = this.favoritesSettings.FavoritesList;
@@ -1531,7 +1531,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void FavoriteUp()
+		protected void FavoritesMoveUp()
 		{
 			//	Monte un favoris dans la liste.
 			System.Collections.ArrayList list = this.favoritesSettings.FavoritesList;
@@ -1549,7 +1549,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void FavoriteDown()
+		protected void FavoritesMoveDown()
 		{
 			//	Descend un favoris dans la liste.
 			System.Collections.ArrayList list = this.favoritesSettings.FavoritesList;
@@ -1567,7 +1567,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected void FavoriteBig()
+		protected void FavoritesToggleSize()
 		{
 			//	Modifie la hauteur des favoris.
 			if (this.favoritesBigState.ActiveState == ActiveState.No)
