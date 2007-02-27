@@ -190,8 +190,10 @@ namespace Epsitec.Common.Dialogs
 			return this.Result;
 		}
 
-		
-		public abstract void PersistWindowBounds();
+
+		public virtual void PersistWindowBounds()
+		{
+		}
 
 		protected virtual string RedirectPath(string path)
 		{
@@ -301,7 +303,11 @@ namespace Epsitec.Common.Dialogs
 		{
 		}
 
-		protected abstract Rectangle GetPersistedWindowBounds(string name);
+		protected virtual Rectangle GetPersistedWindowBounds(string name)
+		{
+			return Rectangle.Empty;
+		}
+
 
 		protected abstract Rectangle GetOwnerBounds();
 

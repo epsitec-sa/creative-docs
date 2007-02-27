@@ -34,7 +34,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			else
 			{
-				return Rectangle.Empty;
+				return base.GetPersistedWindowBounds (name);
 			}
 		}
 
@@ -75,15 +75,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 		
-		protected void WindowSave(string name)
+		public override void PersistWindowBounds()
 		{
 			//	Sauve la fenêtre.
-			if (this.window == null)
+			if ((this.window == null) ||
+				(this.globalSettings == null))
 			{
 				return;
 			}
 
-			this.globalSettings.SetWindowBounds (name, this.window.WindowLocation, this.window.ClientSize);
+			this.globalSettings.SetWindowBounds (this.window.Name, this.window.WindowLocation, this.window.ClientSize);
 		}
 		
 		protected DocumentEditor editor;
