@@ -697,16 +697,11 @@ namespace Epsitec.Common.Dialogs
 			{
 				FileListItem.type = new Epsitec.Common.Types.StructuredType ();
 
-				//	TODO: remplacer les Druid.Empty par des caption ID décrivant
-				//	les diverses colonnes; cela implique qu'il faudra commencer
-				//	par rajouter des captions, puis utiliser Res.Captions.Xyz.Id
-				//	à la place des Druid.Empty ci-après :
-
-				FileListItem.type.Fields.Add ("icon", Epsitec.Common.Types.StringType.Default, Druid.Empty);
-				FileListItem.type.Fields.Add ("name", Epsitec.Common.Types.StringType.Default, Druid.Empty);
-				FileListItem.type.Fields.Add ("type", Epsitec.Common.Types.IntegerType.Default, Druid.Empty);
-				FileListItem.type.Fields.Add ("date", Epsitec.Common.Types.DateTimeType.Default, Druid.Empty);
-				FileListItem.type.Fields.Add ("size", Epsitec.Common.Types.LongIntegerType.Default, Druid.Empty);
+				FileListItem.type.Fields.Add ("icon", Epsitec.Common.Types.StringType.Default, Res.Captions.File.Column.Icon.Id);
+				FileListItem.type.Fields.Add ("name", Epsitec.Common.Types.StringType.Default, Res.Captions.File.Column.Name.Id);
+				FileListItem.type.Fields.Add ("type", Epsitec.Common.Types.IntegerType.Default, Res.Captions.File.Column.Type.Id);
+				FileListItem.type.Fields.Add ("date", Epsitec.Common.Types.DateTimeType.Default, Res.Captions.File.Column.Date.Id);
+				FileListItem.type.Fields.Add ("size", Epsitec.Common.Types.LongIntegerType.Default, Res.Captions.File.Column.Size.Id);
 			}
 
 			return FileListItem.type;
