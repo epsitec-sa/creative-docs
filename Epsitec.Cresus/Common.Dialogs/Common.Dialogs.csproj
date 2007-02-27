@@ -220,6 +220,22 @@
     <Content Include="Resources\Common.Dialogs\module.info" />
     <Content Include="Resources\Common.Dialogs\Strings.00.resource" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\FavoritesAdd.icon" />
+    <EmbeddedResource Include="Images\FavoritesLarge.icon" />
+    <EmbeddedResource Include="Images\FavoritesRemove.icon" />
+    <EmbeddedResource Include="Images\FileDelete.icon" />
+    <EmbeddedResource Include="Images\FileNewFolder.icon" />
+    <EmbeddedResource Include="Images\FileParentFolder.icon" />
+    <EmbeddedResource Include="Images\FileRename.icon" />
+    <EmbeddedResource Include="Images\MoveDownArrow.icon" />
+    <EmbeddedResource Include="Images\MoveUpArrow.icon" />
+    <EmbeddedResource Include="Images\NavigateNext.icon" />
+    <EmbeddedResource Include="Images\NavigatePrev.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Common.Dialogs\Captions.en.resource" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

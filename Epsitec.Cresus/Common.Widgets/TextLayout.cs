@@ -3838,7 +3838,7 @@ namespace Epsitec.Common.Widgets
 								
 								if ( image == null )
 								{
-									image = Support.ImageProvider.Default.GetImage ("file:images/missing.icon", this.resourceManager);
+									image = Support.ImageProvider.Default.GetImage ("manifest:Epsitec.Common.Widgets.Images.Missing.icon", this.resourceManager);
 									System.Diagnostics.Debug.WriteLine (string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory()));
 //-									throw new System.FormatException(string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory()));
 								}

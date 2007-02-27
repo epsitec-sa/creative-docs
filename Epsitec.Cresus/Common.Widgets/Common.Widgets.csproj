@@ -787,6 +787,9 @@
     <EmbeddedResource Include="Images\Cmd.Redo.icon" />
     <EmbeddedResource Include="Images\Cmd.Undo.icon" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\Missing.icon" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

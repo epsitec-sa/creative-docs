@@ -35,6 +35,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <ProjectReference Include="..\App.DocumentEditor\App.DocumentEditor.csproj">
+      <Project>{B3B20AC3-680D-41E0-94C2-8113577CE703}</Project>
+      <Name>App.DocumentEditor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Designer\Common.Designer.csproj">
       <Project>{A70AD57E-0E80-48D7-8583-836C4758669D}</Project>
       <Name>Common.Designer</Name>
