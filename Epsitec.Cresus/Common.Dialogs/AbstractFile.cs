@@ -257,7 +257,7 @@ namespace Epsitec.Common.Dialogs
 			this.WindowInit(name, windowSize.Width, windowSize.Height, true);
 			this.window.Text = title;
 			this.window.Owner = this.GetWindowOwner ();
-			this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
+			this.window.Icon = this.window.Owner == null ? null : this.window.Owner.Icon;
 			this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 			this.window.Root.MinSize = new Size(400, 200);
 			this.window.Root.Padding = new Margins(8, 8, 8, 8);
