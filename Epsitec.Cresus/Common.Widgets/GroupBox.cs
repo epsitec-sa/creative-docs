@@ -27,11 +27,11 @@ namespace Epsitec.Common.Widgets
 			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (GroupBox), metadata);
 		}
 
-		private Drawing.Rectangle GetClientBounds()
+		protected override Drawing.Size GetTextLayoutSize()
 		{
 			if (this.IsActualGeometryValid)
 			{
-				return this.Client.Bounds;
+				return base.GetTextLayoutSize ();
 			}
 			else
 			{
@@ -41,7 +41,20 @@ namespace Epsitec.Common.Widgets
 				double dx = ((width == null)  || double.IsNaN (width.Desired))  ? this.PreferredWidth : width.Desired;
 				double dy = ((height == null) || double.IsNaN (height.Desired)) ? this.PreferredHeight : height.Desired;
 
-				return new Drawing.Rectangle (0, 0, dx, dy);
+				return new Drawing.Size (dx, dy);
+			}
+		}
+
+
+		private Drawing.Rectangle GetClientBounds()
+		{
+			if (this.IsActualGeometryValid)
+			{
+				return this.Client.Bounds;
+			}
+			else
+			{
+				return new Drawing.Rectangle (Drawing.Point.Zero, this.TextLayout.LayoutSize);
 			}
 		}
 		

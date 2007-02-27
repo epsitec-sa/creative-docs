@@ -55,22 +55,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		protected override void CreateOptions()
+		protected override void CreateOptionsUserInterface()
 		{
 			//	Crée le panneau facultatif pour les options d'enregistrement.
-			this.optionsToolbar = new Widget (this.window.Root);
-			this.optionsToolbar.Margins = new Margins (0, 0, 8, 0);
-			this.optionsToolbar.Dock = DockStyle.Bottom;
-			this.optionsToolbar.TabNavigationMode = TabNavigationMode.None;
-			this.optionsToolbar.Visibility = false;
+			this.optionsContainer = new Widget (this.window.Root);
+			this.optionsContainer.Margins = new Margins (0, 0, 8, 0);
+			this.optionsContainer.Dock = DockStyle.Bottom;
+			this.optionsContainer.TabNavigationMode = TabNavigationMode.None;
+			this.optionsContainer.Visibility = false;
+			this.optionsContainer.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			this.optionsContainer.Name = "OptionsContainer";
 
 			//	Options pour les polices.
-			GroupBox groupFont = new GroupBox (this.optionsToolbar);
+			GroupBox groupFont = new GroupBox (this.optionsContainer);
 			groupFont.Text = Res.Strings.Dialog.Save.Include.Font.Title;
 			groupFont.PreferredWidth = 180;
 			groupFont.Padding = new Margins (4, 0, 0, 3);
-			groupFont.Dock = DockStyle.Left;
+			groupFont.Dock = DockStyle.StackEnd;
 			groupFont.Margins = new Margins (0, 8, 0, 0);
+			groupFont.Name = "FontOptions";
 
 			this.optionsFontNone = new RadioButton (groupFont);
 			this.optionsFontNone.Text = Res.Strings.Dialog.Save.Include.Font.None;
@@ -88,12 +91,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.optionsFontAll.Clicked += new MessageEventHandler (this.HandleOptionsFontClicked);
 
 			//	Options pour les images.
-			GroupBox groupImage = new GroupBox (this.optionsToolbar);
+			GroupBox groupImage = new GroupBox (this.optionsContainer);
 			groupImage.Text = Res.Strings.Dialog.Save.Include.Image.Title;
 			groupImage.PreferredWidth = 180;
 			groupImage.Padding = new Margins (4, 0, 0, 3);
-			groupImage.Dock = DockStyle.Left;
+			groupImage.Dock = DockStyle.StackEnd;
 			groupImage.Margins = new Margins (0, 8, 0, 0);
+			groupImage.Name = "ImageOptions";
 
 			this.optionsImageNone = new RadioButton (groupImage);
 			this.optionsImageNone.Text = Res.Strings.Dialog.Save.Include.Image.None;
@@ -130,7 +134,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			
 			if (this.optionsExtend != null)
 			{
-				this.optionsExtend.GlyphShape = this.optionsToolbar.Visibility ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
+				this.optionsExtend.GlyphShape = this.optionsContainer.Visibility ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
 			}
 
 			
@@ -152,7 +156,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void UpdateImageIncludeMode()
 		{
 			//	Met à jour le mode d'inclusion des images.
-			if (this.optionsFontNone != null)
+			if (this.optionsImageNone != null)
 			{
 				this.optionsImageNone.ActiveState = (this.imageIncludeMode == Document.ImageIncludeMode.None) ? ActiveState.Yes : ActiveState.No;
 				this.optionsImageDefined.ActiveState = (this.imageIncludeMode == Document.ImageIncludeMode.Defined) ? ActiveState.Yes : ActiveState.No;
@@ -162,8 +166,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private void HandleOptionsExtendClicked(object sender, MessageEventArgs e)
 		{
-			this.optionsToolbar.Visibility = !this.optionsToolbar.Visibility;
-//-			this.UpdateButtons ();
+			this.optionsContainer.Visibility = !this.optionsContainer.Visibility;
 		}
 
 		private void HandleOptionsFontClicked(object sender, MessageEventArgs e)
@@ -207,7 +210,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected Document.FontIncludeMode fontIncludeMode;
 		protected Document.ImageIncludeMode imageIncludeMode;
 		protected GlyphButton optionsExtend;
-		protected Widget optionsToolbar;
+		protected Widget optionsContainer;
 		protected RadioButton optionsFontNone;
 		protected RadioButton optionsFontUsed;
 		protected RadioButton optionsFontAll;

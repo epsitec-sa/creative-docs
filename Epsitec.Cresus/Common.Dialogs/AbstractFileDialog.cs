@@ -289,11 +289,11 @@ namespace Epsitec.Common.Dialogs
 
 			//	Dans l'ordre de bas en haut :
 			this.CreateFooter ();
-			this.CreateOptions ();
+			this.CreateOptionsUserInterface ();
 			this.CreateFileName ();
 		}
 
-		protected virtual void CreateOptions()
+		protected virtual void CreateOptionsUserInterface()
 		{
 		}
 
