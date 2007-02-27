@@ -645,6 +645,13 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoDuplicate(true);
 		}
 
+		[Command("CopyToModule")]
+		void CommandCopyToModule(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentModule )  return;
+			this.CurrentModule.Modifier.ActiveViewer.DoCopyToModule(this.LastModule);
+		}
+
 		[Command("Cut")]
 		[Command("Copy")]
 		[Command("Paste")]
@@ -742,6 +749,7 @@ namespace Epsitec.Common.Designer
 			this.deleteState = this.CreateCommandState("Delete");
 			this.createState = this.CreateCommandState("Create");
 			this.duplicateState = this.CreateCommandState("Duplicate");
+			this.copyToModuleState = this.CreateCommandState("CopyToModule", KeyCode.ModifierControl|KeyCode.AlphaM);
 
 			this.fontBoldState = this.CreateCommandState("FontBold", KeyCode.ModifierControl|KeyCode.AlphaB);
 			this.fontItalicState = this.CreateCommandState("FontItalic", KeyCode.ModifierControl|KeyCode.AlphaI);
@@ -956,11 +964,22 @@ namespace Epsitec.Common.Designer
 
 		public Module CurrentModule
 		{
-			//	Retourne le Module courant.
+			//	Retourne le module courant.
 			get
 			{
 				if ( this.currentModule < 0 )  return null;
 				return this.CurrentModuleInfo.Module;
+			}
+		}
+
+		protected Module LastModule
+		{
+			//	Retourne le module précédemment sélectionné.
+			get
+			{
+				if ( this.lastModule < 0 || this.lastModule >= this.moduleInfoList.Count )  return null;
+				if ( this.lastModule == this.currentModule )  return null;
+				return this.moduleInfoList[this.lastModule].Module;
 			}
 		}
 
@@ -993,6 +1012,7 @@ namespace Epsitec.Common.Designer
 			//	Utilise un module ouvert.
 			if ( this.ignoreChange )  return;
 
+			this.lastModule = this.currentModule;
 			this.currentModule = rank;
 
 			if ( rank >= 0 )
@@ -1029,6 +1049,7 @@ namespace Epsitec.Common.Designer
 				this.deleteState.Enable = false;
 				this.createState.Enable = false;
 				this.duplicateState.Enable = false;
+				this.copyToModuleState.Enable = false;
 				this.fontBoldState.Enable = false;
 				this.fontItalicState.Enable = false;
 				this.fontUnderlinedState.Enable = false;
@@ -1364,6 +1385,7 @@ namespace Epsitec.Common.Designer
 
 		protected Support.ResourceManagerPool	resourceManagerPool;
 		protected List<ModuleInfo>				moduleInfoList;
+		protected int							lastModule = -1;
 		protected int							currentModule = -1;
 		protected double						ribbonHeight = 71;
 		protected bool							ignoreChange = false;
@@ -1382,6 +1404,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					deleteState;
 		protected CommandState					createState;
 		protected CommandState					duplicateState;
+		protected CommandState					copyToModuleState;
 		protected CommandState					fontBoldState;
 		protected CommandState					fontItalicState;
 		protected CommandState					fontUnderlinedState;

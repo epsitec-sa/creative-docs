@@ -464,6 +464,18 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+		public void DoCopyToModule(Module destModule)
+		{
+			//	Copie la ressource dans un autre module.
+			if (!this.IsDeleteOrDuplicateForViewer)
+			{
+				ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Name);
+
+				//	TODO: à finir...
+				//destModule.AccessStrings.SetField();
+			}
+		}
+
 #if false
 		public void DoMove(int direction)
 		{
@@ -854,6 +866,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.GetCommandState("Delete").Enable = (sel != -1 && count > 1 && build);
 				this.GetCommandState("Create").Enable = (sel != -1 && build);
 				this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
+				this.GetCommandState("CopyToModule").Enable = (sel != -1 && build);
 			}
 
 			if (this is Panels)
@@ -907,6 +920,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.GetCommandState("Delete").Enable = (objSelected != 0);
 					this.GetCommandState("Create").Enable = false;
 					this.GetCommandState("Duplicate").Enable = false;
+					this.GetCommandState("CopyToModule").Enable = false;
 				}
 
 				this.GetCommandState("PanelDeselectAll").Enable = (objSelected != 0);
