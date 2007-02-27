@@ -76,7 +76,74 @@ namespace Epsitec.Common.Dialogs
 		{
 			public static class Dialog
 			{
-				public static string Title { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (0)); } }
+				public static class File
+				{
+					public static string Directory { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (10)); } }
+					public static string Document { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (11)); } }
+					public static string LabelDoc { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (17)); } }
+					public static string LabelMod { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (18)); } }
+					public static string Model { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (21)); } }
+					public static string NewDirectoryName { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (22)); } }
+					public static string Statistics { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (26)); } }
+					public static class Button
+					{
+						public static string New { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (7)); } }
+						public static string Open { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (8)); } }
+						public static string Save { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (9)); } }
+					}
+					
+					public static class Header
+					{
+						public static string Date { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (12)); } }
+						public static string Description { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (13)); } }
+						public static string FileName { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (14)); } }
+						public static string Preview { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (15)); } }
+						public static string Size { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (16)); } }
+					}
+					
+					public static class LabelPath
+					{
+						public static string Open { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (19)); } }
+						public static string Save { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (20)); } }
+					}
+					
+					public static class Size
+					{
+						public static string Giga { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (23)); } }
+						public static string Kilo { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (24)); } }
+						public static string Mega { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (25)); } }
+					}
+					
+					public static class Tooltip
+					{
+						public static string ExtendInclude { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (4)); } }
+						public static string ExtendToolbar { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (3)); } }
+						public static string PreviewSize { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (5)); } }
+						public static string VisitedMenu { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (6)); } }
+					}
+				}
+				
+				public static class Question
+				{
+					public static class Open
+					{
+						public static string File { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (27)); } }
+					}
+					
+					public static class Save
+					{
+						public static string File { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (28)); } }
+						public static string Part1 { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (29)); } }
+						public static string Part2 { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (30)); } }
+					}
+				}
+				
+				public static class Tooltip
+				{
+					public static string Close { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (0)); } }
+					public static string Help { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1)); } }
+					public static string Resize { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (2)); } }
+				}
 			}
 			
 			public static string GetString(params string[] path)
