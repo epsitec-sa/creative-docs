@@ -41,7 +41,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected override void FavoritesAddApplicationFolders()
 		{
-			if (!this.isSave)
+			if (this.FileDialogType != Epsitec.Common.Dialogs.FileDialogType.Save)
 			{
 				this.FavoritesAdd (Document.OriginalSamplesDisplayName, Misc.Icon ("FileTypeOriginalSamples"), Document.OriginalSamplesPath);
 			}

@@ -1536,7 +1536,7 @@ namespace Epsitec.App.DocumentEditor
 					this.dlgFileSave.FontIncludeMode = this.CurrentDocument.FontIncludeModeValue;
 					this.dlgFileSave.ImageIncludeMode = this.CurrentDocument.ImageIncludeModeValue;
 
-					if (this.dlgFileSave.IsRedirection && this.dlgFileSave.InitialFileName != "")
+					if (this.dlgFileSave.IsDirectoryRedirected && this.dlgFileSave.InitialFileName != "")
 					{
 						this.DialogWarningRedirection();
 					}

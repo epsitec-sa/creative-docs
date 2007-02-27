@@ -1,7 +1,6 @@
 //	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX & Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.IO;
 using Epsitec.Common.Support;
@@ -16,7 +15,8 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Dialogs
 {
 	/// <summary>
-	/// Classe abstraite pour les dialogues FileNew, FileOpen et FileOpenModel.
+	/// The <c>AbstractFileDialog</c> is used as a base class for every file
+	/// dialog (open, save, etc.) which displays a list of files.
 	/// </summary>
 	public abstract class AbstractFileDialog
 	{
@@ -24,23 +24,21 @@ namespace Epsitec.Common.Dialogs
 		{
 			this.directoriesVisited = new List<FolderItem> ();
 			this.directoriesVisitedIndex = -1;
-
-			this.focusedWidget = null;
 		}
 
 
-		public Common.Dialogs.DialogResult Result
+		public DialogResult Result
 		{
 			//	Indique si le dialogue a été fermé avec 'ouvrir' ou 'annuler'.
 			get
 			{
 				if (this.selectedFileName == null)
 				{
-					return Common.Dialogs.DialogResult.Cancel;
+					return DialogResult.Cancel;
 				}
 				else
 				{
-					return Common.Dialogs.DialogResult.Accept;
+					return DialogResult.Accept;
 				}
 			}
 		}
@@ -50,7 +48,7 @@ namespace Epsitec.Common.Dialogs
 			//	Dossier initial.
 			get
 			{
-				return this.initialFolder.FullPath;
+				return this.initialDirectory.FullPath;
 			}
 			set
 			{
@@ -63,7 +61,7 @@ namespace Epsitec.Common.Dialogs
 				}
 				else
 				{
-					if (this.isSave)
+					if (this.FileDialogType == FileDialogType.Save)
 					{
 						string oldPath = value;
 						string newPath = this.RedirectPath (oldPath);
@@ -92,7 +90,11 @@ namespace Epsitec.Common.Dialogs
 		{
 			get;
 		}
-		
+
+		protected abstract FileDialogType FileDialogType
+		{
+			get;
+		}
 
 
 		public string InitialFileName
@@ -104,7 +106,7 @@ namespace Epsitec.Common.Dialogs
 			}
 			set
 			{
-				if (this.isSave)
+				if (this.FileDialogType == FileDialogType.Save)
 				{
 					value = this.RedirectPath (value);
 				}
@@ -149,7 +151,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		public bool IsRedirection
+		public bool IsDirectoryRedirected
 		{
 			//	Indique si le dossier passé avec InitialDirectory a dû être
 			//	redirigé de 'Exemples originaux' vers 'Mes exemples'.
@@ -190,7 +192,20 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		public abstract void Show();
+		public void Show()
+		{
+			if (this.window == null)
+			{
+				this.CreateWindow ();
+			}
+
+			this.UpdateAll (this.FileDialogType == FileDialogType.New ? 0 : -1, true);
+			this.window.ShowDialog ();  // montre le dialogue modal...
+		}
+
+
+		protected abstract void CreateWindow();
+
 
 		public void Hide()
 		{
@@ -208,18 +223,18 @@ namespace Epsitec.Common.Dialogs
 			//	Change le dossier courant.
 			if (folder.IsEmpty)
 			{
-				this.initialFolder = FileManager.GetFolderItem (FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
+				this.initialDirectory = FileManager.GetFolderItem (FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
 			}
 			else
 			{
-				this.initialFolder = folder;
+				this.initialDirectory = folder;
 			}
 
-			this.initialSmallIcon = FileManager.GetFolderItemIcon (this.initialFolder, FolderQueryMode.SmallIcons);
+			this.initialSmallIcon = FileManager.GetFolderItemIcon (this.initialDirectory, FolderQueryMode.SmallIcons);
 
 			if (updateVisited)
 			{
-				this.AddToVisitedDirectories (this.initialFolder);
+				this.AddToVisitedDirectories (this.initialDirectory);
 			}
 
 			this.UpdateInitialDirectory ();
@@ -538,7 +553,7 @@ namespace Epsitec.Common.Dialogs
 			ToolTip.Default.SetToolTip (this.toolbarExtend, Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Tooltip.ExtendToolbar);
 
 			StaticText label = new StaticText (group);
-			label.Text = this.isSave ? Epsitec.Common.Dialogs.Res.Strings.Dialog.File.LabelPath.Save : Epsitec.Common.Dialogs.Res.Strings.Dialog.File.LabelPath.Open;
+			label.Text = this.FileDialogType == FileDialogType.Save ? Epsitec.Common.Dialogs.Res.Strings.Dialog.File.LabelPath.Save : Epsitec.Common.Dialogs.Res.Strings.Dialog.File.LabelPath.Open;
 			label.PreferredWidth = 140-16-10-1;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Dock = DockStyle.Left;
@@ -726,17 +741,19 @@ namespace Epsitec.Common.Dialogs
 			this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			string ok;
-			if (this.displayNewEmtpyDocument)
+			switch (this.FileDialogType)
 			{
-				ok = Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.New;
-			}
-			else if (this.isSave)
-			{
-				ok = Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.Save;
-			}
-			else
-			{
-				ok = Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.Open;
+				case FileDialogType.New:
+					ok = Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.New;
+					break;
+
+				case FileDialogType.Save:
+					ok = Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.Save;
+					break;
+
+				default:
+					ok = Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.Open;
+					break;
 			}
 
 			this.buttonOk = new Button (footer);
@@ -882,7 +899,7 @@ namespace Epsitec.Common.Dialogs
 					FileButton f = widget as FileButton;
 
 					int i = System.Int32.Parse (f.Name, System.Globalization.CultureInfo.InvariantCulture);
-					bool active = (this.favoritesList[i] == this.initialFolder);
+					bool active = (this.favoritesList[i] == this.initialDirectory);
 					f.ActiveState = active ? ActiveState.Yes : ActiveState.No;
 
 					if (active)
@@ -952,11 +969,11 @@ namespace Epsitec.Common.Dialogs
 
 		private bool RefreshFileList(CancelCallback cancelCallback)
 		{
-			if (this.initialFolder.IsFolder)
+			if (this.initialDirectory.IsFolder)
 			{
 				FileListSettings settings = this.GetFileListSettings ();
 
-				string path = this.initialFolder.FullPath;
+				string path = this.initialDirectory.FullPath;
 
 				List<string> added = new List<string> ();
 				List<string> deleted = new List<string> ();
@@ -1140,7 +1157,7 @@ namespace Epsitec.Common.Dialogs
 
 			try
 			{
-				foreach (FolderItem item in FileManager.GetFolderItems (this.initialFolder, settings.FolderQueryMode, filter))
+				foreach (FolderItem item in FileManager.GetFolderItems (this.initialDirectory, settings.FolderQueryMode, filter))
 				{
 					settings.Process (this.files, item);
 				}
@@ -1160,9 +1177,9 @@ namespace Epsitec.Common.Dialogs
 			{
 				this.files.Clear ();
 
-				if (this.displayNewEmtpyDocument)
+				if (this.FileDialogType == FileDialogType.New)
 				{
-					this.files.Add (new FileListItem ("manifest:Epsitec.Common.Dialogs.Images.New.icon", Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument, "-", Epsitec.Common.Dialogs.Res.Strings.Dialog.File.NewEmptyDocument));  // première ligne avec 'nouveau document vide'
+					this.files.Add (new FileListItem ("manifest:Epsitec.Common.Dialogs.Images.New.icon", AbstractFileDialog.NewEmptyDocument, "-", Epsitec.Common.Dialogs.Res.Strings.Dialog.File.NewEmptyDocument));  // première ligne avec 'nouveau document vide'
 				}
 			}
 		}
@@ -1173,8 +1190,8 @@ namespace Epsitec.Common.Dialogs
 			settings = new FileListSettings ();
 
 			settings.FolderQueryMode = this.UseLargeIcons ? FolderQueryMode.LargeIcons : FolderQueryMode.SmallIcons;
-			settings.HideFolders     = this.initialFolder.Equals (FileManager.GetFolderItem (FolderId.Recent, FolderQueryMode.NoIcons));
-			settings.HideShortcuts   = FolderItem.IsNetworkPath (this.initialFolder.FullPath);
+			settings.HideFolders     = this.initialDirectory.Equals (FileManager.GetFolderItem (FolderId.Recent, FolderQueryMode.NoIcons));
+			settings.HideShortcuts   = FolderItem.IsNetworkPath (this.initialDirectory.FullPath);
 
 			settings.DefineFilterPattern (this.fileFilterPattern);
 
@@ -1208,12 +1225,12 @@ namespace Epsitec.Common.Dialogs
 			this.favoritesDownState.Enable = (sel >= 0 && sel < list.Count-1);
 
 			FileListItem item = this.GetCurrentFileListItem ();
-			bool enable = (item != null && item.FullPath != Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument);
+			bool enable = (item != null && item.FullPath != AbstractFileDialog.NewEmptyDocument);
 			bool okEnable = enable;
 
 			System.Diagnostics.Debug.WriteLine (string.Format ("UpdateButtons: {0} {1} {2}", this.fieldFileName.Text, this.IsTextFieldFocused, item));
 
-			string oldPath = this.initialFolder.FullPath;
+			string oldPath = this.initialDirectory.FullPath;
 			string newPath = this.RedirectPath (oldPath);
 
 			if (oldPath != newPath)
@@ -1228,7 +1245,7 @@ namespace Epsitec.Common.Dialogs
 			this.renameState.Enable = enable;
 			this.deleteState.Enable = enable;
 
-			FolderItem parent = FileManager.GetParentFolderItem (this.initialFolder, FolderQueryMode.NoIcons);
+			FolderItem parent = FileManager.GetParentFolderItem (this.initialDirectory, FolderQueryMode.NoIcons);
 			this.parentState.Enable = !parent.IsEmpty;
 
 			this.prevState.Enable = (this.directoriesVisitedIndex > 0);
@@ -1253,7 +1270,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				this.ignoreChanged = true;
 
-				string text = TextLayout.ConvertToTaggedText (this.initialFolder.DisplayName);
+				string text = TextLayout.ConvertToTaggedText (this.initialDirectory.DisplayName);
 				if (this.initialSmallIcon != null)
 				{
 					text = string.Format ("<img src=\"{0}\"/> {1}", this.initialSmallIcon.ImageName, text);
@@ -1308,7 +1325,7 @@ namespace Epsitec.Common.Dialogs
 		protected void ParentDirectory()
 		{
 			//	Remonte dans le dossier parent.
-			FolderItem parent = FileManager.GetParentFolderItem (this.initialFolder, FolderQueryMode.NoIcons);
+			FolderItem parent = FileManager.GetParentFolderItem (this.initialDirectory, FolderQueryMode.NoIcons);
 			if (parent.IsEmpty)
 			{
 				return;
@@ -1349,7 +1366,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				for (int i=1; i<100; i++)
 				{
-					string newDir = string.Concat (this.initialFolder.FullPath, "\\", Epsitec.Common.Dialogs.Res.Strings.Dialog.File.NewDirectoryName);
+					string newDir = string.Concat (this.initialDirectory.FullPath, "\\", Epsitec.Common.Dialogs.Res.Strings.Dialog.File.NewDirectoryName);
 					if (i > 1)
 					{
 						newDir = string.Concat (newDir, " (", i.ToString (), ")");
@@ -1506,7 +1523,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				foreach (FolderItem item in this.favoritesList)
 				{
-					if (item == this.initialFolder)
+					if (item == this.initialDirectory)
 					{
 						return false;
 					}
@@ -1640,7 +1657,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				if (!System.IO.Path.IsPathRooted (name))
 				{
-					name = System.IO.Path.Combine (this.initialFolder.FullPath, name);
+					name = System.IO.Path.Combine (this.initialDirectory.FullPath, name);
 				}
 
 				if (System.IO.Directory.Exists (name))
@@ -1752,7 +1769,7 @@ namespace Epsitec.Common.Dialogs
 		protected bool PromptForOverwriting()
 		{
 			//	Si requis, demande s'il faut écraser le fichier ?
-			if (!this.isSave && this.selectedFileName != Epsitec.Common.Dialogs.AbstractFileDialog.NewEmptyDocument && !System.IO.File.Exists (this.selectedFileName))  // fichier n'existe pas ?
+			if (this.FileDialogType != FileDialogType.Save && this.selectedFileName != AbstractFileDialog.NewEmptyDocument && !System.IO.File.Exists (this.selectedFileName))  // fichier n'existe pas ?
 			{
 #if false //#fix
 				string message = string.Format(Epsitec.Common.Dialogs.Res.Strings.Dialog.Question.Open.File, Misc.ExtractName(this.selectedFileName), this.selectedFileName);
@@ -1763,7 +1780,7 @@ namespace Epsitec.Common.Dialogs
 #endif
 			}
 
-			if (this.isSave && System.IO.File.Exists (this.selectedFileName))  // fichier existe déjà ?
+			if (this.FileDialogType == FileDialogType.Save && System.IO.File.Exists (this.selectedFileName))  // fichier existe déjà ?
 			{
 #if false //#fix
 				string message = string.Format(Epsitec.Common.Dialogs.Res.Strings.Dialog.Question.Save.File, Misc.ExtractName(this.selectedFileName), this.selectedFileName);
@@ -2042,7 +2059,7 @@ namespace Epsitec.Common.Dialogs
 
 #if true
 			//	Ajoute toutes les unités du chemin courant et de ses parents.
-			FolderItem currentFolder = this.initialFolder;
+			FolderItem currentFolder = this.initialDirectory;
 			int nb = 0;
 			while (!currentFolder.IsEmpty)
 			{
@@ -2218,14 +2235,12 @@ namespace Epsitec.Common.Dialogs
 		private string fileFilterPattern;
 
 		protected bool isModel;
-		protected bool isSave;
 
 		protected bool enableNavigation;
 		protected bool enableMultipleSelection;
-		protected bool displayNewEmtpyDocument;
-
+		
 		private bool isRedirected;
-		private FolderItem initialFolder;
+		private FolderItem initialDirectory;
 		private FolderItemIcon initialSmallIcon;
 		private string initialFileName;
 		private string selectedFileName;

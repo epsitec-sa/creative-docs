@@ -19,20 +19,21 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.isModel = false;
 			this.enableNavigation = true;
 			this.enableMultipleSelection = true;
-			this.displayNewEmtpyDocument = false;
-			this.isSave = false;
 		}
 
-		public override void Show()
-		{
-			//	Crée et montre la fenêtre du dialogue.
-			if ( this.window == null )
-			{
-				this.CreateAll ("FileOpen", new Size (720, 480), Res.Strings.Dialog.Open.TitleDoc, 20);
-			}
 
-			this.UpdateAll(-1, true);
-			this.window.ShowDialog();  // montre le dialogue modal...
+		protected override Epsitec.Common.Dialogs.FileDialogType FileDialogType
+		{
+			get
+			{
+				return Epsitec.Common.Dialogs.FileDialogType.Open;
+			}
+		}
+		
+		protected override void CreateWindow()
+		{
+			//	Crée la fenêtre du dialogue.
+			this.CreateAll ("FileOpen", new Size (720, 480), Res.Strings.Dialog.Open.TitleDoc, 20);
 		}
 
 		public override void Save()
