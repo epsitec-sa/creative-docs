@@ -30,10 +30,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			if (!this.isSave)
 			{
-				this.FavoritesAdd (Document.OriginalSamplesDisplayName, "FileTypeEpsitecSamples", Document.OriginalSamplesPath);
+				this.FavoritesAdd (Document.OriginalSamplesDisplayName, Misc.Icon ("FileTypeEpsitecSamples"), Document.OriginalSamplesPath);
 			}
 
-			this.FavoritesAdd (Document.MySamplesDisplayName, "FileTypeMySamples", Document.MySamplesPath);
+			this.FavoritesAdd (Document.MySamplesDisplayName, Misc.Icon ("FileTypeMySamples"), Document.MySamplesPath);
 		}
 
 		protected override string RedirectPath(string path)

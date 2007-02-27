@@ -823,7 +823,7 @@ namespace Epsitec.Common.Dialogs
 
 			FileButton f = new FileButton();
 			f.DisplayName = text;
-			f.IconName = string.IsNullOrEmpty (icon) ? null : string.Concat ("manifest:Epsitec.Common.Dialogs.Images.", icon, ".icon");
+			f.IconName = icon;
 
 			this.FavoritesAdd(item, f);
 		}
@@ -1855,7 +1855,7 @@ namespace Epsitec.Common.Dialogs
 				string icon = "";
 				if (!isNext)
 				{
-					icon = isCurrent ? "manifest:Epsitec.Common.Dialogs.Images.ActiveCurrent.icon" : "manifest:Epsitec.Common.Dialogs.Images.ActiveNo.icon";
+					icon = isCurrent ? "manifest:Epsitec.Common.Widgets.Images.ActiveCurrent.icon" : "manifest:Epsitec.Common.Widgets.Images.ActiveNo.icon";
 				}
 
 				string text = TextLayout.ConvertToTaggedText(folder.DisplayName);

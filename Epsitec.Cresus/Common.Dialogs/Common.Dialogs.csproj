@@ -244,6 +244,9 @@
   <ItemGroup>
     <Content Include="Resources\Common.Dialogs\Captions.en.resource" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\New.icon" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
