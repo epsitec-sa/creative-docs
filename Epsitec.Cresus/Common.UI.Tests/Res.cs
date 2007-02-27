@@ -49,27 +49,27 @@ namespace Epsitec.Common.UI
 		
 		public static class Captions
 		{
-			public static Epsitec.Common.Types.Caption Address1 { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 5)); } }
-			public static Epsitec.Common.Types.Caption Address2 { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 6)); } }
-			public static Epsitec.Common.Types.Caption BillingAddress { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 18)); } }
-			public static Epsitec.Common.Types.Caption City { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 7)); } }
-			public static Epsitec.Common.Types.Caption Company { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 21)); } }
-			public static Epsitec.Common.Types.Caption FirstName { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 0)); } }
-			public static Epsitec.Common.Types.Caption InvoiceTitle { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 17)); } }
-			public static Epsitec.Common.Types.Caption LastName { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 4)); } }
-			public static Epsitec.Common.Types.Caption ShippingAddress { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 19)); } }
-			public static Epsitec.Common.Types.Caption TotalAmount { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 20)); } }
-			public static Epsitec.Common.Types.Caption ZipCode { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 8)); } }
+			public static Epsitec.Common.Types.Caption Address1 { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 5)); } }
+			public static Epsitec.Common.Types.Caption Address2 { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 6)); } }
+			public static Epsitec.Common.Types.Caption BillingAddress { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 18)); } }
+			public static Epsitec.Common.Types.Caption City { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 7)); } }
+			public static Epsitec.Common.Types.Caption Company { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 21)); } }
+			public static Epsitec.Common.Types.Caption FirstName { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 0)); } }
+			public static Epsitec.Common.Types.Caption InvoiceTitle { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 17)); } }
+			public static Epsitec.Common.Types.Caption LastName { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 4)); } }
+			public static Epsitec.Common.Types.Caption ShippingAddress { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 19)); } }
+			public static Epsitec.Common.Types.Caption TotalAmount { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 20)); } }
+			public static Epsitec.Common.Types.Caption ZipCode { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 8)); } }
 			public static class Sample
 			{
-				public static Epsitec.Common.Types.Caption Fontenay6 { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 10)); } }
-				public static Epsitec.Common.Types.Caption PierreArnaud { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 9)); } }
-				public static Epsitec.Common.Types.Caption Yverdon { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 11)); } }
+				public static Epsitec.Common.Types.Caption Fontenay6 { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 10)); } }
+				public static Epsitec.Common.Types.Caption PierreArnaud { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 9)); } }
+				public static Epsitec.Common.Types.Caption Yverdon { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 11)); } }
 			}
 			
 			public static class Suggest
 			{
-				public static Epsitec.Common.Types.Caption ColumnHeader { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 25)); } }
+				public static Epsitec.Common.Types.Caption ColumnHeader { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 25)); } }
 			}
 			
 		}
@@ -119,7 +119,7 @@ namespace Epsitec.Common.UI
 			{
 				return _stringsBundle[druid].AsString;
 			}
-			private static Epsitec.Common.Support.ResourceBundle _stringsBundle = _manager.GetBundle ("Strings");
+			private static Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
 			#endregion
 		}
 		
@@ -139,16 +139,25 @@ namespace Epsitec.Common.UI
 		
 		//	Code mapping for 'Panel' resources
 		
-		public static void Initialize(System.Type type, string name)
+		static Res()
 		{
-			_manager = new Epsitec.Common.Support.ResourceManager (type);
-			_manager.DefineDefaultModuleName (name);
+			Res.Initialize (typeof (Res), "Cresus.Tests");
+		}
+
+		public static void Initialize()
+		{
+		}
+
+		private static void Initialize(System.Type type, string name)
+		{
+			Res._manager = new Epsitec.Common.Support.ResourceManager (type);
+			Res._manager.DefineDefaultModuleName (name);
 			Commands._Initialize ();
 		}
 		
 		public static Epsitec.Common.Support.ResourceManager Manager
 		{
-			get { return _manager; }
+			get { return Res._manager; }
 		}
 		
 		public static int ModuleId

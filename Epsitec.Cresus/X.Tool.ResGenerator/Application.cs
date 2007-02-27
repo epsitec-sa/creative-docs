@@ -171,12 +171,25 @@ namespace Epsitec.Common.Tool.ResGenerator
 			buffer.Append (generator.Tabs);
 			buffer.Append ("\n");
 
-			generator.BeginBlock ("public static void", "Initialize(System.Type type, string name)");
+			generator.BeginBlock ("static", "Res()");
 			buffer.Append (generator.Tabs);
-			buffer.Append (@"_manager = new Epsitec.Common.Support.ResourceManager (type);");
+			buffer.Append (@"Res.Initialize (typeof (Res), """);
+			buffer.Append (moduleName);
+			buffer.Append (@""");");
+			buffer.Append ("\n");
+			generator.EndBlock ();
+			buffer.Append ("\n");
+
+			generator.BeginBlock ("public static void", "Initialize()");
+			generator.EndBlock ();
+			buffer.Append ("\n");
+
+			generator.BeginBlock ("private static void", "Initialize(System.Type type, string name)");
+			buffer.Append (generator.Tabs);
+			buffer.Append (@"Res._manager = new Epsitec.Common.Support.ResourceManager (type);");
 			buffer.Append ("\n");
 			buffer.Append (generator.Tabs);
-			buffer.Append (@"_manager.DefineDefaultModuleName (name);");
+			buffer.Append (@"Res._manager.DefineDefaultModuleName (name);");
 			buffer.Append ("\n");
 			if (Application.commandsGenerated)
 			{
@@ -191,7 +204,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 			generator.BeginBlock ("public static Epsitec.Common.Support.ResourceManager", "Manager");
 			buffer.Append (generator.Tabs);
-			buffer.Append (@"get { return _manager; }");
+			buffer.Append (@"get { return Res._manager; }");
 			buffer.Append ("\n");
 			generator.EndBlock ();
 
@@ -612,7 +625,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 				buffer.Append ("public static Epsitec.Common.Types.Caption ");
 				buffer.Append (delta);
-				buffer.Append (@" { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, ");
+				buffer.Append (@" { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, ");
 				buffer.Append (druid.ToFieldId ());
 				buffer.Append (")); } }\n");
 			}
@@ -712,7 +725,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 				buffer.Append ("public static Epsitec.Common.Types.Caption ");
 				buffer.Append (delta);
-				buffer.Append (@" { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, ");
+				buffer.Append (@" { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, ");
 				buffer.Append (druid.ToFieldId ());
 				buffer.Append (")); } }\n");
 			}
@@ -1019,7 +1032,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 			generator.EndBlock ();
 
 			buffer.Append (generator.Tabs);
-			buffer.Append (@"private static Epsitec.Common.Support.ResourceBundle _stringsBundle = _manager.GetBundle (""");
+			buffer.Append (@"private static Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle (""");
 			buffer.Append (bundleId);
 			buffer.Append (@""");");
 			buffer.Append ("\n");

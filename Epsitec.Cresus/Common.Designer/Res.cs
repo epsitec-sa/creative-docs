@@ -11,25 +11,25 @@ namespace Epsitec.Common.Designer
 		{
 			public static class Aspect
 			{
-				public static Epsitec.Common.Types.Caption ButtonAspect { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 387)); } }
+				public static Epsitec.Common.Types.Caption ButtonAspect { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 387)); } }
 			}
 			
 			public static class Command
 			{
-				public static Epsitec.Common.Types.Caption ButtonAspect { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 391)); } }
+				public static Epsitec.Common.Types.Caption ButtonAspect { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 391)); } }
 			}
 			
 			public static class Dialog
 			{
 				public static class TableConfiguration
 				{
-					public static Epsitec.Common.Types.Caption Add { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 410)); } }
-					public static Epsitec.Common.Types.Caption Next { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 414)); } }
-					public static Epsitec.Common.Types.Caption Prev { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 413)); } }
-					public static Epsitec.Common.Types.Caption Remove { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 411)); } }
-					public static Epsitec.Common.Types.Caption Sort { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 415)); } }
-					public static Epsitec.Common.Types.Caption TemplateAdd { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 412)); } }
-					public static Epsitec.Common.Types.Caption TemplateRemove { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 416)); } }
+					public static Epsitec.Common.Types.Caption Add { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 410)); } }
+					public static Epsitec.Common.Types.Caption Next { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 414)); } }
+					public static Epsitec.Common.Types.Caption Prev { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 413)); } }
+					public static Epsitec.Common.Types.Caption Remove { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 411)); } }
+					public static Epsitec.Common.Types.Caption Sort { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 415)); } }
+					public static Epsitec.Common.Types.Caption TemplateAdd { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 412)); } }
+					public static Epsitec.Common.Types.Caption TemplateRemove { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 416)); } }
 				}
 			}
 			
@@ -37,118 +37,118 @@ namespace Epsitec.Common.Designer
 			{
 				public static class Structured
 				{
-					public static Epsitec.Common.Types.Caption Add { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 392)); } }
-					public static Epsitec.Common.Types.Caption ChangeCaption { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 397)); } }
-					public static Epsitec.Common.Types.Caption ChangeType { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 396)); } }
-					public static Epsitec.Common.Types.Caption Next { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 395)); } }
-					public static Epsitec.Common.Types.Caption Prev { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 394)); } }
-					public static Epsitec.Common.Types.Caption Remove { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 393)); } }
+					public static Epsitec.Common.Types.Caption Add { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 392)); } }
+					public static Epsitec.Common.Types.Caption ChangeCaption { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 397)); } }
+					public static Epsitec.Common.Types.Caption ChangeType { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 396)); } }
+					public static Epsitec.Common.Types.Caption Next { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 395)); } }
+					public static Epsitec.Common.Types.Caption Prev { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 394)); } }
+					public static Epsitec.Common.Types.Caption Remove { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 393)); } }
 					public static class Relation
 					{
-						public static Epsitec.Common.Types.Caption Bijective { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 408)); } }
-						public static Epsitec.Common.Types.Caption Collection { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 409)); } }
-						public static Epsitec.Common.Types.Caption Reference { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 407)); } }
+						public static Epsitec.Common.Types.Caption Bijective { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 408)); } }
+						public static Epsitec.Common.Types.Caption Collection { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 409)); } }
+						public static Epsitec.Common.Types.Caption Reference { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 407)); } }
 					}
 				}
 				
 				public static class Type
 				{
-					public static Epsitec.Common.Types.Caption Add { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 308)); } }
-					public static Epsitec.Common.Types.Caption Next { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 310)); } }
-					public static Epsitec.Common.Types.Caption Prev { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 309)); } }
-					public static Epsitec.Common.Types.Caption Remove { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 311)); } }
-					public static Epsitec.Common.Types.Caption SearchNext { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 345)); } }
-					public static Epsitec.Common.Types.Caption SearchPrev { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 344)); } }
-					public static Epsitec.Common.Types.Caption Sort { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 343)); } }
+					public static Epsitec.Common.Types.Caption Add { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 308)); } }
+					public static Epsitec.Common.Types.Caption Next { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 310)); } }
+					public static Epsitec.Common.Types.Caption Prev { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 309)); } }
+					public static Epsitec.Common.Types.Caption Remove { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 311)); } }
+					public static Epsitec.Common.Types.Caption SearchNext { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 345)); } }
+					public static Epsitec.Common.Types.Caption SearchPrev { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 344)); } }
+					public static Epsitec.Common.Types.Caption Sort { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 343)); } }
 				}
 			}
 			
 			public static class Geometry
 			{
-				public static Epsitec.Common.Types.Caption BottomMargin { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 3)); } }
-				public static Epsitec.Common.Types.Caption Height { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 7)); } }
-				public static Epsitec.Common.Types.Caption LeftMargin { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 0)); } }
-				public static Epsitec.Common.Types.Caption MaxHeight { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 30)); } }
-				public static Epsitec.Common.Types.Caption MaxWidth { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 28)); } }
-				public static Epsitec.Common.Types.Caption MinHeight { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 29)); } }
-				public static Epsitec.Common.Types.Caption MinWidth { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 27)); } }
-				public static Epsitec.Common.Types.Caption OriginX { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 4)); } }
-				public static Epsitec.Common.Types.Caption OriginY { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 5)); } }
-				public static Epsitec.Common.Types.Caption RightMargin { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 1)); } }
-				public static Epsitec.Common.Types.Caption TopMargin { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 2)); } }
-				public static Epsitec.Common.Types.Caption Width { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 6)); } }
+				public static Epsitec.Common.Types.Caption BottomMargin { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 3)); } }
+				public static Epsitec.Common.Types.Caption Height { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 7)); } }
+				public static Epsitec.Common.Types.Caption LeftMargin { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 0)); } }
+				public static Epsitec.Common.Types.Caption MaxHeight { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 30)); } }
+				public static Epsitec.Common.Types.Caption MaxWidth { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 28)); } }
+				public static Epsitec.Common.Types.Caption MinHeight { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 29)); } }
+				public static Epsitec.Common.Types.Caption MinWidth { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 27)); } }
+				public static Epsitec.Common.Types.Caption OriginX { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 4)); } }
+				public static Epsitec.Common.Types.Caption OriginY { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 5)); } }
+				public static Epsitec.Common.Types.Caption RightMargin { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 1)); } }
+				public static Epsitec.Common.Types.Caption TopMargin { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 2)); } }
+				public static Epsitec.Common.Types.Caption Width { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 6)); } }
 			}
 			
 			public static class Grid
 			{
-				public static Epsitec.Common.Types.Caption BottomBorder { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 260)); } }
-				public static Epsitec.Common.Types.Caption ColumnMode { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 23)); } }
-				public static Epsitec.Common.Types.Caption ColumnsCount { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 19)); } }
-				public static Epsitec.Common.Types.Caption ColumnSpan { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 21)); } }
-				public static Epsitec.Common.Types.Caption ColumnWidth { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 25)); } }
-				public static Epsitec.Common.Types.Caption LeftBorder { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 164)); } }
-				public static Epsitec.Common.Types.Caption MaxHeight { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 132)); } }
-				public static Epsitec.Common.Types.Caption MaxWidth { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 68)); } }
-				public static Epsitec.Common.Types.Caption MinHeight { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 100)); } }
-				public static Epsitec.Common.Types.Caption MinWidth { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 36)); } }
-				public static Epsitec.Common.Types.Caption RightBorder { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 196)); } }
-				public static Epsitec.Common.Types.Caption RowHeight { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 26)); } }
-				public static Epsitec.Common.Types.Caption RowMode { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 24)); } }
-				public static Epsitec.Common.Types.Caption RowsCount { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 20)); } }
-				public static Epsitec.Common.Types.Caption RowSpan { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 22)); } }
-				public static Epsitec.Common.Types.Caption TopBorder { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 228)); } }
+				public static Epsitec.Common.Types.Caption BottomBorder { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 260)); } }
+				public static Epsitec.Common.Types.Caption ColumnMode { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 23)); } }
+				public static Epsitec.Common.Types.Caption ColumnsCount { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 19)); } }
+				public static Epsitec.Common.Types.Caption ColumnSpan { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 21)); } }
+				public static Epsitec.Common.Types.Caption ColumnWidth { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 25)); } }
+				public static Epsitec.Common.Types.Caption LeftBorder { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 164)); } }
+				public static Epsitec.Common.Types.Caption MaxHeight { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 132)); } }
+				public static Epsitec.Common.Types.Caption MaxWidth { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 68)); } }
+				public static Epsitec.Common.Types.Caption MinHeight { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 100)); } }
+				public static Epsitec.Common.Types.Caption MinWidth { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 36)); } }
+				public static Epsitec.Common.Types.Caption RightBorder { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 196)); } }
+				public static Epsitec.Common.Types.Caption RowHeight { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 26)); } }
+				public static Epsitec.Common.Types.Caption RowMode { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 24)); } }
+				public static Epsitec.Common.Types.Caption RowsCount { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 20)); } }
+				public static Epsitec.Common.Types.Caption RowSpan { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 22)); } }
+				public static Epsitec.Common.Types.Caption TopBorder { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 228)); } }
 				public static class Mode
 				{
-					public static Epsitec.Common.Types.Caption Absolute { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 69)); } }
-					public static Epsitec.Common.Types.Caption Auto { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 101)); } }
-					public static Epsitec.Common.Types.Caption Proportional { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 37)); } }
+					public static Epsitec.Common.Types.Caption Absolute { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 69)); } }
+					public static Epsitec.Common.Types.Caption Auto { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 101)); } }
+					public static Epsitec.Common.Types.Caption Proportional { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 37)); } }
 				}
 			}
 			
 			public static class Layout
 			{
-				public static Epsitec.Common.Types.Caption AnchoredHorizontalAttachment { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 13)); } }
-				public static Epsitec.Common.Types.Caption AnchoredVerticalAttachment { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 14)); } }
-				public static Epsitec.Common.Types.Caption ChildrenPlacement { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 12)); } }
-				public static Epsitec.Common.Types.Caption StackedHorizontalAlignment { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 17)); } }
-				public static Epsitec.Common.Types.Caption StackedHorizontalAttachment { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 15)); } }
-				public static Epsitec.Common.Types.Caption StackedVerticalAlignment { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 18)); } }
-				public static Epsitec.Common.Types.Caption StackedVerticalAttachment { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 16)); } }
+				public static Epsitec.Common.Types.Caption AnchoredHorizontalAttachment { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 13)); } }
+				public static Epsitec.Common.Types.Caption AnchoredVerticalAttachment { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 14)); } }
+				public static Epsitec.Common.Types.Caption ChildrenPlacement { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 12)); } }
+				public static Epsitec.Common.Types.Caption StackedHorizontalAlignment { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 17)); } }
+				public static Epsitec.Common.Types.Caption StackedHorizontalAttachment { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 15)); } }
+				public static Epsitec.Common.Types.Caption StackedVerticalAlignment { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 18)); } }
+				public static Epsitec.Common.Types.Caption StackedVerticalAttachment { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 16)); } }
 			}
 			
 			public static class Padding
 			{
-				public static Epsitec.Common.Types.Caption Bottom { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 11)); } }
-				public static Epsitec.Common.Types.Caption Left { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 8)); } }
-				public static Epsitec.Common.Types.Caption Right { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 9)); } }
-				public static Epsitec.Common.Types.Caption Top { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 10)); } }
+				public static Epsitec.Common.Types.Caption Bottom { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 11)); } }
+				public static Epsitec.Common.Types.Caption Left { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 8)); } }
+				public static Epsitec.Common.Types.Caption Right { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 9)); } }
+				public static Epsitec.Common.Types.Caption Top { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 10)); } }
 			}
 			
 			public static class PanelMode
 			{
-				public static Epsitec.Common.Types.Caption Default { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 403)); } }
-				public static Epsitec.Common.Types.Caption Edition { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 404)); } }
-				public static Epsitec.Common.Types.Caption Search { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 405)); } }
-				public static Epsitec.Common.Types.Caption Type { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 406)); } }
+				public static Epsitec.Common.Types.Caption Default { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 403)); } }
+				public static Epsitec.Common.Types.Caption Edition { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 404)); } }
+				public static Epsitec.Common.Types.Caption Search { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 405)); } }
+				public static Epsitec.Common.Types.Caption Type { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 406)); } }
 			}
 			
 			public static class Types
 			{
 				public static class Type
 				{
-					public static Epsitec.Common.Types.Caption Binary { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 401)); } }
-					public static Epsitec.Common.Types.Caption Boolean { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 301)); } }
-					public static Epsitec.Common.Types.Caption Collection { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 402)); } }
-					public static Epsitec.Common.Types.Caption Date { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 398)); } }
-					public static Epsitec.Common.Types.Caption DateTime { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 400)); } }
-					public static Epsitec.Common.Types.Caption Decimal { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 304)); } }
-					public static Epsitec.Common.Types.Caption Enum { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 306)); } }
-					public static Epsitec.Common.Types.Caption Integer { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 302)); } }
-					public static Epsitec.Common.Types.Caption LongInteger { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 303)); } }
-					public static Epsitec.Common.Types.Caption String { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 305)); } }
-					public static Epsitec.Common.Types.Caption Structured { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 307)); } }
-					public static Epsitec.Common.Types.Caption Time { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 399)); } }
-					public static Epsitec.Common.Types.Caption Void { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 300)); } }
+					public static Epsitec.Common.Types.Caption Binary { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 401)); } }
+					public static Epsitec.Common.Types.Caption Boolean { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 301)); } }
+					public static Epsitec.Common.Types.Caption Collection { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 402)); } }
+					public static Epsitec.Common.Types.Caption Date { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 398)); } }
+					public static Epsitec.Common.Types.Caption DateTime { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 400)); } }
+					public static Epsitec.Common.Types.Caption Decimal { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 304)); } }
+					public static Epsitec.Common.Types.Caption Enum { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 306)); } }
+					public static Epsitec.Common.Types.Caption Integer { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 302)); } }
+					public static Epsitec.Common.Types.Caption LongInteger { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 303)); } }
+					public static Epsitec.Common.Types.Caption String { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 305)); } }
+					public static Epsitec.Common.Types.Caption Structured { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 307)); } }
+					public static Epsitec.Common.Types.Caption Time { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 399)); } }
+					public static Epsitec.Common.Types.Caption Void { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 300)); } }
 				}
 			}
 			
@@ -180,62 +180,62 @@ namespace Epsitec.Common.Designer
 			{
 				public static class AnchoredHorizontalAttachment
 				{
-					public static Epsitec.Common.Types.Caption Fill { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 357)); } }
-					public static Epsitec.Common.Types.Caption Left { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 355)); } }
-					public static Epsitec.Common.Types.Caption Right { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 356)); } }
+					public static Epsitec.Common.Types.Caption Fill { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 357)); } }
+					public static Epsitec.Common.Types.Caption Left { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 355)); } }
+					public static Epsitec.Common.Types.Caption Right { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 356)); } }
 				}
 				
 				public static class AnchoredVerticalAttachment
 				{
-					public static Epsitec.Common.Types.Caption Bottom { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 359)); } }
-					public static Epsitec.Common.Types.Caption Fill { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 361)); } }
-					public static Epsitec.Common.Types.Caption Top { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 360)); } }
+					public static Epsitec.Common.Types.Caption Bottom { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 359)); } }
+					public static Epsitec.Common.Types.Caption Fill { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 361)); } }
+					public static Epsitec.Common.Types.Caption Top { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 360)); } }
 				}
 				
 				public static class ChildrenPlacement
 				{
-					public static Epsitec.Common.Types.Caption Anchored { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 346)); } }
-					public static Epsitec.Common.Types.Caption Grid { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 349)); } }
-					public static Epsitec.Common.Types.Caption HorizontalStacked { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 348)); } }
-					public static Epsitec.Common.Types.Caption VerticalStacked { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 347)); } }
+					public static Epsitec.Common.Types.Caption Anchored { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 346)); } }
+					public static Epsitec.Common.Types.Caption Grid { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 349)); } }
+					public static Epsitec.Common.Types.Caption HorizontalStacked { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 348)); } }
+					public static Epsitec.Common.Types.Caption VerticalStacked { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 347)); } }
 				}
 				
 				public static class GridMode
 				{
-					public static Epsitec.Common.Types.Caption Absolute { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 352)); } }
-					public static Epsitec.Common.Types.Caption Auto { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 351)); } }
-					public static Epsitec.Common.Types.Caption Proportional { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 353)); } }
+					public static Epsitec.Common.Types.Caption Absolute { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 352)); } }
+					public static Epsitec.Common.Types.Caption Auto { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 351)); } }
+					public static Epsitec.Common.Types.Caption Proportional { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 353)); } }
 				}
 				
 				public static class StackedHorizontalAlignment
 				{
-					public static Epsitec.Common.Types.Caption Center { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 372)); } }
-					public static Epsitec.Common.Types.Caption Left { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 373)); } }
-					public static Epsitec.Common.Types.Caption Right { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 374)); } }
-					public static Epsitec.Common.Types.Caption Stretch { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 371)); } }
+					public static Epsitec.Common.Types.Caption Center { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 372)); } }
+					public static Epsitec.Common.Types.Caption Left { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 373)); } }
+					public static Epsitec.Common.Types.Caption Right { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 374)); } }
+					public static Epsitec.Common.Types.Caption Stretch { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 371)); } }
 				}
 				
 				public static class StackedHorizontalAttachment
 				{
-					public static Epsitec.Common.Types.Caption Fill { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 365)); } }
-					public static Epsitec.Common.Types.Caption Left { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 363)); } }
-					public static Epsitec.Common.Types.Caption Right { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 364)); } }
+					public static Epsitec.Common.Types.Caption Fill { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 365)); } }
+					public static Epsitec.Common.Types.Caption Left { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 363)); } }
+					public static Epsitec.Common.Types.Caption Right { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 364)); } }
 				}
 				
 				public static class StackedVerticalAlignment
 				{
-					public static Epsitec.Common.Types.Caption BaseLine { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 380)); } }
-					public static Epsitec.Common.Types.Caption Bottom { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 378)); } }
-					public static Epsitec.Common.Types.Caption Center { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 377)); } }
-					public static Epsitec.Common.Types.Caption Stretch { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 376)); } }
-					public static Epsitec.Common.Types.Caption Top { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 379)); } }
+					public static Epsitec.Common.Types.Caption BaseLine { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 380)); } }
+					public static Epsitec.Common.Types.Caption Bottom { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 378)); } }
+					public static Epsitec.Common.Types.Caption Center { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 377)); } }
+					public static Epsitec.Common.Types.Caption Stretch { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 376)); } }
+					public static Epsitec.Common.Types.Caption Top { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 379)); } }
 				}
 				
 				public static class StackedVerticalAttachment
 				{
-					public static Epsitec.Common.Types.Caption Bottom { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 367)); } }
-					public static Epsitec.Common.Types.Caption Fill { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 369)); } }
-					public static Epsitec.Common.Types.Caption Top { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 368)); } }
+					public static Epsitec.Common.Types.Caption Bottom { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 367)); } }
+					public static Epsitec.Common.Types.Caption Fill { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 369)); } }
+					public static Epsitec.Common.Types.Caption Top { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 368)); } }
 				}
 			}
 			
@@ -243,8 +243,8 @@ namespace Epsitec.Common.Designer
 			{
 				public static class ButtonAspect
 				{
-					public static Epsitec.Common.Types.Caption DialogButton { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 388)); } }
-					public static Epsitec.Common.Types.Caption IconButton { get { return _manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 389)); } }
+					public static Epsitec.Common.Types.Caption DialogButton { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 388)); } }
+					public static Epsitec.Common.Types.Caption IconButton { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 389)); } }
 				}
 			}
 		}
@@ -847,19 +847,28 @@ namespace Epsitec.Common.Designer
 			{
 				return _stringsBundle[druid].AsString;
 			}
-			private static Epsitec.Common.Support.ResourceBundle _stringsBundle = _manager.GetBundle ("Strings");
+			private static Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
 			#endregion
 		}
 		
-		public static void Initialize(System.Type type, string name)
+		static Res()
 		{
-			_manager = new Epsitec.Common.Support.ResourceManager (type);
-			_manager.DefineDefaultModuleName (name);
+			Res.Initialize (typeof (Res), "Common.Designer");
+		}
+
+		public static void Initialize()
+		{
+		}
+
+		private static void Initialize(System.Type type, string name)
+		{
+			Res._manager = new Epsitec.Common.Support.ResourceManager (type);
+			Res._manager.DefineDefaultModuleName (name);
 		}
 		
 		public static Epsitec.Common.Support.ResourceManager Manager
 		{
-			get { return _manager; }
+			get { return Res._manager; }
 		}
 		
 		public static int ModuleId

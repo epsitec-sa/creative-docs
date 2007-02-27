@@ -609,20 +609,29 @@ namespace Epsitec.App.DocumentEditor
 			{
 				return _stringsBundle[druid].AsString;
 			}
-			private static Epsitec.Common.Support.ResourceBundle _stringsBundle = _manager.GetBundle ("Strings");
+			private static Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
 			#endregion
 		}
 		
-		public static void Initialize(System.Type type, string name)
+		static Res()
 		{
-			_manager = new Epsitec.Common.Support.ResourceManager (type);
-			_manager.DefineDefaultModuleName (name);
+			Res.Initialize (typeof (Res), "App.DocumentEditor");
+		}
+
+		public static void Initialize()
+		{
+		}
+
+		private static void Initialize(System.Type type, string name)
+		{
+			Res._manager = new Epsitec.Common.Support.ResourceManager (type);
+			Res._manager.DefineDefaultModuleName (name);
 			Commands._Initialize ();
 		}
 		
 		public static Epsitec.Common.Support.ResourceManager Manager
 		{
-			get { return _manager; }
+			get { return Res._manager; }
 		}
 		
 		public static int ModuleId

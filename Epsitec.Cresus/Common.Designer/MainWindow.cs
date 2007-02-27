@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer
 	{
 		static MainWindow()
 		{
-			Res.Initialize(typeof(MainWindow), "Common.Designer");
+			Res.Initialize();
 
 			ImageProvider.Default.EnableLongLifeCache = true;
 			ImageProvider.Default.PrefillManifestIconCache();
