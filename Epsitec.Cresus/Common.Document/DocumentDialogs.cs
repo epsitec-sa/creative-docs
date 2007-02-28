@@ -5,7 +5,7 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.Common.Document
 {
 	/// <summary>
-	/// Summary description for Dialogs.
+	/// Summary description for DocumentDialogs.
 	/// </summary>
 	public class DocumentDialogs
 	{
