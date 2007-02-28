@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Dialogs
 		protected override void CreateWindow()
 		{
 			//	Crée la fenêtre du dialogue.
-			this.CreateUserInterface ("FileOpenImage", new Size (720, 480), "Toto", 20, this.ownerWindow);
+			this.CreateUserInterface ("FileOpenImage", new Size (720, 480), "Importer une image", 20, this.ownerWindow);
 		}
 	}
 }

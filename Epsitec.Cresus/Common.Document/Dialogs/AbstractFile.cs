@@ -11,6 +11,7 @@ namespace Epsitec.Common.Document.Dialogs
 		public AbstractFile(Document document, Window ownerWindow)
 		{
 			this.document = document;
+			this.ownerWindow = ownerWindow;
 			this.globalSettings = document.GlobalSettings;
 		}
 
@@ -39,7 +40,15 @@ namespace Epsitec.Common.Document.Dialogs
 
 		protected override void CreateFileExtensionDescriptions(Epsitec.Common.Dialogs.IFileExtensionDescription settings)
 		{
-			settings.Add (".jpg", "Toto");
+			settings.Add (".bmp", "Image JPG");
+			settings.Add (".tif", "Image TIFF");
+			settings.Add (".tiff", "Image TIFF");
+			settings.Add (".jpg", "Image JPEG");
+			settings.Add (".jpeg", "Image JPEG");
+			settings.Add (".gif", "Image GIF");
+			settings.Add (".png", "Image PNG");
+			settings.Add (".wmf", "Image WMF");
+			settings.Add (".emf", "Image EMF");
 		}
 
 		protected override void FavoritesAddApplicationFolders()

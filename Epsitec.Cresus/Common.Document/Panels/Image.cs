@@ -377,7 +377,25 @@ namespace Epsitec.Common.Document.Panels
 #else
 			Button button = sender as Button;
 			Dialogs.FileOpenImage dlg = new Dialogs.FileOpenImage(this.document, button.Window);
-			dlg.ShowDialog();
+
+			if (string.IsNullOrEmpty(this.fieldFilename.Text))
+			{
+				dlg.InitialDirectory = this.document.GlobalSettings.InitialDirectory;
+				dlg.InitialFileName = "";
+			}
+			else
+			{
+				dlg.InitialDirectory = System.IO.Path.GetDirectoryName(this.fieldFilename.Text);
+				dlg.InitialFileName = System.IO.Path.GetFileName(this.fieldFilename.Text);
+			}
+
+			dlg.ShowDialog();  // choix d'un fichier image...
+
+			if (dlg.Result == Common.Dialogs.DialogResult.Accept)
+			{
+				this.fieldFilename.Text = dlg.FileName;
+				this.fieldFilename.Cursor = this.fieldFilename.Text.Length;
+			}
 #endif
 		}
 
