@@ -7,9 +7,9 @@ namespace Epsitec.Common.Document
 	/// <summary>
 	/// Summary description for Dialogs.
 	/// </summary>
-	public class Dialogs
+	public class DocumentDialogs
 	{
-		public Dialogs(Document document)
+		public DocumentDialogs(Document document)
 		{
 			this.document = document;
 			this.widgetsTable = new System.Collections.Hashtable();
@@ -76,19 +76,19 @@ namespace Epsitec.Common.Document
 				this.tabIndex = 0;
 				if ( this.document.Type == DocumentType.Pictogram )
 				{
-					Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.SizePic);
+					DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Settings.SizePic);
 					this.CreatePoint(container, "PageSize");
 				}
 				else
 				{
-					Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.SizeDoc);
+					DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Settings.SizeDoc);
 					this.CreatePaper(container);
 					this.CreatePoint(container, "PageSize");
 					this.CreateDouble(container, "OutsideArea");
-					Dialogs.CreateSeparator(container);
+					DocumentDialogs.CreateSeparator(container);
 					this.CreateCombo(container, "DefaultUnit");
 				}
-				Dialogs.CreateSeparator(container);
+				DocumentDialogs.CreateSeparator(container);
 
 				//	Onglet Grid:
 				parent = book.FindChild("Grid");
@@ -97,18 +97,18 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 
 				this.tabIndex = 0;
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.Grid);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Settings.Grid);
 				this.CreateBool(container, "GridActive");
 				this.CreateBool(container, "GridShow");
 				this.CreatePoint(container, "GridStep");
 				this.CreatePoint(container, "GridSubdiv");
 				this.CreatePoint(container, "GridOffset");
 
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.TextGrid);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Settings.TextGrid);
 				this.CreateBool(container, "TextGridShow");
 				this.CreateDouble(container, "TextGridStep");
 				this.CreateDouble(container, "TextGridOffset");
-				Dialogs.CreateSeparator(container);
+				DocumentDialogs.CreateSeparator(container);
 
 				//	Onglet Guides:
 				parent = book.FindChild("Guides");
@@ -117,11 +117,11 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 
 				this.tabIndex = 0;
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.Magnet);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Settings.Magnet);
 				this.CreateBool(container, "GuidesActive");
 				this.CreateBool(container, "GuidesShow");
 				this.CreateBool(container, "GuidesMouse");
-				Dialogs.CreateSeparator(container);
+				DocumentDialogs.CreateSeparator(container);
 
 				if ( this.containerGuides == null )
 				{
@@ -140,15 +140,15 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 
 				this.tabIndex = 0;
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.DuplicateMove);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Settings.DuplicateMove);
 				this.CreatePoint(container, "DuplicateMove");
 				this.CreateBool(container, "RepeatDuplicateMove");
 
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.ArrowMove);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Settings.ArrowMove);
 				this.CreatePoint(container, "ArrowMove");
 				this.CreateDouble(container, "ArrowMoveMul");
 				this.CreateDouble(container, "ArrowMoveDiv");
-				Dialogs.CreateSeparator(container);
+				DocumentDialogs.CreateSeparator(container);
 
 				//	Onglet Misc:
 				parent = book.FindChild("Misc");
@@ -157,13 +157,13 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 
 				this.tabIndex = 0;
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.Dimension);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Settings.Dimension);
 				this.CreateDouble(container, "DimensionScale");
 				this.CreateDouble(container, "DimensionDecimal");
 
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.ToLinePrecision);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Settings.ToLinePrecision);
 				this.CreateDouble(container, "ToLinePrecision");
-				Dialogs.CreateSeparator(container);
+				DocumentDialogs.CreateSeparator(container);
 
 				//	Onglet Fonts:
 				parent = book.FindChild("Fonts");
@@ -172,7 +172,7 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 
 				this.tabIndex = 0;
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.Fonts.Title);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Settings.Fonts.Title);
 
 				if ( this.containerFonts == null )
 				{
@@ -248,18 +248,18 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 				
 				this.tabIndex = 0;
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.Print.Printer);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Print.Printer);
 				this.CreatePrinter(container, "PrintName");
 
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.Print.Area);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Print.Area);
 				this.CreateRange(container, "PrintRange");
 				this.CreateCombo(container, "PrintArea");
 
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.Print.Copies);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Print.Copies);
 				this.CreateDouble(container, "PrintCopies");
 				this.CreateBool(container, "PrintCollate");
 				this.CreateBool(container, "PrintReverse");
-				Dialogs.CreateSeparator(container);
+				DocumentDialogs.CreateSeparator(container);
 
 				//	Onglet Paramètres:
 				parent = book.FindChild("Param");
@@ -268,7 +268,7 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 				
 				this.tabIndex = 0;
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.Print.Param);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Print.Param);
 				this.CreateBool(container, "PrintAutoLandscape");
 				this.CreateBool(container, "PrintDraft");
 				this.CreateBool(container, "PrintPerfectJoin");
@@ -278,10 +278,10 @@ namespace Epsitec.Common.Document
 				this.CreateDouble(container, "PrintDpi");
 				this.CreateBool(container, "PrintAA");
 
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.Print.File);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Print.File);
 				this.CreateBool(container, "PrintToFile");
 				this.CreateFilename(container, "PrintFilename");
-				Dialogs.CreateSeparator(container);
+				DocumentDialogs.CreateSeparator(container);
 
 				//	Onglet Images:
 				parent = book.FindChild("Image");
@@ -290,10 +290,10 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 
 				this.tabIndex = 0;
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.Print.Image);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Print.Image);
 				this.CreateCombo(container, "PrintImageFilterA");
 				this.CreateCombo(container, "PrintImageFilterB");
-				Dialogs.CreateSeparator(container);
+				DocumentDialogs.CreateSeparator(container);
 
 				//	Onglet Pré-presse:
 				parent = book.FindChild("Publisher");
@@ -302,13 +302,13 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 				
 				this.tabIndex = 0;
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.Print.Publisher);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Print.Publisher);
 				this.CreateBool(container, "PrintAutoZoom");
 				this.CreateCombo(container, "PrintCentring");
 				this.CreateDouble(container, "PrintMargins");
 				this.CreateDouble(container, "PrintDebord");
 				this.CreateBool(container, "PrintTarget");
-				Dialogs.CreateSeparator(container);
+				DocumentDialogs.CreateSeparator(container);
 			}
 
 			this.UpdatePrint(true);
@@ -353,7 +353,7 @@ namespace Epsitec.Common.Document
 
 				this.tabIndex = 0;
 
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.Export.Param);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Export.Param);
 				this.CreateDouble(container, "ImageDpi");
 				this.CreateCombo(container, "ImageDepth");
 				this.CreateCombo(container, "ImageCompression");
@@ -361,7 +361,7 @@ namespace Epsitec.Common.Document
 				this.CreateDouble(container, "ImageAA");
 				this.CreateCombo(container, "ImageFilterA");
 				this.CreateCombo(container, "ImageFilterB");
-				Dialogs.CreateSeparator(container);
+				DocumentDialogs.CreateSeparator(container);
 			}
 
 			this.UpdateExport(true);
@@ -403,12 +403,12 @@ namespace Epsitec.Common.Document
 				
 				this.tabIndex = 0;
 
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.Print.Area);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Print.Area);
 				this.CreateRange(container, "ExportPDFRange");
 
-				Dialogs.CreateSeparator(container);
+				DocumentDialogs.CreateSeparator(container);
 				this.CreateBool(container, "ExportPDFTextCurve");
-				Dialogs.CreateSeparator(container);
+				DocumentDialogs.CreateSeparator(container);
 
 				//	Onglet Couleurs:
 				parent = book.FindChild("Color");
@@ -417,9 +417,9 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 				
 				this.tabIndex = 0;
-				Dialogs.CreateSeparator(container);
+				DocumentDialogs.CreateSeparator(container);
 				this.CreateCombo(container, "ExportPDFColorConversion");
-				Dialogs.CreateSeparator(container);
+				DocumentDialogs.CreateSeparator(container);
 
 				//	Onglet Images:
 				parent = book.FindChild("Image");
@@ -428,14 +428,14 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 				
 				this.tabIndex = 0;
-				Dialogs.CreateSeparator(container);
+				DocumentDialogs.CreateSeparator(container);
 				this.CreateCombo(container, "ExportPDFImageCompression");
 				this.CreateDouble(container, "ExportPDFJpegQuality");
 				this.CreateDouble(container, "ExportPDFImageMinDpi");
 				this.CreateDouble(container, "ExportPDFImageMaxDpi");
 				this.CreateCombo(container, "ExportPDFImageFilterA");
 				this.CreateCombo(container, "ExportPDFImageFilterB");
-				Dialogs.CreateSeparator(container);
+				DocumentDialogs.CreateSeparator(container);
 
 				//	Onglet Pré-presse:
 				parent = book.FindChild("Publisher");
@@ -444,10 +444,10 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 				
 				this.tabIndex = 0;
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.ExportPDF.Publisher);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.ExportPDF.Publisher);
 				this.CreateDouble(container, "ExportPDFDebord");
 				this.CreateBool(container, "ExportPDFTarget");
-				Dialogs.CreateSeparator(container);
+				DocumentDialogs.CreateSeparator(container);
 			}
 
 			this.UpdateExportPDF(true);
@@ -496,9 +496,9 @@ namespace Epsitec.Common.Document
 
                 this.tabIndex = 0;
 
-				Dialogs.CreateTitle(container, Res.Strings.Dialog.ExportICO.Param);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.ExportICO.Param);
 				this.CreateCombo(container, "ExportICOFormat");
-                Dialogs.CreateSeparator(container);
+                DocumentDialogs.CreateSeparator(container);
             }
 
             this.UpdateExportICO(true);
@@ -879,7 +879,7 @@ namespace Epsitec.Common.Document
 
 			IconButton ib = new IconButton(container);
 			ib.Name = sPoint.Name;
-			Dialogs.UpdateLink(ib, sep, sPoint.Link);
+			DocumentDialogs.UpdateLink(ib, sep, sPoint.Link);
 			ib.TabIndex = this.tabIndex++;
 			ib.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ib.Dock = DockStyle.Left;
@@ -1007,7 +1007,7 @@ namespace Epsitec.Common.Document
 
 			sPoint.Link = !sPoint.Link;
 			Separator sep = this.WidgetsTableSearch(settings.Name, ".SepLink") as Separator;
-			Dialogs.UpdateLink(ib, sep, sPoint.Link);
+			DocumentDialogs.UpdateLink(ib, sep, sPoint.Link);
 		}
 
 		protected static void UpdateLink(IconButton ib, Separator sep, bool state)
@@ -1260,7 +1260,7 @@ namespace Epsitec.Common.Document
 			field.Name = "PaperFormat";
 
 			field.Items.Add(Res.Strings.Dialog.Print.Format.User);
-			foreach (string format in Dialogs.PaperList)
+			foreach (string format in DocumentDialogs.PaperList)
 			{
 				field.Items.Add(format);
 			}
@@ -1290,11 +1290,11 @@ namespace Epsitec.Common.Document
 			if ( sPoint == null )  return;
 			sPoint.Link = false;
 
-			Size size = Dialogs.PaperRankToSize(sel);
+			Size size = DocumentDialogs.PaperRankToSize(sel);
 			RadioButton radio = this.WidgetsTableSearch("PaperFormat.Landscape", "") as RadioButton;
 			if ( radio != null && radio.ActiveState == ActiveState.Yes )
 			{
-				Dialogs.SwapSize(ref size);
+				DocumentDialogs.SwapSize(ref size);
 			}
 			this.document.DocumentSize = size;
 		}
@@ -1310,7 +1310,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( size.Width > size.Height )
 				{
-					Dialogs.SwapSize(ref size);
+					DocumentDialogs.SwapSize(ref size);
 					this.document.DocumentSize = size;
 				}
 			}
@@ -1318,7 +1318,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( size.Width < size.Height )
 				{
-					Dialogs.SwapSize(ref size);
+					DocumentDialogs.SwapSize(ref size);
 					this.document.DocumentSize = size;
 				}
 			}
@@ -1332,7 +1332,7 @@ namespace Epsitec.Common.Document
 			TextFieldCombo combo = this.WidgetsTableSearch("PaperFormat", "") as TextFieldCombo;
 			if ( combo != null )
 			{
-				combo.SelectedIndex = Dialogs.PaperSizeToRank(this.document.DocumentSize);
+				combo.SelectedIndex = DocumentDialogs.PaperSizeToRank(this.document.DocumentSize);
 			}
 
 			RadioButton radio;
@@ -1356,14 +1356,14 @@ namespace Epsitec.Common.Document
 		public static string PaperFormat(Size pageSize)
 		{
 			//	Retourne le format en clair, s'il existe.
-			int i = Dialogs.PaperSizeToRank(pageSize);
+			int i = DocumentDialogs.PaperSizeToRank(pageSize);
 			if (i == 0)
 			{
 				return null;
 			}
 			else
 			{
-				return Dialogs.PaperList[i-1];
+				return DocumentDialogs.PaperList[i-1];
 			}
 		}
 
@@ -1440,9 +1440,9 @@ namespace Epsitec.Common.Document
 
 		protected static int PaperSizeToRank(Size size)
 		{
-			for ( int rank=1 ; rank<=Dialogs.PaperList.Length ; rank++ )
+			for ( int rank=1 ; rank<=DocumentDialogs.PaperList.Length ; rank++ )
 			{
-				Size paper = Dialogs.PaperRankToSize(rank);
+				Size paper = DocumentDialogs.PaperRankToSize(rank);
 				if ( size.Width == paper.Width  && size.Height == paper.Height )  return rank;
 				if ( size.Width == paper.Height && size.Height == paper.Width  )  return rank;
 			}
@@ -1924,7 +1924,7 @@ namespace Epsitec.Common.Document
 					Separator sep = this.WidgetsTableSearch(setting.Name, ".SepLink") as Separator;
 					if ( ib != null && sep != null )
 					{
-						Dialogs.UpdateLink(ib, sep, sPoint.Link);
+						DocumentDialogs.UpdateLink(ib, sep, sPoint.Link);
 						ib.ActiveState = sPoint.Link ? ActiveState.Yes : ActiveState.No;
 					}
 

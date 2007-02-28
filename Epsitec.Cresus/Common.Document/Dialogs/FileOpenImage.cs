@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Dialogs
 	/// </summary>
 	public class FileOpen : AbstractFile
 	{
-		public FileOpen(Document document) : base(document)
+		public FileOpen(Document document, Window ownerWindow) : base(document, ownerWindow)
 		{
 			this.FileExtension = ".jpg";
 			this.enableNavigation = true;

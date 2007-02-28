@@ -91,7 +91,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.tabIndex = 0;
 
 				//	Crée l'onglet "general".
-				Common.Document.Dialogs.CreateTitle(bookGeneral, Res.Strings.Dialog.Settings.Startup);
+				Common.Document.DocumentDialogs.CreateTitle(bookGeneral, Res.Strings.Dialog.Settings.Startup);
 
 				combo = this.CreateCombo(bookGeneral, "FirstAction", Res.Strings.Dialog.Settings.StartupAction);
 				for ( int i=0 ; i<GlobalSettings.FirstActionCount ; i++ )
@@ -104,20 +104,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				check = this.CreateCheck(bookGeneral, "SplashScreen", Res.Strings.Dialog.Settings.SplashScreen);
 				check.ActiveState = this.globalSettings.SplashScreen ? ActiveState.Yes : ActiveState.No;
 
-				Common.Document.Dialogs.CreateTitle(bookGeneral, Res.Strings.Dialog.Settings.AutoUpdate);
+				Common.Document.DocumentDialogs.CreateTitle(bookGeneral, Res.Strings.Dialog.Settings.AutoUpdate);
 
 				check = this.CreateCheck(bookGeneral, "AutoChecker", Res.Strings.Dialog.Settings.AutoChecker);
 				check.ActiveState = this.globalSettings.AutoChecker ? ActiveState.Yes : ActiveState.No;
 
-				Common.Document.Dialogs.CreateTitle(bookGeneral, Res.Strings.Dialog.Settings.PanelProperties);
+				Common.Document.DocumentDialogs.CreateTitle(bookGeneral, Res.Strings.Dialog.Settings.PanelProperties);
 
 				check = this.CreateCheck(bookGeneral, "LabelProperties", Res.Strings.Dialog.Settings.LabelProperties);
 				check.ActiveState = this.globalSettings.LabelProperties ? ActiveState.Yes : ActiveState.No;
 
-				Common.Document.Dialogs.CreateSeparator(bookGeneral);
+				Common.Document.DocumentDialogs.CreateSeparator(bookGeneral);
 
 				//	Crée l'onglet "periph".
-				Common.Document.Dialogs.CreateTitle(bookPeriph, Res.Strings.Dialog.Settings.Mouse);
+				Common.Document.DocumentDialogs.CreateTitle(bookPeriph, Res.Strings.Dialog.Settings.Mouse);
 
 				combo = this.CreateCombo(bookPeriph, "MouseWheelAction", Res.Strings.Dialog.Settings.MouseWheel);
 				for ( int i=0 ; i<GlobalSettings.MouseWheelActionCount ; i++ )
@@ -137,7 +137,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				check = this.CreateCheck(bookPeriph, "FineCursor", Res.Strings.Dialog.Settings.FineCursor);
 				check.ActiveState = this.globalSettings.FineCursor ? ActiveState.Yes : ActiveState.No;
 
-				Common.Document.Dialogs.CreateTitle(bookPeriph, Res.Strings.Dialog.Settings.Screen);
+				Common.Document.DocumentDialogs.CreateTitle(bookPeriph, Res.Strings.Dialog.Settings.Screen);
 
 				combo = this.CreateCombo(bookPeriph, "Adorner", Res.Strings.Dialog.Settings.Adorner);
 				string[] list = Widgets.Adorners.Factory.AdornerNames;
@@ -164,10 +164,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				field.Resolution = 1.0M;
 				field.Value = (decimal) this.globalSettings.ScreenDpi;
 				
-				Common.Document.Dialogs.CreateSeparator(bookPeriph);
+				Common.Document.DocumentDialogs.CreateSeparator(bookPeriph);
 
 				//	Crée l'onglet "quick".
-				Common.Document.Dialogs.CreateTitle(bookQuick, Res.Strings.Dialog.Settings.TabPage.QuickHelp);
+				Common.Document.DocumentDialogs.CreateTitle(bookQuick, Res.Strings.Dialog.Settings.TabPage.QuickHelp);
 
 				toolBar = new HToolBar(bookQuick);
 				toolBar.Dock = DockStyle.Top;

@@ -154,7 +154,7 @@ namespace Epsitec.Common.Document
 				this.modifier  = new Modifier(this);
 				this.wrappers  = new Wrappers(this);
 				this.notifier  = new Notifier(this);
-				this.dialogs   = new Dialogs(this);
+				this.dialogs   = new DocumentDialogs(this);
 				this.settings  = new Settings.Settings(this);
 				this.printer   = new Printer(this);
 				this.exportPDF = new PDF.Export(this);
@@ -485,7 +485,7 @@ namespace Epsitec.Common.Document
 			get { return this.notifier; }
 		}
 
-		public Dialogs Dialogs
+		public DocumentDialogs Dialogs
 		{
 			//	Dialogues éventuels pour ce document.
 			get { return this.dialogs; }
@@ -1855,7 +1855,7 @@ namespace Epsitec.Common.Document
 			Statistics stat = new Statistics();
 			stat.PageSize = this.PageSize;
 
-			string format = Dialogs.PaperFormat(stat.PageSize);
+			string format = DocumentDialogs.PaperFormat(stat.PageSize);
 			if (format == null)
 			{
 				stat.PageFormat = string.Format("{0} x {1}", this.modifier.RealToString(stat.PageSize.Width), this.modifier.RealToString(stat.PageSize.Height));
@@ -3088,7 +3088,7 @@ namespace Epsitec.Common.Document
 		protected Printer						printer;
 		protected Common.Dialogs.Print			printDialog;
 		protected PDF.Export					exportPDF;
-		protected Dialogs						dialogs;
+		protected DocumentDialogs						dialogs;
 		protected string						ioDirectory;
 		protected System.Collections.ArrayList	readWarnings;
 		protected List<OpenType.FontName>		fontList;

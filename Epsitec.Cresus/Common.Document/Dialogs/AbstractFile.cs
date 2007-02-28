@@ -8,7 +8,7 @@ namespace Epsitec.Common.Document.Dialogs
 
 	public abstract class AbstractFile : Epsitec.Common.Dialogs.AbstractFileDialog
 	{
-		public AbstractFile(Document document)
+		public AbstractFile(Document document, Window ownerWindow)
 		{
 			this.document = document;
 			this.globalSettings = document.GlobalSettings;
@@ -55,15 +55,13 @@ namespace Epsitec.Common.Document.Dialogs
 		protected override Rectangle GetOwnerBounds()
 		{
 			//	Donne les frontières de l'application.
-			Window window = this.editor.Window;
-
-			if ( window == null )
+			if ( this.ownerWindow == null )
 			{
 				return this.globalSettings.MainWindowBounds;
 			}
 			else
 			{
-				return new Rectangle(window.WindowLocation, window.WindowSize);
+				return new Rectangle(this.ownerWindow.WindowLocation, this.ownerWindow.WindowSize);
 			}
 		}
 		
@@ -80,6 +78,7 @@ namespace Epsitec.Common.Document.Dialogs
 		}
 		
 		protected Document document;
+		protected Window ownerWindow;
 		protected GlobalSettings globalSettings;
 	}
 }
