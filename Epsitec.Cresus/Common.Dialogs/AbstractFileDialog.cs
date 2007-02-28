@@ -420,12 +420,12 @@ namespace Epsitec.Common.Dialogs
 			group.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.favorites = new Scrollable (group);
-			this.favorites.PreferredWidth = 140;
+			this.favorites.PreferredWidth = AbstractFileDialog.LeftColumnWidth-5;
 			this.favorites.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
 			this.favorites.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;  // (*)
 			this.favorites.Panel.IsAutoFitting = true;
 			this.favorites.IsForegroundFrame = true;
-			this.favorites.Margins = new Margins (0, -1, 0, 0);
+			this.favorites.Margins = new Margins (0, 5, 0, 0);
 			this.favorites.Dock = DockStyle.Left;
 
 			//	TODO: (*) En mode Auto, l'ascenseur est caché lors de la première apparition
@@ -563,7 +563,7 @@ namespace Epsitec.Common.Dialogs
 
 			StaticText label = new StaticText (group);
 			label.Text = this.FileDialogType == FileDialogType.Save ? Epsitec.Common.Dialogs.Res.Strings.Dialog.File.LabelPath.Save : Epsitec.Common.Dialogs.Res.Strings.Dialog.File.LabelPath.Open;
-			label.PreferredWidth = 140-16-10-1;
+			label.PreferredWidth = AbstractFileDialog.LeftColumnWidth-16-10;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Dock = DockStyle.Left;
 			label.Margins = new Margins (0, 10, 0, 0);
@@ -704,7 +704,7 @@ namespace Epsitec.Common.Dialogs
 
 			StaticText label = new StaticText (container);
 			label.Text = this.FileTypeLabel;
-			label.PreferredWidth = 140-10-1;
+			label.PreferredWidth = AbstractFileDialog.LeftColumnWidth-10;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Dock = DockStyle.Left;
 			label.Margins = new Margins (0, 10, 0, 0);
@@ -2236,6 +2236,7 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		public static readonly string NewEmptyDocument = "#NewEmptyDocument#";
+		private static readonly double LeftColumnWidth = 145;
 
 		protected Window window;
 		
