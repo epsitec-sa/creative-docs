@@ -359,6 +359,7 @@ namespace Epsitec.Common.Document.Panels
 		private void HandleOpenClicked(object sender, MessageEventArgs e)
 		{
 			//	Le bouton 'Importer' pour choisir l'image a été cliqué.
+#if false
 			FileOpen dialog = new FileOpen();
 			dialog.Title = Res.Strings.Panel.Image.Dialog.Open.Title;
 			dialog.FileName = this.fieldFilename.Text;
@@ -373,6 +374,11 @@ namespace Epsitec.Common.Document.Panels
 
 			this.fieldFilename.Text = TextLayout.ConvertToTaggedText(dialog.FileName);
 			this.fieldFilename.Cursor = this.fieldFilename.Text.Length;
+#else
+			Button button = sender as Button;
+			Dialogs.FileOpenImage dlg = new Dialogs.FileOpenImage(this.document, button.Window);
+			dlg.ShowDialog();
+#endif
 		}
 
 		private void HandleUpdateClicked(object sender, MessageEventArgs e)

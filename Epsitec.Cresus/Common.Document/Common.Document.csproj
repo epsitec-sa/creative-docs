@@ -192,7 +192,7 @@
     <Compile Include="DocumentInfo.cs" />
     <Compile Include="GlobalImageCache.cs" />
     <Compile Include="ImageCache.cs" />
-    <Compile Include="Dialogs.cs">
+    <Compile Include="DocumentDialogs.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Document.cs">

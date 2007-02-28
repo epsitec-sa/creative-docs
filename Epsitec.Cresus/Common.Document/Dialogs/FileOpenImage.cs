@@ -10,9 +10,9 @@ namespace Epsitec.Common.Document.Dialogs
 	/// <summary>
 	/// Dialogue pour ouvrir un document existant.
 	/// </summary>
-	public class FileOpen : AbstractFile
+	public class FileOpenImage : AbstractFile
 	{
-		public FileOpen(Document document, Window ownerWindow) : base(document, ownerWindow)
+		public FileOpenImage(Document document, Window ownerWindow) : base(document, ownerWindow)
 		{
 			this.FileExtension = ".jpg";
 			this.enableNavigation = true;
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Dialogs
 		protected override void CreateWindow()
 		{
 			//	Crée la fenêtre du dialogue.
-			this.CreateUserInterface ("FileImageOpen", new Size (720, 480), "Toto", 20, null);
+			this.CreateUserInterface ("FileOpenImage", new Size (720, 480), "Toto", 20, this.ownerWindow);
 		}
 	}
 }
