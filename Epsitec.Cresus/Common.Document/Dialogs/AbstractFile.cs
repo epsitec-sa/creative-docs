@@ -28,27 +28,18 @@ namespace Epsitec.Common.Document.Dialogs
 			Point location;
 			Size  size;
 
-			if (this.globalSettings.GetWindowBounds (name, out location, out size))
+			if (this.globalSettings.GetWindowBounds(name, out location, out size))
 			{
-				return new Rectangle (location, size);
+				return new Rectangle(location, size);
 			}
 			else
 			{
-				return base.GetPersistedWindowBounds (name);
+				return base.GetPersistedWindowBounds(name);
 			}
 		}
 
 		protected override void CreateFileExtensionDescriptions(Epsitec.Common.Dialogs.IFileExtensionDescription settings)
 		{
-			settings.Add (".bmp", "Image JPG");
-			settings.Add (".tif", "Image TIFF");
-			settings.Add (".tiff", "Image TIFF");
-			settings.Add (".jpg", "Image JPEG");
-			settings.Add (".jpeg", "Image JPEG");
-			settings.Add (".gif", "Image GIF");
-			settings.Add (".png", "Image PNG");
-			settings.Add (".wmf", "Image WMF");
-			settings.Add (".emf", "Image EMF");
 		}
 
 		protected override void FavoritesAddApplicationFolders()
@@ -57,14 +48,14 @@ namespace Epsitec.Common.Document.Dialogs
 
 		protected override string RedirectPath(string path)
 		{
-			Document.RedirectPath (ref path);
+			Document.RedirectPath(ref path);
 			return path;
 		}
 
 		protected override Rectangle GetOwnerBounds()
 		{
 			//	Donne les frontières de l'application.
-			if ( this.ownerWindow == null )
+			if (this.ownerWindow == null)
 			{
 				return this.globalSettings.MainWindowBounds;
 			}
@@ -77,13 +68,12 @@ namespace Epsitec.Common.Document.Dialogs
 		public override void PersistWindowBounds()
 		{
 			//	Sauve la fenêtre.
-			if ((this.window == null) ||
-				(this.globalSettings == null))
+			if (this.window == null || this.globalSettings == null)
 			{
 				return;
 			}
 
-			this.globalSettings.SetWindowBounds (this.window.Name, this.window.WindowLocation, this.window.ClientSize);
+			this.globalSettings.SetWindowBounds(this.window.Name, this.window.WindowLocation, this.window.ClientSize);
 		}
 		
 		protected Document document;

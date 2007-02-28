@@ -443,7 +443,7 @@ namespace Epsitec.Common.Dialogs
 			this.table.VerticalScrollMode = ItemTableScrollMode.ItemBased;
 			this.table.ItemPanel.ItemViewDefaultSize = new Size (this.table.Parent.PreferredWidth, cellHeight);
 			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 72));
-			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 200));
+			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 195));
 			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("type", 120, FileListItem.GetDescriptionPropertyComparer ()));
 			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("date", 96));
 			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("size", 54));

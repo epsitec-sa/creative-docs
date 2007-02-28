@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Dialogs
 	{
 		public FileOpenImage(Document document, Window ownerWindow) : base(document, ownerWindow)
 		{
-			this.FileExtension = ".jpg";
+			this.FileFilterPattern = "*.bmp|*.tif|*.tiff|*.jpg|*.jpeg|*.gif|*.png|*.wmf|*.emf";
 			this.enableNavigation = true;
 			this.enableMultipleSelection = false;
 		}
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Dialogs
 		protected override void CreateWindow()
 		{
 			//	Crée la fenêtre du dialogue.
-			this.CreateUserInterface ("FileOpenImage", new Size (720, 480), "Importer une image", 20, this.ownerWindow);
+			this.CreateUserInterface("FileOpenImage", new Size(720, 480), "Importer une image", 20, this.ownerWindow);
 		}
 	}
 }
