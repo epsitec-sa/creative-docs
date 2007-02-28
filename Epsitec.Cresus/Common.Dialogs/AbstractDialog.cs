@@ -26,24 +26,26 @@ namespace Epsitec.Common.Dialogs
 				}
 				
 				Widgets.Window owner = this.Owner;
+				Drawing.Rectangle owner_bounds;
 				
-				if (owner != null)
+				if ((owner != null) &&
+					(owner.IsMinimized == false))
 				{
-					Drawing.Rectangle owner_bounds  = owner.WindowBounds;
-					Drawing.Rectangle dialog_bounds = this.Window.WindowBounds;
-					
-					if (owner.IsMinimized)
-					{
-						owner_bounds = Widgets.ScreenInfo.AllScreens[0].Bounds;
-					}
-					
-					double ox = System.Math.Floor (owner_bounds.Left + (owner_bounds.Width - dialog_bounds.Width) / 2);
-					double oy = System.Math.Floor (owner_bounds.Top  - (owner_bounds.Height - dialog_bounds.Height) / 3 - dialog_bounds.Height);
-					
-					dialog_bounds.Location = new Drawing.Point (ox, oy);
-					
-					this.Window.WindowBounds = dialog_bounds;
+					owner_bounds = owner.WindowBounds;
 				}
+				else
+				{
+					owner_bounds = Widgets.ScreenInfo.AllScreens[0].Bounds;
+				}
+
+				Drawing.Rectangle dialog_bounds = this.Window.WindowBounds;
+				
+				double ox = System.Math.Floor (owner_bounds.Left + (owner_bounds.Width - dialog_bounds.Width) / 2);
+				double oy = System.Math.Floor (owner_bounds.Top  - (owner_bounds.Height - dialog_bounds.Height) / 3 - dialog_bounds.Height);
+				
+				dialog_bounds.Location = new Drawing.Point (ox, oy);
+				
+				this.Window.WindowBounds = dialog_bounds;
 				
 				this.OnDialogOpening ();
 				
@@ -82,6 +84,7 @@ namespace Epsitec.Common.Dialogs
 					}
 					
 					this.Window.Hide ();
+					this.OnDialogClosed ();
 					
 					if (this.is_modal)
 					{
@@ -92,7 +95,7 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 		}
-		
+
 		
 		public virtual Widgets.Window			Window
 		{
@@ -193,7 +196,15 @@ namespace Epsitec.Common.Dialogs
 				this.DialogOpened (this);
 			}
 		}
-		
+
+		protected virtual void OnDialogClosed()
+		{
+			if (this.DialogClosed != null)
+			{
+				this.DialogClosed (this);
+			}
+		}
+
 		protected virtual void OnOwnerChanged()
 		{
 		}
@@ -208,8 +219,9 @@ namespace Epsitec.Common.Dialogs
 		
 		public event Support.EventHandler		DialogOpening;
 		public event Support.EventHandler		DialogOpened;
+		public event Support.EventHandler		DialogClosed;
 		
-		protected Widgets.Window				window;
+		protected Widgets.Window window;
 		protected bool							is_modal = true;
 		protected DialogResult					result = DialogResult.None;
 	}

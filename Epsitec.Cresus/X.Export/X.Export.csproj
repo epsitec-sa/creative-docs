@@ -47,6 +47,7 @@ xcopy "$(SolutionDir)External\*.pdb" "$(SolutionDir)Export" /Y /EXCLUDE:..\..\..
 
 xcopy "$(SolutionDir)App.DocumentEditor\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Designer\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.Dialogs\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Document\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Types\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini

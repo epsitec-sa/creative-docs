@@ -19,7 +19,7 @@
     <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
-    <OutputType>WinExe</OutputType>
+    <OutputType>WinExe</OutputType>	
     <RootNamespace>Epsitec.App.CreativeDocs</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
@@ -116,6 +116,11 @@
     <Content Include="Resources\Common.Designer\Captions.00.resource" />
     <Content Include="Resources\Common.Designer\Strings.00.resource" />
     <Content Include="Resources\Common.Designer\Strings.en.resource" />
+    <Content Include="Resources\Common.Dialogs\module.info" />
+    <Content Include="Resources\Common.Dialogs\Captions.00.resource" />
+    <Content Include="Resources\Common.Dialogs\Captions.en.resource" />
+    <Content Include="Resources\Common.Dialogs\Strings.00.resource" />
+    <Content Include="Resources\Common.Dialogs\Strings.en.resource" />
     <Content Include="Resources\Common.Document\module.info" />
     <Content Include="Resources\Common.Document\Strings.00.resource" />
     <Content Include="Resources\Common.Document\Strings.en.resource" />

@@ -17,10 +17,10 @@ namespace Epsitec.Common.Dialogs
 			this.command_yes_template = command_yes_template;
 			this.command_no_template  = command_no_template;
 			
-			this.private_dispatcher   = new CommandDispatcher ("Dialog", CommandDispatcherLevel.Secondary);
-			this.private_context      = new CommandContext ();
+			this.privateDispatcher   = new CommandDispatcher ("Dialog", CommandDispatcherLevel.Secondary);
+			this.privateContext      = new CommandContext ();
 			
-			this.private_dispatcher.RegisterController (this);
+			this.privateDispatcher.RegisterController (this);
 
 			CommandDispatcher.SetDispatcher (this, command_dispatcher);
 		}
@@ -51,12 +51,12 @@ namespace Epsitec.Common.Dialogs
 			this.window.ClientSize        = new Drawing.Size (dx+2*8, dy+2*16+24+16);
 			this.window.PreventAutoClose  = true;
 			
-			CommandDispatcher.SetDispatcher (this.window, this.private_dispatcher);
-			CommandContext.SetContext (this.window, this.private_context);
+			CommandDispatcher.SetDispatcher (this.window, this.privateDispatcher);
+			CommandContext.SetContext (this.window, this.privateContext);
 
-			this.private_context.GetCommandState ("ValidateDialogYes").Enable = true;
-			this.private_context.GetCommandState ("ValidateDialogNo").Enable = true;
-			this.private_context.GetCommandState ("QuitDialog").Enable = true;
+			this.privateContext.GetCommandState ("ValidateDialogYes").Enable = true;
+			this.privateContext.GetCommandState ("ValidateDialogNo").Enable = true;
+			this.privateContext.GetCommandState ("QuitDialog").Enable = true;
 			
 			this.window.MakeFixedSizeWindow ();
 			this.window.MakeSecondaryWindow ();
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Dialogs
 		protected string						command_yes_template;
 		protected string						command_no_template;
 		protected CommandDispatcher				command_dispatcher;
-		protected CommandDispatcher				private_dispatcher;
-		protected CommandContext				private_context;
+		protected CommandDispatcher				privateDispatcher;
+		protected CommandContext				privateContext;
 	}
 }
