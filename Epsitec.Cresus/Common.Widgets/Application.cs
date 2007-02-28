@@ -241,6 +241,29 @@ namespace Epsitec.Common.Widgets
 				}
 				finally
 				{
+					if (Application.runningCallbacks.Count > 0)
+					{
+						System.Diagnostics.Debug.WriteLine ("Running callbacks not executed: " + Application.runningCallbacks.Count, "ExecuteAsyncCallbacks");
+
+						lock (Application.queueExclusion)
+						{
+							Queue<Support.SimpleCallback> queue = new Queue<Support.SimpleCallback> ();
+
+							while (Application.runningCallbacks.Count > 0)
+							{
+								queue.Enqueue (Application.runningCallbacks.Dequeue ());
+							}
+							while (Application.pendingCallbacks.Count > 0)
+							{
+								queue.Enqueue (Application.pendingCallbacks.Dequeue ());
+							}
+
+							Application.pendingCallbacks = queue;
+						}
+					}
+
+					System.Diagnostics.Debug.Assert (Application.runningCallbacks.Count == 0);
+					
 					Application.executingAsyncCallbacks = false;
 				}
 			}

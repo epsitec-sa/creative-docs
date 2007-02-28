@@ -108,13 +108,24 @@ namespace Epsitec.Common.Support.Internal
 					if (image == null)
 					{
 						this.callbackQueue.Enqueue (callback);
+						callback = null;
 					}
 				}
 			}
 
+			if (image == null)
+			{
+				image = Drawing.Bitmap.FromImage (this.imageData.Thumbnail);
+			}
+
 			if (image != null)
 			{
-				callback (image);
+				this.NotifyCallbacks (image, false);
+				
+				if (callback != null)
+				{
+					callback (image);
+				}
 			}
 		}
 
@@ -135,16 +146,33 @@ namespace Epsitec.Common.Support.Internal
 			
 			if (image != null)
 			{
-				SimpleCallback<Drawing.Image>[] callbacks;
+				this.NotifyCallbacks (image, true);
+			}
+		}
 
-				lock (this.exclusion)
+		private void NotifyCallbacks(Drawing.Image image, bool unlink)
+		{
+			SimpleCallback<Drawing.Image>[] callbacks = null;
+
+			lock (this.exclusion)
+			{
+				this.thumbnail = new Types.Weak<Drawing.Image> (image);
+				
+				if (this.callbackQueue != null)
 				{
-					this.thumbnail = new Types.Weak<Drawing.Image> (image);
 					callbacks = this.callbackQueue.ToArray ();
-					this.callbackQueue = null;
-					this.imageData.Changed -= this.HandleImageChanged;
 				}
 
+				if (unlink)
+				{
+					this.imageData.Changed -= this.HandleImageChanged;
+				}
+				
+				this.callbackQueue = null;
+			}
+
+			if (callbacks != null)
+			{
 				foreach (SimpleCallback<Drawing.Image> callback in callbacks)
 				{
 					callback (image);
@@ -163,6 +191,11 @@ namespace Epsitec.Common.Support.Internal
 			if (this.thumbnail != null)
 			{
 				image = this.thumbnail.Target;
+
+				if (image == null)
+				{
+					System.Diagnostics.Debug.WriteLine ("GC freed image thumbnail: image path is " + this.imageData.ImageFilePath);
+				}
 			}
 
 			return image;

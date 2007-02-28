@@ -2230,6 +2230,11 @@ namespace Epsitec.Common.Widgets
 		
 		internal void RefreshGraphics(Drawing.Graphics graphics, Drawing.Rectangle repaint, Drawing.Rectangle[] strips)
 		{
+			if (this.is_disposed)
+			{
+				return;
+			}
+			
 			if (strips.Length > 1)
 			{
 				//	On doit repeindre toute une série de rectangles :
