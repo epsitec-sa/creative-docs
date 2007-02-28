@@ -187,6 +187,8 @@
     <Compile Include="Containers\Styles.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Dialogs\AbstractFile.cs" />
+    <Compile Include="Dialogs\FileOpenImage.cs" />
     <Compile Include="DocumentInfo.cs" />
     <Compile Include="GlobalImageCache.cs" />
     <Compile Include="ImageCache.cs" />
