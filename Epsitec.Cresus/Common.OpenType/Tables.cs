@@ -876,7 +876,7 @@ namespace Epsitec.Common.OpenType
 		
 		public int GetOffset(int n)
 		{
-			return this.ReadInt16 (n*2);
+			return this.ReadInt16 (n*2)*2;
 		}
 	}
 	
