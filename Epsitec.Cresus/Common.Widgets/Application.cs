@@ -1,6 +1,8 @@
 //	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
@@ -8,7 +10,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// The <c>Application</c> class offers basic, application related, services.
 	/// </summary>
-	public class Application : System.IDisposable
+	public abstract class Application : DependencyObject
 	{
 		protected Application()
 		{
@@ -87,6 +89,12 @@ namespace Epsitec.Common.Widgets
 				return this.resourceManagerPool;
 			}
 		}
+
+
+		public abstract string					ShortWindowTitle
+		{
+			get;
+		}
 		
 		public void RunMessageLoop()
 		{
@@ -98,18 +106,9 @@ namespace Epsitec.Common.Widgets
 			System.Windows.Forms.Application.DoEvents ();
 		}
 
-		#region IDisposable Members
-
-		public void Dispose()
+		protected override void Dispose(bool disposing)
 		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
-		}
-
-		#endregion
-
-		protected virtual void Dispose(bool disposing)
-		{
+			base.Dispose (disposing);
 		}
 
 		[Support.Command (ApplicationCommands.Id.Quit)]
@@ -124,6 +123,8 @@ namespace Epsitec.Common.Widgets
 		{
 			CommandDispatcher.SetDispatcher (window, this.CommandDispatcher);
 			CommandContext.SetContext (window, this.CommandContext);
+			Application.SetApplication (window, this);
+			
 			Support.ResourceManager.SetResourceManager (window, this.ResourceManager);
 
 			window.Root.WindowType = WindowType.Document;
@@ -245,6 +246,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public static void SetApplication(DependencyObject obj, Application application)
+		{
+			obj.SetValue (Application.ApplicationProperty, application);
+		}
+
+		public static Application GetApplication(DependencyObject obj)
+		{
+			return (Application) obj.GetValue (Application.ApplicationProperty);
+		}
+
+		public static readonly DependencyProperty ApplicationProperty = DependencyProperty.RegisterAttached ("Application", typeof (Application), typeof (Application));
+		
 		private static object queueExclusion = new object ();
 		private static Queue<Support.SimpleCallback> pendingCallbacks = new Queue<Support.SimpleCallback> ();
 		private static Queue<Support.SimpleCallback> runningCallbacks = new Queue<Support.SimpleCallback> ();

@@ -187,14 +187,7 @@ namespace Epsitec.Common.Dialogs
 					}
 					else
 					{
-						if (FolderItem.HideFileExtensions)
-						{
-							this.cachedShortFileName = System.IO.Path.GetFileNameWithoutExtension (this.folderItem.FullPath);
-						}
-						else
-						{
-							this.cachedShortFileName = System.IO.Path.GetFileName (this.folderItem.FullPath);
-						}
+						this.cachedShortFileName = FolderItem.GetShortFileName (this.folderItem.FullPath);
 					}
 				}
 

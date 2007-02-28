@@ -8,10 +8,13 @@ namespace Epsitec.App.DocumentEditor
 	/// <summary>
 	/// La classe Application démarre l'éditeur de documents.
 	/// </summary>
-	public class Application
+	public class Application : Epsitec.Common.Widgets.Application
 	{
 		public static void Start(string mode)
 		{
+			System.Diagnostics.Debug.Assert (mode != null);
+			System.Diagnostics.Debug.Assert (mode.Length > 0);
+
 			//	Evite de créer la liste des fontes complète maintenant si elle n'existe
 			//	pas, puisque l'on veut tout d'abord être capable d'afficher le splash:
 			Epsitec.Common.Text.TextContext.PostponeFullFontCollectionInitialization ();
@@ -31,92 +34,73 @@ namespace Epsitec.App.DocumentEditor
 			Common.Support.ImageProvider.Default.EnableLongLifeCache = true;
 			Common.Support.ImageProvider.Default.PrefillManifestIconCache();
 
-			if (mode.Length > 1)
+			switch (mode.Substring (1))
 			{
-				switch (mode[1])
-				{
-					case 'p':
-						Application.application = new Application(DocumentType.Pictogram);
-						break;
-				}
+				case "p":
+					Application.application = new Application(DocumentType.Pictogram);
+					break;
+				default:
+					Application.application = new Application(DocumentType.Graphic);
+					break;
 			}
 			
-			if (Application.application == null)
-			{
-				Application.application = new Application(DocumentType.Graphic);
-				//Application.application = new Application(DocumentType.Pictogram);
-			}
-			
-			Application.application.MainWindow.Run();
+			Application.application.Window.Run();
 		}
 		
 		
 		public Application(DocumentType type)
 		{
-			//?System.Threading.Thread.Sleep(60000);
-			this.editor = new DocumentEditor(type);
+			this.editor = new DocumentEditor(type, this.CommandDispatcher, this.CommandContext);
 
-			this.mainWindow = new Window();
-			this.mainWindow.Root.WindowStyles = WindowStyles.CanResize |
-												WindowStyles.CanMinimize |
-												WindowStyles.CanMaximize |
-												WindowStyles.HasCloseButton;
+			Window window;
 
-			//this.mainWindow.Root.SetClientZoom(2.0);
-			this.mainWindow.Name = "Application";  // utilisé pour générer "QuitApplication" !
-			this.mainWindow.PreventAutoClose = true;
-			this.mainWindow.IsValidDropTarget = true;
-			this.mainWindow.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
-			this.mainWindow.AsyncNotification += new EventHandler(this.HandleWindowAsyncNotification);
-			this.mainWindow.WindowDragEntered += new WindowDragEventHandler(this.HandleMainWindowWindowDragEntered);
-			this.mainWindow.WindowDragDropped += new WindowDragEventHandler(this.HandleMainWindowWindowDragDropped);
+			window = new Window();
+			
+			this.Window = window;
+
+			window.IsValidDropTarget = true;
+			window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", typeof (Application).Assembly);
+			window.AsyncNotification += new EventHandler(this.HandleWindowAsyncNotification);
+			window.WindowDragEntered += new WindowDragEventHandler(this.HandleMainWindowWindowDragEntered);
+			window.WindowDragDropped += new WindowDragEventHandler(this.HandleMainWindowWindowDragDropped);
 			
 			if ( type == DocumentType.Graphic )
 			{
-				this.mainWindow.Root.MinSize = new Size(410, 250);
+				window.Root.MinSize = new Size(410, 250);
 			}
 			else
 			{
-				this.mainWindow.Root.MinSize = new Size(430, 250);
+				window.Root.MinSize = new Size(430, 250);
 			}
 
-			this.mainWindow.WindowBounds = this.editor.GlobalSettings.MainWindowBounds;
-			this.mainWindow.IsFullScreen = this.editor.GlobalSettings.IsFullScreen;
+			window.WindowBounds = this.editor.GlobalSettings.MainWindowBounds;
+			window.IsFullScreen = this.editor.GlobalSettings.IsFullScreen;
 
 			switch ( type )
 			{
 				case DocumentType.Graphic:
-					this.mainWindow.Text = Res.Strings.Application.TitleDoc;
+					window.Text = Res.Strings.Application.TitleDoc;
 					break;
 
 				case DocumentType.Pictogram:
-					this.mainWindow.Text = Res.Strings.Application.TitlePic;
+					window.Text = Res.Strings.Application.TitlePic;
 					break;
 
 				case DocumentType.Text:
-					this.mainWindow.Text = Res.Strings.Application.TitleTxt;
+					window.Text = Res.Strings.Application.TitleTxt;
 					break;
 
 				default:
-					this.mainWindow.Text = Res.Strings.Application.TitleDoc;
+					window.Text = Res.Strings.Application.TitleDoc;
 					break;
 			}
 			
-#if false
-			this.menu = this.editor.GetMenu();
-			this.menu.Dock   = DockStyle.Top;
-			this.menu.Parent = this.mainWindow.Root;
-#endif
-
-			this.editor.PreferredSize = this.mainWindow.ClientSize;
+			this.editor.PreferredSize = window.ClientSize;
 			this.editor.Dock = DockStyle.Fill;
-			this.editor.SetParent(this.mainWindow.Root);
+			this.editor.SetParent(window.Root);
 			
-			CommandDispatcher.SetDispatcher (this.mainWindow, this.editor.CommandDispatcher);
-			CommandContext.SetContext (this.mainWindow, this.editor.CommandContext);
-
-			this.mainWindow.Show();
-			this.mainWindow.MakeActive();
+			window.Show();
+			window.MakeActive();
 
 			this.editor.MakeReadyToRun();
 		}
@@ -126,30 +110,45 @@ namespace Epsitec.App.DocumentEditor
 			this.editor.AsyncNotify();
 		}
 
+		public override string ShortWindowTitle
+		{
+			get
+			{
+				return this.editor.ShortWindowTitle;
+			}
+		}
 
-		public static string			Mode
+		public static string					Mode
 		{
 			get
 			{
 				return Application.mode;
 			}
 		}
-		
-		public DocumentType				Type
+
+		public DocumentType						Type
 		{
-			get { return this.editor.DocumentType; }
-		}
-		
-		public Window					MainWindow
-		{
-			get { return this.mainWindow; }
-		}
-		
-		public static Application		Current
-		{
-			get { return Application.application; }
+			get
+			{
+				return this.editor.DocumentType;
+			}
 		}
 
+		public static Application				Current
+		{
+			get
+			{
+				return Application.application;
+			}
+		}
+
+
+		protected override void ExecuteQuit(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			//	Evite que cette commande ne soit exécutée par Widgets.Application,
+			//	car cela provoquerait la fin du programme, quelle que soit la
+			//	réponse donnée par l'utilisateur au dialogue affiché par DocumentEditor.
+		}
 
 		private void HandleMainWindowWindowDragEntered(object sender, WindowDragEventArgs e)
 		{
@@ -235,10 +234,6 @@ namespace Epsitec.App.DocumentEditor
 		private static Application		application;
 		private static string			mode;
 		
-		private Window					mainWindow;
-#if false
-		private HMenu					menu;
-#endif
 		private DocumentEditor			editor;
 	}
 }

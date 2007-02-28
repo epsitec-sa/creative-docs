@@ -341,6 +341,23 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the short name of the file, with or without the extension, based
+		/// on the user settings.
+		/// </summary>
+		/// <param name="path">The file path.</param>
+		/// <returns>The short name of the file.</returns>
+		public static string GetShortFileName(string path)
+		{
+			if (FolderItem.HideFileExtensions)
+			{
+				return System.IO.Path.GetFileNameWithoutExtension (path);
+			}
+			else
+			{
+				return System.IO.Path.GetFileName (path);
+			}
+		}
 		
 		/// <summary>
 		/// Determines whether the specified path is a network path.

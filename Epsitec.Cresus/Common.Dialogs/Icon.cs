@@ -6,6 +6,7 @@ namespace Epsitec.Common.Dialogs
 	public enum Icon
 	{
 		None,
-		Warning
+		Warning,
+		Question,
 	}
 }

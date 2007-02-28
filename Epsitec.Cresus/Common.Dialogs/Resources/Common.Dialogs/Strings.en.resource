@@ -36,4 +36,5 @@
   <data id="0T">The file &lt;b&gt;{0}&lt;/b&gt; has been modified.</data>
   <data id="0U">Do you want to save changes?</data>
   <data id="031">Empty document</data>
+  <data id="041"> </data>
 </bundle>

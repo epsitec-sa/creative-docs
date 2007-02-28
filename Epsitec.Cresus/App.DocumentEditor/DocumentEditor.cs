@@ -25,12 +25,16 @@ namespace Epsitec.App.DocumentEditor
 	public class DocumentEditor : Widgets.Widget
 	{
 		public DocumentEditor(DocumentType type)
+			: this (type, new CommandDispatcher ("Common.DocumentEditor", CommandDispatcherLevel.Primary), new CommandContext ())
 		{
-			//	On crée son propre dispatcher, pour éviter de marcher sur les autres commandes.
-			System.Diagnostics.Debug.WriteLine("*** Created Primary Command Dispatcher ***");
-			this.commandDispatcher = new CommandDispatcher("Common.DocumentEditor", CommandDispatcherLevel.Primary);
-			this.commandDispatcher.RegisterController(this);
-			this.commandContext = new CommandContext();
+		}
+
+		public DocumentEditor(DocumentType type, CommandDispatcher dispatcher, CommandContext context)
+		{
+			this.commandDispatcher = dispatcher;
+			this.commandContext    = context;
+			
+			this.commandDispatcher.RegisterController (this);
 			
 			CommandDispatcher.SetDispatcher(this, this.commandDispatcher);
 			
@@ -1274,6 +1278,14 @@ namespace Epsitec.App.DocumentEditor
 			//	Affiche l'avertissement de changement 'Exemples originaux' vers 'Mes exemples'.
 			string message = string.Format(Res.Strings.Dialog.Warning.Redirection, Document.OriginalSamplesDisplayName, Document.MySamplesDisplayName);  // TODO: mettre dans les ressources !
 			this.DialogError(message);
+		}
+
+		public string ShortWindowTitle
+		{
+			get
+			{
+				return Res.Strings.Application.TitleShort;
+			}
 		}
 
 		public Common.Dialogs.DialogResult DialogError(string error)

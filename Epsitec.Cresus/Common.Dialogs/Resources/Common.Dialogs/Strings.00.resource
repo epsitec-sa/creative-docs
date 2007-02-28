@@ -32,7 +32,8 @@
   <data name="Dialog.Generic.Button.Cancel" id="0V">Annuler</data>
   <data name="Dialog.Generic.Button.Close" id="001">Fermer</data>
   <data name="Dialog.Generic.Button.Help" id="011">Aide</data>
-  <data name="Dialog.Generic.Button.OK" id="021">D&amp;apos;accord</data>
+  <data name="Dialog.Generic.Button.Ok" id="021">D&amp;apos;accord</data>
+  <data name="Dialog.Generic.Title" id="041"> </data>
   <data name="Dialog.File.NewEmptyDocument" id="031">Document vide</data>
   <data name="Dialog.Tooltip.Help" id="01">Texte explicatif</data>
   <data name="Dialog.Tooltip.Resize" id="02">Redimensionner la fenêtre</data>

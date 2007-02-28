@@ -106,6 +106,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			return value;
 		}
+		
 		public static Drawing.Size MapRootToVisual(Visual visual, Drawing.Size value)
 		{
 			return value;
@@ -498,7 +499,24 @@ namespace Epsitec.Common.Widgets.Helpers
 				context.Refresh (visual);
 			}
 		}
-		
+
+		public static Application GetApplication(Window window)
+		{
+			while (window != null)
+			{
+				Application application = Application.GetApplication (window);
+
+				if (application != null)
+				{
+					return application;
+				}
+
+				window = window.Owner;
+			}
+
+			return null;
+		}
+
 
 		public static Support.OpletQueue GetOpletQueue(Visual visual)
 		{

@@ -1770,27 +1770,34 @@ namespace Epsitec.Common.Dialogs
 			//	Si requis, demande s'il faut écraser le fichier ?
 			if (this.FileDialogType != FileDialogType.Save && this.selectedFileName != AbstractFileDialog.NewEmptyDocument && !System.IO.File.Exists (this.selectedFileName))  // fichier n'existe pas ?
 			{
-#if false //#fix
-				string message = string.Format(Epsitec.Common.Dialogs.Res.Strings.Dialog.Question.Open.File, Misc.ExtractName(this.selectedFileName), this.selectedFileName);
-				Common.Dialogs.DialogResult result = this.editor.DialogError(message);
+				string question = Epsitec.Common.Dialogs.Res.Strings.Dialog.Question.Open.File;
+				string filePath = this.selectedFileName;
+				string fileName = FolderItem.GetShortFileName (filePath);
+				string message  = string.Format (question, Message.FormatMessage (fileName), Message.FormatMessage (filePath));
+
+				Common.Dialogs.DialogResult result = Message.ShowError (message, this.window);
+
 				this.selectedFileName = null;
 				this.selectedFileNames = null;
+
 				return false;  // ne pas fermer le dialogue
-#endif
 			}
 
 			if (this.FileDialogType == FileDialogType.Save && System.IO.File.Exists (this.selectedFileName))  // fichier existe déjà ?
 			{
-#if false //#fix
-				string message = string.Format(Epsitec.Common.Dialogs.Res.Strings.Dialog.Question.Save.File, Misc.ExtractName(this.selectedFileName), this.selectedFileName);
-				Common.Dialogs.DialogResult result = this.editor.DialogQuestion(message);
+				string question = Epsitec.Common.Dialogs.Res.Strings.Dialog.Question.Save.File;
+				string filePath = this.selectedFileName;
+				string fileName = FolderItem.GetShortFileName (filePath);
+				string message  = string.Format (question, Message.FormatMessage (fileName), Message.FormatMessage (filePath));
+
+				Common.Dialogs.DialogResult result = Message.ShowQuestion (message, this.window);
+
 				if (result != Common.Dialogs.DialogResult.Yes)
 				{
-					this.selectedFileName = null;
+					this.selectedFileName  = null;
 					this.selectedFileNames = null;
 					return false;  // ne pas fermer le dialogue
 				}
-#endif
 			}
 
 			return true;  // il faudra fermer le dialogue
