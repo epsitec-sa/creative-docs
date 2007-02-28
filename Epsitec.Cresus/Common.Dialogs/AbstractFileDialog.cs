@@ -300,7 +300,6 @@ namespace Epsitec.Common.Dialogs
 			//	Dans l'ordre de bas en haut :
 			this.CreateFooter ();
 			this.CreateOptionsUserInterface ();
-			this.CreateFileName ();
 		}
 
 		protected virtual void CreateOptionsUserInterface()
@@ -692,40 +691,6 @@ namespace Epsitec.Common.Dialogs
 			this.toolbar.Items.Add (buttonNew);
 		}
 
-		private void CreateFileName()
-		{
-			//	Crée la partie permettant d'éditer le nom de fichier.
-			Widget container = new Widget (this.window.Root);
-			container.PreferredHeight = 20;
-			container.Margins = new Margins (0, 0, 8, 0);
-			container.Dock = DockStyle.Bottom;
-			container.TabIndex = 4;
-			container.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
-
-			StaticText label = new StaticText (container);
-			label.Text = this.FileTypeLabel;
-			label.PreferredWidth = AbstractFileDialog.LeftColumnWidth-10;
-			label.ContentAlignment = ContentAlignment.MiddleRight;
-			label.Dock = DockStyle.Left;
-			label.Margins = new Margins (0, 10, 0, 0);
-
-			this.fieldFileName = new TextField (container);
-			this.fieldFileName.Dock = DockStyle.Fill;
-			this.fieldFileName.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
-			this.fieldFileName.TextEdited += this.HandleFileNameTextEdited;
-			this.fieldFileName.TabIndex = 1;
-			this.fieldFileName.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-
-			TextField ext = new TextField (container);
-			ext.AutoFocus = false;
-			ext.TabNavigationMode = TabNavigationMode.None;
-			ext.IsReadOnly = true;
-			ext.Text = this.fileExtension;
-			ext.PreferredWidth = 50;
-			ext.Margins = new Margins (1, 0, 0, 0);
-			ext.Dock = DockStyle.Right;
-		}
-
 		private void CreateFooter()
 		{
 			//	Crée le pied du dialogue, avec les boutons 'ouvrir/enregistrer' et 'annuler'.
@@ -737,6 +702,20 @@ namespace Epsitec.Common.Dialogs
 			footer.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.CreateFooterOptions (footer);
+
+			StaticText label = new StaticText (footer);
+			label.Text = this.FileTypeLabel;
+			label.PreferredWidth = AbstractFileDialog.LeftColumnWidth-10;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Dock = DockStyle.Left;
+			label.Margins = new Margins (0, 10, 0, 0);
+
+			this.fieldFileName = new TextField (footer);
+			this.fieldFileName.Dock = DockStyle.Fill;
+			this.fieldFileName.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
+			this.fieldFileName.TextEdited += this.HandleFileNameTextEdited;
+			this.fieldFileName.TabIndex = 1;
+			this.fieldFileName.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			//	Dans l'ordre de droite à gauche:
 			this.buttonCancel = new Button (footer);
