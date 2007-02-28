@@ -508,7 +508,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				string name = item.ShortFileName;
 
-				if (name.EndsWith (this.fileExtension))
+				if (this.fileExtension != null && name.EndsWith (this.fileExtension))
 				{
 					name = name.Substring (0, name.Length - this.fileExtension.Length);
 				}
@@ -1670,8 +1670,9 @@ namespace Epsitec.Common.Dialogs
 					}
 				}
 
-				if ((!name.ToLowerInvariant ().EndsWith (this.fileExtension)) &&
-					(!System.IO.File.Exists (name)))
+				if (this.fileExtension != null &&
+					!name.ToLowerInvariant().EndsWith(this.fileExtension) &&
+					!System.IO.File.Exists (name))
 				{
 					name = string.Concat (name, this.fileExtension);
 				}
