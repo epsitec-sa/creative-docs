@@ -28,6 +28,11 @@ namespace Epsitec.Common.Document.Dialogs
 			}
 		}
 		
+		protected override void FavoritesAddApplicationFolders()
+		{
+			this.AddFavorite(FolderId.MyPictures);
+		}
+
 		protected override void CreateWindow()
 		{
 			//	Crée la fenêtre du dialogue.
