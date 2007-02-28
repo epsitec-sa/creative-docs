@@ -1563,7 +1563,9 @@ namespace Epsitec.Common.Document.PDF
 
 			if ( resizeRequired )
 			{
-				fi.Rescale(dx, dy, Properties.Image.FilterToFreeImage(image.Filter));
+				Opac.FreeImage.Image resized = fi.Rescale(dx, dy, Properties.Image.FilterToFreeImage(image.Filter));
+				fi.Dispose();
+				fi = resized;
 			}
 
 			//	Choix du mode de compression possible.
