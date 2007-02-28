@@ -15,12 +15,12 @@ namespace Epsitec.Common.Dialogs
 			return new Message.YesNoCancel (dialog_title, message_icon, message_text, command_yes_template, command_no_template, command_dispatcher);
 		}
 
-		public static IDialog CreateYesNoCancel(string dialog_title, Icon icon, string message_text)
+		public static IDialog CreateYesNoCancel(string dialog_title, DialogIcon icon, string message_text)
 		{
 			return Message.CreateYesNoCancel (dialog_title, icon, message_text, null, null, null);
 		}
 
-		public static IDialog CreateYesNoCancel(string dialog_title, Icon icon, string message_text, string command_yes_template, string command_no_template, CommandDispatcher command_dispatcher)
+		public static IDialog CreateYesNoCancel(string dialog_title, DialogIcon icon, string message_text, string command_yes_template, string command_no_template, CommandDispatcher command_dispatcher)
 		{
 			string message_icon = Message.GetIconName (icon);
 			
@@ -34,12 +34,12 @@ namespace Epsitec.Common.Dialogs
 			return dialog;
 		}
 
-		public static IDialog CreateYesNo(string dialog_title, Icon icon, string message_text)
+		public static IDialog CreateYesNo(string dialog_title, DialogIcon icon, string message_text)
 		{
 			return Message.CreateYesNo (dialog_title, icon, message_text, null, null, null);
 		}
 
-		public static IDialog CreateYesNo(string dialog_title, Icon icon, string message_text, string command_yes_template, string command_no_template, CommandDispatcher command_dispatcher)
+		public static IDialog CreateYesNo(string dialog_title, DialogIcon icon, string message_text, string command_yes_template, string command_no_template, CommandDispatcher command_dispatcher)
 		{
 			string message_icon = Message.GetIconName (icon);
 			
@@ -51,12 +51,12 @@ namespace Epsitec.Common.Dialogs
 			return new Message.OkCancel (dialog_title, message_icon, message_text, command_ok_template, command_dispatcher);
 		}
 
-		public static IDialog CreateOkCancel(string dialog_title, Icon icon, string message_text)
+		public static IDialog CreateOkCancel(string dialog_title, DialogIcon icon, string message_text)
 		{
 			return Message.CreateOkCancel (dialog_title, icon, message_text, null, null);
 		}
 
-		public static IDialog CreateOkCancel(string dialog_title, Icon icon, string message_text, string command_ok_template, CommandDispatcher command_dispatcher)
+		public static IDialog CreateOkCancel(string dialog_title, DialogIcon icon, string message_text, string command_ok_template, CommandDispatcher command_dispatcher)
 		{
 			string message_icon = Message.GetIconName (icon);
 			
@@ -70,12 +70,12 @@ namespace Epsitec.Common.Dialogs
 			return dialog;
 		}
 
-		public static IDialog CreateOk(string dialog_title, Icon icon, string message_text)
+		public static IDialog CreateOk(string dialog_title, DialogIcon icon, string message_text)
 		{
 			return Message.CreateOk (dialog_title, icon, message_text, null, null);
 		}
 		
-		public static IDialog CreateOk(string dialog_title, Icon icon, string message_text, string command_ok_template, CommandDispatcher command_dispatcher)
+		public static IDialog CreateOk(string dialog_title, DialogIcon icon, string message_text, string command_ok_template, CommandDispatcher command_dispatcher)
 		{
 			string message_icon = Message.GetIconName (icon);
 			
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Dialogs
 				return DialogResult.None;
 			}
 
-			IDialog dialog = Message.CreateOk (Message.GetDialogTitle (owner), Icon.Warning, formattedErrorMessage);
+			IDialog dialog = Message.CreateOk (Message.GetDialogTitle (owner), DialogIcon.Warning, formattedErrorMessage);
 
 			dialog.Owner = owner;
 			dialog.OpenDialog ();
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Dialogs
 				return DialogResult.None;
 			}
 
-			IDialog dialog = Message.CreateYesNo (Message.GetDialogTitle (owner), Icon.Question, formattedQuestion);
+			IDialog dialog = Message.CreateYesNo (Message.GetDialogTitle (owner), DialogIcon.Question, formattedQuestion);
 
 			dialog.Owner = owner;
 			dialog.OpenDialog ();
@@ -140,12 +140,12 @@ namespace Epsitec.Common.Dialogs
 			return dialog.Result;
 		}
 		
-		protected static string GetIconName(Icon icon)
+		protected static string GetIconName(DialogIcon icon)
 		{
 			switch (icon)
 			{
-				case Icon.Warning:
-				case Icon.Question:
+				case DialogIcon.Warning:
+				case DialogIcon.Question:
 					return string.Concat ("manifest:Epsitec.Common.Dialogs.Images.", icon, ".icon");
 			}
 			

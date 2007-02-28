@@ -3,7 +3,7 @@
 
 namespace Epsitec.Common.Dialogs
 {
-	public enum Icon
+	public enum DialogIcon
 	{
 		None,
 		Warning,

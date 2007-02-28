@@ -188,7 +188,7 @@
     <Compile Include="Helpers\MessageBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Icon.cs">
+    <Compile Include="DialogIcon.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IDialog.cs">
