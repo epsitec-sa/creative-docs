@@ -127,7 +127,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.CloseWindow();
 
 			string filename = System.IO.Path.Combine (this.editor.CurrentDocument.ExportDirectory, this.editor.CurrentDocument.ExportFilename);
-			string err = this.editor.CurrentDocument.ExportPDF(filename);
+			string err = "";
+
+			Common.Dialogs.WorkInProgressDialog.Execute
+			(
+				"Exportation PDF en cours...",
+				ProgressIndicatorStyle.UnknownDuration,
+				delegate(Common.Dialogs.IWorkInProgressReport report)
+				{
+					err = this.editor.CurrentDocument.ExportPDF(filename);
+				}
+			);
+			
 			this.editor.DialogError(err);
 		}
 
