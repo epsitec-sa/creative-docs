@@ -25,7 +25,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.extensions.Add(".ico");
 
 			this.shortDescriptions = new List<string>();
-			this.shortDescriptions.Add("Fichiers PDF (Adobe® Acrobat®)");
+			this.shortDescriptions.Add("Fichier PDF (Adobe® Acrobat®)");
 			this.shortDescriptions.Add("Image compressée JPEG");
 			this.shortDescriptions.Add("Graphics Interchange Format GIF");
 			this.shortDescriptions.Add("Portable Network Graphics PNG");
@@ -40,7 +40,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fullDescriptions.Add("Image bitmap comprimée sans perte contenant la page courante. Format moderne générant de gros fichier de qualité optimale, avec possibilité de transparence.");
 			this.fullDescriptions.Add("Image bitmap avec ou sans compresion sans perte contenant la page courante. Format ancien générant de gros fichier de qualité optimale, avec possibilité de transparence.");
 			this.fullDescriptions.Add("Image bitmap non comprimée contenant la page courante. Format ancien générant de très gros fichiers, à éviter.");
-			this.fullDescriptions.Add("Icône Windows contenant la page courante dans différentes résolutions.");
+			this.fullDescriptions.Add("Icône pour Windows contenant la page courante dans différentes résolutions.");
 		}
 
 		public override void Show()

@@ -46,7 +46,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected override void CreateWindow()
 		{
 			//	Crée la fenêtre du dialogue.
-			this.CreateUserInterface("FileExport", new Size(720, 480), "Fichier à exporter", 20, this.editor.Window);
+			this.CreateUserInterface("FileExport", new Size(720, 480), null, 20, this.editor.Window);
 		}
 	}
 }

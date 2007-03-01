@@ -27,6 +27,19 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
+		public void ChangeTitle(string title)
+		{
+			//	Modifie le titre de la fenêtre du dialogue.
+			if (this.window == null)
+			{
+				this.title = title;
+			}
+			else
+			{
+				this.window.Text = title;
+			}
+		}
+
 		public DialogResult Result
 		{
 			//	Indique si le dialogue a été fermé avec 'ouvrir' ou 'annuler'.
@@ -300,7 +313,7 @@ namespace Epsitec.Common.Dialogs
 			this.window.MakeSecondaryWindow ();
 			this.window.PreventAutoClose = true;
 			this.window.Name = name;
-			this.window.Text = title;
+			this.window.Text = (title == null) ? this.title : title;
 			this.window.Owner = owner;
 			this.window.Icon = owner == null ? null : this.window.Owner.Icon;
 			
@@ -2278,5 +2291,6 @@ namespace Epsitec.Common.Dialogs
 		private CollectionView filesCollectionView;
 		private List<FileListJob> fileListJobs = new List<FileListJob> ();
 		private bool useLargeIcons;
+		private string title;
 	}
 }
