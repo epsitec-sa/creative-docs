@@ -8,11 +8,11 @@ using System.IO;
 namespace Epsitec.Common.Document.Dialogs
 {
 	/// <summary>
-	/// Dialogue pour importer une image bitmap.
+	/// Dialogue pour exporter une image bitmap.
 	/// </summary>
-	public class FileOpenImage : AbstractFile
+	public class FileSaveImage : AbstractFile
 	{
-		public FileOpenImage(Document document, Window ownerWindow) : base(document, ownerWindow)
+		public FileSaveImage(Document document, Window ownerWindow) : base(document, ownerWindow)
 		{
 			this.FileFilterPattern = "*.bmp|*.tif|*.tiff|*.jpg|*.jpeg|*.gif|*.png|*.wmf|*.emf";
 			this.enableNavigation = true;
@@ -24,7 +24,7 @@ namespace Epsitec.Common.Document.Dialogs
 		{
 			get
 			{
-				return Epsitec.Common.Dialogs.FileDialogType.Open;
+				return Epsitec.Common.Dialogs.FileDialogType.Save;
 			}
 		}
 		
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Document.Dialogs
 		{
 			get
 			{
-				return Res.Strings.Dialog.OpenImage.ActionButtonName;
+				return Res.Strings.Dialog.SaveImage.ActionButtonName;
 			}
 		}
 
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Document.Dialogs
 		protected override void CreateWindow()
 		{
 			//	Crée la fenêtre du dialogue.
-			this.CreateUserInterface("FileOpenImage", new Size(720, 480), Res.Strings.Dialog.OpenImage.Title, 20, this.ownerWindow);
+			this.CreateUserInterface("FileSaveImage", new Size(720, 480), Res.Strings.Dialog.SaveImage.Title, 20, this.ownerWindow);
 		}
 	}
 }

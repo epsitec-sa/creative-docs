@@ -420,6 +420,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleSaveClicked(object sender, MessageEventArgs e)
 		{
+#if false
 			//	Le bouton 'Exporter' pour choisir l'image a été cliqué.
 			Properties.Image p = this.property as Properties.Image;
 			ImageCache.Item item = this.document.ImageCache.Find(p.FileName, p.FileDate);
@@ -446,6 +447,28 @@ namespace Epsitec.Common.Document.Panels
 			}
 
 			item.ExportImage(dialog.FileName);  // écrit le fichier sur disque
+#else
+			Properties.Image p = this.property as Properties.Image;
+			ImageCache.Item item = this.document.ImageCache.Find(p.FileName, p.FileDate);
+			if (item == null)
+			{
+				return;
+			}
+
+			Button button = sender as Button;
+			Dialogs.FileSaveImage dlg = new Dialogs.FileSaveImage(this.document, button.Window);
+
+			dlg.FileExtension = System.IO.Path.GetExtension(this.fieldFilename.Text);
+			dlg.InitialDirectory = System.IO.Path.GetDirectoryName(this.fieldFilename.Text);
+			dlg.InitialFileName = System.IO.Path.GetFileName(this.fieldFilename.Text);
+
+			dlg.ShowDialog();  // choix d'un fichier image...
+
+			if (dlg.Result == Common.Dialogs.DialogResult.Accept)
+			{
+				item.ExportImage(dlg.FileName);  // écrit le fichier sur disque
+			}
+#endif
 		}
 
 		void HandleCropChanged(object sender)

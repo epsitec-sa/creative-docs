@@ -827,6 +827,12 @@ namespace Epsitec.Common.Document
 					}
 				}
 				
+				public static class SaveImage
+				{
+					public static string ActionButtonName { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1372)); } }
+					public static string Title { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1373)); } }
+				}
+				
 				public static class Settings
 				{
 					public static string ArrowMove { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (11)); } }
