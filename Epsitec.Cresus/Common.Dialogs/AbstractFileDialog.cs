@@ -128,6 +128,11 @@ namespace Epsitec.Common.Dialogs
 				{
 					this.fileExtension = value.ToLowerInvariant ();
 					this.fileFilterPattern = string.Concat ("*", value);
+
+					if (this.fieldExtension != null)
+					{
+						this.fieldExtension.Text = this.fileExtension;
+					}
 				}
 				else
 				{
@@ -727,21 +732,21 @@ namespace Epsitec.Common.Dialogs
 			//	Crée le pied du dialogue, avec les boutons 'ouvrir/enregistrer' et 'annuler'.
 			Widget footer = new Widget (this.window.Root);
 			footer.PreferredHeight = 22;
-			footer.Margins = new Margins (0, 0, 8, 0);
+			footer.Margins = new Margins(0, 0, 8, 0);
 			footer.Dock = DockStyle.Bottom;
 			footer.TabIndex = 6;
 			footer.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.CreateFooterOptions (footer);
 
-			StaticText label = new StaticText (footer);
+			StaticText label = new StaticText(footer);
 			label.Text = this.FileTypeLabel;
 			label.PreferredWidth = AbstractFileDialog.LeftColumnWidth-10;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Dock = DockStyle.Left;
 			label.Margins = new Margins (0, 10, 0, 0);
 
-			this.fieldFileName = new TextField (footer);
+			this.fieldFileName = new TextField(footer);
 			this.fieldFileName.Dock = DockStyle.Fill;
 			this.fieldFileName.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
 			this.fieldFileName.TextEdited += this.HandleFileNameTextEdited;
@@ -769,6 +774,15 @@ namespace Epsitec.Common.Dialogs
 			this.buttonOk.TabIndex = 1;
 			this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.buttonOk.Enable = false;
+
+			this.fieldExtension = new TextField(footer);
+			this.fieldExtension.AutoFocus = false;
+			this.fieldExtension.TabNavigationMode = TabNavigationMode.None;
+			this.fieldExtension.IsReadOnly = true;
+			this.fieldExtension.Text = this.fileExtension;
+			this.fieldExtension.PreferredWidth = 44;
+			this.fieldExtension.Margins = new Margins(-1, 10, 0, 0);
+			this.fieldExtension.Dock = DockStyle.Right;
 		}
 
 		protected virtual void CreateFooterOptions(Widget footer)
@@ -2243,6 +2257,7 @@ namespace Epsitec.Common.Dialogs
 		private HSlider slider;
 		private TextFieldCombo fieldPath;
 		private TextField fieldFileName;
+		private TextField fieldExtension;
 		private TextFieldEx fieldRename;
 		private Button buttonOk;
 		private Button buttonCancel;
