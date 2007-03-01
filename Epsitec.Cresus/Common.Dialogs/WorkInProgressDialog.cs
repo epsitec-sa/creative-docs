@@ -34,15 +34,15 @@ namespace Epsitec.Common.Dialogs
 		/// is shown.
 		/// </summary>
 		/// <value>The action.</value>
-		public System.Action<IWorkInProgressReport> Action
+		public System.Action<IWorkInProgressReport> Operation
 		{
 			get
 			{
-				return this.action;
+				return this.operation;
 			}
 			set
 			{
-				this.action = value;
+				this.operation = value;
 			}
 		}
 
@@ -108,19 +108,31 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
-		public static OperationResult ExecuteAction(string title, ProgressIndicatorStyle style, System.Action<IWorkInProgressReport> action)
+		public static OperationResult Execute(string title, ProgressIndicatorStyle style, System.Action<IWorkInProgressReport> action)
 		{
-			WorkInProgressDialog dialog = new WorkInProgressDialog (title, false);
-			dialog.Action = action;
-			dialog.ProgressIndicatorStyle = style;
-			dialog.OpenDialog ();
-			return dialog.OperationResult;
+			return WorkInProgressDialog.Execute (title, style, action, null);
 		}
 
-		public static OperationResult ExecuteCancellableAction(string title, ProgressIndicatorStyle style, System.Action<IWorkInProgressReport> action)
+		public static OperationResult Execute(string title, ProgressIndicatorStyle style, System.Action<IWorkInProgressReport> action, Window owner)
 		{
-			WorkInProgressDialog dialog = new WorkInProgressDialog (title, true);
-			dialog.Action = action;
+			return WorkInProgressDialog.Execute (title, style, action, owner, false);
+		}
+
+		public static OperationResult ExecuteCancellable(string title, ProgressIndicatorStyle style, System.Action<IWorkInProgressReport> action)
+		{
+			return WorkInProgressDialog.ExecuteCancellable (title, style, action, null);
+		}
+
+		public static OperationResult ExecuteCancellable(string title, ProgressIndicatorStyle style, System.Action<IWorkInProgressReport> action, Window owner)
+		{
+			return WorkInProgressDialog.Execute (title, style, action, owner, true);
+		}
+
+		private static OperationResult Execute(string title, ProgressIndicatorStyle style, System.Action<IWorkInProgressReport> action, Window owner, bool cancellable)
+		{
+			WorkInProgressDialog dialog = new WorkInProgressDialog (title, cancellable);
+			dialog.Operation = action;
+			dialog.Owner = owner;
 			dialog.ProgressIndicatorStyle = style;
 			dialog.OpenDialog ();
 			return dialog.OperationResult;
@@ -251,7 +263,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			base.OnDialogOpened ();
 
-			if (this.action != null)
+			if (this.operation != null)
 			{
 				this.timer.Start ();
 
@@ -294,7 +306,7 @@ namespace Epsitec.Common.Dialogs
 
 			try
 			{
-				this.action (this);
+				this.operation (this);
 				this.operationResult = this.cancelled ? OperationResult.Cancelled : OperationResult.Done;
 			}
 			catch (System.Exception ex)
@@ -318,7 +330,7 @@ namespace Epsitec.Common.Dialogs
 
 		private readonly object					exclusion = new object ();
 
-		private System.Action<IWorkInProgressReport> action;
+		private System.Action<IWorkInProgressReport> operation;
 		private string							dialogTitle;
 		
 		private CommandDispatcher				privateDispatcher;

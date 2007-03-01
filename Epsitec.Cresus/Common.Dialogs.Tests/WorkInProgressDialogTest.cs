@@ -32,7 +32,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			bool executed = false;
 
-			WorkInProgressDialog.ExecuteAction ("CheckProgress", ProgressIndicatorStyle.Default,
+			WorkInProgressDialog.Execute ("CheckProgress", ProgressIndicatorStyle.Default,
 				delegate (IWorkInProgressReport report)
 				{
 					report.DefineOperation ("Waiting");
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			bool executed = false;
 
-			WorkInProgressDialog.ExecuteCancellableAction ("CheckCancellableProgress", ProgressIndicatorStyle.Default,
+			WorkInProgressDialog.ExecuteCancellable ("CheckCancellableProgress", ProgressIndicatorStyle.Default,
 				delegate (IWorkInProgressReport report)
 				{
 					report.DefineOperation ("Waiting");
