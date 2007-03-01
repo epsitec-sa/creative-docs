@@ -1435,7 +1435,14 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal void SendQueueCommand()
 		{
-			Win32Api.PostMessage (this.Handle, Win32Const.WM_APP_EXEC_CMD, System.IntPtr.Zero, System.IntPtr.Zero);
+			if (this.InvokeRequired)
+			{
+				this.Invoke (new SimpleCallback (this.SendQueueCommand));
+			}
+			else
+			{
+				Win32Api.PostMessage (this.Handle, Win32Const.WM_APP_EXEC_CMD, System.IntPtr.Zero, System.IntPtr.Zero);
+			}
 		}
 		
 		internal void SendValidation()
