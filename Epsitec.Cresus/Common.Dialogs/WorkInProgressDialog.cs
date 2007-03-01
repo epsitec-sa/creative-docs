@@ -13,6 +13,11 @@ namespace Epsitec.Common.Dialogs
 	/// </summary>
 	public class WorkInProgressDialog : AbstractMessageDialog, IWorkInProgressReport
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WorkInProgressDialog"/> class.
+		/// </summary>
+		/// <param name="title">The title displayed in the dialog.</param>
+		/// <param name="cancellable">if set to <c>true</c> the action is cancellable.</param>
 		public WorkInProgressDialog(string title, bool cancellable)
 		{
 			this.dialogTitle = title;
@@ -24,6 +29,11 @@ namespace Epsitec.Common.Dialogs
 			this.privateDispatcher.RegisterController (this);
 		}
 
+		/// <summary>
+		/// Gets or sets the action which will be executed when the dialog
+		/// is shown.
+		/// </summary>
+		/// <value>The action.</value>
 		public System.Action<IWorkInProgressReport> Action
 		{
 			get
@@ -36,17 +46,21 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		public bool UnknownProgressValue
+		/// <summary>
+		/// Gets or sets the progress indicator style.
+		/// </summary>
+		/// <value>The progress indicator style.</value>
+		public ProgressIndicatorStyle ProgressIndicatorStyle
 		{
 			get
 			{
-				return this.unknownProgressValue;
+				return this.progressIndicatorStyle;
 			}
 			set
 			{
-				if (this.unknownProgressValue != value)
+				if (this.progressIndicatorStyle != value)
 				{
-					this.unknownProgressValue = value;
+					this.progressIndicatorStyle = value;
 
 					//	TODO: modifier l'interface graphique en conséquence, si elle
 					//	a déjà été créée; cela permet de remplacer un widget avec barre
@@ -55,6 +69,64 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 		}
+
+		/// <summary>
+		/// Gets a value indicating whether the operation was cancelled.
+		/// </summary>
+		/// <value><c>true</c> if the operation was cancelled; otherwise, <c>false</c>.</value>
+		public bool Cancelled
+		{
+			get
+			{
+				return this.cancelled;
+			}
+		}
+
+		/// <summary>
+		/// Gets the operation result.
+		/// </summary>
+		/// <value>The operation result.</value>
+		public OperationResult OperationResult
+		{
+			get
+			{
+				return this.operationResult;
+			}
+		}
+
+		/// <summary>
+		/// Gets the exception thrown by the operation if the operation result
+		/// is set to <code>OperationResult.Error</code>.
+		/// </summary>
+		/// <value>The operation exception.</value>
+		public System.Exception OperationException
+		{
+			get
+			{
+				return this.operationException;
+			}
+		}
+
+
+		public static OperationResult ExecuteAction(string title, ProgressIndicatorStyle style, System.Action<IWorkInProgressReport> action)
+		{
+			WorkInProgressDialog dialog = new WorkInProgressDialog (title, false);
+			dialog.Action = action;
+			dialog.ProgressIndicatorStyle = style;
+			dialog.OpenDialog ();
+			return dialog.OperationResult;
+		}
+
+		public static OperationResult ExecuteCancellableAction(string title, ProgressIndicatorStyle style, System.Action<IWorkInProgressReport> action)
+		{
+			WorkInProgressDialog dialog = new WorkInProgressDialog (title, true);
+			dialog.Action = action;
+			dialog.ProgressIndicatorStyle = style;
+			dialog.OpenDialog ();
+			return dialog.OperationResult;
+		}
+
+
 
 		#region IWorkInProgressReport Members
 
@@ -204,17 +276,32 @@ namespace Epsitec.Common.Dialogs
 		protected void CancelOperation()
 		{
 			this.cancelled = true;
+
+			if (this.cancelButton != null)
+			{
+				this.cancelButton.Enable = false;
+			}
 		}
 
 		private void HandleCancelButtonClicked(object sender, MessageEventArgs e)
 		{
-			this.cancelled = true;
-			this.cancelButton.Enable = false;
+			this.CancelOperation ();
 		}
 
 		private void ProcessAction()
 		{
-			this.action (this);
+			this.operationResult = OperationResult.Pending;
+
+			try
+			{
+				this.action (this);
+				this.operationResult = this.cancelled ? OperationResult.Cancelled : OperationResult.Done;
+			}
+			catch (System.Exception ex)
+			{
+				this.operationException = ex;
+				this.operationResult = OperationResult.Error;
+			}
 
 			SimpleCallback callback = this.CloseDialog;
 
@@ -229,24 +316,28 @@ namespace Epsitec.Common.Dialogs
 			this.CloseDialog ();
 		}
 
-		private readonly object exclusion = new object ();
+		private readonly object					exclusion = new object ();
 
 		private System.Action<IWorkInProgressReport> action;
-		private string dialogTitle;
+		private string							dialogTitle;
 		
-		private CommandDispatcher privateDispatcher;
-		private CommandContext privateContext;
-		private StaticText operationMessageWidget;
-		private HSlider progressValueSlider;
-		private StaticText progressMessageWidget;
-		private Button cancelButton;
-		private Timer timer;
+		private CommandDispatcher				privateDispatcher;
+		private CommandContext					privateContext;
+		
+		private StaticText						operationMessageWidget;
+		private HSlider							progressValueSlider;
+		private StaticText						progressMessageWidget;
+		private Button							cancelButton;
+		private Timer							timer;
 
 		private string							operationMessage;
 		private string							progressMessage;
 		private double							progressValue;
 		private bool							cancelled;
 		private bool							cancellable;
-		private bool							unknownProgressValue;
+		private ProgressIndicatorStyle			progressIndicatorStyle;
+		private OperationResult					operationResult;
+
+		private System.Exception				operationException;
 	}
 }

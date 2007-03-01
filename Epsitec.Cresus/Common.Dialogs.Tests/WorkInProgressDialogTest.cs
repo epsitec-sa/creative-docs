@@ -1,3 +1,6 @@
+//	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using NUnit.Framework;
 using Epsitec.Common.Widgets;
 
@@ -27,10 +30,9 @@ namespace Epsitec.Common.Dialogs
 		[Test]
 		public void CheckProgress()
 		{
-			WorkInProgressDialog dialog = new WorkInProgressDialog ("Test Sleep", false);
 			bool executed = false;
 
-			dialog.Action =
+			WorkInProgressDialog.ExecuteAction ("CheckProgress", ProgressIndicatorStyle.Default,
 				delegate (IWorkInProgressReport report)
 				{
 					report.DefineOperation ("Waiting");
@@ -42,9 +44,7 @@ namespace Epsitec.Common.Dialogs
 					}
 					report.DefineProgress (1.0, "done");
 					executed = true;
-				};
-
-			dialog.OpenDialog ();
+				});
 
 			Assert.IsTrue (executed);
 		}
@@ -52,10 +52,9 @@ namespace Epsitec.Common.Dialogs
 		[Test]
 		public void CheckCancellableProgress()
 		{
-			WorkInProgressDialog dialog = new WorkInProgressDialog ("Test Sleep", true);
 			bool executed = false;
 
-			dialog.Action =
+			WorkInProgressDialog.ExecuteCancellableAction ("CheckCancellableProgress", ProgressIndicatorStyle.Default,
 				delegate (IWorkInProgressReport report)
 				{
 					report.DefineOperation ("Waiting");
@@ -72,9 +71,7 @@ namespace Epsitec.Common.Dialogs
 					}
 					report.DefineProgress (1.0, "done");
 					executed = true;
-				};
-
-			dialog.OpenDialog ();
+				});
 
 			Assert.IsTrue (executed);
 		}
