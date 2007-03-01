@@ -25,21 +25,52 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		[Test]
-		public void CheckSleep()
+		public void CheckProgress()
 		{
-			WorkInProgressDialog dialog = new WorkInProgressDialog ("Test Sleep");
+			WorkInProgressDialog dialog = new WorkInProgressDialog ("Test Sleep", false);
 			bool executed = false;
-			
+
 			dialog.Action =
-				delegate (WorkInProgressDialog d)
+				delegate (IWorkInProgressReport report)
 				{
-					d.DefineMessage ("Start waiting");
-					System.Threading.Thread.Sleep (1*1000);
-					d.DefineMessage ("2 more seconds");
-					System.Threading.Thread.Sleep (1*1000);
-					d.DefineMessage ("1 more second");
-					System.Threading.Thread.Sleep (1*1000);
-					d.DefineMessage ("Done");
+					report.DefineOperation ("Waiting");
+
+					for (int i = 5; i >= 0; i--)
+					{
+						report.DefineProgress ((5-i)/5.0, string.Format ("{0} seconds remaining", i));
+						System.Threading.Thread.Sleep (1*1000);
+					}
+					report.DefineProgress (1.0, "done");
+					executed = true;
+				};
+
+			dialog.OpenDialog ();
+
+			Assert.IsTrue (executed);
+		}
+		
+		[Test]
+		public void CheckCancellableProgress()
+		{
+			WorkInProgressDialog dialog = new WorkInProgressDialog ("Test Sleep", true);
+			bool executed = false;
+
+			dialog.Action =
+				delegate (IWorkInProgressReport report)
+				{
+					report.DefineOperation ("Waiting");
+
+					for (int i = 5; i >= 0; i--)
+					{
+						report.DefineProgress ((5-i)/5.0, string.Format ("{0} seconds remaining", i));
+						System.Threading.Thread.Sleep (1*1000);
+						
+						if (report.Cancelled)
+						{
+							return;
+						}
+					}
+					report.DefineProgress (1.0, "done");
 					executed = true;
 				};
 
