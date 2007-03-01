@@ -236,6 +236,8 @@
     </Compile>
     <Compile Include="Dialogs\AbstractFile.cs" />
     <Compile Include="Dialogs\AbstractFileSave.cs" />
+    <Compile Include="Dialogs\FileExport.cs" />
+    <Compile Include="Dialogs\ExportType.cs" />
     <Compile Include="Dialogs\ExportICO.cs" />
     <Compile Include="Dialogs\FileSave.cs" />
     <Compile Include="Dialogs\FileSaveModel.cs" />

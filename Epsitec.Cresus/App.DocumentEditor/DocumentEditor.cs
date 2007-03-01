@@ -110,12 +110,14 @@ namespace Epsitec.App.DocumentEditor
 			
 			this.dlgAbout         = new Dialogs.About(this);
 			this.dlgDownload      = new Dialogs.Download(this);
+			this.dlgExportType    = new Dialogs.ExportType(this);
 			this.dlgExport        = new Dialogs.Export(this);
 			this.dlgExportPDF     = new Dialogs.ExportPDF(this);
 			this.dlgExportICO     = new Dialogs.ExportICO(this);
 			this.dlgGlyphs        = new Dialogs.Glyphs(this);
 			this.dlgInfos         = new Dialogs.Infos(this);
 			this.dlgKey           = new Dialogs.Key(this);
+			this.dlgFileExport    = new Dialogs.FileExport(this);
 			this.dlgFileNew       = new Dialogs.FileNew(this);
 			this.dlgFileOpen      = new Dialogs.FileOpen(this);
 			this.dlgFileOpenModel = new Dialogs.FileOpenModel(this);
@@ -1911,67 +1913,64 @@ namespace Epsitec.App.DocumentEditor
 		{
 			this.dlgSplash.Hide();
 
-			Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
-			
+			//	Choix du type de fichier à exporter.
+			if (string.IsNullOrEmpty(this.CurrentDocument.ExportFilename))
+			{
+				this.dlgExportType.FileType = ".pdf";
+			}
+			else
+			{
+				this.dlgExportType.FileType = System.IO.Path.GetExtension(this.CurrentDocument.ExportFilename).ToLowerInvariant();
+			}
+
+			this.dlgExportType.Show();  // choix du type de fichier...
+			if (!this.dlgExportType.IsOKclicked)  // annuler ?
+			{
+				return;
+			}
+
+			//	Choix du fichier.
+			this.dlgFileExport.FileExtension = this.dlgExportType.FileType;
+
 			if ( this.CurrentDocument.ExportDirectory == "" )
 			{
 				if ( this.CurrentDocument.Filename == "" )
 				{
-					dialog.InitialDirectory = this.globalSettings.InitialDirectory;
+					this.dlgFileExport.InitialDirectory = this.globalSettings.InitialDirectory;
 				}
 				else
 				{
-					dialog.InitialDirectory = System.IO.Path.GetDirectoryName(this.CurrentDocument.Filename);
+					this.dlgFileExport.InitialDirectory = System.IO.Path.GetDirectoryName(this.CurrentDocument.Filename);
 				}
 			}
 			else
 			{
-				dialog.InitialDirectory = this.CurrentDocument.ExportDirectory;
+				this.dlgFileExport.InitialDirectory = this.CurrentDocument.ExportDirectory;
 			}
 
-			dialog.FileName = this.CurrentDocument.ExportFilename;
-			dialog.Title = Res.Strings.Dialog.Export.Title1;
-			dialog.Filters.Add("pdf", DocumentEditor.GetRes("File.Vector.PDF"), "*.pdf");
-            if (this.documentType == DocumentType.Pictogram)
-            {
-                dialog.Filters.Add("ico", "Icône Windows ICO", "*.ico");
-            }
-            dialog.Filters.Add("bmp", DocumentEditor.GetRes("File.Bitmap.BMP"), "*.bmp");
-			dialog.Filters.Add("tif", DocumentEditor.GetRes("File.Bitmap.TIF"), "*.tif; *.tiff");
-			dialog.Filters.Add("jpg", DocumentEditor.GetRes("File.Bitmap.JPG"), "*.jpg; *.jpeg");
-			dialog.Filters.Add("png", DocumentEditor.GetRes("File.Bitmap.PNG"), "*.png");
-            dialog.Filters.Add("gif", DocumentEditor.GetRes("File.Bitmap.GIF"), "*.gif");
-			dialog.FilterIndex = this.CurrentDocument.ExportFilter;
-			dialog.PromptForOverwriting = true;
-			dialog.Owner = this.Window;
-			dialog.OpenDialog();
-			if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return;
+			this.dlgFileExport.InitialFileName = this.CurrentDocument.ExportFilename;
 
-			this.CurrentDocument.ExportDirectory = System.IO.Path.GetDirectoryName(dialog.FileName);
-			this.CurrentDocument.ExportFilename = System.IO.Path.GetFileName(dialog.FileName);
-			this.CurrentDocument.ExportFilter = dialog.FilterIndex;
+			this.dlgFileExport.ShowDialog();  // choix d'un fichier...
+			if (this.dlgFileExport.Result != Common.Dialogs.DialogResult.Accept)
+			{
+				return;
+			}
 
-#if false
-			string dir = this.CurrentDocument.ExportDirectory;
-			string name = System.IO.Path.GetFileNameWithoutExtension(this.CurrentDocument.ExportFilename);
-			string ext = dialog.Filters[this.CurrentDocument.ExportFilter].Name;
-			this.CurrentDocument.ExportFilename = string.Format("{0}\\{1}.{2}", dir, name, ext);
-#endif
+			this.CurrentDocument.ExportDirectory = this.dlgFileExport.InitialDirectory;
+			this.CurrentDocument.ExportFilename = this.dlgFileExport.FileName;
 
-            if (this.CurrentDocument.ExportFilter == 0)  // PDF ?
+			//	Choix des options d'exportation.
+            if (this.dlgExportType.FileType == ".pdf")
             {
                 this.dlgExportPDF.Show(this.CurrentDocument.ExportFilename);
             }
-            else if (this.documentType == DocumentType.Pictogram &&
-                     this.CurrentDocument.ExportFilter == 1)  // ICO ?
+            else if (this.dlgExportType.FileType == ".ico")
             {
                 this.dlgExportICO.Show(this.CurrentDocument.ExportFilename);
             }
             else
 			{
-				string ext = dialog.Filters[this.CurrentDocument.ExportFilter].Name;
-				this.CurrentDocument.Printer.ImageFormat = Printer.GetImageFormat(ext);
-
+				this.CurrentDocument.Printer.ImageFormat = Printer.GetImageFormat(this.dlgExportType.FileType);
 				this.dlgExport.Show(this.CurrentDocument.ExportFilename);
 			}
 		}
@@ -5396,12 +5395,14 @@ namespace Epsitec.App.DocumentEditor
 
 			this.dlgAbout.Save();
 			this.dlgDownload.Save();
+			this.dlgExportType.Save();
 			this.dlgExport.Save();
             this.dlgExportPDF.Save();
             this.dlgExportICO.Save();
 			this.dlgGlyphs.Save();
 			this.dlgInfos.Save();
 			this.dlgKey.Save();
+			this.dlgFileExport.PersistWindowBounds();
 			this.dlgFileNew.PersistWindowBounds();
 			this.dlgFileOpen.PersistWindowBounds();
 			this.dlgFileOpenModel.PersistWindowBounds();
@@ -5573,12 +5574,14 @@ namespace Epsitec.App.DocumentEditor
 
 		protected Dialogs.About					dlgAbout;
 		protected Dialogs.Download				dlgDownload;
+		protected Dialogs.ExportType			dlgExportType;
 		protected Dialogs.Export				dlgExport;
 		protected Dialogs.ExportPDF				dlgExportPDF;
 		protected Dialogs.ExportICO				dlgExportICO;
 		protected Dialogs.Glyphs				dlgGlyphs;
 		protected Dialogs.Infos					dlgInfos;
 		protected Dialogs.Key					dlgKey;
+		protected Dialogs.FileExport			dlgFileExport;
 		protected Dialogs.FileNew				dlgFileNew;
 		protected Dialogs.FileOpen				dlgFileOpen;
 		protected Dialogs.FileOpenModel			dlgFileOpenModel;

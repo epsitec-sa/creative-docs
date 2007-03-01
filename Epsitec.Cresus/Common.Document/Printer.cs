@@ -108,14 +108,14 @@ namespace Epsitec.Common.Document
 			//	Trouve le type d'une image en fonction de l'extension.
 			switch ( ext.ToLower() )
 			{
-				case "bmp":  return ImageFormat.Bmp;
-				case "gif":  return ImageFormat.Gif;
-				case "tif":  return ImageFormat.Tiff;
-				case "jpg":  return ImageFormat.Jpeg;
-				case "png":  return ImageFormat.Png;
-				case "exf":  return ImageFormat.Exif;
-				case "emf":  return ImageFormat.WindowsEmf;
-				case "wmf":  return ImageFormat.WindowsWmf;
+				case ".bmp":  return ImageFormat.Bmp;
+				case ".gif":  return ImageFormat.Gif;
+				case ".tif":  return ImageFormat.Tiff;
+				case ".jpg":  return ImageFormat.Jpeg;
+				case ".png":  return ImageFormat.Png;
+				case ".exf":  return ImageFormat.Exif;
+				case ".emf":  return ImageFormat.WindowsEmf;
+				case ".wmf":  return ImageFormat.WindowsWmf;
 			}
 			return ImageFormat.Unknown;
 		}
