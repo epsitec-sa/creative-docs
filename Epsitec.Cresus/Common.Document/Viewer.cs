@@ -2624,7 +2624,7 @@ namespace Epsitec.Common.Document
 			//	Ouvre la mini-palette.
 			this.CloseMiniBar(false);
 
-			System.Collections.ArrayList cmds = this.MiniBarCommands(noSelected);
+			List<string> cmds = this.MiniBarCommands(noSelected);
 			if (cmds == null || cmds.Count == 0)
 			{
 				return;
@@ -2901,11 +2901,11 @@ namespace Epsitec.Common.Document
 			miniBar.AsyncDispose();
 		}
 
-		protected System.Collections.ArrayList MiniBarCommands(bool noSelected)
+		protected virtual List<string> MiniBarCommands(bool noSelected)
 		{
 			//	Retourne la liste des commandes pour la mini-palette.
 			this.document.Notifier.GenerateEvents();
-			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			List<string> list = new List<string> ();
 
 			int nbSel = this.document.Modifier.TotalSelected;
 			if ( nbSel == 0 )
@@ -3024,7 +3024,7 @@ namespace Epsitec.Common.Document
 			return list;
 		}
 
-		protected int MiniBarCount(System.Collections.ArrayList list)
+		protected int MiniBarCount(IEnumerable<string> list)
 		{
 			//	Compte le nombre de commandes dans une liste.
 			int count = 0;
@@ -3035,7 +3035,7 @@ namespace Epsitec.Common.Document
 			return count;
 		}
 
-		protected int MiniBarJustifDo(System.Collections.ArrayList list, double widthHope)
+		protected int MiniBarJustifDo(List<string> list, double widthHope)
 		{
 			//	Justifie la mini-palette, en remplaçant certains séparateurs ("") par une marque
 			//	de fin de ligne ("#").
@@ -3068,7 +3068,7 @@ namespace Epsitec.Common.Document
 			return lines;
 		}
 
-		protected void MiniBarJustifClear(System.Collections.ArrayList list)
+		protected void MiniBarJustifClear(List<string> list)
 		{
 			//	Supprime la justification de la mini-palette.
 			for ( int i=0 ; i<list.Count ; i++ )
@@ -3083,7 +3083,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected double MiniBarJustifScraps(System.Collections.ArrayList list)
+		protected double MiniBarJustifScraps(List<string> list)
 		{
 			//	Retourne la longueur inutilisée la plus grande. Il s'agit généralement de la place
 			//	perdue à la fin de la dernière ligne.
@@ -3126,7 +3126,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void MiniBarAdd(System.Collections.ArrayList list, string cmd)
+		public void MiniBarAdd(List<string> list, string cmd)
 		{
 			//	Ajoute une commande dans la liste pour la mini-palette.
 			//	Une commande n'est qu'une seule fois dans la liste.
@@ -3170,7 +3170,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				System.Collections.ArrayList listOrder = new System.Collections.ArrayList();
+				List<Menus.ContextMenuItem> listOrder = new List<Menus.ContextMenuItem> ();
 
 				exist = false;
 				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, listOrder, "OrderUpAll");
@@ -3198,7 +3198,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				System.Collections.ArrayList listOper = new System.Collections.ArrayList();
+				List<Menus.ContextMenuItem> listOper = new List<Menus.ContextMenuItem> ();
 
 				exist = false;
 				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, listOper, "Rotate90");
@@ -3235,7 +3235,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				System.Collections.ArrayList listGeom = new System.Collections.ArrayList();
+				List<Menus.ContextMenuItem> listGeom = new List<Menus.ContextMenuItem> ();
 
 				exist = false;
 				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, listGeom, "Combine");
@@ -3265,7 +3265,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				System.Collections.ArrayList listBool = new System.Collections.ArrayList();
+				List<Menus.ContextMenuItem> listBool = new List<Menus.ContextMenuItem> ();
 
 				exist = false;
 				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, listBool, "BooleanOr");
@@ -3288,7 +3288,7 @@ namespace Epsitec.Common.Document
 			}
 
 			//	Construit le menu principal.
-			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			List<Menus.ContextMenuItem> list = new List<Menus.ContextMenuItem> ();
 			if ( globalMenu || nbSel == 0 )
 			{
 				exist = false;
@@ -4852,7 +4852,7 @@ namespace Epsitec.Common.Document
 
 		protected Point							miniBarClickPos;
 		protected Timer							miniBarTimer;
-		protected System.Collections.ArrayList	miniBarCmds;
+		protected List<string>					miniBarCmds;
 		protected int							miniBarLines;
 		protected Drawing.Rectangle				miniBarRect;
 		protected double						miniBarHot;

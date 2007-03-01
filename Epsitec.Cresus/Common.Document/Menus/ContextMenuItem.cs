@@ -1,6 +1,8 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Document.Menus
 {
 	/// <summary>
@@ -70,7 +72,7 @@ namespace Epsitec.Common.Document.Menus
 
 
 		#region StaticMethods
-		public static bool MenuAddItem(CommandContext context, System.Collections.ArrayList list, string command)
+		public static bool MenuAddItem(CommandContext context, List<ContextMenuItem> list, string command)
 		{
 			//	Ajoute une case dans le menu.
 			CommandState cs = context.GetCommandState (command);
@@ -85,7 +87,7 @@ namespace Epsitec.Common.Document.Menus
 			return true;
 		}
 
-		public static bool MenuAddSubmenu(System.Collections.ArrayList list, AbstractMenu submenu, string icon, string text)
+		public static bool MenuAddSubmenu(List<ContextMenuItem> list, AbstractMenu submenu, string icon, string text)
 		{
 			//	Ajoute un sous-menu dans le menu.
 			if ( submenu == null )  return false;
@@ -98,14 +100,14 @@ namespace Epsitec.Common.Document.Menus
 			return true;
 		}
 
-		public static void MenuAddSep(System.Collections.ArrayList list)
+		public static void MenuAddSep(List<ContextMenuItem> list)
 		{
 			//	Ajoute un séparateur dans le menu.
 			ContextMenuItem item = new ContextMenuItem();
 			list.Add(item);  // séparateur
 		}
 
-		public static bool IsMenuActive(System.Collections.ArrayList list)
+		public static bool IsMenuActive(List<ContextMenuItem> list)
 		{
 			//	Indique si un futur menu sera actif.
 			foreach ( ContextMenuItem cmi in list )
@@ -125,7 +127,7 @@ namespace Epsitec.Common.Document.Menus
 			return false;
 		}
 
-		public static void MenuCreate(VMenu menu, System.Collections.ArrayList list)
+		public static void MenuCreate(VMenu menu, List<ContextMenuItem> list)
 		{
 			//	Crée le menu.
 			foreach ( ContextMenuItem cmi in list )

@@ -318,7 +318,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		public override void PutCommands(System.Collections.ArrayList list)
+		public override void PutCommands(List<string> list)
 		{
 			//	Met les commandes pour l'objet dans une liste.
 			base.PutCommands(list);

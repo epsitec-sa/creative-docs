@@ -2305,7 +2305,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		public virtual void PutCommands(System.Collections.ArrayList list)
+		public virtual void PutCommands(List<string> list)
 		{
 			//	Met les commandes pour l'objet dans une liste.
 			if ( this.document.Modifier.IsToolShaper )
@@ -2337,7 +2337,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		protected void PutCommands(System.Collections.ArrayList list, string cmd)
+		protected void PutCommands(List<string> list, string cmd)
 		{
 			//	Met une commande pour l'objet dans une liste, si nécessaire.
 			this.document.Modifier.ActiveViewer.MiniBarAdd(list, cmd);
