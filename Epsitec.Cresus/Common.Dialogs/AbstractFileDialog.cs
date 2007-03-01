@@ -227,7 +227,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			get
 			{
-				return Epsitec.Common.Dialogs.Res.Strings.Dialog.File.LabelDoc;
+				return Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Label;
 			}
 		}
 

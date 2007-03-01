@@ -133,10 +133,45 @@ namespace Epsitec.App.DocumentEditor
 						public static string OK { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (78)); } }
 					}
 					
+					public static class Long
+					{
+						public static class Type
+						{
+							public static string BMP { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (270)); } }
+							public static string GIF { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (271)); } }
+							public static string ICO { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (272)); } }
+							public static string JPG { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (273)); } }
+							public static string PDF { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (274)); } }
+							public static string PNG { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (275)); } }
+							public static string TIF { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (276)); } }
+							public static string WMF { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (277)); } }
+						}
+					}
+					
+					public static class Short
+					{
+						public static class Type
+						{
+							public static string BMP { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (262)); } }
+							public static string GIF { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (268)); } }
+							public static string ICO { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (267)); } }
+							public static string JPG { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (264)); } }
+							public static string PDF { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (263)); } }
+							public static string PNG { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (265)); } }
+							public static string TIF { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (266)); } }
+							public static string WMF { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (269)); } }
+						}
+					}
+					
 					public static class Tooltip
 					{
 						public static string Cancel { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (81)); } }
 						public static string OK { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (80)); } }
+					}
+					
+					public static class Type
+					{
+						public static string Title { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (278)); } }
 					}
 				}
 				

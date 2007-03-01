@@ -354,14 +354,6 @@
   <data id="0VA">Browse for an image</data>
   <data id="00B">Update image from a file</data>
   <data id="01B">Import an image from a file</data>
-  <data id="02B">All images</data>
-  <data id="03B">Windows Bitmap BMP</data>
-  <data id="04B">Tagged Image File Format TIFF</data>
-  <data id="05B">Compressed Image JPEG</data>
-  <data id="06B">Portable Network Graphics PNG</data>
-  <data id="07B">Graphics Interchange Format GIF</data>
-  <data id="08B">PDF (Adobe® Acrobat® file format)</data>
-  <data id="09B">Windows Metafile WMF/EMF</data>
   <data id="0AB">Mx</data>
   <data id="0BB">My</data>
   <data id="0CB">Oy</data>

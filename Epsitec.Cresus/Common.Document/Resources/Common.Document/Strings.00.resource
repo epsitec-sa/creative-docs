@@ -394,14 +394,6 @@
   <data name="Panel.Image.Filter.Blackman" id="0DA01" mod="1">Normal (Blackman)</data>
   <data name="Panel.Image.Filter.Sinc" id="0EA01" mod="1">Accentué (Sinc)</data>
   <data name="Panel.Image.Filter.Other" id="06A01" mod="1">Filtrage {0}</data>
-  <data name="File.Bitmap.All" id="02B">Toutes les images</data>
-  <data name="File.Bitmap.BMP" id="03B">Bitmap Windows BMP</data>
-  <data name="File.Bitmap.TIF" id="04B">Tagged Image TIFF</data>
-  <data name="File.Bitmap.JPG" id="05B">Image compressée JPEG</data>
-  <data name="File.Bitmap.PNG" id="06B">Portable Network Graphics PNG</data>
-  <data name="File.Bitmap.GIF" id="07B">Graphics Interchange Format GIF</data>
-  <data name="File.Vector.PDF" id="08B">Fichiers PDF (Adobe® Acrobat®)</data>
-  <data name="File.Vector.WMF" id="09B">Windows Metafile WMF/EMF</data>
   <data name="Panel.Justif.Short.MarginH" id="0AB">Mx</data>
   <data name="Panel.Justif.Short.MarginV" id="0BB">My</data>
   <data name="Panel.Justif.Short.OffsetV" id="0CB">Oy</data>
@@ -849,7 +841,6 @@
   <data name="Dialog.File.Statistics" id="0KA01">Format: {0}&lt;br/&gt;Pages/calques: {1}/{2}&lt;br/&gt;Polices/images: {5}/{6}&lt;br/&gt;Objets: {3}/{4}</data>
   <data name="Dialog.OpenImage.Title" id="0PA01">Importer une image</data>
   <data name="Dialog.OpenImage.ActionButtonName" id="0RA01">Importer</data>
-  <data name="Dialog.OpenImage.FileLabel" id="0QA01">Image</data>
   <data name="Action.UndoMain" id="03P">Annuler</data>
   <data name="Action.Undo" id="04P">Annuler</data>
   <data name="Action.UndoRedoList" id="05P">Annuler ou refaire plusieurs actions</data>

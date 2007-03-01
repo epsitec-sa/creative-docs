@@ -96,8 +96,7 @@ namespace Epsitec.Common.Dialogs
 				{
 					public static string Directory { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (10)); } }
 					public static string Document { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (11)); } }
-					public static string LabelDoc { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (17)); } }
-					public static string LabelMod { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (18)); } }
+					public static string Label { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (17)); } }
 					public static string Model { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (21)); } }
 					public static string NewDirectoryName { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (22)); } }
 					public static string NewEmptyDocument { get { return Epsitec.Common.Dialogs.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (35)); } }

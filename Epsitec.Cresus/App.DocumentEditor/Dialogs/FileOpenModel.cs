@@ -28,14 +28,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		protected override string FileTypeLabel
-		{
-			get
-			{
-				return Res.Strings.Dialog.File.LabelMod;
-			}
-		}
-
 		protected override void CreateWindow()
 		{
 			//	Crée la fenêtre du dialogue.

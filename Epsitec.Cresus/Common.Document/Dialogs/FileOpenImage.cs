@@ -28,14 +28,6 @@ namespace Epsitec.Common.Document.Dialogs
 			}
 		}
 		
-		protected override string FileTypeLabel
-		{
-			get
-			{
-				return Res.Strings.Dialog.OpenImage.FileLabel;
-			}
-		}
-
 		protected override string ActionButtonName
 		{
 			get

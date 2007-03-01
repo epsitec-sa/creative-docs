@@ -14,7 +14,6 @@
   <data id="0F">Preview</data>
   <data id="0G">Size</data>
   <data id="0H">Document</data>
-  <data id="0I">Template</data>
   <data id="0J">Browse</data>
   <data id="0K">Save in</data>
   <data id="0L">Template</data>
@@ -36,5 +35,4 @@
   <data id="0T">The file &lt;b&gt;{0}&lt;/b&gt; has been modified.</data>
   <data id="0U">Do you want to save changes?</data>
   <data id="031">Empty document</data>
-  <data id="041"> </data>
 </bundle>

@@ -27,19 +27,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		protected override string FileTypeLabel
-		{
-			get
-			{
-				return "Fichier";
-			}
-		}
-
 		protected override string ActionButtonName
 		{
 			get
 			{
-				return "Exporter";
+				return Res.Strings.Dialog.Export.Button.OK;
 			}
 		}
 

@@ -15,9 +15,8 @@
   <data name="Dialog.File.Header.FileName" id="0E">Nom</data>
   <data name="Dialog.File.Header.Preview" id="0F">Aperçu</data>
   <data name="Dialog.File.Header.Size" id="0G">Taille</data>
-  <data name="Dialog.File.LabelDoc" id="0H">Document</data>
-  <data name="Dialog.File.LabelMod" id="0I">Modèle</data>
-  <data name="Dialog.File.LabelPath.Open" id="0J">Ragarder dans</data>
+  <data name="Dialog.File.Label" id="0H">Nom de fichier</data>
+  <data name="Dialog.File.LabelPath.Open" id="0J">Regarder dans</data>
   <data name="Dialog.File.LabelPath.Save" id="0K">Enregistrer dans</data>
   <data name="Dialog.File.Model" id="0L">Modèle</data>
   <data name="Dialog.File.NewDirectoryName" id="0M">Nouveau dossier</data>
@@ -33,7 +32,8 @@
   <data name="Dialog.Generic.Button.Close" id="001">Fermer</data>
   <data name="Dialog.Generic.Button.Help" id="011">Aide</data>
   <data name="Dialog.Generic.Button.Ok" id="021">D&amp;apos;accord</data>
-  <data name="Dialog.Generic.Title" id="041"> </data>
+  <data name="Dialog.Generic.Title" id="041">
+  </data>
   <data name="Dialog.File.NewEmptyDocument" id="031">Document vide</data>
   <data name="Dialog.Tooltip.Help" id="01">Texte explicatif</data>
   <data name="Dialog.Tooltip.Resize" id="02">Redimensionner la fenêtre</data>

@@ -438,7 +438,7 @@ namespace Epsitec.Common.Document.Panels
 			dialog.Title = Res.Strings.Panel.Image.Dialog.Save.Title;
 			dialog.FileName = this.fieldFilename.Text;
 			dialog.PromptForOverwriting = true;
-			dialog.Filters.Add(ext, Res.Strings.File.Bitmap.All, "*."+ext);
+			dialog.Filters.Add(ext, "Image", "*."+ext);
 			dialog.OpenDialog();  // demande le nom du fichier...
 			if (dialog.Result != Common.Dialogs.DialogResult.Accept)
 			{

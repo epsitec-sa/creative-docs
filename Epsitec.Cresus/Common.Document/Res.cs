@@ -769,7 +769,6 @@ namespace Epsitec.Common.Document
 				public static class OpenImage
 				{
 					public static string ActionButtonName { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1371)); } }
-					public static string FileLabel { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1370)); } }
 					public static string Title { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1369)); } }
 				}
 				
@@ -890,25 +889,9 @@ namespace Epsitec.Common.Document
 			
 			public static class File
 			{
-				public static class Bitmap
-				{
-					public static string All { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (354)); } }
-					public static string BMP { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (355)); } }
-					public static string GIF { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (359)); } }
-					public static string JPG { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (357)); } }
-					public static string PNG { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (358)); } }
-					public static string TIF { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (356)); } }
-				}
-				
 				public static class Model
 				{
 					public static string Empty { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1344)); } }
-				}
-				
-				public static class Vector
-				{
-					public static string PDF { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (360)); } }
-					public static string WMF { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (361)); } }
 				}
 			}
 			

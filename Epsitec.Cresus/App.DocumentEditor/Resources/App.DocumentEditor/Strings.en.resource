@@ -256,5 +256,12 @@
   <data id="048">Cancel export</data>
   <data id="058">Export {0}</data>
   <data id="018">Export</data>
-  <data id="052"> </data>
+  <data id="068">BMP Windows Bitmap</data>
+  <data id="078">PDF (Adobe® Acrobat® file format)</data>
+  <data id="088">JPEG Compressed Image</data>
+  <data id="098">PNG Portable Network Graphics</data>
+  <data id="0A8">TIFF Tagged Image File Format</data>
+  <data id="0B8">ICO Windows Icon</data>
+  <data id="0C8">GIF Graphics Interchange Format</data>
+  <data id="0D8">WMF/EMF Windows Metafile</data>
 </bundle>

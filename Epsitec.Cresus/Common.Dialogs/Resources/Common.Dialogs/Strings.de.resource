@@ -14,7 +14,6 @@
   <data id="0F">Vorschau</data>
   <data id="0G">Größe</data>
   <data id="0H">Dokument</data>
-  <data id="0I">Vorlage</data>
   <data id="0J">Aktueller Ordner:</data>
   <data id="0K">Speichern nach</data>
   <data id="0L">Vorlage</data>
@@ -36,5 +35,4 @@
   <data id="0T">Die Datei &lt;b&gt;{0}&lt;/b&gt; wurde geändert.</data>
   <data id="0U">Sollen die Änderungen gespeichert werden?</data>
   <data id="031">Leeres Dokument</data>
-  <data id="041"> </data>
 </bundle>

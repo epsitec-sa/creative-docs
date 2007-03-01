@@ -25,22 +25,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.extensions.Add(".ico");
 
 			this.shortDescriptions = new List<string>();
-			this.shortDescriptions.Add("Fichier PDF (Adobe® Acrobat®)");
-			this.shortDescriptions.Add("Image compressée JPEG");
-			this.shortDescriptions.Add("Graphics Interchange Format GIF");
-			this.shortDescriptions.Add("Portable Network Graphics PNG");
-			this.shortDescriptions.Add("Tagged Image TIFF");
-			this.shortDescriptions.Add("Bitmap Windows BMP");
-			this.shortDescriptions.Add("Icône Windows ICO");
+			this.shortDescriptions.Add(Res.Strings.Dialog.Export.Short.Type.PDF);
+			this.shortDescriptions.Add(Res.Strings.Dialog.Export.Short.Type.JPG);
+			this.shortDescriptions.Add(Res.Strings.Dialog.Export.Short.Type.GIF);
+			this.shortDescriptions.Add(Res.Strings.Dialog.Export.Short.Type.PNG);
+			this.shortDescriptions.Add(Res.Strings.Dialog.Export.Short.Type.TIF);
+			this.shortDescriptions.Add(Res.Strings.Dialog.Export.Short.Type.BMP);
+			this.shortDescriptions.Add(Res.Strings.Dialog.Export.Short.Type.ICO);
 
 			this.fullDescriptions = new List<string>();
-			this.fullDescriptions.Add("Fichier vectoriel portable contenant toutes les pages. Idéal pour préparer un fichier prêt à imprimer, indépendant de Crésus Documents.");
-			this.fullDescriptions.Add("Image bitmap comprimée avec perte de qualité contenant la page courante. Fichier de petite taille, mais de mauvaise qualité. Le facteur de qualité est réglable.");
-			this.fullDescriptions.Add("Image bitmap comprimée sans perte contenant la page courante. Format ancien à utiliser lorsque la page contient peu de couleurs.");
-			this.fullDescriptions.Add("Image bitmap comprimée sans perte contenant la page courante. Format moderne générant de gros fichier de qualité optimale, avec possibilité de transparence.");
-			this.fullDescriptions.Add("Image bitmap avec ou sans compresion sans perte contenant la page courante. Format ancien générant de gros fichier de qualité optimale, avec possibilité de transparence.");
-			this.fullDescriptions.Add("Image bitmap non comprimée contenant la page courante. Format ancien générant de très gros fichiers, à éviter.");
-			this.fullDescriptions.Add("Icône pour Windows contenant la page courante dans différentes résolutions.");
+			this.fullDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.PDF);
+			this.fullDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.JPG);
+			this.fullDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.GIF);
+			this.fullDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.PNG);
+			this.fullDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.TIF);
+			this.fullDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.BMP);
+			this.fullDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.ICO);
 		}
 
 		public override void Show()
@@ -54,7 +54,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.WindowInit("ExportType", 350, 230);
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
-				this.window.Text = "Choix du type de fichier à exporter";
+				this.window.Text = Res.Strings.Dialog.Export.Type.Title;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowExportCloseClicked);
 
 				Panel panel = new Panel(this.window.Root);

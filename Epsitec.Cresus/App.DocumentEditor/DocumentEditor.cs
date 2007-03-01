@@ -1930,7 +1930,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 
 			//	Choix du fichier.
-			this.dlgFileExport.ChangeTitle(string.Format("Exporter un fichier {0}", this.dlgExportType.FileType));
+			this.dlgFileExport.ChangeTitle(string.Format(Res.Strings.Dialog.Export.Title2, this.dlgExportType.FileType));
 
 			this.dlgFileExport.FileExtension = this.dlgExportType.FileType;
 
