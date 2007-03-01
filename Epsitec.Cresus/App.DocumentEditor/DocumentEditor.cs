@@ -1930,7 +1930,14 @@ namespace Epsitec.App.DocumentEditor
 			}
 
 			//	Choix du fichier.
-			this.dlgFileExport.ChangeTitle(string.Format(Res.Strings.Dialog.Export.Title2, this.dlgExportType.FileType));
+			if (this.dlgExportType.FileType == ".pdf")
+			{
+				this.dlgFileExport.ChangeTitle(Res.Strings.Dialog.Export.Title1);
+			}
+			else
+			{
+				this.dlgFileExport.ChangeTitle(Res.Strings.Dialog.Export.Title);
+			}
 
 			this.dlgFileExport.FileExtension = this.dlgExportType.FileType;
 
