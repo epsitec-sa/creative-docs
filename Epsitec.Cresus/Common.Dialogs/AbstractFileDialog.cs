@@ -218,6 +218,24 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		protected virtual string ActionButtonName
+		{
+			get
+			{
+				switch (this.FileDialogType)
+				{
+					case FileDialogType.New:
+						return Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.New;
+
+					case FileDialogType.Save:
+						return Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.Save;
+
+					default:
+						return Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.Open;
+				}
+			}
+		}
+
 		protected abstract void CreateWindow();
 
 
@@ -728,25 +746,9 @@ namespace Epsitec.Common.Dialogs
 			this.buttonCancel.TabIndex = 2;
 			this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-			string ok;
-			switch (this.FileDialogType)
-			{
-				case FileDialogType.New:
-					ok = Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.New;
-					break;
-
-				case FileDialogType.Save:
-					ok = Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.Save;
-					break;
-
-				default:
-					ok = Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.Open;
-					break;
-			}
-
 			this.buttonOk = new Button (footer);
 			this.buttonOk.PreferredWidth = 85;
-			this.buttonOk.Text = ok;
+			this.buttonOk.Text = this.ActionButtonName;
 			this.buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 			this.buttonOk.Dock = DockStyle.Right;
 			this.buttonOk.Margins = new Margins (6, 0, 0, 0);

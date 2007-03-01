@@ -28,6 +28,22 @@ namespace Epsitec.Common.Document.Dialogs
 			}
 		}
 		
+		protected override string FileTypeLabel
+		{
+			get
+			{
+				return Res.Strings.Dialog.OpenImage.FileLabel;
+			}
+		}
+
+		protected override string ActionButtonName
+		{
+			get
+			{
+				return Res.Strings.Dialog.OpenImage.ActionButtonName;
+			}
+		}
+
 		protected override void FavoritesAddApplicationFolders()
 		{
 			this.AddFavorite(FolderId.MyPictures);
@@ -36,7 +52,7 @@ namespace Epsitec.Common.Document.Dialogs
 		protected override void CreateWindow()
 		{
 			//	Crée la fenêtre du dialogue.
-			this.CreateUserInterface("FileOpenImage", new Size(720, 480), "Importer une image", 20, this.ownerWindow);
+			this.CreateUserInterface("FileOpenImage", new Size(720, 480), Res.Strings.Dialog.OpenImage.Title, 20, this.ownerWindow);
 		}
 	}
 }
