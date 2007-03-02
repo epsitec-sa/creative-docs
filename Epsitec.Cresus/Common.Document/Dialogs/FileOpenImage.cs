@@ -14,7 +14,8 @@ namespace Epsitec.Common.Document.Dialogs
 	{
 		public FileOpenImage(Document document, Window ownerWindow) : base(document, ownerWindow)
 		{
-			this.FileFilterPattern = "*.bmp|*.tif|*.tiff|*.jpg|*.jpeg|*.gif|*.png|*.wmf|*.emf";
+			//	Il faut mettre en premier les extensions qu'on souhaite voir.
+			this.FileFilterPattern = "*.tif|*.jpg|*.gif|*.png|*.bmp|*.wmf|*.emf|*.tiff|*.jpeg";
 			this.enableNavigation = true;
 			this.enableMultipleSelection = false;
 		}

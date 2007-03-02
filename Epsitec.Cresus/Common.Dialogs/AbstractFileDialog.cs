@@ -779,8 +779,8 @@ namespace Epsitec.Common.Dialogs
 			this.fieldExtension.AutoFocus = false;
 			this.fieldExtension.TabNavigationMode = TabNavigationMode.None;
 			this.fieldExtension.IsReadOnly = true;
-			this.fieldExtension.Text = string.IsNullOrEmpty(this.fileExtension) ? "..." : this.fileExtension;
-			this.fieldExtension.PreferredWidth = 44;
+			this.fieldExtension.Text = this.NiceFileExtension;
+			this.fieldExtension.PreferredWidth = this.IsMultipleExtensions ? 100 : 44;
 			this.fieldExtension.Margins = new Margins(-1, 10, 0, 0);
 			this.fieldExtension.Dock = DockStyle.Right;
 		}
@@ -789,6 +789,50 @@ namespace Epsitec.Common.Dialogs
 		{
 		}
 
+
+		private bool IsMultipleExtensions
+		{
+			//	Retourne true s'il existe plus d'une extension.
+			get
+			{
+				return this.fileFilterPattern.IndexOf("|") != -1;
+			}
+		}
+
+		private string NiceFileExtension
+		{
+			//	Retourne ce qu'il faut afficher comme extension.
+			get
+			{
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+				int founded = 0;
+
+				for (int i=0; i<this.fileFilterPattern.Length; i++)
+				{
+					if (this.fileFilterPattern[i] == '*')
+					{
+						founded++;
+						continue;
+					}
+					else if (this.fileFilterPattern[i] == '|')
+					{
+						builder.Append(' ');
+
+						if (founded > 3)
+						{
+							builder.Append("...");
+							break;
+						}
+					}
+					else
+					{
+						builder.Append(this.fileFilterPattern[i]);
+					}
+				}
+				
+				return builder.ToString();
+			}
+		}
 
 		private void SelectFileNameInTable(string fileNameToSelect)
 		{
@@ -1305,13 +1349,13 @@ namespace Epsitec.Common.Dialogs
 				}
 				else
 				{
-					if (this.fileFilterPattern.IndexOf("|") == -1)  // une seule extension ?
-					{
-						this.fieldFileName.Text = TextLayout.ConvertToTaggedText(System.IO.Path.GetFileNameWithoutExtension(this.initialFileName));
-					}
-					else  // plusieurs extensions ?
+					if (this.IsMultipleExtensions)  // plusieurs extensions ?
 					{
 						this.fieldFileName.Text = TextLayout.ConvertToTaggedText(this.initialFileName);
+					}
+					else  // une seule extension ?
+					{
+						this.fieldFileName.Text = TextLayout.ConvertToTaggedText(System.IO.Path.GetFileNameWithoutExtension(this.initialFileName));
 					}
 				}
 			}
