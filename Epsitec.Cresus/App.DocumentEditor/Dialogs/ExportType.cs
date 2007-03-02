@@ -24,6 +24,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.extensions.Add(".bmp");
 			this.extensions.Add(".ico");
 
+			this.formatDescriptions = new List<string>();
+			this.formatDescriptions.Add(Res.Strings.Dialog.Export.Format.Type.PDF);
+			this.formatDescriptions.Add(Res.Strings.Dialog.Export.Format.Type.JPG);
+			this.formatDescriptions.Add(Res.Strings.Dialog.Export.Format.Type.GIF);
+			this.formatDescriptions.Add(Res.Strings.Dialog.Export.Format.Type.PNG);
+			this.formatDescriptions.Add(Res.Strings.Dialog.Export.Format.Type.TIF);
+			this.formatDescriptions.Add(Res.Strings.Dialog.Export.Format.Type.BMP);
+			this.formatDescriptions.Add(Res.Strings.Dialog.Export.Format.Type.ICO);
+
 			this.shortDescriptions = new List<string>();
 			this.shortDescriptions.Add(Res.Strings.Dialog.Export.Short.Type.PDF);
 			this.shortDescriptions.Add(Res.Strings.Dialog.Export.Short.Type.JPG);
@@ -33,14 +42,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.shortDescriptions.Add(Res.Strings.Dialog.Export.Short.Type.BMP);
 			this.shortDescriptions.Add(Res.Strings.Dialog.Export.Short.Type.ICO);
 
-			this.fullDescriptions = new List<string>();
-			this.fullDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.PDF);
-			this.fullDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.JPG);
-			this.fullDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.GIF);
-			this.fullDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.PNG);
-			this.fullDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.TIF);
-			this.fullDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.BMP);
-			this.fullDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.ICO);
+			this.longDescriptions = new List<string>();
+			this.longDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.PDF);
+			this.longDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.JPG);
+			this.longDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.GIF);
+			this.longDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.PNG);
+			this.longDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.TIF);
+			this.longDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.BMP);
+			this.longDescriptions.Add(Res.Strings.Dialog.Export.Long.Type.ICO);
 		}
 
 		public override void Show()
@@ -51,7 +60,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window = new Window();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
-				this.WindowInit("ExportType", 350, 230);
+				this.WindowInit("ExportType", 350, 250);
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
 				this.window.Text = Res.Strings.Dialog.Export.Type.Title;
@@ -66,15 +75,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					RadioButton radio = new RadioButton(panel);
 					radio.Name = this.extensions[i];
-					radio.Text = this.shortDescriptions[i];
+					radio.Text = string.Concat(this.formatDescriptions[i], " ", this.shortDescriptions[i]);
 					radio.ActiveStateChanged += new EventHandler(this.HandleRadioActiveStateChanged);
+					radio.Entered += new MessageEventHandler(this.HandleRadioEntered);
+					radio.Exited += new MessageEventHandler(this.HandleRadioExited);
 					radio.Dock = DockStyle.Top;
 					this.radioButtons.Add(radio);
 				}
 				this.UpdateRadio();
 
 				this.fullDescription = new StaticText(panel);
-				this.fullDescription.Margins = new Margins(0, 0, 5, 5);
+				this.fullDescription.ContentAlignment = ContentAlignment.TopLeft;
+				this.fullDescription.Margins = new Margins(0, 0, 10, 0);
 				this.fullDescription.Dock = DockStyle.Fill;
 				this.UpdateDescription();
 
@@ -170,7 +182,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 				else
 				{
-					this.fullDescription.Text = this.fullDescriptions[i];
+					this.fullDescription.Text = string.Concat("<b><font size=\"140%\">", this.formatDescriptions[i], "</font></b><br/>", this.longDescriptions[i]);
 				}
 			}
 		}
@@ -187,6 +199,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			return -1;
 		}
 
+
+		private void HandleRadioEntered(object sender, MessageEventArgs e)
+		{
+			RadioButton radio = sender as RadioButton;
+			string ift = this.fileType;
+			this.fileType = radio.Name;
+			this.UpdateDescription();
+			this.fileType = ift;
+		}
+
+		private void HandleRadioExited(object sender, MessageEventArgs e)
+		{
+			this.UpdateDescription();
+		}
 
 		private void HandleRadioActiveStateChanged(object sender)
 		{
@@ -216,8 +242,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected string					fileType;
 
 		protected List<string>				extensions;
+		protected List<string>				formatDescriptions;
 		protected List<string>				shortDescriptions;
-		protected List<string>				fullDescriptions;
+		protected List<string>				longDescriptions;
 		protected bool						ignoreChange;
 		protected bool						isOKclicked;
 

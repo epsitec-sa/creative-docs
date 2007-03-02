@@ -118,6 +118,7 @@ namespace Epsitec.Common.Dialogs
 
 		public string FileExtension
 		{
+			//	Extension unique, par exemple ".crdoc".
 			get
 			{
 				return this.fileExtension;
@@ -143,6 +144,8 @@ namespace Epsitec.Common.Dialogs
 
 		public string FileFilterPattern
 		{
+			//	Liste des extensions, par exemple "*.tif|*.jpg".
+			//	Il faut mettre en premier les extensions qu'on souhaite voir.
 			get
 			{
 				return this.fileFilterPattern;

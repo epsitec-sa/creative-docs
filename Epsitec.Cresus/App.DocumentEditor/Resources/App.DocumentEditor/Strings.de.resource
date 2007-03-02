@@ -235,4 +235,12 @@
   <data id="0B1">Sollen die Änderungen gespeichert werden?</data>
   <data id="0K4">Akzente berücksichtigen</data>
   <data id="0J4">Groß-/Kleinschreibung breücksichigen</data>
+  <data id="0N8">BMP</data>
+  <data id="0O8">GIF</data>
+  <data id="0P8">ICO</data>
+  <data id="0Q8">JPEG</data>
+  <data id="0R8">PDF</data>
+  <data id="0S8">PNG</data>
+  <data id="0T8">TIFF</data>
+  <data id="0U8">WMF/EMF</data>
 </bundle>
