@@ -1305,7 +1305,14 @@ namespace Epsitec.Common.Dialogs
 				}
 				else
 				{
-					this.fieldFileName.Text = TextLayout.ConvertToTaggedText (System.IO.Path.GetFileNameWithoutExtension (this.initialFileName));
+					if (this.fileFilterPattern.IndexOf("|") == -1)  // une seule extension ?
+					{
+						this.fieldFileName.Text = TextLayout.ConvertToTaggedText(System.IO.Path.GetFileNameWithoutExtension(this.initialFileName));
+					}
+					else
+					{
+						this.fieldFileName.Text = TextLayout.ConvertToTaggedText(this.initialFileName);
+					}
 				}
 			}
 		}
