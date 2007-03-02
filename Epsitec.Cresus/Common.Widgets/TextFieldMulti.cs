@@ -39,6 +39,19 @@ namespace Epsitec.Common.Widgets
 			
 			base.Dispose(disposing);
 		}
+
+		public bool ScrollerVisibility
+		{
+			get
+			{
+				return this.scroller.Visibility;
+			}
+			set
+			{
+				this.scroller.Visibility = value;
+			}
+		}
+
 		
 		protected override void UpdateGeometry()
 		{

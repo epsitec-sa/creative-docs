@@ -60,7 +60,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window = new Window();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
-				this.WindowInit("ExportType", 350, 250);
+				this.WindowInit("ExportType", 350, 270);
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
 				this.window.Text = Res.Strings.Dialog.Export.Type.Title;
@@ -82,13 +82,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					radio.Dock = DockStyle.Top;
 					this.radioButtons.Add(radio);
 				}
-				this.UpdateRadio();
 
-				this.fullDescription = new StaticText(panel);
-				this.fullDescription.ContentAlignment = ContentAlignment.TopLeft;
-				this.fullDescription.Margins = new Margins(0, 0, 10, 0);
+				this.fullDescription = new TextFieldMulti(panel);
+				this.fullDescription.ScrollerVisibility = false;
+				this.fullDescription.IsReadOnly = true;
+				this.fullDescription.Margins = new Margins(0, 0, 12, 8);
 				this.fullDescription.Dock = DockStyle.Fill;
-				this.UpdateDescription();
 
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
@@ -113,6 +112,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonCancel, Res.Strings.Dialog.Export.Tooltip.Cancel);
 			}
+
+			this.UpdateRadio();
+			this.UpdateDescription();
 
 			this.isOKclicked = false;
 			this.window.ShowDialog();
@@ -249,6 +251,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected bool						isOKclicked;
 
 		protected List<RadioButton>			radioButtons;
-		protected StaticText				fullDescription;
+		protected TextFieldMulti			fullDescription;
 	}
 }
