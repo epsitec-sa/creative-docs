@@ -779,7 +779,7 @@ namespace Epsitec.Common.Dialogs
 			this.fieldExtension.AutoFocus = false;
 			this.fieldExtension.TabNavigationMode = TabNavigationMode.None;
 			this.fieldExtension.IsReadOnly = true;
-			this.fieldExtension.Text = this.fileExtension;
+			this.fieldExtension.Text = string.IsNullOrEmpty(this.fileExtension) ? "..." : this.fileExtension;
 			this.fieldExtension.PreferredWidth = 44;
 			this.fieldExtension.Margins = new Margins(-1, 10, 0, 0);
 			this.fieldExtension.Dock = DockStyle.Right;
@@ -1309,7 +1309,7 @@ namespace Epsitec.Common.Dialogs
 					{
 						this.fieldFileName.Text = TextLayout.ConvertToTaggedText(System.IO.Path.GetFileNameWithoutExtension(this.initialFileName));
 					}
-					else
+					else  // plusieurs extensions ?
 					{
 						this.fieldFileName.Text = TextLayout.ConvertToTaggedText(this.initialFileName);
 					}
