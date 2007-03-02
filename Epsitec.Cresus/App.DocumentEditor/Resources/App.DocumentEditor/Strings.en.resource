@@ -257,8 +257,8 @@
   <data id="058">Export {0}</data>
   <data id="018">Export</data>
   <data id="068">Windows Bitmap</data>
-  <data id="078">Adobe® Acrobat® file format</data>
-  <data id="088">Compressed Image</data>
+  <data id="078">Portable Document Format (Adobe® Reader®)</data>
+  <data id="088">Joint Photographic Experts Group</data>
   <data id="098">Portable Network Graphics</data>
   <data id="0A8">Tagged Image File Format</data>
   <data id="0B8">Windows Icon</data>
@@ -272,4 +272,5 @@
   <data id="0S8">PNG</data>
   <data id="0T8">TIFF</data>
   <data id="0U8">WMF/EMF</data>
+  <data id="0V8">{0} — {1}</data>
 </bundle>

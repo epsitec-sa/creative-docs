@@ -117,29 +117,30 @@
   <data name="Dialog.Export.Title1" id="0C2">Exporter un document</data>
   <data name="Dialog.Export.Title2" id="0D2">Exporter {0}</data>
   <data name="Dialog.Export.Short.Type.BMP" id="068">Bitmap Windows</data>
+  <data name="Dialog.Export.FormatDescription" id="0V8">{0} — {1}</data>
   <data name="Dialog.Export.Format.Type.BMP" id="0N8">BMP</data>
-  <data name="Dialog.Export.Long.Type.BMP" id="0E8">Image bitmap non comprimée contenant la page courante. Format ancien générant de très gros fichiers, à éviter.</data>
-  <data name="Dialog.Export.Short.Type.PDF" id="078">Fichier Adobe® Acrobat®</data>
+  <data name="Dialog.Export.Long.Type.BMP" id="0E8">Image bitmap de la page courante, non comprimée.&lt;br/&gt;&lt;br/&gt;Ce format génère des fichiers volumineux (à éviter).</data>
+  <data name="Dialog.Export.Short.Type.PDF" id="078">Portable Document Format (Adobe® Reader®)</data>
   <data name="Dialog.Export.Format.Type.PDF" id="0R8">PDF</data>
-  <data name="Dialog.Export.Long.Type.PDF" id="0I8">Fichier vectoriel portable contenant toutes les pages. Idéal pour préparer un fichier prêt à imprimer, indépendant de Crésus Documents.</data>
-  <data name="Dialog.Export.Short.Type.JPG" id="088">Image compressée</data>
+  <data name="Dialog.Export.Long.Type.PDF" id="0I8">Document compatible avec Adobe® Reader®.&lt;br/&gt;&lt;br/&gt;Ce format est idéal pour préparer un fichier prêt à imprimer, indépendant de Crésus Documents.</data>
+  <data name="Dialog.Export.Short.Type.JPG" id="088">Joint Photographic Experts Group</data>
   <data name="Dialog.Export.Format.Type.JPG" id="0Q8">JPEG</data>
-  <data name="Dialog.Export.Long.Type.JPG" id="0H8">Image bitmap comprimée avec perte de qualité contenant la page courante. Fichier de petite taille, mais de mauvaise qualité. Le facteur de qualité est réglable.</data>
+  <data name="Dialog.Export.Long.Type.JPG" id="0H8">Image bitmap de la page courante, comprimée avec perte de qualité.&lt;br/&gt;&lt;br/&gt;Ce format génère des fichiers compacts, au détriment de la qualité. Ce format convient mal à des documents techniques, mais est idéal pour des documents riches en photographies.</data>
   <data name="Dialog.Export.Short.Type.PNG" id="098">Portable Network Graphics</data>
   <data name="Dialog.Export.Format.Type.PNG" id="0S8">PNG</data>
-  <data name="Dialog.Export.Long.Type.PNG" id="0J8">Image bitmap comprimée sans perte contenant la page courante. Format moderne générant de gros fichier de qualité optimale, avec possibilité de transparence.</data>
+  <data name="Dialog.Export.Long.Type.PNG" id="0J8">Image bitmap de la page courante, comprimée sans perte de qualité, avec préservation optionnelle de la transparence.&lt;br/&gt;&lt;br/&gt;Ce format convient à tous les types de documents et produit une représentation fidèle. Il génère des fichiers volumineux lorsque le document contient des photographies. Idéal pour le web.</data>
   <data name="Dialog.Export.Short.Type.TIF" id="0A8">Tagged Image File Format</data>
   <data name="Dialog.Export.Format.Type.TIF" id="0T8">TIFF</data>
-  <data name="Dialog.Export.Long.Type.TIF" id="0K8">Image bitmap avec ou sans compresion sans perte contenant la page courante. Format ancien générant de gros fichier de qualité optimale, avec possibilité de transparence.</data>
-  <data name="Dialog.Export.Short.Type.WMF" id="0D8">Windows Metafile</data>
+  <data name="Dialog.Export.Long.Type.TIF" id="0K8">Image bitmap de la page courante, comprimée sans perte de qualité, avec préservation optionnelle de la transparence.&lt;br/&gt;&lt;br/&gt;Ce format convient à tous les types de documents et produit une représentation fidèle. Il génère des fichiers volumineux lorsque le document contient des photographies.</data>
+  <data name="Dialog.Export.Short.Type.WMF" id="0D8">Métafichier Windows</data>
   <data name="Dialog.Export.Format.Type.WMF" id="0U8">WMF/EMF</data>
-  <data name="Dialog.Export.Long.Type.WMF" id="0L8">Fichier vectoriel Windows.</data>
+  <data name="Dialog.Export.Long.Type.WMF" id="0L8">Image vectorielle Windows.</data>
   <data name="Dialog.Export.Short.Type.ICO" id="0B8">Icône Windows</data>
   <data name="Dialog.Export.Format.Type.ICO" id="0P8">ICO</data>
-  <data name="Dialog.Export.Long.Type.ICO" id="0G8">Icône pour Windows contenant la page courante dans différentes résolutions.</data>
+  <data name="Dialog.Export.Long.Type.ICO" id="0G8">Icône de la page courante, au format Windows.&lt;br/&gt;&lt;br/&gt;Ce format génère une icône avec diverses résolutions et niveaux de couleurs, optionnellement avec une icône de haute qualité pour Vista.</data>
   <data name="Dialog.Export.Short.Type.GIF" id="0C8">Graphics Interchange Format</data>
   <data name="Dialog.Export.Format.Type.GIF" id="0O8">GIF</data>
-  <data name="Dialog.Export.Long.Type.GIF" id="0F8">Image bitmap comprimée sans perte contenant la page courante. Format ancien à utiliser lorsque la page contient peu de couleurs.</data>
+  <data name="Dialog.Export.Long.Type.GIF" id="0F8">Image bitmap comprimée de la page courante, avec un nombre de couleurs restreint.&lt;br/&gt;&lt;br/&gt;Ce format génère des fichiers compacts mais ne convient pas à des documents contenant beaucoup de couleurs (photos, dégradés).</data>
   <data name="Dialog.Export.Button.OK" id="0E2">Exporter</data>
   <data name="Dialog.Export.Button.Cancel" id="0F2">Annuler</data>
   <data name="Dialog.Export.Tooltip.OK" id="0G2">Exporter l&amp;apos;image</data>

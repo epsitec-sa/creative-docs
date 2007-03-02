@@ -60,7 +60,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window = new Window();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
-				this.WindowInit("ExportType", 350, 270);
+				this.WindowInit("ExportType", 350, 300);
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
 				this.window.Text = Res.Strings.Dialog.Export.Type.Title;
@@ -75,7 +75,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					RadioButton radio = new RadioButton(panel);
 					radio.Name = this.extensions[i];
-					radio.Text = string.Concat(this.formatDescriptions[i], " ", this.shortDescriptions[i]);
+					radio.Text = string.Format(Res.Strings.Dialog.Export.FormatDescription, this.formatDescriptions[i], this.shortDescriptions[i]);
 					radio.ActiveStateChanged += new EventHandler(this.HandleRadioActiveStateChanged);
 					radio.Entered += new MessageEventHandler(this.HandleRadioEntered);
 					radio.Exited += new MessageEventHandler(this.HandleRadioExited);

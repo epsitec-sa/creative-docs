@@ -124,6 +124,7 @@ namespace Epsitec.App.DocumentEditor
 				
 				public static class Export
 				{
+					public static string FormatDescription { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (287)); } }
 					public static string Title { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (59)); } }
 					public static string Title1 { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (76)); } }
 					public static string Title2 { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (77)); } }
@@ -662,6 +663,8 @@ namespace Epsitec.App.DocumentEditor
 			private static Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
 			#endregion
 		}
+		
+		//	Code mapping for 'Panel' resources
 		
 		static Res()
 		{
