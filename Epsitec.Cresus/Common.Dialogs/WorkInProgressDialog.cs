@@ -213,12 +213,10 @@ namespace Epsitec.Common.Dialogs
 			//	d'implémenter ce widget de manière 100% autonome, avec refresh automatique
 			//	de son animation, sans intervention externe.
 			
-			this.progressValueSlider = new ProgressIndicator (frame);
-			this.progressValueSlider.Dock = DockStyle.Stacked;
-			this.progressValueSlider.PreferredHeight = 20;
-			this.progressValueSlider.Margins = new Epsitec.Common.Drawing.Margins (4, 4, 4, 4);
-			this.progressValueSlider.MinValue = 0.0M;
-			this.progressValueSlider.MaxValue = 1.0M;
+			this.progressIndicator = new ProgressIndicator (frame);
+			this.progressIndicator.Dock = DockStyle.Stacked;
+			this.progressIndicator.PreferredHeight = 20;
+			this.progressIndicator.Margins = new Epsitec.Common.Drawing.Margins (4, 4, 4, 4);
 
 			this.progressMessageWidget = new StaticText (frame);
 			this.progressMessageWidget.Dock = DockStyle.Stacked;
@@ -258,11 +256,11 @@ namespace Epsitec.Common.Dialogs
 					switch (this.progressIndicatorStyle)
 					{
 						case ProgressIndicatorStyle.Default:
-							this.progressValueSlider.Value = (decimal) progressValue;
+							this.progressIndicator.Value = progressValue;
 							break;
 
 						case ProgressIndicatorStyle.UnknownDuration:
-							this.progressValueSlider.Value = ((System.Environment.TickCount - this.startTicks) / 2000M + 0.5M) % 1M;
+							this.progressIndicator.Value = ((double)(System.Environment.TickCount-this.startTicks) / 2000.0 + 0.5) % 1.0;
 							break;
 					}
 				};
@@ -354,7 +352,7 @@ namespace Epsitec.Common.Dialogs
 		private CommandContext					privateContext;
 		
 		private StaticText						operationMessageWidget;
-		private ProgressIndicator				progressValueSlider;
+		private ProgressIndicator				progressIndicator;
 		private StaticText						progressMessageWidget;
 		private Button							cancelButton;
 		private Timer							timer;
