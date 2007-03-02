@@ -1110,6 +1110,24 @@ namespace Epsitec.Common.Widgets.Adorners
 												ProgressIndicatorStyle style,
 												double progress)
 		{
+			this.PaintImageButton(graphics, rect, 48);
+
+			Drawing.Rectangle rInside = rect;
+			rInside.Deflate(3);
+			if (style == ProgressIndicatorStyle.UnknownDuration)
+			{
+				rInside.Left = (rInside.Width-rInside.Height)*progress;
+				rInside.Width = rInside.Height;
+				this.PaintImageButton(graphics, rInside, 40);
+			}
+			else
+			{
+				if (progress != 0)
+				{
+					rInside.Width *= progress;
+					this.PaintImageButton(graphics, rInside, 0);
+				}
+			}
 		}
 
 		public override void PaintGroupBox(Drawing.Graphics graphics,
