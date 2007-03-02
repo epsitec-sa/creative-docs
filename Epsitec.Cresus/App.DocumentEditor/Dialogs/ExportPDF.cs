@@ -131,11 +131,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			Common.Dialogs.WorkInProgressDialog.Execute
 			(
-				"Exportation PDF en cours...",
+				"Exportation PDF",
 				ProgressIndicatorStyle.UnknownDuration,
 				delegate(Common.Dialogs.IWorkInProgressReport report)
 				{
-					err = this.editor.CurrentDocument.ExportPDF(filename);
+					report.DefineOperation ("Création du fichier PDF en cours...");
+					err = this.editor.CurrentDocument.ExportPDF(filename, report);
 				},
 				this.editor.Window
 			);

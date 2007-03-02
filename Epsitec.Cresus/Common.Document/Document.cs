@@ -2239,7 +2239,7 @@ namespace Epsitec.Common.Document
 			return this.printer.Export(filename);
 		}
 
-		public string ExportPDF(string filename)
+		public string ExportPDF(string filename, Common.Dialogs.IWorkInProgressReport report)
 		{
 			//	Exporte le document.
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
@@ -2249,7 +2249,7 @@ namespace Epsitec.Common.Document
 			{
 				this.imageCache.SetResolution (ImageCacheResolution.High);
 			}
-			return this.exportPDF.FileExport(filename);
+			return this.exportPDF.FileExport(filename, report);
 		}
 
         public string ExportICO(string filename)
