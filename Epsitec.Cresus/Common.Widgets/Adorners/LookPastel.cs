@@ -966,6 +966,61 @@ namespace Epsitec.Common.Widgets.Adorners
 												ProgressIndicatorStyle style,
 												double progress)
 		{
+			this.PaintImageButton(graphics, rect, 3);
+
+			double radius = this.RetRadius(rect);
+			Drawing.Path path = this.PathRoundRectangle(rect, radius);
+			graphics.Rasterizer.AddOutline(path, 1);
+			graphics.RenderSolid(this.colorBorder);
+
+			Drawing.Rectangle rInside = rect;
+			rInside.Deflate(3);
+			if (style == ProgressIndicatorStyle.UnknownDuration)
+			{
+				double x = rInside.Width*progress;
+				double w = rInside.Width*0.4;
+
+				this.PaintProgressUnknow(graphics, rInside, w, x-w);
+				this.PaintProgressUnknow(graphics, rInside, w, x-w+rInside.Width);
+			}
+			else
+			{
+				if (progress != 0)
+				{
+					rInside.Width *= progress;
+					this.PaintImageButton(graphics, rInside, 1);
+				}
+			}
+
+			rInside = rect;
+			rInside.Deflate(3.5);
+			graphics.AddRectangle(rInside);
+			graphics.RenderSolid(this.colorBorder);
+		}
+
+		protected void PaintProgressUnknow(Drawing.Graphics graphics, Drawing.Rectangle rect, double w, double x)
+		{
+			Drawing.Rectangle fill = new Drawing.Rectangle(rect.Left+x, rect.Bottom, w, rect.Height);
+			Drawing.Rectangle icon = new Drawing.Rectangle(128, 0, 32*4, 32);
+
+			if (fill.Left < rect.Left)
+			{
+				double over = (rect.Left-fill.Left)/w;
+				icon.Left += icon.Width*over;
+				fill.Left = rect.Left;
+			}
+
+			if (fill.Right > rect.Right)
+			{
+				double over = (fill.Right-rect.Right)/w;
+				icon.Width -= icon.Width*over;
+				fill.Right = rect.Right;
+			}
+
+			if (fill.Width > 0)
+			{
+				graphics.PaintImage(this.bitmap, fill, icon);
+			}
 		}
 
 		public override void PaintGroupBox(Drawing.Graphics graphics,
@@ -1034,7 +1089,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine la zone principale sous les onglets.
 			if ( (state&WidgetPaintState.Enabled) != 0 )
 			{
-				this.PaintImageButton(graphics, rect, 28);
+				this.PaintImageButton(graphics, rect, 5);
 			}
 			else
 			{
@@ -2038,7 +2093,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			icon.Top    = 128-32*(rank/8);
 			icon.Bottom = icon.Top-32;
 
-			if ( rank == 7 || rank == 16 || rank == 18 || rank == 20 || rank == 28 )
+			if ( rank == 5 || rank == 7 || rank == 16 || rank == 18 || rank == 20 )
 			{
 				this.PaintImageButton1(graphics, rect, icon);
 			}
