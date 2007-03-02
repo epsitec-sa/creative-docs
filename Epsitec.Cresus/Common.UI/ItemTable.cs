@@ -223,7 +223,13 @@ namespace Epsitec.Common.UI
 
 			Widgets.IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			if (!this.BackColor.IsEmpty)
+			if (this.BackColor.IsEmpty)
+			{
+				Drawing.Rectangle rect = this.Client.Bounds;
+				WidgetPaintState state = this.PaintState;
+				adorner.PaintArrayBackground(graphics, rect, state);
+			}
+			else
 			{
 				Drawing.Rectangle rect = Drawing.Rectangle.Intersection (clipRect, this.Client.Bounds);
 				graphics.AddFilledRectangle (rect);

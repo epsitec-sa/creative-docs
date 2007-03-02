@@ -1272,11 +1272,11 @@ namespace Epsitec.Common.Widgets.Adorners
 			graphics.AddFilledRectangle(rect);
 			if ( (state&WidgetPaintState.Enabled) != 0 )  // bouton enable ?
 			{
-				graphics.RenderSolid(this.colorControlLight);
+				graphics.RenderSolid(this.colorWindow);
 			}
 			else
 			{
-				graphics.RenderSolid(this.colorWindow);
+				graphics.RenderSolid(this.colorControlLight);
 			}
 
 			graphics.LineWidth = 1;
@@ -1325,11 +1325,6 @@ namespace Epsitec.Common.Widgets.Adorners
 				{
 					graphics.RenderSolid(this.colorCaptionNF);
 				}
-			}
-			else
-			{
-				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.colorWindow);
 			}
 		}
 
