@@ -213,7 +213,7 @@ namespace Epsitec.Common.Dialogs
 			//	d'implémenter ce widget de manière 100% autonome, avec refresh automatique
 			//	de son animation, sans intervention externe.
 			
-			this.progressValueSlider = new HSlider (frame);
+			this.progressValueSlider = new ProgressIndicator (frame);
 			this.progressValueSlider.Dock = DockStyle.Stacked;
 			this.progressValueSlider.PreferredHeight = 20;
 			this.progressValueSlider.Margins = new Epsitec.Common.Drawing.Margins (4, 4, 4, 4);
@@ -354,7 +354,7 @@ namespace Epsitec.Common.Dialogs
 		private CommandContext					privateContext;
 		
 		private StaticText						operationMessageWidget;
-		private HSlider							progressValueSlider;
+		private ProgressIndicator				progressValueSlider;
 		private StaticText						progressMessageWidget;
 		private Button							cancelButton;
 		private Timer							timer;

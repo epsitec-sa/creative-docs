@@ -140,6 +140,7 @@
     <Compile Include="CommandState.cs" />
     <Compile Include="CloneView.cs" />
     <Compile Include="CommandType.cs" />
+    <Compile Include="ProgressIndicator.cs" />
     <Compile Include="ProgressIndicatorStyle.cs" />
     <Compile Include="TimerState.cs" />
     <Compile Include="ImageDisplayMode.cs" />
