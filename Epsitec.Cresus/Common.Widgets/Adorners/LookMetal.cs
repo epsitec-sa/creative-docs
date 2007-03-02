@@ -1076,13 +1076,21 @@ namespace Epsitec.Common.Widgets.Adorners
 												ProgressIndicatorStyle style,
 												double progress)
 		{
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(Drawing.Color.FromBrightness(0));
+			Drawing.Rectangle rInside = rect;
+			rInside.Deflate(1);
+			this.PaintImageButton(graphics, rInside, 0);
 
-			rect.Left = rect.Left + rect.Width*progress - 5;
-			rect.Width = 10;
-			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(Drawing.Color.FromBrightness(0));
+			double radius = this.RetRadius(rect);
+			Drawing.Path path = this.PathRoundRectangle(rect, radius);
+			graphics.Rasterizer.AddOutline(path, 1);
+			graphics.RenderSolid(this.colorBorder);
+
+			if (progress != 0)
+			{
+				rInside.Deflate(2);
+				rInside.Width *= progress;
+				this.PaintImageButton(graphics, rInside, 13);
+			}
 		}
 
 		public override void PaintGroupBox(Drawing.Graphics graphics,

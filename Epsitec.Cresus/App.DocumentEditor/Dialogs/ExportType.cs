@@ -60,7 +60,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window = new Window();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
-				this.WindowInit("ExportType", 350, 300);
+				this.WindowInit("ExportType", 350, 310);
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
 				this.window.Text = Res.Strings.Dialog.Export.Type.Title;
