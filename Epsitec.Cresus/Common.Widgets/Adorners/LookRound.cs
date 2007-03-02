@@ -935,7 +935,7 @@ namespace Epsitec.Common.Widgets.Adorners
 												ProgressIndicatorStyle style,
 												double progress)
 		{
-			Drawing.Path path = this.PathRoundRectangle(rect, 0);
+			Drawing.Path path = this.PathRoundRectangle(rect, 3);
 			graphics.Rasterizer.AddSurface(path);
 			graphics.RenderSolid(this.colorControlLight);
 			graphics.Rasterizer.AddOutline(path, 1);
