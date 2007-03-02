@@ -95,6 +95,24 @@ namespace Epsitec.Common.Widgets
 		{
 			get;
 		}
+
+
+		public static void SetWaitCursor()
+		{
+			System.Threading.Interlocked.Increment (ref Application.waitCursorCount);
+			Platform.Window.UseWaitCursor = true;
+		}
+
+		public static void ClearWaitCursor()
+		{
+			if (System.Threading.Interlocked.Decrement (ref Application.waitCursorCount) < 0)
+			{
+				throw new System.InvalidOperationException ("WaitCursor count < 0");
+			}
+			
+			Platform.Window.UseWaitCursor = (Application.waitCursorCount > 0);
+		}
+		
 		
 		public void RunMessageLoop()
 		{
@@ -285,6 +303,7 @@ namespace Epsitec.Common.Widgets
 		private static Queue<Support.SimpleCallback> pendingCallbacks = new Queue<Support.SimpleCallback> ();
 		private static Queue<Support.SimpleCallback> runningCallbacks = new Queue<Support.SimpleCallback> ();
 		private static bool executingAsyncCallbacks;
+		private static int waitCursorCount;
 
 		private Window window;
 		private CommandDispatcher commandDispatcher;

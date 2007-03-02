@@ -937,6 +937,18 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get { return Window.is_app_active; }
 		}
+
+		internal static bool					UseWaitCursor
+		{
+			get
+			{
+				return System.Windows.Forms.Application.UseWaitCursor;
+			}
+			set
+			{
+				System.Windows.Forms.Application.UseWaitCursor = value;
+			}
+		}
 		
 		
 		internal new void Close()
