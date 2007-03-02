@@ -53,9 +53,6 @@ namespace Epsitec.Common.Widgets
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			WidgetPaintState state = this.PaintState;
-			Rectangle box = this.Client.Bounds;
-
 			adorner.PaintProgressIndicator(graphics, this.Client.Bounds, this.progressStyle, this.progressValue);
 		}
 

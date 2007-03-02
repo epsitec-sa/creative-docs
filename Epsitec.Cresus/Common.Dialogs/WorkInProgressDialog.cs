@@ -176,45 +176,45 @@ namespace Epsitec.Common.Dialogs
 		{
 			this.window = new Window ();
 
-			this.window.Text              = this.dialogTitle;
-			this.window.Name              = "Dialog";
-			this.window.ClientSize        = new Drawing.Size (320, 200);
-			this.window.PreventAutoClose  = true;
+			this.window.Text             = this.dialogTitle;
+			this.window.Name             = "Dialog";
+			this.window.ClientSize       = new Drawing.Size (400, 150);
+			this.window.PreventAutoClose = true;
 
 			CommandDispatcher.SetDispatcher (this.window, this.privateDispatcher);
 			CommandContext.SetContext (this.window, this.privateContext);
 
-			this.window.MakeFramelessWindow ();
-			this.window.MakeFloatingWindow ();
+			//?this.window.MakeFramelessWindow ();
+			//?this.window.MakeFloatingWindow ();
+			this.window.MakeFixedSizeWindow();
+			this.window.MakeSecondaryWindow();
 
 			FrameBox frame = new FrameBox (this.window.Root);
-			
 			frame.DrawFullFrame = true;
 			frame.Dock = DockStyle.Fill;
 			frame.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 
+#if false
 			StaticText textTitle = new StaticText (frame);
-
 			textTitle.Dock = DockStyle.Stacked;
 			textTitle.PreferredHeight = 32;
 			textTitle.ContentAlignment = Epsitec.Common.Drawing.ContentAlignment.MiddleCenter;
 			textTitle.Text = string.Concat (@"<font size=""120%"">", this.dialogTitle, @"</font>");
+#endif
 
 			this.operationMessageWidget = new StaticText (frame);
+			this.operationMessageWidget.PreferredHeight = 30;
 			this.operationMessageWidget.Dock = DockStyle.Stacked;
-			this.operationMessageWidget.PreferredHeight = 32;
-			this.operationMessageWidget.Margins = new Epsitec.Common.Drawing.Margins (4, 4, 4, 4);
+			this.operationMessageWidget.Margins = new Epsitec.Common.Drawing.Margins (10, 10, 15, 0);
+
+			this.progressMessageWidget = new StaticText (frame);
+			this.progressMessageWidget.Dock = DockStyle.Stacked;
+			this.progressMessageWidget.Margins = new Epsitec.Common.Drawing.Margins (10, 10, 0, 0);
 
 			this.progressIndicator = new ProgressIndicator (frame);
 			this.progressIndicator.ProgressStyle = this.progressIndicatorStyle;
 			this.progressIndicator.Dock = DockStyle.Stacked;
-			this.progressIndicator.PreferredHeight = 20;
-			this.progressIndicator.Margins = new Epsitec.Common.Drawing.Margins (4, 4, 4, 4);
-
-			this.progressMessageWidget = new StaticText (frame);
-			this.progressMessageWidget.Dock = DockStyle.Stacked;
-			this.progressMessageWidget.PreferredHeight = 32;
-			this.progressMessageWidget.Margins = new Epsitec.Common.Drawing.Margins (4, 4, 4, 4);
+			this.progressIndicator.Margins = new Epsitec.Common.Drawing.Margins (10, 10, 15, 0);
 
 			this.startTicks = System.Environment.TickCount;
 
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Dialogs
 						progressValue    = this.progressValue;
 					}
 
-					this.operationMessageWidget.Text = operationMessage;
+					this.operationMessageWidget.Text = string.Concat(@"<font size=""150%"">", operationMessage, "</font>");
 					this.progressMessageWidget.Text = progressMessage;
 
 					switch (this.progressIndicatorStyle)

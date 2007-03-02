@@ -865,6 +865,49 @@ namespace Epsitec.Common.Widgets.Adorners
 												ProgressIndicatorStyle style,
 												double progress)
 		{
+			this.PaintL(graphics, rect, this.colorControlDarkDark, this.Opposite(Direction.Up));
+			this.PaintL(graphics, rect, this.colorControlLightLight, Direction.Up);
+
+			Drawing.Rectangle rInside = rect;
+			rInside.Deflate(2);
+			if (style == ProgressIndicatorStyle.UnknownDuration)
+			{
+				double x = rInside.Width*progress;
+				double w = rInside.Width*0.2;
+
+				this.PaintProgressUnknow(graphics, rInside, w, x-w);
+				this.PaintProgressUnknow(graphics, rInside, w, x-w+rInside.Width);
+			}
+			else
+			{
+				if (progress != 0)
+				{
+					rInside.Width *= progress;
+					graphics.AddFilledRectangle(rInside);
+					graphics.RenderSolid(this.colorCaption);
+				}
+			}
+		}
+
+		protected void PaintProgressUnknow(Drawing.Graphics graphics, Drawing.Rectangle rect, double w, double x)
+		{
+			Drawing.Rectangle fill = new Drawing.Rectangle(rect.Left+x, rect.Bottom, w, rect.Height);
+
+			if (fill.Left < rect.Left)
+			{
+				fill.Left = rect.Left;
+			}
+
+			if (fill.Right > rect.Right)
+			{
+				fill.Right = rect.Right;
+			}
+
+			if (fill.Width > 0)
+			{
+				graphics.AddFilledRectangle(fill);
+				graphics.RenderSolid(this.colorCaption);
+			}
 		}
 
 		public override void PaintGroupBox(Drawing.Graphics graphics,
