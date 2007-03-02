@@ -42,6 +42,8 @@ namespace Epsitec.Common.Widgets
 		void PaintSliderHandle(Drawing.Graphics graphics, Drawing.Rectangle thumbRect, Drawing.Rectangle tabRect, WidgetPaintState state, Direction dir);
 		void PaintSliderForeground(Drawing.Graphics graphics, Drawing.Rectangle thumbRect, Drawing.Rectangle tabRect, WidgetPaintState state, Direction dir);
 		
+		void PaintProgressIndicator(Drawing.Graphics graphics, Drawing.Rectangle rect, ProgressIndicatorStyle style, double progress);
+
 		void PaintGroupBox(Drawing.Graphics graphics, Drawing.Rectangle frameRect, Drawing.Rectangle titleRect, WidgetPaintState state);
 		void PaintSepLine(Drawing.Graphics graphics, Drawing.Rectangle frameRect, Drawing.Rectangle titleRect, WidgetPaintState state, Direction dir);
 

@@ -19,7 +19,20 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public double Value
+		public ProgressIndicatorStyle ProgressStyle
+		{
+			//	Style graphique du widget.
+			get
+			{
+				return this.progressStyle;
+			}
+			set
+			{
+				this.progressStyle = value;
+			}
+		}
+
+		public double ProgressValue
 		{
 			//	Valeur de la progression (0..1).
 			get
@@ -43,16 +56,11 @@ namespace Epsitec.Common.Widgets
 			WidgetPaintState state = this.PaintState;
 			Rectangle box = this.Client.Bounds;
 
-			graphics.AddRectangle(box);
-			graphics.RenderSolid(Color.FromBrightness(0));
-
-			box.Left = box.Left + box.Width*this.progressValue - 5;
-			box.Width = 10;
-			graphics.AddFilledRectangle(box);
-			graphics.RenderSolid(Color.FromBrightness(0));
+			adorner.PaintProgressIndicator(graphics, this.Client.Bounds, this.progressStyle, this.progressValue);
 		}
 
 
+		protected ProgressIndicatorStyle			progressStyle;
 		protected double							progressValue;
 	}
 }

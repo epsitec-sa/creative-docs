@@ -1071,6 +1071,20 @@ namespace Epsitec.Common.Widgets.Adorners
 		{
 		}
 
+		public override void PaintProgressIndicator(Drawing.Graphics graphics,
+												Drawing.Rectangle rect,
+												ProgressIndicatorStyle style,
+												double progress)
+		{
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(Drawing.Color.FromBrightness(0));
+
+			rect.Left = rect.Left + rect.Width*progress - 5;
+			rect.Width = 10;
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(Drawing.Color.FromBrightness(0));
+		}
+
 		public override void PaintGroupBox(Drawing.Graphics graphics,
 								  Drawing.Rectangle frameRect,
 								  Drawing.Rectangle titleRect,

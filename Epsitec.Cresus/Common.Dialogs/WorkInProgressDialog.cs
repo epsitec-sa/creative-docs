@@ -62,10 +62,10 @@ namespace Epsitec.Common.Dialogs
 				{
 					this.progressIndicatorStyle = value;
 
-					//	TODO: modifier l'interface graphique en conséquence, si elle
-					//	a déjà été créée; cela permet de remplacer un widget avec barre
-					//	d'avancement par un widget animé simple, sans information de
-					//	durée ou de progrès.
+					if (this.progressIndicator != null)
+					{
+						this.progressIndicator.ProgressStyle = this.progressIndicatorStyle;
+					}
 				}
 			}
 		}
@@ -205,15 +205,8 @@ namespace Epsitec.Common.Dialogs
 			this.operationMessageWidget.PreferredHeight = 32;
 			this.operationMessageWidget.Margins = new Epsitec.Common.Drawing.Margins (4, 4, 4, 4);
 
-			//	TODO: en fonction de this.unknownProgressValue, crée soit un widget qui
-			//	permet d'afficher le progrès de l'opération (sorte de slider), soit un
-			//	widget qui affiche juste une animation "générale", sans information de
-			//	progrès... On peut utiliser le timer interne ci-après pour faire un
-			//	refresh du widget qui affiche l'animation générale, ou alors décider
-			//	d'implémenter ce widget de manière 100% autonome, avec refresh automatique
-			//	de son animation, sans intervention externe.
-			
 			this.progressIndicator = new ProgressIndicator (frame);
+			this.progressIndicator.ProgressStyle = this.progressIndicatorStyle;
 			this.progressIndicator.Dock = DockStyle.Stacked;
 			this.progressIndicator.PreferredHeight = 20;
 			this.progressIndicator.Margins = new Epsitec.Common.Drawing.Margins (4, 4, 4, 4);
@@ -256,11 +249,11 @@ namespace Epsitec.Common.Dialogs
 					switch (this.progressIndicatorStyle)
 					{
 						case ProgressIndicatorStyle.Default:
-							this.progressIndicator.Value = progressValue;
+							this.progressIndicator.ProgressValue = progressValue;
 							break;
 
 						case ProgressIndicatorStyle.UnknownDuration:
-							this.progressIndicator.Value = ((double)(System.Environment.TickCount-this.startTicks) / 2000.0 + 0.5) % 1.0;
+							this.progressIndicator.ProgressValue = ((double)(System.Environment.TickCount-this.startTicks) / 2000.0 + 0.5) % 1.0;
 							break;
 					}
 				};

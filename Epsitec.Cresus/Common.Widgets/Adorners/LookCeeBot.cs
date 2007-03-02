@@ -932,6 +932,13 @@ namespace Epsitec.Common.Widgets.Adorners
 		{
 		}
 
+		public override void PaintProgressIndicator(Drawing.Graphics graphics,
+												Drawing.Rectangle rect,
+												ProgressIndicatorStyle style,
+												double progress)
+		{
+		}
+
 		public override void PaintGroupBox(Drawing.Graphics graphics,
 								  Drawing.Rectangle frameRect,
 								  Drawing.Rectangle titleRect,
