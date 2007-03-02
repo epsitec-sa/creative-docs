@@ -779,10 +779,14 @@ namespace Epsitec.Common.Dialogs
 			this.fieldExtension.AutoFocus = false;
 			this.fieldExtension.TabNavigationMode = TabNavigationMode.None;
 			this.fieldExtension.IsReadOnly = true;
-			this.fieldExtension.Text = this.NiceFileExtension;
+			this.fieldExtension.Text = this.NiceFileExtension(true);
 			this.fieldExtension.PreferredWidth = this.IsMultipleExtensions ? 100 : 44;
 			this.fieldExtension.Margins = new Margins(-1, 10, 0, 0);
 			this.fieldExtension.Dock = DockStyle.Right;
+			if (this.IsMultipleExtensions)
+			{
+				ToolTip.Default.SetToolTip(this.fieldExtension, this.NiceFileExtension(false));
+			}
 		}
 
 		protected virtual void CreateFooterOptions(Widget footer)
@@ -799,39 +803,36 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		private string NiceFileExtension
+		private string NiceFileExtension(bool summary)
 		{
 			//	Retourne ce qu'il faut afficher comme extension.
-			get
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			int founded = 0;
+
+			for (int i=0; i<this.fileFilterPattern.Length; i++)
 			{
-				System.Text.StringBuilder builder = new System.Text.StringBuilder();
-				int founded = 0;
-
-				for (int i=0; i<this.fileFilterPattern.Length; i++)
+				if (this.fileFilterPattern[i] == '*')
 				{
-					if (this.fileFilterPattern[i] == '*')
-					{
-						founded++;
-						continue;
-					}
-					else if (this.fileFilterPattern[i] == '|')
-					{
-						builder.Append(' ');
+					founded++;
+					continue;
+				}
+				else if (this.fileFilterPattern[i] == '|')
+				{
+					builder.Append(' ');
 
-						if (founded > 3)
-						{
-							builder.Append("...");
-							break;
-						}
-					}
-					else
+					if (summary && founded > 3)
 					{
-						builder.Append(this.fileFilterPattern[i]);
+						builder.Append("...");
+						break;
 					}
 				}
-				
-				return builder.ToString();
+				else
+				{
+					builder.Append(this.fileFilterPattern[i]);
+				}
 			}
+			
+			return builder.ToString();
 		}
 
 		private void SelectFileNameInTable(string fileNameToSelect)
