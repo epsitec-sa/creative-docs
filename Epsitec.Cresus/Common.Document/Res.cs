@@ -893,6 +893,20 @@ namespace Epsitec.Common.Document
 				public static string Uncombine { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1307)); } }
 			}
 			
+			public static class Export
+			{
+				public static class PDF
+				{
+					public static class Progress
+					{
+						public static string Content { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1378)); } }
+						public static string Image { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1379)); } }
+						public static string Init { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1376)); } }
+						public static string Ressource { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1377)); } }
+					}
+				}
+			}
+			
 			public static class File
 			{
 				public static class Model
@@ -2347,6 +2361,8 @@ namespace Epsitec.Common.Document
 			private static Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
 			#endregion
 		}
+		
+		//	Code mapping for 'Panel' resources
 		
 		static Res()
 		{

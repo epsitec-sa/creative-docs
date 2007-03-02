@@ -570,6 +570,18 @@ namespace Epsitec.App.DocumentEditor
 				}
 			}
 			
+			public static class Export
+			{
+				public static class PDF
+				{
+					public static class Progress
+					{
+						public static string Operation { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (289)); } }
+						public static string Title { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (288)); } }
+					}
+				}
+			}
+			
 			public static class LastFiles
 			{
 				public static string None { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (21)); } }

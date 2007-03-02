@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Strings" type="String" about="Ressources pour l'application CrDoc" culture="fr">
   <data mod="1" name="Application.SoftName" id="0">Cresus_Documents</data>
+  <data name="Export.PDF.Progress.Title" id="009">Exportation PDF</data>
+  <data name="Export.PDF.Progress.Operation" id="019">Création du fichier PDF en cours...</data>
   <data mod="1" about="Titre de la fenêtre de l'application, mode Document" name="Application.TitleDoc" id="01">Crésus Documents</data>
   <data mod="1" about="Titre de la fenêtre de l'application, mode Pictogram" name="Application.TitlePic" id="02">Crésus Pictogrammes</data>
   <data mod="1" name="Application.TitleTxt" id="03">Crésus Textes</data>

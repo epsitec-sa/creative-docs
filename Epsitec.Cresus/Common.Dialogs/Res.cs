@@ -194,8 +194,6 @@ namespace Epsitec.Common.Dialogs
 			#endregion
 		}
 		
-		//	Code mapping for 'Panel' resources
-		
 		static Res()
 		{
 			Res.Initialize (typeof (Res), "Common.Dialogs");

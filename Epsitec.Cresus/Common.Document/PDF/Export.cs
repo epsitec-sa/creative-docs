@@ -72,7 +72,7 @@ namespace Epsitec.Common.Document.PDF
 		public string FileExport(string filename, Common.Dialogs.IWorkInProgressReport report)
 		{
 			//	Exporte le document dans un fichier.
-			report.DefineProgress(0, "Initialisation");
+			report.DefineProgress(0, Res.Strings.Export.PDF.Progress.Init);
 
 			Settings.ExportPDFInfo info = this.document.Settings.ExportPDFInfo;
 			this.colorConversion = info.ColorConversion;
@@ -242,7 +242,7 @@ namespace Epsitec.Common.Document.PDF
 			//	Un objet pour les ressources de chaque page.
 			foreach ( int page in this.pageList )
 			{
-				report.DefineProgress(0, string.Format("PageRessource #{0}", page+1));
+				report.DefineProgress(0, string.Format(Res.Strings.Export.PDF.Progress.Ressource, page+1));
 				writer.WriteObjectDef(Export.NameResources(page));
 				writer.WriteString("<< /ProcSet [/PDF /Text /ImageB /ImageC] ");
 
@@ -341,7 +341,7 @@ namespace Epsitec.Common.Document.PDF
 			//	Un objet pour le contenu de chaque page.
 			foreach ( int page in this.pageList )
 			{
-				report.DefineProgress(0, string.Format("PageContent #{0}", page+1));
+				report.DefineProgress(0, string.Format(Res.Strings.Export.PDF.Progress.Content, page+1));
 				port.Reset();
 
 				//	Matrice de transformation globale:
@@ -1509,7 +1509,7 @@ namespace Epsitec.Common.Document.PDF
 			{
 				if ( image.DrawingImage == null )  continue;
 
-				report.DefineProgress(0, string.Format("Image #{0}", image.Id));
+				report.DefineProgress(0, string.Format(Res.Strings.Export.PDF.Progress.Image, image.Id));
 
 				if ( this.CreateImageSurface(writer, port, image, TypeComplexSurface.XObject, TypeComplexSurface.XObjectMask) )
 				{

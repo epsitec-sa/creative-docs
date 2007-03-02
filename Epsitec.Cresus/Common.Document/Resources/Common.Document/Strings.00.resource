@@ -75,6 +75,10 @@
   <data name="Dialog.Bool.PrintTarget" id="012">Traits de coupe (hors de la page)</data>
   <data name="Dialog.Bool.PrintDebugArea" id="022">Imprime les zones détectées (debug)</data>
   <data name="Dialog.Bool.ExportPDFTarget" id="032">Traits de coupe (hors de la page)</data>
+  <data name="Export.PDF.Progress.Init" id="00B01">Initialisation</data>
+  <data name="Export.PDF.Progress.Ressource" id="01B01">Ressource {0}</data>
+  <data name="Export.PDF.Progress.Content" id="02B01">Contenu {0}</data>
+  <data name="Export.PDF.Progress.Image" id="03B01">Image {0}</data>
   <data name="Dialog.Bool.ExportPDFTextCurve" id="042">Textes en courbes</data>
   <data name="Dialog.Bool.RepeatDuplicateMove" id="052">Duplique avec répétition du dernier déplacement</data>
   <data name="Dialog.Double.OutsideArea" id="062">Zone hors page</data>
