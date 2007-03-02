@@ -24,7 +24,7 @@ namespace Epsitec.Common.Dialogs
 
 			Epsitec.Common.Support.Implementation.FileProvider.DefineGlobalProbingPath (string.Join (";", paths));
 			//?Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
-			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookBlue");
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookCeeBot");
 			Epsitec.Common.Document.Engine.Initialize ();
 		}
 
