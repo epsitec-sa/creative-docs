@@ -48,7 +48,7 @@ namespace Epsitec.Common.Dialogs
 
 			Assert.IsTrue (executed);
 		}
-		
+
 		[Test]
 		public void CheckCancellableProgress()
 		{
@@ -63,13 +63,38 @@ namespace Epsitec.Common.Dialogs
 					{
 						report.DefineProgress ((5-i)/5.0, string.Format ("{0} seconds remaining", i));
 						System.Threading.Thread.Sleep (1*1000);
-						
+
 						if (report.Cancelled)
 						{
 							return;
 						}
 					}
 					report.DefineProgress (1.0, "done");
+					executed = true;
+				});
+
+			Assert.IsTrue (executed);
+		}
+		
+		[Test]
+		public void CheckCancellableProgressUnknownDuration()
+		{
+			bool executed = false;
+
+			WorkInProgressDialog.ExecuteCancellable ("CheckCancellableProgressUnknownDuration", ProgressIndicatorStyle.UnknownDuration,
+				delegate (IWorkInProgressReport report)
+				{
+					report.DefineOperation ("Waiting");
+
+					for (int i = 0; i < 100; i++)
+					{
+						System.Threading.Thread.Sleep (100);
+
+						if (report.Cancelled)
+						{
+							return;
+						}
+					}
 					executed = true;
 				});
 

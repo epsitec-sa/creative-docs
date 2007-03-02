@@ -225,6 +225,8 @@ namespace Epsitec.Common.Dialogs
 			this.progressMessageWidget.PreferredHeight = 32;
 			this.progressMessageWidget.Margins = new Epsitec.Common.Drawing.Margins (4, 4, 4, 4);
 
+			this.autoProgressValue = 0.5;
+
 			if (this.cancellable)
 			{
 				this.cancelButton = new Button (frame);
@@ -250,9 +252,16 @@ namespace Epsitec.Common.Dialogs
 						progressValue    = this.progressValue;
 					}
 
+					this.autoProgressValue += 0.02;
+					
+					while (this.autoProgressValue > 1.0)
+					{
+						this.autoProgressValue -= 1.0;
+					}
+
 					this.operationMessageWidget.Text = operationMessage;
 					this.progressMessageWidget.Text = progressMessage;
-					this.progressValueSlider.Value = (decimal) progressValue;
+					this.progressValueSlider.Value = (decimal) (this.progressIndicatorStyle == ProgressIndicatorStyle.UnknownDuration ? this.autoProgressValue : progressValue);
 				};
 
 			this.timer.AutoRepeat = 0.050;
@@ -345,6 +354,7 @@ namespace Epsitec.Common.Dialogs
 		private string							operationMessage;
 		private string							progressMessage;
 		private double							progressValue;
+		private double							autoProgressValue;
 		private bool							cancelled;
 		private bool							cancellable;
 		private ProgressIndicatorStyle			progressIndicatorStyle;
