@@ -1773,7 +1773,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.window != null)
 				{
-					this.window.SendQueueCommand ();
+					this.SendQueueCommand ();
 				}
 			}
 			
@@ -1787,7 +1787,7 @@ namespace Epsitec.Common.Widgets
 		public void AsyncDispose()
 		{
 			this.is_dispose_queued = true;
-			this.window.SendQueueCommand ();
+			this.SendQueueCommand ();
 		}
 		
 		public void AsyncNotify()
@@ -1795,7 +1795,7 @@ namespace Epsitec.Common.Widgets
 			if (this.is_async_notification_queued == false)
 			{
 				this.is_async_notification_queued = true;
-				this.window.SendQueueCommand ();
+				this.SendQueueCommand ();
 			}
 		}
 
@@ -1806,7 +1806,7 @@ namespace Epsitec.Common.Widgets
 				if (this.is_async_layout_queued == false)
 				{
 					this.is_async_layout_queued = true;
-					this.window.SendQueueCommand ();
+					this.SendQueueCommand ();
 				}
 			}
 		}
@@ -1826,6 +1826,48 @@ namespace Epsitec.Common.Widgets
 			{
 				this.async_validation_list.Add (widget);
 				this.AsyncValidation ();
+			}
+		}
+
+		public static void SuspendAsyncNotify()
+		{
+			System.Threading.Interlocked.Increment (ref Window.async_suspend_count);
+		}
+
+		public static void ResumeAsyncNotify()
+		{
+			if (System.Threading.Interlocked.Decrement (ref Window.async_suspend_count) == 0)
+			{
+				Window[] windows = new Window[0];
+
+				lock (Window.pending_async_windows)
+				{
+					windows = Window.pending_async_windows.ToArray ();
+					Window.pending_async_windows.Clear ();
+				}
+
+				foreach (Window window in windows)
+				{
+					window.window.SendQueueCommand ();
+				}
+			}
+		}
+
+		private void SendQueueCommand()
+		{
+			if (Window.async_suspend_count == 0)
+			{
+				this.window.SendQueueCommand ();
+			}
+			else
+			{
+				lock (Window.pending_async_windows)
+				{
+					if (!Window.pending_async_windows.Contains (this))
+					{
+						Window.pending_async_windows.Add (this);
+					}
+				}
 			}
 		}
 
@@ -2464,6 +2506,9 @@ namespace Epsitec.Common.Widgets
 		private bool							is_async_notification_queued;
 		private bool							is_async_layout_queued;
 		private bool							is_disposed;
+		private static int						async_suspend_count;
+		private static List<Window>				pending_async_windows = new List<Window> ();
+
 		
 		private bool							pending_validation;
 		private List<Widget>					async_validation_list = new List<Widget> ();

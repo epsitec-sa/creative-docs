@@ -225,7 +225,7 @@ namespace Epsitec.Common.Dialogs
 			this.progressMessageWidget.PreferredHeight = 32;
 			this.progressMessageWidget.Margins = new Epsitec.Common.Drawing.Margins (4, 4, 4, 4);
 
-			this.autoProgressValue = 0.5;
+			this.startTicks = System.Environment.TickCount;
 
 			if (this.cancellable)
 			{
@@ -252,16 +252,19 @@ namespace Epsitec.Common.Dialogs
 						progressValue    = this.progressValue;
 					}
 
-					this.autoProgressValue += 0.02;
-					
-					while (this.autoProgressValue > 1.0)
-					{
-						this.autoProgressValue -= 1.0;
-					}
-
 					this.operationMessageWidget.Text = operationMessage;
 					this.progressMessageWidget.Text = progressMessage;
-					this.progressValueSlider.Value = (decimal) (this.progressIndicatorStyle == ProgressIndicatorStyle.UnknownDuration ? this.autoProgressValue : progressValue);
+
+					switch (this.progressIndicatorStyle)
+					{
+						case ProgressIndicatorStyle.Default:
+							this.progressValueSlider.Value = (decimal) progressValue;
+							break;
+
+						case ProgressIndicatorStyle.UnknownDuration:
+							this.progressValueSlider.Value = ((System.Environment.TickCount - this.startTicks) / 2000M + 0.5M) % 1M;
+							break;
+					}
 				};
 
 			this.timer.AutoRepeat = 0.050;
@@ -275,6 +278,7 @@ namespace Epsitec.Common.Dialogs
 			if (this.operation != null)
 			{
 				this.timer.Start ();
+				Window.SuspendAsyncNotify ();
 
 				System.Threading.Thread thread = new System.Threading.Thread (this.ProcessAction);
 				
@@ -291,7 +295,11 @@ namespace Epsitec.Common.Dialogs
 		{
 			base.OnDialogClosed ();
 
-			this.timer.Stop ();
+			if (this.timer.State == TimerState.Running)
+			{
+				this.timer.Stop ();
+				Window.ResumeAsyncNotify ();
+			}
 		}
 
 		protected void CancelOperation()
@@ -354,7 +362,7 @@ namespace Epsitec.Common.Dialogs
 		private string							operationMessage;
 		private string							progressMessage;
 		private double							progressValue;
-		private double							autoProgressValue;
+		private int								startTicks;
 		private bool							cancelled;
 		private bool							cancellable;
 		private ProgressIndicatorStyle			progressIndicatorStyle;
