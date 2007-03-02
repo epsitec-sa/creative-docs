@@ -1084,6 +1084,61 @@ namespace Epsitec.Common.Widgets.Adorners
 												ProgressIndicatorStyle style,
 												double progress)
 		{
+			this.PaintImageButton(graphics, rect, 1);
+
+			double radius = this.RetRadius(rect);
+			Drawing.Path path = this.PathRoundRectangle(rect, radius);
+			graphics.Rasterizer.AddOutline(path, 1);
+			graphics.RenderSolid(this.colorBorder);
+
+			Drawing.Rectangle rInside = rect;
+			rInside.Deflate(3);
+			if (style == ProgressIndicatorStyle.UnknownDuration)
+			{
+				double x = rInside.Width*progress;
+				double w = rInside.Width*0.4;
+
+				this.PaintProgressUnknow(graphics, rInside, w, x-w);
+				this.PaintProgressUnknow(graphics, rInside, w, x-w+rInside.Width);
+			}
+			else
+			{
+				if (progress != 0)
+				{
+					rInside.Width *= progress;
+					this.PaintImageButton(graphics, rInside, 11);
+				}
+			}
+
+			rInside = rect;
+			rInside.Deflate(3.5);
+			graphics.AddRectangle(rInside);
+			graphics.RenderSolid(this.colorBorder);
+		}
+
+		protected void PaintProgressUnknow(Drawing.Graphics graphics, Drawing.Rectangle rect, double w, double x)
+		{
+			Drawing.Rectangle fill = new Drawing.Rectangle(rect.Left+x, rect.Bottom, w, rect.Height);
+			Drawing.Rectangle icon = new Drawing.Rectangle(0, 0, 32*4, 32);
+
+			if (fill.Left < rect.Left)
+			{
+				double over = (rect.Left-fill.Left)/w;
+				icon.Left += icon.Width*over;
+				fill.Left = rect.Left;
+			}
+
+			if (fill.Right > rect.Right)
+			{
+				double over = (fill.Right-rect.Right)/w;
+				icon.Width -= icon.Width*over;
+				fill.Right = rect.Right;
+			}
+
+			if (fill.Width > 0)
+			{
+				graphics.PaintImage(this.bitmap, fill, icon);
+			}
 		}
 
 		public override void PaintGroupBox(Drawing.Graphics graphics,
