@@ -1216,6 +1216,11 @@ namespace Epsitec.Common.Widgets.Adorners
 					this.PaintImageButton(graphics, rect, 38);
 				}
 			}
+
+			if ( (state&WidgetPaintState.Entered) != 0 )
+			{
+				this.PaintImageButton(graphics, rect, 32);
+			}
 		}
 
 		public override void PaintHeaderBackground(Drawing.Graphics graphics,

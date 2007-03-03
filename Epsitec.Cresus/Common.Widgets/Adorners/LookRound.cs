@@ -1225,6 +1225,12 @@ namespace Epsitec.Common.Widgets.Adorners
 					graphics.RenderSolid(this.colorCaptionNF);
 				}
 			}
+
+			if ( (state&WidgetPaintState.Entered) != 0 )
+			{
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(Drawing.Color.FromAlphaRgb(0.2, this.colorCaption.R, this.colorCaption.G, this.colorCaption.B));
+			}
 		}
 
 		public override void PaintHeaderBackground(Drawing.Graphics graphics,
