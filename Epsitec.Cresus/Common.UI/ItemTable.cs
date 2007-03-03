@@ -236,6 +236,9 @@ namespace Epsitec.Common.UI
 				graphics.RenderSolid (this.BackColor);
 			}
 
+			//	Affiche les séparations verticales des colonnes.
+			//	TODO: comment n'afficher les séparateurs que si on est en mode 'colonnes' ?
+			//	TODO: comment forcer le redessin de ItemTable pendant le drag d'une largeur de colonne ?
 			double x = this.Client.Bounds.Left+0.5;
 			for (int i=0; i<this.columnHeader.ColumnCount; i++)
 			{
