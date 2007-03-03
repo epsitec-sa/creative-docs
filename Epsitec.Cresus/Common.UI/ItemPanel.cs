@@ -806,6 +806,21 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		protected override void OnEntered(Epsitec.Common.Widgets.MessageEventArgs e)
+		{
+			base.OnEntered(e);
+
+			//	TODO: pourquoi est-ce que e.Point n'a rien à voir les coordonnées obtenues dans OnClicked ???
+			this.enteredItem = this.Detect (e.Point);
+		}
+
+		protected override void OnExited(Epsitec.Common.Widgets.MessageEventArgs e)
+		{
+			base.OnExited(e);
+
+			this.enteredItem = null;
+		}
+
 		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clipRect)
 		{
 			IEnumerable<ItemView> views = this.SafeGetViews ();
@@ -830,6 +845,10 @@ namespace Epsitec.Common.UI
 					if (view.Item == focusedItem)
 					{
 						state |= Widgets.WidgetPaintState.Focused;
+					}
+					if (view == this.enteredItem)
+					{
+						state |= Widgets.WidgetPaintState.Selected;
 					}
 
 					adorner.PaintCellBackground (graphics, view.Bounds, state);
@@ -1373,6 +1392,7 @@ namespace Epsitec.Common.UI
 		bool hasDirtyLayout;
 		bool isRefreshPending;
 		bool isCurrentShowPending;
+		ItemView enteredItem;
 
 		double minItemWidth;
 		double maxItemWidth;
