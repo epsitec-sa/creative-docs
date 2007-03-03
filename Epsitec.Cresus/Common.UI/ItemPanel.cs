@@ -806,19 +806,30 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected override void OnEntered(Epsitec.Common.Widgets.MessageEventArgs e)
+		protected override void ProcessMessage(Epsitec.Common.Widgets.Message message, Epsitec.Common.Drawing.Point pos)
 		{
-			base.OnEntered(e);
+			base.ProcessMessage(message, pos);
 
-			//	TODO: pourquoi est-ce que e.Point n'a rien à voir les coordonnées obtenues dans OnClicked ???
-			this.enteredItem = this.Detect (e.Point);
+			if (message.MessageType == Epsitec.Common.Widgets.MessageType.MouseMove)
+			{
+				ItemView item = this.Detect(pos);
+				if (this.enteredItem != item)
+				{
+					this.enteredItem = item;
+					this.Invalidate();
+				}
+			}
 		}
 
 		protected override void OnExited(Epsitec.Common.Widgets.MessageEventArgs e)
 		{
 			base.OnExited(e);
 
-			this.enteredItem = null;
+			if (this.enteredItem != null)
+			{
+				this.enteredItem = null;
+				this.Invalidate();
+			}
 		}
 
 		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clipRect)
