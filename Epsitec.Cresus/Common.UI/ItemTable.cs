@@ -237,9 +237,10 @@ namespace Epsitec.Common.UI
 			}
 
 			double x = this.Client.Bounds.Left+0.5;
-			foreach (ItemTableColumn column in this.columns)
+			for (int i=0; i<this.columnHeader.ColumnCount; i++)
 			{
-				x += column.Width.Value;
+				Widgets.Layouts.ColumnDefinition cd = this.ColumnHeader.GetColumnDefinition(i);
+				x += cd.ActualWidth;
 				graphics.AddLine(x, this.Client.Bounds.Bottom, x, this.Client.Bounds.Top);
 			}
 			graphics.RenderSolid (Drawing.Color.FromAlphaRgb(0.2, adorner.ColorBorder.R, adorner.ColorBorder.G, adorner.ColorBorder.B));
