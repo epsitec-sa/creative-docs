@@ -859,7 +859,7 @@ namespace Epsitec.Common.UI
 					}
 					if (view == this.enteredItem)
 					{
-						state |= Widgets.WidgetPaintState.Selected;
+						state |= Widgets.WidgetPaintState.Entered;
 					}
 
 					adorner.PaintCellBackground (graphics, view.Bounds, state);
