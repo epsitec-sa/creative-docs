@@ -236,6 +236,14 @@ namespace Epsitec.Common.UI
 				graphics.RenderSolid (this.BackColor);
 			}
 
+			double x = this.Client.Bounds.Left+0.5;
+			foreach (ItemTableColumn column in this.columns)
+			{
+				x += column.Width.Value;
+				graphics.AddLine(x, this.Client.Bounds.Bottom, x, this.Client.Bounds.Top);
+			}
+			graphics.RenderSolid (Drawing.Color.FromAlphaRgb(0.2, adorner.ColorBorder.R, adorner.ColorBorder.G, adorner.ColorBorder.B));
+
 			if (this.FrameVisibility)
 			{
 				double x1 = 0;
