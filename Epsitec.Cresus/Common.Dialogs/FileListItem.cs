@@ -315,7 +315,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				this.InitializeCachedFileDate ();
 				
-				if (this.cachedDateTime.Ticks == 0)
+				if (this.cachedDateTime.Ticks < 1000)
 				{
 					return "";
 				}
@@ -338,7 +338,11 @@ namespace Epsitec.Common.Dialogs
 				{
 					try
 					{
-						if (this.IsDirectoryOrShortcut)
+						if (this.IsDrive)
+						{
+							this.cachedDateTime = new System.DateTime (1L);
+						}
+						else if (this.IsDirectoryOrShortcut)
 						{
 							System.IO.DirectoryInfo info = new System.IO.DirectoryInfo (this.folderItem.FullPath);
 
@@ -359,11 +363,11 @@ namespace Epsitec.Common.Dialogs
 					}
 					catch (System.ArgumentOutOfRangeException)
 					{
-						this.cachedDateTime = System.DateTime.MinValue;
+						this.cachedDateTime = new System.DateTime (1L);
 					}
 					catch (System.IO.IOException)
 					{
-						this.cachedDateTime = System.DateTime.MinValue;
+						this.cachedDateTime = new System.DateTime (1L);
 					}
 				}
 			}
