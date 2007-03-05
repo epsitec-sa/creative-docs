@@ -417,7 +417,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			menu.Host = this;
 			menu.MinWidth = button.ActualWidth;
-			TextFieldCombo.AdjustComboSize(button, menu);
+			TextFieldCombo.AdjustComboSize(button, menu, true);
 			menu.ShowAsComboList(button, Point.Zero, button);
 		}
 
@@ -691,7 +691,7 @@ namespace Epsitec.Common.Document.TextPanels
 			VMenu menu = this.CreateMenu();
 			menu.Host = this;
 			menu.MinWidth = this.fontSize.ActualWidth+button.ActualWidth;
-			TextFieldCombo.AdjustComboSize(this.fontSize, menu);
+			TextFieldCombo.AdjustComboSize(this.fontSize, menu, false);
 			menu.ShowAsComboList(this.fontSize, Point.Zero, button);
 		}
 

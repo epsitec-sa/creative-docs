@@ -620,7 +620,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			TextFieldCombo.AdjustScrollListWidth (this.scrollList);
-			TextFieldCombo.AdjustComboSize (this, menu);
+			TextFieldCombo.AdjustComboSize (this, menu, false);
 			
 			return menu;
 		}

@@ -1280,7 +1280,7 @@ namespace Epsitec.Common.Document.Containers
 			if ( menu == null )  return;
 			menu.Host = this;
 			menu.MinWidth = widget.ActualWidth;
-			TextFieldCombo.AdjustComboSize(widget, menu);
+			TextFieldCombo.AdjustComboSize(widget, menu, false);
 			menu.ShowAsComboList(widget, Point.Zero, this.dummyChildren.Button);
 		}
 
@@ -1292,7 +1292,7 @@ namespace Epsitec.Common.Document.Containers
 			VMenu menu = this.CreateMenuTypes();
 			menu.Host = this;
 			menu.MinWidth = button.ActualWidth;
-			TextFieldCombo.AdjustComboSize(button, menu);
+			TextFieldCombo.AdjustComboSize(button, menu, false);
 			menu.ShowAsComboList(button, Point.Zero, button);
 		}
 

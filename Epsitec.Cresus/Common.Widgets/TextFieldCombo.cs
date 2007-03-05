@@ -529,11 +529,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public static void AdjustComboSize(Widget parent, AbstractMenu menu)
-		{
-			TextFieldCombo.AdjustComboSize(parent, menu, true);
-		}
-
 		public static void AdjustComboSize(Widget parent, AbstractMenu menu, bool isScrollable)
 		{
 			menu.AdjustSize();
@@ -572,7 +567,7 @@ namespace Epsitec.Common.Widgets
 			this.CopyItemsToComboList (this.scroll_list.Items);
 
 			TextFieldCombo.AdjustScrollListWidth (this.scroll_list);
-			TextFieldCombo.AdjustComboSize (this, menu);
+			TextFieldCombo.AdjustComboSize (this, menu, true);
 			
 			return menu;
 		}
