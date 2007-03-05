@@ -840,6 +840,14 @@ namespace Epsitec.Common.UI
 			Drawing.Rectangle rect = Drawing.Rectangle.Intersection (clipRect, this.Aperture);
 			ICollectionView items = this.RootPanel.Items;
 
+#if false
+			if (!this.BackColor.IsEmpty)
+			{
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (this.BackColor);
+			}
+#endif
+
 			object focusedItem = items == null ? null : items.CurrentItem;
 
 			foreach (ItemView view in views)

@@ -184,10 +184,9 @@ namespace Epsitec.Common.Dialogs
 			CommandDispatcher.SetDispatcher (this.window, this.privateDispatcher);
 			CommandContext.SetContext (this.window, this.privateContext);
 
-			//?this.window.MakeFramelessWindow ();
-			//?this.window.MakeFloatingWindow ();
-			this.window.MakeFixedSizeWindow();
-			this.window.MakeSecondaryWindow();
+			this.window.MakeFixedSizeWindow ();
+			this.window.MakeSecondaryWindow ();
+			this.window.MakeButtonlessWindow ();
 
 			FrameBox frame = new FrameBox (this.window.Root);
 			frame.DrawFullFrame = true;

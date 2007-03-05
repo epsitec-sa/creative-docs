@@ -233,40 +233,34 @@ namespace Epsitec.Common.UI
 			double x2 = this.vScroller.Visibility ? this.vScroller.ActualBounds.Left : this.Client.Bounds.Right;
 			double y1 = this.hScroller.Visibility ? this.hScroller.ActualBounds.Top : this.Client.Bounds.Bottom;
 			double y2 = this.headerStripe.Visibility ? this.headerStripe.ActualBounds.Bottom : this.Client.Bounds.Top;
-			Drawing.Rectangle bounds = new Drawing.Rectangle(new Drawing.Point(x1,y1), new Drawing.Point(x2,y2));
+			
+			Drawing.Rectangle bounds = Drawing.Rectangle.FromOppositeCorners (x1, y1, x2, y2);
 
 			if (this.BackColor.IsEmpty)
 			{
 				WidgetPaintState state = this.PaintState;
-				adorner.PaintArrayBackground(graphics, bounds, state);
+				adorner.PaintArrayBackground (graphics, bounds, state);
+
+				if (this.itemPanel.Layout == ItemPanelLayout.VerticalList)
+				{
+					this.PaintColumnSeparators (graphics, adorner);
+				}
 			}
 			else
 			{
-				Drawing.Rectangle rect = Drawing.Rectangle.Intersection(clipRect, bounds);
-				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.BackColor);
-			}
+				Drawing.Rectangle rect = Drawing.Rectangle.Intersection (clipRect, this.Client.Bounds);
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (this.BackColor);
 
-			if (this.itemPanel.Layout == ItemPanelLayout.VerticalList)
-			{
-				this.PaintColumnSeparators(graphics, adorner);
+				if (this.FrameVisibility)
+				{
+					graphics.AddLine (bounds.Left+0.5,  bounds.Bottom+0.5, bounds.Left+0.5,  bounds.Top+0.5);		//	trait vertical gauche
+					graphics.AddLine (bounds.Right+0.5, bounds.Bottom+0.5, bounds.Right+0.5, bounds.Top+0.5);		//	trait vertical droite
+					graphics.AddLine (bounds.Left+0.5,  bounds.Top+0.5,    bounds.Right+0.5, bounds.Top+0.5);		//	trait horizontal supérieur
+					graphics.AddLine (bounds.Left+0.5,  bounds.Bottom+0.5, bounds.Right+0.5, bounds.Bottom+0.5);	//	trait horizontal inférieur
+					graphics.RenderSolid (adorner.ColorBorder);
+				}
 			}
-
-#if false
-			if (this.FrameVisibility)
-			{
-				double x1 = 0;
-				double x2 = this.vScroller.Visibility ? this.vScroller.ActualBounds.Left-1 : this.Client.Bounds.Right-1;
-				double y1 = this.hScroller.Visibility ? this.hScroller.ActualBounds.Top : this.Client.Bounds.Bottom;
-				double y2 = this.headerStripe.Visibility ? this.headerStripe.ActualBounds.Bottom-1 : this.Client.Bounds.Top-1;
-
-				graphics.AddLine (x1+0.5, y1+0.5, x1+0.5, y2+0.5);  // trait vertical gauche
-				graphics.AddLine (x2+0.5, y1+0.5, x2+0.5, y2+0.5);  // trait vertical droite
-				graphics.AddLine (x1+0.5, y2+0.5, x2+0.5, y2+0.5);  // trait horizontal supérieur
-				graphics.AddLine (x1+0.5, y1+0.5, x2+0.5, y1+0.5);  // trait horizontal inférieur
-				graphics.RenderSolid (adorner.ColorBorder);
-			}
-#endif
 		}
 
 		private void PaintColumnSeparators(Drawing.Graphics graphics, Widgets.IAdorner adorner)
