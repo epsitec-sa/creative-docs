@@ -837,7 +837,7 @@ namespace Epsitec.Common.Dialogs
 
 					if (typeA != typeB)
 					{
-						if (typeA < 0)
+						if (typeA < typeB)
 						{
 							return -1;
 						}
