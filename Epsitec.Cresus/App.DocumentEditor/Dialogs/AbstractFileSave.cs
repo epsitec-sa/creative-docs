@@ -167,6 +167,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleOptionsExtendClicked(object sender, MessageEventArgs e)
 		{
 			this.optionsContainer.Visibility = !this.optionsContainer.Visibility;
+			this.UpdateOptions();
 		}
 
 		private void HandleOptionsFontClicked(object sender, MessageEventArgs e)
