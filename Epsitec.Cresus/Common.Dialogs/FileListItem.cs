@@ -812,6 +812,42 @@ namespace Epsitec.Common.Dialogs
 
 			if (this.IsDrive)
 			{
+				DriveInfo infoA = FileListItem.GetDriveInfo (this.FullPath);
+				DriveInfo infoB = FileListItem.GetDriveInfo (that.FullPath);
+
+				if ((infoA == null) ||
+					(infoB == null))
+				{
+					if (infoA != infoB)
+					{
+						if (infoA == null)
+						{
+							return 1;
+						}
+						else
+						{
+							return -1;
+						}
+					}
+				}
+				else
+				{
+					int typeA = FileListItem.GetDriveTypeRank (infoA.DriveType);
+					int typeB = FileListItem.GetDriveTypeRank (infoB.DriveType);
+
+					if (typeA != typeB)
+					{
+						if (typeA < 0)
+						{
+							return -1;
+						}
+						else
+						{
+							return 1;
+						}
+					}
+				}
+				
 				int ct = this.folderItem.DriveInfo.Name.CompareTo (that.folderItem.DriveInfo.Name);
 				if (ct != 0)
 				{
@@ -831,6 +867,7 @@ namespace Epsitec.Common.Dialogs
 			string f2 = that.ShortFileName.ToLowerInvariant ();
 			return f1.CompareTo (f2);
 		}
+
 		#endregion
 
 		private static int PropertyComparer(object a, object b)
@@ -917,7 +954,53 @@ namespace Epsitec.Common.Dialogs
 
 		#endregion
 
+		private static DriveInfo GetDriveInfo(string fullPath)
+		{
+			lock (FileListItem.globalExclusion)
+			{
+				int ticks = System.Environment.TickCount;
+				int delta = System.Math.Abs (ticks - FileListItem.driveInfoTicks);
+
+				if ((delta > 1000) ||
+					(FileListItem.driveInfos == null))
+				{
+					FileListItem.driveInfos = DriveInfo.GetDrives ();
+					FileListItem.driveInfoTicks = ticks;
+				}
+
+				foreach (DriveInfo info in FileListItem.driveInfos)
+				{
+					if (info.Name == fullPath)
+					{
+						return info;
+					}
+				}
+			}
+
+			return null;
+		}
+		
+		private static int GetDriveTypeRank(DriveType driveType)
+		{
+			switch (driveType)
+			{
+				case DriveType.Fixed:
+				case DriveType.Ram:
+					return 0;
+				case DriveType.Removable:
+				case DriveType.CDRom:
+					return 1;
+				case DriveType.Network:
+					return 2;
+				default:
+					return 9;
+			}
+		}
+
+		private static object globalExclusion = new object ();
 		private static Epsitec.Common.Types.StructuredType type;
+		private static int driveInfoTicks;
+		private static DriveInfo[] driveInfos;
 
 		private string cachedFileName;
 		private string cachedShortFileName;
