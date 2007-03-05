@@ -243,7 +243,7 @@ namespace Epsitec.Common.UI
 
 				if (this.itemPanel.Layout == ItemPanelLayout.VerticalList)
 				{
-					this.PaintColumnSeparators (graphics, adorner);
+					this.PaintColumnSeparators (graphics, adorner, bounds);
 				}
 			}
 			else
@@ -263,18 +263,16 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		private void PaintColumnSeparators(Drawing.Graphics graphics, Widgets.IAdorner adorner)
+		private void PaintColumnSeparators(Drawing.Graphics graphics, Widgets.IAdorner adorner, Drawing.Rectangle bounds)
 		{
 			//	Affiche les séparations verticales des colonnes.
-			//	TODO: comment forcer le redessin de ItemTable pendant le drag d'une largeur de colonne ?
-			
-			double x = this.Client.Bounds.Left + 0.5;
+			double x = bounds.Left + 0.5;
 			
 			for (int i = 0; i < this.columnHeader.ColumnCount; i++)
 			{
 				Widgets.Layouts.ColumnDefinition cd = this.ColumnHeader.GetColumnDefinition (i);
 				x += cd.ActualWidth;
-				graphics.AddLine (x, this.Client.Bounds.Bottom, x, this.Client.Bounds.Top);
+				graphics.AddLine (x, bounds.Bottom, x, bounds.Top);
 			}
 			
 			graphics.RenderSolid (Drawing.Color.FromAlphaRgb (0.2, adorner.ColorBorder.R, adorner.ColorBorder.G, adorner.ColorBorder.B));
