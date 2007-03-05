@@ -425,6 +425,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					state |= WidgetPaintState.Selected;
 				}
+				state &= ~WidgetPaintState.Entered;
 				adorner.PaintCellBackground(graphics, cell, state);
 
 				if (this.cells[i].State == CellState.Warning)

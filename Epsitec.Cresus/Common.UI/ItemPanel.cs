@@ -819,6 +819,39 @@ namespace Epsitec.Common.UI
 					this.Invalidate();
 				}
 			}
+
+			if (message.MessageType == Epsitec.Common.Widgets.MessageType.MouseWheel)
+			{
+				//	TODO: bouger l'ascenseur vertical...
+			}
+
+			if (message.MessageType == Epsitec.Common.Widgets.MessageType.KeyDown)
+			{
+				//	TODO: ne fonctionne pas, car le widget n'a pas le focus !
+				IList<ItemView> list = this.GetSelectedItemViews();
+				if (list.Count > 0)
+				{
+					if (message.KeyCode == Epsitec.Common.Widgets.KeyCode.ArrowUp)
+					{
+						ItemView item = list[0];  // premier item sélectionné
+						if (item.Index > 0)
+						{
+							item = this.GetItemView(item.Index-1);
+							this.SelectItemView(item);
+						}
+					}
+
+					if (message.KeyCode == Epsitec.Common.Widgets.KeyCode.ArrowDown)
+					{
+						ItemView item = list[list.Count-1];  // dernier item sélectionné
+						if (item.Index < this.GetTotalLineCount()-1)
+						{
+							item = this.GetItemView(item.Index+1);
+							this.SelectItemView(item);
+						}
+					}
+				}
+			}
 		}
 
 		protected override void OnExited(Epsitec.Common.Widgets.MessageEventArgs e)

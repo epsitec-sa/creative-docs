@@ -751,6 +751,7 @@ namespace Epsitec.Common.Dialogs
 
 			this.fieldFileName = new TextField(footer);
 			this.fieldFileName.Dock = DockStyle.Fill;
+			this.fieldFileName.AutoFocus = true;
 			this.fieldFileName.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
 			this.fieldFileName.TextEdited += this.HandleFileNameTextEdited;
 			this.fieldFileName.TabIndex = 1;
