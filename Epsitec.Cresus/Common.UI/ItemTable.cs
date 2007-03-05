@@ -229,24 +229,30 @@ namespace Epsitec.Common.UI
 
 			Widgets.IAdorner adorner = Widgets.Adorners.Factory.Active;
 
+			double x1 = 0;
+			double x2 = this.vScroller.Visibility ? this.vScroller.ActualBounds.Left : this.Client.Bounds.Right;
+			double y1 = this.hScroller.Visibility ? this.hScroller.ActualBounds.Top : this.Client.Bounds.Bottom;
+			double y2 = this.headerStripe.Visibility ? this.headerStripe.ActualBounds.Bottom : this.Client.Bounds.Top;
+			Drawing.Rectangle bounds = new Drawing.Rectangle(new Drawing.Point(x1,y1), new Drawing.Point(x2,y2));
+
 			if (this.BackColor.IsEmpty)
 			{
-				Drawing.Rectangle rect = this.Client.Bounds;
 				WidgetPaintState state = this.PaintState;
-				adorner.PaintArrayBackground (graphics, rect, state);
+				adorner.PaintArrayBackground(graphics, bounds, state);
 			}
 			else
 			{
-				Drawing.Rectangle rect = Drawing.Rectangle.Intersection (clipRect, this.Client.Bounds);
-				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (this.BackColor);
+				Drawing.Rectangle rect = Drawing.Rectangle.Intersection(clipRect, bounds);
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(this.BackColor);
 			}
 
 			if (this.itemPanel.Layout == ItemPanelLayout.VerticalList)
 			{
-				this.PaintColumnSeparators (graphics, adorner);
+				this.PaintColumnSeparators(graphics, adorner);
 			}
 
+#if false
 			if (this.FrameVisibility)
 			{
 				double x1 = 0;
@@ -260,6 +266,7 @@ namespace Epsitec.Common.UI
 				graphics.AddLine (x1+0.5, y1+0.5, x2+0.5, y1+0.5);  // trait horizontal inférieur
 				graphics.RenderSolid (adorner.ColorBorder);
 			}
+#endif
 		}
 
 		private void PaintColumnSeparators(Drawing.Graphics graphics, Widgets.IAdorner adorner)
