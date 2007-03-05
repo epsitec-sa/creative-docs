@@ -876,7 +876,14 @@ namespace Epsitec.Common.Dialogs
 					return "x";
 				
 				case "name":
-					return this.ShortFileName;
+					if (this.IsDrive)
+					{
+						return string.Concat (this.FullPath ?? "", this.ShortFileName ?? "");
+					}
+					else
+					{
+						return this.ShortFileName;
+					}
 				
 				case "type":
 					return 0;
