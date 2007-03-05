@@ -1224,7 +1224,11 @@ namespace Epsitec.Common.Dialogs
 			{
 				foreach (FolderItem item in FileManager.GetFolderItems (this.initialDirectory, settings.FolderQueryMode, filter))
 				{
+					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+					watch.Start ();
 					settings.Process (this.files, item);
+					watch.Stop ();
+					System.Diagnostics.Debug.WriteLine (string.Format ("{0}: {1} ms", item.FullPath, watch.ElapsedMilliseconds));
 				}
 			}
 			catch (System.Threading.ThreadInterruptedException)
