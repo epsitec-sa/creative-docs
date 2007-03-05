@@ -222,7 +222,23 @@ namespace Epsitec.Common.UI
 
 		public void SetColumnWidth(int index, double width)
 		{
-			this.columns[index].Button.PreferredWidth = width;
+			double oldWidth = this.columns[index].Button.PreferredWidth;
+			double newWidth = width;
+			
+			if (oldWidth != newWidth)
+			{
+				ColumnWidthChangeEventArgs e = new ColumnWidthChangeEventArgs (index, oldWidth, newWidth);
+
+				this.OnColumnWidthChanging (e);
+
+				width = e.Width;
+
+				if (width != oldWidth)
+				{
+					this.columns[index].Button.PreferredWidth = width;
+					this.OnColumnWidthChanged (new ColumnWidthChangeEventArgs (index, oldWidth, width));
+				}
+			}
 		}
 
 		public double GetTotalWidth()
@@ -240,6 +256,26 @@ namespace Epsitec.Common.UI
 			}
 			
 			return width;
+		}
+
+		protected virtual void OnColumnWidthChanging(ColumnWidthChangeEventArgs e)
+		{
+			Support.EventHandler<ColumnWidthChangeEventArgs> handler = this.GetUserEventHandler<ColumnWidthChangeEventArgs> (ItemPanelColumnHeader.ColumnWidthChangingEventName);
+
+			if (handler != null)
+			{
+				handler (this, e);
+			}
+		}
+
+		protected virtual void OnColumnWidthChanged(ColumnWidthChangeEventArgs e)
+		{
+			Support.EventHandler<ColumnWidthChangeEventArgs> handler = this.GetUserEventHandler<ColumnWidthChangeEventArgs> (ItemPanelColumnHeader.ColumnWidthChangedEventName);
+
+			if (handler != null)
+			{
+				handler (this, e);
+			}
 		}
 
 		private void UpdateSliderZOrder()
@@ -411,6 +447,36 @@ namespace Epsitec.Common.UI
 			header.HandleItemPanelChanged ((ItemPanel) oldValue, (ItemPanel) newValue);
 		}
 
+
+		public event Support.EventHandler<ColumnWidthChangeEventArgs> ColumnWidthChanging
+		{
+			add
+			{
+				this.AddUserEventHandler (ItemPanelColumnHeader.ColumnWidthChangingEventName, value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler (ItemPanelColumnHeader.ColumnWidthChangingEventName, value);
+			}
+		}
+
+		public event Support.EventHandler<ColumnWidthChangeEventArgs> ColumnWidthChanged
+		{
+			add
+			{
+				this.AddUserEventHandler (ItemPanelColumnHeader.ColumnWidthChangedEventName, value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler (ItemPanelColumnHeader.ColumnWidthChangedEventName, value);
+			}
+		}
+
+
+		private static string ColumnWidthChangingEventName = "ColumnWidthChanging";
+		private static string ColumnWidthChangedEventName  = "ColumnWidthChanged";
+
+		
 		public static void SetColumnHeader(DependencyObject obj, ItemPanelColumnHeader header)
 		{
 			if (header == null)
