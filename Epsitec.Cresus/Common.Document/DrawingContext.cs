@@ -1249,6 +1249,18 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public bool VisibleHandles
+		{
+			//	Montre les poignées quand un objet est sélectionné
+			get
+			{
+				return this.visibleHandles;
+			}
+			set
+			{
+				this.visibleHandles = value;
+			}
+		}
 
 		public bool IsActive
 		{
@@ -2613,6 +2625,7 @@ namespace Epsitec.Common.Document
 		protected bool							labelsShow;
 		protected bool							aggregatesShow;
 		protected bool							hideHalfActive = true;
+		protected bool							visibleHandles = true;
 		protected bool							isDimmed;
 		protected bool							isBitmap;
 		protected bool							isDrawBoxThin;

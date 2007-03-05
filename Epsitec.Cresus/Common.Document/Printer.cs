@@ -101,6 +101,36 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public bool MiniatureJpeg(Size sizeHope, bool isModel, out string filename, out byte[] data)
+		{
+			//	Retourne les données pour l'image bitmap miniature de la première page.
+			DrawingContext drawingContext = new DrawingContext (this.document, null);
+			drawingContext.ContainerSize = this.document.PageSize;
+			drawingContext.PreviewActive = false;
+			drawingContext.IsBitmap = true;
+			drawingContext.GridShow = isModel;
+
+			int pageNumber = this.document.Modifier.PrintablePageRank (0);  // numéro de la première page non modèle du document
+
+			Size pageSize = this.document.GetPageSize (pageNumber);
+			double dpix = sizeHope.Width*254/pageSize.Width;
+			double dpiy = sizeHope.Height*254/pageSize.Height;
+			double dpi = System.Math.Min (dpix, dpiy);
+
+			string err = this.ExportGeometry (drawingContext, pageNumber, ImageFormat.Jpeg, dpi, ImageCompression.None, 24, 85, 1, false, out data);
+			if (err == "")
+			{
+				filename = "preview.jpg";
+				return true;
+			}
+			else
+			{
+				filename = null;
+				data = null;
+				return false;
+			}
+		}
+
 
 		#region Image
 		public static ImageFormat GetImageFormat(string ext)

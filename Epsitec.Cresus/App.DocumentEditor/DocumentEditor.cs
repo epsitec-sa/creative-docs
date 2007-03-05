@@ -2196,16 +2196,16 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.Paste();
 		}
 
-		[Command ("FontBold")]
-		[Command ("FontItalic")]
-		[Command ("FontUnderlined")]
-		[Command ("FontOverlined")]
-		[Command ("FontStrikeout")]
-		[Command ("FontSubscript")]
-		[Command ("FontSuperscript")]
-		[Command ("FontSizePlus")]
-		[Command ("FontSizeMinus")]
-		[Command ("FontClear")]
+		[Command (Commands.FontBold)]
+		[Command (Commands.FontItalic)]
+		[Command (Commands.FontUnderline)]
+		[Command (Commands.FontOverline)]
+		[Command (Commands.FontStrikeout)]
+		[Command (Commands.FontSubscript)]
+		[Command (Commands.FontSuperscript)]
+		[Command (Commands.FontSizePlus)]
+		[Command (Commands.FontSizeMinus)]
+		[Command (Commands.FontClear)]
 		[Command ("ParagraphLeadingPlus")]
 		[Command ("ParagraphLeadingMinus")]
 		[Command ("ParagraphIndentPlus")]
@@ -3544,16 +3544,16 @@ namespace Epsitec.App.DocumentEditor
 			this.copyState = this.CreateCommandState("Copy", "Copy", KeyCode.ModifierControl|KeyCode.AlphaC);
 			this.pasteState = this.CreateCommandState("Paste", "Paste", KeyCode.ModifierControl|KeyCode.AlphaV);
 
-			this.fontBoldState = this.CreateCommandState("FontBold", "FontBold", true, KeyCode.ModifierControl|KeyCode.AlphaB);
-			this.fontItalicState = this.CreateCommandState("FontItalic", "FontItalic", true, KeyCode.ModifierControl|KeyCode.AlphaI);
-			this.fontUnderlinedState = this.CreateCommandState("FontUnderlined", "FontUnderlined", true, KeyCode.ModifierControl|KeyCode.AlphaU);
-			this.fontOverlinedState = this.CreateCommandState("FontOverlined", "FontOverlined", true);
-			this.fontStrikeoutState = this.CreateCommandState("FontStrikeout", "FontStrikeout", true);
-			this.fontSubscriptState = this.CreateCommandState("FontSubscript", "FontSubscript", true, KeyCode.ModifierControl|KeyCode.AlphaG);
-			this.fontSuperscriptState = this.CreateCommandState("FontSuperscript", "FontSuperscript", true, KeyCode.ModifierControl|KeyCode.AlphaT);
-			this.fontSizePlusState = this.CreateCommandState("FontSizePlus", "FontSizePlus");
-			this.fontSizeMinusState = this.CreateCommandState("FontSizeMinus", "FontSizeMinus");
-			this.fontClearState = this.CreateCommandState("FontClear", "FontClear");
+			this.fontBoldState = this.CreateCommandState(Commands.FontBold, "FontBold", true, KeyCode.ModifierControl|KeyCode.AlphaB);
+			this.fontItalicState = this.CreateCommandState(Commands.FontItalic, "FontItalic", true, KeyCode.ModifierControl|KeyCode.AlphaI);
+			this.fontUnderlinedState = this.CreateCommandState(Commands.FontUnderline, "FontUnderlined", true, KeyCode.ModifierControl|KeyCode.AlphaU);
+			this.fontOverlinedState = this.CreateCommandState(Commands.FontOverline, "FontOverlined", true);
+			this.fontStrikeoutState = this.CreateCommandState(Commands.FontStrikeout, "FontStrikeout", true);
+			this.fontSubscriptState = this.CreateCommandState(Commands.FontSubscript, "FontSubscript", true, KeyCode.ModifierControl|KeyCode.AlphaG);
+			this.fontSuperscriptState = this.CreateCommandState(Commands.FontSuperscript, "FontSuperscript", true, KeyCode.ModifierControl|KeyCode.AlphaT);
+			this.fontSizePlusState = this.CreateCommandState(Commands.FontSizePlus, "FontSizePlus");
+			this.fontSizeMinusState = this.CreateCommandState(Commands.FontSizeMinus, "FontSizeMinus");
+			this.fontClearState = this.CreateCommandState(Commands.FontClear, "FontClear");
 			this.paragraphLeadingState = this.CreateCommandState("ParagraphLeading", "ParagraphLeading", true);
 			this.paragraphLeadingPlusState = this.CreateCommandState("ParagraphLeadingPlus", "ParagraphLeadingPlus");
 			this.paragraphLeadingMinusState = this.CreateCommandState("ParagraphLeadingMinus", "ParagraphLeadingMinus");

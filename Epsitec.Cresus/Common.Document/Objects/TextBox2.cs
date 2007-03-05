@@ -277,7 +277,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Construit les formes de l'objet.
 			Path path = this.PathBuild();
 
-			bool flowHandles = this.edited && drawingContext != null;
+			bool flowHandles = this.edited && drawingContext != null && drawingContext.VisibleHandles;
 
 			int totalShapes = 4;
 			if ( flowHandles )  totalShapes += 2;

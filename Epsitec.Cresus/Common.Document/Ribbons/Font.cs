@@ -25,17 +25,17 @@ namespace Epsitec.Common.Document.Ribbons
 			this.comboFont.SelectedIndexChanged += new EventHandler(this.HandleSelectedIndexChanged);
 			this.comboFont.FirstIconChanged += new EventHandler(this.HandleFirstIconChanged);
 
-			this.buttonBold          = this.CreateIconButton("FontBold");
-			this.buttonItalic        = this.CreateIconButton("FontItalic");
-			this.buttonFontSizeMinus = this.CreateIconButton("FontSizeMinus");
-			this.buttonFontSizePlus  = this.CreateIconButton("FontSizePlus");
+			this.buttonBold          = this.CreateIconButton(Commands.FontBold);
+			this.buttonItalic        = this.CreateIconButton(Commands.FontItalic);
+			this.buttonFontSizeMinus = this.CreateIconButton(Commands.FontSizeMinus);
+			this.buttonFontSizePlus  = this.CreateIconButton(Commands.FontSizePlus);
 			this.buttonShowControl   = this.CreateIconButton("TextShowControlCharacters");
-			this.buttonUnderlined    = this.CreateIconButton("FontUnderlined");
-			this.buttonOverlined     = this.CreateIconButton("FontOverlined");
-			this.buttonStrikeout     = this.CreateIconButton("FontStrikeout");
-			this.buttonSubscript     = this.CreateIconButton("FontSubscript");
-			this.buttonSuperscript   = this.CreateIconButton("FontSuperscript");
-			this.buttonClear         = this.CreateIconButton("FontClear");
+			this.buttonUnderlined    = this.CreateIconButton(Commands.FontUnderline);
+			this.buttonOverlined     = this.CreateIconButton(Commands.FontOverline);
+			this.buttonStrikeout     = this.CreateIconButton(Commands.FontStrikeout);
+			this.buttonSubscript     = this.CreateIconButton(Commands.FontSubscript);
+			this.buttonSuperscript   = this.CreateIconButton(Commands.FontSuperscript);
+			this.buttonClear         = this.CreateIconButton(Commands.FontClear);
 
 			this.buttonStyle = new Button(this);
 			this.buttonStyle.Text = "S";

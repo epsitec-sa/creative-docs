@@ -20,7 +20,7 @@
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
-    <RootNamespace>Common.Document</RootNamespace>
+    <RootNamespace>Epsitec.Common.Document</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
@@ -160,6 +160,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands.cs" />
     <Compile Include="Containers\Abstract.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -679,6 +680,10 @@
     <Content Include="Resources\Common.Document\module.info" />
     <Content Include="Resources\Common.Document\Strings.00.resource" />
     <Content Include="Resources\Common.Document\Strings.en.resource" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Common.Document\Captions.00.resource" />
+    <Content Include="Resources\Common.Document\Strings.de.resource" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

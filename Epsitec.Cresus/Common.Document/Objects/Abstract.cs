@@ -2793,6 +2793,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Dessine les poignées de l'objet.
 			if ( this.isHide )  return;
+			if ( !drawingContext.VisibleHandles )  return;
 
 			foreach ( Properties.Abstract property in this.properties )
 			{

@@ -207,17 +207,17 @@ namespace Epsitec.Common.Document
 			this.CommandActiveState("TextInsertNewFrame", enabled);
 			this.CommandActiveState("TextInsertNewPage", enabled);
 
-			this.CommandActiveState("FontBold",        enabled, bold       );
-			this.CommandActiveState("FontItalic",      enabled, italic     );
-			this.CommandActiveState("FontUnderlined",  enabled, underlined );
-			this.CommandActiveState("FontOverlined",   enabled, overlined  );
-			this.CommandActiveState("FontStrikeout",   enabled, strikeout  );
-			this.CommandActiveState("FontSubscript",   enabled, subscript  );
-			this.CommandActiveState("FontSuperscript", enabled, superscript);
+			this.CommandActiveState(Commands.FontBold,        enabled, bold       );
+			this.CommandActiveState(Commands.FontItalic,      enabled, italic     );
+			this.CommandActiveState(Commands.FontUnderline,   enabled, underlined );
+			this.CommandActiveState(Commands.FontOverline,    enabled, overlined  );
+			this.CommandActiveState(Commands.FontStrikeout,   enabled, strikeout  );
+			this.CommandActiveState(Commands.FontSubscript,   enabled, subscript  );
+			this.CommandActiveState(Commands.FontSuperscript, enabled, superscript);
 
-			this.CommandActiveState("FontSizePlus",  enabled);
-			this.CommandActiveState("FontSizeMinus", enabled);
-			this.CommandActiveState("FontClear",     enabled);
+			this.CommandActiveState(Commands.FontSizePlus,  enabled);
+			this.CommandActiveState(Commands.FontSizeMinus, enabled);
+			this.CommandActiveState(Commands.FontClear,     enabled);
 		}
 
 		protected void HandleParagraphWrapperChanged(object sender)
@@ -875,17 +875,28 @@ namespace Epsitec.Common.Document
 		public void ExecuteCommand(string name, string advanceState)
 		{
 			//	Exécute une commande.
+
+			if ( Druid.IsValidResourceId(name) )
+			{
+				//	La commande a été spécifiée au moyen d'un DRUID. On préfère travailler
+				//	avec les noms des commandes ci-après, alors on remplace le DRUID de la
+				//	commande par son nom :
+				
+				Command command = Command.Find(name);
+				name = command.Name;
+			}
+
 			switch ( name )
 			{
-				case "FontBold":        this.ChangeBold();           break;
-				case "FontItalic":      this.ChangeItalic();         break;
-				case "FontUnderlined":  this.ChangeUnderlined();     break;
-				case "FontOverlined":   this.ChangeOverlined();      break;
-				case "FontStrikeout":   this.ChangeStrikeout();      break;
-				case "FontSubscript":   this.ChangeSubscript();      break;
-				case "FontSuperscript": this.ChangeSuperscript();    break;
-				case "FontSizePlus":    this.IncrementFontSize(1);   break;
-				case "FontSizeMinus":   this.IncrementFontSize(-1);  break;
+				case Commands.FontBold:        this.ChangeBold();           break;
+				case Commands.FontItalic:      this.ChangeItalic();         break;
+				case Commands.FontUnderline:   this.ChangeUnderlined();     break;
+				case Commands.FontOverline:    this.ChangeOverlined();      break;
+				case Commands.FontStrikeout:   this.ChangeStrikeout();      break;
+				case Commands.FontSubscript:   this.ChangeSubscript();      break;
+				case Commands.FontSuperscript: this.ChangeSuperscript();    break;
+				case Commands.FontSizePlus:    this.IncrementFontSize(1);   break;
+				case Commands.FontSizeMinus:   this.IncrementFontSize(-1);  break;
 
 				case "ParagraphLeading":  this.ChangeParagraphLeading(advanceState);  break;
 				case "ParagraphJustif":   this.ChangeParagraphJustif(advanceState);   break;
@@ -895,7 +906,7 @@ namespace Epsitec.Common.Document
 				case "ParagraphIndentPlus":    this.IncrementParagraphIndent(1);    break;
 				case "ParagraphIndentMinus":   this.IncrementParagraphIndent(-1);   break;
 
-				case "FontClear":       this.FontClear();       break;
+				case Commands.FontClear:       this.FontClear();       break;
 				case "ParagraphClear":  this.ParagraphClear();  break;
 			}
 		}

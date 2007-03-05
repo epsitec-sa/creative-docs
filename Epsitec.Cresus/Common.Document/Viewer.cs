@@ -2828,16 +2828,16 @@ namespace Epsitec.Common.Document
 					button.Name == "OrderDownOne" ||
 					button.Name == "OrderDownAll" ||
 
-					button.Name == "FontBold" ||
-					button.Name == "FontItalic" ||
-					button.Name == "FontUnderlined" ||
-					button.Name == "FontOverlined" ||
-					button.Name == "FontStrikeout" ||
-					button.Name == "FontSubscript" ||
-					button.Name == "FontSuperscript" ||
-					button.Name == "FontSizePlus" ||
-					button.Name == "FontSizeMinus" ||
-					button.Name == "FontClear" ||
+					button.Name == Commands.FontBold ||
+					button.Name == Commands.FontItalic ||
+					button.Name == Commands.FontUnderline ||
+					button.Name == Commands.FontOverline ||
+					button.Name == Commands.FontStrikeout ||
+					button.Name == Commands.FontSubscript ||
+					button.Name == Commands.FontSuperscript ||
+					button.Name == Commands.FontSizePlus ||
+					button.Name == Commands.FontSizeMinus ||
+					button.Name == Commands.FontClear ||
 					button.Name == "ParagraphLeading08" ||
 					button.Name == "ParagraphLeading10" ||
 					button.Name == "ParagraphLeading15" ||
