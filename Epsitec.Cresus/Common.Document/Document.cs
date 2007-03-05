@@ -769,6 +769,7 @@ namespace Epsitec.Common.Document
 				ZipFile zip = new ZipFile ();
 				zip.LoadFileName = this.ioDocumentManager.GetLocalFilePath ();
 				DocumentFileExtension ext = Document.GetDocumentFileExtension (filename);
+				bool isCrDoc = (ext == DocumentFileExtension.CrDoc);
 
 				if (ext != DocumentFileExtension.Icon &&
 					zip.TryLoadFile(sourceStream, delegate(string entryName) { return entryName == "document.data" || entryName.StartsWith("fonts/"); }))
@@ -776,13 +777,13 @@ namespace Epsitec.Common.Document
 					// Fichier CrDoc au format ZIP, chargé avec succès.
 					using (MemoryStream stream = new MemoryStream(zip["document.data"].Data))
 					{
-						err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), zip);
+						err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), zip, isCrDoc);
 					}
 				}
 				else
 				{
 					// Désérialisation standard; c'est un ancien fichier CrDoc.
-					err = this.Read(sourceStream, System.IO.Path.GetDirectoryName(filename), null);
+					err = this.Read(sourceStream, System.IO.Path.GetDirectoryName(filename), null, isCrDoc);
 				}
 
 				sourceStream.Close ();
@@ -819,10 +820,10 @@ namespace Epsitec.Common.Document
 		{
 			//	Ouvre un document sérialisé, soit parce que l'utilisateur veut ouvrir
 			//	explicitement un fichier, soit par Engine.
-			return this.Read(stream, directory, null);
+			return this.Read(stream, directory, null, false);
 		}
 
-		private string Read(Stream stream, string directory, ZipFile zip)
+		private string Read(Stream stream, string directory, ZipFile zip, bool isCrDoc)
 		{
 			//	Ouvre un document sérialisé, zippé ou non.
 			this.ioDirectory = directory;
@@ -860,6 +861,10 @@ namespace Epsitec.Common.Document
 							doc = (Document) formatter.Deserialize(compressor);
 							doc.ioDocumentManager = this.ioDocumentManager;
 							//-doc.imageCache = new ImageCache();
+							if (isCrDoc)
+							{
+								doc.ImageCacheReadAll(zip, doc.imageIncludeMode);
+							}
 						}
 					}
 					else
