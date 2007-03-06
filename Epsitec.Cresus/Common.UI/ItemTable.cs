@@ -17,7 +17,7 @@ namespace Epsitec.Common.UI
 	/// The <c>ItemTable</c> class is used to represent items in a table, with
 	/// column headers and scroll bars.
 	/// </summary>
-	public class ItemTable : Widgets.FrameBox, IListHost<ItemTableColumn>
+	public class ItemTable : FrameBox, IListHost<ItemTableColumn>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ItemTable"/> class.
@@ -231,16 +231,29 @@ namespace Epsitec.Common.UI
 			return this.defaultItemSize;
 		}
 
-		protected override void ProcessMessage(Epsitec.Common.Widgets.Message message, Point pos)
+		protected override void ProcessMessage(Message message, Point pos)
 		{
 			base.ProcessMessage(message, pos);
 
-			if (message.MessageType == Epsitec.Common.Widgets.MessageType.MouseWheel)
+			if (message.MessageType == MessageType.MouseWheel)
 			{
 				if (this.vScroller.IsVisible)
 				{
 					if ( message.Wheel < 0 )  this.vScroller.Value += this.vScroller.SmallChange;
 					if ( message.Wheel > 0 )  this.vScroller.Value -= this.vScroller.SmallChange;
+				}
+			}
+
+			if (message.MessageType == MessageType.KeyDown && message.IsControlPressed && !message.IsShiftPressed)
+			{
+				if (message.KeyCode == KeyCode.ArrowUp)
+				{
+					this.vScroller.Value -= this.vScroller.SmallChange;
+				}
+
+				if (message.KeyCode == KeyCode.ArrowDown)
+				{
+					this.vScroller.Value += this.vScroller.SmallChange;
 				}
 			}
 		}

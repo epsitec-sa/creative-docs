@@ -17,7 +17,7 @@ namespace Epsitec.Common.UI
 	/// The <c>ItemPanel</c> class represents a collection of items in a panel,
 	/// where the collection is defined through a <see cref="ICollectionView"/>.
 	/// </summary>
-	public class ItemPanel : Widgets.FrameBox
+	public class ItemPanel : FrameBox
 	{
 		public ItemPanel()
 		{
@@ -828,9 +828,8 @@ namespace Epsitec.Common.UI
 				}
 			}
 
-			if (message.MessageType == MessageType.KeyDown)
+			if (message.MessageType == MessageType.KeyDown && !message.IsControlPressed)
 			{
-				//	TODO: ne fonctionne pas, car le widget n'a pas le focus !
 				IList<ItemView> list = this.GetSelectedItemViews();
 				if (list.Count > 0)
 				{
@@ -840,6 +839,10 @@ namespace Epsitec.Common.UI
 						if (item.Index > 0)
 						{
 							item = this.GetItemView(item.Index-1);
+							if (!message.IsShiftPressed)
+							{
+								this.DeselectAllItemViews();
+							}
 							this.SelectItemView(item);
 						}
 					}
@@ -850,6 +853,10 @@ namespace Epsitec.Common.UI
 						if (item.Index < this.GetTotalLineCount()-1)
 						{
 							item = this.GetItemView(item.Index+1);
+							if (!message.IsShiftPressed)
+							{
+								this.DeselectAllItemViews();
+							}
 							this.SelectItemView(item);
 						}
 					}
