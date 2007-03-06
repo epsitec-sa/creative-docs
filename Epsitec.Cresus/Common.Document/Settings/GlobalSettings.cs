@@ -723,8 +723,8 @@ namespace Epsitec.Common.Document.Settings
 			
 			list.Add("00:FontBold");
 			list.Add("00:FontItalic");
-			list.Add("00:FontUnderlined");
-			list.Add("00:FontOverlined");
+			list.Add("00:FontUnderline");
+			list.Add("00:FontOverline");
 			list.Add("00:FontStrikeout");
 			list.Add("00:FontSizePlus");
 			list.Add("00:FontSizeMinus");

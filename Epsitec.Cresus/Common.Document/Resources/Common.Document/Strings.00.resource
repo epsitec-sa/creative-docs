@@ -626,27 +626,27 @@
   <data name="TextPanel.Tabs.Tooltip.Delete" id="0AI">Supprimer un tabulateur</data>
   <data name="TextPanel.Tabs.Tooltip.Pos" id="0BI">Position du tabulateur</data>
   <data name="TextPanel.Xline.Title" id="0CI">Traits horizontaux</data>
-  <data name="TextPanel.Xline.Short.Underlined.Thickness" id="0DI">E</data>
-  <data name="TextPanel.Xline.Short.Underlined.Position" id="0EI">P</data>
+  <data name="TextPanel.Xline.Short.Underline.Thickness" id="0DI">E</data>
+  <data name="TextPanel.Xline.Short.Underline.Position" id="0EI">P</data>
   <data name="TextPanel.Xline.Short.Strikeout.Thickness" id="0FI">E</data>
   <data name="TextPanel.Xline.Short.Strikeout.Position" id="0GI">P</data>
-  <data name="TextPanel.Xline.Short.Overlined.Thickness" id="0HI">E</data>
-  <data name="TextPanel.Xline.Short.Overlined.Position" id="0II">P</data>
-  <data name="TextPanel.Xline.Long.Underlined.Thickness" id="0JI">Epaisseur souligné</data>
-  <data name="TextPanel.Xline.Long.Underlined.Position" id="0KI">Position souligné</data>
+  <data name="TextPanel.Xline.Short.Overline.Thickness" id="0HI">E</data>
+  <data name="TextPanel.Xline.Short.Overline.Position" id="0II">P</data>
+  <data name="TextPanel.Xline.Long.Underline.Thickness" id="0JI">Epaisseur souligné</data>
+  <data name="TextPanel.Xline.Long.Underline.Position" id="0KI">Position souligné</data>
   <data name="TextPanel.Xline.Long.Strikeout.Thickness" id="0LI">Epaisseur biffé</data>
   <data name="TextPanel.Xline.Long.Strikeout.Position" id="0MI">Position biffé</data>
-  <data name="TextPanel.Xline.Long.Overlined.Thickness" id="0NI">Epaisseur surligné</data>
-  <data name="TextPanel.Xline.Long.Overlined.Position" id="0OI">Position surligné</data>
-  <data name="TextPanel.Xline.Tooltip.Underlined.Thickness" id="0PI">Epaisseur du souligné</data>
-  <data name="TextPanel.Xline.Tooltip.Underlined.Position" id="0QI">Position verticale du souligné</data>
-  <data name="TextPanel.Xline.Tooltip.Underlined.Color" id="0RI">Couleur du souligné</data>
+  <data name="TextPanel.Xline.Long.Overline.Thickness" id="0NI">Epaisseur surligné</data>
+  <data name="TextPanel.Xline.Long.Overline.Position" id="0OI">Position surligné</data>
+  <data name="TextPanel.Xline.Tooltip.Underline.Thickness" id="0PI">Epaisseur du souligné</data>
+  <data name="TextPanel.Xline.Tooltip.Underline.Position" id="0QI">Position verticale du souligné</data>
+  <data name="TextPanel.Xline.Tooltip.Underline.Color" id="0RI">Couleur du souligné</data>
   <data name="TextPanel.Xline.Tooltip.Strikeout.Thickness" id="0SI">Epaisseur du biffé</data>
   <data name="TextPanel.Xline.Tooltip.Strikeout.Position" id="0TI">Position verticale du biffé</data>
   <data name="TextPanel.Xline.Tooltip.Strikeout.Color" id="0UI">Couleur du biffé</data>
-  <data name="TextPanel.Xline.Tooltip.Overlined.Thickness" id="0VI">Epaisseur du surligné</data>
-  <data name="TextPanel.Xline.Tooltip.Overlined.Position" id="00J">Position verticale du surligné</data>
-  <data name="TextPanel.Xline.Tooltip.Overlined.Color" id="01J">Couleur du surligné</data>
+  <data name="TextPanel.Xline.Tooltip.Overline.Thickness" id="0VI">Epaisseur du surligné</data>
+  <data name="TextPanel.Xline.Tooltip.Overline.Position" id="00J">Position verticale du surligné</data>
+  <data name="TextPanel.Xline.Tooltip.Overline.Color" id="01J">Couleur du surligné</data>
   <data name="TextPanel.Xscript.Title" id="02J">Indices et exposants</data>
   <data name="TextPanel.Xscript.Short.Scale" id="03J">E</data>
   <data name="TextPanel.Xscript.Short.Offset" id="04J">D</data>
@@ -1110,8 +1110,8 @@
   <data name="Action.FontItalic" id="05101">Italique</data>
   <data name="Action.FontInvertBold" id="06101">Inverser le gras</data>
   <data name="Action.FontInvertItalic" id="07101">Inverser l&amp;apos;italique</data>
-  <data name="Action.FontUnderlined" id="08101">Souligné</data>
-  <data name="Action.FontOverlined" id="09101">Surligné</data>
+  <data name="Action.FontUnderline" id="08101">Souligné</data>
+  <data name="Action.FontOverline" id="09101">Surligné</data>
   <data name="Action.FontStrikeout" id="0A101">Biffé</data>
   <data name="Action.FontFrame" id="0B101">Bordure</data>
   <data name="Action.FontSubscript" id="0C101">Indice</data>

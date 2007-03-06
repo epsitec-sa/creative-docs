@@ -566,9 +566,9 @@ namespace Epsitec.Common.Designer.Viewers
 				this.currentTextField.TextNavigator.SelectionItalic = !this.currentTextField.TextNavigator.SelectionItalic;
 			}
 
-			if (name == "FontUnderlined")
+			if (name == "FontUnderline")
 			{
-				this.currentTextField.TextNavigator.SelectionUnderlined = !this.currentTextField.TextNavigator.SelectionUnderlined;
+				this.currentTextField.TextNavigator.SelectionUnderline = !this.currentTextField.TextNavigator.SelectionUnderline;
 			}
 
 			//?this.HandleTextChanged(this.currentTextField);
@@ -897,14 +897,14 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.GetCommandState("FontBold").Enable = false;
 				this.GetCommandState("FontItalic").Enable = false;
-				this.GetCommandState("FontUnderlined").Enable = false;
+				this.GetCommandState("FontUnderline").Enable = false;
 				this.GetCommandState("DesignerGlyphs").Enable = false;
 			}
 			else
 			{
 				this.GetCommandState("FontBold").Enable = (sel != -1);
 				this.GetCommandState("FontItalic").Enable = (sel != -1);
-				this.GetCommandState("FontUnderlined").Enable = (sel != -1);
+				this.GetCommandState("FontUnderline").Enable = (sel != -1);
 				this.GetCommandState("DesignerGlyphs").Enable = (sel != -1);
 			}
 

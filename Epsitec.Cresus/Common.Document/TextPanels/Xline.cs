@@ -17,17 +17,17 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fixIcon.Text = Misc.Image("TextXline");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Xline.Title);
 
-			this.buttonUnderlined = this.CreateIconButton(Misc.Icon("FontUnderlined"), Res.Strings.Action.FontUnderlined, new MessageEventHandler(this.HandleButtonUnderlineClicked));
-			this.buttonOverlined  = this.CreateIconButton(Misc.Icon("FontOverlined"),  Res.Strings.Action.FontOverlined,  new MessageEventHandler(this.HandleButtonOverlineClicked));
-			this.buttonStrikeout  = this.CreateIconButton(Misc.Icon("FontStrikeout"),  Res.Strings.Action.FontStrikeout,  new MessageEventHandler(this.HandleButtonStrikeoutClicked));
+			this.buttonUnderline = this.CreateIconButton(Misc.Icon("FontUnderline"), Res.Strings.Action.FontUnderline, new MessageEventHandler(this.HandleButtonUnderlineClicked));
+			this.buttonOverline  = this.CreateIconButton(Misc.Icon("FontOverline"),  Res.Strings.Action.FontOverline,  new MessageEventHandler(this.HandleButtonOverlineClicked));
+			this.buttonStrikeout = this.CreateIconButton(Misc.Icon("FontStrikeout"), Res.Strings.Action.FontStrikeout, new MessageEventHandler(this.HandleButtonStrikeoutClicked));
 
-			this.fieldUnderlinedThickness = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Underlined.Thickness, Res.Strings.TextPanel.Xline.Short.Underlined.Thickness, Res.Strings.TextPanel.Xline.Long.Underlined.Thickness, 0.0,  0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleUnderlinedValueChanged));
-			this.fieldUnderlinedPosition  = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Underlined.Position,  Res.Strings.TextPanel.Xline.Short.Underlined.Position,  Res.Strings.TextPanel.Xline.Long.Underlined.Position,  0.0,  0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleUnderlinedValueChanged));
-			this.underlinedColor          = this.CreateColorSample(Res.Strings.TextPanel.Xline.Tooltip.Underlined.Color, new MessageEventHandler(this.HandleSampleColorClicked), new EventHandler(this.HandleSampleColorChanged));
+			this.fieldUnderlineThickness = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Underline.Thickness, Res.Strings.TextPanel.Xline.Short.Underline.Thickness, Res.Strings.TextPanel.Xline.Long.Underline.Thickness, 0.0,  0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleUnderlineValueChanged));
+			this.fieldUnderlinePosition  = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Underline.Position,  Res.Strings.TextPanel.Xline.Short.Underline.Position,  Res.Strings.TextPanel.Xline.Long.Underline.Position,  0.0,  0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleUnderlineValueChanged));
+			this.underlineColor          = this.CreateColorSample(Res.Strings.TextPanel.Xline.Tooltip.Underline.Color, new MessageEventHandler(this.HandleSampleColorClicked), new EventHandler(this.HandleSampleColorChanged));
 
-			this.fieldOverlinedThickness  = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Overlined.Thickness,  Res.Strings.TextPanel.Xline.Short.Overlined.Thickness,  Res.Strings.TextPanel.Xline.Long.Overlined.Thickness,  0.0,  0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleOverlinedValueChanged));
-			this.fieldOverlinedPosition   = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Overlined.Position,   Res.Strings.TextPanel.Xline.Short.Overlined.Position,   Res.Strings.TextPanel.Xline.Long.Overlined.Position,  -0.01, 0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleOverlinedValueChanged));
-			this.overlinedColor           = this.CreateColorSample(Res.Strings.TextPanel.Xline.Tooltip.Overlined.Color, new MessageEventHandler(this.HandleSampleColorClicked), new EventHandler(this.HandleSampleColorChanged));
+			this.fieldOverlineThickness  = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Overline.Thickness,  Res.Strings.TextPanel.Xline.Short.Overline.Thickness,  Res.Strings.TextPanel.Xline.Long.Overline.Thickness,  0.0,  0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleOverlineValueChanged));
+			this.fieldOverlinePosition   = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Overline.Position,   Res.Strings.TextPanel.Xline.Short.Overline.Position,   Res.Strings.TextPanel.Xline.Long.Overline.Position,  -0.01, 0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleOverlineValueChanged));
+			this.overlineColor           = this.CreateColorSample(Res.Strings.TextPanel.Xline.Tooltip.Overline.Color, new MessageEventHandler(this.HandleSampleColorClicked), new EventHandler(this.HandleSampleColorChanged));
 
 			this.fieldStrikeoutThickness  = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Strikeout.Thickness,  Res.Strings.TextPanel.Xline.Short.Strikeout.Thickness,  Res.Strings.TextPanel.Xline.Long.Strikeout.Thickness,  0.0,  0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleStrikeoutValueChanged));
 			this.fieldStrikeoutPosition   = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Strikeout.Position,   Res.Strings.TextPanel.Xline.Short.Strikeout.Position,   Res.Strings.TextPanel.Xline.Long.Strikeout.Position,   0.0,  0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleStrikeoutValueChanged));
@@ -102,9 +102,9 @@ namespace Epsitec.Common.Document.TextPanels
 		public override void OriginColorDeselect()
 		{
 			//	Désélectionne toutes les origines de couleurs possibles.
-			this.underlinedColor.ActiveState = ActiveState.No;
-			this.overlinedColor.ActiveState  = ActiveState.No;
-			this.strikeoutColor.ActiveState  = ActiveState.No;
+			this.underlineColor.ActiveState = ActiveState.No;
+			this.overlineColor.ActiveState  = ActiveState.No;
+			this.strikeoutColor.ActiveState = ActiveState.No;
 		}
 
 		public override void OriginColorSelect(int rank)
@@ -113,8 +113,8 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( rank != -1 )
 			{
 				this.originFieldRank = rank;
-				if ( rank == 0 )  this.originFieldColor = this.underlinedColor;
-				if ( rank == 1 )  this.originFieldColor = this.overlinedColor;
+				if ( rank == 0 )  this.originFieldColor = this.underlineColor;
+				if ( rank == 1 )  this.originFieldColor = this.overlineColor;
 				if ( rank == 2 )  this.originFieldColor = this.strikeoutColor;
 			}
 			if ( this.originFieldColor == null )  return;
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected void ColorToWrapper(ColorSample sample)
 		{
 			//	Donne la couleur au wrapper.
-			if ( sample == this.underlinedColor )
+			if ( sample == this.underlineColor )
 			{
 				this.TextWrapper.SuspendSynchronizations();
 				Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.TextWrapper.Defined.Underline;
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.ActionMade();
 			}
 
-			if ( sample == this.overlinedColor )
+			if ( sample == this.overlineColor )
 			{
 				this.TextWrapper.SuspendSynchronizations();
 				Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.TextWrapper.Defined.Overline;
@@ -195,13 +195,13 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
-			if ( this.buttonUnderlined == null )  return;
+			if ( this.buttonUnderline == null )  return;
 
 			Rectangle rect = this.UsefulZone;
 
-			bool isUnderlined = this.TextWrapper.Defined.IsUnderlineDefined;
-			bool isOverlined  = this.TextWrapper.Defined.IsOverlineDefined;
-			bool isStrikeout  = this.TextWrapper.Defined.IsStrikeoutDefined;
+			bool isUnderline = this.TextWrapper.Defined.IsUnderlineDefined;
+			bool isOverline  = this.TextWrapper.Defined.IsOverlineDefined;
+			bool isStrikeout = this.TextWrapper.Defined.IsStrikeoutDefined;
 
 			if ( this.isExtendedSize )
 			{
@@ -212,9 +212,9 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					r.Left = rect.Left;
 					r.Width = 20;
-					this.buttonUnderlined.SetManualBounds(r);
+					this.buttonUnderline.SetManualBounds(r);
 					r.Offset(20, 0);
-					this.buttonOverlined.SetManualBounds(r);
+					this.buttonOverline.SetManualBounds(r);
 					r.Offset(20+5, 0);
 					this.buttonStrikeout.SetManualBounds(r);
 
@@ -222,50 +222,50 @@ namespace Epsitec.Common.Document.TextPanels
 					r.Width = 20;
 					this.buttonClear.SetManualBounds(r);
 
-					if ( isUnderlined )
+					if ( isUnderline )
 					{
 						r.Offset(0, -25);
 						r.Left = rect.Left;
 						r.Right = rect.Right-25;
-						this.fieldUnderlinedThickness.SetManualBounds(r);
-						this.fieldUnderlinedThickness.Visibility = true;
+						this.fieldUnderlineThickness.SetManualBounds(r);
+						this.fieldUnderlineThickness.Visibility = true;
 						r.Offset(0, -25);
-						this.fieldUnderlinedPosition.SetManualBounds(r);
-						this.fieldUnderlinedPosition.Visibility = true;
+						this.fieldUnderlinePosition.SetManualBounds(r);
+						this.fieldUnderlinePosition.Visibility = true;
 						r.Offset(0, -25);
 						r.Left = rect.Right-25-48;
 						r.Width = 48;
-						this.underlinedColor.SetManualBounds(r);
-						this.underlinedColor.Visibility = true;
+						this.underlineColor.SetManualBounds(r);
+						this.underlineColor.Visibility = true;
 					}
 					else
 					{
-						this.fieldUnderlinedThickness.Visibility = false;
-						this.fieldUnderlinedPosition.Visibility = false;
-						this.underlinedColor.Visibility = false;
+						this.fieldUnderlineThickness.Visibility = false;
+						this.fieldUnderlinePosition.Visibility = false;
+						this.underlineColor.Visibility = false;
 					}
 
-					if ( isOverlined )
+					if ( isOverline )
 					{
 						r.Offset(0, -25);
 						r.Left = rect.Left;
 						r.Right = rect.Right-25;
-						this.fieldOverlinedThickness.SetManualBounds(r);
-						this.fieldOverlinedThickness.Visibility = true;
+						this.fieldOverlineThickness.SetManualBounds(r);
+						this.fieldOverlineThickness.Visibility = true;
 						r.Offset(0, -25);
-						this.fieldOverlinedPosition.SetManualBounds(r);
-						this.fieldOverlinedPosition.Visibility = true;
+						this.fieldOverlinePosition.SetManualBounds(r);
+						this.fieldOverlinePosition.Visibility = true;
 						r.Offset(0, -25);
 						r.Left = rect.Right-25-48;
 						r.Width = 48;
-						this.overlinedColor.SetManualBounds(r);
-						this.overlinedColor.Visibility = true;
+						this.overlineColor.SetManualBounds(r);
+						this.overlineColor.Visibility = true;
 					}
 					else
 					{
-						this.fieldOverlinedThickness.Visibility = false;
-						this.fieldOverlinedPosition.Visibility = false;
-						this.overlinedColor.Visibility = false;
+						this.fieldOverlineThickness.Visibility = false;
+						this.fieldOverlinePosition.Visibility = false;
+						this.overlineColor.Visibility = false;
 					}
 
 					if ( isStrikeout )
@@ -295,57 +295,57 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					r.Left = rect.Left;
 					r.Width = 20;
-					this.buttonUnderlined.SetManualBounds(r);
+					this.buttonUnderline.SetManualBounds(r);
 					r.Offset(20, 0);
-					this.buttonOverlined.SetManualBounds(r);
+					this.buttonOverline.SetManualBounds(r);
 					r.Offset(20+5, 0);
 					this.buttonStrikeout.SetManualBounds(r);
 					r.Left = rect.Right-20;
 					r.Width = 20;
 					this.buttonClear.SetManualBounds(r);
 
-					if ( isUnderlined )
+					if ( isUnderline )
 					{
 						r.Offset(0, -25);
 						r.Left = rect.Left;
 						r.Width = 60;
-						this.fieldUnderlinedThickness.SetManualBounds(r);
-						this.fieldUnderlinedThickness.Visibility = true;
+						this.fieldUnderlineThickness.SetManualBounds(r);
+						this.fieldUnderlineThickness.Visibility = true;
 						r.Offset(60, 0);
-						this.fieldUnderlinedPosition.SetManualBounds(r);
-						this.fieldUnderlinedPosition.Visibility = true;
+						this.fieldUnderlinePosition.SetManualBounds(r);
+						this.fieldUnderlinePosition.Visibility = true;
 						r.Offset(60+12, 0);
 						r.Width = 48;
-						this.underlinedColor.SetManualBounds(r);
-						this.underlinedColor.Visibility = true;
+						this.underlineColor.SetManualBounds(r);
+						this.underlineColor.Visibility = true;
 					}
 					else
 					{
-						this.fieldUnderlinedThickness.Visibility = false;
-						this.fieldUnderlinedPosition.Visibility = false;
-						this.underlinedColor.Visibility = false;
+						this.fieldUnderlineThickness.Visibility = false;
+						this.fieldUnderlinePosition.Visibility = false;
+						this.underlineColor.Visibility = false;
 					}
 
-					if ( isOverlined )
+					if ( isOverline )
 					{
 						r.Offset(0, -25);
 						r.Left = rect.Left;
 						r.Width = 60;
-						this.fieldOverlinedThickness.SetManualBounds(r);
-						this.fieldOverlinedThickness.Visibility = true;
+						this.fieldOverlineThickness.SetManualBounds(r);
+						this.fieldOverlineThickness.Visibility = true;
 						r.Offset(60, 0);
-						this.fieldOverlinedPosition.SetManualBounds(r);
-						this.fieldOverlinedPosition.Visibility = true;
+						this.fieldOverlinePosition.SetManualBounds(r);
+						this.fieldOverlinePosition.Visibility = true;
 						r.Offset(60+12, 0);
 						r.Width = 48;
-						this.overlinedColor.SetManualBounds(r);
-						this.overlinedColor.Visibility = true;
+						this.overlineColor.SetManualBounds(r);
+						this.overlineColor.Visibility = true;
 					}
 					else
 					{
-						this.fieldOverlinedThickness.Visibility = false;
-						this.fieldOverlinedPosition.Visibility = false;
-						this.overlinedColor.Visibility = false;
+						this.fieldOverlineThickness.Visibility = false;
+						this.fieldOverlinePosition.Visibility = false;
+						this.overlineColor.Visibility = false;
 					}
 
 					if ( isStrikeout )
@@ -378,21 +378,21 @@ namespace Epsitec.Common.Document.TextPanels
 
 				r.Left = rect.Left;
 				r.Width = 20;
-				this.buttonUnderlined.SetManualBounds(r);
+				this.buttonUnderline.SetManualBounds(r);
 				r.Offset(20, 0);
-				this.buttonOverlined.SetManualBounds(r);
+				this.buttonOverline.SetManualBounds(r);
 				r.Offset(20+5, 0);
 				this.buttonStrikeout.SetManualBounds(r);
 				r.Left = rect.Right-20;
 				r.Width = 20;
 				this.buttonClear.SetManualBounds(r);
 
-				this.fieldUnderlinedThickness.Visibility = false;
-				this.fieldUnderlinedPosition.Visibility = false;
-				this.underlinedColor.Visibility = false;
-				this.fieldOverlinedThickness.Visibility = false;
-				this.fieldOverlinedPosition.Visibility = false;
-				this.overlinedColor.Visibility = false;
+				this.fieldUnderlineThickness.Visibility = false;
+				this.fieldUnderlinePosition.Visibility = false;
+				this.underlineColor.Visibility = false;
+				this.fieldOverlineThickness.Visibility = false;
+				this.fieldOverlinePosition.Visibility = false;
+				this.overlineColor.Visibility = false;
 				this.fieldStrikeoutThickness.Visibility = false;
 				this.fieldStrikeoutPosition.Visibility = false;
 				this.strikeoutColor.Visibility = false;
@@ -407,39 +407,39 @@ namespace Epsitec.Common.Document.TextPanels
 			
 			if ( this.TextWrapper.IsAttached == false )  return;
 			
-			bool underlined   = this.TextWrapper.Active.IsUnderlineDefined;
-			bool isUnderlined = this.TextWrapper.Defined.IsUnderlineDefined;
+			bool underline   = this.TextWrapper.Active.IsUnderlineDefined;
+			bool isUnderline = this.TextWrapper.Defined.IsUnderlineDefined;
 
-			bool overlined    = this.TextWrapper.Active.IsOverlineDefined;
-			bool isOverlined  = this.TextWrapper.Defined.IsOverlineDefined;
+			bool overline     = this.TextWrapper.Active.IsOverlineDefined;
+			bool isOverline  = this.TextWrapper.Defined.IsOverlineDefined;
 
 			bool strikeout    = this.TextWrapper.Active.IsStrikeoutDefined;
 			bool isStrikeout  = this.TextWrapper.Defined.IsStrikeoutDefined;
 
-			double underlinedThickness = 0.0;
-			double underlinedPosition  = 0.0;
-			string underlinedColor     = null;
+			double underlineThickness = 0.0;
+			double underlinePosition  = 0.0;
+			string underlineColor     = null;
 
-			double overlinedThickness = 0.0;
-			double overlinedPosition  = 0.0;
-			string overlinedColor     = null;
+			double overlineThickness = 0.0;
+			double overlinePosition  = 0.0;
+			string overlineColor     = null;
 
 			double strikeoutThickness = 0.0;
 			double strikeoutPosition  = 0.0;
 			string strikeoutColor     = null;
 
-			if ( isUnderlined )
+			if ( isUnderline )
 			{
-				underlinedThickness = this.TextWrapper.Defined.Underline.Thickness;
-				underlinedPosition  = this.TextWrapper.Defined.Underline.Position;
-				underlinedColor     = this.TextWrapper.Defined.Underline.DrawStyle;
+				underlineThickness = this.TextWrapper.Defined.Underline.Thickness;
+				underlinePosition  = this.TextWrapper.Defined.Underline.Position;
+				underlineColor     = this.TextWrapper.Defined.Underline.DrawStyle;
 			}
 
-			if ( isOverlined )
+			if ( isOverline )
 			{
-				overlinedThickness = this.TextWrapper.Defined.Overline.Thickness;
-				overlinedPosition  = this.TextWrapper.Defined.Overline.Position;
-				overlinedColor     = this.TextWrapper.Defined.Overline.DrawStyle;
+				overlineThickness = this.TextWrapper.Defined.Overline.Thickness;
+				overlinePosition  = this.TextWrapper.Defined.Overline.Position;
+				overlineColor     = this.TextWrapper.Defined.Overline.DrawStyle;
 			}
 
 			if ( isStrikeout )
@@ -451,23 +451,23 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.ignoreChanged = true;
 			
-			this.ActiveIconButton(this.buttonUnderlined, underlined, isUnderlined);
-			this.ActiveIconButton(this.buttonOverlined,  overlined,  isOverlined );
-			this.ActiveIconButton(this.buttonStrikeout,  strikeout,  isStrikeout );
+			this.ActiveIconButton(this.buttonUnderline, underline, isUnderline);
+			this.ActiveIconButton(this.buttonOverline,  overline,  isOverline );
+			this.ActiveIconButton(this.buttonStrikeout, strikeout, isStrikeout );
 
-			this.SetTextFieldRealValue(this.fieldUnderlinedThickness.TextFieldReal, underlinedThickness, Common.Text.Properties.SizeUnits.Points, isUnderlined, true);
-			this.SetTextFieldRealValue(this.fieldUnderlinedPosition.TextFieldReal,  underlinedPosition,  Common.Text.Properties.SizeUnits.Points, isUnderlined, true);
-			this.SetTextFieldRealValue(this.fieldOverlinedThickness.TextFieldReal,  overlinedThickness,  Common.Text.Properties.SizeUnits.Points, isOverlined,  true);
-			this.SetTextFieldRealValue(this.fieldOverlinedPosition.TextFieldReal,   overlinedPosition,   Common.Text.Properties.SizeUnits.Points, isOverlined,  true);
-			this.SetTextFieldRealValue(this.fieldStrikeoutThickness.TextFieldReal,  strikeoutThickness,  Common.Text.Properties.SizeUnits.Points, isStrikeout,  true);
-			this.SetTextFieldRealValue(this.fieldStrikeoutPosition.TextFieldReal,   strikeoutPosition,   Common.Text.Properties.SizeUnits.Points, isStrikeout,  true);
+			this.SetTextFieldRealValue(this.fieldUnderlineThickness.TextFieldReal, underlineThickness, Common.Text.Properties.SizeUnits.Points, isUnderline, true);
+			this.SetTextFieldRealValue(this.fieldUnderlinePosition.TextFieldReal,  underlinePosition,  Common.Text.Properties.SizeUnits.Points, isUnderline, true);
+			this.SetTextFieldRealValue(this.fieldOverlineThickness.TextFieldReal,  overlineThickness,  Common.Text.Properties.SizeUnits.Points, isOverline,  true);
+			this.SetTextFieldRealValue(this.fieldOverlinePosition.TextFieldReal,   overlinePosition,   Common.Text.Properties.SizeUnits.Points, isOverline,  true);
+			this.SetTextFieldRealValue(this.fieldStrikeoutThickness.TextFieldReal, strikeoutThickness, Common.Text.Properties.SizeUnits.Points, isStrikeout,  true);
+			this.SetTextFieldRealValue(this.fieldStrikeoutPosition.TextFieldReal,  strikeoutPosition,  Common.Text.Properties.SizeUnits.Points, isStrikeout,  true);
 
-			this.SetColorSample(this.underlinedColor, underlinedColor, isUnderlined, true);
-			this.SetColorSample(this.overlinedColor,  overlinedColor,  isOverlined,  true);
-			this.SetColorSample(this.strikeoutColor,  strikeoutColor,  isStrikeout,  true);
+			this.SetColorSample(this.underlineColor, underlineColor, isUnderline, true);
+			this.SetColorSample(this.overlineColor,  overlineColor,  isOverline,  true);
+			this.SetColorSample(this.strikeoutColor, strikeoutColor, isStrikeout,  true);
 
-			if ( this.underlinedColor.ActiveState == ActiveState.Yes ||
-				 this.overlinedColor.ActiveState  == ActiveState.Yes ||
+			if ( this.underlineColor.ActiveState == ActiveState.Yes ||
+				 this.overlineColor.ActiveState  == ActiveState.Yes ||
 				 this.strikeoutColor.ActiveState  == ActiveState.Yes )
 			{
 				this.OnOriginColorChanged();  // change la couleur dans le ColorSelector
@@ -537,7 +537,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.FillUnderlineDefinition(xline, true);  // --> (B2)
 			}
 			
-			this.TextWrapper.DefineOperationName("FontUnderlined", Res.Strings.Action.FontUnderlined);
+			this.TextWrapper.DefineOperationName("FontUnderline", Res.Strings.Action.FontUnderline);
 			this.TextWrapper.ResumeSynchronizations();
 			this.ActionMade();
 			this.ForceHeightChanged();
@@ -595,7 +595,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.FillOverlineDefinition(xline, true);  // --> (B2)
 			}
 			
-			this.TextWrapper.DefineOperationName("FontOverlined", Res.Strings.Action.FontOverlined);
+			this.TextWrapper.DefineOperationName("FontOverline", Res.Strings.Action.FontOverline);
 			this.TextWrapper.ResumeSynchronizations();
 			this.ActionMade();
 			this.ForceHeightChanged();
@@ -659,7 +659,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ForceHeightChanged();
 		}
 		
-		private void HandleUnderlinedValueChanged(object sender)
+		private void HandleUnderlineValueChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
 			if ( !this.TextWrapper.IsAttached )  return;
@@ -667,12 +667,12 @@ namespace Epsitec.Common.Document.TextPanels
 			this.TextWrapper.SuspendSynchronizations();
 			Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.TextWrapper.Defined.Underline;
 			this.FillUnderlineDefinition(xline, false);
-			this.TextWrapper.DefineOperationName("FontUnderlined", Res.Strings.Action.FontUnderlined);
+			this.TextWrapper.DefineOperationName("FontUnderline", Res.Strings.Action.FontUnderline);
 			this.TextWrapper.ResumeSynchronizations();
 			this.ActionMade();
 		}
 
-		private void HandleOverlinedValueChanged(object sender)
+		private void HandleOverlineValueChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
 			if ( !this.TextWrapper.IsAttached )  return;
@@ -680,7 +680,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.TextWrapper.SuspendSynchronizations();
 			Common.Text.Wrappers.TextWrapper.XlineDefinition xline = this.TextWrapper.Defined.Overline;
 			this.FillOverlineDefinition(xline, false);
-			this.TextWrapper.DefineOperationName("FontOverlined", Res.Strings.Action.FontOverlined);
+			this.TextWrapper.DefineOperationName("FontOverline", Res.Strings.Action.FontOverline);
 			this.TextWrapper.ResumeSynchronizations();
 			this.ActionMade();
 		}
@@ -703,8 +703,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.originFieldColor = sender as ColorSample;
 
 			this.originFieldRank = -1;
-			if ( this.originFieldColor == this.underlinedColor )  this.originFieldRank = 0;
-			if ( this.originFieldColor == this.overlinedColor  )  this.originFieldRank = 1;
+			if ( this.originFieldColor == this.underlineColor )  this.originFieldRank = 0;
+			if ( this.originFieldColor == this.overlineColor  )  this.originFieldRank = 1;
 			if ( this.originFieldColor == this.strikeoutColor  )  this.originFieldRank = 2;
 
 			this.OnOriginColorChanged();
@@ -744,9 +744,9 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( !def )
 			{
-				xline.Thickness = (double) this.fieldUnderlinedThickness.TextFieldReal.InternalValue;
-				xline.Position  = (double) this.fieldUnderlinedPosition.TextFieldReal.InternalValue;
-				xline.DrawStyle = this.GetColorSample(this.underlinedColor);
+				xline.Thickness = (double) this.fieldUnderlineThickness.TextFieldReal.InternalValue;
+				xline.Position  = (double) this.fieldUnderlinePosition.TextFieldReal.InternalValue;
+				xline.DrawStyle = this.GetColorSample(this.underlineColor);
 			}
 		}
         
@@ -756,9 +756,9 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( !def )
 			{
-				xline.Thickness = (double) this.fieldOverlinedThickness.TextFieldReal.InternalValue;
-				xline.Position  = (double) this.fieldOverlinedPosition.TextFieldReal.InternalValue;
-				xline.DrawStyle = this.GetColorSample(this.overlinedColor);
+				xline.Thickness = (double) this.fieldOverlineThickness.TextFieldReal.InternalValue;
+				xline.Position  = (double) this.fieldOverlinePosition.TextFieldReal.InternalValue;
+				xline.DrawStyle = this.GetColorSample(this.overlineColor);
 			}
 		}
         
@@ -794,15 +794,15 @@ namespace Epsitec.Common.Document.TextPanels
 		}
         
 
-		protected IconButton				buttonUnderlined;
-		protected IconButton				buttonOverlined;
+		protected IconButton				buttonUnderline;
+		protected IconButton				buttonOverline;
 		protected IconButton				buttonStrikeout;
-		protected Widgets.TextFieldLabel	fieldUnderlinedThickness;
-		protected Widgets.TextFieldLabel	fieldUnderlinedPosition;
-		protected ColorSample				underlinedColor;
-		protected Widgets.TextFieldLabel	fieldOverlinedThickness;
-		protected Widgets.TextFieldLabel	fieldOverlinedPosition;
-		protected ColorSample				overlinedColor;
+		protected Widgets.TextFieldLabel	fieldUnderlineThickness;
+		protected Widgets.TextFieldLabel	fieldUnderlinePosition;
+		protected ColorSample				underlineColor;
+		protected Widgets.TextFieldLabel	fieldOverlineThickness;
+		protected Widgets.TextFieldLabel	fieldOverlinePosition;
+		protected ColorSample				overlineColor;
 		protected Widgets.TextFieldLabel	fieldStrikeoutThickness;
 		protected Widgets.TextFieldLabel	fieldStrikeoutPosition;
 		protected ColorSample				strikeoutColor;

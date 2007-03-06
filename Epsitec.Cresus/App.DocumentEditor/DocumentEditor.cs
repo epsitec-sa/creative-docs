@@ -3546,8 +3546,8 @@ namespace Epsitec.App.DocumentEditor
 
 			this.fontBoldState = this.CreateCommandState(Commands.FontBold, "FontBold", true, KeyCode.ModifierControl|KeyCode.AlphaB);
 			this.fontItalicState = this.CreateCommandState(Commands.FontItalic, "FontItalic", true, KeyCode.ModifierControl|KeyCode.AlphaI);
-			this.fontUnderlinedState = this.CreateCommandState(Commands.FontUnderline, "FontUnderlined", true, KeyCode.ModifierControl|KeyCode.AlphaU);
-			this.fontOverlinedState = this.CreateCommandState(Commands.FontOverline, "FontOverlined", true);
+			this.fontUnderlineState = this.CreateCommandState(Commands.FontUnderline, "FontUnderline", true, KeyCode.ModifierControl|KeyCode.AlphaU);
+			this.fontOverlineState = this.CreateCommandState(Commands.FontOverline, "FontOverline", true);
 			this.fontStrikeoutState = this.CreateCommandState(Commands.FontStrikeout, "FontStrikeout", true);
 			this.fontSubscriptState = this.CreateCommandState(Commands.FontSubscript, "FontSubscript", true, KeyCode.ModifierControl|KeyCode.AlphaG);
 			this.fontSuperscriptState = this.CreateCommandState(Commands.FontSuperscript, "FontSuperscript", true, KeyCode.ModifierControl|KeyCode.AlphaT);
@@ -4227,8 +4227,8 @@ namespace Epsitec.App.DocumentEditor
 				this.textInsertNewPageState.Enable = false;
 				this.fontBoldState.Enable = false;
 				this.fontItalicState.Enable = false;
-				this.fontUnderlinedState.Enable = false;
-				this.fontOverlinedState.Enable = false;
+				this.fontUnderlineState.Enable = false;
+				this.fontOverlineState.Enable = false;
 				this.fontStrikeoutState.Enable = false;
 				this.fontSubscriptState.Enable = false;
 				this.fontSuperscriptState.Enable = false;
@@ -5656,8 +5656,8 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					pasteState;
 		protected CommandState					fontBoldState;
 		protected CommandState					fontItalicState;
-		protected CommandState					fontUnderlinedState;
-		protected CommandState					fontOverlinedState;
+		protected CommandState					fontUnderlineState;
+		protected CommandState					fontOverlineState;
 		protected CommandState					fontStrikeoutState;
 		protected CommandState					fontSubscriptState;
 		protected CommandState					fontSuperscriptState;

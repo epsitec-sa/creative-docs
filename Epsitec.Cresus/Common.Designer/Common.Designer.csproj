@@ -189,7 +189,7 @@
     <EmbeddedResource Include="Images\SaveAs.icon" />
     <EmbeddedResource Include="Images\FontBold.icon" />
     <EmbeddedResource Include="Images\FontItalic.icon" />
-    <EmbeddedResource Include="Images\FontUnderlined.icon" />
+    <EmbeddedResource Include="Images\FontUnderline.icon" />
     <EmbeddedResource Include="Images\DesignerGlyphs.icon" />
     <EmbeddedResource Include="Images\Filter.icon" />
     <EmbeddedResource Include="Images\Search.icon" />

@@ -151,7 +151,7 @@ namespace Epsitec.Common.Text.Exchange
 					htmlText.SetItalic (Rosetta.IsItalic (cpContext.Navigator));
 					htmlText.SetBold (Rosetta.IsBold (cpContext.Navigator));
 #endif
-					htmlText.SetUnderlined (cpContext.TextWrapper.Active.IsUnderlineDefined);
+					htmlText.SetUnderline (cpContext.TextWrapper.Active.IsUnderlineDefined);
 					htmlText.SetStrikeout (cpContext.TextWrapper.Active.IsStrikeoutDefined);
 
 					SimpleXScript xscript = GetSimpleXScript (cpContext.TextWrapper);

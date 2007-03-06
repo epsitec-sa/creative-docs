@@ -30,8 +30,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonFontSizeMinus = this.CreateIconButton(Commands.FontSizeMinus);
 			this.buttonFontSizePlus  = this.CreateIconButton(Commands.FontSizePlus);
 			this.buttonShowControl   = this.CreateIconButton("TextShowControlCharacters");
-			this.buttonUnderlined    = this.CreateIconButton(Commands.FontUnderline);
-			this.buttonOverlined     = this.CreateIconButton(Commands.FontOverline);
+			this.buttonUnderline     = this.CreateIconButton(Commands.FontUnderline);
+			this.buttonOverline      = this.CreateIconButton(Commands.FontOverline);
 			this.buttonStrikeout     = this.CreateIconButton(Commands.FontStrikeout);
 			this.buttonSubscript     = this.CreateIconButton(Commands.FontSubscript);
 			this.buttonSuperscript   = this.CreateIconButton(Commands.FontSuperscript);
@@ -159,9 +159,9 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Height = dy;
 			rect.Width = dx;
 			rect.Offset(80, 0);
-			this.buttonUnderlined.SetManualBounds(rect);
+			this.buttonUnderline.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonOverlined.SetManualBounds(rect);
+			this.buttonOverline.SetManualBounds(rect);
 			rect.Offset(dx+5, 0);
 			this.buttonStrikeout.SetManualBounds(rect);
 			rect.Offset(dx+5, 0);
@@ -281,8 +281,8 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton				buttonShowControl;
 		protected IconButton				buttonBold;
 		protected IconButton				buttonItalic;
-		protected IconButton				buttonUnderlined;
-		protected IconButton				buttonOverlined;
+		protected IconButton				buttonUnderline;
+		protected IconButton				buttonOverline;
 		protected IconButton				buttonStrikeout;
 		protected IconButton				buttonSubscript;
 		protected IconButton				buttonSuperscript;

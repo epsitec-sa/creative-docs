@@ -536,6 +536,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Updates the quick list.
+		/// </summary>
+		/// <param name="sel">The sel.</param>
 		protected void UpdateQuickList(int sel)
 		{
 			//	Met à jour la liste des commandes rapides.

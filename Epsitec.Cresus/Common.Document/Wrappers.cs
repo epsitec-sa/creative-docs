@@ -181,8 +181,8 @@ namespace Epsitec.Common.Document
 			bool enabled = this.IsWrappersAttached;
 			bool bold        = false;
 			bool italic      = false;
-			bool underlined  = false;
-			bool overlined   = false;
+			bool underline   = false;
+			bool overline    = false;
 			bool strikeout   = false;
 			bool subscript   = false;
 			bool superscript = false;
@@ -191,8 +191,8 @@ namespace Epsitec.Common.Document
 			{
 				bold        = this.BoldActiveState;
 				italic      = this.ItalicActiveState;
-				underlined  = this.UnderlinedActiveState;
-				overlined   = this.OverlinedActiveState;
+				underline   = this.UnderlineActiveState;
+				overline    = this.OverlineActiveState;
 				strikeout   = this.StrikeoutActiveState;
 				subscript   = this.SubscriptActiveState;
 				superscript = this.SuperscriptActiveState;
@@ -209,8 +209,8 @@ namespace Epsitec.Common.Document
 
 			this.CommandActiveState(Commands.FontBold,        enabled, bold       );
 			this.CommandActiveState(Commands.FontItalic,      enabled, italic     );
-			this.CommandActiveState(Commands.FontUnderline,   enabled, underlined );
-			this.CommandActiveState(Commands.FontOverline,    enabled, overlined  );
+			this.CommandActiveState(Commands.FontUnderline,   enabled, underline  );
+			this.CommandActiveState(Commands.FontOverline,    enabled, overline   );
 			this.CommandActiveState(Commands.FontStrikeout,   enabled, strikeout  );
 			this.CommandActiveState(Commands.FontSubscript,   enabled, subscript  );
 			this.CommandActiveState(Commands.FontSuperscript, enabled, superscript);
@@ -769,14 +769,14 @@ namespace Epsitec.Common.Document
 				if ( this.styleTextWrapper.Defined.IsUnderlineDefined )
 				{
 					if ( !first )  builder.Append(", ");
-					builder.Append(Res.Strings.Action.FontUnderlined);
+					builder.Append(Res.Strings.Action.FontUnderline);
 					first = false;
 				}
 
 				if ( this.styleTextWrapper.Defined.IsOverlineDefined )
 				{
 					if ( !first )  builder.Append(", ");
-					builder.Append(Res.Strings.Action.FontOverlined);
+					builder.Append(Res.Strings.Action.FontOverline);
 					first = false;
 				}
 
@@ -890,8 +890,8 @@ namespace Epsitec.Common.Document
 			{
 				case Commands.FontBold:        this.ChangeBold();           break;
 				case Commands.FontItalic:      this.ChangeItalic();         break;
-				case Commands.FontUnderline:   this.ChangeUnderlined();     break;
-				case Commands.FontOverline:    this.ChangeOverlined();      break;
+				case Commands.FontUnderline:   this.ChangeUnderline();      break;
+				case Commands.FontOverline:    this.ChangeOverline();       break;
 				case Commands.FontStrikeout:   this.ChangeStrikeout();      break;
 				case Commands.FontSubscript:   this.ChangeSubscript();      break;
 				case Commands.FontSuperscript: this.ChangeSuperscript();    break;
@@ -929,7 +929,7 @@ namespace Epsitec.Common.Document
 			this.textWrapper.ResumeSynchronizations();
 		}
 
-		protected void ChangeUnderlined()
+		protected void ChangeUnderline()
 		{
 			//	La commande 'souligné' a été actionnée.
 			this.textWrapper.SuspendSynchronizations();
@@ -944,11 +944,11 @@ namespace Epsitec.Common.Document
 				this.FillUnderlineDefinition(xline);
 			}
 
-			this.textWrapper.DefineOperationName("FontUnderlined", Res.Strings.Action.FontUnderlined);
+			this.textWrapper.DefineOperationName("FontUnderline", Res.Strings.Action.FontUnderline);
 			this.textWrapper.ResumeSynchronizations();
 		}
 
-		protected void ChangeOverlined()
+		protected void ChangeOverline()
 		{
 			//	La commande 'surligné' a été actionnée.
 			this.textWrapper.SuspendSynchronizations();
@@ -963,7 +963,7 @@ namespace Epsitec.Common.Document
 				this.FillOverlineDefinition(xline);
 			}
 
-			this.textWrapper.DefineOperationName("FontOverlined", Res.Strings.Action.FontOverlined);
+			this.textWrapper.DefineOperationName("FontOverline", Res.Strings.Action.FontOverline);
 			this.textWrapper.ResumeSynchronizations();
 		}
 
@@ -1458,7 +1458,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected bool UnderlinedActiveState
+		protected bool UnderlineActiveState
 		{
 			//	Donne l'état de la commande 'souligné'.
 			get
@@ -1467,7 +1467,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected bool OverlinedActiveState
+		protected bool OverlineActiveState
 		{
 			//	Donne l'état de la commande 'surligné'.
 			get

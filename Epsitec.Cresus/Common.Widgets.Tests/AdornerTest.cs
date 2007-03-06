@@ -1118,7 +1118,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleMultiUnderline(object sender, MessageEventArgs e)
 		{
-			this.bigText.TextNavigator.SelectionUnderlined = !this.bigText.TextNavigator.SelectionUnderlined;
+			this.bigText.TextNavigator.SelectionUnderline = !this.bigText.TextNavigator.SelectionUnderline;
 		}
 
 		private void HandleMultiFace1(object sender, MessageEventArgs e)

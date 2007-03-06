@@ -1055,8 +1055,8 @@
   <data id="05101">Italic</data>
   <data id="06101">Invert Bold</data>
   <data id="07101">Invert Italic</data>
-  <data id="08101">Underlined</data>
-  <data id="09101">Overlined</data>
+  <data id="08101">Underline</data>
+  <data id="09101">Overline</data>
   <data id="0A101">Strikethrough</data>
   <data id="0B101">Frame</data>
   <data id="0C101">Subscript</data>

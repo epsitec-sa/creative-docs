@@ -28,7 +28,7 @@ namespace Epsitec.Common.Text.Exchange
 			this.tagStorageList.Add (HtmlTagType.Strikeout, new TagStoreage (this, HtmlTagType.Strikeout));
 			this.tagStorageList.Add (HtmlTagType.Subscript, new TagStoreage (this, HtmlTagType.Subscript));
 			this.tagStorageList.Add (HtmlTagType.Superscript, new TagStoreage (this, HtmlTagType.Superscript));
-			this.tagStorageList.Add (HtmlTagType.Underlined, new TagStoreage (this, HtmlTagType.Underlined));
+			this.tagStorageList.Add (HtmlTagType.Underline, new TagStoreage (this, HtmlTagType.Underline));
 #if USE_SPAN
 			this.tagStorageList.Add (HtmlTagType.Span, new TagStoreage (this, HtmlTagType.Span));
 #endif
@@ -189,9 +189,9 @@ namespace Epsitec.Common.Text.Exchange
 			this.tagStorageList[HtmlTagType.Bold].Set (bold);
 		}
 
-		public void SetUnderlined(bool underlined)
+		public void SetUnderline(bool underline)
 		{
-			this.tagStorageList[HtmlTagType.Underlined].Set (underlined);
+			this.tagStorageList[HtmlTagType.Underline].Set (underline);
 		}
 
 		public void SetStrikeout(bool strikeout)
@@ -666,7 +666,7 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			Bold,
 			Italic,
-			Underlined,
+			Underline,
 			Strikeout,
 			Font,
 			Paragraph,
@@ -705,7 +705,7 @@ namespace Epsitec.Common.Text.Exchange
 					case HtmlTagType.Bold:
 						retval = HtmlTextOut.GetHtmlTag ("b", tagmode);
 						break;
-					case HtmlTagType.Underlined:
+					case HtmlTagType.Underline:
 						retval = HtmlTextOut.GetHtmlTag ("u", tagmode);
 						break;
 					case HtmlTagType.Strikeout:

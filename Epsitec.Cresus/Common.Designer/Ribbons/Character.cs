@@ -16,7 +16,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 			this.buttonBold       = this.CreateIconButton("FontBold");
 			this.buttonItalic     = this.CreateIconButton("FontItalic");
-			this.buttonUnderlined = this.CreateIconButton("FontUnderlined");
+			this.buttonUnderline  = this.CreateIconButton("FontUnderline");
 			this.buttonGlyphs     = this.CreateIconButton("DesignerGlyphs");
 			
 			this.UpdateClientGeometry();
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Offset(dx, 0);
 			this.buttonItalic.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonUnderlined.SetManualBounds(rect);
+			this.buttonUnderline.SetManualBounds(rect);
 			rect.Offset(dx+5, 0);
 			this.buttonGlyphs.SetManualBounds(rect);
 		}
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		protected IconButton				buttonBold;
 		protected IconButton				buttonItalic;
-		protected IconButton				buttonUnderlined;
+		protected IconButton				buttonUnderline;
 		protected IconButton				buttonGlyphs;
 	}
 }

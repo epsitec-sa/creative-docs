@@ -69,10 +69,10 @@
   <data name="TextRuler.FontSize" id="022">Taille en pourcents</data>
   <data name="TextRuler.ButtonBold" id="032">&lt;b&gt;G&lt;/b&gt;</data>
   <data name="TextRuler.ButtonItalic" id="042">&lt;i&gt;I&lt;/i&gt;</data>
-  <data name="TextRuler.ButtonUnderlined" id="052">&lt;u&gt;S&lt;/u&gt;</data>
+  <data name="TextRuler.ButtonUnderline" id="052">&lt;u&gt;S&lt;/u&gt;</data>
   <data name="TextRuler.Bold" id="062">Gras</data>
   <data name="TextRuler.Italic" id="072">Italique</data>
-  <data name="TextRuler.Underlined" id="082">Souligné</data>
+  <data name="TextRuler.Underline" id="082">Souligné</data>
   <data name="TextRuler.DefaultColor" id="092">Couleur par défaut</data>
   <data name="TextRuler.Color" id="0A2">Couleur</data>
   <data name="TextRuler.ListNum" id="0B2">Numérotation</data>

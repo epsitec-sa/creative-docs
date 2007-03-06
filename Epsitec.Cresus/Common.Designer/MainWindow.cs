@@ -663,7 +663,7 @@ namespace Epsitec.Common.Designer
 
 		[Command("FontBold")]
 		[Command("FontItalic")]
-		[Command("FontUnderlined")]
+		[Command("FontUnderline")]
 		void CommandFont(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if ( !this.IsCurrentModule )  return;
@@ -753,7 +753,7 @@ namespace Epsitec.Common.Designer
 
 			this.fontBoldState = this.CreateCommandState("FontBold", KeyCode.ModifierControl|KeyCode.AlphaB);
 			this.fontItalicState = this.CreateCommandState("FontItalic", KeyCode.ModifierControl|KeyCode.AlphaI);
-			this.fontUnderlinedState = this.CreateCommandState("FontUnderlined", KeyCode.ModifierControl|KeyCode.AlphaU);
+			this.fontUnderlineState = this.CreateCommandState("FontUnderline", KeyCode.ModifierControl|KeyCode.AlphaU);
 
 			this.glyphsState = this.CreateCommandState("DesignerGlyphs");
 			this.filterState = this.CreateCommandState("Filter");
@@ -852,7 +852,7 @@ namespace Epsitec.Common.Designer
 
 				string iconName = commandName;
 				string description = Res.Strings.GetString ("Action."+commandName);
-				bool statefull = (commandName == "FontBold" || commandName == "FontItalic" || commandName == "FontUnderlined" || commandName.StartsWith("PanelShow"));
+				bool statefull = (commandName == "FontBold" || commandName == "FontItalic" || commandName == "FontUnderline" || commandName.StartsWith("PanelShow"));
 
 				command.ManuallyDefineCommand (description, Misc.Icon(iconName), null, statefull);
 			}
@@ -1052,7 +1052,7 @@ namespace Epsitec.Common.Designer
 				this.copyToModuleState.Enable = false;
 				this.fontBoldState.Enable = false;
 				this.fontItalicState.Enable = false;
-				this.fontUnderlinedState.Enable = false;
+				this.fontUnderlineState.Enable = false;
 				this.glyphsState.Enable = false;
 
 				this.UpdateInfoCurrentModule();
@@ -1407,7 +1407,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					copyToModuleState;
 		protected CommandState					fontBoldState;
 		protected CommandState					fontItalicState;
-		protected CommandState					fontUnderlinedState;
+		protected CommandState					fontUnderlineState;
 		protected CommandState					glyphsState;
 		protected CommandState					filterState;
 		protected CommandState					searchState;

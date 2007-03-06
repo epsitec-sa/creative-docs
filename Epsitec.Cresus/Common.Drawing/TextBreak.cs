@@ -131,7 +131,7 @@ namespace Epsitec.Common.Drawing
 			public RichColor FontColor   = RichColor.Empty;
 			public bool Bold        = false;
 			public bool Italic      = false;
-			public bool Underlined  = false;
+			public bool Underline   = false;
 			public bool Anchor      = false;
 			public bool Wave        = false;
 			public Color WaveColor   = Color.Empty;

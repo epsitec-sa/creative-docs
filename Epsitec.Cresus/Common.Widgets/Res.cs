@@ -201,7 +201,7 @@ namespace Epsitec.Common.Widgets
 				public static string Bold { get { return Epsitec.Common.Widgets.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (70)); } }
 				public static string ButtonBold { get { return Epsitec.Common.Widgets.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (67)); } }
 				public static string ButtonItalic { get { return Epsitec.Common.Widgets.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (68)); } }
-				public static string ButtonUnderlined { get { return Epsitec.Common.Widgets.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (69)); } }
+				public static string ButtonUnderline { get { return Epsitec.Common.Widgets.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (69)); } }
 				public static string Color { get { return Epsitec.Common.Widgets.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (74)); } }
 				public static string DefaultColor { get { return Epsitec.Common.Widgets.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (73)); } }
 				public static string FontDefault { get { return Epsitec.Common.Widgets.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (79)); } }
@@ -211,7 +211,7 @@ namespace Epsitec.Common.Widgets
 				public static string ListFix { get { return Epsitec.Common.Widgets.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (76)); } }
 				public static string ListNum { get { return Epsitec.Common.Widgets.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (75)); } }
 				public static string Tab { get { return Epsitec.Common.Widgets.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (64)); } }
-				public static string Underlined { get { return Epsitec.Common.Widgets.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (72)); } }
+				public static string Underline { get { return Epsitec.Common.Widgets.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (72)); } }
 				public static class Tooltip
 				{
 					public static string Deleted { get { return Epsitec.Common.Widgets.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (78)); } }

@@ -278,10 +278,10 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		public bool EditUnderlined()
+		public bool EditUnderline()
 		{
 			//	Souligne pendant l'édition.
-			this.textNavigator.SelectionUnderlined = !this.textNavigator.SelectionUnderlined;
+			this.textNavigator.SelectionUnderline = !this.textNavigator.SelectionUnderline;
 			return true;
 		}
 		#endregion

@@ -149,7 +149,7 @@
   <data name="Action.DeleteCulture" id="0F1">Supprimer la culture sélectionnée</data>
   <data name="Action.FontBold" id="0G1">Gras</data>
   <data name="Action.FontItalic" id="0H1">Italique</data>
-  <data name="Action.FontUnderlined" id="0I1">Souligné</data>
+  <data name="Action.FontUnderline" id="0I1">Souligné</data>
   <data name="Action.DesignerGlyphs" id="0J1">Caractères spéciaux...</data>
   <data name="Action.Filter" id="0K1">Filtrer les ressources visibles...</data>
   <data name="Action.Search" id="0L1">Rechercher et remplacer...</data>

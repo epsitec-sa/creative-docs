@@ -107,7 +107,7 @@ namespace Epsitec.Common.Document
 				public static string FontInvertItalic { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1063)); } }
 				public static string FontItalic { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1061)); } }
 				public static string FontMain { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1053)); } }
-				public static string FontOverlined { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1065)); } }
+				public static string FontOverline { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1065)); } }
 				public static string Fonts { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (932)); } }
 				public static string FontSize { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1057)); } }
 				public static string FontSizeMinus { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1059)); } }
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Document
 				public static string FontStyle { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1055)); } }
 				public static string FontSubscript { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1068)); } }
 				public static string FontSuperscript { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1069)); } }
-				public static string FontUnderlined { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1064)); } }
+				public static string FontUnderline { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1064)); } }
 				public static string FontUserX { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1070)); } }
 				public static string FontUserY { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1071)); } }
 				public static string FontUserZ { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1072)); } }
@@ -2255,7 +2255,7 @@ namespace Epsitec.Common.Document
 					public static string Title { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (588)); } }
 					public static class Long
 					{
-						public static class Overlined
+						public static class Overline
 						{
 							public static string Position { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (600)); } }
 							public static string Thickness { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (599)); } }
@@ -2267,7 +2267,7 @@ namespace Epsitec.Common.Document
 							public static string Thickness { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (597)); } }
 						}
 						
-						public static class Underlined
+						public static class Underline
 						{
 							public static string Position { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (596)); } }
 							public static string Thickness { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (595)); } }
@@ -2276,7 +2276,7 @@ namespace Epsitec.Common.Document
 					
 					public static class Short
 					{
-						public static class Overlined
+						public static class Overline
 						{
 							public static string Position { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (594)); } }
 							public static string Thickness { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (593)); } }
@@ -2288,7 +2288,7 @@ namespace Epsitec.Common.Document
 							public static string Thickness { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (591)); } }
 						}
 						
-						public static class Underlined
+						public static class Underline
 						{
 							public static string Position { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (590)); } }
 							public static string Thickness { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (589)); } }
@@ -2297,7 +2297,7 @@ namespace Epsitec.Common.Document
 					
 					public static class Tooltip
 					{
-						public static class Overlined
+						public static class Overline
 						{
 							public static string Color { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (609)); } }
 							public static string Position { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (608)); } }
@@ -2311,7 +2311,7 @@ namespace Epsitec.Common.Document
 							public static string Thickness { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (604)); } }
 						}
 						
-						public static class Underlined
+						public static class Underline
 						{
 							public static string Color { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (603)); } }
 							public static string Position { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (602)); } }

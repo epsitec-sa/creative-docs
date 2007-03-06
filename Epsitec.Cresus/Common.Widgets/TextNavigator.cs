@@ -264,19 +264,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool								SelectionUnderlined
+		public bool								SelectionUnderline
 		{
 			get
 			{
-				return this.textLayout.IsSelectionUnderlined(this.context);
+				return this.textLayout.IsSelectionUnderline(this.context);
 			}
 
 			set
 			{
-				if ( this.textLayout.IsSelectionUnderlined(this.context) != value )
+				if ( this.textLayout.IsSelectionUnderline(this.context) != value )
 				{
 					this.UndoMemorise(UndoType.AutonomusStyle);
-					this.textLayout.SetSelectionUnderlined(this.context, value);
+					this.textLayout.SetSelectionUnderline(this.context, value);
 					this.OnStyleChanged();
 				}
 			}

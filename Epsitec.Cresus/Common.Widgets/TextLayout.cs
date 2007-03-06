@@ -650,26 +650,26 @@ namespace Epsitec.Common.Widgets
 			this.InsertPutCommand(context, "italic=\"" + state + "\"");
 		}
 
-		internal bool IsSelectionUnderlined(TextLayout.Context context)
+		internal bool IsSelectionUnderline(TextLayout.Context context)
 		{
 			//	Indique si les caractères sélectionnés sont soulignés.
 			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
 			{
-				return this.IsPrepared(context, "underlined");
+				return this.IsPrepared(context, "underline");
 			}
 			else
 			{
 				JustifBlock block = this.SearchJustifBlock(context);
 				if ( block == null )  return false;
-				return block.Underlined;
+				return block.Underline;
 			}
 		}
 
-		internal void SetSelectionUnderlined(TextLayout.Context context, bool underlined)
+		internal void SetSelectionUnderline(TextLayout.Context context, bool underline)
 		{
 			//	Met en souligné ou en normal tous les caractères sélectionnés.
-			string state = underlined ? "yes" : "no";
-			this.InsertPutCommand(context, "underlined=\"" + state + "\"");
+			string state = underline ? "yes" : "no";
+			this.InsertPutCommand(context, "underline=\"" + state + "\"");
 		}
 
 		internal string GetSelectionFontName(TextLayout.Context context)
@@ -1348,7 +1348,7 @@ namespace Epsitec.Common.Widgets
 			this.SetSelectionFontRichColor(context, block.FontColor);
 			this.SetSelectionBold(context, block.Bold);
 			this.SetSelectionItalic(context, block.Italic);
-			this.SetSelectionUnderlined(context, block.Underlined);
+			this.SetSelectionUnderline(context, block.Underline);
 		}
 		
 		
@@ -1667,10 +1667,10 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 
-				if (block.Underlined)
+				if (block.Underline)
 				{
 					Drawing.Point p1, p2;
-					this.UnderlinedPoints (graphics, block, pos, out p1, out p2);
+					this.UnderlinePoints (graphics, block, pos, out p1, out p2);
 					graphics.LineWidth = 1.0;
 					graphics.RichColor = color;
 					graphics.PaintOutline (Drawing.Path.FromLine (p1, p2));
@@ -1679,7 +1679,7 @@ namespace Epsitec.Common.Widgets
 				if (block.Wave)
 				{
 					Drawing.Point p1, p2;
-					this.UnderlinedPoints (graphics, block, pos, out p1, out p2);
+					this.UnderlinePoints (graphics, block, pos, out p1, out p2);
 					graphics.LineWidth = 0.75;
 					if (block.WaveColor.IsEmpty)
 					{
@@ -1732,9 +1732,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		private void UnderlinedPoints(Drawing.IPaintPort graphics, JustifBlock block,
-										Drawing.Point pos,
-										out Drawing.Point p1, out Drawing.Point p2)
+		private void UnderlinePoints(Drawing.IPaintPort graphics, JustifBlock block,
+									 Drawing.Point pos,
+									 out Drawing.Point p1, out Drawing.Point p2)
 		{
 			//	Calcule les points de la ligne pour souligner un bloc.
 			double width = block.Width;
@@ -2618,7 +2618,7 @@ namespace Epsitec.Common.Widgets
 
 			TextLayout.TagComplete(ref result, Tag.Bold,       Tag.BoldEnd,       "<b>", "</b>");
 			TextLayout.TagComplete(ref result, Tag.Italic,     Tag.ItalicEnd,     "<i>", "</i>");
-			TextLayout.TagComplete(ref result, Tag.Underlined, Tag.UnderlinedEnd, "<u>", "</u>");
+			TextLayout.TagComplete(ref result, Tag.Underline,  Tag.UnderlineEnd, "<u>", "</u>");
 			TextLayout.TagComplete(ref result, Tag.Mnemonic,   Tag.MnemonicEnd,   "<m>", "</m>");
 			TextLayout.TagComplete(ref result, Tag.Wave,       Tag.WaveEnd,       "<w>", "</w>");
 
@@ -2731,7 +2731,7 @@ namespace Epsitec.Common.Widgets
 				{
 					case Tag.Bold:
 					case Tag.Italic:
-					case Tag.Underlined:
+					case Tag.Underline:
 					case Tag.Mnemonic:
 					case Tag.Wave:
 					case Tag.Font:
@@ -2741,7 +2741,7 @@ namespace Epsitec.Common.Widgets
 
 					case Tag.BoldEnd:
 					case Tag.ItalicEnd:
-					case Tag.UnderlinedEnd:
+					case Tag.UnderlineEnd:
 					case Tag.MnemonicEnd:
 					case Tag.WaveEnd:
 					case Tag.FontEnd:
@@ -2826,13 +2826,13 @@ namespace Epsitec.Common.Widgets
 						case "<tab/>":   return Tag.Tab;
 						case "<b>":      return Tag.Bold;
 						case "<i>":      return Tag.Italic;
-						case "<u>":      return Tag.Underlined;
+						case "<u>":      return Tag.Underline;
 						case "<m>":      return Tag.Mnemonic;
 						case "<w>":      return Tag.Wave;
 						
 						case "</b>":     return Tag.BoldEnd;
 						case "</i>":     return Tag.ItalicEnd;
-						case "</u>":     return Tag.UnderlinedEnd;
+						case "</u>":     return Tag.UnderlineEnd;
 						case "</m>":     return Tag.MnemonicEnd;
 						case "</w>":     return Tag.WaveEnd;
 						
@@ -3333,22 +3333,22 @@ namespace Epsitec.Common.Widgets
 						supplItem.Italic --;
 						break;
 
-					case Tag.Underlined:
-						supplItem.Underlined ++;
+					case Tag.Underline:
+						supplItem.Underline ++;
 						break;
-					case Tag.UnderlinedEnd:
-						supplItem.Underlined --;
+					case Tag.UnderlineEnd:
+						supplItem.Underline --;
 						break;
 
 					case Tag.Put:
 						if ( parameters != null )
 						{
-							if ( parameters.ContainsKey("face")       )  supplItem.PutFontName   = (string)parameters["face"];
-							if ( parameters.ContainsKey("size")       )  supplItem.PutfontScale  = (string)parameters["size"];
-							if ( parameters.ContainsKey("color")      )  supplItem.PutFontColor  = (string)parameters["color"];
-							if ( parameters.ContainsKey("bold")       )  supplItem.PutBold       = (string)parameters["bold"];
-							if ( parameters.ContainsKey("italic")     )  supplItem.PutItalic     = (string)parameters["italic"];
-							if ( parameters.ContainsKey("underlined") )  supplItem.PutUnderlined = (string)parameters["underlined"];
+							if ( parameters.ContainsKey("face")      )  supplItem.PutFontName   = (string)parameters["face"];
+							if ( parameters.ContainsKey("size")      )  supplItem.PutfontScale  = (string)parameters["size"];
+							if ( parameters.ContainsKey("color")     )  supplItem.PutFontColor  = (string)parameters["color"];
+							if ( parameters.ContainsKey("bold")      )  supplItem.PutBold       = (string)parameters["bold"];
+							if ( parameters.ContainsKey("italic")    )  supplItem.PutItalic     = (string)parameters["italic"];
+							if ( parameters.ContainsKey("underline") )  supplItem.PutUnderline  = (string)parameters["underline"];
 						}
 						break;
 					case Tag.PutEnd:
@@ -3357,7 +3357,7 @@ namespace Epsitec.Common.Widgets
 						supplItem.PutFontColor  = "";
 						supplItem.PutBold       = "";
 						supplItem.PutItalic     = "";
-						supplItem.PutUnderlined = "";
+						supplItem.PutUnderline  = "";
 						break;
 
 					case Tag.None:
@@ -3387,7 +3387,7 @@ namespace Epsitec.Common.Widgets
 
 			supplItem.Bold       = 0;
 			supplItem.Italic     = 0;
-			supplItem.Underlined = 0;
+			supplItem.Underline  = 0;
 			supplItem.Anchor     = 0;
 			supplItem.Wave       = 0;
 			this.SimplifyPutSuppl(buffer, supplCurrent, supplItem);
@@ -3471,9 +3471,9 @@ namespace Epsitec.Common.Widgets
 				buffer.Append(supplItem.IsItalic ? "<i>" : "</i>");
 			}
 
-			if ( supplItem.IsUnderlined != supplCurrent.IsUnderlined )
+			if ( supplItem.IsUnderline != supplCurrent.IsUnderline )
 			{
-				buffer.Append(supplItem.IsUnderlined ? "<u>" : "</u>");
+				buffer.Append(supplItem.IsUnderline ? "<u>" : "</u>");
 			}
 
 			if ( (supplItem.Mnemonic != 0) != (supplCurrent.Mnemonic != 0) )
@@ -3598,14 +3598,14 @@ namespace Epsitec.Common.Widgets
 				case Tag.Italic:		supplItem.Italic ++;	break;
 				case Tag.ItalicEnd:		supplItem.Italic --;	break;
 
-				case Tag.Underlined:
-				case Tag.Mnemonic:		supplItem.Underlined ++;	break;
+				case Tag.Underline:
+				case Tag.Mnemonic:		supplItem.Underline ++;	break;
 					
-				case Tag.UnderlinedEnd:
-				case Tag.MnemonicEnd:	supplItem.Underlined --;	break;
+				case Tag.UnderlineEnd:
+				case Tag.MnemonicEnd:	supplItem.Underline --;	break;
 
-				case Tag.Anchor:		supplItem.Anchor ++;	supplItem.Underlined ++;		break;
-				case Tag.AnchorEnd:		supplItem.Anchor --;	supplItem.Underlined --;		break;
+				case Tag.Anchor:		supplItem.Anchor ++;	supplItem.Underline ++;		break;
+				case Tag.AnchorEnd:		supplItem.Anchor --;	supplItem.Underline --;		break;
 
 				case Tag.Wave:
 					supplItem.Wave ++;
@@ -3692,7 +3692,7 @@ namespace Epsitec.Common.Widgets
 			run.FontColor  = fontItem.FontColor;
 			run.Bold       = supplItem.Bold > 0;
 			run.Italic     = supplItem.Italic > 0;
-			run.Underlined = supplItem.Underlined > 0;
+			run.Underline  = supplItem.Underline > 0;
 			run.Anchor     = supplItem.Anchor > 0;
 			run.Wave       = supplItem.Wave > 0;
 			run.WaveColor  = supplItem.WaveColor;
@@ -3741,7 +3741,7 @@ namespace Epsitec.Common.Widgets
 			block.FontColor  = fontItem.FontColor;
 			block.Bold       = supplItem.Bold>0;
 			block.Italic     = supplItem.Italic>0;
-			block.Underlined = supplItem.Underlined>0;
+			block.Underline  = supplItem.Underline>0;
 			block.Anchor     = supplItem.Anchor>0;
 			block.Wave       = supplItem.Wave>0;
 			block.WaveColor  = supplItem.WaveColor;
@@ -4156,7 +4156,7 @@ noText:
 							block.FontColor  = run.FontColor;
 							block.Bold       = run.Bold;
 							block.Italic     = run.Italic;
-							block.Underlined = run.Underlined;
+							block.Underline  = run.Underline;
 							block.Anchor     = run.Anchor;
 							block.Wave       = run.Wave;
 							block.WaveColor  = run.WaveColor;
@@ -4631,7 +4631,7 @@ noText:
 				{
 					case Tag.Bold:
 					case Tag.Italic:
-					case Tag.Underlined:
+					case Tag.Underline:
 					case Tag.Mnemonic:
 					case Tag.Wave:
 					case Tag.Font:
@@ -4641,7 +4641,7 @@ noText:
 
 					case Tag.BoldEnd:
 					case Tag.ItalicEnd:
-					case Tag.UnderlinedEnd:
+					case Tag.UnderlineEnd:
 					case Tag.MnemonicEnd:
 					case Tag.WaveEnd:
 					case Tag.FontEnd:
@@ -4727,7 +4727,7 @@ noText:
 					array[0].FontColor  = block.GetFontColor ();
 					array[0].Bold       = block.Bold;
 					array[0].Italic     = block.Italic;
-					array[0].Underlined = block.Underlined;
+					array[0].Underline  = block.Underline;
 
 					return array;
 				}
@@ -4748,7 +4748,7 @@ noText:
 					array[index].FontColor  = block.GetFontColor ();
 					array[index].Bold       = block.Bold;
 					array[index].Italic     = block.Italic;
-					array[index].Underlined = block.Underlined;
+					array[index].Underline  = block.Underline;
 
 					index++;
 				}
@@ -4777,7 +4777,7 @@ noText:
 			public Drawing.RichColor		FontColor;
 			public bool						Bold;
 			public bool						Italic;
-			public bool						Underlined;
+			public bool						Underline;
 		}
 		
 
@@ -4795,7 +4795,7 @@ noText:
 			
 			Bold,		BoldEnd,			// <b>...</b>
 			Italic,		ItalicEnd,			// <i>...</i>
-			Underlined,	UnderlinedEnd,		// <u>...</u>
+			Underline,	UnderlineEnd,		// <u>...</u>
 			Mnemonic,	MnemonicEnd,		// <m>...</m>  --> comme <u>...</u>
 			Wave,		WaveEnd,			// <w>...</w> ou <w color="#FF00FF">
 			Font,		FontEnd,			// <font ...>...</font>
@@ -4889,20 +4889,20 @@ noText:
 				}
 			}
 
-			public bool		IsUnderlined
+			public bool		IsUnderline
 			{
 				get
 				{
-					if ( this.PutUnderlined == "yes" )  return true;
-					if ( this.PutUnderlined == "no"  )  return false;
-					return (this.Underlined > 0);
+					if ( this.PutUnderline == "yes" )  return true;
+					if ( this.PutUnderline == "no"  )  return false;
+					return (this.Underline > 0);
 				}
 			}
 
 			
 			public int		Bold          = 0;	// gras si > 0
 			public int		Italic        = 0;	// italique si > 0
-			public int		Underlined    = 0;	// souligné si > 0
+			public int		Underline     = 0;	// souligné si > 0
 			public int		Mnemonic      = 0;	// souligné si > 0
 			public int		Anchor        = 0;	// lien si > 0
 			public string	StringAnchor  = "";
@@ -4913,7 +4913,7 @@ noText:
 			public string	PutFontColor  = "";
 			public string	PutBold       = "";
 			public string	PutItalic     = "";
-			public string	PutUnderlined = "";
+			public string	PutUnderline  = "";
 		}
 
 		//	Fonte servant à refléter les commandes HTML rencontrées.
@@ -4974,7 +4974,7 @@ noText:
 		{
 			public int				Bold       = 0;  // gras si > 0
 			public int				Italic     = 0;  // italique si > 0
-			public int				Underlined = 0;  // souligné si > 0
+			public int				Underline  = 0;  // souligné si > 0
 			public int				Anchor     = 0;  // lien si > 0
 			public int				Wave       = 0;  // vague si > 0
 			public Drawing.Color	WaveColor  = Drawing.Color.Empty;
@@ -5010,7 +5010,7 @@ noText:
 				this.FontColor  = fontItem.FontColor;
 				this.Bold       = supplItem.Bold > 0;
 				this.Italic     = supplItem.Italic > 0;
-				this.Underlined = supplItem.Underlined > 0;
+				this.Underline  = supplItem.Underline > 0;
 				this.Anchor     = supplItem.Anchor > 0;
 				this.Wave       = supplItem.Wave > 0;
 				this.WaveColor  = supplItem.WaveColor;
@@ -5062,7 +5062,7 @@ noText:
 			public Drawing.RichColor		FontColor = Drawing.RichColor.Empty;
 			public bool						Bold;
 			public bool						Italic;
-			public bool						Underlined;
+			public bool						Underline;
 			public bool						Anchor;
 			public bool						Wave;
 			public Drawing.Color			WaveColor = Drawing.Color.Empty;
