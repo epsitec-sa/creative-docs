@@ -49,6 +49,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public void UpdateProgress()
+		{
+			if (this.progressInitialTicks == 0)
+			{
+				this.progressInitialTicks = System.Environment.TickCount;
+			}
+
+			int delta = System.Environment.TickCount-this.progressInitialTicks;
+
+			this.ProgressValue = (delta * 1000.0 / ProgressIndicator.AnimationDuration + 0.5) % 1.0;
+		}
+
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -57,7 +69,10 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected ProgressIndicatorStyle			progressStyle;
-		protected double							progressValue;
+		private const double					AnimationDuration = 2.0;
+
+		private ProgressIndicatorStyle			progressStyle;
+		private double							progressValue;
+		private int								progressInitialTicks;
 	}
 }

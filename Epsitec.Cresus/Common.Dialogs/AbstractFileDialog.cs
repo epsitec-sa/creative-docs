@@ -1281,15 +1281,24 @@ namespace Epsitec.Common.Dialogs
 		private void NextProgressIndicator()
 		{
 			//	Affiche le ProgressIndicator (si nécessaire) puis fait-le avancer.
-			if (!this.progressIndicator.IsVisible)
+			
+			if (this.progressStartTicks == 0)
 			{
-				this.filenameLabel.Visibility = false;
-				this.progressIndicator.Visibility = true;
-				this.progressIndicatorValue = 0;
+				this.progressStartTicks = System.Environment.TickCount;
 			}
 
-			this.progressIndicatorValue += 0.05;
-			this.progressIndicator.ProgressValue = this.progressIndicatorValue;
+			int delta = System.Environment.TickCount - this.progressStartTicks;
+
+			if (delta > 200)
+			{
+				if (!this.progressIndicator.IsVisible)
+				{
+					this.filenameLabel.Visibility = false;
+					this.progressIndicator.Visibility = true;
+				}
+
+				this.progressIndicator.UpdateProgress ();
+			}
 		}
 
 		private void StopProgressIndicator()
@@ -1299,6 +1308,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				this.filenameLabel.Visibility = true;
 				this.progressIndicator.Visibility = false;
+				this.progressStartTicks = 0;
 			}
 		}
 
@@ -2420,7 +2430,7 @@ namespace Epsitec.Common.Dialogs
 		private TextFieldCombo				fieldPath;
 		private StaticText					filenameLabel;
 		private ProgressIndicator			progressIndicator;
-		private double						progressIndicatorValue;
+		private int							progressStartTicks;
 		private TextField					fieldFileName;
 		private TextField					fieldExtension;
 		private TextFieldEx					fieldRename;

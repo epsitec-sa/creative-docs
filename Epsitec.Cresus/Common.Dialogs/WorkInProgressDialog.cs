@@ -215,8 +215,6 @@ namespace Epsitec.Common.Dialogs
 			this.progressIndicator.Dock = DockStyle.Stacked;
 			this.progressIndicator.Margins = new Epsitec.Common.Drawing.Margins (10, 10, 15, 0);
 
-			this.startTicks = System.Environment.TickCount;
-
 			if (this.cancellable)
 			{
 				this.cancelButton = new Button (frame);
@@ -252,7 +250,7 @@ namespace Epsitec.Common.Dialogs
 							break;
 
 						case ProgressIndicatorStyle.UnknownDuration:
-							this.progressIndicator.ProgressValue = ((double)(System.Environment.TickCount-this.startTicks) / 2000.0 + 0.5) % 1.0;
+							this.progressIndicator.UpdateProgress ();
 							break;
 					}
 				};
@@ -356,7 +354,6 @@ namespace Epsitec.Common.Dialogs
 		private string							operationMessage;
 		private string							progressMessage;
 		private double							progressValue;
-		private int								startTicks;
 		private bool							cancelled;
 		private bool							cancellable;
 		private ProgressIndicatorStyle			progressIndicatorStyle;

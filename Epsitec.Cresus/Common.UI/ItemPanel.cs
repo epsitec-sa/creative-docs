@@ -890,9 +890,19 @@ namespace Epsitec.Common.UI
 										index2 = temp;
 									}
 
-									for (int i = index1; i <= index2; i++)
+									if (newIndex < oldIndex)
 									{
-										this.SelectItemView (this.GetItemView (i));
+										for (int i = index2; i >= index1; i--)
+										{
+											this.SelectItemView (this.GetItemView (i));
+										}
+									}
+									else
+									{
+										for (int i = index1; i <= index2; i++)
+										{
+											this.SelectItemView (this.GetItemView (i));
+										}
 									}
 
 									List<ItemView> deselect = new List<ItemView> ();
@@ -914,35 +924,6 @@ namespace Epsitec.Common.UI
 									this.DeselectAllItemViews ();
 									this.SelectItemView (newCurrent);
 								}
-#if false
-								if (message.KeyCode == KeyCode.ArrowUp)
-								{
-									ItemView item = list[0];  // premier item sélectionné
-									if (item.Index > 0)
-									{
-										item = this.GetItemView (item.Index-1);
-										if (!message.IsShiftPressed)
-										{
-											this.DeselectAllItemViews ();
-										}
-										this.SelectItemView (item);
-									}
-								}
-
-								if (message.KeyCode == KeyCode.ArrowDown)
-								{
-									ItemView item = list[list.Count-1];  // dernier item sélectionné
-									if (item.Index < this.GetTotalLineCount ()-1)
-									{
-										item = this.GetItemView (item.Index+1);
-										if (!message.IsShiftPressed)
-										{
-											this.DeselectAllItemViews ();
-										}
-										this.SelectItemView (item);
-									}
-								}
-#endif
 							}
 						}
 
