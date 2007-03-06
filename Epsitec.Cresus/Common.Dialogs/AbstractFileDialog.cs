@@ -688,7 +688,7 @@ namespace Epsitec.Common.Dialogs
 			buttonNext.AutoFocus = false;
 			buttonNext.TabNavigationMode = TabNavigationMode.None;
 			buttonNext.CommandObject = this.nextState.Command;
-			buttonNext.Margins = new Margins(0, -(22+22), 0, 0);
+			buttonNext.Margins = new Margins(0, -(22+22), 0, 0);  // TODO: cette marge négative fait que le bouton disparaît !
 			buttonNext.Dock = DockStyle.Right;
 
 			IconButton buttonPrev = new IconButton (group);

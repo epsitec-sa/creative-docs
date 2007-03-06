@@ -124,17 +124,17 @@ namespace Epsitec.Common.Widgets
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			Direction dir = Direction.None;
-			switch ( this.shape )
-			{
-				case GlyphShape.ArrowUp:     dir = Direction.Up;     break;
-				case GlyphShape.ArrowDown:   dir = Direction.Down;   break;
-				case GlyphShape.ArrowLeft:   dir = Direction.Left;   break;
-				case GlyphShape.ArrowRight:  dir = Direction.Right;  break;
-			}
-			
 			if ( this.ButtonStyle != ButtonStyle.None )
 			{
+				Direction dir = Direction.None;
+				switch ( this.shape )
+				{
+					case GlyphShape.ArrowUp:     dir = Direction.Up;     break;
+					case GlyphShape.ArrowDown:   dir = Direction.Down;   break;
+					case GlyphShape.ArrowLeft:   dir = Direction.Left;   break;
+					case GlyphShape.ArrowRight:  dir = Direction.Right;  break;
+				}
+			
 				adorner.PaintButtonBackground (graphics, this.Client.Bounds, this.PaintState, dir, this.ButtonStyle);
 			}
 
@@ -143,6 +143,7 @@ namespace Epsitec.Common.Widgets
 
 		protected Rectangle GlyphBounds
 		{
+			//	Retourne le rectangle à utiliser pour le glyph, en tenant compte de GlyphSize et ContentAlignment.
 			get
 			{
 				Rectangle rect = this.Client.Bounds;
