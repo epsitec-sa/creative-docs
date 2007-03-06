@@ -546,9 +546,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Platform\WindowManagerOperation.cs" />
-    <Compile Include="ProgressBar.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="RadioButton.cs">
       <SubType>Code</SubType>
     </Compile>

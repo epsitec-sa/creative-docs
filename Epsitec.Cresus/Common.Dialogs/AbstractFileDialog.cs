@@ -197,7 +197,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		
+
 		public DialogResult ShowDialog()
 		{
 			if (this.window == null)
@@ -324,16 +324,16 @@ namespace Epsitec.Common.Dialogs
 			this.window.Text = (title == null) ? this.title : title;
 			this.window.Owner = owner;
 			this.window.Icon = owner == null ? null : this.window.Owner.Icon;
-			
+
 			this.SetWindowGeometry (windowSize.Width, windowSize.Height, true);
-			
+
 			this.window.WindowCloseClicked += new EventHandler (this.HandleWindowCloseClicked);
 
 			this.timer = new Timer ();
 			this.timer.TimeElapsed += this.HandleTimerTimeElapsed;
 			this.timer.Delay = AbstractFileDialog.TimerRefreshRate;
 			this.timer.AutoRepeat = AbstractFileDialog.TimerRefreshRate;
-			
+
 			this.CreateCommandDispatcher ();
 			this.CreateResizer ();
 			this.CreateAccess ();
@@ -344,33 +344,6 @@ namespace Epsitec.Common.Dialogs
 			//	Dans l'ordre de bas en haut :
 			this.CreateFooter ();
 			this.CreateOptionsUserInterface ();
-		}
-
-		private void HandleTimerTimeElapsed(object sender)
-		{
-			bool refresh = false;
-
-			lock (this.exclusion)
-			{
-				if (this.fileListJobs.Count == 0)
-				{
-					this.timer.Stop ();
-				}
-			}
-
-			if (this.refreshRequested)
-			{
-				Epsitec.Common.Widgets.Application.QueueAsyncCallback (this.AsyncRefresh);
-			}
-		}
-
-		private void AsyncRefresh()
-		{
-			if (this.refreshRequested)
-			{
-				this.refreshRequested = false;
-				this.filesCollectionView.Refresh ();
-			}
 		}
 
 		protected virtual void CreateOptionsUserInterface()
@@ -549,9 +522,9 @@ namespace Epsitec.Common.Dialogs
 						{
 							if (this.timer.State != TimerState.Running)
 							{
-								Epsitec.Common.Widgets.Application.QueueAsyncCallback (this.AsyncRefresh);
+								Epsitec.Common.Widgets.Application.QueueAsyncCallback (this.AsyncRefreshCollectionView);
 							}
-							
+
 							this.refreshRequested = true;
 							this.timer.Start ();
 						}
@@ -559,6 +532,45 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		private void HandleTimerTimeElapsed(object sender)
+		{
+			bool refresh = false;
+			bool stopped = false;
+
+			lock (this.exclusion)
+			{
+				if (this.fileListJobs.Count == 0)
+				{
+					this.timer.Stop ();
+					stopped = true;
+				}
+			}
+
+			if (this.refreshRequested)
+			{
+				Epsitec.Common.Widgets.Application.QueueAsyncCallback (this.AsyncRefreshCollectionView);
+			}
+
+			this.OnTimerTicked ();
+
+			if (stopped)
+			{
+				this.OnTimerStopped ();
+			}
+		}
+
+		
+		private void OnTimerTicked()
+		{
+			//	TODO: repeindre le ProgressIndicator
+		}
+
+		private void OnTimerStopped()
+		{
+			//	TODO: cacher le ProgressIndicator
+		}
+
+		
 		private void HandleFilesItemTableSelectionChanged(object sender)
 		{
 			this.UpdateAfterSelectionChanged ();
@@ -772,21 +784,21 @@ namespace Epsitec.Common.Dialogs
 			//	Crée le pied du dialogue, avec les boutons 'ouvrir/enregistrer' et 'annuler'.
 			Widget footer = new Widget (this.window.Root);
 			footer.PreferredHeight = 22;
-			footer.Margins = new Margins(0, 0, 8, 0);
+			footer.Margins = new Margins (0, 0, 8, 0);
 			footer.Dock = DockStyle.Bottom;
 			footer.TabIndex = 6;
 			footer.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.CreateFooterOptions (footer);
 
-			StaticText label = new StaticText(footer);
+			StaticText label = new StaticText (footer);
 			label.Text = this.FileTypeLabel;
 			label.PreferredWidth = AbstractFileDialog.LeftColumnWidth-10;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Dock = DockStyle.Left;
 			label.Margins = new Margins (0, 10, 0, 0);
 
-			this.fieldFileName = new TextField(footer);
+			this.fieldFileName = new TextField (footer);
 			this.fieldFileName.Dock = DockStyle.Fill;
 			this.fieldFileName.AutoFocus = true;
 			this.fieldFileName.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
@@ -816,17 +828,17 @@ namespace Epsitec.Common.Dialogs
 			this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.buttonOk.Enable = false;
 
-			this.fieldExtension = new TextField(footer);
+			this.fieldExtension = new TextField (footer);
 			this.fieldExtension.AutoFocus = false;
 			this.fieldExtension.TabNavigationMode = TabNavigationMode.None;
 			this.fieldExtension.IsReadOnly = true;
-			this.fieldExtension.Text = this.NiceFileExtension(true);
+			this.fieldExtension.Text = this.NiceFileExtension (true);
 			this.fieldExtension.PreferredWidth = this.IsMultipleExtensions ? 100 : 44;
-			this.fieldExtension.Margins = new Margins(-1, 10, 0, 0);
+			this.fieldExtension.Margins = new Margins (-1, 10, 0, 0);
 			this.fieldExtension.Dock = DockStyle.Right;
 			if (this.IsMultipleExtensions)
 			{
-				ToolTip.Default.SetToolTip(this.fieldExtension, this.NiceFileExtension(false));
+				ToolTip.Default.SetToolTip (this.fieldExtension, this.NiceFileExtension (false));
 			}
 		}
 
@@ -840,14 +852,14 @@ namespace Epsitec.Common.Dialogs
 			//	Retourne true s'il existe plus d'une extension.
 			get
 			{
-				return this.fileFilterPattern.IndexOf("|") != -1;
+				return this.fileFilterPattern.IndexOf ("|") != -1;
 			}
 		}
 
 		private string NiceFileExtension(bool summary)
 		{
 			//	Retourne ce qu'il faut afficher comme extension.
-			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			System.Text.StringBuilder builder = new System.Text.StringBuilder ();
 			int founded = 0;
 
 			for (int i=0; i<this.fileFilterPattern.Length; i++)
@@ -859,21 +871,21 @@ namespace Epsitec.Common.Dialogs
 				}
 				else if (this.fileFilterPattern[i] == '|')
 				{
-					builder.Append(' ');
+					builder.Append (' ');
 
 					if (summary && founded > 3)
 					{
-						builder.Append("...");
+						builder.Append ("...");
 						break;
 					}
 				}
 				else
 				{
-					builder.Append(this.fileFilterPattern[i]);
+					builder.Append (this.fileFilterPattern[i]);
 				}
 			}
-			
-			return builder.ToString();
+
+			return builder.ToString ();
 		}
 
 		private void SelectFileNameInTable(string fileNameToSelect)
@@ -1053,6 +1065,15 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		private void AsyncRefreshCollectionView()
+		{
+			if (this.refreshRequested)
+			{
+				this.refreshRequested = false;
+				this.filesCollectionView.Refresh ();
+			}
+		}
+
 		private void UpdateFileList()
 		{
 			if (this.files != null)
@@ -1166,6 +1187,7 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			this.timer.Stop ();
+			this.OnTimerStopped ();
 		}
 
 		private delegate bool CancelCallback();
@@ -1274,11 +1296,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				foreach (FolderItem item in FileManager.GetFolderItems (this.initialDirectory, settings.FolderQueryMode, filter))
 				{
-					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
-					watch.Start ();
 					settings.Process (this.files, item);
-					watch.Stop ();
-					System.Diagnostics.Debug.WriteLine (string.Format ("{0}: {1} ms", item.FullPath, watch.ElapsedMilliseconds));
 				}
 			}
 			catch (System.Threading.ThreadInterruptedException)
@@ -1409,11 +1427,11 @@ namespace Epsitec.Common.Dialogs
 				{
 					if (this.IsMultipleExtensions)  // plusieurs extensions ?
 					{
-						this.fieldFileName.Text = TextLayout.ConvertToTaggedText(this.initialFileName);
+						this.fieldFileName.Text = TextLayout.ConvertToTaggedText (this.initialFileName);
 					}
 					else  // une seule extension ?
 					{
-						this.fieldFileName.Text = TextLayout.ConvertToTaggedText(System.IO.Path.GetFileNameWithoutExtension(this.initialFileName));
+						this.fieldFileName.Text = TextLayout.ConvertToTaggedText (System.IO.Path.GetFileNameWithoutExtension (this.initialFileName));
 					}
 				}
 			}
@@ -1788,7 +1806,7 @@ namespace Epsitec.Common.Dialogs
 				}
 
 				if (this.fileExtension != null &&
-					!name.ToLowerInvariant().EndsWith(this.fileExtension) &&
+					!name.ToLowerInvariant ().EndsWith (this.fileExtension) &&
 					!System.IO.File.Exists (name))
 				{
 					name = string.Concat (name, this.fileExtension);
@@ -2284,7 +2302,7 @@ namespace Epsitec.Common.Dialogs
 						return false;
 					}
 				});
-			
+
 			this.fieldPath.Text = AbstractFileDialog.RemoveStartingIndent (this.fieldPath.Text);
 		}
 
@@ -2354,12 +2372,12 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		public static readonly string NewEmptyDocument = "#NewEmptyDocument#";
-		
+
 		private static readonly double LeftColumnWidth = 145;
 		private static readonly double TimerRefreshRate = 0.1;
 
 		protected Window window;
-		
+
 		private GlyphButton toolbarExtend;
 		private HToolBar toolbar;
 		private GlyphButton navigateCombo;
@@ -2381,7 +2399,7 @@ namespace Epsitec.Common.Dialogs
 
 		protected bool enableNavigation;
 		protected bool enableMultipleSelection;
-		
+
 		private bool isRedirected;
 		private FolderItem initialDirectory;
 		private FolderItemIcon initialSmallIcon;
