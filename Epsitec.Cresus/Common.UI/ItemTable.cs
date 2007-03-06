@@ -223,6 +223,20 @@ namespace Epsitec.Common.UI
 			return this.defaultItemSize;
 		}
 
+		protected override void ProcessMessage(Epsitec.Common.Widgets.Message message, Epsitec.Common.Drawing.Point pos)
+		{
+			base.ProcessMessage(message, pos);
+
+			if (message.MessageType == Epsitec.Common.Widgets.MessageType.MouseWheel)
+			{
+				if (this.vScroller.IsVisible)
+				{
+					if ( message.Wheel < 0 )  this.vScroller.Value += this.vScroller.SmallChange;
+					if ( message.Wheel > 0 )  this.vScroller.Value -= this.vScroller.SmallChange;
+				}
+			}
+		}
+
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			base.PaintBackgroundImplementation (graphics, clipRect);

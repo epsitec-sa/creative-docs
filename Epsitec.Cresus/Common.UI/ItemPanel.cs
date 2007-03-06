@@ -820,11 +820,6 @@ namespace Epsitec.Common.UI
 				}
 			}
 
-			if (message.MessageType == Epsitec.Common.Widgets.MessageType.MouseWheel)
-			{
-				//	TODO: bouger l'ascenseur vertical...
-			}
-
 			if (message.MessageType == Epsitec.Common.Widgets.MessageType.KeyDown)
 			{
 				//	TODO: ne fonctionne pas, car le widget n'a pas le focus !
