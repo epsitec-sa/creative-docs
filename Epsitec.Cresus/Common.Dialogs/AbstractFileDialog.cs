@@ -328,6 +328,11 @@ namespace Epsitec.Common.Dialogs
 			this.SetWindowGeometry (windowSize.Width, windowSize.Height, true);
 			
 			this.window.WindowCloseClicked += new EventHandler (this.HandleWindowCloseClicked);
+
+			this.timer = new Timer ();
+			this.timer.TimeElapsed += this.HandleTimerTimeElapsed;
+			this.timer.Delay = AbstractFileDialog.TimerRefreshRate;
+			this.timer.AutoRepeat = AbstractFileDialog.TimerRefreshRate;
 			
 			this.CreateCommandDispatcher ();
 			this.CreateResizer ();
@@ -339,6 +344,29 @@ namespace Epsitec.Common.Dialogs
 			//	Dans l'ordre de bas en haut :
 			this.CreateFooter ();
 			this.CreateOptionsUserInterface ();
+		}
+
+		private void HandleTimerTimeElapsed(object sender)
+		{
+			bool refresh = false;
+
+			lock (this.exclusion)
+			{
+				refresh = this.refreshRequested;
+
+				this.refreshRequested = false;
+
+				if (this.fileListJobs.Count == 0)
+				{
+					this.timer.Stop ();
+				}
+			}
+
+			if (refresh)
+			{
+				Epsitec.Common.Widgets.Application.QueueAsyncCallback (this.filesCollectionView.Refresh);
+				System.Diagnostics.Debug.WriteLine ("Tick...");
+			}
 		}
 
 		protected virtual void CreateOptionsUserInterface()
@@ -511,14 +539,14 @@ namespace Epsitec.Common.Dialogs
 				this.filesCollectionView.CurrentChanged += this.HandleFilesCollectionViewCurrentChanged;
 
 				this.filesCollectionView.InvalidationHandler =
-				delegate (Epsitec.Common.Types.CollectionView cv)
-				{
-					Epsitec.Common.Widgets.Application.QueueAsyncCallback (
-						delegate ()
+					delegate (Epsitec.Common.Types.CollectionView cv)
+					{
+						lock (this.exclusion)
 						{
-							cv.Refresh ();
-						});
-				};
+							this.refreshRequested = true;
+							this.timer.Start ();
+						}
+					};
 			}
 		}
 
@@ -1104,7 +1132,7 @@ namespace Epsitec.Common.Dialogs
 
 		private void AddJob(FileListJob job)
 		{
-			lock (this.fileListJobs)
+			lock (this.exclusion)
 			{
 				this.fileListJobs.Add (job);
 			}
@@ -1112,7 +1140,7 @@ namespace Epsitec.Common.Dialogs
 
 		private void RemoveJob(FileListJob job)
 		{
-			lock (this.fileListJobs)
+			lock (this.exclusion)
 			{
 				this.fileListJobs.Remove (job);
 			}
@@ -1120,13 +1148,15 @@ namespace Epsitec.Common.Dialogs
 
 		private void CancelPendingJobs()
 		{
-			lock (this.fileListJobs)
+			lock (this.exclusion)
 			{
 				foreach (FileListJob job in this.fileListJobs)
 				{
 					job.Cancel ();
 				}
 			}
+
+			this.timer.Stop ();
 		}
 
 		private delegate bool CancelCallback();
@@ -1136,18 +1166,28 @@ namespace Epsitec.Common.Dialogs
 		{
 			public static void Start(AbstractFileDialog dialog, CancellableProcessCallback process)
 			{
-				new FileListJob (dialog, process);
+				FileListJob job = new FileListJob (dialog, process);
+
+				job.Register ();
+				job.Begin ();
 			}
 
-			public FileListJob(AbstractFileDialog dialog, CancellableProcessCallback process)
+			private FileListJob(AbstractFileDialog dialog, CancellableProcessCallback process)
 			{
 				this.dialog = dialog;
 				this.process = process;
 				this.running = true;
 				this.callback = new JobCallback (this.ProcessJob);
+			}
 
+			private void Register()
+			{
 				this.dialog.AddJob (this);
+			}
 
+			private void Begin()
+			{
+				this.dialog.timer.Start ();
 				this.callback.BeginInvoke (this.ProcessResult, null);
 			}
 
@@ -1195,7 +1235,7 @@ namespace Epsitec.Common.Dialogs
 			JobCallback callback;
 			bool running;
 			bool interrupted;
-			bool cancelRequested;
+			volatile bool cancelRequested;
 		}
 
 
@@ -2305,7 +2345,9 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		public static readonly string NewEmptyDocument = "#NewEmptyDocument#";
+		
 		private static readonly double LeftColumnWidth = 145;
+		private static readonly double TimerRefreshRate = 0.1;
 
 		protected Window window;
 		
@@ -2321,6 +2363,9 @@ namespace Epsitec.Common.Dialogs
 		private TextFieldEx fieldRename;
 		private Button buttonOk;
 		private Button buttonCancel;
+		private Timer timer;
+		private readonly object exclusion = new object ();
+		private bool refreshRequested;
 
 		private string fileExtension;
 		private string fileFilterPattern;
