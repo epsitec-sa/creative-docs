@@ -704,6 +704,8 @@ namespace Epsitec.Common.UI
 
 		protected virtual void HandleItemCollectionCurrentChanged(object sender)
 		{
+			this.Invalidate ();
+
 			if (this.CurrentChanged != null)
 			{
 				this.CurrentChanged (this);
@@ -1074,7 +1076,10 @@ namespace Epsitec.Common.UI
 					}
 					if (view.Item == focusedItem)
 					{
-						state |= WidgetPaintState.Focused;
+						if (this.IsFocused)
+						{
+							state |= WidgetPaintState.Focused;
+						}
 					}
 					if (view == this.enteredItem)
 					{
