@@ -67,6 +67,7 @@ namespace Epsitec.Common.Widgets
 		
 		public GlyphShape						GlyphShape
 		{
+			//	Forme représentée dans le bouton.
 			get
 			{
 				return this.shape;
@@ -83,6 +84,8 @@ namespace Epsitec.Common.Widgets
 
 		public Size								GlyphSize
 		{
+			//	Taille de la forme dans le bouton. Utile lorsque la forme est plus petite que le bouton,
+			//	et qu'elle est éventuellement décentrée avec ContentAlignment.
 			get
 			{
 				return this.glyphSize;
@@ -140,28 +143,28 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.ContentAlignment == ContentAlignment.MiddleLeft ||
 					this.ContentAlignment == ContentAlignment.BottomLeft ||
-					this.ContentAlignment == ContentAlignment.TopLeft)
+					this.ContentAlignment == ContentAlignment.TopLeft    )
 				{
 					rect.Width = this.glyphSize.Width;
 				}
 
 				if (this.ContentAlignment == ContentAlignment.MiddleRight ||
 					this.ContentAlignment == ContentAlignment.BottomRight ||
-					this.ContentAlignment == ContentAlignment.TopRight)
+					this.ContentAlignment == ContentAlignment.TopRight    )
 				{
 					rect.Left = rect.Right-this.glyphSize.Width;
 				}
 
 				if (this.ContentAlignment == ContentAlignment.BottomCenter ||
 					this.ContentAlignment == ContentAlignment.BottomLeft   ||
-					this.ContentAlignment == ContentAlignment.BottomRight)
+					this.ContentAlignment == ContentAlignment.BottomRight  )
 				{
 					rect.Height = this.glyphSize.Height;
 				}
 
 				if (this.ContentAlignment == ContentAlignment.TopCenter ||
 					this.ContentAlignment == ContentAlignment.TopLeft   ||
-					this.ContentAlignment == ContentAlignment.TopRight)
+					this.ContentAlignment == ContentAlignment.TopRight  )
 				{
 					rect.Bottom = rect.Top-this.glyphSize.Height;
 				}
