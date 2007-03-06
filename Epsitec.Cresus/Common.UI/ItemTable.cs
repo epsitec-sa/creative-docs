@@ -24,12 +24,7 @@ namespace Epsitec.Common.UI
 		/// </summary>
 		public ItemTable()
 		{
-			this.AutoFocus  = true;
-			this.AutoEngage = true;
 			this.AutoDoubleClick = true;
-			
-			this.InternalState |= InternalState.Focusable;
-			this.InternalState |= InternalState.Engageable;
 
 			this.vScroller = new VScroller (this);
 			this.hScroller = new HScroller (this);
@@ -56,6 +51,7 @@ namespace Epsitec.Common.UI
 			this.itemPanel.ApertureChanged += this.HandleItemPanelApertureChanged;
 			this.itemPanel.ContentsSizeChanged += this.HandleContentsSizeChanged;
 			this.itemPanel.CurrentChanged += this.HandleItemPanelCurrentChanged;
+			this.itemPanel.Clicked += this.HandleItemPanelClicked;
 			
 			this.itemPanel.Layout = ItemPanelLayout.VerticalList;
 			this.itemPanel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne;
@@ -235,26 +231,25 @@ namespace Epsitec.Common.UI
 		{
 			base.ProcessMessage(message, pos);
 
-			if (message.MessageType == MessageType.MouseWheel)
+			if (message.IsMouseType)
 			{
-				if (this.vScroller.IsVisible)
+				if (message.MessageType == MessageType.MouseWheel)
 				{
-					if ( message.Wheel < 0 )  this.vScroller.Value += this.vScroller.SmallChange;
-					if ( message.Wheel > 0 )  this.vScroller.Value -= this.vScroller.SmallChange;
-				}
-			}
+					if (this.vScroller.IsVisible)
+					{
+						if (message.Wheel < 0)
+						{
+							this.vScroller.Value += this.vScroller.SmallChange;
+						}
 
-			if (message.MessageType == MessageType.KeyDown && message.IsControlPressed && !message.IsShiftPressed)
-			{
-				if (message.KeyCode == KeyCode.ArrowUp)
-				{
-					this.vScroller.Value -= this.vScroller.SmallChange;
+						if (message.Wheel > 0)
+						{
+							this.vScroller.Value -= this.vScroller.SmallChange;
+						}
+					}
 				}
 
-				if (message.KeyCode == KeyCode.ArrowDown)
-				{
-					this.vScroller.Value += this.vScroller.SmallChange;
-				}
+				message.Consumer = this;
 			}
 		}
 
@@ -595,6 +590,11 @@ namespace Epsitec.Common.UI
 		private void HandleItemPanelApertureChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			this.SynchronizeScrollers ((Rectangle) e.NewValue);
+		}
+
+		private void HandleItemPanelClicked(object sender, MessageEventArgs e)
+		{
+			this.itemPanel.Focus ();
 		}
 
 		private void HandleItemPanelCurrentChanged(object sender)

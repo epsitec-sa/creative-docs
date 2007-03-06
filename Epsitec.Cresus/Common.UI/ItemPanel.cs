@@ -21,12 +21,8 @@ namespace Epsitec.Common.UI
 	{
 		public ItemPanel()
 		{
-			this.AutoFocus  = true;
-			this.AutoEngage = true;
 			this.AutoDoubleClick = true;
-			
 			this.InternalState |= InternalState.Focusable;
-			this.InternalState |= InternalState.Engageable;
 		}
 
 		public ItemPanel(Widget embedder)
@@ -757,9 +753,9 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected override void OnClicked(MessageEventArgs e)
+		protected override void OnPressed(MessageEventArgs e)
 		{
-			base.OnClicked (e);
+			base.OnPressed (e);
 
 			if (!e.Suppress)
 			{
@@ -769,45 +765,7 @@ namespace Epsitec.Common.UI
 
 					if (view != null)
 					{
-						bool select = !view.IsSelected;
-						bool action = false;
-
-						switch (this.SelectionBehavior)
-						{
-							case ItemPanelSelectionBehavior.Automatic:
-								action = true;
-								break;
-
-							case ItemPanelSelectionBehavior.Manual:
-								action = true;
-								if (!e.Message.IsControlPressed)
-								{
-									this.DeselectAllItemViews ();
-								}
-								break;
-							
-							case ItemPanelSelectionBehavior.ManualOne:
-								action = true;
-								if (!e.Message.IsControlPressed)
-								{
-									this.DeselectAllItemViews ();
-									select = true;
-								}
-								break;
-						}
-
-						if (action)
-						{
-							if (select)
-							{
-								this.SelectItemView (view);
-							}
-							else
-							{
-								this.DeselectItemView (view);
-							}
-						}
-						
+						this.ManualSelection (view, e.Message.IsControlPressed);
 						e.Message.Consumer = this;
 					}
 				}
@@ -818,49 +776,216 @@ namespace Epsitec.Common.UI
 		{
 			base.ProcessMessage(message, pos);
 
-			if (message.MessageType == MessageType.MouseMove)
+			if (message.IsMouseType)
 			{
-				ItemView item = this.Detect(pos);
-				if (this.enteredItem != item)
+				if (message.MessageType == MessageType.MouseDown)
 				{
-					this.enteredItem = item;
-					this.Invalidate();
+					this.Focus ();
+				}
+
+				if ((message.MessageType == MessageType.MouseMove) &&
+					(message.Button == MouseButtons.None))
+				{
+					ItemView item = this.Detect (pos);
+
+					if (this.enteredItem != item)
+					{
+						this.enteredItem = item;
+						this.Invalidate ();
+					}
+				}
+			}
+			else if (message.IsKeyType)
+			{
+				if (message.MessageType == MessageType.KeyDown)
+				{
+					if (message.KeyCode == KeyCode.Space)
+					{
+						//	Behaves as if the user had pressed the mouse button; this will
+						//	either select just the current item or add/remove the item from
+						//	the selection if CTRL is pressed.
+
+						ItemView view = this.GetCurrentItemView ();
+						this.ManualSelection (view, message.IsControlPressed);
+					}
+					else
+					{
+						//	Change the current item (this does not select the item).
+
+						ItemView oldCurrent = this.GetCurrentItemView ();
+						
+						switch (message.KeyCode)
+						{
+							case KeyCode.ArrowUp:
+								this.Items.MoveCurrentToPrevious ();
+								break;
+
+							case KeyCode.ArrowDown:
+								this.Items.MoveCurrentToNext ();
+								break;
+
+							case KeyCode.Home:
+								this.Items.MoveCurrentToFirst ();
+								break;
+
+							case KeyCode.End:
+								this.Items.MoveCurrentToLast ();
+								break;
+
+							case KeyCode.PageUp:
+							case KeyCode.PageDown:
+								//	TODO: déplace sur le premier/dernier visible entièrement ou, s'il est
+								//	déjà l'élément courant, une page avant/après, en tenant compte de la
+								//	géométrie des items...
+								break;
+						}
+
+						ItemView newCurrent = this.GetCurrentItemView ();
+						
+						if ((!message.IsControlPressed) &&
+							(!message.IsAltPressed))
+						{
+							IList<ItemView> list = this.GetSelectedItemViews ();
+
+							
+							
+							if (list.Count > 0)
+							{
+								ItemView first = ItemPanel.GetFirstSelectedItemView (list);
+								ItemView last  = ItemPanel.GetLastSelectedItemView (list);
+
+								if (message.KeyCode == KeyCode.ArrowUp)
+								{
+									ItemView item = list[0];  // premier item sélectionné
+									if (item.Index > 0)
+									{
+										item = this.GetItemView (item.Index-1);
+										if (!message.IsShiftPressed)
+										{
+											this.DeselectAllItemViews ();
+										}
+										this.SelectItemView (item);
+									}
+								}
+
+								if (message.KeyCode == KeyCode.ArrowDown)
+								{
+									ItemView item = list[list.Count-1];  // dernier item sélectionné
+									if (item.Index < this.GetTotalLineCount ()-1)
+									{
+										item = this.GetItemView (item.Index+1);
+										if (!message.IsShiftPressed)
+										{
+											this.DeselectAllItemViews ();
+										}
+										this.SelectItemView (item);
+									}
+								}
+							}
+						}
+					}
+
+					this.Show (newCurrent);
+				}
+			}
+		}
+
+		private void ManualSelection(ItemView view, bool expand)
+		{
+			if (view == null)
+			{
+				return;
+			}
+			
+			bool select = !view.IsSelected;
+			bool action = false;
+
+			switch (this.SelectionBehavior)
+			{
+				case ItemPanelSelectionBehavior.Automatic:
+					action = true;
+					break;
+
+				case ItemPanelSelectionBehavior.Manual:
+					action = true;
+					if (!expand)
+					{
+						this.DeselectAllItemViews ();
+					}
+					break;
+
+				case ItemPanelSelectionBehavior.ManualOne:
+					action = true;
+					if (!expand)
+					{
+						this.DeselectAllItemViews ();
+						select = true;
+					}
+					break;
+			}
+
+			if (action)
+			{
+				if (select)
+				{
+					this.SelectItemView (view);
+				}
+				else
+				{
+					this.DeselectItemView (view);
+				}
+			}
+		}
+
+		private static ItemView GetFirstSelectedItemView(IEnumerable<ItemView> list)
+		{
+			int      index = int.MaxValue;
+			ItemView found = null;
+
+			foreach (ItemView view in list)
+			{
+				if (view.Index < index)
+				{
+					index = view.Index;
+					found = view;
 				}
 			}
 
-			if (message.MessageType == MessageType.KeyDown && !message.IsControlPressed)
-			{
-				IList<ItemView> list = this.GetSelectedItemViews();
-				if (list.Count > 0)
-				{
-					if (message.KeyCode == KeyCode.ArrowUp)
-					{
-						ItemView item = list[0];  // premier item sélectionné
-						if (item.Index > 0)
-						{
-							item = this.GetItemView(item.Index-1);
-							if (!message.IsShiftPressed)
-							{
-								this.DeselectAllItemViews();
-							}
-							this.SelectItemView(item);
-						}
-					}
+			return found;
+		}
 
-					if (message.KeyCode == KeyCode.ArrowDown)
-					{
-						ItemView item = list[list.Count-1];  // dernier item sélectionné
-						if (item.Index < this.GetTotalLineCount()-1)
-						{
-							item = this.GetItemView(item.Index+1);
-							if (!message.IsShiftPressed)
-							{
-								this.DeselectAllItemViews();
-							}
-							this.SelectItemView(item);
-						}
-					}
+		private static ItemView GetLastSelectedItemView(IEnumerable<ItemView> list)
+		{
+			int      index = -1;
+			ItemView found = null;
+
+			foreach (ItemView view in list)
+			{
+				if (view.Index > index)
+				{
+					index = view.Index;
+					found = view;
 				}
+			}
+
+			return found;
+		}
+		
+		private ItemView GetCurrentItemView()
+		{
+			object item = this.Items.CurrentItem;
+
+			if (item == null)
+			{
+				return null;
+			}
+			else
+			{
+				return this.FindItemView (
+					delegate (ItemView view)
+					{
+						return (view.Item == item);
+					});
 			}
 		}
 
@@ -921,11 +1046,6 @@ namespace Epsitec.Common.UI
 		protected override void DispatchMessage(Message message, Point pos)
 		{
 			base.DispatchMessage (message, pos);
-
-			if (message.Consumer == null)
-			{
-				message.Consumer = this;
-			}
 		}
 		
 		private IList<ItemView> SafeGetViews()
