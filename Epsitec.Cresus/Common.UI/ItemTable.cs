@@ -5,6 +5,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 
 using System.Collections.Generic;
 
@@ -23,6 +24,13 @@ namespace Epsitec.Common.UI
 		/// </summary>
 		public ItemTable()
 		{
+			this.AutoFocus  = true;
+			this.AutoEngage = true;
+			this.AutoDoubleClick = true;
+			
+			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= InternalState.Engageable;
+
 			this.vScroller = new VScroller (this);
 			this.hScroller = new HScroller (this);
 			this.surface = new Widget (this);
@@ -75,10 +83,10 @@ namespace Epsitec.Common.UI
 			double rightMargin  = this.vScroller.Visibility ? this.vScroller.PreferredWidth : 0;
 			double frameMargin  = this.FrameVisibility ? 1 : 0;
 
-			this.headerStripe.Margins = new Drawing.Margins (0, rightMargin, 0, 0);
-			this.vScroller.Margins = new Drawing.Margins (0, 0, topMargin, bottomMargin);
-			this.hScroller.Margins = new Drawing.Margins (0, rightMargin, 0, 0);
-			this.surface.Margins = new Drawing.Margins (frameMargin, rightMargin+frameMargin, topMargin+frameMargin, bottomMargin+frameMargin);
+			this.headerStripe.Margins = new Margins (0, rightMargin, 0, 0);
+			this.vScroller.Margins = new Margins (0, 0, topMargin, bottomMargin);
+			this.hScroller.Margins = new Margins (0, rightMargin, 0, 0);
+			this.surface.Margins = new Margins (frameMargin, rightMargin+frameMargin, topMargin+frameMargin, bottomMargin+frameMargin);
 		}
 
 		public ItemTable(Widget embedder)
@@ -218,12 +226,12 @@ namespace Epsitec.Common.UI
 			this.UpdateColumnHeader ();
 		}
 
-		public Drawing.Size GetDefaultItemSize(ItemView itemView)
+		public Size GetDefaultItemSize(ItemView itemView)
 		{
 			return this.defaultItemSize;
 		}
 
-		protected override void ProcessMessage(Epsitec.Common.Widgets.Message message, Epsitec.Common.Drawing.Point pos)
+		protected override void ProcessMessage(Epsitec.Common.Widgets.Message message, Point pos)
 		{
 			base.ProcessMessage(message, pos);
 
@@ -237,7 +245,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			base.PaintBackgroundImplementation (graphics, clipRect);
 
@@ -248,7 +256,7 @@ namespace Epsitec.Common.UI
 			double y1 = this.hScroller.Visibility ? this.hScroller.ActualBounds.Top : this.Client.Bounds.Bottom;
 			double y2 = this.headerStripe.Visibility ? this.headerStripe.ActualBounds.Bottom : this.Client.Bounds.Top;
 			
-			Drawing.Rectangle bounds = Drawing.Rectangle.FromOppositeCorners (x1, y1, x2, y2);
+			Rectangle bounds = Rectangle.FromOppositeCorners (x1, y1, x2, y2);
 
 			if (this.BackColor.IsEmpty)
 			{
@@ -262,7 +270,7 @@ namespace Epsitec.Common.UI
 			}
 			else
 			{
-				Drawing.Rectangle rect = Drawing.Rectangle.Intersection (clipRect, this.Client.Bounds);
+				Rectangle rect = Rectangle.Intersection (clipRect, this.Client.Bounds);
 				graphics.AddFilledRectangle (rect);
 				graphics.RenderSolid (this.BackColor);
 
@@ -277,7 +285,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		private void PaintColumnSeparators(Drawing.Graphics graphics, Widgets.IAdorner adorner, Drawing.Rectangle bounds)
+		private void PaintColumnSeparators(Graphics graphics, Widgets.IAdorner adorner, Rectangle bounds)
 		{
 			//	Affiche les séparations verticales des colonnes.
 			double x = bounds.Left + 0.5;
@@ -289,10 +297,10 @@ namespace Epsitec.Common.UI
 				graphics.AddLine (x, bounds.Bottom, x, bounds.Top);
 			}
 			
-			graphics.RenderSolid (Drawing.Color.FromAlphaRgb (0.2, adorner.ColorBorder.R, adorner.ColorBorder.G, adorner.ColorBorder.B));
+			graphics.RenderSolid (Color.FromAlphaRgb (0.2, adorner.ColorBorder.R, adorner.ColorBorder.G, adorner.ColorBorder.B));
 		}
 
-		public Drawing.Margins GetPanelPadding()
+		public Margins GetPanelPadding()
 		{
 			return this.surface.Margins;
 		}
@@ -316,11 +324,11 @@ namespace Epsitec.Common.UI
 
 		private void UpdateAperture()
 		{
-			Drawing.Margins padding = Drawing.Margins.Zero;
+			Margins padding = Margins.Zero;
 
-			this.aperture = Drawing.Rectangle.Deflate (this.Client.Bounds, this.GetPanelPadding ()).Size;
+			this.aperture = Rectangle.Deflate (this.Client.Bounds, this.GetPanelPadding ()).Size;
 
-			Drawing.Size scrollSize = this.GetScrollSize (this.aperture);
+			Size scrollSize = this.GetScrollSize (this.aperture);
 
 			this.UpdateScrollRatios ();
 
@@ -355,7 +363,7 @@ namespace Epsitec.Common.UI
 			double ox = System.Math.Floor ((double) this.hScroller.Value * scrollSize.Width);
 			double oy = this.GetVerticalScrollOffset ();
 
-			this.itemPanel.Aperture = new Drawing.Rectangle (ox+1, oy, aW, aH);
+			this.itemPanel.Aperture = new Rectangle (ox+1, oy, aW, aH);
 			this.itemPanel.AperturePadding = padding;
 
 			if (this.itemPanel.PreferredHeight < aH)
@@ -366,8 +374,8 @@ namespace Epsitec.Common.UI
 			double dx = System.Math.Max (this.itemPanel.PreferredWidth, aW);
 			double dy = System.Math.Max (this.itemPanel.PreferredHeight, aH);
 
-			this.itemPanel.SetManualBounds (new Drawing.Rectangle (-ox, -oy, dx, dy));
-			this.columnHeader.SetManualBounds (new Drawing.Rectangle (-ox, 0, this.columnHeader.GetTotalWidth (), this.columnHeader.PreferredHeight));
+			this.itemPanel.SetManualBounds (new Rectangle (-ox, -oy, dx, dy));
+			this.columnHeader.SetManualBounds (new Rectangle (-ox, 0, this.columnHeader.GetTotalWidth (), this.columnHeader.PreferredHeight));
 		}
 
 		private void UpdateScrollRatios()
@@ -434,7 +442,7 @@ namespace Epsitec.Common.UI
 			ItemView view = this.itemPanel.FindItemView (
 				delegate (ItemView item)
 				{
-					Drawing.Rectangle bounds = item.Bounds;
+					Rectangle bounds = item.Bounds;
 					
 					if ((bounds.Bottom < pos) &&
 						(bounds.Top > pos))
@@ -453,24 +461,24 @@ namespace Epsitec.Common.UI
 
 		private double GetScrollWidth()
 		{
-			Drawing.Size size = this.itemPanel.GetContentsSize ();
+			Size size = this.itemPanel.GetContentsSize ();
 			return System.Math.Max (0, size.Width - this.aperture.Width);
 		}
 
 		private double GetScrollHeight()
 		{
-			Drawing.Size size = this.itemPanel.GetContentsSize ();
+			Size size = this.itemPanel.GetContentsSize ();
 			return System.Math.Max (0, size.Height - this.aperture.Height);
 		}
 
-		private Drawing.Size GetScrollSize(Drawing.Size aperture)
+		private Size GetScrollSize(Size aperture)
 		{
-			Drawing.Size panelSize = this.itemPanel.GetContentsSize ();
+			Size panelSize = this.itemPanel.GetContentsSize ();
 
 			double dx = System.Math.Max (0, panelSize.Width  - aperture.Width);
 			double dy = System.Math.Max (0, panelSize.Height - aperture.Height);
 
-			return new Drawing.Size (dx, dy);
+			return new Size (dx, dy);
 		}
 
 		private void UpdateColumnHeader()
@@ -533,7 +541,7 @@ namespace Epsitec.Common.UI
 						}
 					}
 
-					Drawing.Size size = this.itemPanel.ItemViewDefaultSize;
+					Size size = this.itemPanel.ItemViewDefaultSize;
 
 					if (column.TemplateId.IsValid)
 					{
@@ -550,7 +558,7 @@ namespace Epsitec.Common.UI
 					headerIndex += 1;
 				}
 
-				this.defaultItemSize = new Drawing.Size (minWidth, minHeight);
+				this.defaultItemSize = new Size (minWidth, minHeight);
 
 				this.itemPanel.AsyncRefresh ();
 			}
@@ -573,18 +581,18 @@ namespace Epsitec.Common.UI
 
 		private void HandleItemPanelApertureChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			this.SynchronizeScrollers ((Drawing.Rectangle) e.NewValue);
+			this.SynchronizeScrollers ((Rectangle) e.NewValue);
 		}
 
 		private void HandleItemPanelCurrentChanged(object sender)
 		{
 		}
 
-		private void SynchronizeScrollers(Drawing.Rectangle value)
+		private void SynchronizeScrollers(Rectangle value)
 		{
 			if (this.suspendScroll == 0)
 			{
-				Drawing.Size scrollSize = this.GetScrollSize (this.aperture);
+				Size scrollSize = this.GetScrollSize (this.aperture);
 
 				double sx = scrollSize.Width;
 				double sy = scrollSize.Height;
@@ -700,17 +708,17 @@ namespace Epsitec.Common.UI
 		public static readonly DependencyProperty VerticalScrollModeProperty = DependencyProperty.Register ("VerticalScrollMode", typeof (ItemTableScrollMode), typeof (ItemTable), new DependencyPropertyMetadata (ItemTableScrollMode.Linear, ItemTable.NotifyVerticalScrollModeChanged));
 		public static readonly DependencyProperty HorizontalScrollModeProperty = DependencyProperty.Register ("HorizontalScrollMode", typeof (ItemTableScrollMode), typeof (ItemTable), new DependencyPropertyMetadata (ItemTableScrollMode.Linear, ItemTable.NotifyHorizontalScrollModeChanged));
 
-		private VScroller vScroller;
-		private HScroller hScroller;
-		private ItemPanelColumnHeader columnHeader;
-		private Collections.ItemTableColumnCollection columns;
-		private Widget surface;
-		private Widget headerStripe;
-		private ItemPanel itemPanel;
-		private StructuredType sourceType;
-		private int suspendColumnUpdates;
-		private Drawing.Size defaultItemSize;
-		private Drawing.Size aperture;
-		private int suspendScroll;
+		private VScroller								vScroller;
+		private HScroller								hScroller;
+		private ItemPanelColumnHeader					columnHeader;
+		private Collections.ItemTableColumnCollection	columns;
+		private Widget									surface;
+		private Widget									headerStripe;
+		private ItemPanel								itemPanel;
+		private StructuredType							sourceType;
+		private int										suspendColumnUpdates;
+		private Size									defaultItemSize;
+		private Size									aperture;
+		private int										suspendScroll;
 	}
 }
