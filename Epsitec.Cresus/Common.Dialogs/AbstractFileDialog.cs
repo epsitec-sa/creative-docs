@@ -684,17 +684,18 @@ namespace Epsitec.Common.Dialogs
 			this.navigateCombo.Clicked += new MessageEventHandler (this.HandleNavigateComboClicked);
 			ToolTip.Default.SetToolTip (this.navigateCombo, Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Tooltip.VisitedMenu);
 
-			IconButton buttonPrev = new IconButton (this.navigateCombo);
-			buttonPrev.AutoFocus = false;
-			buttonPrev.TabNavigationMode = TabNavigationMode.None;
-			buttonPrev.CommandObject = this.prevState.Command;
-			buttonPrev.Dock = DockStyle.Left;
-
-			IconButton buttonNext = new IconButton (this.navigateCombo);
+			IconButton buttonNext = new IconButton (group);
 			buttonNext.AutoFocus = false;
 			buttonNext.TabNavigationMode = TabNavigationMode.None;
 			buttonNext.CommandObject = this.nextState.Command;
-			buttonNext.Dock = DockStyle.Left;
+			buttonNext.Margins = new Margins(0, -(22+22), 0, 0);
+			buttonNext.Dock = DockStyle.Right;
+
+			IconButton buttonPrev = new IconButton (group);
+			buttonPrev.AutoFocus = false;
+			buttonPrev.TabNavigationMode = TabNavigationMode.None;
+			buttonPrev.CommandObject = this.prevState.Command;
+			buttonPrev.Dock = DockStyle.Right;
 		}
 
 		private void CreateToolbar()

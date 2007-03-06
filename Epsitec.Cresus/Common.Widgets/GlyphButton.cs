@@ -123,7 +123,6 @@ namespace Epsitec.Common.Widgets
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Rectangle rect = this.Client.Bounds;
 
 			Direction dir = Direction.None;
 			switch ( this.shape )
@@ -136,41 +135,51 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.ButtonStyle != ButtonStyle.None )
 			{
-				adorner.PaintButtonBackground (graphics, rect, this.PaintState, dir, this.ButtonStyle);
+				adorner.PaintButtonBackground (graphics, this.Client.Bounds, this.PaintState, dir, this.ButtonStyle);
 			}
 
-			if (!this.glyphSize.IsEmpty)
+			adorner.PaintGlyph(graphics, this.GlyphBounds, this.PaintState, this.shape, PaintTextStyle.Button);
+		}
+
+		protected Rectangle GlyphBounds
+		{
+			get
 			{
-				if (this.ContentAlignment == ContentAlignment.MiddleLeft ||
-					this.ContentAlignment == ContentAlignment.BottomLeft ||
-					this.ContentAlignment == ContentAlignment.TopLeft    )
+				Rectangle rect = this.Client.Bounds;
+
+				if (!this.glyphSize.IsEmpty)
 				{
-					rect.Width = this.glyphSize.Width;
+					if (this.ContentAlignment == ContentAlignment.MiddleLeft ||
+						this.ContentAlignment == ContentAlignment.BottomLeft ||
+						this.ContentAlignment == ContentAlignment.TopLeft    )
+					{
+						rect.Width = this.glyphSize.Width;
+					}
+
+					if (this.ContentAlignment == ContentAlignment.MiddleRight ||
+						this.ContentAlignment == ContentAlignment.BottomRight ||
+						this.ContentAlignment == ContentAlignment.TopRight    )
+					{
+						rect.Left = rect.Right-this.glyphSize.Width;
+					}
+
+					if (this.ContentAlignment == ContentAlignment.BottomCenter ||
+						this.ContentAlignment == ContentAlignment.BottomLeft   ||
+						this.ContentAlignment == ContentAlignment.BottomRight  )
+					{
+						rect.Height = this.glyphSize.Height;
+					}
+
+					if (this.ContentAlignment == ContentAlignment.TopCenter ||
+						this.ContentAlignment == ContentAlignment.TopLeft   ||
+						this.ContentAlignment == ContentAlignment.TopRight  )
+					{
+						rect.Bottom = rect.Top-this.glyphSize.Height;
+					}
 				}
 
-				if (this.ContentAlignment == ContentAlignment.MiddleRight ||
-					this.ContentAlignment == ContentAlignment.BottomRight ||
-					this.ContentAlignment == ContentAlignment.TopRight    )
-				{
-					rect.Left = rect.Right-this.glyphSize.Width;
-				}
-
-				if (this.ContentAlignment == ContentAlignment.BottomCenter ||
-					this.ContentAlignment == ContentAlignment.BottomLeft   ||
-					this.ContentAlignment == ContentAlignment.BottomRight  )
-				{
-					rect.Height = this.glyphSize.Height;
-				}
-
-				if (this.ContentAlignment == ContentAlignment.TopCenter ||
-					this.ContentAlignment == ContentAlignment.TopLeft   ||
-					this.ContentAlignment == ContentAlignment.TopRight  )
-				{
-					rect.Bottom = rect.Top-this.glyphSize.Height;
-				}
+				return rect;
 			}
-
-			adorner.PaintGlyph(graphics, rect, this.PaintState, this.shape, PaintTextStyle.Button);
 		}
 
 		

@@ -1159,6 +1159,12 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				this.PaintImageButton(graphics, rect, 30);
 			}
+
+			if ((state&WidgetPaintState.Focused) != 0)
+			{
+				rect.Deflate(1);
+				AbstractAdorner.DrawFocusedRectangle(graphics, rect, this.colorBorder);
+			}
 		}
 
 		public override void PaintHeaderBackground(Drawing.Graphics graphics,

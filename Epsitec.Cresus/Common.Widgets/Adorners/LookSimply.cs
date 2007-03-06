@@ -1305,6 +1305,12 @@ namespace Epsitec.Common.Widgets.Adorners
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(Drawing.Color.FromAlphaRgb(0.2, this.colorCaption.R, this.colorCaption.G, this.colorCaption.B));
 			}
+
+			if ((state&WidgetPaintState.Focused) != 0)
+			{
+				rect.Deflate(1);
+				AbstractAdorner.DrawFocusedRectangle(graphics, rect, this.colorControlDarkDark);
+			}
 		}
 
 		public override void PaintHeaderBackground(Drawing.Graphics graphics,
