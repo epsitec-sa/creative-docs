@@ -534,7 +534,6 @@ namespace Epsitec.Common.Dialogs
 
 		private void HandleTimerTimeElapsed(object sender)
 		{
-			bool refresh = false;
 			bool stopped = false;
 
 			lock (this.exclusion)
@@ -562,12 +561,12 @@ namespace Epsitec.Common.Dialogs
 		
 		private void OnTimerTicked()
 		{
-			//	TODO: repeindre le ProgressIndicator
+			this.NextProgressIndicator();
 		}
 
 		private void OnTimerStopped()
 		{
-			//	TODO: cacher le ProgressIndicator
+			this.StopProgressIndicator();
 		}
 
 		
@@ -791,12 +790,19 @@ namespace Epsitec.Common.Dialogs
 
 			this.CreateFooterOptions (footer);
 
-			StaticText label = new StaticText (footer);
-			label.Text = this.FileTypeLabel;
-			label.PreferredWidth = AbstractFileDialog.LeftColumnWidth-10;
-			label.ContentAlignment = ContentAlignment.MiddleRight;
-			label.Dock = DockStyle.Left;
-			label.Margins = new Margins (0, 10, 0, 0);
+			this.filenameLabel = new StaticText (footer);
+			this.filenameLabel.Text = this.FileTypeLabel;
+			this.filenameLabel.PreferredWidth = AbstractFileDialog.LeftColumnWidth-10;
+			this.filenameLabel.ContentAlignment = ContentAlignment.MiddleRight;
+			this.filenameLabel.Dock = DockStyle.Left;
+			this.filenameLabel.Margins = new Margins (0, 10, 0, 0);
+
+			this.progressIndicator = new ProgressIndicator(footer);
+			this.progressIndicator.ProgressStyle = ProgressIndicatorStyle.UnknownDuration;
+			this.progressIndicator.PreferredWidth = AbstractFileDialog.LeftColumnWidth-10;
+			this.progressIndicator.Dock = DockStyle.Left;
+			this.progressIndicator.Margins = new Margins (0, 10, 0, 0);
+			this.progressIndicator.Visibility = false;
 
 			this.fieldFileName = new TextField (footer);
 			this.fieldFileName.Dock = DockStyle.Fill;
@@ -1267,6 +1273,29 @@ namespace Epsitec.Common.Dialogs
 			bool running;
 			bool interrupted;
 			volatile bool cancelRequested;
+		}
+
+
+		private void NextProgressIndicator()
+		{
+			if (!this.progressIndicator.IsVisible)
+			{
+				this.filenameLabel.Visibility = false;
+				this.progressIndicator.Visibility = true;
+				this.progressIndicatorValue = 0;
+			}
+
+			this.progressIndicatorValue += 0.05;
+			this.progressIndicator.ProgressValue = this.progressIndicatorValue;
+		}
+
+		private void StopProgressIndicator()
+		{
+			if (this.filenameLabel != null)
+			{
+				this.filenameLabel.Visibility = true;
+				this.progressIndicator.Visibility = false;
+			}
 		}
 
 
@@ -2376,68 +2405,71 @@ namespace Epsitec.Common.Dialogs
 		private static readonly double LeftColumnWidth = 145;
 		private static readonly double TimerRefreshRate = 0.1;
 
-		protected Window window;
+		protected Window					window;
 
-		private GlyphButton toolbarExtend;
-		private HToolBar toolbar;
-		private GlyphButton navigateCombo;
-		private Scrollable favorites;
-		private Epsitec.Common.UI.ItemTable table;
-		private HSlider slider;
-		private TextFieldCombo fieldPath;
-		private TextField fieldFileName;
-		private TextField fieldExtension;
-		private TextFieldEx fieldRename;
-		private Button buttonOk;
-		private Button buttonCancel;
-		private Timer timer;
-		private readonly object exclusion = new object ();
-		private volatile bool refreshRequested;
+		private GlyphButton					toolbarExtend;
+		private HToolBar					toolbar;
+		private GlyphButton					navigateCombo;
+		private Scrollable					favorites;
+		private Epsitec.Common.UI.ItemTable	table;
+		private HSlider						slider;
+		private TextFieldCombo				fieldPath;
+		private StaticText					filenameLabel;
+		private ProgressIndicator			progressIndicator;
+		private double						progressIndicatorValue;
+		private TextField					fieldFileName;
+		private TextField					fieldExtension;
+		private TextFieldEx					fieldRename;
+		private Button						buttonOk;
+		private Button						buttonCancel;
+		private Timer						timer;
+		private readonly object				exclusion = new object ();
+		private volatile bool				refreshRequested;
 
-		private string fileExtension;
-		private string fileFilterPattern;
+		private string						fileExtension;
+		private string						fileFilterPattern;
+			
+		protected bool						enableNavigation;
+		protected bool						enableMultipleSelection;
+			
+		private bool						isRedirected;
+		private FolderItem					initialDirectory;
+		private FolderItemIcon				initialSmallIcon;
+		private string						initialFileName;
+		private string						selectedFileName;
+		private string[]					selectedFileNames;
+		private FileListItem				renameSelected;
+		private Widget						focusedWidget;
+		private Widget						focusedWidgetBeforeRename;
 
-		protected bool enableNavigation;
-		protected bool enableMultipleSelection;
+		private List<FolderItem>			favoritesList;
+		private int							favoritesFixes;
+		private int							favoritesSelected;
 
-		private bool isRedirected;
-		private FolderItem initialDirectory;
-		private FolderItemIcon initialSmallIcon;
-		private string initialFileName;
-		private string selectedFileName;
-		private string[] selectedFileNames;
-		private FileListItem renameSelected;
-		private Widget focusedWidget;
-		private Widget focusedWidgetBeforeRename;
+		private List<FolderItem>			directoriesVisited;
+		private int							directoriesVisitedIndex;
+		private List<FileListItem>			comboFolders;
+		private List<string>				comboTexts;
+		private int							comboSelected;
 
-		private List<FolderItem> favoritesList;
-		private int favoritesFixes;
-		private int favoritesSelected;
-
-		private List<FolderItem> directoriesVisited;
-		private int directoriesVisitedIndex;
-		private List<FileListItem> comboFolders;
-		private List<string> comboTexts;
-		private int comboSelected;
-
-		private CommandDispatcher dispatcher;
-		private CommandContext context;
-		private CommandState prevState;
-		private CommandState nextState;
-		private CommandState parentState;
-		private CommandState newState;
-		private CommandState renameState;
-		private CommandState deleteState;
-		private CommandState favoritesAddState;
-		private CommandState favoritesRemoveState;
-		private CommandState favoritesUpState;
-		private CommandState favoritesDownState;
-		private CommandState favoritesBigState;
+		private CommandDispatcher			dispatcher;
+		private CommandContext				context;
+		private CommandState				prevState;
+		private CommandState				nextState;
+		private CommandState				parentState;
+		private CommandState				newState;
+		private CommandState				renameState;
+		private CommandState				deleteState;
+		private CommandState				favoritesAddState;
+		private CommandState				favoritesRemoveState;
+		private CommandState				favoritesUpState;
+		private CommandState				favoritesDownState;
+		private CommandState				favoritesBigState;
 
 		private ObservableList<FileListItem> files;
-		private CollectionView filesCollectionView;
-		private List<FileListJob> fileListJobs = new List<FileListJob> ();
-		private bool useLargeIcons;
-		private string title;
+		private CollectionView				filesCollectionView;
+		private List<FileListJob>			fileListJobs = new List<FileListJob> ();
+		private bool						useLargeIcons;
+		private string						title;
 	}
 }

@@ -123,7 +123,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.optionsExtend.AutoFocus = false;
 			this.optionsExtend.TabNavigationMode = TabNavigationMode.None;
 			this.optionsExtend.Dock = DockStyle.Left;
-			this.optionsExtend.Margins = new Margins (0, 0, 3, 3);
+			this.optionsExtend.Margins = new Margins (0, 8, 3, 3);
 			this.optionsExtend.Clicked += new MessageEventHandler (this.HandleOptionsExtendClicked);
 			ToolTip.Default.SetToolTip (this.optionsExtend, Res.Strings.Dialog.File.Tooltip.ExtendInclude);
 		}
