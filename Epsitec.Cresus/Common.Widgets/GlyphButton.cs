@@ -1,6 +1,8 @@
 //	Copyright © 2004-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Drawing;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -39,6 +41,7 @@ namespace Epsitec.Common.Widgets
 			this.ButtonStyle = ButtonStyle.Icon;
 			this.AutoFocus = false;
 			this.InternalState &= ~InternalState.Focusable;
+			this.glyphSize = Size.Zero;
 		}
 		
 		public GlyphButton(string command) : this (command, null)
@@ -48,7 +51,7 @@ namespace Epsitec.Common.Widgets
 		public GlyphButton(string command, string name) : this ()
 		{
 			this.CommandObject = Command.Get (command);
-			this.Name    = name;
+			this.Name = name;
 		}
 		
 		public GlyphButton(Widget embedder) : this()
@@ -77,6 +80,22 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+
+		public Size								GlyphSize
+		{
+			get
+			{
+				return this.glyphSize;
+			}
+			set
+			{
+				if (this.glyphSize != value)
+				{
+					this.glyphSize = value;
+					this.Invalidate();
+				}
+			}
+		}
 		
 		
 		static GlyphButton()
@@ -92,16 +111,16 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public override Drawing.Margins GetShapeMargins()
+		public override Margins GetShapeMargins()
 		{
 			return Widgets.Adorners.Factory.Active.GeometryToolShapeMargins;
 		}
 		
 		
-		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
+			Rectangle rect = this.Client.Bounds;
 
 			Direction dir = Direction.None;
 			switch ( this.shape )
@@ -117,10 +136,42 @@ namespace Epsitec.Common.Widgets
 				adorner.PaintButtonBackground (graphics, rect, this.PaintState, dir, this.ButtonStyle);
 			}
 
+			if (!this.glyphSize.IsEmpty)
+			{
+				if (this.ContentAlignment == ContentAlignment.MiddleLeft ||
+					this.ContentAlignment == ContentAlignment.BottomLeft ||
+					this.ContentAlignment == ContentAlignment.TopLeft)
+				{
+					rect.Width = this.glyphSize.Width;
+				}
+
+				if (this.ContentAlignment == ContentAlignment.MiddleRight ||
+					this.ContentAlignment == ContentAlignment.BottomRight ||
+					this.ContentAlignment == ContentAlignment.TopRight)
+				{
+					rect.Left = rect.Right-this.glyphSize.Width;
+				}
+
+				if (this.ContentAlignment == ContentAlignment.BottomCenter ||
+					this.ContentAlignment == ContentAlignment.BottomLeft   ||
+					this.ContentAlignment == ContentAlignment.BottomRight)
+				{
+					rect.Height = this.glyphSize.Height;
+				}
+
+				if (this.ContentAlignment == ContentAlignment.TopCenter ||
+					this.ContentAlignment == ContentAlignment.TopLeft   ||
+					this.ContentAlignment == ContentAlignment.TopRight)
+				{
+					rect.Bottom = rect.Top-this.glyphSize.Height;
+				}
+			}
+
 			adorner.PaintGlyph(graphics, rect, this.PaintState, this.shape, PaintTextStyle.Button);
 		}
 
 		
 		private GlyphShape						shape;
+		private Size							glyphSize;
 	}
 }

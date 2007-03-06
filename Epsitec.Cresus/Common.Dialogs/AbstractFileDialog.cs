@@ -672,8 +672,10 @@ namespace Epsitec.Common.Dialogs
 			buttonParent.Dock = DockStyle.Right;
 
 			this.navigateCombo = new GlyphButton (group);
-			this.navigateCombo.PreferredWidth = 12;
+			this.navigateCombo.PreferredWidth = 22+22+12;
 			this.navigateCombo.GlyphShape = GlyphShape.ArrowDown;
+			this.navigateCombo.GlyphSize = new Size(12, 20);
+			this.navigateCombo.ContentAlignment = ContentAlignment.MiddleRight;
 			this.navigateCombo.ButtonStyle = ButtonStyle.ToolItem;
 			this.navigateCombo.AutoFocus = false;
 			this.navigateCombo.TabNavigationMode = TabNavigationMode.None;
@@ -682,17 +684,17 @@ namespace Epsitec.Common.Dialogs
 			this.navigateCombo.Clicked += new MessageEventHandler (this.HandleNavigateComboClicked);
 			ToolTip.Default.SetToolTip (this.navigateCombo, Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Tooltip.VisitedMenu);
 
-			IconButton buttonNext = new IconButton (group);
-			buttonNext.AutoFocus = false;
-			buttonNext.TabNavigationMode = TabNavigationMode.None;
-			buttonNext.CommandObject = this.nextState.Command;
-			buttonNext.Dock = DockStyle.Right;
-
-			IconButton buttonPrev = new IconButton (group);
+			IconButton buttonPrev = new IconButton (this.navigateCombo);
 			buttonPrev.AutoFocus = false;
 			buttonPrev.TabNavigationMode = TabNavigationMode.None;
 			buttonPrev.CommandObject = this.prevState.Command;
-			buttonPrev.Dock = DockStyle.Right;
+			buttonPrev.Dock = DockStyle.Left;
+
+			IconButton buttonNext = new IconButton (this.navigateCombo);
+			buttonNext.AutoFocus = false;
+			buttonNext.TabNavigationMode = TabNavigationMode.None;
+			buttonNext.CommandObject = this.nextState.Command;
+			buttonNext.Dock = DockStyle.Left;
 		}
 
 		private void CreateToolbar()
@@ -1278,6 +1280,7 @@ namespace Epsitec.Common.Dialogs
 
 		private void NextProgressIndicator()
 		{
+			//	Affiche le ProgressIndicator (si nécessaire) puis fait-le avancer.
 			if (!this.progressIndicator.IsVisible)
 			{
 				this.filenameLabel.Visibility = false;
@@ -1291,6 +1294,7 @@ namespace Epsitec.Common.Dialogs
 
 		private void StopProgressIndicator()
 		{
+			//	Cache le ProgressIndicator.
 			if (this.filenameLabel != null)
 			{
 				this.filenameLabel.Visibility = true;
