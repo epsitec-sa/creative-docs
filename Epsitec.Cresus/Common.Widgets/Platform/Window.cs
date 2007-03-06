@@ -1493,22 +1493,28 @@ namespace Epsitec.Common.Widgets.Platform
 
 		internal static void SendAwakeEvent()
 		{
+			bool awake = false;
+
 			lock (Window.dispatch_window)
 			{
 				if (Window.is_awake_requested == false)
 				{
 					Window.is_awake_requested = true;
+					awake = true;
 				}
 			}
 
-			try
+			if (awake)
 			{
-				Win32Api.PostMessage (Window.dispatch_window_handle, Win32Const.WM_APP_AWAKE, System.IntPtr.Zero, System.IntPtr.Zero);
-			}
-			catch (System.Exception ex)
-			{
-				System.Diagnostics.Debug.WriteLine ("Exception thrown in Platform.Window.SendAwakeEvent:");
-				System.Diagnostics.Debug.WriteLine (ex.Message);
+				try
+				{
+					Win32Api.PostMessage (Window.dispatch_window_handle, Win32Const.WM_APP_AWAKE, System.IntPtr.Zero, System.IntPtr.Zero);
+				}
+				catch (System.Exception ex)
+				{
+					System.Diagnostics.Debug.WriteLine ("Exception thrown in Platform.Window.SendAwakeEvent:");
+					System.Diagnostics.Debug.WriteLine (ex.Message);
+				}
 			}
 		}
 

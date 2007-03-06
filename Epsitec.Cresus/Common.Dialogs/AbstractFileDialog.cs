@@ -352,20 +352,24 @@ namespace Epsitec.Common.Dialogs
 
 			lock (this.exclusion)
 			{
-				refresh = this.refreshRequested;
-
-				this.refreshRequested = false;
-
 				if (this.fileListJobs.Count == 0)
 				{
 					this.timer.Stop ();
 				}
 			}
 
-			if (refresh)
+			if (this.refreshRequested)
 			{
-				Epsitec.Common.Widgets.Application.QueueAsyncCallback (this.filesCollectionView.Refresh);
-				System.Diagnostics.Debug.WriteLine ("Tick...");
+				Epsitec.Common.Widgets.Application.QueueAsyncCallback (this.AsyncRefresh);
+			}
+		}
+
+		private void AsyncRefresh()
+		{
+			if (this.refreshRequested)
+			{
+				this.refreshRequested = false;
+				this.filesCollectionView.Refresh ();
 			}
 		}
 
@@ -543,6 +547,11 @@ namespace Epsitec.Common.Dialogs
 					{
 						lock (this.exclusion)
 						{
+							if (this.timer.State != TimerState.Running)
+							{
+								Epsitec.Common.Widgets.Application.QueueAsyncCallback (this.AsyncRefresh);
+							}
+							
 							this.refreshRequested = true;
 							this.timer.Start ();
 						}
@@ -2365,7 +2374,7 @@ namespace Epsitec.Common.Dialogs
 		private Button buttonCancel;
 		private Timer timer;
 		private readonly object exclusion = new object ();
-		private bool refreshRequested;
+		private volatile bool refreshRequested;
 
 		private string fileExtension;
 		private string fileFilterPattern;

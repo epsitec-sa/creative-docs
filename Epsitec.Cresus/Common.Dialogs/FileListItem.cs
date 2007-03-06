@@ -342,7 +342,7 @@ namespace Epsitec.Common.Dialogs
 						{
 							this.cachedDateTime = new System.DateTime (1L);
 						}
-						else if (this.IsDirectoryOrShortcut)
+						else if (this.IsDirectory)
 						{
 							System.IO.DirectoryInfo info = new System.IO.DirectoryInfo (this.folderItem.FullPath);
 
@@ -388,24 +388,24 @@ namespace Epsitec.Common.Dialogs
 				{
 					long size = this.cachedFileSize;
 					
-					size = (size+512)/1024;
-					if (size < 1024)
+					size = (size+1023)/1024;
+					if (size/1024 < 10)
 					{
 						double s = (double) size;
 						s = System.Math.Ceiling (s*1000/1024);  // 0..999 KB
 						return string.Format (Res.Strings.Dialog.File.Size.Kilo, s.ToString ());
 					}
 
-					size = (size+512)/1024;
-					if (size < 1024)
+					size = (size+1023)/1024;
+					if (size/1024 < 10)
 					{
 						double s = (double) size;
 						s = System.Math.Ceiling (s*1000/1024);  // 0..999 MB
 						return string.Format (Res.Strings.Dialog.File.Size.Mega, s.ToString ());
 					}
 
-					size = (size+512)/1024;
-					if (size < 1024)
+					size = (size+1023)/1024;
+					if (size/1024 < 10)
 					{
 						double s = (double) size;
 						s = System.Math.Ceiling (s*1000/1024);  // 0..999 GB

@@ -220,8 +220,12 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					Application.pendingCallbacks.Enqueue (callback);
-					
+
 					if (Application.thread != System.Threading.Thread.CurrentThread)
+					{
+						Platform.Window.SendAwakeEvent ();
+					}
+					else
 					{
 						Platform.Window.SendAwakeEvent ();
 					}
