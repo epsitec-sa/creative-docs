@@ -845,15 +845,76 @@ namespace Epsitec.Common.UI
 						if ((!message.IsControlPressed) &&
 							(!message.IsAltPressed))
 						{
-							IList<ItemView> list = this.GetSelectedItemViews ();
-
-							
-							
-							if (list.Count > 0)
+							if ((message.KeyCode == KeyCode.ArrowUp) ||
+								(message.KeyCode == KeyCode.ArrowDown) ||
+								(message.KeyCode == KeyCode.PageUp) ||
+								(message.KeyCode == KeyCode.PageDown) ||
+								(message.KeyCode == KeyCode.Home) ||
+								(message.KeyCode == KeyCode.End))
 							{
-								ItemView first = ItemPanel.GetFirstSelectedItemView (list);
-								ItemView last  = ItemPanel.GetLastSelectedItemView (list);
+								IList<ItemView> list = this.GetSelectedItemViews ();
 
+								if ((message.IsShiftPressed) &&
+									(list.Count > 0))
+								{
+									ItemView first = ItemPanel.GetFirstSelectedItemView (list);
+									ItemView last  = ItemPanel.GetLastSelectedItemView (list);
+
+									int index1 = first == null ? -1 : first.Index;
+									int index2 = last == null ? -1 : last.Index;
+
+									int oldIndex = oldCurrent == null ? -1 : oldCurrent.Index;
+									int newIndex = newCurrent == null ? -1 : newCurrent.Index;
+
+									if (oldIndex == index1)
+									{
+										index1 = newIndex;
+									}
+									else if (oldIndex == index2)
+									{
+										index2 = newIndex;
+									}
+									else
+									{
+										index1 = newIndex;
+										index2 = newIndex;
+									}
+
+									index1 = System.Math.Max (0, index1);
+									index2 = System.Math.Max (0, index2);
+
+									if (index1 > index2)
+									{
+										int temp = index1;
+										index1 = index2;
+										index2 = temp;
+									}
+
+									for (int i = index1; i <= index2; i++)
+									{
+										this.SelectItemView (this.GetItemView (i));
+									}
+
+									List<ItemView> deselect = new List<ItemView> ();
+
+									foreach (ItemView view in list)
+									{
+										if ((view.Index < index1) ||
+											(view.Index > index2))
+										{
+											deselect.Add (view);
+										}
+									}
+
+									this.DeselectItemViews (deselect);
+									this.Items.MoveCurrentToPosition (newIndex);
+								}
+								else
+								{
+									this.DeselectAllItemViews ();
+									this.SelectItemView (newCurrent);
+								}
+#if false
 								if (message.KeyCode == KeyCode.ArrowUp)
 								{
 									ItemView item = list[0];  // premier item sélectionné
@@ -881,11 +942,12 @@ namespace Epsitec.Common.UI
 										this.SelectItemView (item);
 									}
 								}
+#endif
 							}
 						}
-					}
 
-					this.Show (newCurrent);
+						this.Show (newCurrent);
+					}
 				}
 			}
 		}
