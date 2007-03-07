@@ -12,11 +12,30 @@ namespace Epsitec.Common.Document.Ribbons
 		public Undo() : base()
 		{
 			this.Title = Res.Strings.Action.UndoMain;
-			this.PreferredWidth = 8 + 22*1.5*2;
+			this.PreferredWidth = 8 + 22*3.0;
+
+			double dx = 22;
+			double dy = 22;
+
+			this.groupUndo = new Widget(this);
+
+			this.buttonList = this.CreateMenuButton("UndoRedoList", Res.Strings.Action.UndoRedoList, new MessageEventHandler(this.HandleListPressed));
+			this.buttonList.ContentAlignment = ContentAlignment.BottomCenter;
+			this.buttonList.GlyphSize = new Size(dx*3.0, dy*0.5);
+			this.buttonList.Anchor = AnchorStyles.All;
+			this.buttonList.SetParent(this.groupUndo);
 
 			this.buttonUndo = this.CreateIconButton("Undo", "Large");
+			this.buttonUndo.PreferredSize = new Size(dx*1.5, dy*1.5);
+			this.buttonUndo.Dock = DockStyle.Left;
+			this.buttonUndo.VerticalAlignment = VerticalAlignment.Top;
+			this.buttonUndo.SetParent(this.groupUndo);
+
 			this.buttonRedo = this.CreateIconButton("Redo", "Large");
-			this.buttonList = this.CreateMenuButton("UndoRedoList", Res.Strings.Action.UndoRedoList, new MessageEventHandler(this.HandleListPressed));
+			this.buttonRedo.PreferredSize = new Size(dx*1.5, dy*1.5);
+			this.buttonRedo.Dock = DockStyle.Left;
+			this.buttonRedo.VerticalAlignment = VerticalAlignment.Top;
+			this.buttonRedo.SetParent(this.groupUndo);
 			
 //			this.UpdateClientGeometry();
 		}
@@ -38,21 +57,13 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonUndo == null )  return;
 
-			double dx = this.buttonUndo.PreferredWidth;
-			double dy = this.buttonUndo.PreferredHeight;
+			double dx = 22;
+			double dy = 22;
 
 			Rectangle rect = this.UsefulZone;
-			rect.Width  = dx*1.5;
-			rect.Height = dy*1.5;
-			rect.Offset(0, dy*0.5);
-			this.buttonUndo.SetManualBounds(rect);
-			rect.Offset(dx*1.5, 0);
-			this.buttonRedo.SetManualBounds(rect);
-
-			rect = this.UsefulZone;
-			rect.Width  = dx*1.5*2;
-			rect.Height = dy*0.5;
-			this.buttonList.SetManualBounds(rect);
+			rect.Width  = dx*3.0;
+			rect.Height = dy*2.0;
+			this.groupUndo.SetManualBounds(rect);
 		}
 
 
@@ -80,6 +91,7 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
+		protected Widget					groupUndo;
 		protected IconButton				buttonUndo;
 		protected IconButton				buttonRedo;
 		protected GlyphButton				buttonList;

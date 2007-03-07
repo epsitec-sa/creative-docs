@@ -14,19 +14,38 @@ namespace Epsitec.Common.Document.Ribbons
 			this.Title = Res.Strings.Action.FileMain;
 			this.PreferredWidth = 8 + 22*1.5*4 + 4 + 22*2;
 
-			this.buttonNew        = this.CreateIconButton("New", "Large");
+			this.buttonSave  = this.CreateIconButton("Save", "Large");
+			this.buttonPrint = this.CreateIconButton("Print", "Large");
+
+			double dx = this.buttonSave.PreferredWidth;
+			double dy = this.buttonSave.PreferredHeight;
+
+			this.groupNew = new Widget(this);
 			this.buttonLastModels = this.CreateMenuButton("", Res.Strings.Action.LastModels, new MessageEventHandler(this.HandleLastModelsPressed));
+			this.buttonLastModels.ContentAlignment = ContentAlignment.BottomCenter;
+			this.buttonLastModels.GlyphSize = new Size(dx*1.5, dy*0.5);
+			this.buttonLastModels.Anchor = AnchorStyles.All;
+			this.buttonLastModels.SetParent(this.groupNew);
+			this.buttonNew = this.CreateIconButton("New", "Large");
+			this.buttonNew.PreferredSize = new Size(dx*1.5, dy*1.5);
+			this.buttonNew.Dock = DockStyle.Top;
+			this.buttonNew.SetParent(this.groupNew);
 
-			this.buttonOpen       = this.CreateIconButton("Open", "Large");
+			this.groupOpen = new Widget(this);
 			this.buttonLastFiles  = this.CreateMenuButton("", Res.Strings.Action.LastFiles, new MessageEventHandler(this.HandleLastFilesPressed));
+			this.buttonLastFiles.ContentAlignment = ContentAlignment.BottomCenter;
+			this.buttonLastFiles.GlyphSize = new Size(dx*1.5, dy*0.5);
+			this.buttonLastFiles.Anchor = AnchorStyles.All;
+			this.buttonLastFiles.SetParent(this.groupOpen);
+			this.buttonOpen = this.CreateIconButton("Open", "Large");
+			this.buttonOpen.PreferredSize = new Size(dx*1.5, dy*1.5);
+			this.buttonOpen.Dock = DockStyle.Top;
+			this.buttonOpen.SetParent(this.groupOpen);
 
-			this.buttonSave       = this.CreateIconButton("Save", "Large");
-			this.buttonPrint      = this.CreateIconButton("Print", "Large");
-
-			this.buttonExport     = this.CreateIconButton("Export");
-			this.buttonCloseAll   = this.CreateIconButton("CloseAll");
-			this.buttonSaveAs     = this.CreateIconButton("SaveAs");
-			this.buttonSaveModel  = this.CreateIconButton("SaveModel");
+			this.buttonExport    = this.CreateIconButton("Export");
+			this.buttonCloseAll  = this.CreateIconButton("CloseAll");
+			this.buttonSaveAs    = this.CreateIconButton("SaveAs");
+			this.buttonSaveModel = this.CreateIconButton("SaveModel");
 			
 //			this.UpdateClientGeometry();
 		}
@@ -48,27 +67,22 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonNew == null )  return;
 
-			double dx = this.buttonNew.PreferredWidth;
-			double dy = this.buttonNew.PreferredHeight;
+			double dx = this.buttonSave.PreferredWidth;
+			double dy = this.buttonSave.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx*1.5;
+			rect.Height = dy*2.0;
+			this.groupNew.SetManualBounds(rect);
+			rect.Offset(dx*1.5, 0);
+			this.groupOpen.SetManualBounds(rect);
+			rect.Offset(dx*1.5, 0);
+
 			rect.Height = dy*1.5;
 			rect.Offset(0, dy*0.5);
-			this.buttonNew.SetManualBounds(rect);
-			rect.Offset(dx*1.5, 0);
-			this.buttonOpen.SetManualBounds(rect);
-			rect.Offset(dx*1.5, 0);
 			this.buttonSave.SetManualBounds(rect);
 			rect.Offset(dx*1.5, 0);
 			this.buttonPrint.SetManualBounds(rect);
-
-			rect = this.UsefulZone;
-			rect.Width  = dx*1.5;
-			rect.Height = dy*0.5;
-			this.buttonLastModels.SetManualBounds(rect);
-			rect.Offset(dx*1.5, 0);
-			this.buttonLastFiles.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
@@ -167,15 +181,19 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
+		protected Widget					groupNew;
 		protected IconButton				buttonNew;
+		protected GlyphButton				buttonLastModels;
+
+		protected Widget					groupOpen;
 		protected IconButton				buttonOpen;
+		protected GlyphButton				buttonLastFiles;
+
 		protected IconButton				buttonSave;
 		protected IconButton				buttonPrint;
 		protected IconButton				buttonExport;
 		protected IconButton				buttonCloseAll;
 		protected IconButton				buttonSaveAs;
 		protected IconButton				buttonSaveModel;
-		protected GlyphButton				buttonLastModels;
-		protected GlyphButton				buttonLastFiles;
 	}
 }
