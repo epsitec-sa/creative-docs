@@ -30,10 +30,16 @@ namespace Epsitec.Common.Dialogs
 		protected override Widget CreateElement(string name, ItemPanel panel, ItemView view)
 		{
 			FileListItem item = view.Item as FileListItem;
+			double       size = view.Size.Height;
+
+			if (panel.Layout != ItemPanelLayout.VerticalList)
+			{
+				size -= 40;
+			}
 
 			switch (name)
 			{
-				case "icon": return FileListItemViewFactory.CreateFileIcon (item, view.Size);
+				case "icon": return FileListItemViewFactory.CreateFileIcon (item, size);
 				case "name": return FileListItemViewFactory.CreateFileName (item);
 				case "info": return FileListItemViewFactory.CreateFileInfo (item);
 				case "date": return FileListItemViewFactory.CreateFileDate (item);
@@ -43,14 +49,14 @@ namespace Epsitec.Common.Dialogs
 			return null;
 		}
 
-		private static Widget CreateFileIcon(FileListItem item, Drawing.Size size)
+		private static Widget CreateFileIcon(FileListItem item, double size)
 		{
 			ImagePlaceholder fileIcon;
 
 			fileIcon = new ImagePlaceholder ();
 			fileIcon.Margins = new Margins (1, 1, 1, 1);
 
-			string iconName = item.GetIconName (size.Height < 32 ? FileInfoIconSize.Small : FileInfoIconSize.Large);
+			string iconName = item.GetIconName (size < 32 ? FileInfoIconSize.Small : FileInfoIconSize.Large);
 
 			if (string.IsNullOrEmpty (iconName))
 			{
@@ -69,6 +75,8 @@ namespace Epsitec.Common.Dialogs
 				fileIcon.Image = null;
 				fileIcon.PaintFrame = false;
 			}
+
+			fileIcon.PreferredHeight = size;
 
 			return fileIcon;
 		}
