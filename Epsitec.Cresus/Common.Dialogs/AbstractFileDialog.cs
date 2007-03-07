@@ -1440,7 +1440,6 @@ namespace Epsitec.Common.Dialogs
 			if (oldPath != newPath)
 			{
 				//	This is a special folder where we may not rename the files.
-
 				enable = false;
 			}
 
@@ -1653,7 +1652,16 @@ namespace Epsitec.Common.Dialogs
 
 			this.fieldRename.SetManualBounds (rect);
 			this.fieldRename.Text = TextLayout.ConvertToTaggedText (item.ShortFileName);
-			this.fieldRename.SelectAll ();
+			int i = this.fieldRename.Text.LastIndexOf('.');
+			if (i == -1)
+			{
+				this.fieldRename.SelectAll();
+			}
+			else
+			{
+				this.fieldRename.CursorFrom = 0;
+				this.fieldRename.CursorTo = i;
+			}
 			this.fieldRename.Visibility = true;
 			this.fieldRename.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.fieldRename.StartEdition ();
@@ -1702,7 +1710,8 @@ namespace Epsitec.Common.Dialogs
 				else
 				{
 					srcFileName = item.FullPath;
-					dstFileName = string.Concat (System.IO.Path.GetDirectoryName (srcFileName), "\\", newText, System.IO.Path.GetExtension (srcFileName));
+					//?dstFileName = string.Concat (System.IO.Path.GetDirectoryName (srcFileName), "\\", newText, System.IO.Path.GetExtension (srcFileName));
+					dstFileName = string.Concat (System.IO.Path.GetDirectoryName (srcFileName), "\\", newText);
 
 					FileOperationMode mode = new FileOperationMode (this.window);
 					FileManager.RenameFile (mode, srcFileName, dstFileName);
