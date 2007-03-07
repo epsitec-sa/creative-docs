@@ -1475,10 +1475,15 @@ namespace Epsitec.Common.Dialogs
 				enable = false;
 			}
 
-			System.Diagnostics.Debug.WriteLine ("Rename enable="+enable);
+			this.deleteState.Enable = enable;
+
+			if (this.table.ItemPanel.GetSelectedItemViews().Count > 1)
+			{
+				//	Pas de rename lors d'une sélection multiple.
+				enable = false;
+			}
 
 			this.renameState.Enable = enable;
-			this.deleteState.Enable = enable;
 
 			FolderItem parent = FileManager.GetParentFolderItem (this.initialDirectory, FolderQueryMode.NoIcons);
 			this.parentState.Enable = !parent.IsEmpty;
