@@ -44,6 +44,7 @@ namespace Epsitec.Common.Widgets
 				if (this.progressValue != value)
 				{
 					this.progressValue = value;
+					System.Diagnostics.Debug.WriteLine ("Progress: " + this.progressValue);
 					this.Invalidate();
 				}
 			}
@@ -58,7 +59,7 @@ namespace Epsitec.Common.Widgets
 
 			int delta = System.Environment.TickCount-this.progressInitialTicks;
 
-			this.ProgressValue = (delta * 1000.0 / ProgressIndicator.AnimationDuration + 0.5) % 1.0;
+			this.ProgressValue = (delta / (1000.0 * ProgressIndicator.AnimationDuration) + 0.5) % 1.0;
 		}
 
 
