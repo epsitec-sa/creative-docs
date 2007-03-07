@@ -33,19 +33,44 @@ namespace Epsitec.Common.Dialogs
 
 			switch (name)
 			{
-				case "icon":
-					return FileListItemViewFactory.CreateFileIcon (item, view.Size);
-				case "name":
-					return FileListItemViewFactory.CreateFileName (item);
-				case "type":
-					return FileListItemViewFactory.CreateFileInfo (item);
-				case "date":
-					return FileListItemViewFactory.CreateFileDate (item);
-				case "size":
-					return FileListItemViewFactory.CreateFileSize (item);
+				case "icon": return FileListItemViewFactory.CreateFileIcon (item, view.Size);
+				case "name": return FileListItemViewFactory.CreateFileName (item);
+				case "info": return FileListItemViewFactory.CreateFileInfo (item);
+				case "date": return FileListItemViewFactory.CreateFileDate (item);
+				case "size": return FileListItemViewFactory.CreateFileSize (item);
 			}
 
 			return null;
+		}
+
+		private static Widget CreateFileIcon(FileListItem item, Drawing.Size size)
+		{
+			ImagePlaceholder fileIcon;
+
+			fileIcon = new ImagePlaceholder ();
+			fileIcon.Margins = new Margins (1, 1, 1, 1);
+
+			string iconName = item.GetIconName (size.Height < 32 ? FileInfoIconSize.Small : FileInfoIconSize.Large);
+
+			if (string.IsNullOrEmpty (iconName))
+			{
+				Image bitmap;
+				bool icon;
+				item.AttachedImagePlaceholder = fileIcon;
+				item.GetImage (out bitmap, out icon);
+				fileIcon.Image = bitmap;
+				fileIcon.PaintFrame = icon ? false : true;
+				fileIcon.DisplayMode = icon ? ImageDisplayMode.Center : ImageDisplayMode.Stretch;
+				fileIcon.IconName = null;
+			}
+			else
+			{
+				fileIcon.IconName = iconName;
+				fileIcon.Image = null;
+				fileIcon.PaintFrame = false;
+			}
+
+			return fileIcon;
 		}
 
 		private static Widget CreateFileName(FileListItem item)
@@ -94,35 +119,6 @@ namespace Epsitec.Common.Dialogs
 			fileSize.Text = item.FileSize;
 
 			return fileSize;
-		}
-
-		private static Widget CreateFileIcon(FileListItem item, Drawing.Size size)
-		{
-			ImagePlaceholder fileIcon;
-			
-			fileIcon = new ImagePlaceholder ();
-			fileIcon.Margins = new Margins (1, 1, 1, 1);
-
-			string iconName = item.GetIconName (size.Height < 32 ? FileInfoIconSize.Small : FileInfoIconSize.Large);
-
-			if (string.IsNullOrEmpty (iconName))
-			{
-				Image bitmap;
-				bool icon;
-				item.AttachedImagePlaceholder = fileIcon;
-				item.GetImage (out bitmap, out icon);
-				fileIcon.Image = bitmap;
-				fileIcon.PaintFrame = icon ? false : true;
-				fileIcon.DisplayMode = icon ? ImageDisplayMode.Center : ImageDisplayMode.Stretch;
-				fileIcon.IconName = null;
-			}
-			else
-			{
-				fileIcon.IconName = iconName;
-				fileIcon.Image = null;
-				fileIcon.PaintFrame = false;
-			}
-			return fileIcon;
 		}
 	}
 }

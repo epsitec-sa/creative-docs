@@ -487,7 +487,7 @@ namespace Epsitec.Common.Dialogs
 			this.table.ItemPanel.ItemViewDefaultSize = new Size (this.table.Parent.PreferredWidth, cellHeight);
 			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 72));
 			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 195));
-			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("type", 120, FileListItem.GetDescriptionPropertyComparer ()));
+			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("info", 120, FileListItem.GetDescriptionPropertyComparer ()));
 			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("date", 96));
 			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("size", 54));
 			this.table.ColumnHeader.SetColumnSortable (0, false);

@@ -80,7 +80,7 @@ namespace Epsitec.Common.Dialogs
 					public static Epsitec.Common.Types.Caption Icon { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 0)); } }
 					public static Epsitec.Common.Types.Caption Name { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 14)); } }
 					public static Epsitec.Common.Types.Caption Size { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 16)); } }
-					public static Epsitec.Common.Types.Caption Type { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 17)); } }
+					public static Epsitec.Common.Types.Caption Info { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 17)); } }
 				}
 			}
 			

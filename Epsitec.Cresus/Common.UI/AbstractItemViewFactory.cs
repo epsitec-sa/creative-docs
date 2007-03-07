@@ -13,11 +13,24 @@ namespace Epsitec.Common.UI
 		{
 		}
 
+		/// <summary>
+		/// Creates the user interface for the specified item view.
+		/// </summary>
+		/// <param name="panel">The panel.</param>
+		/// <param name="itemView">The item view.</param>
+		/// <returns>
+		/// The widget which represents the data stored in the item view.
+		/// </returns>
 		public virtual Widgets.Widget CreateUserInterface(ItemPanel panel, ItemView itemView)
 		{
 			return this.CreateElements (panel, itemView);
 		}
 
+		/// <summary>
+		/// Disposes the user interface created by <c>CreateUserInterface</c>.
+		/// </summary>
+		/// <param name="itemView">The item view.</param>
+		/// <param name="widget">The widget to dispose.</param>
 		public virtual void DisposeUserInterface(ItemView itemView, Widgets.Widget widget)
 		{
 			widget.Dispose ();
@@ -58,7 +71,6 @@ namespace Epsitec.Common.UI
 			
 			return new Drawing.Size (dx, dy);
 		}
-
 
 		/// <summary>
 		/// Creates the elements used to represent the item.
