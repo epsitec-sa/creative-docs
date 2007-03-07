@@ -592,18 +592,25 @@ namespace Epsitec.Common.Dialogs
 			if ((item != null) &&
 				(item.IsDataFile))
 			{
-				string name = item.ShortFileName;
-
-				if (this.fileExtension != null && name.EndsWith (this.fileExtension))
-				{
-					name = name.Substring (0, name.Length - this.fileExtension.Length);
-				}
+				string name = this.GetFilename(item);
 
 				IList<ItemView> selectedItemViews = this.table.ItemPanel.GetSelectedItemViews ();
-
 				if (selectedItemViews.Count > 1)
 				{
-					name = "";
+					System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+					foreach (ItemView view in selectedItemViews)
+					{
+						FileListItem oneItem = view.Item as FileListItem;
+						if (oneItem.IsDataFile)
+						{
+							builder.Append("\"");
+							builder.Append(this.GetFilename(oneItem));
+							builder.Append("\" ");
+						}
+					}
+
+					name = builder.ToString();
 				}
 
 				this.fieldFileName.Text = TextLayout.ConvertToTaggedText (name);
@@ -611,6 +618,18 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			this.UpdateButtons ();
+		}
+
+		private string GetFilename(FileListItem item)
+		{
+			string name = item.ShortFileName;
+
+			if (this.fileExtension != null && name.EndsWith (this.fileExtension))
+			{
+				name = name.Substring (0, name.Length - this.fileExtension.Length);
+			}
+
+			return name;
 		}
 
 		private void CreateRename()
@@ -671,33 +690,7 @@ namespace Epsitec.Common.Dialogs
 			buttonParent.CommandObject = this.parentState.Command;
 			buttonParent.Dock = DockStyle.Right;
 
-#if false
-			this.navigateCombo = new GlyphButton (group);
-			this.navigateCombo.PreferredWidth = 22+22+12;
-			this.navigateCombo.GlyphShape = GlyphShape.ArrowDown;
-			this.navigateCombo.GlyphSize = new Size(12, 20);
-			this.navigateCombo.ContentAlignment = ContentAlignment.MiddleRight;
-			this.navigateCombo.ButtonStyle = ButtonStyle.ToolItem;
-			this.navigateCombo.AutoFocus = false;
-			this.navigateCombo.TabNavigationMode = TabNavigationMode.None;
-			this.navigateCombo.Dock = DockStyle.Right;
-			this.navigateCombo.Margins = new Margins (0, 10, 0, 0);
-			this.navigateCombo.Clicked += new MessageEventHandler (this.HandleNavigateComboClicked);
-			ToolTip.Default.SetToolTip (this.navigateCombo, Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Tooltip.VisitedMenu);
-
-			IconButton buttonNext = new IconButton (group);
-			buttonNext.AutoFocus = false;
-			buttonNext.TabNavigationMode = TabNavigationMode.None;
-			buttonNext.CommandObject = this.nextState.Command;
-			buttonNext.Margins = new Margins(0, -(22+22), 0, 0);  // TODO: cette marge négative fait que le bouton disparaît !
-			buttonNext.Dock = DockStyle.Right;
-
-			IconButton buttonPrev = new IconButton (group);
-			buttonPrev.AutoFocus = false;
-			buttonPrev.TabNavigationMode = TabNavigationMode.None;
-			buttonPrev.CommandObject = this.prevState.Command;
-			buttonPrev.Dock = DockStyle.Right;
-#else
+			//	Groupe-combo composé des boutons "prev/next/v".
 			Widget combo = new Widget(group);
 			combo.PreferredWidth = 22+22+12;
 			combo.TabNavigationMode = TabNavigationMode.None;
@@ -728,7 +721,6 @@ namespace Epsitec.Common.Dialogs
 			buttonNext.TabNavigationMode = TabNavigationMode.None;
 			buttonNext.CommandObject = this.nextState.Command;
 			buttonNext.Dock = DockStyle.Left;
-#endif
 		}
 
 		private void CreateToolbar()
@@ -1832,6 +1824,49 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		private static List<string> SplitFilenames(string name)
+		{
+			//	Sépare plusieurs noms de fichiers.
+			//	a			-> a
+			//	a b			-> a b
+			//	"a b"		-> a b
+			//	"a" "b"		-> a, b
+			//	"ab" "cd"	-> ab, cd
+			//	"a b" "c d"	-> a b, c d
+			List<string> list = new List<string>();
+			int i=0;
+			name = name.Trim();
+			while (i<name.Length)
+			{
+				if (name[i] == '"')
+				{
+					int start = ++i;
+					while (i<name.Length && name[i] != '"')
+					{
+						i++;
+					}
+					list.Add(name.Substring(start, i-start));
+					i++;
+				}
+				else
+				{
+					int start = i;
+					while (i<name.Length && name[i] != ' ')
+					{
+						i++;
+					}
+					list.Add(name.Substring(start, i-start));
+				}
+
+				while (i<name.Length && name[i] == ' ')
+				{
+					i++;
+				}
+			}
+
+			return list;
+		}
+
 		private bool ActionOk()
 		{
 			//	Effectue l'action lorsque le bouton 'Ouvrir/Enregistrer' est actionné.
@@ -1864,7 +1899,9 @@ namespace Epsitec.Common.Dialogs
 				return true;
 			}
 
-			if (name.Length > 0)
+			List<string> list = AbstractFileDialog.SplitFilenames(name);
+
+			if (list.Count == 1)
 			{
 				if (!System.IO.Path.IsPathRooted (name))
 				{
@@ -1893,10 +1930,46 @@ namespace Epsitec.Common.Dialogs
 
 				return this.PromptForOverwriting ();
 			}
-			else
+
+			if (list.Count > 1)
 			{
-				return false;
+				this.selectedFileName = "*";
+				this.selectedFileNames = new string[list.Count];
+
+				for (int i=0; i<list.Count; i++)
+				{
+					name = list[i];
+
+					if (!System.IO.Path.IsPathRooted(name))
+					{
+						name = System.IO.Path.Combine(this.initialDirectory.FullPath, name);
+					}
+
+					if (System.IO.Directory.Exists(name))
+					{
+						FolderItem folderItem = FileManager.GetFolderItem(name, FolderQueryMode.NoIcons);
+
+						if (folderItem.IsFolder)
+						{
+							this.SetInitialFolder(folderItem, true);
+							return false;
+						}
+					}
+
+					if (this.fileExtension != null &&
+						!name.ToLowerInvariant().EndsWith(this.fileExtension) &&
+						!System.IO.File.Exists(name))
+					{
+						name = string.Concat(name, this.fileExtension);
+					}
+
+					this.selectedFileNames[i] = name;
+
+				}
+				return true;
 			}
+
+			return false;
 		}
 
 		private string[] GetSelectedFileNames()
@@ -1992,7 +2065,6 @@ namespace Epsitec.Common.Dialogs
 
 				this.selectedFileName = null;
 				this.selectedFileNames = null;
-
 				return false;  // ne pas fermer le dialogue
 			}
 
