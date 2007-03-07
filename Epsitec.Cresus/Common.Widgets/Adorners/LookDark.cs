@@ -419,7 +419,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			Drawing.Rectangle rFocus = rect;
 			if ( System.Math.Min(rect.Width, rect.Height) >= 16 )
 			{
-				rFocus.Deflate(1.0);
+				rFocus.Deflate(2);
 			}
 			double radFocus = 0;
 
@@ -574,7 +574,6 @@ namespace Epsitec.Common.Widgets.Adorners
 					graphics.AddRectangle(rInside);
 					graphics.RenderSolid(this.colorBlack);
 				}
-				rFocus.Deflate(1.0);
 				rFocus.Right ++;
 				radFocus = -1;
 			}
@@ -596,7 +595,6 @@ namespace Epsitec.Common.Widgets.Adorners
 					graphics.AddRectangle(rInside);
 					graphics.RenderSolid(this.colorBlack);
 				}
-				rFocus.Deflate(1.0);
 				radFocus = -1;
 			}
 			else if ( style == ButtonStyle.ActivableIcon )
@@ -633,7 +631,6 @@ namespace Epsitec.Common.Widgets.Adorners
 				graphics.Rasterizer.AddOutline(path, 1);
 				graphics.RenderSolid(this.colorBlack);
 
-				rFocus.Deflate(1.0);
 				rFocus.Right ++;
 				radFocus = -1;
 			}
@@ -654,8 +651,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			if ( (state&WidgetPaintState.Focused) != 0 )
 			{
 				Drawing.Path pInside = this.PathRoundRectangle(rFocus, radFocus);
-				graphics.Rasterizer.AddOutline(pInside, 1);
-				graphics.RenderSolid(this.colorControlLightLight);
+				AbstractAdorner.DrawFocusedPath(graphics, pInside, this.colorWhite);
 			}
 		}
 
@@ -1930,8 +1926,8 @@ namespace Epsitec.Common.Widgets.Adorners
 								  Drawing.Rectangle rect)
 		{
 			//	Dessine le rectangle pour indiquer le focus.
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorControlLightLight);
+			rect.Inflate(0.5);
+			AbstractAdorner.DrawFocusedRectangle(graphics, rect, this.colorWhite);
 		}
 
 		public override void PaintTextCursor(Drawing.Graphics graphics,

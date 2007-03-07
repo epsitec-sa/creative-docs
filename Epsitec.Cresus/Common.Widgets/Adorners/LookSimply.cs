@@ -681,8 +681,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			if ( (state&WidgetPaintState.Focused) != 0 )
 			{
 				Drawing.Path pInside = this.PathRoundRectangle(rFocus, radFocus);
-				graphics.Rasterizer.AddOutline(pInside, 1);
-				graphics.RenderSolid(this.colorControlDark);
+				AbstractAdorner.DrawFocusedPath(graphics, pInside, this.colorControlDark);
 			}
 		}
 
@@ -1925,8 +1924,8 @@ namespace Epsitec.Common.Widgets.Adorners
 								  Drawing.Rectangle rect)
 		{
 			//	Dessine le rectangle pour indiquer le focus.
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorControlDark);
+			rect.Inflate(0.5);
+			AbstractAdorner.DrawFocusedRectangle(graphics, rect, this.colorControlDark);
 		}
 
 		public override void PaintTextCursor(Drawing.Graphics graphics,

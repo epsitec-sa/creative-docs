@@ -393,7 +393,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 				if ( (state&WidgetPaintState.Focused) != 0 )
 				{
-					rect.Deflate(3.0);
+					rect.Deflate(3.5);
 					this.PaintFocusBox(graphics, rect);
 				}
 			}
@@ -534,7 +534,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 				if ( (state&WidgetPaintState.Focused) != 0 )
 				{
-					rect.Deflate(3.0);
+					rect.Deflate(3.5);
 					this.PaintFocusBox(graphics, rect);
 				}
 			}
@@ -557,11 +557,11 @@ namespace Epsitec.Common.Widgets.Adorners
 				{
 					if ( System.Math.Min(rect.Width, rect.Height) < 16 )
 					{
-						rect.Deflate(1);
+						rect.Deflate(1.5);
 					}
 					else
 					{
-						rect.Deflate(2);
+						rect.Deflate(2.5);
 					}
 					this.PaintFocusBox(graphics, rect);
 				}
@@ -592,11 +592,11 @@ namespace Epsitec.Common.Widgets.Adorners
 				{
 					if ( System.Math.Min(rect.Width, rect.Height) < 16 )
 					{
-						rect.Deflate(1);
+						rect.Deflate(1.5);
 					}
 					else
 					{
-						rect.Deflate(2);
+						rect.Deflate(2.5);
 					}
 					this.PaintFocusBox(graphics, rect);
 				}
@@ -629,11 +629,11 @@ namespace Epsitec.Common.Widgets.Adorners
 				{
 					if ( System.Math.Min(rect.Width, rect.Height) < 16 )
 					{
-						rect.Deflate(1);
+						rect.Deflate(1.5);
 					}
 					else
 					{
-						rect.Deflate(2);
+						rect.Deflate(2.5);
 					}
 					this.PaintFocusBox(graphics, rect);
 				}
@@ -1617,8 +1617,8 @@ namespace Epsitec.Common.Widgets.Adorners
 								  Drawing.Rectangle rect)
 		{
 			//	Dessine le rectangle pour indiquer le focus.
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorCaption);
+			rect.Inflate(0.5);
+			AbstractAdorner.DrawFocusedRectangle(graphics, rect, this.colorBlack);
 		}
 
 		public override void PaintTextCursor(Drawing.Graphics graphics,

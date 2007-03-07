@@ -487,7 +487,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(this.colorBorder);
 
-				rFocus.Deflate(2, 2);
+				rFocus.Deflate(2);
 			}
 			else if ( style == ButtonStyle.Slider )
 			{
@@ -575,6 +575,8 @@ namespace Epsitec.Common.Widgets.Adorners
 						graphics.RenderSolid(this.colorBorder);
 					}
 				}
+
+				rFocus.Deflate(2);
 			}
 			else if ( style == ButtonStyle.ComboItem )
 			{
@@ -631,6 +633,8 @@ namespace Epsitec.Common.Widgets.Adorners
 						graphics.RenderSolid(this.colorBorder);
 					}
 				}
+
+				rFocus.Deflate(2);
 			}
 			else if ( style == ButtonStyle.ActivableIcon )
 			{
@@ -1732,8 +1736,8 @@ namespace Epsitec.Common.Widgets.Adorners
 								  Drawing.Rectangle rect)
 		{
 			//	Dessine le rectangle pour indiquer le focus.
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorControlDark);
+			rect.Inflate(0.5);
+			AbstractAdorner.DrawFocusedRectangle(graphics, rect, this.colorControlDark);
 		}
 
 		public void PaintFocusBox(Drawing.Graphics graphics,
@@ -1741,8 +1745,7 @@ namespace Epsitec.Common.Widgets.Adorners
 								  double radius)
 		{
 			Drawing.Path path = this.PathRoundRectangle(rect, radius);
-			graphics.Rasterizer.AddOutline(path, 1);
-			graphics.RenderSolid(this.colorControlDark);
+			AbstractAdorner.DrawFocusedPath(graphics, path, this.colorControlDark);
 		}
 
 		public override void PaintTextCursor(Drawing.Graphics graphics,
@@ -1987,8 +1990,8 @@ namespace Epsitec.Common.Widgets.Adorners
 		{
 			//	Retourne le rayon à utiliser pour une zone rectangulaire.
 			double dim = System.Math.Min(rect.Width, rect.Height);
-			//return System.Math.Floor(System.Math.Min(rectMargin, dim/3));
-			return System.Math.Floor(dim/3);
+			return System.Math.Floor(System.Math.Min(4, dim/3));
+			//?return System.Math.Floor(dim/3);
 		}
 
 		protected void Gradient(Drawing.Graphics graphics,

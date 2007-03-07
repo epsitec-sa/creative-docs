@@ -39,6 +39,12 @@ namespace Epsitec.Common.Widgets.Adorners
 			AbstractAdorner.DrawPathDash(graphics, path, 1, 0, 2, color);
 		}
 
+		protected static void DrawFocusedPath(Drawing.Graphics graphics, Drawing.Path path, Drawing.Color color)
+		{
+			//	Dessine un chemin pointillé correspondant à un widget ayant le focus.
+			AbstractAdorner.DrawPathDash(graphics, path, 1, 0, 2, color);
+		}
+
 		protected static void DrawPathDash(Drawing.Graphics graphics, Drawing.Path path, double width, double dash, double gap, Drawing.Color color)
 		{
 			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
