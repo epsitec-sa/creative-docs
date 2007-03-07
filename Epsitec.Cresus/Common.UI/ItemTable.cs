@@ -334,9 +334,9 @@ namespace Epsitec.Common.UI
 		{
 			Margins padding = Margins.Zero;
 
-			this.aperture = Rectangle.Deflate (this.Client.Bounds, this.GetPanelPadding ()).Size;
+			this.apertureSize = Rectangle.Deflate (this.Client.Bounds, this.GetPanelPadding ()).Size;
 
-			Size scrollSize = this.GetScrollSize (this.aperture);
+			Size scrollSize = this.GetScrollSize (this.apertureSize - this.itemPanel.AperturePadding.Size);
 
 			this.UpdateScrollRatios ();
 
@@ -346,27 +346,27 @@ namespace Epsitec.Common.UI
 					if (scrollSize.Height > 0)
 					{
 						this.vScroller.SmallChange = (decimal) (this.itemPanel.ItemViewDefaultSize.Height / scrollSize.Height);
-						this.vScroller.LargeChange = (decimal) (aperture.Height / scrollSize.Height);
+						this.vScroller.LargeChange = (decimal) (apertureSize.Height / scrollSize.Height);
 					}
 					break;
 
 				case ItemTableScrollMode.ItemBased:
 					this.vScroller.SmallChange = 1;
-					this.vScroller.LargeChange = this.itemPanel.GetVisibleLineCount (this.aperture.Height);
+					this.vScroller.LargeChange = this.itemPanel.GetVisibleLineCount (this.apertureSize.Height);
 					this.vScroller.MinValue = 0;
 					this.vScroller.MaxValue = System.Math.Max (0, this.itemPanel.GetTotalLineCount () - this.vScroller.LargeChange);
-					padding.Bottom = this.aperture.Height - this.itemPanel.GetLineHeight () * (double) (this.vScroller.LargeChange);
+					padding.Bottom = this.apertureSize.Height - this.itemPanel.GetLineHeight () * (double) (this.vScroller.LargeChange);
 					break;
 			}
 
 			if (scrollSize.Width > 0)
 			{
-				this.hScroller.SmallChange = (decimal) (aperture.Width * 0.2 / scrollSize.Width);
-				this.hScroller.LargeChange = (decimal) (aperture.Width / scrollSize.Width);
+				this.hScroller.SmallChange = (decimal) (apertureSize.Width * 0.2 / scrollSize.Width);
+				this.hScroller.LargeChange = (decimal) (apertureSize.Width / scrollSize.Width);
 			}
 			
-			double aW = aperture.Width;
-			double aH = aperture.Height;
+			double aW = apertureSize.Width;
+			double aH = apertureSize.Height;
 
 			double ox = System.Math.Floor ((double) this.hScroller.Value * scrollSize.Width);
 			double oy = this.GetVerticalScrollOffset ();
@@ -388,8 +388,8 @@ namespace Epsitec.Common.UI
 
 		private void UpdateScrollRatios()
 		{
-			double hRatio = System.Math.Max (0, System.Math.Min (1, (aperture.Width+1) / (this.itemPanel.PreferredWidth+1)));
-			double vRatio = System.Math.Max (0, System.Math.Min (1, (aperture.Height+1) / (this.itemPanel.PreferredHeight+1)));
+			double hRatio = System.Math.Max (0, System.Math.Min (1, (apertureSize.Width+1) / (this.itemPanel.PreferredWidth+1)));
+			double vRatio = System.Math.Max (0, System.Math.Min (1, (apertureSize.Height+1) / (this.itemPanel.PreferredHeight+1)));
 
 			this.hScroller.VisibleRangeRatio = (decimal) hRatio;
 			this.vScroller.VisibleRangeRatio = (decimal) vRatio;
@@ -414,7 +414,7 @@ namespace Epsitec.Common.UI
 			double dist = (double) (this.vScroller.Value) * this.GetScrollHeight ();
 			double pos = this.itemPanel.GetContentsSize ().Height - dist;
 
-			return pos - this.aperture.Height;
+			return pos - this.apertureSize.Height;
 		}
 
 		private void SetVerticalScrollValueLinear(double offset)
@@ -423,7 +423,7 @@ namespace Epsitec.Common.UI
 			
 			if (height > 0)
 			{
-				double pos = offset + this.aperture.Height;
+				double pos = offset + this.apertureSize.Height;
 				double dist = this.itemPanel.GetContentsSize ().Height - pos;
 				this.vScroller.Value = (decimal) (dist / height);
 			}
@@ -440,12 +440,12 @@ namespace Epsitec.Common.UI
 			ItemView view = this.itemPanel.GetItemView (index);
 			double   pos  = (view == null) ? this.itemPanel.GetContentsSize ().Height : view.Bounds.Top;
 			
-			return pos - this.aperture.Height;
+			return pos - this.apertureSize.Height;
 		}
 
 		private void SetVerticalScrollValueItemBased(double offset)
 		{
-			double pos = offset + this.aperture.Height - 0.5;
+			double pos = offset + this.apertureSize.Height - this.itemPanel.AperturePadding.Height - 0.5;
 			
 			ItemView view = this.itemPanel.FindItemView (
 				delegate (ItemView item)
@@ -470,13 +470,13 @@ namespace Epsitec.Common.UI
 		private double GetScrollWidth()
 		{
 			Size size = this.itemPanel.GetContentsSize ();
-			return System.Math.Max (0, size.Width - this.aperture.Width);
+			return System.Math.Max (0, size.Width - this.apertureSize.Width);
 		}
 
 		private double GetScrollHeight()
 		{
 			Size size = this.itemPanel.GetContentsSize ();
-			return System.Math.Max (0, size.Height - this.aperture.Height);
+			return System.Math.Max (0, size.Height - this.apertureSize.Height);
 		}
 
 		private Size GetScrollSize(Size aperture)
@@ -605,7 +605,7 @@ namespace Epsitec.Common.UI
 		{
 			if (this.suspendScroll == 0)
 			{
-				Size scrollSize = this.GetScrollSize (this.aperture);
+				Size scrollSize = this.GetScrollSize (this.apertureSize - this.itemPanel.AperturePadding.Size);
 
 				double sx = scrollSize.Width;
 				double sy = scrollSize.Height;
@@ -731,7 +731,7 @@ namespace Epsitec.Common.UI
 		private StructuredType							sourceType;
 		private int										suspendColumnUpdates;
 		private Size									defaultItemSize;
-		private Size									aperture;
+		private Size									apertureSize;
 		private int										suspendScroll;
 	}
 }

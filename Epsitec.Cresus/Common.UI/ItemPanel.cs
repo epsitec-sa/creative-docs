@@ -852,7 +852,10 @@ namespace Epsitec.Common.UI
 							}
 						}
 
-						this.Show (newCurrent);
+						if (oldCurrent != newCurrent)
+						{
+							this.Show (newCurrent);
+						}
 					}
 				}
 			}
