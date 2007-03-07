@@ -671,6 +671,7 @@ namespace Epsitec.Common.Dialogs
 			buttonParent.CommandObject = this.parentState.Command;
 			buttonParent.Dock = DockStyle.Right;
 
+#if false
 			this.navigateCombo = new GlyphButton (group);
 			this.navigateCombo.PreferredWidth = 22+22+12;
 			this.navigateCombo.GlyphShape = GlyphShape.ArrowDown;
@@ -696,6 +697,34 @@ namespace Epsitec.Common.Dialogs
 			buttonPrev.TabNavigationMode = TabNavigationMode.None;
 			buttonPrev.CommandObject = this.prevState.Command;
 			buttonPrev.Dock = DockStyle.Right;
+#else
+			GlyphGroup gg = new GlyphGroup(group);
+			gg.PreferredWidth = 22+22+12;
+			gg.TabNavigationMode = TabNavigationMode.None;
+			gg.Dock = DockStyle.Right;
+			gg.Margins = new Margins(0, 10, 0, 0);
+
+			this.navigateCombo = new GlyphButton(gg);
+			this.navigateCombo.PreferredWidth = 22+22+12;
+			this.navigateCombo.GlyphShape = GlyphShape.ArrowDown;
+			this.navigateCombo.GlyphSize = new Size(12, 20);
+			this.navigateCombo.ContentAlignment = ContentAlignment.MiddleRight;
+			this.navigateCombo.ButtonStyle = ButtonStyle.ToolItem;
+			this.navigateCombo.AutoFocus = false;
+			this.navigateCombo.TabNavigationMode = TabNavigationMode.None;
+			this.navigateCombo.Clicked += new MessageEventHandler(this.HandleNavigateComboClicked);
+			ToolTip.Default.SetToolTip(this.navigateCombo, Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Tooltip.VisitedMenu);
+
+			IconButton buttonPrev = new IconButton(gg);
+			buttonPrev.AutoFocus = false;
+			buttonPrev.TabNavigationMode = TabNavigationMode.None;
+			buttonPrev.CommandObject = this.prevState.Command;
+
+			IconButton buttonNext = new IconButton(gg);
+			buttonNext.AutoFocus = false;
+			buttonNext.TabNavigationMode = TabNavigationMode.None;
+			buttonNext.CommandObject = this.nextState.Command;
+#endif
 		}
 
 		private void CreateToolbar()
