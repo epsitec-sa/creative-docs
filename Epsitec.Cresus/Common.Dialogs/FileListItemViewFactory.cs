@@ -19,32 +19,91 @@ namespace Epsitec.Common.Dialogs
 	/// </summary>
 	class FileListItemViewFactory : AbstractItemViewFactory
 	{
-		#region IItemViewFactory Members
-
-		public override Epsitec.Common.Widgets.Widget CreateUserInterface(ItemPanel panel, ItemView itemView)
+		public static Widget FindFileNameWidget(ItemView itemView)
 		{
-			FileListItem item = itemView.Item as FileListItem;
-			ItemPanel rootPanel = panel.RootPanel;
-			ItemPanelColumnHeader header = ItemPanelColumnHeader.GetColumnHeader (rootPanel);
+			Widget itemLine = itemView == null ? null : itemView.Widget;
+			Widget itemName = itemLine == null ? null : itemLine.FindChild ("name");
 
-			System.Diagnostics.Debug.Assert (item != null);
-			System.Diagnostics.Debug.Assert (header != null);
-			System.Diagnostics.Debug.Assert (header.ColumnCount == 5);
+			return itemName;
+		}
+		
+		protected override Widget CreateElement(string name, ItemPanel panel, ItemView view)
+		{
+			FileListItem item = view.Item as FileListItem;
+
+			switch (name)
+			{
+				case "icon":
+					return FileListItemViewFactory.CreateFileIcon (item, view.Size);
+				case "name":
+					return FileListItemViewFactory.CreateFileName (item);
+				case "type":
+					return FileListItemViewFactory.CreateFileInfo (item);
+				case "date":
+					return FileListItemViewFactory.CreateFileDate (item);
+				case "size":
+					return FileListItemViewFactory.CreateFileSize (item);
+			}
+
+			return null;
+		}
+
+		private static Widget CreateFileName(FileListItem item)
+		{
+			StaticText fileName = new StaticText ();
+
+			fileName.Margins = new Margins (6, 0, 0, 0);
+			fileName.ContentAlignment = ContentAlignment.MiddleLeft;
+			fileName.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+			fileName.Text = item.ShortFileName;
 			
-			Widget container = new Widget ();
+			return fileName;
+		}
 
-			container.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+		private static Widget CreateFileInfo(FileListItem item)
+		{
+			StaticText fileInfo = new StaticText ();
 
-			ImagePlaceholder fileIcon = new ImagePlaceholder (container);
-			StaticText fileName = new StaticText (container);
-			StaticText fileInfo = new StaticText (container);
-			StaticText fileDate = new StaticText (container);
-			StaticText fileSize = new StaticText (container);
+			fileInfo.Margins = new Margins (6, 6, 0, 0);
+			fileInfo.ContentAlignment = ContentAlignment.MiddleLeft;
+			fileInfo.TextBreakMode = TextBreakMode.Hyphenate;
+			fileInfo.Text = item.Description;
 
-			fileIcon.Dock = DockStyle.Stacked;
+			return fileInfo;
+		}
+
+		private static Widget CreateFileDate(FileListItem item)
+		{
+			StaticText fileDate = new StaticText ();
+
+			fileDate.Margins = new Margins (6, 0, 0, 0);
+			fileDate.ContentAlignment = ContentAlignment.MiddleLeft;
+			fileDate.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+			fileDate.Text = item.FileDate;
+
+			return fileDate;
+		}
+
+		private static Widget CreateFileSize(FileListItem item)
+		{
+			StaticText fileSize = new StaticText ();
+
+			fileSize.Margins = new Margins (0, 6, 0, 0);
+			fileSize.ContentAlignment = ContentAlignment.MiddleRight;
+			fileSize.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+			fileSize.Text = item.FileSize;
+
+			return fileSize;
+		}
+
+		private static Widget CreateFileIcon(FileListItem item, Drawing.Size size)
+		{
+			ImagePlaceholder fileIcon;
+			
+			fileIcon = new ImagePlaceholder ();
 			fileIcon.Margins = new Margins (1, 1, 1, 1);
 
-			string iconName = item.GetIconName (itemView.Size.Height < 32 ? FileInfoIconSize.Small : FileInfoIconSize.Large);
+			string iconName = item.GetIconName (size.Height < 32 ? FileInfoIconSize.Small : FileInfoIconSize.Large);
 
 			if (string.IsNullOrEmpty (iconName))
 			{
@@ -63,55 +122,7 @@ namespace Epsitec.Common.Dialogs
 				fileIcon.Image = null;
 				fileIcon.PaintFrame = false;
 			}
-			
-			fileIcon.PreferredWidth = header.GetColumnWidth (0) - fileIcon.Margins.Width;
-			string propName = header.GetColumnPropertyName (0);
-
-			fileName.Name = "FileName";
-			fileName.Dock = DockStyle.Stacked;
-			fileName.Margins = new Margins (6, 0, 0, 0);
-			fileName.ContentAlignment = ContentAlignment.MiddleLeft;
-			fileName.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-			fileName.Text = item.ShortFileName;
-			fileName.PreferredWidth = header.GetColumnWidth (1) - fileName.Margins.Width;
-
-			fileInfo.Dock = DockStyle.Stacked;
-			fileInfo.Margins = new Margins (6, 6, 0, 0);
-			fileInfo.ContentAlignment = ContentAlignment.MiddleLeft;
-			fileInfo.TextBreakMode = TextBreakMode.Hyphenate;
-			fileInfo.Text = item.Description;
-			fileInfo.PreferredWidth = header.GetColumnWidth (2) - fileInfo.Margins.Width;
-
-			fileDate.Dock = DockStyle.Stacked;
-			fileDate.Margins = new Margins (6, 0, 0, 0);
-			fileDate.ContentAlignment = ContentAlignment.MiddleLeft;
-			fileDate.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-			fileDate.Text = item.FileDate;
-			fileDate.PreferredWidth = header.GetColumnWidth (3) - fileDate.Margins.Width;
-
-			fileSize.Dock = DockStyle.Stacked;
-			fileSize.Margins = new Margins (0, 6, 0, 0);
-			fileSize.ContentAlignment = ContentAlignment.MiddleRight;
-			fileSize.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-			fileSize.Text = item.FileSize;
-			fileSize.PreferredWidth = header.GetColumnWidth (4) - fileSize.Margins.Width;
-			
-			return container;
-		}
-
-		public override void DisposeUserInterface(ItemView itemView, Epsitec.Common.Widgets.Widget widget)
-		{
-			widget.Dispose ();
-		}
-
-		#endregion
-
-		public static Widget GetFileNameWidget(ItemView itemView)
-		{
-			Widget itemLine = itemView == null ? null : itemView.Widget;
-			Widget itemName = itemLine == null ? null : itemLine.FindChild ("FileName");
-
-			return itemName;
+			return fileIcon;
 		}
 	}
 }

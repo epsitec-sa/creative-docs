@@ -1629,7 +1629,7 @@ namespace Epsitec.Common.Dialogs
 			ItemPanel itemPanel = this.table.ItemPanel;
 			ItemView view = itemPanel.GetItemView (item);
 			itemPanel.Show (view);
-			Widget nameWidget = FileListItemViewFactory.GetFileNameWidget (view);
+			Widget nameWidget = FileListItemViewFactory.FindFileNameWidget (view);
 
 			if (item == null || view == null || nameWidget == null || item.IsSynthetic)
 			{

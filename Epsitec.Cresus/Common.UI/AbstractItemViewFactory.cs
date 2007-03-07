@@ -13,8 +13,15 @@ namespace Epsitec.Common.UI
 		{
 		}
 
-		public abstract Widgets.Widget CreateUserInterface(ItemPanel panel, ItemView itemView);
-		public abstract void DisposeUserInterface(ItemView itemView, Widgets.Widget widget);
+		public virtual Widgets.Widget CreateUserInterface(ItemPanel panel, ItemView itemView)
+		{
+			return this.CreateElements (panel, itemView);
+		}
+
+		public virtual void DisposeUserInterface(ItemView itemView, Widgets.Widget widget)
+		{
+			widget.Dispose ();
+		}
 
 		/// <summary>
 		/// Gets the preferred size of the user interface associated with the
@@ -51,5 +58,52 @@ namespace Epsitec.Common.UI
 			
 			return new Drawing.Size (dx, dy);
 		}
+
+
+		/// <summary>
+		/// Creates the elements used to represent the item.
+		/// </summary>
+		/// <param name="panel">The panel.</param>
+		/// <param name="view">The item view.</param>
+		/// <returns>The container which hosts all the elements.</returns>
+		protected Widgets.Widget CreateElements(ItemPanel panel, ItemView view)
+		{
+			ItemPanel rootPanel = panel.RootPanel;
+			ItemPanelColumnHeader header = ItemPanelColumnHeader.GetColumnHeader (rootPanel);
+
+			System.Diagnostics.Debug.Assert (header != null);
+			System.Diagnostics.Debug.Assert (header.ColumnCount > 0);
+			
+			Widgets.Widget container = new Widgets.Widget ();
+
+			container.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
+
+			for (int i = 0; i < header.ColumnCount; i++)
+			{
+				string name  = header.GetColumnPropertyName (i);
+				double width = header.GetColumnWidth (i);
+
+				Widgets.Widget element = this.CreateElement (name, panel, view);
+
+				if (element != null)
+				{
+					element.Name = name;
+					element.Dock = Widgets.DockStyle.Stacked;
+					element.PreferredWidth = width - element.Margins.Width;
+					container.Children.Add (element);
+				}
+			}
+
+			return container;
+		}
+
+		/// <summary>
+		/// Creates a single element, based on a property name.
+		/// </summary>
+		/// <param name="name">The property name.</param>
+		/// <param name="panel">The panel.</param>
+		/// <param name="view">The item view.</param>
+		/// <returns>The widget which represents the named property.</returns>
+		protected abstract Widgets.Widget CreateElement(string name, ItemPanel panel, ItemView view);
 	}
 }
