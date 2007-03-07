@@ -1876,7 +1876,13 @@ namespace Epsitec.Common.Dialogs
 			string name = TextLayout.ConvertToSimpleText (this.fieldFileName.Text).Trim ();
 			bool synthetic = false;
 
-			if (item != null)
+			List<string> list = null;
+
+			if (item == null)
+			{
+				list = AbstractFileDialog.SplitFilenames(name);
+			}
+			else
 			{
 				name = item.GetResolvedFileName ();
 				synthetic = item.IsSynthetic;
@@ -1899,9 +1905,7 @@ namespace Epsitec.Common.Dialogs
 				return true;
 			}
 
-			List<string> list = AbstractFileDialog.SplitFilenames(name);
-
-			if (list.Count == 1)
+			if (list == null || list.Count == 1)
 			{
 				if (!System.IO.Path.IsPathRooted (name))
 				{
