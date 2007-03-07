@@ -309,7 +309,7 @@ namespace Epsitec.Common.Types
 					result = MoveResult.MoveCurrentToPosition (this, position);
 				}
 
-				return result.RaiseEvents (this);
+				return result.GenerateEvents (this);
 			}
 			else
 			{
@@ -327,7 +327,7 @@ namespace Epsitec.Common.Types
 				this.isCurrentInView = isCurrentInView;
 			}
 
-			public bool RaiseEvents(CollectionView collectionView)
+			public bool GenerateEvents(CollectionView collectionView)
 			{
 				if (this.currentChanged)
 				{
@@ -393,7 +393,7 @@ namespace Epsitec.Common.Types
 					result = MoveResult.MoveCurrentToPosition (this, position);
 				}
 
-				return result.RaiseEvents (this);
+				return result.GenerateEvents (this);
 			}
 			else
 			{
@@ -418,7 +418,7 @@ namespace Epsitec.Common.Types
 					result = MoveResult.MoveCurrentToPosition (this, 0);
 				}
 
-				return result.RaiseEvents (this);
+				return result.GenerateEvents (this);
 			}
 			else
 			{
@@ -443,7 +443,7 @@ namespace Epsitec.Common.Types
 					result = MoveResult.MoveCurrentToPosition (this, this.Count-1);
 				}
 
-				return result.RaiseEvents (this);
+				return result.GenerateEvents (this);
 			}
 			else
 			{
@@ -475,7 +475,7 @@ namespace Epsitec.Common.Types
 					}
 				}
 
-				return result.RaiseEvents (this);
+				return result.GenerateEvents (this);
 			}
 			else
 			{
@@ -508,7 +508,7 @@ namespace Epsitec.Common.Types
 					}
 				}
 
-				return result.RaiseEvents (this);
+				return result.GenerateEvents (this);
 			}
 			else
 			{
@@ -1269,7 +1269,7 @@ namespace Epsitec.Common.Types
 					}
 				}
 
-				result.RaiseEvents (this);
+				result.GenerateEvents (this);
 
 				if (this.IsCurrentAfterLast != isCurrentAfterLast)
 				{

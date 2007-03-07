@@ -269,7 +269,7 @@ namespace Epsitec.Common.UI
 
 			if (selectedViews.Count > 0)
 			{
-				this.DeselectItemViews (selectedViews);
+				this.InternalDeselectItemViews (selectedViews);
 			}
 
 			state.GenerateEvents ();
@@ -284,50 +284,7 @@ namespace Epsitec.Common.UI
 
 			SelectionState state = new SelectionState (this);
 
-			if (view.IsSelected)
-			{
-				this.SetItemViewSelection (view, true);
-			}
-			else
-			{
-				IList<ItemView>        selectedViews;
-				ItemPanelSelectionMode selectionMode;
-				
-				if (ItemPanel.ContainsItem (view))
-				{
-					//	The view specifies a plain item.
-					
-					selectedViews = this.RootPanel.GetSelectedItemViews (ItemPanel.ContainsItem);
-					selectionMode = this.ItemSelectionMode;
-				}
-				else
-				{
-					//	The view specifies a group.
-
-					selectedViews = this.RootPanel.GetSelectedItemViews (ItemPanel.ContainsGroup);
-					selectionMode = this.GroupSelectionMode;
-				}
-
-				System.Diagnostics.Debug.Assert (selectedViews.Contains (view) == false);
-				
-				switch (selectionMode)
-				{
-					case ItemPanelSelectionMode.None:
-						this.DeselectItemViews (selectedViews);
-						break;
-
-					case ItemPanelSelectionMode.ExactlyOne:
-					case ItemPanelSelectionMode.ZeroOrOne:
-						this.DeselectItemViews (selectedViews);
-						this.SetItemViewSelection (view, true);
-						break;
-
-					case ItemPanelSelectionMode.Multiple:
-					case ItemPanelSelectionMode.OneOrMore:
-						this.SetItemViewSelection (view, true);
-						break;
-				}
-			}
+			this.InternalSelectItemView (view);
 
 			state.GenerateEvents ();
 		}
@@ -381,53 +338,8 @@ namespace Epsitec.Common.UI
 		public void DeselectItemView(ItemView view)
 		{
 			SelectionState state = new SelectionState (this);
-			
-			if (view.IsSelected)
-			{
-				IList<ItemView> selectedViews;
-				ItemPanelSelectionMode selectionMode;
 
-				if (ItemPanel.ContainsItem (view))
-				{
-					//	The view specifies a plain item.
-
-					selectedViews = this.RootPanel.GetSelectedItemViews (ItemPanel.ContainsItem);
-					selectionMode = this.ItemSelectionMode;
-				}
-				else
-				{
-					//	The view specifies a group.
-
-					selectedViews = this.RootPanel.GetSelectedItemViews (ItemPanel.ContainsGroup);
-					selectionMode = this.GroupSelectionMode;
-				}
-
-				System.Diagnostics.Debug.Assert (selectedViews.Contains (view));
-
-				switch (selectionMode)
-				{
-					case ItemPanelSelectionMode.None:
-						this.DeselectItemViews (selectedViews);
-						break;
-
-					case ItemPanelSelectionMode.ExactlyOne:
-					case ItemPanelSelectionMode.OneOrMore:
-						if (selectedViews.Count > 1)
-						{
-							this.SetItemViewSelection (view, false);
-						}
-						break;
-
-					case ItemPanelSelectionMode.ZeroOrOne:
-					case ItemPanelSelectionMode.Multiple:
-						this.SetItemViewSelection (view, false);
-						break;
-				}
-			}
-			else
-			{
-				this.SetItemViewSelection (view, false);
-			}
+			this.InternalDeselectItemView (view);
 
 			state.GenerateEvents ();
 		}
@@ -819,11 +731,17 @@ namespace Epsitec.Common.UI
 						switch (message.KeyCode)
 						{
 							case KeyCode.ArrowUp:
-								this.Items.MoveCurrentToPrevious ();
+								if (this.Items.CurrentPosition > 0)
+								{
+									this.Items.MoveCurrentToPrevious ();
+								}
 								break;
 
 							case KeyCode.ArrowDown:
-								this.Items.MoveCurrentToNext ();
+								if (this.Items.CurrentPosition < this.Items.Items.Count-1)
+								{
+									this.Items.MoveCurrentToNext ();
+								}
 								break;
 
 							case KeyCode.Home:
@@ -856,6 +774,8 @@ namespace Epsitec.Common.UI
 							{
 								IList<ItemView> list = this.GetSelectedItemViews ();
 
+								SelectionState state = new SelectionState (this);
+								
 								if ((message.IsShiftPressed) &&
 									(list.Count > 0))
 								{
@@ -891,19 +811,19 @@ namespace Epsitec.Common.UI
 										index1 = index2;
 										index2 = temp;
 									}
-
+									
 									if (newIndex < oldIndex)
 									{
 										for (int i = index2; i >= index1; i--)
 										{
-											this.SelectItemView (this.GetItemView (i));
+											this.InternalSelectItemView (this.GetItemView (i));
 										}
 									}
 									else
 									{
 										for (int i = index1; i <= index2; i++)
 										{
-											this.SelectItemView (this.GetItemView (i));
+											this.InternalSelectItemView (this.GetItemView (i));
 										}
 									}
 
@@ -918,14 +838,17 @@ namespace Epsitec.Common.UI
 										}
 									}
 
-									this.DeselectItemViews (deselect);
+									this.InternalDeselectItemViews (deselect);
+
 									this.Items.MoveCurrentToPosition (newIndex);
 								}
 								else
 								{
-									this.DeselectAllItemViews ();
-									this.SelectItemView (newCurrent);
+									this.InternalDeselectItemViews (list);
+									this.InternalSelectItemView (newCurrent);
 								}
+								
+								state.GenerateEvents ();
 							}
 						}
 
@@ -945,6 +868,8 @@ namespace Epsitec.Common.UI
 			bool select = !view.IsSelected;
 			bool action = false;
 
+			SelectionState state = new SelectionState (this);
+
 			switch (this.SelectionBehavior)
 			{
 				case ItemPanelSelectionBehavior.Automatic:
@@ -955,7 +880,7 @@ namespace Epsitec.Common.UI
 					action = true;
 					if (!expand)
 					{
-						this.DeselectAllItemViews ();
+						this.InternalDeselectItemViews (this.GetSelectedItemViews ());
 					}
 					break;
 
@@ -963,7 +888,7 @@ namespace Epsitec.Common.UI
 					action = true;
 					if (!expand)
 					{
-						this.DeselectAllItemViews ();
+						this.InternalDeselectItemViews (this.GetSelectedItemViews ());
 						select = true;
 					}
 					break;
@@ -973,13 +898,15 @@ namespace Epsitec.Common.UI
 			{
 				if (select)
 				{
-					this.SelectItemView (view);
+					this.InternalSelectItemView (view);
 				}
 				else
 				{
-					this.DeselectItemView (view);
+					this.InternalDeselectItemView (view);
 				}
 			}
+
+			state.GenerateEvents ();
 		}
 
 		private static ItemView GetFirstSelectedItemView(IEnumerable<ItemView> list)
@@ -1096,7 +1023,105 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		private void DeselectItemViews(IEnumerable<ItemView> views)
+		private void InternalSelectItemView(ItemView view)
+		{
+			if (view.IsSelected)
+			{
+				this.SetItemViewSelection (view, true);
+			}
+			else
+			{
+				IList<ItemView> selectedViews;
+				ItemPanelSelectionMode selectionMode;
+
+				if (ItemPanel.ContainsItem (view))
+				{
+					//	The view specifies a plain item.
+
+					selectedViews = this.RootPanel.GetSelectedItemViews (ItemPanel.ContainsItem);
+					selectionMode = this.ItemSelectionMode;
+				}
+				else
+				{
+					//	The view specifies a group.
+
+					selectedViews = this.RootPanel.GetSelectedItemViews (ItemPanel.ContainsGroup);
+					selectionMode = this.GroupSelectionMode;
+				}
+
+				System.Diagnostics.Debug.Assert (selectedViews.Contains (view) == false);
+
+				switch (selectionMode)
+				{
+					case ItemPanelSelectionMode.None:
+						this.InternalDeselectItemViews (selectedViews);
+						break;
+
+					case ItemPanelSelectionMode.ExactlyOne:
+					case ItemPanelSelectionMode.ZeroOrOne:
+						this.InternalDeselectItemViews (selectedViews);
+						this.SetItemViewSelection (view, true);
+						break;
+
+					case ItemPanelSelectionMode.Multiple:
+					case ItemPanelSelectionMode.OneOrMore:
+						this.SetItemViewSelection (view, true);
+						break;
+				}
+			}
+		}
+
+		private void InternalDeselectItemView(ItemView view)
+		{
+			if (view.IsSelected)
+			{
+				IList<ItemView> selectedViews;
+				ItemPanelSelectionMode selectionMode;
+
+				if (ItemPanel.ContainsItem (view))
+				{
+					//	The view specifies a plain item.
+
+					selectedViews = this.RootPanel.GetSelectedItemViews (ItemPanel.ContainsItem);
+					selectionMode = this.ItemSelectionMode;
+				}
+				else
+				{
+					//	The view specifies a group.
+
+					selectedViews = this.RootPanel.GetSelectedItemViews (ItemPanel.ContainsGroup);
+					selectionMode = this.GroupSelectionMode;
+				}
+
+				System.Diagnostics.Debug.Assert (selectedViews.Contains (view));
+
+				switch (selectionMode)
+				{
+					case ItemPanelSelectionMode.None:
+						this.InternalDeselectItemViews (selectedViews);
+						break;
+
+					case ItemPanelSelectionMode.ExactlyOne:
+					case ItemPanelSelectionMode.OneOrMore:
+						if (selectedViews.Count > 1)
+						{
+							this.SetItemViewSelection (view, false);
+						}
+						break;
+
+					case ItemPanelSelectionMode.ZeroOrOne:
+					case ItemPanelSelectionMode.Multiple:
+						this.SetItemViewSelection (view, false);
+						break;
+				}
+			}
+			else
+			{
+				this.SetItemViewSelection (view, false);
+			}
+		}
+
+		private void InternalDeselectItemViews(IEnumerable<ItemView> views)
 		{
 			foreach (ItemView view in views)
 			{
