@@ -147,7 +147,10 @@ namespace Epsitec.Common.IO
 
 		private static void HandleAssemblyLoad(object sender, System.AssemblyLoadEventArgs e)
 		{
-			GenericDeserializationBinder.assemblies.Add (e.LoadedAssembly);
+			if (!e.LoadedAssembly.ReflectionOnly)
+			{
+				GenericDeserializationBinder.assemblies.Add (e.LoadedAssembly);
+			}
 		}
 		
 		

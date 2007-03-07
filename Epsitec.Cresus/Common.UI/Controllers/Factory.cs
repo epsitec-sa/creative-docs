@@ -98,8 +98,11 @@ namespace Epsitec.Common.UI.Controllers
 
 		private static void HandleDomainAssemblyLoad(object sender, System.AssemblyLoadEventArgs args)
 		{
-			Factory.assemblies.Add (args.LoadedAssembly);
-			Factory.Analyse (args.LoadedAssembly);
+			if (!args.LoadedAssembly.ReflectionOnly)
+			{
+				Factory.assemblies.Add (args.LoadedAssembly);
+				Factory.Analyse (args.LoadedAssembly);
+			}
 		}
 
 		#endregion

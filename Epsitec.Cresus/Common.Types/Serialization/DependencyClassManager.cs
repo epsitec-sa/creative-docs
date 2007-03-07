@@ -112,8 +112,11 @@ namespace Epsitec.Common.Types.Serialization
 
 		private void HandleDomainAssemblyLoad(object sender, System.AssemblyLoadEventArgs args)
 		{
-			this.assemblies.Add (args.LoadedAssembly);
-			this.Analyse (args.LoadedAssembly);
+			if (!args.LoadedAssembly.ReflectionOnly)
+			{
+				this.assemblies.Add (args.LoadedAssembly);
+				this.Analyse (args.LoadedAssembly);
+			}
 		}
 		
 		private static DependencyClassManager	current;

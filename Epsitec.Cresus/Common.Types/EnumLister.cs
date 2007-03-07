@@ -101,8 +101,11 @@ namespace Epsitec.Common.Types
 
 		private static void HandleDomainAssemblyLoad(object sender, System.AssemblyLoadEventArgs args)
 		{
-			EnumLister.assemblies.Add (args.LoadedAssembly);
-			EnumLister.Analyse (args.LoadedAssembly);
+			if (!args.LoadedAssembly.ReflectionOnly)
+			{
+				EnumLister.assemblies.Add (args.LoadedAssembly);
+				EnumLister.Analyse (args.LoadedAssembly);
+			}
 		}
 
 		#endregion
