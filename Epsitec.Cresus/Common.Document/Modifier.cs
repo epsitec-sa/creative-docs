@@ -1,8 +1,10 @@
-using System.Collections.Generic;
-using Epsitec.Common.Support;
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
 using Epsitec.Common.IO;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Document
 {
@@ -943,7 +945,15 @@ namespace Epsitec.Common.Document
 
 			set
 			{
-				this.totalSelected = value;
+				int oldValue = this.TotalSelected;
+				int newValue = value;
+
+				if (oldValue != newValue)
+				{
+					this.totalSelected = newValue;
+					
+					this.OnTotalSelectedChanged(new DependencyPropertyChangedEventArgs("TotalSelected", oldValue, newValue));
+				}
 			}
 		}
 
@@ -994,6 +1004,17 @@ namespace Epsitec.Common.Document
 				}
 			}
 		}
+
+		protected virtual void OnTotalSelectedChanged(DependencyPropertyChangedEventArgs e)
+		{
+			if (this.TotalSelectedChanged != null)
+			{
+				this.TotalSelectedChanged (this, e);
+			}
+		}
+
+		public event EventHandler<DependencyPropertyChangedEventArgs> TotalSelectedChanged;
+
 		#endregion
 
 

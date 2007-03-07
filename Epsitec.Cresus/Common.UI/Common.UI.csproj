@@ -111,6 +111,7 @@
   <ItemGroup>
     <Compile Include="Collections\ItemTableColumnCollection.cs" />
     <Compile Include="ColumnWidthChangeEventArgs.cs" />
+    <Compile Include="AbstractItemViewFactory.cs" />
     <Compile Include="ItemPanelSelectionBehavior.cs" />
     <Compile Include="ItemTableScrollMode.cs" />
     <Compile Include="PanelActivationEventArgs.cs" />

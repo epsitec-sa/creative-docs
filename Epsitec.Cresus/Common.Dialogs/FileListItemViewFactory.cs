@@ -17,11 +17,11 @@ namespace Epsitec.Common.Dialogs
 	/// The <c>FileItemViewFactory</c> class populates the ItemView with the
 	/// visual representation of a <c>FileItem</c> instance.
 	/// </summary>
-	class FileListItemViewFactory : IItemViewFactory
+	class FileListItemViewFactory : AbstractItemViewFactory
 	{
 		#region IItemViewFactory Members
 
-		public Epsitec.Common.Widgets.Widget CreateUserInterface(ItemPanel panel, ItemView itemView)
+		public override Epsitec.Common.Widgets.Widget CreateUserInterface(ItemPanel panel, ItemView itemView)
 		{
 			FileListItem item = itemView.Item as FileListItem;
 			ItemPanel rootPanel = panel.RootPanel;
@@ -65,6 +65,7 @@ namespace Epsitec.Common.Dialogs
 			}
 			
 			fileIcon.PreferredWidth = header.GetColumnWidth (0) - fileIcon.Margins.Width;
+			string propName = header.GetColumnPropertyName (0);
 
 			fileName.Name = "FileName";
 			fileName.Dock = DockStyle.Stacked;
@@ -98,34 +99,9 @@ namespace Epsitec.Common.Dialogs
 			return container;
 		}
 
-		public void DisposeUserInterface(ItemView itemView, Epsitec.Common.Widgets.Widget widget)
+		public override void DisposeUserInterface(ItemView itemView, Epsitec.Common.Widgets.Widget widget)
 		{
 			widget.Dispose ();
-		}
-
-		public Epsitec.Common.Drawing.Size GetPreferredSize(ItemPanel panel, ItemView itemView)
-		{
-			ItemPanel rootPanel = panel.RootPanel;
-			ItemPanelColumnHeader header = ItemPanelColumnHeader.GetColumnHeader (rootPanel);
-			ItemTable table = ItemTable.GetItemTable (rootPanel);
-
-			if (header == null)
-			{
-				return itemView.Size;
-			}
-			else if (table == null)
-			{
-				return new Size (header.GetTotalWidth (), itemView.Size.Height);
-			}
-			else
-			{
-				//	TODO: better handling here... this only works for vertical layout!
-
-				double dx = header.GetTotalWidth ();
-				double dy = rootPanel.ItemViewDefaultSize.Height;
-
-				return new Size (dx, dy);
-			}
 		}
 
 		#endregion
