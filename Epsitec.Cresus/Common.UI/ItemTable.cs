@@ -227,6 +227,16 @@ namespace Epsitec.Common.UI
 			return this.defaultItemSize;
 		}
 
+		protected override void OnSizeChanged(Size oldValue, Size newValue)
+		{
+			base.OnSizeChanged (oldValue, newValue);
+
+			if (this.itemPanel.Layout != ItemPanelLayout.VerticalList)
+			{
+				this.itemPanel.RefreshLayout ();
+			}
+		}
+		
 		protected override void ProcessMessage(Message message, Point pos)
 		{
 			base.ProcessMessage(message, pos);

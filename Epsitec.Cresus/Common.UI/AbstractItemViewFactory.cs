@@ -50,6 +50,9 @@ namespace Epsitec.Common.UI
 
 			double dx = itemView.Size.Width;
 			double dy = itemView.Size.Height;
+
+			dx = rootPanel.ItemViewDefaultSize.Width;
+			dy = rootPanel.ItemViewDefaultSize.Height;
 			
 			if (header != null)
 			{
@@ -85,10 +88,24 @@ namespace Epsitec.Common.UI
 
 			System.Diagnostics.Debug.Assert (header != null);
 			System.Diagnostics.Debug.Assert (header.ColumnCount > 0);
-			
+
 			Widgets.Widget container = new Widgets.Widget ();
 
-			container.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
+			container.PreferredSize = view.Size;
+
+			switch (panel.ItemViewShape)
+			{
+				case ItemViewShape.Row:
+					container.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
+					break;
+
+				case ItemViewShape.Tile:
+					container.ContainerLayoutMode = Widgets.ContainerLayoutMode.VerticalFlow;
+					break;
+
+				default:
+					throw new System.NotSupportedException (string.Format ("ItemViewShape {0} not supported", panel.ItemViewShape));
+			}
 
 			for (int i = 0; i < header.ColumnCount; i++)
 			{

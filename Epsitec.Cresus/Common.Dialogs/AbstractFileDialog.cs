@@ -484,7 +484,13 @@ namespace Epsitec.Common.Dialogs
 			this.table.Items = this.filesCollectionView;
 			this.table.AutoFocus = true;
 			this.table.VerticalScrollMode = ItemTableScrollMode.ItemBased;
-			this.table.ItemPanel.ItemViewDefaultSize = new Size (this.table.Parent.PreferredWidth, cellHeight);
+			
+#if false
+			this.SetItemViewDisposition (cellHeight, ItemPanelLayout.RowsOfTiles);
+#else
+			this.SetItemViewDisposition (cellHeight, ItemPanelLayout.VerticalList);
+#endif
+			
 			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 72));
 			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 195));
 			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("info", 120, FileListItem.GetDescriptionPropertyComparer ()));
@@ -504,6 +510,32 @@ namespace Epsitec.Common.Dialogs
 			this.useLargeIcons = false;
 
 			this.UpdateFileList ();
+		}
+
+		private void SetItemViewDisposition(double size)
+		{
+			this.SetItemViewDisposition (size, this.table.ItemPanel.Layout);
+		}
+		
+		private void SetItemViewDisposition(ItemPanelLayout layout)
+		{
+			this.SetItemViewDisposition (this.itemViewSize, layout);
+		}
+		
+		private void SetItemViewDisposition(double size, ItemPanelLayout layout)
+		{
+			this.table.ItemPanel.Layout = layout;
+			this.itemViewSize = size;
+
+			switch (layout)
+			{
+				case ItemPanelLayout.RowsOfTiles:
+				case ItemPanelLayout.ColumnsOfTiles:
+					size += 40;
+					break;
+			}
+
+			this.table.ItemPanel.ItemViewDefaultSize = new Size (size, size);
 		}
 
 		private void CreateCollectionView()
@@ -2485,7 +2517,7 @@ namespace Epsitec.Common.Dialogs
 			//#this.table.DefHeight = (double) this.slider.Value;
 			//#this.table.HeaderHeight = 20;
 
-			this.table.ItemPanel.ItemViewDefaultSize = new Size (this.table.Parent.PreferredWidth, (double) this.slider.Value);
+			this.SetItemViewDisposition ((double) this.slider.Value);
 		}
 
 		private void HandleWindowCloseClicked(object sender)
@@ -2603,6 +2635,7 @@ namespace Epsitec.Common.Dialogs
 		private CollectionView				filesCollectionView;
 		private List<FileListJob>			fileListJobs = new List<FileListJob> ();
 		private bool						useLargeIcons;
+		private double						itemViewSize;
 		private string						title;
 	}
 }

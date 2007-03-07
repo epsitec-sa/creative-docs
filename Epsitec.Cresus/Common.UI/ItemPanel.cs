@@ -80,6 +80,25 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public ItemViewShape ItemViewShape
+		{
+			get
+			{
+				switch (this.Layout)
+				{
+					case ItemPanelLayout.VerticalList:
+						return ItemViewShape.Row;
+
+					case ItemPanelLayout.ColumnsOfTiles:
+					case ItemPanelLayout.RowsOfTiles:
+						return ItemViewShape.Tile;
+
+					default:
+						throw new System.NotSupportedException (string.Format ("Layout {0} not supported", this.Layout));
+				}
+			}
+		}
+
 		public ItemPanelSelectionBehavior SelectionBehavior
 		{
 			get
@@ -185,6 +204,14 @@ namespace Epsitec.Common.UI
 				case ItemPanelLayout.VerticalList:
 					return views.Count;
 
+				case ItemPanelLayout.RowsOfTiles:
+					//	TODO: calculer le nombre de lignes
+					return views.Count;
+
+				case ItemPanelLayout.ColumnsOfTiles:
+					//	TODO: calculer le nombre de lignes
+					return views.Count;
+				
 				default:
 					return -1;
 			}
@@ -1301,7 +1328,7 @@ namespace Epsitec.Common.UI
 			state.GenerateEvents ();
 		}
 		
-		private void RefreshLayout()
+		public void RefreshLayout()
 		{
 			RefreshState state = new RefreshState (this);
 
@@ -1323,6 +1350,14 @@ namespace Epsitec.Common.UI
 			{
 				case ItemPanelLayout.VerticalList:
 					this.LayoutVerticalList (views);
+					break;
+
+				case ItemPanelLayout.RowsOfTiles:
+					this.LayoutRowsOfTiles (views);
+					break;
+				
+				case ItemPanelLayout.ColumnsOfTiles:
+					this.LayoutColumnsOfTiles (views);
 					break;
 			}
 		}
@@ -1410,6 +1445,91 @@ namespace Epsitec.Common.UI
 			}
 
 			this.UpdatePreferredSize (maxDx, dy);
+		}
+
+		private void LayoutRowsOfTiles(IEnumerable<ItemView> views)
+		{
+			double width = this.Aperture.Width;
+			
+			double minDy = 0;
+			double minDx = 0;
+			double maxDy = 0;
+			double maxDx = 0;
+
+			double dx = 0;
+			double dy = 0;
+			double ly = 0;
+			double lx = 0;
+
+			foreach (ItemView view in views)
+			{
+				Size size = view.Size;
+
+				if ((dx == 0) && (dy == 0))
+				{
+					minDx = size.Width;
+					minDy = size.Height;
+					maxDx = size.Width;
+					maxDy = size.Height;
+				}
+				else
+				{
+					minDx = System.Math.Min (minDx, size.Width);
+					minDy = System.Math.Min (minDy, size.Height);
+					maxDx = System.Math.Min (maxDx, size.Width);
+					maxDy = System.Math.Min (maxDy, size.Height);
+				}
+
+				dx += size.Width;
+
+				if (dx > width)
+				{
+					dx  = size.Width;
+					dy += ly;
+					ly  = 0;
+				}
+
+				lx = System.Math.Max (lx, dx);
+				ly = System.Math.Max (ly, size.Height);
+			}
+
+			this.minItemWidth  = minDx;
+			this.maxItemWidth  = maxDx;
+
+			this.minItemHeight = minDy;
+			this.maxItemHeight = maxDy;
+
+			dy += ly;
+
+			double x = 0;
+			double y = dy;
+
+			ly = 0;
+
+			foreach (ItemView view in views)
+			{
+				double h = view.Size.Height;
+				double w = view.Size.Width;
+
+				if (x+w > width)
+				{
+					x  = 0;
+					y -= ly;
+					ly = 0;
+				}
+
+				view.Bounds = new Rectangle (x, y-h, w, h);
+
+				x += w;
+				ly = System.Math.Max (ly, h);
+			}
+
+			this.UpdatePreferredSize (lx, dy);
+		}
+
+		private void LayoutColumnsOfTiles(IEnumerable<ItemView> views)
+		{
+			throw new System.Exception ("The method or operation is not implemented.");
 		}
 
 		private void UpdatePreferredSize(double width, double height)
