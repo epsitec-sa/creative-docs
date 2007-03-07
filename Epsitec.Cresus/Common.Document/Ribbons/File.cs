@@ -27,6 +27,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonLastModels.Anchor = AnchorStyles.All;
 			this.buttonLastModels.SetParent(this.groupNew);
 			this.buttonNew = this.CreateIconButton("New", "Large");
+			this.buttonNew.ButtonStyle = ButtonStyle.ComboItem;
 			this.buttonNew.PreferredSize = new Size(dx*1.5, dy*1.5);
 			this.buttonNew.Dock = DockStyle.Top;
 			this.buttonNew.SetParent(this.groupNew);
@@ -38,6 +39,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonLastFiles.Anchor = AnchorStyles.All;
 			this.buttonLastFiles.SetParent(this.groupOpen);
 			this.buttonOpen = this.CreateIconButton("Open", "Large");
+			this.buttonOpen.ButtonStyle = ButtonStyle.ComboItem;
 			this.buttonOpen.PreferredSize = new Size(dx*1.5, dy*1.5);
 			this.buttonOpen.Dock = DockStyle.Top;
 			this.buttonOpen.SetParent(this.groupOpen);

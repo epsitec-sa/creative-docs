@@ -26,12 +26,14 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonList.SetParent(this.groupUndo);
 
 			this.buttonUndo = this.CreateIconButton("Undo", "Large");
+			this.buttonUndo.ButtonStyle = ButtonStyle.ComboItem;
 			this.buttonUndo.PreferredSize = new Size(dx*1.5, dy*1.5);
 			this.buttonUndo.Dock = DockStyle.Left;
 			this.buttonUndo.VerticalAlignment = VerticalAlignment.Top;
 			this.buttonUndo.SetParent(this.groupUndo);
 
 			this.buttonRedo = this.CreateIconButton("Redo", "Large");
+			this.buttonRedo.ButtonStyle = ButtonStyle.ComboItem;
 			this.buttonRedo.PreferredSize = new Size(dx*1.5, dy*1.5);
 			this.buttonRedo.Dock = DockStyle.Left;
 			this.buttonRedo.VerticalAlignment = VerticalAlignment.Top;

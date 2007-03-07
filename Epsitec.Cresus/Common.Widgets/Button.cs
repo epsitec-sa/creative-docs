@@ -20,6 +20,7 @@ namespace Epsitec.Common.Widgets
 		Icon,							// bouton pour une icône
 		ActivableIcon,					// bouton pour une icône activable
 		ToolItem,						// bouton pour barre d'icône
+		ComboItem,						// bouton pour menu-combo
 		ListItem,						// bouton pour liste
 		HeaderSlider,					// bouton pour modifier une largeur de colonne
 		

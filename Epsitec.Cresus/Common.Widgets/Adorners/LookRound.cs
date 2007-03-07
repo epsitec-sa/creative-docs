@@ -621,6 +621,26 @@ namespace Epsitec.Common.Widgets.Adorners
 				rFocus.Right ++;
 				radFocus = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
 			}
+			else if ( style == ButtonStyle.ComboItem )
+			{
+				if ( (state&WidgetPaintState.Entered)   != 0 ||  // bouton survolé ?
+					 (state&WidgetPaintState.Engaged)   != 0 ||  // bouton pressé ?
+					 (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
+				{
+					double radius = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
+					Drawing.Path path = this.PathRoundRectangle(rect, radius);
+
+					if ((state&WidgetPaintState.Selected) == 0)
+					{
+						graphics.Rasterizer.AddSurface(path);
+						graphics.RenderSolid(this.colorCaptionLight);
+					}
+
+					graphics.Rasterizer.AddOutline(path, 1);
+					graphics.RenderSolid(this.colorCaption);
+				}
+				radFocus = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
+			}
 			else if ( style == ButtonStyle.ActivableIcon )
 			{
 				if ( AbstractAdorner.IsThreeState2(state) )

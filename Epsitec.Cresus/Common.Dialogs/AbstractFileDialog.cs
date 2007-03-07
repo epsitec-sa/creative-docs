@@ -705,10 +705,10 @@ namespace Epsitec.Common.Dialogs
 			combo.Margins = new Margins(0, 10, 0, 0);
 
 			this.navigateCombo = new GlyphButton(combo);
+			this.navigateCombo.ButtonStyle = ButtonStyle.ComboItem;
 			this.navigateCombo.GlyphShape = GlyphShape.ArrowDown;
 			this.navigateCombo.GlyphSize = new Size(12, 20);
 			this.navigateCombo.ContentAlignment = ContentAlignment.MiddleRight;
-			this.navigateCombo.ButtonStyle = ButtonStyle.ToolItem;
 			this.navigateCombo.AutoFocus = false;
 			this.navigateCombo.TabNavigationMode = TabNavigationMode.None;
 			this.navigateCombo.Anchor = AnchorStyles.All;

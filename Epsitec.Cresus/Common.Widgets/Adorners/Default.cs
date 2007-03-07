@@ -506,7 +506,8 @@ namespace Epsitec.Common.Widgets.Adorners
 				this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
 				this.PaintL(graphics, rInside, this.colorControlDark, shadow);
 			}
-			else if ( style == ButtonStyle.ToolItem )
+			else if ( style == ButtonStyle.ToolItem  ||
+					  style == ButtonStyle.ComboItem )
 			{
 				graphics.AddFilledRectangle(rect);
 				if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?

@@ -621,6 +621,52 @@ namespace Epsitec.Common.Widgets.Adorners
 					this.PaintFocusBox(graphics, rect);
 				}
 			}
+			else if ( style == ButtonStyle.ComboItem )
+			{
+				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
+				{
+					if ((state&WidgetPaintState.Selected) == 0)
+					{
+						graphics.AddFilledRectangle(rect);
+						graphics.RenderSolid(this.colorCaptionNF);
+					}
+
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.colorBorder);
+				}
+				else if ( (state&WidgetPaintState.Engaged) != 0 )   // bouton pressé ?
+				{
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(this.colorCaptionNF);
+
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.colorBorder);
+				}
+				else if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
+				{
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(this.colorCaption);
+
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.colorBorder);
+				}
+
+				if ( (state&WidgetPaintState.Focused) != 0 )
+				{
+					if ( System.Math.Min(rect.Width, rect.Height) < 16 )
+					{
+						rect.Deflate(2);
+					}
+					else
+					{
+						rect.Deflate(3);
+					}
+					this.PaintFocusBox(graphics, rect);
+				}
+			}
 			else if ( style == ButtonStyle.ActivableIcon )
 			{
 				if ( AbstractAdorner.IsThreeState2(state) )

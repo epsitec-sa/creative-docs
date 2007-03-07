@@ -566,6 +566,41 @@ namespace Epsitec.Common.Widgets.Adorners
 					this.PaintFocusBox(graphics, rect);
 				}
 			}
+			else if ( style == ButtonStyle.ComboItem )
+			{
+				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
+				{
+					if ((state&WidgetPaintState.Selected) == 0)
+					{
+						this.PaintImageButton(graphics, rect, 47);
+					}
+					else  // groupe d'un combo ?
+					{
+						this.PaintImageButton(graphics, rect, 44);
+					}
+				}
+				else if ( (state&WidgetPaintState.Engaged) != 0 )   // bouton pressé ?
+				{
+					this.PaintImageButton(graphics, rect, 47);
+				}
+				else if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
+				{
+					this.PaintImageButton(graphics, rect, 46);
+				}
+
+				if ( (state&WidgetPaintState.Focused) != 0 )
+				{
+					if ( System.Math.Min(rect.Width, rect.Height) < 16 )
+					{
+						rect.Deflate(1);
+					}
+					else
+					{
+						rect.Deflate(2);
+					}
+					this.PaintFocusBox(graphics, rect);
+				}
+			}
 			else if ( style == ButtonStyle.ActivableIcon )
 			{
 				if ( AbstractAdorner.IsThreeState2(state) )

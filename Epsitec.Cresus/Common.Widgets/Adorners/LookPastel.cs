@@ -581,6 +581,33 @@ namespace Epsitec.Common.Widgets.Adorners
 				}
 				rFocus.Inflate(1.0);
 			}
+			else if ( style == ButtonStyle.ComboItem )
+			{
+				if ( (state&WidgetPaintState.Engaged) != 0 )   // bouton pressé ?
+				{
+					this.PaintImageButton(graphics, rInside, 11);
+				}
+				if ( (state&WidgetPaintState.Entered) != 0 )   // bouton survolé ?
+				{
+					if ((state&WidgetPaintState.Selected) == 0)
+					{
+						this.PaintImageButton(graphics, rInside, 11);
+					}
+					else  // groupe d'un combo ?
+					{
+						this.PaintImageButton(graphics, rInside, 16);
+					}
+				}
+				if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
+				{
+					this.PaintImageButton(graphics, rInside, 8);
+
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.ColorOutline(state));
+				}
+				rFocus.Inflate(1.0);
+			}
 			else if ( style == ButtonStyle.ActivableIcon )
 			{
 				if ( AbstractAdorner.IsThreeState2(state) )
