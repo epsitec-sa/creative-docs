@@ -47,12 +47,27 @@ namespace Epsitec.Common.UI
 		{
 			ItemPanel rootPanel = panel.RootPanel;
 			ItemPanelColumnHeader header = ItemPanelColumnHeader.GetColumnHeader (rootPanel);
+			ItemTable rootTable = ItemTable.GetItemTable (rootPanel);
 
-			double dx = itemView.Size.Width;
-			double dy = itemView.Size.Height;
+			double dx;
+			double dy;
 
-			dx = rootPanel.ItemViewDefaultSize.Width;
-			dy = rootPanel.ItemViewDefaultSize.Height;
+#if false
+			if (rootTable != null)
+			{
+				Drawing.Size size = rootTable.GetDefaultItemSize (itemView);
+				
+				dx = size.Width;
+				dy = size.Height;
+			}
+			else
+#endif
+			{
+				Drawing.Size size = rootPanel.ItemViewDefaultSize;
+				
+				dx = size.Width;
+				dy = size.Height;
+			}
 			
 			if (header != null)
 			{

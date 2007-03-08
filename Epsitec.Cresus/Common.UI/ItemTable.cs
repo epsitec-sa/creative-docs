@@ -52,6 +52,7 @@ namespace Epsitec.Common.UI
 			this.itemPanel.ContentsSizeChanged += this.HandleContentsSizeChanged;
 			this.itemPanel.CurrentChanged += this.HandleItemPanelCurrentChanged;
 			this.itemPanel.Clicked += this.HandleItemPanelClicked;
+			this.itemPanel.AddEventHandler (ItemPanel.LayoutProperty, this.HandleItemPanelLayoutChanged);
 			
 			this.itemPanel.Layout = ItemPanelLayout.VerticalList;
 			this.itemPanel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne;
@@ -559,14 +560,32 @@ namespace Epsitec.Common.UI
 						}
 					}
 
-					Size size = this.itemPanel.ItemViewDefaultSize;
+					Size   size  = this.itemPanel.ItemViewDefaultSize;
+					double width = column.Width.Value;
 
 					if (column.TemplateId.IsValid)
 					{
 						size = Panel.GetPanelDefaultSize (column.TemplateId, manager);
 					}
+					else
+					{
+						size.Width = size.Width / this.columns.Count;
+					}
 
-					double width = column.Width.IsAbsolute ? column.Width.Value : size.Width;
+					switch (column.Width.GridUnitType)
+					{
+						case Widgets.Layouts.GridUnitType.Absolute:
+							width = column.Width.Value;
+							break;
+
+						case Widgets.Layouts.GridUnitType.Auto:
+							width = size.Width;
+							break;
+
+						case Widgets.Layouts.GridUnitType.Proportional:
+							//	TODO: gérer les colonnes proportionnelles
+							break;
+					}
 
 					this.columnHeader.SetColumnWidth (headerIndex, width);
 					this.columnHeader.SetColumnComparer (headerIndex, column.Comparer);
@@ -600,6 +619,11 @@ namespace Epsitec.Common.UI
 		private void HandleItemPanelApertureChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			this.SynchronizeScrollers ((Rectangle) e.NewValue);
+		}
+
+		private void HandleItemPanelLayoutChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			//	...
 		}
 
 		private void HandleItemPanelClicked(object sender, MessageEventArgs e)
