@@ -1435,12 +1435,15 @@ namespace Epsitec.Common.UI
 			this.maxItemHeight = maxDy;
 
 			double y = dy;
+			int row = 0;
 			
 			foreach (ItemView view in views)
 			{
 				double h = view.Size.Height;
 				y -= h;
 				view.Bounds = new Rectangle (0, y, maxDx, h);
+				view.RowIndex = row++;
+				view.ColumnIndex = 0;
 			}
 
 			this.UpdatePreferredSize (maxDx, dy);
@@ -1511,6 +1514,8 @@ namespace Epsitec.Common.UI
 			double y = dy;
 
 			ly = 0;
+			int row = 0;
+			int column = 0;
 
 			foreach (ItemView view in views)
 			{
@@ -1522,12 +1527,17 @@ namespace Epsitec.Common.UI
 					x  = 0;
 					y -= ly;
 					ly = 0;
+					column = 0;
+					row++;
 				}
 
 				view.Bounds = new Rectangle (x, y-h, w, h);
+				view.RowIndex = row;
+				view.ColumnIndex = column;
 
 				x += w;
 				ly = System.Math.Max (ly, h);
+				column++;
 			}
 
 			this.totalLineCount = count;

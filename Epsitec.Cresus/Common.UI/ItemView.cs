@@ -50,6 +50,31 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+
+		public int RowIndex
+		{
+			get
+			{
+				return this.rowIndex;
+			}
+			internal set
+			{
+				this.rowIndex = value;
+			}
+		}
+
+		public int ColumnIndex
+		{
+			get
+			{
+				return this.columnIndex;
+			}
+			internal set
+			{
+				this.columnIndex = value;
+			}
+		}
+
 		/// <summary>
 		/// Gets the factory which is used to create the user interface for
 		/// this item view.
@@ -329,6 +354,8 @@ namespace Epsitec.Common.UI
 
 		private object item;
 		private int index;
+		private int rowIndex;
+		private int columnIndex;
 		private IItemViewFactory factory;
 		private Widgets.Widget widget;
 		private Drawing.Size size;

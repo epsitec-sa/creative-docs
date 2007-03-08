@@ -473,7 +473,7 @@ namespace Epsitec.Common.UI
 
 			if (view != null)
 			{
-				this.vScroller.Value = view.Index;
+				this.vScroller.Value = view.RowIndex;
 			}
 		}
 
