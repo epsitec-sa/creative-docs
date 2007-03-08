@@ -428,6 +428,7 @@ namespace Epsitec.Common.Dialogs
 			this.newState             = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NewFolder, this.NewDirectory);
 			this.renameState          = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Rename, this.RenameStarting);
 			this.deleteState          = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Delete, this.FileDelete);
+			this.viewDispositionState = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.ViewDisposition, this.ViewDisposition);
 			this.favoritesAddState    = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Add, this.AddFavorite);
 			this.favoritesRemoveState = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Remove, this.FavoritesRemove);
 			this.favoritesUpState     = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Up, this.FavoritesMoveUp);
@@ -485,7 +486,7 @@ namespace Epsitec.Common.Dialogs
 			this.table.AutoFocus = true;
 			this.table.VerticalScrollMode = ItemTableScrollMode.ItemBased;
 			
-#if false
+#if true
 			this.SetItemViewDisposition (cellHeight, ItemPanelLayout.RowsOfTiles);
 #else
 			this.SetItemViewDisposition (cellHeight, ItemPanelLayout.VerticalList);
@@ -716,6 +717,12 @@ namespace Epsitec.Common.Dialogs
 			this.fieldPath.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			//	Il faut créer ces boutons dans l'ordre 'de droite à gauche'.
+			IconButton buttonViewDisposition = new IconButton (group);
+			buttonViewDisposition.AutoFocus = false;
+			buttonViewDisposition.TabNavigationMode = TabNavigationMode.None;
+			buttonViewDisposition.CommandObject = this.viewDispositionState.Command;
+			buttonViewDisposition.Dock = DockStyle.Right;
+
 			IconButton buttonParent = new IconButton (group);
 			buttonParent.AutoFocus = false;
 			buttonParent.TabNavigationMode = TabNavigationMode.None;
@@ -1488,6 +1495,8 @@ namespace Epsitec.Common.Dialogs
 			FolderItem parent = FileManager.GetParentFolderItem (this.initialDirectory, FolderQueryMode.NoIcons);
 			this.parentState.Enable = !parent.IsEmpty;
 
+			this.viewDispositionState.Enable = true;
+
 			this.prevState.Enable = (this.directoriesVisitedIndex > 0);
 			this.nextState.Enable = (this.directoriesVisitedIndex < this.directoriesVisited.Count-1);
 
@@ -1653,6 +1662,18 @@ namespace Epsitec.Common.Dialogs
 				{
 					this.RefreshFileList (null);
 				}
+			}
+		}
+
+		private void ViewDisposition()
+		{
+			if (this.table.ItemPanel.Layout == ItemPanelLayout.VerticalList)
+			{
+				this.SetItemViewDisposition(this.itemViewSize, ItemPanelLayout.RowsOfTiles);
+			}
+			else
+			{
+				this.SetItemViewDisposition(this.itemViewSize, ItemPanelLayout.VerticalList);
 			}
 		}
 
@@ -2630,6 +2651,7 @@ namespace Epsitec.Common.Dialogs
 		private CommandState				newState;
 		private CommandState				renameState;
 		private CommandState				deleteState;
+		private CommandState				viewDispositionState;
 		private CommandState				favoritesAddState;
 		private CommandState				favoritesRemoveState;
 		private CommandState				favoritesUpState;

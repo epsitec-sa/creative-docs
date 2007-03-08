@@ -178,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <EmbeddedResource Include="Images\ViewDisposition.icon" />
     <EmbeddedResource Include="Images\Constrain.icon" />
     <EmbeddedResource Include="Images\Reset.icon" />
     <EmbeddedResource Include="Images\ImageFilter1.icon" />
