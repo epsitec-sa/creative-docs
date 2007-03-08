@@ -604,7 +604,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				{
 					Drawing.Path path = this.PathRoundRectangle(rect, 0);
 
-					if ((state&WidgetPaintState.Selected) == 0)
+					if ((state&WidgetPaintState.InheritedEnter) == 0)
 					{
 						graphics.Rasterizer.AddSurface(path);
 						graphics.RenderSolid(this.colorCaptionLight);

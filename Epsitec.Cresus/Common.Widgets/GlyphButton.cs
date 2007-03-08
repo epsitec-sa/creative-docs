@@ -145,7 +145,7 @@ namespace Epsitec.Common.Widgets
 					WidgetPaintState state = this.PaintState;
 					if ((state&WidgetPaintState.Entered) != 0)  // bouton survolé ?
 					{
-						state |=  WidgetPaintState.Selected;  // mode spécial pour le groupe d'un combo
+						state |=  WidgetPaintState.InheritedEnter;  // mode spécial pour le groupe d'un combo
 					}
 					adorner.PaintButtonBackground(graphics, this.Client.Bounds, state, dir, this.ButtonStyle);
 

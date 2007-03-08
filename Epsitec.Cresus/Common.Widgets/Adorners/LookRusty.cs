@@ -625,7 +625,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
 				{
-					if ((state&WidgetPaintState.Selected) == 0)
+					if ((state&WidgetPaintState.InheritedEnter) == 0)
 					{
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.colorCaptionNF);

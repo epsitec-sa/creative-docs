@@ -695,7 +695,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
 				{
-					if ((state&WidgetPaintState.Selected) == 0)
+					if ((state&WidgetPaintState.InheritedEnter) == 0)
 					{
 						this.PaintImageButton(graphics, rInside, 8);
 

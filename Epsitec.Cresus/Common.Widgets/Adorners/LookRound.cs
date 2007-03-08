@@ -630,7 +630,7 @@ namespace Epsitec.Common.Widgets.Adorners
 					double radius = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
 					Drawing.Path path = this.PathRoundRectangle(rect, radius);
 
-					if ((state&WidgetPaintState.Selected) == 0)
+					if ((state&WidgetPaintState.InheritedEnter) == 0)
 					{
 						graphics.Rasterizer.AddSurface(path);
 						graphics.RenderSolid(this.colorCaptionLight);

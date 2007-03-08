@@ -583,7 +583,7 @@ namespace Epsitec.Common.Widgets.Adorners
 					 (state&WidgetPaintState.Engaged)   != 0 ||  // bouton pressé ?
 					 (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
 				{
-					if ((state&WidgetPaintState.Selected) == 0)
+					if ((state&WidgetPaintState.InheritedEnter) == 0)
 					{
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.colorCaption);
