@@ -139,7 +139,7 @@ namespace Epsitec.Common.UI
 				}
 			}
 
-			Widgets.Widget tooltipContainer = new Widgets.Widget ();
+			Widgets.ToolTip.Contents tooltipContainer = new Widgets.ToolTip.Contents ();
 			tooltipContainer.ContainerLayoutMode = Widgets.ContainerLayoutMode.VerticalFlow;
 
 			for (int i = 0; i < header.ColumnCount; i++)

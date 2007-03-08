@@ -724,7 +724,7 @@ namespace Epsitec.Common.Dialogs
 			buttonViewDisposition.AutoFocus = false;
 			buttonViewDisposition.TabNavigationMode = TabNavigationMode.None;
 			buttonViewDisposition.CommandObject = this.viewDispositionState.Command;
-			buttonViewDisposition.Margins = new Margins(5, 0, 0, 0);
+			buttonViewDisposition.Margins = new Margins(10, 0, 0, 0);
 			buttonViewDisposition.Dock = DockStyle.Right;
 
 			IconButton buttonParent = new IconButton (group);
@@ -1477,7 +1477,7 @@ namespace Epsitec.Common.Dialogs
 			bool enable = (item != null && item.FullPath != AbstractFileDialog.NewEmptyDocument);
 			bool okEnable = enable;
 
-			if (item != null && (item.IsDrive || item.IsShortcut || item.IsVirtual || item.IsSynthetic))
+			if (item != null && (item.IsDrive || item.IsVirtual || item.IsSynthetic))
 			{
 				//	on ne peut renommer/supprimer que les fichiers ou les dossiers.
 				enable = false;
