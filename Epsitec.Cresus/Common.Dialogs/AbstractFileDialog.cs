@@ -1477,6 +1477,12 @@ namespace Epsitec.Common.Dialogs
 			bool enable = (item != null && item.FullPath != AbstractFileDialog.NewEmptyDocument);
 			bool okEnable = enable;
 
+			if (item != null && (item.IsDrive || item.IsShortcut || item.IsVirtual || item.IsSynthetic))
+			{
+				//	on ne peut renommer/supprimer que les fichiers ou les dossiers.
+				enable = false;
+			}
+
 			string oldPath = this.initialDirectory.FullPath;
 			string newPath = this.RedirectPath (oldPath);
 
@@ -1721,7 +1727,7 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			Rectangle rect = nameWidget.MapClientToRoot (nameWidget.Client.Bounds);
-			rect.Deflate (0, System.Math.Floor ((rect.Height-20)/2));		// force une hauteur de 20
+			rect.Deflate (0, System.Math.Floor ((rect.Height-20)/2));	// force une hauteur de 20
 			rect.Left -= 3;												// aligne par rapport au contenu de la ligne éditable
 			rect.Width += 32;											// place pour les boutons "v" et "x"
 
@@ -1738,7 +1744,7 @@ namespace Epsitec.Common.Dialogs
 			this.fieldRename.SetManualBounds (rect);
 			this.fieldRename.Text = TextLayout.ConvertToTaggedText (item.ShortFileName);
 			int i = this.fieldRename.Text.LastIndexOf('.');
-			if (i == -1)
+			if (i == -1 || FolderItem.HideFileExtensions || !item.IsDataFile)
 			{
 				this.fieldRename.SelectAll();
 			}
@@ -1795,8 +1801,14 @@ namespace Epsitec.Common.Dialogs
 				else
 				{
 					srcFileName = item.FullPath;
-					//?dstFileName = string.Concat (System.IO.Path.GetDirectoryName (srcFileName), "\\", newText, System.IO.Path.GetExtension (srcFileName));
-					dstFileName = string.Concat (System.IO.Path.GetDirectoryName (srcFileName), "\\", newText);
+					if (FolderItem.HideFileExtensions)
+					{
+						dstFileName = string.Concat (System.IO.Path.GetDirectoryName (srcFileName), "\\", newText, System.IO.Path.GetExtension (srcFileName));
+					}
+					else
+					{
+						dstFileName = string.Concat (System.IO.Path.GetDirectoryName (srcFileName), "\\", newText);
+					}
 
 					FileOperationMode mode = new FileOperationMode (this.window);
 					FileManager.RenameFile (mode, srcFileName, dstFileName);
