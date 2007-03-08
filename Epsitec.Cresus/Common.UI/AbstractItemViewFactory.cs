@@ -146,6 +146,7 @@ namespace Epsitec.Common.UI
 
 			Widgets.ToolTip.Contents tooltipContainer = new Widgets.ToolTip.Contents ();
 			tooltipContainer.ContainerLayoutMode = Widgets.ContainerLayoutMode.VerticalFlow;
+			tooltipContainer.Padding = new Epsitec.Common.Drawing.Margins(5, 5, 5, 5);
 
 			for (int i = 0; i < header.ColumnCount; i++)
 			{
@@ -158,7 +159,6 @@ namespace Epsitec.Common.UI
 				{
 					element.Name = name;
 					element.Dock = Widgets.DockStyle.Stacked;
-					element.PreferredWidth = width - element.Margins.Width;
 					element.SetFrozen(true);
 					tooltipContainer.Children.Add (element);
 				}
@@ -166,10 +166,8 @@ namespace Epsitec.Common.UI
 
 			Widgets.Layouts.LayoutMeasure widthMeasure;
 			Widgets.Layouts.LayoutMeasure heightMeasure;
-
 			tooltipContainer.GetMeasures (out widthMeasure, out heightMeasure);
-
-			tooltipContainer.PreferredWidth  = widthMeasure.Desired;
+			tooltipContainer.PreferredWidth  = widthMeasure.Desired;  // TODO: la valeur rendue n'est pas correcte
 			tooltipContainer.PreferredHeight = heightMeasure.Desired;
 
 			Widgets.ToolTip.Default.SetToolTip (viewContainer, tooltipContainer);

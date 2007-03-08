@@ -98,9 +98,13 @@ namespace Epsitec.Common.Dialogs
 		{
 			StaticText fileName = new StaticText ();
 
-			if (shape == ItemViewShape.Tile)
+			string text = item.ShortFileName;
+			if (shape == ItemViewShape.ToolTip)
 			{
-				fileName.Margins = new Margins (0, 0, 0, 0);
+				text = string.Concat(Common.Dialogs.Res.Strings.Dialog.File.Header.FileName, ": ", text);
+			}
+			else if (shape == ItemViewShape.Tile)
+			{
 				fileName.ContentAlignment = ContentAlignment.MiddleCenter;
 			}
 			else
@@ -109,7 +113,7 @@ namespace Epsitec.Common.Dialogs
 				fileName.ContentAlignment = ContentAlignment.MiddleLeft;
 			}
 			fileName.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-			fileName.Text = item.ShortFileName;
+			fileName.Text = text;
 			
 			return fileName;
 		}
@@ -131,10 +135,23 @@ namespace Epsitec.Common.Dialogs
 
 			StaticText fileInfo = new StaticText ();
 
-			fileInfo.Margins = new Margins (6, 6, 0, 0);
+			string text = item.Description;
+			if (string.IsNullOrEmpty(text))
+			{
+				text = "";
+			}
+			if (shape == ItemViewShape.ToolTip)
+			{
+				text = text.Replace("<br/>", ", ");
+			}
+			else
+			{
+				fileInfo.Margins = new Margins (6, 6, 0, 0);
+			}
+
 			fileInfo.ContentAlignment = ContentAlignment.MiddleLeft;
 			fileInfo.TextBreakMode = TextBreakMode.Hyphenate;
-			fileInfo.Text = item.Description;
+			fileInfo.Text = text;
 
 			return fileInfo;
 		}
@@ -156,10 +173,19 @@ namespace Epsitec.Common.Dialogs
 			
 			StaticText fileDate = new StaticText ();
 
-			fileDate.Margins = new Margins (6, 0, 0, 0);
+			string text = item.FileDate;
+			if (shape == ItemViewShape.ToolTip)
+			{
+				text = string.Concat(Common.Dialogs.Res.Strings.Dialog.File.Header.Date, ": ", text);
+			}
+			else
+			{
+				fileDate.Margins = new Margins (6, 0, 0, 0);
+			}
+
 			fileDate.ContentAlignment = ContentAlignment.MiddleLeft;
 			fileDate.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-			fileDate.Text = item.FileDate;
+			fileDate.Text = text;
 
 			return fileDate;
 		}
@@ -181,18 +207,19 @@ namespace Epsitec.Common.Dialogs
 
 			StaticText fileSize = new StaticText ();
 
+			string text = item.FileSize;
 			if (shape == ItemViewShape.ToolTip)
 			{
-				fileSize.Margins = new Margins(6, 0, 0, 0);
-				fileSize.ContentAlignment = ContentAlignment.MiddleLeft;
+				text = string.Concat(Common.Dialogs.Res.Strings.Dialog.File.Header.Size, ": ", text);
 			}
 			else
 			{
 				fileSize.Margins = new Margins(0, 6, 0, 0);
-				fileSize.ContentAlignment = ContentAlignment.MiddleRight;
 			}
+
+			fileSize.ContentAlignment = ContentAlignment.MiddleLeft;
 			fileSize.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-			fileSize.Text = item.FileSize;
+			fileSize.Text = text;
 
 			return fileSize;
 		}
