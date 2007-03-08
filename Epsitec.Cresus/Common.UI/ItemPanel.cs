@@ -205,8 +205,7 @@ namespace Epsitec.Common.UI
 					return views.Count;
 
 				case ItemPanelLayout.RowsOfTiles:
-					//	TODO: calculer le nombre de lignes
-					return views.Count;
+					return this.totalLineCount;
 
 				case ItemPanelLayout.ColumnsOfTiles:
 					//	TODO: calculer le nombre de lignes
@@ -1450,6 +1449,8 @@ namespace Epsitec.Common.UI
 		private void LayoutRowsOfTiles(IEnumerable<ItemView> views)
 		{
 			double width = this.Aperture.Width;
+
+			int count = 0;
 			
 			double minDy = 0;
 			double minDx = 0;
@@ -1487,6 +1488,7 @@ namespace Epsitec.Common.UI
 					dx  = size.Width;
 					dy += ly;
 					ly  = 0;
+					count++;
 				}
 
 				lx = System.Math.Max (lx, dx);
@@ -1499,7 +1501,11 @@ namespace Epsitec.Common.UI
 			this.minItemHeight = minDy;
 			this.maxItemHeight = maxDy;
 
-			dy += ly;
+			if (ly > 0)
+			{
+				dy += ly;
+				count++;
+			}
 
 			double x = 0;
 			double y = dy;
@@ -1524,6 +1530,7 @@ namespace Epsitec.Common.UI
 				ly = System.Math.Max (ly, h);
 			}
 
+			this.totalLineCount = count;
 			this.UpdatePreferredSize (lx, dy);
 		}
 
@@ -1768,5 +1775,7 @@ namespace Epsitec.Common.UI
 		double							maxItemWidth;
 		double							minItemHeight;
 		double							maxItemHeight;
+
+		int								totalLineCount;
 	}
 }
