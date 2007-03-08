@@ -742,6 +742,20 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		protected override void OnContainsFocusChanged()
+		{
+			base.OnContainsFocusChanged ();
+
+			if (this.ContainsKeyboardFocus)
+			{
+				this.RefreshFocus (true);
+			}
+			else
+			{
+				this.RefreshFocus (this.KeyboardFocus);
+			}
+		}
+		
 		protected override void ProcessMessage(Message message, Point pos)
 		{
 			base.ProcessMessage(message, pos);
@@ -1052,12 +1066,14 @@ namespace Epsitec.Common.UI
 					{
 						state |= WidgetPaintState.Selected;
 					}
-					if (view.Item == focusedItem)
+					if (this.IsFocused)
 					{
-						if (this.IsFocused)
+						if (view.Item == focusedItem)
 						{
 							state |= WidgetPaintState.Focused;
 						}
+
+						state |= WidgetPaintState.InheritedFocus;
 					}
 					if (view == this.enteredItem)
 					{

@@ -444,8 +444,14 @@ namespace Epsitec.Common.Widgets
 			{
 				//	Return true when the visual, or one of its children,
 				//	has the keyboard focus.
+
+				if (!this.containsFocusIsValid)
+				{
+					this.containsFocus = Helpers.VisualTree.ContainsKeyboardFocus (this);
+					this.containsFocusIsValid = true;
+				}
 				
-				return Helpers.VisualTree.ContainsKeyboardFocus (this);
+				return this.containsFocus;
 			}
 		}
 		
@@ -453,7 +459,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				//	When true, IsFocus is inherited from the parent.
+				//	When true, IsFocused is inherited from the parent.
 
 				return (bool) this.GetValue (Visual.InheritsParentFocusProperty);
 			}
@@ -895,8 +901,22 @@ namespace Epsitec.Common.Widgets
 				return this.children;
 			}
 		}
-		
-		
+
+		public IEnumerable<Visual>				Parents
+		{
+			get
+			{
+				Visual parent = this.parent;
+
+				while (parent != null)
+				{
+					yield return parent;
+					parent = parent.parent;
+				}
+			}
+		}
+
+
 		public IEnumerable<Visual> GetAllChildren()
 		{
 			if (this.HasChildren)
@@ -1516,6 +1536,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected virtual void OnContainsFocusChanged()
+		{
+		}
+
 		#region Helpers.IClientInfo Members
 
 		Drawing.Rectangle Helpers.IClientInfo.Bounds
@@ -1628,29 +1652,60 @@ namespace Epsitec.Common.Widgets
 			{
 				//	When setting KeyboardFocus, we have to update IsFocused according
 				//	to how the focus inheritance has been defined :
-				
-				that.SetValueBase (Visual.KeyboardFocusProperty, value);
 
-				if (focus)
+				that.SetValueBase (Visual.KeyboardFocusProperty, value);
+				that.RefreshFocus (focus);
+			}
+		}
+
+		protected void RefreshFocus(bool focus)
+		{
+			//	Update IsFocused according to how the focus inheritance has been
+			//	defined :
+
+			if (focus)
+			{
+				//	When we have the focus, IsFocused will be true.
+
+				this.SetValueBase (Visual.IsFocusedProperty, true);
+
+				foreach (Visual parent in this.Parents)
 				{
-					//	When we have the focus, IsFocused will be true.
-					
-					that.SetValueBase (Visual.IsFocusedProperty, true);
+					if (parent.containsFocus)
+					{
+						break;
+					}
+
+					parent.containsFocus = true;
+					parent.containsFocusIsValid = true;
+					parent.OnContainsFocusChanged ();
+				}
+			}
+			else
+			{
+				//	When we don't have the focus, we will either clear the IsFocused
+				//	property (and thus inherit its value from the parent) or set it
+				//	to false (no inheritance).
+
+				if (this.InheritsParentFocus)
+				{
+					this.ClearValue (Visual.IsFocusedProperty);
 				}
 				else
 				{
-					//	When we don't have the focus, we will either clear the IsFocused
-					//	property (and thus inherit its value from the parent) or set it
-					//	to false (no inheritance).
-					
-					if (that.InheritsParentFocus)
+					this.SetValueBase (Visual.IsFocusedProperty, false);
+				}
+
+				foreach (Visual parent in this.Parents)
+				{
+					if (parent.containsFocusIsValid == false)
 					{
-						that.ClearValue (Visual.IsFocusedProperty);
+						break;
 					}
-					else
-					{
-						that.SetValueBase (Visual.IsFocusedProperty, false);
-					}
+
+					parent.containsFocusIsValid = false;
+					parent.containsFocus = false;
+					parent.OnContainsFocusChanged ();
 				}
 			}
 		}
@@ -1983,6 +2038,8 @@ namespace Epsitec.Common.Widgets
 		private long							visualSerialId;
 		private bool							dirtyLayout;
 		private bool							dirtyDisplay;
+		private bool							containsFocus;
+		private bool							containsFocusIsValid;
 
 		private double							x, y;
 		private double							width, height;

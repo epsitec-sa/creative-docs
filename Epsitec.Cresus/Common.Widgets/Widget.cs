@@ -489,6 +489,10 @@ namespace Epsitec.Common.Widgets
 				}
 				if (this.IsFocused)
 				{
+					state |= WidgetPaintState.InheritedFocus;
+				}
+				if (this.KeyboardFocus)
+				{
 					state |= WidgetPaintState.Focused;
 				}
 				if (this.AcceptThreeState)

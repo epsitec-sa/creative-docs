@@ -624,6 +624,8 @@ namespace Epsitec.Common.UI
 		private void HandleItemPanelLayoutChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			//	...
+			
+			this.Invalidate ();
 		}
 
 		private void HandleItemPanelClicked(object sender, MessageEventArgs e)
