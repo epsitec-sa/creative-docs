@@ -1207,7 +1207,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			if ( (state&WidgetPaintState.Selected) != 0 )
 			{
 				graphics.AddFilledRectangle(rect);
-				if ( (state&WidgetPaintState.Focused) != 0 )
+				if ( (state&WidgetPaintState.Focused) != 0 ||
+					 (state&WidgetPaintState.InheritedFocus) != 0 )
 				{
 					graphics.RenderSolid(this.colorCaption);
 				}

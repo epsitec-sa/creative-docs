@@ -1234,7 +1234,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine le fond d'une cellule.
 			if ( (state&WidgetPaintState.Selected) != 0 )
 			{
-				if ( (state&WidgetPaintState.Focused) != 0 )
+				if ( (state&WidgetPaintState.Focused) != 0 ||
+					 (state&WidgetPaintState.InheritedFocus) != 0 )
 				{
 					this.PaintImageButton(graphics, rect, 20);
 				}
