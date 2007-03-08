@@ -36,7 +36,9 @@ namespace Epsitec.Common.Dialogs
 			{
 				case ItemViewShape.Tile:
 				case ItemViewShape.ToolTip:
-					iconSize = view.Size.Height-18-2-2;  // TODO: hauteur d'une ligne, faire mieux
+					iconSize = view.Size.Height;
+					iconSize -= StaticText.DefaultFontHeight;
+					iconSize -= AbstractItemViewFactory.TileMargin*2;
 					break;
 				
 				case ItemViewShape.Row:
@@ -101,7 +103,7 @@ namespace Epsitec.Common.Dialogs
 			string text = item.ShortFileName;
 			if (shape == ItemViewShape.ToolTip)
 			{
-				text = string.Concat(Common.Dialogs.Res.Strings.Dialog.File.Header.FileName, ": ", text);
+				text = string.Concat(Common.Dialogs.Res.Strings.Dialog.File.Header.FileName, ": <b>", text, "</b>");
 			}
 			else if (shape == ItemViewShape.Tile)
 			{
@@ -143,7 +145,7 @@ namespace Epsitec.Common.Dialogs
 			}
 			if (shape == ItemViewShape.ToolTip)
 			{
-				//?text = text.Replace("<br/>", ", ");
+				//text = text.Replace("<br/>", ", ");
 			}
 			else
 			{

@@ -529,7 +529,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				case ItemPanelLayout.RowsOfTiles:
 				case ItemPanelLayout.ColumnsOfTiles:
-					size += 40;
+					size += 44;
 					break;
 			}
 

@@ -124,7 +124,7 @@ namespace Epsitec.Common.UI
 
 			if (shape == ItemViewShape.Tile)
 			{
-				viewContainer.Padding = new Drawing.Margins(2,2,2,2);
+				viewContainer.Padding = new Drawing.Margins(AbstractItemViewFactory.TileMargin, AbstractItemViewFactory.TileMargin, AbstractItemViewFactory.TileMargin, AbstractItemViewFactory.TileMargin);
 			}
 
 			for (int i = 0; i < header.ColumnCount; i++)
@@ -186,5 +186,8 @@ namespace Epsitec.Common.UI
 		/// The widget which represents the named property.
 		/// </returns>
 		protected abstract Widgets.Widget CreateElement(string name, ItemPanel panel, ItemView view, ItemViewShape shape);
+
+
+		public static readonly double TileMargin = 8;
 	}
 }
