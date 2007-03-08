@@ -106,8 +106,8 @@ namespace Epsitec.Common.UI
 
 			Widgets.Widget viewContainer = new Widgets.Widget ();
 			viewContainer.PreferredSize = view.Size;
-			ItemViewShape shape = panel.ItemViewShape;
 
+			ItemViewShape shape = panel.ItemViewShape;
 			switch (shape)
 			{
 				case ItemViewShape.Row:
@@ -120,6 +120,11 @@ namespace Epsitec.Common.UI
 
 				default:
 					throw new System.NotSupportedException (string.Format ("ItemViewShape {0} not supported", panel.ItemViewShape));
+			}
+
+			if (shape == ItemViewShape.Tile)
+			{
+				viewContainer.Padding = new Drawing.Margins(2,2,2,2);
 			}
 
 			for (int i = 0; i < header.ColumnCount; i++)

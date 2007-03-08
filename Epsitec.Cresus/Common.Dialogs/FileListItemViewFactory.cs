@@ -29,6 +29,16 @@ namespace Epsitec.Common.Dialogs
 		
 		protected override Widget CreateElement(string name, ItemPanel panel, ItemView view, ItemViewShape shape)
 		{
+			if (shape == ItemViewShape.ToolTip && name == "icon")
+			{
+				return null;
+			}
+
+			if (shape == ItemViewShape.Tile && (name != "icon" && name != "name"))
+			{
+				return null;
+			}
+
 			FileListItem item = view.Item as FileListItem;
 			double iconSize;
 
@@ -36,7 +46,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				case ItemViewShape.Tile:
 				case ItemViewShape.ToolTip:
-					iconSize = view.Size.Height - 40;
+					iconSize = view.Size.Height-18-2-2;  // TODO: hauteur d'une ligne, faire mieux
 					break;
 				
 				case ItemViewShape.Row:
@@ -47,17 +57,17 @@ namespace Epsitec.Common.Dialogs
 
 			switch (name)
 			{
-				case "icon": return FileListItemViewFactory.CreateFileIcon (item, iconSize);
-				case "name": return FileListItemViewFactory.CreateFileName (item);
-				case "info": return FileListItemViewFactory.CreateFileInfo (item);
-				case "date": return FileListItemViewFactory.CreateFileDate (item);
-				case "size": return FileListItemViewFactory.CreateFileSize (item);
+				case "icon": return FileListItemViewFactory.CreateFileIcon (item, shape, iconSize);
+				case "name": return FileListItemViewFactory.CreateFileName (item, shape);
+				case "info": return FileListItemViewFactory.CreateFileInfo (item, shape);
+				case "date": return FileListItemViewFactory.CreateFileDate (item, shape);
+				case "size": return FileListItemViewFactory.CreateFileSize (item, shape);
 			}
 
 			return null;
 		}
 
-		private static Widget CreateFileIcon(FileListItem item, double size)
+		private static Widget CreateFileIcon(FileListItem item, ItemViewShape shape, double size)
 		{
 			ImagePlaceholder fileIcon;
 
@@ -89,19 +99,27 @@ namespace Epsitec.Common.Dialogs
 			return fileIcon;
 		}
 
-		private static Widget CreateFileName(FileListItem item)
+		private static Widget CreateFileName(FileListItem item, ItemViewShape shape)
 		{
 			StaticText fileName = new StaticText ();
 
-			fileName.Margins = new Margins (6, 0, 0, 0);
-			fileName.ContentAlignment = ContentAlignment.MiddleLeft;
+			if (shape == ItemViewShape.Tile)
+			{
+				fileName.Margins = new Margins (0, 0, 0, 0);
+				fileName.ContentAlignment = ContentAlignment.MiddleCenter;
+			}
+			else
+			{
+				fileName.Margins = new Margins (6, 0, 0, 0);
+				fileName.ContentAlignment = ContentAlignment.MiddleLeft;
+			}
 			fileName.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 			fileName.Text = item.ShortFileName;
 			
 			return fileName;
 		}
 
-		private static Widget CreateFileInfo(FileListItem item)
+		private static Widget CreateFileInfo(FileListItem item, ItemViewShape shape)
 		{
 			StaticText fileInfo = new StaticText ();
 
@@ -113,7 +131,7 @@ namespace Epsitec.Common.Dialogs
 			return fileInfo;
 		}
 
-		private static Widget CreateFileDate(FileListItem item)
+		private static Widget CreateFileDate(FileListItem item, ItemViewShape shape)
 		{
 			StaticText fileDate = new StaticText ();
 
@@ -125,12 +143,20 @@ namespace Epsitec.Common.Dialogs
 			return fileDate;
 		}
 
-		private static Widget CreateFileSize(FileListItem item)
+		private static Widget CreateFileSize(FileListItem item, ItemViewShape shape)
 		{
 			StaticText fileSize = new StaticText ();
 
-			fileSize.Margins = new Margins (0, 6, 0, 0);
-			fileSize.ContentAlignment = ContentAlignment.MiddleRight;
+			if (shape == ItemViewShape.ToolTip)
+			{
+				fileSize.Margins = new Margins(6, 0, 0, 0);
+				fileSize.ContentAlignment = ContentAlignment.MiddleLeft;
+			}
+			else
+			{
+				fileSize.Margins = new Margins(0, 6, 0, 0);
+				fileSize.ContentAlignment = ContentAlignment.MiddleRight;
+			}
 			fileSize.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 			fileSize.Text = item.FileSize;
 
