@@ -106,8 +106,9 @@ namespace Epsitec.Common.UI
 
 			Widgets.Widget viewContainer = new Widgets.Widget ();
 			viewContainer.PreferredSize = view.Size;
+			ItemViewShape shape = panel.ItemViewShape;
 
-			switch (panel.ItemViewShape)
+			switch (shape)
 			{
 				case ItemViewShape.Row:
 					viewContainer.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
@@ -126,7 +127,7 @@ namespace Epsitec.Common.UI
 				string name  = header.GetColumnPropertyName (i);
 				double width = header.GetColumnWidth (i);
 
-				Widgets.Widget element = this.CreateElement (name, panel, view);
+				Widgets.Widget element = this.CreateElement (name, panel, view, shape);
 
 				if (element != null)
 				{
@@ -146,7 +147,7 @@ namespace Epsitec.Common.UI
 				string name  = header.GetColumnPropertyName (i);
 				double width = header.GetColumnWidth (i);
 
-				Widgets.Widget element = this.CreateElement (name, panel, view);
+				Widgets.Widget element = this.CreateElement (name, panel, view, ItemViewShape.ToolTip);
 
 				if (element != null)
 				{
@@ -170,7 +171,10 @@ namespace Epsitec.Common.UI
 		/// <param name="name">The property name.</param>
 		/// <param name="panel">The panel.</param>
 		/// <param name="view">The item view.</param>
-		/// <returns>The widget which represents the named property.</returns>
-		protected abstract Widgets.Widget CreateElement(string name, ItemPanel panel, ItemView view);
+		/// <param name="shape">The shape of the container.</param>
+		/// <returns>
+		/// The widget which represents the named property.
+		/// </returns>
+		protected abstract Widgets.Widget CreateElement(string name, ItemPanel panel, ItemView view, ItemViewShape shape);
 	}
 }

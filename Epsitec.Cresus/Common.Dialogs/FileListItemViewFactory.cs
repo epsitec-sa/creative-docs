@@ -27,19 +27,27 @@ namespace Epsitec.Common.Dialogs
 			return itemName;
 		}
 		
-		protected override Widget CreateElement(string name, ItemPanel panel, ItemView view)
+		protected override Widget CreateElement(string name, ItemPanel panel, ItemView view, ItemViewShape shape)
 		{
 			FileListItem item = view.Item as FileListItem;
-			double       size = view.Size.Height;
+			double iconSize;
 
-			if (panel.Layout != ItemPanelLayout.VerticalList)
+			switch (shape)
 			{
-				size -= 40;
+				case ItemViewShape.Tile:
+				case ItemViewShape.ToolTip:
+					iconSize = view.Size.Height - 40;
+					break;
+				
+				case ItemViewShape.Row:
+				default:
+					iconSize = view.Size.Height;
+					break;
 			}
 
 			switch (name)
 			{
-				case "icon": return FileListItemViewFactory.CreateFileIcon (item, size);
+				case "icon": return FileListItemViewFactory.CreateFileIcon (item, iconSize);
 				case "name": return FileListItemViewFactory.CreateFileName (item);
 				case "info": return FileListItemViewFactory.CreateFileInfo (item);
 				case "date": return FileListItemViewFactory.CreateFileDate (item);

@@ -18,5 +18,7 @@ namespace Epsitec.Common.UI
 		/// The <c>ItemView</c> should be displayed as a tile.
 		/// </summary>
 		Tile,
+
+		ToolTip,
 	}
 }
