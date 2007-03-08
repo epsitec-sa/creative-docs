@@ -447,7 +447,7 @@ namespace Epsitec.Common.UI
 			index = System.Math.Min (total-1, index);
 			index = System.Math.Max (0, index);
 			
-			ItemView view = this.itemPanel.GetItemView (index);
+			ItemView view = this.itemPanel.GetItemViewAtRow (index);
 			double   pos  = (view == null) ? this.itemPanel.GetContentsSize ().Height : view.Bounds.Top;
 			
 			return pos - this.apertureSize.Height;

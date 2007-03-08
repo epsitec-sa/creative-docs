@@ -240,6 +240,36 @@ namespace Epsitec.Common.UI
 			return ItemPanel.TryGetItemView (this.SafeGetViews (), index);
 		}
 
+		public ItemView GetItemViewAtRow(int rowIndex)
+		{
+			IEnumerable<ItemView> views = this.SafeGetViews ();
+
+			foreach (ItemView view in views)
+			{
+				if (view.RowIndex == rowIndex)
+				{
+					return view;
+				}
+			}
+
+			return null;
+		}
+
+		public ItemView GetItemViewAtColumn(int columnIndex)
+		{
+			IEnumerable<ItemView> views = this.SafeGetViews ();
+
+			foreach (ItemView view in views)
+			{
+				if (view.ColumnIndex == columnIndex)
+				{
+					return view;
+				}
+			}
+
+			return null;
+		}
+
 		public ItemView GetItemView(object item)
 		{
 			IEnumerable<ItemView> views = this.SafeGetViews ();
