@@ -134,6 +134,7 @@ namespace Epsitec.Common.UI
 					element.Name = name;
 					element.Dock = Widgets.DockStyle.Stacked;
 					element.PreferredWidth = width - element.Margins.Width;
+					element.SetFrozen(true);
 					container.Children.Add (element);
 				}
 			}
