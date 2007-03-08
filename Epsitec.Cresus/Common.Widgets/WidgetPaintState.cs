@@ -22,5 +22,8 @@ namespace Epsitec.Common.Widgets
 		Engaged			= 0x00100000,				//	=> pression en cours
 		Error			= 0x00200000,				//	=> signale une erreur
 		ThreeState		= 0x00400000,				//	=> accepte 3 états
+
+		InheritedFocus	= 0x01000000,				//	=> le parent est Focused
+		InheritedEnter	= 0x02000000,				//	=> l'enfant est Entered
 	}
 }
