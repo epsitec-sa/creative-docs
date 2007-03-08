@@ -981,6 +981,14 @@ namespace Epsitec.Common.Widgets
 			this.SetBounds (value);
 			this.Arrange (null);
 		}
+
+		public void GetMeasures(out Layouts.LayoutMeasure width, out Layouts.LayoutMeasure height)
+		{
+			Layouts.LayoutContext.SyncMeasure (this);
+			
+			width  = Layouts.LayoutMeasure.GetWidth (this);
+			height = Layouts.LayoutMeasure.GetHeight (this);
+		}
 		
 		internal virtual void SetBounds(Drawing.Rectangle value)
 		{

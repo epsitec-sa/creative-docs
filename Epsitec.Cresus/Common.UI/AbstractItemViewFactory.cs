@@ -164,8 +164,15 @@ namespace Epsitec.Common.UI
 				}
 			}
 
-			tooltipContainer.PreferredSize = new Epsitec.Common.Drawing.Size(150, 100);
-			Widgets.ToolTip.Default.SetToolTip(viewContainer, tooltipContainer);
+			Widgets.Layouts.LayoutMeasure widthMeasure;
+			Widgets.Layouts.LayoutMeasure heightMeasure;
+
+			tooltipContainer.GetMeasures (out widthMeasure, out heightMeasure);
+
+			tooltipContainer.PreferredWidth  = widthMeasure.Desired;
+			tooltipContainer.PreferredHeight = heightMeasure.Desired;
+
+			Widgets.ToolTip.Default.SetToolTip (viewContainer, tooltipContainer);
 
 			return viewContainer;
 		}
