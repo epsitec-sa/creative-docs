@@ -486,11 +486,7 @@ namespace Epsitec.Common.Dialogs
 			this.table.AutoFocus = true;
 			this.table.VerticalScrollMode = ItemTableScrollMode.ItemBased;
 			
-#if true
 			this.SetItemViewDisposition (cellHeight, ItemPanelLayout.RowsOfTiles);
-#else
-			this.SetItemViewDisposition (cellHeight, ItemPanelLayout.VerticalList);
-#endif
 			
 			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 72));
 			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 195));
@@ -721,6 +717,7 @@ namespace Epsitec.Common.Dialogs
 			buttonViewDisposition.AutoFocus = false;
 			buttonViewDisposition.TabNavigationMode = TabNavigationMode.None;
 			buttonViewDisposition.CommandObject = this.viewDispositionState.Command;
+			buttonViewDisposition.Margins = new Margins(5, 1, 0, 0);
 			buttonViewDisposition.Dock = DockStyle.Right;
 
 			IconButton buttonParent = new IconButton (group);
@@ -1670,10 +1667,12 @@ namespace Epsitec.Common.Dialogs
 			if (this.table.ItemPanel.Layout == ItemPanelLayout.VerticalList)
 			{
 				this.SetItemViewDisposition(this.itemViewSize, ItemPanelLayout.RowsOfTiles);
+				this.viewDispositionState.ActiveState = ActiveState.No;
 			}
 			else
 			{
 				this.SetItemViewDisposition(this.itemViewSize, ItemPanelLayout.VerticalList);
+				this.viewDispositionState.ActiveState = ActiveState.Yes;
 			}
 		}
 

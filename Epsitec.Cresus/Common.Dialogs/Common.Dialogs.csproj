@@ -255,6 +255,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Images\New.icon" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\ViewDisposition.icon" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
