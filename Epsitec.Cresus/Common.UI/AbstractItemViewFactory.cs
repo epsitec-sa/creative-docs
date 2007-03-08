@@ -104,18 +104,17 @@ namespace Epsitec.Common.UI
 			System.Diagnostics.Debug.Assert (header != null);
 			System.Diagnostics.Debug.Assert (header.ColumnCount > 0);
 
-			Widgets.Widget container = new Widgets.Widget ();
-
-			container.PreferredSize = view.Size;
+			Widgets.Widget viewContainer = new Widgets.Widget ();
+			viewContainer.PreferredSize = view.Size;
 
 			switch (panel.ItemViewShape)
 			{
 				case ItemViewShape.Row:
-					container.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
+					viewContainer.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
 					break;
 
 				case ItemViewShape.Tile:
-					container.ContainerLayoutMode = Widgets.ContainerLayoutMode.VerticalFlow;
+					viewContainer.ContainerLayoutMode = Widgets.ContainerLayoutMode.VerticalFlow;
 					break;
 
 				default:
@@ -135,11 +134,34 @@ namespace Epsitec.Common.UI
 					element.Dock = Widgets.DockStyle.Stacked;
 					element.PreferredWidth = width - element.Margins.Width;
 					element.SetFrozen(true);
-					container.Children.Add (element);
+					viewContainer.Children.Add (element);
 				}
 			}
 
-			return container;
+			Widgets.Widget tooltipContainer = new Widgets.Widget ();
+			tooltipContainer.ContainerLayoutMode = Widgets.ContainerLayoutMode.VerticalFlow;
+
+			for (int i = 0; i < header.ColumnCount; i++)
+			{
+				string name  = header.GetColumnPropertyName (i);
+				double width = header.GetColumnWidth (i);
+
+				Widgets.Widget element = this.CreateElement (name, panel, view);
+
+				if (element != null)
+				{
+					element.Name = name;
+					element.Dock = Widgets.DockStyle.Stacked;
+					element.PreferredWidth = width - element.Margins.Width;
+					element.SetFrozen(true);
+					tooltipContainer.Children.Add (element);
+				}
+			}
+
+			tooltipContainer.PreferredSize = new Epsitec.Common.Drawing.Size(150, 100);
+			Widgets.ToolTip.Default.SetToolTip(viewContainer, tooltipContainer);
+
+			return viewContainer;
 		}
 
 		/// <summary>
