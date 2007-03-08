@@ -114,6 +114,7 @@ namespace Epsitec.Common.Dialogs
 			}
 			fileName.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 			fileName.Text = text;
+			fileName.PreferredSize = fileName.GetBestFitSize();
 			
 			return fileName;
 		}
@@ -142,7 +143,7 @@ namespace Epsitec.Common.Dialogs
 			}
 			if (shape == ItemViewShape.ToolTip)
 			{
-				text = text.Replace("<br/>", ", ");
+				//?text = text.Replace("<br/>", ", ");
 			}
 			else
 			{
@@ -152,6 +153,7 @@ namespace Epsitec.Common.Dialogs
 			fileInfo.ContentAlignment = ContentAlignment.MiddleLeft;
 			fileInfo.TextBreakMode = TextBreakMode.Hyphenate;
 			fileInfo.Text = text;
+			fileInfo.PreferredSize = fileInfo.GetBestFitSize();
 
 			return fileInfo;
 		}
@@ -186,6 +188,7 @@ namespace Epsitec.Common.Dialogs
 			fileDate.ContentAlignment = ContentAlignment.MiddleLeft;
 			fileDate.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 			fileDate.Text = text;
+			fileDate.PreferredSize = fileDate.GetBestFitSize();
 
 			return fileDate;
 		}
@@ -220,6 +223,7 @@ namespace Epsitec.Common.Dialogs
 			fileSize.ContentAlignment = ContentAlignment.MiddleLeft;
 			fileSize.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 			fileSize.Text = text;
+			fileSize.PreferredSize = fileSize.GetBestFitSize();
 
 			return fileSize;
 		}
