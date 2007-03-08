@@ -4,6 +4,9 @@
   <data name="Cmd.FontBold" id="01">&lt;s:data id="_0" f:Name="FontBold" f:Icon="manifest:Epsitec.App.DocumentEditor.Images.FontBold.icon" f:Labels="{Collection {Text 'Gras'}}" /&gt;</data>
   <data name="Cmd.FontItalic" id="04">&lt;s:data id="_0" f:Name="FontItalic" f:Icon="manifest:Epsitec.App.DocumentEditor.Images.FontItalic.icon" f:Labels="{Collection {Text 'Italique'}}" /&gt;</data>
   <data name="Cmd.FontUnderline" id="05">&lt;s:data id="_0" f:Name="FontUnderline" f:Icon="manifest:Epsitec.App.DocumentEditor.Images.FontUnderline.icon" f:Labels="{Collection {Text 'Souligné'}}" /&gt;</data>
+  <data name="Cmd.FontSizePlus" id="06">&lt;s:data id="_0" f:Name="FontSizePlus" f:Icon="manifest:Epsitec.App.DocumentEditor.Images.FontSizePlus.icon" f:Labels="{Collection {Text 'Caractères plus grands'}}" /&gt;</data>
+  <data name="Cmd.FontSizeMinus" id="07">&lt;s:data id="_0" f:Name="FontSizeMinus" f:Icon="manifest:Epsitec.App.DocumentEditor.Images.FontSizeMinus.icon" f:Labels="{Collection {Text 'Caractères plus petits'}}" /&gt;</data>
+  <data name="Cmd.FontClear" id="08">&lt;s:data id="_0" f:Name="FontClear" f:Icon="manifest:Epsitec.App.DocumentEditor.Images.FontClear.icon" f:Labels="{Collection {Text 'Caractères par défaut'}}" /&gt;</data>
   <data name="Typ.New" id="02">&lt;s:data id="_0" f:Name="New" /&gt;</data>
   <data name="Val.New" id="03">&lt;s:data id="_0" f:Name="New" /&gt;</data>
 </bundle>

@@ -10,7 +10,10 @@ namespace Epsitec.Common.Document
 		public static class Commands
 		{
 			public static readonly Epsitec.Common.Widgets.Command FontBold = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 1));
+			public static readonly Epsitec.Common.Widgets.Command FontClear = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 8));
 			public static readonly Epsitec.Common.Widgets.Command FontItalic = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 4));
+			public static readonly Epsitec.Common.Widgets.Command FontSizeMinus = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 7));
+			public static readonly Epsitec.Common.Widgets.Command FontSizePlus = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 6));
 			public static readonly Epsitec.Common.Widgets.Command FontUnderline = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 5));
 			
 			internal static void _Initialize()
@@ -21,7 +24,10 @@ namespace Epsitec.Common.Document
 		public static class CommandIds
 		{
 			public const long FontBold = 0x200000000001L;
+			public const long FontClear = 0x200000000008L;
 			public const long FontItalic = 0x200000000004L;
+			public const long FontSizeMinus = 0x200000000007L;
+			public const long FontSizePlus = 0x200000000006L;
 			public const long FontUnderline = 0x200000000005L;
 		}
 		

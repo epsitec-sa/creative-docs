@@ -29,16 +29,6 @@ namespace Epsitec.Common.Dialogs
 		
 		protected override Widget CreateElement(string name, ItemPanel panel, ItemView view, ItemViewShape shape)
 		{
-			if (shape == ItemViewShape.ToolTip && name == "icon")
-			{
-				return null;
-			}
-
-			if (shape == ItemViewShape.Tile && (name != "icon" && name != "name"))
-			{
-				return null;
-			}
-
 			FileListItem item = view.Item as FileListItem;
 			double iconSize;
 
@@ -69,6 +59,11 @@ namespace Epsitec.Common.Dialogs
 
 		private static Widget CreateFileIcon(FileListItem item, ItemViewShape shape, double size)
 		{
+			if (shape == ItemViewShape.ToolTip)
+			{
+				return null;
+			}
+
 			ImagePlaceholder fileIcon;
 
 			fileIcon = new ImagePlaceholder ();
@@ -121,6 +116,19 @@ namespace Epsitec.Common.Dialogs
 
 		private static Widget CreateFileInfo(FileListItem item, ItemViewShape shape)
 		{
+			switch (shape)
+			{
+				case ItemViewShape.Tile:
+					return null;
+				
+				case ItemViewShape.ToolTip:
+					if (string.IsNullOrEmpty (item.Description))
+					{
+						return null;
+					}
+					break;
+			}
+
 			StaticText fileInfo = new StaticText ();
 
 			fileInfo.Margins = new Margins (6, 6, 0, 0);
@@ -133,6 +141,19 @@ namespace Epsitec.Common.Dialogs
 
 		private static Widget CreateFileDate(FileListItem item, ItemViewShape shape)
 		{
+			switch (shape)
+			{
+				case ItemViewShape.Tile:
+					return null;
+				
+				case ItemViewShape.ToolTip:
+					if (string.IsNullOrEmpty (item.FileDate))
+					{
+						return null;
+					}
+					break;
+			}
+			
 			StaticText fileDate = new StaticText ();
 
 			fileDate.Margins = new Margins (6, 0, 0, 0);
@@ -145,6 +166,19 @@ namespace Epsitec.Common.Dialogs
 
 		private static Widget CreateFileSize(FileListItem item, ItemViewShape shape)
 		{
+			switch (shape)
+			{
+				case ItemViewShape.Tile:
+					return null;
+				
+				case ItemViewShape.ToolTip:
+					if (string.IsNullOrEmpty (item.FileSize))
+					{
+						return null;
+					}
+					break;
+			}
+
 			StaticText fileSize = new StaticText ();
 
 			if (shape == ItemViewShape.ToolTip)
