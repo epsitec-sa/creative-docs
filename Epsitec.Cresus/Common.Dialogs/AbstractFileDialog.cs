@@ -429,6 +429,7 @@ namespace Epsitec.Common.Dialogs
 			this.renameState          = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Rename, this.RenameStarting);
 			this.deleteState          = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Delete, this.FileDelete);
 			this.viewDispositionState = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.ViewDisposition, this.ViewDisposition);
+			this.viewSizeState        = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.ViewSize, this.ViewSize);
 			this.favoritesAddState    = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Add, this.AddFavorite);
 			this.favoritesRemoveState = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Remove, this.FavoritesRemove);
 			this.favoritesUpState     = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Up, this.FavoritesMoveUp);
@@ -713,11 +714,17 @@ namespace Epsitec.Common.Dialogs
 			this.fieldPath.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			//	Il faut créer ces boutons dans l'ordre 'de droite à gauche'.
+			IconButton buttonViewSize = new IconButton (group);
+			buttonViewSize.AutoFocus = false;
+			buttonViewSize.TabNavigationMode = TabNavigationMode.None;
+			buttonViewSize.CommandObject = this.viewSizeState.Command;
+			buttonViewSize.Dock = DockStyle.Right;
+
 			IconButton buttonViewDisposition = new IconButton (group);
 			buttonViewDisposition.AutoFocus = false;
 			buttonViewDisposition.TabNavigationMode = TabNavigationMode.None;
 			buttonViewDisposition.CommandObject = this.viewDispositionState.Command;
-			buttonViewDisposition.Margins = new Margins(5, 1, 0, 0);
+			buttonViewDisposition.Margins = new Margins(5, 0, 0, 0);
 			buttonViewDisposition.Dock = DockStyle.Right;
 
 			IconButton buttonParent = new IconButton (group);
@@ -1493,6 +1500,7 @@ namespace Epsitec.Common.Dialogs
 			this.parentState.Enable = !parent.IsEmpty;
 
 			this.viewDispositionState.Enable = true;
+			this.viewSizeState.Enable = true;
 
 			this.prevState.Enable = (this.directoriesVisitedIndex > 0);
 			this.nextState.Enable = (this.directoriesVisitedIndex < this.directoriesVisited.Count-1);
@@ -1674,6 +1682,26 @@ namespace Epsitec.Common.Dialogs
 				this.SetItemViewDisposition(this.itemViewSize, ItemPanelLayout.VerticalList);
 				this.viewDispositionState.ActiveState = ActiveState.Yes;
 			}
+		}
+
+		private void ViewSize()
+		{
+			double size = this.itemViewSize;
+
+			if (size < 25)
+			{
+				size = 50;
+			}
+			else if (size < 75)
+			{
+				size = 100;
+			}
+			else
+			{
+				size = 20;
+			}
+
+			this.SetItemViewDisposition(size);
 		}
 
 		private void RenameStarting()
@@ -2651,6 +2679,7 @@ namespace Epsitec.Common.Dialogs
 		private CommandState				renameState;
 		private CommandState				deleteState;
 		private CommandState				viewDispositionState;
+		private CommandState				viewSizeState;
 		private CommandState				favoritesAddState;
 		private CommandState				favoritesRemoveState;
 		private CommandState				favoritesUpState;

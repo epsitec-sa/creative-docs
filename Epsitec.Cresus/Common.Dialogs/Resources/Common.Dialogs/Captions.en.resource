@@ -16,4 +16,5 @@
   <data id="0G">&lt;s:data id="_0" f:Labels="{Collection {Text 'Size'}}" /&gt;</data>
   <data id="0H">&lt;s:data id="_0" f:Labels="{Collection {Text 'Type'}}" /&gt;</data>
   <data id="0I">&lt;s:data id="_0" /&gt;</data>
+  <data id="0J">&lt;s:data id="_0" /&gt;</data>
 </bundle>

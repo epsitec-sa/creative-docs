@@ -24,6 +24,7 @@ namespace Epsitec.Common.Dialogs
 					public static readonly Epsitec.Common.Widgets.Command ParentFolder = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 1));
 					public static readonly Epsitec.Common.Widgets.Command Rename = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 4));
 					public static readonly Epsitec.Common.Widgets.Command ViewDisposition = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 18));
+					public static readonly Epsitec.Common.Widgets.Command ViewSize = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 19));
 					public static class Favorites
 					{
 						internal static void _Initialize() { }
@@ -59,6 +60,7 @@ namespace Epsitec.Common.Dialogs
 					public const long ParentFolder = 0x600000000001L;
 					public const long Rename = 0x600000000004L;
 					public const long ViewDisposition = 0x600000000012L;
+					public const long ViewSize = 0x600000000013L;
 					public static class Favorites
 					{
 						
