@@ -124,7 +124,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetPaintState       state = this.PaintState;
+			WidgetPaintState  state = this.PaintState;
 			Drawing.Point     pos   = new Drawing.Point();
 
 			if ( !this.isDynamic )
@@ -179,13 +179,13 @@ namespace Epsitec.Common.Widgets
 					if ( this.sortMode > 0 )
 					{
 						rect.Bottom -= 4;
-						rect.Height = dim;
+						rect.Height = dim;  // triangle en bas au milieu
 						type = GlyphShape.TriangleDown;
 					}
 					else
 					{
 						rect.Bottom = rect.Top-dim+2;
-						rect.Height = dim;
+						rect.Height = dim;  // triangle en haut au milieu
 						type = GlyphShape.TriangleUp;
 					}
 #endif

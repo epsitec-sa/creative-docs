@@ -92,7 +92,7 @@ namespace Epsitec.Common.Dialogs
 
 			fileIcon.PreferredHeight = size;
 
-			if (size > 64)  // très grande icône ?
+			if (size > 64 && shape == ItemViewShape.Tile)  // très grande icône ?
 			{
 				Widgets.FrameBox frame = new FrameBox();  // dessine un cadre autour
 				frame.DrawFullFrame = true;
@@ -233,13 +233,14 @@ namespace Epsitec.Common.Dialogs
 			if (shape == ItemViewShape.ToolTip)
 			{
 				text = string.Concat(Common.Dialogs.Res.Strings.Dialog.File.Header.Size, ": ", text);
+				fileSize.ContentAlignment = ContentAlignment.MiddleLeft;
 			}
 			else
 			{
 				fileSize.Margins = new Margins(0, 6, 0, 0);
+				fileSize.ContentAlignment = ContentAlignment.MiddleRight;
 			}
 
-			fileSize.ContentAlignment = ContentAlignment.MiddleLeft;
 			fileSize.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 			fileSize.Text = text;
 			fileSize.PreferredSize = fileSize.GetBestFitSize();
