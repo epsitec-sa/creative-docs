@@ -363,10 +363,10 @@ namespace Epsitec.Common.UI
 
 				case ItemTableScrollMode.ItemBased:
 					this.vScroller.SmallChange = 1;
-					this.vScroller.LargeChange = this.itemPanel.GetVisibleLineCount (this.apertureSize.Height);
+					this.vScroller.LargeChange = this.itemPanel.GetVisibleRowCount (this.apertureSize.Height);
 					this.vScroller.MinValue = 0;
-					this.vScroller.MaxValue = System.Math.Max (0, this.itemPanel.GetTotalLineCount () - this.vScroller.LargeChange);
-					padding.Bottom = this.apertureSize.Height - this.itemPanel.GetLineHeight () * (double) (this.vScroller.LargeChange);
+					this.vScroller.MaxValue = System.Math.Max (0, this.itemPanel.GetTotalRowCount () - this.vScroller.LargeChange);
+					padding.Bottom = this.apertureSize.Height - this.itemPanel.GetRowHeight () * (double) (this.vScroller.LargeChange);
 					break;
 			}
 
@@ -443,7 +443,7 @@ namespace Epsitec.Common.UI
 		private double GetVerticalScrollOffsetItemBased()
 		{
 			int index = (int) this.vScroller.Value;
-			int total = this.itemPanel.GetTotalLineCount ();
+			int total = this.itemPanel.GetTotalRowCount ();
 
 			index = System.Math.Min (total-1, index);
 			index = System.Math.Max (0, index);

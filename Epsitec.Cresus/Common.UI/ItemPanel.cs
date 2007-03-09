@@ -195,35 +195,55 @@ namespace Epsitec.Common.UI
 			return this.SafeGetViews ().Count;
 		}
 
-		public int GetTotalLineCount()
+		public int GetTotalRowCount()
 		{
-			IList<ItemView> views = this.SafeGetViews ();
+			IList<ItemView> views;
 
 			switch (this.Layout)
 			{
 				case ItemPanelLayout.VerticalList:
+					views = this.SafeGetViews ();
 					return views.Count;
 
 				case ItemPanelLayout.RowsOfTiles:
-					return this.totalLineCount;
+					return this.totalRowCount;
 
 				case ItemPanelLayout.ColumnsOfTiles:
 					//	TODO: calculer le nombre de lignes
-					return views.Count;
+					return 1;
 				
 				default:
 					return -1;
 			}
 		}
 
-		public double GetLineHeight()
+		public int GetTotalColumnCount()
+		{
+			switch (this.Layout)
+			{
+				case ItemPanelLayout.VerticalList:
+					return 1;
+
+				case ItemPanelLayout.RowsOfTiles:
+					return this.totalColumnCount;
+
+				case ItemPanelLayout.ColumnsOfTiles:
+					//	TODO: calculer le nombre de colonne
+					return 1;
+
+				default:
+					return -1;
+			}
+		}
+
+		public double GetRowHeight()
 		{
 			return (this.minItemHeight + this.maxItemHeight) / 2;
 		}
 		
-		public int GetVisibleLineCount(double height)
+		public int GetVisibleRowCount(double height)
 		{
-			double itemHeight = this.GetLineHeight ();
+			double itemHeight = this.GetRowHeight ();
 
 			if (itemHeight <= 0)
 			{
@@ -1499,7 +1519,8 @@ namespace Epsitec.Common.UI
 		{
 			double width = this.Aperture.Width;
 
-			int count = 0;
+			int rowCount = 0;
+			int colCount = 0;
 			
 			double minDy = 0;
 			double minDx = 0;
@@ -1510,6 +1531,8 @@ namespace Epsitec.Common.UI
 			double dy = 0;
 			double ly = 0;
 			double lx = 0;
+
+			int c = 0;
 
 			foreach (ItemView view in views)
 			{
@@ -1531,18 +1554,24 @@ namespace Epsitec.Common.UI
 				}
 
 				dx += size.Width;
+				c++;
 
 				if (dx > width)
 				{
+					colCount = System.Math.Max (c, colCount);
+
 					dx  = size.Width;
 					dy += ly;
 					ly  = 0;
-					count++;
+					c   = 0;
+					rowCount++;
 				}
 
 				lx = System.Math.Max (lx, dx);
 				ly = System.Math.Max (ly, size.Height);
 			}
+
+			colCount = System.Math.Max (c, colCount);
 
 			this.minItemWidth  = minDx;
 			this.maxItemWidth  = maxDx;
@@ -1553,7 +1582,7 @@ namespace Epsitec.Common.UI
 			if (ly > 0)
 			{
 				dy += ly;
-				count++;
+				rowCount++;
 			}
 
 			double x = 0;
@@ -1586,7 +1615,8 @@ namespace Epsitec.Common.UI
 				column++;
 			}
 
-			this.totalLineCount = count;
+			this.totalRowCount    = rowCount;
+			this.totalColumnCount = colCount;
 			this.UpdatePreferredSize (lx, dy);
 		}
 
@@ -1832,6 +1862,7 @@ namespace Epsitec.Common.UI
 		double							minItemHeight;
 		double							maxItemHeight;
 
-		int								totalLineCount;
+		int								totalRowCount;
+		int								totalColumnCount;
 	}
 }
