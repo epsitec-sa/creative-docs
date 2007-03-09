@@ -92,7 +92,22 @@ namespace Epsitec.Common.Dialogs
 
 			fileIcon.PreferredHeight = size;
 
-			return fileIcon;
+			if (size > 64)
+			{
+				Widgets.FrameBox frame = new FrameBox();
+				frame.DrawFullFrame = true;
+				frame.PreferredHeight = size;
+				frame.Margins = new Margins (1, 1, 1, 1);
+
+				fileIcon.Margins = new Margins (0, 0, 0, 0);
+				fileIcon.Dock = DockStyle.Fill;
+				fileIcon.SetParent(frame);
+				return frame;
+			}
+			else
+			{
+				return fileIcon;
+			}
 		}
 
 		private static Widget CreateFileName(FileListItem item, ItemViewShape shape)
