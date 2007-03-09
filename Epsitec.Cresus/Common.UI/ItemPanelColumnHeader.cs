@@ -213,7 +213,7 @@ namespace Epsitec.Common.UI
 			this.UpdateColumnSorts ();
 		}
 
-		private void UpdateColumnSorts()
+		public void UpdateColumnSorts()
 		{
 			//Column column = this.columns[index];
 			//string propertyName = column.PropertyName;

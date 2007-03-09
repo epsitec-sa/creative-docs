@@ -616,6 +616,7 @@ namespace Epsitec.Common.UI
 				}
 
 				this.defaultItemSize = new Size (minWidth, minHeight);
+				this.columnHeader.UpdateColumnSorts ();
 
 				this.itemPanel.AsyncRefresh ();
 			}
