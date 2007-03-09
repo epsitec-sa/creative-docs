@@ -35,9 +35,8 @@ namespace Epsitec.Common.Dialogs
 			switch (shape)
 			{
 				case ItemViewShape.Tile:
-				case ItemViewShape.ToolTip:
 					iconSize = view.Size.Height;
-					iconSize -= StaticText.DefaultFontHeight;
+					iconSize -= StaticText.DefaultFontHeight*2;
 					iconSize -= AbstractItemViewFactory.TileMargin*2;
 					break;
 				
@@ -104,19 +103,25 @@ namespace Epsitec.Common.Dialogs
 			if (shape == ItemViewShape.ToolTip)
 			{
 				text = string.Concat(Common.Dialogs.Res.Strings.Dialog.File.Header.FileName, ": <b>", text, "</b>");
+				fileName.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				fileName.Text = text;
+				fileName.PreferredSize = fileName.GetBestFitSize();
 			}
 			else if (shape == ItemViewShape.Tile)
 			{
-				fileName.ContentAlignment = ContentAlignment.MiddleCenter;
+				fileName.ContentAlignment = ContentAlignment.TopCenter;
+				fileName.TextBreakMode = TextBreakMode.Split;
+				fileName.Text = text;
+				fileName.PreferredHeight = StaticText.DefaultFontHeight*2+2;  // place pour deux lignes
 			}
 			else
 			{
 				fileName.Margins = new Margins (6, 0, 0, 0);
 				fileName.ContentAlignment = ContentAlignment.MiddleLeft;
+				fileName.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				fileName.Text = text;
+				fileName.PreferredSize = fileName.GetBestFitSize();
 			}
-			fileName.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-			fileName.Text = text;
-			fileName.PreferredSize = fileName.GetBestFitSize();
 			
 			return fileName;
 		}
