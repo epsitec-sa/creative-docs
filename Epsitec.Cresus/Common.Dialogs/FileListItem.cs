@@ -697,7 +697,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				FileListItem.type = new Epsitec.Common.Types.StructuredType ();
 
-				FileListItem.type.Fields.Add ("icon", Epsitec.Common.Types.StringType.Default, Res.Captions.File.Column.Icon.Id);
+				FileListItem.type.Fields.Add ("icon", Epsitec.Common.Types.StringType.Default, Support.Druid.Empty);
 				FileListItem.type.Fields.Add ("name", Epsitec.Common.Types.StringType.Default, Res.Captions.File.Column.Name.Id);
 				FileListItem.type.Fields.Add ("info", Epsitec.Common.Types.IntegerType.Default, Res.Captions.File.Column.Info.Id);
 				FileListItem.type.Fields.Add ("date", Epsitec.Common.Types.DateTimeType.Default, Res.Captions.File.Column.Date.Id);

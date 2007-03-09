@@ -494,7 +494,11 @@ namespace Epsitec.Common.Dialogs
 			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("info", 120, FileListItem.GetDescriptionPropertyComparer ()));
 			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("date", 96));
 			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("size", 54));
-			this.table.ColumnHeader.SetColumnSortable (0, false);
+
+			this.table.Columns[0].SortDirection = ListSortDirection.None;
+//-			this.table.Columns[1].SortDirection = ListSortDirection.Ascending;
+//-			this.table.Columns[2].SortDirection = ListSortDirection.Ascending;
+
 			this.table.ColumnHeader.SetColumnSort (1, Epsitec.Common.Types.ListSortDirection.Ascending);
 			this.table.ColumnHeader.SetColumnSort (2, Epsitec.Common.Types.ListSortDirection.Ascending);
 			this.table.ItemPanel.ItemSelectionMode = this.enableMultipleSelection ? ItemPanelSelectionMode.Multiple : ItemPanelSelectionMode.ZeroOrOne;

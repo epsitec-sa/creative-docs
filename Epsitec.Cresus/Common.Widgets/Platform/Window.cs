@@ -938,7 +938,7 @@ namespace Epsitec.Common.Widgets.Platform
 			get { return Window.is_app_active; }
 		}
 
-		internal static bool					UseWaitCursor
+		internal static new bool				UseWaitCursor
 		{
 			get
 			{

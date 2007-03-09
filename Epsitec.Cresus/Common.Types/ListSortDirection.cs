@@ -17,6 +17,11 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Sort in descending order.
 		/// </summary>
-		Descending
+		Descending,
+
+		/// <summary>
+		/// Don't sort.
+		/// </summary>
+		None,
 	}
 }

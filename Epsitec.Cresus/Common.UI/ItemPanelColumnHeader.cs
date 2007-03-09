@@ -155,9 +155,19 @@ namespace Epsitec.Common.UI
 			return SortDescription.Empty;
 		}
 
+		public void SetColumnVisibility(int index, bool visible)
+		{
+			this.columns[index].Button.Visibility = visible;
+			this.columns[index].Slider.Visibility = visible;
+			this.gridLayout.ColumnDefinitions[index].Visibility = visible;
+		}
+		
 		public void SetColumnSort(int index, ListSortDirection sortDirection)
 		{
-			this.SetColumnSort (index, new SortDescription (sortDirection, this.columns[index].PropertyName));
+			if (sortDirection != ListSortDirection.None)
+			{
+				this.SetColumnSort (index, new SortDescription (sortDirection, this.columns[index].PropertyName));
+			}
 		}
 
 		public void SetColumnSort(int index, SortDescription sortDescription)
@@ -241,13 +251,21 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public void SetAutomaticColumnWidth(int index)
+		{
+			this.SetColumnWidth (index, this.columns[index].Button.GetBestFitSize ().Width);
+		}
+
 		public double GetTotalWidth()
 		{
 			double width = 0;
 			
 			foreach (Column column in this.columns)
 			{
-				width += column.Button.PreferredWidth;
+				if (column.Button.Visibility)
+				{
+					width += column.Button.PreferredWidth;
+				}
 			}
 
 			if (this.columns.Count > 0)
@@ -292,8 +310,11 @@ namespace Epsitec.Common.UI
 
 			foreach (Column column in this.columns)
 			{
-				offset += column.Button.PreferredWidth;
-				column.Slider.Margins = new Drawing.Margins (offset-(column.Slider.PreferredWidth-1)/2, 0, 0, 0);
+				if (column.Button.Visibility)
+				{
+					offset += column.Button.PreferredWidth;
+					column.Slider.Margins = new Drawing.Margins (offset-(column.Slider.PreferredWidth-1)/2, 0, 0, 0);
+				}
 			}
 		}
 
@@ -384,7 +405,7 @@ namespace Epsitec.Common.UI
 
 				if (captionId.IsEmpty)
 				{
-					this.button.Text = propertyName;
+					this.button.Text = "";
 					this.button.Name = propertyName;
 				}
 

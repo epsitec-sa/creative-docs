@@ -1,4 +1,4 @@
-//	Copyright © -2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.UI
@@ -19,6 +19,10 @@ namespace Epsitec.Common.UI
 		/// </summary>
 		Tile,
 
+		/// <summary>
+		/// The elements of the <c>ItemView</c> are to be displayed in a
+		/// tool-tip.
+		/// </summary>
 		ToolTip,
 	}
 }

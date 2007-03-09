@@ -61,7 +61,12 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Size GetBestFitSize()
 		{
-			TextLayout textLayout = this.TextLayout;
+			return StaticText.GetTextBestFitSize (this);
+		}
+
+		public static Drawing.Size GetTextBestFitSize(Widget widget)
+		{
+			TextLayout textLayout = widget.TextLayout;
 
 			if (textLayout != null)
 			{
@@ -74,10 +79,10 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				return new Drawing.Size (0, this.DefaultFont.LineHeight * this.DefaultFontSize);
+				return new Drawing.Size (0, widget.DefaultFont.LineHeight * widget.DefaultFontSize);
 			}
 		}
-		
+
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			Drawing.Rectangle rect  = this.Client.Bounds;

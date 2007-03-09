@@ -82,7 +82,14 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			get
 			{
-				return (GridLength) this.GetValue (ColumnDefinition.WidthProperty);
+				if (this.Visibility)
+				{
+					return (GridLength) this.GetValue (ColumnDefinition.WidthProperty);
+				}
+				else
+				{
+					return new GridLength (0.0);
+				}
 			}
 			set
 			{
@@ -94,7 +101,14 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			get
 			{
-				return (double) this.GetValue (ColumnDefinition.LeftBorderProperty);
+				if (this.Visibility)
+				{
+					return (double) this.GetValue (ColumnDefinition.LeftBorderProperty);
+				}
+				else
+				{
+					return 0.0;
+				}
 			}
 			set
 			{
@@ -106,7 +120,14 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			get
 			{
-				return (double) this.GetValue (ColumnDefinition.RightBorderProperty);
+				if (this.Visibility)
+				{
+					return (double) this.GetValue (ColumnDefinition.RightBorderProperty);
+				}
+				else
+				{
+					return 0.0;
+				}
 			}
 			set
 			{
@@ -127,6 +148,18 @@ namespace Epsitec.Common.Widgets.Layouts
 			get
 			{
 				return this.actualOffset;
+			}
+		}
+
+		public bool Visibility
+		{
+			get
+			{
+				return (bool) this.GetValue (ColumnDefinition.VisibilityProperty);
+			}
+			set
+			{
+				this.SetValue (ColumnDefinition.VisibilityProperty, value);
 			}
 		}
 
@@ -161,6 +194,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		public static readonly DependencyProperty WidthProperty			= DependencyProperty.Register ("Width", typeof (GridLength), typeof (ColumnDefinition), new DependencyPropertyMetadata (GridLength.Auto, ColumnDefinition.NotifyPropertyInvalidated));
 		public static readonly DependencyProperty LeftBorderProperty	= DependencyProperty.Register ("LeftBorder", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (0.0, ColumnDefinition.NotifyPropertyInvalidated));
 		public static readonly DependencyProperty RightBorderProperty	= DependencyProperty.Register ("RightBorder", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (0.0, ColumnDefinition.NotifyPropertyInvalidated));
+		public static readonly DependencyProperty VisibilityProperty	= DependencyProperty.Register ("Visibility", typeof (bool), typeof (ColumnDefinition), new DependencyPropertyMetadata (true, ColumnDefinition.NotifyPropertyInvalidated));
 
 		private double actualOffset;
 		private double actualWidth;

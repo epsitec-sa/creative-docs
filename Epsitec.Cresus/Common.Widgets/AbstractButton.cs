@@ -34,6 +34,17 @@ namespace Epsitec.Common.Widgets
 			return Widgets.Adorners.Factory.Active.GeometryButtonShapeMargins;
 		}
 
+
+		public override Drawing.Size GetBestFitSize()
+		{
+			Drawing.Size size = StaticText.GetTextBestFitSize (this);
+
+			size.Width  += 6;
+			size.Height += 6;
+
+			return size;
+		}
+
 		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
@@ -80,8 +91,7 @@ namespace Epsitec.Common.Widgets
 			
 			message.Consumer = this;
 		}
-		
-		
+
 		protected override void OnShortcutPressed()
 		{
 			if ( this.AutoToggle )

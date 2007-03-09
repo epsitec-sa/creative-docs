@@ -131,6 +131,18 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public ListSortDirection SortDirection
+		{
+			get
+			{
+				return (ListSortDirection) this.GetValue (ItemTableColumn.SortDirectionProperty);
+			}
+			set
+			{
+				this.SetValue (ItemTableColumn.SortDirectionProperty, value);
+			}
+		}
+
 
 		public static void SetComparer(DependencyObject obj, Support.PropertyComparer comparer)
 		{
@@ -143,10 +155,11 @@ namespace Epsitec.Common.UI
 		}
 
 
-		public static readonly DependencyProperty FieldIdProperty	 = DependencyProperty.Register ("FieldId", typeof (string), typeof (ItemTableColumn));
-		public static readonly DependencyProperty WidthProperty		 = DependencyProperty.Register ("Width", typeof (GridLength), typeof (ItemTableColumn), new DependencyPropertyMetadata (GridLength.Auto));
-		public static readonly DependencyProperty CaptionIdProperty	 = DependencyProperty.Register ("CaptionId", typeof (Support.Druid), typeof (ItemTableColumn), new DependencyPropertyMetadata (Support.Druid.Empty));
-		public static readonly DependencyProperty TemplateIdProperty = DependencyProperty.Register ("TemplateId", typeof (Support.Druid), typeof (ItemTableColumn), new DependencyPropertyMetadata (Support.Druid.Empty));
+		public static readonly DependencyProperty FieldIdProperty		= DependencyProperty.Register ("FieldId", typeof (string), typeof (ItemTableColumn));
+		public static readonly DependencyProperty WidthProperty			= DependencyProperty.Register ("Width", typeof (GridLength), typeof (ItemTableColumn), new DependencyPropertyMetadata (GridLength.Auto));
+		public static readonly DependencyProperty CaptionIdProperty		= DependencyProperty.Register ("CaptionId", typeof (Support.Druid), typeof (ItemTableColumn), new DependencyPropertyMetadata (Support.Druid.Empty));
+		public static readonly DependencyProperty TemplateIdProperty	= DependencyProperty.Register ("TemplateId", typeof (Support.Druid), typeof (ItemTableColumn), new DependencyPropertyMetadata (Support.Druid.Empty));
+		public static readonly DependencyProperty SortDirectionProperty	= DependencyProperty.Register ("SortDirection", typeof (ListSortDirection), typeof (ItemTableColumn), new DependencyPropertyMetadata (ListSortDirection.Descending));
 
 		public static readonly DependencyProperty ComparerProperty	= DependencyProperty.RegisterAttached ("Comparer", typeof (Support.PropertyComparer), typeof (ItemTableColumn));
 

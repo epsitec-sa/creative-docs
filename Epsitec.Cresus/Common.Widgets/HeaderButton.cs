@@ -96,6 +96,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+
+		public override Drawing.Size GetBestFitSize()
+		{
+			Drawing.Size size = base.GetBestFitSize ();
+
+			size.Width += 16;
+			
+			return size;
+		}
 		
 		protected override void UpdateTextLayout()
 		{

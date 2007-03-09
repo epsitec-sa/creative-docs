@@ -508,6 +508,8 @@ namespace Epsitec.Common.UI
 				(this.sourceType != null))
 			{
 				Support.ResourceManager manager = Widgets.Helpers.VisualTree.FindResourceManager (this);
+
+				bool useRealColumns = this.itemPanel.Layout == ItemPanelLayout.VerticalList;
 				
 				this.columnHeader.ClearColumns ();
 
@@ -519,6 +521,7 @@ namespace Epsitec.Common.UI
 				for (int i = 0; i < this.columns.Count; i++)
 				{
 					ItemTableColumn column = this.columns[i];
+					Support.Druid captionId = Support.Druid.Empty;
 					
 					if (string.IsNullOrEmpty (column.FieldId))
 					{
@@ -526,7 +529,7 @@ namespace Epsitec.Common.UI
 						//	that the contents of the column will default to the
 						//	full item itself.
 						
-						Support.Druid captionId = column.CaptionId;
+						captionId = column.CaptionId;
 
 						if (captionId.IsValid)
 						{
@@ -547,16 +550,14 @@ namespace Epsitec.Common.UI
 						}
 						else
 						{
-							Support.Druid captionId = column.CaptionId;
+							captionId = column.CaptionId;
 
 							if (captionId.IsEmpty)
 							{
-								this.columnHeader.AddColumn (i, field);
+								captionId = field.CaptionId;
 							}
-							else
-							{
-								this.columnHeader.AddColumn (i, field.Id, captionId);
-							}
+
+							this.columnHeader.AddColumn (i, field.Id, captionId);
 						}
 					}
 
@@ -587,8 +588,22 @@ namespace Epsitec.Common.UI
 							break;
 					}
 
-					this.columnHeader.SetColumnWidth (headerIndex, width);
-					this.columnHeader.SetColumnComparer (headerIndex, column.Comparer);
+					if (useRealColumns)
+					{
+						this.columnHeader.SetColumnWidth (headerIndex, width);
+						this.columnHeader.SetColumnComparer (headerIndex, column.Comparer);
+						this.columnHeader.SetColumnSortable (headerIndex, column.SortDirection != ListSortDirection.None);
+						this.columnHeader.SetColumnVisibility (headerIndex, true);
+//-						this.columnHeader.SetColumnSort (headerIndex, column.SortDirection);
+					}
+					else
+					{
+						this.columnHeader.SetAutomaticColumnWidth (headerIndex);
+						this.columnHeader.SetColumnComparer (headerIndex, column.Comparer);
+						this.columnHeader.SetColumnSortable (headerIndex, column.SortDirection != ListSortDirection.None);
+						this.columnHeader.SetColumnVisibility (headerIndex, captionId.IsValid);
+//-						this.columnHeader.SetColumnSort (headerIndex, column.SortDirection);
+					}
 
 					minWidth += width;
 					minHeight = System.Math.Max (minHeight, size.Height);
@@ -623,9 +638,8 @@ namespace Epsitec.Common.UI
 
 		private void HandleItemPanelLayoutChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			//	...
-			
 			this.Invalidate ();
+			this.UpdateColumnHeader ();
 		}
 
 		private void HandleItemPanelClicked(object sender, MessageEventArgs e)
