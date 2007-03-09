@@ -178,13 +178,13 @@ namespace Epsitec.Common.Widgets
 
 					if ( this.sortMode > 0 )
 					{
-						rect.Bottom -= 3;
+						rect.Bottom -= 4;
 						rect.Height = dim;
 						type = GlyphShape.TriangleDown;
 					}
 					else
 					{
-						rect.Bottom = rect.Top-dim+1;
+						rect.Bottom = rect.Top-dim+2;
 						rect.Height = dim;
 						type = GlyphShape.TriangleUp;
 					}
