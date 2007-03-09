@@ -100,8 +100,7 @@ namespace Epsitec.Common.Widgets
 		public override Drawing.Size GetBestFitSize()
 		{
 			Drawing.Size size = base.GetBestFitSize ();
-
-			size.Width += 16;
+			size.Width += HeaderButton.Margin*2;
 			
 			return size;
 		}
@@ -125,7 +124,6 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
 			WidgetPaintState  state = this.PaintState;
-			Drawing.Point     pos   = new Drawing.Point();
 
 			if ( !this.isDynamic )
 			{
@@ -146,7 +144,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.TextLayout != null )
 			{
-				pos.X += HeaderButton.Margin;
+				Drawing.Point pos = new Drawing.Point(HeaderButton.Margin, 0);
 				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, ButtonStyle.Flat);
 			}
 
@@ -216,6 +214,6 @@ namespace Epsitec.Common.Widgets
 		protected bool						isSortable = true;
 		protected SortMode					sortMode = SortMode.None;
 		
-		protected const double				Margin = 2;
+		protected const double				Margin = 6;
 	}
 }
