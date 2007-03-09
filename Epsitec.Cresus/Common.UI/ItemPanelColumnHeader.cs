@@ -21,6 +21,7 @@ namespace Epsitec.Common.UI
 		public ItemPanelColumnHeader()
 		{
 			this.columns = new List<Column> ();
+			this.sorts = new List<SortRecord> ();
 			this.gridLayout = new GridLayoutEngine ();
 
 			this.gridLayout.RowDefinitions.Add (new RowDefinition ());
@@ -187,48 +188,92 @@ namespace Epsitec.Common.UI
 		{
 			if (sortDirection != ListSortDirection.None)
 			{
-				this.SetColumnSort (index, new SortDescription (sortDirection, this.columns[index].PropertyName));
+				this.SetColumnSort (index, new SortDescription (sortDirection, this.columns[index].PropertyName, this.GetColumnComparer (index)));
 			}
 		}
 
 		public void SetColumnSort(int index, SortDescription sortDescription)
 		{
-			Column column = this.columns[index];
-			string propertyName = column.PropertyName;
-			Support.PropertyComparer comparer = this.GetColumnComparer (index);
+			List<SortRecord> sorts = new List<SortRecord> ();
 
-			List<SortDescription> sorts = new List<SortDescription> ();
-
-			foreach (SortDescription sort in this.ItemPanel.Items.SortDescriptions)
+			foreach (SortRecord record in this.sorts)
 			{
-				if (sort.PropertyName != propertyName)
+				if (record.Column != index)
 				{
-					sorts.Add (sort);
-				}
-			}
-			
-			foreach (Column item in this.columns)
-			{
-				if ((item.Button == column.Button) &&
-					(!sortDescription.IsEmpty) &&
-					(column.Button.IsSortable))
-				{
-					item.Button.SortMode = sortDescription.Direction == ListSortDirection.Ascending ? SortMode.Down : SortMode.Up;
-				}
-				else
-				{
-					item.Button.SortMode = SortMode.None;
+					sorts.Add (record);
 				}
 			}
 
-			this.ItemPanel.Items.SortDescriptions.Clear ();
-			
 			if (!sortDescription.IsEmpty)
 			{
-				this.ItemPanel.Items.SortDescriptions.Add (new SortDescription (sortDescription.Direction, propertyName, comparer));
+				sorts.Add (new SortRecord (index, sortDescription));
+			}
+
+			this.sorts = sorts;
+			this.UpdateColumnSorts ();
+		}
+
+		private void UpdateColumnSorts()
+		{
+			//Column column = this.columns[index];
+			//string propertyName = column.PropertyName;
+			//Support.PropertyComparer comparer = this.GetColumnComparer (index);
+			//new SortDescription (sortDescription.Direction, propertyName, comparer)
+			List<SortDescription> sorts = new List<SortDescription> ();
+
+			foreach (SortRecord record in this.sorts)
+			{
+				sorts.Insert (0, record.Sort);
+			}
+
+			for (int i = 0; i < this.columns.Count; i++)
+			{
+				this.columns[i].Button.SortMode = SortMode.None;
+			}
+
+			for (int i = this.sorts.Count; --i >= 0; )
+			{
+				SortRecord record = this.sorts[i];
+
+				int index = record.Column;
+
+				if (this.columns[index].Button.IsSortable)
+				{
+					this.columns[index].Button.SortMode = record.Sort.Direction == ListSortDirection.Ascending ? SortMode.Down : SortMode.Up;
+					break;
+				}
 			}
 			
+			this.ItemPanel.Items.SortDescriptions.Clear ();
 			this.ItemPanel.Items.SortDescriptions.AddRange (sorts);
+		}
+
+		private struct SortRecord
+		{
+			public SortRecord(int column, SortDescription sort)
+			{
+				this.column = column;
+				this.sort   = sort;
+			}
+
+			public int Column
+			{
+				get
+				{
+					return this.column;
+				}
+			}
+
+			public SortDescription Sort
+			{
+				get
+				{
+					return this.sort;
+				}
+			}
+
+			private int column;
+			private SortDescription sort;
 		}
 
 		public ColumnDefinition GetColumnDefinition(int index)
@@ -565,6 +610,7 @@ namespace Epsitec.Common.UI
 		public static readonly DependencyProperty ItemPanelProperty = DependencyProperty.Register ("ItemPanel", typeof (ItemPanel), typeof (ItemPanelColumnHeader), new DependencyPropertyMetadata (ItemPanelColumnHeader.NotifyItemPanelChanged));
 
 		private List<Column> columns;
+		private List<SortRecord> sorts;
 		private GridLayoutEngine gridLayout;
 
 		private double dragPos;
