@@ -467,14 +467,11 @@ namespace Epsitec.Common.Dialogs
 			this.favorites = new Scrollable (group);
 			this.favorites.PreferredWidth = AbstractFileDialog.LeftColumnWidth-5;
 			this.favorites.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
-			this.favorites.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;  // (*)
+			this.favorites.VerticalScrollerMode = ScrollableScrollerMode.Auto;
 			this.favorites.Panel.IsAutoFitting = true;
 			this.favorites.IsForegroundFrame = true;
 			this.favorites.Margins = new Margins (0, 5, 0, 0);
 			this.favorites.Dock = DockStyle.Left;
-
-			//	TODO: (*) En mode Auto, l'ascenseur est caché lors de la première apparition
-			//	du dialogue !
 
 			this.CreateCollectionView ();
 

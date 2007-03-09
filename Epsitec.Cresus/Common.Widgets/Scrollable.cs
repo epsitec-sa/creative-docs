@@ -201,21 +201,21 @@ namespace Epsitec.Common.Widgets
 			double margin_x = (this.v_scroller.Visibility) ? this.v_scroller.PreferredWidth  : 0;
 			double margin_y = (this.h_scroller.Visibility) ? this.h_scroller.PreferredHeight : 0;
 			
-//			double total_dx = this.Client.Size.Width;
-//			double total_dy = this.Client.Size.Height;
+			double total_dx = this.Client.Size.Width;
+			double total_dy = this.Client.Size.Height;
 			
 			if (this.v_scroller.Visibility)
 			{
-				this.v_scroller.Margins = new Drawing.Margins (0, 0, 0, margin_y);
-				this.v_scroller.Anchor = AnchorStyles.Right | AnchorStyles.TopAndBottom;
-//				this.v_scroller.SetManualBounds(new Drawing.Rectangle(total_dx - margin_x, margin_y, margin_x, total_dy - margin_y));
+//				this.v_scroller.Margins = new Drawing.Margins (0, 0, 0, margin_y);
+//				this.v_scroller.Anchor = AnchorStyles.Right | AnchorStyles.TopAndBottom;
+				this.v_scroller.SetManualBounds(new Drawing.Rectangle(total_dx - margin_x, margin_y, margin_x, total_dy - margin_y));
 			}
 
 			if (this.h_scroller.Visibility)
 			{
-				this.h_scroller.Margins = new Drawing.Margins (0, margin_x, 0, 0);
-				this.h_scroller.Anchor = AnchorStyles.Bottom | AnchorStyles.LeftAndRight;
-//				this.h_scroller.SetManualBounds(new Drawing.Rectangle(0, 0, total_dx - margin_x, margin_y));
+//				this.h_scroller.Margins = new Drawing.Margins (0, margin_x, 0, 0);
+//				this.h_scroller.Anchor = AnchorStyles.Bottom | AnchorStyles.LeftAndRight;
+				this.h_scroller.SetManualBounds(new Drawing.Rectangle(0, 0, total_dx - margin_x, margin_y));
 			}
 		}
 		
@@ -343,13 +343,13 @@ namespace Epsitec.Common.Widgets
 			//	Met à jour l'ouverture (aperture) qui permet de voir le panel et ajuste
 			//	ce dernier pour que la partie qui intéresse l'utilisateur soit en face de
 			//	l'ouverture.
-			
+
+			this.h_scroller.Visibility = (margin_y > 0);
+			this.v_scroller.Visibility = (margin_x > 0);
+
 			this.panel_aperture = new Drawing.Rectangle (0, margin_y, vis_dx, vis_dy);
 			panel.SetManualBounds (new Drawing.Rectangle (-offset_x, total_dy - panel_dy + offset_y, panel_dx, panel_dy));
 			panel.Aperture = panel.MapParentToClient (this.panel_aperture);
-			
-			this.h_scroller.Visibility = (margin_y > 0);
-			this.v_scroller.Visibility = (margin_x > 0);
 			
 			this.Invalidate ();
 		}
