@@ -167,7 +167,7 @@ namespace Epsitec.Common.UI
 			Widgets.Layouts.LayoutMeasure widthMeasure;
 			Widgets.Layouts.LayoutMeasure heightMeasure;
 			tooltipContainer.GetMeasures (out widthMeasure, out heightMeasure);
-			tooltipContainer.PreferredWidth  = widthMeasure.Desired;  // TODO: la valeur rendue n'est pas correcte
+			tooltipContainer.PreferredWidth  = widthMeasure.Desired;
 			tooltipContainer.PreferredHeight = heightMeasure.Desired;
 
 			Widgets.ToolTip.Default.SetToolTip (viewContainer, tooltipContainer);

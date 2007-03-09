@@ -787,8 +787,8 @@ namespace Epsitec.Common.UI
 					this.Focus ();
 				}
 
-				if ((message.MessageType == MessageType.MouseMove) &&
-					(message.Button == MouseButtons.None))
+				if (message.MessageType == MessageType.MouseMove &&
+					message.Button == MouseButtons.None)
 				{
 					ItemView item = this.Detect (pos);
 
@@ -817,57 +817,27 @@ namespace Epsitec.Common.UI
 						//	Change the current item (this does not select the item).
 
 						ItemView oldCurrent = this.GetCurrentItemView ();
-						
-						switch (message.KeyCode)
-						{
-							case KeyCode.ArrowUp:
-								if (this.Items.CurrentPosition > 0)
-								{
-									this.Items.MoveCurrentToPrevious ();
-								}
-								break;
 
-							case KeyCode.ArrowDown:
-								if (this.Items.CurrentPosition < this.Items.Items.Count-1)
-								{
-									this.Items.MoveCurrentToNext ();
-								}
-								break;
-
-							case KeyCode.Home:
-								this.Items.MoveCurrentToFirst ();
-								break;
-
-							case KeyCode.End:
-								this.Items.MoveCurrentToLast ();
-								break;
-
-							case KeyCode.PageUp:
-							case KeyCode.PageDown:
-								//	TODO: déplace sur le premier/dernier visible entièrement ou, s'il est
-								//	déjà l'élément courant, une page avant/après, en tenant compte de la
-								//	géométrie des items...
-								break;
-						}
-
+						this.ProcessArrowMove(message.KeyCode);
 						ItemView newCurrent = this.GetCurrentItemView ();
 						
-						if ((!message.IsControlPressed) &&
-							(!message.IsAltPressed))
+						if (!message.IsControlPressed &&
+							!message.IsAltPressed)
 						{
-							if ((message.KeyCode == KeyCode.ArrowUp) ||
-								(message.KeyCode == KeyCode.ArrowDown) ||
-								(message.KeyCode == KeyCode.PageUp) ||
-								(message.KeyCode == KeyCode.PageDown) ||
-								(message.KeyCode == KeyCode.Home) ||
-								(message.KeyCode == KeyCode.End))
+							if (message.KeyCode == KeyCode.ArrowUp ||
+								message.KeyCode == KeyCode.ArrowDown ||
+								message.KeyCode == KeyCode.ArrowLeft ||
+								message.KeyCode == KeyCode.ArrowRight ||
+								message.KeyCode == KeyCode.PageUp ||
+								message.KeyCode == KeyCode.PageDown ||
+								message.KeyCode == KeyCode.Home ||
+								message.KeyCode == KeyCode.End)
 							{
 								IList<ItemView> list = this.GetSelectedItemViews ();
 
 								SelectionState state = new SelectionState (this);
 								
-								if ((message.IsShiftPressed) &&
-									(list.Count > 0))
+								if (message.IsShiftPressed && list.Count > 0)
 								{
 									ItemView first = ItemPanel.GetFirstSelectedItemView (list);
 									ItemView last  = ItemPanel.GetLastSelectedItemView (list);
@@ -921,8 +891,8 @@ namespace Epsitec.Common.UI
 
 									foreach (ItemView view in list)
 									{
-										if ((view.Index < index1) ||
-											(view.Index > index2))
+										if (view.Index < index1 ||
+											view.Index > index2)
 										{
 											deselect.Add (view);
 										}
@@ -948,6 +918,102 @@ namespace Epsitec.Common.UI
 						}
 					}
 				}
+			}
+		}
+
+		private void ProcessArrowMove(Common.Widgets.KeyCode keyCode)
+		{
+			int pos = this.Items.CurrentPosition;
+
+			if (this.Layout == ItemPanelLayout.VerticalList)
+			{
+				switch (keyCode)
+				{
+					case KeyCode.ArrowUp:
+						if (pos > 0)
+						{
+							this.Items.MoveCurrentToPrevious();
+						}
+						break;
+
+					case KeyCode.ArrowDown:
+						if (pos < this.Items.Items.Count-1)
+						{
+							this.Items.MoveCurrentToNext();
+						}
+						break;
+
+					case KeyCode.Home:
+						this.Items.MoveCurrentToFirst();
+						break;
+
+					case KeyCode.End:
+						this.Items.MoveCurrentToLast();
+						break;
+
+					case KeyCode.PageUp:
+					case KeyCode.PageDown:
+						//	TODO: déplace sur le premier/dernier visible entièrement ou, s'il est
+						//	déjà l'élément courant, une page avant/après, en tenant compte de la
+						//	géométrie des items...
+						break;
+				}
+			}
+
+			if (this.Layout == ItemPanelLayout.RowsOfTiles)
+			{
+				switch (keyCode)
+				{
+					case KeyCode.ArrowLeft:
+						if (pos > 0 && pos%this.totalColumnCount > 0)
+						{
+							this.Items.MoveCurrentToPrevious();
+						}
+						break;
+
+					case KeyCode.ArrowRight:
+						if (pos < this.Items.Items.Count-1 && pos%this.totalColumnCount < this.totalColumnCount-1)
+						{
+							this.Items.MoveCurrentToNext();
+						}
+						break;
+
+					case KeyCode.ArrowUp:
+						pos -= this.totalColumnCount;
+						if (pos >= 0)
+						{
+							this.Items.MoveCurrentToPosition(pos);
+						}
+						break;
+
+					case KeyCode.ArrowDown:
+						pos += this.totalColumnCount;
+						if (pos < this.Items.Items.Count)
+						{
+							this.Items.MoveCurrentToPosition(pos);
+						}
+						break;
+
+					case KeyCode.Home:
+						this.Items.MoveCurrentToFirst();
+						break;
+
+					case KeyCode.End:
+						this.Items.MoveCurrentToLast();
+						break;
+
+					case KeyCode.PageUp:
+					case KeyCode.PageDown:
+						//	TODO: déplace sur le premier/dernier visible entièrement ou, s'il est
+						//	déjà l'élément courant, une page avant/après, en tenant compte de la
+						//	géométrie des items...
+						break;
+				}
+			}
+			
+			if (this.Layout == ItemPanelLayout.ColumnsOfTiles)
+			{
+				//	TODO:
 			}
 		}
 
@@ -1558,7 +1624,7 @@ namespace Epsitec.Common.UI
 
 				if (dx > width)
 				{
-					colCount = System.Math.Max (c, colCount);
+					colCount = System.Math.Max (c-1, colCount);
 
 					dx  = size.Width;
 					dy += ly;
@@ -1843,6 +1909,7 @@ namespace Epsitec.Common.UI
 				this.lockedViews = value;
 			}
 		}
+
 		List<ItemView>					lockedViews = new List<ItemView> ();
 		object							exclusion = new object ();
 		int								lockAcquired;

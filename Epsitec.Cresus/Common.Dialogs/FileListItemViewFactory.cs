@@ -139,15 +139,12 @@ namespace Epsitec.Common.Dialogs
 			StaticText fileInfo = new StaticText ();
 
 			string text = item.Description;
-			if (string.IsNullOrEmpty(text))
+			if (text == null)
 			{
 				text = "";
 			}
-			if (shape == ItemViewShape.ToolTip)
-			{
-				//text = text.Replace("<br/>", ", ");
-			}
-			else
+
+			if (shape != ItemViewShape.ToolTip)
 			{
 				fileInfo.Margins = new Margins (6, 6, 0, 0);
 			}
