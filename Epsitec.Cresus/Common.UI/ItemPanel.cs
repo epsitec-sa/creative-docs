@@ -1620,11 +1620,10 @@ namespace Epsitec.Common.UI
 				}
 
 				dx += size.Width;
-				c++;
 
 				if (dx > width)
 				{
-					colCount = System.Math.Max (c-1, colCount);
+					colCount = System.Math.Max (c, colCount);
 
 					dx  = size.Width;
 					dy += ly;
@@ -1633,6 +1632,7 @@ namespace Epsitec.Common.UI
 					rowCount++;
 				}
 
+				c++;
 				lx = System.Math.Max (lx, dx);
 				ly = System.Math.Max (ly, size.Height);
 			}

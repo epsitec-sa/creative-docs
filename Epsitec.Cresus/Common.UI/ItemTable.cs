@@ -595,15 +595,17 @@ namespace Epsitec.Common.UI
 						this.columnHeader.SetColumnComparer (headerIndex, column.Comparer);
 						this.columnHeader.SetColumnSortable (headerIndex, column.SortDirection != ListSortDirection.None);
 						this.columnHeader.SetColumnVisibility (headerIndex, true);
+						this.columnHeader.SetColumnContentAlignment (headerIndex, column.ContentAlignment);
 //-						this.columnHeader.SetColumnSort (headerIndex, column.SortDirection);
 					}
 					else
 					{
-						this.columnHeader.SetAutomaticColumnWidth (headerIndex);
+						this.columnHeader.AdjustColumnWidth (headerIndex);
 						this.columnHeader.SetColumnFixedWidth (headerIndex, true);
 						this.columnHeader.SetColumnComparer (headerIndex, column.Comparer);
 						this.columnHeader.SetColumnSortable (headerIndex, column.SortDirection != ListSortDirection.None);
 						this.columnHeader.SetColumnVisibility (headerIndex, captionId.IsValid);
+						this.columnHeader.SetColumnContentAlignment (headerIndex, Drawing.ContentAlignment.MiddleCenter);
 //-						this.columnHeader.SetColumnSort (headerIndex, column.SortDirection);
 					}
 

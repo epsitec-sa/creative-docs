@@ -143,6 +143,18 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public Drawing.ContentAlignment ContentAlignment
+		{
+			get
+			{
+				return (Drawing.ContentAlignment) this.GetValue (ItemTableColumn.ContentAlignmentProperty);
+			}
+			set
+			{
+				this.SetValue (ItemTableColumn.ContentAlignmentProperty, value);
+			}
+		}
+
 
 		public static void SetComparer(DependencyObject obj, Support.PropertyComparer comparer)
 		{
@@ -160,6 +172,7 @@ namespace Epsitec.Common.UI
 		public static readonly DependencyProperty CaptionIdProperty		= DependencyProperty.Register ("CaptionId", typeof (Support.Druid), typeof (ItemTableColumn), new DependencyPropertyMetadata (Support.Druid.Empty));
 		public static readonly DependencyProperty TemplateIdProperty	= DependencyProperty.Register ("TemplateId", typeof (Support.Druid), typeof (ItemTableColumn), new DependencyPropertyMetadata (Support.Druid.Empty));
 		public static readonly DependencyProperty SortDirectionProperty	= DependencyProperty.Register ("SortDirection", typeof (ListSortDirection), typeof (ItemTableColumn), new DependencyPropertyMetadata (ListSortDirection.Descending));
+		public static readonly DependencyProperty ContentAlignmentProperty	= DependencyProperty.Register ("ContentAlignment", typeof (Drawing.ContentAlignment), typeof (ItemTableColumn), new DependencyPropertyMetadata (Drawing.ContentAlignment.MiddleLeft));
 
 		public static readonly DependencyProperty ComparerProperty	= DependencyProperty.RegisterAttached ("Comparer", typeof (Support.PropertyComparer), typeof (ItemTableColumn));
 

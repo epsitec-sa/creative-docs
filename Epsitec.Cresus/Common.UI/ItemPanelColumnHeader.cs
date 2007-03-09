@@ -125,6 +125,12 @@ namespace Epsitec.Common.UI
 			ItemTableColumn.SetComparer (this.columns[index].Button, propertyComparer);
 		}
 
+		public void SetColumnText(int index, string text)
+		{
+			this.columns[index].Button.CaptionId = Support.Druid.Empty;
+			this.columns[index].Button.Text      = text;
+		}
+
 		public Support.PropertyComparer GetColumnComparer(int index)
 		{
 			return ItemTableColumn.GetComparer (this.columns[index].Button);
@@ -165,6 +171,16 @@ namespace Epsitec.Common.UI
 		public void SetColumnFixedWidth(int index, bool fixedWidth)
 		{
 			this.columns[index].FixedWidth = fixedWidth;
+		}
+
+		public void SetColumnContentAlignment(int index, Drawing.ContentAlignment alignment)
+		{
+			this.columns[index].Button.ContentAlignment = alignment;
+		}
+
+		public Drawing.ContentAlignment GetColumnContentAlignment(int index)
+		{
+			return this.columns[index].Button.ContentAlignment;
 		}
 		
 		public void SetColumnSort(int index, ListSortDirection sortDirection)
@@ -256,7 +272,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public void SetAutomaticColumnWidth(int index)
+		public void AdjustColumnWidth(int index)
 		{
 			this.SetColumnWidth (index, this.columns[index].Button.GetBestFitSize ().Width);
 		}
@@ -394,6 +410,9 @@ namespace Epsitec.Common.UI
 			this.DispatchDummyMouseMoveEvent ();
 		}
 
+
+		#region Column Class
+
 		private class Column
 		{
 			public Column(ItemPanelColumnHeader header, string propertyName, Support.Druid captionId, int id)
@@ -484,6 +503,8 @@ namespace Epsitec.Common.UI
 			private int id;
 			private bool fixedWidth;
 		}
+
+		#endregion
 
 		private static void NotifyItemPanelChanged(DependencyObject o, object oldValue, object newValue)
 		{

@@ -211,6 +211,7 @@
     <Compile Include="Platform\Win32\ShellGuids.cs" />
     <Compile Include="Platform\Win32\ShellShortcut.cs" />
     <Compile Include="Platform\Win32\Win32Const.cs" />
+    <Compile Include="Res.cs" />
     <Compile Include="SerialAlgorithm.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -226,6 +227,21 @@
       <SubType>Code</SubType>
     </Compile>
     <Content Include="TODO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Common.Support\Captions.00.resource" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Common.Support\Captions.en.resource" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Common.Support\module.info" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Common.Support\Strings.00.resource" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Common.Support\Strings.en.resource" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

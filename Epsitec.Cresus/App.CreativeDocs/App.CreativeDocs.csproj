@@ -19,7 +19,7 @@
     <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
-    <OutputType>WinExe</OutputType>	
+    <OutputType>WinExe</OutputType>
     <RootNamespace>Epsitec.App.CreativeDocs</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
@@ -103,14 +103,17 @@
     <None Include="App.rc" />
     <Content Include="Original Samples\objects.crdoc" />
     <Content Include="Resources\App.DocumentEditor\Captions.00.resource" />
+    <Content Include="Resources\App.DocumentEditor\Captions.de.resource" />
     <Content Include="Resources\App.DocumentEditor\Captions.en.resource" />
     <Content Include="Resources\App.DocumentEditor\module.info" />
     <Content Include="Resources\App.DocumentEditor\Strings.00.resource" />
+    <Content Include="Resources\App.DocumentEditor\Strings.de.resource" />
     <Content Include="Resources\App.DocumentEditor\Strings.en.resource" />
     <Content Include="Resources\Common.Widgets\module.info" />
     <Content Include="Resources\Common.Widgets\Captions.00.resource" />
     <Content Include="Resources\Common.Widgets\Captions.en.resource" />
     <Content Include="Resources\Common.Widgets\Strings.00.resource" />
+    <Content Include="Resources\Common.Widgets\Strings.de.resource" />
     <Content Include="Resources\Common.Widgets\Strings.en.resource" />
     <Content Include="Resources\Common.Designer\module.info" />
     <Content Include="Resources\Common.Designer\Captions.00.resource" />
@@ -120,10 +123,17 @@
     <Content Include="Resources\Common.Dialogs\Captions.00.resource" />
     <Content Include="Resources\Common.Dialogs\Captions.en.resource" />
     <Content Include="Resources\Common.Dialogs\Strings.00.resource" />
+    <Content Include="Resources\Common.Dialogs\Strings.de.resource" />
     <Content Include="Resources\Common.Dialogs\Strings.en.resource" />
     <Content Include="Resources\Common.Document\module.info" />
+    <Content Include="Resources\Common.Document\Captions.00.resource" />
     <Content Include="Resources\Common.Document\Strings.00.resource" />
     <Content Include="Resources\Common.Document\Strings.en.resource" />
+    <Content Include="Resources\Common.Support\module.info" />
+    <Content Include="Resources\Common.Support\Captions.00.resource" />
+    <Content Include="Resources\Common.Support\Captions.en.resource" />
+    <Content Include="Resources\Common.Support\Strings.00.resource" />
+    <Content Include="Resources\Common.Support\Strings.en.resource" />
     <Content Include="Resources\Common.Types\module.info" />
     <Content Include="Resources\Common.Types\Captions.00.resource" />
     <Content Include="Resources\Common.Types\Captions.en.resource" />
@@ -165,6 +175,7 @@
     <PreBuildEvent>xcopy "$(SolutionDir)Common.Designer\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Dialogs\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.Support\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)App.DocumentEditor\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini

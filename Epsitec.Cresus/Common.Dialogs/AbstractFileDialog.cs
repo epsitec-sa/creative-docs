@@ -498,6 +498,8 @@ namespace Epsitec.Common.Dialogs
 			this.table.Columns[0].SortDirection = ListSortDirection.None;
 //-			this.table.Columns[1].SortDirection = ListSortDirection.Ascending;
 //-			this.table.Columns[2].SortDirection = ListSortDirection.Ascending;
+			
+			this.table.Columns[4].ContentAlignment = ContentAlignment.MiddleRight;
 
 			this.table.ColumnHeader.SetColumnSort (1, Epsitec.Common.Types.ListSortDirection.Ascending);
 			this.table.ColumnHeader.SetColumnSort (2, Epsitec.Common.Types.ListSortDirection.Ascending);
