@@ -158,8 +158,13 @@ namespace Epsitec.Common.UI
 		public void SetColumnVisibility(int index, bool visible)
 		{
 			this.columns[index].Button.Visibility = visible;
-			this.columns[index].Slider.Visibility = visible;
+			this.columns[index].Slider.Visibility = visible & !this.columns[index].FixedWidth;
 			this.gridLayout.ColumnDefinitions[index].Visibility = visible;
+		}
+
+		public void SetColumnFixedWidth(int index, bool fixedWidth)
+		{
+			this.columns[index].FixedWidth = fixedWidth;
 		}
 		
 		public void SetColumnSort(int index, ListSortDirection sortDirection)
@@ -389,14 +394,15 @@ namespace Epsitec.Common.UI
 			this.DispatchDummyMouseMoveEvent ();
 		}
 
-		private struct Column
+		private class Column
 		{
 			public Column(ItemPanelColumnHeader header, string propertyName, Support.Druid captionId, int id)
 			{
-				this.property = new PropertyGroupDescription (propertyName);
-				this.button   = new HeaderButton (header);
-				this.slider   = new HeaderSlider (header);
-				this.id       = id;
+				this.property   = new PropertyGroupDescription (propertyName);
+				this.button     = new HeaderButton (header);
+				this.slider     = new HeaderSlider (header);
+				this.id         = id;
+				this.fixedWidth = false;
 
 				this.button.Style     = HeaderButtonStyle.Top;
 				this.button.IsDynamic = true;
@@ -450,6 +456,22 @@ namespace Epsitec.Common.UI
 				}
 			}
 
+			public bool FixedWidth
+			{
+				get
+				{
+					return this.fixedWidth;
+				}
+				set
+				{
+					if (this.fixedWidth != value)
+					{
+						this.fixedWidth = value;
+						this.slider.Visibility = this.button.Visibility & !this.fixedWidth;
+					}
+				}
+			}
+
 			public string GetColumnText(object item)
 			{
 				string[] names = this.property.GetGroupNamesForItem (item, System.Globalization.CultureInfo.CurrentCulture);
@@ -460,6 +482,7 @@ namespace Epsitec.Common.UI
 			private HeaderButton button;
 			private HeaderSlider slider;
 			private int id;
+			private bool fixedWidth;
 		}
 
 		private static void NotifyItemPanelChanged(DependencyObject o, object oldValue, object newValue)

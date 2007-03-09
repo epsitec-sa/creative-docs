@@ -591,6 +591,7 @@ namespace Epsitec.Common.UI
 					if (useRealColumns)
 					{
 						this.columnHeader.SetColumnWidth (headerIndex, width);
+						this.columnHeader.SetColumnFixedWidth (headerIndex, false);
 						this.columnHeader.SetColumnComparer (headerIndex, column.Comparer);
 						this.columnHeader.SetColumnSortable (headerIndex, column.SortDirection != ListSortDirection.None);
 						this.columnHeader.SetColumnVisibility (headerIndex, true);
@@ -599,6 +600,7 @@ namespace Epsitec.Common.UI
 					else
 					{
 						this.columnHeader.SetAutomaticColumnWidth (headerIndex);
+						this.columnHeader.SetColumnFixedWidth (headerIndex, true);
 						this.columnHeader.SetColumnComparer (headerIndex, column.Comparer);
 						this.columnHeader.SetColumnSortable (headerIndex, column.SortDirection != ListSortDirection.None);
 						this.columnHeader.SetColumnVisibility (headerIndex, captionId.IsValid);
