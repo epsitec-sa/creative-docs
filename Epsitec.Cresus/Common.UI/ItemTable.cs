@@ -41,6 +41,7 @@ namespace Epsitec.Common.UI
 			this.headerStripe.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.surface.Anchor = AnchorStyles.All;
 
+			this.columnHeader.PreferredHeight *= ItemTable.HeaderHeightFactor;
 			this.headerStripe.PreferredHeight = this.columnHeader.PreferredHeight;
 
 			this.UpdateGeometry ();
@@ -774,6 +775,8 @@ namespace Epsitec.Common.UI
 		public static readonly DependencyProperty FrameVisibilityProperty = DependencyProperty.Register ("FrameVisibility", typeof (bool), typeof (ItemTable), new DependencyPropertyMetadata (true, ItemTable.NotifyFrameVisibilityChanged));
 		public static readonly DependencyProperty VerticalScrollModeProperty = DependencyProperty.Register ("VerticalScrollMode", typeof (ItemTableScrollMode), typeof (ItemTable), new DependencyPropertyMetadata (ItemTableScrollMode.Linear, ItemTable.NotifyVerticalScrollModeChanged));
 		public static readonly DependencyProperty HorizontalScrollModeProperty = DependencyProperty.Register ("HorizontalScrollMode", typeof (ItemTableScrollMode), typeof (ItemTable), new DependencyPropertyMetadata (ItemTableScrollMode.Linear, ItemTable.NotifyHorizontalScrollModeChanged));
+
+		public static readonly double HeaderHeightFactor = 1.3;
 
 		private VScroller								vScroller;
 		private HScroller								hScroller;

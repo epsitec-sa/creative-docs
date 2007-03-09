@@ -157,6 +157,7 @@ namespace Epsitec.Common.Widgets
 
 				if ( this.headerButtonStyle == HeaderButtonStyle.Top )
 				{
+#if false
 					rect.Right = rect.Left+rect.Height;
 					rect.Width  *= 0.75;
 					rect.Height *= 0.75;
@@ -170,6 +171,24 @@ namespace Epsitec.Common.Widgets
 						type = GlyphShape.TriangleUp;
 						rect.Offset(0, rect.Height/3);
 					}
+#else
+					double dim = rect.Height*0.5;
+					rect.Left = rect.Center.X-dim/2;
+					rect.Width = dim;
+
+					if ( this.sortMode > 0 )
+					{
+						rect.Bottom -= 3;
+						rect.Height = dim;
+						type = GlyphShape.TriangleDown;
+					}
+					else
+					{
+						rect.Bottom = rect.Top-dim+1;
+						rect.Height = dim;
+						type = GlyphShape.TriangleUp;
+					}
+#endif
 				}
 				if ( this.headerButtonStyle == HeaderButtonStyle.Left )
 				{

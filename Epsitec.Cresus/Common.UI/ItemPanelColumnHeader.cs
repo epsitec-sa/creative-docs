@@ -427,6 +427,7 @@ namespace Epsitec.Common.UI
 				this.button.IsDynamic = true;
 				this.button.CaptionId = captionId;
 				this.button.Index     = header.columns.Count;
+				this.button.PreferredHeight *= ItemTable.HeaderHeightFactor;
 
 				if (captionId.IsEmpty)
 				{
@@ -438,6 +439,7 @@ namespace Epsitec.Common.UI
 				this.slider.Index          = header.columns.Count;
 				this.slider.Anchor         = AnchorStyles.Left | AnchorStyles.TopAndBottom;
 				this.slider.PreferredWidth = 5;
+				this.slider.PreferredHeight *= ItemTable.HeaderHeightFactor;
 				
 				GridLayoutEngine.SetColumn (this.button, header.columns.Count);
 				GridLayoutEngine.SetRow (this.button, 0);
