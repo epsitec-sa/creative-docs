@@ -1,5 +1,5 @@
 //	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 using Epsitec.Common.Types;
@@ -58,7 +58,14 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			get
 			{
-				return (double) this.GetValue (ColumnDefinition.MinWidthProperty);
+				if (this.Visibility)
+				{
+					return (double) this.GetValue (ColumnDefinition.MinWidthProperty);
+				}
+				else
+				{
+					return 0.0;
+				}
 			}
 			set
 			{
@@ -70,7 +77,14 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			get
 			{
-				return (double) this.GetValue (ColumnDefinition.MaxWidthProperty);
+				if (this.Visibility)
+				{
+					return (double) this.GetValue (ColumnDefinition.MaxWidthProperty);
+				}
+				else
+				{
+					return 0.0;
+				}
 			}
 			set
 			{
