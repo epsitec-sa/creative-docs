@@ -125,24 +125,28 @@ namespace Epsitec.Common.Widgets.Adorners
 			switch ( type )
 			{
 				case GlyphShape.ArrowUp:
+				case GlyphShape.TriangleUp:
 					path.MoveTo(center.X, center.Y+rect.Height*spikeShift);
 					path.LineTo(center.X-rect.Width*baseShiftH, center.Y-rect.Height*baseShiftV);
 					path.LineTo(center.X+rect.Width*baseShiftH, center.Y-rect.Height*baseShiftV);
 					break;
 
 				case GlyphShape.ArrowDown:
+				case GlyphShape.TriangleDown:
 					path.MoveTo(center.X, center.Y-rect.Height*spikeShift);
 					path.LineTo(center.X-rect.Width*baseShiftH, center.Y+rect.Height*baseShiftV);
 					path.LineTo(center.X+rect.Width*baseShiftH, center.Y+rect.Height*baseShiftV);
 					break;
 
 				case GlyphShape.ArrowRight:
+				case GlyphShape.TriangleRight:
 					path.MoveTo(center.X+rect.Width*spikeShift, center.Y);
 					path.LineTo(center.X-rect.Width*baseShiftV, center.Y+rect.Height*baseShiftH);
 					path.LineTo(center.X-rect.Width*baseShiftV, center.Y-rect.Height*baseShiftH);
 					break;
 
 				case GlyphShape.ArrowLeft:
+				case GlyphShape.TriangleLeft:
 					path.MoveTo(center.X-rect.Width*spikeShift, center.Y);
 					path.LineTo(center.X+rect.Width*baseShiftV, center.Y+rect.Height*baseShiftH);
 					path.LineTo(center.X+rect.Width*baseShiftV, center.Y-rect.Height*baseShiftH);

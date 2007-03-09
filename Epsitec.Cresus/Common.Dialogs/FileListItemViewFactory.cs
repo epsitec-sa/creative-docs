@@ -92,9 +92,9 @@ namespace Epsitec.Common.Dialogs
 
 			fileIcon.PreferredHeight = size;
 
-			if (size > 64)
+			if (size > 64)  // très grande icône ?
 			{
-				Widgets.FrameBox frame = new FrameBox();
+				Widgets.FrameBox frame = new FrameBox();  // dessine un cadre autour
 				frame.DrawFullFrame = true;
 				frame.PreferredHeight = size;
 				frame.Margins = new Margins (1, 1, 1, 1);

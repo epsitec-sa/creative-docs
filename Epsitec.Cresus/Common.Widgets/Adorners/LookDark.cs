@@ -150,6 +150,30 @@ namespace Epsitec.Common.Widgets.Adorners
 					path.LineTo(center.X+0.1*rect.Width, center.Y+0.3*rect.Height);
 					break;
 
+				case GlyphShape.TriangleUp:
+					path.MoveTo(center.X, center.Y+rect.Height*0.2);
+					path.LineTo(center.X-rect.Width*0.3, center.Y-rect.Height*0.1);
+					path.LineTo(center.X+rect.Width*0.3, center.Y-rect.Height*0.1);
+					break;
+
+				case GlyphShape.TriangleDown:
+					path.MoveTo(center.X, center.Y-rect.Height*0.2);
+					path.LineTo(center.X-rect.Width*0.3, center.Y+rect.Height*0.1);
+					path.LineTo(center.X+rect.Width*0.3, center.Y+rect.Height*0.1);
+					break;
+
+				case GlyphShape.TriangleRight:
+					path.MoveTo(center.X+rect.Width*0.2, center.Y);
+					path.LineTo(center.X-rect.Width*0.1, center.Y+rect.Height*0.3);
+					path.LineTo(center.X-rect.Width*0.1, center.Y-rect.Height*0.3);
+					break;
+
+				case GlyphShape.TriangleLeft:
+					path.MoveTo(center.X-rect.Width*0.2, center.Y);
+					path.LineTo(center.X+rect.Width*0.1, center.Y+rect.Height*0.3);
+					path.LineTo(center.X+rect.Width*0.1, center.Y-rect.Height*0.3);
+					break;
+
 				case GlyphShape.Menu:
 					path.MoveTo(center.X+rect.Width*0.00, center.Y-rect.Height*0.25);
 					path.LineTo(center.X-rect.Width*0.30, center.Y+rect.Height*0.15);

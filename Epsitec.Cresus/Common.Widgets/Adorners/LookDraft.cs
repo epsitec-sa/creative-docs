@@ -101,18 +101,22 @@ namespace Epsitec.Common.Widgets.Adorners
 			switch ( type )
 			{
 				case GlyphShape.ArrowUp:
+				case GlyphShape.TriangleUp:
 					this.PaintImageButton(graphics, rInside, enabled?64:65);
 					return;
 
 				case GlyphShape.ArrowDown:
+				case GlyphShape.TriangleDown:
 					this.PaintImageButton(graphics, rInside, enabled?66:67);
 					return;
 
 				case GlyphShape.ArrowRight:
+				case GlyphShape.TriangleRight:
 					this.PaintImageButton(graphics, rInside, enabled?68:69);
 					return;
 
 				case GlyphShape.ArrowLeft:
+				case GlyphShape.TriangleLeft:
 					this.PaintImageButton(graphics, rInside, enabled?70:71);
 					return;
 

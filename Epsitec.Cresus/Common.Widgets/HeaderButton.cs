@@ -163,11 +163,11 @@ namespace Epsitec.Common.Widgets
 
 					if ( this.sortMode > 0 )
 					{
-						type = GlyphShape.ArrowDown;
+						type = GlyphShape.TriangleDown;
 					}
 					else
 					{
-						type = GlyphShape.ArrowUp;
+						type = GlyphShape.TriangleUp;
 						rect.Offset(0, rect.Height/3);
 					}
 				}
@@ -180,11 +180,11 @@ namespace Epsitec.Common.Widgets
 
 					if ( this.sortMode > 0 )
 					{
-						type = GlyphShape.ArrowRight;
+						type = GlyphShape.TriangleRight;
 					}
 					else
 					{
-						type = GlyphShape.ArrowLeft;
+						type = GlyphShape.TriangleLeft;
 					}
 				}
 				adorner.PaintGlyph(graphics, rect, state, type, PaintTextStyle.Header);
