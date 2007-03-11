@@ -951,11 +951,15 @@ namespace Epsitec.Common.UI
 						this.Items.MoveCurrentToLast();
 						break;
 
-					case KeyCode.PageUp:
-					case KeyCode.PageDown:
 						//	TODO: déplace sur le premier/dernier visible entièrement ou, s'il est
 						//	déjà l'élément courant, une page avant/après, en tenant compte de la
 						//	géométrie des items...
+					case KeyCode.PageUp:
+						this.ProcessPageUpMove();
+						break;
+
+					case KeyCode.PageDown:
+						this.ProcessPageDownMove();
 						break;
 				}
 			}
@@ -1003,10 +1007,11 @@ namespace Epsitec.Common.UI
 						break;
 
 					case KeyCode.PageUp:
+						this.ProcessPageUpMove();
+						break;
+
 					case KeyCode.PageDown:
-						//	TODO: déplace sur le premier/dernier visible entièrement ou, s'il est
-						//	déjà l'élément courant, une page avant/après, en tenant compte de la
-						//	géométrie des items...
+						this.ProcessPageDownMove();
 						break;
 				}
 			}
@@ -1014,6 +1019,116 @@ namespace Epsitec.Common.UI
 			if (this.Layout == ItemPanelLayout.ColumnsOfTiles)
 			{
 				//	TODO:
+			}
+		}
+
+		private void ProcessPageUpMove()
+		{
+			int pos = this.Items.CurrentPosition;
+			int first, last;
+			this.GetFirstAndListVisibleItem(out first, out last);
+			
+			if (this.Layout == ItemPanelLayout.VerticalList)
+			{
+				if (pos == first)
+				{
+					pos = pos-(last-first-1);
+				}
+				else
+				{
+					pos = first;
+				}
+			}
+
+			if (this.Layout == ItemPanelLayout.RowsOfTiles)
+			{
+				int visibleRows = (last-first+1)/this.totalColumnCount;
+
+				if (pos/this.totalColumnCount == first/this.totalColumnCount)
+				{
+					pos = pos-visibleRows*this.totalColumnCount;
+				}
+				else
+				{
+					pos = first + pos%this.totalColumnCount;
+				}
+			}
+
+			pos = System.Math.Max(pos, 0);
+			pos = System.Math.Min(pos, this.Items.Items.Count-1);
+			this.Items.MoveCurrentToPosition(pos);
+		}
+
+		private void ProcessPageDownMove()
+		{
+			int pos = this.Items.CurrentPosition;
+			int first, last;
+			this.GetFirstAndListVisibleItem(out first, out last);
+			
+			if (this.Layout == ItemPanelLayout.VerticalList)
+			{
+				if (pos == last-1)
+				{
+					pos = pos+(last-first-1);
+				}
+				else
+				{
+					pos = last-1;
+				}
+			}
+
+			if (this.Layout == ItemPanelLayout.RowsOfTiles)
+			{
+				int visibleRows = (last-first+1)/this.totalColumnCount;
+
+				if (pos/this.totalColumnCount == last/this.totalColumnCount)
+				{
+					pos = pos+visibleRows*this.totalColumnCount;
+				}
+				else
+				{
+					pos = last/this.totalColumnCount*this.totalColumnCount + pos%this.totalColumnCount;
+				}
+			}
+
+			pos = System.Math.Max(pos, 0);
+			pos = System.Math.Min(pos, this.Items.Items.Count-1);
+			this.Items.MoveCurrentToPosition(pos);
+		}
+
+		private void GetFirstAndListVisibleItem(out int first, out int last)
+		{
+			IEnumerable<ItemView> views = this.SafeGetViews();
+			first = 0;
+			last = 0;
+			bool inside = false;
+			int index = 0;
+
+			foreach (ItemView view in views)
+			{
+				index = view.Index;
+
+				if (view.IsVisible)
+				{
+					if (!inside)  // premier visible ?
+					{
+						first = index;
+						inside = true;
+					}
+				}
+				else
+				{
+					if (inside)  // premier caché ?
+					{
+						last = index-1;
+						inside = false;
+					}
+				}
+			}
+
+			if (inside)
+			{
+				last = index;
 			}
 		}
 
