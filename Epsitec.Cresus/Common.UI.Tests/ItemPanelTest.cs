@@ -185,6 +185,10 @@ namespace Epsitec.Common.UI
 			
 			ItemPanel panel = table.ItemPanel;
 
+			table.ColumnHeader.SetColumnText (0, "Quantité");
+			table.ColumnHeader.SetColumnText (1, "Description");
+			table.ColumnHeader.SetColumnText (2, "Prix unitaire");
+
 			panel.Items = ItemPanelTest.GetStructuredItems (false);
 			panel.Layout = ItemPanelLayout.VerticalList;
 			panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne;
@@ -226,6 +230,7 @@ namespace Epsitec.Common.UI
 			panel.ItemSelectionMode = ItemPanelSelectionMode.ZeroOrOne;
 			panel.Aperture = new Drawing.Rectangle (0, 0, dx, dy);
 			panel.ItemViewDefaultSize = new Drawing.Size (320, 20);
+			panel.ItemViewDefaultExpanded = true;
 
 			ItemPanelColumnHeader header = table.ColumnHeader;
 

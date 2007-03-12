@@ -9,30 +9,41 @@ using Epsitec.Common.UI.ItemViewFactories;
 
 namespace Epsitec.Common.UI.ItemViewFactories
 {
-	internal sealed class GroupItemViewFactory : IItemViewFactory
+	internal sealed class GroupItemViewFactory : AbstractItemViewFactory
 	{
 		#region IItemViewFactory Members
 
-		public Widgets.Widget CreateUserInterface(ItemPanel panel, ItemView itemView)
+		public override Widgets.Widget CreateUserInterface(ItemPanel panel, ItemView itemView)
 		{
 			ItemPanelGroup group = new ItemPanelGroup ();
 
 			group.ParentPanel = panel;
 			group.ParentView  = itemView;
+
+			group.PreferredWidth = itemView.Size.Width;
 			
 			return group;
 		}
 
-		public void DisposeUserInterface(ItemView itemView, Widgets.Widget widget)
+		public override void DisposeUserInterface(ItemView itemView, Widgets.Widget widget)
 		{
 			widget.Dispose ();
 		}
 
-		public Drawing.Size GetPreferredSize(ItemPanel panel, ItemView itemView)
+		#endregion
+		
+		protected override Widgets.Widget CreateElement(string name, ItemPanel panel, ItemView view, ItemViewShape shape)
 		{
-			return itemView.Size;
+			return null;
 		}
 
-		#endregion
+		public override Drawing.Size GetPreferredSize(ItemPanel panel, ItemView itemView)
+		{
+			Drawing.Size size = base.GetPreferredSize (panel, itemView);
+
+			size.Height = itemView.Size.Height;
+
+			return size;
+		}
 	}
 }

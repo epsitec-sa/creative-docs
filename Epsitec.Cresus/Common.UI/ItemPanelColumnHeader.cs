@@ -243,9 +243,12 @@ namespace Epsitec.Common.UI
 					break;
 				}
 			}
-			
-			this.ItemPanel.Items.SortDescriptions.Clear ();
-			this.ItemPanel.Items.SortDescriptions.AddRange (sorts);
+
+			if (this.ItemPanel.Items != null)
+			{
+				this.ItemPanel.Items.SortDescriptions.Clear ();
+				this.ItemPanel.Items.SortDescriptions.AddRange (sorts);
+			}
 		}
 
 		private struct SortRecord
