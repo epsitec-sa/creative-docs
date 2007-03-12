@@ -325,6 +325,18 @@ namespace Epsitec.Common.UI
 			this.SetColumnWidth (index, this.columns[index].Button.GetBestFitSize ().Width);
 		}
 
+		public override Drawing.Size GetBestFitSize()
+		{
+			double width = this.GetTotalWidth ();
+			
+			if (this.columns.Count > 0)
+			{
+				width += (this.columns[0].Slider.PreferredWidth + 1) / 2;
+			}
+
+			return new Drawing.Size (width, this.PreferredHeight);
+		}
+
 		public double GetTotalWidth()
 		{
 			double width = 0;
@@ -335,11 +347,6 @@ namespace Epsitec.Common.UI
 				{
 					width += column.Button.PreferredWidth;
 				}
-			}
-
-			if (this.columns.Count > 0)
-			{
-				width += (this.columns[0].Slider.PreferredWidth + 1) / 2;
 			}
 			
 			return width;

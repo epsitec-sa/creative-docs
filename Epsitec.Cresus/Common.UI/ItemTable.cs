@@ -394,8 +394,10 @@ namespace Epsitec.Common.UI
 			double dx = System.Math.Max (this.itemPanel.PreferredWidth, aW);
 			double dy = System.Math.Max (this.itemPanel.PreferredHeight, aH);
 
+			Drawing.Size headerSize = this.columnHeader.GetBestFitSize ();
+
 			this.itemPanel.SetManualBounds (new Rectangle (-ox, -oy, dx, dy));
-			this.columnHeader.SetManualBounds (new Rectangle (-ox, 0, this.columnHeader.GetTotalWidth (), this.columnHeader.PreferredHeight));
+			this.columnHeader.SetManualBounds (new Rectangle (-ox, 0, headerSize.Width, headerSize.Height));
 		}
 
 		private void UpdateScrollRatios()
