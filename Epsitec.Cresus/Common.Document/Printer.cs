@@ -101,7 +101,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public bool MiniatureJpeg(Size sizeHope, bool isModel, out string filename, out byte[] data)
+		public Drawing.Bitmap CreateMiniatureBitmap(Size sizeHope, bool isModel, int page)
 		{
 			//	Retourne les données pour l'image bitmap miniature de la première page.
 			DrawingContext drawingContext = new DrawingContext (this.document, null);
@@ -110,25 +110,14 @@ namespace Epsitec.Common.Document
 			drawingContext.IsBitmap = true;
 			drawingContext.GridShow = isModel;
 
-			int pageNumber = this.document.Modifier.PrintablePageRank (0);  // numéro de la première page non modèle du document
+			int pageNumber = this.document.Modifier.PrintablePageRank (page);
 
 			Size pageSize = this.document.GetPageSize (pageNumber);
 			double dpix = sizeHope.Width*254/pageSize.Width;
 			double dpiy = sizeHope.Height*254/pageSize.Height;
 			double dpi = System.Math.Min (dpix, dpiy);
 
-			string err = this.ExportGeometry (drawingContext, pageNumber, ImageFormat.Jpeg, dpi, ImageCompression.None, 24, 85, 1, false, out data);
-			if (err == "")
-			{
-				filename = "preview.jpg";
-				return true;
-			}
-			else
-			{
-				filename = null;
-				data = null;
-				return false;
-			}
+			return this.ExportBitmap (drawingContext, pageNumber, dpi, 24, 1, false);
 		}
 
 
@@ -1227,63 +1216,8 @@ namespace Epsitec.Common.Document
 				return Res.Strings.Error.BadImage;
 			}
 
-			Size pageSize = this.document.GetPageSize(pageNumber);
-			int dx = (int) ((pageSize.Width/10.0)*(dpi/25.4));
-			int dy = (int) ((pageSize.Height/10.0)*(dpi/25.4));
-
-			Graphics gfx = new Graphics();
-			gfx.SetPixmapSize(dx, dy);
-			gfx.SolidRenderer.ClearAlphaRgb((depth==32)?0:1, 1, 1, 1);
-			gfx.Rasterizer.Gamma = AA;
-
-			double zoomH = dx / pageSize.Width;
-			double zoomV = dy / pageSize.Height;
-			double zoom = System.Math.Min(zoomH, zoomV);
-			gfx.TranslateTransform(0, dy);
-			gfx.ScaleTransform(zoom, -zoom, 0, 0);
-
-			System.Collections.ArrayList layers = this.ComputeLayers(pageNumber);
-			foreach (Objects.Layer layer in layers)
-			{
-				Properties.ModColor modColor = layer.PropertyModColor;
-				gfx.PushColorModifier(new ColorModifierCallback(modColor.ModifyColor));
-				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
-				gfx.PushColorModifier(new ColorModifierCallback(drawingContext.DimmedColor));
-
-				foreach (Objects.Abstract obj in this.document.Deep(layer))
-				{
-					if (obj.IsHide)
-					{
-						continue;  // objet caché ?
-					}
-
-					obj.DrawGeometry(gfx, drawingContext);
-				}
-
-				gfx.PopColorModifier();
-				gfx.PopColorModifier();
-			}
-
-			if (drawingContext.GridShow)
-			{
-				gfx.LineWidth = 1/zoom;
-				this.document.Modifier.ActiveViewer.DrawGuides(gfx);
-				gfx.LineWidth = 1;
-			}
-
-			if (paintMark)
-			{
-				if (this.document.InstallType == InstallType.Demo)
-				{
-					this.PaintDemo(gfx, pageNumber);
-				}
-				if (this.document.InstallType == InstallType.Expired)
-				{
-					this.PaintExpired(gfx, pageNumber);
-				}
-			}
-
-			Bitmap bitmap = Bitmap.FromPixmap(gfx.Pixmap) as Bitmap;
+			Bitmap bitmap = this.ExportBitmap (drawingContext, pageNumber, dpi, depth, AA, paintMark);
+			
 			if (bitmap == null)
 			{
 				return Res.Strings.Error.NoBitmap;
@@ -1300,6 +1234,68 @@ namespace Epsitec.Common.Document
 			}
 
 			return "";  // ok
+		}
+
+		protected Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, double dpi, int depth, double AA, bool paintMark)
+		{
+			Size pageSize = this.document.GetPageSize (pageNumber);
+			int dx = (int) ((pageSize.Width/10.0)*(dpi/25.4));
+			int dy = (int) ((pageSize.Height/10.0)*(dpi/25.4));
+
+			Graphics gfx = new Graphics ();
+			gfx.SetPixmapSize (dx, dy);
+			gfx.SolidRenderer.ClearAlphaRgb ((depth==32)?0:1, 1, 1, 1);
+			gfx.Rasterizer.Gamma = AA;
+
+			double zoomH = dx / pageSize.Width;
+			double zoomV = dy / pageSize.Height;
+			double zoom = System.Math.Min (zoomH, zoomV);
+			gfx.TranslateTransform (0, dy);
+			gfx.ScaleTransform (zoom, -zoom, 0, 0);
+
+			System.Collections.ArrayList layers = this.ComputeLayers (pageNumber);
+			foreach (Objects.Layer layer in layers)
+			{
+				Properties.ModColor modColor = layer.PropertyModColor;
+				gfx.PushColorModifier (new ColorModifierCallback (modColor.ModifyColor));
+				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
+				gfx.PushColorModifier (new ColorModifierCallback (drawingContext.DimmedColor));
+
+				foreach (Objects.Abstract obj in this.document.Deep (layer))
+				{
+					if (obj.IsHide)
+					{
+						continue;  // objet caché ?
+					}
+
+					obj.DrawGeometry (gfx, drawingContext);
+				}
+
+				gfx.PopColorModifier ();
+				gfx.PopColorModifier ();
+			}
+
+			if (drawingContext.GridShow)
+			{
+				gfx.LineWidth = 1/zoom;
+				this.document.Modifier.ActiveViewer.DrawGuides (gfx);
+				gfx.LineWidth = 1;
+			}
+
+			if (paintMark)
+			{
+				if (this.document.InstallType == InstallType.Demo)
+				{
+					this.PaintDemo (gfx, pageNumber);
+				}
+				if (this.document.InstallType == InstallType.Expired)
+				{
+					this.PaintExpired (gfx, pageNumber);
+				}
+			}
+
+			Bitmap bitmap = Bitmap.FromPixmap (gfx.Pixmap) as Bitmap;
+			return bitmap;
 		}
 
 

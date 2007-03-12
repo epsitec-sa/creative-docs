@@ -923,7 +923,7 @@ namespace Epsitec.Common.Dialogs
 					}
 
 				case "info":
-					return 0;
+					return this.Description;
 				
 				case "date":
 					this.InitializeCachedFileDate ();

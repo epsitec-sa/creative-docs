@@ -745,12 +745,12 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifySelectionChanged();
 		}
 
-		public void CreateEnding(bool delete, bool close)
+		public Objects.Abstract CreateEnding(bool delete, bool close)
 		{
 			//	Si nécessaire, termine la création en cours.
 			if (this.createRank == -1)
 			{
-				return;
+				return null;
 			}
 
 			Objects.Abstract layer = this.drawingContext.RootObject();
@@ -780,11 +780,14 @@ namespace Epsitec.Common.Document
 				this.document.Modifier.OpletQueueCancelAction();  // annule les propriétés
 
 				this.document.Modifier.IsObjectJustCreated = false;
+				obj = null;
 			}
 
 			this.CreateRank = -1;
 			this.document.Notifier.NotifyCreateChanged();
 			this.document.Notifier.NotifySelectionChanged();
+			
+			return obj;
 		}
 
 		public bool IsCreating

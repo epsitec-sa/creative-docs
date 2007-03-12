@@ -1607,7 +1607,22 @@ namespace Epsitec.Common.Document
 
 			if ( this.ActiveViewer.IsCreating )
 			{
-				this.ActiveViewer.CreateEnding(true, false);
+				Objects.Abstract obj = this.ActiveViewer.CreateEnding(false, false);
+
+				if (obj != null)
+				{
+					//	L'objet a pu être créé correctement; il faut maintenant le détruire.
+					//	On aurait pu appeler CreateEnding avec delete=true, mais cela n'aurait
+					//	pas généré d'opération annulable dans la OpletQueue, ce qui peut être
+					//	gênant si on vient de détruire par erreur une grande courbe.
+					using (this.OpletQueueBeginAction (Res.Strings.Action.Delete))
+					{
+						DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+						this.document.Modifier.ActiveViewer.Select (obj, false, false);
+						this.DeleteSelection ();
+						this.OpletQueueValidateAction ();
+					}
+				}
 			}
 			else
 			{
