@@ -771,7 +771,17 @@ namespace Epsitec.Common.UI
 
 					if (view != null)
 					{
-						this.ManualSelection (view, e.Message.IsControlPressed);
+						IList<ItemView> list = this.GetSelectedItemViews();
+						if (e.Message.IsShiftPressed && list.Count > 0)
+						{
+							ItemView oldCurrent = this.GetCurrentItemView();
+							this.ContinuousSelection(list, oldCurrent, view);
+						}
+						else
+						{
+							this.ManualSelection(view, e.Message.IsControlPressed);
+						}
+
 						e.Message.Consumer = this;
 					}
 				}
@@ -850,73 +860,11 @@ namespace Epsitec.Common.UI
 								message.KeyCode == KeyCode.End)
 							{
 								IList<ItemView> list = this.GetSelectedItemViews ();
-
 								SelectionState state = new SelectionState (this);
 								
 								if (message.IsShiftPressed && list.Count > 0)
 								{
-									ItemView first = ItemPanel.GetFirstSelectedItemView (list);
-									ItemView last  = ItemPanel.GetLastSelectedItemView (list);
-
-									int index1 = first == null ? -1 : first.Index;
-									int index2 = last == null ? -1 : last.Index;
-
-									int oldIndex = oldCurrent == null ? -1 : oldCurrent.Index;
-									int newIndex = newCurrent == null ? -1 : newCurrent.Index;
-
-									if (oldIndex == index1)
-									{
-										index1 = newIndex;
-									}
-									else if (oldIndex == index2)
-									{
-										index2 = newIndex;
-									}
-									else
-									{
-										index1 = newIndex;
-										index2 = newIndex;
-									}
-
-									index1 = System.Math.Max (0, index1);
-									index2 = System.Math.Max (0, index2);
-
-									if (index1 > index2)
-									{
-										int temp = index1;
-										index1 = index2;
-										index2 = temp;
-									}
-									
-									if (newIndex < oldIndex)
-									{
-										for (int i = index2; i >= index1; i--)
-										{
-											this.InternalSelectItemView (this.GetItemView (i));
-										}
-									}
-									else
-									{
-										for (int i = index1; i <= index2; i++)
-										{
-											this.InternalSelectItemView (this.GetItemView (i));
-										}
-									}
-
-									List<ItemView> deselect = new List<ItemView> ();
-
-									foreach (ItemView view in list)
-									{
-										if (view.Index < index1 ||
-											view.Index > index2)
-										{
-											deselect.Add (view);
-										}
-									}
-
-									this.InternalDeselectItemViews (deselect);
-
-									this.Items.MoveCurrentToPosition (newIndex);
+									this.ContinuousSelection(list, oldCurrent, newCurrent);
 								}
 								else
 								{
@@ -935,6 +883,71 @@ namespace Epsitec.Common.UI
 					}
 				}
 			}
+		}
+
+		private void ContinuousSelection(IList<ItemView> list, ItemView oldCurrent, ItemView newCurrent)
+		{
+			ItemView first = ItemPanel.GetFirstSelectedItemView (list);
+			ItemView last  = ItemPanel.GetLastSelectedItemView (list);
+
+			int index1 = (first == null) ? -1 : first.Index;
+			int index2 = (last  == null) ? -1 : last.Index;
+
+			int oldIndex = (oldCurrent == null) ? -1 : oldCurrent.Index;
+			int newIndex = (newCurrent == null) ? -1 : newCurrent.Index;
+
+			if (oldIndex == index1)
+			{
+				index1 = newIndex;
+			}
+			else if (oldIndex == index2)
+			{
+				index2 = newIndex;
+			}
+			else
+			{
+				index1 = newIndex;
+				index2 = newIndex;
+			}
+
+			index1 = System.Math.Max (0, index1);
+			index2 = System.Math.Max (0, index2);
+
+			if (index1 > index2)
+			{
+				int temp = index1;
+				index1 = index2;
+				index2 = temp;
+			}
+			
+			if (newIndex < oldIndex)
+			{
+				for (int i = index2; i >= index1; i--)
+				{
+					this.InternalSelectItemView (this.GetItemView (i));
+				}
+			}
+			else
+			{
+				for (int i = index1; i <= index2; i++)
+				{
+					this.InternalSelectItemView (this.GetItemView (i));
+				}
+			}
+
+			List<ItemView> deselect = new List<ItemView> ();
+
+			foreach (ItemView view in list)
+			{
+				if (view.Index < index1 ||
+					view.Index > index2)
+				{
+					deselect.Add (view);
+				}
+			}
+
+			this.InternalDeselectItemViews (deselect);
+			this.Items.MoveCurrentToPosition (newIndex);
 		}
 
 		private void ProcessArrowMove(Common.Widgets.KeyCode keyCode)
@@ -967,9 +980,6 @@ namespace Epsitec.Common.UI
 						this.Items.MoveCurrentToLast();
 						break;
 
-						//	TODO: déplace sur le premier/dernier visible entièrement ou, s'il est
-						//	déjà l'élément courant, une page avant/après, en tenant compte de la
-						//	géométrie des items...
 					case KeyCode.PageUp:
 						this.ProcessPageUpMove();
 						break;
@@ -1040,6 +1050,8 @@ namespace Epsitec.Common.UI
 
 		private void ProcessPageUpMove()
 		{
+			//	Déplace sur le premier visible entièrement ou, s'il est déjà l'élément courant,
+			//	une page avant, en tenant compte de la géométrie des items.
 			int pos = this.Items.CurrentPosition;
 			int first, last;
 			this.GetFirstAndListVisibleItem(out first, out last);
@@ -1077,6 +1089,8 @@ namespace Epsitec.Common.UI
 
 		private void ProcessPageDownMove()
 		{
+			//	Déplace sur le dernier visible entièrement ou, s'il est déjà l'élément courant,
+			//	une page après, en tenant compte de la géométrie des items.
 			int pos = this.Items.CurrentPosition;
 			int first, last;
 			this.GetFirstAndListVisibleItem(out first, out last);
