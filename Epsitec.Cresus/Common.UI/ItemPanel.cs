@@ -147,6 +147,18 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public bool ItemViewDefaultExpanded
+		{
+			get
+			{
+				return (bool) this.GetValue (ItemPanel.ItemViewDefaultExpandedProperty);
+			}
+			set
+			{
+				this.SetValue (ItemPanel.ItemViewDefaultExpandedProperty, value);
+			}
+		}
+
 		public Rectangle Aperture
 		{
 			get
@@ -703,6 +715,10 @@ namespace Epsitec.Common.UI
 		protected virtual void HandleItemViewDefaultSizeChanged(Size oldValue, Size newValue)
 		{
 			this.AsyncRefresh ();
+		}
+		
+		protected virtual void HandleItemViewDefaultExpandedChanged(bool oldValue, bool newValue)
+		{
 		}
 		
 		protected virtual void HandleApertureChanged(Rectangle oldValue, Rectangle newValue)
@@ -1640,6 +1656,7 @@ namespace Epsitec.Common.UI
 			ItemView view = new ItemView (item, this.ItemViewDefaultSize);
 			
 			view.DefineIndex (index);
+			view.IsExpanded = this.ItemViewDefaultExpanded;
 
 			return view;
 		}
@@ -1994,6 +2011,12 @@ namespace Epsitec.Common.UI
 			panel.HandleItemViewDefaultSizeChanged ((Size) oldValue, (Size) newValue);
 		}
 
+		private static void NotifyItemViewDefaultExpandedChanged(DependencyObject obj, object oldValue, object newValue)
+		{
+			ItemPanel panel = (ItemPanel) obj;
+			panel.HandleItemViewDefaultExpandedChanged ((bool) oldValue, (bool) newValue);
+		}
+
 
 		public event Support.EventHandler<DependencyPropertyChangedEventArgs> ApertureChanged;
 
@@ -2009,6 +2032,7 @@ namespace Epsitec.Common.UI
 		public static readonly DependencyProperty GroupSelectionModeProperty = DependencyProperty.Register ("GroupSelectionMode", typeof (ItemPanelSelectionMode), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelSelectionMode.None, ItemPanel.NotifyGroupSelectionModeChanged));
 		public static readonly DependencyProperty SelectionBehaviorProperty = DependencyProperty.Register ("SelectionBehavior", typeof (ItemPanelSelectionBehavior), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelSelectionBehavior.Automatic, ItemPanel.NotifySelectionBehaviorChanged));
 		public static readonly DependencyProperty ItemViewDefaultSizeProperty = DependencyProperty.Register ("ItemViewDefaultSize", typeof (Size), typeof (ItemPanel), new DependencyPropertyMetadata (new Size (80, 20), ItemPanel.NotifyItemViewDefaultSizeChanged));
+		public static readonly DependencyProperty ItemViewDefaultExpandedProperty = DependencyProperty.Register ("ItemViewDefaultExpanded", typeof (bool), typeof (ItemPanel), new DependencyPropertyMetadata (false, ItemPanel.NotifyItemViewDefaultExpandedChanged));
 		public static readonly DependencyProperty AperturePaddingProperty = DependencyProperty.Register ("AperturePadding", typeof (Margins), typeof (ItemPanel), new DependencyPropertyMetadata (Margins.Zero));
 
 		List<ItemView> views

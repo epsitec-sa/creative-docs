@@ -483,6 +483,7 @@ namespace Epsitec.Common.Dialogs
 			this.table.Items = this.filesCollectionView;
 			this.table.AutoFocus = true;
 			this.table.VerticalScrollMode = ItemTableScrollMode.ItemBased;
+			this.table.ItemPanel.ItemViewDefaultExpanded = true;
 			
 			this.SetItemViewDisposition (cellHeight, ItemPanelLayout.RowsOfTiles);
 			

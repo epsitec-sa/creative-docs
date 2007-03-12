@@ -923,7 +923,14 @@ namespace Epsitec.Common.Dialogs
 					}
 
 				case "info":
-					return this.Description;
+					if (string.IsNullOrEmpty (this.Description))
+					{
+						return "";
+					}
+					else
+					{
+						return this.Description.Split (new string[] { "<br" }, System.StringSplitOptions.None)[0];
+					}
 				
 				case "date":
 					this.InitializeCachedFileDate ();
