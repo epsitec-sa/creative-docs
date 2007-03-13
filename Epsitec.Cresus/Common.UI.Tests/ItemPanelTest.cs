@@ -133,12 +133,15 @@ namespace Epsitec.Common.UI
 			panel.Layout = ItemPanelLayout.VerticalList;
 			panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne;
 			panel.GroupSelectionMode = ItemPanelSelectionMode.ExactlyOne;
-			panel.Aperture = new Drawing.Rectangle (0, 0, 80, 60);
+			
+			table.SetManualBounds (new Drawing.Rectangle (0, 0, 99, 105));
 
+			Assert.AreEqual (new Drawing.Size (99-17-2*1, 105-26-17-2*1), panel.Aperture.Size);
+			
 			Widgets.Application.ExecuteAsyncCallbacks ();
 			
 			Assert.AreEqual (2, panel.GetItemViewCount ());
-			Assert.AreEqual (new Drawing.Size (80, 20*2), panel.PreferredSize);
+			Assert.AreEqual (new Drawing.Size (300, 20*2), panel.PreferredSize);
 			Assert.IsNotNull (panel.GetItemView (0).Widget);
 			Assert.IsNotNull (panel.GetItemView (1).Widget);
 			Assert.AreEqual (typeof (ItemPanelGroup), panel.GetItemView (0).Widget.GetType ());
