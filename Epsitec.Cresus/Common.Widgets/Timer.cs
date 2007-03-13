@@ -256,6 +256,11 @@ namespace Epsitec.Common.Widgets
 			this.state = TimerState.Stopped;
 		}
 
+		public void Restart()
+		{
+			this.Stop ();
+			this.Start ();
+		}
 
 		private void HandleTimerTick(object sender, System.EventArgs e)
 		{
