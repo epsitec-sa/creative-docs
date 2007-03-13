@@ -774,8 +774,7 @@ namespace Epsitec.Common.UI
 						IList<ItemView> list = this.GetSelectedItemViews();
 						if (e.Message.IsShiftPressed && list.Count > 0)
 						{
-							ItemView oldCurrent = this.GetCurrentItemView();
-							this.ContinuousSelection(list, oldCurrent, view);
+							this.ContinuousMouseSelection(list, this.GetCurrentItemView(), view, e.Message.IsControlPressed);
 						}
 						else
 						{
@@ -864,7 +863,7 @@ namespace Epsitec.Common.UI
 								
 								if (message.IsShiftPressed && list.Count > 0)
 								{
-									this.ContinuousSelection(list, oldCurrent, newCurrent);
+									this.ContinuousKeySelection(list, oldCurrent, newCurrent);
 								}
 								else
 								{
@@ -885,7 +884,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		private void ContinuousSelection(IList<ItemView> list, ItemView oldCurrent, ItemView newCurrent)
+		private void ContinuousKeySelection(IList<ItemView> list, ItemView oldCurrent, ItemView newCurrent)
 		{
 			ItemView first = ItemPanel.GetFirstSelectedItemView (list);
 			ItemView last  = ItemPanel.GetLastSelectedItemView (list);
@@ -936,7 +935,6 @@ namespace Epsitec.Common.UI
 			}
 
 			List<ItemView> deselect = new List<ItemView> ();
-
 			foreach (ItemView view in list)
 			{
 				if (view.Index < index1 ||
@@ -945,9 +943,55 @@ namespace Epsitec.Common.UI
 					deselect.Add (view);
 				}
 			}
-
 			this.InternalDeselectItemViews (deselect);
+
 			this.Items.MoveCurrentToPosition (newIndex);
+		}
+
+		private void ContinuousMouseSelection(IList<ItemView> list, ItemView current, ItemView clicked, bool expand)
+		{
+			int currentIndex = current.Index;
+			int clickedIndex = clicked.Index;
+			int index1 = -1;
+			int index2 = -1;
+
+			if (currentIndex < clickedIndex)
+			{
+				for (int i=currentIndex; i<=clickedIndex; i++)
+				{
+					this.InternalSelectItemView(this.GetItemView(i));
+				}
+
+				index1 = currentIndex;
+				index2 = clickedIndex;
+			}
+
+			if (currentIndex > clickedIndex)
+			{
+				for (int i=currentIndex; i>=clickedIndex; i--)
+				{
+					this.InternalSelectItemView(this.GetItemView(i));
+				}
+
+				index1 = clickedIndex;
+				index2 = currentIndex;
+			}
+
+			if (!expand && index1 != -1 && index2 != -1)
+			{
+				List<ItemView> deselect = new List<ItemView>();
+				foreach (ItemView view in list)
+				{
+					if (view.Index < index1 ||
+					view.Index > index2)
+					{
+						deselect.Add(view);
+					}
+				}
+				this.InternalDeselectItemViews(deselect);
+			}
+
+			this.Items.MoveCurrentToPosition(clickedIndex);
 		}
 
 		private void ProcessArrowMove(Common.Widgets.KeyCode keyCode)
