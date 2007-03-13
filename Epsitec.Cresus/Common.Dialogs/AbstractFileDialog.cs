@@ -469,7 +469,7 @@ namespace Epsitec.Common.Dialogs
 			this.favorites.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
 			this.favorites.VerticalScrollerMode = ScrollableScrollerMode.Auto;
 			this.favorites.Panel.IsAutoFitting = true;
-			this.favorites.IsForegroundFrame = true;
+			this.favorites.PaintForegroundFrame = true;
 			this.favorites.Margins = new Margins (0, 5, 0, 0);
 			this.favorites.Dock = DockStyle.Left;
 

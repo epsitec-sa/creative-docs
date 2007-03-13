@@ -133,7 +133,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (!string.IsNullOrEmpty (this.Text))
 				{
-					this.TextLayout.Paint(rect.BottomLeft, graphics);
+					this.TextLayout.Paint (rect.BottomLeft, graphics);
 				}
 			}
 			else  // image ?
@@ -157,25 +157,41 @@ namespace Epsitec.Common.Widgets
 						rect.Left  += ww/2;
 						rect.Right -= ww/2;
 					}
-					
+
 					graphics.ImageFilter = new ImageFilter (ImageFilteringMode.ResamplingBicubic);
 				}
 				else
 				{
-					rect = new Rectangle(rect.Center.X-w/2, rect.Center.Y-h/2, w, h);
+					rect = new Rectangle (rect.Center.X-w/2, rect.Center.Y-h/2, w, h);
 					graphics.ImageFilter = new ImageFilter (ImageFilteringMode.None);
 				}
 
-				graphics.Align(ref rect);
-				graphics.PaintImage(this.image, rect);
+				graphics.Align (ref rect);
+				graphics.PaintImage (this.image, rect);
 				graphics.ImageFilter = oldFilter;
 			}
 
 			if (this.paintFrame)
 			{
-				rect.Deflate(0.5);
-				graphics.AddRectangle(rect);
-				graphics.RenderSolid(adorner.ColorBorder);
+				Drawing.Rectangle frame = rect;
+				
+				frame.Deflate (0.5);
+				
+				graphics.AddRectangle (frame);
+				graphics.RenderSolid (adorner.ColorBorder);
+			}
+
+			if (this.IsSelected)
+			{
+				Drawing.Rectangle frame = rect;
+
+				frame.Deflate (0.5);
+				graphics.AddRectangle (frame);
+				frame.Deflate (1.0);
+				graphics.AddRectangle (frame);
+				
+				graphics.RenderSolid (adorner.ColorCaption);
+
 			}
 		}
 

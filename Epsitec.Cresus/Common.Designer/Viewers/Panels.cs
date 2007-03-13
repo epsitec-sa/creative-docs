@@ -87,7 +87,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.scrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.scrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.scrollable.Panel.IsAutoFitting = true;
-			this.scrollable.IsForegroundFrame = true;
+			this.scrollable.PaintForegroundFrame = true;
 			//?this.scrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 1);
 
 			Widget container = new Widget(this.scrollable.Panel);
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.propertiesScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.propertiesScrollable.Panel.IsAutoFitting = true;
 			this.propertiesScrollable.Panel.Margins = new Margins(10, 10, 10, 10);
-			this.propertiesScrollable.IsForegroundFrame = true;
+			this.propertiesScrollable.PaintForegroundFrame = true;
 			//?this.propertiesScrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 0);
 
 			//	Crée l'onglet 'objets'.
@@ -194,7 +194,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.objectsScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.objectsScrollable.Panel.IsAutoFitting = true;
 			this.objectsScrollable.Panel.Padding = new Margins(6, 6, 6, 6);
-			this.objectsScrollable.IsForegroundFrame = true;
+			this.objectsScrollable.PaintForegroundFrame = true;
 
 			//	Crée l'onglet 'cultures'.
 			this.tabPageCultures = new TabPage();

@@ -94,7 +94,7 @@ namespace Epsitec.Common.Document.Containers
 			this.bottomScrollable.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
 			this.bottomScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.bottomScrollable.Panel.IsAutoFitting = true;
-			this.bottomScrollable.IsForegroundFrame = true;
+			this.bottomScrollable.PaintForegroundFrame = true;
 			this.bottomScrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 0);
 			this.bottomScrollable.SetParent(this.bottomPage);
 

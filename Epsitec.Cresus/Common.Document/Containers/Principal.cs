@@ -34,7 +34,7 @@ namespace Epsitec.Common.Document.Containers
 			this.scrollable.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
 			this.scrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.scrollable.Panel.IsAutoFitting = true;
-			this.scrollable.IsForegroundFrame = true;
+			this.scrollable.PaintForegroundFrame = true;
 			this.scrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 0);
 			this.scrollable.SetParent(this);
 
