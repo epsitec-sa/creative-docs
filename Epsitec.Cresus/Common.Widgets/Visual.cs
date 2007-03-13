@@ -34,7 +34,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		internal long							VisualSerialId
+		public long								VisualSerialId
 		{
 			get
 			{

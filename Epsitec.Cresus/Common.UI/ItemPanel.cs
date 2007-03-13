@@ -68,6 +68,22 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public int PanelDepth
+		{
+			get
+			{
+				if ((this.parentGroup != null) &&
+					(this.parentGroup.ParentPanel != null))
+				{
+					return this.parentGroup.ParentPanel.PanelDepth + 1;
+				}
+				else
+				{
+					return 0;
+				}
+			}
+		}
+
 		public ItemPanelLayout Layout
 		{
 			get
@@ -465,9 +481,168 @@ namespace Epsitec.Common.UI
 			if (this.isRefreshPending == false)
 			{
 				this.isRefreshPending = true;
-				Application.QueueAsyncCallback (this.Refresh);
+				this.QueueAsyncRefresh (RefreshOperations.Content);
 			}
 		}
+
+		private void ExecuteAsyncRefreshOperations()
+		{
+			RefreshInfo[] infos;
+
+			while (true)
+			{
+				lock (this.exclusion)
+				{
+					infos = this.refreshInfos.ToArray ();
+					this.isRefreshing = true;
+				}
+
+				if (infos.Length == 0)
+				{
+					break;
+				}
+
+				System.Array.Sort<RefreshInfo> (infos);
+				RefreshInfo info = infos[0];
+
+				lock (this.exclusion)
+				{
+					this.refreshInfos.Remove (info);
+				}
+
+				info.Execute ();
+			}
+
+			lock (this.exclusion)
+			{
+				this.isRefreshing = false;
+			}
+		}
+
+		private void QueueAsyncRefresh(RefreshOperations operations)
+		{
+			RefreshInfo info = new RefreshInfo (this, operations);
+			ItemPanel   root = this.RootPanel;
+			
+			bool queue = false;
+
+			lock (root.exclusion)
+			{
+				int index = root.refreshInfos.IndexOf (info);
+				
+				if (index >= 0)
+				{
+					info = root.refreshInfos[index];
+					info.Add (operations);
+				}
+				else
+				{
+					root.refreshInfos.Add (info);
+				}
+
+				queue = !root.isRefreshing;
+			}
+
+			if (queue)
+			{
+				Application.QueueAsyncCallback (root.ExecuteAsyncRefreshOperations);
+			}
+		}
+
+		[System.Flags]
+		private enum RefreshOperations
+		{
+			None = 0,
+			Content = 1,
+			Layout = 2,
+		}
+
+		private class RefreshInfo : System.IComparable<RefreshInfo>, System.IEquatable<RefreshInfo>
+		{
+			public RefreshInfo(ItemPanel panel, RefreshOperations operations)
+			{
+				this.panel = panel;
+				this.depth = panel.PanelDepth;
+				this.operations = operations;
+			}
+
+
+			public RefreshOperations Operations
+			{
+				get
+				{
+					return this.operations;
+				}
+			}
+
+			public ItemPanel Panel
+			{
+				get
+				{
+					return this.panel;
+				}
+			}
+
+			public int Depth
+			{
+				get
+				{
+					return this.depth;
+				}
+			}
+
+			public void Add(RefreshOperations operations)
+			{
+				this.operations |= operations;
+			}
+
+			private ItemPanel panel;
+			private int depth;
+			private RefreshOperations operations;
+
+			#region IEquatable<RefreshInfo> Members
+
+			public bool Equals(RefreshInfo other)
+			{
+				return (this.panel == other.panel)
+					&& (this.depth == other.depth);
+			}
+
+			#endregion
+
+			#region IComparable<RefreshInfo> Members
+
+			public int CompareTo(RefreshInfo other)
+			{
+				if (this.depth < other.depth)
+				{
+					return -1;
+				}
+				else if (this.depth > other.depth)
+				{
+					return 1;
+				}
+				else
+				{
+					return this.panel.VisualSerialId.CompareTo (other.panel.VisualSerialId);
+				}
+			}
+
+			#endregion
+
+			internal void Execute()
+			{
+				if ((this.operations & RefreshOperations.Content) != 0)
+				{
+					this.panel.Refresh ();
+				}
+				else if ((this.operations & RefreshOperations.Layout) != 0)
+				{
+					this.panel.RefreshLayout ();
+				}
+			}
+		}
+
 
 		public void SyncRefreshIfNeeded()
 		{
@@ -608,7 +783,7 @@ namespace Epsitec.Common.UI
 			if (this.hasDirtyLayout == false)
 			{
 				this.hasDirtyLayout = true;
-				Application.QueueAsyncCallback (this.RefreshLayout);
+				this.QueueAsyncRefresh (RefreshOperations.Layout);
 			}
 		}
 
@@ -2108,10 +2283,13 @@ namespace Epsitec.Common.UI
 		double							apertureX, apertureY, apertureWidth, apertureHeight;
 		List<ItemPanelGroup>			groups = new List<ItemPanelGroup> ();
 		ItemPanelGroup					parentGroup;
+		List<RefreshInfo>				refreshInfos = new List<RefreshInfo> ();
 		
 		bool							hasDirtyLayout;
+		bool							isRefreshing;
 		bool							isRefreshPending;
 		bool							isCurrentShowPending;
+
 		ItemView						enteredItem;
 
 		double							minItemWidth;
