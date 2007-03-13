@@ -33,16 +33,27 @@ namespace Epsitec.Common.UI
 			ItemTable table = new ItemTable ();
 			ItemPanel panel = table.ItemPanel;
 
+			table.SourceType = ItemPanelTest.GetStructuredType ();
+
+			table.Columns.Add ("Stock", 20);
+			table.Columns.Add ("Article", 100);
+			table.Columns.Add ("Category", 30);
+			table.Columns.Add ("Price", 50);
+
 			panel.Items = ItemPanelTest.GetGroupedItems ();
 			panel.Layout = ItemPanelLayout.VerticalList;
 			panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne;
 			panel.GroupSelectionMode = ItemPanelSelectionMode.ExactlyOne;
+
+			table.SetManualBounds (new Drawing.Rectangle (0, 0, 100, 80));
+			
+			
 			panel.Aperture = new Drawing.Rectangle (0, 0, 80, 60);
 
 			Widgets.Application.ExecuteAsyncCallbacks ();
 
 			Assert.AreEqual (2, panel.GetItemViewCount ());
-			Assert.AreEqual (new Drawing.Size (80, 20*2), panel.PreferredSize);
+			Assert.AreEqual (new Drawing.Size (200, 20*2), panel.PreferredSize);
 			Assert.IsNotNull (panel.GetItemView (0).Widget);
 			Assert.IsNotNull (panel.GetItemView (1).Widget);
 			Assert.AreEqual (typeof (ItemPanelGroup), panel.GetItemView (0).Widget.GetType ());

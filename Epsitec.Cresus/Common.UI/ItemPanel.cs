@@ -166,7 +166,8 @@ namespace Epsitec.Common.UI
 				double yTop = this.PreferredHeight - System.Math.Max (this.apertureY, 0);
 				double yBot = System.Math.Max (yTop - this.apertureHeight, 0);
 
-				return new Rectangle (this.apertureX, yBot, this.apertureWidth, yTop - yBot);
+				//return new Rectangle (this.apertureX, yBot, this.apertureWidth, yTop - yBot);
+				return new Rectangle (this.apertureX, yTop-this.apertureHeight, this.apertureWidth, this.apertureHeight);
 			}
 			set
 			{

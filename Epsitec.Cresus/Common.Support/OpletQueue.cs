@@ -658,6 +658,7 @@ namespace Epsitec.Common.Support
 					}
 					
 					this.live_index = i;
+					this.OnUndoExecuted ();
 					
 					return true;
 				}
@@ -710,6 +711,8 @@ namespace Epsitec.Common.Support
 						
 						this.queue[i] = oplet.Redo ();
 					}
+
+					this.OnRedoExecuted ();
 					
 					return true;
 				}
@@ -1120,10 +1123,27 @@ namespace Epsitec.Common.Support
 				this.ActionCancelled (this);
 			}
 		}
-		
+
+		protected virtual void OnUndoExecuted()
+		{
+			if (this.UndoExecuted != null)
+			{
+				this.UndoExecuted (this);
+			}
+		}
+
+		protected virtual void OnRedoExecuted()
+		{
+			if (this.RedoExecuted != null)
+			{
+				this.RedoExecuted (this);
+			}
+		}
 		
 		public event EventHandler				ActionValidated;
 		public event EventHandler				ActionCancelled;
+		public event EventHandler				UndoExecuted;
+		public event EventHandler				RedoExecuted;
 		
 		protected System.Collections.ArrayList	queue;
 		protected System.Collections.ArrayList	temp_queue;
