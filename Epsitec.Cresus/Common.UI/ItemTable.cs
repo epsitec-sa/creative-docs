@@ -383,7 +383,7 @@ namespace Epsitec.Common.UI
 			double ox = System.Math.Floor ((double) this.hScroller.Value * scrollSize.Width);
 			double oy = this.GetVerticalScrollOffset ();
 
-			this.itemPanel.Aperture = new Rectangle (ox+1, oy, aW, aH);
+			this.itemPanel.Aperture = new Rectangle (ox, oy, aW, aH);
 			this.itemPanel.AperturePadding = padding;
 
 			if (this.itemPanel.PreferredHeight < aH)
@@ -667,7 +667,7 @@ namespace Epsitec.Common.UI
 
 				double sx = scrollSize.Width;
 				double sy = scrollSize.Height;
-				double ox = value.Left - 1;
+				double ox = value.Left;
 				double oy = value.Top;
 
 				System.Threading.Interlocked.Increment (ref this.suspendScroll);

@@ -176,6 +176,9 @@ namespace Epsitec.Common.UI
 				
 				if (oldValue != newValue)
 				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("{0} -> {1}", oldValue, newValue));
+
+
 					this.apertureWidth = value.Width;
 					this.apertureHeight = value.Height;
 					this.apertureX = value.Left;
