@@ -166,7 +166,6 @@ namespace Epsitec.Common.UI
 				double yTop = this.PreferredHeight - System.Math.Max (this.apertureY, 0);
 				double yBot = System.Math.Max (yTop - this.apertureHeight, 0);
 
-				//return new Rectangle (this.apertureX, yBot, this.apertureWidth, yTop - yBot);
 				return new Rectangle (this.apertureX, yTop-this.apertureHeight, this.apertureWidth, this.apertureHeight);
 			}
 			set
@@ -176,9 +175,6 @@ namespace Epsitec.Common.UI
 				
 				if (oldValue != newValue)
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("{0} -> {1}", oldValue, newValue));
-
-
 					this.apertureWidth = value.Width;
 					this.apertureHeight = value.Height;
 					this.apertureX = value.Left;
@@ -1475,7 +1471,6 @@ namespace Epsitec.Common.UI
 
 		private void RecreateUserInterface(IEnumerable<ItemView> views, Rectangle aperture)
 		{
-			System.Diagnostics.Debug.WriteLine ("Recreate user interface");
 			List<ItemView> dispose = new List<ItemView> ();
 			List<ItemView> create  = new List<ItemView> ();
 			
@@ -1512,23 +1507,17 @@ namespace Epsitec.Common.UI
 
 			//	TODO: make this code asynchronous
 
-			System.Diagnostics.Debug.WriteLine ("Recreate user interface: disposing");
-			
 			dispose.ForEach (
 				delegate (ItemView view)
 				{
 					view.DisposeUserInterface ();
 				} );
 			
-			System.Diagnostics.Debug.WriteLine ("Recreate user interface: creating");
-
 			create.ForEach (
 				delegate (ItemView view)
 				{
 					view.CreateUserInterface (this);
 				} );
-
-			System.Diagnostics.Debug.WriteLine ("Recreate user interface: done");
 		}
 
 		private void RefreshItemViews()
