@@ -52,14 +52,24 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public ItemPanelGroup ParentGroup
+		{
+			get
+			{
+				return this.Parent as ItemPanelGroup;
+			}
+		}
+
 		public ItemPanel RootPanel
 		{
 			get
 			{
-				if ((this.parentGroup != null) &&
-					(this.parentGroup.ParentPanel != null))
+				ItemPanelGroup parent = this.ParentGroup;
+
+				if ((parent != null) &&
+					(parent.ParentPanel != null))
 				{
-					return this.parentGroup.ParentPanel.RootPanel;
+					return parent.ParentPanel.RootPanel;
 				}
 				else
 				{
@@ -72,10 +82,12 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				if ((this.parentGroup != null) &&
-					(this.parentGroup.ParentPanel != null))
+				ItemPanelGroup parent = this.ParentGroup;
+
+				if ((parent != null) &&
+					(parent.ParentPanel != null))
 				{
-					return this.parentGroup.ParentPanel.PanelDepth + 1;
+					return parent.ParentPanel.PanelDepth + 1;
 				}
 				else
 				{
@@ -787,11 +799,11 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		internal void SetParentGroup(ItemPanelGroup parentGroup)
+		internal void SetGroupPanelEnable(bool enable)
 		{
-			if (this.parentGroup != parentGroup)
+			if (this.isGroupPanelEnabled != enable)
 			{
-				this.parentGroup = parentGroup;
+				this.isGroupPanelEnabled = enable;
 				this.RefreshItemViews ();
 			}
 		}
@@ -1770,17 +1782,22 @@ namespace Epsitec.Common.UI
 					this.CreateItemViews (views, items.Groups, currentViews);
 				}
 			}
-			else if (this.parentGroup != null)
+			else if (this.isGroupPanelEnabled)
 			{
-				CollectionViewGroup group = this.parentGroup.CollectionViewGroup;
+				ItemPanelGroup parent = this.ParentGroup;
 
-				if (group.HasSubgroups)
+				if (parent != null)
 				{
-					this.CreateItemViews (views, group.Subgroups, currentViews);
-				}
-				else
-				{
-					this.CreateItemViews (views, group.Items as System.Collections.IList, currentViews);
+					CollectionViewGroup group  = parent.CollectionViewGroup;
+
+					if (group.HasSubgroups)
+					{
+						this.CreateItemViews (views, group.Subgroups, currentViews);
+					}
+					else
+					{
+						this.CreateItemViews (views, group.Items as System.Collections.IList, currentViews);
+					}
 				}
 			}
 
@@ -1927,6 +1944,8 @@ namespace Epsitec.Common.UI
 			double y = dy;
 			int row = 0;
 			
+			this.UpdatePreferredSize (maxDx, dy);
+			
 			foreach (ItemView view in views)
 			{
 				double h = view.Size.Height;
@@ -1935,8 +1954,6 @@ namespace Epsitec.Common.UI
 				view.RowIndex = row++;
 				view.ColumnIndex = 0;
 			}
-
-			this.UpdatePreferredSize (maxDx, dy);
 		}
 
 		private void LayoutRowsOfTiles(IEnumerable<ItemView> views)
@@ -2282,13 +2299,13 @@ namespace Epsitec.Common.UI
 		int								hotItemViewIndex = -1;
 		double							apertureX, apertureY, apertureWidth, apertureHeight;
 		List<ItemPanelGroup>			groups = new List<ItemPanelGroup> ();
-		ItemPanelGroup					parentGroup;
 		List<RefreshInfo>				refreshInfos = new List<RefreshInfo> ();
 		
 		bool							hasDirtyLayout;
 		bool							isRefreshing;
 		bool							isRefreshPending;
 		bool							isCurrentShowPending;
+		bool							isGroupPanelEnabled;
 
 		ItemView						enteredItem;
 

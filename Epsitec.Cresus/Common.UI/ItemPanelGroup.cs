@@ -304,7 +304,7 @@ namespace Epsitec.Common.UI
 
 			if (this.parentView.IsExpanded)
 			{
-				this.panel.SetParentGroup (this);
+				this.panel.SetGroupPanelEnable (true);
 				
 				newSize  = this.panel.PreferredSize;
 				newSize += this.Padding.Size;
@@ -319,7 +319,7 @@ namespace Epsitec.Common.UI
 				
 				newSize = this.defaultCompactSize;
 				
-				this.panel.SetParentGroup (null);
+				this.panel.SetGroupPanelEnable (false);
 			}
 
 			if (oldSize != newSize)

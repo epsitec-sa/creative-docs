@@ -27,7 +27,10 @@ namespace Epsitec.Common.UI.ItemViewFactories
 
 		public override void DisposeUserInterface(ItemView itemView, Widgets.Widget widget)
 		{
-			widget.Dispose ();
+			ItemPanelGroup group = widget as ItemPanelGroup;
+
+			group.ParentPanel = null;
+			group.Dispose ();
 		}
 
 		#endregion
