@@ -236,6 +236,12 @@ namespace Epsitec.Common.UI
 			ItemTable table = new ItemTable ();
 			table.Dock = Widgets.DockStyle.Fill;
 
+			table.SourceType = ItemPanelTest.GetStructuredType ();
+			
+			table.Columns.Add ("Stock", 40);
+			table.Columns.Add ("Article", 200);
+			table.Columns.Add ("Price", 60);
+			
 			ItemPanel panel = table.ItemPanel;
 
 			panel.Items = ItemPanelTest.GetStructuredItems (true);
@@ -244,12 +250,6 @@ namespace Epsitec.Common.UI
 			panel.Aperture = new Drawing.Rectangle (0, 0, dx, dy);
 			panel.ItemViewDefaultSize = new Drawing.Size (320, 20);
 			panel.ItemViewDefaultExpanded = true;
-
-			ItemPanelColumnHeader header = table.ColumnHeader;
-
-			header.AddColumn ("Stock", Support.Druid.Empty);
-			header.AddColumn ("Article", Support.Druid.Empty);
-			header.AddColumn ("Price", Support.Druid.Empty);
 
 			window.Root.Children.Add (table);
 
