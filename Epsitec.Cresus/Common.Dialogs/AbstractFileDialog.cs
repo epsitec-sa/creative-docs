@@ -509,7 +509,6 @@ namespace Epsitec.Common.Dialogs
 			this.table.ItemPanel.SelectionChanged += this.HandleFilesItemTableSelectionChanged;
 
 			this.slider.Value = (decimal) Widget.DefaultFontHeight+4;
-			this.useLargeIcons = false;
 
 			this.UpdateFileList ();
 		}
@@ -1140,15 +1139,6 @@ namespace Epsitec.Common.Dialogs
 			this.UpdateButtons ();
 		}
 
-		private bool UseLargeIcons
-		{
-			//	Indique si la hauteur des lignes permet l'usage des grandes icônes.
-			get
-			{
-				return this.useLargeIcons;
-			}
-		}
-
 		private void AsyncRefreshCollectionView()
 		{
 			if (this.refreshRequested)
@@ -1445,7 +1435,7 @@ namespace Epsitec.Common.Dialogs
 			FileListSettings settings;
 			settings = new FileListSettings ();
 
-			settings.FolderQueryMode = this.UseLargeIcons ? FolderQueryMode.LargeIcons : FolderQueryMode.SmallIcons;
+			settings.FolderQueryMode = (this.itemViewSize >= 32) ? FolderQueryMode.LargeIcons : FolderQueryMode.SmallIcons;
 			settings.HideFolders     = this.initialDirectory.Equals (FileManager.GetFolderItem (FolderId.Recent, FolderQueryMode.NoIcons));
 			settings.HideShortcuts   = FolderItem.IsNetworkPath (this.initialDirectory.FullPath);
 
@@ -2567,20 +2557,6 @@ namespace Epsitec.Common.Dialogs
 		private void HandleSliderChanged(object sender)
 		{
 			//	Slider pour la taille des miniatures changé.
-			bool initialMode = this.UseLargeIcons;
-
-			if (this.slider.Value >= 32)
-			{
-				this.useLargeIcons = true;
-			}
-			else
-			{
-				this.useLargeIcons = false;
-			}
-
-			//#this.table.DefHeight = (double) this.slider.Value;
-			//#this.table.HeaderHeight = 20;
-
 			this.SetItemViewDisposition ((double) this.slider.Value);
 		}
 
@@ -2700,7 +2676,6 @@ namespace Epsitec.Common.Dialogs
 		private ObservableList<FileListItem> files;
 		private CollectionView				filesCollectionView;
 		private List<FileListJob>			fileListJobs = new List<FileListJob> ();
-		private bool						useLargeIcons;
 		private double						itemViewSize;
 		private string						title;
 	}
