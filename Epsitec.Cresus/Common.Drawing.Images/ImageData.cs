@@ -13,6 +13,7 @@ namespace Epsitec.Common.Drawing
 			this.imageFilePath = path;
 			this.imageId = imageId;
 			this.imageFileDate = date;
+			this.fileFormat = Opac.FreeImage.FileFormat.Unknown;
 		}
 
 		internal QueueStatus QueueStatus
