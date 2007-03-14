@@ -1705,6 +1705,7 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			this.SetItemViewDisposition(size);
+			this.UpdateSlider();
 		}
 
 		private void RenameStarting()
@@ -2564,6 +2565,11 @@ namespace Epsitec.Common.Dialogs
 		{
 			//	Fenêtre fermée.
 			this.CloseWindow ();
+		}
+
+		private void UpdateSlider()
+		{
+			this.slider.Value = (decimal) this.itemViewSize;
 		}
 
 		protected void CloseWindow()
