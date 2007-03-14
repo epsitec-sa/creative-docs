@@ -1681,6 +1681,8 @@ namespace Epsitec.Common.Document.PDF
 				port.Reset();
 				port.PutASCII85(jpeg);
 				port.PutEOL();
+
+				jpeg = null;
 			}
 			else	// compression ZIP ou aucune ?
 			{
@@ -1791,7 +1793,12 @@ namespace Epsitec.Common.Document.PDF
 				port.Reset();
 				port.PutASCII85(data);
 				port.PutEOL();
+
+				data = null;
 			}
+
+			fi.Dispose();
+			fi = null;
 
 			if ( maskType == TypeComplexSurface.XObjectMask && useMask )
 			{
