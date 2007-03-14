@@ -206,6 +206,7 @@ namespace Epsitec.Common.UI
 					
 					if (group != null)
 					{
+						group.ChildPanel.SetGroupPanelEnable (this.isExpanded);
 						group.NotifyItemViewChanged (this);
 					}
 				}

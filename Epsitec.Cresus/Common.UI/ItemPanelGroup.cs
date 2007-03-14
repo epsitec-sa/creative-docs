@@ -17,9 +17,26 @@ namespace Epsitec.Common.UI
 	/// </summary>
 	public class ItemPanelGroup : ItemViewWidget
 	{
-		public ItemPanelGroup(ItemView view)
+		public ItemPanelGroup(ItemView view, ItemPanel parentPanel)
 			: base (view)
 		{
+			view.DefineGroup (this);
+			
+			this.parentPanel = parentPanel;
+
+			this.panel = new ItemPanel (this);
+			this.panel.Dock = Widgets.DockStyle.Fill;
+			this.panel.Layout = this.parentPanel.Layout;
+
+			this.panel.ItemSelectionMode  = this.parentPanel.ItemSelectionMode;
+			this.panel.GroupSelectionMode = this.parentPanel.GroupSelectionMode;
+			
+			this.panel.ItemViewDefaultSize = this.parentPanel.ItemViewDefaultSize;
+			this.panel.SetGroupPanelEnable (view.IsExpanded);
+
+			this.parentPanel.AddPanelGroup (this);
+
+//-			this.RefreshAperture (this.parentPanel.Aperture);
 		}
 
 		public bool HasUserInterface
@@ -35,32 +52,6 @@ namespace Epsitec.Common.UI
 			get
 			{
 				return this.parentPanel;
-			}
-			set
-			{
-				if (this.parentPanel != value)
-				{
-					if (this.parentPanel != null)
-					{
-						this.parentPanel.RemovePanelGroup (this);
-					}
-
-					this.parentPanel = value;
-
-					if (this.parentPanel != null)
-					{
-						this.panel.Layout = this.parentPanel.Layout;
-						
-						this.panel.ItemSelectionMode  = this.parentPanel.ItemSelectionMode;
-						this.panel.GroupSelectionMode = this.parentPanel.GroupSelectionMode;
-
-						this.panel.ItemViewDefaultSize = this.parentPanel.ItemViewDefaultSize;
-						
-						this.parentPanel.AddPanelGroup (this);
-						
-						this.RefreshAperture (this.parentPanel.Aperture);
-					}
-				}
 			}
 		}
 
@@ -78,6 +69,20 @@ namespace Epsitec.Common.UI
 			{
 				return this.ItemView.Item as CollectionViewGroup;
 			}
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (this.parentPanel != null)
+				{
+					this.parentPanel.RemovePanelGroup (this);
+					this.parentPanel = null;
+				}
+			}
+			
+			base.Dispose (disposing);
 		}
 
 		internal void RefreshAperture(Drawing.Rectangle aperture)
@@ -110,15 +115,6 @@ namespace Epsitec.Common.UI
 
 			this.UpdateItemViewSize ();
 			this.Invalidate ();
-		}
-
-		internal void CreateMissingUserInterface()
-		{
-			if (this.panel == null)
-			{
-				this.panel = new ItemPanel (this);
-				this.panel.Dock = Widgets.DockStyle.Fill;
-			}
 		}
 
 		/// <summary>
@@ -285,32 +281,43 @@ namespace Epsitec.Common.UI
 			System.Diagnostics.Debug.Assert (this.ItemView != null);
 
 			Drawing.Size oldSize = this.ItemView.Size;
-			Drawing.Size newSize;
+			Drawing.Size newSize = this.GetBestFitSize ();
 
 			if (this.ItemView.IsExpanded)
 			{
-				this.panel.SetGroupPanelEnable (true);
-				
-				newSize  = this.panel.PreferredSize;
-				newSize += this.Padding.Size;
-				newSize += this.GetInternalPadding ().Size;
-				newSize += this.panel.Margins.Size;
-
 				this.RefreshUserInterface ();
 			}
 			else
 			{
 				this.ClearUserInterface ();
-				
-				newSize = this.defaultCompactSize;
-				
-				this.panel.SetGroupPanelEnable (false);
 			}
 
 			if (oldSize != newSize)
 			{
 				this.ItemView.DefineSize (newSize, this.parentPanel);
 			}
+		}
+
+		public override Drawing.Size GetBestFitSize()
+		{
+			Drawing.Size size;
+
+			if (this.ItemView.IsExpanded)
+			{
+				size  = this.panel.GetContentsSize ();
+				size += this.Padding.Size;
+				size += this.GetInternalPadding ().Size;
+				size += this.panel.Margins.Size;
+			}
+			else
+			{
+				double width  = this.parentPanel.PreferredWidth;
+				double height = this.GetInternalPadding ().Height;
+
+				size = new Drawing.Size (width, height);
+			}
+
+			return size;
 		}
 
 		#region ItemViewGhost Class
@@ -368,7 +375,6 @@ namespace Epsitec.Common.UI
 
 		private ItemPanel panel;
 		private ItemPanel parentPanel;
-		private Drawing.Size defaultCompactSize = new Drawing.Size (80, 20);
 		
 		private List<System.WeakReference> selectedGhostItems = new List<System.WeakReference> ();
 		private readonly object exclusion = new object ();

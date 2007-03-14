@@ -1805,7 +1805,11 @@ namespace Epsitec.Common.UI
 			}
 
 			this.RefreshLayout (views);
-			this.RecreateUserInterface (views, this.Aperture);
+
+			if (this.Aperture.IsValid)
+			{
+				this.RecreateUserInterface (views, this.Aperture);
+			}
 
 			List<ItemView> dispose = new List<ItemView> ();
 			

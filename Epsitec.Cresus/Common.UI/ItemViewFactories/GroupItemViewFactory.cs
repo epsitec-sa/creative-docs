@@ -19,11 +19,8 @@ namespace Epsitec.Common.UI.ItemViewFactories
 
 			if (group == null)
 			{
-				group = new ItemPanelGroup (itemView);
+				group = new ItemPanelGroup (itemView, panel);
 			}
-			
-			group.CreateMissingUserInterface ();
-			group.ParentPanel = panel;
 			
 			group.PreferredWidth = itemView.Size.Width;
 			
@@ -34,7 +31,6 @@ namespace Epsitec.Common.UI.ItemViewFactories
 		{
 			ItemPanelGroup group = widget as ItemPanelGroup;
 
-			group.ParentPanel = null;
 			group.Dispose ();
 		}
 
@@ -47,11 +43,14 @@ namespace Epsitec.Common.UI.ItemViewFactories
 
 		public override Drawing.Size GetPreferredSize(ItemPanel panel, ItemView itemView)
 		{
-			Drawing.Size size = base.GetPreferredSize (panel, itemView);
+			ItemPanelGroup group = itemView.Group;
 
-			size.Height = itemView.Size.Height;
-
-			return size;
+			if (group == null)
+			{
+				group = new ItemPanelGroup (itemView, panel);
+			}
+				
+			return group.GetBestFitSize ();
 		}
 	}
 }
