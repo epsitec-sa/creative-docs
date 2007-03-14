@@ -302,7 +302,7 @@ namespace Epsitec.Common.UI
 			}
 			else
 			{
-				double width  = this.parentPanel.PreferredWidth;
+				double width  = this.parentPanel.ItemViewDefaultSize.Width;
 				double height = this.GetInternalPadding ().Height;
 
 				size = new Drawing.Size (width, height);

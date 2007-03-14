@@ -44,6 +44,7 @@ namespace Epsitec.Common.UI
 			panel.Layout = ItemPanelLayout.VerticalList;
 			panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne;
 			panel.GroupSelectionMode = ItemPanelSelectionMode.ExactlyOne;
+			panel.ItemViewDefaultSize = new Drawing.Size (200, 20);
 
 			table.SetManualBounds (new Drawing.Rectangle (0, 0, 100, 80));
 
@@ -52,7 +53,7 @@ namespace Epsitec.Common.UI
 			Widgets.Application.ExecuteAsyncCallbacks ();
 
 			Assert.AreEqual (2, panel.GetItemViewCount ());
-			Assert.AreEqual (new Drawing.Size (200, 20*2), panel.PreferredSize);
+			Assert.AreEqual (new Drawing.Size (200, 20*2), panel.GetContentsSize ());
 			Assert.IsNotNull (panel.GetItemView (0).Widget);
 			Assert.IsNotNull (panel.GetItemView (1).Widget);
 			Assert.AreEqual (typeof (ItemPanelGroup), panel.GetItemView (0).Widget.GetType ());
@@ -65,12 +66,12 @@ namespace Epsitec.Common.UI
 			panel.ExpandItemView (panel.GetItemView (0), true);
 
 			Assert.IsTrue (panel.GetItemView (0).IsExpanded);
-			Assert.AreEqual (new Drawing.Size (80, 20+20*3), panel.GetItemView (0).Size);
+			Assert.AreEqual (new Drawing.Size (200, 20+20*3), panel.GetItemView (0).Size);
 			Assert.AreEqual (3, (panel.GetItemView (0).Widget as ItemPanelGroup).ChildPanel.GetItemViewCount ());
-			
-			Assert.AreEqual (new Drawing.Size (200, 20*2), panel.PreferredSize);
+
+			Assert.AreEqual (new Drawing.Size (200, 20*2), panel.GetContentsSize ());
 			Widgets.Application.ExecuteAsyncCallbacks ();
-			Assert.AreEqual (new Drawing.Size (200, 20+20*3+20), panel.PreferredSize);
+			Assert.AreEqual (new Drawing.Size (200, 20+20*3+20), panel.GetContentsSize ());
 			Assert.AreEqual (new Drawing.Rectangle (0, 20, 200, 20+20*3), panel.GetItemView (0).Bounds);
 			Assert.AreEqual (new Drawing.Rectangle (0, 0, 200, 20), panel.GetItemView (1).Bounds);
 
@@ -82,9 +83,9 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (new Drawing.Size (200, 20), panel.GetItemView (0).Size);
 			Assert.AreEqual (0, (panel.GetItemView (0).Widget as ItemPanelGroup).ChildPanel.GetItemViewCount ());
 
-			Assert.AreEqual (new Drawing.Size (200, 20+20*3+20), panel.PreferredSize);
+			Assert.AreEqual (new Drawing.Size (200, 20+20*3+20), panel.GetContentsSize ());
 			Widgets.Application.ExecuteAsyncCallbacks ();
-			Assert.AreEqual (new Drawing.Size (200, 20*2), panel.PreferredSize);
+			Assert.AreEqual (new Drawing.Size (200, 20*2), panel.GetContentsSize ());
 
 			//	Expanded subpanel
 
@@ -94,7 +95,7 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (new Drawing.Rectangle (0, 20, 200, 20+20*3), panel.GetItemView (0).Bounds);
 			Assert.AreEqual (new Drawing.Rectangle (0, 0, 200, 20), panel.GetItemView (1).Bounds);
 			Assert.AreEqual (new Drawing.Rectangle (0, 65, 81, 35), panel.Aperture);
-			Assert.AreEqual (new Drawing.Size (200, 20+80), panel.PreferredSize);
+			Assert.AreEqual (new Drawing.Size (200, 20+80), panel.GetContentsSize ());
 			
 			panel.ExpandItemView (panel.GetItemView (1), true);
 			Widgets.Application.ExecuteAsyncCallbacks ();
@@ -102,7 +103,7 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (new Drawing.Rectangle (0, 0, 200, 20+20*3), panel.GetItemView (1).Bounds);
 			Assert.AreEqual (new Drawing.Rectangle (0, 20+20*3, 200, 20+20*3), panel.GetItemView (0).Bounds);
 			Assert.AreEqual (new Drawing.Rectangle (0, 65+20*3, 81, 35), panel.Aperture);
-			Assert.AreEqual (new Drawing.Size (200, 80+80), panel.PreferredSize);
+			Assert.AreEqual (new Drawing.Size (200, 80+80), panel.GetContentsSize ());
 			
 			panel.Show (panel.GetItemView (1));
 			
@@ -114,7 +115,7 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (panel, group.Parent);
 			Assert.AreEqual (panel, group.ParentPanel);
 			Assert.AreEqual (panel.GetItemView (1), group.ItemView);
-			Assert.AreEqual ("Part: 19 x Ecrou M3 @ 0.10", group.ChildPanel.GetItemView (0).Widget.Text);
+			Assert.AreEqual ("Part: 19 x Ecrou M3 @ 0.10", group.ChildPanel.GetItemView (0).Widget.Children.Widgets[0].Text);
 		}
 
 		[Test]
@@ -133,6 +134,7 @@ namespace Epsitec.Common.UI
 			panel.Layout = ItemPanelLayout.VerticalList;
 			panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne;
 			panel.GroupSelectionMode = ItemPanelSelectionMode.ExactlyOne;
+			panel.ItemViewDefaultSize = new Drawing.Size (300, 20);
 			
 			table.SetManualBounds (new Drawing.Rectangle (0, 0, 99, 105));
 
@@ -141,7 +143,7 @@ namespace Epsitec.Common.UI
 			Widgets.Application.ExecuteAsyncCallbacks ();
 			
 			Assert.AreEqual (2, panel.GetItemViewCount ());
-			Assert.AreEqual (new Drawing.Size (300, 20*2), panel.PreferredSize);
+			Assert.AreEqual (new Drawing.Size (300, 20*2), panel.GetContentsSize ());
 			Assert.IsNotNull (panel.GetItemView (0).Widget);
 			Assert.IsNotNull (panel.GetItemView (1).Widget);
 			Assert.AreEqual (typeof (ItemPanelGroup), panel.GetItemView (0).Widget.GetType ());
@@ -166,10 +168,19 @@ namespace Epsitec.Common.UI
 			
 			panel.Refresh ();
 
-			Assert.AreEqual (3, group.ChildPanel.GetItemView (2).Widget.Children.Count);
-			Assert.AreEqual ("7", ((Widgets.Widget)group.ChildPanel.GetItemView (2).Widget.Children[0]).Text);
-			Assert.AreEqual ("Tournevis", ((Widgets.Widget) group.ChildPanel.GetItemView (2).Widget.Children[1]).Text);
-			Assert.AreEqual ("25.70", ((Widgets.Widget) group.ChildPanel.GetItemView (2).Widget.Children[2]).Text);
+			Assert.AreEqual (new Drawing.Rectangle (0, 40, 80, 60), panel.Aperture);
+			Assert.AreEqual (new Drawing.Rectangle (0, 20, 300, 80), group.ItemView.Bounds);
+			Assert.AreEqual (new Drawing.Rectangle (0, 40, 300, 20), group.ChildPanel.GetItemView (0).Bounds);
+			Assert.AreEqual (new Drawing.Rectangle (0, 20, 300, 20), group.ChildPanel.GetItemView (1).Bounds);
+			Assert.AreEqual (new Drawing.Rectangle (0,  0, 300, 20), group.ChildPanel.GetItemView (2).Bounds);
+
+			Assert.AreEqual (3, group.ChildPanel.GetItemView (0).Widget.Children.Count);
+			Assert.AreEqual (3, group.ChildPanel.GetItemView (1).Widget.Children.Count);
+			Assert.IsNull (group.ChildPanel.GetItemView (2).Widget);
+			
+			Assert.AreEqual ("2", ((Widgets.Widget)group.ChildPanel.GetItemView (1).Widget.Children[0]).Text);
+			Assert.AreEqual ("Tournevis", ((Widgets.Widget) group.ChildPanel.GetItemView (1).Widget.Children[1]).Text);
+			Assert.AreEqual ("8.45", ((Widgets.Widget) group.ChildPanel.GetItemView (1).Widget.Children[2]).Text);
 		}
 
 		[Test]
@@ -391,7 +402,7 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual ("Sunday", panel.GetItemView (6).Item);
 			Assert.AreEqual (2, panel.GetItemView (2).Index);
 
-			Assert.AreEqual (new Drawing.Size (80, 20*7), panel.PreferredSize);
+			Assert.AreEqual (new Drawing.Size (80, 20*7), panel.GetContentsSize ());
 
 			Assert.AreEqual (new Drawing.Rectangle (0, 20*6, 80, 20), panel.GetItemView (0).Bounds);
 			Assert.AreEqual (new Drawing.Rectangle (0, 0, 80, 20), panel.GetItemView (6).Bounds);
@@ -435,7 +446,7 @@ namespace Epsitec.Common.UI
 			Widgets.Application.ExecuteAsyncCallbacks ();
 
 			Assert.AreEqual (8, panel.GetItemViewCount ());
-			Assert.AreEqual (new Drawing.Size (80, 20*8), panel.PreferredSize);
+			Assert.AreEqual (new Drawing.Size (80, 20*8), panel.GetContentsSize ());
 			
 			Assert.AreEqual (new Drawing.Rectangle (0, 20*7, 80, 20), panel.GetItemView (0).Bounds);
 			Assert.AreEqual (new Drawing.Rectangle (0, 20*1, 80, 20), panel.GetItemView (6).Bounds);
