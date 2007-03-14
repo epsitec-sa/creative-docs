@@ -13,16 +13,18 @@ namespace Epsitec.Common.UI.ItemViewFactories
 	{
 		#region IItemViewFactory Members
 
-		public Widgets.Widget CreateUserInterface(ItemPanel panel, ItemView itemView)
+		public ItemViewWidget CreateUserInterface(ItemPanel panel, ItemView itemView)
 		{
-			Widgets.StaticText text = new Widgets.StaticText ();
+			ItemViewWidget container = new ItemViewWidget (itemView);
+			Widgets.StaticText text = new Widgets.StaticText (container);
 
 			text.Text = itemView.Item.ToString ();
+			text.Dock = Widgets.DockStyle.Fill;
 			
-			return text;
+			return container;
 		}
 
-		public void DisposeUserInterface(ItemView itemView, Widgets.Widget widget)
+		public void DisposeUserInterface(ItemViewWidget widget)
 		{
 			widget.Dispose ();
 		}

@@ -21,7 +21,7 @@ namespace Epsitec.Common.UI
 		/// <returns>
 		/// The widget which represents the data stored in the item view.
 		/// </returns>
-		public virtual Widgets.Widget CreateUserInterface(ItemPanel panel, ItemView itemView)
+		public virtual ItemViewWidget CreateUserInterface(ItemPanel panel, ItemView itemView)
 		{
 			return this.CreateElements (panel, itemView);
 		}
@@ -29,9 +29,8 @@ namespace Epsitec.Common.UI
 		/// <summary>
 		/// Disposes the user interface created by <c>CreateUserInterface</c>.
 		/// </summary>
-		/// <param name="itemView">The item view.</param>
 		/// <param name="widget">The widget to dispose.</param>
-		public virtual void DisposeUserInterface(ItemView itemView, Widgets.Widget widget)
+		public virtual void DisposeUserInterface(ItemViewWidget widget)
 		{
 			widget.Dispose ();
 		}
@@ -96,7 +95,7 @@ namespace Epsitec.Common.UI
 		/// <param name="panel">The panel.</param>
 		/// <param name="view">The item view.</param>
 		/// <returns>The container which hosts all the elements.</returns>
-		protected Widgets.Widget CreateElements(ItemPanel panel, ItemView view)
+		protected ItemViewWidget CreateElements(ItemPanel panel, ItemView view)
 		{
 			ItemPanel rootPanel = panel.RootPanel;
 			ItemPanelColumnHeader header = ItemPanelColumnHeader.GetColumnHeader (rootPanel);
@@ -104,7 +103,7 @@ namespace Epsitec.Common.UI
 			System.Diagnostics.Debug.Assert (header != null);
 			System.Diagnostics.Debug.Assert (header.ColumnCount > 0);
 
-			Widgets.Widget viewContainer = new Widgets.Widget ();
+			ItemViewWidget viewContainer = new ItemViewWidget (view);
 			viewContainer.PreferredSize = view.Size;
 
 			ItemViewShape shape = panel.ItemViewShape;

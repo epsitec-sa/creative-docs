@@ -112,6 +112,7 @@
     <Compile Include="Collections\ItemTableColumnCollection.cs" />
     <Compile Include="ColumnWidthChangeEventArgs.cs" />
     <Compile Include="AbstractItemViewFactory.cs" />
+    <Compile Include="ItemViewWidget.cs" />
     <Compile Include="ItemViewShape.cs" />
     <Compile Include="ItemPanelSelectionBehavior.cs" />
     <Compile Include="ItemTableScrollMode.cs" />

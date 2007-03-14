@@ -97,7 +97,7 @@ namespace Epsitec.Common.UI
 		/// Gets the widget which represents this item view.
 		/// </summary>
 		/// <value>The widget or <c>null</c>.</value>
-		public Widgets.Widget Widget
+		public ItemViewWidget Widget
 		{
 			get
 			{
@@ -325,7 +325,7 @@ namespace Epsitec.Common.UI
 
 				if (group == null)
 				{
-					this.factory.DisposeUserInterface (this, this.widget);
+					this.factory.DisposeUserInterface (this.widget);
 					
 					this.widget    = null;
 					this.isCleared = false;
@@ -345,7 +345,7 @@ namespace Epsitec.Common.UI
 		{
 			if (this.widget != null)
 			{
-				this.factory.DisposeUserInterface (this, this.widget);
+				this.factory.DisposeUserInterface (this.widget);
 
 				this.widget    = null;
 				this.isCleared = false;
@@ -357,7 +357,7 @@ namespace Epsitec.Common.UI
 		private int rowIndex;
 		private int columnIndex;
 		private IItemViewFactory factory;
-		private Widgets.Widget widget;
+		private ItemViewWidget widget;
 		private Drawing.Size size;
 		private Drawing.Rectangle bounds;
 		private bool isSelected;

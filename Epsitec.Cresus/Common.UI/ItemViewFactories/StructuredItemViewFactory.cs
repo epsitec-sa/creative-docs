@@ -27,27 +27,28 @@ namespace Epsitec.Common.UI.ItemViewFactories
 		/// <returns>
 		/// The widget which represents the data stored in the item view.
 		/// </returns>
-		public Widgets.Widget CreateUserInterface(ItemPanel panel, ItemView itemView)
+		public ItemViewWidget CreateUserInterface(ItemPanel panel, ItemView itemView)
 		{
 			ItemPanel rootPanel = panel.RootPanel;
 			ItemPanelColumnHeader header = ItemPanelColumnHeader.GetColumnHeader (rootPanel);
 			ItemTable             table  = ItemTable.GetItemTable (rootPanel);
+
+			ItemViewWidget container = new ItemViewWidget (itemView);
+			
+			container.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
 
 			if (header == null)
 			{
 				//	There is no header, just fall back to the simplest form of
 				//	data representation :
 				
-				Widgets.StaticText text = new Widgets.StaticText ();
+				Widgets.StaticText text = new Widgets.StaticText (container);
 				text.Text = itemView.Item.ToString ();
-				return text;
+				text.Dock = Widgets.DockStyle.Fill;
 			}
 			else
 			{
-				Widgets.Widget container = new Widgets.Widget ();
 				int count = header.ColumnCount;
-
-				container.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
 
 				for (int i = 0; i < count; i++)
 				{
@@ -84,17 +85,16 @@ namespace Epsitec.Common.UI.ItemViewFactories
 						throw new System.InvalidOperationException ("No column definition found");
 					}
 				}
-
-				return container;
 			}
+
+			return container;
 		}
 
 		/// <summary>
 		/// Disposes the user interface created by <c>CreateUserInterface</c>.
 		/// </summary>
-		/// <param name="itemView">The item view.</param>
 		/// <param name="widget">The widget to dispose.</param>
-		public void DisposeUserInterface(ItemView itemView, Widgets.Widget widget)
+		public void DisposeUserInterface(ItemViewWidget widget)
 		{
 			if (widget.Children.Count == 1)
 			{

@@ -113,7 +113,7 @@ namespace Epsitec.Common.UI
 			Assert.IsNotNull (group.ChildPanel);
 			Assert.AreEqual (panel, group.Parent);
 			Assert.AreEqual (panel, group.ParentPanel);
-			Assert.AreEqual (panel.GetItemView (1), group.ParentView);
+			Assert.AreEqual (panel.GetItemView (1), group.ItemView);
 			Assert.AreEqual ("Part: 19 x Ecrou M3 @ 0.10", group.ChildPanel.GetItemView (0).Widget.Text);
 		}
 
@@ -159,7 +159,7 @@ namespace Epsitec.Common.UI
 			Assert.IsNotNull (group.ChildPanel);
 			Assert.AreEqual (panel, group.Parent);
 			Assert.AreEqual (panel, group.ParentPanel);
-			Assert.AreEqual (panel.GetItemView (0), group.ParentView);
+			Assert.AreEqual (panel.GetItemView (0), group.ItemView);
 
 			Assert.AreEqual (3, header.ColumnCount);
 			Assert.AreEqual (panel, header.ItemPanel);

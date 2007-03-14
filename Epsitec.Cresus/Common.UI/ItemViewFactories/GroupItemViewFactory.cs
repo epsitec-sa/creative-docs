@@ -13,19 +13,18 @@ namespace Epsitec.Common.UI.ItemViewFactories
 	{
 		#region IItemViewFactory Members
 
-		public override Widgets.Widget CreateUserInterface(ItemPanel panel, ItemView itemView)
+		public override ItemViewWidget CreateUserInterface(ItemPanel panel, ItemView itemView)
 		{
-			ItemPanelGroup group = new ItemPanelGroup ();
+			ItemPanelGroup group = new ItemPanelGroup (itemView);
 
 			group.ParentPanel = panel;
-			group.ParentView  = itemView;
-
+			
 			group.PreferredWidth = itemView.Size.Width;
 			
 			return group;
 		}
 
-		public override void DisposeUserInterface(ItemView itemView, Widgets.Widget widget)
+		public override void DisposeUserInterface(ItemViewWidget widget)
 		{
 			ItemPanelGroup group = widget as ItemPanelGroup;
 

@@ -15,9 +15,10 @@ namespace Epsitec.Common.UI
 	/// The <c>ItemPanelGroup</c> class represents a specialized <see cref="ItemPanel"/>
 	/// which represents a group of items.
 	/// </summary>
-	public class ItemPanelGroup : Widgets.FrameBox
+	public class ItemPanelGroup : ItemViewWidget
 	{
-		public ItemPanelGroup()
+		public ItemPanelGroup(ItemView view)
+			: base (view)
 		{
 			this.panel = new ItemPanel (this);
 			this.panel.Dock = Widgets.DockStyle.Fill;
@@ -51,7 +52,7 @@ namespace Epsitec.Common.UI
 						
 						this.parentPanel.AddPanelGroup (this);
 
-						if (this.parentView != null)
+						if (this.ItemView != null)
 						{
 							this.RefreshAperture (this.parentPanel.Aperture);
 						}
@@ -68,48 +69,20 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public ItemView ParentView
-		{
-			get
-			{
-				return this.parentView;
-			}
-			set
-			{
-				if (this.parentView != value)
-				{
-					this.parentView = value;
-
-					if (this.parentView != null)
-					{
-						this.defaultCompactSize = this.parentView.Size;
-						this.UpdateItemViewSize ();
-						
-						if (this.parentPanel != null)
-						{
-							this.RefreshAperture (this.parentPanel.Aperture);
-						}
-					}
-
-					this.Invalidate ();
-				}
-			}
-		}
-
 		public CollectionViewGroup CollectionViewGroup
 		{
 			get
 			{
-				return this.parentView.Item as CollectionViewGroup;
+				return this.ItemView.Item as CollectionViewGroup;
 			}
 		}
 
 		internal void RefreshAperture(Drawing.Rectangle aperture)
 		{
-			System.Diagnostics.Debug.Assert (this.parentView != null);
+			System.Diagnostics.Debug.Assert (this.ItemView != null);
 			System.Diagnostics.Debug.Assert (this.parentPanel != null);
 			
-			Drawing.Rectangle bounds = this.parentView.Bounds;
+			Drawing.Rectangle bounds = this.ItemView.Bounds;
 
 			bounds.Deflate (this.Padding);
 			bounds.Deflate (this.GetInternalPadding ());
@@ -129,7 +102,7 @@ namespace Epsitec.Common.UI
 
 		internal void NotifyItemViewChanged(ItemView view)
 		{
-			System.Diagnostics.Debug.Assert (this.parentView == view);
+			System.Diagnostics.Debug.Assert (this.ItemView == view);
 			System.Diagnostics.Debug.Assert (this.parentPanel != null);
 
 			this.UpdateItemViewSize ();
@@ -271,7 +244,7 @@ namespace Epsitec.Common.UI
 				graphics.RenderSolid (Drawing.Color.FromBrightness (0));
 			}
 
-			string text = this.parentView.IsExpanded ? "-" : "+";
+			string text = this.ItemView.IsExpanded ? "-" : "+";
 
 			double r = 9;
 
@@ -287,22 +260,22 @@ namespace Epsitec.Common.UI
 			base.OnClicked (e);
 
 			if ((e.Message.Button == Widgets.MouseButtons.Left) &&
-				(this.parentView != null) &&
+				(this.ItemView != null) &&
 				(this.parentPanel != null))
 			{
-				this.parentPanel.ExpandItemView (this.parentView, !this.parentView.IsExpanded);
+				this.parentPanel.ExpandItemView (this.ItemView, !this.ItemView.IsExpanded);
 				e.Message.Consumer = this;
 			}
 		}
 
 		private void UpdateItemViewSize()
 		{
-			System.Diagnostics.Debug.Assert (this.parentView != null);
+			System.Diagnostics.Debug.Assert (this.ItemView != null);
 
-			Drawing.Size oldSize = this.parentView.Size;
+			Drawing.Size oldSize = this.ItemView.Size;
 			Drawing.Size newSize;
 
-			if (this.parentView.IsExpanded)
+			if (this.ItemView.IsExpanded)
 			{
 				this.panel.SetGroupPanelEnable (true);
 				
@@ -324,7 +297,7 @@ namespace Epsitec.Common.UI
 
 			if (oldSize != newSize)
 			{
-				this.parentView.DefineSize (newSize, this.parentPanel);
+				this.ItemView.DefineSize (newSize, this.parentPanel);
 			}
 		}
 
@@ -383,7 +356,6 @@ namespace Epsitec.Common.UI
 
 		private ItemPanel panel;
 		private ItemPanel parentPanel;
-		private ItemView parentView;
 		private Drawing.Size defaultCompactSize;
 		
 		private List<System.WeakReference> selectedGhostItems = new List<System.WeakReference> ();
