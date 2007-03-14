@@ -428,6 +428,7 @@ namespace Epsitec.Common.Dialogs
 			this.newState             = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NewFolder, this.NewDirectory);
 			this.renameState          = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Rename, this.RenameStarting);
 			this.deleteState          = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Delete, this.FileDelete);
+			this.refreshState         = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Refresh, this.Refresh);
 			this.viewDispositionState = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.ViewDisposition, this.ViewDisposition);
 			this.viewSizeState        = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.ViewSize, this.ViewSize);
 			this.favoritesAddState    = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Add, this.AddFavorite);
@@ -853,6 +854,14 @@ namespace Epsitec.Common.Dialogs
 			buttonNew.CommandObject = this.newState.Command;
 			buttonNew.Dock = DockStyle.Right;
 			this.toolbar.Items.Add (buttonNew);
+
+			IconButton buttonRefresh = new IconButton ();
+			buttonRefresh.AutoFocus = false;
+			buttonRefresh.TabNavigationMode = TabNavigationMode.None;
+			buttonRefresh.CommandObject = this.refreshState.Command;
+			buttonRefresh.Dock = DockStyle.Right;
+			buttonRefresh.Margins = new Margins(0, 10, 0, 0);
+			this.toolbar.Items.Add (buttonRefresh);
 		}
 
 		private void CreateFooter()
@@ -1706,6 +1715,11 @@ namespace Epsitec.Common.Dialogs
 
 			this.SetItemViewDisposition(size);
 			this.UpdateSlider();
+		}
+
+		private void Refresh()
+		{
+			//	TODO:
 		}
 
 		private void RenameStarting()
@@ -2671,6 +2685,7 @@ namespace Epsitec.Common.Dialogs
 		private CommandState				newState;
 		private CommandState				renameState;
 		private CommandState				deleteState;
+		private CommandState				refreshState;
 		private CommandState				viewDispositionState;
 		private CommandState				viewSizeState;
 		private CommandState				favoritesAddState;

@@ -261,6 +261,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Images\ViewSize.icon" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\FileRefresh.icon" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

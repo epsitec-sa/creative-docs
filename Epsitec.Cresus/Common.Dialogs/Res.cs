@@ -22,6 +22,7 @@ namespace Epsitec.Common.Dialogs
 					public static readonly Epsitec.Common.Widgets.Command NavigatePrev = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 6));
 					public static readonly Epsitec.Common.Widgets.Command NewFolder = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 3));
 					public static readonly Epsitec.Common.Widgets.Command ParentFolder = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 1));
+					public static readonly Epsitec.Common.Widgets.Command Refresh = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 20));
 					public static readonly Epsitec.Common.Widgets.Command Rename = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 4));
 					public static readonly Epsitec.Common.Widgets.Command ViewDisposition = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 18));
 					public static readonly Epsitec.Common.Widgets.Command ViewSize = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, 19));
@@ -58,6 +59,7 @@ namespace Epsitec.Common.Dialogs
 					public const long NavigatePrev = 0x600000000006L;
 					public const long NewFolder = 0x600000000003L;
 					public const long ParentFolder = 0x600000000001L;
+					public const long Refresh = 0x600000000014L;
 					public const long Rename = 0x600000000004L;
 					public const long ViewDisposition = 0x600000000012L;
 					public const long ViewSize = 0x600000000013L;
