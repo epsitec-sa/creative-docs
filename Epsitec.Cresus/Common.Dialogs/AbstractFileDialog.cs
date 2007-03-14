@@ -1947,34 +1947,26 @@ namespace Epsitec.Common.Dialogs
 			//	"ab" "cd"	-> ab, cd
 			//	"a b" "c d"	-> a b, c d
 			List<string> list = new List<string>();
-			int i=0;
 			name = name.Trim();
-			while (i<name.Length)
-			{
-				if (name[i] == '"')
-				{
-					int start = ++i;
-					while (i<name.Length && name[i] != '"')
-					{
-						i++;
-					}
-					list.Add(name.Substring(start, i-start));
-					i++;
-				}
-				else
-				{
-					int start = i;
-					while (i<name.Length && name[i] != ' ')
-					{
-						i++;
-					}
-					list.Add(name.Substring(start, i-start));
-				}
 
-				while (i<name.Length && name[i] == ' ')
+			if (name.Length != 0 && name[0] == '"')
+			{
+				int i = 0;
+				while (i<name.Length && name[i] != '"')
 				{
 					i++;
 				}
+				int start = ++i;
+				while (i<name.Length && name[i] != '"')
+				{
+					i++;
+				}
+				list.Add(name.Substring(start, i-start));
+				i++;
+			}
+			else
+			{
+				list.Add(name);
 			}
 
 			return list;
