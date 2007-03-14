@@ -222,11 +222,22 @@ namespace Epsitec.Common.UI
 		///	<c>true</c> if this item view has a dirty user interface;
 		/// otherwise, <c>false</c>.
 		/// </value>
-		internal bool IsUserInterfaceDirty
+		internal bool HasValidUserInterface
 		{
 			get
 			{
-				return this.isCleared;
+				if (this.isCleared)
+				{
+					return false;
+				}
+				if (this.widget == null)
+				{
+					return false;
+				}
+
+				ItemPanelGroup group = this.Group;
+
+				return (group == null) || group.HasValidUserInterface;
 			}
 		}
 
@@ -306,16 +317,6 @@ namespace Epsitec.Common.UI
 				if (factory != null)
 				{
 					this.widget = factory.CreateUserInterface (panel, this);
-				}
-			}
-			else
-			{
-				ItemPanelGroup group = this.Group;
-
-				if ((group != null) &&
-					(!group.HasUserInterface))
-				{
-					this.factory.CreateUserInterface (panel, this);
 				}
 			}
 			

@@ -1710,8 +1710,7 @@ namespace Epsitec.Common.UI
 			
 			foreach (ItemView view in views)
 			{
-				if ((view.Widget != null) &&
-					(view.IsUserInterfaceDirty == false))
+				if (view.HasValidUserInterface)
 				{
 					if (view.Bounds.IntersectsWith (aperture))
 					{

@@ -35,15 +35,13 @@ namespace Epsitec.Common.UI
 			this.panel.SetGroupPanelEnable (view.IsExpanded);
 
 			this.parentPanel.AddPanelGroup (this);
-
-//-			this.RefreshAperture (this.parentPanel.Aperture);
 		}
 
-		public bool HasUserInterface
+		internal bool HasValidUserInterface
 		{
 			get
 			{
-				return this.panel != null;
+				return this.hasValidUserInterface;
 			}
 		}
 		
@@ -116,6 +114,11 @@ namespace Epsitec.Common.UI
 			this.UpdateItemViewSize ();
 			this.Invalidate ();
 		}
+		
+		internal void MarkUserInterfaceAsValid()
+		{
+			this.hasValidUserInterface = true;
+		}
 
 		/// <summary>
 		/// Clears information related to the user interface. This is a softer
@@ -125,52 +128,49 @@ namespace Epsitec.Common.UI
 		/// </summary>
 		internal void ClearUserInterface()
 		{
-			if (this.panel != null)
+			//	Remember all items which were selected, so we can reselect
+			//	them when the ViewItem objects get recreated...
+
+			List<System.WeakReference> selectedGhostItems = new List<System.WeakReference> ();
+			
+			foreach (ItemView view in this.panel.GetSelectedItemViews ())
 			{
-				//	Remember all items which were selected, so we can reselect
-				//	them when the ViewItem objects get recreated...
-
-				List<System.WeakReference> selectedGhostItems = new List<System.WeakReference> ();
-				
-				foreach (ItemView view in this.panel.GetSelectedItemViews ())
-				{
-					selectedGhostItems.Add (new System.WeakReference (view.Item));
-				}
-
-				lock (this.exclusion)
-				{
-					this.selectedGhostItems = selectedGhostItems;
-				}
-				
-				this.panel.ClearUserInterface ();
+				selectedGhostItems.Add (new System.WeakReference (view.Item));
 			}
+
+			lock (this.exclusion)
+			{
+				this.selectedGhostItems = selectedGhostItems;
+			}
+			
+			this.panel.ClearUserInterface ();
+			this.hasValidUserInterface = false;
 		}
 
 		internal void RefreshUserInterface()
 		{
-			if (this.panel != null)
+			this.hasValidUserInterface = true;
+
+			this.panel.RefreshUserInterface ();
+
+			lock (this.exclusion)
 			{
-				this.panel.RefreshUserInterface ();
-
-				lock (this.exclusion)
+				foreach (System.WeakReference ghostItem in this.selectedGhostItems)
 				{
-					foreach (System.WeakReference ghostItem in this.selectedGhostItems)
+					object item = ghostItem.Target;
+
+					if (item != null)
 					{
-						object item = ghostItem.Target;
+						ItemView view = this.panel.GetItemView (item);
 
-						if (item != null)
+						if (view != null)
 						{
-							ItemView view = this.panel.GetItemView (item);
-
-							if (view != null)
-							{
-								view.Select (true);
-							}
+							view.Select (true);
 						}
 					}
-					
-					this.selectedGhostItems.Clear ();
 				}
+				
+				this.selectedGhostItems.Clear ();
 			}
 		}
 
@@ -184,18 +184,9 @@ namespace Epsitec.Common.UI
 		{
 			System.Diagnostics.Debug.Assert (this.parentPanel != null);
 
-			Drawing.Size size;
-
-			if (this.panel != null)
-			{
-				this.panel.GetSelectedItemViews (filter, list);
+			this.panel.GetSelectedItemViews (filter, list);
 				
-				size = this.panel.ItemViewDefaultSize;
-			}
-			else
-			{
-				size = this.parentPanel.ItemViewDefaultSize;
-			}
+			Drawing.Size size = this.panel.ItemViewDefaultSize;
 
 			//	If we have selected ghost items for this group, we will provide
 			//	dummy (ghost) item view instances so that the root panel can
@@ -378,5 +369,6 @@ namespace Epsitec.Common.UI
 		
 		private List<System.WeakReference> selectedGhostItems = new List<System.WeakReference> ();
 		private readonly object exclusion = new object ();
+		private bool hasValidUserInterface;
 	}
 }
