@@ -5,7 +5,6 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Drawing;
 
 using System.Collections.Generic;
 
@@ -17,7 +16,7 @@ namespace Epsitec.Common.UI
 	/// The <c>ItemPanel</c> class represents a collection of items in a panel,
 	/// where the collection is defined through a <see cref="ICollectionView"/>.
 	/// </summary>
-	public class ItemPanel : FrameBox
+	public class ItemPanel : Widgets.FrameBox
 	{
 		public ItemPanel()
 		{
@@ -25,7 +24,7 @@ namespace Epsitec.Common.UI
 			this.InternalState |= InternalState.Focusable;
 		}
 
-		public ItemPanel(Widget embedder)
+		public ItemPanel(Widgets.Widget embedder)
 			: this ()
 		{
 			this.SetEmbedder (embedder);
@@ -163,11 +162,11 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public Size ItemViewDefaultSize
+		public Drawing.Size ItemViewDefaultSize
 		{
 			get
 			{
-				return (Size) this.GetValue (ItemPanel.ItemViewDefaultSizeProperty);
+				return (Drawing.Size) this.GetValue (ItemPanel.ItemViewDefaultSizeProperty);
 			}
 			set
 			{
@@ -187,19 +186,19 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public Rectangle Aperture
+		public Drawing.Rectangle Aperture
 		{
 			get
 			{
 				double yTop = this.PreferredHeight - System.Math.Max (this.apertureY, 0);
 				double yBot = System.Math.Max (yTop - this.apertureHeight, 0);
 
-				return new Rectangle (this.apertureX, yTop-this.apertureHeight, this.apertureWidth, this.apertureHeight);
+				return new Drawing.Rectangle (this.apertureX, yTop-this.apertureHeight, this.apertureWidth, this.apertureHeight);
 			}
 			set
 			{
-				Rectangle oldValue = this.Aperture;
-				Rectangle newValue = value;
+				Drawing.Rectangle oldValue = this.Aperture;
+				Drawing.Rectangle newValue = value;
 				
 				if (oldValue != newValue)
 				{
@@ -213,11 +212,11 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public Margins AperturePadding
+		public Drawing.Margins AperturePadding
 		{
 			get
 			{
-				return (Margins) this.GetValue (ItemPanel.AperturePaddingProperty);
+				return (Drawing.Margins) this.GetValue (ItemPanel.AperturePaddingProperty);
 			}
 			set
 			{
@@ -225,7 +224,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public ItemView Detect(Point pos)
+		public ItemView Detect(Drawing.Point pos)
 		{
 			return this.Detect (this.SafeGetViews (), pos);
 		}
@@ -345,7 +344,7 @@ namespace Epsitec.Common.UI
 			return null;
 		}
 
-		public ItemView DetectItemView(Point pos)
+		public ItemView DetectItemView(Drawing.Point pos)
 		{
 			return this.FindItemView (
 				delegate (ItemView item)
@@ -483,7 +482,7 @@ namespace Epsitec.Common.UI
 			return list;
 		}
 
-		public Size GetContentsSize()
+		public Drawing.Size GetContentsSize()
 		{
 			return this.PreferredSize;
 		}
@@ -725,8 +724,8 @@ namespace Epsitec.Common.UI
 					this.RefreshLayout ();
 				}
 
-				Rectangle aperture = this.Aperture;
-				Rectangle bounds   = view.Bounds;
+				Drawing.Rectangle aperture = this.Aperture;
+				Drawing.Rectangle bounds   = view.Bounds;
 
 				aperture.Deflate (this.AperturePadding);
 
@@ -785,7 +784,7 @@ namespace Epsitec.Common.UI
 
 		#endregion
 		
-		internal void NotifyItemViewSizeChanged(ItemView view, Size oldSize, Size newSize)
+		internal void NotifyItemViewSizeChanged(ItemView view, Drawing.Size oldSize, Drawing.Size newSize)
 		{
 			this.InvalidateLayout ();
 		}
@@ -899,7 +898,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected virtual void HandleItemViewDefaultSizeChanged(Size oldValue, Size newValue)
+		protected virtual void HandleItemViewDefaultSizeChanged(Drawing.Size oldValue, Drawing.Size newValue)
 		{
 			this.AsyncRefresh ();
 		}
@@ -907,8 +906,8 @@ namespace Epsitec.Common.UI
 		protected virtual void HandleItemViewDefaultExpandedChanged(bool oldValue, bool newValue)
 		{
 		}
-		
-		protected virtual void HandleApertureChanged(Rectangle oldValue, Rectangle newValue)
+
+		protected virtual void HandleApertureChanged(Drawing.Rectangle oldValue, Drawing.Rectangle newValue)
 		{
 			this.RecreateUserInterface (this.SafeGetViews (), newValue);
 
@@ -946,7 +945,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected override void OnPressed(MessageEventArgs e)
+		protected override void OnPressed(Widgets.MessageEventArgs e)
 		{
 			base.OnPressed (e);
 
@@ -987,8 +986,8 @@ namespace Epsitec.Common.UI
 				this.RefreshFocus (this.KeyboardFocus);
 			}
 		}
-		
-		protected override void ProcessMessage(Message message, Point pos)
+
+		protected override void ProcessMessage(Widgets.Message message, Drawing.Point pos)
 		{
 			base.ProcessMessage(message, pos);
 
@@ -1496,7 +1495,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected override void OnExited(MessageEventArgs e)
+		protected override void OnExited(Widgets.MessageEventArgs e)
 		{
 			base.OnExited(e);
 
@@ -1507,12 +1506,12 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IEnumerable<ItemView> views = this.SafeGetViews ();
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			Rectangle rect = Rectangle.Intersection (clipRect, this.Aperture);
+			Drawing.Rectangle rect = Drawing.Rectangle.Intersection (clipRect, this.Aperture);
 			ICollectionView items = this.RootPanel.Items;
 
 			object focusedItem = items == null ? null : items.CurrentItem;
@@ -1522,7 +1521,7 @@ namespace Epsitec.Common.UI
 				if (view.Bounds.IntersectsWith (rect))
 				{
 					WidgetPaintState state = WidgetPaintState.Enabled;
-					Rectangle viewBounds = Rectangle.Intersection (rect, view.Bounds);
+					Drawing.Rectangle viewBounds = Drawing.Rectangle.Intersection (rect, view.Bounds);
 
 					if (view.IsSelected)
 					{
@@ -1547,7 +1546,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected override void DispatchMessage(Message message, Point pos)
+		protected override void DispatchMessage(Widgets.Message message, Drawing.Point pos)
 		{
 			base.DispatchMessage (message, pos);
 		}
@@ -1674,7 +1673,7 @@ namespace Epsitec.Common.UI
 				
 				if (view.IsVisible)
 				{
-					this.Invalidate (Rectangle.Intersection (this.Aperture, view.Bounds));
+					this.Invalidate (Drawing.Rectangle.Intersection (this.Aperture, view.Bounds));
 				}
 			}
 
@@ -1700,7 +1699,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		private void RecreateUserInterface(IEnumerable<ItemView> views, Rectangle aperture)
+		private void RecreateUserInterface(IEnumerable<ItemView> views, Drawing.Rectangle aperture)
 		{
 			List<ItemView> dispose = new List<ItemView> ();
 			List<ItemView> create  = new List<ItemView> ();
@@ -1915,7 +1914,7 @@ namespace Epsitec.Common.UI
 			
 			foreach (ItemView view in views)
 			{
-				Size size = view.Size;
+				Drawing.Size size = view.Size;
 
 				if (dy == 0)
 				{
@@ -1950,7 +1949,7 @@ namespace Epsitec.Common.UI
 			{
 				double h = view.Size.Height;
 				y -= h;
-				view.Bounds = new Rectangle (0, y, maxDx, h);
+				view.Bounds = new Drawing.Rectangle (0, y, maxDx, h);
 				view.RowIndex = row++;
 				view.ColumnIndex = 0;
 			}
@@ -1977,7 +1976,7 @@ namespace Epsitec.Common.UI
 
 			foreach (ItemView view in views)
 			{
-				Size size = view.Size;
+				Drawing.Size size = view.Size;
 
 				if ((dx == 0) && (dy == 0))
 				{
@@ -2047,7 +2046,7 @@ namespace Epsitec.Common.UI
 					row++;
 				}
 
-				view.Bounds = new Rectangle (x, y-h, w, h);
+				view.Bounds = new Drawing.Rectangle (x, y-h, w, h);
 				view.RowIndex = row;
 				view.ColumnIndex = column;
 
@@ -2068,13 +2067,13 @@ namespace Epsitec.Common.UI
 
 		private void UpdatePreferredSize(double width, double height)
 		{
-			Size oldValue = this.PreferredSize;
+			Drawing.Size oldValue = this.PreferredSize;
 
 			this.PreferredWidth  = width;
 			this.PreferredHeight = height;
 		}
 
-		private ItemView Detect(IList<ItemView> views, Point pos)
+		private ItemView Detect(IList<ItemView> views, Drawing.Point pos)
 		{
 			if (this.hotItemViewIndex != -1)
 			{
@@ -2197,14 +2196,14 @@ namespace Epsitec.Common.UI
 			public RefreshState(ItemPanel panel)
 			{
 				this.panel = panel;
-				this.contentsSize = this.panel.PreferredSize;
+				this.savedContentsSize = this.panel.GetContentsSize ();
 			}
 
-
+			
 			public void GenerateEvents()
 			{
-				Size oldContentsSize = this.contentsSize;
-				Size newContentsSize = this.panel.PreferredSize;
+				Drawing.Size oldContentsSize = this.savedContentsSize;
+				Drawing.Size newContentsSize = this.panel.GetContentsSize ();
 
 				if (oldContentsSize != newContentsSize)
 				{
@@ -2213,7 +2212,7 @@ namespace Epsitec.Common.UI
 			}
 
 			private ItemPanel panel;
-			private Size contentsSize;
+			private Drawing.Size savedContentsSize;
 		}
 
 		#endregion
@@ -2251,7 +2250,7 @@ namespace Epsitec.Common.UI
 		private static void NotifyItemViewDefaultSizeChanged(DependencyObject obj, object oldValue, object newValue)
 		{
 			ItemPanel panel = (ItemPanel) obj;
-			panel.HandleItemViewDefaultSizeChanged ((Size) oldValue, (Size) newValue);
+			panel.HandleItemViewDefaultSizeChanged ((Drawing.Size) oldValue, (Drawing.Size) newValue);
 		}
 
 		private static void NotifyItemViewDefaultExpandedChanged(DependencyObject obj, object oldValue, object newValue)
@@ -2274,9 +2273,9 @@ namespace Epsitec.Common.UI
 		public static readonly DependencyProperty ItemSelectionModeProperty = DependencyProperty.Register ("ItemSelectionMode", typeof (ItemPanelSelectionMode), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelSelectionMode.None, ItemPanel.NotifyItemSelectionModeChanged));
 		public static readonly DependencyProperty GroupSelectionModeProperty = DependencyProperty.Register ("GroupSelectionMode", typeof (ItemPanelSelectionMode), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelSelectionMode.None, ItemPanel.NotifyGroupSelectionModeChanged));
 		public static readonly DependencyProperty SelectionBehaviorProperty = DependencyProperty.Register ("SelectionBehavior", typeof (ItemPanelSelectionBehavior), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelSelectionBehavior.Automatic, ItemPanel.NotifySelectionBehaviorChanged));
-		public static readonly DependencyProperty ItemViewDefaultSizeProperty = DependencyProperty.Register ("ItemViewDefaultSize", typeof (Size), typeof (ItemPanel), new DependencyPropertyMetadata (new Size (80, 20), ItemPanel.NotifyItemViewDefaultSizeChanged));
+		public static readonly DependencyProperty ItemViewDefaultSizeProperty = DependencyProperty.Register ("ItemViewDefaultSize", typeof (Drawing.Size), typeof (ItemPanel), new DependencyPropertyMetadata (new Drawing.Size (80, 20), ItemPanel.NotifyItemViewDefaultSizeChanged));
 		public static readonly DependencyProperty ItemViewDefaultExpandedProperty = DependencyProperty.Register ("ItemViewDefaultExpanded", typeof (bool), typeof (ItemPanel), new DependencyPropertyMetadata (false, ItemPanel.NotifyItemViewDefaultExpandedChanged));
-		public static readonly DependencyProperty AperturePaddingProperty = DependencyProperty.Register ("AperturePadding", typeof (Margins), typeof (ItemPanel), new DependencyPropertyMetadata (Margins.Zero));
+		public static readonly DependencyProperty AperturePaddingProperty = DependencyProperty.Register ("AperturePadding", typeof (Drawing.Margins), typeof (ItemPanel), new DependencyPropertyMetadata (Drawing.Margins.Zero));
 
 		List<ItemView> views
 		{
