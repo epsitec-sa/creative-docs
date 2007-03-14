@@ -20,10 +20,16 @@ namespace Epsitec.Common.UI
 		public ItemPanelGroup(ItemView view)
 			: base (view)
 		{
-			this.panel = new ItemPanel (this);
-			this.panel.Dock = Widgets.DockStyle.Fill;
 		}
 
+		public bool HasUserInterface
+		{
+			get
+			{
+				return this.panel != null;
+			}
+		}
+		
 		public ItemPanel ParentPanel
 		{
 			get
@@ -51,11 +57,8 @@ namespace Epsitec.Common.UI
 						this.panel.ItemViewDefaultSize = this.parentPanel.ItemViewDefaultSize;
 						
 						this.parentPanel.AddPanelGroup (this);
-
-						if (this.ItemView != null)
-						{
-							this.RefreshAperture (this.parentPanel.Aperture);
-						}
+						
+						this.RefreshAperture (this.parentPanel.Aperture);
 					}
 				}
 			}
@@ -107,6 +110,15 @@ namespace Epsitec.Common.UI
 
 			this.UpdateItemViewSize ();
 			this.Invalidate ();
+		}
+
+		internal void CreateMissingUserInterface()
+		{
+			if (this.panel == null)
+			{
+				this.panel = new ItemPanel (this);
+				this.panel.Dock = Widgets.DockStyle.Fill;
+			}
 		}
 
 		/// <summary>
@@ -356,7 +368,7 @@ namespace Epsitec.Common.UI
 
 		private ItemPanel panel;
 		private ItemPanel parentPanel;
-		private Drawing.Size defaultCompactSize;
+		private Drawing.Size defaultCompactSize = new Drawing.Size (80, 20);
 		
 		private List<System.WeakReference> selectedGhostItems = new List<System.WeakReference> ();
 		private readonly object exclusion = new object ();

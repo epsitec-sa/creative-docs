@@ -106,6 +106,19 @@ namespace Epsitec.Common.UI
 		}
 
 		/// <summary>
+		/// Gets the widget which represents the group associated with this
+		/// item view.
+		/// </summary>
+		/// <value>The widget or <c>null</c>.</value>
+		public ItemPanelGroup Group
+		{
+			get
+			{
+				return this.widget as ItemPanelGroup;
+			}
+		}
+
+		/// <summary>
 		/// Gets the size of this item view.
 		/// </summary>
 		/// <value>The size of the item view.</value>
@@ -189,7 +202,7 @@ namespace Epsitec.Common.UI
 				{
 					this.isExpanded = value;
 
-					ItemPanelGroup group = this.widget as ItemPanelGroup;
+					ItemPanelGroup group = this.Group;
 					
 					if (group != null)
 					{
@@ -226,7 +239,8 @@ namespace Epsitec.Common.UI
 			
 			if (factory != null)
 			{
-				this.DefineSize (factory.GetPreferredSize (panel, this), panel);
+				Drawing.Size size = factory.GetPreferredSize (panel, this);
+				this.DefineSize (size, panel);
 			}
 		}
 
@@ -287,19 +301,30 @@ namespace Epsitec.Common.UI
 			if (this.widget == null)
 			{
 				IItemViewFactory factory = this.Factory;
-				
+
 				if (factory != null)
 				{
 					this.widget = factory.CreateUserInterface (panel, this);
 				}
 			}
+			else
+			{
+				ItemPanelGroup group = this.Group;
+
+				if ((group != null) &&
+					(!group.HasUserInterface))
+				{
+					this.factory.CreateUserInterface (panel, this);
+				}
+			}
+			
 			if (this.widget != null)
 			{
 				if (this.isCleared)
 				{
 					this.isCleared = false;
-					
-					ItemPanelGroup group = this.widget as ItemPanelGroup;
+
+					ItemPanelGroup group = this.Group;
 
 					if (group != null)
 					{
@@ -313,6 +338,24 @@ namespace Epsitec.Common.UI
 		}
 
 		/// <summary>
+		/// Defines the widget used to represent the associated group. The widget
+		/// might only be partially initialized and will still need to go through
+		/// the full <c>CreateUserInterface</c> procedure.
+		/// </summary>
+		/// <param name="group">The widget used to represent the group.</param>
+		internal void DefineGroup(ItemPanelGroup group)
+		{
+			System.Diagnostics.Debug.Assert (group != null);
+
+			if (this.widget != group)
+			{
+				System.Diagnostics.Debug.Assert (this.widget == null);
+				
+				this.widget = group;
+			}
+		}
+
+		/// <summary>
 		/// Clears the user interface. This will either remove the associated
 		/// widget or, if it is an <see cref="ItemPanelGroup"/>, then it will
 		/// simply mark the user interface as being dirty.
@@ -321,7 +364,7 @@ namespace Epsitec.Common.UI
 		{
 			if (this.widget != null)
 			{
-				ItemPanelGroup group = this.widget as ItemPanelGroup;
+				ItemPanelGroup group = this.Group;
 
 				if (group == null)
 				{

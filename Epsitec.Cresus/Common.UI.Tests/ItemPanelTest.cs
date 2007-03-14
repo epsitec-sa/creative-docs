@@ -411,8 +411,8 @@ namespace Epsitec.Common.UI
 			Assert.IsNotNull (panel.GetItemView (1).Widget);
 			Assert.IsNull (panel.GetItemView (2).Widget);
 
-			Assert.AreEqual ("Monday", panel.GetItemView (0).Widget.Text);
-			Assert.AreEqual ("Tuesday", panel.GetItemView (1).Widget.Text);
+			Assert.AreEqual ("Monday", panel.GetItemView (0).Widget.Children.Widgets[0].Text);
+			Assert.AreEqual ("Tuesday", panel.GetItemView (1).Widget.Children.Widgets[0].Text);
 
 			panel.Aperture = new Drawing.Rectangle (0, 10, 80, 20);
 

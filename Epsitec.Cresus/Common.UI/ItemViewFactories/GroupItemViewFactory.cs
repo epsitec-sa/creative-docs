@@ -15,8 +15,14 @@ namespace Epsitec.Common.UI.ItemViewFactories
 
 		public override ItemViewWidget CreateUserInterface(ItemPanel panel, ItemView itemView)
 		{
-			ItemPanelGroup group = new ItemPanelGroup (itemView);
+			ItemPanelGroup group = itemView.Group;
 
+			if (group == null)
+			{
+				group = new ItemPanelGroup (itemView);
+			}
+			
+			group.CreateMissingUserInterface ();
 			group.ParentPanel = panel;
 			
 			group.PreferredWidth = itemView.Size.Width;
