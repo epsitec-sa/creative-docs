@@ -247,6 +247,7 @@ namespace Epsitec.Common.UI
 			panel.Items = ItemPanelTest.GetStructuredItems (true);
 			panel.Layout = ItemPanelLayout.VerticalList;
 			panel.ItemSelectionMode = ItemPanelSelectionMode.ZeroOrOne;
+			panel.GroupSelectionMode = ItemPanelSelectionMode.ZeroOrOne;
 			panel.ItemViewDefaultSize = new Drawing.Size (300, 20);
 			panel.ItemViewDefaultExpanded = true;
 
