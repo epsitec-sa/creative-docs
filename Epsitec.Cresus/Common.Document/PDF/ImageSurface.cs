@@ -57,7 +57,36 @@ namespace Epsitec.Common.Document.PDF
 		public Drawing.Image DrawingImage
 		{
 			//	Donne le Drawing.Image associé.
-			get { return this.cache.Image; }
+			get
+			{
+				Drawing.Image image = this.cache.Image;
+				
+				if (image != null)
+				{
+					this.exists = true;
+				}
+
+				return image;
+			}
+		}
+
+		public bool Exists
+		{
+			//	Retourne true si l'image a pu être chargée au moins une fois avec succès.
+			get
+			{
+				return this.cache.Size != Size.Zero;
+			}
+		}
+
+		public Drawing.Image CachedDrawingImage
+		{
+			//	Donne le Drawing.Image associé, sans le charger s'il n'est pas/plus dans
+			//	le cache.
+			get
+			{
+				return this.cache.CachedImage;
+			}
 		}
 
 
@@ -82,12 +111,12 @@ namespace Epsitec.Common.Document.PDF
 			//	Cherche une image d'après son Drawing.Image.
 			foreach ( ImageSurface image in list )
 			{
-				if ( image.DrawingImage == null )  continue;
+				if ( image.CachedDrawingImage == null )  continue;
 
-				if ( image.DrawingImage.UniqueId == drim.UniqueId &&
-					 image.size                  == size          &&
-					 image.crop                  == crop          &&
-					 image.filter                == filter        )
+				if ( image.CachedDrawingImage.UniqueId == drim.UniqueId &&
+					 image.size                        == size          &&
+					 image.crop                        == crop          &&
+					 image.filter                      == filter        )
 				{
 					return image;
 				}
@@ -101,5 +130,6 @@ namespace Epsitec.Common.Document.PDF
 		protected Margins					crop;
 		protected ImageFilter				filter;
 		protected int						id;
+		protected bool						exists;
 	}
 }

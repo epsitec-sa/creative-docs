@@ -44,7 +44,6 @@ namespace Epsitec.Common.Widgets
 				if (this.progressValue != value)
 				{
 					this.progressValue = value;
-					System.Diagnostics.Debug.WriteLine ("Progress: " + this.progressValue);
 					this.Invalidate();
 				}
 			}

@@ -302,7 +302,7 @@ namespace Epsitec.Common.Document.PDF
 					}
 					foreach ( ImageSurface image in this.imageSurfaces )
 					{
-						if ( image.DrawingImage == null )  continue;
+						if ( !image.Exists )  continue;
 						writer.WriteString(Export.ShortNameComplexSurface(image.Id, TypeComplexSurface.XObject));
 						writer.WriteObjectRef(Export.NameComplexSurface(image.Id, TypeComplexSurface.XObject));
 					}

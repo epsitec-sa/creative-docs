@@ -304,15 +304,31 @@ namespace Epsitec.Common.Document
 		{
 			//	Cherche la partie d'image libérable la plus vieille du cache.
 			long min = long.MaxValue;
+			long max = 0;
 			Item older = null;
 
 			foreach (Item item in GlobalImageCache.items.Values)
 			{
-				if (!item.Locked && item.IsFreeable(part) && min > item.TimeStamp)
+				long time = item.TimeStamp;
+				
+				if (!item.Locked && item.IsFreeable (part))
 				{
-					min = item.TimeStamp;
-					older = item;
+					if (min > time)
+					{
+						min = time;
+						older = item;
+					}
 				}
+				if (max < time)
+				{
+					max = time;
+				}
+			}
+
+			if (min == max)
+			{
+				//	Evite de retourner le dernier élément ajouté dans le cache.
+				return null;
 			}
 
 			return older;
@@ -597,16 +613,16 @@ namespace Epsitec.Common.Document
 			public byte[] GetImageData()
 			{
 				//	Données brutes de l'image.
-				this.ReadImageData();
+				this.ReadImageData(true);
 				return this.data;
 			}
 
-			public Drawing.Image GetImage(ImageCacheResolution resolution)
+			public Drawing.Image GetImage(ImageCacheResolution resolution, bool read)
 			{
 				//	Retourne l'objet Drawing.Image.
 				if (resolution == ImageCacheResolution.Low)
 				{
-					this.ReadLowresImage();
+					this.ReadLowresImage(read);
 
 					if (this.lowresImage != null)
 					{
@@ -619,17 +635,18 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					this.ReadOriginalImage();
+					this.ReadOriginalImage(read);
 
 					return this.originalImage;
 				}
 			}
 
-			protected void ReadLowresImage()
+			protected void ReadLowresImage(bool read)
 			{
 				//	Si l'image originale est trop grosse, crée l'image basse résolution
 				//	pour l'affichage et libère l'image originale.
-				if (this.lowresImage != null)
+				if ((this.lowresImage != null) ||
+					(read == false))
 				{
 					return;
 				}
@@ -652,12 +669,12 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			protected void ReadOriginalImage()
+			protected void ReadOriginalImage(bool read)
 			{
 				//	Lit l'image originale, si nécessaire.
-				this.ReadImageData();
+				this.ReadImageData(read);
 
-				if (this.data == null || this.originalImage != null)
+				if (this.data == null || this.originalImage != null || read == false)
 				{
 					return;
 				}
@@ -669,10 +686,11 @@ namespace Epsitec.Common.Document
 				this.SetRecentTimeStamp();
 			}
 
-			protected void ReadImageData()
+			protected void ReadImageData(bool read)
 			{
 				//	Relit les données de l'image, si nécessaire.
-				if (this.data != null)
+				if ((this.data != null) ||
+					(read == false))
 				{
 					return;
 				}

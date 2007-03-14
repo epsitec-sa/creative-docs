@@ -319,7 +319,7 @@ namespace Epsitec.Common.Document.Objects
 
 				ImageCache.Item item = this.Item;
 
-				if ( width > 0 && height > 0 && item != null && item.Image != null)
+				if ( width > 0 && height > 0 && item != null && item.Size != Size.Zero)
 				{
 					Properties.Image property = this.PropertyImage;
 
@@ -455,8 +455,7 @@ namespace Epsitec.Common.Document.Objects
 			ImageCache.Item item = this.Item;
 			if (item != null)
 			{
-				Drawing.Image image = item.Image;
-				if (image != null)
+				if (item.Size != Size.Zero)
 				{
 					Properties.Image pi = this.PropertyImage;
 					Margins crop = pi.CropMargins;
@@ -477,7 +476,7 @@ namespace Epsitec.Common.Document.Objects
 
 					if (width > 0 && height > 0)
 					{
-						Drawing.Rectangle cropRect = new Drawing.Rectangle(0, 0, image.Width, image.Height);
+						Drawing.Rectangle cropRect = new Drawing.Rectangle(0, 0, item.Size.Width, item.Size.Height);
 						cropRect.Deflate(crop);
 
 						if (!cropRect.IsSurfaceZero)

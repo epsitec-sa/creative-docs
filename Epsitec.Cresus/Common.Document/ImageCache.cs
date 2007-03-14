@@ -358,7 +358,7 @@ namespace Epsitec.Common.Document
 
 					if (size == Drawing.Size.Zero)
 					{
-						this.globalItem.GetImage (this.resolution);
+						this.globalItem.GetImage (this.resolution, true);
 						size = this.globalItem.Size;
 					}
 
@@ -370,7 +370,17 @@ namespace Epsitec.Common.Document
 			{
 				get
 				{
-					return this.globalItem.GetImage (this.resolution);
+					this.SetRecentTimeStamp ();
+					GlobalImageCache.FreeOldest ();
+					return this.globalItem.GetImage (this.resolution, true);
+				}
+			}
+
+			public Drawing.Image CachedImage
+			{
+				get
+				{
+					return this.globalItem.GetImage (this.resolution, false);
 				}
 			}
 
