@@ -1525,6 +1525,7 @@ namespace Epsitec.Common.Document.PDF
 			//	Création d'une instance de Magick.Image à partir du nom de fichier.
 			byte[] imageData = image.Cache.GetImageData();
 			Opac.FreeImage.Image fi = Opac.FreeImage.Image.Load(imageData);
+			imageData = null;
 
 			Margins crop = image.Crop;
 			if (crop != Margins.Zero)  // recadrage nécessaire ?
