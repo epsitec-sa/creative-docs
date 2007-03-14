@@ -4,7 +4,6 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 using Epsitec.Common.UI;
-using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 
@@ -12,6 +11,11 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.UI
 {
+	using MouseButtons=Widgets.MouseButtons;
+	using MessageType=Widgets.MessageType;
+	using KeyCode=Widgets.KeyCode;
+	using WidgetPaintState=Widgets.WidgetPaintState;
+
 	/// <summary>
 	/// The <c>ItemPanel</c> class represents a collection of items in a panel,
 	/// where the collection is defined through a <see cref="ICollectionView"/>.
@@ -21,7 +25,7 @@ namespace Epsitec.Common.UI
 		public ItemPanel()
 		{
 			this.AutoDoubleClick = true;
-			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= Widgets.InternalState.Focusable;
 		}
 
 		public ItemPanel(Widgets.Widget embedder)
@@ -32,11 +36,11 @@ namespace Epsitec.Common.UI
 
 		static ItemPanel()
 		{
-			DependencyPropertyMetadata metadata = Widget.AutoDoubleClickProperty.DefaultMetadata.Clone ();
+			DependencyPropertyMetadata metadata = Widgets.Widget.AutoDoubleClickProperty.DefaultMetadata.Clone ();
 
 			metadata.DefineDefaultValue (true);
 
-			Widget.AutoDoubleClickProperty.OverrideMetadata (typeof (ItemPanel), metadata);
+			Widgets.Widget.AutoDoubleClickProperty.OverrideMetadata (typeof (ItemPanel), metadata);
 		}
 		
 		public ICollectionView Items
@@ -556,7 +560,7 @@ namespace Epsitec.Common.UI
 
 			if (queue)
 			{
-				Application.QueueAsyncCallback (root.ExecuteAsyncRefreshOperations);
+				Widgets.Application.QueueAsyncCallback (root.ExecuteAsyncRefreshOperations);
 			}
 		}
 
@@ -1509,7 +1513,7 @@ namespace Epsitec.Common.UI
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IEnumerable<ItemView> views = this.SafeGetViews ();
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
+			Widgets.IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect = Drawing.Rectangle.Intersection (clipRect, this.Aperture);
 			ICollectionView items = this.RootPanel.Items;
