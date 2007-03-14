@@ -30,18 +30,13 @@ namespace Epsitec.Common.Support.Internal
 		{
 			if (this.imageData != null)
 			{
-				//	TODO: use resource to format the information
-
 				int dx = this.imageData.SourceWidth;
 				int dy = this.imageData.SourceHeight;
 
-				if ((dx > 0) &&
-					(dy > 0))
+				if (dx > 0 && dy > 0)
 				{
 					string format = this.imageData.GetFileFormat ().ToString ();
-					string size = string.Format ("{0} x {1}", dx, dy);
-
-					return string.Concat (size, "<br/>", format);
+					return string.Format(Res.Strings.Image.Description, dx, dy, format);
 				}
 			}
 

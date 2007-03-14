@@ -3,4 +3,5 @@
   <data name="Cmd.New" id="01">&lt;s:data id="_0" f:Name="New" /&gt;</data>
   <data name="Cap.New" id="02">&lt;s:data id="_0" f:Name="New" /&gt;</data>
   <data name="Typ.New" id="03">&lt;s:data id="_0" f:Name="New" /&gt;</data>
+  <data name="Val.New" id="04">&lt;s:data id="_0" f:Name="New" /&gt;</data>
 </bundle>

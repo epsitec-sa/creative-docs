@@ -1863,7 +1863,7 @@ namespace Epsitec.Common.Document
 			string format = DocumentDialogs.PaperFormat(stat.PageSize);
 			if (format == null)
 			{
-				stat.PageFormat = string.Format("{0} x {1}", this.modifier.RealToString(stat.PageSize.Width), this.modifier.RealToString(stat.PageSize.Height));
+				stat.PageFormat = string.Format("{0} × {1}", this.modifier.RealToString(stat.PageSize.Width), this.modifier.RealToString(stat.PageSize.Height));
 			}
 			else
 			{

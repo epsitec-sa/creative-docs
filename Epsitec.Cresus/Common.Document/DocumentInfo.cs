@@ -64,7 +64,7 @@ namespace Epsitec.Common.Document
 
 		public string							PageFormat
 		{
-			//	Format d'une page en clair ("A4" ou "123 x 456").
+			//	Format d'une page en clair ("A4" ou "123 × 456").
 			get
 			{
 				return this.pageFormat;
