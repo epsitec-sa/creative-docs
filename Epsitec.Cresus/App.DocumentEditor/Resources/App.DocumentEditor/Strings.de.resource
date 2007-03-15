@@ -243,4 +243,5 @@
   <data id="0S8">PNG</data>
   <data id="0T8">TIFF</data>
   <data id="0U8">WMF/EMF</data>
+  <data id="052">*</data>
 </bundle>

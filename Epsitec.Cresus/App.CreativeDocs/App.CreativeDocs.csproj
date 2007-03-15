@@ -101,6 +101,13 @@
     <None Include="App.ico" />
     <None Include="App.res" />
     <None Include="App.rc" />
+    <Content Include="Resources\Common.Widgets\Captions.de.resource" />
+    <Content Include="Resources\Common.Support\Captions.de.resource" />
+    <Content Include="Resources\Common.Support\Strings.de.resource" />
+    <Content Include="Resources\Common.Document\Captions.de.resource" />
+    <Content Include="Resources\Common.Document\Captions.en.resource" />
+    <Content Include="Resources\Common.Document\Strings.de.resource" />
+    <Content Include="Resources\Common.Dialogs\Captions.de.resource" />
     <Content Include="Original Samples\objects.crdoc" />
     <Content Include="Resources\App.DocumentEditor\Captions.00.resource" />
     <Content Include="Resources\App.DocumentEditor\Captions.de.resource" />

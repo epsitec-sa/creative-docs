@@ -166,6 +166,18 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		public bool EnableMultipleSelection
+		{
+			get
+			{
+				return this.enableMultipleSelection;
+			}
+			set
+			{
+				this.enableMultipleSelection = value;
+			}
+		}
+
 		public string FileName
 		{
 			//	Retourne le nom du fichier à ouvrir, ou null si l'utilisateur a choisi

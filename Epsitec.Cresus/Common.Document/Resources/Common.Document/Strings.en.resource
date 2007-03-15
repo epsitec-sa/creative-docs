@@ -1352,4 +1352,13 @@
   <data id="0OA01">Windows Vista</data>
   <data id="0LA01">ICO export settings</data>
   <data id="0MA01">Format</data>
+  <data id="0RA01">Import</data>
+  <data id="0PA01">Import an image</data>
+  <data id="0SA01">Export</data>
+  <data id="0TA01">Export an image</data>
+  <data id="02B01">Generating content {0}</data>
+  <data id="03B01">Generating image {0}</data>
+  <data id="00B01">Initializing PDF export</data>
+  <data id="01B01">Generating resource {0}</data>
+  <data id="04B01">Generating surface {0}.{1}</data>
 </bundle>

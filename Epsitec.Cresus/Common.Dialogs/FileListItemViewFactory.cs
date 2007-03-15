@@ -114,7 +114,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			StaticText fileName = new StaticText ();
 
-			string text = item.ShortFileName;
+			string text = Widgets.TextLayout.ConvertToTaggedText(item.ShortFileName);
 			if (shape == ItemViewShape.ToolTip)
 			{
 				text = string.Concat(Common.Dialogs.Res.Strings.Dialog.File.Header.FileName, ": <b>", text, "</b>");
@@ -194,7 +194,7 @@ namespace Epsitec.Common.Dialogs
 			
 			StaticText fileDate = new StaticText ();
 
-			string text = item.FileDate;
+			string text = Widgets.TextLayout.ConvertToTaggedText(item.FileDate);
 			if (shape == ItemViewShape.ToolTip)
 			{
 				text = string.Concat(Common.Dialogs.Res.Strings.Dialog.File.Header.Date, ": ", text);
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Dialogs
 
 			StaticText fileSize = new StaticText ();
 
-			string text = item.FileSize;
+			string text = Widgets.TextLayout.ConvertToTaggedText(item.FileSize);
 			if (shape == ItemViewShape.ToolTip)
 			{
 				text = string.Concat(Common.Dialogs.Res.Strings.Dialog.File.Header.Size, ": ", text);

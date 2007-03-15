@@ -273,4 +273,16 @@
   <data id="0T8">TIFF</data>
   <data id="0U8">WMF/EMF</data>
   <data id="0V8">{0} — {1}</data>
+  <data id="052">*</data>
+  <data id="0E8">Bitmap image of the current page; no compression.&lt;br/&gt;&lt;br/&gt;This format produces huge files (avoid whenever possible).</data>
+  <data id="0F8">Bitmap image of the current page; compression and few colors.&lt;br/&gt;&lt;br/&gt;This format produces compact images which are perfect for documents which have only few colors. It should not be used if the document contains photos or color gradients.</data>
+  <data id="0G8">Icon of the current page; compatible with Windows ICO files.&lt;br/&gt;&lt;br/&gt;This format produces an icon containing several sizes and color depths, including transparency; optionally with a high resolution image (256×256) for Vista.</data>
+  <data id="0H8">Bitmap image of the current page; lossy compression.&lt;br/&gt;&lt;br/&gt;This format produces compact files with a customizable compression ratio. The higher the compression, the lower the quality. This format is recommended for photo books.</data>
+  <data id="0I8">Adobe® Reader® compatible document.&lt;br/&gt;&lt;br/&gt;This format is ideal when preparing ready-to-print documents which need no longer to be modified. They can be viewed on any computer thanks to the free Adobe® Reader®.</data>
+  <data id="0J8">Bitmap image of current page; lossless compression, optionally preserves transparency.&lt;br/&gt;&lt;br/&gt;This format can be used to export any document type and produces a high quality representation. The files might be huge if the document contains lots of photos. Ideal for the web.</data>
+  <data id="0K8">Bitmap image of current page; lossless compression, optionally preserves transparency.&lt;br/&gt;&lt;br/&gt;This format can be used to export any document type and produces a high quality representation. The files might be huge if the document contains lots of photos.</data>
+  <data id="0L8">Vector-based image.</data>
+  <data id="0M8">Select export file type</data>
+  <data id="019">PDF file creation in progress...</data>
+  <data id="009">Exporting PDF</data>
 </bundle>
