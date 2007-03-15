@@ -762,7 +762,5 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected IconButton					buttonQuickUp;
 		protected IconButton					buttonQuickDown;
 		protected IconButton					buttonQuickLast;
-		protected IconButton					buttonFontsDefault;
-		protected IconButton					buttonFontsClear;
 	}
 }
