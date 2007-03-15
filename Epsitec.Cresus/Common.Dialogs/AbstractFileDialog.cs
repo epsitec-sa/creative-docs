@@ -1077,11 +1077,15 @@ namespace Epsitec.Common.Dialogs
 			//	Ajoute un favoris dans le panneau de gauche.
 			FolderItem item = FileManager.GetFolderItem (id, FolderQueryMode.LargeIcons);
 
-			FileButton f = new FileButton ();
-			f.DisplayName = item.DisplayName;
-			f.IconName = item.Icon == null ? null : item.Icon.ImageName;
+			if (item.Icon != null)
+			{
+				FileButton f = new FileButton ();
+				
+				f.DisplayName = item.DisplayName;
+				f.IconName = item.Icon.ImageName;
 
-			this.AddFavorite (item, f);
+				this.AddFavorite (item, f);
+			}
 		}
 
 		private void AddFavorite(FolderItem item, FileButton f)
