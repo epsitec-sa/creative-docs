@@ -331,8 +331,151 @@ namespace Epsitec.Common.Document
 			GlobalImageCache.UnlockAll ();
 		}
 
+		private string GetWorkingDocumentFileName()
+		{
+			if ((this.document == null) ||
+				(this.document.DocumentManager == null))
+			{
+				return null;
+			}
+			else
+			{
+				return this.document.DocumentManager.GetLocalFilePath ();
+			}
+		}
+
+		private Item Find(string fileName)
+		{
+			//	Retourne les données d'une image en se basant uniquement sur le
+			//	nom. On prend le premier qui correspond (dans le cache local ou
+			//	dans le cache global).
+
+			string key = ImageManager.GetKeyPrefix (fileName);
+			string doc = this.GetWorkingDocumentFileName ();
+
+			foreach (KeyValuePair<string, Item> pair in this.items)
+			{
+				if (pair.Key.StartsWith (key))
+				{
+					return pair.Value;
+				}
+			}
+
+			GlobalImageCache.Item global = GlobalImageCache.FindStartingWith (key, doc);
+
+			if (global != null)
+			{
+				key = global.LocalKeyName;
+				Item item = new Item (this, global);
+				this.items.Add (key, item);
+				return item;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		private Item FindItem(string key)
+		{
+			//	Retourne les données d'une image, pour autant que celle-ci soit déjà connue
+			//	dans l'un des caches (local ou global).
+
+			Item item = null;
+
+			if (this.items.TryGetValue (key, out item))
+			{
+				//	Image déjà dans le cache !
+			}
+			else
+			{
+				GlobalImageCache.Item global = GlobalImageCache.Find (key, this.GetWorkingDocumentFileName ());
+
+				if (global == null)
+				{
+					global = GlobalImageCache.Find (key, null);
+				}
+
+				if (global != null)  // image dans le cache global ?
+				{
+					item = new Item (this, global);
+					this.items.Add (key, item);  // ajoute l'image dans le cache local
+				}
+			}
+
+			if (item != null)  // image trouvée ?
+			{
+				item.SetRecentTimeStamp ();  // le plus récent
+				GlobalImageCache.FreeOldest ();  // libère éventuellement des antiquités
+			}
+
+			return item;
+		}
+
+		private bool Contains(string fileName, System.DateTime fileDate)
+		{
+			//	Vérifie si une image est en cache.
+
+			if (string.IsNullOrEmpty (fileName))
+			{
+				return false;
+			}
+			else
+			{
+				return this.items.ContainsKey (ImageManager.GetKey (fileName, fileDate));
+			}
+		}
+
+		private bool IsShortNameUsed(string shortName)
+		{
+			//	Vérifie si un nom court donné est déjà utilisé.
+			foreach (Item item in this.items.Values)
+			{
+				if (item.ShortName == shortName)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		private Item Add(string filename, System.DateTime dateTime)
+		{
+			//	Ajoute une nouvelle image dans le cache.
+			return this.Add (filename, null, dateTime);
+		}
+
+		private Item Add(string filename, string zipPath, System.DateTime date)
+		{
+			//	Ajoute une nouvelle image dans le cache.
+
+			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (filename) == false);
+			System.Diagnostics.Debug.Assert (date.Ticks > 0);
+			
+			string key = ImageManager.GetKey (filename, date);
+			Item item;
+
+			if (this.items.TryGetValue (key, out item))
+			{
+				//	OK, l'élément est déjà dans notre cache local.
+			}
+			else
+			{
+				GlobalImageCache.Item global = GlobalImageCache.Add (key, filename, zipPath, date);
+
+				if (global != null)
+				{
+					item = new Item (this, global);
+					this.items.Add (key, item);
+				}
+			}
+
+			return item;
+		}
+
+
 		#region Item Class
-		
 		public sealed class Item
 		{
 			internal Item(ImageCache cache, GlobalImageCache.Item globalItem)
@@ -492,148 +635,6 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
-		private string GetWorkingDocumentFileName()
-		{
-			if ((this.document == null) ||
-				(this.document.DocumentManager == null))
-			{
-				return null;
-			}
-			else
-			{
-				return this.document.DocumentManager.GetLocalFilePath ();
-			}
-		}
-
-		private Item Find(string fileName)
-		{
-			//	Retourne les données d'une image en se basant uniquement sur le
-			//	nom. On prend le premier qui correspond (dans le cache local ou
-			//	dans le cache global).
-
-			string key = ImageManager.GetKeyPrefix (fileName);
-			string doc = this.GetWorkingDocumentFileName ();
-
-			foreach (KeyValuePair<string, Item> pair in this.items)
-			{
-				if (pair.Key.StartsWith (key))
-				{
-					return pair.Value;
-				}
-			}
-
-			GlobalImageCache.Item global = GlobalImageCache.FindStartingWith (key, doc);
-
-			if (global != null)
-			{
-				key = global.LocalKeyName;
-				Item item = new Item (this, global);
-				this.items.Add (key, item);
-				return item;
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		private Item FindItem(string key)
-		{
-			//	Retourne les données d'une image, pour autant que celle-ci soit déjà connue
-			//	dans l'un des caches (local ou global).
-
-			Item item = null;
-
-			if (this.items.TryGetValue (key, out item))
-			{
-				//	Image déjà dans le cache !
-			}
-			else
-			{
-				GlobalImageCache.Item global = GlobalImageCache.Find (key, this.GetWorkingDocumentFileName ());
-
-				if (global == null)
-				{
-					global = GlobalImageCache.Find (key, null);
-				}
-
-				if (global != null)  // image dans le cache global ?
-				{
-					item = new Item (this, global);
-					this.items.Add (key, item);  // ajoute l'image dans le cache local
-				}
-			}
-
-			if (item != null)  // image trouvée ?
-			{
-				item.SetRecentTimeStamp ();  // le plus récent
-				GlobalImageCache.FreeOldest ();  // libère éventuellement des antiquités
-			}
-
-			return item;
-		}
-
-		private bool Contains(string fileName, System.DateTime fileDate)
-		{
-			//	Vérifie si une image est en cache.
-
-			if (string.IsNullOrEmpty (fileName))
-			{
-				return false;
-			}
-			else
-			{
-				return this.items.ContainsKey (ImageManager.GetKey (fileName, fileDate));
-			}
-		}
-
-		private bool IsShortNameUsed(string shortName)
-		{
-			//	Vérifie si un nom court donné est déjà utilisé.
-			foreach (Item item in this.items.Values)
-			{
-				if (item.ShortName == shortName)
-				{
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		private Item Add(string filename, System.DateTime dateTime)
-		{
-			//	Ajoute une nouvelle image dans le cache.
-			return this.Add (filename, null, dateTime);
-		}
-
-		private Item Add(string filename, string zipPath, System.DateTime date)
-		{
-			//	Ajoute une nouvelle image dans le cache.
-
-			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (filename) == false);
-			System.Diagnostics.Debug.Assert (date.Ticks > 0);
-			
-			string key = ImageManager.GetKey (filename, date);
-			Item item;
-
-			if (this.items.TryGetValue (key, out item))
-			{
-				//	OK, l'élément est déjà dans notre cache local.
-			}
-			else
-			{
-				GlobalImageCache.Item global = GlobalImageCache.Add (key, filename, zipPath, date);
-
-				if (global != null)
-				{
-					item = new Item (this, global);
-					this.items.Add (key, item);
-				}
-			}
-
-			return item;
-		}
 
 		private Document						document;
 		private Dictionary<string, Item>		items;

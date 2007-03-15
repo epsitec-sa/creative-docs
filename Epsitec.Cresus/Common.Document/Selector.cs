@@ -260,6 +260,10 @@ namespace Epsitec.Common.Document
 			this.finalData.P4 = rect.BottomRight;
 			this.finalData.Center = rect.Center;
 			this.finalData.Angle = angle;
+
+			this.isTranslate = false;
+			this.isMirrorH = false;
+			this.isMirrorV = false;
 		}
 
 		public void QuickScale(Rectangle rInitial, Rectangle rFinal)
@@ -280,6 +284,10 @@ namespace Epsitec.Common.Document
 			this.finalData.P4 = rFinal.BottomRight;
 			this.finalData.Center = rFinal.Center;
 			this.finalData.Angle = 0.0;
+
+			this.isTranslate = false;
+			this.isMirrorH = false;
+			this.isMirrorV = false;
 		}
 
 		public Point Position(int rank)
