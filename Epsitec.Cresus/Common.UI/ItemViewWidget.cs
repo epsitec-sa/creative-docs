@@ -29,6 +29,42 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		protected ItemPanel GetParentPanel()
+		{
+			ItemPanel panel = this.Parent as ItemPanel;
+			
+			return panel;
+		}
+
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		{
+			ItemPanel panel = this.GetParentPanel ();
+			
+			Widgets.WidgetPaintState state   = this.PaintState;
+			Widgets.IAdorner         adorner = Widgets.Adorners.Factory.Active;
+			
+			if (this.view.IsSelected)
+			{
+				state |= Widgets.WidgetPaintState.Selected;
+			}
+			if (panel != null)
+			{
+				object currentItem = panel.RootPanel.Items.CurrentItem;
+				
+				if (panel.IsFocused)
+				{
+					if (currentItem == this.view.Item)
+					{
+						state |= Widgets.WidgetPaintState.Focused;
+					}
+					
+					state |= Widgets.WidgetPaintState.InheritedFocus;
+				}
+			}
+
+			adorner.PaintCellBackground (graphics, this.Client.Bounds, state);
+		}
+
 		private ItemView view;
 	}
 }

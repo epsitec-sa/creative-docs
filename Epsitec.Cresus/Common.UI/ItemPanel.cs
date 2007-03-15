@@ -1512,6 +1512,7 @@ namespace Epsitec.Common.UI
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+#if false
 			IEnumerable<ItemView> views = this.SafeGetViews ();
 			Widgets.IAdorner adorner = Widgets.Adorners.Factory.Active;
 
@@ -1548,6 +1549,7 @@ namespace Epsitec.Common.UI
 					adorner.PaintCellBackground (graphics, view.Bounds, state);
 				}
 			}
+#endif
 		}
 
 		protected override void DispatchMessage(Widgets.Message message, Drawing.Point pos)

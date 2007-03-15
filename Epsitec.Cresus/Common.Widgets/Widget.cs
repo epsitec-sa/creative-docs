@@ -3121,12 +3121,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
+		protected virtual void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			//	Implémenter le dessin du fond dans cette méthode.
 		}
 		
-		protected virtual void PaintForegroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
+		protected virtual void PaintForegroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			//	Implémenter le dessin des enjoliveurs additionnels dans cette méthode.
 		}
