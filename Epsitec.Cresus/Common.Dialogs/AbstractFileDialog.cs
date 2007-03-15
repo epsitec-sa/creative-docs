@@ -2022,7 +2022,7 @@ namespace Epsitec.Common.Dialogs
 					name = System.IO.Path.Combine (this.initialDirectory.FullPath, name);
 				}
 
-				if (System.IO.Directory.Exists (name))
+				if (System.IO.Directory.Exists (name) && item != null)
 				{
 					FolderItem folderItem = FileManager.GetFolderItem (name, FolderQueryMode.NoIcons);
 
