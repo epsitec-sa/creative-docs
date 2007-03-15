@@ -288,7 +288,7 @@ namespace Epsitec.Common.Document
 				}
 
 				total -= older.Free(part);
-				System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: total={0}", total.ToString()));
+				//?System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: total={0}", total.ToString()));
 			}
 		}
 
@@ -388,7 +388,7 @@ namespace Epsitec.Common.Document
 
 				if (this.IsFreeable(part))
 				{
-					System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: Free {0} {1}", this.filename, part.ToString()));
+					//?System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: Free {0} {1}", this.filename, part.ToString()));
 					total = this.KBUsed(part);
 
 					if (part == ImagePart.LargeOriginal || part == ImagePart.SmallOriginal)
@@ -679,7 +679,7 @@ namespace Epsitec.Common.Document
 					return;
 				}
 
-				System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: ReadOriginalImage {0}", this.filename));
+				//?System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: ReadOriginalImage {0}", this.filename));
 				this.originalImage = Bitmap.FromData(this.data);
 				System.Diagnostics.Debug.Assert(this.originalImage != null);
 				this.originalSize = this.originalImage.Size;
@@ -697,13 +697,13 @@ namespace Epsitec.Common.Document
 
 				if (this.zipFilename == null)
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("GlobalImageCache: ReadImageData from file {0}", this.filename));
+					//?System.Diagnostics.Debug.WriteLine (string.Format ("GlobalImageCache: ReadImageData from file {0}", this.filename));
 					this.data = System.IO.File.ReadAllBytes (this.filename);
 					this.date = GlobalImageCache.GetFileDate(this.filename);
 				}
 				else
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("GlobalImageCache: ReadImageData from zip {0} {1}", this.zipFilename, this.zipEntryName));
+					//?System.Diagnostics.Debug.WriteLine (string.Format ("GlobalImageCache: ReadImageData from zip {0} {1}", this.zipFilename, this.zipEntryName));
 					ZipFile zip = new ZipFile ();
 
 					bool ok = zip.TryLoadFile (this.zipFilename,
