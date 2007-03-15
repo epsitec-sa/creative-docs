@@ -154,7 +154,7 @@ namespace Epsitec.Common.Document.PDF
 				}
 			}
 
-			this.FoundComplexSurfaces(port, drawingContext);
+			this.FoundComplexSurfaces(port, drawingContext, report);
 
 			//	Crée et ouvre le fichier.
 			Writer writer;
@@ -502,7 +502,7 @@ namespace Epsitec.Common.Document.PDF
 
 
 		#region ComplexSurface
-		protected void FoundComplexSurfaces(Port port, DrawingContext drawingContext)
+		protected void FoundComplexSurfaces(Port port, DrawingContext drawingContext, Common.Dialogs.IWorkInProgressReport report)
 		{
 			//	Trouve toutes les surfaces complexes dans toutes les pages.
 			port.Reset();
@@ -523,9 +523,12 @@ namespace Epsitec.Common.Document.PDF
 					drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
 					port.PushColorModifier(new ColorModifierCallback(drawingContext.DimmedColor));
 
+					int objIndex = 1;
 					foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 					{
 						if ( obj.IsHide )  continue;  // objet caché ?
+
+						report.DefineProgress(0, string.Format(Res.Strings.Export.PDF.Progress.Surface, page+1, objIndex++));
 
 						System.Collections.ArrayList list = obj.GetComplexSurfacesPDF(port);
 						int total = list.Count;
