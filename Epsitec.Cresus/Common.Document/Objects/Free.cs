@@ -277,7 +277,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
 			//	Début de la création d'un objet.
-			this.HandleAdd(pos, HandleType.Primary);
+			this.HandleAdd(pos, HandleType.Starting);
 			this.isCreating = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
