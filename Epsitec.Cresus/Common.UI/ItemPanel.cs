@@ -897,7 +897,7 @@ namespace Epsitec.Common.UI
 			ItemView view = this.GetCurrentItemView ();
 
 			if ((view != null) &&
-				(this.focusedItem != view))
+				(this.focusedItemView != view))
 			{
 				if (view.HasValidUserInterface)
 				{
@@ -968,23 +968,34 @@ namespace Epsitec.Common.UI
 			{
 				if (e.Message.Button == MouseButtons.Left)
 				{
-					ItemView view = this.Detect (e.Point);
-
-					if (view != null)
-					{
-						IList<ItemView> list = this.GetSelectedItemViews();
-						if (e.Message.IsShiftPressed && list.Count > 0)
-						{
-							this.ContinuousMouseSelection(list, this.GetCurrentItemView(), view, e.Message.IsControlPressed);
-						}
-						else
-						{
-							this.ManualSelection(view, e.Message.IsControlPressed);
-						}
-
-						e.Message.Consumer = this;
-					}
+					this.HandleItemViewPressed (e.Message, this.Detect (e.Point));
 				}
+			}
+		}
+
+		protected override void OnReleased(Epsitec.Common.Widgets.MessageEventArgs e)
+		{
+			base.OnReleased (e);
+			e.Message.Consumer = this;
+		}
+
+		private void HandleItemViewPressed(Widgets.Message message, ItemView view)
+		{
+			if (view != null)
+			{
+				IList<ItemView> list = this.GetSelectedItemViews ();
+				
+				if (message.IsShiftPressed && list.Count > 0)
+				{
+					this.ContinuousMouseSelection (list, this.GetCurrentItemView (), view, message.IsControlPressed);
+				}
+				else
+				{
+					this.ManualSelection (view, message.IsControlPressed);
+				}
+
+				message.Consumer = this;
+				view.Widget.Focus ();
 			}
 		}
 
@@ -1018,9 +1029,9 @@ namespace Epsitec.Common.UI
 				{
 					ItemView item = this.Detect (pos);
 
-					if (this.enteredItem != item)
+					if (this.enteredItemView != item)
 					{
-						this.enteredItem = item;
+						this.enteredItemView = item;
 						this.Invalidate ();
 					}
 				}
@@ -1029,46 +1040,55 @@ namespace Epsitec.Common.UI
 			{
 				if (message.MessageType == MessageType.KeyDown)
 				{
-					if (message.KeyCode == KeyCode.Space)
-					{
-						//	Behaves as if the user had pressed the mouse button; this will
-						//	either select just the current item or add/remove the item from
-						//	the selection if CTRL is pressed.
+					this.ProcessKeyDown (message);
+				}
+			}
+		}
 
-						ItemView view = this.GetCurrentItemView ();
-						this.ManualSelection (view, message.IsControlPressed);
-					}
-					else if (message.KeyCode == KeyCode.Add)
-					{
-						ItemView group = ItemViewWidget.FindGroupItemView (this.focusedItem);
-						
-						if (group != null)
-						{
-							group.IsExpanded = true;
-						}
-					}
-					else if (message.KeyCode == KeyCode.Substract)
-					{
-						ItemView group = ItemViewWidget.FindGroupItemView (this.focusedItem);
+		private void ProcessKeyDown(Widgets.Message message)
+		{
+			if (message.KeyCode == KeyCode.Space)
+			{
+				//	Behaves as if the user had pressed the mouse button; this will
+				//	either select just the current item or add/remove the item from
+				//	the selection if CTRL is pressed.
 
-						if (group != null)
-						{
-							group.IsExpanded = false;
-						}
-					}
-					else
-					{
-						//	Change the current item (this does not select the item).
+				ItemView view = this.GetFocusedItemView ();
+				this.ManualSelection (view, message.IsControlPressed);
+			}
+			else if (message.KeyCode == KeyCode.Add)
+			{
+				ItemView group = ItemViewWidget.FindGroupItemView (this.focusedItemView);
 
-						ItemView oldCurrent = this.GetCurrentItemView ();
+				if (group != null)
+				{
+					group.IsExpanded = true;
+					this.Focus (group);
+				}
+			}
+			else if (message.KeyCode == KeyCode.Substract)
+			{
+				ItemView group = ItemViewWidget.FindGroupItemView (this.focusedItemView);
 
-						this.ProcessArrowMove (message.KeyCode);
-						ItemView newCurrent = this.GetCurrentItemView ();
+				if (group != null)
+				{
+					group.IsExpanded = false;
+					this.Focus (group);
+				}
+			}
+			else
+			{
+				//	Change the current item (this does not select the item).
 
-						if (!message.IsControlPressed &&
+				ItemView oldCurrent = this.GetFocusedItemView ();
+
+				this.ProcessArrowMove (message.KeyCode);
+				ItemView newCurrent = this.GetFocusedItemView ();
+
+				if (!message.IsControlPressed &&
 							!message.IsAltPressed)
-						{
-							if (message.KeyCode == KeyCode.ArrowUp ||
+				{
+					if (message.KeyCode == KeyCode.ArrowUp ||
 								message.KeyCode == KeyCode.ArrowDown ||
 								message.KeyCode == KeyCode.ArrowLeft ||
 								message.KeyCode == KeyCode.ArrowRight ||
@@ -1076,29 +1096,41 @@ namespace Epsitec.Common.UI
 								message.KeyCode == KeyCode.PageDown ||
 								message.KeyCode == KeyCode.Home ||
 								message.KeyCode == KeyCode.End)
-							{
-								IList<ItemView> list = this.GetSelectedItemViews ();
-								SelectionState state = new SelectionState (this);
+					{
+						IList<ItemView> list = this.GetSelectedItemViews ();
+						SelectionState state = new SelectionState (this);
 
-								if (message.IsShiftPressed && list.Count > 0)
-								{
-									this.ContinuousKeySelection (list, oldCurrent, newCurrent);
-								}
-								else
-								{
-									this.InternalDeselectItemViews (list);
-									this.InternalSelectItemView (newCurrent);
-								}
-
-								state.GenerateEvents ();
-							}
-						}
-
-						if (oldCurrent != newCurrent)
+						if (message.IsShiftPressed && list.Count > 0)
 						{
-							this.Show (newCurrent);
+							this.ContinuousKeySelection (list, oldCurrent, newCurrent);
 						}
+						else
+						{
+							this.InternalDeselectItemViews (list);
+							this.InternalSelectItemView (newCurrent);
+						}
+
+						state.GenerateEvents ();
 					}
+				}
+
+				if (oldCurrent != newCurrent)
+				{
+					this.Show (newCurrent);
+				}
+			}
+		}
+
+		private void Focus(ItemView itemView)
+		{
+			if (itemView != null)
+			{
+				this.focusedItemView = itemView;
+
+				if (itemView.HasValidUserInterface)
+				{
+					ItemViewWidget widget = itemView.Widget;
+					widget.Focus ();
 				}
 			}
 		}
@@ -1531,13 +1563,25 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		private ItemView GetFocusedItemView()
+		{
+			if (this.focusedItemView == null)
+			{
+				return this.GetCurrentItemView ();
+			}
+			else
+			{
+				return this.focusedItemView;
+			}
+		}
+
 		protected override void OnExited(Widgets.MessageEventArgs e)
 		{
 			base.OnExited(e);
 
-			if (this.enteredItem != null)
+			if (this.enteredItemView != null)
 			{
-				this.enteredItem = null;
+				this.enteredItemView = null;
 				this.Invalidate();
 			}
 		}
@@ -2347,8 +2391,8 @@ namespace Epsitec.Common.UI
 		bool							isCurrentShowPending;
 		bool							isGroupPanelEnabled;
 
-		ItemView						enteredItem;
-		ItemView						focusedItem;
+		ItemView						enteredItemView;
+		ItemView						focusedItemView;
 
 		double							minItemWidth;
 		double							maxItemWidth;
@@ -2358,10 +2402,14 @@ namespace Epsitec.Common.UI
 		int								totalRowCount;
 		int								totalColumnCount;
 
-		internal Widgets.Widget NotifyWidgetAboutToGetFocus(Widgets.Widget focus)
+		internal void NotifyWidgetAboutToGetFocus(ItemViewWidget widget)
 		{
-			this.focusedItem = ItemViewWidget.FindItemView (focus);
-			return focus;
+			this.focusedItemView = ItemViewWidget.FindItemView (widget);
+		}
+
+		internal void NotifyWidgetClicked(ItemViewWidget widget, Widgets.Message message, Drawing.Point pos)
+		{
+			this.HandleItemViewPressed (message, widget.ItemView);
 		}
 	}
 }

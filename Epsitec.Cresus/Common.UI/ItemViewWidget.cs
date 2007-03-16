@@ -50,15 +50,8 @@ namespace Epsitec.Common.UI
 			}
 			if (panel != null)
 			{
-				object currentItem = panel.RootPanel.Items.CurrentItem;
-				
 				if (panel.IsFocused)
 				{
-					if (currentItem == this.view.Item)
-					{
-						state |= Widgets.WidgetPaintState.Focused;
-					}
-					
 					state |= Widgets.WidgetPaintState.InheritedFocus;
 				}
 			}
@@ -69,12 +62,24 @@ namespace Epsitec.Common.UI
 		protected override void ProcessMessage(Widgets.Message message, Drawing.Point pos)
 		{
 			base.ProcessMessage (message, pos);
+
+			ItemPanel panel = this.GetParentPanel ();
 			
 			if (message.IsMouseType)
 			{
-				if (message.MessageType == Widgets.MessageType.MouseDown)
+				if (message.Button == Widgets.MouseButtons.Left)
 				{
-					this.Focus ();
+					switch (message.MessageType)
+					{
+						case Widgets.MessageType.MouseDown:
+							message.Consumer = this;
+							panel.NotifyWidgetClicked (this, message, pos);
+							break;
+
+						case Epsitec.Common.Widgets.MessageType.MouseUp:
+							message.Consumer = this;
+							break;
+					}
 				}
 			}
 		}
@@ -85,7 +90,7 @@ namespace Epsitec.Common.UI
 			{
 				ItemPanel panel = this.GetParentPanel ();
 
-				focus = panel.NotifyWidgetAboutToGetFocus (focus);
+				panel.NotifyWidgetAboutToGetFocus (this);
 
 				return true;
 			}
