@@ -552,11 +552,7 @@ namespace Epsitec.Common.Document.Objects
 
 						if (i == 1 && !this.PropertyPolyClose.BoolValue)
 						{
-#if true
 							s1 = this.GetCyclingHandlePosition(i-1);
-#else
-							s1 = Point.Scale(this.GetCyclingHandlePosition(i), this.GetCyclingHandlePosition(i-1), Free.pressure);
-#endif
 						}
 						else
 						{
@@ -565,11 +561,7 @@ namespace Epsitec.Common.Document.Objects
 
 						if (i == total-1 && !this.PropertyPolyClose.BoolValue)
 						{
-#if true
 							s2 = this.GetCyclingHandlePosition(i);
-#else
-							s2 = Point.Scale(this.GetCyclingHandlePosition(i-1), this.GetCyclingHandlePosition(i), Free.pressure);
-#endif
 						}
 						else
 						{
@@ -584,6 +576,9 @@ namespace Epsitec.Common.Document.Objects
 
 		private Point GetCyclingHandlePosition(int rank)
 		{
+			//	Retourne la position d'un poignée, en acceptant les rangs négatifs ou dépassant le
+			//	nombre maximal de poignées. Tient compte des positions virtuelles vp1/vp2 selon la
+			//	propriété Arrow.
 			int total = this.TotalMainHandle;
 
 			if (rank < 0)
@@ -612,6 +607,15 @@ namespace Epsitec.Common.Document.Objects
 
 		private Point ComputeSecondary(Point p1, Point p, Point p2)
 		{
+			//	Calcule un point secondaire s1 permettant d'obtenir une jolie courbe.
+			//	   p
+			//	   o----o p2
+			//	  /|   /
+			//	 o |  /      le segment s-p est // à p1-p2
+			//	s1 | /
+			//	   |/
+			//	p1 o
+
 			return Point.Move(p, p+(p1-p2), Point.Distance(p,p1)*Free.pressure);
 		}
 
