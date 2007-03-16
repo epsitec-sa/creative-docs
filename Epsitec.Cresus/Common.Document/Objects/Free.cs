@@ -611,7 +611,7 @@ namespace Epsitec.Common.Document.Objects
 			//	   p
 			//	   o----o p2
 			//	  /|   /
-			//	 o |  /      le segment s-p est // à p1-p2
+			//	 o |  /      le segment s1-p est // à p1-p2
 			//	s1 | /
 			//	   |/
 			//	p1 o
@@ -655,14 +655,6 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			return pathLine;
-		}
-
-		public void CreateFromPoints(Point p1, Point p2)
-		{
-			//	Crée une ligne à partir de 2 points.
-			this.HandleAdd(p1, HandleType.Primary);
-			this.HandleAdd(p2, HandleType.Primary);
-			this.SetDirtyBbox();
 		}
 
 

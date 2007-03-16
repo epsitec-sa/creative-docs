@@ -480,6 +480,22 @@ namespace Epsitec.Common.Document.Properties
 				pos = Point.Move(obj.Handle(r1).Position, obj.Handle(r2).Position, this.length[rank]);
 			}
 
+			if ( obj is Objects.Free )
+			{
+				int r1 = 0, r2 = 0;
+				if ( rank == 0 )
+				{
+					r1 = 0;
+					r2 = 1;
+				}
+				if ( rank == 1 )
+				{
+					r1 = obj.TotalMainHandle-1;
+					r2 = obj.TotalMainHandle-2;
+				}
+				pos = Point.Move(obj.Handle(r1).Position, obj.Handle(r2).Position, this.length[rank]);
+			}
+
 			if ( obj is Objects.Poly )
 			{
 				int r1 = 0, r2 = 0;
@@ -515,6 +531,18 @@ namespace Epsitec.Common.Document.Properties
 			if ( obj is Objects.Line )
 			{
 				r1 = rank;
+			}
+
+			if ( obj is Objects.Free )
+			{
+				if ( rank == 0 )
+				{
+					r1 = 0;
+				}
+				if ( rank == 1 )
+				{
+					r1 = obj.TotalMainHandle-1;
+				}
 			}
 
 			if ( obj is Objects.Poly )
