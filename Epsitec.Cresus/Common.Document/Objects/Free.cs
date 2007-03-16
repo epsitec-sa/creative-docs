@@ -277,6 +277,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
 			//	Début de la création d'un objet.
+			drawingContext.SnapPos(ref pos);
 			this.HandleAdd(pos, HandleType.Starting);
 			this.isCreating = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
@@ -286,6 +287,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Déplacement pendant la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
+			drawingContext.SnapPos(ref pos);
 
 			if (this.TotalHandle == 1)
 			{
@@ -313,6 +315,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Fin de la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
+			drawingContext.SnapPos(ref pos);
 
 			int total = this.TotalHandle;
 			if (total > 2)
@@ -333,6 +336,7 @@ namespace Epsitec.Common.Document.Objects
 				{
 					this.Handle(total-2).Position = Point.Move(p2, p1, (d01+d12)*0.5);
 				}
+				// Si le dernier point est proche d'une nouvelle position, on le laisse tel quel.
 
 				this.SetDirtyBbox();
 				this.document.Notifier.NotifyArea(this.BoundingBox);
