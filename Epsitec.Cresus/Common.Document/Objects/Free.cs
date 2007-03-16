@@ -371,7 +371,18 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
 			//	pas exister et doit être détruit.
-			return this.TotalMainHandle >= 2;
+			if (this.TotalMainHandle > 2)
+			{
+				return true;
+			}
+
+			if (this.TotalMainHandle == 2)
+			{
+				double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
+				return ( len > drawingContext.MinimalSize );
+			}
+
+			return false;
 		}
 
 		private void InitSpacing(DrawingContext drawingContext)
