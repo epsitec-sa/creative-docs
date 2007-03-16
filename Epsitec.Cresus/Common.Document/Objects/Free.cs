@@ -277,6 +277,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
 			//	Début de la création d'un objet.
+			this.InitSpacing(drawingContext);
 			drawingContext.SnapPos(ref pos);
 			this.HandleAdd(pos, HandleType.Starting);
 			this.isCreating = true;
@@ -296,7 +297,7 @@ namespace Epsitec.Common.Document.Objects
 			else
 			{
 				double len = Point.Distance(this.Handle(this.TotalHandle-1).Position, this.Handle(this.TotalHandle-2).Position);
-				if (len < Free.spacing)
+				if (len < this.spacing)
 				{
 					this.Handle(this.TotalHandle-1).Position = pos;
 				}
@@ -327,12 +328,12 @@ namespace Epsitec.Common.Document.Objects
 				double d01 = Point.Distance(p0, p1);
 				double d12 = Point.Distance(p1, p2);
 
-				if (d01 < Free.spacing*0.2)  // dernier point proche de l'avant-dernier ?
+				if (d01 < this.spacing*0.2)  // dernier point proche de l'avant-dernier ?
 				{
 					this.HandleDelete(total-1);
 					this.Handle(total-2).Position = pos;
 				}
-				else if (d01 < Free.spacing*0.8)  // dernier point à mi-chemin d'une nouvelle position ?
+				else if (d01 < this.spacing*0.8)  // dernier point à mi-chemin d'une nouvelle position ?
 				{
 					this.Handle(total-2).Position = Point.Move(p2, p1, (d01+d12)*0.5);
 				}
@@ -355,6 +356,13 @@ namespace Epsitec.Common.Document.Objects
 			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
 			//	pas exister et doit être détruit.
 			return this.TotalMainHandle >= 2;
+		}
+
+		private void InitSpacing(DrawingContext drawingContext)
+		{
+			//	Calcule l'espacement, en fonction du zoom actuel, afin d'obtenir une distance visible
+			//	toujours identique.
+			this.spacing = 200/drawingContext.Zoom;
 		}
 
 
@@ -443,13 +451,13 @@ namespace Epsitec.Common.Document.Objects
 				Point center = this.Handle(total-2).Position;
 
 				Path pathSupport = new Path();
-				pathSupport.AppendCircle(center, Free.spacing);
+				pathSupport.AppendCircle(center, this.spacing);
 
-				pathSupport.MoveTo(center+new Point(-Free.spacing*0.2, 0));
-				pathSupport.LineTo(center+new Point( Free.spacing*0.2, 0));
+				pathSupport.MoveTo(center+new Point(-this.spacing*0.2, 0));
+				pathSupport.LineTo(center+new Point( this.spacing*0.2, 0));
 
-				pathSupport.MoveTo(center+new Point(0, -Free.spacing*0.2));
-				pathSupport.LineTo(center+new Point(0,  Free.spacing*0.2));
+				pathSupport.MoveTo(center+new Point(0, -this.spacing*0.2));
+				pathSupport.LineTo(center+new Point(0,  this.spacing*0.2));
 
 				shapes[i] = new Shape();
 				shapes[i].Path = pathSupport;
@@ -459,7 +467,7 @@ namespace Epsitec.Common.Document.Objects
 				i ++;
 
 				Path pathBox = new Path();
-				pathBox.AppendRectangle(center-new Point(Free.spacing, Free.spacing), new Size(Free.spacing*2, Free.spacing*2));
+				pathBox.AppendRectangle(center-new Point(this.spacing, this.spacing), new Size(this.spacing*2, this.spacing*2));
 
 				shapes[i] = new Shape();
 				shapes[i].Path = pathBox;
@@ -666,9 +674,9 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
-		private static readonly double	spacing = 200;
 		private static readonly double	pressure = 0.33;
 
+		protected double				spacing;
 		protected Point					initialPos;
 		protected Point					vp1, vp2;
 	}
