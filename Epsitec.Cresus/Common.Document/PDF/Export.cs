@@ -89,6 +89,8 @@ namespace Epsitec.Common.Document.PDF
 			Port port = new Port(this.complexSurfaces, this.imageSurfaces, info.TextCurve ? null : this.fontList);
 			port.PushColorModifier(new ColorModifierCallback(this.FinalOutputColorModifier));
 
+			string err;
+
 			//	Crée le DrawingContext utilisé pour l'exportation.
 			DrawingContext drawingContext;
 			drawingContext = new DrawingContext(this.document, null);
@@ -154,7 +156,11 @@ namespace Epsitec.Common.Document.PDF
 				}
 			}
 
-			this.FoundComplexSurfaces(port, drawingContext, report);
+			err = this.FoundComplexSurfaces(port, drawingContext, report);
+			if (err != "")
+			{
+				return err;
+			}
 
 			//	Crée et ouvre le fichier.
 			Writer writer;
@@ -243,6 +249,11 @@ namespace Epsitec.Common.Document.PDF
 			foreach ( int page in this.pageList )
 			{
 				report.DefineProgress(0, string.Format(Res.Strings.Export.PDF.Progress.Ressource, page+1));
+				if (report.Cancelled)
+				{
+					return "Exportation annulée.";
+				}
+
 				writer.WriteObjectDef(Export.NameResources(page));
 				writer.WriteString("<< /ProcSet [/PDF /Text /ImageB /ImageC] ");
 
@@ -331,7 +342,11 @@ namespace Epsitec.Common.Document.PDF
 
 			//	Crée les objets de définition.
 			this.CreateComplexSurface(writer, port, drawingContext);
-			this.CreateImageSurface(writer, port, report);
+			err = this.CreateImageSurface(writer, port, report);
+			if (err != "")
+			{
+				return err;
+			}
 
 			if ( !info.TextCurve )
 			{
@@ -342,6 +357,11 @@ namespace Epsitec.Common.Document.PDF
 			foreach ( int page in this.pageList )
 			{
 				report.DefineProgress(0, string.Format(Res.Strings.Export.PDF.Progress.Content, page+1));
+				if (report.Cancelled)
+				{
+					return "Exportation annulée.";
+				}
+
 				port.Reset();
 
 				//	Matrice de transformation globale:
@@ -502,7 +522,7 @@ namespace Epsitec.Common.Document.PDF
 
 
 		#region ComplexSurface
-		protected void FoundComplexSurfaces(Port port, DrawingContext drawingContext, Common.Dialogs.IWorkInProgressReport report)
+		protected string FoundComplexSurfaces(Port port, DrawingContext drawingContext, Common.Dialogs.IWorkInProgressReport report)
 		{
 			//	Trouve toutes les surfaces complexes dans toutes les pages.
 			port.Reset();
@@ -529,6 +549,10 @@ namespace Epsitec.Common.Document.PDF
 						if ( obj.IsHide )  continue;  // objet caché ?
 
 						report.DefineProgress(0, string.Format(Res.Strings.Export.PDF.Progress.Surface, page+1, objIndex++));
+						if (report.Cancelled)
+						{
+							return "Exportation annulée.";
+						}
 
 						System.Collections.ArrayList list = obj.GetComplexSurfacesPDF(port);
 						int total = list.Count;
@@ -589,6 +613,7 @@ namespace Epsitec.Common.Document.PDF
 			}
 
 			FontList.CreateFonts(this.fontList, this.characterList);
+			return "";  // ok
 		}
 
 		protected int TotalComplexSurface(int page)
@@ -1505,7 +1530,7 @@ namespace Epsitec.Common.Document.PDF
 
 
 		#region Images
-		protected void CreateImageSurface(Writer writer, Port port, Common.Dialogs.IWorkInProgressReport report)
+		protected string CreateImageSurface(Writer writer, Port port, Common.Dialogs.IWorkInProgressReport report)
 		{
 			//	Crée toutes les images.
 			foreach ( ImageSurface image in this.imageSurfaces )
@@ -1513,12 +1538,17 @@ namespace Epsitec.Common.Document.PDF
 				if ( image.DrawingImage == null )  continue;
 
 				report.DefineProgress(0, string.Format(Res.Strings.Export.PDF.Progress.Image, image.Id));
+				if (report.Cancelled)
+				{
+					return "Exportation annulée.";
+				}
 
 				if ( this.CreateImageSurface(writer, port, image, TypeComplexSurface.XObject, TypeComplexSurface.XObjectMask) )
 				{
 					this.CreateImageSurface(writer, port, image, TypeComplexSurface.XObjectMask, TypeComplexSurface.None);
 				}
 			}
+			return "";  // ok
 		}
 
 		protected bool CreateImageSurface(Writer writer, Port port, ImageSurface image,

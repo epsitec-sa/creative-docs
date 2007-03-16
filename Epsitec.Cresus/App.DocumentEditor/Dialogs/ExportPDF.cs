@@ -129,7 +129,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			string filename = System.IO.Path.Combine (this.editor.CurrentDocument.ExportDirectory, this.editor.CurrentDocument.ExportFilename);
 			string err = "";
 
-			Common.Dialogs.WorkInProgressDialog.Execute
+			Common.Dialogs.WorkInProgressDialog.ExecuteCancellable
 			(
 				Res.Strings.Export.PDF.Progress.Title,
 				ProgressIndicatorStyle.UnknownDuration,
