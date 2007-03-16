@@ -312,7 +312,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
 			//	Fin de la création d'un objet.
-#if false
+#if true
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			
 			if (this.TotalHandle > 2)
@@ -356,6 +356,14 @@ namespace Epsitec.Common.Document.Objects
 			if ( outlineStart )  totalShapes ++;
 			if ( outlineEnd   )  totalShapes ++;
 			
+			int total = this.TotalMainHandle;
+			bool support = false;
+			if ( this.isCreating && total >= 2 )
+			{
+				support = true;
+				totalShapes += 2;
+			}
+
 			Shape[] shapes = new Shape[totalShapes];
 			int i = 0;
 			
@@ -408,6 +416,37 @@ namespace Epsitec.Common.Document.Objects
 				shapes[i].Path = pathEnd;
 				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
 				shapes[i].IsMisc = true;
+				i ++;
+			}
+
+			//	Forme des traits de support pour les poignées secondaires.
+			if ( support )
+			{
+				Point center = this.Handle(total-2).Position;
+
+				Path pathSupport = new Path();
+				pathSupport.AppendCircle(center, Free.spacing);
+
+				pathSupport.MoveTo(center+new Point(-Free.spacing*0.2, 0));
+				pathSupport.LineTo(center+new Point( Free.spacing*0.2, 0));
+
+				pathSupport.MoveTo(center+new Point(0, -Free.spacing*0.2));
+				pathSupport.LineTo(center+new Point(0,  Free.spacing*0.2));
+
+				shapes[i] = new Shape();
+				shapes[i].Path = pathSupport;
+				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].Aspect = Aspect.Support;
+				shapes[i].IsVisible = true;
+				i ++;
+
+				Path pathBox = new Path();
+				pathBox.AppendRectangle(center-new Point(Free.spacing, Free.spacing), new Size(Free.spacing*2, Free.spacing*2));
+
+				shapes[i] = new Shape();
+				shapes[i].Path = pathBox;
+				shapes[i].Type = Type.Surface;
+				shapes[i].Aspect = Aspect.InvisibleBox;
 				i ++;
 			}
 
