@@ -894,6 +894,17 @@ namespace Epsitec.Common.UI
 
 		protected virtual void HandleItemCollectionCurrentChanged(object sender)
 		{
+			ItemView view = this.GetCurrentItemView ();
+
+			if ((view != null) &&
+				(this.focusedItem != view))
+			{
+				if (view.HasValidUserInterface)
+				{
+					view.Widget.Focus ();
+				}
+			}
+
 			this.Invalidate ();
 
 			if (this.CurrentChanged != null)
@@ -1073,6 +1084,9 @@ namespace Epsitec.Common.UI
 				}
 			}
 		}
+
+
+
 
 		private void ContinuousKeySelection(IList<ItemView> list, ItemView oldCurrent, ItemView newCurrent)
 		{
@@ -2316,6 +2330,7 @@ namespace Epsitec.Common.UI
 		bool							isGroupPanelEnabled;
 
 		ItemView						enteredItem;
+		ItemView						focusedItem;
 
 		double							minItemWidth;
 		double							maxItemWidth;
@@ -2324,5 +2339,11 @@ namespace Epsitec.Common.UI
 
 		int								totalRowCount;
 		int								totalColumnCount;
+
+		internal Widgets.Widget NotifyWidgetAboutToGetFocus(Widgets.Widget focus)
+		{
+			this.focusedItem = ItemViewWidget.FindItemView (focus);
+			return focus;
+		}
 	}
 }

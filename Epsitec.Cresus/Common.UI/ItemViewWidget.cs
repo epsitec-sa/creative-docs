@@ -18,6 +18,7 @@ namespace Epsitec.Common.UI
 		public ItemViewWidget(ItemView view)
 		{
 			this.view = view;
+			this.InternalState |= Widgets.InternalState.Focusable;
 		}
 
 
@@ -65,6 +66,52 @@ namespace Epsitec.Common.UI
 			adorner.PaintCellBackground (graphics, this.Client.Bounds, state);
 		}
 
+		protected override void ProcessMessage(Widgets.Message message, Drawing.Point pos)
+		{
+			base.ProcessMessage (message, pos);
+			
+			if (message.IsMouseType)
+			{
+				if (message.MessageType == Widgets.MessageType.MouseDown)
+				{
+					this.Focus ();
+				}
+			}
+		}
+
+		protected override bool AboutToGetFocus(Widgets.TabNavigationDir dir, Widgets.TabNavigationMode mode, out Widgets.Widget focus)
+		{
+			if (base.AboutToGetFocus (dir, mode, out focus))
+			{
+				ItemPanel panel = this.GetParentPanel ();
+
+				focus = panel.NotifyWidgetAboutToGetFocus (focus);
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		internal static ItemView FindItemView(Widgets.Widget widget)
+		{
+			while (widget != null)
+			{
+				ItemViewWidget view = widget as ItemViewWidget;
+				
+				if (view != null)
+				{
+					return view.ItemView;
+				}
+
+				widget = widget.Parent;
+			}
+
+			return null;
+		}
+		
 		private ItemView view;
 	}
 }
