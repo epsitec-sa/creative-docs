@@ -312,17 +312,31 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
 			//	Fin de la création d'un objet.
-#if true
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			
-			if (this.TotalHandle > 2)
+
+			int total = this.TotalHandle;
+			if (total > 2)
 			{
-				this.HandleDelete(this.TotalHandle-1);
-				this.Handle(this.TotalHandle-1).Position = pos;
+				Point p0 = this.Handle(total-1).Position;
+				Point p1 = this.Handle(total-2).Position;
+				Point p2 = this.Handle(total-3).Position;
+
+				double d01 = Point.Distance(p0, p1);
+				double d12 = Point.Distance(p1, p2);
+
+				if (d01 < Free.spacing*0.2)  // dernier point proche de l'avant-dernier ?
+				{
+					this.HandleDelete(total-1);
+					this.Handle(total-2).Position = pos;
+				}
+				else if (d01 < Free.spacing*0.8)  // dernier point à mi-chemin d'une nouvelle position ?
+				{
+					this.Handle(total-2).Position = Point.Move(p2, p1, (d01+d12)*0.5);
+				}
+
 				this.SetDirtyBbox();
 				this.document.Notifier.NotifyArea(this.BoundingBox);
 			}
-#endif
 
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
