@@ -272,8 +272,10 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Début de la création d'un objet.
 			this.InitSpacing(drawingContext);
+			this.ChangePropertyPolyClose(false);
 			drawingContext.SnapPos(ref pos);
 			this.HandleAdd(pos, HandleType.Starting);
+			this.Handle(0).IsVisible = true;
 			this.isCreating = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -299,6 +301,16 @@ namespace Epsitec.Common.Document.Objects
 				{
 					this.HandleAdd(pos, HandleType.Primary);
 				}
+			}
+
+			double startingLen = Point.Distance(this.Handle(0).Position, pos);
+			if ( startingLen <= drawingContext.CloseMargin && this.TotalHandle > 2)
+			{
+				this.Handle(0).Type = HandleType.Ending;
+			}
+			else
+			{
+				this.Handle(0).Type = HandleType.Starting;
 			}
 
 			this.SetDirtyBbox();
@@ -337,6 +349,16 @@ namespace Epsitec.Common.Document.Objects
 				this.document.Notifier.NotifyArea(this.BoundingBox);
 			}
 
+			total = this.TotalHandle;
+			double len = Point.Distance(this.Handle(0).Position, pos);
+			if (len <= drawingContext.CloseMargin && total > 2)  // trait fermé ?
+			{
+				this.HandleDelete(total-1);
+				this.ChangePropertyPolyClose(true);
+			}
+			this.Handle(0).Type = HandleType.Starting;
+			this.Handle(0).IsVisible = false;
+			
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
 
