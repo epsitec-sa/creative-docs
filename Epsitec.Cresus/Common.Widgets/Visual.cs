@@ -445,6 +445,11 @@ namespace Epsitec.Common.Widgets
 				//	Return true when the visual, or one of its children,
 				//	has the keyboard focus.
 
+				if (this.KeyboardFocus)
+				{
+					return true;
+				}
+
 				if (!this.containsFocusIsValid)
 				{
 					this.containsFocus = Helpers.VisualTree.ContainsKeyboardFocus (this);
@@ -1396,9 +1401,10 @@ namespace Epsitec.Common.Widgets
 				//	children no longer have to be recorded in the measure/arrange queues.
 				
 				Layouts.LayoutContext.RemoveFromQueues (this);
-				
+
+				this.ClearCachedFocus ();
 				this.Invalidate ();
-				this.parent = visual;
+				this.parent = null;
 
 				//	Make sure that we will measure the children if some of them have
 				//	never been measured (they lack the Layouts.LayoutMeasure records).
@@ -1415,6 +1421,10 @@ namespace Epsitec.Common.Widgets
 				{
 					context = Layouts.LayoutContext.GetLayoutContext (this);
 				}
+				else
+				{
+					this.ClearCachedFocus ();
+				}
 
 				this.parent = visual;
 
@@ -1427,6 +1437,8 @@ namespace Epsitec.Common.Widgets
 					Layouts.LayoutContext.ClearLayoutContext (this);
 					Layouts.LayoutContext.AddToMeasureQueue (this, context);
 				}
+
+				this.ClearCachedFocus ();
 			}
 		}
 
@@ -1704,17 +1716,22 @@ namespace Epsitec.Common.Widgets
 					this.SetValueBase (Visual.IsFocusedProperty, false);
 				}
 
-				foreach (Visual parent in this.Parents)
-				{
-					if (parent.containsFocusIsValid == false)
-					{
-						break;
-					}
+				this.ClearCachedFocus ();
+			}
+		}
 
-					parent.containsFocusIsValid = false;
-					parent.containsFocus = false;
-					parent.OnContainsFocusChanged ();
+		private void ClearCachedFocus()
+		{
+			foreach (Visual parent in this.Parents)
+			{
+				if (parent.containsFocusIsValid == false)
+				{
+					break;
 				}
+
+				parent.containsFocusIsValid = false;
+				parent.containsFocus = false;
+				parent.OnContainsFocusChanged ();
 			}
 		}
 

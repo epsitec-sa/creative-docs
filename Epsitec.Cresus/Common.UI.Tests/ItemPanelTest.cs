@@ -258,17 +258,69 @@ namespace Epsitec.Common.UI
 			panel.Items = ItemPanelTest.GetStructuredItems (true);
 			panel.Layout = ItemPanelLayout.VerticalList;
 			panel.ItemSelectionMode = ItemPanelSelectionMode.ZeroOrOne;
-			panel.GroupSelectionMode = ItemPanelSelectionMode.ZeroOrOne;
+			panel.GroupSelectionMode = ItemPanelSelectionMode.None;
 			panel.ItemViewDefaultSize = new Drawing.Size (300, 20);
 			panel.ItemViewDefaultExpanded = true;
+			panel.CurrentItemTrackingMode = CurrentItemTrackingMode.AutoSelect;
+
+			IList<StructuredData> source = panel.Items.SourceCollection as IList<StructuredData>;
+
+			Widgets.FrameBox box = new Widgets.FrameBox ();
+
+			box.Dock = Widgets.DockStyle.Bottom;
+			box.PreferredHeight = 36;
+			box.Padding = new Drawing.Margins (4, 4, 8, 8);
+			box.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
 
 			window.Root.Children.Add (table);
+			window.Root.Children.Add (box);
+			
+			Widgets.Button buttonClear  = ItemPanelTest.CreateButton (box, "*");
+			Widgets.Button buttonTop    = ItemPanelTest.CreateButton (box, "^");
+			Widgets.Button buttonBottom = ItemPanelTest.CreateButton (box, "v");
+			Widgets.Button buttonPrev   = ItemPanelTest.CreateButton (box, "&lt;");
+			Widgets.Button buttonNext   = ItemPanelTest.CreateButton (box, "&gt;");
+			Widgets.Button buttonCreate = ItemPanelTest.CreateButton (box, "+");
+
+			buttonClear.Clicked += delegate { panel.Items.MoveCurrentToPosition (-1); };
+			buttonTop.Clicked += delegate { panel.Items.MoveCurrentToFirst (); };
+			buttonBottom.Clicked += delegate { panel.Items.MoveCurrentToLast (); };
+			buttonPrev.Clicked += delegate { panel.Items.MoveCurrentToPrevious (); };
+			buttonNext.Clicked += delegate { panel.Items.MoveCurrentToNext (); };
+			buttonCreate.Clicked += delegate { source.Add (ItemPanelTest.CreateRandomRecord ()); };
+
+			buttonCreate.Margins = new Drawing.Margins (8, 0, 0, 0);
 
 			panel.Show (panel.GetItemView (0));
 
 			window.Show ();
 
 			Widgets.Window.RunInTestEnvironment (window);
+		}
+
+		private static System.Random random = new System.Random ();
+
+		private static StructuredData CreateRandomRecord()
+		{
+			Category   cat = (Category) (ItemPanelTest.random.Next (3)+1);
+			decimal  price = (decimal) (ItemPanelTest.random.Next (100)+1) * 0.05M;
+			int   quantity = ItemPanelTest.random.Next (50);
+			string article = new string[] { "Foo", "Bar", "Grok", "Glup", "Munch", "Zap" }[ItemPanelTest.random.Next (6)];
+
+			return ItemPanelTest.NewStructuredData (article, quantity, price, cat);
+		}
+
+		private static Widgets.Button CreateButton(Epsitec.Common.Widgets.FrameBox box, string text)
+		{
+			Widgets.Button button = new Widgets.Button (text);
+			
+			button.Dock = Widgets.DockStyle.Stacked;
+			button.PreferredWidth = 20;
+			button.AutoFocus = false;
+			
+			box.Children.Add (button);
+
+			return button;
 		}
 
 		[Test]
@@ -487,7 +539,7 @@ namespace Epsitec.Common.UI
 
 		private static CollectionView GetStructuredItems(bool group)
 		{
-			List<StructuredData> source = new List<StructuredData> ();
+			Types.Collections.ObservableList<StructuredData> source = new Types.Collections.ObservableList<StructuredData> ();
 			CollectionView view = new CollectionView (source);
 
 			ItemPanelTest.AddStructuredRecords (source);

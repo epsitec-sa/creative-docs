@@ -130,6 +130,18 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public CurrentItemTrackingMode CurrentItemTrackingMode
+		{
+			get
+			{
+				return (CurrentItemTrackingMode) this.GetValue (ItemPanel.CurrentItemTrackingModeProperty);
+			}
+			set
+			{
+				this.SetValue (ItemPanel.CurrentItemTrackingModeProperty, value);
+			}
+		}
+
 		public ItemPanelSelectionBehavior SelectionBehavior
 		{
 			get
@@ -378,6 +390,22 @@ namespace Epsitec.Common.UI
 			}
 
 			return null;
+		}
+
+		public ItemView FindItemView(object item)
+		{
+			if (item == null)
+			{
+				return null;
+			}
+			else
+			{
+				return this.FindItemView (
+					delegate (ItemView view)
+					{
+						return view.Item == item;
+					});
+			}
 		}
 		
 		public void DeselectAllItemViews()
@@ -669,6 +697,8 @@ namespace Epsitec.Common.UI
 
 		public void Refresh()
 		{
+			bool focus = this.ContainsKeyboardFocus;
+
 			this.isRefreshPending = false;
 			this.ClearUserInterface ();
 			this.RefreshItemViews ();
@@ -690,6 +720,12 @@ namespace Epsitec.Common.UI
 
 					this.Show (item);
 				}
+			}
+			
+			if (focus)
+			{
+				this.Focus ();
+				this.TrackCurrentItem (false);
 			}
 		}
 
@@ -894,23 +930,104 @@ namespace Epsitec.Common.UI
 
 		protected virtual void HandleItemCollectionCurrentChanged(object sender)
 		{
-			ItemView view = this.GetCurrentItemView ();
+			this.TrackCurrentItem (true);
 
-			if ((view != null) &&
-				(this.focusedItemView != view))
+			if (this.CurrentChanged != null)
 			{
-				if (view.HasValidUserInterface)
+				this.CurrentChanged (this);
+			}
+		}
+
+		private void TrackCurrentItem(bool autoSelect)
+		{
+			if (this.CurrentItemTrackingMode == CurrentItemTrackingMode.None)
+			{
+				return;
+			}
+			
+			if (this.PanelDepth == 0)
+			{
+				object item = this.Items.CurrentItem;
+
+				if (item == null)
+				{
+					//	No current item at all...
+				}
+				else
+				{
+					ItemView view  = this.FindItemView (item);
+					bool     focus = this.ContainsKeyboardFocus;
+
+					if (view == null)
+					{
+						//	The item does not belong to the panel as such, but it
+						//	belongs to a (sub)group, most probably.
+
+						IList<CollectionViewGroup> path = CollectionView.GetGroupPath (this.Items, item);
+
+						if (path != null)
+						{
+							ItemPanel panel = this;
+
+							for (int i = 0; i < path.Count; i++)
+							{
+								view = this.FindItemView (path[i]);
+
+								panel.TrackCurrentItem (view, focus, autoSelect);
+
+								panel = view.Group.ChildPanel;
+							}
+
+							view = panel.FindItemView (item);
+							panel.TrackCurrentItem (view, focus, autoSelect);
+						}
+					}
+
+					this.TrackCurrentItem (view, focus, autoSelect);
+				}
+			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine ("TrackCurrentItem: called for panel at depth=" + this.PanelDepth);
+			}
+		}
+
+		private void TrackCurrentItem(ItemView view, bool focus, bool autoSelect)
+		{
+			if (this.CurrentItemTrackingMode == CurrentItemTrackingMode.None)
+			{
+				return;
+			}
+
+			if (view == null)
+			{
+				this.focusedItemView = null;
+			}
+			else
+			{
+				this.focusedItemView = view;
+				this.Show (view);
+
+				switch (this.CurrentItemTrackingMode)
+				{
+					case CurrentItemTrackingMode.AutoFocus:
+						break;
+
+					case CurrentItemTrackingMode.AutoSelect:
+						if (autoSelect)
+						{
+							this.SelectItemView (view);
+						}
+						break;
+				}
+
+				if (focus)
 				{
 					view.Widget.Focus ();
 				}
 			}
 
 			this.Invalidate ();
-
-			if (this.CurrentChanged != null)
-			{
-				this.CurrentChanged (this);
-			}
 		}
 
 		protected virtual void HandleItemViewDefaultSizeChanged(Drawing.Size oldValue, Drawing.Size newValue)
@@ -987,7 +1104,7 @@ namespace Epsitec.Common.UI
 				
 				if (message.IsShiftPressed && list.Count > 0)
 				{
-					this.ContinuousMouseSelection (list, this.GetCurrentItemView (), view, message.IsControlPressed);
+					this.ContinuousMouseSelection (list, this.FindItemView (this.Items.CurrentItem), view, message.IsControlPressed);
 				}
 				else
 				{
@@ -1545,29 +1662,11 @@ namespace Epsitec.Common.UI
 			return found;
 		}
 		
-		private ItemView GetCurrentItemView()
-		{
-			object item = this.Items.CurrentItem;
-
-			if (item == null)
-			{
-				return null;
-			}
-			else
-			{
-				return this.FindItemView (
-					delegate (ItemView view)
-					{
-						return (view.Item == item);
-					});
-			}
-		}
-
 		private ItemView GetFocusedItemView()
 		{
 			if (this.focusedItemView == null)
 			{
-				return this.GetCurrentItemView ();
+				return this.FindItemView (this.Items.CurrentItem);
 			}
 			else
 			{
@@ -2361,6 +2460,7 @@ namespace Epsitec.Common.UI
 		public static readonly DependencyProperty ItemViewDefaultSizeProperty = DependencyProperty.Register ("ItemViewDefaultSize", typeof (Drawing.Size), typeof (ItemPanel), new DependencyPropertyMetadata (new Drawing.Size (80, 20), ItemPanel.NotifyItemViewDefaultSizeChanged));
 		public static readonly DependencyProperty ItemViewDefaultExpandedProperty = DependencyProperty.Register ("ItemViewDefaultExpanded", typeof (bool), typeof (ItemPanel), new DependencyPropertyMetadata (false, ItemPanel.NotifyItemViewDefaultExpandedChanged));
 		public static readonly DependencyProperty AperturePaddingProperty = DependencyProperty.Register ("AperturePadding", typeof (Drawing.Margins), typeof (ItemPanel), new DependencyPropertyMetadata (Drawing.Margins.Zero));
+		public static readonly DependencyProperty CurrentItemTrackingModeProperty = DependencyProperty.Register ("CurrentItemTrackingMode", typeof (CurrentItemTrackingMode), typeof (ItemPanel), new DependencyPropertyMetadata (CurrentItemTrackingMode.None));
 
 		List<ItemView> views
 		{

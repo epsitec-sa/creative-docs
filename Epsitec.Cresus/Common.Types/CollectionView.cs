@@ -671,6 +671,13 @@ namespace Epsitec.Common.Types
 		}
 
 
+		/// <summary>
+		/// Gets the path through the groups which leads to the specified item.
+		/// </summary>
+		/// <param name="collection">The collection view.</param>
+		/// <param name="item">The item.</param>
+		/// <returns>A list of <see cref="CollectionViewGroup"/> which lead to the item
+		/// or <c>null</c> if the item cannot be found.</returns>
 		public static IList<CollectionViewGroup> GetGroupPath(ICollectionView collection, object item)
 		{
 			if (collection != null)

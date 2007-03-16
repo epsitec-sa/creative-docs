@@ -31,6 +31,8 @@ namespace Epsitec.Common.UI
 			this.panel.ItemSelectionMode  = this.parentPanel.ItemSelectionMode;
 			this.panel.GroupSelectionMode = this.parentPanel.GroupSelectionMode;
 			
+			this.panel.CurrentItemTrackingMode = this.parentPanel.CurrentItemTrackingMode;
+			
 			this.panel.ItemViewDefaultSize = this.parentPanel.ItemViewDefaultSize;
 			this.panel.SetGroupPanelEnable (view.IsExpanded);
 
