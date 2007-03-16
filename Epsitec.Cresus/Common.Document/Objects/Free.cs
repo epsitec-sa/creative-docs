@@ -348,7 +348,7 @@ namespace Epsitec.Common.Document.Objects
 			this.PathBuild(drawingContext,
 						   out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
-						   out pathLine);
+						   out pathLine, simplify);
 
 			int totalShapes = 2;
 			if ( surfaceStart )  totalShapes ++;
@@ -417,7 +417,7 @@ namespace Epsitec.Common.Document.Objects
 		protected void PathBuild(DrawingContext drawingContext,
 								 out Path pathStart, out bool outlineStart, out bool surfaceStart,
 								 out Path pathEnd,   out bool outlineEnd,   out bool surfaceEnd,
-								 out Path pathLine)
+								 out Path pathLine, bool simplify)
 		{
 			//	Crée les 3 chemins de l'objet.
 			pathStart = new Path();
@@ -430,11 +430,30 @@ namespace Epsitec.Common.Document.Objects
 			pathLine.DefaultZoom = zoom;
 
 			int total = this.TotalMainHandle;
+			if ( total < 2 )
+			{
+				outlineStart = false;
+				surfaceStart = false;
+				outlineEnd   = false;
+				surfaceEnd   = false;
+				return;
+			}
+
+			Point e1, e2;
+			double w = this.PropertyLineMode.Width;
+			CapStyle cap = this.PropertyLineMode.Cap;
+			e1 = this.Handle(0).Position;
+			e2 = this.Handle(1).Position;
+			this.vp1 = this.PropertyArrow.PathExtremity(pathStart, 0, w,cap, e1,e2, simplify, out outlineStart, out surfaceStart);
+			e1 = this.Handle(total-1).Position;
+			e2 = this.Handle(total-2).Position;
+			this.vp2 = this.PropertyArrow.PathExtremity(pathEnd,   1, w,cap, e1,e2, simplify, out outlineEnd,   out surfaceEnd);
+
 			if (total <= 2)
 			{
 				for (int i=0; i<total; i++)
 				{
-					Point pos = this.Handle(i).Position;
+					Point pos = this.GetCyclingHandlePosition(i);
 
 					if (i == 0)
 					{
@@ -457,7 +476,7 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if (i == 0)
 					{
-						Point p = this.Handle(i).Position;
+						Point p = this.GetCyclingHandlePosition(i);
 						pathLine.MoveTo(p);
 					}
 					else
@@ -494,11 +513,6 @@ namespace Epsitec.Common.Document.Objects
 					}
 				}
 			}
-
-			outlineStart = false;
-			surfaceStart = false;
-			outlineEnd = false;
-			surfaceEnd = false;
 		}
 
 		private Point GetCyclingHandlePosition(int rank)
@@ -515,7 +529,18 @@ namespace Epsitec.Common.Document.Objects
 				rank = rank-total;
 			}
 
-			return this.Handle(rank).Position;
+			if (rank == 0)
+			{
+				return this.vp1;
+			}
+			else if (rank == total-1)
+			{
+				return this.vp2;
+			}
+			else
+			{
+				return this.Handle(rank).Position;
+			}
 		}
 
 		private Point ComputeSecondary(Point p1, Point p, Point p2)
@@ -533,7 +558,7 @@ namespace Epsitec.Common.Document.Objects
 			this.PathBuild(null,
 						   out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
-						   out pathLine);
+						   out pathLine, true);
 
 			return pathLine;
 		}
@@ -546,7 +571,7 @@ namespace Epsitec.Common.Document.Objects
 			this.PathBuild(null,
 						   out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
-						   out pathLine);
+						   out pathLine, false);
 
 			if ( outlineStart || surfaceStart )
 			{
@@ -588,5 +613,6 @@ namespace Epsitec.Common.Document.Objects
 		private static readonly double	pressure = 0.33;
 
 		protected Point					initialPos;
+		protected Point					vp1, vp2;
 	}
 }
