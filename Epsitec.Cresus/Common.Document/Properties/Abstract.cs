@@ -34,6 +34,7 @@ namespace Epsitec.Common.Document.Properties
 		DimensionArrow = 22,	// extrémité des cotes
 		Dimension      = 23,	// cotes
 		LineDimension  = 24,	// lignes secondaires d'une cote
+		Tension        = 25,	// tension d'un trait à main levée
 	}
 
 	/// <summary>
@@ -76,6 +77,7 @@ namespace Epsitec.Common.Document.Properties
 				case Type.PolyClose:      property = new Bool(document, type);      break;
 				case Type.Corner:         property = new Corner(document, type);    break;
 				case Type.Regular:        property = new Regular(document, type);   break;
+				case Type.Tension:        property = new Tension(document, type);   break;
 				case Type.Arc:            property = new Arc(document, type);       break;
 				case Type.Surface:        property = new Surface(document, type);   break;
 				case Type.Volume:         property = new Volume(document, type);    break;
@@ -141,6 +143,7 @@ namespace Epsitec.Common.Document.Properties
 				case Type.Image:          return 22;
 				case Type.ModColor:       return 23;
 				case Type.Dimension:      return 24;
+				case Type.Tension:        return 25;
 			}
 			return 0;
 		}
@@ -274,6 +277,7 @@ namespace Epsitec.Common.Document.Properties
 				case Type.TextLine:       return 0.80;
 				case Type.Image:          return 0.90;
 				case Type.ModColor:       return 0.95;
+				case Type.Tension:        return 0.90;
 			}
 			return 0.0;
 		}
@@ -298,6 +302,7 @@ namespace Epsitec.Common.Document.Properties
 				case Type.Dimension:      return Res.Strings.Property.Abstract.Dimension;
 				case Type.Corner:         return Res.Strings.Property.Abstract.Corner;
 				case Type.Regular:        return Res.Strings.Property.Abstract.Regular;
+				case Type.Tension:        return Res.Strings.Property.Abstract.Tension;
 				case Type.Arc:            return Res.Strings.Property.Abstract.Arc;
 				case Type.Surface:        return Res.Strings.Property.Abstract.Surface;
 				case Type.Volume:         return Res.Strings.Property.Abstract.Volume;
@@ -331,6 +336,7 @@ namespace Epsitec.Common.Document.Properties
 				case Type.Dimension:      return "PropertyDimension";
 				case Type.Corner:         return "PropertyCorner";
 				case Type.Regular:        return "PropertyRegular";
+				case Type.Tension:        return "PropertyTension";
 				case Type.Arc:            return "PropertyArc";
 				case Type.Surface:        return "PropertySurface";
 				case Type.Volume:         return "PropertyVolume";

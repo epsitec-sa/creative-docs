@@ -1515,6 +1515,24 @@ namespace Epsitec.Common.Document
 					}
 				}
 				
+				public static class Tension
+				{
+					public static class Long
+					{
+						public static string Value { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1386)); } }
+					}
+					
+					public static class Short
+					{
+						public static string Value { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1385)); } }
+					}
+					
+					public static class Tooltip
+					{
+						public static string Value { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1387)); } }
+					}
+				}
+				
 				public static class TextLine
 				{
 					public static class Long
@@ -1590,6 +1608,7 @@ namespace Epsitec.Common.Document
 					public static string Regular { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (640)); } }
 					public static string Shadow { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (634)); } }
 					public static string Surface { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (642)); } }
+					public static string Tension { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1383)); } }
 					public static string TextFont { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (645)); } }
 					public static string TextJustif { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (646)); } }
 					public static string TextLine { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (647)); } }
@@ -1745,6 +1764,14 @@ namespace Epsitec.Common.Document
 					public static string TrapezeL { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (739)); } }
 					public static string TrapezeR { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (740)); } }
 					public static string TrapezeT { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (737)); } }
+				}
+				
+				public static class Tension
+				{
+					public static class Short
+					{
+						public static string Value { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1384)); } }
+					}
 				}
 				
 				public static class Volume

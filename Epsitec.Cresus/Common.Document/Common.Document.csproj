@@ -324,6 +324,7 @@
     <Compile Include="Panels\Color.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Panels\Tension.cs" />
     <Compile Include="Panels\Corner.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -408,6 +409,7 @@
     <Compile Include="Properties\Color.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Properties\Tension.cs" />
     <Compile Include="Properties\Corner.cs">
       <SubType>Code</SubType>
     </Compile>

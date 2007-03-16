@@ -1755,6 +1755,11 @@ namespace Epsitec.Common.Document.Objects
 			get { return this.Property(Properties.Type.Regular) as Properties.Regular; }
 		}
 
+		public Properties.Tension PropertyTension
+		{
+			get { return this.Property(Properties.Type.Tension) as Properties.Tension; }
+		}
+
 		public Properties.Arc PropertyArc
 		{
 			get { return this.Property(Properties.Type.Arc) as Properties.Arc; }

@@ -29,6 +29,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( type == Properties.Type.Arrow )  return true;
 			if ( type == Properties.Type.FillGradient )  return true;
 			if ( type == Properties.Type.PolyClose )  return true;
+			if ( type == Properties.Type.Tension )  return true;
 			return false;
 		}
 
@@ -549,6 +550,8 @@ namespace Epsitec.Common.Document.Objects
 			e2 = this.Handle(total-2).Position;
 			this.vp2 = this.PropertyArrow.PathExtremity(pathEnd,   1, w,cap, e1,e2, simplify, out outlineEnd,   out surfaceEnd);
 
+			double tension = this.PropertyTension.TensionValue * 0.5;
+
 			if (total <= 2)
 			{
 				for (int i=0; i<total; i++)
@@ -589,7 +592,7 @@ namespace Epsitec.Common.Document.Objects
 						}
 						else
 						{
-							s1 = this.ComputeSecondary(this.GetCyclingHandlePosition(i), this.GetCyclingHandlePosition(i-1), this.GetCyclingHandlePosition(i-2));
+							s1 = this.ComputeSecondary(this.GetCyclingHandlePosition(i), this.GetCyclingHandlePosition(i-1), this.GetCyclingHandlePosition(i-2), tension);
 						}
 
 						if (i == total-1 && !this.PropertyPolyClose.BoolValue)
@@ -598,7 +601,7 @@ namespace Epsitec.Common.Document.Objects
 						}
 						else
 						{
-							s2 = this.ComputeSecondary(this.GetCyclingHandlePosition(i-1), this.GetCyclingHandlePosition(i), this.GetCyclingHandlePosition(i+1));
+							s2 = this.ComputeSecondary(this.GetCyclingHandlePosition(i-1), this.GetCyclingHandlePosition(i), this.GetCyclingHandlePosition(i+1), tension);
 						}
 						
 						pathLine.CurveTo(s1, s2, this.GetCyclingHandlePosition(i));
@@ -638,7 +641,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		private Point ComputeSecondary(Point p1, Point p, Point p2)
+		private Point ComputeSecondary(Point p1, Point p, Point p2, double tension)
 		{
 			//	Calcule un point secondaire s1 permettant d'obtenir une jolie courbe.
 			//	   p
@@ -649,7 +652,7 @@ namespace Epsitec.Common.Document.Objects
 			//	   |/
 			//	p1 o
 
-			return Point.Move(p, p+(p1-p2), Point.Distance(p,p1)*Free.pressure);
+			return Point.Move(p, p+(p1-p2), Point.Distance(p,p1)*tension);
 		}
 
 
@@ -704,8 +707,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 		#endregion
 
-
-		private static readonly double	pressure = 0.33;
 
 		protected double				spacing;
 		protected Point					initialPos;

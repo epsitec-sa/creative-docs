@@ -457,6 +457,9 @@
   <data name="Panel.Regular.Short.Deep" id="00D">R</data>
   <data name="Panel.Regular.Long.Faces" id="01D">Nombre de côtés</data>
   <data name="Panel.Regular.Long.Deep" id="02D">Renfoncement</data>
+  <data name="Panel.Tension.Short.Value" id="09B01">T</data>
+  <data name="Panel.Tension.Long.Value" id="0AB01">Tension</data>
+  <data name="Panel.Tension.Tooltip.Value" id="0BB01">Tension du trait</data>
   <data name="Panel.Regular.Tooltip.Faces" id="03D">Nombre de côtés</data>
   <data name="Panel.Regular.Tooltip.Deep" id="04D">Renfoncement de l&amp;apos;étoile</data>
   <data name="Panel.Surface.Short.Factor" id="05D">R{0}</data>
@@ -670,6 +673,7 @@
   <data name="Property.Abstract.LineMode" id="0KJ">Epaisseur trait</data>
   <data name="Property.Abstract.LineDimension" id="0LJ">Epaisseur supports</data>
   <data name="Property.Abstract.FillGradient" id="0MJ">Couleur intérieure</data>
+  <data name="Property.Abstract.Tension" id="07B01">Tension du trait</data>
   <data name="Property.Abstract.FillGradientVT" id="0NJ">Couleur couvercle</data>
   <data name="Property.Abstract.FillGradientVL" id="0OJ">Couleur flanc gauche</data>
   <data name="Property.Abstract.FillGradientVR" id="0PJ">Couleur flanc droit</data>
@@ -773,6 +777,7 @@
   <data name="Property.Regular.Norm" id="0QM">Polygone régulier</data>
   <data name="Property.Regular.Star" id="0RM">Etoile</data>
   <data name="Property.Regular.Short.Faces" id="0SM">N = </data>
+  <data name="Property.Tension.Short.Value" id="08B01">T = </data>
   <data name="Property.Surface.ParallelT" id="0TM">Parallélogramme 1</data>
   <data name="Property.Surface.ParallelB" id="0UM">Parallélogramme 2</data>
   <data name="Property.Surface.ParallelL" id="0VM">Parallélogramme 3</data>

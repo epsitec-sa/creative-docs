@@ -178,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <EmbeddedResource Include="Images\PropertyTension.icon" />
     <EmbeddedResource Include="Images\ObjectFree.icon" />
     <EmbeddedResource Include="Images\ViewDisposition.icon" />
     <EmbeddedResource Include="Images\Constrain.icon" />
