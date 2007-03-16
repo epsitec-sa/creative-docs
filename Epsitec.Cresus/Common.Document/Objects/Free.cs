@@ -94,7 +94,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
 			//	Déplace une poignée.
-			if ( rank >= 2 )  // poignée d'une propriété ?
+			if ( rank >= this.TotalMainHandle )  // poignée d'une propriété ?
 			{
 				base.MoveHandleProcess(rank, pos, drawingContext);
 				return;
@@ -103,17 +103,11 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 
-			if ( rank == 0 )  // p1 ?
-			{
-				this.Handle(0).Position = pos;
-			}
-			else if ( rank == 1 )  // p2 ?
-			{
-				this.Handle(1).Position = pos;
-			}
+			this.Handle(rank).Position = pos;
+
 			this.HandlePropertiesUpdate();
 			this.SetDirtyBbox();
-			this.TextInfoModifLine();
+			this.TextInfoModif(pos, rank);
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -308,7 +302,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.SetDirtyBbox();
-			this.TextInfoModifLine();
+			this.TextInfoModif(pos, this.TotalHandle-1);
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -363,6 +357,14 @@ namespace Epsitec.Common.Document.Objects
 			//	Calcule l'espacement, en fonction du zoom actuel, afin d'obtenir une distance visible
 			//	toujours identique.
 			this.spacing = 200/drawingContext.Zoom;
+		}
+
+
+		protected void TextInfoModif(Point mouse, int rank)
+		{
+			//	Texte des informations de modification.
+			string text = string.Format("Sommet={0}/{1}", rank+1, this.TotalMainHandle);
+			this.document.Modifier.TextInfoModif = text;
 		}
 
 
