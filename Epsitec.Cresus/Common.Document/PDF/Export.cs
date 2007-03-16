@@ -251,7 +251,7 @@ namespace Epsitec.Common.Document.PDF
 				report.DefineProgress(0, string.Format(Res.Strings.Export.PDF.Progress.Ressource, page+1));
 				if (report.Cancelled)
 				{
-					return "Exportation annulée.";
+					return Res.Strings.Export.PDF.Progress.Cancelled;
 				}
 
 				writer.WriteObjectDef(Export.NameResources(page));
@@ -359,7 +359,7 @@ namespace Epsitec.Common.Document.PDF
 				report.DefineProgress(0, string.Format(Res.Strings.Export.PDF.Progress.Content, page+1));
 				if (report.Cancelled)
 				{
-					return "Exportation annulée.";
+					return Res.Strings.Export.PDF.Progress.Cancelled;
 				}
 
 				port.Reset();
@@ -551,7 +551,7 @@ namespace Epsitec.Common.Document.PDF
 						report.DefineProgress(0, string.Format(Res.Strings.Export.PDF.Progress.Surface, page+1, objIndex++));
 						if (report.Cancelled)
 						{
-							return "Exportation annulée.";
+							return Res.Strings.Export.PDF.Progress.Cancelled;
 						}
 
 						System.Collections.ArrayList list = obj.GetComplexSurfacesPDF(port);
@@ -1540,7 +1540,7 @@ namespace Epsitec.Common.Document.PDF
 				report.DefineProgress(0, string.Format(Res.Strings.Export.PDF.Progress.Image, image.Id));
 				if (report.Cancelled)
 				{
-					return "Exportation annulée.";
+					return Res.Strings.Export.PDF.Progress.Cancelled;
 				}
 
 				if ( this.CreateImageSurface(writer, port, image, TypeComplexSurface.XObject, TypeComplexSurface.XObjectMask) )
