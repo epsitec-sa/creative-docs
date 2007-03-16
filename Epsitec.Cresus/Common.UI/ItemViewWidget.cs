@@ -100,7 +100,7 @@ namespace Epsitec.Common.UI
 			while (widget != null)
 			{
 				ItemViewWidget view = widget as ItemViewWidget;
-				
+
 				if (view != null)
 				{
 					return view.ItemView;
@@ -111,7 +111,68 @@ namespace Epsitec.Common.UI
 
 			return null;
 		}
-		
+
+		internal static ItemView FindParentItemView(Widgets.Widget widget)
+		{
+			bool skip = true;
+
+			if (widget != null)
+			{
+				ItemViewWidget view = widget as ItemViewWidget;
+
+				if (view != null)
+				{
+					if (skip)
+					{
+						skip = false;
+					}
+					else
+					{
+						return view.ItemView;
+					}
+				}
+
+				widget = widget.Parent;
+			}
+
+			return null;
+		}
+
+		internal static ItemView FindGroupItemView(ItemView itemView)
+		{
+			if (itemView != null)
+			{
+				return ItemViewWidget.FindGroupItemView (itemView.Widget);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		internal static ItemView FindGroupItemView(Widgets.Widget widget)
+		{
+			while (widget != null)
+			{
+				ItemViewWidget view = widget as ItemViewWidget;
+
+				if (view != null)
+				{
+					ItemView itemView = view.ItemView;
+
+					if ((itemView != null) &&
+						(itemView.IsGroup))
+					{
+						return itemView;
+					}
+				}
+
+				widget = widget.Parent;
+			}
+
+			return null;
+		}
+
 		private ItemView view;
 	}
 }

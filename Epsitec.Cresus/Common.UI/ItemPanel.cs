@@ -465,7 +465,7 @@ namespace Epsitec.Common.UI
 
 		public void ExpandItemView(ItemView view, bool expand)
 		{
-			if (ItemPanel.ContainsGroup (view))
+			if (view.IsGroup)
 			{
 				view.CreateUserInterface (this);
 				view.IsExpanded = expand;
@@ -783,7 +783,7 @@ namespace Epsitec.Common.UI
 
 		public static bool ContainsGroup(ItemView view)
 		{
-			return (view.Item is CollectionViewGroup) ? true : false;
+			return view.IsGroup;
 		}
 
 		#endregion
@@ -1038,15 +1038,33 @@ namespace Epsitec.Common.UI
 						ItemView view = this.GetCurrentItemView ();
 						this.ManualSelection (view, message.IsControlPressed);
 					}
+					else if (message.KeyCode == KeyCode.Add)
+					{
+						ItemView group = ItemViewWidget.FindGroupItemView (this.focusedItem);
+						
+						if (group != null)
+						{
+							group.IsExpanded = true;
+						}
+					}
+					else if (message.KeyCode == KeyCode.Substract)
+					{
+						ItemView group = ItemViewWidget.FindGroupItemView (this.focusedItem);
+
+						if (group != null)
+						{
+							group.IsExpanded = false;
+						}
+					}
 					else
 					{
 						//	Change the current item (this does not select the item).
 
 						ItemView oldCurrent = this.GetCurrentItemView ();
 
-						this.ProcessArrowMove(message.KeyCode);
+						this.ProcessArrowMove (message.KeyCode);
 						ItemView newCurrent = this.GetCurrentItemView ();
-						
+
 						if (!message.IsControlPressed &&
 							!message.IsAltPressed)
 						{
@@ -1061,17 +1079,17 @@ namespace Epsitec.Common.UI
 							{
 								IList<ItemView> list = this.GetSelectedItemViews ();
 								SelectionState state = new SelectionState (this);
-								
+
 								if (message.IsShiftPressed && list.Count > 0)
 								{
-									this.ContinuousKeySelection(list, oldCurrent, newCurrent);
+									this.ContinuousKeySelection (list, oldCurrent, newCurrent);
 								}
 								else
 								{
 									this.InternalDeselectItemViews (list);
 									this.InternalSelectItemView (newCurrent);
 								}
-								
+
 								state.GenerateEvents ();
 							}
 						}
@@ -1699,7 +1717,7 @@ namespace Epsitec.Common.UI
 
 			if (selection)
 			{
-				if (ItemPanel.ContainsGroup (view))
+				if (view.IsGroup)
 				{
 					//	A group was selected. This will not change the current item in
 					//	the collection view.

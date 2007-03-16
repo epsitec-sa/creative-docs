@@ -214,6 +214,18 @@ namespace Epsitec.Common.UI
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether this item view represents a group.
+		/// </summary>
+		/// <value><c>true</c> if this item view represents a group; otherwise, <c>false</c>.</value>
+		public bool IsGroup
+		{
+			get
+			{
+				return this.item is CollectionViewGroup;
+			}
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether this item view has a dirty user
 		/// interface. If this is the case, then <c>CreateUserInterface</c>
 		/// must be called to recreate the user interface.
