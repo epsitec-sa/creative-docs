@@ -1,5 +1,5 @@
 //	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -669,6 +669,53 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
+
+
+		public static IList<CollectionViewGroup> GetGroupPath(ICollectionView collection, object item)
+		{
+			if (collection != null)
+			{
+				if (collection.Groups.Count > 0)
+				{
+					return CollectionView.GetGroupPath (collection.Groups, item, 0);
+				}
+				else if (collection.Items.Contains (item))
+				{
+					return new CollectionViewGroup[0];
+				}
+			}
+			
+			return null;
+		}
+
+		private static IList<CollectionViewGroup> GetGroupPath(IEnumerable<CollectionViewGroup> groups, object item, int depth)
+		{
+			foreach (CollectionViewGroup group in groups)
+			{
+				if (group.HasSubgroups)
+				{
+					IList<CollectionViewGroup> list = CollectionView.GetGroupPath (group.Subgroups, item, depth+1);
+
+					if (list != null)
+					{
+						list[depth] = group;
+						return list;
+					}
+				}
+				else
+				{
+					if (group.Items.Contains (item))
+					{
+						CollectionViewGroup[] list = new CollectionViewGroup[depth+1];
+						list[depth] = group;
+						return list;
+					}
+				}
+			}
+
+			return null;
+		}
+
 
 		/// <summary>
 		/// Gets a value indicating whether the <c>CurrentItem</c> belongs to this view.

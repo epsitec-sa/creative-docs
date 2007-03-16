@@ -349,6 +349,7 @@ namespace Epsitec.Common.Types
 		public void CheckCollectionViewSortAndGroup()
 		{
 			Record[] records;
+			IList<CollectionViewGroup> path;
 
 			List<Record> source = new List<Record> ();
 			CollectionView view = new CollectionView (source);
@@ -377,7 +378,11 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Tournevis", ((Record) view.Items[3]).Article);
 			Assert.AreEqual ("Tournevis", ((Record) view.Items[4]).Article);
 			Assert.AreEqual ("Vis M3",    ((Record) view.Items[5]).Article);
-			
+
+			path = CollectionView.GetGroupPath (view, source[0]);
+
+			Assert.AreEqual (0, path.Count);
+
 			view.GroupDescriptions.Add (new PropertyGroupDescription ("Category"));
 			
 			Assert.AreEqual (2, view.Groups.Count);
@@ -408,6 +413,16 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Ecrou M3", records[0].Article);
 			Assert.AreEqual ("Rondelle", records[1].Article);
 			Assert.AreEqual ("Vis M3", records[2].Article);
+			
+			path = CollectionView.GetGroupPath (view, source[0]);
+
+			Assert.AreEqual (1, path.Count);
+			Assert.AreEqual ("Part", path[0].Name);
+
+			path = CollectionView.GetGroupPath (view, source[5]);
+
+			Assert.AreEqual (1, path.Count);
+			Assert.AreEqual ("Tool", path[0].Name);
 
 			view.GroupDescriptions.Add (new PropertyGroupDescription ("Article"));
 			
@@ -433,6 +448,22 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual ("Clé M3", subgroup1.Name);
 			Assert.AreEqual ("Tournevis", subgroup2.Name);
+
+			path = CollectionView.GetGroupPath (view, source[0]);
+
+			Assert.AreEqual (2, path.Count);
+			Assert.AreEqual ("Part", path[0].Name);
+			Assert.AreEqual ("Vis M3", path[1].Name);
+
+			path = CollectionView.GetGroupPath (view, source[5]);
+
+			Assert.AreEqual (2, path.Count);
+			Assert.AreEqual ("Tool", path[0].Name);
+			Assert.AreEqual ("Tournevis", path[1].Name);
+			
+			path = CollectionView.GetGroupPath (view, new StructuredData ());
+
+			Assert.IsNull (path);
 		}
 
 		[Test]
