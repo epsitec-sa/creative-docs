@@ -1146,9 +1146,10 @@ namespace Epsitec.Common.Document
 				Properties.Image image = obj.PropertyImage;
 				if ( image != null )
 				{
-					if ( !list.Contains(image.FileName) )
+					string filename = TextLayout.ConvertToTaggedText(image.FileName);
+					if ( !list.Contains(filename) )
 					{
-						list.Add(image.FileName);
+						list.Add(filename);
 					}
 				}
 			}
