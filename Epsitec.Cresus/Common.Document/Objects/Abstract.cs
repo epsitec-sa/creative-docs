@@ -100,6 +100,7 @@ namespace Epsitec.Common.Document.Objects
 				case "ObjectCircle":     obj = new Circle(document, model);     break;
 				case "ObjectEllipse":    obj = new Ellipse(document, model);    break;
 				case "ObjectPoly":       obj = new Poly(document, model);       break;
+				case "ObjectFree":       obj = new Free(document, model);       break;
 				case "ObjectBezier":     obj = new Bezier(document, model);     break;
 				case "ObjectRegular":    obj = new Regular(document, model);    break;
 				case "ObjectSurface":    obj = new Surface(document, model);    break;

@@ -314,6 +314,7 @@ namespace Epsitec.Common.Document
 				case "ObjectCircle":     return Res.Strings.Action.ToolCircle;
 				case "ObjectEllipse":    return Res.Strings.Action.ToolEllipse;
 				case "ObjectPoly":       return Res.Strings.Action.ToolPoly;
+				case "ObjectFree":       return Res.Strings.Action.ToolFree;
 				case "ObjectBezier":     return Res.Strings.Action.ToolBezier;
 				case "ObjectRegular":    return Res.Strings.Action.ToolRegular;
 				case "ObjectSurface":    return Res.Strings.Action.ToolSurface;

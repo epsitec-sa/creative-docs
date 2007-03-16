@@ -322,6 +322,7 @@ namespace Epsitec.Common.Document
 				public static string ToolDimension { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (783)); } }
 				public static string ToolEdit { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (765)); } }
 				public static string ToolEllipse { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (773)); } }
+				public static string ToolFree { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1382)); } }
 				public static string ToolGlobal { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (763)); } }
 				public static string ToolHand { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (767)); } }
 				public static string ToolHotSpot { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (769)); } }

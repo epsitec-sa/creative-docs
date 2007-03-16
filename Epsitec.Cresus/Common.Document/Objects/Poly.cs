@@ -412,17 +412,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		protected int DetectOutline(Point pos)
-		{
-			//	Détecte si la souris est sur le pourtour de l'objet.
-			//	Retourne le rang de la poignée de départ, ou -1
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-
-			Shape[] shapes = this.ShapesBuild(null, context, false);
-			return context.Drawer.DetectOutline(pos, context, shapes);
-		}
-
-
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
 			//	Début de la création d'un objet.

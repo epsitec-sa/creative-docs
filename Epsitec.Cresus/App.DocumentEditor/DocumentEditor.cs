@@ -509,6 +509,7 @@ namespace Epsitec.App.DocumentEditor
 			this.VToolBarAdd(this.toolCircleState.Command);
 			this.VToolBarAdd(this.toolEllipseState.Command);
 			this.VToolBarAdd(this.toolPolyState.Command);
+			this.VToolBarAdd(this.toolFreeState.Command);
 			this.VToolBarAdd(this.toolBezierState.Command);
 			this.VToolBarAdd(this.toolRegularState.Command);
 			this.VToolBarAdd(this.toolSurfaceState.Command);
@@ -1195,6 +1196,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ObjectCircle")]
 		[Command ("ObjectEllipse")]
 		[Command ("ObjectPoly")]
+		[Command ("ObjectFree")]
 		[Command ("ObjectBezier")]
 		[Command ("ObjectRegular")]
 		[Command ("ObjectSurface")]
@@ -3503,6 +3505,7 @@ namespace Epsitec.App.DocumentEditor
 			this.toolCircleState = this.CreateCommandState("ObjectCircle", "ObjectCircle", "ToolCircle", KeyCode.AlphaC);
 			this.toolEllipseState = this.CreateCommandState("ObjectEllipse", "ObjectEllipse", "ToolEllipse");
 			this.toolPolyState = this.CreateCommandState("ObjectPoly", "ObjectPoly", "ToolPoly", KeyCode.AlphaP);
+			this.toolFreeState = this.CreateCommandState("ObjectFree", "ObjectFree", "ToolFree", KeyCode.AlphaM);
 			this.toolBezierState = this.CreateCommandState("ObjectBezier", "ObjectBezier", "ToolBezier", KeyCode.AlphaB);
 			this.toolRegularState = this.CreateCommandState("ObjectRegular", "ObjectRegular", "ToolRegular");
 			this.toolSurfaceState = this.CreateCommandState("ObjectSurface", "ObjectSurface", "ToolSurface");
@@ -4033,6 +4036,7 @@ namespace Epsitec.App.DocumentEditor
 			this.UpdateTool(this.toolCircleState, tool, isCreating, enabled);
 			this.UpdateTool(this.toolEllipseState, tool, isCreating, enabled);
 			this.UpdateTool(this.toolPolyState, tool, isCreating, enabled);
+			this.UpdateTool(this.toolFreeState, tool, isCreating, enabled);
 			this.UpdateTool(this.toolBezierState, tool, isCreating, enabled);
 			this.UpdateTool(this.toolRegularState, tool, isCreating, enabled);
 			this.UpdateTool(this.toolSurfaceState, tool, isCreating, enabled);
@@ -5616,6 +5620,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					toolCircleState;
 		protected CommandState					toolEllipseState;
 		protected CommandState					toolPolyState;
+		protected CommandState					toolFreeState;
 		protected CommandState					toolBezierState;
 		protected CommandState					toolRegularState;
 		protected CommandState					toolSurfaceState;

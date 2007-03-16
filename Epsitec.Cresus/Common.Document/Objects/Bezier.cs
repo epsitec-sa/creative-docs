@@ -46,18 +46,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		protected int DetectOutline(Point pos)
-		{
-			//	Détecte si la souris est sur le pourtour de l'objet.
-			//	Retourne le rang de la poignée de départ, ou -1
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-
-			Shape[] shapes = this.ShapesBuild(null, context, false);
-			int rank = context.Drawer.DetectOutline(pos, context, shapes);
-			if ( rank != -1 )  rank *= 3;
-			return rank;
-		}
-
 		public override void MoveAllProcess(Point move)
 		{
 			//	Déplace tout l'objet.

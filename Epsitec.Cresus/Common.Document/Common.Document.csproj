@@ -251,6 +251,7 @@
     <Compile Include="Objects\Circle.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Objects\Free.cs" />
     <Compile Include="Objects\Dimension.cs">
       <SubType>Code</SubType>
     </Compile>

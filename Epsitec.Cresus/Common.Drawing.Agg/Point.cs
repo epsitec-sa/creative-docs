@@ -199,24 +199,24 @@ namespace Epsitec.Common.Drawing
 		
 		public static double ComputeAngleRad(Point c, Point a)
 		{
-			//	Calcule l'angle d'un triangle rectangle.
-			//	L'angle est anti-horaire (CCW), compris entre 0 et 2*PI.
-			//	Pour obtenir un angle horaire (CW), il suffit de passer -y.
-			//
-			//	^
-			//	|
-			//	y o----o
-			//	|  / |
-			//	|/)a |
-			//	----o----o-->
-			//	|    x 
-			//	|
-			
 			return Point.ComputeAngleRad(a.X-c.X, a.Y-c.Y);
 		}
 
 		public static double ComputeAngleRad(double x, double y)
 		{
+			//	Calcule l'angle d'un triangle rectangle.
+			//	L'angle est anti-horaire (CCW), compris entre 0 et 2*PI.
+			//	Pour obtenir un angle horaire (CW), il suffit de passer -y.
+			//
+			//	    ^
+			//	    |
+			//	  y o----o
+			//	    |  / |
+			//	    |/)a |
+			//	----o----o-->
+			//	    |    x 
+			//	    |
+			
 			if ((x == 0.0) && (y == 0.0))
 			{
 				return 0.0;

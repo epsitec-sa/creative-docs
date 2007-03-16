@@ -811,6 +811,7 @@
   <data name="Action.ToolPicker" id="00O">Pipette</data>
   <data name="Action.ToolHotSpot" id="01O">Point chaud</data>
   <data name="Action.ToolLine" id="02O">Segment de ligne</data>
+  <data name="Action.ToolFree" id="06B01">Trait à main levée</data>
   <data name="Action.ToolRectangle" id="03O">Rectangle</data>
   <data name="Action.ToolCircle" id="04O">Cercle</data>
   <data name="Action.ToolEllipse" id="05O">Ellipse</data>
