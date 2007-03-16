@@ -26,6 +26,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( type == Properties.Type.Name )  return true;
 			if ( type == Properties.Type.LineMode )  return true;
 			if ( type == Properties.Type.LineColor )  return true;
+			if ( type == Properties.Type.Arrow )  return true;
 			if ( type == Properties.Type.FillGradient )  return true;
 			if ( type == Properties.Type.PolyClose )  return true;
 			return false;
@@ -311,6 +312,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
 			//	Fin de la création d'un objet.
+#if false
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			
 			if (this.TotalHandle > 2)
@@ -320,6 +322,7 @@ namespace Epsitec.Common.Document.Objects
 				this.SetDirtyBbox();
 				this.document.Notifier.NotifyArea(this.BoundingBox);
 			}
+#endif
 
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
