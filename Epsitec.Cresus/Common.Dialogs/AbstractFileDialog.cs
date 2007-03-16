@@ -441,8 +441,8 @@ namespace Epsitec.Common.Dialogs
 			this.renameState          = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Rename, this.RenameStarting);
 			this.deleteState          = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Delete, this.FileDelete);
 			this.refreshState         = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Refresh, this.Refresh);
-			this.viewDispositionState = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.ViewDisposition, this.ViewDisposition);
-			this.viewSizeState        = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.ViewSize, this.ViewSize);
+			this.viewDispositionState = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.ViewDisposition, this.ToggleViewDisposition);
+			this.viewSizeState        = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.ViewSize, this.ToggleViewSize);
 			this.favoritesAddState    = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Add, this.AddFavorite);
 			this.favoritesRemoveState = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Remove, this.FavoritesRemove);
 			this.favoritesUpState     = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Favorites.Up, this.FavoritesMoveUp);
@@ -1698,7 +1698,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		private void ViewDisposition()
+		private void ToggleViewDisposition()
 		{
 			if (this.table.ItemPanel.Layout == ItemPanelLayout.VerticalList)
 			{
@@ -1712,7 +1712,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		private void ViewSize()
+		private void ToggleViewSize()
 		{
 			double size = this.itemViewSize;
 
@@ -1729,8 +1729,7 @@ namespace Epsitec.Common.Dialogs
 				size = 20;
 			}
 
-			this.SetItemViewDisposition(size);
-			this.UpdateSlider();
+			this.slider.Value = (decimal) size;
 		}
 
 		private void Refresh()
