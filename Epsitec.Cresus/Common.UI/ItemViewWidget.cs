@@ -19,6 +19,8 @@ namespace Epsitec.Common.UI
 		{
 			this.view = view;
 			this.InternalState |= Widgets.InternalState.Focusable;
+
+			this.AddEventHandler (Widgets.Visual.KeyboardFocusProperty, this.HandleKeyboardFocusChanged);
 		}
 
 
@@ -30,7 +32,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected ItemPanel GetParentPanel()
+		public ItemPanel GetParentPanel()
 		{
 			ItemPanel panel = this.Parent as ItemPanel;
 			
@@ -84,19 +86,43 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected override bool AboutToGetFocus(Widgets.TabNavigationDir dir, Widgets.TabNavigationMode mode, out Widgets.Widget focus)
+		protected override void AboutToBecomeOrphan()
 		{
-			if (base.AboutToGetFocus (dir, mode, out focus))
+			base.AboutToBecomeOrphan ();
+			this.AboutToLoseFocus ();
+		}
+
+		protected virtual void AboutToLoseFocus()
+		{
+			if (this.KeyboardFocus)
 			{
 				ItemPanel panel = this.GetParentPanel ();
 
-				panel.NotifyWidgetAboutToGetFocus (this);
+				if (panel != null)
+				{
+					panel.NotifyFocusChanged (this, false);
+				}
+			}
+		}
 
-				return true;
+		private void HandleKeyboardFocusChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			bool focus = (bool) e.NewValue;
+
+			System.Diagnostics.Debug.WriteLine ("Focus=" + focus.ToString () + ", " + this.ToString ());
+
+			if (focus)
+			{
+				ItemPanel panel = this.GetParentPanel ();
+
+				if (panel != null)
+				{
+					panel.NotifyFocusChanged (this, focus);
+				}
 			}
 			else
 			{
-				return false;
+				this.AboutToLoseFocus ();
 			}
 		}
 

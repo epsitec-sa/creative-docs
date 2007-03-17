@@ -334,7 +334,7 @@ namespace Epsitec.Common.UI
 			
 			if (this.widget != null)
 			{
-				if (this.isCleared)
+				if (!this.HasValidUserInterface)
 				{
 					this.isCleared = false;
 
@@ -346,8 +346,18 @@ namespace Epsitec.Common.UI
 					}
 				}
 				
+				System.Diagnostics.Debug.WriteLine ("Created " + this.index + " -> " + this.widget.ToString () + " in " + panel.VisualSerialId);
+				
 				this.widget.SetEmbedder (panel);
 				this.widget.SetManualBounds (this.bounds);
+
+				//	TODO: ...gérer le cas où le panel n'aurait plus focus du tout...
+
+				if (panel.GetFocusedItemView () == this)
+				{
+					System.Diagnostics.Debug.WriteLine ("Refocus " + this.widget);
+					this.widget.Focus ();
+				}
 			}
 		}
 
@@ -367,6 +377,12 @@ namespace Epsitec.Common.UI
 				
 				this.widget = group;
 			}
+			
+			if (this.widget != null)
+			{
+				ItemPanel panel = this.widget.GetParentPanel ();
+				System.Diagnostics.Debug.WriteLine ("Defining " + this.index + " -> " + this.widget.ToString () + " in " + (panel == null ? 0L : panel.VisualSerialId));
+			}
 		}
 
 		/// <summary>
@@ -378,12 +394,17 @@ namespace Epsitec.Common.UI
 		{
 			if (this.widget != null)
 			{
+				{
+					ItemPanel panel = this.widget.GetParentPanel ();
+					System.Diagnostics.Debug.WriteLine ("Clearing " + this.index + " -> " + this.widget.ToString () + " in " + panel.VisualSerialId);
+				}
+				
 				ItemPanelGroup group = this.Group;
 
 				if (group == null)
 				{
 					this.factory.DisposeUserInterface (this.widget);
-					
+
 					this.widget    = null;
 					this.isCleared = false;
 				}
@@ -400,8 +421,25 @@ namespace Epsitec.Common.UI
 		/// </summary>
 		internal void DisposeUserInterface()
 		{
+			{
+				ItemPanel panel = this.widget.GetParentPanel ();
+				System.Diagnostics.Debug.WriteLine ("Disposing " + this.index + " -> " + this.widget.ToString () + " in " + panel.VisualSerialId);
+			}
+
 			if (this.widget != null)
 			{
+#if false
+				if (this.widget.ContainsKeyboardFocus)
+				{
+					ItemPanel panel = this.widget.GetParentPanel ();
+
+					if (panel != null)
+					{
+						panel.RecordFocus (this);
+						panel.RootPanel.Focus ();
+					}
+				}
+#endif
 				this.factory.DisposeUserInterface (this.widget);
 
 				this.widget    = null;

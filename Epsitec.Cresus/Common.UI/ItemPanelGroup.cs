@@ -133,16 +133,11 @@ namespace Epsitec.Common.UI
 			//	Remember all items which were selected, so we can reselect
 			//	them when the ViewItem objects get recreated...
 
-			List<System.WeakReference> selectedGhostItems = new List<System.WeakReference> ();
-			
-			foreach (ItemView view in this.panel.GetSelectedItemViews ())
-			{
-				selectedGhostItems.Add (new System.WeakReference (view.Item));
-			}
+			State state = this.SaveState ();
 
 			lock (this.exclusion)
 			{
-				this.selectedGhostItems = selectedGhostItems;
+				this.savedState = state;
 			}
 			
 			this.panel.ClearUserInterface ();
@@ -155,25 +150,96 @@ namespace Epsitec.Common.UI
 
 			this.panel.RefreshUserInterface ();
 
+			State state = null;
+
 			lock (this.exclusion)
 			{
-				foreach (System.WeakReference ghostItem in this.selectedGhostItems)
+				state = this.savedState;
+				this.savedState = null;
+			}
+
+			this.RestoreSavedState (state);
+		}
+
+		internal void RestoreSavedState(State state)
+		{
+			if (state != null)
+			{
+				ItemView view;
+
+				foreach (object item in state.SelectedItems)
 				{
-					object item = ghostItem.Target;
+					view = this.panel.GetItemView (item);
 
-					if (item != null)
+					if (view != null)
 					{
-						ItemView view = this.panel.GetItemView (item);
+						view.Select (true);
+					}
+				}
+			}
+		}
 
-						if (view != null)
+		internal State SaveState()
+		{
+			State state = new State ();
+			
+			foreach (ItemView view in this.panel.GetSelectedItemViews ())
+			{
+				state.AddSelectedItem (view.Item);
+			}
+
+			return state;
+		}
+
+		internal class State
+		{
+			public State()
+			{
+				this.selectedItems = new List<System.WeakReference> ();
+			}
+
+			public IEnumerable<object> SelectedItems
+			{
+				get
+				{
+					foreach (System.WeakReference item in this.selectedItems)
+					{
+						object value = item.Target;
+						
+						if (value != null)
 						{
-							view.Select (true);
+							yield return value;
 						}
 					}
 				}
-				
-				this.selectedGhostItems.Clear ();
 			}
+			
+			public void AddSelectedItem(object item)
+			{
+				this.selectedItems.Add (new System.WeakReference (item));
+			}
+
+			public void Remove(object item)
+			{
+				List<System.WeakReference> list = new List<System.WeakReference> ();
+
+				foreach (System.WeakReference weak in this.selectedItems)
+				{
+					if ((weak.Target == null) ||
+						(weak.Target == item))
+					{
+						//	Skip element
+					}
+					else
+					{
+						list.Add (weak);
+					}
+				}
+
+				this.selectedItems = list;
+			}
+
+			List<System.WeakReference> selectedItems;
 		}
 
 		/// <summary>
@@ -194,18 +260,16 @@ namespace Epsitec.Common.UI
 			//	dummy (ghost) item view instances so that the root panel can
 			//	enforce the selection mode (e.g. only one selected item).
 
-			System.WeakReference[] ghostItems;
+			State state;
 			
 			lock (this.exclusion)
 			{
-				ghostItems = this.selectedGhostItems.ToArray ();
+				state = this.savedState;
 			}
 
-			foreach (System.WeakReference ghostItem in ghostItems)
+			if (state != null)
 			{
-				object item = ghostItem.Target;
-				
-				if (item != null)
+				foreach (object item in state.SelectedItems)
 				{
 					ItemViewGhost view = new ItemViewGhost (this, item, size);
 
@@ -344,18 +408,10 @@ namespace Epsitec.Common.UI
 
 					lock (this.group.exclusion)
 					{
-						foreach (System.WeakReference ghostItem in this.group.selectedGhostItems)
+						if (this.group.savedState != null)
 						{
-							object item = ghostItem.Target;
-
-							if ((item != null) &&
-								(item != this.Item))
-							{
-								list.Add (new System.WeakReference (item));
-							}
+							this.group.savedState.Remove (this.Item);
 						}
-
-						this.group.selectedGhostItems = list;
 					}
 				}
 			}
@@ -368,8 +424,8 @@ namespace Epsitec.Common.UI
 
 		private ItemPanel panel;
 		private ItemPanel parentPanel;
-		
-		private List<System.WeakReference> selectedGhostItems = new List<System.WeakReference> ();
+
+		private State savedState;
 		private readonly object exclusion = new object ();
 		private bool hasValidUserInterface;
 	}

@@ -724,8 +724,8 @@ namespace Epsitec.Common.UI
 			
 			if (focus)
 			{
-				this.Focus ();
-				this.TrackCurrentItem (false);
+			//	this.Focus ();
+			//	this.TrackCurrentItem (false);
 			}
 		}
 
@@ -994,18 +994,12 @@ namespace Epsitec.Common.UI
 
 		private void TrackCurrentItem(ItemView view, bool focus, bool autoSelect)
 		{
-			if (this.CurrentItemTrackingMode == CurrentItemTrackingMode.None)
-			{
-				return;
-			}
-
 			if (view == null)
 			{
-				this.focusedItemView = null;
+				this.ClearFocus ();
 			}
 			else
 			{
-				this.focusedItemView = view;
 				this.Show (view);
 
 				switch (this.CurrentItemTrackingMode)
@@ -1175,7 +1169,7 @@ namespace Epsitec.Common.UI
 			}
 			else if (message.KeyCode == KeyCode.Add)
 			{
-				ItemView group = ItemViewWidget.FindGroupItemView (this.focusedItemView);
+				ItemView group = ItemViewWidget.FindGroupItemView (this.GetFocusedItemView ());
 
 				if (group != null)
 				{
@@ -1185,7 +1179,7 @@ namespace Epsitec.Common.UI
 			}
 			else if (message.KeyCode == KeyCode.Substract)
 			{
-				ItemView group = ItemViewWidget.FindGroupItemView (this.focusedItemView);
+				ItemView group = ItemViewWidget.FindGroupItemView (this.GetFocusedItemView ());
 
 				if (group != null)
 				{
@@ -1199,13 +1193,16 @@ namespace Epsitec.Common.UI
 
 				ItemView oldCurrent = this.GetFocusedItemView ();
 
-				this.ProcessArrowMove (message.KeyCode);
-				ItemView newCurrent = this.GetFocusedItemView ();
-
-				if (!message.IsControlPressed &&
-							!message.IsAltPressed)
+				if (this.ProcessArrowKeys (message.KeyCode))
 				{
-					if (message.KeyCode == KeyCode.ArrowUp ||
+					this.TrackCurrentItem (this.FindItemView (this.Items.CurrentItem), true, false);
+
+					ItemView newCurrent = this.GetFocusedItemView ();
+
+					if (!message.IsControlPressed &&
+						!message.IsAltPressed)
+					{
+						if (message.KeyCode == KeyCode.ArrowUp ||
 								message.KeyCode == KeyCode.ArrowDown ||
 								message.KeyCode == KeyCode.ArrowLeft ||
 								message.KeyCode == KeyCode.ArrowRight ||
@@ -1213,27 +1210,28 @@ namespace Epsitec.Common.UI
 								message.KeyCode == KeyCode.PageDown ||
 								message.KeyCode == KeyCode.Home ||
 								message.KeyCode == KeyCode.End)
-					{
-						IList<ItemView> list = this.GetSelectedItemViews ();
-						SelectionState state = new SelectionState (this);
-
-						if (message.IsShiftPressed && list.Count > 0)
 						{
-							this.ContinuousKeySelection (list, oldCurrent, newCurrent);
-						}
-						else
-						{
-							this.InternalDeselectItemViews (list);
-							this.InternalSelectItemView (newCurrent);
-						}
+							IList<ItemView> list = this.GetSelectedItemViews ();
+							SelectionState state = new SelectionState (this);
 
-						state.GenerateEvents ();
+							if (message.IsShiftPressed && list.Count > 0)
+							{
+								this.ContinuousKeySelection (list, oldCurrent, newCurrent);
+							}
+							else
+							{
+								this.InternalDeselectItemViews (list);
+								this.InternalSelectItemView (newCurrent);
+							}
+
+							state.GenerateEvents ();
+						}
 					}
-				}
 
-				if (oldCurrent != newCurrent)
-				{
-					this.Show (newCurrent);
+					if (oldCurrent != newCurrent)
+					{
+						this.Show (newCurrent);
+					}
 				}
 			}
 		}
@@ -1242,7 +1240,7 @@ namespace Epsitec.Common.UI
 		{
 			if (itemView != null)
 			{
-				this.focusedItemView = itemView;
+				this.RootPanel.RecordFocus (itemView.Item);
 
 				if (itemView.HasValidUserInterface)
 				{
@@ -1365,7 +1363,7 @@ namespace Epsitec.Common.UI
 			this.Items.MoveCurrentToPosition(clickedIndex);
 		}
 
-		private void ProcessArrowMove(Common.Widgets.KeyCode keyCode)
+		private bool ProcessArrowKeys(Common.Widgets.KeyCode keyCode)
 		{
 			int pos = this.Items.CurrentPosition;
 
@@ -1402,7 +1400,12 @@ namespace Epsitec.Common.UI
 					case KeyCode.PageDown:
 						this.ProcessPageDownMove();
 						break;
+
+					default:
+						return false;
 				}
+
+				return true;
 			}
 
 			if (this.Layout == ItemPanelLayout.RowsOfTiles)
@@ -1454,13 +1457,20 @@ namespace Epsitec.Common.UI
 					case KeyCode.PageDown:
 						this.ProcessPageDownMove();
 						break;
+
+					default:
+						return false;
 				}
+
+				return true;
 			}
 			
 			if (this.Layout == ItemPanelLayout.ColumnsOfTiles)
 			{
 				//	TODO:
 			}
+
+			return false;
 		}
 
 		private void ProcessPageUpMove()
@@ -1662,15 +1672,18 @@ namespace Epsitec.Common.UI
 			return found;
 		}
 		
-		private ItemView GetFocusedItemView()
+		internal ItemView GetFocusedItemView()
 		{
-			if (this.focusedItemView == null)
+			ItemPanel root = this.RootPanel;
+			object    item = root.focusedItem;
+
+			if (item == null)
 			{
-				return this.FindItemView (this.Items.CurrentItem);
+				return null;
 			}
 			else
 			{
-				return this.focusedItemView;
+				return this.FindItemView (item);
 			}
 		}
 
@@ -1882,8 +1895,8 @@ namespace Epsitec.Common.UI
 
 		private void RecreateUserInterface(IEnumerable<ItemView> views, Drawing.Rectangle aperture)
 		{
-			List<ItemView> dispose = new List<ItemView> ();
-			List<ItemView> create  = new List<ItemView> ();
+			List<ItemView> clear  = new List<ItemView> ();
+			List<ItemView> create = new List<ItemView> ();
 			
 			foreach (ItemView view in views)
 			{
@@ -1896,10 +1909,10 @@ namespace Epsitec.Common.UI
 					}
 					else
 					{
-						//	The view is no longer visible; remember to dispose the
+						//	The view is no longer visible; remember to dispose or clear the
 						//	user interface.
 
-						dispose.Add (view);
+						clear.Add (view);
 					}
 				}
 				else
@@ -1917,10 +1930,10 @@ namespace Epsitec.Common.UI
 
 			//	TODO: make this code asynchronous
 
-			dispose.ForEach (
+			clear.ForEach (
 				delegate (ItemView view)
 				{
-					view.DisposeUserInterface ();
+					view.ClearUserInterface ();
 				} );
 			
 			create.ForEach (
@@ -2492,7 +2505,7 @@ namespace Epsitec.Common.UI
 		bool							isGroupPanelEnabled;
 
 		ItemView						enteredItemView;
-		ItemView						focusedItemView;
+		object							focusedItem;
 
 		double							minItemWidth;
 		double							maxItemWidth;
@@ -2502,9 +2515,47 @@ namespace Epsitec.Common.UI
 		int								totalRowCount;
 		int								totalColumnCount;
 
-		internal void NotifyWidgetAboutToGetFocus(ItemViewWidget widget)
+		internal void NotifyFocusChanged(ItemViewWidget widget, bool focus)
 		{
-			this.focusedItemView = ItemViewWidget.FindItemView (widget);
+			ItemPanel root = this.RootPanel;
+			ItemView  view = widget.ItemView;
+			object    item = view.Item;
+
+			System.Diagnostics.Debug.WriteLine (string.Format ("NotifyFocus: {0} {1} {2}", view.Index, focus, view.Item));
+
+			if (focus)
+			{
+				root.RecordFocus (item);
+			}
+			else if (root.focusedItem == item)
+			{
+				root.ClearFocus ();
+			}
+		}
+
+		internal void RecordFocus(object item)
+		{
+			if (this.focusedItem == item)
+			{
+				return;
+			}
+
+			System.Diagnostics.Debug.Assert (item != null);
+			System.Diagnostics.Debug.WriteLine (string.Format ("RecordFocus: {0} item={1} group={2}", item, this.Items.Items.IndexOf (item), this.Items.Groups.IndexOf (item as CollectionViewGroup)));
+			
+			this.focusedItem = item;
+		}
+
+		internal void ClearFocus()
+		{
+			if (this.focusedItem == null)
+			{
+				return;
+			}
+
+			System.Diagnostics.Debug.WriteLine (string.Format ("ClearFocus: {0} item={1} group={2}", this.focusedItem, this.Items.Items.IndexOf (this.focusedItem), this.Items.Groups.IndexOf (this.focusedItem as CollectionViewGroup)));
+
+			this.focusedItem = null;
 		}
 
 		internal void NotifyWidgetClicked(ItemViewWidget widget, Widgets.Message message, Drawing.Point pos)

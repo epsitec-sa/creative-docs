@@ -298,7 +298,7 @@ namespace Epsitec.Common.UI
 			Widgets.Window.RunInTestEnvironment (window);
 		}
 
-		private static System.Random random = new System.Random ();
+		private static System.Random random = new System.Random (0);
 
 		private static StructuredData CreateRandomRecord()
 		{
