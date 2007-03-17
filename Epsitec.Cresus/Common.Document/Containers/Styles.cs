@@ -724,19 +724,16 @@ namespace Epsitec.Common.Document.Containers
 					if ( sel == -1 )  return;
 					Properties.Aggregate agg = this.document.Aggregates[sel] as Properties.Aggregate;
 
-					string brief;
-					int lines;
-					agg.GetStyleBrief(out brief, out lines);
-					double h = 5 + lines*14 + 5;
+					string brief = agg.GetStyleBrief();
 
 					this.styleBriefPanel = new StaticText(this.panelContainer);
 					this.styleBriefPanel.ContentAlignment = ContentAlignment.TopLeft;
-					this.styleBriefPanel.PreferredHeight = h;
 					this.styleBriefPanel.Dock = DockStyle.Fill;
 					this.styleBriefPanel.Margins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
 					this.styleBriefPanel.Text = brief;
+					this.styleBriefPanel.PreferredHeight = this.styleBriefPanel.GetBestFitSize().Height;
 
-					this.panelContainer.PreferredHeight = h;
+					this.panelContainer.PreferredHeight = this.styleBriefPanel.PreferredHeight;
 //-					this.panelContainer.ForceLayout();
 					return;
 				}

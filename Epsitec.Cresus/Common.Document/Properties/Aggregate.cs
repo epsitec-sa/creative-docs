@@ -133,21 +133,19 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		public void GetStyleBrief(out string brief, out int lines)
+		public string GetStyleBrief()
 		{
 			//	Donne un texte résumé sur un style graphique.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			builder.Append("<font size=\"80%\">");
-			lines = 0;
 
 			foreach ( Properties.Abstract property in this.styles )
 			{
 				property.PutStyleBrief(builder);
-				lines ++;
 			}
 
 			builder.Append("</font>");
-			brief = builder.ToString();
+			return builder.ToString();
 		}
 
 

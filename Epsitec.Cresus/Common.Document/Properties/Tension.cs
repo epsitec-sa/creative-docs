@@ -17,7 +17,7 @@ namespace Epsitec.Common.Document.Properties
 		protected override void Initialize()
 		{
 			base.Initialize ();
-			this.tensionValue = 0.6;
+			this.tensionValue = 0.6;  // tension de 60% par défaut
 		}
 
 		public double TensionValue
