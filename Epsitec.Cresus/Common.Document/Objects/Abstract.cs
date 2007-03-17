@@ -2391,6 +2391,11 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.MagnetClearStarting();
 		}
 
+		public virtual void CreateProcessMessage(Message message, Point pos)
+		{
+			//	Gestion du clavier pendant la création d'un objet.
+		}
+
 		public virtual bool CreateIsEnding(DrawingContext drawingContext)
 		{
 			//	Indique si la création de l'objet est terminée.

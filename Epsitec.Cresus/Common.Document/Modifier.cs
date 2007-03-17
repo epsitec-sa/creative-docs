@@ -295,6 +295,15 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public bool IsToolObject
+		{
+			//	Indique si l'outil est un objet.
+			get
+			{
+				return this.tool.StartsWith("Object");
+			}
+		}
+
 		public string ToolName(string tool)
 		{
 			//	Retourne le nom d'un outil.

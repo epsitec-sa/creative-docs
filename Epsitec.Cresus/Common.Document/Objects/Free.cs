@@ -368,6 +368,49 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
+		public override void CreateProcessMessage(Common.Widgets.Message message, Point pos)
+		{
+			//	Gestion du clavier pendant la création d'un objet.
+			if (message.MessageType == Common.Widgets.MessageType.KeyDown)
+			{
+				double spacing = Free.radiusSpacing;
+
+				if (message.KeyCode == Epsitec.Common.Widgets.KeyCode.ArrowUp   ||
+					message.KeyCode == Epsitec.Common.Widgets.KeyCode.ArrowRight||
+					message.KeyCode == Epsitec.Common.Widgets.KeyCode.ShiftKey  )
+				{
+					spacing += 20;
+				}
+
+				if (message.KeyCode == Epsitec.Common.Widgets.KeyCode.ArrowDown ||
+					message.KeyCode == Epsitec.Common.Widgets.KeyCode.ArrowLeft ||
+					message.KeyCode == Epsitec.Common.Widgets.KeyCode.ControlKey)
+				{
+					spacing -= 20;
+				}
+
+				if (message.KeyCode == Epsitec.Common.Widgets.KeyCode.Multiply||
+					message.KeyCode == Epsitec.Common.Widgets.KeyCode.Decimal )
+				{
+					spacing = 200;
+				}
+
+				spacing = System.Math.Max(spacing, 20);
+				spacing = System.Math.Min(spacing, 400);
+
+				if (Free.radiusSpacing != spacing)
+				{
+					this.document.Notifier.NotifyArea(this.BoundingBox);
+
+					Free.radiusSpacing = spacing;
+					this.spacing = Free.radiusSpacing/this.zoom;
+					
+					this.SetDirtyBbox();
+					this.document.Notifier.NotifyArea(this.BoundingBox);
+				}
+			}
+		}
+
 		public override bool CreateIsExist(DrawingContext drawingContext)
 		{
 			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
@@ -390,7 +433,8 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Calcule l'espacement, en fonction du zoom actuel, afin d'obtenir une distance visible
 			//	toujours identique.
-			this.spacing = 200/drawingContext.Zoom;
+			this.zoom = drawingContext.Zoom;
+			this.spacing = Free.radiusSpacing/this.zoom;
 		}
 
 
@@ -708,6 +752,9 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
+		protected static double			radiusSpacing = 200;
+
+		protected double				zoom;
 		protected double				spacing;
 		protected Point					initialPos;
 		protected Point					vp1, vp2;

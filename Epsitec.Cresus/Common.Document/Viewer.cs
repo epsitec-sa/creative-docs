@@ -1747,6 +1747,17 @@ namespace Epsitec.Common.Document
 
 		protected bool EditProcessMessage(Message message, Point pos)
 		{
+			if (this.document.Modifier.IsToolObject)
+			{
+				if ( this.createRank != -1 )
+				{
+					Objects.Abstract layer = this.drawingContext.RootObject();
+					Objects.Abstract obj = layer.Objects[this.createRank] as Objects.Abstract;
+
+					obj.CreateProcessMessage(message, pos);
+				}
+			}
+
 			Objects.AbstractText editObject = this.document.Modifier.RetEditObject();
 			if ( editObject == null )  return false;
 
