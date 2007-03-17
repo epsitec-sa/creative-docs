@@ -137,7 +137,8 @@ namespace Epsitec.Common.Widgets
 			//	Si la chaîne des widgets décrivant les widgets contenant le
 			//	focus n'existe pas, on la construit
 
-			if (this.focus_chain.Count == 0)
+			if ((this.focus_chain.Count == 0) &&
+				(this.window != null))
 			{
 				Widget widget = this.window.FocusedWidget;
 

@@ -495,6 +495,7 @@ namespace Epsitec.Common.UI
 				this.slider.Anchor         = AnchorStyles.Left | AnchorStyles.TopAndBottom;
 				this.slider.PreferredWidth = 5;
 				this.slider.PreferredHeight *= ItemTable.HeaderHeightFactor;
+				this.slider.AutoFocus      = false;
 				
 				GridLayoutEngine.SetColumn (this.button, header.columns.Count);
 				GridLayoutEngine.SetRow (this.button, 0);
