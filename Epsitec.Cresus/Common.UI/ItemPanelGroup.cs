@@ -131,11 +131,11 @@ namespace Epsitec.Common.UI
 
 		internal void RefreshUserInterface()
 		{
-			System.Diagnostics.Debug.Assert (this.hasValidUserInterface == false);
-
-			this.hasValidUserInterface = true;
-
-			this.panel.RefreshUserInterface ();
+			if (this.hasValidUserInterface == false)
+			{
+				this.hasValidUserInterface = true;
+				this.panel.RefreshUserInterface ();
+			}
 		}
 
 		public override Drawing.Margins GetInternalPadding()

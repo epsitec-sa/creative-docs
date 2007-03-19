@@ -415,6 +415,58 @@ namespace Epsitec.Common.UI
 
 			window.Root.Children.Add (table);
 
+			IList<StructuredData> source = panel.Items.SourceCollection as IList<StructuredData>;
+
+			Widgets.FrameBox box = new Widgets.FrameBox ();
+
+			box.Dock = Widgets.DockStyle.Bottom;
+			box.PreferredHeight = 36;
+			box.Padding = new Drawing.Margins (4, 4, 8, 8);
+			box.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
+
+			window.Root.Children.Add (table);
+			window.Root.Children.Add (box);
+			
+			Widgets.Button buttonClear  = ItemPanelTest.CreateButton (box, "*");
+			Widgets.Button buttonTop    = ItemPanelTest.CreateButton (box, "^");
+			Widgets.Button buttonBottom = ItemPanelTest.CreateButton (box, "v");
+			Widgets.Button buttonPrev   = ItemPanelTest.CreateButton (box, "&lt;");
+			Widgets.Button buttonNext   = ItemPanelTest.CreateButton (box, "&gt;");
+			Widgets.Button buttonCreate = ItemPanelTest.CreateButton (box, "+");
+
+			buttonClear.Clicked += delegate { panel.Items.MoveCurrentToPosition (-1); };
+			buttonTop.Clicked += delegate { panel.Items.MoveCurrentToFirst (); };
+			buttonBottom.Clicked += delegate { panel.Items.MoveCurrentToLast (); };
+			buttonPrev.Clicked += delegate { panel.Items.MoveCurrentToPrevious (); };
+			buttonNext.Clicked += delegate { panel.Items.MoveCurrentToNext (); };
+			buttonCreate.Clicked += delegate { source.Add (ItemPanelTest.CreateRandomRecord ()); };
+
+			buttonCreate.Margins = new Drawing.Margins (8, 0, 0, 0);
+
+			box = new Widgets.FrameBox ();
+
+			box.Dock = Widgets.DockStyle.Bottom;
+			box.PreferredHeight = 36;
+			box.Padding = new Drawing.Margins (4, 4, 8, 8);
+			box.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
+			
+			Widgets.Button button0 = ItemPanelTest.CreateButton (box, "0");
+			Widgets.Button button1 = ItemPanelTest.CreateButton (box, "1");
+			Widgets.Button buttonN = ItemPanelTest.CreateButton (box, "n");
+			
+			Widgets.TextField text = new Widgets.TextField (box);
+
+			text.Margins = new Drawing.Margins (16, 0, 0, 0);
+			text.Dock = Widgets.DockStyle.Stacked;
+			text.PreferredWidth = 40;
+			text.VerticalAlignment = Widgets.VerticalAlignment.Center;
+
+			button0.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.None; };
+			button1.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne; };
+			buttonN.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.Multiple; };
+
+			window.Root.Children.Add (box);
+			
 			panel.Show (panel.GetItemView (0));
 
 			window.Show ();
