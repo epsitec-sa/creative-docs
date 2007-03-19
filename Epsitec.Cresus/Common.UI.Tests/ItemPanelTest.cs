@@ -234,6 +234,13 @@ namespace Epsitec.Common.UI
 			Widgets.Button button0 = ItemPanelTest.CreateButton (box, "0");
 			Widgets.Button button1 = ItemPanelTest.CreateButton (box, "1");
 			Widgets.Button buttonN = ItemPanelTest.CreateButton (box, "n");
+			
+			Widgets.TextField text = new Widgets.TextField (box);
+
+			text.Margins = new Drawing.Margins (16, 0, 0, 0);
+			text.Dock = Widgets.DockStyle.Stacked;
+			text.PreferredWidth = 40;
+			text.VerticalAlignment = Widgets.VerticalAlignment.Center;
 
 			button0.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.None; };
 			button1.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne; };
@@ -323,6 +330,13 @@ namespace Epsitec.Common.UI
 			Widgets.Button button0 = ItemPanelTest.CreateButton (box, "0");
 			Widgets.Button button1 = ItemPanelTest.CreateButton (box, "1");
 			Widgets.Button buttonN = ItemPanelTest.CreateButton (box, "n");
+			
+			Widgets.TextField text = new Widgets.TextField (box);
+
+			text.Margins = new Drawing.Margins (16, 0, 0, 0);
+			text.Dock = Widgets.DockStyle.Stacked;
+			text.PreferredWidth = 40;
+			text.VerticalAlignment = Widgets.VerticalAlignment.Center;
 
 			button0.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.None; };
 			button1.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne; };

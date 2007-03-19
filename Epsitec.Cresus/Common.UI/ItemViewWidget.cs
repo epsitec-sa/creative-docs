@@ -54,7 +54,7 @@ namespace Epsitec.Common.UI
 			}
 			if (panel != null)
 			{
-				if (panel.IsFocused)
+				if (panel.RootPanel.ContainsKeyboardFocus)
 				{
 					state |= Widgets.WidgetPaintState.InheritedFocus;
 				}
