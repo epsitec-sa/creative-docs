@@ -314,7 +314,7 @@ namespace Epsitec.Common.OpenType
 		}
 
 		
-		internal FontData						FontData
+		public FontData							FontData
 		{
 			get
 			{
