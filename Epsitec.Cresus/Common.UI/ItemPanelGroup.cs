@@ -34,7 +34,8 @@ namespace Epsitec.Common.UI
 			this.panel.CurrentItemTrackingMode = this.parentPanel.CurrentItemTrackingMode;
 			
 			this.panel.ItemViewDefaultSize = this.parentPanel.ItemViewDefaultSize;
-			this.panel.SetGroupPanelEnable (view.IsExpanded);
+			
+			this.SetGroupPanelEnable (view.IsExpanded);
 
 			this.parentPanel.AddPanelGroup (this);
 		}
@@ -68,6 +69,25 @@ namespace Epsitec.Common.UI
 			get
 			{
 				return this.ItemView.Item as CollectionViewGroup;
+			}
+		}
+
+		internal void SetGroupPanelEnable(bool enable)
+		{
+			if (enable)
+			{
+				this.panel.SetGroupPanelEnable (enable);
+			}
+			else
+			{
+				State state = this.SaveState ();
+
+				lock (this.exclusion)
+				{
+					this.savedState = state;
+				}
+				
+				this.panel.SetGroupPanelEnable (enable);
 			}
 		}
 
@@ -133,13 +153,16 @@ namespace Epsitec.Common.UI
 			//	Remember all items which were selected, so we can reselect
 			//	them when the ViewItem objects get recreated...
 
-			State state = this.SaveState ();
-
-			lock (this.exclusion)
+			if (this.panel.IsGroupPanelEnabled)
 			{
-				this.savedState = state;
+				State state = this.SaveState ();
+
+				lock (this.exclusion)
+				{
+					this.savedState = state;
+				}
 			}
-			
+
 			this.panel.ClearUserInterface ();
 			this.hasValidUserInterface = false;
 		}

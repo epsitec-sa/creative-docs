@@ -838,6 +838,14 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		internal bool IsGroupPanelEnabled
+		{
+			get
+			{
+				return this.isGroupPanelEnabled;
+			}
+		}
+
 		internal void SetGroupPanelEnable(bool enable)
 		{
 			if (this.isGroupPanelEnabled != enable)
@@ -1365,6 +1373,12 @@ namespace Epsitec.Common.UI
 
 		private bool ProcessArrowKeys(Common.Widgets.KeyCode keyCode)
 		{
+			if (this.Items == null)
+			{
+				//	TODO: gérer proprement !!!
+				return false;
+			}
+			
 			int pos = this.Items.CurrentPosition;
 
 			if (this.Layout == ItemPanelLayout.VerticalList)
