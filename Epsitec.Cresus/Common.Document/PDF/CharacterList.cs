@@ -59,6 +59,16 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
+		public Drawing.Rectangle Bounds
+		{
+			get
+			{
+				double xMin, xMax, yMin, yMax;
+				this.openTypeFont.GetGlyphBounds(this.glyph, 1.0, out xMin, out xMax, out yMin, out yMax);
+				return new Drawing.Rectangle(xMin, yMin, xMax-xMin, yMax-yMin);
+			}
+		}
+
 		public OpenType.Font OpenTypeFont
 		{
 			get { return this.openTypeFont; }

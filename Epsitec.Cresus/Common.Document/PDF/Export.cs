@@ -2050,6 +2050,19 @@ namespace Epsitec.Common.Document.PDF
 			Port port = new Port();
 			port.ColorForce = ColorForce.Nothing;  // pas de commande de couleur !
 			port.DefaultDecimals = 4;
+
+			//	Sans "wx wy llx lly urx ury d1", Acrobat 8 n'arrive pas à afficher les caractères.
+			//	Attention, si wx ne correspond pas à la valeur générée par CreateFontWidths, Acrobat 8 plante !
+			//	Acrobat 8 n'apprécie pas du tout si "... d1" est remplacé par "wx wy d0" !
+			Rectangle bounds = cl.Bounds;
+			port.PutValue(cl.Width);       // wx
+			port.PutValue(0);              // wy
+			port.PutValue(bounds.Left);    // iix
+			port.PutValue(bounds.Bottom);  // iiy
+			port.PutValue(bounds.Right);   // urx
+			port.PutValue(bounds.Top);     // ury
+			port.PutCommand("d1 ");        // voir [*] page 393
+
 			port.PaintSurface(path);
 
 			string pdf = port.GetPDF();
