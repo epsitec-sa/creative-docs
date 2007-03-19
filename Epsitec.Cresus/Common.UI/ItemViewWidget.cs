@@ -32,14 +32,18 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public ItemPanel GetParentPanel()
+		public ItemPanel ParentPanel
 		{
-			return this.view.Owner;
+			get
+			{
+				return this.view.Owner;
+			}
 		}
 
+		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			ItemPanel panel = this.GetParentPanel ();
+			ItemPanel panel = this.ParentPanel;
 			
 			Widgets.WidgetPaintState state   = this.PaintState;
 			Widgets.IAdorner         adorner = Widgets.Adorners.Factory.Active;
@@ -63,7 +67,7 @@ namespace Epsitec.Common.UI
 		{
 			base.ProcessMessage (message, pos);
 
-			ItemPanel panel = this.GetParentPanel ();
+			ItemPanel panel = this.ParentPanel;
 			
 			if (message.IsMouseType)
 			{
@@ -94,7 +98,7 @@ namespace Epsitec.Common.UI
 		{
 			if (this.KeyboardFocus)
 			{
-				ItemPanel panel = this.GetParentPanel ();
+				ItemPanel panel = this.ParentPanel;
 
 				if (panel != null)
 				{
@@ -103,6 +107,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		
 		private void HandleKeyboardFocusChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			bool focus = (bool) e.NewValue;
@@ -111,7 +116,7 @@ namespace Epsitec.Common.UI
 
 			if (focus)
 			{
-				ItemPanel panel = this.GetParentPanel ();
+				ItemPanel panel = this.ParentPanel;
 
 				if (panel != null)
 				{
@@ -124,6 +129,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		
 		internal static ItemView FindItemView(Widgets.Widget widget)
 		{
 			while (widget != null)
@@ -202,6 +208,7 @@ namespace Epsitec.Common.UI
 			return null;
 		}
 
+		
 		private ItemView view;
 	}
 }

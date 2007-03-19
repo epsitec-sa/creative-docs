@@ -30,10 +30,11 @@ namespace Epsitec.Common.UI
 			this.panel.GroupSelectionMode = this.ParentPanel.GroupSelectionMode;
 			
 			this.panel.CurrentItemTrackingMode = this.ParentPanel.CurrentItemTrackingMode;
-			
+
+			this.panel.SetParentGroup (this);
 			this.panel.ItemViewDefaultSize = this.ParentPanel.ItemViewDefaultSize;
 			
-			this.SetGroupPanelEnable (view.IsExpanded);
+			this.SetPanelIsExpanded (view.IsExpanded);
 
 			this.ParentPanel.AddPanelGroup (this);
 		}
@@ -46,14 +47,6 @@ namespace Epsitec.Common.UI
 			}
 		}
 		
-		public ItemPanel ParentPanel
-		{
-			get
-			{
-				return this.ItemView.Owner;
-			}
-		}
-
 		public ItemPanel ChildPanel
 		{
 			get
@@ -70,8 +63,9 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		internal void SetGroupPanelEnable(bool enable)
+		internal void SetPanelIsExpanded(bool enable)
 		{
+#if false
 			if (this.panel.IsGroupPanelEnabled != enable)
 			{
 				if (enable)
@@ -94,6 +88,7 @@ namespace Epsitec.Common.UI
 					this.panel.SetGroupPanelEnable (enable);
 				}
 			}
+#endif
 		}
 
 		protected override void Dispose(bool disposing)
@@ -157,6 +152,7 @@ namespace Epsitec.Common.UI
 			//	Remember all items which were selected, so we can reselect
 			//	them when the ViewItem objects get recreated...
 
+#if false
 			if (this.panel.IsGroupPanelEnabled)
 			{
 				State state = this.SaveState ();
@@ -166,6 +162,7 @@ namespace Epsitec.Common.UI
 					this.savedState = state;
 				}
 			}
+#endif
 
 			this.panel.ClearUserInterface ();
 			this.hasValidUserInterface = false;

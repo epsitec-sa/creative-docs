@@ -59,7 +59,7 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				return this.Parent as ItemPanelGroup;
+				return this.parentGroup;
 			}
 		}
 
@@ -69,10 +69,9 @@ namespace Epsitec.Common.UI
 			{
 				ItemPanelGroup parent = this.ParentGroup;
 
-				if ((parent != null) &&
-					(parent.ParentPanel != null))
+				if (this.parentGroup != null)
 				{
-					return parent.ParentPanel.RootPanel;
+					return this.parentGroup.ParentPanel.RootPanel;
 				}
 				else
 				{
@@ -85,12 +84,9 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				ItemPanelGroup parent = this.ParentGroup;
-
-				if ((parent != null) &&
-					(parent.ParentPanel != null))
+				if (this.parentGroup != null)
 				{
-					return parent.ParentPanel.PanelDepth + 1;
+					return this.parentGroup.ParentPanel.PanelDepth + 1;
 				}
 				else
 				{
@@ -862,15 +858,15 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				return this.isGroupPanelEnabled;
+				return this.parentGroup != null;
 			}
 		}
 
-		internal void SetGroupPanelEnable(bool enable)
+		internal void SetParentGroup(ItemPanelGroup parentGroup)
 		{
-			if (this.isGroupPanelEnabled != enable)
+			if (this.parentGroup != parentGroup)
 			{
-				this.isGroupPanelEnabled = enable;
+				this.parentGroup = parentGroup;
 				this.RefreshItemViews ();
 			}
 		}
@@ -2045,11 +2041,12 @@ namespace Epsitec.Common.UI
 
 			List<ItemView> views = new List<ItemView> ();
 
-			//	TODO: make this code asynchronous
-			
 			if ((items != null) &&
 				(items.Items.Count > 0))
 			{
+				//	We are executing in the root panel; create the item views for
+				//	every item (or every group and sub-group) :
+				
 				if (items.Groups.Count == 0)
 				{
 					this.CreateItemViews (views, items.Items, currentViews);
@@ -2059,22 +2056,20 @@ namespace Epsitec.Common.UI
 					this.CreateItemViews (views, items.Groups, currentViews);
 				}
 			}
-			else if (this.isGroupPanelEnabled)
+			else if (this.parentGroup != null)
 			{
-				ItemPanelGroup parent = this.ParentGroup;
+				//	We are executing in a sub-panel, which is used to represent
+				//	the contents of a group :
+				
+				CollectionViewGroup group = this.parentGroup.CollectionViewGroup;
 
-				if (parent != null)
+				if (group.HasSubgroups)
 				{
-					CollectionViewGroup group  = parent.CollectionViewGroup;
-
-					if (group.HasSubgroups)
-					{
-						this.CreateItemViews (views, group.Subgroups, currentViews);
-					}
-					else
-					{
-						this.CreateItemViews (views, group.Items as System.Collections.IList, currentViews);
-					}
+					this.CreateItemViews (views, group.Subgroups, currentViews);
+				}
+				else
+				{
+					this.CreateItemViews (views, group.Items as System.Collections.IList, currentViews);
 				}
 			}
 
@@ -2587,8 +2582,9 @@ namespace Epsitec.Common.UI
 		bool							isRefreshing;
 		bool							isRefreshPending;
 		bool							isCurrentShowPending;
-		bool							isGroupPanelEnabled;
 		int								manualTrackingCounter;
+
+		ItemPanelGroup					parentGroup;
 
 		ItemView						enteredItemView;
 		object							focusedItem;
