@@ -588,7 +588,17 @@ namespace Epsitec.Common.UI
 
 			if (queue)
 			{
-				Widgets.Application.QueueAsyncCallback (root.ExecuteAsyncRefreshOperations);
+				if (root.manualTrackingCounter == 0)
+				{
+					Widgets.Application.QueueAsyncCallback (root.ExecuteAsyncRefreshOperations);
+				}
+				else
+				{
+					//	The user expects the update to occur immediately; don't queue
+					//	the refresh but execute it instead :
+					
+					this.ExecuteAsyncRefreshOperations ();
+				}
 			}
 		}
 
