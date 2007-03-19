@@ -428,18 +428,6 @@ namespace Epsitec.Common.UI
 
 			if (this.widget != null)
 			{
-#if false
-				if (this.widget.ContainsKeyboardFocus)
-				{
-					ItemPanel panel = this.widget.GetParentPanel ();
-
-					if (panel != null)
-					{
-						panel.RecordFocus (this);
-						panel.RootPanel.Focus ();
-					}
-				}
-#endif
 				this.factory.DisposeUserInterface (this.widget);
 
 				this.widget    = null;

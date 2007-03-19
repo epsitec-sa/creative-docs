@@ -130,12 +130,14 @@ namespace Epsitec.Common.UI
 			table.Columns.Add ("Article", 200);
 			table.Columns.Add ("Price", 60);
 
-			panel.Items = ItemPanelTest.GetStructuredItems (true);
+			panel.Items = ItemPanelTest.GetStructuredItems ();
 			panel.Layout = ItemPanelLayout.VerticalList;
 			panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne;
 			panel.GroupSelectionMode = ItemPanelSelectionMode.ExactlyOne;
 			panel.ItemViewDefaultSize = new Drawing.Size (300, 20);
-			
+
+			panel.Items.GroupDescriptions.Add (new PropertyGroupDescription ("Category"));
+
 			table.SetManualBounds (new Drawing.Rectangle (0, 0, 99, 105));
 
 			Assert.AreEqual (new Drawing.Size (99-17-2*1, 105-26-17-2*1), panel.Aperture.Size);
@@ -213,7 +215,7 @@ namespace Epsitec.Common.UI
 			table.ColumnHeader.SetColumnText (1, "Description");
 			table.ColumnHeader.SetColumnText (2, "Prix unitaire");
 
-			panel.Items = ItemPanelTest.GetStructuredItems (false);
+			panel.Items = ItemPanelTest.GetStructuredItems ();
 			panel.Layout = ItemPanelLayout.VerticalList;
 			panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne;
 			panel.GroupSelectionMode = ItemPanelSelectionMode.ExactlyOne;
@@ -255,13 +257,15 @@ namespace Epsitec.Common.UI
 			
 			ItemPanel panel = table.ItemPanel;
 
-			panel.Items = ItemPanelTest.GetStructuredItems (true);
+			panel.Items = ItemPanelTest.GetStructuredItems ();
 			panel.Layout = ItemPanelLayout.VerticalList;
 			panel.ItemSelectionMode = ItemPanelSelectionMode.ZeroOrOne;
 			panel.GroupSelectionMode = ItemPanelSelectionMode.None;
 			panel.ItemViewDefaultSize = new Drawing.Size (300, 20);
 			panel.ItemViewDefaultExpanded = true;
 			panel.CurrentItemTrackingMode = CurrentItemTrackingMode.AutoSelect;
+
+			panel.Items.GroupDescriptions.Add (new PropertyGroupDescription ("Category"));
 
 			IList<StructuredData> source = panel.Items.SourceCollection as IList<StructuredData>;
 
@@ -341,22 +345,24 @@ namespace Epsitec.Common.UI
 			ItemTable table = new ItemTable ();
 			table.Dock = Widgets.DockStyle.Fill;
 
+			table.SourceType = ItemPanelTest.GetStructuredType ();
+
+			table.Columns.Add ("Stock", 40);
+			table.Columns.Add ("Article", 200);
+			table.Columns.Add ("Price", 60);
+			
 			ItemPanel panel = table.ItemPanel;
 
-			panel.Items = ItemPanelTest.GetStructuredItems (true);
+			panel.Items = ItemPanelTest.GetStructuredItems ();
 			panel.Layout = ItemPanelLayout.VerticalList;
 			panel.ItemSelectionMode = ItemPanelSelectionMode.ZeroOrOne;
-			panel.Aperture = new Drawing.Rectangle (0, 0, dx, dy);
+			panel.GroupSelectionMode = ItemPanelSelectionMode.None;
 			panel.ItemViewDefaultSize = new Drawing.Size (320, 20);
+			panel.ItemViewDefaultExpanded = false;
+			panel.CurrentItemTrackingMode = CurrentItemTrackingMode.AutoSelect;
 
+			panel.Items.GroupDescriptions.Add (new PropertyGroupDescription ("Category"));
 			panel.Items.GroupDescriptions.Add (new PropertyGroupDescription ("Article"));
-
-
-			ItemPanelColumnHeader header = table.ColumnHeader;
-
-			header.AddColumn ("Stock", Support.Druid.Empty);
-			header.AddColumn ("Article", Support.Druid.Empty);
-			header.AddColumn ("Price", Support.Druid.Empty);
 
 			window.Root.Children.Add (table);
 
@@ -537,7 +543,7 @@ namespace Epsitec.Common.UI
 			return view;
 		}
 
-		private static CollectionView GetStructuredItems(bool group)
+		private static CollectionView GetStructuredItems()
 		{
 			Types.Collections.ObservableList<StructuredData> source = new Types.Collections.ObservableList<StructuredData> ();
 			CollectionView view = new CollectionView (source);
@@ -546,11 +552,6 @@ namespace Epsitec.Common.UI
 
 			view.SortDescriptions.Add (new SortDescription ("Article"));
 			view.SortDescriptions.Add (new SortDescription ("Price"));
-
-			if (group)
-			{
-				view.GroupDescriptions.Add (new PropertyGroupDescription ("Category"));
-			}
 
 			return view;
 		}

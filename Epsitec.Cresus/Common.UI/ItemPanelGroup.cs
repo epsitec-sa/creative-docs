@@ -74,20 +74,27 @@ namespace Epsitec.Common.UI
 
 		internal void SetGroupPanelEnable(bool enable)
 		{
-			if (enable)
+			if (this.panel.IsGroupPanelEnabled != enable)
 			{
-				this.panel.SetGroupPanelEnable (enable);
-			}
-			else
-			{
-				State state = this.SaveState ();
-
-				lock (this.exclusion)
+				if (enable)
 				{
-					this.savedState = state;
+					this.panel.SetGroupPanelEnable (enable);
 				}
-				
-				this.panel.SetGroupPanelEnable (enable);
+				else
+				{
+					//	Remember the state of the contents when the group panel gets
+					//	collapsed; this is required, as the selected state of the items
+					//	would otherwise be lost.
+
+					State state = this.SaveState ();
+
+					lock (this.exclusion)
+					{
+						this.savedState = state;
+					}
+
+					this.panel.SetGroupPanelEnable (enable);
+				}
 			}
 		}
 
