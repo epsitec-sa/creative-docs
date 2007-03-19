@@ -979,7 +979,8 @@ namespace Epsitec.Common.UI
 
 							for (int i = 0; i < path.Count; i++)
 							{
-								view = this.FindItemView (path[i]);
+								view = panel.FindItemView (path[i]);
+								view.IsExpanded = true;
 
 								panel.TrackCurrentItem (view, focus, autoSelect);
 
