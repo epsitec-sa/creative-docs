@@ -525,6 +525,14 @@ namespace Epsitec.Common.UI
 			return this.PreferredSize;
 		}
 
+		internal void RefreshLayoutIfNeeded()
+		{
+			if (this.hasDirtyLayout)
+			{
+				this.RefreshLayout ();
+			}
+		}
+
 		public void AsyncRefresh()
 		{
 			if (this.isRefreshPending == false)
@@ -697,7 +705,10 @@ namespace Epsitec.Common.UI
 				}
 				else if ((this.operations & RefreshOperations.Layout) != 0)
 				{
-					this.panel.RefreshLayout ();
+					if (this.panel.hasDirtyLayout)
+					{
+						this.panel.RefreshLayout ();
+					}
 				}
 			}
 		}
@@ -852,23 +863,18 @@ namespace Epsitec.Common.UI
 				this.hasDirtyLayout = true;
 				this.QueueAsyncRefresh (RefreshOperations.Layout);
 			}
-		}
 
-		internal bool IsGroupPanelEnabled
-		{
-			get
+			if (this.parentGroup != null)
 			{
-				return this.parentGroup != null;
+				this.parentGroup.ParentPanel.InvalidateLayout ();
 			}
 		}
 
-		internal void SetParentGroup(ItemPanelGroup parentGroup)
+		internal void DefineParentGroup(ItemPanelGroup parentGroup)
 		{
-			if (this.parentGroup != parentGroup)
-			{
-				this.parentGroup = parentGroup;
-				this.RefreshItemViews ();
-			}
+			System.Diagnostics.Debug.Assert (this.parentGroup == null);
+			
+			this.parentGroup = parentGroup;
 		}
 
 		internal void AddPanelGroup(ItemPanelGroup group)
@@ -2176,6 +2182,17 @@ namespace Epsitec.Common.UI
 			
 			view.DefineIndex (index);
 			view.IsExpanded = this.ItemViewDefaultExpanded;
+
+			if (view.IsGroup)
+			{
+				if (view.Group == null)
+				{
+					view.DefineGroup (new ItemPanelGroup (view));
+				}
+
+				view.Group.ChildPanel.RefreshItemViews ();
+				view.DefineSize (view.Group.GetBestFitSize ());
+			}
 
 			return view;
 		}

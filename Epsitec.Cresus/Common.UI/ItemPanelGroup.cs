@@ -31,7 +31,7 @@ namespace Epsitec.Common.UI
 			
 			this.panel.CurrentItemTrackingMode = this.ParentPanel.CurrentItemTrackingMode;
 
-			this.panel.SetParentGroup (this);
+			this.panel.DefineParentGroup (this);
 			this.panel.ItemViewDefaultSize = this.ParentPanel.ItemViewDefaultSize;
 			
 			this.SetPanelIsExpanded (view.IsExpanded);
@@ -63,32 +63,12 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		internal void SetPanelIsExpanded(bool enable)
+		internal void SetPanelIsExpanded(bool expanded)
 		{
-#if false
-			if (this.panel.IsGroupPanelEnabled != enable)
+			if (!expanded)
 			{
-				if (enable)
-				{
-					this.panel.SetGroupPanelEnable (enable);
-				}
-				else
-				{
-					//	Remember the state of the contents when the group panel gets
-					//	collapsed; this is required, as the selected state of the items
-					//	would otherwise be lost.
-
-					State state = this.SaveState ();
-
-					lock (this.exclusion)
-					{
-						this.savedState = state;
-					}
-
-					this.panel.SetGroupPanelEnable (enable);
-				}
+				this.ItemView.ClearUserInterface ();
 			}
-#endif
 		}
 
 		protected override void Dispose(bool disposing)
@@ -376,6 +356,7 @@ namespace Epsitec.Common.UI
 			if (oldSize != newSize)
 			{
 				this.ItemView.DefineSize (newSize);
+				this.ParentPanel.NotifyItemViewSizeChanged (this.ItemView, oldSize, newSize);
 			}
 		}
 
@@ -385,6 +366,8 @@ namespace Epsitec.Common.UI
 
 			if (this.ItemView.IsExpanded)
 			{
+				this.panel.RefreshLayoutIfNeeded ();
+
 				size  = this.panel.GetContentsSize ();
 				size += this.Padding.Size;
 				size += this.GetInternalPadding ().Size;

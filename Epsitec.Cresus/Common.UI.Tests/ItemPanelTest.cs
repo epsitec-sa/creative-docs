@@ -67,7 +67,7 @@ namespace Epsitec.Common.UI
 
 			Assert.IsTrue (panel.GetItemView (0).IsExpanded);
 			Assert.AreEqual (new Drawing.Size (200, 20+20*3), panel.GetItemView (0).Size);
-			Assert.AreEqual (3, (panel.GetItemView (0).Widget as ItemPanelGroup).ChildPanel.GetItemViewCount ());
+			Assert.AreEqual (3, (panel.GetItemView (0).Group).ChildPanel.GetItemViewCount ());
 
 			Assert.AreEqual (new Drawing.Size (200, 20*2), panel.GetContentsSize ());
 			Widgets.Application.ExecuteAsyncCallbacks ();
@@ -81,7 +81,7 @@ namespace Epsitec.Common.UI
 
 			Assert.IsFalse (panel.GetItemView (0).IsExpanded);
 			Assert.AreEqual (new Drawing.Size (200, 20), panel.GetItemView (0).Size);
-			Assert.AreEqual (0, (panel.GetItemView (0).Widget as ItemPanelGroup).ChildPanel.GetItemViewCount ());
+			Assert.AreEqual (3, (panel.GetItemView (0).Group.ChildPanel.GetItemViewCount ()));
 
 			Assert.AreEqual (new Drawing.Size (200, 20+20*3+20), panel.GetContentsSize ());
 			Widgets.Application.ExecuteAsyncCallbacks ();
@@ -109,7 +109,7 @@ namespace Epsitec.Common.UI
 			
 			Assert.AreEqual (new Drawing.Rectangle (0, 45, 81, 35), panel.Aperture);
 
-			ItemPanelGroup group = panel.GetItemView (1).Widget as ItemPanelGroup;
+			ItemPanelGroup group = panel.GetItemView (1).Group;
 			
 			Assert.IsNotNull (group.ChildPanel);
 			Assert.AreEqual (panel, group.Parent);
@@ -157,7 +157,7 @@ namespace Epsitec.Common.UI
 			Widgets.Application.ExecuteAsyncCallbacks ();
 			panel.Show (panel.GetItemView (0));
 			
-			ItemPanelGroup group = panel.GetItemView (0).Widget as ItemPanelGroup;
+			ItemPanelGroup group = panel.GetItemView (0).Group;
 			ItemPanelColumnHeader header = table.ColumnHeader;
 
 			Assert.IsNotNull (group.ChildPanel);

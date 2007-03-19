@@ -272,8 +272,14 @@ namespace Epsitec.Common.UI
 			
 			if (factory != null)
 			{
-				Drawing.Size size = factory.GetPreferredSize (this);
-				this.DefineSize (size);
+				Drawing.Size oldSize = this.size;
+				Drawing.Size newSize = factory.GetPreferredSize (this);
+
+				if (oldSize != newSize)
+				{
+					this.DefineSize (newSize);
+					this.owner.NotifyItemViewSizeChanged (this, oldSize, newSize);
+				}
 			}
 		}
 
@@ -284,15 +290,7 @@ namespace Epsitec.Common.UI
 		/// <param name="panel">The containing <see cref="ItemPanel"/>.</param>
 		internal void DefineSize(Drawing.Size size)
 		{
-			Drawing.Size oldSize = this.size;
-			Drawing.Size newSize = size;
-
-			if (oldSize != newSize)
-			{
-				this.size = newSize;
-
-				this.owner.NotifyItemViewSizeChanged (this, oldSize, newSize);
-			}
+			this.size = size;
 		}
 
 		/// <summary>
