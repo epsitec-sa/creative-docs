@@ -938,7 +938,13 @@ namespace Epsitec.Common.UI
 
 		protected virtual void HandleItemCollectionCurrentChanged(object sender)
 		{
-			this.TrackCurrentItem (true);
+			if (this.RootPanel == this)
+			{
+				if (this.manualTrackingCounter == 0)
+				{
+					this.TrackCurrentItem (true);
+				}
+			}
 
 			if (this.CurrentChanged != null)
 			{
@@ -1024,7 +1030,8 @@ namespace Epsitec.Common.UI
 						break;
 				}
 
-				if (focus)
+				if ((focus) &&
+					(view.HasValidUserInterface))
 				{
 					view.Widget.Focus ();
 				}
@@ -1135,112 +1142,198 @@ namespace Epsitec.Common.UI
 
 		protected override void ProcessMessage(Widgets.Message message, Drawing.Point pos)
 		{
-			base.ProcessMessage(message, pos);
-
-			if (message.IsMouseType)
+			ItemPanel root = this.RootPanel;
+			
+			try
 			{
-				if (message.MessageType == MessageType.MouseDown)
-				{
-					this.Focus ();
-				}
+				root.manualTrackingCounter++;
+				
+				base.ProcessMessage (message, pos);
 
-				if (message.MessageType == MessageType.MouseMove &&
-					message.Button == MouseButtons.None)
+				if (message.IsMouseType)
 				{
-					ItemView item = this.Detect (pos);
-
-					if (this.enteredItemView != item)
+					if (message.MessageType == MessageType.MouseDown)
 					{
-						this.enteredItemView = item;
-						this.Invalidate ();
+						this.Focus ();
+					}
+
+					if (message.MessageType == MessageType.MouseMove &&
+						message.Button == MouseButtons.None)
+					{
+						ItemView item = this.Detect (pos);
+
+						if (this.enteredItemView != item)
+						{
+							this.enteredItemView = item;
+							this.Invalidate ();
+						}
+					}
+				}
+				else if (message.IsKeyType)
+				{
+					if (message.MessageType == MessageType.KeyDown)
+					{
+						root.ProcessKeyDown (message);
 					}
 				}
 			}
-			else if (message.IsKeyType)
+			finally
 			{
-				if (message.MessageType == MessageType.KeyDown)
+				root.manualTrackingCounter--;
+			}
+		}
+
+		private bool FindItemViewAndPanel(object item, out ItemView itemView, out ItemPanel itemPanel)
+		{
+			if (item == null)
+			{
+				itemView  = null;
+				itemPanel = null;
+				
+				return false;
+			}
+			
+			itemPanel = this;
+			itemView  = this.FindItemView (item);
+
+			if (itemView != null)
+			{
+				return true;
+			}
+
+			IList<CollectionViewGroup> path = CollectionView.GetGroupPath (this.RootPanel.Items, item);
+
+			if (path != null)
+			{
+				for (int i = 0; i < path.Count; i++)
 				{
-					this.ProcessKeyDown (message);
+					itemView = itemPanel.FindItemView (path[i]);
+					itemView.IsExpanded = true;
+					itemPanel = itemView.Group.ChildPanel;
 				}
+
+				itemView = itemPanel.FindItemView (item);
+			}
+
+			if (itemView == null)
+			{
+				itemPanel = null;
+				return false;
+			}
+			else
+			{
+				return true;
 			}
 		}
 
 		private void ProcessKeyDown(Widgets.Message message)
 		{
+			System.Diagnostics.Debug.Assert (this.Items != null);
+			
 			if (message.KeyCode == KeyCode.Space)
 			{
 				//	Behaves as if the user had pressed the mouse button; this will
 				//	either select just the current item or add/remove the item from
 				//	the selection if CTRL is pressed.
 
-				ItemView view = this.GetFocusedItemView ();
-				this.ManualSelection (view, message.IsControlPressed);
+				ItemView  itemView;
+				ItemPanel itemPanel;
+
+				if (this.GetFocusedItemViewAndPanel (out itemView, out itemPanel))
+				{
+					itemPanel.ManualSelection (itemView, message.IsControlPressed);
+				}
+				
+				message.Handled = true;
 			}
 			else if (message.KeyCode == KeyCode.Add)
 			{
-				ItemView group = ItemViewWidget.FindGroupItemView (this.GetFocusedItemView ());
+				ItemView  itemView;
+				ItemPanel itemPanel;
 
-				if (group != null)
+				if (this.GetFocusedItemViewAndPanel (out itemView, out itemPanel))
 				{
-					group.IsExpanded = true;
-					this.Focus (group);
+					ItemView group = ItemViewWidget.FindGroupItemView (itemView);
+
+					if (group != null)
+					{
+						group.IsExpanded = true;
+						itemPanel.Focus (group);
+					}
 				}
+				
+				message.Handled = true;
 			}
 			else if (message.KeyCode == KeyCode.Substract)
 			{
-				ItemView group = ItemViewWidget.FindGroupItemView (this.GetFocusedItemView ());
+				ItemView itemView;
+				ItemPanel itemPanel;
 
-				if (group != null)
+				if (this.GetFocusedItemViewAndPanel (out itemView, out itemPanel))
 				{
-					group.IsExpanded = false;
-					this.Focus (group);
+					ItemView group = ItemViewWidget.FindGroupItemView (itemView);
+
+					if (group != null)
+					{
+						group.IsExpanded = false;
+						itemPanel.Focus (group);
+					}
 				}
+				
+				message.Handled = true;
 			}
 			else
 			{
 				//	Change the current item (this does not select the item).
 
-				ItemView oldCurrent = this.GetFocusedItemView ();
+				object oldFocusedItem = this.GetFocusedItem ();
+				object newFocusedItem;
 
 				if (this.ProcessArrowKeys (message.KeyCode))
 				{
-					this.TrackCurrentItem (this.FindItemView (this.Items.CurrentItem), true, false);
+					ItemView  currentItemView;
+					ItemPanel currentItemPanel;
 
-					ItemView newCurrent = this.GetFocusedItemView ();
-
-					if (!message.IsControlPressed &&
-						!message.IsAltPressed)
+					if (this.FindItemViewAndPanel (this.Items.CurrentItem, out currentItemView, out currentItemPanel))
 					{
-						if (message.KeyCode == KeyCode.ArrowUp ||
-								message.KeyCode == KeyCode.ArrowDown ||
-								message.KeyCode == KeyCode.ArrowLeft ||
-								message.KeyCode == KeyCode.ArrowRight ||
-								message.KeyCode == KeyCode.PageUp ||
-								message.KeyCode == KeyCode.PageDown ||
-								message.KeyCode == KeyCode.Home ||
-								message.KeyCode == KeyCode.End)
+						currentItemPanel.TrackCurrentItem (currentItemView, true, false);
+					}
+
+					newFocusedItem = this.GetFocusedItem ();
+
+					if ((!message.IsControlPressed) &&
+						(!message.IsAltPressed))
+					{
+						IList<ItemView> list = this.GetSelectedItemViews ();
+						SelectionState state = new SelectionState (this);
+
+#if false
+						if (message.IsShiftPressed && list.Count > 0)
 						{
-							IList<ItemView> list = this.GetSelectedItemViews ();
-							SelectionState state = new SelectionState (this);
+							this.ContinuousKeySelection (list, oldItemView, newCurrent);
+						}
+						else
+						{
+							this.InternalDeselectItemViews (list);
+							this.InternalSelectItemView (newItemView);
+						}
+#endif
 
-							if (message.IsShiftPressed && list.Count > 0)
-							{
-								this.ContinuousKeySelection (list, oldCurrent, newCurrent);
-							}
-							else
-							{
-								this.InternalDeselectItemViews (list);
-								this.InternalSelectItemView (newCurrent);
-							}
+						state.GenerateEvents ();
+					}
 
-							state.GenerateEvents ();
+					if (oldFocusedItem != newFocusedItem)
+					{
+						ItemView  itemView;
+						ItemPanel itemPanel;
+
+						if (this.GetFocusedItemViewAndPanel (out itemView, out itemPanel))
+						{
+							itemPanel.Show (itemView);
 						}
 					}
-
-					if (oldCurrent != newCurrent)
-					{
-						this.Show (newCurrent);
-					}
+					
+					message.Handled = true;
 				}
 			}
 		}
@@ -1372,120 +1465,123 @@ namespace Epsitec.Common.UI
 			this.Items.MoveCurrentToPosition(clickedIndex);
 		}
 
-		private bool ProcessArrowKeys(Common.Widgets.KeyCode keyCode)
+		private bool ProcessArrowKeys(Widgets.KeyCode keyCode)
 		{
-			if (this.Items == null)
+			switch (this.Layout)
 			{
-				//	TODO: gérer proprement !!!
-				return false;
-			}
-			
-			int pos = this.Items.CurrentPosition;
+				case ItemPanelLayout.VerticalList:
+					return this.ProcessArrowKeysVerticalList (keyCode);
 
-			if (this.Layout == ItemPanelLayout.VerticalList)
-			{
-				switch (keyCode)
-				{
-					case KeyCode.ArrowUp:
-						if (pos > 0)
-						{
-							this.Items.MoveCurrentToPrevious();
-						}
-						break;
+				case ItemPanelLayout.RowsOfTiles:
+					return this.ProcessArrowKeysRowsOfTiles (keyCode);
 
-					case KeyCode.ArrowDown:
-						if (pos < this.Items.Items.Count-1)
-						{
-							this.Items.MoveCurrentToNext();
-						}
-						break;
-
-					case KeyCode.Home:
-						this.Items.MoveCurrentToFirst();
-						break;
-
-					case KeyCode.End:
-						this.Items.MoveCurrentToLast();
-						break;
-
-					case KeyCode.PageUp:
-						this.ProcessPageUpMove();
-						break;
-
-					case KeyCode.PageDown:
-						this.ProcessPageDownMove();
-						break;
-
-					default:
-						return false;
-				}
-
-				return true;
-			}
-
-			if (this.Layout == ItemPanelLayout.RowsOfTiles)
-			{
-				switch (keyCode)
-				{
-					case KeyCode.ArrowLeft:
-						if (pos > 0 && pos%this.totalColumnCount > 0)
-						{
-							this.Items.MoveCurrentToPrevious();
-						}
-						break;
-
-					case KeyCode.ArrowRight:
-						if (pos < this.Items.Items.Count-1 && pos%this.totalColumnCount < this.totalColumnCount-1)
-						{
-							this.Items.MoveCurrentToNext();
-						}
-						break;
-
-					case KeyCode.ArrowUp:
-						pos -= this.totalColumnCount;
-						if (pos >= 0)
-						{
-							this.Items.MoveCurrentToPosition(pos);
-						}
-						break;
-
-					case KeyCode.ArrowDown:
-						pos += this.totalColumnCount;
-						if (pos < this.Items.Items.Count)
-						{
-							this.Items.MoveCurrentToPosition(pos);
-						}
-						break;
-
-					case KeyCode.Home:
-						this.Items.MoveCurrentToFirst();
-						break;
-
-					case KeyCode.End:
-						this.Items.MoveCurrentToLast();
-						break;
-
-					case KeyCode.PageUp:
-						this.ProcessPageUpMove();
-						break;
-
-					case KeyCode.PageDown:
-						this.ProcessPageDownMove();
-						break;
-
-					default:
-						return false;
-				}
-
-				return true;
-			}
-			
-			if (this.Layout == ItemPanelLayout.ColumnsOfTiles)
-			{
-				//	TODO:
+				case ItemPanelLayout.ColumnsOfTiles:
+					break;
 			}
 
 			return false;
+		}
+
+		private bool ProcessArrowKeysVerticalList(Widgets.KeyCode keyCode)
+		{
+			int pos = this.Items.CurrentPosition;
+
+			switch (keyCode)
+			{
+				case KeyCode.ArrowUp:
+					if (pos > 0)
+					{
+						this.Items.MoveCurrentToPrevious ();
+					}
+					break;
+
+				case KeyCode.ArrowDown:
+					if (pos < this.Items.Items.Count-1)
+					{
+						this.Items.MoveCurrentToNext ();
+					}
+					break;
+
+				case KeyCode.Home:
+					this.Items.MoveCurrentToFirst ();
+					break;
+
+				case KeyCode.End:
+					this.Items.MoveCurrentToLast ();
+					break;
+
+				case KeyCode.PageUp:
+					this.ProcessPageUpMove ();
+					break;
+
+				case KeyCode.PageDown:
+					this.ProcessPageDownMove ();
+					break;
+
+				default:
+					return false;
+			}
+
+			return true;
+		}
+
+		private bool ProcessArrowKeysRowsOfTiles(Widgets.KeyCode keyCode)
+		{
+			int pos = this.Items.CurrentPosition;
+
+			switch (keyCode)
+			{
+				case KeyCode.ArrowLeft:
+					if (pos > 0 && pos%this.totalColumnCount > 0)
+					{
+						this.Items.MoveCurrentToPrevious ();
+					}
+					break;
+
+				case KeyCode.ArrowRight:
+					if (pos < this.Items.Items.Count-1 && pos%this.totalColumnCount < this.totalColumnCount-1)
+					{
+						this.Items.MoveCurrentToNext ();
+					}
+					break;
+
+				case KeyCode.ArrowUp:
+					pos -= this.totalColumnCount;
+					if (pos >= 0)
+					{
+						this.Items.MoveCurrentToPosition (pos);
+					}
+					break;
+
+				case KeyCode.ArrowDown:
+					pos += this.totalColumnCount;
+					if (pos < this.Items.Items.Count)
+					{
+						this.Items.MoveCurrentToPosition (pos);
+					}
+					break;
+
+				case KeyCode.Home:
+					this.Items.MoveCurrentToFirst ();
+					break;
+
+				case KeyCode.End:
+					this.Items.MoveCurrentToLast ();
+					break;
+
+				case KeyCode.PageUp:
+					this.ProcessPageUpMove ();
+					break;
+
+				case KeyCode.PageDown:
+					this.ProcessPageDownMove ();
+					break;
+
+				default:
+					return false;
+			}
+
+			return true;
 		}
 
 		private void ProcessPageUpMove()
@@ -1685,6 +1781,16 @@ namespace Epsitec.Common.UI
 			}
 
 			return found;
+		}
+
+		internal object GetFocusedItem()
+		{
+			return this.RootPanel.focusedItem;
+		}
+
+		internal bool GetFocusedItemViewAndPanel(out ItemView itemView, out ItemPanel itemPanel)
+		{
+			return this.FindItemViewAndPanel (this.GetFocusedItem (), out itemView, out itemPanel);
 		}
 		
 		internal ItemView GetFocusedItemView()
@@ -2518,6 +2624,7 @@ namespace Epsitec.Common.UI
 		bool							isRefreshPending;
 		bool							isCurrentShowPending;
 		bool							isGroupPanelEnabled;
+		int								manualTrackingCounter;
 
 		ItemView						enteredItemView;
 		object							focusedItem;

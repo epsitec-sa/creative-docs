@@ -550,6 +550,7 @@ namespace Epsitec.Common.UI
 
 			ItemPanelTest.AddStructuredRecords (source);
 
+			view.SortDescriptions.Add (new SortDescription ("Category"));
 			view.SortDescriptions.Add (new SortDescription ("Article"));
 			view.SortDescriptions.Add (new SortDescription ("Price"));
 
