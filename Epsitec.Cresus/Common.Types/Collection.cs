@@ -52,6 +52,40 @@ namespace Epsitec.Common.Types
 			return list;
 		}
 
+		public static T GetLast<T>(IList<T> list)
+		{
+			if (list == null)
+			{
+				throw new System.ArgumentOutOfRangeException ();
+			}
+
+			int n = list.Count;
+
+			if (n < 1)
+			{
+				throw new System.ArgumentOutOfRangeException ();
+			}
+
+			return list[n-1];
+		}
+		
+		public static T GetLast<T>(IList<T> list, T defaultValue)
+		{
+			if (list == null)
+			{
+				return defaultValue;
+			}
+
+			int n = list.Count;
+
+			if (n < 1)
+			{
+				return defaultValue;
+			}
+
+			return list[n-1];
+		}
+
 		public static T[] ToArray<T>(IList<T> list)
 		{
 			T[] array = new T[list.Count];

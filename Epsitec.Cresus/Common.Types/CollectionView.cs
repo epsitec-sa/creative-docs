@@ -709,6 +709,10 @@ namespace Epsitec.Common.Types
 						return list;
 					}
 				}
+				else if (group == item)
+				{
+					return new CollectionViewGroup[depth];
+				}
 				else
 				{
 					if (group.Items.Contains (item))
