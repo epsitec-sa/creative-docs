@@ -19,9 +19,10 @@ namespace Epsitec.Common.UI
 		/// </summary>
 		/// <param name="item">The item.</param>
 		/// <param name="defaultSize">Default size for this item view.</param>
-		public ItemView(object item, Drawing.Size defaultSize)
+		public ItemView(object item, ItemPanel owner, Drawing.Size defaultSize)
 		{
 			this.item  = item;
+			this.owner = owner;
 			this.size  = defaultSize;
 			this.index = -1;
 		}
@@ -72,6 +73,14 @@ namespace Epsitec.Common.UI
 			internal set
 			{
 				this.columnIndex = value;
+			}
+		}
+
+		public ItemPanel Owner
+		{
+			get
+			{
+				return this.owner;
 			}
 		}
 
@@ -435,6 +444,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		private ItemPanel owner;
 		private object item;
 		private int index;
 		private int rowIndex;

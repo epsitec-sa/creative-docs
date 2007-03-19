@@ -387,6 +387,16 @@ namespace Epsitec.Common.UI
 				{
 					return view;
 				}
+
+				if (view.IsGroup)
+				{
+					ItemView hit = view.Group.ChildPanel.FindItemView (match);
+					
+					if (hit != null)
+					{
+						return hit;
+					}
+				}
 			}
 
 			return null;
@@ -1193,48 +1203,6 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		private bool FindItemViewAndPanel(object item, out ItemView itemView, out ItemPanel itemPanel)
-		{
-			if (item == null)
-			{
-				itemView  = null;
-				itemPanel = null;
-				
-				return false;
-			}
-			
-			itemPanel = this;
-			itemView  = this.FindItemView (item);
-
-			if (itemView != null)
-			{
-				return true;
-			}
-
-			IList<CollectionViewGroup> path = CollectionView.GetGroupPath (this.RootPanel.Items, item);
-
-			if (path != null)
-			{
-				for (int i = 0; i < path.Count; i++)
-				{
-					itemView = itemPanel.FindItemView (path[i]);
-					itemView.IsExpanded = true;
-					itemPanel = itemView.Group.ChildPanel;
-				}
-
-				itemView = itemPanel.FindItemView (item);
-			}
-
-			if (itemView == null)
-			{
-				itemPanel = null;
-				return false;
-			}
-			else
-			{
-				return true;
-			}
-		}
 
 		private void ProcessKeyDown(Widgets.Message message)
 		{
@@ -1246,29 +1214,27 @@ namespace Epsitec.Common.UI
 				//	either select just the current item or add/remove the item from
 				//	the selection if CTRL is pressed.
 
-				ItemView  itemView;
-				ItemPanel itemPanel;
-
-				if (this.GetFocusedItemViewAndPanel (out itemView, out itemPanel))
+				ItemView itemView = this.GetFocusedItemView ();
+				
+				if (itemView != null)
 				{
-					itemPanel.ManualSelection (itemView, message.IsControlPressed);
+					itemView.Owner.ManualSelection (itemView, message.IsControlPressed);
 				}
 				
 				message.Handled = true;
 			}
 			else if (message.KeyCode == KeyCode.Add)
 			{
-				ItemView  itemView;
-				ItemPanel itemPanel;
-
-				if (this.GetFocusedItemViewAndPanel (out itemView, out itemPanel))
+				ItemView itemView = this.GetFocusedItemView ();
+				
+				if (itemView != null)
 				{
 					ItemView group = ItemViewWidget.FindGroupItemView (itemView);
 
 					if (group != null)
 					{
 						group.IsExpanded = true;
-						itemPanel.Focus (group);
+						group.Owner.Focus (group);
 					}
 				}
 				
@@ -1276,17 +1242,16 @@ namespace Epsitec.Common.UI
 			}
 			else if (message.KeyCode == KeyCode.Substract)
 			{
-				ItemView itemView;
-				ItemPanel itemPanel;
+				ItemView itemView = this.GetFocusedItemView ();
 
-				if (this.GetFocusedItemViewAndPanel (out itemView, out itemPanel))
+				if (itemView != null)
 				{
 					ItemView group = ItemViewWidget.FindGroupItemView (itemView);
 
 					if (group != null)
 					{
 						group.IsExpanded = false;
-						itemPanel.Focus (group);
+						group.Owner.Focus (group);
 					}
 				}
 				
@@ -1296,20 +1261,19 @@ namespace Epsitec.Common.UI
 			{
 				//	Change the current item (this does not select the item).
 
-				object oldFocusedItem = this.GetFocusedItem ();
-				object newFocusedItem;
+				ItemView oldFocusedItemView = this.GetFocusedItemView ();
+				ItemView newFocusedItemView;
 
 				if (this.ProcessArrowKeys (message.KeyCode))
 				{
-					ItemView  currentItemView;
-					ItemPanel currentItemPanel;
-
-					if (this.FindItemViewAndPanel (this.Items.CurrentItem, out currentItemView, out currentItemPanel))
+					ItemView currentItemView = this.FindItemView (this.Items.CurrentItem);
+					
+					if (currentItemView != null)
 					{
-						currentItemPanel.TrackCurrentItem (currentItemView, true, false);
+						currentItemView.Owner.TrackCurrentItem (currentItemView, true, false);
 					}
 
-					newFocusedItem = this.GetFocusedItem ();
+					newFocusedItemView = this.GetFocusedItemView ();
 
 					if ((!message.IsControlPressed) &&
 						(!message.IsAltPressed))
@@ -1317,29 +1281,24 @@ namespace Epsitec.Common.UI
 						IList<ItemView> list = this.GetSelectedItemViews ();
 						SelectionState state = new SelectionState (this);
 
-#if false
 						if (message.IsShiftPressed && list.Count > 0)
 						{
-							this.ContinuousKeySelection (list, oldItemView, newCurrent);
+							this.ContinuousKeySelection (list, oldFocusedItemView, newFocusedItemView);
 						}
 						else
 						{
 							this.InternalDeselectItemViews (list);
-							this.InternalSelectItemView (newItemView);
+							this.InternalSelectItemView (newFocusedItemView);
 						}
-#endif
 
 						state.GenerateEvents ();
 					}
 
-					if (oldFocusedItem != newFocusedItem)
+					if (oldFocusedItemView != newFocusedItemView)
 					{
-						ItemView  itemView;
-						ItemPanel itemPanel;
-
-						if (this.GetFocusedItemViewAndPanel (out itemView, out itemPanel))
+						if (newFocusedItemView != null)
 						{
-							itemPanel.Show (itemView);
+							newFocusedItemView.Owner.Show (newFocusedItemView);
 						}
 					}
 					
@@ -1798,11 +1757,6 @@ namespace Epsitec.Common.UI
 			return this.RootPanel.focusedItem;
 		}
 
-		internal bool GetFocusedItemViewAndPanel(out ItemView itemView, out ItemPanel itemPanel)
-		{
-			return this.FindItemViewAndPanel (this.GetFocusedItem (), out itemView, out itemPanel);
-		}
-		
 		internal ItemView GetFocusedItemView()
 		{
 			ItemPanel root = this.RootPanel;
@@ -2223,7 +2177,7 @@ namespace Epsitec.Common.UI
 
 		private ItemView CreateItemView(object item, int index)
 		{
-			ItemView view = new ItemView (item, this.ItemViewDefaultSize);
+			ItemView view = new ItemView (item, this, this.ItemViewDefaultSize);
 			
 			view.DefineIndex (index);
 			view.IsExpanded = this.ItemViewDefaultExpanded;

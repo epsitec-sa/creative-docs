@@ -417,7 +417,7 @@ namespace Epsitec.Common.UI
 		private class ItemViewGhost : ItemView
 		{
 			public ItemViewGhost(ItemPanelGroup group, object item, Drawing.Size defaultSize)
-				: base (item, defaultSize)
+				: base (item, group.ChildPanel, defaultSize)
 			{
 				this.group = group;
 				base.Select (true);
