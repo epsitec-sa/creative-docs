@@ -385,8 +385,7 @@ namespace Epsitec.Common.UI
 			
 			if (this.widget != null)
 			{
-				ItemPanel panel = this.widget.GetParentPanel ();
-				System.Diagnostics.Debug.WriteLine ("Defining " + this.index + " -> " + this.widget.ToString () + " in " + (panel == null ? 0L : panel.VisualSerialId));
+				System.Diagnostics.Debug.WriteLine ("Defining " + this.index + " -> " + this.widget.ToString () + " in " + this.owner.ToString ());
 			}
 		}
 
@@ -399,10 +398,7 @@ namespace Epsitec.Common.UI
 		{
 			if (this.widget != null)
 			{
-				{
-					ItemPanel panel = this.widget.GetParentPanel ();
-					System.Diagnostics.Debug.WriteLine ("Clearing " + this.index + " -> " + this.widget.ToString () + " in " + panel.VisualSerialId);
-				}
+				System.Diagnostics.Debug.WriteLine ("Clearing " + this.index + " -> " + this.widget.ToString () + " in " + this.owner.ToString ());
 				
 				ItemPanelGroup group = this.Group;
 
@@ -426,10 +422,7 @@ namespace Epsitec.Common.UI
 		/// </summary>
 		internal void DisposeUserInterface()
 		{
-			{
-				ItemPanel panel = this.widget.GetParentPanel ();
-				System.Diagnostics.Debug.WriteLine ("Disposing " + this.index + " -> " + this.widget.ToString () + " in " + panel.VisualSerialId);
-			}
+			System.Diagnostics.Debug.WriteLine ("Disposing " + this.index + " -> " + this.widget.ToString () + " in " + this.owner.ToString ());
 
 			if (this.widget != null)
 			{

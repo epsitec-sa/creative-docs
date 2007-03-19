@@ -34,9 +34,7 @@ namespace Epsitec.Common.UI
 
 		public ItemPanel GetParentPanel()
 		{
-			ItemPanel panel = this.Parent as ItemPanel;
-			
-			return panel;
+			return this.view.Owner;
 		}
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
