@@ -180,9 +180,9 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (3, group.ChildPanel.GetItemView (1).Widget.Children.Count);
 			Assert.IsNull (group.ChildPanel.GetItemView (2).Widget);
 			
-			Assert.AreEqual ("2", ((Widgets.Widget)group.ChildPanel.GetItemView (1).Widget.Children[0]).Text);
-			Assert.AreEqual ("Tournevis", ((Widgets.Widget) group.ChildPanel.GetItemView (1).Widget.Children[1]).Text);
-			Assert.AreEqual ("8.45", ((Widgets.Widget) group.ChildPanel.GetItemView (1).Widget.Children[2]).Text);
+			Assert.AreEqual ("41", ((Widgets.Widget)group.ChildPanel.GetItemView (1).Widget.Children[0]).Text);
+			Assert.AreEqual ("Rondelle", ((Widgets.Widget) group.ChildPanel.GetItemView (1).Widget.Children[1]).Text);
+			Assert.AreEqual ("0.05", ((Widgets.Widget) group.ChildPanel.GetItemView (1).Widget.Children[2]).Text);
 		}
 
 		[Test]
