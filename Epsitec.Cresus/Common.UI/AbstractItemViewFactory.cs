@@ -16,14 +16,13 @@ namespace Epsitec.Common.UI
 		/// <summary>
 		/// Creates the user interface for the specified item view.
 		/// </summary>
-		/// <param name="panel">The panel.</param>
 		/// <param name="itemView">The item view.</param>
 		/// <returns>
 		/// The widget which represents the data stored in the item view.
 		/// </returns>
-		public virtual ItemViewWidget CreateUserInterface(ItemPanel panel, ItemView itemView)
+		public virtual ItemViewWidget CreateUserInterface(ItemView itemView)
 		{
-			return this.CreateElements (panel, itemView);
+			return this.CreateElements (itemView);
 		}
 
 		/// <summary>
@@ -39,11 +38,11 @@ namespace Epsitec.Common.UI
 		/// Gets the preferred size of the user interface associated with the
 		/// specified item view.
 		/// </summary>
-		/// <param name="panel">The panel.</param>
 		/// <param name="itemView">The item view.</param>
 		/// <returns>The preferred size.</returns>
-		public virtual Drawing.Size GetPreferredSize(ItemPanel panel, ItemView itemView)
+		public virtual Drawing.Size GetPreferredSize(ItemView itemView)
 		{
+			ItemPanel panel = itemView.Owner;
 			ItemPanel rootPanel = panel.RootPanel;
 			ItemPanelColumnHeader header = ItemPanelColumnHeader.GetColumnHeader (rootPanel);
 			ItemTable rootTable = ItemTable.GetItemTable (rootPanel);
@@ -92,19 +91,19 @@ namespace Epsitec.Common.UI
 		/// <summary>
 		/// Creates the elements used to represent the item.
 		/// </summary>
-		/// <param name="panel">The panel.</param>
-		/// <param name="view">The item view.</param>
+		/// <param name="itemView">The item view.</param>
 		/// <returns>The container which hosts all the elements.</returns>
-		protected ItemViewWidget CreateElements(ItemPanel panel, ItemView view)
+		protected ItemViewWidget CreateElements(ItemView itemView)
 		{
+			ItemPanel panel = itemView.Owner;
 			ItemPanel rootPanel = panel.RootPanel;
 			ItemPanelColumnHeader header = ItemPanelColumnHeader.GetColumnHeader (rootPanel);
 
 			System.Diagnostics.Debug.Assert (header != null);
 			System.Diagnostics.Debug.Assert (header.ColumnCount > 0);
 
-			ItemViewWidget viewContainer = new ItemViewWidget (view);
-			viewContainer.PreferredSize = view.Size;
+			ItemViewWidget viewContainer = new ItemViewWidget (itemView);
+			viewContainer.PreferredSize = itemView.Size;
 
 			ItemViewShape shape = panel.ItemViewShape;
 			switch (shape)
@@ -131,7 +130,7 @@ namespace Epsitec.Common.UI
 				string name  = header.GetColumnPropertyName (i);
 				double width = header.GetColumnWidth (i);
 
-				Widgets.Widget element = this.CreateElement (name, panel, view, shape);
+				Widgets.Widget element = this.CreateElement (name, panel, itemView, shape);
 
 				if (element != null)
 				{
@@ -152,7 +151,7 @@ namespace Epsitec.Common.UI
 				string name  = header.GetColumnPropertyName (i);
 				double width = header.GetColumnWidth (i);
 
-				Widgets.Widget element = this.CreateElement (name, panel, view, ItemViewShape.ToolTip);
+				Widgets.Widget element = this.CreateElement (name, panel, itemView, ItemViewShape.ToolTip);
 
 				if (element != null)
 				{

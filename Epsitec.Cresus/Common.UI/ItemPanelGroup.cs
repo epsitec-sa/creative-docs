@@ -17,27 +17,25 @@ namespace Epsitec.Common.UI
 	/// </summary>
 	public class ItemPanelGroup : ItemViewWidget
 	{
-		public ItemPanelGroup(ItemView view, ItemPanel parentPanel)
+		public ItemPanelGroup(ItemView view)
 			: base (view)
 		{
 			view.DefineGroup (this);
 			
-			this.parentPanel = parentPanel;
-
 			this.panel = new ItemPanel (this);
 			this.panel.Dock = Widgets.DockStyle.Fill;
-			this.panel.Layout = this.parentPanel.Layout;
+			this.panel.Layout = this.ParentPanel.Layout;
 
-			this.panel.ItemSelectionMode  = this.parentPanel.ItemSelectionMode;
-			this.panel.GroupSelectionMode = this.parentPanel.GroupSelectionMode;
+			this.panel.ItemSelectionMode  = this.ParentPanel.ItemSelectionMode;
+			this.panel.GroupSelectionMode = this.ParentPanel.GroupSelectionMode;
 			
-			this.panel.CurrentItemTrackingMode = this.parentPanel.CurrentItemTrackingMode;
+			this.panel.CurrentItemTrackingMode = this.ParentPanel.CurrentItemTrackingMode;
 			
-			this.panel.ItemViewDefaultSize = this.parentPanel.ItemViewDefaultSize;
+			this.panel.ItemViewDefaultSize = this.ParentPanel.ItemViewDefaultSize;
 			
 			this.SetGroupPanelEnable (view.IsExpanded);
 
-			this.parentPanel.AddPanelGroup (this);
+			this.ParentPanel.AddPanelGroup (this);
 		}
 
 		internal bool HasValidUserInterface
@@ -52,7 +50,7 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				return this.parentPanel;
+				return this.ItemView.Owner;
 			}
 		}
 
@@ -102,10 +100,9 @@ namespace Epsitec.Common.UI
 		{
 			if (disposing)
 			{
-				if (this.parentPanel != null)
+				if (this.ParentPanel != null)
 				{
-					this.parentPanel.RemovePanelGroup (this);
-					this.parentPanel = null;
+					this.ParentPanel.RemovePanelGroup (this);
 				}
 			}
 			
@@ -115,7 +112,7 @@ namespace Epsitec.Common.UI
 		internal void RefreshAperture(Drawing.Rectangle aperture)
 		{
 			System.Diagnostics.Debug.Assert (this.ItemView != null);
-			System.Diagnostics.Debug.Assert (this.parentPanel != null);
+			System.Diagnostics.Debug.Assert (this.ParentPanel != null);
 			
 			Drawing.Rectangle bounds = this.ItemView.Bounds;
 
@@ -138,7 +135,7 @@ namespace Epsitec.Common.UI
 		internal void NotifyItemViewChanged(ItemView view)
 		{
 			System.Diagnostics.Debug.Assert (this.ItemView == view);
-			System.Diagnostics.Debug.Assert (this.parentPanel != null);
+			System.Diagnostics.Debug.Assert (this.ParentPanel != null);
 
 			this.UpdateItemViewSize ();
 			this.Invalidate ();
@@ -280,7 +277,7 @@ namespace Epsitec.Common.UI
 		/// <param name="list">The item view list which gets filled.</param>
 		internal void GetSelectedItemViews(System.Predicate<ItemView> filter, List<ItemView> list)
 		{
-			System.Diagnostics.Debug.Assert (this.parentPanel != null);
+			System.Diagnostics.Debug.Assert (this.ParentPanel != null);
 
 			this.panel.GetSelectedItemViews (filter, list);
 				
@@ -320,7 +317,7 @@ namespace Epsitec.Common.UI
 		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
 			base.SetBoundsOverride (oldRect, newRect);
-			this.RefreshAperture (this.parentPanel.Aperture);
+			this.RefreshAperture (this.ParentPanel.Aperture);
 		}
 
 		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clipRect)
@@ -356,9 +353,9 @@ namespace Epsitec.Common.UI
 
 			if ((e.Message.Button == Widgets.MouseButtons.Left) &&
 				(this.ItemView != null) &&
-				(this.parentPanel != null))
+				(this.ParentPanel != null))
 			{
-				this.parentPanel.ExpandItemView (this.ItemView, !this.ItemView.IsExpanded);
+				this.ParentPanel.ExpandItemView (this.ItemView, !this.ItemView.IsExpanded);
 				e.Message.Consumer = this;
 			}
 		}
@@ -381,7 +378,7 @@ namespace Epsitec.Common.UI
 
 			if (oldSize != newSize)
 			{
-				this.ItemView.DefineSize (newSize, this.parentPanel);
+				this.ItemView.DefineSize (newSize);
 			}
 		}
 
@@ -398,7 +395,7 @@ namespace Epsitec.Common.UI
 			}
 			else
 			{
-				double width  = this.parentPanel.ItemViewDefaultSize.Width;
+				double width  = this.ParentPanel.ItemViewDefaultSize.Width;
 				double height = this.GetInternalPadding ().Height;
 
 				size = new Drawing.Size (width, height);
@@ -453,8 +450,7 @@ namespace Epsitec.Common.UI
 		#endregion
 
 		private ItemPanel panel;
-		private ItemPanel parentPanel;
-
+		
 		private State savedState;
 		private readonly object exclusion = new object ();
 		private bool hasValidUserInterface;

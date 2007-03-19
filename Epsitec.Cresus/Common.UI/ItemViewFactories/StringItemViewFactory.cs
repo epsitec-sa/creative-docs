@@ -13,7 +13,7 @@ namespace Epsitec.Common.UI.ItemViewFactories
 	{
 		#region IItemViewFactory Members
 
-		public ItemViewWidget CreateUserInterface(ItemPanel panel, ItemView itemView)
+		public ItemViewWidget CreateUserInterface(ItemView itemView)
 		{
 			ItemViewWidget container = new ItemViewWidget (itemView);
 			Widgets.StaticText text = new Widgets.StaticText (container);
@@ -29,7 +29,7 @@ namespace Epsitec.Common.UI.ItemViewFactories
 			widget.Dispose ();
 		}
 
-		public Drawing.Size GetPreferredSize(ItemPanel panel, ItemView itemView)
+		public Drawing.Size GetPreferredSize(ItemView itemView)
 		{
 			return itemView.Size;
 		}

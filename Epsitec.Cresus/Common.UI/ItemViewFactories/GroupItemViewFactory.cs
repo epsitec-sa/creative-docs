@@ -13,13 +13,13 @@ namespace Epsitec.Common.UI.ItemViewFactories
 	{
 		#region IItemViewFactory Members
 
-		public override ItemViewWidget CreateUserInterface(ItemPanel panel, ItemView itemView)
+		public override ItemViewWidget CreateUserInterface(ItemView itemView)
 		{
 			ItemPanelGroup group = itemView.Group;
 
 			if (group == null)
 			{
-				group = new ItemPanelGroup (itemView, panel);
+				group = new ItemPanelGroup (itemView);
 			}
 			
 			group.PreferredWidth = itemView.Size.Width;
@@ -42,13 +42,13 @@ namespace Epsitec.Common.UI.ItemViewFactories
 			return null;
 		}
 
-		public override Drawing.Size GetPreferredSize(ItemPanel panel, ItemView itemView)
+		public override Drawing.Size GetPreferredSize(ItemView itemView)
 		{
 			ItemPanelGroup group = itemView.Group;
 
 			if (group == null)
 			{
-				group = new ItemPanelGroup (itemView, panel);
+				group = new ItemPanelGroup (itemView);
 			}
 				
 			return group.GetBestFitSize ();

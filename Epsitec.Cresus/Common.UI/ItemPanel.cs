@@ -505,7 +505,7 @@ namespace Epsitec.Common.UI
 		{
 			if (view.IsGroup)
 			{
-				view.CreateUserInterface (this);
+				view.CreateUserInterface ();
 				view.IsExpanded = expand;
 			}
 		}
@@ -2024,7 +2024,7 @@ namespace Epsitec.Common.UI
 			create.ForEach (
 				delegate (ItemView view)
 				{
-					view.CreateUserInterface (this);
+					view.CreateUserInterface ();
 				} );
 		}
 
@@ -2127,7 +2127,7 @@ namespace Epsitec.Common.UI
 		{
 			foreach (ItemView view in views)
 			{
-				view.UpdateSize (this);
+				view.UpdateSize ();
 			}
 			
 			this.hasDirtyLayout = false;

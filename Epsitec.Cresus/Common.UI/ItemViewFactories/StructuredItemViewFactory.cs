@@ -27,8 +27,9 @@ namespace Epsitec.Common.UI.ItemViewFactories
 		/// <returns>
 		/// The widget which represents the data stored in the item view.
 		/// </returns>
-		public ItemViewWidget CreateUserInterface(ItemPanel panel, ItemView itemView)
+		public ItemViewWidget CreateUserInterface(ItemView itemView)
 		{
+			ItemPanel panel = itemView.Owner;
 			ItemPanel rootPanel = panel.RootPanel;
 			ItemPanelColumnHeader header = ItemPanelColumnHeader.GetColumnHeader (rootPanel);
 			ItemTable             table  = ItemTable.GetItemTable (rootPanel);
@@ -127,8 +128,9 @@ namespace Epsitec.Common.UI.ItemViewFactories
 		/// <param name="panel">The panel.</param>
 		/// <param name="itemView">The item view.</param>
 		/// <returns>The preferred size.</returns>
-		public Drawing.Size GetPreferredSize(ItemPanel panel, ItemView itemView)
+		public Drawing.Size GetPreferredSize(ItemView itemView)
 		{
+			ItemPanel panel = itemView.Owner;
 			ItemPanel rootPanel = panel.RootPanel;
 			ItemPanelColumnHeader header = ItemPanelColumnHeader.GetColumnHeader (rootPanel);
 			ItemTable table = ItemTable.GetItemTable (rootPanel);

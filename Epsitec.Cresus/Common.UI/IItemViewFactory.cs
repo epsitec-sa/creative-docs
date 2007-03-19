@@ -12,10 +12,9 @@ namespace Epsitec.Common.UI
 		/// <summary>
 		/// Creates the user interface for the specified item view.
 		/// </summary>
-		/// <param name="panel">The panel.</param>
 		/// <param name="itemView">The item view.</param>
 		/// <returns>The widget which represents the data stored in the item view.</returns>
-		ItemViewWidget CreateUserInterface(ItemPanel panel, ItemView itemView);
+		ItemViewWidget CreateUserInterface(ItemView itemView);
 
 		/// <summary>
 		/// Disposes the user interface created by <c>CreateUserInterface</c>.
@@ -27,9 +26,8 @@ namespace Epsitec.Common.UI
 		/// Gets the preferred size of the user interface associated with the
 		/// specified item view.
 		/// </summary>
-		/// <param name="panel">The panel.</param>
 		/// <param name="itemView">The item view.</param>
 		/// <returns>The preferred size.</returns>
-		Drawing.Size GetPreferredSize(ItemPanel panel, ItemView itemView);
+		Drawing.Size GetPreferredSize(ItemView itemView);
 	}
 }

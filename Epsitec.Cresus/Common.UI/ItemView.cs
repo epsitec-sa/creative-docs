@@ -266,14 +266,14 @@ namespace Epsitec.Common.UI
 		/// Updates the size of this item view.
 		/// </summary>
 		/// <param name="panel">The panel.</param>
-		internal void UpdateSize(ItemPanel panel)
+		internal void UpdateSize()
 		{
 			IItemViewFactory factory = this.Factory;
 			
 			if (factory != null)
 			{
-				Drawing.Size size = factory.GetPreferredSize (panel, this);
-				this.DefineSize (size, panel);
+				Drawing.Size size = factory.GetPreferredSize (this);
+				this.DefineSize (size);
 			}
 		}
 
@@ -282,7 +282,7 @@ namespace Epsitec.Common.UI
 		/// </summary>
 		/// <param name="size">The size.</param>
 		/// <param name="panel">The containing <see cref="ItemPanel"/>.</param>
-		internal void DefineSize(Drawing.Size size, ItemPanel panel)
+		internal void DefineSize(Drawing.Size size)
 		{
 			Drawing.Size oldSize = this.size;
 			Drawing.Size newSize = size;
@@ -291,10 +291,7 @@ namespace Epsitec.Common.UI
 			{
 				this.size = newSize;
 
-				if (panel != null)
-				{
-					panel.NotifyItemViewSizeChanged (this, oldSize, newSize);
-				}
+				this.owner.NotifyItemViewSizeChanged (this, oldSize, newSize);
 			}
 		}
 
@@ -328,8 +325,7 @@ namespace Epsitec.Common.UI
 		/// <summary>
 		/// Creates the user interface for this item view.
 		/// </summary>
-		/// <param name="panel">The containing <see cref="ItemPanel"/>.</param>
-		internal void CreateUserInterface(ItemPanel panel)
+		internal void CreateUserInterface()
 		{
 			if (this.widget == null)
 			{
@@ -337,7 +333,7 @@ namespace Epsitec.Common.UI
 
 				if (factory != null)
 				{
-					this.widget = factory.CreateUserInterface (panel, this);
+					this.widget = factory.CreateUserInterface (this);
 				}
 			}
 			
@@ -355,14 +351,14 @@ namespace Epsitec.Common.UI
 					}
 				}
 				
-				System.Diagnostics.Debug.WriteLine ("Created " + this.index + " -> " + this.widget.ToString () + " in " + panel.VisualSerialId);
-				
-				this.widget.SetEmbedder (panel);
+				System.Diagnostics.Debug.WriteLine ("Created " + this.index + " -> " + this.widget.ToString () + " in " + this.owner.VisualSerialId);
+
+				this.widget.SetEmbedder (this.owner);
 				this.widget.SetManualBounds (this.bounds);
 
 				//	TODO: ...gérer le cas où le panel n'aurait plus focus du tout...
 
-				if (panel.GetFocusedItemView () == this)
+				if (this.owner.GetFocusedItemView () == this)
 				{
 					System.Diagnostics.Debug.WriteLine ("Refocus " + this.widget);
 					this.widget.Focus ();
