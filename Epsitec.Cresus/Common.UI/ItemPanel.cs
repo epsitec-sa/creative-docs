@@ -154,11 +154,11 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				return (ItemPanelSelectionMode) this.GetValue (ItemPanel.ItemSelectionModeProperty);
+				return (ItemPanelSelectionMode) this.RootPanel.GetValue (ItemPanel.ItemSelectionModeProperty);
 			}
 			set
 			{
-				this.SetValue (ItemPanel.ItemSelectionModeProperty, value);
+				this.RootPanel.SetValue (ItemPanel.ItemSelectionModeProperty, value);
 			}
 		}
 
@@ -166,11 +166,11 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				return (ItemPanelSelectionMode) this.GetValue (ItemPanel.GroupSelectionModeProperty);
+				return (ItemPanelSelectionMode) this.RootPanel.GetValue (ItemPanel.GroupSelectionModeProperty);
 			}
 			set
 			{
-				this.SetValue (ItemPanel.GroupSelectionModeProperty, value);
+				this.RootPanel.SetValue (ItemPanel.GroupSelectionModeProperty, value);
 			}
 		}
 
@@ -908,11 +908,11 @@ namespace Epsitec.Common.UI
 					}
 				}
 
-				ItemPanelGroup childPanelGroup = view.Widget as ItemPanelGroup;
+				ItemPanelGroup group = view.Group;
 
-				if (childPanelGroup != null)
+				if (group != null)
 				{
-					childPanelGroup.GetSelectedItemViews (filter, list);
+					group.ChildPanel.GetSelectedItemViews (filter, list);
 				}
 			}
 		}
@@ -1047,7 +1047,13 @@ namespace Epsitec.Common.UI
 					case CurrentItemTrackingMode.AutoSelect:
 						if (autoSelect)
 						{
-							this.SelectItemView (view);
+							IList<ItemView> list = this.GetSelectedItemViews ();
+							SelectionState state = new SelectionState (this);
+
+							this.InternalDeselectItemViews (list);
+							this.InternalSelectItemView (view);
+							
+							state.GenerateEvents ();
 						}
 						break;
 				}
@@ -1115,9 +1121,20 @@ namespace Epsitec.Common.UI
 
 			if (!e.Suppress)
 			{
-				if (e.Message.Button == MouseButtons.Left)
+				ItemPanel root = this.RootPanel;
+				
+				root.manualTrackingCounter++;
+
+				try
 				{
-					this.HandleItemViewPressed (e.Message, this.Detect (e.Point));
+					if (e.Message.Button == MouseButtons.Left)
+					{
+						this.HandleItemViewPressed (e.Message, this.Detect (e.Point));
+					}
+				}
+				finally
+				{
+					root.manualTrackingCounter--;
 				}
 			}
 		}
@@ -1130,7 +1147,16 @@ namespace Epsitec.Common.UI
 
 		private void HandleItemViewPressed(Widgets.Message message, ItemView view)
 		{
-			if (view != null)
+			if (view == null)
+			{
+				return;
+			}
+			
+			if (view.Owner != this)
+			{
+				view.Owner.HandleItemViewPressed (message, view);
+			}
+			else
 			{
 				IList<ItemView> list = this.GetSelectedItemViews ();
 				
@@ -1166,10 +1192,10 @@ namespace Epsitec.Common.UI
 		{
 			ItemPanel root = this.RootPanel;
 			
+			root.manualTrackingCounter++;
+			
 			try
 			{
-				root.manualTrackingCounter++;
-				
 				base.ProcessMessage (message, pos);
 
 				if (message.IsMouseType)
@@ -2659,7 +2685,21 @@ namespace Epsitec.Common.UI
 
 		internal void NotifyWidgetClicked(ItemViewWidget widget, Widgets.Message message, Drawing.Point pos)
 		{
-			this.HandleItemViewPressed (message, widget.ItemView);
+			ItemPanel root = this.RootPanel;
+
+			root.manualTrackingCounter++;
+
+			try
+			{
+				if (message.Button == MouseButtons.Left)
+				{
+					this.HandleItemViewPressed (message, widget.ItemView);
+				}
+			}
+			finally
+			{
+				root.manualTrackingCounter--;
+			}
 		}
 	}
 }

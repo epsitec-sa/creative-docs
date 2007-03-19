@@ -26,9 +26,6 @@ namespace Epsitec.Common.UI
 			this.panel.Dock = Widgets.DockStyle.Fill;
 			this.panel.Layout = this.ParentPanel.Layout;
 
-			this.panel.ItemSelectionMode  = this.ParentPanel.ItemSelectionMode;
-			this.panel.GroupSelectionMode = this.ParentPanel.GroupSelectionMode;
-			
 			this.panel.CurrentItemTrackingMode = this.ParentPanel.CurrentItemTrackingMode;
 
 			this.panel.DefineParentGroup (this);
@@ -124,166 +121,21 @@ namespace Epsitec.Common.UI
 		/// <summary>
 		/// Clears information related to the user interface. This is a softer
 		/// version of a dispose where the object can be turned alive again by
-		/// calling <see cref="RefreshUserInterface"/>. This takes a snapshot
-		/// of the <c>ItemView</c> states before they get lost.
+		/// calling <see cref="RefreshUserInterface"/>.
 		/// </summary>
 		internal void ClearUserInterface()
 		{
-			//	Remember all items which were selected, so we can reselect
-			//	them when the ViewItem objects get recreated...
-
-#if false
-			if (this.panel.IsGroupPanelEnabled)
-			{
-				State state = this.SaveState ();
-
-				lock (this.exclusion)
-				{
-					this.savedState = state;
-				}
-			}
-#endif
-
 			this.panel.ClearUserInterface ();
 			this.hasValidUserInterface = false;
 		}
 
 		internal void RefreshUserInterface()
 		{
+			System.Diagnostics.Debug.Assert (this.hasValidUserInterface == false);
+
 			this.hasValidUserInterface = true;
 
 			this.panel.RefreshUserInterface ();
-
-			State state = null;
-
-			lock (this.exclusion)
-			{
-				state = this.savedState;
-				this.savedState = null;
-			}
-
-			this.RestoreSavedState (state);
-		}
-
-		internal void RestoreSavedState(State state)
-		{
-			if (state != null)
-			{
-				ItemView view;
-
-				foreach (object item in state.SelectedItems)
-				{
-					view = this.panel.GetItemView (item);
-
-					if (view != null)
-					{
-						view.Select (true);
-					}
-				}
-			}
-		}
-
-		internal State SaveState()
-		{
-			State state = new State ();
-			
-			foreach (ItemView view in this.panel.GetSelectedItemViews ())
-			{
-				state.AddSelectedItem (view.Item);
-			}
-
-			return state;
-		}
-
-		internal class State
-		{
-			public State()
-			{
-				this.selectedItems = new List<System.WeakReference> ();
-			}
-
-			public IEnumerable<object> SelectedItems
-			{
-				get
-				{
-					foreach (System.WeakReference item in this.selectedItems)
-					{
-						object value = item.Target;
-						
-						if (value != null)
-						{
-							yield return value;
-						}
-					}
-				}
-			}
-			
-			public void AddSelectedItem(object item)
-			{
-				this.selectedItems.Add (new System.WeakReference (item));
-			}
-
-			public void Remove(object item)
-			{
-				List<System.WeakReference> list = new List<System.WeakReference> ();
-
-				foreach (System.WeakReference weak in this.selectedItems)
-				{
-					if ((weak.Target == null) ||
-						(weak.Target == item))
-					{
-						//	Skip element
-					}
-					else
-					{
-						list.Add (weak);
-					}
-				}
-
-				this.selectedItems = list;
-			}
-
-			List<System.WeakReference> selectedItems;
-		}
-
-		/// <summary>
-		/// Gets the selected item views, including the ghost item views which do
-		/// not really exist when a group is in compact mode.
-		/// </summary>
-		/// <param name="filter">The item view filter.</param>
-		/// <param name="list">The item view list which gets filled.</param>
-		internal void GetSelectedItemViews(System.Predicate<ItemView> filter, List<ItemView> list)
-		{
-			System.Diagnostics.Debug.Assert (this.ParentPanel != null);
-
-			this.panel.GetSelectedItemViews (filter, list);
-				
-			Drawing.Size size = this.panel.ItemViewDefaultSize;
-
-			//	If we have selected ghost items for this group, we will provide
-			//	dummy (ghost) item view instances so that the root panel can
-			//	enforce the selection mode (e.g. only one selected item).
-
-			State state;
-			
-			lock (this.exclusion)
-			{
-				state = this.savedState;
-			}
-
-			if (state != null)
-			{
-				foreach (object item in state.SelectedItems)
-				{
-					ItemViewGhost view = new ItemViewGhost (this, item, size);
-
-					if ((filter == null) ||
-						(filter (view)))
-					{
-						list.Add (view);
-					}
-				}
-			}
 		}
 
 		public override Drawing.Margins GetInternalPadding()
@@ -384,54 +236,8 @@ namespace Epsitec.Common.UI
 			return size;
 		}
 
-		#region ItemViewGhost Class
-
-		/// <summary>
-		/// The <c>ItemViewGhost</c> class is used to monitor the change from
-		/// <c>IsSelected=true</c> to <c>IsSelected=false</c>, which is used
-		/// to remove the corresponding item from the selected item list.
-		/// </summary>
-		private class ItemViewGhost : ItemView
-		{
-			public ItemViewGhost(ItemPanelGroup group, object item, Drawing.Size defaultSize)
-				: base (item, group.ChildPanel, defaultSize)
-			{
-				this.group = group;
-				base.Select (true);
-			}
-
-			internal override void Select(bool value)
-			{
-				if (this.IsSelected != value)
-				{
-					System.Diagnostics.Debug.Assert (value == false);
-
-					base.Select (value);
-
-					//	Rebuild the list of selected items: remove dead object
-					//	references and also remove this item view's item.
-					
-					List<System.WeakReference> list = new List<System.WeakReference> ();
-
-					lock (this.group.exclusion)
-					{
-						if (this.group.savedState != null)
-						{
-							this.group.savedState.Remove (this.Item);
-						}
-					}
-				}
-			}
-			
-
-			private ItemPanelGroup group;
-		}
-
-		#endregion
-
 		private ItemPanel panel;
 		
-		private State savedState;
 		private readonly object exclusion = new object ();
 		private bool hasValidUserInterface;
 	}

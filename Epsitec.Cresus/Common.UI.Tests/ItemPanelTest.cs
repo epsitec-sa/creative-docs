@@ -222,9 +222,27 @@ namespace Epsitec.Common.UI
 			panel.Aperture = new Drawing.Rectangle (0, 0, dx, dy);
 			panel.ItemViewDefaultSize = new Drawing.Size (dx, 20);
 
-			window.Root.Children.Add (table);
+			Widgets.FrameBox box;
+			
+			box = new Widgets.FrameBox ();
+
+			box.Dock = Widgets.DockStyle.Bottom;
+			box.PreferredHeight = 36;
+			box.Padding = new Drawing.Margins (4, 4, 8, 8);
+			box.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
+			
+			Widgets.Button button0 = ItemPanelTest.CreateButton (box, "0");
+			Widgets.Button button1 = ItemPanelTest.CreateButton (box, "1");
+			Widgets.Button buttonN = ItemPanelTest.CreateButton (box, "n");
+
+			button0.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.None; };
+			button1.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne; };
+			buttonN.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.Multiple; };
 			
 			panel.Show (panel.GetItemView (0));
+
+			window.Root.Children.Add (table);
+			window.Root.Children.Add (box);
 
 			window.Show ();
 
@@ -295,6 +313,23 @@ namespace Epsitec.Common.UI
 
 			buttonCreate.Margins = new Drawing.Margins (8, 0, 0, 0);
 
+			box = new Widgets.FrameBox ();
+
+			box.Dock = Widgets.DockStyle.Bottom;
+			box.PreferredHeight = 36;
+			box.Padding = new Drawing.Margins (4, 4, 8, 8);
+			box.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
+			
+			Widgets.Button button0 = ItemPanelTest.CreateButton (box, "0");
+			Widgets.Button button1 = ItemPanelTest.CreateButton (box, "1");
+			Widgets.Button buttonN = ItemPanelTest.CreateButton (box, "n");
+
+			button0.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.None; };
+			button1.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne; };
+			buttonN.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.Multiple; };
+
+			window.Root.Children.Add (box);
+			
 			panel.Show (panel.GetItemView (0));
 
 			window.Show ();
