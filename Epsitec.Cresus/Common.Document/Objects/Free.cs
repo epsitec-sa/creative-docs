@@ -273,6 +273,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Début de la création d'un objet.
 			this.InitSpacing(drawingContext);
+			this.initialClose = this.PropertyPolyClose.BoolValue;
 			this.ChangePropertyPolyClose(false);
 			drawingContext.SnapPos(ref pos);
 			this.HandleAdd(pos, HandleType.Starting);
@@ -355,6 +356,10 @@ namespace Epsitec.Common.Document.Objects
 			if (len <= drawingContext.CloseMargin && total > 2)  // trait fermé ?
 			{
 				this.HandleDelete(total-1);
+				this.ChangePropertyPolyClose(true);
+			}
+			else if (this.initialClose)
+			{
 				this.ChangePropertyPolyClose(true);
 			}
 			this.Handle(0).Type = HandleType.Starting;
@@ -758,5 +763,6 @@ namespace Epsitec.Common.Document.Objects
 		protected double				spacing;
 		protected Point					initialPos;
 		protected Point					vp1, vp2;
+		protected bool					initialClose;
 	}
 }
