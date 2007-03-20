@@ -264,7 +264,7 @@ namespace Epsitec.Common.UI
 			buttonB.Clicked += delegate { table.VerticalScrollMode = ItemTableScrollMode.Linear; };
 			
 			panel.Show (panel.GetItemView (0));
-
+			
 			window.Root.Children.Add (table);
 			window.Root.Children.Add (box);
 			
@@ -294,6 +294,7 @@ namespace Epsitec.Common.UI
 			buttonCreate.Margins = new Drawing.Margins (8, 0, 0, 0);
 
 			window.Show ();
+			panel.Focus ();
 
 			Widgets.Window.RunInTestEnvironment (window);
 		}
@@ -398,6 +399,7 @@ namespace Epsitec.Common.UI
 			panel.Show (panel.GetItemView (0));
 
 			window.Show ();
+			panel.Focus ();
 
 			Widgets.Window.RunInTestEnvironment (window);
 		}
@@ -530,6 +532,7 @@ namespace Epsitec.Common.UI
 			panel.Show (panel.GetItemView (0));
 
 			window.Show ();
+			panel.Focus ();
 
 			Widgets.Window.RunInTestEnvironment (window);
 		}
