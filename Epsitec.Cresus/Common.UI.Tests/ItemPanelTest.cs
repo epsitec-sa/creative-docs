@@ -229,6 +229,7 @@ namespace Epsitec.Common.UI
 			panel.GroupSelectionMode = ItemPanelSelectionMode.ExactlyOne;
 			panel.Aperture = new Drawing.Rectangle (0, 0, dx, dy);
 			panel.ItemViewDefaultSize = new Drawing.Size (dx, 20);
+			panel.CurrentItemTrackingMode = CurrentItemTrackingMode.AutoSelect;
 
 			Widgets.FrameBox box;
 			

@@ -577,6 +577,8 @@ namespace Epsitec.Common.UI
 
 		public void ExpandItemView(ItemView view, bool expand)
 		{
+			System.Diagnostics.Debug.Assert (this.IsRootPanel);
+
 			while (view != null)
 			{
 				if (view.IsGroup)
@@ -593,6 +595,18 @@ namespace Epsitec.Common.UI
 				}
 
 				view = group.ItemView;
+			}
+		}
+
+		public void ExpandParentItemView(ItemView view)
+		{
+			System.Diagnostics.Debug.Assert (this.IsRootPanel);
+
+			ItemPanelGroup group = view.Owner.ParentGroup;
+
+			if (group != null)
+			{
+				this.ExpandItemView (group.ItemView, true);
 			}
 		}
 
@@ -880,7 +894,7 @@ namespace Epsitec.Common.UI
 			}
 			else
 			{
-				this.ExpandItemView (view, true);
+				this.ExpandParentItemView (view);
 
 				if (this.hasDirtyLayout)
 				{
@@ -1072,6 +1086,8 @@ namespace Epsitec.Common.UI
 
 		private void TrackCurrentItem(bool autoSelect)
 		{
+			System.Diagnostics.Debug.Assert (this.IsRootPanel);
+
 			if (this.CurrentItemTrackingMode == CurrentItemTrackingMode.None)
 			{
 				return;
