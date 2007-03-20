@@ -569,10 +569,22 @@ namespace Epsitec.Common.UI
 
 		public void ExpandItemView(ItemView view, bool expand)
 		{
-			if (view.IsGroup)
+			while (view != null)
 			{
-				view.CreateUserInterface ();
-				view.IsExpanded = expand;
+				if (view.IsGroup)
+				{
+//-					view.CreateUserInterface ();
+					view.IsExpanded = expand;
+				}
+
+				ItemPanelGroup group = view.Owner.ParentGroup;
+
+				if (group == null)
+				{
+					break;
+				}
+
+				view = group.ItemView;
 			}
 		}
 
@@ -860,6 +872,8 @@ namespace Epsitec.Common.UI
 			}
 			else
 			{
+				this.ExpandItemView (view, true);
+
 				if (this.hasDirtyLayout)
 				{
 					this.RefreshLayout ();
