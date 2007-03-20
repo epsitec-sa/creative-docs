@@ -1231,6 +1231,9 @@ namespace Epsitec.Common.UI
 		{
 			base.OnPressed (e);
 
+			//	If nobody ate the event, then we may handle it here and determine
+			//	what item has to be selected/deselected :
+
 			if (!e.Suppress)
 			{
 				ItemPanel root = this.RootPanel;
@@ -1241,7 +1244,12 @@ namespace Epsitec.Common.UI
 				{
 					if (e.Message.Button == MouseButtons.Left)
 					{
-						this.HandleItemViewPressed (e.Message, this.Detect (e.Point));
+						ItemView view = this.Detect (e.Point);
+						
+						if (view != null)
+						{
+							this.HandleItemViewPressed (e.Message, view);
+						}
 					}
 				}
 				finally
@@ -1316,18 +1324,6 @@ namespace Epsitec.Common.UI
 					if (message.MessageType == MessageType.MouseDown)
 					{
 						this.Focus ();
-					}
-
-					if (message.MessageType == MessageType.MouseMove &&
-						message.Button == MouseButtons.None)
-					{
-						ItemView item = this.Detect (pos);
-
-						if (this.enteredItemView != item)
-						{
-							this.enteredItemView = item;
-							this.Invalidate ();
-						}
 					}
 				}
 				else if (message.IsKeyType)
@@ -1461,7 +1457,7 @@ namespace Epsitec.Common.UI
 		{
 			if (itemView != null)
 			{
-				this.RootPanel.RecordFocus (itemView.Item);
+				this.RootPanel.RecordFocus (itemView);
 
 				if (itemView.HasValidUserInterface)
 				{
@@ -1904,77 +1900,13 @@ namespace Epsitec.Common.UI
 			return found;
 		}
 
-		internal object GetFocusedItem()
-		{
-			return this.RootPanel.focusedItem;
-		}
-
 		internal ItemView GetFocusedItemView()
 		{
-			ItemPanel root = this.RootPanel;
-			object    item = root.focusedItem;
-
-			if (item == null)
-			{
-				return null;
-			}
-			else
-			{
-				return this.FindItemView (item);
-			}
-		}
-
-		protected override void OnExited(Widgets.MessageEventArgs e)
-		{
-			base.OnExited(e);
-
-			if (this.enteredItemView != null)
-			{
-				this.enteredItemView = null;
-				this.Invalidate();
-			}
+			return this.RootPanel.focusedItemView;
 		}
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-#if false
-			IEnumerable<ItemView> views = this.SafeGetViews ();
-			Widgets.IAdorner adorner = Widgets.Adorners.Factory.Active;
-
-			Drawing.Rectangle rect = Drawing.Rectangle.Intersection (clipRect, this.Aperture);
-			ICollectionView items = this.RootPanel.Items;
-
-			object focusedItem = items == null ? null : items.CurrentItem;
-
-			foreach (ItemView view in views)
-			{
-				if (view.Bounds.IntersectsWith (rect))
-				{
-					WidgetPaintState state = WidgetPaintState.Enabled;
-					Drawing.Rectangle viewBounds = Drawing.Rectangle.Intersection (rect, view.Bounds);
-
-					if (view.IsSelected)
-					{
-						state |= WidgetPaintState.Selected;
-					}
-					if (this.IsFocused)
-					{
-						if (view.Item == focusedItem)
-						{
-							state |= WidgetPaintState.Focused;
-						}
-
-						state |= WidgetPaintState.InheritedFocus;
-					}
-					if (view == this.enteredItem)
-					{
-						state |= WidgetPaintState.Entered;
-					}
-
-					adorner.PaintCellBackground (graphics, view.Bounds, state);
-				}
-			}
-#endif
 		}
 
 		protected override void DispatchMessage(Widgets.Message message, Drawing.Point pos)
@@ -2753,8 +2685,7 @@ namespace Epsitec.Common.UI
 
 		ItemPanelGroup					parentGroup;
 
-		ItemView						enteredItemView;
-		object							focusedItem;
+		ItemView						focusedItemView;
 
 		double							minItemWidth;
 		double							maxItemWidth;
@@ -2766,45 +2697,46 @@ namespace Epsitec.Common.UI
 
 		internal void NotifyFocusChanged(ItemViewWidget widget, bool focus)
 		{
-			ItemPanel root = this.RootPanel;
-			ItemView  view = widget.ItemView;
-			object    item = view.Item;
-
-			System.Diagnostics.Debug.WriteLine (string.Format ("NotifyFocus: {0} {1} {2}", view.Index, focus, view.Item));
-
-			if (focus)
+			if (this.IsRootPanel)
 			{
-				root.RecordFocus (item);
+				ItemView view = widget.ItemView;
+
+				if (focus)
+				{
+					this.RecordFocus (view);
+				}
+				else
+				{
+					if (this.focusedItemView == view)
+					{
+						this.ClearFocus ();
+					}
+				}
 			}
-			else if (root.focusedItem == item)
+			else
 			{
-				root.ClearFocus ();
+				this.RootPanel.NotifyFocusChanged (widget, focus);
 			}
 		}
 
-		internal void RecordFocus(object item)
+		private void RecordFocus(ItemView itemView)
 		{
-			if (this.focusedItem == item)
+			if (this.focusedItemView == itemView)
 			{
 				return;
 			}
 
-			System.Diagnostics.Debug.Assert (item != null);
-			System.Diagnostics.Debug.WriteLine (string.Format ("RecordFocus: {0} item={1} group={2}", item, this.Items.Items.IndexOf (item), this.Items.Groups.IndexOf (item as CollectionViewGroup)));
-			
-			this.focusedItem = item;
+			this.focusedItemView = itemView;
 		}
 
-		internal void ClearFocus()
+		private void ClearFocus()
 		{
-			if (this.focusedItem == null)
+			if (this.focusedItemView == null)
 			{
 				return;
 			}
 
-			System.Diagnostics.Debug.WriteLine (string.Format ("ClearFocus: {0} item={1} group={2}", this.focusedItem, this.Items.Items.IndexOf (this.focusedItem), this.Items.Groups.IndexOf (this.focusedItem as CollectionViewGroup)));
-
-			this.focusedItem = null;
+			this.focusedItemView = null;
 		}
 
 		internal void NotifyWidgetClicked(ItemViewWidget widget, Widgets.Message message, Drawing.Point pos)
