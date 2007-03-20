@@ -366,7 +366,7 @@ namespace Epsitec.Common.Document
 			if (global != null)
 			{
 				key = global.LocalKeyName;
-				Item item = new Item (this, global);
+				Item item = new Item (global, this.resolution);
 				this.items.Add (key, item);
 				return item;
 			}
@@ -398,7 +398,7 @@ namespace Epsitec.Common.Document
 
 				if (global != null)  // image dans le cache global ?
 				{
-					item = new Item (this, global);
+					item = new Item (global, this.resolution);
 					this.items.Add (key, item);  // ajoute l'image dans le cache local
 				}
 			}
@@ -466,7 +466,7 @@ namespace Epsitec.Common.Document
 
 				if (global != null)
 				{
-					item = new Item (this, global);
+					item = new Item (global, this.resolution);
 					this.items.Add (key, item);
 				}
 			}
@@ -478,11 +478,10 @@ namespace Epsitec.Common.Document
 		#region Item Class
 		public sealed class Item
 		{
-			internal Item(ImageCache cache, GlobalImageCache.Item globalItem)
+			internal Item(GlobalImageCache.Item globalItem, ImageCacheResolution resolution)
 			{
-				this.cache = cache;
 				this.globalItem = globalItem;
-				this.resolution = this.cache.resolution;
+				this.resolution = resolution;
 			}
 
 			public string FileName
@@ -626,10 +625,9 @@ namespace Epsitec.Common.Document
 				this.globalItem.SetRecentTimeStamp ();
 			}
 			
-			private ImageCache					cache;
 			private GlobalImageCache.Item		globalItem;
-			private string						shortName;
 			private ImageCacheResolution		resolution;
+			private string						shortName;
 			private bool						embeddedInDocument;
 			private bool						usedInDocument;
 		}
