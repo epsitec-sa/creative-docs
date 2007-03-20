@@ -452,7 +452,7 @@ namespace Epsitec.Common.UI
 			index = System.Math.Max (0, index);
 			
 			ItemView view = this.itemPanel.GetItemViewAtRow (index);
-			double   pos  = (view == null) ? this.itemPanel.GetContentsSize ().Height : view.Bounds.Top;
+			double   pos  = (view == null) ? this.itemPanel.GetContentsSize ().Height : this.itemPanel.GetItemViewBounds (view).Top;
 			
 			return pos - this.apertureSize.Height;
 		}
@@ -462,9 +462,9 @@ namespace Epsitec.Common.UI
 			double pos = offset + this.apertureSize.Height - this.itemPanel.AperturePadding.Height - 0.5;
 			
 			ItemView view = this.itemPanel.FindItemView (
-				delegate (ItemView item)
+				delegate (ItemView candidate)
 				{
-					Rectangle bounds = item.Bounds;
+					Rectangle bounds = this.itemPanel.GetItemViewBounds (candidate);
 					
 					if ((bounds.Bottom < pos) &&
 						(bounds.Top > pos))

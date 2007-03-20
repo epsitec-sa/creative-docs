@@ -817,7 +817,7 @@ namespace Epsitec.Common.UI
 				}
 
 				Drawing.Rectangle aperture = this.Aperture;
-				Drawing.Rectangle bounds   = view.Bounds;
+				Drawing.Rectangle bounds   = this.GetItemViewBounds (view);
 
 				aperture.Deflate (this.AperturePadding);
 
