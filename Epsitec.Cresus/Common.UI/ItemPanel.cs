@@ -318,10 +318,59 @@ namespace Epsitec.Common.UI
 
 			while (panel != this)
 			{
+				ItemPanelGroup group = panel.ParentGroup;
+
+				bounds = panel.MapClientToParent (bounds);
+				bounds = group.MapClientToParent (bounds);
+				
 				view  = panel.ParentGroup.ItemView;
 				panel = view.Owner;
 
-				bounds.Offset (view.Bounds.Location);
+//-				bounds.Offset (view.Bounds.Location);
+			}
+
+			return bounds;
+		}
+
+		public Drawing.Rectangle GetExpandedItemViewBounds(ItemView view)
+		{
+			if (view == null)
+			{
+				return Drawing.Rectangle.Empty;
+			}
+
+			Drawing.Rectangle bounds = view.Bounds;
+			ItemPanel         panel  = view.Owner;
+
+			while (panel != this)
+			{
+				ItemPanelGroup group = panel.ParentGroup;
+
+				double top   = panel.PreferredHeight;
+				double right = panel.PreferredWidth;
+
+				if (view.Bounds.Top == top)
+				{
+					bounds.Top += group.GetInternalPadding ().Top + group.Padding.Top + panel.Margins.Top;
+				}
+				if (view.Bounds.Right == right)
+				{
+					bounds.Right += group.GetInternalPadding ().Right + group.Padding.Right + panel.Margins.Right;
+				}
+				if (view.Bounds.Bottom == 0)
+				{
+					bounds.Bottom -= group.GetInternalPadding ().Bottom + group.Padding.Bottom + panel.Margins.Bottom;
+				}
+				if (view.Bounds.Left == 0)
+				{
+					bounds.Left -= group.GetInternalPadding ().Left + group.Padding.Left + panel.Margins.Left;
+				}
+
+				bounds = panel.MapClientToParent (bounds);
+				bounds = group.MapClientToParent (bounds);
+
+				view  = panel.ParentGroup.ItemView;
+				panel = view.Owner;
 			}
 
 			return bounds;
@@ -817,7 +866,7 @@ namespace Epsitec.Common.UI
 				}
 
 				Drawing.Rectangle aperture = this.Aperture;
-				Drawing.Rectangle bounds   = this.GetItemViewBounds (view);
+				Drawing.Rectangle bounds   = this.GetExpandedItemViewBounds (view);
 
 				aperture.Deflate (this.AperturePadding);
 
