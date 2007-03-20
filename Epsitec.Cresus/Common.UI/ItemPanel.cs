@@ -800,7 +800,11 @@ namespace Epsitec.Common.UI
 				return;
 			}
 
-			if (this.Aperture.IsSurfaceZero)
+			if (this.parentGroup != null)
+			{
+				this.RootPanel.Show (view);
+			}
+			else if (this.Aperture.IsSurfaceZero)
 			{
 				//	Nothing to do : there is no visible aperture, so don't bother
 				//	moving it around !
