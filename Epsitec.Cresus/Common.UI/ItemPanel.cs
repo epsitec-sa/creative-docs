@@ -491,6 +491,15 @@ namespace Epsitec.Common.UI
 					});
 			}
 		}
+
+		public ItemView FindItemView(int index)
+		{
+			return this.FindItemView (
+				delegate (ItemView view)
+				{
+					return view.Index == index;
+				});
+		}
 		
 		public void DeselectAllItemViews()
 		{
@@ -832,22 +841,28 @@ namespace Epsitec.Common.UI
 			this.ClearUserInterface ();
 			this.RefreshItemViews ();
 
-			if (this.isCurrentShowPending)
+			if (this.IsRootPanel)
 			{
-				ICollectionView view = this.RootPanel.Items;
-
-				if (view != null)
+				if (this.isCurrentShowPending)
 				{
-					this.isCurrentShowPending = false;
-					ItemView item = this.GetItemView (view.CurrentPosition);
+					ICollectionView view = this.RootPanel.Items;
 
-					if ((this.ItemSelectionMode == ItemPanelSelectionMode.ExactlyOne) ||
-						(this.ItemSelectionMode == ItemPanelSelectionMode.ZeroOrOne))
+					if (view != null)
 					{
-						this.SelectItemView (item);
-					}
+						this.isCurrentShowPending = false;
+						this.TrackCurrentItem (true);
+#if false
+						ItemView item = this.FindItemView (view.CurrentPosition);
 
-					this.Show (item);
+						if ((this.ItemSelectionMode == ItemPanelSelectionMode.ExactlyOne) ||
+						(this.ItemSelectionMode == ItemPanelSelectionMode.ZeroOrOne))
+						{
+							this.SelectItemView (item);
+						}
+
+						this.Show (item);
+#endif
+					}
 				}
 			}
 		}
@@ -1379,8 +1394,7 @@ namespace Epsitec.Common.UI
 
 					newFocusedItemView = this.GetFocusedItemView ();
 
-					if ((!message.IsControlPressed) &&
-						(!message.IsAltPressed))
+					if (!message.IsControlPressed)
 					{
 						IList<ItemView> list = this.GetSelectedItemViews ();
 						SelectionState state = new SelectionState (this);
@@ -1437,7 +1451,7 @@ namespace Epsitec.Common.UI
 
 			if (itemView != null)
 			{
-				itemView.Owner.ManualSelection (itemView, modifySelection);
+				this.ManualSelection (itemView, modifySelection);
 			}
 		}
 
@@ -1499,14 +1513,14 @@ namespace Epsitec.Common.UI
 			{
 				for (int i = index2; i >= index1; i--)
 				{
-					this.InternalSelectItemView (this.GetItemView (i));
+					this.InternalSelectItemView (this.FindItemView (i));
 				}
 			}
 			else
 			{
 				for (int i = index1; i <= index2; i++)
 				{
-					this.InternalSelectItemView (this.GetItemView (i));
+					this.InternalSelectItemView (this.FindItemView (i));
 				}
 			}
 
@@ -1535,7 +1549,7 @@ namespace Epsitec.Common.UI
 			{
 				for (int i=currentIndex; i<=clickedIndex; i++)
 				{
-					this.InternalSelectItemView(this.GetItemView(i));
+					this.InternalSelectItemView(this.FindItemView(i));
 				}
 
 				index1 = currentIndex;
@@ -1546,7 +1560,7 @@ namespace Epsitec.Common.UI
 			{
 				for (int i=currentIndex; i>=clickedIndex; i--)
 				{
-					this.InternalSelectItemView(this.GetItemView(i));
+					this.InternalSelectItemView(this.FindItemView(i));
 				}
 
 				index1 = clickedIndex;
@@ -1575,10 +1589,10 @@ namespace Epsitec.Common.UI
 			switch (this.Layout)
 			{
 				case ItemPanelLayout.VerticalList:
-					return this.ProcessArrowKeysVerticalList (keyCode);
+					return this.ProcessNavigationKeysVerticalList (keyCode);
 
 				case ItemPanelLayout.RowsOfTiles:
-					return this.ProcessArrowKeysRowsOfTiles (keyCode);
+					return this.ProcessNavigationKeysRowsOfTiles (keyCode);
 
 				case ItemPanelLayout.ColumnsOfTiles:
 					break;
@@ -1587,7 +1601,7 @@ namespace Epsitec.Common.UI
 			return false;
 		}
 
-		private bool ProcessArrowKeysVerticalList(Widgets.KeyCode keyCode)
+		private bool ProcessNavigationKeysVerticalList(Widgets.KeyCode keyCode)
 		{
 			int pos = this.Items.CurrentPosition;
 
@@ -1630,7 +1644,7 @@ namespace Epsitec.Common.UI
 			return true;
 		}
 
-		private bool ProcessArrowKeysRowsOfTiles(Widgets.KeyCode keyCode)
+		private bool ProcessNavigationKeysRowsOfTiles(Widgets.KeyCode keyCode)
 		{
 			int pos = this.Items.CurrentPosition;
 
