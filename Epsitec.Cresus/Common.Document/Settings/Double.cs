@@ -78,6 +78,70 @@ namespace Epsitec.Common.Document.Settings
 					this.factorStep = 1.0;
 					break;
 
+				case "ExportPDFBleedEvenTop":
+					this.text = Res.Strings.Dialog.Double.ExportPDFBleedEvenTop;
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 0.1;
+					this.factorResolution = 0.1;
+					this.factorStep = 1.0;
+					break;
+
+				case "ExportPDFBleedEvenBottom":
+					this.text = Res.Strings.Dialog.Double.ExportPDFBleedEvenBottom;
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 0.1;
+					this.factorResolution = 0.1;
+					this.factorStep = 1.0;
+					break;
+
+				case "ExportPDFBleedEvenLeft":
+					this.text = Res.Strings.Dialog.Double.ExportPDFBleedEvenLeft;
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 0.1;
+					this.factorResolution = 0.1;
+					this.factorStep = 1.0;
+					break;
+
+				case "ExportPDFBleedEvenRight":
+					this.text = Res.Strings.Dialog.Double.ExportPDFBleedEvenRight;
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 0.1;
+					this.factorResolution = 0.1;
+					this.factorStep = 1.0;
+					break;
+
+				case "ExportPDFBleedOddTop":
+					this.text = Res.Strings.Dialog.Double.ExportPDFBleedOddTop;
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 0.1;
+					this.factorResolution = 0.1;
+					this.factorStep = 1.0;
+					break;
+
+				case "ExportPDFBleedOddBottom":
+					this.text = Res.Strings.Dialog.Double.ExportPDFBleedOddBottom;
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 0.1;
+					this.factorResolution = 0.1;
+					this.factorStep = 1.0;
+					break;
+
+				case "ExportPDFBleedOddLeft":
+					this.text = Res.Strings.Dialog.Double.ExportPDFBleedOddLeft;
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 0.1;
+					this.factorResolution = 0.1;
+					this.factorStep = 1.0;
+					break;
+
+				case "ExportPDFBleedOddRight":
+					this.text = Res.Strings.Dialog.Double.ExportPDFBleedOddRight;
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 0.1;
+					this.factorResolution = 0.1;
+					this.factorStep = 1.0;
+					break;
+
 				case "ExportPDFJpegQuality":
 					this.text = Res.Strings.Dialog.Double.ExportPDFJpegQuality;
 					this.integer = true;
@@ -237,6 +301,30 @@ namespace Epsitec.Common.Document.Settings
 					case "ExportPDFDebord":
 						return this.document.Settings.ExportPDFInfo.Debord;
 
+					case "ExportPDFBleedEvenTop":
+						return this.document.Settings.ExportPDFInfo.BleedEvenMargins.Top;
+
+					case "ExportPDFBleedEvenBottom":
+						return this.document.Settings.ExportPDFInfo.BleedEvenMargins.Bottom;
+
+					case "ExportPDFBleedEvenLeft":
+						return this.document.Settings.ExportPDFInfo.BleedEvenMargins.Left;
+
+					case "ExportPDFBleedEvenRight":
+						return this.document.Settings.ExportPDFInfo.BleedEvenMargins.Right;
+
+					case "ExportPDFBleedOddTop":
+						return this.document.Settings.ExportPDFInfo.BleedOddMargins.Top;
+
+					case "ExportPDFBleedOddBottom":
+						return this.document.Settings.ExportPDFInfo.BleedOddMargins.Bottom;
+
+					case "ExportPDFBleedOddLeft":
+						return this.document.Settings.ExportPDFInfo.BleedOddMargins.Left;
+
+					case "ExportPDFBleedOddRight":
+						return this.document.Settings.ExportPDFInfo.BleedOddMargins.Right;
+
 					case "ExportPDFJpegQuality":
 						return this.document.Settings.ExportPDFInfo.JpegQuality*100.0;
 
@@ -312,6 +400,38 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ExportPDFDebord":
 						this.document.Settings.ExportPDFInfo.Debord = value;
+						break;
+
+					case "ExportPDFBleedEvenTop":
+						this.document.Settings.ExportPDFInfo.BleedEvenMargins = new Margins(this.document.Settings.ExportPDFInfo.BleedEvenMargins.Left, this.document.Settings.ExportPDFInfo.BleedEvenMargins.Right, value, this.document.Settings.ExportPDFInfo.BleedEvenMargins.Bottom);
+						break;
+
+					case "ExportPDFBleedEvenBottom":
+						this.document.Settings.ExportPDFInfo.BleedEvenMargins = new Margins(this.document.Settings.ExportPDFInfo.BleedEvenMargins.Left, this.document.Settings.ExportPDFInfo.BleedEvenMargins.Right, this.document.Settings.ExportPDFInfo.BleedEvenMargins.Top, value);
+						break;
+
+					case "ExportPDFBleedEvenLeft":
+						this.document.Settings.ExportPDFInfo.BleedEvenMargins = new Margins(value, this.document.Settings.ExportPDFInfo.BleedEvenMargins.Right, this.document.Settings.ExportPDFInfo.BleedEvenMargins.Top, this.document.Settings.ExportPDFInfo.BleedEvenMargins.Bottom);
+						break;
+
+					case "ExportPDFBleedEvenRight":
+						this.document.Settings.ExportPDFInfo.BleedEvenMargins = new Margins(this.document.Settings.ExportPDFInfo.BleedEvenMargins.Left, value, this.document.Settings.ExportPDFInfo.BleedEvenMargins.Top, this.document.Settings.ExportPDFInfo.BleedEvenMargins.Bottom);
+						break;
+
+					case "ExportPDFBleedOddTop":
+						this.document.Settings.ExportPDFInfo.BleedOddMargins = new Margins(this.document.Settings.ExportPDFInfo.BleedOddMargins.Left, this.document.Settings.ExportPDFInfo.BleedOddMargins.Right, value, this.document.Settings.ExportPDFInfo.BleedOddMargins.Bottom);
+						break;
+
+					case "ExportPDFBleedOddBottom":
+						this.document.Settings.ExportPDFInfo.BleedOddMargins = new Margins(this.document.Settings.ExportPDFInfo.BleedOddMargins.Left, this.document.Settings.ExportPDFInfo.BleedOddMargins.Right, this.document.Settings.ExportPDFInfo.BleedOddMargins.Top, value);
+						break;
+
+					case "ExportPDFBleedOddLeft":
+						this.document.Settings.ExportPDFInfo.BleedOddMargins = new Margins(value, this.document.Settings.ExportPDFInfo.BleedOddMargins.Right, this.document.Settings.ExportPDFInfo.BleedOddMargins.Top, this.document.Settings.ExportPDFInfo.BleedOddMargins.Bottom);
+						break;
+
+					case "ExportPDFBleedOddRight":
+						this.document.Settings.ExportPDFInfo.BleedOddMargins = new Margins(this.document.Settings.ExportPDFInfo.BleedOddMargins.Left, value, this.document.Settings.ExportPDFInfo.BleedOddMargins.Top, this.document.Settings.ExportPDFInfo.BleedOddMargins.Bottom);
 						break;
 
 					case "ExportPDFJpegQuality":

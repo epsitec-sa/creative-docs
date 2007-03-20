@@ -657,6 +657,14 @@ namespace Epsitec.Common.Document
 					public static string ArrowMoveMul { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (92)); } }
 					public static string DimensionDecimal { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (96)); } }
 					public static string DimensionScale { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (95)); } }
+					public static string ExportPDFBleedEvenBottom { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1389)); } }
+					public static string ExportPDFBleedEvenLeft { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1390)); } }
+					public static string ExportPDFBleedEvenRight { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1391)); } }
+					public static string ExportPDFBleedEvenTop { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1388)); } }
+					public static string ExportPDFBleedOddBottom { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1392)); } }
+					public static string ExportPDFBleedOddLeft { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1393)); } }
+					public static string ExportPDFBleedOddRight { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1394)); } }
+					public static string ExportPDFBleedOddTop { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1395)); } }
 					public static string ExportPDFDebord { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (75)); } }
 					public static string ExportPDFImageMaxDpi { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (78)); } }
 					public static string ExportPDFImageMinDpi { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (77)); } }
@@ -695,6 +703,8 @@ namespace Epsitec.Common.Document
 				
 				public static class ExportPDF
 				{
+					public static string BleedEven { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1396)); } }
+					public static string BleedOdd { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1397)); } }
 					public static string Param { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (42)); } }
 					public static string Publisher { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (43)); } }
 				}

@@ -108,6 +108,14 @@ namespace Epsitec.Common.Document.Settings
 
 			this.CreateDefaultRange("ExportPDF", "ExportPDFRange");
 			this.CreateDefaultDouble("ExportPDF", "ExportPDFDebord");
+			this.CreateDefaultDouble("ExportPDF", "ExportPDFBleedEvenTop");
+			this.CreateDefaultDouble("ExportPDF", "ExportPDFBleedEvenBottom");
+			this.CreateDefaultDouble("ExportPDF", "ExportPDFBleedEvenLeft");
+			this.CreateDefaultDouble("ExportPDF", "ExportPDFBleedEvenRight");
+			this.CreateDefaultDouble("ExportPDF", "ExportPDFBleedOddTop");
+			this.CreateDefaultDouble("ExportPDF", "ExportPDFBleedOddBottom");
+			this.CreateDefaultDouble("ExportPDF", "ExportPDFBleedOddLeft");
+			this.CreateDefaultDouble("ExportPDF", "ExportPDFBleedOddRight");
 			this.CreateDefaultBool("ExportPDF", "ExportPDFTarget");
 			this.CreateDefaultBool("ExportPDF", "ExportPDFTextCurve");
 			this.CreateDefaultInteger("ExportPDF", "ExportPDFColorConversion");

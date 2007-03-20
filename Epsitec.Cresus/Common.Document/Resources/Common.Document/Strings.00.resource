@@ -51,6 +51,8 @@
   <data name="Dialog.ExportPDF.Param" id="0A1">Paramètres pour le document à exporter en PDF</data>
   <data name="Dialog.ExportICO.Param" id="0LA01">Choix pour l&amp;apos;exportation de l&amp;apos;icône</data>
   <data name="Dialog.ExportPDF.Publisher" id="0B1">Réglages pré-presse</data>
+  <data name="Dialog.ExportPDF.BleedEven" id="0KB01">Débords additionnels (page paire)</data>
+  <data name="Dialog.ExportPDF.BleedOdd" id="0LB01">Débords additionnels (page impaire)</data>
   <data name="Dialog.Bool.GridActive" id="0C1">Grille active</data>
   <data name="Dialog.Bool.GridShow" id="0D1">Grille visible</data>
   <data name="Dialog.Bool.TextGridShow" id="0E1">Lignes visibles</data>
@@ -89,6 +91,14 @@
   <data name="Dialog.Double.PrintMargins" id="092">Marges de centrage</data>
   <data name="Dialog.Double.PrintDebord" id="0A2">Débord</data>
   <data name="Dialog.Double.ExportPDFDebord" id="0B2">Débord</data>
+  <data name="Dialog.Double.ExportPDFBleedEvenTop" id="0CB01">Haut</data>
+  <data name="Dialog.Double.ExportPDFBleedOddTop" id="0JB01">Haut</data>
+  <data name="Dialog.Double.ExportPDFBleedEvenBottom" id="0DB01">Bas</data>
+  <data name="Dialog.Double.ExportPDFBleedOddBottom" id="0GB01">Bas</data>
+  <data name="Dialog.Double.ExportPDFBleedEvenLeft" id="0EB01">Gauche</data>
+  <data name="Dialog.Double.ExportPDFBleedOddLeft" id="0HB01">Gauche</data>
+  <data name="Dialog.Double.ExportPDFBleedEvenRight" id="0FB01">Droite</data>
+  <data name="Dialog.Double.ExportPDFBleedOddRight" id="0IB01">Droite</data>
   <data name="Dialog.Double.ExportPDFJpegQuality" id="0C2">Qualité des images</data>
   <data name="Dialog.Double.ExportPDFImageMinDpi" id="0D2">Résolution min. (dpi)</data>
   <data name="Dialog.Double.ExportPDFImageMaxDpi" id="0E2">Résolution max. (dpi)</data>

@@ -178,6 +178,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <Content Include="Resources\App.DocumentEditor\Captions.de.resource" />
+    <Content Include="Resources\App.DocumentEditor\Strings.de.resource" />
     <EmbeddedResource Include="Images\PropertyTension.icon" />
     <EmbeddedResource Include="Images\ObjectFree.icon" />
     <EmbeddedResource Include="Images\ViewDisposition.icon" />

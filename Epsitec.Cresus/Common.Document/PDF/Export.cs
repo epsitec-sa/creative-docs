@@ -219,10 +219,15 @@ namespace Epsitec.Common.Document.PDF
 			{
 				Size pageSize = this.document.GetPageSize(page);
 
-				if ( info.Debord > 0.0 )
+				if ( page%2 == 1 )
 				{
-					pageSize.Width  += info.Debord*2.0;
-					pageSize.Height += info.Debord*2.0;
+					pageSize.Width  += info.BleedEvenMargins.Width  + 2*info.Debord;
+					pageSize.Height += info.BleedEvenMargins.Height + 2*info.Debord;
+				}
+				else
+				{
+					pageSize.Width  += info.BleedOddMargins.Width  + 2*info.Debord;
+					pageSize.Height += info.BleedOddMargins.Height + 2*info.Debord;
 				}
 
 				if ( info.Target )  // traits de coupe ?
@@ -364,9 +369,22 @@ namespace Epsitec.Common.Document.PDF
 
 				port.Reset();
 
+				Point currentPageOffset = pageOffset;
+
+				if ( page%2 == 1 )
+				{
+					currentPageOffset.X += info.BleedEvenMargins.Left;
+					currentPageOffset.Y += info.BleedEvenMargins.Bottom;
+				}
+				else
+				{
+					currentPageOffset.X += info.BleedOddMargins.Left;
+					currentPageOffset.Y += info.BleedOddMargins.Bottom;
+				}
+
 				//	Matrice de transformation globale:
 				Transform gt = port.Transform;
-				gt.Translate(pageOffset);  // translation si débord
+				gt.Translate(currentPageOffset);  // translation si débord
 				gt.Scale(Export.mm2in);  // unité = 0.1mm
 				port.Transform = gt;
 
@@ -487,33 +505,38 @@ namespace Epsitec.Common.Document.PDF
 			double debord = info.Debord;
 			double length = info.TargetLength;
 
+			double bleedLeft   = (page%2 == 1) ? info.BleedEvenMargins.Left   : info.BleedOddMargins.Left;
+			double bleedRight  = (page%2 == 1) ? info.BleedEvenMargins.Right  : info.BleedOddMargins.Right;
+			double bleedTop    = (page%2 == 1) ? info.BleedEvenMargins.Top    : info.BleedOddMargins.Top;
+			double bleedBottom = (page%2 == 1) ? info.BleedEvenMargins.Bottom : info.BleedOddMargins.Bottom;
+
 			Path path = new Path();
 
 			//	Traits horizontaux.
-			path.MoveTo(0.0-debord, 0.0);
-			path.LineTo(0.0-debord-length, 0.0);
+			path.MoveTo(0.0-debord-bleedLeft, 0.0);
+			path.LineTo(0.0-debord-bleedLeft-length, 0.0);
 
-			path.MoveTo(0.0-debord, height);
-			path.LineTo(0.0-debord-length, height);
+			path.MoveTo(0.0-debord-bleedLeft, height);
+			path.LineTo(0.0-debord-bleedLeft-length, height);
 
-			path.MoveTo(width+debord, 0.0);
-			path.LineTo(width+debord+length, 0.0);
+			path.MoveTo(width+debord+bleedRight, 0.0);
+			path.LineTo(width+debord+bleedRight+length, 0.0);
 
-			path.MoveTo(width+debord, height);
-			path.LineTo(width+debord+length, height);
+			path.MoveTo(width+debord+bleedRight, height);
+			path.LineTo(width+debord+bleedRight+length, height);
 
 			//	Traits verticaux.
-			path.MoveTo(0.0, 0.0-debord);
-			path.LineTo(0.0, 0.0-debord-length);
+			path.MoveTo(0.0, 0.0-debord-bleedBottom);
+			path.LineTo(0.0, 0.0-debord-bleedBottom-length);
 
-			path.MoveTo(width, 0.0-debord);
-			path.LineTo(width, 0.0-debord-length);
+			path.MoveTo(width, 0.0-debord-bleedBottom);
+			path.LineTo(width, 0.0-debord-bleedBottom-length);
 
-			path.MoveTo(0.0, height+debord);
-			path.LineTo(0.0, height+debord+length);
+			path.MoveTo(0.0, height+debord+bleedTop);
+			path.LineTo(0.0, height+debord+bleedTop+length);
 
-			path.MoveTo(width, height+debord);
-			path.LineTo(width, height+debord+length);
+			path.MoveTo(width, height+debord+bleedTop);
+			path.LineTo(width, height+debord+bleedTop+length);
 
 			port.LineWidth = info.TargetWidth;
 			port.RichColor = RichColor.FromCmyk(1.0, 1.0, 1.0, 1.0);  // noir de repérage

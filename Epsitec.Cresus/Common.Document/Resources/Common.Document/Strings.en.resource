@@ -1361,4 +1361,14 @@
   <data id="00B01">Initializing PDF export</data>
   <data id="01B01">Generating resource {0}</data>
   <data id="04B01">Generating surface {0}.{1}</data>
+  <data id="0CB01">Top</data>
+  <data id="0DB01">Bottom</data>
+  <data id="0EB01">Left</data>
+  <data id="0FB01">Right</data>
+  <data id="0GB01">Bottom</data>
+  <data id="0HB01">Left</data>
+  <data id="0IB01">Right</data>
+  <data id="0JB01">Top</data>
+  <data id="0KB01">Additional even page bleed</data>
+  <data id="0LB01">Additional odd page bleed</data>
 </bundle>

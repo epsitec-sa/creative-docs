@@ -447,7 +447,16 @@ namespace Epsitec.Common.Document
 				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.ExportPDF.Publisher);
 				this.CreateDouble(container, "ExportPDFDebord");
 				this.CreateBool(container, "ExportPDFTarget");
-				DocumentDialogs.CreateSeparator(container);
+				DocumentDialogs.CreateTitle (container, Res.Strings.Dialog.ExportPDF.BleedEven);
+				this.CreateDouble (container, "ExportPDFBleedEvenTop");
+				this.CreateDouble(container, "ExportPDFBleedEvenBottom");
+				this.CreateDouble(container, "ExportPDFBleedEvenLeft");
+				this.CreateDouble(container, "ExportPDFBleedEvenRight");
+				DocumentDialogs.CreateTitle (container, Res.Strings.Dialog.ExportPDF.BleedOdd);
+				this.CreateDouble (container, "ExportPDFBleedOddTop");
+				this.CreateDouble(container, "ExportPDFBleedOddBottom");
+				this.CreateDouble(container, "ExportPDFBleedOddLeft");
+				this.CreateDouble(container, "ExportPDFBleedOddRight");
 			}
 
 			this.UpdateExportPDF(true);
@@ -470,6 +479,18 @@ namespace Epsitec.Common.Document
 			this.UpdateDouble("ExportPDFImageMaxDpi");
 			this.UpdateCombo("ExportPDFImageFilterA");
 			this.UpdateCombo("ExportPDFImageFilterB");
+
+			//TODO: ajouter this.UpdateBool("ExportPDFTarget");
+			
+			this.UpdateDouble("ExportPDFDebord");
+			this.UpdateDouble("ExportPDFBleedEvenTop");
+			this.UpdateDouble("ExportPDFBleedEvenBottom");
+			this.UpdateDouble("ExportPDFBleedEvenLeft");
+			this.UpdateDouble("ExportPDFBleedEvenRight");
+			this.UpdateDouble("ExportPDFBleedOddTop");
+			this.UpdateDouble("ExportPDFBleedOddBottom");
+			this.UpdateDouble("ExportPDFBleedOddLeft");
+			this.UpdateDouble("ExportPDFBleedOddRight");
 		}
 
 		public void UpdateExportPDFPages()

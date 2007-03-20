@@ -239,6 +239,8 @@ namespace Epsitec.Common.Widgets
 			#endregion
 		}
 		
+		//	Code mapping for 'Panel' resources
+		
 		static Res()
 		{
 			Res.Initialize (typeof (Res), "Common.Widgets");

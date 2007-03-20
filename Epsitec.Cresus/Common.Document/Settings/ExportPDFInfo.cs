@@ -60,6 +60,18 @@ namespace Epsitec.Common.Document.Settings
 			set { this.debord = value; }
 		}
 
+		public Margins BleedEvenMargins
+		{
+			get { return this.bleedEvenMargins; }
+			set { this.bleedEvenMargins = value; }
+		}
+
+		public Margins BleedOddMargins
+		{
+			get { return this.bleedOddMargins; }
+			set { this.bleedOddMargins = value; }
+		}
+
 		public bool Target
 		{
 			get { return this.target; }
@@ -136,7 +148,7 @@ namespace Epsitec.Common.Document.Settings
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			//	Sérialise les réglages.
-			info.AddValue("Rev", 5);
+			info.AddValue("Rev", 6);
 			info.AddValue("PageRange", this.pageRange);
 			info.AddValue("PageFrom", this.pageFrom);
 			info.AddValue("PageTo", this.pageTo);
@@ -151,6 +163,8 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("ImageMinDpi", this.imageMinDpi);
 			info.AddValue("ImageMaxDpi", this.imageMaxDpi);
 			info.AddValue("ImageNameFilters", this.imageNameFilters);
+			info.AddValue("BleedEvenMargins", this.bleedEvenMargins);
+			info.AddValue("BleedOddMargins", this.bleedOddMargins);
 		}
 
 		protected ExportPDFInfo(SerializationInfo info, StreamingContext context)
@@ -195,6 +209,17 @@ namespace Epsitec.Common.Document.Settings
 			{
 				this.imageNameFilters = (string[]) info.GetValue("ImageNameFilters", typeof(string[]));
 			}
+
+			if ( rev >= 6 )
+			{
+				this.bleedEvenMargins = (Margins) info.GetValue("BleedEvenMargins", typeof(Margins));
+				this.bleedOddMargins  = (Margins) info.GetValue("BleedOddMargins", typeof(Margins));
+			}
+			else
+			{
+				this.bleedEvenMargins = Margins.Zero;
+				this.bleedOddMargins  = Margins.Zero;
+			}
 		}
 		#endregion
 
@@ -214,5 +239,7 @@ namespace Epsitec.Common.Document.Settings
 		protected double					imageMinDpi;
 		protected double					imageMaxDpi;
 		protected string[]					imageNameFilters;
+		protected Margins					bleedEvenMargins;
+		protected Margins					bleedOddMargins;
 	}
 }
