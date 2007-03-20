@@ -242,6 +242,11 @@ namespace Epsitec.Common.UI
 			Widgets.Button button0 = ItemPanelTest.CreateButton (box, "0");
 			Widgets.Button button1 = ItemPanelTest.CreateButton (box, "1");
 			Widgets.Button buttonN = ItemPanelTest.CreateButton (box, "n");
+
+			Widgets.Button buttonSA = ItemPanelTest.CreateButton (box, "A");
+			Widgets.Button buttonSM = ItemPanelTest.CreateButton (box, "M");
+			Widgets.Button buttonSO = ItemPanelTest.CreateButton (box, "1");
+			
 			Widgets.Button buttonA = ItemPanelTest.CreateButton (box, "Item");
 			Widgets.Button buttonB = ItemPanelTest.CreateButton (box, "Linear");
 			
@@ -255,6 +260,12 @@ namespace Epsitec.Common.UI
 			button0.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.None; };
 			button1.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne; };
 			buttonN.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.Multiple; };
+
+			buttonSA.Margins = new Drawing.Margins (8, 0, 0, 0);
+
+			buttonSA.Clicked += delegate { panel.SelectionBehavior = ItemPanelSelectionBehavior.Automatic; };
+			buttonSM.Clicked += delegate { panel.SelectionBehavior = ItemPanelSelectionBehavior.Manual; };
+			buttonSO.Clicked += delegate { panel.SelectionBehavior = ItemPanelSelectionBehavior.ManualOne; };
 
 			buttonA.Margins = new Drawing.Margins (8, 0, 0, 0);
 			buttonA.PreferredWidth = 40;
@@ -373,6 +384,11 @@ namespace Epsitec.Common.UI
 			Widgets.Button button0 = ItemPanelTest.CreateButton (box, "0");
 			Widgets.Button button1 = ItemPanelTest.CreateButton (box, "1");
 			Widgets.Button buttonN = ItemPanelTest.CreateButton (box, "n");
+
+			Widgets.Button buttonSA = ItemPanelTest.CreateButton (box, "A");
+			Widgets.Button buttonSM = ItemPanelTest.CreateButton (box, "M");
+			Widgets.Button buttonSO = ItemPanelTest.CreateButton (box, "1");
+			
 			Widgets.Button buttonA = ItemPanelTest.CreateButton (box, "Item");
 			Widgets.Button buttonB = ItemPanelTest.CreateButton (box, "Linear");
 			
@@ -386,6 +402,12 @@ namespace Epsitec.Common.UI
 			button0.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.None; };
 			button1.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne; };
 			buttonN.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.Multiple; };
+
+			buttonSA.Margins = new Drawing.Margins (8, 0, 0, 0);
+
+			buttonSA.Clicked += delegate { panel.SelectionBehavior = ItemPanelSelectionBehavior.Automatic; };
+			buttonSM.Clicked += delegate { panel.SelectionBehavior = ItemPanelSelectionBehavior.Manual; };
+			buttonSO.Clicked += delegate { panel.SelectionBehavior = ItemPanelSelectionBehavior.ManualOne; };
 
 			buttonA.Margins = new Drawing.Margins (8, 0, 0, 0);
 			buttonA.PreferredWidth = 40;
@@ -506,6 +528,11 @@ namespace Epsitec.Common.UI
 			Widgets.Button button0 = ItemPanelTest.CreateButton (box, "0");
 			Widgets.Button button1 = ItemPanelTest.CreateButton (box, "1");
 			Widgets.Button buttonN = ItemPanelTest.CreateButton (box, "n");
+
+			Widgets.Button buttonSA = ItemPanelTest.CreateButton (box, "A");
+			Widgets.Button buttonSM = ItemPanelTest.CreateButton (box, "M");
+			Widgets.Button buttonSO = ItemPanelTest.CreateButton (box, "1");
+
 			Widgets.Button buttonA = ItemPanelTest.CreateButton (box, "Item");
 			Widgets.Button buttonB = ItemPanelTest.CreateButton (box, "Linear");
 
@@ -519,6 +546,12 @@ namespace Epsitec.Common.UI
 			button0.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.None; };
 			button1.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne; };
 			buttonN.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.Multiple; };
+
+			buttonSA.Margins = new Drawing.Margins (8, 0, 0, 0);
+
+			buttonSA.Clicked += delegate { panel.SelectionBehavior = ItemPanelSelectionBehavior.Automatic; };
+			buttonSM.Clicked += delegate { panel.SelectionBehavior = ItemPanelSelectionBehavior.Manual; };
+			buttonSO.Clicked += delegate { panel.SelectionBehavior = ItemPanelSelectionBehavior.ManualOne; };
 
 			buttonA.Margins = new Drawing.Margins (8, 0, 0, 0);
 			buttonA.PreferredWidth = 40;
