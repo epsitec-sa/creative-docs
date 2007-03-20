@@ -80,6 +80,14 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public bool IsRootPanel
+		{
+			get
+			{
+				return this.parentGroup == null;
+			}
+		}
+
 		public int PanelDepth
 		{
 			get
@@ -1247,14 +1255,15 @@ namespace Epsitec.Common.UI
 			else
 			{
 				IList<ItemView> list = this.GetSelectedItemViews ();
+				bool modifySelection = message.IsControlPressed;
 				
 				if (message.IsShiftPressed && list.Count > 0)
 				{
-					this.ContinuousMouseSelection (list, this.FindItemView (this.Items.CurrentItem), view, message.IsControlPressed);
+					this.ContinuousMouseSelection (list, this.FindItemView (this.Items.CurrentItem), view, modifySelection);
 				}
 				else
 				{
-					this.ManualSelection (view, message.IsControlPressed);
+					this.ManualSelection (view, modifySelection);
 				}
 
 				message.Consumer = this;
@@ -1320,67 +1329,46 @@ namespace Epsitec.Common.UI
 		}
 
 
+		/// <summary>
+		/// Processes the key down event.
+		/// </summary>
+		/// <param name="message">The event message.</param>
 		private void ProcessKeyDown(Widgets.Message message)
 		{
+			System.Diagnostics.Debug.Assert (this.IsRootPanel);
 			System.Diagnostics.Debug.Assert (this.Items != null);
+
+			if (message.IsAltPressed)
+			{
+				return;
+			}
+
+			switch (message.KeyCode)
+			{
+				case KeyCode.Space:
+					this.ProcessSpaceKey (message.IsControlPressed);
+					message.Handled = true;
+					break;
+
+				case KeyCode.Add:
+					this.ProcessExpandKey (true);
+					message.Handled = true;
+					break;
+
+				case KeyCode.Substract:
+					this.ProcessExpandKey (false);
+					message.Handled = true;
+					break;
+			}
 			
-			if (message.KeyCode == KeyCode.Space)
-			{
-				//	Behaves as if the user had pressed the mouse button; this will
-				//	either select just the current item or add/remove the item from
-				//	the selection if CTRL is pressed.
-
-				ItemView itemView = this.GetFocusedItemView ();
-				
-				if (itemView != null)
-				{
-					itemView.Owner.ManualSelection (itemView, message.IsControlPressed);
-				}
-				
-				message.Handled = true;
-			}
-			else if (message.KeyCode == KeyCode.Add)
-			{
-				ItemView itemView = this.GetFocusedItemView ();
-				
-				if (itemView != null)
-				{
-					ItemView group = ItemViewWidget.FindGroupItemView (itemView);
-
-					if (group != null)
-					{
-						group.IsExpanded = true;
-						group.Owner.Focus (group);
-					}
-				}
-				
-				message.Handled = true;
-			}
-			else if (message.KeyCode == KeyCode.Substract)
-			{
-				ItemView itemView = this.GetFocusedItemView ();
-
-				if (itemView != null)
-				{
-					ItemView group = ItemViewWidget.FindGroupItemView (itemView);
-
-					if (group != null)
-					{
-						group.IsExpanded = false;
-						group.Owner.Focus (group);
-					}
-				}
-				
-				message.Handled = true;
-			}
-			else
+			if (!message.Handled)
 			{
 				//	Change the current item (this does not select the item).
 
 				ItemView oldFocusedItemView = this.GetFocusedItemView ();
 				ItemView newFocusedItemView;
 
-				if (this.ProcessArrowKeys (message.KeyCode))
+				if (this.ProcessNavigationKeys (message.KeyCode))
 				{
 					ItemView currentItemView = this.FindItemView (this.Items.CurrentItem);
 					
@@ -1420,6 +1408,36 @@ namespace Epsitec.Common.UI
 					
 					message.Handled = true;
 				}
+			}
+		}
+
+		private void ProcessExpandKey(bool expand)
+		{
+			ItemView itemView = this.GetFocusedItemView ();
+
+			if (itemView != null)
+			{
+				ItemView group = ItemViewWidget.FindGroupItemView (itemView);
+
+				if (group != null)
+				{
+					group.IsExpanded = expand;
+					group.Owner.Focus (group);
+				}
+			}
+		}
+
+		private void ProcessSpaceKey(bool modifySelection)
+		{
+			//	Behaves as if the user had pressed the mouse button; this will
+			//	either select just the current item or add/remove the item from
+			//	the selection if CTRL is pressed.
+
+			ItemView itemView = this.GetFocusedItemView ();
+
+			if (itemView != null)
+			{
+				itemView.Owner.ManualSelection (itemView, modifySelection);
 			}
 		}
 
@@ -1550,7 +1568,7 @@ namespace Epsitec.Common.UI
 			this.Items.MoveCurrentToPosition(clickedIndex);
 		}
 
-		private bool ProcessArrowKeys(Widgets.KeyCode keyCode)
+		private bool ProcessNavigationKeys(Widgets.KeyCode keyCode)
 		{
 			switch (this.Layout)
 			{
@@ -1783,8 +1801,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		private void ManualSelection(ItemView view, bool expand)
+		private void ManualSelection(ItemView view, bool modifySelection)
 		{
+			System.Diagnostics.Debug.Assert (this.IsRootPanel);
+
 			if (view == null)
 			{
 				return;
@@ -1803,7 +1823,7 @@ namespace Epsitec.Common.UI
 
 				case ItemPanelSelectionBehavior.Manual:
 					action = true;
-					if (!expand)
+					if (!modifySelection)
 					{
 						this.InternalDeselectItemViews (this.GetSelectedItemViews ());
 					}
@@ -1811,7 +1831,7 @@ namespace Epsitec.Common.UI
 
 				case ItemPanelSelectionBehavior.ManualOne:
 					action = true;
-					if (!expand)
+					if (!modifySelection)
 					{
 						this.InternalDeselectItemViews (this.GetSelectedItemViews ());
 						select = true;
