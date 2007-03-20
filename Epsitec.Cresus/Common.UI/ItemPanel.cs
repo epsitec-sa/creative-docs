@@ -828,8 +828,6 @@ namespace Epsitec.Common.UI
 
 		public void Refresh()
 		{
-			bool focus = this.ContainsKeyboardFocus;
-
 			this.isRefreshPending = false;
 			this.ClearUserInterface ();
 			this.RefreshItemViews ();
@@ -851,12 +849,6 @@ namespace Epsitec.Common.UI
 
 					this.Show (item);
 				}
-			}
-			
-			if (focus)
-			{
-			//	this.Focus ();
-			//	this.TrackCurrentItem (false);
 			}
 		}
 
@@ -1248,7 +1240,7 @@ namespace Epsitec.Common.UI
 						
 						if (view != null)
 						{
-							this.HandleItemViewPressed (e.Message, view);
+							root.HandleItemViewPressed (e.Message, view);
 						}
 					}
 				}
@@ -1267,32 +1259,28 @@ namespace Epsitec.Common.UI
 
 		private void HandleItemViewPressed(Widgets.Message message, ItemView view)
 		{
+			System.Diagnostics.Debug.Assert (this.IsRootPanel);
+
 			if (view == null)
 			{
 				return;
 			}
 			
-			if (view.Owner != this)
+			IList<ItemView> list = this.GetSelectedItemViews ();
+			bool modifySelection = message.IsControlPressed;
+			
+			if (message.IsShiftPressed && list.Count > 0)
 			{
-				view.Owner.HandleItemViewPressed (message, view);
+				this.ContinuousMouseSelection (list, this.FindItemView (this.Items.CurrentItem), view, modifySelection);
 			}
 			else
 			{
-				IList<ItemView> list = this.GetSelectedItemViews ();
-				bool modifySelection = message.IsControlPressed;
-				
-				if (message.IsShiftPressed && list.Count > 0)
-				{
-					this.ContinuousMouseSelection (list, this.FindItemView (this.Items.CurrentItem), view, modifySelection);
-				}
-				else
-				{
-					this.ManualSelection (view, modifySelection);
-				}
-
-				message.Consumer = this;
-				view.Widget.Focus ();
+				this.ManualSelection (view, modifySelection);
 			}
+
+			message.Consumer = this;
+
+			this.Focus (view);
 		}
 
 		protected override void OnContainsFocusChanged()
@@ -1434,7 +1422,7 @@ namespace Epsitec.Common.UI
 				if (group != null)
 				{
 					group.IsExpanded = expand;
-					group.Owner.Focus (group);
+					this.Focus (group);
 				}
 			}
 		}
@@ -1455,6 +1443,8 @@ namespace Epsitec.Common.UI
 
 		private void Focus(ItemView itemView)
 		{
+			System.Diagnostics.Debug.Assert (this.IsRootPanel);
+
 			if (itemView != null)
 			{
 				this.RootPanel.RecordFocus (itemView);
@@ -2749,7 +2739,7 @@ namespace Epsitec.Common.UI
 			{
 				if (message.Button == MouseButtons.Left)
 				{
-					this.HandleItemViewPressed (message, widget.ItemView);
+					root.HandleItemViewPressed (message, widget.ItemView);
 				}
 			}
 			finally
