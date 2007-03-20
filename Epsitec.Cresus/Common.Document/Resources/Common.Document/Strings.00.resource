@@ -80,7 +80,7 @@
   <data name="Export.PDF.Progress.Content" id="02B01">Génération du contenu {0}</data>
   <data name="Export.PDF.Progress.Cancelled" id="05B01">Exportation annulée.</data>
   <data name="Export.PDF.Progress.Image" id="03B01">Génération des images {0}</data>
-  <data name="Export.PDF.Progress.Surface" id="04B01">Génération des surface {0}.{1}</data>
+  <data name="Export.PDF.Progress.Surface" id="04B01">Génération des surfaces {0}.{1}</data>
   <data name="Dialog.Bool.ExportPDFTextCurve" id="042">Textes en courbes</data>
   <data name="Dialog.Bool.RepeatDuplicateMove" id="052">Duplique avec répétition du dernier déplacement</data>
   <data name="Dialog.Double.OutsideArea" id="062">Zone hors page</data>
