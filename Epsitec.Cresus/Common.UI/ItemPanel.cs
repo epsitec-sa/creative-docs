@@ -306,6 +306,27 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public Drawing.Rectangle GetItemViewBounds(ItemView view)
+		{
+			if (view == null)
+			{
+				return Drawing.Rectangle.Empty;
+			}
+
+			Drawing.Rectangle bounds = view.Bounds;
+			ItemPanel         panel  = view.Owner;
+
+			while (panel != this)
+			{
+				view  = panel.ParentGroup.ItemView;
+				panel = view.Owner;
+
+				bounds.Offset (view.Bounds.Location);
+			}
+
+			return bounds;
+		}
+
 		public ItemView GetItemView(int index)
 		{
 			return ItemPanel.TryGetItemView (this.SafeGetViews (), index);

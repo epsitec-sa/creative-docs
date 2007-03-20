@@ -75,6 +75,14 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (new Drawing.Rectangle (0, 20, 200, 20+20*3), panel.GetItemView (0).Bounds);
 			Assert.AreEqual (new Drawing.Rectangle (0, 0, 200, 20), panel.GetItemView (1).Bounds);
 
+			Assert.AreEqual (new Drawing.Rectangle (0, 40, 200, 20), panel.GetItemView (0).Group.ChildPanel.GetItemView (0).Bounds);
+			Assert.AreEqual (new Drawing.Rectangle (0, 20, 200, 20), panel.GetItemView (0).Group.ChildPanel.GetItemView (1).Bounds);
+			Assert.AreEqual (new Drawing.Rectangle (0,  0, 200, 20), panel.GetItemView (0).Group.ChildPanel.GetItemView (2).Bounds);
+			
+			Assert.AreEqual (new Drawing.Rectangle (0, 60-0*20, 200, 20), panel.GetItemViewBounds (panel.GetItemView (0).Group.ChildPanel.GetItemView (0)));
+			Assert.AreEqual (new Drawing.Rectangle (0, 60-1*20, 200, 20), panel.GetItemViewBounds (panel.GetItemView (0).Group.ChildPanel.GetItemView (1)));
+			Assert.AreEqual (new Drawing.Rectangle (0, 60-2*20, 200, 20), panel.GetItemViewBounds (panel.GetItemView (0).Group.ChildPanel.GetItemView (2)));
+
 			//	Compact subpanel
 			
 			panel.ExpandItemView (panel.GetItemView (0), false);
@@ -234,6 +242,8 @@ namespace Epsitec.Common.UI
 			Widgets.Button button0 = ItemPanelTest.CreateButton (box, "0");
 			Widgets.Button button1 = ItemPanelTest.CreateButton (box, "1");
 			Widgets.Button buttonN = ItemPanelTest.CreateButton (box, "n");
+			Widgets.Button buttonA = ItemPanelTest.CreateButton (box, "Item");
+			Widgets.Button buttonB = ItemPanelTest.CreateButton (box, "Linear");
 			
 			Widgets.TextField text = new Widgets.TextField (box);
 
@@ -245,11 +255,43 @@ namespace Epsitec.Common.UI
 			button0.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.None; };
 			button1.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne; };
 			buttonN.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.Multiple; };
+
+			buttonA.Margins = new Drawing.Margins (8, 0, 0, 0);
+			buttonA.PreferredWidth = 40;
+			buttonB.PreferredWidth = 40;
+
+			buttonA.Clicked += delegate { table.VerticalScrollMode = ItemTableScrollMode.ItemBased; };
+			buttonB.Clicked += delegate { table.VerticalScrollMode = ItemTableScrollMode.Linear; };
 			
 			panel.Show (panel.GetItemView (0));
 
 			window.Root.Children.Add (table);
 			window.Root.Children.Add (box);
+			
+			IList<StructuredData> source = panel.Items.SourceCollection as IList<StructuredData>;
+
+			box = new Widgets.FrameBox (window.Root);
+
+			box.Dock = Widgets.DockStyle.Bottom;
+			box.PreferredHeight = 36;
+			box.Padding = new Drawing.Margins (4, 4, 8, 8);
+			box.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
+
+			Widgets.Button buttonClear  = ItemPanelTest.CreateButton (box, "*");
+			Widgets.Button buttonTop    = ItemPanelTest.CreateButton (box, "^");
+			Widgets.Button buttonBottom = ItemPanelTest.CreateButton (box, "v");
+			Widgets.Button buttonPrev   = ItemPanelTest.CreateButton (box, "&lt;");
+			Widgets.Button buttonNext   = ItemPanelTest.CreateButton (box, "&gt;");
+			Widgets.Button buttonCreate = ItemPanelTest.CreateButton (box, "+");
+
+			buttonClear.Clicked += delegate { panel.Items.MoveCurrentToPosition (-1); };
+			buttonTop.Clicked += delegate { panel.Items.MoveCurrentToFirst (); };
+			buttonBottom.Clicked += delegate { panel.Items.MoveCurrentToLast (); };
+			buttonPrev.Clicked += delegate { panel.Items.MoveCurrentToPrevious (); };
+			buttonNext.Clicked += delegate { panel.Items.MoveCurrentToNext (); };
+			buttonCreate.Clicked += delegate { source.Add (ItemPanelTest.CreateRandomRecord ()); };
+
+			buttonCreate.Margins = new Drawing.Margins (8, 0, 0, 0);
 
 			window.Show ();
 
@@ -330,6 +372,8 @@ namespace Epsitec.Common.UI
 			Widgets.Button button0 = ItemPanelTest.CreateButton (box, "0");
 			Widgets.Button button1 = ItemPanelTest.CreateButton (box, "1");
 			Widgets.Button buttonN = ItemPanelTest.CreateButton (box, "n");
+			Widgets.Button buttonA = ItemPanelTest.CreateButton (box, "Item");
+			Widgets.Button buttonB = ItemPanelTest.CreateButton (box, "Linear");
 			
 			Widgets.TextField text = new Widgets.TextField (box);
 
@@ -342,6 +386,13 @@ namespace Epsitec.Common.UI
 			button1.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne; };
 			buttonN.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.Multiple; };
 
+			buttonA.Margins = new Drawing.Margins (8, 0, 0, 0);
+			buttonA.PreferredWidth = 40;
+			buttonB.PreferredWidth = 40;
+
+			buttonA.Clicked += delegate { table.VerticalScrollMode = ItemTableScrollMode.ItemBased; };
+			buttonB.Clicked += delegate { table.VerticalScrollMode = ItemTableScrollMode.Linear; };
+			
 			window.Root.Children.Add (box);
 			
 			panel.Show (panel.GetItemView (0));
@@ -453,7 +504,9 @@ namespace Epsitec.Common.UI
 			Widgets.Button button0 = ItemPanelTest.CreateButton (box, "0");
 			Widgets.Button button1 = ItemPanelTest.CreateButton (box, "1");
 			Widgets.Button buttonN = ItemPanelTest.CreateButton (box, "n");
-			
+			Widgets.Button buttonA = ItemPanelTest.CreateButton (box, "Item");
+			Widgets.Button buttonB = ItemPanelTest.CreateButton (box, "Linear");
+
 			Widgets.TextField text = new Widgets.TextField (box);
 
 			text.Margins = new Drawing.Margins (16, 0, 0, 0);
@@ -465,6 +518,13 @@ namespace Epsitec.Common.UI
 			button1.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne; };
 			buttonN.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.Multiple; };
 
+			buttonA.Margins = new Drawing.Margins (8, 0, 0, 0);
+			buttonA.PreferredWidth = 40;
+			buttonB.PreferredWidth = 40;
+
+			buttonA.Clicked += delegate { table.VerticalScrollMode = ItemTableScrollMode.ItemBased; };
+			buttonB.Clicked += delegate { table.VerticalScrollMode = ItemTableScrollMode.Linear; };
+			
 			window.Root.Children.Add (box);
 			
 			panel.Show (panel.GetItemView (0));

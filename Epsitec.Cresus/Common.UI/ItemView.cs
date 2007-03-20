@@ -319,7 +319,6 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-
 		/// <summary>
 		/// Creates the user interface for this item view.
 		/// </summary>
