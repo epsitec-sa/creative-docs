@@ -79,16 +79,6 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
-		public Drawing.Image CachedDrawingImage
-		{
-			//	Donne le Drawing.Image associé, sans le charger s'il n'est pas/plus dans
-			//	le cache.
-			get
-			{
-				return this.cache.CachedImage;
-			}
-		}
-
 
 		public static ImageSurface Search(System.Collections.ArrayList list, string filename, Size size, Margins crop, ImageFilter filter)
 		{
@@ -111,12 +101,13 @@ namespace Epsitec.Common.Document.PDF
 			//	Cherche une image d'après son Drawing.Image.
 			foreach ( ImageSurface image in list )
 			{
-				if ( image.CachedDrawingImage == null )  continue;
+				Drawing.Image di = image.cache.CachedImage;
+				if ( di == null )  continue;
 
-				if ( image.CachedDrawingImage.UniqueId == drim.UniqueId &&
-					 image.size                        == size          &&
-					 image.crop                        == crop          &&
-					 image.filter                      == filter        )
+				if ( di.UniqueId  == drim.UniqueId &&
+					 image.size   == size          &&
+					 image.crop   == crop          &&
+					 image.filter == filter        )
 				{
 					return image;
 				}
