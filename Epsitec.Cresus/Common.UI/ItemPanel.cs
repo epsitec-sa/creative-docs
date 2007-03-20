@@ -492,15 +492,6 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public ItemView FindItemView(int index)
-		{
-			return this.FindItemView (
-				delegate (ItemView view)
-				{
-					return view.Index == index;
-				});
-		}
-		
 		public void DeselectAllItemViews()
 		{
 			SelectionState state = new SelectionState (this);
@@ -1476,14 +1467,18 @@ namespace Epsitec.Common.UI
 
 		private void ContinuousKeySelection(IList<ItemView> list, ItemView oldCurrent, ItemView newCurrent)
 		{
+			System.Diagnostics.Debug.Assert (this.IsRootPanel);
+
+			System.Collections.IList collection = this.Items.Items;
+
 			ItemView first = ItemPanel.GetFirstSelectedItemView (list);
 			ItemView last  = ItemPanel.GetLastSelectedItemView (list);
 
-			int index1 = (first == null) ? -1 : first.Index;
-			int index2 = (last  == null) ? -1 : last.Index;
+			int index1 = (first == null) ? -1 : collection.IndexOf (first.Item);
+			int index2 = (last  == null) ? -1 : collection.IndexOf (last.Item);
 
-			int oldIndex = (oldCurrent == null) ? -1 : oldCurrent.Index;
-			int newIndex = (newCurrent == null) ? -1 : newCurrent.Index;
+			int oldIndex = (oldCurrent == null) ? -1 : collection.IndexOf (oldCurrent.Item);
+			int newIndex = (newCurrent == null) ? -1 : collection.IndexOf (newCurrent.Item);
 
 			if (oldIndex == index1)
 			{
@@ -1513,26 +1508,30 @@ namespace Epsitec.Common.UI
 			{
 				for (int i = index2; i >= index1; i--)
 				{
-					this.InternalSelectItemView (this.FindItemView (i));
+					this.InternalSelectItemView (this.FindItemView (collection[i]));
 				}
 			}
 			else
 			{
 				for (int i = index1; i <= index2; i++)
 				{
-					this.InternalSelectItemView (this.FindItemView (i));
+					this.InternalSelectItemView (this.FindItemView (collection[i]));
 				}
 			}
 
 			List<ItemView> deselect = new List<ItemView> ();
+			
 			foreach (ItemView view in list)
 			{
-				if (view.Index < index1 ||
-					view.Index > index2)
+				int index = collection.IndexOf (view.Item);
+				
+				if ((index < index1) ||
+					(index > index2))
 				{
 					deselect.Add (view);
 				}
 			}
+			
 			this.InternalDeselectItemViews (deselect);
 
 			this.Items.MoveCurrentToPosition (newIndex);
@@ -1540,8 +1539,10 @@ namespace Epsitec.Common.UI
 
 		private void ContinuousMouseSelection(IList<ItemView> list, ItemView current, ItemView clicked, bool expand)
 		{
-			int currentIndex = current.Index;
-			int clickedIndex = clicked.Index;
+			System.Collections.IList collection = this.Items.Items;
+
+			int currentIndex = collection.IndexOf (current.Item);
+			int clickedIndex = collection.IndexOf (clicked.Item);
 			int index1 = -1;
 			int index2 = -1;
 
@@ -1549,7 +1550,7 @@ namespace Epsitec.Common.UI
 			{
 				for (int i=currentIndex; i<=clickedIndex; i++)
 				{
-					this.InternalSelectItemView(this.FindItemView(i));
+					this.InternalSelectItemView(this.FindItemView (collection[i]));
 				}
 
 				index1 = currentIndex;
@@ -1560,7 +1561,7 @@ namespace Epsitec.Common.UI
 			{
 				for (int i=currentIndex; i>=clickedIndex; i--)
 				{
-					this.InternalSelectItemView(this.FindItemView(i));
+					this.InternalSelectItemView(this.FindItemView (collection[i]));
 				}
 
 				index1 = clickedIndex;
@@ -1570,14 +1571,18 @@ namespace Epsitec.Common.UI
 			if (!expand && index1 != -1 && index2 != -1)
 			{
 				List<ItemView> deselect = new List<ItemView>();
+				
 				foreach (ItemView view in list)
 				{
-					if (view.Index < index1 ||
-					view.Index > index2)
+					int index = collection.IndexOf (view.Item);
+
+					if ((index < index1) ||
+						(index > index2))
 					{
-						deselect.Add(view);
+						deselect.Add (view);
 					}
 				}
+				
 				this.InternalDeselectItemViews(deselect);
 			}
 
@@ -1791,7 +1796,7 @@ namespace Epsitec.Common.UI
 
 			foreach (ItemView view in views)
 			{
-				index = view.Index;
+				index = view.GetCollectionIndex ();
 
 				if (view.IsVisible)
 				{
@@ -1877,9 +1882,11 @@ namespace Epsitec.Common.UI
 
 			foreach (ItemView view in list)
 			{
-				if (view.Index < index)
+				int viewIndex = view.GetCollectionIndex ();
+
+				if (viewIndex < index)
 				{
-					index = view.Index;
+					index = viewIndex;
 					found = view;
 				}
 			}
@@ -1894,9 +1901,11 @@ namespace Epsitec.Common.UI
 
 			foreach (ItemView view in list)
 			{
-				if (view.Index > index)
+				int viewIndex = view.GetCollectionIndex ();
+
+				if (viewIndex > index)
 				{
-					index = view.Index;
+					index = viewIndex;
 					found = view;
 				}
 			}

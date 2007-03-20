@@ -430,6 +430,16 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets the index in the global collection for the item represented by
+		/// this view.
+		/// </summary>
+		/// <returns>The index.</returns>
+		internal int GetCollectionIndex()
+		{
+			return this.owner.RootPanel.Items.Items.IndexOf (this.item);
+		}
+
 		private ItemPanel owner;
 		private object item;
 		private int index;
