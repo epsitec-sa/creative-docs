@@ -208,7 +208,7 @@ namespace Epsitec.Common.UI
 			dx -= 8;
 			dy -= 8;
 
-			ItemTable table = new ItemTable ();
+			ItemTable table = new ItemTable (window.Root);
 			table.Dock = Widgets.DockStyle.Fill;
 
 			table.SourceType = ItemPanelTest.GetStructuredType ();
@@ -231,80 +231,10 @@ namespace Epsitec.Common.UI
 			panel.ItemViewDefaultSize = new Drawing.Size (dx, 20);
 			panel.CurrentItemTrackingMode = CurrentItemTrackingMode.AutoSelect;
 
-			Widgets.FrameBox box;
-			
-			box = new Widgets.FrameBox ();
-
-			box.Dock = Widgets.DockStyle.Bottom;
-			box.PreferredHeight = 36;
-			box.Padding = new Drawing.Margins (4, 4, 8, 8);
-			box.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
-			
-			Widgets.Button button0 = ItemPanelTest.CreateButton (box, "0");
-			Widgets.Button button1 = ItemPanelTest.CreateButton (box, "1");
-			Widgets.Button buttonN = ItemPanelTest.CreateButton (box, "n");
-
-			Widgets.Button buttonSA = ItemPanelTest.CreateButton (box, "A");
-			Widgets.Button buttonSM = ItemPanelTest.CreateButton (box, "M");
-			Widgets.Button buttonSO = ItemPanelTest.CreateButton (box, "1");
-			
-			Widgets.Button buttonA = ItemPanelTest.CreateButton (box, "Item");
-			Widgets.Button buttonB = ItemPanelTest.CreateButton (box, "Linear");
-			
-			Widgets.TextField text = new Widgets.TextField (box);
-
-			text.Margins = new Drawing.Margins (16, 0, 0, 0);
-			text.Dock = Widgets.DockStyle.Stacked;
-			text.PreferredWidth = 40;
-			text.VerticalAlignment = Widgets.VerticalAlignment.Center;
-
-			button0.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.None; };
-			button1.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne; };
-			buttonN.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.Multiple; };
-
-			buttonSA.Margins = new Drawing.Margins (8, 0, 0, 0);
-
-			buttonSA.Clicked += delegate { panel.SelectionBehavior = ItemPanelSelectionBehavior.Automatic; };
-			buttonSM.Clicked += delegate { panel.SelectionBehavior = ItemPanelSelectionBehavior.Manual; };
-			buttonSO.Clicked += delegate { panel.SelectionBehavior = ItemPanelSelectionBehavior.ManualOne; };
-
-			buttonA.Margins = new Drawing.Margins (8, 0, 0, 0);
-			buttonA.PreferredWidth = 40;
-			buttonB.PreferredWidth = 40;
-
-			buttonA.Clicked += delegate { table.VerticalScrollMode = ItemTableScrollMode.ItemBased; };
-			buttonB.Clicked += delegate { table.VerticalScrollMode = ItemTableScrollMode.Linear; };
+			ItemPanelTest.CreateTableButtons (window, table, panel);
 			
 			panel.Show (panel.GetItemView (0));
 			
-			window.Root.Children.Add (table);
-			window.Root.Children.Add (box);
-			
-			IList<StructuredData> source = panel.Items.SourceCollection as IList<StructuredData>;
-
-			box = new Widgets.FrameBox (window.Root);
-
-			box.Dock = Widgets.DockStyle.Bottom;
-			box.PreferredHeight = 36;
-			box.Padding = new Drawing.Margins (4, 4, 8, 8);
-			box.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
-
-			Widgets.Button buttonClear  = ItemPanelTest.CreateButton (box, "*");
-			Widgets.Button buttonTop    = ItemPanelTest.CreateButton (box, "^");
-			Widgets.Button buttonBottom = ItemPanelTest.CreateButton (box, "v");
-			Widgets.Button buttonPrev   = ItemPanelTest.CreateButton (box, "&lt;");
-			Widgets.Button buttonNext   = ItemPanelTest.CreateButton (box, "&gt;");
-			Widgets.Button buttonCreate = ItemPanelTest.CreateButton (box, "+");
-
-			buttonClear.Clicked += delegate { panel.Items.MoveCurrentToPosition (-1); };
-			buttonTop.Clicked += delegate { panel.Items.MoveCurrentToFirst (); };
-			buttonBottom.Clicked += delegate { panel.Items.MoveCurrentToLast (); };
-			buttonPrev.Clicked += delegate { panel.Items.MoveCurrentToPrevious (); };
-			buttonNext.Clicked += delegate { panel.Items.MoveCurrentToNext (); };
-			buttonCreate.Clicked += delegate { source.Add (ItemPanelTest.CreateRandomRecord ()); };
-
-			buttonCreate.Margins = new Drawing.Margins (8, 0, 0, 0);
-
 			window.Show ();
 			panel.Focus ();
 
@@ -326,7 +256,7 @@ namespace Epsitec.Common.UI
 			dx -= 8;
 			dy -= 8;
 
-			ItemTable table = new ItemTable ();
+			ItemTable table = new ItemTable (window.Root);
 			table.Dock = Widgets.DockStyle.Fill;
 
 			table.SourceType = ItemPanelTest.GetStructuredType ();
@@ -347,78 +277,55 @@ namespace Epsitec.Common.UI
 
 			panel.Items.GroupDescriptions.Add (new PropertyGroupDescription ("Category"));
 
-			IList<StructuredData> source = panel.Items.SourceCollection as IList<StructuredData>;
-
-			Widgets.FrameBox box = new Widgets.FrameBox ();
-
-			box.Dock = Widgets.DockStyle.Bottom;
-			box.PreferredHeight = 36;
-			box.Padding = new Drawing.Margins (4, 4, 8, 8);
-			box.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
-
-			window.Root.Children.Add (table);
-			window.Root.Children.Add (box);
+			ItemPanelTest.CreateTableButtons (window, table, panel);
 			
-			Widgets.Button buttonClear  = ItemPanelTest.CreateButton (box, "*");
-			Widgets.Button buttonTop    = ItemPanelTest.CreateButton (box, "^");
-			Widgets.Button buttonBottom = ItemPanelTest.CreateButton (box, "v");
-			Widgets.Button buttonPrev   = ItemPanelTest.CreateButton (box, "&lt;");
-			Widgets.Button buttonNext   = ItemPanelTest.CreateButton (box, "&gt;");
-			Widgets.Button buttonCreate = ItemPanelTest.CreateButton (box, "+");
+			panel.Show (panel.GetItemView (0));
 
-			buttonClear.Clicked += delegate { panel.Items.MoveCurrentToPosition (-1); };
-			buttonTop.Clicked += delegate { panel.Items.MoveCurrentToFirst (); };
-			buttonBottom.Clicked += delegate { panel.Items.MoveCurrentToLast (); };
-			buttonPrev.Clicked += delegate { panel.Items.MoveCurrentToPrevious (); };
-			buttonNext.Clicked += delegate { panel.Items.MoveCurrentToNext (); };
-			buttonCreate.Clicked += delegate { source.Add (ItemPanelTest.CreateRandomRecord ()); };
+			window.Show ();
+			panel.Focus ();
 
-			buttonCreate.Margins = new Drawing.Margins (8, 0, 0, 0);
+			Widgets.Window.RunInTestEnvironment (window);
+		}
 
-			box = new Widgets.FrameBox ();
+		[Test]
+		public void CheckInteractiveTableWithGroups_2_Levels()
+		{
+			Widgets.Window window = new Widgets.Window ();
 
-			box.Dock = Widgets.DockStyle.Bottom;
-			box.PreferredHeight = 36;
-			box.Padding = new Drawing.Margins (4, 4, 8, 8);
-			box.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
-			
-			Widgets.Button button0 = ItemPanelTest.CreateButton (box, "0");
-			Widgets.Button button1 = ItemPanelTest.CreateButton (box, "1");
-			Widgets.Button buttonN = ItemPanelTest.CreateButton (box, "n");
+			double dx = 400;
+			double dy = 420;
 
-			Widgets.Button buttonSA = ItemPanelTest.CreateButton (box, "A");
-			Widgets.Button buttonSM = ItemPanelTest.CreateButton (box, "M");
-			Widgets.Button buttonSO = ItemPanelTest.CreateButton (box, "1");
-			
-			Widgets.Button buttonA = ItemPanelTest.CreateButton (box, "Item");
-			Widgets.Button buttonB = ItemPanelTest.CreateButton (box, "Linear");
-			
-			Widgets.TextField text = new Widgets.TextField (box);
+			window.Text = "CheckInteractiveTableWithGroups_2_Levels";
+			window.ClientSize = new Drawing.Size (dx, dy);
+			window.Root.Padding = new Drawing.Margins (4, 4, 4, 4);
 
-			text.Margins = new Drawing.Margins (16, 0, 0, 0);
-			text.Dock = Widgets.DockStyle.Stacked;
-			text.PreferredWidth = 40;
-			text.VerticalAlignment = Widgets.VerticalAlignment.Center;
+			dx -= 8;
+			dy -= 8;
 
-			button0.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.None; };
-			button1.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne; };
-			buttonN.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.Multiple; };
+			ItemTable table = new ItemTable (window.Root);
+			table.Dock = Widgets.DockStyle.Fill;
 
-			buttonSA.Margins = new Drawing.Margins (8, 0, 0, 0);
+			table.SourceType = ItemPanelTest.GetStructuredType ();
 
-			buttonSA.Clicked += delegate { panel.SelectionBehavior = ItemPanelSelectionBehavior.Automatic; };
-			buttonSM.Clicked += delegate { panel.SelectionBehavior = ItemPanelSelectionBehavior.Manual; };
-			buttonSO.Clicked += delegate { panel.SelectionBehavior = ItemPanelSelectionBehavior.ManualOne; };
+			table.Columns.Add ("Stock", 40);
+			table.Columns.Add ("Article", 200);
+			table.Columns.Add ("Price", 60);
 
-			buttonA.Margins = new Drawing.Margins (8, 0, 0, 0);
-			buttonA.PreferredWidth = 40;
-			buttonB.PreferredWidth = 40;
+			ItemPanel panel = table.ItemPanel;
 
-			buttonA.Clicked += delegate { table.VerticalScrollMode = ItemTableScrollMode.ItemBased; };
-			buttonB.Clicked += delegate { table.VerticalScrollMode = ItemTableScrollMode.Linear; };
-			
-			window.Root.Children.Add (box);
-			
+			panel.Items = ItemPanelTest.GetStructuredItems ();
+			panel.Layout = ItemPanelLayout.VerticalList;
+			panel.ItemSelectionMode = ItemPanelSelectionMode.ZeroOrOne;
+			panel.GroupSelectionMode = ItemPanelSelectionMode.None;
+			panel.ItemViewDefaultSize = new Drawing.Size (320, 20);
+			panel.ItemViewDefaultExpanded = false;
+			panel.CurrentItemTrackingMode = CurrentItemTrackingMode.AutoSelect;
+
+			panel.Items.GroupDescriptions.Add (new PropertyGroupDescription ("Category"));
+			panel.Items.GroupDescriptions.Add (new PropertyGroupDescription ("Article"));
+
+			ItemPanelTest.CreateTableButtons (window, table, panel);
+
 			panel.Show (panel.GetItemView (0));
 
 			window.Show ();
@@ -439,93 +346,17 @@ namespace Epsitec.Common.UI
 			return ItemPanelTest.NewStructuredData (article, quantity, price, cat);
 		}
 
-		private static Widgets.Button CreateButton(Epsitec.Common.Widgets.FrameBox box, string text)
+		private static void CreateTableButtons(Widgets.Window window, ItemTable table, ItemPanel panel)
 		{
-			Widgets.Button button = new Widgets.Button (text);
-			
-			button.Dock = Widgets.DockStyle.Stacked;
-			button.PreferredWidth = 20;
-			button.AutoFocus = false;
-			
-			box.Children.Add (button);
+			Widgets.FrameBox box;
 
-			return button;
-		}
-
-		[Test]
-		public void CheckInteractiveTableWithGroups_2_Levels()
-		{
-			Widgets.Window window = new Widgets.Window ();
-
-			double dx = 400;
-			double dy = 420;
-
-			window.Text = "CheckInteractiveTableWithGroups_2_Levels";
-			window.ClientSize = new Drawing.Size (dx, dy);
-			window.Root.Padding = new Drawing.Margins (4, 4, 4, 4);
-
-			dx -= 8;
-			dy -= 8;
-
-			ItemTable table = new ItemTable ();
-			table.Dock = Widgets.DockStyle.Fill;
-
-			table.SourceType = ItemPanelTest.GetStructuredType ();
-
-			table.Columns.Add ("Stock", 40);
-			table.Columns.Add ("Article", 200);
-			table.Columns.Add ("Price", 60);
-			
-			ItemPanel panel = table.ItemPanel;
-
-			panel.Items = ItemPanelTest.GetStructuredItems ();
-			panel.Layout = ItemPanelLayout.VerticalList;
-			panel.ItemSelectionMode = ItemPanelSelectionMode.ZeroOrOne;
-			panel.GroupSelectionMode = ItemPanelSelectionMode.None;
-			panel.ItemViewDefaultSize = new Drawing.Size (320, 20);
-			panel.ItemViewDefaultExpanded = false;
-			panel.CurrentItemTrackingMode = CurrentItemTrackingMode.AutoSelect;
-
-			panel.Items.GroupDescriptions.Add (new PropertyGroupDescription ("Category"));
-			panel.Items.GroupDescriptions.Add (new PropertyGroupDescription ("Article"));
-
-			window.Root.Children.Add (table);
-
-			IList<StructuredData> source = panel.Items.SourceCollection as IList<StructuredData>;
-
-			Widgets.FrameBox box = new Widgets.FrameBox ();
+			box = new Widgets.FrameBox (window.Root);
 
 			box.Dock = Widgets.DockStyle.Bottom;
 			box.PreferredHeight = 36;
 			box.Padding = new Drawing.Margins (4, 4, 8, 8);
 			box.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
 
-			window.Root.Children.Add (table);
-			window.Root.Children.Add (box);
-			
-			Widgets.Button buttonClear  = ItemPanelTest.CreateButton (box, "*");
-			Widgets.Button buttonTop    = ItemPanelTest.CreateButton (box, "^");
-			Widgets.Button buttonBottom = ItemPanelTest.CreateButton (box, "v");
-			Widgets.Button buttonPrev   = ItemPanelTest.CreateButton (box, "&lt;");
-			Widgets.Button buttonNext   = ItemPanelTest.CreateButton (box, "&gt;");
-			Widgets.Button buttonCreate = ItemPanelTest.CreateButton (box, "+");
-
-			buttonClear.Clicked += delegate { panel.Items.MoveCurrentToPosition (-1); };
-			buttonTop.Clicked += delegate { panel.Items.MoveCurrentToFirst (); };
-			buttonBottom.Clicked += delegate { panel.Items.MoveCurrentToLast (); };
-			buttonPrev.Clicked += delegate { panel.Items.MoveCurrentToPrevious (); };
-			buttonNext.Clicked += delegate { panel.Items.MoveCurrentToNext (); };
-			buttonCreate.Clicked += delegate { source.Add (ItemPanelTest.CreateRandomRecord ()); };
-
-			buttonCreate.Margins = new Drawing.Margins (8, 0, 0, 0);
-
-			box = new Widgets.FrameBox ();
-
-			box.Dock = Widgets.DockStyle.Bottom;
-			box.PreferredHeight = 36;
-			box.Padding = new Drawing.Margins (4, 4, 8, 8);
-			box.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
-			
 			Widgets.Button button0 = ItemPanelTest.CreateButton (box, "0");
 			Widgets.Button button1 = ItemPanelTest.CreateButton (box, "1");
 			Widgets.Button buttonN = ItemPanelTest.CreateButton (box, "n");
@@ -544,31 +375,112 @@ namespace Epsitec.Common.UI
 			text.PreferredWidth = 40;
 			text.VerticalAlignment = Widgets.VerticalAlignment.Center;
 
-			button0.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.None; };
-			button1.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne; };
-			buttonN.Clicked += delegate { panel.ItemSelectionMode = ItemPanelSelectionMode.Multiple; };
+			button0.Clicked += delegate
+			{
+				panel.ItemSelectionMode = ItemPanelSelectionMode.None;
+			};
+			
+			button1.Clicked += delegate
+			{
+				panel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne;
+			};
+			
+			buttonN.Clicked += delegate
+			{
+				panel.ItemSelectionMode = ItemPanelSelectionMode.Multiple;
+			};
 
 			buttonSA.Margins = new Drawing.Margins (8, 0, 0, 0);
 
-			buttonSA.Clicked += delegate { panel.SelectionBehavior = ItemPanelSelectionBehavior.Automatic; };
-			buttonSM.Clicked += delegate { panel.SelectionBehavior = ItemPanelSelectionBehavior.Manual; };
-			buttonSO.Clicked += delegate { panel.SelectionBehavior = ItemPanelSelectionBehavior.ManualOne; };
+			buttonSA.Clicked += delegate
+			{
+				panel.SelectionBehavior = ItemPanelSelectionBehavior.Automatic;
+			};
+			
+			buttonSM.Clicked += delegate
+			{
+				panel.SelectionBehavior = ItemPanelSelectionBehavior.Manual;
+			};
+			
+			buttonSO.Clicked += delegate
+			{
+				panel.SelectionBehavior = ItemPanelSelectionBehavior.ManualOne;
+			};
 
 			buttonA.Margins = new Drawing.Margins (8, 0, 0, 0);
 			buttonA.PreferredWidth = 40;
 			buttonB.PreferredWidth = 40;
 
-			buttonA.Clicked += delegate { table.VerticalScrollMode = ItemTableScrollMode.ItemBased; };
-			buttonB.Clicked += delegate { table.VerticalScrollMode = ItemTableScrollMode.Linear; };
+			buttonA.Clicked += delegate
+			{
+				table.VerticalScrollMode = ItemTableScrollMode.ItemBased;
+			};
 			
-			window.Root.Children.Add (box);
+			buttonB.Clicked += delegate
+			{
+				table.VerticalScrollMode = ItemTableScrollMode.Linear;
+			};
+
+			IList<StructuredData> source = panel.Items.SourceCollection as IList<StructuredData>;
+
+			box = new Widgets.FrameBox (window.Root);
+
+			box.Dock = Widgets.DockStyle.Bottom;
+			box.PreferredHeight = 36;
+			box.Padding = new Drawing.Margins (4, 4, 8, 8);
+			box.ContainerLayoutMode = Widgets.ContainerLayoutMode.HorizontalFlow;
+
+			Widgets.Button buttonClear  = ItemPanelTest.CreateButton (box, "*");
+			Widgets.Button buttonTop    = ItemPanelTest.CreateButton (box, "^");
+			Widgets.Button buttonBottom = ItemPanelTest.CreateButton (box, "v");
+			Widgets.Button buttonPrev   = ItemPanelTest.CreateButton (box, "&lt;");
+			Widgets.Button buttonNext   = ItemPanelTest.CreateButton (box, "&gt;");
+			Widgets.Button buttonCreate = ItemPanelTest.CreateButton (box, "+");
+
+			buttonClear.Clicked += delegate
+			{
+				panel.Items.MoveCurrentToPosition (-1);
+			};
 			
-			panel.Show (panel.GetItemView (0));
+			buttonTop.Clicked += delegate
+			{
+				panel.Items.MoveCurrentToFirst ();
+			};
+			
+			buttonBottom.Clicked += delegate
+			{
+				panel.Items.MoveCurrentToLast ();
+			};
+			
+			buttonPrev.Clicked += delegate
+			{
+				panel.Items.MoveCurrentToPrevious ();
+			};
+			
+			buttonNext.Clicked += delegate
+			{
+				panel.Items.MoveCurrentToNext ();
+			};
+			
+			buttonCreate.Clicked += delegate
+			{
+				source.Add (ItemPanelTest.CreateRandomRecord ());
+			};
 
-			window.Show ();
-			panel.Focus ();
+			buttonCreate.Margins = new Drawing.Margins (8, 0, 0, 0);
+		}
 
-			Widgets.Window.RunInTestEnvironment (window);
+		private static Widgets.Button CreateButton(Epsitec.Common.Widgets.FrameBox box, string text)
+		{
+			Widgets.Button button = new Widgets.Button (text);
+			
+			button.Dock = Widgets.DockStyle.Stacked;
+			button.PreferredWidth = 20;
+			button.AutoFocus = false;
+			
+			box.Children.Add (button);
+
+			return button;
 		}
 
 		[Test]
