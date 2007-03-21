@@ -605,6 +605,12 @@ namespace Epsitec.Common.Document
 				return this.globalItem.Reload ();
 			}
 
+			internal void FreeImage()
+			{
+				this.globalItem.Free(GlobalImageCache.ImagePart.LargeOriginal);
+				this.globalItem.Free(GlobalImageCache.ImagePart.Data);
+			}
+
 			internal void ExportImage(string path)
 			{
 				byte[] imageData = this.GetImageData ();

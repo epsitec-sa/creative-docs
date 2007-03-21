@@ -1578,9 +1578,13 @@ namespace Epsitec.Common.Document.PDF
 										  TypeComplexSurface baseType, TypeComplexSurface maskType)
 		{
 			//	Crée une image.
-			//	Création d'une instance de Magick.Image à partir du nom de fichier.
+			System.GC.WaitForPendingFinalizers();
+			long mu = System.Diagnostics.Process.GetCurrentProcess().VirtualMemorySize64;
+			System.Diagnostics.Debug.WriteLine(string.Format("CreateImageSurface a:{0} {1}", image.Id, mu));
+
 			byte[] imageData = image.Cache.GetImageData();
 			Opac.FreeImage.Image fi = Opac.FreeImage.Image.Load(imageData);
+			image.Cache.FreeImage();
 			imageData = null;
 
 			Margins crop = image.Crop;
@@ -1869,6 +1873,9 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteString(pdf);
 			writer.WriteLine("endstream endobj");
 
+			System.GC.WaitForPendingFinalizers();
+			mu = System.Diagnostics.Process.GetCurrentProcess().VirtualMemorySize64;
+			System.Diagnostics.Debug.WriteLine(string.Format("CreateImageSurface b:{0} {1}", image.Id, mu));
 			return useMask;
 		}
 

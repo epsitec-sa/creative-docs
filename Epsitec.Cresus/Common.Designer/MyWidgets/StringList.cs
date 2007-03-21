@@ -425,6 +425,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					state |= WidgetPaintState.Selected;
 				}
+				else
+				{
+					state &= ~WidgetPaintState.Focused;
+				}
 				state &= ~WidgetPaintState.Entered;
 				adorner.PaintCellBackground(graphics, cell, state);
 
