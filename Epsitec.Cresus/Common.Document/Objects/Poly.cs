@@ -661,7 +661,7 @@ namespace Epsitec.Common.Document.Objects
 			this.PathBuild(drawingContext,
 						   out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
-						   out pathLine, simplify);
+						   out pathLine, simplify, false);
 
 			int totalShapes = 2;
 			if ( surfaceStart )  totalShapes ++;
@@ -749,9 +749,11 @@ namespace Epsitec.Common.Document.Objects
 		protected void PathBuild(DrawingContext drawingContext,
 								 out Path pathStart, out bool outlineStart, out bool surfaceStart,
 								 out Path pathEnd,   out bool outlineEnd,   out bool surfaceEnd,
-								 out Path pathLine, bool simplify)
+								 out Path pathLine, bool simplify, bool forShaper)
 		{
 			//	Crée les chemins de l'objet.
+			//	Le mode forShaper génère des segments nuls lorsque la ligne est ouverte, pour ne pas
+			//	perturber le compte des segments avec Geometry.PathExtract et Geometry.DetectOutlineRank.
 			pathStart = new Path();
 			pathEnd   = new Path();
 			pathLine  = new Path();
@@ -796,10 +798,15 @@ namespace Epsitec.Common.Document.Objects
 					}
 					else if ( this.Handle(i).Type == HandleType.Starting )  // premier point ?
 					{
-						if ( close )
+						if (close)  // fermé ?
 						{
 							pathLine.LineTo(pp1);
 							pathLine.Close();
+						}
+						else if (forShaper)  // ouvert et modeleur ?
+						{
+							pathLine.MoveTo(pp1);
+							pathLine.LineTo(pp1);  // met un segment nul
 						}
 						first = i;
 						pp1 = this.Handle(i).Position;
@@ -814,10 +821,15 @@ namespace Epsitec.Common.Document.Objects
 						pathLine.LineTo(pp2);
 					}
 				}
-				if ( close )
+				if (close)  // fermé ?
 				{
 					pathLine.LineTo(pp1);
 					pathLine.Close();
+				}
+				else if (forShaper)  // ouvert et modeleur ?
+				{
+					pathLine.MoveTo(pp1);
+					pathLine.LineTo(pp1);  // met un segment nul
 				}
 			}
 			else	// coins spéciaux ?
@@ -846,9 +858,14 @@ namespace Epsitec.Common.Document.Objects
 					}
 					else if ( this.Handle(i).Type == HandleType.Starting )  // premier point ?
 					{
-						if ( close )
+						if (close)  // fermé ?
 						{
 							pathLine.Close();
+						}
+						else if (forShaper)  // ouvert et modeleur ?
+						{
+							pathLine.MoveTo(p1);
+							pathLine.LineTo(p1);  // met un segment nul
 						}
 						first = i;
 						pp1 = this.Handle(i).Position;
@@ -893,9 +910,14 @@ namespace Epsitec.Common.Document.Objects
 						}
 					}
 				}
-				if ( close )
+				if (close)  // fermé ?
 				{
 					pathLine.Close();
+				}
+				else if (forShaper)  // ouvert et modeleur ?
+				{
+					pathLine.MoveTo(p1);
+					pathLine.LineTo(p1);  // met un segment nul
 				}
 			}
 		}
@@ -963,7 +985,20 @@ namespace Epsitec.Common.Document.Objects
 			this.PathBuild(null,
 						   out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
-						   out pathLine, true);
+						   out pathLine, true, false);
+
+			return pathLine;
+		}
+
+		public override Path GetShaperPath()
+		{
+			//	Retourne le chemin géométrique de l'objet pour le modeleur.
+			Path pathStart, pathEnd, pathLine;
+			bool outlineStart, outlineEnd, surfaceStart, surfaceEnd;
+			this.PathBuild(null,
+						   out pathStart, out outlineStart, out surfaceStart,
+						   out pathEnd,   out outlineEnd,   out surfaceEnd,
+						   out pathLine, true, true);
 
 			return pathLine;
 		}
@@ -976,7 +1011,7 @@ namespace Epsitec.Common.Document.Objects
 			this.PathBuild(null,
 						   out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
-						   out pathLine, false);
+						   out pathLine, false, false);
 
 			if ( outlineStart || surfaceStart )
 			{

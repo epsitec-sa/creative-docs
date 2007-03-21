@@ -21,7 +21,7 @@ namespace Epsitec.Common.Document.Objects
 			this.rank = rank;
 			this.scale = 0;
 
-			Path path = obj.GetMagnetPath();
+			Path path = obj.GetShaperPath();
 			Point p1, s1, s2, p2;
 			this.type = Geometry.PathExtract(path, rank, out p1, out s1, out s2, out p2);
 
@@ -195,7 +195,7 @@ namespace Epsitec.Common.Document.Objects
 		public static void Update(UndoableList list, Objects.Abstract obj)
 		{
 			//	Mise à jour après un changement de géométrie.
-			Path path = obj.GetMagnetPath();
+			Path path = obj.GetShaperPath();
 
 			for ( int i=0 ; i<list.Count ; i++ )
 			{

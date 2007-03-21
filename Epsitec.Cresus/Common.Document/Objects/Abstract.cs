@@ -511,7 +511,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( !this.IsSelectedSegmentPossible )  return -1;
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			Path path = this.GetMagnetPath();
+			Path path = this.GetShaperPath();
 			double width = this.SelectedSegmentWidth(context, true);
 			return Geometry.DetectOutlineRank(path, width, mouse);
 		}
@@ -2571,7 +2571,7 @@ namespace Epsitec.Common.Document.Objects
 				//	Dessine les segments sélectionnés ou survolés.
 				if ( this.selectedSegments != null || this.hilitedSegment != -1 )
 				{
-					Path path = this.GetMagnetPath();
+					Path path = this.GetShaperPath();
 					double width = this.SelectedSegmentWidth(drawingContext, false);
 
 					if ( this.selectedSegments != null )
@@ -2904,6 +2904,20 @@ namespace Epsitec.Common.Document.Objects
 			//	par GetPath, mais certains objets peuvent retourner un chemin plus
 			//	simple (comme Line, Poly, TextLine, TextBox et Dimension).
 			//	L'idée est d'ignorer les propriétés Corner et Arrow, par exemple.
+			return this.GetPath();
+		}
+
+		public virtual Path GetShaperPath()
+		{
+			//	Retourne le chemin géométrique de l'objet pour le modeleur.
+			//	Généralement, ce chemin est identique à celui rendu
+			//	par GetPath, mais certains objets peuvent retourner un chemin plus
+			//	simple (comme Line, Poly, TextLine, TextBox et Dimension).
+			//	L'idée est d'ignorer les propriétés Corner et Arrow, par exemple.
+			//	Lorsqu'une courbe est ouverte, un segment null est ajouté pour ne
+			//	pas perturber le compte des segments (ShaperDetectSegment).
+			//	Il faut utiliser GetShaperPath lors de l'utilisation de
+			//	Geometry.PathExtract et Geometry.DetectOutlineRank.
 			return this.GetPath();
 		}
 

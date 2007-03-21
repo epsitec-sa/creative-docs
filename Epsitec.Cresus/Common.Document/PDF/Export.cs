@@ -1587,6 +1587,13 @@ namespace Epsitec.Common.Document.PDF
 			image.Cache.FreeImage();
 			imageData = null;
 
+#if false
+			System.GC.WaitForPendingFinalizers();
+			mu = System.Diagnostics.Process.GetCurrentProcess().VirtualMemorySize64;
+			System.Diagnostics.Debug.WriteLine(string.Format("CreateImageSurface b:{0} {1}", image.Id, mu));
+			return false;  //?
+#endif
+
 			Margins crop = image.Crop;
 			if (crop != Margins.Zero)  // recadrage nécessaire ?
 			{
