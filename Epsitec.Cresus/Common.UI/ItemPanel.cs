@@ -139,6 +139,22 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public double LayoutWidth
+		{
+			get
+			{
+				return this.layoutWidth;
+			}
+			set
+			{
+				if (this.layoutWidth != value)
+				{
+					this.layoutWidth = value;
+					this.InvalidateLayout ();
+				}
+			}
+		}
+
 		public ItemViewShape ItemViewShape
 		{
 			get
@@ -2481,7 +2497,7 @@ namespace Epsitec.Common.UI
 
 		private void LayoutRowsOfTiles(IEnumerable<ItemView> views)
 		{
-			double width = this.Aperture.Width;
+			double width = this.LayoutWidth;
 
 			int rowCount = 0;
 			int colCount = 0;
@@ -2836,6 +2852,7 @@ namespace Epsitec.Common.UI
 		int								lockOwnerPid;
 		int								hotItemViewIndex = -1;
 		double							apertureX, apertureY, apertureWidth, apertureHeight;
+		double							layoutWidth;
 		List<ItemPanelGroup>			groups = new List<ItemPanelGroup> ();
 		List<RefreshInfo>				refreshInfos = new List<RefreshInfo> ();
 		

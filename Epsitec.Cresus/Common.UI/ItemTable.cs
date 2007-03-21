@@ -54,13 +54,17 @@ namespace Epsitec.Common.UI
 			this.itemPanel.CurrentChanged += this.HandleItemPanelCurrentChanged;
 			this.itemPanel.Clicked += this.HandleItemPanelClicked;
 			this.itemPanel.AddEventHandler (ItemPanel.LayoutProperty, this.HandleItemPanelLayoutChanged);
+			this.itemPanel.AddEventHandler (ItemPanel.LayoutGroupsProperty, this.HandleItemPanelLayoutChanged);
+			this.itemPanel.AddEventHandler (ItemPanel.LayoutSubgroupsProperty, this.HandleItemPanelLayoutChanged);
 			
-			this.itemPanel.Layout = ItemPanelLayout.VerticalList;
+//-			this.itemPanel.Layout = ItemPanelLayout.VerticalList;
 			this.itemPanel.ItemSelectionMode = ItemPanelSelectionMode.ExactlyOne;
 			this.itemPanel.GroupSelectionMode = ItemPanelSelectionMode.None;
 
 			this.columnHeader.ItemPanel = this.itemPanel;
 			this.columnHeader.ColumnWidthChanged += this.HandleColumnHeaderColumnWidthChanged;
+			
+			this.itemPanel.LayoutWidth = this.columnHeader.GetTotalWidth ();
 
 			//	Link the item panel with its table, so that an ItemViewFactory
 			//	can find the table and the column templates, if it needs to do
@@ -71,7 +75,16 @@ namespace Epsitec.Common.UI
 
 		private void HandleColumnHeaderColumnWidthChanged(object sender, ColumnWidthChangeEventArgs e)
 		{
+			this.UpdateItemPanelLayoutWidth ();
 			this.surface.Invalidate ();
+		}
+
+		private void UpdateItemPanelLayoutWidth()
+		{
+			double headerWidth   = this.columnHeader.GetTotalWidth ();
+			double apertureWidth = this.apertureSize.Width;
+
+			this.itemPanel.LayoutWidth = System.Math.Max (headerWidth, apertureWidth);
 		}
 
 		private void UpdateGeometry()
@@ -233,6 +246,8 @@ namespace Epsitec.Common.UI
 		{
 			base.OnSizeChanged (oldValue, newValue);
 
+			this.UpdateItemPanelLayoutWidth ();
+
 			if (this.itemPanel.Layout != ItemPanelLayout.VerticalList)
 			{
 				this.itemPanel.RefreshLayout ();
@@ -280,10 +295,9 @@ namespace Epsitec.Common.UI
 
 			if (this.BackColor.IsEmpty)
 			{
-				WidgetPaintState state = this.PaintState;
-				adorner.PaintArrayBackground (graphics, bounds, state);
+				adorner.PaintArrayBackground (graphics, bounds, this.PaintState);
 
-				if (this.itemPanel.Layout == ItemPanelLayout.VerticalList)
+				if (this.GetItemTableLayout () == ItemPanelLayout.VerticalList)
 				{
 					this.PaintColumnSeparators (graphics, adorner, bounds);
 				}
@@ -308,7 +322,7 @@ namespace Epsitec.Common.UI
 		private void PaintColumnSeparators(Graphics graphics, Widgets.IAdorner adorner, Rectangle bounds)
 		{
 			//	Affiche les séparations verticales des colonnes.
-			double x = bounds.Left + 0.5;
+			double x = bounds.Left + 0.5 - this.horizontalOffset;
 			
 			for (int i = 0; i < this.columnHeader.ColumnCount; i++)
 			{
@@ -346,7 +360,7 @@ namespace Epsitec.Common.UI
 		{
 			Margins padding = Margins.Zero;
 
-			this.apertureSize = Rectangle.Deflate (this.Client.Bounds, this.GetPanelPadding ()).Size;
+			this.apertureSize = this.ComputeApertureSize ();
 
 			Size scrollSize = this.GetScrollSize (this.apertureSize - this.itemPanel.AperturePadding.Size);
 
@@ -391,6 +405,8 @@ namespace Epsitec.Common.UI
 				oy = this.itemPanel.PreferredHeight - aH;
 			}
 
+			this.horizontalOffset = ox;
+			
 			double dx = System.Math.Max (this.itemPanel.PreferredWidth, aW);
 			double dy = System.Math.Max (this.itemPanel.PreferredHeight, aH);
 
@@ -398,6 +414,11 @@ namespace Epsitec.Common.UI
 
 			this.itemPanel.SetManualBounds (new Rectangle (-ox, -oy, dx, dy));
 			this.columnHeader.SetManualBounds (new Rectangle (-ox, 0, headerSize.Width, headerSize.Height));
+		}
+
+		private Size ComputeApertureSize()
+		{
+			return Rectangle.Deflate (this.Client.Bounds, this.GetPanelPadding ()).Size;
 		}
 
 		private ItemTableScrollMode GetVerticalScrollMode()
@@ -521,6 +542,22 @@ namespace Epsitec.Common.UI
 			return new Size (dx, dy);
 		}
 
+		private ItemPanelLayout GetItemTableLayout()
+		{
+			ItemPanelLayout layout;
+			
+			if (this.Items.GroupDescriptions.Count > 0)
+			{
+				layout = this.itemPanel.LayoutGroups;
+			}
+			else
+			{
+				layout = this.itemPanel.Layout;
+			}
+			
+			return layout;
+		}
+
 		private void UpdateColumnHeader()
 		{
 			if ((this.suspendColumnUpdates == 0) &&
@@ -530,7 +567,7 @@ namespace Epsitec.Common.UI
 			{
 				Support.ResourceManager manager = Widgets.Helpers.VisualTree.FindResourceManager (this);
 
-				bool useRealColumns = this.itemPanel.Layout == ItemPanelLayout.VerticalList;
+				bool useRealColumns = this.GetItemTableLayout () == ItemPanelLayout.VerticalList;
 				
 				this.columnHeader.ClearColumns ();
 
@@ -650,6 +687,7 @@ namespace Epsitec.Common.UI
 		private void HandleScrollerValueChanged(object sender)
 		{
 			this.UpdateApertureProtected ();
+			this.Invalidate ();
 		}
 
 		private void HandleContentsSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -811,5 +849,6 @@ namespace Epsitec.Common.UI
 		private Size									defaultItemSize;
 		private Size									apertureSize;
 		private int										suspendScroll;
+		private double									horizontalOffset;
 	}
 }

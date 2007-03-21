@@ -50,6 +50,8 @@ namespace Epsitec.Common.UI.ItemViewFactories
 			{
 				group = new ItemPanelGroup (itemView);
 			}
+
+			group.ChildPanel.LayoutWidth = itemView.Owner.LayoutWidth;
 				
 			return group.GetBestFitSize ();
 		}

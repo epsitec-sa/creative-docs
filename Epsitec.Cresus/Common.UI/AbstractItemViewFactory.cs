@@ -69,7 +69,7 @@ namespace Epsitec.Common.UI
 			
 			if (header != null)
 			{
-				switch (panel.Layout)
+				switch (panel.GetPanelLayout ())
 				{
 					case ItemPanelLayout.VerticalList:
 						dx = header.GetTotalWidth ();
@@ -80,7 +80,7 @@ namespace Epsitec.Common.UI
 						break;
 
 					default:
-						throw new System.NotSupportedException (string.Format ("Layout {0} not supported", panel.Layout));
+						throw new System.NotSupportedException (string.Format ("Layout {0} not supported", panel.GetPanelLayout ()));
 				}
 
 			}

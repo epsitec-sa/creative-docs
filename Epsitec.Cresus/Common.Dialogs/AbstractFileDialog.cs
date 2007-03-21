@@ -528,7 +528,7 @@ namespace Epsitec.Common.Dialogs
 
 		private void SetItemViewDisposition(double size)
 		{
-			this.SetItemViewDisposition (size, this.table.ItemPanel.Layout);
+			this.SetItemViewDisposition (size, this.GetItemTableLayout ());
 		}
 		
 		private void SetItemViewDisposition(ItemPanelLayout layout)
@@ -538,7 +538,8 @@ namespace Epsitec.Common.Dialogs
 		
 		private void SetItemViewDisposition(double size, ItemPanelLayout layout)
 		{
-			this.table.ItemPanel.Layout = layout;
+			this.SetItemTableLayout (layout);
+
 			this.itemViewSize = size;
 
 			switch (layout)
@@ -550,6 +551,30 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			this.table.ItemPanel.ItemViewDefaultSize = new Size (size, size);
+		}
+
+		private ItemPanelLayout GetItemTableLayout()
+		{
+			if (this.filesCollectionView.GroupDescriptions.Count > 0)
+			{
+				return this.table.ItemPanel.LayoutGroups;
+			}
+			else
+			{
+				return this.table.ItemPanel.Layout;
+			}
+		}
+
+		private void SetItemTableLayout(ItemPanelLayout layout)
+		{
+			if (this.filesCollectionView.GroupDescriptions.Count > 0)
+			{
+				this.table.ItemPanel.LayoutGroups = layout;
+			}
+			else
+			{
+				this.table.ItemPanel.Layout = layout;
+			}
 		}
 
 		private void CreateCollectionView()
@@ -1700,14 +1725,16 @@ namespace Epsitec.Common.Dialogs
 
 		private void ToggleViewDisposition()
 		{
-			if (this.table.ItemPanel.Layout == ItemPanelLayout.VerticalList)
+			ItemPanelLayout layout = this.GetItemTableLayout ();
+			
+			if (layout == ItemPanelLayout.VerticalList)
 			{
-				this.SetItemViewDisposition(this.itemViewSize, ItemPanelLayout.RowsOfTiles);
+				this.SetItemViewDisposition (this.itemViewSize, ItemPanelLayout.RowsOfTiles);
 				this.viewDispositionState.ActiveState = ActiveState.No;
 			}
 			else
 			{
-				this.SetItemViewDisposition(this.itemViewSize, ItemPanelLayout.VerticalList);
+				this.SetItemViewDisposition (this.itemViewSize, ItemPanelLayout.VerticalList);
 				this.viewDispositionState.ActiveState = ActiveState.Yes;
 			}
 		}
