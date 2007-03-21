@@ -115,11 +115,35 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public ItemPanelLayout LayoutGroups
+		{
+			get
+			{
+				return (ItemPanelLayout) this.GetValue (ItemPanel.LayoutGroupsProperty);
+			}
+			set
+			{
+				this.SetValue (ItemPanel.LayoutGroupsProperty, value);
+			}
+		}
+
+		public ItemPanelLayout LayoutSubgroups
+		{
+			get
+			{
+				return (ItemPanelLayout) this.GetValue (ItemPanel.LayoutSubgroupsProperty);
+			}
+			set
+			{
+				this.SetValue (ItemPanel.LayoutSubgroupsProperty, value);
+			}
+		}
+
 		public ItemViewShape ItemViewShape
 		{
 			get
 			{
-				switch (this.Layout)
+				switch (this.GetPanelLayout ())
 				{
 					case ItemPanelLayout.VerticalList:
 						return ItemViewShape.Row;
@@ -129,7 +153,7 @@ namespace Epsitec.Common.UI
 						return ItemViewShape.Tile;
 
 					default:
-						throw new System.NotSupportedException (string.Format ("Layout {0} not supported", this.Layout));
+						throw new System.NotSupportedException (string.Format ("Layout {0} not supported", this.GetPanelLayout ()));
 				}
 			}
 		}
@@ -244,6 +268,21 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public ItemPanelLayout GetPanelLayout()
+		{
+			switch (this.PanelDepth)
+			{
+				case 0:
+					return this.Layout;
+
+				case 1:
+					return this.RootPanel.LayoutGroups;
+
+				default:
+					return this.RootPanel.LayoutSubgroups;
+			}
+		}
+		
 		public ItemView Detect(Drawing.Point pos)
 		{
 			return this.Detect (this.SafeGetViews (), pos);
@@ -258,7 +297,7 @@ namespace Epsitec.Common.UI
 		{
 			IList<ItemView> views;
 
-			switch (this.Layout)
+			switch (this.GetPanelLayout ())
 			{
 				case ItemPanelLayout.VerticalList:
 					views = this.SafeGetViews ();
@@ -278,7 +317,7 @@ namespace Epsitec.Common.UI
 
 		public int GetTotalColumnCount()
 		{
-			switch (this.Layout)
+			switch (this.GetPanelLayout ())
 			{
 				case ItemPanelLayout.VerticalList:
 					return 1;
@@ -1048,6 +1087,18 @@ namespace Epsitec.Common.UI
 			this.AsyncRefresh ();
 		}
 
+		protected virtual void HandleLayoutGroupsChanged(ItemPanelLayout oldValue, ItemPanelLayout newValue)
+		{
+			//	TODO: decide whether to call RefreshItemViews or RefreshLayout
+			this.AsyncRefresh ();
+		}
+
+		protected virtual void HandleLayoutSubgroupsChanged(ItemPanelLayout oldValue, ItemPanelLayout newValue)
+		{
+			//	TODO: decide whether to call RefreshItemViews or RefreshLayout
+			this.AsyncRefresh ();
+		}
+
 		protected virtual void HandleItemSelectionModeChanged(ItemPanelSelectionMode oldValue, ItemPanelSelectionMode newValue)
 		{
 		}
@@ -1149,7 +1200,7 @@ namespace Epsitec.Common.UI
 			{
 				this.Show (view);
 
-				switch (this.CurrentItemTrackingMode)
+				switch (this.RootPanel.CurrentItemTrackingMode)
 				{
 					case CurrentItemTrackingMode.AutoFocus:
 						break;
@@ -1475,6 +1526,69 @@ namespace Epsitec.Common.UI
 		}
 
 
+		internal void NotifyWidgetClicked(ItemViewWidget widget, Widgets.Message message, Drawing.Point pos)
+		{
+			ItemPanel root = this.RootPanel;
+
+			root.manualTrackingCounter++;
+
+			try
+			{
+				if (message.Button == MouseButtons.Left)
+				{
+					root.HandleItemViewPressed (message, widget.ItemView);
+				}
+			}
+			finally
+			{
+				root.manualTrackingCounter--;
+			}
+		}
+
+		internal void NotifyFocusChanged(ItemViewWidget widget, bool focus)
+		{
+			if (this.IsRootPanel)
+			{
+				ItemView view = widget.ItemView;
+
+				if (focus)
+				{
+					this.RecordFocus (view);
+				}
+				else
+				{
+					if (this.focusedItemView == view)
+					{
+						this.ClearFocus ();
+					}
+				}
+			}
+			else
+			{
+				this.RootPanel.NotifyFocusChanged (widget, focus);
+			}
+		}
+
+		private void RecordFocus(ItemView itemView)
+		{
+			if (this.focusedItemView == itemView)
+			{
+				return;
+			}
+
+			this.focusedItemView = itemView;
+		}
+
+		private void ClearFocus()
+		{
+			if (this.focusedItemView == null)
+			{
+				return;
+			}
+
+			this.focusedItemView = null;
+		}
+
 
 
 		private void ContinuousKeySelection(IList<ItemView> list, ItemView oldCurrent, ItemView newCurrent)
@@ -1606,7 +1720,7 @@ namespace Epsitec.Common.UI
 
 		private bool ProcessNavigationKeys(Widgets.KeyCode keyCode)
 		{
-			switch (this.Layout)
+			switch (this.GetPanelLayout ())
 			{
 				case ItemPanelLayout.VerticalList:
 					return this.ProcessNavigationKeysVerticalList (keyCode);
@@ -1730,8 +1844,10 @@ namespace Epsitec.Common.UI
 			int pos = this.Items.CurrentPosition;
 			int first, last;
 			this.GetFirstAndListVisibleItem(out first, out last);
+
+			ItemPanelLayout layout = this.GetPanelLayout ();
 			
-			if (this.Layout == ItemPanelLayout.VerticalList)
+			if (layout == ItemPanelLayout.VerticalList)
 			{
 				if (pos == first)
 				{
@@ -1743,7 +1859,7 @@ namespace Epsitec.Common.UI
 				}
 			}
 
-			if (this.Layout == ItemPanelLayout.RowsOfTiles)
+			if (layout == ItemPanelLayout.RowsOfTiles)
 			{
 				int visibleRows = (last-first+1)/this.totalColumnCount;
 
@@ -1769,8 +1885,10 @@ namespace Epsitec.Common.UI
 			int pos = this.Items.CurrentPosition;
 			int first, last;
 			this.GetFirstAndListVisibleItem(out first, out last);
+
+			ItemPanelLayout layout = this.GetPanelLayout ();
 			
-			if (this.Layout == ItemPanelLayout.VerticalList)
+			if (layout == ItemPanelLayout.VerticalList)
 			{
 				if (pos == last-1)
 				{
@@ -1782,7 +1900,7 @@ namespace Epsitec.Common.UI
 				}
 			}
 
-			if (this.Layout == ItemPanelLayout.RowsOfTiles)
+			if (layout == ItemPanelLayout.RowsOfTiles)
 			{
 				int visibleRows = (last-first+1)/this.totalColumnCount;
 
@@ -2244,8 +2362,8 @@ namespace Epsitec.Common.UI
 			}
 			
 			this.hasDirtyLayout = false;
-			
-			switch (this.Layout)
+
+			switch (this.GetPanelLayout ())
 			{
 				case ItemPanelLayout.VerticalList:
 					this.LayoutVerticalList (views);
@@ -2635,6 +2753,18 @@ namespace Epsitec.Common.UI
 			panel.HandleLayoutChanged ((ItemPanelLayout) oldValue, (ItemPanelLayout) newValue);
 		}
 
+		private static void NotifyLayoutGroupsChanged(DependencyObject obj, object oldValue, object newValue)
+		{
+			ItemPanel panel = (ItemPanel) obj;
+			panel.HandleLayoutGroupsChanged ((ItemPanelLayout) oldValue, (ItemPanelLayout) newValue);
+		}
+
+		private static void NotifyLayoutSubgroupsChanged(DependencyObject obj, object oldValue, object newValue)
+		{
+			ItemPanel panel = (ItemPanel) obj;
+			panel.HandleLayoutSubgroupsChanged ((ItemPanelLayout) oldValue, (ItemPanelLayout) newValue);
+		}
+
 		private static void NotifyItemSelectionModeChanged(DependencyObject obj, object oldValue, object newValue)
 		{
 			ItemPanel panel = (ItemPanel) obj;
@@ -2675,7 +2805,9 @@ namespace Epsitec.Common.UI
 		public event Support.EventHandler CurrentChanged;
 
 		public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register ("Items", typeof (ICollectionView), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanel.NotifyItemsChanged));
-		public static readonly DependencyProperty LayoutProperty = DependencyProperty.Register ("Layout", typeof (ItemPanelLayout), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelLayout.None, ItemPanel.NotifyLayoutChanged));
+		public static readonly DependencyProperty LayoutProperty = DependencyProperty.Register ("Layout", typeof (ItemPanelLayout), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelLayout.VerticalList, ItemPanel.NotifyLayoutChanged));
+		public static readonly DependencyProperty LayoutGroupsProperty = DependencyProperty.Register ("LayoutGroups", typeof (ItemPanelLayout), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelLayout.VerticalList, ItemPanel.NotifyLayoutGroupsChanged));
+		public static readonly DependencyProperty LayoutSubgroupsProperty = DependencyProperty.Register ("LayoutSubgroups", typeof (ItemPanelLayout), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelLayout.VerticalList, ItemPanel.NotifyLayoutSubgroupsChanged));
 		public static readonly DependencyProperty ItemSelectionModeProperty = DependencyProperty.Register ("ItemSelectionMode", typeof (ItemPanelSelectionMode), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelSelectionMode.None, ItemPanel.NotifyItemSelectionModeChanged));
 		public static readonly DependencyProperty GroupSelectionModeProperty = DependencyProperty.Register ("GroupSelectionMode", typeof (ItemPanelSelectionMode), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelSelectionMode.None, ItemPanel.NotifyGroupSelectionModeChanged));
 		public static readonly DependencyProperty SelectionBehaviorProperty = DependencyProperty.Register ("SelectionBehavior", typeof (ItemPanelSelectionBehavior), typeof (ItemPanel), new DependencyPropertyMetadata (ItemPanelSelectionBehavior.Automatic, ItemPanel.NotifySelectionBehaviorChanged));
@@ -2725,68 +2857,5 @@ namespace Epsitec.Common.UI
 
 		int								totalRowCount;
 		int								totalColumnCount;
-
-		internal void NotifyFocusChanged(ItemViewWidget widget, bool focus)
-		{
-			if (this.IsRootPanel)
-			{
-				ItemView view = widget.ItemView;
-
-				if (focus)
-				{
-					this.RecordFocus (view);
-				}
-				else
-				{
-					if (this.focusedItemView == view)
-					{
-						this.ClearFocus ();
-					}
-				}
-			}
-			else
-			{
-				this.RootPanel.NotifyFocusChanged (widget, focus);
-			}
-		}
-
-		private void RecordFocus(ItemView itemView)
-		{
-			if (this.focusedItemView == itemView)
-			{
-				return;
-			}
-
-			this.focusedItemView = itemView;
-		}
-
-		private void ClearFocus()
-		{
-			if (this.focusedItemView == null)
-			{
-				return;
-			}
-
-			this.focusedItemView = null;
-		}
-
-		internal void NotifyWidgetClicked(ItemViewWidget widget, Widgets.Message message, Drawing.Point pos)
-		{
-			ItemPanel root = this.RootPanel;
-
-			root.manualTrackingCounter++;
-
-			try
-			{
-				if (message.Button == MouseButtons.Left)
-				{
-					root.HandleItemViewPressed (message, widget.ItemView);
-				}
-			}
-			finally
-			{
-				root.manualTrackingCounter--;
-			}
-		}
 	}
 }

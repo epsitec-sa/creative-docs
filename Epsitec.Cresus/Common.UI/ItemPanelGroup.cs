@@ -24,9 +24,6 @@ namespace Epsitec.Common.UI
 			
 			this.panel = new ItemPanel (this);
 			this.panel.Dock = Widgets.DockStyle.Fill;
-			this.panel.Layout = this.ParentPanel.Layout;
-
-			this.panel.CurrentItemTrackingMode = this.ParentPanel.CurrentItemTrackingMode;
 
 			this.panel.DefineParentGroup (this);
 			this.panel.ItemViewDefaultSize = this.ParentPanel.ItemViewDefaultSize;
