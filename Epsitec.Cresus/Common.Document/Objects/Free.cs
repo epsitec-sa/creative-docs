@@ -209,6 +209,24 @@ namespace Epsitec.Common.Document.Objects
 				return true;
 			}
 
+			if ( family == "Segment" )
+			{
+				if ( this.selectedSegments != null && this.selectedSegments.Count != 0 )
+				{
+					enable = true;
+					for ( int i=0 ; i<this.selectedSegments.Count ; i++ )
+					{
+						SelectedSegment ss = this.selectedSegments[i] as SelectedSegment;
+						int rank = ss.Rank;
+						string state = (this.IsCyclingHandleRight(rank) && this.IsCyclingHandleRight(rank+1)) ? "ToLine" : "ToCurve";
+						{
+							Abstract.ShaperHandleStateAdd(actives, state);
+						}
+					}
+				}
+				return true;
+			}
+
 			return base.ShaperHandleState(family, ref enable, actives);
 		}
 
@@ -267,7 +285,7 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if ( !this.Handle(i).IsVisible )  continue;
 					if ( this.Handle(i).IsShaperDeselected )  continue;
-					this.Handle(i).ConstrainType = HandleConstrainType.Simply;
+					this.SetCyclingHandleRight(i, true);
 				}
 
 				this.document.Notifier.NotifyArea(this.BoundingBox);
@@ -286,8 +304,56 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if ( !this.Handle(i).IsVisible )  continue;
 					if ( this.Handle(i).IsShaperDeselected )  continue;
-					this.Handle(i).ConstrainType = HandleConstrainType.Symmetric;
+					this.SetCyclingHandleRight(i, false);
 				}
+
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				this.document.Modifier.OpletQueueValidateAction();
+				return true;
+			}
+
+			if ( cmd == "ShaperHandleToLine" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleToLine);
+				this.InsertOpletGeometry();
+				SelectedSegment.InsertOpletGeometry(this.selectedSegments, this);
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				if ( this.selectedSegments != null )
+				{
+					for ( int i=0 ; i<this.selectedSegments.Count ; i++ )
+					{
+						SelectedSegment ss = this.selectedSegments[i] as SelectedSegment;
+						int rank = ss.Rank;
+						this.SetCyclingHandleRight(rank, true);
+						this.SetCyclingHandleRight(rank+1, true);
+					}
+				}
+				this.SelectedSegmentClear();
+
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				this.document.Modifier.OpletQueueValidateAction();
+				return true;
+			}
+
+			if ( cmd == "ShaperHandleToCurve" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleToLine);
+				this.InsertOpletGeometry();
+				SelectedSegment.InsertOpletGeometry(this.selectedSegments, this);
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				if ( this.selectedSegments != null )
+				{
+					for ( int i=0 ; i<this.selectedSegments.Count ; i++ )
+					{
+						SelectedSegment ss = this.selectedSegments[i] as SelectedSegment;
+						int rank = ss.Rank;
+						this.SetCyclingHandleRight(rank, false);
+						this.SetCyclingHandleRight(rank+1, false);
+					}
+				}
+				this.SelectedSegmentClear();
 
 				this.document.Notifier.NotifyArea(this.BoundingBox);
 				this.document.Modifier.OpletQueueValidateAction();
@@ -731,6 +797,23 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			return this.Handle(rank).ConstrainType == HandleConstrainType.Simply;
+		}
+
+		private void SetCyclingHandleRight(int rank, bool right)
+		{
+			int total = this.TotalMainHandle;
+
+			if (rank < 0)
+			{
+				rank = total+rank;
+			}
+
+			if (rank >= total)
+			{
+				rank = rank-total;
+			}
+
+			this.Handle(rank).ConstrainType = right ? HandleConstrainType.Simply : HandleConstrainType.Symmetric;
 		}
 
 		private Point GetCyclingHandlePosition(int rank)
