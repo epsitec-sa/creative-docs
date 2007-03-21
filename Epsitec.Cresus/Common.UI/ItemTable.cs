@@ -352,7 +352,7 @@ namespace Epsitec.Common.UI
 
 			this.UpdateScrollRatios ();
 
-			switch (this.VerticalScrollMode)
+			switch (this.GetVerticalScrollMode ())
 			{
 				case ItemTableScrollMode.Linear:
 					if (scrollSize.Height > 0)
@@ -400,6 +400,24 @@ namespace Epsitec.Common.UI
 			this.columnHeader.SetManualBounds (new Rectangle (-ox, 0, headerSize.Width, headerSize.Height));
 		}
 
+		private ItemTableScrollMode GetVerticalScrollMode()
+		{
+			ItemTableScrollMode mode = this.VerticalScrollMode;
+
+			if (mode == ItemTableScrollMode.ItemBased)
+			{
+				//	A table with groups can not be configured in the item based
+				//	scroll mode :
+				
+				if (this.Items.Groups.Count > 0)
+				{
+					mode = ItemTableScrollMode.Linear;
+				}
+			}
+
+			return mode;
+		}
+
 		private void UpdateScrollRatios()
 		{
 			double hRatio = System.Math.Max (0, System.Math.Min (1, (apertureSize.Width+1) / (this.itemPanel.PreferredWidth+1)));
@@ -411,7 +429,7 @@ namespace Epsitec.Common.UI
 
 		private double GetVerticalScrollOffset()
 		{
-			switch (this.VerticalScrollMode)
+			switch (this.GetVerticalScrollMode ())
 			{
 				case ItemTableScrollMode.Linear:
 					return this.GetVerticalScrollOffsetLinear ();
@@ -680,7 +698,7 @@ namespace Epsitec.Common.UI
 					}
 					if (sy > 0)
 					{
-						switch (this.VerticalScrollMode)
+						switch (this.GetVerticalScrollMode ())
 						{
 							case ItemTableScrollMode.Linear:
 								this.SetVerticalScrollValueLinear (value.Bottom);
