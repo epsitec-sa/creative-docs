@@ -585,7 +585,7 @@ namespace Epsitec.Common.Dialogs
 				this.ClearFileList ();
 				this.filesCollectionView = new CollectionView (this.files);
 				this.filesCollectionView.CurrentChanged += this.HandleFilesCollectionViewCurrentChanged;
-#if false
+#if true
 				this.filesCollectionView.GroupDescriptions.Add (new PropertyGroupDescription ("info")); 
 #endif
 

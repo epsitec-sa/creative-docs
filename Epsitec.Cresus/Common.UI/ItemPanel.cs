@@ -2467,8 +2467,8 @@ namespace Epsitec.Common.UI
 				{
 					minDx = System.Math.Min (minDx, size.Width);
 					minDy = System.Math.Min (minDy, size.Height);
-					maxDx = System.Math.Min (maxDx, size.Width);
-					maxDy = System.Math.Min (maxDy, size.Height);
+					maxDx = System.Math.Max (maxDx, size.Width);
+					maxDy = System.Math.Max (maxDy, size.Height);
 				}
 
 				dy += size.Height;
@@ -2529,8 +2529,8 @@ namespace Epsitec.Common.UI
 				{
 					minDx = System.Math.Min (minDx, size.Width);
 					minDy = System.Math.Min (minDy, size.Height);
-					maxDx = System.Math.Min (maxDx, size.Width);
-					maxDy = System.Math.Min (maxDy, size.Height);
+					maxDx = System.Math.Max (maxDx, size.Width);
+					maxDy = System.Math.Max (maxDy, size.Height);
 				}
 
 				dx += size.Width;
