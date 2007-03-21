@@ -34,7 +34,7 @@ namespace Epsitec.Common.Document.PDF
 			this.parts = new System.Collections.ArrayList();
 			this.dictionary = new System.Collections.Hashtable();
 			this.objectNextId = 1;  // premier identificateur d'objet
-			this.flushed = false;
+			this.streamIO = null;
 		}
 
 		public void WriteObjectDef(string objectName)
@@ -53,8 +53,6 @@ namespace Epsitec.Common.Document.PDF
 		protected void WriteObject(string objectName, string ending, string type)
 		{
 			//	Ecrit une définition ou une référence d'objet.
-			System.Diagnostics.Debug.Assert(!this.flushed);
-
 			if ( !this.dictionary.ContainsKey(objectName) )
 			{
 				Object obj = new Object(this.objectNextId++, 0);
@@ -85,19 +83,20 @@ namespace Epsitec.Common.Document.PDF
 		public void WriteString(string text)
 		{
 			//	Ecrit juste une string telle quelle.
-			System.Diagnostics.Debug.Assert(!this.flushed);
 			this.parts.Add(string.Format(System.Globalization.CultureInfo.InvariantCulture, "F{0}", text));  // texte fixe
 		}
 
 		public void Flush()
 		{
-			//	Ecrit effectivement le fichier.
+			//	Ecrit tout ce qui est possible dans le fichier. On peut appeler Flush autant
+			//	de fois qu'on veut, pour écrire les données dans le fichier au fur et à mesure,
+			//	afin d'utiliser le moins possible de mémoire.
 			//	Les objectName sont remplacés par des numéros.
-			//	Les tables "xref..startxref..%%EOF" en fin de fichier sont créées.
-			System.Diagnostics.Debug.Assert(!this.flushed);
-
-			this.FileOpen(this.filename);
-			this.FileWriteLine("%PDF-1.4");
+			if (this.streamIO == null)
+			{
+				this.FileOpen(this.filename);
+				this.FileWriteLine("%PDF-1.4");
+			}
 
 			//	Ecrit toutes les parties fixes ou variables.
 			foreach ( string part in this.parts )
@@ -121,7 +120,13 @@ namespace Epsitec.Common.Document.PDF
 				}
 			}
 
+			this.parts.Clear();  // libère les données écrites, afin d'utiliser le moins possible de mémoire
+		}
+
+		public void Finish()
+		{
 			//	Ecrit l'objet xref final.
+			//	Les tables "xref..startxref..%%EOF" en fin de fichier sont créées.
 			int startXref = this.streamOffset;
 			this.FileWriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "xref 0 {0}", Writer.ToString(this.dictionary.Count+1)));
 			this.FileWriteLine("0000000000 65535 f");
@@ -139,9 +144,7 @@ namespace Epsitec.Common.Document.PDF
 
 			this.FileClose();
 
-			this.parts.Clear();
 			this.dictionary.Clear();
-			this.flushed = true;
 		}
 
 		protected Object DictionarySearch(int id)
@@ -215,7 +218,6 @@ namespace Epsitec.Common.Document.PDF
 
 
 		protected string						filename;
-		protected bool							flushed;
 		protected System.Collections.ArrayList	parts;
 		protected System.Collections.Hashtable	dictionary;
 		protected int							objectNextId;

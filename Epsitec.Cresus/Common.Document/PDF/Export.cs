@@ -417,7 +417,8 @@ namespace Epsitec.Common.Document.PDF
 				writer.WriteLine("endstream endobj");
 			}
 
-			writer.Flush();
+			writer.Flush();  // termine l'écriture sur disque
+			writer.Finish();  // écrit l'objet final
 			this.FlushComplexSurface();
 			this.FlushImageSurface();
 			this.FlushFont();
@@ -1571,6 +1572,8 @@ namespace Epsitec.Common.Document.PDF
 				{
 					this.CreateImageSurface(writer, port, image, TypeComplexSurface.XObjectMask, TypeComplexSurface.None);
 				}
+
+				writer.Flush();  // écrit déjà tout ce qu'on peut sur disque, afin d'utiliser le moins possible de mémoire
 			}
 			return "";  // ok
 		}
@@ -1579,10 +1582,6 @@ namespace Epsitec.Common.Document.PDF
 										  TypeComplexSurface baseType, TypeComplexSurface maskType)
 		{
 			//	Crée une image.
-			System.GC.WaitForPendingFinalizers();
-			long mu = System.Diagnostics.Process.GetCurrentProcess().VirtualMemorySize64;
-			System.Diagnostics.Debug.WriteLine(string.Format("CreateImageSurface a:{0} {1}", image.Id, mu));
-
 			byte[] imageData = image.Cache.GetImageData();
 			Opac.FreeImage.Image fi = Opac.FreeImage.Image.Load(imageData);
 			image.Cache.FreeImage();
@@ -1876,10 +1875,6 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteString(pdf);
 			writer.WriteLine("endstream endobj");
 
-			System.GC.WaitForPendingFinalizers();
-			mu = System.Diagnostics.Process.GetCurrentProcess().VirtualMemorySize64;
-			System.Diagnostics.Debug.WriteLine(string.Format("CreateImageSurface b:{0} {1}", image.Id, mu));
-			System.Diagnostics.Debug.WriteLine(string.Format("Export.debugTotal = {0}", Export.debugTotal));
 			return useMask;
 		}
 
