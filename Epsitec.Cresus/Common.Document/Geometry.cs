@@ -10,6 +10,7 @@ namespace Epsitec.Common.Document
 		public static Path PathExtract(Path path, int rank)
 		{
 			//	Extrait un fragment d'un chemin.
+			//	Attention à utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
 			Point p1, s1, s2, p2;
 			Objects.SelectedSegment.Type type;
 			type = Geometry.PathExtract(path, rank, out p1, out s1, out s2, out p2);
@@ -36,6 +37,7 @@ namespace Epsitec.Common.Document
 		public static Objects.SelectedSegment.Type PathExtract(Path path, int rank, out Point pp1, out Point ss1, out Point ss2, out Point pp2)
 		{
 			//	Extrait un fragment de droite ou de courbe d'un chemin.
+			//	Attention à utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
 			PathElement[] elements;
 			Point[] points;
 			path.GetElements(out elements, out points);
@@ -133,6 +135,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Détecte sur quel trait d'un chemin est la souris.
 			//	Retourne le rang du trait (0..1), ou -1.
+			//	Attention à utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
 			Point p1,s1,s2,p2;
 			return Geometry.DetectOutlineRank(path, width, pos, out p1, out s1, out s2, out p2);
 		}
@@ -142,6 +145,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Détecte sur quel trait d'un chemin est la souris.
 			//	Retourne le rang du trait (0..1), ou -1.
+			//	Attention à utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
 			PathElement[] elements;
 			Point[] points;
 			path.GetElements(out elements, out points);

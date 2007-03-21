@@ -41,22 +41,22 @@ namespace Epsitec.Common.IO
 		/// <returns>byte array of decoded binary data</returns>
 		public byte[] Decode(string s)
 		{
-			if (EnforceMarks)
+			if (this.EnforceMarks)
 			{
-				if (!s.StartsWith (PrefixMark) | !s.EndsWith (SuffixMark))
+				if (!s.StartsWith (this.PrefixMark) | !s.EndsWith (this.SuffixMark))
 				{
-					throw new System.FormatException ("ASCII85 encoded data should begin with '" + PrefixMark + "' and end with '" + SuffixMark + "'");
+					throw new System.FormatException ("ASCII85 encoded data should begin with '" + this.PrefixMark + "' and end with '" + this.SuffixMark + "'");
 				}
 			}
 
 			// strip prefix and suffix if present
-			if (s.StartsWith (PrefixMark))
+			if (s.StartsWith (this.PrefixMark))
 			{
-				s = s.Substring (PrefixMark.Length);
+				s = s.Substring (this.PrefixMark.Length);
 			}
-			if (s.EndsWith (SuffixMark))
+			if (s.EndsWith (this.SuffixMark))
 			{
-				s = s.Substring (0, s.Length - SuffixMark.Length);
+				s = s.Substring (0, s.Length - this.SuffixMark.Length);
 			}
 
 			MemoryStream ms = new MemoryStream ();
@@ -103,7 +103,7 @@ namespace Epsitec.Common.IO
 					count++;
 					if (count == Ascii85.encodedBlockLength)
 					{
-						DecodeBlock ();
+						this.DecodeBlock ();
 						ms.Write (this.decodedBlock, 0, Ascii85.decodedBlockLength);
 						this.tuple = 0;
 						count = 0;
@@ -120,7 +120,7 @@ namespace Epsitec.Common.IO
 				}
 				count--;
 				this.tuple += pow85[count];
-				DecodeBlock (count);
+				this.DecodeBlock (count);
 				for (int i = 0; i < count; i++)
 				{
 					ms.WriteByte (this.decodedBlock[i]);
@@ -140,9 +140,9 @@ namespace Epsitec.Common.IO
 			StringBuilder sb = new StringBuilder ((int) (ba.Length * (Ascii85.encodedBlockLength/Ascii85.decodedBlockLength)));
 			this.linePos = 0;
 
-			if (EnforceMarks)
+			if (this.EnforceMarks)
 			{
-				AppendString (sb, PrefixMark);
+				this.AppendString (sb, this.PrefixMark);
 			}
 
 			int count = 0;
@@ -154,11 +154,11 @@ namespace Epsitec.Common.IO
 					this.tuple |= b;
 					if (this.tuple == 0)
 					{
-						AppendChar (sb, 'z');
+						this.AppendChar (sb, 'z');
 					}
 					else
 					{
-						EncodeBlock (sb);
+						this.EncodeBlock (sb);
 					}
 					this.tuple = 0;
 					count = 0;
@@ -173,12 +173,12 @@ namespace Epsitec.Common.IO
 			// if we have some bytes left over at the end..
 			if (count > 0)
 			{
-				EncodeBlock (count + 1, sb);
+				this.EncodeBlock (count + 1, sb);
 			}
 
-			if (EnforceMarks)
+			if (this.EnforceMarks)
 			{
-				AppendString (sb, SuffixMark);
+				this.AppendString (sb, this.SuffixMark);
 			}
 			return sb.ToString ();
 		}
@@ -187,7 +187,7 @@ namespace Epsitec.Common.IO
 
 		private void EncodeBlock(StringBuilder sb)
 		{
-			EncodeBlock (Ascii85.encodedBlockLength, sb);
+			this.EncodeBlock (Ascii85.encodedBlockLength, sb);
 		}
 
 		private void EncodeBlock(int count, StringBuilder sb)
@@ -201,14 +201,14 @@ namespace Epsitec.Common.IO
 			for (int i = 0; i < count; i++)
 			{
 				char c = (char) this.encodedBlock[i];
-				AppendChar (sb, c);
+				this.AppendChar (sb, c);
 			}
 
 		}
 
 		private void DecodeBlock()
 		{
-			DecodeBlock (Ascii85.decodedBlockLength);
+			this.DecodeBlock (Ascii85.decodedBlockLength);
 		}
 
 		private void DecodeBlock(int bytes)
@@ -221,7 +221,7 @@ namespace Epsitec.Common.IO
 
 		private void AppendString(StringBuilder sb, string s)
 		{
-			if (LineLength > 0 && (this.linePos + s.Length > LineLength))
+			if (this.LineLength > 0 && (this.linePos + s.Length > this.LineLength))
 			{
 				this.linePos = 0;
 				sb.Append ('\n');
@@ -237,7 +237,7 @@ namespace Epsitec.Common.IO
 		{
 			sb.Append (c);
 			this.linePos++;
-			if (LineLength > 0 && (this.linePos >= LineLength))
+			if (this.LineLength > 0 && (this.linePos >= this.LineLength))
 			{
 				this.linePos = 0;
 				sb.Append ('\n');
