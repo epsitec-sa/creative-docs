@@ -34,7 +34,7 @@ namespace Epsitec.Common.Document.PDF
 			this.parts = new System.Collections.ArrayList();
 			this.dictionary = new System.Collections.Hashtable();
 			this.objectNextId = 1;  // premier identificateur d'objet
-			this.streamIO = null;
+			this.streamIO = null;  // fichier pas encore ouvert
 		}
 
 		public void WriteObjectDef(string objectName)
@@ -88,11 +88,11 @@ namespace Epsitec.Common.Document.PDF
 
 		public void Flush()
 		{
-			//	Ecrit tout ce qui est possible dans le fichier. On peut appeler Flush autant
-			//	de fois qu'on veut, pour écrire les données dans le fichier au fur et à mesure,
+			//	Ecrit tout ce qui est possible dans le fichier sur disque. On peut appeler Flush
+			//	autant de fois qu'on veut, pour écrire les données dans le fichier au fur et à mesure,
 			//	afin d'utiliser le moins possible de mémoire.
 			//	Les objectName sont remplacés par des numéros.
-			if (this.streamIO == null)
+			if (this.streamIO == null)  // fichier pas encore ouvert ?
 			{
 				this.FileOpen(this.filename);
 				this.FileWriteLine("%PDF-1.4");
@@ -127,6 +127,7 @@ namespace Epsitec.Common.Document.PDF
 		{
 			//	Ecrit l'objet xref final.
 			//	Les tables "xref..startxref..%%EOF" en fin de fichier sont créées.
+			System.Diagnostics.Debug.Assert(this.streamIO != null);
 			int startXref = this.streamOffset;
 			this.FileWriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "xref 0 {0}", Writer.ToString(this.dictionary.Count+1)));
 			this.FileWriteLine("0000000000 65535 f");
