@@ -264,6 +264,11 @@
   <ItemGroup>
     <EmbeddedResource Include="Images\FileRefresh.icon" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Common.Dialogs\Captions.de.resource" />
+    <Content Include="Resources\Common.Dialogs\Strings.de.resource" />
+    <Content Include="Resources\Common.Dialogs\Strings.en.resource" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

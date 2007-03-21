@@ -1277,7 +1277,18 @@ namespace Epsitec.Common.UI
 			
 			if (message.IsShiftPressed && list.Count > 0)
 			{
-				this.ContinuousMouseSelection (list, this.FindItemView (this.Items.CurrentItem), view, modifySelection);
+				ItemView first = null;
+				
+				if (this.firstSelectedItem != null)
+				{
+					first = this.FindItemView (this.firstSelectedItem.Target);
+				}
+				if (first == null)
+				{
+					first = this.FindItemView (this.Items.CurrentItem);
+				}
+
+				this.ContinuousMouseSelection (list, first, view, modifySelection);
 			}
 			else
 			{
@@ -1468,14 +1479,15 @@ namespace Epsitec.Common.UI
 		private void ContinuousKeySelection(IList<ItemView> list, ItemView oldCurrent, ItemView newCurrent)
 		{
 			System.Diagnostics.Debug.Assert (this.IsRootPanel);
+			System.Diagnostics.Debug.Assert (this.Items != null);
 
 			System.Collections.IList collection = this.Items.Items;
 
-			ItemView first = ItemPanel.GetFirstSelectedItemView (list);
-			ItemView last  = ItemPanel.GetLastSelectedItemView (list);
+			ItemView view1 = ItemPanel.GetFirstSelectedItemView (collection, list);
+			ItemView view2 = ItemPanel.GetLastSelectedItemView (collection, list);
 
-			int index1 = (first == null) ? -1 : collection.IndexOf (first.Item);
-			int index2 = (last  == null) ? -1 : collection.IndexOf (last.Item);
+			int index1 = (view1 == null) ? -1 : collection.IndexOf (view1.Item);
+			int index2 = (view2 == null) ? -1 : collection.IndexOf (view2.Item);
 
 			int oldIndex = (oldCurrent == null) ? -1 : collection.IndexOf (oldCurrent.Item);
 			int newIndex = (newCurrent == null) ? -1 : collection.IndexOf (newCurrent.Item);
@@ -1496,7 +1508,7 @@ namespace Epsitec.Common.UI
 
 			index1 = System.Math.Max (0, index1);
 			index2 = System.Math.Max (0, index2);
-
+			
 			if (index1 > index2)
 			{
 				int temp = index1;
@@ -1537,7 +1549,7 @@ namespace Epsitec.Common.UI
 			this.Items.MoveCurrentToPosition (newIndex);
 		}
 
-		private void ContinuousMouseSelection(IList<ItemView> list, ItemView current, ItemView clicked, bool expand)
+		private void ContinuousMouseSelection(IList<ItemView> list, ItemView current, ItemView clicked, bool modifySelection)
 		{
 			System.Collections.IList collection = this.Items.Items;
 
@@ -1545,6 +1557,8 @@ namespace Epsitec.Common.UI
 			int clickedIndex = collection.IndexOf (clicked.Item);
 			int index1 = -1;
 			int index2 = -1;
+
+			System.Diagnostics.Debug.WriteLine (string.Format ("Current: {0} Clicked: {1}", currentIndex, clickedIndex));
 
 			if (currentIndex < clickedIndex)
 			{
@@ -1568,7 +1582,7 @@ namespace Epsitec.Common.UI
 				index2 = currentIndex;
 			}
 
-			if (!expand && index1 != -1 && index2 != -1)
+			if (!modifySelection && index1 != -1 && index2 != -1)
 			{
 				List<ItemView> deselect = new List<ItemView>();
 				
@@ -1865,24 +1879,26 @@ namespace Epsitec.Common.UI
 				if (select)
 				{
 					this.InternalSelectItemView (view);
+					this.firstSelectedItem = new System.WeakReference (view.Item);
 				}
 				else
 				{
 					this.InternalDeselectItemView (view);
+					this.firstSelectedItem = null;
 				}
 			}
 
 			state.GenerateEvents ();
 		}
 
-		private static ItemView GetFirstSelectedItemView(IEnumerable<ItemView> list)
+		private static ItemView GetFirstSelectedItemView(System.Collections.IList collection, IEnumerable<ItemView> list)
 		{
 			int      index = int.MaxValue;
 			ItemView found = null;
 
 			foreach (ItemView view in list)
 			{
-				int viewIndex = view.GetCollectionIndex ();
+				int viewIndex = collection.IndexOf (view.Item);
 
 				if (viewIndex < index)
 				{
@@ -1894,14 +1910,14 @@ namespace Epsitec.Common.UI
 			return found;
 		}
 
-		private static ItemView GetLastSelectedItemView(IEnumerable<ItemView> list)
+		private static ItemView GetLastSelectedItemView(System.Collections.IList collection, IEnumerable<ItemView> list)
 		{
 			int      index = -1;
 			ItemView found = null;
 
 			foreach (ItemView view in list)
 			{
-				int viewIndex = view.GetCollectionIndex ();
+				int viewIndex = collection.IndexOf (view.Item);
 
 				if (viewIndex > index)
 				{
@@ -2699,6 +2715,7 @@ namespace Epsitec.Common.UI
 		ItemPanelGroup					parentGroup;
 
 		ItemView						focusedItemView;
+		System.WeakReference			firstSelectedItem;
 
 		double							minItemWidth;
 		double							maxItemWidth;
