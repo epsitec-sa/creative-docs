@@ -348,7 +348,7 @@ namespace Epsitec.Common.UI
 					}
 				}
 				
-				System.Diagnostics.Debug.WriteLine ("Created " + this.index + " -> " + this.widget.ToString () + " in " + this.owner.VisualSerialId);
+				System.Diagnostics.Debug.WriteLine ("Created " + this.index + "/" + this.GetCollectionIndex () + " -> " + this.widget.ToString () + " in " + this.owner.VisualSerialId);
 
 				this.widget.SetEmbedder (this.owner);
 				this.widget.SetManualBounds (this.bounds);
@@ -382,7 +382,7 @@ namespace Epsitec.Common.UI
 			
 			if (this.widget != null)
 			{
-				System.Diagnostics.Debug.WriteLine ("Defining " + this.index + " -> " + this.widget.ToString () + " in " + this.owner.ToString ());
+				System.Diagnostics.Debug.WriteLine ("Defining " + this.index + "/" + this.GetCollectionIndex () + " -> " + this.widget.ToString () + " in " + this.owner.ToString ());
 			}
 		}
 
@@ -395,7 +395,7 @@ namespace Epsitec.Common.UI
 		{
 			if (this.widget != null)
 			{
-				System.Diagnostics.Debug.WriteLine ("Clearing " + this.index + " -> " + this.widget.ToString () + " in " + this.owner.ToString ());
+				System.Diagnostics.Debug.WriteLine ("Clearing " + this.index + "/" + this.GetCollectionIndex () + " -> " + this.widget.ToString () + " in " + this.owner.ToString ());
 				
 				ItemPanelGroup group = this.Group;
 
@@ -419,7 +419,7 @@ namespace Epsitec.Common.UI
 		/// </summary>
 		internal void DisposeUserInterface()
 		{
-			System.Diagnostics.Debug.WriteLine ("Disposing " + this.index + " -> " + this.widget.ToString () + " in " + this.owner.ToString ());
+			System.Diagnostics.Debug.WriteLine ("Disposing " + this.index + "/" + this.GetCollectionIndex () + " -> " + this.widget.ToString () + " in " + this.owner.ToString ());
 
 			if (this.widget != null)
 			{

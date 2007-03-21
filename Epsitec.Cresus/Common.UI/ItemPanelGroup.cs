@@ -126,14 +126,18 @@ namespace Epsitec.Common.UI
 		internal void ClearUserInterface()
 		{
 			this.panel.ClearUserInterface ();
-			this.hasValidUserInterface = false;
+			
+			this.hasClearedUserInterface |= this.hasValidUserInterface;
+			this.hasValidUserInterface    = false;
 		}
 
 		internal void RefreshUserInterface()
 		{
 			if (this.hasValidUserInterface == false)
 			{
-				this.hasValidUserInterface = true;
+				this.hasValidUserInterface   = true;
+				this.hasClearedUserInterface = false;
+				
 				this.panel.RefreshUserInterface ();
 			}
 		}
@@ -218,7 +222,14 @@ namespace Epsitec.Common.UI
 
 			if (this.ItemView.IsExpanded)
 			{
-				this.panel.RefreshLayoutIfNeeded ();
+				if (this.hasClearedUserInterface)
+				{
+					this.RefreshUserInterface ();
+				}
+				else
+				{
+					this.panel.RefreshLayoutIfNeeded ();
+				}
 
 				size  = this.panel.GetContentsSize ();
 				size += this.Padding.Size;
@@ -240,5 +251,6 @@ namespace Epsitec.Common.UI
 		
 		private readonly object exclusion = new object ();
 		private bool hasValidUserInterface;
+		private bool hasClearedUserInterface;
 	}
 }
