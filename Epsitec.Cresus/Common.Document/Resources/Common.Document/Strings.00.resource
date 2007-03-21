@@ -987,6 +987,8 @@
   <data name="Action.ShaperHandleAdd" id="0OS">Ajouter le(s) point(s)</data>
   <data name="Action.ShaperHandleSub" id="0PS">Enlever le(s) point(s)</data>
   <data name="Action.ShaperHandleToLine" id="0QS">Droit</data>
+  <data name="Action.ShaperHandleSharp" id="0MB01">Anguleux</data>
+  <data name="Action.ShaperHandleRound" id="0NB01">Arrondi&lt;br/&gt;</data>
   <data name="Action.ShaperHandleToCurve" id="0RS">Courbe</data>
   <data name="Action.ShaperHandleSym" id="0SS">Symétrique</data>
   <data name="Action.ShaperHandleSmooth" id="0TS">Lisse</data>

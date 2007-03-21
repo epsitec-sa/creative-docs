@@ -3898,6 +3898,10 @@ namespace Epsitec.Common.Document
 				this.ShaperHandleState("Poly", out enable, actives);
 				this.ShaperHandleState(cd, "ShaperHandleSimply", enable, actives, "Simply");
 				this.ShaperHandleState(cd, "ShaperHandleCorner", enable, actives, "Corner");
+
+				this.ShaperHandleState("Free", out enable, actives);
+				this.ShaperHandleState(cd, "ShaperHandleSharp", enable, actives, "Sharp");
+				this.ShaperHandleState(cd, "ShaperHandleRound", enable, actives, "Round");
 			}
 			else
 			{
@@ -3913,6 +3917,8 @@ namespace Epsitec.Common.Document
 				this.document.GetCommandState ("ShaperHandleFree").Enable = false;
 				this.document.GetCommandState ("ShaperHandleSimply").Enable = false;
 				this.document.GetCommandState ("ShaperHandleCorner").Enable = false;
+				this.document.GetCommandState ("ShaperHandleSharp").Enable = false;
+				this.document.GetCommandState ("ShaperHandleRound").Enable = false;
 			}
 		}
 

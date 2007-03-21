@@ -2647,6 +2647,8 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ShaperHandleSimply")]
 		[Command ("ShaperHandleCorner")]
 		[Command ("ShaperHandleContinue")]
+		[Command ("ShaperHandleSharp")]
+		[Command ("ShaperHandleRound")]
 		void CommandShaperHandle(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.CurrentDocument.Modifier.ShaperHandleCommand (e.Command.CommandId);
@@ -3644,6 +3646,8 @@ namespace Epsitec.App.DocumentEditor
 			this.shaperHandleSimplyState = this.CreateCommandState("ShaperHandleSimply", "ShaperHandleSimply", true);
 			this.shaperHandleCornerState = this.CreateCommandState("ShaperHandleCorner", "ShaperHandleCorner", true);
 			this.shaperHandleContinueState = this.CreateCommandState("ShaperHandleContinue", "ShaperHandleContinue");
+			this.shaperHandleSharpState = this.CreateCommandState("ShaperHandleSharp", "ShaperHandleSharp", true);
+			this.shaperHandleRoundState = this.CreateCommandState("ShaperHandleRound", "ShaperHandleRound", true);
 
 			this.booleanAndState = this.CreateCommandState("BooleanAnd", "BooleanAnd");
 			this.booleanOrState = this.CreateCommandState("BooleanOr", "BooleanOr");
@@ -4382,6 +4386,8 @@ namespace Epsitec.App.DocumentEditor
 				this.shaperHandleSimplyState.Enable = false;
 				this.shaperHandleCornerState.Enable = false;
 				this.shaperHandleContinueState.Enable = false;
+				this.shaperHandleSharpState.Enable = false;
+				this.shaperHandleRoundState.Enable = false;
 			}
 		}
 
@@ -5744,6 +5750,8 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					shaperHandleSimplyState;
 		protected CommandState					shaperHandleCornerState;
 		protected CommandState					shaperHandleContinueState;
+		protected CommandState					shaperHandleSharpState;
+		protected CommandState					shaperHandleRoundState;
 		protected CommandState					booleanAndState;
 		protected CommandState					booleanOrState;
 		protected CommandState					booleanXorState;

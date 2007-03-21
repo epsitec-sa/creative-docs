@@ -2340,6 +2340,9 @@ namespace Epsitec.Common.Document.Objects
 				this.PutCommands(list, "ShaperHandleCorner");
 				this.PutCommands(list, "ShaperHandleSimply");
 				this.PutCommands(list, "");
+				this.PutCommands(list, "ShaperHandleSharp");
+				this.PutCommands(list, "ShaperHandleRound");
+				this.PutCommands(list, "");
 			}
 		}
 
