@@ -1465,9 +1465,10 @@ namespace Epsitec.Common.UI
 			{
 				this.RootPanel.RecordFocus (itemView);
 
-				if (itemView.HasValidUserInterface)
+				ItemViewWidget widget = itemView.Widget;
+
+				if (widget != null)
 				{
-					ItemViewWidget widget = itemView.Widget;
 					widget.Focus ();
 				}
 			}
