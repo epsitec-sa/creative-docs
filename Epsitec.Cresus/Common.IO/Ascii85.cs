@@ -138,10 +138,15 @@ namespace Epsitec.Common.IO
 		public string Encode(byte[] ba)
 		{
 			StringBuilder sb = new StringBuilder ((int) (ba.Length * (Ascii85.encodedBlockLength/Ascii85.decodedBlockLength)));
-			this.Encode(ba, sb);
+			this.Encode (ba, sb);
 			return sb.ToString ();
 		}
 
+		/// <summary>
+		/// Encodes binary data into a plaintext ASCII85 format string
+		/// </summary>
+		/// <param name="ba">binary data to encode</param>
+		/// <param name="sb">StringBuilder to use</param>
 		public void Encode(byte[] ba, StringBuilder sb)
 		{
 			this.linePos = 0;
