@@ -190,6 +190,25 @@ namespace Epsitec.Common.Document.Objects
 				return true;
 			}
 
+			if ( family == "Poly" )
+			{
+				if ( this.IsShaperHandleSelected() )
+				{
+					int total = this.TotalMainHandle;
+					for ( int i=0 ; i<total ; i++ )
+					{
+						if ( !this.Handle(i).IsVisible )  continue;
+						if ( this.Handle(i).IsShaperDeselected )  continue;
+
+						HandleConstrainType type = this.Handle(i).ConstrainType;
+						if ( type == HandleConstrainType.Simply )  Abstract.ShaperHandleStateAdd(actives, "Simply"); 
+						else                                       Abstract.ShaperHandleStateAdd(actives, "Corner"); 
+						enable = true;
+					}
+				}
+				return true;
+			}
+
 			return base.ShaperHandleState(family, ref enable, actives);
 		}
 
@@ -230,6 +249,44 @@ namespace Epsitec.Common.Document.Objects
 					if ( !this.Handle(i).IsVisible )  continue;
 					if ( this.Handle(i).IsShaperDeselected )  continue;
 					this.ShaperHandleSub(i);
+				}
+
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				this.document.Modifier.OpletQueueValidateAction();
+				return true;
+			}
+
+			if ( cmd == "ShaperHandleSimply" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleSimply);
+				this.InsertOpletGeometry();
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				int total = this.TotalMainHandle;
+				for ( int i=0 ; i<total ; i++ )
+				{
+					if ( !this.Handle(i).IsVisible )  continue;
+					if ( this.Handle(i).IsShaperDeselected )  continue;
+					this.Handle(i).ConstrainType = HandleConstrainType.Simply;
+				}
+
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+				this.document.Modifier.OpletQueueValidateAction();
+				return true;
+			}
+
+			if ( cmd == "ShaperHandleCorner" )
+			{
+				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.ShaperHandleCorner);
+				this.InsertOpletGeometry();
+				this.document.Notifier.NotifyArea(this.BoundingBox);
+
+				int total = this.TotalMainHandle;
+				for ( int i=0 ; i<total ; i++ )
+				{
+					if ( !this.Handle(i).IsVisible )  continue;
+					if ( this.Handle(i).IsShaperDeselected )  continue;
+					this.Handle(i).ConstrainType = HandleConstrainType.Symmetric;
 				}
 
 				this.document.Notifier.NotifyArea(this.BoundingBox);
@@ -635,7 +692,7 @@ namespace Epsitec.Common.Document.Objects
 					{
 						Point s1, s2;
 
-						if (i == 1 && !this.PropertyPolyClose.BoolValue)
+						if ((i == 1 && !this.PropertyPolyClose.BoolValue) || this.IsCyclingHandleRight(i-1))
 						{
 							s1 = this.GetCyclingHandlePosition(i-1);
 						}
@@ -644,7 +701,7 @@ namespace Epsitec.Common.Document.Objects
 							s1 = this.ComputeSecondary(this.GetCyclingHandlePosition(i), this.GetCyclingHandlePosition(i-1), this.GetCyclingHandlePosition(i-2), tension);
 						}
 
-						if (i == total-1 && !this.PropertyPolyClose.BoolValue)
+						if ((i == total-1 && !this.PropertyPolyClose.BoolValue) || this.IsCyclingHandleRight(i))
 						{
 							s2 = this.GetCyclingHandlePosition(i);
 						}
@@ -657,6 +714,23 @@ namespace Epsitec.Common.Document.Objects
 					}
 				}
 			}
+		}
+
+		private bool IsCyclingHandleRight(int rank)
+		{
+			int total = this.TotalMainHandle;
+
+			if (rank < 0)
+			{
+				rank = total+rank;
+			}
+
+			if (rank >= total)
+			{
+				rank = rank-total;
+			}
+
+			return this.Handle(rank).ConstrainType == HandleConstrainType.Simply;
 		}
 
 		private Point GetCyclingHandlePosition(int rank)
