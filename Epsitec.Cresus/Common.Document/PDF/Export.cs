@@ -1556,6 +1556,7 @@ namespace Epsitec.Common.Document.PDF
 		protected string CreateImageSurface(Writer writer, Port port, Common.Dialogs.IWorkInProgressReport report)
 		{
 			//	Crée toutes les images.
+			Export.debugTotal = 0;
 			foreach ( ImageSurface image in this.imageSurfaces )
 			{
 				if ( image.DrawingImage == null )  continue;
@@ -1586,13 +1587,6 @@ namespace Epsitec.Common.Document.PDF
 			Opac.FreeImage.Image fi = Opac.FreeImage.Image.Load(imageData);
 			image.Cache.FreeImage();
 			imageData = null;
-
-#if false
-			System.GC.WaitForPendingFinalizers();
-			mu = System.Diagnostics.Process.GetCurrentProcess().VirtualMemorySize64;
-			System.Diagnostics.Debug.WriteLine(string.Format("CreateImageSurface b:{0} {1}", image.Id, mu));
-			return false;  //?
-#endif
 
 			Margins crop = image.Crop;
 			if (crop != Margins.Zero)  // recadrage nécessaire ?
@@ -1748,6 +1742,7 @@ namespace Epsitec.Common.Document.PDF
 
 				port.Reset();
 				port.PutASCII85(jpeg);
+				Export.debugTotal += jpeg.Length;
 				port.PutEOL();
 
 				jpeg = null;
@@ -1860,6 +1855,7 @@ namespace Epsitec.Common.Document.PDF
 
 				port.Reset();
 				port.PutASCII85(data);
+				Export.debugTotal += data.Length;
 				port.PutEOL();
 
 				data = null;
@@ -1883,6 +1879,7 @@ namespace Epsitec.Common.Document.PDF
 			System.GC.WaitForPendingFinalizers();
 			mu = System.Diagnostics.Process.GetCurrentProcess().VirtualMemorySize64;
 			System.Diagnostics.Debug.WriteLine(string.Format("CreateImageSurface b:{0} {1}", image.Id, mu));
+			System.Diagnostics.Debug.WriteLine(string.Format("Export.debugTotal = {0}", Export.debugTotal));
 			return useMask;
 		}
 
@@ -2165,6 +2162,7 @@ namespace Epsitec.Common.Document.PDF
 		//	Constante pour conversion dixièmes de millimètres -> 72ème de pouce
 		protected static readonly double		mm2in = 7.2/25.4;
 		public static readonly int				charPerFont = 256;
+		protected static long debugTotal = 0;
 
 		protected Document						document;
 		protected System.Collections.ArrayList	complexSurfaces;

@@ -138,6 +138,12 @@ namespace Epsitec.Common.IO
 		public string Encode(byte[] ba)
 		{
 			StringBuilder sb = new StringBuilder ((int) (ba.Length * (Ascii85.encodedBlockLength/Ascii85.decodedBlockLength)));
+			this.Encode(ba, sb);
+			return sb.ToString ();
+		}
+
+		public void Encode(byte[] ba, StringBuilder sb)
+		{
 			this.linePos = 0;
 
 			if (this.EnforceMarks)
@@ -180,7 +186,6 @@ namespace Epsitec.Common.IO
 			{
 				this.AppendString (sb, this.SuffixMark);
 			}
-			return sb.ToString ();
 		}
 
 		#region Private Methods
