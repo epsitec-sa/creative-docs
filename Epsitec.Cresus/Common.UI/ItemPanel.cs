@@ -1378,7 +1378,12 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected override bool AboutToGetFocus(Epsitec.Common.Widgets.TabNavigationDir dir, Epsitec.Common.Widgets.TabNavigationMode mode, out Epsitec.Common.Widgets.Widget focus)
+		internal bool InternalAboutToGetFocus(Widgets.TabNavigationDir dir, Widgets.TabNavigationMode mode, out Widgets.Widget focus)
+		{
+			return this.AboutToGetFocus (dir, mode, out focus);
+		}
+		
+		protected override bool AboutToGetFocus(Widgets.TabNavigationDir dir, Widgets.TabNavigationMode mode, out Widgets.Widget focus)
 		{
 			if (base.AboutToGetFocus (dir, mode, out focus))
 			{

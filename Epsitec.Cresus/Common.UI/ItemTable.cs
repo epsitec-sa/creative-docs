@@ -41,6 +41,8 @@ namespace Epsitec.Common.UI
 			this.headerStripe.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.surface.Anchor = AnchorStyles.All;
 
+			this.surface.TabNavigationMode = TabNavigationMode.None;
+
 			this.columnHeader.PreferredHeight *= ItemTable.HeaderHeightFactor;
 			this.headerStripe.PreferredHeight = this.columnHeader.PreferredHeight;
 
@@ -246,12 +248,15 @@ namespace Epsitec.Common.UI
 		{
 			if (base.AboutToGetFocus (dir, mode, out focus))
 			{
-				if (focus == this)
+				if ((focus == this) &&
+					(this.itemPanel != null))
 				{
-					focus = this.itemPanel;
+					return this.itemPanel.InternalAboutToGetFocus (dir, mode, out focus);
 				}
-				
-				return true;
+				else
+				{
+					return true;
+				}
 			}
 			else
 			{
