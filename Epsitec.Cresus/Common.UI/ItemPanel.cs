@@ -1363,7 +1363,8 @@ namespace Epsitec.Common.UI
 			}
 
 			message.Consumer = this;
-
+			message.ForceCapture = true;
+			
 			this.Focus (view);
 		}
 
@@ -1371,13 +1372,9 @@ namespace Epsitec.Common.UI
 		{
 			base.OnContainsFocusChanged ();
 
-			if (this.ContainsKeyboardFocus)
+			if (this.IsRootPanel)
 			{
-				this.RefreshFocus (true);
-			}
-			else
-			{
-				this.RefreshFocus (this.KeyboardFocus);
+				this.Invalidate ();
 			}
 		}
 
@@ -2198,8 +2195,33 @@ namespace Epsitec.Common.UI
 		{
 		}
 
+		public override bool AcceptsFocus
+		{
+			get
+			{
+				if (this.IsRootPanel)
+				{
+					return base.AcceptsFocus;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+
 		protected override void DispatchMessage(Widgets.Message message, Drawing.Point pos)
 		{
+			if ((message.MessageType == MessageType.MouseUp) &&
+				(message.Button == MouseButtons.Left))
+			{
+				if (message.Captured)
+				{
+					message.Consumer = this;
+					return;
+				}
+			}
+			
 			base.DispatchMessage (message, pos);
 		}
 		
