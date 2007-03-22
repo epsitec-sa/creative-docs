@@ -1466,22 +1466,25 @@ namespace Epsitec.Common.UI
 
 					newFocusedItemView = this.GetFocusedItemView ();
 
-					if (!message.IsControlPressed)
+					if (newCurrentItemView != oldCurrentItemView)
 					{
-						IList<ItemView> list = this.GetSelectedItemViews ();
-						SelectionState state = new SelectionState (this);
-
-						if (message.IsShiftPressed && list.Count > 0)
+						if (!message.IsControlPressed)
 						{
-							this.ContinuousKeySelection (list, oldFocusedItemView, newFocusedItemView);
-						}
-						else
-						{
-							this.InternalDeselectItemViews (list);
-							this.InternalSelectItemView (newFocusedItemView);
-						}
+							IList<ItemView> list = this.GetSelectedItemViews ();
+							SelectionState state = new SelectionState (this);
 
-						state.GenerateEvents ();
+							if (message.IsShiftPressed && list.Count > 0)
+							{
+								this.ContinuousKeySelection (list, oldFocusedItemView, newFocusedItemView);
+							}
+							else
+							{
+								this.InternalDeselectItemViews (list);
+								this.InternalSelectItemView (newFocusedItemView);
+							}
+
+							state.GenerateEvents ();
+						}
 					}
 
 					if (oldFocusedItemView != newFocusedItemView)
