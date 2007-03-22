@@ -1451,14 +1451,17 @@ namespace Epsitec.Common.UI
 
 				ItemView oldFocusedItemView = this.GetFocusedItemView ();
 				ItemView newFocusedItemView;
+				ItemView oldCurrentItemView = this.FindItemView (this.Items.CurrentItem);
+				ItemView newCurrentItemView;
 
 				if (this.ProcessNavigationKeys (message.KeyCode))
 				{
-					ItemView currentItemView = this.FindItemView (this.Items.CurrentItem);
+					newCurrentItemView = this.FindItemView (this.Items.CurrentItem);
 					
-					if (currentItemView != null)
+					if ((newCurrentItemView != null) &&
+						(newCurrentItemView != oldCurrentItemView))
 					{
-						currentItemView.Owner.TrackCurrentItem (currentItemView, true, false);
+						newCurrentItemView.Owner.TrackCurrentItem (newCurrentItemView, true, false);
 					}
 
 					newFocusedItemView = this.GetFocusedItemView ();
@@ -1530,7 +1533,7 @@ namespace Epsitec.Common.UI
 
 			if (itemView != null)
 			{
-				this.RootPanel.RecordFocus (itemView);
+				this.RecordFocus (itemView);
 
 				ItemViewWidget widget = itemView.Widget;
 
@@ -1809,7 +1812,7 @@ namespace Epsitec.Common.UI
 						return false;
 				}
 
-				current.Owner.Focus (this.GetItemView (index));
+				this.Focus (current.Owner.GetItemView (index));
 			}
 			else
 			{

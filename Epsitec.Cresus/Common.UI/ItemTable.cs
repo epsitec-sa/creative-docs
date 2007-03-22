@@ -546,7 +546,8 @@ namespace Epsitec.Common.UI
 		{
 			ItemPanelLayout layout;
 			
-			if (this.Items.GroupDescriptions.Count > 0)
+			if ((this.Items != null) &&
+				(this.Items.GroupDescriptions.Count > 0))
 			{
 				layout = this.itemPanel.LayoutGroups;
 			}
