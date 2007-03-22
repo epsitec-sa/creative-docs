@@ -1736,13 +1736,29 @@ namespace Epsitec.Common.UI
 
 		private bool ProcessNavigationKeys(Widgets.KeyCode keyCode)
 		{
-			switch (this.GetPanelLayout ())
+			System.Diagnostics.Debug.Assert (this.IsRootPanel);
+			
+			ItemPanelLayout layout;
+			ItemView        current;
+
+			if (this.focusedItemView == null)
+			{
+				layout  = this.GetPanelLayout ();
+				current = this.FindItemView (this.Items.CurrentItem);
+			}
+			else
+			{
+				layout  = this.focusedItemView.Owner.GetPanelLayout ();
+				current = this.focusedItemView;
+			}
+
+			switch (layout)
 			{
 				case ItemPanelLayout.VerticalList:
-					return this.ProcessNavigationKeysVerticalList (keyCode);
+					return this.ProcessNavigationKeysVerticalList (current, keyCode);
 
 				case ItemPanelLayout.RowsOfTiles:
-					return this.ProcessNavigationKeysRowsOfTiles (keyCode);
+					return this.ProcessNavigationKeysRowsOfTiles (current, keyCode);
 
 				case ItemPanelLayout.ColumnsOfTiles:
 					break;
@@ -1751,51 +1767,103 @@ namespace Epsitec.Common.UI
 			return false;
 		}
 
-		private bool ProcessNavigationKeysVerticalList(Widgets.KeyCode keyCode)
+		private bool ProcessNavigationKeysVerticalList(ItemView current, Widgets.KeyCode keyCode)
 		{
-			int pos = this.Items.CurrentPosition;
-
-			switch (keyCode)
+			if ((current != null) &&
+				(current.IsGroup))
 			{
-				case KeyCode.ArrowUp:
-					if (pos > 0)
-					{
-						this.Items.MoveCurrentToPrevious ();
-					}
-					break;
+				//	The focus is currently set on a group, not an item. We will
+				//	have to move through the groups at the current depth.
 
-				case KeyCode.ArrowDown:
-					if (pos < this.Items.Items.Count-1)
-					{
-						this.Items.MoveCurrentToNext ();
-					}
-					break;
+				int index    = current.Index;
+				int minIndex = 0;
+				int maxIndex = current.Owner.GetItemViewCount ()-1;
+				
+				switch (keyCode)
+				{
+					case KeyCode.ArrowUp:
+						index = System.Math.Max (minIndex, index-1);
+						break;
 
-				case KeyCode.Home:
-					this.Items.MoveCurrentToFirst ();
-					break;
+					case KeyCode.ArrowDown:
+						index = System.Math.Min (maxIndex, index+1);
+						break;
 
-				case KeyCode.End:
-					this.Items.MoveCurrentToLast ();
-					break;
+					case KeyCode.Home:
+						index = minIndex;
+						break;
 
-				case KeyCode.PageUp:
-					this.ProcessPageUpMove ();
-					break;
+					case KeyCode.End:
+						index = maxIndex;
+						break;
 
-				case KeyCode.PageDown:
-					this.ProcessPageDownMove ();
-					break;
+					case KeyCode.PageUp:
+						//	TODO: monte d'une page parmi les groupes
+						break;
 
-				default:
-					return false;
+					case KeyCode.PageDown:
+						//	TODO: descend d'une page parmi les groupes
+						break;
+
+					default:
+						return false;
+				}
+
+				current.Owner.Focus (this.GetItemView (index));
 			}
+			else
+			{
+				int pos = this.Items.CurrentPosition;
 
+				switch (keyCode)
+				{
+					case KeyCode.ArrowUp:
+						if (pos > 0)
+						{
+							this.Items.MoveCurrentToPrevious ();
+						}
+						break;
+
+					case KeyCode.ArrowDown:
+						if (pos < this.Items.Items.Count-1)
+						{
+							this.Items.MoveCurrentToNext ();
+						}
+						break;
+
+					case KeyCode.Home:
+						this.Items.MoveCurrentToFirst ();
+						break;
+
+					case KeyCode.End:
+						this.Items.MoveCurrentToLast ();
+						break;
+
+					case KeyCode.PageUp:
+						this.ProcessVerticalListPageUpMove ();
+						break;
+
+					case KeyCode.PageDown:
+						this.ProcessVerticalListPageDownMove ();
+						break;
+
+					default:
+						return false;
+				}
+			}
+			
 			return true;
 		}
 
-		private bool ProcessNavigationKeysRowsOfTiles(Widgets.KeyCode keyCode)
+		private bool ProcessNavigationKeysRowsOfTiles(ItemView current, Widgets.KeyCode keyCode)
 		{
+#if true
+			//	TODO: écrire ici un code "géographique" qui se base exclusivement
+			//	sur les informations géométriques retournées par la méthode 
+			//	ItemPanel.GetItemViewBounds(ItemView).
+			
+			return false;
+#else
 			int pos = this.Items.CurrentPosition;
 
 			switch (keyCode)
@@ -1839,11 +1907,11 @@ namespace Epsitec.Common.UI
 					break;
 
 				case KeyCode.PageUp:
-					this.ProcessPageUpMove ();
+					this.ProcessVerticalListPageUpMove ();
 					break;
 
 				case KeyCode.PageDown:
-					this.ProcessPageDownMove ();
+					this.ProcessVerticalListPageDownMove ();
 					break;
 
 				default:
@@ -1851,9 +1919,10 @@ namespace Epsitec.Common.UI
 			}
 
 			return true;
+#endif
 		}
 
-		private void ProcessPageUpMove()
+		private void ProcessVerticalListPageUpMove()
 		{
 			//	Déplace sur le premier visible entièrement ou, s'il est déjà l'élément courant,
 			//	une page avant, en tenant compte de la géométrie des items.
@@ -1894,7 +1963,7 @@ namespace Epsitec.Common.UI
 			this.Items.MoveCurrentToPosition(pos);
 		}
 
-		private void ProcessPageDownMove()
+		private void ProcessVerticalListPageDownMove()
 		{
 			//	Déplace sur le dernier visible entièrement ou, s'il est déjà l'élément courant,
 			//	une page après, en tenant compte de la géométrie des items.
