@@ -258,7 +258,14 @@ namespace Epsitec.Common.UI
 
 				ItemPanelGroup group = this.Group;
 
-				return (group == null) || group.HasValidUserInterface;
+				if (group == null)
+				{
+					return true;
+				}
+				else
+				{
+					return group.HasValidUserInterface;
+				}
 			}
 		}
 

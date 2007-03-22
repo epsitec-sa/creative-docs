@@ -1796,7 +1796,7 @@ namespace Epsitec.Common.UI
 					case KeyCode.ArrowUp:
 						if (index <= minIndex)
 						{
-							group = ItemPanelGroup.GetPrevSibling (current.Group);
+							group = ItemPanelGroup.GetLastSiblingInPreviousParent (current.Group);
 
 							if (group != null)
 							{
@@ -1812,7 +1812,7 @@ namespace Epsitec.Common.UI
 					case KeyCode.ArrowDown:
 						if (index >= maxIndex)
 						{
-							group = ItemPanelGroup.GetNextSibling (current.Group);
+							group = ItemPanelGroup.GetFirstSiblingInNextParent (current.Group);
 
 							if (group != null)
 							{
@@ -1827,7 +1827,7 @@ namespace Epsitec.Common.UI
 
 					case KeyCode.Home:
 						view  = panel.GetItemView (minIndex);
-						group = ItemPanelGroup.GetPrevSibling (current.Group);
+						group = ItemPanelGroup.GetLastSiblingInPreviousParent (current.Group);
 
 						if (group != null)
 						{
@@ -1838,7 +1838,7 @@ namespace Epsitec.Common.UI
 
 					case KeyCode.End:
 						view  = panel.GetItemView (maxIndex);
-						group = ItemPanelGroup.GetNextSibling (current.Group);
+						group = ItemPanelGroup.GetFirstSiblingInNextParent (current.Group);
 
 						if (group != null)
 						{
@@ -2553,12 +2553,7 @@ namespace Epsitec.Common.UI
 
 			if (view.IsGroup)
 			{
-				if (view.Group == null)
-				{
-					view.DefineGroup (new ItemPanelGroup (view));
-				}
-
-				view.Group.ChildPanel.RefreshItemViews ();
+				view.CreateUserInterface ();
 				view.DefineSize (view.Group.GetBestFitSize ());
 			}
 

@@ -23,7 +23,6 @@ namespace Epsitec.Common.UI.ItemViewFactories
 			}
 			
 			group.PreferredWidth = itemView.Size.Width;
-			group.MarkUserInterfaceAsValid ();
 			
 			return group;
 		}

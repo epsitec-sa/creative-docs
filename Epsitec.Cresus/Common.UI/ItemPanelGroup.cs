@@ -31,21 +31,23 @@ namespace Epsitec.Common.UI
 			this.SetPanelIsExpanded (view.IsExpanded);
 
 			this.ParentPanel.AddPanelGroup (this);
+
+			this.hasClearedUserInterface = true;
 		}
 
-		internal bool HasValidUserInterface
-		{
-			get
-			{
-				return this.hasValidUserInterface;
-			}
-		}
-		
 		public ItemPanel ChildPanel
 		{
 			get
 			{
 				return this.panel;
+			}
+		}
+
+		public bool HasValidUserInterface
+		{
+			get
+			{
+				return !this.hasClearedUserInterface;
 			}
 		}
 
@@ -110,11 +112,6 @@ namespace Epsitec.Common.UI
 			this.Invalidate ();
 		}
 		
-		internal void MarkUserInterfaceAsValid()
-		{
-			this.hasValidUserInterface = true;
-		}
-
 		/// <summary>
 		/// Clears information related to the user interface. This is a softer
 		/// version of a dispose where the object can be turned alive again by
@@ -122,26 +119,165 @@ namespace Epsitec.Common.UI
 		/// </summary>
 		internal void ClearUserInterface()
 		{
-			this.panel.ClearUserInterface ();
-			
-			this.hasClearedUserInterface |= this.hasValidUserInterface;
-			this.hasValidUserInterface    = false;
+			if (this.hasClearedUserInterface)
+			{
+				//	Nothing to do.
+			}
+			else
+			{
+				this.panel.ClearUserInterface ();
+				this.hasClearedUserInterface = true;
+			}
 		}
 
 		internal void RefreshUserInterface()
 		{
-			if (this.hasValidUserInterface == false)
+			if (this.hasClearedUserInterface)
 			{
-				this.hasValidUserInterface   = true;
 				this.hasClearedUserInterface = false;
 				
 				this.panel.RefreshUserInterface ();
 			}
 		}
 
+		/// <summary>
+		/// Gets the first sibling group in the next parent.
+		/// </summary>
+		/// <param name="group">The current group.</param>
+		/// <returns>The first sibling group in the next parent, or <c>null</c>.</returns>
+		internal static ItemPanelGroup GetFirstSiblingInNextParent(ItemPanelGroup group)
+		{
+			int index;
+			int count = 0;
+
+			ItemPanel panel = group.ParentPanel;
+			ItemView  view  = group.ItemView;
+
+			group = panel.ParentGroup;
+
+			while (count == 0)
+			{
+				if (group == null)
+				{
+					return null;
+				}
+
+				panel = group.ParentPanel;
+				index = group.ItemView.Index+1;
+				count = panel.GetItemViewCount ();
+
+				while (index >= count)
+				{
+					index = 0;
+					group = ItemPanelGroup.GetFirstSiblingInNextParent (group);
+
+					if (group == null)
+					{
+						return null;
+					}
+
+					panel = group.ParentPanel;
+					count = panel.GetItemViewCount ();
+				}
+
+				view  = panel.GetItemView (index);
+				group = view.Group;
+				panel = group.ChildPanel;
+				count = panel.GetItemViewCount ();
+			}
+
+			view  = panel.GetItemView (0);
+			group = view.Group;
+
+			return group;
+		}
+
+		/// <summary>
+		/// Gets the last sibling group in the previous parent.
+		/// </summary>
+		/// <param name="group">The current group.</param>
+		/// <returns>The last sibling group in the previous parent, or <c>null</c>.</returns>
+		internal static ItemPanelGroup GetLastSiblingInPreviousParent(ItemPanelGroup group)
+		{
+			int index;
+			int count = 0;
+
+			ItemPanel panel = group.ParentPanel;
+			ItemView  view  = group.ItemView;
+
+			group = panel.ParentGroup;
+
+			while (count == 0)
+			{
+				if (group == null)
+				{
+					return null;
+				}
+
+				panel = group.ParentPanel;
+				index = group.ItemView.Index-1;
+				count = panel.GetItemViewCount ();
+
+				while (index < 0)
+				{
+					group = ItemPanelGroup.GetLastSiblingInPreviousParent (group);
+
+					if (group == null)
+					{
+						return null;
+					}
+
+					panel = group.ParentPanel;
+					count = panel.GetItemViewCount ();
+					index = count-1;
+				}
+
+				view  = panel.GetItemView (index);
+				group = view.Group;
+				panel = group.ChildPanel;
+				count = panel.GetItemViewCount ();
+			}
+
+			view  = panel.GetItemView (count-1);
+			group = view.Group;
+
+			return group;
+		}
+
 		public override Drawing.Margins GetInternalPadding()
 		{
 			return new Drawing.Margins (0, 0, 20, 0);
+		}
+
+		public override Drawing.Size GetBestFitSize()
+		{
+			Drawing.Size size;
+
+			if (this.ItemView.IsExpanded)
+			{
+				if (this.hasClearedUserInterface)
+				{
+					this.RefreshUserInterface ();
+				}
+				else
+				{
+					this.panel.RefreshLayoutIfNeeded ();
+				}
+
+				size  = this.panel.GetContentsSize ();
+				size += this.Padding.Size;
+				size += this.GetInternalPadding ().Size;
+				size += this.panel.Margins.Size;
+			}
+			else
+			{
+				double width  = this.ParentPanel.ItemViewDefaultSize.Width;
+				double height = this.GetInternalPadding ().Height;
+
+				size = new Drawing.Size (width, height);
+			}
+
+			return size;
 		}
 
 		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
@@ -213,141 +349,9 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public override Drawing.Size GetBestFitSize()
-		{
-			Drawing.Size size;
-
-			if (this.ItemView.IsExpanded)
-			{
-				if (this.hasClearedUserInterface)
-				{
-					this.RefreshUserInterface ();
-				}
-				else
-				{
-					this.panel.RefreshLayoutIfNeeded ();
-				}
-
-				size  = this.panel.GetContentsSize ();
-				size += this.Padding.Size;
-				size += this.GetInternalPadding ().Size;
-				size += this.panel.Margins.Size;
-			}
-			else
-			{
-				double width  = this.ParentPanel.ItemViewDefaultSize.Width;
-				double height = this.GetInternalPadding ().Height;
-
-				size = new Drawing.Size (width, height);
-			}
-
-			return size;
-		}
-
 		private ItemPanel panel;
 		
 		private readonly object exclusion = new object ();
-		private bool hasValidUserInterface;
 		private bool hasClearedUserInterface;
-
-		internal static ItemPanelGroup GetNextSibling(ItemPanelGroup group)
-		{
-			int index;
-			int count;
-
-			ItemPanel panel = group.ParentPanel;
-			ItemView  view  = group.ItemView;
-
-			group = panel.ParentGroup;
-
-		again:
-			if (group == null)
-			{
-				return null;
-			}
-			
-			panel = group.ParentPanel;
-			index = group.ItemView.Index+1;
-			count = panel.GetItemViewCount ();
-
-			while (index >= count)
-			{
-				index = 0;
-				group = ItemPanelGroup.GetNextSibling (group);
-
-				if (group == null)
-				{
-					return null;
-				}
-
-				panel = group.ParentPanel;
-				count = panel.GetItemViewCount ();
-			}
-
-			view  = panel.GetItemView (index);
-			group = view.Group;
-			panel = group.ChildPanel;
-			count = panel.GetItemViewCount ();
-
-			if (count == 0)
-			{
-				goto again;
-			}
-
-			view  = panel.GetItemView (0);
-			group = view.Group;
-
-			return group;
-		}
-		
-		internal static ItemPanelGroup GetPrevSibling(ItemPanelGroup group)
-		{
-			int index;
-			int count;
-
-			ItemPanel panel = group.ParentPanel;
-			ItemView  view  = group.ItemView;
-
-			group = panel.ParentGroup;
-
-		again:
-			if (group == null)
-			{
-				return null;
-			}
-
-			panel = group.ParentPanel;
-			index = group.ItemView.Index-1;
-			count = panel.GetItemViewCount ();
-
-			while (index < 0)
-			{
-				group = ItemPanelGroup.GetPrevSibling (group);
-
-				if (group == null)
-				{
-					return null;
-				}
-
-				panel = group.ParentPanel;
-				count = panel.GetItemViewCount ();
-				index = count-1;
-			}
-
-			view  = panel.GetItemView (index);
-			group = view.Group;
-			panel = group.ChildPanel;
-			count = panel.GetItemViewCount ();
-
-			if (count == 0)
-			{
-				goto again;
-			}
-
-			view  = panel.GetItemView (count-1);
-			group = view.Group;
-
-			return group;
-		}
 	}
 }
