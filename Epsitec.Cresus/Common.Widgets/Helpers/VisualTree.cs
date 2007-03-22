@@ -584,7 +584,7 @@ namespace Epsitec.Common.Widgets.Helpers
 
 				if (root != null)
 				{
-					root.DoesVisualContainKeyboardFocus (visual);
+					return root.DoesVisualContainKeyboardFocus (visual);
 				}
 			}	
 			
