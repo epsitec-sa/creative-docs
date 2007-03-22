@@ -42,7 +42,12 @@ namespace Epsitec.Common.UI
 
 			Widgets.Widget.AutoDoubleClickProperty.OverrideMetadata (typeof (ItemPanel), metadata);
 		}
-		
+
+		/// <summary>
+		/// Gets or sets the <see cref="ICollectionView"/> collection of items
+		/// represented by this panel.
+		/// </summary>
+		/// <value>The collection view.</value>
 		public ICollectionView Items
 		{
 			get
@@ -55,6 +60,11 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets the parent group for this panel, if any.
+		/// </summary>
+		/// <value>The parent group or <c>null</c> if the panel does not belong
+		/// to a group.</value>
 		public ItemPanelGroup ParentGroup
 		{
 			get
@@ -63,6 +73,11 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets the root panel.
+		/// </summary>
+		/// <value>The root panel or <c>this</c> if this panel is at the root
+		/// of the tree.</value>
 		public ItemPanel RootPanel
 		{
 			get
@@ -80,6 +95,13 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this panel is the root panel of the
+		/// tree.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this panel is the root panel; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsRootPanel
 		{
 			get
@@ -88,6 +110,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets the panel depth in the tree.
+		/// </summary>
+		/// <value>The panel depth (the root panel is at depth <c>0</c>).</value>
 		public int PanelDepth
 		{
 			get
@@ -103,6 +129,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the layout for the root panel.
+		/// </summary>
+		/// <value>The layout of the panel.</value>
 		public ItemPanelLayout Layout
 		{
 			get
@@ -115,6 +145,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the layout for the top level groups.
+		/// </summary>
+		/// <value>The layout of the groups.</value>
 		public ItemPanelLayout LayoutGroups
 		{
 			get
@@ -127,6 +161,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the layout for the subgroups of the top level groups.
+		/// </summary>
+		/// <value>The layout of the subgroups.</value>
 		public ItemPanelLayout LayoutSubgroups
 		{
 			get
@@ -139,7 +177,13 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public double LayoutWidth
+		/// <summary>
+		/// Gets or sets the preferred layout width. This is useful to specify
+		/// how much horizontal space the <see cref="ItemTable"/> provides in
+		/// its aperture.
+		/// </summary>
+		/// <value>The preferred layout width.</value>
+		public double PreferredLayoutWidth
 		{
 			get
 			{
@@ -155,6 +199,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets the shape used by the item views in this panel.
+		/// </summary>
+		/// <value>The item view shape.</value>
 		public ItemViewShape ItemViewShape
 		{
 			get
@@ -174,6 +222,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the tracking mode for the current item.
+		/// </summary>
+		/// <value>The tracking mode.</value>
 		public CurrentItemTrackingMode CurrentItemTrackingMode
 		{
 			get
@@ -186,6 +238,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the selection behavior.
+		/// </summary>
+		/// <value>The selection behavior.</value>
 		public ItemPanelSelectionBehavior SelectionBehavior
 		{
 			get
@@ -198,6 +254,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the item selection mode.
+		/// </summary>
+		/// <value>The item selection mode.</value>
 		public ItemPanelSelectionMode ItemSelectionMode
 		{
 			get
@@ -210,6 +270,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the group selection mode.
+		/// </summary>
+		/// <value>The group selection mode.</value>
 		public ItemPanelSelectionMode GroupSelectionMode
 		{
 			get
@@ -222,6 +286,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the default size of an item view.
+		/// </summary>
+		/// <value>The default size of an item view.</value>
 		public Drawing.Size ItemViewDefaultSize
 		{
 			get
@@ -234,6 +302,14 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether the group item views should
+		/// be expanded by default.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if the group item views should be expanded by default;
+		/// otherwise, <c>false</c>.
+		/// </value>
 		public bool ItemViewDefaultExpanded
 		{
 			get
@@ -246,6 +322,12 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the aperture for the current panel. This determines
+		/// which item views will need a visual representation. The aperture
+		/// is usually defined by the embedding <see cref="ItemTable"/>.
+		/// </summary>
+		/// <value>The aperture.</value>
 		public Drawing.Rectangle Aperture
 		{
 			get
@@ -272,6 +354,12 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the aperture padding, which can be used to restrict
+		/// the usable aperture, for instance to make room for a partial line
+		/// at the bottom of the aperture.
+		/// </summary>
+		/// <value>The aperture padding.</value>
 		public Drawing.Margins AperturePadding
 		{
 			get
@@ -284,6 +372,12 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets the layout used by this panel. This queries the root panel for
+		/// the appropriate <c>Layout</c>, <c>LayoutGroups</c> or <c>LayoutSubgroups</c>
+		/// property, depending on the depth of this panel.
+		/// </summary>
+		/// <returns>The layout used by this panel.</returns>
 		public ItemPanelLayout GetPanelLayout()
 		{
 			switch (this.PanelDepth)
@@ -298,17 +392,30 @@ namespace Epsitec.Common.UI
 					return this.RootPanel.LayoutSubgroups;
 			}
 		}
-		
+
+		/// <summary>
+		/// Detects which local item view is at the specified position.
+		/// </summary>
+		/// <param name="pos">The position.</param>
+		/// <returns>The detected item view or <c>null</c> if none can be found.</returns>
 		public ItemView Detect(Drawing.Point pos)
 		{
 			return this.Detect (this.SafeGetViews (), pos);
 		}
 
+		/// <summary>
+		/// Gets the number of item views in this panel.
+		/// </summary>
+		/// <returns>The number of item views in this panel</returns>
 		public int GetItemViewCount()
 		{
 			return this.SafeGetViews ().Count;
 		}
 
+		/// <summary>
+		/// Gets the total row count in this panel.
+		/// </summary>
+		/// <returns>The total row count.</returns>
 		public int GetTotalRowCount()
 		{
 			IList<ItemView> views;
@@ -331,6 +438,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets the total column count in this panel.
+		/// </summary>
+		/// <returns>The total column count.</returns>
 		public int GetTotalColumnCount()
 		{
 			switch (this.GetPanelLayout ())
@@ -350,11 +461,22 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets the mean height for a row in this panel. This is computed as
+		/// the mean between the minimum row height and the maximum row height.
+		/// </summary>
+		/// <returns>The mean row height.</returns>
 		public double GetRowHeight()
 		{
 			return (this.minItemHeight + this.maxItemHeight) / 2;
 		}
-		
+
+		/// <summary>
+		/// Gets the number of visible rows which fit into the given height.
+		/// This is an approximation based on the mean row height.
+		/// </summary>
+		/// <param name="height">The height.</param>
+		/// <returns>The number of visible rows which fit into the given height.</returns>
 		public int GetVisibleRowCount(double height)
 		{
 			double itemHeight = this.GetRowHeight ();
@@ -369,6 +491,11 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets the panel relative bounds of the item view.
+		/// </summary>
+		/// <param name="view">The item view.</param>
+		/// <returns>The panel relative bounds.</returns>
 		public Drawing.Rectangle GetItemViewBounds(ItemView view)
 		{
 			if (view == null)
@@ -395,6 +522,14 @@ namespace Epsitec.Common.UI
 			return bounds;
 		}
 
+		/// <summary>
+		/// Gets the panel relative bounds of the item view. If the item view
+		/// logically touches one of the panel borders (top/bottom or left/right),
+		/// then the bounds are expanded in order to include the item view's
+		/// parent group(s).
+		/// </summary>
+		/// <param name="view">The item view.</param>
+		/// <returns>The (possibly expanded) panel relative bounds.</returns>
 		public Drawing.Rectangle GetExpandedItemViewBounds(ItemView view)
 		{
 			if (view == null)
@@ -409,8 +544,13 @@ namespace Epsitec.Common.UI
 			{
 				ItemPanelGroup group = panel.ParentGroup;
 
+				System.Diagnostics.Debug.Assert (group != null);
+
 				double top   = panel.PreferredHeight;
 				double right = panel.PreferredWidth;
+
+				//	If the view touches the edges of the panel, then we will have
+				//	to expand the bounds to include the containing group frame :
 
 				if (view.Bounds.Top == top)
 				{
@@ -432,6 +572,9 @@ namespace Epsitec.Common.UI
 				bounds = panel.MapClientToParent (bounds);
 				bounds = group.MapClientToParent (bounds);
 
+				//	Move up one level in the tree, until we reach the top level
+				//	panel...
+
 				view  = panel.ParentGroup.ItemView;
 				panel = view.Owner;
 			}
@@ -439,11 +582,22 @@ namespace Epsitec.Common.UI
 			return bounds;
 		}
 
+		/// <summary>
+		/// Gets the local item view at the specified index in the current panel. The
+		/// index is compared to the <c>ItemView.Index</c> property.
+		/// </summary>
+		/// <param name="index">The local index.</param>
+		/// <returns>The item view or <c>null</c> if it cannot be found.</returns>
 		public ItemView GetItemView(int index)
 		{
 			return ItemPanel.TryGetItemView (this.SafeGetViews (), index);
 		}
 
+		/// <summary>
+		/// Gets the first local item view located at the specified row.
+		/// </summary>
+		/// <param name="rowIndex">Index of the row.</param>
+		/// <returns>The item view or <c>null</c> if it cannot be found.</returns>
 		public ItemView GetItemViewAtRow(int rowIndex)
 		{
 			IEnumerable<ItemView> views = this.SafeGetViews ();
@@ -459,6 +613,11 @@ namespace Epsitec.Common.UI
 			return null;
 		}
 
+		/// <summary>
+		/// Gets the first local item view at the specified column.
+		/// </summary>
+		/// <param name="columnIndex">Index of the column.</param>
+		/// <returns>The item view or <c>null</c> if it cannot be found.</returns>
 		public ItemView GetItemViewAtColumn(int columnIndex)
 		{
 			IEnumerable<ItemView> views = this.SafeGetViews ();
@@ -474,6 +633,11 @@ namespace Epsitec.Common.UI
 			return null;
 		}
 
+		/// <summary>
+		/// Gets the local item view which represents the specified item.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <returns>The item view or <c>null</c> if it cannot be found.</returns>
 		public ItemView GetItemView(object item)
 		{
 			IEnumerable<ItemView> views = this.SafeGetViews ();
@@ -489,6 +653,12 @@ namespace Epsitec.Common.UI
 			return null;
 		}
 
+		/// <summary>
+		/// Detects the item view at the specified position. This will also detect
+		/// item views in groups and subgroups.
+		/// </summary>
+		/// <param name="pos">The position.</param>
+		/// <returns>The item view or <c>null</c> if it cannot be found.</returns>
 		public ItemView DetectItemView(Drawing.Point pos)
 		{
 			return this.FindItemView (
@@ -506,6 +676,12 @@ namespace Epsitec.Common.UI
 				});
 		}
 
+		/// <summary>
+		/// Finds the item view based on a predicate. This will walk through every
+		/// local item view, and also every item view in the groups and subgroups.
+		/// </summary>
+		/// <param name="match">The test predicate.</param>
+		/// <returns>The item view or <c>null</c> if it cannot be found.</returns>
 		public ItemView FindItemView(System.Predicate<ItemView> match)
 		{
 			IEnumerable<ItemView> views = this.SafeGetViews ();
@@ -531,6 +707,13 @@ namespace Epsitec.Common.UI
 			return null;
 		}
 
+		/// <summary>
+		/// Finds the item view which represents the specified item. This will walk
+		/// through every local item view, and also every item view in the groups
+		/// and subgroups.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <returns>The item view or <c>null</c> if it cannot be found.</returns>
 		public ItemView FindItemView(object item)
 		{
 			if (item == null)
@@ -547,6 +730,9 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Deselects all item views, including those in groups and subgroups.
+		/// </summary>
 		public void DeselectAllItemViews()
 		{
 			SelectionState state = new SelectionState (this);
@@ -560,7 +746,12 @@ namespace Epsitec.Common.UI
 
 			state.GenerateEvents ();
 		}
-		
+
+		/// <summary>
+		/// Selects the specified item view. The item view can belong to a group
+		/// or a subgroup.
+		/// </summary>
+		/// <param name="view">The item view.</param>
 		public void SelectItemView(ItemView view)
 		{
 			if (view == null)
@@ -621,6 +812,11 @@ namespace Epsitec.Common.UI
 
 		#endregion
 
+		/// <summary>
+		/// Deselects the specified item view. The item view can belong to a group
+		/// or a subgroup.
+		/// </summary>
+		/// <param name="view">The item view.</param>
 		public void DeselectItemView(ItemView view)
 		{
 			SelectionState state = new SelectionState (this);
@@ -630,6 +826,13 @@ namespace Epsitec.Common.UI
 			state.GenerateEvents ();
 		}
 
+		/// <summary>
+		/// Expands or contracts the specified item view. The item view can belong
+		/// to a group or a subgroup. This will also expand the parent groups, if
+		/// required.
+		/// </summary>
+		/// <param name="view">The item view.</param>
+		/// <param name="expand">if set to <c>true</c>, expand the specified item view.</param>
 		public void ExpandItemView(ItemView view, bool expand)
 		{
 			System.Diagnostics.Debug.Assert (this.IsRootPanel);
@@ -638,7 +841,6 @@ namespace Epsitec.Common.UI
 			{
 				if (view.IsGroup)
 				{
-//-					view.CreateUserInterface ();
 					view.IsExpanded = expand;
 				}
 
@@ -653,6 +855,11 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Expands the parent group of a specified item view, and recursively
+		/// every parent.
+		/// </summary>
+		/// <param name="view">The item view.</param>
 		public void ExpandParentItemView(ItemView view)
 		{
 			System.Diagnostics.Debug.Assert (this.IsRootPanel);
@@ -665,11 +872,22 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets the list of selected item views, including those found in the
+		/// groups and subgroups.
+		/// </summary>
+		/// <returns>The selected item views.</returns>
 		public IList<ItemView> GetSelectedItemViews()
 		{
 			return this.GetSelectedItemViews (null);
 		}
-		
+
+		/// <summary>
+		/// Gets the list of selected item views, including those found in the
+		/// groups and subgroups, filtered by a given predicate.
+		/// </summary>
+		/// <param name="filter">The predicate used to filter the list.</param>
+		/// <returns>The selected item views.</returns>
 		public IList<ItemView> GetSelectedItemViews(System.Predicate<ItemView> filter)
 		{
 			List<ItemView> list = new List<ItemView> ();
@@ -679,9 +897,154 @@ namespace Epsitec.Common.UI
 			return list;
 		}
 
+		/// <summary>
+		/// Gets the size of the item panel contents.
+		/// </summary>
+		/// <returns>The size of the item panel contents.</returns>
 		public Drawing.Size GetContentsSize()
 		{
 			return this.PreferredSize;
+		}
+
+		/// <summary>
+		/// Shows the specified item view, which may belong to a group or a
+		/// subgroup. The parent groups get automatically expanded if this
+		/// is required and the aperture is moved accordingly.
+		/// </summary>
+		/// <param name="view">The item view.</param>
+		public void Show(ItemView view)
+		{
+			if (view == null)
+			{
+				return;
+			}
+
+			if (this.parentGroup != null)
+			{
+				this.RootPanel.Show (view);
+			}
+			else if (this.Aperture.IsSurfaceZero)
+			{
+				//	Nothing to do : there is no visible aperture, so don't bother
+				//	moving it around !
+			}
+			else
+			{
+				this.ExpandParentItemView (view);
+
+				if (this.hasDirtyLayout)
+				{
+					this.RefreshLayout ();
+				}
+
+				Drawing.Rectangle aperture = this.Aperture;
+				Drawing.Rectangle bounds   = this.GetExpandedItemViewBounds (view);
+
+				aperture.Deflate (this.AperturePadding);
+
+				if (aperture.Contains (bounds))
+				{
+					//	Nothing to do : the view is already completely visible in
+					//	the current aperture.
+				}
+				else
+				{
+					double ox = 0;
+					double oy = 0;
+
+					if ((aperture.Right < bounds.Right) &&
+						(aperture.Left < bounds.Left))
+					{
+						ox = System.Math.Max (aperture.Right - bounds.Right, aperture.Left - bounds.Left);
+					}
+					else if ((aperture.Right > bounds.Right) &&
+						     (aperture.Left > bounds.Left))
+					{
+						ox = System.Math.Min (aperture.Right - bounds.Right, aperture.Left - bounds.Left);
+					}
+
+					if ((aperture.Top < bounds.Top) &&
+						(aperture.Bottom < bounds.Bottom))
+					{
+						oy = System.Math.Max (aperture.Top - bounds.Top, aperture.Bottom - bounds.Bottom);
+					}
+					else if ((aperture.Top > bounds.Top) &&
+						     (aperture.Bottom > bounds.Bottom))
+					{
+						oy = System.Math.Min (aperture.Top - bounds.Top, aperture.Bottom - bounds.Bottom);
+					}
+
+					aperture = this.Aperture;
+
+					aperture.Offset (-ox, -oy);
+
+					this.Aperture = aperture;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Refresh asynchronously the full item panel. This will rebuild the
+		/// internal list of item views, recreate their user interfaces, redo
+		/// the layout, etc.
+		/// </summary>
+		public void AsyncRefresh()
+		{
+			if (this.isRefreshPending == false)
+			{
+				this.isRefreshPending = true;
+				this.QueueAsyncRefresh (RefreshOperations.Content);
+			}
+		}
+
+		/// <summary>
+		/// Refresh the full item panel. This will rebuild the internal list
+		/// of item views, recreate their user interfaces, redo the layout,
+		/// etc.
+		/// </summary>
+		public void Refresh()
+		{
+			this.isRefreshPending = false;
+			this.ClearUserInterface ();
+			this.RefreshItemViews ();
+
+			if (this.IsRootPanel)
+			{
+				if (this.isCurrentShowPending)
+				{
+					ICollectionView view = this.RootPanel.Items;
+
+					if (view != null)
+					{
+						this.isCurrentShowPending = false;
+						this.TrackCurrentItem (true);
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Executes a refresh if this is needed, i.e. if <c>AsyncRefresh</c>
+		/// was called and no refresh was executed since.
+		/// </summary>
+		public void SyncRefreshIfNeeded()
+		{
+			if (this.isRefreshPending)
+			{
+				this.Refresh ();
+			}
+		}
+
+		/// <summary>
+		/// Refreshes the layout of the item panel.
+		/// </summary>
+		public void RefreshLayout()
+		{
+			RefreshState state = new RefreshState (this);
+
+			this.RefreshLayout (this.SafeGetViews ());
+
+			state.GenerateEvents ();
 		}
 
 		internal void RefreshLayoutIfNeeded()
@@ -689,15 +1052,6 @@ namespace Epsitec.Common.UI
 			if (this.hasDirtyLayout)
 			{
 				this.RefreshLayout ();
-			}
-		}
-
-		public void AsyncRefresh()
-		{
-			if (this.isRefreshPending == false)
-			{
-				this.isRefreshPending = true;
-				this.QueueAsyncRefresh (RefreshOperations.Content);
 			}
 		}
 
@@ -774,6 +1128,8 @@ namespace Epsitec.Common.UI
 				}
 			}
 		}
+
+		#region RefreshOperations and RefreshInfo
 
 		[System.Flags]
 		private enum RefreshOperations
@@ -872,46 +1228,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-
-		public void SyncRefreshIfNeeded()
-		{
-			if (this.isRefreshPending)
-			{
-				this.Refresh ();
-			}
-		}
-
-		public void Refresh()
-		{
-			this.isRefreshPending = false;
-			this.ClearUserInterface ();
-			this.RefreshItemViews ();
-
-			if (this.IsRootPanel)
-			{
-				if (this.isCurrentShowPending)
-				{
-					ICollectionView view = this.RootPanel.Items;
-
-					if (view != null)
-					{
-						this.isCurrentShowPending = false;
-						this.TrackCurrentItem (true);
-#if false
-						ItemView item = this.FindItemView (view.CurrentPosition);
-
-						if ((this.ItemSelectionMode == ItemPanelSelectionMode.ExactlyOne) ||
-						(this.ItemSelectionMode == ItemPanelSelectionMode.ZeroOrOne))
-						{
-							this.SelectItemView (item);
-						}
-
-						this.Show (item);
-#endif
-					}
-				}
-			}
-		}
+		#endregion
 
 		internal void ClearUserInterface()
 		{
@@ -929,77 +1246,6 @@ namespace Epsitec.Common.UI
 			this.RefreshItemViews ();
 		}
 		
-		public void Show(ItemView view)
-		{
-			if (view == null)
-			{
-				return;
-			}
-
-			if (this.parentGroup != null)
-			{
-				this.RootPanel.Show (view);
-			}
-			else if (this.Aperture.IsSurfaceZero)
-			{
-				//	Nothing to do : there is no visible aperture, so don't bother
-				//	moving it around !
-			}
-			else
-			{
-				this.ExpandParentItemView (view);
-
-				if (this.hasDirtyLayout)
-				{
-					this.RefreshLayout ();
-				}
-
-				Drawing.Rectangle aperture = this.Aperture;
-				Drawing.Rectangle bounds   = this.GetExpandedItemViewBounds (view);
-
-				aperture.Deflate (this.AperturePadding);
-
-				if (aperture.Contains (bounds))
-				{
-					//	Nothing to do : the view is already completely visible in
-					//	the current aperture.
-				}
-				else
-				{
-					double ox = 0;
-					double oy = 0;
-					
-					if ((aperture.Right < bounds.Right) &&
-						(aperture.Left < bounds.Left))
-					{
-						ox = System.Math.Max (aperture.Right - bounds.Right, aperture.Left - bounds.Left);
-					}
-					else if ((aperture.Right > bounds.Right) &&
-						     (aperture.Left > bounds.Left))
-					{
-						ox = System.Math.Min (aperture.Right - bounds.Right, aperture.Left - bounds.Left);
-					}
-
-					if ((aperture.Top < bounds.Top) &&
-						(aperture.Bottom < bounds.Bottom))
-					{
-						oy = System.Math.Max (aperture.Top - bounds.Top, aperture.Bottom - bounds.Bottom);
-					}
-					else if ((aperture.Top > bounds.Top) &&
-						     (aperture.Bottom > bounds.Bottom))
-					{
-						oy = System.Math.Min (aperture.Top - bounds.Top, aperture.Bottom - bounds.Bottom);
-					}
-					
-					aperture = this.Aperture;
-
-					aperture.Offset (-ox, -oy);
-
-					this.Aperture = aperture;
-				}
-			}
-		}
-
 		#region Filter Methods
 
 		public static bool ContainsItem(ItemView view)
@@ -2005,7 +2251,7 @@ namespace Epsitec.Common.UI
 			//	une page avant, en tenant compte de la géométrie des items.
 			int pos = this.Items.CurrentPosition;
 			int first, last;
-			this.GetFirstAndListVisibleItem(out first, out last);
+			this.GetFirstAndLastVisibleItem(out first, out last);
 
 			ItemPanelLayout layout = this.GetPanelLayout ();
 			
@@ -2046,7 +2292,7 @@ namespace Epsitec.Common.UI
 			//	une page après, en tenant compte de la géométrie des items.
 			int pos = this.Items.CurrentPosition;
 			int first, last;
-			this.GetFirstAndListVisibleItem(out first, out last);
+			this.GetFirstAndLastVisibleItem(out first, out last);
 
 			ItemPanelLayout layout = this.GetPanelLayout ();
 			
@@ -2081,7 +2327,7 @@ namespace Epsitec.Common.UI
 			this.Items.MoveCurrentToPosition(pos);
 		}
 
-		private void GetFirstAndListVisibleItem(out int first, out int last)
+		private void GetFirstAndLastVisibleItem(out int first, out int last)
 		{
 			IEnumerable<ItemView> views = this.SafeGetViews();
 			first = 0;
@@ -2223,6 +2469,8 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
+				//	Only the root panel may accept the focus.
+				
 				if (this.IsRootPanel)
 				{
 					return base.AcceptsFocus;
@@ -2532,15 +2780,6 @@ namespace Epsitec.Common.UI
 			state.GenerateEvents ();
 		}
 		
-		public void RefreshLayout()
-		{
-			RefreshState state = new RefreshState (this);
-
-			this.RefreshLayout (this.SafeGetViews ());
-
-			state.GenerateEvents ();
-		}
-
 		private void RefreshLayout(IEnumerable<ItemView> views)
 		{
 			foreach (ItemView view in views)
@@ -2649,7 +2888,7 @@ namespace Epsitec.Common.UI
 			double y = dy;
 			int row = 0;
 			
-			this.UpdatePreferredSize (System.Math.Max (this.LayoutWidth, maxDx), dy);
+			this.UpdatePreferredSize (System.Math.Max (this.PreferredLayoutWidth, maxDx), dy);
 			
 			foreach (ItemView view in views)
 			{
@@ -2663,7 +2902,7 @@ namespace Epsitec.Common.UI
 
 		private void LayoutRowsOfTiles(IEnumerable<ItemView> views)
 		{
-			double width = this.LayoutWidth;
+			double width = this.PreferredLayoutWidth;
 
 			int rowCount = 0;
 			int colCount = 0;

@@ -66,7 +66,7 @@ namespace Epsitec.Common.UI
 			this.columnHeader.ItemPanel = this.itemPanel;
 			this.columnHeader.ColumnWidthChanged += this.HandleColumnHeaderColumnWidthChanged;
 			
-			this.itemPanel.LayoutWidth = this.columnHeader.GetTotalWidth ();
+			this.itemPanel.PreferredLayoutWidth = this.columnHeader.GetTotalWidth ();
 
 			//	Link the item panel with its table, so that an ItemViewFactory
 			//	can find the table and the column templates, if it needs to do
@@ -86,7 +86,7 @@ namespace Epsitec.Common.UI
 			double headerWidth   = this.columnHeader.GetTotalWidth ();
 			double apertureWidth = this.apertureSize.Width;
 
-			this.itemPanel.LayoutWidth = System.Math.Max (headerWidth, apertureWidth);
+			this.itemPanel.PreferredLayoutWidth = System.Math.Max (headerWidth, apertureWidth);
 		}
 
 		private void UpdateGeometry()

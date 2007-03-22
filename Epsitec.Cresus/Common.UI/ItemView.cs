@@ -189,7 +189,14 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				return this.widget != null;
+				if (this.widget == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.Bounds.IntersectsWith (this.owner.Aperture);
+				}
 			}
 		}
 
