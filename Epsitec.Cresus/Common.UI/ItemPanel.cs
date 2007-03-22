@@ -1778,26 +1778,73 @@ namespace Epsitec.Common.UI
 				//	The focus is currently set on a group, not an item. We will
 				//	have to move through the groups at the current depth.
 
+			again:
+				ItemPanelGroup group;
+
+				ItemPanel panel = current.Owner;
+				ItemView  view  = null;
+
 				int index    = current.Index;
 				int minIndex = 0;
-				int maxIndex = current.Owner.GetItemViewCount ()-1;
+				int maxIndex = panel.GetItemViewCount ()-1;
+
+				index = System.Math.Max (index, minIndex);
+				index = System.Math.Min (index, maxIndex);
 				
 				switch (keyCode)
 				{
 					case KeyCode.ArrowUp:
-						index = System.Math.Max (minIndex, index-1);
+						if (index <= minIndex)
+						{
+							group = ItemPanelGroup.GetPrevSibling (current.Group);
+
+							if (group != null)
+							{
+								view = group.ItemView;
+							}
+						}
+						else
+						{
+							view = panel.GetItemView (index-1);
+						}
 						break;
 
 					case KeyCode.ArrowDown:
-						index = System.Math.Min (maxIndex, index+1);
+						if (index >= maxIndex)
+						{
+							group = ItemPanelGroup.GetNextSibling (current.Group);
+
+							if (group != null)
+							{
+								view = group.ItemView;
+							}
+						}
+						else
+						{
+							view = panel.GetItemView (index+1);
+						}
 						break;
 
 					case KeyCode.Home:
-						index = minIndex;
+						view  = panel.GetItemView (minIndex);
+						group = ItemPanelGroup.GetPrevSibling (current.Group);
+
+						if (group != null)
+						{
+							current = group.ItemView;
+							goto again;
+						}
 						break;
 
 					case KeyCode.End:
-						index = maxIndex;
+						view  = panel.GetItemView (maxIndex);
+						group = ItemPanelGroup.GetNextSibling (current.Group);
+
+						if (group != null)
+						{
+							current = group.ItemView;
+							goto again;
+						}
 						break;
 
 					case KeyCode.PageUp:
@@ -1812,7 +1859,10 @@ namespace Epsitec.Common.UI
 						return false;
 				}
 
-				this.Focus (current.Owner.GetItemView (index));
+				if (view != null)
+				{
+					this.Focus (view);
+				}
 			}
 			else
 			{

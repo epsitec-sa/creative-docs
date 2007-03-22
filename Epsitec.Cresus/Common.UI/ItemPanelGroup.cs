@@ -249,5 +249,105 @@ namespace Epsitec.Common.UI
 		private readonly object exclusion = new object ();
 		private bool hasValidUserInterface;
 		private bool hasClearedUserInterface;
+
+		internal static ItemPanelGroup GetNextSibling(ItemPanelGroup group)
+		{
+			int index;
+			int count;
+
+			ItemPanel panel = group.ParentPanel;
+			ItemView  view  = group.ItemView;
+
+			group = panel.ParentGroup;
+
+		again:
+			if (group == null)
+			{
+				return null;
+			}
+			
+			panel = group.ParentPanel;
+			index = group.ItemView.Index+1;
+			count = panel.GetItemViewCount ();
+
+			while (index >= count)
+			{
+				index = 0;
+				group = ItemPanelGroup.GetNextSibling (group);
+
+				if (group == null)
+				{
+					return null;
+				}
+
+				panel = group.ParentPanel;
+				count = panel.GetItemViewCount ();
+			}
+
+			view  = panel.GetItemView (index);
+			group = view.Group;
+			panel = group.ChildPanel;
+			count = panel.GetItemViewCount ();
+
+			if (count == 0)
+			{
+				goto again;
+			}
+
+			view  = panel.GetItemView (0);
+			group = view.Group;
+
+			return group;
+		}
+		
+		internal static ItemPanelGroup GetPrevSibling(ItemPanelGroup group)
+		{
+			int index;
+			int count;
+
+			ItemPanel panel = group.ParentPanel;
+			ItemView  view  = group.ItemView;
+
+			group = panel.ParentGroup;
+
+		again:
+			if (group == null)
+			{
+				return null;
+			}
+
+			panel = group.ParentPanel;
+			index = group.ItemView.Index-1;
+			count = panel.GetItemViewCount ();
+
+			while (index < 0)
+			{
+				group = ItemPanelGroup.GetPrevSibling (group);
+
+				if (group == null)
+				{
+					return null;
+				}
+
+				panel = group.ParentPanel;
+				count = panel.GetItemViewCount ();
+				index = count-1;
+			}
+
+			view  = panel.GetItemView (index);
+			group = view.Group;
+			panel = group.ChildPanel;
+			count = panel.GetItemViewCount ();
+
+			if (count == 0)
+			{
+				goto again;
+			}
+
+			view  = panel.GetItemView (count-1);
+			group = view.Group;
+
+			return group;
+		}
 	}
 }
