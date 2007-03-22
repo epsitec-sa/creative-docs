@@ -2483,7 +2483,7 @@ namespace Epsitec.Common.UI
 			double y = dy;
 			int row = 0;
 			
-			this.UpdatePreferredSize (maxDx, dy);
+			this.UpdatePreferredSize (System.Math.Max (this.LayoutWidth, maxDx), dy);
 			
 			foreach (ItemView view in views)
 			{
@@ -2597,7 +2597,7 @@ namespace Epsitec.Common.UI
 
 			this.totalRowCount    = rowCount;
 			this.totalColumnCount = colCount;
-			this.UpdatePreferredSize (lx, dy);
+			this.UpdatePreferredSize (System.Math.Max (lx, width), dy);
 		}
 
 		private void LayoutColumnsOfTiles(IEnumerable<ItemView> views)
