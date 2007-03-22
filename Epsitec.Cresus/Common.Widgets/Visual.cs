@@ -1722,6 +1722,8 @@ namespace Epsitec.Common.Widgets
 
 		private void ClearCachedFocus()
 		{
+			List<Visual> notify = new List<Visual> ();
+
 			foreach (Visual parent in this.Parents)
 			{
 				if (parent.containsFocusIsValid == false)
@@ -1731,6 +1733,12 @@ namespace Epsitec.Common.Widgets
 
 				parent.containsFocusIsValid = false;
 				parent.containsFocus = false;
+				
+				notify.Add (parent);
+			}
+
+			foreach (Visual parent in notify)
+			{
 				parent.OnContainsFocusChanged ();
 			}
 		}
