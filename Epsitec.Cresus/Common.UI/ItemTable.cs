@@ -17,7 +17,7 @@ namespace Epsitec.Common.UI
 	/// The <c>ItemTable</c> class is used to represent items in a table, with
 	/// column headers and scroll bars.
 	/// </summary>
-	public class ItemTable : FrameBox, IListHost<ItemTableColumn>
+	public class ItemTable : Widget, IListHost<ItemTableColumn>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ItemTable"/> class.
@@ -240,6 +240,23 @@ namespace Epsitec.Common.UI
 		public Size GetDefaultItemSize(ItemView itemView)
 		{
 			return this.defaultItemSize;
+		}
+
+		protected override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
+		{
+			if (base.AboutToGetFocus (dir, mode, out focus))
+			{
+				if (focus == this)
+				{
+					focus = this.itemPanel;
+				}
+				
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		protected override void OnSizeChanged(Size oldValue, Size newValue)

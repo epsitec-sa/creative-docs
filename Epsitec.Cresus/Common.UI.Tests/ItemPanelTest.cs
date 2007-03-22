@@ -348,6 +348,9 @@ namespace Epsitec.Common.UI
 
 		private static void CreateTableButtons(Widgets.Window window, ItemTable table, ItemPanel panel)
 		{
+			table.TabIndex = 1;
+			table.TabNavigationMode = Epsitec.Common.Widgets.TabNavigationMode.ActivateOnTab;
+
 			Widgets.FrameBox box;
 
 			box = new Widgets.FrameBox (window.Root);
@@ -374,6 +377,9 @@ namespace Epsitec.Common.UI
 			text.Dock = Widgets.DockStyle.Stacked;
 			text.PreferredWidth = 40;
 			text.VerticalAlignment = Widgets.VerticalAlignment.Center;
+
+			text.TabIndex = 2;
+			text.TabNavigationMode = Epsitec.Common.Widgets.TabNavigationMode.ActivateOnTab;
 
 			button0.Clicked += delegate
 			{

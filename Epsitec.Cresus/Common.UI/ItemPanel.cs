@@ -20,7 +20,7 @@ namespace Epsitec.Common.UI
 	/// The <c>ItemPanel</c> class represents a collection of items in a panel,
 	/// where the collection is defined through a <see cref="ICollectionView"/>.
 	/// </summary>
-	public class ItemPanel : Widgets.FrameBox
+	public class ItemPanel : Widgets.Widget
 	{
 		public ItemPanel()
 		{
@@ -1375,6 +1375,25 @@ namespace Epsitec.Common.UI
 			if (this.IsRootPanel)
 			{
 				this.Invalidate ();
+			}
+		}
+
+		protected override bool AboutToGetFocus(Epsitec.Common.Widgets.TabNavigationDir dir, Epsitec.Common.Widgets.TabNavigationMode mode, out Epsitec.Common.Widgets.Widget focus)
+		{
+			if (base.AboutToGetFocus (dir, mode, out focus))
+			{
+				ItemView view = this.RootPanel.focusedItemView;
+
+				if (view != null)
+				{
+					focus = view.Widget;
+				}
+
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 
