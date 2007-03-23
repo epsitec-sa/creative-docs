@@ -393,7 +393,28 @@ namespace Epsitec.Common.Document.Objects
 		public virtual bool EditPaste()
 		{
 #if SIMPLECOPYPASTE
-			Support.Clipboard.ReadData data = Support.Clipboard.GetData();
+			System.Windows.Forms.IDataObject ido = System.Windows.Forms.Clipboard.GetDataObject ();
+			
+			if (ido.GetDataPresent (Common.Text.Exchange.EpsitecFormat.Format.Name, false))
+			{
+				// colle du texte natif
+				TextFlow flow = this.TextFlow;
+				Text.TextStory story = flow.TextStory;
+				Text.TextNavigator navigator = flow.TextNavigator;
+
+				//	TODO: utiliser un texte des ressources
+				this.document.Modifier.OpletQueueBeginAction ("** PASTE **");
+				this.MetaNavigator.DeleteSelection (); // TODO: ATTENTION plante au undo suivant
+				Text.Exchange.Rosetta.PasteNativeText (story, navigator);
+
+				// provoquer le raffichage de la liste des styles en haut dans l'onglet "Text"
+				this.document.Notifier.NotifyTextStyleListChanged ();
+
+				this.document.Modifier.OpletQueueValidateAction ();
+				return true;
+			}
+			
+			Support.Clipboard.ReadData data = Support.Clipboard.GetData ();
 			string text = data.ReadTextLayout();
 			if ( text == null )
 			{

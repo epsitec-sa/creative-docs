@@ -323,14 +323,14 @@ namespace Epsitec.Common.Text.Exchange
 						
 				}
 
-				if (notHandled && pasteMode == PasteMode.MatchDestination)
+				if (notHandled && this.pasteMode == PasteMode.MatchDestination)
 				{
 					if (subelements[0] == "par")
 					{
 						paragrpahSep = true;
 					}
 				}
-				else if (notHandled && pasteMode == PasteMode.KeepSource)
+				else if (notHandled && this.pasteMode == PasteMode.KeepSource)
 				{
 					switch (subelements[0])
 					{
@@ -430,7 +430,7 @@ namespace Epsitec.Common.Text.Exchange
 			if (!color)
 				this.textWrapper.Defined.ClearColor ();
 
-			if (pasteMode == PasteMode.KeepSource)
+			if (this.pasteMode == PasteMode.KeepSource)
 			{
 
 				if (!fontFace)

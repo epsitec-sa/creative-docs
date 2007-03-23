@@ -25,7 +25,7 @@ namespace Epsitec.Common.Text.Exchange
 		{
 		}
 
-		public static PasteMode pasteMode = PasteMode.MatchDestination;
+		public static PasteMode pasteMode = PasteMode.KeepSource;
 
 		public static void TogglePasteMode()
 		{
@@ -80,19 +80,20 @@ namespace Epsitec.Common.Text.Exchange
 
 			using (CopyPasteContext cpContext = new CopyPasteContext (story))
 			{
-#if !SIMPLECOPYPASTE
+//#if !SIMPLECOPYPASTE
 				Rosetta.CopyHtmlText (story, usernavigator, htmlText, cpContext);
 				Rosetta.CopyNativeText (story, usernavigator, nativeText, cpContext);
-#endif
+//#endif
 				rawText = Rosetta.CopyRawText (story, usernavigator);
 
 				System.Windows.Forms.IDataObject od = new System.Windows.Forms.DataObject ();
 				od.SetData (System.Windows.Forms.DataFormats.Text, true, rawText);
-#if !SIMPLECOPYPASTE
+//#if !SIMPLECOPYPASTE
 				od.SetData (System.Windows.Forms.DataFormats.Html, true, htmlText.HtmlStream);
 				EpsitecFormat efmt = new EpsitecFormat (nativeText.ToString ());
 				od.SetData (EpsitecFormat.Format.Name, true, efmt);
-#endif
+				System.IO.File.WriteAllText (@"C:\test.txt", nativeText.ToString ());
+//#endif
 				System.Windows.Forms.Clipboard.SetDataObject (od, true);
 			}
 		}
