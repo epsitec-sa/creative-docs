@@ -72,7 +72,7 @@ namespace Epsitec.App.DocumentEditor
 				}
 			}
 
-			if (this.GetType ().Assembly.Location.Contains ("Debug"))
+			if (Epsitec.Common.Support.Globals.IsDebugBuild)
 			{
 				this.debugMode = DebugMode.DebugCommands;
 			}

@@ -82,7 +82,20 @@ namespace Epsitec.Common.Support
 				return Globals.abort_event;
 			}
 		}
-		
+
+		public static bool						IsDebugBuild
+		{
+			get
+			{
+				if (Globals.isDebugBuildInitialized == false)
+				{
+					Globals.isDebugBuild = typeof (Globals).Assembly.Location.Contains ("Debug");
+					Globals.isDebugBuildInitialized = true;
+				}
+
+				return Globals.isDebugBuild;
+			}
+		}
 		
 		public static void SignalAbort()
 		{
@@ -173,5 +186,7 @@ namespace Epsitec.Common.Support
 		private static Globals					properties;
 		private static DirectoriesAccessor		directories;
 		private static ManualResetEvent			abort_event;
+		private static bool						isDebugBuild;
+		private static bool						isDebugBuildInitialized;
 	}
 }

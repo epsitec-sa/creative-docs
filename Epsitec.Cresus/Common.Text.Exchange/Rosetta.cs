@@ -92,7 +92,11 @@ namespace Epsitec.Common.Text.Exchange
 				od.SetData (System.Windows.Forms.DataFormats.Html, true, htmlText.HtmlStream);
 				EpsitecFormat efmt = new EpsitecFormat (nativeText.ToString ());
 				od.SetData (EpsitecFormat.Format.Name, true, efmt);
-				System.IO.File.WriteAllText (@"C:\test.txt", nativeText.ToString ());
+				
+				if (Epsitec.Common.Support.Globals.IsDebugBuild)
+				{
+					System.IO.File.WriteAllText (@"C:\Clipboard native text (debug).txt", nativeText.ToString ());
+				}
 //#endif
 				System.Windows.Forms.Clipboard.SetDataObject (od, true);
 			}
