@@ -200,14 +200,16 @@ namespace Epsitec.Common.Document.Objects
 						if ( !this.Handle(i).IsVisible )  continue;
 						if ( this.Handle(i).IsShaperDeselected )  continue;
 
-						if (this.IsCyclingHandleSharp(i, true) || this.IsCyclingHandleSharp(i, false))
+						if (this.IsCyclingHandleSharp(i, true) && this.IsCyclingHandleSharp(i, false))
 						{
 							Abstract.ShaperHandleStateAdd(actives, "Sharp");
 						}
-						else
+
+						if (!this.IsCyclingHandleSharp(i, true) && !this.IsCyclingHandleSharp(i, false))
 						{
 							Abstract.ShaperHandleStateAdd(actives, "Round");
 						}
+
 						enable = true;
 					}
 				}
@@ -223,9 +225,15 @@ namespace Epsitec.Common.Document.Objects
 					{
 						SelectedSegment ss = this.selectedSegments[i] as SelectedSegment;
 						int rank = ss.Rank;
-						string state = (this.IsCyclingHandleSharp(rank, false) && this.IsCyclingHandleSharp(rank+1, true)) ? "ToLine" : "ToCurve";
+
+						if (this.IsCyclingHandleSharp(rank, false) && this.IsCyclingHandleSharp(rank+1, true))
 						{
-							Abstract.ShaperHandleStateAdd(actives, state);
+							Abstract.ShaperHandleStateAdd(actives, "ToLine");
+						}
+
+						if (!this.IsCyclingHandleSharp(rank, false) && !this.IsCyclingHandleSharp(rank+1, true))
+						{
+							Abstract.ShaperHandleStateAdd(actives, "ToCurve");
 						}
 					}
 				}
@@ -789,23 +797,6 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		private bool IsCyclingHandleSharp(int rank, bool before)
-		{
-			//	Indique si un sommet (avant ou après) est anguleux.
-			rank = this.GetCyclingHandleRank(rank);
-
-			if (before)
-			{
-				return this.Handle(rank).ConstrainType == HandleConstrainType.SharpRound ||
-					   this.Handle(rank).ConstrainType == HandleConstrainType.SharpSharp;
-			}
-			else
-			{
-				return this.Handle(rank).ConstrainType == HandleConstrainType.RoundSharp ||
-					   this.Handle(rank).ConstrainType == HandleConstrainType.SharpSharp;
-			}
-		}
-
 		private void SetCyclingHandleSharp(int rank, bool before, bool sharp)
 		{
 			//	Modifie l'état d'un sommet (avant ou après).
@@ -834,6 +825,23 @@ namespace Epsitec.Common.Document.Objects
 				{
 					this.Handle(rank).ConstrainType = this.IsCyclingHandleSharp(rank, !before) ? HandleConstrainType.SharpRound : HandleConstrainType.Symmetric;
 				}
+			}
+		}
+
+		private bool IsCyclingHandleSharp(int rank, bool before)
+		{
+			//	Indique si un sommet (avant ou après) est anguleux.
+			rank = this.GetCyclingHandleRank(rank);
+
+			if (before)
+			{
+				return this.Handle(rank).ConstrainType == HandleConstrainType.SharpRound ||
+					   this.Handle(rank).ConstrainType == HandleConstrainType.SharpSharp;
+			}
+			else
+			{
+				return this.Handle(rank).ConstrainType == HandleConstrainType.RoundSharp ||
+					   this.Handle(rank).ConstrainType == HandleConstrainType.SharpSharp;
 			}
 		}
 
