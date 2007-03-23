@@ -22,10 +22,13 @@ namespace Epsitec.Common.Document.Objects
 
 	public enum HandleConstrainType
 	{
-		Symmetric = 0,		// symétrique
-		Smooth    = 1,		// lisse
-		Corner    = 2,		// anguleux
-		Simply    = 3,		// simple (sans coin fantaisie)
+		Symmetric  = 0,		// symétrique
+		Smooth     = 1,		// lisse
+		Corner     = 2,		// anguleux
+		Simply     = 3,		// simple (sans coin fantaisie)
+		SharpRound = 4,		// free: sommet anguleux-arrondi
+		RoundSharp = 5,		// free: sommet arrondi-anguleux
+		SharpSharp = 6,		// free: sommet anguleux-anguleux
 	}
 
 	/// <summary>

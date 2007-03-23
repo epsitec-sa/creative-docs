@@ -218,7 +218,7 @@ namespace Epsitec.Common.Document.Objects
 					{
 						SelectedSegment ss = this.selectedSegments[i] as SelectedSegment;
 						int rank = ss.Rank;
-						string state = (this.IsCyclingHandleSharp(rank) && this.IsCyclingHandleSharp(rank+1)) ? "ToLine" : "ToCurve";
+						string state = (this.IsCyclingHandleSharp(rank, false) && this.IsCyclingHandleSharp(rank+1, true)) ? "ToLine" : "ToCurve";
 						{
 							Abstract.ShaperHandleStateAdd(actives, state);
 						}
@@ -285,7 +285,8 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if ( !this.Handle(i).IsVisible )  continue;
 					if ( this.Handle(i).IsShaperDeselected )  continue;
-					this.SetCyclingHandleSharp(i, true);
+					this.SetCyclingHandleSharp(i, true, true);
+					this.SetCyclingHandleSharp(i, false, true);
 				}
 
 				this.document.Notifier.NotifyArea(this.BoundingBox);
@@ -304,7 +305,8 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if ( !this.Handle(i).IsVisible )  continue;
 					if ( this.Handle(i).IsShaperDeselected )  continue;
-					this.SetCyclingHandleSharp(i, false);
+					this.SetCyclingHandleSharp(i, true, false);
+					this.SetCyclingHandleSharp(i, false, false);
 				}
 
 				this.document.Notifier.NotifyArea(this.BoundingBox);
@@ -325,8 +327,8 @@ namespace Epsitec.Common.Document.Objects
 					{
 						SelectedSegment ss = this.selectedSegments[i] as SelectedSegment;
 						int rank = ss.Rank;
-						this.SetCyclingHandleSharp(rank, true);
-						this.SetCyclingHandleSharp(rank+1, true);
+						this.SetCyclingHandleSharp(rank, false, true);
+						this.SetCyclingHandleSharp(rank+1, true, true);
 					}
 				}
 				this.SelectedSegmentClear();
@@ -349,8 +351,8 @@ namespace Epsitec.Common.Document.Objects
 					{
 						SelectedSegment ss = this.selectedSegments[i] as SelectedSegment;
 						int rank = ss.Rank;
-						this.SetCyclingHandleSharp(rank, false);
-						this.SetCyclingHandleSharp(rank+1, false);
+						this.SetCyclingHandleSharp(rank, false, false);
+						this.SetCyclingHandleSharp(rank+1, true, false);
 					}
 				}
 				this.SelectedSegmentClear();
@@ -758,7 +760,7 @@ namespace Epsitec.Common.Document.Objects
 					{
 						Point s1, s2;
 
-						if ((i == 1 && !this.PropertyPolyClose.BoolValue) || this.IsCyclingHandleSharp(i-1))
+						if ((i == 1 && !this.PropertyPolyClose.BoolValue) || this.IsCyclingHandleSharp(i-1, false))
 						{
 							s1 = this.GetCyclingHandlePosition(i-1);
 						}
@@ -767,7 +769,7 @@ namespace Epsitec.Common.Document.Objects
 							s1 = this.ComputeSecondary(this.GetCyclingHandlePosition(i), this.GetCyclingHandlePosition(i-1), this.GetCyclingHandlePosition(i-2), tension);
 						}
 
-						if ((i == total-1 && !this.PropertyPolyClose.BoolValue) || this.IsCyclingHandleSharp(i))
+						if ((i == total-1 && !this.PropertyPolyClose.BoolValue) || this.IsCyclingHandleSharp(i, true))
 						{
 							s2 = this.GetCyclingHandlePosition(i);
 						}
@@ -782,8 +784,9 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		private bool IsCyclingHandleSharp(int rank)
+		private bool IsCyclingHandleSharp(int rank, bool before)
 		{
+			//	Indique si un sommet (avant ou après) est anguleux.
 			int total = this.TotalMainHandle;
 
 			if (rank < 0)
@@ -796,11 +799,23 @@ namespace Epsitec.Common.Document.Objects
 				rank = rank-total;
 			}
 
-			return this.Handle(rank).ConstrainType == HandleConstrainType.Simply;
+			if (before)
+			{
+				return this.Handle(rank).ConstrainType == HandleConstrainType.SharpRound ||
+					   this.Handle(rank).ConstrainType == HandleConstrainType.SharpSharp;
+			}
+			else
+			{
+				return this.Handle(rank).ConstrainType == HandleConstrainType.RoundSharp ||
+					   this.Handle(rank).ConstrainType == HandleConstrainType.SharpSharp;
+			}
 		}
 
-		private void SetCyclingHandleSharp(int rank, bool sharp)
+		private void SetCyclingHandleSharp(int rank, bool before, bool sharp)
 		{
+			//	Modifie l'état d'un sommet (avant ou après).
+			//	sharp = false -> arrondi
+			//	sharp = true  -> anguleux
 			int total = this.TotalMainHandle;
 
 			if (rank < 0)
@@ -813,7 +828,28 @@ namespace Epsitec.Common.Document.Objects
 				rank = rank-total;
 			}
 
-			this.Handle(rank).ConstrainType = sharp ? HandleConstrainType.Simply : HandleConstrainType.Symmetric;
+			if (before)
+			{
+				if (sharp)
+				{
+					this.Handle(rank).ConstrainType = this.IsCyclingHandleSharp(rank, !before) ? HandleConstrainType.SharpSharp : HandleConstrainType.SharpRound;
+				}
+				else
+				{
+					this.Handle(rank).ConstrainType = this.IsCyclingHandleSharp(rank, !before) ? HandleConstrainType.RoundSharp : HandleConstrainType.Symmetric;
+				}
+			}
+			else
+			{
+				if (sharp)
+				{
+					this.Handle(rank).ConstrainType = this.IsCyclingHandleSharp(rank, !before) ? HandleConstrainType.SharpSharp : HandleConstrainType.RoundSharp;
+				}
+				else
+				{
+					this.Handle(rank).ConstrainType = this.IsCyclingHandleSharp(rank, !before) ? HandleConstrainType.SharpRound : HandleConstrainType.Symmetric;
+				}
+			}
 		}
 
 		private Point GetCyclingHandlePosition(int rank)
