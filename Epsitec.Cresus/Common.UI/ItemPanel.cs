@@ -2809,27 +2809,24 @@ namespace Epsitec.Common.UI
 
 		private void CreateItemViews(IList<ItemView> views, System.Collections.IList list, Dictionary<object, ItemView> currentViews)
 		{
-			lock (list)
+			foreach (object item in list)
 			{
-				foreach (object item in list)
+				ItemView view;
+
+				//	Try to find and recycle the view for the specified item; this
+				//	not only speeds up recreation of the item views, it also allows
+				//	to keep track of the state associated with an item (selected or
+				//	expanded, for instance).
+
+				if (currentViews.TryGetValue (item, out view))
 				{
-					ItemView view;
-
-					//	Try to find and recycle the view for the specified item; this
-					//	not only speeds up recreation of the item views, it also allows
-					//	to keep track of the state associated with an item (selected or
-					//	expanded, for instance).
-
-					if (currentViews.TryGetValue (item, out view))
-					{
-						currentViews.Remove (item);
-						view.DefineIndex (views.Count);
-						views.Add (view);
-					}
-					else
-					{
-						views.Add (this.CreateItemView (item, views.Count));
-					}
+					currentViews.Remove (item);
+					view.DefineIndex (views.Count);
+					views.Add (view);
+				}
+				else
+				{
+					views.Add (this.CreateItemView (item, views.Count));
 				}
 			}
 		}

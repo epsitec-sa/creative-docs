@@ -147,7 +147,9 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Gets the items synchronization object.
+		/// Gets the items synchronization object. Locking on this object ensures
+		/// that nobody asynchronously modifies the <c>Items</c> or <c>Groups</c>
+		/// collections.
 		/// </summary>
 		/// <value>The items synchronization object.</value>
 		public object ItemsSyncRoot
@@ -165,22 +167,23 @@ namespace Epsitec.Common.Types
 		/// A read-only collection of the top level groups; it is empty
 		/// if there are no groups configured for this view.
 		/// </value>
-		public Collections.ReadOnlyObservableList<CollectionViewGroup> Groups
+		public Collections.ReadOnlyList<CollectionViewGroup> Groups
 		{
 			get
 			{
-				if (this.readOnlyGroups == null)
+				Collections.ReadOnlyList<CollectionViewGroup> groups;
+
+				lock (this.itemExclusion)
 				{
-					lock (this.groupExclusion)
+					if (this.readOnlyGroups == null)
 					{
-						if (this.readOnlyGroups == null)
-						{
-							this.readOnlyGroups = new Collections.ReadOnlyObservableList<CollectionViewGroup> (this.rootGroup.GetSubgroups ());
-						}
+						this.readOnlyGroups = new Collections.ReadOnlyList<CollectionViewGroup> (this.rootGroup.GetSubgroups ());
 					}
+
+					groups = this.readOnlyGroups;
 				}
 				
-				return this.readOnlyGroups;
+				return groups;
 			}
 		}
 
@@ -1301,20 +1304,19 @@ namespace Epsitec.Common.Types
 							groupDescriptions = this.groupDescriptions == null ? null : this.groupDescriptions.ToArray ();
 						}
 
-						lock (this.groupExclusion)
+						//	Locked by itemExclusion, so we may modify the root group collection
+						//	without having to lock anything else here :
+						
+						this.readOnlyGroups = null;
+						this.rootGroup      = new CollectionViewGroup (null, null);
+
+						if ((groupDescriptions != null) &&
+							(groupDescriptions.Length > 0))
 						{
-							if ((groupDescriptions != null) &&
-								(groupDescriptions.Length > 0))
-							{
-								CollectionView.GroupItemsInList (this.sortedList, groupDescriptions, this.rootGroup);
-							}
-							else
-							{
-								this.rootGroup.ClearSubgroups ();
-							}
-							
-							this.dirtyGroups = false;
+							CollectionView.GroupItemsInList (this.sortedList, groupDescriptions, this.rootGroup);
 						}
+						
+						this.dirtyGroups = false;
 					}
 
 					//	Update the current item since the contents might have moved :
@@ -1550,7 +1552,7 @@ namespace Epsitec.Common.Types
 		private int currentPosition;
 		private object currentItem;
 		private CollectionViewGroup rootGroup;
-		private Collections.ReadOnlyObservableList<CollectionViewGroup> readOnlyGroups;
+		private Collections.ReadOnlyList<CollectionViewGroup> readOnlyGroups;
 		private Collections.ObservableList<GroupDescription> groupDescriptions;
 		private Collections.ObservableList<SortDescription> sortDescriptions;
 		private System.Predicate<object> filter;

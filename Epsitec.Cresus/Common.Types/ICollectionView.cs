@@ -68,7 +68,7 @@ namespace Epsitec.Common.Types
 		/// A read-only collection of the top level groups; it is empty
 		/// if there are no groups configured for this view.
 		/// </value>
-		Collections.ReadOnlyObservableList<CollectionViewGroup> Groups
+		Collections.ReadOnlyList<CollectionViewGroup> Groups
 		{
 			get;
 		}
@@ -84,7 +84,9 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Gets the items synchronization object.
+		/// Gets the items synchronization object. Locking on this object ensures
+		/// that nobody asynchronously modifies the <c>Items</c> or <c>Groups</c>
+		/// collections.
 		/// </summary>
 		/// <value>The items synchronization object.</value>
 		object ItemsSyncRoot
