@@ -1584,34 +1584,37 @@ namespace Epsitec.Common.UI
 			{
 				return;
 			}
-			
-			IList<ItemView> list = this.GetSelectedItemViews ();
-			bool modifySelection = message.IsControlPressed;
-			
-			if (message.IsShiftPressed && list.Count > 0)
+
+			if (message.ButtonDownCount == 1)
 			{
-				ItemView first = null;
-				
-				if (this.firstSelectedItem != null)
+				IList<ItemView> list = this.GetSelectedItemViews ();
+				bool modifySelection = message.IsControlPressed;
+
+				if (message.IsShiftPressed && list.Count > 0)
 				{
-					first = this.FindItemView (this.firstSelectedItem.Target);
+					ItemView first = null;
+
+					if (this.firstSelectedItem != null)
+					{
+						first = this.FindItemView (this.firstSelectedItem.Target);
+					}
+					if (first == null)
+					{
+						first = this.FindItemView (this.Items.CurrentItem);
+					}
+
+					this.ContinuousMouseSelection (list, first, view, modifySelection);
 				}
-				if (first == null)
+				else
 				{
-					first = this.FindItemView (this.Items.CurrentItem);
+					this.ManualSelection (view, modifySelection);
 				}
 
-				this.ContinuousMouseSelection (list, first, view, modifySelection);
+				this.Focus (view);
 			}
-			else
-			{
-				this.ManualSelection (view, modifySelection);
-			}
-
+			
 			message.Consumer = this;
 			message.ForceCapture = true;
-			
-			this.Focus (view);
 		}
 
 		protected override void OnContainsFocusChanged()
@@ -2489,6 +2492,11 @@ namespace Epsitec.Common.UI
 			{
 				if (message.Captured)
 				{
+					if (message.ButtonDownCount == 2)
+					{
+						this.OnDoubleClicked (new Widgets.MessageEventArgs (message, pos));
+					}
+
 					message.Consumer = this;
 					return;
 				}
