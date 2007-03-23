@@ -760,16 +760,17 @@ namespace Epsitec.Common.Document
 
 			try
 			{
-				this.ioDocumentManager = new DocumentManager ();
-				this.ioDocumentManager.Open (filename);
+				this.ioDocumentManager = new DocumentManager();
+				this.ioDocumentManager.Open(filename);
 
-				Stream sourceStream = this.ioDocumentManager.GetLocalFileStream (FileAccess.Read);
+				Stream sourceStream = this.ioDocumentManager.GetLocalFileStream(FileAccess.Read);
 
 				string err = "";
-				ZipFile zip = new ZipFile ();
-				zip.LoadFileName = this.ioDocumentManager.GetLocalFilePath ();
-				DocumentFileExtension ext = Document.GetDocumentFileExtension (filename);
+				ZipFile zip = new ZipFile();
+				zip.LoadFileName = this.ioDocumentManager.GetLocalFilePath();
+				DocumentFileExtension ext = Document.GetDocumentFileExtension(filename);
 				bool isCrDoc = (ext == DocumentFileExtension.CrDoc);
+				this.type = isCrDoc ? DocumentType.Graphic : DocumentType.Pictogram;
 
 				if (ext != DocumentFileExtension.Icon &&
 					zip.TryLoadFile(sourceStream, delegate(string entryName) { return entryName == "document.data" || entryName.StartsWith("fonts/"); }))

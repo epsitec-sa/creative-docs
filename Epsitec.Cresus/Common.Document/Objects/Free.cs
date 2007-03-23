@@ -433,22 +433,13 @@ namespace Epsitec.Common.Document.Objects
 			else
 			{
 				int total = this.TotalHandle;
-				double len = Point.Distance(this.Handle(this.TotalHandle-1).Position, this.Handle(this.TotalHandle-2).Position);
+				double len = Point.Distance(this.Handle(total-1).Position, this.Handle(total-2).Position);
 				if (len < this.spacing || total >= 100)
 				{
 					this.Handle(total-1).Position = pos;
 				}
 				else
 				{
-					if (total >= 3)
-					{
-						double a1 = Point.ComputeAngleDeg(this.Handle(total-1).Position, this.Handle(total-2).Position);
-						double a2 = Point.ComputeAngleDeg(this.Handle(total-2).Position, this.Handle(total-3).Position);
-						double a = Math.ClipAngleDeg(a1-a2);
-						//?System.Diagnostics.Debug.WriteLine(string.Format("a1={0} a2={1} a={2}", a1, a2, a));
-						this.Handle(total-2).ConstrainType = (a < 90 || a > 270) ? HandleConstrainType.Symmetric : HandleConstrainType.SharpSharp;
-					}
-
 					this.HandleAdd(pos, HandleType.Primary);
 				}
 			}

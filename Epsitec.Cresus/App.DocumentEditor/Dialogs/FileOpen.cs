@@ -16,6 +16,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		public FileOpen(DocumentEditor editor) : base(editor)
 		{
 			this.FileExtension = ".crdoc";
+			//?this.FileFilterPattern = "*.crdoc|*.icon";
 			this.enableNavigation = true;
 			this.enableMultipleSelection = true;
 		}
