@@ -2698,8 +2698,8 @@ namespace Epsitec.Common.UI
 		private void RefreshItemViews()
 		{
 			RefreshState    state = new RefreshState (this);
-			ICollectionView items = this.Items;
-
+			ICollectionView items = this.RootPanel.Items;
+			
 			Dictionary<object, ItemView> currentViews = new Dictionary<object, ItemView> ();
 
 			using (new LockManager (this))
@@ -2712,35 +2712,37 @@ namespace Epsitec.Common.UI
 
 			List<ItemView> views = new List<ItemView> ();
 
-			if ((items != null) &&
-				(items.Items.Count > 0))
+			lock (items.ItemsSyncRoot)
 			{
-				//	We are executing in the root panel; create the item views for
-				//	every item (or every group and sub-group) :
-				
-				if (items.Groups.Count == 0)
+				if (this.IsRootPanel)
 				{
-					this.CreateItemViews (views, items.Items, currentViews);
-				}
-				else
-				{
-					this.CreateItemViews (views, items.Groups, currentViews);
-				}
-			}
-			else if (this.parentGroup != null)
-			{
-				//	We are executing in a sub-panel, which is used to represent
-				//	the contents of a group :
-				
-				CollectionViewGroup group = this.parentGroup.CollectionViewGroup;
+					//	We are executing in the root panel; create the item views for
+					//	every item (or every group and sub-group) :
 
-				if (group.HasSubgroups)
-				{
-					this.CreateItemViews (views, group.Subgroups, currentViews);
+					if (items.Groups.Count == 0)
+					{
+						this.CreateItemViews (views, items.Items, currentViews);
+					}
+					else
+					{
+						this.CreateItemViews (views, items.Groups, currentViews);
+					}
 				}
 				else
 				{
-					this.CreateItemViews (views, group.Items as System.Collections.IList, currentViews);
+					//	We are executing in a sub-panel, which is used to represent
+					//	the contents of a group :
+
+					CollectionViewGroup group = this.parentGroup.CollectionViewGroup;
+
+					if (group.HasSubgroups)
+					{
+						this.CreateItemViews (views, group.Subgroups, currentViews);
+					}
+					else
+					{
+						this.CreateItemViews (views, group.Items as System.Collections.IList, currentViews);
+					}
 				}
 			}
 

@@ -84,6 +84,15 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Gets the items synchronization object.
+		/// </summary>
+		/// <value>The items synchronization object.</value>
+		object ItemsSyncRoot
+		{
+			get;
+		}
+
+		/// <summary>
 		/// Gets a collection of group description objects that describe how
 		/// the items in the collection are grouped in a view.
 		/// </summary>

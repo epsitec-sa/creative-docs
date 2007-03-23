@@ -147,6 +147,18 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Gets the items synchronization object.
+		/// </summary>
+		/// <value>The items synchronization object.</value>
+		public object ItemsSyncRoot
+		{
+			get
+			{
+				return this.itemExclusion;
+			}
+		}
+
+		/// <summary>
 		/// Gets the top level groups.
 		/// </summary>
 		/// <value>
@@ -276,7 +288,10 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public System.IDisposable DeferRefresh()
 		{
-			return new DeferManager (this);
+			lock (this.exclusion)
+			{
+				return new DeferManager (this);
+			}
 		}
 
 		/// <summary>
@@ -669,7 +684,6 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Gets the path through the groups which leads to the specified item.
@@ -1290,7 +1304,7 @@ namespace Epsitec.Common.Types
 						lock (this.groupExclusion)
 						{
 							if ((groupDescriptions != null) &&
-							(groupDescriptions.Length > 0))
+								(groupDescriptions.Length > 0))
 							{
 								CollectionView.GroupItemsInList (this.sortedList, groupDescriptions, this.rootGroup);
 							}
