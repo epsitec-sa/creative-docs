@@ -200,9 +200,14 @@ namespace Epsitec.Common.Document.Objects
 						if ( !this.Handle(i).IsVisible )  continue;
 						if ( this.Handle(i).IsShaperDeselected )  continue;
 
-						HandleConstrainType type = this.Handle(i).ConstrainType;
-						if ( type == HandleConstrainType.Simply )  Abstract.ShaperHandleStateAdd(actives, "Sharp"); 
-						else                                       Abstract.ShaperHandleStateAdd(actives, "Round"); 
+						if (this.IsCyclingHandleSharp(i, true) || this.IsCyclingHandleSharp(i, false))
+						{
+							Abstract.ShaperHandleStateAdd(actives, "Sharp");
+						}
+						else
+						{
+							Abstract.ShaperHandleStateAdd(actives, "Round");
+						}
 						enable = true;
 					}
 				}
@@ -787,17 +792,7 @@ namespace Epsitec.Common.Document.Objects
 		private bool IsCyclingHandleSharp(int rank, bool before)
 		{
 			//	Indique si un sommet (avant ou après) est anguleux.
-			int total = this.TotalMainHandle;
-
-			if (rank < 0)
-			{
-				rank = total+rank;
-			}
-
-			if (rank >= total)
-			{
-				rank = rank-total;
-			}
+			rank = this.GetCyclingHandleRank(rank);
 
 			if (before)
 			{
@@ -816,17 +811,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Modifie l'état d'un sommet (avant ou après).
 			//	sharp = false -> arrondi
 			//	sharp = true  -> anguleux
-			int total = this.TotalMainHandle;
-
-			if (rank < 0)
-			{
-				rank = total+rank;
-			}
-
-			if (rank >= total)
-			{
-				rank = rank-total;
-			}
+			rank = this.GetCyclingHandleRank(rank);
 
 			if (before)
 			{
@@ -857,6 +842,26 @@ namespace Epsitec.Common.Document.Objects
 			//	Retourne la position d'un poignée, en acceptant les rangs négatifs ou dépassant le
 			//	nombre maximal de poignées. Tient compte des positions virtuelles vp1/vp2 selon la
 			//	propriété Arrow.
+			rank = this.GetCyclingHandleRank(rank);
+
+			if (rank == 0)
+			{
+				return this.vp1;
+			}
+			else if (rank == this.TotalMainHandle-1)
+			{
+				return this.vp2;
+			}
+			else
+			{
+				return this.Handle(rank).Position;
+			}
+		}
+
+		private int GetCyclingHandleRank(int rank)
+		{
+			//	Retourne le rang d'un poignée, en acceptant les rangs négatifs ou dépassant le
+			//	nombre maximal de poignées.
 			int total = this.TotalMainHandle;
 
 			if (rank < 0)
@@ -869,18 +874,7 @@ namespace Epsitec.Common.Document.Objects
 				rank = rank-total;
 			}
 
-			if (rank == 0)
-			{
-				return this.vp1;
-			}
-			else if (rank == total-1)
-			{
-				return this.vp2;
-			}
-			else
-			{
-				return this.Handle(rank).Position;
-			}
+			return rank;
 		}
 
 		private Point ComputeSecondary(Point p1, Point p, Point p2, double tension)
