@@ -4306,6 +4306,11 @@ namespace Epsitec.Common.Document
 				//	N'affiche pas le document pendant la phase d'initialisation.
 				return;
 			}
+
+			if (this.drawingContext.RootStackIsEmpty)
+			{
+				return;
+			}
 			
 			//	Ignore une zone de repeinture d'un pixel à gauche ou en haut,
 			//	à cause des règles qui chevauchent Viewer.
@@ -4492,6 +4497,11 @@ namespace Epsitec.Common.Document
 		protected void HandleDefocused()
 		{
 			//	Appelé lorsque la vue perd le focus.
+			if (this.document.Modifier == null)
+			{
+				return;
+			}
+
 			Objects.AbstractText edit = this.document.Modifier.RetEditObject();
 			if ( edit != null )
 			{
