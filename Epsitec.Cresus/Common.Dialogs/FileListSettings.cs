@@ -13,12 +13,23 @@ namespace Epsitec.Common.Dialogs
 {
 	internal class FileListSettings : IFileExtensionDescription
 	{
-		public FileListSettings()
+		public FileListSettings(AbstractFileDialog dialog)
 		{
+			this.dialog = dialog;
+			this.path   = this.dialog.InitialDirectory;
+			
 			this.showHiddenFiles    = FolderItem.ShowHiddenFiles;
 			this.hideFileExtensions = FolderItem.HideFileExtensions;
 		}
 
+		public string							Path
+		{
+			get
+			{
+				return this.path;
+			}
+		}
+		
 		public FolderQueryMode					FolderQueryMode
 		{
 			get
@@ -179,7 +190,10 @@ namespace Epsitec.Common.Dialogs
 			{
 				lock (list.SyncRoot)
 				{
-					list.Add (fileItem);
+					if (this.dialog.InitialDirectory == this.path)
+					{
+						list.Add (fileItem);
+					}
 				}
 			}
 		}
@@ -296,6 +310,9 @@ namespace Epsitec.Common.Dialogs
 		private bool							hideShortcuts;
 		private FolderQueryMode					folderQueryMode;
 		private Regex							filterRegex;
+		
+		private AbstractFileDialog				dialog;
+		private string							path;
 		
 		private readonly Dictionary<string, string> defaultDescriptions = new Dictionary<string, string> ();
 	}

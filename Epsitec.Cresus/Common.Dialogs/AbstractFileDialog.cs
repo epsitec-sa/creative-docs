@@ -1211,6 +1211,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			if (this.files != null)
 			{
+				this.CancelPendingJobs ();
 				FileListJob.Start (this, this.RefreshFileList);
 			}
 		}
@@ -1221,7 +1222,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				FileListSettings settings = this.GetFileListSettings ();
 
-				string path = this.initialDirectory.FullPath;
+				string path = settings.Path;
 
 				List<string> added = new List<string> ();
 				List<string> deleted = new List<string> ();
@@ -1483,7 +1484,7 @@ namespace Epsitec.Common.Dialogs
 		private FileListSettings GetFileListSettings()
 		{
 			FileListSettings settings;
-			settings = new FileListSettings ();
+			settings = new FileListSettings (this);
 
 			settings.FolderQueryMode = (this.itemViewSize >= 32) ? FolderQueryMode.LargeIcons : FolderQueryMode.SmallIcons;
 			settings.HideFolders     = this.initialDirectory.Equals (FileManager.GetFolderItem (FolderId.Recent, FolderQueryMode.NoIcons));
@@ -1761,7 +1762,7 @@ namespace Epsitec.Common.Dialogs
 
 		private void Refresh()
 		{
-			//	TODO:
+			this.UpdateFileList ();
 		}
 
 		private void RenameStarting()
