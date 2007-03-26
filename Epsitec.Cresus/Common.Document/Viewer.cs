@@ -133,6 +133,18 @@ namespace Epsitec.Common.Document
 			get { return this.selector; }
 		}
 
+		public bool IsPictogramPreview
+		{
+			get
+			{
+				return this.isPictogramPreview;
+			}
+			set
+			{
+				this.isPictogramPreview = value;
+			}
+		}
+
 
 #if false
 		public override double DefaultWidth
@@ -4822,6 +4834,7 @@ namespace Epsitec.Common.Document
 		protected DrawingContext				drawingContext;
 		protected Selector						selector;
 		protected Selector						zoomer;
+		protected bool							isPictogramPreview;
 		protected bool							partialSelect;
 		protected bool							selectorAdaptLine = true;
 		protected bool							selectorAdaptText = true;

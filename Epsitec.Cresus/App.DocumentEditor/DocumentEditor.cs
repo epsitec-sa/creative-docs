@@ -615,6 +615,7 @@ namespace Epsitec.App.DocumentEditor
 
 				mainViewParent = leftPane;
 				Viewer viewer = new Viewer(document);
+				viewer.IsPictogramPreview = false;
 				viewer.SetParent(mainViewParent);
 				viewer.Anchor = AnchorStyles.All;
 				viewer.Margins = new Margins(wm, wm+sw+1, 6+wm, wm+sw+1);
@@ -632,6 +633,7 @@ namespace Epsitec.App.DocumentEditor
 				
 				mainViewParent = leftPane;
 				Viewer viewer = new Viewer(document);
+				viewer.IsPictogramPreview = false;
 				viewer.SetParent(mainViewParent);
 				viewer.Anchor = AnchorStyles.All;
 				viewer.Margins = new Margins(wm, wm+sw+1, 6+wm, wm+sw+1);
@@ -641,6 +643,7 @@ namespace Epsitec.App.DocumentEditor
 
 #if true
 				Viewer frame = new Viewer(document);
+				frame.IsPictogramPreview = true;
 				frame.SetParent(rightPane);
 				frame.Dock = DockStyle.Top;
 				frame.PreferredSize = new Size(50, 50);
@@ -656,6 +659,7 @@ namespace Epsitec.App.DocumentEditor
 
 				mainViewParent = di.tabPage;
 				Viewer viewer = new Viewer(document);
+				viewer.IsPictogramPreview = false;
 				viewer.SetParent(mainViewParent);
 				viewer.Anchor = AnchorStyles.All;
 				viewer.Margins = new Margins(wm+lm, wm+sw+1, 6+wm+tm, wm+sw+1);

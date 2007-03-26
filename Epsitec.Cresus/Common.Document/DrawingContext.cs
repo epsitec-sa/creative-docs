@@ -2372,19 +2372,13 @@ namespace Epsitec.Common.Document
 			this.InsertOpletRootStack();
 			this.InternalPageLayer(page, layer);
 
-			bool other = false;
 			foreach (Viewer viewer in this.document.Modifier.Viewers)
 			{
-				if (viewer != this.document.Modifier.ActiveViewer)
+				if (viewer.IsPictogramPreview)
 				{
 					viewer.DrawingContext.InternalPageLayer(page, layer);
-					other = true;
+					this.document.Notifier.NotifyArea(viewer);
 				}
-			}
-
-			if (this.document.Notifier != null && other)
-			{
-				this.document.Notifier.NotifyArea();
 			}
 		}
 
