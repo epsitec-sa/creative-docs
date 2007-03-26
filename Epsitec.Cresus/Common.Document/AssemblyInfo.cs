@@ -1,5 +1,5 @@
 //	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -14,5 +14,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 
-[assembly: AssemblyVersion ("2.0.13.0")]
+[assembly: AssemblyVersion ("2.0.14.0")]
 [assembly: ComVisibleAttribute (false)]

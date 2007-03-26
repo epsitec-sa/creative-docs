@@ -2183,7 +2183,7 @@ namespace Epsitec.Common.UI
 
 		private bool ProcessNavigationKeysRowsOfTiles(ItemView current, Widgets.KeyCode keyCode)
 		{
-#if true
+#if false
 			//	TODO: écrire ici un code "géographique" qui se base exclusivement
 			//	sur les informations géométriques retournées par la méthode 
 			//	ItemPanel.GetItemViewBounds(ItemView).

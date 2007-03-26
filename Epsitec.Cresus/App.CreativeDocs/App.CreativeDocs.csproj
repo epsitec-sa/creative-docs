@@ -101,6 +101,7 @@
     <None Include="App.ico" />
     <None Include="App.res" />
     <None Include="App.rc" />
+    <None Include="uac.manifest" />
     <Content Include="Resources\Common.Widgets\Captions.de.resource" />
     <Content Include="Resources\Common.Support\Captions.de.resource" />
     <Content Include="Resources\Common.Support\Strings.de.resource" />
