@@ -645,9 +645,7 @@ namespace Epsitec.App.DocumentEditor
 				Viewer frame = new Viewer(document);
 				frame.IsPictogramPreview = true;
 				frame.SetParent(rightPane);
-				//?frame.Dock = DockStyle.Top;
 				frame.Anchor = AnchorStyles.TopLeft;
-				//?frame.PreferredSize = new Size(50, 50);
 				frame.Margins = new Margins(wm, wm, 6+wm, wm);
 				frame.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
 				document.Modifier.AttachViewer(frame);
@@ -4415,6 +4413,7 @@ namespace Epsitec.App.DocumentEditor
 				di.containerPages.SetDirtyContent();
 
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+				context.AdaptPictogramViewer();
 				int cp = context.CurrentPage;
 				int tp = context.TotalPages();
 
@@ -4664,6 +4663,9 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.HasCurrentDocument )
 			{
 				this.CurrentDocument.Dialogs.UpdateAllSettings();
+
+				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+				context.AdaptPictogramViewer();
 			}
 		}
 

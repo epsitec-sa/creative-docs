@@ -2386,9 +2386,9 @@ namespace Epsitec.Common.Document
 			this.AdaptPictogramViewer();
 		}
 
-		protected void AdaptPictogramViewer()
+		public void AdaptPictogramViewer()
 		{
-			//	Adapte les vues miniatures de CrPicto.
+			//	Adapte les vues miniatures de CrPicto en fonction de la page courante.
 			if (!this.viewer.IsPictogramPreview)
 			{
 				foreach (Viewer viewer in this.document.Modifier.Viewers)
