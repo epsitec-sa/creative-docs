@@ -645,8 +645,9 @@ namespace Epsitec.App.DocumentEditor
 				Viewer frame = new Viewer(document);
 				frame.IsPictogramPreview = true;
 				frame.SetParent(rightPane);
-				frame.Dock = DockStyle.Top;
-				frame.PreferredSize = new Size(50, 50);
+				//?frame.Dock = DockStyle.Top;
+				frame.Anchor = AnchorStyles.TopLeft;
+				//?frame.PreferredSize = new Size(50, 50);
 				frame.Margins = new Margins(wm, wm, 6+wm, wm);
 				frame.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
 				document.Modifier.AttachViewer(frame);

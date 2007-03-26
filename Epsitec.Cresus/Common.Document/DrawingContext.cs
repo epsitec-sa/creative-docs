@@ -2371,15 +2371,6 @@ namespace Epsitec.Common.Document
 			//	Spécifie une page et un calque.
 			this.InsertOpletRootStack();
 			this.InternalPageLayer(page, layer);
-
-			foreach (Viewer viewer in this.document.Modifier.Viewers)
-			{
-				if (viewer.IsPictogramPreview)
-				{
-					viewer.DrawingContext.InternalPageLayer(page, layer);
-					this.document.Notifier.NotifyArea(viewer);
-				}
-			}
 		}
 
 		public void InternalPageLayer(int page, int layer)
@@ -2392,6 +2383,24 @@ namespace Epsitec.Common.Document
 			this.RootStackPush(layer);
 			this.UpdateAfterPageChanged();
 			this.document.Modifier.OpletQueueEnable = ie;
+			this.AdaptPictogramViewer();
+		}
+
+		protected void AdaptPictogramViewer()
+		{
+			//	Adapte les vues miniatures de CrPicto.
+			if (!this.viewer.IsPictogramPreview)
+			{
+				foreach (Viewer viewer in this.document.Modifier.Viewers)
+				{
+					if (viewer.IsPictogramPreview)
+					{
+						viewer.PreferredSize = this.PageSize;
+						viewer.DrawingContext.InternalPageLayer(this.CurrentPage, this.CurrentLayer);
+						this.document.Notifier.NotifyArea(viewer);
+					}
+				}
+			}
 		}
 
 		public int TotalPages()
