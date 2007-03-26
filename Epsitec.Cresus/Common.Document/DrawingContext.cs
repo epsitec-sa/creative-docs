@@ -2371,6 +2371,21 @@ namespace Epsitec.Common.Document
 			//	Spécifie une page et un calque.
 			this.InsertOpletRootStack();
 			this.InternalPageLayer(page, layer);
+
+			bool other = false;
+			foreach (Viewer viewer in this.document.Modifier.Viewers)
+			{
+				if (viewer != this.document.Modifier.ActiveViewer)
+				{
+					viewer.DrawingContext.InternalPageLayer(page, layer);
+					other = true;
+				}
+			}
+
+			if (this.document.Notifier != null && other)
+			{
+				this.document.Notifier.NotifyArea();
+			}
 		}
 
 		public void InternalPageLayer(int page, int layer)

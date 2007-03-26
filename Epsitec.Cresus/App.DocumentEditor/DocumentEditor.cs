@@ -643,6 +643,7 @@ namespace Epsitec.App.DocumentEditor
 				Viewer frame = new Viewer(document);
 				frame.SetParent(rightPane);
 				frame.Dock = DockStyle.Top;
+				frame.PreferredSize = new Size(50, 50);
 				frame.Margins = new Margins(wm, wm, 6+wm, wm);
 				frame.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
 				document.Modifier.AttachViewer(frame);
