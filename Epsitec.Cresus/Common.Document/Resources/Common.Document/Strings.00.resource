@@ -1375,6 +1375,7 @@
   <data name="Error.Share" id="0P801">Impossible de distribuer les objets,&lt;br/&gt;car ils sont trop serrés.</data>
   <data name="Error.Combine" id="0Q801">Un ou plusieurs objets n&amp;apos;ont pas pu être combinés.</data>
   <data name="Error.Uncombine" id="0R801">Un ou plusieurs objets n&amp;apos;ont pas pu être scindés.</data>
+  <data name="Error.ExistingText" id="0OB01">La présence de textes empêche l&amp;apos;enregistrement de l&amp;apos;icône.&lt;br/&gt;Il faut convertir ces objets en courbes avant l&amp;apos;enregistrement.</data>
   <data name="Error.ToBezier" id="0S801">Un ou plusieurs objets n&amp;apos;ont pas pu être convertis en courbes.</data>
   <data name="Error.ToPoly" id="0T801">Un ou plusieurs objets n&amp;apos;ont pas pu être convertis en droites.</data>
   <data name="Error.Fragment" id="0U801">Un ou plusieurs objets n&amp;apos;ont pas pu être fragmentés.</data>

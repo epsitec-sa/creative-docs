@@ -426,13 +426,13 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 
-			if (this.TotalHandle == 1)
+			int total = this.TotalHandle;
+			if (total == 1)
 			{
 				this.HandleAdd(pos, HandleType.Primary);
 			}
 			else
 			{
-				int total = this.TotalHandle;
 				double len = Point.Distance(this.Handle(total-1).Position, this.Handle(total-2).Position);
 				if (len < this.spacing || total >= 100)
 				{

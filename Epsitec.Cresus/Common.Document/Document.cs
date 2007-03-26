@@ -1323,6 +1323,12 @@ namespace Epsitec.Common.Document
 
 				if (this.type == DocumentType.Pictogram)
 				{
+					string err = this.PictogramCheckBeforeWrite();
+					if (err != "")
+					{
+						return err;
+					}
+
 					this.ioDocumentManager.Save (filename,
 						delegate (System.IO.Stream stream)
 						{
@@ -1410,6 +1416,22 @@ namespace Epsitec.Common.Document
 			}
 			DocumentCache.Remove(filename);
 			return "";
+		}
+
+		private string PictogramCheckBeforeWrite()
+		{
+			foreach (Objects.Abstract obj in this.Deep(null))
+			{
+				if (obj is Objects.TextBox  ||
+					obj is Objects.TextBox2 ||
+					obj is Objects.TextLine ||
+					obj is Objects.TextLine2)
+				{
+					return Res.Strings.Error.ExistingText;
+				}
+			}
+
+			return "";  // ok
 		}
 
 		private static IOType ReadIdentifier(Stream stream)
