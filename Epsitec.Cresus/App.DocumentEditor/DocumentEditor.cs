@@ -607,10 +607,10 @@ namespace Epsitec.App.DocumentEditor
 				pane.Items.Add(leftPane);
 
 				PanePage rightPane = new PanePage();
-				rightPane.PaneAbsoluteSize = 40;
+				rightPane.PaneAbsoluteSize = 100;
 				rightPane.PaneElasticity = 0;
 				rightPane.PaneMinSize = 40;
-				rightPane.PaneMaxSize = 200;
+				rightPane.PaneMaxSize = 400;
 				pane.Items.Add(rightPane);
 
 				mainViewParent = leftPane;
@@ -654,6 +654,7 @@ namespace Epsitec.App.DocumentEditor
 
 				Viewer frame2 = new Viewer(document);
 				frame2.IsPictogramPreview = true;
+				frame2.PictogramMagnifierZoom = 3;
 				frame2.SetParent(rightPane);
 				//?frame2.Anchor = AnchorStyles.TopLeft;
 				frame2.Dock = DockStyle.StackBegin;

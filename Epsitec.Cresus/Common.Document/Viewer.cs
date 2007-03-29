@@ -145,6 +145,18 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public double PictogramMagnifierZoom
+		{
+			get
+			{
+				return this.pictogramMagnifierZoom;
+			}
+			set
+			{
+				this.pictogramMagnifierZoom = value;
+			}
+		}
+
 
 #if false
 		public override double DefaultWidth
@@ -4323,6 +4335,15 @@ namespace Epsitec.Common.Document
 			{
 				return;
 			}
+
+			if (this.isPictogramPreview && this.pictogramMagnifierZoom != 1)
+			{
+				Bitmap bitmap = this.document.Printer.CreateMiniatureBitmap(this.Client.Size/this.pictogramMagnifierZoom, false, this.drawingContext.CurrentPage);
+				graphics.ScaleTransform(this.pictogramMagnifierZoom, this.pictogramMagnifierZoom, 0, 0);
+				graphics.ImageFilter = new ImageFilter(ImageFilteringMode.None);
+				graphics.PaintImage(bitmap, new Rectangle(this.Client.Bounds.BottomLeft, this.Client.Bounds.Size/this.pictogramMagnifierZoom));
+				return;
+			}
 			
 			//	Ignore une zone de repeinture d'un pixel à gauche ou en haut,
 			//	à cause des règles qui chevauchent Viewer.
@@ -4456,6 +4477,16 @@ namespace Epsitec.Common.Document
 				graphics.RenderSolid(Color.FromAlphaRgb(0.5, 0.2, 0.2, 0.0));  // beurk !
 				this.debugDirty = false;
 			}
+		}
+
+		public override void InvalidateRectangle(Rectangle rect, bool sync)
+		{
+			if (this.isPictogramPreview && this.pictogramMagnifierZoom != 1)
+			{
+				rect = this.Client.Bounds;
+			}
+
+			base.InvalidateRectangle(rect, sync);
 		}
 
 		public override void Invalidate(InvalidateReason reason)
@@ -4835,6 +4866,7 @@ namespace Epsitec.Common.Document
 		protected Selector						selector;
 		protected Selector						zoomer;
 		protected bool							isPictogramPreview;
+		protected double						pictogramMagnifierZoom = 1;
 		protected bool							partialSelect;
 		protected bool							selectorAdaptLine = true;
 		protected bool							selectorAdaptText = true;

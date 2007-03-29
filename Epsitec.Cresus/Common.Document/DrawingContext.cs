@@ -2395,7 +2395,7 @@ namespace Epsitec.Common.Document
 				{
 					if (viewer.IsPictogramPreview)
 					{
-						viewer.PreferredSize = this.PageSize;
+						viewer.PreferredSize = this.PageSize*viewer.PictogramMagnifierZoom;
 						viewer.DrawingContext.InternalPageLayer(this.CurrentPage, this.CurrentLayer);
 						this.document.Notifier.NotifyArea(viewer);
 					}
