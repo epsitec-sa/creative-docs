@@ -642,13 +642,25 @@ namespace Epsitec.App.DocumentEditor
 #endif
 
 #if true
-				Viewer frame = new Viewer(document);
-				frame.IsPictogramPreview = true;
-				frame.SetParent(rightPane);
-				frame.Anchor = AnchorStyles.TopLeft;
-				frame.Margins = new Margins(wm, wm, 6+wm, wm);
-				frame.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
-				document.Modifier.AttachViewer(frame);
+				Viewer frame1 = new Viewer(document);
+				frame1.IsPictogramPreview = true;
+				frame1.SetParent(rightPane);
+				//?frame1.Anchor = AnchorStyles.TopLeft;
+				frame1.Dock = DockStyle.StackBegin;
+				frame1.HorizontalAlignment = HorizontalAlignment.Left;
+				frame1.Margins = new Margins(wm, wm, 6+wm, wm);
+				frame1.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
+				document.Modifier.AttachViewer(frame1);
+
+				Viewer frame2 = new Viewer(document);
+				frame2.IsPictogramPreview = true;
+				frame2.SetParent(rightPane);
+				//?frame2.Anchor = AnchorStyles.TopLeft;
+				frame2.Dock = DockStyle.StackBegin;
+				frame2.HorizontalAlignment = HorizontalAlignment.Left;
+				frame2.Margins = new Margins(wm, wm, wm, wm);
+				frame2.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
+				document.Modifier.AttachViewer(frame2);
 #endif
 			}
 			else

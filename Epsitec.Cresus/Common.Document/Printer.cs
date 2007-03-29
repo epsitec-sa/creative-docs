@@ -101,23 +101,23 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public Drawing.Bitmap CreateMiniatureBitmap(Size sizeHope, bool isModel, int page)
+		public Bitmap CreateMiniatureBitmap(Size sizeHope, bool isModel, int page)
 		{
 			//	Retourne les données pour l'image bitmap miniature de la première page.
-			DrawingContext drawingContext = new DrawingContext (this.document, null);
+			DrawingContext drawingContext = new DrawingContext(this.document, null);
 			drawingContext.ContainerSize = this.document.PageSize;
 			drawingContext.PreviewActive = false;
 			drawingContext.IsBitmap = true;
 			drawingContext.GridShow = isModel;
 
-			int pageNumber = this.document.Modifier.PrintablePageRank (page);
+			int pageNumber = this.document.Modifier.PrintablePageRank(page);
 
-			Size pageSize = this.document.GetPageSize (pageNumber);
+			Size pageSize = this.document.GetPageSize(pageNumber);
 			double dpix = sizeHope.Width*254/pageSize.Width;
 			double dpiy = sizeHope.Height*254/pageSize.Height;
-			double dpi = System.Math.Min (dpix, dpiy);
+			double dpi = System.Math.Min(dpix, dpiy);
 
-			return this.ExportBitmap (drawingContext, pageNumber, dpi, 24, 1, false);
+			return this.ExportBitmap(drawingContext, pageNumber, dpi, 24, 1, false);
 		}
 
 
