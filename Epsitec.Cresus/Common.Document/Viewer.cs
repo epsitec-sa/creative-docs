@@ -4336,12 +4336,21 @@ namespace Epsitec.Common.Document
 				return;
 			}
 
+			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+
 			if (this.isPictogramPreview && this.pictogramMagnifierZoom != 1)
 			{
 				Bitmap bitmap = this.document.Printer.CreateMiniatureBitmap(this.Client.Size/this.pictogramMagnifierZoom, false, this.drawingContext.CurrentPage);
+				Transform it = graphics.Transform;
 				graphics.ScaleTransform(this.pictogramMagnifierZoom, this.pictogramMagnifierZoom, 0, 0);
 				graphics.ImageFilter = new ImageFilter(ImageFilteringMode.None);
 				graphics.PaintImage(bitmap, new Rectangle(this.Client.Bounds.BottomLeft, this.Client.Bounds.Size/this.pictogramMagnifierZoom));
+				graphics.Transform = it;
+
+				Rectangle rect = new Rectangle(0, 0, this.Client.Size.Width, this.Client.Size.Height);
+				rect.Deflate(0.5);
+				graphics.AddRectangle (rect);
+				graphics.RenderSolid (adorner.ColorBorder);
 				return;
 			}
 			
@@ -4381,28 +4390,32 @@ namespace Epsitec.Common.Document
 			}
 			
 			//?System.Diagnostics.Debug.WriteLine("PaintBackgroundImplementation "+clipRect.ToString());
-			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
 			if (this.paintWorkSurface)
 			{
 				//	Peint le fond de la surface de travail.
 				if (this.document.Type == DocumentType.Pictogram)
 				{
-					if (!this.BackColor.IsTransparent && this.drawingContext.PreviewActive)
+					if (this.isPictogramPreview)
 					{
-						graphics.AddFilledRectangle (clipRect);
-						graphics.RenderSolid (this.BackColor);
+						graphics.AddFilledRectangle(clipRect);
+						graphics.RenderSolid(Color.FromBrightness(1));
+					}
+					else if (!this.BackColor.IsTransparent && this.drawingContext.PreviewActive)
+					{
+						graphics.AddFilledRectangle(clipRect);
+						graphics.RenderSolid(this.BackColor);
 					}
 					else
 					{
-						graphics.AddFilledRectangle (clipRect);
-						graphics.RenderSolid (Color.FromBrightness (0.95));
+						graphics.AddFilledRectangle(clipRect);
+						graphics.RenderSolid(Color.FromBrightness(0.95));
 					}
 				}
 				else
 				{
-					graphics.AddFilledRectangle (clipRect);
-					graphics.RenderSolid (Color.FromBrightness (0.95));
+					graphics.AddFilledRectangle(clipRect);
+					graphics.RenderSolid(Color.FromBrightness(0.95));
 				}
 			}
 
@@ -4465,8 +4478,8 @@ namespace Epsitec.Common.Document
 			if (this.paintWorkSurface)
 			{
 				//	Dessine le cadre.
-				Rectangle rect = new Rectangle (0, 0, this.Client.Size.Width, this.Client.Size.Height);
-				rect.Deflate (0.5);
+				Rectangle rect = new Rectangle(0, 0, this.Client.Size.Width, this.Client.Size.Height);
+				rect.Deflate(0.5);
 				graphics.AddRectangle (rect);
 				graphics.RenderSolid (adorner.ColorBorder);
 			}

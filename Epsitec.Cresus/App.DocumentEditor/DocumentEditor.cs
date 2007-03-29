@@ -607,7 +607,7 @@ namespace Epsitec.App.DocumentEditor
 				pane.Items.Add(leftPane);
 
 				PanePage rightPane = new PanePage();
-				rightPane.PaneAbsoluteSize = 100;
+				rightPane.PaneAbsoluteSize = 80;
 				rightPane.PaneElasticity = 0;
 				rightPane.PaneMinSize = 40;
 				rightPane.PaneMaxSize = 400;
@@ -642,26 +642,40 @@ namespace Epsitec.App.DocumentEditor
 #endif
 
 #if true
+				HSlider slider = new HSlider(rightPane);
+				slider.MinValue = 1M;
+				slider.MaxValue = 5M;
+				slider.SmallChange = 1M;
+				slider.LargeChange = 1M;
+				slider.Resolution = 1M;
+				slider.Value = 1M;
+				slider.PreferredWidth = 70;
+				slider.PreferredHeight = 14;
+				slider.Anchor = AnchorStyles.TopLeft;
+				slider.HorizontalAlignment = HorizontalAlignment.Left;
+				slider.Margins = new Margins(wm, wm, 6+wm, wm);
+				slider.ValueChanged += new EventHandler(this.HandlePictogramPreviewSliderValueChanged);
+
 				Viewer frame1 = new Viewer(document);
 				frame1.IsPictogramPreview = true;
 				frame1.SetParent(rightPane);
-				//?frame1.Anchor = AnchorStyles.TopLeft;
-				frame1.Dock = DockStyle.StackBegin;
-				frame1.HorizontalAlignment = HorizontalAlignment.Left;
-				frame1.Margins = new Margins(wm, wm, 6+wm, wm);
+				frame1.Anchor = AnchorStyles.TopLeft;
+				//?frame1.Dock = DockStyle.StackBegin;
+				//?frame1.HorizontalAlignment = HorizontalAlignment.Left;
+				frame1.Margins = new Margins(wm, wm, 6+wm+30, wm);
 				frame1.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
 				document.Modifier.AttachViewer(frame1);
 
-				Viewer frame2 = new Viewer(document);
-				frame2.IsPictogramPreview = true;
-				frame2.PictogramMagnifierZoom = 3;
-				frame2.SetParent(rightPane);
-				//?frame2.Anchor = AnchorStyles.TopLeft;
-				frame2.Dock = DockStyle.StackBegin;
-				frame2.HorizontalAlignment = HorizontalAlignment.Left;
-				frame2.Margins = new Margins(wm, wm, wm, wm);
-				frame2.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
-				document.Modifier.AttachViewer(frame2);
+				//Viewer frame2 = new Viewer(document);
+				//frame2.IsPictogramPreview = true;
+				//frame2.PictogramMagnifierZoom = 3;
+				//frame2.SetParent(rightPane);
+				////?frame2.Anchor = AnchorStyles.TopLeft;
+				//frame2.Dock = DockStyle.StackBegin;
+				//frame2.HorizontalAlignment = HorizontalAlignment.Left;
+				//frame2.Margins = new Margins(wm, wm, wm, wm);
+				//frame2.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
+				//document.Modifier.AttachViewer(frame2);
 #endif
 			}
 			else
@@ -864,6 +878,22 @@ namespace Epsitec.App.DocumentEditor
 			di.containerOperations.Margins = new Margins(4, 4, 10, 4);
 			document.Modifier.AttachContainer(di.containerOperations);
 #endif
+		}
+
+		private void HandlePictogramPreviewSliderValueChanged(object sender)
+		{
+			HSlider slider = sender as HSlider;
+
+			foreach (Viewer viewer in this.CurrentDocument.Modifier.Viewers)
+			{
+				if (viewer.IsPictogramPreview)
+				{
+					viewer.PictogramMagnifierZoom = (double) slider.Value;
+				}
+			}
+
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			context.AdaptPictogramViewer();
 		}
 
 		public HMenu GetMenu()
