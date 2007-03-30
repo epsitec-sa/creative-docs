@@ -4496,7 +4496,11 @@ namespace Epsitec.Common.Document
 		{
 			if (this.isPictogramPreview && this.pictogramMagnifierZoom != 1)
 			{
-				rect = this.Client.Bounds;
+				double left   = System.Math.Floor(rect.Left/this.pictogramMagnifierZoom)*this.pictogramMagnifierZoom;
+				double bottom = System.Math.Floor(rect.Bottom/this.pictogramMagnifierZoom)*this.pictogramMagnifierZoom;
+				double right  = System.Math.Ceiling(rect.Right/this.pictogramMagnifierZoom)*this.pictogramMagnifierZoom;
+				double top    = System.Math.Ceiling(rect.Top/this.pictogramMagnifierZoom)*this.pictogramMagnifierZoom;
+				rect = new Rectangle(left, bottom, right-left, top-bottom);
 			}
 
 			base.InvalidateRectangle(rect, sync);
