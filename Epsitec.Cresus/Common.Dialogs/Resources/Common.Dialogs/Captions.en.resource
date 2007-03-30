@@ -15,7 +15,7 @@
   <data id="0F">&lt;s:data id="_0" f:Labels="{Collection {Text 'Date'}}" /&gt;</data>
   <data id="0G">&lt;s:data id="_0" f:Labels="{Collection {Text 'Size'}}" /&gt;</data>
   <data id="0H">&lt;s:data id="_0" f:Labels="{Collection {Text 'Description'}}" /&gt;</data>
-  <data id="0I">&lt;s:data id="_0" /&gt;</data>
-  <data id="0J">&lt;s:data id="_0" /&gt;</data>
-  <data id="0K">&lt;s:data id="_0" /&gt;</data>
+  <data id="0I">&lt;s:data id="_0" f:Description="Toggle the display mode (list/tiles)" f:Labels="{Collection {Text 'Display mode'}}" /&gt;</data>
+  <data id="0J">&lt;s:data id="_0" f:Description="Toggle the preview size in the file list" f:Labels="{Collection {Text 'Size'}}" /&gt;</data>
+  <data id="0K">&lt;s:data id="_0" f:Description="Refresh list" f:Labels="{Collection {Text 'Refresh'}}" /&gt;</data>
 </bundle>
