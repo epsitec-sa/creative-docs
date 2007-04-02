@@ -466,6 +466,11 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.SnapPos(ref pos);
 
 			int total = this.TotalHandle;
+			if (total < 2)
+			{
+				return;
+			}
+
 			if (total > 2)
 			{
 				Point p0 = this.Handle(total-1).Position;
