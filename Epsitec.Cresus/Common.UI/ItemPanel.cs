@@ -1818,22 +1818,29 @@ namespace Epsitec.Common.UI
 		}
 
 
-		internal void NotifyWidgetClicked(ItemViewWidget widget, Widgets.Message message, Drawing.Point pos)
+		internal void NotifyWidgetPressed(ItemViewWidget widget, Widgets.Message message, Drawing.Point pos)
 		{
-			ItemPanel root = this.RootPanel;
+			Widgets.MessageEventArgs e = new Widgets.MessageEventArgs (message, widget.MapClientToParent (pos));
 
-			root.manualTrackingCounter++;
+			base.OnPressed (e);
 
-			try
+			if (!e.Suppress)
 			{
-				if (message.Button == MouseButtons.Left)
+				ItemPanel root = this.RootPanel;
+
+				root.manualTrackingCounter++;
+
+				try
 				{
-					root.HandleItemViewPressed (message, widget.ItemView);
+					if (message.Button == MouseButtons.Left)
+					{
+						root.HandleItemViewPressed (message, widget.ItemView);
+					}
 				}
-			}
-			finally
-			{
-				root.manualTrackingCounter--;
+				finally
+				{
+					root.manualTrackingCounter--;
+				}
 			}
 		}
 

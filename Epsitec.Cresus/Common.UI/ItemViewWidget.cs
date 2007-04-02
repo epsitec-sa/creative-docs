@@ -77,7 +77,7 @@ namespace Epsitec.Common.UI
 					{
 						case Widgets.MessageType.MouseDown:
 							message.Consumer = this;
-							panel.NotifyWidgetClicked (this, message, pos);
+							panel.NotifyWidgetPressed (this, message, pos);
 							break;
 
 						case Epsitec.Common.Widgets.MessageType.MouseUp:
