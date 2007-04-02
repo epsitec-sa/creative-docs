@@ -46,6 +46,12 @@
         "Entry"
         {
         "MsmKey" = "8:_0D2F1DE5D94A57D3FBE6AF788D1D1A5B"
+        "OwnerKey" = "8:_5ABE1C6781A027783780B6B9B67DD7BB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_0D2F1DE5D94A57D3FBE6AF788D1D1A5B"
         "OwnerKey" = "8:_CB85E79B98DFB77512A3521B3D0768C6"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -183,14 +189,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_245A2AACD15647C68865B1C9942ABA06"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_1B9F6191DD954F16AD315B480722AB61"
+        "OwnerKey" = "8:_B0FC9A5706914E848F9F20C897BFA22A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_2D51F7A989EF4997A21E0D7619F23D79"
-        "OwnerKey" = "8:_B0FC9A5706914E848F9F20C897BFA22A"
+        "MsmKey" = "8:_245A2AACD15647C68865B1C9942ABA06"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1013,7 +1019,7 @@
             {
             "Enabled" = "11:TRUE"
             "PromptEnabled" = "11:TRUE"
-            "PrerequisitesLocation" = "2:1"
+            "PrerequisitesLocation" = "2:2"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
                 "Items"
@@ -2137,7 +2143,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Crésus Documents"
         "ProductCode" = "8:{60E413FB-E18F-4631-BC0A-9992867F65FE}"
-        "PackageCode" = "8:{9DDBE4EF-D0D5-4290-BF7A-5D831E9A51AC}"
+        "PackageCode" = "8:{136C5DDD-3983-4F36-AB74-5C9E66CDD64A}"
         "UpgradeCode" = "8:{028E66AB-AF47-419F-A2DE-8EDC1BC9C240}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -2719,7 +2725,7 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_2D51F7A989EF4997A21E0D7619F23D79"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_1B9F6191DD954F16AD315B480722AB61"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
@@ -2737,7 +2743,7 @@
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
+            "SourcePath" = "8:C:\\Program Files (x86)\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
                 "Properties"
                 {
                 }
