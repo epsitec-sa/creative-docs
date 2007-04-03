@@ -384,7 +384,7 @@ namespace Epsitec.Common.UI
 		{
 			if (this.currentView != null)
 			{
-				Drawing.Rectangle bounds = this.currentView.FocusBounds;
+				Drawing.Rectangle bounds = this.MapToRoot (this.currentPanel, this.currentView.FocusBounds);
 
 				if (!this.isCurrentXValid)
 				{
