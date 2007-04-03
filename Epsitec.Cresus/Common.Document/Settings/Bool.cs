@@ -122,7 +122,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "ImageOnlySelected":
-					this.text = "Seulement les objets sélectionnés";
+					this.text = Res.Strings.Dialog.Bool.ImageOnlySelected;
 					break;
 
 				case "ExportPDFTarget":

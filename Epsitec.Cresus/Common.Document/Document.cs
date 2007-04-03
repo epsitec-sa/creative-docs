@@ -2261,7 +2261,6 @@ namespace Epsitec.Common.Document
 		{
 			//	Exporte le document.
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
-			//?this.Modifier.DeselectAll();
 
 			if (this.imageCache != null)
 			{
