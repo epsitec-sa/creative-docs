@@ -30,6 +30,36 @@ namespace Epsitec.Common.UI
 			this.isCurrentYValid = false;
 		}
 
+		public bool Navigate(Widgets.Direction direction)
+		{
+			ItemView view = this.FindNeighbour (direction);
+
+			if (view != null)
+			{
+				this.currentView  = view;
+				this.currentPanel = view.Owner;
+
+				switch (direction)
+				{
+					case Epsitec.Common.Widgets.Direction.Up:
+					case Epsitec.Common.Widgets.Direction.Down:
+						this.isCurrentYValid = false;
+						break;
+
+					case Epsitec.Common.Widgets.Direction.Left:
+					case Epsitec.Common.Widgets.Direction.Right:
+						this.isCurrentXValid = false;
+						break;
+				}
+				
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 		private ItemView FindNeighbour(Widgets.Direction direction)
 		{
 			this.UpdateCurrentPosition ();
