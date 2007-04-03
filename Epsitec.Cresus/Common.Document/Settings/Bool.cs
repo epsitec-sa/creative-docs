@@ -121,6 +121,10 @@ namespace Epsitec.Common.Document.Settings
 					this.conditionState = true;
 					break;
 
+				case "ImageOnlySelected":
+					this.text = "Seulement les objets sélectionnés";
+					break;
+
 				case "ExportPDFTarget":
 					this.text = Res.Strings.Dialog.Bool.ExportPDFTarget;
 					break;
@@ -209,6 +213,9 @@ namespace Epsitec.Common.Document.Settings
 
 					case "PrintDebugArea":
 						return this.document.Settings.PrintInfo.DebugArea;
+
+					case "ImageOnlySelected":
+						return this.document.Printer.ImageOnlySelected;
 
 					case "ExportPDFTarget":
 						return this.document.Settings.ExportPDFInfo.Target;
@@ -319,6 +326,10 @@ namespace Epsitec.Common.Document.Settings
 						this.document.Settings.PrintInfo.DebugArea = value;
 						break;
 
+					case "ImageOnlySelected":
+						this.document.Printer.ImageOnlySelected = value;
+						break;
+
 					case "ExportPDFTarget":
 						this.document.Settings.ExportPDFInfo.Target = value;
 						break;
@@ -331,6 +342,22 @@ namespace Epsitec.Common.Document.Settings
 						this.document.Modifier.RepeatDuplicateMove = value;
 						break;
 				}
+			}
+		}
+
+
+		public bool IsEnabled
+		{
+			get
+			{
+				bool enabled = true;
+
+				if ( this.name == "ImageOnlySelected" )
+				{
+					enabled = (this.document.Modifier.TotalSelected > 0);
+				}
+
+				return enabled;
 			}
 		}
 

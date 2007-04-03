@@ -24,7 +24,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window = new Window();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
-				this.WindowInit("Export", 300, 340);
+				this.WindowInit("Export", 300, 360);
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowExportCloseClicked);
@@ -96,8 +96,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			this.CloseWindow();
 
-			string filename = System.IO.Path.Combine (this.editor.CurrentDocument.ExportDirectory, this.editor.CurrentDocument.ExportFilename);
-			string err = this.editor.CurrentDocument.Export (filename);
+			string filename = System.IO.Path.Combine(this.editor.CurrentDocument.ExportDirectory, this.editor.CurrentDocument.ExportFilename);
+			string err = this.editor.CurrentDocument.Export(filename);
 			this.editor.DialogError(err);
 		}
 

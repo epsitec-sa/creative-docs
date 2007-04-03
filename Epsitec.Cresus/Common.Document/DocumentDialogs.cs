@@ -354,6 +354,7 @@ namespace Epsitec.Common.Document
 				this.tabIndex = 0;
 
 				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Export.Param);
+				this.CreateBool(container, "ImageOnlySelected");
 				this.CreateDouble(container, "ImageDpi");
 				this.CreateCombo(container, "ImageDepth");
 				this.CreateCombo(container, "ImageCompression");
@@ -376,6 +377,7 @@ namespace Epsitec.Common.Document
 			}
 
 			this.UpdateDialogSettings("Export");
+			this.UpdateBool("ImageOnlySelected");
 			this.UpdateCombo("ImageDepth");
 			this.UpdateCombo("ImageCompression");
 			this.UpdateDouble("ImageQuality");
@@ -675,6 +677,20 @@ namespace Epsitec.Common.Document
 				{
 					this.EnableWidget(setting.Name, sBool.Value^setting.ConditionState);
 				}
+			}
+		}
+
+		protected void UpdateBool(string name)
+		{
+			Settings.Abstract settings = this.document.Settings.Get(name);
+			if ( settings == null )  return;
+			Settings.Bool sBool = settings as Settings.Bool;
+			if ( sBool == null )  return;
+
+			CheckButton button = this.WidgetsTableSearch(name, "") as CheckButton;
+			if ( button != null )
+			{
+				button.Enable = (sBool.IsEnabled);
 			}
 		}
 		#endregion

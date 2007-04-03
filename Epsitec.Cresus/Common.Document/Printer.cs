@@ -15,6 +15,7 @@ namespace Epsitec.Common.Document
 		{
 			this.document = document;
 
+			this.imageOnlySelected = false;
 			this.imageFormat = ImageFormat.Unknown;
 			this.imageDpi = 100;
 			this.imageCompression = ImageCompression.None;
@@ -87,7 +88,7 @@ namespace Epsitec.Common.Document
 			double dpiy = sizeHope.Height*254/pageSize.Height;
 			double dpi = System.Math.Min(dpix, dpiy);
 			
-			string err = this.ExportGeometry(drawingContext, pageNumber, ImageFormat.Png, dpi, ImageCompression.None, 24, 85, 1, false, out data);
+			string err = this.ExportGeometry(drawingContext, pageNumber, ImageFormat.Png, dpi, ImageCompression.None, 24, 85, 1, false, false, out data);
 			if (err == "")
 			{
 				filename = "preview.png";
@@ -117,7 +118,7 @@ namespace Epsitec.Common.Document
 			double dpiy = sizeHope.Height*254/pageSize.Height;
 			double dpi = System.Math.Min(dpix, dpiy);
 
-			return this.ExportBitmap(drawingContext, pageNumber, dpi, 24, 1, false);
+			return this.ExportBitmap(drawingContext, pageNumber, dpi, 24, 1, false, false);
 		}
 
 
@@ -137,6 +138,18 @@ namespace Epsitec.Common.Document
 				case ".wmf":  return ImageFormat.WindowsWmf;
 			}
 			return ImageFormat.Unknown;
+		}
+
+		public bool ImageOnlySelected
+		{
+			get
+			{
+				return this.document.Modifier.TotalSelected > 0 && this.imageOnlySelected;
+			}
+			set
+			{
+				this.imageOnlySelected = value;
+			}
 		}
 
 		public ImageFormat ImageFormat
@@ -1147,7 +1160,7 @@ namespace Epsitec.Common.Document
 			//	Exporte la géométrie complexe de tous les objets, en utilisant
 			//	un bitmap intermédiaire.
 			byte[] data;
-			string err = this.ExportGeometry(drawingContext, pageNumber, this.imageFormat, this.imageDpi, this.imageCompression, this.imageDepth, this.imageQuality, this.imageAA, true, out data);
+			string err = this.ExportGeometry(drawingContext, pageNumber, this.imageFormat, this.imageDpi, this.imageCompression, this.imageDepth, this.imageQuality, this.imageAA, true, this.ImageOnlySelected, out data);
 			if (err != "")
 			{
 				return err;
@@ -1186,7 +1199,7 @@ namespace Epsitec.Common.Document
             }
 
             byte[] data;
-            string err = this.ExportGeometry(drawingContext, pageNumber, format, dpi, ImageCompression.None, 32, 1.0, 1.0, true, out data);
+            string err = this.ExportGeometry(drawingContext, pageNumber, format, dpi, ImageCompression.None, 32, 1.0, 1.0, true, false, out data);
             if (err != "")
             {
                 return err;
@@ -1204,7 +1217,7 @@ namespace Epsitec.Common.Document
             return "";  // ok
         }
 
-        protected string ExportGeometry(DrawingContext drawingContext, int pageNumber, ImageFormat format, double dpi, ImageCompression compression, int depth, double quality, double AA, bool paintMark, out byte[] data)
+        protected string ExportGeometry(DrawingContext drawingContext, int pageNumber, ImageFormat format, double dpi, ImageCompression compression, int depth, double quality, double AA, bool paintMark, bool onlySelected, out byte[] data)
 		{
 			//	Exporte la géométrie complexe de tous les objets, en utilisant
 			//	un bitmap intermédiaire. Retourne un éventuel message d'erreur ainsi
@@ -1216,7 +1229,7 @@ namespace Epsitec.Common.Document
 				return Res.Strings.Error.BadImage;
 			}
 
-			Bitmap bitmap = this.ExportBitmap (drawingContext, pageNumber, dpi, depth, AA, paintMark);
+			Bitmap bitmap = this.ExportBitmap(drawingContext, pageNumber, dpi, depth, AA, paintMark, onlySelected);
 			
 			if (bitmap == null)
 			{
@@ -1236,7 +1249,7 @@ namespace Epsitec.Common.Document
 			return "";  // ok
 		}
 
-		protected Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, double dpi, int depth, double AA, bool paintMark)
+		protected Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, double dpi, int depth, double AA, bool paintMark, bool onlySelected)
 		{
 			Size pageSize = this.document.GetPageSize (pageNumber);
 			int dx = (int) ((pageSize.Width/10.0)*(dpi/25.4));
@@ -1261,7 +1274,7 @@ namespace Epsitec.Common.Document
 				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
 				gfx.PushColorModifier (new ColorModifierCallback (drawingContext.DimmedColor));
 
-				foreach (Objects.Abstract obj in this.document.Deep (layer))
+				foreach (Objects.Abstract obj in this.document.Deep(layer, onlySelected))
 				{
 					if (obj.IsHide)
 					{
@@ -1310,6 +1323,7 @@ namespace Epsitec.Common.Document
 
 
 		protected Document					document;
+		protected bool						imageOnlySelected;
 		protected ImageFormat				imageFormat;
 		protected double					imageDpi;
 		protected ImageCompression			imageCompression;
