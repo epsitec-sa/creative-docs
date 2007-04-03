@@ -1906,6 +1906,10 @@ namespace Epsitec.Common.UI
 
 		private void RecordFocus(ItemView itemView)
 		{
+			ItemPanelNavigator navigator = this.GetNavigator ();
+
+			navigator.NavigateTo (itemView);
+
 			if (this.focusedItemView == itemView)
 			{
 				return;
@@ -1924,6 +1928,24 @@ namespace Epsitec.Common.UI
 			this.focusedItemView = null;
 		}
 
+		private ItemPanelNavigator GetNavigator()
+		{
+			if (this.IsRootPanel)
+			{
+				lock (this.exclusion)
+				{
+					if (this.navigator == null)
+					{
+						this.navigator = new ItemPanelNavigator (this);
+					}
+				}
+				return this.navigator;
+			}
+			else
+			{
+				return this.RootPanel.GetNavigator ();
+			}
+		}
 
 
 		private void ContinuousKeySelection(IList<ItemView> list, ItemView oldCurrent, ItemView newCurrent)
@@ -2226,12 +2248,49 @@ namespace Epsitec.Common.UI
 
 		private bool ProcessNavigationKeysRowsOfTiles(ItemView current, Widgets.KeyCode keyCode)
 		{
-#if false
+#if true
 			//	TODO: écrire ici un code "géographique" qui se base exclusivement
 			//	sur les informations géométriques retournées par la méthode 
 			//	ItemPanel.GetItemViewBounds(ItemView).
+
+			ItemPanelNavigator navigator = this.GetNavigator ();
 			
-			return false;
+			switch (keyCode)
+			{
+				case KeyCode.ArrowLeft:
+					if (navigator.Navigate (Widgets.Direction.Left))
+					{
+						this.Items.MoveCurrentTo (navigator.Current.Item);
+					}
+					break;
+
+				case KeyCode.ArrowRight:
+					if (navigator.Navigate (Widgets.Direction.Right))
+					{
+						this.Items.MoveCurrentTo (navigator.Current.Item);
+					}
+					break;
+
+				case KeyCode.ArrowUp:
+					if (navigator.Navigate (Widgets.Direction.Up))
+					{
+						this.Items.MoveCurrentTo (navigator.Current.Item);
+					}
+					break;
+
+				case KeyCode.ArrowDown:
+					if (navigator.Navigate (Widgets.Direction.Down))
+					{
+						this.Items.MoveCurrentTo (navigator.Current.Item);
+					}
+					break;
+
+				default:
+					return false;
+			}
+			
+			
+			return true;
 #else
 			int pos = this.Items.CurrentPosition;
 
@@ -3321,6 +3380,7 @@ namespace Epsitec.Common.UI
 
 		ItemView						focusedItemView;
 		System.WeakReference			firstSelectedItem;
+		ItemPanelNavigator				navigator;
 
 		double							minItemWidth;
 		double							maxItemWidth;

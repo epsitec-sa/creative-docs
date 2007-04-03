@@ -22,16 +22,30 @@ namespace Epsitec.Common.UI
 			this.rootPanel = rootPanel;
 		}
 
+		public ItemView Current
+		{
+			get
+			{
+				return this.currentView;
+			}
+		}
+
 		public void NavigateTo(ItemView view)
 		{
-			this.currentView = view;
-			this.currentPanel = view.Owner;
-			this.isCurrentXValid = false;
-			this.isCurrentYValid = false;
+			if (this.currentView != view)
+			{
+				this.currentView  = view;
+				this.currentPanel = view == null ? null : view.Owner;
+				
+				this.isCurrentXValid = false;
+				this.isCurrentYValid = false;
+			}
 		}
 
 		public bool Navigate(Widgets.Direction direction)
 		{
+			this.UpdateCurrentPosition ();
+
 			ItemView view = this.FindNeighbour (direction);
 
 			if (view != null)
@@ -62,8 +76,6 @@ namespace Epsitec.Common.UI
 
 		private ItemView FindNeighbour(Widgets.Direction direction)
 		{
-			this.UpdateCurrentPosition ();
-
 			List<ItemPanel> exclusionList = new List<ItemPanel> ();
 			ItemPanel panel = this.currentPanel;
 
@@ -111,6 +123,12 @@ namespace Epsitec.Common.UI
 
 		private class BestRecord
 		{
+			public BestRecord()
+			{
+				this.MinDistance = 1000000000.0;
+				this.MaxOverlap  = -1.0;
+			}
+
 			public void Merge(ItemView view, double distance, double overlap)
 			{
 				if (distance < this.MinDistance)
