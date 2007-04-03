@@ -164,6 +164,28 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public Drawing.Rectangle FocusBounds
+		{
+			get
+			{
+				ItemPanelGroup group = this.Group;
+
+				Drawing.Rectangle bounds = this.Bounds;
+				
+				if (group != null)
+				{
+					Drawing.Point offset;
+
+					offset = bounds.Location;
+					bounds = group.FocusBounds;
+
+					bounds.Offset (offset);
+				}
+				
+				return bounds;
+			}
+		}
+
 		/// <summary>
 		/// Gets a value indicating whether this item view is selected.
 		/// </summary>

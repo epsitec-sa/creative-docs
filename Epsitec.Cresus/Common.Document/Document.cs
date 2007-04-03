@@ -2229,7 +2229,10 @@ namespace Epsitec.Common.Document
 						if ( !entry.IsInsideBranch &&
 							(layer.Type != Objects.LayerType.Show || !isBase) )
 						{
-							drawingContext.IsDimmed = true;
+							if ( drawingContext.LayerDrawingMode != LayerDrawingMode.ShowInactive )
+							{
+								drawingContext.IsDimmed = true;
+							}
 						}
 
 						obj.DrawGeometry(graphics, drawingContext);

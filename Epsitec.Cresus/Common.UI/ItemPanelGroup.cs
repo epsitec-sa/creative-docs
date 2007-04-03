@@ -51,6 +51,17 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public Drawing.Rectangle FocusBounds
+		{
+			get
+			{
+				double dx = this.ActualWidth;
+				double dy = this.ActualHeight;
+
+				return new Drawing.Rectangle (0, dy - 20, dx, 20);
+			}
+		}
+
 		public CollectionViewGroup CollectionViewGroup
 		{
 			get
@@ -291,10 +302,11 @@ namespace Epsitec.Common.UI
 			base.PaintBackgroundImplementation (graphics, clipRect);
 
 			CollectionViewGroup group = this.CollectionViewGroup;
+			Drawing.Rectangle bounds = this.FocusBounds;
 
-			double dx = this.ActualWidth;
-			double dy = 20;
-			double y  = this.ActualHeight - dy;
+			double dx = bounds.Width;
+			double dy = bounds.Height;
+			double y  = bounds.Bottom;
 
 			if (group != null)
 			{
