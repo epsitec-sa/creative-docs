@@ -708,6 +708,42 @@ namespace Epsitec.Common.UI
 		}
 
 		/// <summary>
+		/// Finds all item views matching a predicate. This will walk through every
+		/// local item view, and also every item view in the groups and subgroups.
+		/// </summary>
+		/// <param name="match">The item view test predicate.</param>
+		/// <param name="groupMatch">The group test predicate (or <c>null</c>). Groups
+		/// for which this predicate returns <c>false</c> won't be explored.</param>
+		/// <returns>
+		/// The list of item views; the list is empty if no item  view can
+		/// be found.
+		/// </returns>
+		public IList<ItemView> FindItemViews(System.Predicate<ItemView> match, System.Predicate<ItemView> groupMatch)
+		{
+			List<ItemView>        list  = new List<ItemView> ();
+			IEnumerable<ItemView> views = this.SafeGetViews ();
+
+			foreach (ItemView view in views)
+			{
+				if (match (view))
+				{
+					list.Add (view);
+				}
+
+				if (view.IsGroup)
+				{
+					if ((groupMatch == null) ||
+						(groupMatch (view)))
+					{
+						list.AddRange (view.Group.ChildPanel.FindItemViews (match, groupMatch));
+					}
+				}
+			}
+
+			return list;
+		}
+
+		/// <summary>
 		/// Finds the item view which represents the specified item. This will walk
 		/// through every local item view, and also every item view in the groups
 		/// and subgroups.
