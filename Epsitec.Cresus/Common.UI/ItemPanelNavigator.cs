@@ -305,7 +305,8 @@ namespace Epsitec.Common.UI
 				case Epsitec.Common.Widgets.Direction.Up:
 					predicate = delegate (ItemView view)
 					{
-						if (exclusionList.Contains (view.Owner))
+						if ((!view.IsExpanded) ||
+							(exclusionList.Contains (view.Owner)))
 						{
 							return false;
 						}
@@ -328,7 +329,8 @@ namespace Epsitec.Common.UI
 				case Epsitec.Common.Widgets.Direction.Down:
 					predicate = delegate (ItemView view)
 					{
-						if (exclusionList.Contains (view.Owner))
+						if ((!view.IsExpanded) ||
+							(exclusionList.Contains (view.Owner)))
 						{
 							return false;
 						}
@@ -351,7 +353,8 @@ namespace Epsitec.Common.UI
 				case Epsitec.Common.Widgets.Direction.Right:
 					predicate = delegate (ItemView view)
 					{
-						if (exclusionList.Contains (view.Owner))
+						if ((!view.IsExpanded) ||
+							(exclusionList.Contains (view.Owner)))
 						{
 							return false;
 						}
@@ -374,7 +377,8 @@ namespace Epsitec.Common.UI
 				case Epsitec.Common.Widgets.Direction.Left:
 					predicate = delegate (ItemView view)
 					{
-						if (exclusionList.Contains (view.Owner))
+						if ((!view.IsExpanded) ||
+							(exclusionList.Contains (view.Owner)))
 						{
 							return false;
 						}
@@ -411,7 +415,15 @@ namespace Epsitec.Common.UI
 				{
 					this.currentX1 = bounds.Left;
 					this.currentX2 = bounds.Right;
-					this.currentX  = (this.currentX1 + this.currentX2) / 2;
+					
+					if (this.currentView.IsGroup)
+					{
+						this.currentX = this.currentX1;
+					}
+					else
+					{
+						this.currentX = (this.currentX1 + this.currentX2) / 2;
+					}
 					
 					this.isCurrentXValid = true;
 				}
