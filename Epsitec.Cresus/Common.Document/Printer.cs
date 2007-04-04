@@ -1264,13 +1264,14 @@ namespace Epsitec.Common.Document
 
 		protected Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, double dpi, int depth, double AA, bool paintMark, bool onlySelected, bool onlyArea)
 		{
+			//	Retourne le bitmap contenant le dessin des objets à exporter.
 			Rectangle pageBox;
-			double zoom = (1.0/10.0)*(dpi/25.4);
+			double zoom = dpi/(10.0*25.4);
 
 			if (onlyArea)
 			{
 				pageBox = this.GetBoundingBox(pageNumber, onlySelected);
-				if (pageBox.IsEmpty)
+				if (pageBox.IsEmpty)  // aucun objet ?
 				{
 					return null;
 				}
@@ -1284,6 +1285,7 @@ namespace Epsitec.Common.Document
 			Rectangle pageScale = pageBox;
 			pageScale.Scale(zoom);
 
+			//	Il faut subtilement agrandir le rectangle, afin qu'un trait antialiasé soit contenu intégralement.
 			int left   = (int) System.Math.Floor(pageScale.Left);
 			int right  = (int) System.Math.Ceiling(pageScale.Right);
 			int bottom = (int) System.Math.Floor(pageScale.Bottom);
