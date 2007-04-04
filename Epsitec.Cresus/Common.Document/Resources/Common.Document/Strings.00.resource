@@ -47,7 +47,7 @@
   <data name="Dialog.Print.Range.To" id="061">à</data>
   <data name="Dialog.Print.Range.Current" id="071">Page courante</data>
   <data name="Dialog.Print.Format.User" id="081">Personnalisé</data>
-  <data name="Dialog.Export.Generic" id="091">Choix pour l&amp;apos;exportation de la page en cours</data>
+  <data name="Dialog.Export.Generic" id="091">Géométrie de l&amp;apos;image exportée</data>
   <data name="Dialog.Export.Format" id="0SB01">Format de l&amp;apos;image exportée</data>
   <data name="Dialog.Export.Filter" id="0TB01">Filtrage des images contenues</data>
   <data name="Dialog.ExportPDF.Param" id="0A1">Paramètres pour le document à exporter en PDF</data>

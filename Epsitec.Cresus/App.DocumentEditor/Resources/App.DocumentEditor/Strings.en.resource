@@ -285,5 +285,4 @@
   <data id="0M8">Select export file type</data>
   <data id="019">PDF file creation in progress...</data>
   <data id="009">Exporting PDF</data>
-  <data id="029">General</data>
 </bundle>
