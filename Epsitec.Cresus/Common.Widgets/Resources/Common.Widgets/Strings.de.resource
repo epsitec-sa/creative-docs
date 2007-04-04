@@ -83,4 +83,6 @@
   <data id="0N1">Zeile nach unten verschieben</data>
   <data id="0M1">Zeile nach oben verschieben</data>
   <data id="0L1">Zeile entfernen</data>
+  <data id="0D1">&lt;m&gt;N&lt;/m&gt;ein</data>
+  <data id="0C1">&lt;m&gt;J&lt;/m&gt;a</data>
 </bundle>

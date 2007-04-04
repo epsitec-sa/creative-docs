@@ -38,7 +38,7 @@
   <data id="0O2">Allgemein</data>
   <data id="001">{0}%</data>
   <data id="0U">Stufe {0}</data>
-  <data id="0V">Deite {0} Ebene {0}</data>
+  <data id="0V">Seite {0} Ebene {0}</data>
   <data id="0T">Auswahl</data>
   <data id="0M">Dokument schließen</data>
   <data id="0O">Styles</data>
@@ -234,14 +234,25 @@
   <data id="0A1">Die Datei &lt;b&gt;{0}&lt;/b&gt; wurde geändert.</data>
   <data id="0B1">Sollen die Änderungen gespeichert werden?</data>
   <data id="0K4">Akzente berücksichtigen</data>
-  <data id="0J4">Groß-/Kleinschreibung breücksichigen</data>
-  <data id="0N8">BMP</data>
-  <data id="0O8">GIF</data>
-  <data id="0P8">ICO</data>
-  <data id="0Q8">JPEG</data>
-  <data id="0R8">PDF</data>
-  <data id="0S8">PNG</data>
-  <data id="0T8">TIFF</data>
-  <data id="0U8">WMF/EMF</data>
-  <data id="052">*</data>
+  <data id="0J4">Groß-/Kleinschreibung berücksichigen</data>
+  <data id="0H4">Suchen</data>
+  <data id="0N4">Abwärts suchen</data>
+  <data id="0M4">Aufwärts suchen</data>
+  <data id="0I4">Ersetzen</data>
+  <data id="0L4">Nur ganze Wörter</data>
+  <data id="0O4">Suchen:</data>
+  <data id="0P4">Ersetzen mit:</data>
+  <data id="0G4">Suchen und Ersetzen...</data>
+  <data id="056">Diese Software kann bei Epsitec SA gekauft werden.</data>
+  <data id="076">Besuchen Sie für neue Programmversionen unsere Webseite.</data>
+  <data id="066">Updates können bei Epsitec SA gekauft werden.</data>
+  <data id="0H7" mod="1">Der Inhalt des Ordners &lt;b&gt;{0}&lt;/b&gt; kann nicht verändert werden.&lt;br/&gt;Die Datei wird stattdessen in &lt;b&gt;{1}&lt;/b&gt; gespeichert.</data>
+  <data id="0C1">Die folgenden Probleme wurden erkannt:</data>
+  <data id="0D1">Die Datei wurde trotz dieser Probleme geöffnet.</data>
+  <data id="0E1">Jedoch wird das Dokument unter Umständen anders angezeigt als vom Autor gewünscht.</data>
+  <data id="038">Abbrechen</data>
+  <data id="018">Exportieren</data>
+  <data id="058">Exportiere {0}</data>
+  <data id="048">Exportieren abbrechen</data>
+  <data id="028">Nach ICO exportieren</data>
 </bundle>
