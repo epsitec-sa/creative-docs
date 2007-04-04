@@ -2287,6 +2287,10 @@ namespace Epsitec.Common.UI
 					}
 					break;
 
+				case KeyCode.PageUp:
+					view = this.ProcessNavigationPageUp (navigator);
+					break;
+
 				case KeyCode.Home:
 					this.Items.MoveCurrentToFirst ();
 					break;
@@ -2367,6 +2371,63 @@ namespace Epsitec.Common.UI
 
 			return true;
 #endif
+		}
+
+		private ItemView ProcessNavigationPageUp(ItemPanelNavigator navigator)
+		{
+			System.Diagnostics.Debug.Assert (this.IsRootPanel);
+
+			ItemView          startView   = navigator.Current;
+			Drawing.Rectangle startBounds = this.GetItemViewBounds (startView);
+
+			if (navigator.Navigate (Widgets.Direction.Up))
+			{
+				Drawing.Rectangle aperture = this.Aperture;
+				ItemView          view     = navigator.Current;
+				Drawing.Rectangle bounds   = this.GetItemViewBounds (view);
+
+				if (aperture.Contains (bounds))
+				{
+					//	We are still in the fully visible part of the panel; we will
+					//	just keep on moving up until we get outside of the aperture or
+					//	we hit the top of the panel.
+
+					while (navigator.Navigate (Widgets.Direction.Up))
+					{
+						view   = navigator.Current;
+						bounds = this.GetItemViewBounds (view);
+
+						if (!aperture.Contains (bounds))
+						{
+							navigator.Navigate (Widgets.Direction.Down);
+							break;
+						}
+					}
+				}
+				else
+				{
+					//	We were previously already located at the top of the aperture;
+					//	this means we will have to move up by an aperture height.
+					
+					while (navigator.Navigate (Widgets.Direction.Up))
+					{
+						view   = navigator.Current;
+						bounds = this.GetItemViewBounds (view);
+
+						double distance = bounds.Top - startBounds.Top;
+
+						if (distance > aperture.Height)
+						{
+							navigator.Navigate (Widgets.Direction.Down);
+							break;
+						}
+					}
+				}
+
+				return navigator.Current;
+			}
+
+			return null;
 		}
 
 		private void ProcessVerticalListPageUpMove()

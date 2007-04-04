@@ -154,6 +154,19 @@ namespace Epsitec.Common.UI
 
 		#endregion
 
+		private bool FilterGroups(ItemView view)
+		{
+			if ((view.IsGroup) &&
+				(view.IsExpanded))
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
 		private System.Predicate<ItemView> GetMatchItemViewFocusBoundsPredicateAndRecordBest(Widgets.Direction direction, BestRecord best)
 		{
 			System.Predicate<ItemView> predicate;
@@ -163,80 +176,108 @@ namespace Epsitec.Common.UI
 				case Epsitec.Common.Widgets.Direction.Up:
 					predicate = delegate (ItemView view)
 					{
-						Drawing.Rectangle bounds = this.MapToRoot (view.Owner, view.FocusBounds);
-						
-						double distance = bounds.Center.Y - this.currentY;
+						if (this.FilterGroups (view))
+						{
+							Drawing.Rectangle bounds = this.MapToRoot (view.Owner, view.FocusBounds);
 
-						if (distance <= 0)
+							double distance = bounds.Center.Y - this.currentY;
+
+							if (distance <= 0)
+							{
+								return false;
+							}
+
+							double overlap = ItemPanelNavigator.GetOverlap (bounds.Left, bounds.Right, this.currentX1, this.currentX2);
+
+							best.Merge (view, distance, overlap);
+
+							return true;
+						}
+						else
 						{
 							return false;
 						}
-						
-						double overlap = ItemPanelNavigator.GetOverlap (bounds.Left, bounds.Right, this.currentX1, this.currentX2);
-
-						best.Merge (view, distance, overlap);
-						
-						return true;
 					};
 					break;
 
 				case Epsitec.Common.Widgets.Direction.Down:
 					predicate = delegate (ItemView view)
 					{
-						Drawing.Rectangle bounds = this.MapToRoot (view.Owner, view.FocusBounds);
+						if (this.FilterGroups (view))
+						{
+							Drawing.Rectangle bounds = this.MapToRoot (view.Owner, view.FocusBounds);
 
-						double distance = this.currentY - bounds.Center.Y;
+							double distance = this.currentY - bounds.Center.Y;
 
-						if (distance <= 0)
+							if (distance <= 0)
+							{
+								return false;
+							}
+
+							double overlap = ItemPanelNavigator.GetOverlap (bounds.Left, bounds.Right, this.currentX1, this.currentX2);
+
+							best.Merge (view, distance, overlap);
+
+							return true;
+						}
+						else
 						{
 							return false;
 						}
-
-						double overlap = ItemPanelNavigator.GetOverlap (bounds.Left, bounds.Right, this.currentX1, this.currentX2);
-
-						best.Merge (view, distance, overlap);
-						
-						return true;
 					};
 					break;
 
 				case Epsitec.Common.Widgets.Direction.Right:
 					predicate = delegate (ItemView view)
 					{
-						Drawing.Rectangle bounds = this.MapToRoot (view.Owner, view.FocusBounds);
+						if (this.FilterGroups (view))
+						{
+							Drawing.Rectangle bounds = this.MapToRoot (view.Owner, view.FocusBounds);
 
-						double distance = bounds.Center.X - this.currentX;
+							double distance = bounds.Center.X - this.currentX;
 
-						if (distance <= 0)
+							if (distance <= 0)
+							{
+								return false;
+							}
+
+							double overlap = ItemPanelNavigator.GetOverlap (bounds.Bottom, bounds.Top, this.currentY1, this.currentY2);
+
+							best.Merge (view, distance, overlap);
+
+							return true;
+						}
+						else
 						{
 							return false;
 						}
-
-						double overlap = ItemPanelNavigator.GetOverlap (bounds.Bottom, bounds.Top, this.currentY1, this.currentY2);
-
-						best.Merge (view, distance, overlap);
-
-						return true;
 					};
 					break;
 
 				case Epsitec.Common.Widgets.Direction.Left:
 					predicate = delegate (ItemView view)
 					{
-						Drawing.Rectangle bounds = this.MapToRoot (view.Owner, view.FocusBounds);
+						if (this.FilterGroups (view))
+						{
+							Drawing.Rectangle bounds = this.MapToRoot (view.Owner, view.FocusBounds);
 
-						double distance = this.currentX - bounds.Center.X;
+							double distance = this.currentX - bounds.Center.X;
 
-						if (distance <= 0)
+							if (distance <= 0)
+							{
+								return false;
+							}
+
+							double overlap = ItemPanelNavigator.GetOverlap (bounds.Bottom, bounds.Top, this.currentY1, this.currentY2);
+
+							best.Merge (view, distance, overlap);
+
+							return true;
+						}
+						else
 						{
 							return false;
 						}
-
-						double overlap = ItemPanelNavigator.GetOverlap (bounds.Bottom, bounds.Top, this.currentY1, this.currentY2);
-
-						best.Merge (view, distance, overlap);
-
-						return true;
 					};
 					break;
 
