@@ -226,6 +226,29 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(rank >= 0 && rank < this.imageNameFilters.Length);
 			this.imageNameFilters[rank] = name;
 		}
+
+		public Size ImageExportSize
+		{
+			//	Retourne la taille de l'image exportée.
+			get
+			{
+				Size size;
+
+				if (this.ImageCrop == ExportImageCrop.Page)
+				{
+					size = this.document.PageSize;
+				}
+				else
+				{
+					int pageNumber = this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage;
+					size = this.GetBoundingBox(pageNumber, this.ImageCrop == ExportImageCrop.Selection).Size;
+				}
+
+				size.Width  = System.Math.Floor((size.Width/10.0)*(this.imageDpi/25.4));
+				size.Height = System.Math.Floor((size.Height/10.0)*(this.imageDpi/25.4));
+				return size;
+			}
+		}
 		#endregion
 
 

@@ -1181,6 +1181,11 @@ namespace Epsitec.Common.Document
 
 			sInteger.Value = sInteger.RankToType(field.SelectedIndex);
 
+			if ( sInteger.Name == "ImageCrop" )
+			{
+				this.UpdateDouble("ImageDpi");
+			}
+
 			if ( sInteger.Name == "ExportPDFImageCompression" )
 			{
 				this.UpdateDouble("ExportPDFJpegQuality");
