@@ -1814,10 +1814,29 @@ namespace Epsitec.Common.UI
 			{
 				ItemView group = ItemViewWidget.FindGroupItemView (itemView);
 
+			again:
+
 				if (group != null)
 				{
-					group.IsExpanded = expand;
-					this.Focus (group);
+					if (group.IsExpanded == expand)
+					{
+						if (expand == false)
+						{
+							ItemPanel parent = group.Owner;
+
+							if ((parent != null) &&
+								(parent.ParentGroup != null))
+							{
+								group = group.Owner.ParentGroup.ItemView;
+								goto again;
+							}
+						}
+					}
+					else
+					{
+						group.IsExpanded = expand;
+						this.Focus (group);
+					}
 				}
 			}
 		}
