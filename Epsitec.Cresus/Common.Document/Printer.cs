@@ -1270,6 +1270,10 @@ namespace Epsitec.Common.Document
 			if (onlyArea)
 			{
 				pageBox = this.GetBoundingBox(pageNumber, onlySelected);
+				if (pageBox.IsEmpty)
+				{
+					return null;
+				}
 				pageBox.Inflate(zoom);
 			}
 			else
