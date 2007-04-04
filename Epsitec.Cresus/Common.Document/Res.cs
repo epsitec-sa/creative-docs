@@ -625,7 +625,8 @@ namespace Epsitec.Common.Document
 					public static string GuidesActive { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (50)); } }
 					public static string GuidesMouse { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (52)); } }
 					public static string GuidesShow { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (51)); } }
-					public static string ImageOnlyArea { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1402)); } }
+					public static string ImageCropObjects { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1402)); } }
+					public static string ImageCropSelection { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1403)); } }
 					public static string ImageOnlySelected { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1401)); } }
 					public static string LabelsShow { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (55)); } }
 					public static string MagnetActive { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (56)); } }
@@ -697,7 +698,9 @@ namespace Epsitec.Common.Document
 				
 				public static class Export
 				{
-					public static string Param { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (41)); } }
+					public static string Filter { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1405)); } }
+					public static string Format { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1404)); } }
+					public static string Generic { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (41)); } }
 				}
 				
 				public static class ExportICO

@@ -346,21 +346,46 @@ namespace Epsitec.Common.Document
 			{
 				this.windowExport = window;
 
-				Widget parent = this.windowExport.Root.FindChild("Panel");
-				Panel container = new Panel(parent);
+				Widget parent, container;
+				Widget book = this.windowExport.Root.FindChild("Book");
+
+				//	Onglet Général:
+				parent = book.FindChild("Generic");
+				container = new Widget(parent);
 				container.Name = "Container";
 				container.Dock = DockStyle.Fill;
-
+				
 				this.tabIndex = 0;
-
-				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Export.Param);
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Export.Generic);
+				this.CreateBool(container, "ImageCropObjects");
+				this.CreateBool(container, "ImageCropSelection");
 				this.CreateBool(container, "ImageOnlySelected");
-				this.CreateBool(container, "ImageOnlyArea");
+				DocumentDialogs.CreateSeparator(container);
 				this.CreateDouble(container, "ImageDpi");
+				DocumentDialogs.CreateSeparator(container);
+				
+				//	Onglet Format:
+				parent = book.FindChild("Format");
+				container = new Widget(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
+				
+				this.tabIndex = 0;
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Export.Format);
 				this.CreateCombo(container, "ImageDepth");
 				this.CreateCombo(container, "ImageCompression");
 				this.CreateDouble(container, "ImageQuality");
 				this.CreateDouble(container, "ImageAA");
+				DocumentDialogs.CreateSeparator(container);
+				
+				//	Onglet Filtre:
+				parent = book.FindChild("Filter");
+				container = new Widget(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
+				
+				this.tabIndex = 0;
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Export.Filter);
 				this.CreateCombo(container, "ImageFilterA");
 				this.CreateCombo(container, "ImageFilterB");
 				DocumentDialogs.CreateSeparator(container);
@@ -378,6 +403,7 @@ namespace Epsitec.Common.Document
 			}
 
 			this.UpdateDialogSettings("Export");
+			this.UpdateBool("ImageCropSelection");
 			this.UpdateBool("ImageOnlySelected");
 			this.UpdateCombo("ImageDepth");
 			this.UpdateCombo("ImageCompression");
@@ -1849,8 +1875,10 @@ namespace Epsitec.Common.Document
 
 			if ( this.windowExport != null )
 			{
-				Widget parent = this.windowExport.Root.FindChild("Panel");
-				this.DeleteContainer(parent, "Container");
+				Widget parent = this.windowExport.Root.FindChild("Book");
+				this.DeletePage(parent, "Generic");
+				this.DeletePage(parent, "Format");
+				this.DeletePage(parent, "Filter");
 				this.windowExport = null;
 			}
 

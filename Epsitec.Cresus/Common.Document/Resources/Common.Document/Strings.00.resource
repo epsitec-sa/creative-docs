@@ -47,7 +47,9 @@
   <data name="Dialog.Print.Range.To" id="061">à</data>
   <data name="Dialog.Print.Range.Current" id="071">Page courante</data>
   <data name="Dialog.Print.Format.User" id="081">Personnalisé</data>
-  <data name="Dialog.Export.Param" id="091">Choix pour l&amp;apos;exportation de la page en cours</data>
+  <data name="Dialog.Export.Generic" id="091">Choix pour l&amp;apos;exportation de la page en cours</data>
+  <data name="Dialog.Export.Format" id="0SB01">Format de l&amp;apos;image exportée</data>
+  <data name="Dialog.Export.Filter" id="0TB01">Filtrage des images contenues</data>
   <data name="Dialog.ExportPDF.Param" id="0A1">Paramètres pour le document à exporter en PDF</data>
   <data name="Dialog.ExportICO.Param" id="0LA01">Choix pour l&amp;apos;exportation de l&amp;apos;icône</data>
   <data name="Dialog.ExportPDF.Publisher" id="0B1">Réglages pré-presse</data>
@@ -55,7 +57,8 @@
   <data name="Dialog.ExportPDF.BleedOdd" id="0LB01">Débords additionnels (page impaire)</data>
   <data name="Dialog.Bool.GridActive" id="0C1">Grille active</data>
   <data name="Dialog.Bool.ImageOnlySelected" id="0PB01">Seulement les objets sélectionnés</data>
-  <data name="Dialog.Bool.ImageOnlyArea" id="0QB01">Recadrage sur les objets</data>
+  <data name="Dialog.Bool.ImageCropObjects" id="0QB01">Recadrer sur les objets de la page</data>
+  <data name="Dialog.Bool.ImageCropSelection" id="0RB01">Recadrer sur les objets sélectionnés</data>
   <data name="Dialog.Bool.GridShow" id="0D1">Grille visible</data>
   <data name="Dialog.Bool.TextGridShow" id="0E1">Lignes visibles</data>
   <data name="Dialog.Bool.TextShowControlCharacters" id="0F1">Afficher les caractères spéciaux</data>

@@ -255,4 +255,5 @@
   <data id="058">Exportiere {0}</data>
   <data id="048">Exportieren abbrechen</data>
   <data id="028">Nach ICO exportieren</data>
+  <data id="029">Allgemein</data>
 </bundle>

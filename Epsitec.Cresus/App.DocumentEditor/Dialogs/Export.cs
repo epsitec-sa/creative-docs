@@ -24,15 +24,34 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window = new Window();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
-				this.WindowInit("Export", 300, 380);
+				this.WindowInit("Export", 300, 270);
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowExportCloseClicked);
 
-				Panel panel = new Panel(this.window.Root);
-				panel.Name = "Panel";
-				panel.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
-				panel.Margins = new Margins(10, 10, 10, 40);
+				//	Crée les onglets.
+				TabBook bookDoc = new TabBook(this.window.Root);
+				bookDoc.Name = "Book";
+				bookDoc.Arrows = TabBookArrows.Stretch;
+				bookDoc.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+				bookDoc.Margins = new Margins(6, 6, 6, 34);
+
+				TabPage bookGeneric = new TabPage();
+				bookGeneric.Name = "Generic";
+				bookGeneric.TabTitle = Res.Strings.Dialog.Export.TabPage.Generic;
+				bookDoc.Items.Add(bookGeneric);
+
+				TabPage bookColor = new TabPage();
+				bookColor.Name = "Format";
+				bookColor.TabTitle = Res.Strings.Dialog.Export.TabPage.Format;
+				bookDoc.Items.Add(bookColor);
+
+				TabPage bookImage = new TabPage();
+				bookImage.Name = "Filter";
+				bookImage.TabTitle = Res.Strings.Dialog.Export.TabPage.Filter;
+				bookDoc.Items.Add(bookImage);
+
+				bookDoc.ActivePage = bookGeneric;
 
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
@@ -40,7 +59,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonOk.Text = Res.Strings.Dialog.Export.Button.OK;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomLeft;
-				buttonOk.Margins = new Margins(10, 0, 0, 10);
+				buttonOk.Margins = new Margins(6, 0, 0, 6);
 				buttonOk.Clicked += new MessageEventHandler(this.HandleExportButtonOkClicked);
 				buttonOk.TabIndex = 10;
 				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -51,7 +70,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonCancel.Text = Res.Strings.Dialog.Export.Button.Cancel;
 				buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				buttonCancel.Anchor = AnchorStyles.BottomLeft;
-				buttonCancel.Margins = new Margins(10+75+10, 0, 0, 10);
+				buttonCancel.Margins = new Margins(6+75+10, 0, 0, 6);
 				buttonCancel.Clicked += new MessageEventHandler(this.HandleExportButtonCancelClicked);
 				buttonCancel.TabIndex = 11;
 				buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;

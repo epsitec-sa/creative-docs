@@ -179,6 +179,13 @@ namespace Epsitec.App.DocumentEditor
 						}
 					}
 					
+					public static class TabPage
+					{
+						public static string Filter { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (292)); } }
+						public static string Format { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (291)); } }
+						public static string Generic { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (290)); } }
+					}
+					
 					public static class Tooltip
 					{
 						public static string Cancel { get { return Epsitec.App.DocumentEditor.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (81)); } }

@@ -99,7 +99,8 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultInteger("Print", "PrintImageFilterB");
 
 			this.CreateDefaultBool("Export", "ImageOnlySelected");
-			this.CreateDefaultBool("Export", "ImageOnlyArea");
+			this.CreateDefaultBool("Export", "ImageCropObjects");
+			this.CreateDefaultBool("Export", "ImageCropSelection");
 			this.CreateDefaultDouble("Export", "ImageDpi");
 			this.CreateDefaultInteger("Export", "ImageDepth");
 			this.CreateDefaultInteger("Export", "ImageCompression");

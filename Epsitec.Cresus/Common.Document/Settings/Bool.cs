@@ -125,8 +125,12 @@ namespace Epsitec.Common.Document.Settings
 					this.text = Res.Strings.Dialog.Bool.ImageOnlySelected;
 					break;
 
-				case "ImageOnlyArea":
-					this.text = Res.Strings.Dialog.Bool.ImageOnlyArea;
+				case "ImageCropObjects":
+					this.text = Res.Strings.Dialog.Bool.ImageCropObjects;
+					break;
+
+				case "ImageCropSelection":
+					this.text = Res.Strings.Dialog.Bool.ImageCropSelection;
 					break;
 
 				case "ExportPDFTarget":
@@ -221,8 +225,11 @@ namespace Epsitec.Common.Document.Settings
 					case "ImageOnlySelected":
 						return this.document.Printer.ImageOnlySelected;
 
-					case "ImageOnlyArea":
-						return this.document.Printer.ImageOnlyArea;
+					case "ImageCropObjects":
+						return this.document.Printer.ImageCropObjects;
+
+					case "ImageCropSelection":
+						return this.document.Printer.ImageCropSelection;
 
 					case "ExportPDFTarget":
 						return this.document.Settings.ExportPDFInfo.Target;
@@ -337,8 +344,12 @@ namespace Epsitec.Common.Document.Settings
 						this.document.Printer.ImageOnlySelected = value;
 						break;
 
-					case "ImageOnlyArea":
-						this.document.Printer.ImageOnlyArea = value;
+					case "ImageCropObjects":
+						this.document.Printer.ImageCropObjects = value;
+						break;
+
+					case "ImageCropSelection":
+						this.document.Printer.ImageCropSelection = value;
 						break;
 
 					case "ExportPDFTarget":
@@ -364,6 +375,11 @@ namespace Epsitec.Common.Document.Settings
 				bool enabled = true;
 
 				if ( this.name == "ImageOnlySelected" )
+				{
+					enabled = (this.document.Modifier.TotalSelected > 0);
+				}
+
+				if ( this.name == "ImageCropSelection" )
 				{
 					enabled = (this.document.Modifier.TotalSelected > 0);
 				}

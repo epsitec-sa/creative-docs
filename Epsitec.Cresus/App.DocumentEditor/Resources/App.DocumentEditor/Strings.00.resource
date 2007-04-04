@@ -159,6 +159,9 @@
   <data name="Dialog.ExportPDF.Tooltip.Cancel" id="0N2">Annuler l&amp;apos;exporation</data>
   <data name="Dialog.ExportICO.Tooltip.Cancel" id="048">Annuler l&amp;apos;exporation</data>
   <data name="Dialog.ExportPDF.TabPage.Generic" id="0O2">Général</data>
+  <data name="Dialog.Export.TabPage.Generic" id="029">Général</data>
+  <data name="Dialog.Export.TabPage.Format" id="039">Format</data>
+  <data name="Dialog.Export.TabPage.Filter" id="049">Filtre</data>
   <data name="Dialog.ExportPDF.TabPage.Color" id="0P2">Couleurs</data>
   <data name="Dialog.ExportPDF.TabPage.Image" id="0Q2">Images</data>
   <data name="Dialog.ExportPDF.TabPage.Publisher" id="0R2">Pré-presse</data>

@@ -16,7 +16,8 @@ namespace Epsitec.Common.Document
 			this.document = document;
 
 			this.imageOnlySelected = false;
-			this.imageOnlyArea = false;
+			this.imageCropObjects = false;
+			this.imageCropSelection = false;
 			this.imageFormat = ImageFormat.Unknown;
 			this.imageDpi = 100;
 			this.imageCompression = ImageCompression.None;
@@ -89,7 +90,7 @@ namespace Epsitec.Common.Document
 			double dpiy = sizeHope.Height*254/pageSize.Height;
 			double dpi = System.Math.Min(dpix, dpiy);
 			
-			string err = this.ExportGeometry(drawingContext, pageNumber, ImageFormat.Png, dpi, ImageCompression.None, 24, 85, 1, false, false, false, out data);
+			string err = this.ExportGeometry(drawingContext, pageNumber, ImageFormat.Png, dpi, ImageCompression.None, 24, 85, 1, false, false, false, false, out data);
 			if (err == "")
 			{
 				filename = "preview.png";
@@ -119,7 +120,7 @@ namespace Epsitec.Common.Document
 			double dpiy = sizeHope.Height*254/pageSize.Height;
 			double dpi = System.Math.Min(dpix, dpiy);
 
-			return this.ExportBitmap(drawingContext, pageNumber, dpi, 24, 1, false, false, false);
+			return this.ExportBitmap(drawingContext, pageNumber, dpi, 24, 1, false, false, false, false);
 		}
 
 
@@ -153,15 +154,27 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public bool ImageOnlyArea
+		public bool ImageCropObjects
 		{
 			get
 			{
-				return this.imageOnlyArea;
+				return this.imageCropObjects;
 			}
 			set
 			{
-				this.imageOnlyArea = value;
+				this.imageCropObjects = value;
+			}
+		}
+
+		public bool ImageCropSelection
+		{
+			get
+			{
+				return this.document.Modifier.TotalSelected > 0 && this.imageCropSelection;
+			}
+			set
+			{
+				this.imageCropSelection = value;
 			}
 		}
 
@@ -1173,7 +1186,7 @@ namespace Epsitec.Common.Document
 			//	Exporte la géométrie complexe de tous les objets, en utilisant
 			//	un bitmap intermédiaire.
 			byte[] data;
-			string err = this.ExportGeometry(drawingContext, pageNumber, this.imageFormat, this.imageDpi, this.imageCompression, this.imageDepth, this.imageQuality, this.imageAA, true, this.ImageOnlySelected, this.ImageOnlyArea, out data);
+			string err = this.ExportGeometry(drawingContext, pageNumber, this.imageFormat, this.imageDpi, this.imageCompression, this.imageDepth, this.imageQuality, this.imageAA, true, this.ImageOnlySelected, this.ImageCropObjects, this.ImageCropSelection, out data);
 			if (err != "")
 			{
 				return err;
@@ -1212,7 +1225,7 @@ namespace Epsitec.Common.Document
             }
 
             byte[] data;
-            string err = this.ExportGeometry(drawingContext, pageNumber, format, dpi, ImageCompression.None, 32, 1.0, 1.0, true, false, false, out data);
+            string err = this.ExportGeometry(drawingContext, pageNumber, format, dpi, ImageCompression.None, 32, 1.0, 1.0, true, false, false, false, out data);
             if (err != "")
             {
                 return err;
@@ -1230,7 +1243,7 @@ namespace Epsitec.Common.Document
             return "";  // ok
         }
 
-        protected string ExportGeometry(DrawingContext drawingContext, int pageNumber, ImageFormat format, double dpi, ImageCompression compression, int depth, double quality, double AA, bool paintMark, bool onlySelected, bool onlyArea, out byte[] data)
+        protected string ExportGeometry(DrawingContext drawingContext, int pageNumber, ImageFormat format, double dpi, ImageCompression compression, int depth, double quality, double AA, bool paintMark, bool onlySelected, bool cropObjects, bool cropSelection, out byte[] data)
 		{
 			//	Exporte la géométrie complexe de tous les objets, en utilisant
 			//	un bitmap intermédiaire. Retourne un éventuel message d'erreur ainsi
@@ -1242,7 +1255,7 @@ namespace Epsitec.Common.Document
 				return Res.Strings.Error.BadImage;
 			}
 
-			Bitmap bitmap = this.ExportBitmap(drawingContext, pageNumber, dpi, depth, AA, paintMark, onlySelected, onlyArea);
+			Bitmap bitmap = this.ExportBitmap(drawingContext, pageNumber, dpi, depth, AA, paintMark, onlySelected, cropObjects, cropSelection);
 			
 			if (bitmap == null)
 			{
@@ -1262,15 +1275,15 @@ namespace Epsitec.Common.Document
 			return "";  // ok
 		}
 
-		protected Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, double dpi, int depth, double AA, bool paintMark, bool onlySelected, bool onlyArea)
+		protected Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, double dpi, int depth, double AA, bool paintMark, bool onlySelected, bool cropObjects, bool cropSelection)
 		{
 			//	Retourne le bitmap contenant le dessin des objets à exporter.
 			Rectangle pageBox;
 			double zoom = dpi/(10.0*25.4);
 
-			if (onlyArea)
+			if (cropObjects || cropSelection)
 			{
-				pageBox = this.GetBoundingBox(pageNumber, onlySelected);
+				pageBox = this.GetBoundingBox(pageNumber, cropSelection);
 				if (pageBox.IsEmpty)  // aucun objet ?
 				{
 					return null;
@@ -1382,7 +1395,8 @@ namespace Epsitec.Common.Document
 
 		protected Document					document;
 		protected bool						imageOnlySelected;
-		protected bool						imageOnlyArea;
+		protected bool						imageCropObjects;
+		protected bool						imageCropSelection;
 		protected ImageFormat				imageFormat;
 		protected double					imageDpi;
 		protected ImageCompression			imageCompression;
