@@ -16,6 +16,7 @@ namespace Epsitec.Common.Document
 			this.document = document;
 
 			this.imageOnlySelected = false;
+			this.imageOnlyArea = false;
 			this.imageFormat = ImageFormat.Unknown;
 			this.imageDpi = 100;
 			this.imageCompression = ImageCompression.None;
@@ -88,7 +89,7 @@ namespace Epsitec.Common.Document
 			double dpiy = sizeHope.Height*254/pageSize.Height;
 			double dpi = System.Math.Min(dpix, dpiy);
 			
-			string err = this.ExportGeometry(drawingContext, pageNumber, ImageFormat.Png, dpi, ImageCompression.None, 24, 85, 1, false, false, out data);
+			string err = this.ExportGeometry(drawingContext, pageNumber, ImageFormat.Png, dpi, ImageCompression.None, 24, 85, 1, false, false, false, out data);
 			if (err == "")
 			{
 				filename = "preview.png";
@@ -118,7 +119,7 @@ namespace Epsitec.Common.Document
 			double dpiy = sizeHope.Height*254/pageSize.Height;
 			double dpi = System.Math.Min(dpix, dpiy);
 
-			return this.ExportBitmap(drawingContext, pageNumber, dpi, 24, 1, false, false);
+			return this.ExportBitmap(drawingContext, pageNumber, dpi, 24, 1, false, false, false);
 		}
 
 
@@ -149,6 +150,18 @@ namespace Epsitec.Common.Document
 			set
 			{
 				this.imageOnlySelected = value;
+			}
+		}
+
+		public bool ImageOnlyArea
+		{
+			get
+			{
+				return this.imageOnlyArea;
+			}
+			set
+			{
+				this.imageOnlyArea = value;
 			}
 		}
 
@@ -1160,7 +1173,7 @@ namespace Epsitec.Common.Document
 			//	Exporte la géométrie complexe de tous les objets, en utilisant
 			//	un bitmap intermédiaire.
 			byte[] data;
-			string err = this.ExportGeometry(drawingContext, pageNumber, this.imageFormat, this.imageDpi, this.imageCompression, this.imageDepth, this.imageQuality, this.imageAA, true, this.ImageOnlySelected, out data);
+			string err = this.ExportGeometry(drawingContext, pageNumber, this.imageFormat, this.imageDpi, this.imageCompression, this.imageDepth, this.imageQuality, this.imageAA, true, this.ImageOnlySelected, this.ImageOnlyArea, out data);
 			if (err != "")
 			{
 				return err;
@@ -1199,7 +1212,7 @@ namespace Epsitec.Common.Document
             }
 
             byte[] data;
-            string err = this.ExportGeometry(drawingContext, pageNumber, format, dpi, ImageCompression.None, 32, 1.0, 1.0, true, false, out data);
+            string err = this.ExportGeometry(drawingContext, pageNumber, format, dpi, ImageCompression.None, 32, 1.0, 1.0, true, false, false, out data);
             if (err != "")
             {
                 return err;
@@ -1217,7 +1230,7 @@ namespace Epsitec.Common.Document
             return "";  // ok
         }
 
-        protected string ExportGeometry(DrawingContext drawingContext, int pageNumber, ImageFormat format, double dpi, ImageCompression compression, int depth, double quality, double AA, bool paintMark, bool onlySelected, out byte[] data)
+        protected string ExportGeometry(DrawingContext drawingContext, int pageNumber, ImageFormat format, double dpi, ImageCompression compression, int depth, double quality, double AA, bool paintMark, bool onlySelected, bool onlyArea, out byte[] data)
 		{
 			//	Exporte la géométrie complexe de tous les objets, en utilisant
 			//	un bitmap intermédiaire. Retourne un éventuel message d'erreur ainsi
@@ -1229,7 +1242,7 @@ namespace Epsitec.Common.Document
 				return Res.Strings.Error.BadImage;
 			}
 
-			Bitmap bitmap = this.ExportBitmap(drawingContext, pageNumber, dpi, depth, AA, paintMark, onlySelected);
+			Bitmap bitmap = this.ExportBitmap(drawingContext, pageNumber, dpi, depth, AA, paintMark, onlySelected, onlyArea);
 			
 			if (bitmap == null)
 			{
@@ -1249,30 +1262,47 @@ namespace Epsitec.Common.Document
 			return "";  // ok
 		}
 
-		protected Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, double dpi, int depth, double AA, bool paintMark, bool onlySelected)
+		protected Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, double dpi, int depth, double AA, bool paintMark, bool onlySelected, bool onlyArea)
 		{
-			Size pageSize = this.document.GetPageSize (pageNumber);
-			int dx = (int) ((pageSize.Width/10.0)*(dpi/25.4));
-			int dy = (int) ((pageSize.Height/10.0)*(dpi/25.4));
+			Rectangle pageBox;
+			double zoom = (1.0/10.0)*(dpi/25.4);
 
-			Graphics gfx = new Graphics ();
-			gfx.SetPixmapSize (dx, dy);
-			gfx.SolidRenderer.ClearAlphaRgb ((depth==32)?0:1, 1, 1, 1);
+			if (onlyArea)
+			{
+				pageBox = this.GetBoundingBox(pageNumber, onlySelected);
+				pageBox.Inflate(zoom);
+			}
+			else
+			{
+				pageBox = new Rectangle(Point.Zero, this.document.GetPageSize(pageNumber));
+			}
+
+			Rectangle pageScale = pageBox;
+			pageScale.Scale(zoom);
+
+			int left   = (int) System.Math.Floor(pageScale.Left);
+			int right  = (int) System.Math.Ceiling(pageScale.Right);
+			int bottom = (int) System.Math.Floor(pageScale.Bottom);
+			int top    = (int) System.Math.Ceiling(pageScale.Top);
+
+			int dx = right-left;
+			int dy = top-bottom;
+
+			Graphics gfx = new Graphics();
+			gfx.SetPixmapSize(dx, dy);
+			gfx.SolidRenderer.ClearAlphaRgb((depth==32)?0:1, 1, 1, 1);
 			gfx.Rasterizer.Gamma = AA;
 
-			double zoomH = dx / pageSize.Width;
-			double zoomV = dy / pageSize.Height;
-			double zoom = System.Math.Min (zoomH, zoomV);
-			gfx.TranslateTransform (0, dy);
-			gfx.ScaleTransform (zoom, -zoom, 0, 0);
+			gfx.TranslateTransform(-left, bottom+dy);
+			gfx.ScaleTransform(zoom, -zoom, 0, 0);
 
-			System.Collections.ArrayList layers = this.ComputeLayers (pageNumber);
+			System.Collections.ArrayList layers = this.ComputeLayers(pageNumber);
 			foreach (Objects.Layer layer in layers)
 			{
 				Properties.ModColor modColor = layer.PropertyModColor;
-				gfx.PushColorModifier (new ColorModifierCallback (modColor.ModifyColor));
+				gfx.PushColorModifier (new ColorModifierCallback(modColor.ModifyColor));
 				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
-				gfx.PushColorModifier (new ColorModifierCallback (drawingContext.DimmedColor));
+				gfx.PushColorModifier (new ColorModifierCallback(drawingContext.DimmedColor));
 
 				foreach (Objects.Abstract obj in this.document.Deep(layer, onlySelected))
 				{
@@ -1281,17 +1311,17 @@ namespace Epsitec.Common.Document
 						continue;  // objet caché ?
 					}
 
-					obj.DrawGeometry (gfx, drawingContext);
+					obj.DrawGeometry(gfx, drawingContext);
 				}
 
-				gfx.PopColorModifier ();
-				gfx.PopColorModifier ();
+				gfx.PopColorModifier();
+				gfx.PopColorModifier();
 			}
 
 			if (drawingContext.GridShow)
 			{
 				gfx.LineWidth = 1/zoom;
-				this.document.Modifier.ActiveViewer.DrawGuides (gfx);
+				this.document.Modifier.ActiveViewer.DrawGuides(gfx);
 				gfx.LineWidth = 1;
 			}
 
@@ -1299,16 +1329,38 @@ namespace Epsitec.Common.Document
 			{
 				if (this.document.InstallType == InstallType.Demo)
 				{
-					this.PaintDemo (gfx, pageNumber);
+					this.PaintDemo(gfx, pageNumber);
 				}
 				if (this.document.InstallType == InstallType.Expired)
 				{
-					this.PaintExpired (gfx, pageNumber);
+					this.PaintExpired(gfx, pageNumber);
 				}
 			}
 
-			Bitmap bitmap = Bitmap.FromPixmap (gfx.Pixmap) as Bitmap;
+			Bitmap bitmap = Bitmap.FromPixmap(gfx.Pixmap) as Bitmap;
 			return bitmap;
+		}
+
+		protected Rectangle GetBoundingBox(int pageNumber, bool onlySelected)
+		{
+			//	Retourne le rectangle englobant les objets à imprimer.
+			Rectangle bbox = Rectangle.Empty;
+
+			System.Collections.ArrayList layers = this.ComputeLayers(pageNumber);
+			foreach (Objects.Layer layer in layers)
+			{
+				foreach (Objects.Abstract obj in this.document.Deep(layer, onlySelected))
+				{
+					if (obj.IsHide)
+					{
+						continue;  // objet caché ?
+					}
+
+					bbox = Rectangle.Union(bbox, obj.BoundingBoxGeom);
+				}
+			}
+
+			return bbox;
 		}
 
 
@@ -1324,6 +1376,7 @@ namespace Epsitec.Common.Document
 
 		protected Document					document;
 		protected bool						imageOnlySelected;
+		protected bool						imageOnlyArea;
 		protected ImageFormat				imageFormat;
 		protected double					imageDpi;
 		protected ImageCompression			imageCompression;

@@ -55,6 +55,7 @@
   <data name="Dialog.ExportPDF.BleedOdd" id="0LB01">Débords additionnels (page impaire)</data>
   <data name="Dialog.Bool.GridActive" id="0C1">Grille active</data>
   <data name="Dialog.Bool.ImageOnlySelected" id="0PB01">Seulement les objets sélectionnés</data>
+  <data name="Dialog.Bool.ImageOnlyArea" id="0QB01">Recadrage sur les objets</data>
   <data name="Dialog.Bool.GridShow" id="0D1">Grille visible</data>
   <data name="Dialog.Bool.TextGridShow" id="0E1">Lignes visibles</data>
   <data name="Dialog.Bool.TextShowControlCharacters" id="0F1">Afficher les caractères spéciaux</data>

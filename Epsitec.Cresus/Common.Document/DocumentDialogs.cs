@@ -355,6 +355,7 @@ namespace Epsitec.Common.Document
 
 				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Export.Param);
 				this.CreateBool(container, "ImageOnlySelected");
+				this.CreateBool(container, "ImageOnlyArea");
 				this.CreateDouble(container, "ImageDpi");
 				this.CreateCombo(container, "ImageDepth");
 				this.CreateCombo(container, "ImageCompression");

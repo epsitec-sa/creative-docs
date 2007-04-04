@@ -125,6 +125,10 @@ namespace Epsitec.Common.Document.Settings
 					this.text = Res.Strings.Dialog.Bool.ImageOnlySelected;
 					break;
 
+				case "ImageOnlyArea":
+					this.text = Res.Strings.Dialog.Bool.ImageOnlyArea;
+					break;
+
 				case "ExportPDFTarget":
 					this.text = Res.Strings.Dialog.Bool.ExportPDFTarget;
 					break;
@@ -216,6 +220,9 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ImageOnlySelected":
 						return this.document.Printer.ImageOnlySelected;
+
+					case "ImageOnlyArea":
+						return this.document.Printer.ImageOnlyArea;
 
 					case "ExportPDFTarget":
 						return this.document.Settings.ExportPDFInfo.Target;
@@ -328,6 +335,10 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ImageOnlySelected":
 						this.document.Printer.ImageOnlySelected = value;
+						break;
+
+					case "ImageOnlyArea":
+						this.document.Printer.ImageOnlyArea = value;
 						break;
 
 					case "ExportPDFTarget":
