@@ -2255,41 +2255,59 @@ namespace Epsitec.Common.UI
 			//	ItemPanel.GetItemViewBounds(ItemView).
 
 			ItemPanelNavigator navigator = this.GetNavigator ();
+			ItemView view = null;
 			
 			switch (keyCode)
 			{
 				case KeyCode.ArrowLeft:
 					if (navigator.Navigate (Widgets.Direction.Left))
 					{
-						this.Items.MoveCurrentTo (navigator.Current.Item);
+						view = navigator.Current;
 					}
 					break;
 
 				case KeyCode.ArrowRight:
 					if (navigator.Navigate (Widgets.Direction.Right))
 					{
-						this.Items.MoveCurrentTo (navigator.Current.Item);
+						view = navigator.Current;
 					}
 					break;
 
 				case KeyCode.ArrowUp:
 					if (navigator.Navigate (Widgets.Direction.Up))
 					{
-						this.Items.MoveCurrentTo (navigator.Current.Item);
+						view = navigator.Current;
 					}
 					break;
 
 				case KeyCode.ArrowDown:
 					if (navigator.Navigate (Widgets.Direction.Down))
 					{
-						this.Items.MoveCurrentTo (navigator.Current.Item);
+						view = navigator.Current;
 					}
+					break;
+
+				case KeyCode.Home:
+					this.Items.MoveCurrentToFirst ();
+					break;
+
+				case KeyCode.End:
+					this.Items.MoveCurrentToLast ();
 					break;
 
 				default:
 					return false;
 			}
-			
+
+			if (view != null)
+			{
+				this.Focus (view);
+
+				if (!view.IsGroup)
+				{
+					this.Items.MoveCurrentTo (view.Item);
+				}
+			}
 			
 			return true;
 #else

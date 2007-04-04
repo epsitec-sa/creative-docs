@@ -125,8 +125,8 @@ namespace Epsitec.Common.UI
 		{
 			public BestRecord()
 			{
-				this.MinDistance = 1000000000.0;
-				this.MaxOverlap  = -1.0;
+				this.MinDistance =  1000000000.0;
+				this.MaxOverlap  = -1000000000.0;
 			}
 
 			public void Merge(ItemView view, double distance, double overlap)
@@ -174,11 +174,6 @@ namespace Epsitec.Common.UI
 						
 						double overlap = ItemPanelNavigator.GetOverlap (bounds.Left, bounds.Right, this.currentX1, this.currentX2);
 
-						if (overlap <= 0)
-						{
-							return false;
-						}
-						
 						best.Merge (view, distance, overlap);
 						
 						return true;
@@ -198,11 +193,6 @@ namespace Epsitec.Common.UI
 						}
 
 						double overlap = ItemPanelNavigator.GetOverlap (bounds.Left, bounds.Right, this.currentX1, this.currentX2);
-
-						if (overlap <= 0)
-						{
-							return false;
-						}
 
 						best.Merge (view, distance, overlap);
 						
@@ -224,11 +214,6 @@ namespace Epsitec.Common.UI
 
 						double overlap = ItemPanelNavigator.GetOverlap (bounds.Bottom, bounds.Top, this.currentY1, this.currentY2);
 
-						if (overlap <= 0)
-						{
-							return false;
-						}
-
 						best.Merge (view, distance, overlap);
 
 						return true;
@@ -248,11 +233,6 @@ namespace Epsitec.Common.UI
 						}
 
 						double overlap = ItemPanelNavigator.GetOverlap (bounds.Bottom, bounds.Top, this.currentY1, this.currentY2);
-
-						if (overlap <= 0)
-						{
-							return false;
-						}
 
 						best.Merge (view, distance, overlap);
 
