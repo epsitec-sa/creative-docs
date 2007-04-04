@@ -56,9 +56,7 @@
   <data name="Dialog.ExportPDF.BleedEven" id="0KB01">Débords additionnels (page paire)</data>
   <data name="Dialog.ExportPDF.BleedOdd" id="0LB01">Débords additionnels (page impaire)</data>
   <data name="Dialog.Bool.GridActive" id="0C1">Grille active</data>
-  <data name="Dialog.Bool.ImageOnlySelected" id="0PB01">Seulement les objets sélectionnés</data>
-  <data name="Dialog.Bool.ImageCropObjects" id="0QB01">Recadrer sur les objets de la page</data>
-  <data name="Dialog.Bool.ImageCropSelection" id="0RB01">Recadrer sur les objets sélectionnés</data>
+  <data name="Dialog.Bool.ImageOnlySelected" id="0PB01">Exporter seulement les objets sélectionnés</data>
   <data name="Dialog.Bool.GridShow" id="0D1">Grille visible</data>
   <data name="Dialog.Bool.TextGridShow" id="0E1">Lignes visibles</data>
   <data name="Dialog.Bool.TextShowControlCharacters" id="0F1">Afficher les caractères spéciaux</data>
@@ -131,6 +129,9 @@
   <data name="Dialog.Integer.DefaultUnit.Centimeter" id="043">Centimètres</data>
   <data name="Dialog.Integer.DefaultUnit.Inch" id="053">Pouces</data>
   <data name="Dialog.Integer.PrintArea.Text" id="063">Imprimer</data>
+  <data name="Dialog.Integer.ImageCrop.Page" id="0UB01">Sur la page</data>
+  <data name="Dialog.Integer.ImageCrop.Objects" id="0VB01">Sur les objets</data>
+  <data name="Dialog.Integer.ImageCrop.Selection" id="00C01">Sur la sélection</data>
   <data name="Dialog.Integer.PrintArea.All" id="073">Toutes les pages</data>
   <data name="Dialog.Integer.PrintArea.Even" id="083">Les pages paires</data>
   <data name="Dialog.Integer.PrintArea.Odd" id="093">Les pages impaires</data>

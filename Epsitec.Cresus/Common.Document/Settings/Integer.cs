@@ -48,6 +48,10 @@ namespace Epsitec.Common.Document.Settings
 					this.text = Res.Strings.Dialog.Integer.ImageFilterB.Text;
 					break;
 
+				case "ImageCrop":
+					this.text = "Cadrage de l'image";
+					break;
+
 				case "ImageDepth":
 					this.text = Res.Strings.Dialog.Integer.ImageDepth.Text;
 					break;
@@ -107,6 +111,9 @@ namespace Epsitec.Common.Document.Settings
 					case "PrintImageFilterB":
 						return Properties.Image.FilterNameToIndex(this.document.Settings.PrintInfo.GetImageNameFilter(1));
 
+					case "ImageCrop":
+						return (int) this.document.Printer.ImageCrop;
+
 					case "ImageDepth":
 						return this.document.Printer.ImageDepth;
 
@@ -160,6 +167,10 @@ namespace Epsitec.Common.Document.Settings
 
 					case "PrintImageFilterB":
 						this.document.Settings.PrintInfo.SetImageNameFilter(1, Properties.Image.FilterIndexToName(value));
+						break;
+
+					case "ImageCrop":
+						this.document.Printer.ImageCrop = (ExportImageCrop) value;
 						break;
 
 					case "ImageDepth":
@@ -286,6 +297,13 @@ namespace Epsitec.Common.Document.Settings
 					if ( pc == PrintCentring.TopRight     )  return Res.Strings.Dialog.Integer.PrintCentring.TopRight;
 					break;
 
+				case "ImageCrop":
+					ExportImageCrop xic = (ExportImageCrop) type;
+					if ( xic == ExportImageCrop.Page      )  return Res.Strings.Dialog.Integer.ImageCrop.Page;
+					if ( xic == ExportImageCrop.Objects   )  return Res.Strings.Dialog.Integer.ImageCrop.Objects;
+					if ( xic == ExportImageCrop.Selection )  return Res.Strings.Dialog.Integer.ImageCrop.Selection;
+					break;
+
 				case "ImageDepth":
 					if ( type ==  2 )  return Res.Strings.Dialog.Integer.ImageDepth.Bit2;
 					if ( type ==  8 )  return Res.Strings.Dialog.Integer.ImageDepth.Bit8;
@@ -370,6 +388,12 @@ namespace Epsitec.Common.Document.Settings
 					if ( rank == 6 )  return (int) PrintCentring.TopLeft;
 					if ( rank == 7 )  return (int) PrintCentring.TopCenter;
 					if ( rank == 8 )  return (int) PrintCentring.TopRight;
+					return -1;
+
+				case "ImageCrop":
+					if ( rank == 0 )  return (int) ExportImageCrop.Page;
+					if ( rank == 1 )  return (int) ExportImageCrop.Objects;
+					if ( rank == 2 )  return (int) ExportImageCrop.Selection;
 					return -1;
 
 				case "ImageDepth":

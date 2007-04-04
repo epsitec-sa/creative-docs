@@ -625,8 +625,6 @@ namespace Epsitec.Common.Document
 					public static string GuidesActive { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (50)); } }
 					public static string GuidesMouse { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (52)); } }
 					public static string GuidesShow { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (51)); } }
-					public static string ImageCropObjects { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1402)); } }
-					public static string ImageCropSelection { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1403)); } }
 					public static string ImageOnlySelected { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1401)); } }
 					public static string LabelsShow { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (55)); } }
 					public static string MagnetActive { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (56)); } }
@@ -763,6 +761,13 @@ namespace Epsitec.Common.Document
 						public static string None { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (123)); } }
 						public static string Rle { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (125)); } }
 						public static string Text { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (122)); } }
+					}
+					
+					public static class ImageCrop
+					{
+						public static string Objects { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1407)); } }
+						public static string Page { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1406)); } }
+						public static string Selection { get { return Epsitec.Common.Document.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (1408)); } }
 					}
 					
 					public static class ImageDepth

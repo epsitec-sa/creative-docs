@@ -38,7 +38,7 @@ namespace Epsitec.Common.Document.Settings
 	}
 
 	/// <summary>
-	/// La classe PrintInfo comtient tous les réglages secondaires pour l'impression.
+	/// La classe PrintInfo contient tous les réglages secondaires pour l'impression.
 	/// </summary>
 	[System.Serializable()]
 	public class PrintInfo : ISerializable

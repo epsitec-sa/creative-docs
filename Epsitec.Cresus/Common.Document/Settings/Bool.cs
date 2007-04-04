@@ -125,14 +125,6 @@ namespace Epsitec.Common.Document.Settings
 					this.text = Res.Strings.Dialog.Bool.ImageOnlySelected;
 					break;
 
-				case "ImageCropObjects":
-					this.text = Res.Strings.Dialog.Bool.ImageCropObjects;
-					break;
-
-				case "ImageCropSelection":
-					this.text = Res.Strings.Dialog.Bool.ImageCropSelection;
-					break;
-
 				case "ExportPDFTarget":
 					this.text = Res.Strings.Dialog.Bool.ExportPDFTarget;
 					break;
@@ -224,12 +216,6 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ImageOnlySelected":
 						return this.document.Printer.ImageOnlySelected;
-
-					case "ImageCropObjects":
-						return this.document.Printer.ImageCropObjects;
-
-					case "ImageCropSelection":
-						return this.document.Printer.ImageCropSelection;
 
 					case "ExportPDFTarget":
 						return this.document.Settings.ExportPDFInfo.Target;
@@ -342,14 +328,6 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ImageOnlySelected":
 						this.document.Printer.ImageOnlySelected = value;
-						break;
-
-					case "ImageCropObjects":
-						this.document.Printer.ImageCropObjects = value;
-						break;
-
-					case "ImageCropSelection":
-						this.document.Printer.ImageCropSelection = value;
 						break;
 
 					case "ExportPDFTarget":

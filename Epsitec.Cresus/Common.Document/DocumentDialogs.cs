@@ -357,8 +357,7 @@ namespace Epsitec.Common.Document
 				
 				this.tabIndex = 0;
 				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Export.Generic);
-				this.CreateBool(container, "ImageCropObjects");
-				this.CreateBool(container, "ImageCropSelection");
+				this.CreateCombo(container, "ImageCrop");
 				this.CreateBool(container, "ImageOnlySelected");
 				DocumentDialogs.CreateSeparator(container);
 				this.CreateDouble(container, "ImageDpi");
