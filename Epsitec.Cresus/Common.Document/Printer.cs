@@ -165,6 +165,10 @@ namespace Epsitec.Common.Document
 		{
 			get
 			{
+				if (this.imageCrop == ExportImageCrop.Selection && this.document.Modifier.TotalSelected == 0)
+				{
+					return ExportImageCrop.Objects;
+				}
 				return this.imageCrop;
 			}
 			set
