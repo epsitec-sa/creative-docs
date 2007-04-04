@@ -2096,7 +2096,8 @@ namespace Epsitec.Common.UI
 			switch (layout)
 			{
 				case ItemPanelLayout.VerticalList:
-					return this.ProcessNavigationKeysVerticalList (current, keyCode);
+					return this.ProcessNavigationKeysRowsOfTiles (current, keyCode);
+//					return this.ProcessNavigationKeysVerticalList (current, keyCode);
 
 				case ItemPanelLayout.RowsOfTiles:
 					return this.ProcessNavigationKeysRowsOfTiles (current, keyCode);
