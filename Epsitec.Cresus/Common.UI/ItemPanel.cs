@@ -2915,6 +2915,11 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		internal void RecreateUserInterface()
+		{
+			this.RecreateUserInterface (this.SafeGetViews (), this.Aperture);
+		}
+		
 		private void RecreateUserInterface(IEnumerable<ItemView> views, Drawing.Rectangle aperture)
 		{
 			List<ItemView> clear  = new List<ItemView> ();
@@ -3018,11 +3023,6 @@ namespace Epsitec.Common.UI
 
 			this.RefreshLayout (views);
 
-			if (this.Aperture.IsValid)
-			{
-				this.RecreateUserInterface (views, this.Aperture);
-			}
-
 			List<ItemView> dispose = new List<ItemView> ();
 			
 			using (new LockManager (this))
@@ -3074,6 +3074,11 @@ namespace Epsitec.Common.UI
 				case ItemPanelLayout.ColumnsOfTiles:
 					this.LayoutColumnsOfTiles (views);
 					break;
+			}
+			
+			if (this.Aperture.IsValid)
+			{
+				this.RecreateUserInterface (views, this.Aperture);
 			}
 		}
 

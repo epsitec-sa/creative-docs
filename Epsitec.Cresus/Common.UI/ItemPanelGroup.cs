@@ -47,7 +47,7 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				return !this.hasClearedUserInterface;
+				return !this.hasClearedUserInterface && !this.hasClearedWidgets;
 			}
 		}
 
@@ -146,8 +146,19 @@ namespace Epsitec.Common.UI
 			if (this.hasClearedUserInterface)
 			{
 				this.hasClearedUserInterface = false;
+				this.hasClearedWidgets = !this.panel.Aperture.IsValid;
 				
 				this.panel.RefreshUserInterface ();
+			}
+			else if (this.hasClearedWidgets)
+			{
+				this.RefreshAperture (this.ParentPanel.Aperture);
+
+				if (this.panel.Aperture.IsValid)
+				{
+					this.hasClearedWidgets = false;
+					this.panel.RecreateUserInterface ();
+				}
 			}
 		}
 
@@ -365,5 +376,6 @@ namespace Epsitec.Common.UI
 		
 		private readonly object exclusion = new object ();
 		private bool hasClearedUserInterface;
+		private bool hasClearedWidgets;
 	}
 }
