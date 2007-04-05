@@ -60,7 +60,7 @@ namespace Epsitec.Common.Document.Containers
 				this.selectorName.TextChanged -= new EventHandler(this.HandleSelectorNameChanged);
 				this.selectorName.ComboOpening -= new EventHandler<CancelEventArgs> (this.HandleSelectorNameComboOpening);
 				this.selectorName.ComboClosed -= new EventHandler(this.HandleSelectorNameComboClosed);
-				this.selectorGo.Pressed -= new MessageEventHandler(this.HandleSelectorGo);
+				this.selectorGo.Clicked -= new MessageEventHandler(this.HandleSelectorGo);
 			}
 
 			base.Dispose(disposing);
@@ -186,19 +186,19 @@ namespace Epsitec.Common.Document.Containers
 			
 			this.aggregateNew3 = new IconButton(Misc.Icon("AggregateNew3"));
 			this.aggregateNew3.AutoFocus = false;
-			this.aggregateNew3.Pressed += new MessageEventHandler(this.HandleAggregateNew3);
+			this.aggregateNew3.Clicked += new MessageEventHandler(this.HandleAggregateNew3);
 			this.aggregateToolBar.Items.Add(this.aggregateNew3);
 			ToolTip.Default.SetToolTip(this.aggregateNew3, Res.Strings.Action.AggregateNew3);
 			
 			this.aggregateNewAll = new IconButton(Misc.Icon("AggregateNewAll"));
 			this.aggregateNewAll.AutoFocus = false;
-			this.aggregateNewAll.Pressed += new MessageEventHandler(this.HandleAggregateNewAll);
+			this.aggregateNewAll.Clicked += new MessageEventHandler (this.HandleAggregateNewAll);
 			this.aggregateToolBar.Items.Add(this.aggregateNewAll);
 			ToolTip.Default.SetToolTip(this.aggregateNewAll, Res.Strings.Action.AggregateNewAll);
 			
 			this.aggregateFree = new IconButton(Misc.Icon("AggregateFree"));
 			this.aggregateFree.AutoFocus = false;
-			this.aggregateFree.Pressed += new MessageEventHandler(this.HandleAggregateFree);
+			this.aggregateFree.Clicked += new MessageEventHandler (this.HandleAggregateFree);
 			this.aggregateToolBar.Items.Add(this.aggregateFree);
 			ToolTip.Default.SetToolTip(this.aggregateFree, Res.Strings.Action.AggregateFree);
 		}
@@ -311,7 +311,7 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorGo.PreferredWidth = 80;
 			this.selectorGo.Dock = DockStyle.Left;
 			this.selectorGo.Margins = new Margins(3, 0, 0, 0);
-			this.selectorGo.Pressed += new MessageEventHandler(this.HandleSelectorGo);
+			this.selectorGo.Clicked += new MessageEventHandler(this.HandleSelectorGo);
 			ToolTip.Default.SetToolTip(this.selectorGo, Res.Strings.Container.Principal.Button.SelGoHelp);
 
 			this.UpdateSelectorGo();
@@ -868,7 +868,7 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( message != null )
 			{
-				item.Pressed += message;
+				item.Clicked += message;
 			}
 
 			menu.Items.Add(item);
