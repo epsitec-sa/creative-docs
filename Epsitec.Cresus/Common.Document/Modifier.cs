@@ -3937,8 +3937,8 @@ namespace Epsitec.Common.Document
 
 		protected void ShaperHandleState(CommandDispatcher cd, string cmd, bool enable, System.Collections.ArrayList actives, string active)
 		{
-			this.document.GetCommandState (cmd).Enable = enable;
-			this.document.GetCommandState (cmd).ActiveState = actives.Contains (active) ? Common.Widgets.ActiveState.Yes : Common.Widgets.ActiveState.No;
+			this.document.GetCommandState(cmd).Enable = enable;
+			this.document.GetCommandState(cmd).ActiveState = actives.Contains(active) ? Common.Widgets.ActiveState.Yes : Common.Widgets.ActiveState.No;
 		}
 
 		public void ShaperHandleCommand(string cmd)

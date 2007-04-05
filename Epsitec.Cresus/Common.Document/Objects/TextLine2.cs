@@ -2550,6 +2550,13 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
+		public override Path GetShaperPath()
+		{
+			//	Retourne le chemin géométrique de l'objet pour le modeleur.
+			Path path = this.PathBuild();
+			return path;
+		}
+
 		public void CreateFinalise()
 		{
 			//	Finalise la création d'une courbe de Bézier.
