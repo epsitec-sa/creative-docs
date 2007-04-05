@@ -243,14 +243,11 @@ namespace Epsitec.Common.Document
 
 		public Size ImagePixelSize
 		{
-			//	Retourne la taille en pixels de l'image exportée. Les valeurs rendues sont toujours
-			//	multiples de 1, car une largeur/hauteur en pixel de 100.3 n'a aucun sens !
+			//	Retourne la taille en pixels de l'image exportée.
 			get
 			{
 				Size size = this.ImageSize;
 
-				//?size.Width  = System.Math.Floor((size.Width/10.0)*(this.imageDpi/25.4));
-				//?size.Height = System.Math.Floor((size.Height/10.0)*(this.imageDpi/25.4));
 				size.Width  = (size.Width/10.0)*(this.imageDpi/25.4);
 				size.Height = (size.Height/10.0)*(this.imageDpi/25.4);
 				
@@ -263,8 +260,6 @@ namespace Epsitec.Common.Document
 			//	Retourne la taille de l'image exportée.
 			get
 			{
-				Size size;
-
 				if (this.ImageCrop == ExportImageCrop.Page)
 				{
 					return this.document.PageSize;

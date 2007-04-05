@@ -578,20 +578,6 @@ namespace Epsitec.Common.Document.Settings
 		{
 			string text = "";
 
-#if false
-			if ( this.name == "ImageDpi" )
-			{
-#if false
-				double dpi = this.document.Printer.ImageDpi;
-				int dx = (int) ((this.document.PageSize.Width/10.0)*(dpi/25.4));
-				int dy = (int) ((this.document.PageSize.Height/10.0)*(dpi/25.4));
-#else
-				Size size = this.document.Printer.ImageExportSize;
-				text = string.Format("{0} x {1} pixels", size.Width, size.Height);
-#endif
-			}
-#endif
-
 			if ( this.name == "ImageQuality"         ||
 				 this.name == "ExportPDFJpegQuality" )
 			{
