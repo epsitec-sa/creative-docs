@@ -42,16 +42,16 @@ namespace Epsitec.Common.Document
 			Point[] points;
 			path.GetElements(out elements, out points);
 
-			pp1 = new Point(0, 0);
-			ss1 = new Point(0, 0);
-			ss2 = new Point(0, 0);
-			pp2 = new Point(0, 0);
+			pp1 = Point.Zero;
+			ss1 = Point.Zero;
+			ss2 = Point.Zero;
+			pp2 = Point.Zero;
 
-			Point start = new Point(0, 0);
-			Point current = new Point(0, 0);
-			Point p1 = new Point(0, 0);
-			Point p2 = new Point(0, 0);
-			Point p3 = new Point(0, 0);
+			Point start = Point.Zero;
+			Point current = Point.Zero;
+			Point p1 = Point.Zero;
+			Point p2 = Point.Zero;
+			Point p3 = Point.Zero;
 			int i = 0;
 			while ( i < elements.Length )
 			{
@@ -146,19 +146,25 @@ namespace Epsitec.Common.Document
 			//	Détecte sur quel trait d'un chemin est la souris.
 			//	Retourne le rang du trait (0..1), ou -1.
 			//	Attention à utiliser un chemin obtenu avec GetShaperPath, et non GetMagnetPath !
+			bp1 = Point.Zero;
+			bs1 = Point.Zero;
+			bs2 = Point.Zero;
+			bp2 = Point.Zero;
+
+			if (path == null)
+			{
+				return -1;
+			}
+
 			PathElement[] elements;
 			Point[] points;
 			path.GetElements(out elements, out points);
 
-			Point start = new Point(0, 0);
-			Point current = new Point(0, 0);
-			Point p1 = new Point(0, 0);
-			Point p2 = new Point(0, 0);
-			Point p3 = new Point(0, 0);
-			bp1 = new Point(0, 0);
-			bs1 = new Point(0, 0);
-			bs2 = new Point(0, 0);
-			bp2 = new Point(0, 0);
+			Point start = Point.Zero;
+			Point current = Point.Zero;
+			Point p1 = Point.Zero;
+			Point p2 = Point.Zero;
+			Point p3 = Point.Zero;
 			int i = 0;
 			int rank = 0;
 			while ( i < elements.Length )
@@ -283,11 +289,11 @@ namespace Epsitec.Common.Document
 			}
 			InsideSurface surf = new InsideSurface(pos, total+10);
 
-			Point start = new Point(0, 0);
-			Point current = new Point(0, 0);
-			Point p1 = new Point(0, 0);
-			Point p2 = new Point(0, 0);
-			Point p3 = new Point(0, 0);
+			Point start = Point.Zero;
+			Point current = Point.Zero;
+			Point p1 = Point.Zero;
+			Point p2 = Point.Zero;
+			Point p3 = Point.Zero;
 			bool closed = false;
 			i = 0;
 			while ( i < elements.Length )
@@ -380,11 +386,11 @@ namespace Epsitec.Common.Document
 			Point[] points;
 			path.GetElements(out elements, out points);
 
-			Point start = new Point(0, 0);
-			Point current = new Point(0, 0);
-			Point p1 = new Point(0, 0);
-			Point p2 = new Point(0, 0);
-			Point p3 = new Point(0, 0);
+			Point start = Point.Zero;
+			Point current = Point.Zero;
+			Point p1 = Point.Zero;
+			Point p2 = Point.Zero;
+			Point p3 = Point.Zero;
 			int i = 0;
 			while ( i < elements.Length )
 			{
