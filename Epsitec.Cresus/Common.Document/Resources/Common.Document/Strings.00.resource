@@ -1379,7 +1379,7 @@
   <data name="Question.ManyObjects" id="0L801">Voulez-vous vraiment transformer {0} objets ?</data>
   <data name="Error.BadFile" id="0M801">Type de fichier incorrect.</data>
   <data name="Error.BadImage" id="0N801">Format d&amp;apos;image inconnu.</data>
-  <data name="Error.NoBitmap" id="0O801">Pas de bitmap.</data>
+  <data name="Error.NoBitmap" id="0O801">Aucune image à exporter.</data>
   <data name="Error.Share" id="0P801">Impossible de distribuer les objets,&lt;br/&gt;car ils sont trop serrés.</data>
   <data name="Error.Combine" id="0Q801">Un ou plusieurs objets n&amp;apos;ont pas pu être combinés.</data>
   <data name="Error.Uncombine" id="0R801">Un ou plusieurs objets n&amp;apos;ont pas pu être scindés.</data>

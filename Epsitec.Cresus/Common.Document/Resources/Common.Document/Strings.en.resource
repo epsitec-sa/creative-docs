@@ -1295,7 +1295,6 @@
   <data id="0L801">Do you really want to transform {0} objects?</data>
   <data id="0M801">Incorrect file type.</data>
   <data id="0N801">Unrecognized image format.</data>
-  <data id="0O801">No bitmap.</data>
   <data id="0P801">Object cannot be distributed,&lt;br/&gt;they are too near each other.</data>
   <data id="0Q801">One or more objects could not be combined.</data>
   <data id="0R801">One or more objects could not be split.</data>
