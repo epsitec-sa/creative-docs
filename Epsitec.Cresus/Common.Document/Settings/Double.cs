@@ -171,11 +171,11 @@ namespace Epsitec.Common.Document.Settings
 				case "ImageDpi":
 					this.text = Res.Strings.Dialog.Double.ImageDpi;
 					this.integer = true;
-					this.info = true;
+					this.info = false;
 					this.factorMinValue = 10.0;
 					this.factorMaxValue = 600.0;
-					this.factorResolution = 0.1;
-					this.factorStep = 0.1;
+					this.factorResolution = 0.01;
+					this.factorStep = 1.0;
 					break;
 
 				case "ImageQuality":
@@ -578,6 +578,7 @@ namespace Epsitec.Common.Document.Settings
 		{
 			string text = "";
 
+#if false
 			if ( this.name == "ImageDpi" )
 			{
 #if false
@@ -589,6 +590,7 @@ namespace Epsitec.Common.Document.Settings
 				text = string.Format("{0} x {1} pixels", size.Width, size.Height);
 #endif
 			}
+#endif
 
 			if ( this.name == "ImageQuality"         ||
 				 this.name == "ExportPDFJpegQuality" )

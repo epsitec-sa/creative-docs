@@ -227,7 +227,38 @@ namespace Epsitec.Common.Document
 			this.imageNameFilters[rank] = name;
 		}
 
-		public Size ImageExportSize
+		public void SetImagePixelWidth(double width)
+		{
+			//	Adapte la résolution d'après une largeur en pixel souhaitée.
+			Size size = this.ImageSize;
+			this.imageDpi = (width*10.0*25.4)/size.Width;
+		}
+
+		public void SetImagePixelHeight(double height)
+		{
+			//	Adapte la résolution d'après une hauteur en pixel souhaitée.
+			Size size = this.ImageSize;
+			this.imageDpi = (height*10.0*25.4)/size.Height;
+		}
+
+		public Size ImagePixelSize
+		{
+			//	Retourne la taille en pixels de l'image exportée. Les valeurs rendues sont toujours
+			//	multiples de 1, car une largeur/hauteur en pixel de 100.3 n'a aucun sens !
+			get
+			{
+				Size size = this.ImageSize;
+
+				//?size.Width  = System.Math.Floor((size.Width/10.0)*(this.imageDpi/25.4));
+				//?size.Height = System.Math.Floor((size.Height/10.0)*(this.imageDpi/25.4));
+				size.Width  = (size.Width/10.0)*(this.imageDpi/25.4);
+				size.Height = (size.Height/10.0)*(this.imageDpi/25.4);
+				
+				return size;
+			}
+		}
+
+		protected Size ImageSize
 		{
 			//	Retourne la taille de l'image exportée.
 			get
@@ -236,17 +267,13 @@ namespace Epsitec.Common.Document
 
 				if (this.ImageCrop == ExportImageCrop.Page)
 				{
-					size = this.document.PageSize;
+					return this.document.PageSize;
 				}
 				else
 				{
 					int pageNumber = this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage;
-					size = this.GetBoundingBox(pageNumber, this.ImageCrop == ExportImageCrop.Selection).Size;
+					return this.GetBoundingBox(pageNumber, this.ImageCrop == ExportImageCrop.Selection).Size;
 				}
-
-				size.Width  = System.Math.Floor((size.Width/10.0)*(this.imageDpi/25.4));
-				size.Height = System.Math.Floor((size.Height/10.0)*(this.imageDpi/25.4));
-				return size;
 			}
 		}
 		#endregion

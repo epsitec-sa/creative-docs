@@ -785,6 +785,71 @@ namespace Epsitec.Common.Document
 				text.Margins = new Margins(120, 0, 0, 0);
 				this.WidgetsTableAdd(text, ".Info");
 			}
+
+			if (name == "ImageDpi")
+			{
+				Size size = this.document.Printer.ImagePixelSize;
+
+				//	Ligne supplémentaire pour la largeur.
+				container = new Panel(parent);
+				container.PreferredHeight = 22;
+				container.TabIndex = this.tabIndex++;
+				container.Dock = DockStyle.Top;
+				container.Margins = new Margins(10, 10, 2, 0);
+
+				text = new StaticText(container);
+				text.Text = "Largeur en pixels";
+				text.PreferredWidth = 120;
+				text.Dock = DockStyle.Left;
+				text.Margins = new Margins(0, 0, 0, 0);
+
+				field = new TextFieldReal(container);
+				field.PreferredWidth = 60;
+				field.Name = string.Concat(sDouble.Name, ".Width");
+				field.TextSuffix = sDouble.Suffix;
+				this.document.Modifier.AdaptTextFieldRealScalar(field);
+				field.MinValue = 1M;
+				field.MaxValue = 10000M;
+				field.Resolution = 0.01M;
+				field.Step = 1M;
+				field.InternalValue = (decimal) size.Width;
+				field.ValueChanged += new EventHandler(this.HandleFieldDoubleChanged);
+				field.TabIndex = this.tabIndex++;
+				field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				field.Dock = DockStyle.Left;
+				field.Margins = new Margins(0, 0, 0, 0);
+				this.WidgetsTableAdd(field, "");
+
+				//	Ligne supplémentaire pour la hauteur.
+				container = new Panel(parent);
+				container.PreferredHeight = 22;
+				container.TabIndex = this.tabIndex++;
+				container.Dock = DockStyle.Top;
+				container.Margins = new Margins(10, 10, 2, 0);
+
+				text = new StaticText(container);
+				text.Text = "Hauteur en pixels";
+				text.PreferredWidth = 120;
+				text.Dock = DockStyle.Left;
+				text.Margins = new Margins(0, 0, 0, 0);
+
+				field = new TextFieldReal(container);
+				field.PreferredWidth = 60;
+				field.Name = string.Concat(sDouble.Name, ".Height");
+				field.TextSuffix = sDouble.Suffix;
+				this.document.Modifier.AdaptTextFieldRealScalar(field);
+				field.MinValue = 1M;
+				field.MaxValue = 10000M;
+				field.Resolution = 0.01M;
+				field.Step = 1M;
+				field.InternalValue = (decimal) size.Height;
+				field.ValueChanged += new EventHandler(this.HandleFieldDoubleChanged);
+				field.TabIndex = this.tabIndex++;
+				field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				field.Dock = DockStyle.Left;
+				field.Margins = new Margins(0, 0, 0, 0);
+				this.WidgetsTableAdd(field, "");
+			}
 		}
 
 		private void HandleFieldDoubleChanged(object sender)
@@ -792,6 +857,28 @@ namespace Epsitec.Common.Document
 			if ( this.ignoreChanged )  return;
 			TextFieldReal field = sender as TextFieldReal;
 			if ( field == null )  return;
+
+			string name = field.Name;
+
+			if (name == "ImageDpi.Width")
+			{
+				this.ignoreChanged = true;
+				this.document.Printer.SetImagePixelWidth((double) field.InternalValue);
+				this.ignoreChanged = false;
+
+				this.UpdateDouble("ImageDpi");
+				return;
+			}
+
+			if (name == "ImageDpi.Height")
+			{
+				this.ignoreChanged = true;
+				this.document.Printer.SetImagePixelHeight((double) field.InternalValue);
+				this.ignoreChanged = false;
+
+				this.UpdateDouble("ImageDpi");
+				return;
+			}
 
 			Settings.Abstract settings = this.document.Settings.Get(field.Name);
 			if ( settings == null )  return;
@@ -804,6 +891,22 @@ namespace Epsitec.Common.Document
 			{
 				StaticText info = this.WidgetsTableSearch(sDouble.Name, ".Info") as StaticText;
 				info.Text = "<font size=\"80%\">" + sDouble.GetInfo() + "</font>";
+			}
+
+			if (name == "ImageDpi")
+			{
+				Size size = this.document.Printer.ImagePixelSize;
+				TextFieldReal fieldReal;
+
+				this.ignoreChanged = true;
+
+				fieldReal = this.WidgetsTableSearch(name, ".Width") as TextFieldReal;
+				fieldReal.InternalValue = (decimal) size.Width;
+				
+				fieldReal = this.WidgetsTableSearch(name, ".Height") as TextFieldReal;
+				fieldReal.InternalValue = (decimal) size.Height;
+
+				this.ignoreChanged = false;
 			}
 		}
 
@@ -826,8 +929,27 @@ namespace Epsitec.Common.Document
 				if ( info != null )
 				{
 					info.Visibility = (sDouble.IsEnabled);
-					info.Text = "<font size=\"80%\">" + sDouble.GetInfo() + "</font>";
+					//?info.Text = "<font size=\"80%\">" + sDouble.GetInfo() + "</font>";
 				}
+			}
+
+			if (name == "ImageDpi")
+			{
+				Size size = this.document.Printer.ImagePixelSize;
+				TextFieldReal fieldReal;
+
+				this.ignoreChanged = true;
+				
+				fieldReal = this.WidgetsTableSearch(name, "") as TextFieldReal;
+				fieldReal.InternalValue = (decimal) this.document.Printer.ImageDpi;
+
+				fieldReal = this.WidgetsTableSearch(name, ".Width") as TextFieldReal;
+				fieldReal.InternalValue = (decimal) size.Width;
+				
+				fieldReal = this.WidgetsTableSearch(name, ".Height") as TextFieldReal;
+				fieldReal.InternalValue = (decimal) size.Height;
+
+				this.ignoreChanged = false;
 			}
 		}
 		#endregion
