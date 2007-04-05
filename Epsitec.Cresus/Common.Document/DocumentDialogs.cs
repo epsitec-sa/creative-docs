@@ -809,7 +809,7 @@ namespace Epsitec.Common.Document
 				field.Name = string.Concat(sDouble.Name, ".Width");
 				field.TextSuffix = sDouble.Suffix;
 				this.document.Modifier.AdaptTextFieldRealScalar(field);
-				field.MinValue = 1M;
+				field.MinValue = 0M;
 				field.MaxValue = 10000M;
 				field.Resolution = 0.01M;
 				field.Step = 1M;
@@ -839,7 +839,7 @@ namespace Epsitec.Common.Document
 				field.Name = string.Concat(sDouble.Name, ".Height");
 				field.TextSuffix = sDouble.Suffix;
 				this.document.Modifier.AdaptTextFieldRealScalar(field);
-				field.MinValue = 1M;
+				field.MinValue = 0M;
 				field.MaxValue = 10000M;
 				field.Resolution = 0.01M;
 				field.Step = 1M;
