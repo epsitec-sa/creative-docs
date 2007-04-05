@@ -4,6 +4,13 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.IO;
 
+/*
+ *	Note: on ne doit pas faire de image.Dispose (cf. //!), car il se peut
+ *	qu'un appelant soit encore en train de travailler avec l'instance en
+ *	question. Un Dispose serait dès lors fatal (accès hors de la mémoire,
+ *	par exemple)
+ */
+
 namespace Epsitec.Common.Document
 {
 	/// <summary>
@@ -393,13 +400,13 @@ namespace Epsitec.Common.Document
 
 					if (part == ImagePart.LargeOriginal || part == ImagePart.SmallOriginal)
 					{
-						this.originalImage.Dispose();
+//!						this.originalImage.Dispose();
 						this.originalImage = null;
 					}
 
 					if (part == ImagePart.Lowres)
 					{
-						this.lowresImage.Dispose();
+//!						this.lowresImage.Dispose();
 						this.lowresImage = null;
 					}
 
@@ -733,13 +740,13 @@ namespace Epsitec.Common.Document
 
 				if (this.originalImage != null)
 				{
-					this.originalImage.Dispose();
+//!					this.originalImage.Dispose();
 					this.originalImage = null;
 				}
 
 				if (this.lowresImage != null)
 				{
-					this.lowresImage.Dispose();
+//!					this.lowresImage.Dispose();
 					this.lowresImage = null;
 				}
 			}

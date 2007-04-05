@@ -591,7 +591,8 @@ namespace Epsitec.Common.Widgets.Platform
 			{
 				return (this.is_frozen)
 					|| (this.widget_window == null)
-					|| (this.widget_window.Root == null);
+					|| (this.widget_window.Root == null)
+					|| (this.widget_window.Root.IsFrozen);
 			}
 		}
 		
