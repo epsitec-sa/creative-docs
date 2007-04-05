@@ -404,6 +404,7 @@ namespace Epsitec.Common.Document
 			this.UpdateDialogSettings("Export");
 			this.UpdateBool("ImageCropSelection");
 			this.UpdateBool("ImageOnlySelected");
+			this.UpdateDouble("ImageDpi");
 			this.UpdateCombo("ImageDepth");
 			this.UpdateCombo("ImageCompression");
 			this.UpdateDouble("ImageQuality");
