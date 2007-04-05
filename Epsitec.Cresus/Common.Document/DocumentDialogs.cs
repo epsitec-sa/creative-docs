@@ -826,6 +826,7 @@ namespace Epsitec.Common.Document
 				if ( info != null )
 				{
 					info.Visibility = (sDouble.IsEnabled);
+					info.Text = "<font size=\"80%\">" + sDouble.GetInfo() + "</font>";
 				}
 			}
 		}
