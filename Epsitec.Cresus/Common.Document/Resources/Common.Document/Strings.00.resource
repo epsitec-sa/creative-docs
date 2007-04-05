@@ -106,6 +106,8 @@
   <data name="Dialog.Double.ExportPDFImageMinDpi" id="0D2">Résolution min. (dpi)</data>
   <data name="Dialog.Double.ExportPDFImageMaxDpi" id="0E2">Résolution max. (dpi)</data>
   <data name="Dialog.Double.ImageDpi" id="0F2">Résolution (dpi)</data>
+  <data name="Dialog.Double.ImageDpiWidth" id="01C01">Largeur en pixels</data>
+  <data name="Dialog.Double.ImageDpiHeight" id="02C01">Hauteur en pixels</data>
   <data name="Dialog.Double.ImageQuality" id="0G2">Qualité de l&amp;apos;image</data>
   <data name="Dialog.Double.ImageQuality1" id="0H2">Qualité minimale, taille faible</data>
   <data name="Dialog.Double.ImageQuality2" id="0I2">Basse qualité, taille faible</data>

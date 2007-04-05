@@ -798,7 +798,7 @@ namespace Epsitec.Common.Document
 				container.Margins = new Margins(10, 10, 2, 0);
 
 				text = new StaticText(container);
-				text.Text = "Largeur en pixels";
+				text.Text = Res.Strings.Dialog.Double.ImageDpiWidth;
 				text.PreferredWidth = 120;
 				text.Dock = DockStyle.Left;
 				text.Margins = new Margins(0, 0, 0, 0);
@@ -828,7 +828,7 @@ namespace Epsitec.Common.Document
 				container.Margins = new Margins(10, 10, 2, 0);
 
 				text = new StaticText(container);
-				text.Text = "Hauteur en pixels";
+				text.Text = Res.Strings.Dialog.Double.ImageDpiHeight;
 				text.PreferredWidth = 120;
 				text.Dock = DockStyle.Left;
 				text.Margins = new Margins(0, 0, 0, 0);
