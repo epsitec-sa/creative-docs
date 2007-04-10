@@ -1739,6 +1739,8 @@ namespace Epsitec.Common.Document.PDF
 					jpeg = rgb.SaveToMemory(Opac.FreeImage.FileFormat.Jpeg, Properties.Image.FilterQualityToMode(this.jpegQuality));
 				}
 
+				System.Diagnostics.Debug.Assert(jpeg != null);
+
 				port.Reset();
 				port.PutASCII85(jpeg);
 				Export.debugTotal += jpeg.Length;
