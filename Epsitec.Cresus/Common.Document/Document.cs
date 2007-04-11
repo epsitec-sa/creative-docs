@@ -323,7 +323,7 @@ namespace Epsitec.Common.Document
 			set { this.initializationInProgress = value; }
 		}
 
-		public void MainWindowSetFrozen()
+		protected void MainWindowSetFrozen()
 		{
 			//	Gèle la fenêtre principale.
 			if (this.mainWindow != null)
@@ -333,7 +333,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void MainWindowClearFrozen()
+		protected void MainWindowClearFrozen()
 		{
 			//	Dégèle la fenêtre principale.
 			if (this.mainWindow != null)
@@ -2282,11 +2282,18 @@ namespace Epsitec.Common.Document
 			//	Exporte le document.
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 
+			//	MainWindowSetFrozen évite des appels à ImageCache.SetResolution pendant l'exportation,
+			//	si la fenêtre doit être repeinte !
+			this.MainWindowSetFrozen();
+
 			if (this.imageCache != null)
 			{
 				this.imageCache.SetResolution(ImageCacheResolution.High);
 			}
-			return this.printer.Export(filename);
+			string err = this.printer.Export(filename);
+
+			this.MainWindowClearFrozen();
+			return err;
 		}
 
 		public string ExportPDF(string filename, Common.Dialogs.IWorkInProgressReport report)
@@ -2295,11 +2302,18 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
+			//	MainWindowSetFrozen évite des appels à ImageCache.SetResolution pendant l'exportation,
+			//	si la fenêtre doit être repeinte !
+			this.MainWindowSetFrozen();
+
 			if (this.imageCache != null)
 			{
 				this.imageCache.SetResolution(ImageCacheResolution.High);
 			}
-			return this.exportPDF.FileExport(filename, report);
+			string err = this.exportPDF.FileExport(filename, report);
+
+			this.MainWindowClearFrozen();
+			return err;
 		}
 
         public string ExportICO(string filename)
@@ -2308,11 +2322,18 @@ namespace Epsitec.Common.Document
             System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
             this.Modifier.DeselectAll();
 
+			//	MainWindowSetFrozen évite des appels à ImageCache.SetResolution pendant l'exportation,
+			//	si la fenêtre doit être repeinte !
+			this.MainWindowSetFrozen();
+
             if (this.imageCache != null)
             {
                 this.imageCache.SetResolution(ImageCacheResolution.High);
             }
-            return this.printer.ExportICO(filename);
+            string err = this.printer.ExportICO(filename);
+
+			this.MainWindowClearFrozen();
+			return err;
         }
 
 

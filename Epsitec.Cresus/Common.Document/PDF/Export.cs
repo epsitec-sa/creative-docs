@@ -72,11 +72,6 @@ namespace Epsitec.Common.Document.PDF
 		public string FileExport(string filename, Common.Dialogs.IWorkInProgressReport report)
 		{
 			//	Exporte le document dans un fichier.
-
-			//	MainWindowSetFrozen évite des appels à ImageCache.SetResolution pendant l'exportation,
-			//	si la fenêtre doit être repeinte !
-			this.document.MainWindowSetFrozen();
-
 			report.DefineProgress(0, Res.Strings.Export.PDF.Progress.Init);
 
 			Settings.ExportPDFInfo info = this.document.Settings.ExportPDFInfo;
@@ -164,7 +159,6 @@ namespace Epsitec.Common.Document.PDF
 			err = this.FoundComplexSurfaces(port, drawingContext, report);
 			if (err != "")
 			{
-				this.document.MainWindowClearFrozen();
 				return err;
 			}
 
@@ -181,7 +175,6 @@ namespace Epsitec.Common.Document.PDF
 			}
 			catch ( System.Exception e )
 			{
-				this.document.MainWindowClearFrozen();
 				return e.Message;
 			}
 
@@ -263,7 +256,6 @@ namespace Epsitec.Common.Document.PDF
 				report.DefineProgress(0, string.Format(Res.Strings.Export.PDF.Progress.Ressource, page+1));
 				if (report.Cancelled)
 				{
-					this.document.MainWindowClearFrozen();
 					return Res.Strings.Export.PDF.Progress.Cancelled;
 				}
 
@@ -358,7 +350,6 @@ namespace Epsitec.Common.Document.PDF
 			err = this.CreateImageSurface(writer, port, report);
 			if (err != "")
 			{
-				this.document.MainWindowClearFrozen();
 				return err;
 			}
 
@@ -373,7 +364,6 @@ namespace Epsitec.Common.Document.PDF
 				report.DefineProgress(0, string.Format(Res.Strings.Export.PDF.Progress.Content, page+1));
 				if (report.Cancelled)
 				{
-					this.document.MainWindowClearFrozen();
 					return Res.Strings.Export.PDF.Progress.Cancelled;
 				}
 
@@ -433,7 +423,6 @@ namespace Epsitec.Common.Document.PDF
 			this.FlushImageSurface();
 			this.FlushFont();
 
-			this.document.MainWindowClearFrozen();
 			return "";  // ok
 		}
 
