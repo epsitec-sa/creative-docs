@@ -95,7 +95,13 @@ namespace Epsitec.Common.Text.Exchange
 				
 				if (Epsitec.Common.Support.Globals.IsDebugBuild)
 				{
-					System.IO.File.WriteAllText (@"C:\Clipboard native text (debug).txt", nativeText.ToString ());
+					try
+					{
+						System.IO.File.WriteAllText (@"C:\Clipboard native text (debug).txt", nativeText.ToString ());
+					}
+					catch
+					{
+					}
 				}
 //#endif
 				System.Windows.Forms.Clipboard.SetDataObject (od, true);
