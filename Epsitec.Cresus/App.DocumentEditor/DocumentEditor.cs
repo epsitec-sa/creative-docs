@@ -143,7 +143,7 @@ namespace Epsitec.App.DocumentEditor
 			
 			this.dlgSplash.StartTimer();
 
-			this.clipboard = new Document(this.documentType, DocumentMode.Clipboard, this.installType, this.debugMode, this.globalSettings, this.CommandDispatcher, this.CommandContext);
+			this.clipboard = new Document(this.documentType, DocumentMode.Clipboard, this.installType, this.debugMode, this.globalSettings, this.CommandDispatcher, this.CommandContext, this.Window);
 			this.clipboard.Name = "Clipboard";
 
 			this.documents = new List<DocumentInfo> ();
@@ -5238,7 +5238,7 @@ namespace Epsitec.App.DocumentEditor
 			//	Crée un nouveau document.
 			this.PrepareCloseDocument();
 
-			Document doc = new Document(this.documentType, DocumentMode.Modify, this.installType, this.debugMode, this.globalSettings, this.CommandDispatcher, this.CommandContext);
+			Document doc = new Document(this.documentType, DocumentMode.Modify, this.installType, this.debugMode, this.globalSettings, this.CommandDispatcher, this.CommandContext, this.Window);
 			doc.Name = "Document";
 			doc.Clipboard = this.clipboard;
 

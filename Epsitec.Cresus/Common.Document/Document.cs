@@ -97,7 +97,7 @@ namespace Epsitec.Common.Document
 			Icon			// extension *.icon
 		}
 
-		public Document(DocumentType type, DocumentMode mode, InstallType installType, DebugMode debugMode, Settings.GlobalSettings globalSettings, CommandDispatcher commandDispatcher, CommandContext commandContext)
+		public Document(DocumentType type, DocumentMode mode, InstallType installType, DebugMode debugMode, Settings.GlobalSettings globalSettings, CommandDispatcher commandDispatcher, CommandContext commandContext, Window mainWindow)
 		{
 			//	Crée un nouveau document vide.
 			this.UniqueIDCreate();
@@ -110,6 +110,7 @@ namespace Epsitec.Common.Document
 			this.globalSettings = globalSettings;
 			this.commandDispatcher = commandDispatcher;
 			this.commandContext = commandContext;
+			this.mainWindow = mainWindow;
 			this.initializationInProgress = true;
 
 			if ( this.type == DocumentType.Pictogram )
@@ -322,6 +323,25 @@ namespace Epsitec.Common.Document
 			set { this.initializationInProgress = value; }
 		}
 
+		public void MainWindowSetFrozen()
+		{
+			//	Gèle la fenêtre principale.
+			if (this.mainWindow != null)
+			{
+				this.isMainWindowFrozen = this.mainWindow.Root.IsFrozen;
+				this.mainWindow.Root.SetFrozen(true);
+			}
+		}
+
+		public void MainWindowClearFrozen()
+		{
+			//	Dégèle la fenêtre principale.
+			if (this.mainWindow != null)
+			{
+				this.mainWindow.Root.SetFrozen(this.isMainWindowFrozen);
+			}
+		}
+
 		#region ForSamples
 		public Document DocumentForSamples
 		{
@@ -330,7 +350,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.documentForSamples == null )
 				{
-					this.documentForSamples = new Document(DocumentType.Graphic, DocumentMode.Samples, InstallType.Full, DebugMode.Release, this.GlobalSettings, null, null);
+					this.documentForSamples = new Document(DocumentType.Graphic, DocumentMode.Samples, InstallType.Full, DebugMode.Release, this.GlobalSettings, null, null, null);
 					this.documentForSamples.TextContext = this.TextContext;
 				}
 
@@ -2264,7 +2284,7 @@ namespace Epsitec.Common.Document
 
 			if (this.imageCache != null)
 			{
-				this.imageCache.SetResolution (ImageCacheResolution.High);
+				this.imageCache.SetResolution(ImageCacheResolution.High);
 			}
 			return this.printer.Export(filename);
 		}
@@ -2277,7 +2297,7 @@ namespace Epsitec.Common.Document
 
 			if (this.imageCache != null)
 			{
-				this.imageCache.SetResolution (ImageCacheResolution.High);
+				this.imageCache.SetResolution(ImageCacheResolution.High);
 			}
 			return this.exportPDF.FileExport(filename, report);
 		}
@@ -3093,6 +3113,8 @@ namespace Epsitec.Common.Document
 		protected Settings.GlobalSettings		globalSettings;
 		protected CommandDispatcher				commandDispatcher;
 		protected CommandContext				commandContext;
+		protected Window						mainWindow;
+		protected bool							isMainWindowFrozen;
 		protected string						name;
 		protected Document						clipboard;
 		protected Document						documentForSamples;
@@ -3118,7 +3140,7 @@ namespace Epsitec.Common.Document
 		protected Printer						printer;
 		protected Common.Dialogs.Print			printDialog;
 		protected PDF.Export					exportPDF;
-		protected DocumentDialogs						dialogs;
+		protected DocumentDialogs				dialogs;
 		protected string						ioDirectory;
 		protected System.Collections.ArrayList	readWarnings;
 		protected List<OpenType.FontName>		fontList;
