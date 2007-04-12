@@ -138,7 +138,8 @@ namespace Epsitec.Common.OpenType
 
 		/// <summary>
 		/// Initializes this font collection object. If font identities have
-		/// already been loaded by <see cref="LoadFromCache()"/>.
+		/// already been loaded by <see cref="LoadFromCache()"/>, they will be
+		/// updated.
 		/// </summary>
 		/// <returns><c>true</c> if the font collection has changed; otherwise, <c>false</c>.</returns>
 		public bool Initialize()

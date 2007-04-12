@@ -1727,16 +1727,21 @@ namespace Epsitec.Common.Document.PDF
 				{
 					Opac.FreeImage.Image mask = fi.GetChannel(Opac.FreeImage.ColorChannel.Alpha);
 					jpeg = mask.SaveToMemory(Opac.FreeImage.FileFormat.Jpeg, Properties.Image.FilterQualityToMode(this.jpegQuality));
+					mask.Dispose();
 				}
 				else if (isGray)
 				{
 					Opac.FreeImage.Image gray = fi.ConvertToGrayscale();
 					jpeg = gray.SaveToMemory(Opac.FreeImage.FileFormat.Jpeg, Properties.Image.FilterQualityToMode(this.jpegQuality));
+					gray.Dispose();
 				}
 				else
 				{
 					Opac.FreeImage.Image rgb = fi.ConvertToRgb();
-					jpeg = rgb.SaveToMemory(Opac.FreeImage.FileFormat.Jpeg, Properties.Image.FilterQualityToMode(this.jpegQuality));
+					Opac.FreeImage.Image rgb24 = rgb.ConvertTo24Bits();
+					jpeg = rgb24.SaveToMemory(Opac.FreeImage.FileFormat.Jpeg, Properties.Image.FilterQualityToMode(this.jpegQuality));
+					rgb24.Dispose();
+					rgb.Dispose();
 				}
 
 				System.Diagnostics.Debug.Assert(jpeg != null);
