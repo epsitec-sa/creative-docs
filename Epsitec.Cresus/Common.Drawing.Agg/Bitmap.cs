@@ -386,32 +386,33 @@ namespace Epsitec.Common.Drawing
 				
 				byte[] data = stream.ToArray ();
 
-				if (data != null && (format == ImageFormat.Png || format == ImageFormat.Tiff) && depth == 24)
+				if (data == null)
 				{
-					Opac.FreeImage.Image fi = Opac.FreeImage.Image.Load(data);
-					Opac.FreeImage.Image fi24 = fi.ConvertTo24Bits();
+					return null;
+				}
 
-					if (format == ImageFormat.Png)
-					{
-						data = fi24.SaveToMemory(Opac.FreeImage.FileFormat.Png);
-					}
+				if (format == ImageFormat.Png)
+				{
+					//	FreeImage does a better job than Windows for the PNG compression.
 
-					if (format == ImageFormat.Tiff)
+					using (Opac.FreeImage.Image fi = Opac.FreeImage.Image.Load (data))
 					{
-						Opac.FreeImage.LoadSaveMode value = Opac.FreeImage.LoadSaveMode.TiffDefault;
-						switch (compression)
+						switch (depth)
 						{
-							case ImageCompression.Lzw:			value = Opac.FreeImage.LoadSaveMode.TiffLzw;		break;
-							case ImageCompression.FaxGroup3:	value = Opac.FreeImage.LoadSaveMode.TiffCcittFax3;	break;
-							case ImageCompression.FaxGroup4:	value = Opac.FreeImage.LoadSaveMode.TiffCcittFax4;	break;
-							case ImageCompression.Rle:			value = Opac.FreeImage.LoadSaveMode.TiffPackBits;	break;
+							case 24:
+								using (Opac.FreeImage.Image fi24 = fi.ConvertTo24Bits ())
+								{
+									data = fi24.SaveToMemory (Opac.FreeImage.FileFormat.Png);
+								}
+								break;
+							case 32:
+								using (Opac.FreeImage.Image fi32 = fi.ConvertTo32Bits ())
+								{
+									data = fi32.SaveToMemory (Opac.FreeImage.FileFormat.Png);
+								}
+								break;
 						}
-
-						data = fi24.SaveToMemory(Opac.FreeImage.FileFormat.Tiff, value);
 					}
-
-					fi.Dispose();
-					fi24.Dispose();
 				}
 				
 				return data;
