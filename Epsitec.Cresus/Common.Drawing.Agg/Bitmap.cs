@@ -384,9 +384,39 @@ namespace Epsitec.Common.Drawing
 				this.NativeBitmap.Save (stream, encoder_info, encoder_params);
 				stream.Close ();
 				
-				return stream.ToArray ();
+				byte[] data = stream.ToArray ();
+
+				if (data != null && (format == ImageFormat.Png || format == ImageFormat.Tiff) && depth == 24)
+				{
+					Opac.FreeImage.Image fi = Opac.FreeImage.Image.Load(data);
+					Opac.FreeImage.Image fi24 = fi.ConvertTo24Bits();
+
+					if (format == ImageFormat.Png)
+					{
+						data = fi24.SaveToMemory(Opac.FreeImage.FileFormat.Png);
+					}
+
+					if (format == ImageFormat.Tiff)
+					{
+						Opac.FreeImage.LoadSaveMode value = Opac.FreeImage.LoadSaveMode.TiffDefault;
+						switch (compression)
+						{
+							case ImageCompression.Lzw:			value = Opac.FreeImage.LoadSaveMode.TiffLzw;		break;
+							case ImageCompression.FaxGroup3:	value = Opac.FreeImage.LoadSaveMode.TiffCcittFax3;	break;
+							case ImageCompression.FaxGroup4:	value = Opac.FreeImage.LoadSaveMode.TiffCcittFax4;	break;
+							case ImageCompression.Rle:			value = Opac.FreeImage.LoadSaveMode.TiffPackBits;	break;
+						}
+
+						data = fi24.SaveToMemory(Opac.FreeImage.FileFormat.Tiff, value);
+					}
+
+					fi.Dispose();
+					fi24.Dispose();
+				}
+				
+				return data;
 			}
-			
+
 			return null;
 		}
 		
