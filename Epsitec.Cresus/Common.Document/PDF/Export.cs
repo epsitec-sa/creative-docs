@@ -60,6 +60,7 @@ namespace Epsitec.Common.Document.PDF
 			Alpha        = 6,
 		}
 
+
 		public Export(Document document)
 		{
 			this.document = document;
@@ -425,6 +426,7 @@ namespace Epsitec.Common.Document.PDF
 
 			return "";  // ok
 		}
+
 
 		protected static string NamePage(int page)
 		{

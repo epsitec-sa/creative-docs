@@ -3905,20 +3905,20 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				this.document.GetCommandState ("ShaperHandleAdd").Enable = false;
-				this.document.GetCommandState ("ShaperHandleContinue").Enable = false;
-				this.document.GetCommandState ("ShaperHandleSub").Enable = false;
-				this.document.GetCommandState ("ShaperHandleToLine").Enable = false;
-				this.document.GetCommandState ("ShaperHandleToCurve").Enable = false;
-				this.document.GetCommandState ("ShaperHandleSym").Enable = false;
-				this.document.GetCommandState ("ShaperHandleSmooth").Enable = false;
-				this.document.GetCommandState ("ShaperHandleDis").Enable = false;
-				this.document.GetCommandState ("ShaperHandleInline").Enable = false;
-				this.document.GetCommandState ("ShaperHandleFree").Enable = false;
-				this.document.GetCommandState ("ShaperHandleSimply").Enable = false;
-				this.document.GetCommandState ("ShaperHandleCorner").Enable = false;
-				this.document.GetCommandState ("ShaperHandleSharp").Enable = false;
-				this.document.GetCommandState ("ShaperHandleRound").Enable = false;
+				this.document.GetCommandState("ShaperHandleAdd").Enable = false;
+				this.document.GetCommandState("ShaperHandleContinue").Enable = false;
+				this.document.GetCommandState("ShaperHandleSub").Enable = false;
+				this.document.GetCommandState("ShaperHandleToLine").Enable = false;
+				this.document.GetCommandState("ShaperHandleToCurve").Enable = false;
+				this.document.GetCommandState("ShaperHandleSym").Enable = false;
+				this.document.GetCommandState("ShaperHandleSmooth").Enable = false;
+				this.document.GetCommandState("ShaperHandleDis").Enable = false;
+				this.document.GetCommandState("ShaperHandleInline").Enable = false;
+				this.document.GetCommandState("ShaperHandleFree").Enable = false;
+				this.document.GetCommandState("ShaperHandleSimply").Enable = false;
+				this.document.GetCommandState("ShaperHandleCorner").Enable = false;
+				this.document.GetCommandState("ShaperHandleSharp").Enable = false;
+				this.document.GetCommandState("ShaperHandleRound").Enable = false;
 			}
 		}
 

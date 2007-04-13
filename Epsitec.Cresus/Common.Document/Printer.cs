@@ -1316,6 +1316,15 @@ namespace Epsitec.Common.Document
 				return e.Message;
 			}
 
+			if (format == ImageFormat.Png && depth == 24)
+			{
+				Opac.FreeImage.Image fi = Opac.FreeImage.Image.Load(data);
+				Opac.FreeImage.Image fi24 = fi.ConvertTo24Bits();
+				data = fi24.SaveToMemory(Opac.FreeImage.FileFormat.Png);
+				fi.Dispose();
+				fi24.Dispose();
+			}
+
 			return "";  // ok
 		}
 

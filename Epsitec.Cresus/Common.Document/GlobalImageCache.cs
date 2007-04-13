@@ -60,8 +60,8 @@ namespace Epsitec.Common.Document
 		{
 			//	Retourne les données d'une image.
 			Item item;
-			key = GlobalImageCache.GetGlobalKeyName (key, zipFileName);
-			GlobalImageCache.items.TryGetValue (key, out item);
+			key = GlobalImageCache.GetGlobalKeyName(key, zipFileName);
+			GlobalImageCache.items.TryGetValue(key, out item);
 			return item;
 		}
 
@@ -197,29 +197,28 @@ namespace Epsitec.Common.Document
 		{
 			//	Ajoute une nouvelle image dans le cache.
 
-			System.Diagnostics.Debug.Assert (date != System.DateTime.MinValue);
+			System.Diagnostics.Debug.Assert(date != System.DateTime.MinValue);
 
 			Item item;
 
 			string zipFileName;
 			string zipEntryName;
 
-			GlobalImageCache.ExtractZipPathNames (zipPath, out zipFileName, out zipEntryName);
+			GlobalImageCache.ExtractZipPathNames(zipPath, out zipFileName, out zipEntryName);
 
-			key = GlobalImageCache.GetGlobalKeyName (key, zipFileName);
+			key = GlobalImageCache.GetGlobalKeyName(key, zipFileName);
 
-			if (GlobalImageCache.items.TryGetValue (key, out item))
+			if (GlobalImageCache.items.TryGetValue(key, out item))
 			{
 				return item;
 			}
 			else
 			{
-				item = new Item (fileName, zipPath, date);
+				item = new Item(fileName, zipPath, date);
 
-				if (!string.IsNullOrEmpty (zipPath) ||
-					System.IO.File.Exists (fileName))
+				if (!string.IsNullOrEmpty(zipPath) || System.IO.File.Exists(fileName))
 				{
-					GlobalImageCache.items.Add (key, item);
+					GlobalImageCache.items.Add(key, item);
 					return item;
 				}
 				else
@@ -256,9 +255,9 @@ namespace Epsitec.Common.Document
 			//	Bloque l'image car elle est utilisée dans la page.
 			Item item;
 
-			key = GlobalImageCache.GetGlobalKeyName (key, zipFileName);
+			key = GlobalImageCache.GetGlobalKeyName(key, zipFileName);
 			
-			if (GlobalImageCache.items.TryGetValue (key, out item))
+			if (GlobalImageCache.items.TryGetValue(key, out item))
 			{
 				item.Locked = true;
 			}
@@ -568,7 +567,7 @@ namespace Epsitec.Common.Document
 			{
 				get
 				{
-					return GlobalImageCache.GetGlobalKeyName (this.LocalKeyName, this.zipFilename);
+					return GlobalImageCache.GetGlobalKeyName(this.LocalKeyName, this.zipFilename);
 				}
 			}
 
@@ -652,26 +651,25 @@ namespace Epsitec.Common.Document
 			{
 				//	Si l'image originale est trop grosse, crée l'image basse résolution
 				//	pour l'affichage et libère l'image originale.
-				if ((this.lowresImage != null) ||
-					(read == false))
+				if (this.lowresImage != null || read == false)
 				{
 					return;
 				}
 
 				//	Cherche d'abord l'image dans le cache persistant.
-				string path = this.zipFilename == null ? string.Concat ("file:", this.filename) : GlobalImageCache.CreateZipPath (this.zipFilename, this.zipEntryName);
-				ImageData imageData = GlobalImageCache.GetImageManager ().GetImage (path, this.filename, this.date);
-				Opac.FreeImage.Image sampleImage = imageData.GetSampleImage ();
+				string path = this.zipFilename == null ? string.Concat("file:", this.filename) : GlobalImageCache.CreateZipPath(this.zipFilename, this.zipEntryName);
+				ImageData imageData = GlobalImageCache.GetImageManager().GetImage(path, this.filename, this.date);
+				Opac.FreeImage.Image sampleImage = imageData.GetSampleImage();
 
 				if (sampleImage == null)
 				{
-					this.originalSize = new Size (imageData.SourceWidth, imageData.SourceHeight);
+					this.originalSize = new Size(imageData.SourceWidth, imageData.SourceHeight);
 					this.lowResScale = 1.0;
 				}
 				else
 				{
-					this.originalSize = new Size (imageData.SourceWidth, imageData.SourceHeight);
-					this.lowresImage = Bitmap.FromImage (sampleImage);
+					this.originalSize = new Size(imageData.SourceWidth, imageData.SourceHeight);
+					this.lowresImage = Bitmap.FromImage(sampleImage);
 					this.lowResScale = (double) this.originalSize.Width / this.lowresImage.Width;
 				}
 			}
@@ -696,24 +694,23 @@ namespace Epsitec.Common.Document
 			protected void ReadImageData(bool read)
 			{
 				//	Relit les données de l'image, si nécessaire.
-				if ((this.data != null) ||
-					(read == false))
+				if (this.data != null || read == false)
 				{
 					return;
 				}
 
 				if (this.zipFilename == null)
 				{
-					//?System.Diagnostics.Debug.WriteLine (string.Format ("GlobalImageCache: ReadImageData from file {0}", this.filename));
-					this.data = System.IO.File.ReadAllBytes (this.filename);
+					//?System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: ReadImageData from file {0}", this.filename));
+					this.data = System.IO.File.ReadAllBytes(this.filename);
 					this.date = GlobalImageCache.GetFileDate(this.filename);
 				}
 				else
 				{
-					//?System.Diagnostics.Debug.WriteLine (string.Format ("GlobalImageCache: ReadImageData from zip {0} {1}", this.zipFilename, this.zipEntryName));
-					ZipFile zip = new ZipFile ();
+					//?System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: ReadImageData from zip {0} {1}", this.zipFilename, this.zipEntryName));
+					ZipFile zip = new ZipFile();
 
-					bool ok = zip.TryLoadFile (this.zipFilename,
+					bool ok = zip.TryLoadFile(this.zipFilename,
 						delegate (string entryName)
 						{
 							return (entryName == this.zipEntryName);
@@ -770,10 +767,9 @@ namespace Epsitec.Common.Document
 		internal static System.DateTime GetFileDate(string path)
 		{
 			//	Retourne la date de dernière modification d'un fichier.
-			if ((!string.IsNullOrEmpty (path)) &&
-				(System.IO.File.Exists (path)))
+			if (!string.IsNullOrEmpty(path) && System.IO.File.Exists(path))
 			{
-				return System.IO.File.GetLastWriteTimeUtc (path);
+				return System.IO.File.GetLastWriteTimeUtc(path);
 			}
 			else
 			{
@@ -796,27 +792,27 @@ namespace Epsitec.Common.Document
 		}
 
 
-		//?private static readonly long				globalLimit = 500000;  // limite globale de 0.5 GB
-		private static readonly long				globalLimit =  20000;  // limite globale de 20 MB
-		private static readonly long				imageLimit  =   1000;  // limite par image de 1 MB
-		private const string						zipPrefix = "crdoc-ZIP:";
-
-		private static Dictionary<string, Item>		items = new Dictionary<string, Item> ();
-		private static long							timeStamp = 0;
-		private static ImageManager					cache;
-		private static List<ImageCache>				localCache = new List<ImageCache> ();
-
 		private static string GetGlobalKeyName(string localKeyName, string zipFileName)
 		{
-			if (string.IsNullOrEmpty (zipFileName))
+			if (string.IsNullOrEmpty(zipFileName))
 			{
 				return localKeyName;
 			}
 			else
 			{
-				return string.Concat (localKeyName, "|", zipFileName);
+				return string.Concat(localKeyName, "|", zipFileName);
 			}
-
 		}
+
+		
+		//?private static readonly long				globalLimit = 500000;  // limite globale de 0.5 GB
+		private static readonly long				globalLimit =  20000;  // limite globale de 20 MB
+		private static readonly long				imageLimit  =   1000;  // limite par image de 1 MB
+		private const string						zipPrefix = "crdoc-ZIP:";
+
+		private static Dictionary<string, Item>		items = new Dictionary<string, Item>();
+		private static long							timeStamp = 0;
+		private static ImageManager					cache;
+		private static List<ImageCache>				localCache = new List<ImageCache>();
 	}
 }
