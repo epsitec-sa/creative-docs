@@ -22,6 +22,10 @@ namespace Epsitec.Common.UI
 			this.rootPanel = rootPanel;
 		}
 
+		/// <summary>
+		/// Gets the current item view.
+		/// </summary>
+		/// <value>The current item view, or <c>null</c>.</value>
 		public ItemView Current
 		{
 			get
@@ -30,6 +34,11 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Navigates to the specified item view. This will clear the cached
+		/// position information.
+		/// </summary>
+		/// <param name="view">The item view.</param>
 		public void NavigateTo(ItemView view)
 		{
 			if (this.currentView != view)
@@ -42,6 +51,12 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Navigates to a new item view in the specified direction.
+		/// </summary>
+		/// <param name="direction">The direction.</param>
+		/// <returns><c>true</c> if the navigation was successful; otherwise,
+		/// <c>false</c></returns>
 		public bool Navigate(Widgets.Direction direction)
 		{
 			this.UpdateCurrentPosition ();
@@ -74,6 +89,13 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Finds the neighbour. This will first look for immediate neighbours
+		/// in the same container; if none can be found, a new search will be
+		/// done in the parent containers.
+		/// </summary>
+		/// <param name="direction">The search direction.</param>
+		/// <returns>The item view or <c>null</c> if none can be found.</returns>
 		private ItemView FindNeighbour(Widgets.Direction direction)
 		{
 			List<ItemPanel> exclusionList = new List<ItemPanel> ();
@@ -114,6 +136,10 @@ namespace Epsitec.Common.UI
 			System.Predicate<ItemView> viewPredicate  = this.GetMatchItemViewFocusBoundsPredicateAndRecordBest (direction, best);
 			System.Predicate<ItemView> groupPredicate = this.GetMatchItemViewBoundsPredicate (direction, exclusionList);
 			
+			//	Visit all local views and all children views not in the exclusion
+			//	list, recording the distance from the current view. The best match
+			//	is recorded by the "best" instance :
+			
 			IList<ItemView> views = panel.FindItemViews (viewPredicate, groupPredicate);
 
 			return best.View;
@@ -121,6 +147,10 @@ namespace Epsitec.Common.UI
 
 		#region BestRecord Class
 
+		/// <summary>
+		/// The <c>BestRecord</c> class is used to record the best item view
+		/// based on geometric considerations.
+		/// </summary>
 		private class BestRecord
 		{
 			public BestRecord()
@@ -129,6 +159,13 @@ namespace Epsitec.Common.UI
 				this.MaxOverlap  = -1000000000.0;
 			}
 
+			/// <summary>
+			/// Record the best view based on the minimum distance and, in case of
+			/// equality, the view with the highest overlap.
+			/// </summary>
+			/// <param name="view">The view.</param>
+			/// <param name="distance">The distance.</param>
+			/// <param name="overlap">The overlap.</param>
 			public void Merge(ItemView view, double distance, double overlap)
 			{
 				if (distance < this.MinDistance)
@@ -405,6 +442,10 @@ namespace Epsitec.Common.UI
 			return predicate;
 		}
 
+		/// <summary>
+		/// Updates the cached X and Y positions based on the current item view
+		/// and the validity of the positions.
+		/// </summary>
 		private void UpdateCurrentPosition()
 		{
 			if (this.currentView != null)
@@ -485,6 +526,15 @@ namespace Epsitec.Common.UI
 			FromRoot,
 		}
 
+		/// <summary>
+		/// Maps the coordinates between the root and the specified container.
+		/// </summary>
+		/// <param name="container">The container.</param>
+		/// <param name="coord">The coordinates.</param>
+		/// <param name="mode">The mapping mode.</param>
+		/// <param name="transform">The transform used to map the coordinates between
+		/// a widget and its parent.</param>
+		/// <returns>The mapped coordinates.</returns>
 		private T MapCoordinates<T>(ItemPanel container, T coord, MapMode mode, Transform<T> transform)
 		{
 			List<Widgets.Widget> widgets = new List<Widgets.Widget> ();
@@ -524,13 +574,14 @@ namespace Epsitec.Common.UI
 
 		#endregion
 
-		ItemPanel rootPanel;
-		ItemView currentView;
-		ItemPanel currentPanel;
+		private ItemPanel						rootPanel;
+		private ItemView						currentView;
+		private ItemPanel						currentPanel;
 
-		double currentX1, currentX2, currentX;
-		double currentY1, currentY2, currentY;
-		bool isCurrentXValid;
-		bool isCurrentYValid;
+		private double							currentX1, currentX2, currentX;
+		private double							currentY1, currentY2, currentY;
+		
+		private bool							isCurrentXValid;
+		private bool							isCurrentYValid;
 	}
 }
