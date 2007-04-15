@@ -138,7 +138,7 @@ namespace Epsitec.Common.OpenType
 
 		/// <summary>
 		/// Initializes this font collection object. If font identities have
-		/// already been loaded by <see cref="LoadFromCache()"/>, they will be
+		/// already been loaded by <see cref="LoadFromCache"/>, they will be
 		/// updated.
 		/// </summary>
 		/// <returns><c>true</c> if the font collection has changed; otherwise, <c>false</c>.</returns>
@@ -791,7 +791,7 @@ namespace Epsitec.Common.OpenType
 
 		internal static string GetInternalFontName(string family, string style)
 		{
-			return string.Concat (family, "/", style);
+			return string.Concat (family, " ", style).Trim ();
 		}
 
 		public event FontIdentityCallback		FontIdentityDefined;
@@ -803,7 +803,7 @@ namespace Epsitec.Common.OpenType
 		private static System.Predicate<string>	fontListFilter;
 		
 		private static string CacheFolderName	= "Epsitec Cache";
-		private static string CacheFileName		= "OpenType.FontCollection.2.0.data";
+		private static string CacheFileName		= "OpenType.FontCollection.2.1.data";
 		
 		private object							localExclusion = new object ();
 		private Dictionary<string, FontIdentity> fontDict;

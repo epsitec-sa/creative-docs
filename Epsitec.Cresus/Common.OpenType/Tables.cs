@@ -1525,6 +1525,34 @@ namespace Epsitec.Common.OpenType
 			
 			return name;
 		}
+
+		public string GetFontFamilyName()
+		{
+			string name;
+
+			name = this.GetLatinName (0, NameId.FontFamily, PlatformId.Macintosh);
+
+			if (name == null)
+			{
+				name = this.GetUnicodeName (1033, NameId.FontFamily, PlatformId.Microsoft);
+			}
+
+			return name;
+		}
+
+		public string GetFontStyleName()
+		{
+			string name;
+
+			name = this.GetLatinName (0, NameId.FontSubfamily, PlatformId.Macintosh);
+
+			if (name == null)
+			{
+				name = this.GetUnicodeName (1033, NameId.FontSubfamily, PlatformId.Microsoft);
+			}
+
+			return name;
+		}
 	}
 	
 	#region PlatformId and NameId Enumeration

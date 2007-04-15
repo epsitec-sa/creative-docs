@@ -171,12 +171,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4A6C68CEF7DC417C81AC06E31C6F9E31"
-        "OwnerKey" = "8:_303C7042A09F44598761ED7F92BB9BD2"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_503528C7D637A47C461392A075FE31B1"
         "OwnerKey" = "8:_873470D6C8840C2B33C65011B1CA00CD"
         "MsmSig" = "8:_UNDEFINED"
@@ -484,6 +478,12 @@
         "Entry"
         {
         "MsmKey" = "8:_A0E1DEF038CECE0AD28057C157AD1E52"
+        "OwnerKey" = "8:_18E8A44E7DE20AD648C02F818DD7E53D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A0E1DEF038CECE0AD28057C157AD1E52"
         "OwnerKey" = "8:_33BDC55475E633E7272F9157114ED3BB"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -527,6 +527,12 @@
         {
         "MsmKey" = "8:_A0E1DEF038CECE0AD28057C157AD1E52"
         "OwnerKey" = "8:_42BC534E4B9B9525779037475F77B461"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A45B8AAEF4F048B78906201B9201DF14"
+        "OwnerKey" = "8:_303C7042A09F44598761ED7F92BB9BD2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -2055,14 +2061,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Creative Docs .NET"
-        "ProductCode" = "8:{FFD711F7-C718-4D45-85AC-57F93FBEF4AC}"
-        "PackageCode" = "8:{F2FA4472-3ABA-4AB1-BE40-F78260C2AF9A}"
+        "ProductCode" = "8:{E70CB525-AB0B-4857-A04B-1071AB0DA795}"
+        "PackageCode" = "8:{1AE828BE-4616-4467-B802-04831F5FAF57}"
         "UpgradeCode" = "8:{925CE84A-106F-439D-B0AA-6222B871FB71}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:2.0.14"
+        "ProductVersion" = "8:2.0.15"
         "Manufacturer" = "8:OPaC bright ideas"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.creativedocs.net/"
@@ -2651,7 +2657,7 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_4A6C68CEF7DC417C81AC06E31C6F9E31"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_A45B8AAEF4F048B78906201B9201DF14"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
