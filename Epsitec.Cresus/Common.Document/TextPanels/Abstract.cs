@@ -426,7 +426,7 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Crée un bouton "v" pour un menu.
 			GlyphButton button = new GlyphButton(this);
 
-			button.CommandObject = Epsitec.Common.Widgets.Command.Get (command);
+			button.CommandObject = Epsitec.Common.Widgets.Command.Get(command);
 			button.ButtonStyle = ButtonStyle.Combo;
 			button.GlyphShape = GlyphShape.Menu;
 			button.AutoFocus = false;
@@ -598,6 +598,7 @@ namespace Epsitec.Common.Document.TextPanels
 			ColorSample sample = new ColorSample(this);
 
 			sample.PossibleSource = true;
+			sample.AutoFocus = false;
 			sample.Clicked += handlerClicked;
 			sample.Changed += handlerChanged;
 			sample.TabIndex = this.tabIndex++;
