@@ -548,6 +548,8 @@ namespace Epsitec.Common.OpenType
 										fid_n.DefineTableName (name_t, name_t_length);
 										fid_n.DefineSystemFontFamilyAndStyle (fid_n.InvariantFaceName, fid_n.InvariantStyleName);
 
+										delete.Remove (fid_n.InternalFontName);
+
 										this.Add (fullName, fuidName, fid_n, callback);
 									}
 								}
@@ -579,6 +581,8 @@ namespace Epsitec.Common.OpenType
 							fid.DefineSystemFontFamilyAndStyle (family, style);
 
 							this.Add (fullName, fuidName, fid, callback);
+							
+							delete.Remove (fid.InternalFontName);
 						}
 					}
 				}
@@ -716,12 +720,12 @@ namespace Epsitec.Common.OpenType
 			this.Add (fullName, fuidName, fid);
 		}
 		
-		private void Add(string fullName, string fuidName, FontIdentity fid)
+		private bool Add(string fullName, string fuidName, FontIdentity fid)
 		{
 			if (this.fullDict.ContainsKey (fullName) == false)
 			{
 				string fontName = fid.InternalFontName;
-				
+
 				this.fontDict[fontName] = fid;
 				this.fullDict[fullName] = fid;
 				this.fuidDict[fuidName] = fid;
@@ -731,16 +735,23 @@ namespace Epsitec.Common.OpenType
 				{
 					this.FontIdentityDefined (fid);
 				}
+
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 
 		private void Add(string fullName, string fuidName, FontIdentity fid, FontIdentityCallback callback)
 		{
-			this.Add (fullName, fuidName, fid);
-
-			if (callback != null)
+			if (this.Add (fullName, fuidName, fid))
 			{
-				callback (fid);
+				if (callback != null)
+				{
+					callback (fid);
+				}
 			}
 		}
 
