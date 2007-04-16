@@ -1091,6 +1091,7 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			FileButton f = new FileButton ();
+			f.AutoFocus = false;
 			f.DisplayName = text;
 			f.IconName = icon;
 
@@ -1106,6 +1107,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				FileButton f = new FileButton ();
 				
+				f.AutoFocus = false;
 				f.DisplayName = item.DisplayName;
 				f.IconName = item.Icon.ImageName;
 
