@@ -171,6 +171,7 @@ namespace Epsitec.Common.Widgets
 			this.colorSpaceController.Changed += new EventHandler(this.HandleColorSpaceChanged);
 			
 			this.buttonRgb = new IconButton(this);
+			this.buttonRgb.AutoFocus = false;
 			this.buttonRgb.AutoRadio = true;
 			this.buttonRgb.AutoToggle = true;
 			this.buttonRgb.Group = this.colorSpaceController.Group;
@@ -181,6 +182,7 @@ namespace Epsitec.Common.Widgets
 			ToolTip.Default.SetToolTip(this.buttonRgb, Res.Strings.ColorSelector.ColorSpace.Rgb);
 
 			this.buttonCmyk = new IconButton(this);
+			this.buttonCmyk.AutoFocus = false;
 			this.buttonCmyk.AutoRadio = true;
 			this.buttonCmyk.AutoToggle = true;
 			this.buttonCmyk.Group = this.colorSpaceController.Group;
@@ -191,6 +193,7 @@ namespace Epsitec.Common.Widgets
 			ToolTip.Default.SetToolTip(this.buttonCmyk, Res.Strings.ColorSelector.ColorSpace.Cmyk);
 
 			this.buttonGray = new IconButton(this);
+			this.buttonGray.AutoFocus = false;
 			this.buttonGray.AutoRadio = true;
 			this.buttonGray.AutoToggle = true;
 			this.buttonGray.Group = this.colorSpaceController.Group;
