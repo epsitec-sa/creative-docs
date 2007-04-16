@@ -129,6 +129,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ClipboardData.cs" />
     <Compile Include="CopyPasteContext.cs" />
     <Compile Include="CresusWrapper.cs" />
     <Compile Include="EpsitecFormat.cs" />

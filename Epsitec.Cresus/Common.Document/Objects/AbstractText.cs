@@ -354,14 +354,25 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region CopyPaste
-		public virtual bool EditCut()
+		public bool EditCut()
 		{
 			this.EditCopy();
 			this.MetaNavigator.DeleteSelection();
 			return true;
 		}
 
-		public virtual bool EditCopy()
+		public bool EditCopy()
+		{
+			Text.Exchange.ClipboardData clipboard = new Text.Exchange.ClipboardData ();
+			
+			bool ok = this.EditCopy (clipboard);
+
+			clipboard.CopyToSystemClipboard ();
+			
+			return ok;
+		}
+		
+		public virtual bool EditCopy(Text.Exchange.ClipboardData clipboard)
 		{
 #if false
 			string[] texts = this.textFlow.TextNavigator.GetSelectedTexts();
@@ -383,19 +394,23 @@ namespace Epsitec.Common.Document.Objects
 			TextFlow flow = this.TextFlow;
 			Text.TextStory story = flow.TextStory;
 			Text.TextNavigator navigator = flow.TextNavigator;
-
-			Text.Exchange.Rosetta.CopyText (story, navigator);
+			
+			Text.Exchange.Rosetta.CopyText (story, navigator, clipboard);
 			return true;
-
 #endif
 		}
+
+		public bool EditPaste()
+		{
+			Text.Exchange.ClipboardData clipboard = new Text.Exchange.ClipboardData ();
+			clipboard.CopyFromSystemClipboard ();
+			return this.EditPaste (clipboard);
+		}
 		
-		public virtual bool EditPaste()
+		public virtual bool EditPaste(Text.Exchange.ClipboardData clipboard)
 		{
 #if SIMPLECOPYPASTE
-			System.Windows.Forms.IDataObject ido = System.Windows.Forms.Clipboard.GetDataObject ();
-			
-			if (ido.GetDataPresent (Common.Text.Exchange.EpsitecFormat.Format.Name, false))
+			if (clipboard.Contains (Common.Text.Exchange.EpsitecFormat.Format.Name))
 			{
 				// colle du texte natif
 				TextFlow flow = this.TextFlow;
@@ -405,7 +420,7 @@ namespace Epsitec.Common.Document.Objects
 				//	TODO: utiliser un texte des ressources
 				this.document.Modifier.OpletQueueBeginAction ("** PASTE **");
 				this.MetaNavigator.DeleteSelection (); // TODO: ATTENTION plante au undo suivant
-				Text.Exchange.Rosetta.PasteNativeText (story, navigator);
+				Text.Exchange.Rosetta.PasteNativeText (story, navigator, clipboard);
 
 				// provoquer le raffichage de la liste des styles en haut dans l'onglet "Text"
 				this.document.Notifier.NotifyTextStyleListChanged ();
@@ -414,21 +429,20 @@ namespace Epsitec.Common.Document.Objects
 				return true;
 			}
 			
-			Support.Clipboard.ReadData data = Support.Clipboard.GetData ();
-			string text = data.ReadTextLayout();
-			if ( text == null )
+			string text = clipboard.GetDataText ();
+			
+			if (string.IsNullOrEmpty (text))
 			{
-				text = data.ReadText();
-				if ( text != null )
-				{
-					text = text.Replace("\r\n", "\u2029");		//	ParagraphSeparator
-					text = text.Replace("\n", "\u2028");		//	LineSeparator
-					text = text.Replace("\r", "\u2028");		//	LineSeparator
-				}
+				return false;
 			}
-			if ( text == null )  return false;
-			this.MetaNavigator.Insert(text);
-			this.textFlow.NotifyAreaFlow();
+			
+			text = text.Replace ("\r\n", "\u2029");		//	ParagraphSeparator
+			text = text.Replace ("\n", "\u2028");		//	LineSeparator
+			text = text.Replace ("\r", "\u2028");		//	LineSeparator
+			
+			this.MetaNavigator.Insert (text);
+			this.textFlow.NotifyAreaFlow ();
+			
 			return true;
 #else
 #if false
@@ -485,26 +499,6 @@ namespace Epsitec.Common.Document.Objects
 				this.document.Modifier.OpletQueueValidateAction ();
 				textInserted = true;
 			}
-#if false
-// les conversions depuis le format html foirent trop
-// donc pour l'instant tout ce qu'on colle depuis d'autres logiciels
-// que CrésusDocuments est collé en texte pur.
-
-			else if (ido.GetDataPresent (System.Windows.Forms.DataFormats.Html, false))
-			{
-				// colle du texte Html
-				TextFlow flow = this.TextFlow;
-				Text.TextStory story = flow.TextStory;
-				Text.TextNavigator navigator = flow.TextNavigator;
-
-				//	TODO: utiliser un texte des ressources
-				this.document.Modifier.OpletQueueBeginAction ("** PASTE **");
-				this.MetaNavigator.DeleteSelection (); // TODO: ATTENTION plante au undo suivant
-				Text.Exchange.Rosetta.PasteHtmlText (story, navigator);
-				this.document.Modifier.OpletQueueValidateAction ();
-				textInserted = true;
-			}
-#endif
 			else if (ido.GetDataPresent(System.Windows.Forms.DataFormats.Text, false))
 			{
 				string text = ido.GetData (System.Windows.Forms.DataFormats.Text, false) as string;

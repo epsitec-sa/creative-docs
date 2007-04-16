@@ -56,13 +56,15 @@ namespace Epsitec.Common.Text.Exchange
 			}
 		}
 
-		public static void PasteNativeText(TextStory story, TextNavigator navigator)
+		public static void PasteNativeText(TextStory story, TextNavigator navigator, ClipboardData clipboard)
 		{
-			System.Windows.Forms.IDataObject ido = System.Windows.Forms.Clipboard.GetDataObject ();
-			EpsitecFormat efmt = ido.GetData (Common.Text.Exchange.EpsitecFormat.Format.Name, false) as EpsitecFormat;
+			EpsitecFormat efmt = clipboard.GetData (Common.Text.Exchange.EpsitecFormat.Format.Name) as EpsitecFormat;
 
-			if (efmt.String.Length == 0)
+			if ((efmt == null) ||
+				(efmt.String.Length == 0))
+			{
 				return;
+			}
 
 			using (CopyPasteContext cpContext = new CopyPasteContext (story, navigator))
 			{
@@ -72,7 +74,7 @@ namespace Epsitec.Common.Text.Exchange
 		}
 
 
-		public static void CopyText(TextStory story, TextNavigator usernavigator)
+		public static void CopyText(TextStory story, TextNavigator usernavigator, ClipboardData clipboard)
 		{
 			HtmlTextOut htmlText = new HtmlTextOut ();
 			NativeTextOut nativeText = new NativeTextOut ();
@@ -86,25 +88,12 @@ namespace Epsitec.Common.Text.Exchange
 //#endif
 				rawText = Rosetta.CopyRawText (story, usernavigator);
 
-				System.Windows.Forms.IDataObject od = new System.Windows.Forms.DataObject ();
-				od.SetData (System.Windows.Forms.DataFormats.Text, true, rawText);
+				clipboard.Add (System.Windows.Forms.DataFormats.Text, rawText);
 //#if !SIMPLECOPYPASTE
-				od.SetData (System.Windows.Forms.DataFormats.Html, true, htmlText.HtmlStream);
+				clipboard.Add (System.Windows.Forms.DataFormats.Html, htmlText.HtmlStream);
 				EpsitecFormat efmt = new EpsitecFormat (nativeText.ToString ());
-				od.SetData (EpsitecFormat.Format.Name, true, efmt);
-				
-				if (Epsitec.Common.Support.Globals.IsDebugBuild)
-				{
-					try
-					{
-						System.IO.File.WriteAllText (@"C:\Clipboard native text (debug).txt", nativeText.ToString ());
-					}
-					catch
-					{
-					}
-				}
+				clipboard.Add (EpsitecFormat.Format.Name, efmt);
 //#endif
-				System.Windows.Forms.Clipboard.SetDataObject (od, true);
 			}
 		}
 
