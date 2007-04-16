@@ -58,17 +58,17 @@ namespace Epsitec.Common.Text.Exchange
 
 		public static void PasteNativeText(TextStory story, TextNavigator navigator, ClipboardData clipboard)
 		{
-			EpsitecFormat efmt = clipboard.GetData (Common.Text.Exchange.EpsitecFormat.Format.Name) as EpsitecFormat;
+			Internal.FormattedText efmt = clipboard.GetData (Internal.FormattedText.ClipboardFormat.Name) as Internal.FormattedText;
 
 			if ((efmt == null) ||
-				(efmt.String.Length == 0))
+				(efmt.EncodedText.Length == 0))
 			{
 				return;
 			}
 
 			using (CopyPasteContext cpContext = new CopyPasteContext (story, navigator))
 			{
-				NativeToTextWriter theWriter = new NativeToTextWriter (efmt.String, cpContext, Rosetta.pasteMode);
+				NativeToTextWriter theWriter = new NativeToTextWriter (efmt.EncodedText, cpContext, Rosetta.pasteMode);
 				theWriter.ProcessIt ();
 			}
 		}
@@ -82,18 +82,14 @@ namespace Epsitec.Common.Text.Exchange
 
 			using (CopyPasteContext cpContext = new CopyPasteContext (story))
 			{
-//#if !SIMPLECOPYPASTE
 				Rosetta.CopyHtmlText (story, usernavigator, htmlText, cpContext);
 				Rosetta.CopyNativeText (story, usernavigator, nativeText, cpContext);
-//#endif
+				
 				rawText = Rosetta.CopyRawText (story, usernavigator);
 
 				clipboard.Add (System.Windows.Forms.DataFormats.Text, rawText);
-//#if !SIMPLECOPYPASTE
 				clipboard.Add (System.Windows.Forms.DataFormats.Html, htmlText.HtmlStream);
-				EpsitecFormat efmt = new EpsitecFormat (nativeText.ToString ());
-				clipboard.Add (EpsitecFormat.Format.Name, efmt);
-//#endif
+				clipboard.Add (Internal.FormattedText.ClipboardFormat.Name, nativeText.FormattedText);
 			}
 		}
 

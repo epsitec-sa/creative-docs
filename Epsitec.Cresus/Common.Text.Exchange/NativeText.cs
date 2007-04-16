@@ -1,11 +1,7 @@
 //	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Michael WALZ
 
-using System;
 using System.Collections.Generic;
-using System.Text;
-
-
 
 namespace Epsitec.Common.Text.Exchange
 {
@@ -30,12 +26,20 @@ namespace Epsitec.Common.Text.Exchange
 			this.styles.AppendLine (text);
 		}
 
-		public override string ToString()
+		internal Internal.FormattedText FormattedText
 		{
-			return styles.ToString () + output.ToString ();
+			get
+			{
+				return new Internal.FormattedText (this.ToString ());
+			}
 		}
 
-		private StringBuilder output = new StringBuilder() ;
-		private StringBuilder styles = new StringBuilder ();
+		public override string ToString()
+		{
+			return this.styles.ToString () + this.output.ToString ();
+		}
+
+		private System.Text.StringBuilder output = new System.Text.StringBuilder ();
+		private System.Text.StringBuilder styles = new System.Text.StringBuilder ();
 	}
 }

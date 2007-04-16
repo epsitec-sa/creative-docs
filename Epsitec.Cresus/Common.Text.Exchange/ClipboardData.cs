@@ -1,6 +1,7 @@
-using System;
+//	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using System.Collections.Generic;
-using System.Text;
 
 namespace Epsitec.Common.Text.Exchange
 {
@@ -52,70 +53,6 @@ namespace Epsitec.Common.Text.Exchange
 			System.Windows.Forms.Clipboard.SetDataObject (data, true);
 		}
 
-		public struct Record
-		{
-			internal Record(string id, string text)
-			{
-				this.id = id;
-				this.text = text;
-				this.data = null;
-				this.stream = null;
-			}
-
-			internal Record(string id, object data)
-			{
-				this.id = id;
-				this.text = null;
-				this.data = data;
-				this.stream = null;
-			}
-
-			internal Record(string id, System.IO.MemoryStream stream)
-			{
-				this.id = id;
-				this.text = null;
-				this.data = null;
-				this.stream = stream;
-			}
-
-			public string Id
-			{
-				get
-				{
-					return this.id;
-				}
-			}
-
-			public string Text
-			{
-				get
-				{
-					return this.text;
-				}
-			}
-
-			public object Data
-			{
-				get
-				{
-					return this.data;
-				}
-			}
-
-			public System.IO.MemoryStream Stream
-			{
-				get
-				{
-					return this.stream;
-				}
-			}
-
-			private string id;
-			private object data;
-			private string text;
-			private System.IO.MemoryStream stream;
-		}
-
 		public bool Contains(string id)
 		{
 			foreach (Record record in this.list)
@@ -127,19 +64,6 @@ namespace Epsitec.Common.Text.Exchange
 			}
 			
 			return false;
-		}
-
-		public Record GetRecord(string id)
-		{
-			foreach (Record record in this.list)
-			{
-				if (record.Id == id)
-				{
-					return record;
-				}
-			}
-
-			return new Record ();
 		}
 
 		public void CopyFromSystemClipboard()
@@ -214,7 +138,88 @@ namespace Epsitec.Common.Text.Exchange
 			}
 		}
 
+		#region Record Structure
 
+		private struct Record
+		{
+			internal Record(string id, string text)
+			{
+				this.id = id;
+				this.text = text;
+				this.data = null;
+				this.stream = null;
+			}
+
+			internal Record(string id, object data)
+			{
+				this.id = id;
+				this.text = data as string;
+				this.stream = data as System.IO.MemoryStream;
+				this.data = (this.text == null) && (this.stream == null) ? data : null;
+			}
+
+			internal Record(string id, System.IO.MemoryStream stream)
+			{
+				this.id = id;
+				this.text = null;
+				this.data = null;
+				this.stream = stream;
+			}
+
+			public string Id
+			{
+				get
+				{
+					return this.id;
+				}
+			}
+
+			public string Text
+			{
+				get
+				{
+					return this.text;
+				}
+			}
+
+			public object Data
+			{
+				get
+				{
+					return this.data;
+				}
+			}
+
+			public System.IO.MemoryStream Stream
+			{
+				get
+				{
+					return this.stream;
+				}
+			}
+
+			private string id;
+			private object data;
+			private string text;
+			private System.IO.MemoryStream stream;
+		}
+
+		#endregion
+
+		private Record GetRecord(string id)
+		{
+			foreach (Record record in this.list)
+			{
+				if (record.Id == id)
+				{
+					return record;
+				}
+			}
+
+			return new Record ();
+		}
+
+		
 		private void DebugDump(string id, System.IO.MemoryStream stream)
 		{
 			if (Epsitec.Common.Support.Globals.IsDebugBuild)

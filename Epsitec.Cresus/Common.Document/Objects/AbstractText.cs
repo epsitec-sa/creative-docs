@@ -410,7 +410,7 @@ namespace Epsitec.Common.Document.Objects
 		public virtual bool EditPaste(Text.Exchange.ClipboardData clipboard)
 		{
 #if SIMPLECOPYPASTE
-			if (clipboard.Contains (Common.Text.Exchange.EpsitecFormat.Format.Name))
+			if (clipboard.Contains (Common.Text.Exchange.Internal.FormattedText.ClipboardFormat.Name))
 			{
 				// colle du texte natif
 				TextFlow flow = this.TextFlow;

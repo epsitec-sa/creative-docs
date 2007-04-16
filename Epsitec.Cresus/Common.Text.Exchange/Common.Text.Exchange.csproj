@@ -132,7 +132,7 @@
     <Compile Include="ClipboardData.cs" />
     <Compile Include="CopyPasteContext.cs" />
     <Compile Include="CresusWrapper.cs" />
-    <Compile Include="EpsitecFormat.cs" />
+    <Compile Include="Internal\FormattedText.cs" />
     <Compile Include="ExchangeStringBuilder.cs" />
     <Compile Include="HtmlClipboardReader.cs" />
     <Compile Include="HtmlParser\HtmlAttribute.cs" />
