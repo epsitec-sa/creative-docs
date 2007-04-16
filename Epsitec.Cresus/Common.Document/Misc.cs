@@ -18,6 +18,16 @@ namespace Epsitec.Common.Document
 		}
 
 
+		static public void AutoFocus(Widget widget, bool state)
+		{
+			//	Modifie le mode AutoFocus d'un widget et de tous ses enfants.
+			foreach (Widget child in widget.FindAllChildren())
+			{
+				child.AutoFocus = state;
+			}
+		}
+
+
 		static public void ConvertStringToDouble(out double value, out Text.Properties.SizeUnits units, string text, double min, double max, double defaultValue)
 		{
 			//	Conversion d'une chaîne en nombre réel.

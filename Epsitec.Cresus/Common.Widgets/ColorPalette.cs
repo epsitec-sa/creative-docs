@@ -18,7 +18,6 @@ namespace Epsitec.Common.Widgets
 			for ( int i=0 ; i<this.nbTotal ; i++ )
 			{
 				this.palette[i] = new ColorSample(this);
-				this.palette[i].AutoFocus = false;
 				this.palette[i].Clicked += new MessageEventHandler(this.HandleColorClicked);
 				this.palette[i].TabIndex = i;
 				this.palette[i].TabNavigationMode = TabNavigationMode.ActivateOnTab;

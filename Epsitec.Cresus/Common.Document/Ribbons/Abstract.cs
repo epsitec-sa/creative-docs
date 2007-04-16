@@ -126,7 +126,8 @@ namespace Epsitec.Common.Document.Ribbons
 			IconButtonCombo button = new IconButtonCombo(this);
 
 			button.CommandObject = c;
-			button.AutoFocus = false;
+			//?button.AutoFocus = false;
+			Misc.AutoFocus(button, false);
 			button.IsLiveUpdateEnabled = false;
 
 			button.TabIndex = this.tabIndex++;
