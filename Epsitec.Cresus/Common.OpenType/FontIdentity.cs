@@ -398,6 +398,15 @@ namespace Epsitec.Common.OpenType
 						{
 							this.record = Platform.Neutral.GetFontSystemDescription (this.systemFontFamily, this.systemFontStyle);
 						}
+						if (this.record == null)
+						{
+							//	For some fonts, such as the Meiryo font collection, the system font name
+							//	is returned in the local language; just to prevent not finding the font
+							//	based on the system font family & system font style, we try also a look-
+							//	up with the localized names :
+							
+							this.record = Platform.Neutral.GetFontSystemDescription (this.LocaleFaceName, this.LocaleStyleName);
+						}
 					}
 				}
 

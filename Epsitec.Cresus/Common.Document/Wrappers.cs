@@ -1410,7 +1410,11 @@ namespace Epsitec.Common.Document
 				if ( face != null && style != null )
 				{
 					OpenType.Font font = TextContext.GetFont(face, style);
-					weight = font.FontIdentity.FontWeight;
+					
+					if (font != null)
+					{
+						weight = font.FontIdentity.FontWeight;
+					}
 				}
 
 				bool state = ((int)weight > (int)OpenType.FontWeight.Medium);
@@ -1441,14 +1445,22 @@ namespace Epsitec.Common.Document
 				if ( face != null && style != null )
 				{
 					OpenType.Font font = TextContext.GetFont(face, style);
-					weight = font.FontIdentity.FontWeight;
+
+					if (font != null)
+					{
+						weight = font.FontIdentity.FontWeight;
+					}
 				}
 
 				OpenType.FontStyle italic = OpenType.FontStyle.Normal;
 				if ( face != null && style != null )
 				{
 					OpenType.Font font = TextContext.GetFont(face, style);
-					italic = font.FontIdentity.FontStyle;
+
+					if (font != null)
+					{
+						italic = font.FontIdentity.FontStyle;
+					}
 				}
 
 				bool state = italic != OpenType.FontStyle.Normal;
@@ -1607,6 +1619,13 @@ namespace Epsitec.Common.Document
 				Rectangle rect = new Rectangle (0, 1.5, size.Width, size.Height-5);
 
 				OpenType.Font font = TextContext.GetFont (fontFace, fontStyle);
+
+				if (font == null)
+				{
+					return false;
+				}
+
+
 				OpenType.FontIdentity id = font.FontIdentity;
 				double ox = rect.Left;
 				double oy = rect.Bottom + rect.Height*0.25;
@@ -1651,6 +1670,12 @@ namespace Epsitec.Common.Document
 				string fontStyle = arguments[1];
 
 				OpenType.Font font = TextContext.GetFont (fontFace, fontStyle);
+				
+				if (font == null)
+				{
+					return false;
+				}
+
 				OpenType.FontIdentity id = font.FontIdentity;
 				double oy = size.Height*0.25;
 
