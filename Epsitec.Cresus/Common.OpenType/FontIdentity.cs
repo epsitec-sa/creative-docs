@@ -52,13 +52,8 @@ namespace Epsitec.Common.OpenType
 			{
 				lock (this.exclusion)
 				{
-					string face  = this.GetName (NameId.PreferredFamily);
-					string style = this.LocaleStyleName;
-
-					if (face == null)
-					{
-						face = this.GetName (NameId.FontFamily);
-					}
+					string face  = this.GetName (NameId.FontFamily);
+					string style = this.GetName (NameId.FontSubfamily);
 
 					if (face.EndsWith (style))
 					{
@@ -81,14 +76,39 @@ namespace Epsitec.Common.OpenType
 			{
 				lock (this.exclusion)
 				{
-					string name = this.GetName (NameId.PreferredSubfamily);
+					return this.GetName (NameId.FontSubfamily);
+				}
+			}
+		}
 
-					if (name == null)
-					{
-						name = this.GetName (NameId.FontSubfamily);
-					}
+		/// <summary>
+		/// Gets the preferred font face name for the current locale, using
+		/// <c>CultureInfo.CurrentCulture</c>.
+		/// </summary>
+		/// <value>The preferred font face name or <c>null</c>.</value>
+		public string							LocalePreferredFaceName
+		{
+			get
+			{
+				lock (this.exclusion)
+				{
+					return this.GetName (NameId.PreferredFamily);
+				}
+			}
+		}
 
-					return name;
+		/// <summary>
+		/// Gets the preferred font style name for the current locale, using
+		/// <c>CultureInfo.CurrentCulture</c>.
+		/// </summary>
+		/// <value>The font style name or <c>null</c>.</value>
+		public string							LocalePreferredStyleName
+		{
+			get
+			{
+				lock (this.exclusion)
+				{
+					return this.GetName (NameId.PreferredSubfamily);
 				}
 			}
 		}
@@ -105,14 +125,9 @@ namespace Epsitec.Common.OpenType
 			{
 				lock (this.exclusion)
 				{
-					string face  = this.GetName (NameId.PreferredFamily, FontIdentity.InvariantLocale);
-					string style = this.InvariantStyleName;
-
-					if (face == null)
-					{
-						face = this.GetName (NameId.FontFamily, FontIdentity.InvariantLocale);
-					}
-
+					string face  = this.GetName (NameId.FontFamily, FontIdentity.InvariantLocale);
+					string style = this.GetName (NameId.FontSubfamily, FontIdentity.InvariantLocale);
+					
 					if (face.EndsWith (style))
 					{
 						face = face.Substring (0, face.Length - style.Length).Trim ();
@@ -134,14 +149,41 @@ namespace Epsitec.Common.OpenType
 			{
 				lock (this.exclusion)
 				{
-					string name = this.GetName (NameId.PreferredSubfamily, FontIdentity.InvariantLocale);
+					return this.GetName (NameId.FontSubfamily, FontIdentity.InvariantLocale);
+				}
+			}
+		}
 
-					if (name == null)
-					{
-						name = this.GetName (NameId.FontSubfamily, FontIdentity.InvariantLocale);
-					}
+		/// <summary>
+		/// Gets the invariant preferred font face name. This name is independent
+		/// of the current culture.
+		/// </summary>
+		/// <value>The preferred font face name or <c>null</c> if there is no
+		/// preferred font face associated with this font.</value>
+		public string							InvariantPreferredFaceName
+		{
+			get
+			{
+				lock (this.exclusion)
+				{
+					return this.GetName (NameId.PreferredFamily, FontIdentity.InvariantLocale);
+				}
+			}
+		}
 
-					return name;
+		/// <summary>
+		/// Gets the invariant preferred font style name. This name is independent
+		/// of the current culture.
+		/// </summary>
+		/// <value>The preferred font style name or <c>null</c> if there is no
+		/// preferred font style associated with this font.</value>
+		public string							InvariantPreferredStyleName
+		{
+			get
+			{
+				lock (this.exclusion)
+				{
+					return this.GetName (NameId.PreferredSubfamily, FontIdentity.InvariantLocale);
 				}
 			}
 		}
