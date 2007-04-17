@@ -58,17 +58,16 @@ namespace Epsitec.Common.Text.Exchange
 
 		public static void PasteNativeText(TextStory story, TextNavigator navigator, ClipboardData clipboard)
 		{
-			Internal.FormattedText efmt = clipboard.GetData (Internal.FormattedText.ClipboardFormat.Name) as Internal.FormattedText;
+			string text = clipboard.GetFormattedText ();
 
-			if ((efmt == null) ||
-				(efmt.EncodedText.Length == 0))
+			if (string.IsNullOrEmpty (text))
 			{
 				return;
 			}
 
 			using (CopyPasteContext cpContext = new CopyPasteContext (story, navigator))
 			{
-				NativeToTextWriter theWriter = new NativeToTextWriter (efmt.EncodedText, cpContext, Rosetta.pasteMode);
+				NativeToTextWriter theWriter = new NativeToTextWriter (text, cpContext, Rosetta.pasteMode);
 				theWriter.ProcessIt ();
 			}
 		}

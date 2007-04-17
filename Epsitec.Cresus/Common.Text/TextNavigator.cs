@@ -696,6 +696,20 @@ namespace Epsitec.Common.Text
 			
 			this.NotifyCursorMoved ();
 		}
+
+		public void SelectAll()
+		{
+			if (this.IsSelectionActive)
+			{
+				this.EndSelection ();
+			}
+			
+			this.ClearSelection ();
+			this.MoveTo (Target.TextStart, 0);
+			this.StartSelection ();
+			this.MoveTo (Target.TextEnd, 0);
+			this.EndSelection ();
+		}
 		
 		
 		public void ClearSelection()

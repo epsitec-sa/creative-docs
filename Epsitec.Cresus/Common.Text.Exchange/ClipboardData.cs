@@ -116,6 +116,20 @@ namespace Epsitec.Common.Text.Exchange
 			return null;
 		}
 
+		public string GetFormattedText()
+		{
+			Internal.FormattedText text = this.GetData (Internal.FormattedText.ClipboardFormat.Name) as Internal.FormattedText;
+
+			if (text == null)
+			{
+				return null;
+			}
+			else
+			{
+				return text.EncodedText;
+			}
+		}
+
 		public object GetData(string id)
 		{
 			Record record = this.GetRecord (id);
@@ -136,6 +150,13 @@ namespace Epsitec.Common.Text.Exchange
 			{
 				return null;
 			}
+		}
+
+		public void SetFormattedText(string text)
+		{
+			Internal.FormattedText formattedText = new Epsitec.Common.Text.Exchange.Internal.FormattedText (text);
+
+			this.Add (Internal.FormattedText.ClipboardFormat.Name, formattedText);
 		}
 
 		#region Record Structure
