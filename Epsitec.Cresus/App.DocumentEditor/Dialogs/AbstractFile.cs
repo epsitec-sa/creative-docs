@@ -28,35 +28,35 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			Point location;
 			Size  size;
 
-			if (this.globalSettings.GetWindowBounds (name, out location, out size))
+			if (this.globalSettings.GetWindowBounds(name, out location, out size))
 			{
-				return new Rectangle (location, size);
+				return new Rectangle(location, size);
 			}
 			else
 			{
-				return base.GetPersistedWindowBounds (name);
+				return base.GetPersistedWindowBounds(name);
 			}
 		}
 
 		protected override void CreateFileExtensionDescriptions(Epsitec.Common.Dialogs.IFileExtensionDescription settings)
 		{
-			settings.Add (".crdoc", Res.Strings.Dialog.File.Document);
-			settings.Add (".crmod", Res.Strings.Dialog.File.Model);
+			settings.Add(".crdoc", Res.Strings.Dialog.File.Document);
+			settings.Add(".crmod", Res.Strings.Dialog.File.Model);
 		}
 
 		protected override void FavoritesAddApplicationFolders()
 		{
 			if (this.FileDialogType != Epsitec.Common.Dialogs.FileDialogType.Save)
 			{
-				this.AddFavorite (Document.OriginalSamplesDisplayName, Misc.Icon ("FileTypeOriginalSamples"), Document.OriginalSamplesPath);
+				this.AddFavorite(Document.OriginalSamplesDisplayName, Misc.Icon("FileTypeOriginalSamples"), Document.OriginalSamplesPath);
 			}
 
-			this.AddFavorite (Document.MySamplesDisplayName, Misc.Icon ("FileTypeMySamples"), Document.MySamplesPath);
+			this.AddFavorite(Document.MySamplesDisplayName, Misc.Icon("FileTypeMySamples"), Document.MySamplesPath);
 		}
 
 		protected override string RedirectPath(string path)
 		{
-			Document.RedirectPath (ref path);
+			Document.RedirectPath(ref path);
 			return path;
 		}
 
@@ -65,7 +65,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Donne les frontières de l'application.
 			Window window = this.editor.Window;
 
-			if ( window == null )
+			if (window == null)
 			{
 				return this.globalSettings.MainWindowBounds;
 			}
@@ -78,16 +78,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		public override void PersistWindowBounds()
 		{
 			//	Sauve la fenêtre.
-			if ((this.window == null) ||
-				(this.globalSettings == null))
+			if (this.window == null || this.globalSettings == null)
 			{
 				return;
 			}
 
-			this.globalSettings.SetWindowBounds (this.window.Name, this.window.WindowLocation, this.window.ClientSize);
+			this.globalSettings.SetWindowBounds(this.window.Name, this.window.WindowLocation, this.window.ClientSize);
 		}
 		
-		protected DocumentEditor editor;
-		protected GlobalSettings globalSettings;
+		protected DocumentEditor				editor;
+		protected GlobalSettings				globalSettings;
 	}
 }

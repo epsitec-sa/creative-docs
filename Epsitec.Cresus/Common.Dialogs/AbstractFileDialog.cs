@@ -1478,7 +1478,7 @@ namespace Epsitec.Common.Dialogs
 
 				if (this.FileDialogType == FileDialogType.New)
 				{
-					this.files.Add (new FileListItem ("manifest:Epsitec.Common.Dialogs.Images.New.icon", AbstractFileDialog.NewEmptyDocument, "-", Epsitec.Common.Dialogs.Res.Strings.Dialog.File.NewEmptyDocument));  // première ligne avec 'nouveau document vide'
+					this.files.Add (new FileListItem ("manifest:Epsitec.Common.Dialogs.Images.New.icon", AbstractFileDialog.NewEmptyDocument, Epsitec.Common.Dialogs.Res.Strings.Dialog.File.NewEmptyDocument, Epsitec.Common.Dialogs.Res.Strings.Dialog.File.NewEmptyDocument));  // première ligne avec 'nouveau document vide'
 				}
 			}
 		}
