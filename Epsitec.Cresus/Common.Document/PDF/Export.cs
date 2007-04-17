@@ -218,33 +218,43 @@ namespace Epsitec.Common.Document.PDF
 			//	Un objet pour chaque page.
 			foreach ( int page in this.pageList )
 			{
-				Size pageSize = this.document.GetPageSize(page);
+				Rectangle trimBox = new Rectangle(Point.Zero, this.document.GetPageSize(page));
+				Rectangle bleedBox = trimBox;
 
 				if ( page%2 == 1 )
 				{
-					pageSize.Width  += info.BleedEvenMargins.Width  + 2*info.Debord;
-					pageSize.Height += info.BleedEvenMargins.Height + 2*info.Debord;
+					bleedBox.Inflate(info.BleedEvenMargins);
+					bleedBox.Inflate(info.Debord);
 				}
 				else
 				{
-					pageSize.Width  += info.BleedOddMargins.Width  + 2*info.Debord;
-					pageSize.Height += info.BleedOddMargins.Height + 2*info.Debord;
+					bleedBox.Inflate(info.BleedOddMargins);
+					bleedBox.Inflate(info.Debord);
 				}
+
+				Rectangle mediaBox = bleedBox;
 
 				if ( info.Target )  // traits de coupe ?
 				{
-					pageSize.Width  += info.TargetLength*2.0;
-					pageSize.Height += info.TargetLength*2.0;
+					mediaBox.Inflate(info.TargetLength);
 				}
+
+				Point offset = -mediaBox.BottomLeft;
+				trimBox.Offset(offset);
+				bleedBox.Offset(offset);
+				mediaBox.Offset(offset);
+				trimBox.Scale(Export.mm2in);
+				bleedBox.Scale(Export.mm2in);
+				mediaBox.Scale(Export.mm2in);
 
 				writer.WriteObjectDef(Export.NamePage(page));
 				writer.WriteString("<< /Type /Page /Parent ");
 				writer.WriteObjectRef("HeaderPages");
-				writer.WriteString("/MediaBox [0 0 ");
-				writer.WriteString(Port.StringValue(pageSize.Width*Export.mm2in));
-				writer.WriteString(" ");
-				writer.WriteString(Port.StringValue(pageSize.Height*Export.mm2in));
-				writer.WriteString("] /Resources ");
+				writer.WriteString(Port.StringBBox("/MediaBox", mediaBox));
+				writer.WriteString(Port.StringBBox("/CropBox", mediaBox));
+				writer.WriteString(Port.StringBBox("/BleedBox", bleedBox));
+				writer.WriteString(Port.StringBBox("/TrimBox", trimBox));
+				writer.WriteString("/Resources ");
 				writer.WriteObjectRef(Export.NameResources(page));
 				writer.WriteString("/Contents ");
 				writer.WriteObjectRef(Export.NameContent(page));
