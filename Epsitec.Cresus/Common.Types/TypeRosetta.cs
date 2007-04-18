@@ -825,6 +825,11 @@ namespace Epsitec.Common.Types
 				return this.structuredType.GetField (fieldId);
 			}
 
+			public StructuredTypeClass GetClass()
+			{
+				return this.structuredType.GetClass ();
+			}
+
 			#endregion
 
 			private IStructuredType structuredType;

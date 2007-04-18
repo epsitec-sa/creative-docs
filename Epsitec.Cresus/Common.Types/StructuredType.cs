@@ -67,7 +67,7 @@ namespace Epsitec.Common.Types
 			field = StructuredTypeField.Empty;
 			return false;
 		}
-		
+
 		#region IStructuredType Members
 
 		/// <summary>
@@ -109,6 +109,16 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the structured type class for this instance. The default is
+		/// simply <c>Node</c>.
+		/// </summary>
+		/// <returns>The structured type class to which this instance belongs.</returns>
+		public virtual StructuredTypeClass GetClass()
+		{
+			return StructuredTypeClass.None;
+		}
+		
 		#endregion
 		
 		#region ISystemType Members

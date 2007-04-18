@@ -135,6 +135,10 @@ namespace Epsitec.Common.UI
 			return ids;
 		}
 
+		StructuredTypeClass IStructuredType.GetClass()
+		{
+			return StructuredTypeClass.None;
+		}
 
 		#endregion
 

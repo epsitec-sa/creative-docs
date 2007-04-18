@@ -226,6 +226,11 @@ namespace Epsitec.Common.Types
 			return names;
 		}
 
+		StructuredTypeClass IStructuredType.GetClass()
+		{
+			return StructuredTypeClass.None;
+		}
+
 		#endregion
 		
 		#region Private Methods

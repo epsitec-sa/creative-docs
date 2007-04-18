@@ -23,5 +23,12 @@ namespace Epsitec.Common.Types
 		/// <param name="fieldId">The field identifier.</param>
 		/// <returns>The matching field descriptor; otherwise, <c>null</c>.</returns>
 		StructuredTypeField GetField(string fieldId);
+
+		/// <summary>
+		/// Gets the structured type class for this instance. The default is
+		/// simply <c>Node</c>.
+		/// </summary>
+		/// <returns>The structured type class to which this instance belongs.</returns>
+		StructuredTypeClass GetClass();
 	}
 }

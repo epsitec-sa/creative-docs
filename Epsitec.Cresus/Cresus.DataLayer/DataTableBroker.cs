@@ -474,6 +474,11 @@ namespace Epsitec.Cresus.DataLayer
 			return this.structuredType.GetField (fieldId);
 		}
 
+		StructuredTypeClass IStructuredType.GetClass()
+		{
+			return this.structuredType.GetClass ();
+		}
+
 		#endregion
 
 		#region ICollectionType Members

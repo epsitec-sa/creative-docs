@@ -118,6 +118,11 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		StructuredTypeClass IStructuredType.GetClass()
+		{
+			return StructuredTypeClass.None;
+		}
+
 		#endregion
 		
 		private static object GetFieldsValue(DependencyObject obj)

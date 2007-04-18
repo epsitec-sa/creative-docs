@@ -40,6 +40,11 @@ namespace Epsitec.Common.Types
 			return this.data.GetValueIds ();
 		}
 
+		public StructuredTypeClass GetClass()
+		{
+			return StructuredTypeClass.None;
+		}
+
 		#endregion
 
 		#region ISystemType Members
