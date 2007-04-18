@@ -38,5 +38,5 @@ Les colonnes dans "Data" sont les suivantes :
 La recherche se fait au moyen d'un SELECT tel que :
 
 -	Name   = id de la ressource
--	Level  = niveau (Default="00", Localised="fr", Customised="Xfr")
+-	Level  = niveau (Default="00", Localized="fr", Customized="Xfr")
 -	CR_REV = 0

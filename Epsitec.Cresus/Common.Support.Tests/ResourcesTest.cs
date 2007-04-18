@@ -127,11 +127,11 @@ namespace Epsitec.Common.Support
 			byte[] data_xx = new byte[] { (byte)'X' };
 			byte[] data_de = new byte[] { (byte)'D', (byte)'E' };
 			
-			Resources.SetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null, data_xx, ResourceSetMode.CreateOnly);
-			Resources.SetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de"), data_de, ResourceSetMode.CreateOnly);
+			Resources.SetBinaryData ("base:raw_data_test", ResourceLevel.Customized, null, data_xx, ResourceSetMode.CreateOnly);
+			Resources.SetBinaryData ("base:raw_data_test", ResourceLevel.Localized, Resources.FindCultureInfo ("de"), data_de, ResourceSetMode.CreateOnly);
 			
-			byte[] find_xx = Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null);
-			byte[] find_de = Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de"));
+			byte[] find_xx = Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Customized, null);
+			byte[] find_de = Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Localized, Resources.FindCultureInfo ("de"));
 			
 			Assert.IsNotNull (find_xx);
 			Assert.IsNotNull (find_de);
@@ -139,21 +139,21 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (data_de[0], find_de[0]);
 			Assert.AreEqual (data_de[1], find_de[1]);
 			
-			Resources.RemoveResource ("base:raw_data_test", ResourceLevel.Customised, null);
-			Resources.RemoveResource ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de"));
+			Resources.RemoveResource ("base:raw_data_test", ResourceLevel.Customized, null);
+			Resources.RemoveResource ("base:raw_data_test", ResourceLevel.Localized, Resources.FindCultureInfo ("de"));
 			
-			Assert.IsNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null));
-			Assert.IsNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de")));
+			Assert.IsNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Customized, null));
+			Assert.IsNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Localized, Resources.FindCultureInfo ("de")));
 			Assert.IsNotNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Default, null));
 			Assert.IsTrue (Resources.ContainsId ("base:raw_data_test"));
 			
-			Resources.SetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null, data_xx, ResourceSetMode.CreateOnly);
-			Resources.SetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de"), data_de, ResourceSetMode.CreateOnly);
+			Resources.SetBinaryData ("base:raw_data_test", ResourceLevel.Customized, null, data_xx, ResourceSetMode.CreateOnly);
+			Resources.SetBinaryData ("base:raw_data_test", ResourceLevel.Localized, Resources.FindCultureInfo ("de"), data_de, ResourceSetMode.CreateOnly);
 			
 			Resources.RemoveResource ("base:raw_data_test", ResourceLevel.All, null);
 			
-			Assert.IsNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null));
-			Assert.IsNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de")));
+			Assert.IsNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Customized, null));
+			Assert.IsNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Localized, Resources.FindCultureInfo ("de")));
 			Assert.IsNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Default, null));
 			Assert.IsTrue (! Resources.ContainsId ("base:raw_data_test"));
 		}
@@ -241,7 +241,7 @@ namespace Epsitec.Common.Support
 				System.Console.Out.WriteLine ("  {0}: {1}", tag, bundle[tag].AsString);
 			}
 			
-			bundle = Resources.GetBundle ("base:button.cancel", ResourceLevel.Localised);
+			bundle = Resources.GetBundle ("base:button.cancel", ResourceLevel.Localized);
 			Assert.IsNotNull (bundle);
 			System.Console.Out.WriteLine ("Bundle with localized level only:");
 			

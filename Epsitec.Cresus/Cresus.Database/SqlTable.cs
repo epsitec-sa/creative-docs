@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Database
 
 		/// <summary>
 		/// Gets or sets the primary key. A primary key can span several columns
-		/// which are organised to form a tuple. The tuple must be unique in the
+		/// which are organized to form a tuple. The tuple must be unique in the
 		/// database.
 		/// </summary>
 		/// <value>The primary key.</value>

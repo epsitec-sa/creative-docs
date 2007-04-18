@@ -134,7 +134,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public string							LocalisedSuffix
+		public string							LocalizedSuffix
 		{
 			get
 			{
@@ -142,7 +142,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public string							CustomisedSuffix
+		public string							CustomizedSuffix
 		{
 			get
 			{

@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Database
 					return this.currentId;
 				}
 				
-				throw new System.InvalidOperationException ("DbLogger not initialised");
+				throw new System.InvalidOperationException ("DbLogger not initialized");
 			}
 		}
 

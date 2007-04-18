@@ -64,8 +64,8 @@ namespace Epsitec.Common.Support.Implementation
 			switch (level)
 			{
 				case ResourceLevel.Default:		break;
-				case ResourceLevel.Localised:	break;
-				case ResourceLevel.Customised:	break;
+				case ResourceLevel.Localized:	break;
+				case ResourceLevel.Customized:	break;
 				
 				default:
 					throw new ResourceException (string.Format ("Invalid resource level {0} for resource '{1}'.", level, id));
@@ -79,8 +79,8 @@ namespace Epsitec.Common.Support.Implementation
 			switch (level)
 			{
 				case ResourceLevel.Default:		break;
-				case ResourceLevel.Localised:	break;
-				case ResourceLevel.Customised:	break;
+				case ResourceLevel.Localized:	break;
+				case ResourceLevel.Customized:	break;
 				
 				default:
 					throw new ResourceException (string.Format ("Invalid resource level {0} for resource '{1}'.", level, id));
