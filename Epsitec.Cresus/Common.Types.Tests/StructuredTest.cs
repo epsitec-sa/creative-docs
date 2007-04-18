@@ -366,15 +366,21 @@ namespace Epsitec.Common.Types
 		public void CheckStructuredTypeSerialization()
 		{
 			StructuredType type = new StructuredType ();
+			Support.Druid typeId = Support.Druid.Parse ("[12345678]");
 
 			type.Caption.Name = "TestStruct";
+			type.DefineCaptionId (typeId);
 
 			type.Fields.Add ("Name", StringType.Default);
 			type.Fields.Add ("Age", IntegerType.Default);
 
 			type.Fields["Name"] = new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 1);
 
+			type.Fields.Add (new StructuredTypeField ("SelfName", type, Support.Druid.Empty, 2, Relation.Inclusion, "Name"));
+
 			Assert.IsNull (type.SystemType);
+
+			TypeRosetta.RecordType (typeId, type);
 
 			string xml = type.Caption.SerializeToString ();
 
@@ -409,10 +415,10 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Name", fieldIds[1]);
 
 			restoredType.Fields.Remove ("Age");
-			Assert.AreEqual (1, restoredType.Fields.Count);
+			Assert.AreEqual (2, restoredType.Fields.Count);
 			
 			restoredType.Fields.Remove ("Xxx");
-			Assert.AreEqual (1, restoredType.Fields.Count);
+			Assert.AreEqual (2, restoredType.Fields.Count);
 		}
 
 		[Test]

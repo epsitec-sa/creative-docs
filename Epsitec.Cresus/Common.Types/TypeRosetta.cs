@@ -558,6 +558,27 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Records the type and associates it with the specified type id. This
+		/// should not be called directly in production code.
+		/// </summary>
+		/// <param name="typeId">The type id.</param>
+		/// <param name="type">The type.</param>
+		public static void RecordType(Support.Druid typeId, AbstractType type)
+		{
+			if ((type != null) &&
+				(typeId.IsValid))
+			{
+				//	Check if the type is already known. If not, record a reference to
+				//	it so that we can then access it by its DRUID or by its name :
+
+				if (TypeRosetta.knownTypes.ContainsKey (typeId) == false)
+				{
+					TypeRosetta.knownTypes[typeId] = type;
+				}
+			}
+		}
+
 		#region Low level type management code
 
 		private static AbstractType LockedCreateTypeObject(Caption caption)
@@ -645,18 +666,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			if ((type != null) &&
-				(typeId.IsValid))
-			{
-				//	Check if the type is already known. If not, record a reference to
-				//	it so that we can then access it by its DRUID or by its name :
-
-				if (TypeRosetta.knownTypes.ContainsKey (typeId) == false)
-				{
-					TypeRosetta.knownTypes[typeId] = type;
-				}
-			}
-
+			TypeRosetta.RecordType (typeId, type);
 			TypeRosetta.ExecuteFixUps ();
 			
 			return type;
