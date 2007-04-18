@@ -49,7 +49,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "ImageCrop":
-					this.text = "Cadrage de l'image";
+					this.text = Res.Strings.Dialog.Integer.ImageCrop.Text;
 					break;
 
 				case "ImageDepth":
@@ -86,6 +86,10 @@ namespace Epsitec.Common.Document.Settings
 
                 case "ExportICOFormat":
                     this.text = Res.Strings.Dialog.Integer.ExportICOFormat.Text;
+                    break;
+
+                case "ConstrainAngle":
+                    this.text = Res.Strings.Dialog.Integer.ConstrainAngle.Text;
                     break;
             }
 		}
@@ -139,7 +143,10 @@ namespace Epsitec.Common.Document.Settings
 						return Properties.Image.FilterNameToIndex(this.document.Settings.ExportPDFInfo.GetImageNameFilter(1));
 
                     case "ExportICOFormat":
-                        return (int)this.document.Settings.ExportICOInfo.Format;
+                        return (int) this.document.Settings.ExportICOInfo.Format;
+
+                    case "ConstrainAngle":
+						return (int) this.document.Modifier.ActiveViewer.DrawingContext.ConstrainAngle;
                 }
 
 				return 0;
@@ -207,6 +214,10 @@ namespace Epsitec.Common.Document.Settings
 
                     case "ExportICOFormat":
                         this.document.Settings.ExportICOInfo.Format = (ICOFormat) value;
+                        break;
+
+                    case "ConstrainAngle":
+						this.document.Modifier.ActiveViewer.DrawingContext.ConstrainAngle = (ConstrainAngle) value;
                         break;
                 }
 			}
@@ -349,6 +360,14 @@ namespace Epsitec.Common.Document.Settings
                     if ( icf == ICOFormat.XP    )  return Res.Strings.Dialog.Integer.ExportICOFormat.XP;
                     if ( icf == ICOFormat.Vista )  return Res.Strings.Dialog.Integer.ExportICOFormat.Vista;
 				    break;
+
+				case "ConstrainAngle":
+					ConstrainAngle ca = (ConstrainAngle) type;
+                    if ( ca == ConstrainAngle.None    )  return Res.Strings.Dialog.Integer.ConstrainAngle.None;
+                    if ( ca == ConstrainAngle.Quarter )  return Res.Strings.Dialog.Integer.ConstrainAngle.Quarter;
+                    if ( ca == ConstrainAngle.Sixth   )  return Res.Strings.Dialog.Integer.ConstrainAngle.Sixth;
+                    if ( ca == ConstrainAngle.Eight   )  return Res.Strings.Dialog.Integer.ConstrainAngle.Eight;
+				    break;
 			}
 			return "";
 		}
@@ -426,6 +445,13 @@ namespace Epsitec.Common.Document.Settings
 				case "ExportICOFormat":
 					if ( rank == 0 )  return (int) ICOFormat.XP;
 					if ( rank == 1 )  return (int) ICOFormat.Vista;
+					return -1;
+
+				case "ConstrainAngle":
+					if ( rank == 0 )  return (int) ConstrainAngle.None;
+					if ( rank == 1 )  return (int) ConstrainAngle.Quarter;
+					if ( rank == 2 )  return (int) ConstrainAngle.Sixth;
+					if ( rank == 3 )  return (int) ConstrainAngle.Eight;
 					return -1;
 			}
 			return -1;

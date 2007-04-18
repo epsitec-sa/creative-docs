@@ -13,6 +13,14 @@ namespace Epsitec.Common.Document
 		HideInactive,	// cache les calques inactifs
 	}
 
+	public enum ConstrainAngle
+	{
+		None,			// aucune
+		Quarter,		// 45°
+		Sixth,			// 30°, 60°
+		Eight,			// 22.5°, 45°, 67.5°
+	}
+
 
 	/// <summary>
 	/// La classe DrawingContext contient le "device contexte".
@@ -25,6 +33,7 @@ namespace Epsitec.Common.Document
 			this.viewer = viewer;
 			this.drawer = new Drawer(this.document);
 			this.rootStack = new List<int> ();
+			this.constrainAngle = ConstrainAngle.None;
 			this.constrainList = new List<MagnetLine> ();
 			this.masterPageList = new List<Objects.Page> ();
 			this.magnetLayerList = new List<Objects.Layer> ();
@@ -1873,6 +1882,19 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public ConstrainAngle ConstrainAngle
+		{
+			//	Angles supplémentaires pour les contraintes.
+			get
+			{
+				return this.constrainAngle;
+			}
+			set
+			{
+				this.constrainAngle = value;
+			}
+		}
+
 		public void ConstrainClear()
 		{
 			//	Efface toutes les contraintes.
@@ -1919,6 +1941,33 @@ namespace Epsitec.Common.Document
 			//	Ajoute une contrainte horizontale et verticale (+).
 			this.ConstrainAddHorizontal(pos.Y);
 			this.ConstrainAddVertical(pos.X);
+
+			if (this.constrainAngle == ConstrainAngle.Quarter)
+			{
+				Point r = new Point(pos.X+1.0, pos.Y);
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 45.0*1, r));
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 45.0*3, r));
+			}
+
+			if (this.constrainAngle == ConstrainAngle.Sixth)
+			{
+				Point r = new Point(pos.X+1.0, pos.Y);
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 30.0*1, r));
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 30.0*2, r));
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 30.0*4, r));
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 30.0*5, r));
+			}
+
+			if (this.constrainAngle == ConstrainAngle.Eight)
+			{
+				Point r = new Point(pos.X+1.0, pos.Y);
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 22.5*1, r));
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 22.5*2, r));
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 22.5*3, r));
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 22.5*5, r));
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 22.5*6, r));
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 22.5*7, r));
+			}
 		}
 
 		public void ConstrainAddHorizontal(double y)
@@ -2660,6 +2709,7 @@ namespace Epsitec.Common.Document
 		protected bool							isCtrl;
 		protected bool							isAlt;
 		protected bool							constrainActive;
+		protected ConstrainAngle				constrainAngle;
 		protected List<MagnetLine>				constrainList;
 		protected bool							isMagnetStarting;
 		protected Point							magnetStarting;

@@ -148,6 +148,9 @@ namespace Epsitec.Common.Document
 				this.CreatePoint(container, "ArrowMove");
 				this.CreateDouble(container, "ArrowMoveMul");
 				this.CreateDouble(container, "ArrowMoveDiv");
+
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Settings.Constrain);
+				this.CreateCombo(container, "ConstrainAngle");
 				DocumentDialogs.CreateSeparator(container);
 
 				//	Onglet Misc:

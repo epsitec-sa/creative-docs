@@ -653,19 +653,19 @@ namespace Epsitec.Common.Document.Objects
 			switch (this.internalOperation)
 			{
 				case InternalOperation.Painting:
-					this.RenderPainting (layout, font, size, color, mapping, glyphs, x, y, sx, sy);
+					this.RenderPainting(layout, font, size, color, mapping, glyphs, x, y, sx, sy);
 					break;
 			
 				case InternalOperation.GetPath:
-					this.graphics.PaintGlyphs (Drawing.Font.GetFont (font), size, glyphs, x, y, sx, sy);
+					this.graphics.PaintGlyphs(Drawing.Font.GetFont(font), size, glyphs, x, y, sx, sy);
 					break;
 					
 				case InternalOperation.CharactersTable:
-					this.RenderCharactersTable (font, mapping);
+					this.RenderCharactersTable(font, mapping);
 					break;
 					
 				case InternalOperation.RealBoundingBox:
-					this.RenderTextBoundingBox (font, size, glyphs, x, y, sx, sy);
+					this.RenderTextBoundingBox(font, size, glyphs, x, y, sx, sy);
 					break;
 			}
 		}
@@ -675,37 +675,36 @@ namespace Epsitec.Common.Document.Objects
 			int[] cArray;
 			ushort[] gArray;
 			ulong[] tArray;
-			while (mapping.GetNextMapping (out cArray, out gArray, out tArray))
+			while (mapping.GetNextMapping(out cArray, out gArray, out tArray))
 			{
 				int numChars  = cArray.Length;
 				int numGlyphs = gArray.Length;
-				System.Diagnostics.Debug.Assert (numChars == 1 || numGlyphs == 1);
+				System.Diagnostics.Debug.Assert(numChars == 1 || numGlyphs == 1);
 
 				for (int i=0; i<numGlyphs; i++)
 				{
-					if (gArray[i] >= 0xffff)
-						continue;
+					if (gArray[i] >= 0xffff)  continue;
 
 					PDF.CharacterList cl;
 					if (numChars == 1)
 					{
 						if (i == 1)  // TODO: césure gérée de façon catastrophique !
 						{
-							cl = new PDF.CharacterList (gArray[i], (int) '-', font);
+							cl = new PDF.CharacterList(gArray[i], (int) '-', font);
 						}
 						else
 						{
-							cl = new PDF.CharacterList (gArray[i], cArray[0], font);
+							cl = new PDF.CharacterList(gArray[i], cArray[0], font);
 						}
 					}
 					else
 					{
-						cl = new PDF.CharacterList (gArray[i], cArray, font);
+						cl = new PDF.CharacterList(gArray[i], cArray, font);
 					}
 
-					if (!this.charactersTable.ContainsKey (cl))
+					if (!this.charactersTable.ContainsKey(cl))
 					{
-						this.charactersTable.Add (cl, null);
+						this.charactersTable.Add(cl, null);
 					}
 				}
 			}
@@ -713,7 +712,7 @@ namespace Epsitec.Common.Document.Objects
 
 		private void RenderPainting(Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
 		{
-			System.Diagnostics.Debug.Assert (mapping != null);
+			System.Diagnostics.Debug.Assert(mapping != null);
 			Text.ITextFrame frame = layout.Frame;
 
 			//	Vérifions d'abord que le mapping du texte vers les glyphes est
@@ -735,11 +734,11 @@ namespace Epsitec.Common.Document.Objects
 			int ii = 0;
 			bool isSpace = false;
 
-			while (mapping.GetNextMapping (out cArray, out gArray, out tArray))
+			while (mapping.GetNextMapping(out cArray, out gArray, out tArray))
 			{
 				int numChars  = cArray.Length;
 				int numGlyphs = gArray.Length;
-				System.Diagnostics.Debug.Assert (numChars == 1 || numGlyphs == 1);
+				System.Diagnostics.Debug.Assert(numChars == 1 || numGlyphs == 1);
 
 				x1 = x[offset+0];
 				x2 = x[offset+numGlyphs];
@@ -764,7 +763,7 @@ namespace Epsitec.Common.Document.Objects
 						isSpace = true;  // contient au moins un espace
 
 						Text.Properties.BreakProperty prop;
-						this.document.TextContext.GetBreak (tArray[0], out prop);
+						this.document.TextContext.GetBreak(tArray[0], out prop);
 						if (prop.ParagraphStartMode == Text.Properties.ParagraphStartMode.NewFrame)
 						{
 							iArray[ii++] = SpaceType.NewFrame;
@@ -810,7 +809,7 @@ namespace Epsitec.Common.Document.Objects
 
 							if (xx > selX)
 							{
-								this.MarkSel (layout, ref selRectList, xx, selX);
+								this.MarkSel(layout, ref selRectList, xx, selX);
 							}
 						}
 					}
@@ -827,7 +826,7 @@ namespace Epsitec.Common.Document.Objects
 
 				if (xx > selX)
 				{
-					this.MarkSel (layout, ref selRectList, xx, selX);
+					this.MarkSel(layout, ref selRectList, xx, selX);
 				}
 			}
 
@@ -836,25 +835,25 @@ namespace Epsitec.Common.Document.Objects
 				//	Dessine les rectangles correspondant à la sélection.
 				foreach (Drawing.Rectangle rect in selRectList)
 				{
-					this.graphics.AddFilledRectangle (rect);
+					this.graphics.AddFilledRectangle(rect);
 
-					Point c1 = this.transform.TransformDirect (rect.BottomLeft);
-					Point c2 = this.transform.TransformDirect (rect.TopRight);
-					this.selectBox.MergeWith (c1);
-					this.selectBox.MergeWith (c2);
+					Point c1 = this.transform.TransformDirect(rect.BottomLeft);
+					Point c2 = this.transform.TransformDirect(rect.TopRight);
+					this.selectBox.MergeWith(c1);
+					this.selectBox.MergeWith(c2);
 				}
-				this.graphics.RenderSolid (DrawingContext.ColorSelectEdit (this.isActive));
+				this.graphics.RenderSolid(DrawingContext.ColorSelectEdit(this.isActive));
 			}
 
 			//	Dessine le texte.
 
 			if (color != this.cachedColorString)
 			{
-				this.cachedColor = RichColor.Parse (color);
+				this.cachedColor = RichColor.Parse(color);
 				this.cachedColorString = color;
 			}
 			
-			this.RenderText (font, size, glyphs, iArray, x, y, sx, sy, isSpace);
+			this.RenderText(font, size, glyphs, iArray, x, y, sx, sy, isSpace);
 		}
 
 		private void MarkSel(Text.Layout.Context layout, ref System.Collections.ArrayList selRectList, double x, double selX)
@@ -880,17 +879,17 @@ namespace Epsitec.Common.Document.Objects
 			//	Effectue le rendu des caractères.
 			if (this.internalOperation == InternalOperation.Painting)
 			{
-				this.RenderTextPainting (font, size, glyphs, spaces, x, y, sx, sy, isSpace);
+				this.RenderTextPainting(font, size, glyphs, spaces, x, y, sx, sy, isSpace);
 			}
 			else
 			{
-				throw new System.InvalidOperationException (string.Format ("InternalOperation.{0} not handled", this.internalOperation));
+				throw new System.InvalidOperationException(string.Format("InternalOperation.{0} not handled", this.internalOperation));
 			}
 		}
 
 		private void RenderTextBoundingBox(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
 		{
-			Drawing.Font drawingFont = Drawing.Font.GetFont (font);
+			Drawing.Font drawingFont = Drawing.Font.GetFont(font);
 			if (drawingFont != null)
 			{
 				Drawing.Rectangle mergedBounds = Drawing.Rectangle.Empty;
@@ -901,21 +900,20 @@ namespace Epsitec.Common.Document.Objects
 
 					if (glyphs[i] < 0xffff)
 					{
-						bounds = drawingFont.GetGlyphBounds (glyphs[i], size);
+						bounds = drawingFont.GetGlyphBounds(glyphs[i], size);
 					}
 					else
 					{
-						bounds = drawingFont.GetCharBounds ((int) Unicode.Code.EndOfText);
-						bounds.Scale (size);
+						bounds = drawingFont.GetCharBounds((int) Unicode.Code.EndOfText);
+						bounds.Scale(size);
 					}
 
-					if ((sx != null) ||
-						(sy != null))
+					if (sx != null || sy != null)
 					{
-						bounds.Scale (sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+						bounds.Scale(sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
 					}
 
-					bounds.Offset (x[i], y[i]);
+					bounds.Offset(x[i], y[i]);
 
 					if (i == 0)
 					{
@@ -923,7 +921,7 @@ namespace Epsitec.Common.Document.Objects
 					}
 					else
 					{
-						mergedBounds = Drawing.Rectangle.Union (mergedBounds, bounds);
+						mergedBounds = Drawing.Rectangle.Union(mergedBounds, bounds);
 					}
 				}
 
@@ -931,14 +929,14 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if (this.transform.OnlyScaleOrTranslate)
 					{
-						this.mergingBoundingBox.MergeWith (this.transform.ScaleOrTranslateDirect (mergedBounds));
+						this.mergingBoundingBox.MergeWith(this.transform.ScaleOrTranslateDirect(mergedBounds));
 					}
 					else
 					{
-						this.mergingBoundingBox.MergeWith (this.transform.TransformDirect (mergedBounds.BottomLeft));
-						this.mergingBoundingBox.MergeWith (this.transform.TransformDirect (mergedBounds.BottomRight));
-						this.mergingBoundingBox.MergeWith (this.transform.TransformDirect (mergedBounds.TopLeft));
-						this.mergingBoundingBox.MergeWith (this.transform.TransformDirect (mergedBounds.TopRight));
+						this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(mergedBounds.BottomLeft));
+						this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(mergedBounds.BottomRight));
+						this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(mergedBounds.TopLeft));
+						this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(mergedBounds.TopRight));
 					}
 				}
 			}
@@ -948,18 +946,18 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if (this.graphics != null)  // affichage sur écran ?
 			{
-				Drawing.Font drawingFont = Drawing.Font.GetFont (font);
+				Drawing.Font drawingFont = Drawing.Font.GetFont(font);
 				if (drawingFont != null)
 				{
 					if (sy == null)
 					{
-						if (this.graphics.PaintCachedGlyphs (drawingFont, size, glyphs, x, y, sx, this.cachedColor.Basic))
+						if (this.graphics.PaintCachedGlyphs(drawingFont, size, glyphs, x, y, sx, this.cachedColor.Basic))
 						{
 							//	OK, pixels provenant du cache bitmap de la fonte.
 						}
 						else
 						{
-							this.graphics.Rasterizer.AddGlyphs (drawingFont, size, glyphs, x, y, sx);
+							this.graphics.Rasterizer.AddGlyphs(drawingFont, size, glyphs, x, y, sx);
 						}
 					}
 					else
@@ -968,33 +966,33 @@ namespace Epsitec.Common.Document.Objects
 						{
 							if (glyphs[i] < 0xffff)
 							{
-								this.graphics.Rasterizer.AddGlyph (drawingFont, glyphs[i], x[i], y[i], size, (sx == null) ? 1.0 : sx[i], (sy == null) ? 1.0 : sy[i]);
+								this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, (sx == null) ? 1.0 : sx[i], (sy == null) ? 1.0 : sy[i]);
 							}
 						}
 					}
 
 					if (this.textFlow.HasActiveTextBox && isSpace && spaces != null &&
-							 this.drawingContext != null && this.drawingContext.TextShowControlCharacters)
+						this.drawingContext != null && this.drawingContext.TextShowControlCharacters)
 					{
-						this.RenderTextPaintSpecialCharacters (font, size, glyphs, spaces, x, y);
+						this.RenderTextPaintSpecialCharacters(font, size, glyphs, spaces, x, y);
 					}
 				}
 
-				this.graphics.RenderSolid (this.cachedColor.Basic);
+				this.graphics.RenderSolid(this.cachedColor.Basic);
 			}
 			else if (this.port is Printing.PrintPort)  // impression ?
 			{
 				Printing.PrintPort printPort = port as Printing.PrintPort;
-				Drawing.Font drawingFont = Drawing.Font.GetFont (font);
+				Drawing.Font drawingFont = Drawing.Font.GetFont(font);
 				printPort.RichColor = this.cachedColor;
-				printPort.PaintGlyphs (drawingFont, size, glyphs, x, y, sx, sy);
+				printPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
 			}
 			else if (this.port is PDF.Port)  // exportation PDF ?
 			{
 				PDF.Port pdfPort = port as PDF.Port;
-				Drawing.Font drawingFont = Drawing.Font.GetFont (font);
+				Drawing.Font drawingFont = Drawing.Font.GetFont(font);
 				pdfPort.RichColor = this.cachedColor;
-				pdfPort.PaintGlyphs (drawingFont, size, glyphs, x, y, sx, sy);
+				pdfPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
 			}
 		}
 
@@ -1002,31 +1000,31 @@ namespace Epsitec.Common.Document.Objects
 		{
 			for (int i=0; i<glyphs.Length; i++)
 			{
-				double width = font.GetGlyphWidth (glyphs[i], size);
-				double oy = font.GetAscender (size)*0.3;
+				double width = font.GetGlyphWidth(glyphs[i], size);
+				double oy = font.GetAscender(size)*0.3;
 
 				if (spaces[i] == SpaceType.BreakSpace)  // espace sécable ?
 				{
-					this.graphics.AddFilledCircle (x[i]+width/2, y[i]+oy, size*0.05);
+					this.graphics.AddFilledCircle(x[i]+width/2, y[i]+oy, size*0.05);
 				}
 
 				if (spaces[i] == SpaceType.NoBreakSpace)  // espace insécable ?
 				{
-					this.graphics.AddCircle (x[i]+width/2, y[i]+oy, size*0.08);
+					this.graphics.AddCircle(x[i]+width/2, y[i]+oy, size*0.08);
 				}
 
 				if (spaces[i] == SpaceType.NewFrame ||
-									 spaces[i] == SpaceType.NewPage)  // saut ?
+					spaces[i] == SpaceType.NewPage)  // saut ?
 				{
 					Text.SimpleTextFrame frame = this.textFrame as Text.SimpleTextFrame;
-					Point p1 = new Point (x[i], y[i]+oy);
-					Point p2 = new Point (frame.Width, y[i]+oy);
-					Path path = Path.FromLine (p1, p2);
+					Point p1 = new Point(x[i], y[i]+oy);
+					Point p2 = new Point(frame.Width, y[i]+oy);
+					Path path = Path.FromLine(p1, p2);
 
 					double w    = (spaces[i] == SpaceType.NewFrame) ? 0.8 : 0.5;
 					double dash = (spaces[i] == SpaceType.NewFrame) ? 0.0 : 8.0;
 					double gap  = (spaces[i] == SpaceType.NewFrame) ? 3.0 : 2.0;
-					Drawer.DrawPathDash (this.graphics, this.drawingContext, path, w, dash, gap, this.cachedColor.Basic);
+					Drawer.DrawPathDash(this.graphics, this.drawingContext, path, w, dash, gap, this.cachedColor.Basic);
 				}
 			}
 		}

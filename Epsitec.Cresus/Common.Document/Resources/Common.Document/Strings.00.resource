@@ -17,6 +17,7 @@
   <data name="Dialog.Settings.ArrowMove" id="0B">Déplacements avec les touches flèches</data>
   <data name="Dialog.Settings.Dimension" id="0C">Valeurs des cotes</data>
   <data name="Dialog.Settings.ToLinePrecision" id="0D">Convertir en droites et opérations booléennes</data>
+  <data name="Dialog.Settings.Constrain" id="09C01">Contraintes</data>
   <data name="Dialog.Settings.FirstAction.Nothing" id="0E">Rien</data>
   <data name="Dialog.Settings.FirstAction.OpenNewDocument" id="0F">Ouvrir un document vide</data>
   <data name="Dialog.Settings.FirstAction.OpenLastModel" id="0T901" mod="1">Ouvrir le dernier modèle</data>
@@ -154,6 +155,12 @@
   <data name="Dialog.Integer.ImageDepth.Bit24" id="0O3">16 millions (24 bits)</data>
   <data name="Dialog.Integer.ImageDepth.Bit32" id="0P3">Avec transparence (32 bits)</data>
   <data name="Dialog.Integer.ImageCompression.Text" id="0Q3">Type de compression</data>
+  <data name="Dialog.Integer.ImageCrop.Text" id="03C01">Cadrage de l&amp;apos;image</data>
+  <data name="Dialog.Integer.ConstrainAngle.Text" id="04C01">Angles supplémentaires</data>
+  <data name="Dialog.Integer.ConstrainAngle.None" id="05C01">Aucun</data>
+  <data name="Dialog.Integer.ConstrainAngle.Quarter" id="06C01">45°</data>
+  <data name="Dialog.Integer.ConstrainAngle.Sixth" id="07C01">30° et 60°</data>
+  <data name="Dialog.Integer.ConstrainAngle.Eight" id="08C01">22.5°, 45° et 67.5°</data>
   <data name="Dialog.Integer.ImageCompression.None" id="0R3">Aucune</data>
   <data name="Dialog.Integer.ImageCompression.Lzw" id="0S3">LZW</data>
   <data name="Dialog.Integer.ImageCompression.Rle" id="0T3">RLE</data>
