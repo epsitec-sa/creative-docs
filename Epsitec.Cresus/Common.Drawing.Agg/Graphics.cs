@@ -369,7 +369,7 @@ namespace Epsitec.Common.Drawing
 					return false;
 				}
 
-				font.PaintPixelGlyphs (this.pixmap, scale, glyphs, x, y, sx, color, xx, yy, tx, ty);
+				font.PaintPixelGlyphs (this.pixmap, scale, glyphs, x, y, sx, this.GetFinalColor (color), xx, yy, tx, ty);
 
 				return true;
 			}
