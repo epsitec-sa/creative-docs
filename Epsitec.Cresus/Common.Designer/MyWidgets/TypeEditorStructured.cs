@@ -246,7 +246,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (st)
 			{
 				this.buttonRelationRef.ActiveState = (field.Relation == Relation.Reference ) ? ActiveState.Yes : ActiveState.No;
-				this.buttonRelationBij.ActiveState = (field.Relation == Relation.Bijective ) ? ActiveState.Yes : ActiveState.No;
+				this.buttonRelationBij.ActiveState = ActiveState.No; //- (field.Relation == Relation.Bijective) ? ActiveState.Yes : ActiveState.No;
 				this.buttonRelationCol.ActiveState = (field.Relation == Relation.Collection) ? ActiveState.Yes : ActiveState.No;
 			}
 			else
@@ -283,7 +283,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						if (type is StructuredType)
 						{
 							if (field.Relation == Relation.Reference )  iconRelation = Misc.Image("RelationReference");
-							if (field.Relation == Relation.Bijective )  iconRelation = Misc.Image("RelationBijective");
+//-							if (field.Relation == Relation.Bijective )  iconRelation = Misc.Image("RelationBijective");
 							if (field.Relation == Relation.Collection)  iconRelation = Misc.Image("RelationCollection");
 						}
 
@@ -655,10 +655,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ArrayRelation(Relation.Reference);
 			}
 
-			if (sender == this.buttonRelationBij)
-			{
-				this.ArrayRelation(Relation.Bijective);
-			}
+//-			if (sender == this.buttonRelationBij)
+//-			{
+//-				this.ArrayRelation(Relation.Bijective);
+//-			}
 
 			if (sender == this.buttonRelationCol)
 			{

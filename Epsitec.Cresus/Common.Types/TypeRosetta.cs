@@ -341,11 +341,13 @@ namespace Epsitec.Common.Types
 			{
 				case Relation.None:
 				case Relation.Reference:
-				case Relation.Bijective:
 					return TypeRosetta.IsValidValue (value, field.Type);
-
+				
 				case Relation.Collection:
 					return TypeRosetta.IsValidValueForCollectionOfType (value, field.Type);
+
+				case Relation.Inclusion:
+					//	TODO: handle inclusion
 
 				default:
 					throw new System.NotImplementedException (string.Format ("Support for Relation.{0} not implemented", field.Relation));

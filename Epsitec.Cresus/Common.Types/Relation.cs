@@ -19,6 +19,12 @@ namespace Epsitec.Common.Types
 		/// The field defines a reference (pointer) to another structure.
 		/// </summary>
 		Reference=1,
+
+		Inclusion=2,
+
+		Collection=3,
+
+#if false
 		
 		/// <summary>
 		/// The field defines a bijective reference (bidirectional pointer)
@@ -56,5 +62,6 @@ namespace Epsitec.Common.Types
 		/// <c>Cluster</c>.
 		/// </summary>
 		ManyToMany=Cluster,
+#endif
 	}
 }

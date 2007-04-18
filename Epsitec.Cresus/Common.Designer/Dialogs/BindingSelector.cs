@@ -342,7 +342,7 @@ namespace Epsitec.Common.Designer.Dialogs
 						if (type is StructuredType)
 						{
 							if (field.Relation == Relation.Reference )  iconRelation = Misc.Image("RelationReference");
-							if (field.Relation == Relation.Bijective )  iconRelation = Misc.Image("RelationBijective");
+//-							if (field.Relation == Relation.Bijective )  iconRelation = Misc.Image("RelationBijective");
 							if (field.Relation == Relation.Collection)  iconRelation = Misc.Image("RelationCollection");
 						}
 
