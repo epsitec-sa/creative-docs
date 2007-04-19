@@ -28,6 +28,7 @@ namespace Epsitec.Common.Document
 			this.infinite = false;
 			this.temp = false;
 			this.flyOver = false;
+			this.handleRank = -1;
 		}
 
 		public void Clear()
@@ -73,6 +74,15 @@ namespace Epsitec.Common.Document
 					this.isVisible = value;
 					this.Invalidate();
 				}
+			}
+		}
+
+		public int HandleRank
+		{
+			//	Retourne le rang de la poignée associée.
+			get
+			{
+				return this.handleRank;
 			}
 		}
 
@@ -132,17 +142,24 @@ namespace Epsitec.Common.Document
 		public void Initialize(Point p1, Point p2, bool infinite)
 		{
 			//	Initialise la ligne et rend-la visible.
-			this.Initialize(p1, p2, infinite, true);
+			this.Initialize(p1, p2, infinite, true, -1);
 		}
 
 		public void Initialize(Point p1, Point p2, bool infinite, bool isVisible)
 		{
 			//	Initialise la ligne visible ou invisible.
+			this.Initialize(p1, p2, infinite, isVisible, -1);
+		}
+
+		public void Initialize(Point p1, Point p2, bool infinite, bool isVisible, int handleRank)
+		{
+			//	Initialise la ligne visible ou invisible, en donnant la poignée à l'origine de cette contrainte.
 			if ( this.p1 != p1 ||
 				 this.p2 != p2 ||
 				 this.infinite != infinite ||
 				 this.isVisible != isVisible ||
-				 this.isUsed != true )
+				 this.isUsed != true ||
+				 this.handleRank != handleRank )
 			{
 				this.Invalidate();
 				this.p1 = p1;
@@ -150,6 +167,7 @@ namespace Epsitec.Common.Document
 				this.infinite = infinite;
 				this.isVisible = isVisible;
 				this.isUsed = true;
+				this.handleRank = handleRank;
 				this.Invalidate();
 			}
 		}
@@ -265,15 +283,17 @@ namespace Epsitec.Common.Document
 		{
 			//	Compare la géométrie de deux lignes magnétiques.
 			//	Les types sont ignorés.
+			if ( this.handleRank != line.handleRank )  return false;
+
 			if ( this.p1.Y == this.p2.Y )  // horizontal ?
 			{
 				if ( line.p1.Y != line.p2.Y )  return false;
-				return (  this.p1.Y == line.p1.Y );
+				return this.p1.Y == line.p1.Y;
 			}
 			else if ( this.p1.X == this.p2.X )  // vertical ?
 			{
 				if ( line.p1.X != line.p2.X )  return false;
-				return (  this.p1.X == line.p1.X );
+				return this.p1.X == line.p1.X;
 			}
 			else	// quelconque ?
 			{
@@ -393,5 +413,6 @@ namespace Epsitec.Common.Document
 		protected bool					flyOver;
 		protected Point					p1;
 		protected Point					p2;
+		protected int					handleRank;
 	}
 }

@@ -1901,111 +1901,99 @@ namespace Epsitec.Common.Document
 			this.constrainList.Clear();
 		}
 
-		public void ConstrainAddRect(Point p1, Point p2)
-		{
-			//	Ajoute 4 contraintes pour former un rectangle HV.
-			//	p1 et p2 sont 2 coins opposés quelconques du rectangle.
-			Point p3 = new Point(p1.X, p2.Y);
-			Point p4 = new Point(p2.X, p1.Y);
-			this.ConstrainAddLine(p1, p3);
-			this.ConstrainAddLine(p3, p2);
-			this.ConstrainAddLine(p2, p4);
-			this.ConstrainAddLine(p4, p1);
-		}
-
-		public void ConstrainAddRect(Point corner, Point opp, Point left, Point right)
+		public void ConstrainAddRect(Point corner, Point opp, Point left, Point right, bool isVisible, int handleRank)
 		{
 			//	Ajoute des contraintes pour déplacer le sommet d'un rectangle.
-			this.ConstrainAddLine(corner, opp);
-			this.ConstrainAddLine(corner, left);
-			this.ConstrainAddLine(corner, right);
+			this.ConstrainAddLine(corner, opp, isVisible, handleRank);
+			this.ConstrainAddLine(corner, left, isVisible, handleRank);
+			this.ConstrainAddLine(corner, right, isVisible, handleRank);
 		}
 
-		public void ConstrainAddCenter(Point pos)
+		public void ConstrainAddCenter(Point pos, bool isVisible, int handleRank)
 		{
 			//	Ajoute un centre de rotation pour les contraintes, permettant des
 			//	rotations multiples de 45 degrés.
-			this.ConstrainAddHV(pos);
-			this.ConstrainAddHomo(pos);
+			this.ConstrainAddHV(pos, isVisible, handleRank);
+			this.ConstrainAddHomo(pos, isVisible, handleRank);
 		}
 
-		public void ConstrainAddHomo(Point pos)
+		public void ConstrainAddHomo(Point pos, bool isVisible, int handleRank)
 		{
 			//	Ajoute une croix de zoom à 45 degrés pour les contraintes.
-			this.ConstrainAddLine(pos, new Point(pos.X+1.0, pos.Y+1.0));
-			this.ConstrainAddLine(pos, new Point(pos.X+1.0, pos.Y-1.0));
+			this.ConstrainAddLine(pos, new Point(pos.X+1.0, pos.Y+1.0), isVisible, handleRank);
+			this.ConstrainAddLine(pos, new Point(pos.X+1.0, pos.Y-1.0), isVisible, handleRank);
 		}
 
-		public void ConstrainAddHV(Point pos)
+		public void ConstrainAddHV(Point pos, bool isVisible, int handleRank)
 		{
 			//	Ajoute une contrainte horizontale et verticale (+).
-			this.ConstrainAddHorizontal(pos.Y);
-			this.ConstrainAddVertical(pos.X);
+			this.ConstrainAddHorizontal(pos.Y, isVisible, handleRank);
+			this.ConstrainAddVertical(pos.X, isVisible, handleRank);
 
 			if (this.constrainAngle == ConstrainAngle.Quarter)
 			{
 				Point r = new Point(pos.X+1.0, pos.Y);
-				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 45.0*1, r));
-				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 45.0*3, r));
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 45.0*1, r), isVisible, handleRank);
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 45.0*3, r), isVisible, handleRank);
 			}
 
 			if (this.constrainAngle == ConstrainAngle.Sixth)
 			{
 				Point r = new Point(pos.X+1.0, pos.Y);
-				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 30.0*1, r));
-				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 30.0*2, r));
-				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 30.0*4, r));
-				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 30.0*5, r));
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 30.0*1, r), isVisible, handleRank);
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 30.0*2, r), isVisible, handleRank);
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 30.0*4, r), isVisible, handleRank);
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 30.0*5, r), isVisible, handleRank);
 			}
 
 			if (this.constrainAngle == ConstrainAngle.Eight)
 			{
 				Point r = new Point(pos.X+1.0, pos.Y);
-				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 22.5*1, r));
-				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 22.5*2, r));
-				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 22.5*3, r));
-				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 22.5*5, r));
-				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 22.5*6, r));
-				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 22.5*7, r));
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 22.5*1, r), isVisible, handleRank);
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 22.5*2, r), isVisible, handleRank);
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 22.5*3, r), isVisible, handleRank);
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 22.5*5, r), isVisible, handleRank);
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 22.5*6, r), isVisible, handleRank);
+				this.ConstrainAddLine(pos, Transform.RotatePointDeg(pos, 22.5*7, r), isVisible, handleRank);
 			}
 		}
 
-		public void ConstrainAddHorizontal(double y)
+		public void ConstrainAddHorizontal(double y, bool isVisible, int handleRank)
 		{
 			//	Ajoute une contrainte horizontale (-).
-			this.ConstrainAddLine(new Point(0.0, y), new Point(1.0, y));
+			this.ConstrainAddLine(new Point(0.0, y), new Point(1.0, y), isVisible, handleRank);
 		}
 
-		public void ConstrainAddVertical(double x)
+		public void ConstrainAddVertical(double x, bool isVisible, int handleRank)
 		{
-			//	Ajoute une contrainte verticale (|).
-			this.ConstrainAddLine(new Point(x, 0.0), new Point(x, 1.0));
+			//	Ajoute une contrainte verticale (|), issue d'une poignée spécifique.
+			this.ConstrainAddLine(new Point(x, 0.0), new Point(x, 1.0), isVisible, handleRank);
 		}
 
-		public void ConstrainAddLine(Point p1, Point p2)
+		public void ConstrainAddLine(Point p1, Point p2, bool isVisible, int handleRank)
 		{
 			//	Ajoute une contrainte quelconque.
 			if ( p1 == p2 )  return;
 
 			MagnetLine line = new MagnetLine(this.document, this, MagnetLine.Type.Constrain);
-			line.Initialize(p1, p2, true, false);
+			line.Initialize(p1, p2, true, isVisible, handleRank);
 
-			foreach ( MagnetLine exist in this.constrainList )
+			foreach (MagnetLine exist in this.constrainList)
 			{
-				if ( line.Compare(exist) )  return;
+				if (line.Compare(exist))  return;
 			}
 
-			line.IsVisible = this.constrainActive;
+			line.IsVisible = this.constrainActive|isVisible;
 			this.constrainList.Add(line);
 		}
 
-		public void ConstrainAddCircle(Point center, Point ext)
+		public void ConstrainAddCircle(Point center, Point ext, bool isVisible, int handleRank)
 		{
 			//	Ajoute une contrainte de distance (circulaire).
 			if ( center == ext )  return;
 
 			MagnetLine line = new MagnetLine(this.document, this, MagnetLine.Type.Circle);
-			line.Initialize(center, ext, true, false);
+			line.Initialize(center, ext, true, isVisible, handleRank);
 
 			line.IsVisible = this.constrainActive;
 			this.constrainList.Add(line);
@@ -2032,14 +2020,14 @@ namespace Epsitec.Common.Document
 			//	respectives.
 			double margin = this.MagnetMargin*2.0;
 			int detect = 0;
-			MagnetLine[] table = new MagnetLine[10];
-			double[] dist = new double[10];
+			MagnetLine[] table = new MagnetLine[20];
+			double[] dist = new double[20];
 			foreach ( MagnetLine line in this.constrainList )
 			{
 				double d = line.Distance(pos);
 				if ( d <= margin )
 				{
-					System.Diagnostics.Debug.Assert(detect<10, "Too many magnet constrain.");
+					System.Diagnostics.Debug.Assert(detect<20, "Too many magnet constrain.");
 					table[detect] = line;
 					dist[detect++] = d;
 				}
@@ -2051,7 +2039,7 @@ namespace Epsitec.Common.Document
 			{
 				//	Trie les lignes détectées, afin d'avoir la plus proche en premier.
 				//	Bubble sort peu efficace, mais c'est sans grande importance vu
-				//	le petit nombre de lignes à trier (<10).
+				//	le petit nombre de lignes à trier (<20).
 				bool more;
 				do
 				{
@@ -2127,10 +2115,29 @@ namespace Epsitec.Common.Document
 			return snap;
 		}
 
-		public bool ConstrainSpacePressed()
+		public bool ConstrainSpacePressed(Point pos, Objects.Abstract obj, int excludeHandle)
 		{
-			//	Modifie les contraintes suite à la pression de la touche Space.
+			//	Modifie les contraintes suite à la pression de la barre d'espace.
 			//	Retourne true s'il existe au moins une contrainte.
+			if (obj != null)
+			{
+				int rank = obj.DetectHandle(pos, excludeHandle);
+				if (rank != -1)
+				{
+					if (this.ConstrainIsHide(rank))
+					{
+						this.ConstrainShow(rank);
+					}
+					else if (!this.ConstrainDelete(rank))
+					{
+						pos = obj.Handle(rank).Position;
+						this.ConstrainAddHV(pos, true, rank);
+					}
+					
+					return (this.ConstrainVisibleCount != 0);
+				}
+			}
+
 			int count = this.ConstrainVisibleCount;
 
 			if (count == this.constrainList.Count)  // toutes les lignes visibles ?
@@ -2145,6 +2152,7 @@ namespace Epsitec.Common.Document
 				foreach (MagnetLine line in this.constrainList)
 				{
 					line.IsVisible = true;  // remontre toutes les lignes
+					line.FlyOver = false;
 				}
 			}
 			else	// pas toutes les lignes visibles ?
@@ -2156,6 +2164,58 @@ namespace Epsitec.Common.Document
 			}
 
 			return (this.ConstrainVisibleCount != 0);
+		}
+
+		protected bool ConstrainIsHide(int handleRank)
+		{
+			foreach (MagnetLine line in this.constrainList)
+			{
+				if (line.HandleRank == handleRank && !line.IsVisible)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		protected void ConstrainShow(int handleRank)
+		{
+			foreach (MagnetLine line in this.constrainList)
+			{
+				if (line.HandleRank == handleRank)
+				{
+					line.IsVisible = true;
+					line.FlyOver = false;
+				}
+			}
+		}
+
+		protected bool ConstrainDelete(int handleRank)
+		{
+			//	Supprime toutes les contraintes issues d'une poignée spécifique.
+			//	Retourne true si au moins une contrainte visible a été supprimée.
+			bool deleted = false;
+			int i = 0;
+			while (i < this.constrainList.Count)
+			{
+				MagnetLine line = this.constrainList[i];
+				if (handleRank != -1 && line.HandleRank == handleRank)
+				{
+					if (line.IsVisible)
+					{
+						deleted = true;
+					}
+
+					line.Clear();  // pour forcer le redessin
+					this.constrainList.RemoveAt(i);
+				}
+				else
+				{
+					i++;
+				}
+			}
+
+			return deleted;
 		}
 
 		protected int ConstrainVisibleCount

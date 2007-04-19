@@ -378,12 +378,31 @@ namespace Epsitec.Common.Document.Objects
 		public int DetectHandle(Point pos)
 		{
 			//	Détecte la poignée pointée par la souris.
+			return this.DetectHandle(pos, -1);
+		}
+
+		public int DetectHandle(Point pos, int excludeRank)
+		{
+			//	Détecte la poignée pointée par la souris, en excluant une poignée.
 			int total = this.TotalHandle;
 			double min = 1000000.0;
 			int rank = -1;
 			for ( int i=total-1 ; i>=0 ; i-- )
 			{
-				if ( this.Handle(i).Detect(pos) )
+				bool detected = false;
+
+				if (i == excludeRank && this.moveHandleRank != -1)
+				{
+					DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+					double size = context.HandleSize + 1.0/context.ScaleX;
+					detected = Common.Document.Objects.Handle.Detect(pos, this.moveHandlePos, size);
+				}
+				else if (i != excludeRank)
+				{
+					detected = this.Handle(i).Detect(pos);
+				}
+
+				if (detected)
 				{
 					double distance = Point.Distance(this.Handle(i).Position, pos);
 					if ( distance < min && System.Math.Abs(distance-min) > 0.00001 )
@@ -604,6 +623,8 @@ namespace Epsitec.Common.Document.Objects
 			//	Début du déplacement d'une poignée.
 			if ( rank < this.TotalMainHandle )  // poignée de l'objet, pas propriété ?
 			{
+				this.moveHandleRank = rank;
+				this.moveHandlePos = this.Handle(rank).Position;
 				this.InsertOpletGeometry();
 			}
 		}
@@ -637,6 +658,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Fin du déplacement d'une poignée.
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
 			{
+				this.moveHandleRank = -1;
 				drawingContext.MagnetClearStarting();
 				this.document.Modifier.TextInfoModif = "";
 			}
@@ -2377,7 +2399,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Début de la création d'un objet.
 			drawingContext.ConstrainClear();
-			drawingContext.ConstrainAddHV(pos);
+			drawingContext.ConstrainAddHV(pos, false, 0);
 			drawingContext.MagnetFixStarting(pos);
 		}
 
@@ -3635,6 +3657,8 @@ namespace Epsitec.Common.Document.Objects
 		protected int							hilitedSegment = -1;
 		protected Point							moveSelectedHandleStart;
 		protected System.Collections.ArrayList	moveSelectedHandleList;
+		protected int							moveHandleRank = -1;
+		protected Point							moveHandlePos;
 
 		protected string						name = "";
 		protected UndoableList					properties;

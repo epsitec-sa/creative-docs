@@ -60,12 +60,12 @@ namespace Epsitec.Common.Document.Objects
 				Handle handle = this.Handle(rank);
 				if ( handle.PropertyType == Properties.Type.None )
 				{
-					drawingContext.ConstrainAddHV(this.Handle(0).Position);
-					drawingContext.ConstrainAddHV(this.Handle(1).Position);
-					drawingContext.ConstrainAddLine(this.Handle(0).Position, this.Handle(1).Position);
+					drawingContext.ConstrainAddHV(this.Handle(0).Position, false, -1);
+					drawingContext.ConstrainAddHV(this.Handle(1).Position, false, -1);
+					drawingContext.ConstrainAddLine(this.Handle(0).Position, this.Handle(1).Position, false, -1);
 					if ( rank == 0 || rank == 1 )
 					{
-						drawingContext.ConstrainAddCircle(this.Handle(rank^1).Position, this.Handle(rank).Position);
+						drawingContext.ConstrainAddCircle(this.Handle(rank^1).Position, this.Handle(rank).Position, false, -1);
 					}
 				}
 				else
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Début de la création d'un objet.
 			drawingContext.ConstrainClear();
-			drawingContext.ConstrainAddHV(pos);
+			drawingContext.ConstrainAddHV(pos, false, -1);
 			if ( this.handles.Count == 0 )
 			{
 				this.HandleAdd(pos, HandleType.Primary);

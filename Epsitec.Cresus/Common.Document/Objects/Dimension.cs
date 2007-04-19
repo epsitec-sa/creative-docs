@@ -66,36 +66,36 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if ( rank == 0 || rank == 1 )  // extrémité ?
 					{
-						drawingContext.ConstrainAddHV(this.Handle(0).Position);
-						drawingContext.ConstrainAddHV(this.Handle(1).Position);
-						drawingContext.ConstrainAddLine(this.Handle(0).Position, this.Handle(1).Position);
+						drawingContext.ConstrainAddHV(this.Handle(0).Position, false, -1);
+						drawingContext.ConstrainAddHV(this.Handle(1).Position, false, -1);
+						drawingContext.ConstrainAddLine(this.Handle(0).Position, this.Handle(1).Position, false, -1);
 					}
 					else if ( rank == 2 || rank == 3 )  // support ?
 					{
 						if ( this.IsRight )
 						{
-							drawingContext.ConstrainAddLine(this.Handle(rank-2).Position, this.Handle(rank).Position);
-							drawingContext.ConstrainAddLine(this.Handle(rank).Position, this.Handle(rank).Position+(this.Handle((rank-2)^1).Position-this.Handle(rank-2).Position));
+							drawingContext.ConstrainAddLine(this.Handle(rank-2).Position, this.Handle(rank).Position, false, -1);
+							drawingContext.ConstrainAddLine(this.Handle(rank).Position, this.Handle(rank).Position+(this.Handle((rank-2)^1).Position-this.Handle(rank-2).Position), false, -1);
 						}
 						else
 						{
-							drawingContext.ConstrainAddHV(this.Handle(rank-2).Position);
-							drawingContext.ConstrainAddHV(this.Handle(rank).Position);
-							drawingContext.ConstrainAddHV(this.Handle(rank^1).Position);
-							drawingContext.ConstrainAddLine(this.Handle(rank-2).Position, this.Handle(rank).Position);
+							drawingContext.ConstrainAddHV(this.Handle(rank-2).Position, false, -1);
+							drawingContext.ConstrainAddHV(this.Handle(rank).Position, false, -1);
+							drawingContext.ConstrainAddHV(this.Handle(rank^1).Position, false, -1);
+							drawingContext.ConstrainAddLine(this.Handle(rank-2).Position, this.Handle(rank).Position, false, -1);
 						}
 					}
 					else if ( rank == 4 )  // milieu ?
 					{
 						if ( this.IsRight )
 						{
-							drawingContext.ConstrainAddLine(this.Handle(4).Position, this.Handle(4).Position+(this.Handle(0).Position-this.Handle(2).Position));
+							drawingContext.ConstrainAddLine(this.Handle(4).Position, this.Handle(4).Position+(this.Handle(0).Position-this.Handle(2).Position), false, -1);
 						}
 						else
 						{
-							drawingContext.ConstrainAddHV(this.Handle(4).Position);
-							drawingContext.ConstrainAddLine(this.Handle(0).Position, this.Handle(1).Position);
-							drawingContext.ConstrainAddLine(this.Handle(4).Position, this.Handle(4).Position+(this.Handle(0).Position-this.Handle(2).Position));
+							drawingContext.ConstrainAddHV(this.Handle(4).Position, false, -1);
+							drawingContext.ConstrainAddLine(this.Handle(0).Position, this.Handle(1).Position, false, -1);
+							drawingContext.ConstrainAddLine(this.Handle(4).Position, this.Handle(4).Position+(this.Handle(0).Position-this.Handle(2).Position), false, -1);
 						}
 					}
 				}
@@ -274,7 +274,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( this.creatingPhase == 0 )
 			{
 				drawingContext.ConstrainClear();
-				drawingContext.ConstrainAddHV(pos);
+				drawingContext.ConstrainAddHV(pos, false, -1);
 				this.HandleAdd(pos, HandleType.Primary);  // poignée 0
 				this.HandleAdd(pos, HandleType.Primary);  // poignée 1
 			}

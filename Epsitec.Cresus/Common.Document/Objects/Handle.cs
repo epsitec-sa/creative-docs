@@ -298,7 +298,6 @@ namespace Epsitec.Common.Document.Objects
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			double scaleX     = context.ScaleX;
-			double scaleY     = context.ScaleY;
 			double handleSize = context.HandleSize*2.0;
 
 			if ( this.type == HandleType.Secondary ||
@@ -314,12 +313,17 @@ namespace Epsitec.Common.Document.Objects
 
 			handleSize += 1.0/scaleX;
 
+			return Handle.Detect(pos, this.position, handleSize);
+		}
+
+		static public bool Detect(Point mousePos, Point handlePos, double size)
+		{
 			Drawing.Rectangle rect = new Drawing.Rectangle();
-			rect.Left   = this.position.X - handleSize/2.0;
-			rect.Right  = this.position.X + handleSize/2.0;
-			rect.Bottom = this.position.Y - handleSize/2.0;
-			rect.Top    = this.position.Y + handleSize/2.0;
-			return rect.Contains(pos);
+			rect.Left   = handlePos.X - size/2.0;
+			rect.Right  = handlePos.X + size/2.0;
+			rect.Bottom = handlePos.Y - size/2.0;
+			rect.Top    = handlePos.Y + size/2.0;
+			return rect.Contains(mousePos);
 		}
 
 

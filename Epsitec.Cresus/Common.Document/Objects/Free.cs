@@ -63,12 +63,12 @@ namespace Epsitec.Common.Document.Objects
 				Handle handle = this.Handle(rank);
 				if ( handle.PropertyType == Properties.Type.None )
 				{
-					drawingContext.ConstrainAddHV(this.Handle(0).Position);
-					drawingContext.ConstrainAddHV(this.Handle(1).Position);
-					drawingContext.ConstrainAddLine(this.Handle(0).Position, this.Handle(1).Position);
+					drawingContext.ConstrainAddHV(this.Handle(0).Position, false, -1);
+					drawingContext.ConstrainAddHV(this.Handle(1).Position, false, -1);
+					drawingContext.ConstrainAddLine(this.Handle(0).Position, this.Handle(1).Position, false, -1);
 					if ( rank == 0 || rank == 1 )
 					{
-						drawingContext.ConstrainAddCircle(this.Handle(rank^1).Position, this.Handle(rank).Position);
+						drawingContext.ConstrainAddCircle(this.Handle(rank^1).Position, this.Handle(rank).Position, false, -1);
 					}
 				}
 				else
@@ -126,12 +126,12 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(n).InitialPosition = this.Handle(n).Position;
 
 			drawingContext.ConstrainClear();
-			drawingContext.ConstrainAddHV(ss.Position);
+			drawingContext.ConstrainAddHV(ss.Position, false, -1);
 			Point p1 = this.Handle(r).Position;
 			Point p2 = this.Handle(n).Position;
 			Size d = new Size(p2.X-p1.X, p2.Y-p1.Y);
-			drawingContext.ConstrainAddLine(p1, p2);
-			drawingContext.ConstrainAddLine(pos, new Point(pos.X-d.Height, pos.Y+d.Width));
+			drawingContext.ConstrainAddLine(p1, p2, false, -1);
+			drawingContext.ConstrainAddLine(pos, new Point(pos.X-d.Height, pos.Y+d.Width), false, -1);
 		}
 
 		public override void MoveSelectedSegmentProcess(int rank, Point pos, DrawingContext drawingContext)

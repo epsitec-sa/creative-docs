@@ -420,7 +420,22 @@ namespace Epsitec.Common.Document
 						{
 							if (this.moveObject != null || this.moveGlobal != -1 || this.createRank != -1)
 							{
-								if (this.drawingContext.ConstrainSpacePressed())
+								Objects.Abstract obj = null;
+								int rank = -1;
+
+								if (this.moveObject != null)
+								{
+									obj = this.moveObject;
+									rank = this.moveHandle;
+								}
+								else if (this.createRank != -1)
+								{
+									Objects.Abstract layer = this.drawingContext.RootObject();
+									obj = layer.Objects[this.createRank] as Objects.Abstract;
+									rank = obj.TotalMainHandle-1;
+								}
+
+								if (this.drawingContext.ConstrainSpacePressed(pos, obj, rank))
 								{
 									this.drawingContext.MagnetDelStarting();
 								}
@@ -852,7 +867,7 @@ namespace Epsitec.Common.Document
 			this.moveAccept = false;
 			this.moveInitialSel = false;
 			this.drawingContext.ConstrainClear();
-			this.drawingContext.ConstrainAddHV(mouse);
+			this.drawingContext.ConstrainAddHV(mouse, false, -1);
 			this.ClearHilite();
 			this.selector.HiliteHandle(-1);
 			this.HiliteHandle(null, -1);
@@ -962,7 +977,7 @@ namespace Epsitec.Common.Document
 						this.moveLast = this.moveCenter;
 						this.moveOffset = mouse-this.moveLast;
 						this.drawingContext.ConstrainClear();
-						this.drawingContext.ConstrainAddHV(this.moveLast);
+						this.drawingContext.ConstrainAddHV(this.moveLast, false, -1);
 						this.MoveAllStarting();
 						this.hotSpotHandle.Position = this.moveCenter;
 						this.hotSpotHandle.IsVisible = this.drawingContext.MagnetActiveAndExist;
@@ -1249,7 +1264,7 @@ namespace Epsitec.Common.Document
 				this.drawingContext.MagnetDelStarting();
 				this.drawingContext.ConstrainDelStarting();
 				this.drawingContext.ConstrainClear();
-				this.drawingContext.ConstrainAddHV(this.moveLast);
+				this.drawingContext.ConstrainAddHV(this.moveLast, false, -1);
 			}
 			return true;
 		}
@@ -1273,7 +1288,7 @@ namespace Epsitec.Common.Document
 			this.moveAccept = false;
 			this.moveInitialSel = false;
 			this.drawingContext.ConstrainClear();
-			this.drawingContext.ConstrainAddHV(mouse);
+			this.drawingContext.ConstrainAddHV(mouse, false, -1);
 			this.ShaperHilite(null, Point.Zero);
 			this.selector.HiliteHandle(-1);
 			this.HiliteHandle(null, -1);

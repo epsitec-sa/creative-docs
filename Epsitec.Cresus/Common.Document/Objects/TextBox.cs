@@ -92,10 +92,10 @@ namespace Epsitec.Common.Document.Objects
 				Handle handle = this.Handle(rank);
 				if ( handle.PropertyType == Properties.Type.None )
 				{
-						 if ( rank == 0 )  drawingContext.ConstrainAddRect(this.Handle(0).Position, this.Handle(1).Position, this.Handle(2).Position, this.Handle(3).Position);
-					else if ( rank == 1 )  drawingContext.ConstrainAddRect(this.Handle(1).Position, this.Handle(0).Position, this.Handle(3).Position, this.Handle(2).Position);
-					else if ( rank == 2 )  drawingContext.ConstrainAddRect(this.Handle(2).Position, this.Handle(3).Position, this.Handle(0).Position, this.Handle(1).Position);
-					else if ( rank == 3 )  drawingContext.ConstrainAddRect(this.Handle(3).Position, this.Handle(2).Position, this.Handle(1).Position, this.Handle(0).Position);
+						 if ( rank == 0 )  drawingContext.ConstrainAddRect(this.Handle(0).Position, this.Handle(1).Position, this.Handle(2).Position, this.Handle(3).Position, false, -1);
+					else if ( rank == 1 )  drawingContext.ConstrainAddRect(this.Handle(1).Position, this.Handle(0).Position, this.Handle(3).Position, this.Handle(2).Position, false, -1);
+					else if ( rank == 2 )  drawingContext.ConstrainAddRect(this.Handle(2).Position, this.Handle(3).Position, this.Handle(0).Position, this.Handle(1).Position, false, -1);
+					else if ( rank == 3 )  drawingContext.ConstrainAddRect(this.Handle(3).Position, this.Handle(2).Position, this.Handle(1).Position, this.Handle(0).Position, false, -1);
 				}
 				else
 				{
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Début de la création d'un objet.
 			drawingContext.ConstrainClear();
-			drawingContext.ConstrainAddHomo(pos);
+			drawingContext.ConstrainAddHomo(pos, false, -1);
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 1
 			this.document.Notifier.NotifyArea(this.BoundingBox);

@@ -704,7 +704,7 @@ namespace Epsitec.Common.Document.Properties
 				if ( rank == 0 )  // angle ?
 				{
 					SurfaceAnchor sa = this.SurfaceAnchor(obj);
-					drawingContext.ConstrainAddCenter(sa.Center);
+					drawingContext.ConstrainAddCenter(sa.Center, false, -1);
 				}
 
 				if ( rank == 1 )  // épaisseur ?
@@ -719,19 +719,19 @@ namespace Epsitec.Common.Document.Properties
 			{
 				if ( rank == 0 )  // centre ?
 				{
-					drawingContext.ConstrainAddHV(this.GetHandlePosition(obj, 0));
+					drawingContext.ConstrainAddHV(this.GetHandlePosition(obj, 0), false, -1);
 				}
 
 				if ( rank == 1 )  // coin ?
 				{
 					Point center = this.GetHandlePosition(obj, 0);
-					drawingContext.ConstrainAddHV(center);
-					drawingContext.ConstrainAddLine(center, this.GetHandlePosition(obj, 1));
+					drawingContext.ConstrainAddHV(center, false, -1);
+					drawingContext.ConstrainAddLine(center, this.GetHandlePosition(obj, 1), false, -1);
 				}
 
 				if ( rank == 2 )  // angle ?
 				{
-					drawingContext.ConstrainAddCenter(this.GetHandlePosition(obj, 0));
+					drawingContext.ConstrainAddCenter(this.GetHandlePosition(obj, 0), false, -1);
 				}
 			}
 		}

@@ -380,15 +380,15 @@ namespace Epsitec.Common.Document
 			drawingContext.ConstrainClear();
 			if ( rank == 0 )  // global ?
 			{
-				drawingContext.ConstrainAddHV(pos);
+				drawingContext.ConstrainAddHV(pos, false, 0);
 			}
 			else if ( rank == 5 )  // center ?
 			{
-				drawingContext.ConstrainAddHV(this.Position(5));
+				drawingContext.ConstrainAddHV(this.Position(5), false, 5);
 			}
 			else if ( rank == 6 )  // rotate ?
 			{
-				drawingContext.ConstrainAddCenter(this.Position(5));
+				drawingContext.ConstrainAddCenter(this.Position(5), false, 6);
 			}
 			else
 			{
@@ -397,8 +397,8 @@ namespace Epsitec.Common.Document
 				if ( rank == 2 )  origin = this.finalData.P1;  // sup/droite ?
 				if ( rank == 3 )  origin = this.finalData.P4;  // sup/gauche ?
 				if ( rank == 4 )  origin = this.finalData.P3;  // inf/droite ?
-				drawingContext.ConstrainAddHV(this.Position(rank));
-				drawingContext.ConstrainAddLine(this.Position(rank), origin);
+				drawingContext.ConstrainAddHV(this.Position(rank), false, rank);
+				drawingContext.ConstrainAddLine(this.Position(rank), origin, false, rank);
 			}
 
 			this.MoveTextInfoModif(rank);

@@ -60,12 +60,12 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if ( rank == 0 )  // centre ?
 					{
-						drawingContext.ConstrainAddHV(this.Handle(0).Position);
+						drawingContext.ConstrainAddHV(this.Handle(0).Position, false, -1);
 					}
 					if ( rank == 1 )  // extrémité ?
 					{
-						drawingContext.ConstrainAddCenter(this.Handle(0).Position);
-						drawingContext.ConstrainAddCircle(this.Handle(0).Position, this.Handle(1).Position);
+						drawingContext.ConstrainAddCenter(this.Handle(0).Position, false, -1);
+						drawingContext.ConstrainAddCircle(this.Handle(0).Position, this.Handle(1).Position, false, -1);
 					}
 				}
 				else
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Début de la création d'un objet.
 			drawingContext.ConstrainClear();
-			drawingContext.ConstrainAddHV(pos);
+			drawingContext.ConstrainAddHV(pos, false, -1);
 			this.HandleAdd(pos, HandleType.Primary);
 			this.HandleAdd(pos, HandleType.Primary);
 			this.isCreating = true;

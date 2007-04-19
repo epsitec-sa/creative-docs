@@ -155,7 +155,7 @@ namespace Epsitec.Common.Document.Properties
 		{
 			//	Début du déplacement d'une poignée.
 			Point center = obj.Handle(0).Position;
-			drawingContext.ConstrainAddCenter(center);
+			drawingContext.ConstrainAddCenter(center, false, 0);
 		}
 		
 		public override int TotalHandle(Objects.Abstract obj)

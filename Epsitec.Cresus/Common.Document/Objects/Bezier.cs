@@ -846,42 +846,42 @@ namespace Epsitec.Common.Document.Objects
 					{
 						if ( this.Handle(rank-1).Type == HandleType.Hide )
 						{
-							drawingContext.ConstrainAddLine(this.Handle(rank).Position, this.Handle(prev+1).Position);
-							drawingContext.ConstrainAddHV(this.Handle(prev+1).Position);
-							drawingContext.ConstrainAddCircle(this.Handle(prev+1).Position, this.Handle(rank).Position);
+							drawingContext.ConstrainAddLine(this.Handle(rank).Position, this.Handle(prev+1).Position, false, -1);
+							drawingContext.ConstrainAddHV(this.Handle(prev+1).Position, false, prev+1);
+							drawingContext.ConstrainAddCircle(this.Handle(prev+1).Position, this.Handle(rank).Position, false, prev+1);
 						}
 
 						if ( this.Handle(rank+1).Type == HandleType.Hide )
 						{
-							drawingContext.ConstrainAddLine(this.Handle(rank).Position, this.Handle(next+1).Position);
-							drawingContext.ConstrainAddHV(this.Handle(next+1).Position);
-							drawingContext.ConstrainAddCircle(this.Handle(next+1).Position, this.Handle(rank).Position);
+							drawingContext.ConstrainAddLine(this.Handle(rank).Position, this.Handle(next+1).Position, false, -1);
+							drawingContext.ConstrainAddHV(this.Handle(next+1).Position, false, next+1);
+							drawingContext.ConstrainAddCircle(this.Handle(next+1).Position, this.Handle(rank).Position, false, next+1);
 						}
 
-						drawingContext.ConstrainAddHV(this.Handle(rank).Position);
+						drawingContext.ConstrainAddHV(this.Handle(rank).Position, false, rank);
 					}
 					else	// poignée secondaire ?
 					{
 						pos = this.Handle((rank/3)*3+1).Position;
-						drawingContext.ConstrainAddLine(this.Handle(rank).Position, pos);
-						drawingContext.ConstrainAddHV(pos);
+						drawingContext.ConstrainAddLine(this.Handle(rank).Position, pos, false, rank);
+						drawingContext.ConstrainAddHV(pos, false, rank);
 
 						if ( rank%3 == 0 )
 						{
 							if ( this.Handle(rank+2).Type == HandleType.Hide )
 							{
-								drawingContext.ConstrainAddLine(this.Handle(rank+1).Position, this.Handle(next+1).Position);
+								drawingContext.ConstrainAddLine(this.Handle(rank+1).Position, this.Handle(next+1).Position, false, -1);
 							}
-							drawingContext.ConstrainAddCircle(this.Handle(rank+1).Position, this.Handle(rank).Position);
+							drawingContext.ConstrainAddCircle(this.Handle(rank+1).Position, this.Handle(rank).Position, false, rank+1);
 						}
 
 						if ( rank%3 == 2 )
 						{
 							if ( this.Handle(rank-2).Type == HandleType.Hide )
 							{
-								drawingContext.ConstrainAddLine(this.Handle(rank-1).Position, this.Handle(prev+1).Position);
+								drawingContext.ConstrainAddLine(this.Handle(rank-1).Position, this.Handle(prev+1).Position, false, -1);
 							}
-							drawingContext.ConstrainAddCircle(this.Handle(rank-1).Position, this.Handle(rank).Position);
+							drawingContext.ConstrainAddCircle(this.Handle(rank-1).Position, this.Handle(rank).Position, false, rank-1);
 						}
 					}
 				}
@@ -949,12 +949,12 @@ namespace Epsitec.Common.Document.Objects
 				this.Handle(rp2).InitialPosition = this.Handle(rp2).Position;
 
 				drawingContext.ConstrainClear();
-				drawingContext.ConstrainAddHV(ss.Position);
+				drawingContext.ConstrainAddHV(ss.Position, false, -1);
 				Point p1 = this.Handle(rp1).Position;
 				Point p2 = this.Handle(rp2).Position;
 				Size d = new Size(p2.X-p1.X, p2.Y-p1.Y);
-				drawingContext.ConstrainAddLine(p1, p2);
-				drawingContext.ConstrainAddLine(pos, new Point(pos.X-d.Height, pos.Y+d.Width));
+				drawingContext.ConstrainAddLine(p1, p2, false, -1);
+				drawingContext.ConstrainAddLine(pos, new Point(pos.X-d.Height, pos.Y+d.Width), false, -1);
 			}
 			else	// courbe ?
 			{
@@ -962,12 +962,12 @@ namespace Epsitec.Common.Document.Objects
 				this.Handle(rs2).InitialPosition = this.Handle(rs2).Position;
 
 				drawingContext.ConstrainClear();
-				drawingContext.ConstrainAddHV(ss.Position);
+				drawingContext.ConstrainAddHV(ss.Position, false, -1);
 				double a1 = Point.ComputeAngleDeg(this.Handle(rp1).Position, this.Handle(rs1).Position);
 				double a2 = Point.ComputeAngleDeg(this.Handle(rp2).Position, this.Handle(rs2).Position);
 				Point c = ss.Position;
 				Point p = Transform.RotatePointDeg(c, (a1+a2)/2, new Point(c.X+100, c.Y));
-				drawingContext.ConstrainAddLine(c, p);
+				drawingContext.ConstrainAddLine(c, p, false, -1);
 			}
 		}
 
@@ -1108,7 +1108,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Début de la création d'un objet.
 			drawingContext.ConstrainClear();
-			drawingContext.ConstrainAddHV(pos);
+			drawingContext.ConstrainAddHV(pos, false, 0);
 
 			this.isCreating = true;
 			bool ignore = false;

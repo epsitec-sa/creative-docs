@@ -14,10 +14,10 @@
   <data name="Dialog.Settings.TextGrid" id="08">Lignes magnétiques pour le texte</data>
   <data name="Dialog.Settings.Magnet" id="09">Repères magnétiques</data>
   <data name="Dialog.Settings.DuplicateMove" id="0A">Déplacement lorsqu&amp;apos;un objet est dupliqué</data>
-  <data name="Dialog.Settings.ArrowMove" id="0B">Déplacements avec les touches flèches</data>
+  <data name="Dialog.Settings.ArrowMove" id="0B">Déplacement avec les touches flèches</data>
   <data name="Dialog.Settings.Dimension" id="0C">Valeurs des cotes</data>
   <data name="Dialog.Settings.ToLinePrecision" id="0D">Convertir en droites et opérations booléennes</data>
-  <data name="Dialog.Settings.Constrain" id="09C01">Contraintes</data>
+  <data name="Dialog.Settings.Constrain" id="09C01">Déplacement avec les contraintes</data>
   <data name="Dialog.Settings.FirstAction.Nothing" id="0E">Rien</data>
   <data name="Dialog.Settings.FirstAction.OpenNewDocument" id="0F">Ouvrir un document vide</data>
   <data name="Dialog.Settings.FirstAction.OpenLastModel" id="0T901" mod="1">Ouvrir le dernier modèle</data>

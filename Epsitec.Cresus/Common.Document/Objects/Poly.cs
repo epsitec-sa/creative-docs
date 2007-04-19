@@ -61,9 +61,9 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if ( handle.PropertyType == Properties.Type.None )
 					{
-						drawingContext.ConstrainAddHV(this.Handle(0).Position);
-						drawingContext.ConstrainAddHV(this.Handle(1).Position);
-						drawingContext.ConstrainAddLine(this.Handle(0).Position, this.Handle(1).Position);
+						drawingContext.ConstrainAddHV(this.Handle(0).Position, false, 0);
+						drawingContext.ConstrainAddHV(this.Handle(1).Position, false, 1);
+						drawingContext.ConstrainAddLine(this.Handle(0).Position, this.Handle(1).Position, false, -1);
 					}
 					else
 					{
@@ -88,12 +88,14 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if ( handle.PropertyType == Properties.Type.None )
 					{
-						drawingContext.ConstrainAddRect(this.Handle(this.NextRank(rank)).Position, this.Handle(this.PrevRank(rank)).Position);
-						drawingContext.ConstrainAddLine(this.Handle(rank).Position, this.Handle(this.NextRank(rank)).Position);
-						drawingContext.ConstrainAddLine(this.Handle(rank).Position, this.Handle(this.PrevRank(rank)).Position);
-						drawingContext.ConstrainAddHV(this.Handle(rank).Position);
-						drawingContext.ConstrainAddCircle(this.Handle(this.NextRank(rank)).Position, this.Handle(rank).Position);
-						drawingContext.ConstrainAddCircle(this.Handle(this.PrevRank(rank)).Position, this.Handle(rank).Position);
+						drawingContext.ConstrainAddHV(this.Handle(this.NextRank(rank)).Position, false, this.NextRank(rank));
+						drawingContext.ConstrainAddHV(this.Handle(this.PrevRank(rank)).Position, false, this.PrevRank(rank));
+						drawingContext.ConstrainAddCircle(this.Handle(this.NextRank(rank)).Position, this.Handle(rank).Position, false, this.NextRank(rank));
+						drawingContext.ConstrainAddCircle(this.Handle(this.PrevRank(rank)).Position, this.Handle(rank).Position, false, this.PrevRank(rank));
+
+						drawingContext.ConstrainAddLine(this.Handle(rank).Position, this.Handle(this.NextRank(rank)).Position, false, rank);
+						drawingContext.ConstrainAddLine(this.Handle(rank).Position, this.Handle(this.PrevRank(rank)).Position, false, rank);
+						drawingContext.ConstrainAddHV(this.Handle(rank).Position, false, rank);
 					}
 					else
 					{
@@ -140,12 +142,12 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(n).InitialPosition = this.Handle(n).Position;
 
 			drawingContext.ConstrainClear();
-			drawingContext.ConstrainAddHV(ss.Position);
+			drawingContext.ConstrainAddHV(ss.Position, false, -1);
 			Point p1 = this.Handle(r).Position;
 			Point p2 = this.Handle(n).Position;
 			Size d = new Size(p2.X-p1.X, p2.Y-p1.Y);
-			drawingContext.ConstrainAddLine(p1, p2);
-			drawingContext.ConstrainAddLine(pos, new Point(pos.X-d.Height, pos.Y+d.Width));
+			drawingContext.ConstrainAddLine(p1, p2, false, -1);
+			drawingContext.ConstrainAddLine(pos, new Point(pos.X-d.Height, pos.Y+d.Width), false, -1);
 		}
 
 		public override void MoveSelectedSegmentProcess(int rank, Point pos, DrawingContext drawingContext)
@@ -420,7 +422,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( this.TotalHandle == 0 )
 			{
 				drawingContext.ConstrainClear();
-				drawingContext.ConstrainAddHV(pos);
+				drawingContext.ConstrainAddHV(pos, false, 0);
 				this.ChangePropertyPolyClose(false);
 				this.HandleAdd(pos, HandleType.Starting);
 				this.HandleAdd(pos, HandleType.Primary);
@@ -492,7 +494,7 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(rank).Position = pos;
 			drawingContext.ConstrainDelStarting();
 			drawingContext.ConstrainClear();
-			drawingContext.ConstrainAddHV(pos);
+			drawingContext.ConstrainAddHV(pos, false, rank);
 			drawingContext.MagnetClearStarting();
 			this.mouseDown = false;
 			this.AdditionalCreate(pos, drawingContext);
