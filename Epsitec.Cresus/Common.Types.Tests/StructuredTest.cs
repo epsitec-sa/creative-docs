@@ -370,6 +370,7 @@ namespace Epsitec.Common.Types
 
 			type.Caption.Name = "TestStruct";
 			type.DefineCaptionId (typeId);
+			type.SetValue (StructuredType.ClassProperty, StructuredTypeClass.Entity);
 
 			type.Fields.Add ("Name", StringType.Default);
 			type.Fields.Add ("Age", IntegerType.Default);
@@ -398,6 +399,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Age", restoredType.Fields["Age"].Id);
 			Assert.AreEqual (1, restoredType.Fields["Name"].Rank);
 			Assert.AreEqual (-1, restoredType.Fields["Age"].Rank);
+			Assert.AreEqual (StructuredTypeClass.Entity, restoredType.GetClass ());
 
 			List<StructuredTypeField> fields = new List<StructuredTypeField> (restoredType.Fields.Values);
 

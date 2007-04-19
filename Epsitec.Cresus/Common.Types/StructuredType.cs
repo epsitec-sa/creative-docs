@@ -116,7 +116,7 @@ namespace Epsitec.Common.Types
 		/// <returns>The structured type class to which this instance belongs.</returns>
 		public virtual StructuredTypeClass GetClass()
 		{
-			return StructuredTypeClass.None;
+			return (StructuredTypeClass) this.GetValue (StructuredType.ClassProperty);
 		}
 		
 		#endregion
@@ -259,7 +259,8 @@ namespace Epsitec.Common.Types
 			return data;
 		}
 
-		public static DependencyProperty FieldsProperty = DependencyProperty.RegisterReadOnly ("Fields", typeof (Collections.StructuredTypeFieldCollection), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetFieldsValue).MakeReadOnlySerializable ());
+		public static readonly DependencyProperty FieldsProperty = DependencyProperty.RegisterReadOnly ("Fields", typeof (Collections.StructuredTypeFieldCollection), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetFieldsValue).MakeReadOnlySerializable ());
+		public static readonly DependencyProperty ClassProperty = DependencyProperty.RegisterReadOnly ("Class", typeof (StructuredTypeClass), typeof (StructuredType), new DependencyPropertyMetadata (StructuredTypeClass.None).MakeReadOnlySerializable ());
 
 		private Collections.HostedStructuredTypeFieldDictionary fields;
 	}
