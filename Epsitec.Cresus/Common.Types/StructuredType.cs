@@ -265,6 +265,8 @@ namespace Epsitec.Common.Types
 			return (data != null) && (data.StructuredType == this);
 		}
 
+		#region Private and Protected Methods
+
 		protected override void OnCaptionDefined()
 		{
 			base.OnCaptionDefined ();
@@ -309,6 +311,8 @@ namespace Epsitec.Common.Types
 		private void NotifyFieldRemoval(string name, StructuredTypeField field)
 		{
 		}
+
+		#endregion
 
 		private static object GetFieldsValue(DependencyObject obj)
 		{
