@@ -93,7 +93,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			field = StructuredTypeField.Empty;
+			field = null;
 			return false;
 		}
 
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				return StructuredTypeField.Empty;
+				return null;
 			}
 		}
 
@@ -232,9 +232,9 @@ namespace Epsitec.Common.Types
 			{
 				StructuredTypeField sourceField = source.GetField (fieldId);
 				StructuredTypeField targetField = target.GetField (fieldId);
-				
-				if ((sourceField.Relation != targetField.Relation) ||
-					(targetField.IsEmpty))
+
+				if ((targetField == null) ||
+					(sourceField.Relation != targetField.Relation))
 				{
 					return false;
 				}

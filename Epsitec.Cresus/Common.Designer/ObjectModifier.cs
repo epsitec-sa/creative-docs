@@ -380,7 +380,7 @@ namespace Epsitec.Common.Designer
 						StructuredTypeField field = StructuredTree.GetField(structuredType, path);
 						UI.TablePlaceholder table = obj as UI.TablePlaceholder;
 
-						System.Diagnostics.Debug.Assert(field.IsEmpty == false);
+						System.Diagnostics.Debug.Assert(field != null);
 						System.Diagnostics.Debug.Assert(field.Relation == Relation.Collection);
 
 						table.SourceTypeId = field.Type.CaptionId;

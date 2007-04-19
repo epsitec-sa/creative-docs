@@ -100,7 +100,7 @@ namespace Epsitec.Common.UI
 				}
 			}
 			
-			return StructuredTypeField.Empty;
+			return null;
 		}
 
 		/// <summary>

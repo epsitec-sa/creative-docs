@@ -102,7 +102,7 @@ namespace Epsitec.Common.Types
 			this.captionId = captionId;
 			this.rank = rank;
 			this.relation = relation;
-			this.sourceFieldId = sourceFieldId;
+			this.sourceFieldId = string.IsNullOrEmpty (sourceFieldId) ? null : sourceFieldId;
 		}
 
 		/// <summary>
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Types
 			this.captionId = captionId;
 			this.rank = rank;
 			this.relation = (Relation) (flags & 0x0f);
-			this.sourceFieldId = sourceFieldId;
+			this.sourceFieldId = string.IsNullOrEmpty (sourceFieldId) ? null : sourceFieldId;
 		}
 
 		/// <summary>
@@ -174,18 +174,6 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether this field is empty.
-		/// </summary>
-		/// <value><c>true</c> if this field is empty; otherwise, <c>false</c>.</value>
-		public bool								IsEmpty
-		{
-			get
-			{
-				return (this.id == null) && (this.type == null) && (this.rank == 0) && (this.captionId.IsEmpty);
-			}
-		}
-
-		/// <summary>
 		/// Gets the relation defined by this field. This is useful when the
 		/// field is a reference.
 		/// </summary>
@@ -211,12 +199,13 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		#region Private Fields
 
 		/// <summary>
 		/// Gets a bitwise representation of the relation property.
 		/// </summary>
 		/// <value>The flags.</value>
-		private int Flags
+		private int								Flags
 		{
 			get
 			{
@@ -228,7 +217,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public static readonly StructuredTypeField Empty = new StructuredTypeField ();
+		#endregion
 
 		#region SerializationConverter Class
 
@@ -244,7 +233,7 @@ namespace Epsitec.Common.Types
 				string rank  = field.rank == -1 ? "" : field.rank.ToString (System.Globalization.CultureInfo.InvariantCulture);
 				string flags = field.Flags == 0 ? "" : field.Flags.ToString (System.Globalization.CultureInfo.InvariantCulture);
 
-				if (!string.IsNullOrEmpty (field.sourceFieldId))
+				if (field.sourceFieldId != null)
 				{
 					return string.Concat (field.id, ";", captionId, ";", rank, ";", field.captionId.ToString (), ";", flags, ";", field.sourceFieldId);
 				}

@@ -127,7 +127,7 @@ namespace Epsitec.Common.Types
 					IStructuredType type = provider == null ? root as IStructuredType : provider.GetStructuredType ();
 
 					if ((type == null) ||
-						(type.GetField (name).IsEmpty))
+						(type.GetField (name) == null))
 					{
 						return value;
 					}
@@ -263,14 +263,14 @@ namespace Epsitec.Common.Types
 
 			if (string.IsNullOrEmpty (leafName))
 			{
-				return StructuredTypeField.Empty;
+				return null;
 			}
 			
 			root = StructuredTree.GetSubTreeType (root, leafPath);
 			
 			if (root == null)
 			{
-				return StructuredTypeField.Empty;
+				return null;
 			}
 			
 			return root.GetField (leafName);

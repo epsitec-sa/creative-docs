@@ -26,7 +26,7 @@ namespace Epsitec.Common.Types
 
 			if (UnknownValue.IsUnknownValue (value))
 			{
-				return StructuredTypeField.Empty;
+				return null;
 			}
 			
 			object typeObject = TypeRosetta.GetTypeObjectFromValue (value);

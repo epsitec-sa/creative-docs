@@ -231,7 +231,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonNext.Enable = (sel != -1 && sel < this.fields.Count-1);
 			this.buttonRemove.Enable = (sel != -1);
 
-			StructuredTypeField field = StructuredTypeField.Empty;
+			StructuredTypeField field = null;
 			bool st = false;
 			if (sel != -1)
 			{

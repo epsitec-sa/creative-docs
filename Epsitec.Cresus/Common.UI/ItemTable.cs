@@ -625,7 +625,7 @@ namespace Epsitec.Common.UI
 					{
 						StructuredTypeField field = this.sourceType.GetField (column.FieldId);
 						
-						if (field.IsEmpty)
+						if (field == null)
 						{
 							continue;
 						}

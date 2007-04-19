@@ -332,7 +332,7 @@ namespace Epsitec.Common.Types
 			{
 				return false;
 			}
-			if (field.IsEmpty)
+			if (field == null)
 			{
 				throw new System.ArgumentNullException ("Empty field specified");
 			}

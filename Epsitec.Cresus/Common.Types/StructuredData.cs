@@ -415,13 +415,13 @@ namespace Epsitec.Common.Types
 			{
 				//	No checking done, as there is no schema.
 
-				type = StructuredTypeField.Empty;
+				type = null;
 			}
 			else
 			{
 				type = this.type.GetField (id);
 
-				if (type.IsEmpty)
+				if (type == null)
 				{
 					return false;
 				}
@@ -432,7 +432,7 @@ namespace Epsitec.Common.Types
 
 		protected virtual bool CheckValueValidity(StructuredTypeField type, object value)
 		{
-			if (type.IsEmpty)
+			if (type == null)
 			{
 				return true;
 			}
