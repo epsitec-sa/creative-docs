@@ -845,7 +845,7 @@ namespace Epsitec.Common.Support
 					
 					if (caption != null)
 					{
-						caption.DefineDruid (druid);
+						caption.DefineId (druid);
 
 						if (cache)
 						{

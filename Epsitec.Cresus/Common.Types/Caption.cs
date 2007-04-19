@@ -25,10 +25,10 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Caption"/> class.
 		/// </summary>
-		/// <param name="druid">The DRUID associated with this caption.</param>
-		public Caption(Support.Druid druid) : this ()
+		/// <param name="id">The id associated with this caption.</param>
+		public Caption(Support.Druid id) : this ()
 		{
-			this.druid = druid;
+			this.id = id;
 		}
 
 		/// <summary>
@@ -148,14 +148,14 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Gets the DRUID associated with the caption.
+		/// Gets the id associated with the caption.
 		/// </summary>
-		/// <value>The DRUID.</value>
+		/// <value>The id.</value>
 		public Support.Druid					Id
 		{
 			get
 			{
-				return this.druid;
+				return this.id;
 			}
 		}
 
@@ -180,20 +180,20 @@ namespace Epsitec.Common.Types
 		/// Defines the ID associated with the caption. The ID can be defined
 		/// only once; redefining it throws an <see cref="T:InvalidOperationException"/>.
 		/// </summary>
-		/// <param name="druid">The caption DRUID.</param>
-		public void DefineDruid(Support.Druid druid)
+		/// <param name="id">The caption id.</param>
+		public void DefineId(Support.Druid id)
 		{
-			if (this.druid == druid)
+			if (this.id == id)
 			{
 				return;
 			}
 			
-			if (this.druid.IsValid)
+			if (this.id.IsValid)
 			{
-				throw new System.InvalidOperationException ("The DRUID cannot be changed");
+				throw new System.InvalidOperationException ("The id cannot be changed");
 			}
 			
-			this.druid = druid;
+			this.id = id;
 		}
 
 		/// <summary>
@@ -697,7 +697,7 @@ namespace Epsitec.Common.Types
 
 		private Collections.HostedList<string> labels;
 		private string[] sortedLabels;
-		private Support.Druid druid;
+		private Support.Druid id;
 		private int suspendCounter;
 		private bool hasChanged;
 	}

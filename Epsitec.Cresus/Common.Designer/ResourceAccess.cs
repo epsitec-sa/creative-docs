@@ -643,7 +643,7 @@ namespace Epsitec.Common.Designer
 						newField.SetName(newName);
 
 						Caption caption = value.Caption;
-						caption.DefineDruid(newDruid);
+						caption.DefineId(newDruid);
 						
 						System.Diagnostics.Debug.Assert(caption.Name == value.Name);
 						System.Diagnostics.Debug.Assert(value.IsNative);

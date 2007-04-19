@@ -141,7 +141,7 @@ namespace Epsitec.Common.Support
 		public void CheckSerializationOfStructuredCommand()
 		{
 			Caption caption = new Caption ();
-			caption.DefineDruid (Druid.Parse ("[4001]"));
+			caption.DefineId (Druid.Parse ("[4001]"));
 			Command command = Command.CreateTemporary (caption, Support.Resources.DefaultManager);
 
 			command.DefineCommandType (CommandType.Structured);

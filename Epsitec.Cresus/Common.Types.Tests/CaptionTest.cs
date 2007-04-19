@@ -74,7 +74,7 @@ namespace Epsitec.Common.Types
 		{
 			Caption caption = new Caption ();
 
-			caption.DefineDruid (Support.Druid.Parse ("[4005]"));
+			caption.DefineId (Support.Druid.Parse ("[4005]"));
 			caption.Name = "TestEnum";
 			caption.Description = "Enumeration used for tests only";
 
@@ -86,15 +86,15 @@ namespace Epsitec.Common.Types
 			Caption captionV2 = new Caption ();
 			Caption captionV3 = new Caption ();
 
-			captionV1.DefineDruid (Support.Druid.Parse ("[4007]"));
+			captionV1.DefineId (Support.Druid.Parse ("[4007]"));
 			captionV1.Name = "Value1";
 			captionV1.Description = "First value";
 
-			captionV2.DefineDruid (Support.Druid.Parse ("[4008]"));
+			captionV2.DefineId (Support.Druid.Parse ("[4008]"));
 			captionV2.Name = "Value2";
 			captionV2.Description = "Middle value";
 
-			captionV3.DefineDruid (Support.Druid.Parse ("[4009]"));
+			captionV3.DefineId (Support.Druid.Parse ("[4009]"));
 			captionV3.Name = "Value3";
 			captionV3.Description = "Last value";
 
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Types
 		{
 			Caption caption = new Caption ();
 
-			caption.DefineDruid (Support.Druid.Parse ("[4005]"));
+			caption.DefineId (Support.Druid.Parse ("[4005]"));
 			caption.Name = "TestEnum";
 			caption.Description = "Enumeration used for tests only";
 
@@ -131,15 +131,15 @@ namespace Epsitec.Common.Types
 			Caption captionV2 = new Caption ();
 			Caption captionV3 = new Caption ();
 
-			captionV1.DefineDruid (Support.Druid.Parse ("[4007]"));
+			captionV1.DefineId (Support.Druid.Parse ("[4007]"));
 			captionV1.Name = "Value1";
 			captionV1.Description = "First value";
 
-			captionV2.DefineDruid (Support.Druid.Parse ("[4008]"));
+			captionV2.DefineId (Support.Druid.Parse ("[4008]"));
 			captionV2.Name = "Value2";
 			captionV2.Description = "Middle value";
 
-			captionV3.DefineDruid (Support.Druid.Parse ("[4009]"));
+			captionV3.DefineId (Support.Druid.Parse ("[4009]"));
 			captionV3.Name = "Value3";
 			captionV3.Description = "Last value";
 
