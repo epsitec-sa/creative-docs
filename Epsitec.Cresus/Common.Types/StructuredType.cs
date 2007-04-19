@@ -1,24 +1,41 @@
 //	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.StructuredType))]
+[assembly: DependencyClass (typeof (StructuredType))]
 
 namespace Epsitec.Common.Types
 {
 	/// <summary>
 	/// The <c>StructuredType</c> class describes the type of the data stored in
-	/// a <see cref="T:StructuredData"/> class.
+	/// a <see cref="StructuredData"/> class.
 	/// </summary>
 	public class StructuredType : AbstractType, IStructuredType
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="T:StructuredType"/> class.
+		/// Initializes a new instance of the <see cref="StructuredType"/> class,
+		/// defaulting to <c>StructuredTypeClass.None</c>.
 		/// </summary>
-		public StructuredType() : base ("Structure")
+		public StructuredType()
+			: base ("Structure")
 		{
 			this.fields = new Collections.HostedStructuredTypeFieldDictionary (this.NotifyFieldInserted, this.NotifyFieldRemoved);
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StructuredType"/> class.
+		/// </summary>
+		/// <param name="class">The structured type class.</param>
+		public StructuredType(StructuredTypeClass @class)
+			: this ()
+		{
+			if (@class != this.Class)
+			{
+				this.SetValue (StructuredType.ClassProperty, @class);
+			}
 		}
 
 		/// <summary>
@@ -30,6 +47,18 @@ namespace Epsitec.Common.Types
 			get
 			{
 				return this.fields;
+			}
+		}
+
+		/// <summary>
+		/// Gets the structured type class (e.g. <c>Entity</c> or <c>View</c>).
+		/// </summary>
+		/// <value>The class for this structured type.</value>
+		public StructuredTypeClass Class
+		{
+			get
+			{
+				return (StructuredTypeClass) this.GetValue (StructuredType.ClassProperty);
 			}
 		}
 
@@ -114,9 +143,9 @@ namespace Epsitec.Common.Types
 		/// simply <c>Node</c>.
 		/// </summary>
 		/// <returns>The structured type class to which this instance belongs.</returns>
-		public virtual StructuredTypeClass GetClass()
+		StructuredTypeClass IStructuredType.GetClass()
 		{
-			return (StructuredTypeClass) this.GetValue (StructuredType.ClassProperty);
+			return this.Class;
 		}
 		
 		#endregion
@@ -166,6 +195,26 @@ namespace Epsitec.Common.Types
 		
 		#endregion
 
+		/// <summary>
+		/// Merges this structured type with the other one. This structured
+		/// type will be updated.
+		/// </summary>
+		/// <param name="other">The structured type to merge with.</param>
+		public void MergeWith(StructuredType other)
+		{
+			//	TODO: implement structured type merge
+
+			throw new System.NotImplementedException ();
+		}
+
+		/// <summary>
+		/// Check if two structured types share compatible fields, i.e. if all
+		/// fields from the source can be safely copied to the target.
+		/// </summary>
+		/// <param name="source">The source.</param>
+		/// <param name="target">The target.</param>
+		/// <returns><c>true</c> if source and target have compatible fields;
+		/// otherwise, <c>false</c>.</returns>
 		public static bool HaveCompatibleFields(IStructuredType source, IStructuredType target)
 		{
 			if (source == target)
