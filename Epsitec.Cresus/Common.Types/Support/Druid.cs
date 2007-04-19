@@ -11,7 +11,7 @@ namespace Epsitec.Common.Support
 	/// These DRUIDs are 64-bit identifiers which encode the module identity,
 	/// the developer identity and a locally unique value.
 	/// The string encoding is very compact for small DRUIDs: we rely on an
-	/// interleaved encoding such as MMDLLDLLDMLDM, with trailing zeroes
+	/// interleaved encoding such as MMDLLDMLDMLDL, with trailing zeroes
 	/// omitted. M=module ID, D=dev. ID, L=local ID. Each is encoded using
 	/// 5-bit digits (0..9, A..V) and the first digit of each category
 	/// encodes the lowest bits of each ID. For instance "1023" can be used
@@ -551,7 +551,7 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
-		/// Converts the DRUID to a full string encoded as MMDLLDLLDMLDM, less
+		/// Converts the DRUID to a full string encoded as MMDLLDMLDMLDL, less
 		/// significant digits first, trailing zeroes omitted.
 		/// </summary>
 		/// <param name="druid">The 64-bit DRUID to convert.</param>
@@ -570,13 +570,13 @@ namespace Epsitec.Common.Support
 			buffer[3]  = Druid.OutputDigit (ref local);
 			buffer[4]  = Druid.OutputDigit (ref local);
 			buffer[5]  = Druid.OutputDigit (ref dev);
-			buffer[6]  = Druid.OutputDigit (ref local);
+			buffer[6]  = Druid.OutputDigit (ref module);
 			buffer[7]  = Druid.OutputDigit (ref local);
 			buffer[8]  = Druid.OutputDigit (ref dev);
 			buffer[9]  = Druid.OutputDigit (ref module);
 			buffer[10] = Druid.OutputDigit (ref local);
 			buffer[11] = Druid.OutputDigit (ref dev);
-			buffer[12] = Druid.OutputDigit (ref module);
+			buffer[12] = Druid.OutputDigit (ref local);
 
 			return Druid.StripEndZeroes (buffer);
 		}
@@ -637,13 +637,13 @@ namespace Epsitec.Common.Support
 				buffer[i] = '0';
 			}
 
-			Druid.InputDigit (ref module, buffer[12]);
+			Druid.InputDigit (ref local, buffer[12]);
 			Druid.InputDigit (ref dev, buffer[11]);
 			Druid.InputDigit (ref local, buffer[10]);
 			Druid.InputDigit (ref module, buffer[9]);
 			Druid.InputDigit (ref dev, buffer[8]);
 			Druid.InputDigit (ref local, buffer[7]);
-			Druid.InputDigit (ref local, buffer[6]);
+			Druid.InputDigit (ref module, buffer[6]);
 			Druid.InputDigit (ref dev, buffer[5]);
 			Druid.InputDigit (ref local, buffer[4]);
 			Druid.InputDigit (ref local, buffer[3]);
