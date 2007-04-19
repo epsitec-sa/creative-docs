@@ -31,10 +31,11 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (0x0000100002000100L, Druid.FromFullString ("10208"));
 			Assert.AreEqual (0x0000100011000100L, Druid.FromFullString ("10H08"));
 			Assert.AreEqual (0x000010001f0003ffL, Druid.FromFullString ("10VVV"));
-			Assert.AreEqual (0x000010001f000400L, Druid.FromFullString ("10V0001"));
-			Assert.AreEqual (0x0000100042000400L, Druid.FromFullString ("1020021"));
-			Assert.AreEqual (0x0040100002000003L, Druid.FromFullString ("1023000001"));
-			Assert.AreEqual (0x4000100002000003L, Druid.FromFullString ("1023000000008"));
+			Assert.AreEqual (0x000010001f000400L, Druid.FromFullString ("10V00001"));
+			Assert.AreEqual (0x0000100042000400L, Druid.FromFullString ("10200201"));
+			Assert.AreEqual (0x0040100002000003L, Druid.FromFullString ("1023001"));
+			Assert.AreEqual (0x4000100002000003L, Druid.FromFullString ("1023000008"));
+			Assert.AreEqual (0x40001F8002F00003L, Druid.FromFullString ("10230000080VF"));
 
 			Assert.AreEqual (1, Druid.GetModuleId (0x0000100002000003L));
 			Assert.AreEqual (2, Druid.GetDevId (0x0000100002000003L));
@@ -63,10 +64,10 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("10208", Druid.ToFullString (0x0000100002000100));
 			Assert.AreEqual ("10H08", Druid.ToFullString (0x0000100011000100));
 			Assert.AreEqual ("10VVV", Druid.ToFullString (0x000010001f0003ff));
-			Assert.AreEqual ("10V0001", Druid.ToFullString (0x000010001f000400));
-			Assert.AreEqual ("1020021", Druid.ToFullString (0x0000100042000400));
-			Assert.AreEqual ("1023000001", Druid.ToFullString (0x0040100002000003));
-			Assert.AreEqual ("1023000000008", Druid.ToFullString (0x4000100002000003));
+			Assert.AreEqual ("10V00001", Druid.ToFullString (0x000010001f000400));
+			Assert.AreEqual ("10200201", Druid.ToFullString (0x0000100042000400));
+			Assert.AreEqual ("1023001", Druid.ToFullString (0x0040100002000003));
+			Assert.AreEqual ("1023000008", Druid.ToFullString (0x4000100002000003));
 		}
 
 		[Test]
@@ -99,7 +100,7 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckMiscConversions()
 		{
-			Druid druid = Druid.Parse ("[1023000000008]");
+			Druid druid = Druid.Parse ("[1023000008]");
 
 			Assert.AreEqual (2, druid.Developer);
 			Assert.AreEqual (3, druid.Local);
@@ -107,7 +108,7 @@ namespace Epsitec.Common.Support
 			
 			Assert.AreEqual (0x4000100002000003L, druid.ToLong ());
 			Assert.AreEqual (0x0000000002000003L, druid.ToFieldId ());
-			Assert.AreEqual ("[1023000000008]", druid.ToResourceId ());
+			Assert.AreEqual ("[1023000008]", druid.ToResourceId ());
 			Assert.AreEqual ("$23", druid.ToFieldName ());
 
 			Assert.AreEqual (DruidType.Full, druid.Type);
@@ -127,10 +128,10 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (0x0000100002000100L, Druid.Parse ("[10208]").ToLong ());
 			Assert.AreEqual (0x0000100011000100L, Druid.Parse ("[10H08]").ToLong ());
 			Assert.AreEqual (0x000010001f0003ffL, Druid.Parse ("[10VVV]").ToLong ());
-			Assert.AreEqual (0x000010001f000400L, Druid.Parse ("[10V0001]").ToLong ());
-			Assert.AreEqual (0x0000100042000400L, Druid.Parse ("[1020021]").ToLong ());
-			Assert.AreEqual (0x0040100002000003L, Druid.Parse ("[1023000001]").ToLong ());
-			Assert.AreEqual (0x4000100002000003L, Druid.Parse ("[1023000000008]").ToLong ());
+			Assert.AreEqual (0x000010001f000400L, Druid.Parse ("[10V00001]").ToLong ());
+			Assert.AreEqual (0x0000100042000400L, Druid.Parse ("[10200201]").ToLong ());
+			Assert.AreEqual (0x0040100002000003L, Druid.Parse ("[1023001]").ToLong ());
+			Assert.AreEqual (0x4000100002000003L, Druid.Parse ("[1023000008]").ToLong ());
 
 			Assert.AreEqual (0x0000000002000003L, Druid.Parse ("23").ToLong ());
 			Assert.AreEqual (0x000010001f0003ffL, Druid.Parse ("_10VVV").ToLong ());
@@ -161,10 +162,10 @@ namespace Epsitec.Common.Support
 			Assert.IsTrue (Druid.TryParse ("[0]", out druid));
 			Assert.AreEqual (0x0000000000000000L, druid.ToLong ());
 
-			Assert.IsTrue (Druid.TryParse ("[1023000000008]", out druid));
+			Assert.IsTrue (Druid.TryParse ("[1023000008]", out druid));
 			Assert.AreEqual (0x4000100002000003L, druid.ToLong ());
 
-			Assert.IsTrue (Druid.TryParse ("_1023000000008", out druid));
+			Assert.IsTrue (Druid.TryParse ("_1023000008", out druid));
 			Assert.AreEqual (0x4000100002000003L, druid.ToLong ());
 
 			Assert.IsTrue (Druid.TryParse ("$VVV", out druid));

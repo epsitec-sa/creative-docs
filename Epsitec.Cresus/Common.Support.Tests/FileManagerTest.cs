@@ -6,14 +6,23 @@ namespace Epsitec.Common.Support
 	public class FileManagerTest
 	{
 		[Test]
+		public void _AutomaticRun()
+		{
+			this.automaticRun = true;
+		}
+
+		[Test]
 		public void CheckDelete()
 		{
-			System.IO.File.WriteAllText (@"S:\test 1.txt", "Fichier 1\r\n");
-			System.IO.File.WriteAllText (@"S:\test 2.txt", "Fichier 2\r\n");
+			if (!this.automaticRun)
+			{
+				System.IO.File.WriteAllText (@"S:\test 1.txt", "Fichier 1\r\n");
+				System.IO.File.WriteAllText (@"S:\test 2.txt", "Fichier 2\r\n");
 
-			FileOperationMode mode = new FileOperationMode ();
+				FileOperationMode mode = new FileOperationMode ();
 
-			FileManager.DeleteFiles (mode, @"S:\test 1.txt", @"S:\test 2.txt");
+				FileManager.DeleteFiles (mode, @"S:\test 1.txt", @"S:\test 2.txt");
+			}
 		}
 		
 		[Test]
@@ -135,5 +144,7 @@ namespace Epsitec.Common.Support
 
 			Assert.IsTrue (ok, "Not found in recent folder");
 		}
+
+		private bool automaticRun;
 	}
 }

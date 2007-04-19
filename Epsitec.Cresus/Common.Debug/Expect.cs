@@ -8,6 +8,7 @@ namespace Epsitec.Common.Debug
 	/// </summary>
 	public sealed class Expect
 	{
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void Exception(Method method, System.Type ex_type)
 		{
 			try
@@ -26,7 +27,8 @@ namespace Epsitec.Common.Debug
 			
 			throw new AssertFailedException ("Expected exception not raised.");
 		}
-		
+
+		[System.Diagnostics.Conditional ("DEBUG")]
 		public static void Exception(Method method, string ex_message)
 		{
 			try
