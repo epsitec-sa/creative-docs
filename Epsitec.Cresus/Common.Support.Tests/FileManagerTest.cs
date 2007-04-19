@@ -8,21 +8,27 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void _AutomaticRun()
 		{
+			//	If run individually, automaticRun will be false when the CheckDelete test
+			//	is run interactively; otherwise, the CheckDelete test will be run silently,
+			//	as it would block with the confirmation request from the Windows UI.
+
 			this.automaticRun = true;
 		}
 
 		[Test]
 		public void CheckDelete()
 		{
-			if (!this.automaticRun)
-			{
-				System.IO.File.WriteAllText (@"S:\test 1.txt", "Fichier 1\r\n");
-				System.IO.File.WriteAllText (@"S:\test 2.txt", "Fichier 2\r\n");
+			System.IO.File.WriteAllText (@"S:\test 1.txt", "Fichier 1\r\n");
+			System.IO.File.WriteAllText (@"S:\test 2.txt", "Fichier 2\r\n");
 
-				FileOperationMode mode = new FileOperationMode ();
+			FileOperationMode mode = new FileOperationMode ();
 
-				FileManager.DeleteFiles (mode, @"S:\test 1.txt", @"S:\test 2.txt");
-			}
+			mode.AutoConfirmation = this.automaticRun;
+
+			FileManager.DeleteFiles (mode, @"S:\test 1.txt", @"S:\test 2.txt");
+
+			Assert.IsFalse (System.IO.File.Exists (@"S:\test 1.txt"));
+			Assert.IsFalse (System.IO.File.Exists (@"S:\test 2.txt"));
 		}
 		
 		[Test]
