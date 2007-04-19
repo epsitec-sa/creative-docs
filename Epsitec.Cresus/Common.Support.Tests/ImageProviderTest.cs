@@ -37,7 +37,7 @@ namespace Epsitec.Common.Support
 			names.Clear ();
 			names.AddRange (Support.ImageProvider.Default.GetImageNames ("manifest", Support.Resources.DefaultManager));
 
-			Assert.AreEqual (@"manifest:Epsitec.Common.Dialogs.Images.Information.icon", names[0]);
+			Assert.AreEqual (@"manifest:Epsitec.Common.Dialogs.Images.FavoritesAdd.icon", names[0]);
 		}
 
 		[Test]

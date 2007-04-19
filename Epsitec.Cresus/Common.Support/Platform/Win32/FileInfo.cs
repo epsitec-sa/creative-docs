@@ -262,7 +262,16 @@ namespace Epsitec.Common.Support.Platform.Win32
 					if (pidlTemp != System.IntPtr.Zero)
 					{
 						string fullPath = FileInfo.GetFullPathFromPidl (pidlTemp);
-						System.IO.FileAttributes fileAttributes = FileInfo.GetAttributes (fullPath);
+						System.IO.FileAttributes fileAttributes;
+
+						if (fullPath.EndsWith (".lnk"))
+						{
+							fileAttributes = 0;
+						}
+						else
+						{
+							fileAttributes = FileInfo.GetAttributes (fullPath);
+						}
 
 						if (filter == null)
 						{

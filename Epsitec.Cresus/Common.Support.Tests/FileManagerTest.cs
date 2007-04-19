@@ -98,6 +98,12 @@ namespace Epsitec.Common.Support
 		public void CheckRecentDocuments()
 		{
 			string path = @"S:\Epsitec.Cresus\Example Document.txt";
+
+			if (!System.IO.File.Exists (path))
+			{
+				System.IO.File.CreateText (path).Close ();
+			}
+			
 			FileManager.AddToRecentDocuments (path);
 
 			bool ok = false;
@@ -105,7 +111,7 @@ namespace Epsitec.Common.Support
 			foreach (FolderItem item in FileManager.GetFolderItems (FileManager.GetFolderItem (FolderId.Recent, FolderQueryMode.NoIcons), FolderQueryMode.NoIcons))
 			{
 				System.Console.Out.WriteLine ("{0}", item);
-				
+
 				if (item.IsShortcut)
 				{
 					string resolvesTo = FileManager.ResolveShortcut (item, FolderQueryMode.NoIcons).FullPath;
@@ -115,6 +121,16 @@ namespace Epsitec.Common.Support
 						ok = true;
 					}
 				}
+				else
+				{
+					System.Console.Out.Flush ();
+					Assert.Fail (string.Format ("IsShortcut={0} for item {1}", item.IsShortcut, item));
+				}
+			}
+
+			if (System.IO.File.Exists (path))
+			{
+				System.IO.File.Delete (path);
 			}
 
 			Assert.IsTrue (ok, "Not found in recent folder");
