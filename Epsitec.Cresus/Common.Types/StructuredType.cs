@@ -22,7 +22,7 @@ namespace Epsitec.Common.Types
 		public StructuredType()
 			: base ("Structure")
 		{
-			this.fields = new Collections.HostedStructuredTypeFieldDictionary (this.NotifyFieldInserted, this.NotifyFieldRemoved);
+			this.fields = new Collections.HostedStructuredTypeFieldDictionary (this.NotifyFieldInsertion, this.NotifyFieldRemoval);
 		}
 
 		/// <summary>
@@ -278,11 +278,35 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		private void NotifyFieldInserted(string name, StructuredTypeField field)
+		private void NotifyFieldInsertion(string name, StructuredTypeField field)
 		{
+			if (this.Class == StructuredTypeClass.View)
+			{
+				//	A structured type used to represent a view may only contain fields
+				//	using an inclusion relation with the same target (structured) type.
+
+				if (field.Relation != Relation.Inclusion)
+				{
+					throw new System.ArgumentException (string.Format ("View may not use field with {0} relation", field.Relation));
+				}
+
+				if (field.Type != null)
+				{
+					foreach (StructuredTypeField item in this.fields.Values)
+					{
+						if (item.Type != null)
+						{
+							if (field.Type != item.Type)
+							{
+								throw new System.ArgumentException (string.Format ("View may not use mismatched fields ({0} and {1})", item.Id, field.Id));
+							}
+						}
+					}
+				}
+			}
 		}
 
-		private void NotifyFieldRemoved(string name, StructuredTypeField field)
+		private void NotifyFieldRemoval(string name, StructuredTypeField field)
 		{
 		}
 

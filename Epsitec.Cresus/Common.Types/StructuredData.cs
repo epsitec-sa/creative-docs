@@ -348,6 +348,11 @@ namespace Epsitec.Common.Types
 
 		protected virtual object GetUndefinedValue(StructuredTypeField fieldType, string id)
 		{
+			if (fieldType == null)
+			{
+				return UndefinedValue.Instance;
+			}
+
 			AbstractType type = fieldType.Type as AbstractType;
 			Relation relation = fieldType.Relation;
 

@@ -80,10 +80,10 @@ namespace Epsitec.Common.Types
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, Relation relation)
 		{
 			this.id = id;
-			this.type = type;
 			this.captionId = captionId;
 			this.rank = rank;
 			this.relation = relation;
+			this.DefineType (type);
 		}
 
 		/// <summary>
@@ -98,11 +98,11 @@ namespace Epsitec.Common.Types
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, Relation relation, string sourceFieldId)
 		{
 			this.id = id;
-			this.type = type;
 			this.captionId = captionId;
 			this.rank = rank;
 			this.relation = relation;
 			this.sourceFieldId = string.IsNullOrEmpty (sourceFieldId) ? null : sourceFieldId;
+			this.DefineType (type);
 		}
 
 		/// <summary>
@@ -117,11 +117,11 @@ namespace Epsitec.Common.Types
 		private StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, int flags, string sourceFieldId)
 		{
 			this.id = id;
-			this.type = type;
 			this.captionId = captionId;
 			this.rank = rank;
 			this.relation = (Relation) (flags & 0x0f);
 			this.sourceFieldId = string.IsNullOrEmpty (sourceFieldId) ? null : sourceFieldId;
+			this.DefineType (type);
 		}
 
 		/// <summary>
@@ -219,6 +219,44 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		private void DefineType(INamedType abstractType)
+		{
+			if ((abstractType != null) &&
+				(abstractType != this.type))
+			{
+				if (this.type != null)
+				{
+					throw new System.InvalidOperationException ("Field type is immutable");
+				}
+
+				bool isStructuredType = abstractType is IStructuredType;
+
+				switch (this.relation)
+				{
+					case Relation.Collection:
+					case Relation.Reference:
+						if (!isStructuredType)
+						{
+							throw new System.ArgumentException (string.Format ("Invalid type {0} in relation {1} for field {2}", abstractType.Name, this.relation, this.id));
+						}
+						break;
+
+					case Relation.Inclusion:
+						if (!isStructuredType)
+						{
+							throw new System.ArgumentException (string.Format ("Invalid type {0} in relation {1} for field {2}", abstractType.Name, this.relation, this.id));
+						}
+						if (this.sourceFieldId == null)
+						{
+							throw new System.ArgumentException (string.Format ("Invalid relation {0} for field {1}, no source field id specified", this.relation, this.id));
+						}
+						break;
+				}
+
+				this.type = abstractType;
+			}
+		}
+		
 		#region SerializationConverter Class
 
 		public sealed class SerializationConverter : ISerializationConverter
@@ -287,7 +325,7 @@ namespace Epsitec.Common.Types
 							delegate ()
 							{
 								Caption caption = (manager ?? Support.Resources.DefaultManager).GetCaption (druid);
-								field.type = TypeRosetta.GetTypeObject (caption);
+								field.DefineType (TypeRosetta.GetTypeObject (caption));
 							});
 					}
 					else

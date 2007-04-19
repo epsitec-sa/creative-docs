@@ -569,6 +569,8 @@ namespace Epsitec.Common.Types
 			if ((type != null) &&
 				(typeId.IsValid))
 			{
+				TypeRosetta.InitializeKnownTypes ();
+				
 				//	Check if the type is already known. If not, record a reference to
 				//	it so that we can then access it by its DRUID or by its name :
 

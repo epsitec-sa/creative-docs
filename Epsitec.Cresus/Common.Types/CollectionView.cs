@@ -368,7 +368,10 @@ namespace Epsitec.Common.Types
 				if ((position < -1) ||
 					(position > view.Count))
 				{
-					throw new System.ArgumentOutOfRangeException ("position");
+					if (position != System.Int32.MaxValue)
+					{
+						throw new System.ArgumentOutOfRangeException ("position");
+					}
 				}
 
 				object item = view.CurrentItem;

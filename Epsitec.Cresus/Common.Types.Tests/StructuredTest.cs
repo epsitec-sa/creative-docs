@@ -363,10 +363,87 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckStructuredTypeEx1()
+		{
+			StructuredType type = new StructuredType (StructuredTypeClass.Entity);
+
+			type.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, Relation.Reference));
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckStructuredTypeEx2()
+		{
+			StructuredType type = new StructuredType (StructuredTypeClass.Entity);
+			Support.Druid typeId = Support.Druid.Parse ("[123456780]");
+
+			TypeRosetta.RecordType (typeId, type);
+
+			type.DefineCaptionId (typeId);
+
+			type.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, Relation.None));
+			type.Fields.Add (new StructuredTypeField ("SelfName", type, Support.Druid.Empty, 1, Relation.Inclusion, null));
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckStructuredTypeEx3()
+		{
+			StructuredType type = new StructuredType (StructuredTypeClass.View);
+
+			type.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, Relation.None));
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckStructuredTypeEx4()
+		{
+			StructuredType type = new StructuredType (StructuredTypeClass.Entity);
+			StructuredType view = new StructuredType (StructuredTypeClass.View);
+			
+			Support.Druid typeId1 = Support.Druid.Parse ("[123456781]");
+			Support.Druid typeId2 = Support.Druid.Parse ("[123456782]");
+
+			TypeRosetta.RecordType (typeId1, type);
+			TypeRosetta.RecordType (typeId2, view);
+
+			type.DefineCaptionId (typeId1);
+			view.DefineCaptionId (typeId2);
+
+			type.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, Relation.None));
+
+			view.Fields.Add (new StructuredTypeField ("Name1", type, Support.Druid.Empty, 1, Relation.Inclusion, "Name"));
+			view.Fields.Add (new StructuredTypeField ("Name2", view, Support.Druid.Empty, 2, Relation.Inclusion, "Name"));
+		}
+
+		
+		[Test]
+		public void CheckStructuredTypeRelations()
+		{
+			StructuredType entity = new StructuredType (StructuredTypeClass.Entity);
+			StructuredType view   = new StructuredType (StructuredTypeClass.View);
+			
+			Support.Druid typeId = Support.Druid.Parse ("[12345678A]");
+
+			TypeRosetta.RecordType (typeId, entity);
+
+			entity.DefineCaptionId (typeId);
+			
+			entity.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, Relation.None));
+			entity.Fields.Add (new StructuredTypeField ("SelfRef", entity, Support.Druid.Empty, 1, Relation.Reference));
+			entity.Fields.Add (new StructuredTypeField ("SelfName", entity, Support.Druid.Empty, 2, Relation.Inclusion, "Name"));
+			entity.Fields.Add (new StructuredTypeField ("SelfCollection", entity, Support.Druid.Empty, 3, Relation.Collection));
+
+			view.Fields.Add (new StructuredTypeField ("Name", entity, Support.Druid.Empty, 0, Relation.Inclusion, "Name"));
+			view.Fields.Add (new StructuredTypeField ("Ref", entity, Support.Druid.Empty, 0, Relation.Inclusion, "SelfRef"));
+		}
+
+		[Test]
 		public void CheckStructuredTypeSerialization()
 		{
 			StructuredType type = new StructuredType (StructuredTypeClass.Entity);
-			Support.Druid typeId = Support.Druid.Parse ("[12345678]");
+			Support.Druid typeId = Support.Druid.Parse ("[12345678B]");
 
 			type.Caption.Name = "TestStruct";
 			type.DefineCaptionId (typeId);
