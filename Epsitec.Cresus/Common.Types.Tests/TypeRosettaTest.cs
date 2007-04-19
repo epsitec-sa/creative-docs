@@ -235,9 +235,27 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (TypeRosetta.IsValidValueForCollectionOfType (new List<A> (), typeof (B)));
 			Assert.IsTrue (TypeRosetta.IsValidValueForCollectionOfType (new List<B> (), typeof (B)));
 
+			StructuredType typeA = new StructuredType ();
+			StructuredType typeB = new StructuredType ();
+
+			typeA.Fields.Add (new StructuredTypeField ("Text", StringType.Default));
+			typeB.Fields.Add (new StructuredTypeField ("Number", IntegerType.Default));
+
+			StructuredData dataA = new StructuredData (typeA);
+			StructuredData dataB = new StructuredData (typeB);
+
 			Assert.IsTrue (TypeRosetta.IsValidValue (10, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, Relation.None)));
-			Assert.IsFalse (TypeRosetta.IsValidValue (new List<int> (), new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, Relation.None)));
-			Assert.IsTrue (TypeRosetta.IsValidValue (new List<int> (), new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, Relation.Collection)));
+			Assert.IsFalse (TypeRosetta.IsValidValue (new List<StructuredData> (), new StructuredTypeField ("X", typeA, Support.Druid.Empty, 0, Relation.None)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (new List<StructuredData> (), new StructuredTypeField ("X", typeA, Support.Druid.Empty, 0, Relation.Collection)));
+
+			List<StructuredData> listA = new List<StructuredData> ();
+			List<StructuredData> listB = new List<StructuredData> ();
+
+			listA.Add (dataA);
+			listB.Add (dataB);
+
+			Assert.IsTrue (TypeRosetta.IsValidValue (listA, new StructuredTypeField ("X", typeA, Support.Druid.Empty, 0, Relation.Collection)));
+			Assert.IsFalse (TypeRosetta.IsValidValue (listB, new StructuredTypeField ("X", typeA, Support.Druid.Empty, 0, Relation.Collection)));
 		}
 
 		#region A Class
