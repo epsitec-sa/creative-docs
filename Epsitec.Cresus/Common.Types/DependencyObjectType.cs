@@ -289,11 +289,29 @@ namespace Epsitec.Common.Types
 				{
 					if (infos[i].FieldType == typeof (DependencyProperty))
 					{
-//						System.Diagnostics.Debug.WriteLine (string.Format ("Initialized type {0}", this.Name));
-						infos[i].GetValue (null);
-						break;
+						DependencyObjectType.typeStaticConstructorExecuting++;
+						
+						try
+						{
+//							System.Diagnostics.Debug.WriteLine (string.Format ("Initialized type {0}", this.Name));
+							infos[i].GetValue (null);
+							break;
+						}
+						finally
+						{
+							DependencyObjectType.typeStaticConstructorExecuting--;
+							Serialization.DependencyClassManager.ExecutePendingInitializationCode ();
+						}
 					}
 				}
+			}
+		}
+
+		internal static bool IsExecutingStaticConstructor
+		{
+			get
+			{
+				return DependencyObjectType.typeStaticConstructorExecuting > 0;
 			}
 		}
 
@@ -358,6 +376,9 @@ namespace Epsitec.Common.Types
 		private Dictionary<string, DependencyProperty>	lookup;
 		private bool							initialized;
 		private Support.Allocator<DependencyObject> allocator;
+
+		[System.ThreadStatic]
+		static int typeStaticConstructorExecuting;
 
 		static Dictionary<System.Type, DependencyObjectType> types = new Dictionary<System.Type, DependencyObjectType> ();
 	}

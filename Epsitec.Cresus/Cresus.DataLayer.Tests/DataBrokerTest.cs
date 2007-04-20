@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.DataLayer
 		[TestFixtureSetUp]
 		public void Setup()
 		{
-			Epsitec.Common.Document.Engine.Initialize ();
 			Epsitec.Common.Widgets.Widget.Initialize ();
+			Epsitec.Common.Document.Engine.Initialize ();
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 			
 			this.infrastructure = new DbInfrastructure ();

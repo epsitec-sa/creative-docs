@@ -587,7 +587,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			get
 			{
-				throw new System.Exception ("The method or operation is not implemented.");
+				return this.exclusion;
 			}
 		}
 

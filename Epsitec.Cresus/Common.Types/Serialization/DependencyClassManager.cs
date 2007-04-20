@@ -93,21 +93,82 @@ namespace Epsitec.Common.Types.Serialization
 				return null;
 			}
 		}
-		
+
+		/// <summary>
+		/// Executes the specified initialization code, either synchronously if
+		/// no explicit static constructor call was done by the dependency system,
+		/// or postponed later.
+		/// </summary>
+		/// <param name="callback">The initialization code callback.</param>
+		public static void ExecuteInitializationCode(Support.SimpleCallback callback)
+		{
+			if (DependencyObjectType.IsExecutingStaticConstructor)
+			{
+				if (DependencyClassManager.pendingActions == null)
+				{
+					DependencyClassManager.pendingActions = new Queue<Support.SimpleCallback> ();
+				}
+
+				DependencyClassManager.pendingActions.Enqueue (callback);
+			}
+			else
+			{
+				callback ();
+			}
+		}
+
+		/// <summary>
+		/// Executes the pending initialization code.
+		/// </summary>
+		internal static void ExecutePendingInitializationCode()
+		{
+			if (!DependencyObjectType.IsExecutingStaticConstructor)
+			{
+				if (DependencyClassManager.pendingActions != null)
+				{
+					while (DependencyClassManager.pendingActions.Count > 0)
+					{
+						if (DependencyClassManager.analyseCount > 0)
+						{
+							break;
+						}
+						
+						DependencyClassManager.pendingActions.Dequeue () ();
+					}
+
+					if (DependencyClassManager.pendingActions.Count == 0)
+					{
+						DependencyClassManager.pendingActions = null;
+					}
+				}
+			}
+		}
+
 		private void Analyse(Assembly assembly)
 		{
-			foreach (System.Type type in DependencyClassAttribute.GetRegisteredTypes (assembly))
+			DependencyClassManager.analyseCount++;
+
+			try
 			{
-				DependencyObjectType depType = DependencyObjectType.FromSystemType (type);
-				string name = type.FullName;
-				
-				this.types[name] = depType;
+				foreach (System.Type type in DependencyClassAttribute.GetRegisteredTypes (assembly))
+				{
+					DependencyObjectType depType = DependencyObjectType.FromSystemType (type);
+					string name = type.FullName;
+
+					this.types[name] = depType;
+				}
+
+				foreach (DependencyClassAttribute attribute in DependencyClassAttribute.GetConverterAttributes (assembly))
+				{
+					this.converters[attribute.Type] = System.Activator.CreateInstance (attribute.Converter) as ISerializationConverter;
+				}
+			}
+			finally
+			{
+				DependencyClassManager.analyseCount--;
 			}
 
-			foreach (DependencyClassAttribute attribute in DependencyClassAttribute.GetConverterAttributes (assembly))
-			{
-				this.converters[attribute.Type] = System.Activator.CreateInstance (attribute.Converter) as ISerializationConverter;
-			}
+			DependencyClassManager.ExecutePendingInitializationCode ();
 		}
 
 		private void HandleDomainAssemblyLoad(object sender, System.AssemblyLoadEventArgs args)
@@ -126,5 +187,11 @@ namespace Epsitec.Common.Types.Serialization
 		private List<Assembly>					assemblies;
 		private Dictionary<string, DependencyObjectType> types;
 		private Dictionary<System.Type, ISerializationConverter> converters;
+
+		[System.ThreadStatic]
+		private static Queue<Support.SimpleCallback> pendingActions;
+
+		[System.ThreadStatic]
+		private static int analyseCount;
 	}
 }

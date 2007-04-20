@@ -73,18 +73,29 @@ namespace Epsitec.Common.Widgets
 		
 		static Widget()
 		{
-			System.Diagnostics.Debug.WriteLine ("Initializing Widget infrastructure.");
-			
-			Helpers.FontPreviewer.Initialize ();
+			//	This static constructor can either be called implicitely by running the
+			//	code, or by the dependency class manager when it is analysing a freshly
+			//	loaded assembly.
 
-			Platform.Window.Initialize ();
-			Res.Initialize ();
+			//	If we get called through the dependency class manager, we may not yet
+			//	initialize the resources, as the other Widget classes are not yet known
+			//	to the dependency object (de)serializer. The safe-guard is implemented
+			//	by delegating the initialization to the dependency class manager :
+
+			Epsitec.Common.Types.Serialization.DependencyClassManager.ExecuteInitializationCode (
+				delegate ()
+				{
+					Helpers.FontPreviewer.Initialize ();
+
+					Platform.Window.Initialize ();
+					Res.Initialize ();
+
+					Support.ImageProvider.Initialize ();
+				});
 			
-			Support.ImageProvider.Initialize ();
-			
-			System.Threading.Thread          thread  = System.Threading.Thread.CurrentThread;
+			System.Threading.Thread thread = System.Threading.Thread.CurrentThread;
 			System.Globalization.CultureInfo culture = thread.CurrentCulture;
-			
+
 			thread.CurrentUICulture = culture;
 		}
 		
