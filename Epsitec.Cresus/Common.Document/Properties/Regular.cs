@@ -20,12 +20,11 @@ namespace Epsitec.Common.Document.Properties
 			this.nbFaces = 6;
 			this.star    = false;
 			this.flower  = false;
-			this.deep    = new Polar(0.5, 0.0);
-			this.e1      = new Polar(0.4, 0.0);
-			this.e2      = new Polar(0.4, 0.0);
-			this.i1      = new Polar(0.6, 0.0);
-			this.i2      = new Polar(0.6, 0.0);
-			this.curve   = true;
+			this.deep    = new Polar(0.5,   0.0);
+			this.e1      = new Polar(0.0,  20.0);
+			this.e2      = new Polar(0.0, -20.0);
+			this.i1      = new Polar(0.6,   0.0);
+			this.i2      = new Polar(0.6,   0.0);
 		}
 
 		public int NbFaces
@@ -207,24 +206,6 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		public bool Curve
-		{
-			get
-			{
-				return this.curve;
-			}
-
-			set
-			{
-				if ( this.curve != value )
-				{
-					this.NotifyBefore();
-					this.curve = value;
-					this.NotifyAfter();
-				}
-			}
-		}
-
 		public override string SampleText
 		{
 			//	Donne le petit texte pour les échantillons.
@@ -260,7 +241,7 @@ namespace Epsitec.Common.Document.Properties
 			switch (type)
 			{
 				case "Star":    return "RegularStar";
-				case "Flower":  return "RegularStar";
+				case "Flower":  return "RegularFlower";
 				default:        return "RegularNorm";
 			}
 		}
@@ -443,7 +424,6 @@ namespace Epsitec.Common.Document.Properties
 			p.e2      = this.e2;
 			p.i1      = this.i1;
 			p.i2      = this.i2;
-			p.curve   = this.curve;
 		}
 
 		public override bool Compare(Abstract property)
@@ -460,7 +440,6 @@ namespace Epsitec.Common.Document.Properties
 			if ( p.e2      != this.e2      )  return false;
 			if ( p.i1      != this.i1      )  return false;
 			if ( p.i2      != this.i2      )  return false;
-			if ( p.curve   != this.curve   )  return false;
 
 			return true;
 		}
@@ -489,7 +468,6 @@ namespace Epsitec.Common.Document.Properties
 				info.AddValue("E2", this.e2);
 				info.AddValue("I1", this.i1);
 				info.AddValue("I2", this.i2);
-				info.AddValue("Curve", this.curve);
 			}
 		}
 
@@ -509,7 +487,6 @@ namespace Epsitec.Common.Document.Properties
 					this.e2 = (Polar) info.GetValue("E2", typeof(Polar));
 					this.i1 = (Polar) info.GetValue("I1", typeof(Polar));
 					this.i2 = (Polar) info.GetValue("I2", typeof(Polar));
-					this.curve = info.GetBoolean("Curve");
 				}
 			}
 			else
@@ -532,6 +509,5 @@ namespace Epsitec.Common.Document.Properties
 		protected Polar					e2;
 		protected Polar					i1;
 		protected Polar					i2;
-		protected bool					curve;
 	}
 }

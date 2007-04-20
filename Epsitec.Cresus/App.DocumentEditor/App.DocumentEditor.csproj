@@ -178,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <EmbeddedResource Include="Images\RegularFlower.icon" />
     <EmbeddedResource Include="Images\ShaperHandleSharp.icon" />
     <EmbeddedResource Include="Images\ShaperHandleRound.icon" />
     <Content Include="Resources\App.DocumentEditor\Captions.de.resource" />

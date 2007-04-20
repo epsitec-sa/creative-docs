@@ -157,11 +157,6 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldTwirlScaleI2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldTwirlScaleI2, Res.Strings.Panel.Regular.Tooltip.Deep);
 
-			this.buttonCurve = new CheckButton(this);
-			this.buttonCurve.Text = "Courbe";
-			this.buttonCurve.ActiveStateChanged += new EventHandler(this.HandleFieldChanged);
-			this.buttonCurve.TabIndex = 10;
-
 			this.isNormalAndExtended = true;
 		}
 
@@ -186,7 +181,6 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldTwirlScaleE2.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
 				this.fieldTwirlScaleI1.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
 				this.fieldTwirlScaleI2.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.buttonCurve.ActiveStateChanged -= new EventHandler(this.HandleFieldChanged);
 
 				this.grid = null;
 				this.fieldNbFaces = null;
@@ -200,7 +194,6 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldTwirlScaleE2 = null;
 				this.fieldTwirlScaleI1 = null;
 				this.fieldTwirlScaleI2 = null;
-				this.buttonCurve = null;
 			}
 			
 			base.Dispose(disposing);
@@ -218,11 +211,11 @@ namespace Epsitec.Common.Document.Panels
 				{
 					if ( this.IsLabelProperties )  // étendu/détails ?
 					{
-						h += 5+25*12;
+						h += 5+25*11;
 					}
 					else	// étendu/compact ?
 					{
-						h += 5+25*6;
+						h += 5+25*5;
 					}
 				}
 				else	// panneau réduit ?
@@ -260,7 +253,6 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldTwirlScaleE2.TextFieldReal.InternalValue = (decimal) p.E2.R*100;
 			this.fieldTwirlScaleI1.TextFieldReal.InternalValue = (decimal) p.I1.R*100;
 			this.fieldTwirlScaleI2.TextFieldReal.InternalValue = (decimal) p.I2.R*100;
-			this.buttonCurve.ActiveState = p.Curve ? ActiveState.Yes : ActiveState.No;
 
 			this.EnableWidgets();
 			this.ignoreChanged = false;
@@ -294,7 +286,6 @@ namespace Epsitec.Common.Document.Panels
 			p.E2 = new Polar((double) this.fieldTwirlScaleE2.TextFieldReal.InternalValue/100, (double) this.fieldTwirlAngleE2.TextFieldReal.InternalValue);
 			p.I1 = new Polar((double) this.fieldTwirlScaleI1.TextFieldReal.InternalValue/100, (double) this.fieldTwirlAngleI1.TextFieldReal.InternalValue);
 			p.I2 = new Polar((double) this.fieldTwirlScaleI2.TextFieldReal.InternalValue/100, (double) this.fieldTwirlAngleI2.TextFieldReal.InternalValue);
-			p.Curve = (this.buttonCurve.ActiveState == ActiveState.Yes);
 		}
 
 		protected void EnableWidgets()
@@ -312,7 +303,6 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldTwirlScaleE2.Enable = (this.isExtendedSize && flower);
 			this.fieldTwirlScaleI1.Enable = (this.isExtendedSize && flower);
 			this.fieldTwirlScaleI2.Enable = (this.isExtendedSize && flower);
-			this.buttonCurve.Enable = (this.isExtendedSize && flower);
 		}
 
 		protected override void UpdateClientGeometry()
@@ -409,13 +399,6 @@ namespace Epsitec.Common.Document.Panels
 				r.Left = rect.Left;
 				r.Right = rect.Right;
 				this.fieldTwirlScaleI2.SetManualBounds(r);
-
-				rect.Top = r.Bottom-5;
-				rect.Bottom = rect.Top-20;
-				r = rect;
-				r.Left = rect.Left;
-				r.Right = rect.Right;
-				this.buttonCurve.SetManualBounds(r);
 			}
 			else
 			{
@@ -466,10 +449,6 @@ namespace Epsitec.Common.Document.Panels
 				r.Left = r.Right;
 				r.Width = Widgets.TextFieldLabel.ShortWidth;
 				this.fieldTwirlScaleI2.SetManualBounds(r);
-
-				r.Left = r.Right+4;
-				r.Width = Widgets.TextFieldLabel.ShortWidth-4;
-				this.buttonCurve.SetManualBounds(r);
 			}
 		}
 		
@@ -501,6 +480,5 @@ namespace Epsitec.Common.Document.Panels
 		protected Widgets.TextFieldLabel	fieldTwirlScaleE2;
 		protected Widgets.TextFieldLabel	fieldTwirlScaleI1;
 		protected Widgets.TextFieldLabel	fieldTwirlScaleI2;
-		protected CheckButton				buttonCurve;
 	}
 }

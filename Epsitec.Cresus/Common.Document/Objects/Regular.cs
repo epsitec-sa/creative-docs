@@ -199,7 +199,7 @@ namespace Epsitec.Common.Document.Objects
 				pathSupport.AppendCircle(center, radius);
 				pathSupport.AppendCircle(center, radius*(1.0-pr.Deep.R));
 
-				if (pr.Flower && pr.Curve)
+				if (pr.Flower)
 				{
 					Point p1, s1, s2, p2;
 
@@ -386,24 +386,11 @@ namespace Epsitec.Common.Document.Objects
 
 					if (reg.Flower)
 					{
-						if (reg.Curve)
+						if (i == 0)
 						{
-							if (i == 0)
-							{
-								path.MoveTo(p1);
-							}
-							path.CurveTo(s1, s2, p2);
+							path.MoveTo(p1);
 						}
-						else
-						{
-							if (i == 0)
-							{
-								path.MoveTo(p1);
-							}
-							path.LineTo(s1);
-							path.LineTo(s2);
-							path.LineTo(p2);
-						}
+						path.CurveTo(s1, s2, p2);
 					}
 					else
 					{
