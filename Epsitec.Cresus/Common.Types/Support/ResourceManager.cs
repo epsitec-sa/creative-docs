@@ -1722,8 +1722,8 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
-		public static DependencyProperty ResourceManagerProperty = DependencyProperty.RegisterAttached ("ResourceManager", typeof (ResourceManager), typeof (ResourceManager));
-		public static DependencyProperty SourceBundleProperty    = DependencyProperty.RegisterAttached ("SourceBundle", typeof (ResourceBundle), typeof (ResourceManager));
+		public static DependencyProperty ResourceManagerProperty = DependencyProperty.RegisterAttached ("ResourceManager", typeof (ResourceManager), typeof (ResourceManager), new DependencyPropertyMetadata ().MakeNotSerializable ());
+		public static DependencyProperty SourceBundleProperty    = DependencyProperty.RegisterAttached ("SourceBundle", typeof (ResourceBundle), typeof (ResourceManager), new DependencyPropertyMetadata ().MakeNotSerializable ());
 		
 		private static long						nextSerialId = 1;
 		
