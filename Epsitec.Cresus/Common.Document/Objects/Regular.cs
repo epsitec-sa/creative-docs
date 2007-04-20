@@ -158,18 +158,82 @@ namespace Epsitec.Common.Document.Objects
 		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			//	Constuit les formes de l'objet.
+			Properties.Regular pr = this.PropertyRegular;
+
+			int totalShapes = 3;
+
+			bool support = false;
+			if ( this.IsSelected &&
+				 (pr.Star || pr.Flower) &&
+				 drawingContext != null && drawingContext.IsActive &&
+				 !this.IsGlobalSelected )
+			{
+				support = true;
+				totalShapes ++;
+			}
+			
 			Path path = this.PathBuild(drawingContext, simplify);
-			Shape[] shapes = new Shape[2];
+			Shape[] shapes = new Shape[totalShapes];
+			int i = 0;
 
 			//	Forme de la surface.
-			shapes[0] = new Shape();
-			shapes[0].Path = path;
-			shapes[0].SetPropertySurface(port, this.PropertyFillGradient);
+			shapes[i] = new Shape();
+			shapes[i].Path = path;
+			shapes[i].SetPropertySurface(port, this.PropertyFillGradient);
+			i ++;
 
 			//	Forme du chemin.
-			shapes[1] = new Shape();
-			shapes[1].Path = path;
-			shapes[1].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
+			shapes[i] = new Shape();
+			shapes[i].Path = path;
+			shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
+			i ++;
+
+			Point center = this.Handle(0).Position;
+			double radius = Point.Distance(center, this.Handle(1).Position);
+
+			//	Forme des traits de construction.
+			if ( support )
+			{
+				Path pathSupport = new Path();
+
+				pathSupport.AppendCircle(center, radius);
+				pathSupport.AppendCircle(center, radius*(1.0-pr.Deep.R));
+
+				if (pr.Flower && pr.Curve)
+				{
+					Point p1, s1, s2, p2;
+
+					this.ComputeLine(0, out p1, out s1, out s2, out p2);
+					pathSupport.MoveTo(p1);
+					pathSupport.LineTo(s1);
+					pathSupport.MoveTo(p2);
+					pathSupport.LineTo(s2);
+
+					this.ComputeLine(pr.NbFaces*2-1, out p1, out s1, out s2, out p2);
+					pathSupport.MoveTo(p1);
+					pathSupport.LineTo(s1);
+					pathSupport.MoveTo(p2);
+					pathSupport.LineTo(s2);
+				}
+
+				shapes[i] = new Shape();
+				shapes[i].Path = pathSupport;
+				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].Aspect = Aspect.Support;
+				shapes[i].IsVisible = true;
+				i ++;
+			}
+
+			//	Pour bbox et détection
+			Path pathBbox = new Path();
+
+			pathBbox.AppendRectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
+
+			shapes[i] = new Shape();
+			shapes[i].Path = pathBbox;
+			shapes[i].Type = Type.Surface;
+			shapes[i].Aspect = Aspect.InvisibleBox;
+			i ++;
 
 			return shapes;
 		}
@@ -177,87 +241,190 @@ namespace Epsitec.Common.Document.Objects
 		public void ComputeCorners(out Point a, out Point b)
 		{
 			//	Calcule les points pour les poignées de la propriété PropertyCorner.
-			Point t;
+			Point t, s1, s2;
 
 			Properties.Regular pr = this.PropertyRegular;
 			if ( pr.Star )  // étoile ?
 			{
-				this.ComputeLine(0, out t, out a);
-				this.ComputeLine(pr.NbFaces*2-1, out b, out t);
+				this.ComputeLine(0, out t, out s1, out s2, out a);
+				this.ComputeLine(pr.NbFaces*2-1, out b, out s1, out s2, out t);
 			}
 			else	// polygone ?
 			{
-				this.ComputeLine(0, out t, out a);
-				this.ComputeLine(pr.NbFaces-1, out b, out t);
+				this.ComputeLine(0, out t, out s1, out s2, out a);
+				this.ComputeLine(pr.NbFaces-1, out b, out s1, out s2, out t);
 			}
 		}
 
-		protected bool ComputeLine(int i, out Point a, out Point b)
+		protected void ComputeLine(int i, out Point p1, out Point s1, out Point s2, out Point p2)
 		{
-			//	Calcule une droite de l'objet.
-			int total = this.PropertyRegular.NbFaces;
+			//	Calcule une courbe de l'objet.
+			Properties.Regular reg = this.PropertyRegular;
+			int total = reg.NbFaces;
 			Point center = this.Handle(0).Position;
 			Point corner = this.Handle(1).Position;
 
-			a = new Point(0, 0);
-			b = new Point(0, 0);
+			p1 = Point.Zero;
+			s1 = Point.Zero;
+			s2 = Point.Zero;
+			p2 = Point.Zero;
 
-			if ( this.PropertyRegular.Star )  // étoile ?
+			if (reg.Flower)  // fleur ?
 			{
-				if ( i >= total*2 )  return false;
+				Point star = Point.Scale(corner, center, reg.Deep.R);
+				double a = reg.Deep.A;
 
-				Point star = center + (corner-center)*(1-this.PropertyRegular.Deep);
-				a = Transform.RotatePointDeg(center, 360.0*(i+0)/(total*2), (i%2==0) ? corner : star);
-				b = Transform.RotatePointDeg(center, 360.0*(i+1)/(total*2), (i%2==0) ? star : corner);
-				return true;
+				if (i%2 == 0)
+				{
+					double a1 = 360.0*(i+0)/(total*2);
+					double a2 = 360.0*(i+1)/(total*2)+a;
+
+					p1 = this.PolarToPoint(1, a1);
+					s1 = this.PolarToPoint(1-reg.Deep.R*reg.E1.R, Regular.Scale(a1,a2,reg.E1.R)+reg.E1.A);
+					s2 = this.PolarToPoint(1-reg.Deep.R*reg.I1.R, Regular.Scale(a1,a2,reg.I1.R)+reg.I1.A);
+					p2 = this.PolarToPoint(1-reg.Deep.R, a2);
+				}
+				else
+				{
+					double a1 = 360.0*(i+0)/(total*2)+a;
+					double a2 = 360.0*(i+1)/(total*2);
+
+					p1 = this.PolarToPoint(1-reg.Deep.R, a1);
+					s1 = this.PolarToPoint(1-reg.Deep.R*reg.I2.R, Regular.Scale(a2,a1,reg.I2.R)+reg.I2.A);
+					s2 = this.PolarToPoint(1-reg.Deep.R*reg.E2.R, Regular.Scale(a2,a1,reg.E2.R)+reg.E2.A);
+					p2 = this.PolarToPoint(1, a2);
+				}
+			}
+			else if (reg.Star)  // étoile ?
+			{
+				Point star = Point.Scale(corner, center, reg.Deep.R);
+				double a = reg.Deep.A;
+
+				if (i%2 == 0)
+				{
+					double a1 = 360.0*(i+0)/(total*2);
+					double a2 = 360.0*(i+1)/(total*2)+a;
+
+					p1 = this.PolarToPoint(1, a1);
+					p2 = this.PolarToPoint(1-reg.Deep.R, a2);
+				}
+				else
+				{
+					double a1 = 360.0*(i+0)/(total*2)+a;
+					double a2 = 360.0*(i+1)/(total*2);
+
+					p1 = this.PolarToPoint(1-reg.Deep.R, a1);
+					p2 = this.PolarToPoint(1, a2);
+				}
 			}
 			else	// polygone ?
 			{
-				if ( i >= total )  return false;
-
-				a = Transform.RotatePointDeg(center, 360.0*(i+0)/total, corner);
-				b = Transform.RotatePointDeg(center, 360.0*(i+1)/total, corner);
-				return true;
+				p1 = Transform.RotatePointDeg(center, 360.0*(i+0)/total, corner);
+				p2 = Transform.RotatePointDeg(center, 360.0*(i+1)/total, corner);
 			}
+		}
+
+		static protected double Scale(double a, double b, double scale)
+		{
+			return a + (b-a)*scale;
+		}
+
+		public Point PolarToPoint(double scale, double angle)
+		{
+			//	Conversion d'une coordonnée polaire (scale;angle) en coordonnée (x;y), dans l'espace de l'objet.
+			Point center = this.Handle(0).Position;
+
+			Point pos = Point.Scale(center, this.Handle(1).Position, scale);
+			return Transform.RotatePointDeg(center, angle, pos);
+		}
+
+		public Polar PointToPolar(Point pos)
+		{
+			//	Conversion d'une coordonnée (x;y) en coordonnée polaire (scale;angle), dans l'espace de l'objet.
+			double scale, angle;
+
+			Point center = this.Handle(0).Position;
+
+			double d1 = Point.Distance(center, this.Handle(1).Position);
+			double d2 = Point.Distance(center, pos);
+			if (d1 == 0)
+			{
+				scale = 0;
+			}
+			else
+			{
+				scale = d2/d1;
+			}
+
+			double a1 = Point.ComputeAngleDeg(center, this.Handle(1).Position);
+			double a2 = Point.ComputeAngleDeg(center, pos);
+			angle = a2-a1;
+
+			return new Polar(scale, angle);
 		}
 
 		protected Path PathBuild(DrawingContext drawingContext, bool simplify)
 		{
 			//	Crée le chemin d'un polygone régulier.
+			Properties.Regular reg = this.PropertyRegular;
+
 			Path path = new Path();
 			path.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);;
 
-			int total = this.PropertyRegular.NbFaces;
+			int total = reg.NbFaces;
+			if (reg.Star || reg.Flower)  total *= 2;  // étoile ?
+
 			Properties.Corner corner = this.PropertyCorner;
 
 			if ( corner.CornerType == Properties.CornerType.Right || simplify )  // coins droits ?
 			{
-				Point a;
-				Point b;
-
-				if ( this.PropertyRegular.Star )  total *= 2;  // étoile ?
+				Point p1, s1, s2, p2;
 
 				for ( int i=0 ; i<total ; i++ )
 				{
-					this.ComputeLine(i, out a, out b);
-					if ( i == 0 )  path.MoveTo(a);
-					else           path.LineTo(a);
+					this.ComputeLine(i, out p1, out s1, out s2, out p2);
+
+					if (reg.Flower)
+					{
+						if (reg.Curve)
+						{
+							if (i == 0)
+							{
+								path.MoveTo(p1);
+							}
+							path.CurveTo(s1, s2, p2);
+						}
+						else
+						{
+							if (i == 0)
+							{
+								path.MoveTo(p1);
+							}
+							path.LineTo(s1);
+							path.LineTo(s2);
+							path.LineTo(p2);
+						}
+					}
+					else
+					{
+						if (i == 0)
+						{
+							path.MoveTo(p1);
+						}
+						path.LineTo(p2);
+					}
 				}
 				path.Close();
 			}
 			else	// coins quelconques ?
 			{
-				Point p1;
-				Point s;
-				Point p2;
-
-				if ( this.PropertyRegular.Star )  total *= 2;  // étoile ?
+				Point p1, s1, s2, p2, s;
 
 				for ( int i=0 ; i<total ; i++ )
 				{
 					int prev = i-1;  if ( prev < 0 )  prev = total-1;
-					this.ComputeLine(prev, out p1, out s);
-					this.ComputeLine(i, out s, out p2);
+					this.ComputeLine(prev, out p1, out s1, out s2, out s);
+					this.ComputeLine(i, out s, out s1, out s2, out p2);
 					this.PathCorner(path, p1,s,p2, corner);
 				}
 				path.Close();

@@ -19,7 +19,13 @@ namespace Epsitec.Common.Document.Properties
 			base.Initialize ();
 			this.nbFaces = 6;
 			this.star    = false;
-			this.deep    = 0.5;
+			this.flower  = false;
+			this.deep    = new Polar(0.5, 0.0);
+			this.e1      = new Polar(0.4, 0.0);
+			this.e2      = new Polar(0.4, 0.0);
+			this.i1      = new Polar(0.6, 0.0);
+			this.i2      = new Polar(0.6, 0.0);
+			this.curve   = true;
 		}
 
 		public int NbFaces
@@ -58,8 +64,27 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		public double Deep
+		public bool Flower
 		{
+			get
+			{
+				return this.flower;
+			}
+
+			set
+			{
+				if ( this.flower != value )
+				{
+					this.NotifyBefore();
+					this.flower = value;
+					this.NotifyAfter();
+				}
+			}
+		}
+
+		public Polar Deep
+		{
+			//	Profondeur des branches de l'étoile.
 			get
 			{
 				return this.deep;
@@ -67,13 +92,134 @@ namespace Epsitec.Common.Document.Properties
 
 			set
 			{
-				value = System.Math.Max(0.0, value);
-				value = System.Math.Min(1.0, value);
+				value.R = System.Math.Max(0.0, value.R);
+				value.R = System.Math.Min(1.0, value.R);
+
+				value.A = System.Math.Max(-90.0, value.A);
+				value.A = System.Math.Min(90.0, value.A);
 
 				if ( this.deep != value )
 				{
 					this.NotifyBefore();
 					this.deep = value;
+					this.NotifyAfter();
+				}
+			}
+		}
+
+		public Polar E1
+		{
+			//	Torsion des branches de l'étoile.
+			get
+			{
+				return this.e1;
+			}
+
+			set
+			{
+				value.R = System.Math.Max(-1.0, value.R);
+				value.R = System.Math.Min(1.0, value.R);
+
+				value.A = System.Math.Max(-90.0, value.A);
+				value.A = System.Math.Min(90.0, value.A);
+
+				if ( this.e1 != value )
+				{
+					this.NotifyBefore();
+					this.e1 = value;
+					this.NotifyAfter();
+				}
+			}
+		}
+
+		public Polar E2
+		{
+			//	Torsion des branches de l'étoile.
+			get
+			{
+				return this.e2;
+			}
+
+			set
+			{
+				value.R = System.Math.Max(-1.0, value.R);
+				value.R = System.Math.Min(1.0, value.R);
+
+				value.A = System.Math.Max(-90.0, value.A);
+				value.A = System.Math.Min(90.0, value.A);
+
+				if ( this.e2 != value )
+				{
+					this.NotifyBefore();
+					this.e2 = value;
+					this.NotifyAfter();
+				}
+			}
+		}
+
+		public Polar I1
+		{
+			//	Torsion des branches de l'étoile.
+			get
+			{
+				return this.i1;
+			}
+
+			set
+			{
+				value.R = System.Math.Max(-1.0, value.R);
+				value.R = System.Math.Min(1.0, value.R);
+
+				value.A = System.Math.Max(-90.0, value.A);
+				value.A = System.Math.Min(90.0, value.A);
+
+				if ( this.i1 != value )
+				{
+					this.NotifyBefore();
+					this.i1 = value;
+					this.NotifyAfter();
+				}
+			}
+		}
+
+		public Polar I2
+		{
+			//	Torsion des branches de l'étoile.
+			get
+			{
+				return this.i2;
+			}
+
+			set
+			{
+				value.R = System.Math.Max(-1.0, value.R);
+				value.R = System.Math.Min(1.0, value.R);
+
+				value.A = System.Math.Max(-90.0, value.A);
+				value.A = System.Math.Min(90.0, value.A);
+
+				if ( this.i2 != value )
+				{
+					this.NotifyBefore();
+					this.i2 = value;
+					this.NotifyAfter();
+				}
+			}
+		}
+
+		public bool Curve
+		{
+			get
+			{
+				return this.curve;
+			}
+
+			set
+			{
+				if ( this.curve != value )
+				{
+					this.NotifyBefore();
+					this.curve = value;
 					this.NotifyAfter();
 				}
 			}
@@ -97,18 +243,26 @@ namespace Epsitec.Common.Document.Properties
 			this.PutStyleBriefPostfix(builder);
 		}
 
-		public static string GetName(bool type)
+		public static string GetName(string type)
 		{
 			//	Retourne le nom d'un type donné.
-			if ( type )  return Res.Strings.Property.Regular.Star;
-			else         return Res.Strings.Property.Regular.Norm;
+			switch (type)
+			{
+				case "Star":    return Res.Strings.Property.Regular.Star;
+				case "Flower":  return "Fleur";
+				default:        return Res.Strings.Property.Regular.Norm;
+			}
 		}
 
-		public static string GetIconText(bool type)
+		public static string GetIconText(string type)
 		{
 			//	Retourne l'icône pour un type donné.
-			if ( type )  return "RegularStar";
-			else         return "RegularNorm";
+			switch (type)
+			{
+				case "Star":    return "RegularStar";
+				case "Flower":  return "RegularStar";
+				default:        return "RegularNorm";
+			}
 		}
 
 
@@ -122,7 +276,7 @@ namespace Epsitec.Common.Document.Properties
 		public override int TotalHandle(Objects.Abstract obj)
 		{
 			//	Nombre de poignées.
-			return 1;
+			return 5;
 		}
 
 		public override bool IsHandleVisible(Objects.Abstract obj, int rank)
@@ -133,22 +287,144 @@ namespace Epsitec.Common.Document.Properties
 				return false;
 			}
 
-			return this.star;
+			if (this.flower)
+			{
+				return true;
+			}
+			else if (this.star)
+			{
+				return rank <= 0;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		
 		public override Point GetHandlePosition(Objects.Abstract obj, int rank)
 		{
 			//	Retourne la position d'une poignée.
-			return Point.Scale(obj.Handle(1).Position, obj.Handle(0).Position, this.deep);
+			Objects.Regular reg = obj as Objects.Regular;
+			Point pos = Point.Zero;
+
+			if (rank == 0)
+			{
+				return reg.PolarToPoint(1-this.deep.R, this.deep.A);
+			}
+
+			if (rank == 1)
+			{
+				double a = 360.0/(this.nbFaces*2)+this.deep.A;
+				return reg.PolarToPoint(1-this.deep.R*this.e1.R, a*this.e1.R+this.e1.A);
+			}
+
+			if (rank == 2)
+			{
+				double a = 360.0/(this.nbFaces*2)+this.deep.A;
+				return reg.PolarToPoint(1-this.deep.R*this.i1.R, a*this.i1.R+this.i1.A);
+			}
+
+			if (rank == 3)
+			{
+				double a = -360.0/(this.nbFaces*2)+this.deep.A;
+				return reg.PolarToPoint(1-this.deep.R*this.e2.R, a*this.e2.R+this.e2.A);
+			}
+
+			if (rank == 4)
+			{
+				double a = -360.0/(this.nbFaces*2)+this.deep.A;
+				return reg.PolarToPoint(1-this.deep.R*this.i2.R, a*this.i2.R+this.i2.A);
+			}
+
+			return pos;
 		}
 
 		public override void SetHandlePosition(Objects.Abstract obj, int rank, Point pos)
 		{
 			//	Modifie la position d'une poignée.
-			double d1 = Point.Distance(obj.Handle(1).Position, obj.Handle(0).Position);
-			double d2 = Point.Distance(obj.Handle(1).Position, pos);
-			if ( d1 == 0.0 )  this.Deep = 0.0;
-			else              this.Deep = d2/d1;
+			Objects.Regular reg = obj as Objects.Regular;
+
+			if (rank == 0)
+			{
+				Polar p = reg.PointToPolar(pos);
+				this.Deep = new Polar(1-p.R, p.A);
+			}
+
+			if (rank == 1)
+			{
+				Polar p = reg.PointToPolar(pos);
+				double scale, angle;
+				if (this.deep.R == 0)
+				{
+					scale = 0;
+				}
+				else
+				{
+					scale = (1-p.R)/this.deep.R;
+				}
+
+				double a = 360.0/(this.nbFaces*2)+this.deep.A;
+				angle = p.A-(a*this.e1.R);
+
+				this.E1 = new Polar(scale, angle);
+			}
+
+			if (rank == 2)
+			{
+				Polar p = reg.PointToPolar(pos);
+				double scale, angle;
+				if (this.deep.R == 0)
+				{
+					scale = 0;
+				}
+				else
+				{
+					scale = (1-p.R)/this.deep.R;
+				}
+
+				double a = 360.0/(this.nbFaces*2)+this.deep.A;
+				angle = p.A-(a*this.i1.R);
+
+				this.I1 = new Polar(scale, angle);
+			}
+
+			if (rank == 3)
+			{
+				Polar p = reg.PointToPolar(pos);
+				double scale, angle;
+				if (this.deep.R == 0)
+				{
+					scale = 0;
+				}
+				else
+				{
+					scale = (1-p.R)/this.deep.R;
+				}
+
+				double a = -360.0/(this.nbFaces*2)+this.deep.A;
+				angle = p.A-(a*this.e2.R);
+
+				this.E2 = new Polar(scale, angle);
+			}
+
+			if (rank == 4)
+			{
+				Polar p = reg.PointToPolar(pos);
+				double scale, angle;
+				if (this.deep.R == 0)
+				{
+					scale = 0;
+				}
+				else
+				{
+					scale = (1-p.R)/this.deep.R;
+				}
+
+				double a = -360.0/(this.nbFaces*2)+this.deep.A;
+				angle = p.A-(a*this.i2.R);
+
+				this.I2 = new Polar(scale, angle);
+			}
 
 			base.SetHandlePosition(obj, rank, pos);
 		}
@@ -161,7 +437,13 @@ namespace Epsitec.Common.Document.Properties
 			Regular p = property as Regular;
 			p.nbFaces = this.nbFaces;
 			p.star    = this.star;
+			p.flower  = this.flower;
 			p.deep    = this.deep;
+			p.e1      = this.e1;
+			p.e2      = this.e2;
+			p.i1      = this.i1;
+			p.i2      = this.i2;
+			p.curve   = this.curve;
 		}
 
 		public override bool Compare(Abstract property)
@@ -172,7 +454,13 @@ namespace Epsitec.Common.Document.Properties
 			Regular p = property as Regular;
 			if ( p.nbFaces != this.nbFaces )  return false;
 			if ( p.star    != this.star    )  return false;
+			if ( p.flower  != this.flower  )  return false;
 			if ( p.deep    != this.deep    )  return false;
+			if ( p.e1      != this.e1      )  return false;
+			if ( p.e2      != this.e2      )  return false;
+			if ( p.i1      != this.i1      )  return false;
+			if ( p.i2      != this.i2      )  return false;
+			if ( p.curve   != this.curve   )  return false;
 
 			return true;
 		}
@@ -193,9 +481,15 @@ namespace Epsitec.Common.Document.Properties
 
 			info.AddValue("NbFaces", this.nbFaces);
 			info.AddValue("Star", this.star);
-			if ( this.star )
+			info.AddValue("Flower", this.flower);
+			if (this.star || this.flower)
 			{
 				info.AddValue("Deep", this.deep);
+				info.AddValue("E1", this.e1);
+				info.AddValue("E2", this.e2);
+				info.AddValue("I1", this.i1);
+				info.AddValue("I2", this.i2);
+				info.AddValue("Curve", this.curve);
 			}
 		}
 
@@ -204,9 +498,27 @@ namespace Epsitec.Common.Document.Properties
 			//	Constructeur qui désérialise la propriété.
 			this.nbFaces = info.GetInt32("NbFaces");
 			this.star = info.GetBoolean("Star");
-			if ( this.star )
+
+			if (this.document.IsRevisionGreaterOrEqual(2, 0, 16))
 			{
-				this.deep = info.GetDouble("Deep");
+				this.flower = info.GetBoolean("Flower");
+				if (this.star || this.flower)
+				{
+					this.deep = (Polar) info.GetValue("Deep", typeof(Polar));
+					this.e1 = (Polar) info.GetValue("E1", typeof(Polar));
+					this.e2 = (Polar) info.GetValue("E2", typeof(Polar));
+					this.i1 = (Polar) info.GetValue("I1", typeof(Polar));
+					this.i2 = (Polar) info.GetValue("I2", typeof(Polar));
+					this.curve = info.GetBoolean("Curve");
+				}
+			}
+			else
+			{
+				this.flower = false;
+				if (this.star)
+				{
+					this.deep = new Polar(info.GetDouble("Deep"), 0.0);
+				}
 			}
 		}
 		#endregion
@@ -214,6 +526,12 @@ namespace Epsitec.Common.Document.Properties
 	
 		protected int					nbFaces;
 		protected bool					star;
-		protected double				deep;
+		protected bool					flower;
+		protected Polar					deep;
+		protected Polar					e1;
+		protected Polar					e2;
+		protected Polar					i1;
+		protected Polar					i2;
+		protected bool					curve;
 	}
 }
