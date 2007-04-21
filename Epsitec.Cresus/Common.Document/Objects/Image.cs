@@ -405,46 +405,62 @@ namespace Epsitec.Common.Document.Objects
 						name = string.Concat(name, " ", Misc.ExtractName(pi.FileName));
 					}
 
-					ImageCache.Item item = this.Item;
-					if (item != null)
+					int dpi = this.GetOutputDpi ();
+
+					if (dpi > 0)
 					{
-						Drawing.Image image = item.Image;
-						if (image != null)
-						{
-							Point center;
-							double width, height, angle;
-							this.ImageGeometry(out center, out width, out height, out angle);
-
-							if (width > 0 && height > 0)
-							{
-								Drawing.Rectangle cropRect = new Drawing.Rectangle(0, 0, image.Width*item.Scale, image.Height*item.Scale);
-								cropRect.Deflate(pi.CropMargins);
-
-								if (!cropRect.IsSurfaceZero)
-								{
-									if (pi.Homo)  // conserve les proportions ?
-									{
-										double rapport = cropRect.Height/cropRect.Width;
-										if (rapport < height/width)
-										{
-											height = width*rapport;
-										}
-										else
-										{
-											width  = height/rapport;
-										}
-									}
-
-									int dpi = (int) (cropRect.Width/width*254);
-									name = string.Concat(name, " (", dpi.ToString(), " dpi)");
-								}
-							}
-						}
+						name = string.Concat (name, " (", dpi.ToString (), " dpi)");
 					}
 				}
 
 				return name;
 			}
+		}
+
+		public int GetOutputDpi()
+		{
+			Properties.Image pi = this.PropertyImage;
+			int dpi = 0;
+
+			if (pi != null)
+			{
+				ImageCache.Item item = this.Item;
+				if (item != null)
+				{
+					Drawing.Image image = item.Image;
+					if (image != null)
+					{
+						Point center;
+						double width, height, angle;
+						this.ImageGeometry (out center, out width, out height, out angle);
+
+						if (width > 0 && height > 0)
+						{
+							Drawing.Rectangle cropRect = new Drawing.Rectangle (0, 0, image.Width*item.Scale, image.Height*item.Scale);
+							cropRect.Deflate (pi.CropMargins);
+
+							if (!cropRect.IsSurfaceZero)
+							{
+								if (pi.Homo)  // conserve les proportions ?
+								{
+									double rapport = cropRect.Height/cropRect.Width;
+									if (rapport < height/width)
+									{
+										height = width*rapport;
+									}
+									else
+									{
+										width  = height/rapport;
+									}
+								}
+
+								dpi = (int) (cropRect.Width/width*254);
+							}
+						}
+					}
+				}
+			}
+			return dpi;
 		}
 
 		public ImageFilter GetFilter(IPaintPort port, DrawingContext drawingContext)
