@@ -33,7 +33,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.fieldNbFaces, Res.Strings.Panel.Regular.Tooltip.Faces);
 
 			this.fieldDeep = new Widgets.TextFieldPolar(this);
-			this.fieldDeep.LabelText = "Profondeur";
+			this.fieldDeep.LabelText = Res.Strings.Panel.Regular.Label.Deep;
 			this.fieldDeep.TextFieldR.InternalMinValue = 0.0M;
 			this.fieldDeep.TextFieldR.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldDeep.TextFieldA.EditionAccepted += new EventHandler(this.HandleFieldChanged);
@@ -42,36 +42,36 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.fieldDeep, Res.Strings.Panel.Regular.Tooltip.Deep);
 
 			this.fieldE1 = new Widgets.TextFieldPolar(this);
-			this.fieldE1.LabelText = "Extérieur gauche";
+			this.fieldE1.LabelText = Res.Strings.Panel.Regular.Label.E1;
 			this.fieldE1.TextFieldR.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldE1.TextFieldA.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldE1.TabIndex = 3;
 			this.fieldE1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldE1, Res.Strings.Panel.Regular.Tooltip.Deep);
+			ToolTip.Default.SetToolTip(this.fieldE1, Res.Strings.Panel.Regular.Tooltip.E1);
 
 			this.fieldE2 = new Widgets.TextFieldPolar(this);
-			this.fieldE2.LabelText = "Extérieur droite";
+			this.fieldE2.LabelText = Res.Strings.Panel.Regular.Label.E2;
 			this.fieldE2.TextFieldR.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldE2.TextFieldA.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldE2.TabIndex = 4;
 			this.fieldE2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldE2, Res.Strings.Panel.Regular.Tooltip.Deep);
+			ToolTip.Default.SetToolTip(this.fieldE2, Res.Strings.Panel.Regular.Tooltip.E2);
 
 			this.fieldI1 = new Widgets.TextFieldPolar(this);
-			this.fieldI1.LabelText = "Intérieur gauche";
+			this.fieldI1.LabelText = Res.Strings.Panel.Regular.Label.I1;
 			this.fieldI1.TextFieldR.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldI1.TextFieldA.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldI1.TabIndex = 5;
 			this.fieldI1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldI1, Res.Strings.Panel.Regular.Tooltip.Deep);
+			ToolTip.Default.SetToolTip(this.fieldI1, Res.Strings.Panel.Regular.Tooltip.I1);
 
 			this.fieldI2 = new Widgets.TextFieldPolar(this);
-			this.fieldI2.LabelText = "Intérieur droite";
+			this.fieldI2.LabelText = Res.Strings.Panel.Regular.Label.I2;
 			this.fieldI2.TextFieldR.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldI2.TextFieldA.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldI2.TabIndex = 6;
 			this.fieldI2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldI2, Res.Strings.Panel.Regular.Tooltip.Deep);
+			ToolTip.Default.SetToolTip(this.fieldI2, Res.Strings.Panel.Regular.Tooltip.I2);
 
 			this.isNormalAndExtended = true;
 		}

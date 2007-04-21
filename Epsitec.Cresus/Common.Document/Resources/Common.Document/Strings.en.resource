@@ -408,7 +408,6 @@
   <data id="0TC">Reset (default values)</data>
   <data id="0UC">Object name</data>
   <data id="0VC">N</data>
-  <data id="00D">R</data>
   <data id="01D">Sides</data>
   <data id="02D">Recess</data>
   <data id="03D">Side number for a polygon</data>

@@ -230,7 +230,7 @@ namespace Epsitec.Common.Document.Properties
 			switch (type)
 			{
 				case "Star":    return Res.Strings.Property.Regular.Star;
-				case "Flower":  return "Fleur";
+				case "Flower":  return Res.Strings.Property.Regular.Flower;
 				default:        return Res.Strings.Property.Regular.Norm;
 			}
 		}
