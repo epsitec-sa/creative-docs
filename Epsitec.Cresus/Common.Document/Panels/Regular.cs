@@ -233,20 +233,6 @@ namespace Epsitec.Common.Document.Panels
 			r = rect;
 			r.Left = rect.Left;
 			r.Right = rect.Right;
-			this.fieldE1.SetManualBounds(r);
-
-			rect.Top = r.Bottom+1;
-			rect.Bottom = rect.Top-20;
-			r = rect;
-			r.Left = rect.Left;
-			r.Right = rect.Right;
-			this.fieldE2.SetManualBounds(r);
-
-			rect.Top = r.Bottom-10;
-			rect.Bottom = rect.Top-20;
-			r = rect;
-			r.Left = rect.Left;
-			r.Right = rect.Right;
 			this.fieldI1.SetManualBounds(r);
 
 			rect.Top = r.Bottom+1;
@@ -255,6 +241,20 @@ namespace Epsitec.Common.Document.Panels
 			r.Left = rect.Left;
 			r.Right = rect.Right;
 			this.fieldI2.SetManualBounds(r);
+
+			rect.Top = r.Bottom-10;
+			rect.Bottom = rect.Top-20;
+			r = rect;
+			r.Left = rect.Left;
+			r.Right = rect.Right;
+			this.fieldE1.SetManualBounds(r);
+
+			rect.Top = r.Bottom+1;
+			rect.Bottom = rect.Top-20;
+			r = rect;
+			r.Left = rect.Left;
+			r.Right = rect.Right;
+			this.fieldE2.SetManualBounds(r);
 		}
 		
 		private void HandleFieldChanged(object sender)

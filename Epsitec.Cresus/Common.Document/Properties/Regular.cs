@@ -20,11 +20,11 @@ namespace Epsitec.Common.Document.Properties
 			this.nbFaces = 6;
 			this.star    = false;
 			this.flower  = false;
-			this.deep    = new Polar(0.5,   0.0);
-			this.e1      = new Polar(0.0,  20.0);
-			this.e2      = new Polar(0.0, -20.0);
-			this.i1      = new Polar(0.6,   0.0);
-			this.i2      = new Polar(0.6,   0.0);
+			this.deep    = new Polar( 0.50,   0.0);
+			this.e1      = new Polar(-0.05,  20.0);
+			this.e2      = new Polar(-0.05, -20.0);
+			this.i1      = new Polar( 0.60,  10.0);
+			this.i2      = new Polar( 0.60, -10.0);
 		}
 
 		public int NbFaces
