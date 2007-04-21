@@ -329,13 +329,19 @@ namespace Epsitec.Common.Document.Objects
 			return a + (b-a)*scale;
 		}
 
-		public Point PolarToPoint(double scale, double angle)
+		public Point PolarToPoint(double r, double a)
+		{
+			//	Conversion d'une coordonnée polaire (scale;angle) en coordonnée (x;y), dans l'espace de l'objet.
+			return this.PolarToPoint(new Polar(r, a));
+		}
+
+		public Point PolarToPoint(Polar p)
 		{
 			//	Conversion d'une coordonnée polaire (scale;angle) en coordonnée (x;y), dans l'espace de l'objet.
 			Point center = this.Handle(0).Position;
 
-			Point pos = Point.Scale(center, this.Handle(1).Position, scale);
-			return Transform.RotatePointDeg(center, angle, pos);
+			Point pos = Point.Scale(center, this.Handle(1).Position, p.R);
+			return Transform.RotatePointDeg(center, p.A, pos);
 		}
 
 		public Polar PointToPolar(Point pos)
