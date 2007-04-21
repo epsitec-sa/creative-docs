@@ -199,7 +199,7 @@ namespace Epsitec.Common.Document.Objects
 				pathSupport.AppendCircle(center, radius);
 				pathSupport.AppendCircle(center, radius*(1.0-pr.Deep.R));
 
-				if (pr.Flower)
+				if (pr.Flower && this.document.Modifier.IsPropertiesExtended(Properties.Type.Regular))
 				{
 					Point p1, s1, s2, p2;
 
