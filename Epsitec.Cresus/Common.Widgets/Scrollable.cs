@@ -26,22 +26,24 @@ namespace Epsitec.Common.Widgets
 	{
 		public Scrollable()
 		{
-			this.h_scroller = new HScroller (this);
-			this.v_scroller = new VScroller (this);
+			this.hScroller = new HScroller (this);
+			this.vScroller = new VScroller (this);
 			
-			this.h_scroller_mode = ScrollableScrollerMode.Auto;
-			this.v_scroller_mode = ScrollableScrollerMode.Auto;
+			this.hScrollerMode = ScrollableScrollerMode.Auto;
+			this.vScrollerMode = ScrollableScrollerMode.Auto;
+
+			this.hScroller.Name = "HorizontalScroller";
+			this.hScroller.MaxValue          = 0;
+			this.hScroller.VisibleRangeRatio = 1;
+			this.hScroller.IsInverted        = false;
+
+			this.vScroller.Name = "VerticalScroller";
+			this.vScroller.MaxValue          = 0;
+			this.vScroller.VisibleRangeRatio = 1;
+			this.vScroller.IsInverted        = true;
 			
-			this.h_scroller.MaxValue          = 0;
-			this.h_scroller.VisibleRangeRatio = 1;
-			this.h_scroller.IsInverted        = false;
-			
-			this.v_scroller.MaxValue          = 0;
-			this.v_scroller.VisibleRangeRatio = 1;
-			this.v_scroller.IsInverted        = true;
-			
-			this.h_scroller.ValueChanged += new Support.EventHandler (this.HandleHScrollerValueChanged);
-			this.v_scroller.ValueChanged += new Support.EventHandler (this.HandleVScrollerValueChanged);
+			this.hScroller.ValueChanged += new Support.EventHandler (this.HandleHScrollerValueChanged);
+			this.vScroller.ValueChanged += new Support.EventHandler (this.HandleVScrollerValueChanged);
 
 			this.Panel = new Panel ();
 		}
@@ -100,13 +102,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.h_scroller_mode;
+				return this.hScrollerMode;
 			}
 			set
 			{
-				if (this.h_scroller_mode != value)
+				if (this.hScrollerMode != value)
 				{
-					this.h_scroller_mode = value;
+					this.hScrollerMode = value;
 					this.UpdateGeometry ();
 				}
 			}
@@ -116,13 +118,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.v_scroller_mode;
+				return this.vScrollerMode;
 			}
 			set
 			{
-				if (this.v_scroller_mode != value)
+				if (this.vScrollerMode != value)
 				{
-					this.v_scroller_mode = value;
+					this.vScrollerMode = value;
 					this.UpdateGeometry ();
 				}
 			}
@@ -147,14 +149,14 @@ namespace Epsitec.Common.Widgets
 			{
 				this.Panel = null;
 				
-				this.h_scroller.ValueChanged -= new Support.EventHandler (this.HandleHScrollerValueChanged);
-				this.v_scroller.ValueChanged -= new Support.EventHandler (this.HandleVScrollerValueChanged);
+				this.hScroller.ValueChanged -= new Support.EventHandler (this.HandleHScrollerValueChanged);
+				this.vScroller.ValueChanged -= new Support.EventHandler (this.HandleVScrollerValueChanged);
 				
-				this.h_scroller.Dispose ();
-				this.v_scroller.Dispose ();
+				this.hScroller.Dispose ();
+				this.vScroller.Dispose ();
 				
-				this.h_scroller = null;
-				this.v_scroller = null;
+				this.hScroller = null;
+				this.vScroller = null;
 			}
 			
 			base.Dispose (disposing);
@@ -194,8 +196,8 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Met à jour la géométrie du panel et des ascenceurs.
 			
-			if ((this.h_scroller == null) ||
-				(this.v_scroller == null))
+			if ((this.hScroller == null) ||
+				(this.vScroller == null))
 			{
 				return;
 			}
@@ -204,38 +206,50 @@ namespace Epsitec.Common.Widgets
 			//	du même coup la visibilité des ascenceurs.
 			
 			this.UpdatePanelLocation ();
-			
+			this.UpdateScrollerLocation ();
+		}
+
+		protected virtual void UpdateScrollerLocation()
+		{
 			//	Place correctement les ascenceurs.
 
-			double margin_x = (this.v_scroller.Visibility) ? this.v_scroller.PreferredWidth  : 0;
-			double margin_y = (this.h_scroller.Visibility) ? this.h_scroller.PreferredHeight : 0;
-			
-			double total_dx = this.Client.Size.Width;
-			double total_dy = this.Client.Size.Height;
-			
-			if (this.v_scroller.Visibility)
+			double width  = (this.vScroller.Visibility) ? this.vScroller.PreferredWidth  : 0;
+			double height = (this.hScroller.Visibility) ? this.hScroller.PreferredHeight : 0;
+
+			double right = this.Client.Bounds.Right;
+			double top   = this.Client.Bounds.Top;
+
+			if (this.vScroller.Visibility)
 			{
-//				this.v_scroller.Margins = new Drawing.Margins (0, 0, 0, margin_y);
-//				this.v_scroller.Anchor = AnchorStyles.Right | AnchorStyles.TopAndBottom;
-				this.v_scroller.SetManualBounds(new Drawing.Rectangle(total_dx - margin_x, margin_y, margin_x, total_dy - margin_y));
+				Drawing.Rectangle bounds = new Drawing.Rectangle (right - width, height, width, top - height);
+				this.UpdateVerticalScrollerBounds (bounds);
 			}
 
-			if (this.h_scroller.Visibility)
+			if (this.hScroller.Visibility)
 			{
-//				this.h_scroller.Margins = new Drawing.Margins (0, margin_x, 0, 0);
-//				this.h_scroller.Anchor = AnchorStyles.Bottom | AnchorStyles.LeftAndRight;
-				this.h_scroller.SetManualBounds(new Drawing.Rectangle(0, 0, total_dx - margin_x, margin_y));
+				Drawing.Rectangle bounds = new Drawing.Rectangle (0, 0, right - width, height);
+				this.UpdateHorizontalScrollerBounds (bounds);
 			}
 		}
-		
-		protected void UpdatePanelLocation()
+
+		protected virtual void UpdateVerticalScrollerBounds(Epsitec.Common.Drawing.Rectangle bounds)
+		{
+			this.vScroller.SetManualBounds (bounds);
+		}
+
+		protected virtual void UpdateHorizontalScrollerBounds(Drawing.Rectangle bounds)
+		{
+			this.hScroller.SetManualBounds (bounds);
+		}
+
+		protected virtual void UpdatePanelLocation()
 		{
 			Panel panel = this.Panel;
 			
 			if (panel == null)
 			{
-				this.h_scroller.Hide ();
-				this.v_scroller.Hide ();
+				this.hScroller.Hide ();
+				this.vScroller.Hide ();
 				
 				return;
 			}
@@ -244,8 +258,8 @@ namespace Epsitec.Common.Widgets
 			double total_dy = this.Client.Size.Height;
 			double panel_dx = panel.SurfaceWidth;
 			double panel_dy = panel.SurfaceHeight;
-			double margin_x = (this.v_scroller_mode == ScrollableScrollerMode.ShowAlways) ? this.v_scroller.PreferredWidth : 0;
-			double margin_y = (this.h_scroller_mode == ScrollableScrollerMode.ShowAlways) ? this.h_scroller.PreferredHeight : 0;
+			double margin_x = (this.vScrollerMode == ScrollableScrollerMode.ShowAlways) ? this.vScroller.PreferredWidth : 0;
+			double margin_y = (this.hScrollerMode == ScrollableScrollerMode.ShowAlways) ? this.hScroller.PreferredHeight : 0;
 			
 			double delta_dx;
 			double delta_dy;
@@ -259,25 +273,25 @@ namespace Epsitec.Common.Widgets
 				delta_dy = panel_dy - total_dy + margin_y;
 				
 				if ((delta_dx > 0) &&
-					(this.h_scroller_mode != ScrollableScrollerMode.HideAlways))
+					(this.hScrollerMode != ScrollableScrollerMode.HideAlways))
 				{
 					//	Il y a besoin d'un ascenceur horizontal.
 					
 					if (margin_y == 0)
 					{
-						margin_y = this.h_scroller.PreferredHeight;
+						margin_y = this.hScroller.PreferredHeight;
 						continue;
 					}
 				}
 				
 				if ((delta_dy > 0) &&
-					(this.v_scroller_mode != ScrollableScrollerMode.HideAlways))
+					(this.vScrollerMode != ScrollableScrollerMode.HideAlways))
 				{
 					//	Il y a besoin d'un ascenceur vertical.
 					
 					if (margin_x == 0)
 					{
-						margin_x = this.v_scroller.PreferredWidth;
+						margin_x = this.vScroller.PreferredWidth;
 						continue;
 					}
 				}
@@ -301,60 +315,60 @@ namespace Epsitec.Common.Widgets
 				(delta_dx > 0) &&
 				(vis_dx > 0))
 			{
-				this.h_scroller.MaxValue          = (decimal) (delta_dx);
-				this.h_scroller.VisibleRangeRatio = (decimal) (vis_dx / panel_dx);
-				this.h_scroller.SmallChange       = (decimal) (Scrollable.SmallScrollPixels);
-				this.h_scroller.LargeChange       = (decimal) (vis_dx * Scrollable.LargeScrollPercent / 100);
+				this.hScroller.MaxValue          = (decimal) (delta_dx);
+				this.hScroller.VisibleRangeRatio = (decimal) (vis_dx / panel_dx);
+				this.hScroller.SmallChange       = (decimal) (Scrollable.SmallScrollPixels);
+				this.hScroller.LargeChange       = (decimal) (vis_dx * Scrollable.LargeScrollPercent / 100);
 			
 				offset_x = System.Math.Min (this.panelOffset.X, delta_dx);
 				
-				this.h_scroller_value = (decimal) offset_x;
-				this.h_scroller.Value = (decimal) offset_x;
+				this.hScrollerValue  = (decimal) offset_x;
+				this.hScroller.Value = (decimal) offset_x;
 			}
 			else
 			{
 				panel_dx = vis_dx;
 				
-				this.h_scroller_value = 0;
-				this.panelOffset.X   = 0;
+				this.hScrollerValue = 0;
+				this.panelOffset.X  = 0;
 				
-				this.h_scroller.MaxValue          = 1.0M;
-				this.h_scroller.Value             = 0.0M;
-				this.h_scroller.VisibleRangeRatio = 1.0M;
+				this.hScroller.MaxValue          = 1.0M;
+				this.hScroller.Value             = 0.0M;
+				this.hScroller.VisibleRangeRatio = 1.0M;
 			}
 			
 			if ((panel_dy > 0) &&
 				(delta_dy > 0) &&
 				(vis_dy > 0))
 			{
-				this.v_scroller.MaxValue          = (decimal) (delta_dy);
-				this.v_scroller.VisibleRangeRatio = (decimal) (vis_dy / panel_dy);
-				this.v_scroller.SmallChange       = (decimal) (Scrollable.SmallScrollPixels);
-				this.v_scroller.LargeChange       = (decimal) (vis_dy * Scrollable.LargeScrollPercent / 100);
+				this.vScroller.MaxValue          = (decimal) (delta_dy);
+				this.vScroller.VisibleRangeRatio = (decimal) (vis_dy / panel_dy);
+				this.vScroller.SmallChange       = (decimal) (Scrollable.SmallScrollPixels);
+				this.vScroller.LargeChange       = (decimal) (vis_dy * Scrollable.LargeScrollPercent / 100);
 				
 				offset_y = System.Math.Min (this.panelOffset.Y, delta_dy);
 				
-				this.v_scroller_value = (decimal) offset_y;
-				this.v_scroller.Value = (decimal) offset_y;
+				this.vScrollerValue = (decimal) offset_y;
+				this.vScroller.Value = (decimal) offset_y;
 			}
 			else
 			{
 				panel_dy = vis_dy;
 				
-				this.v_scroller_value = 0;
-				this.panelOffset.Y   = 0;
+				this.vScrollerValue = 0;
+				this.panelOffset.Y  = 0;
 				
-				this.v_scroller.MaxValue          = 1.0M;
-				this.v_scroller.Value             = 0.0M;
-				this.v_scroller.VisibleRangeRatio = 1.0M;
+				this.vScroller.MaxValue          = 1.0M;
+				this.vScroller.Value             = 0.0M;
+				this.vScroller.VisibleRangeRatio = 1.0M;
 			}
 			
 			//	Met à jour l'ouverture (aperture) qui permet de voir le panel et ajuste
 			//	ce dernier pour que la partie qui intéresse l'utilisateur soit en face de
 			//	l'ouverture.
 
-			this.h_scroller.Visibility = (margin_y > 0);
-			this.v_scroller.Visibility = (margin_x > 0);
+			this.hScroller.Visibility = (margin_y > 0);
+			this.vScroller.Visibility = (margin_x > 0);
 
 			this.panelAperture = new Drawing.Rectangle (0, margin_y, vis_dx, vis_dy);
 			panel.SetManualBounds (new Drawing.Rectangle (-offset_x, total_dy - panel_dy + offset_y, panel_dx, panel_dy));
@@ -366,22 +380,22 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleHScrollerValueChanged(object sender)
 		{
-			System.Diagnostics.Debug.Assert (this.h_scroller == sender);
+			System.Diagnostics.Debug.Assert (this.hScroller == sender);
 			
-			if (this.h_scroller.Value != this.h_scroller_value)
+			if (this.hScroller.Value != this.hScrollerValue)
 			{
-				this.panelOffset.X = System.Math.Floor (this.h_scroller.DoubleValue);
+				this.panelOffset.X = System.Math.Floor (this.hScroller.DoubleValue);
 				this.UpdatePanelLocation ();
 			}
 		}
 		
 		private void HandleVScrollerValueChanged(object sender)
 		{
-			System.Diagnostics.Debug.Assert (this.v_scroller == sender);
+			System.Diagnostics.Debug.Assert (this.vScroller == sender);
 			
-			if (this.v_scroller.Value != this.v_scroller_value)
+			if (this.vScroller.Value != this.vScrollerValue)
 			{
-				this.panelOffset.Y = System.Math.Floor (this.v_scroller.DoubleValue);
+				this.panelOffset.Y = System.Math.Floor (this.vScroller.DoubleValue);
 				this.UpdatePanelLocation ();
 			}
 		}
@@ -405,8 +419,8 @@ namespace Epsitec.Common.Widgets
 			WidgetPaintState state = this.PaintState;
 			
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			double margin_x = (this.v_scroller.Visibility) ? this.v_scroller.PreferredWidth  : 0;
-			double margin_y = (this.h_scroller.Visibility) ? this.h_scroller.PreferredHeight : 0;
+			double margin_x = (this.vScroller.Visibility) ? this.vScroller.PreferredWidth  : 0;
+			double margin_y = (this.hScroller.Visibility) ? this.hScroller.PreferredHeight : 0;
 			rect.Right -= margin_x;
 			rect.Bottom += margin_y;
 			rect.Deflate (this.foregroundFrameMargins);
@@ -415,7 +429,7 @@ namespace Epsitec.Common.Widgets
 			graphics.RenderSolid (adorner.ColorBorder);
 		}
 
-		private static void HandlePanelInvalidated(DependencyObject o, object oldValue, object newValue)
+		private static void HandlePanelChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			Scrollable that = (Scrollable) o;
 
@@ -458,19 +472,19 @@ namespace Epsitec.Common.Widgets
 			that.PanelOffsetX = (double) value;
 		}
 
-		public static readonly DependencyProperty PanelProperty = DependencyProperty.Register ("Panel", typeof (Panel), typeof (Scrollable), new DependencyPropertyMetadata (null, Scrollable.HandlePanelInvalidated));
+		public static readonly DependencyProperty PanelProperty = DependencyProperty.Register ("Panel", typeof (Panel), typeof (Scrollable), new DependencyPropertyMetadata (null, Scrollable.HandlePanelChanged));
 		public static readonly DependencyProperty PanelOffsetXProperty = DependencyProperty.Register ("PanelOffsetX", typeof (double), typeof (Scrollable), new DependencyPropertyMetadata (Scrollable.GetPanelOffsetXValue, Scrollable.SetPanelOffsetXValue));
 		public static readonly DependencyProperty PanelOffsetYProperty = DependencyProperty.Register ("PanelOffsetY", typeof (double), typeof (Scrollable), new DependencyPropertyMetadata (Scrollable.GetPanelOffsetYValue, Scrollable.SetPanelOffsetYValue));
 
-		private Drawing.Rectangle				panelAperture;				//	ouverture par laquelle on voit le panel
-		private Drawing.Point					panelOffset;				//	offset du panel, dérivé de la position des ascenceurs
+		private Drawing.Rectangle				panelAperture;
+		private Drawing.Point					panelOffset;
 		
-		protected VScroller						v_scroller;
-		protected HScroller						h_scroller;
-		protected decimal						v_scroller_value;			//	dernière position de l'ascenceur vertical
-		protected decimal						h_scroller_value;			//	dernière position de l'ascenceur horizontal
-		protected ScrollableScrollerMode		v_scroller_mode;
-		protected ScrollableScrollerMode		h_scroller_mode;
+		protected VScroller						vScroller;
+		protected HScroller						hScroller;
+		private decimal							vScrollerValue;
+		private decimal							hScrollerValue;
+		private ScrollableScrollerMode			vScrollerMode;
+		private ScrollableScrollerMode			hScrollerMode;
 		
 		private bool							paintForegroundFrame;
 		private Drawing.Margins					foregroundFrameMargins;
