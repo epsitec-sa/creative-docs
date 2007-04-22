@@ -324,6 +324,21 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorGo.Enable = (this.selectorName.Text.Length > 0);
 		}
 
+		public bool ShowOnlyPanels
+		{
+			get
+			{
+				return this.showOnlyPanels;
+			}
+			set
+			{
+				if ( this.showOnlyPanels != value )
+				{
+					this.showOnlyPanels = value;
+					this.DoUpdateContent();
+				}
+			}
+		}
 
 		public override void Hilite(Objects.Abstract hiliteObject)
 		{
@@ -349,6 +364,10 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
+		public void UpdateContent()
+		{
+			this.DoUpdateContent ();
+		}
 		
 		protected override void DoUpdateContent()
 		{
@@ -357,47 +376,57 @@ namespace Epsitec.Common.Document.Containers
 			Viewer viewer = this.document.Modifier.ActiveViewer;
 			DrawingContext context = viewer.DrawingContext;
 
-			this.helpText.Visibility = this.document.GlobalSettings.LabelProperties;
+			this.helpText.Visibility = this.document.GlobalSettings.LabelProperties && !this.showOnlyPanels;
 
-			if ( this.document.Modifier.Tool == "ToolSelect" ||
-				 this.document.Modifier.Tool == "ToolGlobal" )
+			if ( this.showOnlyPanels )
 			{
-				if ( this.document.Modifier.TotalSelected == 0 )
-				{
-					this.aggregateToolBar.Hide();
-				}
-				else
-				{
-					this.aggregateToolBar.Show();
-				}
-
-				this.selectorToolBar.Show();
-				this.selectorPanel.Visibility = (this.document.Modifier.NamesExist);
+				this.aggregateToolBar.Hide ();
+				this.selectorToolBar.Hide ();
+				this.selectorPanel.Hide ();
+				this.textToolBar.Hide ();
 			}
 			else
 			{
-				if ( this.document.Modifier.IsTool )
+				if ( this.document.Modifier.Tool == "ToolSelect" ||
+					 this.document.Modifier.Tool == "ToolGlobal" )
 				{
-					this.aggregateToolBar.Hide();
+					if ( this.document.Modifier.TotalSelected == 0 )
+					{
+						this.aggregateToolBar.Hide();
+					}
+					else
+					{
+						this.aggregateToolBar.Show();
+					}
+
+					this.selectorToolBar.Show();
+					this.selectorPanel.Visibility = (this.document.Modifier.NamesExist);
 				}
 				else
 				{
-					this.aggregateToolBar.Show();
+					if ( this.document.Modifier.IsTool )
+					{
+						this.aggregateToolBar.Hide();
+					}
+					else
+					{
+						this.aggregateToolBar.Show();
+					}
+
+					this.selectorToolBar.Hide();
+					this.selectorPanel.Hide();
 				}
 
-				this.selectorToolBar.Hide();
-				this.selectorPanel.Hide();
+				if ( this.document.Modifier.IsToolEdit )
+				{
+					this.textToolBar.Show();
+				}
+				else
+				{
+					this.textToolBar.Hide();
+				}
 			}
-
-			if ( this.document.Modifier.IsToolEdit )
-			{
-				this.textToolBar.Show();
-			}
-			else
-			{
-				this.textToolBar.Hide();
-			}
-
+			
 			this.UpdateAggregate();
 
 			this.detailButton.SetParent(null);
@@ -927,5 +956,6 @@ namespace Epsitec.Common.Document.Containers
 
 		protected bool							ignoreColorChanged = false;
 		protected bool							ignoreChanged = false;
+		protected bool							showOnlyPanels = false;
 	}
 }
