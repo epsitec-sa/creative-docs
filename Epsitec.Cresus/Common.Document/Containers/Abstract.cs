@@ -25,6 +25,13 @@ namespace Epsitec.Common.Document.Containers
 			base.Dispose (disposing);
 		}
 
+		public Document Document
+		{
+			get
+			{
+				return this.document;
+			}
+		}
 
 		public virtual void Hilite(Objects.Abstract hiliteObject)
 		{
