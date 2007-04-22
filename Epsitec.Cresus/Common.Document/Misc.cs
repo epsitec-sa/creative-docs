@@ -205,6 +205,26 @@ namespace Epsitec.Common.Document
 		}
 
 
+		static public string FaceInvariantToInvariant(string face, string style)
+		{
+			//	Conversion d'un nom de famille en filtrant en plus d'éventuels
+			//	"Black" qui traineraient derrière un "Arial Black".
+			if (face == null || style == null)
+			{
+				return null;
+			}
+
+			OpenType.FontName fontName = new OpenType.FontName (face, style);
+			OpenType.FontIdentity id = OpenType.FontCollection.Default[fontName];
+
+			if (id == null)
+			{
+				return null;
+			}
+
+			return id.InvariantFaceName;
+		}
+
 		static public string FaceInvariantToLocale(string face, string style)
 		{
 			//	Conversion d'un nom de famille dans la culture locale, en

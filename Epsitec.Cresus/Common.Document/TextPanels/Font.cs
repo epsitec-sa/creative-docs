@@ -253,7 +253,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.ignoreChanged = true;
 
-			this.UpdateComboStyleList(face);
+			this.UpdateComboStyleList(face, style);
 
 			this.fontFace.Text  = TextLayout.ConvertToTaggedText(Misc.FaceInvariantToLocale(face, style));
 			this.fontStyle.Text = TextLayout.ConvertToTaggedText(Misc.StyleInvariantToLocale(face, style));
@@ -278,22 +278,24 @@ namespace Epsitec.Common.Document.TextPanels
 			this.ignoreChanged = false;
 		}
 
-		protected void UpdateComboStyleList(string face)
+		protected void UpdateComboStyleList(string face, string style)
 		{
 			//	Met à jour la liste d'un champ éditable pour le style de la police.
 			this.fontStyle.Items.Clear();  // vide la liste
-			if ( face == null )  return;
-
-			OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(face);
-			this.stylesInvariant = new List<string>();
-			this.stylesLocal = new List<string>();
-
-			foreach ( OpenType.FontIdentity id in list )
+			
+			if ( face != null && style != null )
 			{
-				this.fontStyle.Items.Add(id.LocaleStyleName);
+				OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(Misc.FaceInvariantToInvariant(face, style));
+				this.stylesInvariant = new List<string>();
+				this.stylesLocal = new List<string>();
 
-				this.stylesInvariant.Add(id.InvariantStyleName);
-				this.stylesLocal.Add(id.LocaleStyleName);
+				foreach ( OpenType.FontIdentity id in list )
+				{
+					this.fontStyle.Items.Add(id.LocaleStyleName);
+
+					this.stylesInvariant.Add(id.InvariantStyleName);
+					this.stylesLocal.Add(id.LocaleStyleName);
+				}
 			}
 		}
 
