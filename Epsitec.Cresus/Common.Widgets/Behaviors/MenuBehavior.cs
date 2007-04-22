@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Types;
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Widgets.Behaviors
 {
 	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
@@ -20,8 +22,28 @@ namespace Epsitec.Common.Widgets.Behaviors
 			//	et seul le MenuBehavior associé à la racine des menus sera utilisé
 			//	pour gérer l'ensemble des (sous-)menus.
 		}
-		
-		
+
+
+		public static bool						HasOpenMenus
+		{
+			get
+			{
+				lock (MenuBehavior.sync_object)
+				{
+					if (MenuBehavior.menu_list.Count > 0)
+					{
+						return true;
+					}
+					if (MenuBehavior.stack.Count > 0)
+					{
+						return true;
+					}
+				}
+
+				return false;
+			}
+		}
+
 		private bool							IsFrozen
 		{
 			get
@@ -144,8 +166,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			return behavior;
 		}
-		
-		
+
 		
 		private static void DisableKeyboardFilter()
 		{
@@ -422,6 +443,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 				MenuBehavior.menu_list.Add (this);
 			}
 			
+			MenuBehavior.NotifyMenuListChanged ();
+			
 			System.Diagnostics.Debug.Assert (this.live_menu_windows.Contains (window) == false);
 			
 			this.live_menu_windows.Add (window);
@@ -460,6 +483,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 				{
 					MenuBehavior.menu_list.Remove (this);
 				}
+				
+				MenuBehavior.NotifyMenuListChanged ();
 			}
 		}
 		
@@ -472,10 +497,10 @@ namespace Epsitec.Common.Widgets.Behaviors
 		static MenuBehavior()
 		{
 			MenuBehavior.timer = new Timer ();
-			MenuBehavior.stack = new System.Collections.Stack ();
-			
-			MenuBehavior.menu_list      = new System.Collections.ArrayList ();
-			MenuBehavior.menu_root_list = new System.Collections.ArrayList ();
+			MenuBehavior.stack = new Stack<State> ();
+
+			MenuBehavior.menu_list      = new List<MenuBehavior> ();
+			MenuBehavior.menu_root_list = new List<MenuBehavior> ();
 			
 			MenuBehavior.timer.TimeElapsed += MenuBehavior.HandleTimerTimeElapsed;
 		}
@@ -1255,7 +1280,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			lock (MenuBehavior.sync_object)
 			{
-				return (MenuBehavior[]) MenuBehavior.menu_list.ToArray (typeof (MenuBehavior));
+				return MenuBehavior.menu_list.ToArray ();
 			}
 		}
 		
@@ -1263,7 +1288,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			lock (MenuBehavior.sync_object)
 			{
-				return (MenuBehavior[]) MenuBehavior.menu_root_list.ToArray (typeof (MenuBehavior));
+				return MenuBehavior.menu_root_list.ToArray ();
 			}
 		}
 		
@@ -1403,7 +1428,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 					
 					if (n > 0)
 					{
-						MenuBehavior that = MenuBehavior.menu_list[n-1] as MenuBehavior;
+						MenuBehavior that = MenuBehavior.menu_list[n-1];
 						
 						foreach (Window menu in that.live_menu_windows)
 						{
@@ -1654,7 +1679,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			if ((that == null) &&
 				(MenuBehavior.menu_list.Count > 0))
 			{
-				that = MenuBehavior.menu_list[MenuBehavior.menu_list.Count-1] as MenuBehavior;
+				that = MenuBehavior.menu_list[MenuBehavior.menu_list.Count-1];
 			}
 			
 			if (that == null)
@@ -1759,6 +1784,14 @@ namespace Epsitec.Common.Widgets.Behaviors
 				}
 			}
 		}
+
+		private static void NotifyMenuListChanged()
+		{
+			if (MenuBehavior.MenuListChanged != null)
+			{
+				MenuBehavior.MenuListChanged ();
+			}
+		}
 		
 		
 		private void OnAccepted()
@@ -1786,7 +1819,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private static void Pop(MenuBehavior behavior)
 		{
-			State state = MenuBehavior.stack.Peek () as State;
+			State state = MenuBehavior.stack.Peek ();
 			
 			System.Diagnostics.Debug.Assert (state.Behavior == behavior);
 			
@@ -1818,8 +1851,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			public void Save()
 			{
-				this.menu_list      = new System.Collections.ArrayList ();
-				this.menu_root_list = new System.Collections.ArrayList ();
+				this.menu_list      = new List<MenuBehavior> ();
+				this.menu_root_list = new List<MenuBehavior> ();
 				
 				this.menu_list.AddRange (MenuBehavior.menu_list);
 				this.menu_root_list.AddRange (MenuBehavior.menu_root_list);
@@ -1836,6 +1869,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 				MenuBehavior.menu_list.Clear ();
 				MenuBehavior.menu_root_list.Clear ();
 				MenuBehavior.filter_keyboard_off = 0;
+
+				MenuBehavior.NotifyMenuListChanged ();
 			}
 			
 			public void Restore()
@@ -1852,13 +1887,15 @@ namespace Epsitec.Common.Widgets.Behaviors
 				MenuBehavior.filter_keyboard_off = this.filter_keyboard_off;
 				
 				System.Diagnostics.Debug.WriteLine (string.Format ("Restored; menu list: {0} items, root list: {1} items", this.menu_list.Count, this.menu_root_list.Count));
+
+				MenuBehavior.NotifyMenuListChanged ();
 			}
 			
 			
 			MenuBehavior						behavior;
 			
-			System.Collections.ArrayList		menu_list;
-			System.Collections.ArrayList		menu_root_list;
+			List<MenuBehavior>					menu_list;
+			List<MenuBehavior>					menu_root_list;
 			MenuItem							menu_last_item;
 			MenuBehavior						menu_last_behavior;
 			int									filter_keyboard_off;
@@ -1867,16 +1904,18 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		public event Support.EventHandler		Accepted;
 		public event Support.EventHandler		Rejected;
+
+		public static event Support.SimpleCallback MenuListChanged;
 		
-		static object							sync_object = new object ();
+		static readonly object					sync_object = new object ();
 		static long								next_id = 1;
 		static int								menu_count;
-		static System.Collections.ArrayList		menu_list;			//	liste de MenuBehavior
-		static System.Collections.ArrayList		menu_root_list;		//	liste de MenuBehavior
+		static List<MenuBehavior>				menu_list;
+		static List<MenuBehavior>				menu_root_list;
 		static MenuItem							menu_last_item;
 		static MenuBehavior						menu_last_behavior;
 		
-		static System.Collections.Stack			stack;
+		static Stack<State>						stack;
 		static Timer							timer;
 		
 		static MenuItem							timer_item;

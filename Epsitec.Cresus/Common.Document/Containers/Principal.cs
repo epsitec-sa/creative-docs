@@ -368,7 +368,14 @@ namespace Epsitec.Common.Document.Containers
 		{
 			this.DoUpdateContent ();
 		}
-		
+
+		public void SetTextFilter(string filter)
+		{
+			this.textFilter = filter;
+			this.UpdateText ();
+			this.DoUpdateContent ();
+		}
+
 		protected override void DoUpdateContent()
 		{
 			//	Effectue la mise à jour du contenu.
@@ -845,8 +852,9 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleFilterTextClicked(object sender, MessageEventArgs e)
 		{
 			IconButton button = sender as IconButton;
+			string filter = button.Name;
 
-			if ( this.textFilter == button.Name )
+			if ( this.textFilter == filter )
 			{
 				if ( this.IsTextPanelsReduced() )
 				{
@@ -859,9 +867,7 @@ namespace Epsitec.Common.Document.Containers
 			}
 			else
 			{
-				this.textFilter = button.Name;
-				this.UpdateText();
-				this.DoUpdateContent();
+				this.SetTextFilter (filter);
 			}
 		}
 
