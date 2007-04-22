@@ -55,19 +55,18 @@ namespace Epsitec.Common.OpenType
 		/// </summary>
 		/// <value>The <see cref="FontIdentity"/> or <c>null</c> if it does
 		/// not exist in the collection.</value>
-		public FontIdentity this[FontName name]
+		public FontIdentity						this[FontName name]
 		{
 			get
 			{
 				lock (this.localExclusion)
 				{
-					string faceName = name.FaceName;
-					string styleHash = FontCollection.GetStyleHash (name.StyleName);
+					string fullName = OpenType.FontName.GetFullName (name.FaceName, name.StyleName);
+					string fullHash = OpenType.FontName.GetFullHash (fullName);
 					
 					foreach (FontIdentity fid in this.fullList)
 					{
-						if ((fid.InvariantFaceName == faceName) &&
-							(fid.InvariantStyleHash == styleHash))
+						if (fid.FullHash == fullHash)
 						{
 							return fid;
 						}
@@ -697,13 +696,13 @@ namespace Epsitec.Common.OpenType
 			//	Pour trouver la fonte correspondante, on se base sur le "hash"
 			//	du nom de style, ce qui permet d'être plus souple dans le cas
 			//	des fontes à variantes.
-			
-			string hash = FontCollection.GetStyleHash (style);
+
+			string fullName = FontName.GetFullName (face, FontCollection.GetStyleHash (style));
+			string fullHash = FontName.GetFullHash (fullName);
 			
 			foreach (FontIdentity identity in this.fullList)
 			{
-				if ((identity.InvariantFaceName == face) &&
-					(identity.InvariantStyleHash == hash))
+				if (identity.FullHash == fullHash)
 				{
 					return this.CreateFont (identity);
 				}

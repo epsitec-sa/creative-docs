@@ -61,7 +61,7 @@ namespace Epsitec.Common.OpenType
 		/// Gets the full name of the font (face and style).
 		/// </summary>
 		/// <value>The full name of the font (face and style).</value>
-		public string FullName
+		public string							FullName
 		{
 			get
 			{
@@ -84,7 +84,7 @@ namespace Epsitec.Common.OpenType
 		/// </returns>
 		public override int GetHashCode()
 		{
-			return this.face.GetHashCode () ^ this.style.GetHashCode ();
+			return this.FullName.GetHashCode ();
 		}
 
 		/// <summary>
@@ -102,6 +102,75 @@ namespace Epsitec.Common.OpenType
 			return this.Equals (that);
 		}
 
+		/// <summary>
+		/// Gets the full font name, based on the concatenation of the font face
+		/// name and font style name.
+		/// </summary>
+		/// <param name="face">The font face name.</param>
+		/// <param name="style">The font style name.</param>
+		/// <returns>The full font name.</returns>
+		public static string GetFullName(string face, string style)
+		{
+			if (string.IsNullOrEmpty (style))
+			{
+				return face;
+			}
+			else
+			{
+				return string.Concat (face, " ", style);
+			}
+		}
+
+		/// <summary>
+		/// Gets the full hash of the specified full font name. This will sort
+		/// all elements in alphabetic order and remove any <c>"Regular"</c>,
+		/// <c>"Normal"</c> or <c>"Roman"</c> from the name; duplicates are
+		/// also removed.
+		/// </summary>
+		/// <param name="fullName">The full name.</param>
+		/// <returns>The full name hash.</returns>
+		public static string GetFullHash(string fullName)
+		{
+			List<string> names = new List<string> ();
+			string[] split = fullName.Split (' ');
+
+			foreach (string element in split)
+			{
+				switch (element)
+				{
+					case "Regular":
+						break;
+					case "Normal":
+						break;
+					case "Roman":
+						break;
+
+					default:
+						if (!names.Contains (element))
+						{
+							names.Add (element);
+						}
+						break;
+				}
+			}
+
+			names.Sort ();
+
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			foreach (string element in names)
+			{
+				if (buffer.Length > 0)
+				{
+					buffer.Append (" ");
+				}
+
+				buffer.Append (element);
+			}
+
+			return buffer.ToString ();
+		}
+
 		#region IComparable Members
 		
 		public int CompareTo(object obj)
@@ -117,14 +186,7 @@ namespace Epsitec.Common.OpenType
 
 		public int CompareTo(FontName other)
 		{
-			if (this.face == other.face)
-			{
-				return this.style.CompareTo (other.style);
-			}
-			else
-			{
-				return this.face.CompareTo (other.face);
-			}
+			return this.FullName.CompareTo (other.FullName);
 		}
 
 		#endregion
@@ -133,8 +195,7 @@ namespace Epsitec.Common.OpenType
 
 		public bool Equals(FontName other)
 		{
-			return this.face == other.face
-				&& this.style == other.style;
+			return this.FullName == other.FullName;
 		}
 
 		#endregion

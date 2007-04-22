@@ -1925,18 +1925,18 @@ namespace Epsitec.Common.Text
 			this.layout_list.NewEngine ("*", typeof (Layout.LineEngine));
 		}
 		
-		private static void CreateOrGetFontFromCache(string font_face, string font_style, out OpenType.Font font)
+		private static void CreateOrGetFontFromCache(string fontFace, string font_style, out OpenType.Font font)
 		{
 			TextContext.InitializeFontCollection (null);
-			
-			string font_full = string.Concat (font_face, "/", font_style);
+
+			string fullName = OpenType.FontName.GetFullName (fontFace, font_style);
 			
 			lock (TextContext.font_cache)
 			{
-				if (TextContext.font_cache.TryGetValue (font_full, out font) == false)
+				if (TextContext.font_cache.TryGetValue (fullName, out font) == false)
 				{
-					font = TextContext.font_collection.CreateFont (font_face, font_style);
-					TextContext.font_cache[font_full] = font;
+					font = TextContext.font_collection.CreateFont (fontFace, font_style);
+					TextContext.font_cache[fullName] = font;
 				}
 			}
 		}

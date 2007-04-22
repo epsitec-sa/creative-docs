@@ -216,6 +216,12 @@ namespace Epsitec.Common.Document
 
 			OpenType.FontName fontName = new OpenType.FontName(face, style);
 			OpenType.FontIdentity id = OpenType.FontCollection.Default[fontName];
+
+			if (id == null)
+			{
+				return null;
+			}
+
 			return id.LocaleStyleName;
 		}
 
@@ -334,11 +340,10 @@ namespace Epsitec.Common.Document
 			if (fontName.StyleName == "")
 			{
 				OpenType.FontIdentity did = Misc.DefaultFontIdentityStyle(fontName.FaceName);
-				if (did == null)
+				if (did != null)
 				{
-					return false;
+					fontName = new OpenType.FontName (did.InvariantFaceName, did.InvariantStyleName);
 				}
-				fontName = new OpenType.FontName(did.InvariantFaceName, did.InvariantStyleName);
 			}
 
 			OpenType.FontIdentity id = OpenType.FontCollection.Default[fontName];

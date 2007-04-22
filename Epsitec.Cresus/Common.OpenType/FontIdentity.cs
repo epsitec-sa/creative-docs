@@ -52,8 +52,8 @@ namespace Epsitec.Common.OpenType
 			{
 				lock (this.exclusion)
 				{
-					string face  = this.GetName (NameId.FontFamily);
-					string style = this.GetName (NameId.FontSubfamily);
+					string face  = this.LocalePreferredFaceName ?? this.LocaleSimpleFaceName;
+					string style = this.LocalePreferredStyleName ?? this.LocaleSimpleStyleName;
 
 					if (face.EndsWith (style))
 					{
@@ -76,8 +76,42 @@ namespace Epsitec.Common.OpenType
 			{
 				lock (this.exclusion)
 				{
-					return this.GetName (NameId.FontSubfamily);
+					return this.LocalePreferredStyleName ?? this.LocaleSimpleStyleName;
 				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the font face name for the current locale, using
+		/// <c>CultureInfo.CurrentCulture</c>.
+		/// </summary>
+		/// <value>The font face name.</value>
+		public string							LocaleSimpleFaceName
+		{
+			get
+			{
+				string face  = this.GetName (NameId.FontFamily);
+				string style = this.GetName (NameId.FontSubfamily);
+
+				if (face.EndsWith (style))
+				{
+					face = face.Substring (0, face.Length - style.Length).Trim ();
+				}
+
+				return face;
+			}
+		}
+
+		/// <summary>
+		/// Gets the font style name for the current locale, using
+		/// <c>CultureInfo.CurrentCulture</c>.
+		/// </summary>
+		/// <value>The font style name.</value>
+		public string							LocaleSimpleStyleName
+		{
+			get
+			{
+				return this.GetName (NameId.FontSubfamily);
 			}
 		}
 
@@ -123,11 +157,45 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
+				string face  = this.InvariantPreferredFaceName ?? this.InvariantSimpleFaceName;
+				string style = this.InvariantPreferredStyleName ?? this.InvariantSimpleStyleName;
+				
+				if (face.EndsWith (style))
+				{
+					face = face.Substring (0, face.Length - style.Length).Trim ();
+				}
+
+				return face;
+			}
+		}
+
+		/// <summary>
+		/// Gets the invariant font style name. This name is independent
+		/// of the current culture.
+		/// </summary>
+		/// <value>The font style name.</value>
+		public string							InvariantStyleName
+		{
+			get
+			{
+				return this.InvariantPreferredStyleName ?? this.InvariantSimpleStyleName;
+			}
+		}
+
+		/// <summary>
+		/// Gets the invariant font face name. This name is independent
+		/// of the current culture.
+		/// </summary>
+		/// <value>The font face name.</value>
+		public string							InvariantSimpleFaceName
+		{
+			get
+			{
 				lock (this.exclusion)
 				{
 					string face  = this.GetName (NameId.FontFamily, FontIdentity.InvariantLocale);
 					string style = this.GetName (NameId.FontSubfamily, FontIdentity.InvariantLocale);
-					
+
 					if (face.EndsWith (style))
 					{
 						face = face.Substring (0, face.Length - style.Length).Trim ();
@@ -143,7 +211,7 @@ namespace Epsitec.Common.OpenType
 		/// of the current culture.
 		/// </summary>
 		/// <value>The font style name.</value>
-		public string							InvariantStyleName
+		public string							InvariantSimpleStyleName
 		{
 			get
 			{
@@ -197,18 +265,45 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				lock (this.exclusion)
+				if (this.styleHash == null)
 				{
-					if (this.styleHash == null)
+					lock (this.exclusion)
 					{
-						this.styleHash = FontCollection.GetStyleHash (this.InvariantStyleName);
+						if (this.styleHash == null)
+						{
+							this.styleHash = FontCollection.GetStyleHash (this.InvariantStyleName);
+						}
 					}
-
-					return this.styleHash;
 				}
+
+				return this.styleHash;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets a simplified version of the full font name. The names <c>"Regular"</c>
+		/// and <c>"Normal"</c> are mapped to <c>""</c> and all elements are sorted
+		/// alphabetically.
+		/// </summary>
+		/// <value>The simplified version of the full font name.</value>
+		public string							FullHash
+		{
+			get
+			{
+				if (this.fullHash == null)
+				{
+					lock (this.exclusion)
+					{
+						if (this.fullHash == null)
+						{
+							this.fullHash = FontName.GetFullHash (this.FullName);
+						}
+					}
+				}
+				
+				return this.fullHash;
+			}
+		}
 		
 		/// <summary>
 		/// Gets the number of font styles available for the font face
@@ -682,6 +777,7 @@ namespace Epsitec.Common.OpenType
 		private FontData						fontData;
 		private Dictionary<int, FontSizeInfo>	fontSizes;
 		private string							styleHash;
+		private string							fullHash;
 		private int								ttcIndex;
 		private int								fontStyleCount;
 		private string							systemFontFamily;
