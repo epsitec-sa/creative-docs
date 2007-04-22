@@ -159,7 +159,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldI2.TextFieldR.InternalValue = (decimal) p.I2.R*100;
 			this.fieldI2.TextFieldA.InternalValue = (decimal) p.I2.A;
 
-			this.fieldSamples.Text = "Personnalisé";
+			this.UpdateFieldSample();
 
 			this.EnableWidgets();
 			this.ignoreChanged = false;
@@ -179,9 +179,7 @@ namespace Epsitec.Common.Document.Panels
 			p.I1 = new Polar((double) this.fieldI1.TextFieldR.InternalValue/100, (double) this.fieldI1.TextFieldA.InternalValue);
 			p.I2 = new Polar((double) this.fieldI2.TextFieldR.InternalValue/100, (double) this.fieldI2.TextFieldA.InternalValue);
 
-			this.ignoreChanged = true;
-			this.fieldSamples.Text = "Personnalisé";
-			this.ignoreChanged = false;
+			this.UpdateFieldSample();
 		}
 
 		protected void EnableWidgets()
@@ -196,6 +194,25 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldE2.Enable = (this.isExtendedSize && flower2);
 			this.fieldI1.Enable = (this.isExtendedSize && flower1 || flower2);
 			this.fieldI2.Enable = (this.isExtendedSize && flower2);
+		}
+
+		protected void UpdateFieldSample()
+		{
+			Properties.Regular p = this.property as Properties.Regular;
+
+			string text = "Personnalisé";
+			foreach (Sample sample in Regular.Samples)
+			{
+				if (sample.Compare(p))
+				{
+					text = sample.Text;
+					break;
+				}
+			}
+
+			this.ignoreChanged = true;
+			this.fieldSamples.Text = text;
+			this.ignoreChanged = false;
 		}
 
 		protected override void UpdateClientGeometry()
@@ -337,11 +354,6 @@ namespace Epsitec.Common.Document.Panels
 					this.fieldI2.TextFieldA.InternalValue = (decimal) sample.I2.A;
 					
 					this.OnChanged();
-
-					this.ignoreChanged = true;
-					field.Text = sample.Text;
-					this.ignoreChanged = false;
-
 					return;
 				}
 			}
@@ -353,14 +365,25 @@ namespace Epsitec.Common.Document.Panels
 		{
 			public Sample(string text, Properties.RegularType regularType, int nbFaces, Polar deep, Polar i1, Polar i2, Polar e1, Polar e2)
 			{
-				this.Text = text;
+				this.Text        = text;
 				this.RegularType = regularType;
-				this.NbFaces = nbFaces;
-				this.Deep = deep;
-				this.I1 = i1;
-				this.I2 = i2;
-				this.E1 = e1;
-				this.E2 = e2;
+				this.NbFaces     = nbFaces;
+				this.Deep        = deep;
+				this.I1          = i1;
+				this.I2          = i2;
+				this.E1          = e1;
+				this.E2          = e2;
+			}
+
+			public bool Compare(Properties.Regular reg)
+			{
+				return (reg.RegularType == this.RegularType &&
+						reg.NbFaces     == this.NbFaces     &&
+						reg.Deep        == this.Deep        &&
+						reg.I1          == this.I1          &&
+						reg.I2          == this.I2          &&
+						reg.E1          == this.E1          &&
+						reg.E2          == this.E2          );
 			}
 
 			public string					Text;
