@@ -41,7 +41,11 @@ namespace Epsitec.Common.Document.TextPanels
 			ToolTip.Default.SetToolTip(this.fontStyle, Res.Strings.TextPanel.Font.Tooltip.Style);
 
 			this.fontFeatures = this.CreateIconButton(Misc.Icon("FontFeatures"), Res.Strings.TextPanel.Font.Tooltip.Features, new MessageEventHandler(this.HandleFeaturesClicked));
-			this.buttonSettings = this.CreateIconButton(Misc.Icon("Settings"), Res.Strings.Action.Settings, new MessageEventHandler(this.HandleButtonSettingsClicked), false);
+
+			if (Command.IsDefined ("Settings"))
+			{
+				this.buttonSettings = this.CreateIconButton (Misc.Icon ("Settings"), Res.Strings.Action.Settings, new MessageEventHandler (this.HandleButtonSettingsClicked), false);
+			}
 
 			this.fontSize = this.CreateTextFieldLabel(Res.Strings.TextPanel.Font.Tooltip.Size, Res.Strings.TextPanel.Font.Short.Size, Res.Strings.TextPanel.Font.Long.Size, 0,0,0,0, Widgets.TextFieldLabel.Type.TextFieldUnit, new EventHandler(this.HandleSizeChanged));
 			this.fontSize.SetRangeFontSize(this.document);
@@ -336,8 +340,11 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fontFeatures.Visibility = true;
 				r.Left = rect.Right-20;
 				r.Right = rect.Right;
-				this.buttonSettings.SetManualBounds(r);
-				this.buttonSettings.Visibility = true;
+				if (this.buttonSettings != null)
+				{
+					this.buttonSettings.SetManualBounds (r);
+					this.buttonSettings.Visibility = true;
+				}
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
@@ -404,7 +411,10 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fontColor.SetManualBounds(r);
 
 				this.fontFeatures.Visibility = false;
-				this.buttonSettings.Visibility = false;
+				if (this.buttonSettings != null)
+				{
+					this.buttonSettings.Visibility = false;
+				}
 				this.fontGlue.Visibility = false;
 				this.checkBold.Visibility = false;
 				this.checkItalic.Visibility = false;

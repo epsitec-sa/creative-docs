@@ -274,12 +274,17 @@ namespace Epsitec.Common.Widgets
 		{
 			this.window.MakeSecondaryWindow ();
 		}
-		
+
 		public void MakeToolWindow()
 		{
 			this.window.MakeToolWindow ();
 		}
-		
+
+		public void MakeSizableToolWindow()
+		{
+			this.window.MakeSizableToolWindow ();
+		}
+
 		public void MakeFloatingWindow()
 		{
 			this.window.MakeFloatingWindow ();

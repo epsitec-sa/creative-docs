@@ -158,7 +158,7 @@ namespace Epsitec.Common.Widgets.Platform
 			this.ShowInTaskbar   = false;
 			Window.DummyHandleEater (this.Handle);
 		}
-		
+
 		internal void MakeToolWindow()
 		{
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -166,7 +166,15 @@ namespace Epsitec.Common.Widgets.Platform
 			this.is_tool_window  = true;
 			Window.DummyHandleEater (this.Handle);
 		}
-		
+
+		internal void MakeSizableToolWindow()
+		{
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+			this.ShowInTaskbar   = false;
+			this.is_tool_window  = true;
+			Window.DummyHandleEater (this.Handle);
+		}
+
 		internal void MakeFloatingWindow()
 		{
 			this.ShowInTaskbar   = false;

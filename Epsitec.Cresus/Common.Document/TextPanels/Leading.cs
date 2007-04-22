@@ -27,7 +27,11 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.buttonAlignFirst = this.CreateIconButton(Misc.Icon("ParagraphLeadingAlignFirst"), Res.Strings.TextPanel.Leading.Tooltip.AlignFirst, new MessageEventHandler(this.HandleButtonAlignFirstClicked));
 			this.buttonAlignAll   = this.CreateIconButton(Misc.Icon("ParagraphLeadingAlignAll"),   Res.Strings.TextPanel.Leading.Tooltip.AlignAll,   new MessageEventHandler(this.HandleButtonAlignAllClicked));
-			this.buttonSettings   = this.CreateIconButton(Misc.Icon("Settings"),                   Res.Strings.Action.Settings,                      new MessageEventHandler(this.HandleButtonSettingsClicked), false);
+
+			if (Command.IsDefined ("Settings"))
+			{
+				this.buttonSettings = this.CreateIconButton (Misc.Icon ("Settings"), Res.Strings.Action.Settings, new MessageEventHandler (this.HandleButtonSettingsClicked), false);
+			}
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
 
@@ -129,8 +133,11 @@ namespace Epsitec.Common.Document.TextPanels
 					this.buttonAlignAll.SetManualBounds(r);
 					this.buttonAlignAll.Visibility = true;
 					r.Offset(20+5, 0);
-					this.buttonSettings.SetManualBounds(r);
-					this.buttonSettings.Visibility = true;
+					if (this.buttonSettings != null)
+					{
+						this.buttonSettings.SetManualBounds (r);
+						this.buttonSettings.Visibility = true;
+					}
 				}
 				else
 				{
@@ -154,8 +161,11 @@ namespace Epsitec.Common.Document.TextPanels
 					this.buttonAlignAll.SetManualBounds(r);
 					this.buttonAlignAll.Visibility = true;
 					r.Offset(20+5, 0);
-					this.buttonSettings.SetManualBounds(r);
-					this.buttonSettings.Visibility = true;
+					if (this.buttonSettings != null)
+					{
+						this.buttonSettings.SetManualBounds (r);
+						this.buttonSettings.Visibility = true;
+					}
 				}
 			}
 			else
@@ -176,7 +186,10 @@ namespace Epsitec.Common.Document.TextPanels
 
 				this.buttonAlignFirst.Visibility = false;
 				this.buttonAlignAll.Visibility = false;
-				this.buttonSettings.Visibility = false;
+				if (this.buttonSettings != null)
+				{
+					this.buttonSettings.Visibility = false;
+				}
 			}
 		}
 
