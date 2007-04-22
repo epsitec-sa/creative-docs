@@ -415,14 +415,20 @@ namespace Epsitec.Common.Document.Panels
 			new Sample("Etoile de David",      Properties.RegularType.Star,     6, new Polar(0.42,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
 			new Sample("Scie circulaire",      Properties.RegularType.Star,    24, new Polar(0.05,  -8.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
 			new Sample("Soleil droit",         Properties.RegularType.Star,    20, new Polar(0.65,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
-			new Sample("Soleil tournoyant",    Properties.RegularType.Flower2, 20, new Polar(0.65, -50.0), new Polar( 0.55,  -8.0), new Polar( 0.40,  -8.0), new Polar( 0.40,  -3.0), new Polar( 0.25,   1.0)),
+			new Sample("Soleil tournoyant",    Properties.RegularType.Flower2, 20, new Polar(0.65, -50.0), new Polar( 0.55,  -8.0), new Polar( 0.40, -12.0), new Polar( 0.40,  -3.0), new Polar( 0.25,   1.0)),
 			new Sample("Fleur symétrique 1",   Properties.RegularType.Flower1,  6, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
 			new Sample("Fleur symétrique 2",   Properties.RegularType.Flower1,  4, new Polar(0.80,   0.0), new Polar( 0.25,  30.0), new Polar( 0.25, -30.0), new Polar(-0.10,  30.0), new Polar(-0.10, -30.0)),
+			new Sample("Fleur symétrique 3",   Properties.RegularType.Flower1, 16, new Polar(0.25,   0.0), new Polar( 0.35,   8.0), new Polar( 0.35,  -8.0), new Polar(-0.02,   6.0), new Polar(-0.02,  -6.0)),
+			new Sample("Fleur symétrique 4",   Properties.RegularType.Flower1,  8, new Polar(0.55,   0.0), new Polar( 0.25,  16.0), new Polar( 0.25, -16.0), new Polar( 0.65, -10.0), new Polar( 0.65,  10.0)),
 			new Sample("Fleur asymétrique 1",  Properties.RegularType.Flower2,  6, new Polar(0.85,  20.0), new Polar( 0.40, -16.0), new Polar( 0.00, -48.0), new Polar( 0.05,  15.0), new Polar(-0.40, -33.0)),
-			new Sample("Fleur asymétrique 2",  Properties.RegularType.Flower2,  8, new Polar(0.45, -10.0), new Polar( 0.50, -10.0), new Polar(-0.10, -44.0), new Polar( 0.30,  16.0), new Polar(-0.65, -38.0)),
+			new Sample("Fleur asymétrique 2",  Properties.RegularType.Flower2,  8, new Polar(0.75, -10.0), new Polar( 0.50, -10.0), new Polar(-0.10, -44.0), new Polar( 0.30,  16.0), new Polar( 0.60,   8.0)),
 			new Sample("Trèfle à 4 feuilles",  Properties.RegularType.Flower1,  4, new Polar(0.80,   0.0), new Polar( 0.70,   0.0), new Polar( 0.70,   0.0), new Polar(-0.75,  75.0), new Polar(-0.75, -75.0)),
+			new Sample("Marguerite",           Properties.RegularType.Flower1, 16, new Polar(0.75,   0.0), new Polar( 0.65,   3.0), new Polar( 0.65,  -3.0), new Polar( 0.00,  12.0), new Polar( 0.00, -12.0)),
+			new Sample("Tournesol",            Properties.RegularType.Flower1, 24, new Polar(0.55,   0.0), new Polar( 0.60,   0.0), new Polar( 0.60,   0.0), new Polar( 0.35,   8.0), new Polar( 0.35,  -8.0)),
 			new Sample("Hélice de bateau",     Properties.RegularType.Flower2,  3, new Polar(0.80, -30.0), new Polar( 0.40,  30.0), new Polar( 0.70,   0.0), new Polar(-0.30,  50.0), new Polar(-0.40, -75.0)),
 			new Sample("Hélice d'avion",       Properties.RegularType.Flower2,  4, new Polar(0.90,   0.0), new Polar( 0.50, -10.0), new Polar( 0.40, -10.0), new Polar(-0.05,  10.0), new Polar( 0.05,  -5.0)),
+			new Sample("Hélice fantaisie",     Properties.RegularType.Flower2,  5, new Polar(0.75, -90.0), new Polar( 0.60,  30.0), new Polar( 0.45,   0.0), new Polar(-1.00,  10.0), new Polar( 0.35,  90.0)),
+			new Sample("Forme ajourée",        Properties.RegularType.Flower2,  8, new Polar(1.00, -90.0), new Polar( 0.15,  90.0), new Polar( 0.25, -60.0), new Polar( 0.50,  30.0), new Polar( 0.10, -15.0)),
 		};
 		#endregion
 
