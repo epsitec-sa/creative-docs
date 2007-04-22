@@ -19,15 +19,18 @@ namespace Epsitec.Common.Document.Panels
 			this.fontFace.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontFace, Res.Strings.TextPanel.Font.Tooltip.Face);
 
-			this.buttonFilter = new IconButton(this);
-			this.buttonFilter.CommandObject = Command.Get("TextFontFilter");
-			this.buttonFilter.IconName = Misc.Icon("TextFontFilter");
-			this.buttonFilter.PreferredIconSize = Misc.IconPreferredSize("Normal");
-			this.buttonFilter.AutoFocus = false;
-			this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonFilter.TabIndex = 2;
-			this.buttonFilter.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.buttonFilter, Res.Strings.Action.TextFontFilter);
+			if (Command.IsDefined ("TextFontFilter"))
+			{
+				this.buttonFilter = new IconButton (this);
+				this.buttonFilter.CommandObject = Command.Get ("TextFontFilter");
+				this.buttonFilter.IconName = Misc.Icon ("TextFontFilter");
+				this.buttonFilter.PreferredIconSize = Misc.IconPreferredSize ("Normal");
+				this.buttonFilter.AutoFocus = false;
+				this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;
+				this.buttonFilter.TabIndex = 2;
+				this.buttonFilter.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				ToolTip.Default.SetToolTip (this.buttonFilter, Res.Strings.Action.TextFontFilter);
+			}
 
 			this.fontSize = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fontSize.LabelShortText = Res.Strings.Panel.Font.Short.Size;
@@ -197,8 +200,12 @@ namespace Epsitec.Common.Document.Panels
 
 				r.Left = rect.Right-20;
 				r.Right = rect.Right;
-				this.buttonFilter.SetManualBounds(r);
-				this.buttonFilter.Visibility = true;
+				
+				if (this.buttonFilter != null)
+				{
+					this.buttonFilter.SetManualBounds (r);
+					this.buttonFilter.Visibility = true;
+				}
 
 				if ( this.IsLabelProperties )
 				{
@@ -244,7 +251,11 @@ namespace Epsitec.Common.Document.Panels
 				r.Right = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth-5;
 				this.fontFace.SetManualBounds(r);
 				this.fontFace.Visibility = true;
-				this.buttonFilter.Visibility = false;
+
+				if (this.buttonFilter != null)
+				{
+					this.buttonFilter.Visibility = false;
+				}
 
 				r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth;
 				r.Width = Widgets.TextFieldLabel.ShortWidth;

@@ -27,7 +27,10 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fontFace.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontFace, Res.Strings.TextPanel.Font.Tooltip.Face);
 
-			this.buttonFilter = this.CreateIconButton("TextFontFilter");
+			if (Command.IsDefined ("TextFontFilter"))
+			{
+				this.buttonFilter = this.CreateIconButton ("TextFontFilter");
+			}
 
 			this.fontStyle = new TextFieldCombo(this);
 			this.fontStyle.IsReadOnly = true;
@@ -317,7 +320,11 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fontFace.SetManualBounds(r);
 				r.Left = rect.Right-20;
 				r.Right = rect.Right;
-				this.buttonFilter.SetManualBounds(r);
+
+				if (this.buttonFilter != null)
+				{
+					this.buttonFilter.SetManualBounds (r);
+				}
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
@@ -371,7 +378,11 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fontFace.SetManualBounds(r);
 				r.Left = rect.Right-20;
 				r.Right = rect.Right;
-				this.buttonFilter.SetManualBounds(r);
+
+				if (this.buttonFilter != null)
+				{
+					this.buttonFilter.SetManualBounds (r);
+				}
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;

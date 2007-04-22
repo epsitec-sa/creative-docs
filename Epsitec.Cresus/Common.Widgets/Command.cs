@@ -440,6 +440,19 @@ namespace Epsitec.Common.Widgets
 		}
 
 		/// <summary>
+		/// Determines whether the specified command is defined.
+		/// </summary>
+		/// <param name="id">The command id.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified command is defined; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool IsDefined(string id)
+		{
+			return Command.Find (id) != null;
+		}
+
+
+		/// <summary>
 		/// Finds and enumerates the commands matching the specified shortcut.
 		/// </summary>
 		/// <param name="shortcut">The command shortcut.</param>
