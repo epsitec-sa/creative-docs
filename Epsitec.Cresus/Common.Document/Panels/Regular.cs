@@ -189,6 +189,16 @@ namespace Epsitec.Common.Document.Panels
 			bool flower1 = (this.grid.SelectedValue == 2);
 			bool flower2 = (this.grid.SelectedValue == 3);
 
+			this.grid.Visibility = this.isExtendedSize;
+			this.fieldNbFaces.Visibility = this.isExtendedSize;
+			this.fieldDeep.Visibility = this.isExtendedSize;
+			this.fieldE1.Visibility = this.isExtendedSize;
+			this.fieldE2.Visibility = this.isExtendedSize;
+			this.fieldI1.Visibility = this.isExtendedSize;
+			this.fieldI2.Visibility = this.isExtendedSize;
+
+			this.grid.Enable = this.isExtendedSize;
+			this.fieldNbFaces.Enable = this.isExtendedSize;
 			this.fieldDeep.Enable = (this.isExtendedSize && (star || flower1 || flower2));
 			this.fieldE1.Enable = (this.isExtendedSize && flower1 || flower2);
 			this.fieldE2.Enable = (this.isExtendedSize && flower2);
@@ -228,6 +238,13 @@ namespace Epsitec.Common.Document.Panels
 
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
+			r.Left = rect.Left;
+			r.Right = rect.Right;
+			this.fieldSamples.SetManualBounds(r);
+
+			rect.Top = r.Bottom-5;
+			rect.Bottom = rect.Top-20;
+			r = rect;
 			r.Width = 22*4;
 			r.Inflate(1);
 			this.grid.SetManualBounds(r);
@@ -272,13 +289,6 @@ namespace Epsitec.Common.Document.Panels
 			r.Left = rect.Left;
 			r.Right = rect.Right;
 			this.fieldE2.SetManualBounds(r);
-
-			rect.Top = r.Bottom-5;
-			rect.Bottom = rect.Top-20;
-			r = rect;
-			r.Left = rect.Left;
-			r.Right = rect.Right;
-			this.fieldSamples.SetManualBounds(r);
 		}
 		
 		private void HandleFieldChanged(object sender)
