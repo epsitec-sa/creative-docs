@@ -255,7 +255,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.UpdateComboStyleList(face);
 
-			this.fontFace.Text  = TextLayout.ConvertToTaggedText(face);
+			this.fontFace.Text  = TextLayout.ConvertToTaggedText(Misc.FaceInvariantToLocale(face, style));
 			this.fontStyle.Text = TextLayout.ConvertToTaggedText(Misc.StyleInvariantToLocale(face, style));
 			this.ProposalFontFaceCombo(this.fontFace, !isFace);
 			this.ProposalTextFieldCombo(this.fontStyle, !isStyle);
