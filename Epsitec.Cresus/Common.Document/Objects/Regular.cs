@@ -164,6 +164,7 @@ namespace Epsitec.Common.Document.Objects
 
 			bool support = false;
 			if ( this.IsSelected &&
+				 this.document.Modifier.IsPropertiesExtended(Properties.Type.Regular) &&
 				 (pr.RegularType != Properties.RegularType.Norm) &&
 				 drawingContext != null && drawingContext.IsActive &&
 				 !this.IsGlobalSelected )
@@ -199,27 +200,24 @@ namespace Epsitec.Common.Document.Objects
 				pathSupport.AppendCircle(center, radius);
 				pathSupport.AppendCircle(center, radius*(1.0-pr.Deep.R));
 
-				if (this.document.Modifier.IsPropertiesExtended(Properties.Type.Regular))
+				if (pr.RegularType == Properties.RegularType.Flower1 || pr.RegularType == Properties.RegularType.Flower2)
 				{
-					if (pr.RegularType == Properties.RegularType.Flower1 || pr.RegularType == Properties.RegularType.Flower2)
-					{
-						Point p1, s1, s2, p2;
-						this.ComputeLine(0, out p1, out s1, out s2, out p2);
-						pathSupport.MoveTo(p1);
-						pathSupport.LineTo(s1);
-						pathSupport.MoveTo(p2);
-						pathSupport.LineTo(s2);
-					}
+					Point p1, s1, s2, p2;
+					this.ComputeLine(0, out p1, out s1, out s2, out p2);
+					pathSupport.MoveTo(p1);
+					pathSupport.LineTo(s1);
+					pathSupport.MoveTo(p2);
+					pathSupport.LineTo(s2);
+				}
 
-					if (pr.RegularType == Properties.RegularType.Flower2)
-					{
-						Point p1, s1, s2, p2;
-						this.ComputeLine(pr.NbFaces*2-1, out p1, out s1, out s2, out p2);
-						pathSupport.MoveTo(p1);
-						pathSupport.LineTo(s1);
-						pathSupport.MoveTo(p2);
-						pathSupport.LineTo(s2);
-					}
+				if (pr.RegularType == Properties.RegularType.Flower2)
+				{
+					Point p1, s1, s2, p2;
+					this.ComputeLine(pr.NbFaces*2-1, out p1, out s1, out s2, out p2);
+					pathSupport.MoveTo(p1);
+					pathSupport.LineTo(s1);
+					pathSupport.MoveTo(p2);
+					pathSupport.LineTo(s2);
 				}
 
 				shapes[i] = new Shape();
