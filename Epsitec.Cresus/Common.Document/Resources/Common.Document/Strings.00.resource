@@ -486,6 +486,28 @@
   <data name="Panel.Regular.Tooltip.E2" id="0FC01">Extérieur droite (longueur et angle)</data>
   <data name="Panel.Regular.Tooltip.I1" id="0GC01">Intérieur gauche (longueur et angle)</data>
   <data name="Panel.Regular.Tooltip.I2" id="0HC01">Intérieur droite (longueur et angle)</data>
+  <data name="Panel.Regular.Sample01" id="0KC01">Triangle équilatéral</data>
+  <data name="Panel.Regular.Sample08" id="0LC01">Soleil tournoyant</data>
+  <data name="Panel.Regular.Sample09" id="0MC01">Fleur symétrique 1</data>
+  <data name="Panel.Regular.Sample10" id="0NC01">Fleur symétrique 2</data>
+  <data name="Panel.Regular.Sample11" id="0OC01">Fleur symétrique 3</data>
+  <data name="Panel.Regular.Sample12" id="0PC01">Fleur symétrique 4</data>
+  <data name="Panel.Regular.Sample13" id="0QC01">Fleur asymétrique 1</data>
+  <data name="Panel.Regular.Sample14" id="0RC01">Fleur asymétrique 2</data>
+  <data name="Panel.Regular.Sample15" id="0SC01">Trèfle à 4 feuilles</data>
+  <data name="Panel.Regular.Sample16" id="03D01">Marguerite</data>
+  <data name="Panel.Regular.Sample17" id="04D01">Tournesol</data>
+  <data name="Panel.Regular.Sample18" id="05D01">Hélice de bateau</data>
+  <data name="Panel.Regular.Sample19" id="06D01">Hélice d&amp;apos;avion</data>
+  <data name="Panel.Regular.Sample20" id="07D01">Hélice fantaisie</data>
+  <data name="Panel.Regular.Sample21" id="08D01">Forme ajourée</data>
+  <data name="Panel.Regular.Custom" id="09D01">Personnalisé</data>
+  <data name="Panel.Regular.Sample02" id="0TC01">Carré</data>
+  <data name="Panel.Regular.Sample03" id="0UC01">Hexagone</data>
+  <data name="Panel.Regular.Sample04" id="0VC01">Octogone</data>
+  <data name="Panel.Regular.Sample05" id="00D01">Etoile de David</data>
+  <data name="Panel.Regular.Sample06" id="01D01">Scie circulaire</data>
+  <data name="Panel.Regular.Sample07" id="02D01">Soleil droit</data>
   <data name="Panel.Regular.Label.E2" id="0BC01">Extérieur droite</data>
   <data name="Panel.Regular.Label.I1" id="0CC01">Intérieur gauche</data>
   <data name="Panel.Regular.Label.I2" id="0DC01">Intérieur droite</data>

@@ -210,7 +210,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			Properties.Regular p = this.property as Properties.Regular;
 
-			string text = "Personnalisé";
+			string text = Res.Strings.Panel.Regular.Custom;
 			foreach (Sample sample in Regular.Samples)
 			{
 				if (sample.Compare(p))
@@ -371,8 +371,12 @@ namespace Epsitec.Common.Document.Panels
 
 
 		#region Sample
+		/// <summary>
+		/// La structure Sample permet de décrire un exemple de forme.
+		/// </summary>
 		protected struct Sample
 		{
+			//	Constructeur d'un exemple.
 			public Sample(string text, Properties.RegularType regularType, int nbFaces, Polar deep, Polar i1, Polar i2, Polar e1, Polar e2)
 			{
 				this.Text        = text;
@@ -387,6 +391,7 @@ namespace Epsitec.Common.Document.Panels
 
 			public bool Compare(Properties.Regular reg)
 			{
+				//	Compare un exemple avec une propriété.
 				return (reg.RegularType == this.RegularType &&
 						reg.NbFaces     == this.NbFaces     &&
 						reg.Deep        == this.Deep        &&
@@ -406,29 +411,30 @@ namespace Epsitec.Common.Document.Panels
 			public Polar					E2;
 		}
 
+		//	Liste des exemples accessibles avec la liste déroulante.
 		static protected Sample[] Samples =
 		{
-			new Sample("Triangle équilatéral", Properties.RegularType.Norm,     3, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
-			new Sample("Carré",                Properties.RegularType.Norm,     4, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
-			new Sample("Hexagone",             Properties.RegularType.Norm,     6, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
-			new Sample("Octogone",             Properties.RegularType.Norm,     8, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
-			new Sample("Etoile de David",      Properties.RegularType.Star,     6, new Polar(0.42,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
-			new Sample("Scie circulaire",      Properties.RegularType.Star,    24, new Polar(0.05,  -8.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
-			new Sample("Soleil droit",         Properties.RegularType.Star,    20, new Polar(0.65,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
-			new Sample("Soleil tournoyant",    Properties.RegularType.Flower2, 20, new Polar(0.65, -50.0), new Polar( 0.55,  -8.0), new Polar( 0.40, -12.0), new Polar( 0.40,  -3.0), new Polar( 0.25,   1.0)),
-			new Sample("Fleur symétrique 1",   Properties.RegularType.Flower1,  6, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
-			new Sample("Fleur symétrique 2",   Properties.RegularType.Flower1,  4, new Polar(0.80,   0.0), new Polar( 0.25,  30.0), new Polar( 0.25, -30.0), new Polar(-0.10,  30.0), new Polar(-0.10, -30.0)),
-			new Sample("Fleur symétrique 3",   Properties.RegularType.Flower1, 16, new Polar(0.25,   0.0), new Polar( 0.35,   8.0), new Polar( 0.35,  -8.0), new Polar(-0.02,   6.0), new Polar(-0.02,  -6.0)),
-			new Sample("Fleur symétrique 4",   Properties.RegularType.Flower1,  8, new Polar(0.55,   0.0), new Polar( 0.25,  16.0), new Polar( 0.25, -16.0), new Polar( 0.65, -10.0), new Polar( 0.65,  10.0)),
-			new Sample("Fleur asymétrique 1",  Properties.RegularType.Flower2,  6, new Polar(0.85,  20.0), new Polar( 0.40, -16.0), new Polar( 0.00, -48.0), new Polar( 0.05,  15.0), new Polar(-0.40, -33.0)),
-			new Sample("Fleur asymétrique 2",  Properties.RegularType.Flower2,  8, new Polar(0.75, -10.0), new Polar( 0.50, -10.0), new Polar(-0.10, -44.0), new Polar( 0.30,  16.0), new Polar( 0.60,   8.0)),
-			new Sample("Trèfle à 4 feuilles",  Properties.RegularType.Flower1,  4, new Polar(0.80,   0.0), new Polar( 0.70,   0.0), new Polar( 0.70,   0.0), new Polar(-0.75,  75.0), new Polar(-0.75, -75.0)),
-			new Sample("Marguerite",           Properties.RegularType.Flower1, 16, new Polar(0.75,   0.0), new Polar( 0.65,   3.0), new Polar( 0.65,  -3.0), new Polar( 0.00,  12.0), new Polar( 0.00, -12.0)),
-			new Sample("Tournesol",            Properties.RegularType.Flower1, 24, new Polar(0.55,   0.0), new Polar( 0.60,   0.0), new Polar( 0.60,   0.0), new Polar( 0.35,   8.0), new Polar( 0.35,  -8.0)),
-			new Sample("Hélice de bateau",     Properties.RegularType.Flower2,  3, new Polar(0.80, -30.0), new Polar( 0.40,  30.0), new Polar( 0.70,   0.0), new Polar(-0.30,  50.0), new Polar(-0.40, -75.0)),
-			new Sample("Hélice d'avion",       Properties.RegularType.Flower2,  4, new Polar(0.90,   0.0), new Polar( 0.50, -10.0), new Polar( 0.40, -10.0), new Polar(-0.05,  10.0), new Polar( 0.05,  -5.0)),
-			new Sample("Hélice fantaisie",     Properties.RegularType.Flower2,  5, new Polar(0.75, -90.0), new Polar( 0.60,  30.0), new Polar( 0.45,   0.0), new Polar(-1.00,  10.0), new Polar( 0.35,  90.0)),
-			new Sample("Forme ajourée",        Properties.RegularType.Flower2,  8, new Polar(1.00, -90.0), new Polar( 0.15,  90.0), new Polar( 0.25, -60.0), new Polar( 0.50,  30.0), new Polar( 0.10, -15.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample01, Properties.RegularType.Norm,     3, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample02, Properties.RegularType.Norm,     4, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample03, Properties.RegularType.Norm,     6, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample04, Properties.RegularType.Norm,     8, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample05, Properties.RegularType.Star,     6, new Polar(0.42,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample06, Properties.RegularType.Star,    24, new Polar(0.05,  -8.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample07, Properties.RegularType.Star,    20, new Polar(0.65,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample08, Properties.RegularType.Flower2, 20, new Polar(0.65, -50.0), new Polar( 0.55,  -8.0), new Polar( 0.40, -12.0), new Polar( 0.40,  -3.0), new Polar( 0.25,   1.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample09, Properties.RegularType.Flower1,  6, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample10, Properties.RegularType.Flower1,  4, new Polar(0.80,   0.0), new Polar( 0.25,  30.0), new Polar( 0.25, -30.0), new Polar(-0.10,  30.0), new Polar(-0.10, -30.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample11, Properties.RegularType.Flower1, 16, new Polar(0.25,   0.0), new Polar( 0.35,   8.0), new Polar( 0.35,  -8.0), new Polar(-0.02,   6.0), new Polar(-0.02,  -6.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample12, Properties.RegularType.Flower1,  8, new Polar(0.55,   0.0), new Polar( 0.25,  16.0), new Polar( 0.25, -16.0), new Polar( 0.65, -10.0), new Polar( 0.65,  10.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample13, Properties.RegularType.Flower2,  6, new Polar(0.85,  20.0), new Polar( 0.40, -16.0), new Polar( 0.00, -48.0), new Polar( 0.05,  15.0), new Polar(-0.40, -33.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample14, Properties.RegularType.Flower2,  8, new Polar(0.75, -10.0), new Polar( 0.50, -10.0), new Polar(-0.10, -44.0), new Polar( 0.30,  16.0), new Polar( 0.60,   8.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample15, Properties.RegularType.Flower1,  4, new Polar(0.80,   0.0), new Polar( 0.70,   0.0), new Polar( 0.70,   0.0), new Polar(-0.75,  75.0), new Polar(-0.75, -75.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample16, Properties.RegularType.Flower1, 16, new Polar(0.75,   0.0), new Polar( 0.65,   3.0), new Polar( 0.65,  -3.0), new Polar( 0.00,  12.0), new Polar( 0.00, -12.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample17, Properties.RegularType.Flower1, 24, new Polar(0.55,   0.0), new Polar( 0.60,   0.0), new Polar( 0.60,   0.0), new Polar( 0.35,   8.0), new Polar( 0.35,  -8.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample18, Properties.RegularType.Flower2,  3, new Polar(0.80, -30.0), new Polar( 0.40,  30.0), new Polar( 0.70,   0.0), new Polar(-0.30,  50.0), new Polar(-0.40, -75.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample19, Properties.RegularType.Flower2,  4, new Polar(0.90,   0.0), new Polar( 0.50, -10.0), new Polar( 0.40, -10.0), new Polar(-0.05,  10.0), new Polar( 0.05,  -5.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample20, Properties.RegularType.Flower2,  5, new Polar(0.75, -90.0), new Polar( 0.60,  30.0), new Polar( 0.45,   0.0), new Polar(-1.00,  10.0), new Polar( 0.35,  90.0)),
+			new Sample(Res.Strings.Panel.Regular.Sample21, Properties.RegularType.Flower2,  8, new Polar(1.00, -90.0), new Polar( 0.15,  90.0), new Polar( 0.25, -60.0), new Polar( 0.50,  30.0), new Polar( 0.10, -15.0)),
 		};
 		#endregion
 
