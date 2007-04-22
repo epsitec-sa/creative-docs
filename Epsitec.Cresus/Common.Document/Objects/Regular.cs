@@ -164,7 +164,7 @@ namespace Epsitec.Common.Document.Objects
 
 			bool support = false;
 			if ( this.IsSelected &&
-				 (pr.Star || pr.Flower) &&
+				 (pr.RegularType != Properties.RegularType.Norm) &&
 				 drawingContext != null && drawingContext.IsActive &&
 				 !this.IsGlobalSelected )
 			{
@@ -199,21 +199,27 @@ namespace Epsitec.Common.Document.Objects
 				pathSupport.AppendCircle(center, radius);
 				pathSupport.AppendCircle(center, radius*(1.0-pr.Deep.R));
 
-				if (pr.Flower && this.document.Modifier.IsPropertiesExtended(Properties.Type.Regular))
+				if (this.document.Modifier.IsPropertiesExtended(Properties.Type.Regular))
 				{
-					Point p1, s1, s2, p2;
+					if (pr.RegularType == Properties.RegularType.Flower1 || pr.RegularType == Properties.RegularType.Flower2)
+					{
+						Point p1, s1, s2, p2;
+						this.ComputeLine(0, out p1, out s1, out s2, out p2);
+						pathSupport.MoveTo(p1);
+						pathSupport.LineTo(s1);
+						pathSupport.MoveTo(p2);
+						pathSupport.LineTo(s2);
+					}
 
-					this.ComputeLine(0, out p1, out s1, out s2, out p2);
-					pathSupport.MoveTo(p1);
-					pathSupport.LineTo(s1);
-					pathSupport.MoveTo(p2);
-					pathSupport.LineTo(s2);
-
-					this.ComputeLine(pr.NbFaces*2-1, out p1, out s1, out s2, out p2);
-					pathSupport.MoveTo(p1);
-					pathSupport.LineTo(s1);
-					pathSupport.MoveTo(p2);
-					pathSupport.LineTo(s2);
+					if (pr.RegularType == Properties.RegularType.Flower2)
+					{
+						Point p1, s1, s2, p2;
+						this.ComputeLine(pr.NbFaces*2-1, out p1, out s1, out s2, out p2);
+						pathSupport.MoveTo(p1);
+						pathSupport.LineTo(s1);
+						pathSupport.MoveTo(p2);
+						pathSupport.LineTo(s2);
+					}
 				}
 
 				shapes[i] = new Shape();
@@ -244,15 +250,15 @@ namespace Epsitec.Common.Document.Objects
 			Point t, s1, s2;
 
 			Properties.Regular pr = this.PropertyRegular;
-			if ( pr.Star )  // étoile ?
-			{
-				this.ComputeLine(0, out t, out s1, out s2, out a);
-				this.ComputeLine(pr.NbFaces*2-1, out b, out s1, out s2, out t);
-			}
-			else	// polygone ?
+			if ( pr.RegularType == Properties.RegularType.Norm )  // polygone ?
 			{
 				this.ComputeLine(0, out t, out s1, out s2, out a);
 				this.ComputeLine(pr.NbFaces-1, out b, out s1, out s2, out t);
+			}
+			else	// étoile ?
+			{
+				this.ComputeLine(0, out t, out s1, out s2, out a);
+				this.ComputeLine(pr.NbFaces*2-1, out b, out s1, out s2, out t);
 			}
 		}
 
@@ -269,7 +275,7 @@ namespace Epsitec.Common.Document.Objects
 			s2 = Point.Zero;
 			p2 = Point.Zero;
 
-			if (reg.Flower)  // fleur ?
+			if (reg.RegularType == Properties.RegularType.Flower1 || reg.RegularType == Properties.RegularType.Flower2)  // fleur ?
 			{
 				Point star = Point.Scale(corner, center, reg.Deep.R);
 				double a = reg.Deep.A;
@@ -295,7 +301,7 @@ namespace Epsitec.Common.Document.Objects
 					p2 = this.PolarToPoint(1, a2);
 				}
 			}
-			else if (reg.Star)  // étoile ?
+			else if (reg.RegularType == Properties.RegularType.Star)  // étoile ?
 			{
 				Point star = Point.Scale(corner, center, reg.Deep.R);
 				double a = reg.Deep.A;
@@ -378,7 +384,7 @@ namespace Epsitec.Common.Document.Objects
 			path.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);;
 
 			int total = reg.NbFaces;
-			if (reg.Star || reg.Flower)  total *= 2;  // étoile ?
+			if (reg.RegularType != Properties.RegularType.Norm)  total *= 2;  // étoile ?
 
 			Properties.Corner corner = this.PropertyCorner;
 
@@ -390,7 +396,7 @@ namespace Epsitec.Common.Document.Objects
 				{
 					this.ComputeLine(i, out p1, out s1, out s2, out p2);
 
-					if (reg.Flower)
+					if (reg.RegularType == Properties.RegularType.Flower1 || reg.RegularType == Properties.RegularType.Flower2)
 					{
 						if (i == 0)
 						{

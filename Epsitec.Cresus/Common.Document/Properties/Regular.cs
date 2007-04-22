@@ -4,6 +4,16 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Properties
 {
+	//	ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	//	sous peine de plantée lors de la désérialisation.
+	public enum RegularType
+	{
+		Norm    = 0,
+		Star    = 1,
+		Flower1 = 2,
+		Flower2 = 3,
+	}
+
 	/// <summary>
 	/// La classe Regular représente une propriété d'un objet graphique.
 	/// </summary>
@@ -17,14 +27,13 @@ namespace Epsitec.Common.Document.Properties
 		protected override void Initialize()
 		{
 			base.Initialize ();
-			this.nbFaces = 6;
-			this.star    = false;
-			this.flower  = false;
-			this.deep    = new Polar( 0.50,   0.0);
-			this.e1      = new Polar(-0.05,  20.0);
-			this.e2      = new Polar(-0.05, -20.0);
-			this.i1      = new Polar( 0.60,  10.0);
-			this.i2      = new Polar( 0.60, -10.0);
+			this.regularType = RegularType.Norm;
+			this.nbFaces     = 6;
+			this.deep        = new Polar( 0.50,   0.0);
+			this.e1          = new Polar(-0.05,  20.0);
+			this.e2          = new Polar(-0.05, -20.0);
+			this.i1          = new Polar( 0.60,  10.0);
+			this.i2          = new Polar( 0.60, -10.0);
 		}
 
 		public int NbFaces
@@ -45,37 +54,19 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		public bool Star
+		public RegularType RegularType
 		{
 			get
 			{
-				return this.star;
+				return this.regularType;
 			}
 
 			set
 			{
-				if ( this.star != value )
+				if ( this.regularType != value )
 				{
 					this.NotifyBefore();
-					this.star = value;
-					this.NotifyAfter();
-				}
-			}
-		}
-
-		public bool Flower
-		{
-			get
-			{
-				return this.flower;
-			}
-
-			set
-			{
-				if ( this.flower != value )
-				{
-					this.NotifyBefore();
-					this.flower = value;
+					this.regularType = value;
 					this.NotifyAfter();
 				}
 			}
@@ -211,7 +202,7 @@ namespace Epsitec.Common.Document.Properties
 			//	Donne le petit texte pour les échantillons.
 			get
 			{
-				string star = this.star ? " *" : "";
+				string star = this.regularType == RegularType.Norm ? "" : " *";
 				return string.Concat(Res.Strings.Property.Regular.Short.Faces, this.nbFaces.ToString(), star);
 			}
 		}
@@ -224,25 +215,27 @@ namespace Epsitec.Common.Document.Properties
 			this.PutStyleBriefPostfix(builder);
 		}
 
-		public static string GetName(string type)
+		public static string GetName(RegularType type)
 		{
 			//	Retourne le nom d'un type donné.
 			switch (type)
 			{
-				case "Star":    return Res.Strings.Property.Regular.Star;
-				case "Flower":  return Res.Strings.Property.Regular.Flower;
-				default:        return Res.Strings.Property.Regular.Norm;
+				case RegularType.Star:     return Res.Strings.Property.Regular.Star;
+				case RegularType.Flower1:  return Res.Strings.Property.Regular.Flower1;
+				case RegularType.Flower2:  return Res.Strings.Property.Regular.Flower2;
+				default:                   return Res.Strings.Property.Regular.Norm;
 			}
 		}
 
-		public static string GetIconText(string type)
+		public static string GetIconText(RegularType type)
 		{
 			//	Retourne l'icône pour un type donné.
 			switch (type)
 			{
-				case "Star":    return "RegularStar";
-				case "Flower":  return "RegularFlower";
-				default:        return "RegularNorm";
+				case RegularType.Star:     return "RegularStar";
+				case RegularType.Flower1:  return "RegularFlower1";
+				case RegularType.Flower2:  return "RegularFlower2";
+				default:                   return "RegularNorm";
 			}
 		}
 
@@ -268,18 +261,22 @@ namespace Epsitec.Common.Document.Properties
 				return false;
 			}
 
-			if (this.flower)
+			switch (this.regularType)
 			{
-				return true;
+				case RegularType.Norm:
+					return false;
+
+				case RegularType.Star:
+					return rank <= 0;
+
+				case RegularType.Flower1:
+					return rank <= 2;
+
+				case RegularType.Flower2:
+					return rank <= 4;
 			}
-			else if (this.star)
-			{
-				return rank <= 0;
-			}
-			else
-			{
-				return false;
-			}
+
+			return false;
 		}
 		
 		public override Point GetHandlePosition(Objects.Abstract obj, int rank)
@@ -348,6 +345,11 @@ namespace Epsitec.Common.Document.Properties
 				angle = p.A-(a*this.e1.R);
 
 				this.E1 = new Polar(scale, angle);
+
+				if (this.regularType == RegularType.Flower1)
+				{
+					this.E2 = new Polar(scale, -angle);
+				}
 			}
 
 			if (rank == 2)
@@ -367,6 +369,11 @@ namespace Epsitec.Common.Document.Properties
 				angle = p.A-(a*this.i1.R);
 
 				this.I1 = new Polar(scale, angle);
+
+				if (this.regularType == RegularType.Flower1)
+				{
+					this.I2 = new Polar(scale, -angle);
+				}
 			}
 
 			if (rank == 3)
@@ -416,14 +423,13 @@ namespace Epsitec.Common.Document.Properties
 			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			Regular p = property as Regular;
-			p.nbFaces = this.nbFaces;
-			p.star    = this.star;
-			p.flower  = this.flower;
-			p.deep    = this.deep;
-			p.e1      = this.e1;
-			p.e2      = this.e2;
-			p.i1      = this.i1;
-			p.i2      = this.i2;
+			p.regularType = this.regularType;
+			p.nbFaces     = this.nbFaces;
+			p.deep        = this.deep;
+			p.e1          = this.e1;
+			p.e2          = this.e2;
+			p.i1          = this.i1;
+			p.i2          = this.i2;
 		}
 
 		public override bool Compare(Abstract property)
@@ -432,14 +438,13 @@ namespace Epsitec.Common.Document.Properties
 			if ( !base.Compare(property) )  return false;
 
 			Regular p = property as Regular;
-			if ( p.nbFaces != this.nbFaces )  return false;
-			if ( p.star    != this.star    )  return false;
-			if ( p.flower  != this.flower  )  return false;
-			if ( p.deep    != this.deep    )  return false;
-			if ( p.e1      != this.e1      )  return false;
-			if ( p.e2      != this.e2      )  return false;
-			if ( p.i1      != this.i1      )  return false;
-			if ( p.i2      != this.i2      )  return false;
+			if ( p.regularType != this.regularType )  return false;
+			if ( p.nbFaces     != this.nbFaces     )  return false;
+			if ( p.deep        != this.deep        )  return false;
+			if ( p.e1          != this.e1          )  return false;
+			if ( p.e2          != this.e2          )  return false;
+			if ( p.i1          != this.i1          )  return false;
+			if ( p.i2          != this.i2          )  return false;
 
 			return true;
 		}
@@ -459,9 +464,8 @@ namespace Epsitec.Common.Document.Properties
 			base.GetObjectData(info, context);
 
 			info.AddValue("NbFaces", this.nbFaces);
-			info.AddValue("Star", this.star);
-			info.AddValue("Flower", this.flower);
-			if (this.star || this.flower)
+			info.AddValue("RegularType", this.regularType);
+			if (this.regularType != RegularType.Norm)
 			{
 				info.AddValue("Deep", this.deep);
 				info.AddValue("E1", this.e1);
@@ -475,12 +479,11 @@ namespace Epsitec.Common.Document.Properties
 		{
 			//	Constructeur qui désérialise la propriété.
 			this.nbFaces = info.GetInt32("NbFaces");
-			this.star = info.GetBoolean("Star");
 
 			if (this.document.IsRevisionGreaterOrEqual(2, 0, 16))
 			{
-				this.flower = info.GetBoolean("Flower");
-				if (this.star || this.flower)
+				this.regularType = (RegularType) info.GetValue("RegularType", typeof(RegularType));
+				if (this.regularType != RegularType.Norm)
 				{
 					this.deep = (Polar) info.GetValue("Deep", typeof(Polar));
 					this.e1 = (Polar) info.GetValue("E1", typeof(Polar));
@@ -491,8 +494,9 @@ namespace Epsitec.Common.Document.Properties
 			}
 			else
 			{
-				this.flower = false;
-				if (this.star)
+				bool star = info.GetBoolean("Star");
+				this.regularType = star ? RegularType.Star : RegularType.Norm;
+				if (star)
 				{
 					this.deep = new Polar(info.GetDouble("Deep"), 0.0);
 				}
@@ -500,10 +504,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 		#endregion
 
-	
+
+		protected RegularType			regularType;
 		protected int					nbFaces;
-		protected bool					star;
-		protected bool					flower;
 		protected Polar					deep;
 		protected Polar					e1;
 		protected Polar					e2;

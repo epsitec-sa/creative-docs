@@ -16,9 +16,10 @@ namespace Epsitec.Common.Document.Panels
 			this.grid.TabIndex = 0;
 			this.grid.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-			this.AddRadioIcon(0, "Norm");
-			this.AddRadioIcon(1, "Star");
-			this.AddRadioIcon(2, "Flower");
+			this.AddRadioIcon(Properties.RegularType.Norm);
+			this.AddRadioIcon(Properties.RegularType.Star);
+			this.AddRadioIcon(Properties.RegularType.Flower1);
+			this.AddRadioIcon(Properties.RegularType.Flower2);
 
 			this.fieldNbFaces = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldNbFaces.LabelShortText = Res.Strings.Panel.Regular.Short.Faces;
@@ -85,9 +86,9 @@ namespace Epsitec.Common.Document.Panels
 			this.isNormalAndExtended = true;
 		}
 
-		protected void AddRadioIcon(int rank, string type)
+		protected void AddRadioIcon(Properties.RegularType type)
 		{
-			this.grid.AddRadioIcon(Misc.Icon(Properties.Regular.GetIconText(type)), Properties.Regular.GetName(type), rank, false);
+			this.grid.AddRadioIcon(Misc.Icon(Properties.Regular.GetIconText(type)), Properties.Regular.GetName(type), (int)type, false);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -139,10 +140,7 @@ namespace Epsitec.Common.Document.Panels
 
 			this.ignoreChanged = true;
 
-			int sv = 0;
-			if (p.Star)  sv = 1;
-			if (p.Flower)  sv = 2;
-			this.grid.SelectedValue = sv;
+			this.grid.SelectedValue = (int) p.RegularType;
 
 			this.fieldNbFaces.TextFieldReal.InternalValue = p.NbFaces;
 
@@ -173,22 +171,7 @@ namespace Epsitec.Common.Document.Panels
 			Properties.Regular p = this.property as Properties.Regular;
 			if ( p == null )  return;
 
-			if (this.grid.SelectedValue == 0)
-			{
-				p.Star = false;
-				p.Flower = false;
-			}
-			else if (this.grid.SelectedValue == 1)
-			{
-				p.Star = true;
-				p.Flower = false;
-			}
-			else if (this.grid.SelectedValue == 2)
-			{
-				p.Star = false;
-				p.Flower = true;
-			}
-
+			p.RegularType = (Properties.RegularType) this.grid.SelectedValue;
 			p.NbFaces = (int)this.fieldNbFaces.TextFieldReal.InternalValue;
 			p.Deep = new Polar((double) this.fieldDeep.TextFieldR.InternalValue/100, (double) this.fieldDeep.TextFieldA.InternalValue);
 			p.E1 = new Polar((double) this.fieldE1.TextFieldR.InternalValue/100, (double) this.fieldE1.TextFieldA.InternalValue);
@@ -205,12 +188,14 @@ namespace Epsitec.Common.Document.Panels
 		{
 			//	Grise les widgets nécessaires.
 			bool star = (this.grid.SelectedValue == 1);
-			bool flower = (this.grid.SelectedValue == 2);
-			this.fieldDeep.Enable = (this.isExtendedSize && (star || flower));
-			this.fieldE1.Enable = (this.isExtendedSize && flower);
-			this.fieldE2.Enable = (this.isExtendedSize && flower);
-			this.fieldI1.Enable = (this.isExtendedSize && flower);
-			this.fieldI2.Enable = (this.isExtendedSize && flower);
+			bool flower1 = (this.grid.SelectedValue == 2);
+			bool flower2 = (this.grid.SelectedValue == 3);
+
+			this.fieldDeep.Enable = (this.isExtendedSize && (star || flower1 || flower2));
+			this.fieldE1.Enable = (this.isExtendedSize && flower1 || flower2);
+			this.fieldE2.Enable = (this.isExtendedSize && flower2);
+			this.fieldI1.Enable = (this.isExtendedSize && flower1 || flower2);
+			this.fieldI2.Enable = (this.isExtendedSize && flower2);
 		}
 
 		protected override void UpdateClientGeometry()
@@ -226,13 +211,13 @@ namespace Epsitec.Common.Document.Panels
 
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
-			r.Width = 22*3;
+			r.Width = 22*4;
 			r.Inflate(1);
 			this.grid.SetManualBounds(r);
 
 			r = rect;
 			r.Bottom = r.Top-20;
-			r.Left = rect.Left+22*3;
+			r.Left = rect.Left+22*4;
 			r.Right = rect.Right;
 			this.fieldNbFaces.SetManualBounds(r);
 
@@ -283,6 +268,36 @@ namespace Epsitec.Common.Document.Panels
 		{
 			//	Un champ a été changé.
 			if ( this.ignoreChanged )  return;
+
+			Properties.Regular p = this.property as Properties.Regular;
+
+			if (p.RegularType == Properties.RegularType.Flower1)
+			{
+				this.ignoreChanged = true;
+
+				if (sender == this.fieldE1.TextFieldR)
+				{
+					this.fieldE2.TextFieldR.InternalValue = this.fieldE1.TextFieldR.InternalValue;
+				}
+
+				if (sender == this.fieldE1.TextFieldA)
+				{
+					this.fieldE2.TextFieldA.InternalValue = -this.fieldE1.TextFieldA.InternalValue;
+				}
+
+				if (sender == this.fieldI1.TextFieldR)
+				{
+					this.fieldI2.TextFieldR.InternalValue = this.fieldI1.TextFieldR.InternalValue;
+				}
+
+				if (sender == this.fieldI1.TextFieldA)
+				{
+					this.fieldI2.TextFieldA.InternalValue = -this.fieldI1.TextFieldA.InternalValue;
+				}
+
+				this.ignoreChanged = false;
+			}
+
 			this.OnChanged();
 		}
 
@@ -302,10 +317,7 @@ namespace Epsitec.Common.Document.Panels
 			{
 				if (field.Text == sample.Text)
 				{
-					int sv = 0;
-					if (sample.Star)  sv = 1;
-					if (sample.Flower)  sv = 2;
-					this.grid.SelectedValue = sv;
+					this.grid.SelectedValue = (int) sample.RegularType;
 
 					this.fieldNbFaces.TextFieldReal.InternalValue = (decimal) sample.NbFaces;
 
@@ -339,11 +351,10 @@ namespace Epsitec.Common.Document.Panels
 		#region Sample
 		protected struct Sample
 		{
-			public Sample(string text, bool star, bool flower, int nbFaces, Polar deep, Polar i1, Polar i2, Polar e1, Polar e2)
+			public Sample(string text, Properties.RegularType regularType, int nbFaces, Polar deep, Polar i1, Polar i2, Polar e1, Polar e2)
 			{
 				this.Text = text;
-				this.Star = star;
-				this.Flower = flower;
+				this.RegularType = regularType;
 				this.NbFaces = nbFaces;
 				this.Deep = deep;
 				this.I1 = i1;
@@ -352,34 +363,33 @@ namespace Epsitec.Common.Document.Panels
 				this.E2 = e2;
 			}
 
-			public string	Text;
-			public bool		Star;
-			public bool		Flower;
-			public int		NbFaces;
-			public Polar	Deep;
-			public Polar	I1;
-			public Polar	I2;
-			public Polar	E1;
-			public Polar	E2;
+			public string					Text;
+			public Properties.RegularType	RegularType;
+			public int						NbFaces;
+			public Polar					Deep;
+			public Polar					I1;
+			public Polar					I2;
+			public Polar					E1;
+			public Polar					E2;
 		}
 
 		static protected Sample[] Samples =
 		{
-			new Sample("Triangle équilatéral", false, false,  3, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
-			new Sample("Carré",                false, false,  4, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
-			new Sample("Hexagone",             false, false,  6, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
-			new Sample("Octogone",             false, false,  8, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
-			new Sample("Etoile de David",      true,  false,  6, new Polar(0.42,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
-			new Sample("Scie circulaire",      true,  false, 24, new Polar(0.05,  -8.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
-			new Sample("Fleur symétrique 1",   false, true,   6, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
-			new Sample("Fleur symétrique 2",   false, true,   4, new Polar(0.80,   0.0), new Polar( 0.25,  30.0), new Polar( 0.25, -30.0), new Polar(-0.10,  30.0), new Polar(-0.10, -30.0)),
-			new Sample("Fleur asymétrique 1",  false, true,   6, new Polar(0.85,  20.0), new Polar( 0.40, -16.0), new Polar( 0.00, -48.0), new Polar( 0.05,  15.0), new Polar(-0.40, -33.0)),
-			new Sample("Fleur asymétrique 2",  false, true,   8, new Polar(0.45, -10.0), new Polar( 0.50, -10.0), new Polar(-0.10, -44.0), new Polar( 0.30,  16.0), new Polar(-0.65, -38.0)),
-			new Sample("Trèfle à 4 feuilles",  false, true,   4, new Polar(0.80,   0.0), new Polar( 0.70,   0.0), new Polar( 0.70,   0.0), new Polar(-0.75,  75.0), new Polar(-0.75, -75.0)),
-			new Sample("Hélice de bateau",     false, true,   3, new Polar(0.80, -30.0), new Polar( 0.40,  30.0), new Polar( 0.70,   0.0), new Polar(-0.30,  50.0), new Polar(-0.40, -75.0)),
-			new Sample("Hélice d'avion",       false, true,   4, new Polar(0.90,   0.0), new Polar( 0.50, -10.0), new Polar( 0.40, -10.0), new Polar(-0.05,  10.0), new Polar( 0.05,  -5.0)),
-			new Sample("Soleil droit",         true,  false, 20, new Polar(0.65,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
-			new Sample("Soleil tournoyant",    false, true,  20, new Polar(0.65, -50.0), new Polar( 0.55,  -8.0), new Polar( 0.40,  -8.0), new Polar( 0.40,  -3.0), new Polar( 0.25,   1.0)),
+			new Sample("Triangle équilatéral", Properties.RegularType.Norm,     3, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
+			new Sample("Carré",                Properties.RegularType.Norm,     4, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
+			new Sample("Hexagone",             Properties.RegularType.Norm,     6, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
+			new Sample("Octogone",             Properties.RegularType.Norm,     8, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
+			new Sample("Etoile de David",      Properties.RegularType.Star,     6, new Polar(0.42,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
+			new Sample("Scie circulaire",      Properties.RegularType.Star,    24, new Polar(0.05,  -8.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
+			new Sample("Soleil droit",         Properties.RegularType.Star,    20, new Polar(0.65,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
+			new Sample("Soleil tournoyant",    Properties.RegularType.Flower2, 20, new Polar(0.65, -50.0), new Polar( 0.55,  -8.0), new Polar( 0.40,  -8.0), new Polar( 0.40,  -3.0), new Polar( 0.25,   1.0)),
+			new Sample("Fleur symétrique 1",   Properties.RegularType.Flower1,  6, new Polar(0.50,   0.0), new Polar( 0.60,  10.0), new Polar( 0.60, -10.0), new Polar(-0.05,  20.0), new Polar(-0.05, -20.0)),
+			new Sample("Fleur symétrique 2",   Properties.RegularType.Flower1,  4, new Polar(0.80,   0.0), new Polar( 0.25,  30.0), new Polar( 0.25, -30.0), new Polar(-0.10,  30.0), new Polar(-0.10, -30.0)),
+			new Sample("Fleur asymétrique 1",  Properties.RegularType.Flower2,  6, new Polar(0.85,  20.0), new Polar( 0.40, -16.0), new Polar( 0.00, -48.0), new Polar( 0.05,  15.0), new Polar(-0.40, -33.0)),
+			new Sample("Fleur asymétrique 2",  Properties.RegularType.Flower2,  8, new Polar(0.45, -10.0), new Polar( 0.50, -10.0), new Polar(-0.10, -44.0), new Polar( 0.30,  16.0), new Polar(-0.65, -38.0)),
+			new Sample("Trèfle à 4 feuilles",  Properties.RegularType.Flower1,  4, new Polar(0.80,   0.0), new Polar( 0.70,   0.0), new Polar( 0.70,   0.0), new Polar(-0.75,  75.0), new Polar(-0.75, -75.0)),
+			new Sample("Hélice de bateau",     Properties.RegularType.Flower2,  3, new Polar(0.80, -30.0), new Polar( 0.40,  30.0), new Polar( 0.70,   0.0), new Polar(-0.30,  50.0), new Polar(-0.40, -75.0)),
+			new Sample("Hélice d'avion",       Properties.RegularType.Flower2,  4, new Polar(0.90,   0.0), new Polar( 0.50, -10.0), new Polar( 0.40, -10.0), new Polar(-0.05,  10.0), new Polar( 0.05,  -5.0)),
 		};
 		#endregion
 

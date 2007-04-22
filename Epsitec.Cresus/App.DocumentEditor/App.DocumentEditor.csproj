@@ -178,7 +178,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
-    <EmbeddedResource Include="Images\RegularFlower.icon" />
+    <EmbeddedResource Include="Images\RegularFlower2.icon" />
+    <EmbeddedResource Include="Images\RegularStar.icon" />
+    <EmbeddedResource Include="Images\RegularFlower1.icon" />
     <EmbeddedResource Include="Images\ShaperHandleSharp.icon" />
     <EmbeddedResource Include="Images\ShaperHandleRound.icon" />
     <Content Include="Resources\App.DocumentEditor\Captions.de.resource" />
@@ -571,7 +573,6 @@
     <EmbeddedResource Include="Images\RadioYes.icon" />
     <EmbeddedResource Include="Images\Redo.icon" />
     <EmbeddedResource Include="Images\RegularNorm.icon" />
-    <EmbeddedResource Include="Images\RegularStar.icon" />
     <EmbeddedResource Include="Images\Replace.icon" />
     <EmbeddedResource Include="Images\Rotate180.icon" />
     <EmbeddedResource Include="Images\Rotate270.icon" />

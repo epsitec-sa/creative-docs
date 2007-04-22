@@ -478,7 +478,7 @@
   <data name="Panel.ModColor.Tooltip.Draft" id="0SC">Traits de construction</data>
   <data name="Panel.ModColor.Tooltip.Reset" id="0TC">Reset (valeurs standards)</data>
   <data name="Panel.Name.Tooltip.Title" id="0UC">Nom de l&amp;apos;objet</data>
-  <data name="Panel.Regular.Short.Faces" id="0VC">Nb de côtés</data>
+  <data name="Panel.Regular.Short.Faces" id="0VC">N</data>
   <data name="Panel.Regular.Long.Faces" id="01D">Nombre de côtés</data>
   <data name="Panel.Regular.Label.Deep" id="02D">Renfoncement</data>
   <data name="Panel.Regular.Label.E1" id="0AC01">Extérieur gauche</data>
@@ -808,7 +808,8 @@
   <data name="Property.Line.Short.Witdh" id="0PM">E = </data>
   <data name="Property.Regular.Norm" id="0QM">Polygone régulier</data>
   <data name="Property.Regular.Star" id="0RM">Etoile</data>
-  <data name="Property.Regular.Flower" id="0IC01">Fleur</data>
+  <data name="Property.Regular.Flower1" id="0IC01">Fleur symétrique</data>
+  <data name="Property.Regular.Flower2" id="0JC01">Fleur asymétrique</data>
   <data name="Property.Regular.Short.Faces" id="0SM">N = </data>
   <data name="Property.Tension.Short.Value" id="08B01">T = </data>
   <data name="Property.Surface.ParallelT" id="0TM">Parallélogramme 1</data>
