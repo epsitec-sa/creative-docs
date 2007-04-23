@@ -70,6 +70,14 @@ namespace Epsitec.Common.OpenType
 						{
 							return fid;
 						}
+						
+						string fidFullName = OpenType.FontName.GetFullName (fid.InvariantSimpleFaceName, fid.InvariantSimpleStyleName);
+						string fidFullHash = OpenType.FontName.GetFullHash (fidFullName);
+
+						if (fidFullHash == fullHash)
+						{
+							return fid;
+						}
 					}
 				}
 				

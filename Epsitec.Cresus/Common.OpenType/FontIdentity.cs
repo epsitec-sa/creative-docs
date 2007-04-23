@@ -787,7 +787,8 @@ namespace Epsitec.Common.OpenType
 			
 			name = this.otName.GetUnicodeName (localeId, id, PlatformId.Microsoft);
 			
-			if (name == null)
+			if ((name == null) &&
+				(localeId == FontIdentity.InvariantLocale))
 			{
 				name = this.otName.GetLatinName (0, id, PlatformId.Macintosh);
 			}
