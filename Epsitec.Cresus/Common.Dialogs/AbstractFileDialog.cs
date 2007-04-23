@@ -22,8 +22,22 @@ namespace Epsitec.Common.Dialogs
 	{
 		public AbstractFileDialog()
 		{
-			this.directoriesVisited = new List<FolderItem> ();
-			this.directoriesVisitedIndex = -1;
+			this.context = new CommandContext ();
+			this.dispatcher = new CommandDispatcher ();
+			
+			this.navigationController = new Controllers.FileNavigationController (this.context);
+			this.navigationController.ActiveDirectoryChanged += this.HandleNavigationControllerActiveDirectoryChanged;
+		}
+
+		void HandleNavigationControllerActiveDirectoryChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			this.UpdateInitialDirectory ();
+			this.UpdateTable (-1);
+
+			if (this.table != null)
+			{
+				this.UpdateFileList ();
+			}
 		}
 
 
@@ -61,7 +75,7 @@ namespace Epsitec.Common.Dialogs
 			//	Dossier initial.
 			get
 			{
-				return this.initialDirectory.FullPath;
+				return this.navigationController.ActiveDirectoryPath;
 			}
 			set
 			{
@@ -90,7 +104,8 @@ namespace Epsitec.Common.Dialogs
 					}
 				}
 
-				this.SetInitialFolder (folder, true);
+				this.navigationController.ActiveDirectory = folder;
+//				this.SetInitialFolder (folder, true);
 			}
 		}
 
@@ -271,7 +286,7 @@ namespace Epsitec.Common.Dialogs
 
 		protected abstract void CreateWindow();
 
-
+#if false
 		private void SetInitialFolder(FolderItem folder, bool updateVisited)
 		{
 			//	Change le dossier courant.
@@ -283,8 +298,6 @@ namespace Epsitec.Common.Dialogs
 			{
 				this.initialDirectory = folder;
 			}
-
-			this.initialSmallIcon = FileManager.GetFolderItemIcon (this.initialDirectory, FolderQueryMode.SmallIcons);
 
 			if (updateVisited)
 			{
@@ -299,32 +312,7 @@ namespace Epsitec.Common.Dialogs
 				this.UpdateFileList ();
 			}
 		}
-
-		private void AddToVisitedDirectories(FolderItem folder)
-		{
-			if (folder.IsEmpty)
-			{
-				return;  // on n'insère jamais un folder vide
-			}
-
-			if (this.directoriesVisited.Count != 0)
-			{
-				FolderItem current = this.directoriesVisited[this.directoriesVisitedIndex];
-				if (current == folder)
-				{
-					return;
-				}
-
-				while (this.directoriesVisitedIndex < this.directoriesVisited.Count-1)
-				{
-					this.directoriesVisited.RemoveAt (this.directoriesVisited.Count-1);
-				}
-			}
-
-			this.directoriesVisited.Add (folder);
-			this.directoriesVisitedIndex = this.directoriesVisited.Count-1;
-		}
-
+#endif
 
 		protected void CreateUserInterface(string name, Size windowSize, string title, double cellHeight, Window owner)
 		{
@@ -431,12 +419,10 @@ namespace Epsitec.Common.Dialogs
 
 		private void CreateCommandDispatcher()
 		{
-			this.dispatcher = new CommandDispatcher ();
-			this.context = new CommandContext ();
-
-			this.prevState            = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NavigatePrev, this.NavigatePrev);
-			this.nextState            = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NavigateNext, this.NavigateNext);
-			this.parentState          = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.ParentFolder, this.ParentDirectory);
+			this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NavigatePrev, this.navigationController.NavigatePrev);
+			this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NavigateNext, this.navigationController.NavigateNext);
+			this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.ParentFolder, this.navigationController.NavigateParent);
+			
 			this.newState             = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NewFolder, this.NewDirectory);
 			this.renameState          = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Rename, this.RenameStarting);
 			this.deleteState          = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Delete, this.FileDelete);
@@ -774,7 +760,7 @@ namespace Epsitec.Common.Dialogs
 			IconButton buttonParent = new IconButton (group);
 			buttonParent.AutoFocus = false;
 			buttonParent.TabNavigationMode = TabNavigationMode.None;
-			buttonParent.CommandObject = this.parentState.Command;
+			buttonParent.CommandObject = Res.Commands.Dialog.File.ParentFolder;
 			buttonParent.Dock = DockStyle.Right;
 
 			//	Groupe-combo composé des boutons "prev/next/v".
@@ -799,14 +785,14 @@ namespace Epsitec.Common.Dialogs
 			buttonPrev.PreferredHeight = group.PreferredHeight;
 			buttonPrev.AutoFocus = false;
 			buttonPrev.TabNavigationMode = TabNavigationMode.None;
-			buttonPrev.CommandObject = this.prevState.Command;
+			buttonPrev.CommandObject = Res.Commands.Dialog.File.NavigatePrev;
 			buttonPrev.Dock = DockStyle.Left;
 
 			IconButton buttonNext = new IconButton(combo);
 			buttonNext.PreferredHeight = group.PreferredHeight;
 			buttonNext.AutoFocus = false;
 			buttonNext.TabNavigationMode = TabNavigationMode.None;
-			buttonNext.CommandObject = this.nextState.Command;
+			buttonNext.CommandObject = Res.Commands.Dialog.File.NavigateNext;
 			buttonNext.Dock = DockStyle.Left;
 		}
 
@@ -1149,7 +1135,7 @@ namespace Epsitec.Common.Dialogs
 					FileButton f = widget as FileButton;
 
 					int i = System.Int32.Parse (f.Name, System.Globalization.CultureInfo.InvariantCulture);
-					bool active = (this.favoritesList[i] == this.initialDirectory);
+					bool active = (this.favoritesList[i] == this.navigationController.ActiveDirectory);
 					f.ActiveState = active ? ActiveState.Yes : ActiveState.No;
 
 					if (active)
@@ -1220,7 +1206,7 @@ namespace Epsitec.Common.Dialogs
 
 		private bool RefreshFileList(CancelCallback cancelCallback)
 		{
-			if (this.initialDirectory.IsFolder)
+			if (this.navigationController.ActiveDirectory.IsFolder)
 			{
 				FileListSettings settings = this.GetFileListSettings ();
 
@@ -1456,7 +1442,7 @@ namespace Epsitec.Common.Dialogs
 
 			try
 			{
-				foreach (FolderItem item in FileManager.GetFolderItems (this.initialDirectory, settings.FolderQueryMode, filter))
+				foreach (FolderItem item in FileManager.GetFolderItems (this.navigationController.ActiveDirectory, settings.FolderQueryMode, filter))
 				{
 					settings.Process (this.files, item);
 				}
@@ -1489,8 +1475,8 @@ namespace Epsitec.Common.Dialogs
 			settings = new FileListSettings (this);
 
 			settings.FolderQueryMode = (this.itemViewSize >= 32) ? FolderQueryMode.LargeIcons : FolderQueryMode.SmallIcons;
-			settings.HideFolders     = this.initialDirectory.Equals (FileManager.GetFolderItem (FolderId.Recent, FolderQueryMode.NoIcons));
-			settings.HideShortcuts   = FolderItem.IsNetworkPath (this.initialDirectory.FullPath);
+			settings.HideFolders     = this.navigationController.ActiveDirectory.Equals (FileManager.GetFolderItem (FolderId.Recent, FolderQueryMode.NoIcons));
+			settings.HideShortcuts   = FolderItem.IsNetworkPath (this.navigationController.ActiveDirectoryPath);
 
 			settings.DefineFilterPattern (this.fileFilterPattern);
 
@@ -1533,7 +1519,7 @@ namespace Epsitec.Common.Dialogs
 				enable = false;
 			}
 
-			string oldPath = this.initialDirectory.FullPath;
+			string oldPath = this.navigationController.ActiveDirectoryPath;
 			string newPath = this.RedirectPath (oldPath);
 
 			if (oldPath != newPath)
@@ -1552,14 +1538,8 @@ namespace Epsitec.Common.Dialogs
 
 			this.renameState.Enable = enable;
 
-			FolderItem parent = FileManager.GetParentFolderItem (this.initialDirectory, FolderQueryMode.NoIcons);
-			this.parentState.Enable = !parent.IsEmpty;
-
 			this.viewDispositionState.Enable = true;
 			this.viewSizeState.Enable = true;
-
-			this.prevState.Enable = (this.directoriesVisitedIndex > 0);
-			this.nextState.Enable = (this.directoriesVisitedIndex < this.directoriesVisited.Count-1);
 
 			if (item == null)
 			{
@@ -1578,10 +1558,10 @@ namespace Epsitec.Common.Dialogs
 			//	Met à jour le chemin d'accès.
 			if (this.fieldPath != null)
 			{
-				string text = TextLayout.ConvertToTaggedText (this.initialDirectory.DisplayName);
-				if (this.initialSmallIcon != null)
+				string text = TextLayout.ConvertToTaggedText (this.navigationController.ActiveDirectoryDisplayName);
+				if (this.navigationController.ActiveSmallIcon != null)
 				{
-					text = string.Format ("<img src=\"{0}\"/> {1}", this.initialSmallIcon.ImageName, text);
+					text = string.Format ("<img src=\"{0}\"/> {1}", this.navigationController.ActiveSmallIcon.ImageName, text);
 				}
 
 				this.fieldPath.Text = text;
@@ -1613,35 +1593,6 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
-		private void NavigatePrev()
-		{
-			if (this.directoriesVisitedIndex > 0)
-			{
-				this.SetInitialFolder (this.directoriesVisited[--this.directoriesVisitedIndex], false);
-				this.UpdateButtons ();
-			}
-		}
-
-		private void NavigateNext()
-		{
-			if (this.directoriesVisitedIndex < this.directoriesVisited.Count-1)
-			{
-				this.SetInitialFolder (this.directoriesVisited[++this.directoriesVisitedIndex], false);
-				this.UpdateButtons ();
-			}
-		}
-
-		private void ParentDirectory()
-		{
-			//	Remonte dans le dossier parent.
-			FolderItem parent = FileManager.GetParentFolderItem (this.initialDirectory, FolderQueryMode.NoIcons);
-			if (parent.IsEmpty)
-			{
-				return;
-			}
-
-			this.SetInitialFolder (parent, true);
-		}
 
 		private void NewDirectory()
 		{
@@ -1675,7 +1626,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				for (int i=1; i<100; i++)
 				{
-					string newDir = string.Concat (this.initialDirectory.FullPath, "\\", Epsitec.Common.Dialogs.Res.Strings.Dialog.File.NewDirectoryName);
+					string newDir = string.Concat (this.navigationController.ActiveDirectoryPath, "\\", Epsitec.Common.Dialogs.Res.Strings.Dialog.File.NewDirectoryName);
 					if (i > 1)
 					{
 						newDir = string.Concat (newDir, " (", i.ToString (), ")");
@@ -1889,7 +1840,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				foreach (FolderItem item in this.favoritesList)
 				{
-					if (item == this.initialDirectory)
+					if (item == this.navigationController.ActiveDirectory)
 					{
 						return false;
 					}
@@ -2064,7 +2015,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				if (!System.IO.Path.IsPathRooted (name))
 				{
-					name = System.IO.Path.Combine (this.initialDirectory.FullPath, name);
+					name = System.IO.Path.Combine (this.navigationController.ActiveDirectoryPath, name);
 				}
 
 				if (System.IO.Directory.Exists (name) && item != null)
@@ -2073,7 +2024,7 @@ namespace Epsitec.Common.Dialogs
 
 					if (folderItem.IsFolder)
 					{
-						this.SetInitialFolder (folderItem, true);
+						this.navigationController.ActiveDirectory = folderItem;
 						return false;
 					}
 				}
@@ -2101,7 +2052,7 @@ namespace Epsitec.Common.Dialogs
 
 					if (!System.IO.Path.IsPathRooted(name))
 					{
-						name = System.IO.Path.Combine(this.initialDirectory.FullPath, name);
+						name = System.IO.Path.Combine (this.navigationController.ActiveDirectoryPath, name);
 					}
 
 					if (System.IO.Directory.Exists(name))
@@ -2110,7 +2061,7 @@ namespace Epsitec.Common.Dialogs
 
 						if (folderItem.IsFolder)
 						{
-							this.SetInitialFolder(folderItem, true);
+							this.navigationController.ActiveDirectory = folderItem;
 							return false;
 						}
 					}
@@ -2271,100 +2222,10 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
-		private VMenu CreateVisitedMenu()
-		{
-			//	Crée le menu pour choisir un dossier visité.
-			VMenu menu = new VMenu ();
-
-			int max = 10;  // +/-, donc 20 lignes au maximum
-			int end   = System.Math.Min (this.directoriesVisitedIndex+max, this.directoriesVisited.Count-1);
-			int start = System.Math.Max (end-max*2, 0);
-
-			if (start > 0)  // commence après le début ?
-			{
-				menu.Items.Add (this.CreateVisitedMenuItem (0));  // met "1: dossier"
-
-				if (start > 1)
-				{
-					menu.Items.Add (new MenuSeparator ());  // met séparateur "------"
-				}
-			}
-
-			for (int i=start; i<=end; i++)
-			{
-				if (i-1 == this.directoriesVisitedIndex)
-				{
-					menu.Items.Add (new MenuSeparator ());  // met séparateur "------"
-				}
-
-				menu.Items.Add (this.CreateVisitedMenuItem (i));  // met "n: dossier"
-			}
-
-			if (end < this.directoriesVisited.Count-1)  // fini avant la fin ?
-			{
-				if (end < this.directoriesVisited.Count-2)
-				{
-					menu.Items.Add (new MenuSeparator ());  // met séparateur "------"
-				}
-
-				menu.Items.Add (this.CreateVisitedMenuItem (this.directoriesVisited.Count-1));  // met "n: dossier"
-			}
-
-			menu.AdjustSize ();
-			return menu;
-		}
-
-		private MenuItem CreateVisitedMenuItem(int index)
-		{
-			//	Crée une case du menu pour choisir un dossier visité.
-			if (index == -1)
-			{
-				return new MenuItem ("ChangeVisitedDirectory", "", "...", null);
-			}
-			else
-			{
-				FolderItem folder = this.directoriesVisited[index];
-
-				bool isCurrent = (index == this.directoriesVisitedIndex);
-				bool isNext    = (index >  this.directoriesVisitedIndex);
-
-				string icon = "";
-				if (!isNext)
-				{
-					icon = isCurrent ? "manifest:Epsitec.Common.Widgets.Images.ActiveCurrent.icon" : "manifest:Epsitec.Common.Widgets.Images.ActiveNo.icon";
-				}
-
-				string text = TextLayout.ConvertToTaggedText (folder.DisplayName);
-				if (isNext)
-				{
-					text = string.Concat ("<i>", text, "</i>");
-				}
-				text = string.Format ("{0}: {1}", (index+1).ToString (), text);
-
-				string tooltip = TextLayout.ConvertToTaggedText (folder.FullPath);
-
-				string name = index.ToString (System.Globalization.CultureInfo.InvariantCulture);
-
-				MenuItem item = new MenuItem ("ChangeVisitedDirectory", icon, text, null, name);
-				item.Pressed += new MessageEventHandler (this.HandleVisitedMenuPressed);
-				ToolTip.Default.SetToolTip (item, tooltip);
-
-				return item;
-			}
-		}
 
 		private void HandleWindowResizeBeginning(object sender)
 		{
 			this.fieldFileName.Focus ();
-		}
-
-		private void HandleVisitedMenuPressed(object sender, MessageEventArgs e)
-		{
-			//	Une case du menu pour choisir un dossier visité a été actionnée.
-			MenuItem item = sender as MenuItem;
-			this.directoriesVisitedIndex = System.Int32.Parse (item.Name, System.Globalization.CultureInfo.InvariantCulture);
-			this.SetInitialFolder (this.directoriesVisited[this.directoriesVisitedIndex], false);
-			this.UpdateButtons ();
 		}
 
 
@@ -2374,7 +2235,7 @@ namespace Epsitec.Common.Dialogs
 			GlyphButton button = sender as GlyphButton;
 			if (button == null)
 				return;
-			VMenu menu = this.CreateVisitedMenu ();
+			VMenu menu = this.navigationController.CreateVisitedMenu ();
 			menu.Host = this.window;
 			TextFieldCombo.AdjustComboSize (button, menu, false);
 			menu.ShowAsComboList (button, Point.Zero, button);
@@ -2391,7 +2252,7 @@ namespace Epsitec.Common.Dialogs
 			//	Favoris cliqué dans le panneau de gauche.
 			FileButton f = sender as FileButton;
 			int i = System.Int32.Parse (f.Name, System.Globalization.CultureInfo.InvariantCulture);
-			this.SetInitialFolder (this.favoritesList[i], true);
+			this.navigationController.ActiveDirectory = this.favoritesList[i];
 		}
 
 		private void HandleRenameAccepted(object sender)
@@ -2509,7 +2370,7 @@ namespace Epsitec.Common.Dialogs
 
 #if true
 			//	Ajoute toutes les unités du chemin courant et de ses parents.
-			FolderItem currentFolder = this.initialDirectory;
+			FolderItem currentFolder = this.navigationController.ActiveDirectory;
 			int nb = 0;
 			while (!currentFolder.IsEmpty)
 			{
@@ -2574,7 +2435,7 @@ namespace Epsitec.Common.Dialogs
 			//	Le menu pour le chemin d'accès a été fermé.
 			if (this.comboSelected != -1)
 			{
-				this.SetInitialFolder (this.comboFolders[this.comboSelected].FolderItem, true);
+				this.navigationController.ActiveDirectory = this.comboFolders[this.comboSelected].FolderItem;
 			}
 		}
 
@@ -2703,8 +2564,8 @@ namespace Epsitec.Common.Dialogs
 		protected bool						enableMultipleSelection;
 			
 		private bool						isRedirected;
-		private FolderItem					initialDirectory;
-		private FolderItemIcon				initialSmallIcon;
+		private Controllers.FileNavigationController navigationController;
+		
 		private string						initialFileName;
 		private string						selectedFileName;
 		private string[]					selectedFileNames;
@@ -2716,17 +2577,12 @@ namespace Epsitec.Common.Dialogs
 		private int							favoritesFixes;
 		private int							favoritesSelected;
 
-		private List<FolderItem>			directoriesVisited;
-		private int							directoriesVisitedIndex;
 		private List<FileListItem>			comboFolders;
 		private List<string>				comboTexts;
 		private int							comboSelected;
 
-		private CommandDispatcher			dispatcher;
-		private CommandContext				context;
-		private CommandState				prevState;
-		private CommandState				nextState;
-		private CommandState				parentState;
+		private readonly CommandDispatcher	dispatcher;
+		private readonly CommandContext		context;
 		private CommandState				newState;
 		private CommandState				renameState;
 		private CommandState				deleteState;

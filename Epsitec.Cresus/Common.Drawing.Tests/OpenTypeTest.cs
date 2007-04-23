@@ -93,6 +93,56 @@ namespace Epsitec.Common.OpenType
 			
 			System.Console.Out.Flush ();
 		}
+
+		[Test]
+		public void ListAllChameleonFontNames()
+		{
+			FontCollection collection = new FontCollection ();
+
+			collection.Initialize ();
+
+			System.Console.WriteLine ("Chameleon fonts (different names for Microsoft or Macintosh)");
+			System.Console.WriteLine ("------------------------------------------------------------");
+
+			foreach (FontIdentity id in collection)
+			{
+				if (string.IsNullOrEmpty (id.MacintoshFaceName))
+				{
+					continue;
+				}
+
+				if ((id.InvariantSimpleFaceName != id.MacintoshFaceName) ||
+					(id.InvariantSimpleStyleName != id.MacintoshStyleName))
+				{
+					System.Console.WriteLine ("{0} + {1} <--> {2} + {3}", id.InvariantSimpleFaceName, id.InvariantSimpleStyleName, id.MacintoshFaceName, id.MacintoshStyleName);
+				}
+			}
+
+			System.Console.Out.Flush ();
+		}
+
+		[Test]
+		public void ListAllFullFontNames()
+		{
+			FontCollection collection = new FontCollection ();
+
+			collection.Initialize ();
+
+			System.Console.WriteLine ("FullFontName compared with Mac FontFamily+FontSubfamily");
+			System.Console.WriteLine ("-------------------------------------------------------");
+
+			foreach (FontIdentity id in collection)
+			{
+				if (string.IsNullOrEmpty (id.MacintoshFaceName))
+				{
+					continue;
+				}
+
+				System.Console.WriteLine ("{0} --> {1} + {2} ==> {3} + {4}", id.FullName, id.MacintoshFaceName, id.MacintoshStyleName, id.InvariantFaceName, id.InvariantStyleName);
+			}
+
+			System.Console.Out.Flush ();
+		}
 		
 		
 		

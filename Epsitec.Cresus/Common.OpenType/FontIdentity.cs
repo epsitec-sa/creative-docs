@@ -55,9 +55,14 @@ namespace Epsitec.Common.OpenType
 					string face  = this.LocalePreferredFaceName ?? this.LocaleSimpleFaceName;
 					string style = this.LocalePreferredStyleName ?? this.LocaleSimpleStyleName;
 
-					if (face.EndsWith (style))
+					face = FontIdentity.RepairBrokenFaceName (face);
+					
+					if (face != null)
 					{
-						face = face.Substring (0, face.Length - style.Length).Trim ();
+						if (face.EndsWith (style))
+						{
+							face = face.Substring (0, face.Length - style.Length).Trim ();
+						}
 					}
 
 					return face;
@@ -78,9 +83,36 @@ namespace Epsitec.Common.OpenType
 				string simple    = this.LocaleSimpleStyleName;
 				string adobe     = this.LocaleAdobeStyleName;
 
-				return FontIdentity.ComposeStyleName (preferred, simple, adobe);
+				string localeName = FontIdentity.ComposeStyleName (preferred, simple, adobe);
+				
+				preferred = this.InvariantPreferredStyleName;
+				simple    = this.InvariantSimpleStyleName;
+				adobe     = this.InvariantAdobeStyleName;
+
+				string invariantName = FontIdentity.ComposeStyleName (preferred, simple, adobe);
+
+				if (localeName == invariantName)
+				{
+					return this.InvariantStyleName;
+				}
+				else
+				{
+					return localeName;
+				}
 			}
 		}
+		
+		public string LocaleFullName
+		{
+			get
+			{
+				lock (this.exclusion)
+				{
+					return this.GetName (NameId.FullFontName);
+				}
+			}
+		}
+
 
 		/// <summary>
 		/// Gets the font face name for the current locale, using
@@ -182,16 +214,35 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				string face  = this.InvariantPreferredFaceName ?? this.InvariantSimpleFaceName;
-				string style = this.InvariantPreferredStyleName ?? this.InvariantSimpleStyleName;
-				
-				if (face.EndsWith (style))
+				string face  = this.InvariantPreferredFaceName  ?? this.MacintoshFaceName  ?? this.InvariantSimpleFaceName;
+				string style = this.InvariantPreferredStyleName ?? this.MacintoshStyleName ?? this.InvariantSimpleStyleName;
+
+				face = FontIdentity.RepairBrokenFaceName (face);
+
+				if (face != null)
 				{
-					face = face.Substring (0, face.Length - style.Length).Trim ();
+					if (face.EndsWith (style))
+					{
+						face = face.Substring (0, face.Length - style.Length).Trim ();
+					}
 				}
 
 				return face;
 			}
+		}
+
+		private static string RepairBrokenFaceName(string face)
+		{
+			if (face != null)
+			{
+				if ((face.StartsWith ("Futura ")) &&
+					(face.EndsWith (" BT")))
+				{
+					face = "Futura";
+				}
+			}
+
+			return face;
 		}
 
 		/// <summary>
@@ -207,9 +258,67 @@ namespace Epsitec.Common.OpenType
 				string simple    = this.InvariantSimpleStyleName;
 				string adobe     = this.InvariantAdobeStyleName;
 
-				return FontIdentity.ComposeStyleName (preferred, simple, adobe);
+				string name = FontIdentity.ComposeStyleName (preferred, simple, adobe);
+				string full = this.FullName;
+
+				if ((name != null) &&
+					(full != null))
+				{
+					name = FontIdentity.RepairBrokenStyleName (this.FullName, name);
+
+					//	Special post-processing here for the poorly named Futura font
+					//	collection, where the "Condensed" is neither present in the style
+					//	name, nor in the face name, which leads to possible confusions if
+					//	we do not add it manually :
+					
+					string[] attributes = new string[] { "Condensed" };
+
+					foreach (string attribute in attributes)
+					{
+						if ((full.Contains (attribute)) &&
+							(!name.Contains (attribute)))
+						{
+							name = string.Concat (attribute, " ", name);
+						}
+					}
+				}
+
+				return name;
 			}
 		}
+
+		private static string RepairBrokenStyleName(string fullName, string style)
+		{
+			if (fullName.Contains (" LtCn BT"))
+			{
+				if (!style.Contains ("Condensed Light"))
+				{
+					style = string.Concat ("Condensed Light ", style);
+				}
+			}
+			else if (fullName.Contains (" MdCn BT"))
+			{
+				if (!style.Contains ("Condensed Medium"))
+				{
+					style = string.Concat ("Condensed Medium ", style);
+				}
+			}
+
+			return style;
+		}
+
+
+		public string InvariantFullName
+		{
+			get
+			{
+				lock (this.exclusion)
+				{
+					return this.GetName (NameId.FullFontName, FontIdentity.InvariantLocale);
+				}
+			}
+		}
+
 
 		/// <summary>
 		/// Gets the invariant font face name. This name is independent
@@ -412,7 +521,10 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
+				lock (this.exclusion)
+				{
 				return this.otName.GetFullFontName ();
+				}
 			}
 		}
 		
@@ -824,6 +936,10 @@ namespace Epsitec.Common.OpenType
 				return true;
 			}
 			if (FontName.GetFullHash (FontName.GetFullName (this.MacintoshFaceName, this.MacintoshStyleName)) == fullHash)
+			{
+				return true;
+			}
+			if (FontName.GetFullHash (FontName.GetFullName (this.InvariantFaceName, this.InvariantStyleName)) == fullHash)
 			{
 				return true;
 			}
