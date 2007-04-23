@@ -719,7 +719,24 @@ namespace Epsitec.Common.OpenType
 			
 			return this.fontSizes[size];
 		}
-		
+
+
+		internal bool EqualsFullHash(string fullHash)
+		{
+			if (this.FullHash == fullHash)
+			{
+				return true;
+			}
+
+			string fullName = FontName.GetFullName (this.InvariantSimpleFaceName, this.InvariantSimpleStyleName);
+
+			if (FontName.GetFullHash (fullName) == fullHash)
+			{
+				return true;
+			}
+
+			return false;
+		}
 		
 		
 		#region FontComparer Class

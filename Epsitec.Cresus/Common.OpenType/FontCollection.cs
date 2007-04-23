@@ -66,15 +66,7 @@ namespace Epsitec.Common.OpenType
 					
 					foreach (FontIdentity fid in this.fullList)
 					{
-						if (fid.FullHash == fullHash)
-						{
-							return fid;
-						}
-						
-						string fidFullName = OpenType.FontName.GetFullName (fid.InvariantSimpleFaceName, fid.InvariantSimpleStyleName);
-						string fidFullHash = OpenType.FontName.GetFullHash (fidFullName);
-
-						if (fidFullHash == fullHash)
+						if (fid.EqualsFullHash (fullHash))
 						{
 							return fid;
 						}
@@ -710,7 +702,7 @@ namespace Epsitec.Common.OpenType
 			
 			foreach (FontIdentity identity in this.fullList)
 			{
-				if (identity.FullHash == fullHash)
+				if (identity.EqualsFullHash (fullHash))
 				{
 					return this.CreateFont (identity);
 				}

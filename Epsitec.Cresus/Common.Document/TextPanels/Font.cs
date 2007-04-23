@@ -255,7 +255,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.UpdateComboStyleList(face, style);
 
-			this.fontFace.Text  = TextLayout.ConvertToTaggedText(Misc.FaceInvariantToLocale(face, style));
+			this.fontFace.Text  = TextLayout.ConvertToTaggedText(Misc.FaceInvariantToInvariant(face, style));
 			this.fontStyle.Text = TextLayout.ConvertToTaggedText(Misc.StyleInvariantToLocale(face, style));
 			this.ProposalFontFaceCombo(this.fontFace, !isFace);
 			this.ProposalTextFieldCombo(this.fontStyle, !isStyle);
@@ -282,10 +282,11 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			//	Met à jour la liste d'un champ éditable pour le style de la police.
 			this.fontStyle.Items.Clear();  // vide la liste
+			face = Misc.FaceInvariantToInvariant (face, style);
 			
 			if ( face != null && style != null )
 			{
-				OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(Misc.FaceInvariantToInvariant(face, style));
+				OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(face);
 				this.stylesInvariant = new List<string>();
 				this.stylesLocal = new List<string>();
 
