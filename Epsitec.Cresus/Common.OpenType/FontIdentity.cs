@@ -102,7 +102,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public string LocaleFullName
+		public string							LocaleFullName
 		{
 			get
 			{
@@ -159,7 +159,7 @@ namespace Epsitec.Common.OpenType
 		/// <c>CultureInfo.CurrentCulture</c>.
 		/// </summary>
 		/// <value>The Adobe font style name.</value>
-		public string LocaleAdobeStyleName
+		public string							LocaleAdobeStyleName
 		{
 			get
 			{
@@ -231,20 +231,6 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 
-		private static string RepairBrokenFaceName(string face)
-		{
-			if (face != null)
-			{
-				if ((face.StartsWith ("Futura ")) &&
-					(face.EndsWith (" BT")))
-				{
-					face = "Futura";
-				}
-			}
-
-			return face;
-		}
-
 		/// <summary>
 		/// Gets the invariant font style name. This name is independent
 		/// of the current culture.
@@ -287,28 +273,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 
-		private static string RepairBrokenStyleName(string fullName, string style)
-		{
-			if (fullName.Contains (" LtCn BT"))
-			{
-				if (!style.Contains ("Condensed Light"))
-				{
-					style = string.Concat ("Condensed Light ", style);
-				}
-			}
-			else if (fullName.Contains (" MdCn BT"))
-			{
-				if (!style.Contains ("Condensed Medium"))
-				{
-					style = string.Concat ("Condensed Medium ", style);
-				}
-			}
-
-			return style;
-		}
-
-
-		public string InvariantFullName
+		public string							InvariantFullName
 		{
 			get
 			{
@@ -365,7 +330,7 @@ namespace Epsitec.Common.OpenType
 		/// of the current culture.
 		/// </summary>
 		/// <value>The Adobe font style name.</value>
-		public string InvariantAdobeStyleName
+		public string							InvariantAdobeStyleName
 		{
 			get
 			{
@@ -1018,6 +983,48 @@ namespace Epsitec.Common.OpenType
 				return string.Concat (adobe, " (", preferred, ")");
 			}
 		}
+
+		private static string RepairBrokenFaceName(string face)
+		{
+			//	Make all fonts of the "Futura * BT" collection belong to the "Futura"
+			//	font face. Some cheating is required, as some font instances have
+			//	incorrect names in their name table :
+
+			if (face != null)
+			{
+				if ((face.StartsWith ("Futura ")) &&
+					(face.EndsWith (" BT")))
+				{
+					face = "Futura";
+				}
+			}
+
+			return face;
+		}
+
+		private static string RepairBrokenStyleName(string fullName, string style)
+		{
+			//	A few members of the "Futura" family are really badly broken
+			//	with respect to their naming. Fix these issues here. Erk.
+
+			if (fullName.Contains (" LtCn BT"))
+			{
+				if (!style.Contains ("Condensed Light"))
+				{
+					style = string.Concat ("Condensed Light ", style);
+				}
+			}
+			else if (fullName.Contains (" MdCn BT"))
+			{
+				if (!style.Contains ("Condensed Medium"))
+				{
+					style = string.Concat ("Condensed Medium ", style);
+				}
+			}
+
+			return style;
+		}
+
 
 		private string GetName(NameId id)
 		{
