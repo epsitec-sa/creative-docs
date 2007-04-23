@@ -74,10 +74,10 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				lock (this.exclusion)
-				{
-					return this.LocalePreferredStyleName ?? this.LocaleSimpleStyleName;
-				}
+				string preferred = this.LocalePreferredStyleName;
+				string simple    = this.LocaleSimpleStyleName;
+
+				return FontIdentity.ComposeStyleName (preferred, simple);
 			}
 		}
 
@@ -178,7 +178,10 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.InvariantPreferredStyleName ?? this.InvariantSimpleStyleName;
+				string preferred = this.InvariantPreferredStyleName;
+				string simple    = this.InvariantSimpleStyleName;
+
+				return FontIdentity.ComposeStyleName (preferred, simple);
 			}
 		}
 
@@ -739,7 +742,34 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		#endregion
-		
+
+		private static string ComposeStyleName(string preferred, string simple)
+		{
+			//	Examples of preferred subfamily names and subfamily names, with the
+			//	expected resulting composed style name :
+			//
+			//	"Light Italic Display" / "Italic" --> "Light Italic Display"
+			//	"Regular" / "Regular" --------------> "Regular"
+			//	"Narrow" / "Bold" ------------------> "Narrow Bold"
+
+			if (preferred == null)
+			{
+				return simple;
+			}
+			if (preferred == simple)
+			{
+				return preferred;
+			}
+			if (preferred.Contains (simple))
+			{
+				return preferred;
+			}
+			else
+			{
+				return string.Concat (preferred, " ", simple);
+			}
+		}
+
 		private string GetName(NameId id)
 		{
 			System.Globalization.CultureInfo info = System.Globalization.CultureInfo.CurrentCulture;
