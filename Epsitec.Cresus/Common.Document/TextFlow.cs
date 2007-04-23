@@ -457,14 +457,14 @@ namespace Epsitec.Common.Document
 		}
 
 
-		public static void StatisticFonts(List<OpenType.FontName> list, UndoableList textFlows)
+		public static void StatisticFonts(List<OpenType.FontName> list, UndoableList textFlows, TextStats.FontNaming fontNaming)
 		{
-			//	Rempli une liste avec tous les noms des polices utilisées dans tous
+			//	Remplit une liste avec tous les noms des polices utilisées dans tous
 			//	les TextFlows du document.
 			foreach ( TextFlow flow in textFlows )
 			{
 				Text.TextStats stats = new TextStats(flow.textStory);
-				OpenType.FontName[] fontNames = stats.GetFontUse();
+				OpenType.FontName[] fontNames = stats.GetFontUse(fontNaming);
 
 				foreach ( OpenType.FontName fontName in fontNames )
 				{
@@ -482,7 +482,7 @@ namespace Epsitec.Common.Document
 			if ( textFlows.Count == 0 )  return;
 
 			List<OpenType.FontName> documentList = new List<OpenType.FontName>();
-			TextFlow.StatisticFonts(documentList, textFlows);
+			TextFlow.StatisticFonts (documentList, textFlows, TextStats.FontNaming.Invariant);
 			documentList.Sort();
 
 			foreach (OpenType.FontName fontName in documentList)

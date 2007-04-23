@@ -131,8 +131,15 @@ namespace Epsitec.Common.OpenType
 		/// <returns>The full name hash.</returns>
 		public static string GetFullHash(string fullName)
 		{
+			if (string.IsNullOrEmpty (fullName))
+			{
+				return null;
+			}
+			
 			List<string> names = new List<string> ();
-			string[] split = fullName.Split (' ');
+
+			string   clean = fullName.Replace ("(", "").Replace (")", "");
+			string[] split = clean.Split (' ');
 
 			foreach (string element in split)
 			{

@@ -1086,7 +1086,7 @@ namespace Epsitec.Common.Document
 				builder.Append(br);
 				builder.Append(string.Format(Res.Strings.Statistic.Fonts, t1, t2));
 				List<OpenType.FontName> list = new List<OpenType.FontName>();
-				TextFlow.StatisticFonts(list, this.document.TextFlows);
+				TextFlow.StatisticFonts (list, this.document.TextFlows, Text.TextStats.FontNaming.Localized);
 				this.StatisticFonts(list);
 				list.Sort();
 				if ( list.Count == 0 )

@@ -76,8 +76,9 @@ namespace Epsitec.Common.OpenType
 			{
 				string preferred = this.LocalePreferredStyleName;
 				string simple    = this.LocaleSimpleStyleName;
+				string adobe     = this.LocaleAdobeStyleName;
 
-				return FontIdentity.ComposeStyleName (preferred, simple);
+				return FontIdentity.ComposeStyleName (preferred, simple, adobe);
 			}
 		}
 
@@ -90,15 +91,18 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				string face  = this.GetName (NameId.FontFamily);
-				string style = this.GetName (NameId.FontSubfamily);
-
-				if (face.EndsWith (style))
+				lock (this.exclusion)
 				{
-					face = face.Substring (0, face.Length - style.Length).Trim ();
-				}
+					string face  = this.GetName (NameId.FontFamily);
+					string style = this.GetName (NameId.FontSubfamily);
 
-				return face;
+					if (face.EndsWith (style))
+					{
+						face = face.Substring (0, face.Length - style.Length).Trim ();
+					}
+
+					return face;
+				}
 			}
 		}
 
@@ -111,9 +115,30 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.GetName (NameId.FontSubfamily);
+				lock (this.exclusion)
+				{
+					return this.GetName (NameId.FontSubfamily);
+				}
 			}
 		}
+
+		/// <summary>
+		/// Gets the Adobe font style name for the current locale, using
+		/// <c>CultureInfo.CurrentCulture</c>.
+		/// </summary>
+		/// <value>The Adobe font style name.</value>
+		public string LocaleAdobeStyleName
+		{
+			get
+			{
+				lock (this.exclusion)
+				{
+					return this.GetName (NameId.AdobeFontStyle);
+				}
+			}
+		}
+
+
 
 		/// <summary>
 		/// Gets the preferred font face name for the current locale, using
@@ -180,8 +205,9 @@ namespace Epsitec.Common.OpenType
 			{
 				string preferred = this.InvariantPreferredStyleName;
 				string simple    = this.InvariantSimpleStyleName;
+				string adobe     = this.InvariantAdobeStyleName;
 
-				return FontIdentity.ComposeStyleName (preferred, simple);
+				return FontIdentity.ComposeStyleName (preferred, simple, adobe);
 			}
 		}
 
@@ -224,6 +250,64 @@ namespace Epsitec.Common.OpenType
 				}
 			}
 		}
+
+		/// <summary>
+		/// Gets the invariant Adobe font style name. This name is independent
+		/// of the current culture.
+		/// </summary>
+		/// <value>The Adobe font style name.</value>
+		public string InvariantAdobeStyleName
+		{
+			get
+			{
+				lock (this.exclusion)
+				{
+					return this.GetName (NameId.AdobeFontStyle, FontIdentity.InvariantLocale);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the Macintosh font face name. This name is independent
+		/// of the current culture.
+		/// </summary>
+		/// <value>The font face name.</value>
+		public string							MacintoshFaceName
+		{
+			get
+			{
+				lock (this.exclusion)
+				{
+					string face  = this.GetMacName (NameId.FontFamily);
+					string style = this.GetMacName (NameId.FontSubfamily);
+
+					if ((face != null) &&
+						(face.EndsWith (style)))
+					{
+						face = face.Substring (0, face.Length - style.Length).Trim ();
+					}
+
+					return face;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the Macintosh font style name. This name is independent
+		/// of the current culture.
+		/// </summary>
+		/// <value>The font style name.</value>
+		public string							MacintoshStyleName
+		{
+			get
+			{
+				lock (this.exclusion)
+				{
+					return this.GetMacName (NameId.FontSubfamily);
+				}
+			}
+		}
+
 
 		/// <summary>
 		/// Gets the invariant preferred font face name. This name is independent
@@ -483,6 +567,14 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 
+		public Table_name						OpenTypeTable_name
+		{
+			get
+			{
+				return this.otName;
+			}
+		}
+
 		
 		private object							Record
 		{
@@ -727,10 +819,11 @@ namespace Epsitec.Common.OpenType
 			{
 				return true;
 			}
-
-			string fullName = FontName.GetFullName (this.InvariantSimpleFaceName, this.InvariantSimpleStyleName);
-
-			if (FontName.GetFullHash (fullName) == fullHash)
+			if (FontName.GetFullHash (FontName.GetFullName (this.InvariantSimpleFaceName, this.InvariantSimpleStyleName)) == fullHash)
+			{
+				return true;
+			}
+			if (FontName.GetFullHash (FontName.GetFullName (this.MacintoshFaceName, this.MacintoshStyleName)) == fullHash)
 			{
 				return true;
 			}
@@ -760,7 +853,7 @@ namespace Epsitec.Common.OpenType
 		
 		#endregion
 
-		private static string ComposeStyleName(string preferred, string simple)
+		private static string ComposeStyleName(string preferred, string simple, string adobe)
 		{
 			//	Examples of preferred subfamily names and subfamily names, with the
 			//	expected resulting composed style name :
@@ -768,7 +861,7 @@ namespace Epsitec.Common.OpenType
 			//	"Light Italic Display" / "Italic" --> "Light Italic Display"
 			//	"Regular" / "Regular" --------------> "Regular"
 			//	"Narrow" / "Bold" ------------------> "Narrow Bold"
-
+			
 			if (preferred == null)
 			{
 				return simple;
@@ -777,13 +870,36 @@ namespace Epsitec.Common.OpenType
 			{
 				return preferred;
 			}
-			if (preferred.Contains (simple))
+			if (string.IsNullOrEmpty (adobe))
 			{
-				return preferred;
+				if (preferred.Contains (simple))
+				{
+					return preferred;
+				}
+				else
+				{
+					return string.Concat (preferred, " ", simple);
+				}
+			}
+			else if (preferred.Contains (adobe))
+			{
+				if (preferred == adobe)
+				{
+					return preferred;
+				}
+				if (preferred.StartsWith (adobe))
+				{
+					string suffix = preferred.Substring (adobe.Length).Trim ();
+					return string.Concat (adobe, " (", suffix, ")");
+				}
+				else
+				{
+					return preferred;
+				}
 			}
 			else
 			{
-				return string.Concat (preferred, " ", simple);
+				return string.Concat (adobe, " (", preferred, ")");
 			}
 		}
 
@@ -807,10 +923,15 @@ namespace Epsitec.Common.OpenType
 			if ((name == null) &&
 				(localeId == FontIdentity.InvariantLocale))
 			{
-				name = this.otName.GetLatinName (0, id, PlatformId.Macintosh);
+				name = this.GetMacName (id);
 			}
 			
 			return name;
+		}
+
+		private string GetMacName(NameId id)
+		{
+			return this.otName.GetLatinName (0, id, PlatformId.Macintosh);
 		}
 
 

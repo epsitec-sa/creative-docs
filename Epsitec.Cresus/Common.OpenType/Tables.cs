@@ -1587,6 +1587,8 @@ namespace Epsitec.Common.OpenType
 		Mac_CompatibleFull,
 		SampleText,				//	"The quick brown fox..."
 		PostScriptCID,
+
+		AdobeFontStyle=256		//	Regular (for "Warnock Pro Caption")
 	}
 	#endregion
 	

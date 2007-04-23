@@ -110,6 +110,18 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether this item is valid.
+		/// </summary>
+		/// <value><c>true</c> if this item is valid; otherwise, <c>false</c>.</value>
+		public bool								IsValid
+		{
+			get
+			{
+				return this.displayName != null;
+			}
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether this item is browsable. This is
 		/// the case of the Internet.
 		/// </summary>

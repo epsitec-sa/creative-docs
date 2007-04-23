@@ -46,6 +46,55 @@ namespace Epsitec.Common.OpenType
 			
 			Common.OpenType.Tests.CheckTables.RunTests ();
 		}
+
+		[Test]
+		public void ListAllFontNames()
+		{
+			FontCollection collection = new FontCollection ();
+
+			collection.Initialize ();
+
+			System.Console.WriteLine ("Available fonts & names");
+			System.Console.WriteLine ("-----------------------");
+
+			foreach (FontIdentity id in collection)
+			{
+				OpenType.Table_name name = id.OpenTypeTable_name;
+				OpenType.Table_name.NameEncoding[] encodings = name.GetAvailableNameEncodings ();
+				
+				System.Console.WriteLine (
+					"{0,-32}Style={1} Weight={2} Count={3}\n" +
+					"                                Invariant={4} / {5}\n" +
+					"                                Invariant Preferred={6} / {7}\n" +
+					"                                Invariant Hash={8}\n" +
+					"                                Locale={9} / {10}\n" +
+					"                                Locale Preferred={11} / {12}\n" +
+					"                                UniqueFontId={13}, entries={14}",
+					id.FullName, id.FontStyle, id.FontWeight, id.FontStyleCount,
+					id.InvariantSimpleFaceName, id.InvariantSimpleStyleName,
+					id.InvariantPreferredFaceName, id.InvariantPreferredStyleName,
+					id.InvariantStyleHash,
+					id.LocaleSimpleFaceName, id.LocaleSimpleStyleName,
+					id.LocalePreferredFaceName, id.LocalePreferredStyleName,
+					id.UniqueFontId, encodings.Length);
+
+				string[] lines = new string[encodings.Length];
+
+				for (int i = 0; i < encodings.Length; i++)
+				{
+					string unicode = encodings[i].Platform == PlatformId.Microsoft ? name.GetUnicodeName (encodings[i].Language, encodings[i].Name, encodings[i].Platform) : null;
+					string latin   = encodings[i].Platform == PlatformId.Macintosh ? name.GetLatinName (encodings[i].Language, encodings[i].Name, encodings[i].Platform) : null;
+
+					lines[i] = string.Format ("{0,-4} {1,-24} {2,-10} : {3}", encodings[i].Language, encodings[i].Name, encodings[i].Platform, (unicode ?? latin ?? "").Split ('\n')[0]);
+				}
+				
+				System.IO.File.WriteAllLines (id.FullName + ".txt", lines);
+			}
+			
+			System.Console.Out.Flush ();
+		}
+		
+		
 		
 		[Test] public void ListAllFeatures()
 		{

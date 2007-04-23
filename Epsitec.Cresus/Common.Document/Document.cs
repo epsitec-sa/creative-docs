@@ -1920,7 +1920,7 @@ namespace Epsitec.Common.Document
 			stat.DefineDocumentVersion (typeof (Document).Assembly);
 
 			List<OpenType.FontName> fontList = new List<OpenType.FontName>();
-			TextFlow.StatisticFonts(fontList, this.TextFlows);
+			TextFlow.StatisticFonts (fontList, this.TextFlows, TextStats.FontNaming.Invariant);
 			this.modifier.StatisticFonts(fontList);
 			stat.FontCount = fontList.Count;
 
@@ -1939,7 +1939,7 @@ namespace Epsitec.Common.Document
 			//	Met à jour la liste de toutes les polices utilisées dans le document.
 			this.fontList = new List<OpenType.FontName>();
 
-			TextFlow.StatisticFonts(this.fontList, this.textFlows);
+			TextFlow.StatisticFonts (this.fontList, this.textFlows, TextStats.FontNaming.Invariant);
 			this.modifier.StatisticFonts(this.fontList);
 
 			if (this.fontIncludeMode == FontIncludeMode.All)

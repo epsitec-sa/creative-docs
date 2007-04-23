@@ -287,14 +287,14 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( face != null && style != null )
 			{
 				OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(face);
-				this.stylesInvariant = new List<string>();
+				this.stylesInvariant = new List<OpenType.FontIdentity> ();
 				this.stylesLocal = new List<string>();
 
 				foreach ( OpenType.FontIdentity id in list )
 				{
 					this.fontStyle.Items.Add(id.LocaleStyleName);
 
-					this.stylesInvariant.Add(id.InvariantStyleName);
+					this.stylesInvariant.Add(id);
 					this.stylesLocal.Add(id.LocaleStyleName);
 				}
 			}
@@ -593,11 +593,13 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( !this.TextWrapper.IsAttached )  return;
 
 			string style = TextLayout.ConvertToSimpleText(this.fontStyle.Text);
+			string face = this.TextWrapper.Active.FontFace;
 			for (int i=0; i<this.stylesLocal.Count; i++)
 			{
 				if (this.stylesLocal[i] == style)
 				{
-					style = this.stylesInvariant[i];
+					style = this.stylesInvariant[i].InvariantSimpleStyleName;
+					face  = this.stylesInvariant[i].InvariantSimpleFaceName;
 					break;
 				}
 			}
@@ -606,7 +608,6 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( style != "" )
 			{
-				string face = this.TextWrapper.Active.FontFace;
 				this.TextWrapper.Defined.FontFace = face;
 				this.TextWrapper.Defined.FontStyle = style;
 			}
@@ -883,7 +884,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected ColorSample				originFieldColor;
 		protected int						originFieldRank = -1;
-		protected List<string>				stylesInvariant;
+		protected List<OpenType.FontIdentity> stylesInvariant;
 		protected List<string>				stylesLocal;
 	}
 }

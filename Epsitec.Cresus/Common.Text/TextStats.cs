@@ -25,7 +25,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public OpenType.FontName[] GetFontUse()
+		public OpenType.FontName[] GetFontUse(FontNaming fontNaming)
 		{
 			PropertyWrapper[] wrappers = this.GetPropertyUsage (Properties.WellKnownType.Font);
 
@@ -37,8 +37,23 @@ namespace Epsitec.Common.Text
 				
 				string font_face  = font_property.FaceName;
 				string font_style = OpenType.FontCollection.GetStyleHash (font_property.StyleName);
-				
+
 				OpenType.FontName name = new OpenType.FontName (font_face, font_style);
+				OpenType.FontIdentity id = OpenType.FontCollection.Default[name];
+
+				if (id != null)
+				{
+					switch (fontNaming)
+					{
+						case FontNaming.Invariant:
+							name = new OpenType.FontName (id.InvariantFaceName, id.InvariantStyleName);
+							break;
+						
+						case FontNaming.Localized:
+							name = new OpenType.FontName (id.LocaleFaceName, id.LocaleStyleName);
+							break;
+					}
+				}
 				
 				if (list.Contains (name) == false)
 				{
@@ -222,6 +237,12 @@ namespace Epsitec.Common.Text
 				
 				this.properties[i].Record (property, count);
 			}
+		}
+
+		public enum FontNaming
+		{
+			Invariant,
+			Localized
 		}
 		
 		
