@@ -247,6 +247,40 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
+		public override void MoveHandleStarting(Objects.Abstract obj, int rank, Point pos, DrawingContext drawingContext)
+		{
+			//	Début du déplacement d'une poignée.
+			if (rank == 0)
+			{
+				drawingContext.ConstrainAddLine(obj.Handle(0).Position, this.GetHandlePosition(obj, 0), false, -1);
+				drawingContext.ConstrainAddCircle(obj.Handle(0).Position, this.GetHandlePosition(obj, 0), false, -1);
+			}
+
+			if (rank == 1)
+			{
+				drawingContext.ConstrainAddLine(obj.Handle(1).Position, this.GetHandlePosition(obj, 1), false, -1);
+				drawingContext.ConstrainAddCircle(obj.Handle(1).Position, this.GetHandlePosition(obj, 1), false, -1);
+			}
+
+			if (rank == 2)
+			{
+				drawingContext.ConstrainAddLine(obj.Handle(0).Position, this.GetHandlePosition(obj, 2), false, -1);
+				drawingContext.ConstrainAddCircle(obj.Handle(0).Position, this.GetHandlePosition(obj, 2), false, -1);
+			}
+
+			if (rank == 3)
+			{
+				drawingContext.ConstrainAddLine(obj.Handle(1).Position, this.GetHandlePosition(obj, 3), false, -1);
+				drawingContext.ConstrainAddCircle(obj.Handle(1).Position, this.GetHandlePosition(obj, 3), false, -1);
+			}
+
+			if (rank == 4)
+			{
+				drawingContext.ConstrainAddLine(obj.Handle(0).Position, this.GetHandlePosition(obj, 4), false, -1);
+				drawingContext.ConstrainAddCircle(obj.Handle(0).Position, this.GetHandlePosition(obj, 4), false, -1);
+			}
+		}
+
 		public override int TotalHandle(Objects.Abstract obj)
 		{
 			//	Nombre de poignées.
