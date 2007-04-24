@@ -51,17 +51,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonRelationRef.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonRelationRef);
 
-			this.buttonRelationInc = new IconButton();
-			this.buttonRelationInc.CaptionId = Res.Captions.Editor.Structured.Relation.Inclusion.Id;
-			this.buttonRelationInc.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonRelationInc.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-			this.toolbar.Items.Add(this.buttonRelationInc);
-
 			this.buttonRelationCol = new IconButton();
 			this.buttonRelationCol.CaptionId = Res.Captions.Editor.Structured.Relation.Collection.Id;
 			this.buttonRelationCol.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonRelationCol.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonRelationCol);
+
+			this.buttonRelationInc = new IconButton();
+			this.buttonRelationInc.CaptionId = Res.Captions.Editor.Structured.Relation.Inclusion.Id;
+			this.buttonRelationInc.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonRelationInc.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.toolbar.Items.Add(this.buttonRelationInc);
 
 			this.slider = new HSlider(toolbar);
 			this.slider.PreferredWidth = 80;
@@ -95,30 +95,42 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.headerType.Style = HeaderButtonStyle.Top;
 			this.headerType.Dock = DockStyle.Left;
 
+			this.headerInc = new HeaderButton(this.header);
+			this.headerInc.Text = Res.Strings.Viewers.Types.Structured.Inclusion;
+			this.headerInc.Style = HeaderButtonStyle.Top;
+			this.headerInc.Dock = DockStyle.Left;
+
 			//	Crée le tableau principal.
 			this.array = new StringArray(this);
-			this.array.Columns = 6;
-			this.array.SetColumnsRelativeWidth(0, 0.30);
+			this.array.Columns = 8;
+			this.array.SetColumnsRelativeWidth(0, 0.20);
 			this.array.SetColumnsRelativeWidth(1, 0.05);
-			this.array.SetColumnsRelativeWidth(2, 0.30);
+			this.array.SetColumnsRelativeWidth(2, 0.20);
 			this.array.SetColumnsRelativeWidth(3, 0.05);
-			this.array.SetColumnsRelativeWidth(4, 0.30);
+			this.array.SetColumnsRelativeWidth(4, 0.20);
 			this.array.SetColumnsRelativeWidth(5, 0.05);
+			this.array.SetColumnsRelativeWidth(6, 0.20);
+			this.array.SetColumnsRelativeWidth(7, 0.05);
 			this.array.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(1, ContentAlignment.MiddleCenter);
 			this.array.SetColumnAlignment(2, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(3, ContentAlignment.MiddleCenter);
 			this.array.SetColumnAlignment(4, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(5, ContentAlignment.MiddleCenter);
+			this.array.SetColumnAlignment(6, ContentAlignment.MiddleLeft);
+			this.array.SetColumnAlignment(7, ContentAlignment.MiddleCenter);
 			this.array.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 			this.array.SetColumnBreakMode(2, TextBreakMode.Ellipsis | TextBreakMode.Split);
 			this.array.SetColumnBreakMode(4, TextBreakMode.Ellipsis | TextBreakMode.Split);
+			this.array.SetColumnBreakMode(6, TextBreakMode.Ellipsis | TextBreakMode.Split);
 			this.array.SetDynamicToolTips(0, true);
 			this.array.SetDynamicToolTips(1, false);
 			this.array.SetDynamicToolTips(2, false);
 			this.array.SetDynamicToolTips(3, false);
 			this.array.SetDynamicToolTips(4, false);
 			this.array.SetDynamicToolTips(5, false);
+			this.array.SetDynamicToolTips(6, false);
+			this.array.SetDynamicToolTips(7, false);
 			this.array.LineHeight = TypeEditorStructured.arrayLineHeight;
 			this.array.Dock = DockStyle.StackBegin;
 			this.array.PreferredHeight = 200;
@@ -151,6 +163,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonType.Margins = new Margins(1, 0, 0, 0);
 			this.buttonType.Dock = DockStyle.Left;
 			this.buttonType.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
+			this.buttonInc = new Button(this.footer);
+			this.buttonInc.CaptionId = Res.Captions.Editor.Structured.ChangeInclusion.Id;
+			this.buttonInc.Margins = new Margins(1, 0, 0, 0);
+			this.buttonInc.Dock = DockStyle.Left;
+			this.buttonInc.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 		}
 
 		public TypeEditorStructured(Widget embedder) : this()
@@ -168,8 +186,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.buttonNext.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonRemove.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonRelationRef.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-				this.buttonRelationInc.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonRelationCol.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonRelationInc.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 				this.slider.ValueChanged -= new EventHandler(this.HandleSliderChanged);
 
@@ -182,6 +200,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.fieldName.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 				this.buttonCaption.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonType.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonInc.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 			}
 			
 			base.Dispose(disposing);
@@ -240,25 +259,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.buttonRelationRef.Enable = st;
-			this.buttonRelationInc.Enable = st;
 			this.buttonRelationCol.Enable = st;
+			this.buttonRelationInc.Enable = st;
 
 			if (st)
 			{
 				this.buttonRelationRef.ActiveState = (field.Relation == Relation.Reference ) ? ActiveState.Yes : ActiveState.No;
-				this.buttonRelationInc.ActiveState = (field.Relation == Relation.Inclusion ) ? ActiveState.Yes : ActiveState.No;
 				this.buttonRelationCol.ActiveState = (field.Relation == Relation.Collection) ? ActiveState.Yes : ActiveState.No;
+				this.buttonRelationInc.ActiveState = (field.Relation == Relation.Inclusion ) ? ActiveState.Yes : ActiveState.No;
 			}
 			else
 			{
 				this.buttonRelationRef.ActiveState = ActiveState.No;
-				this.buttonRelationInc.ActiveState = ActiveState.No;
 				this.buttonRelationCol.ActiveState = ActiveState.No;
+				this.buttonRelationInc.ActiveState = ActiveState.No;
 			}
 
 			this.fieldName.Enable = (sel != -1);
 			this.buttonCaption.Enable = (sel != -1);
 			this.buttonType.Enable = (sel != -1);
+			this.buttonInc.Enable = (sel != -1 && st && field.Relation == Relation.Inclusion);
 		}
 
 		protected void UpdateArray()
@@ -329,6 +349,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 						}
 					}
 
+					string captionInc = "";
+					string iconInc = "";
+					//	TODO: ...
+
 					this.array.SetLineString(0, first+i, name);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 
@@ -346,6 +370,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					this.array.SetLineString(5, first+i, iconType);
 					this.array.SetLineState(5, first+i, MyWidgets.StringList.CellState.Normal);
+
+					this.array.SetLineString(6, first+i, captionInc);
+					this.array.SetLineState(6, first+i, MyWidgets.StringList.CellState.Normal);
+
+					this.array.SetLineString(7, first+i, iconInc);
+					this.array.SetLineState(7, first+i, MyWidgets.StringList.CellState.Normal);
 				}
 				else
 				{
@@ -366,6 +396,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					this.array.SetLineString(5, first+i, "");
 					this.array.SetLineState(5, first+i, MyWidgets.StringList.CellState.Disabled);
+
+					this.array.SetLineString(6, first+i, "");
+					this.array.SetLineState(6, first+i, MyWidgets.StringList.CellState.Disabled);
+
+					this.array.SetLineString(7, first+i, "");
+					this.array.SetLineState(7, first+i, MyWidgets.StringList.CellState.Disabled);
 				}
 			}
 		}
@@ -476,7 +512,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			StructuredTypeField actualField = this.fields[sel];
-			StructuredTypeField newField = new StructuredTypeField(actualField.Id, actualField.Type, actualField.CaptionId, actualField.Rank, relation);
+
+			string sourceField = null;
+			if (relation == Relation.Inclusion)
+			{
+				//	TODO: ...
+			}
+
+			StructuredTypeField newField = new StructuredTypeField(actualField.Id, actualField.Type, actualField.CaptionId, actualField.Rank, relation, sourceField);
 			this.fields[sel] = newField;
 
 			this.FieldsOutput();
@@ -517,6 +560,32 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ChangeCaption()
 		{
 			//	Choix du caption.
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			StructuredTypeField actualField = this.fields[sel];
+			Druid druid = actualField.CaptionId;
+
+			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Captions, ResourceAccess.TypeType.None, druid, null);
+			if (druid.IsEmpty)
+			{
+				return;
+			}
+
+			StructuredTypeField newField = new StructuredTypeField(actualField.Id, actualField.Type, druid, actualField.Rank, actualField.Relation);
+			this.fields[sel] = newField;
+
+			this.FieldsOutput();
+			this.UpdateArray();
+			this.OnContentChanged();
+		}
+
+		protected void ChangeInclusion()
+		{
+			//	Choix de l'inclusion.
 			int sel = this.array.SelectedRow;
 			if (sel == -1)
 			{
@@ -617,14 +686,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 			double w1 = this.array.GetColumnsAbsoluteWidth(0) + this.array.GetColumnsAbsoluteWidth(1);
 			double w2 = this.array.GetColumnsAbsoluteWidth(2) + this.array.GetColumnsAbsoluteWidth(3);
 			double w3 = this.array.GetColumnsAbsoluteWidth(4) + this.array.GetColumnsAbsoluteWidth(5);
+			double w4 = this.array.GetColumnsAbsoluteWidth(6) + this.array.GetColumnsAbsoluteWidth(7);
 
 			this.headerName.PreferredWidth = w1;
 			this.headerCaption.PreferredWidth = w2;
-			this.headerType.PreferredWidth = w3+1;
+			this.headerType.PreferredWidth = w3;
+			this.headerInc.PreferredWidth = w4+1;
 
 			this.fieldName.PreferredWidth = w1-1;
 			this.buttonCaption.PreferredWidth = w2-1;
-			this.buttonType.PreferredWidth = w3+1;
+			this.buttonType.PreferredWidth = w3;
+			this.buttonInc.PreferredWidth = w4+1;
 		}
 
 
@@ -655,14 +727,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ArrayRelation(Relation.Reference);
 			}
 
-			if (sender == this.buttonRelationInc)
-			{
-				this.ArrayRelation(Relation.Inclusion);
-			}
-
 			if (sender == this.buttonRelationCol)
 			{
 				this.ArrayRelation(Relation.Collection);
+			}
+
+			if (sender == this.buttonRelationInc)
+			{
+				this.ArrayRelation(Relation.Inclusion);
 			}
 
 			if (sender == this.buttonCaption)
@@ -673,6 +745,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (sender == this.buttonType)
 			{
 				this.ChangeType();
+			}
+
+			if (sender == this.buttonInc)
+			{
+				this.ChangeInclusion();
 			}
 		}
 
@@ -801,20 +878,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButton					buttonNext;
 		protected IconButton					buttonRemove;
 		protected IconButton					buttonRelationRef;
-		protected IconButton					buttonRelationInc;
 		protected IconButton					buttonRelationCol;
+		protected IconButton					buttonRelationInc;
 		protected HSlider						slider;
 
 		protected Widget						header;
 		protected HeaderButton					headerName;
 		protected HeaderButton					headerCaption;
 		protected HeaderButton					headerType;
+		protected HeaderButton					headerInc;
 		protected MyWidgets.StringArray			array;
 
 		protected Widget						footer;
 		protected TextFieldEx					fieldName;
 		protected Button						buttonCaption;
 		protected Button						buttonType;
+		protected Button						buttonInc;
 
 		protected int							lastIndex = -1;
 		protected List<StructuredTypeField>		fields;

@@ -39,6 +39,7 @@ namespace Epsitec.Common.Designer
 				{
 					public static Epsitec.Common.Types.Caption Add { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 392)); } }
 					public static Epsitec.Common.Types.Caption ChangeCaption { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 397)); } }
+					public static Epsitec.Common.Types.Caption ChangeInclusion { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 417)); } }
 					public static Epsitec.Common.Types.Caption ChangeType { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 396)); } }
 					public static Epsitec.Common.Types.Caption Next { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 395)); } }
 					public static Epsitec.Common.Types.Caption Prev { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 394)); } }
@@ -803,6 +804,7 @@ namespace Epsitec.Common.Designer
 					public static class Structured
 					{
 						public static string Caption { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (255)); } }
+						public static string Inclusion { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (319)); } }
 						public static string Name { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (254)); } }
 						public static string NewName { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (256)); } }
 						public static string Type { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (253)); } }

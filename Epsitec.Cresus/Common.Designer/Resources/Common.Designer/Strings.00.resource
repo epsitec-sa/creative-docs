@@ -107,6 +107,7 @@
   <data name="Viewers.Types.Enum.RowIcon" id="0S7">Icône</data>
   <data name="Viewers.Types.Structured.Name" id="0U7">Nom</data>
   <data name="Viewers.Types.Structured.Type" id="0T7">Type</data>
+  <data name="Viewers.Types.Structured.Inclusion" id="0V9">Inclusion</data>
   <data name="Viewers.Types.Structured.Caption" id="0V7">Légende</data>
   <data name="Viewers.Types.Structured.NewName" id="008">Rubrique{0}</data>
   <data name="Viewers.Types.Controller.Title" id="0H7">Contrôleur</data>
