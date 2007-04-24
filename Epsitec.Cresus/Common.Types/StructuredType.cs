@@ -41,14 +41,14 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Initializes a new instance of the <see cref="StructuredType"/> class.
 		/// </summary>
-		/// <param name="@class">The @class.</param>
-		/// <param name="extends">The structured type this instance extends.</param>
-		public StructuredType(StructuredTypeClass @class, StructuredType extends)
+		/// <param name="class">The structured type class.</param>
+		/// <param name="baseType">The structured type this instance extends.</param>
+		public StructuredType(StructuredTypeClass @class, StructuredType baseType)
 			: this (@class)
 		{
-			if (extends != null)
+			if (baseType != null)
 			{
-				this.SetValue (StructuredType.ExtendsProperty, extends);
+				this.SetValue (StructuredType.BaseTypeProperty, baseType);
 			}
 		}
 
@@ -77,14 +77,15 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Gets the structured type extended by this instance.
+		/// Gets the structured type extended by this instance (also known as
+		/// its base type).
 		/// </summary>
 		/// <value>The structured type this instance extends or <c>null</c>.</value>
-		public StructuredType Extends
+		public StructuredType BaseType
 		{
 			get
 			{
-				return (StructuredType) this.GetValue (StructuredType.ExtendsProperty);
+				return (StructuredType) this.GetValue (StructuredType.BaseTypeProperty);
 			}
 		}
 
@@ -364,7 +365,7 @@ namespace Epsitec.Common.Types
 
 		public static readonly DependencyProperty FieldsProperty = DependencyProperty.RegisterReadOnly ("Fields", typeof (Collections.StructuredTypeFieldCollection), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetFieldsValue).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty ClassProperty = DependencyProperty.RegisterReadOnly ("Class", typeof (StructuredTypeClass), typeof (StructuredType), new DependencyPropertyMetadata (StructuredTypeClass.None).MakeReadOnlySerializable ());
-		public static readonly DependencyProperty ExtendsProperty = DependencyProperty.RegisterReadOnly ("Extends", typeof (StructuredType), typeof (StructuredType), new DependencyPropertyMetadata ().MakeReadOnlySerializable ());
+		public static readonly DependencyProperty BaseTypeProperty = DependencyProperty.RegisterReadOnly ("BaseType", typeof (StructuredType), typeof (StructuredType), new DependencyPropertyMetadata ().MakeReadOnlySerializable ());
 
 		private Collections.HostedStructuredTypeFieldDictionary fields;
 	}
