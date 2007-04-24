@@ -250,6 +250,8 @@ namespace Epsitec.Common.Document.Properties
 		public override void MoveHandleStarting(Objects.Abstract obj, int rank, Point pos, DrawingContext drawingContext)
 		{
 			//	Début du déplacement d'une poignée.
+			Objects.Regular reg = obj as Objects.Regular;
+
 			if (rank == 0)
 			{
 				drawingContext.ConstrainAddLine(obj.Handle(0).Position, this.GetHandlePosition(obj, 0), false, -1);
@@ -264,8 +266,11 @@ namespace Epsitec.Common.Document.Properties
 
 			if (rank == 2)
 			{
-				drawingContext.ConstrainAddLine(obj.Handle(0).Position, this.GetHandlePosition(obj, 2), false, -1);
-				drawingContext.ConstrainAddCircle(obj.Handle(0).Position, this.GetHandlePosition(obj, 2), false, -1);
+				double a = 360.0/(this.nbFaces*2)+this.deep.A;
+				Point p = reg.PolarToPoint(1-this.deep.R, a);
+
+				drawingContext.ConstrainAddLine(p, this.GetHandlePosition(obj, 2), false, -1);
+				drawingContext.ConstrainAddCircle(p, this.GetHandlePosition(obj, 2), false, -1);
 			}
 
 			if (rank == 3)
@@ -276,8 +281,11 @@ namespace Epsitec.Common.Document.Properties
 
 			if (rank == 4)
 			{
-				drawingContext.ConstrainAddLine(obj.Handle(0).Position, this.GetHandlePosition(obj, 4), false, -1);
-				drawingContext.ConstrainAddCircle(obj.Handle(0).Position, this.GetHandlePosition(obj, 4), false, -1);
+				double a = -360.0/(this.nbFaces*2)+this.deep.A;
+				Point p = reg.PolarToPoint(1-this.deep.R, a);
+
+				drawingContext.ConstrainAddLine(p, this.GetHandlePosition(obj, 4), false, -1);
+				drawingContext.ConstrainAddCircle(p, this.GetHandlePosition(obj, 4), false, -1);
 			}
 		}
 
