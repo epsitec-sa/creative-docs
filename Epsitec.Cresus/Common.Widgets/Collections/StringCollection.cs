@@ -1,6 +1,8 @@
 //	Copyright © 2004-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Widgets.Collections
 {
 	public class StringCollection : System.Collections.IList, System.IDisposable
@@ -8,8 +10,8 @@ namespace Epsitec.Common.Widgets.Collections
 		public StringCollection(IStringCollectionHost host)
 		{
 			this.host  = host;
-			this.list  = new System.Collections.ArrayList ();
-			this.names = new System.Collections.ArrayList ();
+			this.list  = new List<object> ();
+			this.names = new List<string> ();
 		}
 		
 		
@@ -38,9 +40,7 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			get
 			{
-				object[] values = new object[this.list.Count];
-				this.list.CopyTo (values);
-				return values;
+				return this.list.ToArray ();
 			}
 		}
 		
@@ -57,8 +57,11 @@ namespace Epsitec.Common.Widgets.Collections
 		
 		public int  Add(string name, object value)
 		{
-			int index_0 = this.list.Add (value);
-			int index_1 = this.names.Add (name);
+			int index_0 = this.list.Count;
+			int index_1 = this.names.Count;
+			
+			this.list.Add (value);
+			this.names.Add (name);
 			
 			System.Diagnostics.Debug.Assert (index_0 == index_1);
 			
@@ -95,6 +98,10 @@ namespace Epsitec.Common.Widgets.Collections
 			return this.names[index] as string;
 		}
 
+		public int FindIndex(System.Predicate<object> match)
+		{
+			return this.list.FindIndex (match);
+		}
 		
 		public int FindExactMatch(string find)
 		{
@@ -245,8 +252,11 @@ namespace Epsitec.Common.Widgets.Collections
 
 		public int Add(object value)
 		{
-			int index_0 = this.list.Add (value);
-			int index_1 = this.names.Add (null);
+			int index_0 = this.list.Count;
+			int index_1 = this.names.Count;
+
+			this.list.Add (value);
+			this.names.Add (null);
 			
 			System.Diagnostics.Debug.Assert (index_0 == index_1);
 			
@@ -260,7 +270,7 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			get
 			{
-				return this.list.IsFixedSize;
+				return false;
 			}
 		}
 		#endregion
@@ -270,7 +280,7 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			get
 			{
-				return this.list.IsSynchronized;
+				return false;
 			}
 		}
 
@@ -284,14 +294,15 @@ namespace Epsitec.Common.Widgets.Collections
 
 		public void CopyTo(System.Array array, int index)
 		{
-			this.list.CopyTo (array, index);
+			System.Collections.IList list = this.list;
+			list.CopyTo (array, index);
 		}
 
 		public object SyncRoot
 		{
 			get
 			{
-				return this.list.SyncRoot;
+				return this.list;
 			}
 		}
 
@@ -322,8 +333,8 @@ namespace Epsitec.Common.Widgets.Collections
 		
 		
 		private IStringCollectionHost			host;
-		private System.Collections.ArrayList	list;
-		private System.Collections.ArrayList	names;
+		private List<object>					list;
+		private List<string>					names;
 		private bool							accepts_rich_text;
 	}
 }

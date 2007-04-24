@@ -86,6 +86,48 @@ namespace Epsitec.Common.Types
 			return list[n-1];
 		}
 
+		public static void RemoveDuplicates<T>(IList<T> list) where T : System.IEquatable<T>
+		{
+			for (int index = 0; index < list.Count-1; index++)
+			{
+				T a = list[index];
+
+				for (int j = 1; j+index < list.Count; )
+				{
+					T b = list[index+j];
+
+					if (a.Equals (b))
+					{
+						list.RemoveAt (index+j);
+					}
+					else
+					{
+						j++;
+					}
+				}
+			}
+		}
+
+		public static void RemoveDuplicatesInSortedList<T>(IList<T> list) where T : System.IEquatable<T>
+		{
+			int index = 0;
+
+			while (index < list.Count-1)
+			{
+				T a = list[index];
+				T b = list[index+1];
+
+				if (a.Equals (b))
+				{
+					list.RemoveAt (index+1);
+				}
+				else
+				{
+					index++;
+				}
+			}
+		}
+
 		public static T[] ToArray<T>(IList<T> list)
 		{
 			T[] array = new T[list.Count];

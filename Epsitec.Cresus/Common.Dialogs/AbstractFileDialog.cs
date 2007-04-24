@@ -2235,7 +2235,7 @@ namespace Epsitec.Common.Dialogs
 			GlyphButton button = sender as GlyphButton;
 			if (button == null)
 				return;
-			VMenu menu = this.navigationController.CreateVisitedMenu ();
+			VMenu menu = this.navigationController.CreateHistoryMenu ();
 			menu.Host = this.window;
 			TextFieldCombo.AdjustComboSize (button, menu, false);
 			menu.ShowAsComboList (button, Point.Zero, button);

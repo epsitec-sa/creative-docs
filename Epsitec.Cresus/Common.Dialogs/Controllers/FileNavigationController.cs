@@ -14,8 +14,8 @@ namespace Epsitec.Common.Dialogs.Controllers
 		public FileNavigationController(CommandContext context)
 		{
 			this.context = context;
-			this.directoriesVisited = new List<FolderItem> ();
-			this.directoriesVisitedIndex = -1;
+			this.visitedFolderItems = new List<FolderItem> ();
+			this.visitedIndex = -1;
 		}
 
 		
@@ -64,17 +64,17 @@ namespace Epsitec.Common.Dialogs.Controllers
 
 		public void NavigatePrev()
 		{
-			if (this.directoriesVisitedIndex > 0)
+			if (this.visitedIndex > 0)
 			{
-				this.SetActiveDirectory (this.directoriesVisited[--this.directoriesVisitedIndex], RecordInHistory.No);
+				this.SetActiveDirectory (this.visitedFolderItems[--this.visitedIndex], RecordInHistory.No);
 			}
 		}
 
 		public void NavigateNext()
 		{
-			if (this.directoriesVisitedIndex < this.directoriesVisited.Count-1)
+			if (this.visitedIndex < this.visitedFolderItems.Count-1)
 			{
-				this.SetActiveDirectory (this.directoriesVisited[++this.directoriesVisitedIndex], RecordInHistory.No);
+				this.SetActiveDirectory (this.visitedFolderItems[++this.visitedIndex], RecordInHistory.No);
 			}
 		}
 
@@ -91,18 +91,18 @@ namespace Epsitec.Common.Dialogs.Controllers
 		}
 
 
-		public VMenu CreateVisitedMenu()
+		public VMenu CreateHistoryMenu()
 		{
 			//	Crée le menu pour choisir un dossier visité.
 			VMenu menu = new VMenu ();
 
-			int max = 10;  // +/-, donc 20 lignes au maximum
-			int end   = System.Math.Min (this.directoriesVisitedIndex+max, this.directoriesVisited.Count-1);
+			int max   = 10;  // +/-, donc 20 lignes au maximum
+			int end   = System.Math.Min (this.visitedIndex+max, this.visitedFolderItems.Count-1);
 			int start = System.Math.Max (end-max*2, 0);
 
 			if (start > 0)  // commence après le début ?
 			{
-				menu.Items.Add (this.CreateVisitedMenuItem (0));  // met "1: dossier"
+				menu.Items.Add (this.CreateHistoryMenuItem (0));  // met "1: dossier"
 
 				if (start > 1)
 				{
@@ -110,31 +110,34 @@ namespace Epsitec.Common.Dialogs.Controllers
 				}
 			}
 
-			for (int i=start; i<=end; i++)
+			for (int i = start; i <= end; i++)
 			{
-				if (i-1 == this.directoriesVisitedIndex)
+				if (i-1 == this.visitedIndex)
 				{
 					menu.Items.Add (new MenuSeparator ());  // met séparateur "------"
 				}
 
-				menu.Items.Add (this.CreateVisitedMenuItem (i));  // met "n: dossier"
+				menu.Items.Add (this.CreateHistoryMenuItem (i));  // met "n: dossier"
 			}
 
-			if (end < this.directoriesVisited.Count-1)  // fini avant la fin ?
+			if (end < this.visitedFolderItems.Count-1)  // fini avant la fin ?
 			{
-				if (end < this.directoriesVisited.Count-2)
+				if (end < this.visitedFolderItems.Count-2)
 				{
 					menu.Items.Add (new MenuSeparator ());  // met séparateur "------"
 				}
 
-				menu.Items.Add (this.CreateVisitedMenuItem (this.directoriesVisited.Count-1));  // met "n: dossier"
+				menu.Items.Add (this.CreateHistoryMenuItem (this.visitedFolderItems.Count-1));  // met "n: dossier"
 			}
 
 			menu.AdjustSize ();
+			
 			return menu;
 		}
 
-		private MenuItem CreateVisitedMenuItem(int index)
+		#region History Menu related methods
+
+		private MenuItem CreateHistoryMenuItem(int index)
 		{
 			//	Crée une case du menu pour choisir un dossier visité.
 			if (index == -1)
@@ -143,10 +146,10 @@ namespace Epsitec.Common.Dialogs.Controllers
 			}
 			else
 			{
-				FolderItem folder = this.directoriesVisited[index];
+				FolderItem folder = this.visitedFolderItems[index];
 
-				bool isCurrent = (index == this.directoriesVisitedIndex);
-				bool isNext    = (index >  this.directoriesVisitedIndex);
+				bool isCurrent = (index == this.visitedIndex);
+				bool isNext    = (index >  this.visitedIndex);
 
 				string icon = "";
 				if (!isNext)
@@ -166,22 +169,28 @@ namespace Epsitec.Common.Dialogs.Controllers
 				string name = index.ToString (System.Globalization.CultureInfo.InvariantCulture);
 
 				MenuItem item = new MenuItem ("ChangeVisitedDirectory", icon, text, null, name);
-				item.Pressed += new MessageEventHandler (this.HandleVisitedMenuPressed);
+				item.Pressed += new MessageEventHandler (this.HandleHistoryMenuItemPressed);
 				ToolTip.Default.SetToolTip (item, tooltip);
 
 				return item;
 			}
 		}
 
-		private void HandleVisitedMenuPressed(object sender, MessageEventArgs e)
+		private void HandleHistoryMenuItemPressed(object sender, MessageEventArgs e)
 		{
-			//	Une case du menu pour choisir un dossier visité a été actionnée.
 			MenuItem item = sender as MenuItem;
-			this.directoriesVisitedIndex = System.Int32.Parse (item.Name, System.Globalization.CultureInfo.InvariantCulture);
-			this.SetActiveDirectory (this.directoriesVisited[this.directoriesVisitedIndex], RecordInHistory.No);
+
+			int index;
+
+			if (int.TryParse (item.Name, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out index))
+			{
+				this.visitedIndex = index;
+				this.SetActiveDirectory (this.visitedFolderItems[this.visitedIndex], RecordInHistory.No);
+			}
 		}
 
-		
+		#endregion
+
 		protected virtual void OnActiveDirectoryChanged(string oldPath, string newPath)
 		{
 			if (this.ActiveDirectoryChanged != null)
@@ -197,23 +206,23 @@ namespace Epsitec.Common.Dialogs.Controllers
 				return;
 			}
 
-			if (this.directoriesVisited.Count > 0)
+			if (this.visitedFolderItems.Count > 0)
 			{
-				FolderItem current = this.directoriesVisited[this.directoriesVisitedIndex];
+				FolderItem current = this.visitedFolderItems[this.visitedIndex];
 
 				if (current == folder)
 				{
 					return;
 				}
 
-				while (this.directoriesVisitedIndex < this.directoriesVisited.Count-1)
+				while (this.visitedIndex < this.visitedFolderItems.Count-1)
 				{
-					this.directoriesVisited.RemoveAt (this.directoriesVisited.Count-1);
+					this.visitedFolderItems.RemoveAt (this.visitedFolderItems.Count-1);
 				}
 			}
 
-			this.directoriesVisited.Add (folder);
-			this.directoriesVisitedIndex = this.directoriesVisited.Count-1;
+			this.visitedFolderItems.Add (folder);
+			this.visitedIndex = this.visitedFolderItems.Count-1;
 
 			this.UpdateCommandStates ();
 		}
@@ -222,8 +231,8 @@ namespace Epsitec.Common.Dialogs.Controllers
 		{
 			FolderItem parent = FileManager.GetParentFolderItem (this.ActiveDirectory, FolderQueryMode.NoIcons);
 			
-			this.context.GetCommandState (Res.Commands.Dialog.File.NavigatePrev).Enable = (this.directoriesVisitedIndex > 0);
-			this.context.GetCommandState (Res.Commands.Dialog.File.NavigateNext).Enable = (this.directoriesVisitedIndex < this.directoriesVisited.Count-1);
+			this.context.GetCommandState (Res.Commands.Dialog.File.NavigatePrev).Enable = (this.visitedIndex > 0);
+			this.context.GetCommandState (Res.Commands.Dialog.File.NavigateNext).Enable = (this.visitedIndex < this.visitedFolderItems.Count-1);
 			this.context.GetCommandState (Res.Commands.Dialog.File.ParentFolder).Enable = parent.IsValid;
 		}
 
@@ -259,14 +268,12 @@ namespace Epsitec.Common.Dialogs.Controllers
 
 		public event EventHandler<DependencyPropertyChangedEventArgs> ActiveDirectoryChanged;
 
-		private CommandContext context;
+		private CommandContext					context;
 
-		private FolderItem activeDirectory;
-		private FolderItemIcon activeSmallIcon;
+		private FolderItem						activeDirectory;
+		private FolderItemIcon					activeSmallIcon;
 
-		private int disableHistoryCount;
-		
-		private List<FolderItem> directoriesVisited;
-		private int directoriesVisitedIndex;
+		private List<FolderItem>				visitedFolderItems;
+		private int								visitedIndex;
 	}
 }

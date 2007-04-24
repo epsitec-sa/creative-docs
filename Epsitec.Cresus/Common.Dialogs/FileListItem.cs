@@ -13,7 +13,7 @@ namespace Epsitec.Common.Dialogs
 {
 	//	Cette classe représente une 'ligne' dans la liste, qui peut représenter
 	//	un fichier, un dossier ou la commande 'nouveau document vide'.
-	public class FileListItem : System.IComparable<FileListItem>, Epsitec.Common.Types.IStructuredData, Epsitec.Common.Types.IStructuredTypeProvider
+	public class FileListItem : System.IComparable<FileListItem>, System.IEquatable<FileListItem>, Epsitec.Common.Types.IStructuredData, Epsitec.Common.Types.IStructuredTypeProvider
 	{
 		public FileListItem(string iconName, string fileName, string shortFileName, string description)
 		{
@@ -707,8 +707,9 @@ namespace Epsitec.Common.Dialogs
 			return FileListItem.type;
 		}
 
-		#region IComparable<FileItem> Members
-		public int CompareTo(FileListItem that)
+		#region IComparable<FileListItem> Members
+		
+		public int CompareTo(FileListItem other)
 		{
 			//	Comparaison simple ou complexe, selon SortAccordingToLevel.
 			//	En mode complexe (SortAccordingToLevel = true), on cherche
@@ -721,7 +722,7 @@ namespace Epsitec.Common.Dialogs
 			//		B/2		(deep = 1)
 			//		C		(deep = 0)
 
-			if (this == that)
+			if (this == other)
 			{
 				return 0;
 			}
@@ -729,7 +730,7 @@ namespace Epsitec.Common.Dialogs
 			if (this.sortAccordingToLevel)
 			{
 				List<FileListItem> path1 = this.GetAncestorList ();
-				List<FileListItem> path2 = that.GetAncestorList ();
+				List<FileListItem> path2 = other.GetAncestorList ();
 
 				int index1 = path1.Count;
 				int index2 = path2.Count;
@@ -750,7 +751,7 @@ namespace Epsitec.Common.Dialogs
 					
 					if (p1 == null && p2 == null)
 					{
-						return this.BaseCompareTo (that);
+						return this.BaseCompareTo (other);
 					}
 
 					if (p1 == null && p2 != null)
@@ -771,23 +772,23 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
-			return this.BaseCompareTo (that);
+			return this.BaseCompareTo (other);
 		}
 
-		protected int BaseCompareTo(FileListItem that)
+		protected int BaseCompareTo(FileListItem other)
 		{
 			//	Comparaison simple, sans tenir compte du niveau.
 			
-			if (this == that)
+			if (this == other)
 			{
 				return 0;
 			}
 
-			if (this.isSynthetic || that.isSynthetic)
+			if (this.isSynthetic || other.isSynthetic)
 			{
-				if (this.isSynthetic == that.isSynthetic)
+				if (this.isSynthetic == other.isSynthetic)
 				{
-					return string.Compare (this.ShortFileName, that.ShortFileName);
+					return string.Compare (this.ShortFileName, other.ShortFileName);
 				}
 				else
 				{
@@ -795,17 +796,17 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
-			if (this.IsDrive != that.IsDrive)
+			if (this.IsDrive != other.IsDrive)
 			{
 				return this.IsDrive ? -1 : 1;  // unités avant les fichiers
 			}
 
-			if (this.IsVirtual != that.IsVirtual)
+			if (this.IsVirtual != other.IsVirtual)
 			{
 				return this.IsVirtual ? -1 : 1;  // unités virtuelles avant les dossiers
 			}
 
-			if (this.IsDirectoryOrShortcut != that.IsDirectoryOrShortcut)
+			if (this.IsDirectoryOrShortcut != other.IsDirectoryOrShortcut)
 			{
 				return this.IsDirectoryOrShortcut ? -1 : 1;  // dossiers avant les fichiers
 			}
@@ -813,7 +814,7 @@ namespace Epsitec.Common.Dialogs
 			if (this.IsDrive)
 			{
 				DriveInfo infoA = FileListItem.GetDriveInfo (this.FullPath);
-				DriveInfo infoB = FileListItem.GetDriveInfo (that.FullPath);
+				DriveInfo infoB = FileListItem.GetDriveInfo (other.FullPath);
 
 				if ((infoA == null) ||
 					(infoB == null))
@@ -848,7 +849,7 @@ namespace Epsitec.Common.Dialogs
 					}
 				}
 				
-				int ct = this.folderItem.DriveInfo.Name.CompareTo (that.folderItem.DriveInfo.Name);
+				int ct = this.folderItem.DriveInfo.Name.CompareTo (other.folderItem.DriveInfo.Name);
 				if (ct != 0)
 				{
 					return ct;
@@ -856,7 +857,7 @@ namespace Epsitec.Common.Dialogs
 			}
 			else
 			{
-				int ct = this.folderItem.TypeName.CompareTo (that.folderItem.TypeName);
+				int ct = this.folderItem.TypeName.CompareTo (other.folderItem.TypeName);
 				if (ct != 0)
 				{
 					return ct;
@@ -864,11 +865,30 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			string f1 = this.ShortFileName.ToLowerInvariant ();
-			string f2 = that.ShortFileName.ToLowerInvariant ();
+			string f2 = other.ShortFileName.ToLowerInvariant ();
 			return f1.CompareTo (f2);
 		}
 
 		#endregion
+
+		#region IEquatable<FileItem> Members
+
+		public bool Equals(FileListItem other)
+		{
+			return this.CompareTo (other) == 0;
+		}
+
+		#endregion
+
+		public override bool Equals(object obj)
+		{
+			return this.Equals (obj as FileListItem);
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode ();
+		}
 
 		private static int PropertyComparer(object a, object b)
 		{
