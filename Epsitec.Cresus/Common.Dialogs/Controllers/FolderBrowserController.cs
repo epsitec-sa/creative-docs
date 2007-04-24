@@ -38,6 +38,12 @@ namespace Epsitec.Common.Dialogs.Controllers
 			this.browser.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleBrowserComboOpening);
 			this.browser.ComboClosed += new EventHandler (this.HandleBrowserComboClosed);
 			this.browser.AddEventHandler (Widget.TextProperty, this.HandleFieldPathTextChanged);
+			
+			this.browser.ItemTextConverter =
+				delegate (string itemText)
+				{
+					return itemText.Trim ();
+				};
 
 			this.SyncBrowserText ();
 		}
@@ -152,8 +158,6 @@ namespace Epsitec.Common.Dialogs.Controllers
 
 				this.browser.Items.Add (text);
 			}
-
-			this.comboSelected = -1;
 		}
 
 		private static string CreateIconAndLabel(FolderItemIcon folderIcon, string folderName)
@@ -182,9 +186,9 @@ namespace Epsitec.Common.Dialogs.Controllers
 		private void HandleBrowserComboClosed(object sender)
 		{
 			//	Le menu pour le chemin d'accès a été fermé.
-			if (this.comboSelected != -1)
+			if (this.browser.SelectedIndex != -1)
 			{
-				this.navigationController.ActiveDirectory = this.comboFolders[this.comboSelected].FolderItem;
+				this.navigationController.ActiveDirectory = this.comboFolders[this.browser.SelectedIndex].FolderItem;
 			}
 		}
 
@@ -192,6 +196,10 @@ namespace Epsitec.Common.Dialogs.Controllers
 		{
 			//	Le texte pour le chemin d'accès a changé.
 			if (this.browser == null)
+			{
+				return;
+			}
+			else
 			{
 				return;
 			}
@@ -206,20 +214,6 @@ namespace Epsitec.Common.Dialogs.Controllers
 			{
 				return;
 			}
-
-			this.comboSelected = this.browser.Items.FindIndex (
-				delegate (object obj)
-				{
-					string path = (string) obj;
-					if (path.Trim () == newValue)
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-				});
 
 			this.browser.Text = FolderBrowserController.RemoveStartingIndent (this.browser.Text);
 		}
@@ -252,6 +246,5 @@ namespace Epsitec.Common.Dialogs.Controllers
 		private TextFieldCombo				browser;
 		
 		private List<FileListItem>			comboFolders;
-		private int							comboSelected;
 	}
 }

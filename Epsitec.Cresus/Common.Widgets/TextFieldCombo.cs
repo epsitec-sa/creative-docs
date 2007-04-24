@@ -96,6 +96,31 @@ namespace Epsitec.Common.Widgets
 				this.combo_arrow_mode = value;
 			}
 		}
+
+		public System.Converter<string, string> ItemTextConverter
+		{
+			get
+			{
+				return this.itemTextConverter;
+			}
+			set
+			{
+				this.itemTextConverter = value;
+			}
+		}
+
+		public System.Converter<string, string>	ListTextConverter
+		{
+			get
+			{
+				return this.listTextConverter;
+			}
+			set
+			{
+				this.listTextConverter = value;
+			}
+		}
+
 		
 		
 		protected ScrollList					ScrollList
@@ -382,6 +407,11 @@ namespace Epsitec.Common.Widgets
 			{
 				string name = this.items.GetName (i);
 				string text = this.items[i];
+
+				if (this.listTextConverter != null)
+				{
+					text = this.listTextConverter (text);
+				}
 				
 				list.Add (name, text);
 			}
@@ -641,11 +671,19 @@ namespace Epsitec.Common.Widgets
 		{
 			this.CloseCombo(CloseMode.Reject);
 		}
-		
+
+		protected override void OnTextChanged()
+		{
+			base.OnTextChanged ();
+
+			this.selectedIndex = -1;
+		}
 		
 		#region IStringCollectionHost Members
+		
 		public void StringCollectionChanged()
 		{
+			this.selectedIndex = -1;
 		}
 		
 		
@@ -656,37 +694,57 @@ namespace Epsitec.Common.Widgets
 				return this.items;
 			}
 		}
+		
 		#endregion
 		
 		#region INamedStringSelection Members
+		
 		public virtual int						SelectedIndex
 		{
 			get
 			{
-				int	 sel;
-				bool exact;
-				
-				if (this.FindMatch (this.Text, out sel, out exact))
+				if (this.selectedIndex == -1)
 				{
-					return sel;
+					int sel;
+					bool exact;
+
+					if (this.FindMatch (this.Text, out sel, out exact))
+					{
+						this.selectedIndex = sel;
+					}
 				}
-				
-				return -1;
+
+				return this.selectedIndex;
 			}
 
 			set
 			{
+				int oldIndex = this.SelectedIndex;
+				int newIndex = value;
+
 				string text = "";
 				
 				if ((value >= 0) &&
 					(value < this.items.Count))
 				{
 					text = this.items[value];
+
+					if (this.itemTextConverter != null)
+					{
+						text = this.itemTextConverter (text);
+					}
 				}
 
 				if (this.Text != text)
 				{
 					this.Text = text;
+					this.SelectAll ();
+				}
+
+				this.selectedIndex = newIndex;
+
+				if (oldIndex != newIndex)
+				{
 					this.OnSelectedIndexChanged ();
 					this.SelectAll ();
 				}
@@ -705,7 +763,14 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					return this.items[index];
+					string text = this.items[index];
+					
+					if (this.itemTextConverter != null)
+					{
+						text = this.itemTextConverter (text);
+					}
+
+					return text;
 				}
 			}
 			set
@@ -784,6 +849,7 @@ namespace Epsitec.Common.Widgets
 				this.RemoveUserEventHandler("SelectedIndexChanged", value);
 			}
 		}
+		
 		#endregion
 		
 		#region CloseMode Enumeration
@@ -956,6 +1022,9 @@ namespace Epsitec.Common.Widgets
 				this.RemoveUserEventHandler("ComboClosed", value);
 			}
 		}
+
+		System.Converter<string, string>		itemTextConverter;
+		System.Converter<string, string>		listTextConverter;
 		
 		private Behaviors.SelectItemBehavior	select_item_behavior;
 		private ComboArrowMode					combo_arrow_mode		= ComboArrowMode.Open;
@@ -964,6 +1033,7 @@ namespace Epsitec.Common.Widgets
 		protected AbstractMenu					menu;
 		
 		private ScrollList						scroll_list;
+		private int								selectedIndex;
 		
 		protected Button						button;
 		protected Collections.StringCollection	items;

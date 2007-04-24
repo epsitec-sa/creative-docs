@@ -31,8 +31,21 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			get
 			{
-				if (index == -1) return null;
-				return this.list[index].ToString ();
+				if (index == -1)
+				{
+					return null;
+				}
+				else
+				{
+					if (this.converter != null)
+					{
+						return this.converter (this.list[index]);
+					}
+					else
+					{
+						return this.list[index].ToString ();
+					}
+				}
 			}
 		}
 		
@@ -51,6 +64,18 @@ namespace Epsitec.Common.Widgets.Collections
 				string[] names = new string[this.names.Count];
 				this.names.CopyTo (names);
 				return names;
+			}
+		}
+
+		public ConverterCallback				Converter
+		{
+			get
+			{
+				return this.converter;
+			}
+			set
+			{
+				this.converter = value;
 			}
 		}
 		
@@ -330,11 +355,13 @@ namespace Epsitec.Common.Widgets.Collections
 				this.host.StringCollectionChanged ();
 			}
 		}
-		
+
+		public delegate string ConverterCallback(object value);
 		
 		private IStringCollectionHost			host;
 		private List<object>					list;
 		private List<string>					names;
 		private bool							accepts_rich_text;
+		private ConverterCallback				converter;
 	}
 }
