@@ -203,7 +203,7 @@ namespace Epsitec.Common.Document.Objects
 				if (pr.RegularType == Properties.RegularType.Flower1 || pr.RegularType == Properties.RegularType.Flower2)
 				{
 					Point p1, s1, s2, p2;
-					this.ComputeLine(0, out p1, out s1, out s2, out p2);
+					this.ComputeCurve(0, out p1, out s1, out s2, out p2);
 					pathSupport.MoveTo(p1);
 					pathSupport.LineTo(s1);
 					pathSupport.MoveTo(p2);
@@ -213,7 +213,7 @@ namespace Epsitec.Common.Document.Objects
 				if (pr.RegularType == Properties.RegularType.Flower2)
 				{
 					Point p1, s1, s2, p2;
-					this.ComputeLine(pr.NbFaces*2-1, out p1, out s1, out s2, out p2);
+					this.ComputeCurve(pr.NbFaces*2-1, out p1, out s1, out s2, out p2);
 					pathSupport.MoveTo(p1);
 					pathSupport.LineTo(s1);
 					pathSupport.MoveTo(p2);
@@ -250,17 +250,17 @@ namespace Epsitec.Common.Document.Objects
 			Properties.Regular pr = this.PropertyRegular;
 			if ( pr.RegularType == Properties.RegularType.Norm )  // polygone ?
 			{
-				this.ComputeLine(0, out t, out s1, out s2, out a);
-				this.ComputeLine(pr.NbFaces-1, out b, out s1, out s2, out t);
+				this.ComputeCurve(0, out t, out s1, out s2, out a);
+				this.ComputeCurve(pr.NbFaces-1, out b, out s1, out s2, out t);
 			}
 			else	// étoile ?
 			{
-				this.ComputeLine(0, out t, out s1, out s2, out a);
-				this.ComputeLine(pr.NbFaces*2-1, out b, out s1, out s2, out t);
+				this.ComputeCurve(0, out t, out s1, out s2, out a);
+				this.ComputeCurve(pr.NbFaces*2-1, out b, out s1, out s2, out t);
 			}
 		}
 
-		protected void ComputeLine(int i, out Point p1, out Point s1, out Point s2, out Point p2)
+		protected void ComputeCurve(int i, out Point p1, out Point s1, out Point s2, out Point p2)
 		{
 			//	Calcule une courbe de l'objet.
 			Properties.Regular reg = this.PropertyRegular;
@@ -388,11 +388,10 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( corner.CornerType == Properties.CornerType.Right || simplify )  // coins droits ?
 			{
-				Point p1, s1, s2, p2;
-
 				for ( int i=0 ; i<total ; i++ )
 				{
-					this.ComputeLine(i, out p1, out s1, out s2, out p2);
+					Point p1, s1, s2, p2;
+					this.ComputeCurve(i, out p1, out s1, out s2, out p2);
 
 					if (reg.RegularType == Properties.RegularType.Flower1 || reg.RegularType == Properties.RegularType.Flower2)
 					{
@@ -415,14 +414,62 @@ namespace Epsitec.Common.Document.Objects
 			}
 			else	// coins quelconques ?
 			{
-				Point p1, s1, s2, p2, s;
-
-				for ( int i=0 ; i<total ; i++ )
+				for (int i=0; i<total; i++)
 				{
-					int prev = i-1;  if ( prev < 0 )  prev = total-1;
-					this.ComputeLine(prev, out p1, out s1, out s2, out s);
-					this.ComputeLine(i, out s, out s1, out s2, out p2);
-					this.PathCorner(path, p1,s,p2, corner);
+					int prev = i-1;
+					if (prev < 0)
+					{
+						prev = total-1;
+					}
+
+					int next = i+1;
+					if (next >= total)
+					{
+						next = 0;
+					}
+
+					if (reg.RegularType == Properties.RegularType.Flower1 || reg.RegularType == Properties.RegularType.Flower2)
+					{
+						Point p1, s1, s2, p2;
+						Point p3, s3, s4, p4;
+						Point p5, s5, s6, p6;
+						this.ComputeCurve(prev, out p1, out s1, out s2, out p2);
+						this.ComputeCurve(i,    out p3, out s3, out s4, out p4);
+						this.ComputeCurve(next, out p5, out s5, out s6, out p6);
+
+						Point c2, c3, c4, c5;
+						double r1, r2;
+						this.PathCorner(path, s2, p3, s3, corner, out c2, out c3, out r1);
+						this.PathCorner(path, s4, p5, s5, corner, out c4, out c5, out r2);
+
+						if (i == 0)
+						{
+							path.MoveTo(c2);
+						}
+						corner.PathCorner(path, c2,p3,c3, r1);
+						
+						path.CurveTo(s3, s4, c4);
+					}
+					else
+					{
+						Point p1, s1, s2, p2, s;
+						this.ComputeCurve(prev, out p1, out s1, out s2, out s );
+						this.ComputeCurve(i,    out s,  out s1, out s2, out p2);
+
+						Point c1, c2;
+						double radius;
+						this.PathCorner(path, p1, s, p2, corner, out c1, out c2, out radius);
+
+						if (i == 0)
+						{
+							path.MoveTo(c1);
+						}
+						else
+						{
+							path.LineTo(c1);
+						}
+						corner.PathCorner(path, c1,s,c2, radius);
+					}
 				}
 				path.Close();
 			}
@@ -430,17 +477,14 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		protected void PathCorner(Path path, Point p1, Point s, Point p2, Properties.Corner corner)
+		protected void PathCorner(Path path, Point p1, Point s, Point p2, Properties.Corner corner, out Point c1, out Point c2, out double radius)
 		{
 			//	Crée le chemin d'un coin.
 			double l1 = Point.Distance(p1, s);
 			double l2 = Point.Distance(p2, s);
-			double radius = System.Math.Min(corner.Radius, System.Math.Min(l1,l2)/2);
-			Point c1 = Point.Move(s, p1, radius);
-			Point c2 = Point.Move(s, p2, radius);
-			if ( path.IsEmpty )  path.MoveTo(c1);
-			else                 path.LineTo(c1);
-			corner.PathCorner(path, c1,s,c2, radius);
+			radius = System.Math.Min(corner.Radius, System.Math.Min(l1,l2)/2);
+			c1 = Point.Move(s, p1, radius);
+			c2 = Point.Move(s, p2, radius);
 		}
 
 
