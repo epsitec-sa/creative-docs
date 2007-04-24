@@ -35,9 +35,9 @@ namespace Epsitec.Common.Dialogs.Controllers
 		{
 			this.browser = new TextFieldCombo ();
 			this.browser.IsReadOnly = true;
+			
 			this.browser.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleBrowserComboOpening);
-			this.browser.ComboClosed += new EventHandler (this.HandleBrowserComboClosed);
-			this.browser.AddEventHandler (Widget.TextProperty, this.HandleFieldPathTextChanged);
+			this.browser.ComboClosed  += new EventHandler (this.HandleBrowserComboClosed);
 			
 			this.browser.ItemTextConverter =
 				delegate (string itemText)
@@ -152,9 +152,10 @@ namespace Epsitec.Common.Dialogs.Controllers
 				FolderItemIcon folderImage = folder.GetSmallIcon ();
 				string         folderName  = folder.ShortFileName;
 				
-				string text = FolderBrowserController.CreateIconAndLabel (folderImage, folderName);
+				string text;
 				
-				text = FolderBrowserController.AddStringIndent (text, folder.Depth);
+				text = FolderBrowserController.CreateIconAndLabel (folderImage, folderName);
+				text = string.Concat (new string (' ', 3 * folder.Depth), text);
 
 				this.browser.Items.Add (text);
 			}
@@ -185,66 +186,15 @@ namespace Epsitec.Common.Dialogs.Controllers
 
 		private void HandleBrowserComboClosed(object sender)
 		{
-			//	Le menu pour le chemin d'accès a été fermé.
 			if (this.browser.SelectedIndex != -1)
 			{
 				this.navigationController.ActiveDirectory = this.comboFolders[this.browser.SelectedIndex].FolderItem;
 			}
 		}
 
-		private void HandleFieldPathTextChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			//	Le texte pour le chemin d'accès a changé.
-			if (this.browser == null)
-			{
-				return;
-			}
-			else
-			{
-				return;
-			}
 
-			string oldValue = (e.OldValue as string) ?? "";
-			string newValue = (e.NewValue as string) ?? "";
-
-			oldValue = oldValue.Trim ();
-			newValue = newValue.Trim ();
-
-			if (oldValue == newValue)
-			{
-				return;
-			}
-
-			this.browser.Text = FolderBrowserController.RemoveStartingIndent (this.browser.Text);
-		}
-
-		private static string AddStringIndent(string text, int level)
-		{
-			//	Ajoute des niveaux d'indentation au début d'un texte.
-			while (level > 0)
-			{
-				text = "   "+text;
-				level--;
-			}
-			return text;
-		}
-
-		private static string RemoveStartingIndent(string text)
-		{
-			//	Supprime tous les niveaux d'indentation au début d'un texte.
-			while (text.StartsWith ("   "))
-			{
-				text = text.Substring (3);
-			}
-
-			return text;
-		}
-
-
-		private FileNavigationController navigationController;
-
+		private FileNavigationController	navigationController;
 		private TextFieldCombo				browser;
-		
 		private List<FileListItem>			comboFolders;
 	}
 }
