@@ -14,25 +14,48 @@ namespace Epsitec.Common.Dialogs.Controllers
 		public FolderBrowserController(FileNavigationController navigationController)
 		{
 			this.navigationController = navigationController;
+			this.navigationController.ActiveDirectoryChanged += this.HandleNavigationControllerActiveDirectoryChanged;
 		}
+
 
 		public TextFieldCombo				BrowserWidget
 		{
 			get
 			{
+				if (this.browser == null)
+				{
+					this.CreateUserInterface ();
+				}
+
 				return this.browser;
 			}
 		}
 
-		public Widget CreateUserInterface(Widget container)
+		private void CreateUserInterface()
 		{
-			this.browser = new TextFieldCombo (container);
+			this.browser = new TextFieldCombo ();
 			this.browser.IsReadOnly = true;
 			this.browser.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleBrowserComboOpening);
 			this.browser.ComboClosed += new EventHandler (this.HandleBrowserComboClosed);
 			this.browser.AddEventHandler (Widget.TextProperty, this.HandleFieldPathTextChanged);
-			
-			return this.browser;
+
+			this.SyncBrowserText ();
+		}
+
+		private void HandleNavigationControllerActiveDirectoryChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			if (this.browser != null)
+			{
+				this.SyncBrowserText ();
+			}
+		}
+
+		private void SyncBrowserText()
+		{
+			FolderItemIcon folderIcon = this.navigationController.ActiveSmallIcon;
+			string folderName = this.navigationController.ActiveDirectoryDisplayName;
+
+			this.browser.Text = FolderBrowserController.CreateIconAndLabel (folderIcon, folderName);
 		}
 
 		private void HandleBrowserComboOpening(object sender, CancelEventArgs e)
@@ -48,7 +71,7 @@ namespace Epsitec.Common.Dialogs.Controllers
 
 			this.comboFolders.Add (FolderBrowserController.CreateFileListItem (desktop, null));
 
-			System.Diagnostics.Debug.Assert (this.comboFolders.Count == 0);
+			System.Diagnostics.Debug.Assert (this.comboFolders.Count == 1);
 			
 			FileListItem root = this.comboFolders[0];
 
@@ -120,9 +143,10 @@ namespace Epsitec.Common.Dialogs.Controllers
 			
 			foreach (FileListItem folder in this.comboFolders)
 			{
-				string folderImage = folder.GetSmallIcon ().ImageName;
-				string folderName  = TextLayout.ConvertToTaggedText (folder.ShortFileName);
-				string text = string.Concat (@"<img src=""", folderImage, @"""/> ", folderName);
+				FolderItemIcon folderImage = folder.GetSmallIcon ();
+				string         folderName  = folder.ShortFileName;
+				
+				string text = FolderBrowserController.CreateIconAndLabel (folderImage, folderName);
 				
 				text = FolderBrowserController.AddStringIndent (text, folder.Depth);
 
@@ -130,6 +154,19 @@ namespace Epsitec.Common.Dialogs.Controllers
 			}
 
 			this.comboSelected = -1;
+		}
+
+		private static string CreateIconAndLabel(FolderItemIcon folderIcon, string folderName)
+		{
+			if ((folderIcon != null) &&
+				(!string.IsNullOrEmpty (folderIcon.ImageName)))
+			{
+				return string.Concat (@"<img src=""", folderIcon.ImageName, @"""/> ", TextLayout.ConvertToTaggedText (folderName));
+			}
+			else
+			{
+				return TextLayout.ConvertToTaggedText (folderName);
+			}
 		}
 
 		private static FileListItem CreateFileListItem(FolderItem folderItem, FileListItem parent)

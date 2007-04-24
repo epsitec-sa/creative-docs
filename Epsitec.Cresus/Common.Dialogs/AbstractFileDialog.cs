@@ -26,12 +26,14 @@ namespace Epsitec.Common.Dialogs
 			this.dispatcher = new CommandDispatcher ();
 			
 			this.navigationController = new Controllers.FileNavigationController (this.context);
+			this.browserController = new Controllers.FolderBrowserController (this.navigationController);
+			
 			this.navigationController.ActiveDirectoryChanged += this.HandleNavigationControllerActiveDirectoryChanged;
 		}
 
 		void HandleNavigationControllerActiveDirectoryChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			this.UpdateInitialDirectory ();
+			this.UpdateSelectedFavorites ();
 			this.UpdateTable (-1);
 
 			if (this.table != null)
@@ -286,34 +288,6 @@ namespace Epsitec.Common.Dialogs
 
 		protected abstract void CreateWindow();
 
-#if false
-		private void SetInitialFolder(FolderItem folder, bool updateVisited)
-		{
-			//	Change le dossier courant.
-			if (folder.IsEmpty)
-			{
-				this.initialDirectory = FileManager.GetFolderItem (FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
-			}
-			else
-			{
-				this.initialDirectory = folder;
-			}
-
-			if (updateVisited)
-			{
-				this.AddToVisitedDirectories (this.initialDirectory);
-			}
-
-			this.UpdateInitialDirectory ();
-			this.UpdateTable (-1);
-
-			if (this.table != null)
-			{
-				this.UpdateFileList ();
-			}
-		}
-#endif
-
 		protected void CreateUserInterface(string name, Size windowSize, string title, double cellHeight, Window owner)
 		{
 			//	Crée la fenêtre et tous les widgets pour peupler le dialogue.
@@ -369,7 +343,7 @@ namespace Epsitec.Common.Dialogs
 			this.selectedFileNames = null;
 			this.UpdateFavorites ();
 			this.UpdateTable (initialSelection);
-			this.UpdateInitialDirectory ();
+			this.UpdateSelectedFavorites ();
 			this.UpdateInitialFileName ();
 			this.UpdateButtons ();
 			this.UpdateOptions ();
@@ -733,13 +707,10 @@ namespace Epsitec.Common.Dialogs
 			label.Dock = DockStyle.Left;
 			label.Margins = new Margins (0, 10, 0, 0);
 
-			this.fieldPath = new TextFieldCombo (group);
-			this.fieldPath.IsReadOnly = true;
+			this.fieldPath = this.browserController.BrowserWidget;
+			this.fieldPath.SetEmbedder (group);
 			this.fieldPath.Dock = DockStyle.Fill;
 			this.fieldPath.Margins = new Margins (0, 5, 0, 0);
-			this.fieldPath.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleFieldPathComboOpening);
-			this.fieldPath.ComboClosed += new EventHandler (this.HandleFieldPathComboClosed);
-			this.fieldPath.AddEventHandler (Widget.TextProperty, this.HandleFieldPathTextChanged);
 			this.fieldPath.TabIndex = 1;
 			this.fieldPath.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -1125,6 +1096,11 @@ namespace Epsitec.Common.Dialogs
 
 		private void UpdateSelectedFavorites()
 		{
+			if (this.favorites == null)
+			{
+				return;
+			}
+
 			//	Met à jour le favoris sélectionné selon le chemin d'accès en cours.
 			this.favoritesSelected = -1;
 
@@ -1553,21 +1529,6 @@ namespace Epsitec.Common.Dialogs
 			this.buttonOk.Enable = okEnable || ((item != null) && (item.IsSynthetic));
 		}
 
-		private void UpdateInitialDirectory()
-		{
-			//	Met à jour le chemin d'accès.
-			if (this.fieldPath != null)
-			{
-				string text = TextLayout.ConvertToTaggedText (this.navigationController.ActiveDirectoryDisplayName);
-				if (this.navigationController.ActiveSmallIcon != null)
-				{
-					text = string.Format ("<img src=\"{0}\"/> {1}", this.navigationController.ActiveSmallIcon.ImageName, text);
-				}
-
-				this.fieldPath.Text = text;
-				this.UpdateSelectedFavorites ();
-			}
-		}
 
 		private void UpdateInitialFileName()
 		{
@@ -1782,8 +1743,12 @@ namespace Epsitec.Common.Dialogs
 
 			this.fieldRename.Window.WindowResizeBeginning -= this.HandleWindowResizeBeginning;
 
-			this.focusedWidgetBeforeRename.Focus ();
-			this.focusedWidgetBeforeRename = null;
+			if (this.focusedWidgetBeforeRename != null)
+			{
+				this.focusedWidgetBeforeRename.Focus ();
+				this.focusedWidgetBeforeRename = null;
+			}
+
 			this.fieldRename.Visibility = false;
 
 			if (accepted && this.renameSelected != null)
@@ -2309,172 +2274,6 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		private void HandleFieldPathComboOpening(object sender, CancelEventArgs e)
-		{
-			//	Le menu pour le chemin d'accès va être ouvert.
-			this.comboFolders = new List<FileListItem> ();
-
-#if true
-			//	Ajoute toutes les unités du bureau et du poste de travail.
-			FolderItem desktop = FileManager.GetFolderItem (FolderId.VirtualDesktop, FolderQueryMode.SmallIcons);
-			FolderItem computer = FileManager.GetFolderItem (FolderId.VirtualMyComputer, FolderQueryMode.SmallIcons);
-			bool showHidden = FolderItem.ShowHiddenFiles;
-
-			this.ComboAdd (desktop, null);
-			FileListItem root = this.comboFolders[this.comboFolders.Count-1];
-
-			foreach (FolderItem item in FileManager.GetFolderItems (desktop, FolderQueryMode.SmallIcons))
-			{
-				if (!item.IsFileSystemNode)
-				{
-					continue;  // ignore les items qui ne stockent pas des fichiers
-				}
-
-				if (item.IsHidden && !showHidden)
-				{
-					continue;  // ignore les items cachés si l'utilisateur ne veut pas les voir
-				}
-
-				if (!item.IsFolder)
-				{
-					continue;
-				}
-
-				this.ComboAdd (item, root);
-				FileListItem parent = this.comboFolders[this.comboFolders.Count-1];
-
-				if (item.DisplayName == computer.DisplayName)
-				{
-					foreach (FolderItem subItem in FileManager.GetFolderItems (item, FolderQueryMode.SmallIcons))
-					{
-						if (!subItem.IsFileSystemNode)
-						{
-							continue;  // ignore les items qui ne stockent pas des fichiers
-						}
-
-						if (subItem.IsHidden && !showHidden)
-						{
-							continue;  // ignore les items cachés si l'utilisateur ne veut pas les voir
-						}
-
-						if (!subItem.IsFolder)
-						{
-							continue;
-						}
-
-						this.ComboAdd (subItem, parent);
-					}
-				}
-			}
-#endif
-
-#if true
-			//	Ajoute toutes les unités du chemin courant et de ses parents.
-			FolderItem currentFolder = this.navigationController.ActiveDirectory;
-			int nb = 0;
-			while (!currentFolder.IsEmpty)
-			{
-				this.ComboAdd (currentFolder, null);
-				nb++;
-				currentFolder = FileManager.GetParentFolderItem (currentFolder, FolderQueryMode.SmallIcons);
-			}
-
-			int count = this.comboFolders.Count;
-			for (int i=count-nb; i<count-1; i++)
-			{
-				this.comboFolders[i].Parent = this.comboFolders[i+1];
-			}
-#endif
-
-			//	Trie la liste obtenue.
-			this.comboFolders.Sort ();
-
-			//	Supprime les doublons.
-			int index=0;
-			while (index < this.comboFolders.Count-1)
-			{
-				FileListItem i1 = this.comboFolders[index];
-				FileListItem i2 = this.comboFolders[index+1];
-				if (i1.CompareTo (i2) == 0)
-				{
-					this.comboFolders.RemoveAt (index+1);
-				}
-				else
-				{
-					index++;
-				}
-			}
-
-			//	Crée le menu-combo.
-			this.fieldPath.Items.Clear ();
-			this.comboTexts = new List<string> ();
-
-			foreach (FileListItem cell in this.comboFolders)
-			{
-				string text = string.Format ("<img src=\"{0}\"/> {1}", cell.GetSmallIcon ().ImageName, TextLayout.ConvertToTaggedText (cell.ShortFileName));
-				text = AbstractFileDialog.AddStringIndent (text, cell.Depth);
-
-				this.fieldPath.Items.Add (text);
-				this.comboTexts.Add (text);
-			}
-
-			this.comboSelected = -1;
-		}
-
-		private void ComboAdd(FolderItem folderItem, FileListItem parent)
-		{
-			FileListItem item = new FileListItem (folderItem);
-
-			item.Parent = parent;
-			item.SortAccordingToLevel = true;
-			this.comboFolders.Add (item);
-		}
-
-		private void HandleFieldPathComboClosed(object sender)
-		{
-			//	Le menu pour le chemin d'accès a été fermé.
-			if (this.comboSelected != -1)
-			{
-				this.navigationController.ActiveDirectory = this.comboFolders[this.comboSelected].FolderItem;
-			}
-		}
-
-		private void HandleFieldPathTextChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			//	Le texte pour le chemin d'accès a changé.
-			if ((this.comboTexts == null) ||
-				(this.fieldPath == null))
-			{
-				return;
-			}
-
-			string oldValue = (e.OldValue as string) ?? "";
-			string newValue = (e.NewValue as string) ?? "";
-
-			oldValue = oldValue.Trim ();
-			newValue = newValue.Trim ();
-
-			if (oldValue == newValue)
-			{
-				return;
-			}
-
-			this.comboSelected = this.comboTexts.FindIndex (
-				delegate (string path)
-				{
-					if (path.Trim () == newValue)
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-				});
-
-			this.fieldPath.Text = AbstractFileDialog.RemoveStartingIndent (this.fieldPath.Text);
-		}
-
 		private void HandleSliderChanged(object sender)
 		{
 			//	Slider pour la taille des miniatures changé.
@@ -2564,7 +2363,8 @@ namespace Epsitec.Common.Dialogs
 		protected bool						enableMultipleSelection;
 			
 		private bool						isRedirected;
-		private Controllers.FileNavigationController navigationController;
+		private readonly Controllers.FileNavigationController navigationController;
+		private readonly Controllers.FolderBrowserController browserController;
 		
 		private string						initialFileName;
 		private string						selectedFileName;
