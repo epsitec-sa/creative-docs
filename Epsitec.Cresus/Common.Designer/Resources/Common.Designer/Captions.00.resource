@@ -55,7 +55,7 @@
   <data name="Cap.Types.Type.Decimal" id="0G9" mod="1">&lt;s:data id="_0" f:Description="Valeur décimale" f:Name="Types.Type.Decimal" f:Labels="{Collection {Text 'Décimal'}}" /&gt;</data>
   <data name="Cap.Types.Type.String" id="0H9" mod="1">&lt;s:data id="_0" f:Description="Chaîne de caractères" f:Name="Types.Type.String" f:Labels="{Collection {Text 'Chaîne'}, {Text 'Chaîne de caractères'}}" /&gt;</data>
   <data name="Cap.Types.Type.Enum" id="0I9" mod="1">&lt;s:data id="_0" f:Description="Valeur choisie dans une énumération" f:Name="Types.Type.Enum" f:Labels="{Collection {Text 'Enumération'}}" /&gt;</data>
-  <data name="Cap.Types.Type.Structured" id="0J9" mod="1">&lt;s:data id="_0" f:Description="Structure d&amp;amp;apos;une fiche" f:Name="Types.Type.Structured" f:Labels="{Collection {Text 'Structure de données'}}" /&gt;</data>
+  <data name="Cap.Types.Type.Structured" id="0J9" mod="1">&lt;s:data id="_0" f:Description="Description d&amp;amp;apos;une entité (rubriques d&amp;amp;apos;une fiche)" f:Name="Types.Type.Structured" f:Labels="{Collection {Text 'Entité'}}" /&gt;</data>
   <data name="Cap.Types.Type.Collection" id="0IC">&lt;s:data id="_0" f:Name="Types.Type.Collection" f:Description="Collection" f:Labels="{Collection {Text 'Collection'}}" /&gt;</data>
   <data name="Cap.Types.Type.Date" id="0EC">&lt;s:data id="_0" f:Name="Types.Type.Date" f:Description="Date" f:Labels="{Collection {Text 'Date'}}" /&gt;</data>
   <data name="Cap.Types.Type.Time" id="0FC">&lt;s:data id="_0" f:Name="Types.Type.Time" f:Description="Heure" f:Labels="{Collection {Text 'Heure'}}" /&gt;</data>
