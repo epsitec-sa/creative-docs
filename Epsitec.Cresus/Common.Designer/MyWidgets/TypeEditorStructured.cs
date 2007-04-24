@@ -51,11 +51,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonRelationRef.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonRelationRef);
 
-			this.buttonRelationBij = new IconButton();
-			this.buttonRelationBij.CaptionId = Res.Captions.Editor.Structured.Relation.Bijective.Id;
-			this.buttonRelationBij.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonRelationBij.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-			this.toolbar.Items.Add(this.buttonRelationBij);
+			this.buttonRelationInc = new IconButton();
+			this.buttonRelationInc.CaptionId = Res.Captions.Editor.Structured.Relation.Inclusion.Id;
+			this.buttonRelationInc.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonRelationInc.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.toolbar.Items.Add(this.buttonRelationInc);
 
 			this.buttonRelationCol = new IconButton();
 			this.buttonRelationCol.CaptionId = Res.Captions.Editor.Structured.Relation.Collection.Id;
@@ -168,7 +168,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.buttonNext.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonRemove.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonRelationRef.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-				this.buttonRelationBij.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonRelationInc.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonRelationCol.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 				this.slider.ValueChanged -= new EventHandler(this.HandleSliderChanged);
@@ -240,19 +240,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.buttonRelationRef.Enable = st;
-			this.buttonRelationBij.Enable = st;
+			this.buttonRelationInc.Enable = st;
 			this.buttonRelationCol.Enable = st;
 
 			if (st)
 			{
 				this.buttonRelationRef.ActiveState = (field.Relation == Relation.Reference ) ? ActiveState.Yes : ActiveState.No;
-				this.buttonRelationBij.ActiveState = ActiveState.No; //- (field.Relation == Relation.Bijective) ? ActiveState.Yes : ActiveState.No;
+				this.buttonRelationInc.ActiveState = (field.Relation == Relation.Inclusion ) ? ActiveState.Yes : ActiveState.No;
 				this.buttonRelationCol.ActiveState = (field.Relation == Relation.Collection) ? ActiveState.Yes : ActiveState.No;
 			}
 			else
 			{
 				this.buttonRelationRef.ActiveState = ActiveState.No;
-				this.buttonRelationBij.ActiveState = ActiveState.No;
+				this.buttonRelationInc.ActiveState = ActiveState.No;
 				this.buttonRelationCol.ActiveState = ActiveState.No;
 			}
 
@@ -283,7 +283,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						if (type is StructuredType)
 						{
 							if (field.Relation == Relation.Reference )  iconRelation = Misc.Image("RelationReference");
-//-							if (field.Relation == Relation.Bijective )  iconRelation = Misc.Image("RelationBijective");
+							if (field.Relation == Relation.Inclusion )  iconRelation = Misc.Image("RelationInclusion");
 							if (field.Relation == Relation.Collection)  iconRelation = Misc.Image("RelationCollection");
 						}
 
@@ -655,10 +655,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ArrayRelation(Relation.Reference);
 			}
 
-//-			if (sender == this.buttonRelationBij)
-//-			{
-//-				this.ArrayRelation(Relation.Bijective);
-//-			}
+			if (sender == this.buttonRelationInc)
+			{
+				this.ArrayRelation(Relation.Inclusion);
+			}
 
 			if (sender == this.buttonRelationCol)
 			{
@@ -801,7 +801,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButton					buttonNext;
 		protected IconButton					buttonRemove;
 		protected IconButton					buttonRelationRef;
-		protected IconButton					buttonRelationBij;
+		protected IconButton					buttonRelationInc;
 		protected IconButton					buttonRelationCol;
 		protected HSlider						slider;
 

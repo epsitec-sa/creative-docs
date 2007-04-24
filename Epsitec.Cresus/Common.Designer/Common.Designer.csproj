@@ -443,9 +443,6 @@
     <EmbeddedResource Include="Images\RelationReference.icon" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Images\RelationBijective.icon" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Images\RelationCollection.icon" />
   </ItemGroup>
   <ItemGroup>
@@ -453,6 +450,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\ObjectGroupFrame.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\RelationInclusion.icon" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

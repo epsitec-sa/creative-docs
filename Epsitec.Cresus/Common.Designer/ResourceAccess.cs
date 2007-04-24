@@ -243,7 +243,7 @@ namespace Epsitec.Common.Designer
 				case TypeType.Decimal:      return new DecimalType();
 				case TypeType.String:       return new StringType();
 				case TypeType.Enum:         return new EnumType();
-				case TypeType.Structured:   return new StructuredType(StructuredTypeClass.Entity);
+				case TypeType.Structured:   return new StructuredType(StructuredTypeClass.Entity, null);
 				case TypeType.Collection:   return new CollectionType();
 				case TypeType.Date:         return new DateType();
 				case TypeType.Time:         return new TimeType();
