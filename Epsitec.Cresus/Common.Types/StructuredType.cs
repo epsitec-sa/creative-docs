@@ -39,6 +39,20 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="StructuredType"/> class.
+		/// </summary>
+		/// <param name="@class">The @class.</param>
+		/// <param name="extends">The structured type this instance extends.</param>
+		public StructuredType(StructuredTypeClass @class, StructuredType extends)
+			: this (@class)
+		{
+			if (extends != null)
+			{
+				this.SetValue (StructuredType.ExtendsProperty, extends);
+			}
+		}
+
+		/// <summary>
 		/// Gets the field definition dictionary. This instance is writable.
 		/// </summary>
 		/// <value>The fields.</value>
@@ -59,6 +73,18 @@ namespace Epsitec.Common.Types
 			get
 			{
 				return (StructuredTypeClass) this.GetValue (StructuredType.ClassProperty);
+			}
+		}
+
+		/// <summary>
+		/// Gets the structured type extended by this instance.
+		/// </summary>
+		/// <value>The structured type this instance extends or <c>null</c>.</value>
+		public StructuredType Extends
+		{
+			get
+			{
+				return (StructuredType) this.GetValue (StructuredType.ExtendsProperty);
 			}
 		}
 
@@ -338,6 +364,7 @@ namespace Epsitec.Common.Types
 
 		public static readonly DependencyProperty FieldsProperty = DependencyProperty.RegisterReadOnly ("Fields", typeof (Collections.StructuredTypeFieldCollection), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetFieldsValue).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty ClassProperty = DependencyProperty.RegisterReadOnly ("Class", typeof (StructuredTypeClass), typeof (StructuredType), new DependencyPropertyMetadata (StructuredTypeClass.None).MakeReadOnlySerializable ());
+		public static readonly DependencyProperty ExtendsProperty = DependencyProperty.RegisterReadOnly ("Extends", typeof (StructuredType), typeof (StructuredType), new DependencyPropertyMetadata ().MakeReadOnlySerializable ());
 
 		private Collections.HostedStructuredTypeFieldDictionary fields;
 	}
