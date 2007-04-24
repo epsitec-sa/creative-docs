@@ -370,6 +370,9 @@ namespace Epsitec.Common.Document.Objects
 			double a2 = Point.ComputeAngleDeg(center, pos);
 			angle = a2-a1;
 
+			if (angle >  180)  angle -= 360;
+			if (angle < -180)  angle += 360;
+
 			return new Polar(scale, angle);
 		}
 
