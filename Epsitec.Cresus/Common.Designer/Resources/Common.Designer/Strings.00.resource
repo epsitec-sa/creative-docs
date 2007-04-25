@@ -252,6 +252,8 @@
   <data name="Dialog.Search.Check.Word" id="054">Mots entiers</data>
   <data name="Dialog.Search.Check.Who" id="064">Où rechercher :</data>
   <data name="Dialog.Search.Check.Label" id="074">Rechercher dans les noms</data>
+  <data name="Dialog.ResourceStructuredTypeField.Title" id="00A">Rubrique à inclure</data>
+  <data name="Dialog.ResourceStructuredTypeField.Button.OK" id="01A">Inclure</data>
   <data name="Dialog.Search.Check.PrimaryText" id="084">Rechercher dans les textes de référence</data>
   <data name="Dialog.Search.Check.SecondaryText" id="094">Rechercher dans les textes secondaires</data>
   <data name="Dialog.Search.Check.PrimaryAbout" id="0A4">Rechercher dans les commentaires de référence</data>

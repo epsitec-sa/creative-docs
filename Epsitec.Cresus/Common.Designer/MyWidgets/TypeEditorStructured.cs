@@ -605,15 +605,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			StructuredTypeField actualField = this.fields[sel];
-			Druid druid = actualField.CaptionId;
-
-			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Captions, ResourceAccess.TypeType.None, druid, null);
-			if (druid.IsEmpty)
+			StructuredType st = actualField.Type as StructuredType;
+			string field = this.mainWindow.DlgResourceStructuredTypeField(st, actualField.SourceFieldId);
+			if (string.IsNullOrEmpty(field))
 			{
 				return;
 			}
 
-			StructuredTypeField newField = new StructuredTypeField(actualField.Id, actualField.Type, druid, actualField.Rank, actualField.Relation, actualField.SourceFieldId);
+			StructuredTypeField newField = new StructuredTypeField(actualField.Id, actualField.Type, actualField.CaptionId, actualField.Rank, actualField.Relation, field);
 			this.fields[sel] = newField;
 
 			this.FieldsOutput();

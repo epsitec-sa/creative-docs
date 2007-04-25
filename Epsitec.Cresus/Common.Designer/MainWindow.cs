@@ -78,16 +78,17 @@ namespace Epsitec.Common.Designer
 				CommandDispatcher.SetDispatcher(this.window, this.commandDispatcher);
 				CommandContext.SetContext(this.window, this.commandContext);
 
-				this.dlgOpen               = new Dialogs.Open(this);
-				this.dlgGlyphs             = new Dialogs.Glyphs(this);
-				this.dlgIcon               = new Dialogs.Icon(this);
-				this.dlgFilter             = new Dialogs.Filter(this);
-				this.dlgSearch             = new Dialogs.Search(this);
-				this.dlgNewCulture         = new Dialogs.NewCulture(this);
-				this.dlgResourceTypeType   = new Dialogs.ResourceTypeType(this);
-				this.dlgResourceSelector   = new Dialogs.ResourceSelector(this);
-				this.dlgBindingSelector    = new Dialogs.BindingSelector(this);
-				this.dlgTableConfiguration = new Dialogs.TableConfiguration(this);
+				this.dlgOpen                        = new Dialogs.Open(this);
+				this.dlgGlyphs                      = new Dialogs.Glyphs(this);
+				this.dlgIcon                        = new Dialogs.Icon(this);
+				this.dlgFilter                      = new Dialogs.Filter(this);
+				this.dlgSearch                      = new Dialogs.Search(this);
+				this.dlgNewCulture                  = new Dialogs.NewCulture(this);
+				this.dlgResourceTypeType            = new Dialogs.ResourceTypeType(this);
+				this.dlgResourceSelector            = new Dialogs.ResourceSelector(this);
+				this.dlgResourceStructuredTypeField = new Dialogs.ResourceStructuredTypeField(this);
+				this.dlgBindingSelector             = new Dialogs.BindingSelector(this);
+				this.dlgTableConfiguration          = new Dialogs.TableConfiguration(this);
 
 				this.dlgGlyphs.Closed += new EventHandler(this.HandleDlgClosed);
 				this.dlgFilter.Closed += new EventHandler(this.HandleDlgClosed);
@@ -1179,6 +1180,14 @@ namespace Epsitec.Common.Designer
 			return this.dlgResourceSelector.AccessCloseList();
 		}
 
+		public string DlgResourceStructuredTypeField(StructuredType st, string field)
+		{
+			//	Ouvre le dialogue pour choisir un champ d'un type structuré.
+			this.dlgResourceStructuredTypeField.Initialise(st, field);
+			this.dlgResourceStructuredTypeField.Show();  // choix dans le dialogue...
+			return this.dlgResourceStructuredTypeField.SelectedField;
+		}
+
 		public string DlgIcon(ResourceManager manager, string icon)
 		{
 			//	Ouvre le dialogue pour choisir une icône.
@@ -1379,6 +1388,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.NewCulture			dlgNewCulture;
 		protected Dialogs.ResourceTypeType		dlgResourceTypeType;
 		protected Dialogs.ResourceSelector		dlgResourceSelector;
+		protected Dialogs.ResourceStructuredTypeField dlgResourceStructuredTypeField;
 		protected Dialogs.BindingSelector		dlgBindingSelector;
 		protected Dialogs.TableConfiguration	dlgTableConfiguration;
 		protected PanelsContext					context;
