@@ -306,14 +306,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 						Caption caption = this.module.ResourceManager.GetCaption(type.Caption.Id);
 
+						string text = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
 						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
 						{
-							string nd = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
-							captionType = string.Concat(caption.Name, ":<br/>", nd);
+							captionType = string.Concat(caption.Name, ":<br/>", text);
+						}
+						else if (string.IsNullOrEmpty(text))
+						{
+							captionType = caption.Name;
 						}
 						else
 						{
-							captionType = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
+							captionType = text;
 						}
 
 						iconType = this.resourceAccess.DirectGetIcon(caption.Id);
@@ -330,14 +334,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						Caption caption = this.module.ResourceManager.GetCaption(druid);
 
+						string text = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
 						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
 						{
-							string nd = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
-							captionText = string.Concat(caption.Name, ":<br/>", nd);
+							captionText = string.Concat(caption.Name, ":<br/>", text);
+						}
+						else if (string.IsNullOrEmpty(text))
+						{
+							captionType = caption.Name;
 						}
 						else
 						{
-							captionText = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
+							captionText = text;
 						}
 
 						if (!string.IsNullOrEmpty(caption.Icon))
