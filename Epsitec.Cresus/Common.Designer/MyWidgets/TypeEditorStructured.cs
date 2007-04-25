@@ -557,6 +557,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.FieldsOutput();
 			this.UpdateArray();
+			this.UpdateButtons();
 			this.OnContentChanged();
 		}
 
