@@ -352,7 +352,7 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			if (this.host != null)
 			{
-				this.host.StringCollectionChanged ();
+				this.host.NotifyStringCollectionChanged ();
 			}
 		}
 

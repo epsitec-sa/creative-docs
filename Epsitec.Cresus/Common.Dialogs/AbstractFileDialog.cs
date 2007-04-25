@@ -25,7 +25,7 @@ namespace Epsitec.Common.Dialogs
 			this.context = new CommandContext ();
 			this.dispatcher = new CommandDispatcher ();
 			
-			this.navigationController = new Controllers.FileNavigationController (this.context);
+			this.navigationController = new Controllers.FileNavigationController (this.context, this.dispatcher);
 			this.browserController = new Controllers.FolderBrowserController (this.navigationController);
 			
 			this.navigationController.ActiveDirectoryChanged += this.HandleNavigationControllerActiveDirectoryChanged;
@@ -393,10 +393,6 @@ namespace Epsitec.Common.Dialogs
 
 		private void CreateCommandDispatcher()
 		{
-			this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NavigatePrev, this.navigationController.NavigatePrev);
-			this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NavigateNext, this.navigationController.NavigateNext);
-			this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.ParentFolder, this.navigationController.NavigateParent);
-			
 			this.newState             = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NewFolder, this.NewDirectory);
 			this.renameState          = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Rename, this.RenameStarting);
 			this.deleteState          = this.RegisterCommand (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.Delete, this.FileDelete);
@@ -735,36 +731,12 @@ namespace Epsitec.Common.Dialogs
 			buttonParent.Dock = DockStyle.Right;
 
 			//	Groupe-combo composé des boutons "prev/next/v".
-			Widget combo = new Widget(group);
-			combo.PreferredWidth = 22+22+12;
+			Widget combo = this.navigationController.NavigationWidget;
+
+			combo.SetEmbedder (group);
 			combo.TabNavigationMode = TabNavigationMode.None;
 			combo.Dock = DockStyle.Right;
 			combo.Margins = new Margins(0, 10, 0, 0);
-
-			this.navigateCombo = new GlyphButton(combo);
-			this.navigateCombo.ButtonStyle = ButtonStyle.ComboItem;
-			this.navigateCombo.GlyphShape = GlyphShape.ArrowDown;
-			this.navigateCombo.GlyphSize = new Size(12, 20);
-			this.navigateCombo.ContentAlignment = ContentAlignment.MiddleRight;
-			this.navigateCombo.AutoFocus = false;
-			this.navigateCombo.TabNavigationMode = TabNavigationMode.None;
-			this.navigateCombo.Anchor = AnchorStyles.All;
-			this.navigateCombo.Clicked += new MessageEventHandler(this.HandleNavigateComboClicked);
-			ToolTip.Default.SetToolTip(this.navigateCombo, Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Tooltip.VisitedMenu);
-
-			IconButton buttonPrev = new IconButton(combo);
-			buttonPrev.PreferredHeight = group.PreferredHeight;
-			buttonPrev.AutoFocus = false;
-			buttonPrev.TabNavigationMode = TabNavigationMode.None;
-			buttonPrev.CommandObject = Res.Commands.Dialog.File.NavigatePrev;
-			buttonPrev.Dock = DockStyle.Left;
-
-			IconButton buttonNext = new IconButton(combo);
-			buttonNext.PreferredHeight = group.PreferredHeight;
-			buttonNext.AutoFocus = false;
-			buttonNext.TabNavigationMode = TabNavigationMode.None;
-			buttonNext.CommandObject = Res.Commands.Dialog.File.NavigateNext;
-			buttonNext.Dock = DockStyle.Left;
 		}
 
 		private void CreateToolbar()
@@ -2194,18 +2166,6 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
-		private void HandleNavigateComboClicked(object sender, MessageEventArgs e)
-		{
-			//	Clic sur le bouton pour le menu de navigation.
-			GlyphButton button = sender as GlyphButton;
-			if (button == null)
-				return;
-			VMenu menu = this.navigationController.CreateHistoryMenu ();
-			menu.Host = this.window;
-			TextFieldCombo.AdjustComboSize (button, menu, false);
-			menu.ShowAsComboList (button, Point.Zero, button);
-		}
-
 		private void HandleToolbarExtendClicked(object sender, MessageEventArgs e)
 		{
 			this.toolbar.Visibility = !this.toolbar.Visibility;
@@ -2339,7 +2299,6 @@ namespace Epsitec.Common.Dialogs
 
 		private GlyphButton					toolbarExtend;
 		private HToolBar					toolbar;
-		private GlyphButton					navigateCombo;
 		private Scrollable					favorites;
 		private Epsitec.Common.UI.ItemTable	table;
 		private HSlider						slider;

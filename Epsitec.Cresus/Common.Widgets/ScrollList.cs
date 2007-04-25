@@ -720,7 +720,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		#region IStringCollectionHost Members
-		public void StringCollectionChanged()
+		public void NotifyStringCollectionChanged()
 		{
 			if ( this.items.Count == 0 )
 			{

@@ -11,11 +11,14 @@ namespace Epsitec.Common.Dialogs.Controllers
 {
 	public class FileNavigationController
 	{
-		public FileNavigationController(CommandContext context)
+		public FileNavigationController(CommandContext context, CommandDispatcher dispatcher)
 		{
 			this.context = context;
+			this.dispatcher = dispatcher;
 			this.visitedFolderItems = new List<FolderItem> ();
 			this.visitedIndex = -1;
+
+			this.RegisterCommands ();
 		}
 
 		
@@ -60,6 +63,67 @@ namespace Epsitec.Common.Dialogs.Controllers
 			}
 		}
 
+
+		public Widget NavigationWidget
+		{
+			get
+			{
+				if (this.navigator == null)
+				{
+					this.CreateUserInterface ();
+				}
+
+				return this.navigator;
+			}
+		}
+
+		private void CreateUserInterface()
+		{
+			this.navigator = new Widget ();
+			this.navigator.PreferredWidth = 22+22+12;
+			this.navigator.TabNavigationMode = TabNavigationMode.None;
+
+			this.navigateCombo = new GlyphButton (this.navigator);
+			this.navigateCombo.ButtonStyle = ButtonStyle.ComboItem;
+			this.navigateCombo.GlyphShape = GlyphShape.ArrowDown;
+			this.navigateCombo.GlyphSize = new Drawing.Size (12, 20);
+			this.navigateCombo.ContentAlignment = Drawing.ContentAlignment.MiddleRight;
+			this.navigateCombo.AutoFocus = false;
+			this.navigateCombo.TabNavigationMode = TabNavigationMode.None;
+			this.navigateCombo.Anchor = AnchorStyles.All;
+			this.navigateCombo.Clicked += this.HandleNavigatorComboClicked;
+			
+			ToolTip.Default.SetToolTip (this.navigateCombo, Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Tooltip.VisitedMenu);
+
+			IconButton buttonPrev = new IconButton (this.navigator);
+			buttonPrev.AutoFocus = false;
+			buttonPrev.TabNavigationMode = TabNavigationMode.None;
+			buttonPrev.CommandObject = Res.Commands.Dialog.File.NavigatePrev;
+			buttonPrev.Dock = DockStyle.Left;
+
+			IconButton buttonNext = new IconButton (this.navigator);
+			buttonNext.AutoFocus = false;
+			buttonNext.TabNavigationMode = TabNavigationMode.None;
+			buttonNext.CommandObject = Res.Commands.Dialog.File.NavigateNext;
+			buttonNext.Dock = DockStyle.Left;
+			
+		}
+
+		private void HandleNavigatorComboClicked(object sender, MessageEventArgs e)
+		{
+			GlyphButton button = sender as GlyphButton;
+
+			if (button == null)
+			{
+				return;
+			}
+
+			VMenu menu = this.CreateHistoryMenu ();
+			
+			menu.Host = button.Window;
+			TextFieldCombo.AdjustComboSize (button, menu, false);
+			menu.ShowAsComboList (button, Drawing.Point.Zero, button);
+		}
 
 
 		public void NavigatePrev()
@@ -227,6 +291,13 @@ namespace Epsitec.Common.Dialogs.Controllers
 			this.UpdateCommandStates ();
 		}
 
+		private void RegisterCommands()
+		{
+			this.dispatcher.Register (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NavigatePrev, this.NavigatePrev);
+			this.dispatcher.Register (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.NavigateNext, this.NavigateNext);
+			this.dispatcher.Register (Epsitec.Common.Dialogs.Res.Commands.Dialog.File.ParentFolder, this.NavigateParent);
+		}
+
 		private void UpdateCommandStates()
 		{
 			FolderItem parent = FileManager.GetParentFolderItem (this.ActiveDirectory, FolderQueryMode.NoIcons);
@@ -269,11 +340,15 @@ namespace Epsitec.Common.Dialogs.Controllers
 		public event EventHandler<DependencyPropertyChangedEventArgs> ActiveDirectoryChanged;
 
 		private CommandContext					context;
+		private CommandDispatcher				dispatcher;
 
 		private FolderItem						activeDirectory;
 		private FolderItemIcon					activeSmallIcon;
 
 		private List<FolderItem>				visitedFolderItems;
 		private int								visitedIndex;
+
+		private Widget							navigator;
+		private GlyphButton						navigateCombo;
 	}
 }

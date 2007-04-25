@@ -1,16 +1,19 @@
 //	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Collections
 {
 	/// <summary>
-	/// L'interface IStringCollectionHost permet d'offrir le support pour
-	/// la classe StringCollection.
+	/// The <c>IStringCollectionHost</c> interface must be implemented by users
+	/// of the <see cref="StringCollection"/> class.
 	/// </summary>
 	public interface IStringCollectionHost
 	{
-		void StringCollectionChanged();
-		
-		StringCollection	Items	{ get; }
+		void NotifyStringCollectionChanged();
+
+		StringCollection Items
+		{
+			get;
+		}
 	}
 }
