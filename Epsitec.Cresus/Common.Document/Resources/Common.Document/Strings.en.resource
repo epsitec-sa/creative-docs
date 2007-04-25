@@ -1387,12 +1387,12 @@
   <data id="05C01">None</data>
   <data id="06C01">45°</data>
   <data id="07C01">30° and 60°</data>
-  <data id="04C01">Other angles</data>
+  <data id="04C01">Additional angles</data>
   <data id="03C01">Crop image</data>
   <data id="0VB01">Fit to objects</data>
   <data id="0UB01">Fit to page</data>
   <data id="00C01">Fit to selection</data>
-  <data id="09C01">Move using constraints</data>
+  <data id="09C01">Default geometric constraints</data>
   <data id="0OB01">There are text objects in this document! This prevents it from&lt;br/&gt;being saved as an icon. Convert them into curves first.</data>
   <data id="0O801">No image can be exported.</data>
   <data id="09D01">Custom</data>

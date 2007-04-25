@@ -55,7 +55,7 @@ namespace Epsitec.Common.OpenType
 					string face  = this.LocalePreferredFaceName ?? this.LocaleSimpleFaceName;
 					string style = this.LocalePreferredStyleName ?? this.LocaleSimpleStyleName;
 
-					face = FontIdentity.RepairBrokenFaceName (face);
+					face = FontIdentity.RepairBrokenFaceName (this.FullName, face);
 					
 					if (face != null)
 					{
@@ -97,6 +97,14 @@ namespace Epsitec.Common.OpenType
 				}
 				else
 				{
+					string full = this.LocaleFullName;
+
+					if ((localeName != null) &&
+						(full != null))
+					{
+						localeName = FontIdentity.RepairBrokenStyleName (full, localeName);
+					}
+
 					return localeName;
 				}
 			}
@@ -217,7 +225,7 @@ namespace Epsitec.Common.OpenType
 				string face  = this.InvariantPreferredFaceName  ?? this.MacintoshFaceName  ?? this.InvariantSimpleFaceName;
 				string style = this.InvariantPreferredStyleName ?? this.MacintoshStyleName ?? this.InvariantSimpleStyleName;
 
-				face = FontIdentity.RepairBrokenFaceName (face);
+				face = FontIdentity.RepairBrokenFaceName (this.FullName, face);
 
 				if (face != null)
 				{
@@ -250,23 +258,7 @@ namespace Epsitec.Common.OpenType
 				if ((name != null) &&
 					(full != null))
 				{
-					name = FontIdentity.RepairBrokenStyleName (this.FullName, name);
-
-					//	Special post-processing here for the poorly named Futura font
-					//	collection, where the "Condensed" is neither present in the style
-					//	name, nor in the face name, which leads to possible confusions if
-					//	we do not add it manually :
-					
-					string[] attributes = new string[] { "Condensed" };
-
-					foreach (string attribute in attributes)
-					{
-						if ((full.Contains (attribute)) &&
-							(!name.Contains (attribute)))
-						{
-							name = string.Concat (attribute, " ", name);
-						}
-					}
+					name = FontIdentity.RepairBrokenStyleName (full, name);
 				}
 
 				return name;
@@ -984,45 +976,198 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 
-		private static string RepairBrokenFaceName(string face)
+		private static string RepairBrokenFaceName(string full, string face)
 		{
-			//	Make all fonts of the "Futura * BT" collection belong to the "Futura"
+			//	Make all fonts of the "Futura * BT" collection belong to the "Futura BT"
 			//	font face. Some cheating is required, as some font instances have
 			//	incorrect names in their name table :
 
 			if (face != null)
 			{
-				if ((face.StartsWith ("Futura ")) &&
-					(face.EndsWith (" BT")))
+				if (face.StartsWith ("Futura"))
 				{
-					face = "Futura";
+					if (FontIdentity.ContainsWord (full, "BT"))
+					{
+						return face.Split (' ')[0];
+					}
 				}
+
+				string[] splitFull = full.Split (' ');
+				string[] suffixes =	new string[] 
+					{
+						"Black", "Bold", "Book", "Condensed", "Cond", "Demi", "Demibold", "Extra",
+						"Heavy", "Italic", "Light", "Medium", "Narrow", "Oblique", "Semibold",
+						"Display", "Caption", "Subhead"
+					};
+
+				if ((face.Contains ("Bk")) ||
+					(face.Contains ("Hv")) ||
+					(face.Contains ("Cn")) ||
+					(face.Contains ("Blk")) ||
+					(FontIdentity.ContainsAnySuffix (splitFull, suffixes)))
+				{
+					foreach (string suffix in suffixes)
+					{
+						int index = FontIdentity.FindWordIndex (splitFull, suffix);
+
+						if (index < 0)
+						{
+							continue;
+						}
+
+						splitFull[index] = "";
+					}
+
+					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+					foreach (string part in splitFull)
+					{
+						if (string.IsNullOrEmpty (part))
+						{
+							continue;
+						}
+
+						if (buffer.Length > 0)
+						{
+							buffer.Append (' ');
+						}
+
+						buffer.Append (part);
+					}
+
+					face = buffer.ToString ();
+				}
+
+				face = FontIdentity.RemoveFontFactorySuffix (face);
 			}
 
 			return face;
 		}
 
-		private static string RepairBrokenStyleName(string fullName, string style)
+		private static bool ContainsAnySuffix(string[] split, string[] suffixes)
+		{
+			for (int i = 1; i < split.Length; i++)
+			{
+				string item = split[i];
+				
+				foreach (string suffix in suffixes)
+				{
+					if (item == suffix)
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+		private static string RepairBrokenStyleName(string full, string style)
 		{
 			//	A few members of the "Futura" family are really badly broken
 			//	with respect to their naming. Fix these issues here. Erk.
 
-			if (fullName.Contains (" LtCn BT"))
+			if (full.Contains (" LtCn BT"))
 			{
 				if (!style.Contains ("Condensed Light"))
 				{
 					style = string.Concat ("Condensed Light ", style);
 				}
 			}
-			else if (fullName.Contains (" MdCn BT"))
+			else if (full.Contains (" MdCn BT"))
 			{
 				if (!style.Contains ("Condensed Medium"))
 				{
 					style = string.Concat ("Condensed Medium ", style);
 				}
 			}
+			else
+			{
+				string[] suffixes = new string[] { "Medium", "Book", "Demi", "Heavy", "Extra Black", "Black", "Narrow", "Condensed", "Cond" };
+				string[] split = full.Split (' ', '-');
+				string[] insert = new string[split.Length];
+
+				foreach (string suffix in suffixes)
+				{
+					int index = FontIdentity.FindWordIndex (split, suffix);
+
+					if (index >= 0)
+					{
+						if (FontIdentity.ContainsWord (style, suffix))
+						{
+							continue;
+						}
+
+						insert[index] = suffix;
+					}
+				}
+
+				foreach (string prefix in insert)
+				{
+					if (string.IsNullOrEmpty (prefix))
+					{
+						continue;
+					}
+
+					style = string.Concat (prefix, " ", style);
+				}
+			}
 
 			return style;
+		}
+
+		private static bool ContainsWord(string text, string search)
+		{
+			string[] split = text.Split (' ', '-');
+			
+			if (FontIdentity.FindWordIndex (split, search) > -1)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		private static int FindWordIndex(string[] text, string search)
+		{
+			for (int i = 0; i < text.Length; i++)
+			{
+				if (text[i] == search)
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+		private static string RemoveFontFactorySuffix(string face)
+		{
+			string[] knownSuffixes = new string[] { " BT", " FB", " ITC", " MS", " MT" };
+
+		again:
+			
+			foreach (string suffix in knownSuffixes)
+			{
+				if (face.EndsWith (suffix))
+				{
+					face = face.Substring (0, face.Length - suffix.Length);
+					goto again;
+				}
+				
+				int pos = face.IndexOf (suffix);
+
+				if ((pos > 0) &&
+					(face[pos+suffix.Length] == ' '))
+				{
+					face = string.Concat (face.Substring (0, pos), face.Substring (pos+suffix.Length));
+					goto again;
+				}
+			}
+
+			return face;
 		}
 
 
