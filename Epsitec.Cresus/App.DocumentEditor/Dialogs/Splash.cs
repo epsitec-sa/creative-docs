@@ -25,7 +25,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				double dx = 400;
 				double dy = 200;
 				Rectangle mw = this.globalSettings.MainWindowBounds;
-				Rectangle wrect = new Rectangle(mw.Center.X-dx/2, mw.Center.Y-dy/2, dx, dy);
+				Rectangle display = ScreenInfo.Find(mw.Center).Bounds;
+				
+				if ( !display.IsValid )
+				{
+					display = ScreenInfo.FitIntoWorkingArea(mw);
+				}
+				
+				Rectangle wrect = new Rectangle(display.Center.X-dx/2, display.Center.Y-dy/2, dx, dy);
 
 				this.window = new Window();
 				this.window.MakeFramelessWindow();
