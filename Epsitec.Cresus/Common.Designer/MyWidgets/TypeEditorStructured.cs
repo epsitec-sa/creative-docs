@@ -102,15 +102,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			//	Crée le tableau principal.
 			this.array = new StringArray(this);
-			this.array.Columns = 8;
+			this.array.Columns = 7;
 			this.array.SetColumnsRelativeWidth(0, 0.20);
-			this.array.SetColumnsRelativeWidth(1, 0.05);
+			this.array.SetColumnsRelativeWidth(1, 0.04);
 			this.array.SetColumnsRelativeWidth(2, 0.20);
-			this.array.SetColumnsRelativeWidth(3, 0.05);
+			this.array.SetColumnsRelativeWidth(3, 0.04);
 			this.array.SetColumnsRelativeWidth(4, 0.20);
-			this.array.SetColumnsRelativeWidth(5, 0.05);
-			this.array.SetColumnsRelativeWidth(6, 0.20);
-			this.array.SetColumnsRelativeWidth(7, 0.05);
+			this.array.SetColumnsRelativeWidth(5, 0.04);
+			this.array.SetColumnsRelativeWidth(6, 0.15);
 			this.array.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(1, ContentAlignment.MiddleCenter);
 			this.array.SetColumnAlignment(2, ContentAlignment.MiddleLeft);
@@ -118,7 +117,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.SetColumnAlignment(4, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(5, ContentAlignment.MiddleCenter);
 			this.array.SetColumnAlignment(6, ContentAlignment.MiddleLeft);
-			this.array.SetColumnAlignment(7, ContentAlignment.MiddleCenter);
 			this.array.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 			this.array.SetColumnBreakMode(2, TextBreakMode.Ellipsis | TextBreakMode.Split);
 			this.array.SetColumnBreakMode(4, TextBreakMode.Ellipsis | TextBreakMode.Split);
@@ -130,7 +128,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.SetDynamicToolTips(4, false);
 			this.array.SetDynamicToolTips(5, false);
 			this.array.SetDynamicToolTips(6, false);
-			this.array.SetDynamicToolTips(7, false);
 			this.array.LineHeight = TypeEditorStructured.arrayLineHeight;
 			this.array.Dock = DockStyle.StackBegin;
 			this.array.PreferredHeight = 200;
@@ -349,10 +346,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						}
 					}
 
-					string captionInc = "";
-					string iconInc = "";
-					captionInc = field.SourceFieldId;
-					//	TODO: ...
+					string captionInc = field.SourceFieldId;
 
 					this.array.SetLineString(0, first+i, name);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
@@ -374,9 +368,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					this.array.SetLineString(6, first+i, captionInc);
 					this.array.SetLineState(6, first+i, MyWidgets.StringList.CellState.Normal);
-
-					this.array.SetLineString(7, first+i, iconInc);
-					this.array.SetLineState(7, first+i, MyWidgets.StringList.CellState.Normal);
 				}
 				else
 				{
@@ -400,9 +391,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					this.array.SetLineString(6, first+i, "");
 					this.array.SetLineState(6, first+i, MyWidgets.StringList.CellState.Disabled);
-
-					this.array.SetLineString(7, first+i, "");
-					this.array.SetLineState(7, first+i, MyWidgets.StringList.CellState.Disabled);
 				}
 			}
 		}
@@ -701,7 +689,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			double w1 = this.array.GetColumnsAbsoluteWidth(0) + this.array.GetColumnsAbsoluteWidth(1);
 			double w2 = this.array.GetColumnsAbsoluteWidth(2) + this.array.GetColumnsAbsoluteWidth(3);
 			double w3 = this.array.GetColumnsAbsoluteWidth(4) + this.array.GetColumnsAbsoluteWidth(5);
-			double w4 = this.array.GetColumnsAbsoluteWidth(6) + this.array.GetColumnsAbsoluteWidth(7);
+			double w4 = this.array.GetColumnsAbsoluteWidth(6);
 
 			this.headerName.PreferredWidth = w1;
 			this.headerCaption.PreferredWidth = w2;
@@ -812,14 +800,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Une ligne a été double-cliquée.
 			int column = this.array.SelectedColumn;
 
-			if (column == 1 || column == 2)
+			if (column == 2 || column == 3)
 			{
 				this.ChangeType();
 			}
 
-			if (column == 3 || column == 4)
+			if (column == 4 || column == 5)
 			{
 				this.ChangeCaption();
+			}
+
+			if (column == 6)
+			{
+				this.ChangeInclusion();
 			}
 		}
 
