@@ -449,6 +449,47 @@ namespace Epsitec.Common.OpenType
 		}
 
 
+
+		public string DebugGetFullFontList()
+		{
+			List<string> lines = new List<string> ();
+
+			foreach (FontIdentity id in this)
+			{
+				Table_name name = id.OpenTypeTable_name;
+				Table_name.NameEncoding[] encodings = name.GetAvailableNameEncodings ();
+
+				lines.Add ("-----------------------------");
+				lines.AddRange (string.Format (
+					"{0,-32}Style={1} Weight={2} Count={3}\n" +
+					"                                Invariant={4} / {5}\n" +
+					"                                Invariant Preferred={6} / {7}\n" +
+					"                                Invariant Hash={8}\n" +
+					"                                Locale={9} / {10}\n" +
+					"                                Locale Preferred={11} / {12}\n" +
+					"                                UniqueFontId={13}, entries={14}",
+					id.FullName, id.FontStyle, id.FontWeight, id.FontStyleCount,
+					id.InvariantSimpleFaceName, id.InvariantSimpleStyleName,
+					id.InvariantPreferredFaceName, id.InvariantPreferredStyleName,
+					id.InvariantStyleHash,
+					id.LocaleSimpleFaceName, id.LocaleSimpleStyleName,
+					id.LocalePreferredFaceName, id.LocalePreferredStyleName,
+					id.UniqueFontId, encodings.Length).Split ('\n'));
+				lines.Add (">> " + id.FullName);
+				
+				for (int i = 0; i < encodings.Length; i++)
+				{
+					string unicode = encodings[i].Platform == PlatformId.Microsoft ? name.GetUnicodeName (encodings[i].Language, encodings[i].Name, encodings[i].Platform) : null;
+					string latin   = encodings[i].Platform == PlatformId.Macintosh ? name.GetLatinName (encodings[i].Language, encodings[i].Name, encodings[i].Platform) : null;
+
+					lines.Add (string.Format ("{0,-4} {1,-24} {2,-10} : {3}", encodings[i].Language, encodings[i].Name, encodings[i].Platform, (unicode ?? latin ?? "").Split ('\n')[0]));
+				}
+			}
+
+			return string.Join ("\r\n", lines.ToArray ());
+		}
+
+
 		#region IEnumerable Members
 		
 		public IEnumerator<FontIdentity> GetEnumerator()
