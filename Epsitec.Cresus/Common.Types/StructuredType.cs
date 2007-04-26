@@ -309,7 +309,9 @@ namespace Epsitec.Common.Types
 		
 		private void NotifyFieldInsertion(string name, StructuredTypeField field)
 		{
-			if (this.Class == StructuredTypeClass.View)
+			StructuredTypeClass typeClass = this.Class;
+
+			if (typeClass == StructuredTypeClass.View)
 			{
 				//	A structured type used to represent a view may only contain fields
 				//	using an inclusion relation with the same target (structured) type.
@@ -330,6 +332,35 @@ namespace Epsitec.Common.Types
 								throw new System.ArgumentException (string.Format ("View may not use mismatched fields ({0} and {1})", item.Id, field.Id));
 							}
 						}
+					}
+				}
+			}
+
+			if ((typeClass == StructuredTypeClass.Entity) ||
+				(typeClass == StructuredTypeClass.View))
+			{
+				if (! (bool) this.GetValue (StructuredType.DebugDisableChecksProperty))
+				{
+					//	Ensure that the field ID matches the field's caption ID. This is
+					//	a strict requirement for entities and views.
+
+					Caption caption = Support.Resources.DefaultManager.GetCaption (field.CaptionId);
+
+					if ((caption == null) ||
+						(string.IsNullOrEmpty (caption.Name)))
+					{
+						throw new System.ArgumentException (string.Format ("Invalid caption specified for field in {0} {1}", typeClass.ToString ().ToLower (), this.Name));
+					}
+
+					if ((!Support.RegexFactory.PascalCaseSymbol.IsMatch (caption.Name)) ||
+						((caption.Name.Length > 1) && (caption.Name == caption.Name.ToUpper ())))
+					{
+						throw new System.ArgumentException (string.Format ("Field name {0} invalid in {1} {2}", caption.Name, typeClass.ToString ().ToLower (), this.Name));
+					}
+
+					if (field.Id != field.CaptionId.ToString ())
+					{
+						throw new System.ArgumentException (string.Format ("Field {0} must specify {1} as ID in {2} {3}", caption.Name, field.CaptionId.ToString (), typeClass.ToString ().ToLower (), this.Name));
 					}
 				}
 			}
@@ -363,6 +394,7 @@ namespace Epsitec.Common.Types
 			return data;
 		}
 
+		public static readonly DependencyProperty DebugDisableChecksProperty = DependencyProperty.Register ("DebugDisableChecks", typeof (bool), typeof (StructuredType), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty FieldsProperty = DependencyProperty.RegisterReadOnly ("Fields", typeof (Collections.StructuredTypeFieldCollection), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetFieldsValue).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty ClassProperty = DependencyProperty.RegisterReadOnly ("Class", typeof (StructuredTypeClass), typeof (StructuredType), new DependencyPropertyMetadata (StructuredTypeClass.None).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty BaseTypeProperty = DependencyProperty.RegisterReadOnly ("BaseType", typeof (StructuredType), typeof (StructuredType), new DependencyPropertyMetadata ().MakeReadOnlySerializable ());

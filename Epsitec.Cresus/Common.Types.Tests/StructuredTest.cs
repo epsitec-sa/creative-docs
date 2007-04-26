@@ -367,6 +367,7 @@ namespace Epsitec.Common.Types
 		public void CheckStructuredTypeEx1()
 		{
 			StructuredType type = new StructuredType (StructuredTypeClass.Entity);
+			type.SetValue (StructuredType.DebugDisableChecksProperty, true);
 
 			type.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, Relation.Reference));
 		}
@@ -376,6 +377,7 @@ namespace Epsitec.Common.Types
 		public void CheckStructuredTypeEx2()
 		{
 			StructuredType type = new StructuredType (StructuredTypeClass.Entity);
+			type.SetValue (StructuredType.DebugDisableChecksProperty, true);
 			Support.Druid typeId = Support.Druid.Parse ("[123456780]");
 
 			TypeRosetta.RecordType (typeId, type);
@@ -391,6 +393,7 @@ namespace Epsitec.Common.Types
 		public void CheckStructuredTypeEx3()
 		{
 			StructuredType type = new StructuredType (StructuredTypeClass.View);
+			type.SetValue (StructuredType.DebugDisableChecksProperty, true);
 
 			type.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, Relation.None));
 		}
@@ -401,6 +404,8 @@ namespace Epsitec.Common.Types
 		{
 			StructuredType type = new StructuredType (StructuredTypeClass.Entity);
 			StructuredType view = new StructuredType (StructuredTypeClass.View);
+			type.SetValue (StructuredType.DebugDisableChecksProperty, true);
+			view.SetValue (StructuredType.DebugDisableChecksProperty, true);
 			
 			Support.Druid typeId1 = Support.Druid.Parse ("[123456781]");
 			Support.Druid typeId2 = Support.Druid.Parse ("[123456782]");
@@ -423,6 +428,8 @@ namespace Epsitec.Common.Types
 		{
 			StructuredType entity = new StructuredType (StructuredTypeClass.Entity);
 			StructuredType view   = new StructuredType (StructuredTypeClass.View);
+			entity.SetValue (StructuredType.DebugDisableChecksProperty, true);
+			view.SetValue (StructuredType.DebugDisableChecksProperty, true);
 			
 			Support.Druid typeId = Support.Druid.Parse ("[12345678A]");
 
@@ -443,6 +450,7 @@ namespace Epsitec.Common.Types
 		public void CheckStructuredTypeSerialization()
 		{
 			StructuredType type = new StructuredType (StructuredTypeClass.Entity);
+			type.SetValue (StructuredType.DebugDisableChecksProperty, true);
 			Support.Druid typeId = Support.Druid.Parse ("[12345678B]");
 
 			type.Caption.Name = "TestStruct";

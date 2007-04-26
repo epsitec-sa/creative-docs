@@ -19,6 +19,8 @@ namespace Epsitec.Common.Support
 		ResourceFullName,				//	"abc123#x.y3.z"
 		ResourceBundleName,				//	"abc"
 		ResourceFieldName,				//	"x.y3.z"
+
+		PascalCaseSymbol,				//	"AbcDef"
 		
 		InvariantDecimalNum,
 		LocalizedDecimalNum
@@ -46,6 +48,10 @@ namespace Epsitec.Common.Support
 			RegexFactory.r_full_name    = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*" + @"(\#([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*)*" + @"(\[[0-9]{1,4}\])?" + @"$", options);
 			RegexFactory.r_bundle_name  = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*$", options);
 			RegexFactory.r_field_name   = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*$", options);
+
+			RegexFactory.pascal_case_symbol = new Regex (@"^[A-Z][a-zA-Z0-9]*$", options);
+			
+			//	TODO: recalculer l'expression régulière en fonction de la culture
 			
 			//	L'expression régulière utilisée pour déterminer si un nombre est formaté correctement
 			//	devrait être recalculée chaque fois que la culture active change, mais on ne le fait
@@ -164,6 +170,7 @@ namespace Epsitec.Common.Support
 				case PredefinedRegex.ResourceFullName:		return RegexFactory.ResourceFullName;
 				case PredefinedRegex.ResourceBundleName:	return RegexFactory.ResourceBundleName;
 				case PredefinedRegex.ResourceFieldName:		return RegexFactory.ResourceFieldName;
+				case PredefinedRegex.PascalCaseSymbol:		return RegexFactory.PascalCaseSymbol;
 				case PredefinedRegex.InvariantDecimalNum:	return RegexFactory.InvariantDecimalNum;
 				case PredefinedRegex.LocalizedDecimalNum:	return RegexFactory.LocalizedDecimalNum;
 			}
@@ -193,6 +200,14 @@ namespace Epsitec.Common.Support
 			get
 			{
 				return RegexFactory.alpha_dot_name;
+			}
+		}
+
+		public static Regex PascalCaseSymbol
+		{
+			get
+			{
+				return RegexFactory.pascal_case_symbol;
 			}
 		}
 		
@@ -271,6 +286,9 @@ namespace Epsitec.Common.Support
 		private static Regex					r_full_name;
 		private static Regex					r_bundle_name;
 		private static Regex					r_field_name;
+		
+		private static Regex					pascal_case_symbol;
+
 		private static Regex					loc_decimal_num;
 		private static Regex					inv_decimal_num;
 	}
