@@ -461,6 +461,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateResourceType()
 		{
 			//	Met à jour le tableau en fonction du type des ressources.
+			this.fieldModule.Visibility = (this.resourceType != ResourceAccess.Type.Fields);
+
 			int columns;
 			if (this.resourceType == ResourceAccess.Type.Strings)
 			{
