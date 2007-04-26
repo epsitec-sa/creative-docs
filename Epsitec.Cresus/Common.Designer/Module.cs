@@ -124,6 +124,7 @@ namespace Epsitec.Common.Designer
 					return this.accessStrings;
 
 				case ResourceAccess.Type.Captions:
+				case ResourceAccess.Type.Fields:
 				case ResourceAccess.Type.Commands:
 				case ResourceAccess.Type.Types:
 				case ResourceAccess.Type.Values:

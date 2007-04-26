@@ -43,6 +43,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCaptions.Dock = DockStyle.Left;
 			this.buttonCaptions.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
+			this.buttonFields = new IconButtonMark(this);
+			this.buttonFields.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Fields);
+			this.buttonFields.Name = BundleType.Convert(ResourceAccess.Type.Fields);
+			this.buttonFields.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonFields.SiteMark = ButtonMarkDisposition.Below;
+			this.buttonFields.MarkDimension = 5;
+			this.buttonFields.PreferredWidth = 100;
+			this.buttonFields.MinHeight = 20+5;
+			this.buttonFields.AutoFocus = false;
+			this.buttonFields.Margins = new Margins(2, 0, 10, 0);
+			this.buttonFields.Dock = DockStyle.Left;
+			this.buttonFields.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
 			this.buttonCommands = new IconButtonMark(this);
 			this.buttonCommands.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Commands);
 			this.buttonCommands.Name = BundleType.Convert(ResourceAccess.Type.Commands);
@@ -141,6 +154,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			this.buttonStrings.ActiveState  = (this.currentType == ResourceAccess.Type.Strings ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonCaptions.ActiveState = (this.currentType == ResourceAccess.Type.Captions) ? ActiveState.Yes : ActiveState.No;
+			this.buttonFields.ActiveState   = (this.currentType == ResourceAccess.Type.Fields  ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonCommands.ActiveState = (this.currentType == ResourceAccess.Type.Commands) ? ActiveState.Yes : ActiveState.No;
 			this.buttonTypes.ActiveState    = (this.currentType == ResourceAccess.Type.Types   ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonValues.ActiveState   = (this.currentType == ResourceAccess.Type.Values  ) ? ActiveState.Yes : ActiveState.No;
@@ -196,6 +210,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButtonMark			buttonStrings;
 		protected IconButtonMark			buttonScripts;
 		protected IconButtonMark			buttonCaptions;
+		protected IconButtonMark			buttonFields;
 		protected IconButtonMark			buttonCommands;
 		protected IconButtonMark			buttonPanels;
 		protected IconButtonMark			buttonTypes;

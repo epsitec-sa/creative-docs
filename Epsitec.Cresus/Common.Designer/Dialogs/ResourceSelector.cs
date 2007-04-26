@@ -197,7 +197,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		public void AccessOpenList(Module baseModule, ResourceAccess.Type type, ResourceAccess.TypeType typeType, List<Druid> resources, List<Druid> exclude)
 		{
 			//	Début de l'accès 'bypass' aux ressources pour le dialogue.
-			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Commands || type == ResourceAccess.Type.Values);
+			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Fields || type == ResourceAccess.Type.Commands || type == ResourceAccess.Type.Values);
 
 			this.resourceType = type;
 			this.resourceTypeType = typeType;
@@ -218,7 +218,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Début de l'accès 'bypass' aux ressources pour le dialogue.
 			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
-			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Unknow || type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Commands || type == ResourceAccess.Type.Values || type == ResourceAccess.Type.Types || type == ResourceAccess.Type.Panels);
+			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Unknow || type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Fields || type == ResourceAccess.Type.Commands || type == ResourceAccess.Type.Values || type == ResourceAccess.Type.Types || type == ResourceAccess.Type.Panels);
 			System.Diagnostics.Debug.Assert(resource.Type != DruidType.ModuleRelative);
 
 			this.resourceTypeType = typeType;

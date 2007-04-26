@@ -40,6 +40,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Crée un Viewer d'un type donné.
 			if (type == ResourceAccess.Type.Strings)  return new Strings(module, context, access, mainWindow);
 			if (type == ResourceAccess.Type.Captions)  return new Captions(module, context, access, mainWindow);
+			if (type == ResourceAccess.Type.Fields)  return new Fields(module, context, access, mainWindow);
 			if (type == ResourceAccess.Type.Commands)  return new Commands(module, context, access, mainWindow);
 			if (type == ResourceAccess.Type.Types)  return new Types(module, context, access, mainWindow);
 			if (type == ResourceAccess.Type.Values)  return new Values(module, context, access, mainWindow);

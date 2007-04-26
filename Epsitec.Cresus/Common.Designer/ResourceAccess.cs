@@ -17,6 +17,7 @@ namespace Epsitec.Common.Designer
 			Unknow,
 			Strings,
 			Captions,
+			Fields,
 			Commands,
 			Types,
 			Values,
@@ -83,6 +84,7 @@ namespace Epsitec.Common.Designer
 
 			this.captionCounters = new Dictionary<Type, int>();
 			this.captionCounters[Type.Captions] = 0;
+			this.captionCounters[Type.Fields] = 0;
 			this.captionCounters[Type.Commands] = 0;
 			this.captionCounters[Type.Types] = 0;
 			this.captionCounters[Type.Values] = 0;
@@ -152,6 +154,9 @@ namespace Epsitec.Common.Designer
 
 				case Type.Captions:
 					return many ? Res.Strings.BundleType.Captions : Res.Strings.BundleType.Caption;
+
+				case Type.Fields:
+					return many ? Res.Strings.BundleType.Fields : Res.Strings.BundleType.Field;
 
 				case Type.Commands:
 					return many ? Res.Strings.BundleType.Commands : Res.Strings.BundleType.Command;
@@ -2286,6 +2291,7 @@ namespace Epsitec.Common.Designer
 					this.CreateFirstField(bundle, 1, ResourceAccess.GetFixFilter(Type.Commands)+Res.Strings.Viewers.Panels.New);
 					this.CreateFirstField(bundle, 2, ResourceAccess.GetFixFilter(Type.Types)+Res.Strings.Viewers.Panels.New);
 					this.CreateFirstField(bundle, 3, ResourceAccess.GetFixFilter(Type.Values)+Res.Strings.Viewers.Panels.New);
+					this.CreateFirstField(bundle, 4, ResourceAccess.GetFixFilter(Type.Fields)+Res.Strings.Viewers.Panels.New);
 				}
 				else
 				{
@@ -2745,11 +2751,13 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert(this.IsCaptionsType);
 
 			int countCap = 0;
+			int countFld = 0;
 			int countCmd = 0;
 			int countTyp = 0;
 			int countVal = 0;
 
 			string filterCap = ResourceAccess.GetFixFilter(Type.Captions);
+			string filterFld = ResourceAccess.GetFixFilter(Type.Fields);
 			string filterCmd = ResourceAccess.GetFixFilter(Type.Commands);
 			string filterTyp = ResourceAccess.GetFixFilter(Type.Types);
 			string filterVal = ResourceAccess.GetFixFilter(Type.Values);
@@ -2761,6 +2769,11 @@ namespace Epsitec.Common.Designer
 				if (name.StartsWith(filterCap))
 				{
 					countCap++;
+				}
+
+				if (name.StartsWith(filterFld))
+				{
+					countFld++;
 				}
 
 				if (name.StartsWith(filterCmd))
@@ -2780,6 +2793,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			this.captionCounters[Type.Captions] = countCap;
+			this.captionCounters[Type.Fields] = countFld;
 			this.captionCounters[Type.Commands] = countCmd;
 			this.captionCounters[Type.Types] = countTyp;
 			this.captionCounters[Type.Values] = countVal;
@@ -3045,7 +3059,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne true si on accède à des ressources de type Captions/Commands/Types/Values.
 			get
 			{
-				return (this.type == Type.Captions || this.type == Type.Commands || this.type == Type.Types || this.type == Type.Values);
+				return (this.type == Type.Captions || this.type == Type.Fields || this.type == Type.Commands || this.type == Type.Types || this.type == Type.Values);
 			}
 		}
 
@@ -3058,6 +3072,7 @@ namespace Epsitec.Common.Designer
 					return many ? "Strings" : "String";
 
 				case Type.Captions:
+				case Type.Fields:
 				case Type.Commands:
 				case Type.Types:
 				case Type.Values:
@@ -3153,6 +3168,12 @@ namespace Epsitec.Common.Designer
 				return Type.Captions;
 			}
 
+			filter = ResourceAccess.GetFixFilter(Type.Fields);
+			if (name.StartsWith(filter))
+			{
+				return Type.Fields;
+			}
+
 			filter = ResourceAccess.GetFixFilter(Type.Commands);
 			if (name.StartsWith(filter))
 			{
@@ -3202,6 +3223,9 @@ namespace Epsitec.Common.Designer
 			{
 				case Type.Captions:
 					return "Cap.";
+
+				case Type.Fields:
+					return "Fld.";
 
 				case Type.Commands:
 					return "Cmd.";
