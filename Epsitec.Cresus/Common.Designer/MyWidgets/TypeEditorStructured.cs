@@ -552,7 +552,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			AbstractType type = actualField.Type as AbstractType;
 			Druid druid = (type == null) ? Druid.Empty : type.Caption.Id;
 
-			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Types, ResourceAccess.TypeType.None, druid, null);
+			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Types, ResourceAccess.TypeType.None, druid, null, null);
 			if (druid.IsEmpty)
 			{
 				return;
@@ -590,8 +590,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			StructuredTypeField actualField = this.fields[sel];
 			Druid druid = actualField.CaptionId;
+			string includePrefix = string.Concat(this.AbstractType.Caption.Name, ".");
 
-			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Fields, ResourceAccess.TypeType.None, druid, null);
+			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Fields, ResourceAccess.TypeType.None, druid, null, includePrefix);
 			if (druid.IsEmpty)
 			{
 				return;

@@ -475,7 +475,7 @@ namespace Epsitec.Common.Designer
 			{
 				//	Choix d'une ressource type de type 'Types', mais uniquement parmi les TypeType.Structured.
 				Module module = this.mainWindow.CurrentModule;
-				Druid druid = this.mainWindow.DlgResourceSelector(module, ResourceAccess.Type.Types, ResourceAccess.TypeType.Structured, Druid.Empty, null);
+				Druid druid = this.mainWindow.DlgResourceSelector(module, ResourceAccess.Type.Types, ResourceAccess.TypeType.Structured, Druid.Empty, null, null);
 				if (druid.IsEmpty)  // annuler ?
 				{
 					return;
@@ -1057,11 +1057,11 @@ namespace Epsitec.Common.Designer
 
 
 		#region ByPassFilter
-		public void BypassFilterOpenAccess(Type type, TypeType typeType, List<Druid> exclude)
+		public void BypassFilterOpenAccess(Type type, TypeType typeType, List<Druid> exclude, string includePrefix)
 		{
 			//	Ouvre l'accès 'bypass'.
 			//	Ce type d'accès n'est possible que sur une ressource 'Caption' (Captions,
-			//	Commands, Types et Values) et 'Panel'.
+			//	Fields, Commands, Types et Values) et 'Panel'.
 			System.Diagnostics.Debug.Assert(this.bypassType == Type.Unknow);
 			this.bypassType = type;
 			System.Diagnostics.Debug.Assert(this.bypassType != Type.Unknow);
@@ -1075,6 +1075,15 @@ namespace Epsitec.Common.Designer
 					ResourceBundle.Field field = this.primaryBundle[i];
 					if (this.HasFixFilter(field.Name, true))
 					{
+						if (includePrefix != null)
+						{
+							string name = this.SubFilter(field.Name, true);
+							if (!name.StartsWith(includePrefix))
+							{
+								continue;
+							}
+						}
+
 						Druid fullDruid = new Druid(field.Id, this.primaryBundle.Module.Id);
 
 						if (exclude == null || !exclude.Contains(fullDruid))

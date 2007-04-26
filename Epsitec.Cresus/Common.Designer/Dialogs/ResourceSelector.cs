@@ -194,7 +194,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void AccessOpenList(Module baseModule, ResourceAccess.Type type, ResourceAccess.TypeType typeType, List<Druid> resources, List<Druid> exclude)
+		public void AccessOpenList(Module baseModule, ResourceAccess.Type type, ResourceAccess.TypeType typeType, List<Druid> resources, List<Druid> exclude, string includePrefix)
 		{
 			//	Début de l'accès 'bypass' aux ressources pour le dialogue.
 			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Fields || type == ResourceAccess.Type.Commands || type == ResourceAccess.Type.Values);
@@ -204,6 +204,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.resource = Druid.Empty;
 			this.resources = resources;
 			this.exclude = exclude;
+			this.includePrefix = includePrefix;
 
 			//	Cherche le module contenant le Druid de la ressource.
 			this.baseModule = baseModule;
@@ -211,10 +212,10 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.access = this.module.AccessCaptions;
 
-			this.access.BypassFilterOpenAccess(this.resourceType, this.resourceTypeType, this.exclude);
+			this.access.BypassFilterOpenAccess(this.resourceType, this.resourceTypeType, this.exclude, this.includePrefix);
 		}
 
-		public void AccessOpen(Module baseModule, ResourceAccess.Type type, ResourceAccess.TypeType typeType, Druid resource, List<Druid> exclude)
+		public void AccessOpen(Module baseModule, ResourceAccess.Type type, ResourceAccess.TypeType typeType, Druid resource, List<Druid> exclude, string includePrefix)
 		{
 			//	Début de l'accès 'bypass' aux ressources pour le dialogue.
 			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
@@ -225,6 +226,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.resource = resource;
 			this.resources = null;
 			this.exclude = exclude;
+			this.includePrefix = includePrefix;
 
 			//	Cherche le module contenant le Druid de la ressource.
 			this.baseModule = baseModule;
@@ -255,7 +257,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.resourceType = type;
 			}
 
-			this.access.BypassFilterOpenAccess(this.resourceType, this.resourceTypeType, this.exclude);
+			this.access.BypassFilterOpenAccess(this.resourceType, this.resourceTypeType, this.exclude, this.includePrefix);
 		}
 
 		protected void AccessChange(Module module)
@@ -274,7 +276,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.access = this.module.AccessCaptions;
 			}
 
-			this.access.BypassFilterOpenAccess(this.resourceType, this.resourceTypeType, this.exclude);
+			this.access.BypassFilterOpenAccess(this.resourceType, this.resourceTypeType, this.exclude, this.includePrefix);
 		}
 
 		public List<Druid> AccessCloseList()
@@ -756,8 +758,15 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 
 			string label = TextLayout.ConvertToSimpleText(this.filterLabel.Text);
+			string fullLabel = label;
+			if (this.includePrefix != null && !fullLabel.StartsWith(this.includePrefix))
+			{
+				fullLabel = string.Concat(this.includePrefix, fullLabel);
+			}
+
 			string text  = TextLayout.ConvertToSimpleText(this.filterText.Text);
-			if (label != "" && text != "" && this.access.IsCorrectNewName(ref label, true))
+			
+			if (label != "" && text != "" && this.access.IsCorrectNewName(ref fullLabel, true))
 			{
 				if (this.array.AllowMultipleSelection)
 				{
@@ -765,7 +774,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 				else
 				{
-					this.resource = this.access.BypassFilterCreate(this.CurrentBundle, label, text);
+					this.resource = this.access.BypassFilterCreate(this.CurrentBundle, fullLabel, text);
 				}
 			}
 		}
@@ -852,6 +861,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected ResourceAccess.TypeType		resourceTypeType;
 		protected ResourceAccess				access;
 		protected List<Druid>					exclude;
+		protected string						includePrefix;
 		protected StaticText					title;
 		protected TextFieldCombo				fieldModule;
 		protected StaticText					header1;

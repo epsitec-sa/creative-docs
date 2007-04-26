@@ -1160,22 +1160,22 @@ namespace Epsitec.Common.Designer
 			return this.dlgBindingSelector.IsOk;
 		}
 
-		public Druid DlgResourceSelector(Module baseModule, ResourceAccess.Type type, ResourceAccess.TypeType typeType, Druid ressource, List<Druid> exclude)
+		public Druid DlgResourceSelector(Module baseModule, ResourceAccess.Type type, ResourceAccess.TypeType typeType, Druid ressource, List<Druid> exclude, string includePrefix)
 		{
 			//	Ouvre le dialogue pour choisir une ressource (sous forme d'un Druid)
 			//	d'un type à choix.
 			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
-			this.dlgResourceSelector.AccessOpen(baseModule, type, typeType, ressource, exclude);
+			this.dlgResourceSelector.AccessOpen(baseModule, type, typeType, ressource, exclude, includePrefix);
 			this.dlgResourceSelector.Show();  // choix dans le dialogue...
 			return this.dlgResourceSelector.AccessClose();
 		}
 
-		public List<Druid> DlgResourceSelector(Module baseModule, ResourceAccess.Type type, ResourceAccess.TypeType typeType, List<Druid> ressources, List<Druid> exclude)
+		public List<Druid> DlgResourceSelector(Module baseModule, ResourceAccess.Type type, ResourceAccess.TypeType typeType, List<Druid> ressources, List<Druid> exclude, string includePrefix)
 		{
 			//	Ouvre le dialogue pour choisir des ressources (sous forme d'une liste
 			//	de Druids) d'un type à choix.
 			//	Le type doit être connu.
-			this.dlgResourceSelector.AccessOpenList(baseModule, type, typeType, ressources, exclude);
+			this.dlgResourceSelector.AccessOpenList(baseModule, type, typeType, ressources, exclude, includePrefix);
 			this.dlgResourceSelector.Show();  // choix dans le dialogue...
 			return this.dlgResourceSelector.AccessCloseList();
 		}
