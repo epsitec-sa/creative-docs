@@ -3494,6 +3494,15 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.ActiveViewer.DirtyAllViews();
 		}
 
+		[Command ("DebugCopyFonts")]
+		void CommandCopyFonts(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			Clipboard.WriteData data;
+			data = new Clipboard.WriteData();
+			data.WriteText(Common.OpenType.FontCollection.Default.DebugGetFullFontList());
+			Clipboard.SetData(data);
+		}
+
 
 		public void QuitApplication()
 		{
@@ -3764,6 +3773,7 @@ namespace Epsitec.App.DocumentEditor
 			this.debugBboxGeomState = this.CreateCommandState("DebugBboxGeom");
 			this.debugBboxFullState = this.CreateCommandState("DebugBboxFull");
 			this.debugDirtyState = this.CreateCommandState("DebugDirty", KeyCode.FuncF12);
+			this.debugCopyFontsState = this.CreateCommandState("DebugCopyFonts", KeyCode.ModifierControl|KeyCode.ModifierShift|KeyCode.AlphaF);
 
 			this.pagePrevState = this.CreateCommandState("PagePrev", KeyCode.PageUp);
 			this.pageNextState = this.CreateCommandState("PageNext", KeyCode.PageDown);
@@ -5864,6 +5874,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					debugBboxGeomState;
 		protected CommandState					debugBboxFullState;
 		protected CommandState					debugDirtyState;
+		protected CommandState					debugCopyFontsState;
 		protected CommandState					pagePrevState;
 		protected CommandState					pageNextState;
 		protected CommandState					pageMenuState;
