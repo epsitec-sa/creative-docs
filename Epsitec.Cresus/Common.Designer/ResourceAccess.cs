@@ -2321,6 +2321,12 @@ namespace Epsitec.Common.Designer
 					Druid newDruid = this.CreateUniqueDruid();
 					this.CreateFirstField(this.primaryBundle, newDruid.Local, ResourceAccess.GetFixFilter(Type.Values)+Res.Strings.Viewers.Panels.New);
 				}
+
+				if (this.captionCounters[Type.Fields] == 0)
+				{
+					Druid newDruid = this.CreateUniqueDruid();
+					this.CreateFirstField(this.primaryBundle, newDruid.Local, ResourceAccess.GetFixFilter(Type.Fields)+Res.Strings.Viewers.Panels.New);
+				}
 			}
 		}
 
