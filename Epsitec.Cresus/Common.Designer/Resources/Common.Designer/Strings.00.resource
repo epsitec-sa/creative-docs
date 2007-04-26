@@ -67,7 +67,7 @@
   <data name="Viewers.Types.Editor.Decimal" id="0M7">Décimal</data>
   <data name="Viewers.Types.Editor.String" id="0N7">Chaîne</data>
   <data name="Viewers.Types.Editor.Enum" id="0O7">Enumération</data>
-  <data name="Viewers.Types.Editor.Structured" id="0P7">Structure de données</data>
+  <data name="Viewers.Types.Editor.Structured" id="0P7">Entité</data>
   <data name="Viewers.Types.Editor.Collection" id="038">Collection</data>
   <data name="Viewers.Types.Editor.Date" id="048">Date</data>
   <data name="Viewers.Types.Editor.Time" id="058">Heure</data>
@@ -109,7 +109,7 @@
   <data name="Viewers.Types.Structured.Type" id="0T7">Type</data>
   <data name="Viewers.Types.Structured.Inclusion" id="0V9">Inclusion</data>
   <data name="Viewers.Types.Structured.Caption" id="0V7">Légende</data>
-  <data name="Viewers.Types.Structured.NewName" id="008">Rubrique{0}</data>
+  <data name="Viewers.Types.Structured.NewName" id="008">Champ{0}</data>
   <data name="Viewers.Types.Controller.Title" id="0H7">Contrôleur</data>
   <data name="Viewers.Types.Binary.Mime" id="089">Mine</data>
   <data name="Viewers.Types.Summary.Min" id="0C8">Min</data>
@@ -224,8 +224,8 @@
   <data name="StringCollection.Prev" id="0H5" mod="1">Monter le texte</data>
   <data name="StringCollection.Next" id="0I5" mod="1">Descendre le texte</data>
   <data name="Panel.Content.Tooltip.ChangeDruid" id="0B9">Choix de la ressource associée</data>
-  <data name="Panel.Content.Tooltip.ChangeBinding" id="0C9">Choix de la rubrique à éditer</data>
-  <data name="Panel.Content.Tooltip.ChangeStructured" id="0D9">Choix de la structure de données liée</data>
+  <data name="Panel.Content.Tooltip.ChangeBinding" id="0C9">Choix du champ à éditer</data>
+  <data name="Panel.Content.Tooltip.ChangeStructured" id="0D9">Choix de l&amp;apos;entité liée</data>
   <data name="Dialog.Button.Close" id="0E3">Fermer</data>
   <data name="Dialog.Button.OK" id="0F3">D&amp;apos;accord</data>
   <data name="Dialog.Button.Cancel" id="0G3">Annuler</data>
@@ -252,7 +252,7 @@
   <data name="Dialog.Search.Check.Word" id="054">Mots entiers</data>
   <data name="Dialog.Search.Check.Who" id="064">Où rechercher :</data>
   <data name="Dialog.Search.Check.Label" id="074">Rechercher dans les noms</data>
-  <data name="Dialog.ResourceStructuredTypeField.Title" id="00A">Rubrique à inclure</data>
+  <data name="Dialog.ResourceStructuredTypeField.Title" id="00A">Champ à inclure</data>
   <data name="Dialog.ResourceStructuredTypeField.Button.OK" id="01A">Inclure</data>
   <data name="Dialog.Search.Check.PrimaryText" id="084">Rechercher dans les textes de référence</data>
   <data name="Dialog.Search.Check.SecondaryText" id="094">Rechercher dans les textes secondaires</data>
@@ -290,7 +290,7 @@
   <data name="Dialog.ResourceSelector.Button.Clear" id="0Q4">R</data>
   <data name="Dialog.ResourceSelector.Button.Use" id="0R4">Utiliser</data>
   <data name="Dialog.ResourceSelector.Button.Create" id="0S4">Créer</data>
-  <data name="Dialog.BindingSelector.Title" id="099">Choix d&amp;apos;une rubrique dans une structure de données</data>
+  <data name="Dialog.BindingSelector.Title" id="099">Choix d&amp;apos;un champ dans une entité</data>
   <data name="Dialog.BindingSelector.Button.Readonly" id="0S9">Lecture seule</data>
   <data name="Dialog.BindingSelector.Button.Inherit" id="0T9">Hérité</data>
   <data name="Dialog.BindingSelector.Button.Use" id="0A9">Utiliser</data>

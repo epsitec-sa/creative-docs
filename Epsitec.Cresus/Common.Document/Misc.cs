@@ -343,38 +343,6 @@ namespace Epsitec.Common.Document
 			return enableSymbols ? Misc.fontListWithSymbols : Misc.fontListWithoutSymbols;
 		}
 
-		static public void AddFontList(TextFieldCombo combo, bool enableSymbols)
-		{
-			//	Ajoute la liste des polices dans la liste d'un TextFieldCombo.
-			//	TODO: à supprimer prochainement...
-			if ( Misc.fontListCombo == null )
-			{
-				Misc.fontListCombo = new System.Collections.ArrayList();
-
-				foreach( string face in TextContext.GetAvailableFontFaces() )
-				{
-					bool symbol = false;
-					OpenType.FontIdentity[] ids = TextContext.GetAvailableFontIdentities(face);
-					foreach ( OpenType.FontIdentity id in ids )
-					{
-						if ( id.IsSymbolFont )
-						{
-							symbol = true;
-							break;
-						}
-					}
-
-					Misc.fontListCombo.Add((symbol ? "S" : "N") + face);
-				}
-			}
-
-			foreach ( string s in Misc.fontListCombo )
-			{
-				if ( !enableSymbols && s[0] == 'S' )  continue;
-				combo.Items.Add(s.Substring(1));
-			}
-		}
-
 		static public bool IsExistingFont(OpenType.FontName fontName)
 		{
 			//	Indique si une police existe, c'est-à-dire si elle est installée.
