@@ -591,7 +591,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			StructuredTypeField actualField = this.fields[sel];
 			Druid druid = actualField.CaptionId;
 
-			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Captions, ResourceAccess.TypeType.None, druid, null);
+			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Fields, ResourceAccess.TypeType.None, druid, null);
 			if (druid.IsEmpty)
 			{
 				return;
