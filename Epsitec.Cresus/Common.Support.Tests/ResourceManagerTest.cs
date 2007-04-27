@@ -32,9 +32,16 @@ namespace Epsitec.Common.Support
 			ResourceModuleInfo[] modules = Types.Collection.ToArray (this.manager.GetModuleInfos ("file"));
 			
 			Assert.AreEqual (6, modules.Length);
+			
 			Assert.AreEqual ("LowLevelTest", modules[3].Name);
+			Assert.AreEqual (ResourceModuleLayer.Customization1, modules[3].Layer);
+			
 			Assert.AreEqual ("OtherModule", modules[4].Name);
+			Assert.AreEqual (ResourceModuleLayer.User, modules[4].Layer);
+			
 			Assert.AreEqual ("Test", modules[5].Name);
+			Assert.AreEqual (ResourceModuleLayer.Application, modules[5].Layer);
+			
 			Assert.AreEqual (5, modules[3].Id);
 			Assert.AreEqual (31, modules[4].Id);
 			Assert.AreEqual (4, modules[5].Id);

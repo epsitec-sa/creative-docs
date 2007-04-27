@@ -46,7 +46,7 @@ namespace Epsitec.Common.Types
 		/// <param name="captionId">The field caption DRUID.</param>
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId)
 		{
-			this.id = id;
+			this.id = id ?? (captionId.IsValid ? captionId.ToString () : null);
 			this.type = type;
 			this.captionId = captionId;
 			this.rank = -1;
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Types
 		/// <param name="rank">The field rank when listed in a user interface.</param>
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank)
 		{
-			this.id = id;
+			this.id = id ?? (captionId.IsValid ? captionId.ToString () : null);
 			this.type = type;
 			this.captionId = captionId;
 			this.rank = rank;
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Types
 		/// <param name="relation">The relation.</param>
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, Relation relation)
 		{
-			this.id = id;
+			this.id = id ?? (captionId.IsValid ? captionId.ToString () : null);
 			this.captionId = captionId;
 			this.rank = rank;
 			this.relation = relation;
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Types
 		/// <param name="sourceFieldId">The source field id.</param>
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, Relation relation, string sourceFieldId)
 		{
-			this.id = id;
+			this.id = id ?? (captionId.IsValid ? captionId.ToString () : null);
 			this.captionId = captionId;
 			this.rank = rank;
 			this.relation = relation;
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Types
 		/// <param name="sourceFieldId">The source field id.</param>
 		private StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, int flags, string sourceFieldId)
 		{
-			this.id = id;
+			this.id = id ?? (captionId.IsValid ? captionId.ToString () : null);
 			this.captionId = captionId;
 			this.rank = rank;
 			this.relation = (Relation) (flags & 0x0f);

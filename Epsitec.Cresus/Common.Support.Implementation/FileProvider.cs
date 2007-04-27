@@ -86,12 +86,14 @@ namespace Epsitec.Common.Support.Implementation
 				if ((!string.IsNullOrEmpty (modulePath)) &&
 					(System.IO.Directory.Exists (modulePath)))
 				{
-					moduleId = FileProvider.GetModuleId (modulePath);
+					ResourceModuleInfo info = FileProvider.GetModuleId (modulePath);
+					
+					moduleId = info.Id;
 
 					if ((moduleId >= 0) &&
 						((module.Id < 0) || (module.Id == moduleId)))
 					{
-						module = new ResourceModuleInfo (moduleName, modulePath, moduleId);
+						module = info;
 
 						this.pathPrefix = string.Concat (modulePath, System.IO.Path.DirectorySeparatorChar);
 						this.module = module;
@@ -182,13 +184,13 @@ namespace Epsitec.Common.Support.Implementation
 
 				if (this.ValidateId (moduleName))
 				{
-					int moduleId = FileProvider.GetModuleId (file);
+					ResourceModuleInfo info = FileProvider.GetModuleId (file);
 					
-					if (moduleId >= 0)
+					if (info.Id >= 0)
 					{
-						if (modules.FindIndex (delegate (ResourceModuleInfo info) { return info.Id == moduleId; }) == -1)
+						if (modules.FindIndex (delegate (ResourceModuleInfo item) { return item.Id == info.Id; }) == -1)
 						{
-							modules.Add (new ResourceModuleInfo (moduleName, file, moduleId));
+							modules.Add (info);
 						}
 					}
 				}
@@ -470,16 +472,19 @@ namespace Epsitec.Common.Support.Implementation
 			}
 		}
 
-		private static int GetModuleId(string path)
+		private static ResourceModuleInfo GetModuleId(string path)
 		{
-			string fileName = System.IO.Path.Combine (path, "module.info");
+			string moduleName = System.IO.Path.GetFileName (path);
+			string fileName   = System.IO.Path.Combine (path, "module.info");
 
 			if (!System.IO.File.Exists (fileName))
 			{
-				return -1;
+				return ResourceModuleInfo.Empty;
 			}
 
-			int moduleId = -1;
+			int                 moduleId    = -1;
+			ResourceModuleLayer moduleLayer = ResourceModuleLayer.Undefined;
+
 			try
 			{
 				//	Load the "module.info" file from the resource sub-folder
@@ -493,12 +498,19 @@ namespace Epsitec.Common.Support.Implementation
 				if (root.Name == "ModuleInfo")
 				{
 					int idValue;
-					string idAttribute = root.GetAttribute ("id");
+					
+					string idAttribute    = root.GetAttribute ("id");
+					string layerAttribute = root.GetAttribute ("layer");
 
-					if ((string.IsNullOrEmpty (idAttribute) == false) &&
+					if ((!string.IsNullOrEmpty (idAttribute)) &&
 						(int.TryParse (idAttribute, NumberStyles.Integer, CultureInfo.InvariantCulture, out idValue)))
 					{
 						moduleId = idValue;
+					}
+
+					if (!string.IsNullOrEmpty (layerAttribute))
+					{
+						moduleLayer = ResourceModuleInfo.ConvertPrefixToLayer (layerAttribute);
 					}
 				}
 
@@ -516,7 +528,7 @@ namespace Epsitec.Common.Support.Implementation
 				System.Diagnostics.Debug.WriteLine (string.Format ("Path to module.info file for '{0}' is too long", path));
 			}
 
-			return moduleId;
+			return new ResourceModuleInfo (moduleName, path, moduleId, moduleLayer);
 		}
 
 		private static string				globalProbingPath;

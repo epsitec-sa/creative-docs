@@ -6,13 +6,13 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// The <c>ResourceModuleInfo</c> stores the name and the identifier of a
-	/// resource module.
+	/// The <c>ResourceModuleInfo</c> structure stores the name and the identifier
+	/// of a resource module.
 	/// </summary>
 	public struct ResourceModuleInfo : System.IEquatable<ResourceModuleInfo>
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="T:ResourceModuleInfo"/> structure.
+		/// Initializes a new instance of the <see cref="ResourceModuleInfo"/> structure.
 		/// </summary>
 		/// <param name="name">The name of the module.</param>
 		/// <param name="id">The id of the module.</param>
@@ -21,10 +21,11 @@ namespace Epsitec.Common.Support
 			this.name = string.IsNullOrEmpty (name) ? null : name;
 			this.path = null;
 			this.id = id+1;
+			this.layer = ResourceModuleLayer.Undefined;
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="T:ResourceModuleInfo"/> structure.
+		/// Initializes a new instance of the <see cref="ResourceModuleInfo"/> structure.
 		/// </summary>
 		/// <param name="name">The name of the module.</param>
 		/// <param name="path">The path to the module.</param>
@@ -34,10 +35,26 @@ namespace Epsitec.Common.Support
 			this.name = string.IsNullOrEmpty (name) ? null : name;
 			this.path = string.IsNullOrEmpty (path) ? null : path;
 			this.id = id+1;
+			this.layer = ResourceModuleLayer.Undefined;
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="T:ResourceModuleInfo"/> structure.
+		/// Initializes a new instance of the <see cref="ResourceModuleInfo"/> structure.
+		/// </summary>
+		/// <param name="name">The name of the module.</param>
+		/// <param name="path">The path to the module.</param>
+		/// <param name="id">The id of the module.</param>
+		/// <param name="layer">The application layer of the module.</param>
+		public ResourceModuleInfo(string name, string path, int id, ResourceModuleLayer layer)
+		{
+			this.name = string.IsNullOrEmpty (name) ? null : name;
+			this.path = string.IsNullOrEmpty (path) ? null : path;
+			this.id = id+1;
+			this.layer = layer;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ResourceModuleInfo"/> structure.
 		/// </summary>
 		/// <param name="name">The name of the module.</param>
 		public ResourceModuleInfo(string name)
@@ -45,10 +62,11 @@ namespace Epsitec.Common.Support
 			this.name = string.IsNullOrEmpty (name) ? null : name;
 			this.path = null;
 			this.id = 0;
+			this.layer = ResourceModuleLayer.Undefined;
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="T:ResourceModuleInfo"/> structure.
+		/// Initializes a new instance of the <see cref="ResourceModuleInfo"/> structure.
 		/// </summary>
 		/// <param name="id">The id of the module.</param>
 		public ResourceModuleInfo(int id)
@@ -56,6 +74,7 @@ namespace Epsitec.Common.Support
 			this.name = null;
 			this.path = null;
 			this.id = id+1;
+			this.layer = ResourceModuleLayer.Undefined;
 		}
 
 		/// <summary>
@@ -95,6 +114,21 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Gets the layer of the module.
+		/// </summary>
+		/// <value>The layer of the module.</value>
+		public ResourceModuleLayer Layer
+		{
+			get
+			{
+				return this.layer;
+			}
+		}
+
+
+		public static readonly ResourceModuleInfo Empty = new ResourceModuleInfo ();
+
+		/// <summary>
 		/// Returns the module id as a string representation.
 		/// </summary>
 		/// <returns>
@@ -132,6 +166,64 @@ namespace Epsitec.Common.Support
 			{
 				return new ResourceModuleInfo (module);
 			}
+		}
+
+		/// <summary>
+		/// Converts the layer to a string prefix (e.g. maps <c>Application</c>
+		/// to <c>"A"</c>).
+		/// </summary>
+		/// <param name="layer">The layer.</param>
+		/// <returns>The string prefix.</returns>
+		public static string ConvertLayerToPrefix(ResourceModuleLayer layer)
+		{
+			switch (layer)
+			{
+				case ResourceModuleLayer.Application:
+					return "A";
+				
+				case ResourceModuleLayer.Customization1:
+					return "C";
+				
+				case ResourceModuleLayer.Customization2:
+					return "D";
+				
+				case ResourceModuleLayer.Customization3:
+					return "E";
+				
+				case ResourceModuleLayer.User:
+					return "U";
+			}
+
+			throw new System.ArgumentOutOfRangeException ("layer");
+		}
+
+		/// <summary>
+		/// Converts the string prefix  to a layer (e.g. maps <c>"A"</c> to
+		/// <c>Application</c>).
+		/// </summary>
+		/// <param name="prefix">The string prefix.</param>
+		/// <returns>The layer.</returns>
+		public static ResourceModuleLayer ConvertPrefixToLayer(string prefix)
+		{
+			switch (prefix)
+			{
+				case "A":
+					return ResourceModuleLayer.Application;
+				
+				case "C":
+					return ResourceModuleLayer.Customization1;
+				
+				case "D":
+					return ResourceModuleLayer.Customization2;
+				
+				case "E":
+					return ResourceModuleLayer.Customization3;
+				
+				case "U":
+					return ResourceModuleLayer.User;
+			}
+
+			throw new System.ArgumentException ();
 		}
 
 		#region IEquatable<ResourceModuleInfo> Members
@@ -196,6 +288,7 @@ namespace Epsitec.Common.Support
 		private string							name;			//	null or name
 		private string							path;			//	module path or null
 		private int								id;				//	0 or module id+1
+		private ResourceModuleLayer				layer;			//	module layer
 		
 		#endregion
 	}

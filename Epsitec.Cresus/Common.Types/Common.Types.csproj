@@ -109,6 +109,7 @@
     <Compile Include="Internal\BindingHelper.cs" />
     <Compile Include="Relation.cs" />
     <Compile Include="Serialization\IDeserialization.cs" />
+    <Compile Include="Support\ResourceModuleLayer.cs" />
     <Compile Include="TypedObject.cs" />
     <Compile Include="DateStep.cs" />
     <Compile Include="DateTimeType.cs" />
