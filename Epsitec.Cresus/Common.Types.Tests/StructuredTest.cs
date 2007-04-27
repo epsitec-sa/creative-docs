@@ -516,25 +516,145 @@ namespace Epsitec.Common.Types
 			type.Fields["Xyz"] = fieldAbc;
 		}
 
+		[Test]
+		public void CheckStructuredTypeCreateEntities()
+		{
+			StructuredType e1;
+			StructuredType e2;
+			StructuredType e3;
+
+			this.CreateEntities (out e1, out e2, out e3);
+		}
 
 		[Test]
 		public void CheckStructuredTypeMerge1()
 		{
-			StructuredType e1 = new StructuredType (StructuredTypeClass.Entity, null);
-			StructuredType e2 = new StructuredType (StructuredTypeClass.Entity, null);
+			StructuredType e1;
+			StructuredType e2;
+			StructuredType e3;
 
-			e1.DefineCaption (this.manager.GetCaption (Support.Druid.Parse ("[400C]")));
-			e2.DefineCaption (this.manager.GetCaption (Support.Druid.Parse ("[400D]")));
+			this.CreateEntities (out e1, out e2, out e3);
+
+			StructuredType e12 = StructuredType.Merge (e1, e2);
+			StructuredType e21 = StructuredType.Merge (e2, e1);
+			StructuredType e13 = StructuredType.Merge (e1, e3);
+			StructuredType e31 = StructuredType.Merge (e3, e1);
+
+			Assert.AreEqual ("E2", e12.Name);	//	E1 merged with E2, caption of E2 wins
+			Assert.AreEqual ("E1", e21.Name);	//	E2 merged with E1, caption of E1 wins
+			Assert.AreEqual ("U1", e13.Name);	//	E1 merged with U1, U1 wins as it is of a higher layer
+			Assert.AreEqual ("U1", e31.Name);	//	U1 merged with E1, U1 wins as it is of a higher layer
+
+			Assert.AreEqual (Support.ResourceModuleLayer.Application, e12.Module.Layer);
+			Assert.AreEqual (Support.ResourceModuleLayer.Application, e21.Module.Layer);
+			Assert.AreEqual (Support.ResourceModuleLayer.Application, e13.Module.Layer);
+			Assert.AreEqual (Support.ResourceModuleLayer.Application, e31.Module.Layer);
+
+			Assert.AreEqual (StructuredTypeClass.Entity, e12.Class);
+			Assert.AreEqual (StructuredTypeClass.Entity, e21.Class);
+		}
+
+		[Test]
+		public void CheckStructuredTypeMerge2()
+		{
+			StructuredType e1;
+			StructuredType e2;
+			StructuredType e3;
+
+			this.CreateEntities (out e1, out e2, out e3);
+
+			StructuredType e12 = StructuredType.Merge (e1, e2);
+			StructuredType e21 = StructuredType.Merge (e2, e1);
+			StructuredType e13 = StructuredType.Merge (e1, e3);
+			StructuredType e31 = StructuredType.Merge (e3, e1);
+
+			string[] e12Fields = Types.Collection.ToArray (e12.GetFieldIds ());
+			string[] e21Fields = Types.Collection.ToArray (e21.GetFieldIds ());
+			string[] e13Fields = Types.Collection.ToArray (e13.GetFieldIds ());
+			string[] e31Fields = Types.Collection.ToArray (e31.GetFieldIds ());
+			
+			Assert.AreEqual (3, e12.Fields.Count);
+			Assert.AreEqual (3, e21.Fields.Count);
+
+			//	Verify field merge and rank assignment :
+			
+			Assert.AreEqual ("[400E]", e12Fields[0]);	//	E1.X
+			Assert.AreEqual ("[400F]", e12Fields[1]);	//	E1.Y
+			Assert.AreEqual ("[400G]", e12Fields[2]);	//	E2.Z
+			Assert.AreEqual (0, e12.Fields[e12Fields[0]].Rank);	//	E1.X, rank = 0
+			Assert.AreEqual (1, e12.Fields[e12Fields[1]].Rank);	//	E1.Y, rank = 1
+			Assert.AreEqual (2, e12.Fields[e12Fields[2]].Rank);	//	E2.Z, rank = 2
+
+			Assert.AreEqual ("[400G]", e21Fields[0]);	//	E2.Z
+			Assert.AreEqual ("[400E]", e21Fields[1]);	//	E1.X
+			Assert.AreEqual ("[400F]", e21Fields[2]);	//	E1.Y
+			Assert.AreEqual (0, e21.Fields[e21Fields[0]].Rank);	//	E2.Z, rank = 0
+			Assert.AreEqual (1, e21.Fields[e21Fields[1]].Rank);	//	E1.X, rank = 1
+			Assert.AreEqual (2, e21.Fields[e21Fields[2]].Rank);	//	E1.Y, rank = 2
+
+			Assert.AreEqual (4, e13.Fields.Count);
+			Assert.AreEqual (4, e31.Fields.Count);
+
+			Assert.AreEqual ("[400E]", e13Fields[0]);	//	E1.X
+			Assert.AreEqual ("[400F]", e13Fields[1]);	//	E1.Y
+			Assert.AreEqual ("[V002]", e13Fields[2]);	//	U1.V
+			Assert.AreEqual ("[V003]", e13Fields[3]);	//	U1.W
+
+			Assert.AreEqual ("[400E]", e31Fields[0]);	//	E1.X
+			Assert.AreEqual ("[400F]", e31Fields[1]);	//	E1.Y
+			Assert.AreEqual ("[V002]", e31Fields[2]);	//	U1.V
+			Assert.AreEqual ("[V003]", e31Fields[3]);	//	U1.W
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckStructuredTypeMergeEx1()
+		{
+			StructuredType e1;
+			StructuredType e2;
+			StructuredType e3;
+			
+			this.CreateEntities (out e1, out e2, out e3);
+
+			e1.SetValue (StructuredType.ClassProperty, StructuredTypeClass.View);
+
+			//	We cannot merge two entities of different classes; verify
+			//	that this raises the ArgumentException exception :
+			
+			StructuredType.Merge (e1, e2);
+		}
+
+		private void CreateEntities(out StructuredType e1, out StructuredType e2, out StructuredType e3)
+		{
+			//	Manually create 3 entities based on captions stored in the Test
+			//	and OtherModule modules :
+
+			e1 = new StructuredType (StructuredTypeClass.Entity, null);
+			e2 = new StructuredType (StructuredTypeClass.Entity, null);
+			e3 = new StructuredType (StructuredTypeClass.Entity, null);
+
+			e1.DefineCaption (this.manager.GetCaption (Support.Druid.Parse ("[400C]")));	//	from Test, Application layer
+			e2.DefineCaption (this.manager.GetCaption (Support.Druid.Parse ("[400D]")));	//	from Test, Application layer
+			e3.DefineCaption (this.manager.GetCaption (Support.Druid.Parse ("[V001]")));	//	from OtherModule, User layer
+
+			Assert.AreEqual (Support.ResourceModuleLayer.Application, e1.Module.Layer);
+			Assert.AreEqual (Support.ResourceModuleLayer.Application, e2.Module.Layer);
+			Assert.AreEqual (Support.ResourceModuleLayer.User, e3.Module.Layer);
 
 			e1.Fields.Add (new StructuredTypeField (null, StringType.Default, Support.Druid.Parse ("[400E]"), 0));
 			e1.Fields.Add (new StructuredTypeField (null, StringType.Default, Support.Druid.Parse ("[400F]"), 1));
-			e2.Fields.Add (new StructuredTypeField (null, StringType.Default, Support.Druid.Parse ("[400G]")));
+			e2.Fields.Add (new StructuredTypeField (null, StringType.Default, Support.Druid.Parse ("[400G]"), 0));
+			e3.Fields.Add (new StructuredTypeField (null, StringType.Default, Support.Druid.Parse ("[V002]"), 0));
+			e3.Fields.Add (new StructuredTypeField (null, StringType.Default, Support.Druid.Parse ("[V003]"), 1));
 
 			Assert.AreEqual ("E1", e1.Name);
 			Assert.AreEqual ("E2", e2.Name);
+			Assert.AreEqual ("U1", e3.Name);
 			Assert.AreEqual ("X", this.manager.GetCaption (e1.GetField ("[400E]").CaptionId).Name);
 			Assert.AreEqual ("Y", this.manager.GetCaption (e1.GetField ("[400F]").CaptionId).Name);
 			Assert.AreEqual ("Z", this.manager.GetCaption (e2.GetField ("[400G]").CaptionId).Name);
+			Assert.AreEqual ("V", this.manager.GetCaption (e3.GetField ("[V002]").CaptionId).Name);
+			Assert.AreEqual ("W", this.manager.GetCaption (e3.GetField ("[V003]").CaptionId).Name);
 		}
 
 

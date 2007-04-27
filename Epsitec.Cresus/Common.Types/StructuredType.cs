@@ -248,6 +248,11 @@ namespace Epsitec.Common.Types
 				merge.DefineCaption (Caption.Merge (a.Caption, b.Caption));
 			}
 
+			//	Make the merged structure type belong to the same bundle/module
+			//	as the lower layer source structured type :
+			
+			Support.ResourceManager.SetSourceBundle (merge, Support.ResourceManager.GetSourceBundle (a));
+
 			return merge;
 		}
 
