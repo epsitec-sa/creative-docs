@@ -114,6 +114,18 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether this instance is empty.
+		/// </summary>
+		/// <value><c>true</c> if this instance is empty; otherwise, <c>false</c>.</value>
+		public bool IsEmpty
+		{
+			get
+			{
+				return this.id == -1;
+			}
+		}
+
+		/// <summary>
 		/// Gets the layer of the module.
 		/// </summary>
 		/// <value>The layer of the module.</value>

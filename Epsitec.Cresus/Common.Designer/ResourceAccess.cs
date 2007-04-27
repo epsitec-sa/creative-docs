@@ -236,27 +236,38 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
-		protected static AbstractType TypeTypeCreate(TypeType type)
+		protected static AbstractType TypeTypeCreate(TypeType type, ResourceBundle bundle)
 		{
+			AbstractType abstractType = null;
+
 			switch (type)
 			{
-				case TypeType.Void:         return new VoidType();
-				case TypeType.Boolean:      return new BooleanType();
-				case TypeType.Integer:      return new IntegerType();
-				case TypeType.LongInteger:  return new LongIntegerType();
-				case TypeType.Double:       return new DoubleType();
-				case TypeType.Decimal:      return new DecimalType();
-				case TypeType.String:       return new StringType();
-				case TypeType.Enum:         return new EnumType();
-				case TypeType.Structured:   return new StructuredType(StructuredTypeClass.Entity, null);
-				case TypeType.Collection:   return new CollectionType();
-				case TypeType.Date:         return new DateType();
-				case TypeType.Time:         return new TimeType();
-				case TypeType.DateTime:     return new DateTimeType();
-				case TypeType.Binary:       return new BinaryType();
+				case TypeType.Void:         abstractType = new VoidType(); break;
+				case TypeType.Boolean:      abstractType = new BooleanType(); break;
+				case TypeType.Integer:      abstractType = new IntegerType(); break;
+				case TypeType.LongInteger:  abstractType = new LongIntegerType(); break;
+				case TypeType.Double:       abstractType = new DoubleType(); break;
+				case TypeType.Decimal:      abstractType = new DecimalType(); break;
+				case TypeType.String:       abstractType = new StringType(); break;
+				case TypeType.Enum:         abstractType = new EnumType(); break;
+				case TypeType.Structured:	abstractType = new StructuredType(StructuredTypeClass.Entity, null); break;
+				case TypeType.Collection:   abstractType = new CollectionType(); break;
+				case TypeType.Date:         abstractType = new DateType(); break;
+				case TypeType.Time:         abstractType = new TimeType(); break;
+				case TypeType.DateTime:     abstractType = new DateTimeType(); break;
+				case TypeType.Binary:       abstractType = new BinaryType(); break;
 			}
 
-			return null;
+			if (abstractType != null)
+			{
+				//	Associe le type avec le bundle dans lequel il sera stocké.
+				//	Cela est nécessaire pour certains types qui doivent savoir
+				//	de quel module ils proviennent.
+				Caption caption = abstractType.Caption;
+				ResourceManager.SetSourceBundle (caption, bundle);
+			}
+
+			return abstractType;
 		}
 
 		public static string TypeTypeToDisplay(TypeType type)
@@ -530,7 +541,7 @@ namespace Epsitec.Common.Designer
 
 							if (et == null)
 							{
-								type = ResourceAccess.TypeTypeCreate(this.lastTypeTypeCreatated);
+								type = ResourceAccess.TypeTypeCreate(this.lastTypeTypeCreatated, bundle);
 							}
 							else
 							{

@@ -1715,9 +1715,33 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the source bundle associated with an object.
+		/// </summary>
+		/// <param name="obj">The object.</param>
+		/// <returns>The source bundle or <c>null</c>.</returns>
 		public static ResourceBundle GetSourceBundle(DependencyObject obj)
 		{
 			return (ResourceBundle) obj.GetValue (ResourceManager.SourceBundleProperty);
+		}
+
+		/// <summary>
+		/// Gets the source module associated with an object.
+		/// </summary>
+		/// <param name="obj">The object.</param>
+		/// <returns>The source module or <c>ResourceModuleInfo.Empty</c>.</returns>
+		public static ResourceModuleInfo GetSourceModule(DependencyObject obj)
+		{
+			ResourceBundle bundle = ResourceManager.GetSourceBundle (obj);
+			
+			if (bundle == null)
+			{
+				return ResourceModuleInfo.Empty;
+			}
+			else
+			{
+				return bundle.Module;
+			}
 		}
 
 		#endregion
