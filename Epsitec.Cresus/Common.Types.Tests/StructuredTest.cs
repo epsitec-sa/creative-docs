@@ -6,8 +6,20 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	[TestFixture] public class StructuredTest
+	[TestFixture]
+	public class StructuredTest
 	{
+		[SetUp]
+		public void SetUp()
+		{
+			this.buffer = new System.Text.StringBuilder ();
+
+			this.manager = new Support.ResourceManager (@"S:\Epsitec.Cresus\Common.Types.Tests");
+			this.manager.DefineDefaultModuleName ("Test");
+			this.manager.ActivePrefix = "file";
+			this.manager.ActiveCulture = Support.Resources.FindCultureInfo ("en");
+		}
+		
 		[Test]
 		public void CheckStructuredData()
 		{
@@ -29,7 +41,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (10, data.GetValue ("A"));
 			Assert.AreEqual (20, data.GetValue ("B"));
 			Assert.AreEqual (UndefinedValue.Instance, data.GetValue ("X"));
-			
+
 			data.SetValue ("A", UndefinedValue.Instance);
 
 			Assert.AreEqual (1, Collection.Count (data.GetValueIds ()));
@@ -58,7 +70,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (UndefinedValue.Instance, data.GetValue ("B"));
 
 			Assert.AreEqual (-1, data.InternalGetValueCount ());
-			
+
 			data.SetValue ("A", 10);
 			data.SetValue ("B", 20);
 
@@ -66,7 +78,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (typeof (IntegerType), data.StructuredType.GetField ("A").Type.GetType ());
 			Assert.AreEqual (10, data.GetValue ("A"));
 			Assert.AreEqual (20, data.GetValue ("B"));
-			
+
 			this.buffer.Length = 0;
 
 			data.AttachListener ("A", this.HandleDataPropertyChanged);
@@ -77,7 +89,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (1, data.InternalGetValueCount ());
 			data.SetValue ("A", 10);
 			Assert.AreEqual (2, data.InternalGetValueCount ());
-			
+
 			Assert.AreEqual ("[A:10->15][A:15-><UndefinedValue>]", this.buffer.ToString ());
 
 			data.SetValue ("A", UndefinedValue.Instance);
@@ -90,7 +102,7 @@ namespace Epsitec.Common.Types
 		{
 			StructuredType type1 = new StructuredType ();
 			StructuredType type2 = new StructuredType ();
-			
+
 			StructuredData data1 = new StructuredData (type1);
 			StructuredData data2 = new StructuredData (type2);
 
@@ -99,17 +111,17 @@ namespace Epsitec.Common.Types
 
 			type1.Fields.Add (new StructuredTypeField ("A", type2, Support.Druid.Empty, 0, Relation.Reference));
 			type1.Fields.Add (new StructuredTypeField ("B", type2, Support.Druid.Empty, 1, Relation.Collection));
-			
+
 			type2.Fields.Add ("X", new IntegerType (0, 100));
 			type2.DefineIsNullable (true);
 
 			List<StructuredData> list = new List<StructuredData> ();
-			
+
 			Assert.AreEqual (UndefinedValue.Instance, data1.GetValue ("A"));
 			Assert.AreEqual (UndefinedValue.Instance, data1.GetValue ("B"));
-			Assert.AreEqual (UnknownValue.Instance,   data1.GetValue ("C"));
+			Assert.AreEqual (UnknownValue.Instance, data1.GetValue ("C"));
 			Assert.AreEqual (UndefinedValue.Instance, data2.GetValue ("X"));
-			Assert.AreEqual (UnknownValue.Instance,   data2.GetValue ("Y"));
+			Assert.AreEqual (UnknownValue.Instance, data2.GetValue ("Y"));
 
 			data1.SetValue ("A", data2);
 			data1.SetValue ("B", list);
@@ -119,29 +131,16 @@ namespace Epsitec.Common.Types
 			//	We can use an empty list of StructuredData (there is no possible
 			//	verification) or a list which contains a first item of the proper
 			//	structured type :
-			
+
 			Assert.IsTrue (TypeRosetta.IsValidValue (list, type1.GetField ("B")));
 			list.Add (data2);
 			Assert.IsTrue (TypeRosetta.IsValidValue (list, type1.GetField ("B")));
-			
+
 			//	...but we cannot use a list of StructuredData of the wrong type.
-			
+
 			list.Clear ();
 			list.Add (data1);
 			Assert.IsFalse (TypeRosetta.IsValidValue (list, type1.GetField ("B")));
-		}
-
-		private System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-
-		private void HandleDataPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			this.buffer.Append ("[");
-			this.buffer.Append (e.PropertyName);
-			this.buffer.Append (":");
-			this.buffer.Append (e.OldValue);
-			this.buffer.Append ("->");
-			this.buffer.Append (e.NewValue);
-			this.buffer.Append ("]");
 		}
 
 		[Test]
@@ -234,17 +233,17 @@ namespace Epsitec.Common.Types
 		{
 			StringType strType = new StringType ();
 			DateType dateType = new DateType ();
-			
+
 			strType.DefineSampleValue ("Abc");
 			dateType.DefineSampleValue (Date.Today);
-			
+
 			StructuredType rec1 = new StructuredType ();
 			StructuredType rec2 = new StructuredType ();
 			StructuredType rec3 = new StructuredType ();
 
 			rec1.Fields.Add ("Employee", rec2);
 			rec1.Fields.Add ("Comment", strType);
-			
+
 			rec2.Fields.Add ("FirstName", strType);
 			rec2.Fields.Add ("LastName", strType);
 			rec2.Fields.Add ("History", rec3);
@@ -257,18 +256,18 @@ namespace Epsitec.Common.Types
 			Assert.IsNotNull (StructuredTree.GetSampleValue (data, "Employee"));
 			Assert.AreEqual (typeof (StructuredData), StructuredTree.GetSampleValue (data, "Employee").GetType ());
 			Assert.AreEqual ("Abc", StructuredTree.GetSampleValue (data, "Comment"));
-			
+
 			Assert.IsNotNull (StructuredTree.GetSampleValue (data, "Employee.FirstName"));
 			Assert.IsNotNull (StructuredTree.GetSampleValue (data, "Employee.LastName"));
 			Assert.IsNotNull (StructuredTree.GetSampleValue (data, "Employee.History"));
-			
+
 			Assert.AreEqual ("Abc", StructuredTree.GetSampleValue (data, "Employee.FirstName"));
 			Assert.AreEqual ("Abc", StructuredTree.GetSampleValue (data, "Employee.LastName"));
 
 			Assert.AreEqual (Date.Today, StructuredTree.GetSampleValue (data, "Employee.History.HireDate"));
 			Assert.AreEqual (Date.Today, StructuredTree.GetSampleValue (data, "Employee.History.FireDate"));
 		}
-		
+
 		[Test]
 		public void CheckStructuredTreeGetValue()
 		{
@@ -285,7 +284,6 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("z", StructuredTree.GetValue (data, "Z"));
 		}
 
-		
 		[Test]
 		public void CheckStructuredTreeMisc()
 		{
@@ -330,7 +328,7 @@ namespace Epsitec.Common.Types
 			StructuredData record = new StructuredData (null);
 
 			Assert.AreEqual (0, Collection.Count (type.GetFieldIds ()));
-			
+
 			StructuredTest.Fill (type);
 
 			record = new StructuredData (type);
@@ -406,7 +404,7 @@ namespace Epsitec.Common.Types
 			StructuredType view = new StructuredType (StructuredTypeClass.View);
 			type.SetValue (StructuredType.DebugDisableChecksProperty, true);
 			view.SetValue (StructuredType.DebugDisableChecksProperty, true);
-			
+
 			Support.Druid typeId1 = Support.Druid.Parse ("[123456781]");
 			Support.Druid typeId2 = Support.Druid.Parse ("[123456782]");
 
@@ -422,7 +420,6 @@ namespace Epsitec.Common.Types
 			view.Fields.Add (new StructuredTypeField ("Name2", view, Support.Druid.Empty, 2, Relation.Inclusion, "Name"));
 		}
 
-		
 		[Test]
 		public void CheckStructuredTypeRelations()
 		{
@@ -430,13 +427,13 @@ namespace Epsitec.Common.Types
 			StructuredType view   = new StructuredType (StructuredTypeClass.View);
 			entity.SetValue (StructuredType.DebugDisableChecksProperty, true);
 			view.SetValue (StructuredType.DebugDisableChecksProperty, true);
-			
+
 			Support.Druid typeId = Support.Druid.Parse ("[12345678A]");
 
 			TypeRosetta.RecordType (typeId, entity);
 
 			entity.DefineCaptionId (typeId);
-			
+
 			entity.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, Relation.None));
 			entity.Fields.Add (new StructuredTypeField ("SelfRef", entity, Support.Druid.Empty, 1, Relation.Reference));
 			entity.Fields.Add (new StructuredTypeField ("SelfName", entity, Support.Druid.Empty, 2, Relation.Inclusion, "Name"));
@@ -496,13 +493,13 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Name", fields[1].Id);
 
 			string[] fieldIds = Collection.ToArray<string> (restoredType.GetFieldIds ());
-			
+
 			Assert.AreEqual ("Age", fieldIds[0]);
 			Assert.AreEqual ("Name", fieldIds[1]);
 
 			restoredType.Fields.Remove ("Age");
 			Assert.AreEqual (2, restoredType.Fields.Count);
-			
+
 			restoredType.Fields.Remove ("Xxx");
 			Assert.AreEqual (2, restoredType.Fields.Count);
 		}
@@ -514,10 +511,47 @@ namespace Epsitec.Common.Types
 			StructuredType type = new StructuredType ();
 			StructuredTypeField fieldAbc = new StructuredTypeField ("Abc", StringType.Default);
 			StructuredTypeField fieldXyz = new StructuredTypeField ("Xyz", StringType.Default);
-			
+
 			type.Fields.Add (fieldXyz);
 			type.Fields["Xyz"] = fieldAbc;
 		}
+
+
+		[Test]
+		public void CheckStructuredTypeMerge1()
+		{
+			StructuredType e1 = new StructuredType (StructuredTypeClass.Entity, null);
+			StructuredType e2 = new StructuredType (StructuredTypeClass.Entity, null);
+
+			e1.DefineCaption (this.manager.GetCaption (Support.Druid.Parse ("[400C]")));
+			e2.DefineCaption (this.manager.GetCaption (Support.Druid.Parse ("[400D]")));
+
+			e1.Fields.Add (new StructuredTypeField (null, StringType.Default, Support.Druid.Parse ("[400E]"), 0));
+			e1.Fields.Add (new StructuredTypeField (null, StringType.Default, Support.Druid.Parse ("[400F]"), 1));
+			e2.Fields.Add (new StructuredTypeField (null, StringType.Default, Support.Druid.Parse ("[400G]")));
+
+			Assert.AreEqual ("E1", e1.Name);
+			Assert.AreEqual ("E2", e2.Name);
+			Assert.AreEqual ("X", this.manager.GetCaption (e1.GetField ("[400E]").CaptionId).Name);
+			Assert.AreEqual ("Y", this.manager.GetCaption (e1.GetField ("[400F]").CaptionId).Name);
+			Assert.AreEqual ("Z", this.manager.GetCaption (e2.GetField ("[400G]").CaptionId).Name);
+		}
+
+
+
+		private void HandleDataPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			this.buffer.Append ("[");
+			this.buffer.Append (e.PropertyName);
+			this.buffer.Append (":");
+			this.buffer.Append (e.OldValue);
+			this.buffer.Append ("->");
+			this.buffer.Append (e.NewValue);
+			this.buffer.Append ("]");
+		}
+
+		private System.Text.StringBuilder buffer;
+		private Support.ResourceManager manager;
 
 		private static void Fill(StructuredType record)
 		{

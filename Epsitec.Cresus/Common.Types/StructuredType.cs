@@ -32,6 +32,8 @@ namespace Epsitec.Common.Types
 		public StructuredType(StructuredTypeClass @class)
 			: this ()
 		{
+			this.DefineName (null);
+			
 			if (@class != this.Class)
 			{
 				this.SetValue (StructuredType.ClassProperty, @class);
@@ -223,15 +225,30 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		/// <summary>
-		/// Merges this structured type with the other one. This structured
-		/// type will be updated.
+		/// Merges two structured types and creates a new one.
 		/// </summary>
-		/// <param name="other">The structured type to merge with.</param>
-		public void MergeWith(StructuredType other)
+		/// <param name="a">The first structured type.</param>
+		/// <param name="b">The second structured type.</param>
+		/// <returns>The merged structured type.</returns>
+		public static StructuredType Merge(StructuredType a, StructuredType b)
 		{
-			//	TODO: implement structured type merge
-
 			throw new System.NotImplementedException ();
+			
+			//	TODO: implement structured type merge; swap a and b if needed, based on
+			//	their layer depth (a should belong to the lower level layer)
+
+			StructuredType merge = new StructuredType ();
+
+			//	TODO: populate properties, fields, etc.
+
+			if (a.Module.Layer != b.Module.Layer)
+			{
+				System.Diagnostics.Debug.Assert (a.Module.Layer < b.Module.Layer);
+
+				merge.DefineCaption (Caption.Merge (a.Caption, b.Caption));
+			}
+
+			return merge;
 		}
 
 		/// <summary>

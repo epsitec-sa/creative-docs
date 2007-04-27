@@ -147,6 +147,26 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Gets the module where this type is defined.
+		/// </summary>
+		/// <value>The module where this type is defined or <c>ResourceModuleInfo.Empty</c>.</value>
+		public Support.ResourceModuleInfo Module
+		{
+			get
+			{
+				if (this.IsCaptionDefined)
+				{
+					return Support.ResourceManager.GetSourceModule (this.Caption);
+				}
+				else
+				{
+					return Support.ResourceModuleInfo.Empty;
+				}
+			}
+		}
+
+
+		/// <summary>
 		/// Defines the default controller used to represent data of this type.
 		/// </summary>
 		/// <param name="controller">The controller.</param>

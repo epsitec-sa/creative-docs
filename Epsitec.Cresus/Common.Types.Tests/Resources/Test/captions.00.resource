@@ -13,4 +13,9 @@
   <data id="09">&lt;s:data id="_0" f:Name="Third" f:Description="3rd choice" /&gt;</data>
   <data id="0A">&lt;s:data id="_0" f:Description="Borrowed Text" /&gt;</data>
   <data id="0B">&lt;s:data id="_0" f:Name="Default" f:Description="Default color palette" f:Labels="{Collection {Text 'Default palette'}}" /&gt;</data>
+  <data id="0C">&lt;s:data id="_0" f:Name="E1" f:Description="Entity Number 1" f:Labels="{Collection {Text 'Entity1'}}" /&gt;</data>
+  <data id="0D">&lt;s:data id="_0" f:Name="E2" f:Description="Entity Number 2" f:Labels="{Collection {Text 'Entity2'}}" /&gt;</data>
+  <data id="0E">&lt;s:data id="_0" f:Name="X" f:Labels="{Collection {Text 'Field X'}}" /&gt;</data>
+  <data id="0F">&lt;s:data id="_0" f:Name="Y" f:Labels="{Collection {Text 'Field Y'}}" /&gt;</data>
+  <data id="0G">&lt;s:data id="_0" f:Name="Z" f:Labels="{Collection {Text 'Field Z'}}" /&gt;</data>
 </bundle>

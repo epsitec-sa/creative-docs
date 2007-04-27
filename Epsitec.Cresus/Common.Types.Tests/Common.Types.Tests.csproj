@@ -151,6 +151,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\OtherModule\captions.00.resource" />
+    <None Include="Resources\OtherModule\module.info" />
+    <None Include="Resources\OtherModule\strings.00.resource" />
     <None Include="Resources\Test\captions.00.resource" />
     <None Include="Resources\Test\captions.fr.resource" />
     <None Include="Resources\Test\module.info" />
