@@ -475,7 +475,8 @@ namespace Epsitec.Common.OpenType
 					id.LocaleSimpleFaceName, id.LocaleSimpleStyleName,
 					id.LocalePreferredFaceName, id.LocalePreferredStyleName,
 					id.UniqueFontId, encodings.Length).Split ('\n'));
-				lines.Add (">> " + id.FullName);
+				
+				lines.Add (string.Concat (">>> ", id.FullName, "/", id.InvariantFaceName, "+", id.InvariantStyleName, "/", id.LocaleFaceName, "+", id.LocaleStyleName));
 				
 				for (int i = 0; i < encodings.Length; i++)
 				{
@@ -486,7 +487,7 @@ namespace Epsitec.Common.OpenType
 				}
 			}
 
-			return string.Join ("\r\n", lines.ToArray ());
+			return string.Join ("\n", lines.ToArray ());
 		}
 
 
