@@ -444,42 +444,49 @@ namespace Epsitec.Common.Dialogs
 
 			this.CreateCollectionView ();
 
-			this.table = new Epsitec.Common.UI.ItemTable (group);
+			this.table = AbstractFileDialog.CreateItemTable (this.enableMultipleSelection, this.filesCollectionView);
+			this.table.SetEmbedder (group);
+			
 			this.table.Dock = DockStyle.Fill;
 			this.table.TabIndex = 2;
 			this.table.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.table.SourceType = FileListItem.GetStructuredType ();
-			this.table.Items = this.filesCollectionView;
 			this.table.AutoFocus = true;
-			this.table.VerticalScrollMode = ItemTableScrollMode.ItemBased;
-			this.table.ItemPanel.ItemViewDefaultExpanded = true;
-			
-			this.SetItemViewDisposition (cellHeight, ItemPanelLayout.RowsOfTiles);
-			
-			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 72));
-			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 195));
-			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("info", 120, FileListItem.GetDescriptionPropertyComparer ()));
-			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("date", 96));
-			this.table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("size", 54));
-
-			this.table.Columns[0].SortDirection = ListSortDirection.None;
-//-			this.table.Columns[1].SortDirection = ListSortDirection.Ascending;
-//-			this.table.Columns[2].SortDirection = ListSortDirection.Ascending;
-			
-			this.table.Columns[4].ContentAlignment = ContentAlignment.MiddleRight;
-
-			this.table.ColumnHeader.SetColumnSort (1, Epsitec.Common.Types.ListSortDirection.Ascending);
-			this.table.ColumnHeader.SetColumnSort (2, Epsitec.Common.Types.ListSortDirection.Ascending);
-			this.table.ItemPanel.ItemSelectionMode = this.enableMultipleSelection ? ItemPanelSelectionMode.Multiple : ItemPanelSelectionMode.ZeroOrOne;
-			this.table.ItemPanel.SelectionBehavior = ItemPanelSelectionBehavior.ManualOne;
-
 			this.table.KeyboardFocusChanged += this.HandleKeyboardFocusChanged;
 			this.table.ItemPanel.DoubleClicked += this.HandleTableDoubleClicked;
 			this.table.ItemPanel.SelectionChanged += this.HandleFilesItemTableSelectionChanged;
+			
+			this.SetItemViewDisposition (cellHeight, ItemPanelLayout.RowsOfTiles);
 
 			this.slider.Value = (decimal) Widget.DefaultFontHeight+4;
 
 			this.UpdateFileList ();
+		}
+
+		public static ItemTable CreateItemTable(bool enableMultipleSelection, ICollectionView collectionView)
+		{
+			ItemTable table = new Epsitec.Common.UI.ItemTable ();
+			
+			table.SourceType = FileListItem.GetStructuredType ();
+			table.Items = collectionView;
+			table.AutoFocus = true;
+			table.VerticalScrollMode = ItemTableScrollMode.ItemBased;
+			table.ItemPanel.ItemViewDefaultExpanded = true;
+
+			table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("icon", 72));
+			table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("name", 195));
+			table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("info", 120, FileListItem.GetDescriptionPropertyComparer ()));
+			table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("date", 96));
+			table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("size", 54));
+
+			table.Columns[0].SortDirection    = ListSortDirection.None;
+			table.Columns[4].ContentAlignment = ContentAlignment.MiddleRight;
+
+			table.ColumnHeader.SetColumnSort (1, Epsitec.Common.Types.ListSortDirection.Ascending);
+			table.ColumnHeader.SetColumnSort (2, Epsitec.Common.Types.ListSortDirection.Ascending);
+			table.ItemPanel.ItemSelectionMode = enableMultipleSelection ? ItemPanelSelectionMode.Multiple : ItemPanelSelectionMode.ZeroOrOne;
+			table.ItemPanel.SelectionBehavior = ItemPanelSelectionBehavior.ManualOne;
+
+			return table;
 		}
 
 		private void SetItemViewDisposition(double size)
@@ -2311,8 +2318,8 @@ namespace Epsitec.Common.Dialogs
 		private TextFieldEx					fieldRename;
 		private Button						buttonOk;
 		private Button						buttonCancel;
-		private Timer						timer;
 		private readonly object				exclusion = new object ();
+		private Timer						timer;
 		private volatile bool				refreshRequested;
 
 		private string						fileExtension;
