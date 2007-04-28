@@ -18,6 +18,7 @@ namespace Epsitec.Common.UI
 		/// Initializes a new instance of the <see cref="ItemView"/> class.
 		/// </summary>
 		/// <param name="item">The item.</param>
+		/// <param name="owner">The owner panel.</param>
 		/// <param name="defaultSize">Default size for this item view.</param>
 		public ItemView(object item, ItemPanel owner, Drawing.Size defaultSize)
 		{
@@ -301,7 +302,6 @@ namespace Epsitec.Common.UI
 		/// <summary>
 		/// Updates the size of this item view.
 		/// </summary>
-		/// <param name="panel">The panel.</param>
 		internal void UpdateSize()
 		{
 			IItemViewFactory factory = this.Factory;
@@ -323,7 +323,6 @@ namespace Epsitec.Common.UI
 		/// Defines the size of this item view.
 		/// </summary>
 		/// <param name="size">The size.</param>
-		/// <param name="panel">The containing <see cref="ItemPanel"/>.</param>
 		internal void DefineSize(Drawing.Size size)
 		{
 			this.size = size;

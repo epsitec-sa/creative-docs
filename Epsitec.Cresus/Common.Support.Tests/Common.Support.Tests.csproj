@@ -195,7 +195,7 @@
     <Compile Include="RegexFactoryTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Res.cs">
+    <Compile Include="TestRes.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ResourceBundleTest.cs">

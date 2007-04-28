@@ -188,7 +188,7 @@ namespace Epsitec.Common.Types
 
 		/// <summary>
 		/// Gets the ID of the source field if this field defines an inclusion
-		/// relation (see <see cref="Relation.Inclusion"/>).
+		/// relation (see <see cref="T:Relation.Inclusion"/>).
 		/// </summary>
 		/// <value>The source field id or <c>null</c>.</value>
 		public string							SourceFieldId

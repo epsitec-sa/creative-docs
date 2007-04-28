@@ -2336,10 +2336,6 @@ namespace Epsitec.Common.Dialogs
 		private int							favoritesFixes;
 		private int							favoritesSelected;
 
-		private List<FileListItem>			comboFolders;
-		private List<string>				comboTexts;
-		private int							comboSelected;
-
 		private readonly CommandDispatcher	dispatcher;
 		private readonly CommandContext		context;
 		private CommandState				newState;

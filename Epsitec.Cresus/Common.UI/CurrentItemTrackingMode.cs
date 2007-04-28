@@ -6,7 +6,7 @@ namespace Epsitec.Common.UI
 	/// <summary>
 	/// The <c>CurrentItemTrackingMode</c> enumeration defines how an
 	/// <see cref="ItemPanel"/> behaves when the current item of the
-	/// <see cref="ICollectionView"/> changes.
+	/// <see cref="Epsitec.Common.Types.ICollectionView"/> changes.
 	/// </summary>
 	public enum CurrentItemTrackingMode
 	{

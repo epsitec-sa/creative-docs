@@ -3,7 +3,7 @@
 
 namespace Epsitec.Common.Support
 {
-	public sealed class Res
+	public sealed class TestRes
 	{
 		public sealed class Strings
 		{

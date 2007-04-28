@@ -22,7 +22,6 @@ namespace Epsitec.Common.UI.ItemViewFactories
 		/// <summary>
 		/// Creates the user interface for the specified item view.
 		/// </summary>
-		/// <param name="panel">The panel.</param>
 		/// <param name="itemView">The item view.</param>
 		/// <returns>
 		/// The widget which represents the data stored in the item view.
@@ -125,7 +124,6 @@ namespace Epsitec.Common.UI.ItemViewFactories
 		/// Gets the preferred size of the user interface associated with the
 		/// specified item view.
 		/// </summary>
-		/// <param name="panel">The panel.</param>
 		/// <param name="itemView">The item view.</param>
 		/// <returns>The preferred size.</returns>
 		public Drawing.Size GetPreferredSize(ItemView itemView)
