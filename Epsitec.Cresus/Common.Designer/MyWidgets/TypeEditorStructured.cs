@@ -771,12 +771,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (column == 0 || column == 1)
 			{
-				this.ChangeType();
+				this.ChangeCaption();
 			}
 
 			if (column == 2 || column == 3)
 			{
-				this.ChangeCaption();
+				this.ChangeType();
 			}
 
 			if (column == 4 || column == 5)
