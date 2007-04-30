@@ -80,11 +80,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.header.Dock = DockStyle.StackBegin;
 			this.header.Margins = new Margins(0, 0, 4, 0);
 
-			this.headerName = new HeaderButton(this.header);
-			this.headerName.Text = Res.Strings.Viewers.Types.Structured.Name;
-			this.headerName.Style = HeaderButtonStyle.Top;
-			this.headerName.Dock = DockStyle.Left;
-
 			this.headerCaption = new HeaderButton(this.header);
 			this.headerCaption.Text = Res.Strings.Viewers.Types.Structured.Caption;
 			this.headerCaption.Style = HeaderButtonStyle.Top;
@@ -102,32 +97,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			//	Crée le tableau principal.
 			this.array = new StringArray(this);
-			this.array.Columns = 7;
-			this.array.SetColumnsRelativeWidth(0, 0.20);
-			this.array.SetColumnsRelativeWidth(1, 0.04);
-			this.array.SetColumnsRelativeWidth(2, 0.20);
-			this.array.SetColumnsRelativeWidth(3, 0.04);
-			this.array.SetColumnsRelativeWidth(4, 0.20);
-			this.array.SetColumnsRelativeWidth(5, 0.04);
-			this.array.SetColumnsRelativeWidth(6, 0.15);
+			this.array.Columns = 6;
+			this.array.SetColumnsRelativeWidth(0, 0.30);
+			this.array.SetColumnsRelativeWidth(1, 0.06);
+			this.array.SetColumnsRelativeWidth(2, 0.30);
+			this.array.SetColumnsRelativeWidth(3, 0.06);
+			this.array.SetColumnsRelativeWidth(4, 0.30);
+			this.array.SetColumnsRelativeWidth(5, 0.06);
 			this.array.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(1, ContentAlignment.MiddleCenter);
 			this.array.SetColumnAlignment(2, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(3, ContentAlignment.MiddleCenter);
 			this.array.SetColumnAlignment(4, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(5, ContentAlignment.MiddleCenter);
-			this.array.SetColumnAlignment(6, ContentAlignment.MiddleLeft);
-			this.array.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
+			this.array.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split);
 			this.array.SetColumnBreakMode(2, TextBreakMode.Ellipsis | TextBreakMode.Split);
 			this.array.SetColumnBreakMode(4, TextBreakMode.Ellipsis | TextBreakMode.Split);
-			this.array.SetColumnBreakMode(6, TextBreakMode.Ellipsis | TextBreakMode.Split);
-			this.array.SetDynamicToolTips(0, true);
+			this.array.SetDynamicToolTips(0, false);
 			this.array.SetDynamicToolTips(1, false);
 			this.array.SetDynamicToolTips(2, false);
 			this.array.SetDynamicToolTips(3, false);
 			this.array.SetDynamicToolTips(4, false);
 			this.array.SetDynamicToolTips(5, false);
-			this.array.SetDynamicToolTips(6, false);
 			this.array.LineHeight = TypeEditorStructured.arrayLineHeight;
 			this.array.Dock = DockStyle.StackBegin;
 			this.array.PreferredHeight = 200;
@@ -140,14 +131,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.footer = new Widget(this);
 			this.footer.Dock = DockStyle.StackBegin;
 			this.footer.Margins = new Margins(0, 0, 5, 0);
-
-			this.fieldName = new TextFieldEx(this.footer);
-			this.fieldName.Margins = new Margins(1, 0, 0, 0);
-			this.fieldName.Dock = DockStyle.Left;
-			this.fieldName.ButtonShowCondition = ShowCondition.WhenModified;
-			this.fieldName.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
-			this.fieldName.EditionAccepted += new EventHandler(this.HandleTextChanged);
-			this.fieldName.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 
 			this.buttonCaption = new Button(this.footer);
 			this.buttonCaption.CaptionId = Res.Captions.Editor.Structured.ChangeCaption.Id;
@@ -193,8 +176,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
 				this.array.SelectedRowDoubleClicked -= new EventHandler(this.HandleArraySelectedRowDoubleClicked);
 
-				this.fieldName.EditionAccepted -= new EventHandler(this.HandleTextChanged);
-				this.fieldName.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 				this.buttonCaption.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonType.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonInc.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
@@ -234,7 +215,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.FieldsInput();
 			this.UpdateArray();
 			this.UpdateButtons();
-			this.UpdateEdit();
 			this.ignoreChange = false;
 		}
 
@@ -272,7 +252,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.buttonRelationInc.ActiveState = ActiveState.No;
 			}
 
-			this.fieldName.Enable = (sel != -1);
 			this.buttonCaption.Enable = (sel != -1);
 			this.buttonType.Enable = (sel != -1);
 			this.buttonInc.Enable = (sel != -1 && st && field.Relation == Relation.Inclusion);
@@ -289,7 +268,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (first+i < this.fields.Count)
 				{
 					StructuredTypeField field = this.fields[first+i];
-					string name = field.Id;
 					string iconRelation = "";
 
 					string captionType = "";
@@ -356,26 +334,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					string captionInc = field.SourceFieldId;
 
-					this.array.SetLineString(0, first+i, name);
+					this.array.SetLineString(0, first+i, captionText);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(1, first+i, iconRelation);
+					this.array.SetLineString(1, first+i, iconText);
 					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(2, first+i, captionText);
+					this.array.SetLineString(2, first+i, captionType);
 					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(3, first+i, iconText);
+					this.array.SetLineString(3, first+i, iconType);
 					this.array.SetLineState(3, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(4, first+i, captionType);
+					this.array.SetLineString(4, first+i, captionInc);
 					this.array.SetLineState(4, first+i, MyWidgets.StringList.CellState.Normal);
 
-					this.array.SetLineString(5, first+i, iconType);
+					this.array.SetLineString(5, first+i, iconRelation);
 					this.array.SetLineState(5, first+i, MyWidgets.StringList.CellState.Normal);
-
-					this.array.SetLineString(6, first+i, captionInc);
-					this.array.SetLineState(6, first+i, MyWidgets.StringList.CellState.Normal);
 				}
 				else
 				{
@@ -396,24 +371,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					this.array.SetLineString(5, first+i, "");
 					this.array.SetLineState(5, first+i, MyWidgets.StringList.CellState.Disabled);
-
-					this.array.SetLineString(6, first+i, "");
-					this.array.SetLineState(6, first+i, MyWidgets.StringList.CellState.Disabled);
 				}
-			}
-		}
-
-		protected void UpdateEdit()
-		{
-			int sel = this.array.SelectedRow;
-			if (sel == -1 || sel >= this.fields.Count)
-			{
-				this.fieldName.Text = "";
-			}
-			else
-			{
-				StructuredTypeField field = this.fields[sel];
-				this.fieldName.Text = field.Id;
 			}
 		}
 
@@ -448,11 +406,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.ShowSelectedRow();
 
 			this.UpdateButtons();
-			this.UpdateEdit();
 
-			this.fieldName.SelectAll();
-			this.fieldName.Focus();
-			
 			this.OnContentChanged();
 		}
 
@@ -479,7 +433,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.ShowSelectedRow();
 
 			this.UpdateButtons();
-			this.UpdateEdit();
 			this.OnContentChanged();
 		}
 
@@ -503,7 +456,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.ShowSelectedRow();
 
 			this.UpdateButtons();
-			this.UpdateEdit();
 			this.OnContentChanged();
 		}
 
@@ -716,17 +668,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			double w1 = this.array.GetColumnsAbsoluteWidth(0) + this.array.GetColumnsAbsoluteWidth(1);
 			double w2 = this.array.GetColumnsAbsoluteWidth(2) + this.array.GetColumnsAbsoluteWidth(3);
 			double w3 = this.array.GetColumnsAbsoluteWidth(4) + this.array.GetColumnsAbsoluteWidth(5);
-			double w4 = this.array.GetColumnsAbsoluteWidth(6);
 
-			this.headerName.PreferredWidth = w1;
-			this.headerCaption.PreferredWidth = w2;
-			this.headerType.PreferredWidth = w3;
-			this.headerInc.PreferredWidth = w4+1;
+			this.headerCaption.PreferredWidth = w1;
+			this.headerType.PreferredWidth = w2;
+			this.headerInc.PreferredWidth = w3+1;
 
-			this.fieldName.PreferredWidth = w1-1;
-			this.buttonCaption.PreferredWidth = w2-1;
-			this.buttonType.PreferredWidth = w3;
-			this.buttonInc.PreferredWidth = w4+1;
+			this.buttonCaption.PreferredWidth = w1-1;
+			this.buttonType.PreferredWidth = w2;
+			this.buttonInc.PreferredWidth = w3+1;
 		}
 
 
@@ -813,13 +762,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	La ligne sélectionnée a changé.
 			this.UpdateButtons();
-			this.UpdateEdit();
-
-			if (this.array.SelectedColumn == 0)
-			{
-				this.fieldName.SelectAll();
-				this.fieldName.Focus();
-			}
 		}
 
 		private void HandleArraySelectedRowDoubleClicked(object sender)
@@ -827,81 +769,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Une ligne a été double-cliquée.
 			int column = this.array.SelectedColumn;
 
-			if (column == 2 || column == 3)
+			if (column == 0 || column == 1)
 			{
 				this.ChangeType();
 			}
 
-			if (column == 4 || column == 5)
+			if (column == 2 || column == 3)
 			{
 				this.ChangeCaption();
 			}
 
-			if (column == 6)
+			if (column == 4 || column == 5)
 			{
 				this.ChangeInclusion();
 			}
-		}
-
-		private void HandleTextChanged(object sender)
-		{
-			//	Un texte éditable a changé.
-			if (this.ignoreChange)
-			{
-				return;
-			}
-
-			int sel = this.array.SelectedRow;
-			if (sel == -1)
-			{
-				return;
-			}
-
-			StructuredTypeField actualField = this.fields[sel];
-			string name = this.fieldName.Text;
-
-			if (!Misc.IsValidLabel(ref name))
-			{
-				this.mainWindow.DialogError(Res.Strings.Error.Name.Invalid);
-
-				this.ignoreChange = true;
-				this.fieldName.Text = actualField.Id;
-				this.fieldName.SelectAll();
-				this.ignoreChange = false;
-
-				return;
-			}
-
-			if (this.IsExistingName(name, sel))
-			{
-				this.mainWindow.DialogError(Res.Strings.Error.Name.AlreadyExist);
-
-				this.ignoreChange = true;
-				this.fieldName.Text = actualField.Id;
-				this.fieldName.SelectAll();
-				this.ignoreChange = false;
-
-				return;
-			}
-
-			StructuredTypeField newField = new StructuredTypeField(name, actualField.Type, actualField.CaptionId, actualField.Rank, actualField.Relation, actualField.SourceFieldId);
-			this.fields[sel] = newField;
-
-			this.FieldsOutput();
-			this.UpdateArray();
-			this.OnContentChanged();
-
-			this.ignoreChange = true;
-			this.fieldName.Text = name;
-			this.fieldName.SelectAll();
-			this.ignoreChange = false;
-		}
-
-		private void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
-		{
-			//	Appelé lorsque la ligne éditable pour le label voit son focus changer.
-			TextFieldEx field = sender as TextFieldEx;
-			field.AcceptEdition();
 		}
 
 
@@ -918,14 +799,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected HSlider						slider;
 
 		protected Widget						header;
-		protected HeaderButton					headerName;
 		protected HeaderButton					headerCaption;
 		protected HeaderButton					headerType;
 		protected HeaderButton					headerInc;
 		protected MyWidgets.StringArray			array;
 
 		protected Widget						footer;
-		protected TextFieldEx					fieldName;
 		protected Button						buttonCaption;
 		protected Button						buttonType;
 		protected Button						buttonInc;
