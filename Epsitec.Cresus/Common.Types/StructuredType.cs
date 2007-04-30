@@ -366,7 +366,10 @@ namespace Epsitec.Common.Types
 					//	Ensure that the field ID matches the field's caption ID. This is
 					//	a strict requirement for entities and views.
 
-					Caption caption = Support.Resources.DefaultManager.GetCaption (field.CaptionId);
+					Support.ResourceBundle  bundle  = Support.ResourceManager.GetSourceBundle (this);
+					Support.ResourceManager manager = bundle == null ? Support.Resources.DefaultManager : bundle.ResourceManager;
+
+					Caption caption = manager.GetCaption (field.CaptionId);
 
 					if ((caption == null) ||
 						(string.IsNullOrEmpty (caption.Name)))
