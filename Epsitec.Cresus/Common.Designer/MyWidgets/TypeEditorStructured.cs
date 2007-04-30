@@ -433,21 +433,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			string text = this.GetNewName();
 			string name = string.Concat(this.AbstractType.Caption.Name, ".", text);
 
+			//	Crée un Caption de type Field (dont le nom commence par "Fld.").
 			this.resourceAccess.BypassFilterOpenAccess(ResourceAccess.Type.Fields, ResourceAccess.TypeType.None, null, null);
 			Druid druid = this.resourceAccess.BypassFilterCreate(this.resourceAccess.GetCultureBundle(null), name, text);
 			this.resourceAccess.BypassFilterCloseAccess();
 
-			//	TODO: ne fonctionne pas !!!
-#if true
 			StructuredTypeField newField = new StructuredTypeField(null, type, druid, 0);
-#endif
-#if false
-			Caption caption = this.module.ResourceManager.GetCaption(druid);
-			StructuredTypeField newField = new StructuredTypeField(null, type, caption.Id, 0);
-#endif
-#if false
-			StructuredTypeField newField = new StructuredTypeField(null, type, druid, 0);
-#endif
 			this.fields.Insert(sel+1, newField);
 
 			this.FieldsOutput();

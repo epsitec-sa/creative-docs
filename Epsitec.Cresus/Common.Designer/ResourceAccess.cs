@@ -2456,14 +2456,27 @@ namespace Epsitec.Common.Designer
 			//	Pour une Value, caption.Name ne contient que le dernier nom.
 			if (bundle == this.primaryBundle)
 			{
+				string name;
+
 				if (field.Name.StartsWith(ResourceAccess.GetFixFilter(Type.Values)))
 				{
-					caption.Name = ResourceAccess.LastName(field.Name);
+					name = ResourceAccess.LastName(field.Name);
 				}
 				else
 				{
-					caption.Name = ResourceAccess.SubAllFilter(field.Name);
+					name = ResourceAccess.SubAllFilter(field.Name);
 				}
+
+				if (this.type == Type.Types)
+				{
+					int i = name.IndexOf(".");
+					if (i != -1)  // commence par le nom de l'entité ?
+					{
+						name = name.Substring(i+1);
+					}
+				}
+
+				caption.Name = name;
 
 				if (this.type == Type.Types)
 				{
