@@ -2459,6 +2459,21 @@ namespace Epsitec.Common.Designer
 				{
 					caption.Name = ResourceAccess.SubAllFilter(field.Name);
 				}
+
+				if (this.type == Type.Types)
+				{
+					StructuredType st = this.CachedAbstractType as StructuredType;
+					if (st != null)
+					{
+						foreach (string id in st.GetFieldIds())
+						{
+							StructuredTypeField actualField = st.Fields[id];
+							//	TODO: modifier le nom...
+							StructuredTypeField newField = new StructuredTypeField(null, actualField.Type, actualField.CaptionId, actualField.Rank, actualField.Relation, actualField.SourceFieldId);
+							st.Fields[id] = newField;
+						}
+					}
+				}
 			}
 			else
 			{

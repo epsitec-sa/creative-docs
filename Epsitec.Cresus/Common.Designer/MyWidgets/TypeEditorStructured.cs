@@ -430,8 +430,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 				type = actualField.Type as AbstractType;
 			}
 
-			string name = this.GetNewName();
-			StructuredTypeField newField = new StructuredTypeField(name, type, Druid.Empty, 0);
+			string text = this.GetNewName();
+			string name = string.Concat(this.AbstractType.Caption.Name, ".", text);
+
+			this.resourceAccess.BypassFilterOpenAccess(ResourceAccess.Type.Fields, ResourceAccess.TypeType.None, null, null);
+			Druid druid = this.resourceAccess.BypassFilterCreate(this.resourceAccess.GetCultureBundle(null), name, text);
+			this.resourceAccess.BypassFilterCloseAccess();
+
+			//	TODO: ne fonctionne pas !!!
+#if true
+			StructuredTypeField newField = new StructuredTypeField(null, type, druid, 0);
+#endif
+#if false
+			Caption caption = this.module.ResourceManager.GetCaption(druid);
+			StructuredTypeField newField = new StructuredTypeField(null, type, caption.Id, 0);
+#endif
+#if false
+			StructuredTypeField newField = new StructuredTypeField(null, type, druid, 0);
+#endif
 			this.fields.Insert(sel+1, newField);
 
 			this.FieldsOutput();
@@ -519,18 +535,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					foreach (string id in type.GetFieldIds())
 					{
-						if (sourceField == null)
-						{
-							sourceField = id;
-							break;
-						}
+						sourceField = id;
+						break;
 					}
 				}
 
 				System.Diagnostics.Debug.Assert(sourceField != null);
 			}
 
-			StructuredTypeField newField = new StructuredTypeField(actualField.Id, actualField.Type, actualField.CaptionId, actualField.Rank, relation, sourceField);
+			StructuredTypeField newField = new StructuredTypeField(null, actualField.Type, actualField.CaptionId, actualField.Rank, relation, sourceField);
 			this.fields[sel] = newField;
 
 			this.FieldsOutput();
@@ -570,7 +583,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				sourceField = null;
 			}
 			System.Diagnostics.Debug.Assert(type != null);
-			StructuredTypeField newField = new StructuredTypeField(actualField.Id, type, actualField.CaptionId, actualField.Rank, relation, sourceField);
+			StructuredTypeField newField = new StructuredTypeField(null, type, actualField.CaptionId, actualField.Rank, relation, sourceField);
 			this.fields[sel] = newField;
 
 			this.FieldsOutput();
@@ -598,7 +611,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			StructuredTypeField newField = new StructuredTypeField(actualField.Id, actualField.Type, druid, actualField.Rank, actualField.Relation, actualField.SourceFieldId);
+			StructuredTypeField newField = new StructuredTypeField(null, actualField.Type, druid, actualField.Rank, actualField.Relation, actualField.SourceFieldId);
 			this.fields[sel] = newField;
 
 			this.FieldsOutput();
@@ -623,7 +636,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			StructuredTypeField newField = new StructuredTypeField(actualField.Id, actualField.Type, actualField.CaptionId, actualField.Rank, actualField.Relation, field);
+			StructuredTypeField newField = new StructuredTypeField(null, actualField.Type, actualField.CaptionId, actualField.Rank, actualField.Relation, field);
 			this.fields[sel] = newField;
 
 			this.FieldsOutput();
@@ -694,7 +707,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			for (int i=0; i<this.fields.Count; i++)
 			{
 				StructuredTypeField actualField = this.fields[i];
-				StructuredTypeField newField = new StructuredTypeField(actualField.Id, actualField.Type, actualField.CaptionId, i, actualField.Relation, actualField.SourceFieldId);
+				StructuredTypeField newField = new StructuredTypeField(null, actualField.Type, actualField.CaptionId, i, actualField.Relation, actualField.SourceFieldId);
 
 				type.Fields.Add(newField);
 			}
