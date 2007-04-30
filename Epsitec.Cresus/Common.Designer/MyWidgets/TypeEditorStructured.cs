@@ -656,8 +656,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			for (int i=0; i<this.fields.Count; i++)
 			{
 				StructuredTypeField field = this.fields[i];
+				Druid druid = field.CaptionId;
+				System.Diagnostics.Debug.Assert(druid.IsValid);
+				Caption caption = this.module.ResourceManager.GetCaption(druid);
+				System.Diagnostics.Debug.Assert(caption != null);
 
-				if (i != exclude && name == field.Id)
+				if (i != exclude && name == caption.Name)
 				{
 					return true;
 				}
