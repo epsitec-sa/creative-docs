@@ -367,7 +367,9 @@ namespace Epsitec.Common.Types
 					//	a strict requirement for entities and views.
 
 					Support.ResourceBundle  bundle  = Support.ResourceManager.GetSourceBundle (this.Caption);
-					Support.ResourceManager manager = bundle == null ? Support.Resources.DefaultManager : bundle.ResourceManager;
+					Support.ResourceManager manager = bundle == null
+						? (Serialization.Context.GetResourceManager (Storage.CurrentDeserializationContext) ?? Support.Resources.DefaultManager)
+						: bundle.ResourceManager;
 
 					Caption caption = manager.GetCaption (field.CaptionId);
 

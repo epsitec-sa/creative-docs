@@ -2484,6 +2484,11 @@ namespace Epsitec.Common.Designer
 					StructuredType st = this.CachedAbstractType as StructuredType;
 					if (st != null)
 					{
+						if (ResourceManager.GetSourceBundle (st.Caption) == null)
+						{
+							//	Ne devrait jamais être nécessaire !
+							ResourceManager.SetSourceBundle (st.Caption, this.accessBundle);
+						}
 						foreach (string id in st.GetFieldIds())
 						{
 							StructuredTypeField actualField = st.Fields[id];
