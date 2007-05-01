@@ -264,7 +264,7 @@ namespace Epsitec.Common.Designer
 				//	Cela est nécessaire pour certains types qui doivent savoir
 				//	de quel module ils proviennent.
 				Caption caption = abstractType.Caption;
-				ResourceManager.SetSourceBundle (caption, bundle);
+				ResourceManager.SetSourceBundle(caption, bundle);
 			}
 
 			return abstractType;
@@ -561,7 +561,7 @@ namespace Epsitec.Common.Designer
 						if (!string.IsNullOrEmpty(s))
 						{
 							caption.DeserializeFromString(s, this.resourceManager);
-							Support.ResourceManager.SetSourceBundle (caption, bundle);
+							ResourceManager.SetSourceBundle(caption, bundle);
 						}
 
 						this.AdjustCaptionName(bundle, newField, caption);
@@ -1225,7 +1225,7 @@ namespace Epsitec.Common.Designer
 				if (!string.IsNullOrEmpty(s))
 				{
 					caption.DeserializeFromString(s, this.resourceManager);
-					Support.ResourceManager.SetSourceBundle (caption, bundle);
+					ResourceManager.SetSourceBundle(caption, bundle);
 				}
 
 				text = ResourceAccess.GetCaptionNiceDescription(caption, availableHeight);
@@ -1268,6 +1268,7 @@ namespace Epsitec.Common.Designer
 
 						this.AdjustCaptionName(bundle, newField, caption);
 						newField.SetStringValue(caption.SerializeToString());
+						ResourceManager.SetSourceBundle(caption, bundle);
 					}
 				}
 
@@ -1885,7 +1886,7 @@ namespace Epsitec.Common.Designer
 						if (!string.IsNullOrEmpty(s))
 						{
 							caption.DeserializeFromString(s, this.resourceManager);
-							Support.ResourceManager.SetSourceBundle (caption, this.accessBundle);
+							ResourceManager.SetSourceBundle(caption, this.accessBundle);
 						}
 
 						if (ResourceAccess.IsEmptyCollection(caption.Labels) && string.IsNullOrEmpty(caption.Description))
@@ -2136,7 +2137,7 @@ namespace Epsitec.Common.Designer
 							if (!string.IsNullOrEmpty(s))
 							{
 								this.accessCaption.DeserializeFromString(s, this.resourceManager);
-								Support.ResourceManager.SetSourceBundle (this.accessCaption, this.accessBundle);
+								ResourceManager.SetSourceBundle(this.accessCaption, this.accessBundle);
 							}
 
 							this.AdjustCaptionName(this.accessBundle, this.accessField, this.accessCaption);
@@ -2419,7 +2420,7 @@ namespace Epsitec.Common.Designer
 						if (!string.IsNullOrEmpty(s))
 						{
 							caption.DeserializeFromString(s, this.resourceManager);
-							Support.ResourceManager.SetSourceBundle (caption, bundle);
+							ResourceManager.SetSourceBundle(caption, bundle);
 						}
 
 						string name = caption.Name;
@@ -2521,7 +2522,7 @@ namespace Epsitec.Common.Designer
 				if (!string.IsNullOrEmpty(s))
 				{
 					caption.DeserializeFromString(s, this.resourceManager);
-					Support.ResourceManager.SetSourceBundle (caption, bundle);
+					ResourceManager.SetSourceBundle(caption, bundle);
 				}
 
 				Widgets.Collections.ShortcutCollection collection = Shortcut.GetShortcuts(caption);
