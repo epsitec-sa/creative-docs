@@ -213,6 +213,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		protected string SelectedName
+		{
+			//	Retourne le nom de la ressource sélectionnée.
+			get
+			{
+				if (this.resourceSelected != -1)
+				{
+					ResourceAccess.Field field = this.resourceAccess.GetField(this.resourceSelected, null, ResourceAccess.FieldType.Name);
+					if (field != null)
+					{
+						return field.String;
+					}
+				}
+
+				return null;
+			}
+		}
+
 
 		#region Super widgets
 		protected void CreateStringLabeled(string label, Widget parent, out Widget group, out TextField field)

@@ -389,7 +389,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			string text = this.GetNewName();
-			string name = string.Concat(this.AbstractType.Caption.Name, ".", text);
+			//?string name = string.Concat(this.AbstractType.Caption.Name, ".", text);
+			string name = string.Concat(this.SelectedName, ".", text);
 
 			//	Crée un Caption de type Field (dont le nom commence par "Fld.").
 			this.resourceAccess.BypassFilterOpenAccess(ResourceAccess.Type.Fields, ResourceAccess.TypeType.None, null, null);

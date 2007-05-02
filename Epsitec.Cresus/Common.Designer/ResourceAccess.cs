@@ -1155,6 +1155,19 @@ namespace Epsitec.Common.Designer
 			return this.bypassDruids.IndexOf(druid);
 		}
 
+		public void BypassFilterRenameStructuredField(Druid druid, ResourceBundle bundle, string initialName, string newName)
+		{
+			//	Renomme le ResourceBundle.Field.Name d'un champ, lorsque le nom du StructuredType a changé.
+			//	"Fld.InitialName.Champ1" devient "Fld.NewName.Champ1".
+			string name = this.SubFilter(bundle[druid].Name, true);
+			if (name.StartsWith(initialName))
+			{
+				name = name.Substring(initialName.Length, name.Length-initialName.Length);
+				name = this.AddFilter(string.Concat(newName, name), true);
+				bundle[druid].SetName(name);
+			}
+		}
+
 		public void BypassFilterGetStrings(Druid druid, ResourceBundle bundle, double availableHeight, out string name, out string text, out bool isDefined)
 		{
 			//	Retourne une ressource de l'accès 'bypass'.
@@ -1828,6 +1841,11 @@ namespace Epsitec.Common.Designer
 		protected static AbstractType GetAbstractType(Caption caption)
 		{
 			//	Retourne le AbstractType correspondant à un caption.
+			if (caption == null)
+			{
+				return null;
+			}
+
 			AbstractType type = AbstractType.GetCachedType(caption);
 
 			if (type == null)
@@ -2468,9 +2486,9 @@ namespace Epsitec.Common.Designer
 					name = ResourceAccess.SubAllFilter(field.Name);
 				}
 
-				if (this.type == Type.Types)
+				if ((this.bypassType == Type.Unknow && this.type == Type.Fields) || this.bypassType == Type.Fields)
 				{
-					int i = name.IndexOf(".");
+					int i = name.LastIndexOf(".");
 					if (i != -1)  // commence par le nom de l'entité ?
 					{
 						name = name.Substring(i+1);
@@ -2479,6 +2497,18 @@ namespace Epsitec.Common.Designer
 
 				caption.Name = name;
 
+#if true
+				StructuredType st = this.CachedAbstractType as StructuredType;
+				if (st != null)
+				{
+					if (ResourceManager.GetSourceBundle(st.Caption) == null)
+					{
+						//	Ne devrait jamais être nécessaire !
+						ResourceManager.SetSourceBundle(st.Caption, this.accessBundle);
+					}
+				}
+#endif
+#if false
 				if (this.type == Type.Types)
 				{
 					StructuredType st = this.CachedAbstractType as StructuredType;
@@ -2492,12 +2522,17 @@ namespace Epsitec.Common.Designer
 						foreach (string id in st.GetFieldIds())
 						{
 							StructuredTypeField actualField = st.Fields[id];
+
+							ResourceBundle b = this.resourceManager.GetBundle(actualField.Id);
+							ResourceBundle.Field stf = b[actualField.Id];
+
 							//	TODO: modifier le nom...
 							StructuredTypeField newField = new StructuredTypeField(null, actualField.Type, actualField.CaptionId, actualField.Rank, actualField.Relation, actualField.SourceFieldId);
 							st.Fields[id] = newField;
 						}
 					}
 				}
+#endif
 			}
 			else
 			{

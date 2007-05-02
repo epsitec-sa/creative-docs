@@ -1116,9 +1116,37 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ignoreChange = false;
 
 			this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field(editedName));
+
+			ResourceAccess.Field field = this.access.GetField(sel, null, ResourceAccess.FieldType.AbstractType);
+			if (field != null)
+			{
+				Common.Types.AbstractType type = field.AbstractType;
+				ResourceAccess.TypeType typeType = ResourceAccess.AbstractTypeToTypeType(type);
+				if (typeType == ResourceAccess.TypeType.Structured)
+				{
+					this.RenameStructuredFields(initialName, editedName);
+				}
+			}
+			
 			this.access.AccessIndex = this.access.Sort(sel, false);
 			this.UpdateArray();
 			this.array.ShowSelectedRow();
+		}
+
+		protected void RenameStructuredFields(string initialName, string newName)
+		{
+			//	Renomme tous les ResourceBundle.Field.Name des champs d'un StructuredType.
+			ResourceAccess access = this.module.AccessCaptions;
+			access.BypassFilterOpenAccess(ResourceAccess.Type.Fields, ResourceAccess.TypeType.None, null, null);
+			ResourceBundle bundle = access.GetCultureBundle(null);
+			int count = access.BypassFilterCount;
+			for (int i=0; i<count; i++)
+			{
+				Druid druid = access.BypassFilterGetDruid(i);
+				System.Diagnostics.Debug.Assert(druid.IsValid);
+				access.BypassFilterRenameStructuredField(druid, bundle, initialName, newName);
+			}
+			access.BypassFilterCloseAccess();
 		}
 
 		protected void UpdateArrayField(int column, int row, string culture, ResourceAccess.FieldType fieldType)
