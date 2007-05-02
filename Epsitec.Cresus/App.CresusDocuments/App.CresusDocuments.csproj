@@ -87,6 +87,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
     <Content Include="Exemples originaux\normal.crmod" />
     <Compile Include="Application.cs">
       <SubType>Code</SubType>

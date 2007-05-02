@@ -20,7 +20,7 @@ namespace Epsitec.Common.Types
 		/// defaulting to <c>StructuredTypeClass.None</c>.
 		/// </summary>
 		public StructuredType()
-			: base ("Structure")
+			: base()			// modOK001 remplacé base ("Structure") pour qu'on n'ait pas ce nom qui prime sur la caption
 		{
 			this.fields = new Collections.HostedStructuredTypeFieldDictionary (this.NotifyFieldInsertion, this.NotifyFieldRemoval);
 		}
@@ -232,21 +232,47 @@ namespace Epsitec.Common.Types
 		/// <returns>The merged structured type.</returns>
 		public static StructuredType Merge(StructuredType a, StructuredType b)
 		{
-			throw new System.NotImplementedException ();
+			// modOK001 complété l'implémentation
+			// throw new System.NotImplementedException ();
 			
 			//	TODO: implement structured type merge; swap a and b if needed, based on
 			//	their layer depth (a should belong to the lower level layer)
 
-			StructuredType merge = new StructuredType ();
+			StructuredType c;
+			if (a.Module.Layer > b.Module.Layer)
+			{
+				c = a; // il doit y avoir plus élégant, non?
+				a = b;
+				b = c;
+			}
+
+			// est-ce qu'ici, par prudence, il faut tester si c'est null? Il y a une valeur par défaut (.None), mais au cas où ?
+			if (a.Class != b.Class)
+			{
+				throw new System.ArgumentException (string.Format ("Can not merge 2 StructuredType of different Class ( {0} and {1} )", a.Class, b.Class));
+			}
+
+			StructuredType merge = new StructuredType (b.Class);
 
 			//	TODO: populate properties, fields, etc.
+
+			foreach (string id in a.GetFieldIds ())
+			{
+				merge.fields.Add (a.GetField(id));
+			}
+
+			foreach (string id in b.GetFieldIds ())
+			{
+				merge.fields.Add (b.GetField (id));
+			}
 
 			if (a.Module.Layer != b.Module.Layer)
 			{
 				System.Diagnostics.Debug.Assert (a.Module.Layer < b.Module.Layer);
 
-				merge.DefineCaption (Caption.Merge (a.Caption, b.Caption));
 			}
+			merge.DefineCaption (Caption.Merge (a.Caption, b.Caption));
+
 
 			//	Make the merged structure type belong to the same bundle/module
 			//	as the lower layer source structured type :
