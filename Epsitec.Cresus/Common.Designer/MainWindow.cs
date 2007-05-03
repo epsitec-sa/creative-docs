@@ -482,13 +482,13 @@ namespace Epsitec.Common.Designer
 		[Command("Open")]
 		void CommandOpen(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.dlgOpen.SetResourcePrefix (this.resourceManagerPool.DefaultPrefix);
+			this.dlgOpen.SetResourcePrefix(this.resourceManagerPool.DefaultPrefix);
 			this.dlgOpen.Show();
 
 			ResourceModuleInfo item = this.dlgOpen.SelectedModule;
 			if (item.Name != null)
 			{
-				Module module = new Module (this, this.mode, this.resourceManagerPool.DefaultPrefix, item);
+				Module module = new Module(this, this.mode, this.resourceManagerPool.DefaultPrefix, item);
 
 				ModuleInfo mi = new ModuleInfo();
 				mi.Module = module;
@@ -742,7 +742,6 @@ namespace Epsitec.Common.Designer
 		{
 			ModuleInfo mi = this.CurrentModuleInfo;
 			mi.Module.LocatorPrev();
-			this.UpdateCommandLocator();
 		}
 
 		[Command("LocatorNext")]
@@ -750,10 +749,9 @@ namespace Epsitec.Common.Designer
 		{
 			ModuleInfo mi = this.CurrentModuleInfo;
 			mi.Module.LocatorNext();
-			this.UpdateCommandLocator();
 		}
 
-		protected void UpdateCommandLocator()
+		public void UpdateCommandLocator()
 		{
 			//	Met à jour les commandes du navigateur.
 			ModuleInfo mi = this.CurrentModuleInfo;
@@ -940,10 +938,9 @@ namespace Epsitec.Common.Designer
 			this.DialogSearchAdapt();
 
 			ModuleInfo mi = this.CurrentModuleInfo;
-			mi.Module.LocatorFix(mi.BundleType.CurrentType, Druid.Empty);
+			mi.Module.LocatorFix();
 
 			this.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
-			this.UpdateCommandLocator();
 		}
 
 
@@ -980,6 +977,17 @@ namespace Epsitec.Common.Designer
 			{
 				if ( this.currentModule < 0 )  return null;
 				return this.moduleInfoList[this.currentModule];
+			}
+		}
+
+		public Viewers.Abstract CurrentViewer
+		{
+			//	Retourne le Viewer courant.
+			get
+			{
+				ModuleInfo mi = this.CurrentModuleInfo;
+				if (mi == null)  return null;
+				return mi.Module.Modifier.ActiveViewer;
 			}
 		}
 

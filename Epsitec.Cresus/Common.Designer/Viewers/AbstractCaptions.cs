@@ -834,6 +834,8 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	La ligne sélectionnée a changé.
 			this.access.AccessIndex = this.array.SelectedRow;
+			this.module.LocatorFix();
+
 			this.UpdateTitle();
 			this.UpdateEdit();
 			this.UpdateColor();

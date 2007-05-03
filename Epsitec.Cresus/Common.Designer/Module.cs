@@ -244,14 +244,28 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert(this.bundleTypeWidget != null);
 			this.locators = new List<Viewers.Locator>();
 			this.locatorIndex = -1;
-
-			this.LocatorFix(this.bundleTypeWidget.CurrentType, Druid.Empty);  // fixe la première vue par défaut
+			this.locatorIgnore = false;
 		}
 
-		public void LocatorFix(ResourceAccess.Type viewerType, Druid resource)
+		public void LocatorFix()
 		{
 			//	Fixe une vue que l'on vient d'atteindre.
 			System.Diagnostics.Debug.Assert(this.locators != null);
+			if (this.locatorIgnore)
+			{
+				return;
+			}
+
+			ResourceAccess.Type viewerType = this.bundleTypeWidget.CurrentType;
+
+			Druid resource = Druid.Empty;
+			ResourceAccess access = this.GetAccess(viewerType);
+			int sel = access.AccessIndex;
+			if (sel != -1)
+			{
+				resource = access.AccessDruid(sel);
+			}
+
 			Viewers.Locator locator = new Viewers.Locator(viewerType, resource);
 
 			if (this.locatorIndex >= 0 && this.locatorIndex < this.locators.Count)
@@ -270,6 +284,8 @@ namespace Epsitec.Common.Designer
 
 			this.locators.Add(locator);
 			this.locatorIndex++;
+
+			this.mainWindow.UpdateCommandLocator();
 		}
 
 		public bool LocatorPrevIsEnable
@@ -297,7 +313,7 @@ namespace Epsitec.Common.Designer
 			//	Action de la commande "LocatorPrev".
 			System.Diagnostics.Debug.Assert(this.LocatorPrevIsEnable);
 			Viewers.Locator locator = this.locators[--this.locatorIndex];
-			this.bundleTypeWidget.CurrentType = locator.ViewerType;
+			this.LocatorGoto(locator);
 		}
 
 		public void LocatorNext()
@@ -305,7 +321,34 @@ namespace Epsitec.Common.Designer
 			//	Action de la commande "LocatorNext".
 			System.Diagnostics.Debug.Assert(this.LocatorNextIsEnable);
 			Viewers.Locator locator = this.locators[++this.locatorIndex];
+			this.LocatorGoto(locator);
+		}
+
+		protected void LocatorGoto(Viewers.Locator locator)
+		{
+			this.locatorIgnore = true;
 			this.bundleTypeWidget.CurrentType = locator.ViewerType;
+			this.locatorIgnore = false;
+
+			if (!locator.Resource.IsEmpty)
+			{
+				ResourceAccess access = this.GetAccess(locator.ViewerType);
+				int sel = access.AccessIndexOfDruid(locator.Resource);
+				if (sel != -1)
+				{
+					access.AccessIndex = sel;
+					Viewers.Abstract viewer = this.mainWindow.CurrentViewer;
+					if (viewer != null)
+					{
+						this.locatorIgnore = true;
+						viewer.Update();
+						this.locatorIgnore = false;
+					}
+				}
+			}
+
+			this.LocatorFix();
+			this.mainWindow.UpdateCommandLocator();
 		}
 		#endregion
 
@@ -365,5 +408,6 @@ namespace Epsitec.Common.Designer
 		protected ResourceAccess			accessScripts;
 		protected List<Viewers.Locator>		locators;
 		protected int						locatorIndex;
+		protected bool						locatorIgnore;
 	}
 }

@@ -871,7 +871,20 @@ namespace Epsitec.Common.Designer
 		public Druid AccessDruid(int index)
 		{
 			//	Retourne le druid d'un index donné.
-			return this.druidsIndex[index];
+			if (index >= 0 && index < this.druidsIndex.Count)
+			{
+				return this.druidsIndex[index];
+			}
+			else
+			{
+				return Druid.Empty;
+			}
+		}
+
+		public int AccessIndexOfDruid(Druid druid)
+		{
+			//	Retourne l'index d'un Druid.
+			return this.druidsIndex.IndexOf(druid);
 		}
 
 		public int AccessIndex
@@ -2204,7 +2217,14 @@ namespace Epsitec.Common.Designer
 			//	Retourne le nombre de cultures.
 			get
 			{
-				return this.bundles.Count;
+				if (this.bundles == null)
+				{
+					return 0;
+				}
+				else
+				{
+					return this.bundles.Count;
+				}
 			}
 		}
 

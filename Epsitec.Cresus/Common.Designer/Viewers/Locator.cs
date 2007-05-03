@@ -51,7 +51,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override string ToString()
 		{
-			return System.String.Format("{0}, {1}", this.viewerType, this.resource);
+			return System.String.Format("Type={0}, Resource={1}", this.viewerType, this.resource);
 		}
 		
 		public override bool Equals(object obj)
