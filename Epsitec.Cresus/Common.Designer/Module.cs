@@ -34,6 +34,9 @@ namespace Epsitec.Common.Designer
 				access.DirtyChanged += new EventHandler(this.HandleAccessDirtyChanged);
 			}
 
+			this.locators = new List<Viewers.Locator>();
+			this.locatorIndex = 0;
+
 			this.Load();
 		}
 
@@ -53,6 +56,18 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				return this.mainWindow;
+			}
+		}
+
+		public MyWidgets.BundleType BundleTypeWidget
+		{
+			set
+			{
+				this.bundleTypeWidget = value;
+			}
+			get
+			{
+				return this.bundleTypeWidget;
 			}
 		}
 
@@ -224,7 +239,46 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		void HandleAccessDirtyChanged(object sender)
+		#region Locator
+		public void LocatorAdd(ResourceAccess.Type viewerType, Druid resource)
+		{
+			Viewers.Locator locator = new Viewers.Locator(viewerType, resource);
+
+			if (this.locatorIndex > 0)
+			{
+				if (locator == this.locators[this.locatorIndex-1])
+				{
+					return;
+				}
+			}
+
+			this.locators.Insert(this.locatorIndex++, locator);
+
+			while (this.locators.Count > this.locatorIndex)
+			{
+				this.locators.RemoveAt(this.locators.Count-1);
+			}
+		}
+
+		public void LocatorPrev()
+		{
+			if (this.locators.Count == 0 || this.locatorIndex <= 0)
+			{
+				return;
+			}
+
+			Viewers.Locator locator = this.locators[--this.locatorIndex];
+
+			this.bundleTypeWidget.CurrentType = locator.ViewerType;
+		}
+
+		public void LocatorNext()
+		{
+		}
+		#endregion
+
+
+		private void HandleAccessDirtyChanged(object sender)
 		{
 			//	Appelé lorsque l'état IsDirty d'un accès a changé.
 			this.mainWindow.GetCommandState("Save").Enable = this.IsDirty;
@@ -268,6 +322,7 @@ namespace Epsitec.Common.Designer
 
 
 		protected MainWindow				mainWindow;
+		protected MyWidgets.BundleType		bundleTypeWidget;
 		protected DesignerMode				mode;
 		protected ResourceModuleInfo		moduleInfo;
 		protected Modifier					modifier;
@@ -276,5 +331,7 @@ namespace Epsitec.Common.Designer
 		protected ResourceAccess			accessCaptions;
 		protected ResourceAccess			accessPanels;
 		protected ResourceAccess			accessScripts;
+		protected List<Viewers.Locator>		locators;
+		protected int						locatorIndex;
 	}
 }

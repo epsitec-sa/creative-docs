@@ -102,14 +102,14 @@ namespace Epsitec.Common.Designer
 			Resources.DefaultManager.RefreshModuleInfos(this.resourceManagerPool.DefaultPrefix);
 			if (this.moduleInfoList.Count == 0)
 			{
-				foreach (ResourceModuleInfo item in Resources.DefaultManager.GetModuleInfos (this.resourceManagerPool.DefaultPrefix))
+				foreach (ResourceModuleInfo item in Resources.DefaultManager.GetModuleInfos(this.resourceManagerPool.DefaultPrefix))
 				{
-					Module module = new Module (this, this.mode, this.resourceManagerPool.DefaultPrefix, item);
+					Module module = new Module(this, this.mode, this.resourceManagerPool.DefaultPrefix, item);
 
-					ModuleInfo mi = new ModuleInfo ();
+					ModuleInfo mi = new ModuleInfo();
 					mi.Module = module;
-					this.moduleInfoList.Insert (++this.currentModule, mi);
-					this.CreateModuleLayout ();
+					this.moduleInfoList.Insert(++this.currentModule, mi);
+					this.CreateModuleLayout();
 
 					this.bookModules.ActivePage = mi.TabPage;
 				}
@@ -286,6 +286,7 @@ namespace Epsitec.Common.Designer
 			}
 			this.ribbonMain.Items.Add(new Ribbons.Access(this));
 			this.ribbonMain.Items.Add(new Ribbons.Character(this));
+			this.ribbonMain.Items.Add(new Ribbons.Locator(this));
 
 			//	Crée le ruban des opérations.
 			this.ribbonOper = new RibbonPage();
@@ -736,6 +737,20 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoCommand(e.Command.CommandId);
 		}
 
+		[Command("LocatorPrev")]
+		void CommandLocatorPrev(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			ModuleInfo mi = this.CurrentModuleInfo;
+			mi.Module.LocatorPrev();
+		}
+
+		[Command("LocatorNext")]
+		void CommandLocatorNext(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			ModuleInfo mi = this.CurrentModuleInfo;
+			mi.Module.LocatorNext();
+		}
+
 		protected void InitCommands()
 		{
 			this.newState = this.CreateCommandState("New", KeyCode.ModifierControl|KeyCode.AlphaN);
@@ -836,6 +851,9 @@ namespace Epsitec.Common.Designer
 			this.tabIndexNextState = this.CreateCommandState("TabIndexNext");
 			this.tabIndexLastState = this.CreateCommandState("TabIndexLast");
 			this.tabIndexRenumState = this.CreateCommandState("TabIndexRenum");
+
+			this.locatorPrevState = this.CreateCommandState("LocatorPrev");
+			this.locatorNextState = this.CreateCommandState("LocatorNext");
 		}
 
 		protected CommandState CreateCommandState(string commandName, params Widgets.Shortcut[] shortcuts)
@@ -876,6 +894,8 @@ namespace Epsitec.Common.Designer
 			mi.BundleType.Dock = DockStyle.Top;
 			mi.BundleType.TypeChanged += new EventHandler(this.HandleTypeChanged);
 
+			mi.Module.BundleTypeWidget = mi.BundleType;
+
 			this.CreateViewerLayout();
 		}
 
@@ -907,6 +927,10 @@ namespace Epsitec.Common.Designer
 		{
 			this.CreateViewerLayout();
 			this.DialogSearchAdapt();
+
+			ModuleInfo mi = this.CurrentModuleInfo;
+			mi.Module.LocatorAdd(mi.BundleType.CurrentType, Druid.Empty);
+
 			this.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
 		}
 
@@ -1486,6 +1510,8 @@ namespace Epsitec.Common.Designer
 		protected CommandState					tabIndexNextState;
 		protected CommandState					tabIndexLastState;
 		protected CommandState					tabIndexRenumState;
+		protected CommandState					locatorPrevState;
+		protected CommandState					locatorNextState;
 
 		public static readonly DependencyProperty InstanceProperty = DependencyProperty.RegisterAttached("Instance", typeof(MainWindow), typeof(MainWindow));
 	}

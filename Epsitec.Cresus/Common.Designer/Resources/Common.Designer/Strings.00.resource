@@ -16,6 +16,7 @@
   <data name="Ribbon.Section.TabIndex" id="0D">Touche Tab</data>
   <data name="Ribbon.Section.Align" id="0E">Alignement</data>
   <data name="Ribbon.Section.Move" id="0F">Déplacement</data>
+  <data name="Ribbon.Section.Locator" id="05A">Navigation</data>
   <data name="Ribbon.Section.MoveHorizontal" id="0G">Déplacement horizontal</data>
   <data name="Ribbon.Section.MoveVertical" id="0H">Déplacement vertical</data>
   <data name="BundleType.String" id="0J6" mod="1">Texte</data>
@@ -133,6 +134,8 @@
   <data name="Viewers.Types.Summary.Mime" id="0S8">Mime</data>
   <data name="Action.New" id="0U">Nouveau</data>
   <data name="Action.Open" id="0V">Ouvrir...</data>
+  <data name="Action.LocatorPrev" id="06A">Vue précédente</data>
+  <data name="Action.LocatorNext" id="07A">Vue suivante</data>
   <data name="Action.Close" id="001">Fermer</data>
   <data name="Action.CloseAll" id="011">Fermer tout</data>
   <data name="Action.Save" id="021">Enregistrer</data>
