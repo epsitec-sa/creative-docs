@@ -2695,6 +2695,8 @@ namespace Epsitec.Common.Designer
 			//	A partir d'une liste déjà triée, déplace un seul élément modifié pour qu'il
 			//	soit de nouveau trié. Si resortAll = true, trie toutes les ressources et retourne
 			//	le nouvel index du Druid.
+			this.CacheClear();
+
 			if (resortAll)
 			{
 				Druid druid = this.druidsIndex[index];
