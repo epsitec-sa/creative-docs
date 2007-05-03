@@ -232,10 +232,11 @@ namespace Epsitec.Common.Types
 		/// <returns>The merged structured type.</returns>
 		public static StructuredType Merge(StructuredType a, StructuredType b)
 		{
-			// modOK001 complété l'implémentation
+			// modOK001 complété l'implémentation, par moment au pifomètre. Toutes les modifications y relatives
+			// désignées par modOK001. Remplacé TO_DO (sans underscore) par OKDONE?
 			// throw new System.NotImplementedException ();
 			
-			//	TODO: implement structured type merge; swap a and b if needed, based on
+			//	OKDONE? : implement structured type merge; swap a and b if needed, based on
 			//	their layer depth (a should belong to the lower level layer)
 
 			StructuredType c;
@@ -252,27 +253,33 @@ namespace Epsitec.Common.Types
 				throw new System.ArgumentException (string.Format ("Can not merge 2 StructuredType of different Class ( {0} and {1} )", a.Class, b.Class));
 			}
 
-			StructuredType merge = new StructuredType (b.Class);
-
-			//	TODO: populate properties, fields, etc.
-
-			foreach (string id in a.GetFieldIds ())
-			{
-				merge.fields.Add (a.GetField(id));
-			}
-
-			foreach (string id in b.GetFieldIds ())
-			{
-				merge.fields.Add (b.GetField (id));
-			}
+			// b.Class OK, mais b.BaseType? 
+			StructuredType merge = new StructuredType (b.Class, b.BaseType);
+			merge.SetValue (StructuredType.DebugDisableChecksProperty, b.GetValue(DebugDisableChecksProperty));
 
 			if (a.Module.Layer != b.Module.Layer)
 			{
 				System.Diagnostics.Debug.Assert (a.Module.Layer < b.Module.Layer);
 
 			}
+			// J'ai dû mettre ici, si on met après avoir populé les fields, il refuse de redéfinir la caption
 			merge.DefineCaption (Caption.Merge (a.Caption, b.Caption));
 
+			//	OKDONE?: populate properties, fields, etc.
+			// modOK001 j'ai peuplé les properties plus haut, juste après le new.
+
+			int rank = 0;
+			foreach (string id in a.GetFieldIds ())
+			{
+				merge.fields.Add (new StructuredTypeField(id, a.GetField(id).Type, a.GetField(id).CaptionId, rank++, 
+					                                      a.GetField(id).Relation, a.GetField(id).SourceFieldId ));
+			}
+
+			foreach (string id in b.GetFieldIds ())
+			{
+				merge.fields.Add (new StructuredTypeField (id, b.GetField (id).Type, b.GetField (id).CaptionId, rank++,
+														  b.GetField (id).Relation, b.GetField (id).SourceFieldId));
+			}
 
 			//	Make the merged structure type belong to the same bundle/module
 			//	as the lower layer source structured type :

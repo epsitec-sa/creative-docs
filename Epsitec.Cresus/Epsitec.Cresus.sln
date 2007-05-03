@@ -126,6 +126,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Drawing.Images", "Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Designer", "App.Designer\App.Designer.csproj", "{2FAAC41D-B020-4BD3-BE37-48E8A7D850A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.DataLayer.Test2", "Cresus.DataLayer.Test2\Cresus.DataLayer.Test2.csproj", "{2EFFC683-3CE9-40DC-9F3D-D85A95AC1213}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -684,6 +686,16 @@ Global
 		{2FAAC41D-B020-4BD3-BE37-48E8A7D850A9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{2FAAC41D-B020-4BD3-BE37-48E8A7D850A9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{2FAAC41D-B020-4BD3-BE37-48E8A7D850A9}.Release|Win32.ActiveCfg = Release|Any CPU
+		{2EFFC683-3CE9-40DC-9F3D-D85A95AC1213}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EFFC683-3CE9-40DC-9F3D-D85A95AC1213}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EFFC683-3CE9-40DC-9F3D-D85A95AC1213}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2EFFC683-3CE9-40DC-9F3D-D85A95AC1213}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{2EFFC683-3CE9-40DC-9F3D-D85A95AC1213}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{2EFFC683-3CE9-40DC-9F3D-D85A95AC1213}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EFFC683-3CE9-40DC-9F3D-D85A95AC1213}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EFFC683-3CE9-40DC-9F3D-D85A95AC1213}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2EFFC683-3CE9-40DC-9F3D-D85A95AC1213}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{2EFFC683-3CE9-40DC-9F3D-D85A95AC1213}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
