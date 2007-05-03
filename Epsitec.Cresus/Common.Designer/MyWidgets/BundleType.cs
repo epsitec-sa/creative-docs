@@ -43,19 +43,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCaptions.Dock = DockStyle.Left;
 			this.buttonCaptions.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
-			this.buttonFields = new IconButtonMark(this);
-			this.buttonFields.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Fields);
-			this.buttonFields.Name = BundleType.Convert(ResourceAccess.Type.Fields);
-			this.buttonFields.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonFields.SiteMark = ButtonMarkDisposition.Below;
-			this.buttonFields.MarkDimension = 5;
-			this.buttonFields.PreferredWidth = 100;
-			this.buttonFields.MinHeight = 20+5;
-			this.buttonFields.AutoFocus = false;
-			this.buttonFields.Margins = new Margins(2, 0, 10, 0);
-			this.buttonFields.Dock = DockStyle.Left;
-			this.buttonFields.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-
 			this.buttonCommands = new IconButtonMark(this);
 			this.buttonCommands.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Commands);
 			this.buttonCommands.Name = BundleType.Convert(ResourceAccess.Type.Commands);
@@ -81,6 +68,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonTypes.Margins = new Margins(2, 0, 10, 0);
 			this.buttonTypes.Dock = DockStyle.Left;
 			this.buttonTypes.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
+			this.buttonFields = new IconButtonMark(this);
+			this.buttonFields.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Fields);
+			this.buttonFields.Name = BundleType.Convert(ResourceAccess.Type.Fields);
+			this.buttonFields.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonFields.SiteMark = ButtonMarkDisposition.Below;
+			this.buttonFields.MarkDimension = 5;
+			this.buttonFields.PreferredWidth = 100;
+			this.buttonFields.MinHeight = 20+5;
+			this.buttonFields.AutoFocus = false;
+			this.buttonFields.Margins = new Margins(2, 0, 10, 0);
+			this.buttonFields.Dock = DockStyle.Left;
+			this.buttonFields.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonValues = new IconButtonMark(this);
 			this.buttonValues.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Values);
