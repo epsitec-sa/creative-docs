@@ -49,7 +49,22 @@ namespace Epsitec.Common.Designer.Viewers
 			return (a.viewerType != b.viewerType) || (a.resource != b.resource);
 		}
 
+		public override string ToString()
+		{
+			return System.String.Format("{0}, {1}", this.viewerType, this.resource);
+		}
 		
+		public override bool Equals(object obj)
+		{
+			return (obj is Locator) && (this == (Locator) obj);
+		}
+		
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
+		
+
 		protected ResourceAccess.Type				viewerType;
 		protected Druid								resource;						
 	}
