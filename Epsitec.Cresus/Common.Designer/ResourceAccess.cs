@@ -1302,7 +1302,10 @@ namespace Epsitec.Common.Designer
 				this.CaptionsCountersModify(1);
 			}
 
-			this.druidsIndex.Add(newDruid);
+			if (this.bypassType == this.type)
+			{
+				this.druidsIndex.Add(newDruid);
+			}
 
 			return newDruid;
 		}
