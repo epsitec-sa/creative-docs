@@ -755,6 +755,7 @@ namespace Epsitec.Common.Designer
 
 		protected void UpdateCommandLocator()
 		{
+			//	Met à jour les commandes du navigateur.
 			ModuleInfo mi = this.CurrentModuleInfo;
 			this.locatorPrevState.Enable = mi != null && mi.Module.LocatorPrevIsEnable;
 			this.locatorNextState.Enable = mi != null && mi.Module.LocatorNextIsEnable;
@@ -934,6 +935,7 @@ namespace Epsitec.Common.Designer
 
 		void HandleTypeChanged(object sender)
 		{
+			//	Appelé lorsque le type de vue a changé.
 			this.CreateViewerLayout();
 			this.DialogSearchAdapt();
 

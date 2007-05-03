@@ -240,10 +240,12 @@ namespace Epsitec.Common.Designer
 		#region Locator
 		protected void LocatorInit()
 		{
+			//	Initialise la liste des localisations.
+			System.Diagnostics.Debug.Assert(this.bundleTypeWidget != null);
 			this.locators = new List<Viewers.Locator>();
 			this.locatorIndex = -1;
 
-			this.LocatorFix(this.bundleTypeWidget.CurrentType, Druid.Empty);
+			this.LocatorFix(this.bundleTypeWidget.CurrentType, Druid.Empty);  // fixe la première vue par défaut
 		}
 
 		public void LocatorFix(ResourceAccess.Type viewerType, Druid resource)
@@ -256,10 +258,11 @@ namespace Epsitec.Common.Designer
 			{
 				if (locator == this.locators[this.locatorIndex])  // locateur déjà fixé ?
 				{
-					return;
+					return;  // si oui, il ne faut surtout rien fixer
 				}
 			}
 
+			//	Supprime les localisations après la localisation courante.
 			while (this.locators.Count-1 > this.locatorIndex)
 			{
 				this.locators.RemoveAt(this.locators.Count-1);
@@ -271,6 +274,7 @@ namespace Epsitec.Common.Designer
 
 		public bool LocatorPrevIsEnable
 		{
+			//	Donne l'état de la commande "LocatorPrev".
 			get
 			{
 				System.Diagnostics.Debug.Assert(this.locators != null);
@@ -280,6 +284,7 @@ namespace Epsitec.Common.Designer
 
 		public bool LocatorNextIsEnable
 		{
+			//	Donne l'état de la commande "LocatorNext".
 			get
 			{
 				System.Diagnostics.Debug.Assert(this.locators != null);
@@ -289,6 +294,7 @@ namespace Epsitec.Common.Designer
 
 		public void LocatorPrev()
 		{
+			//	Action de la commande "LocatorPrev".
 			System.Diagnostics.Debug.Assert(this.LocatorPrevIsEnable);
 			Viewers.Locator locator = this.locators[--this.locatorIndex];
 			this.bundleTypeWidget.CurrentType = locator.ViewerType;
@@ -296,6 +302,7 @@ namespace Epsitec.Common.Designer
 
 		public void LocatorNext()
 		{
+			//	Action de la commande "LocatorNext".
 			System.Diagnostics.Debug.Assert(this.LocatorNextIsEnable);
 			Viewers.Locator locator = this.locators[++this.locatorIndex];
 			this.bundleTypeWidget.CurrentType = locator.ViewerType;
