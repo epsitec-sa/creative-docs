@@ -573,6 +573,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			StructuredTypeField actualField = this.fields[sel];
+			if (actualField.Relation != Relation.Inclusion)
+			{
+				return;
+			}
+
 			StructuredType st = actualField.Type as StructuredType;
 			string field = this.mainWindow.DlgResourceStructuredTypeField(st, actualField.SourceFieldId);
 			if (string.IsNullOrEmpty(field))
