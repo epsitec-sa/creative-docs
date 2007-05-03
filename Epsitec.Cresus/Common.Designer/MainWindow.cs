@@ -742,6 +742,7 @@ namespace Epsitec.Common.Designer
 		{
 			ModuleInfo mi = this.CurrentModuleInfo;
 			mi.Module.LocatorPrev();
+			this.UpdateCommandLocator();
 		}
 
 		[Command("LocatorNext")]
@@ -749,6 +750,14 @@ namespace Epsitec.Common.Designer
 		{
 			ModuleInfo mi = this.CurrentModuleInfo;
 			mi.Module.LocatorNext();
+			this.UpdateCommandLocator();
+		}
+
+		protected void UpdateCommandLocator()
+		{
+			ModuleInfo mi = this.CurrentModuleInfo;
+			this.locatorPrevState.Enable = mi != null && mi.Module.LocatorPrevIsEnable;
+			this.locatorNextState.Enable = mi != null && mi.Module.LocatorNextIsEnable;
 		}
 
 		protected void InitCommands()
@@ -929,9 +938,10 @@ namespace Epsitec.Common.Designer
 			this.DialogSearchAdapt();
 
 			ModuleInfo mi = this.CurrentModuleInfo;
-			mi.Module.LocatorAdd(mi.BundleType.CurrentType, Druid.Empty);
+			mi.Module.LocatorFix(mi.BundleType.CurrentType, Druid.Empty);
 
 			this.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
+			this.UpdateCommandLocator();
 		}
 
 
@@ -1048,6 +1058,7 @@ namespace Epsitec.Common.Designer
 
 				this.DialogSearchAdapt();
 				this.CurrentModule.Modifier.ActiveViewer.UpdateWhenModuleUsed();
+				this.UpdateCommandLocator();
 			}
 			else
 			{
@@ -1083,6 +1094,7 @@ namespace Epsitec.Common.Designer
 				this.UpdateInfoCurrentModule();
 				this.UpdateInfoAccess();
 				this.UpdateInfoViewer();
+				this.UpdateCommandLocator();
 			}
 		}
 

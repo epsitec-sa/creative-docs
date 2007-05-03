@@ -34,9 +34,6 @@ namespace Epsitec.Common.Designer
 				access.DirtyChanged += new EventHandler(this.HandleAccessDirtyChanged);
 			}
 
-			this.locators = new List<Viewers.Locator>();
-			this.locatorIndex = 0;
-
 			this.Load();
 		}
 
@@ -64,6 +61,7 @@ namespace Epsitec.Common.Designer
 			set
 			{
 				this.bundleTypeWidget = value;
+				this.LocatorInit();
 			}
 			get
 			{
@@ -240,40 +238,67 @@ namespace Epsitec.Common.Designer
 
 
 		#region Locator
-		public void LocatorAdd(ResourceAccess.Type viewerType, Druid resource)
+		protected void LocatorInit()
 		{
+			this.locators = new List<Viewers.Locator>();
+			this.locatorIndex = -1;
+
+			this.LocatorFix(this.bundleTypeWidget.CurrentType, Druid.Empty);
+		}
+
+		public void LocatorFix(ResourceAccess.Type viewerType, Druid resource)
+		{
+			//	Fixe une vue que l'on vient d'atteindre.
+			System.Diagnostics.Debug.Assert(this.locators != null);
 			Viewers.Locator locator = new Viewers.Locator(viewerType, resource);
 
-			if (this.locatorIndex > 0)
+			if (this.locatorIndex >= 0 && this.locatorIndex < this.locators.Count)
 			{
-				if (locator == this.locators[this.locatorIndex-1])
+				if (locator == this.locators[this.locatorIndex])  // locateur déjà fixé ?
 				{
 					return;
 				}
 			}
 
-			this.locators.Insert(this.locatorIndex++, locator);
-
-			while (this.locators.Count > this.locatorIndex)
+			while (this.locators.Count-1 > this.locatorIndex)
 			{
 				this.locators.RemoveAt(this.locators.Count-1);
+			}
+
+			this.locators.Add(locator);
+			this.locatorIndex++;
+		}
+
+		public bool LocatorPrevIsEnable
+		{
+			get
+			{
+				System.Diagnostics.Debug.Assert(this.locators != null);
+				return this.locatorIndex > 0;
+			}
+		}
+
+		public bool LocatorNextIsEnable
+		{
+			get
+			{
+				System.Diagnostics.Debug.Assert(this.locators != null);
+				return this.locatorIndex < this.locators.Count-1;
 			}
 		}
 
 		public void LocatorPrev()
 		{
-			if (this.locators.Count == 0 || this.locatorIndex <= 0)
-			{
-				return;
-			}
-
+			System.Diagnostics.Debug.Assert(this.LocatorPrevIsEnable);
 			Viewers.Locator locator = this.locators[--this.locatorIndex];
-
 			this.bundleTypeWidget.CurrentType = locator.ViewerType;
 		}
 
 		public void LocatorNext()
 		{
+			System.Diagnostics.Debug.Assert(this.LocatorNextIsEnable);
+			Viewers.Locator locator = this.locators[++this.locatorIndex];
+			this.bundleTypeWidget.CurrentType = locator.ViewerType;
 		}
 		#endregion
 
