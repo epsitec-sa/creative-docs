@@ -52,7 +52,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override string ToString()
 		{
-			return System.String.Format("Module={0}, Type={1}, Resource={1}", this.moduleName, this.viewerType, this.resource);
+			return System.String.Format("Module={0}, Type={1}, Resource={2}", this.moduleName, this.viewerType, this.resource);
 		}
 		
 		public override bool Equals(object obj)

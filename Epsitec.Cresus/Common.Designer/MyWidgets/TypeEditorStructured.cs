@@ -528,7 +528,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			StructuredTypeField actualField = this.fields[sel];
 			Druid druid = actualField.CaptionId;
 
-			this.mainWindow.LocatorGoto(this.module.ModuleInfo.Name, ResourceAccess.Type.Fields, druid);
+			Module module = this.mainWindow.SearchModule(druid);
+			if (module == null)
+			{
+				return;
+			}
+
+			this.mainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Fields, druid);
 		}
 
 #if false
@@ -577,7 +583,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			this.mainWindow.LocatorGoto(this.module.ModuleInfo.Name, ResourceAccess.Type.Types, druid);
+			Module module = this.mainWindow.SearchModule(druid);
+			if (module == null)
+			{
+				return;
+			}
+
+			this.mainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Types, druid);
 		}
 
 		protected void ChangeType()

@@ -991,6 +991,8 @@ namespace Epsitec.Common.Designer
 				this.locatorIgnore = true;
 				this.UseModule(rank);
 				this.locatorIgnore = false;
+
+				mi = this.CurrentModuleInfo;
 			}
 
 			this.locatorIgnore = true;
@@ -1008,6 +1010,7 @@ namespace Epsitec.Common.Designer
 					if (viewer != null)
 					{
 						this.locatorIgnore = true;
+						viewer.Window.ForceLayout();  // StringArray.LineCount nécessite que la hauteur du widget soit juste !
 						viewer.Update();
 						viewer.ShowSelectedRow();
 						this.locatorIgnore = false;
