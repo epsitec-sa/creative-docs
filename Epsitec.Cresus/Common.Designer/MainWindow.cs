@@ -910,6 +910,11 @@ namespace Epsitec.Common.Designer
 			}
 
 			ModuleInfo mi = this.CurrentModuleInfo;
+			if (mi == null)
+			{
+				return;
+			}
+
 			string moduleName = mi.Module.ModuleInfo.Name;
 			ResourceAccess.Type viewerType = mi.BundleTypeWidget.CurrentType;
 
