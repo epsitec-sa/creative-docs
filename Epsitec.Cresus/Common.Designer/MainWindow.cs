@@ -1002,7 +1002,14 @@ namespace Epsitec.Common.Designer
 			if (!locator.Resource.IsEmpty)
 			{
 				ResourceAccess access = mi.Module.GetAccess(locator.ViewerType);
+
 				int sel = access.AccessIndexOfDruid(locator.Resource);
+				if (sel == -1)
+				{
+					access.SetFilter("", Searcher.SearchingMode.None);
+				}
+
+				sel = access.AccessIndexOfDruid(locator.Resource);
 				if (sel != -1)
 				{
 					access.AccessIndex = sel;
