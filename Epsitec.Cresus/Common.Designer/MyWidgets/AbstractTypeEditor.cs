@@ -361,6 +361,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			field.Text = value.ToString();
 		}
 
+		protected IconButton CreateLocatorGotoButton(Widget parent)
+		{
+			//	Crée un bouton pour la commande "LocatorGoto".
+			IconButton button = new IconButton(parent);
+
+			button.CaptionId = Res.Captions.Editor.LocatorGoto.Id;
+
+			return button;
+		}
+
 		protected IconButton CreateIconButton()
 		{
 			IconButton button = new IconButton();

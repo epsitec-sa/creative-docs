@@ -132,11 +132,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.footer.Dock = DockStyle.StackBegin;
 			this.footer.Margins = new Margins(0, 0, 5, 0);
 
+			this.buttonCaptionGoto = this.CreateLocatorGotoButton(this.footer);
+			this.buttonCaptionGoto.Margins = new Margins(1, 0, 0, 0);
+			this.buttonCaptionGoto.Dock = DockStyle.Left;
+			this.buttonCaptionGoto.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
 			this.buttonCaption = new Button(this.footer);
 			this.buttonCaption.CaptionId = Res.Captions.Editor.Structured.ChangeCaption.Id;
 			this.buttonCaption.Margins = new Margins(1, 0, 0, 0);
 			this.buttonCaption.Dock = DockStyle.Left;
 			this.buttonCaption.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
+			this.buttonTypeGoto = this.CreateLocatorGotoButton(this.footer);
+			this.buttonTypeGoto.Margins = new Margins(1, 0, 0, 0);
+			this.buttonTypeGoto.Dock = DockStyle.Left;
+			this.buttonTypeGoto.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonType = new Button(this.footer);
 			this.buttonType.CaptionId = Res.Captions.Editor.Structured.ChangeType.Id;
@@ -176,7 +186,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
 				this.array.SelectedRowDoubleClicked -= new EventHandler(this.HandleArraySelectedRowDoubleClicked);
 
+				this.buttonCaptionGoto.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonCaption.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonTypeGoto.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonType.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonInc.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 			}
@@ -229,10 +241,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			StructuredTypeField field = null;
 			bool st = false;
+			Druid typeDruid = Druid.Empty;
 			if (sel != -1)
 			{
 				field = this.fields[sel];
 				st = (field.Type is StructuredType);
+			
+				AbstractType type = field.Type as AbstractType;
+				if (type != null)
+				{
+					typeDruid = type.Caption.Id;
+				}
+			
 			}
 
 			this.buttonRelationRef.Enable = st;
@@ -252,8 +272,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.buttonRelationInc.ActiveState = ActiveState.No;
 			}
 
+			this.buttonCaptionGoto.Enable = (sel != -1);
 			this.buttonCaption.Enable = (sel != -1);
+
+			this.buttonTypeGoto.Enable = (sel != -1 && !typeDruid.IsEmpty);
 			this.buttonType.Enable = (sel != -1);
+			
 			this.buttonInc.Enable = (sel != -1 && st && field.Relation == Relation.Inclusion);
 		}
 
@@ -496,6 +520,68 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.OnContentChanged();
 		}
 
+		protected void GotoCaption()
+		{
+			//	Va sur la définition du Caption.
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			StructuredTypeField actualField = this.fields[sel];
+			Druid druid = actualField.CaptionId;
+
+			this.module.LocatorGoto(ResourceAccess.Type.Fields, druid);
+		}
+
+		protected void ChangeCaption()
+		{
+			//	Choix du caption.
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			StructuredTypeField actualField = this.fields[sel];
+			Druid druid = actualField.CaptionId;
+			string includePrefix = string.Concat(this.AbstractType.Caption.Name, ".");
+
+			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Fields, ResourceAccess.TypeType.None, druid, null, includePrefix);
+			if (druid.IsEmpty)
+			{
+				return;
+			}
+
+			StructuredTypeField newField = new StructuredTypeField(null, actualField.Type, druid, actualField.Rank, actualField.Relation, actualField.SourceFieldId);
+			this.fields[sel] = newField;
+
+			this.FieldsOutput();
+			this.UpdateArray();
+			this.OnContentChanged();
+		}
+
+		protected void GotoType()
+		{
+			//	Va sur la définition du type.
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			StructuredTypeField actualField = this.fields[sel];
+			AbstractType type = actualField.Type as AbstractType;
+			Druid druid = (type == null) ? Druid.Empty : type.Caption.Id;
+			if (druid.IsEmpty)
+			{
+				return;
+			}
+
+			this.module.LocatorGoto(ResourceAccess.Type.Types, druid);
+		}
+
 		protected void ChangeType()
 		{
 			//	Choix du type.
@@ -533,33 +619,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.FieldsOutput();
 			this.UpdateArray();
 			this.UpdateButtons();
-			this.OnContentChanged();
-		}
-
-		protected void ChangeCaption()
-		{
-			//	Choix du caption.
-			int sel = this.array.SelectedRow;
-			if (sel == -1)
-			{
-				return;
-			}
-
-			StructuredTypeField actualField = this.fields[sel];
-			Druid druid = actualField.CaptionId;
-			string includePrefix = string.Concat(this.AbstractType.Caption.Name, ".");
-
-			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Fields, ResourceAccess.TypeType.None, druid, null, includePrefix);
-			if (druid.IsEmpty)
-			{
-				return;
-			}
-
-			StructuredTypeField newField = new StructuredTypeField(null, actualField.Type, druid, actualField.Rank, actualField.Relation, actualField.SourceFieldId);
-			this.fields[sel] = newField;
-
-			this.FieldsOutput();
-			this.UpdateArray();
 			this.OnContentChanged();
 		}
 
@@ -679,8 +738,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.headerType.PreferredWidth = w2;
 			this.headerInc.PreferredWidth = w3+1;
 
-			this.buttonCaption.PreferredWidth = w1-1;
-			this.buttonType.PreferredWidth = w2;
+			this.buttonCaption.PreferredWidth = w1-1-this.buttonCaptionGoto.PreferredWidth;
+			this.buttonType.PreferredWidth = w2-this.buttonTypeGoto.PreferredWidth;
 			this.buttonInc.PreferredWidth = w3+1;
 		}
 
@@ -722,9 +781,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ArrayRelation(Relation.Inclusion);
 			}
 
+			if (sender == this.buttonCaptionGoto)
+			{
+				this.GotoCaption();
+			}
+
 			if (sender == this.buttonCaption)
 			{
 				this.ChangeCaption();
+			}
+
+			if (sender == this.buttonTypeGoto)
+			{
+				this.GotoType();
 			}
 
 			if (sender == this.buttonType)
@@ -811,7 +880,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected MyWidgets.StringArray			array;
 
 		protected Widget						footer;
+		protected IconButton					buttonCaptionGoto;
 		protected Button						buttonCaption;
+		protected IconButton					buttonTypeGoto;
 		protected Button						buttonType;
 		protected Button						buttonInc;
 

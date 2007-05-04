@@ -324,6 +324,13 @@ namespace Epsitec.Common.Designer
 			this.LocatorGoto(locator);
 		}
 
+		public void LocatorGoto(ResourceAccess.Type viewerType, Druid resource)
+		{
+			//	Va sur une ressource d'une vue quelconque.
+			Viewers.Locator locator = new Viewers.Locator(viewerType, resource);
+			this.LocatorGoto(locator);
+		}
+
 		protected void LocatorGoto(Viewers.Locator locator)
 		{
 			this.locatorIgnore = true;
