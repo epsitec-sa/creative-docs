@@ -698,6 +698,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.SelectedRow = this.access.AccessIndex;
 		}
 
+		public virtual void ShowSelectedRow()
+		{
+			//	Montre la ressource sélectionnée dans le tableau.
+			this.array.ShowSelectedRow();
+		}
+
 		protected void UpdateModificationsCulture()
 		{
 			//	Met à jour les pastilles dans les boutons des cultures.

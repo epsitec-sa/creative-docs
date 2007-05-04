@@ -349,6 +349,7 @@ namespace Epsitec.Common.Designer
 					{
 						this.locatorIgnore = true;
 						viewer.Update();
+						viewer.ShowSelectedRow();
 						this.locatorIgnore = false;
 					}
 				}
