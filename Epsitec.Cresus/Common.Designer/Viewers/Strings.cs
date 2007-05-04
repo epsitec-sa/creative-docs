@@ -132,6 +132,15 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 		
+		public override void Update()
+		{
+			//	Met à jour le contenu du Viewer.
+			this.UpdateArray();
+			this.UpdateEdit();
+			this.UpdateModificationsCulture();
+			this.UpdateCommands();
+		}
+
 		protected override void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
@@ -476,6 +485,8 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	La ligne sélectionnée a changé.
 			this.access.AccessIndex = this.array.SelectedRow;
+			this.module.LocatorFix();
+
 			this.UpdateEdit();
 			this.UpdateModificationsCulture();
 			this.UpdateCommands();
