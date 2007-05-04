@@ -932,7 +932,7 @@ namespace Epsitec.Common.Designer
 			this.UpdateCommandLocator();
 		}
 
-		public bool LocatorPrevIsEnable
+		protected bool LocatorPrevIsEnable
 		{
 			//	Donne l'état de la commande "LocatorPrev".
 			get
@@ -942,7 +942,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public bool LocatorNextIsEnable
+		protected bool LocatorNextIsEnable
 		{
 			//	Donne l'état de la commande "LocatorNext".
 			get
@@ -952,7 +952,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void LocatorPrev()
+		protected void LocatorPrev()
 		{
 			//	Action de la commande "LocatorPrev".
 			System.Diagnostics.Debug.Assert(this.LocatorPrevIsEnable);
@@ -960,7 +960,7 @@ namespace Epsitec.Common.Designer
 			this.LocatorGoto(locator);
 		}
 
-		public void LocatorNext()
+		protected void LocatorNext()
 		{
 			//	Action de la commande "LocatorNext".
 			System.Diagnostics.Debug.Assert(this.LocatorNextIsEnable);
@@ -977,7 +977,21 @@ namespace Epsitec.Common.Designer
 
 		protected void LocatorGoto(Viewers.Locator locator)
 		{
+			//	Va sur une ressource définie par un locateur.
 			ModuleInfo mi = this.CurrentModuleInfo;
+
+			if (mi.Module.ModuleInfo.Name != locator.ModuleName)
+			{
+				int rank = this.SearchModuleRank(locator.ModuleName);
+				if (rank == -1)
+				{
+					return;
+				}
+
+				this.locatorIgnore = true;
+				this.UseModule(rank);
+				this.locatorIgnore = false;
+			}
 
 			this.locatorIgnore = true;
 			mi.BundleTypeWidget.CurrentType = locator.ViewerType;
@@ -990,7 +1004,7 @@ namespace Epsitec.Common.Designer
 				if (sel != -1)
 				{
 					access.AccessIndex = sel;
-					Viewers.Abstract viewer = this.CurrentViewer;
+					Viewers.Abstract viewer = mi.Module.Modifier.ActiveViewer;
 					if (viewer != null)
 					{
 						this.locatorIgnore = true;
@@ -1070,7 +1084,7 @@ namespace Epsitec.Common.Designer
 			if ( this.ignoreChange )  return;
 
 			int total = this.bookModules.PageCount;
-			for ( int i=0 ; i<total ; i++ )
+			for (int i=0; i<total; i++)
 			{
 				ModuleInfo di = this.moduleInfoList[i];
 				if ( di.TabPage == this.bookModules.ActivePage )
@@ -1097,17 +1111,6 @@ namespace Epsitec.Common.Designer
 			{
 				if ( this.currentModule < 0 )  return null;
 				return this.moduleInfoList[this.currentModule];
-			}
-		}
-
-		public Viewers.Abstract CurrentViewer
-		{
-			//	Retourne le Viewer courant.
-			get
-			{
-				ModuleInfo mi = this.CurrentModuleInfo;
-				if (mi == null)  return null;
-				return mi.Module.Modifier.ActiveViewer;
 			}
 		}
 
@@ -1172,6 +1175,21 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
+		protected int SearchModuleRank(string moduleName)
+		{
+			//	Cherche le rang d'un module d'après son nom.
+			for (int i=0; i<this.moduleInfoList.Count; i++)
+			{
+				ModuleInfo mi = this.moduleInfoList[i];
+				if (mi.Module.ModuleInfo.Name == moduleName)
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
 		protected void UseModule(int rank)
 		{
 			//	Utilise un module ouvert.
@@ -1188,7 +1206,6 @@ namespace Epsitec.Common.Designer
 
 				this.DialogSearchAdapt();
 				this.CurrentModule.Modifier.ActiveViewer.UpdateWhenModuleUsed();
-				this.UpdateCommandLocator();
 			}
 			else
 			{
@@ -1224,8 +1241,10 @@ namespace Epsitec.Common.Designer
 				this.UpdateInfoCurrentModule();
 				this.UpdateInfoAccess();
 				this.UpdateInfoViewer();
-				this.UpdateCommandLocator();
 			}
+
+			this.LocatorFix();
+			this.UpdateCommandLocator();
 		}
 
 		protected void CloseModule()
