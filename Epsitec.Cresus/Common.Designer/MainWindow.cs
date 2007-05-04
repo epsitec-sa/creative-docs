@@ -851,8 +851,8 @@ namespace Epsitec.Common.Designer
 			this.tabIndexLastState = this.CreateCommandState("TabIndexLast");
 			this.tabIndexRenumState = this.CreateCommandState("TabIndexRenum");
 
-			this.locatorPrevState = this.CreateCommandState("LocatorPrev");
-			this.locatorNextState = this.CreateCommandState("LocatorNext");
+			this.locatorPrevState = this.CreateCommandState("LocatorPrev", KeyCode.ArrowLeft|KeyCode.ModifierAlt);
+			this.locatorNextState = this.CreateCommandState("LocatorNext", KeyCode.ArrowRight|KeyCode.ModifierAlt);
 		}
 
 		protected CommandState CreateCommandState(string commandName, params Widgets.Shortcut[] shortcuts)
