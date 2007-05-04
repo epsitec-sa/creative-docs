@@ -754,9 +754,8 @@ namespace Epsitec.Common.Designer
 		void CommandLocatorListDo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			string value = StructuredCommand.GetFieldValue(e.CommandState, "Name") as string;
-
 			int i = System.Convert.ToInt32(value);
-			this.LocatorRestore(i);
+			this.LocatorMenuGoto(i);
 		}
 
 		protected void InitCommands()
@@ -941,7 +940,7 @@ namespace Epsitec.Common.Designer
 			this.locators.Add(locator);
 			this.locatorIndex++;
 
-			this.UpdateCommandLocator();
+			this.LocatorUpdateCommand();
 		}
 
 		public VMenu LocatorCreateMenu(MessageEventHandler message)
@@ -967,7 +966,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			//	Met les localisation où aller.
+			//	Met les localisations où aller.
 			for (int i=start; i<start+total; i++)
 			{
 				if (i <= this.locatorIndex)  // prev ?
@@ -1098,7 +1097,7 @@ namespace Epsitec.Common.Designer
 			this.LocatorGoto(locator);
 		}
 
-		protected void LocatorRestore(int index)
+		protected void LocatorMenuGoto(int index)
 		{
 			//	Revient à une location choisie dans le menu.
 			this.locatorIndex = index;
@@ -1115,7 +1114,7 @@ namespace Epsitec.Common.Designer
 
 		protected void LocatorGoto(Viewers.Locator locator)
 		{
-			//	Va sur une ressource définie par une localisations.
+			//	Va sur une ressource définie par une localisation.
 			ModuleInfo mi = this.CurrentModuleInfo;
 
 			if (mi.Module.ModuleInfo.Name != locator.ModuleName)
@@ -1164,10 +1163,10 @@ namespace Epsitec.Common.Designer
 			}
 
 			this.LocatorFix();
-			this.UpdateCommandLocator();
+			this.LocatorUpdateCommand();
 		}
 
-		protected void UpdateCommandLocator()
+		protected void LocatorUpdateCommand()
 		{
 			//	Met à jour les commandes du navigateur.
 			this.locatorPrevState.Enable = this.LocatorPrevIsEnable;
@@ -1392,7 +1391,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			this.LocatorFix();
-			this.UpdateCommandLocator();
+			this.LocatorUpdateCommand();
 		}
 
 		protected void CloseModule()

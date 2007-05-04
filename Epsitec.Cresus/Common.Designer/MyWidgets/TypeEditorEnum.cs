@@ -46,6 +46,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonSort.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonSort);
 
+			this.buttonGoto = new IconButton();
+			this.buttonGoto.CaptionId = Res.Captions.Editor.LocatorGoto.Id;
+			this.buttonGoto.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.toolbar.Items.Add(this.buttonGoto);
+
 			this.fieldSearch = new TextFieldCombo();
 			this.fieldSearch.PreferredWidth = 200;
 			this.fieldSearch.Margins = new Margins(30, 0, 1, 1);
@@ -135,6 +140,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.buttonNext.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonRemove.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonSort.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonGoto.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 
 				this.slider.ValueChanged -= new EventHandler(this.HandleSliderChanged);
 
@@ -245,6 +251,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			bool remove = false;
 			bool prev   = false;
 			bool next   = false;
+			bool lgoto  = false;
 
 			int sel = this.array.SelectedRow;
 			if (sel != -1)
@@ -263,6 +270,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					add = !this.IsNativeEnum;
 				}
+
+				lgoto = druid.IsValid;
 			}
 
 			this.buttonAdd.Enable    = add;
@@ -270,6 +279,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonPrev.Enable   = prev;
 			this.buttonNext.Enable   = next;
 			this.buttonSort.Enable   = !this.IsNativeEnum;
+			this.buttonGoto.Enable   = lgoto;
 		}
 
 		protected void UpdateArray()
@@ -435,6 +445,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.OnContentChanged();
 		}
 
+		protected void ArrayGoto()
+		{
+			int sel = this.array.SelectedRow;
+			Druid druid = (sel == -1) ? Druid.Empty : this.listDruids[sel];
+
+			Module module = this.mainWindow.SearchModule(druid);
+			if (module == null)
+			{
+				return;
+			}
+
+			this.mainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Values, druid);
+		}
+
 		protected void ArraySearch(string searching, int direction)
 		{
 			//	Cherche en avant ou en arrière.
@@ -565,6 +589,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ArraySort();
 			}
 
+			if (sender == this.buttonGoto)
+			{
+				this.ArrayGoto();
+			}
+
 			if (sender == this.buttonSearchPrev)
 			{
 				Misc.ComboMenuAdd(this.fieldSearch);
@@ -639,6 +668,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButton					buttonPrev;
 		protected IconButton					buttonNext;
 		protected IconButton					buttonSort;
+		protected IconButton					buttonGoto;
 		protected TextFieldCombo				fieldSearch;
 		protected IconButton					buttonSearchPrev;
 		protected IconButton					buttonSearchNext;
