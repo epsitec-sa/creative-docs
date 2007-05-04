@@ -137,11 +137,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCaptionGoto.Dock = DockStyle.Left;
 			this.buttonCaptionGoto.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
-			this.buttonCaption = new Button(this.footer);
-			this.buttonCaption.CaptionId = Res.Captions.Editor.Structured.ChangeCaption.Id;
-			this.buttonCaption.Margins = new Margins(1, 0, 0, 0);
-			this.buttonCaption.Dock = DockStyle.Left;
-			this.buttonCaption.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.blankCaption = new Widget(this.footer);
+			this.blankCaption.Margins = new Margins(1, 0, 0, 0);
+			this.blankCaption.Dock = DockStyle.Left;
 
 			this.buttonTypeGoto = this.CreateLocatorGotoButton(this.footer);
 			this.buttonTypeGoto.Margins = new Margins(1, 0, 0, 0);
@@ -187,7 +185,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.array.SelectedRowDoubleClicked -= new EventHandler(this.HandleArraySelectedRowDoubleClicked);
 
 				this.buttonCaptionGoto.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.buttonCaption.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonTypeGoto.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonType.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonInc.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
@@ -273,7 +270,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.buttonCaptionGoto.Enable = (sel != -1);
-			this.buttonCaption.Enable = (sel != -1);
 
 			this.buttonTypeGoto.Enable = (sel != -1 && !typeDruid.IsEmpty);
 			this.buttonType.Enable = (sel != -1);
@@ -535,6 +531,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.module.LocatorGoto(ResourceAccess.Type.Fields, druid);
 		}
 
+#if false
 		protected void ChangeCaption()
 		{
 			//	Choix du caption.
@@ -561,6 +558,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.UpdateArray();
 			this.OnContentChanged();
 		}
+#endif
 
 		protected void GotoType()
 		{
@@ -738,7 +736,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.headerType.PreferredWidth = w2;
 			this.headerInc.PreferredWidth = w3+1;
 
-			this.buttonCaption.PreferredWidth = w1-1-this.buttonCaptionGoto.PreferredWidth;
+			this.blankCaption.PreferredWidth = w1-1-this.buttonCaptionGoto.PreferredWidth;
 			this.buttonType.PreferredWidth = w2-this.buttonTypeGoto.PreferredWidth;
 			this.buttonInc.PreferredWidth = w3+1;
 		}
@@ -784,11 +782,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (sender == this.buttonCaptionGoto)
 			{
 				this.GotoCaption();
-			}
-
-			if (sender == this.buttonCaption)
-			{
-				this.ChangeCaption();
 			}
 
 			if (sender == this.buttonTypeGoto)
@@ -844,11 +837,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Une ligne a été double-cliquée.
 			int column = this.array.SelectedColumn;
 
-			if (column == 0 || column == 1)
-			{
-				this.ChangeCaption();
-			}
-
 			if (column == 2 || column == 3)
 			{
 				this.ChangeType();
@@ -881,7 +869,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected Widget						footer;
 		protected IconButton					buttonCaptionGoto;
-		protected Button						buttonCaption;
+		protected Widget						blankCaption;
 		protected IconButton					buttonTypeGoto;
 		protected Button						buttonType;
 		protected Button						buttonInc;
