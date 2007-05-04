@@ -900,7 +900,10 @@ namespace Epsitec.Common.Designer
 
 		public void LocatorFix()
 		{
-			//	Fixe une vue que l'on vient d'atteindre.
+			//	Fixe une vue que l'on vient d'atteindre. Si on est déjà exactement sur cette même
+			//	localisation, on ne mémorise rien. Ceci est primordial, car on appelle LocatorFix
+			//	lorsqu'on retourne à une position localisation mémorisée, et il ne faudrait surtout
+			//	pas modifier alors la liste des localisations !
 			System.Diagnostics.Debug.Assert(this.locators != null);
 			if (this.locatorIgnore)
 			{
@@ -923,7 +926,7 @@ namespace Epsitec.Common.Designer
 
 			if (this.locatorIndex >= 0 && this.locatorIndex < this.locators.Count)
 			{
-				if (locator == this.locators[this.locatorIndex])  // locateur déjà fixé ?
+				if (locator == this.locators[this.locatorIndex])  // localisation déjà fixée ?
 				{
 					return;  // si oui, il ne faut surtout rien fixer
 				}
@@ -939,6 +942,124 @@ namespace Epsitec.Common.Designer
 			this.locatorIndex++;
 
 			this.UpdateCommandLocator();
+		}
+
+		public VMenu LocatorCreateMenu(MessageEventHandler message)
+		{
+			//	Construit le menu des localisations visitées.
+			int all = this.locators.Count;
+			int total = System.Math.Min(all, 20);
+			int start = this.locatorIndex;
+			start += total/2;  if ( start > all-1 )  start = all-1;
+			start -= total-1;  if ( start < 0     )  start = 0;
+
+			List<Widget> list = new List<Widget>();
+
+			//	Met éventuellement la première localisation où aller.
+			if (start > 0)
+			{
+				string action = this.LocatorGetNiceText(0);
+				this.LocatorCreateMenu(list, message, "ActiveNo", 0, action);
+
+				if (start > 1)
+				{
+					list.Add(new MenuSeparator());
+				}
+			}
+
+			//	Met les localisation où aller.
+			for (int i=start; i<start+total; i++)
+			{
+				if (i <= this.locatorIndex)  // prev ?
+				{
+					string action = this.LocatorGetNiceText(i);
+					string icon = "ActiveNo";
+					if (i == this.locatorIndex)
+					{
+						icon = "ActiveCurrent";
+						action = Misc.Bold(action);
+					}
+					this.LocatorCreateMenu(list, message, icon, i, action);
+				}
+				else	// next ?
+				{
+					if (i == this.locatorIndex+1)
+					{
+						list.Add(new MenuSeparator());
+					}
+
+					string action = this.LocatorGetNiceText(i);
+					action = Misc.Italic(action);
+					this.LocatorCreateMenu(list, message, "", i, action);
+				}
+			}
+
+			//	Met éventuellement la dernière localisation où aller.
+			if (start+total < all)
+			{
+				if (start+total < all-1)
+				{
+					list.Add(new MenuSeparator());
+				}
+
+				string action = this.LocatorGetNiceText(all-1);
+				action = Misc.Italic(action);
+				this.LocatorCreateMenu(list, message, "", all-1, action);
+			}
+
+			//	Génère le menu.
+			VMenu menu = new VMenu();
+			for (int i=0; i<list.Count; i++)
+			{
+				menu.Items.Add(list[i]);
+			}
+			menu.AdjustSize();
+			return menu;
+		}
+
+		protected void LocatorCreateMenu(List<Widget> list, MessageEventHandler message, string icon, int rank, string action)
+		{
+			//	Crée une case du menu des localisations.
+			if (icon != "")
+			{
+				icon = Misc.Icon(icon);
+			}
+
+			string name = string.Format("{0}: {1}", (rank+1).ToString(), action);
+			string cmd = "LocatorListDo";
+			Misc.CreateStructuredCommandWithName(cmd);
+
+			MenuItem item = new MenuItem(cmd, icon, name, "", rank.ToString());
+
+			if ( message != null )
+			{
+				item.Pressed += message;
+			}
+
+			list.Add(item);
+		}
+
+		protected string LocatorGetNiceText(int index)
+		{
+			//	Retourne le joli texte correspondant à une localisations.
+			string moduleName              = this.locators[index].ModuleName;
+			ResourceAccess.Type viewerType = this.locators[index].ViewerType;
+			Druid resource                 = this.locators[index].Resource;
+
+			string typeText = ResourceAccess.TypeDisplayName(viewerType);
+
+			string resourceText = resource.ToString();  // affiche le Druid si on ne trouve rien de mieux
+			int moduleRank = this.SearchModuleRank(moduleName);
+			if (moduleRank != -1)
+			{
+				ResourceAccess access = this.moduleInfoList[moduleRank].Module.GetAccess(viewerType);
+				if (access != null)
+				{
+					resourceText = access.DirectGetDisplayName(resource);
+				}
+			}
+
+			return System.String.Format("{0}/{1}: {2}", moduleName, typeText, resourceText);
 		}
 
 		protected bool LocatorPrevIsEnable
@@ -994,7 +1115,7 @@ namespace Epsitec.Common.Designer
 
 		protected void LocatorGoto(Viewers.Locator locator)
 		{
-			//	Va sur une ressource définie par un locateur.
+			//	Va sur une ressource définie par une localisations.
 			ModuleInfo mi = this.CurrentModuleInfo;
 
 			if (mi.Module.ModuleInfo.Name != locator.ModuleName)
@@ -1051,123 +1172,6 @@ namespace Epsitec.Common.Designer
 			//	Met à jour les commandes du navigateur.
 			this.locatorPrevState.Enable = this.LocatorPrevIsEnable;
 			this.locatorNextState.Enable = this.LocatorNextIsEnable;
-		}
-
-		public VMenu LocatorCreateMenu(MessageEventHandler message)
-		{
-			//	Construit le menu des localisations visitées.
-			int all = this.locators.Count;
-			int total = System.Math.Min(all, 20);
-			int start = this.locatorIndex;
-			start += total/2;  if ( start > all-1 )  start = all-1;
-			start -= total-1;  if ( start < 0     )  start = 0;
-
-			List<Widget> list = new List<Widget>();
-
-			//	Met éventuellement la première localisation où aller.
-			if (start > 0)
-			{
-				string action = this.LocatorGetNiceText(0);
-				this.LocatorCreateMenu(list, message, 1, 0, action);
-
-				if (start > 1)
-				{
-					list.Add(new MenuSeparator());
-				}
-			}
-
-			//	Met les localisation où aller.
-			for (int i=start; i<start+total; i++)
-			{
-				if (i <= this.locatorIndex)  // prev ?
-				{
-					string action = this.LocatorGetNiceText(i);
-					int active = 1;
-					if (i == this.locatorIndex)
-					{
-						active = 2;
-						action = Misc.Bold(action);
-					}
-					this.LocatorCreateMenu(list, message, active, i, action);
-				}
-				else	// next ?
-				{
-					if (i == this.locatorIndex+1)
-					{
-						list.Add(new MenuSeparator());
-					}
-
-					string action = this.LocatorGetNiceText(i);
-					action = Misc.Italic(action);
-					this.LocatorCreateMenu(list, message, 0, i, action);
-				}
-			}
-
-			//	Met éventuellement la dernière localisation où aller.
-			if (start+total < all)
-			{
-				if (start+total < all-1)
-				{
-					list.Add(new MenuSeparator());
-				}
-
-				string action = this.LocatorGetNiceText(all-1);
-				action = Misc.Italic(action);
-				this.LocatorCreateMenu(list, message, 0, all-1, action);
-			}
-
-			//	Génère le menu.
-			VMenu menu = new VMenu();
-			for (int i=0; i<list.Count; i++)
-			{
-				menu.Items.Add(list[i]);
-			}
-			menu.AdjustSize();
-			return menu;
-		}
-
-		protected void LocatorCreateMenu(List<Widget> list, MessageEventHandler message, int active, int rank, string action)
-		{
-			//	Crée une case du menu des actions à refaire/annuler.
-			string icon = "";
-			if ( active == 1 )  icon = Misc.Icon("ActiveNo");
-			if ( active == 2 )  icon = Misc.Icon("ActiveCurrent");
-
-			string name = string.Format("{0}: {1}", (rank+1).ToString(), action);
-			string cmd = "LocatorListDo";
-			Misc.CreateStructuredCommandWithName(cmd);
-
-			MenuItem item = new MenuItem(cmd, icon, name, "", rank.ToString());
-
-			if ( message != null )
-			{
-				item.Pressed += message;
-			}
-
-			list.Add(item);
-		}
-
-		protected string LocatorGetNiceText(int index)
-		{
-			//	Retourne le joil texte correspondant à un locateur.
-			string moduleName              = this.locators[index].ModuleName;
-			ResourceAccess.Type viewerType = this.locators[index].ViewerType;
-			Druid resource                 = this.locators[index].Resource;
-
-			string typeText = ResourceAccess.TypeDisplayName(viewerType);
-
-			string resourceText = resource.ToString();  // affiche le Druid si on ne trouve rien de mieux
-			int moduleRank = this.SearchModuleRank(moduleName);
-			if (moduleRank != -1)
-			{
-				ResourceAccess access = this.moduleInfoList[moduleRank].Module.GetAccess(viewerType);
-				if (access != null)
-				{
-					resourceText = access.DirectGetDisplayName(resource);
-				}
-			}
-
-			return System.String.Format("{0}/{1}: {2}", moduleName, typeText, resourceText);
 		}
 		#endregion
 
