@@ -8,10 +8,19 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Locator
 	{
-		public Locator(ResourceAccess.Type viewerType, Druid resource)
+		public Locator(string moduleName, ResourceAccess.Type viewerType, Druid resource)
 		{
+			this.moduleName = moduleName;
 			this.viewerType = viewerType;
 			this.resource = resource;
+		}
+
+		public string ModuleName
+		{
+			get
+			{
+				return this.moduleName;
+			}
 		}
 
 		public ResourceAccess.Type ViewerType
@@ -19,10 +28,6 @@ namespace Epsitec.Common.Designer.Viewers
 			get
 			{
 				return this.viewerType;
-			}
-			set
-			{
-				this.viewerType = value;
 			}
 		}
 
@@ -32,26 +37,22 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				return this.resource;
 			}
-			set
-			{
-				this.resource = value;
-			}
 		}
 
 
 		public static bool operator ==(Locator a, Locator b)
 		{
-			return (a.viewerType == b.viewerType) && (a.resource == b.resource);
+			return (a.moduleName == b.moduleName) && (a.viewerType == b.viewerType) && (a.resource == b.resource);
 		}
 		
 		public static bool operator !=(Locator a, Locator b)
 		{
-			return (a.viewerType != b.viewerType) || (a.resource != b.resource);
+			return (a.moduleName != b.moduleName) || (a.viewerType != b.viewerType) || (a.resource != b.resource);
 		}
 
 		public override string ToString()
 		{
-			return System.String.Format("Type={0}, Resource={1}", this.viewerType, this.resource);
+			return System.String.Format("Module={0}, Type={1}, Resource={1}", this.moduleName, this.viewerType, this.resource);
 		}
 		
 		public override bool Equals(object obj)
@@ -65,6 +66,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 		
 
+		protected string							moduleName;
 		protected ResourceAccess.Type				viewerType;
 		protected Druid								resource;						
 	}

@@ -898,11 +898,11 @@ namespace Epsitec.Common.Designer
 			mi.TabPage.TabTitle = mi.Module.ModuleInfo.Name;
 			this.bookModules.Items.Insert(this.currentModule, mi.TabPage);
 
-			mi.BundleType = new MyWidgets.BundleType(mi.TabPage);
-			mi.BundleType.Dock = DockStyle.Top;
-			mi.BundleType.TypeChanged += new EventHandler(this.HandleTypeChanged);
+			mi.BundleTypeWidget = new MyWidgets.BundleType(mi.TabPage);
+			mi.BundleTypeWidget.Dock = DockStyle.Top;
+			mi.BundleTypeWidget.TypeChanged += new EventHandler(this.HandleTypeChanged);
 
-			mi.Module.BundleTypeWidget = mi.BundleType;
+			mi.Module.BundleTypeWidget = mi.BundleTypeWidget;
 
 			this.CreateViewerLayout();
 		}
@@ -919,7 +919,7 @@ namespace Epsitec.Common.Designer
 				mi.Module.Modifier.ActiveViewer = null;
 			}
 
-			ResourceAccess.Type type = mi.BundleType.CurrentType;
+			ResourceAccess.Type type = mi.BundleTypeWidget.CurrentType;
 			Viewers.Abstract viewer = Viewers.Abstract.Create(type, mi.Module, this.context, mi.Module.GetAccess(type), this);
 
 			if (viewer != null)
@@ -977,6 +977,17 @@ namespace Epsitec.Common.Designer
 			{
 				if ( this.currentModule < 0 )  return null;
 				return this.moduleInfoList[this.currentModule];
+			}
+		}
+
+		public string CurrentModuleName
+		{
+			//	Retourne le nom du module courant.
+			get
+			{
+				ModuleInfo mi = this.CurrentModuleInfo;
+				if (mi == null)  return null;
+				return mi.Module.ModuleInfo.Name;
 			}
 		}
 
@@ -1390,7 +1401,7 @@ namespace Epsitec.Common.Designer
 		{
 			public Module						Module;
 			public TabPage						TabPage;
-			public MyWidgets.BundleType			BundleType;
+			public MyWidgets.BundleType			BundleTypeWidget;
 
 			#region IDisposable Members
 			public void Dispose()

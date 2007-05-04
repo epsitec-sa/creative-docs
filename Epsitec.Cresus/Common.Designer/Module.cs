@@ -256,6 +256,8 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
+			string moduleName = this.mainWindow.CurrentModuleName;
+
 			ResourceAccess.Type viewerType = this.bundleTypeWidget.CurrentType;
 
 			Druid resource = Druid.Empty;
@@ -266,7 +268,7 @@ namespace Epsitec.Common.Designer
 				resource = access.AccessDruid(sel);
 			}
 
-			Viewers.Locator locator = new Viewers.Locator(viewerType, resource);
+			Viewers.Locator locator = new Viewers.Locator(moduleName, viewerType, resource);
 
 			if (this.locatorIndex >= 0 && this.locatorIndex < this.locators.Count)
 			{
@@ -324,10 +326,10 @@ namespace Epsitec.Common.Designer
 			this.LocatorGoto(locator);
 		}
 
-		public void LocatorGoto(ResourceAccess.Type viewerType, Druid resource)
+		public void LocatorGoto(string moduleName, ResourceAccess.Type viewerType, Druid resource)
 		{
 			//	Va sur une ressource d'une vue quelconque.
-			Viewers.Locator locator = new Viewers.Locator(viewerType, resource);
+			Viewers.Locator locator = new Viewers.Locator(moduleName, viewerType, resource);
 			this.LocatorGoto(locator);
 		}
 
