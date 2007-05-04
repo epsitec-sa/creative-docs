@@ -39,14 +39,6 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		public string NiceText
-		{
-			get
-			{
-				return System.String.Format("{0}/{1}: {2}", this.moduleName, this.viewerType, this.resource);
-			}
-		}
-
 
 		public static bool operator ==(Locator a, Locator b)
 		{

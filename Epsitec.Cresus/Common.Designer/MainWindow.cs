@@ -1067,7 +1067,7 @@ namespace Epsitec.Common.Designer
 			//	Met éventuellement la première localisation où aller.
 			if (start > 0)
 			{
-				string action = this.locators[0].NiceText;
+				string action = this.LocatorGetNiceText(0);
 				this.LocatorCreateMenu(list, message, 1, 0, action);
 
 				if (start > 1)
@@ -1081,7 +1081,7 @@ namespace Epsitec.Common.Designer
 			{
 				if (i <= this.locatorIndex)  // prev ?
 				{
-					string action = this.locators[i].NiceText;
+					string action = this.LocatorGetNiceText(i);
 					int active = 1;
 					if (i == this.locatorIndex)
 					{
@@ -1097,7 +1097,7 @@ namespace Epsitec.Common.Designer
 						list.Add(new MenuSeparator());
 					}
 
-					string action = this.locators[i].NiceText;
+					string action = this.LocatorGetNiceText(i);
 					action = Misc.Italic(action);
 					this.LocatorCreateMenu(list, message, 0, i, action);
 				}
@@ -1111,7 +1111,7 @@ namespace Epsitec.Common.Designer
 					list.Add(new MenuSeparator());
 				}
 
-				string action = this.locators[all-1].NiceText;
+				string action = this.LocatorGetNiceText(all-1);
 				action = Misc.Italic(action);
 				this.LocatorCreateMenu(list, message, 0, all-1, action);
 			}
@@ -1145,6 +1145,29 @@ namespace Epsitec.Common.Designer
 			}
 
 			list.Add(item);
+		}
+
+		protected string LocatorGetNiceText(int index)
+		{
+			//	Retourne le joil texte correspondant à un locateur.
+			string moduleName              = this.locators[index].ModuleName;
+			ResourceAccess.Type viewerType = this.locators[index].ViewerType;
+			Druid resource                 = this.locators[index].Resource;
+
+			string typeText = ResourceAccess.TypeDisplayName(viewerType);
+
+			string resourceText = resource.ToString();  // affiche le Druid si on ne trouve rien de mieux
+			int moduleRank = this.SearchModuleRank(moduleName);
+			if (moduleRank != -1)
+			{
+				ResourceAccess access = this.moduleInfoList[moduleRank].Module.GetAccess(viewerType);
+				if (access != null)
+				{
+					resourceText = access.DirectGetDisplayName(resource);
+				}
+			}
+
+			return System.String.Format("{0}/{1}: {2}", moduleName, typeText, resourceText);
 		}
 		#endregion
 
