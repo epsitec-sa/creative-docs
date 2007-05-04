@@ -1061,6 +1061,26 @@ namespace Epsitec.Common.Designer
 			return System.String.Format("{0}/{1}: {2}", moduleName, typeText, resourceText);
 		}
 
+		protected void LocatorClose(string moduleName)
+		{
+			//	Suite à la fermeture d'un module, supprime toutes les localisations en rapport avec ce module.
+			int i = 0;
+			while (i<this.locators.Count)
+			{
+				if (this.locators[i].ModuleName == moduleName)
+				{
+					this.locators.RemoveAt(i);
+				}
+				else
+				{
+					i++;
+				}
+			}
+
+			this.locatorIndex = this.locators.Count-1;
+			this.LocatorUpdateCommand();
+		}
+
 		protected bool LocatorPrevIsEnable
 		{
 			//	Donne l'état de la commande "LocatorPrev".
@@ -1406,6 +1426,7 @@ namespace Epsitec.Common.Designer
 			this.ignoreChange = true;
 			this.bookModules.Items.RemoveAt(rank);
 			this.ignoreChange = false;
+			this.LocatorClose(mi.Module.ModuleInfo.Name);
 			mi.Module.Dispose();
 			mi.Dispose();
 
