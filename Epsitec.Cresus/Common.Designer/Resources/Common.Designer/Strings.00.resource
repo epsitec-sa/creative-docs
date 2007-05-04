@@ -135,6 +135,7 @@
   <data name="Action.New" id="0U">Nouveau</data>
   <data name="Action.Open" id="0V">Ouvrir...</data>
   <data name="Action.LocatorPrev" id="06A">Reculer</data>
+  <data name="Action.LocatorList" id="08A">Liste des ressources visitées</data>
   <data name="Action.LocatorNext" id="07A">Avancer</data>
   <data name="Action.Close" id="001">Fermer</data>
   <data name="Action.CloseAll" id="011">Fermer tout</data>

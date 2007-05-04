@@ -422,6 +422,23 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		static public Command CreateStructuredCommandWithName(string commandName)
+		{
+			Command command = Command.Find(commandName);
+
+			if (command == null || command.CommandType == CommandType.Standard)
+			{
+				command = Command.Get(commandName);
+				Command.SetCommandType(command.Caption, CommandType.Structured);
+				
+				Types.StructuredType type = command.StructuredType;
+				type.Fields.Add("Name", Types.StringType.Default);
+			}
+
+			return command;
+		}
+
+
 		static public string GetUnicodeName(int code)
 		{
 			//	Retourne le nom d'un caractère Unicode.

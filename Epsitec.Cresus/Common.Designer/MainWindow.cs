@@ -750,6 +750,22 @@ namespace Epsitec.Common.Designer
 			this.LocatorNext();
 		}
 
+		[Command ("LocatorListDo")]
+		void CommandLocatorListDo(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			string value = StructuredCommand.GetFieldValue(e.CommandState, "Name") as string;
+
+			int nb = System.Convert.ToInt32(value);
+			if ( nb > 0 )
+			{
+				this.LocatorRestore(nb);
+			}
+			else
+			{
+				this.LocatorRestore(-nb);
+			}
+		}
+
 		protected void InitCommands()
 		{
 			this.newState = this.CreateCommandState("New", KeyCode.ModifierControl|KeyCode.AlphaN);
@@ -968,6 +984,10 @@ namespace Epsitec.Common.Designer
 			this.LocatorGoto(locator);
 		}
 
+		protected void LocatorRestore(int nb)
+		{
+		}
+
 		public void LocatorGoto(string moduleName, ResourceAccess.Type viewerType, Druid resource)
 		{
 			//	Va sur une ressource d'une vue d'un module quelconque.
@@ -1034,6 +1054,127 @@ namespace Epsitec.Common.Designer
 			//	Met à jour les commandes du navigateur.
 			this.locatorPrevState.Enable = this.LocatorPrevIsEnable;
 			this.locatorNextState.Enable = this.LocatorNextIsEnable;
+		}
+
+		public VMenu LocatorCreateMenu(MessageEventHandler message)
+		{
+			//	Construit le menu des ressources visitées.
+			List<string> prevNames = new List<string>();
+			List<string> nextNames = new List<string>();
+
+			for (int i=0; i<this.locatorIndex+1; i++)
+			{
+				prevNames.Add(this.locators[i].NiceText);
+			}
+
+			for (int i=this.locatorIndex+1; i<this.locators.Count; i++)
+			{
+				nextNames.Add(this.locators[i].NiceText);
+			}
+
+			//	Pour des raisons historiques, le menu est construit à l'envers,
+			//	c'est-à-dire la dernière action au début du menu (en haut).
+			//	-
+			//	| next
+			//	-
+			//	|
+			//	| prev
+			//	|
+			//	- 0
+			int all = prevNames.Count+nextNames.Count;
+			int total = System.Math.Min(all, 20);
+			int start = prevNames.Count;
+			start -= total/2;  if ( start < 0     )  start = 0;
+			start += total-1;  if ( start > all-1 )  start = all-1;
+
+			List<Widget> list = new List<Widget>();
+
+			//	Met éventuellement la dernière action à refaire.
+			if ( start < all-1 )
+			{
+				int todo = -nextNames.Count;
+				string action = nextNames[nextNames.Count-1];
+				action = Misc.Italic(action);
+				this.LocatorCreateMenu(list, message, 0, all, action, todo);
+
+				if ( start < all-2 )
+				{
+					list.Add(new MenuSeparator());
+				}
+			}
+
+			//	Met les actions à refaire puis à celles à annuler.
+			for ( int i=start ; i>start-total ; i-- )
+			{
+				if ( i >= prevNames.Count )  // next ?
+				{
+					int todo = -(i-prevNames.Count+1);
+					string action = nextNames[i-prevNames.Count];
+					action = Misc.Italic(action);
+					this.LocatorCreateMenu(list, message, 0, i+1, action, todo);
+
+					if ( i == prevNames.Count && prevNames.Count != 0 )
+					{
+						list.Add(new MenuSeparator());
+					}
+				}
+				else	// prev ?
+				{
+					int todo = prevNames.Count-i;
+					string action = prevNames[prevNames.Count-i-1];
+					int active = 1;
+					if ( i == prevNames.Count-1 )
+					{
+						active = 2;
+						action = Misc.Bold(action);
+					}
+					this.LocatorCreateMenu(list, message, active, i+1, action, todo);
+				}
+			}
+
+			//	Met éventuellement la dernière action à annuler.
+			if ( start-total >= 0 )
+			{
+				if ( start-total > 0 )
+				{
+					list.Add(new MenuSeparator());
+				}
+
+				int todo = prevNames.Count;
+				string action = prevNames[prevNames.Count-1];
+				this.LocatorCreateMenu(list, message, 1, 1, action, todo);
+			}
+
+			//	Génère le menu à l'envers, c'est-à-dire la première action au
+			//	début du menu (en haut).
+			VMenu menu = new VMenu();
+			for (int i=list.Count-1; i>=0; i--)
+			{
+				menu.Items.Add(list[i]);
+			}
+			menu.AdjustSize();
+			return menu;
+		}
+
+		protected void LocatorCreateMenu(List<Widget> list, MessageEventHandler message, int active, int rank, string action, int todo)
+		{
+			//	Crée une case du menu des actions à refaire/annuler.
+			string icon = "";
+			if ( active == 1 )  icon = Misc.Icon("ActiveNo");
+			if ( active == 2 )  icon = Misc.Icon("ActiveCurrent");
+
+			string name = string.Format("{0}: {1}", rank.ToString(), action);
+			string cmd = "LocatorListDo";
+			Misc.CreateStructuredCommandWithName(cmd);
+
+			MenuItem item = new MenuItem(cmd, icon, name, "", todo.ToString());
+
+			if ( message != null )
+			{
+				item.Pressed += message;
+			}
+
+			list.Add(item);
 		}
 		#endregion
 
@@ -1105,7 +1246,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected bool IsCurrentModule
+		public bool IsCurrentModule
 		{
 			//	Indique s'il existe un module courant.
 			get
