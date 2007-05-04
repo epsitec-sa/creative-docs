@@ -667,7 +667,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateEdit();
 			this.UpdateCommands();
 
-			this.module.LocatorFix();
+			this.mainWindow.LocatorFix();
 		}
 
 		protected virtual void ClearCache()

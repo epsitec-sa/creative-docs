@@ -56,19 +56,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public MyWidgets.BundleType BundleTypeWidget
-		{
-			set
-			{
-				this.bundleTypeWidget = value;
-				this.LocatorInit();
-			}
-			get
-			{
-				return this.bundleTypeWidget;
-			}
-		}
-
 		public DesignerMode Mode
 		{
 			//	Retourne le mode de fonctionnement du logiciel.
@@ -237,132 +224,6 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		#region Locator
-		protected void LocatorInit()
-		{
-			//	Initialise la liste des localisations.
-			System.Diagnostics.Debug.Assert(this.bundleTypeWidget != null);
-			this.locators = new List<Viewers.Locator>();
-			this.locatorIndex = -1;
-			this.locatorIgnore = false;
-		}
-
-		public void LocatorFix()
-		{
-			//	Fixe une vue que l'on vient d'atteindre.
-			System.Diagnostics.Debug.Assert(this.locators != null);
-			if (this.locatorIgnore)
-			{
-				return;
-			}
-
-			string moduleName = this.mainWindow.CurrentModuleName;
-
-			ResourceAccess.Type viewerType = this.bundleTypeWidget.CurrentType;
-
-			Druid resource = Druid.Empty;
-			ResourceAccess access = this.GetAccess(viewerType);
-			int sel = access.AccessIndex;
-			if (sel != -1)
-			{
-				resource = access.AccessDruid(sel);
-			}
-
-			Viewers.Locator locator = new Viewers.Locator(moduleName, viewerType, resource);
-
-			if (this.locatorIndex >= 0 && this.locatorIndex < this.locators.Count)
-			{
-				if (locator == this.locators[this.locatorIndex])  // locateur déjà fixé ?
-				{
-					return;  // si oui, il ne faut surtout rien fixer
-				}
-			}
-
-			//	Supprime les localisations après la localisation courante.
-			while (this.locators.Count-1 > this.locatorIndex)
-			{
-				this.locators.RemoveAt(this.locators.Count-1);
-			}
-
-			this.locators.Add(locator);
-			this.locatorIndex++;
-
-			this.mainWindow.UpdateCommandLocator();
-		}
-
-		public bool LocatorPrevIsEnable
-		{
-			//	Donne l'état de la commande "LocatorPrev".
-			get
-			{
-				System.Diagnostics.Debug.Assert(this.locators != null);
-				return this.locatorIndex > 0;
-			}
-		}
-
-		public bool LocatorNextIsEnable
-		{
-			//	Donne l'état de la commande "LocatorNext".
-			get
-			{
-				System.Diagnostics.Debug.Assert(this.locators != null);
-				return this.locatorIndex < this.locators.Count-1;
-			}
-		}
-
-		public void LocatorPrev()
-		{
-			//	Action de la commande "LocatorPrev".
-			System.Diagnostics.Debug.Assert(this.LocatorPrevIsEnable);
-			Viewers.Locator locator = this.locators[--this.locatorIndex];
-			this.LocatorGoto(locator);
-		}
-
-		public void LocatorNext()
-		{
-			//	Action de la commande "LocatorNext".
-			System.Diagnostics.Debug.Assert(this.LocatorNextIsEnable);
-			Viewers.Locator locator = this.locators[++this.locatorIndex];
-			this.LocatorGoto(locator);
-		}
-
-		public void LocatorGoto(string moduleName, ResourceAccess.Type viewerType, Druid resource)
-		{
-			//	Va sur une ressource d'une vue quelconque.
-			Viewers.Locator locator = new Viewers.Locator(moduleName, viewerType, resource);
-			this.LocatorGoto(locator);
-		}
-
-		protected void LocatorGoto(Viewers.Locator locator)
-		{
-			this.locatorIgnore = true;
-			this.bundleTypeWidget.CurrentType = locator.ViewerType;
-			this.locatorIgnore = false;
-
-			if (!locator.Resource.IsEmpty)
-			{
-				ResourceAccess access = this.GetAccess(locator.ViewerType);
-				int sel = access.AccessIndexOfDruid(locator.Resource);
-				if (sel != -1)
-				{
-					access.AccessIndex = sel;
-					Viewers.Abstract viewer = this.mainWindow.CurrentViewer;
-					if (viewer != null)
-					{
-						this.locatorIgnore = true;
-						viewer.Update();
-						viewer.ShowSelectedRow();
-						this.locatorIgnore = false;
-					}
-				}
-			}
-
-			this.LocatorFix();
-			this.mainWindow.UpdateCommandLocator();
-		}
-		#endregion
-
-
 		private void HandleAccessDirtyChanged(object sender)
 		{
 			//	Appelé lorsque l'état IsDirty d'un accès a changé.
@@ -407,7 +268,6 @@ namespace Epsitec.Common.Designer
 
 
 		protected MainWindow				mainWindow;
-		protected MyWidgets.BundleType		bundleTypeWidget;
 		protected DesignerMode				mode;
 		protected ResourceModuleInfo		moduleInfo;
 		protected Modifier					modifier;
@@ -416,8 +276,5 @@ namespace Epsitec.Common.Designer
 		protected ResourceAccess			accessCaptions;
 		protected ResourceAccess			accessPanels;
 		protected ResourceAccess			accessScripts;
-		protected List<Viewers.Locator>		locators;
-		protected int						locatorIndex;
-		protected bool						locatorIgnore;
 	}
 }

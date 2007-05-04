@@ -34,8 +34,9 @@ namespace Epsitec.Common.Designer
 		internal MainWindow(ResourceManagerPool pool)
 		{
 			this.resourceManagerPool = pool;
-			this.moduleInfoList = new List<ModuleInfo> ();
-			this.context = new PanelsContext ();
+			this.LocatorInit();
+			this.moduleInfoList = new List<ModuleInfo>();
+			this.context = new PanelsContext();
 		}
 
 		public void Show(Window parentWindow)
@@ -740,23 +741,13 @@ namespace Epsitec.Common.Designer
 		[Command("LocatorPrev")]
 		void CommandLocatorPrev(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			ModuleInfo mi = this.CurrentModuleInfo;
-			mi.Module.LocatorPrev();
+			this.LocatorPrev();
 		}
 
 		[Command("LocatorNext")]
 		void CommandLocatorNext(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			ModuleInfo mi = this.CurrentModuleInfo;
-			mi.Module.LocatorNext();
-		}
-
-		public void UpdateCommandLocator()
-		{
-			//	Met à jour les commandes du navigateur.
-			ModuleInfo mi = this.CurrentModuleInfo;
-			this.locatorPrevState.Enable = mi != null && mi.Module.LocatorPrevIsEnable;
-			this.locatorNextState.Enable = mi != null && mi.Module.LocatorNextIsEnable;
+			this.LocatorNext();
 		}
 
 		protected void InitCommands()
@@ -889,6 +880,140 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		#region Locator
+		protected void LocatorInit()
+		{
+			//	Initialise la liste des localisations.
+			this.locators = new List<Viewers.Locator>();
+			this.locatorIndex = -1;
+			this.locatorIgnore = false;
+		}
+
+		public void LocatorFix()
+		{
+			//	Fixe une vue que l'on vient d'atteindre.
+			System.Diagnostics.Debug.Assert(this.locators != null);
+			if (this.locatorIgnore)
+			{
+				return;
+			}
+
+			ModuleInfo mi = this.CurrentModuleInfo;
+			string moduleName = mi.Module.ModuleInfo.Name;
+			ResourceAccess.Type viewerType = mi.BundleTypeWidget.CurrentType;
+
+			Druid resource = Druid.Empty;
+			ResourceAccess access = mi.Module.GetAccess(viewerType);
+			int sel = access.AccessIndex;
+			if (sel != -1)
+			{
+				resource = access.AccessDruid(sel);
+			}
+
+			Viewers.Locator locator = new Viewers.Locator(moduleName, viewerType, resource);
+
+			if (this.locatorIndex >= 0 && this.locatorIndex < this.locators.Count)
+			{
+				if (locator == this.locators[this.locatorIndex])  // locateur déjà fixé ?
+				{
+					return;  // si oui, il ne faut surtout rien fixer
+				}
+			}
+
+			//	Supprime les localisations après la localisation courante.
+			while (this.locators.Count-1 > this.locatorIndex)
+			{
+				this.locators.RemoveAt(this.locators.Count-1);
+			}
+
+			this.locators.Add(locator);
+			this.locatorIndex++;
+
+			this.UpdateCommandLocator();
+		}
+
+		public bool LocatorPrevIsEnable
+		{
+			//	Donne l'état de la commande "LocatorPrev".
+			get
+			{
+				System.Diagnostics.Debug.Assert(this.locators != null);
+				return this.locatorIndex > 0;
+			}
+		}
+
+		public bool LocatorNextIsEnable
+		{
+			//	Donne l'état de la commande "LocatorNext".
+			get
+			{
+				System.Diagnostics.Debug.Assert(this.locators != null);
+				return this.locatorIndex < this.locators.Count-1;
+			}
+		}
+
+		public void LocatorPrev()
+		{
+			//	Action de la commande "LocatorPrev".
+			System.Diagnostics.Debug.Assert(this.LocatorPrevIsEnable);
+			Viewers.Locator locator = this.locators[--this.locatorIndex];
+			this.LocatorGoto(locator);
+		}
+
+		public void LocatorNext()
+		{
+			//	Action de la commande "LocatorNext".
+			System.Diagnostics.Debug.Assert(this.LocatorNextIsEnable);
+			Viewers.Locator locator = this.locators[++this.locatorIndex];
+			this.LocatorGoto(locator);
+		}
+
+		public void LocatorGoto(string moduleName, ResourceAccess.Type viewerType, Druid resource)
+		{
+			//	Va sur une ressource d'une vue d'un module quelconque.
+			Viewers.Locator locator = new Viewers.Locator(moduleName, viewerType, resource);
+			this.LocatorGoto(locator);
+		}
+
+		protected void LocatorGoto(Viewers.Locator locator)
+		{
+			ModuleInfo mi = this.CurrentModuleInfo;
+
+			this.locatorIgnore = true;
+			mi.BundleTypeWidget.CurrentType = locator.ViewerType;
+			this.locatorIgnore = false;
+
+			if (!locator.Resource.IsEmpty)
+			{
+				ResourceAccess access = mi.Module.GetAccess(locator.ViewerType);
+				int sel = access.AccessIndexOfDruid(locator.Resource);
+				if (sel != -1)
+				{
+					access.AccessIndex = sel;
+					Viewers.Abstract viewer = this.CurrentViewer;
+					if (viewer != null)
+					{
+						this.locatorIgnore = true;
+						viewer.Update();
+						viewer.ShowSelectedRow();
+						this.locatorIgnore = false;
+					}
+				}
+			}
+
+			this.LocatorFix();
+			this.UpdateCommandLocator();
+		}
+
+		protected void UpdateCommandLocator()
+		{
+			//	Met à jour les commandes du navigateur.
+			this.locatorPrevState.Enable = this.LocatorPrevIsEnable;
+			this.locatorNextState.Enable = this.LocatorNextIsEnable;
+		}
+		#endregion
+
+
 		#region Modules manager
 		protected void CreateModuleLayout()
 		{
@@ -901,8 +1026,6 @@ namespace Epsitec.Common.Designer
 			mi.BundleTypeWidget = new MyWidgets.BundleType(mi.TabPage);
 			mi.BundleTypeWidget.Dock = DockStyle.Top;
 			mi.BundleTypeWidget.TypeChanged += new EventHandler(this.HandleTypeChanged);
-
-			mi.Module.BundleTypeWidget = mi.BundleTypeWidget;
 
 			this.CreateViewerLayout();
 		}
@@ -936,10 +1059,7 @@ namespace Epsitec.Common.Designer
 			//	Appelé lorsque le type de vue a changé.
 			this.CreateViewerLayout();
 			this.DialogSearchAdapt();
-
-			ModuleInfo mi = this.CurrentModuleInfo;
-			mi.Module.LocatorFix();
-
+			this.LocatorFix();
 			this.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
 		}
 
@@ -977,17 +1097,6 @@ namespace Epsitec.Common.Designer
 			{
 				if ( this.currentModule < 0 )  return null;
 				return this.moduleInfoList[this.currentModule];
-			}
-		}
-
-		public string CurrentModuleName
-		{
-			//	Retourne le nom du module courant.
-			get
-			{
-				ModuleInfo mi = this.CurrentModuleInfo;
-				if (mi == null)  return null;
-				return mi.Module.ModuleInfo.Name;
 			}
 		}
 
@@ -1458,6 +1567,10 @@ namespace Epsitec.Common.Designer
 		protected bool							ignoreChange = false;
 		protected double						moveHorizontal = 5;
 		protected double						moveVertical = 5;
+
+		protected List<Viewers.Locator>			locators;
+		protected int							locatorIndex;
+		protected bool							locatorIgnore;
 
 		protected CommandState					newState;
 		protected CommandState					openState;
