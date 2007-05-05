@@ -32,6 +32,10 @@ namespace App.Tester
 			MainWindow testerMainWindow;
 			
 			testerMainWindow = new MainWindow ();
+			if (!testerMainWindow.InitDb ())
+			{
+				return;
+			}
 			testerMainWindow.Show (null);
 			testerMainWindow.Window.WindowCloseClicked += delegate (object sender) { testerMainWindow.Window.Quit (); };
 			testerMainWindow.Window.Run ();
