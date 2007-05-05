@@ -35,6 +35,8 @@ namespace Epsitec.Common.Widgets
 
 			this.window.Show();
 			Window.RunInTestEnvironment (this.window);
+//			System.Threading.Thread.Sleep (10000); // modOK001 pour pouvoir regarder tranquillement le produit du test, annulé
+
 		}
 
 		private void HandleWindowClosed(object sender)

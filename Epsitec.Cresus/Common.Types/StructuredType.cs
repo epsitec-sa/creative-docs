@@ -26,6 +26,18 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="StructuredType"/> class,
+		/// defaulting to <c>StructuredTypeClass.None</c>.
+		/// </summary>
+		// modOK001 on a besoin de pouvoir fixer une caption pour faire une nouvelle instance StructuredType dont on veut 
+		// ensuite faire de manière automatique une DbTable (la caption donne le nom de la table)
+		public StructuredType(Caption caption)
+			: base (caption)
+		{
+			this.fields = new Collections.HostedStructuredTypeFieldDictionary (this.NotifyFieldInsertion, this.NotifyFieldRemoval);
+		}
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="StructuredType"/> class.
 		/// </summary>
 		/// <param name="class">The structured type class.</param>

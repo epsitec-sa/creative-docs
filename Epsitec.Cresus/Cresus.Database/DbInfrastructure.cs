@@ -2314,7 +2314,30 @@ namespace Epsitec.Cresus.Database
 			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnId],       column.Key.Id));
 			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnStatus],   column.Key.IntStatus));
 			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefLog],   this.logger.CurrentId));
-			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnName],     column.Name));
+			if (column.CaptionId.IsValid) // modOK001 on accepte aussi les colonnes avec un DRUID, j'ai rajouté le 
+				                          // code suivant pour que ce soit géré
+			{
+				Caption caption = transaction.Infrastructure.DefaultContext.ResourceManager.GetCaption (column.CaptionId);
+				if (caption == null)
+				{
+					if (column.Name != null)
+					{
+						fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnName], column.Name));
+					}
+					else
+					{
+						throw new System.Exception ("Column without a name");
+					}
+				}
+				else
+				{
+					fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnName], transaction.Infrastructure.DefaultContext.ResourceManager.GetCaption (column.CaptionId).Name));
+				}
+			}
+			else
+			{
+				fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnName], column.Name));
+			}
 			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnInfoXml],  DbTools.GetCompactXml (column)));
 			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefTable], table.Key.Id));
 			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefType],  column.Type.Key.Id));
