@@ -1,8 +1,9 @@
-using System;
 using System.Text;
 using System.Collections.Generic;
+using System.Data;
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.UI;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
@@ -11,7 +12,7 @@ using Epsitec.Common.Drawing;
 namespace App.Tester
 {
 	/// <summary>
-	/// Fenêtre principale de l'éditeur de ressources.
+	/// Fenêtre principale de l'éditeur de l'application de test.
 	/// </summary>
 	public class MainWindow : DependencyObject
 	{
@@ -27,40 +28,79 @@ namespace App.Tester
 				this.window = new Window ();
 
 				this.window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;
-
-/*				Point parentCenter;
 				Rectangle windowBounds;
-
-				if (parentWindow == null)
-				{
-					Rectangle area = ScreenInfo.GlobalArea;
-					parentCenter = area.Center;
-				}
-				else
-				{
-					parentCenter = parentWindow.WindowBounds.Center;
-				}
-
-				windowBounds = new Rectangle (parentCenter.X-1000/2, parentCenter.Y-700/2, 1000, 700);
+				Rectangle area = ScreenInfo.GlobalArea;
+				windowBounds = new Rectangle (0, area.Height - 700, 1400, 700);
 				windowBounds = ScreenInfo.FitIntoWorkingArea (windowBounds);
-
-				this.window.WindowBounds = windowBounds;*/
-				this.window.ClientSize = new Size(1024, 768);
+				this.window.WindowBounds = windowBounds;
+//				this.window.ClientSize = new Size (1380, 700);
 				this.window.Root.MinSize = new Size (500, 400);
 				this.window.Text = "Tester";
 				this.window.Name = "Application";  // utilisé pour générer "QuitApplication" !
 				this.window.PreventAutoClose = true;
-				this.window.WindowClosed += new Epsitec.Common.Support.EventHandler(this.HandleWindowClosed);
+				this.window.WindowClosed += new EventHandler(this.HandleWindowClosed);
 
 				MainWindow.SetInstance (this.window, this);  // attache l'instance de MainWindow à la fenêtre
 				this.CreateLayout ();
 			}
+			this.leftList = new LeftList (this.broker, this.tableNameContactMain, this.paneLeftList);
+
 			this.window.Show ();
 		}
 
 		private void CreateLayout()
 		{
+			Widget root = new Panel ();
+			//			root.SetClientAngle(0);
+			//			root.SetClientZoom(1.0);
+			//-			root.Location = new Point(0, 0);
+			//-			root.Size = new Size(rect.Width, rect.Height-this.menu.DefaultHeight-this.toolBar.DefaultHeight);
+			root.Dock = DockStyle.Fill;
+			root.SetParent (this.window.Root);
 
+			this.mainPaneBook = new PaneBook ();
+			//-			this.mainPaneBook.Location = new Point(0, 0);
+			//-			this.mainPaneBook.Size = root.Size;
+			this.mainPaneBook.PaneBookStyle = PaneBookStyle.LeftRight;
+			this.mainPaneBook.PaneBehaviour = PaneBookBehaviour.Draft;
+			//this.mainPaneBook.PaneBehaviour = PaneBookBehaviour.FollowMe;
+			this.mainPaneBook.Dock = DockStyle.Fill;
+			this.mainPaneBook.PaneSizeChanged += new EventHandler (this.HandlePaneSizeChanged);
+			this.mainPaneBook.SetParent (root);
+
+			this.paneLeftList = new PanePage ();
+			this.paneLeftList.PaneRelativeSize = 5;
+			this.paneLeftList.PaneElasticity = 1;
+			this.paneLeftList.PaneHideSize = 50;
+			this.mainPaneBook.Items.Add (this.paneLeftList);
+
+			this.paneEdit = new PanePage ();
+			this.paneEdit.PaneRelativeSize = 10;
+			this.paneEdit.PaneElasticity = 1;
+			this.paneEdit.PaneHideSize = 100;
+			this.mainPaneBook.Items.Add (this.paneEdit);
+
+			this.paneSettingsDb = new PanePage ();
+			this.paneSettingsDb.PaneRelativeSize = 10;
+			this.paneSettingsDb.PaneElasticity = 1;
+			this.paneSettingsDb.PaneHideSize = 100;
+			this.mainPaneBook.Items.Add (this.paneSettingsDb);
+
+			this.paneSettingsType = new PanePage ();
+			this.paneSettingsType.PaneRelativeSize = 10;
+			this.paneSettingsType.PaneElasticity = 1;
+			this.paneSettingsType.PaneHideSize = 100;
+			this.mainPaneBook.Items.Add (this.paneSettingsType);
+
+			this.paneSettingsTab = new PanePage ();
+			this.paneSettingsTab.PaneRelativeSize = 10;
+			this.paneSettingsTab.PaneElasticity = 1;
+			this.paneSettingsTab.PaneHideSize = 100;
+			this.mainPaneBook.Items.Add (this.paneSettingsTab);
+		}
+
+		private void HandlePaneSizeChanged(object sender)
+		{
 		}
 
 		private void HandleWindowClosed(object sender)
@@ -89,6 +129,7 @@ namespace App.Tester
 		{
 			// Creates the StructuredType serving as model for the only table
 			Caption caption = new Caption (Druid.Parse ("[9000]"));
+			this.tableNameContactMain = "CONTACTMAIN";
 
 			//			caption.Name = "CONTACTMAIN";
 			StructuredType strucType = new StructuredType (caption);
@@ -99,16 +140,6 @@ namespace App.Tester
 			strucType.Fields.Add (new StructuredTypeField (null, StringType.Default, Druid.Parse ("[9005]"), 4));
 			strucType.Fields.Add (new StructuredTypeField (null, StringType.Default, Druid.Parse ("[9006]"), 5));
 			strucType.Fields.Add (new StructuredTypeField (null, StringType.Default, Druid.Parse ("[9007]"), 6));
-
-			StructuredTypeField strucTypeField;
-			if (strucType.FindFieldByRank (3, out strucTypeField))
-			{
-				System.Diagnostics.Debug.WriteLine ("TTT Name of field 3: " + strucTypeField.Id);
-			}
-			else
-			{
-				System.Diagnostics.Debug.WriteLine ("Field not found");
-			}
 
 			// Creates the database
 			try
@@ -138,18 +169,150 @@ namespace App.Tester
 				ResourceManager resMan = new ResourceManager (@"S:\Epsitec.Cresus\App.Tester\Resources\App.Tester");
 				infrastructure.DefaultContext.ResourceManager = resMan;
 
-				DbRichCommand command;
 				using (DbTransaction transaction = infrastructure.BeginTransaction ())
 				{
 					DbTable dbTable1 = Adapter.CreateTableDefinition (transaction, strucType);
 					transaction.Commit ();
 				}
 
+				this.broker = new DataBroker (infrastructure);
+				broker.LoadTable ( strucType );
+
+				DataTableBroker tableBroker = this.broker.GetTableBrokerFromType (strucType);
+
+//				DataTable dataTable = tableBroker.DataTable;
+//				int n = this.DumpDataTable (dataTable);
+
+				DataBrokerRecord record = tableBroker.AddRow ();
+				record.SetValue ("[9001]", "Otto");
+				record.SetValue ("[9002]", "Kölbl");
+				record.SetValue ("[9003]", "Ch. de la Tour-Grise");
+				record.SetValue ("[9004]", "28");
+				record.SetValue ("[9005]", "1007");
+				record.SetValue ("[9006]", "Lausanne");
+				record.SetValue ("[9007]", "Suisse");
+
+				record = tableBroker.AddRow ();
+				record.SetValue ("[9001]", "Timothy");
+				record.SetValue ("[9002]", "Loayza");
+				record.SetValue ("[9003]", "Ch. de la Tour-Grise");
+				record.SetValue ("[9004]", "28");
+				record.SetValue ("[9005]", "1007");
+				record.SetValue ("[9006]", "Lausanne");
+				record.SetValue ("[9007]", "Suisse");
+
+				record = tableBroker.AddRow ();
+				record.SetValue ("[9001]", "Vladimir");
+				record.SetValue ("[9002]", "Jaboyedoff-Gerber");
+				record.SetValue ("[9003]", "Ch. de la Tour-Grise");
+				record.SetValue ("[9004]", "28");
+				record.SetValue ("[9005]", "1007");
+				record.SetValue ("[9006]", "Lausanne");
+				record.SetValue ("[9007]", "Suisse");
+
+				record = tableBroker.AddRow ();
+				record.SetValue ("[9001]", "Frédéric");
+				record.SetValue ("[9002]", "Von Arx");
+				record.SetValue ("[9003]", "Av. de la Gare");
+				record.SetValue ("[9004]", "34");
+				record.SetValue ("[9005]", "2710");
+				record.SetValue ("[9006]", "Tavannes");
+				record.SetValue ("[9007]", "Suisse");
+
+				record = tableBroker.AddRow ();
+				record.SetValue ("[9001]", "Pierre");
+				record.SetValue ("[9002]", "Arnaud");
+				record.SetValue ("[9003]", "Ch. du Brit");
+				record.SetValue ("[9004]", "14");
+				record.SetValue ("[9005]", "1400");
+				record.SetValue ("[9006]", "Yverdon");
+				record.SetValue ("[9007]", "Suisse");
+
+				tableBroker.CopyChangesToDataTable ();
+				using (DbTransaction transaction = infrastructure.BeginTransaction ())
+				{
+					this.broker.Save (transaction);
+					transaction.Commit ();
+				}
 			}
 			return true;
 		}
 
+
+		int DumpDataTable(DataTable myTable)
+		{
+			int nb = 0;
+
+			System.Diagnostics.Debug.WriteLine ("TableName = " + myTable.TableName.ToString ());
+
+			//	Affiche le nom des colonnes
+			foreach (DataColumn myColumn in myTable.Columns)
+			{
+				System.Diagnostics.Debug.Write (myColumn.ColumnName);
+				System.Diagnostics.Debug.Write (", ");
+			}
+			System.Diagnostics.Debug.WriteLine (" ");
+
+			foreach (DataRow myRow in myTable.Rows)
+			{
+				nb++;
+				foreach (DataColumn myColumn in myTable.Columns)
+				{
+					System.Diagnostics.Debug.Write (myRow[myColumn]);
+					System.Diagnostics.Debug.Write (", ");
+				}
+				System.Diagnostics.Debug.WriteLine (" ");
+			}
+			System.Diagnostics.Debug.WriteLine (nb + " fiches listées");
+			return nb;
+		}
+
+		
+		int DumpDataSet(DataSet data_set)
+		{
+			int nb = 0;
+
+			//	Pour chaque table dans DataSet, imprime les valeurs.
+			foreach (DataTable myTable in data_set.Tables)
+			{
+				System.Diagnostics.Debug.WriteLine ("TableName = " + myTable.TableName.ToString ());
+
+				//	Affiche le nom des colonnes
+				foreach (DataColumn myColumn in data_set.Tables[0].Columns)
+				{
+					System.Diagnostics.Debug.Write (myColumn.ColumnName);
+					System.Diagnostics.Debug.Write (", ");
+				}
+				System.Diagnostics.Debug.WriteLine (" ");
+
+				foreach (DataRow myRow in myTable.Rows)
+				{
+					nb++;
+					foreach (DataColumn myColumn in myTable.Columns)
+					{
+						System.Diagnostics.Debug.Write (myRow[myColumn]);
+						System.Diagnostics.Debug.Write (", ");
+					}
+					System.Diagnostics.Debug.WriteLine (" ");
+				}
+			}
+			System.Diagnostics.Debug.WriteLine (nb + " fiches listées");
+			return nb;
+		}
+
+		protected LeftList leftList;
+
 		protected Window window;
+		protected PaneBook mainPaneBook;
+		protected PanePage paneLeftList;
+		protected PanePage paneEdit;
+		protected PanePage paneSettingsDb;
+		protected PanePage paneSettingsType;
+		protected PanePage paneSettingsTab;
+
+		protected string tableNameContactMain;
+		protected DataBroker broker;
+
 		public static readonly DependencyProperty InstanceProperty = DependencyProperty.RegisterAttached ("Instance", typeof (MainWindow), typeof (MainWindow));
 	}
 }

@@ -449,11 +449,12 @@ namespace Epsitec.Cresus.Database
 		/// <param name="name">The name or a caption DRUID (like <c>"[1234]"</c>).</param>
 		internal void DefineName(string name)
 		{
-			if (Druid.IsValidResourceId (name))
-			{
-				this.DefineCaptionId (Druid.Parse (name));
-			}
-			else
+//			if (Druid.IsValidResourceId (name))		// modOK001: me semble mieux de toujours laisser le druid comme nom du champ
+													// Attention, je suis sûr que ça fera que beaucoup de tests ne marchent plus
+//			{
+//				this.DefineCaptionId (Druid.Parse (name));
+//			}
+//			else
 			{
 				this.name = name;
 			}

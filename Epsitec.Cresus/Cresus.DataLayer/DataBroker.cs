@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
 
+using System.Data;
 using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer
@@ -119,7 +120,62 @@ namespace Epsitec.Cresus.DataLayer
 		/// </returns>
 		public DataTableBroker GetTableBroker(StructuredType type)
 		{
-			return this.GetTableBroker (type.Caption.Name);
+			if (type.Caption.Name != null) // modOK001 c'est moi qui ne dois pas bien mettre le nom là où il faut
+			{
+				return this.GetTableBroker (type.Caption.Name);
+			}
+			else
+			{
+				return this.GetTableBroker (infrastructure.DefaultContext.ResourceManager.GetCaption (type.CaptionId).Name);
+			}
+		}
+
+		/// <summary>
+		/// Gets the table broker for the table storing the specified
+		/// structured type. Uses the specified type instead of trying to load it
+		/// from the resources
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns>
+		/// The table broker or <c>null</c> if the specified table is not
+		/// loaded.
+		/// </returns>
+		public DataTableBroker GetTableBrokerFromType(StructuredType type)
+		{
+			string tableName;
+			if (type.Caption.Name != null) // modOK001 c'est moi qui ne dois pas bien mettre le nom là où il faut
+			{
+				tableName = type.Caption.Name;
+			}
+			else
+			{
+				tableName = infrastructure.DefaultContext.ResourceManager.GetCaption (type.CaptionId).Name;
+			}
+
+			if (!this.richCommand.DataSet.Tables.Contains (tableName))
+			{
+				return null;
+			}
+
+			DataTableBroker broker;
+
+			lock (this.exclusion)
+			{
+				if (!this.tableBrokers.TryGetValue (tableName, out broker))
+				{
+					DbTable tableDefinition = this.infrastructure.ResolveDbTable (tableName);
+					Caption tableCaption    = tableDefinition.Caption;
+
+					System.Data.DataTable dataTable = this.richCommand.DataSet.Tables[tableName];
+					
+					broker = new DataTableBroker (type, tableDefinition, dataTable);
+					broker.ParentBroker = this;
+					
+					this.tableBrokers[tableName] = broker;
+				}
+			}
+			
+			return broker;
 		}
 
 		/// <summary>
@@ -130,7 +186,7 @@ namespace Epsitec.Cresus.DataLayer
 		/// loaded.</returns>
 		public DataTableBroker GetTableBroker(string tableName)
 		{
-			if (!this.richCommand.DataSet.Tables.Contains (tableName))
+ 			if (!this.richCommand.DataSet.Tables.Contains (tableName))
 			{
 				return null;
 			}
