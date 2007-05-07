@@ -605,6 +605,47 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("[V002]", e31Fields[2]);	//	U1.V
 			Assert.AreEqual ("[V003]", e31Fields[3]);	//	U1.W
 		}
+		
+		[Test]
+		public void CheckStructuredTypeMerge3()
+		{
+			StructuredType e1;
+			StructuredType e2;
+			StructuredType e3;
+
+			this.CreateEntities (out e1, out e2, out e3);
+
+			e2.Fields.Add (new StructuredTypeField (null, IntegerType.Default, Support.Druid.Parse ("[400E]"), 1));
+
+			Assert.AreEqual (StringType.Default, e1.Fields["[400E]"].Type);
+			Assert.AreEqual (StringType.Default, e1.Fields["[400F]"].Type);
+
+			Assert.AreEqual (StringType.Default, e2.Fields["[400G]"].Type);
+			Assert.AreEqual (IntegerType.Default, e2.Fields["[400E]"].Type);
+
+
+			//	Merging two entities where the second one redefines a field of the
+			//	first one (field [400E] is redefined to be of type Integer) :
+
+			StructuredType e12 = StructuredType.Merge (e1, e2);
+
+			string[] e12Fields = Types.Collection.ToArray (e12.GetFieldIds ());
+
+			Assert.AreEqual (3, e12.Fields.Count);
+
+			Assert.AreEqual ("[400E]", e12Fields[0]);	//	E2.X <--
+			Assert.AreEqual ("[400F]", e12Fields[1]);	//	E1.Y
+			Assert.AreEqual ("[400G]", e12Fields[2]);	//	E2.Z
+
+			Assert.AreEqual (0, e12.Fields[e12Fields[0]].Rank);	//	E1.X, rank = 0
+			Assert.AreEqual (1, e12.Fields[e12Fields[1]].Rank);	//	E1.Y, rank = 1
+			Assert.AreEqual (2, e12.Fields[e12Fields[2]].Rank);	//	E2.Z, rank = 2
+
+			Assert.AreEqual (IntegerType.Default, e12.Fields[e12Fields[0]].Type);
+			Assert.AreEqual (StringType.Default, e12.Fields[e12Fields[1]].Type);
+			Assert.AreEqual (StringType.Default, e12.Fields[e12Fields[2]].Type);
+		}
+
 
 		[Test]
 		[ExpectedException (typeof (System.ArgumentException))]
@@ -620,24 +661,7 @@ namespace Epsitec.Common.Types
 
 			//	We cannot merge two entities of different classes; verify
 			//	that this raises the ArgumentException exception :
-			
-			StructuredType.Merge (e1, e2);
-		}
 
-		[Test]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void CheckStructuredTypeMergeEx2()
-		{
-			StructuredType e1;
-			StructuredType e2;
-			StructuredType e3;
-
-			this.CreateEntities (out e1, out e2, out e3);
-			
-			e2.Fields.Add (new StructuredTypeField (null, StringType.Default, Support.Druid.Parse ("[400E]"), 1));
-
-			//	We cannot merge two entities with an identically named field.
-			
 			StructuredType.Merge (e1, e2);
 		}
 

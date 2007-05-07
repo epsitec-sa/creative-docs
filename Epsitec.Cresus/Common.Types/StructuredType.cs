@@ -288,9 +288,16 @@ namespace Epsitec.Common.Types
 			foreach (string id in b.GetFieldIds ())
 			{
 				StructuredTypeField field = b.GetField (id);
-				
-				merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++,
-														   field.Relation, field.SourceFieldId));
+
+				if (merge.fields.ContainsKey (id))
+				{
+					merge.fields[id] = new StructuredTypeField (id, field.Type, field.CaptionId, merge.fields[id].Rank, field.Relation, field.SourceFieldId);
+				}
+				else
+				{
+					merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++,
+															   field.Relation, field.SourceFieldId));
+				}
 			}
 
 			//	Make the merged structure type belong to the same bundle/module
