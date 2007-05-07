@@ -309,17 +309,19 @@ namespace Epsitec.Common.Dialogs.Controllers
 
 		private void SetActiveDirectory(FolderItem folder, RecordInHistory recordMode)
 		{
-			string oldPath = this.activeDirectory.FullPath;
-
+			FolderItem oldItem = this.activeDirectory;
+			string     oldPath = oldItem.FullPath;
+			
 			if (this.activeDirectory != folder)
 			{
 				this.activeDirectory = folder;
 				this.activeSmallIcon = null;
 			}
 
-			string newPath = this.activeDirectory.FullPath;
+			FolderItem newItem = this.activeDirectory;
+			string     newPath = newItem.FullPath;
 
-			if (oldPath != newPath)
+			if (oldItem != newItem)
 			{
 				if (recordMode == RecordInHistory.Yes)
 				{
