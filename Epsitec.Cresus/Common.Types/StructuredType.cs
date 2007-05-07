@@ -20,19 +20,7 @@ namespace Epsitec.Common.Types
 		/// defaulting to <c>StructuredTypeClass.None</c>.
 		/// </summary>
 		public StructuredType()
-			: base()			// modOK001 remplacé base ("Structure") pour qu'on n'ait pas ce nom qui prime sur la caption
-		{
-			this.fields = new Collections.HostedStructuredTypeFieldDictionary (this.NotifyFieldInsertion, this.NotifyFieldRemoval);
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="StructuredType"/> class,
-		/// defaulting to <c>StructuredTypeClass.None</c>.
-		/// </summary>
-		// modOK001 on a besoin de pouvoir fixer une caption pour faire une nouvelle instance StructuredType dont on veut 
-		// ensuite faire de manière automatique une DbTable (la caption donne le nom de la table)
-		public StructuredType(Caption caption)
-			: base (caption)
+			: base ("Structure")
 		{
 			this.fields = new Collections.HostedStructuredTypeFieldDictionary (this.NotifyFieldInsertion, this.NotifyFieldRemoval);
 		}
@@ -251,9 +239,10 @@ namespace Epsitec.Common.Types
 			//	OKDONE? : implement structured type merge; swap a and b if needed, based on
 			//	their layer depth (a should belong to the lower level layer)
 
-			StructuredType c;
 			if (a.Module.Layer > b.Module.Layer)
 			{
+				StructuredType c;
+			
 				c = a; // il doit y avoir plus élégant, non?
 				a = b;
 				b = c;
@@ -269,11 +258,8 @@ namespace Epsitec.Common.Types
 			StructuredType merge = new StructuredType (b.Class, b.BaseType);
 			merge.SetValue (StructuredType.DebugDisableChecksProperty, b.GetValue(DebugDisableChecksProperty));
 
-			if (a.Module.Layer != b.Module.Layer)
-			{
-				System.Diagnostics.Debug.Assert (a.Module.Layer < b.Module.Layer);
-
-			}
+			System.Diagnostics.Debug.Assert (a.Module.Layer <= b.Module.Layer);
+			
 			// J'ai dû mettre ici, si on met après avoir populé les fields, il refuse de redéfinir la caption
 			merge.DefineCaption (Caption.Merge (a.Caption, b.Caption));
 

@@ -26,7 +26,7 @@ namespace Epsitec.Common.Types
 
 		/// <summary>
 		/// Gets the structured type class for this instance. The default is
-		/// simply <c>Node</c>. modOK001 : or "None" ?
+		/// simply <c>StructuredTypeClass.None</c>.
 		/// </summary>
 		/// <returns>The structured type class to which this instance belongs.</returns>
 		StructuredTypeClass GetClass();
