@@ -98,6 +98,7 @@ namespace Epsitec.Common.Types.Collections
 
 				if (EqualityComparer<T>.Default.Equals (oldValue, value) == false)
 				{
+					this.NotifyBeforeSet (index, oldValue, value);
 					this.NotifyBeforeChange ();
 					this.list[index] = value;
 					this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Replace, index, new object[] { value }, index, new object[] { oldValue }));
@@ -292,6 +293,10 @@ namespace Epsitec.Common.Types.Collections
 
 		#endregion
 
+
+		protected virtual void NotifyBeforeSet(int index, T oldValue, T newValue)
+		{
+		}
 
 		protected virtual void NotifyBeforeChange()
 		{

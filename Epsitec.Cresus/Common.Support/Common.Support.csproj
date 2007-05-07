@@ -131,6 +131,8 @@
     <Compile Include="CommandAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CultureMap.cs" />
+    <Compile Include="CultureMapList.cs" />
     <Compile Include="DocumentCache.cs" />
     <Compile Include="DocumentManager.cs" />
     <Compile Include="FileFilterInfo.cs" />
@@ -179,9 +181,12 @@
     </Compile>
     <Compile Include="Internal\DocumentManagerStream.cs" />
     <Compile Include="Internal\ImageDocumentInfo.cs" />
+    <Compile Include="Internal\Test.cs" />
     <Compile Include="IOplet.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IDataBroker.cs" />
+    <Compile Include="IResourceAccessor.cs" />
     <Compile Include="ObjectDictMapper.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -212,6 +217,9 @@
     <Compile Include="Platform\Win32\ShellShortcut.cs" />
     <Compile Include="Platform\Win32\Win32Const.cs" />
     <Compile Include="Res.cs" />
+    <Compile Include="ResourceAccessors\AbstractResourceAccessor.cs" />
+    <Compile Include="ResourceAccessors\StringResourceAccessor.cs" />
+    <Compile Include="ResourceBrokers\StringDataBroker.cs" />
     <Compile Include="SerialAlgorithm.cs">
       <SubType>Code</SubType>
     </Compile>
