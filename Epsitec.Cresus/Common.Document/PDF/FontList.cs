@@ -104,6 +104,8 @@ namespace Epsitec.Common.Document.PDF
 
 		public override bool Equals(object obj)
 		{
+			//	Compare si deux fontes ont des apparences identiques, même si les objets
+			//	ne sont pas physiquement les mêmes.
 			FontList o = obj as FontList;
 
 			return OpenType.Font.HaveEqualTypography(this.openTypeFont, o.openTypeFont);
@@ -156,6 +158,7 @@ namespace Epsitec.Common.Document.PDF
 
 		public static FontList Search(System.Collections.Hashtable fonts, Drawing.Font drawingFont)
 		{
+			//	Cherche une fonte ayant une apparence identique.
 			foreach ( System.Collections.DictionaryEntry dict in fonts )
 			{
 				FontList fl = dict.Key as FontList;

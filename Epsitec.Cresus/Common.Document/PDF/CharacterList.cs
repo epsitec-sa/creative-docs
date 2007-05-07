@@ -76,16 +76,18 @@ namespace Epsitec.Common.Document.PDF
 
 		public override bool Equals(object obj)
 		{
+			//	Compare deux caractères. Ils doivent utiliser des fontes ayant une apparence identique
+			//	pour être considérés comme identiques.
 			CharacterList o = obj as CharacterList;
 
-			return ( this.unicode      == o.unicode      &&
-					 this.glyph        == o.glyph        &&
-					 this.openTypeFont == o.openTypeFont );
+			return ( this.unicode == o.unicode &&
+					 this.glyph   == o.glyph   &&
+					 OpenType.Font.HaveEqualTypography(this.openTypeFont, o.openTypeFont) );
 		}
 
 		public override int GetHashCode() 
 		{
-			return this.unicode ^ this.openTypeFont.GetHashCode();
+			return this.unicode ^ this.openTypeFont.GetTypographyHashCode();
 		}
 
 
