@@ -540,25 +540,11 @@ namespace Epsitec.Common.Types
 			StructuredType e13 = StructuredType.Merge (e1, e3);
 			StructuredType e31 = StructuredType.Merge (e3, e1);
 
-			// modOK001 est-ce que c'est voulu que ça teste le nom (.Name)? Le nom doit donc être vide pour qu'on ait
-			// la caption (voir modOK001 dans StructuredType constructeur), ou est-ce que dans Merge il aurait fallu
-			// copier la caption dans le nom? Mais laquelle, s'il y en a plusieurs?
 			Assert.AreEqual ("E2", e12.Name);	//	E1 merged with E2, caption of E2 wins
 			Assert.AreEqual ("E1", e21.Name);	//	E2 merged with E1, caption of E1 wins
 			Assert.AreEqual ("U1", e13.Name);	//	E1 merged with U1, U1 wins as it is of a higher layer
 			Assert.AreEqual ("U1", e31.Name);	//	U1 merged with E1, U1 wins as it is of a higher layer
 
-			// modOK001 état avant ma modification:
-			//Assert.AreEqual (Support.ResourceModuleLayer.Application, e12.Module.Layer);
-			//Assert.AreEqual (Support.ResourceModuleLayer.Application, e21.Module.Layer);
-			//Assert.AreEqual (Support.ResourceModuleLayer.Application, e13.Module.Layer);
-			//Assert.AreEqual (Support.ResourceModuleLayer.Application, e31.Module.Layer);
-			// modOK001 j'ai peut-être rien compris, mais il me semblerait logique que si on merge
-			// une entité de la couche application avec une de la couche utilisateur, que ça donne
-			// une entité utilisateur? Vu que c'est toujours le niveau le plus élevé qui prime? Sinon
-			// je ne vois pas très bien comment faire :-( , parce qu'il faudrait garder la caption de b,
-			// mais le module de a... Donc il faudrait modifier Caption.Merge, qui est sûrement utilisé
-			// ailleurs. Alors j'ai modifié comme je pensais:
 			Assert.AreEqual (Support.ResourceModuleLayer.Application, e12.Module.Layer);
 			Assert.AreEqual (Support.ResourceModuleLayer.Application, e21.Module.Layer);
 			Assert.AreEqual (Support.ResourceModuleLayer.User, e13.Module.Layer);

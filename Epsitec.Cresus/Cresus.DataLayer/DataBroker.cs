@@ -120,14 +120,10 @@ namespace Epsitec.Cresus.DataLayer
 		/// </returns>
 		public DataTableBroker GetTableBroker(StructuredType type)
 		{
-			if (type.Caption.Name != null) // modOK001 c'est moi qui ne dois pas bien mettre le nom là où il faut
-			{
-				return this.GetTableBroker (type.Caption.Name);
-			}
-			else
-			{
-				return this.GetTableBroker (infrastructure.DefaultContext.ResourceManager.GetCaption (type.CaptionId).Name);
-			}
+			System.Diagnostics.Debug.Assert (type != null);
+			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (type.Name));
+
+			return this.GetTableBroker (type.Name);
 		}
 
 		/// <summary>
@@ -142,15 +138,10 @@ namespace Epsitec.Cresus.DataLayer
 		/// </returns>
 		public DataTableBroker GetTableBrokerFromType(StructuredType type)
 		{
-			string tableName;
-			if (type.Caption.Name != null) // modOK001 c'est moi qui ne dois pas bien mettre le nom là où il faut
-			{
-				tableName = type.Caption.Name;
-			}
-			else
-			{
-				tableName = infrastructure.DefaultContext.ResourceManager.GetCaption (type.CaptionId).Name;
-			}
+			System.Diagnostics.Debug.Assert (type != null);
+			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (type.Name));
+			
+			string tableName = type.Name;
 
 			if (!this.richCommand.DataSet.Tables.Contains (tableName))
 			{

@@ -2314,10 +2314,15 @@ namespace Epsitec.Cresus.Database
 			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnId],       column.Key.Id));
 			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnStatus],   column.Key.IntStatus));
 			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefLog],   this.logger.CurrentId));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnName],     column.Name));
+#if false
+			//	NON : on n'a pas le droit d'accéder au ResourceManager depuis ici, car
+			//	le ResourceManager lui-même peut faire appel à DbInfrastructure.
+			
 			if (column.CaptionId.IsValid) // modOK001 on accepte aussi les colonnes avec un DRUID, j'ai rajouté le 
 				                          // code suivant pour que ce soit géré
 			{
-				Caption caption = transaction.Infrastructure.DefaultContext.ResourceManager.GetCaption (column.CaptionId);
+				Caption caption = this.DefaultContext.ResourceManager.GetCaption (column.CaptionId);
 				if (caption == null)
 				{
 					if (column.Name != null)
@@ -2338,6 +2343,7 @@ namespace Epsitec.Cresus.Database
 			{
 				fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnName], column.Name));
 			}
+#endif
 			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnInfoXml],  DbTools.GetCompactXml (column)));
 			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefTable], table.Key.Id));
 			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefType],  column.Type.Key.Id));

@@ -444,17 +444,18 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Defines the column name.
+		/// Defines the column name. The name can be specified explicitely or as
+		/// a caption identifier (DRUID), in which case this method behaves like
+		/// the method <see cref="DefineCaptionId"/>.
 		/// </summary>
 		/// <param name="name">The name or a caption DRUID (like <c>"[1234]"</c>).</param>
 		internal void DefineName(string name)
 		{
-//			if (Druid.IsValidResourceId (name))		// modOK001: me semble mieux de toujours laisser le druid comme nom du champ
-													// Attention, je suis sûr que ça fera que beaucoup de tests ne marchent plus
-//			{
-//				this.DefineCaptionId (Druid.Parse (name));
-//			}
-//			else
+			if (Druid.IsValidResourceId (name))
+			{
+				this.DefineCaptionId (Druid.Parse (name));
+			}
+			else
 			{
 				this.name = name;
 			}

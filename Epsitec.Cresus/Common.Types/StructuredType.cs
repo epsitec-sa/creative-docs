@@ -248,35 +248,49 @@ namespace Epsitec.Common.Types
 				b = c;
 			}
 
+			System.Diagnostics.Debug.Assert (a.Module.Layer <= b.Module.Layer);
+
 			// est-ce qu'ici, par prudence, il faut tester si c'est null? Il y a une valeur par défaut (.None), mais au cas où ?
 			if (a.Class != b.Class)
 			{
-				throw new System.ArgumentException (string.Format ("Can not merge 2 StructuredType of different Class ( {0} and {1} )", a.Class, b.Class));
+				throw new System.ArgumentException (string.Format ("Cannot merge StructuredType of Class {0} and {1}", a.Class, b.Class));
+			}
+			if (a.BaseType != b.BaseType)
+			{
+				throw new System.ArgumentException ("Cannot merge StructuredType with different base types");
 			}
 
-			// b.Class OK, mais b.BaseType? 
 			StructuredType merge = new StructuredType (b.Class, b.BaseType);
-			merge.SetValue (StructuredType.DebugDisableChecksProperty, b.GetValue(DebugDisableChecksProperty));
-
-			System.Diagnostics.Debug.Assert (a.Module.Layer <= b.Module.Layer);
 			
-			// J'ai dû mettre ici, si on met après avoir populé les fields, il refuse de redéfinir la caption
-			merge.DefineCaption (Caption.Merge (a.Caption, b.Caption));
+			if (((bool)a.GetValue(StructuredType.DebugDisableChecksProperty)) ||
+				((bool)b.GetValue(StructuredType.DebugDisableChecksProperty)))
+			{
+				merge.SetValue (StructuredType.DebugDisableChecksProperty, true);
+			}
 
-			//	OKDONE?: populate properties, fields, etc.
-			// modOK001 j'ai peuplé les properties plus haut, juste après le new.
+			// J'ai dû mettre ici, si on met après avoir peuplé les fields, il refuse de redéfinir la caption
+
+			Caption caption = Caption.Merge (a.Caption, b.Caption);
+
+			caption.ClearValue (AbstractType.ComplexTypeProperty);
+			merge.DefineCaption (caption);
 
 			int rank = 0;
+			
 			foreach (string id in a.GetFieldIds ())
 			{
-				merge.fields.Add (new StructuredTypeField(id, a.GetField(id).Type, a.GetField(id).CaptionId, rank++, 
-					                                      a.GetField(id).Relation, a.GetField(id).SourceFieldId ));
+				StructuredTypeField field = a.GetField (id);
+				
+				merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++,
+														   field.Relation, field.SourceFieldId));
 			}
 
 			foreach (string id in b.GetFieldIds ())
 			{
-				merge.fields.Add (new StructuredTypeField (id, b.GetField (id).Type, b.GetField (id).CaptionId, rank++,
-														  b.GetField (id).Relation, b.GetField (id).SourceFieldId));
+				StructuredTypeField field = b.GetField (id);
+				
+				merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++,
+														   field.Relation, field.SourceFieldId));
 			}
 
 			//	Make the merged structure type belong to the same bundle/module
