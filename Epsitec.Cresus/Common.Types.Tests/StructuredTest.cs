@@ -624,6 +624,23 @@ namespace Epsitec.Common.Types
 			StructuredType.Merge (e1, e2);
 		}
 
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckStructuredTypeMergeEx2()
+		{
+			StructuredType e1;
+			StructuredType e2;
+			StructuredType e3;
+
+			this.CreateEntities (out e1, out e2, out e3);
+			
+			e2.Fields.Add (new StructuredTypeField (null, StringType.Default, Support.Druid.Parse ("[400E]"), 1));
+
+			//	We cannot merge two entities with an identically named field.
+			
+			StructuredType.Merge (e1, e2);
+		}
+
 		private void CreateEntities(out StructuredType e1, out StructuredType e2, out StructuredType e3)
 		{
 			//	Manually create 3 entities based on captions stored in the Test
