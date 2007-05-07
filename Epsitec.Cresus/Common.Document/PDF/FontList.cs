@@ -106,12 +106,12 @@ namespace Epsitec.Common.Document.PDF
 		{
 			FontList o = obj as FontList;
 
-			return ( this.openTypeFont == o.openTypeFont );
+			return OpenType.Font.HaveEqualTypography(this.openTypeFont, o.openTypeFont);
 		}
 
 		public override int GetHashCode() 
 		{
-			return this.openTypeFont.GetHashCode();
+			return this.openTypeFont.GetTypographyHashCode();
 		}
 
 
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Document.PDF
 			foreach ( System.Collections.DictionaryEntry dict in fonts )
 			{
 				FontList fl = dict.Key as FontList;
-				if (fl.drawingFont.OpenTypeFont == drawingFont.OpenTypeFont)
+				if (OpenType.Font.HaveEqualTypography(fl.OpenTypeFont, drawingFont.OpenTypeFont))
 				{
 					return fl;
 				}

@@ -278,6 +278,34 @@ namespace Epsitec.Common.OpenType
 
 
 		/// <summary>
+		/// Compares the typography of two fonts and return true if both have the
+		/// same glyphs (they use the same font type).
+		/// </summary>
+		/// <param name="a">The first font.</param>
+		/// <param name="b">The second font.</param>
+		/// <returns><c>true</c> if both fonts use the same font type; otherwise, <c>false</c></returns>
+		public static bool HaveEqualTypography(Font a, Font b)
+		{
+			if (a == b)
+			{
+				return true;
+			}
+			
+			if ((a == null) ||
+				(b == null))
+			{
+				return false;
+			}
+
+			return a.FontIdentity.UniqueFontId == b.FontIdentity.UniqueFontId;
+		}
+
+		public int GetTypographyHashCode()
+		{
+			return this.FontIdentity.UniqueFontId.GetHashCode ();
+		}
+
+		/// <summary>
 		/// Generates the glyphs for the specified text.
 		/// </summary>
 		/// <param name="text">The text.</param>
