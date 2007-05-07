@@ -926,7 +926,11 @@ namespace Epsitec.Common.Designer
 				resource = access.AccessDruid(sel);
 			}
 
-			Viewers.Locator locator = new Viewers.Locator(moduleName, viewerType, resource);
+			Widget widgetFocused = this.Window.FocusedWidget;
+			int lineSelected = -1;
+			this.LocatorAdjustWidgetFocused(ref widgetFocused, ref lineSelected);
+
+			Viewers.Locator locator = new Viewers.Locator(moduleName, viewerType, resource, widgetFocused, lineSelected);
 
 			if (this.locatorIndex >= 0 && this.locatorIndex < this.locators.Count)
 			{
@@ -1130,10 +1134,12 @@ namespace Epsitec.Common.Designer
 			this.LocatorGoto(locator);
 		}
 
-		public void LocatorGoto(string moduleName, ResourceAccess.Type viewerType, Druid resource)
+		public void LocatorGoto(string moduleName, ResourceAccess.Type viewerType, Druid resource, Widget widgetFocused)
 		{
 			//	Va sur une ressource d'une vue d'un module quelconque.
-			Viewers.Locator locator = new Viewers.Locator(moduleName, viewerType, resource);
+			int lineSelected = -1;
+			this.LocatorAdjustWidgetFocused(ref widgetFocused, ref lineSelected);
+			Viewers.Locator locator = new Viewers.Locator(moduleName, viewerType, resource, widgetFocused, lineSelected);
 			this.LocatorGoto(locator);
 		}
 
@@ -1187,8 +1193,33 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
+#if false
+			//	Remet le widget dans le même état. Cela ne semble pas fonctionner, à cause de problèmes
+			//	dans StringArray !
+			if (locator.WidgetFocused != null)
+			{
+				if (locator.WidgetFocused != null && locator.WidgetFocused.Parent is MyWidgets.StringArray)
+				{
+					MyWidgets.StringArray array = locator.WidgetFocused.Parent as MyWidgets.StringArray;
+					array.SelectedRow = locator.LineSelected;
+				}
+
+				locator.WidgetFocused.Focus();
+			}
+#endif
+
 			this.LocatorFix();
 			this.LocatorUpdateCommand();
+		}
+
+		protected void LocatorAdjustWidgetFocused(ref Widget widgetFocused, ref int lineSelected)
+		{
+			//	Si le focus est dans une StringList, cherche la sélection dans le StringArray parent.
+			if (widgetFocused != null && widgetFocused.Parent is MyWidgets.StringArray)
+			{
+				MyWidgets.StringArray array = widgetFocused.Parent as MyWidgets.StringArray;
+				lineSelected = array.SelectedRow;
+			}
 		}
 
 		protected void LocatorUpdateCommand()

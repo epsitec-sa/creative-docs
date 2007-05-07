@@ -46,8 +46,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonSort.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonSort);
 
-			this.buttonGoto = new IconButton();
-			this.buttonGoto.CaptionId = Res.Captions.Editor.LocatorGoto.Id;
+			this.buttonGoto = this.CreateLocatorGotoButton(null);
 			this.buttonGoto.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonGoto);
 
@@ -456,7 +455,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			this.mainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Values, druid);
+			this.mainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Values, druid, this.Window.FocusedWidget);
 		}
 
 		protected void ArraySearch(string searching, int direction)

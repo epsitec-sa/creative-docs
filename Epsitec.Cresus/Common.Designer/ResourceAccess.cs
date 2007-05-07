@@ -2531,31 +2531,6 @@ namespace Epsitec.Common.Designer
 					}
 				}
 #endif
-#if false
-				if (this.type == Type.Types)
-				{
-					StructuredType st = this.CachedAbstractType as StructuredType;
-					if (st != null)
-					{
-						if (ResourceManager.GetSourceBundle (st.Caption) == null)
-						{
-							//	Ne devrait jamais être nécessaire !
-							ResourceManager.SetSourceBundle (st.Caption, this.accessBundle);
-						}
-						foreach (string id in st.GetFieldIds())
-						{
-							StructuredTypeField actualField = st.Fields[id];
-
-							ResourceBundle b = this.resourceManager.GetBundle(actualField.Id);
-							ResourceBundle.Field stf = b[actualField.Id];
-
-							//	TODO: modifier le nom...
-							StructuredTypeField newField = new StructuredTypeField(null, actualField.Type, actualField.CaptionId, actualField.Rank, actualField.Relation, actualField.SourceFieldId);
-							st.Fields[id] = newField;
-						}
-					}
-				}
-#endif
 			}
 			else
 			{

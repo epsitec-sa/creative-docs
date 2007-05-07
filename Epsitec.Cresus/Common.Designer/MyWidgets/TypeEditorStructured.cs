@@ -534,7 +534,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			this.mainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Fields, druid);
+			this.mainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Fields, druid, this.Window.FocusedWidget);
 		}
 
 #if false
@@ -589,7 +589,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			this.mainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Types, druid);
+			this.mainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Types, druid, this.Window.FocusedWidget);
 		}
 
 		protected void ChangeType()

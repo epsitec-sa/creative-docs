@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Designer.Viewers
@@ -6,13 +7,15 @@ namespace Epsitec.Common.Designer.Viewers
 	/// <summary>
 	/// Permet de localiser une ressource dans un Viewer.
 	/// </summary>
-	public class Locator
+	public class Locator : System.IEquatable<Locator>
 	{
-		public Locator(string moduleName, ResourceAccess.Type viewerType, Druid resource)
+		public Locator(string moduleName, ResourceAccess.Type viewerType, Druid resource, Widget widgetFocused, int lineSelected)
 		{
 			this.moduleName = moduleName;
 			this.viewerType = viewerType;
 			this.resource = resource;
+			this.widgetFocused = widgetFocused;
+			this.lineSelected = lineSelected;
 		}
 
 		public string ModuleName
@@ -39,15 +42,35 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+		public Widget WidgetFocused
+		{
+			get
+			{
+				return this.widgetFocused;
+			}
+		}
+
+		public int LineSelected
+		{
+			get
+			{
+				return this.lineSelected;
+			}
+		}
+
 
 		public static bool operator ==(Locator a, Locator b)
 		{
-			return (a.moduleName == b.moduleName) && (a.viewerType == b.viewerType) && (a.resource == b.resource);
+			return (a.moduleName == b.moduleName) &&
+				   (a.viewerType == b.viewerType) &&
+				   (a.resource == b.resource);
 		}
 		
 		public static bool operator !=(Locator a, Locator b)
 		{
-			return (a.moduleName != b.moduleName) || (a.viewerType != b.viewerType) || (a.resource != b.resource);
+			return (a.moduleName != b.moduleName) ||
+				   (a.viewerType != b.viewerType) ||
+				   (a.resource != b.resource);
 		}
 
 		public override string ToString()
@@ -66,8 +89,20 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 		
 
+		#region IEquatable<Locator> Members
+		public bool Equals(Locator other)
+		{
+			//	Two locators can only be equal if they are represented by the same
+			//	instance in memory :
+			return object.ReferenceEquals(this, other);
+		}
+		#endregion
+
+
 		protected string							moduleName;
 		protected ResourceAccess.Type				viewerType;
-		protected Druid								resource;						
+		protected Druid								resource;
+		protected Widget							widgetFocused;
+		protected int								lineSelected;
 	}
 }

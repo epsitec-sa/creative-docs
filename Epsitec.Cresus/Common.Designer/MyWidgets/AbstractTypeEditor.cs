@@ -367,6 +367,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			IconButton button = new IconButton(parent);
 
 			button.CaptionId = Res.Captions.Editor.LocatorGoto.Id;
+			button.AutoFocus = false;
 
 			return button;
 		}
