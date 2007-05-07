@@ -10,7 +10,7 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.UI
 {
-	public class LeftList
+	public class LeftList : DependencyObject
 	{
 		public LeftList(DataBroker broker, string tableName, Widget parent)
 		{
@@ -36,9 +36,10 @@ namespace Epsitec.Cresus.UI
 			for (int x=0; x<arrayNbColumns; x++)
 			{
 				this.scrollArray.SetHeaderText (x, arrayColumnNames[x]);
-				this.scrollArray.SetColumnWidth (x, 40);
+				this.scrollArray.SetColumnWidth (x, 65);
 				this.scrollArray.SetColumnAlignment (x, Epsitec.Common.Drawing.ContentAlignment.MiddleLeft);
 			}
+			this.scrollArray.SelectedIndex = 2;
 		}
 
 		protected string FillText(int row, int column)
@@ -47,7 +48,7 @@ namespace Epsitec.Cresus.UI
 			if (row >= this.tableBroker.Count || column >= this.arrayNbColumns)
 				return "";
 
-			DataBrokerRecord record = this.tableBroker.GetRowFromIndex (row);
+			DataBrokerRecord record = this.tableBroker.GetRowFromIndex (row); // - 2
 			return (string) record.GetValue (this.arrayColumnIds[column]);
 		}
 
@@ -55,7 +56,8 @@ namespace Epsitec.Cresus.UI
 		{
 			//	Met à jour le contenu de la table.
 			this.scrollArray.Clear ();
-			this.scrollArray.RowCount = this.tableBroker.Count;
+			this.scrollArray.RowCount = this.tableBroker.Count; // + 2
+			int temp = this.tableBroker.Count;
 
 			this.scrollArray.SetSortingHeader (0, SortMode.Up);
 
@@ -63,13 +65,43 @@ namespace Epsitec.Cresus.UI
 			this.scrollArray.ShowSelected (ScrollShowMode.Extremity);
 		}
 
+		public int RecordRank
+		{
+			get
+			{
+				return recordRank;
+			}
+		}
+
 		private void HandleSelectedIndexChanged(object sender)
 		{
 			this.recordRank = this.scrollArray.SelectedIndex;
+			OnSelectedChanged ();
 		}
 
 		private void HandleSortChanged(object sender)
 		{
+		}
+
+		public event EventHandler SelectedChanged
+		{
+			add
+			{
+				this.AddUserEventHandler ("SelectedChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("SelectedChanged", value);
+			}
+		}
+
+		protected virtual void OnSelectedChanged()
+		{
+			EventHandler handler = (EventHandler) this.GetUserEventHandler ("SelectedChanged");
+			if (handler != null)
+			{
+				handler (this);
+			}
 		}
 
 		protected DataBroker broker;
