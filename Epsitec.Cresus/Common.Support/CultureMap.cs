@@ -5,6 +5,11 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support
 {
+	/// <summary>
+	/// The <c>CultureMap</c> class provides the root access to culture specific
+	/// data, as it is used in the resource editor. Basically, a <c>CultureMap</c>
+	/// instance represents a row in the resource list.
+	/// </summary>
 	public class CultureMap
 	{
 		internal CultureMap(IResourceAccessor owner, Druid id)
@@ -21,6 +26,10 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the id associated with this instance.
+		/// </summary>
+		/// <value>The id.</value>
 		public Druid Id
 		{
 			get
@@ -29,6 +38,10 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the name associated with this instance.
+		/// </summary>
+		/// <value>The name.</value>
 		public string Name
 		{
 			get
@@ -39,11 +52,24 @@ namespace Epsitec.Common.Support
 			{
 				if (this.name != value)
 				{
+					string oldName = this.name;
+					string newName = value;
+
 					this.name = value;
+
+					//	TODO: notify name change
 				}
 			}
 		}
 
+		/// <summary>
+		/// Determines whether the culture for specified two letter ISO language name
+		/// is defined.
+		/// </summary>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <returns>
+		/// 	<c>true</c> if the culture is defined; otherwise, <c>false</c>.
+		/// </returns>
 		public bool IsCultureDefined(string twoLetterISOLanguageName)
 		{
 			if (this.map == null)
@@ -62,21 +88,21 @@ namespace Epsitec.Common.Support
 			return false;
 		}
 
+		/// <summary>
+		/// Gets the data associated with the specified two letter ISO language name.
+		/// Missing data will be created on the fly.
+		/// </summary>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <returns>The structured data associated with the culture.</returns>
 		public Types.StructuredData GetCultureData(string twoLetterISOLanguageName)
 		{
-			if (this.map == null)
+			if ((string.IsNullOrEmpty (twoLetterISOLanguageName)) ||
+				(twoLetterISOLanguageName.Length != 2))
 			{
-				Types.StructuredData data = this.CreateData (twoLetterISOLanguageName);
-
-				if (data != null)
-				{
-					this.map = new KeyValuePair<string, Types.StructuredData>[1];
-					this.map[0] = new KeyValuePair<string, Types.StructuredData> (twoLetterISOLanguageName, data);
-				}
-
-				return data;
+				throw new System.ArgumentException ("Invalid two letter ISO language name");
 			}
-			else
+
+			if (this.map != null)
 			{
 				for (int i = 0; i < this.map.Length; i++)
 				{
@@ -85,24 +111,46 @@ namespace Epsitec.Common.Support
 						return this.map[i].Value;
 					}
 				}
-
-				Types.StructuredData data = this.CreateData (twoLetterISOLanguageName);
-
-				if (data != null)
-				{
-					int pos = this.map.Length;
-
-					KeyValuePair<string, Types.StructuredData>[] temp = this.map;
-					KeyValuePair<string, Types.StructuredData>[] copy = new KeyValuePair<string, Types.StructuredData>[pos+1];
-
-					temp.CopyTo (copy, 0);
-					copy[pos] = new KeyValuePair<string, Types.StructuredData> (twoLetterISOLanguageName, data);
-
-					this.map = copy;
-				}
-
-				return data;
 			}
+			
+			Types.StructuredData data = this.CreateData (twoLetterISOLanguageName);
+
+			if (data != null)
+			{
+				this.RecordCultureData (twoLetterISOLanguageName, data);
+			}
+
+			return data;
+		}
+
+		internal void RecordCultureData(string twoLetterISOLanguageName, Types.StructuredData data)
+		{
+			System.Diagnostics.Debug.Assert (data != null);
+			
+			if (this.map == null)
+			{
+				this.map = new KeyValuePair<string, Types.StructuredData>[1];
+				this.map[0] = new KeyValuePair<string, Types.StructuredData> (twoLetterISOLanguageName, data);
+			}
+			else
+			{
+				int pos = this.map.Length;
+
+				KeyValuePair<string, Types.StructuredData>[] temp = this.map;
+				KeyValuePair<string, Types.StructuredData>[] copy = new KeyValuePair<string, Types.StructuredData>[pos+1];
+
+				temp.CopyTo (copy, 0);
+				copy[pos] = new KeyValuePair<string, Types.StructuredData> (twoLetterISOLanguageName, data);
+
+				this.map = copy;
+			}
+
+			data.ValueChanged += this.HandleDataValueChanged;
+		}
+
+		private void HandleDataValueChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
+		{
+			this.owner.NotifyItemChanged (this);
 		}
 
 		private Types.StructuredData CreateData(string twoLetterISOLanguageName)

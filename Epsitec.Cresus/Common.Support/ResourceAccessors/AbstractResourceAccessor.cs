@@ -5,15 +5,22 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.ResourceAccessors
 {
-	class AbstractResourceAccessor : IResourceAccessor
+	public abstract class AbstractResourceAccessor : IResourceAccessor
 	{
+		protected AbstractResourceAccessor(IDataBroker dataBroker)
+		{
+			this.dataBroker = dataBroker;
+		}
+
+		public abstract void Load();
+
 		#region IResourceAccessor Members
 
-		public IList<CultureMap> Collection
+		public CultureMapList Collection
 		{
 			get
 			{
-				throw new System.Exception ("The method or operation is not implemented.");
+				return this.items;
 			}
 		}
 
@@ -21,24 +28,43 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			get
 			{
-				throw new System.Exception ("The method or operation is not implemented.");
+				return this.dataBroker;
 			}
 		}
 
-		public CultureMap CreateItem()
+		public virtual CultureMap CreateItem()
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			return new CultureMap (this, this.CreateId ());
 		}
 
 		public int PersistChanges()
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			List<CultureMap> list = new List<CultureMap> (this.dirtyItems.Keys);
+			
+			this.dirtyItems.Clear ();
+			
+			foreach (CultureMap item in list)
+			{
+				this.PersistItem (item);
+			}
+
+			return list.Count;
+		}
+
+		public void NotifyItemChanged(CultureMap item)
+		{
+			this.dirtyItems[item] = true;
 		}
 
 		#endregion
 
-
-
+		protected abstract Druid CreateId();
 		
+		protected abstract void PersistItem(CultureMap item);
+
+
+		private readonly CultureMapList items = new CultureMapList ();
+		private readonly Dictionary<CultureMap, bool> dirtyItems = new Dictionary<CultureMap, bool> ();
+		private readonly IDataBroker dataBroker;
 	}
 }

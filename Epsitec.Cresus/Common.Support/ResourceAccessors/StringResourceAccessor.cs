@@ -7,5 +7,24 @@ namespace Epsitec.Common.Support.ResourceAccessors
 {
 	class StringResourceAccessor : AbstractResourceAccessor
 	{
+		public StringResourceAccessor()
+			: base (new ResourceBrokers.StringDataBroker ())
+		{
+		}
+
+		public override void Load()
+		{
+			throw new System.Exception ("The method or operation is not implemented.");
+		}
+
+		protected override Druid CreateId()
+		{
+			throw new System.Exception ("The method or operation is not implemented.");
+		}
+
+		protected override void PersistItem(CultureMap item)
+		{
+			throw new System.Exception ("The method or operation is not implemented.");
+		}
 	}
 }
