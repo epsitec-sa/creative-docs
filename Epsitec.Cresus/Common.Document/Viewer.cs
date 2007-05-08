@@ -158,26 +158,6 @@ namespace Epsitec.Common.Document
 		}
 
 
-#if false
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard d'une icône.
-			get
-			{
-				return 22;
-			}
-		}
-
-		public override double DefaultHeight
-		{
-			//	Retourne la hauteur standard d'une icône.
-			get
-			{
-				return 22;
-			}
-		}
-#endif
-
 		public double MarkerVertical
 		{
 			//	Position horizontale du marqueur vertical.
@@ -1108,7 +1088,7 @@ namespace Epsitec.Common.Document
 					this.selector.HiliteHandle(rank);
 					this.ChangeMouseCursor(MouseCursorType.Finger);
 				}
-				else if (!this.drawingContext.IsShift && !this.drawingContext.IsCtrl &&  this.DetectHandle(mouse, out obj, out rank))
+				else if (!this.drawingContext.IsShift && !this.drawingContext.IsCtrl && this.DetectHandle(mouse, out obj, out rank))
 				{
 					this.Hilite(null);
 					this.HiliteHandle(obj, rank);
@@ -2165,6 +2145,7 @@ namespace Epsitec.Common.Document
 		protected void Hilite(Objects.Abstract item)
 		{
 			//	Hilite un objet.
+			this.hiliteObject = item;
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 			{
@@ -2208,7 +2189,7 @@ namespace Epsitec.Common.Document
 
 		protected void HiliteHandle(Objects.Abstract obj, int rank)
 		{
-			//	Survolle une poignée.
+			//	Survole une poignée.
 			if ( this.hiliteHandleObject != null )
 			{
 				this.hiliteHandleObject.HandleHilite(this.hiliteHandleRank, false);
@@ -3520,7 +3501,7 @@ namespace Epsitec.Common.Document
 				 this.mouseCursorType == MouseCursorType.ArrowPlus   ||
 				 this.mouseCursorType == MouseCursorType.ArrowGlobal )
 			{
-				if ( message.IsControlPressed && !this.mouseDragging )
+				if ( message.IsControlPressed && !this.mouseDragging && this.hiliteObject != null )
 				{
 					this.ChangeMouseCursor(MouseCursorType.ArrowDup);
 				}
@@ -4864,7 +4845,6 @@ namespace Epsitec.Common.Document
 
 
 		#region Paint Settings
-
 		public bool PaintPageFrame
 		{
 			//	Peint le cadre de la page.
@@ -4890,8 +4870,8 @@ namespace Epsitec.Common.Document
 				this.paintWorkSurface = value;
 			}
 		}
-
 		#endregion
+
 
 		protected Document						document;
 		protected DrawingContext				drawingContext;
@@ -4925,6 +4905,7 @@ namespace Epsitec.Common.Document
 		protected bool							moveSelectedHandle;
 		protected int							moveGlobal = -1;
 		protected Objects.Abstract				moveObject;
+		protected Objects.Abstract				hiliteObject;
 		protected Objects.Abstract				hiliteHandleObject;
 		protected int							hiliteHandleRank = -1;
 		protected int							createRank = -1;
