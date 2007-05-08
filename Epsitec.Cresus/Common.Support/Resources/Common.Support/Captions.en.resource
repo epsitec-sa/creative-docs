@@ -1,2 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<bundle name="Captions" type="Caption" culture="en" />
+<bundle name="Captions" type="Caption" culture="en">
+  <data id="06">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:_2.ComplexType="{ObjRef _2}" f:_2.DefaultController="{Null}" /&gt;&lt;s:data id="_2" f:Class="Entity" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
+  <data id="07">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:_2.ComplexType="{ObjRef _2}" f:_2.DefaultController="{Null}" /&gt;&lt;s:data id="_2" f:Class="Entity" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
+  <data id="08">&lt;s:data id="_0" /&gt;</data>
+  <data id="0A">&lt;s:data id="_0" /&gt;</data>
+</bundle>

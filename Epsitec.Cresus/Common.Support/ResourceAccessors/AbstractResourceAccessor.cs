@@ -12,7 +12,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			this.dataBroker = dataBroker;
 		}
 
-		public abstract void Load();
+		public ResourceManager ResourceManager
+		{
+			get
+			{
+				return this.resourceManager;
+			}
+		}
+		
+		public abstract void Load(ResourceManager manager);
 
 		#region IResourceAccessor Members
 
@@ -62,9 +70,19 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		
 		protected abstract void PersistItem(CultureMap item);
 
+		protected void Initialize(ResourceManager manager)
+		{
+			this.resourceManager = manager;
+			
+			this.items.Clear ();
+			this.dirtyItems.Clear ();
+		}
+
 
 		private readonly CultureMapList items = new CultureMapList ();
 		private readonly Dictionary<CultureMap, bool> dirtyItems = new Dictionary<CultureMap, bool> ();
 		private readonly IDataBroker dataBroker;
+
+		private ResourceManager resourceManager;
 	}
 }
