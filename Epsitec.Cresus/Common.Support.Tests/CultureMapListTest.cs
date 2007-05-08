@@ -41,9 +41,17 @@ namespace Epsitec.Common.Support
 
 		[Test]
 		[ExpectedException (typeof (System.InvalidOperationException))]
-		public void CheckItemOperatorWrite()
+		public void CheckItemOperatorEx1()
 		{
-			this.list[0] = null;
+			System.Collections.Generic.IList<CultureMap> list = this.list;
+			list[0] = null;
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.ArgumentOutOfRangeException))]
+		public void CheckItemOperatorEx2()
+		{
+			CultureMap map = this.list[4];
 		}
 
 
