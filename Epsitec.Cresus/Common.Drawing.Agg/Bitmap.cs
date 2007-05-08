@@ -185,7 +185,8 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 		}
-		
+
+		static System.Collections.Generic.Dictionary<System.Drawing.Bitmap, System.Drawing.Imaging.BitmapData> bitmapDataCache = new System.Collections.Generic.Dictionary<System.Drawing.Bitmap, System.Drawing.Imaging.BitmapData> ();
 		
 		public bool LockBits()
 		{
@@ -199,7 +200,17 @@ namespace Epsitec.Common.Drawing
 					int width  = this.bitmap_dx;
 					int height = this.bitmap_dy;
 					
+					lock (bitmapDataCache)
+					{
+						System.Diagnostics.Debug.Assert (!bitmapDataCache.ContainsKey (this.bitmap));
+					}
+					
 					this.bitmap_data = this.bitmap.LockBits (new System.Drawing.Rectangle (0, 0, width, height), mode, format);
+
+					lock (bitmapDataCache)
+					{
+						bitmapDataCache[this.bitmap] = this.bitmap_data;
+					}
 				}
 				
 				if (this.bitmap_data != null)
@@ -227,6 +238,11 @@ namespace Epsitec.Common.Drawing
 						
 						this.bitmap.UnlockBits (this.bitmap_data);
 						this.bitmap_data = null;
+						
+						lock (bitmapDataCache)
+						{
+							bitmapDataCache.Remove (this.bitmap);
+						}
 					}
 				}
 			}
@@ -521,11 +537,6 @@ namespace Epsitec.Common.Drawing
 
 		public static Image FromNativeIcon(System.Drawing.Icon native)
 		{
-#if false
-			ICONINFO iconInfo;
-			Bitmap.GetIconInfo (native, out iconInfo);
-#endif
-			
 			System.Drawing.Bitmap src_bitmap = native.ToBitmap ();
 			System.Drawing.Bitmap dst_bitmap;
 

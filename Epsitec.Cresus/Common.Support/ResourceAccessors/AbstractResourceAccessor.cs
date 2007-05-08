@@ -67,6 +67,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		public abstract Types.StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName);
+
 		#endregion
 
 		protected abstract Druid CreateId();

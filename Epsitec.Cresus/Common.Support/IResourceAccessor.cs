@@ -47,5 +47,8 @@ namespace Epsitec.Common.Support
 		/// </summary>
 		/// <param name="item">The item which was modified.</param>
 		void NotifyItemChanged(CultureMap item);
+
+
+		Types.StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName);
 	}
 }

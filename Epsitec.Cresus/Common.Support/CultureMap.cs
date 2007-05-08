@@ -112,15 +112,8 @@ namespace Epsitec.Common.Support
 					}
 				}
 			}
-			
-			Types.StructuredData data = this.CreateData (twoLetterISOLanguageName);
 
-			if (data != null)
-			{
-				this.RecordCultureData (twoLetterISOLanguageName, data);
-			}
-
-			return data;
+			return this.owner.LoadCultureData (this, twoLetterISOLanguageName);
 		}
 
 		internal void RecordCultureData(string twoLetterISOLanguageName, Types.StructuredData data)

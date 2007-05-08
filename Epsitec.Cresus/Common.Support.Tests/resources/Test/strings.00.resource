@@ -8,6 +8,6 @@
   <data id="03">Text B</data>
   <data id="04">Text C</data>
   <data id="05">Text Property</data>
-  <data name="Text1">Hello, world</data>
-  <data name="Text2">Good bye...</data>
+  <data name="Text1" id="06">Hello, world</data>
+  <data name="Text2" id="07">Good bye...</data>
 </bundle>

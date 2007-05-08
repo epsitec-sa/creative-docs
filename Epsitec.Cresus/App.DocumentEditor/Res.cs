@@ -683,8 +683,6 @@ namespace Epsitec.App.DocumentEditor
 			#endregion
 		}
 		
-		//	Code mapping for 'Panel' resources
-		
 		static Res()
 		{
 			Res.Initialize (typeof (Res), "App.DocumentEditor");
