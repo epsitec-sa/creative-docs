@@ -164,6 +164,7 @@
     </Compile>
     <Compile Include="CaptionCacheTest.cs" />
     <Compile Include="CommandTest.cs" />
+    <Compile Include="ResourceAccessorTest.cs" />
     <Compile Include="CultureMapListTest.cs" />
     <Compile Include="DocumentTest.cs" />
     <Compile Include="DynamicCodeTest.cs" />
@@ -247,6 +248,7 @@
     <PreBuildEvent>
     </PreBuildEvent>
     <PostBuildEvent>xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.Support\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini</PostBuildEvent>
   </PropertyGroup>

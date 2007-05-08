@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.ResourceAccessors
 {
-	class StringResourceAccessor : AbstractResourceAccessor
+	public class StringResourceAccessor : AbstractResourceAccessor
 	{
 		public StringResourceAccessor()
 			: base (new ResourceBrokers.StringDataBroker ())
@@ -21,15 +21,33 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			ResourceBundle bundle = manager.GetBundle (Resources.StringsBundleName, ResourceLevel.Default);
 
-			foreach (ResourceBundle.Field field in bundle.Fields)
+			this.LoadFromBundle (bundle, "00");
+		}
+
+		private void LoadFromBundle(ResourceBundle bundle, string twoLetterISOLanguageName)
+		{
+			if (bundle != null)
 			{
-				CultureMap item = new CultureMap (this, field.Id);
-				StructuredData data = new StructuredData ();
+				using (this.SuspendNotifications ())
+				{
+					int module = bundle.Module.Id;
 
-				item.Name = field.Name;
-				item.RecordCultureData ("00", data);
+					foreach (ResourceBundle.Field field in bundle.Fields)
+					{
+						Druid id = new Druid (field.Id, module);
 
-				this.Collection.Add (item);
+						CultureMap item = this.Collection[id] ?? new CultureMap (this, id);
+						StructuredData data = new StructuredData (Res.Types.ResourceString);
+
+						data.SetValue (Res.Fields.ResourceString.Text, field.AsString);
+						data.SetValue (Res.Fields.ResourceString.About, field.About);
+
+						item.Name = field.Name;
+						item.RecordCultureData (twoLetterISOLanguageName, data);
+
+						this.Collection.Add (item);
+					}
+				}
 			}
 		}
 

@@ -61,7 +61,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		public void NotifyItemChanged(CultureMap item)
 		{
-			this.dirtyItems[item] = true;
+			if (this.suspendNotifications == 0)
+			{
+				this.dirtyItems[item] = true;
+			}
 		}
 
 		#endregion
@@ -78,11 +81,40 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			this.dirtyItems.Clear ();
 		}
 
+		protected System.IDisposable SuspendNotifications()
+		{
+			return new Suspender (this);
+		}
+
+		#region Suspender Class
+
+		private class Suspender : System.IDisposable
+		{
+			public Suspender(AbstractResourceAccessor host)
+			{
+				this.host = host;
+				System.Threading.Interlocked.Increment (ref this.host.suspendNotifications);
+			}
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				System.Threading.Interlocked.Decrement (ref this.host.suspendNotifications);
+			}
+
+			#endregion
+
+			private AbstractResourceAccessor host;
+		}
+
+		#endregion
 
 		private readonly CultureMapList items = new CultureMapList ();
 		private readonly Dictionary<CultureMap, bool> dirtyItems = new Dictionary<CultureMap, bool> ();
 		private readonly IDataBroker dataBroker;
 
 		private ResourceManager resourceManager;
+		private int suspendNotifications;
 	}
 }

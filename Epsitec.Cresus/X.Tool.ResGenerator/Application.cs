@@ -1,5 +1,5 @@
 //	Copyright © 2005-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using System.Collections.Generic;
@@ -245,6 +245,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 			List<string> capFields = new List<string> ();
 			List<string> typFields = new List<string> ();
 			List<string> valFields = new List<string> ();
+			List<string> fldFields = new List<string> ();
 
 			foreach (string field in bundle.FieldNames)
 			{
@@ -263,6 +264,10 @@ namespace Epsitec.Common.Tool.ResGenerator
 				else if (field.StartsWith ("Val."))
 				{
 					valFields.Add (field);
+				}
+				else if (field.StartsWith ("Fld."))
+				{
+					fldFields.Add (field);
 				}
 				else
 				{
@@ -300,6 +305,13 @@ namespace Epsitec.Common.Tool.ResGenerator
 				buffer.Append (generator.Tabs);
 				buffer.Append ("\n");
 				Application.GenerateValues (manager, buffer, generator, defaultNamespace, bundleId, bundle, valFields);
+			}
+
+			if (fldFields.Count > 1)
+			{
+				buffer.Append (generator.Tabs);
+				buffer.Append ("\n");
+				Application.GenerateFields (manager, buffer, generator, defaultNamespace, bundleId, bundle, fldFields);
 			}
 		}
 
@@ -728,6 +740,104 @@ namespace Epsitec.Common.Tool.ResGenerator
 				buffer.Append (@" { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, ");
 				buffer.Append (druid.ToFieldId ());
 				buffer.Append (")); } }\n");
+			}
+
+			//	Referme les classes ouvertes :
+			if (prefix.Length > 0)
+			{
+				string[] args = prefix.Split ('.');
+
+				for (int j = 0; j < args.Length; j++)
+				{
+					generator.EndBlock ();
+				}
+			}
+
+			generator.EndBlock ();
+		}
+
+		static void GenerateFields(ResourceManager manager, System.Text.StringBuilder buffer, Generator generator, string defaultNamespace, string bundleId, ResourceBundle bundle, List<string> fldFields)
+		{
+			string prefix   = "";
+			bool addNewline = false;
+
+			generator.BeginBlock ("public static class", "Fields");
+
+			string[] fields   = new string[fldFields.Count];
+			string[] sortKeys = new string[fldFields.Count];
+
+			for (int i = 0; i < fields.Length; i++)
+			{
+				fields[i] = fldFields[i];
+
+				int pos = fields[i].LastIndexOf ('.');
+				if (pos < 0)
+				{
+					sortKeys[i] = fields[i];
+				}
+				else
+				{
+					sortKeys[i] = string.Concat (fields[i].Substring (0, pos), "!", fields[i].Substring (pos+1));
+				}
+			}
+
+			System.Array.Sort (sortKeys, fields);
+
+			for (int i = 0; i < fields.Length; i++)
+			{
+				string field = fields[i].Substring (4);
+
+				while (prefix != "" && !field.StartsWith (prefix + "."))
+				{
+					//	Remonte d'un niveau dans la hiérarchie des classes.
+					string[] args = prefix.Split ('.');
+					string last = args[args.Length-1];
+
+					generator.EndBlock ();
+
+					prefix = prefix.Substring (0, System.Math.Max (0, prefix.Length-last.Length-1));
+					addNewline = true;
+				}
+
+				string delta = prefix.Length == 0 ? field : field.Substring (prefix.Length+1);
+
+				if (addNewline)
+				{
+					buffer.Append (generator.Tabs);
+					buffer.Append ("\n");
+					addNewline = false;
+				}
+
+				//	Crée les classes manquantes, si besoin :
+				while (delta.IndexOf ('.') > -1)
+				{
+					string[] args = delta.Split ('.');
+					string elem = args[0];
+
+					generator.BeginBlock ("public static class", elem);
+
+					if (prefix.Length == 0)
+					{
+						prefix = elem;
+					}
+					else
+					{
+						prefix = string.Concat (prefix, ".", elem);
+					}
+
+					delta = field.Substring (prefix.Length + 1);
+				}
+
+				//	Crée l'accesseur pour le champ actuel :
+				buffer.Append (generator.Tabs);
+
+				Support.Druid druid = bundle[fields[i]].Id;
+
+				buffer.Append ("public static readonly Epsitec.Common.Support.Druid ");
+				buffer.Append (delta);
+				buffer.Append (@" = Epsitec.Common.Support.Druid.FromLong (_moduleId, ");
+				buffer.Append (druid.ToFieldId ());
+				buffer.Append (");\n");
 			}
 
 			//	Referme les classes ouvertes :

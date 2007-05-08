@@ -314,6 +314,16 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		public object GetValue(Support.Druid id)
+		{
+			return this.GetValue (id.ToString ());
+		}
+
+		public void SetValue(Support.Druid id, object value)
+		{
+			this.SetValue (id.ToString (), value);
+		}
+
 		public static Support.PropertyGetter CreatePropertyGetter(string propertyName)
 		{
 			return delegate (object obj)
