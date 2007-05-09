@@ -27,6 +27,12 @@ namespace Epsitec.Common.Support
 		/// <summary>
 		/// Create or update the bundle.
 		/// </summary>
-		Write
+		Write,
+
+		/// <summary>
+		/// Create or update the bundle in memory only. This will not write the
+		/// bundle to the resource provider, but just update the pool cache.
+		/// </summary>
+		InMemory,
 	}
 }

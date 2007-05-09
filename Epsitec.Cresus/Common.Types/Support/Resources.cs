@@ -549,6 +549,7 @@ namespace Epsitec.Common.Support
 
 		public static readonly string			StringsBundleName = "Strings";
 		public static readonly string			CaptionsBundleName = "Captions";
+		public static readonly string			DefaultTwoLetterISOLanguageName = "00";
 
 		public static readonly char				PrefixSeparator = ':';
 		public static readonly char				ModuleSeparator = '/';

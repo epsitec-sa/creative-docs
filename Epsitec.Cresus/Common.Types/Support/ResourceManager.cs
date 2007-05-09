@@ -336,7 +336,7 @@ namespace Epsitec.Common.Support
 			
 			switch (level)
 			{
-				case ResourceLevel.Default:		return "00";
+				case ResourceLevel.Default:		return Resources.DefaultTwoLetterISOLanguageName;
 				case ResourceLevel.Localized:	return Resources.GetTwoLetterISOLanguageName (culture);
 				case ResourceLevel.Customized:	return string.Concat ("X", culture.TwoLetterISOLanguageName);
 			}
@@ -1014,7 +1014,8 @@ namespace Epsitec.Common.Support
 		
 		public bool SetBinaryData(string id, ResourceLevel level, CultureInfo culture, byte[] data, ResourceSetMode mode)
 		{
-			if (mode == ResourceSetMode.None)
+			if ((mode == ResourceSetMode.None) ||
+				(mode == ResourceSetMode.InMemory))
 			{
 				return true;
 			}

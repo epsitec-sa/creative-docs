@@ -22,8 +22,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			this.Initialize (manager);
 
 			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Default);
-			
-			this.LoadFromBundle (bundle, "00");
+
+			this.LoadFromBundle (bundle, Resources.DefaultTwoLetterISOLanguageName);
 		}
 
 		public override Types.StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName)
@@ -136,8 +136,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				bundle.Add (field);
 			}
 
-			string text = item.GetCultureData ("00").GetValue (Res.Fields.ResourceString.Text) as string;
-			string about = item.GetCultureData ("00").GetValue (Res.Fields.ResourceString.About) as string;
+			string text = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName).GetValue (Res.Fields.ResourceString.Text) as string;
+			string about = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName).GetValue (Res.Fields.ResourceString.About) as string;
 
 			field.SetName (item.Name);
 			field.SetStringValue (text);
@@ -145,7 +145,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			foreach (string twoLetterISOLanguageName in item.GetDefinedCultures ())
 			{
-				if (twoLetterISOLanguageName == "00")
+				if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
 				{
 					continue;
 				}
@@ -155,8 +155,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				if (bundle == null)
 				{
-					//	TODO: create new bundle...
-					continue; // HACK: skip
+					bundle = ResourceBundle.Create (this.ResourceManager, this.ResourceManager.ActivePrefix, Resources.StringsBundleName, ResourceLevel.Localized, culture);
+					this.ResourceManager.SetBundle (bundle, ResourceSetMode.InMemory);
 				}
 				
 				field = bundle[item.Id];

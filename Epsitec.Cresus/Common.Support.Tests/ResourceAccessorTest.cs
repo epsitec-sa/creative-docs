@@ -47,12 +47,14 @@ namespace Epsitec.Common.Support
 
 			data1 = accessor.Collection["Text1"].GetCultureData ("fr");
 			data1.SetValue (Res.Fields.ResourceString.Text, "Bonjour tout le monde");
+			data2.SetValue (Res.Fields.ResourceString.Text, "Hallo, Welt");
 
 			Assert.IsTrue (accessor.ContainsChanges);
 			Assert.AreEqual (1, accessor.PersistChanges ());
 			Assert.IsFalse (accessor.ContainsChanges);
 
 			Assert.AreEqual ("Bonjour tout le monde", this.manager.GetText (Druid.Parse ("[4006]"), ResourceLevel.Localized, Resources.FindCultureInfo ("fr")));
+			Assert.AreEqual ("Hallo, Welt", this.manager.GetText (Druid.Parse ("[4006]"), ResourceLevel.Localized, Resources.FindCultureInfo ("de")));
 
 			CultureMap map = accessor.CreateItem ();
 
