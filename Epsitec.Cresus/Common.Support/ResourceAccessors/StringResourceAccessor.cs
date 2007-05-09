@@ -112,7 +112,32 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected override void DeleteItem(CultureMap item)
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			foreach (string twoLetterISOLanguageName in item.GetDefinedCultures ())
+			{
+				ResourceBundle bundle;
+				CultureInfo culture;
+
+				if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
+				{
+					bundle = this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Default);
+				}
+				else
+				{
+					culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
+					bundle  = this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Localized, culture);
+				}
+
+				if (bundle != null)
+				{
+					int pos = bundle.IndexOf (item.Id);
+					
+					if (pos >= 0)
+					{
+						bundle.Remove (pos);
+					}
+				}
+			}
+			
 		}
 		
 		protected override void PersistItem(CultureMap item)

@@ -77,6 +77,11 @@ namespace Epsitec.Common.Support
 
 			accessor.Collection.Remove (map);
 			Assert.IsTrue (accessor.ContainsChanges);
+			Assert.AreEqual (1, accessor.PersistChanges ());
+			Assert.IsFalse (accessor.ContainsChanges);
+
+			Assert.IsNull (this.manager.GetText (Druid.Parse ("[4008]"), ResourceLevel.Default));
+			Assert.IsNull (this.manager.GetText (Druid.Parse ("[4008]"), ResourceLevel.Localized, Resources.FindCultureInfo ("fr")));
 		}
 
 
