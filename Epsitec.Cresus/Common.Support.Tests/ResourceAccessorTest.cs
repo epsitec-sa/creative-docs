@@ -30,8 +30,19 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Text1", accessor.Collection[Druid.Parse ("[4006]")].Name);
 			Assert.AreEqual ("Hello, world", accessor.Collection["Text1"].GetCultureData ("00").GetValue (Res.Fields.ResourceString.Text));
 
-			Assert.AreEqual ("Bonjour", accessor.Collection["Text1"].GetCultureData ("fr").GetValue (Res.Fields.ResourceString.Text));
+			Types.StructuredData data1 = accessor.Collection["Text1"].GetCultureData ("fr");
+			Types.StructuredData data2 = accessor.Collection["Text1"].GetCultureData ("fr");
 
+			Assert.AreSame (data1, data2);
+			Assert.AreEqual ("Bonjour", data1.GetValue (Res.Fields.ResourceString.Text));
+			Assert.IsFalse (accessor.ContainsChanges);
+
+			data1 = accessor.Collection["Text1"].GetCultureData ("de");
+			data2 = accessor.Collection["Text1"].GetCultureData ("de");
+
+			Assert.IsNotNull (data1);
+			Assert.AreSame (data1, data2);
+			Assert.AreEqual (Types.UndefinedValue.Instance, data1.GetValue (Res.Fields.ResourceString.Text));
 			Assert.IsFalse (accessor.ContainsChanges);
 		}
 

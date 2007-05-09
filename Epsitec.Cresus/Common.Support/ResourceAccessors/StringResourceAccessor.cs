@@ -77,7 +77,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.SetValue (Res.Fields.ResourceString.Text, field.AsString);
 			data.SetValue (Res.Fields.ResourceString.About, field.About);
 
-			item.Name = field.Name;
+			item.Name = field.Name ?? item.Name;
 			item.RecordCultureData (twoLetterISOLanguageName, data);
 
 			if (insert)
