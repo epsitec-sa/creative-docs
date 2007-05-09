@@ -44,6 +44,13 @@ namespace Epsitec.Common.Support
 			Assert.AreSame (data1, data2);
 			Assert.AreEqual (Types.UndefinedValue.Instance, data1.GetValue (Res.Fields.ResourceString.Text));
 			Assert.IsFalse (accessor.ContainsChanges);
+
+			data1 = accessor.Collection["Text1"].GetCultureData ("fr");
+			data1.SetValue (Res.Fields.ResourceString.Text, "Bonjour tout le monde");
+
+			Assert.IsTrue (accessor.ContainsChanges);
+			Assert.AreEqual (1, accessor.PersistChanges ());
+			Assert.IsFalse (accessor.ContainsChanges);
 		}
 
 
