@@ -73,8 +73,16 @@ namespace Epsitec.Common.Support
 			Assert.IsFalse (accessor.ContainsChanges);
 
 			Assert.AreEqual ("New value", this.manager.GetText (Druid.Parse ("[4008]"), ResourceLevel.Default));
-			Assert.AreEqual ("Nouvelle valeur", this.manager.GetText (Druid.Parse ("[4008]"), ResourceLevel.Localized, Resources.FindCultureInfo ("fr")));
+			Assert.AreEqual ("Nouvelle valeur", this.manager.GetText (Druid.Parse ("[4008]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")));
 
+			map.GetCultureData ("fr").SetValue (Res.Fields.ResourceString.Text, Types.UndefinedValue.Instance);
+			
+			Assert.AreEqual (1, accessor.PersistChanges ());
+			Assert.IsFalse (accessor.ContainsChanges);
+
+			Assert.AreEqual ("New value", this.manager.GetText (Druid.Parse ("[4008]"), ResourceLevel.Default));
+			Assert.AreEqual ("New value", this.manager.GetText (Druid.Parse ("[4008]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")));
+			
 			accessor.Collection.Remove (map);
 			Assert.IsTrue (accessor.ContainsChanges);
 			Assert.AreEqual (1, accessor.PersistChanges ());

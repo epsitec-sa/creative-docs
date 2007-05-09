@@ -72,6 +72,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
+			this.ResourceManager.ClearMergedBundlesFromBundleCache ();
+
 			return list.Count;
 		}
 

@@ -193,11 +193,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					bundle.Add (field);
 				}
 				
-				text  = item.GetCultureData (twoLetterISOLanguageName).GetValue (Res.Fields.ResourceString.Text) as string;
-				about = item.GetCultureData (twoLetterISOLanguageName).GetValue (Res.Fields.ResourceString.About) as string;
-				
-				field.SetStringValue (text);
-				field.SetAbout (about);
+				if (Types.UndefinedValue.IsUndefinedValue (item.GetCultureData (twoLetterISOLanguageName).GetValue (Res.Fields.ResourceString.Text)))
+				{
+					bundle.Remove (bundle.IndexOf (item.Id));
+				}
+				else
+				{
+					text  = item.GetCultureData (twoLetterISOLanguageName).GetValue (Res.Fields.ResourceString.Text) as string;
+					about = item.GetCultureData (twoLetterISOLanguageName).GetValue (Res.Fields.ResourceString.About) as string;
+					
+					field.SetStringValue (text);
+					field.SetAbout (about);
+				}
 			}
 		}
 	}
