@@ -30,17 +30,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			CultureInfo          culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
 			ResourceBundle       bundle  = this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Localized, culture);
-			ResourceBundle.Field field   = bundle == null ? null : bundle[item.Id];
+			ResourceBundle.Field field   = bundle == null ? ResourceBundle.Field.Empty : bundle[item.Id];
 			Types.StructuredData data    = null;
 
-			if (field != null)
-			{
-				data = this.LoadFromField (field, bundle.Module.Id, twoLetterISOLanguageName);
-			}
-			else
+			if (field.IsEmpty)
 			{
 				data = new StructuredData (Res.Types.ResourceString);
 				item.RecordCultureData (twoLetterISOLanguageName, data);
+			}
+			else
+			{
+				data = this.LoadFromField (field, bundle.Module.Id, twoLetterISOLanguageName);
 			}
 
 			return data;
@@ -90,12 +90,88 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected override Druid CreateId()
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Default);
+
+			int devId   = 0;
+			int localId = -1;
+
+			foreach (ResourceBundle.Field field in bundle.Fields)
+			{
+				Druid id = field.Id;
+
+				System.Diagnostics.Debug.Assert (id.IsValid);
+
+				if (id.Developer == devId)
+				{
+					localId = System.Math.Max (localId, id.Local);
+				}
+			}
+
+			return new Druid (bundle.Module.Id, devId, localId+1);
 		}
 
-		protected override void PersistItem(CultureMap item)
+		protected override void DeleteItem(CultureMap item)
 		{
 			throw new System.Exception ("The method or operation is not implemented.");
+		}
+		
+		protected override void PersistItem(CultureMap item)
+		{
+			if (string.IsNullOrEmpty (item.Name))
+			{
+				throw new System.ArgumentException (string.Format ("No name for item {0}", item.Id));
+			}
+
+			ResourceBundle bundle;
+			CultureInfo culture;
+
+			bundle = this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Default);
+
+			ResourceBundle.Field field = bundle[item.Id];
+
+			if (field.IsEmpty)
+			{
+				field = bundle.CreateField (ResourceFieldType.Data);
+				field.SetDruid (item.Id);
+			}
+
+			string text = item.GetCultureData ("00").GetValue (Res.Fields.ResourceString.Text) as string;
+			string about = item.GetCultureData ("00").GetValue (Res.Fields.ResourceString.About) as string;
+
+			field.SetName (item.Name);
+			field.SetStringValue (text);
+			field.SetAbout (about);
+
+			foreach (string twoLetterISOLanguageName in item.GetDefinedCultures ())
+			{
+				if (twoLetterISOLanguageName == "00")
+				{
+					continue;
+				}
+
+				culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
+				bundle  = this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Localized, culture);
+
+				if (bundle == null)
+				{
+					//	TODO: create new bundle...
+					continue; // HACK: skip
+				}
+				
+				field = bundle[item.Id];
+
+				if (field.IsEmpty)
+				{
+					field = bundle.CreateField (ResourceFieldType.Data);
+					field.SetDruid (item.Id);
+				}
+				
+				text  = item.GetCultureData (twoLetterISOLanguageName).GetValue (Res.Fields.ResourceString.Text) as string;
+				about = item.GetCultureData (twoLetterISOLanguageName).GetValue (Res.Fields.ResourceString.About) as string;
+				
+				field.SetStringValue (text);
+				field.SetAbout (about);
+			}
 		}
 	}
 }

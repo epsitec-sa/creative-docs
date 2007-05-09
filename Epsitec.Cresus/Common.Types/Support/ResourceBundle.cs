@@ -447,7 +447,8 @@ namespace Epsitec.Common.Support
 				default:
 					return -1;
 			}
-			long id    = druid.ToFieldId ();
+			
+			long id = druid.ToFieldId ();
 
 			for (int i = 0; i < this.fields.Length; i++)
 			{
@@ -1683,7 +1684,7 @@ namespace Epsitec.Common.Support
 					this.type = ResourceFieldType.Data;
 					this.data = value;
 					
-					this.xml.InnerText = value;
+					this.xml.InnerText = value ?? "";
 					
 					this.parent.OnFieldsChanged ();
 				}

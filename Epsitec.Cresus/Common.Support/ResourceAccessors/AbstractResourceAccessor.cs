@@ -10,6 +10,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		protected AbstractResourceAccessor(IDataBroker dataBroker)
 		{
 			this.dataBroker = dataBroker;
+			this.items.CollectionChanged += this.HandleItemsCollectionChanged;
 		}
 
 		public ResourceManager ResourceManager
@@ -61,7 +62,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			
 			foreach (CultureMap item in list)
 			{
-				this.PersistItem (item);
+				if (this.Collection.Contains (item))
+				{
+					this.PersistItem (item);
+				}
+				else
+				{
+					this.DeleteItem (item);
+				}
 			}
 
 			return list.Count;
@@ -80,6 +88,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		#endregion
 
 		protected abstract Druid CreateId();
+
+		protected abstract void DeleteItem(CultureMap item);
 		
 		protected abstract void PersistItem(CultureMap item);
 
@@ -94,6 +104,43 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		protected System.IDisposable SuspendNotifications()
 		{
 			return new Suspender (this);
+		}
+
+		private void HandleItemsCollectionChanged(object sender, Types.CollectionChangedEventArgs e)
+		{
+			if (this.suspendNotifications == 0)
+			{
+				switch (e.Action)
+				{
+					case Epsitec.Common.Types.CollectionChangedAction.Reset:
+						throw new System.InvalidOperationException ("The collection may not be reset");
+
+					case Epsitec.Common.Types.CollectionChangedAction.Add:
+					case Epsitec.Common.Types.CollectionChangedAction.Replace:
+					case Epsitec.Common.Types.CollectionChangedAction.Remove:
+						if (e.OldItems != null)
+						{
+							foreach (CultureMap item in e.OldItems)
+							{
+								this.dirtyItems[item] = true;
+							}
+						}
+						if (e.NewItems != null)
+						{
+							foreach (CultureMap item in e.NewItems)
+							{
+								this.dirtyItems[item] = true;
+							}
+						}
+						break;
+
+					case Epsitec.Common.Types.CollectionChangedAction.Move:
+						break;
+
+					default:
+						throw new System.InvalidOperationException (string.Format ("Unknown operation {0} applied to collection", e.Action));
+				}
+			}
 		}
 
 		#region Suspender Class

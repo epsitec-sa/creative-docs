@@ -1,11 +1,14 @@
 //	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Types
 {
 	/// <summary>
 	/// The <c>UndefinedValueMode</c> enumeration defines what value should
-	/// be used by <see cref="StructuredData.GetValue"/> when an undefined
+	/// be used by <see cref="StructuredData.GetValue(string)"/> or
+	/// <see cref="StructuredData.GetValue(Druid)"/> when an undefined
 	/// value is found.
 	/// </summary>
 	public enum UndefinedValueMode

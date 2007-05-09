@@ -51,6 +51,24 @@ namespace Epsitec.Common.Support
 			Assert.IsTrue (accessor.ContainsChanges);
 			Assert.AreEqual (1, accessor.PersistChanges ());
 			Assert.IsFalse (accessor.ContainsChanges);
+
+			Assert.AreEqual ("Bonjour tout le monde", this.manager.GetText (Druid.Parse ("[4006]"), ResourceLevel.Localized, Resources.FindCultureInfo ("fr")));
+
+			CultureMap map = accessor.CreateItem ();
+
+			Assert.IsNotNull (map);
+			Assert.AreNotEqual (Druid.Empty, map.Id);
+			Assert.IsNull (accessor.Collection[map.Id]);
+
+			accessor.Collection.Add (map);
+			Assert.IsTrue (accessor.ContainsChanges);
+			
+			map.Name = "NewItem";
+			map.GetCultureData ("00").SetValue (Res.Fields.ResourceString.Text, "New value");
+			map.GetCultureData ("fr").SetValue (Res.Fields.ResourceString.Text, "Nouvelle valeur");
+			
+			Assert.AreEqual (1, accessor.PersistChanges ());
+			Assert.IsFalse (accessor.ContainsChanges);
 		}
 
 

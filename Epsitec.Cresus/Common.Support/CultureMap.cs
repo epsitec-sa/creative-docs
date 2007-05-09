@@ -89,6 +89,19 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Gets the enumeration of all defined cultures, even the empty ones.
+		/// </summary>
+		/// <returns>The enumeration of all defined cultures, using their two
+		/// letter ISO language name.</returns>
+		public IEnumerable<string> GetDefinedCultures()
+		{
+			for (int i = 0; i < this.map.Length; i++)
+			{
+				yield return this.map[i].Key;
+			}
+		}
+
+		/// <summary>
 		/// Gets the data associated with the specified two letter ISO language name.
 		/// Missing data will be created on the fly.
 		/// </summary>

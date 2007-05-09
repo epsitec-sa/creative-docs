@@ -58,10 +58,13 @@ namespace Epsitec.Common.Types.Collections
 		/// <param name="collection">The collection.</param>
 		public void ReplaceWithRange(IEnumerable<T> collection)
 		{
+			object[] oldItems = Collection.ToObjectArray (this.list);
+			object[] newItems = Collection.ToObjectArray (collection);
+
 			this.list.Clear ();
 			this.list.AddRange (collection);
 
-			this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Reset));
+			this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Replace, 0, newItems, 0, oldItems));
 		}
 		
 		#region IList<T> Members
