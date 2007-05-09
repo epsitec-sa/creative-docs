@@ -204,11 +204,10 @@ namespace Epsitec.Common.Drawing
 					{
 						System.Diagnostics.Debug.Assert (!bitmapDataCache.ContainsKey (this.bitmap));
 					}
-					
-					this.bitmap_data = this.bitmap.LockBits (new System.Drawing.Rectangle (0, 0, width, height), mode, format);
 
 					lock (bitmapDataCache)
 					{
+						this.bitmap_data = this.bitmap.LockBits (new System.Drawing.Rectangle (0, 0, width, height), mode, format);
 						bitmapDataCache[this.bitmap] = this.bitmap_data;
 					}
 				}
