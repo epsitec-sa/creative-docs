@@ -133,6 +133,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				field = bundle.CreateField (ResourceFieldType.Data);
 				field.SetDruid (item.Id);
+				bundle.Add (field);
 			}
 
 			string text = item.GetCultureData ("00").GetValue (Res.Fields.ResourceString.Text) as string;
@@ -164,6 +165,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				{
 					field = bundle.CreateField (ResourceFieldType.Data);
 					field.SetDruid (item.Id);
+					bundle.Add (field);
 				}
 				
 				text  = item.GetCultureData (twoLetterISOLanguageName).GetValue (Res.Fields.ResourceString.Text) as string;

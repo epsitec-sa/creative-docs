@@ -57,7 +57,7 @@ namespace Epsitec.Common.Support
 			CultureMap map = accessor.CreateItem ();
 
 			Assert.IsNotNull (map);
-			Assert.AreNotEqual (Druid.Empty, map.Id);
+			Assert.AreEqual (Druid.Parse ("[4008]"), map.Id);
 			Assert.IsNull (accessor.Collection[map.Id]);
 
 			accessor.Collection.Add (map);
@@ -69,6 +69,12 @@ namespace Epsitec.Common.Support
 			
 			Assert.AreEqual (1, accessor.PersistChanges ());
 			Assert.IsFalse (accessor.ContainsChanges);
+
+			Assert.AreEqual ("New value", this.manager.GetText (Druid.Parse ("[4008]"), ResourceLevel.Default));
+			Assert.AreEqual ("Nouvelle valeur", this.manager.GetText (Druid.Parse ("[4008]"), ResourceLevel.Localized, Resources.FindCultureInfo ("fr")));
+
+			accessor.Collection.Remove (map);
+			Assert.IsTrue (accessor.ContainsChanges);
 		}
 
 
