@@ -5,6 +5,11 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.ResourceAccessors
 {
+	/// <summary>
+	/// The <c>AbstractResourceAccessor</c> class is the base class used by
+	/// all resource accessors found in the <c>Epsitec.Common.Support</c>
+	/// namespace.
+	/// </summary>
 	public abstract class AbstractResourceAccessor : IResourceAccessor
 	{
 		protected AbstractResourceAccessor(IDataBroker dataBroker)
@@ -13,6 +18,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			this.items.CollectionChanged += this.HandleItemsCollectionChanged;
 		}
 
+		/// <summary>
+		/// Gets the resource manager associated with this accessor.
+		/// </summary>
+		/// <value>The resource manager.</value>
 		public ResourceManager ResourceManager
 		{
 			get
@@ -20,7 +29,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				return this.resourceManager;
 			}
 		}
-		
+
+		/// <summary>
+		/// Loads resources from the specified resource manager. The resource
+		/// manager will be used for all upcoming accesses.
+		/// </summary>
+		/// <param name="manager">The resource manager.</param>
 		public abstract void Load(ResourceManager manager);
 
 		#region IResourceAccessor Members
@@ -89,12 +103,28 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		#endregion
 
+		/// <summary>
+		/// Creates a new unique id.
+		/// </summary>
+		/// <returns>The new unique id.</returns>
 		protected abstract Druid CreateId();
 
+		/// <summary>
+		/// Deletes the specified item.
+		/// </summary>
+		/// <param name="item">The item to delete.</param>
 		protected abstract void DeleteItem(CultureMap item);
-		
+
+		/// <summary>
+		/// Persists the specified item.
+		/// </summary>
+		/// <param name="item">The item to store as a resource.</param>
 		protected abstract void PersistItem(CultureMap item);
 
+		/// <summary>
+		/// Initializes the accessor and defines the resource manager.
+		/// </summary>
+		/// <param name="manager">The resource manager.</param>
 		protected void Initialize(ResourceManager manager)
 		{
 			this.resourceManager = manager;
@@ -103,11 +133,21 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			this.dirtyItems.Clear ();
 		}
 
+		/// <summary>
+		/// Disables any change notifications until <c>Dispose</c> is called
+		/// on the returned object. Use this with the <c>using</c> construct.
+		/// </summary>
+		/// <returns>The object which will automatically restore notifications on disposal.</returns>
 		protected System.IDisposable SuspendNotifications()
 		{
 			return new Suspender (this);
 		}
 
+		/// <summary>
+		/// Handles changes to the item collection.
+		/// </summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="Epsitec.Common.Types.CollectionChangedEventArgs"/> instance containing the event data.</param>
 		private void HandleItemsCollectionChanged(object sender, Types.CollectionChangedEventArgs e)
 		{
 			if (this.suspendNotifications == 0)

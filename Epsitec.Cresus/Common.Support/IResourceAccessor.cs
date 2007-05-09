@@ -57,7 +57,12 @@ namespace Epsitec.Common.Support
 		/// <param name="item">The item which was modified.</param>
 		void NotifyItemChanged(CultureMap item);
 
-
+		/// <summary>
+		/// Loads the data for the specified culture into an existing item.
+		/// </summary>
+		/// <param name="item">The item to update.</param>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <returns>The data loaded from the resources which was stored in the specified item.</returns>
 		Types.StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName);
 	}
 }

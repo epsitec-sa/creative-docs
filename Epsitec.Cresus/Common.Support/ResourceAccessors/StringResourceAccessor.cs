@@ -10,6 +10,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 {
 	using CultureInfo=System.Globalization.CultureInfo;
 	
+	/// <summary>
+	/// The <c>StringResourceAccessor</c> is used to access text resources,
+	/// stored in the <c>Strings</c> resource bundle.
+	/// </summary>
 	public class StringResourceAccessor : AbstractResourceAccessor
 	{
 		public StringResourceAccessor()
@@ -41,48 +45,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			else
 			{
 				data = this.LoadFromField (field, bundle.Module.Id, twoLetterISOLanguageName);
-			}
-
-			return data;
-		}
-
-		private void LoadFromBundle(ResourceBundle bundle, string twoLetterISOLanguageName)
-		{
-			using (this.SuspendNotifications ())
-			{
-				int module = bundle.Module.Id;
-
-				foreach (ResourceBundle.Field field in bundle.Fields)
-				{
-					this.LoadFromField (field, module, twoLetterISOLanguageName);
-				}
-			}
-		}
-
-		private Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName)
-		{
-			Druid id = new Druid (field.Id, module);
-			bool insert = false;
-
-			CultureMap item = this.Collection[id];
-
-			if (item == null)
-			{
-				item   = new CultureMap (this, id);
-				insert = true;
-			}
-			
-			StructuredData data = new StructuredData (Res.Types.ResourceString);
-
-			data.SetValue (Res.Fields.ResourceString.Text, field.AsString);
-			data.SetValue (Res.Fields.ResourceString.About, field.About);
-
-			item.Name = field.Name ?? item.Name;
-			item.RecordCultureData (twoLetterISOLanguageName, data);
-
-			if (insert)
-			{
-				this.Collection.Add (item);
 			}
 
 			return data;
@@ -192,20 +154,64 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					field.SetDruid (item.Id);
 					bundle.Add (field);
 				}
+
+				StructuredData data = item.GetCultureData (twoLetterISOLanguageName);
 				
-				if (Types.UndefinedValue.IsUndefinedValue (item.GetCultureData (twoLetterISOLanguageName).GetValue (Res.Fields.ResourceString.Text)))
+				if (Types.UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceString.Text)))
 				{
 					bundle.Remove (bundle.IndexOf (item.Id));
 				}
 				else
 				{
-					text  = item.GetCultureData (twoLetterISOLanguageName).GetValue (Res.Fields.ResourceString.Text) as string;
-					about = item.GetCultureData (twoLetterISOLanguageName).GetValue (Res.Fields.ResourceString.About) as string;
+					text  = data.GetValue (Res.Fields.ResourceString.Text) as string;
+					about = data.GetValue (Res.Fields.ResourceString.About) as string;
 					
 					field.SetStringValue (text);
 					field.SetAbout (about);
 				}
 			}
+		}
+
+		private void LoadFromBundle(ResourceBundle bundle, string twoLetterISOLanguageName)
+		{
+			using (this.SuspendNotifications ())
+			{
+				int module = bundle.Module.Id;
+
+				foreach (ResourceBundle.Field field in bundle.Fields)
+				{
+					this.LoadFromField (field, module, twoLetterISOLanguageName);
+				}
+			}
+		}
+
+		private Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName)
+		{
+			Druid id = new Druid (field.Id, module);
+			bool insert = false;
+
+			CultureMap item = this.Collection[id];
+
+			if (item == null)
+			{
+				item   = new CultureMap (this, id);
+				insert = true;
+			}
+
+			StructuredData data = new StructuredData (Res.Types.ResourceString);
+
+			data.SetValue (Res.Fields.ResourceString.Text, field.AsString);
+			data.SetValue (Res.Fields.ResourceString.About, field.About);
+
+			item.Name = field.Name ?? item.Name;
+			item.RecordCultureData (twoLetterISOLanguageName, data);
+
+			if (insert)
+			{
+				this.Collection.Add (item);
+			}
+
+			return data;
 		}
 	}
 }
