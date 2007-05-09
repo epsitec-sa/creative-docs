@@ -31,6 +31,15 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether this accessor contains changes.
+		/// </summary>
+		/// <value><c>true</c> if this accessor contains changes; otherwise, <c>false</c>.</value>
+		bool ContainsChanges
+		{
+			get;
+		}
+
+		/// <summary>
 		/// Creates a new item which can then be added to the collection.
 		/// </summary>
 		/// <returns>A new <see cref="CultureMap"/> item.</returns>

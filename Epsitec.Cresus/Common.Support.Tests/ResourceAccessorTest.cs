@@ -16,6 +16,8 @@ namespace Epsitec.Common.Support
 		public void CheckStringAccessor()
 		{
 			ResourceAccessors.StringResourceAccessor accessor = new ResourceAccessors.StringResourceAccessor ();
+			
+			Assert.IsFalse (accessor.ContainsChanges);
 
 			accessor.Load (this.manager);
 
@@ -29,6 +31,8 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Hello, world", accessor.Collection["Text1"].GetCultureData ("00").GetValue (Res.Fields.ResourceString.Text));
 
 			Assert.AreEqual ("Bonjour", accessor.Collection["Text1"].GetCultureData ("fr").GetValue (Res.Fields.ResourceString.Text));
+
+			Assert.IsFalse (accessor.ContainsChanges);
 		}
 
 

@@ -40,6 +40,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		public bool ContainsChanges
+		{
+			get
+			{
+				return this.dirtyItems.Count > 0;
+			}
+		}
+
 		public virtual CultureMap CreateItem()
 		{
 			return new CultureMap (this, this.CreateId ());
