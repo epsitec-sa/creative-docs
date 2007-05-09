@@ -251,6 +251,10 @@
   <ItemGroup>
     <Content Include="Resources\Common.Support\Strings.en.resource" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Common.Support\Captions.de.resource" />
+    <None Include="Resources\Common.Support\Strings.de.resource" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
