@@ -26,12 +26,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return fieldName.Substring (4);
 		}
 
-		protected override string GetFieldNameFromName(StructuredData data, string name)
+		protected override string GetFieldNameFromName(Types.StructuredData data, string name)
 		{
 			return "Cap." + name;
 		}
 
-		protected override Caption GetCaptionFromData(StructuredData data, string name)
+		protected override Caption GetCaptionFromData(Types.StructuredData data, string name)
 		{
 			string description = data.GetValue (Res.Fields.ResourceCaption.Description) as string;
 			string icon = data.GetValue (Res.Fields.ResourceCaption.Icon) as string;
@@ -66,13 +66,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return caption;
 		}
 
-		protected override void FillDataFromCaption(StructuredData data, Caption caption)
+		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption)
 		{
 			Types.Collections.ObservableList<string> labels = new Epsitec.Common.Types.Collections.ObservableList<string> ();
 			labels.AddRange (caption.Labels);
 
 			data.SetValue (Res.Fields.ResourceCaption.Labels, labels);
 			data.LockValue (Res.Fields.ResourceCaption.Labels);
+			labels.CollectionChanged += new Listener (this, item).HandleLabelsCollectionChanged;
 
 			if (caption.Description != null)
 			{
@@ -84,10 +85,30 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		private class Listener
+		{
+			public Listener(CaptionResourceAccessor accessor, CultureMap item)
+			{
+				this.accessor = accessor;
+				this.item = item;
+			}
+
+			public void HandleLabelsCollectionChanged(object sender, CollectionChangedEventArgs e)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0}: index {1} -> {2}", e.Action, e.OldStartingIndex, e.NewStartingIndex));
+				this.accessor.NotifyItemChanged (this.item);
+			}
+
+			private CaptionResourceAccessor accessor;
+			private CultureMap item;
+		}
+
 		protected override bool FilterField(ResourceBundle.Field field)
 		{
 			return (!string.IsNullOrEmpty (field.Name))
 				&& (field.Name.StartsWith ("Cap."));
 		}
+
+		
 	}
 }

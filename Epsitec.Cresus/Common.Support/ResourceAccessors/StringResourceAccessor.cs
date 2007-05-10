@@ -39,7 +39,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			if (field.IsEmpty)
 			{
-				data = new StructuredData (Res.Types.ResourceString);
+				data = new Types.StructuredData (Res.Types.ResourceString);
 				item.RecordCultureData (twoLetterISOLanguageName, data);
 			}
 			else
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					bundle.Add (field);
 				}
 
-				StructuredData data = item.GetCultureData (twoLetterISOLanguageName);
+				Types.StructuredData data = item.GetCultureData (twoLetterISOLanguageName);
 				
 				if (Types.UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceString.Text)))
 				{
@@ -199,7 +199,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				insert = true;
 			}
 
-			StructuredData data = new StructuredData (Res.Types.ResourceString);
+			Types.StructuredData data = new Types.StructuredData (Res.Types.ResourceString);
 
 			data.SetValue (Res.Fields.ResourceString.Text, field.AsString);
 			data.SetValue (Res.Fields.ResourceString.Comment, field.About);

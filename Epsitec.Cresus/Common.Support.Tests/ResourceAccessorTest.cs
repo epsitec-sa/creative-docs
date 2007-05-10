@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Support
 {
@@ -32,10 +33,11 @@ namespace Epsitec.Common.Support
 
 			Assert.AreSame (data1, data2);
 			Assert.AreEqual ("Angle de rotation de la trame, exprimé en degrés.", data1.GetValue (Res.Fields.ResourceCaption.Description));
-			Assert.AreEqual (3, (data1.GetValue (Res.Fields.ResourceCaption.Labels) as System.Collections.Generic.IList<string>).Count);
-			Assert.AreEqual ("A", (data1.GetValue (Res.Fields.ResourceCaption.Labels) as System.Collections.Generic.IList<string>)[0]);
-			Assert.AreEqual ("Angle", (data1.GetValue (Res.Fields.ResourceCaption.Labels) as System.Collections.Generic.IList<string>)[1]);
-			Assert.AreEqual ("Angle de la trame", (data1.GetValue (Res.Fields.ResourceCaption.Labels) as System.Collections.Generic.IList<string>)[2]);
+			Assert.AreEqual (3, (data1.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>).Count);
+			Assert.AreEqual ("A", (data1.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>)[0]);
+			Assert.AreEqual ("Angle", (data1.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>)[1]);
+			Assert.AreEqual ("Angle de la trame", (data1.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>)[2]);
+			Assert.IsTrue (data1.IsValueLocked (Res.Fields.ResourceCaption.Labels));
 			Assert.IsFalse (accessor.ContainsChanges);
 
 			data1 = accessor.Collection["PatternAngle"].GetCultureData ("de");
@@ -57,6 +59,14 @@ namespace Epsitec.Common.Support
 
 			Assert.AreEqual ("Angle de la hachure", this.manager.GetCaption (Druid.Parse ("[4002]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")).Description);
 			Assert.AreEqual ("Schraffurwinkel", this.manager.GetCaption (Druid.Parse ("[4002]"), ResourceLevel.Merged, Resources.FindCultureInfo ("de")).Description);
+
+			IList<string> labels = data1.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>;
+
+			labels.RemoveAt (2);
+			
+			Assert.IsTrue (accessor.ContainsChanges);
+			Assert.AreEqual (1, accessor.PersistChanges ());
+			Assert.IsFalse (accessor.ContainsChanges);
 
 			CultureMap map = accessor.CreateItem ();
 

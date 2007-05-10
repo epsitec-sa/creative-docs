@@ -40,7 +40,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			if (field.IsEmpty)
 			{
-				data = new StructuredData (Res.Types.ResourceCaption);
+				data = new Types.StructuredData (Res.Types.ResourceCaption);
 				item.RecordCultureData (twoLetterISOLanguageName, data);
 			}
 			else
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				bundle.Add (field);
 			}
 
-			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			Types.StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 
 			Caption caption = this.GetCaptionFromData (data, item.Name);
 			string  name    = this.GetFieldNameFromName (data, item.Name);
@@ -184,11 +184,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		protected abstract string GetFieldNameFromName(StructuredData data, string name);
+		protected abstract string GetFieldNameFromName(Types.StructuredData data, string name);
 
-		protected abstract Caption GetCaptionFromData(StructuredData data, string name);
+		protected abstract Caption GetCaptionFromData(Types.StructuredData data, string name);
 
-		protected abstract void FillDataFromCaption(StructuredData data, Caption caption);
+		protected abstract void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption);
 
 		protected abstract string GetNameFromFieldName(string fieldName);
 
@@ -224,14 +224,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				insert = true;
 			}
 
-			StructuredData data = new StructuredData (Res.Types.ResourceCaption);
+			Types.StructuredData data = new Types.StructuredData (Res.Types.ResourceCaption);
 
 			Caption caption = new Caption ();
 			string  name    = string.IsNullOrEmpty (field.Name) ? null : this.GetNameFromFieldName (field.Name);
 			
 			caption.DeserializeFromString (field.AsString);
 
-			this.FillDataFromCaption (data, caption);
+			this.FillDataFromCaption (item, data, caption);
 			data.SetValue (Res.Fields.ResourceCaption.Comment, field.About); // HACK
 
 			item.Name = name ?? item.Name;

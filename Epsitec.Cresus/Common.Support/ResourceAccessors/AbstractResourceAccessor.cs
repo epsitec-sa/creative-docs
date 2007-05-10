@@ -10,7 +10,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	/// all resource accessors found in the <c>Epsitec.Common.Support</c>
 	/// namespace.
 	/// </summary>
-	public abstract class AbstractResourceAccessor : IResourceAccessor
+	public abstract class AbstractResourceAccessor : Types.DependencyObject, IResourceAccessor
 	{
 		protected AbstractResourceAccessor(IDataBroker dataBroker)
 		{
