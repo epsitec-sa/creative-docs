@@ -590,6 +590,12 @@ namespace Epsitec.Common.Types
 		public void CheckSupportTypes()
 		{
 			Assert.AreSame (StringType.Default, Epsitec.Common.Support.Res.Types.StringCollection.ItemType);
+
+			Assert.IsNotNull (Epsitec.Common.Support.Res.Types.Field);
+			Assert.IsNotNull (Epsitec.Common.Support.Res.Types.FieldCollection);
+			Assert.IsNotNull (Epsitec.Common.Support.Res.Types.FieldCollection.ItemType);
+			
+			Assert.AreEqual (Epsitec.Common.Support.Res.Types.Field.CaptionId, Epsitec.Common.Support.Res.Types.FieldCollection.ItemType.CaptionId);
 		}
 
 		[Test]

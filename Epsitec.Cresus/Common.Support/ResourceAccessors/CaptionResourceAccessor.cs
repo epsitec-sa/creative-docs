@@ -11,8 +11,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	using CultureInfo=System.Globalization.CultureInfo;
 	
 	/// <summary>
-	/// The <c>CaptionResourceAccessor</c> is used to access text resources,
-	/// stored in the <c>Strings</c> resource bundle.
+	/// The <c>CaptionResourceAccessor</c> is used to access caption resources,
+	/// stored in the <c>Captions</c> resource bundle and which have a field
+	/// name prefixed with <c>"Cap."</c>.
 	/// </summary>
 	public class CaptionResourceAccessor : AbstractCaptionResourceAccessor
 	{
@@ -20,15 +21,23 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 		}
 
+		protected virtual string Prefix
+		{
+			get
+			{
+				return "Cap.";
+			}
+		}
+
 		protected override string GetNameFromFieldName(string fieldName)
 		{
-			System.Diagnostics.Debug.Assert (fieldName.StartsWith ("Cap."));
+			System.Diagnostics.Debug.Assert (fieldName.StartsWith (this.Prefix));
 			return fieldName.Substring (4);
 		}
 
 		protected override string GetFieldNameFromName(Types.StructuredData data, string name)
 		{
-			return "Cap." + name;
+			return this.Prefix + name;
 		}
 
 		protected override Caption GetCaptionFromData(Types.StructuredData data, string name)
@@ -91,7 +100,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		protected override bool FilterField(ResourceBundle.Field field)
 		{
 			return (!string.IsNullOrEmpty (field.Name))
-				&& (field.Name.StartsWith ("Cap."));
+				&& (field.Name.StartsWith (this.Prefix));
 		}
 
 		#region Listener Class
