@@ -368,7 +368,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected static readonly double		windowWidthCompacted = 195;
 		protected static readonly double		windowWidthExtended = 500;
-		protected static readonly double		windowHeight = 260;
+		protected static readonly double		windowHeight = 280;
 
 		protected ResourceAccess				resourceAccess;
 		protected ResourceAccess.TypeType		typeEdited;
