@@ -83,11 +83,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
 				{
 					bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
+					this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Default, null);
 				}
 				else
 				{
 					culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
 					bundle  = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Localized, culture);
+					this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Localized, culture);
+					this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Merged, culture);
 				}
 
 				if (bundle != null)
@@ -134,6 +137,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			field.SetStringValue (caption.SerializeToString ());
 			field.SetAbout (about);
 
+			this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Default, null);
+
 			foreach (string twoLetterISOLanguageName in item.GetDefinedCultures ())
 			{
 				if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
@@ -173,6 +178,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					field.SetStringValue (caption.SerializeToString ());
 					field.SetAbout (about);
 				}
+
+				this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Localized, culture);
+				this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Merged, culture);
 			}
 		}
 

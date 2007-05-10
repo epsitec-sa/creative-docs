@@ -792,6 +792,35 @@ namespace Epsitec.Common.Support
 		{
 			return this.GetCaption (druid, level, culture, true);
 		}
+
+		/// <summary>
+		/// Clears the caption cache for the specified caption.
+		/// </summary>
+		/// <param name="druid">The DRUID of the caption.</param>
+		/// <param name="level">The resource level.</param>
+		/// <param name="culture">The culture.</param>
+		/// <returns><c>true</c> if a value was removed from the cache; otherwise, <c>false</c>.</returns>
+		public bool ClearCaptionCache(Druid druid, ResourceLevel level, CultureInfo culture)
+		{
+			culture = culture ?? this.culture;
+
+			string resource = Resources.ResolveCaptionsDruidReference (druid.ToResourceId ());
+			string bundleName;
+			string fieldName;
+			
+			resource = this.NormalizeFullId (resource);
+
+			if (Resources.SplitFieldIdWithoutDruidResolution (resource, out bundleName, out fieldName))
+			{
+				string key = Resources.CreateCaptionKey (druid, level, culture);
+				return this.captionCache.Remove (key);
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
 		
 		private Caption GetCaption(Druid druid, ResourceLevel level, CultureInfo culture, bool cache)
 		{
