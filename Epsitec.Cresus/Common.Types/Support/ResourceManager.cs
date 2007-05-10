@@ -938,7 +938,7 @@ namespace Epsitec.Common.Support
 				temp.DeserializeFromString (source, this);
 				
 				caption = (caption == null) ? temp : Caption.Merge (caption, temp);
-				caption.DefineId (druid);
+//-				caption.DefineId (druid);
 
 				if (caption.ContainsLocalValue (ResourceManager.SourceBundleProperty) == false)
 				{
