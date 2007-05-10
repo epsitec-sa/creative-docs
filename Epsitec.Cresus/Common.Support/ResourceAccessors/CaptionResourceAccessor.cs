@@ -68,10 +68,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected override void FillDataFromCaption(StructuredData data, Caption caption)
 		{
-			List<string> labels = new List<string> ();
+			Types.Collections.ObservableList<string> labels = new Epsitec.Common.Types.Collections.ObservableList<string> ();
 			labels.AddRange (caption.Labels);
 
 			data.SetValue (Res.Fields.ResourceCaption.Labels, labels);
+			data.LockValue (Res.Fields.ResourceCaption.Labels);
 
 			if (caption.Description != null)
 			{

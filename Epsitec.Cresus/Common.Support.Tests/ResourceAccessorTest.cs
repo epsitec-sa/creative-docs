@@ -32,6 +32,10 @@ namespace Epsitec.Common.Support
 
 			Assert.AreSame (data1, data2);
 			Assert.AreEqual ("Angle de rotation de la trame, exprimé en degrés.", data1.GetValue (Res.Fields.ResourceCaption.Description));
+			Assert.AreEqual (3, (data1.GetValue (Res.Fields.ResourceCaption.Labels) as System.Collections.Generic.IList<string>).Count);
+			Assert.AreEqual ("A", (data1.GetValue (Res.Fields.ResourceCaption.Labels) as System.Collections.Generic.IList<string>)[0]);
+			Assert.AreEqual ("Angle", (data1.GetValue (Res.Fields.ResourceCaption.Labels) as System.Collections.Generic.IList<string>)[1]);
+			Assert.AreEqual ("Angle de la trame", (data1.GetValue (Res.Fields.ResourceCaption.Labels) as System.Collections.Generic.IList<string>)[2]);
 			Assert.IsFalse (accessor.ContainsChanges);
 
 			data1 = accessor.Collection["PatternAngle"].GetCultureData ("de");
