@@ -415,7 +415,7 @@ namespace Epsitec.Common.Widgets
 			menu.AdjustSize();
 
 			Drawing.Point pos = button.MapClientToScreen(new Drawing.Point(0, button.ActualHeight));
-			pos.X -= menu.ActualWidth;
+			pos.X -= menu.PreferredWidth;
 			menu.ShowAsContextMenu(this.Window, pos);
 		}
 
