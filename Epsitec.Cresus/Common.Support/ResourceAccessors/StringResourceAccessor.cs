@@ -124,7 +124,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			string text = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName).GetValue (Res.Fields.ResourceString.Text) as string;
-			string about = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName).GetValue (Res.Fields.ResourceString.About) as string;
+			string about = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName).GetValue (Res.Fields.ResourceString.Comment) as string;
 
 			field.SetName (item.Name);
 			field.SetStringValue (text);
@@ -165,7 +165,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				else
 				{
 					text  = data.GetValue (Res.Fields.ResourceString.Text) as string;
-					about = data.GetValue (Res.Fields.ResourceString.About) as string;
+					about = data.GetValue (Res.Fields.ResourceString.Comment) as string;
 					
 					field.SetStringValue (text);
 					field.SetAbout (about);
@@ -202,7 +202,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			StructuredData data = new StructuredData (Res.Types.ResourceString);
 
 			data.SetValue (Res.Fields.ResourceString.Text, field.AsString);
-			data.SetValue (Res.Fields.ResourceString.About, field.About);
+			data.SetValue (Res.Fields.ResourceString.Comment, field.About);
 
 			item.Name = field.Name ?? item.Name;
 			item.RecordCultureData (twoLetterISOLanguageName, data);

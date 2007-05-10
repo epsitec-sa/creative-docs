@@ -26,7 +26,7 @@ namespace Epsitec.Common.Support
 			
 			public static class ResourceString
 			{
-				public static readonly Epsitec.Common.Support.Druid About = Epsitec.Common.Support.Druid.FromLong (_moduleId, 10);
+				public static readonly Epsitec.Common.Support.Druid Comment = Epsitec.Common.Support.Druid.FromLong (_moduleId, 10);
 				public static readonly Epsitec.Common.Support.Druid Text = Epsitec.Common.Support.Druid.FromLong (_moduleId, 8);
 			}
 		}
