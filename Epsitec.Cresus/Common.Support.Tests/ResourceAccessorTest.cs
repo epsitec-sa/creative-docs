@@ -63,13 +63,13 @@ namespace Epsitec.Common.Support
 			IList<string> labels = data1.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>;
 
 			labels.RemoveAt (2);
-			
+
 			Assert.IsTrue (accessor.ContainsChanges);
 			Assert.AreEqual (1, accessor.PersistChanges ());
 			Assert.IsFalse (accessor.ContainsChanges);
 
 			labels[0] = "A.";
-			
+
 			Assert.IsTrue (accessor.ContainsChanges);
 			Assert.AreEqual (1, accessor.PersistChanges ());
 			Assert.IsFalse (accessor.ContainsChanges);
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Support
 			CultureMap map = accessor.CreateItem ();
 
 			Assert.IsNotNull (map);
-			Assert.AreEqual (Druid.Parse ("[400B]"), map.Id);
+			Assert.AreEqual (Druid.Parse ("[400C]"), map.Id);
 			Assert.IsNull (accessor.Collection[map.Id]);
 
 			accessor.Collection.Add (map);
@@ -90,28 +90,40 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (1, accessor.PersistChanges ());
 			Assert.IsFalse (accessor.ContainsChanges);
 
-			Assert.AreEqual ("New value", this.manager.GetCaption (Druid.Parse ("[400B]"), ResourceLevel.Default).Description);
-			Assert.AreEqual ("Nouvelle valeur", this.manager.GetCaption (Druid.Parse ("[400B]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")).Description);
-			Assert.AreEqual ("NewItem", this.manager.GetCaption (Druid.Parse ("[400B]"), ResourceLevel.Default).Name);
-			Assert.AreEqual ("NewItem", this.manager.GetCaption (Druid.Parse ("[400B]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")).Name);
-			Assert.AreEqual ("Cap.NewItem", this.manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Druid.Parse ("[400B]")].Name);
-			Assert.IsTrue (string.IsNullOrEmpty (this.manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Localized, Resources.FindCultureInfo ("fr"))[Druid.Parse ("[400B]")].Name));
+			Assert.AreEqual ("New value", this.manager.GetCaption (Druid.Parse ("[400C]"), ResourceLevel.Default).Description);
+			Assert.AreEqual ("Nouvelle valeur", this.manager.GetCaption (Druid.Parse ("[400C]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")).Description);
+			Assert.AreEqual ("NewItem", this.manager.GetCaption (Druid.Parse ("[400C]"), ResourceLevel.Default).Name);
+			Assert.AreEqual ("NewItem", this.manager.GetCaption (Druid.Parse ("[400C]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")).Name);
+			Assert.AreEqual ("Cap.NewItem", this.manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Druid.Parse ("[400C]")].Name);
+			Assert.IsTrue (string.IsNullOrEmpty (this.manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Localized, Resources.FindCultureInfo ("fr"))[Druid.Parse ("[400C]")].Name));
 
 			map.GetCultureData ("fr").SetValue (Res.Fields.ResourceCaption.Description, Types.UndefinedValue.Instance);
 
 			Assert.AreEqual (1, accessor.PersistChanges ());
 			Assert.IsFalse (accessor.ContainsChanges);
 
-			Assert.AreEqual ("New value", this.manager.GetCaption (Druid.Parse ("[400B]"), ResourceLevel.Default).Description);
-			Assert.AreEqual ("New value", this.manager.GetCaption (Druid.Parse ("[400B]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")).Description);
+			Assert.AreEqual ("New value", this.manager.GetCaption (Druid.Parse ("[400C]"), ResourceLevel.Default).Description);
+			Assert.AreEqual ("New value", this.manager.GetCaption (Druid.Parse ("[400C]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")).Description);
 
 			accessor.Collection.Remove (map);
 			Assert.IsTrue (accessor.ContainsChanges);
 			Assert.AreEqual (1, accessor.PersistChanges ());
 			Assert.IsFalse (accessor.ContainsChanges);
 
-			Assert.IsNull (this.manager.GetCaption (Druid.Parse ("[400B]"), ResourceLevel.Default));
-			Assert.IsNull (this.manager.GetCaption (Druid.Parse ("[400B]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")));
+			Assert.IsNull (this.manager.GetCaption (Druid.Parse ("[400C]"), ResourceLevel.Default));
+			Assert.IsNull (this.manager.GetCaption (Druid.Parse ("[400C]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")));
+		}
+
+		[Test]
+		public void CheckCommandAccessor()
+		{
+			ResourceAccessors.CommandResourceAccessor accessor = new ResourceAccessors.CommandResourceAccessor ();
+
+			Assert.IsFalse (accessor.ContainsChanges);
+
+			accessor.Load (this.manager);
+			
+			Assert.AreEqual (1, accessor.Collection.Count);
 		}
 
 		[Test]
@@ -119,14 +131,18 @@ namespace Epsitec.Common.Support
 		{
 			ResourceAccessors.StringResourceAccessor  stringAccessor  = new ResourceAccessors.StringResourceAccessor ();
 			ResourceAccessors.CaptionResourceAccessor captionAccessor = new ResourceAccessors.CaptionResourceAccessor ();
+			ResourceAccessors.CommandResourceAccessor commandAccessor = new ResourceAccessors.CommandResourceAccessor ();
 
 			stringAccessor.Load (this.manager);
 			captionAccessor.Load (this.manager);
+			commandAccessor.Load (this.manager);
 
 			System.Console.Out.WriteLine ("Strings:");
 			this.DumpCultureMap (stringAccessor.Collection[0]);
 			System.Console.Out.WriteLine ("Captions:");
 			this.DumpCultureMap (captionAccessor.Collection[0]);
+			System.Console.Out.WriteLine ("Commands:");
+			this.DumpCultureMap (commandAccessor.Collection[0]);
 		}
 
 		private void DumpCultureMap(CultureMap map)

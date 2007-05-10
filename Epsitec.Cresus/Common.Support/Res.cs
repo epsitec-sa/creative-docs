@@ -40,23 +40,15 @@ namespace Epsitec.Common.Support
 			
 			public static class ResourceCommand
 			{
-				public static readonly Epsitec.Common.Support.Druid Comment = Epsitec.Common.Support.Druid.FromLong (_moduleId, 21);
 				public static readonly Epsitec.Common.Support.Druid DefaultParameter = Epsitec.Common.Support.Druid.FromLong (_moduleId, 22);
-				public static readonly Epsitec.Common.Support.Druid Description = Epsitec.Common.Support.Druid.FromLong (_moduleId, 19);
-				public static readonly Epsitec.Common.Support.Druid Icon = Epsitec.Common.Support.Druid.FromLong (_moduleId, 20);
-				public static readonly Epsitec.Common.Support.Druid Labels = Epsitec.Common.Support.Druid.FromLong (_moduleId, 18);
 				public static readonly Epsitec.Common.Support.Druid Shortcuts = Epsitec.Common.Support.Druid.FromLong (_moduleId, 24);
 				public static readonly Epsitec.Common.Support.Druid Statefull = Epsitec.Common.Support.Druid.FromLong (_moduleId, 23);
 			}
 			
 			public static class ResourceEntity
 			{
-				public static readonly Epsitec.Common.Support.Druid Comment = Epsitec.Common.Support.Druid.FromLong (_moduleId, 31);
 				public static readonly Epsitec.Common.Support.Druid DefaultController = Epsitec.Common.Support.Druid.FromLong (_moduleId, 32);
-				public static readonly Epsitec.Common.Support.Druid Description = Epsitec.Common.Support.Druid.FromLong (_moduleId, 29);
 				public static readonly Epsitec.Common.Support.Druid Fields = Epsitec.Common.Support.Druid.FromLong (_moduleId, 34);
-				public static readonly Epsitec.Common.Support.Druid Icon = Epsitec.Common.Support.Druid.FromLong (_moduleId, 30);
-				public static readonly Epsitec.Common.Support.Druid Labels = Epsitec.Common.Support.Druid.FromLong (_moduleId, 28);
 				public static readonly Epsitec.Common.Support.Druid Nullable = Epsitec.Common.Support.Druid.FromLong (_moduleId, 33);
 			}
 			

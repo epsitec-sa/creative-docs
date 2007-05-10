@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
 
@@ -33,12 +34,48 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			Caption caption = base.GetCaptionFromData (data, name);
 
+			if (!Types.UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceCommand.Statefull)))
+			{
+				Widgets.Command.SetStatefull (caption, (bool) data.GetValue (Res.Fields.ResourceCommand.Statefull));
+			}
+
+			IList<StructuredData> shortcuts = data.GetValue (Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
+
+			if (shortcuts != null)
+			{
+				IList<Widgets.Shortcut> target = Widgets.Shortcut.GetShortcuts (caption);
+
+				foreach (StructuredData item in shortcuts)
+				{
+					Widgets.Shortcut shortcut = new Widgets.Shortcut ();
+					shortcut.SetValue (Widgets.Shortcut.KeyCodeProperty, item.GetValue (Res.Fields.Shortcut.KeyCode) as string);
+				}
+			}
+			
 			return caption;
 		}
 
 		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption)
 		{
 			base.FillDataFromCaption (item, data, caption);
+
+			ObservableList<StructuredData> shortcuts = new ObservableList<StructuredData> ();
+
+			foreach (Widgets.Shortcut shortcut in Widgets.Shortcut.GetShortcuts (caption))
+			{
+				StructuredData x = new StructuredData (Res.Types.Shortcut);
+				x.SetValue (Res.Fields.Shortcut.KeyCode, shortcut.GetValue (Widgets.Shortcut.KeyCodeProperty));
+				shortcuts.Add (x);
+			}
+			
+			data.SetValue (Res.Fields.ResourceCommand.Shortcuts, shortcuts);
+			data.LockValue (Res.Fields.ResourceCommand.Shortcuts);
+			shortcuts.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+
+			if (!Types.UndefinedValue.IsUndefinedValue (caption.GetValue (Widgets.Command.StatefullProperty)))
+			{
+				data.SetValue (Res.Fields.ResourceCommand.Statefull, caption.GetValue (Widgets.Command.StatefullProperty));
+			}
 		}
 	}
 }

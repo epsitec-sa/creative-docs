@@ -12,4 +12,5 @@
   <data id="08">&lt;s:data id="_0" f:Description="2nd choice" /&gt;</data>
   <data id="09">&lt;s:data id="_0" f:Description="3rd choice" /&gt;</data>
   <data id="0A">&lt;s:data id="_0" f:Description="Borrowed Text" /&gt;</data>
+  <data name="Cmd.Close" id="0B">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="2" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_2" /&gt;&lt;s:data id="_1" f:Name="Close" f:_2.Shortcuts="{Collection {ObjRef _2}}" f:Labels="{Collection {Text 'Fermer'}}" /&gt;&lt;s:data id="_2" f:KeyCode="FuncF4, ModifierControl" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
 </bundle>
