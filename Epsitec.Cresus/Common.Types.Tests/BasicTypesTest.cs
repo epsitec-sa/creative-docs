@@ -35,6 +35,15 @@ namespace Epsitec.Common.Types
 			Assert.IsNotNull (IntegerType.Default);
 			Assert.AreEqual ("Default.Integer", IntegerType.Default.Name);
 			Assert.IsFalse (IntegerType.Default.IsNullable);
+
+			Assert.IsNotNull (DateType.Default);
+			Assert.IsNotNull (DateTimeType.Default);
+			Assert.IsNotNull (TimeType.Default);
+
+			Assert.IsNotNull (DruidType.Default);
+			Assert.AreEqual ("Default.Druid", DruidType.Default.Name);
+			Assert.IsFalse (DruidType.Default.IsNullable);
+			Assert.AreEqual (typeof (Support.Druid), DruidType.Default.SystemType);
 		}
 		
 		[Test]

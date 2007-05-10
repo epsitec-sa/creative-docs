@@ -105,6 +105,7 @@
     <Compile Include="CollectionType.cs" />
     <Compile Include="AbstractDateTimeType.cs" />
     <Compile Include="BinaryType.cs" />
+    <Compile Include="DruidType.cs" />
     <Compile Include="StructuredTypeClass.cs" />
     <Compile Include="Internal\BindingHelper.cs" />
     <Compile Include="Relation.cs" />

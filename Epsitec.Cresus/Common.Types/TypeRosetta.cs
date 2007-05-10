@@ -123,6 +123,10 @@ namespace Epsitec.Common.Types
 							{
 								namedType = StringType.Default;
 							}
+							else if (systemType == typeof (Support.Druid))
+							{
+								namedType = DruidType.Default;
+							}
 							else
 							{
 								IStructuredType structuredType = typeObject as IStructuredType;
@@ -656,6 +660,10 @@ namespace Epsitec.Common.Types
 
 					case "Epsitec.Common.Types.Time, Common.Types":
 						type = new TimeType (caption);
+						break;
+
+					case "Epsitec.Common.Support.Druid, Common.Support":
+						type = new DruidType (caption);
 						break;
 
 					case "System.Collections.IEnumerable":
