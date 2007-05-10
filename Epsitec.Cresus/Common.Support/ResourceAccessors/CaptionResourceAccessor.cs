@@ -71,9 +71,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			Types.Collections.ObservableList<string> labels = new Epsitec.Common.Types.Collections.ObservableList<string> ();
 			labels.AddRange (caption.Labels);
 
+			//	The labels property can be accessed as an IList<string> and any modification
+			//	will be reported to the listener.
+			
 			data.SetValue (Res.Fields.ResourceCaption.Labels, labels);
 			data.LockValue (Res.Fields.ResourceCaption.Labels);
-			labels.CollectionChanged += new Listener (this, item).HandleLabelsCollectionChanged;
+			labels.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
 
 			if (caption.Description != null)
 			{
@@ -85,7 +88,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		private class Listener
+		protected override bool FilterField(ResourceBundle.Field field)
+		{
+			return (!string.IsNullOrEmpty (field.Name))
+				&& (field.Name.StartsWith ("Cap."));
+		}
+
+		#region Listener Class
+
+		protected class Listener
 		{
 			public Listener(CaptionResourceAccessor accessor, CultureMap item)
 			{
@@ -93,7 +104,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				this.item = item;
 			}
 
-			public void HandleLabelsCollectionChanged(object sender, CollectionChangedEventArgs e)
+			public void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("{0}: index {1} -> {2}", e.Action, e.OldStartingIndex, e.NewStartingIndex));
 				this.accessor.NotifyItemChanged (this.item);
@@ -103,12 +114,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			private CultureMap item;
 		}
 
-		protected override bool FilterField(ResourceBundle.Field field)
-		{
-			return (!string.IsNullOrEmpty (field.Name))
-				&& (field.Name.StartsWith ("Cap."));
-		}
-
-		
+		#endregion
 	}
 }

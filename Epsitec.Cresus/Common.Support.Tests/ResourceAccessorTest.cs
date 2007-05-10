@@ -68,6 +68,12 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (1, accessor.PersistChanges ());
 			Assert.IsFalse (accessor.ContainsChanges);
 
+			labels[0] = "A.";
+			
+			Assert.IsTrue (accessor.ContainsChanges);
+			Assert.AreEqual (1, accessor.PersistChanges ());
+			Assert.IsFalse (accessor.ContainsChanges);
+
 			CultureMap map = accessor.CreateItem ();
 
 			Assert.IsNotNull (map);
