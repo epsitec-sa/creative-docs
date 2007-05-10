@@ -207,7 +207,15 @@ namespace Epsitec.Common.Drawing
 
 					lock (bitmapDataCache)
 					{
-						this.bitmap_data = this.bitmap.LockBits (new System.Drawing.Rectangle (0, 0, width, height), mode, format);
+						try
+						{
+							this.bitmap_data = this.bitmap.LockBits (new System.Drawing.Rectangle (0, 0, width, height), mode, format);
+						}
+						catch (System.Exception ex)
+						{
+							System.Diagnostics.Debugger.Break ();
+						}
+
 						bitmapDataCache[this.bitmap] = this.bitmap_data;
 					}
 				}
