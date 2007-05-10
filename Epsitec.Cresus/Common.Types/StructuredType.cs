@@ -413,7 +413,8 @@ namespace Epsitec.Common.Types
 			if ((typeClass == StructuredTypeClass.Entity) ||
 				(typeClass == StructuredTypeClass.View))
 			{
-				if (! (bool) this.GetValue (StructuredType.DebugDisableChecksProperty))
+				if ((this.IsCaptionDefined) &&
+					(! (bool) this.GetValue (StructuredType.DebugDisableChecksProperty)))
 				{
 					//	Ensure that the field ID matches the field's caption ID. This is
 					//	a strict requirement for entities and views.
