@@ -14,9 +14,15 @@
   <data name="Typ.Default.String" id="08">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:_1.SystemType="C:System.String" f:Name="Default.String" f:_1.DefaultController="String" f:_1.IsNullable="True" f:Labels="{Collection {Text 'Type String de .NET'}}" /&gt;</data>
   <data name="Typ.Default.Void" id="09">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:_1.SystemType="V:System.Void" f:Name="Default.Void" f:Labels="{Collection {Text 'Type Void de .NET'}}" /&gt;</data>
   <data name="Typ.BindingMode" id="0G">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.SystemType="E:Epsitec.Common.Types.BindingMode, Common.Types" f:_2.EnumValues="{Collection {Text '0 [100B]'}, {Text '1 [100C]'}, {Text '2 [100D]'}, {Text '3 [100E]'}, {Text '4 [100F]'}}" f:Name="BindingMode" f:Labels="{Collection {Text 'Mode de binding'}}" /&gt;</data>
+  <data name="Typ.Relation" id="0M">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.SystemType="*NaE" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameter="Icons" f:Name="Relation" f:Description="Une relation détermine comment le champ d&amp;amp;apos;une entité est lié avec sa cible." f:_2.EnumValues="{Collection {Text '0 [100N]'}, {Text '1 [100O]'}, {Text '2 [100P]'}, {Text '3 [100Q]'}}" f:Labels="{Collection {Text 'Relation'}}" /&gt;</data>
   <data name="Val.BindingMode.None" id="0B">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text 'Pas de binding'}}" /&gt;</data>
+  <data name="Val.Relation.None" id="0N">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text 'Pas de relation'}}" /&gt;</data>
+  <data name="Val.Relation.Reference" id="0O">&lt;s:data id="_0" f:Name="Reference" f:Labels="{Collection {Text 'Relation de référence'}}" /&gt;</data>
+  <data name="Val.Relation.Inclusion" id="0P">&lt;s:data id="_0" f:Name="Inclusion" f:Labels="{Collection {Text 'Relation d&amp;amp;apos;inclusion'}}" /&gt;</data>
+  <data name="Val.Relation.Collection" id="0Q">&lt;s:data id="_0" f:Name="Collection" f:Labels="{Collection {Text 'Relation multiple (collection)'}}" /&gt;</data>
   <data name="Val.BindingMode.OneTime" id="0C">&lt;s:data id="_0" f:Name="OneTime" f:Description="Binding unique, exécuté à l&amp;amp;apos;initialisation uniquement" f:Labels="{Collection {Text 'Binding unique'}}" /&gt;</data>
   <data name="Val.BindingMode.OneWay" id="0D">&lt;s:data id="_0" f:Name="OneWay" f:Description="Binding de la source vers la cible" f:Labels="{Collection {Text 'Binding unidirectionnel'}}" /&gt;</data>
   <data name="Val.BindingMode.OneWayToSource" id="0E">&lt;s:data id="_0" f:Name="OneWayToSource" f:Description="Binding de la cible vers la source" f:Labels="{Collection {Text 'Binding unidirectionnel inversé'}}" /&gt;</data>
   <data name="Val.BindingMode.TwoWay" id="0F">&lt;s:data id="_0" f:Name="TwoWay" f:Description="Binding bidirectionnel entre la source et la cible" f:Labels="{Collection {Text 'Binding bidirectionnel'}}" /&gt;</data>
+  <data name="Fld.New" id="0L">&lt;s:data id="_0" f:Name="New" /&gt;</data>
 </bundle>

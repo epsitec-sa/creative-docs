@@ -16,4 +16,9 @@
   <data id="0H">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:_1.SystemType="V:Epsitec.Common.Types.Date, Common.Types" f:_1.DefaultController="DateTime" f:Labels="{Collection {Text 'Date Type'}}" /&gt;</data>
   <data id="0I">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:_1.SystemType="V:Epsitec.Common.Types.Time, Common.Types" f:_1.DefaultController="DateTime" f:Labels="{Collection {Text 'Time Type'}}" /&gt;</data>
   <data id="0J">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:_1.SystemType="V:System.DateTime" f:_1.DefaultController="DateTime" f:Labels="{Collection {Text 'DateTime Type'}}" /&gt;</data>
+  <data id="0M">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:_1.SystemType="*NaE" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameter="Icons" /&gt;</data>
+  <data id="0N">&lt;s:data id="_0" f:Labels="{Collection {Text 'No relation'}}" /&gt;</data>
+  <data id="0O">&lt;s:data id="_0" f:Labels="{Collection {Text 'Reference relation'}}" /&gt;</data>
+  <data id="0P">&lt;s:data id="_0" f:Labels="{Collection {Text 'Inclusion relation'}}" /&gt;</data>
+  <data id="0Q">&lt;s:data id="_0" f:Labels="{Collection {Text 'Collection relation'}}" /&gt;</data>
 </bundle>

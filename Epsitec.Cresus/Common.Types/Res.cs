@@ -10,6 +10,7 @@ namespace Epsitec.Common.Types
 		public static class Types
 		{
 			public static readonly Epsitec.Common.Types.EnumType BindingMode = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 16));
+			public static readonly Epsitec.Common.Types.EnumType Relation = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 22));
 			public static class Default
 			{
 				public static readonly Epsitec.Common.Types.BooleanType Boolean = (Epsitec.Common.Types.BooleanType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 3));
@@ -17,6 +18,7 @@ namespace Epsitec.Common.Types
 				public static readonly Epsitec.Common.Types.DateTimeType DateTime = (Epsitec.Common.Types.DateTimeType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 19));
 				public static readonly Epsitec.Common.Types.DecimalType Decimal = (Epsitec.Common.Types.DecimalType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 4));
 				public static readonly Epsitec.Common.Types.DoubleType Double = (Epsitec.Common.Types.DoubleType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 5));
+				public static readonly Epsitec.Common.Types.DruidType Druid = (Epsitec.Common.Types.DruidType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 20));
 				public static readonly Epsitec.Common.Types.IntegerType Integer = (Epsitec.Common.Types.IntegerType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 6));
 				public static readonly Epsitec.Common.Types.LongIntegerType LongInteger = (Epsitec.Common.Types.LongIntegerType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 7));
 				public static readonly Epsitec.Common.Types.StringType String = (Epsitec.Common.Types.StringType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 8));
@@ -34,6 +36,14 @@ namespace Epsitec.Common.Types
 				public static Epsitec.Common.Types.Caption OneWay { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 13)); } }
 				public static Epsitec.Common.Types.Caption OneWayToSource { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 14)); } }
 				public static Epsitec.Common.Types.Caption TwoWay { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 15)); } }
+			}
+			
+			public static class Relation
+			{
+				public static Epsitec.Common.Types.Caption Collection { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 26)); } }
+				public static Epsitec.Common.Types.Caption Inclusion { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 25)); } }
+				public static Epsitec.Common.Types.Caption None { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 23)); } }
+				public static Epsitec.Common.Types.Caption Reference { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 24)); } }
 			}
 		}
 		
