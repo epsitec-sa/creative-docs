@@ -161,7 +161,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 
 				data    = item.GetCultureData (twoLetterISOLanguageName);
-				caption = this.GetCaptionFromData (data, item.Name);
+				caption = this.GetCaptionFromData (data, null);
 				about   = data.GetValue (Res.Fields.ResourceCaption.Comment) as string;
 				
 				if (caption == null)

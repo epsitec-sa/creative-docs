@@ -48,9 +48,20 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
-			caption.Name = name;
-			caption.Description = description;
-			caption.Icon = icon;
+			if (name != null)
+			{
+				caption.Name = name;
+			}
+
+			if (description != null)
+			{
+				caption.Description = description;
+			}
+
+			if (icon != null)
+			{
+				caption.Icon = icon;
+			}
 
 			return caption;
 		}

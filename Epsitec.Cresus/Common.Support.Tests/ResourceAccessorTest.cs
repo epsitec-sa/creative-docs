@@ -156,7 +156,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("NewItem", this.manager.GetCaption (Druid.Parse ("[400B]"), ResourceLevel.Default).Name);
 			Assert.AreEqual ("NewItem", this.manager.GetCaption (Druid.Parse ("[400B]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")).Name);
 			Assert.AreEqual ("Cap.NewItem", this.manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Druid.Parse ("[400B]")].Name);
-			Assert.IsNull (this.manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Localized, Resources.FindCultureInfo ("fr"))[Druid.Parse ("[400B]")].Name);
+			Assert.IsTrue (string.IsNullOrEmpty (this.manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Localized, Resources.FindCultureInfo ("fr"))[Druid.Parse ("[400B]")].Name));
 
 			map.GetCultureData ("fr").SetValue (Res.Fields.ResourceCaption.Description, Types.UndefinedValue.Instance);
 
