@@ -126,9 +126,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 
-			Caption caption = this.GetCaptionFromData (data);
+			Caption caption = this.GetCaptionFromData (data, item.Name);
 			string  name    = this.GetFieldNameFromName (data, item.Name);
-			string about   = data.GetValue (Res.Fields.ResourceCaption.Comment) as string;
+			string  about   = data.GetValue (Res.Fields.ResourceCaption.Comment) as string;
 			
 			field.SetName (name);
 			field.SetStringValue (caption.SerializeToString ());
@@ -146,7 +146,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				if (bundle == null)
 				{
-					bundle = ResourceBundle.Create (this.ResourceManager, this.ResourceManager.ActivePrefix, Resources.CaptionsBundleName, ResourceLevel.Localized, culture);
+					bundle = ResourceBundle.Create (this.ResourceManager, this.ResourceManager.ActivePrefix, this.ResourceManager.GetModuleFromFullId (item.Id.ToString ()), Resources.CaptionsBundleName, ResourceLevel.Localized, culture, 0);
+					bundle.DefineType ("Caption");
 					this.ResourceManager.SetBundle (bundle, ResourceSetMode.InMemory);
 				}
 				
@@ -160,7 +161,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 
 				data    = item.GetCultureData (twoLetterISOLanguageName);
-				caption = this.GetCaptionFromData (data);
+				caption = this.GetCaptionFromData (data, item.Name);
 				about   = data.GetValue (Res.Fields.ResourceCaption.Comment) as string;
 				
 				if (caption == null)
@@ -177,7 +178,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected abstract string GetFieldNameFromName(StructuredData data, string name);
 
-		protected abstract Caption GetCaptionFromData(StructuredData data);
+		protected abstract Caption GetCaptionFromData(StructuredData data, string name);
 
 		protected abstract void FillDataFromCaption(StructuredData data, Caption caption);
 

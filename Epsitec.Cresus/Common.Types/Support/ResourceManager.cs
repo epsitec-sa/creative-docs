@@ -246,6 +246,16 @@ namespace Epsitec.Common.Support
 			return false;
 		}
 
+		public ResourceModuleInfo GetModuleFromFullId(string id)
+		{
+			string prefix;
+			string localId;
+			ResourceModuleInfo module;
+
+			this.AnalyseFullId (id, out prefix, out localId, out module);
+
+			return module;
+		}
 
 		public void AnalyseFullId(string id, out string prefix, out string localId, out ResourceModuleInfo module)
 		{
@@ -1304,7 +1314,7 @@ namespace Epsitec.Common.Support
 
 				System.Diagnostics.Debug.Assert (cache.Bundle.PrefixedName == bundleName);
 				System.Diagnostics.Debug.Assert (cache.Bundle.ResourceLevel == level);
-				System.Diagnostics.Debug.Assert (Resources.EqualCultures (cache.Bundle.Culture, culture));
+				System.Diagnostics.Debug.Assert (level == ResourceLevel.Default || Resources.EqualCultures (cache.Bundle.Culture, culture));
 
 				this.bundleRelatedCache[key] = cache;
 			}

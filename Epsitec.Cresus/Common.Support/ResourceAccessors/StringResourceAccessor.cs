@@ -142,7 +142,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				if (bundle == null)
 				{
-					bundle = ResourceBundle.Create (this.ResourceManager, this.ResourceManager.ActivePrefix, Resources.StringsBundleName, ResourceLevel.Localized, culture);
+					bundle = ResourceBundle.Create (this.ResourceManager, this.ResourceManager.ActivePrefix, this.ResourceManager.GetModuleFromFullId (item.Id.ToString ()), Resources.StringsBundleName, ResourceLevel.Localized, culture, 0);
+					bundle.DefineType ("String");
 					this.ResourceManager.SetBundle (bundle, ResourceSetMode.InMemory);
 				}
 				

@@ -491,7 +491,7 @@ namespace Epsitec.Common.Support
 			buffer.Append ("~");
 			buffer.Append ((int) level);
 			buffer.Append ("~");
-			buffer.Append (culture.TwoLetterISOLanguageName);
+			buffer.Append (level == ResourceLevel.Default ? Resources.DefaultTwoLetterISOLanguageName : culture.TwoLetterISOLanguageName);
 
 			return buffer.ToString ();
 		}
@@ -504,7 +504,7 @@ namespace Epsitec.Common.Support
 			buffer.Append ("~");
 			buffer.Append ((int) level);
 			buffer.Append ("~");
-			buffer.Append (culture.TwoLetterISOLanguageName);
+			buffer.Append (level == ResourceLevel.Default ? Resources.DefaultTwoLetterISOLanguageName : culture.TwoLetterISOLanguageName);
 
 			return buffer.ToString ();
 		}

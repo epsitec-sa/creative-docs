@@ -31,18 +31,24 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return "Cap." + name;
 		}
 
-		protected override Caption GetCaptionFromData(StructuredData data)
+		protected override Caption GetCaptionFromData(StructuredData data, string name)
 		{
 			string description = data.GetValue (Res.Fields.ResourceCaption.Description) as string;
 			string icon = data.GetValue (Res.Fields.ResourceCaption.Icon) as string;
 
 			Caption caption = new Caption ();
 
-			foreach (string label in data.GetValue (Res.Fields.ResourceCaption.Labels) as IEnumerable<string>)
+			IEnumerable<string> labels = data.GetValue (Res.Fields.ResourceCaption.Labels) as IEnumerable<string>;
+
+			if (labels != null)
 			{
-				caption.Labels.Add (label);
+				foreach (string label in labels)
+				{
+					caption.Labels.Add (label);
+				}
 			}
 
+			caption.Name = name;
 			caption.Description = description;
 			caption.Icon = icon;
 
