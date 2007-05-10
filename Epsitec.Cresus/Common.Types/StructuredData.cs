@@ -140,11 +140,11 @@ namespace Epsitec.Common.Types
 
 			if (this.values.TryGetValue (id, out record))
 			{
-				record  = new Record (record.Data, (PropertyChangedEventHandler) System.Delegate.Combine (record.Handler, handler));
+				record  = new Record (record.Data, record.IsReadOnly, (PropertyChangedEventHandler) System.Delegate.Combine (record.Handler, handler));
 			}
 			else
 			{
-				record = new Record (UndefinedValue.Instance, handler);
+				record = new Record (UndefinedValue.Instance, false, handler);
 			}
 
 			this.values[id] = record;
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Types
 
 			if (this.values.TryGetValue (id, out record))
 			{
-				record  = new Record (record.Data, (PropertyChangedEventHandler) System.Delegate.Remove (record.Handler, handler));
+				record  = new Record (record.Data, record.IsReadOnly, (PropertyChangedEventHandler) System.Delegate.Remove (record.Handler, handler));
 				
 				if ((record.Data == UndefinedValue.Instance) &&
 					(record.Handler == null))
@@ -255,6 +255,12 @@ namespace Epsitec.Common.Types
 					
 					if (this.values.TryGetValue (id, out record))
 					{
+						if ((record.IsReadOnly) &&
+							(!UndefinedValue.IsUndefinedValue (record.Data)))
+						{
+							throw new System.InvalidOperationException (string.Format ("Field {0} is read only", id));
+						}
+
 						handler = record.Handler;
 
 						if (handler == null)
@@ -263,7 +269,7 @@ namespace Epsitec.Common.Types
 						}
 						else
 						{
-							record = new Record (UndefinedValue.Instance, handler);
+							record = new Record (UndefinedValue.Instance, false, handler);
 							this.values[id] = record;
 						}
 					}
@@ -290,12 +296,18 @@ namespace Epsitec.Common.Types
 
 				if (this.values.TryGetValue (id, out record))
 				{
+					if ((record.IsReadOnly) &&
+						(!object.Equals (value, record.Data)))
+					{
+						throw new System.InvalidOperationException (string.Format ("Field {0} is read only", id));
+					}
+					
 					handler = record.Handler;
-					record  = new Record (value, handler);
+					record  = new Record (value, record.IsReadOnly, handler);
 				}
 				else
 				{
-					record = new Record (value);
+					record = new Record (value, false);
 				}
 
 				this.values[id] = record;
@@ -322,6 +334,48 @@ namespace Epsitec.Common.Types
 		public void SetValue(Support.Druid id, object value)
 		{
 			this.SetValue (id.ToString (), value);
+		}
+
+		public bool LockValue(Support.Druid id)
+		{
+			return this.LockValue (id.ToString ());
+		}
+
+		public bool LockValue(string id)
+		{
+			Record value;
+
+			if ((this.values != null) &&
+				(this.values.TryGetValue (id, out value)))
+			{
+				if (! UndefinedValue.IsUndefinedValue (value.Data))
+				{
+					this.values[id] = new Record (value.Data, true, value.Handler);
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public bool IsValueLocked(Support.Druid id)
+		{
+			return this.IsValueLocked (id.ToString ());
+		}
+
+		public bool IsValueLocked(string id)
+		{
+			Record value;
+
+			if ((this.values != null) &&
+				(this.values.TryGetValue (id, out value)))
+			{
+				return value.IsReadOnly;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		public static Support.PropertyGetter CreatePropertyGetter(string propertyName)
@@ -491,16 +545,18 @@ namespace Epsitec.Common.Types
 
 		protected struct Record
 		{
-			public Record(object data)
+			public Record(object data, bool readOnly)
 			{
 				this.data = data;
 				this.handler = null;
+				this.readOnly = readOnly;
 			}
 
-			public Record(object data, PropertyChangedEventHandler handler)
+			public Record(object data, bool readOnly, PropertyChangedEventHandler handler)
 			{
 				this.data = data;
 				this.handler = handler;
+				this.readOnly = readOnly;
 			}
 			
 			public object Data
@@ -508,6 +564,14 @@ namespace Epsitec.Common.Types
 				get
 				{
 					return this.data;
+				}
+			}
+
+			public bool IsReadOnly
+			{
+				get
+				{
+					return this.readOnly;
 				}
 			}
 			
@@ -520,6 +584,7 @@ namespace Epsitec.Common.Types
 			}
 			
 			private object data;
+			private bool readOnly;
 			private PropertyChangedEventHandler handler;
 		}
 

@@ -49,6 +49,39 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual ("B", Collection.Extract (data.StructuredType.GetFieldIds (), 0));
 
+			Assert.IsFalse (data.IsValueLocked ("A"));
+			Assert.IsFalse (data.IsValueLocked ("B"));
+
+			Assert.IsFalse (data.LockValue ("A"));
+			Assert.IsTrue (data.LockValue ("B"));
+			
+			Assert.IsFalse (data.IsValueLocked ("A"));
+			Assert.IsTrue (data.IsValueLocked ("B"));
+
+			data.SetValue ("A", 10);
+			data.SetValue ("B", 20);
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.InvalidOperationException))]
+		public void CheckStrurctureDataEx1()
+		{
+			StructuredData data = new StructuredData ();
+
+			data.SetValue ("A", 10);
+			data.LockValue ("A");
+			data.SetValue ("A", 11);
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.InvalidOperationException))]
+		public void CheckStrurctureDataEx2()
+		{
+			StructuredData data = new StructuredData ();
+
+			data.SetValue ("A", 10);
+			data.LockValue ("A");
+			data.SetValue ("A", UndefinedValue.Instance);
 		}
 
 		[Test]
