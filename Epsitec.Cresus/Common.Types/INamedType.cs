@@ -1,5 +1,5 @@
 //	Copyright © 2004-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
@@ -28,4 +28,27 @@ namespace Epsitec.Common.Types
 			get;
 		}
 	}
+
+	#region NamedTypeSerializationConverter Class
+
+	public class NamedTypeSerializationConverter : ISerializationConverter
+	{
+		#region ISerializationConverter Members
+
+		public string ConvertToString(object value, IContextResolver context)
+		{
+			INamedType type = (INamedType) value;
+			return type.CaptionId.ToString ();
+		}
+
+		public object ConvertFromString(string value, IContextResolver context)
+		{
+			Support.Druid id = Support.Druid.Parse (value);
+			return TypeRosetta.GetTypeObject (id);
+		}
+
+		#endregion
+	}
+
+	#endregion
 }

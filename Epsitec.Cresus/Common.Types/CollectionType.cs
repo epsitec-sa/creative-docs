@@ -95,7 +95,12 @@ namespace Epsitec.Common.Types
 				this.Caption.SetValue (CollectionType.ItemTypeProperty, itemType);
 			}
 		}
-		
+
+
+		static CollectionType()
+		{
+			CollectionType.ItemTypeProperty.DefineSerializationConverter (new NamedTypeSerializationConverter ());
+		}
 		
 		public static readonly DependencyProperty ItemTypeProperty = DependencyProperty.RegisterAttached ("ItemType", typeof (INamedType), typeof (CollectionType));
 	}

@@ -479,7 +479,7 @@ namespace Epsitec.Common.Types
 			this.SetupTypeConverterIfNeeded ();
 
 			System.Diagnostics.Debug.Assert (this.typeConverter != null);
-			System.Diagnostics.Debug.Assert (value.GetType () == this.propertyType);
+			System.Diagnostics.Debug.Assert (TypeRosetta.IsValidValue (value, this.propertyType));
 			
 			return this.typeConverter.ConvertToString (value, context);
 		}
@@ -503,6 +503,20 @@ namespace Epsitec.Common.Types
 			
 			return this.typeConverter.ConvertFromString (value, context);
 		}
+
+		/// <summary>
+		/// Defines a specific serialization converter for this property.
+		/// </summary>
+		/// <param name="serializationConverter">The serialization converter.</param>
+		public void DefineSerializationConverter(ISerializationConverter serializationConverter)
+		{
+			System.Diagnostics.Debug.Assert (serializationConverter != null);
+
+			this.typeConverter = serializationConverter;
+			this.typeConverterOk = true;
+			this.hasTypeConverter = true;
+		}
+
 
 		private void SetupTypeConverterIfNeeded()
 		{

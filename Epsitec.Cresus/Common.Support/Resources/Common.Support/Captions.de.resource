@@ -8,4 +8,5 @@
   <data id="0C">&lt;s:data id="_0" f:Labels="{Collection {Text 'Beschreibung'}}" /&gt;</data>
   <data id="0D">&lt;s:data id="_0" f:Labels="{Collection {Text 'Icon'}}" /&gt;</data>
   <data id="0E">&lt;s:data id="_0" f:Labels="{Collection {Text 'Kommentar'}}" /&gt;</data>
+  <data id="0F">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:_1.SystemType="I:System.Collections.IEnumerable" f:_1.DefaultController="{Null}" f:Labels="{Collection {Text ''}}" /&gt;</data>
 </bundle>

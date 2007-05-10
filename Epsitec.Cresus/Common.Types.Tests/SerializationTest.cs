@@ -3,6 +3,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
 using System.Collections.Generic;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.SerializationTest.ContainerX))]
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.SerializationTest.MyItem))]
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.SerializationTest.MySimpleObject))]
 
@@ -97,6 +98,50 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual (typeof (MyItem), t1.SystemType);
 			Assert.AreEqual (typeof (MySimpleObject), t2.SystemType);
+		}
+
+		[Test]
+		public void CheckINamedTypeSerialization()
+		{
+			ContainerX a = new ContainerX ();
+			ContainerX b = new ContainerX ();
+			
+			a.Type = StringType.Default;
+			b.Type = IntegerType.Default;
+
+			string xmlA = Serialization.SimpleSerialization.SerializeToString (a);
+			string xmlB = Serialization.SimpleSerialization.SerializeToString (b);
+
+			ContainerX a1 = Serialization.SimpleSerialization.DeserializeFromString (xmlA) as ContainerX;
+			ContainerX b1 = Serialization.SimpleSerialization.DeserializeFromString (xmlB) as ContainerX;
+
+			Assert.AreSame (a.Type, a1.Type);
+			Assert.AreSame (b.Type, b1.Type);
+
+			System.Console.Out.WriteLine (xmlA);
+			System.Console.Out.WriteLine (xmlB);
+		}
+
+		public class ContainerX : DependencyObject
+		{
+			public INamedType Type
+			{
+				get
+				{
+					return (INamedType) this.GetValue (ContainerX.TypeProperty);
+				}
+				set
+				{
+					this.SetValue (ContainerX.TypeProperty, value);
+				}
+			}
+
+			static ContainerX()
+			{
+				ContainerX.TypeProperty.DefineSerializationConverter (new NamedTypeSerializationConverter ());
+			}
+			
+			public static readonly DependencyProperty TypeProperty = DependencyProperty.Register ("Type", typeof (INamedType), typeof (ContainerX));
 		}
 
 		[Test]
