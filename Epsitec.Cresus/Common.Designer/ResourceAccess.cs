@@ -1173,11 +1173,21 @@ namespace Epsitec.Common.Designer
 			//	Renomme le ResourceBundle.Field.Name d'un champ, lorsque le nom du StructuredType a changé.
 			//	"Fld.InitialName.Champ1" devient "Fld.NewName.Champ1".
 			string name = this.SubFilter(bundle[druid].Name, true);
-			if (name.StartsWith(initialName))
+			if (name.StartsWith(string.Concat(initialName, ".")))
 			{
 				name = name.Substring(initialName.Length, name.Length-initialName.Length);
 				name = this.AddFilter(string.Concat(newName, name), true);
 				bundle[druid].SetName(name);
+
+				//	TODO: adapter aussi Caption.Name !
+				int i = name.LastIndexOf(".");
+				if (i != -1)  // commence par le nom de l'entité ?
+				{
+					name = name.Substring(i+1);
+				}
+
+				//?Caption caption = bundle.Caption;
+				//?caption.Name = name;
 			}
 		}
 
