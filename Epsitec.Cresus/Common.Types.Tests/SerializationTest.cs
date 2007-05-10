@@ -122,6 +122,20 @@ namespace Epsitec.Common.Types
 			System.Console.Out.WriteLine (xmlB);
 		}
 
+		[Test]
+		public void CheckINamedTypeSerializationInCollectionType()
+		{
+			CollectionType type = new CollectionType ();
+			type.DefineItemType (StringType.Default);
+
+			string  xml     = Serialization.SimpleSerialization.SerializeToString (type.Caption);
+			Caption caption = Serialization.SimpleSerialization.DeserializeFromString (xml) as Caption;
+
+			Assert.AreSame (type.ItemType, caption.GetValue (CollectionType.ItemTypeProperty));
+			
+			System.Console.Out.WriteLine (xml);
+		}
+
 		public class ContainerX : DependencyObject
 		{
 			public INamedType Type

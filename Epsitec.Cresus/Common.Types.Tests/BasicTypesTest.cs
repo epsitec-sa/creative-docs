@@ -587,6 +587,12 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckSupportTypes()
+		{
+			Assert.AreSame (StringType.Default, Epsitec.Common.Support.Res.Types.StringCollection.ItemType);
+		}
+
+		[Test]
 		public void CheckTypeCreation()
 		{
 			Caption caption = new Caption ();
