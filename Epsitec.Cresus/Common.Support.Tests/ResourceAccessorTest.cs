@@ -279,6 +279,29 @@ namespace Epsitec.Common.Support
 			splitter.Dock = Widgets.DockStyle.Bottom;
 			splitter.PreferredHeight = 8;
 
+			//	Critère de tri : selon le nom (on n'a pas vraiment le choix, vu la définition
+			//	de CultureMap)
+			
+			collectionView.SortDescriptions.Clear ();
+			collectionView.SortDescriptions.Add (new Epsitec.Common.Types.SortDescription ("Name"));
+
+			//	Filtre uniquement les items qui ont un "b" dans leur nom :
+
+			collectionView.Filter +=
+				delegate (object obj)
+				{
+					CultureMap item = obj as CultureMap;
+					
+					if (item.Name.Contains ("b"))
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				};
+
 			table.ItemPanel.SelectionChanged +=
 				delegate
 				{
