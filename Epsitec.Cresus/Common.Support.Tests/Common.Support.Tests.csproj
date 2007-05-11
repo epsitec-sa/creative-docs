@@ -90,6 +90,7 @@
     <Reference Include="System.Runtime.Serialization.Formatters.Soap">
       <Name>System.Runtime.Serialization.Formatters.Soap</Name>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
@@ -135,6 +136,10 @@
       <Name>Common.Types</Name>
       <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.UI\Common.UI.csproj">
+      <Project>{BDF75452-AAB1-4E62-82D5-AE23F35C6319}</Project>
+      <Name>Common.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.Widgets\Common.Widgets.csproj">
       <Name>Common.Widgets</Name>

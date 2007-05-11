@@ -129,6 +129,17 @@ namespace Epsitec.Common.Support
 			return this.owner.LoadCultureData (this, twoLetterISOLanguageName);
 		}
 
+		/// <summary>
+		/// Returns a string that represents the current object.
+		/// </summary>
+		/// <returns>
+		/// A string that represents the current object.
+		/// </returns>
+		public override string ToString()
+		{
+			return this.Name;
+		}
+
 		internal void RecordCultureData(string twoLetterISOLanguageName, Types.StructuredData data)
 		{
 			System.Diagnostics.Debug.Assert (data != null);
