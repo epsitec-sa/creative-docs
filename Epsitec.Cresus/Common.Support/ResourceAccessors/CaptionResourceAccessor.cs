@@ -29,6 +29,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		protected override IStructuredType GetStructuredType()
+		{
+			return Res.Types.ResourceCaption;
+		}
+
 		protected override string GetNameFromFieldName(string fieldName)
 		{
 			System.Diagnostics.Debug.Assert (fieldName.StartsWith (this.Prefix));

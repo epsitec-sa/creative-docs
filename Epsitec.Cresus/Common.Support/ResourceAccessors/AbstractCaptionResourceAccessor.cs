@@ -40,7 +40,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			if (field.IsEmpty)
 			{
-				data = new Types.StructuredData (Res.Types.ResourceCaption);
+				data = new Types.StructuredData (this.GetStructuredType ());
 				item.RecordCultureData (twoLetterISOLanguageName, data);
 			}
 			else
@@ -50,6 +50,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			return data;
 		}
+
+		protected abstract IStructuredType GetStructuredType();
 
 		protected override Druid CreateId()
 		{
@@ -224,7 +226,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				insert = true;
 			}
 
-			Types.StructuredData data = new Types.StructuredData (Res.Types.ResourceCaption);
+			Types.StructuredData data = new Types.StructuredData (this.GetStructuredType ());
 
 			Caption caption = new Caption ();
 			string  name    = string.IsNullOrEmpty (field.Name) ? null : this.GetNameFromFieldName (field.Name);

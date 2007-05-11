@@ -30,6 +30,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		protected override IStructuredType GetStructuredType()
+		{
+			return Res.Types.ResourceCommand;
+		}
+
 		protected override Caption GetCaptionFromData(Types.StructuredData data, string name)
 		{
 			Caption caption = base.GetCaptionFromData (data, name);

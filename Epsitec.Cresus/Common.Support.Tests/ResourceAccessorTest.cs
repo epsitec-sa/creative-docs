@@ -9,6 +9,8 @@ namespace Epsitec.Common.Support
 		[SetUp]
 		public void Initialize()
 		{
+			Epsitec.Common.Widgets.Widget.Initialize ();
+
 			this.manager = new ResourceManager (typeof (ResourceAccessorTest));
 			this.manager.DefineDefaultModuleName ("Test");
 		}
