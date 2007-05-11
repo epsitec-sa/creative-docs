@@ -30,6 +30,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonStrings.Dock = DockStyle.Left;
 			this.buttonStrings.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
+			this.buttonStrings2 = new IconButtonMark(this);
+			this.buttonStrings2.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Strings);
+			this.buttonStrings2.Name = BundleType.Convert(ResourceAccess.Type.Strings2);
+			this.buttonStrings2.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonStrings2.SiteMark = ButtonMarkDisposition.Below;
+			this.buttonStrings2.MarkDimension = 5;
+			this.buttonStrings2.PreferredWidth = 100;
+			this.buttonStrings2.MinHeight = 20+5;
+			this.buttonStrings2.AutoFocus = false;
+			this.buttonStrings2.Margins = new Margins(2, 0, 10, 0);
+			this.buttonStrings2.Dock = DockStyle.Left;
+			this.buttonStrings2.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
 			this.buttonCaptions = new IconButtonMark(this);
 			this.buttonCaptions.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Captions);
 			this.buttonCaptions.Name = BundleType.Convert(ResourceAccess.Type.Captions);
@@ -153,6 +166,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void UpdateButtons()
 		{
 			this.buttonStrings.ActiveState  = (this.currentType == ResourceAccess.Type.Strings ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonStrings2.ActiveState = (this.currentType == ResourceAccess.Type.Strings2) ? ActiveState.Yes : ActiveState.No;
 			this.buttonCaptions.ActiveState = (this.currentType == ResourceAccess.Type.Captions) ? ActiveState.Yes : ActiveState.No;
 			this.buttonFields.ActiveState   = (this.currentType == ResourceAccess.Type.Fields  ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonCommands.ActiveState = (this.currentType == ResourceAccess.Type.Commands) ? ActiveState.Yes : ActiveState.No;
@@ -208,6 +222,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected ResourceAccess.Type		currentType = ResourceAccess.Type.Strings;
 		protected IconButtonMark			buttonStrings;
+		protected IconButtonMark			buttonStrings2;
 		protected IconButtonMark			buttonScripts;
 		protected IconButtonMark			buttonCaptions;
 		protected IconButtonMark			buttonFields;

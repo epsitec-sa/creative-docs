@@ -191,13 +191,13 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				this.TextLayout.LayoutSize = rect.Size;
-				adorner.PaintButtonTextLayout (graphics, rect.BottomLeft, this.TextLayout, state, this.ButtonStyle);
+				adorner.PaintButtonTextLayout(graphics, rect.BottomLeft, this.TextLayout, state, this.ButtonStyle);
 			}
 		}
 
 
-		protected ButtonMarkDisposition				siteMark = ButtonMarkDisposition.Below;
-		protected double				markDimension = 8;
-		protected Color					bulletColor = Color.Empty;
+		protected ButtonMarkDisposition		siteMark = ButtonMarkDisposition.Below;
+		protected double					markDimension = 8;
+		protected Color						bulletColor = Color.Empty;
 	}
 }

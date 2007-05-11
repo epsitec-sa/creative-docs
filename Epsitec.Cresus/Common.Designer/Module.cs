@@ -25,6 +25,7 @@ namespace Epsitec.Common.Designer
 			this.modifier = new Modifier(this);
 
 			this.accessStrings  = new ResourceAccess(ResourceAccess.Type.Strings,  this.resourceManager, this.moduleInfo, this.mainWindow);
+			this.accessStrings2 = new ResourceAccess(ResourceAccess.Type.Strings2, this.resourceManager, this.moduleInfo, this.mainWindow);
 			this.accessCaptions = new ResourceAccess(ResourceAccess.Type.Captions, this.resourceManager, this.moduleInfo, this.mainWindow);
 			this.accessPanels   = new ResourceAccess(ResourceAccess.Type.Panels,   this.resourceManager, this.moduleInfo, this.mainWindow);
 			this.accessScripts  = new ResourceAccess(ResourceAccess.Type.Scripts,  this.resourceManager, this.moduleInfo, this.mainWindow);
@@ -99,6 +100,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public ResourceAccess AccessStrings2
+		{
+			get
+			{
+				return this.accessStrings2;
+			}
+		}
+
 		public ResourceAccess AccessCaptions
 		{
 			get
@@ -122,6 +131,9 @@ namespace Epsitec.Common.Designer
 			{
 				case ResourceAccess.Type.Strings:
 					return this.accessStrings;
+
+				case ResourceAccess.Type.Strings2:
+					return this.accessStrings2;
 
 				case ResourceAccess.Type.Captions:
 				case ResourceAccess.Type.Fields:
@@ -238,6 +250,7 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				yield return accessStrings;
+				yield return accessStrings2;
 				yield return accessCaptions;
 				yield return accessPanels;
 				yield return accessScripts;
@@ -273,6 +286,7 @@ namespace Epsitec.Common.Designer
 		protected Modifier					modifier;
 		protected ResourceManager			resourceManager;
 		protected ResourceAccess			accessStrings;
+		protected ResourceAccess			accessStrings2;
 		protected ResourceAccess			accessCaptions;
 		protected ResourceAccess			accessPanels;
 		protected ResourceAccess			accessScripts;

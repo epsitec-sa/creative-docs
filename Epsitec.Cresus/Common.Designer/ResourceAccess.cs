@@ -16,6 +16,7 @@ namespace Epsitec.Common.Designer
 		{
 			Unknow,
 			Strings,
+			Strings2,
 			Captions,
 			Fields,
 			Commands,
@@ -137,6 +138,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+
+		public ResourceManager ResourceManager
+		{
+			get
+			{
+				return this.resourceManager;
+			}
+		}
 
 		public static string TypeDisplayName(Type type)
 		{
