@@ -249,6 +249,7 @@ namespace Epsitec.Common.Support
 
 			Types.CollectionView collectionView = new Types.CollectionView (accessor.Collection);
 
+			Widgets.Adorners.Factory.SetActive ("LookRoyale");
 			Widgets.Window window = new Widgets.Window ();
 			window.Text = "CheckUI";
 			window.ClientSize = new Drawing.Size (300, 500);
@@ -262,9 +263,43 @@ namespace Epsitec.Common.Support
 			table.HorizontalScrollMode = Epsitec.Common.UI.ItemTableScrollMode.None;
 			table.VerticalScrollMode = Epsitec.Common.UI.ItemTableScrollMode.ItemBased;
 			table.HeaderVisibility = false;
+			table.FrameVisibility = false;
 			table.ItemPanel.Layout = Epsitec.Common.UI.ItemPanelLayout.VerticalList;
+			table.ItemPanel.ItemSelectionMode = Epsitec.Common.UI.ItemPanelSelectionMode.ExactlyOne;
+			table.Margins = new Drawing.Margins (4, 1, 4, 2);
 
 			table.SizeChanged += this.HandleTableSizeChanged;
+
+			Widgets.TextFieldMulti field = new Epsitec.Common.Widgets.TextFieldMulti (window.Root);
+			field.Dock = Widgets.DockStyle.Bottom;
+			field.PreferredHeight = 60;
+			field.Margins = new Drawing.Margins (4, 0, 2, 4);
+			
+			Widgets.HSplitter splitter = new Epsitec.Common.Widgets.HSplitter (window.Root);
+			splitter.Dock = Widgets.DockStyle.Bottom;
+			splitter.PreferredHeight = 8;
+
+			table.ItemPanel.SelectionChanged +=
+				delegate
+				{
+					CultureMap item = collectionView.CurrentItem as CultureMap;
+					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+					string[] cultures = new string[] { "00", "fr", "en", "de" };
+					
+					foreach (string culture in cultures)
+					{
+						Types.StructuredData data = item.GetCultureData (culture);
+						string text = data.GetValue (Res.Fields.ResourceString.Text) as string;
+						if (text != null)
+						{
+							buffer.Append (culture);
+							buffer.Append (": ");
+							buffer.Append (Widgets.TextLayout.ConvertToTaggedText (text));
+							buffer.Append ("<br/>");
+						}
+					}
+					field.Text = buffer.ToString ();
+				};
 
 			window.Show ();
 			Widgets.Window.RunInTestEnvironment (window);
