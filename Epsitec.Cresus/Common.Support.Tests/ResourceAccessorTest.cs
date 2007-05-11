@@ -154,12 +154,43 @@ namespace Epsitec.Common.Support
 				Types.StructuredData  data = map.GetCultureData (culture);
 				Types.IStructuredType type = data.StructuredType;
 
-				foreach (string fieldId in type.GetFieldIds ())
-				{
-					Types.StructuredTypeField field = type.GetField (fieldId);
-					Types.Caption caption = this.manager.GetCaption (field.CaptionId);
+				this.DumpStructuredData ("", data, type);
+			}
+		}
 
-					System.Console.Out.WriteLine ("{0} ({1}) : type = {2}, data = {3}", fieldId, caption.Name, field.Type.Name, data.GetValue (fieldId));
+		private void DumpStructuredData(string indent, Types.StructuredData data, Types.IStructuredType type)
+		{
+			foreach (string fieldId in type.GetFieldIds ())
+			{
+				Types.StructuredTypeField field = type.GetField (fieldId);
+				Types.Caption caption = this.manager.GetCaption (field.CaptionId);
+
+				System.Console.Out.WriteLine ("{4}{0} ({1}) : type = {2}, data = {3}", fieldId, caption.Name, field.Type.Name, data.GetValue (fieldId), indent);
+
+				if (field.Type is Types.IStructuredType)
+				{
+					this.DumpStructuredData ("  " + indent, data.GetValue (fieldId) as Types.StructuredData, field.Type as Types.IStructuredType);
+				}
+				else if (field.Type is Types.CollectionType)
+				{
+					Types.CollectionType collectionType = field.Type as Types.CollectionType;
+
+					if (collectionType.ItemType is Types.IStructuredType)
+					{
+						System.Collections.IList collection = data.GetValue (fieldId) as System.Collections.IList;
+						Types.StructuredData item0;
+						
+						if (collection.Count > 0)
+						{
+							item0 = collection[0] as Types.StructuredData;
+						}
+						else
+						{
+							item0 = new Types.StructuredData (collectionType.ItemType as Types.IStructuredType);
+						}
+
+						this.DumpStructuredData ("* " + indent, item0, collectionType.ItemType as Types.IStructuredType);
+					}
 				}
 			}
 		}

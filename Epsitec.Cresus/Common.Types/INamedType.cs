@@ -44,7 +44,24 @@ namespace Epsitec.Common.Types
 		public object ConvertFromString(string value, IContextResolver context)
 		{
 			Support.Druid id = Support.Druid.Parse (value);
-			return TypeRosetta.GetTypeObject (id);
+			AbstractType type = TypeRosetta.GetTypeObject (id);
+
+			if (type == null)
+			{
+				Support.ResourceManager manager = context.ExternalMap.GetValue (Serialization.Context.WellKnownTagResourceManager) as Support.ResourceManager;
+
+				if (manager == null)
+				{
+					type = TypeRosetta.CreateTypeObject (id);
+				}
+				else
+				{
+					Caption caption = manager.GetCaption (id);
+					type = caption == null ? null : TypeRosetta.CreateTypeObject (caption);
+				}
+			}
+
+			return type;
 		}
 
 		#endregion

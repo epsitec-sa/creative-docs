@@ -550,13 +550,20 @@ namespace Epsitec.Common.Types
 
 			lock (TypeRosetta.knownTypes)
 			{
+				if (TypeRosetta.pendingTypes.ContainsKey (caption.Id))
+				{
+					throw new System.InvalidOperationException ("Recursive type definition found");
+				}
+
 				try
 				{
 					TypeRosetta.creatingTypeObject++;
+					TypeRosetta.pendingTypes[caption.Id] = true;
 					return TypeRosetta.LockedCreateTypeObject (caption);
 				}
 				finally
 				{
+					TypeRosetta.pendingTypes.Remove (caption.Id);
 					TypeRosetta.creatingTypeObject--;
 				}
 			}
@@ -1014,6 +1021,7 @@ namespace Epsitec.Common.Types
 		private static object globalExclusion = new object ();
 
 		private static Dictionary<Support.Druid, AbstractType> knownTypes;
+		private static Dictionary<Support.Druid, bool> pendingTypes = new Dictionary<Epsitec.Common.Support.Druid, bool> ();
 		private static Queue<Support.SimpleCallback> fixUpQueue = new Queue<Epsitec.Common.Support.SimpleCallback> ();
 		private static int creatingTypeObject;
 	}
