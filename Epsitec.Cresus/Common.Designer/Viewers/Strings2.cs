@@ -34,19 +34,21 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryCulture.Margins = new Drawing.Margins(10, 10, 10, 0);
 
 			this.table = new UI.ItemTable(this);
-			this.table.Dock = Widgets.DockStyle.Fill;
-			this.table.Margins = new Drawing.Margins(10, 10, 0, 10);
 			this.table.SourceType = cultureMapType;
 			this.table.Items = this.collectionView;
-			this.table.Columns.Add(new UI.ItemTableColumn("Name"));
-			this.table.Columns.Add(new UI.ItemTableColumn("Primary"));
-			this.table.Columns.Add(new UI.ItemTableColumn("Secondary"));
-			this.table.HorizontalScrollMode = UI.ItemTableScrollMode.None;
+			this.table.Columns.Add(new UI.ItemTableColumn("Name", 200));
+			this.table.Columns.Add(new UI.ItemTableColumn("Primary", 200));
+			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", 200));
+			this.table.HorizontalScrollMode = UI.ItemTableScrollMode.Linear;
+			//?this.table.HorizontalScrollMode = UI.ItemTableScrollMode.None;
 			this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
 			this.table.HeaderVisibility = true;
 			this.table.FrameVisibility = false;
 			this.table.ItemPanel.Layout = UI.ItemPanelLayout.VerticalList;
 			this.table.ItemPanel.ItemSelectionMode = UI.ItemPanelSelectionMode.ExactlyOne;
+			//?this.table.ItemPanel.ItemViewDefaultExpanded = true;
+			this.table.Dock = Widgets.DockStyle.Fill;
+			this.table.Margins = new Drawing.Margins(10, 10, 0, 10);
 			this.table.SizeChanged += this.HandleTableSizeChanged;
 		}
 
