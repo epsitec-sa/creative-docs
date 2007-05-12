@@ -96,7 +96,16 @@ namespace Epsitec.Common.UI
 			{
 				if (this.factory == null)
 				{
-					this.factory = ItemViewFactories.Factory.GetItemViewFactory (this);
+					if ((this.owner != null) &&
+						(this.owner.CustomItemViewFactoryGetter != null))
+					{
+						this.factory = this.owner.CustomItemViewFactoryGetter (this);
+					}
+
+					if (this.factory == null)
+					{
+						this.factory = ItemViewFactories.Factory.GetItemViewFactory (this);
+					}
 				}
 
 				return this.factory;

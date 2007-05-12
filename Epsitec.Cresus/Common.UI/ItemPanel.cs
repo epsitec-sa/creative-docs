@@ -200,6 +200,25 @@ namespace Epsitec.Common.UI
 		}
 
 		/// <summary>
+		/// Gets or sets the custom item view factory getter associated with this
+		/// item panel. This takes precedence over the factory getter implemented
+		/// by class <see cref="ItemViewFactories.Factory"/>.
+		/// </summary>
+		/// <value>The custom item view factory getter.</value>
+		public ItemViewFactories.ItemViewFactoryGetter CustomItemViewFactoryGetter
+		{
+			get
+			{
+				return this.customItemViewFactoryGetter;
+			}
+			set
+			{
+				this.customItemViewFactoryGetter = value;
+			}
+		}
+		
+		
+		/// <summary>
 		/// Gets the shape used by the item views in this panel.
 		/// </summary>
 		/// <value>The item view shape.</value>
@@ -3534,6 +3553,8 @@ namespace Epsitec.Common.UI
 		double							layoutWidth;
 		List<ItemPanelGroup>			groups = new List<ItemPanelGroup> ();
 		List<RefreshInfo>				refreshInfos = new List<RefreshInfo> ();
+
+		ItemViewFactories.ItemViewFactoryGetter customItemViewFactoryGetter;
 		
 		bool							hasDirtyLayout;
 		bool							isRefreshing;

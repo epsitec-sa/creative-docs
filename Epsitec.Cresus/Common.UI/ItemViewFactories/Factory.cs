@@ -11,6 +11,14 @@ namespace Epsitec.Common.UI.ItemViewFactories
 	using Assembly=System.Reflection.Assembly;
 
 	/// <summary>
+	/// The <c>ItemViewFactoryGetter</c> delegate is used to find an <see cref="IItemViewFactory"/>
+	/// interface for the specified <see cref="ItemView"/>.
+	/// </summary>
+	/// <param name="view">The item view.</param>
+	/// <returns>The item view factory or <c>null</c>.</returns>
+	public delegate IItemViewFactory ItemViewFactoryGetter(ItemView view);
+
+	/// <summary>
 	/// The <c>Factory</c> class provides access to the <see cref="IItemViewFactory"/>
 	/// instances, based on the item types which must be represented.
 	/// </summary>
