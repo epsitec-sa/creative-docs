@@ -40,8 +40,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.SourceType = cultureMapType;
 			this.table.Items = this.collectionView;
 
-			//	PA: On dirait que le mode "largeur proportionnelle" n'est pas implémenté dans l'en-tête
-			//	des tables... tant pis pour le moment ?
 			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(300, Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(300, Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(300, Widgets.Layouts.GridUnitType.Proportional)));
@@ -124,7 +122,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (this.secondaryCultures != null)
 			{
 				rect.Left = rect.Right+2;
-				rect.Width = this.GetColomnWidth(2);
+				rect.Width = this.GetColomnWidth(2)-2;
 				double w = System.Math.Floor(rect.Width/this.secondaryCultures.Length);
 				for (int i=0; i<this.secondaryCultures.Length; i++)
 				{
@@ -235,8 +233,9 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				StaticText widget = new StaticText();
 
-				widget.Margins = new Margins(8, 8, 0, 0);
+				widget.Margins = new Margins(5, 5, 0, 0);
 				widget.Text = TextLayout.ConvertToTaggedText(item.Name);
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
 				return widget;
 			}
@@ -247,7 +246,7 @@ namespace Epsitec.Common.Designer.Viewers
 				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 
-				widget.Margins = new Margins(8, 8, 0, 0);
+				widget.Margins = new Margins(5, 5, 0, 0);
 				widget.Text = TextLayout.ConvertToTaggedText(text);
 
 				return widget;
@@ -259,7 +258,7 @@ namespace Epsitec.Common.Designer.Viewers
 				StructuredData data = item.GetCultureData("en"); // TODO: choisir ici la culture secondaire qui a été sélectionnée
 				string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 
-				widget.Margins = new Margins(8, 8, 0, 0);
+				widget.Margins = new Margins(5, 5, 0, 0);
 				widget.Text = TextLayout.ConvertToTaggedText(text);
 
 				return widget;
