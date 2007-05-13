@@ -32,8 +32,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryCulture.MarkDimension = 5;
 			this.primaryCulture.ActiveState = ActiveState.Yes;
 			this.primaryCulture.AutoFocus = false;
-			this.primaryCulture.Dock = DockStyle.Top;
-			this.primaryCulture.Margins = new Drawing.Margins(10, 10, 10, 0);
+			//?this.primaryCulture.Dock = DockStyle.Top;
+			//?this.primaryCulture.Margins = new Drawing.Margins(10, 10, 10, 0);
 
 			this.table = new UI.ItemTable(this);
 			this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
@@ -47,17 +47,17 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(300, Widgets.Layouts.GridUnitType.Proportional)));
 			
 			this.table.HorizontalScrollMode = UI.ItemTableScrollMode.Linear;
-			//?this.table.HorizontalScrollMode = UI.ItemTableScrollMode.None;
 			this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
 			this.table.HeaderVisibility = false;
 			this.table.FrameVisibility = false;
 			this.table.ItemPanel.Layout = UI.ItemPanelLayout.VerticalList;
 			this.table.ItemPanel.ItemSelectionMode = UI.ItemPanelSelectionMode.ExactlyOne;
-			//?this.table.ItemPanel.ItemViewDefaultExpanded = true;
-			this.table.Dock = Widgets.DockStyle.Fill;
-			this.table.Margins = new Drawing.Margins(10, 10, 0, 10);
+			//?this.table.Dock = Widgets.DockStyle.Fill;
+			//?this.table.Margins = new Drawing.Margins(10, 10, 0, 10);
 			this.table.SizeChanged += this.HandleTableSizeChanged;
 			this.table.ColumnHeader.ColumnWidthChanged += this.HandleColumnHeaderColumnWidthChanged;
+
+			this.UpdateCultures();
 		}
 
 		protected override void Dispose(bool disposing)
@@ -84,36 +84,96 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void Update()
 		{
 			//	Met à jour le contenu du Viewer.
-			this.UpdateArray();
 			this.UpdateEdit();
 			this.UpdateModificationsCulture();
 			this.UpdateCommands();
 		}
 
-		protected override void UpdateArray()
+		
+		protected override void UpdateClientGeometry()
 		{
-			//	Met à jour tout le contenu du tableau.
-			//	Version spéciale pour les trois colonnes de Strings.
-			this.array.TotalRows = this.access.AccessCount;
+			//	Met à jour la géométrie.
+			base.UpdateClientGeometry();
 
-			int first = this.array.FirstVisibleRow;
-			for (int i=0; i<this.array.LineCount; i++)
+			if ( this.primaryCulture == null )  return;
+
+			Rectangle box = this.Client.Bounds;
+			box.Deflate(10);
+			Rectangle rect, r;
+
+			int lines = System.Math.Max((int)box.Height/50, 4);
+			int editLines = lines*2/3;
+			int aboutLines = lines-editLines;
+			double cultureHeight = 20;
+			double editHeight = editLines*13+8;
+			double aboutHeight = aboutLines*13+8;
+
+			//	Il faut obligatoirement s'occuper d'abord de this.array, puisque les autres
+			//	widgets dépendent des largeurs relatives de ses colonnes.
+			rect = box;
+			rect.Top -= cultureHeight+5;
+			rect.Bottom += editHeight+5+aboutHeight+5;
+			this.table.SetManualBounds(rect);
+
+			rect = box;
+			rect.Bottom = rect.Top-cultureHeight-5;
+			rect.Left += this.GetColomnWidth(0);
+			rect.Width = this.GetColomnWidth(1);
+			this.primaryCulture.SetManualBounds(rect);
+
+			if (this.secondaryCultures != null)
 			{
-				if (first+i < this.access.AccessCount)
+				rect.Left = rect.Right+2;
+				rect.Width = this.GetColomnWidth(2);
+				double w = System.Math.Floor(rect.Width/this.secondaryCultures.Length);
+				for (int i=0; i<this.secondaryCultures.Length; i++)
 				{
-					this.UpdateArrayField(0, first+i, null, ResourceAccess.FieldType.Name);
-					this.UpdateArrayField(1, first+i, null, ResourceAccess.FieldType.String);
-					this.UpdateArrayField(2, first+i, this.secondaryCulture, (this.secondaryCulture == null) ? ResourceAccess.FieldType.None : ResourceAccess.FieldType.String);
-				}
-				else
-				{
-					this.UpdateArrayField(0, first+i, null, ResourceAccess.FieldType.None);
-					this.UpdateArrayField(1, first+i, null, ResourceAccess.FieldType.None);
-					this.UpdateArrayField(2, first+i, null, ResourceAccess.FieldType.None);
+					r = rect;
+					r.Left += w*i;
+					r.Width = w;
+					if (i == this.secondaryCultures.Length-1)
+					{
+						r.Right = rect.Right;
+					}
+					this.secondaryCultures[i].SetManualBounds(r);
 				}
 			}
 
-			this.array.SelectedRow = this.access.AccessIndex;
+#if false
+			rect = box;
+			rect.Top = rect.Bottom+editHeight+aboutHeight+5;
+			rect.Bottom = rect.Top-editHeight;
+			rect.Width = this.array.GetColumnsAbsoluteWidth(0)-5;
+			this.labelStatic.SetManualBounds(rect);
+			rect.Width += 5+1;
+			r = rect;
+			r.Bottom = r.Top-21;
+			this.labelEdit.SetManualBounds(r);
+			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
+			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
+			this.primaryEdit.SetManualBounds(rect);
+			rect.Left = rect.Right-1;
+			rect.Width = this.array.GetColumnsAbsoluteWidth(2);
+			this.secondaryEdit.SetManualBounds(rect);
+
+			rect = box;
+			rect.Top = rect.Bottom+aboutHeight;
+			rect.Bottom = rect.Top-aboutHeight;
+			rect.Width = this.array.GetColumnsAbsoluteWidth(0)-5;
+			this.labelAbout.SetManualBounds(rect);
+			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
+			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
+			this.primaryAbout.SetManualBounds(rect);
+			rect.Left = rect.Right-1;
+			rect.Width = this.array.GetColumnsAbsoluteWidth(2);
+			this.secondaryAbout.SetManualBounds(rect);
+#endif
+		}
+
+		protected double GetColomnWidth(int column)
+		{
+			//	Retourne la largeur d'une colonne.
+			return this.table.Columns[column].Width.Value;
 		}
 
 		

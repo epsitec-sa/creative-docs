@@ -3170,7 +3170,7 @@ namespace Epsitec.Common.Designer
 			//	"un bundle par culture, plusieurs ressources par bundle".
 			get
 			{
-				return (this.type == Type.Strings || this.IsCaptionsType);
+				return (this.type == Type.Strings || this.type == Type.Strings2 || this.IsCaptionsType);
 			}
 		}
 

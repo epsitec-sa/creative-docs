@@ -770,7 +770,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Misc.CultureName(bundle.Culture));
 
 			Widget parent = this.CultureParentWidget;
-			bool isCaptions = !(parent is Strings);
+			bool isCaptions = !(parent is Strings) && !(parent is Strings2);
 
 			List<string> list = this.access.GetSecondaryCultureNames();
 			if (list.Count > 0)
