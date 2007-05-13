@@ -18,9 +18,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.accessor.Load(access.ResourceManager);
 
 			StructuredType cultureMapType = new StructuredType();
-			cultureMapType.Fields.Add ("Name", StringType.Default);
-			cultureMapType.Fields.Add ("Primary", StringType.Default);
-			cultureMapType.Fields.Add ("Secondary", StringType.Default);
+			cultureMapType.Fields.Add("Name", StringType.Default);
+			cultureMapType.Fields.Add("Primary", StringType.Default);
+			cultureMapType.Fields.Add("Secondary", StringType.Default);
 
 			this.collectionView = new CollectionView(this.accessor.Collection);
 			this.itemViewFactory = new ItemViewFactory(this);
@@ -36,38 +36,20 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryCulture.Margins = new Drawing.Margins(10, 10, 10, 0);
 
 			this.table = new UI.ItemTable(this);
-			
-			//	Spécifie quel "factory" utiliser pour les éléments représentés dans cet
-			//	ItemTable/ItemPanel :
-			
-			this.table.ItemPanel.CustomItemViewFactoryGetter =
-				delegate (UI.ItemView itemView)
-				{
-					if ((itemView.Item == null) ||
-						(itemView.Item.GetType () != typeof (CultureMap)))
-					{
-						return null;
-					}
-					else
-					{
-						return this.itemViewFactory;
-					}
-				};
-			
+			this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
 			this.table.SourceType = cultureMapType;
 			this.table.Items = this.collectionView;
 
 			//	PA: On dirait que le mode "largeur proportionnelle" n'est pas implémenté dans l'en-tête
 			//	des tables... tant pis pour le moment ?
-
-			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Epsitec.Common.Widgets.Layouts.GridLength (200, Epsitec.Common.Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add (new UI.ItemTableColumn ("Primary", new Epsitec.Common.Widgets.Layouts.GridLength (200, Epsitec.Common.Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add (new UI.ItemTableColumn ("Secondary", new Epsitec.Common.Widgets.Layouts.GridLength (200, Epsitec.Common.Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(300, Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(300, Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(300, Widgets.Layouts.GridUnitType.Proportional)));
 			
 			this.table.HorizontalScrollMode = UI.ItemTableScrollMode.Linear;
 			//?this.table.HorizontalScrollMode = UI.ItemTableScrollMode.None;
 			this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
-			this.table.HeaderVisibility = true;
+			this.table.HeaderVisibility = false;
 			this.table.FrameVisibility = false;
 			this.table.ItemPanel.Layout = UI.ItemPanelLayout.VerticalList;
 			this.table.ItemPanel.ItemSelectionMode = UI.ItemPanelSelectionMode.ExactlyOne;
@@ -78,16 +60,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ColumnHeader.ColumnWidthChanged += this.HandleColumnHeaderColumnWidthChanged;
 		}
 
-		void HandleColumnHeaderColumnWidthChanged(object sender, Epsitec.Common.UI.ColumnWidthChangeEventArgs e)
-		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("{0} : {1} --> {2}", e.Column, e.OldWidth, e.NewWidth));
-		}
-
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
 				this.table.SizeChanged -= this.HandleTableSizeChanged;
+				this.table.ColumnHeader.ColumnWidthChanged -= this.HandleColumnHeaderColumnWidthChanged;
 			}
 
 			base.Dispose(disposing);
@@ -147,30 +125,47 @@ namespace Epsitec.Common.Designer.Viewers
 			double width = size.Width - table.GetPanelPadding().Width;
 			//?table.ColumnHeader.SetColumnWidth(0, width);
 
-			table.ItemPanel.ItemViewDefaultSize = new Epsitec.Common.Drawing.Size(width, 20);
+			table.ItemPanel.ItemViewDefaultSize = new Size(width, 20);
+		}
+
+		private void HandleColumnHeaderColumnWidthChanged(object sender, UI.ColumnWidthChangeEventArgs e)
+		{
 		}
 
 
+		protected UI.IItemViewFactory ItemViewFactoryGetter(UI.ItemView itemView)
+		{
+			//	Retourne le "factory" a utiliser pour les éléments représentés dans cet ItemTable/ItemPanel.
+			if (itemView.Item == null || itemView.Item.GetType() != typeof(CultureMap))
+			{
+				return null;
+			}
+			else
+			{
+				return this.itemViewFactory;
+			}
+		}
 
-		private class ItemViewFactory : Epsitec.Common.UI.AbstractItemViewFactory
+
+		private class ItemViewFactory : UI.AbstractItemViewFactory
 		{
 			public ItemViewFactory(Strings2 owner)
 			{
 				this.owner = owner;
 			}
 
-			protected override Widget CreateElement(string name, Epsitec.Common.UI.ItemPanel panel, Epsitec.Common.UI.ItemView view, Epsitec.Common.UI.ItemViewShape shape)
+			protected override Widget CreateElement(string name, UI.ItemPanel panel, UI.ItemView view, UI.ItemViewShape shape)
 			{
 				CultureMap item = view.Item as CultureMap;
 
 				switch (name)
 				{
 					case "Name":
-						return this.CreateName (item);
+						return this.CreateName(item);
 					case "Primary":
-						return this.CreatePrimary (item);
+						return this.CreatePrimary(item);
 					case "Secondary":
-						return this.CreateSecondary (item);
+						return this.CreateSecondary(item);
 				}
 
 				return null;
@@ -178,31 +173,34 @@ namespace Epsitec.Common.Designer.Viewers
 
 			private Widget CreateName(CultureMap item)
 			{
-				StaticText widget = new StaticText ();
+				StaticText widget = new StaticText();
 
-				widget.Text = TextLayout.ConvertToTaggedText (item.Name);
+				widget.Margins = new Margins(8, 8, 0, 0);
+				widget.Text = TextLayout.ConvertToTaggedText(item.Name);
 
 				return widget;
 			}
 
 			private Widget CreatePrimary(CultureMap item)
 			{
-				StaticText widget = new StaticText ();
-				StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-				string text = data.GetValue (Epsitec.Common.Support.Res.Fields.ResourceString.Text) as string;
+				StaticText widget = new StaticText();
+				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 
-				widget.Text = TextLayout.ConvertToTaggedText (text);
+				widget.Margins = new Margins(8, 8, 0, 0);
+				widget.Text = TextLayout.ConvertToTaggedText(text);
 
 				return widget;
 			}
 
 			private Widget CreateSecondary(CultureMap item)
 			{
-				StaticText widget = new StaticText ();
-				StructuredData data = item.GetCultureData ("en"); // TODO: choisir ici la culture secondaire qui a été sélectionnée
-				string text = data.GetValue (Epsitec.Common.Support.Res.Fields.ResourceString.Text) as string;
+				StaticText widget = new StaticText();
+				StructuredData data = item.GetCultureData("en"); // TODO: choisir ici la culture secondaire qui a été sélectionnée
+				string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 
-				widget.Text = TextLayout.ConvertToTaggedText (text);
+				widget.Margins = new Margins(8, 8, 0, 0);
+				widget.Text = TextLayout.ConvertToTaggedText(text);
 
 				return widget;
 			}
@@ -210,6 +208,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			Strings2 owner;
 		}
+
 
 		protected Support.ResourceAccessors.StringResourceAccessor accessor;
 		protected UI.ItemTable table;
