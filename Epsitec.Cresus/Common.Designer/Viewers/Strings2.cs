@@ -91,7 +91,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.HorizontalScrollMode = UI.ItemTableScrollMode.Linear;
 			this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
 			this.table.HeaderVisibility = true;
-			this.table.FrameVisibility = true;
+			this.table.FrameVisibility = false;
 			this.table.ItemPanel.Layout = UI.ItemPanelLayout.VerticalList;
 			this.table.ItemPanel.ItemSelectionMode = UI.ItemPanelSelectionMode.ExactlyOne;
 			this.table.ItemPanel.SelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
@@ -420,6 +420,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.secondaryButtonsCulture[i].Text = Misc.CultureName(list[i]);
 					this.secondaryButtonsCulture[i].AutoFocus = false;
 					this.secondaryButtonsCulture[i].Dock = DockStyle.Fill;
+					this.secondaryButtonsCulture[i].Margins = new Margins(0, (i==list.Count-1)?1:0, 0, 0);
 					this.secondaryButtonsCulture[i].Clicked += new MessageEventHandler(this.HandleButtonSecondaryCultureClicked);
 				}
 
