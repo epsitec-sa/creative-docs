@@ -32,13 +32,16 @@ namespace Epsitec.Common.Designer.Viewers
 			cultureMapType.Fields.Add("Secondary", StringType.Default);
 
 			this.collectionView = new CollectionView(this.accessor.Collection);
+			this.collectionView.SortDescriptions.Clear();
+			this.collectionView.SortDescriptions.Add(new Common.Types.SortDescription("Name"));  // TODO: pourquoi ça ne fonctionne pas ?
+
 			this.itemViewFactory = new ItemViewFactory(this);
 			
 			//	Crée les deux volets gauche/droite séparés d'un splitter.
 			this.left = new Widget(this);
 			this.left.Name = "Left";
 			this.left.MinWidth = 80;
-			this.left.MaxWidth = 400;
+			this.left.MaxWidth = 500;
 			this.left.PreferredWidth = Abstract.leftArrayWidth;
 			this.left.Dock = DockStyle.Left;
 			this.left.Padding = new Margins(10, 10, 10, 10);
@@ -76,21 +79,20 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
 			this.table.SourceType = cultureMapType;
 			this.table.Items = this.collectionView;
-
 			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(200, Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(100, Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(100, Widgets.Layouts.GridUnitType.Proportional)));
-			
 			this.table.HorizontalScrollMode = UI.ItemTableScrollMode.Linear;
 			this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
 			this.table.HeaderVisibility = false;
 			this.table.FrameVisibility = false;
 			this.table.ItemPanel.Layout = UI.ItemPanelLayout.VerticalList;
 			this.table.ItemPanel.ItemSelectionMode = UI.ItemPanelSelectionMode.ExactlyOne;
-			this.table.Dock = Widgets.DockStyle.Fill;
-			this.table.Margins = new Drawing.Margins(0, 0, 0, 0);
+			this.table.ItemPanel.SelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
 			this.table.SizeChanged += this.HandleTableSizeChanged;
 			this.table.ColumnHeader.ColumnWidthChanged += this.HandleColumnHeaderColumnWidthChanged;
+			this.table.Dock = Widgets.DockStyle.Fill;
+			this.table.Margins = new Drawing.Margins(0, 0, 0, 0);
 
 			//	Crée la partie droite, bande supérieure pour les boutons des cultures.
 			Widget sup = new Widget(this.right);
@@ -168,7 +170,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.buttonCaptionCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.primaryText = new TextFieldMulti(leftContainer.Container);
-			this.primaryText.PreferredHeight = 50;
+			this.primaryText.PreferredHeight = 9+14*6;
 			this.primaryText.Dock = DockStyle.StackBegin;
 			this.primaryText.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryText.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -177,7 +179,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.secondaryText = new TextFieldMulti(rightContainer.Container);
-			this.secondaryText.PreferredHeight = 50;
+			this.secondaryText.PreferredHeight = 9+14*6;
 			this.secondaryText.Dock = DockStyle.StackBegin;
 			this.secondaryText.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryText.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -189,7 +191,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, BandMode.CaptionView, GlyphShape.None, false, 0.2);
 
 			this.primaryComment = new TextFieldMulti(leftContainer.Container);
-			this.primaryComment.PreferredHeight = 100;
+			this.primaryComment.PreferredHeight = 9+14*4;
 			this.primaryComment.Dock = DockStyle.StackBegin;
 			this.primaryComment.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryComment.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -198,7 +200,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryComment.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.secondaryComment = new TextFieldMulti(rightContainer.Container);
-			this.secondaryComment.PreferredHeight = 100;
+			this.secondaryComment.PreferredHeight = 9+14*4;
 			this.secondaryComment.Dock = DockStyle.StackBegin;
 			this.secondaryComment.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryComment.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -222,6 +224,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
 				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 
+				this.table.ItemPanel.SelectionChanged -= new EventHandler(this.HandleTableSelectionChanged);
 				this.table.SizeChanged -= this.HandleTableSizeChanged;
 				this.table.ColumnHeader.ColumnWidthChanged -= this.HandleColumnHeaderColumnWidthChanged;
 
@@ -282,6 +285,34 @@ namespace Epsitec.Common.Designer.Viewers
 						break;
 				}
 			}
+		}
+
+		protected override void UpdateArray()
+		{
+			//	Met à jour tout le contenu du tableau.
+		}
+
+		protected override void UpdateEdit()
+		{
+			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			bool iic = this.ignoreChange;
+			this.ignoreChange = true;
+
+			CultureMap item = this.collectionView.CurrentItem as CultureMap;
+
+			this.labelEdit.Text = item.Name;
+
+			StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			this.primaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+			this.primaryComment.Text = data.GetValue(Support.Res.Fields.ResourceString.Comment) as string;
+
+			data = item.GetCultureData("en");
+			this.secondaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+			this.secondaryComment.Text = data.GetValue(Support.Res.Fields.ResourceString.Comment) as string;
+
+			this.ignoreChange = iic;
+
+			this.UpdateCommands();
 		}
 
 
@@ -410,6 +441,11 @@ namespace Epsitec.Common.Designer.Viewers
 			Abstract.leftArrayWidth = this.left.ActualWidth;
 		}
 
+		private void HandleTableSelectionChanged(object sender)
+		{
+			this.UpdateEdit();
+		}
+
 		private void HandleTableSizeChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			UI.ItemTable table = (UI.ItemTable) sender;
@@ -503,8 +539,10 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					case "Name":
 						return this.CreateName(item);
+
 					case "Primary":
 						return this.CreatePrimary(item);
+
 					case "Secondary":
 						return this.CreateSecondary(item);
 				}
