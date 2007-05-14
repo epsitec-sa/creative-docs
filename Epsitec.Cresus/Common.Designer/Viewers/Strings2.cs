@@ -321,18 +321,20 @@ namespace Epsitec.Common.Designer.Viewers
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 
-			this.primarySummary.Text = this.GetSummary(Resources.DefaultTwoLetterISOLanguageName);
-			this.secondarySummary.Text = this.GetSummary(this.twoLettersSecondaryCulture);
+			this.primarySummary.Text = this.GetSummary(this.GetTwoLetters(0));
+			this.secondarySummary.Text = this.GetSummary(this.GetTwoLetters(1));
 
 			CultureMap item = this.collectionView.CurrentItem as CultureMap;
 
 			this.labelEdit.Text = item.Name;
 
-			StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			StructuredData data;
+
+			data = item.GetCultureData(this.GetTwoLetters(0));
 			this.primaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 			this.primaryComment.Text = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
 
-			data = item.GetCultureData(this.twoLettersSecondaryCulture);
+			data = item.GetCultureData(this.GetTwoLetters(1));
 			this.secondaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 			this.secondaryComment.Text = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
 
@@ -344,8 +346,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateColor()
 		{
 			//	Met à jour les couleurs dans toutes les bandes.
-			ResourceState state1 = this.GetResourceState(Resources.DefaultTwoLetterISOLanguageName);
-			ResourceState state2 = this.GetResourceState(this.twoLettersSecondaryCulture);
+			ResourceState state1 = this.GetResourceState(this.GetTwoLetters(0));
+			ResourceState state2 = this.GetResourceState(this.GetTwoLetters(1));
 			this.ColoriseBands(state1, state2);
 		}
 
@@ -378,7 +380,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Sélectionne le bouton correspondant à la culture secondaire.
 			for (int i=0; i<this.secondaryButtonsCulture.Length; i++)
 			{
-				if (this.secondaryButtonsCulture[i].Name == this.twoLettersSecondaryCulture)
+				if (this.secondaryButtonsCulture[i].Name == this.GetTwoLetters(1))
 				{
 					this.secondaryButtonsCulture[i].ActiveState = ActiveState.Yes;
 				}
@@ -402,7 +404,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.secondaryButtonsCulture = null;
 			}
 
-			this.primaryButtonCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Strings2.CultureName("fr"));
+			this.primaryButtonCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Strings2.CultureName(this.GetTwoLetters(0)));
 
 			List<string> list = this.access.GetSecondaryCultureNames();  // TODO:
 			if (list.Count > 0)
@@ -438,6 +440,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected string TwoLettersSecondaryCulture
 		{
+			//	Culture secondaire utilisée.
 			get
 			{
 				return this.twoLettersSecondaryCulture;
@@ -452,6 +455,13 @@ namespace Epsitec.Common.Designer.Viewers
 					this.UpdateArray();
 				}
 			}
+		}
+
+		protected string GetTwoLetters(int row)
+		{
+			//	Retourne la culture primaire ou secondaire utilisée.
+			System.Diagnostics.Debug.Assert(row == 0 || row == 1);
+			return (row == 0) ? Resources.DefaultTwoLetterISOLanguageName : this.twoLettersSecondaryCulture;
 		}
 
 		protected ResourceState GetResourceState(string twoLettersCulture)
@@ -477,11 +487,11 @@ namespace Epsitec.Common.Designer.Viewers
 				return ResourceState.Empty;
 			}
 
-			if (twoLettersCulture != Resources.DefaultTwoLetterISOLanguageName)  // culture secondaire ?
+			if (twoLettersCulture != this.GetTwoLetters(0))  // culture secondaire ?
 			{
-				StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				StructuredData primaryData = item.GetCultureData(this.GetTwoLetters(0));
 				int pmod = (int) primaryData.GetValue(Support.Res.Fields.Resource.ModificationId);
-				int cmod = (int) data.GetValue(Support.Res.Fields.Resource.ModificationId);
+				int cmod = (int)        data.GetValue(Support.Res.Fields.Resource.ModificationId);
 				if (pmod > cmod)
 				{
 					return ResourceState.Modified;
@@ -517,6 +527,13 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			return buffer.ToString();
+		}
+
+
+		protected double GetColomnWidth(int column)
+		{
+			//	Retourne la largeur d'une colonne.
+			return this.table.Columns[column].Width.Value;
 		}
 
 
@@ -597,7 +614,7 @@ namespace Epsitec.Common.Designer.Viewers
 				if (rc != null)
 				{
 					rc.BackgroundColor = Strings2.GetBackgroundColor(state2, this.bands[i].intensityContainer);
-					rc.Visibility = (this.twoLettersSecondaryCulture != null);
+					rc.Visibility = (this.GetTwoLetters(1) != null);
 				}
 			}
 		}
@@ -645,13 +662,6 @@ namespace Epsitec.Common.Designer.Viewers
 		#endregion
 
 
-		protected double GetColomnWidth(int column)
-		{
-			//	Retourne la largeur d'une colonne.
-			return this.table.Columns[column].Width.Value;
-		}
-
-		
 		private void HandleSplitterDragged(object sender)
 		{
 			//	Le splitter a été bougé.
@@ -713,25 +723,25 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (edit == this.primaryText)
 			{
-				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 				data.SetValue(Support.Res.Fields.ResourceString.Text, text);
 			}
 
 			if (edit == this.secondaryText)
 			{
-				StructuredData data = item.GetCultureData(this.twoLettersSecondaryCulture);
+				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
 				data.SetValue(Support.Res.Fields.ResourceString.Text, text);
 			}
 
 			if (edit == this.primaryComment)
 			{
-				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 				data.SetValue(Support.Res.Fields.Resource.Comment, text);
 			}
 
 			if (edit == this.secondaryComment)
 			{
-				StructuredData data = item.GetCultureData(this.twoLettersSecondaryCulture);
+				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
 				data.SetValue(Support.Res.Fields.Resource.Comment, text);
 			}
 
@@ -828,12 +838,12 @@ namespace Epsitec.Common.Designer.Viewers
 
 			private Widget CreatePrimary(CultureMap item)
 			{
-				return this.CreateContent(item, Resources.DefaultTwoLetterISOLanguageName);
+				return this.CreateContent(item, this.owner.GetTwoLetters(0));
 			}
 
 			private Widget CreateSecondary(CultureMap item)
 			{
-				return this.CreateContent(item, this.owner.TwoLettersSecondaryCulture);
+				return this.CreateContent(item, this.owner.GetTwoLetters(1));
 			}
 			
 			private Widget CreateContent(CultureMap item, string twoLettersCulture)
