@@ -164,6 +164,22 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the two letter ISO language names for all loaded bundles in
+		/// this bundle collection.
+		/// </summary>
+		/// <returns>A collection of two letter ISO language names.</returns>
+		public IList<string> GetTwoLetterISOLanguageNames()
+		{
+			string[] names = new string[this.list.Count];
+
+			for (int i = 0; i < this.list.Count; i++)
+			{
+				names[i] = Resources.GetTwoLetterISOLanguageName (this.list[i].Culture);
+			}
+
+			return names;
+		}
 
 		#region ICollection<ResourceBundle> Members
 		
