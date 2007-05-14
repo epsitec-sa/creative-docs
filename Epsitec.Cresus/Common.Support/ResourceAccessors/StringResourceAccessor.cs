@@ -123,12 +123,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				bundle.Add (field);
 			}
 
-			string text = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName).GetValue (Res.Fields.ResourceString.Text) as string;
-			string about = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName).GetValue (Res.Fields.ResourceString.Comment) as string;
+			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+
+			string text  = data.GetValue (Res.Fields.ResourceString.Text) as string;
+			string about = data.GetValue (Res.Fields.Resource.Comment) as string;
+			object modId = data.GetValue (Res.Fields.Resource.ModificationId);
 
 			field.SetName (item.Name);
 			field.SetStringValue (text);
 			field.SetAbout (about);
+
+			StringResourceAccessor.SetModificationId (field, modId);
 
 			foreach (string twoLetterISOLanguageName in item.GetDefinedCultures ())
 			{
@@ -156,7 +161,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					bundle.Add (field);
 				}
 
-				Types.StructuredData data = item.GetCultureData (twoLetterISOLanguageName);
+				data = item.GetCultureData (twoLetterISOLanguageName);
 				
 				if (Types.UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceString.Text)))
 				{
@@ -165,11 +170,26 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				else
 				{
 					text  = data.GetValue (Res.Fields.ResourceString.Text) as string;
-					about = data.GetValue (Res.Fields.ResourceString.Comment) as string;
+					about = data.GetValue (Res.Fields.Resource.Comment) as string;
+					modId = data.GetValue (Res.Fields.Resource.ModificationId);
 					
 					field.SetStringValue (text);
 					field.SetAbout (about);
+
+					StringResourceAccessor.SetModificationId (field, modId);
 				}
+			}
+		}
+
+		internal static void SetModificationId(ResourceBundle.Field field, object modId)
+		{
+			if (!UndefinedValue.IsUndefinedValue (modId))
+			{
+				field.SetModificationId ((int) modId);
+			}
+			else
+			{
+				field.SetModificationId (-1);
 			}
 		}
 
@@ -202,7 +222,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			Types.StructuredData data = new Types.StructuredData (Res.Types.ResourceString);
 
 			data.SetValue (Res.Fields.ResourceString.Text, field.AsString);
-			data.SetValue (Res.Fields.ResourceString.Comment, field.About);
+			data.SetValue (Res.Fields.Resource.Comment, field.About);
+			data.SetValue (Res.Fields.Resource.ModificationId, field.ModificationId);
 
 			item.Name = field.Name ?? item.Name;
 			item.RecordCultureData (twoLetterISOLanguageName, data);

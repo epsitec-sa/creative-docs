@@ -45,6 +45,18 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this instance is empty.
+		/// </summary>
+		/// <value><c>true</c> if this instance is empty; otherwise, <c>false</c>.</value>
+		public bool IsEmpty
+		{
+			get
+			{
+				return (this.values == null) || (this.values.Count == 0);
+			}
+		}
+
 		public int InternalGetValueCount()
 		{
 			return this.values == null ? -1 : this.values.Count;

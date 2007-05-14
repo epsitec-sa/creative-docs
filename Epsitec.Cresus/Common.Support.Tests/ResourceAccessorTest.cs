@@ -176,6 +176,7 @@ namespace Epsitec.Common.Support
 
 			Assert.AreSame (data1, data2);
 			Assert.AreEqual ("Bonjour", data1.GetValue (Res.Fields.ResourceString.Text));
+			Assert.AreEqual (0, data1.GetValue (Res.Fields.Resource.ModificationId));
 			Assert.IsFalse (accessor.ContainsChanges);
 
 			data1 = accessor.Collection["Text1"].GetCultureData ("de");
@@ -185,10 +186,12 @@ namespace Epsitec.Common.Support
 			Assert.AreSame (data1, data2);
 			Assert.AreEqual (Types.UndefinedValue.Instance, data1.GetValue (Res.Fields.ResourceString.Text));
 			Assert.IsFalse (accessor.ContainsChanges);
+			Assert.IsTrue (data1.IsEmpty);
 
 			data1 = accessor.Collection["Text1"].GetCultureData ("fr");
 			data1.SetValue (Res.Fields.ResourceString.Text, "Bonjour tout le monde");
 			data2.SetValue (Res.Fields.ResourceString.Text, "Hallo, Welt");
+			data2.SetValue (Res.Fields.Resource.ModificationId, 1);
 
 			Assert.IsTrue (accessor.ContainsChanges);
 			Assert.AreEqual (1, accessor.PersistChanges ());
@@ -196,6 +199,7 @@ namespace Epsitec.Common.Support
 
 			Assert.AreEqual ("Bonjour tout le monde", this.manager.GetText (Druid.Parse ("[4006]"), ResourceLevel.Localized, Resources.FindCultureInfo ("fr")));
 			Assert.AreEqual ("Hallo, Welt", this.manager.GetText (Druid.Parse ("[4006]"), ResourceLevel.Localized, Resources.FindCultureInfo ("de")));
+			Assert.AreEqual (1, this.manager.GetBundle ("Strings", ResourceLevel.Localized, Resources.FindCultureInfo ("de"))[Druid.Parse ("[4006]")].ModificationId);
 
 			CultureMap map = accessor.CreateItem ();
 

@@ -1638,7 +1638,14 @@ namespace Epsitec.Common.Support
 
 					if (this.xml != null)
 					{
-						this.parent.SetAttributeValue (this.xml, "mod", id.ToString (System.Globalization.CultureInfo.InvariantCulture));
+						if (this.modification_id > 0)
+						{
+							this.parent.SetAttributeValue (this.xml, "mod", id.ToString (System.Globalization.CultureInfo.InvariantCulture));
+						}
+						else
+						{
+							this.parent.SetAttributeValue (this.xml, "mod", null);
+						}
 					}
 				}
 			}
