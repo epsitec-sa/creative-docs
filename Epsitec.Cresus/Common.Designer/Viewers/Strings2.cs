@@ -715,6 +715,8 @@ namespace Epsitec.Common.Designer.Viewers
 			if (edit == this.labelEdit)
 			{
 				item.Name = text;
+				this.access.Accessor.PersistChanges();
+				this.access.CollectionView.Refresh();
 			}
 
 			if (edit == this.primaryText)

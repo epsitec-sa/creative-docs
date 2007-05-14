@@ -158,6 +158,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public Support.ResourceAccessors.AbstractResourceAccessor Accessor
+		{
+			get
+			{
+				return this.accessor;
+			}
+		}
+
 		public CollectionView CollectionView
 		{
 			get
@@ -1025,7 +1033,12 @@ namespace Epsitec.Common.Designer
 				{
 					value = System.Math.Max(value, 0);
 					value = System.Math.Min(value, this.collectionView.Count-1);
-					this.collectionView.MoveCurrentToPosition(value);
+
+					if (this.collectionView.CurrentPosition != value)
+					{
+						this.collectionView.MoveCurrentToPosition(value);
+						this.collectionView.Refresh();
+					}
 				}
 				else
 				{
