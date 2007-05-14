@@ -12,6 +12,15 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Strings2 : Abstract
 	{
+		protected enum BandMode
+		{
+			CaptionSummary,
+			CaptionView,
+			Separator,
+			SuiteSummary,
+			SuiteView,
+		}
+
 		public Strings2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
 			this.accessor = new Support.ResourceAccessors.StringResourceAccessor();
@@ -111,8 +120,97 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryCultureGroup.TabIndex = this.tabIndex++;
 			this.secondaryCultureGroup.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
+			//	Crée le titre.
+			this.titleBox = new FrameBox(this.right);
+			this.titleBox.DrawFullFrame = true;
+			this.titleBox.PreferredHeight = 26;
+			this.titleBox.Dock = DockStyle.Top;
+			this.titleBox.Margins = new Margins(1, 1, 1, -1);
 
+			this.titleText = new StaticText(this.titleBox);
+			this.titleText.ContentAlignment = ContentAlignment.MiddleCenter;
+			this.titleText.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+			this.titleText.Dock = DockStyle.Fill;
+			this.titleText.Margins = new Margins(4, 4, 0, 0);
+
+			//	Crée la partie droite, bande inférieure pour la zone d'étition scrollable.
+			this.scrollable = new Scrollable(this.right);
+			this.scrollable.Name = "Scrollable";
+			this.scrollable.MinWidth = 100;
+			this.scrollable.MinHeight = 100;
+			this.scrollable.Margins = new Margins(1, 1, 0, 1);
+			this.scrollable.Dock = DockStyle.Fill;
+			this.scrollable.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
+			this.scrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
+			this.scrollable.Panel.IsAutoFitting = true;
+			this.scrollable.PaintForegroundFrame = true;
+			this.scrollable.Panel.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
+			this.scrollable.TabIndex = this.tabIndex++;
+			this.scrollable.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
+
+			this.bands = new List<Band>();
+			MyWidgets.StackedPanel leftContainer, rightContainer;
+
+			//	Résumé des captions.
+			this.buttonCaptionExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.CaptionSummary, GlyphShape.ArrowDown, false, 0.2);
+			this.buttonCaptionExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+
+			this.primarySummary = new StaticText(leftContainer.Container);
+			this.primarySummary.MinHeight = 30;
+			this.primarySummary.Dock = DockStyle.Fill;
+
+			this.secondarySummary = new StaticText(rightContainer.Container);
+			this.secondarySummary.MinHeight = 30;
+			this.secondarySummary.Dock = DockStyle.Fill;
+
+			//	Textes.
+			this.buttonCaptionCompact = this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels.Title, BandMode.CaptionView, GlyphShape.ArrowUp, false, 0.2);
+			this.buttonCaptionCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+
+			this.primaryText = new TextFieldMulti(leftContainer.Container);
+			this.primaryText.PreferredHeight = 50;
+			this.primaryText.Dock = DockStyle.StackBegin;
+			this.primaryText.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.primaryText.CursorChanged += new EventHandler(this.HandleCursorChanged);
+			this.primaryText.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.primaryText.TabIndex = this.tabIndex++;
+			this.primaryText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+			this.secondaryText = new TextFieldMulti(rightContainer.Container);
+			this.secondaryText.PreferredHeight = 50;
+			this.secondaryText.Dock = DockStyle.StackBegin;
+			this.secondaryText.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.secondaryText.CursorChanged += new EventHandler(this.HandleCursorChanged);
+			this.secondaryText.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.secondaryText.TabIndex = this.tabIndex++;
+			this.secondaryText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+			//	Commentaires.
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, BandMode.CaptionView, GlyphShape.None, false, 0.2);
+
+			this.primaryComment = new TextFieldMulti(leftContainer.Container);
+			this.primaryComment.PreferredHeight = 100;
+			this.primaryComment.Dock = DockStyle.StackBegin;
+			this.primaryComment.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.primaryComment.CursorChanged += new EventHandler(this.HandleCursorChanged);
+			this.primaryComment.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.primaryComment.TabIndex = this.tabIndex++;
+			this.primaryComment.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+			this.secondaryComment = new TextFieldMulti(rightContainer.Container);
+			this.secondaryComment.PreferredHeight = 100;
+			this.secondaryComment.Dock = DockStyle.StackBegin;
+			this.secondaryComment.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.secondaryComment.CursorChanged += new EventHandler(this.HandleCursorChanged);
+			this.secondaryComment.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.secondaryComment.TabIndex = this.tabIndex++;
+			this.secondaryComment.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+			this.UpdateDisplayMode();
 			this.UpdateCultures();
+			this.UpdateEdit();
+			this.UpdateModificationsCulture();
+			this.UpdateCommands();
 		}
 
 		protected override void Dispose(bool disposing)
@@ -126,6 +224,25 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.table.SizeChanged -= this.HandleTableSizeChanged;
 				this.table.ColumnHeader.ColumnWidthChanged -= this.HandleColumnHeaderColumnWidthChanged;
+
+				this.buttonCaptionExtend.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+				this.buttonCaptionCompact.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+
+				this.primaryText.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.primaryText.CursorChanged -= new EventHandler(this.HandleCursorChanged);
+				this.primaryText.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+
+				this.secondaryText.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.secondaryText.CursorChanged -= new EventHandler(this.HandleCursorChanged);
+				this.secondaryText.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+
+				this.primaryComment.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.primaryComment.CursorChanged -= new EventHandler(this.HandleCursorChanged);
+				this.primaryComment.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+
+				this.secondaryComment.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.secondaryComment.CursorChanged -= new EventHandler(this.HandleCursorChanged);
+				this.secondaryComment.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			}
 
 			base.Dispose(disposing);
@@ -149,7 +266,127 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
-		
+		protected void UpdateDisplayMode()
+		{
+			//	Metà jour le mode d'affichage des bandes.
+			for (int i=0; i<this.bands.Count; i++)
+			{
+				switch (bands[i].bandMode)
+				{
+					case BandMode.CaptionSummary:
+						this.bands[i].bandContainer.Visibility = !Strings2.captionExtended;
+						break;
+
+					case BandMode.CaptionView:
+						this.bands[i].bandContainer.Visibility = Strings2.captionExtended;
+						break;
+				}
+			}
+		}
+
+
+		#region Band
+		protected GlyphButton CreateBand(out MyWidgets.StackedPanel leftContainer, out MyWidgets.StackedPanel rightContainer, string title, BandMode mode, GlyphShape extendShape, bool isNewSection, double backgroundIntensity)
+		{
+			//	Crée une bande horizontale avec deux containers gauche/droite pour les
+			//	ressources primaire/secondaire.
+			Widget band = new Widget(this.scrollable.Panel);
+			band.Name = "BandForLeftAndRight";
+			band.Dock = DockStyle.StackBegin;
+			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			band.TabIndex = this.tabIndex++;
+			band.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
+
+			leftContainer = new MyWidgets.StackedPanel(band);
+			leftContainer.Name = "LeftContainer";
+			leftContainer.Title = title;
+			leftContainer.IsLeftPart = true;
+			leftContainer.IsNewSection = isNewSection;
+			leftContainer.ExtendShape = extendShape;
+			leftContainer.MinWidth = 100;
+			leftContainer.Dock = DockStyle.StackFill;
+			leftContainer.TabIndex = this.tabIndex++;
+			leftContainer.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
+
+			rightContainer = new MyWidgets.StackedPanel(band);
+			rightContainer.Name = "RightContainer";
+			rightContainer.Title = title;
+			rightContainer.IsLeftPart = false;
+			rightContainer.MinWidth = 100;
+			rightContainer.Dock = DockStyle.StackFill;
+			rightContainer.TabIndex = this.tabIndex++;
+			rightContainer.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
+
+			this.bands.Add(new Band(band, leftContainer, rightContainer, mode, backgroundIntensity));
+
+			return leftContainer.ExtendButton;
+		}
+
+		protected GlyphButton CreateBand(out MyWidgets.StackedPanel leftContainer, string title, BandMode mode, GlyphShape extendShape, bool isNewSection, double backgroundIntensity)
+		{
+			//	Crée une bande horizontale avec un seul container gauche pour la
+			//	ressource primaire.
+			Widget band = new Widget(this.scrollable.Panel);
+			band.Name = "BandForLeft";
+			band.Dock = DockStyle.StackBegin;
+			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			band.TabIndex = this.tabIndex++;
+			band.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
+
+			leftContainer = new MyWidgets.StackedPanel(band);
+			leftContainer.Name = "LeftContainer";
+			leftContainer.Title = title;
+			leftContainer.IsLeftPart = true;
+			leftContainer.IsNewSection = isNewSection;
+			leftContainer.ExtendShape = extendShape;
+			leftContainer.MinWidth = 100;
+			leftContainer.Dock = DockStyle.StackFill;
+			leftContainer.TabIndex = this.tabIndex++;
+			leftContainer.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
+
+			this.bands.Add(new Band(band, leftContainer, null, mode, backgroundIntensity));
+
+			return leftContainer.ExtendButton;
+		}
+
+		protected void ColoriseBands(ResourceAccess.ModificationState state1, ResourceAccess.ModificationState state2)
+		{
+			//	Colorise toutes les bandes horizontales.
+			for (int i=0; i<this.bands.Count; i++)
+			{
+				MyWidgets.StackedPanel lc = this.bands[i].leftContainer;
+				MyWidgets.StackedPanel rc = this.bands[i].rightContainer;
+
+				lc.BackgroundColor = Abstract.GetBackgroundColor(state1, this.bands[i].intensityContainer);
+
+				if (rc != null)
+				{
+					rc.BackgroundColor = Abstract.GetBackgroundColor(state2, this.bands[i].intensityContainer);
+					rc.Visibility = (this.secondaryCulture != null);
+				}
+			}
+		}
+
+		protected struct Band
+		{
+			public Band(Widget band, MyWidgets.StackedPanel left, MyWidgets.StackedPanel right, BandMode mode, double intensity)
+			{
+				this.bandContainer = band;
+				this.leftContainer = left;
+				this.rightContainer = right;
+				this.bandMode = mode;
+				this.intensityContainer = intensity;
+			}
+
+			public Widget						bandContainer;
+			public MyWidgets.StackedPanel		leftContainer;
+			public MyWidgets.StackedPanel		rightContainer;
+			public BandMode						bandMode;
+			public double						intensityContainer;
+		}
+		#endregion
+
+
 		protected override Widget CultureParentWidget
 		{
 			//	Retourne le parent à utiliser pour les boutons des cultures.
@@ -159,88 +396,6 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-
-#if false
-		protected override void UpdateClientGeometry()
-		{
-			//	Met à jour la géométrie.
-			base.UpdateClientGeometry();
-
-			if ( this.primaryCulture == null )  return;
-
-			Rectangle box = this.Client.Bounds;
-			box.Deflate(10);
-			Rectangle rect, r;
-
-			int lines = System.Math.Max((int)box.Height/50, 4);
-			int editLines = lines*2/3;
-			int aboutLines = lines-editLines;
-			double cultureHeight = 20;
-			double editHeight = editLines*13+8;
-			double aboutHeight = aboutLines*13+8;
-
-			//	Il faut obligatoirement s'occuper d'abord de this.array, puisque les autres
-			//	widgets dépendent des largeurs relatives de ses colonnes.
-			rect = box;
-			rect.Top -= cultureHeight+5;
-			rect.Bottom += editHeight+5+aboutHeight+5;
-			this.table.SetManualBounds(rect);
-
-			rect = box;
-			rect.Bottom = rect.Top-cultureHeight-5;
-			rect.Left += this.GetColomnWidth(0);
-			rect.Width = this.GetColomnWidth(1);
-			this.primaryCulture.SetManualBounds(rect);
-
-			if (this.secondaryCultures != null)
-			{
-				rect.Left = rect.Right+2;
-				rect.Width = this.GetColomnWidth(2)-2;
-				double w = System.Math.Floor(rect.Width/this.secondaryCultures.Length);
-				for (int i=0; i<this.secondaryCultures.Length; i++)
-				{
-					r = rect;
-					r.Left += w*i;
-					r.Width = w;
-					if (i == this.secondaryCultures.Length-1)
-					{
-						r.Right = rect.Right;
-					}
-					this.secondaryCultures[i].SetManualBounds(r);
-				}
-			}
-
-#if false
-			rect = box;
-			rect.Top = rect.Bottom+editHeight+aboutHeight+5;
-			rect.Bottom = rect.Top-editHeight;
-			rect.Width = this.array.GetColumnsAbsoluteWidth(0)-5;
-			this.labelStatic.SetManualBounds(rect);
-			rect.Width += 5+1;
-			r = rect;
-			r.Bottom = r.Top-21;
-			this.labelEdit.SetManualBounds(r);
-			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
-			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
-			this.primaryEdit.SetManualBounds(rect);
-			rect.Left = rect.Right-1;
-			rect.Width = this.array.GetColumnsAbsoluteWidth(2);
-			this.secondaryEdit.SetManualBounds(rect);
-
-			rect = box;
-			rect.Top = rect.Bottom+aboutHeight;
-			rect.Bottom = rect.Top-aboutHeight;
-			rect.Width = this.array.GetColumnsAbsoluteWidth(0)-5;
-			this.labelAbout.SetManualBounds(rect);
-			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
-			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
-			this.primaryAbout.SetManualBounds(rect);
-			rect.Left = rect.Right-1;
-			rect.Width = this.array.GetColumnsAbsoluteWidth(2);
-			this.secondaryAbout.SetManualBounds(rect);
-#endif
-		}
-#endif
 
 		protected double GetColomnWidth(int column)
 		{
@@ -288,6 +443,34 @@ namespace Epsitec.Common.Designer.Viewers
 			TextFieldEx field = sender as TextFieldEx;
 			field.AcceptEdition();
 			this.HandleEditKeyboardFocusChanged(sender, e);
+		}
+
+		private void HandleCursorChanged(object sender)
+		{
+			//	Le curseur a été déplacé dans un texte éditable.
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			this.lastActionIsReplace = false;
+		}
+
+		protected void HandleButtonCompactOrExtendClicked(object sender, MessageEventArgs e)
+		{
+			//	Un bouton pour changer le mode d'affichage a été cliqué.
+			if (sender == this.buttonCaptionCompact)
+			{
+				Strings2.captionExtended = false;
+			}
+
+			if (sender == this.buttonCaptionExtend)
+			{
+				Strings2.captionExtended = true;
+			}
+
+			this.UpdateDisplayMode();
+			this.UpdateEdit();  // pour que le résumé prenne en compte les modifications
 		}
 
 
@@ -369,6 +552,8 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected static bool					captionExtended = false;
+
 		protected Support.ResourceAccessors.StringResourceAccessor accessor;
 		protected UI.ItemTable					table;
 		protected CollectionView				collectionView;
@@ -379,5 +564,17 @@ namespace Epsitec.Common.Designer.Viewers
 		protected VSplitter						splitter;
 		protected Widget						secondaryCultureGroup;
 		protected MyWidgets.TextFieldExName		labelEdit;
+		protected FrameBox						titleBox;
+		protected StaticText					titleText;
+		protected Scrollable					scrollable;
+		protected List<Band>					bands;
+		protected GlyphButton					buttonCaptionExtend;
+		protected GlyphButton					buttonCaptionCompact;
+		protected StaticText					primarySummary;
+		protected StaticText					secondarySummary;
+		protected TextFieldMulti				primaryText;
+		protected TextFieldMulti				secondaryText;
+		protected TextFieldMulti				primaryComment;
+		protected TextFieldMulti				secondaryComment;
 	}
 }
