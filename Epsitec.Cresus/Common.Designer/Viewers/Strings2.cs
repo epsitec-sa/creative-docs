@@ -87,10 +87,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(200, Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(100, Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(100, Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.ColumnHeader.SetColumnText(0, "Nom");
 			this.table.HorizontalScrollMode = UI.ItemTableScrollMode.Linear;
 			this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
-			this.table.HeaderVisibility = false;
-			this.table.FrameVisibility = false;
+			this.table.HeaderVisibility = true;
+			this.table.FrameVisibility = true;
 			this.table.ItemPanel.Layout = UI.ItemPanelLayout.VerticalList;
 			this.table.ItemPanel.ItemSelectionMode = UI.ItemPanelSelectionMode.ExactlyOne;
 			this.table.ItemPanel.SelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
@@ -385,6 +386,9 @@ namespace Epsitec.Common.Designer.Viewers
 					this.secondaryButtonsCulture[i].ActiveState = ActiveState.No;
 				}
 			}
+
+			this.table.ColumnHeader.SetColumnText(1, Misc.CultureName(this.access.GetBaseCultureName()));
+			this.table.ColumnHeader.SetColumnText(2, Misc.CultureName(this.GetTwoLetters(1)));
 		}
 
 		protected void UpdateButtonsCultures()
