@@ -475,7 +475,16 @@ namespace Epsitec.Common.Designer.Viewers
 				return ModificationState.Empty;
 			}
 
-			// TODO: comment atteindre ModificationId pour retourner l'état ModificationState.Modified ?
+			if (twoLettersCulture != Resources.DefaultTwoLetterISOLanguageName)  // culture secondaire ?
+			{
+				StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				int pmod = (int) primaryData.GetValue(Support.Res.Fields.Resource.ModificationId);
+				int cmod = (int) data.GetValue(Support.Res.Fields.Resource.ModificationId);
+				if (pmod > cmod)
+				{
+					return ModificationState.Modified;
+				}
+			}
 
 			return ModificationState.Normal;
 		}
@@ -803,7 +812,7 @@ namespace Epsitec.Common.Designer.Viewers
 				else
 				{
 					main = new StaticText();
-					main.BackColor = Strings2.GetBackgroundColor(state, 0.2);
+					main.BackColor = Strings2.GetBackgroundColor(state, 0.5);
 
 					text = new StaticText(main);
 					text.Dock = DockStyle.Fill;
