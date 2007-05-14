@@ -330,11 +330,11 @@ namespace Epsitec.Common.Designer.Viewers
 
 			StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			this.primaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
-			this.primaryComment.Text = data.GetValue(Support.Res.Fields.ResourceString.Comment) as string;
+			this.primaryComment.Text = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
 
 			data = item.GetCultureData(this.twoLettersSecondaryCulture);
 			this.secondaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
-			this.secondaryComment.Text = data.GetValue(Support.Res.Fields.ResourceString.Comment) as string;
+			this.secondaryComment.Text = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
 
 			this.ignoreChange = iic;
 
@@ -501,7 +501,7 @@ namespace Epsitec.Common.Designer.Viewers
 				buffer.Append(text);
 			}
 
-			string comment = data.GetValue(Support.Res.Fields.ResourceString.Comment) as string;
+			string comment = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
 			if (!string.IsNullOrEmpty(comment))
 			{
 				buffer.Append("<br/>");
