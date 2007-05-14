@@ -344,18 +344,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateColor()
 		{
 			//	Met à jour les couleurs dans toutes les bandes.
-			ModificationState state1 = ModificationState.Normal;
-			if (!this.IsCultureDefined(Resources.DefaultTwoLetterISOLanguageName))
-			{
-				state1 = ModificationState.Empty;
-			}
-
-			ModificationState state2 = ModificationState.Normal;
-			if (!this.IsCultureDefined(this.twoLettersSecondaryCulture))
-			{
-				state2 = ModificationState.Empty;
-			}
-
+			ModificationState state1 = this.GetModificationState(Resources.DefaultTwoLetterISOLanguageName);
+			ModificationState state2 = this.GetModificationState(this.twoLettersSecondaryCulture);
 			this.ColoriseBands(state1, state2);
 		}
 
@@ -370,11 +360,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			foreach (IconButtonMark button in this.secondaryButtonsCulture)
 			{
-				ModificationState state = ModificationState.Normal;
-				if (!this.IsCultureDefined(button.Name))
-				{
-					state = ModificationState.Empty;
-				}
+				ModificationState state = this.GetModificationState(button.Name);
 
 				if (state == ModificationState.Normal)
 				{
@@ -468,19 +454,30 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected bool IsCultureDefined(string twoLettersCulture)
+		protected ModificationState GetModificationState(string twoLettersCulture)
+		{
+			CultureMap item = this.collectionView.CurrentItem as CultureMap;
+			return this.GetModificationState(item, twoLettersCulture);
+		}
+
+		protected ModificationState GetModificationState(CultureMap item, string twoLettersCulture)
 		{
 			//	Retourne false si une ressource est indéfinie ou vide.
-			CultureMap item = this.collectionView.CurrentItem as CultureMap;
-
 			if (!item.IsCultureDefined(twoLettersCulture))
 			{
-				return false;
+				return ModificationState.Empty;
 			}
 
 			StructuredData data = item.GetCultureData(twoLettersCulture);
 			string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
-			return !string.IsNullOrEmpty(text);
+			if (string.IsNullOrEmpty(text))
+			{
+				return ModificationState.Empty;
+			}
+
+			// TODO: comment atteindre ModificationId pour retourner l'état ModificationState.Modified ?
+
+			return ModificationState.Normal;
 		}
 
 		protected string GetSummary(string twoLettersCulture)
@@ -786,28 +783,40 @@ namespace Epsitec.Common.Designer.Viewers
 
 			private Widget CreatePrimary(CultureMap item)
 			{
-				StaticText widget = new StaticText();
-				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-				string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
-
-				widget.Margins = new Margins(5, 5, 0, 0);
-				widget.Text = TextLayout.ConvertToTaggedText(text);
-				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-
-				return widget;
+				return this.CreateContent(item, Resources.DefaultTwoLetterISOLanguageName);
 			}
 
 			private Widget CreateSecondary(CultureMap item)
 			{
-				StaticText widget = new StaticText();
-				StructuredData data = item.GetCultureData(this.owner.twoLettersSecondaryCulture);
-				string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+				return this.CreateContent(item, this.owner.TwoLettersSecondaryCulture);
+			}
+			
+			private Widget CreateContent(CultureMap item, string twoLettersCulture)
+			{
+				StaticText main, text;
+				ModificationState state = this.owner.GetModificationState(item, twoLettersCulture);
 
-				widget.Margins = new Margins(5, 5, 0, 0);
-				widget.Text = TextLayout.ConvertToTaggedText(text);
-				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				if (state == ModificationState.Normal)
+				{
+					main = text = new StaticText();
+				}
+				else
+				{
+					main = new StaticText();
+					main.BackColor = Strings2.GetBackgroundColor(state, 0.2);
 
-				return widget;
+					text = new StaticText(main);
+					text.Dock = DockStyle.Fill;
+				}
+
+				StructuredData data = item.GetCultureData(twoLettersCulture);
+				string value = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+
+				text.Margins = new Margins(5, 5, 0, 0);
+				text.Text = TextLayout.ConvertToTaggedText(value);
+				text.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+
+				return main;
 			}
 			
 
