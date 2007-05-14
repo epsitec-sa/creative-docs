@@ -817,8 +817,22 @@ namespace Epsitec.Common.Designer
 			{
 				if (this.collectionViewFilter != filter || this.collectionViewMode != mode)
 				{
-					this.collectionViewFilter = filter;
 					this.collectionViewMode = mode;
+
+					if ((this.collectionViewMode&Searcher.SearchingMode.CaseSensitive) == 0)
+					{
+						this.collectionViewFilter = Searcher.RemoveAccent(filter.ToLower());
+					}
+					else
+					{
+						this.collectionViewFilter = filter;
+					}
+
+					this.collectionViewRegex = null;
+					if ((this.collectionViewMode&Searcher.SearchingMode.Jocker) != 0)
+					{
+						this.collectionViewRegex = RegexFactory.FromSimpleJoker(this.collectionViewFilter, RegexFactory.Options.None);
+					}
 
 					this.collectionView.Refresh();
 				}
@@ -878,21 +892,37 @@ namespace Epsitec.Common.Designer
 
 		protected bool CollectionViewFilter(object obj)
 		{
-			if (string.IsNullOrEmpty(this.collectionViewFilter))
-			{
-				return true;
-			}
-
 			CultureMap item = obj as CultureMap;
 			
-			if (item.Name.Contains(this.collectionViewFilter))
+			if (!string.IsNullOrEmpty(this.collectionViewFilter))
 			{
-				return true;
+				if ((this.collectionViewMode&Searcher.SearchingMode.Jocker) != 0)
+				{
+					string text = item.Name;
+					if ((this.collectionViewMode&Searcher.SearchingMode.CaseSensitive) == 0)
+					{
+						text = Searcher.RemoveAccent(text.ToLower());
+					}
+					if (!this.collectionViewRegex.IsMatch(text))
+					{
+						return false;
+					}
+				}
+				else
+				{
+					int index = Searcher.IndexOf(item.Name, this.collectionViewFilter, 0, this.collectionViewMode);
+					if (index == -1)
+					{
+						return false;
+					}
+					if ((this.collectionViewMode&Searcher.SearchingMode.AtBeginning) != 0 && index != 0)
+					{
+						return false;
+					}
+				}
 			}
-			else
-			{
-				return false;
-			}
+
+			return true;
 		}
 
 		public int TotalCount
@@ -3736,8 +3766,9 @@ namespace Epsitec.Common.Designer
 
 		protected Support.ResourceAccessors.StringResourceAccessor accessor;
 		protected CollectionView							collectionView;
-		protected string									collectionViewFilter;
 		protected Searcher.SearchingMode					collectionViewMode;
+		protected string									collectionViewFilter;
+		protected Regex										collectionViewRegex;
 
 		protected ResourceBundleCollection					bundles;
 		protected ResourceBundle							primaryBundle;
