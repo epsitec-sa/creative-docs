@@ -24,7 +24,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected enum ResourceState
 		{
 			Normal,			//	défini normalement
-			Empty,			//	vide (fond rouge)
+			Empty,			//	vide ou indéfini (fond rouge)
 			Modified,		//	modifié (fond jaune)
 		}
 
@@ -79,6 +79,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.ButtonShowCondition = ShowCondition.WhenModified;
 			this.labelEdit.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
+			this.labelEdit.EditionRejected += new EventHandler(this.HandleTextRejected);
+			this.labelEdit.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 			this.labelEdit.TabIndex = this.tabIndex++;
 			this.labelEdit.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -235,6 +237,8 @@ namespace Epsitec.Common.Designer.Viewers
 				this.splitter.SplitterDragged -= new EventHandler(this.HandleSplitterDragged);
 
 				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
+				this.labelEdit.EditionRejected -= new EventHandler(this.HandleTextRejected);
+				this.labelEdit.CursorChanged -= new EventHandler(this.HandleCursorChanged);
 				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 
 				this.table.ItemPanel.SelectionChanged -= new EventHandler(this.HandleTableSelectionChanged);
@@ -746,6 +750,16 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.UpdateButtonsModificationsCulture();
+		}
+
+		private void HandleTextRejected(object sender)
+		{
+			TextFieldEx edit = sender as TextFieldEx;
+
+			if (edit != null)
+			{
+				edit.RejectEdition();  // TODO: devrait être inutile
+			}
 		}
 
 		private void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
