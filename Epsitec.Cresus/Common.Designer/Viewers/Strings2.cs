@@ -344,16 +344,14 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateColor()
 		{
 			//	Met à jour les couleurs dans toutes les bandes.
-			CultureMap item = this.collectionView.CurrentItem as CultureMap;
-
 			ModificationState state1 = ModificationState.Normal;
-			if (!item.IsCultureDefined(Resources.DefaultTwoLetterISOLanguageName))
+			if (!this.IsCultureDefined(Resources.DefaultTwoLetterISOLanguageName))
 			{
 				state1 = ModificationState.Empty;
 			}
 
 			ModificationState state2 = ModificationState.Normal;
-			if (!item.IsCultureDefined(this.twoLettersSecondaryCulture))
+			if (!this.IsCultureDefined(this.twoLettersSecondaryCulture))
 			{
 				state2 = ModificationState.Empty;
 			}
@@ -370,12 +368,10 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			CultureMap item = this.collectionView.CurrentItem as CultureMap;
-
 			foreach (IconButtonMark button in this.secondaryButtonsCulture)
 			{
 				ModificationState state = ModificationState.Normal;
-				if (!item.IsCultureDefined(button.Name))
+				if (!this.IsCultureDefined(button.Name))
 				{
 					state = ModificationState.Empty;
 				}
@@ -470,6 +466,21 @@ namespace Epsitec.Common.Designer.Viewers
 					this.UpdateArray();
 				}
 			}
+		}
+
+		protected bool IsCultureDefined(string twoLettersCulture)
+		{
+			//	Retourne false si une ressource est indéfinie ou vide.
+			CultureMap item = this.collectionView.CurrentItem as CultureMap;
+
+			if (!item.IsCultureDefined(twoLettersCulture))
+			{
+				return false;
+			}
+
+			StructuredData data = item.GetCultureData(twoLettersCulture);
+			string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+			return !string.IsNullOrEmpty(text);
 		}
 
 		protected string GetSummary(string twoLettersCulture)
