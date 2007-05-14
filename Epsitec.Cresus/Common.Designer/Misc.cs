@@ -269,6 +269,13 @@ namespace Epsitec.Common.Designer
 			return Misc.ProperName(culture.NativeName);
 		}
 
+		static public string CultureName(string twoLettersCulture)
+		{
+			//	Retourne le nom standard d'une culture.
+			System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo(twoLettersCulture);
+			return (culture == null) ? "?" : Misc.ProperName(culture.NativeName);
+		}
+
 
 		static public string ProperName(string text)
 		{

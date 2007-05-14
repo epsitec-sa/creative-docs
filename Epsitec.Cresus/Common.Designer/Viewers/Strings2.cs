@@ -400,7 +400,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.secondaryButtonsCulture = null;
 			}
 
-			this.primaryButtonCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Strings2.CultureName(this.GetTwoLetters(0)));
+			this.primaryButtonCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Misc.CultureName(this.access.GetBaseCultureName()));
 
 			List<string> list = this.access.GetSecondaryCultureNames();  // TODO:
 			if (list.Count > 0)
@@ -413,11 +413,10 @@ namespace Epsitec.Common.Designer.Viewers
 					this.secondaryButtonsCulture[i].SiteMark = ButtonMarkDisposition.Below;
 					this.secondaryButtonsCulture[i].MarkDimension = 5;
 					this.secondaryButtonsCulture[i].Name = list[i];
-					this.secondaryButtonsCulture[i].Text = Strings2.CultureName(list[i]);
+					this.secondaryButtonsCulture[i].Text = Misc.CultureName(list[i]);
 					this.secondaryButtonsCulture[i].AutoFocus = false;
 					this.secondaryButtonsCulture[i].Dock = DockStyle.Fill;
 					this.secondaryButtonsCulture[i].Clicked += new MessageEventHandler(this.HandleButtonSecondaryCultureClicked);
-					//?ToolTip.Default.SetToolTip(this.secondaryButtonsCulture[i], Strings2.CultureLongName(bundle.Culture));
 				}
 
 				this.TwoLettersSecondaryCulture = list[0];
@@ -426,11 +425,6 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.TwoLettersSecondaryCulture = null;
 			}
-		}
-
-		static protected string CultureName(string twoLetter)
-		{
-			return twoLetter.ToUpper();  // TODO: transformer "en" en "English"
 		}
 
 
@@ -723,24 +717,28 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 				data.SetValue(Support.Res.Fields.ResourceString.Text, text);
+				//	TODO: que faire ?
 			}
 
 			if (edit == this.secondaryText)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
 				data.SetValue(Support.Res.Fields.ResourceString.Text, text);
+				//	TODO: que faire ?
 			}
 
 			if (edit == this.primaryComment)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 				data.SetValue(Support.Res.Fields.Resource.Comment, text);
+				//	TODO: que faire ?
 			}
 
 			if (edit == this.secondaryComment)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
 				data.SetValue(Support.Res.Fields.Resource.Comment, text);
+				//	TODO: que faire ?
 			}
 
 			this.UpdateButtonsModificationsCulture();
