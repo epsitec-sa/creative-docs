@@ -789,8 +789,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.secondaryCultures[i].AutoFocus = false;
 					if (isCaptions)
 					{
-						//?this.secondaryCultures[i].Margins = new Margins(0, (i==list.Count-1)?1:0, 0, 0);
-						this.secondaryCultures[i].Dock = DockStyle.StackFill;
+						this.secondaryCultures[i].Dock = DockStyle.Fill;
 					}
 					this.secondaryCultures[i].Clicked += new MessageEventHandler(this.HandleSecondaryCultureClicked);
 					ToolTip.Default.SetToolTip(this.secondaryCultures[i], Misc.CultureLongName(bundle.Culture));
@@ -1277,7 +1276,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected static double				leftArrayWidth = 400;
+		protected static double				leftArrayWidth = 338;
 
 		protected Module					module;
 		protected PanelsContext				context;

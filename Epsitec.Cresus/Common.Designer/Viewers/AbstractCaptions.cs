@@ -75,7 +75,7 @@ namespace Epsitec.Common.Designer.Viewers
 			Widget sup = new Widget(this.right);
 			sup.Name = "Sup";
 			sup.PreferredHeight = 35;
-			sup.Padding = new Margins(1, 1, 10, 0);
+			sup.Padding = new Margins(1, 18, 10, 0);
 			sup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			sup.Dock = DockStyle.Top;
 			sup.TabIndex = this.tabIndex++;
@@ -88,14 +88,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryCulture.PreferredHeight = 25;
 			this.primaryCulture.ActiveState = ActiveState.Yes;
 			this.primaryCulture.AutoFocus = false;
-			this.primaryCulture.Margins = new Margins(0, 10, 0, 0);
-			this.primaryCulture.Dock = DockStyle.StackFill;
+			this.primaryCulture.Margins = new Margins(0, 1, 0, 0);
+			this.primaryCulture.Dock = DockStyle.Fill;
 
 			this.secondaryCultureGroup = new Widget(sup);
 			this.secondaryCultureGroup.Name = "SecondaryCultureGroup";
-			this.secondaryCultureGroup.Margins = new Margins(10, 0, 0, 0);
+			this.secondaryCultureGroup.Margins = new Margins(1, 0, 0, 0);
 			this.secondaryCultureGroup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-			this.secondaryCultureGroup.Dock = DockStyle.StackFill;
+			this.secondaryCultureGroup.Dock = DockStyle.Fill;
 			this.secondaryCultureGroup.TabIndex = this.tabIndex++;
 			this.secondaryCultureGroup.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
