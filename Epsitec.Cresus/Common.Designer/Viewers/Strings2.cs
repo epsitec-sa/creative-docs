@@ -33,7 +33,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.collectionView = new CollectionView(this.accessor.Collection);
 			this.collectionView.SortDescriptions.Clear();
-			this.collectionView.SortDescriptions.Add(new Common.Types.SortDescription("Name"));  // TODO: pourquoi ça ne fonctionne pas ?
+			this.collectionView.SortDescriptions.Add(new SortDescription("Name"));  // TODO: pourquoi ça ne fonctionne pas ?
 
 			this.itemViewFactory = new ItemViewFactory(this);
 			
@@ -170,7 +170,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.buttonCaptionCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.primaryText = new TextFieldMulti(leftContainer.Container);
-			this.primaryText.PreferredHeight = 9+14*6;
+			this.primaryText.PreferredHeight = 10+14*6;
 			this.primaryText.Dock = DockStyle.StackBegin;
 			this.primaryText.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryText.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.secondaryText = new TextFieldMulti(rightContainer.Container);
-			this.secondaryText.PreferredHeight = 9+14*6;
+			this.secondaryText.PreferredHeight = 10+14*6;
 			this.secondaryText.Dock = DockStyle.StackBegin;
 			this.secondaryText.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryText.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, BandMode.CaptionView, GlyphShape.None, false, 0.2);
 
 			this.primaryComment = new TextFieldMulti(leftContainer.Container);
-			this.primaryComment.PreferredHeight = 9+14*4;
+			this.primaryComment.PreferredHeight = 10+14*4;
 			this.primaryComment.Dock = DockStyle.StackBegin;
 			this.primaryComment.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryComment.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -200,7 +200,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryComment.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.secondaryComment = new TextFieldMulti(rightContainer.Container);
-			this.secondaryComment.PreferredHeight = 9+14*4;
+			this.secondaryComment.PreferredHeight = 10+14*4;
 			this.secondaryComment.Dock = DockStyle.StackBegin;
 			this.secondaryComment.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryComment.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -298,6 +298,9 @@ namespace Epsitec.Common.Designer.Viewers
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 
+			this.primarySummary.Text = this.GetSummary(Resources.DefaultTwoLetterISOLanguageName);
+			this.secondarySummary.Text = this.GetSummary("en");  // TODO:
+
 			CultureMap item = this.collectionView.CurrentItem as CultureMap;
 
 			this.labelEdit.Text = item.Name;
@@ -306,13 +309,40 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 			this.primaryComment.Text = data.GetValue(Support.Res.Fields.ResourceString.Comment) as string;
 
-			data = item.GetCultureData("en");
+			data = item.GetCultureData("en");  // TODO:
 			this.secondaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 			this.secondaryComment.Text = data.GetValue(Support.Res.Fields.ResourceString.Comment) as string;
 
 			this.ignoreChange = iic;
 
 			this.UpdateCommands();
+		}
+
+		protected string GetSummary(string twoLettersCulture)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+
+			CultureMap item = this.collectionView.CurrentItem as CultureMap;
+			StructuredData data = item.GetCultureData(twoLettersCulture);
+
+			string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+			if (string.IsNullOrEmpty(text))
+			{
+				buffer.Append(Misc.Italic("(indéfini)"));
+			}
+			else
+			{
+				buffer.Append(text);
+			}
+
+			string comment = data.GetValue(Support.Res.Fields.ResourceString.Comment) as string;
+			if (!string.IsNullOrEmpty(comment))
+			{
+				buffer.Append("<br/>");
+				buffer.Append(Misc.Italic(comment));
+			}
+
+			return buffer.ToString();
 		}
 
 
@@ -569,6 +599,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				widget.Margins = new Margins(5, 5, 0, 0);
 				widget.Text = TextLayout.ConvertToTaggedText(text);
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
 				return widget;
 			}
@@ -581,6 +612,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				widget.Margins = new Margins(5, 5, 0, 0);
 				widget.Text = TextLayout.ConvertToTaggedText(text);
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
 				return widget;
 			}
