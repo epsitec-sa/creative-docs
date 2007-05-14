@@ -21,7 +21,7 @@ namespace Epsitec.Common.Designer.Viewers
 			SuiteView,
 		}
 
-		protected enum ModificationState
+		protected enum ResourceState
 		{
 			Normal,			//	défini normalement
 			Empty,			//	vide (fond rouge)
@@ -344,8 +344,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateColor()
 		{
 			//	Met à jour les couleurs dans toutes les bandes.
-			ModificationState state1 = this.GetModificationState(Resources.DefaultTwoLetterISOLanguageName);
-			ModificationState state2 = this.GetModificationState(this.twoLettersSecondaryCulture);
+			ResourceState state1 = this.GetResourceState(Resources.DefaultTwoLetterISOLanguageName);
+			ResourceState state2 = this.GetResourceState(this.twoLettersSecondaryCulture);
 			this.ColoriseBands(state1, state2);
 		}
 
@@ -360,9 +360,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 			foreach (IconButtonMark button in this.secondaryButtonsCulture)
 			{
-				ModificationState state = this.GetModificationState(button.Name);
+				ResourceState state = this.GetResourceState(button.Name);
 
-				if (state == ModificationState.Normal)
+				if (state == ResourceState.Normal)
 				{
 					button.BulletColor = Color.Empty;
 				}
@@ -432,7 +432,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		static protected string CultureName(string twoLetter)
 		{
-			return twoLetter;  // TODO:
+			return twoLetter.ToUpper();  // TODO: transformer "en" en "English"
 		}
 
 
@@ -454,26 +454,27 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected ModificationState GetModificationState(string twoLettersCulture)
+		protected ResourceState GetResourceState(string twoLettersCulture)
 		{
+			//	Retourne l'état d'une ressource.
 			CultureMap item = this.collectionView.CurrentItem as CultureMap;
-			return this.GetModificationState(item, twoLettersCulture);
+			return this.GetResourceState(item, twoLettersCulture);
 		}
 
-		protected ModificationState GetModificationState(CultureMap item, string twoLettersCulture)
+		protected ResourceState GetResourceState(CultureMap item, string twoLettersCulture)
 		{
-			//	Retourne false si une ressource est indéfinie ou vide.
+			//	Retourne l'état d'une ressource.
 			StructuredData data = item.GetCultureData(twoLettersCulture);
 
 			if (data.IsEmpty)
 			{
-				return ModificationState.Empty;
+				return ResourceState.Empty;
 			}
 
 			string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 			if (string.IsNullOrEmpty(text))
 			{
-				return ModificationState.Empty;
+				return ResourceState.Empty;
 			}
 
 			if (twoLettersCulture != Resources.DefaultTwoLetterISOLanguageName)  // culture secondaire ?
@@ -483,11 +484,11 @@ namespace Epsitec.Common.Designer.Viewers
 				int cmod = (int) data.GetValue(Support.Res.Fields.Resource.ModificationId);
 				if (pmod > cmod)
 				{
-					return ModificationState.Modified;
+					return ResourceState.Modified;
 				}
 			}
 
-			return ModificationState.Normal;
+			return ResourceState.Normal;
 		}
 
 		protected string GetSummary(string twoLettersCulture)
@@ -583,7 +584,7 @@ namespace Epsitec.Common.Designer.Viewers
 			return leftContainer.ExtendButton;
 		}
 
-		protected void ColoriseBands(ModificationState state1, ModificationState state2)
+		protected void ColoriseBands(ResourceState state1, ResourceState state2)
 		{
 			//	Colorise toutes les bandes horizontales.
 			for (int i=0; i<this.bands.Count; i++)
@@ -601,7 +602,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected static Color GetBackgroundColor(ModificationState state, double intensity)
+		protected static Color GetBackgroundColor(ResourceState state, double intensity)
 		{
 			//	Donne une couleur pour un fond de panneau.
 			if (intensity == 0.0)
@@ -611,10 +612,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 			switch (state)
 			{
-				case ModificationState.Empty:
+				case ResourceState.Empty:
 					return Color.FromAlphaRgb(intensity, 0.91, 0.40, 0.40);  // rouge
 
-				case ModificationState.Modified:
+				case ResourceState.Modified:
 					return Color.FromAlphaRgb(intensity, 0.91, 0.81, 0.41);  // jaune
 
 				default:
@@ -702,6 +703,39 @@ namespace Epsitec.Common.Designer.Viewers
 
 			AbstractTextField edit = sender as AbstractTextField;
 			string text = edit.Text;
+
+			CultureMap item = this.collectionView.CurrentItem as CultureMap;
+
+			if (edit == this.labelEdit)
+			{
+				item.Name = text;
+			}
+
+			if (edit == this.primaryText)
+			{
+				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				data.SetValue(Support.Res.Fields.ResourceString.Text, text);
+			}
+
+			if (edit == this.secondaryText)
+			{
+				StructuredData data = item.GetCultureData(this.twoLettersSecondaryCulture);
+				data.SetValue(Support.Res.Fields.ResourceString.Text, text);
+			}
+
+			if (edit == this.primaryComment)
+			{
+				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				data.SetValue(Support.Res.Fields.Resource.Comment, text);
+			}
+
+			if (edit == this.secondaryComment)
+			{
+				StructuredData data = item.GetCultureData(this.twoLettersSecondaryCulture);
+				data.SetValue(Support.Res.Fields.Resource.Comment, text);
+			}
+
+			this.UpdateButtonsModificationsCulture();
 		}
 
 		private void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
@@ -804,17 +838,19 @@ namespace Epsitec.Common.Designer.Viewers
 			
 			private Widget CreateContent(CultureMap item, string twoLettersCulture)
 			{
+				//	Crée le contenu pour une colonne primaire ou secondaire.
+				//	Par optimisation, un seul widget est créé s'il n'y a pas de couleur de fond.
 				StaticText main, text;
-				ModificationState state = this.owner.GetModificationState(item, twoLettersCulture);
+				ResourceState state = this.owner.GetResourceState(item, twoLettersCulture);
 
-				if (state == ModificationState.Normal)
+				if (state == ResourceState.Normal)
 				{
 					main = text = new StaticText();
 				}
 				else
 				{
 					main = new StaticText();
-					main.BackColor = Strings2.GetBackgroundColor(state, 0.5);
+					main.BackColor = Strings2.GetBackgroundColor(state, 0.7);
 
 					text = new StaticText(main);
 					text.Dock = DockStyle.Fill;
