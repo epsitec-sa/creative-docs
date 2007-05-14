@@ -967,7 +967,9 @@ namespace Epsitec.Common.Designer
 			{
 				if (this.type == Type.Strings2)
 				{
-					//	TODO:
+					value = System.Math.Max(value, 0);
+					value = System.Math.Min(value, this.collectionView.Count-1);
+					this.collectionView.MoveCurrentToPosition(value);
 				}
 				else
 				{

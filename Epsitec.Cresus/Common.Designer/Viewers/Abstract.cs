@@ -83,8 +83,12 @@ namespace Epsitec.Common.Designer.Viewers
 				this.lastActionIsReplace = false;
 
 				this.access.AccessIndex = searcher.Row;
-				this.array.SelectedRow = this.access.AccessIndex;
-				this.array.ShowSelectedRow();
+
+				if (this.array != null)
+				{
+					this.array.SelectedRow = this.access.AccessIndex;
+					this.array.ShowSelectedRow();
+				}
 
 				AbstractTextField edit = this.IndexToTextField(searcher.Field, searcher.Subfield);
 				if (edit != null && edit.Visibility)
@@ -145,8 +149,13 @@ namespace Epsitec.Common.Designer.Viewers
 				if (text == null)
 				{
 					this.access.AccessIndex = searcher.Row;
-					this.array.SelectedRow = this.access.AccessIndex;
-					this.array.ShowSelectedRow();
+
+					if (this.array != null)
+					{
+						this.array.SelectedRow = this.access.AccessIndex;
+						this.array.ShowSelectedRow();
+					}
+
 					return;
 				}
 
@@ -311,8 +320,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.access.SetFilter(filter, mode);
 
 			this.UpdateArray();
-			this.array.SelectedRow = this.access.AccessIndex;
-			this.array.ShowSelectedRow();
+			
+			if (this.array != null)
+			{
+				this.array.SelectedRow = this.access.AccessIndex;
+				this.array.ShowSelectedRow();
+			}
 
 			this.UpdateCommands();
 		}
@@ -329,8 +342,12 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.access.AccessIndex = sel;
 
-			this.array.SelectedRow = this.access.AccessIndex;
-			this.array.ShowSelectedRow();
+			if (this.array != null)
+			{
+				this.array.SelectedRow = this.access.AccessIndex;
+				this.array.ShowSelectedRow();
+			}
+
 			this.UpdateCommands();
 
 			if (this.currentTextField != null)
@@ -404,8 +421,13 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				this.access.AccessIndex = sel;
-				this.array.SelectedRow = sel;
-				this.array.ShowSelectedRow();
+				
+				if (this.array != null)
+				{
+					this.array.SelectedRow = sel;
+					this.array.ShowSelectedRow();
+				}
+
 				this.SelectEdit(secondary);
 			}
 		}
@@ -427,8 +449,13 @@ namespace Epsitec.Common.Designer.Viewers
 					this.access.Delete();
 
 					this.UpdateArray();
-					this.array.SelectedRow = this.access.AccessIndex;
-					this.array.ShowSelectedRow();
+					
+					if (this.array != null)
+					{
+						this.array.SelectedRow = this.access.AccessIndex;
+						this.array.ShowSelectedRow();
+					}
+
 					this.UpdateCommands();
 				}
 			}
@@ -455,8 +482,13 @@ namespace Epsitec.Common.Designer.Viewers
 				this.access.Duplicate(newName, duplicate);
 
 				this.UpdateArray();
-				this.array.SelectedRow = this.access.AccessIndex;
-				this.array.ShowSelectedRow();
+				
+				if (this.array != null)
+				{
+					this.array.SelectedRow = this.access.AccessIndex;
+					this.array.ShowSelectedRow();
+				}
+				
 				this.UpdateCommands();
 
 				if (this.currentTextField != null)
