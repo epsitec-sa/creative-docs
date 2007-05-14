@@ -33,17 +33,10 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			this.twoLettersSecondaryCulture = "en";
 
-			this.accessor = new Support.ResourceAccessors.StringResourceAccessor();
-			this.accessor.Load(access.ResourceManager);
-
 			StructuredType cultureMapType = new StructuredType();
 			cultureMapType.Fields.Add("Name", StringType.Default);
 			cultureMapType.Fields.Add("Primary", StringType.Default);
 			cultureMapType.Fields.Add("Secondary", StringType.Default);
-
-			this.collectionView = new CollectionView(this.accessor.Collection);
-//-			this.collectionView.SortDescriptions.Clear();
-//-			this.collectionView.SortDescriptions.Add(new SortDescription("Name"));  // TODO: pourquoi ça ne fonctionne pas ?
 
 			this.itemViewFactory = new ItemViewFactory(this);
 			
@@ -90,7 +83,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table = new UI.ItemTable(this.left);
 			this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
 			this.table.SourceType = cultureMapType;
-			this.table.Items = this.collectionView;
+			this.table.Items = this.access.CollectionView;
 			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(200, Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(100, Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(100, Widgets.Layouts.GridUnitType.Proportional)));
@@ -103,10 +96,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ItemPanel.SelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
 			this.table.SizeChanged += this.HandleTableSizeChanged;
 			this.table.ColumnHeader.ColumnWidthChanged += this.HandleColumnHeaderColumnWidthChanged;
+			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 			this.table.Dock = Widgets.DockStyle.Fill;
 			this.table.Margins = new Drawing.Margins(0, 0, 0, 0);
-
-			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 
 			//	Crée la partie droite, bande supérieure pour les boutons des cultures.
 			Widget sup = new Widget(this.right);
@@ -314,7 +306,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateTitle()
 		{
 			//	Met à jour le titre en dessus de la zone scrollable.
-			CultureMap item = this.collectionView.CurrentItem as CultureMap;
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			string name = item.Name;
 			this.titleText.Text = string.Concat("<font size=\"150%\">", name, "</font>");
 		}
@@ -328,7 +320,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primarySummary.Text = this.GetSummary(this.GetTwoLetters(0));
 			this.secondarySummary.Text = this.GetSummary(this.GetTwoLetters(1));
 
-			CultureMap item = this.collectionView.CurrentItem as CultureMap;
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 
 			this.labelEdit.Text = item.Name;
 
@@ -471,7 +463,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected ResourceState GetResourceState(string twoLettersCulture)
 		{
 			//	Retourne l'état d'une ressource.
-			CultureMap item = this.collectionView.CurrentItem as CultureMap;
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			return this.GetResourceState(item, twoLettersCulture);
 		}
 
@@ -510,7 +502,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Retourne le texte résumé de la ressource sélectionnée.
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 
-			CultureMap item = this.collectionView.CurrentItem as CultureMap;
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			StructuredData data = item.GetCultureData(twoLettersCulture);
 
 			string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
@@ -718,7 +710,7 @@ namespace Epsitec.Common.Designer.Viewers
 			AbstractTextField edit = sender as AbstractTextField;
 			string text = edit.Text;
 
-			CultureMap item = this.collectionView.CurrentItem as CultureMap;
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 
 			if (edit == this.labelEdit)
 			{
@@ -897,8 +889,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected static bool					captionExtended = false;
 
-		protected Support.ResourceAccessors.StringResourceAccessor accessor;
-		protected CollectionView				collectionView;
 		private ItemViewFactory					itemViewFactory;
 		protected string						twoLettersSecondaryCulture;
 

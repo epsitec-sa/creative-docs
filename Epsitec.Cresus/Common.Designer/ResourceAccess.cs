@@ -81,18 +81,28 @@ namespace Epsitec.Common.Designer
 			this.moduleInfo = moduleInfo;
 			this.mainWindow = mainWindow;
 
-			this.druidsIndex = new List<Druid>();
+			if (this.type == Type.Strings2)
+			{
+				this.accessor = new Support.ResourceAccessors.StringResourceAccessor();
+				this.accessor.Load(this.resourceManager);
 
-			this.captionCounters = new Dictionary<Type, int>();
-			this.captionCounters[Type.Captions] = 0;
-			this.captionCounters[Type.Fields] = 0;
-			this.captionCounters[Type.Commands] = 0;
-			this.captionCounters[Type.Types] = 0;
-			this.captionCounters[Type.Values] = 0;
+				this.collectionView = new CollectionView(this.accessor.Collection);
+			}
+			else
+			{
+				this.druidsIndex = new List<Druid>();
 
-			this.filterIndexes = new Dictionary<Type, int>();
-			this.filterStrings = new Dictionary<Type, string>();
-			this.filterModes = new Dictionary<Type, Searcher.SearchingMode>();
+				this.captionCounters = new Dictionary<Type, int>();
+				this.captionCounters[Type.Captions] = 0;
+				this.captionCounters[Type.Fields] = 0;
+				this.captionCounters[Type.Commands] = 0;
+				this.captionCounters[Type.Types] = 0;
+				this.captionCounters[Type.Values] = 0;
+
+				this.filterIndexes = new Dictionary<Type, int>();
+				this.filterStrings = new Dictionary<Type, string>();
+				this.filterModes = new Dictionary<Type, Searcher.SearchingMode>();
+			}
 		}
 
 
@@ -144,6 +154,14 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				return this.resourceManager;
+			}
+		}
+
+		public CollectionView CollectionView
+		{
+			get
+			{
+				return this.collectionView;
 			}
 		}
 
@@ -794,54 +812,61 @@ namespace Epsitec.Common.Designer
 		public void SetFilter(string filter, Searcher.SearchingMode mode)
 		{
 			//	Construit l'index en fonction des ressources primaires.
-			Druid druid = Druid.Empty;
-			if (this.accessIndex >= 0 && this.accessIndex < this.druidsIndex.Count)
+			if (this.type == Type.Strings2)
 			{
-				druid = this.druidsIndex[this.accessIndex];
-			}
-
-			//	Met à jour druidsIndex.
-			if (this.IsBundlesType)
-			{
-				this.SetFilterBundles(filter, mode);
-			}
-
-			if (this.type == Type.Panels)
-			{
-				this.SetFilterPanels(filter, mode);
-			}
-
-			//	Trie druidsIndex.
-			this.Sort();
-
-			//	Mémorise le filtre utilisé.
-			if (this.filterStrings.ContainsKey(this.type))
-			{
-				this.filterStrings[this.type] = filter;
+				//	TODO:
 			}
 			else
 			{
-				this.filterStrings.Add(this.type, filter);
-			}
+				Druid druid = Druid.Empty;
+				if (this.accessIndex >= 0 && this.accessIndex < this.druidsIndex.Count)
+				{
+					druid = this.druidsIndex[this.accessIndex];
+				}
 
-			if (this.filterModes.ContainsKey(this.type))
-			{
-				this.filterModes[this.type] = mode;
-			}
-			else
-			{
-				this.filterModes.Add(this.type, mode);
-			}
+				//	Met à jour druidsIndex.
+				if (this.IsBundlesType)
+				{
+					this.SetFilterBundles(filter, mode);
+				}
 
-			//	Cherche l'index correspondant à la ressource d'avant le changement de filtre.
-			int index = this.druidsIndex.IndexOf(druid);
-			if (index == -1)
-			{
-				index = 0;
-			}
-			this.accessIndex = index;
+				if (this.type == Type.Panels)
+				{
+					this.SetFilterPanels(filter, mode);
+				}
 
-			this.CacheClear();
+				//	Trie druidsIndex.
+				this.Sort();
+
+				//	Mémorise le filtre utilisé.
+				if (this.filterStrings.ContainsKey(this.type))
+				{
+					this.filterStrings[this.type] = filter;
+				}
+				else
+				{
+					this.filterStrings.Add(this.type, filter);
+				}
+
+				if (this.filterModes.ContainsKey(this.type))
+				{
+					this.filterModes[this.type] = mode;
+				}
+				else
+				{
+					this.filterModes.Add(this.type, mode);
+				}
+
+				//	Cherche l'index correspondant à la ressource d'avant le changement de filtre.
+				int index = this.druidsIndex.IndexOf(druid);
+				if (index == -1)
+				{
+					index = 0;
+				}
+				this.accessIndex = index;
+
+				this.CacheClear();
+			}
 		}
 
 		public int TotalCount
@@ -849,19 +874,25 @@ namespace Epsitec.Common.Designer
 			//	Retourne le nombre de données accessibles.
 			get
 			{
-				if (this.IsCaptionsType)
+				if (this.type == Type.Strings2)
 				{
-					return this.captionCounters[this.type];
 				}
-
-				if (this.IsBundlesType)
+				else
 				{
-					return this.primaryBundle.FieldCount;
-				}
+					if (this.IsCaptionsType)
+					{
+						return this.captionCounters[this.type];
+					}
 
-				if (this.type == Type.Panels)
-				{
-					return this.panelsList.Count;
+					if (this.IsBundlesType)
+					{
+						return this.primaryBundle.FieldCount;
+					}
+
+					if (this.type == Type.Panels)
+					{
+						return this.panelsList.Count;
+					}
 				}
 
 				return 0;
@@ -873,27 +904,48 @@ namespace Epsitec.Common.Designer
 			//	Retourne le nombre de données accessibles.
 			get
 			{
-				return this.druidsIndex.Count;
+				if (this.type == Type.Strings2)
+				{
+					return this.collectionView.Count;
+				}
+				else
+				{
+					return this.druidsIndex.Count;
+				}
 			}
 		}
 
 		public Druid AccessDruid(int index)
 		{
 			//	Retourne le druid d'un index donné.
-			if (index >= 0 && index < this.druidsIndex.Count)
+			if (this.type == Type.Strings2)
 			{
-				return this.druidsIndex[index];
+				return Druid.Empty;
 			}
 			else
 			{
-				return Druid.Empty;
+				if (index >= 0 && index < this.druidsIndex.Count)
+				{
+					return this.druidsIndex[index];
+				}
+				else
+				{
+					return Druid.Empty;
+				}
 			}
 		}
 
 		public int AccessIndexOfDruid(Druid druid)
 		{
 			//	Retourne l'index d'un Druid.
-			return this.druidsIndex.IndexOf(druid);
+			if (this.type == Type.Strings2)
+			{
+				return -1;
+			}
+			else
+			{
+				return this.druidsIndex.IndexOf(druid);
+			}
 		}
 
 		public int AccessIndex
@@ -901,22 +953,36 @@ namespace Epsitec.Common.Designer
 			//	Index de l'accès en cours.
 			get
 			{
-				return this.accessIndex;
+				if (this.type == Type.Strings2)
+				{
+					return this.collectionView.CurrentPosition;
+				}
+				else
+				{
+					return this.accessIndex;
+				}
 			}
 
 			set
 			{
-				value = System.Math.Max(value, 0);
-				value = System.Math.Min(value, this.druidsIndex.Count-1);
-				this.accessIndex = value;
-
-				if (this.filterIndexes.ContainsKey(this.type))
+				if (this.type == Type.Strings2)
 				{
-					this.filterIndexes[this.type] = value;
+					//	TODO:
 				}
 				else
 				{
-					this.filterIndexes.Add(this.type, value);
+					value = System.Math.Max(value, 0);
+					value = System.Math.Min(value, this.druidsIndex.Count-1);
+					this.accessIndex = value;
+
+					if (this.filterIndexes.ContainsKey(this.type))
+					{
+						this.filterIndexes[this.type] = value;
+					}
+					else
+					{
+						this.filterIndexes.Add(this.type, value);
+					}
 				}
 			}
 		}
@@ -3639,6 +3705,9 @@ namespace Epsitec.Common.Designer
 		protected ResourceModuleInfo						moduleInfo;
 		protected MainWindow								mainWindow;
 		protected bool										isDirty = false;
+
+		protected Support.ResourceAccessors.StringResourceAccessor accessor;
+		protected CollectionView							collectionView;
 
 		protected ResourceBundleCollection					bundles;
 		protected ResourceBundle							primaryBundle;
