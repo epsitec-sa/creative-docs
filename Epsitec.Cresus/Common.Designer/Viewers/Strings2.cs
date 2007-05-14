@@ -21,6 +21,14 @@ namespace Epsitec.Common.Designer.Viewers
 			SuiteView,
 		}
 
+		protected enum ModificationState
+		{
+			Normal,			//	défini normalement
+			Empty,			//	vide (fond rouge)
+			Modified,		//	modifié (fond jaune)
+		}
+
+
 		public Strings2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
 			this.accessor = new Support.ResourceAccessors.StringResourceAccessor();
@@ -210,7 +218,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.UpdateDisplayMode();
 			this.UpdateCultures();
+			this.UpdateTitle();
 			this.UpdateEdit();
+			this.UpdateColor();
 			this.UpdateModificationsCulture();
 			this.UpdateCommands();
 		}
@@ -265,6 +275,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Met à jour le contenu du Viewer.
 			this.UpdateEdit();
+			this.UpdateColor();
 			this.UpdateModificationsCulture();
 			this.UpdateCommands();
 		}
@@ -290,6 +301,14 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
+		}
+
+		protected void UpdateTitle()
+		{
+			//	Met à jour le titre en dessus de la zone scrollable.
+			CultureMap item = this.collectionView.CurrentItem as CultureMap;
+			string name = item.Name;
+			this.titleText.Text = string.Concat("<font size=\"150%\">", name, "</font>");
 		}
 
 		protected override void UpdateEdit()
@@ -318,8 +337,30 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
+		protected void UpdateColor()
+		{
+			//	Met à jour les couleurs dans toutes les bandes.
+			CultureMap item = this.collectionView.CurrentItem as CultureMap;
+
+			ModificationState state1 = ModificationState.Normal;
+			if (!item.IsCultureDefined(Resources.DefaultTwoLetterISOLanguageName))
+			{
+				state1 = ModificationState.Empty;
+			}
+
+			ModificationState state2 = ModificationState.Normal;
+			if (!item.IsCultureDefined("en"))
+			{
+				state2 = ModificationState.Empty;
+			}
+
+			this.ColoriseBands(state1, state2);
+		}
+
+
 		protected string GetSummary(string twoLettersCulture)
 		{
+			//	Retourne le texte résumé de la ressource sélectionnée.
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 
 			CultureMap item = this.collectionView.CurrentItem as CultureMap;
@@ -410,7 +451,7 @@ namespace Epsitec.Common.Designer.Viewers
 			return leftContainer.ExtendButton;
 		}
 
-		protected void ColoriseBands(ResourceAccess.ModificationState state1, ResourceAccess.ModificationState state2)
+		protected void ColoriseBands(ModificationState state1, ModificationState state2)
 		{
 			//	Colorise toutes les bandes horizontales.
 			for (int i=0; i<this.bands.Count; i++)
@@ -418,13 +459,36 @@ namespace Epsitec.Common.Designer.Viewers
 				MyWidgets.StackedPanel lc = this.bands[i].leftContainer;
 				MyWidgets.StackedPanel rc = this.bands[i].rightContainer;
 
-				lc.BackgroundColor = Abstract.GetBackgroundColor(state1, this.bands[i].intensityContainer);
+				lc.BackgroundColor = Strings2.GetBackgroundColor(state1, this.bands[i].intensityContainer);
 
 				if (rc != null)
 				{
-					rc.BackgroundColor = Abstract.GetBackgroundColor(state2, this.bands[i].intensityContainer);
+					rc.BackgroundColor = Strings2.GetBackgroundColor(state2, this.bands[i].intensityContainer);
 					rc.Visibility = (this.secondaryCulture != null);
 				}
+			}
+		}
+
+		protected static Color GetBackgroundColor(ModificationState state, double intensity)
+		{
+			//	Donne une couleur pour un fond de panneau.
+			if (intensity == 0.0)
+			{
+				return Color.Empty;
+			}
+
+			switch (state)
+			{
+				case ModificationState.Empty:
+					return Color.FromAlphaRgb(intensity, 0.91, 0.40, 0.40);  // rouge
+
+				case ModificationState.Modified:
+					return Color.FromAlphaRgb(intensity, 0.91, 0.81, 0.41);  // jaune
+
+				default:
+					IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+					Color cap = adorner.ColorCaption;
+					return Color.FromAlphaRgb(intensity, 0.4+cap.R*0.6, 0.4+cap.G*0.6, 0.4+cap.B*0.6);
 			}
 		}
 
@@ -473,7 +537,11 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleTableSelectionChanged(object sender)
 		{
+			this.UpdateTitle();
 			this.UpdateEdit();
+			this.UpdateColor();
+			this.UpdateModificationsCulture();
+			this.UpdateCommands();
 		}
 
 		private void HandleTableSizeChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
