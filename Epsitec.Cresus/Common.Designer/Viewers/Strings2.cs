@@ -40,8 +40,8 @@ namespace Epsitec.Common.Designer.Viewers
 			cultureMapType.Fields.Add("Secondary", StringType.Default);
 
 			this.collectionView = new CollectionView(this.accessor.Collection);
-			this.collectionView.SortDescriptions.Clear();
-			this.collectionView.SortDescriptions.Add(new SortDescription("Name"));  // TODO: pourquoi ça ne fonctionne pas ?
+//-			this.collectionView.SortDescriptions.Clear();
+//-			this.collectionView.SortDescriptions.Add(new SortDescription("Name"));  // TODO: pourquoi ça ne fonctionne pas ?
 
 			this.itemViewFactory = new ItemViewFactory(this);
 			
@@ -101,6 +101,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ColumnHeader.ColumnWidthChanged += this.HandleColumnHeaderColumnWidthChanged;
 			this.table.Dock = Widgets.DockStyle.Fill;
 			this.table.Margins = new Drawing.Margins(0, 0, 0, 0);
+
+			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 
 			//	Crée la partie droite, bande supérieure pour les boutons des cultures.
 			Widget sup = new Widget(this.right);
