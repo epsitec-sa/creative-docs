@@ -463,12 +463,13 @@ namespace Epsitec.Common.Designer.Viewers
 		protected ModificationState GetModificationState(CultureMap item, string twoLettersCulture)
 		{
 			//	Retourne false si une ressource est indéfinie ou vide.
-			if (!item.IsCultureDefined(twoLettersCulture))
+			StructuredData data = item.GetCultureData(twoLettersCulture);
+
+			if (data.IsEmpty)
 			{
 				return ModificationState.Empty;
 			}
 
-			StructuredData data = item.GetCultureData(twoLettersCulture);
 			string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 			if (string.IsNullOrEmpty(text))
 			{
@@ -687,6 +688,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.TwoLettersSecondaryCulture = button.Name;
 
 			this.UpdateEdit();
+			this.UpdateColor();
 			this.UpdateCommands();
 		}
 
