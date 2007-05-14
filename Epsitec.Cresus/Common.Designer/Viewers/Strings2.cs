@@ -31,6 +31,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public Strings2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
+			this.twoLettersSecondaryCulture = "en";
+
 			this.accessor = new Support.ResourceAccessors.StringResourceAccessor();
 			this.accessor.Load(access.ResourceManager);
 
@@ -114,23 +116,22 @@ namespace Epsitec.Common.Designer.Viewers
 			sup.TabIndex = this.tabIndex++;
 			sup.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			
-			this.primaryCulture = new IconButtonMark(sup);
-			this.primaryCulture.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.primaryCulture.SiteMark = ButtonMarkDisposition.Below;
-			this.primaryCulture.MarkDimension = 5;
-			this.primaryCulture.PreferredHeight = 25;
-			this.primaryCulture.ActiveState = ActiveState.Yes;
-			this.primaryCulture.AutoFocus = false;
-			this.primaryCulture.Margins = new Margins(0, 1, 0, 0);
-			this.primaryCulture.Dock = DockStyle.Fill;
+			this.primaryButtonCulture = new IconButtonMark(sup);
+			this.primaryButtonCulture.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.primaryButtonCulture.SiteMark = ButtonMarkDisposition.Below;
+			this.primaryButtonCulture.MarkDimension = 5;
+			this.primaryButtonCulture.PreferredHeight = 25;
+			this.primaryButtonCulture.ActiveState = ActiveState.Yes;
+			this.primaryButtonCulture.AutoFocus = false;
+			this.primaryButtonCulture.Margins = new Margins(0, 1, 0, 0);
+			this.primaryButtonCulture.Dock = DockStyle.Fill;
 
-			this.secondaryCultureGroup = new Widget(sup);
-			this.secondaryCultureGroup.Name = "SecondaryCultureGroup";
-			this.secondaryCultureGroup.Margins = new Margins(1, 0, 0, 0);
-			this.secondaryCultureGroup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-			this.secondaryCultureGroup.Dock = DockStyle.Fill;
-			this.secondaryCultureGroup.TabIndex = this.tabIndex++;
-			this.secondaryCultureGroup.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
+			this.secondaryButtonsCultureGroup = new Widget(sup);
+			this.secondaryButtonsCultureGroup.Margins = new Margins(1, 0, 0, 0);
+			this.secondaryButtonsCultureGroup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			this.secondaryButtonsCultureGroup.Dock = DockStyle.Fill;
+			this.secondaryButtonsCultureGroup.TabIndex = this.tabIndex++;
+			this.secondaryButtonsCultureGroup.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			//	Crée le titre.
 			this.titleBox = new FrameBox(this.right);
@@ -219,11 +220,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryComment.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.UpdateDisplayMode();
-			this.UpdateCultures();
+			this.UpdateButtonsCultures();
 			this.UpdateTitle();
 			this.UpdateEdit();
 			this.UpdateColor();
-			this.UpdateModificationsCulture();
+			this.UpdateButtonsModificationsCulture();
 			this.UpdateCommands();
 		}
 
@@ -278,13 +279,13 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour le contenu du Viewer.
 			this.UpdateEdit();
 			this.UpdateColor();
-			this.UpdateModificationsCulture();
+			this.UpdateButtonsModificationsCulture();
 			this.UpdateCommands();
 		}
 
 		protected void UpdateDisplayMode()
 		{
-			//	Metà jour le mode d'affichage des bandes.
+			//	Met à jour le mode d'affichage des bandes.
 			for (int i=0; i<this.bands.Count; i++)
 			{
 				switch (bands[i].bandMode)
@@ -303,6 +304,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
+			this.table.ItemPanel.Refresh();
 		}
 
 		protected void UpdateTitle()
@@ -320,7 +322,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ignoreChange = true;
 
 			this.primarySummary.Text = this.GetSummary(Resources.DefaultTwoLetterISOLanguageName);
-			this.secondarySummary.Text = this.GetSummary("en");  // TODO:
+			this.secondarySummary.Text = this.GetSummary(this.twoLettersSecondaryCulture);
 
 			CultureMap item = this.collectionView.CurrentItem as CultureMap;
 
@@ -330,7 +332,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 			this.primaryComment.Text = data.GetValue(Support.Res.Fields.ResourceString.Comment) as string;
 
-			data = item.GetCultureData("en");  // TODO:
+			data = item.GetCultureData(this.twoLettersSecondaryCulture);
 			this.secondaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 			this.secondaryComment.Text = data.GetValue(Support.Res.Fields.ResourceString.Comment) as string;
 
@@ -351,7 +353,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			ModificationState state2 = ModificationState.Normal;
-			if (!item.IsCultureDefined("en"))
+			if (!item.IsCultureDefined(this.twoLettersSecondaryCulture))
 			{
 				state2 = ModificationState.Empty;
 			}
@@ -359,6 +361,116 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ColoriseBands(state1, state2);
 		}
 
+
+		protected void UpdateButtonsModificationsCulture()
+		{
+			//	Met à jour les pastilles dans les boutons des cultures.
+			if (this.secondaryButtonsCulture == null)  // pas de culture secondaire ?
+			{
+				return;
+			}
+
+			CultureMap item = this.collectionView.CurrentItem as CultureMap;
+
+			foreach (IconButtonMark button in this.secondaryButtonsCulture)
+			{
+				ModificationState state = ModificationState.Normal;
+				if (!item.IsCultureDefined(button.Name))
+				{
+					state = ModificationState.Empty;
+				}
+
+				if (state == ModificationState.Normal)
+				{
+					button.BulletColor = Color.Empty;
+				}
+				else
+				{
+					button.BulletColor = Strings2.GetBackgroundColor(state, 1.0);
+				}
+			}
+		}
+
+		protected void UpdateButtonsSelectedCulture()
+		{
+			//	Sélectionne le bouton correspondant à la culture secondaire.
+			for (int i=0; i<this.secondaryButtonsCulture.Length; i++)
+			{
+				if (this.secondaryButtonsCulture[i].Name == this.twoLettersSecondaryCulture)
+				{
+					this.secondaryButtonsCulture[i].ActiveState = ActiveState.Yes;
+				}
+				else
+				{
+					this.secondaryButtonsCulture[i].ActiveState = ActiveState.No;
+				}
+			}
+		}
+
+		protected void UpdateButtonsCultures()
+		{
+			//	Met à jour les boutons des cultures en fonction des cultures existantes.
+			if (this.secondaryButtonsCulture != null)
+			{
+				foreach (IconButtonMark button in this.secondaryButtonsCulture)
+				{
+					button.Clicked -= new MessageEventHandler(this.HandleButtonSecondaryCultureClicked);
+					button.Dispose();
+				}
+				this.secondaryButtonsCulture = null;
+			}
+
+			this.primaryButtonCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Strings2.CultureName("fr"));
+
+			List<string> list = this.access.GetSecondaryCultureNames();  // TODO:
+			if (list.Count > 0)
+			{
+				this.secondaryButtonsCulture = new IconButtonMark[list.Count];
+				for (int i=0; i<list.Count; i++)
+				{
+					this.secondaryButtonsCulture[i] = new IconButtonMark(this.secondaryButtonsCultureGroup);
+					this.secondaryButtonsCulture[i].ButtonStyle = ButtonStyle.ActivableIcon;
+					this.secondaryButtonsCulture[i].SiteMark = ButtonMarkDisposition.Below;
+					this.secondaryButtonsCulture[i].MarkDimension = 5;
+					this.secondaryButtonsCulture[i].Name = list[i];
+					this.secondaryButtonsCulture[i].Text = Strings2.CultureName(list[i]);
+					this.secondaryButtonsCulture[i].AutoFocus = false;
+					this.secondaryButtonsCulture[i].Dock = DockStyle.Fill;
+					this.secondaryButtonsCulture[i].Clicked += new MessageEventHandler(this.HandleButtonSecondaryCultureClicked);
+					//?ToolTip.Default.SetToolTip(this.secondaryButtonsCulture[i], Strings2.CultureLongName(bundle.Culture));
+				}
+
+				this.TwoLettersSecondaryCulture = list[0];
+			}
+			else
+			{
+				this.TwoLettersSecondaryCulture = null;
+			}
+		}
+
+		static protected string CultureName(string twoLetter)
+		{
+			return twoLetter;  // TODO:
+		}
+
+
+		protected string TwoLettersSecondaryCulture
+		{
+			get
+			{
+				return this.twoLettersSecondaryCulture;
+			}
+			set
+			{
+				if (this.twoLettersSecondaryCulture != value)
+				{
+					this.twoLettersSecondaryCulture = value;
+
+					this.UpdateButtonsSelectedCulture();
+					this.UpdateArray();
+				}
+			}
+		}
 
 		protected string GetSummary(string twoLettersCulture)
 		{
@@ -466,7 +578,7 @@ namespace Epsitec.Common.Designer.Viewers
 				if (rc != null)
 				{
 					rc.BackgroundColor = Strings2.GetBackgroundColor(state2, this.bands[i].intensityContainer);
-					rc.Visibility = (this.secondaryCulture != null);
+					rc.Visibility = (this.twoLettersSecondaryCulture != null);
 				}
 			}
 		}
@@ -514,16 +626,6 @@ namespace Epsitec.Common.Designer.Viewers
 		#endregion
 
 
-		protected override Widget CultureParentWidget
-		{
-			//	Retourne le parent à utiliser pour les boutons des cultures.
-			get
-			{
-				return this.secondaryCultureGroup;
-			}
-		}
-
-
 		protected double GetColomnWidth(int column)
 		{
 			//	Retourne la largeur d'une colonne.
@@ -542,7 +644,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateTitle();
 			this.UpdateEdit();
 			this.UpdateColor();
-			this.UpdateModificationsCulture();
+			this.UpdateButtonsModificationsCulture();
 			this.UpdateCommands();
 		}
 
@@ -559,6 +661,16 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleColumnHeaderColumnWidthChanged(object sender, UI.ColumnWidthChangeEventArgs e)
 		{
+		}
+
+		private void HandleButtonSecondaryCultureClicked(object sender, MessageEventArgs e)
+		{
+			//	Un bouton pour changer de culture secondaire a été cliqué.
+			IconButtonMark button = sender as IconButtonMark;
+			this.TwoLettersSecondaryCulture = button.Name;
+
+			this.UpdateEdit();
+			this.UpdateCommands();
 		}
 
 		private void HandleTextChanged(object sender)
@@ -677,7 +789,7 @@ namespace Epsitec.Common.Designer.Viewers
 			private Widget CreateSecondary(CultureMap item)
 			{
 				StaticText widget = new StaticText();
-				StructuredData data = item.GetCultureData("en"); // TODO: choisir ici la culture secondaire qui a été sélectionnée
+				StructuredData data = item.GetCultureData(this.owner.twoLettersSecondaryCulture);
 				string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 
 				widget.Margins = new Margins(5, 5, 0, 0);
@@ -695,15 +807,18 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static bool					captionExtended = false;
 
 		protected Support.ResourceAccessors.StringResourceAccessor accessor;
-		protected UI.ItemTable					table;
 		protected CollectionView				collectionView;
 		private ItemViewFactory					itemViewFactory;
+		protected string						twoLettersSecondaryCulture;
 
 		protected Widget						left;
 		protected Widget						right;
 		protected VSplitter						splitter;
-		protected Widget						secondaryCultureGroup;
+		protected UI.ItemTable					table;
 		protected MyWidgets.TextFieldExName		labelEdit;
+		protected IconButtonMark				primaryButtonCulture;
+		protected Widget						secondaryButtonsCultureGroup;
+		protected IconButtonMark[]				secondaryButtonsCulture;
 		protected FrameBox						titleBox;
 		protected StaticText					titleText;
 		protected Scrollable					scrollable;
