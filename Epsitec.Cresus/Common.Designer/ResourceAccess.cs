@@ -87,6 +87,7 @@ namespace Epsitec.Common.Designer
 				this.accessor.Load(this.resourceManager);
 
 				this.collectionView = new CollectionView(this.accessor.Collection);
+				this.collectionView.Filter = this.CollectionViewFilter;
 			}
 			else
 			{
@@ -814,7 +815,13 @@ namespace Epsitec.Common.Designer
 			//	Construit l'index en fonction des ressources primaires.
 			if (this.type == Type.Strings2)
 			{
-				//	TODO:
+				if (this.collectionViewFilter != filter || this.collectionViewMode != mode)
+				{
+					this.collectionViewFilter = filter;
+					this.collectionViewMode = mode;
+
+					this.collectionView.Refresh();
+				}
 			}
 			else
 			{
@@ -866,6 +873,25 @@ namespace Epsitec.Common.Designer
 				this.accessIndex = index;
 
 				this.CacheClear();
+			}
+		}
+
+		protected bool CollectionViewFilter(object obj)
+		{
+			if (string.IsNullOrEmpty(this.collectionViewFilter))
+			{
+				return true;
+			}
+
+			CultureMap item = obj as CultureMap;
+			
+			if (item.Name.Contains(this.collectionViewFilter))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 
@@ -3710,6 +3736,8 @@ namespace Epsitec.Common.Designer
 
 		protected Support.ResourceAccessors.StringResourceAccessor accessor;
 		protected CollectionView							collectionView;
+		protected string									collectionViewFilter;
+		protected Searcher.SearchingMode					collectionViewMode;
 
 		protected ResourceBundleCollection					bundles;
 		protected ResourceBundle							primaryBundle;
