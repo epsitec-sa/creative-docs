@@ -75,7 +75,7 @@ namespace Epsitec.Common.Designer.Viewers
 			Widget sup = new Widget(this.right);
 			sup.Name = "Sup";
 			sup.PreferredHeight = 35;
-			sup.Padding = new Margins(11, 27, 10, 0);
+			sup.Padding = new Margins(1, 1, 10, 0);
 			sup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			sup.Dock = DockStyle.Top;
 			sup.TabIndex = this.tabIndex++;

@@ -25,24 +25,52 @@ namespace Epsitec.Common.Designer.Viewers
 			this.collectionView = new CollectionView(this.accessor.Collection);
 			this.itemViewFactory = new ItemViewFactory(this);
 			
-			this.primaryCulture = new IconButtonMark(this);
-			this.primaryCulture.Text = "?";
-			this.primaryCulture.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.primaryCulture.SiteMark = ButtonMarkDisposition.Below;
-			this.primaryCulture.MarkDimension = 5;
-			this.primaryCulture.ActiveState = ActiveState.Yes;
-			this.primaryCulture.AutoFocus = false;
-			//?this.primaryCulture.Dock = DockStyle.Top;
-			//?this.primaryCulture.Margins = new Drawing.Margins(10, 10, 10, 0);
+			//	Crée les deux volets gauche/droite séparés d'un splitter.
+			this.left = new Widget(this);
+			this.left.Name = "Left";
+			this.left.MinWidth = 80;
+			this.left.MaxWidth = 400;
+			this.left.PreferredWidth = Abstract.leftArrayWidth;
+			this.left.Dock = DockStyle.Left;
+			this.left.Padding = new Margins(10, 10, 10, 10);
+			this.left.TabIndex = this.tabIndex++;
+			this.left.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
-			this.table = new UI.ItemTable(this);
+			this.splitter = new VSplitter(this);
+			this.splitter.Dock = DockStyle.Left;
+			this.splitter.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
+			VSplitter.SetAutoCollapseEnable(this.left, true);
+
+			this.right = new Widget(this);
+			this.right.Name = "Right";
+			this.right.MinWidth = 200;
+			this.right.Dock = DockStyle.Fill;
+			this.right.Padding = new Margins(1, 1, 1, 1);
+			this.right.TabIndex = this.tabIndex++;
+			this.right.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
+			
+			//	Crée la partie gauche.			
+			this.labelEdit = new MyWidgets.TextFieldExName(this.left);
+			this.labelEdit.Name = "LabelEdit";
+			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
+			this.labelEdit.Dock = DockStyle.Bottom;
+			this.labelEdit.ButtonShowCondition = ShowCondition.WhenModified;
+			this.labelEdit.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
+			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
+			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
+			this.labelEdit.TabIndex = this.tabIndex++;
+			this.labelEdit.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
+			this.currentTextField = this.labelEdit;
+
+			this.table = new UI.ItemTable(this.left);
 			this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
 			this.table.SourceType = cultureMapType;
 			this.table.Items = this.collectionView;
 
-			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(300, Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(300, Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(300, Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(200, Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(100, Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(100, Widgets.Layouts.GridUnitType.Proportional)));
 			
 			this.table.HorizontalScrollMode = UI.ItemTableScrollMode.Linear;
 			this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
@@ -50,10 +78,39 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.FrameVisibility = false;
 			this.table.ItemPanel.Layout = UI.ItemPanelLayout.VerticalList;
 			this.table.ItemPanel.ItemSelectionMode = UI.ItemPanelSelectionMode.ExactlyOne;
-			//?this.table.Dock = Widgets.DockStyle.Fill;
-			//?this.table.Margins = new Drawing.Margins(10, 10, 0, 10);
+			this.table.Dock = Widgets.DockStyle.Fill;
+			this.table.Margins = new Drawing.Margins(0, 0, 0, 0);
 			this.table.SizeChanged += this.HandleTableSizeChanged;
 			this.table.ColumnHeader.ColumnWidthChanged += this.HandleColumnHeaderColumnWidthChanged;
+
+			//	Crée la partie droite, bande supérieure pour les boutons des cultures.
+			Widget sup = new Widget(this.right);
+			sup.Name = "Sup";
+			sup.PreferredHeight = 35;
+			sup.Padding = new Margins(1, 1, 10, 0);
+			sup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			sup.Dock = DockStyle.Top;
+			sup.TabIndex = this.tabIndex++;
+			sup.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
+			
+			this.primaryCulture = new IconButtonMark(sup);
+			this.primaryCulture.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.primaryCulture.SiteMark = ButtonMarkDisposition.Below;
+			this.primaryCulture.MarkDimension = 5;
+			this.primaryCulture.PreferredHeight = 25;
+			this.primaryCulture.ActiveState = ActiveState.Yes;
+			this.primaryCulture.AutoFocus = false;
+			this.primaryCulture.Margins = new Margins(0, 10, 0, 0);
+			this.primaryCulture.Dock = DockStyle.StackFill;
+
+			this.secondaryCultureGroup = new Widget(sup);
+			this.secondaryCultureGroup.Name = "SecondaryCultureGroup";
+			this.secondaryCultureGroup.Margins = new Margins(10, 0, 0, 0);
+			this.secondaryCultureGroup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			this.secondaryCultureGroup.Dock = DockStyle.StackFill;
+			this.secondaryCultureGroup.TabIndex = this.tabIndex++;
+			this.secondaryCultureGroup.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
+
 
 			this.UpdateCultures();
 		}
@@ -62,6 +119,11 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
+				this.splitter.SplitterDragged -= new EventHandler(this.HandleSplitterDragged);
+
+				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
+				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
+
 				this.table.SizeChanged -= this.HandleTableSizeChanged;
 				this.table.ColumnHeader.ColumnWidthChanged -= this.HandleColumnHeaderColumnWidthChanged;
 			}
@@ -88,6 +150,17 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 		
+		protected override Widget CultureParentWidget
+		{
+			//	Retourne le parent à utiliser pour les boutons des cultures.
+			get
+			{
+				return this.secondaryCultureGroup;
+			}
+		}
+
+
+#if false
 		protected override void UpdateClientGeometry()
 		{
 			//	Met à jour la géométrie.
@@ -167,6 +240,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryAbout.SetManualBounds(rect);
 #endif
 		}
+#endif
 
 		protected double GetColomnWidth(int column)
 		{
@@ -175,6 +249,12 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 		
+		private void HandleSplitterDragged(object sender)
+		{
+			//	Le splitter a été bougé.
+			Abstract.leftArrayWidth = this.left.ActualWidth;
+		}
+
 		private void HandleTableSizeChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			UI.ItemTable table = (UI.ItemTable) sender;
@@ -188,6 +268,26 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleColumnHeaderColumnWidthChanged(object sender, UI.ColumnWidthChangeEventArgs e)
 		{
+		}
+
+		private void HandleTextChanged(object sender)
+		{
+			//	Un texte éditable a changé.
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			AbstractTextField edit = sender as AbstractTextField;
+			string text = edit.Text;
+		}
+
+		private void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		{
+			//	Appelé lorsque la ligne éditable pour le label voit son focus changer.
+			TextFieldEx field = sender as TextFieldEx;
+			field.AcceptEdition();
+			this.HandleEditKeyboardFocusChanged(sender, e);
 		}
 
 
@@ -270,8 +370,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		protected Support.ResourceAccessors.StringResourceAccessor accessor;
-		protected UI.ItemTable table;
-		protected CollectionView collectionView;
-		private ItemViewFactory itemViewFactory;
+		protected UI.ItemTable					table;
+		protected CollectionView				collectionView;
+		private ItemViewFactory					itemViewFactory;
+
+		protected Widget						left;
+		protected Widget						right;
+		protected VSplitter						splitter;
+		protected Widget						secondaryCultureGroup;
+		protected MyWidgets.TextFieldExName		labelEdit;
 	}
 }

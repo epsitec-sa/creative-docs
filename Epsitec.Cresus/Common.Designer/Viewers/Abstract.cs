@@ -770,7 +770,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Misc.CultureName(bundle.Culture));
 
 			Widget parent = this.CultureParentWidget;
-			bool isCaptions = !(parent is Strings) && !(parent is Strings2);
+			bool isCaptions = !(parent is Strings);
 
 			List<string> list = this.access.GetSecondaryCultureNames();
 			if (list.Count > 0)
@@ -789,7 +789,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.secondaryCultures[i].AutoFocus = false;
 					if (isCaptions)
 					{
-						this.secondaryCultures[i].Margins = new Margins(0, (i==list.Count-1)?1:0, 0, 0);
+						//?this.secondaryCultures[i].Margins = new Margins(0, (i==list.Count-1)?1:0, 0, 0);
 						this.secondaryCultures[i].Dock = DockStyle.StackFill;
 					}
 					this.secondaryCultures[i].Clicked += new MessageEventHandler(this.HandleSecondaryCultureClicked);
@@ -1277,7 +1277,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected static double				leftArrayWidth = 300;
+		protected static double				leftArrayWidth = 400;
 
 		protected Module					module;
 		protected PanelsContext				context;
