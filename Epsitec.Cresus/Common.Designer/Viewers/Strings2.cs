@@ -94,12 +94,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.FrameVisibility = false;
 			this.table.ItemPanel.Layout = UI.ItemPanelLayout.VerticalList;
 			this.table.ItemPanel.ItemSelectionMode = UI.ItemPanelSelectionMode.ExactlyOne;
+			this.table.ItemPanel.CurrentItemTrackingMode = UI.CurrentItemTrackingMode.AutoSelect;
 			this.table.ItemPanel.SelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
 			this.table.SizeChanged += this.HandleTableSizeChanged;
 			this.table.ColumnHeader.ColumnWidthChanged += this.HandleColumnHeaderColumnWidthChanged;
 			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 			this.table.Dock = Widgets.DockStyle.Fill;
-			this.table.Margins = new Drawing.Margins(0, 0, 0, 0);
+			this.table.Margins = Drawing.Margins.Zero;
 
 			//	Crée la partie droite, bande supérieure pour les boutons des cultures.
 			Widget sup = new Widget(this.right);
