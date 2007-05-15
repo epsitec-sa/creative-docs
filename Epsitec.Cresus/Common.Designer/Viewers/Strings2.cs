@@ -1004,6 +1004,7 @@ namespace Epsitec.Common.Designer.Viewers
 				widget.Margins = new Margins(5, 5, 0, 0);
 				widget.Text = TextLayout.ConvertToTaggedText(item.Name);
 				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				widget.PreferredSize = widget.GetBestFitSize();
 
 				return widget;
 			}
@@ -1021,21 +1022,12 @@ namespace Epsitec.Common.Designer.Viewers
 			private Widget CreateContent(CultureMap item, string twoLettersCulture)
 			{
 				//	Crée le contenu pour une colonne primaire ou secondaire.
-				//	Par optimisation, un seul widget est créé s'il n'y a pas de couleur de fond.
-				StaticText main, text;
+				StaticText text = new StaticText();
 				ResourceAccess.ModificationState state = this.owner.GetModificationState(item, twoLettersCulture);
 
-				if (state == ResourceAccess.ModificationState.Normal)
+				if (state != ResourceAccess.ModificationState.Normal)
 				{
-					main = text = new StaticText();
-				}
-				else
-				{
-					main = new StaticText();
-					main.BackColor = Abstract.GetBackgroundColor(state, 0.7);
-
-					text = new StaticText(main);
-					text.Dock = DockStyle.Fill;
+					text.BackColor = Strings2.GetBackgroundColor(state, 0.7);
 				}
 
 				string value = "";
@@ -1048,8 +1040,9 @@ namespace Epsitec.Common.Designer.Viewers
 				text.Margins = new Margins(5, 5, 0, 0);
 				text.Text = TextLayout.ConvertToTaggedText(value);
 				text.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				text.PreferredSize = text.GetBestFitSize ();
 
-				return main;
+				return text;
 			}
 			
 
