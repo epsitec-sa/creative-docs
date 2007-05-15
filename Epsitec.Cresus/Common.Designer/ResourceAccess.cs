@@ -2089,7 +2089,10 @@ namespace Epsitec.Common.Designer
 			{
 				this.CacheResource(index, cultureName);
 
-				if (this.IsBundlesType)
+				if (this.type == Type.Strings2)
+				{
+				}
+				else if (this.IsBundlesType)
 				{
 					if (this.accessField == null || string.IsNullOrEmpty(this.accessField.AsString))
 					{
@@ -2153,7 +2156,10 @@ namespace Epsitec.Common.Designer
 			//	Considère une ressource comme 'à jour' dans une culture.
 			this.CacheResource(index, cultureName);
 
-			if (this.IsBundlesType)
+			if (this.type == Type.Strings2)
+			{
+			}
+			else if (this.IsBundlesType)
 			{
 				if (this.accessBundle != this.primaryBundle && !this.accessField.IsEmpty)
 				{
@@ -2168,7 +2174,10 @@ namespace Epsitec.Common.Designer
 		public void ModificationSetAll(int index)
 		{
 			//	Considère une ressource comme 'modifiée' dans toutes les cultures.
-			if (this.IsBundlesType)
+			if (this.type == Type.Strings2)
+			{
+			}
+			else if (this.IsBundlesType)
 			{
 				Druid druid = this.druidsIndex[index];
 				int id = this.primaryBundle[druid].ModificationId;
@@ -2183,7 +2192,10 @@ namespace Epsitec.Common.Designer
 		public bool IsModificationAll(int index)
 		{
 			//	Donne l'état de la commande ModificationAll.
-			if (this.IsBundlesType)
+			if (this.type == Type.Strings2)
+			{
+			}
+			else if (this.IsBundlesType)
 			{
 				Druid druid = this.druidsIndex[index];
 				int id = this.primaryBundle[druid].ModificationId;
@@ -2311,7 +2323,10 @@ namespace Epsitec.Common.Designer
 		protected void CacheResource(int index, string cultureName)
 		{
 			//	Cache une ressource.
-			if (this.IsBundlesType)
+			if (this.type == Type.Strings2)
+			{
+			}
+			else if (this.IsBundlesType)
 			{
 				if (this.accessCulture != cultureName)  // changement de culture ?
 				{

@@ -31,7 +31,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public Strings2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
-			this.twoLettersSecondaryCulture = "en";
+			//?this.secondaryCulture = "en";
 
 			StructuredType cultureMapType = new StructuredType();
 			cultureMapType.Fields.Add("Name", StringType.Default);
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.HorizontalScrollMode = UI.ItemTableScrollMode.Linear;
 			this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
 			this.table.HeaderVisibility = true;
-			this.table.FrameVisibility = false;
+			this.table.FrameVisibility = true;
 			this.table.ItemPanel.Layout = UI.ItemPanelLayout.VerticalList;
 			this.table.ItemPanel.ItemSelectionMode = UI.ItemPanelSelectionMode.ExactlyOne;
 			this.table.ItemPanel.CurrentItemTrackingMode = UI.CurrentItemTrackingMode.AutoSelect;
@@ -319,14 +319,13 @@ namespace Epsitec.Common.Designer.Viewers
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			StructuredData data;
+
 			this.primarySummary.Text = this.GetSummary(this.GetTwoLetters(0));
 			this.secondarySummary.Text = this.GetSummary(this.GetTwoLetters(1));
 
-			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
-
 			this.labelEdit.Text = item.Name;
-
-			StructuredData data;
 
 			data = item.GetCultureData(this.GetTwoLetters(0));
 			this.primaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
@@ -337,7 +336,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryComment.Text = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
 
 			this.ignoreChange = iic;
-
 			this.UpdateCommands();
 		}
 
@@ -439,13 +437,13 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Culture secondaire utilisée.
 			get
 			{
-				return this.twoLettersSecondaryCulture;
+				return this.secondaryCulture;
 			}
 			set
 			{
-				if (this.twoLettersSecondaryCulture != value)
+				if (this.secondaryCulture != value)
 				{
-					this.twoLettersSecondaryCulture = value;
+					this.secondaryCulture = value;
 
 					this.UpdateButtonsSelectedCulture();
 					this.UpdateArray();
@@ -457,7 +455,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Retourne la culture primaire ou secondaire utilisée.
 			System.Diagnostics.Debug.Assert(row == 0 || row == 1);
-			return (row == 0) ? Resources.DefaultTwoLetterISOLanguageName : this.twoLettersSecondaryCulture;
+			return (row == 0) ? Resources.DefaultTwoLetterISOLanguageName : this.secondaryCulture;
 		}
 
 
@@ -1055,7 +1053,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static bool					captionExtended = false;
 
 		private ItemViewFactory					itemViewFactory;
-		protected string						twoLettersSecondaryCulture;
 
 		protected Widget						left;
 		protected Widget						right;

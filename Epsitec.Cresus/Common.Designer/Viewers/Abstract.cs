@@ -1290,7 +1290,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected PanelsContext				context;
 		protected ResourceAccess			access;
 		protected MainWindow				mainWindow;
-		protected string					secondaryCulture;
+		protected string					secondaryCulture;  // two letters
 		protected bool						ignoreChange = false;
 		protected bool						lastActionIsReplace = false;
 		protected IconButtonMark			primaryCulture;
