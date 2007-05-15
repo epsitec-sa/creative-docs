@@ -2128,7 +2128,7 @@ namespace Epsitec.Common.Designer
 				{
 					if (cultureName == null)
 					{
-						return ModificationState.Empty;
+						cultureName = "00";
 					}
 
 					CultureMap item = this.collectionView.Items[index] as CultureMap;
@@ -2145,12 +2145,15 @@ namespace Epsitec.Common.Designer
 						return ModificationState.Empty;
 					}
 
-					StructuredData primaryData = item.GetCultureData("00");
-					int pmod = (int) primaryData.GetValue(Support.Res.Fields.Resource.ModificationId);
-					int cmod = (int)        data.GetValue(Support.Res.Fields.Resource.ModificationId);
-					if (pmod > cmod)
+					if (cultureName != "00")  // culture secondaire ?
 					{
-						return ModificationState.Modified;
+						StructuredData primaryData = item.GetCultureData("00");
+						int pmod = (int) primaryData.GetValue(Support.Res.Fields.Resource.ModificationId);
+						int cmod = (int) data.GetValue(Support.Res.Fields.Resource.ModificationId);
+						if (pmod > cmod)
+						{
+							return ModificationState.Modified;
+						}
 					}
 
 					return ModificationState.Normal;
@@ -2277,7 +2280,12 @@ namespace Epsitec.Common.Designer
 				foreach (string culture in cultures)
 				{
 					StructuredData data = item.GetCultureData(culture);
-					int value = (int) data.GetValue(Support.Res.Fields.Resource.ModificationId);
+					int value = 0;
+					if (!data.IsEmpty)
+					{
+						value = (int) data.GetValue(Support.Res.Fields.Resource.ModificationId);
+					}
+
 					if (value < primaryValue)
 					{
 						count++;
