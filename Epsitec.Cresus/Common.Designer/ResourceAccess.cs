@@ -88,6 +88,7 @@ namespace Epsitec.Common.Designer
 
 				this.collectionView = new CollectionView(this.accessor.Collection);
 				this.collectionView.Filter = this.CollectionViewFilter;
+				this.collectionView.MoveCurrentToPosition(0);
 			}
 			else
 			{

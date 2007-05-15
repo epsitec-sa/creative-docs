@@ -31,7 +31,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public Strings2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
-			//?this.secondaryCulture = "en";
+			this.secondaryCulture = "en";
 
 			StructuredType cultureMapType = new StructuredType();
 			cultureMapType.Fields.Add("Name", StringType.Default);
@@ -331,9 +331,21 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 			this.primaryComment.Text = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
 
-			data = item.GetCultureData(this.GetTwoLetters(1));
-			this.secondaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
-			this.secondaryComment.Text = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
+			if (this.GetTwoLetters(1) == null)
+			{
+				this.secondaryText.Text = "";
+				this.secondaryComment.Text = "";
+				this.secondaryText.Enable = true;
+				this.secondaryComment.Enable = true;
+			}
+			else
+			{
+				data = item.GetCultureData(this.GetTwoLetters(1));
+				this.secondaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+				this.secondaryComment.Text = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
+				this.secondaryText.Enable = true;
+				this.secondaryComment.Enable = true;
+			}
 
 			this.ignoreChange = iic;
 			this.UpdateCommands();
@@ -374,6 +386,11 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateButtonsSelectedCulture()
 		{
 			//	Sélectionne le bouton correspondant à la culture secondaire.
+			if (this.secondaryButtonsCulture == null)
+			{
+				return;
+			}
+
 			for (int i=0; i<this.secondaryButtonsCulture.Length; i++)
 			{
 				if (this.secondaryButtonsCulture[i].Name == this.GetTwoLetters(1))
@@ -469,6 +486,11 @@ namespace Epsitec.Common.Designer.Viewers
 		protected ResourceState GetResourceState(CultureMap item, string twoLettersCulture)
 		{
 			//	Retourne l'état d'une ressource (qui défini la couleur du fond).
+			if (twoLettersCulture == null)
+			{
+				return ResourceState.Empty;
+			}
+
 			StructuredData data = item.GetCultureData(twoLettersCulture);
 
 			if (data.IsEmpty)
@@ -501,24 +523,31 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Retourne le texte résumé de la ressource sélectionnée.
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 
-			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
-			StructuredData data = item.GetCultureData(twoLettersCulture);
-
-			string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
-			if (string.IsNullOrEmpty(text))
+			if (twoLettersCulture == null)
 			{
 				buffer.Append(Misc.Italic("(indéfini)"));
 			}
 			else
 			{
-				buffer.Append(text);
-			}
+				CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+				StructuredData data = item.GetCultureData(twoLettersCulture);
 
-			string comment = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
-			if (!string.IsNullOrEmpty(comment))
-			{
-				buffer.Append("<br/>");
-				buffer.Append(Misc.Italic(comment));
+				string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+				if (string.IsNullOrEmpty(text))
+				{
+					buffer.Append(Misc.Italic("(indéfini)"));
+				}
+				else
+				{
+					buffer.Append(text);
+				}
+
+				string comment = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
+				if (!string.IsNullOrEmpty(comment))
+				{
+					buffer.Append("<br/>");
+					buffer.Append(Misc.Italic(comment));
+				}
 			}
 
 			return buffer.ToString();
@@ -1035,8 +1064,12 @@ namespace Epsitec.Common.Designer.Viewers
 					text.Dock = DockStyle.Fill;
 				}
 
-				StructuredData data = item.GetCultureData(twoLettersCulture);
-				string value = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+				string value = "";
+				if (twoLettersCulture != null)
+				{
+					StructuredData data = item.GetCultureData(twoLettersCulture);
+					value = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+				}
 
 				text.Margins = new Margins(5, 5, 0, 0);
 				text.Text = TextLayout.ConvertToTaggedText(value);
