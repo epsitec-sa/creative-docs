@@ -31,7 +31,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public Strings2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
-			this.secondaryCulture = "en";
+			//?this.secondaryCulture = "en";
 
 			StructuredType cultureMapType = new StructuredType();
 			cultureMapType.Fields.Add("Name", StringType.Default);
@@ -335,8 +335,8 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.secondaryText.Text = "";
 				this.secondaryComment.Text = "";
-				this.secondaryText.Enable = true;
-				this.secondaryComment.Enable = true;
+				this.secondaryText.Enable = false;
+				this.secondaryComment.Enable = false;
 			}
 			else
 			{
@@ -386,6 +386,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateButtonsSelectedCulture()
 		{
 			//	Sélectionne le bouton correspondant à la culture secondaire.
+			this.table.ColumnHeader.SetColumnText(1, Misc.CultureName(this.access.GetBaseCultureName()));
+			this.table.ColumnHeader.SetColumnText(2, Misc.CultureName(this.GetTwoLetters(1)));
+
 			if (this.secondaryButtonsCulture == null)
 			{
 				return;
@@ -402,9 +405,6 @@ namespace Epsitec.Common.Designer.Viewers
 					this.secondaryButtonsCulture[i].ActiveState = ActiveState.No;
 				}
 			}
-
-			this.table.ColumnHeader.SetColumnText(1, Misc.CultureName(this.access.GetBaseCultureName()));
-			this.table.ColumnHeader.SetColumnText(2, Misc.CultureName(this.GetTwoLetters(1)));
 		}
 
 		protected void UpdateButtonsCultures()
@@ -458,13 +458,10 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			set
 			{
-				if (this.secondaryCulture != value)
-				{
-					this.secondaryCulture = value;
+				this.secondaryCulture = value;
 
-					this.UpdateButtonsSelectedCulture();
-					this.UpdateArray();
-				}
+				this.UpdateButtonsSelectedCulture();
+				this.UpdateArray();
 			}
 		}
 

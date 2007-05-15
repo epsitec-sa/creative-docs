@@ -273,7 +273,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne le nom standard d'une culture.
 			System.Globalization.CultureInfo culture = Support.Resources.FindCultureInfo(twoLettersCode);
-			return (culture == null) ? "?" : Misc.ProperName(culture.NativeName);
+			return (culture == null) ? Misc.Italic("(indéfini)") : Misc.ProperName(culture.NativeName);
 		}
 
 

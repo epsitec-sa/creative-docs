@@ -88,7 +88,6 @@ namespace Epsitec.Common.Designer
 
 				this.collectionView = new CollectionView(this.accessor.Collection);
 				this.collectionView.Filter = this.CollectionViewFilter;
-				this.collectionView.MoveCurrentToPosition(0);
 			}
 			else
 			{
@@ -3370,6 +3369,7 @@ namespace Epsitec.Common.Designer
 			switch (this.type)
 			{
 				case Type.Strings:
+				case Type.Strings2:
 					return many ? "Strings" : "String";
 
 				case Type.Captions:
