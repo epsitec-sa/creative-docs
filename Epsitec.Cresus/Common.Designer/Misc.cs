@@ -269,10 +269,10 @@ namespace Epsitec.Common.Designer
 			return Misc.ProperName(culture.NativeName);
 		}
 
-		static public string CultureName(string twoLetterCode)
+		static public string CultureName(string twoLettersCode)
 		{
 			//	Retourne le nom standard d'une culture.
-			System.Globalization.CultureInfo culture = Support.Resources.FindCultureInfo(twoLetterCode);
+			System.Globalization.CultureInfo culture = Support.Resources.FindCultureInfo(twoLettersCode);
 			return (culture == null) ? "?" : Misc.ProperName(culture.NativeName);
 		}
 

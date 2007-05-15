@@ -86,6 +86,18 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				Viewers.Abstract.SearchCreateFilterGroup(this.groupStrings, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Strings);
 
+				//	Crée le groupe pour le type 'Strings2'.
+				this.groupStrings2 = new GroupBox(left);
+				this.groupStrings2.Text = Res.Strings.Dialog.Search.Check.Who;
+				this.groupStrings2.PreferredWidth = 160;
+				this.groupStrings2.PreferredHeight = 28+16*2;
+				this.groupStrings2.Dock = DockStyle.Top;
+				this.groupStrings2.Padding = new Margins(5, 5, 5, 5);
+				this.groupStrings2.TabIndex = tabIndex++;
+				this.groupStrings2.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
+
+				Viewers.Abstract.SearchCreateFilterGroup(this.groupStrings2, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Strings2);
+
 				//	Crée le groupe pour le type 'Captions'.
 				this.groupCaptions = new GroupBox(left);
 				this.groupCaptions.Text = Res.Strings.Dialog.Search.Check.Who;
@@ -263,6 +275,10 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					return Viewers.Abstract.SearchGetFilterGroup(this.groupStrings, ResourceAccess.Type.Strings);
 				}
+				else if (this.bundleType == ResourceAccess.Type.Strings2)
+				{
+					return Viewers.Abstract.SearchGetFilterGroup(this.groupStrings2, ResourceAccess.Type.Strings2);
+				}
 				else if (this.bundleType == ResourceAccess.Type.Captions || this.bundleType == ResourceAccess.Type.Fields || this.bundleType == ResourceAccess.Type.Commands || this.bundleType == ResourceAccess.Type.Types)
 				{
 					return Viewers.Abstract.SearchGetFilterGroup(this.groupCaptions, ResourceAccess.Type.Captions);
@@ -315,6 +331,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (this.window != null)
 			{
 				this.groupStrings.Visibility = (this.bundleType == ResourceAccess.Type.Strings);
+				this.groupStrings2.Visibility = (this.bundleType == ResourceAccess.Type.Strings2);
 				this.groupCaptions.Visibility = (this.bundleType == ResourceAccess.Type.Captions || this.bundleType == ResourceAccess.Type.Fields || this.bundleType == ResourceAccess.Type.Commands || this.bundleType == ResourceAccess.Type.Types);
 			}
 		}
@@ -416,6 +433,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected CheckButton					checkCase;
 		protected CheckButton					checkWord;
 		protected GroupBox						groupStrings;
+		protected GroupBox						groupStrings2;
 		protected GroupBox						groupCaptions;
 		protected Button						buttonSearchPrev;
 		protected Button						buttonSearchNext;

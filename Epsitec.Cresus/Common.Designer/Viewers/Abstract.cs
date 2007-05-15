@@ -81,14 +81,8 @@ namespace Epsitec.Common.Designer.Viewers
 			if (searcher.Search(search))
 			{
 				this.lastActionIsReplace = false;
-
 				this.access.AccessIndex = searcher.Row;
-
-				if (this.array != null)
-				{
-					this.array.SelectedRow = this.access.AccessIndex;
-					this.array.ShowSelectedRow();
-				}
+				this.SelectedRow = this.access.AccessIndex;
 
 				AbstractTextField edit = this.IndexToTextField(searcher.Field, searcher.Subfield);
 				if (edit != null && edit.Visibility)
@@ -149,13 +143,7 @@ namespace Epsitec.Common.Designer.Viewers
 				if (text == null)
 				{
 					this.access.AccessIndex = searcher.Row;
-
-					if (this.array != null)
-					{
-						this.array.SelectedRow = this.access.AccessIndex;
-						this.array.ShowSelectedRow();
-					}
-
+					this.SelectedRow = this.access.AccessIndex;
 					return;
 				}
 
@@ -256,7 +244,7 @@ namespace Epsitec.Common.Designer.Viewers
 				return null;
 			}
 
-			searcher.FixStarting(mode, filter, this.array.SelectedRow, field, subfield, this.currentTextField, this.secondaryCulture, false);
+			searcher.FixStarting(mode, filter, this.SelectedRow, field, subfield, this.currentTextField, this.secondaryCulture, false);
 			return searcher;
 		}
 
@@ -320,13 +308,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.access.SetFilter(filter, mode);
 
 			this.UpdateArray();
-			
-			if (this.array != null)
-			{
-				this.array.SelectedRow = this.access.AccessIndex;
-				this.array.ShowSelectedRow();
-			}
-
+			this.SelectedRow = this.access.AccessIndex;
 			this.UpdateCommands();
 		}
 
@@ -341,13 +323,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (name == "AccessLast" )  sel = 1000000;
 
 			this.access.AccessIndex = sel;
-
-			if (this.array != null)
-			{
-				this.array.SelectedRow = this.access.AccessIndex;
-				this.array.ShowSelectedRow();
-			}
-
+			this.SelectedRow = this.access.AccessIndex;
 			this.UpdateCommands();
 
 			if (this.currentTextField != null)
@@ -421,13 +397,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				this.access.AccessIndex = sel;
-				
-				if (this.array != null)
-				{
-					this.array.SelectedRow = sel;
-					this.array.ShowSelectedRow();
-				}
-
+				this.SelectedRow = sel;
 				this.SelectEdit(secondary);
 			}
 		}
@@ -449,13 +419,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.access.Delete();
 
 					this.UpdateArray();
-					
-					if (this.array != null)
-					{
-						this.array.SelectedRow = this.access.AccessIndex;
-						this.array.ShowSelectedRow();
-					}
-
+					this.SelectedRow = this.access.AccessIndex;
 					this.UpdateCommands();
 				}
 			}
@@ -482,13 +446,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.access.Duplicate(newName, duplicate);
 
 				this.UpdateArray();
-				
-				if (this.array != null)
-				{
-					this.array.SelectedRow = this.access.AccessIndex;
-					this.array.ShowSelectedRow();
-				}
-				
+				this.SelectedRow = this.access.AccessIndex;
 				this.UpdateCommands();
 
 				if (this.currentTextField != null)
@@ -517,8 +475,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.access.Move(direction);
 
 			this.UpdateArray();
-			this.array.SelectedRow = this.access.AccessIndex;
-			this.array.ShowSelectedRow();
+			this.SelectedRow = this.access.AccessIndex;
 			this.UpdateCommands();
 		}
 #endif
@@ -619,6 +576,21 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Exécute une commande.
 			this.UpdateCommands();
+		}
+
+
+		public virtual int SelectedRow
+		{
+			//	Ligne sélectionnée dans la table.
+			get
+			{
+				return this.array.SelectedRow;
+			}
+			set
+			{
+				this.array.SelectedRow = value;
+				this.array.ShowSelectedRow();
+			}
 		}
 
 
@@ -1254,6 +1226,10 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				case ResourceAccess.Type.Strings:
 					Strings.SearchCreateFilterGroup(parent, handler);
+					break;
+
+				case ResourceAccess.Type.Strings2:
+					Strings2.SearchCreateFilterGroup(parent, handler);
 					break;
 
 				case ResourceAccess.Type.Captions:

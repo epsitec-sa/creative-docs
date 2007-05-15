@@ -460,16 +460,17 @@ namespace Epsitec.Common.Designer.Viewers
 			return (row == 0) ? Resources.DefaultTwoLetterISOLanguageName : this.twoLettersSecondaryCulture;
 		}
 
+
 		protected ResourceState GetResourceState(string twoLettersCulture)
 		{
-			//	Retourne l'état d'une ressource.
+			//	Retourne l'état d'une ressource (qui défini la couleur du fond).
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			return this.GetResourceState(item, twoLettersCulture);
 		}
 
 		protected ResourceState GetResourceState(CultureMap item, string twoLettersCulture)
 		{
-			//	Retourne l'état d'une ressource.
+			//	Retourne l'état d'une ressource (qui défini la couleur du fond).
 			StructuredData data = item.GetCultureData(twoLettersCulture);
 
 			if (data.IsEmpty)
@@ -658,6 +659,160 @@ namespace Epsitec.Common.Designer.Viewers
 		#endregion
 
 
+		public override int SelectedRow
+		{
+			//	Ligne sélectionnée dans la table.
+			get
+			{
+				return this.access.CollectionView.CurrentPosition;
+			}
+			set
+			{
+				this.access.CollectionView.MoveCurrentToPosition(value);
+			}
+		}
+
+		
+		public static void SearchCreateFilterGroup(AbstractGroup parent, EventHandler handler)
+		{
+			StaticText label;
+			CheckButton check;
+			
+			label = new StaticText(parent);
+			label.PreferredWidth = 80;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Text = Res.Strings.Viewers.Strings.Edit;
+			label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			label.Margins = new Margins(0, 0, 0, 0);
+
+			label = new StaticText(parent);
+			label.PreferredWidth = 80;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Text = Res.Strings.Viewers.Strings.About;
+			label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			label.Margins = new Margins(0, 0, 16, 0);
+
+			check = new CheckButton(parent);
+			check.Name = "0";  // (*)
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*0, 0, 0, 0);
+			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.Label);
+
+			check = new CheckButton(parent);
+			check.Name = "1";  // (*)
+			check.ActiveState = ActiveState.Yes;
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*1, 0, 0, 0);
+			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryText);
+
+			check = new CheckButton(parent);
+			check.Name = "2";  // (*)
+			check.ActiveState = ActiveState.Yes;
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*2, 0, 0, 0);
+			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryText);
+
+			check = new CheckButton(parent);
+			check.Name = "3";  // (*)
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*1, 0, 16, 0);
+			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryAbout);
+
+			check = new CheckButton(parent);
+			check.Name = "4";  // (*)
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*2, 0, 16, 0);
+			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryAbout);
+
+			// (*)	Ce numéro correspond à field dans ResourceAccess.SearcherIndexToAccess !
+		}
+
+		protected override void TextFieldToIndex(AbstractTextField textField, out int field, out int subfield)
+		{
+			//	Cherche les index correspondant à un texte éditable.
+			subfield = 0;
+
+			if (textField == this.labelEdit)
+			{
+				field = 0;
+				return;
+			}
+
+			if (textField == this.primaryText)
+			{
+				field = 1;
+				return;
+			}
+
+			if (textField == this.primaryComment)
+			{
+				field = 3;
+				return;
+			}
+
+			if (this.secondaryCulture != null)
+			{
+				if (textField == this.secondaryText)
+				{
+					field = 2;
+					return;
+				}
+
+				if (textField == this.secondaryComment)
+				{
+					field = 4;
+					return;
+				}
+			}
+
+			field = -1;
+			subfield = -1;
+		}
+
+		protected override AbstractTextField IndexToTextField(int field, int subfield)
+		{
+			//	Cherche le TextField permettant d'éditer des index.
+			if (subfield == 0)
+			{
+				switch (field)
+				{
+					case 0:
+						return this.labelEdit;
+
+					case 1:
+						return this.primaryText;
+
+					case 2:
+						return this.secondaryText;
+
+					case 3:
+						return this.primaryComment;
+
+					case 4:
+						return this.secondaryComment;
+
+				}
+			}
+
+			return null;
+		}
+
+		
 		private void HandleSplitterDragged(object sender)
 		{
 			//	Le splitter a été bougé.

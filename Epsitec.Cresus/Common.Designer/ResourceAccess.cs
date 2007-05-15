@@ -1673,6 +1673,34 @@ namespace Epsitec.Common.Designer
 			this.lastAccessField = fieldType;
 			this.CacheResource(index, cultureName);
 
+			if (this.type == Type.Strings2)
+			{
+				CultureMap item = this.collectionView.Items[index] as CultureMap;
+
+				if (cultureName == null)
+				{
+					cultureName = "00";
+				}
+				StructuredData data = item.GetCultureData(cultureName);
+
+				if (fieldType == FieldType.Name)
+				{
+					return new Field(item.Name);
+				}
+
+				if (fieldType == FieldType.String)
+				{
+					string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+					return new Field(text);
+				}
+
+				if (fieldType == FieldType.About)
+				{
+					string text = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
+					return new Field(text);
+				}
+			}
+
 			if (this.IsBundlesType)
 			{
 				if (this.accessField == null)
@@ -2180,7 +2208,7 @@ namespace Epsitec.Common.Designer
 		public void SearcherIndexToAccess(int field, string secondaryCulture, out string cultureName, out FieldType fieldType)
 		{
 			//	Conversion d'un index de champ (0..n) en l'information nécessaire pour Get/SetField.
-			if (this.type == Type.Strings)
+			if (this.type == Type.Strings || this.type == Type.Strings2)
 			{
 				switch (field)
 				{
