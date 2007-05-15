@@ -1,6 +1,9 @@
 //	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Support
@@ -10,7 +13,7 @@ namespace Epsitec.Common.Support
 	/// data, as it is used in the resource editor. Basically, a <c>CultureMap</c>
 	/// instance represents a row in the resource list.
 	/// </summary>
-	public class CultureMap
+	public class CultureMap : INotifyPropertyChanged
 	{
 		internal CultureMap(IResourceAccessor owner, Druid id)
 		{
@@ -57,7 +60,7 @@ namespace Epsitec.Common.Support
 
 					this.name = value;
 
-					//	TODO: notify name change
+					this.OnPropertyChanged (new DependencyPropertyChangedEventArgs ("Name", oldName, newName));
 				}
 			}
 		}
@@ -140,6 +143,22 @@ namespace Epsitec.Common.Support
 			return this.Name;
 		}
 
+		#region INotifyPropertyChanged Members
+
+		public event EventHandler<DependencyPropertyChangedEventArgs> PropertyChanged;
+
+		#endregion
+
+		protected virtual void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+		{
+			this.owner.NotifyItemChanged (this);
+
+			if (this.PropertyChanged != null)
+			{
+				this.PropertyChanged (this, e);
+			}
+		}
+		
 		internal void RecordCultureData(string twoLetterISOLanguageName, Types.StructuredData data)
 		{
 			System.Diagnostics.Debug.Assert (data != null);
@@ -167,7 +186,7 @@ namespace Epsitec.Common.Support
 
 		private void HandleDataValueChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
-			this.owner.NotifyItemChanged (this);
+			this.OnPropertyChanged (e);
 		}
 
 		private Types.StructuredData CreateData(string twoLetterISOLanguageName)
