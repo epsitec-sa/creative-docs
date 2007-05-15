@@ -66,7 +66,7 @@ namespace Epsitec.Common.Designer
 		public enum ModificationState
 		{
 			Normal,			//	défini normalement
-			Empty,			//	vide (fond rouge)
+			Empty,			//	vide ou indéfini (fond rouge)
 			Modified,		//	modifié (fond jaune)
 		}
 
@@ -1880,6 +1880,7 @@ namespace Epsitec.Common.Designer
 					this.collectionView.Refresh();
 				}
 
+				this.IsDirty = true;
 				return;
 			}
 
@@ -2125,6 +2126,34 @@ namespace Epsitec.Common.Designer
 
 				if (this.type == Type.Strings2)
 				{
+					if (cultureName == null)
+					{
+						return ModificationState.Empty;
+					}
+
+					CultureMap item = this.collectionView.Items[index] as CultureMap;
+					StructuredData data = item.GetCultureData(cultureName);
+
+					if (data.IsEmpty)
+					{
+						return ModificationState.Empty;
+					}
+
+					string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+					if (string.IsNullOrEmpty(text))
+					{
+						return ModificationState.Empty;
+					}
+
+					StructuredData primaryData = item.GetCultureData("00");
+					int pmod = (int) primaryData.GetValue(Support.Res.Fields.Resource.ModificationId);
+					int cmod = (int)        data.GetValue(Support.Res.Fields.Resource.ModificationId);
+					if (pmod > cmod)
+					{
+						return ModificationState.Modified;
+					}
+
+					return ModificationState.Normal;
 				}
 				else if (this.IsBundlesType)
 				{
@@ -2192,6 +2221,12 @@ namespace Epsitec.Common.Designer
 
 			if (this.type == Type.Strings2)
 			{
+				CultureMap item = this.collectionView.Items[index] as CultureMap;
+				StructuredData data = item.GetCultureData(cultureName);
+				StructuredData primaryData = item.GetCultureData("00");
+
+				int primaryValue = (int) primaryData.GetValue(Support.Res.Fields.Resource.ModificationId);
+				data.SetValue(Support.Res.Fields.Resource.ModificationId, primaryValue);
 			}
 			else if (this.IsBundlesType)
 			{
@@ -2210,6 +2245,11 @@ namespace Epsitec.Common.Designer
 			//	Considère une ressource comme 'modifiée' dans toutes les cultures.
 			if (this.type == Type.Strings2)
 			{
+				CultureMap item = this.collectionView.Items[index] as CultureMap;
+				StructuredData primaryData = item.GetCultureData("00");
+
+				int value = (int) primaryData.GetValue(Support.Res.Fields.Resource.ModificationId);
+				primaryData.SetValue(Support.Res.Fields.Resource.ModificationId, value+1);
 			}
 			else if (this.IsBundlesType)
 			{
@@ -2228,6 +2268,22 @@ namespace Epsitec.Common.Designer
 			//	Donne l'état de la commande ModificationAll.
 			if (this.type == Type.Strings2)
 			{
+				CultureMap item = this.collectionView.Items[index] as CultureMap;
+				StructuredData primaryData = item.GetCultureData("00");
+				int primaryValue = (int) primaryData.GetValue(Support.Res.Fields.Resource.ModificationId);
+
+				List<string> cultures = this.GetSecondaryCultureNames();
+				int count = 0;
+				foreach (string culture in cultures)
+				{
+					StructuredData data = item.GetCultureData(culture);
+					int value = (int) data.GetValue(Support.Res.Fields.Resource.ModificationId);
+					if (value < primaryValue)
+					{
+						count++;
+					}
+				}
+				return (count != cultures.Count);
 			}
 			else if (this.IsBundlesType)
 			{

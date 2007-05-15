@@ -354,6 +354,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.access.ModificationSetAll(sel);
 
 				this.UpdateArray();
+				this.UpdateModificationsState();
 				this.UpdateModificationsCulture();
 				this.UpdateCommands();
 			}
@@ -363,6 +364,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.access.ModificationClear(sel, this.secondaryCulture);
 
 				this.UpdateArray();
+				this.UpdateModificationsState();
 				this.UpdateModificationsCulture();
 				this.UpdateCommands();
 			}
@@ -716,6 +718,11 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Montre la ressource sélectionnée dans le tableau.
 			this.array.ShowSelectedRow();
+		}
+
+		protected virtual void UpdateModificationsState()
+		{
+			//	Met à jour en fonction des modifications (fonds de couleur, etc).
 		}
 
 		protected void UpdateModificationsCulture()
