@@ -516,7 +516,7 @@ namespace Epsitec.Common.Widgets
 						new_focus.SetFocused (true);
 					}
 					
-					this.OnFocusedWidgetChanged ();
+					this.OnFocusedWidgetChanged (old_focus, new_focus);
 				}
 			}
 		}
@@ -1605,13 +1605,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void OnFocusedWidgetChanged()
+		protected virtual void OnFocusedWidgetChanged(Widget oldValue, Widget newValue)
 		{
 			this.root.ClearFocusChain ();
 			
 			if (this.FocusedWidgetChanged != null)
 			{
-				this.FocusedWidgetChanged (this);
+				this.FocusedWidgetChanged (this, new DependencyPropertyChangedEventArgs ("FocusedWidget", oldValue, newValue));
 			}
 		}
 		
@@ -2461,8 +2461,8 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler				WindowSizeMoveStatusChanged;
 		public event EventHandler				WindowResizeBeginning;
 		public event EventHandler				WindowResizeEnded;
-		
-		public event EventHandler				FocusedWidgetChanged;
+
+		public event EventHandler<DependencyPropertyChangedEventArgs> FocusedWidgetChanged;
 		
 		public event EventHandler				AboutToShowWindow;
 		public event EventHandler				AboutToHideWindow;

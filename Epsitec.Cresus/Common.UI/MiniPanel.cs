@@ -90,7 +90,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		private void HandleWindowFocusedWidgetChanged(object sender)
+		private void HandleWindowFocusedWidgetChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			if (this.ContainsKeyboardFocus)
 			{

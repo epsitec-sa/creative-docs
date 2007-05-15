@@ -107,8 +107,6 @@ namespace Epsitec.Common.Script.Developer
 			new UniqueValueValidator (this, this.panel.MethodProtoPanel.MethodNameWidget);
 			
 			this.panel.MethodProtoPanel.MethodNameWidget.TextChanged += new EventHandler (this.HandleMethodNameWidgetTextChanged);
-			
-			parent.Window.FocusedWidgetChanged += new EventHandler (this.HandleWindowFocusedWidgetChanged);
 		}
 		
 		public void ShowMethod(string signature)
@@ -430,29 +428,6 @@ namespace Epsitec.Common.Script.Developer
 		private void HandleBookCloseClicked(object sender)
 		{
 			//	TODO: supprime la méthode active, après avoir posé la question...
-		}
-		
-		private void HandleWindowFocusedWidgetChanged(object sender)
-		{
-#if false
-			EditArray edit  = this.panel.ParameterInfoPanel.EditArray;
-			bool      value = edit.ContainsKeyboardFocus;
-			
-			if (this.edit_array_focused != value)
-			{
-				this.edit_array_focused = value;
-				
-				if (this.edit_array_focused == false)
-				{
-					if (edit.InteractionMode == ScrollInteractionMode.Edition)
-					{
-						edit.ValidateEdition (false);
-						
-						System.Diagnostics.Debug.WriteLine ("EditArray: validated edition.");
-					}
-				}
-			}
-#endif
 		}
 		
 		private void HandleMethodNameWidgetTextChanged(object sender)
