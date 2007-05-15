@@ -190,19 +190,22 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			int count = 0;
-			bool fromBeginning = true;
-			while (searcher.Replace(search, fromBeginning))
+			using (this.access.CollectionView.DeferRefresh())
 			{
-				fromBeginning = false;
-				count ++;
-
-				string text = this.ReplaceDo(searcher, replace);
-				if (text == null)
+				bool fromBeginning = true;
+				while (searcher.Replace(search, fromBeginning))
 				{
-					return;
-				}
+					fromBeginning = false;
+					count++;
 
-				searcher.Skip(replace.Length);  // saute les caractères sélectionnés
+					string text = this.ReplaceDo(searcher, replace);
+					if (text == null)
+					{
+						return;
+					}
+
+					searcher.Skip(replace.Length);  // saute les caractères sélectionnés
+				}
 			}
 
 			if (count == 0)
