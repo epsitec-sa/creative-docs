@@ -723,7 +723,11 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 				data.SetValue(Support.Res.Fields.ResourceString.Text, text);
-				//	TODO: que faire ?
+				
+				//	TODO: idéalement, ne faire cela que si le focus quitte la ligne de texte
+				//	d'édition, pour éviter de trop ralentir...
+				this.access.Accessor.PersistChanges();
+				this.access.CollectionView.Refresh();
 			}
 
 			if (edit == this.secondaryText)
