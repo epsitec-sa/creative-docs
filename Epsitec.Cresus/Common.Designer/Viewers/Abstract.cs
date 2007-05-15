@@ -189,24 +189,24 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
+			this.access.SortDeffer();
 			int count = 0;
-			using (this.access.CollectionView.DeferRefresh())
+			bool fromBeginning = true;
+			while (searcher.Replace(search, fromBeginning))
 			{
-				bool fromBeginning = true;
-				while (searcher.Replace(search, fromBeginning))
+				fromBeginning = false;
+				count++;
+
+				string text = this.ReplaceDo(searcher, replace);
+				if (text == null)
 				{
-					fromBeginning = false;
-					count++;
-
-					string text = this.ReplaceDo(searcher, replace);
-					if (text == null)
-					{
-						return;
-					}
-
-					searcher.Skip(replace.Length);  // saute les caractères sélectionnés
+					this.access.SortUndeffer();
+					return;
 				}
+
+				searcher.Skip(replace.Length);  // saute les caractères sélectionnés
 			}
+			this.access.SortUndeffer();
 
 			if (count == 0)
 			{

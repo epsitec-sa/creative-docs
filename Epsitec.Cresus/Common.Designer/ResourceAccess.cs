@@ -2918,6 +2918,26 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public void SortDeffer()
+		{
+			//	Empêche tous tris jusqu'au Undeffer.
+			if (this.collectionView != null)
+			{
+				this.collectionViewInitialSorts = this.collectionView.SortDescriptions.ToArray();
+				this.collectionView.SortDescriptions.Clear();
+			}
+		}
+
+		public void SortUndeffer()
+		{
+			//	Permet de nouveau des tris normaux.
+			if (this.collectionView != null && this.collectionViewInitialSorts != null)
+			{
+				this.collectionView.SortDescriptions.AddRange(this.collectionViewInitialSorts);
+				this.collectionViewInitialSorts = null;
+			}
+		}
+
 		public int Sort(int index, bool resortAll)
 		{
 			//	A partir d'une liste déjà triée, déplace un seul élément modifié pour qu'il
@@ -3865,6 +3885,7 @@ namespace Epsitec.Common.Designer
 		protected Searcher.SearchingMode					collectionViewMode;
 		protected string									collectionViewFilter;
 		protected Regex										collectionViewRegex;
+		protected Types.SortDescription[]					collectionViewInitialSorts;
 
 		protected ResourceBundleCollection					bundles;
 		protected ResourceBundle							primaryBundle;
