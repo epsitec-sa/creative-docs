@@ -167,7 +167,11 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					this.access.AccessIndex = this.access.Sort(searcher.Row, false);
 					this.UpdateArray();
-					this.array.ShowSelectedRow();
+
+					if (array != null)
+					{
+						this.array.ShowSelectedRow();
+					}
 				}
 			}
 			else
@@ -209,7 +213,11 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.access.AccessIndex = this.access.Sort(this.access.AccessIndex, true);
 				this.UpdateArray();
-				this.array.ShowSelectedRow();
+
+				if (this.array != null)
+				{
+					this.array.ShowSelectedRow();
+				}
 				
 				this.UpdateEdit();
 				this.UpdateCommands();

@@ -1849,6 +1849,40 @@ namespace Epsitec.Common.Designer
 			//	Si cultureName est nul, on accède à la culture de base.
 			this.CacheResource(index, cultureName);
 
+			if (this.type == Type.Strings2)
+			{
+				CultureMap item = this.collectionView.Items[index] as CultureMap;
+
+				if (cultureName == null)
+				{
+					cultureName = "00";
+				}
+				StructuredData data = item.GetCultureData(cultureName);
+
+				if (fieldType == FieldType.Name)
+				{
+					item.Name = field.String;
+					this.accessor.PersistChanges();
+					this.collectionView.Refresh();
+				}
+
+				if (fieldType == FieldType.String)
+				{
+					data.SetValue(Support.Res.Fields.ResourceString.Text, field.String);
+					this.accessor.PersistChanges();
+					this.collectionView.Refresh();
+				}
+
+				if (fieldType == FieldType.About)
+				{
+					data.SetValue(Support.Res.Fields.Resource.Comment, field.String);
+					this.accessor.PersistChanges();
+					this.collectionView.Refresh();
+				}
+
+				return;
+			}
+
 			if (this.IsBundlesType)
 			{
 				if (this.accessField == null)
@@ -2889,6 +2923,11 @@ namespace Epsitec.Common.Designer
 			//	A partir d'une liste déjà triée, déplace un seul élément modifié pour qu'il
 			//	soit de nouveau trié. Si resortAll = true, trie toutes les ressources et retourne
 			//	le nouvel index du Druid.
+			if (this.type == Type.Strings2)
+			{
+				return index;
+			}
+
 			this.CacheClear();
 
 			if (resortAll)
