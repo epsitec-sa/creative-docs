@@ -461,6 +461,8 @@ namespace Epsitec.Common.Widgets.Collections
 			{
 				this.DetachVisual (item);
 				this.NotifyChanges (snapshot);
+
+				Layouts.LayoutContext.AddToArrangeQueue (this.host);
 				
 				return true;
 			}
