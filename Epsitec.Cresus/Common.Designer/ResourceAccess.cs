@@ -2920,9 +2920,10 @@ namespace Epsitec.Common.Designer
 
 		public void SortDefer()
 		{
-			//	Empêche tous tris jusqu'au Undefer.
+			//	Empêche tous les tris jusqu'au Undefer.
 			if (this.collectionView != null)
 			{
+				System.Diagnostics.Debug.Assert(this.collectionViewInitialSorts == null);
 				this.collectionViewInitialSorts = this.collectionView.SortDescriptions.ToArray();
 				this.collectionView.SortDescriptions.Clear();
 			}
@@ -2930,9 +2931,10 @@ namespace Epsitec.Common.Designer
 
 		public void SortUndefer()
 		{
-			//	Permet de nouveau des tris normaux.
-			if (this.collectionView != null && this.collectionViewInitialSorts != null)
+			//	Permet de nouveau les tris.
+			if (this.collectionView != null)
 			{
+				System.Diagnostics.Debug.Assert(this.collectionViewInitialSorts != null);
 				this.collectionView.SortDescriptions.AddRange(this.collectionViewInitialSorts);
 				this.collectionViewInitialSorts = null;
 			}

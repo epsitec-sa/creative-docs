@@ -44,7 +44,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.left = new Widget(this);
 			this.left.Name = "Left";
 			this.left.MinWidth = 80;
-			this.left.MaxWidth = 500;
+			this.left.MaxWidth = 439;
 			this.left.PreferredWidth = Abstract.leftArrayWidth;
 			this.left.Dock = DockStyle.Left;
 			this.left.Padding = new Margins(10, 10, 10, 10);
