@@ -2918,9 +2918,9 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public void SortDeffer()
+		public void SortDefer()
 		{
-			//	Empêche tous tris jusqu'au Undeffer.
+			//	Empêche tous tris jusqu'au Undefer.
 			if (this.collectionView != null)
 			{
 				this.collectionViewInitialSorts = this.collectionView.SortDescriptions.ToArray();
@@ -2928,7 +2928,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void SortUndeffer()
+		public void SortUndefer()
 		{
 			//	Permet de nouveau des tris normaux.
 			if (this.collectionView != null && this.collectionViewInitialSorts != null)

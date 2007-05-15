@@ -189,7 +189,7 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			this.access.SortDeffer();
+			this.access.SortDefer();
 			int count = 0;
 			bool fromBeginning = true;
 			while (searcher.Replace(search, fromBeginning))
@@ -200,13 +200,13 @@ namespace Epsitec.Common.Designer.Viewers
 				string text = this.ReplaceDo(searcher, replace);
 				if (text == null)
 				{
-					this.access.SortUndeffer();
+					this.access.SortUndefer();
 					return;
 				}
 
 				searcher.Skip(replace.Length);  // saute les caractères sélectionnés
 			}
-			this.access.SortUndeffer();
+			this.access.SortUndefer();
 
 			if (count == 0)
 			{
