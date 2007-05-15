@@ -34,7 +34,19 @@ namespace Epsitec.Common.Types
 
 		public override bool IsValidValue(object value)
 		{
-			return false;
+			if (this.IsNullValue (value))
+			{
+				return this.IsNullable;
+			}
+
+			if (value is Support.Druid)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		public static DruidType Default

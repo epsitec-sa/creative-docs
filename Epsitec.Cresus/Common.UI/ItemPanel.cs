@@ -3006,36 +3006,39 @@ namespace Epsitec.Common.UI
 
 			List<ItemView> views = new List<ItemView> ();
 
-			lock (items.ItemsSyncRoot)
+			if (items != null)
 			{
-				if (this.IsRootPanel)
+				lock (items.ItemsSyncRoot)
 				{
-					//	We are executing in the root panel; create the item views for
-					//	every item (or every group and sub-group) :
-
-					if (items.Groups.Count == 0)
+					if (this.IsRootPanel)
 					{
-						this.CreateItemViews (views, items.Items, currentViews);
+						//	We are executing in the root panel; create the item views for
+						//	every item (or every group and sub-group) :
+
+						if (items.Groups.Count == 0)
+						{
+							this.CreateItemViews (views, items.Items, currentViews);
+						}
+						else
+						{
+							this.CreateItemViews (views, items.Groups, currentViews);
+						}
 					}
 					else
 					{
-						this.CreateItemViews (views, items.Groups, currentViews);
-					}
-				}
-				else
-				{
-					//	We are executing in a sub-panel, which is used to represent
-					//	the contents of a group :
+						//	We are executing in a sub-panel, which is used to represent
+						//	the contents of a group :
 
-					CollectionViewGroup group = this.parentGroup.CollectionViewGroup;
+						CollectionViewGroup group = this.parentGroup.CollectionViewGroup;
 
-					if (group.HasSubgroups)
-					{
-						this.CreateItemViews (views, group.Subgroups, currentViews);
-					}
-					else
-					{
-						this.CreateItemViews (views, group.Items as System.Collections.IList, currentViews);
+						if (group.HasSubgroups)
+						{
+							this.CreateItemViews (views, group.Subgroups, currentViews);
+						}
+						else
+						{
+							this.CreateItemViews (views, group.Items as System.Collections.IList, currentViews);
+						}
 					}
 				}
 			}
