@@ -55,7 +55,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.right.TabIndex = this.tabIndex++;
 			this.right.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			
-			//	Crée la partie gauche.			
+			//	Crée la partie gauche.
 			this.labelEdit = new MyWidgets.TextFieldExName(this.left);
 			this.labelEdit.Name = "LabelEdit";
 			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
@@ -870,7 +870,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (edit == this.labelEdit)
 			{
-				//?item.Name = text;
 				this.UpdateFieldName(edit, this.access.CollectionView.CurrentPosition);
 				this.access.Accessor.PersistChanges();
 				this.access.CollectionView.Refresh();
@@ -881,31 +880,39 @@ namespace Epsitec.Common.Designer.Viewers
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 				data.SetValue(Support.Res.Fields.ResourceString.Text, text);
 				
-				//	TODO: idéalement, ne faire cela que si le focus quitte la ligne de texte
-				//	d'édition, pour éviter de trop ralentir...
 				this.access.Accessor.PersistChanges();
-				this.access.CollectionView.Refresh();
+				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
+				edit.Focus();
 			}
 
 			if (edit == this.secondaryText)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
 				data.SetValue(Support.Res.Fields.ResourceString.Text, text);
-				//	TODO: que faire ?
+				
+				this.access.Accessor.PersistChanges();
+				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
+				edit.Focus();
 			}
 
 			if (edit == this.primaryComment)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 				data.SetValue(Support.Res.Fields.Resource.Comment, text);
-				//	TODO: que faire ?
+				
+				this.access.Accessor.PersistChanges();
+				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
+				edit.Focus();
 			}
 
 			if (edit == this.secondaryComment)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
 				data.SetValue(Support.Res.Fields.Resource.Comment, text);
-				//	TODO: que faire ?
+				
+				this.access.Accessor.PersistChanges();
+				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
+				edit.Focus();
 			}
 
 			this.UpdateButtonsModificationsCulture();
